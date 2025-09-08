@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 
 ########################################################################
 package VlqBase128Le;
@@ -24,7 +24,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -34,11 +34,14 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{groups} = ();
-    do {
-        $_ = VlqBase128Le::Group->new($self->{_io}, $self, $self->{_root});
-        push @{$self->{groups}}, $_;
-    } until (!($_->has_next()));
+    $self->{groups} = [];
+    {
+        my $_it;
+        do {
+            $_it = VlqBase128Le::Group->new($self->{_io}, $self, $self->{_root});
+            push @{$self->{groups}}, $_it;
+        } until (!($_it->has_next()));
+    }
 }
 
 sub len {
@@ -48,18 +51,18 @@ sub len {
     return $self->{len};
 }
 
+sub sign_bit {
+    my ($self) = @_;
+    return $self->{sign_bit} if ($self->{sign_bit});
+    $self->{sign_bit} = ($self->len() == 10 ? 9223372036854775808 : @{$self->groups()}[-1]->multiplier() * 64);
+    return $self->{sign_bit};
+}
+
 sub value {
     my ($self) = @_;
     return $self->{value} if ($self->{value});
     $self->{value} = @{$self->groups()}[-1]->interm_value();
     return $self->{value};
-}
-
-sub sign_bit {
-    my ($self) = @_;
-    return $self->{sign_bit} if ($self->{sign_bit});
-    $self->{sign_bit} = ($self->len() == 10 ? 9223372036854775808 : (@{$self->groups()}[-1]->multiplier() * 64));
-    return $self->{sign_bit};
 }
 
 sub value_signed {
@@ -94,7 +97,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -111,7 +114,7 @@ sub _read {
 sub interm_value {
     my ($self) = @_;
     return $self->{interm_value} if ($self->{interm_value});
-    $self->{interm_value} = ($self->prev_interm_value() + ($self->value() * $self->multiplier()));
+    $self->{interm_value} = ($self->prev_interm_value() + $self->value() * $self->multiplier());
     return $self->{interm_value};
 }
 

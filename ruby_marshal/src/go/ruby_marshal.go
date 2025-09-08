@@ -46,19 +46,28 @@ const (
 	RubyMarshal_Codes__Bignum RubyMarshal_Codes = 108
 	RubyMarshal_Codes__RubyHash RubyMarshal_Codes = 123
 )
+var values_RubyMarshal_Codes = map[RubyMarshal_Codes]struct{}{34: {}, 48: {}, 58: {}, 59: {}, 64: {}, 70: {}, 73: {}, 83: {}, 84: {}, 91: {}, 105: {}, 108: {}, 123: {}}
+func (v RubyMarshal_Codes) isDefined() bool {
+	_, ok := values_RubyMarshal_Codes[v]
+	return ok
+}
 type RubyMarshal struct {
 	Version []byte
 	Records *RubyMarshal_Record
 	_io *kaitai.Stream
 	_root *RubyMarshal
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewRubyMarshal() *RubyMarshal {
 	return &RubyMarshal{
 	}
 }
 
-func (this *RubyMarshal) Read(io *kaitai.Stream, parent interface{}, root *RubyMarshal) (err error) {
+func (this RubyMarshal) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *RubyMarshal) Read(io *kaitai.Stream, parent kaitai.Struct, root *RubyMarshal) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -80,44 +89,6 @@ func (this *RubyMarshal) Read(io *kaitai.Stream, parent interface{}, root *RubyM
 	this.Records = tmp2
 	return err
 }
-type RubyMarshal_RubyArray struct {
-	NumElements *RubyMarshal_PackedInt
-	Elements []*RubyMarshal_Record
-	_io *kaitai.Stream
-	_root *RubyMarshal
-	_parent *RubyMarshal_Record
-}
-func NewRubyMarshal_RubyArray() *RubyMarshal_RubyArray {
-	return &RubyMarshal_RubyArray{
-	}
-}
-
-func (this *RubyMarshal_RubyArray) Read(io *kaitai.Stream, parent *RubyMarshal_Record, root *RubyMarshal) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp3 := NewRubyMarshal_PackedInt()
-	err = tmp3.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.NumElements = tmp3
-	tmp4, err := this.NumElements.Value()
-	if err != nil {
-		return err
-	}
-	for i := 0; i < int(tmp4); i++ {
-		_ = i
-		tmp5 := NewRubyMarshal_Record()
-		err = tmp5.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Elements = append(this.Elements, tmp5)
-	}
-	return err
-}
 
 /**
  * @see <a href="https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Bignum">Source</a>
@@ -135,32 +106,36 @@ func NewRubyMarshal_Bignum() *RubyMarshal_Bignum {
 	}
 }
 
+func (this RubyMarshal_Bignum) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *RubyMarshal_Bignum) Read(io *kaitai.Stream, parent *RubyMarshal_Record, root *RubyMarshal) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp6, err := this._io.ReadU1()
+	tmp3, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Sign = tmp6
-	tmp7 := NewRubyMarshal_PackedInt()
-	err = tmp7.Read(this._io, this, this._root)
+	this.Sign = tmp3
+	tmp4 := NewRubyMarshal_PackedInt()
+	err = tmp4.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.LenDiv2 = tmp7
-	tmp8, err := this.LenDiv2.Value()
+	this.LenDiv2 = tmp4
+	tmp5, err := this.LenDiv2.Value()
 	if err != nil {
 		return err
 	}
-	tmp9, err := this._io.ReadBytes(int((tmp8 * 2)))
+	tmp6, err := this._io.ReadBytes(int(tmp5 * 2))
 	if err != nil {
 		return err
 	}
-	tmp9 = tmp9
-	this.Body = tmp9
+	tmp6 = tmp6
+	this.Body = tmp6
 	return err
 }
 
@@ -177,98 +152,55 @@ func (this *RubyMarshal_Bignum) Read(io *kaitai.Stream, parent *RubyMarshal_Reco
  */
 
 /**
- * @see <a href="https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Struct">Source</a>
+ * @see <a href="https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Instance+Variables">Source</a>
  */
-type RubyMarshal_RubyStruct struct {
-	Name *RubyMarshal_Record
-	NumMembers *RubyMarshal_PackedInt
-	Members []*RubyMarshal_Pair
+type RubyMarshal_InstanceVar struct {
+	Obj *RubyMarshal_Record
+	NumVars *RubyMarshal_PackedInt
+	Vars []*RubyMarshal_Pair
 	_io *kaitai.Stream
 	_root *RubyMarshal
 	_parent *RubyMarshal_Record
 }
-func NewRubyMarshal_RubyStruct() *RubyMarshal_RubyStruct {
-	return &RubyMarshal_RubyStruct{
+func NewRubyMarshal_InstanceVar() *RubyMarshal_InstanceVar {
+	return &RubyMarshal_InstanceVar{
 	}
 }
 
-func (this *RubyMarshal_RubyStruct) Read(io *kaitai.Stream, parent *RubyMarshal_Record, root *RubyMarshal) (err error) {
+func (this RubyMarshal_InstanceVar) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *RubyMarshal_InstanceVar) Read(io *kaitai.Stream, parent *RubyMarshal_Record, root *RubyMarshal) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp10 := NewRubyMarshal_Record()
-	err = tmp10.Read(this._io, this, this._root)
+	tmp7 := NewRubyMarshal_Record()
+	err = tmp7.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Name = tmp10
-	tmp11 := NewRubyMarshal_PackedInt()
-	err = tmp11.Read(this._io, this, this._root)
+	this.Obj = tmp7
+	tmp8 := NewRubyMarshal_PackedInt()
+	err = tmp8.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.NumMembers = tmp11
-	tmp12, err := this.NumMembers.Value()
+	this.NumVars = tmp8
+	tmp9, err := this.NumVars.Value()
 	if err != nil {
 		return err
 	}
-	for i := 0; i < int(tmp12); i++ {
+	for i := 0; i < int(tmp9); i++ {
 		_ = i
-		tmp13 := NewRubyMarshal_Pair()
-		err = tmp13.Read(this._io, this, this._root)
+		tmp10 := NewRubyMarshal_Pair()
+		err = tmp10.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Members = append(this.Members, tmp13)
+		this.Vars = append(this.Vars, tmp10)
 	}
-	return err
-}
-
-/**
- * Symbol containing the name of the struct.
- */
-
-/**
- * Number of members in a struct
- */
-
-/**
- * @see <a href="https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Symbols+and+Byte+Sequence">Source</a>
- */
-type RubyMarshal_RubySymbol struct {
-	Len *RubyMarshal_PackedInt
-	Name string
-	_io *kaitai.Stream
-	_root *RubyMarshal
-	_parent *RubyMarshal_Record
-}
-func NewRubyMarshal_RubySymbol() *RubyMarshal_RubySymbol {
-	return &RubyMarshal_RubySymbol{
-	}
-}
-
-func (this *RubyMarshal_RubySymbol) Read(io *kaitai.Stream, parent *RubyMarshal_Record, root *RubyMarshal) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp14 := NewRubyMarshal_PackedInt()
-	err = tmp14.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Len = tmp14
-	tmp15, err := this.Len.Value()
-	if err != nil {
-		return err
-	}
-	tmp16, err := this._io.ReadBytes(int(tmp15))
-	if err != nil {
-		return err
-	}
-	tmp16 = tmp16
-	this.Name = string(tmp16)
 	return err
 }
 
@@ -306,7 +238,7 @@ type RubyMarshal_PackedInt struct {
 	Encoded2 uint8
 	_io *kaitai.Stream
 	_root *RubyMarshal
-	_parent interface{}
+	_parent kaitai.Struct
 	_f_isImmediate bool
 	isImmediate bool
 	_f_value bool
@@ -317,79 +249,83 @@ func NewRubyMarshal_PackedInt() *RubyMarshal_PackedInt {
 	}
 }
 
-func (this *RubyMarshal_PackedInt) Read(io *kaitai.Stream, parent interface{}, root *RubyMarshal) (err error) {
+func (this RubyMarshal_PackedInt) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *RubyMarshal_PackedInt) Read(io *kaitai.Stream, parent kaitai.Struct, root *RubyMarshal) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp17, err := this._io.ReadU1()
+	tmp11, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Code = tmp17
+	this.Code = tmp11
 	switch (this.Code) {
-	case 4:
-		tmp18, err := this._io.ReadU4le()
+	case 1:
+		tmp12, err := this._io.ReadU1()
+		if err != nil {
+			return err
+		}
+		this.Encoded = uint32(tmp12)
+	case 2:
+		tmp13, err := this._io.ReadU2le()
+		if err != nil {
+			return err
+		}
+		this.Encoded = uint32(tmp13)
+	case 252:
+		tmp14, err := this._io.ReadU4le()
+		if err != nil {
+			return err
+		}
+		this.Encoded = uint32(tmp14)
+	case 253:
+		tmp15, err := this._io.ReadU2le()
+		if err != nil {
+			return err
+		}
+		this.Encoded = uint32(tmp15)
+	case 254:
+		tmp16, err := this._io.ReadU2le()
+		if err != nil {
+			return err
+		}
+		this.Encoded = uint32(tmp16)
+	case 255:
+		tmp17, err := this._io.ReadU1()
+		if err != nil {
+			return err
+		}
+		this.Encoded = uint32(tmp17)
+	case 3:
+		tmp18, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Encoded = uint32(tmp18)
-	case 1:
-		tmp19, err := this._io.ReadU1()
+	case 4:
+		tmp19, err := this._io.ReadU4le()
 		if err != nil {
 			return err
 		}
 		this.Encoded = uint32(tmp19)
-	case 252:
-		tmp20, err := this._io.ReadU4le()
-		if err != nil {
-			return err
-		}
-		this.Encoded = uint32(tmp20)
-	case 253:
-		tmp21, err := this._io.ReadU2le()
-		if err != nil {
-			return err
-		}
-		this.Encoded = uint32(tmp21)
-	case 3:
-		tmp22, err := this._io.ReadU2le()
-		if err != nil {
-			return err
-		}
-		this.Encoded = uint32(tmp22)
-	case 2:
-		tmp23, err := this._io.ReadU2le()
-		if err != nil {
-			return err
-		}
-		this.Encoded = uint32(tmp23)
-	case 255:
-		tmp24, err := this._io.ReadU1()
-		if err != nil {
-			return err
-		}
-		this.Encoded = uint32(tmp24)
-	case 254:
-		tmp25, err := this._io.ReadU2le()
-		if err != nil {
-			return err
-		}
-		this.Encoded = uint32(tmp25)
 	}
 	switch (this.Code) {
-	case 3:
-		tmp26, err := this._io.ReadU1()
-		if err != nil {
-			return err
-		}
-		this.Encoded2 = tmp26
 	case 253:
-		tmp27, err := this._io.ReadU1()
+		tmp20, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
-		this.Encoded2 = tmp27
+		this.Encoded2 = tmp20
+	case 3:
+		tmp21, err := this._io.ReadU1()
+		if err != nil {
+			return err
+		}
+		this.Encoded2 = tmp21
 	}
 	return err
 }
@@ -397,62 +333,62 @@ func (this *RubyMarshal_PackedInt) IsImmediate() (v bool, err error) {
 	if (this._f_isImmediate) {
 		return this.isImmediate, nil
 	}
-	this.isImmediate = bool( ((this.Code > 4) && (this.Code < 252)) )
 	this._f_isImmediate = true
+	this.isImmediate = bool( ((this.Code > 4) && (this.Code < 252)) )
 	return this.isImmediate, nil
 }
 func (this *RubyMarshal_PackedInt) Value() (v int, err error) {
 	if (this._f_value) {
 		return this.value, nil
 	}
-	var tmp28 int;
-	tmp29, err := this.IsImmediate()
+	this._f_value = true
+	var tmp22 int;
+	tmp23, err := this.IsImmediate()
 	if err != nil {
 		return 0, err
 	}
-	if (tmp29) {
-		var tmp30 int;
+	if (tmp23) {
+		var tmp24 int;
 		if (this.Code < 128) {
-			tmp30 = (this.Code - 5)
+			tmp24 = this.Code - 5
 		} else {
-			tmp30 = (4 - (^(this.Code) & 127))
+			tmp24 = 4 - ^(this.Code) & 127
 		}
-		tmp28 = tmp30
+		tmp22 = tmp24
 	} else {
-		var tmp31 int8;
+		var tmp25 int8;
 		if (this.Code == 0) {
-			tmp31 = 0
+			tmp25 = 0
 		} else {
-			var tmp32 int;
+			var tmp26 int;
 			if (this.Code == 255) {
-				tmp32 = (this.Encoded - 256)
+				tmp26 = this.Encoded - 256
 			} else {
-				var tmp33 int;
+				var tmp27 int;
 				if (this.Code == 254) {
-					tmp33 = (this.Encoded - 65536)
+					tmp27 = this.Encoded - 65536
 				} else {
-					var tmp34 int;
+					var tmp28 int;
 					if (this.Code == 253) {
-						tmp34 = (((this.Encoded2 << 16) | this.Encoded) - 16777216)
+						tmp28 = (this.Encoded2 << 16 | this.Encoded) - 16777216
 					} else {
-						var tmp35 int;
+						var tmp29 int;
 						if (this.Code == 3) {
-							tmp35 = ((this.Encoded2 << 16) | this.Encoded)
+							tmp29 = this.Encoded2 << 16 | this.Encoded
 						} else {
-							tmp35 = this.Encoded
+							tmp29 = this.Encoded
 						}
-						tmp34 = tmp35
+						tmp28 = tmp29
 					}
-					tmp33 = tmp34
+					tmp27 = tmp28
 				}
-				tmp32 = tmp33
+				tmp26 = tmp27
 			}
-			tmp31 = tmp32
+			tmp25 = tmp26
 		}
-		tmp28 = tmp31
+		tmp22 = tmp25
 	}
-	this.value = int(tmp28)
-	this._f_value = true
+	this.value = int(tmp22)
 	return this.value, nil
 }
 
@@ -465,79 +401,34 @@ type RubyMarshal_Pair struct {
 	Value *RubyMarshal_Record
 	_io *kaitai.Stream
 	_root *RubyMarshal
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewRubyMarshal_Pair() *RubyMarshal_Pair {
 	return &RubyMarshal_Pair{
 	}
 }
 
-func (this *RubyMarshal_Pair) Read(io *kaitai.Stream, parent interface{}, root *RubyMarshal) (err error) {
+func (this RubyMarshal_Pair) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *RubyMarshal_Pair) Read(io *kaitai.Stream, parent kaitai.Struct, root *RubyMarshal) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp36 := NewRubyMarshal_Record()
-	err = tmp36.Read(this._io, this, this._root)
+	tmp30 := NewRubyMarshal_Record()
+	err = tmp30.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Key = tmp36
-	tmp37 := NewRubyMarshal_Record()
-	err = tmp37.Read(this._io, this, this._root)
+	this.Key = tmp30
+	tmp31 := NewRubyMarshal_Record()
+	err = tmp31.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Value = tmp37
-	return err
-}
-
-/**
- * @see <a href="https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Instance+Variables">Source</a>
- */
-type RubyMarshal_InstanceVar struct {
-	Obj *RubyMarshal_Record
-	NumVars *RubyMarshal_PackedInt
-	Vars []*RubyMarshal_Pair
-	_io *kaitai.Stream
-	_root *RubyMarshal
-	_parent *RubyMarshal_Record
-}
-func NewRubyMarshal_InstanceVar() *RubyMarshal_InstanceVar {
-	return &RubyMarshal_InstanceVar{
-	}
-}
-
-func (this *RubyMarshal_InstanceVar) Read(io *kaitai.Stream, parent *RubyMarshal_Record, root *RubyMarshal) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp38 := NewRubyMarshal_Record()
-	err = tmp38.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Obj = tmp38
-	tmp39 := NewRubyMarshal_PackedInt()
-	err = tmp39.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.NumVars = tmp39
-	tmp40, err := this.NumVars.Value()
-	if err != nil {
-		return err
-	}
-	for i := 0; i < int(tmp40); i++ {
-		_ = i
-		tmp41 := NewRubyMarshal_Pair()
-		err = tmp41.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Vars = append(this.Vars, tmp41)
-	}
+	this.Value = tmp31
 	return err
 }
 
@@ -548,97 +439,143 @@ func (this *RubyMarshal_InstanceVar) Read(io *kaitai.Stream, parent *RubyMarshal
  */
 type RubyMarshal_Record struct {
 	Code RubyMarshal_Codes
-	Body interface{}
+	Body kaitai.Struct
 	_io *kaitai.Stream
 	_root *RubyMarshal
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewRubyMarshal_Record() *RubyMarshal_Record {
 	return &RubyMarshal_Record{
 	}
 }
 
-func (this *RubyMarshal_Record) Read(io *kaitai.Stream, parent interface{}, root *RubyMarshal) (err error) {
+func (this RubyMarshal_Record) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *RubyMarshal_Record) Read(io *kaitai.Stream, parent kaitai.Struct, root *RubyMarshal) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp42, err := this._io.ReadU1()
+	tmp32, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Code = RubyMarshal_Codes(tmp42)
+	this.Code = RubyMarshal_Codes(tmp32)
 	switch (this.Code) {
-	case RubyMarshal_Codes__PackedInt:
-		tmp43 := NewRubyMarshal_PackedInt()
-		err = tmp43.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp43
 	case RubyMarshal_Codes__Bignum:
-		tmp44 := NewRubyMarshal_Bignum()
-		err = tmp44.Read(this._io, this, this._root)
+		tmp33 := NewRubyMarshal_Bignum()
+		err = tmp33.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Body = tmp44
+		this.Body = tmp33
+	case RubyMarshal_Codes__InstanceVar:
+		tmp34 := NewRubyMarshal_InstanceVar()
+		err = tmp34.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp34
+	case RubyMarshal_Codes__PackedInt:
+		tmp35 := NewRubyMarshal_PackedInt()
+		err = tmp35.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp35
 	case RubyMarshal_Codes__RubyArray:
-		tmp45 := NewRubyMarshal_RubyArray()
+		tmp36 := NewRubyMarshal_RubyArray()
+		err = tmp36.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp36
+	case RubyMarshal_Codes__RubyHash:
+		tmp37 := NewRubyMarshal_RubyHash()
+		err = tmp37.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp37
+	case RubyMarshal_Codes__RubyObjectLink:
+		tmp38 := NewRubyMarshal_PackedInt()
+		err = tmp38.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp38
+	case RubyMarshal_Codes__RubyString:
+		tmp39 := NewRubyMarshal_RubyString()
+		err = tmp39.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp39
+	case RubyMarshal_Codes__RubyStruct:
+		tmp40 := NewRubyMarshal_RubyStruct()
+		err = tmp40.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp40
+	case RubyMarshal_Codes__RubySymbol:
+		tmp41 := NewRubyMarshal_RubySymbol()
+		err = tmp41.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp41
+	case RubyMarshal_Codes__RubySymbolLink:
+		tmp42 := NewRubyMarshal_PackedInt()
+		err = tmp42.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp42
+	}
+	return err
+}
+type RubyMarshal_RubyArray struct {
+	NumElements *RubyMarshal_PackedInt
+	Elements []*RubyMarshal_Record
+	_io *kaitai.Stream
+	_root *RubyMarshal
+	_parent *RubyMarshal_Record
+}
+func NewRubyMarshal_RubyArray() *RubyMarshal_RubyArray {
+	return &RubyMarshal_RubyArray{
+	}
+}
+
+func (this RubyMarshal_RubyArray) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *RubyMarshal_RubyArray) Read(io *kaitai.Stream, parent *RubyMarshal_Record, root *RubyMarshal) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp43 := NewRubyMarshal_PackedInt()
+	err = tmp43.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.NumElements = tmp43
+	tmp44, err := this.NumElements.Value()
+	if err != nil {
+		return err
+	}
+	for i := 0; i < int(tmp44); i++ {
+		_ = i
+		tmp45 := NewRubyMarshal_Record()
 		err = tmp45.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Body = tmp45
-	case RubyMarshal_Codes__RubySymbolLink:
-		tmp46 := NewRubyMarshal_PackedInt()
-		err = tmp46.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp46
-	case RubyMarshal_Codes__RubyStruct:
-		tmp47 := NewRubyMarshal_RubyStruct()
-		err = tmp47.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp47
-	case RubyMarshal_Codes__RubyString:
-		tmp48 := NewRubyMarshal_RubyString()
-		err = tmp48.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp48
-	case RubyMarshal_Codes__InstanceVar:
-		tmp49 := NewRubyMarshal_InstanceVar()
-		err = tmp49.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp49
-	case RubyMarshal_Codes__RubyHash:
-		tmp50 := NewRubyMarshal_RubyHash()
-		err = tmp50.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp50
-	case RubyMarshal_Codes__RubySymbol:
-		tmp51 := NewRubyMarshal_RubySymbol()
-		err = tmp51.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp51
-	case RubyMarshal_Codes__RubyObjectLink:
-		tmp52 := NewRubyMarshal_PackedInt()
-		err = tmp52.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp52
+		this.Elements = append(this.Elements, tmp45)
 	}
 	return err
 }
@@ -658,29 +595,33 @@ func NewRubyMarshal_RubyHash() *RubyMarshal_RubyHash {
 	}
 }
 
+func (this RubyMarshal_RubyHash) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *RubyMarshal_RubyHash) Read(io *kaitai.Stream, parent *RubyMarshal_Record, root *RubyMarshal) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp53 := NewRubyMarshal_PackedInt()
-	err = tmp53.Read(this._io, this, this._root)
+	tmp46 := NewRubyMarshal_PackedInt()
+	err = tmp46.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.NumPairs = tmp53
-	tmp54, err := this.NumPairs.Value()
+	this.NumPairs = tmp46
+	tmp47, err := this.NumPairs.Value()
 	if err != nil {
 		return err
 	}
-	for i := 0; i < int(tmp54); i++ {
+	for i := 0; i < int(tmp47); i++ {
 		_ = i
-		tmp55 := NewRubyMarshal_Pair()
-		err = tmp55.Read(this._io, this, this._root)
+		tmp48 := NewRubyMarshal_Pair()
+		err = tmp48.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Pairs = append(this.Pairs, tmp55)
+		this.Pairs = append(this.Pairs, tmp48)
 	}
 	return err
 }
@@ -700,7 +641,115 @@ func NewRubyMarshal_RubyString() *RubyMarshal_RubyString {
 	}
 }
 
+func (this RubyMarshal_RubyString) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *RubyMarshal_RubyString) Read(io *kaitai.Stream, parent *RubyMarshal_Record, root *RubyMarshal) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp49 := NewRubyMarshal_PackedInt()
+	err = tmp49.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Len = tmp49
+	tmp50, err := this.Len.Value()
+	if err != nil {
+		return err
+	}
+	tmp51, err := this._io.ReadBytes(int(tmp50))
+	if err != nil {
+		return err
+	}
+	tmp51 = tmp51
+	this.Body = tmp51
+	return err
+}
+
+/**
+ * @see <a href="https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Struct">Source</a>
+ */
+type RubyMarshal_RubyStruct struct {
+	Name *RubyMarshal_Record
+	NumMembers *RubyMarshal_PackedInt
+	Members []*RubyMarshal_Pair
+	_io *kaitai.Stream
+	_root *RubyMarshal
+	_parent *RubyMarshal_Record
+}
+func NewRubyMarshal_RubyStruct() *RubyMarshal_RubyStruct {
+	return &RubyMarshal_RubyStruct{
+	}
+}
+
+func (this RubyMarshal_RubyStruct) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *RubyMarshal_RubyStruct) Read(io *kaitai.Stream, parent *RubyMarshal_Record, root *RubyMarshal) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp52 := NewRubyMarshal_Record()
+	err = tmp52.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Name = tmp52
+	tmp53 := NewRubyMarshal_PackedInt()
+	err = tmp53.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.NumMembers = tmp53
+	tmp54, err := this.NumMembers.Value()
+	if err != nil {
+		return err
+	}
+	for i := 0; i < int(tmp54); i++ {
+		_ = i
+		tmp55 := NewRubyMarshal_Pair()
+		err = tmp55.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Members = append(this.Members, tmp55)
+	}
+	return err
+}
+
+/**
+ * Symbol containing the name of the struct.
+ */
+
+/**
+ * Number of members in a struct
+ */
+
+/**
+ * @see <a href="https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Symbols+and+Byte+Sequence">Source</a>
+ */
+type RubyMarshal_RubySymbol struct {
+	Len *RubyMarshal_PackedInt
+	Name string
+	_io *kaitai.Stream
+	_root *RubyMarshal
+	_parent *RubyMarshal_Record
+}
+func NewRubyMarshal_RubySymbol() *RubyMarshal_RubySymbol {
+	return &RubyMarshal_RubySymbol{
+	}
+}
+
+func (this RubyMarshal_RubySymbol) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *RubyMarshal_RubySymbol) Read(io *kaitai.Stream, parent *RubyMarshal_Record, root *RubyMarshal) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -720,6 +769,6 @@ func (this *RubyMarshal_RubyString) Read(io *kaitai.Stream, parent *RubyMarshal_
 		return err
 	}
 	tmp58 = tmp58
-	this.Body = tmp58
+	this.Name = string(tmp58)
 	return err
 }

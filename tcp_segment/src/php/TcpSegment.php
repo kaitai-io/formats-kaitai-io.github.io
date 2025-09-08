@@ -10,8 +10,8 @@
 
 namespace {
     class TcpSegment extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \TcpSegment $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\TcpSegment $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -27,8 +27,8 @@ namespace {
             $this->_m_windowSize = $this->_io->readU2be();
             $this->_m_checksum = $this->_io->readU2be();
             $this->_m_urgentPointer = $this->_io->readU2be();
-            if ((($this->dataOffset() * 4) - 20) != 0) {
-                $this->_m_options = $this->_io->readBytes((($this->dataOffset() * 4) - 20));
+            if ($this->dataOffset() * 4 - 20 != 0) {
+                $this->_m_options = $this->_io->readBytes($this->dataOffset() * 4 - 20);
             }
             $this->_m_body = $this->_io->readBytesFull();
         }
@@ -85,7 +85,7 @@ namespace {
 
 namespace TcpSegment {
     class Flags extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \TcpSegment $_parent = null, \TcpSegment $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\TcpSegment $_parent = null, ?\TcpSegment $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -148,5 +148,9 @@ namespace TcpSegment {
          * No more data from sender
          */
         public function fin() { return $this->_m_fin; }
+
+        public function __toString() {
+            return ((((((($this->cwr() ? "|CWR" : "") . ($this->ece() ? "|ECE" : "")) . ($this->urg() ? "|URG" : "")) . ($this->ack() ? "|ACK" : "")) . ($this->psh() ? "|PSH" : "")) . ($this->rst() ? "|RST" : "")) . ($this->syn() ? "|SYN" : "")) . ($this->fin() ? "|FIN" : "");
+        }
     }
 }

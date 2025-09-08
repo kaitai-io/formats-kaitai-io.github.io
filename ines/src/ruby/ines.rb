@@ -2,63 +2,98 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
 ##
 # @see https://www.nesdev.org/wiki/INES Source
 class Ines < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
-    @_raw_header = @_io.read_bytes(16)
-    _io__raw_header = Kaitai::Struct::Stream.new(@_raw_header)
-    @header = Header.new(_io__raw_header, self, @_root)
+    _io_header = @_io.substream(16)
+    @header = Header.new(_io_header, self, @_root)
     if header.f6.trainer
       @trainer = @_io.read_bytes(512)
     end
-    @prg_rom = @_io.read_bytes((header.len_prg_rom * 16384))
-    @chr_rom = @_io.read_bytes((header.len_chr_rom * 8192))
+    @prg_rom = @_io.read_bytes(header.len_prg_rom * 16384)
+    @chr_rom = @_io.read_bytes(header.len_chr_rom * 8192)
     if header.f7.playchoice10
       @playchoice10 = Playchoice10.new(@_io, self, @_root)
     end
     if !(_io.eof?)
-      @title = (@_io.read_bytes_full).force_encoding("ASCII")
+      @title = (@_io.read_bytes_full).force_encoding("ASCII").encode('UTF-8')
     end
     self
   end
   class Header < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
       @magic = @_io.read_bytes(4)
-      raise Kaitai::Struct::ValidationNotEqualError.new([78, 69, 83, 26].pack('C*'), magic, _io, "/types/header/seq/0") if not magic == [78, 69, 83, 26].pack('C*')
+      raise Kaitai::Struct::ValidationNotEqualError.new([78, 69, 83, 26].pack('C*'), @magic, @_io, "/types/header/seq/0") if not @magic == [78, 69, 83, 26].pack('C*')
       @len_prg_rom = @_io.read_u1
       @len_chr_rom = @_io.read_u1
-      @_raw_f6 = @_io.read_bytes(1)
-      _io__raw_f6 = Kaitai::Struct::Stream.new(@_raw_f6)
-      @f6 = F6.new(_io__raw_f6, self, @_root)
-      @_raw_f7 = @_io.read_bytes(1)
-      _io__raw_f7 = Kaitai::Struct::Stream.new(@_raw_f7)
-      @f7 = F7.new(_io__raw_f7, self, @_root)
+      _io_f6 = @_io.substream(1)
+      @f6 = F6.new(_io_f6, self, @_root)
+      _io_f7 = @_io.substream(1)
+      @f7 = F7.new(_io_f7, self, @_root)
       @len_prg_ram = @_io.read_u1
-      @_raw_f9 = @_io.read_bytes(1)
-      _io__raw_f9 = Kaitai::Struct::Stream.new(@_raw_f9)
-      @f9 = F9.new(_io__raw_f9, self, @_root)
-      @_raw_f10 = @_io.read_bytes(1)
-      _io__raw_f10 = Kaitai::Struct::Stream.new(@_raw_f10)
-      @f10 = F10.new(_io__raw_f10, self, @_root)
+      _io_f9 = @_io.substream(1)
+      @f9 = F9.new(_io_f9, self, @_root)
+      _io_f10 = @_io.substream(1)
+      @f10 = F10.new(_io_f10, self, @_root)
       @reserved = @_io.read_bytes(5)
-      raise Kaitai::Struct::ValidationNotEqualError.new([0, 0, 0, 0, 0].pack('C*'), reserved, _io, "/types/header/seq/8") if not reserved == [0, 0, 0, 0, 0].pack('C*')
+      raise Kaitai::Struct::ValidationNotEqualError.new([0, 0, 0, 0, 0].pack('C*'), @reserved, @_io, "/types/header/seq/8") if not @reserved == [0, 0, 0, 0, 0].pack('C*')
       self
+    end
+
+    ##
+    # @see https://www.nesdev.org/wiki/INES#Flags_10 Source
+    class F10 < Kaitai::Struct::Struct
+
+      TV_SYSTEM = {
+        0 => :tv_system_ntsc,
+        1 => :tv_system_dual1,
+        2 => :tv_system_pal,
+        3 => :tv_system_dual2,
+      }
+      I__TV_SYSTEM = TV_SYSTEM.invert
+      def initialize(_io, _parent = nil, _root = nil)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        @reserved1 = @_io.read_bits_int_be(2)
+        @bus_conflict = @_io.read_bits_int_be(1) != 0
+        @prg_ram = @_io.read_bits_int_be(1) != 0
+        @reserved2 = @_io.read_bits_int_be(2)
+        @tv_system = Kaitai::Struct::Stream::resolve_enum(TV_SYSTEM, @_io.read_bits_int_be(2))
+        self
+      end
+      attr_reader :reserved1
+
+      ##
+      # If 0, no bus conflicts. If 1, bus conflicts.
+      attr_reader :bus_conflict
+
+      ##
+      # If 0, PRG ram is present. If 1, not present.
+      attr_reader :prg_ram
+      attr_reader :reserved2
+
+      ##
+      # if 0, NTSC. If 2, PAL. If 1 or 3, dual compatible.
+      attr_reader :tv_system
     end
 
     ##
@@ -70,7 +105,7 @@ class Ines < Kaitai::Struct::Struct
         1 => :mirroring_vertical,
       }
       I__MIRRORING = MIRRORING.invert
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
@@ -108,7 +143,7 @@ class Ines < Kaitai::Struct::Struct
     ##
     # @see https://www.nesdev.org/wiki/INES#Flags_7 Source
     class F7 < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
@@ -147,7 +182,7 @@ class Ines < Kaitai::Struct::Struct
         1 => :tv_system_pal,
       }
       I__TV_SYSTEM = TV_SYSTEM.invert
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
@@ -165,50 +200,10 @@ class Ines < Kaitai::Struct::Struct
     end
 
     ##
-    # @see https://www.nesdev.org/wiki/INES#Flags_10 Source
-    class F10 < Kaitai::Struct::Struct
-
-      TV_SYSTEM = {
-        0 => :tv_system_ntsc,
-        1 => :tv_system_dual1,
-        2 => :tv_system_pal,
-        3 => :tv_system_dual2,
-      }
-      I__TV_SYSTEM = TV_SYSTEM.invert
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
-
-      def _read
-        @reserved1 = @_io.read_bits_int_be(2)
-        @bus_conflict = @_io.read_bits_int_be(1) != 0
-        @prg_ram = @_io.read_bits_int_be(1) != 0
-        @reserved2 = @_io.read_bits_int_be(2)
-        @tv_system = Kaitai::Struct::Stream::resolve_enum(TV_SYSTEM, @_io.read_bits_int_be(2))
-        self
-      end
-      attr_reader :reserved1
-
-      ##
-      # If 0, no bus conflicts. If 1, bus conflicts.
-      attr_reader :bus_conflict
-
-      ##
-      # If 0, PRG ram is present. If 1, not present.
-      attr_reader :prg_ram
-      attr_reader :reserved2
-
-      ##
-      # if 0, NTSC. If 2, PAL. If 1 or 3, dual compatible.
-      attr_reader :tv_system
-    end
-
-    ##
     # @see https://www.nesdev.org/wiki/Mapper Source
     def mapper
       return @mapper unless @mapper.nil?
-      @mapper = (f6.lower_mapper | (f7.upper_mapper << 4))
+      @mapper = f6.lower_mapper | f7.upper_mapper << 4
       @mapper
     end
     attr_reader :magic
@@ -241,7 +236,7 @@ class Ines < Kaitai::Struct::Struct
   ##
   # @see https://www.nesdev.org/wiki/PC10_ROM-Images Source
   class Playchoice10 < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -252,7 +247,7 @@ class Ines < Kaitai::Struct::Struct
       self
     end
     class Prom < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end

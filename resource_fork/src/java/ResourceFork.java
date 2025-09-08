@@ -5,6 +5,7 @@ import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -72,6 +73,69 @@ public class ResourceFork extends KaitaiStruct {
         this.applicationData = this._io.readBytes(128);
     }
 
+    public void _fetchInstances() {
+        this.header._fetchInstances();
+        dataBlocksWithIo();
+        if (this.dataBlocksWithIo != null) {
+            this.dataBlocksWithIo._fetchInstances();
+        }
+        resourceMap();
+        if (this.resourceMap != null) {
+            this.resourceMap._fetchInstances();
+        }
+    }
+
+    /**
+     * A resource data block,
+     * as stored in the resource data area.
+     * 
+     * Each data block stores the data contained in a resource,
+     * along with its length.
+     */
+    public static class DataBlock extends KaitaiStruct {
+        public static DataBlock fromFile(String fileName) throws IOException {
+            return new DataBlock(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public DataBlock(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public DataBlock(KaitaiStream _io, ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList.Reference _parent) {
+            this(_io, _parent, null);
+        }
+
+        public DataBlock(KaitaiStream _io, ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList.Reference _parent, ResourceFork _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.lenData = this._io.readU4be();
+            this.data = this._io.readBytes(lenData());
+        }
+
+        public void _fetchInstances() {
+        }
+        private long lenData;
+        private byte[] data;
+        private ResourceFork _root;
+        private ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList.Reference _parent;
+
+        /**
+         * The length of the resource data stored in this block.
+         */
+        public long lenData() { return lenData; }
+
+        /**
+         * The data stored in this block.
+         */
+        public byte[] data() { return data; }
+        public ResourceFork _root() { return _root; }
+        public ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList.Reference _parent() { return _parent; }
+    }
+
     /**
      * Resource file header,
      * containing the offsets and lengths of the resource data area and resource map.
@@ -100,6 +164,9 @@ public class ResourceFork extends KaitaiStruct {
             this.ofsResourceMap = this._io.readU4be();
             this.lenDataBlocks = this._io.readU4be();
             this.lenResourceMap = this._io.readU4be();
+        }
+
+        public void _fetchInstances() {
         }
         private long ofsDataBlocks;
         private long ofsResourceMap;
@@ -146,54 +213,6 @@ public class ResourceFork extends KaitaiStruct {
     }
 
     /**
-     * A resource data block,
-     * as stored in the resource data area.
-     * 
-     * Each data block stores the data contained in a resource,
-     * along with its length.
-     */
-    public static class DataBlock extends KaitaiStruct {
-        public static DataBlock fromFile(String fileName) throws IOException {
-            return new DataBlock(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public DataBlock(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public DataBlock(KaitaiStream _io, ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList.Reference _parent) {
-            this(_io, _parent, null);
-        }
-
-        public DataBlock(KaitaiStream _io, ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList.Reference _parent, ResourceFork _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.lenData = this._io.readU4be();
-            this.data = this._io.readBytes(lenData());
-        }
-        private long lenData;
-        private byte[] data;
-        private ResourceFork _root;
-        private ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList.Reference _parent;
-
-        /**
-         * The length of the resource data stored in this block.
-         */
-        public long lenData() { return lenData; }
-
-        /**
-         * The data stored in this block.
-         */
-        public byte[] data() { return data; }
-        public ResourceFork _root() { return _root; }
-        public ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList.Reference _parent() { return _parent; }
-    }
-
-    /**
      * Resource map,
      * containing information about the resources in the file and where they are located in the data area.
      */
@@ -220,11 +239,23 @@ public class ResourceFork extends KaitaiStruct {
             this.reservedFileHeaderCopy = new FileHeader(this._io, this, _root);
             this.reservedNextResourceMapHandle = this._io.readU4be();
             this.reservedFileReferenceNumber = this._io.readU2be();
-            this._raw_fileAttributes = this._io.readBytes(2);
-            KaitaiStream _io__raw_fileAttributes = new ByteBufferKaitaiStream(_raw_fileAttributes);
-            this.fileAttributes = new FileAttributes(_io__raw_fileAttributes, this, _root);
+            KaitaiStream _io_fileAttributes = this._io.substream(2);
+            this.fileAttributes = new FileAttributes(_io_fileAttributes, this, _root);
             this.ofsTypeList = this._io.readU2be();
             this.ofsNames = this._io.readU2be();
+        }
+
+        public void _fetchInstances() {
+            this.reservedFileHeaderCopy._fetchInstances();
+            this.fileAttributes._fetchInstances();
+            namesWithIo();
+            if (this.namesWithIo != null) {
+                this.namesWithIo._fetchInstances();
+            }
+            typeListAndReferenceLists();
+            if (this.typeListAndReferenceLists != null) {
+                this.typeListAndReferenceLists._fetchInstances();
+            }
         }
 
         /**
@@ -261,6 +292,12 @@ public class ResourceFork extends KaitaiStruct {
                 this.needsCompact = this._io.readBitsIntBe(1) != 0;
                 this.mapNeedsWrite = this._io.readBitsIntBe(1) != 0;
                 this.reserved1 = this._io.readBitsIntBe(5);
+            }
+
+            public void _fetchInstances() {
+                asInt();
+                if (this.asInt != null) {
+                }
             }
             private Integer asInt;
 
@@ -351,6 +388,82 @@ public class ResourceFork extends KaitaiStruct {
         }
 
         /**
+         * A resource name,
+         * as stored in the resource name storage area in the resource map.
+         * 
+         * The resource names are not required to appear in any particular order.
+         * There may be unused space between and around resource names,
+         * but in practice they are often contiguous.
+         */
+        public static class Name extends KaitaiStruct {
+            public static Name fromFile(String fileName) throws IOException {
+                return new Name(new ByteBufferKaitaiStream(fileName));
+            }
+
+            public Name(KaitaiStream _io) {
+                this(_io, null, null);
+            }
+
+            public Name(KaitaiStream _io, ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList.Reference _parent) {
+                this(_io, _parent, null);
+            }
+
+            public Name(KaitaiStream _io, ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList.Reference _parent, ResourceFork _root) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                _read();
+            }
+            private void _read() {
+                this.lenValue = this._io.readU1();
+                this.value = this._io.readBytes(lenValue());
+            }
+
+            public void _fetchInstances() {
+            }
+            private int lenValue;
+            private byte[] value;
+            private ResourceFork _root;
+            private ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList.Reference _parent;
+
+            /**
+             * The length of the resource name, in bytes.
+             */
+            public int lenValue() { return lenValue; }
+
+            /**
+             * The resource name.
+             * 
+             * This field is exposed as a byte array,
+             * because there is no universal encoding for resource names.
+             * Most Classic Mac software does not deal with encodings explicitly and instead assumes that all strings,
+             * including resource names,
+             * use the system encoding,
+             * which varies depending on the system language.
+             * This means that resource names can use different encodings depending on what system language they were created with.
+             * 
+             * Many resource names are plain ASCII,
+             * meaning that the encoding often does not matter
+             * (because all Mac OS encodings are ASCII-compatible).
+             * For non-ASCII resource names,
+             * the most common encoding is perhaps MacRoman
+             * (used for English and other Western languages),
+             * but other encodings are also sometimes used,
+             * especially for software in non-Western languages.
+             * 
+             * There is no requirement that all names in a single resource file use the same encoding.
+             * For example,
+             * localized software may have some (but not all) of its resource names translated.
+             * For non-Western languages,
+             * this can lead to some resource names using MacRoman,
+             * and others using a different encoding.
+             */
+            public byte[] value() { return value; }
+            public ResourceFork _root() { return _root; }
+            public ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList.Reference _parent() { return _parent; }
+        }
+
+        /**
          * Resource type list and storage area for resource reference lists in the resource map.
          * 
          * The two parts are combined into a single type here for technical reasons:
@@ -382,158 +495,8 @@ public class ResourceFork extends KaitaiStruct {
                 this.referenceLists = this._io.readBytesFull();
             }
 
-            /**
-             * Resource type list in the resource map.
-             */
-            public static class TypeList extends KaitaiStruct {
-                public static TypeList fromFile(String fileName) throws IOException {
-                    return new TypeList(new ByteBufferKaitaiStream(fileName));
-                }
-
-                public TypeList(KaitaiStream _io) {
-                    this(_io, null, null);
-                }
-
-                public TypeList(KaitaiStream _io, ResourceFork.ResourceMap.TypeListAndReferenceLists _parent) {
-                    this(_io, _parent, null);
-                }
-
-                public TypeList(KaitaiStream _io, ResourceFork.ResourceMap.TypeListAndReferenceLists _parent, ResourceFork _root) {
-                    super(_io);
-                    this._parent = _parent;
-                    this._root = _root;
-                    _read();
-                }
-                private void _read() {
-                    this.numTypesM1 = this._io.readU2be();
-                    this.entries = new ArrayList<TypeListEntry>();
-                    for (int i = 0; i < numTypes(); i++) {
-                        this.entries.add(new TypeListEntry(this._io, this, _root));
-                    }
-                }
-
-                /**
-                 * A single entry in the resource type list.
-                 * 
-                 * Each entry corresponds to exactly one resource reference list.
-                 */
-                public static class TypeListEntry extends KaitaiStruct {
-                    public static TypeListEntry fromFile(String fileName) throws IOException {
-                        return new TypeListEntry(new ByteBufferKaitaiStream(fileName));
-                    }
-
-                    public TypeListEntry(KaitaiStream _io) {
-                        this(_io, null, null);
-                    }
-
-                    public TypeListEntry(KaitaiStream _io, ResourceFork.ResourceMap.TypeListAndReferenceLists.TypeList _parent) {
-                        this(_io, _parent, null);
-                    }
-
-                    public TypeListEntry(KaitaiStream _io, ResourceFork.ResourceMap.TypeListAndReferenceLists.TypeList _parent, ResourceFork _root) {
-                        super(_io);
-                        this._parent = _parent;
-                        this._root = _root;
-                        _read();
-                    }
-                    private void _read() {
-                        this.type = this._io.readBytes(4);
-                        this.numReferencesM1 = this._io.readU2be();
-                        this.ofsReferenceList = this._io.readU2be();
-                    }
-                    private Integer numReferences;
-
-                    /**
-                     * The number of resources in the reference list for this type.
-                     */
-                    public Integer numReferences() {
-                        if (this.numReferences != null)
-                            return this.numReferences;
-                        int _tmp = (int) (KaitaiStream.mod((numReferencesM1() + 1), 65536));
-                        this.numReferences = _tmp;
-                        return this.numReferences;
-                    }
-                    private ReferenceList referenceList;
-
-                    /**
-                     * The resource reference list for this resource type.
-                     */
-                    public ReferenceList referenceList() {
-                        if (this.referenceList != null)
-                            return this.referenceList;
-                        KaitaiStream io = _parent()._parent()._io();
-                        long _pos = io.pos();
-                        io.seek(ofsReferenceList());
-                        this.referenceList = new ReferenceList(io, this, _root, numReferences());
-                        io.seek(_pos);
-                        return this.referenceList;
-                    }
-                    private byte[] type;
-                    private int numReferencesM1;
-                    private int ofsReferenceList;
-                    private ResourceFork _root;
-                    private ResourceFork.ResourceMap.TypeListAndReferenceLists.TypeList _parent;
-
-                    /**
-                     * The four-character type code of the resources in the reference list.
-                     */
-                    public byte[] type() { return type; }
-
-                    /**
-                     * The number of resources in the reference list for this type,
-                     * minus one.
-                     * 
-                     * Empty reference lists should never exist.
-                     */
-                    public int numReferencesM1() { return numReferencesM1; }
-
-                    /**
-                     * Offset of the resource reference list for this resource type,
-                     * from the start of the resource type list.
-                     * 
-                     * Although the offset is relative to the start of the type list,
-                     * it should never point into the type list itself,
-                     * but into the reference list storage area that directly follows it.
-                     * That is,
-                     * it should always be at least `_parent._sizeof`.
-                     */
-                    public int ofsReferenceList() { return ofsReferenceList; }
-                    public ResourceFork _root() { return _root; }
-                    public ResourceFork.ResourceMap.TypeListAndReferenceLists.TypeList _parent() { return _parent; }
-                }
-                private Integer numTypes;
-
-                /**
-                 * The number of resource types in this list.
-                 */
-                public Integer numTypes() {
-                    if (this.numTypes != null)
-                        return this.numTypes;
-                    int _tmp = (int) (KaitaiStream.mod((numTypesM1() + 1), 65536));
-                    this.numTypes = _tmp;
-                    return this.numTypes;
-                }
-                private int numTypesM1;
-                private ArrayList<TypeListEntry> entries;
-                private ResourceFork _root;
-                private ResourceFork.ResourceMap.TypeListAndReferenceLists _parent;
-
-                /**
-                 * The number of resource types in this list,
-                 * minus one.
-                 * 
-                 * If the resource list is empty,
-                 * the value of this field is `0xffff`,
-                 * i. e. `-1` truncated to a 16-bit unsigned integer.
-                 */
-                public int numTypesM1() { return numTypesM1; }
-
-                /**
-                 * Entries in the resource type list.
-                 */
-                public ArrayList<TypeListEntry> entries() { return entries; }
-                public ResourceFork _root() { return _root; }
-                public ResourceFork.ResourceMap.TypeListAndReferenceLists _parent() { return _parent; }
+            public void _fetchInstances() {
+                this.typeList._fetchInstances();
             }
 
             /**
@@ -567,6 +530,12 @@ public class ResourceFork extends KaitaiStruct {
                     }
                 }
 
+                public void _fetchInstances() {
+                    for (int i = 0; i < this.references.size(); i++) {
+                        this.references.get(((Number) (i)).intValue())._fetchInstances();
+                    }
+                }
+
                 /**
                  * A single resource reference in a resource reference list.
                  */
@@ -592,12 +561,22 @@ public class ResourceFork extends KaitaiStruct {
                     private void _read() {
                         this.id = this._io.readS2be();
                         this.ofsName = this._io.readU2be();
-                        this._raw_attributes = this._io.readBytes(1);
-                        KaitaiStream _io__raw_attributes = new ByteBufferKaitaiStream(_raw_attributes);
-                        this.attributes = new Attributes(_io__raw_attributes, this, _root);
+                        KaitaiStream _io_attributes = this._io.substream(1);
+                        this.attributes = new Attributes(_io_attributes, this, _root);
                         this.ofsDataBlock = this._io.readBitsIntBe(24);
-                        this._io.alignToByte();
                         this.reservedHandle = this._io.readU4be();
+                    }
+
+                    public void _fetchInstances() {
+                        this.attributes._fetchInstances();
+                        dataBlock();
+                        if (this.dataBlock != null) {
+                            this.dataBlock._fetchInstances();
+                        }
+                        name();
+                        if (this.name != null) {
+                            this.name._fetchInstances();
+                        }
                     }
 
                     /**
@@ -632,6 +611,12 @@ public class ResourceFork extends KaitaiStruct {
                             this.preload = this._io.readBitsIntBe(1) != 0;
                             this.needsWrite = this._io.readBitsIntBe(1) != 0;
                             this.compressed = this._io.readBitsIntBe(1) != 0;
+                        }
+
+                        public void _fetchInstances() {
+                            asInt();
+                            if (this.asInt != null) {
+                            }
                         }
                         private Integer asInt;
 
@@ -767,6 +752,21 @@ public class ResourceFork extends KaitaiStruct {
                         public ResourceFork _root() { return _root; }
                         public ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList.Reference _parent() { return _parent; }
                     }
+                    private DataBlock dataBlock;
+
+                    /**
+                     * The data block containing the data for the resource described by this reference.
+                     */
+                    public DataBlock dataBlock() {
+                        if (this.dataBlock != null)
+                            return this.dataBlock;
+                        KaitaiStream io = _root().dataBlocksWithIo()._io();
+                        long _pos = io.pos();
+                        io.seek(ofsDataBlock());
+                        this.dataBlock = new DataBlock(io, this, _root);
+                        io.seek(_pos);
+                        return this.dataBlock;
+                    }
                     private Name name;
 
                     /**
@@ -784,21 +784,6 @@ public class ResourceFork extends KaitaiStruct {
                         }
                         return this.name;
                     }
-                    private DataBlock dataBlock;
-
-                    /**
-                     * The data block containing the data for the resource described by this reference.
-                     */
-                    public DataBlock dataBlock() {
-                        if (this.dataBlock != null)
-                            return this.dataBlock;
-                        KaitaiStream io = _root().dataBlocksWithIo()._io();
-                        long _pos = io.pos();
-                        io.seek(ofsDataBlock());
-                        this.dataBlock = new DataBlock(io, this, _root);
-                        io.seek(_pos);
-                        return this.dataBlock;
-                    }
                     private short id;
                     private int ofsName;
                     private Attributes attributes;
@@ -806,7 +791,6 @@ public class ResourceFork extends KaitaiStruct {
                     private long reservedHandle;
                     private ResourceFork _root;
                     private ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList _parent;
-                    private byte[] _raw_attributes;
 
                     /**
                      * ID of the resource described by this reference.
@@ -840,9 +824,8 @@ public class ResourceFork extends KaitaiStruct {
                     public long reservedHandle() { return reservedHandle; }
                     public ResourceFork _root() { return _root; }
                     public ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList _parent() { return _parent; }
-                    public byte[] _raw_attributes() { return _raw_attributes; }
                 }
-                private ArrayList<Reference> references;
+                private List<Reference> references;
                 private int numReferences;
                 private ResourceFork _root;
                 private ResourceFork.ResourceMap.TypeListAndReferenceLists.TypeList.TypeListEntry _parent;
@@ -850,7 +833,7 @@ public class ResourceFork extends KaitaiStruct {
                 /**
                  * The resource references in this reference list.
                  */
-                public ArrayList<Reference> references() { return references; }
+                public List<Reference> references() { return references; }
 
                 /**
                  * The number of references in this resource reference list.
@@ -862,6 +845,171 @@ public class ResourceFork extends KaitaiStruct {
                 public int numReferences() { return numReferences; }
                 public ResourceFork _root() { return _root; }
                 public ResourceFork.ResourceMap.TypeListAndReferenceLists.TypeList.TypeListEntry _parent() { return _parent; }
+            }
+
+            /**
+             * Resource type list in the resource map.
+             */
+            public static class TypeList extends KaitaiStruct {
+                public static TypeList fromFile(String fileName) throws IOException {
+                    return new TypeList(new ByteBufferKaitaiStream(fileName));
+                }
+
+                public TypeList(KaitaiStream _io) {
+                    this(_io, null, null);
+                }
+
+                public TypeList(KaitaiStream _io, ResourceFork.ResourceMap.TypeListAndReferenceLists _parent) {
+                    this(_io, _parent, null);
+                }
+
+                public TypeList(KaitaiStream _io, ResourceFork.ResourceMap.TypeListAndReferenceLists _parent, ResourceFork _root) {
+                    super(_io);
+                    this._parent = _parent;
+                    this._root = _root;
+                    _read();
+                }
+                private void _read() {
+                    this.numTypesM1 = this._io.readU2be();
+                    this.entries = new ArrayList<TypeListEntry>();
+                    for (int i = 0; i < numTypes(); i++) {
+                        this.entries.add(new TypeListEntry(this._io, this, _root));
+                    }
+                }
+
+                public void _fetchInstances() {
+                    for (int i = 0; i < this.entries.size(); i++) {
+                        this.entries.get(((Number) (i)).intValue())._fetchInstances();
+                    }
+                }
+
+                /**
+                 * A single entry in the resource type list.
+                 * 
+                 * Each entry corresponds to exactly one resource reference list.
+                 */
+                public static class TypeListEntry extends KaitaiStruct {
+                    public static TypeListEntry fromFile(String fileName) throws IOException {
+                        return new TypeListEntry(new ByteBufferKaitaiStream(fileName));
+                    }
+
+                    public TypeListEntry(KaitaiStream _io) {
+                        this(_io, null, null);
+                    }
+
+                    public TypeListEntry(KaitaiStream _io, ResourceFork.ResourceMap.TypeListAndReferenceLists.TypeList _parent) {
+                        this(_io, _parent, null);
+                    }
+
+                    public TypeListEntry(KaitaiStream _io, ResourceFork.ResourceMap.TypeListAndReferenceLists.TypeList _parent, ResourceFork _root) {
+                        super(_io);
+                        this._parent = _parent;
+                        this._root = _root;
+                        _read();
+                    }
+                    private void _read() {
+                        this.type = this._io.readBytes(4);
+                        this.numReferencesM1 = this._io.readU2be();
+                        this.ofsReferenceList = this._io.readU2be();
+                    }
+
+                    public void _fetchInstances() {
+                        referenceList();
+                        if (this.referenceList != null) {
+                            this.referenceList._fetchInstances();
+                        }
+                    }
+                    private Integer numReferences;
+
+                    /**
+                     * The number of resources in the reference list for this type.
+                     */
+                    public Integer numReferences() {
+                        if (this.numReferences != null)
+                            return this.numReferences;
+                        this.numReferences = ((Number) (KaitaiStream.mod(numReferencesM1() + 1, 65536))).intValue();
+                        return this.numReferences;
+                    }
+                    private ReferenceList referenceList;
+
+                    /**
+                     * The resource reference list for this resource type.
+                     */
+                    public ReferenceList referenceList() {
+                        if (this.referenceList != null)
+                            return this.referenceList;
+                        KaitaiStream io = _parent()._parent()._io();
+                        long _pos = io.pos();
+                        io.seek(ofsReferenceList());
+                        this.referenceList = new ReferenceList(io, this, _root, numReferences());
+                        io.seek(_pos);
+                        return this.referenceList;
+                    }
+                    private byte[] type;
+                    private int numReferencesM1;
+                    private int ofsReferenceList;
+                    private ResourceFork _root;
+                    private ResourceFork.ResourceMap.TypeListAndReferenceLists.TypeList _parent;
+
+                    /**
+                     * The four-character type code of the resources in the reference list.
+                     */
+                    public byte[] type() { return type; }
+
+                    /**
+                     * The number of resources in the reference list for this type,
+                     * minus one.
+                     * 
+                     * Empty reference lists should never exist.
+                     */
+                    public int numReferencesM1() { return numReferencesM1; }
+
+                    /**
+                     * Offset of the resource reference list for this resource type,
+                     * from the start of the resource type list.
+                     * 
+                     * Although the offset is relative to the start of the type list,
+                     * it should never point into the type list itself,
+                     * but into the reference list storage area that directly follows it.
+                     * That is,
+                     * it should always be at least `_parent._sizeof`.
+                     */
+                    public int ofsReferenceList() { return ofsReferenceList; }
+                    public ResourceFork _root() { return _root; }
+                    public ResourceFork.ResourceMap.TypeListAndReferenceLists.TypeList _parent() { return _parent; }
+                }
+                private Integer numTypes;
+
+                /**
+                 * The number of resource types in this list.
+                 */
+                public Integer numTypes() {
+                    if (this.numTypes != null)
+                        return this.numTypes;
+                    this.numTypes = ((Number) (KaitaiStream.mod(numTypesM1() + 1, 65536))).intValue();
+                    return this.numTypes;
+                }
+                private int numTypesM1;
+                private List<TypeListEntry> entries;
+                private ResourceFork _root;
+                private ResourceFork.ResourceMap.TypeListAndReferenceLists _parent;
+
+                /**
+                 * The number of resource types in this list,
+                 * minus one.
+                 * 
+                 * If the resource list is empty,
+                 * the value of this field is `0xffff`,
+                 * i. e. `-1` truncated to a 16-bit unsigned integer.
+                 */
+                public int numTypesM1() { return numTypesM1; }
+
+                /**
+                 * Entries in the resource type list.
+                 */
+                public List<TypeListEntry> entries() { return entries; }
+                public ResourceFork _root() { return _root; }
+                public ResourceFork.ResourceMap.TypeListAndReferenceLists _parent() { return _parent; }
             }
             private TypeList typeList;
             private byte[] referenceLists;
@@ -884,94 +1032,16 @@ public class ResourceFork extends KaitaiStruct {
             public ResourceFork _root() { return _root; }
             public ResourceFork.ResourceMap _parent() { return _parent; }
         }
+        private byte[] names;
 
         /**
-         * A resource name,
-         * as stored in the resource name storage area in the resource map.
-         * 
-         * The resource names are not required to appear in any particular order.
-         * There may be unused space between and around resource names,
-         * but in practice they are often contiguous.
+         * Storage area for the names of all resources.
          */
-        public static class Name extends KaitaiStruct {
-            public static Name fromFile(String fileName) throws IOException {
-                return new Name(new ByteBufferKaitaiStream(fileName));
-            }
-
-            public Name(KaitaiStream _io) {
-                this(_io, null, null);
-            }
-
-            public Name(KaitaiStream _io, ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList.Reference _parent) {
-                this(_io, _parent, null);
-            }
-
-            public Name(KaitaiStream _io, ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList.Reference _parent, ResourceFork _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.lenValue = this._io.readU1();
-                this.value = this._io.readBytes(lenValue());
-            }
-            private int lenValue;
-            private byte[] value;
-            private ResourceFork _root;
-            private ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList.Reference _parent;
-
-            /**
-             * The length of the resource name, in bytes.
-             */
-            public int lenValue() { return lenValue; }
-
-            /**
-             * The resource name.
-             * 
-             * This field is exposed as a byte array,
-             * because there is no universal encoding for resource names.
-             * Most Classic Mac software does not deal with encodings explicitly and instead assumes that all strings,
-             * including resource names,
-             * use the system encoding,
-             * which varies depending on the system language.
-             * This means that resource names can use different encodings depending on what system language they were created with.
-             * 
-             * Many resource names are plain ASCII,
-             * meaning that the encoding often does not matter
-             * (because all Mac OS encodings are ASCII-compatible).
-             * For non-ASCII resource names,
-             * the most common encoding is perhaps MacRoman
-             * (used for English and other Western languages),
-             * but other encodings are also sometimes used,
-             * especially for software in non-Western languages.
-             * 
-             * There is no requirement that all names in a single resource file use the same encoding.
-             * For example,
-             * localized software may have some (but not all) of its resource names translated.
-             * For non-Western languages,
-             * this can lead to some resource names using MacRoman,
-             * and others using a different encoding.
-             */
-            public byte[] value() { return value; }
-            public ResourceFork _root() { return _root; }
-            public ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList.Reference _parent() { return _parent; }
-        }
-        private TypeListAndReferenceLists typeListAndReferenceLists;
-
-        /**
-         * The resource map's resource type list, followed by the resource reference list area.
-         */
-        public TypeListAndReferenceLists typeListAndReferenceLists() {
-            if (this.typeListAndReferenceLists != null)
-                return this.typeListAndReferenceLists;
-            long _pos = this._io.pos();
-            this._io.seek(ofsTypeList());
-            this._raw_typeListAndReferenceLists = this._io.readBytes((ofsNames() - ofsTypeList()));
-            KaitaiStream _io__raw_typeListAndReferenceLists = new ByteBufferKaitaiStream(_raw_typeListAndReferenceLists);
-            this.typeListAndReferenceLists = new TypeListAndReferenceLists(_io__raw_typeListAndReferenceLists, this, _root);
-            this._io.seek(_pos);
-            return this.typeListAndReferenceLists;
+        public byte[] names() {
+            if (this.names != null)
+                return this.names;
+            this.names = namesWithIo().data();
+            return this.names;
         }
         private BytesWithIo namesWithIo;
 
@@ -985,21 +1055,25 @@ public class ResourceFork extends KaitaiStruct {
             long _pos = this._io.pos();
             this._io.seek(ofsNames());
             this._raw_namesWithIo = this._io.readBytesFull();
-            KaitaiStream _io__raw_namesWithIo = new ByteBufferKaitaiStream(_raw_namesWithIo);
+            KaitaiStream _io__raw_namesWithIo = new ByteBufferKaitaiStream(this._raw_namesWithIo);
             this.namesWithIo = new BytesWithIo(_io__raw_namesWithIo);
             this._io.seek(_pos);
             return this.namesWithIo;
         }
-        private byte[] names;
+        private TypeListAndReferenceLists typeListAndReferenceLists;
 
         /**
-         * Storage area for the names of all resources.
+         * The resource map's resource type list, followed by the resource reference list area.
          */
-        public byte[] names() {
-            if (this.names != null)
-                return this.names;
-            this.names = namesWithIo().data();
-            return this.names;
+        public TypeListAndReferenceLists typeListAndReferenceLists() {
+            if (this.typeListAndReferenceLists != null)
+                return this.typeListAndReferenceLists;
+            long _pos = this._io.pos();
+            this._io.seek(ofsTypeList());
+            KaitaiStream _io_typeListAndReferenceLists = this._io.substream(ofsNames() - ofsTypeList());
+            this.typeListAndReferenceLists = new TypeListAndReferenceLists(_io_typeListAndReferenceLists, this, _root);
+            this._io.seek(_pos);
+            return this.typeListAndReferenceLists;
         }
         private FileHeader reservedFileHeaderCopy;
         private long reservedNextResourceMapHandle;
@@ -1009,8 +1083,6 @@ public class ResourceFork extends KaitaiStruct {
         private int ofsNames;
         private ResourceFork _root;
         private ResourceFork _parent;
-        private byte[] _raw_fileAttributes;
-        private byte[] _raw_typeListAndReferenceLists;
         private byte[] _raw_namesWithIo;
 
         /**
@@ -1050,26 +1122,7 @@ public class ResourceFork extends KaitaiStruct {
         public int ofsNames() { return ofsNames; }
         public ResourceFork _root() { return _root; }
         public ResourceFork _parent() { return _parent; }
-        public byte[] _raw_fileAttributes() { return _raw_fileAttributes; }
-        public byte[] _raw_typeListAndReferenceLists() { return _raw_typeListAndReferenceLists; }
         public byte[] _raw_namesWithIo() { return _raw_namesWithIo; }
-    }
-    private BytesWithIo dataBlocksWithIo;
-
-    /**
-     * Use `data_blocks` instead,
-     * unless you need access to this instance's `_io`.
-     */
-    public BytesWithIo dataBlocksWithIo() {
-        if (this.dataBlocksWithIo != null)
-            return this.dataBlocksWithIo;
-        long _pos = this._io.pos();
-        this._io.seek(header().ofsDataBlocks());
-        this._raw_dataBlocksWithIo = this._io.readBytes(header().lenDataBlocks());
-        KaitaiStream _io__raw_dataBlocksWithIo = new ByteBufferKaitaiStream(_raw_dataBlocksWithIo);
-        this.dataBlocksWithIo = new BytesWithIo(_io__raw_dataBlocksWithIo);
-        this._io.seek(_pos);
-        return this.dataBlocksWithIo;
     }
     private byte[] dataBlocks;
 
@@ -1094,6 +1147,22 @@ public class ResourceFork extends KaitaiStruct {
         this.dataBlocks = dataBlocksWithIo().data();
         return this.dataBlocks;
     }
+    private BytesWithIo dataBlocksWithIo;
+
+    /**
+     * Use `data_blocks` instead,
+     * unless you need access to this instance's `_io`.
+     */
+    public BytesWithIo dataBlocksWithIo() {
+        if (this.dataBlocksWithIo != null)
+            return this.dataBlocksWithIo;
+        long _pos = this._io.pos();
+        this._io.seek(header().ofsDataBlocks());
+        KaitaiStream _io_dataBlocksWithIo = this._io.substream(header().lenDataBlocks());
+        this.dataBlocksWithIo = new BytesWithIo(_io_dataBlocksWithIo);
+        this._io.seek(_pos);
+        return this.dataBlocksWithIo;
+    }
     private ResourceMap resourceMap;
 
     /**
@@ -1104,9 +1173,8 @@ public class ResourceFork extends KaitaiStruct {
             return this.resourceMap;
         long _pos = this._io.pos();
         this._io.seek(header().ofsResourceMap());
-        this._raw_resourceMap = this._io.readBytes(header().lenResourceMap());
-        KaitaiStream _io__raw_resourceMap = new ByteBufferKaitaiStream(_raw_resourceMap);
-        this.resourceMap = new ResourceMap(_io__raw_resourceMap, this, _root);
+        KaitaiStream _io_resourceMap = this._io.substream(header().lenResourceMap());
+        this.resourceMap = new ResourceMap(_io_resourceMap, this, _root);
         this._io.seek(_pos);
         return this.resourceMap;
     }
@@ -1115,8 +1183,6 @@ public class ResourceFork extends KaitaiStruct {
     private byte[] applicationData;
     private ResourceFork _root;
     private KaitaiStruct _parent;
-    private byte[] _raw_dataBlocksWithIo;
-    private byte[] _raw_resourceMap;
 
     /**
      * The resource file's header information.
@@ -1151,6 +1217,4 @@ public class ResourceFork extends KaitaiStruct {
     public byte[] applicationData() { return applicationData; }
     public ResourceFork _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
-    public byte[] _raw_dataBlocksWithIo() { return _raw_dataBlocksWithIo; }
-    public byte[] _raw_resourceMap() { return _raw_resourceMap; }
 }

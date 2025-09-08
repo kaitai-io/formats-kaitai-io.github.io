@@ -173,6 +173,11 @@ and the underlying serialization/wire format.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="AUTOSAR SOME/IP parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="AUTOSAR SOME/IP parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -203,7 +208,17 @@ and the underlying serialization/wire format.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="AUTOSAR SOME/IP parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="AUTOSAR SOME/IP parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="AUTOSAR SOME/IP parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -237,7 +252,7 @@ and the underlying serialization/wire format.</p>
 
 <span class="k">use</span><span class="w"> </span><span class="nn">strict</span><span class="p">;</span>
 <span class="k">use</span><span class="w"> </span><span class="nn">warnings</span><span class="p">;</span>
-<span class="k">use</span><span class="w"> </span><span class="nn">IO::KaitaiStruct</span><span class="w"> </span><span class="mf">0.009_000</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="nn">IO::KaitaiStruct</span><span class="w"> </span><span class="mf">0.011_000</span><span class="p">;</span>
 <span class="k">use</span><span class="w"> </span><span class="nn">SomeIpSd</span><span class="p">;</span>
 
 <span class="c1">########################################################################</span>
@@ -260,7 +275,7 @@ and the underlying serialization/wire format.</p>
 
 <span class="w">    </span><span class="nb">bless</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$class</span><span class="p">;</span>
 <span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">;</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nv">$self</span><span class="p">;;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nv">$self</span><span class="p">;</span>
 
 <span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
 
@@ -273,12 +288,12 @@ and the underlying serialization/wire format.</p>
 <span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">header</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">SomeIp::Header</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
 <span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$_on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">message_id</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">();</span>
 <span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nv">$_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">4294934784</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_payload</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="nb">length</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">8</span><span class="p">));</span>
+<span class="w">        </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_payload</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="nb">length</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">8</span><span class="p">);</span>
 <span class="w">        </span><span class="k">my</span><span class="w"> </span><span class="nv">$io__raw_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_payload</span><span class="p">});</span>
 <span class="w">        </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">payload</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">SomeIpSd</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$io__raw_payload</span><span class="p">);</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">payload</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="nb">length</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">8</span><span class="p">));</span>
+<span class="w">        </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">payload</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="nb">length</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">8</span><span class="p">);</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 
@@ -340,7 +355,7 @@ and the underlying serialization/wire format.</p>
 
 <span class="w">    </span><span class="nb">bless</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$class</span><span class="p">;</span>
 <span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">;</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nv">$self</span><span class="p">;;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="p">;</span>
 
 <span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
 
@@ -435,7 +450,7 @@ and the underlying serialization/wire format.</p>
 
 <span class="w">    </span><span class="nb">bless</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$class</span><span class="p">;</span>
 <span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">;</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nv">$self</span><span class="p">;;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="p">;</span>
 
 <span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
 
@@ -505,7 +520,7 @@ and the underlying serialization/wire format.</p>
 
 <span class="w">    </span><span class="nb">bless</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$class</span><span class="p">;</span>
 <span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">;</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nv">$self</span><span class="p">;;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="p">;</span>
 
 <span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
 

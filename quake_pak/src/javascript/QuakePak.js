@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.QuakePak = factory(root.KaitaiStream);
+    factory(root.QuakePak || (root.QuakePak = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (QuakePak_, KaitaiStream) {
 /**
  * @see {@link https://quakewiki.org/wiki/.pak#Format_specification|Source}
  */
@@ -23,38 +23,18 @@ var QuakePak = (function() {
   }
   QuakePak.prototype._read = function() {
     this.magic = this._io.readBytes(4);
-    if (!((KaitaiStream.byteArrayCompare(this.magic, [80, 65, 67, 75]) == 0))) {
-      throw new KaitaiStream.ValidationNotEqualError([80, 65, 67, 75], this.magic, this._io, "/seq/0");
+    if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([80, 65, 67, 75])) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([80, 65, 67, 75]), this.magic, this._io, "/seq/0");
     }
     this.ofsIndex = this._io.readU4le();
     this.lenIndex = this._io.readU4le();
   }
 
-  var IndexStruct = QuakePak.IndexStruct = (function() {
-    function IndexStruct(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    IndexStruct.prototype._read = function() {
-      this.entries = [];
-      var i = 0;
-      while (!this._io.isEof()) {
-        this.entries.push(new IndexEntry(this._io, this, this._root));
-        i++;
-      }
-    }
-
-    return IndexStruct;
-  })();
-
   var IndexEntry = QuakePak.IndexEntry = (function() {
     function IndexEntry(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -78,6 +58,26 @@ var QuakePak = (function() {
 
     return IndexEntry;
   })();
+
+  var IndexStruct = QuakePak.IndexStruct = (function() {
+    function IndexStruct(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    IndexStruct.prototype._read = function() {
+      this.entries = [];
+      var i = 0;
+      while (!this._io.isEof()) {
+        this.entries.push(new IndexEntry(this._io, this, this._root));
+        i++;
+      }
+    }
+
+    return IndexStruct;
+  })();
   Object.defineProperty(QuakePak.prototype, 'index', {
     get: function() {
       if (this._m_index !== undefined)
@@ -94,5 +94,5 @@ var QuakePak = (function() {
 
   return QuakePak;
 })();
-return QuakePak;
-}));
+QuakePak_.QuakePak = QuakePak;
+});

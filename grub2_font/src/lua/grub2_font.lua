@@ -22,7 +22,7 @@ end
 function Grub2Font:_read()
   self.magic = self._io:read_bytes(12)
   if not(self.magic == "\070\073\076\069\000\000\000\004\080\070\070\050") then
-    error("not equal, expected " ..  "\070\073\076\069\000\000\000\004\080\070\070\050" .. ", but got " .. self.magic)
+    error("not equal, expected " .. "\070\073\076\069\000\000\000\004\080\070\070\050" .. ", but got " .. self.magic)
   end
   self.sections = {}
   local i = 0
@@ -42,145 +42,12 @@ end
 -- via the character index (CHIX) section. When reading this font file,
 -- the rest of the file can be ignored when scanning the sections."
 
-Grub2Font.PtszSection = class.class(KaitaiStruct)
-
-function Grub2Font.PtszSection:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Grub2Font.PtszSection:_read()
-  self.font_point_size = self._io:read_u2be()
-end
-
-
-Grub2Font.FamiSection = class.class(KaitaiStruct)
-
-function Grub2Font.FamiSection:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Grub2Font.FamiSection:_read()
-  self.font_family_name = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "ASCII")
-end
-
-
-Grub2Font.WeigSection = class.class(KaitaiStruct)
-
-function Grub2Font.WeigSection:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Grub2Font.WeigSection:_read()
-  self.font_weight = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "ASCII")
-end
-
-
-Grub2Font.MaxwSection = class.class(KaitaiStruct)
-
-function Grub2Font.MaxwSection:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Grub2Font.MaxwSection:_read()
-  self.maximum_character_width = self._io:read_u2be()
-end
-
-
-Grub2Font.DescSection = class.class(KaitaiStruct)
-
-function Grub2Font.DescSection:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Grub2Font.DescSection:_read()
-  self.descent_in_pixels = self._io:read_u2be()
-end
-
-
-Grub2Font.Section = class.class(KaitaiStruct)
-
-function Grub2Font.Section:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Grub2Font.Section:_read()
-  self.section_type = str_decode.decode(self._io:read_bytes(4), "ASCII")
-  self.len_body = self._io:read_u4be()
-  if self.section_type ~= "DATA" then
-    local _on = self.section_type
-    if _on == "MAXH" then
-      self._raw_body = self._io:read_bytes(self.len_body)
-      local _io = KaitaiStream(stringstream(self._raw_body))
-      self.body = Grub2Font.MaxhSection(_io, self, self._root)
-    elseif _on == "FAMI" then
-      self._raw_body = self._io:read_bytes(self.len_body)
-      local _io = KaitaiStream(stringstream(self._raw_body))
-      self.body = Grub2Font.FamiSection(_io, self, self._root)
-    elseif _on == "PTSZ" then
-      self._raw_body = self._io:read_bytes(self.len_body)
-      local _io = KaitaiStream(stringstream(self._raw_body))
-      self.body = Grub2Font.PtszSection(_io, self, self._root)
-    elseif _on == "MAXW" then
-      self._raw_body = self._io:read_bytes(self.len_body)
-      local _io = KaitaiStream(stringstream(self._raw_body))
-      self.body = Grub2Font.MaxwSection(_io, self, self._root)
-    elseif _on == "SLAN" then
-      self._raw_body = self._io:read_bytes(self.len_body)
-      local _io = KaitaiStream(stringstream(self._raw_body))
-      self.body = Grub2Font.SlanSection(_io, self, self._root)
-    elseif _on == "WEIG" then
-      self._raw_body = self._io:read_bytes(self.len_body)
-      local _io = KaitaiStream(stringstream(self._raw_body))
-      self.body = Grub2Font.WeigSection(_io, self, self._root)
-    elseif _on == "CHIX" then
-      self._raw_body = self._io:read_bytes(self.len_body)
-      local _io = KaitaiStream(stringstream(self._raw_body))
-      self.body = Grub2Font.ChixSection(_io, self, self._root)
-    elseif _on == "DESC" then
-      self._raw_body = self._io:read_bytes(self.len_body)
-      local _io = KaitaiStream(stringstream(self._raw_body))
-      self.body = Grub2Font.DescSection(_io, self, self._root)
-    elseif _on == "NAME" then
-      self._raw_body = self._io:read_bytes(self.len_body)
-      local _io = KaitaiStream(stringstream(self._raw_body))
-      self.body = Grub2Font.NameSection(_io, self, self._root)
-    elseif _on == "ASCE" then
-      self._raw_body = self._io:read_bytes(self.len_body)
-      local _io = KaitaiStream(stringstream(self._raw_body))
-      self.body = Grub2Font.AsceSection(_io, self, self._root)
-    else
-      self.body = self._io:read_bytes(self.len_body)
-    end
-  end
-end
-
--- 
--- Should be set to `0xFFFF_FFFF` for `section_type != "DATA"`.
-
 Grub2Font.AsceSection = class.class(KaitaiStruct)
 
 function Grub2Font.AsceSection:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -194,7 +61,7 @@ Grub2Font.ChixSection = class.class(KaitaiStruct)
 function Grub2Font.ChixSection:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -213,7 +80,7 @@ Grub2Font.ChixSection.Character = class.class(KaitaiStruct)
 function Grub2Font.ChixSection.Character:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -245,7 +112,7 @@ Grub2Font.ChixSection.CharacterDefinition = class.class(KaitaiStruct)
 function Grub2Font.ChixSection.CharacterDefinition:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -255,7 +122,7 @@ function Grub2Font.ChixSection.CharacterDefinition:_read()
   self.x_offset = self._io:read_s2be()
   self.y_offset = self._io:read_s2be()
   self.device_width = self._io:read_s2be()
-  self.bitmap_data = self._io:read_bytes(math.floor(((self.width * self.height) + 7) / 8))
+  self.bitmap_data = self._io:read_bytes(math.floor((self.width * self.height + 7) / 8))
 end
 
 -- 
@@ -272,12 +139,40 @@ end
 -- significant bit positions so that the bitmap ends on a byte
 -- boundary.
 
+Grub2Font.DescSection = class.class(KaitaiStruct)
+
+function Grub2Font.DescSection:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Grub2Font.DescSection:_read()
+  self.descent_in_pixels = self._io:read_u2be()
+end
+
+
+Grub2Font.FamiSection = class.class(KaitaiStruct)
+
+function Grub2Font.FamiSection:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Grub2Font.FamiSection:_read()
+  self.font_family_name = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "ASCII")
+end
+
+
 Grub2Font.MaxhSection = class.class(KaitaiStruct)
 
 function Grub2Font.MaxhSection:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -286,12 +181,26 @@ function Grub2Font.MaxhSection:_read()
 end
 
 
+Grub2Font.MaxwSection = class.class(KaitaiStruct)
+
+function Grub2Font.MaxwSection:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Grub2Font.MaxwSection:_read()
+  self.maximum_character_width = self._io:read_u2be()
+end
+
+
 Grub2Font.NameSection = class.class(KaitaiStruct)
 
 function Grub2Font.NameSection:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -300,17 +209,108 @@ function Grub2Font.NameSection:_read()
 end
 
 
+Grub2Font.PtszSection = class.class(KaitaiStruct)
+
+function Grub2Font.PtszSection:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Grub2Font.PtszSection:_read()
+  self.font_point_size = self._io:read_u2be()
+end
+
+
+Grub2Font.Section = class.class(KaitaiStruct)
+
+function Grub2Font.Section:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Grub2Font.Section:_read()
+  self.section_type = str_decode.decode(self._io:read_bytes(4), "ASCII")
+  self.len_body = self._io:read_u4be()
+  if self.section_type ~= "DATA" then
+    local _on = self.section_type
+    if _on == "ASCE" then
+      self._raw_body = self._io:read_bytes(self.len_body)
+      local _io = KaitaiStream(stringstream(self._raw_body))
+      self.body = Grub2Font.AsceSection(_io, self, self._root)
+    elseif _on == "CHIX" then
+      self._raw_body = self._io:read_bytes(self.len_body)
+      local _io = KaitaiStream(stringstream(self._raw_body))
+      self.body = Grub2Font.ChixSection(_io, self, self._root)
+    elseif _on == "DESC" then
+      self._raw_body = self._io:read_bytes(self.len_body)
+      local _io = KaitaiStream(stringstream(self._raw_body))
+      self.body = Grub2Font.DescSection(_io, self, self._root)
+    elseif _on == "FAMI" then
+      self._raw_body = self._io:read_bytes(self.len_body)
+      local _io = KaitaiStream(stringstream(self._raw_body))
+      self.body = Grub2Font.FamiSection(_io, self, self._root)
+    elseif _on == "MAXH" then
+      self._raw_body = self._io:read_bytes(self.len_body)
+      local _io = KaitaiStream(stringstream(self._raw_body))
+      self.body = Grub2Font.MaxhSection(_io, self, self._root)
+    elseif _on == "MAXW" then
+      self._raw_body = self._io:read_bytes(self.len_body)
+      local _io = KaitaiStream(stringstream(self._raw_body))
+      self.body = Grub2Font.MaxwSection(_io, self, self._root)
+    elseif _on == "NAME" then
+      self._raw_body = self._io:read_bytes(self.len_body)
+      local _io = KaitaiStream(stringstream(self._raw_body))
+      self.body = Grub2Font.NameSection(_io, self, self._root)
+    elseif _on == "PTSZ" then
+      self._raw_body = self._io:read_bytes(self.len_body)
+      local _io = KaitaiStream(stringstream(self._raw_body))
+      self.body = Grub2Font.PtszSection(_io, self, self._root)
+    elseif _on == "SLAN" then
+      self._raw_body = self._io:read_bytes(self.len_body)
+      local _io = KaitaiStream(stringstream(self._raw_body))
+      self.body = Grub2Font.SlanSection(_io, self, self._root)
+    elseif _on == "WEIG" then
+      self._raw_body = self._io:read_bytes(self.len_body)
+      local _io = KaitaiStream(stringstream(self._raw_body))
+      self.body = Grub2Font.WeigSection(_io, self, self._root)
+    else
+      self.body = self._io:read_bytes(self.len_body)
+    end
+  end
+end
+
+-- 
+-- Should be set to `0xFFFF_FFFF` for `section_type != "DATA"`.
+
 Grub2Font.SlanSection = class.class(KaitaiStruct)
 
 function Grub2Font.SlanSection:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function Grub2Font.SlanSection:_read()
   self.font_slant = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "ASCII")
+end
+
+
+Grub2Font.WeigSection = class.class(KaitaiStruct)
+
+function Grub2Font.WeigSection:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Grub2Font.WeigSection:_read()
+  self.font_weight = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "ASCII")
 end
 
 

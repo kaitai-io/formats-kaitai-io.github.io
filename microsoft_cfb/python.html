@@ -191,6 +191,11 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="java-write.html" title="Microsoft Compound File Binary (CFB), AKA OLE (Object Linking and Embedding) file format parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="Microsoft Compound File Binary (CFB), AKA OLE (Object Linking and Embedding) file format parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -221,7 +226,17 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="python-write.html" title="Microsoft Compound File Binary (CFB), AKA OLE (Object Linking and Embedding) file format parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="Microsoft Compound File Binary (CFB), AKA OLE (Object Linking and Embedding) file format parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="Microsoft Compound File Binary (CFB), AKA OLE (Object Linking and Embedding) file format parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -296,30 +311,46 @@ section#format-index .row {
 
         <div class="row">
             <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+<span class="c1"># type: ignore</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">kaitaistruct</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">kaitaistruct</span><span class="w"> </span><span class="kn">import</span> <span class="n">KaitaiStruct</span><span class="p">,</span> <span class="n">KaitaiStream</span><span class="p">,</span> <span class="n">BytesIO</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">IntEnum</span>
 
 
-<span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">kaitaistruct</span><span class="p">,</span> <span class="s1">&#39;API_VERSION&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">):</span>
-    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">kaitaistruct</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span>
+<span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">kaitaistruct</span><span class="p">,</span> <span class="s1">&#39;API_VERSION&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">kaitaistruct</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">MicrosoftCfb</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MicrosoftCfb</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="ow">or</span> <span class="bp">self</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">MicrosoftCfb</span><span class="o">.</span><span class="n">CfbHeader</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
 
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dir</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_dir&#39;</span><span class="p">):</span>
+            <span class="k">pass</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_dir</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+
+        <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fat</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_fat&#39;</span><span class="p">):</span>
+            <span class="k">pass</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_fat</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+
+
     <span class="k">class</span><span class="w"> </span><span class="nc">CfbHeader</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
         <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">MicrosoftCfb</span><span class="o">.</span><span class="n">CfbHeader</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -352,37 +383,28 @@ section#format-index .row {
 
 
 
-    <span class="k">class</span><span class="w"> </span><span class="nc">FatEntries</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
-
-        <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">entries</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">is_eof</span><span class="p">():</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">entries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s4le</span><span class="p">())</span>
-                <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">difat</span><span class="p">)):</span>
+                <span class="k">pass</span>
 
 
 
     <span class="k">class</span><span class="w"> </span><span class="nc">DirEntry</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
 
-        <span class="k">class</span><span class="w"> </span><span class="nc">ObjType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+        <span class="k">class</span><span class="w"> </span><span class="nc">ObjType</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
             <span class="n">unknown</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="n">storage</span> <span class="o">=</span> <span class="mi">1</span>
             <span class="n">stream</span> <span class="o">=</span> <span class="mi">2</span>
             <span class="n">root_storage</span> <span class="o">=</span> <span class="mi">5</span>
 
-        <span class="k">class</span><span class="w"> </span><span class="nc">RbColor</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+        <span class="k">class</span><span class="w"> </span><span class="nc">RbColor</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
             <span class="n">red</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="n">black</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">MicrosoftCfb</span><span class="o">.</span><span class="n">DirEntry</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -400,19 +422,28 @@ section#format-index .row {
             <span class="bp">self</span><span class="o">.</span><span class="n">ofs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s4le</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u8le</span><span class="p">()</span>
 
-        <span class="nd">@property</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">mini_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+            <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">child</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_child&#39;</span><span class="p">):</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_m_child</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+
+            <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">left_sibling</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_left_sibling&#39;</span><span class="p">):</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_m_left_sibling</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+
+            <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mini_stream</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_mini_stream&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_mini_stream</span>
+                <span class="k">pass</span>
 
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">object_type</span> <span class="o">==</span> <span class="n">MicrosoftCfb</span><span class="o">.</span><span class="n">DirEntry</span><span class="o">.</span><span class="n">ObjType</span><span class="o">.</span><span class="n">root_storage</span><span class="p">:</span>
-                <span class="n">io</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">_io</span>
-                <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span>
-                <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(((</span><span class="bp">self</span><span class="o">.</span><span class="n">ofs</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">sector_size</span><span class="p">))</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_m_mini_stream</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
-                <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+            <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_sibling</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_right_sibling&#39;</span><span class="p">):</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_m_right_sibling</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
 
-            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_mini_stream&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
         <span class="nd">@property</span>
         <span class="k">def</span><span class="w"> </span><span class="nf">child</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -420,9 +451,10 @@ section#format-index .row {
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_child</span>
 
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">child_id</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                <span class="k">pass</span>
                 <span class="n">io</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">_io</span>
                 <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span>
-                <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">((((</span><span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">ofs_dir</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">sector_size</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">child_id</span> <span class="o">*</span> <span class="mi">128</span><span class="p">)))</span>
+                <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">ofs_dir</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">sector_size</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">child_id</span> <span class="o">*</span> <span class="mi">128</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_m_child</span> <span class="o">=</span> <span class="n">MicrosoftCfb</span><span class="o">.</span><span class="n">DirEntry</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
                 <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
 
@@ -434,13 +466,29 @@ section#format-index .row {
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_left_sibling</span>
 
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">left_sibling_id</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                <span class="k">pass</span>
                 <span class="n">io</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">_io</span>
                 <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span>
-                <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">((((</span><span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">ofs_dir</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">sector_size</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">left_sibling_id</span> <span class="o">*</span> <span class="mi">128</span><span class="p">)))</span>
+                <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">ofs_dir</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">sector_size</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">left_sibling_id</span> <span class="o">*</span> <span class="mi">128</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_m_left_sibling</span> <span class="o">=</span> <span class="n">MicrosoftCfb</span><span class="o">.</span><span class="n">DirEntry</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
                 <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
 
             <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_left_sibling&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">mini_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_mini_stream&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_mini_stream</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">object_type</span> <span class="o">==</span> <span class="n">MicrosoftCfb</span><span class="o">.</span><span class="n">DirEntry</span><span class="o">.</span><span class="n">ObjType</span><span class="o">.</span><span class="n">root_storage</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="n">io</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">_io</span>
+                <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span>
+                <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">ofs</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">sector_size</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_m_mini_stream</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+                <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_mini_stream&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
         <span class="nd">@property</span>
         <span class="k">def</span><span class="w"> </span><span class="nf">right_sibling</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -448,22 +496,49 @@ section#format-index .row {
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_right_sibling</span>
 
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_sibling_id</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                <span class="k">pass</span>
                 <span class="n">io</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">_io</span>
                 <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span>
-                <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">((((</span><span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">ofs_dir</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">sector_size</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">right_sibling_id</span> <span class="o">*</span> <span class="mi">128</span><span class="p">)))</span>
+                <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">ofs_dir</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">sector_size</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">right_sibling_id</span> <span class="o">*</span> <span class="mi">128</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_m_right_sibling</span> <span class="o">=</span> <span class="n">MicrosoftCfb</span><span class="o">.</span><span class="n">DirEntry</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
                 <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
 
             <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_right_sibling&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
 
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">sector_size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_sector_size&#39;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_sector_size</span>
+    <span class="k">class</span><span class="w"> </span><span class="nc">FatEntries</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">MicrosoftCfb</span><span class="o">.</span><span class="n">FatEntries</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_m_sector_size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">sector_shift</span><span class="p">)</span>
-        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_sector_size&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">entries</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">is_eof</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">entries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s4le</span><span class="p">())</span>
+                <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">entries</span><span class="p">)):</span>
+                <span class="k">pass</span>
+
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">dir</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_dir&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_dir</span>
+
+        <span class="n">_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">seek</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">ofs_dir</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">sector_size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_m_dir</span> <span class="o">=</span> <span class="n">MicrosoftCfb</span><span class="o">.</span><span class="n">DirEntry</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_dir&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">fat</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -472,22 +547,19 @@ section#format-index .row {
 
         <span class="n">_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sector_size</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_raw__m_fat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">size_fat</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">sector_size</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_raw__m_fat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">size_fat</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">sector_size</span><span class="p">)</span>
         <span class="n">_io__raw__m_fat</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw__m_fat</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_m_fat</span> <span class="o">=</span> <span class="n">MicrosoftCfb</span><span class="o">.</span><span class="n">FatEntries</span><span class="p">(</span><span class="n">_io__raw__m_fat</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_fat&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">dir</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_dir&#39;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_dir</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sector_size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_sector_size&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_sector_size</span>
 
-        <span class="n">_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(((</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">ofs_dir</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">sector_size</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_m_dir</span> <span class="o">=</span> <span class="n">MicrosoftCfb</span><span class="o">.</span><span class="n">DirEntry</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
-        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_dir&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_m_sector_size</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">sector_shift</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_sector_size&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 </pre></div>
 
         </div>

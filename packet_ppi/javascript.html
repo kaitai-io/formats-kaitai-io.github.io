@@ -170,6 +170,11 @@ radio information, but can be used for other purposes as well.</p>
                 <a href="java.html" title="packet_ppi parsing Java library">Java</a></li>
                 
                 
+                <li>
+                
+                <a href="java-write.html" title="packet_ppi parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
                 <li class="active">
                 
                 <a href="javascript.html" title="packet_ppi parsing JavaScript library">JavaScript</a></li>
@@ -202,7 +207,17 @@ radio information, but can be used for other purposes as well.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="packet_ppi parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="packet_ppi parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="packet_ppi parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -275,13 +290,13 @@ radio information, but can be used for other purposes as well.</p>
 
 <span class="p">(</span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">root</span><span class="p">,</span><span class="w"> </span><span class="nx">factory</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="ow">typeof</span><span class="w"> </span><span class="nx">define</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;function&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">define</span><span class="p">.</span><span class="nx">amd</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">define</span><span class="p">([</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;./EthernetFrame&#39;</span><span class="p">],</span><span class="w"> </span><span class="nx">factory</span><span class="p">);</span>
-<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="ow">typeof</span><span class="w"> </span><span class="nx">module</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;object&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">factory</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">),</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./EthernetFrame&#39;</span><span class="p">));</span>
+<span class="w">    </span><span class="nx">define</span><span class="p">([</span><span class="s1">&#39;exports&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;./EthernetFrame&#39;</span><span class="p">],</span><span class="w"> </span><span class="nx">factory</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="ow">typeof</span><span class="w"> </span><span class="nx">exports</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;object&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">exports</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="ow">typeof</span><span class="w"> </span><span class="nx">exports</span><span class="p">.</span><span class="nx">nodeType</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s1">&#39;number&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">factory</span><span class="p">(</span><span class="nx">exports</span><span class="p">,</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">),</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./EthernetFrame&#39;</span><span class="p">));</span>
 <span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">root</span><span class="p">.</span><span class="nx">PacketPpi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">KaitaiStream</span><span class="p">,</span><span class="w"> </span><span class="nx">root</span><span class="p">.</span><span class="nx">EthernetFrame</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">PacketPpi</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">PacketPpi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}),</span><span class="w"> </span><span class="nx">root</span><span class="p">.</span><span class="nx">KaitaiStream</span><span class="p">,</span><span class="w"> </span><span class="nx">root</span><span class="p">.</span><span class="nx">EthernetFrame</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">EthernetFrame</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}));</span>
 <span class="w">  </span><span class="p">}</span>
-<span class="p">}(</span><span class="ow">typeof</span><span class="w"> </span><span class="nx">self</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s1">&#39;undefined&#39;</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nx">self</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">,</span><span class="w"> </span><span class="nx">EthernetFrame</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="p">})(</span><span class="ow">typeof</span><span class="w"> </span><span class="nx">self</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s1">&#39;undefined&#39;</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nx">self</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">PacketPpi_</span><span class="p">,</span><span class="w"> </span><span class="nx">KaitaiStream</span><span class="p">,</span><span class="w"> </span><span class="nx">EthernetFrame_</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="cm">/**</span>
 <span class="cm"> * PPI is a standard for link layer packet encapsulation, proposed as</span>
 <span class="cm"> * generic extensible container to store both captured in-band data and</span>
@@ -294,22 +309,6 @@ radio information, but can be used for other purposes as well.</p>
 <span class="cm"> */</span>
 
 <span class="kd">var</span><span class="w"> </span><span class="nx">PacketPpi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="nx">PacketPpi</span><span class="p">.</span><span class="nx">PfhType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
-<span class="w">    </span><span class="nx">RADIO_802_11_COMMON</span><span class="o">:</span><span class="w"> </span><span class="mf">2</span><span class="p">,</span>
-<span class="w">    </span><span class="nx">RADIO_802_11N_MAC_EXT</span><span class="o">:</span><span class="w"> </span><span class="mf">3</span><span class="p">,</span>
-<span class="w">    </span><span class="nx">RADIO_802_11N_MAC_PHY_EXT</span><span class="o">:</span><span class="w"> </span><span class="mf">4</span><span class="p">,</span>
-<span class="w">    </span><span class="nx">SPECTRUM_MAP</span><span class="o">:</span><span class="w"> </span><span class="mf">5</span><span class="p">,</span>
-<span class="w">    </span><span class="nx">PROCESS_INFO</span><span class="o">:</span><span class="w"> </span><span class="mf">6</span><span class="p">,</span>
-<span class="w">    </span><span class="nx">CAPTURE_INFO</span><span class="o">:</span><span class="w"> </span><span class="mf">7</span><span class="p">,</span>
-
-<span class="w">    </span><span class="mf">2</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;RADIO_802_11_COMMON&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="mf">3</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;RADIO_802_11N_MAC_EXT&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="mf">4</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;RADIO_802_11N_MAC_PHY_EXT&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="mf">5</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;SPECTRUM_MAP&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="mf">6</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;PROCESS_INFO&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="mf">7</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;CAPTURE_INFO&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="p">});</span>
-
 <span class="w">  </span><span class="nx">PacketPpi</span><span class="p">.</span><span class="nx">Linktype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
 <span class="w">    </span><span class="nx">NULL_LINKTYPE</span><span class="o">:</span><span class="w"> </span><span class="mf">0</span><span class="p">,</span>
 <span class="w">    </span><span class="nx">ETHERNET</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span>
@@ -522,6 +521,22 @@ radio information, but can be used for other purposes as well.</p>
 <span class="w">    </span><span class="mf">264</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;ISO_14443&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="p">});</span>
 
+<span class="w">  </span><span class="nx">PacketPpi</span><span class="p">.</span><span class="nx">PfhType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+<span class="w">    </span><span class="nx">RADIO_802_11_COMMON</span><span class="o">:</span><span class="w"> </span><span class="mf">2</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">RADIO_802_11N_MAC_EXT</span><span class="o">:</span><span class="w"> </span><span class="mf">3</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">RADIO_802_11N_MAC_PHY_EXT</span><span class="o">:</span><span class="w"> </span><span class="mf">4</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">SPECTRUM_MAP</span><span class="o">:</span><span class="w"> </span><span class="mf">5</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">PROCESS_INFO</span><span class="o">:</span><span class="w"> </span><span class="mf">6</span><span class="p">,</span>
+<span class="w">    </span><span class="nx">CAPTURE_INFO</span><span class="o">:</span><span class="w"> </span><span class="mf">7</span><span class="p">,</span>
+
+<span class="w">    </span><span class="mf">2</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;RADIO_802_11_COMMON&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="mf">3</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;RADIO_802_11N_MAC_EXT&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="mf">4</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;RADIO_802_11N_MAC_PHY_EXT&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="mf">5</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;SPECTRUM_MAP&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="mf">6</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;PROCESS_INFO&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="mf">7</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;CAPTURE_INFO&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="p">});</span>
+
 <span class="w">  </span><span class="kd">function</span><span class="w"> </span><span class="nx">PacketPpi</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">_parent</span><span class="p">,</span><span class="w"> </span><span class="nx">_root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_io</span><span class="p">;</span>
 <span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_parent</span><span class="p">;</span>
@@ -531,19 +546,19 @@ radio information, but can be used for other purposes as well.</p>
 <span class="w">  </span><span class="p">}</span>
 <span class="w">  </span><span class="nx">PacketPpi</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">PacketPpiHeader</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
-<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_fields</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">pphLen</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">8</span><span class="p">));</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_fields</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">pphLen</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">8</span><span class="p">);</span>
 <span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nx">_io__raw_fields</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_fields</span><span class="p">);</span>
 <span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">fields</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">PacketPpiFields</span><span class="p">(</span><span class="nx">_io__raw_fields</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
 <span class="w">    </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">pphDlt</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="nx">PacketPpi</span><span class="p">.</span><span class="nx">Linktype</span><span class="p">.</span><span class="nx">PPI</span><span class="o">:</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytesFull</span><span class="p">();</span>
-<span class="w">      </span><span class="kd">var</span><span class="w"> </span><span class="nx">_io__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span><span class="p">);</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">PacketPpi</span><span class="p">(</span><span class="nx">_io__raw_body</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">);</span>
-<span class="w">      </span><span class="k">break</span><span class="p">;</span>
 <span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="nx">PacketPpi</span><span class="p">.</span><span class="nx">Linktype</span><span class="p">.</span><span class="nx">ETHERNET</span><span class="o">:</span>
 <span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytesFull</span><span class="p">();</span>
 <span class="w">      </span><span class="kd">var</span><span class="w"> </span><span class="nx">_io__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span><span class="p">);</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">EthernetFrame</span><span class="p">(</span><span class="nx">_io__raw_body</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">);</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">EthernetFrame_</span><span class="p">.</span><span class="nx">EthernetFrame</span><span class="p">(</span><span class="nx">_io__raw_body</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">);</span>
+<span class="w">      </span><span class="k">break</span><span class="p">;</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="nx">PacketPpi</span><span class="p">.</span><span class="nx">Linktype</span><span class="p">.</span><span class="nx">PPI</span><span class="o">:</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytesFull</span><span class="p">();</span>
+<span class="w">      </span><span class="kd">var</span><span class="w"> </span><span class="nx">_io__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span><span class="p">);</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">PacketPpi</span><span class="p">(</span><span class="nx">_io__raw_body</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
 <span class="w">      </span><span class="k">break</span><span class="p">;</span>
 <span class="w">    </span><span class="k">default</span><span class="o">:</span>
 <span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytesFull</span><span class="p">();</span>
@@ -551,53 +566,11 @@ radio information, but can be used for other purposes as well.</p>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 
-<span class="w">  </span><span class="kd">var</span><span class="w"> </span><span class="nx">PacketPpiFields</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">PacketPpi</span><span class="p">.</span><span class="nx">PacketPpiFields</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">function</span><span class="w"> </span><span class="nx">PacketPpiFields</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">_parent</span><span class="p">,</span><span class="w"> </span><span class="nx">_root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_io</span><span class="p">;</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_parent</span><span class="p">;</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
-
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="nx">PacketPpiFields</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">entries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[];</span>
-<span class="w">      </span><span class="kd">var</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
-<span class="w">      </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">entries</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="ow">new</span><span class="w"> </span><span class="nx">PacketPpiField</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">));</span>
-<span class="w">        </span><span class="nx">i</span><span class="o">++</span><span class="p">;</span>
-<span class="w">      </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">PacketPpiFields</span><span class="p">;</span>
-<span class="w">  </span><span class="p">})();</span>
-
-<span class="w">  </span><span class="cm">/**</span>
-<span class="cm">   * @see {@link https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf|PPI header format spec, section 4.1.3}</span>
-<span class="cm">   */</span>
-
-<span class="w">  </span><span class="kd">var</span><span class="w"> </span><span class="nx">Radio80211nMacExtBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">PacketPpi</span><span class="p">.</span><span class="nx">Radio80211nMacExtBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">function</span><span class="w"> </span><span class="nx">Radio80211nMacExtBody</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">_parent</span><span class="p">,</span><span class="w"> </span><span class="nx">_root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_io</span><span class="p">;</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_parent</span><span class="p">;</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
-
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="nx">Radio80211nMacExtBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">MacFlags</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">aMpduId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">numDelimiters</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">reserved</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mf">3</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">Radio80211nMacExtBody</span><span class="p">;</span>
-<span class="w">  </span><span class="p">})();</span>
-
 <span class="w">  </span><span class="kd">var</span><span class="w"> </span><span class="nx">MacFlags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">PacketPpi</span><span class="p">.</span><span class="nx">MacFlags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="kd">function</span><span class="w"> </span><span class="nx">MacFlags</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">_parent</span><span class="p">,</span><span class="w"> </span><span class="nx">_root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_io</span><span class="p">;</span>
 <span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_parent</span><span class="p">;</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="p">;</span>
 
 <span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
 <span class="w">    </span><span class="p">}</span>
@@ -649,60 +622,11 @@ radio information, but can be used for other purposes as well.</p>
 <span class="cm">   * @see {@link https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf|PPI header format spec, section 3.1}</span>
 <span class="cm">   */</span>
 
-<span class="w">  </span><span class="kd">var</span><span class="w"> </span><span class="nx">PacketPpiHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">PacketPpi</span><span class="p">.</span><span class="nx">PacketPpiHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">function</span><span class="w"> </span><span class="nx">PacketPpiHeader</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">_parent</span><span class="p">,</span><span class="w"> </span><span class="nx">_root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_io</span><span class="p">;</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_parent</span><span class="p">;</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
-
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="nx">PacketPpiHeader</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">pphVersion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">pphFlags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">pphLen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">pphDlt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">PacketPpiHeader</span><span class="p">;</span>
-<span class="w">  </span><span class="p">})();</span>
-
-<span class="w">  </span><span class="cm">/**</span>
-<span class="cm">   * @see {@link https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf|PPI header format spec, section 4.1.2}</span>
-<span class="cm">   */</span>
-
-<span class="w">  </span><span class="kd">var</span><span class="w"> </span><span class="nx">Radio80211CommonBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">PacketPpi</span><span class="p">.</span><span class="nx">Radio80211CommonBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">function</span><span class="w"> </span><span class="nx">Radio80211CommonBody</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">_parent</span><span class="p">,</span><span class="w"> </span><span class="nx">_root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_io</span><span class="p">;</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_parent</span><span class="p">;</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
-
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="nx">Radio80211CommonBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">tsfTimer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU8le</span><span class="p">();</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">rate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">channelFreq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">channelFlags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">fhssHopset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">fhssPattern</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">dbmAntsignal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS1</span><span class="p">();</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">dbmAntnoise</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS1</span><span class="p">();</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">Radio80211CommonBody</span><span class="p">;</span>
-<span class="w">  </span><span class="p">})();</span>
-
-<span class="w">  </span><span class="cm">/**</span>
-<span class="cm">   * @see {@link https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf|PPI header format spec, section 3.1}</span>
-<span class="cm">   */</span>
-
 <span class="w">  </span><span class="kd">var</span><span class="w"> </span><span class="nx">PacketPpiField</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">PacketPpi</span><span class="p">.</span><span class="nx">PacketPpiField</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="kd">function</span><span class="w"> </span><span class="nx">PacketPpiField</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">_parent</span><span class="p">,</span><span class="w"> </span><span class="nx">_root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_io</span><span class="p">;</span>
 <span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_parent</span><span class="p">;</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="p">;</span>
 
 <span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
 <span class="w">    </span><span class="p">}</span>
@@ -734,6 +658,97 @@ radio information, but can be used for other purposes as well.</p>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">PacketPpiField</span><span class="p">;</span>
 <span class="w">  </span><span class="p">})();</span>
 
+<span class="w">  </span><span class="kd">var</span><span class="w"> </span><span class="nx">PacketPpiFields</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">PacketPpi</span><span class="p">.</span><span class="nx">PacketPpiFields</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">function</span><span class="w"> </span><span class="nx">PacketPpiFields</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">_parent</span><span class="p">,</span><span class="w"> </span><span class="nx">_root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_io</span><span class="p">;</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_parent</span><span class="p">;</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="p">;</span>
+
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="nx">PacketPpiFields</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">entries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[];</span>
+<span class="w">      </span><span class="kd">var</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
+<span class="w">      </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">entries</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="ow">new</span><span class="w"> </span><span class="nx">PacketPpiField</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">));</span>
+<span class="w">        </span><span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">PacketPpiFields</span><span class="p">;</span>
+<span class="w">  </span><span class="p">})();</span>
+
+<span class="w">  </span><span class="cm">/**</span>
+<span class="cm">   * @see {@link https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf|PPI header format spec, section 3.1}</span>
+<span class="cm">   */</span>
+
+<span class="w">  </span><span class="kd">var</span><span class="w"> </span><span class="nx">PacketPpiHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">PacketPpi</span><span class="p">.</span><span class="nx">PacketPpiHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">function</span><span class="w"> </span><span class="nx">PacketPpiHeader</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">_parent</span><span class="p">,</span><span class="w"> </span><span class="nx">_root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_io</span><span class="p">;</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_parent</span><span class="p">;</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="p">;</span>
+
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="nx">PacketPpiHeader</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">pphVersion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">pphFlags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">pphLen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">pphDlt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">PacketPpiHeader</span><span class="p">;</span>
+<span class="w">  </span><span class="p">})();</span>
+
+<span class="w">  </span><span class="cm">/**</span>
+<span class="cm">   * @see {@link https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf|PPI header format spec, section 4.1.2}</span>
+<span class="cm">   */</span>
+
+<span class="w">  </span><span class="kd">var</span><span class="w"> </span><span class="nx">Radio80211CommonBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">PacketPpi</span><span class="p">.</span><span class="nx">Radio80211CommonBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">function</span><span class="w"> </span><span class="nx">Radio80211CommonBody</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">_parent</span><span class="p">,</span><span class="w"> </span><span class="nx">_root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_io</span><span class="p">;</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_parent</span><span class="p">;</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="p">;</span>
+
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="nx">Radio80211CommonBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">tsfTimer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU8le</span><span class="p">();</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">rate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">channelFreq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">channelFlags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">fhssHopset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">fhssPattern</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">dbmAntsignal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS1</span><span class="p">();</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">dbmAntnoise</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS1</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">Radio80211CommonBody</span><span class="p">;</span>
+<span class="w">  </span><span class="p">})();</span>
+
+<span class="w">  </span><span class="cm">/**</span>
+<span class="cm">   * @see {@link https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf|PPI header format spec, section 4.1.3}</span>
+<span class="cm">   */</span>
+
+<span class="w">  </span><span class="kd">var</span><span class="w"> </span><span class="nx">Radio80211nMacExtBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">PacketPpi</span><span class="p">.</span><span class="nx">Radio80211nMacExtBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">function</span><span class="w"> </span><span class="nx">Radio80211nMacExtBody</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">_parent</span><span class="p">,</span><span class="w"> </span><span class="nx">_root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_io</span><span class="p">;</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_parent</span><span class="p">;</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="p">;</span>
+
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="nx">Radio80211nMacExtBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">MacFlags</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">aMpduId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">numDelimiters</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">reserved</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mf">3</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">Radio80211nMacExtBody</span><span class="p">;</span>
+<span class="w">  </span><span class="p">})();</span>
+
 <span class="w">  </span><span class="cm">/**</span>
 <span class="cm">   * @see {@link https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf|PPI header format spec, section 4.1.4}</span>
 <span class="cm">   */</span>
@@ -742,7 +757,7 @@ radio information, but can be used for other purposes as well.</p>
 <span class="w">    </span><span class="kd">function</span><span class="w"> </span><span class="nx">Radio80211nMacPhyExtBody</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">_parent</span><span class="p">,</span><span class="w"> </span><span class="nx">_root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_io</span><span class="p">;</span>
 <span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_parent</span><span class="p">;</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="p">;</span>
 
 <span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
 <span class="w">    </span><span class="p">}</span>
@@ -777,7 +792,7 @@ radio information, but can be used for other purposes as well.</p>
 <span class="w">      </span><span class="kd">function</span><span class="w"> </span><span class="nx">ChannelFlags</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">_parent</span><span class="p">,</span><span class="w"> </span><span class="nx">_root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_io</span><span class="p">;</span>
 <span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_parent</span><span class="p">;</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="p">;</span>
 
 <span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
 <span class="w">      </span><span class="p">}</span>
@@ -832,7 +847,7 @@ radio information, but can be used for other purposes as well.</p>
 <span class="w">      </span><span class="kd">function</span><span class="w"> </span><span class="nx">SignalNoise</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">_parent</span><span class="p">,</span><span class="w"> </span><span class="nx">_root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_io</span><span class="p">;</span>
 <span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_parent</span><span class="p">;</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="p">;</span>
 
 <span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
 <span class="w">      </span><span class="p">}</span>
@@ -893,8 +908,8 @@ radio information, but can be used for other purposes as well.</p>
 
 <span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">PacketPpi</span><span class="p">;</span>
 <span class="p">})();</span>
-<span class="k">return</span><span class="w"> </span><span class="nx">PacketPpi</span><span class="p">;</span>
-<span class="p">}));</span>
+<span class="nx">PacketPpi_</span><span class="p">.</span><span class="nx">PacketPpi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">PacketPpi</span><span class="p">;</span>
+<span class="p">});</span>
 </pre></div>
 
         </div>

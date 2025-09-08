@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.ApmPartitionTable = factory(root.KaitaiStream);
+    factory(root.ApmPartitionTable || (root.ApmPartitionTable = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (ApmPartitionTable_, KaitaiStream) {
 /**
  * @see {@link https://en.wikipedia.org/wiki/Apple_Partition_Map|Source}
  */
@@ -28,21 +28,21 @@ var ApmPartitionTable = (function() {
     function PartitionEntry(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     PartitionEntry.prototype._read = function() {
       this.magic = this._io.readBytes(2);
-      if (!((KaitaiStream.byteArrayCompare(this.magic, [80, 77]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([80, 77], this.magic, this._io, "/types/partition_entry/seq/0");
+      if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([80, 77])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([80, 77]), this.magic, this._io, "/types/partition_entry/seq/0");
       }
       this.reserved1 = this._io.readBytes(2);
       this.numberOfPartitions = this._io.readU4be();
       this.partitionStart = this._io.readU4be();
       this.partitionSize = this._io.readU4be();
-      this.partitionName = KaitaiStream.bytesToStr(KaitaiStream.bytesTerminate(this._io.readBytes(32), 0, false), "ascii");
-      this.partitionType = KaitaiStream.bytesToStr(KaitaiStream.bytesTerminate(this._io.readBytes(32), 0, false), "ascii");
+      this.partitionName = KaitaiStream.bytesToStr(KaitaiStream.bytesTerminate(this._io.readBytes(32), 0, false), "ASCII");
+      this.partitionType = KaitaiStream.bytesToStr(KaitaiStream.bytesTerminate(this._io.readBytes(32), 0, false), "ASCII");
       this.dataStart = this._io.readU4be();
       this.dataSize = this._io.readU4be();
       this.partitionStatus = this._io.readU4be();
@@ -53,20 +53,18 @@ var ApmPartitionTable = (function() {
       this.bootCodeEntry = this._io.readU4be();
       this.reserved3 = this._io.readBytes(4);
       this.bootCodeCksum = this._io.readU4be();
-      this.processorType = KaitaiStream.bytesToStr(KaitaiStream.bytesTerminate(this._io.readBytes(16), 0, false), "ascii");
+      this.processorType = KaitaiStream.bytesToStr(KaitaiStream.bytesTerminate(this._io.readBytes(16), 0, false), "ASCII");
     }
-    Object.defineProperty(PartitionEntry.prototype, 'partition', {
+    Object.defineProperty(PartitionEntry.prototype, 'bootCode', {
       get: function() {
-        if (this._m_partition !== undefined)
-          return this._m_partition;
-        if ((this.partitionStatus & 1) != 0) {
-          var io = this._root._io;
-          var _pos = io.pos;
-          io.seek((this.partitionStart * this._root.sectorSize));
-          this._m_partition = io.readBytes((this.partitionSize * this._root.sectorSize));
-          io.seek(_pos);
-        }
-        return this._m_partition;
+        if (this._m_bootCode !== undefined)
+          return this._m_bootCode;
+        var io = this._root._io;
+        var _pos = io.pos;
+        io.seek(this.bootCodeStart * this._root.sectorSize);
+        this._m_bootCode = io.readBytes(this.bootCodeSize);
+        io.seek(_pos);
+        return this._m_bootCode;
       }
     });
     Object.defineProperty(PartitionEntry.prototype, 'data', {
@@ -75,22 +73,24 @@ var ApmPartitionTable = (function() {
           return this._m_data;
         var io = this._root._io;
         var _pos = io.pos;
-        io.seek((this.dataStart * this._root.sectorSize));
-        this._m_data = io.readBytes((this.dataSize * this._root.sectorSize));
+        io.seek(this.dataStart * this._root.sectorSize);
+        this._m_data = io.readBytes(this.dataSize * this._root.sectorSize);
         io.seek(_pos);
         return this._m_data;
       }
     });
-    Object.defineProperty(PartitionEntry.prototype, 'bootCode', {
+    Object.defineProperty(PartitionEntry.prototype, 'partition', {
       get: function() {
-        if (this._m_bootCode !== undefined)
-          return this._m_bootCode;
-        var io = this._root._io;
-        var _pos = io.pos;
-        io.seek((this.bootCodeStart * this._root.sectorSize));
-        this._m_bootCode = io.readBytes(this.bootCodeSize);
-        io.seek(_pos);
-        return this._m_bootCode;
+        if (this._m_partition !== undefined)
+          return this._m_partition;
+        if ((this.partitionStatus & 1) != 0) {
+          var io = this._root._io;
+          var _pos = io.pos;
+          io.seek(this.partitionStart * this._root.sectorSize);
+          this._m_partition = io.readBytes(this.partitionSize * this._root.sectorSize);
+          io.seek(_pos);
+        }
+        return this._m_partition;
       }
     });
 
@@ -132,17 +132,22 @@ var ApmPartitionTable = (function() {
 
     return PartitionEntry;
   })();
-
-  /**
-   * 0x200 (512) bytes for disks, 0x1000 (4096) bytes is not supported by APM
-   * 0x800 (2048) bytes for CDROM
-   */
-  Object.defineProperty(ApmPartitionTable.prototype, 'sectorSize', {
+  Object.defineProperty(ApmPartitionTable.prototype, 'partitionEntries', {
     get: function() {
-      if (this._m_sectorSize !== undefined)
-        return this._m_sectorSize;
-      this._m_sectorSize = 512;
-      return this._m_sectorSize;
+      if (this._m_partitionEntries !== undefined)
+        return this._m_partitionEntries;
+      var io = this._root._io;
+      var _pos = io.pos;
+      io.seek(this._root.sectorSize);
+      this._raw__m_partitionEntries = [];
+      this._m_partitionEntries = [];
+      for (var i = 0; i < this._root.partitionLookup.numberOfPartitions; i++) {
+        this._raw__m_partitionEntries.push(io.readBytes(this.sectorSize));
+        var _io__raw__m_partitionEntries = new KaitaiStream(this._raw__m_partitionEntries[i]);
+        this._m_partitionEntries.push(new PartitionEntry(_io__raw__m_partitionEntries, this, this._root));
+      }
+      io.seek(_pos);
+      return this._m_partitionEntries;
     }
   });
 
@@ -165,26 +170,21 @@ var ApmPartitionTable = (function() {
       return this._m_partitionLookup;
     }
   });
-  Object.defineProperty(ApmPartitionTable.prototype, 'partitionEntries', {
+
+  /**
+   * 0x200 (512) bytes for disks, 0x1000 (4096) bytes is not supported by APM
+   * 0x800 (2048) bytes for CDROM
+   */
+  Object.defineProperty(ApmPartitionTable.prototype, 'sectorSize', {
     get: function() {
-      if (this._m_partitionEntries !== undefined)
-        return this._m_partitionEntries;
-      var io = this._root._io;
-      var _pos = io.pos;
-      io.seek(this._root.sectorSize);
-      this._raw__m_partitionEntries = [];
-      this._m_partitionEntries = [];
-      for (var i = 0; i < this._root.partitionLookup.numberOfPartitions; i++) {
-        this._raw__m_partitionEntries.push(io.readBytes(this.sectorSize));
-        var _io__raw__m_partitionEntries = new KaitaiStream(this._raw__m_partitionEntries[i]);
-        this._m_partitionEntries.push(new PartitionEntry(_io__raw__m_partitionEntries, this, this._root));
-      }
-      io.seek(_pos);
-      return this._m_partitionEntries;
+      if (this._m_sectorSize !== undefined)
+        return this._m_sectorSize;
+      this._m_sectorSize = 512;
+      return this._m_sectorSize;
     }
   });
 
   return ApmPartitionTable;
 })();
-return ApmPartitionTable;
-}));
+ApmPartitionTable_.ApmPartitionTable = ApmPartitionTable;
+});

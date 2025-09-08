@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream', './ProtocolBody'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./ProtocolBody'));
+    define(['exports', 'kaitai-struct/KaitaiStream', './ProtocolBody'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'), require('./ProtocolBody'));
   } else {
-    root.Ipv6Packet = factory(root.KaitaiStream, root.ProtocolBody);
+    factory(root.Ipv6Packet || (root.Ipv6Packet = {}), root.KaitaiStream, root.ProtocolBody || (root.ProtocolBody = {}));
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, ProtocolBody) {
+})(typeof self !== 'undefined' ? self : this, function (Ipv6Packet_, KaitaiStream, ProtocolBody_) {
 var Ipv6Packet = (function() {
   function Ipv6Packet(_io, _parent, _root) {
     this._io = _io;
@@ -27,11 +27,11 @@ var Ipv6Packet = (function() {
     this.hopLimit = this._io.readU1();
     this.srcIpv6Addr = this._io.readBytes(16);
     this.dstIpv6Addr = this._io.readBytes(16);
-    this.nextHeader = new ProtocolBody(this._io, this, null, this.nextHeaderType);
+    this.nextHeader = new ProtocolBody_.ProtocolBody(this._io, null, null, this.nextHeaderType);
     this.rest = this._io.readBytesFull();
   }
 
   return Ipv6Packet;
 })();
-return Ipv6Packet;
-}));
+Ipv6Packet_.Ipv6Packet = Ipv6Packet;
+});

@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -28,8 +28,8 @@ class Tga < Kaitai::Struct::Struct
     11 => :image_type_enum_rle_bw,
   }
   I__IMAGE_TYPE_ENUM = IMAGE_TYPE_ENUM.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -50,65 +50,28 @@ class Tga < Kaitai::Struct::Struct
     if color_map_type == :color_map_enum_has_color_map
       @color_map = []
       (num_color_map).times { |i|
-        @color_map << @_io.read_bytes(((color_map_depth + 7) / 8))
+        @color_map << @_io.read_bytes((color_map_depth + 7) / 8)
       }
     end
     self
   end
-  class TgaFooter < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @ext_area_ofs = @_io.read_u4le
-      @dev_dir_ofs = @_io.read_u4le
-      @version_magic = @_io.read_bytes(18)
-      self
-    end
-    def is_valid
-      return @is_valid unless @is_valid.nil?
-      @is_valid = version_magic == [84, 82, 85, 69, 86, 73, 83, 73, 79, 78, 45, 88, 70, 73, 76, 69, 46, 0].pack('C*')
-      @is_valid
-    end
-    def ext_area
-      return @ext_area unless @ext_area.nil?
-      if is_valid
-        _pos = @_io.pos
-        @_io.seek(ext_area_ofs)
-        @ext_area = TgaExtArea.new(@_io, self, @_root)
-        @_io.seek(_pos)
-      end
-      @ext_area
-    end
-
-    ##
-    # Offset to extension area
-    attr_reader :ext_area_ofs
-
-    ##
-    # Offset to developer directory
-    attr_reader :dev_dir_ofs
-    attr_reader :version_magic
-  end
   class TgaExtArea < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
       @ext_area_size = @_io.read_u2le
-      @author_name = (@_io.read_bytes(41)).force_encoding("ASCII")
+      @author_name = (@_io.read_bytes(41)).force_encoding("ASCII").encode('UTF-8')
       @comments = []
       (4).times { |i|
-        @comments << (@_io.read_bytes(81)).force_encoding("ASCII")
+        @comments << (@_io.read_bytes(81)).force_encoding("ASCII").encode('UTF-8')
       }
       @timestamp = @_io.read_bytes(12)
-      @job_id = (@_io.read_bytes(41)).force_encoding("ASCII")
-      @job_time = (@_io.read_bytes(6)).force_encoding("ASCII")
-      @software_id = (@_io.read_bytes(41)).force_encoding("ASCII")
+      @job_id = (@_io.read_bytes(41)).force_encoding("ASCII").encode('UTF-8')
+      @job_time = (@_io.read_bytes(6)).force_encoding("ASCII").encode('UTF-8')
+      @software_id = (@_io.read_bytes(41)).force_encoding("ASCII").encode('UTF-8')
       @software_version = @_io.read_bytes(3)
       @key_color = @_io.read_u4le
       @pixel_aspect_ratio = @_io.read_u4le
@@ -165,10 +128,47 @@ class Tga < Kaitai::Struct::Struct
     # Specifies the alpha channel
     attr_reader :attributes
   end
+  class TgaFooter < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @ext_area_ofs = @_io.read_u4le
+      @dev_dir_ofs = @_io.read_u4le
+      @version_magic = @_io.read_bytes(18)
+      self
+    end
+    def ext_area
+      return @ext_area unless @ext_area.nil?
+      if is_valid
+        _pos = @_io.pos
+        @_io.seek(ext_area_ofs)
+        @ext_area = TgaExtArea.new(@_io, self, @_root)
+        @_io.seek(_pos)
+      end
+      @ext_area
+    end
+    def is_valid
+      return @is_valid unless @is_valid.nil?
+      @is_valid = version_magic == [84, 82, 85, 69, 86, 73, 83, 73, 79, 78, 45, 88, 70, 73, 76, 69, 46, 0].pack('C*')
+      @is_valid
+    end
+
+    ##
+    # Offset to extension area
+    attr_reader :ext_area_ofs
+
+    ##
+    # Offset to developer directory
+    attr_reader :dev_dir_ofs
+    attr_reader :version_magic
+  end
   def footer
     return @footer unless @footer.nil?
     _pos = @_io.pos
-    @_io.seek((_io.size - 26))
+    @_io.seek(_io.size - 26)
     @footer = TgaFooter.new(@_io, self, @_root)
     @_io.seek(_pos)
     @footer

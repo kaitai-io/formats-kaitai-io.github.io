@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Encode;
 
 ########################################################################
@@ -18,36 +18,6 @@ sub from_file {
     binmode($fd);
     return new($class, IO::KaitaiStruct::Stream->new($fd));
 }
-
-our $UIMAGE_OS_INVALID = 0;
-our $UIMAGE_OS_OPENBSD = 1;
-our $UIMAGE_OS_NETBSD = 2;
-our $UIMAGE_OS_FREEBSD = 3;
-our $UIMAGE_OS_BSD4_4 = 4;
-our $UIMAGE_OS_LINUX = 5;
-our $UIMAGE_OS_SVR4 = 6;
-our $UIMAGE_OS_ESIX = 7;
-our $UIMAGE_OS_SOLARIS = 8;
-our $UIMAGE_OS_IRIX = 9;
-our $UIMAGE_OS_SCO = 10;
-our $UIMAGE_OS_DELL = 11;
-our $UIMAGE_OS_NCR = 12;
-our $UIMAGE_OS_LYNXOS = 13;
-our $UIMAGE_OS_VXWORKS = 14;
-our $UIMAGE_OS_PSOS = 15;
-our $UIMAGE_OS_QNX = 16;
-our $UIMAGE_OS_U_BOOT = 17;
-our $UIMAGE_OS_RTEMS = 18;
-our $UIMAGE_OS_ARTOS = 19;
-our $UIMAGE_OS_UNITY = 20;
-our $UIMAGE_OS_INTEGRITY = 21;
-our $UIMAGE_OS_OSE = 22;
-our $UIMAGE_OS_PLAN9 = 23;
-our $UIMAGE_OS_OPENRTOS = 24;
-our $UIMAGE_OS_ARM_TRUSTED_FIRMWARE = 25;
-our $UIMAGE_OS_TEE = 26;
-our $UIMAGE_OS_OPENSBI = 27;
-our $UIMAGE_OS_EFI = 28;
 
 our $UIMAGE_ARCH_INVALID = 0;
 our $UIMAGE_ARCH_ALPHA = 1;
@@ -84,6 +54,36 @@ our $UIMAGE_COMP_LZMA = 3;
 our $UIMAGE_COMP_LZO = 4;
 our $UIMAGE_COMP_LZ4 = 5;
 our $UIMAGE_COMP_ZSTD = 6;
+
+our $UIMAGE_OS_INVALID = 0;
+our $UIMAGE_OS_OPENBSD = 1;
+our $UIMAGE_OS_NETBSD = 2;
+our $UIMAGE_OS_FREEBSD = 3;
+our $UIMAGE_OS_BSD4_4 = 4;
+our $UIMAGE_OS_LINUX = 5;
+our $UIMAGE_OS_SVR4 = 6;
+our $UIMAGE_OS_ESIX = 7;
+our $UIMAGE_OS_SOLARIS = 8;
+our $UIMAGE_OS_IRIX = 9;
+our $UIMAGE_OS_SCO = 10;
+our $UIMAGE_OS_DELL = 11;
+our $UIMAGE_OS_NCR = 12;
+our $UIMAGE_OS_LYNXOS = 13;
+our $UIMAGE_OS_VXWORKS = 14;
+our $UIMAGE_OS_PSOS = 15;
+our $UIMAGE_OS_QNX = 16;
+our $UIMAGE_OS_U_BOOT = 17;
+our $UIMAGE_OS_RTEMS = 18;
+our $UIMAGE_OS_ARTOS = 19;
+our $UIMAGE_OS_UNITY = 20;
+our $UIMAGE_OS_INTEGRITY = 21;
+our $UIMAGE_OS_OSE = 22;
+our $UIMAGE_OS_PLAN9 = 23;
+our $UIMAGE_OS_OPENRTOS = 24;
+our $UIMAGE_OS_ARM_TRUSTED_FIRMWARE = 25;
+our $UIMAGE_OS_TEE = 26;
+our $UIMAGE_OS_OPENSBI = 27;
+our $UIMAGE_OS_EFI = 28;
 
 our $UIMAGE_TYPE_INVALID = 0;
 our $UIMAGE_TYPE_STANDALONE = 1;
@@ -133,7 +133,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -177,7 +177,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 

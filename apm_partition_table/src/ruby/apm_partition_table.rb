@@ -2,16 +2,16 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
 ##
 # @see https://en.wikipedia.org/wiki/Apple_Partition_Map Source
 class ApmPartitionTable < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -19,20 +19,20 @@ class ApmPartitionTable < Kaitai::Struct::Struct
     self
   end
   class PartitionEntry < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
       @magic = @_io.read_bytes(2)
-      raise Kaitai::Struct::ValidationNotEqualError.new([80, 77].pack('C*'), magic, _io, "/types/partition_entry/seq/0") if not magic == [80, 77].pack('C*')
+      raise Kaitai::Struct::ValidationNotEqualError.new([80, 77].pack('C*'), @magic, @_io, "/types/partition_entry/seq/0") if not @magic == [80, 77].pack('C*')
       @reserved_1 = @_io.read_bytes(2)
       @number_of_partitions = @_io.read_u4be
       @partition_start = @_io.read_u4be
       @partition_size = @_io.read_u4be
-      @partition_name = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(32), 0, false)).force_encoding("ascii")
-      @partition_type = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(32), 0, false)).force_encoding("ascii")
+      @partition_name = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(32), 0, false)).force_encoding("ASCII").encode('UTF-8')
+      @partition_type = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(32), 0, false)).force_encoding("ASCII").encode('UTF-8')
       @data_start = @_io.read_u4be
       @data_size = @_io.read_u4be
       @partition_status = @_io.read_u4be
@@ -43,37 +43,37 @@ class ApmPartitionTable < Kaitai::Struct::Struct
       @boot_code_entry = @_io.read_u4be
       @reserved_3 = @_io.read_bytes(4)
       @boot_code_cksum = @_io.read_u4be
-      @processor_type = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(16), 0, false)).force_encoding("ascii")
+      @processor_type = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(16), 0, false)).force_encoding("ASCII").encode('UTF-8')
       self
-    end
-    def partition
-      return @partition unless @partition.nil?
-      if (partition_status & 1) != 0
-        io = _root._io
-        _pos = io.pos
-        io.seek((partition_start * _root.sector_size))
-        @partition = io.read_bytes((partition_size * _root.sector_size))
-        io.seek(_pos)
-      end
-      @partition
-    end
-    def data
-      return @data unless @data.nil?
-      io = _root._io
-      _pos = io.pos
-      io.seek((data_start * _root.sector_size))
-      @data = io.read_bytes((data_size * _root.sector_size))
-      io.seek(_pos)
-      @data
     end
     def boot_code
       return @boot_code unless @boot_code.nil?
       io = _root._io
       _pos = io.pos
-      io.seek((boot_code_start * _root.sector_size))
+      io.seek(boot_code_start * _root.sector_size)
       @boot_code = io.read_bytes(boot_code_size)
       io.seek(_pos)
       @boot_code
+    end
+    def data
+      return @data unless @data.nil?
+      io = _root._io
+      _pos = io.pos
+      io.seek(data_start * _root.sector_size)
+      @data = io.read_bytes(data_size * _root.sector_size)
+      io.seek(_pos)
+      @data
+    end
+    def partition
+      return @partition unless @partition.nil?
+      if partition_status & 1 != 0
+        io = _root._io
+        _pos = io.pos
+        io.seek(partition_start * _root.sector_size)
+        @partition = io.read_bytes(partition_size * _root.sector_size)
+        io.seek(_pos)
+      end
+      @partition
     end
     attr_reader :magic
     attr_reader :reserved_1
@@ -121,14 +121,19 @@ class ApmPartitionTable < Kaitai::Struct::Struct
     attr_reader :boot_code_cksum
     attr_reader :processor_type
   end
-
-  ##
-  # 0x200 (512) bytes for disks, 0x1000 (4096) bytes is not supported by APM
-  # 0x800 (2048) bytes for CDROM
-  def sector_size
-    return @sector_size unless @sector_size.nil?
-    @sector_size = 512
-    @sector_size
+  def partition_entries
+    return @partition_entries unless @partition_entries.nil?
+    io = _root._io
+    _pos = io.pos
+    io.seek(_root.sector_size)
+    @_raw_partition_entries = []
+    @partition_entries = []
+    (_root.partition_lookup.number_of_partitions).times { |i|
+      _io_partition_entries = io.substream(sector_size)
+      @partition_entries << PartitionEntry.new(_io_partition_entries, self, @_root)
+    }
+    io.seek(_pos)
+    @partition_entries
   end
 
   ##
@@ -140,27 +145,20 @@ class ApmPartitionTable < Kaitai::Struct::Struct
     io = _root._io
     _pos = io.pos
     io.seek(_root.sector_size)
-    @_raw_partition_lookup = io.read_bytes(sector_size)
-    _io__raw_partition_lookup = Kaitai::Struct::Stream.new(@_raw_partition_lookup)
-    @partition_lookup = PartitionEntry.new(_io__raw_partition_lookup, self, @_root)
+    _io_partition_lookup = io.substream(sector_size)
+    @partition_lookup = PartitionEntry.new(_io_partition_lookup, self, @_root)
     io.seek(_pos)
     @partition_lookup
   end
-  def partition_entries
-    return @partition_entries unless @partition_entries.nil?
-    io = _root._io
-    _pos = io.pos
-    io.seek(_root.sector_size)
-    @_raw_partition_entries = []
-    @partition_entries = []
-    (_root.partition_lookup.number_of_partitions).times { |i|
-      @_raw_partition_entries << io.read_bytes(sector_size)
-      _io__raw_partition_entries = Kaitai::Struct::Stream.new(@_raw_partition_entries[i])
-      @partition_entries << PartitionEntry.new(_io__raw_partition_entries, self, @_root)
-    }
-    io.seek(_pos)
-    @partition_entries
+
+  ##
+  # 0x200 (512) bytes for disks, 0x1000 (4096) bytes is not supported by APM
+  # 0x800 (2048) bytes for CDROM
+  def sector_size
+    return @sector_size unless @sector_size.nil?
+    @sector_size = 512
+    @sector_size
   end
-  attr_reader :_raw_partition_lookup
   attr_reader :_raw_partition_entries
+  attr_reader :_raw_partition_lookup
 end

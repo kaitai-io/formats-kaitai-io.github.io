@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
-from enum import Enum
+from enum import IntEnum
 
 
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class PythonPyc27(KaitaiStruct):
     """Python interpreter runs .py files in 2 step process: first, it
@@ -18,7 +19,7 @@ class PythonPyc27(KaitaiStruct):
     a simple header prepended.
     """
 
-    class Version(Enum):
+    class Version(IntEnum):
         v15 = 20121
         v16 = 50428
         v20 = 50823
@@ -45,9 +46,9 @@ class PythonPyc27(KaitaiStruct):
         v27_a0d = 62201
         v27_a0e = 62211
     def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
+        super(PythonPyc27, self).__init__(_io)
         self._parent = _parent
-        self._root = _root if _root else self
+        self._root = _root or self
         self._read()
 
     def _read(self):
@@ -56,16 +57,43 @@ class PythonPyc27(KaitaiStruct):
         self.modification_timestamp = self._io.read_u4le()
         self.body = PythonPyc27.PyObject(self._io, self, self._root)
 
+
+    def _fetch_instances(self):
+        pass
+        self.body._fetch_instances()
+
+    class Assembly(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(PythonPyc27.Assembly, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.string_magic = self._io.read_bytes(1)
+            if not self.string_magic == b"\x73":
+                raise kaitaistruct.ValidationNotEqualError(b"\x73", self.string_magic, self._io, u"/types/assembly/seq/0")
+            self.length = self._io.read_u4le()
+            self._raw_items = self._io.read_bytes(self.length)
+            _io__raw_items = KaitaiStream(BytesIO(self._raw_items))
+            self.items = PythonPyc27.OpArgs(_io__raw_items, self, self._root)
+
+
+        def _fetch_instances(self):
+            pass
+            self.items._fetch_instances()
+
+
     class CodeObject(KaitaiStruct):
 
-        class FlagsEnum(Enum):
+        class FlagsEnum(IntEnum):
             has_args = 4
             has_kwargs = 8
             generator = 32
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(PythonPyc27.CodeObject, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -85,26 +113,22 @@ class PythonPyc27(KaitaiStruct):
             self.lnotab = PythonPyc27.PyObject(self._io, self, self._root)
 
 
-    class Assembly(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.string_magic = self._io.read_bytes(1)
-            if not self.string_magic == b"\x73":
-                raise kaitaistruct.ValidationNotEqualError(b"\x73", self.string_magic, self._io, u"/types/assembly/seq/0")
-            self.length = self._io.read_u4le()
-            self._raw_items = self._io.read_bytes(self.length)
-            _io__raw_items = KaitaiStream(BytesIO(self._raw_items))
-            self.items = PythonPyc27.OpArgs(_io__raw_items, self, self._root)
+        def _fetch_instances(self):
+            pass
+            self.code._fetch_instances()
+            self.consts._fetch_instances()
+            self.names._fetch_instances()
+            self.var_names._fetch_instances()
+            self.free_vars._fetch_instances()
+            self.cell_vars._fetch_instances()
+            self.filename._fetch_instances()
+            self.name._fetch_instances()
+            self.lnotab._fetch_instances()
 
 
     class OpArg(KaitaiStruct):
 
-        class OpCodeEnum(Enum):
+        class OpCodeEnum(IntEnum):
             stop_code = 0
             pop_top = 1
             rot_two = 2
@@ -225,21 +249,53 @@ class PythonPyc27(KaitaiStruct):
             set_add = 146
             map_add = 147
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(PythonPyc27.OpArg, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
             self.op_code = KaitaiStream.resolve_enum(PythonPyc27.OpArg.OpCodeEnum, self._io.read_u1())
-            if self.op_code.value >= PythonPyc27.OpArg.OpCodeEnum.store_name.value:
+            if int(self.op_code) >= int(PythonPyc27.OpArg.OpCodeEnum.store_name):
+                pass
                 self.arg = self._io.read_u2le()
+
+
+
+        def _fetch_instances(self):
+            pass
+            if int(self.op_code) >= int(PythonPyc27.OpArg.OpCodeEnum.store_name):
+                pass
+
+
+
+    class OpArgs(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(PythonPyc27.OpArgs, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.items = []
+            i = 0
+            while not self._io.is_eof():
+                self.items.append(PythonPyc27.OpArg(self._io, self, self._root))
+                i += 1
+
+
+
+        def _fetch_instances(self):
+            pass
+            for i in range(len(self.items)):
+                pass
+                self.items[i]._fetch_instances()
 
 
 
     class PyObject(KaitaiStruct):
 
-        class ObjectType(Enum):
+        class ObjectType(IntEnum):
             tuple = 40
             py_false = 70
             none = 78
@@ -251,82 +307,170 @@ class PythonPyc27(KaitaiStruct):
             interned = 116
             unicode_string = 117
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(PythonPyc27.PyObject, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
             self.type = KaitaiStream.resolve_enum(PythonPyc27.PyObject.ObjectType, self._io.read_u1())
             _on = self.type
-            if _on == PythonPyc27.PyObject.ObjectType.string:
-                self.value = PythonPyc27.PyObject.PyString(self._io, self, self._root)
-            elif _on == PythonPyc27.PyObject.ObjectType.tuple:
-                self.value = PythonPyc27.PyObject.Tuple(self._io, self, self._root)
-            elif _on == PythonPyc27.PyObject.ObjectType.int:
-                self.value = self._io.read_u4le()
-            elif _on == PythonPyc27.PyObject.ObjectType.py_true:
-                self.value = PythonPyc27.PyObject.PyTrue(self._io, self, self._root)
-            elif _on == PythonPyc27.PyObject.ObjectType.py_false:
-                self.value = PythonPyc27.PyObject.PyFalse(self._io, self, self._root)
-            elif _on == PythonPyc27.PyObject.ObjectType.none:
-                self.value = PythonPyc27.PyObject.PyNone(self._io, self, self._root)
-            elif _on == PythonPyc27.PyObject.ObjectType.string_ref:
-                self.value = PythonPyc27.PyObject.StringRef(self._io, self, self._root)
-            elif _on == PythonPyc27.PyObject.ObjectType.code_object:
+            if _on == PythonPyc27.PyObject.ObjectType.code_object:
+                pass
                 self.value = PythonPyc27.CodeObject(self._io, self, self._root)
+            elif _on == PythonPyc27.PyObject.ObjectType.int:
+                pass
+                self.value = self._io.read_u4le()
             elif _on == PythonPyc27.PyObject.ObjectType.interned:
+                pass
                 self.value = PythonPyc27.PyObject.InternedString(self._io, self, self._root)
+            elif _on == PythonPyc27.PyObject.ObjectType.none:
+                pass
+                self.value = PythonPyc27.PyObject.PyNone(self._io, self, self._root)
+            elif _on == PythonPyc27.PyObject.ObjectType.py_false:
+                pass
+                self.value = PythonPyc27.PyObject.PyFalse(self._io, self, self._root)
+            elif _on == PythonPyc27.PyObject.ObjectType.py_true:
+                pass
+                self.value = PythonPyc27.PyObject.PyTrue(self._io, self, self._root)
+            elif _on == PythonPyc27.PyObject.ObjectType.string:
+                pass
+                self.value = PythonPyc27.PyObject.PyString(self._io, self, self._root)
+            elif _on == PythonPyc27.PyObject.ObjectType.string_ref:
+                pass
+                self.value = PythonPyc27.PyObject.StringRef(self._io, self, self._root)
+            elif _on == PythonPyc27.PyObject.ObjectType.tuple:
+                pass
+                self.value = PythonPyc27.PyObject.Tuple(self._io, self, self._root)
 
-        class PyNone(KaitaiStruct):
+
+        def _fetch_instances(self):
+            pass
+            _on = self.type
+            if _on == PythonPyc27.PyObject.ObjectType.code_object:
+                pass
+                self.value._fetch_instances()
+            elif _on == PythonPyc27.PyObject.ObjectType.int:
+                pass
+            elif _on == PythonPyc27.PyObject.ObjectType.interned:
+                pass
+                self.value._fetch_instances()
+            elif _on == PythonPyc27.PyObject.ObjectType.none:
+                pass
+                self.value._fetch_instances()
+            elif _on == PythonPyc27.PyObject.ObjectType.py_false:
+                pass
+                self.value._fetch_instances()
+            elif _on == PythonPyc27.PyObject.ObjectType.py_true:
+                pass
+                self.value._fetch_instances()
+            elif _on == PythonPyc27.PyObject.ObjectType.string:
+                pass
+                self.value._fetch_instances()
+            elif _on == PythonPyc27.PyObject.ObjectType.string_ref:
+                pass
+                self.value._fetch_instances()
+            elif _on == PythonPyc27.PyObject.ObjectType.tuple:
+                pass
+                self.value._fetch_instances()
+
+        class InternedString(KaitaiStruct):
             def __init__(self, _io, _parent=None, _root=None):
-                self._io = _io
+                super(PythonPyc27.PyObject.InternedString, self).__init__(_io)
                 self._parent = _parent
-                self._root = _root if _root else self
+                self._root = _root
                 self._read()
 
             def _read(self):
+                self.length = self._io.read_u4le()
+                self.data = (self._io.read_bytes(self.length)).decode(u"UTF-8")
+
+
+            def _fetch_instances(self):
                 pass
 
 
         class PyFalse(KaitaiStruct):
             def __init__(self, _io, _parent=None, _root=None):
-                self._io = _io
+                super(PythonPyc27.PyObject.PyFalse, self).__init__(_io)
                 self._parent = _parent
-                self._root = _root if _root else self
+                self._root = _root
                 self._read()
 
             def _read(self):
                 pass
 
 
+            def _fetch_instances(self):
+                pass
+
+
+        class PyNone(KaitaiStruct):
+            def __init__(self, _io, _parent=None, _root=None):
+                super(PythonPyc27.PyObject.PyNone, self).__init__(_io)
+                self._parent = _parent
+                self._root = _root
+                self._read()
+
+            def _read(self):
+                pass
+
+
+            def _fetch_instances(self):
+                pass
+
+
+        class PyString(KaitaiStruct):
+            def __init__(self, _io, _parent=None, _root=None):
+                super(PythonPyc27.PyObject.PyString, self).__init__(_io)
+                self._parent = _parent
+                self._root = _root
+                self._read()
+
+            def _read(self):
+                self.length = self._io.read_u4le()
+                self.data = self._io.read_bytes(self.length)
+
+
+            def _fetch_instances(self):
+                pass
+
+
+        class PyTrue(KaitaiStruct):
+            def __init__(self, _io, _parent=None, _root=None):
+                super(PythonPyc27.PyObject.PyTrue, self).__init__(_io)
+                self._parent = _parent
+                self._root = _root
+                self._read()
+
+            def _read(self):
+                pass
+
+
+            def _fetch_instances(self):
+                pass
+
+
         class StringRef(KaitaiStruct):
             def __init__(self, _io, _parent=None, _root=None):
-                self._io = _io
+                super(PythonPyc27.PyObject.StringRef, self).__init__(_io)
                 self._parent = _parent
-                self._root = _root if _root else self
+                self._root = _root
                 self._read()
 
             def _read(self):
                 self.interned_list_index = self._io.read_u4le()
 
 
-        class PyTrue(KaitaiStruct):
-            def __init__(self, _io, _parent=None, _root=None):
-                self._io = _io
-                self._parent = _parent
-                self._root = _root if _root else self
-                self._read()
-
-            def _read(self):
+            def _fetch_instances(self):
                 pass
 
 
         class Tuple(KaitaiStruct):
             def __init__(self, _io, _parent=None, _root=None):
-                self._io = _io
+                super(PythonPyc27.PyObject.Tuple, self).__init__(_io)
                 self._parent = _parent
-                self._root = _root if _root else self
+                self._root = _root
                 self._read()
 
             def _read(self):
@@ -337,56 +481,28 @@ class PythonPyc27(KaitaiStruct):
 
 
 
+            def _fetch_instances(self):
+                pass
+                for i in range(len(self.items)):
+                    pass
+                    self.items[i]._fetch_instances()
+
+
+
         class UnicodeString(KaitaiStruct):
             def __init__(self, _io, _parent=None, _root=None):
-                self._io = _io
+                super(PythonPyc27.PyObject.UnicodeString, self).__init__(_io)
                 self._parent = _parent
-                self._root = _root if _root else self
+                self._root = _root
                 self._read()
 
             def _read(self):
                 self.length = self._io.read_u4le()
-                self.data = (self._io.read_bytes(self.length)).decode(u"utf-8")
+                self.data = (self._io.read_bytes(self.length)).decode(u"UTF-8")
 
 
-        class InternedString(KaitaiStruct):
-            def __init__(self, _io, _parent=None, _root=None):
-                self._io = _io
-                self._parent = _parent
-                self._root = _root if _root else self
-                self._read()
-
-            def _read(self):
-                self.length = self._io.read_u4le()
-                self.data = (self._io.read_bytes(self.length)).decode(u"utf-8")
-
-
-        class PyString(KaitaiStruct):
-            def __init__(self, _io, _parent=None, _root=None):
-                self._io = _io
-                self._parent = _parent
-                self._root = _root if _root else self
-                self._read()
-
-            def _read(self):
-                self.length = self._io.read_u4le()
-                self.data = self._io.read_bytes(self.length)
-
-
-
-    class OpArgs(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.items = []
-            i = 0
-            while not self._io.is_eof():
-                self.items.append(PythonPyc27.OpArg(self._io, self, self._root))
-                i += 1
+            def _fetch_instances(self):
+                pass
 
 
 

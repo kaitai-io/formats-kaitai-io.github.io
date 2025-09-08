@@ -9,34 +9,13 @@ digraph {
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 			<TR><TD PORT="header_pos">0</TD><TD PORT="header_size">16</TD><TD>Header</TD><TD PORT="header_type">header</TD></TR>
 			<TR><TD PORT="block_pointers_pos">16</TD><TD PORT="block_pointers_size">4</TD><TD>u4le</TD><TD PORT="block_pointers_type">block_pointers</TD></TR>
-			<TR><TD COLSPAN="4" PORT="block_pointers__repeat">repeat (header.num_blocks + 1) times</TD></TR>
+			<TR><TD COLSPAN="4" PORT="block_pointers__repeat">repeat header.num_blocks + 1 times</TD></TR>
 		</TABLE>>];
 		zisofs__inst__blocks [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 			<TR><TD PORT="blocks_pos">...</TD><TD PORT="blocks_size">0</TD><TD>Block</TD><TD PORT="blocks_type">blocks</TD></TR>
 			<TR><TD COLSPAN="4" PORT="blocks__repeat">repeat header.num_blocks times</TD></TR>
 		</TABLE>>];
-		subgraph cluster__header {
-			label="Zisofs::Header";
-			graph[style=dotted];
-
-			header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">8</TD><TD></TD><TD PORT="magic_type">magic</TD></TR>
-				<TR><TD PORT="uncompressed_size_pos">8</TD><TD PORT="uncompressed_size_size">4</TD><TD>u4le</TD><TD PORT="uncompressed_size_type">uncompressed_size</TD></TR>
-				<TR><TD PORT="len_header_pos">12</TD><TD PORT="len_header_size">1</TD><TD>u1</TD><TD PORT="len_header_type">len_header</TD></TR>
-				<TR><TD PORT="block_size_log2_pos">13</TD><TD PORT="block_size_log2_size">1</TD><TD>u1</TD><TD PORT="block_size_log2_type">block_size_log2</TD></TR>
-				<TR><TD PORT="reserved_pos">14</TD><TD PORT="reserved_size">2</TD><TD></TD><TD PORT="reserved_type">reserved</TD></TR>
-			</TABLE>>];
-			header__inst__block_size [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>block_size</TD><TD>(1 &lt;&lt; block_size_log2)</TD></TR>
-			</TABLE>>];
-			header__inst__num_blocks [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>num_blocks</TD><TD>((uncompressed_size / block_size) + ((uncompressed_size % block_size) != 0 ? 1 : 0))</TD></TR>
-			</TABLE>>];
-		}
 		subgraph cluster__block {
 			label="Zisofs::Block";
 			graph[style=dotted];
@@ -44,13 +23,36 @@ digraph {
 			block__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 			</TABLE>>];
-			block__inst__len_data [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>len_data</TD><TD>(ofs_end - ofs_start)</TD></TR>
-			</TABLE>>];
 			block__inst__data [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="data_pos">ofs_start</TD><TD PORT="data_size">len_data</TD><TD></TD><TD PORT="data_type">data</TD></TR>
+			</TABLE>>];
+			block__inst__len_data [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>len_data</TD><TD>ofs_end - ofs_start</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__header {
+			label="Zisofs::Header";
+			graph[style=dotted];
+
+			header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">8</TD><TD>37 E4 53 96 C9 DB D6 07</TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD PORT="uncompressed_size_pos">8</TD><TD PORT="uncompressed_size_size">4</TD><TD>u4le</TD><TD PORT="uncompressed_size_type">uncompressed_size</TD></TR>
+				<TR><TD PORT="len_header_pos">12</TD><TD PORT="len_header_size">1</TD><TD>u1</TD><TD PORT="len_header_type">len_header</TD></TR>
+				<TR><TD COLSPAN="4" PORT="len_header__valid">must be equal to 4</TD></TR>
+				<TR><TD PORT="block_size_log2_pos">13</TD><TD PORT="block_size_log2_size">1</TD><TD>u1</TD><TD PORT="block_size_log2_type">block_size_log2</TD></TR>
+				<TR><TD COLSPAN="4" PORT="block_size_log2__valid">must be any of 15, 16, 17</TD></TR>
+				<TR><TD PORT="reserved_pos">14</TD><TD PORT="reserved_size">2</TD><TD>00 00</TD><TD PORT="reserved_type">reserved</TD></TR>
+			</TABLE>>];
+			header__inst__block_size [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>block_size</TD><TD>1 &lt;&lt; block_size_log2</TD></TR>
+			</TABLE>>];
+			header__inst__num_blocks [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>num_blocks</TD><TD>uncompressed_size / block_size + (uncompressed_size % block_size != 0 ? 1 : 0)</TD></TR>
 			</TABLE>>];
 		}
 	}
@@ -58,13 +60,11 @@ digraph {
 	header__inst__num_blocks:num_blocks_type -> zisofs__seq:block_pointers__repeat [color="#404040"];
 	zisofs__inst__blocks:blocks_type -> block__seq [style=bold];
 	header__inst__num_blocks:num_blocks_type -> zisofs__inst__blocks:blocks__repeat [color="#404040"];
+	block__params:ofs_start_type -> block__inst__data:data_pos [color="#404040"];
+	block__inst__len_data:len_data_type -> block__inst__data:data_size [color="#404040"];
+	block__params:ofs_end_type -> block__inst__len_data [color="#404040"];
+	block__params:ofs_start_type -> block__inst__len_data [color="#404040"];
 	header__seq:block_size_log2_type -> header__inst__block_size [color="#404040"];
 	header__seq:uncompressed_size_type -> header__inst__num_blocks [color="#404040"];
 	header__inst__block_size:block_size_type -> header__inst__num_blocks [color="#404040"];
-	header__seq:uncompressed_size_type -> header__inst__num_blocks [color="#404040"];
-	header__inst__block_size:block_size_type -> header__inst__num_blocks [color="#404040"];
-	block__params:ofs_end_type -> block__inst__len_data [color="#404040"];
-	block__params:ofs_start_type -> block__inst__len_data [color="#404040"];
-	block__params:ofs_start_type -> block__inst__data:data_pos [color="#404040"];
-	block__inst__len_data:len_data_type -> block__inst__data:data_size [color="#404040"];
 }

@@ -14,8 +14,8 @@
 
 namespace {
     class Rar extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Rar $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Rar $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -51,58 +51,6 @@ namespace {
 }
 
 /**
- * RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and
- * 8-byte magic (and pretty different block format) for v5+. This
- * type would parse and validate both versions of signature. Note
- * that actually this signature is a valid RAR "block": in theory,
- * one can omit signature reading at all, and read this normally,
- * as a block, if exact RAR version is known (and thus it's
- * possible to choose correct block format).
- */
-
-namespace Rar {
-    class MagicSignature extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Rar $_parent = null, \Rar $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_magic1 = $this->_io->readBytes(6);
-            if (!($this->magic1() == "\x52\x61\x72\x21\x1A\x07")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x52\x61\x72\x21\x1A\x07", $this->magic1(), $this->_io(), "/types/magic_signature/seq/0");
-            }
-            $this->_m_version = $this->_io->readU1();
-            if ($this->version() == 1) {
-                $this->_m_magic3 = $this->_io->readBytes(1);
-                if (!($this->magic3() == "\x00")) {
-                    throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00", $this->magic3(), $this->_io(), "/types/magic_signature/seq/2");
-                }
-            }
-        }
-        protected $_m_magic1;
-        protected $_m_version;
-        protected $_m_magic3;
-
-        /**
-         * Fixed part of file's magic signature that doesn't change with RAR version
-         */
-        public function magic1() { return $this->_m_magic1; }
-
-        /**
-         * Variable part of magic signature: 0 means old (RAR 1.5-4.0)
-         * format, 1 means new (RAR 5+) format
-         */
-        public function version() { return $this->_m_version; }
-
-        /**
-         * New format (RAR 5+) magic contains extra byte
-         */
-        public function magic3() { return $this->_m_magic3; }
-    }
-}
-
-/**
  * Basic block that RAR files consist of. There are several block
  * types (see `block_type`), which have different `body` and
  * `add_body`.
@@ -110,7 +58,7 @@ namespace Rar {
 
 namespace Rar {
     class Block extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Rar $_parent = null, \Rar $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Rar $_parent = null, ?\Rar $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -137,6 +85,13 @@ namespace Rar {
                 $this->_m_addBody = $this->_io->readBytes($this->addSize());
             }
         }
+        protected $_m_bodySize;
+        public function bodySize() {
+            if ($this->_m_bodySize !== null)
+                return $this->_m_bodySize;
+            $this->_m_bodySize = $this->blockSize() - $this->headerSize();
+            return $this->_m_bodySize;
+        }
         protected $_m_hasAdd;
 
         /**
@@ -154,13 +109,6 @@ namespace Rar {
                 return $this->_m_headerSize;
             $this->_m_headerSize = ($this->hasAdd() ? 11 : 7);
             return $this->_m_headerSize;
-        }
-        protected $_m_bodySize;
-        public function bodySize() {
-            if ($this->_m_bodySize !== null)
-                return $this->_m_bodySize;
-            $this->_m_bodySize = ($this->blockSize() - $this->headerSize());
-            return $this->_m_bodySize;
         }
         protected $_m_crc16;
         protected $_m_blockType;
@@ -199,7 +147,7 @@ namespace Rar {
 
 namespace Rar {
     class BlockFileHeader extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Rar\Block $_parent = null, \Rar $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Rar\Block $_parent = null, ?\Rar $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -284,13 +232,65 @@ namespace Rar {
 
 namespace Rar {
     class BlockV5 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Rar $_parent = null, \Rar $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Rar $_parent = null, ?\Rar $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
         }
+    }
+}
+
+/**
+ * RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and
+ * 8-byte magic (and pretty different block format) for v5+. This
+ * type would parse and validate both versions of signature. Note
+ * that actually this signature is a valid RAR "block": in theory,
+ * one can omit signature reading at all, and read this normally,
+ * as a block, if exact RAR version is known (and thus it's
+ * possible to choose correct block format).
+ */
+
+namespace Rar {
+    class MagicSignature extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Rar $_parent = null, ?\Rar $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_magic1 = $this->_io->readBytes(6);
+            if (!($this->_m_magic1 == "\x52\x61\x72\x21\x1A\x07")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x52\x61\x72\x21\x1A\x07", $this->_m_magic1, $this->_io, "/types/magic_signature/seq/0");
+            }
+            $this->_m_version = $this->_io->readU1();
+            if ($this->version() == 1) {
+                $this->_m_magic3 = $this->_io->readBytes(1);
+                if (!($this->_m_magic3 == "\x00")) {
+                    throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00", $this->_m_magic3, $this->_io, "/types/magic_signature/seq/2");
+                }
+            }
+        }
+        protected $_m_magic1;
+        protected $_m_version;
+        protected $_m_magic3;
+
+        /**
+         * Fixed part of file's magic signature that doesn't change with RAR version
+         */
+        public function magic1() { return $this->_m_magic1; }
+
+        /**
+         * Variable part of magic signature: 0 means old (RAR 1.5-4.0)
+         * format, 1 means new (RAR 5+) format
+         */
+        public function version() { return $this->_m_version; }
+
+        /**
+         * New format (RAR 5+) magic contains extra byte
+         */
+        public function magic3() { return $this->_m_magic3; }
     }
 }
 
@@ -306,17 +306,12 @@ namespace Rar {
         const OLD_STYLE_AUTHENTICITY_INFO_79 = 121;
         const SUBBLOCK = 122;
         const TERMINATOR = 123;
-    }
-}
 
-namespace Rar {
-    class Oses {
-        const MS_DOS = 0;
-        const OS_2 = 1;
-        const WINDOWS = 2;
-        const UNIX = 3;
-        const MAC_OS = 4;
-        const BEOS = 5;
+        private const _VALUES = [114 => true, 115 => true, 116 => true, 117 => true, 118 => true, 119 => true, 120 => true, 121 => true, 122 => true, 123 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
@@ -328,5 +323,28 @@ namespace Rar {
         const NORMAL = 51;
         const GOOD = 52;
         const BEST = 53;
+
+        private const _VALUES = [48 => true, 49 => true, 50 => true, 51 => true, 52 => true, 53 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
+    }
+}
+
+namespace Rar {
+    class Oses {
+        const MS_DOS = 0;
+        const OS_2 = 1;
+        const WINDOWS = 2;
+        const UNIX = 3;
+        const MAC_OS = 4;
+        const BEOS = 5;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 5 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

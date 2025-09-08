@@ -55,7 +55,7 @@ function DcmpVariableLengthInteger.property.value:get()
     return self._m_value
   end
 
-  self._m_value = utils.box_unwrap((self.first == 255) and utils.box_wrap(self.more) or (utils.box_unwrap((self.first >= 128) and utils.box_wrap((((self.first << 8) | self.more) - 49152)) or (self.first))))
+  self._m_value = utils.box_unwrap((self.first == 255) and utils.box_wrap(self.more) or (utils.box_unwrap((self.first >= 128) and utils.box_wrap((self.first << 8 | self.more) - 49152) or (self.first))))
   return self._m_value
 end
 

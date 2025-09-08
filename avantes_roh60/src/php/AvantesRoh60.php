@@ -32,8 +32,8 @@
 
 namespace {
     class AvantesRoh60 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \AvantesRoh60 $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\AvantesRoh60 $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -57,7 +57,7 @@ namespace {
                 $this->_m_unknown3[] = $this->_io->readF4le();
             }
             $this->_m_spectrum = [];
-            $n = ((intval($this->ipixlast()) - intval($this->ipixfirst())) - 1);
+            $n = (intval($this->ipixlast()) - intval($this->ipixfirst())) - 1;
             for ($i = 0; $i < $n; $i++) {
                 $this->_m_spectrum[] = $this->_io->readF4le();
             }

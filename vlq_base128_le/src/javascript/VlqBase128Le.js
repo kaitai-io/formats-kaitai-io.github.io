@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.VlqBase128Le = factory(root.KaitaiStream);
+    factory(root.VlqBase128Le || (root.VlqBase128Le = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (VlqBase128Le_, KaitaiStream) {
 /**
  * A variable-length unsigned/signed integer using base128 encoding. 1-byte groups
  * consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered
@@ -53,7 +53,7 @@ var VlqBase128Le = (function() {
     this.groups = [];
     var i = 0;
     do {
-      var _ = new Group(this._io, this, this._root, i, (i != 0 ? this.groups[(i - 1)].intermValue : 0), (i != 0 ? (i == 9 ? 9223372036854775808 : (this.groups[(i - 1)].multiplier * 128)) : 1));
+      var _ = new Group(this._io, this, this._root, i, (i != 0 ? this.groups[i - 1].intermValue : 0), (i != 0 ? (i == 9 ? 9223372036854775808 : this.groups[i - 1].multiplier * 128) : 1));
       this.groups.push(_);
       i++;
     } while (!(!(_.hasNext)));
@@ -67,7 +67,7 @@ var VlqBase128Le = (function() {
     function Group(_io, _parent, _root, idx, prevIntermValue, multiplier) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
       this.idx = idx;
       this.prevIntermValue = prevIntermValue;
       this.multiplier = multiplier;
@@ -88,7 +88,7 @@ var VlqBase128Le = (function() {
       get: function() {
         if (this._m_intermValue !== undefined)
           return this._m_intermValue;
-        this._m_intermValue = (this.prevIntermValue + (this.value * this.multiplier));
+        this._m_intermValue = (this.prevIntermValue + this.value * this.multiplier);
         return this._m_intermValue;
       }
     });
@@ -119,6 +119,14 @@ var VlqBase128Le = (function() {
       return this._m_len;
     }
   });
+  Object.defineProperty(VlqBase128Le.prototype, 'signBit', {
+    get: function() {
+      if (this._m_signBit !== undefined)
+        return this._m_signBit;
+      this._m_signBit = (this.len == 10 ? 9223372036854775808 : this.groups[this.groups.length - 1].multiplier * 64);
+      return this._m_signBit;
+    }
+  });
 
   /**
    * Resulting unsigned value as normal integer
@@ -129,14 +137,6 @@ var VlqBase128Le = (function() {
         return this._m_value;
       this._m_value = this.groups[this.groups.length - 1].intermValue;
       return this._m_value;
-    }
-  });
-  Object.defineProperty(VlqBase128Le.prototype, 'signBit', {
-    get: function() {
-      if (this._m_signBit !== undefined)
-        return this._m_signBit;
-      this._m_signBit = (this.len == 10 ? 9223372036854775808 : (this.groups[this.groups.length - 1].multiplier * 64));
-      return this._m_signBit;
     }
   });
   Object.defineProperty(VlqBase128Le.prototype, 'valueSigned', {
@@ -150,5 +150,5 @@ var VlqBase128Le = (function() {
 
   return VlqBase128Le;
 })();
-return VlqBase128Le;
-}));
+VlqBase128Le_.VlqBase128Le = VlqBase128Le;
+});

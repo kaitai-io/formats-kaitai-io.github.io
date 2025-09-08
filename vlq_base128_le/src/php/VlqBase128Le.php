@@ -35,8 +35,8 @@
 
 namespace {
     class VlqBase128Le extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \VlqBase128Le $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\VlqBase128Le $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -44,7 +44,7 @@ namespace {
             $this->_m_groups = [];
             $i = 0;
             do {
-                $_ = new \VlqBase128Le\Group($i, ($i != 0 ? $this->groups()[($i - 1)]->intermValue() : 0), ($i != 0 ? ($i == 9 ? (-9223372036854775807 - 1) : ($this->groups()[($i - 1)]->multiplier() * 128)) : 1), $this->_io, $this, $this->_root);
+                $_ = new \VlqBase128Le\Group($i, ($i != 0 ? $this->groups()[$i - 1]->intermValue() : 0), ($i != 0 ? ($i == 9 ? (-9223372036854775807 - 1) : $this->groups()[$i - 1]->multiplier() * 128) : 1), $this->_io, $this, $this->_root);
                 $this->_m_groups[] = $_;
                 $i++;
             } while (!(!($_->hasNext())));
@@ -56,6 +56,13 @@ namespace {
             $this->_m_len = count($this->groups());
             return $this->_m_len;
         }
+        protected $_m_signBit;
+        public function signBit() {
+            if ($this->_m_signBit !== null)
+                return $this->_m_signBit;
+            $this->_m_signBit = ($this->len() == 10 ? (-9223372036854775807 - 1) : $this->groups()[count($this->groups()) - 1]->multiplier() * 64);
+            return $this->_m_signBit;
+        }
         protected $_m_value;
 
         /**
@@ -66,13 +73,6 @@ namespace {
                 return $this->_m_value;
             $this->_m_value = $this->groups()[count($this->groups()) - 1]->intermValue();
             return $this->_m_value;
-        }
-        protected $_m_signBit;
-        public function signBit() {
-            if ($this->_m_signBit !== null)
-                return $this->_m_signBit;
-            $this->_m_signBit = ($this->len() == 10 ? (-9223372036854775807 - 1) : ($this->groups()[count($this->groups()) - 1]->multiplier() * 64));
-            return $this->_m_signBit;
         }
         protected $_m_valueSigned;
         public function valueSigned() {
@@ -92,7 +92,7 @@ namespace {
 
 namespace VlqBase128Le {
     class Group extends \Kaitai\Struct\Struct {
-        public function __construct(int $idx, int $prevIntermValue, int $multiplier, \Kaitai\Struct\Stream $_io, \VlqBase128Le $_parent = null, \VlqBase128Le $_root = null) {
+        public function __construct(int $idx, int $prevIntermValue, int $multiplier, \Kaitai\Struct\Stream $_io, ?\VlqBase128Le $_parent = null, ?\VlqBase128Le $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_m_idx = $idx;
             $this->_m_prevIntermValue = $prevIntermValue;
@@ -102,19 +102,19 @@ namespace VlqBase128Le {
 
         private function _read() {
             $this->_m_hasNext = $this->_io->readBitsIntBe(1) != 0;
-            if (!($this->hasNext() == ($this->idx() == 9 ? false : $this->hasNext()))) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError(($this->idx() == 9 ? false : $this->hasNext()), $this->hasNext(), $this->_io(), "/types/group/seq/0");
+            if (!($this->_m_hasNext == ($this->idx() == 9 ? false : $this->hasNext()))) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError(($this->idx() == 9 ? false : $this->hasNext()), $this->_m_hasNext, $this->_io, "/types/group/seq/0");
             }
             $this->_m_value = $this->_io->readBitsIntBe(7);
-            if (!($this->value() <= ($this->idx() == 9 ? 1 : 127))) {
-                throw new \Kaitai\Struct\Error\ValidationGreaterThanError(($this->idx() == 9 ? 1 : 127), $this->value(), $this->_io(), "/types/group/seq/1");
+            if (!($this->_m_value <= ($this->idx() == 9 ? 1 : 127))) {
+                throw new \Kaitai\Struct\Error\ValidationGreaterThanError(($this->idx() == 9 ? 1 : 127), $this->_m_value, $this->_io, "/types/group/seq/1");
             }
         }
         protected $_m_intermValue;
         public function intermValue() {
             if ($this->_m_intermValue !== null)
                 return $this->_m_intermValue;
-            $this->_m_intermValue = ($this->prevIntermValue() + ($this->value() * $this->multiplier()));
+            $this->_m_intermValue = ($this->prevIntermValue() + $this->value() * $this->multiplier());
             return $this->_m_intermValue;
         }
         protected $_m_hasNext;

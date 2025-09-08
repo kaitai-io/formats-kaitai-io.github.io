@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -46,17 +46,15 @@ class NtMdt < Kaitai::Struct::Struct
   }
   I__ADC_MODE = ADC_MODE.invert
 
-  XML_SCAN_LOCATION = {
-    0 => :xml_scan_location_hlt,
-    1 => :xml_scan_location_hlb,
-    2 => :xml_scan_location_hrt,
-    3 => :xml_scan_location_hrb,
-    4 => :xml_scan_location_vlt,
-    5 => :xml_scan_location_vlb,
-    6 => :xml_scan_location_vrt,
-    7 => :xml_scan_location_vrb,
+  CONSTS = {
+    8 => :consts_frame_mode_size,
+    22 => :consts_frame_header_size,
+    30 => :consts_axis_scales_size,
+    32 => :consts_file_header_size,
+    38 => :consts_spectro_vars_min_size,
+    77 => :consts_scan_vars_min_size,
   }
-  I__XML_SCAN_LOCATION = XML_SCAN_LOCATION.invert
+  I__CONSTS = CONSTS.invert
 
   DATA_TYPE = {
     -65544 => :data_type_floatfix,
@@ -75,14 +73,6 @@ class NtMdt < Kaitai::Struct::Struct
     8 => :data_type_uint64,
   }
   I__DATA_TYPE = DATA_TYPE.invert
-
-  XML_PARAM_TYPE = {
-    0 => :xml_param_type_none,
-    1 => :xml_param_type_laser_wavelength,
-    2 => :xml_param_type_units,
-    255 => :xml_param_type_data_array,
-  }
-  I__XML_PARAM_TYPE = XML_PARAM_TYPE.invert
 
   SPM_MODE = {
     0 => :spm_mode_constant_force,
@@ -113,6 +103,14 @@ class NtMdt < Kaitai::Struct::Struct
     25 => :spm_mode_snom,
   }
   I__SPM_MODE = SPM_MODE.invert
+
+  SPM_TECHNIQUE = {
+    0 => :spm_technique_contact_mode,
+    1 => :spm_technique_semicontact_mode,
+    2 => :spm_technique_tunnel_current,
+    3 => :spm_technique_snom,
+  }
+  I__SPM_TECHNIQUE = SPM_TECHNIQUE.invert
 
   UNIT = {
     -10 => :unit_raman_shift,
@@ -168,70 +166,41 @@ class NtMdt < Kaitai::Struct::Struct
   }
   I__UNIT = UNIT.invert
 
-  SPM_TECHNIQUE = {
-    0 => :spm_technique_contact_mode,
-    1 => :spm_technique_semicontact_mode,
-    2 => :spm_technique_tunnel_current,
-    3 => :spm_technique_snom,
+  XML_PARAM_TYPE = {
+    0 => :xml_param_type_none,
+    1 => :xml_param_type_laser_wavelength,
+    2 => :xml_param_type_units,
+    255 => :xml_param_type_data_array,
   }
-  I__SPM_TECHNIQUE = SPM_TECHNIQUE.invert
+  I__XML_PARAM_TYPE = XML_PARAM_TYPE.invert
 
-  CONSTS = {
-    8 => :consts_frame_mode_size,
-    22 => :consts_frame_header_size,
-    30 => :consts_axis_scales_size,
-    32 => :consts_file_header_size,
-    38 => :consts_spectro_vars_min_size,
-    77 => :consts_scan_vars_min_size,
+  XML_SCAN_LOCATION = {
+    0 => :xml_scan_location_hlt,
+    1 => :xml_scan_location_hlb,
+    2 => :xml_scan_location_hrt,
+    3 => :xml_scan_location_hrb,
+    4 => :xml_scan_location_vlt,
+    5 => :xml_scan_location_vlb,
+    6 => :xml_scan_location_vrt,
+    7 => :xml_scan_location_vrb,
   }
-  I__CONSTS = CONSTS.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  I__XML_SCAN_LOCATION = XML_SCAN_LOCATION.invert
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
     @signature = @_io.read_bytes(4)
-    raise Kaitai::Struct::ValidationNotEqualError.new([1, 176, 147, 255].pack('C*'), signature, _io, "/seq/0") if not signature == [1, 176, 147, 255].pack('C*')
+    raise Kaitai::Struct::ValidationNotEqualError.new([1, 176, 147, 255].pack('C*'), @signature, @_io, "/seq/0") if not @signature == [1, 176, 147, 255].pack('C*')
     @size = @_io.read_u4le
     @reserved0 = @_io.read_bytes(4)
     @last_frame = @_io.read_u2le
     @reserved1 = @_io.read_bytes(18)
     @wrond_doc = @_io.read_bytes(1)
-    @_raw_frames = @_io.read_bytes(size)
-    _io__raw_frames = Kaitai::Struct::Stream.new(@_raw_frames)
-    @frames = Framez.new(_io__raw_frames, self, @_root)
+    _io_frames = @_io.substream(size)
+    @frames = Framez.new(_io_frames, self, @_root)
     self
-  end
-  class Uuid < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @data = []
-      (16).times { |i|
-        @data << @_io.read_u1
-      }
-      self
-    end
-    attr_reader :data
-  end
-  class Framez < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @frames = []
-      ((_root.last_frame + 1)).times { |i|
-        @frames << Frame.new(@_io, self, @_root)
-      }
-      self
-    end
-    attr_reader :frames
   end
   class Frame < Kaitai::Struct::Struct
 
@@ -246,20 +215,111 @@ class NtMdt < Kaitai::Struct::Struct
       201 => :frame_type_curves,
     }
     I__FRAME_TYPE = FRAME_TYPE.invert
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
       @size = @_io.read_u4le
-      @_raw_main = @_io.read_bytes((size - 4))
-      _io__raw_main = Kaitai::Struct::Stream.new(@_raw_main)
-      @main = FrameMain.new(_io__raw_main, self, @_root)
+      _io_main = @_io.substream(size - 4)
+      @main = FrameMain.new(_io_main, self, @_root)
       self
     end
+    class AxisScale < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = nil)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        @offset = @_io.read_f4le
+        @step = @_io.read_f4le
+        @unit = Kaitai::Struct::Stream::resolve_enum(NtMdt::UNIT, @_io.read_s2le)
+        self
+      end
+
+      ##
+      # x_scale->offset = gwy_get_gfloat_le(&p);# r0 (physical units)
+      attr_reader :offset
+
+      ##
+      # x_scale->step = gwy_get_gfloat_le(&p); r (physical units) x_scale->step = fabs(x_scale->step); if (!x_scale->step) {
+      #   g_warning("x_scale.step == 0, changing to 1");
+      #   x_scale->step = 1.0;
+      # }
+      attr_reader :step
+
+      ##
+      # U
+      attr_reader :unit
+    end
+    class DateTime < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = nil)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        @date = Date.new(@_io, self, @_root)
+        @time = Time.new(@_io, self, @_root)
+        self
+      end
+      class Date < Kaitai::Struct::Struct
+        def initialize(_io, _parent = nil, _root = nil)
+          super(_io, _parent, _root)
+          _read
+        end
+
+        def _read
+          @year = @_io.read_u2le
+          @month = @_io.read_u2le
+          @day = @_io.read_u2le
+          self
+        end
+
+        ##
+        # h_yea
+        attr_reader :year
+
+        ##
+        # h_mon
+        attr_reader :month
+
+        ##
+        # h_day
+        attr_reader :day
+      end
+      class Time < Kaitai::Struct::Struct
+        def initialize(_io, _parent = nil, _root = nil)
+          super(_io, _parent, _root)
+          _read
+        end
+
+        def _read
+          @hour = @_io.read_u2le
+          @min = @_io.read_u2le
+          @sec = @_io.read_u2le
+          self
+        end
+
+        ##
+        # h_h
+        attr_reader :hour
+
+        ##
+        # h_m
+        attr_reader :min
+
+        ##
+        # h_s
+        attr_reader :sec
+      end
+      attr_reader :date
+      attr_reader :time
+    end
     class Dots < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
@@ -279,59 +339,8 @@ class NtMdt < Kaitai::Struct::Struct
         }
         self
       end
-      class DotsHeader < Kaitai::Struct::Struct
-        def initialize(_io, _parent = nil, _root = self)
-          super(_io, _parent, _root)
-          _read
-        end
-
-        def _read
-          @header_size = @_io.read_s4le
-          @_raw_header = @_io.read_bytes(header_size)
-          _io__raw_header = Kaitai::Struct::Stream.new(@_raw_header)
-          @header = Header.new(_io__raw_header, self, @_root)
-          self
-        end
-        class Header < Kaitai::Struct::Struct
-          def initialize(_io, _parent = nil, _root = self)
-            super(_io, _parent, _root)
-            _read
-          end
-
-          def _read
-            @coord_size = @_io.read_s4le
-            @version = @_io.read_s4le
-            @xyunits = Kaitai::Struct::Stream::resolve_enum(NtMdt::UNIT, @_io.read_s2le)
-            self
-          end
-          attr_reader :coord_size
-          attr_reader :version
-          attr_reader :xyunits
-        end
-        attr_reader :header_size
-        attr_reader :header
-        attr_reader :_raw_header
-      end
-      class DotsData < Kaitai::Struct::Struct
-        def initialize(_io, _parent = nil, _root = self)
-          super(_io, _parent, _root)
-          _read
-        end
-
-        def _read
-          @coord_x = @_io.read_f4le
-          @coord_y = @_io.read_f4le
-          @forward_size = @_io.read_s4le
-          @backward_size = @_io.read_s4le
-          self
-        end
-        attr_reader :coord_x
-        attr_reader :coord_y
-        attr_reader :forward_size
-        attr_reader :backward_size
-      end
       class DataLinez < Kaitai::Struct::Struct
-        def initialize(_io, _parent = nil, _root = self, index)
+        def initialize(_io, _parent = nil, _root = nil, index)
           super(_io, _parent, _root)
           @index = index
           _read
@@ -352,66 +361,63 @@ class NtMdt < Kaitai::Struct::Struct
         attr_reader :backward
         attr_reader :index
       end
+      class DotsData < Kaitai::Struct::Struct
+        def initialize(_io, _parent = nil, _root = nil)
+          super(_io, _parent, _root)
+          _read
+        end
+
+        def _read
+          @coord_x = @_io.read_f4le
+          @coord_y = @_io.read_f4le
+          @forward_size = @_io.read_s4le
+          @backward_size = @_io.read_s4le
+          self
+        end
+        attr_reader :coord_x
+        attr_reader :coord_y
+        attr_reader :forward_size
+        attr_reader :backward_size
+      end
+      class DotsHeader < Kaitai::Struct::Struct
+        def initialize(_io, _parent = nil, _root = nil)
+          super(_io, _parent, _root)
+          _read
+        end
+
+        def _read
+          @header_size = @_io.read_s4le
+          _io_header = @_io.substream(header_size)
+          @header = Header.new(_io_header, self, @_root)
+          self
+        end
+        class Header < Kaitai::Struct::Struct
+          def initialize(_io, _parent = nil, _root = nil)
+            super(_io, _parent, _root)
+            _read
+          end
+
+          def _read
+            @coord_size = @_io.read_s4le
+            @version = @_io.read_s4le
+            @xyunits = Kaitai::Struct::Stream::resolve_enum(NtMdt::UNIT, @_io.read_s2le)
+            self
+          end
+          attr_reader :coord_size
+          attr_reader :version
+          attr_reader :xyunits
+        end
+        attr_reader :header_size
+        attr_reader :header
+        attr_reader :_raw_header
+      end
       attr_reader :fm_ndots
       attr_reader :coord_header
       attr_reader :coordinates
       attr_reader :data
     end
-    class FrameMain < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
-
-      def _read
-        @type = Kaitai::Struct::Stream::resolve_enum(NtMdt::Frame::FRAME_TYPE, @_io.read_u2le)
-        @version = Version.new(@_io, self, @_root)
-        @date_time = DateTime.new(@_io, self, @_root)
-        @var_size = @_io.read_u2le
-        case type
-        when :frame_type_mda
-          @_raw_frame_data = @_io.read_bytes_full
-          _io__raw_frame_data = Kaitai::Struct::Stream.new(@_raw_frame_data)
-          @frame_data = FdMetaData.new(_io__raw_frame_data, self, @_root)
-        when :frame_type_curves_new
-          @_raw_frame_data = @_io.read_bytes_full
-          _io__raw_frame_data = Kaitai::Struct::Stream.new(@_raw_frame_data)
-          @frame_data = FdCurvesNew.new(_io__raw_frame_data, self, @_root)
-        when :frame_type_curves
-          @_raw_frame_data = @_io.read_bytes_full
-          _io__raw_frame_data = Kaitai::Struct::Stream.new(@_raw_frame_data)
-          @frame_data = FdSpectroscopy.new(_io__raw_frame_data, self, @_root)
-        when :frame_type_spectroscopy
-          @_raw_frame_data = @_io.read_bytes_full
-          _io__raw_frame_data = Kaitai::Struct::Stream.new(@_raw_frame_data)
-          @frame_data = FdSpectroscopy.new(_io__raw_frame_data, self, @_root)
-        when :frame_type_scanned
-          @_raw_frame_data = @_io.read_bytes_full
-          _io__raw_frame_data = Kaitai::Struct::Stream.new(@_raw_frame_data)
-          @frame_data = FdScanned.new(_io__raw_frame_data, self, @_root)
-        else
-          @frame_data = @_io.read_bytes_full
-        end
-        self
-      end
-
-      ##
-      # h_what
-      attr_reader :type
-      attr_reader :version
-      attr_reader :date_time
-
-      ##
-      # h_am, v6 and older only
-      attr_reader :var_size
-
-      ##
-      # 
-      attr_reader :frame_data
-      attr_reader :_raw_frame_data
-    end
     class FdCurvesNew < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
@@ -433,7 +439,7 @@ class NtMdt < Kaitai::Struct::Struct
         self
       end
       class BlockDescr < Kaitai::Struct::Struct
-        def initialize(_io, _parent = nil, _root = self)
+        def initialize(_io, _parent = nil, _root = nil)
           super(_io, _parent, _root)
           _read
         end
@@ -452,7 +458,7 @@ class NtMdt < Kaitai::Struct::Struct
       attr_reader :blocks_data
     end
     class FdMetaData < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
@@ -490,61 +496,8 @@ class NtMdt < Kaitai::Struct::Struct
         }
         self
       end
-      class Image < Kaitai::Struct::Struct
-        def initialize(_io, _parent = nil, _root = self)
-          super(_io, _parent, _root)
-          _read
-        end
-
-        def _read
-          @image = []
-          i = 0
-          while not @_io.eof?
-            @image << Vec.new(@_io, self, @_root)
-            i += 1
-          end
-          self
-        end
-        class Vec < Kaitai::Struct::Struct
-          def initialize(_io, _parent = nil, _root = self)
-            super(_io, _parent, _root)
-            _read
-          end
-
-          def _read
-            @items = []
-            (_parent._parent.n_mesurands).times { |i|
-              case _parent._parent.mesurands[i].data_type
-              when :data_type_uint64
-                @items << @_io.read_u8le
-              when :data_type_uint8
-                @items << @_io.read_u1
-              when :data_type_float32
-                @items << @_io.read_f4le
-              when :data_type_int8
-                @items << @_io.read_s1
-              when :data_type_uint16
-                @items << @_io.read_u2le
-              when :data_type_int64
-                @items << @_io.read_s8le
-              when :data_type_uint32
-                @items << @_io.read_u4le
-              when :data_type_float64
-                @items << @_io.read_f8le
-              when :data_type_int16
-                @items << @_io.read_s2le
-              when :data_type_int32
-                @items << @_io.read_s4le
-              end
-            }
-            self
-          end
-          attr_reader :items
-        end
-        attr_reader :image
-      end
       class Calibration < Kaitai::Struct::Struct
-        def initialize(_io, _parent = nil, _root = self)
+        def initialize(_io, _parent = nil, _root = nil)
           super(_io, _parent, _root)
           _read
         end
@@ -564,15 +517,15 @@ class NtMdt < Kaitai::Struct::Struct
           @max_index = @_io.read_u8le
           @data_type = Kaitai::Struct::Stream::resolve_enum(NtMdt::DATA_TYPE, @_io.read_s4le)
           @len_author = @_io.read_u4le
-          @name = (@_io.read_bytes(len_name)).force_encoding("utf-8")
-          @comment = (@_io.read_bytes(len_comment)).force_encoding("utf-8")
-          @unit = (@_io.read_bytes(len_unit)).force_encoding("utf-8")
-          @author = (@_io.read_bytes(len_author)).force_encoding("utf-8")
+          @name = (@_io.read_bytes(len_name)).force_encoding("UTF-8")
+          @comment = (@_io.read_bytes(len_comment)).force_encoding("UTF-8")
+          @unit = (@_io.read_bytes(len_unit)).force_encoding("UTF-8")
+          @author = (@_io.read_bytes(len_author)).force_encoding("UTF-8")
           self
         end
         def count
           return @count unless @count.nil?
-          @count = ((max_index - min_index) + 1)
+          @count = (max_index - min_index) + 1
           @count
         end
         attr_reader :len_tot
@@ -594,13 +547,65 @@ class NtMdt < Kaitai::Struct::Struct
         attr_reader :unit
         attr_reader :author
       end
+      class Image < Kaitai::Struct::Struct
+        def initialize(_io, _parent = nil, _root = nil)
+          super(_io, _parent, _root)
+          _read
+        end
+
+        def _read
+          @image = []
+          i = 0
+          while not @_io.eof?
+            @image << Vec.new(@_io, self, @_root)
+            i += 1
+          end
+          self
+        end
+        class Vec < Kaitai::Struct::Struct
+          def initialize(_io, _parent = nil, _root = nil)
+            super(_io, _parent, _root)
+            _read
+          end
+
+          def _read
+            @items = []
+            (_parent._parent.n_mesurands).times { |i|
+              case _parent._parent.mesurands[i].data_type
+              when :data_type_float32
+                @items << @_io.read_f4le
+              when :data_type_float64
+                @items << @_io.read_f8le
+              when :data_type_int16
+                @items << @_io.read_s2le
+              when :data_type_int32
+                @items << @_io.read_s4le
+              when :data_type_int64
+                @items << @_io.read_s8le
+              when :data_type_int8
+                @items << @_io.read_s1
+              when :data_type_uint16
+                @items << @_io.read_u2le
+              when :data_type_uint32
+                @items << @_io.read_u4le
+              when :data_type_uint64
+                @items << @_io.read_u8le
+              when :data_type_uint8
+                @items << @_io.read_u1
+              end
+            }
+            self
+          end
+          attr_reader :items
+        end
+        attr_reader :image
+      end
       def image
         return @image unless @image.nil?
         _pos = @_io.pos
         @_io.seek(data_offset)
-        @_raw_image = @_io.read_bytes(data_size)
-        _io__raw_image = Kaitai::Struct::Stream.new(@_raw_image)
-        @image = Image.new(_io__raw_image, self, @_root)
+        _io_image = @_io.substream(data_size)
+        @image = Image.new(_io_image, self, @_root)
         @_io.seek(_pos)
         @image
       end
@@ -627,190 +632,7 @@ class NtMdt < Kaitai::Struct::Struct
       attr_reader :mesurands
       attr_reader :_raw_image
     end
-    class FdSpectroscopy < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
-
-      def _read
-        @_raw_vars = @_io.read_bytes(_parent.var_size)
-        _io__raw_vars = Kaitai::Struct::Stream.new(@_raw_vars)
-        @vars = Vars.new(_io__raw_vars, self, @_root)
-        @fm_mode = @_io.read_u2le
-        @fm_xres = @_io.read_u2le
-        @fm_yres = @_io.read_u2le
-        @dots = Dots.new(@_io, self, @_root)
-        @data = []
-        ((fm_xres * fm_yres)).times { |i|
-          @data << @_io.read_s2le
-        }
-        @title = Title.new(@_io, self, @_root)
-        @xml = Xml.new(@_io, self, @_root)
-        self
-      end
-      class Vars < Kaitai::Struct::Struct
-        def initialize(_io, _parent = nil, _root = self)
-          super(_io, _parent, _root)
-          _read
-        end
-
-        def _read
-          @x_scale = AxisScale.new(@_io, self, @_root)
-          @y_scale = AxisScale.new(@_io, self, @_root)
-          @z_scale = AxisScale.new(@_io, self, @_root)
-          @sp_mode = @_io.read_u2le
-          @sp_filter = @_io.read_u2le
-          @u_begin = @_io.read_f4le
-          @u_end = @_io.read_f4le
-          @z_up = @_io.read_s2le
-          @z_down = @_io.read_s2le
-          @sp_averaging = @_io.read_u2le
-          @sp_repeat = @_io.read_u1
-          @sp_back = @_io.read_u1
-          @sp_4nx = @_io.read_s2le
-          @sp_osc = @_io.read_u1
-          @sp_n4 = @_io.read_u1
-          @sp_4x0 = @_io.read_f4le
-          @sp_4xr = @_io.read_f4le
-          @sp_4u = @_io.read_s2le
-          @sp_4i = @_io.read_s2le
-          @sp_nx = @_io.read_s2le
-          self
-        end
-        attr_reader :x_scale
-        attr_reader :y_scale
-        attr_reader :z_scale
-        attr_reader :sp_mode
-        attr_reader :sp_filter
-        attr_reader :u_begin
-        attr_reader :u_end
-        attr_reader :z_up
-        attr_reader :z_down
-        attr_reader :sp_averaging
-        attr_reader :sp_repeat
-        attr_reader :sp_back
-        attr_reader :sp_4nx
-        attr_reader :sp_osc
-        attr_reader :sp_n4
-        attr_reader :sp_4x0
-        attr_reader :sp_4xr
-        attr_reader :sp_4u
-        attr_reader :sp_4i
-        attr_reader :sp_nx
-      end
-      attr_reader :vars
-      attr_reader :fm_mode
-      attr_reader :fm_xres
-      attr_reader :fm_yres
-      attr_reader :dots
-      attr_reader :data
-      attr_reader :title
-      attr_reader :xml
-      attr_reader :_raw_vars
-    end
-    class DateTime < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
-
-      def _read
-        @date = Date.new(@_io, self, @_root)
-        @time = Time.new(@_io, self, @_root)
-        self
-      end
-      class Date < Kaitai::Struct::Struct
-        def initialize(_io, _parent = nil, _root = self)
-          super(_io, _parent, _root)
-          _read
-        end
-
-        def _read
-          @year = @_io.read_u2le
-          @month = @_io.read_u2le
-          @day = @_io.read_u2le
-          self
-        end
-
-        ##
-        # h_yea
-        attr_reader :year
-
-        ##
-        # h_mon
-        attr_reader :month
-
-        ##
-        # h_day
-        attr_reader :day
-      end
-      class Time < Kaitai::Struct::Struct
-        def initialize(_io, _parent = nil, _root = self)
-          super(_io, _parent, _root)
-          _read
-        end
-
-        def _read
-          @hour = @_io.read_u2le
-          @min = @_io.read_u2le
-          @sec = @_io.read_u2le
-          self
-        end
-
-        ##
-        # h_h
-        attr_reader :hour
-
-        ##
-        # h_m
-        attr_reader :min
-
-        ##
-        # h_s
-        attr_reader :sec
-      end
-      attr_reader :date
-      attr_reader :time
-    end
-    class AxisScale < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
-
-      def _read
-        @offset = @_io.read_f4le
-        @step = @_io.read_f4le
-        @unit = Kaitai::Struct::Stream::resolve_enum(NtMdt::UNIT, @_io.read_s2le)
-        self
-      end
-
-      ##
-      # x_scale->offset = gwy_get_gfloat_le(&p);# r0 (physical units)
-      attr_reader :offset
-
-      ##
-      # x_scale->step = gwy_get_gfloat_le(&p); r (physical units) x_scale->step = fabs(x_scale->step); if (!x_scale->step) {
-      #   g_warning("x_scale.step == 0, changing to 1");
-      #   x_scale->step = 1.0;
-      # }
-      attr_reader :step
-
-      ##
-      # U
-      attr_reader :unit
-    end
     class FdScanned < Kaitai::Struct::Struct
-
-      MODE = {
-        0 => :mode_stm,
-        1 => :mode_afm,
-        2 => :mode_unknown2,
-        3 => :mode_unknown3,
-        4 => :mode_unknown4,
-      }
-      I__MODE = MODE.invert
 
       INPUT_SIGNAL = {
         0 => :input_signal_extension_slot,
@@ -825,15 +647,23 @@ class NtMdt < Kaitai::Struct::Struct
         2 => :lift_mode_slope,
       }
       I__LIFT_MODE = LIFT_MODE.invert
-      def initialize(_io, _parent = nil, _root = self)
+
+      MODE = {
+        0 => :mode_stm,
+        1 => :mode_afm,
+        2 => :mode_unknown2,
+        3 => :mode_unknown3,
+        4 => :mode_unknown4,
+      }
+      I__MODE = MODE.invert
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
 
       def _read
-        @_raw_vars = @_io.read_bytes(_parent.var_size)
-        _io__raw_vars = Kaitai::Struct::Stream.new(@_raw_vars)
-        @vars = Vars.new(_io__raw_vars, self, @_root)
+        _io_vars = @_io.substream(_parent.var_size)
+        @vars = Vars.new(_io_vars, self, @_root)
         if false
           @orig_format = @_io.read_u4le
         end
@@ -854,15 +684,58 @@ class NtMdt < Kaitai::Struct::Struct
         @fm_yres = @_io.read_u2le
         @dots = Dots.new(@_io, self, @_root)
         @image = []
-        ((fm_xres * fm_yres)).times { |i|
+        (fm_xres * fm_yres).times { |i|
           @image << @_io.read_s2le
         }
         @title = Title.new(@_io, self, @_root)
         @xml = Xml.new(@_io, self, @_root)
         self
       end
+      class Dot < Kaitai::Struct::Struct
+        def initialize(_io, _parent = nil, _root = nil)
+          super(_io, _parent, _root)
+          _read
+        end
+
+        def _read
+          @x = @_io.read_s2le
+          @y = @_io.read_s2le
+          self
+        end
+        attr_reader :x
+        attr_reader :y
+      end
+      class ScanDir < Kaitai::Struct::Struct
+        def initialize(_io, _parent = nil, _root = nil)
+          super(_io, _parent, _root)
+          _read
+        end
+
+        def _read
+          @unkn = @_io.read_bits_int_be(4)
+          @double_pass = @_io.read_bits_int_be(1) != 0
+          @bottom = @_io.read_bits_int_be(1) != 0
+          @left = @_io.read_bits_int_be(1) != 0
+          @horizontal = @_io.read_bits_int_be(1) != 0
+          self
+        end
+        attr_reader :unkn
+        attr_reader :double_pass
+
+        ##
+        # Bottom - 1 Top - 0
+        attr_reader :bottom
+
+        ##
+        # Left - 1 Right - 0
+        attr_reader :left
+
+        ##
+        # Horizontal - 1 Vertical - 0
+        attr_reader :horizontal
+      end
       class Vars < Kaitai::Struct::Struct
-        def initialize(_io, _parent = nil, _root = self)
+        def initialize(_io, _parent = nil, _root = nil)
           super(_io, _parent, _root)
           _read
         end
@@ -979,49 +852,6 @@ class NtMdt < Kaitai::Struct::Struct
         # s_cor (bool)
         attr_reader :nl_corr
       end
-      class Dot < Kaitai::Struct::Struct
-        def initialize(_io, _parent = nil, _root = self)
-          super(_io, _parent, _root)
-          _read
-        end
-
-        def _read
-          @x = @_io.read_s2le
-          @y = @_io.read_s2le
-          self
-        end
-        attr_reader :x
-        attr_reader :y
-      end
-      class ScanDir < Kaitai::Struct::Struct
-        def initialize(_io, _parent = nil, _root = self)
-          super(_io, _parent, _root)
-          _read
-        end
-
-        def _read
-          @unkn = @_io.read_bits_int_be(4)
-          @double_pass = @_io.read_bits_int_be(1) != 0
-          @bottom = @_io.read_bits_int_be(1) != 0
-          @left = @_io.read_bits_int_be(1) != 0
-          @horizontal = @_io.read_bits_int_be(1) != 0
-          self
-        end
-        attr_reader :unkn
-        attr_reader :double_pass
-
-        ##
-        # Bottom - 1 Top - 0
-        attr_reader :bottom
-
-        ##
-        # Left - 1 Right - 0
-        attr_reader :left
-
-        ##
-        # Horizontal - 1 Vertical - 0
-        attr_reader :horizontal
-      end
       attr_reader :vars
 
       ##
@@ -1061,6 +891,140 @@ class NtMdt < Kaitai::Struct::Struct
       attr_reader :xml
       attr_reader :_raw_vars
     end
+    class FdSpectroscopy < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = nil)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        _io_vars = @_io.substream(_parent.var_size)
+        @vars = Vars.new(_io_vars, self, @_root)
+        @fm_mode = @_io.read_u2le
+        @fm_xres = @_io.read_u2le
+        @fm_yres = @_io.read_u2le
+        @dots = Dots.new(@_io, self, @_root)
+        @data = []
+        (fm_xres * fm_yres).times { |i|
+          @data << @_io.read_s2le
+        }
+        @title = Title.new(@_io, self, @_root)
+        @xml = Xml.new(@_io, self, @_root)
+        self
+      end
+      class Vars < Kaitai::Struct::Struct
+        def initialize(_io, _parent = nil, _root = nil)
+          super(_io, _parent, _root)
+          _read
+        end
+
+        def _read
+          @x_scale = AxisScale.new(@_io, self, @_root)
+          @y_scale = AxisScale.new(@_io, self, @_root)
+          @z_scale = AxisScale.new(@_io, self, @_root)
+          @sp_mode = @_io.read_u2le
+          @sp_filter = @_io.read_u2le
+          @u_begin = @_io.read_f4le
+          @u_end = @_io.read_f4le
+          @z_up = @_io.read_s2le
+          @z_down = @_io.read_s2le
+          @sp_averaging = @_io.read_u2le
+          @sp_repeat = @_io.read_u1
+          @sp_back = @_io.read_u1
+          @sp_4nx = @_io.read_s2le
+          @sp_osc = @_io.read_u1
+          @sp_n4 = @_io.read_u1
+          @sp_4x0 = @_io.read_f4le
+          @sp_4xr = @_io.read_f4le
+          @sp_4u = @_io.read_s2le
+          @sp_4i = @_io.read_s2le
+          @sp_nx = @_io.read_s2le
+          self
+        end
+        attr_reader :x_scale
+        attr_reader :y_scale
+        attr_reader :z_scale
+        attr_reader :sp_mode
+        attr_reader :sp_filter
+        attr_reader :u_begin
+        attr_reader :u_end
+        attr_reader :z_up
+        attr_reader :z_down
+        attr_reader :sp_averaging
+        attr_reader :sp_repeat
+        attr_reader :sp_back
+        attr_reader :sp_4nx
+        attr_reader :sp_osc
+        attr_reader :sp_n4
+        attr_reader :sp_4x0
+        attr_reader :sp_4xr
+        attr_reader :sp_4u
+        attr_reader :sp_4i
+        attr_reader :sp_nx
+      end
+      attr_reader :vars
+      attr_reader :fm_mode
+      attr_reader :fm_xres
+      attr_reader :fm_yres
+      attr_reader :dots
+      attr_reader :data
+      attr_reader :title
+      attr_reader :xml
+      attr_reader :_raw_vars
+    end
+    class FrameMain < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = nil)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        @type = Kaitai::Struct::Stream::resolve_enum(NtMdt::Frame::FRAME_TYPE, @_io.read_u2le)
+        @version = Version.new(@_io, self, @_root)
+        @date_time = DateTime.new(@_io, self, @_root)
+        @var_size = @_io.read_u2le
+        case type
+        when :frame_type_curves
+          @_raw_frame_data = @_io.read_bytes_full
+          _io__raw_frame_data = Kaitai::Struct::Stream.new(@_raw_frame_data)
+          @frame_data = FdSpectroscopy.new(_io__raw_frame_data, self, @_root)
+        when :frame_type_curves_new
+          @_raw_frame_data = @_io.read_bytes_full
+          _io__raw_frame_data = Kaitai::Struct::Stream.new(@_raw_frame_data)
+          @frame_data = FdCurvesNew.new(_io__raw_frame_data, self, @_root)
+        when :frame_type_mda
+          @_raw_frame_data = @_io.read_bytes_full
+          _io__raw_frame_data = Kaitai::Struct::Stream.new(@_raw_frame_data)
+          @frame_data = FdMetaData.new(_io__raw_frame_data, self, @_root)
+        when :frame_type_scanned
+          @_raw_frame_data = @_io.read_bytes_full
+          _io__raw_frame_data = Kaitai::Struct::Stream.new(@_raw_frame_data)
+          @frame_data = FdScanned.new(_io__raw_frame_data, self, @_root)
+        when :frame_type_spectroscopy
+          @_raw_frame_data = @_io.read_bytes_full
+          _io__raw_frame_data = Kaitai::Struct::Stream.new(@_raw_frame_data)
+          @frame_data = FdSpectroscopy.new(_io__raw_frame_data, self, @_root)
+        else
+          @frame_data = @_io.read_bytes_full
+        end
+        self
+      end
+
+      ##
+      # h_what
+      attr_reader :type
+      attr_reader :version
+      attr_reader :date_time
+
+      ##
+      # h_am, v6 and older only
+      attr_reader :var_size
+
+      ##
+      # 
+      attr_reader :frame_data
+      attr_reader :_raw_frame_data
+    end
 
     ##
     # h_sz
@@ -1068,8 +1032,52 @@ class NtMdt < Kaitai::Struct::Struct
     attr_reader :main
     attr_reader :_raw_main
   end
+  class Framez < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @frames = []
+      (_root.last_frame + 1).times { |i|
+        @frames << Frame.new(@_io, self, @_root)
+      }
+      self
+    end
+    attr_reader :frames
+  end
+  class Title < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @title_len = @_io.read_u4le
+      @title = (@_io.read_bytes(title_len)).force_encoding("windows-1251").encode('UTF-8')
+      self
+    end
+    attr_reader :title_len
+    attr_reader :title
+  end
+  class Uuid < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @data = []
+      (16).times { |i|
+        @data << @_io.read_u1
+      }
+      self
+    end
+    attr_reader :data
+  end
   class Version < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -1083,32 +1091,18 @@ class NtMdt < Kaitai::Struct::Struct
     attr_reader :major
   end
   class Xml < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
       @xml_len = @_io.read_u4le
-      @xml = (@_io.read_bytes(xml_len)).force_encoding("UTF-16LE")
+      @xml = (@_io.read_bytes(xml_len)).force_encoding("UTF-16LE").encode('UTF-8')
       self
     end
     attr_reader :xml_len
     attr_reader :xml
-  end
-  class Title < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @title_len = @_io.read_u4le
-      @title = (@_io.read_bytes(title_len)).force_encoding("cp1251")
-      self
-    end
-    attr_reader :title_len
-    attr_reader :title
   end
   attr_reader :signature
 

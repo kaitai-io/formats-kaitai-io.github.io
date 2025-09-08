@@ -1,12 +1,14 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
-from enum import Enum
+import riff
+from enum import IntEnum
 
 
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Wav(KaitaiStruct):
     """The WAVE file format is a subset of Microsoft's RIFF specification for the
@@ -36,7 +38,28 @@ class Wav(KaitaiStruct):
        Source - https://web.archive.org/web/20101031101749/http://www.ebu.ch/fr/technical/publications/userguides/bwf_user_guide.php
     """
 
-    class WFormatTagType(Enum):
+    class Fourcc(IntEnum):
+        id3 = 540238953
+        cue = 543520099
+        fmt = 544501094
+        wave = 1163280727
+        riff = 1179011410
+        peak = 1262568784
+        ixml = 1280137321
+        info = 1330007625
+        list = 1414744396
+        pmx = 1481461855
+        chna = 1634625635
+        data = 1635017060
+        umid = 1684630901
+        minf = 1718511981
+        axml = 1819113569
+        regn = 1852269938
+        afsp = 1886611041
+        fact = 1952670054
+        bext = 1954047330
+
+    class WFormatTagType(IntEnum):
         unknown = 0
         pcm = 1
         adpcm = 2
@@ -302,226 +325,119 @@ class Wav(KaitaiStruct):
         flac = 61868
         extensible = 65534
         development = 65535
-
-    class Fourcc(Enum):
-        id3 = 540238953
-        cue = 543520099
-        fmt = 544501094
-        wave = 1163280727
-        riff = 1179011410
-        peak = 1262568784
-        ixml = 1280137321
-        info = 1330007625
-        list = 1414744396
-        pmx = 1481461855
-        chna = 1634625635
-        data = 1635017060
-        umid = 1684630901
-        minf = 1718511981
-        axml = 1819113569
-        regn = 1852269938
-        afsp = 1886611041
-        fact = 1952670054
-        bext = 1954047330
     def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
+        super(Wav, self).__init__(_io)
         self._parent = _parent
-        self._root = _root if _root else self
+        self._root = _root or self
         self._read()
 
     def _read(self):
-        self.chunk = Riff.Chunk(self._io, self, self._root)
-
-    class SampleType(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.sample = self._io.read_u2le()
+        self.chunk = riff.Riff.Chunk(self._io)
 
 
-    class FormatChunkType(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
+    def _fetch_instances(self):
+        pass
+        self.chunk._fetch_instances()
+        _ = self.parent_chunk_data
+        if hasattr(self, '_m_parent_chunk_data'):
+            pass
+            self._m_parent_chunk_data._fetch_instances()
 
-        def _read(self):
-            self.w_format_tag = KaitaiStream.resolve_enum(Wav.WFormatTagType, self._io.read_u2le())
-            self.n_channels = self._io.read_u2le()
-            self.n_samples_per_sec = self._io.read_u4le()
-            self.n_avg_bytes_per_sec = self._io.read_u4le()
-            self.n_block_align = self._io.read_u2le()
-            self.w_bits_per_sample = self._io.read_u2le()
-            if not (self.is_basic_pcm):
-                self.cb_size = self._io.read_u2le()
-
-            if self.is_cb_size_meaningful:
-                self.w_valid_bits_per_sample = self._io.read_u2le()
-
-            if self.is_extensible:
-                self.channel_mask_and_subformat = Wav.ChannelMaskAndSubformatType(self._io, self, self._root)
+        _ = self.subchunks
+        if hasattr(self, '_m_subchunks'):
+            pass
+            for i in range(len(self._m_subchunks)):
+                pass
+                self._m_subchunks[i]._fetch_instances()
 
 
-        @property
-        def is_extensible(self):
-            if hasattr(self, '_m_is_extensible'):
-                return self._m_is_extensible
 
-            self._m_is_extensible = self.w_format_tag == Wav.WFormatTagType.extensible
-            return getattr(self, '_m_is_extensible', None)
-
-        @property
-        def is_basic_pcm(self):
-            if hasattr(self, '_m_is_basic_pcm'):
-                return self._m_is_basic_pcm
-
-            self._m_is_basic_pcm = self.w_format_tag == Wav.WFormatTagType.pcm
-            return getattr(self, '_m_is_basic_pcm', None)
-
-        @property
-        def is_basic_float(self):
-            if hasattr(self, '_m_is_basic_float'):
-                return self._m_is_basic_float
-
-            self._m_is_basic_float = self.w_format_tag == Wav.WFormatTagType.ieee_float
-            return getattr(self, '_m_is_basic_float', None)
-
-        @property
-        def is_cb_size_meaningful(self):
-            if hasattr(self, '_m_is_cb_size_meaningful'):
-                return self._m_is_cb_size_meaningful
-
-            self._m_is_cb_size_meaningful =  ((not (self.is_basic_pcm)) and (self.cb_size != 0)) 
-            return getattr(self, '_m_is_cb_size_meaningful', None)
-
-
-    class PmxChunkType(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.data = (self._io.read_bytes_full()).decode(u"UTF-8")
-
-
-    class FactChunkType(KaitaiStruct):
-        """required for all non-PCM formats
-        (`w_format_tag != w_format_tag_type::pcm` or `not is_basic_pcm` in
-        `format_chunk_type` context)
-        """
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.num_samples_per_channel = self._io.read_u4le()
-
-
-    class GuidType(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.data1 = self._io.read_u4le()
-            self.data2 = self._io.read_u2le()
-            self.data3 = self._io.read_u2le()
-            self.data4 = self._io.read_u4be()
-            self.data4a = self._io.read_u4be()
-
-
-    class IxmlChunkType(KaitaiStruct):
+    class AfspChunkType(KaitaiStruct):
         """
         .. seealso::
-           Source - https://en.wikipedia.org/wiki/IXML
+           Source - https://www.mmsp.ece.mcgill.ca/Documents/Downloads/AFsp/
         """
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(Wav.AfspChunkType, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.magic = self._io.read_bytes(4)
+            if not self.magic == b"\x41\x46\x73\x70":
+                raise kaitaistruct.ValidationNotEqualError(b"\x41\x46\x73\x70", self.magic, self._io, u"/types/afsp_chunk_type/seq/0")
+            self.info_records = []
+            i = 0
+            while not self._io.is_eof():
+                self.info_records.append((self._io.read_bytes_term(0, False, True, True)).decode(u"ASCII"))
+                i += 1
+
+
+
+        def _fetch_instances(self):
+            pass
+            for i in range(len(self.info_records)):
+                pass
+
+
+
+    class AxmlChunkType(KaitaiStruct):
+        """
+        .. seealso::
+           Source - https://tech.ebu.ch/docs/tech/tech3285s5.pdf
+        """
+        def __init__(self, _io, _parent=None, _root=None):
+            super(Wav.AxmlChunkType, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
             self._read()
 
         def _read(self):
             self.data = (self._io.read_bytes_full()).decode(u"UTF-8")
 
 
-    class InfoChunkType(KaitaiStruct):
+        def _fetch_instances(self):
+            pass
+
+
+    class BextChunkType(KaitaiStruct):
+        """
+        .. seealso::
+           Source - https://en.wikipedia.org/wiki/Broadcast_Wave_Format
+        """
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(Wav.BextChunkType, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
-            self.chunk = Riff.Chunk(self._io, self, self._root)
-
-        @property
-        def chunk_data(self):
-            if hasattr(self, '_m_chunk_data'):
-                return self._m_chunk_data
-
-            io = self.chunk.data_slot._io
-            _pos = io.pos()
-            io.seek(0)
-            self._m_chunk_data = (io.read_bytes_term(0, False, True, True)).decode(u"ASCII")
-            io.seek(_pos)
-            return getattr(self, '_m_chunk_data', None)
-
-
-    class CuePointType(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.dw_name = self._io.read_u4le()
-            self.dw_position = self._io.read_u4le()
-            self.fcc_chunk = self._io.read_u4le()
-            self.dw_chunk_start = self._io.read_u4le()
-            self.dw_block_start = self._io.read_u4le()
-            self.dw_sample_offset = self._io.read_u4le()
+            self.description = (KaitaiStream.bytes_terminate(self._io.read_bytes(256), 0, False)).decode(u"ASCII")
+            self.originator = (KaitaiStream.bytes_terminate(self._io.read_bytes(32), 0, False)).decode(u"ASCII")
+            self.originator_reference = (KaitaiStream.bytes_terminate(self._io.read_bytes(32), 0, False)).decode(u"ASCII")
+            self.origination_date = (self._io.read_bytes(10)).decode(u"ASCII")
+            self.origination_time = (self._io.read_bytes(8)).decode(u"ASCII")
+            self.time_reference_low = self._io.read_u4le()
+            self.time_reference_high = self._io.read_u4le()
+            self.version = self._io.read_u2le()
+            self.umid = self._io.read_bytes(64)
+            self.loudness_value = self._io.read_u2le()
+            self.loudness_range = self._io.read_u2le()
+            self.max_true_peak_level = self._io.read_u2le()
+            self.max_momentary_loudness = self._io.read_u2le()
+            self.max_short_term_loudness = self._io.read_u2le()
 
 
-    class DataChunkType(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.data = self._io.read_bytes_full()
-
-
-    class SamplesType(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.samples = self._io.read_u4le()
+        def _fetch_instances(self):
+            pass
 
 
     class ChannelMaskAndSubformatType(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(Wav.ChannelMaskAndSubformatType, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -529,64 +445,17 @@ class Wav(KaitaiStruct):
             self.subformat = Wav.GuidType(self._io, self, self._root)
 
 
-    class CueChunkType(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.dw_cue_points = self._io.read_u4le()
-            self.cue_points = []
-            for i in range(self.dw_cue_points):
-                self.cue_points.append(Wav.CuePointType(self._io, self, self._root))
-
-
-
-    class ListChunkType(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.parent_chunk_data = Riff.ParentChunkData(self._io, self, self._root)
-
-        @property
-        def form_type(self):
-            if hasattr(self, '_m_form_type'):
-                return self._m_form_type
-
-            self._m_form_type = KaitaiStream.resolve_enum(Wav.Fourcc, self.parent_chunk_data.form_type)
-            return getattr(self, '_m_form_type', None)
-
-        @property
-        def subchunks(self):
-            if hasattr(self, '_m_subchunks'):
-                return self._m_subchunks
-
-            io = self.parent_chunk_data.subchunks_slot._io
-            _pos = io.pos()
-            io.seek(0)
-            self._m_subchunks = []
-            i = 0
-            while not io.is_eof():
-                _on = self.form_type
-                if _on == Wav.Fourcc.info:
-                    self._m_subchunks.append(Wav.InfoChunkType(io, self, self._root))
-                i += 1
-
-            io.seek(_pos)
-            return getattr(self, '_m_subchunks', None)
+        def _fetch_instances(self):
+            pass
+            self.dw_channel_mask._fetch_instances()
+            self.subformat._fetch_instances()
 
 
     class ChannelMaskType(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(Wav.ChannelMaskType, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -612,61 +481,59 @@ class Wav(KaitaiStruct):
             self.unused2 = self._io.read_bits_int_be(8)
 
 
-    class AfspChunkType(KaitaiStruct):
-        """
-        .. seealso::
-           Source - https://www.mmsp.ece.mcgill.ca/Documents/Downloads/AFsp/
-        """
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.magic = self._io.read_bytes(4)
-            if not self.magic == b"\x41\x46\x73\x70":
-                raise kaitaistruct.ValidationNotEqualError(b"\x41\x46\x73\x70", self.magic, self._io, u"/types/afsp_chunk_type/seq/0")
-            self.info_records = []
-            i = 0
-            while not self._io.is_eof():
-                self.info_records.append((self._io.read_bytes_term(0, False, True, True)).decode(u"ASCII"))
-                i += 1
-
-
-
-    class AxmlChunkType(KaitaiStruct):
-        """
-        .. seealso::
-           Source - https://tech.ebu.ch/docs/tech/tech3285s5.pdf
-        """
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.data = (self._io.read_bytes_full()).decode(u"UTF-8")
+        def _fetch_instances(self):
+            pass
 
 
     class ChunkType(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(Wav.ChunkType, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
-            self.chunk = Riff.Chunk(self._io, self, self._root)
+            self.chunk = riff.Riff.Chunk(self._io)
 
-        @property
-        def chunk_id(self):
-            if hasattr(self, '_m_chunk_id'):
-                return self._m_chunk_id
 
-            self._m_chunk_id = KaitaiStream.resolve_enum(Wav.Fourcc, self.chunk.id)
-            return getattr(self, '_m_chunk_id', None)
+        def _fetch_instances(self):
+            pass
+            self.chunk._fetch_instances()
+            _ = self.chunk_data
+            if hasattr(self, '_m_chunk_data'):
+                pass
+                _on = self.chunk_id
+                if _on == Wav.Fourcc.afsp:
+                    pass
+                    self._m_chunk_data._fetch_instances()
+                elif _on == Wav.Fourcc.axml:
+                    pass
+                    self._m_chunk_data._fetch_instances()
+                elif _on == Wav.Fourcc.bext:
+                    pass
+                    self._m_chunk_data._fetch_instances()
+                elif _on == Wav.Fourcc.cue:
+                    pass
+                    self._m_chunk_data._fetch_instances()
+                elif _on == Wav.Fourcc.data:
+                    pass
+                    self._m_chunk_data._fetch_instances()
+                elif _on == Wav.Fourcc.fact:
+                    pass
+                    self._m_chunk_data._fetch_instances()
+                elif _on == Wav.Fourcc.fmt:
+                    pass
+                    self._m_chunk_data._fetch_instances()
+                elif _on == Wav.Fourcc.ixml:
+                    pass
+                    self._m_chunk_data._fetch_instances()
+                elif _on == Wav.Fourcc.list:
+                    pass
+                    self._m_chunk_data._fetch_instances()
+                elif _on == Wav.Fourcc.pmx:
+                    pass
+                    self._m_chunk_data._fetch_instances()
+
 
         @property
         def chunk_data(self):
@@ -677,90 +544,384 @@ class Wav(KaitaiStruct):
             _pos = io.pos()
             io.seek(0)
             _on = self.chunk_id
-            if _on == Wav.Fourcc.fact:
-                self._m_chunk_data = Wav.FactChunkType(io, self, self._root)
-            elif _on == Wav.Fourcc.list:
-                self._m_chunk_data = Wav.ListChunkType(io, self, self._root)
-            elif _on == Wav.Fourcc.fmt:
-                self._m_chunk_data = Wav.FormatChunkType(io, self, self._root)
-            elif _on == Wav.Fourcc.afsp:
+            if _on == Wav.Fourcc.afsp:
+                pass
                 self._m_chunk_data = Wav.AfspChunkType(io, self, self._root)
+            elif _on == Wav.Fourcc.axml:
+                pass
+                self._m_chunk_data = Wav.AxmlChunkType(io, self, self._root)
             elif _on == Wav.Fourcc.bext:
+                pass
                 self._m_chunk_data = Wav.BextChunkType(io, self, self._root)
             elif _on == Wav.Fourcc.cue:
+                pass
                 self._m_chunk_data = Wav.CueChunkType(io, self, self._root)
-            elif _on == Wav.Fourcc.ixml:
-                self._m_chunk_data = Wav.IxmlChunkType(io, self, self._root)
-            elif _on == Wav.Fourcc.pmx:
-                self._m_chunk_data = Wav.PmxChunkType(io, self, self._root)
-            elif _on == Wav.Fourcc.axml:
-                self._m_chunk_data = Wav.AxmlChunkType(io, self, self._root)
             elif _on == Wav.Fourcc.data:
+                pass
                 self._m_chunk_data = Wav.DataChunkType(io, self, self._root)
+            elif _on == Wav.Fourcc.fact:
+                pass
+                self._m_chunk_data = Wav.FactChunkType(io, self, self._root)
+            elif _on == Wav.Fourcc.fmt:
+                pass
+                self._m_chunk_data = Wav.FormatChunkType(io, self, self._root)
+            elif _on == Wav.Fourcc.ixml:
+                pass
+                self._m_chunk_data = Wav.IxmlChunkType(io, self, self._root)
+            elif _on == Wav.Fourcc.list:
+                pass
+                self._m_chunk_data = Wav.ListChunkType(io, self, self._root)
+            elif _on == Wav.Fourcc.pmx:
+                pass
+                self._m_chunk_data = Wav.PmxChunkType(io, self, self._root)
+            io.seek(_pos)
+            return getattr(self, '_m_chunk_data', None)
+
+        @property
+        def chunk_id(self):
+            if hasattr(self, '_m_chunk_id'):
+                return self._m_chunk_id
+
+            self._m_chunk_id = KaitaiStream.resolve_enum(Wav.Fourcc, self.chunk.id)
+            return getattr(self, '_m_chunk_id', None)
+
+
+    class CueChunkType(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(Wav.CueChunkType, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.dw_cue_points = self._io.read_u4le()
+            self.cue_points = []
+            for i in range(self.dw_cue_points):
+                self.cue_points.append(Wav.CuePointType(self._io, self, self._root))
+
+
+
+        def _fetch_instances(self):
+            pass
+            for i in range(len(self.cue_points)):
+                pass
+                self.cue_points[i]._fetch_instances()
+
+
+
+    class CuePointType(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(Wav.CuePointType, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.dw_name = self._io.read_u4le()
+            self.dw_position = self._io.read_u4le()
+            self.fcc_chunk = self._io.read_u4le()
+            self.dw_chunk_start = self._io.read_u4le()
+            self.dw_block_start = self._io.read_u4le()
+            self.dw_sample_offset = self._io.read_u4le()
+
+
+        def _fetch_instances(self):
+            pass
+
+
+    class DataChunkType(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(Wav.DataChunkType, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.data = self._io.read_bytes_full()
+
+
+        def _fetch_instances(self):
+            pass
+
+
+    class FactChunkType(KaitaiStruct):
+        """required for all non-PCM formats
+        (`w_format_tag != w_format_tag_type::pcm` or `not is_basic_pcm` in
+        `format_chunk_type` context)
+        """
+        def __init__(self, _io, _parent=None, _root=None):
+            super(Wav.FactChunkType, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.num_samples_per_channel = self._io.read_u4le()
+
+
+        def _fetch_instances(self):
+            pass
+
+
+    class FormatChunkType(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(Wav.FormatChunkType, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.w_format_tag = KaitaiStream.resolve_enum(Wav.WFormatTagType, self._io.read_u2le())
+            self.n_channels = self._io.read_u2le()
+            self.n_samples_per_sec = self._io.read_u4le()
+            self.n_avg_bytes_per_sec = self._io.read_u4le()
+            self.n_block_align = self._io.read_u2le()
+            self.w_bits_per_sample = self._io.read_u2le()
+            if (not (self.is_basic_pcm)):
+                pass
+                self.cb_size = self._io.read_u2le()
+
+            if self.is_cb_size_meaningful:
+                pass
+                self.w_valid_bits_per_sample = self._io.read_u2le()
+
+            if self.is_extensible:
+                pass
+                self.channel_mask_and_subformat = Wav.ChannelMaskAndSubformatType(self._io, self, self._root)
+
+
+
+        def _fetch_instances(self):
+            pass
+            if (not (self.is_basic_pcm)):
+                pass
+
+            if self.is_cb_size_meaningful:
+                pass
+
+            if self.is_extensible:
+                pass
+                self.channel_mask_and_subformat._fetch_instances()
+
+
+        @property
+        def is_basic_float(self):
+            if hasattr(self, '_m_is_basic_float'):
+                return self._m_is_basic_float
+
+            self._m_is_basic_float = self.w_format_tag == Wav.WFormatTagType.ieee_float
+            return getattr(self, '_m_is_basic_float', None)
+
+        @property
+        def is_basic_pcm(self):
+            if hasattr(self, '_m_is_basic_pcm'):
+                return self._m_is_basic_pcm
+
+            self._m_is_basic_pcm = self.w_format_tag == Wav.WFormatTagType.pcm
+            return getattr(self, '_m_is_basic_pcm', None)
+
+        @property
+        def is_cb_size_meaningful(self):
+            if hasattr(self, '_m_is_cb_size_meaningful'):
+                return self._m_is_cb_size_meaningful
+
+            self._m_is_cb_size_meaningful =  (((not (self.is_basic_pcm))) and (self.cb_size != 0)) 
+            return getattr(self, '_m_is_cb_size_meaningful', None)
+
+        @property
+        def is_extensible(self):
+            if hasattr(self, '_m_is_extensible'):
+                return self._m_is_extensible
+
+            self._m_is_extensible = self.w_format_tag == Wav.WFormatTagType.extensible
+            return getattr(self, '_m_is_extensible', None)
+
+
+    class GuidType(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(Wav.GuidType, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.data1 = self._io.read_u4le()
+            self.data2 = self._io.read_u2le()
+            self.data3 = self._io.read_u2le()
+            self.data4 = self._io.read_u4be()
+            self.data4a = self._io.read_u4be()
+
+
+        def _fetch_instances(self):
+            pass
+
+
+    class InfoChunkType(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(Wav.InfoChunkType, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.chunk = riff.Riff.Chunk(self._io)
+
+
+        def _fetch_instances(self):
+            pass
+            self.chunk._fetch_instances()
+            _ = self.chunk_data
+            if hasattr(self, '_m_chunk_data'):
+                pass
+
+
+        @property
+        def chunk_data(self):
+            if hasattr(self, '_m_chunk_data'):
+                return self._m_chunk_data
+
+            io = self.chunk.data_slot._io
+            _pos = io.pos()
+            io.seek(0)
+            self._m_chunk_data = (io.read_bytes_term(0, False, True, True)).decode(u"ASCII")
             io.seek(_pos)
             return getattr(self, '_m_chunk_data', None)
 
 
-    class BextChunkType(KaitaiStruct):
+    class IxmlChunkType(KaitaiStruct):
         """
         .. seealso::
-           Source - https://en.wikipedia.org/wiki/Broadcast_Wave_Format
+           Source - https://en.wikipedia.org/wiki/IXML
         """
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(Wav.IxmlChunkType, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
-            self.description = (KaitaiStream.bytes_terminate(self._io.read_bytes(256), 0, False)).decode(u"ASCII")
-            self.originator = (KaitaiStream.bytes_terminate(self._io.read_bytes(32), 0, False)).decode(u"ASCII")
-            self.originator_reference = (KaitaiStream.bytes_terminate(self._io.read_bytes(32), 0, False)).decode(u"ASCII")
-            self.origination_date = (self._io.read_bytes(10)).decode(u"ASCII")
-            self.origination_time = (self._io.read_bytes(8)).decode(u"ASCII")
-            self.time_reference_low = self._io.read_u4le()
-            self.time_reference_high = self._io.read_u4le()
-            self.version = self._io.read_u2le()
-            self.umid = self._io.read_bytes(64)
-            self.loudness_value = self._io.read_u2le()
-            self.loudness_range = self._io.read_u2le()
-            self.max_true_peak_level = self._io.read_u2le()
-            self.max_momentary_loudness = self._io.read_u2le()
-            self.max_short_term_loudness = self._io.read_u2le()
+            self.data = (self._io.read_bytes_full()).decode(u"UTF-8")
 
 
-    @property
-    def subchunks(self):
-        if hasattr(self, '_m_subchunks'):
-            return self._m_subchunks
+        def _fetch_instances(self):
+            pass
 
-        if self.is_form_type_wave:
+
+    class ListChunkType(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(Wav.ListChunkType, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.parent_chunk_data = riff.Riff.ParentChunkData(self._io)
+
+
+        def _fetch_instances(self):
+            pass
+            self.parent_chunk_data._fetch_instances()
+            _ = self.subchunks
+            if hasattr(self, '_m_subchunks'):
+                pass
+                for i in range(len(self._m_subchunks)):
+                    pass
+                    _on = self.form_type
+                    if _on == Wav.Fourcc.info:
+                        pass
+                        self._m_subchunks[i]._fetch_instances()
+
+
+
+        @property
+        def form_type(self):
+            if hasattr(self, '_m_form_type'):
+                return self._m_form_type
+
+            self._m_form_type = KaitaiStream.resolve_enum(Wav.Fourcc, self.parent_chunk_data.form_type)
+            return getattr(self, '_m_form_type', None)
+
+        @property
+        def subchunks(self):
+            if hasattr(self, '_m_subchunks'):
+                return self._m_subchunks
+
             io = self.parent_chunk_data.subchunks_slot._io
             _pos = io.pos()
             io.seek(0)
             self._m_subchunks = []
             i = 0
             while not io.is_eof():
-                self._m_subchunks.append(Wav.ChunkType(io, self, self._root))
+                _on = self.form_type
+                if _on == Wav.Fourcc.info:
+                    pass
+                    self._m_subchunks.append(Wav.InfoChunkType(io, self, self._root))
                 i += 1
 
             io.seek(_pos)
+            return getattr(self, '_m_subchunks', None)
 
-        return getattr(self, '_m_subchunks', None)
+
+    class PmxChunkType(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(Wav.PmxChunkType, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.data = (self._io.read_bytes_full()).decode(u"UTF-8")
+
+
+        def _fetch_instances(self):
+            pass
+
+
+    class SampleType(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(Wav.SampleType, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.sample = self._io.read_u2le()
+
+
+        def _fetch_instances(self):
+            pass
+
+
+    class SamplesType(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(Wav.SamplesType, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.samples = self._io.read_u4le()
+
+
+        def _fetch_instances(self):
+            pass
+
 
     @property
-    def parent_chunk_data(self):
-        if hasattr(self, '_m_parent_chunk_data'):
-            return self._m_parent_chunk_data
+    def chunk_id(self):
+        if hasattr(self, '_m_chunk_id'):
+            return self._m_chunk_id
 
-        if self.is_riff_chunk:
-            io = self.chunk.data_slot._io
-            _pos = io.pos()
-            io.seek(0)
-            self._m_parent_chunk_data = Riff.ParentChunkData(io, self, self._root)
-            io.seek(_pos)
+        self._m_chunk_id = KaitaiStream.resolve_enum(Wav.Fourcc, self.chunk.id)
+        return getattr(self, '_m_chunk_id', None)
 
-        return getattr(self, '_m_parent_chunk_data', None)
+    @property
+    def form_type(self):
+        if hasattr(self, '_m_form_type'):
+            return self._m_form_type
+
+        self._m_form_type = KaitaiStream.resolve_enum(Wav.Fourcc, self.parent_chunk_data.form_type)
+        return getattr(self, '_m_form_type', None)
 
     @property
     def is_form_type_wave(self):
@@ -779,19 +940,38 @@ class Wav(KaitaiStruct):
         return getattr(self, '_m_is_riff_chunk', None)
 
     @property
-    def chunk_id(self):
-        if hasattr(self, '_m_chunk_id'):
-            return self._m_chunk_id
+    def parent_chunk_data(self):
+        if hasattr(self, '_m_parent_chunk_data'):
+            return self._m_parent_chunk_data
 
-        self._m_chunk_id = KaitaiStream.resolve_enum(Wav.Fourcc, self.chunk.id)
-        return getattr(self, '_m_chunk_id', None)
+        if self.is_riff_chunk:
+            pass
+            io = self.chunk.data_slot._io
+            _pos = io.pos()
+            io.seek(0)
+            self._m_parent_chunk_data = riff.Riff.ParentChunkData(io)
+            io.seek(_pos)
+
+        return getattr(self, '_m_parent_chunk_data', None)
 
     @property
-    def form_type(self):
-        if hasattr(self, '_m_form_type'):
-            return self._m_form_type
+    def subchunks(self):
+        if hasattr(self, '_m_subchunks'):
+            return self._m_subchunks
 
-        self._m_form_type = KaitaiStream.resolve_enum(Wav.Fourcc, self.parent_chunk_data.form_type)
-        return getattr(self, '_m_form_type', None)
+        if self.is_form_type_wave:
+            pass
+            io = self.parent_chunk_data.subchunks_slot._io
+            _pos = io.pos()
+            io.seek(0)
+            self._m_subchunks = []
+            i = 0
+            while not io.is_eof():
+                self._m_subchunks.append(Wav.ChunkType(io, self, self._root))
+                i += 1
+
+            io.seek(_pos)
+
+        return getattr(self, '_m_subchunks', None)
 
 

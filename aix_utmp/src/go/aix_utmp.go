@@ -21,23 +21,32 @@ const (
 	AixUtmp_EntryType__DeadProcess AixUtmp_EntryType = 8
 	AixUtmp_EntryType__Accounting AixUtmp_EntryType = 9
 )
+var values_AixUtmp_EntryType = map[AixUtmp_EntryType]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}}
+func (v AixUtmp_EntryType) isDefined() bool {
+	_, ok := values_AixUtmp_EntryType[v]
+	return ok
+}
 type AixUtmp struct {
 	Records []*AixUtmp_Record
 	_io *kaitai.Stream
 	_root *AixUtmp
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewAixUtmp() *AixUtmp {
 	return &AixUtmp{
 	}
 }
 
-func (this *AixUtmp) Read(io *kaitai.Stream, parent interface{}, root *AixUtmp) (err error) {
+func (this AixUtmp) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *AixUtmp) Read(io *kaitai.Stream, parent kaitai.Struct, root *AixUtmp) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	for i := 1;; i++ {
+	for i := 0;; i++ {
 		tmp1, err := this._io.EOF()
 		if err != nil {
 			return err
@@ -54,6 +63,47 @@ func (this *AixUtmp) Read(io *kaitai.Stream, parent interface{}, root *AixUtmp) 
 	}
 	return err
 }
+type AixUtmp_ExitStatus struct {
+	TerminationCode int16
+	ExitCode int16
+	_io *kaitai.Stream
+	_root *AixUtmp
+	_parent *AixUtmp_Record
+}
+func NewAixUtmp_ExitStatus() *AixUtmp_ExitStatus {
+	return &AixUtmp_ExitStatus{
+	}
+}
+
+func (this AixUtmp_ExitStatus) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *AixUtmp_ExitStatus) Read(io *kaitai.Stream, parent *AixUtmp_Record, root *AixUtmp) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp3, err := this._io.ReadS2be()
+	if err != nil {
+		return err
+	}
+	this.TerminationCode = int16(tmp3)
+	tmp4, err := this._io.ReadS2be()
+	if err != nil {
+		return err
+	}
+	this.ExitCode = int16(tmp4)
+	return err
+}
+
+/**
+ * process termination status
+ */
+
+/**
+ * process exit status
+ */
 type AixUtmp_Record struct {
 	User string
 	InittabId string
@@ -75,73 +125,77 @@ func NewAixUtmp_Record() *AixUtmp_Record {
 	}
 }
 
+func (this AixUtmp_Record) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *AixUtmp_Record) Read(io *kaitai.Stream, parent *AixUtmp, root *AixUtmp) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp3, err := this._io.ReadBytes(int(256))
-	if err != nil {
-		return err
-	}
-	tmp3 = tmp3
-	this.User = string(tmp3)
-	tmp4, err := this._io.ReadBytes(int(14))
-	if err != nil {
-		return err
-	}
-	tmp4 = tmp4
-	this.InittabId = string(tmp4)
-	tmp5, err := this._io.ReadBytes(int(64))
+	tmp5, err := this._io.ReadBytes(int(256))
 	if err != nil {
 		return err
 	}
 	tmp5 = tmp5
-	this.Device = string(tmp5)
-	tmp6, err := this._io.ReadU8be()
+	this.User = string(tmp5)
+	tmp6, err := this._io.ReadBytes(int(14))
 	if err != nil {
 		return err
 	}
-	this.Pid = uint64(tmp6)
-	tmp7, err := this._io.ReadS2be()
+	tmp6 = tmp6
+	this.InittabId = string(tmp6)
+	tmp7, err := this._io.ReadBytes(int(64))
 	if err != nil {
 		return err
 	}
-	this.Type = AixUtmp_EntryType(tmp7)
-	tmp8, err := this._io.ReadS8be()
+	tmp7 = tmp7
+	this.Device = string(tmp7)
+	tmp8, err := this._io.ReadU8be()
 	if err != nil {
 		return err
 	}
-	this.Timestamp = int64(tmp8)
-	tmp9 := NewAixUtmp_ExitStatus()
-	err = tmp9.Read(this._io, this, this._root)
+	this.Pid = uint64(tmp8)
+	tmp9, err := this._io.ReadS2be()
 	if err != nil {
 		return err
 	}
-	this.ExitStatus = tmp9
-	tmp10, err := this._io.ReadBytes(int(256))
+	this.Type = AixUtmp_EntryType(tmp9)
+	tmp10, err := this._io.ReadS8be()
 	if err != nil {
 		return err
 	}
-	tmp10 = tmp10
-	this.Hostname = string(tmp10)
-	tmp11, err := this._io.ReadS4be()
+	this.Timestamp = int64(tmp10)
+	tmp11 := NewAixUtmp_ExitStatus()
+	err = tmp11.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.DblWordPad = int32(tmp11)
-	tmp12, err := this._io.ReadBytes(int(8))
+	this.ExitStatus = tmp11
+	tmp12, err := this._io.ReadBytes(int(256))
 	if err != nil {
 		return err
 	}
 	tmp12 = tmp12
-	this.ReservedA = tmp12
-	tmp13, err := this._io.ReadBytes(int(24))
+	this.Hostname = string(tmp12)
+	tmp13, err := this._io.ReadS4be()
 	if err != nil {
 		return err
 	}
-	tmp13 = tmp13
-	this.ReservedV = tmp13
+	this.DblWordPad = int32(tmp13)
+	tmp14, err := this._io.ReadBytes(int(8))
+	if err != nil {
+		return err
+	}
+	tmp14 = tmp14
+	this.ReservedA = tmp14
+	tmp15, err := this._io.ReadBytes(int(24))
+	if err != nil {
+		return err
+	}
+	tmp15 = tmp15
+	this.ReservedV = tmp15
 	return err
 }
 
@@ -175,41 +229,4 @@ func (this *AixUtmp_Record) Read(io *kaitai.Stream, parent *AixUtmp, root *AixUt
 
 /**
  * host name
- */
-type AixUtmp_ExitStatus struct {
-	TerminationCode int16
-	ExitCode int16
-	_io *kaitai.Stream
-	_root *AixUtmp
-	_parent *AixUtmp_Record
-}
-func NewAixUtmp_ExitStatus() *AixUtmp_ExitStatus {
-	return &AixUtmp_ExitStatus{
-	}
-}
-
-func (this *AixUtmp_ExitStatus) Read(io *kaitai.Stream, parent *AixUtmp_Record, root *AixUtmp) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp14, err := this._io.ReadS2be()
-	if err != nil {
-		return err
-	}
-	this.TerminationCode = int16(tmp14)
-	tmp15, err := this._io.ReadS2be()
-	if err != nil {
-		return err
-	}
-	this.ExitCode = int16(tmp15)
-	return err
-}
-
-/**
- * process termination status
- */
-
-/**
- * process exit status
  */

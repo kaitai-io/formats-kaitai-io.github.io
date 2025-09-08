@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Qualcomm Snapdragon (MSM) bootloader.img format: Rust parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="/pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li><a href="//kaitai.io/news/">News</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../">Format Gallery</a></li>
+        <li>Archive Files</li>
+        <li class="active">Qualcomm Snapdragon (MSM) bootloader.img format</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Qualcomm Snapdragon (MSM) bootloader.img format:
+            
+            Rust parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>A bootloader for Android used on various devices powered by Qualcomm
+Snapdragon chips:</p>
+<p><a href="https://en.wikipedia.org/wiki/Devices_using_Qualcomm_Snapdragon_processors">https://en.wikipedia.org/wiki/Devices_using_Qualcomm_Snapdragon_processors</a></p>
+<p>Although not all of the Snapdragon based Android devices use this particular
+bootloader format, it is known that devices with the following chips have used
+it (example devices are given for each chip):</p>
+<ul>
+<li>
+<p>APQ8064 (<a href="https://en.wikipedia.org/wiki/Devices_using_Qualcomm_Snapdragon_processors#Snapdragon_S4_Pro">devices</a>)</p>
+<ul>
+<li>Nexus 4 &quot;mako&quot;: <a href="https://androidfilehost.com/?fid=96039337900113996" title="bootloader-mako-makoz30f.img">sample</a> (<a href="https://androidfilehost.com/?w=search&amp;s=bootloader-mako&amp;type=files">other samples</a>),
+<a href="https://android.googlesource.com/device/lge/mako/+/33f0114/releasetools.py#98">releasetools.py</a></li>
+</ul>
+</li>
+<li>
+<p>MSM8974AA (<a href="https://en.wikipedia.org/wiki/Devices_using_Qualcomm_Snapdragon_processors#Snapdragon_800,_801_and_805_(2013/14)">devices</a>)</p>
+<ul>
+<li>Nexus 5 &quot;hammerhead&quot;: <a href="https://androidfilehost.com/?fid=385035244224410247" title="bootloader-hammerhead-hhz20h.img">sample</a> (<a href="https://androidfilehost.com/?w=search&amp;s=bootloader-hammerhead&amp;type=files">other samples</a>),
+<a href="https://android.googlesource.com/device/lge/hammerhead/+/7618a7d/releasetools.py#116">releasetools.py</a></li>
+</ul>
+</li>
+<li>
+<p>MSM8992 (<a href="https://en.wikipedia.org/wiki/Devices_using_Qualcomm_Snapdragon_processors#Snapdragon_808_and_810_(2015)">devices</a>)</p>
+<ul>
+<li>Nexus 5X &quot;bullhead&quot;: <a href="https://androidfilehost.com/?fid=11410963190603870177" title="bootloader-bullhead-bhz32c.img">sample</a> (<a href="https://androidfilehost.com/?w=search&amp;s=bootloader-bullhead&amp;type=files">other samples</a>),
+<a href="https://android.googlesource.com/device/lge/bullhead/+/2994b6b/releasetools.py#126">releasetools.py</a></li>
+</ul>
+</li>
+<li>
+<p>APQ8064-1AA (<a href="https://en.wikipedia.org/wiki/Devices_using_Qualcomm_Snapdragon_processors#Snapdragon_600_(2013)">devices</a>)</p>
+<ul>
+<li>Nexus 7 <span data-escaped-char>[</span>2013] (Mobile) &quot;deb&quot; <!-- raw HTML omitted -->(<span data-escaped-char>*</span>*)<!-- raw HTML omitted -->: <a href="https://androidfilehost.com/?fid=23501681358552487" title="bootloader-deb-flo-04.02.img">sample</a> (<a href="https://androidfilehost.com/?w=search&amp;s=bootloader-deb-flo&amp;type=files">other samples</a>),
+<a href="https://android.googlesource.com/device/asus/deb/+/14c1638/releasetools.py#105">releasetools.py</a></li>
+<li>Nexus 7 <span data-escaped-char>[</span>2013] (Wi-Fi) &quot;flo&quot; <!-- raw HTML omitted -->(<span data-escaped-char>*</span>*)<!-- raw HTML omitted -->: <a href="https://androidfilehost.com/?fid=23991606952593542" title="bootloader-flo-flo-04.05.img">sample</a> (<a href="https://androidfilehost.com/?w=search&amp;s=bootloader-flo-flo&amp;type=files">other samples</a>),
+<a href="https://android.googlesource.com/device/asus/flo/+/9d9fee9/releasetools.py#130">releasetools.py</a></li>
+</ul>
+</li>
+<li>
+<p>MSM8996 Pro-AB (<a href="https://en.wikipedia.org/wiki/Devices_using_Qualcomm_Snapdragon_processors#Snapdragon_820_and_821_(2016)">devices</a>)</p>
+<ul>
+<li>Pixel &quot;sailfish&quot; <!-- raw HTML omitted -->(<span data-escaped-char>*</span>)<!-- raw HTML omitted -->:
+<a href="https://androidfilehost.com/?fid=6006931924117907154" title="bootloader-sailfish-8996-012001-1904111134.img">sample</a> (<a href="https://androidfilehost.com/?w=search&amp;s=bootloader-sailfish&amp;type=files">other samples</a>)</li>
+<li>Pixel XL &quot;marlin&quot; <!-- raw HTML omitted -->(<span data-escaped-char>*</span>)<!-- raw HTML omitted -->:
+<a href="https://androidfilehost.com/?fid=6006931924117907131" title="bootloader-marlin-8996-012001-1904111134.img">sample</a> (<a href="https://androidfilehost.com/?w=search&amp;s=bootloader-marlin&amp;type=files">other samples</a>)</li>
+</ul>
+</li>
+<li>
+<p>MSM8998 (<a href="https://en.wikipedia.org/wiki/Devices_using_Qualcomm_Snapdragon_processors#Snapdragon_835_(2017)">devices</a>)</p>
+<ul>
+<li>Pixel 2 &quot;walleye&quot; <!-- raw HTML omitted -->(<span data-escaped-char>*</span>)<!-- raw HTML omitted -->: <a href="https://androidfilehost.com/?fid=14943124697586348540" title="bootloader-walleye-mw8998-003.0085.00.img">sample</a> (<a href="https://androidfilehost.com/?w=search&amp;s=bootloader-walleye&amp;type=files">other samples</a>)</li>
+<li>Pixel 2 XL &quot;taimen&quot;: <a href="https://androidfilehost.com/?fid=14943124697586348536" title="bootloader-taimen-tmz30m.img">sample</a> (<a href="https://androidfilehost.com/?w=search&amp;s=bootloader-taimen&amp;type=files">other samples</a>)</li>
+</ul>
+</li>
+</ul>
+<p><!-- raw HTML omitted -->(<span data-escaped-char>*</span>)
+<code>bootloader_size</code> is equal to the size of the whole file (not just <code>img_bodies</code> as usual).
+<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->(<span data-escaped-char>*</span>*)
+There are some data after the end of <code>img_bodies</code>.
+<!-- raw HTML omitted --></p>
+<hr />
+<p>On the other hand, devices with these chips <strong>do not</strong> use this format:</p>
+<ul>
+<li>
+<p><!-- raw HTML omitted -->APQ8084<!-- raw HTML omitted --> (<a href="https://en.wikipedia.org/wiki/Devices_using_Qualcomm_Snapdragon_processors#Snapdragon_800,_801_and_805_(2013/14)">devices</a>)</p>
+<ul>
+<li>Nexus 6 &quot;shamu&quot;: <a href="https://androidfilehost.com/?fid=745849072291678307" title="bootloader-shamu-moto-apq8084-72.04.img">sample</a> (<a href="https://androidfilehost.com/?w=search&amp;s=bootloader-shamu&amp;type=files">other samples</a>),
+<a href="https://android.googlesource.com/device/moto/shamu/+/df9354d/releasetools.py#12">releasetools.py</a> -
+uses &quot;Motoboot packed image format&quot; instead</li>
+</ul>
+</li>
+<li>
+<p><!-- raw HTML omitted -->MSM8994<!-- raw HTML omitted --> (<a href="https://en.wikipedia.org/wiki/Devices_using_Qualcomm_Snapdragon_processors#Snapdragon_808_and_810_(2015)">devices</a>)</p>
+<ul>
+<li>Nexus 6P &quot;angler&quot;: <a href="https://androidfilehost.com/?fid=11410963190603870158" title="bootloader-angler-angler-03.84.img">sample</a> (<a href="https://androidfilehost.com/?w=search&amp;s=bootloader-angler&amp;type=files">other samples</a>),
+<a href="https://android.googlesource.com/device/huawei/angler/+/cf92cd8/releasetools.py#29">releasetools.py</a> -
+uses &quot;Huawei Bootloader packed image format&quot; instead</li>
+</ul>
+</li>
+</ul>
+<hr />
+<p>The <code>bootloader-*.img</code> samples referenced above originally come from factory
+images packed in ZIP archives that can be found on the page <a href="https://developers.google.com/android/images">Factory Images
+for Nexus and Pixel Devices</a> on
+the Google Developers site. Note that the codenames on that page may be
+different than the ones that are written in the list above. That's because the
+Google page indicates <strong>ROM codenames</strong> in headings (e.g. &quot;occam&quot; for Nexus 4)
+but the above list uses <strong>model codenames</strong> (e.g. &quot;mako&quot; for Nexus 4) because
+that is how the original <code>bootloader-*.img</code> files are identified. For most
+devices, however, these code names are the same.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        img
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Qualcomm Snapdragon (MSM) bootloader.img format
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="Qualcomm Snapdragon (MSM) bootloader.img format parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_11.html" title="Qualcomm Snapdragon (MSM) bootloader.img format parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="Qualcomm Snapdragon (MSM) bootloader.img format parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="Qualcomm Snapdragon (MSM) bootloader.img format parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="Qualcomm Snapdragon (MSM) bootloader.img format parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Qualcomm Snapdragon (MSM) bootloader.img format parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="Qualcomm Snapdragon (MSM) bootloader.img format parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="java-write.html" title="Qualcomm Snapdragon (MSM) bootloader.img format parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="Qualcomm Snapdragon (MSM) bootloader.img format parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="Qualcomm Snapdragon (MSM) bootloader.img format parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="Qualcomm Snapdragon (MSM) bootloader.img format parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="Qualcomm Snapdragon (MSM) bootloader.img format parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="Qualcomm Snapdragon (MSM) bootloader.img format parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="Qualcomm Snapdragon (MSM) bootloader.img format parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="python-write.html" title="Qualcomm Snapdragon (MSM) bootloader.img format parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="Qualcomm Snapdragon (MSM) bootloader.img format parsing Ruby library">Ruby</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="rust.html" title="Qualcomm Snapdragon (MSM) bootloader.img format parsing Rust library">Rust</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Rust source code to parse Qualcomm Snapdragon (MSM) bootloader.img format
+            
+        </h2>
+
+        
+
+        <h3>android_bootldr_qcom.rs</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/rust/android_bootldr_qcom.rs" download="android_bootldr_qcom.rs" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="cp">#![allow(unused_imports)]</span>
+<span class="cp">#![allow(non_snake_case)]</span>
+<span class="cp">#![allow(non_camel_case_types)]</span>
+<span class="cp">#![allow(irrefutable_let_patterns)]</span>
+<span class="cp">#![allow(unused_comparisons)]</span>
+
+<span class="k">extern</span><span class="w"> </span><span class="k">crate</span><span class="w"> </span><span class="n">kaitai</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="n">kaitai</span><span class="p">::</span><span class="o">*</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">convert</span><span class="p">::{</span><span class="n">TryFrom</span><span class="p">,</span><span class="w"> </span><span class="n">TryInto</span><span class="p">};</span>
+<span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">cell</span><span class="p">::{</span><span class="n">Ref</span><span class="p">,</span><span class="w"> </span><span class="n">Cell</span><span class="p">,</span><span class="w"> </span><span class="n">RefCell</span><span class="p">};</span>
+<span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">rc</span><span class="p">::{</span><span class="n">Rc</span><span class="p">,</span><span class="w"> </span><span class="n">Weak</span><span class="p">};</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * A bootloader for Android used on various devices powered by Qualcomm</span>
+<span class="sd"> * Snapdragon chips:</span>
+<span class="sd"> * </span>
+<span class="sd"> * &lt;https://en.wikipedia.org/wiki/Devices_using_Qualcomm_Snapdragon_processors&gt;</span>
+<span class="sd"> * </span>
+<span class="sd"> * Although not all of the Snapdragon based Android devices use this particular</span>
+<span class="sd"> * bootloader format, it is known that devices with the following chips have used</span>
+<span class="sd"> * it (example devices are given for each chip):</span>
+<span class="sd"> * </span>
+<span class="sd"> * * APQ8064 ([devices](https://en.wikipedia.org/wiki/Devices_using_Qualcomm_Snapdragon_processors#Snapdragon_S4_Pro))</span>
+<span class="sd"> *   - Nexus 4 &quot;mako&quot;: [sample][sample-mako] ([other samples][others-mako]),</span>
+<span class="sd"> *     [releasetools.py](https://android.googlesource.com/device/lge/mako/+/33f0114/releasetools.py#98)</span>
+<span class="sd"> * </span>
+<span class="sd"> * * MSM8974AA ([devices](https://en.wikipedia.org/wiki/Devices_using_Qualcomm_Snapdragon_processors#Snapdragon_800,_801_and_805_(2013/14)))</span>
+<span class="sd"> *   - Nexus 5 &quot;hammerhead&quot;: [sample][sample-hammerhead] ([other samples][others-hammerhead]),</span>
+<span class="sd"> *     [releasetools.py](https://android.googlesource.com/device/lge/hammerhead/+/7618a7d/releasetools.py#116)</span>
+<span class="sd"> * </span>
+<span class="sd"> * * MSM8992 ([devices](https://en.wikipedia.org/wiki/Devices_using_Qualcomm_Snapdragon_processors#Snapdragon_808_and_810_(2015)))</span>
+<span class="sd"> *   - Nexus 5X &quot;bullhead&quot;: [sample][sample-bullhead] ([other samples][others-bullhead]),</span>
+<span class="sd"> *     [releasetools.py](https://android.googlesource.com/device/lge/bullhead/+/2994b6b/releasetools.py#126)</span>
+<span class="sd"> * </span>
+<span class="sd"> * * APQ8064-1AA ([devices](https://en.wikipedia.org/wiki/Devices_using_Qualcomm_Snapdragon_processors#Snapdragon_600_(2013)))</span>
+<span class="sd"> *   - Nexus 7 \[2013] (Mobile) &quot;deb&quot; &lt;a href=&quot;#doc-note-data-after-img-bodies&quot;&gt;(\**)&lt;/a&gt;: [sample][sample-deb] ([other samples][others-deb]),</span>
+<span class="sd"> *     [releasetools.py](https://android.googlesource.com/device/asus/deb/+/14c1638/releasetools.py#105)</span>
+<span class="sd"> *   - Nexus 7 \[2013] (Wi-Fi) &quot;flo&quot; &lt;a href=&quot;#doc-note-data-after-img-bodies&quot;&gt;(\**)&lt;/a&gt;: [sample][sample-flo] ([other samples][others-flo]),</span>
+<span class="sd"> *     [releasetools.py](https://android.googlesource.com/device/asus/flo/+/9d9fee9/releasetools.py#130)</span>
+<span class="sd"> * </span>
+<span class="sd"> * * MSM8996 Pro-AB ([devices](https://en.wikipedia.org/wiki/Devices_using_Qualcomm_Snapdragon_processors#Snapdragon_820_and_821_(2016)))</span>
+<span class="sd"> *   - Pixel &quot;sailfish&quot; &lt;a href=&quot;#doc-note-bootloader-size&quot;&gt;(\*)&lt;/a&gt;:</span>
+<span class="sd"> *     [sample][sample-sailfish] ([other samples][others-sailfish])</span>
+<span class="sd"> *   - Pixel XL &quot;marlin&quot; &lt;a href=&quot;#doc-note-bootloader-size&quot;&gt;(\*)&lt;/a&gt;:</span>
+<span class="sd"> *     [sample][sample-marlin] ([other samples][others-marlin])</span>
+<span class="sd"> * </span>
+<span class="sd"> * * MSM8998 ([devices](https://en.wikipedia.org/wiki/Devices_using_Qualcomm_Snapdragon_processors#Snapdragon_835_(2017)))</span>
+<span class="sd"> *   - Pixel 2 &quot;walleye&quot; &lt;a href=&quot;#doc-note-bootloader-size&quot;&gt;(\*)&lt;/a&gt;: [sample][sample-walleye] ([other samples][others-walleye])</span>
+<span class="sd"> *   - Pixel 2 XL &quot;taimen&quot;: [sample][sample-taimen] ([other samples][others-taimen])</span>
+<span class="sd"> * </span>
+<span class="sd"> * &lt;small id=&quot;doc-note-bootloader-size&quot;&gt;(\*)</span>
+<span class="sd"> * `bootloader_size` is equal to the size of the whole file (not just `img_bodies` as usual).</span>
+<span class="sd"> * &lt;/small&gt;</span>
+<span class="sd"> * </span>
+<span class="sd"> * &lt;small id=&quot;doc-note-data-after-img-bodies&quot;&gt;(\**)</span>
+<span class="sd"> * There are some data after the end of `img_bodies`.</span>
+<span class="sd"> * &lt;/small&gt;</span>
+<span class="sd"> * </span>
+<span class="sd"> * ---</span>
+<span class="sd"> * </span>
+<span class="sd"> * On the other hand, devices with these chips **do not** use this format:</span>
+<span class="sd"> * </span>
+<span class="sd"> * * &lt;del&gt;APQ8084&lt;/del&gt; ([devices](https://en.wikipedia.org/wiki/Devices_using_Qualcomm_Snapdragon_processors#Snapdragon_800,_801_and_805_(2013/14)))</span>
+<span class="sd"> *   - Nexus 6 &quot;shamu&quot;: [sample][foreign-sample-shamu] ([other samples][foreign-others-shamu]),</span>
+<span class="sd"> *     [releasetools.py](https://android.googlesource.com/device/moto/shamu/+/df9354d/releasetools.py#12) -</span>
+<span class="sd"> *     uses &quot;Motoboot packed image format&quot; instead</span>
+<span class="sd"> * </span>
+<span class="sd"> * * &lt;del&gt;MSM8994&lt;/del&gt; ([devices](https://en.wikipedia.org/wiki/Devices_using_Qualcomm_Snapdragon_processors#Snapdragon_808_and_810_(2015)))</span>
+<span class="sd"> *   - Nexus 6P &quot;angler&quot;: [sample][foreign-sample-angler] ([other samples][foreign-others-angler]),</span>
+<span class="sd"> *     [releasetools.py](https://android.googlesource.com/device/huawei/angler/+/cf92cd8/releasetools.py#29) -</span>
+<span class="sd"> *     uses &quot;Huawei Bootloader packed image format&quot; instead</span>
+<span class="sd"> * </span>
+<span class="sd"> * [sample-mako]: https://androidfilehost.com/?fid=96039337900113996 &quot;bootloader-mako-makoz30f.img&quot;</span>
+<span class="sd"> * [others-mako]: https://androidfilehost.com/?w=search&amp;s=bootloader-mako&amp;type=files</span>
+<span class="sd"> * </span>
+<span class="sd"> * [sample-hammerhead]: https://androidfilehost.com/?fid=385035244224410247 &quot;bootloader-hammerhead-hhz20h.img&quot;</span>
+<span class="sd"> * [others-hammerhead]: https://androidfilehost.com/?w=search&amp;s=bootloader-hammerhead&amp;type=files</span>
+<span class="sd"> * </span>
+<span class="sd"> * [sample-bullhead]: https://androidfilehost.com/?fid=11410963190603870177 &quot;bootloader-bullhead-bhz32c.img&quot;</span>
+<span class="sd"> * [others-bullhead]: https://androidfilehost.com/?w=search&amp;s=bootloader-bullhead&amp;type=files</span>
+<span class="sd"> * </span>
+<span class="sd"> * [sample-deb]: https://androidfilehost.com/?fid=23501681358552487 &quot;bootloader-deb-flo-04.02.img&quot;</span>
+<span class="sd"> * [others-deb]: https://androidfilehost.com/?w=search&amp;s=bootloader-deb-flo&amp;type=files</span>
+<span class="sd"> * </span>
+<span class="sd"> * [sample-flo]: https://androidfilehost.com/?fid=23991606952593542 &quot;bootloader-flo-flo-04.05.img&quot;</span>
+<span class="sd"> * [others-flo]: https://androidfilehost.com/?w=search&amp;s=bootloader-flo-flo&amp;type=files</span>
+<span class="sd"> * </span>
+<span class="sd"> * [sample-sailfish]: https://androidfilehost.com/?fid=6006931924117907154 &quot;bootloader-sailfish-8996-012001-1904111134.img&quot;</span>
+<span class="sd"> * [others-sailfish]: https://androidfilehost.com/?w=search&amp;s=bootloader-sailfish&amp;type=files</span>
+<span class="sd"> * </span>
+<span class="sd"> * [sample-marlin]: https://androidfilehost.com/?fid=6006931924117907131 &quot;bootloader-marlin-8996-012001-1904111134.img&quot;</span>
+<span class="sd"> * [others-marlin]: https://androidfilehost.com/?w=search&amp;s=bootloader-marlin&amp;type=files</span>
+<span class="sd"> * </span>
+<span class="sd"> * [sample-walleye]: https://androidfilehost.com/?fid=14943124697586348540 &quot;bootloader-walleye-mw8998-003.0085.00.img&quot;</span>
+<span class="sd"> * [others-walleye]: https://androidfilehost.com/?w=search&amp;s=bootloader-walleye&amp;type=files</span>
+<span class="sd"> * </span>
+<span class="sd"> * [sample-taimen]: https://androidfilehost.com/?fid=14943124697586348536 &quot;bootloader-taimen-tmz30m.img&quot;</span>
+<span class="sd"> * [others-taimen]: https://androidfilehost.com/?w=search&amp;s=bootloader-taimen&amp;type=files</span>
+<span class="sd"> * </span>
+<span class="sd"> * [foreign-sample-shamu]: https://androidfilehost.com/?fid=745849072291678307 &quot;bootloader-shamu-moto-apq8084-72.04.img&quot;</span>
+<span class="sd"> * [foreign-others-shamu]: https://androidfilehost.com/?w=search&amp;s=bootloader-shamu&amp;type=files</span>
+<span class="sd"> * </span>
+<span class="sd"> * [foreign-sample-angler]: https://androidfilehost.com/?fid=11410963190603870158 &quot;bootloader-angler-angler-03.84.img&quot;</span>
+<span class="sd"> * [foreign-others-angler]: https://androidfilehost.com/?w=search&amp;s=bootloader-angler&amp;type=files</span>
+<span class="sd"> * </span>
+<span class="sd"> * ---</span>
+<span class="sd"> * </span>
+<span class="sd"> * The `bootloader-*.img` samples referenced above originally come from factory</span>
+<span class="sd"> * images packed in ZIP archives that can be found on the page [Factory Images</span>
+<span class="sd"> * for Nexus and Pixel Devices](https://developers.google.com/android/images) on</span>
+<span class="sd"> * the Google Developers site. Note that the codenames on that page may be</span>
+<span class="sd"> * different than the ones that are written in the list above. That&#39;s because the</span>
+<span class="sd"> * Google page indicates **ROM codenames** in headings (e.g. &quot;occam&quot; for Nexus 4)</span>
+<span class="sd"> * but the above list uses **model codenames** (e.g. &quot;mako&quot; for Nexus 4) because</span>
+<span class="sd"> * that is how the original `bootloader-*.img` files are identified. For most</span>
+<span class="sd"> * devices, however, these code names are the same.</span>
+<span class="sd"> * \sa https://android.googlesource.com/device/lge/hammerhead/+/7618a7d/releasetools.py Source</span>
+<span class="sd"> */</span>
+
+<span class="cp">#[derive(Default, Debug, Clone)]</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">AndroidBootldrQcom</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">_root</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="n">AndroidBootldrQcom</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">_parent</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="n">AndroidBootldrQcom</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">_self</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="bp">Self</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">magic</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">u8</span><span class="o">&gt;&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">num_images</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="kt">u32</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">ofs_img_bodies</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="kt">u32</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">bootloader_size</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="kt">u32</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">img_headers</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="nb">Vec</span><span class="o">&lt;</span><span class="n">OptRc</span><span class="o">&lt;</span><span class="n">AndroidBootldrQcom_ImgHeader</span><span class="o">&gt;&gt;&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">_io</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="n">BytesReader</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">f_img_bodies</span><span class="p">:</span><span class="w"> </span><span class="nc">Cell</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">img_bodies</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="nb">Vec</span><span class="o">&lt;</span><span class="n">OptRc</span><span class="o">&lt;</span><span class="n">AndroidBootldrQcom_ImgBody</span><span class="o">&gt;&gt;&gt;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">KStruct</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">AndroidBootldrQcom</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">type</span><span class="w"> </span><span class="nc">Root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AndroidBootldrQcom</span><span class="p">;</span>
+<span class="w">    </span><span class="k">type</span><span class="w"> </span><span class="nc">Parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AndroidBootldrQcom</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">read</span><span class="o">&lt;</span><span class="n">S</span><span class="p">:</span><span class="w"> </span><span class="nc">KStream</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">OptRc</span><span class="o">&lt;</span><span class="bp">Self</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">_io</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">S</span><span class="p">,</span>
+<span class="w">        </span><span class="n">_root</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="bp">Self</span><span class="p">::</span><span class="n">Root</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">_parent</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="bp">Self</span><span class="p">::</span><span class="n">Parent</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">KResult</span><span class="o">&lt;</span><span class="p">()</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">_io</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">_parent</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_self</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="nb">Ok</span><span class="p">(</span><span class="n">self_rc</span><span class="p">.</span><span class="n">clone</span><span class="p">()));</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_rrc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">get_value</span><span class="p">().</span><span class="n">borrow</span><span class="p">().</span><span class="n">upgrade</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_prc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">get_value</span><span class="p">().</span><span class="n">borrow</span><span class="p">().</span><span class="n">upgrade</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_rrc</span><span class="p">.</span><span class="n">as_ref</span><span class="p">().</span><span class="n">unwrap</span><span class="p">();</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">magic</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">usize</span><span class="p">)</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="o">!</span><span class="p">(</span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">magic</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="mh">0x42</span><span class="k">u8</span><span class="p">,</span><span class="w"> </span><span class="mh">0x4f</span><span class="k">u8</span><span class="p">,</span><span class="w"> </span><span class="mh">0x4f</span><span class="k">u8</span><span class="p">,</span><span class="w"> </span><span class="mh">0x54</span><span class="k">u8</span><span class="p">,</span><span class="w"> </span><span class="mh">0x4c</span><span class="k">u8</span><span class="p">,</span><span class="w"> </span><span class="mh">0x44</span><span class="k">u8</span><span class="p">,</span><span class="w"> </span><span class="mh">0x52</span><span class="k">u8</span><span class="p">,</span><span class="w"> </span><span class="mh">0x21</span><span class="k">u8</span><span class="p">])</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nb">Err</span><span class="p">(</span><span class="n">KError</span><span class="p">::</span><span class="n">ValidationFailed</span><span class="p">(</span><span class="n">ValidationFailedError</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">kind</span><span class="p">:</span><span class="w"> </span><span class="nc">ValidationKind</span><span class="p">::</span><span class="n">NotEqual</span><span class="p">,</span><span class="w"> </span><span class="n">src_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/seq/0&quot;</span><span class="p">.</span><span class="n">to_string</span><span class="p">()</span><span class="w"> </span><span class="p">}));</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">num_images</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">read_u4le</span><span class="p">()</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">ofs_img_bodies</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">read_u4le</span><span class="p">()</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">bootloader_size</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">read_u4le</span><span class="p">()</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">img_headers</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Vec</span><span class="p">::</span><span class="n">new</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">l_img_headers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">num_images</span><span class="p">();</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">_i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="n">l_img_headers</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">Self</span><span class="p">::</span><span class="n">read_into</span><span class="p">::</span><span class="o">&lt;</span><span class="n">_</span><span class="p">,</span><span class="w"> </span><span class="n">AndroidBootldrQcom_ImgHeader</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;*</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="n">self_rc</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">clone</span><span class="p">()),</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="n">self_rc</span><span class="p">.</span><span class="n">_self</span><span class="p">.</span><span class="n">clone</span><span class="p">()))</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">            </span><span class="n">self_rc</span><span class="p">.</span><span class="n">img_headers</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">().</span><span class="n">push</span><span class="p">(</span><span class="n">t</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="nb">Ok</span><span class="p">(())</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">AndroidBootldrQcom</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">img_bodies</span><span class="p">(</span>
+<span class="w">        </span><span class="o">&amp;</span><span class="bp">self</span>
+<span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">KResult</span><span class="o">&lt;</span><span class="n">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="n">OptRc</span><span class="o">&lt;</span><span class="n">AndroidBootldrQcom_ImgBody</span><span class="o">&gt;&gt;&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">_io</span><span class="p">.</span><span class="n">borrow</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_rrc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">get_value</span><span class="p">().</span><span class="n">borrow</span><span class="p">().</span><span class="n">upgrade</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_prc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">get_value</span><span class="p">().</span><span class="n">borrow</span><span class="p">().</span><span class="n">upgrade</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_rrc</span><span class="p">.</span><span class="n">as_ref</span><span class="p">().</span><span class="n">unwrap</span><span class="p">();</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">f_img_bodies</span><span class="p">.</span><span class="n">get</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">img_bodies</span><span class="p">.</span><span class="n">borrow</span><span class="p">());</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">f_img_bodies</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">pos</span><span class="p">();</span>
+<span class="w">        </span><span class="n">_io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="p">.</span><span class="n">ofs_img_bodies</span><span class="p">()</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">usize</span><span class="p">)</span><span class="o">?</span><span class="p">;</span>
+<span class="w">        </span><span class="o">*</span><span class="bp">self</span><span class="p">.</span><span class="n">img_bodies</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Vec</span><span class="p">::</span><span class="n">new</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">l_img_bodies</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="bp">self</span><span class="p">.</span><span class="n">num_images</span><span class="p">();</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">_i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="n">l_img_bodies</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">|</span><span class="n">t</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">mut</span><span class="w"> </span><span class="n">AndroidBootldrQcom_ImgBody</span><span class="o">|</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="n">set_params</span><span class="p">((</span><span class="n">_i</span><span class="p">).</span><span class="n">try_into</span><span class="p">().</span><span class="n">map_err</span><span class="p">(</span><span class="o">|</span><span class="n">_</span><span class="o">|</span><span class="w"> </span><span class="n">KError</span><span class="p">::</span><span class="n">CastError</span><span class="p">)</span><span class="o">?</span><span class="p">));</span>
+<span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">Self</span><span class="p">::</span><span class="n">read_into_with_init</span><span class="p">::</span><span class="o">&lt;</span><span class="n">_</span><span class="p">,</span><span class="w"> </span><span class="n">AndroidBootldrQcom_ImgBody</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;*</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">clone</span><span class="p">()),</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">_self</span><span class="p">.</span><span class="n">clone</span><span class="p">()),</span><span class="w"> </span><span class="o">&amp;</span><span class="n">f</span><span class="p">)</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">            </span><span class="bp">self</span><span class="p">.</span><span class="n">img_bodies</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">().</span><span class="n">push</span><span class="p">(</span><span class="n">t</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">_io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span><span class="o">?</span><span class="p">;</span>
+<span class="w">        </span><span class="nb">Ok</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">img_bodies</span><span class="p">.</span><span class="n">borrow</span><span class="p">())</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">AndroidBootldrQcom</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">magic</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">u8</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">magic</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">AndroidBootldrQcom</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">num_images</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="kt">u32</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">num_images</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">AndroidBootldrQcom</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">ofs_img_bodies</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="kt">u32</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">ofs_img_bodies</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * According to all available `releasetools.py` versions from AOSP (links are</span>
+<span class="sd"> * in the top-level `/doc`), this should determine only the size of</span>
+<span class="sd"> * `img_bodies` - there is [an assertion](</span>
+<span class="sd"> * https://android.googlesource.com/device/lge/hammerhead/+/7618a7d/releasetools.py#167)</span>
+<span class="sd"> * for it.</span>
+<span class="sd"> * </span>
+<span class="sd"> * However, files for certain Pixel devices (see `/doc`) apparently declare</span>
+<span class="sd"> * the entire file size here (i.e. including also fields from `magic` to</span>
+<span class="sd"> * `img_headers`). So if you interpreted `bootloader_size` as the size of</span>
+<span class="sd"> * `img_bodies` substream in these files, you would exceed the end of file.</span>
+<span class="sd"> * Although you could check that it fits in the file before attempting to</span>
+<span class="sd"> * create a substream of that size, you wouldn&#39;t know if it&#39;s meant to</span>
+<span class="sd"> * specify the size of just `img_bodies` or the size of the entire bootloader</span>
+<span class="sd"> * payload (whereas there may be additional data after the end of payload)</span>
+<span class="sd"> * until parsing `img_bodies` (or at least summing sizes from `img_headers`,</span>
+<span class="sd"> * but that&#39;s stupid).</span>
+<span class="sd"> * </span>
+<span class="sd"> * So this field isn&#39;t reliable enough to be used as the size of any</span>
+<span class="sd"> * substream. If you want to check if it has a reasonable value, do so in</span>
+<span class="sd"> * your application code.</span>
+<span class="sd"> */</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">AndroidBootldrQcom</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">bootloader_size</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="kt">u32</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">bootloader_size</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">AndroidBootldrQcom</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">img_headers</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="n">OptRc</span><span class="o">&lt;</span><span class="n">AndroidBootldrQcom_ImgHeader</span><span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">img_headers</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">AndroidBootldrQcom</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">_io</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="n">BytesReader</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">_io</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="cp">#[derive(Default, Debug, Clone)]</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">AndroidBootldrQcom_ImgBody</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">_root</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="n">AndroidBootldrQcom</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">_parent</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="n">AndroidBootldrQcom</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">_self</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="bp">Self</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">idx</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">body</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">u8</span><span class="o">&gt;&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">_io</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="n">BytesReader</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">f_img_header</span><span class="p">:</span><span class="w"> </span><span class="nc">Cell</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">img_header</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="n">OptRc</span><span class="o">&lt;</span><span class="n">AndroidBootldrQcom_ImgHeader</span><span class="o">&gt;&gt;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">KStruct</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">AndroidBootldrQcom_ImgBody</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">type</span><span class="w"> </span><span class="nc">Root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AndroidBootldrQcom</span><span class="p">;</span>
+<span class="w">    </span><span class="k">type</span><span class="w"> </span><span class="nc">Parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AndroidBootldrQcom</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">read</span><span class="o">&lt;</span><span class="n">S</span><span class="p">:</span><span class="w"> </span><span class="nc">KStream</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">OptRc</span><span class="o">&lt;</span><span class="bp">Self</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">_io</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">S</span><span class="p">,</span>
+<span class="w">        </span><span class="n">_root</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="bp">Self</span><span class="p">::</span><span class="n">Root</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">_parent</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="bp">Self</span><span class="p">::</span><span class="n">Parent</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">KResult</span><span class="o">&lt;</span><span class="p">()</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">_io</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">_parent</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_self</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="nb">Ok</span><span class="p">(</span><span class="n">self_rc</span><span class="p">.</span><span class="n">clone</span><span class="p">()));</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_rrc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">get_value</span><span class="p">().</span><span class="n">borrow</span><span class="p">().</span><span class="n">upgrade</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_prc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">get_value</span><span class="p">().</span><span class="n">borrow</span><span class="p">().</span><span class="n">upgrade</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_rrc</span><span class="p">.</span><span class="n">as_ref</span><span class="p">().</span><span class="n">unwrap</span><span class="p">();</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">body</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">img_header</span><span class="p">()</span><span class="o">?</span><span class="p">.</span><span class="n">len_body</span><span class="p">()</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">usize</span><span class="p">)</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">        </span><span class="nb">Ok</span><span class="p">(())</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">AndroidBootldrQcom_ImgBody</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">idx</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="kt">i32</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">idx</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">AndroidBootldrQcom_ImgBody</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">set_params</span><span class="p">(</span><span class="o">&amp;</span><span class="k">mut</span><span class="w"> </span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">idx</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="o">*</span><span class="bp">self</span><span class="p">.</span><span class="n">idx</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">idx</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">AndroidBootldrQcom_ImgBody</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">img_header</span><span class="p">(</span>
+<span class="w">        </span><span class="o">&amp;</span><span class="bp">self</span>
+<span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">KResult</span><span class="o">&lt;</span><span class="n">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="n">OptRc</span><span class="o">&lt;</span><span class="n">AndroidBootldrQcom_ImgHeader</span><span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">_io</span><span class="p">.</span><span class="n">borrow</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_rrc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">get_value</span><span class="p">().</span><span class="n">borrow</span><span class="p">().</span><span class="n">upgrade</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_prc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">get_value</span><span class="p">().</span><span class="n">borrow</span><span class="p">().</span><span class="n">upgrade</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_rrc</span><span class="p">.</span><span class="n">as_ref</span><span class="p">().</span><span class="n">unwrap</span><span class="p">();</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">f_img_header</span><span class="p">.</span><span class="n">get</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">img_header</span><span class="p">.</span><span class="n">borrow</span><span class="p">());</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="o">*</span><span class="bp">self</span><span class="p">.</span><span class="n">img_header</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_r</span><span class="p">.</span><span class="n">img_headers</span><span class="p">()[</span><span class="o">*</span><span class="bp">self</span><span class="p">.</span><span class="n">idx</span><span class="p">()</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">usize</span><span class="p">].</span><span class="n">clone</span><span class="p">();</span>
+<span class="w">        </span><span class="nb">Ok</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">img_header</span><span class="p">.</span><span class="n">borrow</span><span class="p">())</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">AndroidBootldrQcom_ImgBody</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">body</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">u8</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">body</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">AndroidBootldrQcom_ImgBody</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">_io</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="n">BytesReader</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">_io</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="cp">#[derive(Default, Debug, Clone)]</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">AndroidBootldrQcom_ImgHeader</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">_root</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="n">AndroidBootldrQcom</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">_parent</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="n">AndroidBootldrQcom</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">_self</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="bp">Self</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="nb">String</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">len_body</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="kt">u32</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">_io</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="n">BytesReader</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">KStruct</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">AndroidBootldrQcom_ImgHeader</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">type</span><span class="w"> </span><span class="nc">Root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AndroidBootldrQcom</span><span class="p">;</span>
+<span class="w">    </span><span class="k">type</span><span class="w"> </span><span class="nc">Parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AndroidBootldrQcom</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">read</span><span class="o">&lt;</span><span class="n">S</span><span class="p">:</span><span class="w"> </span><span class="nc">KStream</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">OptRc</span><span class="o">&lt;</span><span class="bp">Self</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">_io</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">S</span><span class="p">,</span>
+<span class="w">        </span><span class="n">_root</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="bp">Self</span><span class="p">::</span><span class="n">Root</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">_parent</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="bp">Self</span><span class="p">::</span><span class="n">Parent</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">KResult</span><span class="o">&lt;</span><span class="p">()</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">_io</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">_parent</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_self</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="nb">Ok</span><span class="p">(</span><span class="n">self_rc</span><span class="p">.</span><span class="n">clone</span><span class="p">()));</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_rrc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">get_value</span><span class="p">().</span><span class="n">borrow</span><span class="p">().</span><span class="n">upgrade</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_prc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">get_value</span><span class="p">().</span><span class="n">borrow</span><span class="p">().</span><span class="n">upgrade</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_rrc</span><span class="p">.</span><span class="n">as_ref</span><span class="p">().</span><span class="n">unwrap</span><span class="p">();</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">name</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bytes_to_str</span><span class="p">(</span><span class="o">&amp;</span><span class="n">bytes_terminate</span><span class="p">(</span><span class="o">&amp;</span><span class="n">_io</span><span class="p">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">64</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">usize</span><span class="p">)</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">(),</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">).</span><span class="n">into</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;ASCII&quot;</span><span class="p">)</span><span class="o">?</span><span class="p">;</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">len_body</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">read_u4le</span><span class="p">()</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">        </span><span class="nb">Ok</span><span class="p">(())</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">AndroidBootldrQcom_ImgHeader</span><span class="w"> </span><span class="p">{</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">AndroidBootldrQcom_ImgHeader</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">name</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="nb">String</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">name</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">AndroidBootldrQcom_ImgHeader</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">len_body</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="kt">u32</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">len_body</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">AndroidBootldrQcom_ImgHeader</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">_io</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="n">BytesReader</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">_io</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015&ndash;2025 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">format repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+</body>
+</html>

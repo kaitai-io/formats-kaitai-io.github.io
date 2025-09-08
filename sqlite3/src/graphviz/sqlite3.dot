@@ -7,7 +7,7 @@ digraph {
 
 		sqlite3__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-			<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">16</TD><TD></TD><TD PORT="magic_type">magic</TD></TR>
+			<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">16</TD><TD>53 51 4C 69 74 65 20 66 6F 72 6D 61 74 20 33 00</TD><TD PORT="magic_type">magic</TD></TR>
 			<TR><TD PORT="len_page_mod_pos">16</TD><TD PORT="len_page_mod_size">2</TD><TD>u2be</TD><TD PORT="len_page_mod_type">len_page_mod</TD></TR>
 			<TR><TD PORT="write_version_pos">18</TD><TD PORT="write_version_size">1</TD><TD>u1→Versions</TD><TD PORT="write_version_type">write_version</TD></TR>
 			<TR><TD PORT="read_version_pos">19</TD><TD PORT="read_version_size">1</TD><TD>u1→Versions</TD><TD PORT="read_version_type">read_version</TD></TR>
@@ -36,27 +36,6 @@ digraph {
 			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
 			<TR><TD>len_page</TD><TD>(len_page_mod == 1 ? 65536 : len_page_mod)</TD></TR>
 		</TABLE>>];
-		subgraph cluster__serial {
-			label="Sqlite3::Serial";
-			graph[style=dotted];
-
-			serial__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="code_pos">0</TD><TD PORT="code_size">...</TD><TD>VlqBase128Be</TD><TD PORT="code_type">code</TD></TR>
-			</TABLE>>];
-			serial__inst__is_blob [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>is_blob</TD><TD> ((code.value &gt;= 12) &amp;&amp; ((code.value % 2) == 0)) </TD></TR>
-			</TABLE>>];
-			serial__inst__is_string [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>is_string</TD><TD> ((code.value &gt;= 13) &amp;&amp; ((code.value % 2) == 1)) </TD></TR>
-			</TABLE>>];
-			serial__inst__len_content [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>len_content</TD><TD>((code.value - 12) / 2)</TD></TR>
-			</TABLE>>];
-		}
 		subgraph cluster__btree_page {
 			label="Sqlite3::BtreePage";
 			graph[style=dotted];
@@ -69,8 +48,20 @@ digraph {
 				<TR><TD PORT="ofs_cells_pos">5</TD><TD PORT="ofs_cells_size">2</TD><TD>u2be</TD><TD PORT="ofs_cells_type">ofs_cells</TD></TR>
 				<TR><TD PORT="num_frag_free_bytes_pos">7</TD><TD PORT="num_frag_free_bytes_size">1</TD><TD>u1</TD><TD PORT="num_frag_free_bytes_type">num_frag_free_bytes</TD></TR>
 				<TR><TD PORT="right_ptr_pos">8</TD><TD PORT="right_ptr_size">4</TD><TD>u4be</TD><TD PORT="right_ptr_type">right_ptr</TD></TR>
+				<TR><TD COLSPAN="4" PORT="right_ptr__if">if  ((page_type == 2) || (page_type == 5)) </TD></TR>
 				<TR><TD PORT="cells_pos">12</TD><TD PORT="cells_size">2</TD><TD>RefCell</TD><TD PORT="cells_type">cells</TD></TR>
 				<TR><TD COLSPAN="4" PORT="cells__repeat">repeat num_cells times</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__cell_index_interior {
+			label="Sqlite3::CellIndexInterior";
+			graph[style=dotted];
+
+			cell_index_interior__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="left_child_page_pos">0</TD><TD PORT="left_child_page_size">4</TD><TD>u4be</TD><TD PORT="left_child_page_type">left_child_page</TD></TR>
+				<TR><TD PORT="len_payload_pos">4</TD><TD PORT="len_payload_size">...</TD><TD>VlqBase128Be</TD><TD PORT="len_payload_type">len_payload</TD></TR>
+				<TR><TD PORT="payload_pos">...</TD><TD PORT="payload_size">len_payload.value</TD><TD>CellPayload</TD><TD PORT="payload_type">payload</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__cell_index_leaf {
@@ -83,27 +74,6 @@ digraph {
 				<TR><TD PORT="payload_pos">...</TD><TD PORT="payload_size">len_payload.value</TD><TD>CellPayload</TD><TD PORT="payload_type">payload</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__serials {
-			label="Sqlite3::Serials";
-			graph[style=dotted];
-
-			serials__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="entries_pos">0</TD><TD PORT="entries_size">...</TD><TD>Serial</TD><TD PORT="entries_type">entries</TD></TR>
-				<TR><TD COLSPAN="4" PORT="entries__repeat">repeat to end of stream</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__cell_table_leaf {
-			label="Sqlite3::CellTableLeaf";
-			graph[style=dotted];
-
-			cell_table_leaf__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="len_payload_pos">0</TD><TD PORT="len_payload_size">...</TD><TD>VlqBase128Be</TD><TD PORT="len_payload_type">len_payload</TD></TR>
-				<TR><TD PORT="row_id_pos">...</TD><TD PORT="row_id_size">...</TD><TD>VlqBase128Be</TD><TD PORT="row_id_type">row_id</TD></TR>
-				<TR><TD PORT="payload_pos">...</TD><TD PORT="payload_size">len_payload.value</TD><TD>CellPayload</TD><TD PORT="payload_type">payload</TD></TR>
-			</TABLE>>];
-		}
 		subgraph cluster__cell_payload {
 			label="Sqlite3::CellPayload";
 			graph[style=dotted];
@@ -111,7 +81,7 @@ digraph {
 			cell_payload__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="len_header_and_len_pos">0</TD><TD PORT="len_header_and_len_size">...</TD><TD>VlqBase128Be</TD><TD PORT="len_header_and_len_type">len_header_and_len</TD></TR>
-				<TR><TD PORT="column_serials_pos">...</TD><TD PORT="column_serials_size">(len_header_and_len.value - 1)</TD><TD>Serials</TD><TD PORT="column_serials_type">column_serials</TD></TR>
+				<TR><TD PORT="column_serials_pos">...</TD><TD PORT="column_serials_size">len_header_and_len.value - 1</TD><TD>Serials</TD><TD PORT="column_serials_type">column_serials</TD></TR>
 				<TR><TD PORT="column_contents_pos">...</TD><TD PORT="column_contents_size">...</TD><TD>ColumnContent</TD><TD PORT="column_contents_type">column_contents</TD></TR>
 				<TR><TD COLSPAN="4" PORT="column_contents__repeat">repeat column_serials.entries.length times</TD></TR>
 			</TABLE>>];
@@ -126,14 +96,14 @@ digraph {
 				<TR><TD PORT="row_id_pos">4</TD><TD PORT="row_id_size">...</TD><TD>VlqBase128Be</TD><TD PORT="row_id_type">row_id</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__cell_index_interior {
-			label="Sqlite3::CellIndexInterior";
+		subgraph cluster__cell_table_leaf {
+			label="Sqlite3::CellTableLeaf";
 			graph[style=dotted];
 
-			cell_index_interior__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			cell_table_leaf__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="left_child_page_pos">0</TD><TD PORT="left_child_page_size">4</TD><TD>u4be</TD><TD PORT="left_child_page_type">left_child_page</TD></TR>
-				<TR><TD PORT="len_payload_pos">4</TD><TD PORT="len_payload_size">...</TD><TD>VlqBase128Be</TD><TD PORT="len_payload_type">len_payload</TD></TR>
+				<TR><TD PORT="len_payload_pos">0</TD><TD PORT="len_payload_size">...</TD><TD>VlqBase128Be</TD><TD PORT="len_payload_type">len_payload</TD></TR>
+				<TR><TD PORT="row_id_pos">...</TD><TD PORT="row_id_size">...</TD><TD>VlqBase128Be</TD><TD PORT="row_id_type">row_id</TD></TR>
 				<TR><TD PORT="payload_pos">...</TD><TD PORT="payload_size">len_payload.value</TD><TD>CellPayload</TD><TD PORT="payload_type">payload</TD></TR>
 			</TABLE>>];
 		}
@@ -144,8 +114,11 @@ digraph {
 			column_content__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="as_int_pos">0</TD><TD PORT="as_int_size">...</TD><TD>switch (serial_type.code.value)</TD><TD PORT="as_int_type">as_int</TD></TR>
+				<TR><TD COLSPAN="4" PORT="as_int__if">if  ((serial_type.code.value &gt;= 1) &amp;&amp; (serial_type.code.value &lt;= 6)) </TD></TR>
 				<TR><TD PORT="as_float_pos">...</TD><TD PORT="as_float_size">8</TD><TD>f8be</TD><TD PORT="as_float_type">as_float</TD></TR>
+				<TR><TD COLSPAN="4" PORT="as_float__if">if serial_type.code.value == 7</TD></TR>
 				<TR><TD PORT="as_blob_pos">...</TD><TD PORT="as_blob_size">serial_type.len_content</TD><TD></TD><TD PORT="as_blob_type">as_blob</TD></TR>
+				<TR><TD COLSPAN="4" PORT="as_blob__if">if serial_type.is_blob</TD></TR>
 				<TR><TD PORT="as_str_pos">...</TD><TD PORT="as_str_size">serial_type.len_content</TD><TD>str(UTF-8)</TD><TD PORT="as_str_type">as_str</TD></TR>
 			</TABLE>>];
 column_content__seq_as_int_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
@@ -166,50 +139,82 @@ column_content__seq_as_int_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLS
 			</TABLE>>];
 ref_cell__inst__body_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
-	<TR><TD>13</TD><TD PORT="case0">CellTableLeaf</TD></TR>
-	<TR><TD>5</TD><TD PORT="case1">CellTableInterior</TD></TR>
-	<TR><TD>10</TD><TD PORT="case2">CellIndexLeaf</TD></TR>
-	<TR><TD>2</TD><TD PORT="case3">CellIndexInterior</TD></TR>
+	<TR><TD>10</TD><TD PORT="case0">CellIndexLeaf</TD></TR>
+	<TR><TD>13</TD><TD PORT="case1">CellTableLeaf</TD></TR>
+	<TR><TD>2</TD><TD PORT="case2">CellIndexInterior</TD></TR>
+	<TR><TD>5</TD><TD PORT="case3">CellTableInterior</TD></TR>
 </TABLE>>];
+		}
+		subgraph cluster__serial {
+			label="Sqlite3::Serial";
+			graph[style=dotted];
+
+			serial__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="code_pos">0</TD><TD PORT="code_size">...</TD><TD>VlqBase128Be</TD><TD PORT="code_type">code</TD></TR>
+			</TABLE>>];
+			serial__inst__is_blob [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_blob</TD><TD> ((code.value &gt;= 12) &amp;&amp; (code.value % 2 == 0)) </TD></TR>
+			</TABLE>>];
+			serial__inst__is_string [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_string</TD><TD> ((code.value &gt;= 13) &amp;&amp; (code.value % 2 == 1)) </TD></TR>
+			</TABLE>>];
+			serial__inst__len_content [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>len_content</TD><TD>(code.value - 12) / 2</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__serials {
+			label="Sqlite3::Serials";
+			graph[style=dotted];
+
+			serials__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="entries_pos">0</TD><TD PORT="entries_size">...</TD><TD>Serial</TD><TD PORT="entries_type">entries</TD></TR>
+				<TR><TD COLSPAN="4" PORT="entries__repeat">repeat to end of stream</TD></TR>
+			</TABLE>>];
 		}
 	}
 	sqlite3__seq:root_page_type -> btree_page__seq [style=bold];
 	sqlite3__seq:len_page_mod_type -> sqlite3__inst__len_page [color="#404040"];
-	sqlite3__seq:len_page_mod_type -> sqlite3__inst__len_page [color="#404040"];
-	serial__seq:code_type -> vlq_base128_be__seq [style=bold];
-	vlq_base128_be__inst__value:value_type -> serial__inst__is_blob [color="#404040"];
-	vlq_base128_be__inst__value:value_type -> serial__inst__is_blob [color="#404040"];
-	vlq_base128_be__inst__value:value_type -> serial__inst__is_string [color="#404040"];
-	vlq_base128_be__inst__value:value_type -> serial__inst__is_string [color="#404040"];
-	vlq_base128_be__inst__value:value_type -> serial__inst__len_content [color="#404040"];
+	btree_page__seq:page_type_type -> btree_page__seq:right_ptr__if [color="#404040"];
 	btree_page__seq:cells_type -> ref_cell__seq [style=bold];
 	btree_page__seq:num_cells_type -> btree_page__seq:cells__repeat [color="#404040"];
+	cell_index_interior__seq:len_payload_type -> vlq_base128_be__seq [style=bold];
+	vlq_base128_be__inst__value:value_type -> cell_index_interior__seq:payload_size [color="#404040"];
+	cell_index_interior__seq:payload_type -> cell_payload__seq [style=bold];
 	cell_index_leaf__seq:len_payload_type -> vlq_base128_be__seq [style=bold];
 	vlq_base128_be__inst__value:value_type -> cell_index_leaf__seq:payload_size [color="#404040"];
 	cell_index_leaf__seq:payload_type -> cell_payload__seq [style=bold];
-	serials__seq:entries_type -> serial__seq [style=bold];
-	cell_table_leaf__seq:len_payload_type -> vlq_base128_be__seq [style=bold];
-	cell_table_leaf__seq:row_id_type -> vlq_base128_be__seq [style=bold];
-	vlq_base128_be__inst__value:value_type -> cell_table_leaf__seq:payload_size [color="#404040"];
-	cell_table_leaf__seq:payload_type -> cell_payload__seq [style=bold];
 	cell_payload__seq:len_header_and_len_type -> vlq_base128_be__seq [style=bold];
 	vlq_base128_be__inst__value:value_type -> cell_payload__seq:column_serials_size [color="#404040"];
 	cell_payload__seq:column_serials_type -> serials__seq [style=bold];
 	cell_payload__seq:column_contents_type -> column_content__seq [style=bold];
 	serials__seq:entries_type -> cell_payload__seq:column_contents__repeat [color="#404040"];
 	cell_table_interior__seq:row_id_type -> vlq_base128_be__seq [style=bold];
-	cell_index_interior__seq:len_payload_type -> vlq_base128_be__seq [style=bold];
-	vlq_base128_be__inst__value:value_type -> cell_index_interior__seq:payload_size [color="#404040"];
-	cell_index_interior__seq:payload_type -> cell_payload__seq [style=bold];
+	cell_table_leaf__seq:len_payload_type -> vlq_base128_be__seq [style=bold];
+	cell_table_leaf__seq:row_id_type -> vlq_base128_be__seq [style=bold];
+	vlq_base128_be__inst__value:value_type -> cell_table_leaf__seq:payload_size [color="#404040"];
+	cell_table_leaf__seq:payload_type -> cell_payload__seq [style=bold];
 	column_content__seq:as_int_type -> column_content__seq_as_int_switch [style=bold];
 	vlq_base128_be__inst__value:value_type -> column_content__seq:as_int_type [color="#404040"];
+	vlq_base128_be__inst__value:value_type -> column_content__seq:as_int__if [color="#404040"];
+	vlq_base128_be__inst__value:value_type -> column_content__seq:as_float__if [color="#404040"];
 	serial__inst__len_content:len_content_type -> column_content__seq:as_blob_size [color="#404040"];
+	serial__inst__is_blob:is_blob_type -> column_content__seq:as_blob__if [color="#404040"];
 	serial__inst__len_content:len_content_type -> column_content__seq:as_str_size [color="#404040"];
 	ref_cell__seq:ofs_body_type -> ref_cell__inst__body:body_pos [color="#404040"];
 	ref_cell__inst__body:body_type -> ref_cell__inst__body_body_switch [style=bold];
-	ref_cell__inst__body_body_switch:case0 -> cell_table_leaf__seq [style=bold];
-	ref_cell__inst__body_body_switch:case1 -> cell_table_interior__seq [style=bold];
-	ref_cell__inst__body_body_switch:case2 -> cell_index_leaf__seq [style=bold];
-	ref_cell__inst__body_body_switch:case3 -> cell_index_interior__seq [style=bold];
+	ref_cell__inst__body_body_switch:case0 -> cell_index_leaf__seq [style=bold];
+	ref_cell__inst__body_body_switch:case1 -> cell_table_leaf__seq [style=bold];
+	ref_cell__inst__body_body_switch:case2 -> cell_index_interior__seq [style=bold];
+	ref_cell__inst__body_body_switch:case3 -> cell_table_interior__seq [style=bold];
 	btree_page__seq:page_type_type -> ref_cell__inst__body:body_type [color="#404040"];
+	serial__seq:code_type -> vlq_base128_be__seq [style=bold];
+	vlq_base128_be__inst__value:value_type -> serial__inst__is_blob [color="#404040"];
+	vlq_base128_be__inst__value:value_type -> serial__inst__is_string [color="#404040"];
+	vlq_base128_be__inst__value:value_type -> serial__inst__len_content [color="#404040"];
+	serials__seq:entries_type -> serial__seq [style=bold];
 }

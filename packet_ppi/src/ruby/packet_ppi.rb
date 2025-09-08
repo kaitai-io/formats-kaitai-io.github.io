@@ -1,9 +1,10 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 require 'kaitai/struct/struct'
+require_relative 'ethernet_frame'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -17,16 +18,6 @@ end
 # <https://wiki.wireshark.org/uploads/27707187aeb30df68e70c8fb9d614981/http.cap>
 # @see https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 3
 class PacketPpi < Kaitai::Struct::Struct
-
-  PFH_TYPE = {
-    2 => :pfh_type_radio_802_11_common,
-    3 => :pfh_type_radio_802_11n_mac_ext,
-    4 => :pfh_type_radio_802_11n_mac_phy_ext,
-    5 => :pfh_type_spectrum_map,
-    6 => :pfh_type_process_info,
-    7 => :pfh_type_capture_info,
-  }
-  I__PFH_TYPE = PFH_TYPE.invert
 
   LINKTYPE = {
     0 => :linktype_null_linktype,
@@ -135,70 +126,41 @@ class PacketPpi < Kaitai::Struct::Struct
     264 => :linktype_iso_14443,
   }
   I__LINKTYPE = LINKTYPE.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+
+  PFH_TYPE = {
+    2 => :pfh_type_radio_802_11_common,
+    3 => :pfh_type_radio_802_11n_mac_ext,
+    4 => :pfh_type_radio_802_11n_mac_phy_ext,
+    5 => :pfh_type_spectrum_map,
+    6 => :pfh_type_process_info,
+    7 => :pfh_type_capture_info,
+  }
+  I__PFH_TYPE = PFH_TYPE.invert
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
     @header = PacketPpiHeader.new(@_io, self, @_root)
-    @_raw_fields = @_io.read_bytes((header.pph_len - 8))
-    _io__raw_fields = Kaitai::Struct::Stream.new(@_raw_fields)
-    @fields = PacketPpiFields.new(_io__raw_fields, self, @_root)
+    _io_fields = @_io.substream(header.pph_len - 8)
+    @fields = PacketPpiFields.new(_io_fields, self, @_root)
     case header.pph_dlt
-    when :linktype_ppi
-      @_raw_body = @_io.read_bytes_full
-      _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = PacketPpi.new(_io__raw_body)
     when :linktype_ethernet
       @_raw_body = @_io.read_bytes_full
       _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
       @body = EthernetFrame.new(_io__raw_body)
+    when :linktype_ppi
+      @_raw_body = @_io.read_bytes_full
+      _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+      @body = PacketPpi.new(_io__raw_body, self, @_root)
     else
       @body = @_io.read_bytes_full
     end
     self
   end
-  class PacketPpiFields < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @entries = []
-      i = 0
-      while not @_io.eof?
-        @entries << PacketPpiField.new(@_io, self, @_root)
-        i += 1
-      end
-      self
-    end
-    attr_reader :entries
-  end
-
-  ##
-  # @see https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 4.1.3
-  class Radio80211nMacExtBody < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @flags = MacFlags.new(@_io, self, @_root)
-      @a_mpdu_id = @_io.read_u4le
-      @num_delimiters = @_io.read_u1
-      @reserved = @_io.read_bytes(3)
-      self
-    end
-    attr_reader :flags
-    attr_reader :a_mpdu_id
-    attr_reader :num_delimiters
-    attr_reader :reserved
-  end
   class MacFlags < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -250,8 +212,57 @@ class PacketPpi < Kaitai::Struct::Struct
 
   ##
   # @see https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 3.1
+  class PacketPpiField < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @pfh_type = Kaitai::Struct::Stream::resolve_enum(PacketPpi::PFH_TYPE, @_io.read_u2le)
+      @pfh_datalen = @_io.read_u2le
+      case pfh_type
+      when :pfh_type_radio_802_11_common
+        _io_body = @_io.substream(pfh_datalen)
+        @body = Radio80211CommonBody.new(_io_body, self, @_root)
+      when :pfh_type_radio_802_11n_mac_ext
+        _io_body = @_io.substream(pfh_datalen)
+        @body = Radio80211nMacExtBody.new(_io_body, self, @_root)
+      when :pfh_type_radio_802_11n_mac_phy_ext
+        _io_body = @_io.substream(pfh_datalen)
+        @body = Radio80211nMacPhyExtBody.new(_io_body, self, @_root)
+      else
+        @body = @_io.read_bytes(pfh_datalen)
+      end
+      self
+    end
+    attr_reader :pfh_type
+    attr_reader :pfh_datalen
+    attr_reader :body
+    attr_reader :_raw_body
+  end
+  class PacketPpiFields < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @entries = []
+      i = 0
+      while not @_io.eof?
+        @entries << PacketPpiField.new(@_io, self, @_root)
+        i += 1
+      end
+      self
+    end
+    attr_reader :entries
+  end
+
+  ##
+  # @see https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 3.1
   class PacketPpiHeader < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -272,7 +283,7 @@ class PacketPpi < Kaitai::Struct::Struct
   ##
   # @see https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 4.1.2
   class Radio80211CommonBody < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -301,44 +312,30 @@ class PacketPpi < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 3.1
-  class PacketPpiField < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  # @see https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 4.1.3
+  class Radio80211nMacExtBody < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @pfh_type = Kaitai::Struct::Stream::resolve_enum(PacketPpi::PFH_TYPE, @_io.read_u2le)
-      @pfh_datalen = @_io.read_u2le
-      case pfh_type
-      when :pfh_type_radio_802_11_common
-        @_raw_body = @_io.read_bytes(pfh_datalen)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = Radio80211CommonBody.new(_io__raw_body, self, @_root)
-      when :pfh_type_radio_802_11n_mac_ext
-        @_raw_body = @_io.read_bytes(pfh_datalen)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = Radio80211nMacExtBody.new(_io__raw_body, self, @_root)
-      when :pfh_type_radio_802_11n_mac_phy_ext
-        @_raw_body = @_io.read_bytes(pfh_datalen)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = Radio80211nMacPhyExtBody.new(_io__raw_body, self, @_root)
-      else
-        @body = @_io.read_bytes(pfh_datalen)
-      end
+      @flags = MacFlags.new(@_io, self, @_root)
+      @a_mpdu_id = @_io.read_u4le
+      @num_delimiters = @_io.read_u1
+      @reserved = @_io.read_bytes(3)
       self
     end
-    attr_reader :pfh_type
-    attr_reader :pfh_datalen
-    attr_reader :body
-    attr_reader :_raw_body
+    attr_reader :flags
+    attr_reader :a_mpdu_id
+    attr_reader :num_delimiters
+    attr_reader :reserved
   end
 
   ##
   # @see https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 4.1.4
   class Radio80211nMacPhyExtBody < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -371,7 +368,7 @@ class PacketPpi < Kaitai::Struct::Struct
       self
     end
     class ChannelFlags < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
@@ -423,7 +420,7 @@ class PacketPpi < Kaitai::Struct::Struct
     ##
     # RF signal + noise pair at a single antenna
     class SignalNoise < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end

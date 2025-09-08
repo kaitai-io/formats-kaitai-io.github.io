@@ -7,7 +7,7 @@ digraph {
 
 		android_bootldr_qcom__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-			<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">8</TD><TD></TD><TD PORT="magic_type">magic</TD></TR>
+			<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">8</TD><TD>42 4F 4F 54 4C 44 52 21</TD><TD PORT="magic_type">magic</TD></TR>
 			<TR><TD PORT="num_images_pos">8</TD><TD PORT="num_images_size">4</TD><TD>u4le</TD><TD PORT="num_images_type">num_images</TD></TR>
 			<TR><TD PORT="ofs_img_bodies_pos">12</TD><TD PORT="ofs_img_bodies_size">4</TD><TD>u4le</TD><TD PORT="ofs_img_bodies_type">ofs_img_bodies</TD></TR>
 			<TR><TD PORT="bootloader_size_pos">16</TD><TD PORT="bootloader_size_size">4</TD><TD>u4le</TD><TD PORT="bootloader_size_type">bootloader_size</TD></TR>
@@ -19,16 +19,6 @@ digraph {
 			<TR><TD PORT="img_bodies_pos">ofs_img_bodies</TD><TD PORT="img_bodies_size">...</TD><TD>ImgBody</TD><TD PORT="img_bodies_type">img_bodies</TD></TR>
 			<TR><TD COLSPAN="4" PORT="img_bodies__repeat">repeat num_images times</TD></TR>
 		</TABLE>>];
-		subgraph cluster__img_header {
-			label="AndroidBootldrQcom::ImgHeader";
-			graph[style=dotted];
-
-			img_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="name_pos">0</TD><TD PORT="name_size">64</TD><TD>str(ASCII)</TD><TD PORT="name_type">name</TD></TR>
-				<TR><TD PORT="len_body_pos">64</TD><TD PORT="len_body_size">4</TD><TD>u4le</TD><TD PORT="len_body_type">len_body</TD></TR>
-			</TABLE>>];
-		}
 		subgraph cluster__img_body {
 			label="AndroidBootldrQcom::ImgBody";
 			graph[style=dotted];
@@ -40,6 +30,16 @@ digraph {
 			img_body__inst__img_header [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
 				<TR><TD>img_header</TD><TD>_root.img_headers[idx]</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__img_header {
+			label="AndroidBootldrQcom::ImgHeader";
+			graph[style=dotted];
+
+			img_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="name_pos">0</TD><TD PORT="name_size">64</TD><TD>str(ASCII)</TD><TD PORT="name_type">name</TD></TR>
+				<TR><TD PORT="len_body_pos">64</TD><TD PORT="len_body_size">4</TD><TD>u4le</TD><TD PORT="len_body_type">len_body</TD></TR>
 			</TABLE>>];
 		}
 	}

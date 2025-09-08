@@ -11,13 +11,14 @@ digraph {
 			<TR><TD PORT="dst_port_pos">2</TD><TD PORT="dst_port_size">2</TD><TD>u2be</TD><TD PORT="dst_port_type">dst_port</TD></TR>
 			<TR><TD PORT="seq_num_pos">4</TD><TD PORT="seq_num_size">4</TD><TD>u4be</TD><TD PORT="seq_num_type">seq_num</TD></TR>
 			<TR><TD PORT="ack_num_pos">8</TD><TD PORT="ack_num_size">4</TD><TD>u4be</TD><TD PORT="ack_num_type">ack_num</TD></TR>
-			<TR><TD PORT="data_offset_pos">12</TD><TD PORT="data_offset_size">4b</TD><TD>b4</TD><TD PORT="data_offset_type">data_offset</TD></TR>
-			<TR><TD PORT="reserved_pos">12:4</TD><TD PORT="reserved_size">4b</TD><TD>b4</TD><TD PORT="reserved_type">reserved</TD></TR>
+			<TR><TD PORT="data_offset_pos">12</TD><TD PORT="data_offset_size">4b</TD><TD>b4be</TD><TD PORT="data_offset_type">data_offset</TD></TR>
+			<TR><TD PORT="reserved_pos">12:4</TD><TD PORT="reserved_size">4b</TD><TD>b4be</TD><TD PORT="reserved_type">reserved</TD></TR>
 			<TR><TD PORT="flags_pos">13</TD><TD PORT="flags_size">1</TD><TD>Flags</TD><TD PORT="flags_type">flags</TD></TR>
 			<TR><TD PORT="window_size_pos">14</TD><TD PORT="window_size_size">2</TD><TD>u2be</TD><TD PORT="window_size_type">window_size</TD></TR>
 			<TR><TD PORT="checksum_pos">16</TD><TD PORT="checksum_size">2</TD><TD>u2be</TD><TD PORT="checksum_type">checksum</TD></TR>
 			<TR><TD PORT="urgent_pointer_pos">18</TD><TD PORT="urgent_pointer_size">2</TD><TD>u2be</TD><TD PORT="urgent_pointer_type">urgent_pointer</TD></TR>
-			<TR><TD PORT="options_pos">20</TD><TD PORT="options_size">((data_offset * 4) - 20)</TD><TD></TD><TD PORT="options_type">options</TD></TR>
+			<TR><TD PORT="options_pos">20</TD><TD PORT="options_size">data_offset * 4 - 20</TD><TD></TD><TD PORT="options_type">options</TD></TR>
+			<TR><TD COLSPAN="4" PORT="options__if">if data_offset * 4 - 20 != 0</TD></TR>
 			<TR><TD PORT="body_pos">...</TD><TD PORT="body_size">⇲</TD><TD></TD><TD PORT="body_type">body</TD></TR>
 		</TABLE>>];
 		subgraph cluster__flags {
@@ -26,17 +27,18 @@ digraph {
 
 			flags__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="cwr_pos">0</TD><TD PORT="cwr_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="cwr_type">cwr</TD></TR>
-				<TR><TD PORT="ece_pos">0:1</TD><TD PORT="ece_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="ece_type">ece</TD></TR>
-				<TR><TD PORT="urg_pos">0:2</TD><TD PORT="urg_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="urg_type">urg</TD></TR>
-				<TR><TD PORT="ack_pos">0:3</TD><TD PORT="ack_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="ack_type">ack</TD></TR>
-				<TR><TD PORT="psh_pos">0:4</TD><TD PORT="psh_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="psh_type">psh</TD></TR>
-				<TR><TD PORT="rst_pos">0:5</TD><TD PORT="rst_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="rst_type">rst</TD></TR>
-				<TR><TD PORT="syn_pos">0:6</TD><TD PORT="syn_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="syn_type">syn</TD></TR>
-				<TR><TD PORT="fin_pos">0:7</TD><TD PORT="fin_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="fin_type">fin</TD></TR>
+				<TR><TD PORT="cwr_pos">0</TD><TD PORT="cwr_size">1b</TD><TD>b1be→bool</TD><TD PORT="cwr_type">cwr</TD></TR>
+				<TR><TD PORT="ece_pos">0:1</TD><TD PORT="ece_size">1b</TD><TD>b1be→bool</TD><TD PORT="ece_type">ece</TD></TR>
+				<TR><TD PORT="urg_pos">0:2</TD><TD PORT="urg_size">1b</TD><TD>b1be→bool</TD><TD PORT="urg_type">urg</TD></TR>
+				<TR><TD PORT="ack_pos">0:3</TD><TD PORT="ack_size">1b</TD><TD>b1be→bool</TD><TD PORT="ack_type">ack</TD></TR>
+				<TR><TD PORT="psh_pos">0:4</TD><TD PORT="psh_size">1b</TD><TD>b1be→bool</TD><TD PORT="psh_type">psh</TD></TR>
+				<TR><TD PORT="rst_pos">0:5</TD><TD PORT="rst_size">1b</TD><TD>b1be→bool</TD><TD PORT="rst_type">rst</TD></TR>
+				<TR><TD PORT="syn_pos">0:6</TD><TD PORT="syn_size">1b</TD><TD>b1be→bool</TD><TD PORT="syn_type">syn</TD></TR>
+				<TR><TD PORT="fin_pos">0:7</TD><TD PORT="fin_size">1b</TD><TD>b1be→bool</TD><TD PORT="fin_type">fin</TD></TR>
 			</TABLE>>];
 		}
 	}
 	tcp_segment__seq:flags_type -> flags__seq [style=bold];
 	tcp_segment__seq:data_offset_type -> tcp_segment__seq:options_size [color="#404040"];
+	tcp_segment__seq:data_offset_type -> tcp_segment__seq:options__if [color="#404040"];
 }

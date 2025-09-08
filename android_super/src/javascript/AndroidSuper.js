@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.AndroidSuper = factory(root.KaitaiStream);
+    factory(root.AndroidSuper || (root.AndroidSuper = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (AndroidSuper_, KaitaiStream) {
 /**
  * The metadata stored by Android at the beginning of a "super" partition, which
  * is what it calls a disk partition that holds one or more Dynamic Partitions.
@@ -30,52 +30,18 @@ var AndroidSuper = (function() {
   AndroidSuper.prototype._read = function() {
   }
 
-  var Root = AndroidSuper.Root = (function() {
-    function Root(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Root.prototype._read = function() {
-      this._raw_primaryGeometry = this._io.readBytes(4096);
-      var _io__raw_primaryGeometry = new KaitaiStream(this._raw_primaryGeometry);
-      this.primaryGeometry = new Geometry(_io__raw_primaryGeometry, this, this._root);
-      this._raw_backupGeometry = this._io.readBytes(4096);
-      var _io__raw_backupGeometry = new KaitaiStream(this._raw_backupGeometry);
-      this.backupGeometry = new Geometry(_io__raw_backupGeometry, this, this._root);
-      this._raw_primaryMetadata = [];
-      this.primaryMetadata = [];
-      for (var i = 0; i < this.primaryGeometry.metadataSlotCount; i++) {
-        this._raw_primaryMetadata.push(this._io.readBytes(this.primaryGeometry.metadataMaxSize));
-        var _io__raw_primaryMetadata = new KaitaiStream(this._raw_primaryMetadata[i]);
-        this.primaryMetadata.push(new Metadata(_io__raw_primaryMetadata, this, this._root));
-      }
-      this._raw_backupMetadata = [];
-      this.backupMetadata = [];
-      for (var i = 0; i < this.primaryGeometry.metadataSlotCount; i++) {
-        this._raw_backupMetadata.push(this._io.readBytes(this.primaryGeometry.metadataMaxSize));
-        var _io__raw_backupMetadata = new KaitaiStream(this._raw_backupMetadata[i]);
-        this.backupMetadata.push(new Metadata(_io__raw_backupMetadata, this, this._root));
-      }
-    }
-
-    return Root;
-  })();
-
   var Geometry = AndroidSuper.Geometry = (function() {
     function Geometry(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     Geometry.prototype._read = function() {
       this.magic = this._io.readBytes(4);
-      if (!((KaitaiStream.byteArrayCompare(this.magic, [103, 68, 108, 97]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([103, 68, 108, 97], this.magic, this._io, "/types/geometry/seq/0");
+      if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([103, 68, 108, 97])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([103, 68, 108, 97]), this.magic, this._io, "/types/geometry/seq/0");
       }
       this.structSize = this._io.readU4le();
       this.checksum = this._io.readBytes(32);
@@ -108,14 +74,14 @@ var AndroidSuper = (function() {
     function Metadata(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     Metadata.prototype._read = function() {
       this.magic = this._io.readBytes(4);
-      if (!((KaitaiStream.byteArrayCompare(this.magic, [48, 80, 76, 65]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([48, 80, 76, 65], this.magic, this._io, "/types/metadata/seq/0");
+      if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([48, 80, 76, 65])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([48, 80, 76, 65]), this.magic, this._io, "/types/metadata/seq/0");
       }
       this.majorVersion = this._io.readU2le();
       this.minorVersion = this._io.readU2le();
@@ -133,7 +99,7 @@ var AndroidSuper = (function() {
       function BlockDevice(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -162,7 +128,7 @@ var AndroidSuper = (function() {
       function Extent(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -176,68 +142,30 @@ var AndroidSuper = (function() {
       return Extent;
     })();
 
-    var TableDescriptor = Metadata.TableDescriptor = (function() {
-      function TableDescriptor(_io, _parent, _root, kind) {
+    var Group = Metadata.Group = (function() {
+      function Group(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
-        this.kind = kind;
+        this._root = _root;
 
         this._read();
       }
-      TableDescriptor.prototype._read = function() {
-        this.offset = this._io.readU4le();
-        this.numEntries = this._io.readU4le();
-        this.entrySize = this._io.readU4le();
+      Group.prototype._read = function() {
+        this.name = KaitaiStream.bytesToStr(KaitaiStream.bytesTerminate(this._io.readBytes(36), 0, false), "UTF-8");
+        this.flagSlotSuffixed = this._io.readBitsIntLe(1) != 0;
+        this.flagsReserved = this._io.readBitsIntLe(31);
+        this._io.alignToByte();
+        this.maximumSize = this._io.readU8le();
       }
-      Object.defineProperty(TableDescriptor.prototype, 'table', {
-        get: function() {
-          if (this._m_table !== undefined)
-            return this._m_table;
-          var _pos = this._io.pos;
-          this._io.seek((this._parent.headerSize + this.offset));
-          this._raw__m_table = [];
-          this._m_table = [];
-          for (var i = 0; i < this.numEntries; i++) {
-            switch (this.kind) {
-            case AndroidSuper.Metadata.TableKind.PARTITIONS:
-              this._raw__m_table.push(this._io.readBytes(this.entrySize));
-              var _io__raw__m_table = new KaitaiStream(this._raw__m_table[i]);
-              this._m_table.push(new Partition(_io__raw__m_table, this, this._root));
-              break;
-            case AndroidSuper.Metadata.TableKind.EXTENTS:
-              this._raw__m_table.push(this._io.readBytes(this.entrySize));
-              var _io__raw__m_table = new KaitaiStream(this._raw__m_table[i]);
-              this._m_table.push(new Extent(_io__raw__m_table, this, this._root));
-              break;
-            case AndroidSuper.Metadata.TableKind.GROUPS:
-              this._raw__m_table.push(this._io.readBytes(this.entrySize));
-              var _io__raw__m_table = new KaitaiStream(this._raw__m_table[i]);
-              this._m_table.push(new Group(_io__raw__m_table, this, this._root));
-              break;
-            case AndroidSuper.Metadata.TableKind.BLOCK_DEVICES:
-              this._raw__m_table.push(this._io.readBytes(this.entrySize));
-              var _io__raw__m_table = new KaitaiStream(this._raw__m_table[i]);
-              this._m_table.push(new BlockDevice(_io__raw__m_table, this, this._root));
-              break;
-            default:
-              this._m_table.push(this._io.readBytes(this.entrySize));
-              break;
-            }
-          }
-          this._io.seek(_pos);
-          return this._m_table;
-        }
-      });
 
-      return TableDescriptor;
+      return Group;
     })();
 
     var Partition = Metadata.Partition = (function() {
       function Partition(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -257,23 +185,61 @@ var AndroidSuper = (function() {
       return Partition;
     })();
 
-    var Group = Metadata.Group = (function() {
-      function Group(_io, _parent, _root) {
+    var TableDescriptor = Metadata.TableDescriptor = (function() {
+      function TableDescriptor(_io, _parent, _root, kind) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
+        this.kind = kind;
 
         this._read();
       }
-      Group.prototype._read = function() {
-        this.name = KaitaiStream.bytesToStr(KaitaiStream.bytesTerminate(this._io.readBytes(36), 0, false), "UTF-8");
-        this.flagSlotSuffixed = this._io.readBitsIntLe(1) != 0;
-        this.flagsReserved = this._io.readBitsIntLe(31);
-        this._io.alignToByte();
-        this.maximumSize = this._io.readU8le();
+      TableDescriptor.prototype._read = function() {
+        this.offset = this._io.readU4le();
+        this.numEntries = this._io.readU4le();
+        this.entrySize = this._io.readU4le();
       }
+      Object.defineProperty(TableDescriptor.prototype, 'table', {
+        get: function() {
+          if (this._m_table !== undefined)
+            return this._m_table;
+          var _pos = this._io.pos;
+          this._io.seek(this._parent.headerSize + this.offset);
+          this._raw__m_table = [];
+          this._m_table = [];
+          for (var i = 0; i < this.numEntries; i++) {
+            switch (this.kind) {
+            case AndroidSuper.Metadata.TableKind.BLOCK_DEVICES:
+              this._raw__m_table.push(this._io.readBytes(this.entrySize));
+              var _io__raw__m_table = new KaitaiStream(this._raw__m_table[i]);
+              this._m_table.push(new BlockDevice(_io__raw__m_table, this, this._root));
+              break;
+            case AndroidSuper.Metadata.TableKind.EXTENTS:
+              this._raw__m_table.push(this._io.readBytes(this.entrySize));
+              var _io__raw__m_table = new KaitaiStream(this._raw__m_table[i]);
+              this._m_table.push(new Extent(_io__raw__m_table, this, this._root));
+              break;
+            case AndroidSuper.Metadata.TableKind.GROUPS:
+              this._raw__m_table.push(this._io.readBytes(this.entrySize));
+              var _io__raw__m_table = new KaitaiStream(this._raw__m_table[i]);
+              this._m_table.push(new Group(_io__raw__m_table, this, this._root));
+              break;
+            case AndroidSuper.Metadata.TableKind.PARTITIONS:
+              this._raw__m_table.push(this._io.readBytes(this.entrySize));
+              var _io__raw__m_table = new KaitaiStream(this._raw__m_table[i]);
+              this._m_table.push(new Partition(_io__raw__m_table, this, this._root));
+              break;
+            default:
+              this._m_table.push(this._io.readBytes(this.entrySize));
+              break;
+            }
+          }
+          this._io.seek(_pos);
+          return this._m_table;
+        }
+      });
 
-      return Group;
+      return TableDescriptor;
     })();
 
     /**
@@ -286,6 +252,40 @@ var AndroidSuper = (function() {
      */
 
     return Metadata;
+  })();
+
+  var Root = AndroidSuper.Root = (function() {
+    function Root(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Root.prototype._read = function() {
+      this._raw_primaryGeometry = this._io.readBytes(4096);
+      var _io__raw_primaryGeometry = new KaitaiStream(this._raw_primaryGeometry);
+      this.primaryGeometry = new Geometry(_io__raw_primaryGeometry, this, this._root);
+      this._raw_backupGeometry = this._io.readBytes(4096);
+      var _io__raw_backupGeometry = new KaitaiStream(this._raw_backupGeometry);
+      this.backupGeometry = new Geometry(_io__raw_backupGeometry, this, this._root);
+      this._raw_primaryMetadata = [];
+      this.primaryMetadata = [];
+      for (var i = 0; i < this.primaryGeometry.metadataSlotCount; i++) {
+        this._raw_primaryMetadata.push(this._io.readBytes(this.primaryGeometry.metadataMaxSize));
+        var _io__raw_primaryMetadata = new KaitaiStream(this._raw_primaryMetadata[i]);
+        this.primaryMetadata.push(new Metadata(_io__raw_primaryMetadata, this, this._root));
+      }
+      this._raw_backupMetadata = [];
+      this.backupMetadata = [];
+      for (var i = 0; i < this.primaryGeometry.metadataSlotCount; i++) {
+        this._raw_backupMetadata.push(this._io.readBytes(this.primaryGeometry.metadataMaxSize));
+        var _io__raw_backupMetadata = new KaitaiStream(this._raw_backupMetadata[i]);
+        this.backupMetadata.push(new Metadata(_io__raw_backupMetadata, this, this._root));
+      }
+    }
+
+    return Root;
   })();
   Object.defineProperty(AndroidSuper.prototype, 'root', {
     get: function() {
@@ -301,5 +301,5 @@ var AndroidSuper = (function() {
 
   return AndroidSuper;
 })();
-return AndroidSuper;
-}));
+AndroidSuper_.AndroidSuper = AndroidSuper;
+});

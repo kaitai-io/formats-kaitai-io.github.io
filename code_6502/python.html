@@ -194,6 +194,11 @@ and, optionally, an argument. Register arguments are part of the
                 
                 <li>
                 
+                <a href="java-write.html" title="code_6502 parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="code_6502 parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -224,7 +229,17 @@ and, optionally, an argument. Register arguments are part of the
                 
                 <li>
                 
+                <a href="python-write.html" title="code_6502 parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="code_6502 parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="code_6502 parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -299,14 +314,15 @@ and, optionally, an argument. Register arguments are part of the
 
         <div class="row">
             <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+<span class="c1"># type: ignore</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">kaitaistruct</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">kaitaistruct</span><span class="w"> </span><span class="kn">import</span> <span class="n">KaitaiStruct</span><span class="p">,</span> <span class="n">KaitaiStream</span><span class="p">,</span> <span class="n">BytesIO</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">IntEnum</span>
 
 
-<span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">kaitaistruct</span><span class="p">,</span> <span class="s1">&#39;API_VERSION&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">):</span>
-    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">kaitaistruct</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span>
+<span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">kaitaistruct</span><span class="p">,</span> <span class="s1">&#39;API_VERSION&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">kaitaistruct</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Code6502</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;This spec can be used to disassemble raw stream of 6502 CPU machine</span>
@@ -315,7 +331,7 @@ and, optionally, an argument. Register arguments are part of the
 <span class="sd">    `opcode` enum.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">class</span><span class="w"> </span><span class="nc">Opcode</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="k">class</span><span class="w"> </span><span class="nc">Opcode</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
         <span class="n">brk_impl</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">ora_x_ind</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="n">ora_zpg</span> <span class="o">=</span> <span class="mi">5</span>
@@ -468,9 +484,9 @@ and, optionally, an argument. Register arguments are part of the
         <span class="n">sbc_abs_x</span> <span class="o">=</span> <span class="mi">253</span>
         <span class="n">inc_abs_x</span> <span class="o">=</span> <span class="mi">254</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Code6502</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="ow">or</span> <span class="bp">self</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -481,260 +497,639 @@ and, optionally, an argument. Register arguments are part of the
             <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
 
 
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">operations</span><span class="p">)):</span>
+            <span class="k">pass</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">operations</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+
+
     <span class="k">class</span><span class="w"> </span><span class="nc">Operation</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
         <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">Code6502</span><span class="o">.</span><span class="n">Operation</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">code</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="o">.</span><span class="n">resolve_enum</span><span class="p">(</span><span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">())</span>
             <span class="n">_on</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">code</span>
-            <span class="k">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">bcc_rel</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ora_ind_y</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">lda_ind_y</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">cpx_zpg</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sta_zpg_x</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sta_zpg</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">bcs_rel</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ldy_zpg_x</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">lsr_abs_x</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">and_abs_x</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">adc_abs</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sta_abs</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">bne_rel</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">lda_imm</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">adc_imm</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">lsr_abs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">adc_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
             <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">adc_abs_x</span><span class="p">:</span>
+                <span class="k">pass</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sta_abs_x</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">adc_abs_y</span><span class="p">:</span>
+                <span class="k">pass</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">cpx_imm</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">adc_imm</span><span class="p">:</span>
+                <span class="k">pass</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">jmp_ind</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">adc_zpg</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">eor_imm</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">eor_abs_x</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sta_x_ind</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sbc_imm</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">cpy_abs</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ldx_abs_y</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">adc_zpg_x</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">bpl_rel</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ora_imm</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ror_abs_x</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
             <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">adc_ind_y</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">eor_ind_y</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">lda_abs</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">bit_zpg</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">rol_zpg</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sty_zpg</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">jsr_abs</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">eor_zpg</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">eor_abs</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">lda_abs_y</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">lda_zpg_x</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">bmi_rel</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sty_zpg_x</span><span class="p">:</span>
+                <span class="k">pass</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
             <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">adc_x_ind</span><span class="p">:</span>
+                <span class="k">pass</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">rol_abs_x</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">stx_zpg</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">adc_zpg</span><span class="p">:</span>
+                <span class="k">pass</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">asl_abs_x</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">lsr_zpg_x</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ora_zpg_x</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">adc_abs_y</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ldy_abs</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">cmp_abs_x</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">lda_abs_x</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">bvs_rel</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">lda_x_ind</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">cmp_imm</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">inc_zpg_x</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">asl_zpg</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">and_abs_y</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ldx_imm</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">and_zpg</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">cpx_abs</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">dec_zpg</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ror_zpg_x</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ldx_zpg</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">dec_zpg_x</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sbc_zpg</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">cmp_abs</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ror_zpg</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">inc_abs</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">and_x_ind</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sbc_abs_x</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">asl_abs</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">eor_x_ind</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ora_abs_x</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ldy_abs_x</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sbc_x_ind</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">asl_zpg_x</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sbc_abs_y</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">rol_abs</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">lsr_zpg</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">stx_zpg_y</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ora_abs_y</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">eor_abs_y</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">bit_abs</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ldx_abs</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ldy_imm</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">jmp_abs</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">beq_rel</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">dec_abs_x</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">and_ind_y</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">and_zpg_x</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">cmp_zpg_x</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">eor_zpg_x</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sbc_abs</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">cmp_abs_y</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sbc_ind_y</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">cmp_zpg</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">stx_abs</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sty_abs</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">cpy_zpg</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">dec_abs</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ror_abs</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sta_abs_y</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">inc_abs_x</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">lda_zpg</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">cmp_ind_y</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">cpy_imm</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ldx_zpg_y</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sbc_zpg_x</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ora_x_ind</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">rol_zpg_x</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ora_abs</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sta_ind_y</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">adc_zpg_x</span><span class="p">:</span>
+                <span class="k">pass</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
             <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">and_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">and_abs_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">and_abs_y</span><span class="p">:</span>
+                <span class="k">pass</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
             <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">and_imm</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">and_ind_y</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">and_x_ind</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">and_zpg</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">and_zpg_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">asl_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">asl_abs_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">asl_zpg</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">asl_zpg_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">bcc_rel</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">bcs_rel</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">beq_rel</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">bit_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">bit_zpg</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">bmi_rel</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">bne_rel</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">bpl_rel</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">bvc_rel</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">bvs_rel</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">cmp_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">cmp_abs_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">cmp_abs_y</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">cmp_imm</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">cmp_ind_y</span><span class="p">:</span>
+                <span class="k">pass</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
             <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">cmp_x_ind</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">cmp_zpg</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">cmp_zpg_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">cpx_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">cpx_imm</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">cpx_zpg</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">cpy_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">cpy_imm</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">cpy_zpg</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">dec_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">dec_abs_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">dec_zpg</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">dec_zpg_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">eor_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">eor_abs_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">eor_abs_y</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">eor_imm</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">eor_ind_y</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">eor_x_ind</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">eor_zpg</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">eor_zpg_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">inc_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">inc_abs_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">inc_zpg</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">inc_zpg_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">jmp_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">jmp_ind</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">jsr_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">lda_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">lda_abs_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">lda_abs_y</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">lda_imm</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">lda_ind_y</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">lda_x_ind</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">lda_zpg</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">lda_zpg_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ldx_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ldx_abs_y</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ldx_imm</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ldx_zpg</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ldx_zpg_y</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ldy_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ldy_abs_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ldy_imm</span><span class="p">:</span>
+                <span class="k">pass</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
             <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ldy_zpg</span><span class="p">:</span>
+                <span class="k">pass</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">inc_zpg</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ldy_zpg_x</span><span class="p">:</span>
+                <span class="k">pass</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">bvc_rel</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">lsr_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">lsr_abs_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">lsr_zpg</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">lsr_zpg_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ora_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ora_abs_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ora_abs_y</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ora_imm</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ora_ind_y</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ora_x_ind</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
             <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ora_zpg</span><span class="p">:</span>
+                <span class="k">pass</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ora_zpg_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">rol_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">rol_abs_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">rol_zpg</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">rol_zpg_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ror_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ror_abs_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ror_zpg</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ror_zpg_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sbc_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sbc_abs_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sbc_abs_y</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sbc_imm</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sbc_ind_y</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sbc_x_ind</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sbc_zpg</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sbc_zpg_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sta_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sta_abs_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sta_abs_y</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sta_ind_y</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sta_x_ind</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sta_zpg</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sta_zpg_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">stx_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">stx_zpg</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">stx_zpg_y</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sty_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sty_zpg</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sty_zpg_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+            <span class="n">_on</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">code</span>
+            <span class="k">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">adc_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">adc_abs_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">adc_abs_y</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">adc_imm</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">adc_ind_y</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">adc_x_ind</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">adc_zpg</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">adc_zpg_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">and_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">and_abs_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">and_abs_y</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">and_imm</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">and_ind_y</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">and_x_ind</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">and_zpg</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">and_zpg_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">asl_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">asl_abs_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">asl_zpg</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">asl_zpg_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">bcc_rel</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">bcs_rel</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">beq_rel</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">bit_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">bit_zpg</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">bmi_rel</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">bne_rel</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">bpl_rel</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">bvc_rel</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">bvs_rel</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">cmp_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">cmp_abs_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">cmp_abs_y</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">cmp_imm</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">cmp_ind_y</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">cmp_x_ind</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">cmp_zpg</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">cmp_zpg_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">cpx_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">cpx_imm</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">cpx_zpg</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">cpy_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">cpy_imm</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">cpy_zpg</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">dec_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">dec_abs_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">dec_zpg</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">dec_zpg_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">eor_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">eor_abs_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">eor_abs_y</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">eor_imm</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">eor_ind_y</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">eor_x_ind</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">eor_zpg</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">eor_zpg_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">inc_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">inc_abs_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">inc_zpg</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">inc_zpg_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">jmp_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">jmp_ind</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">jsr_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">lda_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">lda_abs_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">lda_abs_y</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">lda_imm</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">lda_ind_y</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">lda_x_ind</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">lda_zpg</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">lda_zpg_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ldx_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ldx_abs_y</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ldx_imm</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ldx_zpg</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ldx_zpg_y</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ldy_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ldy_abs_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ldy_imm</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ldy_zpg</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ldy_zpg_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">lsr_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">lsr_abs_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">lsr_zpg</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">lsr_zpg_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ora_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ora_abs_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ora_abs_y</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ora_imm</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ora_ind_y</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ora_x_ind</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ora_zpg</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ora_zpg_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">rol_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">rol_abs_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">rol_zpg</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">rol_zpg_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ror_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ror_abs_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ror_zpg</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ror_zpg_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sbc_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sbc_abs_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sbc_abs_y</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sbc_imm</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sbc_ind_y</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sbc_x_ind</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sbc_zpg</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sbc_zpg_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sta_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sta_abs_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sta_abs_y</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sta_ind_y</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sta_x_ind</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sta_zpg</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sta_zpg_x</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">stx_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">stx_zpg</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">stx_zpg_y</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sty_abs</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sty_zpg</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Code6502</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">sty_zpg_x</span><span class="p">:</span>
+                <span class="k">pass</span>
 </pre></div>
 
         </div>

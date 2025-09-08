@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream', './RtpPacket'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./RtpPacket'));
+    define(['exports', 'kaitai-struct/KaitaiStream', './RtpPacket'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'), require('./RtpPacket'));
   } else {
-    root.Rtpdump = factory(root.KaitaiStream, root.RtpPacket);
+    factory(root.Rtpdump || (root.Rtpdump = {}), root.KaitaiStream, root.RtpPacket || (root.RtpPacket = {}));
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, RtpPacket) {
+})(typeof self !== 'undefined' ? self : this, function (Rtpdump_, KaitaiStream, RtpPacket_) {
 /**
  * rtpdump is a format used by rtptools to record and replay
  * rtp data from network capture.
@@ -37,21 +37,21 @@ var Rtpdump = (function() {
     function HeaderT(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     HeaderT.prototype._read = function() {
       this.shebang = this._io.readBytes(12);
-      if (!((KaitaiStream.byteArrayCompare(this.shebang, [35, 33, 114, 116, 112, 112, 108, 97, 121, 49, 46, 48]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([35, 33, 114, 116, 112, 112, 108, 97, 121, 49, 46, 48], this.shebang, this._io, "/types/header_t/seq/0");
+      if (!((KaitaiStream.byteArrayCompare(this.shebang, new Uint8Array([35, 33, 114, 116, 112, 112, 108, 97, 121, 49, 46, 48])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([35, 33, 114, 116, 112, 112, 108, 97, 121, 49, 46, 48]), this.shebang, this._io, "/types/header_t/seq/0");
       }
       this.space = this._io.readBytes(1);
-      if (!((KaitaiStream.byteArrayCompare(this.space, [32]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([32], this.space, this._io, "/types/header_t/seq/1");
+      if (!((KaitaiStream.byteArrayCompare(this.space, new Uint8Array([32])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([32]), this.space, this._io, "/types/header_t/seq/1");
       }
-      this.ip = KaitaiStream.bytesToStr(this._io.readBytesTerm(47, false, true, true), "ascii");
-      this.port = KaitaiStream.bytesToStr(this._io.readBytesTerm(10, false, true, true), "ascii");
+      this.ip = KaitaiStream.bytesToStr(this._io.readBytesTerm(47, false, true, true), "ASCII");
+      this.port = KaitaiStream.bytesToStr(this._io.readBytesTerm(10, false, true, true), "ASCII");
       this.startSec = this._io.readU4be();
       this.startUsec = this._io.readU4be();
       this.ip2 = this._io.readU4be();
@@ -86,7 +86,7 @@ var Rtpdump = (function() {
     function PacketT(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -96,7 +96,7 @@ var Rtpdump = (function() {
       this.packetUsec = this._io.readU4be();
       this._raw_body = this._io.readBytes(this.lenBody);
       var _io__raw_body = new KaitaiStream(this._raw_body);
-      this.body = new RtpPacket(_io__raw_body, this, null);
+      this.body = new RtpPacket_.RtpPacket(_io__raw_body, null, null);
     }
 
     /**
@@ -116,5 +116,5 @@ var Rtpdump = (function() {
 
   return Rtpdump;
 })();
-return Rtpdump;
-}));
+Rtpdump_.Rtpdump = Rtpdump;
+});

@@ -16,10 +16,10 @@ type
     `data`*: seq[byte]
     `padding`*: seq[byte]
     `parent`*: KaitaiStruct
-    `lenPaddingIfExistsInst`: uint8
-    `lenPaddingIfExistsInstFlag`: bool
     `lenPaddingInst`: uint8
     `lenPaddingInstFlag`: bool
+    `lenPaddingIfExistsInst`: uint8
+    `lenPaddingIfExistsInstFlag`: bool
   RtpPacket_PayloadTypeEnum* = enum
     pcmu = 0
     reserved1 = 1
@@ -65,8 +65,8 @@ type
 proc read*(_: typedesc[RtpPacket], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): RtpPacket
 proc read*(_: typedesc[RtpPacket_HeaderExtention], io: KaitaiStream, root: KaitaiStruct, parent: RtpPacket): RtpPacket_HeaderExtention
 
-proc lenPaddingIfExists*(this: RtpPacket): uint8
 proc lenPadding*(this: RtpPacket): uint8
+proc lenPaddingIfExists*(this: RtpPacket): uint8
 
 
 ##[
@@ -110,28 +110,10 @@ proc read*(_: typedesc[RtpPacket], io: KaitaiStream, root: KaitaiStruct, parent:
   ##[
   Payload without padding.
   ]##
-  let dataExpr = this.io.readBytes(int(((this.io.size - this.io.pos) - this.lenPadding)))
+  let dataExpr = this.io.readBytes(int((this.io.size - this.io.pos) - this.lenPadding))
   this.data = dataExpr
   let paddingExpr = this.io.readBytes(int(this.lenPadding))
   this.padding = paddingExpr
-
-proc lenPaddingIfExists(this: RtpPacket): uint8 = 
-
-  ##[
-  If padding bit is enabled, last byte of data contains number of
-bytes appended to the payload as padding.
-
-  ]##
-  if this.lenPaddingIfExistsInstFlag:
-    return this.lenPaddingIfExistsInst
-  if this.hasPadding:
-    let pos = this.io.pos()
-    this.io.seek(int((this.io.size - 1)))
-    let lenPaddingIfExistsInstExpr = this.io.readU1()
-    this.lenPaddingIfExistsInst = lenPaddingIfExistsInstExpr
-    this.io.seek(pos)
-  this.lenPaddingIfExistsInstFlag = true
-  return this.lenPaddingIfExistsInst
 
 proc lenPadding(this: RtpPacket): uint8 = 
 
@@ -144,6 +126,24 @@ proc lenPadding(this: RtpPacket): uint8 =
   this.lenPaddingInst = lenPaddingInstExpr
   this.lenPaddingInstFlag = true
   return this.lenPaddingInst
+
+proc lenPaddingIfExists(this: RtpPacket): uint8 = 
+
+  ##[
+  If padding bit is enabled, last byte of data contains number of
+bytes appended to the payload as padding.
+
+  ]##
+  if this.lenPaddingIfExistsInstFlag:
+    return this.lenPaddingIfExistsInst
+  if this.hasPadding:
+    let pos = this.io.pos()
+    this.io.seek(int(this.io.size - 1))
+    let lenPaddingIfExistsInstExpr = this.io.readU1()
+    this.lenPaddingIfExistsInst = lenPaddingIfExistsInstExpr
+    this.io.seek(pos)
+  this.lenPaddingIfExistsInstFlag = true
+  return this.lenPaddingIfExistsInst
 
 proc fromFile*(_: typedesc[RtpPacket], filename: string): RtpPacket =
   RtpPacket.read(newKaitaiFileStream(filename), nil, nil)

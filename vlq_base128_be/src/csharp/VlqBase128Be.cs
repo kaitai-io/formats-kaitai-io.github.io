@@ -96,8 +96,8 @@ namespace Kaitai
             {
                 if (f_last)
                     return _last;
-                _last = (int) ((Groups.Count - 1));
                 f_last = true;
+                _last = (int) (Groups.Count - 1);
                 return _last;
             }
         }
@@ -113,8 +113,8 @@ namespace Kaitai
             {
                 if (f_value)
                     return _value;
-                _value = (ulong) (((ulong) ((((((((Groups[Last].Value + (Last >= 1 ? (Groups[(Last - 1)].Value << 7) : 0)) + (Last >= 2 ? (Groups[(Last - 2)].Value << 14) : 0)) + (Last >= 3 ? (Groups[(Last - 3)].Value << 21) : 0)) + (Last >= 4 ? (Groups[(Last - 4)].Value << 28) : 0)) + (Last >= 5 ? (Groups[(Last - 5)].Value << 35) : 0)) + (Last >= 6 ? (Groups[(Last - 6)].Value << 42) : 0)) + (Last >= 7 ? (Groups[(Last - 7)].Value << 49) : 0)))));
                 f_value = true;
+                _value = (ulong) (((ulong) (((((((Groups[Last].Value + (Last >= 1 ? Groups[Last - 1].Value << 7 : 0)) + (Last >= 2 ? Groups[Last - 2].Value << 14 : 0)) + (Last >= 3 ? Groups[Last - 3].Value << 21 : 0)) + (Last >= 4 ? Groups[Last - 4].Value << 28 : 0)) + (Last >= 5 ? Groups[Last - 5].Value << 35 : 0)) + (Last >= 6 ? Groups[Last - 6].Value << 42 : 0)) + (Last >= 7 ? Groups[Last - 7].Value << 49 : 0))));
                 return _value;
             }
         }

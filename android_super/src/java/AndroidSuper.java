@@ -4,11 +4,12 @@ import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.HashMap;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.ArrayList;
 
 
 /**
@@ -41,67 +42,12 @@ public class AndroidSuper extends KaitaiStruct {
     }
     private void _read() {
     }
-    public static class Root extends KaitaiStruct {
-        public static Root fromFile(String fileName) throws IOException {
-            return new Root(new ByteBufferKaitaiStream(fileName));
-        }
 
-        public Root(KaitaiStream _io) {
-            this(_io, null, null);
+    public void _fetchInstances() {
+        root();
+        if (this.root != null) {
+            this.root._fetchInstances();
         }
-
-        public Root(KaitaiStream _io, AndroidSuper _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Root(KaitaiStream _io, AndroidSuper _parent, AndroidSuper _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this._raw_primaryGeometry = this._io.readBytes(4096);
-            KaitaiStream _io__raw_primaryGeometry = new ByteBufferKaitaiStream(_raw_primaryGeometry);
-            this.primaryGeometry = new Geometry(_io__raw_primaryGeometry, this, _root);
-            this._raw_backupGeometry = this._io.readBytes(4096);
-            KaitaiStream _io__raw_backupGeometry = new ByteBufferKaitaiStream(_raw_backupGeometry);
-            this.backupGeometry = new Geometry(_io__raw_backupGeometry, this, _root);
-            this._raw_primaryMetadata = new ArrayList<byte[]>();
-            this.primaryMetadata = new ArrayList<Metadata>();
-            for (int i = 0; i < primaryGeometry().metadataSlotCount(); i++) {
-                this._raw_primaryMetadata.add(this._io.readBytes(primaryGeometry().metadataMaxSize()));
-                KaitaiStream _io__raw_primaryMetadata = new ByteBufferKaitaiStream(_raw_primaryMetadata.get(_raw_primaryMetadata.size() - 1));
-                this.primaryMetadata.add(new Metadata(_io__raw_primaryMetadata, this, _root));
-            }
-            this._raw_backupMetadata = new ArrayList<byte[]>();
-            this.backupMetadata = new ArrayList<Metadata>();
-            for (int i = 0; i < primaryGeometry().metadataSlotCount(); i++) {
-                this._raw_backupMetadata.add(this._io.readBytes(primaryGeometry().metadataMaxSize()));
-                KaitaiStream _io__raw_backupMetadata = new ByteBufferKaitaiStream(_raw_backupMetadata.get(_raw_backupMetadata.size() - 1));
-                this.backupMetadata.add(new Metadata(_io__raw_backupMetadata, this, _root));
-            }
-        }
-        private Geometry primaryGeometry;
-        private Geometry backupGeometry;
-        private ArrayList<Metadata> primaryMetadata;
-        private ArrayList<Metadata> backupMetadata;
-        private AndroidSuper _root;
-        private AndroidSuper _parent;
-        private byte[] _raw_primaryGeometry;
-        private byte[] _raw_backupGeometry;
-        private ArrayList<byte[]> _raw_primaryMetadata;
-        private ArrayList<byte[]> _raw_backupMetadata;
-        public Geometry primaryGeometry() { return primaryGeometry; }
-        public Geometry backupGeometry() { return backupGeometry; }
-        public ArrayList<Metadata> primaryMetadata() { return primaryMetadata; }
-        public ArrayList<Metadata> backupMetadata() { return backupMetadata; }
-        public AndroidSuper _root() { return _root; }
-        public AndroidSuper _parent() { return _parent; }
-        public byte[] _raw_primaryGeometry() { return _raw_primaryGeometry; }
-        public byte[] _raw_backupGeometry() { return _raw_backupGeometry; }
-        public ArrayList<byte[]> _raw_primaryMetadata() { return _raw_primaryMetadata; }
-        public ArrayList<byte[]> _raw_backupMetadata() { return _raw_backupMetadata; }
     }
     public static class Geometry extends KaitaiStruct {
         public static Geometry fromFile(String fileName) throws IOException {
@@ -124,14 +70,17 @@ public class AndroidSuper extends KaitaiStruct {
         }
         private void _read() {
             this.magic = this._io.readBytes(4);
-            if (!(Arrays.equals(magic(), new byte[] { 103, 68, 108, 97 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 103, 68, 108, 97 }, magic(), _io(), "/types/geometry/seq/0");
+            if (!(Arrays.equals(this.magic, new byte[] { 103, 68, 108, 97 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 103, 68, 108, 97 }, this.magic, this._io, "/types/geometry/seq/0");
             }
             this.structSize = this._io.readU4le();
             this.checksum = this._io.readBytes(32);
             this.metadataMaxSize = this._io.readU4le();
             this.metadataSlotCount = this._io.readU4le();
             this.logicalBlockSize = this._io.readU4le();
+        }
+
+        public void _fetchInstances() {
         }
         private byte[] magic;
         private long structSize;
@@ -193,8 +142,8 @@ public class AndroidSuper extends KaitaiStruct {
         }
         private void _read() {
             this.magic = this._io.readBytes(4);
-            if (!(Arrays.equals(magic(), new byte[] { 48, 80, 76, 65 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 48, 80, 76, 65 }, magic(), _io(), "/types/metadata/seq/0");
+            if (!(Arrays.equals(this.magic, new byte[] { 48, 80, 76, 65 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 48, 80, 76, 65 }, this.magic, this._io, "/types/metadata/seq/0");
             }
             this.majorVersion = this._io.readU2le();
             this.minorVersion = this._io.readU2le();
@@ -206,6 +155,13 @@ public class AndroidSuper extends KaitaiStruct {
             this.extents = new TableDescriptor(this._io, this, _root, TableKind.EXTENTS);
             this.groups = new TableDescriptor(this._io, this, _root, TableKind.GROUPS);
             this.blockDevices = new TableDescriptor(this._io, this, _root, TableKind.BLOCK_DEVICES);
+        }
+
+        public void _fetchInstances() {
+            this.partitions._fetchInstances();
+            this.extents._fetchInstances();
+            this.groups._fetchInstances();
+            this.blockDevices._fetchInstances();
         }
         public static class BlockDevice extends KaitaiStruct {
             public static BlockDevice fromFile(String fileName) throws IOException {
@@ -231,9 +187,12 @@ public class AndroidSuper extends KaitaiStruct {
                 this.alignment = this._io.readU4le();
                 this.alignmentOffset = this._io.readU4le();
                 this.size = this._io.readU8le();
-                this.partitionName = new String(KaitaiStream.bytesTerminate(this._io.readBytes(36), (byte) 0, false), Charset.forName("UTF-8"));
+                this.partitionName = new String(KaitaiStream.bytesTerminate(this._io.readBytes(36), (byte) 0, false), StandardCharsets.UTF_8);
                 this.flagSlotSuffixed = this._io.readBitsIntLe(1) != 0;
                 this.flagsReserved = this._io.readBitsIntLe(31);
+            }
+
+            public void _fetchInstances() {
             }
             private long firstLogicalSector;
             private long alignment;
@@ -294,6 +253,9 @@ public class AndroidSuper extends KaitaiStruct {
                 this.targetData = this._io.readU8le();
                 this.targetSource = this._io.readU4le();
             }
+
+            public void _fetchInstances() {
+            }
             private long numSectors;
             private TargetType targetType;
             private long targetData;
@@ -304,6 +266,103 @@ public class AndroidSuper extends KaitaiStruct {
             public TargetType targetType() { return targetType; }
             public long targetData() { return targetData; }
             public long targetSource() { return targetSource; }
+            public AndroidSuper _root() { return _root; }
+            public AndroidSuper.Metadata.TableDescriptor _parent() { return _parent; }
+        }
+        public static class Group extends KaitaiStruct {
+            public static Group fromFile(String fileName) throws IOException {
+                return new Group(new ByteBufferKaitaiStream(fileName));
+            }
+
+            public Group(KaitaiStream _io) {
+                this(_io, null, null);
+            }
+
+            public Group(KaitaiStream _io, AndroidSuper.Metadata.TableDescriptor _parent) {
+                this(_io, _parent, null);
+            }
+
+            public Group(KaitaiStream _io, AndroidSuper.Metadata.TableDescriptor _parent, AndroidSuper _root) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                _read();
+            }
+            private void _read() {
+                this.name = new String(KaitaiStream.bytesTerminate(this._io.readBytes(36), (byte) 0, false), StandardCharsets.UTF_8);
+                this.flagSlotSuffixed = this._io.readBitsIntLe(1) != 0;
+                this.flagsReserved = this._io.readBitsIntLe(31);
+                this.maximumSize = this._io.readU8le();
+            }
+
+            public void _fetchInstances() {
+            }
+            private String name;
+            private boolean flagSlotSuffixed;
+            private long flagsReserved;
+            private long maximumSize;
+            private AndroidSuper _root;
+            private AndroidSuper.Metadata.TableDescriptor _parent;
+            public String name() { return name; }
+            public boolean flagSlotSuffixed() { return flagSlotSuffixed; }
+            public long flagsReserved() { return flagsReserved; }
+            public long maximumSize() { return maximumSize; }
+            public AndroidSuper _root() { return _root; }
+            public AndroidSuper.Metadata.TableDescriptor _parent() { return _parent; }
+        }
+        public static class Partition extends KaitaiStruct {
+            public static Partition fromFile(String fileName) throws IOException {
+                return new Partition(new ByteBufferKaitaiStream(fileName));
+            }
+
+            public Partition(KaitaiStream _io) {
+                this(_io, null, null);
+            }
+
+            public Partition(KaitaiStream _io, AndroidSuper.Metadata.TableDescriptor _parent) {
+                this(_io, _parent, null);
+            }
+
+            public Partition(KaitaiStream _io, AndroidSuper.Metadata.TableDescriptor _parent, AndroidSuper _root) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                _read();
+            }
+            private void _read() {
+                this.name = new String(KaitaiStream.bytesTerminate(this._io.readBytes(36), (byte) 0, false), StandardCharsets.UTF_8);
+                this.attrReadonly = this._io.readBitsIntLe(1) != 0;
+                this.attrSlotSuffixed = this._io.readBitsIntLe(1) != 0;
+                this.attrUpdated = this._io.readBitsIntLe(1) != 0;
+                this.attrDisabled = this._io.readBitsIntLe(1) != 0;
+                this.attrsReserved = this._io.readBitsIntLe(28);
+                this.firstExtentIndex = this._io.readU4le();
+                this.numExtents = this._io.readU4le();
+                this.groupIndex = this._io.readU4le();
+            }
+
+            public void _fetchInstances() {
+            }
+            private String name;
+            private boolean attrReadonly;
+            private boolean attrSlotSuffixed;
+            private boolean attrUpdated;
+            private boolean attrDisabled;
+            private long attrsReserved;
+            private long firstExtentIndex;
+            private long numExtents;
+            private long groupIndex;
+            private AndroidSuper _root;
+            private AndroidSuper.Metadata.TableDescriptor _parent;
+            public String name() { return name; }
+            public boolean attrReadonly() { return attrReadonly; }
+            public boolean attrSlotSuffixed() { return attrSlotSuffixed; }
+            public boolean attrUpdated() { return attrUpdated; }
+            public boolean attrDisabled() { return attrDisabled; }
+            public long attrsReserved() { return attrsReserved; }
+            public long firstExtentIndex() { return firstExtentIndex; }
+            public long numExtents() { return numExtents; }
+            public long groupIndex() { return groupIndex; }
             public AndroidSuper _root() { return _root; }
             public AndroidSuper.Metadata.TableDescriptor _parent() { return _parent; }
         }
@@ -329,41 +388,71 @@ public class AndroidSuper extends KaitaiStruct {
                 this.numEntries = this._io.readU4le();
                 this.entrySize = this._io.readU4le();
             }
-            private ArrayList<Object> table;
-            public ArrayList<Object> table() {
+
+            public void _fetchInstances() {
+                table();
+                if (this.table != null) {
+                    for (int i = 0; i < this.table.size(); i++) {
+                        {
+                            TableKind on = kind();
+                            if (on != null) {
+                                switch (kind()) {
+                                case BLOCK_DEVICES: {
+                                    ((BlockDevice) (this.table.get(((Number) (i)).intValue())))._fetchInstances();
+                                    break;
+                                }
+                                case EXTENTS: {
+                                    ((Extent) (this.table.get(((Number) (i)).intValue())))._fetchInstances();
+                                    break;
+                                }
+                                case GROUPS: {
+                                    ((Group) (this.table.get(((Number) (i)).intValue())))._fetchInstances();
+                                    break;
+                                }
+                                case PARTITIONS: {
+                                    ((Partition) (this.table.get(((Number) (i)).intValue())))._fetchInstances();
+                                    break;
+                                }
+                                default: {
+                                    break;
+                                }
+                                }
+                            } else {
+                            }
+                        }
+                    }
+                }
+            }
+            private List<Object> table;
+            public List<Object> table() {
                 if (this.table != null)
                     return this.table;
                 long _pos = this._io.pos();
-                this._io.seek((_parent().headerSize() + offset()));
-                this._raw_table = new ArrayList<byte[]>();
+                this._io.seek(_parent().headerSize() + offset());
                 this.table = new ArrayList<Object>();
                 for (int i = 0; i < numEntries(); i++) {
                     {
                         TableKind on = kind();
                         if (on != null) {
                             switch (kind()) {
-                            case PARTITIONS: {
-                                this._raw_table.add(this._io.readBytes(entrySize()));
-                                KaitaiStream _io__raw_table = new ByteBufferKaitaiStream(_raw_table.get(_raw_table.size() - 1));
-                                this.table.add(new Partition(_io__raw_table, this, _root));
+                            case BLOCK_DEVICES: {
+                                KaitaiStream _io_table = this._io.substream(entrySize());
+                                this.table.add(new BlockDevice(_io_table, this, _root));
                                 break;
                             }
                             case EXTENTS: {
-                                this._raw_table.add(this._io.readBytes(entrySize()));
-                                KaitaiStream _io__raw_table = new ByteBufferKaitaiStream(_raw_table.get(_raw_table.size() - 1));
-                                this.table.add(new Extent(_io__raw_table, this, _root));
+                                KaitaiStream _io_table = this._io.substream(entrySize());
+                                this.table.add(new Extent(_io_table, this, _root));
                                 break;
                             }
                             case GROUPS: {
-                                this._raw_table.add(this._io.readBytes(entrySize()));
-                                KaitaiStream _io__raw_table = new ByteBufferKaitaiStream(_raw_table.get(_raw_table.size() - 1));
-                                this.table.add(new Group(_io__raw_table, this, _root));
+                                KaitaiStream _io_table = this._io.substream(entrySize());
+                                this.table.add(new Group(_io_table, this, _root));
                                 break;
                             }
-                            case BLOCK_DEVICES: {
-                                this._raw_table.add(this._io.readBytes(entrySize()));
-                                KaitaiStream _io__raw_table = new ByteBufferKaitaiStream(_raw_table.get(_raw_table.size() - 1));
-                                this.table.add(new BlockDevice(_io__raw_table, this, _root));
+                            case PARTITIONS: {
+                                KaitaiStream _io_table = this._io.substream(entrySize());
+                                this.table.add(new Partition(_io_table, this, _root));
                                 break;
                             }
                             default: {
@@ -385,107 +474,12 @@ public class AndroidSuper extends KaitaiStruct {
             private TableKind kind;
             private AndroidSuper _root;
             private AndroidSuper.Metadata _parent;
-            private ArrayList<byte[]> _raw_table;
             public long offset() { return offset; }
             public long numEntries() { return numEntries; }
             public long entrySize() { return entrySize; }
             public TableKind kind() { return kind; }
             public AndroidSuper _root() { return _root; }
             public AndroidSuper.Metadata _parent() { return _parent; }
-            public ArrayList<byte[]> _raw_table() { return _raw_table; }
-        }
-        public static class Partition extends KaitaiStruct {
-            public static Partition fromFile(String fileName) throws IOException {
-                return new Partition(new ByteBufferKaitaiStream(fileName));
-            }
-
-            public Partition(KaitaiStream _io) {
-                this(_io, null, null);
-            }
-
-            public Partition(KaitaiStream _io, AndroidSuper.Metadata.TableDescriptor _parent) {
-                this(_io, _parent, null);
-            }
-
-            public Partition(KaitaiStream _io, AndroidSuper.Metadata.TableDescriptor _parent, AndroidSuper _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.name = new String(KaitaiStream.bytesTerminate(this._io.readBytes(36), (byte) 0, false), Charset.forName("UTF-8"));
-                this.attrReadonly = this._io.readBitsIntLe(1) != 0;
-                this.attrSlotSuffixed = this._io.readBitsIntLe(1) != 0;
-                this.attrUpdated = this._io.readBitsIntLe(1) != 0;
-                this.attrDisabled = this._io.readBitsIntLe(1) != 0;
-                this.attrsReserved = this._io.readBitsIntLe(28);
-                this._io.alignToByte();
-                this.firstExtentIndex = this._io.readU4le();
-                this.numExtents = this._io.readU4le();
-                this.groupIndex = this._io.readU4le();
-            }
-            private String name;
-            private boolean attrReadonly;
-            private boolean attrSlotSuffixed;
-            private boolean attrUpdated;
-            private boolean attrDisabled;
-            private long attrsReserved;
-            private long firstExtentIndex;
-            private long numExtents;
-            private long groupIndex;
-            private AndroidSuper _root;
-            private AndroidSuper.Metadata.TableDescriptor _parent;
-            public String name() { return name; }
-            public boolean attrReadonly() { return attrReadonly; }
-            public boolean attrSlotSuffixed() { return attrSlotSuffixed; }
-            public boolean attrUpdated() { return attrUpdated; }
-            public boolean attrDisabled() { return attrDisabled; }
-            public long attrsReserved() { return attrsReserved; }
-            public long firstExtentIndex() { return firstExtentIndex; }
-            public long numExtents() { return numExtents; }
-            public long groupIndex() { return groupIndex; }
-            public AndroidSuper _root() { return _root; }
-            public AndroidSuper.Metadata.TableDescriptor _parent() { return _parent; }
-        }
-        public static class Group extends KaitaiStruct {
-            public static Group fromFile(String fileName) throws IOException {
-                return new Group(new ByteBufferKaitaiStream(fileName));
-            }
-
-            public Group(KaitaiStream _io) {
-                this(_io, null, null);
-            }
-
-            public Group(KaitaiStream _io, AndroidSuper.Metadata.TableDescriptor _parent) {
-                this(_io, _parent, null);
-            }
-
-            public Group(KaitaiStream _io, AndroidSuper.Metadata.TableDescriptor _parent, AndroidSuper _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.name = new String(KaitaiStream.bytesTerminate(this._io.readBytes(36), (byte) 0, false), Charset.forName("UTF-8"));
-                this.flagSlotSuffixed = this._io.readBitsIntLe(1) != 0;
-                this.flagsReserved = this._io.readBitsIntLe(31);
-                this._io.alignToByte();
-                this.maximumSize = this._io.readU8le();
-            }
-            private String name;
-            private boolean flagSlotSuffixed;
-            private long flagsReserved;
-            private long maximumSize;
-            private AndroidSuper _root;
-            private AndroidSuper.Metadata.TableDescriptor _parent;
-            public String name() { return name; }
-            public boolean flagSlotSuffixed() { return flagSlotSuffixed; }
-            public long flagsReserved() { return flagsReserved; }
-            public long maximumSize() { return maximumSize; }
-            public AndroidSuper _root() { return _root; }
-            public AndroidSuper.Metadata.TableDescriptor _parent() { return _parent; }
         }
         private byte[] magic;
         private int majorVersion;
@@ -522,6 +516,65 @@ public class AndroidSuper extends KaitaiStruct {
         public TableDescriptor blockDevices() { return blockDevices; }
         public AndroidSuper _root() { return _root; }
         public AndroidSuper.Root _parent() { return _parent; }
+    }
+    public static class Root extends KaitaiStruct {
+        public static Root fromFile(String fileName) throws IOException {
+            return new Root(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Root(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Root(KaitaiStream _io, AndroidSuper _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Root(KaitaiStream _io, AndroidSuper _parent, AndroidSuper _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            KaitaiStream _io_primaryGeometry = this._io.substream(4096);
+            this.primaryGeometry = new Geometry(_io_primaryGeometry, this, _root);
+            KaitaiStream _io_backupGeometry = this._io.substream(4096);
+            this.backupGeometry = new Geometry(_io_backupGeometry, this, _root);
+            this.primaryMetadata = new ArrayList<Metadata>();
+            for (int i = 0; i < primaryGeometry().metadataSlotCount(); i++) {
+                KaitaiStream _io_primaryMetadata = this._io.substream(primaryGeometry().metadataMaxSize());
+                this.primaryMetadata.add(new Metadata(_io_primaryMetadata, this, _root));
+            }
+            this.backupMetadata = new ArrayList<Metadata>();
+            for (int i = 0; i < primaryGeometry().metadataSlotCount(); i++) {
+                KaitaiStream _io_backupMetadata = this._io.substream(primaryGeometry().metadataMaxSize());
+                this.backupMetadata.add(new Metadata(_io_backupMetadata, this, _root));
+            }
+        }
+
+        public void _fetchInstances() {
+            this.primaryGeometry._fetchInstances();
+            this.backupGeometry._fetchInstances();
+            for (int i = 0; i < this.primaryMetadata.size(); i++) {
+                this.primaryMetadata.get(((Number) (i)).intValue())._fetchInstances();
+            }
+            for (int i = 0; i < this.backupMetadata.size(); i++) {
+                this.backupMetadata.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private Geometry primaryGeometry;
+        private Geometry backupGeometry;
+        private List<Metadata> primaryMetadata;
+        private List<Metadata> backupMetadata;
+        private AndroidSuper _root;
+        private AndroidSuper _parent;
+        public Geometry primaryGeometry() { return primaryGeometry; }
+        public Geometry backupGeometry() { return backupGeometry; }
+        public List<Metadata> primaryMetadata() { return primaryMetadata; }
+        public List<Metadata> backupMetadata() { return backupMetadata; }
+        public AndroidSuper _root() { return _root; }
+        public AndroidSuper _parent() { return _parent; }
     }
     private Root root;
     public Root root() {

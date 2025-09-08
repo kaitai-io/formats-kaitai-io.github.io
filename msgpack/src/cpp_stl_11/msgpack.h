@@ -2,13 +2,15 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class msgpack_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -58,15 +60,34 @@ public:
     };
 
 private:
-    bool f_is_array_32;
-    bool m_is_array_32;
+    bool f_bool_value;
+    bool m_bool_value;
+    bool n_bool_value;
+
+public:
+    bool _is_null_bool_value() { bool_value(); return n_bool_value; };
+
+private:
 
 public:
 
     /**
-     * \sa https://github.com/msgpack/msgpack/blob/master/spec.md#formats-array Source
+     * \sa https://github.com/msgpack/msgpack/blob/master/spec.md#formats-bool Source
      */
-    bool is_array_32();
+    bool bool_value();
+
+private:
+    bool f_float_value;
+    double m_float_value;
+    bool n_float_value;
+
+public:
+    bool _is_null_float_value() { float_value(); return n_float_value; };
+
+private:
+
+public:
+    double float_value();
 
 private:
     bool f_int_value;
@@ -82,17 +103,44 @@ public:
     int32_t int_value();
 
 private:
-    bool f_str_len;
-    int32_t m_str_len;
-    bool n_str_len;
+    bool f_is_array;
+    bool m_is_array;
 
 public:
-    bool _is_null_str_len() { str_len(); return n_str_len; };
+
+    /**
+     * \sa https://github.com/msgpack/msgpack/blob/master/spec.md#formats-array Source
+     */
+    bool is_array();
 
 private:
+    bool f_is_array_16;
+    bool m_is_array_16;
 
 public:
-    int32_t str_len();
+
+    /**
+     * \sa https://github.com/msgpack/msgpack/blob/master/spec.md#formats-array Source
+     */
+    bool is_array_16();
+
+private:
+    bool f_is_array_32;
+    bool m_is_array_32;
+
+public:
+
+    /**
+     * \sa https://github.com/msgpack/msgpack/blob/master/spec.md#formats-array Source
+     */
+    bool is_array_32();
+
+private:
+    bool f_is_bool;
+    bool m_is_bool;
+
+public:
+    bool is_bool();
 
 private:
     bool f_is_fix_array;
@@ -106,46 +154,6 @@ public:
     bool is_fix_array();
 
 private:
-    bool f_is_map;
-    bool m_is_map;
-
-public:
-
-    /**
-     * \sa https://github.com/msgpack/msgpack/blob/master/spec.md#formats-map Source
-     */
-    bool is_map();
-
-private:
-    bool f_is_array;
-    bool m_is_array;
-
-public:
-
-    /**
-     * \sa https://github.com/msgpack/msgpack/blob/master/spec.md#formats-array Source
-     */
-    bool is_array();
-
-private:
-    bool f_is_float;
-    bool m_is_float;
-
-public:
-    bool is_float();
-
-private:
-    bool f_is_str_8;
-    bool m_is_str_8;
-
-public:
-
-    /**
-     * \sa https://github.com/msgpack/msgpack/blob/master/spec.md#formats-str Source
-     */
-    bool is_str_8();
-
-private:
     bool f_is_fix_map;
     bool m_is_fix_map;
 
@@ -157,29 +165,33 @@ public:
     bool is_fix_map();
 
 private:
-    bool f_is_int;
-    bool m_is_int;
-
-public:
-    bool is_int();
-
-private:
-    bool f_is_bool;
-    bool m_is_bool;
-
-public:
-    bool is_bool();
-
-private:
-    bool f_is_str_16;
-    bool m_is_str_16;
+    bool f_is_fix_str;
+    bool m_is_fix_str;
 
 public:
 
     /**
      * \sa https://github.com/msgpack/msgpack/blob/master/spec.md#formats-str Source
      */
-    bool is_str_16();
+    bool is_fix_str();
+
+private:
+    bool f_is_float;
+    bool m_is_float;
+
+public:
+    bool is_float();
+
+private:
+    bool f_is_float_32;
+    bool m_is_float_32;
+
+public:
+
+    /**
+     * \sa https://github.com/msgpack/msgpack/blob/master/spec.md#formats-float Source
+     */
+    bool is_float_32();
 
 private:
     bool f_is_float_64;
@@ -193,6 +205,24 @@ public:
     bool is_float_64();
 
 private:
+    bool f_is_int;
+    bool m_is_int;
+
+public:
+    bool is_int();
+
+private:
+    bool f_is_map;
+    bool m_is_map;
+
+public:
+
+    /**
+     * \sa https://github.com/msgpack/msgpack/blob/master/spec.md#formats-map Source
+     */
+    bool is_map();
+
+private:
     bool f_is_map_16;
     bool m_is_map_16;
 
@@ -204,24 +234,22 @@ public:
     bool is_map_16();
 
 private:
+    bool f_is_map_32;
+    bool m_is_map_32;
+
+public:
+
+    /**
+     * \sa https://github.com/msgpack/msgpack/blob/master/spec.md#formats-map Source
+     */
+    bool is_map_32();
+
+private:
     bool f_is_neg_int5;
     bool m_is_neg_int5;
 
 public:
     bool is_neg_int5();
-
-private:
-    bool f_pos_int7_value;
-    uint8_t m_pos_int7_value;
-    bool n_pos_int7_value;
-
-public:
-    bool _is_null_pos_int7_value() { pos_int7_value(); return n_pos_int7_value; };
-
-private:
-
-public:
-    uint8_t pos_int7_value();
 
 private:
     bool f_is_nil;
@@ -235,17 +263,64 @@ public:
     bool is_nil();
 
 private:
-    bool f_float_value;
-    double m_float_value;
-    bool n_float_value;
+    bool f_is_pos_int7;
+    bool m_is_pos_int7;
 
 public:
-    bool _is_null_float_value() { float_value(); return n_float_value; };
+    bool is_pos_int7();
+
+private:
+    bool f_is_str;
+    bool m_is_str;
+
+public:
+    bool is_str();
+
+private:
+    bool f_is_str_16;
+    bool m_is_str_16;
+
+public:
+
+    /**
+     * \sa https://github.com/msgpack/msgpack/blob/master/spec.md#formats-str Source
+     */
+    bool is_str_16();
+
+private:
+    bool f_is_str_32;
+    bool m_is_str_32;
+
+public:
+
+    /**
+     * \sa https://github.com/msgpack/msgpack/blob/master/spec.md#formats-str Source
+     */
+    bool is_str_32();
+
+private:
+    bool f_is_str_8;
+    bool m_is_str_8;
+
+public:
+
+    /**
+     * \sa https://github.com/msgpack/msgpack/blob/master/spec.md#formats-str Source
+     */
+    bool is_str_8();
+
+private:
+    bool f_neg_int5_value;
+    int32_t m_neg_int5_value;
+    bool n_neg_int5_value;
+
+public:
+    bool _is_null_neg_int5_value() { neg_int5_value(); return n_neg_int5_value; };
 
 private:
 
 public:
-    double float_value();
+    int32_t neg_int5_value();
 
 private:
     bool f_num_array_elements;
@@ -265,83 +340,6 @@ public:
     int32_t num_array_elements();
 
 private:
-    bool f_neg_int5_value;
-    int32_t m_neg_int5_value;
-    bool n_neg_int5_value;
-
-public:
-    bool _is_null_neg_int5_value() { neg_int5_value(); return n_neg_int5_value; };
-
-private:
-
-public:
-    int32_t neg_int5_value();
-
-private:
-    bool f_bool_value;
-    bool m_bool_value;
-    bool n_bool_value;
-
-public:
-    bool _is_null_bool_value() { bool_value(); return n_bool_value; };
-
-private:
-
-public:
-
-    /**
-     * \sa https://github.com/msgpack/msgpack/blob/master/spec.md#formats-bool Source
-     */
-    bool bool_value();
-
-private:
-    bool f_is_pos_int7;
-    bool m_is_pos_int7;
-
-public:
-    bool is_pos_int7();
-
-private:
-    bool f_is_array_16;
-    bool m_is_array_16;
-
-public:
-
-    /**
-     * \sa https://github.com/msgpack/msgpack/blob/master/spec.md#formats-array Source
-     */
-    bool is_array_16();
-
-private:
-    bool f_is_str;
-    bool m_is_str;
-
-public:
-    bool is_str();
-
-private:
-    bool f_is_fix_str;
-    bool m_is_fix_str;
-
-public:
-
-    /**
-     * \sa https://github.com/msgpack/msgpack/blob/master/spec.md#formats-str Source
-     */
-    bool is_fix_str();
-
-private:
-    bool f_is_str_32;
-    bool m_is_str_32;
-
-public:
-
-    /**
-     * \sa https://github.com/msgpack/msgpack/blob/master/spec.md#formats-str Source
-     */
-    bool is_str_32();
-
-private:
     bool f_num_map_elements;
     int32_t m_num_map_elements;
     bool n_num_map_elements;
@@ -359,26 +357,30 @@ public:
     int32_t num_map_elements();
 
 private:
-    bool f_is_float_32;
-    bool m_is_float_32;
+    bool f_pos_int7_value;
+    uint8_t m_pos_int7_value;
+    bool n_pos_int7_value;
 
 public:
-
-    /**
-     * \sa https://github.com/msgpack/msgpack/blob/master/spec.md#formats-float Source
-     */
-    bool is_float_32();
+    bool _is_null_pos_int7_value() { pos_int7_value(); return n_pos_int7_value; };
 
 private:
-    bool f_is_map_32;
-    bool m_is_map_32;
 
 public:
+    uint8_t pos_int7_value();
 
-    /**
-     * \sa https://github.com/msgpack/msgpack/blob/master/spec.md#formats-map Source
-     */
-    bool is_map_32();
+private:
+    bool f_str_len;
+    int32_t m_str_len;
+    bool n_str_len;
+
+public:
+    bool _is_null_str_len() { str_len(); return n_str_len; };
+
+private:
+
+public:
+    int32_t str_len();
 
 private:
     uint8_t m_b1;

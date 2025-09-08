@@ -61,14 +61,14 @@ namespace Kaitai
             private void _read()
             {
                 _syncCode = m_io.ReadBytes(4);
-                if (!((KaitaiStream.ByteArrayCompare(SyncCode, new byte[] { 79, 103, 103, 83 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_syncCode, new byte[] { 79, 103, 103, 83 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 79, 103, 103, 83 }, SyncCode, M_Io, "/types/page/seq/0");
+                    throw new ValidationNotEqualError(new byte[] { 79, 103, 103, 83 }, _syncCode, m_io, "/types/page/seq/0");
                 }
                 _version = m_io.ReadBytes(1);
-                if (!((KaitaiStream.ByteArrayCompare(Version, new byte[] { 0 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_version, new byte[] { 0 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 0 }, Version, M_Io, "/types/page/seq/1");
+                    throw new ValidationNotEqualError(new byte[] { 0 }, _version, m_io, "/types/page/seq/1");
                 }
                 _reserved1 = m_io.ReadBitsIntBe(5);
                 _isEndOfStream = m_io.ReadBitsIntBe(1) != 0;

@@ -215,6 +215,11 @@ v2. Netmon v3 seems to use the same file format as v1.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title=".cap file format of Microsoft Network Monitor, v2.x parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title=".cap file format of Microsoft Network Monitor, v2.x parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -245,7 +250,17 @@ v2. Netmon v3 seems to use the same file format as v1.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title=".cap file format of Microsoft Network Monitor, v2.x parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title=".cap file format of Microsoft Network Monitor, v2.x parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title=".cap file format of Microsoft Network Monitor, v2.x parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -321,17 +336,18 @@ v2. Netmon v3 seems to use the same file format as v1.</p>
 
         <div class="row">
             <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+<span class="c1"># type: ignore</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">kaitaistruct</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">kaitaistruct</span><span class="w"> </span><span class="kn">import</span> <span class="n">KaitaiStruct</span><span class="p">,</span> <span class="n">KaitaiStream</span><span class="p">,</span> <span class="n">BytesIO</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
-
-
-<span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">kaitaistruct</span><span class="p">,</span> <span class="s1">&#39;API_VERSION&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">):</span>
-    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">kaitaistruct</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span>
-
 <span class="kn">import</span><span class="w"> </span><span class="nn">windows_systemtime</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">ethernet_frame</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">IntEnum</span>
+
+
+<span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">kaitaistruct</span><span class="p">,</span> <span class="s1">&#39;API_VERSION&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">kaitaistruct</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span>
+
 <span class="k">class</span><span class="w"> </span><span class="nc">MicrosoftNetworkMonitorV2</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Microsoft Network Monitor (AKA Netmon) is a proprietary Microsoft&#39;s</span>
 <span class="sd">    network packet sniffing and analysis tool. It can save captured</span>
@@ -346,7 +362,7 @@ v2. Netmon v3 seems to use the same file format as v1.</p>
 <span class="sd">       Source - https://learn.microsoft.com/en-us/windows/win32/netmon2/capturefile-header-values</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">class</span><span class="w"> </span><span class="nc">Linktype</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="k">class</span><span class="w"> </span><span class="nc">Linktype</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
         <span class="n">null_linktype</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">ethernet</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="n">ax25</span> <span class="o">=</span> <span class="mi">3</span>
@@ -452,9 +468,9 @@ v2. Netmon v3 seems to use the same file format as v1.</p>
         <span class="n">wattstopper_dlm</span> <span class="o">=</span> <span class="mi">263</span>
         <span class="n">iso_14443</span> <span class="o">=</span> <span class="mi">264</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MicrosoftNetworkMonitorV2</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="ow">or</span> <span class="bp">self</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -478,11 +494,60 @@ v2. Netmon v3 seems to use the same file format as v1.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">conversation_stats_ofs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">conversation_stats_len</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
 
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_capture_start</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_table</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_frame_table&#39;</span><span class="p">):</span>
+            <span class="k">pass</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_frame_table</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">Frame</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;A container for actually captured network data. Allow to</span>
+<span class="sd">        timestamp individual frames and designates how much data from</span>
+<span class="sd">        the original packet was actually written into the file.</span>
+<span class="sd">        </span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Source - https://learn.microsoft.com/en-us/windows/win32/netmon2/frame</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">MicrosoftNetworkMonitorV2</span><span class="o">.</span><span class="n">Frame</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ts_delta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u8le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">orig_len</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">inc_len</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="n">_on</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">mac_type</span>
+            <span class="k">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">MicrosoftNetworkMonitorV2</span><span class="o">.</span><span class="n">Linktype</span><span class="o">.</span><span class="n">ethernet</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inc_len</span><span class="p">)</span>
+                <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">ethernet_frame</span><span class="o">.</span><span class="n">EthernetFrame</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inc_len</span><span class="p">)</span>
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+            <span class="n">_on</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">mac_type</span>
+            <span class="k">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">MicrosoftNetworkMonitorV2</span><span class="o">.</span><span class="n">Linktype</span><span class="o">.</span><span class="n">ethernet</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+
     <span class="k">class</span><span class="w"> </span><span class="nc">FrameIndex</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
         <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">MicrosoftNetworkMonitorV2</span><span class="o">.</span><span class="n">FrameIndex</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -494,18 +559,35 @@ v2. Netmon v3 seems to use the same file format as v1.</p>
 
 
 
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">entries</span><span class="p">)):</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">entries</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+
+
+
     <span class="k">class</span><span class="w"> </span><span class="nc">FrameIndexEntry</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Each index entry is just a pointer to where the frame data is</span>
 <span class="sd">        stored in the file.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">MicrosoftNetworkMonitorV2</span><span class="o">.</span><span class="n">FrameIndexEntry</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ofs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+            <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">body</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_body&#39;</span><span class="p">):</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_m_body</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+
 
         <span class="nd">@property</span>
         <span class="k">def</span><span class="w"> </span><span class="nf">body</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -519,33 +601,6 @@ v2. Netmon v3 seems to use the same file format as v1.</p>
             <span class="bp">self</span><span class="o">.</span><span class="n">_m_body</span> <span class="o">=</span> <span class="n">MicrosoftNetworkMonitorV2</span><span class="o">.</span><span class="n">Frame</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
             <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
             <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_body&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-
-
-    <span class="k">class</span><span class="w"> </span><span class="nc">Frame</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;A container for actually captured network data. Allow to</span>
-<span class="sd">        timestamp individual frames and designates how much data from</span>
-<span class="sd">        the original packet was actually written into the file.</span>
-<span class="sd">        </span>
-<span class="sd">        .. seealso::</span>
-<span class="sd">           Source - https://learn.microsoft.com/en-us/windows/win32/netmon2/frame</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
-
-        <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">ts_delta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u8le</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">orig_len</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">inc_len</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
-            <span class="n">_on</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">mac_type</span>
-            <span class="k">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">MicrosoftNetworkMonitorV2</span><span class="o">.</span><span class="n">Linktype</span><span class="o">.</span><span class="n">ethernet</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inc_len</span><span class="p">)</span>
-                <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span><span class="p">))</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">ethernet_frame</span><span class="o">.</span><span class="n">EthernetFrame</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inc_len</span><span class="p">)</span>
 
 
     <span class="nd">@property</span>

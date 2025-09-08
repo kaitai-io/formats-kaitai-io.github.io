@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -26,15 +26,15 @@ class AllegroDat < Kaitai::Struct::Struct
     1936484398 => :pack_enum_unpacked,
   }
   I__PACK_ENUM = PACK_ENUM.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
     @pack_magic = Kaitai::Struct::Stream::resolve_enum(PACK_ENUM, @_io.read_u4be)
     @dat_magic = @_io.read_bytes(4)
-    raise Kaitai::Struct::ValidationNotEqualError.new([65, 76, 76, 46].pack('C*'), dat_magic, _io, "/seq/1") if not dat_magic == [65, 76, 76, 46].pack('C*')
+    raise Kaitai::Struct::ValidationNotEqualError.new([65, 76, 76, 46].pack('C*'), @dat_magic, @_io, "/seq/1") if not @dat_magic == [65, 76, 76, 46].pack('C*')
     @num_objects = @_io.read_u4be
     @objects = []
     (num_objects).times { |i|
@@ -42,27 +42,8 @@ class AllegroDat < Kaitai::Struct::Struct
     }
     self
   end
-
-  ##
-  # Simple monochrome monospaced font, 95 characters, 8x16 px
-  # characters.
-  class DatFont16 < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @chars = []
-      (95).times { |i|
-        @chars << @_io.read_bytes(16)
-      }
-      self
-    end
-    attr_reader :chars
-  end
   class DatBitmap < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -80,7 +61,7 @@ class AllegroDat < Kaitai::Struct::Struct
     attr_reader :image
   end
   class DatFont < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -88,12 +69,12 @@ class AllegroDat < Kaitai::Struct::Struct
     def _read
       @font_size = @_io.read_s2be
       case font_size
-      when 8
-        @body = DatFont8.new(@_io, self, @_root)
-      when 16
-        @body = DatFont16.new(@_io, self, @_root)
       when 0
         @body = DatFont39.new(@_io, self, @_root)
+      when 16
+        @body = DatFont16.new(@_io, self, @_root)
+      when 8
+        @body = DatFont8.new(@_io, self, @_root)
       end
       self
     end
@@ -102,10 +83,94 @@ class AllegroDat < Kaitai::Struct::Struct
   end
 
   ##
+  # Simple monochrome monospaced font, 95 characters, 8x16 px
+  # characters.
+  class DatFont16 < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @chars = []
+      (95).times { |i|
+        @chars << @_io.read_bytes(16)
+      }
+      self
+    end
+    attr_reader :chars
+  end
+
+  ##
+  # New bitmap font format introduced since Allegro 3.9: allows
+  # flexible designation of character ranges, 8-bit colored
+  # characters, etc.
+  class DatFont39 < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @num_ranges = @_io.read_s2be
+      @ranges = []
+      (num_ranges).times { |i|
+        @ranges << Range.new(@_io, self, @_root)
+      }
+      self
+    end
+    class FontChar < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = nil)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        @width = @_io.read_u2be
+        @height = @_io.read_u2be
+        @body = @_io.read_bytes(width * height)
+        self
+      end
+      attr_reader :width
+      attr_reader :height
+      attr_reader :body
+    end
+    class Range < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = nil)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        @mono = @_io.read_u1
+        @start_char = @_io.read_u4be
+        @end_char = @_io.read_u4be
+        @chars = []
+        ((end_char - start_char) + 1).times { |i|
+          @chars << FontChar.new(@_io, self, @_root)
+        }
+        self
+      end
+      attr_reader :mono
+
+      ##
+      # First character in range
+      attr_reader :start_char
+
+      ##
+      # Last character in range (inclusive)
+      attr_reader :end_char
+      attr_reader :chars
+    end
+    attr_reader :num_ranges
+    attr_reader :ranges
+  end
+
+  ##
   # Simple monochrome monospaced font, 95 characters, 8x8 px
   # characters.
   class DatFont8 < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -120,7 +185,7 @@ class AllegroDat < Kaitai::Struct::Struct
     attr_reader :chars
   end
   class DatObject < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -137,17 +202,14 @@ class AllegroDat < Kaitai::Struct::Struct
       @len_uncompressed = @_io.read_s4be
       case type
       when "BMP "
-        @_raw_body = @_io.read_bytes(len_compressed)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = DatBitmap.new(_io__raw_body, self, @_root)
-      when "RLE "
-        @_raw_body = @_io.read_bytes(len_compressed)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = DatRleSprite.new(_io__raw_body, self, @_root)
+        _io_body = @_io.substream(len_compressed)
+        @body = DatBitmap.new(_io_body, self, @_root)
       when "FONT"
-        @_raw_body = @_io.read_bytes(len_compressed)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = DatFont.new(_io__raw_body, self, @_root)
+        _io_body = @_io.substream(len_compressed)
+        @body = DatFont.new(_io_body, self, @_root)
+      when "RLE "
+        _io_body = @_io.substream(len_compressed)
+        @body = DatRleSprite.new(_io_body, self, @_root)
       else
         @body = @_io.read_bytes(len_compressed)
       end
@@ -164,73 +226,28 @@ class AllegroDat < Kaitai::Struct::Struct
     attr_reader :body
     attr_reader :_raw_body
   end
-
-  ##
-  # New bitmap font format introduced since Allegro 3.9: allows
-  # flexible designation of character ranges, 8-bit colored
-  # characters, etc.
-  class DatFont39 < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  class DatRleSprite < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @num_ranges = @_io.read_s2be
-      @ranges = []
-      (num_ranges).times { |i|
-        @ranges << Range.new(@_io, self, @_root)
-      }
+      @bits_per_pixel = @_io.read_s2be
+      @width = @_io.read_u2be
+      @height = @_io.read_u2be
+      @len_image = @_io.read_u4be
+      @image = @_io.read_bytes_full
       self
     end
-    class Range < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
-
-      def _read
-        @mono = @_io.read_u1
-        @start_char = @_io.read_u4be
-        @end_char = @_io.read_u4be
-        @chars = []
-        (((end_char - start_char) + 1)).times { |i|
-          @chars << FontChar.new(@_io, self, @_root)
-        }
-        self
-      end
-      attr_reader :mono
-
-      ##
-      # First character in range
-      attr_reader :start_char
-
-      ##
-      # Last character in range (inclusive)
-      attr_reader :end_char
-      attr_reader :chars
-    end
-    class FontChar < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
-
-      def _read
-        @width = @_io.read_u2be
-        @height = @_io.read_u2be
-        @body = @_io.read_bytes((width * height))
-        self
-      end
-      attr_reader :width
-      attr_reader :height
-      attr_reader :body
-    end
-    attr_reader :num_ranges
-    attr_reader :ranges
+    attr_reader :bits_per_pixel
+    attr_reader :width
+    attr_reader :height
+    attr_reader :len_image
+    attr_reader :image
   end
   class Property < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -257,26 +274,6 @@ class AllegroDat < Kaitai::Struct::Struct
     attr_reader :type
     attr_reader :len_body
     attr_reader :body
-  end
-  class DatRleSprite < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @bits_per_pixel = @_io.read_s2be
-      @width = @_io.read_u2be
-      @height = @_io.read_u2be
-      @len_image = @_io.read_u4be
-      @image = @_io.read_bytes_full
-      self
-    end
-    attr_reader :bits_per_pixel
-    attr_reader :width
-    attr_reader :height
-    attr_reader :len_image
-    attr_reader :image
   end
   attr_reader :pack_magic
   attr_reader :dat_magic

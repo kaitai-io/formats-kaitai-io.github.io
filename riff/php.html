@@ -195,6 +195,11 @@ like AVI, ANI and WAV, which use RIFF as their basis.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="Resource Interchange File Format (RIFF) parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="Resource Interchange File Format (RIFF) parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -225,7 +230,17 @@ like AVI, ANI and WAV, which use RIFF as their basis.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="Resource Interchange File Format (RIFF) parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="Resource Interchange File Format (RIFF) parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="Resource Interchange File Format (RIFF) parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -269,8 +284,8 @@ like AVI, ANI and WAV, which use RIFF as their basis.</p>
 
 <span class="k">namespace</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">Riff</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Riff</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Riff</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span> <span class="o">===</span> <span class="k">null</span> <span class="o">?</span> <span class="nv">$this</span> <span class="o">:</span> <span class="nv">$_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
         <span class="p">}</span>
 
@@ -328,8 +343,187 @@ like AVI, ANI and WAV, which use RIFF as their basis.</p>
 <span class="p">}</span>
 
 <span class="k">namespace</span> <span class="nx">Riff</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">Chunk</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Riff</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_id</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_dataSlot</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">());</span>
+            <span class="nv">$_io__raw_dataSlot</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_dataSlot</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dataSlot</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Riff\Chunk\Slot</span><span class="p">(</span><span class="nv">$_io__raw_dataSlot</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_padByte</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">mod</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">(),</span> <span class="mi">2</span><span class="p">));</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_id</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_len</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_dataSlot</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_padByte</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m__raw_dataSlot</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">len</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">dataSlot</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dataSlot</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">padByte</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_padByte</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw_dataSlot</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_dataSlot</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Riff\Chunk</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">Slot</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Riff\Chunk</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Riff</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Riff</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">ChunkType</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Riff</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">chunkOfs</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_saveChunkOfs</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunk</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Riff\Chunk</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_chunkData</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">chunkData</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkData</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkData</span><span class="p">;</span>
+            <span class="nv">$io</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">chunk</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">dataSlot</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">();</span>
+            <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
+            <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+            <span class="k">switch</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">chunkId</span><span class="p">())</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="nx">\Riff\Fourcc</span><span class="o">::</span><span class="na">LIST</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkData</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Riff\ListChunkData</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkData</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_chunkId</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">chunkId</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkId</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkId</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkId</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">chunk</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">id</span><span class="p">();</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkId</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_chunkIdReadable</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">chunkIdReadable</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkIdReadable</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkIdReadable</span><span class="p">;</span>
+            <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">chunkOfs</span><span class="p">());</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkIdReadable</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkIdReadable</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_chunkOfs</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">chunkOfs</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkOfs</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkOfs</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkOfs</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkOfs</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_saveChunkOfs</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_chunk</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">saveChunkOfs</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_saveChunkOfs</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">chunk</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunk</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * All registered subchunks in the INFO chunk are NULL-terminated strings,</span>
+<span class="sd"> * but the unregistered might not be. By convention, the registered</span>
+<span class="sd"> * chunk IDs are in uppercase and the unregistered IDs are in lowercase.</span>
+<span class="sd"> * </span>
+<span class="sd"> * If the chunk ID of an INFO subchunk contains a lowercase</span>
+<span class="sd"> * letter, this chunk is considered as unregistered and thus we can make</span>
+<span class="sd"> * no assumptions about the type of data.</span>
+<span class="sd"> */</span>
+
+<span class="k">namespace</span> <span class="nx">Riff</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">InfoSubchunk</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Riff\ListChunkData</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Riff</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">chunkOfs</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_saveChunkOfs</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunk</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Riff\Chunk</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_chunkData</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">chunkData</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkData</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkData</span><span class="p">;</span>
+            <span class="nv">$io</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">chunk</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">dataSlot</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">();</span>
+            <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
+            <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+            <span class="k">switch</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">isUnregisteredTag</span><span class="p">())</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="k">false</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkData</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$io</span><span class="o">-&gt;</span><span class="na">readBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">true</span><span class="p">,</span> <span class="k">true</span><span class="p">),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkData</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_chunkIdReadable</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">chunkIdReadable</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkIdReadable</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkIdReadable</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkIdReadable</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">idChars</span><span class="p">(),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkIdReadable</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_chunkOfs</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">chunkOfs</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkOfs</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkOfs</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkOfs</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkOfs</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_idChars</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">idChars</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_idChars</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_idChars</span><span class="p">;</span>
+            <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">chunkOfs</span><span class="p">());</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_idChars</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_idChars</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_isUnregisteredTag</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Check if chunk_id contains lowercase characters ([a-z], ASCII 97 = a, ASCII 122 = z).</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">isUnregisteredTag</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isUnregisteredTag</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isUnregisteredTag</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isUnregisteredTag</span> <span class="o">=</span>  <span class="p">((</span> <span class="p">((</span><span class="nb">ord</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">idChars</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mi">97</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">idChars</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="mi">122</span><span class="p">))</span> <span class="p">)</span> <span class="o">||</span> <span class="p">(</span> <span class="p">((</span><span class="nb">ord</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">idChars</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mi">97</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">idChars</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="mi">122</span><span class="p">))</span> <span class="p">)</span> <span class="o">||</span> <span class="p">(</span> <span class="p">((</span><span class="nb">ord</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">idChars</span><span class="p">()[</span><span class="mi">2</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mi">97</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">idChars</span><span class="p">()[</span><span class="mi">2</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="mi">122</span><span class="p">))</span> <span class="p">)</span> <span class="o">||</span> <span class="p">(</span> <span class="p">((</span><span class="nb">ord</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">idChars</span><span class="p">()[</span><span class="mi">3</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mi">97</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">idChars</span><span class="p">()[</span><span class="mi">3</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="mi">122</span><span class="p">))</span> <span class="p">))</span> <span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isUnregisteredTag</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_saveChunkOfs</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_chunk</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">saveChunkOfs</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_saveChunkOfs</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">chunk</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunk</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Riff</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">ListChunkData</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Riff\ChunkType</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Riff</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Riff\ChunkType</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Riff</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
         <span class="p">}</span>
@@ -339,13 +533,6 @@ like AVI, ANI and WAV, which use RIFF as their basis.</p>
                 <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_saveParentChunkDataOfs</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
             <span class="p">}</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_parentChunkData</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Riff\ParentChunkData</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_parentChunkDataOfs</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">parentChunkDataOfs</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_parentChunkDataOfs</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_parentChunkDataOfs</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_parentChunkDataOfs</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_parentChunkDataOfs</span><span class="p">;</span>
         <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_formType</span><span class="p">;</span>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">formType</span><span class="p">()</span> <span class="p">{</span>
@@ -363,6 +550,13 @@ like AVI, ANI and WAV, which use RIFF as their basis.</p>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_formTypeReadable</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
             <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_formTypeReadable</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_parentChunkDataOfs</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">parentChunkDataOfs</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_parentChunkDataOfs</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_parentChunkDataOfs</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_parentChunkDataOfs</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_parentChunkDataOfs</span><span class="p">;</span>
         <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_subchunks</span><span class="p">;</span>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">subchunks</span><span class="p">()</span> <span class="p">{</span>
@@ -395,48 +589,8 @@ like AVI, ANI and WAV, which use RIFF as their basis.</p>
 <span class="p">}</span>
 
 <span class="k">namespace</span> <span class="nx">Riff</span> <span class="p">{</span>
-    <span class="k">class</span> <span class="nc">Chunk</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Riff</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
-        <span class="p">}</span>
-
-        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_id</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_dataSlot</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">());</span>
-            <span class="nv">$_io__raw_dataSlot</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_dataSlot</span><span class="p">);</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dataSlot</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Riff\Chunk\Slot</span><span class="p">(</span><span class="nv">$_io__raw_dataSlot</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_padByte</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">mod</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">(),</span> <span class="mi">2</span><span class="p">));</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_id</span><span class="p">;</span>
-        <span class="k">protected</span> <span class="nv">$_m_len</span><span class="p">;</span>
-        <span class="k">protected</span> <span class="nv">$_m_dataSlot</span><span class="p">;</span>
-        <span class="k">protected</span> <span class="nv">$_m_padByte</span><span class="p">;</span>
-        <span class="k">protected</span> <span class="nv">$_m__raw_dataSlot</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_id</span><span class="p">;</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">len</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span><span class="p">;</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">dataSlot</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dataSlot</span><span class="p">;</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">padByte</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_padByte</span><span class="p">;</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw_dataSlot</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_dataSlot</span><span class="p">;</span> <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="k">namespace</span> <span class="nx">Riff\Chunk</span> <span class="p">{</span>
-    <span class="k">class</span> <span class="nc">Slot</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Riff\Chunk</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Riff</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
-        <span class="p">}</span>
-
-        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="k">namespace</span> <span class="nx">Riff</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">ParentChunkData</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Riff</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Riff</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
         <span class="p">}</span>
@@ -458,152 +612,13 @@ like AVI, ANI and WAV, which use RIFF as their basis.</p>
 
 <span class="k">namespace</span> <span class="nx">Riff\ParentChunkData</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">Slot</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Riff\ParentChunkData</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Riff</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Riff\ParentChunkData</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Riff</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
         <span class="p">}</span>
 
         <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
         <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="sd">/**</span>
-<span class="sd"> * All registered subchunks in the INFO chunk are NULL-terminated strings,</span>
-<span class="sd"> * but the unregistered might not be. By convention, the registered</span>
-<span class="sd"> * chunk IDs are in uppercase and the unregistered IDs are in lowercase.</span>
-<span class="sd"> * </span>
-<span class="sd"> * If the chunk ID of an INFO subchunk contains a lowercase</span>
-<span class="sd"> * letter, this chunk is considered as unregistered and thus we can make</span>
-<span class="sd"> * no assumptions about the type of data.</span>
-<span class="sd"> */</span>
-
-<span class="k">namespace</span> <span class="nx">Riff</span> <span class="p">{</span>
-    <span class="k">class</span> <span class="nc">InfoSubchunk</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Riff\ListChunkData</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Riff</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
-        <span class="p">}</span>
-
-        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">chunkOfs</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_saveChunkOfs</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
-            <span class="p">}</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunk</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Riff\Chunk</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_chunkData</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">chunkData</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkData</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkData</span><span class="p">;</span>
-            <span class="nv">$io</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">chunk</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">dataSlot</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">();</span>
-            <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
-            <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
-            <span class="k">switch</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">isUnregisteredTag</span><span class="p">())</span> <span class="p">{</span>
-                <span class="k">case</span> <span class="k">false</span><span class="o">:</span>
-                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkData</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$io</span><span class="o">-&gt;</span><span class="na">readBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">true</span><span class="p">,</span> <span class="k">true</span><span class="p">),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkData</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_isUnregisteredTag</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * Check if chunk_id contains lowercase characters ([a-z], ASCII 97 = a, ASCII 122 = z).</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">isUnregisteredTag</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isUnregisteredTag</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isUnregisteredTag</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isUnregisteredTag</span> <span class="o">=</span>  <span class="p">((</span> <span class="p">((</span><span class="nb">ord</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">idChars</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mi">97</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">idChars</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="mi">122</span><span class="p">))</span> <span class="p">)</span> <span class="o">||</span> <span class="p">(</span> <span class="p">((</span><span class="nb">ord</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">idChars</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mi">97</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">idChars</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="mi">122</span><span class="p">))</span> <span class="p">)</span> <span class="o">||</span> <span class="p">(</span> <span class="p">((</span><span class="nb">ord</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">idChars</span><span class="p">()[</span><span class="mi">2</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mi">97</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">idChars</span><span class="p">()[</span><span class="mi">2</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="mi">122</span><span class="p">))</span> <span class="p">)</span> <span class="o">||</span> <span class="p">(</span> <span class="p">((</span><span class="nb">ord</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">idChars</span><span class="p">()[</span><span class="mi">3</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mi">97</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">idChars</span><span class="p">()[</span><span class="mi">3</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="mi">122</span><span class="p">))</span> <span class="p">))</span> <span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isUnregisteredTag</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_idChars</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">idChars</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_idChars</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_idChars</span><span class="p">;</span>
-            <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">chunkOfs</span><span class="p">());</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_idChars</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_idChars</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_chunkIdReadable</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">chunkIdReadable</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkIdReadable</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkIdReadable</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkIdReadable</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">idChars</span><span class="p">(),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkIdReadable</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_chunkOfs</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">chunkOfs</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkOfs</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkOfs</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkOfs</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkOfs</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_saveChunkOfs</span><span class="p">;</span>
-        <span class="k">protected</span> <span class="nv">$_m_chunk</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">saveChunkOfs</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_saveChunkOfs</span><span class="p">;</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">chunk</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunk</span><span class="p">;</span> <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="k">namespace</span> <span class="nx">Riff</span> <span class="p">{</span>
-    <span class="k">class</span> <span class="nc">ChunkType</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Riff</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
-        <span class="p">}</span>
-
-        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">chunkOfs</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_saveChunkOfs</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
-            <span class="p">}</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunk</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Riff\Chunk</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_chunkOfs</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">chunkOfs</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkOfs</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkOfs</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkOfs</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkOfs</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_chunkId</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">chunkId</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkId</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkId</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkId</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">chunk</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">id</span><span class="p">();</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkId</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_chunkIdReadable</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">chunkIdReadable</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkIdReadable</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkIdReadable</span><span class="p">;</span>
-            <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">chunkOfs</span><span class="p">());</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkIdReadable</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkIdReadable</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_chunkData</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">chunkData</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkData</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkData</span><span class="p">;</span>
-            <span class="nv">$io</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">chunk</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">dataSlot</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">();</span>
-            <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
-            <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
-            <span class="k">switch</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">chunkId</span><span class="p">())</span> <span class="p">{</span>
-                <span class="k">case</span> <span class="nx">\Riff\Fourcc</span><span class="o">::</span><span class="na">LIST</span><span class="o">:</span>
-                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkData</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Riff\ListChunkData</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkData</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_saveChunkOfs</span><span class="p">;</span>
-        <span class="k">protected</span> <span class="nv">$_m_chunk</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">saveChunkOfs</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_saveChunkOfs</span><span class="p">;</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">chunk</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunk</span><span class="p">;</span> <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
@@ -612,6 +627,12 @@ like AVI, ANI and WAV, which use RIFF as their basis.</p>
         <span class="k">const</span> <span class="no">RIFF</span> <span class="o">=</span> <span class="mi">1179011410</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">INFO</span> <span class="o">=</span> <span class="mi">1330007625</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">LIST</span> <span class="o">=</span> <span class="mi">1414744396</span><span class="p">;</span>
+
+        <span class="k">private</span> <span class="k">const</span> <span class="no">_VALUES</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1179011410</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">1330007625</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">1414744396</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">];</span>
+
+        <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">isDefined</span><span class="p">(</span><span class="nx">int</span> <span class="nv">$v</span><span class="p">)</span><span class="o">:</span> <span class="nx">bool</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nb">isset</span><span class="p">(</span><span class="nx">self</span><span class="o">::</span><span class="na">_VALUES</span><span class="p">[</span><span class="nv">$v</span><span class="p">]);</span>
+        <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>

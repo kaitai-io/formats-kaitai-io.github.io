@@ -9,7 +9,7 @@ import (
 type Ext2 struct {
 	_io *kaitai.Stream
 	_root *Ext2
-	_parent interface{}
+	_parent kaitai.Struct
 	_f_bg1 bool
 	bg1 *Ext2_BlockGroup
 	_f_rootDir bool
@@ -20,7 +20,11 @@ func NewExt2() *Ext2 {
 	}
 }
 
-func (this *Ext2) Read(io *kaitai.Stream, parent interface{}, root *Ext2) (err error) {
+func (this Ext2) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Ext2) Read(io *kaitai.Stream, parent kaitai.Struct, root *Ext2) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -31,6 +35,7 @@ func (this *Ext2) Bg1() (v *Ext2_BlockGroup, err error) {
 	if (this._f_bg1) {
 		return this.bg1, nil
 	}
+	this._f_bg1 = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
@@ -49,14 +54,13 @@ func (this *Ext2) Bg1() (v *Ext2_BlockGroup, err error) {
 	if err != nil {
 		return nil, err
 	}
-	this._f_bg1 = true
-	this._f_bg1 = true
 	return this.bg1, nil
 }
 func (this *Ext2) RootDir() (v *Ext2_Dir, err error) {
 	if (this._f_rootDir) {
 		return this.rootDir, nil
 	}
+	this._f_rootDir = true
 	tmp2, err := this.Bg1()
 	if err != nil {
 		return nil, err
@@ -70,15 +74,661 @@ func (this *Ext2) RootDir() (v *Ext2_Dir, err error) {
 		return nil, err
 	}
 	this.rootDir = tmp4
-	this._f_rootDir = true
 	return this.rootDir, nil
 }
+type Ext2_Bgd struct {
+	BlockBitmapBlock uint32
+	InodeBitmapBlock uint32
+	InodeTableBlock uint32
+	FreeBlocksCount uint16
+	FreeInodesCount uint16
+	UsedDirsCount uint16
+	PadReserved []byte
+	_io *kaitai.Stream
+	_root *Ext2
+	_parent *Ext2_BlockGroup
+	_f_blockBitmap bool
+	blockBitmap []byte
+	_f_inodeBitmap bool
+	inodeBitmap []byte
+	_f_inodes bool
+	inodes []*Ext2_Inode
+}
+func NewExt2_Bgd() *Ext2_Bgd {
+	return &Ext2_Bgd{
+	}
+}
 
-type Ext2_SuperBlockStruct_StateEnum int
+func (this Ext2_Bgd) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Ext2_Bgd) Read(io *kaitai.Stream, parent *Ext2_BlockGroup, root *Ext2) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp5, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.BlockBitmapBlock = uint32(tmp5)
+	tmp6, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.InodeBitmapBlock = uint32(tmp6)
+	tmp7, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.InodeTableBlock = uint32(tmp7)
+	tmp8, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.FreeBlocksCount = uint16(tmp8)
+	tmp9, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.FreeInodesCount = uint16(tmp9)
+	tmp10, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.UsedDirsCount = uint16(tmp10)
+	tmp11, err := this._io.ReadBytes(int(2 + 12))
+	if err != nil {
+		return err
+	}
+	tmp11 = tmp11
+	this.PadReserved = tmp11
+	return err
+}
+func (this *Ext2_Bgd) BlockBitmap() (v []byte, err error) {
+	if (this._f_blockBitmap) {
+		return this.blockBitmap, nil
+	}
+	this._f_blockBitmap = true
+	_pos, err := this._io.Pos()
+	if err != nil {
+		return nil, err
+	}
+	tmp12, err := this._root.Bg1()
+	if err != nil {
+		return nil, err
+	}
+	tmp13, err := tmp12.SuperBlock.BlockSize()
+	if err != nil {
+		return nil, err
+	}
+	_, err = this._io.Seek(int64(this.BlockBitmapBlock * tmp13), io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	tmp14, err := this._io.ReadBytes(int(1024))
+	if err != nil {
+		return nil, err
+	}
+	tmp14 = tmp14
+	this.blockBitmap = tmp14
+	_, err = this._io.Seek(_pos, io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	return this.blockBitmap, nil
+}
+func (this *Ext2_Bgd) InodeBitmap() (v []byte, err error) {
+	if (this._f_inodeBitmap) {
+		return this.inodeBitmap, nil
+	}
+	this._f_inodeBitmap = true
+	_pos, err := this._io.Pos()
+	if err != nil {
+		return nil, err
+	}
+	tmp15, err := this._root.Bg1()
+	if err != nil {
+		return nil, err
+	}
+	tmp16, err := tmp15.SuperBlock.BlockSize()
+	if err != nil {
+		return nil, err
+	}
+	_, err = this._io.Seek(int64(this.InodeBitmapBlock * tmp16), io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	tmp17, err := this._io.ReadBytes(int(1024))
+	if err != nil {
+		return nil, err
+	}
+	tmp17 = tmp17
+	this.inodeBitmap = tmp17
+	_, err = this._io.Seek(_pos, io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	return this.inodeBitmap, nil
+}
+func (this *Ext2_Bgd) Inodes() (v []*Ext2_Inode, err error) {
+	if (this._f_inodes) {
+		return this.inodes, nil
+	}
+	this._f_inodes = true
+	_pos, err := this._io.Pos()
+	if err != nil {
+		return nil, err
+	}
+	tmp18, err := this._root.Bg1()
+	if err != nil {
+		return nil, err
+	}
+	tmp19, err := tmp18.SuperBlock.BlockSize()
+	if err != nil {
+		return nil, err
+	}
+	_, err = this._io.Seek(int64(this.InodeTableBlock * tmp19), io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	tmp20, err := this._root.Bg1()
+	if err != nil {
+		return nil, err
+	}
+	for i := 0; i < int(tmp20.SuperBlock.InodesPerGroup); i++ {
+		_ = i
+		tmp21 := NewExt2_Inode()
+		err = tmp21.Read(this._io, this, this._root)
+		if err != nil {
+			return nil, err
+		}
+		this.inodes = append(this.inodes, tmp21)
+	}
+	_, err = this._io.Seek(_pos, io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	return this.inodes, nil
+}
+type Ext2_BlockGroup struct {
+	SuperBlock *Ext2_SuperBlockStruct
+	BlockGroups []*Ext2_Bgd
+	_io *kaitai.Stream
+	_root *Ext2
+	_parent *Ext2
+	_raw_SuperBlock []byte
+}
+func NewExt2_BlockGroup() *Ext2_BlockGroup {
+	return &Ext2_BlockGroup{
+	}
+}
+
+func (this Ext2_BlockGroup) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Ext2_BlockGroup) Read(io *kaitai.Stream, parent *Ext2, root *Ext2) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp22, err := this._io.ReadBytes(int(1024))
+	if err != nil {
+		return err
+	}
+	tmp22 = tmp22
+	this._raw_SuperBlock = tmp22
+	_io__raw_SuperBlock := kaitai.NewStream(bytes.NewReader(this._raw_SuperBlock))
+	tmp23 := NewExt2_SuperBlockStruct()
+	err = tmp23.Read(_io__raw_SuperBlock, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.SuperBlock = tmp23
+	tmp24, err := this.SuperBlock.BlockGroupCount()
+	if err != nil {
+		return err
+	}
+	for i := 0; i < int(tmp24); i++ {
+		_ = i
+		tmp25 := NewExt2_Bgd()
+		err = tmp25.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.BlockGroups = append(this.BlockGroups, tmp25)
+	}
+	return err
+}
+type Ext2_BlockPtr struct {
+	Ptr uint32
+	_io *kaitai.Stream
+	_root *Ext2
+	_parent *Ext2_Inode
+	_raw_body []byte
+	_f_body bool
+	body *Ext2_RawBlock
+}
+func NewExt2_BlockPtr() *Ext2_BlockPtr {
+	return &Ext2_BlockPtr{
+	}
+}
+
+func (this Ext2_BlockPtr) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Ext2_BlockPtr) Read(io *kaitai.Stream, parent *Ext2_Inode, root *Ext2) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp26, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Ptr = uint32(tmp26)
+	return err
+}
+func (this *Ext2_BlockPtr) Body() (v *Ext2_RawBlock, err error) {
+	if (this._f_body) {
+		return this.body, nil
+	}
+	this._f_body = true
+	_pos, err := this._io.Pos()
+	if err != nil {
+		return nil, err
+	}
+	tmp27, err := this._root.Bg1()
+	if err != nil {
+		return nil, err
+	}
+	tmp28, err := tmp27.SuperBlock.BlockSize()
+	if err != nil {
+		return nil, err
+	}
+	_, err = this._io.Seek(int64(this.Ptr * tmp28), io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	tmp29, err := this._root.Bg1()
+	if err != nil {
+		return nil, err
+	}
+	tmp30, err := tmp29.SuperBlock.BlockSize()
+	if err != nil {
+		return nil, err
+	}
+	tmp31, err := this._io.ReadBytes(int(tmp30))
+	if err != nil {
+		return nil, err
+	}
+	tmp31 = tmp31
+	this._raw_body = tmp31
+	_io__raw_body := kaitai.NewStream(bytes.NewReader(this._raw_body))
+	tmp32 := NewExt2_RawBlock()
+	err = tmp32.Read(_io__raw_body, this, this._root)
+	if err != nil {
+		return nil, err
+	}
+	this.body = tmp32
+	_, err = this._io.Seek(_pos, io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	return this.body, nil
+}
+type Ext2_Dir struct {
+	Entries []*Ext2_DirEntry
+	_io *kaitai.Stream
+	_root *Ext2
+	_parent *Ext2_Inode
+}
+func NewExt2_Dir() *Ext2_Dir {
+	return &Ext2_Dir{
+	}
+}
+
+func (this Ext2_Dir) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Ext2_Dir) Read(io *kaitai.Stream, parent *Ext2_Inode, root *Ext2) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	for i := 0;; i++ {
+		tmp33, err := this._io.EOF()
+		if err != nil {
+			return err
+		}
+		if tmp33 {
+			break
+		}
+		tmp34 := NewExt2_DirEntry()
+		err = tmp34.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Entries = append(this.Entries, tmp34)
+	}
+	return err
+}
+
+type Ext2_DirEntry_FileTypeEnum int
 const (
-	Ext2_SuperBlockStruct_StateEnum__ValidFs Ext2_SuperBlockStruct_StateEnum = 1
-	Ext2_SuperBlockStruct_StateEnum__ErrorFs Ext2_SuperBlockStruct_StateEnum = 2
+	Ext2_DirEntry_FileTypeEnum__Unknown Ext2_DirEntry_FileTypeEnum = 0
+	Ext2_DirEntry_FileTypeEnum__RegFile Ext2_DirEntry_FileTypeEnum = 1
+	Ext2_DirEntry_FileTypeEnum__Dir Ext2_DirEntry_FileTypeEnum = 2
+	Ext2_DirEntry_FileTypeEnum__Chrdev Ext2_DirEntry_FileTypeEnum = 3
+	Ext2_DirEntry_FileTypeEnum__Blkdev Ext2_DirEntry_FileTypeEnum = 4
+	Ext2_DirEntry_FileTypeEnum__Fifo Ext2_DirEntry_FileTypeEnum = 5
+	Ext2_DirEntry_FileTypeEnum__Sock Ext2_DirEntry_FileTypeEnum = 6
+	Ext2_DirEntry_FileTypeEnum__Symlink Ext2_DirEntry_FileTypeEnum = 7
 )
+var values_Ext2_DirEntry_FileTypeEnum = map[Ext2_DirEntry_FileTypeEnum]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}}
+func (v Ext2_DirEntry_FileTypeEnum) isDefined() bool {
+	_, ok := values_Ext2_DirEntry_FileTypeEnum[v]
+	return ok
+}
+type Ext2_DirEntry struct {
+	InodePtr uint32
+	RecLen uint16
+	NameLen uint8
+	FileType Ext2_DirEntry_FileTypeEnum
+	Name string
+	Padding []byte
+	_io *kaitai.Stream
+	_root *Ext2
+	_parent *Ext2_Dir
+	_f_inode bool
+	inode *Ext2_Inode
+}
+func NewExt2_DirEntry() *Ext2_DirEntry {
+	return &Ext2_DirEntry{
+	}
+}
+
+func (this Ext2_DirEntry) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Ext2_DirEntry) Read(io *kaitai.Stream, parent *Ext2_Dir, root *Ext2) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp35, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.InodePtr = uint32(tmp35)
+	tmp36, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.RecLen = uint16(tmp36)
+	tmp37, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.NameLen = tmp37
+	tmp38, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.FileType = Ext2_DirEntry_FileTypeEnum(tmp38)
+	tmp39, err := this._io.ReadBytes(int(this.NameLen))
+	if err != nil {
+		return err
+	}
+	tmp39 = tmp39
+	this.Name = string(tmp39)
+	tmp40, err := this._io.ReadBytes(int((this.RecLen - this.NameLen) - 8))
+	if err != nil {
+		return err
+	}
+	tmp40 = tmp40
+	this.Padding = tmp40
+	return err
+}
+func (this *Ext2_DirEntry) Inode() (v *Ext2_Inode, err error) {
+	if (this._f_inode) {
+		return this.inode, nil
+	}
+	this._f_inode = true
+	tmp41, err := this._root.Bg1()
+	if err != nil {
+		return nil, err
+	}
+	tmp42, err := this._root.Bg1()
+	if err != nil {
+		return nil, err
+	}
+	tmp43, err := tmp41.BlockGroups[(this.InodePtr - 1) / tmp42.SuperBlock.InodesPerGroup].Inodes()
+	if err != nil {
+		return nil, err
+	}
+	tmp45, err := this._root.Bg1()
+	if err != nil {
+		return nil, err
+	}
+	tmp44 := (this.InodePtr - 1) % tmp45.SuperBlock.InodesPerGroup
+	if tmp44 < 0 {
+		tmp46, err := this._root.Bg1()
+		if err != nil {
+			return nil, err
+		}
+		tmp44 += tmp46.SuperBlock.InodesPerGroup
+	}
+	this.inode = tmp43[tmp44]
+	return this.inode, nil
+}
+type Ext2_Inode struct {
+	Mode uint16
+	Uid uint16
+	Size uint32
+	Atime uint32
+	Ctime uint32
+	Mtime uint32
+	Dtime uint32
+	Gid uint16
+	LinksCount uint16
+	Blocks uint32
+	Flags uint32
+	Osd1 uint32
+	Block []*Ext2_BlockPtr
+	Generation uint32
+	FileAcl uint32
+	DirAcl uint32
+	Faddr uint32
+	Osd2 []byte
+	_io *kaitai.Stream
+	_root *Ext2
+	_parent *Ext2_Bgd
+	_f_asDir bool
+	asDir *Ext2_Dir
+}
+func NewExt2_Inode() *Ext2_Inode {
+	return &Ext2_Inode{
+	}
+}
+
+func (this Ext2_Inode) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Ext2_Inode) Read(io *kaitai.Stream, parent *Ext2_Bgd, root *Ext2) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp47, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.Mode = uint16(tmp47)
+	tmp48, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.Uid = uint16(tmp48)
+	tmp49, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Size = uint32(tmp49)
+	tmp50, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Atime = uint32(tmp50)
+	tmp51, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Ctime = uint32(tmp51)
+	tmp52, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Mtime = uint32(tmp52)
+	tmp53, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Dtime = uint32(tmp53)
+	tmp54, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.Gid = uint16(tmp54)
+	tmp55, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.LinksCount = uint16(tmp55)
+	tmp56, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Blocks = uint32(tmp56)
+	tmp57, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Flags = uint32(tmp57)
+	tmp58, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Osd1 = uint32(tmp58)
+	for i := 0; i < int(15); i++ {
+		_ = i
+		tmp59 := NewExt2_BlockPtr()
+		err = tmp59.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Block = append(this.Block, tmp59)
+	}
+	tmp60, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Generation = uint32(tmp60)
+	tmp61, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.FileAcl = uint32(tmp61)
+	tmp62, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.DirAcl = uint32(tmp62)
+	tmp63, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Faddr = uint32(tmp63)
+	tmp64, err := this._io.ReadBytes(int(12))
+	if err != nil {
+		return err
+	}
+	tmp64 = tmp64
+	this.Osd2 = tmp64
+	return err
+}
+func (this *Ext2_Inode) AsDir() (v *Ext2_Dir, err error) {
+	if (this._f_asDir) {
+		return this.asDir, nil
+	}
+	this._f_asDir = true
+	tmp65, err := this.Block[0].Body()
+	if err != nil {
+		return nil, err
+	}
+	thisIo := tmp65._io
+	_pos, err := thisIo.Pos()
+	if err != nil {
+		return nil, err
+	}
+	_, err = thisIo.Seek(int64(0), io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	tmp66 := NewExt2_Dir()
+	err = tmp66.Read(thisIo, this, this._root)
+	if err != nil {
+		return nil, err
+	}
+	this.asDir = tmp66
+	_, err = thisIo.Seek(_pos, io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	return this.asDir, nil
+}
+type Ext2_RawBlock struct {
+	Body []byte
+	_io *kaitai.Stream
+	_root *Ext2
+	_parent *Ext2_BlockPtr
+}
+func NewExt2_RawBlock() *Ext2_RawBlock {
+	return &Ext2_RawBlock{
+	}
+}
+
+func (this Ext2_RawBlock) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Ext2_RawBlock) Read(io *kaitai.Stream, parent *Ext2_BlockPtr, root *Ext2) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp67, err := this._root.Bg1()
+	if err != nil {
+		return err
+	}
+	tmp68, err := tmp67.SuperBlock.BlockSize()
+	if err != nil {
+		return err
+	}
+	tmp69, err := this._io.ReadBytes(int(tmp68))
+	if err != nil {
+		return err
+	}
+	tmp69 = tmp69
+	this.Body = tmp69
+	return err
+}
 
 type Ext2_SuperBlockStruct_ErrorsEnum int
 const (
@@ -86,6 +736,22 @@ const (
 	Ext2_SuperBlockStruct_ErrorsEnum__ActRo Ext2_SuperBlockStruct_ErrorsEnum = 2
 	Ext2_SuperBlockStruct_ErrorsEnum__ActPanic Ext2_SuperBlockStruct_ErrorsEnum = 3
 )
+var values_Ext2_SuperBlockStruct_ErrorsEnum = map[Ext2_SuperBlockStruct_ErrorsEnum]struct{}{1: {}, 2: {}, 3: {}}
+func (v Ext2_SuperBlockStruct_ErrorsEnum) isDefined() bool {
+	_, ok := values_Ext2_SuperBlockStruct_ErrorsEnum[v]
+	return ok
+}
+
+type Ext2_SuperBlockStruct_StateEnum int
+const (
+	Ext2_SuperBlockStruct_StateEnum__ValidFs Ext2_SuperBlockStruct_StateEnum = 1
+	Ext2_SuperBlockStruct_StateEnum__ErrorFs Ext2_SuperBlockStruct_StateEnum = 2
+)
+var values_Ext2_SuperBlockStruct_StateEnum = map[Ext2_SuperBlockStruct_StateEnum]struct{}{1: {}, 2: {}}
+func (v Ext2_SuperBlockStruct_StateEnum) isDefined() bool {
+	_, ok := values_Ext2_SuperBlockStruct_StateEnum[v]
+	return ok
+}
 type Ext2_SuperBlockStruct struct {
 	InodesCount uint32
 	BlocksCount uint32
@@ -134,14 +800,18 @@ type Ext2_SuperBlockStruct struct {
 	_io *kaitai.Stream
 	_root *Ext2
 	_parent *Ext2_BlockGroup
-	_f_blockSize bool
-	blockSize int
 	_f_blockGroupCount bool
 	blockGroupCount int
+	_f_blockSize bool
+	blockSize int
 }
 func NewExt2_SuperBlockStruct() *Ext2_SuperBlockStruct {
 	return &Ext2_SuperBlockStruct{
 	}
+}
+
+func (this Ext2_SuperBlockStruct) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Ext2_SuperBlockStruct) Read(io *kaitai.Stream, parent *Ext2_BlockGroup, root *Ext2) (err error) {
@@ -149,878 +819,253 @@ func (this *Ext2_SuperBlockStruct) Read(io *kaitai.Stream, parent *Ext2_BlockGro
 	this._parent = parent
 	this._root = root
 
-	tmp5, err := this._io.ReadU4le()
+	tmp70, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.InodesCount = uint32(tmp5)
-	tmp6, err := this._io.ReadU4le()
+	this.InodesCount = uint32(tmp70)
+	tmp71, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.BlocksCount = uint32(tmp6)
-	tmp7, err := this._io.ReadU4le()
+	this.BlocksCount = uint32(tmp71)
+	tmp72, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.RBlocksCount = uint32(tmp7)
-	tmp8, err := this._io.ReadU4le()
+	this.RBlocksCount = uint32(tmp72)
+	tmp73, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.FreeBlocksCount = uint32(tmp8)
-	tmp9, err := this._io.ReadU4le()
+	this.FreeBlocksCount = uint32(tmp73)
+	tmp74, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.FreeInodesCount = uint32(tmp9)
-	tmp10, err := this._io.ReadU4le()
+	this.FreeInodesCount = uint32(tmp74)
+	tmp75, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.FirstDataBlock = uint32(tmp10)
-	tmp11, err := this._io.ReadU4le()
+	this.FirstDataBlock = uint32(tmp75)
+	tmp76, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.LogBlockSize = uint32(tmp11)
-	tmp12, err := this._io.ReadU4le()
+	this.LogBlockSize = uint32(tmp76)
+	tmp77, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.LogFragSize = uint32(tmp12)
-	tmp13, err := this._io.ReadU4le()
+	this.LogFragSize = uint32(tmp77)
+	tmp78, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.BlocksPerGroup = uint32(tmp13)
-	tmp14, err := this._io.ReadU4le()
+	this.BlocksPerGroup = uint32(tmp78)
+	tmp79, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.FragsPerGroup = uint32(tmp14)
-	tmp15, err := this._io.ReadU4le()
+	this.FragsPerGroup = uint32(tmp79)
+	tmp80, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.InodesPerGroup = uint32(tmp15)
-	tmp16, err := this._io.ReadU4le()
+	this.InodesPerGroup = uint32(tmp80)
+	tmp81, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Mtime = uint32(tmp16)
-	tmp17, err := this._io.ReadU4le()
+	this.Mtime = uint32(tmp81)
+	tmp82, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Wtime = uint32(tmp17)
-	tmp18, err := this._io.ReadU2le()
+	this.Wtime = uint32(tmp82)
+	tmp83, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.MntCount = uint16(tmp18)
-	tmp19, err := this._io.ReadU2le()
+	this.MntCount = uint16(tmp83)
+	tmp84, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.MaxMntCount = uint16(tmp19)
-	tmp20, err := this._io.ReadBytes(int(2))
+	this.MaxMntCount = uint16(tmp84)
+	tmp85, err := this._io.ReadBytes(int(2))
 	if err != nil {
 		return err
 	}
-	tmp20 = tmp20
-	this.Magic = tmp20
+	tmp85 = tmp85
+	this.Magic = tmp85
 	if !(bytes.Equal(this.Magic, []uint8{83, 239})) {
 		return kaitai.NewValidationNotEqualError([]uint8{83, 239}, this.Magic, this._io, "/types/super_block_struct/seq/15")
 	}
-	tmp21, err := this._io.ReadU2le()
+	tmp86, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.State = Ext2_SuperBlockStruct_StateEnum(tmp21)
-	tmp22, err := this._io.ReadU2le()
+	this.State = Ext2_SuperBlockStruct_StateEnum(tmp86)
+	tmp87, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.Errors = Ext2_SuperBlockStruct_ErrorsEnum(tmp22)
-	tmp23, err := this._io.ReadU2le()
+	this.Errors = Ext2_SuperBlockStruct_ErrorsEnum(tmp87)
+	tmp88, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.MinorRevLevel = uint16(tmp23)
-	tmp24, err := this._io.ReadU4le()
+	this.MinorRevLevel = uint16(tmp88)
+	tmp89, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Lastcheck = uint32(tmp24)
-	tmp25, err := this._io.ReadU4le()
+	this.Lastcheck = uint32(tmp89)
+	tmp90, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Checkinterval = uint32(tmp25)
-	tmp26, err := this._io.ReadU4le()
+	this.Checkinterval = uint32(tmp90)
+	tmp91, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.CreatorOs = uint32(tmp26)
-	tmp27, err := this._io.ReadU4le()
+	this.CreatorOs = uint32(tmp91)
+	tmp92, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.RevLevel = uint32(tmp27)
-	tmp28, err := this._io.ReadU2le()
+	this.RevLevel = uint32(tmp92)
+	tmp93, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.DefResuid = uint16(tmp28)
-	tmp29, err := this._io.ReadU2le()
+	this.DefResuid = uint16(tmp93)
+	tmp94, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.DefResgid = uint16(tmp29)
-	tmp30, err := this._io.ReadU4le()
+	this.DefResgid = uint16(tmp94)
+	tmp95, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.FirstIno = uint32(tmp30)
-	tmp31, err := this._io.ReadU2le()
+	this.FirstIno = uint32(tmp95)
+	tmp96, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.InodeSize = uint16(tmp31)
-	tmp32, err := this._io.ReadU2le()
+	this.InodeSize = uint16(tmp96)
+	tmp97, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.BlockGroupNr = uint16(tmp32)
-	tmp33, err := this._io.ReadU4le()
+	this.BlockGroupNr = uint16(tmp97)
+	tmp98, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.FeatureCompat = uint32(tmp33)
-	tmp34, err := this._io.ReadU4le()
+	this.FeatureCompat = uint32(tmp98)
+	tmp99, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.FeatureIncompat = uint32(tmp34)
-	tmp35, err := this._io.ReadU4le()
+	this.FeatureIncompat = uint32(tmp99)
+	tmp100, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.FeatureRoCompat = uint32(tmp35)
-	tmp36, err := this._io.ReadBytes(int(16))
+	this.FeatureRoCompat = uint32(tmp100)
+	tmp101, err := this._io.ReadBytes(int(16))
 	if err != nil {
 		return err
 	}
-	tmp36 = tmp36
-	this.Uuid = tmp36
-	tmp37, err := this._io.ReadBytes(int(16))
+	tmp101 = tmp101
+	this.Uuid = tmp101
+	tmp102, err := this._io.ReadBytes(int(16))
 	if err != nil {
 		return err
 	}
-	tmp37 = tmp37
-	this.VolumeName = tmp37
-	tmp38, err := this._io.ReadBytes(int(64))
+	tmp102 = tmp102
+	this.VolumeName = tmp102
+	tmp103, err := this._io.ReadBytes(int(64))
 	if err != nil {
 		return err
 	}
-	tmp38 = tmp38
-	this.LastMounted = tmp38
-	tmp39, err := this._io.ReadU4le()
+	tmp103 = tmp103
+	this.LastMounted = tmp103
+	tmp104, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.AlgoBitmap = uint32(tmp39)
-	tmp40, err := this._io.ReadU1()
+	this.AlgoBitmap = uint32(tmp104)
+	tmp105, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.PreallocBlocks = tmp40
-	tmp41, err := this._io.ReadU1()
+	this.PreallocBlocks = tmp105
+	tmp106, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.PreallocDirBlocks = tmp41
-	tmp42, err := this._io.ReadBytes(int(2))
+	this.PreallocDirBlocks = tmp106
+	tmp107, err := this._io.ReadBytes(int(2))
 	if err != nil {
 		return err
 	}
-	tmp42 = tmp42
-	this.Padding1 = tmp42
-	tmp43, err := this._io.ReadBytes(int(16))
+	tmp107 = tmp107
+	this.Padding1 = tmp107
+	tmp108, err := this._io.ReadBytes(int(16))
 	if err != nil {
 		return err
 	}
-	tmp43 = tmp43
-	this.JournalUuid = tmp43
-	tmp44, err := this._io.ReadU4le()
+	tmp108 = tmp108
+	this.JournalUuid = tmp108
+	tmp109, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.JournalInum = uint32(tmp44)
-	tmp45, err := this._io.ReadU4le()
+	this.JournalInum = uint32(tmp109)
+	tmp110, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.JournalDev = uint32(tmp45)
-	tmp46, err := this._io.ReadU4le()
+	this.JournalDev = uint32(tmp110)
+	tmp111, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.LastOrphan = uint32(tmp46)
+	this.LastOrphan = uint32(tmp111)
 	for i := 0; i < int(4); i++ {
 		_ = i
-		tmp47, err := this._io.ReadU4le()
+		tmp112, err := this._io.ReadU4le()
 		if err != nil {
 			return err
 		}
-		this.HashSeed = append(this.HashSeed, tmp47)
+		this.HashSeed = append(this.HashSeed, tmp112)
 	}
-	tmp48, err := this._io.ReadU1()
+	tmp113, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.DefHashVersion = tmp48
+	this.DefHashVersion = tmp113
 	return err
-}
-func (this *Ext2_SuperBlockStruct) BlockSize() (v int, err error) {
-	if (this._f_blockSize) {
-		return this.blockSize, nil
-	}
-	this.blockSize = int((1024 << this.LogBlockSize))
-	this._f_blockSize = true
-	return this.blockSize, nil
 }
 func (this *Ext2_SuperBlockStruct) BlockGroupCount() (v int, err error) {
 	if (this._f_blockGroupCount) {
 		return this.blockGroupCount, nil
 	}
-	this.blockGroupCount = int((this.BlocksCount / this.BlocksPerGroup))
 	this._f_blockGroupCount = true
+	this.blockGroupCount = int(this.BlocksCount / this.BlocksPerGroup)
 	return this.blockGroupCount, nil
 }
-
-type Ext2_DirEntry_FileTypeEnum int
-const (
-	Ext2_DirEntry_FileTypeEnum__Unknown Ext2_DirEntry_FileTypeEnum = 0
-	Ext2_DirEntry_FileTypeEnum__RegFile Ext2_DirEntry_FileTypeEnum = 1
-	Ext2_DirEntry_FileTypeEnum__Dir Ext2_DirEntry_FileTypeEnum = 2
-	Ext2_DirEntry_FileTypeEnum__Chrdev Ext2_DirEntry_FileTypeEnum = 3
-	Ext2_DirEntry_FileTypeEnum__Blkdev Ext2_DirEntry_FileTypeEnum = 4
-	Ext2_DirEntry_FileTypeEnum__Fifo Ext2_DirEntry_FileTypeEnum = 5
-	Ext2_DirEntry_FileTypeEnum__Sock Ext2_DirEntry_FileTypeEnum = 6
-	Ext2_DirEntry_FileTypeEnum__Symlink Ext2_DirEntry_FileTypeEnum = 7
-)
-type Ext2_DirEntry struct {
-	InodePtr uint32
-	RecLen uint16
-	NameLen uint8
-	FileType Ext2_DirEntry_FileTypeEnum
-	Name string
-	Padding []byte
-	_io *kaitai.Stream
-	_root *Ext2
-	_parent *Ext2_Dir
-	_f_inode bool
-	inode *Ext2_Inode
-}
-func NewExt2_DirEntry() *Ext2_DirEntry {
-	return &Ext2_DirEntry{
-	}
-}
-
-func (this *Ext2_DirEntry) Read(io *kaitai.Stream, parent *Ext2_Dir, root *Ext2) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp49, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.InodePtr = uint32(tmp49)
-	tmp50, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.RecLen = uint16(tmp50)
-	tmp51, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.NameLen = tmp51
-	tmp52, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.FileType = Ext2_DirEntry_FileTypeEnum(tmp52)
-	tmp53, err := this._io.ReadBytes(int(this.NameLen))
-	if err != nil {
-		return err
-	}
-	tmp53 = tmp53
-	this.Name = string(tmp53)
-	tmp54, err := this._io.ReadBytes(int(((this.RecLen - this.NameLen) - 8)))
-	if err != nil {
-		return err
-	}
-	tmp54 = tmp54
-	this.Padding = tmp54
-	return err
-}
-func (this *Ext2_DirEntry) Inode() (v *Ext2_Inode, err error) {
-	if (this._f_inode) {
-		return this.inode, nil
-	}
-	tmp55, err := this._root.Bg1()
-	if err != nil {
-		return nil, err
-	}
-	tmp56, err := this._root.Bg1()
-	if err != nil {
-		return nil, err
-	}
-	tmp57, err := tmp55.BlockGroups[((this.InodePtr - 1) / tmp56.SuperBlock.InodesPerGroup)].Inodes()
-	if err != nil {
-		return nil, err
-	}
-	tmp59, err := this._root.Bg1()
-	if err != nil {
-		return nil, err
-	}
-	tmp58 := (this.InodePtr - 1) % tmp59.SuperBlock.InodesPerGroup
-	if tmp58 < 0 {
-		tmp60, err := this._root.Bg1()
-		if err != nil {
-			return nil, err
-		}
-		tmp58 += tmp60.SuperBlock.InodesPerGroup
-	}
-	this.inode = tmp57[tmp58]
-	this._f_inode = true
-	return this.inode, nil
-}
-type Ext2_Inode struct {
-	Mode uint16
-	Uid uint16
-	Size uint32
-	Atime uint32
-	Ctime uint32
-	Mtime uint32
-	Dtime uint32
-	Gid uint16
-	LinksCount uint16
-	Blocks uint32
-	Flags uint32
-	Osd1 uint32
-	Block []*Ext2_BlockPtr
-	Generation uint32
-	FileAcl uint32
-	DirAcl uint32
-	Faddr uint32
-	Osd2 []byte
-	_io *kaitai.Stream
-	_root *Ext2
-	_parent *Ext2_Bgd
-	_f_asDir bool
-	asDir *Ext2_Dir
-}
-func NewExt2_Inode() *Ext2_Inode {
-	return &Ext2_Inode{
-	}
-}
-
-func (this *Ext2_Inode) Read(io *kaitai.Stream, parent *Ext2_Bgd, root *Ext2) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp61, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.Mode = uint16(tmp61)
-	tmp62, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.Uid = uint16(tmp62)
-	tmp63, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Size = uint32(tmp63)
-	tmp64, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Atime = uint32(tmp64)
-	tmp65, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Ctime = uint32(tmp65)
-	tmp66, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Mtime = uint32(tmp66)
-	tmp67, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Dtime = uint32(tmp67)
-	tmp68, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.Gid = uint16(tmp68)
-	tmp69, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.LinksCount = uint16(tmp69)
-	tmp70, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Blocks = uint32(tmp70)
-	tmp71, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Flags = uint32(tmp71)
-	tmp72, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Osd1 = uint32(tmp72)
-	for i := 0; i < int(15); i++ {
-		_ = i
-		tmp73 := NewExt2_BlockPtr()
-		err = tmp73.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Block = append(this.Block, tmp73)
-	}
-	tmp74, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Generation = uint32(tmp74)
-	tmp75, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.FileAcl = uint32(tmp75)
-	tmp76, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.DirAcl = uint32(tmp76)
-	tmp77, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Faddr = uint32(tmp77)
-	tmp78, err := this._io.ReadBytes(int(12))
-	if err != nil {
-		return err
-	}
-	tmp78 = tmp78
-	this.Osd2 = tmp78
-	return err
-}
-func (this *Ext2_Inode) AsDir() (v *Ext2_Dir, err error) {
-	if (this._f_asDir) {
-		return this.asDir, nil
-	}
-	tmp79, err := this.Block[0].Body()
-	if err != nil {
-		return nil, err
-	}
-	thisIo := tmp79._io
-	_pos, err := thisIo.Pos()
-	if err != nil {
-		return nil, err
-	}
-	_, err = thisIo.Seek(int64(0), io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	tmp80 := NewExt2_Dir()
-	err = tmp80.Read(thisIo, this, this._root)
-	if err != nil {
-		return nil, err
-	}
-	this.asDir = tmp80
-	_, err = thisIo.Seek(_pos, io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	this._f_asDir = true
-	this._f_asDir = true
-	return this.asDir, nil
-}
-type Ext2_BlockPtr struct {
-	Ptr uint32
-	_io *kaitai.Stream
-	_root *Ext2
-	_parent *Ext2_Inode
-	_raw_body []byte
-	_f_body bool
-	body *Ext2_RawBlock
-}
-func NewExt2_BlockPtr() *Ext2_BlockPtr {
-	return &Ext2_BlockPtr{
-	}
-}
-
-func (this *Ext2_BlockPtr) Read(io *kaitai.Stream, parent *Ext2_Inode, root *Ext2) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp81, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Ptr = uint32(tmp81)
-	return err
-}
-func (this *Ext2_BlockPtr) Body() (v *Ext2_RawBlock, err error) {
-	if (this._f_body) {
-		return this.body, nil
-	}
-	_pos, err := this._io.Pos()
-	if err != nil {
-		return nil, err
-	}
-	tmp82, err := this._root.Bg1()
-	if err != nil {
-		return nil, err
-	}
-	tmp83, err := tmp82.SuperBlock.BlockSize()
-	if err != nil {
-		return nil, err
-	}
-	_, err = this._io.Seek(int64((this.Ptr * tmp83)), io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	tmp84, err := this._root.Bg1()
-	if err != nil {
-		return nil, err
-	}
-	tmp85, err := tmp84.SuperBlock.BlockSize()
-	if err != nil {
-		return nil, err
-	}
-	tmp86, err := this._io.ReadBytes(int(tmp85))
-	if err != nil {
-		return nil, err
-	}
-	tmp86 = tmp86
-	this._raw_body = tmp86
-	_io__raw_body := kaitai.NewStream(bytes.NewReader(this._raw_body))
-	tmp87 := NewExt2_RawBlock()
-	err = tmp87.Read(_io__raw_body, this, this._root)
-	if err != nil {
-		return nil, err
-	}
-	this.body = tmp87
-	_, err = this._io.Seek(_pos, io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	this._f_body = true
-	this._f_body = true
-	return this.body, nil
-}
-type Ext2_Dir struct {
-	Entries []*Ext2_DirEntry
-	_io *kaitai.Stream
-	_root *Ext2
-	_parent *Ext2_Inode
-}
-func NewExt2_Dir() *Ext2_Dir {
-	return &Ext2_Dir{
-	}
-}
-
-func (this *Ext2_Dir) Read(io *kaitai.Stream, parent *Ext2_Inode, root *Ext2) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	for i := 1;; i++ {
-		tmp88, err := this._io.EOF()
-		if err != nil {
-			return err
-		}
-		if tmp88 {
-			break
-		}
-		tmp89 := NewExt2_DirEntry()
-		err = tmp89.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Entries = append(this.Entries, tmp89)
-	}
-	return err
-}
-type Ext2_BlockGroup struct {
-	SuperBlock *Ext2_SuperBlockStruct
-	BlockGroups []*Ext2_Bgd
-	_io *kaitai.Stream
-	_root *Ext2
-	_parent *Ext2
-	_raw_SuperBlock []byte
-}
-func NewExt2_BlockGroup() *Ext2_BlockGroup {
-	return &Ext2_BlockGroup{
-	}
-}
-
-func (this *Ext2_BlockGroup) Read(io *kaitai.Stream, parent *Ext2, root *Ext2) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp90, err := this._io.ReadBytes(int(1024))
-	if err != nil {
-		return err
-	}
-	tmp90 = tmp90
-	this._raw_SuperBlock = tmp90
-	_io__raw_SuperBlock := kaitai.NewStream(bytes.NewReader(this._raw_SuperBlock))
-	tmp91 := NewExt2_SuperBlockStruct()
-	err = tmp91.Read(_io__raw_SuperBlock, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.SuperBlock = tmp91
-	tmp92, err := this.SuperBlock.BlockGroupCount()
-	if err != nil {
-		return err
-	}
-	for i := 0; i < int(tmp92); i++ {
-		_ = i
-		tmp93 := NewExt2_Bgd()
-		err = tmp93.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.BlockGroups = append(this.BlockGroups, tmp93)
-	}
-	return err
-}
-type Ext2_Bgd struct {
-	BlockBitmapBlock uint32
-	InodeBitmapBlock uint32
-	InodeTableBlock uint32
-	FreeBlocksCount uint16
-	FreeInodesCount uint16
-	UsedDirsCount uint16
-	PadReserved []byte
-	_io *kaitai.Stream
-	_root *Ext2
-	_parent *Ext2_BlockGroup
-	_f_blockBitmap bool
-	blockBitmap []byte
-	_f_inodeBitmap bool
-	inodeBitmap []byte
-	_f_inodes bool
-	inodes []*Ext2_Inode
-}
-func NewExt2_Bgd() *Ext2_Bgd {
-	return &Ext2_Bgd{
-	}
-}
-
-func (this *Ext2_Bgd) Read(io *kaitai.Stream, parent *Ext2_BlockGroup, root *Ext2) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp94, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.BlockBitmapBlock = uint32(tmp94)
-	tmp95, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.InodeBitmapBlock = uint32(tmp95)
-	tmp96, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.InodeTableBlock = uint32(tmp96)
-	tmp97, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.FreeBlocksCount = uint16(tmp97)
-	tmp98, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.FreeInodesCount = uint16(tmp98)
-	tmp99, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.UsedDirsCount = uint16(tmp99)
-	tmp100, err := this._io.ReadBytes(int((2 + 12)))
-	if err != nil {
-		return err
-	}
-	tmp100 = tmp100
-	this.PadReserved = tmp100
-	return err
-}
-func (this *Ext2_Bgd) BlockBitmap() (v []byte, err error) {
-	if (this._f_blockBitmap) {
-		return this.blockBitmap, nil
-	}
-	_pos, err := this._io.Pos()
-	if err != nil {
-		return nil, err
-	}
-	tmp101, err := this._root.Bg1()
-	if err != nil {
-		return nil, err
-	}
-	tmp102, err := tmp101.SuperBlock.BlockSize()
-	if err != nil {
-		return nil, err
-	}
-	_, err = this._io.Seek(int64((this.BlockBitmapBlock * tmp102)), io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	tmp103, err := this._io.ReadBytes(int(1024))
-	if err != nil {
-		return nil, err
-	}
-	tmp103 = tmp103
-	this.blockBitmap = tmp103
-	_, err = this._io.Seek(_pos, io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	this._f_blockBitmap = true
-	this._f_blockBitmap = true
-	return this.blockBitmap, nil
-}
-func (this *Ext2_Bgd) InodeBitmap() (v []byte, err error) {
-	if (this._f_inodeBitmap) {
-		return this.inodeBitmap, nil
-	}
-	_pos, err := this._io.Pos()
-	if err != nil {
-		return nil, err
-	}
-	tmp104, err := this._root.Bg1()
-	if err != nil {
-		return nil, err
-	}
-	tmp105, err := tmp104.SuperBlock.BlockSize()
-	if err != nil {
-		return nil, err
-	}
-	_, err = this._io.Seek(int64((this.InodeBitmapBlock * tmp105)), io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	tmp106, err := this._io.ReadBytes(int(1024))
-	if err != nil {
-		return nil, err
-	}
-	tmp106 = tmp106
-	this.inodeBitmap = tmp106
-	_, err = this._io.Seek(_pos, io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	this._f_inodeBitmap = true
-	this._f_inodeBitmap = true
-	return this.inodeBitmap, nil
-}
-func (this *Ext2_Bgd) Inodes() (v []*Ext2_Inode, err error) {
-	if (this._f_inodes) {
-		return this.inodes, nil
-	}
-	_pos, err := this._io.Pos()
-	if err != nil {
-		return nil, err
-	}
-	tmp107, err := this._root.Bg1()
-	if err != nil {
-		return nil, err
-	}
-	tmp108, err := tmp107.SuperBlock.BlockSize()
-	if err != nil {
-		return nil, err
-	}
-	_, err = this._io.Seek(int64((this.InodeTableBlock * tmp108)), io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	tmp109, err := this._root.Bg1()
-	if err != nil {
-		return nil, err
-	}
-	for i := 0; i < int(tmp109.SuperBlock.InodesPerGroup); i++ {
-		_ = i
-		tmp110 := NewExt2_Inode()
-		err = tmp110.Read(this._io, this, this._root)
-		if err != nil {
-			return nil, err
-		}
-		this.inodes = append(this.inodes, tmp110)
-	}
-	_, err = this._io.Seek(_pos, io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	this._f_inodes = true
-	this._f_inodes = true
-	return this.inodes, nil
-}
-type Ext2_RawBlock struct {
-	Body []byte
-	_io *kaitai.Stream
-	_root *Ext2
-	_parent *Ext2_BlockPtr
-}
-func NewExt2_RawBlock() *Ext2_RawBlock {
-	return &Ext2_RawBlock{
-	}
-}
-
-func (this *Ext2_RawBlock) Read(io *kaitai.Stream, parent *Ext2_BlockPtr, root *Ext2) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp111, err := this._root.Bg1()
-	if err != nil {
-		return err
-	}
-	tmp112, err := tmp111.SuperBlock.BlockSize()
-	if err != nil {
-		return err
-	}
-	tmp113, err := this._io.ReadBytes(int(tmp112))
-	if err != nil {
-		return err
-	}
-	tmp113 = tmp113
-	this.Body = tmp113
-	return err
+func (this *Ext2_SuperBlockStruct) BlockSize() (v int, err error) {
+	if (this._f_blockSize) {
+		return this.blockSize, nil
+	}
+	this._f_blockSize = true
+	this.blockSize = int(1024 << this.LogBlockSize)
+	return this.blockSize, nil
 }

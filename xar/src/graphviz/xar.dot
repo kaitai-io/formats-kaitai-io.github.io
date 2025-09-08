@@ -1,0 +1,80 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__xar {
+		label="Xar";
+		graph[style=dotted];
+
+		xar__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="header_prefix_pos">0</TD><TD PORT="header_prefix_size">6</TD><TD>FileHeaderPrefix</TD><TD PORT="header_prefix_type">header_prefix</TD></TR>
+			<TR><TD PORT="header_pos">6</TD><TD PORT="header_size">header_prefix.len_header - 6</TD><TD>FileHeader</TD><TD PORT="header_type">header</TD></TR>
+			<TR><TD PORT="toc_pos">...</TD><TD PORT="toc_size">header.len_toc_compressed</TD><TD>TocType</TD><TD PORT="toc_type">toc</TD></TR>
+		</TABLE>>];
+		xar__inst__checksum_algorithm_other [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>checksum_algorithm_other</TD><TD>3</TD></TR>
+		</TABLE>>];
+		subgraph cluster__file_header {
+			label="Xar::FileHeader";
+			graph[style=dotted];
+
+			file_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="version_pos">0</TD><TD PORT="version_size">2</TD><TD>u2be</TD><TD PORT="version_type">version</TD></TR>
+				<TR><TD COLSPAN="4" PORT="version__valid">must be equal to 1</TD></TR>
+				<TR><TD PORT="len_toc_compressed_pos">2</TD><TD PORT="len_toc_compressed_size">8</TD><TD>u8be</TD><TD PORT="len_toc_compressed_type">len_toc_compressed</TD></TR>
+				<TR><TD PORT="toc_length_uncompressed_pos">10</TD><TD PORT="toc_length_uncompressed_size">8</TD><TD>u8be</TD><TD PORT="toc_length_uncompressed_type">toc_length_uncompressed</TD></TR>
+				<TR><TD PORT="checksum_algorithm_int_pos">18</TD><TD PORT="checksum_algorithm_int_size">4</TD><TD>u4be</TD><TD PORT="checksum_algorithm_int_type">checksum_algorithm_int</TD></TR>
+				<TR><TD PORT="checksum_alg_name_pos">22</TD><TD PORT="checksum_alg_name_size">⇲</TD><TD>str(UTF-8)</TD><TD PORT="checksum_alg_name_type">checksum_alg_name</TD></TR>
+				<TR><TD COLSPAN="4" PORT="checksum_alg_name__valid">must satisfy  ((_ != &quot;&quot;) &amp;&amp; (_ != &quot;none&quot;)) </TD></TR>
+				<TR><TD COLSPAN="4" PORT="checksum_alg_name__if">if has_checksum_alg_name</TD></TR>
+			</TABLE>>];
+			file_header__inst__checksum_algorithm_name [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>checksum_algorithm_name</TD><TD>(has_checksum_alg_name ? checksum_alg_name : (checksum_algorithm_int == (Xar::I__CHECKSUM_ALGORITHMS_APPLE[:checksum_algorithms_apple_none] || :checksum_algorithms_apple_none) ? &quot;none&quot; : (checksum_algorithm_int == (Xar::I__CHECKSUM_ALGORITHMS_APPLE[:checksum_algorithms_apple_sha1] || :checksum_algorithms_apple_sha1) ? &quot;sha1&quot; : (checksum_algorithm_int == (Xar::I__CHECKSUM_ALGORITHMS_APPLE[:checksum_algorithms_apple_md5] || :checksum_algorithms_apple_md5) ? &quot;md5&quot; : (checksum_algorithm_int == (Xar::I__CHECKSUM_ALGORITHMS_APPLE[:checksum_algorithms_apple_sha256] || :checksum_algorithms_apple_sha256) ? &quot;sha256&quot; : (checksum_algorithm_int == (Xar::I__CHECKSUM_ALGORITHMS_APPLE[:checksum_algorithms_apple_sha512] || :checksum_algorithms_apple_sha512) ? &quot;sha512&quot; : &quot;&quot;))))))</TD></TR>
+			</TABLE>>];
+			file_header__inst__has_checksum_alg_name [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>has_checksum_alg_name</TD><TD> ((checksum_algorithm_int == _root.checksum_algorithm_other) &amp;&amp; (len_header &gt;= 32) &amp;&amp; (len_header % 4 == 0)) </TD></TR>
+			</TABLE>>];
+			file_header__inst__len_header [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>len_header</TD><TD>_root.header_prefix.len_header</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__file_header_prefix {
+			label="Xar::FileHeaderPrefix";
+			graph[style=dotted];
+
+			file_header_prefix__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD>78 61 72 21</TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD PORT="len_header_pos">4</TD><TD PORT="len_header_size">2</TD><TD>u2be</TD><TD PORT="len_header_type">len_header</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__toc_type {
+			label="Xar::TocType";
+			graph[style=dotted];
+
+			toc_type__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="xml_string_pos">0</TD><TD PORT="xml_string_size">⇲</TD><TD>str(UTF-8)</TD><TD PORT="xml_string_type">xml_string</TD></TR>
+			</TABLE>>];
+		}
+	}
+	xar__seq:header_prefix_type -> file_header_prefix__seq [style=bold];
+	file_header_prefix__seq:len_header_type -> xar__seq:header_size [color="#404040"];
+	xar__seq:header_prefix_size -> xar__seq:header_size [color="#404040"];
+	xar__seq:header_type -> file_header__seq [style=bold];
+	file_header__seq:len_toc_compressed_type -> xar__seq:toc_size [color="#404040"];
+	xar__seq:toc_type -> toc_type__seq [style=bold];
+	file_header__inst__has_checksum_alg_name:has_checksum_alg_name_type -> file_header__seq:checksum_alg_name__if [color="#404040"];
+	file_header__inst__has_checksum_alg_name:has_checksum_alg_name_type -> file_header__inst__checksum_algorithm_name [color="#404040"];
+	file_header__seq:checksum_alg_name_type -> file_header__inst__checksum_algorithm_name [color="#404040"];
+	file_header__seq:checksum_algorithm_int_type -> file_header__inst__checksum_algorithm_name [color="#404040"];
+	file_header__seq:checksum_algorithm_int_type -> file_header__inst__has_checksum_alg_name [color="#404040"];
+	xar__inst__checksum_algorithm_other:checksum_algorithm_other_type -> file_header__inst__has_checksum_alg_name [color="#404040"];
+	file_header__inst__len_header:len_header_type -> file_header__inst__has_checksum_alg_name [color="#404040"];
+	file_header_prefix__seq:len_header_type -> file_header__inst__len_header [color="#404040"];
+}

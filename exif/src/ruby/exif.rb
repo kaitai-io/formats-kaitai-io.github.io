@@ -2,13 +2,13 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 class Exif < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -18,7 +18,7 @@ class Exif < Kaitai::Struct::Struct
     self
   end
   class ExifBody < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -53,7 +53,7 @@ class Exif < Kaitai::Struct::Struct
       self
     end
     class Ifd < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self, _is_le = nil)
+      def initialize(_io, _parent = nil, _root = nil, _is_le = nil)
         super(_io, _parent, _root)
         @_is_le = _is_le
         _read
@@ -583,7 +583,7 @@ class Exif < Kaitai::Struct::Struct
         65112 => :tag_enum_moire_filter,
       }
       I__TAG_ENUM = TAG_ENUM.invert
-      def initialize(_io, _parent = nil, _root = self, _is_le = nil)
+      def initialize(_io, _parent = nil, _root = nil, _is_le = nil)
         super(_io, _parent, _root)
         @_is_le = _is_le
         _read
@@ -616,20 +616,10 @@ class Exif < Kaitai::Struct::Struct
         @ofs_or_data = @_io.read_u4be
         self
       end
-      def type_byte_length
-        return @type_byte_length unless @type_byte_length.nil?
-        @type_byte_length = (field_type == :field_type_enum_word ? 2 : (field_type == :field_type_enum_dword ? 4 : 1))
-        @type_byte_length
-      end
       def byte_length
         return @byte_length unless @byte_length.nil?
-        @byte_length = (length * type_byte_length)
+        @byte_length = length * type_byte_length
         @byte_length
-      end
-      def is_immediate_data
-        return @is_immediate_data unless @is_immediate_data.nil?
-        @is_immediate_data = byte_length <= 4
-        @is_immediate_data
       end
       def data
         return @data unless @data.nil?
@@ -645,6 +635,16 @@ class Exif < Kaitai::Struct::Struct
           io.seek(_pos)
         end
         @data
+      end
+      def is_immediate_data
+        return @is_immediate_data unless @is_immediate_data.nil?
+        @is_immediate_data = byte_length <= 4
+        @is_immediate_data
+      end
+      def type_byte_length
+        return @type_byte_length unless @type_byte_length.nil?
+        @type_byte_length = (field_type == :field_type_enum_word ? 2 : (field_type == :field_type_enum_dword ? 4 : 1))
+        @type_byte_length
       end
       attr_reader :tag
       attr_reader :field_type

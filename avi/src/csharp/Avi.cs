@@ -31,14 +31,6 @@ namespace Kaitai
             Strl = 1819440243,
         }
 
-        public enum StreamType
-        {
-            Mids = 1935960429,
-            Vids = 1935960438,
-            Auds = 1935963489,
-            Txts = 1937012852,
-        }
-
         public enum HandlerType
         {
             Mp3 = 85,
@@ -46,6 +38,14 @@ namespace Kaitai
             Dts = 8193,
             Cvid = 1684633187,
             Xvid = 1684633208,
+        }
+
+        public enum StreamType
+        {
+            Mids = 1935960429,
+            Vids = 1935960438,
+            Auds = 1935963489,
+            Txts = 1937012852,
         }
         public Avi(KaitaiStream p__io, KaitaiStruct p__parent = null, Avi p__root = null) : base(p__io)
         {
@@ -56,110 +56,19 @@ namespace Kaitai
         private void _read()
         {
             _magic1 = m_io.ReadBytes(4);
-            if (!((KaitaiStream.ByteArrayCompare(Magic1, new byte[] { 82, 73, 70, 70 }) == 0)))
+            if (!((KaitaiStream.ByteArrayCompare(_magic1, new byte[] { 82, 73, 70, 70 }) == 0)))
             {
-                throw new ValidationNotEqualError(new byte[] { 82, 73, 70, 70 }, Magic1, M_Io, "/seq/0");
+                throw new ValidationNotEqualError(new byte[] { 82, 73, 70, 70 }, _magic1, m_io, "/seq/0");
             }
             _fileSize = m_io.ReadU4le();
             _magic2 = m_io.ReadBytes(4);
-            if (!((KaitaiStream.ByteArrayCompare(Magic2, new byte[] { 65, 86, 73, 32 }) == 0)))
+            if (!((KaitaiStream.ByteArrayCompare(_magic2, new byte[] { 65, 86, 73, 32 }) == 0)))
             {
-                throw new ValidationNotEqualError(new byte[] { 65, 86, 73, 32 }, Magic2, M_Io, "/seq/2");
+                throw new ValidationNotEqualError(new byte[] { 65, 86, 73, 32 }, _magic2, m_io, "/seq/2");
             }
-            __raw_data = m_io.ReadBytes((FileSize - 4));
+            __raw_data = m_io.ReadBytes(FileSize - 4);
             var io___raw_data = new KaitaiStream(__raw_data);
             _data = new Blocks(io___raw_data, this, m_root);
-        }
-        public partial class ListBody : KaitaiStruct
-        {
-            public static ListBody FromFile(string fileName)
-            {
-                return new ListBody(new KaitaiStream(fileName));
-            }
-
-            public ListBody(KaitaiStream p__io, Avi.Block p__parent = null, Avi p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _listType = ((Avi.ChunkType) m_io.ReadU4le());
-                _data = new Blocks(m_io, this, m_root);
-            }
-            private ChunkType _listType;
-            private Blocks _data;
-            private Avi m_root;
-            private Avi.Block m_parent;
-            public ChunkType ListType { get { return _listType; } }
-            public Blocks Data { get { return _data; } }
-            public Avi M_Root { get { return m_root; } }
-            public Avi.Block M_Parent { get { return m_parent; } }
-        }
-        public partial class Rect : KaitaiStruct
-        {
-            public static Rect FromFile(string fileName)
-            {
-                return new Rect(new KaitaiStream(fileName));
-            }
-
-            public Rect(KaitaiStream p__io, Avi.StrhBody p__parent = null, Avi p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _left = m_io.ReadS2le();
-                _top = m_io.ReadS2le();
-                _right = m_io.ReadS2le();
-                _bottom = m_io.ReadS2le();
-            }
-            private short _left;
-            private short _top;
-            private short _right;
-            private short _bottom;
-            private Avi m_root;
-            private Avi.StrhBody m_parent;
-            public short Left { get { return _left; } }
-            public short Top { get { return _top; } }
-            public short Right { get { return _right; } }
-            public short Bottom { get { return _bottom; } }
-            public Avi M_Root { get { return m_root; } }
-            public Avi.StrhBody M_Parent { get { return m_parent; } }
-        }
-        public partial class Blocks : KaitaiStruct
-        {
-            public static Blocks FromFile(string fileName)
-            {
-                return new Blocks(new KaitaiStream(fileName));
-            }
-
-            public Blocks(KaitaiStream p__io, KaitaiStruct p__parent = null, Avi p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _entries = new List<Block>();
-                {
-                    var i = 0;
-                    while (!m_io.IsEof) {
-                        _entries.Add(new Block(m_io, this, m_root));
-                        i++;
-                    }
-                }
-            }
-            private List<Block> _entries;
-            private Avi m_root;
-            private KaitaiStruct m_parent;
-            public List<Block> Entries { get { return _entries; } }
-            public Avi M_Root { get { return m_root; } }
-            public KaitaiStruct M_Parent { get { return m_parent; } }
         }
 
         /// <summary>
@@ -240,16 +149,16 @@ namespace Kaitai
                 _fourCc = ((Avi.ChunkType) m_io.ReadU4le());
                 _blockSize = m_io.ReadU4le();
                 switch (FourCc) {
-                case Avi.ChunkType.List: {
-                    __raw_data = m_io.ReadBytes(BlockSize);
-                    var io___raw_data = new KaitaiStream(__raw_data);
-                    _data = new ListBody(io___raw_data, this, m_root);
-                    break;
-                }
                 case Avi.ChunkType.Avih: {
                     __raw_data = m_io.ReadBytes(BlockSize);
                     var io___raw_data = new KaitaiStream(__raw_data);
                     _data = new AvihBody(io___raw_data, this, m_root);
+                    break;
+                }
+                case Avi.ChunkType.List: {
+                    __raw_data = m_io.ReadBytes(BlockSize);
+                    var io___raw_data = new KaitaiStream(__raw_data);
+                    _data = new ListBody(io___raw_data, this, m_root);
                     break;
                 }
                 case Avi.ChunkType.Strh: {
@@ -276,6 +185,122 @@ namespace Kaitai
             public Avi M_Root { get { return m_root; } }
             public Avi.Blocks M_Parent { get { return m_parent; } }
             public byte[] M_RawData { get { return __raw_data; } }
+        }
+        public partial class Blocks : KaitaiStruct
+        {
+            public static Blocks FromFile(string fileName)
+            {
+                return new Blocks(new KaitaiStream(fileName));
+            }
+
+            public Blocks(KaitaiStream p__io, KaitaiStruct p__parent = null, Avi p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _entries = new List<Block>();
+                {
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _entries.Add(new Block(m_io, this, m_root));
+                        i++;
+                    }
+                }
+            }
+            private List<Block> _entries;
+            private Avi m_root;
+            private KaitaiStruct m_parent;
+            public List<Block> Entries { get { return _entries; } }
+            public Avi M_Root { get { return m_root; } }
+            public KaitaiStruct M_Parent { get { return m_parent; } }
+        }
+        public partial class ListBody : KaitaiStruct
+        {
+            public static ListBody FromFile(string fileName)
+            {
+                return new ListBody(new KaitaiStream(fileName));
+            }
+
+            public ListBody(KaitaiStream p__io, Avi.Block p__parent = null, Avi p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _listType = ((Avi.ChunkType) m_io.ReadU4le());
+                _data = new Blocks(m_io, this, m_root);
+            }
+            private ChunkType _listType;
+            private Blocks _data;
+            private Avi m_root;
+            private Avi.Block m_parent;
+            public ChunkType ListType { get { return _listType; } }
+            public Blocks Data { get { return _data; } }
+            public Avi M_Root { get { return m_root; } }
+            public Avi.Block M_Parent { get { return m_parent; } }
+        }
+        public partial class Rect : KaitaiStruct
+        {
+            public static Rect FromFile(string fileName)
+            {
+                return new Rect(new KaitaiStream(fileName));
+            }
+
+            public Rect(KaitaiStream p__io, Avi.StrhBody p__parent = null, Avi p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _left = m_io.ReadS2le();
+                _top = m_io.ReadS2le();
+                _right = m_io.ReadS2le();
+                _bottom = m_io.ReadS2le();
+            }
+            private short _left;
+            private short _top;
+            private short _right;
+            private short _bottom;
+            private Avi m_root;
+            private Avi.StrhBody m_parent;
+            public short Left { get { return _left; } }
+            public short Top { get { return _top; } }
+            public short Right { get { return _right; } }
+            public short Bottom { get { return _bottom; } }
+            public Avi M_Root { get { return m_root; } }
+            public Avi.StrhBody M_Parent { get { return m_parent; } }
+        }
+
+        /// <summary>
+        /// Stream format description
+        /// </summary>
+        public partial class StrfBody : KaitaiStruct
+        {
+            public static StrfBody FromFile(string fileName)
+            {
+                return new StrfBody(new KaitaiStream(fileName));
+            }
+
+            public StrfBody(KaitaiStream p__io, KaitaiStruct p__parent = null, Avi p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+            }
+            private Avi m_root;
+            private KaitaiStruct m_parent;
+            public Avi M_Root { get { return m_root; } }
+            public KaitaiStruct M_Parent { get { return m_parent; } }
         }
 
         /// <summary>
@@ -354,31 +379,6 @@ namespace Kaitai
             public Rect Frame { get { return _frame; } }
             public Avi M_Root { get { return m_root; } }
             public Avi.Block M_Parent { get { return m_parent; } }
-        }
-
-        /// <summary>
-        /// Stream format description
-        /// </summary>
-        public partial class StrfBody : KaitaiStruct
-        {
-            public static StrfBody FromFile(string fileName)
-            {
-                return new StrfBody(new KaitaiStream(fileName));
-            }
-
-            public StrfBody(KaitaiStream p__io, KaitaiStruct p__parent = null, Avi p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-            }
-            private Avi m_root;
-            private KaitaiStruct m_parent;
-            public Avi M_Root { get { return m_root; } }
-            public KaitaiStruct M_Parent { get { return m_parent; } }
         }
         private byte[] _magic1;
         private uint _fileSize;

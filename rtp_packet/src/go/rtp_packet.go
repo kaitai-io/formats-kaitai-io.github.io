@@ -52,6 +52,11 @@ const (
 	RtpPacket_PayloadTypeEnum__H263 RtpPacket_PayloadTypeEnum = 34
 	RtpPacket_PayloadTypeEnum__MpegPs RtpPacket_PayloadTypeEnum = 96
 )
+var values_RtpPacket_PayloadTypeEnum = map[RtpPacket_PayloadTypeEnum]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}, 10: {}, 11: {}, 12: {}, 13: {}, 14: {}, 15: {}, 16: {}, 17: {}, 18: {}, 19: {}, 20: {}, 21: {}, 22: {}, 23: {}, 24: {}, 25: {}, 26: {}, 27: {}, 28: {}, 29: {}, 30: {}, 31: {}, 32: {}, 33: {}, 34: {}, 96: {}}
+func (v RtpPacket_PayloadTypeEnum) isDefined() bool {
+	_, ok := values_RtpPacket_PayloadTypeEnum[v]
+	return ok
+}
 type RtpPacket struct {
 	Version uint64
 	HasPadding bool
@@ -67,18 +72,22 @@ type RtpPacket struct {
 	Padding []byte
 	_io *kaitai.Stream
 	_root *RtpPacket
-	_parent interface{}
-	_f_lenPaddingIfExists bool
-	lenPaddingIfExists uint8
+	_parent kaitai.Struct
 	_f_lenPadding bool
 	lenPadding uint8
+	_f_lenPaddingIfExists bool
+	lenPaddingIfExists uint8
 }
 func NewRtpPacket() *RtpPacket {
 	return &RtpPacket{
 	}
 }
 
-func (this *RtpPacket) Read(io *kaitai.Stream, parent interface{}, root *RtpPacket) (err error) {
+func (this RtpPacket) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *RtpPacket) Read(io *kaitai.Stream, parent kaitai.Struct, root *RtpPacket) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -149,7 +158,7 @@ func (this *RtpPacket) Read(io *kaitai.Stream, parent interface{}, root *RtpPack
 	if err != nil {
 		return err
 	}
-	tmp14, err := this._io.ReadBytes(int(((tmp11 - tmp12) - tmp13)))
+	tmp14, err := this._io.ReadBytes(int((tmp11 - tmp12) - tmp13))
 	if err != nil {
 		return err
 	}
@@ -169,6 +178,28 @@ func (this *RtpPacket) Read(io *kaitai.Stream, parent interface{}, root *RtpPack
 }
 
 /**
+ * Always returns number of padding bytes to in the payload.
+ */
+func (this *RtpPacket) LenPadding() (v uint8, err error) {
+	if (this._f_lenPadding) {
+		return this.lenPadding, nil
+	}
+	this._f_lenPadding = true
+	var tmp17 uint8;
+	if (this.HasPadding) {
+		tmp18, err := this.LenPaddingIfExists()
+		if err != nil {
+			return 0, err
+		}
+		tmp17 = tmp18
+	} else {
+		tmp17 = 0
+	}
+	this.lenPadding = uint8(tmp17)
+	return this.lenPadding, nil
+}
+
+/**
  * If padding bit is enabled, last byte of data contains number of
  * bytes appended to the payload as padding.
  */
@@ -176,54 +207,31 @@ func (this *RtpPacket) LenPaddingIfExists() (v uint8, err error) {
 	if (this._f_lenPaddingIfExists) {
 		return this.lenPaddingIfExists, nil
 	}
+	this._f_lenPaddingIfExists = true
 	if (this.HasPadding) {
 		_pos, err := this._io.Pos()
 		if err != nil {
 			return 0, err
 		}
-		tmp17, err := this._io.Size()
+		tmp19, err := this._io.Size()
 		if err != nil {
 			return 0, err
 		}
-		_, err = this._io.Seek(int64((tmp17 - 1)), io.SeekStart)
+		_, err = this._io.Seek(int64(tmp19 - 1), io.SeekStart)
 		if err != nil {
 			return 0, err
 		}
-		tmp18, err := this._io.ReadU1()
+		tmp20, err := this._io.ReadU1()
 		if err != nil {
 			return 0, err
 		}
-		this.lenPaddingIfExists = tmp18
+		this.lenPaddingIfExists = tmp20
 		_, err = this._io.Seek(_pos, io.SeekStart)
 		if err != nil {
 			return 0, err
 		}
-		this._f_lenPaddingIfExists = true
 	}
-	this._f_lenPaddingIfExists = true
 	return this.lenPaddingIfExists, nil
-}
-
-/**
- * Always returns number of padding bytes to in the payload.
- */
-func (this *RtpPacket) LenPadding() (v uint8, err error) {
-	if (this._f_lenPadding) {
-		return this.lenPadding, nil
-	}
-	var tmp19 uint8;
-	if (this.HasPadding) {
-		tmp20, err := this.LenPaddingIfExists()
-		if err != nil {
-			return 0, err
-		}
-		tmp19 = tmp20
-	} else {
-		tmp19 = 0
-	}
-	this.lenPadding = uint8(tmp19)
-	this._f_lenPadding = true
-	return this.lenPadding, nil
 }
 
 /**
@@ -239,6 +247,10 @@ type RtpPacket_HeaderExtention struct {
 func NewRtpPacket_HeaderExtention() *RtpPacket_HeaderExtention {
 	return &RtpPacket_HeaderExtention{
 	}
+}
+
+func (this RtpPacket_HeaderExtention) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *RtpPacket_HeaderExtention) Read(io *kaitai.Stream, parent *RtpPacket, root *RtpPacket) (err error) {

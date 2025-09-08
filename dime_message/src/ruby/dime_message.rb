@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -30,8 +30,8 @@ class DimeMessage < Kaitai::Struct::Struct
     4 => :type_formats_none,
   }
   I__TYPE_FORMATS = TYPE_FORMATS.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -46,24 +46,28 @@ class DimeMessage < Kaitai::Struct::Struct
   end
 
   ##
-  # padding to the next 4-byte boundary
-  class Padding < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  # one element of the option field
+  class OptionElement < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @boundary_padding = @_io.read_bytes((-(_io.pos) % 4))
+      @element_format = @_io.read_u2be
+      @len_element = @_io.read_u2be
+      @element_data = @_io.read_bytes(len_element)
       self
     end
-    attr_reader :boundary_padding
+    attr_reader :element_format
+    attr_reader :len_element
+    attr_reader :element_data
   end
 
   ##
   # the option field of the record
   class OptionField < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -81,28 +85,24 @@ class DimeMessage < Kaitai::Struct::Struct
   end
 
   ##
-  # one element of the option field
-  class OptionElement < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  # padding to the next 4-byte boundary
+  class Padding < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @element_format = @_io.read_u2be
-      @len_element = @_io.read_u2be
-      @element_data = @_io.read_bytes(len_element)
+      @boundary_padding = @_io.read_bytes(-(_io.pos) % 4)
       self
     end
-    attr_reader :element_format
-    attr_reader :len_element
-    attr_reader :element_data
+    attr_reader :boundary_padding
   end
 
   ##
   # each individual fragment of the message
   class Record < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -119,13 +119,12 @@ class DimeMessage < Kaitai::Struct::Struct
       @len_id = @_io.read_u2be
       @len_type = @_io.read_u2be
       @len_data = @_io.read_u4be
-      @_raw_options = @_io.read_bytes(len_options)
-      _io__raw_options = Kaitai::Struct::Stream.new(@_raw_options)
-      @options = OptionField.new(_io__raw_options, self, @_root)
+      _io_options = @_io.substream(len_options)
+      @options = OptionField.new(_io_options, self, @_root)
       @options_padding = Padding.new(@_io, self, @_root)
-      @id = (@_io.read_bytes(len_id)).force_encoding("ASCII")
+      @id = (@_io.read_bytes(len_id)).force_encoding("ASCII").encode('UTF-8')
       @id_padding = Padding.new(@_io, self, @_root)
-      @type = (@_io.read_bytes(len_type)).force_encoding("ASCII")
+      @type = (@_io.read_bytes(len_type)).force_encoding("ASCII").encode('UTF-8')
       @type_padding = Padding.new(@_io, self, @_root)
       @data = @_io.read_bytes(len_data)
       @data_padding = Padding.new(@_io, self, @_root)

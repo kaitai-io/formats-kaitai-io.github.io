@@ -3,11 +3,13 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class android_nanoapp_header_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -28,18 +30,18 @@ public:
     ~android_nanoapp_header_t();
 
 private:
-    bool f_is_signed;
-    bool m_is_signed;
-
-public:
-    bool is_signed();
-
-private:
     bool f_is_encrypted;
     bool m_is_encrypted;
 
 public:
     bool is_encrypted();
+
+private:
+    bool f_is_signed;
+    bool m_is_signed;
+
+public:
+    bool is_signed();
 
 private:
     bool f_is_tcm_capable;

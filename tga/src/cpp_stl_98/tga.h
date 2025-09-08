@@ -3,12 +3,15 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class tga_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -19,13 +22,20 @@
 class tga_t : public kaitai::kstruct {
 
 public:
-    class tga_footer_t;
     class tga_ext_area_t;
+    class tga_footer_t;
 
     enum color_map_enum_t {
         COLOR_MAP_ENUM_NO_COLOR_MAP = 0,
         COLOR_MAP_ENUM_HAS_COLOR_MAP = 1
     };
+    static bool _is_defined_color_map_enum_t(color_map_enum_t v);
+
+private:
+    static const std::set<color_map_enum_t> _values_color_map_enum_t;
+    static std::set<color_map_enum_t> _build_values_color_map_enum_t();
+
+public:
 
     enum image_type_enum_t {
         IMAGE_TYPE_ENUM_NO_IMAGE_DATA = 0,
@@ -36,6 +46,13 @@ public:
         IMAGE_TYPE_ENUM_RLE_TRUE_COLOR = 10,
         IMAGE_TYPE_ENUM_RLE_BW = 11
     };
+    static bool _is_defined_image_type_enum_t(image_type_enum_t v);
+
+private:
+    static const std::set<image_type_enum_t> _values_image_type_enum_t;
+    static std::set<image_type_enum_t> _build_values_image_type_enum_t();
+
+public:
 
     tga_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, tga_t* p__root = 0);
 
@@ -45,62 +62,6 @@ private:
 
 public:
     ~tga_t();
-
-    class tga_footer_t : public kaitai::kstruct {
-
-    public:
-
-        tga_footer_t(kaitai::kstream* p__io, tga_t* p__parent = 0, tga_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~tga_footer_t();
-
-    private:
-        bool f_is_valid;
-        bool m_is_valid;
-
-    public:
-        bool is_valid();
-
-    private:
-        bool f_ext_area;
-        tga_ext_area_t* m_ext_area;
-        bool n_ext_area;
-
-    public:
-        bool _is_null_ext_area() { ext_area(); return n_ext_area; };
-
-    private:
-
-    public:
-        tga_ext_area_t* ext_area();
-
-    private:
-        uint32_t m_ext_area_ofs;
-        uint32_t m_dev_dir_ofs;
-        std::string m_version_magic;
-        tga_t* m__root;
-        tga_t* m__parent;
-
-    public:
-
-        /**
-         * Offset to extension area
-         */
-        uint32_t ext_area_ofs() const { return m_ext_area_ofs; }
-
-        /**
-         * Offset to developer directory
-         */
-        uint32_t dev_dir_ofs() const { return m_dev_dir_ofs; }
-        std::string version_magic() const { return m_version_magic; }
-        tga_t* _root() const { return m__root; }
-        tga_t* _parent() const { return m__parent; }
-    };
 
     class tga_ext_area_t : public kaitai::kstruct {
 
@@ -192,6 +153,62 @@ public:
         uint8_t attributes() const { return m_attributes; }
         tga_t* _root() const { return m__root; }
         tga_t::tga_footer_t* _parent() const { return m__parent; }
+    };
+
+    class tga_footer_t : public kaitai::kstruct {
+
+    public:
+
+        tga_footer_t(kaitai::kstream* p__io, tga_t* p__parent = 0, tga_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~tga_footer_t();
+
+    private:
+        bool f_ext_area;
+        tga_ext_area_t* m_ext_area;
+        bool n_ext_area;
+
+    public:
+        bool _is_null_ext_area() { ext_area(); return n_ext_area; };
+
+    private:
+
+    public:
+        tga_ext_area_t* ext_area();
+
+    private:
+        bool f_is_valid;
+        bool m_is_valid;
+
+    public:
+        bool is_valid();
+
+    private:
+        uint32_t m_ext_area_ofs;
+        uint32_t m_dev_dir_ofs;
+        std::string m_version_magic;
+        tga_t* m__root;
+        tga_t* m__parent;
+
+    public:
+
+        /**
+         * Offset to extension area
+         */
+        uint32_t ext_area_ofs() const { return m_ext_area_ofs; }
+
+        /**
+         * Offset to developer directory
+         */
+        uint32_t dev_dir_ofs() const { return m_dev_dir_ofs; }
+        std::string version_magic() const { return m_version_magic; }
+        tga_t* _root() const { return m__root; }
+        tga_t* _parent() const { return m__parent; }
     };
 
 private:

@@ -196,6 +196,11 @@ If you want a text representation you may want to checkout <code>btrfs receive -
                 
                 <li>
                 
+                <a href="java-write.html" title="btrfs_stream parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="btrfs_stream parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -226,7 +231,17 @@ If you want a text representation you may want to checkout <code>btrfs receive -
                 
                 <li>
                 
+                <a href="python-write.html" title="btrfs_stream parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="btrfs_stream parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="btrfs_stream parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -301,14 +316,15 @@ If you want a text representation you may want to checkout <code>btrfs receive -
 
         <div class="row">
             <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+<span class="c1"># type: ignore</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">kaitaistruct</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">kaitaistruct</span><span class="w"> </span><span class="kn">import</span> <span class="n">KaitaiStruct</span><span class="p">,</span> <span class="n">KaitaiStream</span><span class="p">,</span> <span class="n">BytesIO</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">IntEnum</span>
 
 
-<span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">kaitaistruct</span><span class="p">,</span> <span class="s1">&#39;API_VERSION&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">):</span>
-    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">kaitaistruct</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span>
+<span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">kaitaistruct</span><span class="p">,</span> <span class="s1">&#39;API_VERSION&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">kaitaistruct</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">BtrfsStream</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Btrfs is a copy on write file system based on B-trees focusing on fault tolerance, repair and easy</span>
@@ -325,32 +341,7 @@ If you want a text representation you may want to checkout <code>btrfs receive -
 <span class="sd">       Source - https://archive.kernel.org/oldwiki/btrfs.wiki.kernel.org/index.php/Design_notes_on_Send/Receive.html</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">class</span><span class="w"> </span><span class="nc">Command</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-        <span class="n">unspec</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">subvol</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="n">snapshot</span> <span class="o">=</span> <span class="mi">2</span>
-        <span class="n">mkfile</span> <span class="o">=</span> <span class="mi">3</span>
-        <span class="n">mkdir</span> <span class="o">=</span> <span class="mi">4</span>
-        <span class="n">mknod</span> <span class="o">=</span> <span class="mi">5</span>
-        <span class="n">mkfifo</span> <span class="o">=</span> <span class="mi">6</span>
-        <span class="n">mksock</span> <span class="o">=</span> <span class="mi">7</span>
-        <span class="n">symlink</span> <span class="o">=</span> <span class="mi">8</span>
-        <span class="n">rename</span> <span class="o">=</span> <span class="mi">9</span>
-        <span class="n">link</span> <span class="o">=</span> <span class="mi">10</span>
-        <span class="n">unlink</span> <span class="o">=</span> <span class="mi">11</span>
-        <span class="n">rmdir</span> <span class="o">=</span> <span class="mi">12</span>
-        <span class="n">set_xattr</span> <span class="o">=</span> <span class="mi">13</span>
-        <span class="n">remove_xattr</span> <span class="o">=</span> <span class="mi">14</span>
-        <span class="n">write</span> <span class="o">=</span> <span class="mi">15</span>
-        <span class="n">clone</span> <span class="o">=</span> <span class="mi">16</span>
-        <span class="n">truncate</span> <span class="o">=</span> <span class="mi">17</span>
-        <span class="n">chmod</span> <span class="o">=</span> <span class="mi">18</span>
-        <span class="n">chown</span> <span class="o">=</span> <span class="mi">19</span>
-        <span class="n">utimes</span> <span class="o">=</span> <span class="mi">20</span>
-        <span class="n">end</span> <span class="o">=</span> <span class="mi">21</span>
-        <span class="n">update_extent</span> <span class="o">=</span> <span class="mi">22</span>
-
-    <span class="k">class</span><span class="w"> </span><span class="nc">Attribute</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="k">class</span><span class="w"> </span><span class="nc">Attribute</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
         <span class="n">unspec</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">uuid</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="n">ctransid</span> <span class="o">=</span> <span class="mi">2</span>
@@ -376,10 +367,35 @@ If you want a text representation you may want to checkout <code>btrfs receive -
         <span class="n">clone_path</span> <span class="o">=</span> <span class="mi">22</span>
         <span class="n">clone_offset</span> <span class="o">=</span> <span class="mi">23</span>
         <span class="n">clone_len</span> <span class="o">=</span> <span class="mi">24</span>
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">Command</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+        <span class="n">unspec</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">subvol</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">snapshot</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">mkfile</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="n">mkdir</span> <span class="o">=</span> <span class="mi">4</span>
+        <span class="n">mknod</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="n">mkfifo</span> <span class="o">=</span> <span class="mi">6</span>
+        <span class="n">mksock</span> <span class="o">=</span> <span class="mi">7</span>
+        <span class="n">symlink</span> <span class="o">=</span> <span class="mi">8</span>
+        <span class="n">rename</span> <span class="o">=</span> <span class="mi">9</span>
+        <span class="n">link</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="n">unlink</span> <span class="o">=</span> <span class="mi">11</span>
+        <span class="n">rmdir</span> <span class="o">=</span> <span class="mi">12</span>
+        <span class="n">set_xattr</span> <span class="o">=</span> <span class="mi">13</span>
+        <span class="n">remove_xattr</span> <span class="o">=</span> <span class="mi">14</span>
+        <span class="n">write</span> <span class="o">=</span> <span class="mi">15</span>
+        <span class="n">clone</span> <span class="o">=</span> <span class="mi">16</span>
+        <span class="n">truncate</span> <span class="o">=</span> <span class="mi">17</span>
+        <span class="n">chmod</span> <span class="o">=</span> <span class="mi">18</span>
+        <span class="n">chown</span> <span class="o">=</span> <span class="mi">19</span>
+        <span class="n">utimes</span> <span class="o">=</span> <span class="mi">20</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="mi">21</span>
+        <span class="n">update_extent</span> <span class="o">=</span> <span class="mi">22</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">BtrfsStream</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="ow">or</span> <span class="bp">self</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -391,25 +407,20 @@ If you want a text representation you may want to checkout <code>btrfs receive -
             <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
 
 
-    <span class="k">class</span><span class="w"> </span><span class="nc">SendStreamHeader</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">magic</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">13</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">magic</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x62\x74\x72\x66\x73\x2D\x73\x74\x72\x65\x61\x6D\x00</span><span class="s2">&quot;</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationNotEqualError</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x62\x74\x72\x66\x73\x2D\x73\x74\x72\x65\x61\x6D\x00</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">magic</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/types/send_stream_header/seq/0&quot;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">commands</span><span class="p">)):</span>
+            <span class="k">pass</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">commands</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
 
 
     <span class="k">class</span><span class="w"> </span><span class="nc">SendCommand</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
         <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">BtrfsStream</span><span class="o">.</span><span class="n">SendCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -420,101 +431,208 @@ If you want a text representation you may want to checkout <code>btrfs receive -
             <span class="n">_io__raw_data</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_data</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">SendCommand</span><span class="o">.</span><span class="n">Tlvs</span><span class="p">(</span><span class="n">_io__raw_data</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
 
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+
+        <span class="k">class</span><span class="w"> </span><span class="nc">String</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                <span class="nb">super</span><span class="p">(</span><span class="n">BtrfsStream</span><span class="o">.</span><span class="n">SendCommand</span><span class="o">.</span><span class="n">String</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+            <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">string</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes_full</span><span class="p">())</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+
+
+            <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">pass</span>
+
+
+        <span class="k">class</span><span class="w"> </span><span class="nc">Timespec</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                <span class="nb">super</span><span class="p">(</span><span class="n">BtrfsStream</span><span class="o">.</span><span class="n">SendCommand</span><span class="o">.</span><span class="n">Timespec</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+            <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ts_sec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s8le</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ts_nsec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s4le</span><span class="p">()</span>
+
+
+            <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">pass</span>
+
+
         <span class="k">class</span><span class="w"> </span><span class="nc">Tlv</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
             <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+                <span class="nb">super</span><span class="p">(</span><span class="n">BtrfsStream</span><span class="o">.</span><span class="n">SendCommand</span><span class="o">.</span><span class="n">Tlv</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
             <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="o">.</span><span class="n">resolve_enum</span><span class="p">(</span><span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">())</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
                 <span class="n">_on</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span>
-                <span class="k">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">ctransid</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u8le</span><span class="p">()</span>
-                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u8le</span><span class="p">()</span>
-                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">clone_uuid</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_raw_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">)</span>
-                    <span class="n">_io__raw_value</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_value</span><span class="p">))</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">SendCommand</span><span class="o">.</span><span class="n">Uuid</span><span class="p">(</span><span class="n">_io__raw_value</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
-                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">file_offset</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u8le</span><span class="p">()</span>
-                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">otime</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">atime</span><span class="p">:</span>
+                    <span class="k">pass</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_raw_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">)</span>
                     <span class="n">_io__raw_value</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_value</span><span class="p">))</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">SendCommand</span><span class="o">.</span><span class="n">Timespec</span><span class="p">(</span><span class="n">_io__raw_value</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
-                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">uid</span><span class="p">:</span>
+                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">clone_ctransid</span><span class="p">:</span>
+                    <span class="k">pass</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u8le</span><span class="p">()</span>
-                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">atime</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_raw_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">)</span>
-                    <span class="n">_io__raw_value</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_value</span><span class="p">))</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">SendCommand</span><span class="o">.</span><span class="n">Timespec</span><span class="p">(</span><span class="n">_io__raw_value</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
-                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">ctime</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_raw_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">)</span>
-                    <span class="n">_io__raw_value</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_value</span><span class="p">))</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">SendCommand</span><span class="o">.</span><span class="n">Timespec</span><span class="p">(</span><span class="n">_io__raw_value</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
-                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">uuid</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_raw_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">)</span>
-                    <span class="n">_io__raw_value</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_value</span><span class="p">))</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">SendCommand</span><span class="o">.</span><span class="n">Uuid</span><span class="p">(</span><span class="n">_io__raw_value</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
                 <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">clone_len</span><span class="p">:</span>
+                    <span class="k">pass</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u8le</span><span class="p">()</span>
-                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">xattr_name</span><span class="p">:</span>
+                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">clone_offset</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u8le</span><span class="p">()</span>
+                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">clone_path</span><span class="p">:</span>
+                    <span class="k">pass</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_raw_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">)</span>
                     <span class="n">_io__raw_value</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_value</span><span class="p">))</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">SendCommand</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">_io__raw_value</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
-                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">clone_ctransid</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u8le</span><span class="p">()</span>
-                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">mode</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u8le</span><span class="p">()</span>
-                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">mtime</span><span class="p">:</span>
+                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">clone_uuid</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_raw_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">)</span>
+                    <span class="n">_io__raw_value</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_value</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">SendCommand</span><span class="o">.</span><span class="n">Uuid</span><span class="p">(</span><span class="n">_io__raw_value</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">ctime</span><span class="p">:</span>
+                    <span class="k">pass</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_raw_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">)</span>
                     <span class="n">_io__raw_value</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_value</span><span class="p">))</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">SendCommand</span><span class="o">.</span><span class="n">Timespec</span><span class="p">(</span><span class="n">_io__raw_value</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">ctransid</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u8le</span><span class="p">()</span>
+                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">file_offset</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u8le</span><span class="p">()</span>
+                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">gid</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u8le</span><span class="p">()</span>
+                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">mode</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u8le</span><span class="p">()</span>
+                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">mtime</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_raw_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">)</span>
+                    <span class="n">_io__raw_value</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_value</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">SendCommand</span><span class="o">.</span><span class="n">Timespec</span><span class="p">(</span><span class="n">_io__raw_value</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">otime</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_raw_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">)</span>
+                    <span class="n">_io__raw_value</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_value</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">SendCommand</span><span class="o">.</span><span class="n">Timespec</span><span class="p">(</span><span class="n">_io__raw_value</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_raw_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">)</span>
+                    <span class="n">_io__raw_value</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_value</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">SendCommand</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">_io__raw_value</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
                 <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">path_link</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_raw_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">)</span>
+                    <span class="n">_io__raw_value</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_value</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">SendCommand</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">_io__raw_value</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">path_to</span><span class="p">:</span>
+                    <span class="k">pass</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_raw_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">)</span>
                     <span class="n">_io__raw_value</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_value</span><span class="p">))</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">SendCommand</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">_io__raw_value</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
                 <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">rdev</span><span class="p">:</span>
+                    <span class="k">pass</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u8le</span><span class="p">()</span>
-                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">path_to</span><span class="p">:</span>
+                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u8le</span><span class="p">()</span>
+                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">uid</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u8le</span><span class="p">()</span>
+                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">uuid</span><span class="p">:</span>
+                    <span class="k">pass</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_raw_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">)</span>
                     <span class="n">_io__raw_value</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_value</span><span class="p">))</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">SendCommand</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">_io__raw_value</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
-                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_raw_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">)</span>
-                    <span class="n">_io__raw_value</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_value</span><span class="p">))</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">SendCommand</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">_io__raw_value</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
-                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">clone_offset</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u8le</span><span class="p">()</span>
-                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">gid</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u8le</span><span class="p">()</span>
-                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">clone_path</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">SendCommand</span><span class="o">.</span><span class="n">Uuid</span><span class="p">(</span><span class="n">_io__raw_value</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">xattr_name</span><span class="p">:</span>
+                    <span class="k">pass</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_raw_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">)</span>
                     <span class="n">_io__raw_value</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_value</span><span class="p">))</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">SendCommand</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">_io__raw_value</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
+                    <span class="k">pass</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">)</span>
 
 
-        <span class="k">class</span><span class="w"> </span><span class="nc">Uuid</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-            <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
-
-            <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">uuid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">pass</span>
+                <span class="n">_on</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span>
+                <span class="k">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">atime</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">clone_ctransid</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">clone_len</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">clone_offset</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">clone_path</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">clone_uuid</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">ctime</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">ctransid</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">file_offset</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">gid</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">mode</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">mtime</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">otime</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">path_link</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">path_to</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">rdev</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">uid</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">uuid</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">BtrfsStream</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">xattr_name</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">pass</span>
 
 
         <span class="k">class</span><span class="w"> </span><span class="nc">Tlvs</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
             <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+                <span class="nb">super</span><span class="p">(</span><span class="n">BtrfsStream</span><span class="o">.</span><span class="n">SendCommand</span><span class="o">.</span><span class="n">Tlvs</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
             <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -526,27 +644,46 @@ If you want a text representation you may want to checkout <code>btrfs receive -
 
 
 
-        <span class="k">class</span><span class="w"> </span><span class="nc">String</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">pass</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tlv</span><span class="p">)):</span>
+                    <span class="k">pass</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">tlv</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+
+
+
+        <span class="k">class</span><span class="w"> </span><span class="nc">Uuid</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
             <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+                <span class="nb">super</span><span class="p">(</span><span class="n">BtrfsStream</span><span class="o">.</span><span class="n">SendCommand</span><span class="o">.</span><span class="n">Uuid</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
             <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">string</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes_full</span><span class="p">())</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">uuid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
 
 
-        <span class="k">class</span><span class="w"> </span><span class="nc">Timespec</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-            <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">pass</span>
 
-            <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">ts_sec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s8le</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">ts_nsec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s4le</span><span class="p">()</span>
+
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">SendStreamHeader</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">BtrfsStream</span><span class="o">.</span><span class="n">SendStreamHeader</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">magic</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">13</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">magic</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x62\x74\x72\x66\x73\x2D\x73\x74\x72\x65\x61\x6D\x00</span><span class="s2">&quot;</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationNotEqualError</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x62\x74\x72\x66\x73\x2D\x73\x74\x72\x65\x61\x6D\x00</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">magic</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/types/send_stream_header/seq/0&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
 </pre></div>
 
         </div>

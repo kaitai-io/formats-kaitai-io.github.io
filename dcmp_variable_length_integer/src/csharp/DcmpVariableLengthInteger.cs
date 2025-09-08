@@ -70,8 +70,8 @@ namespace Kaitai
             {
                 if (f_value)
                     return _value;
-                _value = (int) ((First == 255 ? More : (First >= 128 ? (((First << 8) | More) - 49152) : First)));
                 f_value = true;
+                _value = (int) ((First == 255 ? More : (First >= 128 ? (First << 8 | More) - 49152 : First)));
                 return _value;
             }
         }

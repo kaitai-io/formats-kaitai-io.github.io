@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 class GlibcUtmp < Kaitai::Struct::Struct
@@ -21,8 +21,8 @@ class GlibcUtmp < Kaitai::Struct::Struct
     9 => :entry_type_accounting,
   }
   I__ENTRY_TYPE = ENTRY_TYPE.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -31,15 +31,14 @@ class GlibcUtmp < Kaitai::Struct::Struct
     @records = []
     i = 0
     while not @_io.eof?
-      @_raw_records << @_io.read_bytes(384)
-      _io__raw_records = Kaitai::Struct::Stream.new(@_raw_records.last)
-      @records << Record.new(_io__raw_records, self, @_root)
+      _io_records = @_io.substream(384)
+      @records << Record.new(_io_records, self, @_root)
       i += 1
     end
     self
   end
   class Record < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -101,7 +100,7 @@ class GlibcUtmp < Kaitai::Struct::Struct
     attr_reader :reserved
   end
   class Timeval < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end

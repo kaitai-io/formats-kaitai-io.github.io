@@ -2,12 +2,15 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class psx_tim_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
+#include <set>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -27,6 +30,12 @@ public:
         BPP_TYPE_BPP_16 = 2,
         BPP_TYPE_BPP_24 = 3
     };
+    static bool _is_defined_bpp_type_t(bpp_type_t v);
+
+private:
+    static const std::set<bpp_type_t> _values_bpp_type_t;
+
+public:
 
     psx_tim_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, psx_tim_t* p__root = nullptr);
 
@@ -72,18 +81,18 @@ public:
     };
 
 private:
-    bool f_has_clut;
-    bool m_has_clut;
-
-public:
-    bool has_clut();
-
-private:
     bool f_bpp;
     int32_t m_bpp;
 
 public:
     int32_t bpp();
+
+private:
+    bool f_has_clut;
+    bool m_has_clut;
+
+public:
+    bool has_clut();
 
 private:
     std::string m_magic;

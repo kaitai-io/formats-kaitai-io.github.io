@@ -202,32 +202,70 @@ public class ProtocolBody extends KaitaiStruct {
             ProtocolEnum on = protocol();
             if (on != null) {
                 switch (protocol()) {
-                case IPV6_NONXT: {
-                    this.body = new NoNextHeader(this._io, this, _root);
-                    break;
-                }
-                case IPV4: {
-                    this.body = new Ipv4Packet(this._io);
-                    break;
-                }
-                case UDP: {
-                    this.body = new UdpDatagram(this._io);
+                case HOPOPT: {
+                    this.body = new OptionHopByHop(this._io, this, _root);
                     break;
                 }
                 case ICMP: {
                     this.body = new IcmpPacket(this._io);
                     break;
                 }
-                case HOPOPT: {
-                    this.body = new OptionHopByHop(this._io, this, _root);
+                case IPV4: {
+                    this.body = new Ipv4Packet(this._io);
                     break;
                 }
                 case IPV6: {
                     this.body = new Ipv6Packet(this._io);
                     break;
                 }
+                case IPV6_NONXT: {
+                    this.body = new NoNextHeader(this._io, this, _root);
+                    break;
+                }
                 case TCP: {
                     this.body = new TcpSegment(this._io);
+                    break;
+                }
+                case UDP: {
+                    this.body = new UdpDatagram(this._io);
+                    break;
+                }
+                }
+            }
+        }
+    }
+
+    public void _fetchInstances() {
+        {
+            ProtocolEnum on = protocol();
+            if (on != null) {
+                switch (protocol()) {
+                case HOPOPT: {
+                    ((OptionHopByHop) (this.body))._fetchInstances();
+                    break;
+                }
+                case ICMP: {
+                    ((IcmpPacket) (this.body))._fetchInstances();
+                    break;
+                }
+                case IPV4: {
+                    ((Ipv4Packet) (this.body))._fetchInstances();
+                    break;
+                }
+                case IPV6: {
+                    ((Ipv6Packet) (this.body))._fetchInstances();
+                    break;
+                }
+                case IPV6_NONXT: {
+                    ((NoNextHeader) (this.body))._fetchInstances();
+                    break;
+                }
+                case TCP: {
+                    ((TcpSegment) (this.body))._fetchInstances();
+                    break;
+                }
+                case UDP: {
+                    ((UdpDatagram) (this.body))._fetchInstances();
                     break;
                 }
                 }
@@ -259,6 +297,9 @@ public class ProtocolBody extends KaitaiStruct {
         }
         private void _read() {
         }
+
+        public void _fetchInstances() {
+        }
         private ProtocolBody _root;
         private ProtocolBody _parent;
         public ProtocolBody _root() { return _root; }
@@ -286,8 +327,12 @@ public class ProtocolBody extends KaitaiStruct {
         private void _read() {
             this.nextHeaderType = this._io.readU1();
             this.hdrExtLen = this._io.readU1();
-            this.body = this._io.readBytes((hdrExtLen() > 0 ? (hdrExtLen() - 1) : 1));
-            this.nextHeader = new ProtocolBody(this._io, nextHeaderType());
+            this.body = this._io.readBytes((hdrExtLen() > 0 ? hdrExtLen() - 1 : 1));
+            this.nextHeader = new ProtocolBody(this._io, this, _root, nextHeaderType());
+        }
+
+        public void _fetchInstances() {
+            this.nextHeader._fetchInstances();
         }
         private int nextHeaderType;
         private int hdrExtLen;

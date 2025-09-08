@@ -192,6 +192,11 @@ of date and time as individual fields, up to millisecond precision.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="Microsoft Windows SYSTEMTIME structure parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="Microsoft Windows SYSTEMTIME structure parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -222,7 +227,17 @@ of date and time as individual fields, up to millisecond precision.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="Microsoft Windows SYSTEMTIME structure parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="Microsoft Windows SYSTEMTIME structure parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="Microsoft Windows SYSTEMTIME structure parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -297,13 +312,14 @@ of date and time as individual fields, up to millisecond precision.</p>
 
         <div class="row">
             <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+<span class="c1"># type: ignore</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">kaitaistruct</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">kaitaistruct</span><span class="w"> </span><span class="kn">import</span> <span class="n">KaitaiStruct</span><span class="p">,</span> <span class="n">KaitaiStream</span><span class="p">,</span> <span class="n">BytesIO</span>
 
 
-<span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">kaitaistruct</span><span class="p">,</span> <span class="s1">&#39;API_VERSION&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">):</span>
-    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">kaitaistruct</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span>
+<span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">kaitaistruct</span><span class="p">,</span> <span class="s1">&#39;API_VERSION&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">kaitaistruct</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">WindowsSystemtime</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Microsoft Windows SYSTEMTIME structure, stores individual components</span>
@@ -313,9 +329,9 @@ of date and time as individual fields, up to millisecond precision.</p>
 <span class="sd">       Source - https://learn.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-systemtime</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">WindowsSystemtime</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="ow">or</span> <span class="bp">self</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -327,6 +343,10 @@ of date and time as individual fields, up to millisecond precision.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">min</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">msec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
 </pre></div>
 
         </div>

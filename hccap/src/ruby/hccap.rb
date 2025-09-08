@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -14,8 +14,8 @@ end
 # <https://web.archive.org/web/20150220013635if_/http://hashcat.net:80/misc/example_hashes/hashcat.hccap>
 # @see https://hashcat.net/wiki/doku.php?id=hccap Source
 class Hccap < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -28,8 +28,18 @@ class Hccap < Kaitai::Struct::Struct
     end
     self
   end
+  class EapolDummy < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      self
+    end
+  end
   class HccapRecord < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -40,9 +50,8 @@ class Hccap < Kaitai::Struct::Struct
       @mac_station = @_io.read_bytes(6)
       @nonce_station = @_io.read_bytes(32)
       @nonce_ap = @_io.read_bytes(32)
-      @_raw_eapol_buffer = @_io.read_bytes(256)
-      _io__raw_eapol_buffer = Kaitai::Struct::Stream.new(@_raw_eapol_buffer)
-      @eapol_buffer = EapolDummy.new(_io__raw_eapol_buffer, self, @_root)
+      _io_eapol_buffer = @_io.substream(256)
+      @eapol_buffer = EapolDummy.new(_io_eapol_buffer, self, @_root)
       @len_eapol = @_io.read_u4le
       @keyver = @_io.read_u4le
       @keymic = @_io.read_bytes(16)
@@ -93,16 +102,6 @@ class Hccap < Kaitai::Struct::Struct
     # (truncated to 128 bit).
     attr_reader :keymic
     attr_reader :_raw_eapol_buffer
-  end
-  class EapolDummy < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      self
-    end
   end
   attr_reader :records
 end

@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use SomeIp;
 
 ########################################################################
@@ -25,7 +25,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -35,7 +35,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{some_ip_packages} = ();
+    $self->{some_ip_packages} = [];
     while (!$self->{_io}->is_eof()) {
         push @{$self->{some_ip_packages}}, SomeIp->new($self->{_io});
     }

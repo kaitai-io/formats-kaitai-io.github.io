@@ -31,7 +31,7 @@ end
 function GenmidiOp2:_read()
   self.magic = self._io:read_bytes(8)
   if not(self.magic == "\035\079\080\076\095\073\073\035") then
-    error("not equal, expected " ..  "\035\079\080\076\095\073\073\035" .. ", but got " .. self.magic)
+    error("not equal, expected " .. "\035\079\080\076\095\073\073\035" .. ", but got " .. self.magic)
   end
   self.instruments = {}
   for i = 0, 175 - 1 do
@@ -44,34 +44,12 @@ function GenmidiOp2:_read()
 end
 
 
-GenmidiOp2.InstrumentEntry = class.class(KaitaiStruct)
-
-function GenmidiOp2.InstrumentEntry:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function GenmidiOp2.InstrumentEntry:_read()
-  self.flags = self._io:read_u2le()
-  self.finetune = self._io:read_u1()
-  self.note = self._io:read_u1()
-  self.instruments = {}
-  for i = 0, 2 - 1 do
-    self.instruments[i + 1] = GenmidiOp2.Instrument(self._io, self, self._root)
-  end
-end
-
--- 
--- MIDI note for fixed instruments, 0 otherwise.
-
 GenmidiOp2.Instrument = class.class(KaitaiStruct)
 
 function GenmidiOp2.Instrument:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -88,6 +66,28 @@ end
 -- 
 -- Base note offset.
 
+GenmidiOp2.InstrumentEntry = class.class(KaitaiStruct)
+
+function GenmidiOp2.InstrumentEntry:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function GenmidiOp2.InstrumentEntry:_read()
+  self.flags = self._io:read_u2le()
+  self.finetune = self._io:read_u1()
+  self.note = self._io:read_u1()
+  self.instruments = {}
+  for i = 0, 2 - 1 do
+    self.instruments[i + 1] = GenmidiOp2.Instrument(self._io, self, self._root)
+  end
+end
+
+-- 
+-- MIDI note for fixed instruments, 0 otherwise.
+
 -- 
 -- OPL2 settings for one operator (carrier or modulator)
 GenmidiOp2.OpSettings = class.class(KaitaiStruct)
@@ -95,7 +95,7 @@ GenmidiOp2.OpSettings = class.class(KaitaiStruct)
 function GenmidiOp2.OpSettings:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 

@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use SomeIpSd;
 
 ########################################################################
@@ -25,7 +25,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -38,12 +38,12 @@ sub _read {
     $self->{header} = SomeIp::Header->new($self->{_io}, $self, $self->{_root});
     my $_on = $self->header()->message_id()->value();
     if ($_on == 4294934784) {
-        $self->{_raw_payload} = $self->{_io}->read_bytes(($self->header()->length() - 8));
+        $self->{_raw_payload} = $self->{_io}->read_bytes($self->header()->length() - 8);
         my $io__raw_payload = IO::KaitaiStruct::Stream->new($self->{_raw_payload});
         $self->{payload} = SomeIpSd->new($io__raw_payload);
     }
     else {
-        $self->{payload} = $self->{_io}->read_bytes(($self->header()->length() - 8));
+        $self->{payload} = $self->{_io}->read_bytes($self->header()->length() - 8);
     }
 }
 
@@ -105,7 +105,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -200,7 +200,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -270,7 +270,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 

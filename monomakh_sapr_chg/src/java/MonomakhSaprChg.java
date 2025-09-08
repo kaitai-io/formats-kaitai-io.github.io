@@ -4,8 +4,9 @@ import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -39,7 +40,7 @@ public class MonomakhSaprChg extends KaitaiStruct {
         _read();
     }
     private void _read() {
-        this.title = new String(this._io.readBytes(10), Charset.forName("ascii"));
+        this.title = new String(this._io.readBytes(10), StandardCharsets.US_ASCII);
         this.ent = new ArrayList<Block>();
         {
             int i = 0;
@@ -47,6 +48,12 @@ public class MonomakhSaprChg extends KaitaiStruct {
                 this.ent.add(new Block(this._io, this, _root));
                 i++;
             }
+        }
+    }
+
+    public void _fetchInstances() {
+        for (int i = 0; i < this.ent.size(); i++) {
+            this.ent.get(((Number) (i)).intValue())._fetchInstances();
         }
     }
     public static class Block extends KaitaiStruct {
@@ -69,9 +76,12 @@ public class MonomakhSaprChg extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.header = new String(this._io.readBytes(13), Charset.forName("ascii"));
+            this.header = new String(this._io.readBytes(13), StandardCharsets.US_ASCII);
             this.fileSize = this._io.readU8le();
             this.file = this._io.readBytes(fileSize());
+        }
+
+        public void _fetchInstances() {
         }
         private String header;
         private long fileSize;
@@ -85,11 +95,11 @@ public class MonomakhSaprChg extends KaitaiStruct {
         public MonomakhSaprChg _parent() { return _parent; }
     }
     private String title;
-    private ArrayList<Block> ent;
+    private List<Block> ent;
     private MonomakhSaprChg _root;
     private KaitaiStruct _parent;
     public String title() { return title; }
-    public ArrayList<Block> ent() { return ent; }
+    public List<Block> ent() { return ent; }
     public MonomakhSaprChg _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

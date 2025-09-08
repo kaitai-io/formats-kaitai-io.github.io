@@ -2,13 +2,16 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class s3m_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
 #include <vector>
+#include <set>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -33,15 +36,15 @@
 class s3m_t : public kaitai::kstruct {
 
 public:
+    class channel_t;
     class channel_pan_t;
+    class instrument_t;
+    class instrument_ptr_t;
+    class pattern_t;
     class pattern_cell_t;
     class pattern_cells_t;
-    class channel_t;
-    class swapped_u3_t;
-    class pattern_t;
     class pattern_ptr_t;
-    class instrument_ptr_t;
-    class instrument_t;
+    class swapped_u3_t;
 
     s3m_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, s3m_t* p__root = nullptr);
 
@@ -51,6 +54,36 @@ private:
 
 public:
     ~s3m_t();
+
+    class channel_t : public kaitai::kstruct {
+
+    public:
+
+        channel_t(kaitai::kstream* p__io, s3m_t* p__parent = nullptr, s3m_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~channel_t();
+
+    private:
+        bool m_is_disabled;
+        uint64_t m_ch_type;
+        s3m_t* m__root;
+        s3m_t* m__parent;
+
+    public:
+        bool is_disabled() const { return m_is_disabled; }
+
+        /**
+         * Channel type (0..7 = left sample channels, 8..15 = right sample channels, 16..31 = AdLib synth channels)
+         */
+        uint64_t ch_type() const { return m_ch_type; }
+        s3m_t* _root() const { return m__root; }
+        s3m_t* _parent() const { return m__parent; }
+    };
 
     class channel_pan_t : public kaitai::kstruct {
 
@@ -86,6 +119,200 @@ public:
         uint64_t pan() const { return m_pan; }
         s3m_t* _root() const { return m__root; }
         s3m_t* _parent() const { return m__parent; }
+    };
+
+    class instrument_t : public kaitai::kstruct {
+
+    public:
+        class adlib_t;
+        class sampled_t;
+
+        enum inst_types_t {
+            INST_TYPES_SAMPLE = 1,
+            INST_TYPES_MELODIC = 2,
+            INST_TYPES_BASS_DRUM = 3,
+            INST_TYPES_SNARE_DRUM = 4,
+            INST_TYPES_TOM = 5,
+            INST_TYPES_CYMBAL = 6,
+            INST_TYPES_HIHAT = 7
+        };
+        static bool _is_defined_inst_types_t(inst_types_t v);
+
+    private:
+        static const std::set<inst_types_t> _values_inst_types_t;
+
+    public:
+
+        instrument_t(kaitai::kstream* p__io, s3m_t::instrument_ptr_t* p__parent = nullptr, s3m_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~instrument_t();
+
+        class adlib_t : public kaitai::kstruct {
+
+        public:
+
+            adlib_t(kaitai::kstream* p__io, s3m_t::instrument_t* p__parent = nullptr, s3m_t* p__root = nullptr);
+
+        private:
+            void _read();
+            void _clean_up();
+
+        public:
+            ~adlib_t();
+
+        private:
+            std::string m_reserved1;
+            std::string m__unnamed1;
+            s3m_t* m__root;
+            s3m_t::instrument_t* m__parent;
+
+        public:
+            std::string reserved1() const { return m_reserved1; }
+            std::string _unnamed1() const { return m__unnamed1; }
+            s3m_t* _root() const { return m__root; }
+            s3m_t::instrument_t* _parent() const { return m__parent; }
+        };
+
+        class sampled_t : public kaitai::kstruct {
+
+        public:
+
+            sampled_t(kaitai::kstream* p__io, s3m_t::instrument_t* p__parent = nullptr, s3m_t* p__root = nullptr);
+
+        private:
+            void _read();
+            void _clean_up();
+
+        public:
+            ~sampled_t();
+
+        private:
+            bool f_sample;
+            std::string m_sample;
+
+        public:
+            std::string sample();
+
+        private:
+            std::unique_ptr<swapped_u3_t> m_paraptr_sample;
+            uint32_t m_len_sample;
+            uint32_t m_loop_begin;
+            uint32_t m_loop_end;
+            uint8_t m_default_volume;
+            uint8_t m_reserved1;
+            uint8_t m_is_packed;
+            uint8_t m_flags;
+            s3m_t* m__root;
+            s3m_t::instrument_t* m__parent;
+
+        public:
+            swapped_u3_t* paraptr_sample() const { return m_paraptr_sample.get(); }
+            uint32_t len_sample() const { return m_len_sample; }
+            uint32_t loop_begin() const { return m_loop_begin; }
+            uint32_t loop_end() const { return m_loop_end; }
+
+            /**
+             * Default volume
+             */
+            uint8_t default_volume() const { return m_default_volume; }
+            uint8_t reserved1() const { return m_reserved1; }
+
+            /**
+             * 0 = unpacked, 1 = DP30ADPCM packing
+             */
+            uint8_t is_packed() const { return m_is_packed; }
+            uint8_t flags() const { return m_flags; }
+            s3m_t* _root() const { return m__root; }
+            s3m_t::instrument_t* _parent() const { return m__parent; }
+        };
+
+    private:
+        inst_types_t m_type;
+        std::string m_filename;
+        std::unique_ptr<kaitai::kstruct> m_body;
+        uint32_t m_tuning_hz;
+        std::string m_reserved2;
+        std::string m_sample_name;
+        std::string m_magic;
+        s3m_t* m__root;
+        s3m_t::instrument_ptr_t* m__parent;
+
+    public:
+        inst_types_t type() const { return m_type; }
+        std::string filename() const { return m_filename; }
+        kaitai::kstruct* body() const { return m_body.get(); }
+        uint32_t tuning_hz() const { return m_tuning_hz; }
+        std::string reserved2() const { return m_reserved2; }
+        std::string sample_name() const { return m_sample_name; }
+        std::string magic() const { return m_magic; }
+        s3m_t* _root() const { return m__root; }
+        s3m_t::instrument_ptr_t* _parent() const { return m__parent; }
+    };
+
+    class instrument_ptr_t : public kaitai::kstruct {
+
+    public:
+
+        instrument_ptr_t(kaitai::kstream* p__io, s3m_t* p__parent = nullptr, s3m_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~instrument_ptr_t();
+
+    private:
+        bool f_body;
+        std::unique_ptr<instrument_t> m_body;
+
+    public:
+        instrument_t* body();
+
+    private:
+        uint16_t m_paraptr;
+        s3m_t* m__root;
+        s3m_t* m__parent;
+
+    public:
+        uint16_t paraptr() const { return m_paraptr; }
+        s3m_t* _root() const { return m__root; }
+        s3m_t* _parent() const { return m__parent; }
+    };
+
+    class pattern_t : public kaitai::kstruct {
+
+    public:
+
+        pattern_t(kaitai::kstream* p__io, s3m_t::pattern_ptr_t* p__parent = nullptr, s3m_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~pattern_t();
+
+    private:
+        uint16_t m_size;
+        std::unique_ptr<pattern_cells_t> m_body;
+        s3m_t* m__root;
+        s3m_t::pattern_ptr_t* m__parent;
+        std::string m__raw_body;
+        std::unique_ptr<kaitai::kstream> m__io__raw_body;
+
+    public:
+        uint16_t size() const { return m_size; }
+        pattern_cells_t* body() const { return m_body.get(); }
+        s3m_t* _root() const { return m__root; }
+        s3m_t::pattern_ptr_t* _parent() const { return m__parent; }
+        std::string _raw_body() const { return m__raw_body; }
+        kaitai::kstream* _io__raw_body() const { return m__io__raw_body.get(); }
     };
 
     class pattern_cell_t : public kaitai::kstruct {
@@ -182,32 +409,33 @@ public:
         s3m_t::pattern_t* _parent() const { return m__parent; }
     };
 
-    class channel_t : public kaitai::kstruct {
+    class pattern_ptr_t : public kaitai::kstruct {
 
     public:
 
-        channel_t(kaitai::kstream* p__io, s3m_t* p__parent = nullptr, s3m_t* p__root = nullptr);
+        pattern_ptr_t(kaitai::kstream* p__io, s3m_t* p__parent = nullptr, s3m_t* p__root = nullptr);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~channel_t();
+        ~pattern_ptr_t();
 
     private:
-        bool m_is_disabled;
-        uint64_t m_ch_type;
+        bool f_body;
+        std::unique_ptr<pattern_t> m_body;
+
+    public:
+        pattern_t* body();
+
+    private:
+        uint16_t m_paraptr;
         s3m_t* m__root;
         s3m_t* m__parent;
 
     public:
-        bool is_disabled() const { return m_is_disabled; }
-
-        /**
-         * Channel type (0..7 = left sample channels, 8..15 = right sample channels, 16..31 = AdLib synth channels)
-         */
-        uint64_t ch_type() const { return m_ch_type; }
+        uint16_t paraptr() const { return m_paraptr; }
         s3m_t* _root() const { return m__root; }
         s3m_t* _parent() const { return m__parent; }
     };
@@ -247,225 +475,6 @@ public:
         uint16_t lo() const { return m_lo; }
         s3m_t* _root() const { return m__root; }
         s3m_t::instrument_t::sampled_t* _parent() const { return m__parent; }
-    };
-
-    class pattern_t : public kaitai::kstruct {
-
-    public:
-
-        pattern_t(kaitai::kstream* p__io, s3m_t::pattern_ptr_t* p__parent = nullptr, s3m_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~pattern_t();
-
-    private:
-        uint16_t m_size;
-        std::unique_ptr<pattern_cells_t> m_body;
-        s3m_t* m__root;
-        s3m_t::pattern_ptr_t* m__parent;
-        std::string m__raw_body;
-        std::unique_ptr<kaitai::kstream> m__io__raw_body;
-
-    public:
-        uint16_t size() const { return m_size; }
-        pattern_cells_t* body() const { return m_body.get(); }
-        s3m_t* _root() const { return m__root; }
-        s3m_t::pattern_ptr_t* _parent() const { return m__parent; }
-        std::string _raw_body() const { return m__raw_body; }
-        kaitai::kstream* _io__raw_body() const { return m__io__raw_body.get(); }
-    };
-
-    class pattern_ptr_t : public kaitai::kstruct {
-
-    public:
-
-        pattern_ptr_t(kaitai::kstream* p__io, s3m_t* p__parent = nullptr, s3m_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~pattern_ptr_t();
-
-    private:
-        bool f_body;
-        std::unique_ptr<pattern_t> m_body;
-
-    public:
-        pattern_t* body();
-
-    private:
-        uint16_t m_paraptr;
-        s3m_t* m__root;
-        s3m_t* m__parent;
-
-    public:
-        uint16_t paraptr() const { return m_paraptr; }
-        s3m_t* _root() const { return m__root; }
-        s3m_t* _parent() const { return m__parent; }
-    };
-
-    class instrument_ptr_t : public kaitai::kstruct {
-
-    public:
-
-        instrument_ptr_t(kaitai::kstream* p__io, s3m_t* p__parent = nullptr, s3m_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~instrument_ptr_t();
-
-    private:
-        bool f_body;
-        std::unique_ptr<instrument_t> m_body;
-
-    public:
-        instrument_t* body();
-
-    private:
-        uint16_t m_paraptr;
-        s3m_t* m__root;
-        s3m_t* m__parent;
-
-    public:
-        uint16_t paraptr() const { return m_paraptr; }
-        s3m_t* _root() const { return m__root; }
-        s3m_t* _parent() const { return m__parent; }
-    };
-
-    class instrument_t : public kaitai::kstruct {
-
-    public:
-        class sampled_t;
-        class adlib_t;
-
-        enum inst_types_t {
-            INST_TYPES_SAMPLE = 1,
-            INST_TYPES_MELODIC = 2,
-            INST_TYPES_BASS_DRUM = 3,
-            INST_TYPES_SNARE_DRUM = 4,
-            INST_TYPES_TOM = 5,
-            INST_TYPES_CYMBAL = 6,
-            INST_TYPES_HIHAT = 7
-        };
-
-        instrument_t(kaitai::kstream* p__io, s3m_t::instrument_ptr_t* p__parent = nullptr, s3m_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~instrument_t();
-
-        class sampled_t : public kaitai::kstruct {
-
-        public:
-
-            sampled_t(kaitai::kstream* p__io, s3m_t::instrument_t* p__parent = nullptr, s3m_t* p__root = nullptr);
-
-        private:
-            void _read();
-            void _clean_up();
-
-        public:
-            ~sampled_t();
-
-        private:
-            bool f_sample;
-            std::string m_sample;
-
-        public:
-            std::string sample();
-
-        private:
-            std::unique_ptr<swapped_u3_t> m_paraptr_sample;
-            uint32_t m_len_sample;
-            uint32_t m_loop_begin;
-            uint32_t m_loop_end;
-            uint8_t m_default_volume;
-            uint8_t m_reserved1;
-            uint8_t m_is_packed;
-            uint8_t m_flags;
-            s3m_t* m__root;
-            s3m_t::instrument_t* m__parent;
-
-        public:
-            swapped_u3_t* paraptr_sample() const { return m_paraptr_sample.get(); }
-            uint32_t len_sample() const { return m_len_sample; }
-            uint32_t loop_begin() const { return m_loop_begin; }
-            uint32_t loop_end() const { return m_loop_end; }
-
-            /**
-             * Default volume
-             */
-            uint8_t default_volume() const { return m_default_volume; }
-            uint8_t reserved1() const { return m_reserved1; }
-
-            /**
-             * 0 = unpacked, 1 = DP30ADPCM packing
-             */
-            uint8_t is_packed() const { return m_is_packed; }
-            uint8_t flags() const { return m_flags; }
-            s3m_t* _root() const { return m__root; }
-            s3m_t::instrument_t* _parent() const { return m__parent; }
-        };
-
-        class adlib_t : public kaitai::kstruct {
-
-        public:
-
-            adlib_t(kaitai::kstream* p__io, s3m_t::instrument_t* p__parent = nullptr, s3m_t* p__root = nullptr);
-
-        private:
-            void _read();
-            void _clean_up();
-
-        public:
-            ~adlib_t();
-
-        private:
-            std::string m_reserved1;
-            std::string m__unnamed1;
-            s3m_t* m__root;
-            s3m_t::instrument_t* m__parent;
-
-        public:
-            std::string reserved1() const { return m_reserved1; }
-            std::string _unnamed1() const { return m__unnamed1; }
-            s3m_t* _root() const { return m__root; }
-            s3m_t::instrument_t* _parent() const { return m__parent; }
-        };
-
-    private:
-        inst_types_t m_type;
-        std::string m_filename;
-        std::unique_ptr<kaitai::kstruct> m_body;
-        uint32_t m_tuning_hz;
-        std::string m_reserved2;
-        std::string m_sample_name;
-        std::string m_magic;
-        s3m_t* m__root;
-        s3m_t::instrument_ptr_t* m__parent;
-
-    public:
-        inst_types_t type() const { return m_type; }
-        std::string filename() const { return m_filename; }
-        kaitai::kstruct* body() const { return m_body.get(); }
-        uint32_t tuning_hz() const { return m_tuning_hz; }
-        std::string reserved2() const { return m_reserved2; }
-        std::string sample_name() const { return m_sample_name; }
-        std::string magic() const { return m_magic; }
-        s3m_t* _root() const { return m__root; }
-        s3m_t::instrument_ptr_t* _parent() const { return m__parent; }
     };
 
 private:

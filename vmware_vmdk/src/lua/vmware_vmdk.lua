@@ -25,7 +25,7 @@ end
 function VmwareVmdk:_read()
   self.magic = self._io:read_bytes(4)
   if not(self.magic == "\075\068\077\086") then
-    error("not equal, expected " ..  "\075\068\077\086" .. ", but got " .. self.magic)
+    error("not equal, expected " .. "\075\068\077\086" .. ", but got " .. self.magic)
   end
   self.version = self._io:read_s4le()
   self.flags = VmwareVmdk.HeaderFlags(self._io, self, self._root)
@@ -42,16 +42,6 @@ function VmwareVmdk:_read()
   self.compression_method = VmwareVmdk.CompressionMethods(self._io:read_u2le())
 end
 
-VmwareVmdk.property.len_sector = {}
-function VmwareVmdk.property.len_sector:get()
-  if self._m_len_sector ~= nil then
-    return self._m_len_sector
-  end
-
-  self._m_len_sector = 512
-  return self._m_len_sector
-end
-
 VmwareVmdk.property.descriptor = {}
 function VmwareVmdk.property.descriptor:get()
   if self._m_descriptor ~= nil then
@@ -59,8 +49,8 @@ function VmwareVmdk.property.descriptor:get()
   end
 
   local _pos = self._io:pos()
-  self._io:seek((self.start_descriptor * self._root.len_sector))
-  self._m_descriptor = self._io:read_bytes((self.size_descriptor * self._root.len_sector))
+  self._io:seek(self.start_descriptor * self._root.len_sector)
+  self._m_descriptor = self._io:read_bytes(self.size_descriptor * self._root.len_sector)
   self._io:seek(_pos)
   return self._m_descriptor
 end
@@ -72,8 +62,8 @@ function VmwareVmdk.property.grain_primary:get()
   end
 
   local _pos = self._io:pos()
-  self._io:seek((self.start_primary_grain * self._root.len_sector))
-  self._m_grain_primary = self._io:read_bytes((self.size_grain * self._root.len_sector))
+  self._io:seek(self.start_primary_grain * self._root.len_sector)
+  self._m_grain_primary = self._io:read_bytes(self.size_grain * self._root.len_sector)
   self._io:seek(_pos)
   return self._m_grain_primary
 end
@@ -85,10 +75,20 @@ function VmwareVmdk.property.grain_secondary:get()
   end
 
   local _pos = self._io:pos()
-  self._io:seek((self.start_secondary_grain * self._root.len_sector))
-  self._m_grain_secondary = self._io:read_bytes((self.size_grain * self._root.len_sector))
+  self._io:seek(self.start_secondary_grain * self._root.len_sector)
+  self._m_grain_secondary = self._io:read_bytes(self.size_grain * self._root.len_sector)
   self._io:seek(_pos)
   return self._m_grain_secondary
+end
+
+VmwareVmdk.property.len_sector = {}
+function VmwareVmdk.property.len_sector:get()
+  if self._m_len_sector ~= nil then
+    return self._m_len_sector
+  end
+
+  self._m_len_sector = 512
+  return self._m_len_sector
 end
 
 -- 
@@ -111,7 +111,7 @@ VmwareVmdk.HeaderFlags = class.class(KaitaiStruct)
 function VmwareVmdk.HeaderFlags:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 

@@ -26,7 +26,7 @@ proc read*(_: typedesc[HeroesOfMightAndMagicBmp], io: KaitaiStream, root: Kaitai
   this.width = widthExpr
   let heightExpr = this.io.readU2le()
   this.height = heightExpr
-  let dataExpr = this.io.readBytes(int((this.width * this.height)))
+  let dataExpr = this.io.readBytes(int(this.width * this.height))
   this.data = dataExpr
 
 proc fromFile*(_: typedesc[HeroesOfMightAndMagicBmp], filename: string): HeroesOfMightAndMagicBmp =

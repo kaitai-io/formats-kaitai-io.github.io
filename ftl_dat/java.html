@@ -180,6 +180,11 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="java-write.html" title=".dat file format of Faster Than Light (FTL) parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title=".dat file format of Faster Than Light (FTL) parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -210,7 +215,17 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="python-write.html" title=".dat file format of Faster Than Light (FTL) parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title=".dat file format of Faster Than Light (FTL) parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title=".dat file format of Faster Than Light (FTL) parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -291,7 +306,8 @@ for instructions how to add it into your project with the build tool that you us
 <span class="kn">import</span><span class="w"> </span><span class="nn">io.kaitai.struct.KaitaiStream</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">java.io.IOException</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">java.util.ArrayList</span><span class="p">;</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">java.nio.charset.Charset</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.nio.charset.StandardCharsets</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
 
 <span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">FtlDat</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">FtlDat</span><span class="w"> </span><span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">IOException</span><span class="w"> </span><span class="p">{</span>
@@ -319,6 +335,12 @@ for instructions how to add it into your project with the build tool that you us
 <span class="w">            </span><span class="k">this</span><span class="p">.</span><span class="na">files</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">File</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">));</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">_fetchInstances</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">files</span><span class="p">.</span><span class="na">size</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">this</span><span class="p">.</span><span class="na">files</span><span class="p">.</span><span class="na">get</span><span class="p">(((</span><span class="n">Number</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="p">)).</span><span class="na">intValue</span><span class="p">()).</span><span class="na">_fetchInstances</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">class</span> <span class="nc">File</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">File</span><span class="w"> </span><span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">IOException</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">File</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
@@ -340,6 +362,13 @@ for instructions how to add it into your project with the build tool that you us
 <span class="w">        </span><span class="p">}</span>
 <span class="w">        </span><span class="kd">private</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="k">this</span><span class="p">.</span><span class="na">ofsMeta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">_fetchInstances</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">meta</span><span class="p">();</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">meta</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">this</span><span class="p">.</span><span class="na">meta</span><span class="p">.</span><span class="na">_fetchInstances</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">        </span><span class="kd">private</span><span class="w"> </span><span class="n">Meta</span><span class="w"> </span><span class="n">meta</span><span class="p">;</span>
 <span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="n">Meta</span><span class="w"> </span><span class="nf">meta</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
@@ -382,8 +411,11 @@ for instructions how to add it into your project with the build tool that you us
 <span class="w">        </span><span class="kd">private</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="k">this</span><span class="p">.</span><span class="na">lenFile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
 <span class="w">            </span><span class="k">this</span><span class="p">.</span><span class="na">lenFilename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
-<span class="w">            </span><span class="k">this</span><span class="p">.</span><span class="na">filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenFilename</span><span class="p">()),</span><span class="w"> </span><span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">));</span>
+<span class="w">            </span><span class="k">this</span><span class="p">.</span><span class="na">filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenFilename</span><span class="p">()),</span><span class="w"> </span><span class="n">StandardCharsets</span><span class="p">.</span><span class="na">UTF_8</span><span class="p">);</span>
 <span class="w">            </span><span class="k">this</span><span class="p">.</span><span class="na">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenFile</span><span class="p">());</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">_fetchInstances</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">        </span><span class="kd">private</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">lenFile</span><span class="p">;</span>
 <span class="w">        </span><span class="kd">private</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">lenFilename</span><span class="p">;</span>
@@ -399,7 +431,7 @@ for instructions how to add it into your project with the build tool that you us
 <span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="n">FtlDat</span><span class="p">.</span><span class="na">File</span><span class="w"> </span><span class="nf">_parent</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">numFiles</span><span class="p">;</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">File</span><span class="o">&gt;</span><span class="w"> </span><span class="n">files</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">File</span><span class="o">&gt;</span><span class="w"> </span><span class="n">files</span><span class="p">;</span>
 <span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">FtlDat</span><span class="w"> </span><span class="n">_root</span><span class="p">;</span>
 <span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">_parent</span><span class="p">;</span>
 
@@ -407,7 +439,7 @@ for instructions how to add it into your project with the build tool that you us
 <span class="cm">     * Number of files in the archive</span>
 <span class="cm">     */</span>
 <span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="nf">numFiles</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">numFiles</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">File</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">files</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">files</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">File</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">files</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">files</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">FtlDat</span><span class="w"> </span><span class="nf">_root</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="nf">_parent</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="p">}</span>

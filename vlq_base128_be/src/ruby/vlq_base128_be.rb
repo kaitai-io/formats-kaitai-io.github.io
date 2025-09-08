@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -23,8 +23,8 @@ end
 # 
 # This particular implementation supports serialized values to up 8 bytes long.
 class VlqBase128Be < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -42,7 +42,7 @@ class VlqBase128Be < Kaitai::Struct::Struct
   ##
   # One byte group, clearly divided into 7-bit "value" chunk and 1-bit "continuation" flag.
   class Group < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -63,7 +63,7 @@ class VlqBase128Be < Kaitai::Struct::Struct
   end
   def last
     return @last unless @last.nil?
-    @last = (groups.length - 1)
+    @last = groups.length - 1
     @last
   end
 
@@ -71,7 +71,7 @@ class VlqBase128Be < Kaitai::Struct::Struct
   # Resulting value as normal integer
   def value
     return @value unless @value.nil?
-    @value = (((((((groups[last].value + (last >= 1 ? (groups[(last - 1)].value << 7) : 0)) + (last >= 2 ? (groups[(last - 2)].value << 14) : 0)) + (last >= 3 ? (groups[(last - 3)].value << 21) : 0)) + (last >= 4 ? (groups[(last - 4)].value << 28) : 0)) + (last >= 5 ? (groups[(last - 5)].value << 35) : 0)) + (last >= 6 ? (groups[(last - 6)].value << 42) : 0)) + (last >= 7 ? (groups[(last - 7)].value << 49) : 0))
+    @value = (((((((groups[last].value + (last >= 1 ? groups[last - 1].value << 7 : 0)) + (last >= 2 ? groups[last - 2].value << 14 : 0)) + (last >= 3 ? groups[last - 3].value << 21 : 0)) + (last >= 4 ? groups[last - 4].value << 28 : 0)) + (last >= 5 ? groups[last - 5].value << 35 : 0)) + (last >= 6 ? groups[last - 6].value << 42 : 0)) + (last >= 7 ? groups[last - 7].value << 49 : 0))
     @value
   end
   attr_reader :groups

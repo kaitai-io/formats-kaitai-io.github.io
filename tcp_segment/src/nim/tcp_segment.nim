@@ -88,8 +88,8 @@ proc read*(_: typedesc[TcpSegment], io: KaitaiStream, root: KaitaiStruct, parent
   this.checksum = checksumExpr
   let urgentPointerExpr = this.io.readU2be()
   this.urgentPointer = urgentPointerExpr
-  if ((this.dataOffset * 4) - 20) != 0:
-    let optionsExpr = this.io.readBytes(int(((this.dataOffset * 4) - 20)))
+  if this.dataOffset * 4 - 20 != 0:
+    let optionsExpr = this.io.readBytes(int(this.dataOffset * 4 - 20))
     this.options = optionsExpr
   let bodyExpr = this.io.readBytesFull()
   this.body = bodyExpr

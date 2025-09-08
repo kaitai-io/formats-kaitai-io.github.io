@@ -35,7 +35,7 @@ namespace Kaitai
         private void _read()
         {
             _preheader = new Preheader(m_io, this, m_root);
-            __raw_header = m_io.ReadBytes((Preheader.HeaderSize - 4));
+            __raw_header = m_io.ReadBytes(Preheader.HeaderSize - 4);
             var io___raw_header = new KaitaiStream(__raw_header);
             _header = new Header(io___raw_header, this, m_root);
             _patterns = new List<Pattern>();
@@ -48,245 +48,6 @@ namespace Kaitai
             {
                 _instruments.Add(new Instrument(m_io, this, m_root));
             }
-        }
-        public partial class Preheader : KaitaiStruct
-        {
-            public static Preheader FromFile(string fileName)
-            {
-                return new Preheader(new KaitaiStream(fileName));
-            }
-
-            public Preheader(KaitaiStream p__io, FasttrackerXmModule p__parent = null, FasttrackerXmModule p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _signature0 = m_io.ReadBytes(17);
-                if (!((KaitaiStream.ByteArrayCompare(Signature0, new byte[] { 69, 120, 116, 101, 110, 100, 101, 100, 32, 77, 111, 100, 117, 108, 101, 58, 32 }) == 0)))
-                {
-                    throw new ValidationNotEqualError(new byte[] { 69, 120, 116, 101, 110, 100, 101, 100, 32, 77, 111, 100, 117, 108, 101, 58, 32 }, Signature0, M_Io, "/types/preheader/seq/0");
-                }
-                _moduleName = System.Text.Encoding.GetEncoding("utf-8").GetString(KaitaiStream.BytesTerminate(m_io.ReadBytes(20), 0, false));
-                _signature1 = m_io.ReadBytes(1);
-                if (!((KaitaiStream.ByteArrayCompare(Signature1, new byte[] { 26 }) == 0)))
-                {
-                    throw new ValidationNotEqualError(new byte[] { 26 }, Signature1, M_Io, "/types/preheader/seq/2");
-                }
-                _trackerName = System.Text.Encoding.GetEncoding("utf-8").GetString(KaitaiStream.BytesTerminate(m_io.ReadBytes(20), 0, false));
-                _versionNumber = new Version(m_io, this, m_root);
-                _headerSize = m_io.ReadU4le();
-            }
-            public partial class Version : KaitaiStruct
-            {
-                public static Version FromFile(string fileName)
-                {
-                    return new Version(new KaitaiStream(fileName));
-                }
-
-                public Version(KaitaiStream p__io, FasttrackerXmModule.Preheader p__parent = null, FasttrackerXmModule p__root = null) : base(p__io)
-                {
-                    m_parent = p__parent;
-                    m_root = p__root;
-                    f_value = false;
-                    _read();
-                }
-                private void _read()
-                {
-                    _minor = m_io.ReadU1();
-                    _major = m_io.ReadU1();
-                }
-                private bool f_value;
-                private int _value;
-                public int Value
-                {
-                    get
-                    {
-                        if (f_value)
-                            return _value;
-                        _value = (int) (((Major << 8) | Minor));
-                        f_value = true;
-                        return _value;
-                    }
-                }
-                private byte _minor;
-                private byte _major;
-                private FasttrackerXmModule m_root;
-                private FasttrackerXmModule.Preheader m_parent;
-
-                /// <summary>
-                /// currently 0x04
-                /// </summary>
-                public byte Minor { get { return _minor; } }
-
-                /// <summary>
-                /// currently 0x01
-                /// </summary>
-                public byte Major { get { return _major; } }
-                public FasttrackerXmModule M_Root { get { return m_root; } }
-                public FasttrackerXmModule.Preheader M_Parent { get { return m_parent; } }
-            }
-            private byte[] _signature0;
-            private string _moduleName;
-            private byte[] _signature1;
-            private string _trackerName;
-            private Version _versionNumber;
-            private uint _headerSize;
-            private FasttrackerXmModule m_root;
-            private FasttrackerXmModule m_parent;
-            public byte[] Signature0 { get { return _signature0; } }
-
-            /// <summary>
-            /// Module name, padded with zeroes
-            /// </summary>
-            public string ModuleName { get { return _moduleName; } }
-            public byte[] Signature1 { get { return _signature1; } }
-
-            /// <summary>
-            /// Tracker name
-            /// </summary>
-            public string TrackerName { get { return _trackerName; } }
-
-            /// <summary>
-            /// Format versions below [0x01, 0x04] have a LOT of differences. Check this field!
-            /// </summary>
-            public Version VersionNumber { get { return _versionNumber; } }
-
-            /// <summary>
-            /// Header size &lt;&lt; Calculated FROM THIS OFFSET, not from the beginning of the file! &gt;&gt;
-            /// </summary>
-            public uint HeaderSize { get { return _headerSize; } }
-            public FasttrackerXmModule M_Root { get { return m_root; } }
-            public FasttrackerXmModule M_Parent { get { return m_parent; } }
-        }
-        public partial class Pattern : KaitaiStruct
-        {
-            public static Pattern FromFile(string fileName)
-            {
-                return new Pattern(new KaitaiStream(fileName));
-            }
-
-            public Pattern(KaitaiStream p__io, FasttrackerXmModule p__parent = null, FasttrackerXmModule p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _header = new Header(m_io, this, m_root);
-                _packedData = m_io.ReadBytes(Header.Main.LenPackedPattern);
-            }
-            public partial class Header : KaitaiStruct
-            {
-                public static Header FromFile(string fileName)
-                {
-                    return new Header(new KaitaiStream(fileName));
-                }
-
-                public Header(KaitaiStream p__io, FasttrackerXmModule.Pattern p__parent = null, FasttrackerXmModule p__root = null) : base(p__io)
-                {
-                    m_parent = p__parent;
-                    m_root = p__root;
-                    _read();
-                }
-                private void _read()
-                {
-                    _headerLength = m_io.ReadU4le();
-                    __raw_main = m_io.ReadBytes((HeaderLength - 4));
-                    var io___raw_main = new KaitaiStream(__raw_main);
-                    _main = new HeaderMain(io___raw_main, this, m_root);
-                }
-                public partial class HeaderMain : KaitaiStruct
-                {
-                    public static HeaderMain FromFile(string fileName)
-                    {
-                        return new HeaderMain(new KaitaiStream(fileName));
-                    }
-
-                    public HeaderMain(KaitaiStream p__io, FasttrackerXmModule.Pattern.Header p__parent = null, FasttrackerXmModule p__root = null) : base(p__io)
-                    {
-                        m_parent = p__parent;
-                        m_root = p__root;
-                        f_numRows = false;
-                        _read();
-                    }
-                    private void _read()
-                    {
-                        _packingType = m_io.ReadU1();
-                        switch (M_Root.Preheader.VersionNumber.Value) {
-                        case 258: {
-                            _numRowsRaw = m_io.ReadU1();
-                            break;
-                        }
-                        default: {
-                            _numRowsRaw = m_io.ReadU2le();
-                            break;
-                        }
-                        }
-                        _lenPackedPattern = m_io.ReadU2le();
-                    }
-                    private bool f_numRows;
-                    private int _numRows;
-                    public int NumRows
-                    {
-                        get
-                        {
-                            if (f_numRows)
-                                return _numRows;
-                            _numRows = (int) ((NumRowsRaw + (M_Root.Preheader.VersionNumber.Value == 258 ? 1 : 0)));
-                            f_numRows = true;
-                            return _numRows;
-                        }
-                    }
-                    private byte _packingType;
-                    private ushort _numRowsRaw;
-                    private ushort _lenPackedPattern;
-                    private FasttrackerXmModule m_root;
-                    private FasttrackerXmModule.Pattern.Header m_parent;
-
-                    /// <summary>
-                    /// Packing type (always 0)
-                    /// </summary>
-                    public byte PackingType { get { return _packingType; } }
-
-                    /// <summary>
-                    /// Number of rows in pattern (1..256)
-                    /// </summary>
-                    public ushort NumRowsRaw { get { return _numRowsRaw; } }
-
-                    /// <summary>
-                    /// Packed pattern data size
-                    /// </summary>
-                    public ushort LenPackedPattern { get { return _lenPackedPattern; } }
-                    public FasttrackerXmModule M_Root { get { return m_root; } }
-                    public FasttrackerXmModule.Pattern.Header M_Parent { get { return m_parent; } }
-                }
-                private uint _headerLength;
-                private HeaderMain _main;
-                private FasttrackerXmModule m_root;
-                private FasttrackerXmModule.Pattern m_parent;
-                private byte[] __raw_main;
-
-                /// <summary>
-                /// Pattern header length
-                /// </summary>
-                public uint HeaderLength { get { return _headerLength; } }
-                public HeaderMain Main { get { return _main; } }
-                public FasttrackerXmModule M_Root { get { return m_root; } }
-                public FasttrackerXmModule.Pattern M_Parent { get { return m_parent; } }
-                public byte[] M_RawMain { get { return __raw_main; } }
-            }
-            private Header _header;
-            private byte[] _packedData;
-            private FasttrackerXmModule m_root;
-            private FasttrackerXmModule m_parent;
-            public Header Header { get { return _header; } }
-            public byte[] PackedData { get { return _packedData; } }
-            public FasttrackerXmModule M_Root { get { return m_root; } }
-            public FasttrackerXmModule M_Parent { get { return m_parent; } }
         }
         public partial class Flags : KaitaiStruct
         {
@@ -418,7 +179,7 @@ namespace Kaitai
             private void _read()
             {
                 _headerSize = m_io.ReadU4le();
-                __raw_header = m_io.ReadBytes((HeaderSize - 4));
+                __raw_header = m_io.ReadBytes(HeaderSize - 4);
                 var io___raw_header = new KaitaiStream(__raw_header);
                 _header = new Header(io___raw_header, this, m_root);
                 _samplesHeaders = new List<SampleHeader>();
@@ -431,45 +192,6 @@ namespace Kaitai
                 {
                     _samples.Add(new SamplesData(SamplesHeaders[i], m_io, this, m_root));
                 }
-            }
-            public partial class Header : KaitaiStruct
-            {
-                public static Header FromFile(string fileName)
-                {
-                    return new Header(new KaitaiStream(fileName));
-                }
-
-                public Header(KaitaiStream p__io, FasttrackerXmModule.Instrument p__parent = null, FasttrackerXmModule p__root = null) : base(p__io)
-                {
-                    m_parent = p__parent;
-                    m_root = p__root;
-                    _read();
-                }
-                private void _read()
-                {
-                    _name = System.Text.Encoding.GetEncoding("utf-8").GetString(KaitaiStream.BytesTerminate(m_io.ReadBytes(22), 0, false));
-                    _type = m_io.ReadU1();
-                    _numSamples = m_io.ReadU2le();
-                    if (NumSamples > 0) {
-                        _extraHeader = new ExtraHeader(m_io, this, m_root);
-                    }
-                }
-                private string _name;
-                private byte _type;
-                private ushort _numSamples;
-                private ExtraHeader _extraHeader;
-                private FasttrackerXmModule m_root;
-                private FasttrackerXmModule.Instrument m_parent;
-                public string Name { get { return _name; } }
-
-                /// <summary>
-                /// Usually zero, but this seems pretty random, don't assume it's zero
-                /// </summary>
-                public byte Type { get { return _type; } }
-                public ushort NumSamples { get { return _numSamples; } }
-                public ExtraHeader ExtraHeader { get { return _extraHeader; } }
-                public FasttrackerXmModule M_Root { get { return m_root; } }
-                public FasttrackerXmModule.Instrument M_Parent { get { return m_parent; } }
             }
             public partial class ExtraHeader : KaitaiStruct
             {
@@ -629,35 +351,42 @@ namespace Kaitai
                 public FasttrackerXmModule M_Root { get { return m_root; } }
                 public FasttrackerXmModule.Instrument.Header M_Parent { get { return m_parent; } }
             }
-
-            /// <summary>
-            /// The saved data uses simple delta-encoding to achieve better compression ratios (when compressed with pkzip, etc.)
-            /// Pseudocode for converting the delta-coded data to normal data,
-            /// old = 0;
-            /// for i in range(data_len):
-            ///   new = sample[i] + old;
-            ///   sample[i] = new;
-            ///   old = new;
-            /// </summary>
-            public partial class SamplesData : KaitaiStruct
+            public partial class Header : KaitaiStruct
             {
-                public SamplesData(SampleHeader p_header, KaitaiStream p__io, FasttrackerXmModule.Instrument p__parent = null, FasttrackerXmModule p__root = null) : base(p__io)
+                public static Header FromFile(string fileName)
+                {
+                    return new Header(new KaitaiStream(fileName));
+                }
+
+                public Header(KaitaiStream p__io, FasttrackerXmModule.Instrument p__parent = null, FasttrackerXmModule p__root = null) : base(p__io)
                 {
                     m_parent = p__parent;
                     m_root = p__root;
-                    _header = p_header;
                     _read();
                 }
                 private void _read()
                 {
-                    _data = m_io.ReadBytes((Header.SampleLength * (Header.Type.IsSampleData16Bit ? 2 : 1)));
+                    _name = System.Text.Encoding.GetEncoding("UTF-8").GetString(KaitaiStream.BytesTerminate(m_io.ReadBytes(22), 0, false));
+                    _type = m_io.ReadU1();
+                    _numSamples = m_io.ReadU2le();
+                    if (NumSamples > 0) {
+                        _extraHeader = new ExtraHeader(m_io, this, m_root);
+                    }
                 }
-                private byte[] _data;
-                private SampleHeader _header;
+                private string _name;
+                private byte _type;
+                private ushort _numSamples;
+                private ExtraHeader _extraHeader;
                 private FasttrackerXmModule m_root;
                 private FasttrackerXmModule.Instrument m_parent;
-                public byte[] Data { get { return _data; } }
-                public SampleHeader Header { get { return _header; } }
+                public string Name { get { return _name; } }
+
+                /// <summary>
+                /// Usually zero, but this seems pretty random, don't assume it's zero
+                /// </summary>
+                public byte Type { get { return _type; } }
+                public ushort NumSamples { get { return _numSamples; } }
+                public ExtraHeader ExtraHeader { get { return _extraHeader; } }
                 public FasttrackerXmModule M_Root { get { return m_root; } }
                 public FasttrackerXmModule.Instrument M_Parent { get { return m_parent; } }
             }
@@ -685,7 +414,7 @@ namespace Kaitai
                     _panning = m_io.ReadU1();
                     _relativeNoteNumber = m_io.ReadS1();
                     _reserved = m_io.ReadU1();
-                    _name = System.Text.Encoding.GetEncoding("utf-8").GetString(KaitaiStream.BytesTerminate(m_io.ReadBytes(22), 0, false));
+                    _name = System.Text.Encoding.GetEncoding("UTF-8").GetString(KaitaiStream.BytesTerminate(m_io.ReadBytes(22), 0, false));
                 }
                 public partial class LoopType : KaitaiStruct
                 {
@@ -760,6 +489,38 @@ namespace Kaitai
                 public FasttrackerXmModule M_Root { get { return m_root; } }
                 public FasttrackerXmModule.Instrument M_Parent { get { return m_parent; } }
             }
+
+            /// <summary>
+            /// The saved data uses simple delta-encoding to achieve better compression ratios (when compressed with pkzip, etc.)
+            /// Pseudocode for converting the delta-coded data to normal data,
+            /// old = 0;
+            /// for i in range(data_len):
+            ///   new = sample[i] + old;
+            ///   sample[i] = new;
+            ///   old = new;
+            /// </summary>
+            public partial class SamplesData : KaitaiStruct
+            {
+                public SamplesData(SampleHeader p_header, KaitaiStream p__io, FasttrackerXmModule.Instrument p__parent = null, FasttrackerXmModule p__root = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    _header = p_header;
+                    _read();
+                }
+                private void _read()
+                {
+                    _data = m_io.ReadBytes(Header.SampleLength * (Header.Type.IsSampleData16Bit ? 2 : 1));
+                }
+                private byte[] _data;
+                private SampleHeader _header;
+                private FasttrackerXmModule m_root;
+                private FasttrackerXmModule.Instrument m_parent;
+                public byte[] Data { get { return _data; } }
+                public SampleHeader Header { get { return _header; } }
+                public FasttrackerXmModule M_Root { get { return m_root; } }
+                public FasttrackerXmModule.Instrument M_Parent { get { return m_parent; } }
+            }
             private uint _headerSize;
             private Header _header;
             private List<SampleHeader> _samplesHeaders;
@@ -779,6 +540,245 @@ namespace Kaitai
             public FasttrackerXmModule M_Root { get { return m_root; } }
             public FasttrackerXmModule M_Parent { get { return m_parent; } }
             public byte[] M_RawHeader { get { return __raw_header; } }
+        }
+        public partial class Pattern : KaitaiStruct
+        {
+            public static Pattern FromFile(string fileName)
+            {
+                return new Pattern(new KaitaiStream(fileName));
+            }
+
+            public Pattern(KaitaiStream p__io, FasttrackerXmModule p__parent = null, FasttrackerXmModule p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _header = new Header(m_io, this, m_root);
+                _packedData = m_io.ReadBytes(Header.Main.LenPackedPattern);
+            }
+            public partial class Header : KaitaiStruct
+            {
+                public static Header FromFile(string fileName)
+                {
+                    return new Header(new KaitaiStream(fileName));
+                }
+
+                public Header(KaitaiStream p__io, FasttrackerXmModule.Pattern p__parent = null, FasttrackerXmModule p__root = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    _read();
+                }
+                private void _read()
+                {
+                    _headerLength = m_io.ReadU4le();
+                    __raw_main = m_io.ReadBytes(HeaderLength - 4);
+                    var io___raw_main = new KaitaiStream(__raw_main);
+                    _main = new HeaderMain(io___raw_main, this, m_root);
+                }
+                public partial class HeaderMain : KaitaiStruct
+                {
+                    public static HeaderMain FromFile(string fileName)
+                    {
+                        return new HeaderMain(new KaitaiStream(fileName));
+                    }
+
+                    public HeaderMain(KaitaiStream p__io, FasttrackerXmModule.Pattern.Header p__parent = null, FasttrackerXmModule p__root = null) : base(p__io)
+                    {
+                        m_parent = p__parent;
+                        m_root = p__root;
+                        f_numRows = false;
+                        _read();
+                    }
+                    private void _read()
+                    {
+                        _packingType = m_io.ReadU1();
+                        switch (M_Root.Preheader.VersionNumber.Value) {
+                        case 258: {
+                            _numRowsRaw = m_io.ReadU1();
+                            break;
+                        }
+                        default: {
+                            _numRowsRaw = m_io.ReadU2le();
+                            break;
+                        }
+                        }
+                        _lenPackedPattern = m_io.ReadU2le();
+                    }
+                    private bool f_numRows;
+                    private int _numRows;
+                    public int NumRows
+                    {
+                        get
+                        {
+                            if (f_numRows)
+                                return _numRows;
+                            f_numRows = true;
+                            _numRows = (int) (NumRowsRaw + (M_Root.Preheader.VersionNumber.Value == 258 ? 1 : 0));
+                            return _numRows;
+                        }
+                    }
+                    private byte _packingType;
+                    private ushort _numRowsRaw;
+                    private ushort _lenPackedPattern;
+                    private FasttrackerXmModule m_root;
+                    private FasttrackerXmModule.Pattern.Header m_parent;
+
+                    /// <summary>
+                    /// Packing type (always 0)
+                    /// </summary>
+                    public byte PackingType { get { return _packingType; } }
+
+                    /// <summary>
+                    /// Number of rows in pattern (1..256)
+                    /// </summary>
+                    public ushort NumRowsRaw { get { return _numRowsRaw; } }
+
+                    /// <summary>
+                    /// Packed pattern data size
+                    /// </summary>
+                    public ushort LenPackedPattern { get { return _lenPackedPattern; } }
+                    public FasttrackerXmModule M_Root { get { return m_root; } }
+                    public FasttrackerXmModule.Pattern.Header M_Parent { get { return m_parent; } }
+                }
+                private uint _headerLength;
+                private HeaderMain _main;
+                private FasttrackerXmModule m_root;
+                private FasttrackerXmModule.Pattern m_parent;
+                private byte[] __raw_main;
+
+                /// <summary>
+                /// Pattern header length
+                /// </summary>
+                public uint HeaderLength { get { return _headerLength; } }
+                public HeaderMain Main { get { return _main; } }
+                public FasttrackerXmModule M_Root { get { return m_root; } }
+                public FasttrackerXmModule.Pattern M_Parent { get { return m_parent; } }
+                public byte[] M_RawMain { get { return __raw_main; } }
+            }
+            private Header _header;
+            private byte[] _packedData;
+            private FasttrackerXmModule m_root;
+            private FasttrackerXmModule m_parent;
+            public Header Header { get { return _header; } }
+            public byte[] PackedData { get { return _packedData; } }
+            public FasttrackerXmModule M_Root { get { return m_root; } }
+            public FasttrackerXmModule M_Parent { get { return m_parent; } }
+        }
+        public partial class Preheader : KaitaiStruct
+        {
+            public static Preheader FromFile(string fileName)
+            {
+                return new Preheader(new KaitaiStream(fileName));
+            }
+
+            public Preheader(KaitaiStream p__io, FasttrackerXmModule p__parent = null, FasttrackerXmModule p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _signature0 = m_io.ReadBytes(17);
+                if (!((KaitaiStream.ByteArrayCompare(_signature0, new byte[] { 69, 120, 116, 101, 110, 100, 101, 100, 32, 77, 111, 100, 117, 108, 101, 58, 32 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 69, 120, 116, 101, 110, 100, 101, 100, 32, 77, 111, 100, 117, 108, 101, 58, 32 }, _signature0, m_io, "/types/preheader/seq/0");
+                }
+                _moduleName = System.Text.Encoding.GetEncoding("UTF-8").GetString(KaitaiStream.BytesTerminate(m_io.ReadBytes(20), 0, false));
+                _signature1 = m_io.ReadBytes(1);
+                if (!((KaitaiStream.ByteArrayCompare(_signature1, new byte[] { 26 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 26 }, _signature1, m_io, "/types/preheader/seq/2");
+                }
+                _trackerName = System.Text.Encoding.GetEncoding("UTF-8").GetString(KaitaiStream.BytesTerminate(m_io.ReadBytes(20), 0, false));
+                _versionNumber = new Version(m_io, this, m_root);
+                _headerSize = m_io.ReadU4le();
+            }
+            public partial class Version : KaitaiStruct
+            {
+                public static Version FromFile(string fileName)
+                {
+                    return new Version(new KaitaiStream(fileName));
+                }
+
+                public Version(KaitaiStream p__io, FasttrackerXmModule.Preheader p__parent = null, FasttrackerXmModule p__root = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    f_value = false;
+                    _read();
+                }
+                private void _read()
+                {
+                    _minor = m_io.ReadU1();
+                    _major = m_io.ReadU1();
+                }
+                private bool f_value;
+                private int _value;
+                public int Value
+                {
+                    get
+                    {
+                        if (f_value)
+                            return _value;
+                        f_value = true;
+                        _value = (int) (Major << 8 | Minor);
+                        return _value;
+                    }
+                }
+                private byte _minor;
+                private byte _major;
+                private FasttrackerXmModule m_root;
+                private FasttrackerXmModule.Preheader m_parent;
+
+                /// <summary>
+                /// currently 0x04
+                /// </summary>
+                public byte Minor { get { return _minor; } }
+
+                /// <summary>
+                /// currently 0x01
+                /// </summary>
+                public byte Major { get { return _major; } }
+                public FasttrackerXmModule M_Root { get { return m_root; } }
+                public FasttrackerXmModule.Preheader M_Parent { get { return m_parent; } }
+            }
+            private byte[] _signature0;
+            private string _moduleName;
+            private byte[] _signature1;
+            private string _trackerName;
+            private Version _versionNumber;
+            private uint _headerSize;
+            private FasttrackerXmModule m_root;
+            private FasttrackerXmModule m_parent;
+            public byte[] Signature0 { get { return _signature0; } }
+
+            /// <summary>
+            /// Module name, padded with zeroes
+            /// </summary>
+            public string ModuleName { get { return _moduleName; } }
+            public byte[] Signature1 { get { return _signature1; } }
+
+            /// <summary>
+            /// Tracker name
+            /// </summary>
+            public string TrackerName { get { return _trackerName; } }
+
+            /// <summary>
+            /// Format versions below [0x01, 0x04] have a LOT of differences. Check this field!
+            /// </summary>
+            public Version VersionNumber { get { return _versionNumber; } }
+
+            /// <summary>
+            /// Header size &lt;&lt; Calculated FROM THIS OFFSET, not from the beginning of the file! &gt;&gt;
+            /// </summary>
+            public uint HeaderSize { get { return _headerSize; } }
+            public FasttrackerXmModule M_Root { get { return m_root; } }
+            public FasttrackerXmModule M_Parent { get { return m_parent; } }
         }
         private Preheader _preheader;
         private Header _header;

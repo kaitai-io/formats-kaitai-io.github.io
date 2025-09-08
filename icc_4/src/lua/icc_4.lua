@@ -1,0 +1,2859 @@
+-- This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+--
+-- This file is compatible with Lua 5.3
+
+local class = require("class")
+require("kaitaistruct")
+local enum = require("enum")
+local str_decode = require("string_decode")
+local stringstream = require("string_stream")
+
+Icc4 = class.class(KaitaiStruct)
+
+function Icc4:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
+end
+
+function Icc4:_read()
+  self.header = Icc4.ProfileHeader(self._io, self, self._root)
+  self.tag_table = Icc4.TagTable(self._io, self, self._root)
+end
+
+
+Icc4.DateTimeNumber = class.class(KaitaiStruct)
+
+function Icc4.DateTimeNumber:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.DateTimeNumber:_read()
+  self.year = self._io:read_u2be()
+  self.month = self._io:read_u2be()
+  self.day = self._io:read_u2be()
+  self.hour = self._io:read_u2be()
+  self.minute = self._io:read_u2be()
+  self.second = self._io:read_u2be()
+end
+
+
+Icc4.DeviceAttributes = class.class(KaitaiStruct)
+
+Icc4.DeviceAttributes.DeviceAttributesColourOrBlackAndWhiteMedia = enum.Enum {
+  colour_media = 0,
+  black_and_white_media = 1,
+}
+
+Icc4.DeviceAttributes.DeviceAttributesGlossyOrMatte = enum.Enum {
+  glossy = 0,
+  matte = 1,
+}
+
+Icc4.DeviceAttributes.DeviceAttributesPositiveOrNegativeMediaPolarity = enum.Enum {
+  positive_media_polarity = 0,
+  negative_media_polarity = 1,
+}
+
+Icc4.DeviceAttributes.DeviceAttributesReflectiveOrTransparency = enum.Enum {
+  reflective = 0,
+  transparency = 1,
+}
+
+function Icc4.DeviceAttributes:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.DeviceAttributes:_read()
+  self.reflective_or_transparency = Icc4.DeviceAttributes.DeviceAttributesReflectiveOrTransparency(self._io:read_bits_int_be(1))
+  self.glossy_or_matte = Icc4.DeviceAttributes.DeviceAttributesGlossyOrMatte(self._io:read_bits_int_be(1))
+  self.positive_or_negative_media_polarity = Icc4.DeviceAttributes.DeviceAttributesPositiveOrNegativeMediaPolarity(self._io:read_bits_int_be(1))
+  self.colour_or_black_and_white_media = Icc4.DeviceAttributes.DeviceAttributesColourOrBlackAndWhiteMedia(self._io:read_bits_int_be(1))
+  self.reserved = self._io:read_bits_int_be(28)
+  self.vendor_specific = self._io:read_bits_int_be(32)
+end
+
+
+Icc4.DeviceManufacturer = class.class(KaitaiStruct)
+
+Icc4.DeviceManufacturer.DeviceManufacturers = enum.Enum {
+  erdt_systems_gmbh_and_co_kg = 878981744,
+  aamazing_technologies_inc = 1094798657,
+  acer_peripherals = 1094927698,
+  acolyte_color_research = 1094929492,
+  actix_sytems_inc = 1094931529,
+  adara_technology_inc = 1094992210,
+  adobe_systems_incorporated = 1094992453,
+  adi_systems_inc = 1094994208,
+  agfa_graphics_nv = 1095190081,
+  alps_electric_usa_inc = 1095519556,
+  alps_electric_usa_inc_2 = 1095520339,
+  alwan_color_expertise = 1095522126,
+  amiable_technologies_inc = 1095586889,
+  aoc_international_usa_ltd = 1095713568,
+  apago = 1095778631,
+  apple_computer_inc = 1095782476,
+  ast = 1095980064,
+  atandt_computer_systems = 1096033876,
+  barbieri_electronic = 1111573836,
+  barco_nv = 1112687439,
+  breakpoint_pty_limited = 1112689488,
+  brother_industries_ltd = 1112690516,
+  bull = 1112886348,
+  bus_computer_systems = 1112888096,
+  c_itoh = 1127041364,
+  intel_corporation = 1128353106,
+  canon_inc_canon_development_americas_inc = 1128353359,
+  carroll_touch = 1128354386,
+  casio_computer_co_ltd = 1128354633,
+  colorbus_pl = 1128420691,
+  crossfield = 1128614944,
+  crossfield_2 = 1128615032,
+  cgs_publishing_technologies_international_gmbh = 1128747808,
+  rochester_robotics = 1128811808,
+  colour_imaging_group_london = 1128875852,
+  citizen = 1128879177,
+  candela_ltd = 1129066544,
+  color_iq = 1129072977,
+  chromaco_inc = 1129136975,
+  chromix = 1129146712,
+  colorgraphic_communications_corporation = 1129270351,
+  compaq_computer_corporation = 1129270608,
+  compeq_usa_focus_technology = 1129270640,
+  conrac_display_products = 1129270866,
+  cordata_technologies_inc = 1129271876,
+  compaq_computer_corporation_2 = 1129337120,
+  colorpro = 1129337423,
+  cornerstone = 1129467424,
+  ctx_international_inc = 1129601056,
+  colorvision = 1129728339,
+  fujitsu_laboratories_ltd = 1129792288,
+  darius_technology_ltd = 1145131593,
+  dataproducts = 1145132097,
+  dry_creek_photo = 1145262112,
+  digital_contents_resource_center_chung_ang_university = 1145262659,
+  dell_computer_corporation = 1145392204,
+  dainippon_ink_and_chemicals = 1145652000,
+  diconix = 1145652047,
+  digital = 1145653065,
+  digital_light_and_color = 1145841219,
+  doppelganger_llc = 1146113095,
+  dainippon_screen = 1146298400,
+  doosol = 1146310476,
+  dupont = 1146441806,
+  epson = 1162892111,
+  esko_graphics = 1163086671,
+  electronics_and_telecommunications_research_institute = 1163153993,
+  everex_systems_inc = 1163281746,
+  exactcode_gmbh = 1163411779,
+  eizo_nanao_corporation = 1164540527,
+  falco_data_products_inc = 1178684483,
+  fuji_photo_film_coltd = 1179000864,
+  fujifilm_electronic_imaging_ltd = 1179010377,
+  fnord_software = 1179537988,
+  fora_inc = 1179603521,
+  forefront_technology_corporation = 1179603525,
+  fujitsu = 1179658794,
+  waytech_development_inc = 1179664672,
+  fujitsu_2 = 1179994697,
+  fuji_xerox_co_ltd = 1180180512,
+  gcc_technologies_inc = 1195590432,
+  global_graphics_software_limited = 1195856716,
+  gretagmacbeth = 1196245536,
+  gmg_gmbh_and_co_kg = 1196246816,
+  goldstar_technology_inc = 1196379204,
+  giantprint_pty_ltd = 1196446292,
+  gretagmacbeth_2 = 1196707138,
+  waytech_development_inc_2 = 1196835616,
+  sony_corporation = 1196896843,
+  hci = 1212369184,
+  heidelberger_druckmaschinen_ag = 1212435744,
+  hermes = 1212502605,
+  hitachi_america_ltd = 1212765249,
+  hewlett_packard = 1213210656,
+  hitachi_ltd = 1213481760,
+  hiti_digital_inc = 1214862441,
+  ibm_corporation = 1229081888,
+  scitex_corporation_ltd = 1229213268,
+  hewlett_packard_2 = 1229275936,
+  iiyama_north_america_inc = 1229543745,
+  ikegami_electronics_inc = 1229669703,
+  image_systems_corporation = 1229799751,
+  ingram_micro_inc = 1229801760,
+  intel_corporation_2 = 1229870147,
+  intl = 1229870156,
+  intra_electronics_usa_inc = 1229870162,
+  iocomm_international_technology_corporation = 1229931343,
+  infoprint_solutions_company = 1230000928,
+  scitex_corporation_ltd_3 = 1230129491,
+  ichikawa_soft_laboratory = 1230195744,
+  itnl = 1230261836,
+  ivm = 1230392608,
+  iwatsu_electric_co_ltd = 1230455124,
+  scitex_corporation_ltd_2 = 1231318644,
+  inca_digital_printers_ltd = 1231971169,
+  scitex_corporation_ltd_4 = 1232234867,
+  jetsoft_development = 1246971476,
+  jvc_information_products_co = 1247167264,
+  scitex_corporation_ltd_6 = 1262572116,
+  kfc_computek_components_corporation = 1262895904,
+  klh_computers = 1263290400,
+  konica_minolta_holdings_inc = 1263355972,
+  konica_corporation = 1263420225,
+  kodak = 1263486017,
+  kyocera = 1264144195,
+  scitex_corporation_ltd_7 = 1264677492,
+  leica_camera_ag = 1279476039,
+  leeds_colour = 1279476548,
+  left_dakota = 1279541579,
+  leading_technology_inc = 1279607108,
+  lexmark_international_inc = 1279613005,
+  link_computer_inc = 1279872587,
+  linotronic = 1279872591,
+  lite_on_inc = 1279874117,
+  mag_computronic_usa_inc = 1296123715,
+  mag_innovision_inc = 1296123721,
+  mannesmann = 1296125518,
+  micron_technology_inc = 1296646990,
+  microtek = 1296646994,
+  microvitec_inc = 1296646998,
+  minolta = 1296649807,
+  mitsubishi_electronics_america_inc = 1296651347,
+  mitsuba_corporation = 1296651379,
+  minolta_2 = 1296976980,
+  modgraph_inc = 1297040455,
+  monitronix_inc = 1297043017,
+  monaco_systems_inc = 1297043027,
+  morse_technology_inc = 1297044051,
+  motive_systems = 1297044553,
+  microsoft_corporation = 1297303124,
+  mutoh_industries_ltd = 1297437775,
+  mitsubishi_electric_corporation_kyoto_works = 1298756723,
+  nanao_usa_corporation = 1312902721,
+  nec_corporation = 1313162016,
+  nexpress_solutions_llc = 1313167440,
+  nissei_sangyo_america_ltd = 1313428307,
+  nikon_corporation = 1313558350,
+  oce_technologies_bv = 1329808672,
+  ocecolor = 1329808707,
+  oki = 1330333984,
+  okidata = 1330334020,
+  okidata_2 = 1330334032,
+  olivetti = 1330399574,
+  olympus_optical_co_ltd = 1330403661,
+  onyx_graphics = 1330534744,
+  optiquest = 1330664521,
+  packard_bell = 1346454347,
+  matsushita_electric_industrial_co_ltd = 1346457153,
+  pantone_inc = 1346457172,
+  packard_bell_2 = 1346522656,
+  pfu_limited = 1346786592,
+  philips_consumer_electronics_co = 1346914636,
+  hoya_corporation_pentax_imaging_systems_division = 1347310680,
+  phase_one_a_s = 1347382885,
+  premier_computer_innovations = 1347568973,
+  princeton_graphic_systems = 1347569998,
+  princeton_publishing_labs = 1347570000,
+  qlux = 1363957080,
+  qms_inc = 1364022048,
+  qpcard_ab = 1364214596,
+  quadlaser = 1364541764,
+  qume_corporation = 1364544837,
+  radius_inc = 1380009033,
+  integrated_color_solutions_inc_2 = 1380205688,
+  roland_dg_corporation = 1380206368,
+  redms_group_inc = 1380271181,
+  relisys = 1380273225,
+  rolf_gierling_multitools = 1380404563,
+  ricoh_corporation = 1380533071,
+  edmund_ronald = 1380863044,
+  royal = 1380931905,
+  ricoh_printing_systemsltd = 1380991776,
+  royal_information_electronics_co_ltd = 1381256224,
+  sampo_corporation_of_america = 1396788560,
+  samsung_inc = 1396788563,
+  jaime_santana_pomares = 1396788820,
+  scitex_corporation_ltd_9 = 1396918612,
+  dainippon_screen_3 = 1396920910,
+  scitex_corporation_ltd_12 = 1396985888,
+  samsung_electronics_coltd = 1397048096,
+  seiko_instruments_usa_inc = 1397049675,
+  seikosha = 1397049707,
+  scanguycom = 1397183833,
+  sharp_laboratories = 1397244242,
+  international_color_consortium = 1397310275,
+  sony_corporation_2 = 1397706329,
+  spectracal = 1397769036,
+  star = 1398030674,
+  sampo_technology_corporation = 1398031136,
+  scitex_corporation_ltd_10 = 1399023988,
+  scitex_corporation_ltd_13 = 1399091232,
+  sony_corporation_3 = 1399811705,
+  talon_technology_corporation = 1413565519,
+  tandy = 1413566020,
+  tatung_co_of_america_inc = 1413567573,
+  taxan_america_inc = 1413568577,
+  tokyo_denshi_sekei_kk = 1413763872,
+  teco_information_systems_inc = 1413825359,
+  tegra = 1413826386,
+  tektronix_inc = 1413827412,
+  texas_instruments = 1414078496,
+  typemaker_ltd = 1414351698,
+  toshiba_corp = 1414484802,
+  toshiba_inc = 1414484808,
+  totoku_electric_co_ltd = 1414485067,
+  triumph = 1414678869,
+  toshiba_tec_corporation = 1414742612,
+  ttx_computer_products_inc = 1414813728,
+  tvm_professional_monitor_corporation = 1414941984,
+  tw_casper_corporation = 1414996000,
+  ulead_systems = 1431065432,
+  unisys = 1431193939,
+  utz_fehlau_and_sohn = 1431591494,
+  varityper = 1447121481,
+  viewsonic = 1447642455,
+  visual_communication = 1447646028,
+  wang = 1463897671,
+  wilbur_imaging = 1464615506,
+  ware_to_go = 1465141042,
+  wyse_technology = 1465471813,
+  xerox_corporation = 1480938072,
+  x_rite = 1481787732,
+  lavanyas_test_company = 1513173555,
+  zoran_corporation = 1515340110,
+  zebra_technologies_inc = 1516593778,
+  basiccolor_gmbh = 1648968515,
+  bergdesign_incorporated = 1650815591,
+  integrated_color_solutions_inc = 1667594596,
+  macdermid_colorspan_inc = 1668051824,
+  dainippon_screen_2 = 1685266464,
+  dupont_2 = 1685418094,
+  fujifilm_electronic_imaging_ltd_2 = 1717986665,
+  fluxdata_corporation = 1718383992,
+  scitex_corporation_ltd_5 = 1769105779,
+  scitex_corporation_ltd_8 = 1801548404,
+  erdt_systems_gmbh_and_co_kg_2 = 1868706916,
+  medigraph_gmbh = 1868720483,
+  qubyx_sarl = 1903518329,
+  scitex_corporation_ltd_11 = 1935894900,
+  dainippon_screen_4 = 1935897198,
+  scitex_corporation_ltd_14 = 1935962144,
+  siwi_grafika_corporation = 1936291689,
+  yxymaster_gmbh = 2037938541,
+}
+
+function Icc4.DeviceManufacturer:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.DeviceManufacturer:_read()
+  self.device_manufacturer = Icc4.DeviceManufacturer.DeviceManufacturers(self._io:read_u4be())
+end
+
+
+Icc4.PositionNumber = class.class(KaitaiStruct)
+
+function Icc4.PositionNumber:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.PositionNumber:_read()
+  self.offset_to_data_element = self._io:read_u4be()
+  self.size_of_data_element = self._io:read_u4be()
+end
+
+
+Icc4.ProfileHeader = class.class(KaitaiStruct)
+
+Icc4.ProfileHeader.CmmSignatures = enum.Enum {
+  the_imaging_factory_cmm = 858931796,
+  agfa_cmm = 1094929747,
+  adobe_cmm = 1094992453,
+  color_gear_cmm = 1128484179,
+  demoiccmax_cmm = 1145654616,
+  logosync_cmm = 1147629395,
+  efi_cmm = 1162234144,
+  exact_scan_cmm = 1163411779,
+  fuji_film_cmm = 1179000864,
+  harlequin_rip_cmm = 1212370253,
+  heidelberg_cmm = 1212435744,
+  kodak_cmm = 1262701907,
+  konica_minolta_cmm = 1296256324,
+  onyx_graphics_cmm = 1330534744,
+  device_link_cmm = 1380404563,
+  reficcmax_cmm = 1380535640,
+  sample_icc_cmm = 1397310275,
+  mutoh_cmm = 1397311310,
+  toshiba_cmm = 1413696845,
+  color_gear_cmm_lite = 1430471501,
+  color_gear_cmm_c = 1430474067,
+  windows_color_system_cmm = 1464029984,
+  ware_to_go_cmm = 1465141024,
+  apple_cmm = 1634758764,
+  argyll_cms_cmm = 1634887532,
+  little_cms_cmm = 1818455411,
+  vivo_cmm = 1986623087,
+  zoran_cmm = 2053320752,
+}
+
+Icc4.ProfileHeader.DataColourSpaces = enum.Enum {
+  two_colour = 843271250,
+  three_colour = 860048466,
+  four_colour = 876825682,
+  five_colour = 893602898,
+  six_colour = 910380114,
+  seven_colour = 927157330,
+  eight_colour = 943934546,
+  nine_colour = 960711762,
+  ten_colour = 1094929490,
+  eleven_colour = 1111706706,
+  twelve_colour = 1128483922,
+  cmy = 1129142560,
+  cmyk = 1129142603,
+  thirteen_colour = 1145261138,
+  fourteen_colour = 1162038354,
+  fifteen_colour = 1178815570,
+  gray = 1196573017,
+  hls = 1212961568,
+  hsv = 1213421088,
+  cielab_or_pcslab = 1281450528,
+  cieluv = 1282766368,
+  rgb = 1380401696,
+  nciexyz_or_pcsxyz = 1482250784,
+  ycbcr = 1497588338,
+  cieyxy = 1501067552,
+}
+
+Icc4.ProfileHeader.PrimaryPlatforms = enum.Enum {
+  apple_computer_inc = 1095782476,
+  microsoft_corporation = 1297303124,
+  silicon_graphics_inc = 1397180704,
+  sun_microsystems = 1398099543,
+}
+
+Icc4.ProfileHeader.ProfileClasses = enum.Enum {
+  abstract_profile = 1633842036,
+  device_link_profile = 1818848875,
+  display_device_profile = 1835955314,
+  named_color_profile = 1852662636,
+  output_device_profile = 1886549106,
+  input_device_profile = 1935896178,
+  color_space_profile = 1936744803,
+}
+
+Icc4.ProfileHeader.RenderingIntents = enum.Enum {
+  perceptual = 0,
+  media_relative_colorimetric = 1,
+  saturation = 2,
+  icc_absolute_colorimetric = 3,
+}
+
+function Icc4.ProfileHeader:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.ProfileHeader:_read()
+  self.size = self._io:read_u4be()
+  self.preferred_cmm_type = Icc4.ProfileHeader.CmmSignatures(self._io:read_u4be())
+  self.version = Icc4.ProfileHeader.VersionField(self._io, self, self._root)
+  self.device_class = Icc4.ProfileHeader.ProfileClasses(self._io:read_u4be())
+  self.color_space = Icc4.ProfileHeader.DataColourSpaces(self._io:read_u4be())
+  self.pcs = str_decode.decode(self._io:read_bytes(4), "ASCII")
+  self.creation_date_time = Icc4.DateTimeNumber(self._io, self, self._root)
+  self.file_signature = self._io:read_bytes(4)
+  if not(self.file_signature == "\097\099\115\112") then
+    error("not equal, expected " .. "\097\099\115\112" .. ", but got " .. self.file_signature)
+  end
+  self.primary_platform = Icc4.ProfileHeader.PrimaryPlatforms(self._io:read_u4be())
+  self.profile_flags = Icc4.ProfileHeader.ProfileFlags(self._io, self, self._root)
+  self.device_manufacturer = Icc4.DeviceManufacturer(self._io, self, self._root)
+  self.device_model = str_decode.decode(self._io:read_bytes(4), "ASCII")
+  self.device_attributes = Icc4.DeviceAttributes(self._io, self, self._root)
+  self.rendering_intent = Icc4.ProfileHeader.RenderingIntents(self._io:read_u4be())
+  self.nciexyz_values_of_illuminant_of_pcs = Icc4.XyzNumber(self._io, self, self._root)
+  self.creator = Icc4.DeviceManufacturer(self._io, self, self._root)
+  self.identifier = self._io:read_bytes(16)
+  self.reserved_data = self._io:read_bytes(28)
+end
+
+
+Icc4.ProfileHeader.ProfileFlags = class.class(KaitaiStruct)
+
+function Icc4.ProfileHeader.ProfileFlags:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.ProfileHeader.ProfileFlags:_read()
+  self.embedded_profile = self._io:read_bits_int_be(1) ~= 0
+  self.profile_can_be_used_independently_of_embedded_colour_data = self._io:read_bits_int_be(1) ~= 0
+  self.other_flags = self._io:read_bits_int_be(30)
+end
+
+
+Icc4.ProfileHeader.VersionField = class.class(KaitaiStruct)
+
+function Icc4.ProfileHeader.VersionField:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.ProfileHeader.VersionField:_read()
+  self.major = self._io:read_bytes(1)
+  if not(self.major == "\004") then
+    error("not equal, expected " .. "\004" .. ", but got " .. self.major)
+  end
+  self.minor = self._io:read_bits_int_be(4)
+  self.bug_fix_level = self._io:read_bits_int_be(4)
+  self._io:align_to_byte()
+  self.reserved = self._io:read_bytes(2)
+  if not(self.reserved == "\000\000") then
+    error("not equal, expected " .. "\000\000" .. ", but got " .. self.reserved)
+  end
+end
+
+
+Icc4.Response16Number = class.class(KaitaiStruct)
+
+function Icc4.Response16Number:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.Response16Number:_read()
+  self.number = self._io:read_u4be()
+  self.reserved = self._io:read_bytes(2)
+  if not(self.reserved == "\000\000") then
+    error("not equal, expected " .. "\000\000" .. ", but got " .. self.reserved)
+  end
+  self.measurement_value = Icc4.S15Fixed16Number(self._io, self, self._root)
+end
+
+
+Icc4.S15Fixed16Number = class.class(KaitaiStruct)
+
+function Icc4.S15Fixed16Number:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.S15Fixed16Number:_read()
+  self.number = self._io:read_bytes(4)
+end
+
+
+Icc4.StandardIlluminantEncoding = class.class(KaitaiStruct)
+
+Icc4.StandardIlluminantEncoding.StandardIlluminantEncodings = enum.Enum {
+  unknown = 0,
+  d50 = 1,
+  d65 = 2,
+  d93 = 3,
+  f2 = 4,
+  d55 = 5,
+  a = 6,
+  equi_power = 7,
+  f8 = 8,
+}
+
+function Icc4.StandardIlluminantEncoding:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.StandardIlluminantEncoding:_read()
+  self.standard_illuminant_encoding = Icc4.StandardIlluminantEncoding.StandardIlluminantEncodings(self._io:read_u4be())
+end
+
+
+Icc4.TagTable = class.class(KaitaiStruct)
+
+function Icc4.TagTable:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable:_read()
+  self.tag_count = self._io:read_u4be()
+  self.tags = {}
+  for i = 0, self.tag_count - 1 do
+    self.tags[i + 1] = Icc4.TagTable.TagDefinition(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition = class.class(KaitaiStruct)
+
+Icc4.TagTable.TagDefinition.MultiProcessElementsTypes = enum.Enum {
+  bacs_element_type = 1648444243,
+  clut_element_type = 1668052340,
+  one_dimensional_curves_type = 1668641382,
+  eacs_element_type = 1698775891,
+  matrix_element_type = 1835103334,
+  curve_set_element_table_type = 1835428980,
+  formula_curve_segments_type = 1885434470,
+  sampled_curve_segment_type = 1935764838,
+}
+
+Icc4.TagTable.TagDefinition.TagSignatures = enum.Enum {
+  a_to_b_0 = 1093812784,
+  a_to_b_1 = 1093812785,
+  a_to_b_2 = 1093812786,
+  b_to_a_0 = 1110589744,
+  b_to_a_1 = 1110589745,
+  b_to_a_2 = 1110589746,
+  b_to_d_0 = 1110590512,
+  b_to_d_1 = 1110590513,
+  b_to_d_2 = 1110590514,
+  b_to_d_3 = 1110590515,
+  d_to_b_0 = 1144144432,
+  d_to_b_1 = 1144144433,
+  d_to_b_2 = 1144144434,
+  d_to_b_3 = 1144144435,
+  blue_trc = 1649693251,
+  blue_matrix_column = 1649957210,
+  calibration_date_time = 1667329140,
+  chromatic_adaptation = 1667785060,
+  chromaticity = 1667789421,
+  colorimetric_intent_image_state = 1667852659,
+  colorant_table_out = 1668050804,
+  colorant_order = 1668051567,
+  colorant_table = 1668051572,
+  copyright = 1668313716,
+  profile_description = 1684370275,
+  device_model_desc = 1684890724,
+  device_mfg_desc = 1684893284,
+  green_trc = 1733579331,
+  green_matrix_column = 1733843290,
+  gamut = 1734438260,
+  gray_trc = 1800688195,
+  luminance = 1819635049,
+  measurement = 1835360627,
+  named_color_2 = 1852009522,
+  preview_0 = 1886545200,
+  preview_1 = 1886545201,
+  preview_2 = 1886545202,
+  profile_sequence = 1886610801,
+  profile_sequence_identifier = 1886611812,
+  red_trc = 1918128707,
+  red_matrix_column = 1918392666,
+  output_response = 1919251312,
+  perceptual_rendering_intent_gamut = 1919510320,
+  saturation_rendering_intent_gamut = 1919510322,
+  char_target = 1952543335,
+  technology = 1952801640,
+  viewing_conditions = 1986618743,
+  viewing_cond_desc = 1987405156,
+  media_white_point = 2004119668,
+}
+
+Icc4.TagTable.TagDefinition.TagTypeSignatures = enum.Enum {
+  xyz_type = 1482250784,
+  chromaticity_type = 1667789421,
+  colorant_order_type = 1668051567,
+  colorant_table_type = 1668051572,
+  curve_type = 1668641398,
+  data_type = 1684108385,
+  date_time_type = 1685350765,
+  multi_function_a_to_b_table_type = 1832993312,
+  multi_function_b_to_a_table_type = 1833058592,
+  measurement_type = 1835360627,
+  multi_function_table_with_one_byte_precision_type = 1835430961,
+  multi_function_table_with_two_byte_precision_type = 1835430962,
+  multi_localized_unicode_type = 1835824483,
+  multi_process_elements_type = 1836082548,
+  named_color_2_type = 1852009522,
+  parametric_curve_type = 1885434465,
+  profile_sequence_desc_type = 1886610801,
+  profile_sequence_identifier_type = 1886611812,
+  response_curve_set_16_type = 1919120178,
+  s_15_fixed_16_array_type = 1936077618,
+  signature_type = 1936287520,
+  text_type = 1952807028,
+  u_16_fixed_16_array_type = 1969632050,
+  u_int_8_array_type = 1969827896,
+  u_int_16_array_type = 1969828150,
+  u_int_32_array_type = 1969828658,
+  u_int_64_array_type = 1969829428,
+  viewing_conditions_type = 1986618743,
+}
+
+function Icc4.TagTable.TagDefinition:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition:_read()
+  self.tag_signature = Icc4.TagTable.TagDefinition.TagSignatures(self._io:read_u4be())
+  self.offset_to_data_element = self._io:read_u4be()
+  self.size_of_data_element = self._io:read_u4be()
+end
+
+Icc4.TagTable.TagDefinition.property.tag_data_element = {}
+function Icc4.TagTable.TagDefinition.property.tag_data_element:get()
+  if self._m_tag_data_element ~= nil then
+    return self._m_tag_data_element
+  end
+
+  local _pos = self._io:pos()
+  self._io:seek(self.offset_to_data_element)
+  local _on = self.tag_signature
+  if _on == Icc4.TagTable.TagDefinition.TagSignatures.a_to_b_0 then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.AToB0Tag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.a_to_b_1 then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.AToB1Tag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.a_to_b_2 then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.AToB2Tag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.b_to_a_0 then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.BToA0Tag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.b_to_a_1 then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.BToA1Tag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.b_to_a_2 then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.BToA2Tag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.b_to_d_0 then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.BToD0Tag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.b_to_d_1 then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.BToD1Tag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.b_to_d_2 then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.BToD2Tag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.b_to_d_3 then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.BToD3Tag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.blue_matrix_column then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.BlueMatrixColumnTag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.blue_trc then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.BlueTrcTag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.calibration_date_time then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.CalibrationDateTimeTag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.char_target then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.CharTargetTag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.chromatic_adaptation then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.ChromaticAdaptationTag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.chromaticity then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.ChromaticityTag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.colorant_order then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.ColorantOrderTag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.colorant_table then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.ColorantTableTag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.colorant_table_out then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.ColorantTableOutTag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.colorimetric_intent_image_state then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.ColorimetricIntentImageStateTag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.copyright then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.CopyrightTag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.d_to_b_0 then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.DToB0Tag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.d_to_b_1 then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.DToB1Tag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.d_to_b_2 then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.DToB2Tag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.d_to_b_3 then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.DToB3Tag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.device_mfg_desc then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.DeviceMfgDescTag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.device_model_desc then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.DeviceModelDescTag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.gamut then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.GamutTag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.gray_trc then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.GrayTrcTag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.green_matrix_column then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.GreenMatrixColumnTag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.green_trc then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.GreenTrcTag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.luminance then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.LuminanceTag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.measurement then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.MeasurementTag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.media_white_point then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.MediaWhitePointTag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.named_color_2 then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.NamedColor2Tag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.output_response then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.OutputResponseTag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.perceptual_rendering_intent_gamut then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.PerceptualRenderingIntentGamutTag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.preview_0 then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.Preview0Tag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.preview_1 then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.Preview1Tag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.preview_2 then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.Preview2Tag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.profile_description then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.ProfileDescriptionTag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.profile_sequence then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.ProfileSequenceTag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.profile_sequence_identifier then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.ProfileSequenceIdentifierTag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.red_matrix_column then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.RedMatrixColumnTag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.red_trc then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.RedTrcTag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.saturation_rendering_intent_gamut then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.SaturationRenderingIntentGamutTag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.technology then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.TechnologyTag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.viewing_cond_desc then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.ViewingCondDescTag(_io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagSignatures.viewing_conditions then
+    self._raw__m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+    local _io = KaitaiStream(stringstream(self._raw__m_tag_data_element))
+    self._m_tag_data_element = Icc4.TagTable.TagDefinition.ViewingConditionsTag(_io, self, self._root)
+  else
+    self._m_tag_data_element = self._io:read_bytes(self.size_of_data_element)
+  end
+  self._io:seek(_pos)
+  return self._m_tag_data_element
+end
+
+
+Icc4.TagTable.TagDefinition.AToB0Tag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.AToB0Tag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.AToB0Tag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.multi_function_a_to_b_table_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.LutAToBType(self._io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.multi_function_table_with_one_byte_precision_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.Lut8Type(self._io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.multi_function_table_with_two_byte_precision_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.Lut16Type(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.AToB1Tag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.AToB1Tag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.AToB1Tag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.multi_function_a_to_b_table_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.LutAToBType(self._io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.multi_function_table_with_one_byte_precision_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.Lut8Type(self._io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.multi_function_table_with_two_byte_precision_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.Lut16Type(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.AToB2Tag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.AToB2Tag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.AToB2Tag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.multi_function_a_to_b_table_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.LutAToBType(self._io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.multi_function_table_with_one_byte_precision_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.Lut8Type(self._io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.multi_function_table_with_two_byte_precision_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.Lut16Type(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.BToA0Tag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.BToA0Tag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.BToA0Tag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.multi_function_b_to_a_table_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.LutBToAType(self._io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.multi_function_table_with_one_byte_precision_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.Lut8Type(self._io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.multi_function_table_with_two_byte_precision_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.Lut16Type(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.BToA1Tag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.BToA1Tag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.BToA1Tag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.multi_function_b_to_a_table_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.LutBToAType(self._io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.multi_function_table_with_one_byte_precision_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.Lut8Type(self._io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.multi_function_table_with_two_byte_precision_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.Lut16Type(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.BToA2Tag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.BToA2Tag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.BToA2Tag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.multi_function_b_to_a_table_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.LutBToAType(self._io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.multi_function_table_with_one_byte_precision_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.Lut8Type(self._io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.multi_function_table_with_two_byte_precision_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.Lut16Type(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.BToD0Tag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.BToD0Tag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.BToD0Tag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.multi_process_elements_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.MultiProcessElementsType(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.BToD1Tag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.BToD1Tag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.BToD1Tag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.multi_process_elements_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.MultiProcessElementsType(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.BToD2Tag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.BToD2Tag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.BToD2Tag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.multi_process_elements_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.MultiProcessElementsType(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.BToD3Tag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.BToD3Tag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.BToD3Tag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.multi_process_elements_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.MultiProcessElementsType(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.BlueMatrixColumnTag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.BlueMatrixColumnTag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.BlueMatrixColumnTag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.xyz_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.XyzType(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.BlueTrcTag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.BlueTrcTag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.BlueTrcTag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.curve_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.CurveType(self._io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.parametric_curve_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.ParametricCurveType(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.CalibrationDateTimeTag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.CalibrationDateTimeTag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.CalibrationDateTimeTag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.date_time_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.DateTimeType(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.CharTargetTag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.CharTargetTag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.CharTargetTag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.text_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.TextType(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.ChromaticAdaptationTag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.ChromaticAdaptationTag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.ChromaticAdaptationTag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.s_15_fixed_16_array_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.S15Fixed16ArrayType(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.ChromaticityTag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.ChromaticityTag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.ChromaticityTag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.chromaticity_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.ChromaticityType(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.ChromaticityType = class.class(KaitaiStruct)
+
+Icc4.TagTable.TagDefinition.ChromaticityType.ColorantAndPhosphorEncodings = enum.Enum {
+  unknown = 0,
+  itu_r_bt_709_2 = 1,
+  smpte_rp145 = 2,
+  ebu_tech_3213_e = 3,
+  p22 = 4,
+}
+
+function Icc4.TagTable.TagDefinition.ChromaticityType:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.ChromaticityType:_read()
+  self.reserved = self._io:read_bytes(4)
+  if not(self.reserved == "\000\000\000\000") then
+    error("not equal, expected " .. "\000\000\000\000" .. ", but got " .. self.reserved)
+  end
+  self.number_of_device_channels = self._io:read_u2be()
+  self.colorant_and_phosphor_encoding = Icc4.TagTable.TagDefinition.ChromaticityType.ColorantAndPhosphorEncodings(self._io:read_u2be())
+  self.ciexy_coordinates_per_channel = {}
+  for i = 0, self.number_of_device_channels - 1 do
+    self.ciexy_coordinates_per_channel[i + 1] = Icc4.TagTable.TagDefinition.ChromaticityType.CiexyCoordinateValues(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.ChromaticityType.CiexyCoordinateValues = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.ChromaticityType.CiexyCoordinateValues:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.ChromaticityType.CiexyCoordinateValues:_read()
+  self.x_coordinate = self._io:read_u2be()
+  self.y_coordinate = self._io:read_u2be()
+end
+
+
+Icc4.TagTable.TagDefinition.ColorantOrderTag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.ColorantOrderTag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.ColorantOrderTag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.colorant_order_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.ColorantOrderType(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.ColorantOrderType = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.ColorantOrderType:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.ColorantOrderType:_read()
+  self.reserved = self._io:read_bytes(4)
+  if not(self.reserved == "\000\000\000\000") then
+    error("not equal, expected " .. "\000\000\000\000" .. ", but got " .. self.reserved)
+  end
+  self.count_of_colorants = self._io:read_u4be()
+  self.numbers_of_colorants_in_order_of_printing = {}
+  for i = 0, self.count_of_colorants - 1 do
+    self.numbers_of_colorants_in_order_of_printing[i + 1] = self._io:read_u1()
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.ColorantTableOutTag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.ColorantTableOutTag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.ColorantTableOutTag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.colorant_table_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.ColorantTableType(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.ColorantTableTag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.ColorantTableTag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.ColorantTableTag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.colorant_table_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.ColorantTableType(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.ColorantTableType = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.ColorantTableType:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.ColorantTableType:_read()
+  self.reserved = self._io:read_bytes(4)
+  if not(self.reserved == "\000\000\000\000") then
+    error("not equal, expected " .. "\000\000\000\000" .. ", but got " .. self.reserved)
+  end
+  self.count_of_colorants = self._io:read_u4be()
+  self.colorants = {}
+  for i = 0, self.count_of_colorants - 1 do
+    self.colorants[i + 1] = Icc4.TagTable.TagDefinition.ColorantTableType.Colorant(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.ColorantTableType.Colorant = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.ColorantTableType.Colorant:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.ColorantTableType.Colorant:_read()
+  self.name = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "ASCII")
+  self.padding = {}
+  for i = 0, 32 - string.len(self.name) - 1 do
+    self.padding[i + 1] = self._io:read_bytes(1)
+    if not(self.padding[i + 1] == "\000") then
+      error("not equal, expected " .. "\000" .. ", but got " .. self.padding[i + 1])
+    end
+  end
+  self.pcs_values = self._io:read_bytes(6)
+end
+
+
+Icc4.TagTable.TagDefinition.ColorimetricIntentImageStateTag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.ColorimetricIntentImageStateTag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.ColorimetricIntentImageStateTag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.signature_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.SignatureType(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.CopyrightTag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.CopyrightTag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.CopyrightTag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.multi_localized_unicode_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.MultiLocalizedUnicodeType(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.CurveType = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.CurveType:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.CurveType:_read()
+  self.reserved = self._io:read_bytes(4)
+  if not(self.reserved == "\000\000\000\000") then
+    error("not equal, expected " .. "\000\000\000\000" .. ", but got " .. self.reserved)
+  end
+  self.number_of_entries = self._io:read_u4be()
+  if self.number_of_entries > 1 then
+    self.curve_values = {}
+    for i = 0, self.number_of_entries - 1 do
+      self.curve_values[i + 1] = self._io:read_u2be()
+    end
+  end
+  if self.number_of_entries == 1 then
+    self.curve_value = self._io:read_u1()
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.DToB0Tag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.DToB0Tag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.DToB0Tag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.multi_process_elements_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.MultiProcessElementsType(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.DToB1Tag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.DToB1Tag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.DToB1Tag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.multi_process_elements_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.MultiProcessElementsType(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.DToB2Tag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.DToB2Tag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.DToB2Tag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.multi_process_elements_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.MultiProcessElementsType(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.DToB3Tag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.DToB3Tag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.DToB3Tag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.multi_process_elements_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.MultiProcessElementsType(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.DataType = class.class(KaitaiStruct)
+
+Icc4.TagTable.TagDefinition.DataType.DataTypes = enum.Enum {
+  ascii_data = 0,
+  binary_data = 1,
+}
+
+function Icc4.TagTable.TagDefinition.DataType:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.DataType:_read()
+  self.data_flag = Icc4.TagTable.TagDefinition.DataType.DataTypes(self._io:read_u4be())
+end
+
+
+Icc4.TagTable.TagDefinition.DateTimeType = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.DateTimeType:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.DateTimeType:_read()
+  self.reserved = self._io:read_bytes(4)
+  if not(self.reserved == "\000\000\000\000") then
+    error("not equal, expected " .. "\000\000\000\000" .. ", but got " .. self.reserved)
+  end
+  self.date_and_time = Icc4.DateTimeNumber(self._io, self, self._root)
+end
+
+
+Icc4.TagTable.TagDefinition.DeviceMfgDescTag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.DeviceMfgDescTag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.DeviceMfgDescTag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.multi_localized_unicode_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.MultiLocalizedUnicodeType(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.DeviceModelDescTag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.DeviceModelDescTag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.DeviceModelDescTag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.multi_localized_unicode_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.MultiLocalizedUnicodeType(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.GamutTag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.GamutTag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.GamutTag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.multi_function_b_to_a_table_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.LutBToAType(self._io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.multi_function_table_with_one_byte_precision_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.Lut8Type(self._io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.multi_function_table_with_two_byte_precision_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.Lut16Type(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.GrayTrcTag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.GrayTrcTag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.GrayTrcTag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.curve_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.CurveType(self._io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.parametric_curve_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.ParametricCurveType(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.GreenMatrixColumnTag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.GreenMatrixColumnTag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.GreenMatrixColumnTag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.xyz_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.XyzType(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.GreenTrcTag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.GreenTrcTag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.GreenTrcTag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.curve_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.CurveType(self._io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.parametric_curve_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.ParametricCurveType(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.LuminanceTag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.LuminanceTag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.LuminanceTag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.xyz_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.XyzType(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.Lut16Type = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.Lut16Type:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.Lut16Type:_read()
+  self.reserved = self._io:read_bytes(4)
+  if not(self.reserved == "\000\000\000\000") then
+    error("not equal, expected " .. "\000\000\000\000" .. ", but got " .. self.reserved)
+  end
+  self.number_of_input_channels = self._io:read_u1()
+  self.number_of_output_channels = self._io:read_u1()
+  self.number_of_clut_grid_points = self._io:read_u1()
+  self.padding = self._io:read_bytes(1)
+  if not(self.padding == "\000") then
+    error("not equal, expected " .. "\000" .. ", but got " .. self.padding)
+  end
+  self.encoded_e_parameters = {}
+  for i = 0, 9 - 1 do
+    self.encoded_e_parameters[i + 1] = self._io:read_s4be()
+  end
+  self.number_of_input_table_entries = self._io:read_u2be()
+  self.number_of_output_table_entries = self._io:read_u2be()
+  self.input_tables = self._io:read_bytes((2 * self.number_of_input_channels) * self.number_of_input_table_entries)
+  self.clut_values = self._io:read_bytes((2 * (self.number_of_clut_grid_points ~ self.number_of_input_channels)) * self.number_of_output_channels)
+  self.output_tables = self._io:read_bytes((2 * self.number_of_output_channels) * self.number_of_output_table_entries)
+end
+
+
+Icc4.TagTable.TagDefinition.Lut8Type = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.Lut8Type:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.Lut8Type:_read()
+  self.reserved = self._io:read_bytes(4)
+  if not(self.reserved == "\000\000\000\000") then
+    error("not equal, expected " .. "\000\000\000\000" .. ", but got " .. self.reserved)
+  end
+  self.number_of_input_channels = self._io:read_u1()
+  self.number_of_output_channels = self._io:read_u1()
+  self.number_of_clut_grid_points = self._io:read_u1()
+  self.padding = self._io:read_bytes(1)
+  if not(self.padding == "\000") then
+    error("not equal, expected " .. "\000" .. ", but got " .. self.padding)
+  end
+  self.encoded_e_parameters = {}
+  for i = 0, 9 - 1 do
+    self.encoded_e_parameters[i + 1] = self._io:read_s4be()
+  end
+  self.number_of_input_table_entries = self._io:read_u4be()
+  self.number_of_output_table_entries = self._io:read_u4be()
+  self.input_tables = self._io:read_bytes(256 * self.number_of_input_channels)
+  self.clut_values = self._io:read_bytes((self.number_of_clut_grid_points ~ self.number_of_input_channels) * self.number_of_output_channels)
+  self.output_tables = self._io:read_bytes(256 * self.number_of_output_channels)
+end
+
+
+Icc4.TagTable.TagDefinition.LutAToBType = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.LutAToBType:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.LutAToBType:_read()
+  self.reserved = self._io:read_bytes(4)
+  if not(self.reserved == "\000\000\000\000") then
+    error("not equal, expected " .. "\000\000\000\000" .. ", but got " .. self.reserved)
+  end
+  self.number_of_input_channels = self._io:read_u1()
+  self.number_of_output_channels = self._io:read_u1()
+  self.padding = self._io:read_bytes(2)
+  if not(self.padding == "\000\000") then
+    error("not equal, expected " .. "\000\000" .. ", but got " .. self.padding)
+  end
+  self.offset_to_first_b_curve = self._io:read_u4be()
+  self.offset_to_matrix = self._io:read_u4be()
+  self.offset_to_first_m_curve = self._io:read_u4be()
+  self.offset_to_clut = self._io:read_u4be()
+  self.offset_to_first_a_curve = self._io:read_u4be()
+  self.data = self._io:read_bytes_full()
+end
+
+
+Icc4.TagTable.TagDefinition.LutBToAType = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.LutBToAType:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.LutBToAType:_read()
+  self.reserved = self._io:read_bytes(4)
+  if not(self.reserved == "\000\000\000\000") then
+    error("not equal, expected " .. "\000\000\000\000" .. ", but got " .. self.reserved)
+  end
+  self.number_of_input_channels = self._io:read_u1()
+  self.number_of_output_channels = self._io:read_u1()
+  self.padding = self._io:read_bytes(2)
+  if not(self.padding == "\000\000") then
+    error("not equal, expected " .. "\000\000" .. ", but got " .. self.padding)
+  end
+  self.offset_to_first_b_curve = self._io:read_u4be()
+  self.offset_to_matrix = self._io:read_u4be()
+  self.offset_to_first_m_curve = self._io:read_u4be()
+  self.offset_to_clut = self._io:read_u4be()
+  self.offset_to_first_a_curve = self._io:read_u4be()
+  self.data = self._io:read_bytes_full()
+end
+
+
+Icc4.TagTable.TagDefinition.MeasurementTag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.MeasurementTag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.MeasurementTag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.measurement_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.MeasurementType(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.MeasurementType = class.class(KaitaiStruct)
+
+Icc4.TagTable.TagDefinition.MeasurementType.MeasurementFlareEncodings = enum.Enum {
+  zero_percent = 0,
+  one_hundred_percent = 65536,
+}
+
+Icc4.TagTable.TagDefinition.MeasurementType.MeasurementGeometryEncodings = enum.Enum {
+  unknown = 0,
+  zero_degrees_to_45_degrees_or_45_degrees_to_zero_degrees = 1,
+  zero_degrees_to_d_degrees_or_d_degrees_to_zero_degrees = 2,
+}
+
+Icc4.TagTable.TagDefinition.MeasurementType.StandardObserverEncodings = enum.Enum {
+  unknown = 0,
+  cie_1931_standard_colorimetric_observer = 1,
+  cie_1964_standard_colorimetric_observer = 2,
+}
+
+function Icc4.TagTable.TagDefinition.MeasurementType:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.MeasurementType:_read()
+  self.reserved = self._io:read_bytes(4)
+  if not(self.reserved == "\000\000\000\000") then
+    error("not equal, expected " .. "\000\000\000\000" .. ", but got " .. self.reserved)
+  end
+  self.standard_observer_encoding = Icc4.TagTable.TagDefinition.MeasurementType.StandardObserverEncodings(self._io:read_u4be())
+  self.nciexyz_tristimulus_values_for_measurement_backing = Icc4.XyzNumber(self._io, self, self._root)
+  self.measurement_geometry_encoding = Icc4.TagTable.TagDefinition.MeasurementType.MeasurementGeometryEncodings(self._io:read_u4be())
+  self.measurement_flare_encoding = Icc4.TagTable.TagDefinition.MeasurementType.MeasurementFlareEncodings(self._io:read_u4be())
+  self.standard_illuminant_encoding = Icc4.StandardIlluminantEncoding(self._io, self, self._root)
+end
+
+
+Icc4.TagTable.TagDefinition.MediaWhitePointTag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.MediaWhitePointTag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.MediaWhitePointTag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.xyz_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.XyzType(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.MultiLocalizedUnicodeType = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.MultiLocalizedUnicodeType:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.MultiLocalizedUnicodeType:_read()
+  self.reserved = self._io:read_bytes(4)
+  if not(self.reserved == "\000\000\000\000") then
+    error("not equal, expected " .. "\000\000\000\000" .. ", but got " .. self.reserved)
+  end
+  self.number_of_records = self._io:read_u4be()
+  self.record_size = self._io:read_u4be()
+  self.records = {}
+  for i = 0, self.number_of_records - 1 do
+    self.records[i + 1] = Icc4.TagTable.TagDefinition.MultiLocalizedUnicodeType.Record(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.MultiLocalizedUnicodeType.Record = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.MultiLocalizedUnicodeType.Record:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.MultiLocalizedUnicodeType.Record:_read()
+  self.language_code = self._io:read_u2be()
+  self.country_code = self._io:read_u2be()
+  self.string_length = self._io:read_u4be()
+  self.string_offset = self._io:read_u4be()
+end
+
+Icc4.TagTable.TagDefinition.MultiLocalizedUnicodeType.Record.property.string_data = {}
+function Icc4.TagTable.TagDefinition.MultiLocalizedUnicodeType.Record.property.string_data:get()
+  if self._m_string_data ~= nil then
+    return self._m_string_data
+  end
+
+  local _pos = self._io:pos()
+  self._io:seek(self.string_offset)
+  self._m_string_data = str_decode.decode(self._io:read_bytes(self.string_length), "UTF-16BE")
+  self._io:seek(_pos)
+  return self._m_string_data
+end
+
+
+Icc4.TagTable.TagDefinition.MultiProcessElementsType = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.MultiProcessElementsType:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.MultiProcessElementsType:_read()
+  self.reserved = self._io:read_bytes(4)
+  if not(self.reserved == "\000\000\000\000") then
+    error("not equal, expected " .. "\000\000\000\000" .. ", but got " .. self.reserved)
+  end
+  self.number_of_input_channels = self._io:read_u2be()
+  self.number_of_output_channels = self._io:read_u2be()
+  self.number_of_processing_elements = self._io:read_u4be()
+  self.process_element_positions_table = {}
+  for i = 0, self.number_of_processing_elements - 1 do
+    self.process_element_positions_table[i + 1] = Icc4.PositionNumber(self._io, self, self._root)
+  end
+  self.data = self._io:read_bytes_full()
+end
+
+
+Icc4.TagTable.TagDefinition.NamedColor2Tag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.NamedColor2Tag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.NamedColor2Tag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.named_color_2_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.NamedColor2Type(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.NamedColor2Type = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.NamedColor2Type:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.NamedColor2Type:_read()
+  self.reserved = self._io:read_bytes(4)
+  if not(self.reserved == "\000\000\000\000") then
+    error("not equal, expected " .. "\000\000\000\000" .. ", but got " .. self.reserved)
+  end
+  self.vendor_specific_flag = self._io:read_u4be()
+  self.count_of_named_colours = self._io:read_u4be()
+  self.number_of_device_coordinates_for_each_named_colour = self._io:read_u4be()
+  self.prefix_for_each_colour_name = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "ASCII")
+  self.prefix_for_each_colour_name_padding = {}
+  for i = 0, 32 - string.len(self.prefix_for_each_colour_name) - 1 do
+    self.prefix_for_each_colour_name_padding[i + 1] = self._io:read_bytes(1)
+    if not(self.prefix_for_each_colour_name_padding[i + 1] == "\000") then
+      error("not equal, expected " .. "\000" .. ", but got " .. self.prefix_for_each_colour_name_padding[i + 1])
+    end
+  end
+  self.suffix_for_each_colour_name = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "ASCII")
+  self.suffix_for_each_colour_name_padding = {}
+  for i = 0, 32 - string.len(self.suffix_for_each_colour_name) - 1 do
+    self.suffix_for_each_colour_name_padding[i + 1] = self._io:read_bytes(1)
+    if not(self.suffix_for_each_colour_name_padding[i + 1] == "\000") then
+      error("not equal, expected " .. "\000" .. ", but got " .. self.suffix_for_each_colour_name_padding[i + 1])
+    end
+  end
+  self.named_colour_definitions = {}
+  for i = 0, self.count_of_named_colours - 1 do
+    self.named_colour_definitions[i + 1] = Icc4.TagTable.TagDefinition.NamedColor2Type.NamedColourDefinition(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.NamedColor2Type.NamedColourDefinition = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.NamedColor2Type.NamedColourDefinition:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.NamedColor2Type.NamedColourDefinition:_read()
+  self.root_name = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "ASCII")
+  self.root_name_padding = {}
+  for i = 0, 32 - string.len(self.root_name) - 1 do
+    self.root_name_padding[i + 1] = self._io:read_bytes(1)
+    if not(self.root_name_padding[i + 1] == "\000") then
+      error("not equal, expected " .. "\000" .. ", but got " .. self.root_name_padding[i + 1])
+    end
+  end
+  self.pcs_coordinates = self._io:read_bytes(6)
+  if self._parent.number_of_device_coordinates_for_each_named_colour > 0 then
+    self.device_coordinates = {}
+    for i = 0, self._parent.number_of_device_coordinates_for_each_named_colour - 1 do
+      self.device_coordinates[i + 1] = self._io:read_u2be()
+    end
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.OutputResponseTag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.OutputResponseTag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.OutputResponseTag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.response_curve_set_16_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.ResponseCurveSet16Type(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.ParametricCurveType = class.class(KaitaiStruct)
+
+Icc4.TagTable.TagDefinition.ParametricCurveType.ParametricCurveTypeFunctions = enum.Enum {
+  y_equals_x_to_power_of_g = 0,
+  cie_122_1996 = 1,
+  iec_61966_3 = 2,
+  iec_61966_2_1 = 3,
+  y_equals_ob_ax_plus_b_cb_to_power_of_g_plus_c = 4,
+}
+
+function Icc4.TagTable.TagDefinition.ParametricCurveType:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.ParametricCurveType:_read()
+  self.reserved = self._io:read_bytes(4)
+  if not(self.reserved == "\000\000\000\000") then
+    error("not equal, expected " .. "\000\000\000\000" .. ", but got " .. self.reserved)
+  end
+  self.function_type = Icc4.TagTable.TagDefinition.ParametricCurveType.ParametricCurveTypeFunctions(self._io:read_u2be())
+  self.reserved_2 = self._io:read_bytes(2)
+  if not(self.reserved_2 == "\000\000") then
+    error("not equal, expected " .. "\000\000" .. ", but got " .. self.reserved_2)
+  end
+  local _on = self.function_type
+  if _on == Icc4.TagTable.TagDefinition.ParametricCurveType.ParametricCurveTypeFunctions.cie_122_1996 then
+    self.parameters = Icc4.TagTable.TagDefinition.ParametricCurveType.ParamsCie1221996(self._io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.ParametricCurveType.ParametricCurveTypeFunctions.iec_61966_2_1 then
+    self.parameters = Icc4.TagTable.TagDefinition.ParametricCurveType.ParamsIec6196621(self._io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.ParametricCurveType.ParametricCurveTypeFunctions.iec_61966_3 then
+    self.parameters = Icc4.TagTable.TagDefinition.ParametricCurveType.ParamsIec619663(self._io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.ParametricCurveType.ParametricCurveTypeFunctions.y_equals_ob_ax_plus_b_cb_to_power_of_g_plus_c then
+    self.parameters = Icc4.TagTable.TagDefinition.ParametricCurveType.ParamsYEqualsObAxPlusBCbToPowerOfGPlusC(self._io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.ParametricCurveType.ParametricCurveTypeFunctions.y_equals_x_to_power_of_g then
+    self.parameters = Icc4.TagTable.TagDefinition.ParametricCurveType.ParamsYEqualsXToPowerOfG(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.ParametricCurveType.ParamsCie1221996 = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.ParametricCurveType.ParamsCie1221996:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.ParametricCurveType.ParamsCie1221996:_read()
+  self.g = self._io:read_s4be()
+  self.a = self._io:read_s4be()
+  self.b = self._io:read_s4be()
+end
+
+
+Icc4.TagTable.TagDefinition.ParametricCurveType.ParamsIec6196621 = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.ParametricCurveType.ParamsIec6196621:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.ParametricCurveType.ParamsIec6196621:_read()
+  self.g = self._io:read_s4be()
+  self.a = self._io:read_s4be()
+  self.b = self._io:read_s4be()
+  self.c = self._io:read_s4be()
+  self.d = self._io:read_s4be()
+end
+
+
+Icc4.TagTable.TagDefinition.ParametricCurveType.ParamsIec619663 = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.ParametricCurveType.ParamsIec619663:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.ParametricCurveType.ParamsIec619663:_read()
+  self.g = self._io:read_s4be()
+  self.a = self._io:read_s4be()
+  self.b = self._io:read_s4be()
+  self.c = self._io:read_s4be()
+end
+
+
+Icc4.TagTable.TagDefinition.ParametricCurveType.ParamsYEqualsObAxPlusBCbToPowerOfGPlusC = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.ParametricCurveType.ParamsYEqualsObAxPlusBCbToPowerOfGPlusC:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.ParametricCurveType.ParamsYEqualsObAxPlusBCbToPowerOfGPlusC:_read()
+  self.g = self._io:read_s4be()
+  self.a = self._io:read_s4be()
+  self.b = self._io:read_s4be()
+  self.c = self._io:read_s4be()
+  self.d = self._io:read_s4be()
+  self.e = self._io:read_s4be()
+  self.f = self._io:read_s4be()
+end
+
+
+Icc4.TagTable.TagDefinition.ParametricCurveType.ParamsYEqualsXToPowerOfG = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.ParametricCurveType.ParamsYEqualsXToPowerOfG:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.ParametricCurveType.ParamsYEqualsXToPowerOfG:_read()
+  self.g = self._io:read_s4be()
+end
+
+
+Icc4.TagTable.TagDefinition.PerceptualRenderingIntentGamutTag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.PerceptualRenderingIntentGamutTag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.PerceptualRenderingIntentGamutTag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.signature_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.SignatureType(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.Preview0Tag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.Preview0Tag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.Preview0Tag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.multi_function_a_to_b_table_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.LutAToBType(self._io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.multi_function_b_to_a_table_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.LutBToAType(self._io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.multi_function_table_with_one_byte_precision_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.Lut8Type(self._io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.multi_function_table_with_two_byte_precision_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.Lut16Type(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.Preview1Tag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.Preview1Tag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.Preview1Tag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.multi_function_b_to_a_table_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.LutBToAType(self._io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.multi_function_table_with_one_byte_precision_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.Lut8Type(self._io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.multi_function_table_with_two_byte_precision_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.Lut16Type(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.Preview2Tag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.Preview2Tag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.Preview2Tag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.multi_function_b_to_a_table_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.LutBToAType(self._io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.multi_function_table_with_one_byte_precision_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.Lut8Type(self._io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.multi_function_table_with_two_byte_precision_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.Lut16Type(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.ProfileDescriptionTag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.ProfileDescriptionTag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.ProfileDescriptionTag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.multi_localized_unicode_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.MultiLocalizedUnicodeType(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.ProfileSequenceDescType = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.ProfileSequenceDescType:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.ProfileSequenceDescType:_read()
+  self.reserved = self._io:read_bytes(4)
+  if not(self.reserved == "\000\000\000\000") then
+    error("not equal, expected " .. "\000\000\000\000" .. ", but got " .. self.reserved)
+  end
+  self.number_of_description_structures = self._io:read_u4be()
+  self.profile_descriptions = {}
+  for i = 0, self.number_of_description_structures - 1 do
+    self.profile_descriptions[i + 1] = Icc4.TagTable.TagDefinition.ProfileSequenceDescType.ProfileDescription(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.ProfileSequenceDescType.ProfileDescription = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.ProfileSequenceDescType.ProfileDescription:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.ProfileSequenceDescType.ProfileDescription:_read()
+  self.device_manufacturer = Icc4.DeviceManufacturer(self._io, self, self._root)
+  self.device_model = str_decode.decode(self._io:read_bytes(4), "ASCII")
+  self.device_attributes = Icc4.DeviceAttributes(self._io, self, self._root)
+  self.device_technology = Icc4.TagTable.TagDefinition.TechnologyTag(self._io, self, self._root)
+  self.description_of_device_manufacturer = Icc4.TagTable.TagDefinition.DeviceMfgDescTag(self._io, self, self._root)
+  self.description_of_device_model = Icc4.TagTable.TagDefinition.DeviceModelDescTag(self._io, self, self._root)
+end
+
+
+Icc4.TagTable.TagDefinition.ProfileSequenceIdentifierTag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.ProfileSequenceIdentifierTag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.ProfileSequenceIdentifierTag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.profile_sequence_identifier_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.ProfileSequenceIdentifierType(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.ProfileSequenceIdentifierType = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.ProfileSequenceIdentifierType:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.ProfileSequenceIdentifierType:_read()
+  self.reserved = self._io:read_bytes(4)
+  if not(self.reserved == "\000\000\000\000") then
+    error("not equal, expected " .. "\000\000\000\000" .. ", but got " .. self.reserved)
+  end
+  self.number_of_structures = self._io:read_u4be()
+  self.positions_table = {}
+  for i = 0, self.number_of_structures - 1 do
+    self.positions_table[i + 1] = Icc4.PositionNumber(self._io, self, self._root)
+  end
+  self.profile_identifiers = {}
+  for i = 0, self.number_of_structures - 1 do
+    self.profile_identifiers[i + 1] = Icc4.TagTable.TagDefinition.ProfileSequenceIdentifierType.ProfileIdentifier(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.ProfileSequenceIdentifierType.ProfileIdentifier = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.ProfileSequenceIdentifierType.ProfileIdentifier:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.ProfileSequenceIdentifierType.ProfileIdentifier:_read()
+  self.profile_id = self._io:read_bytes(16)
+  self.profile_description = Icc4.TagTable.TagDefinition.MultiLocalizedUnicodeType(self._io, self, self._root)
+end
+
+
+Icc4.TagTable.TagDefinition.ProfileSequenceTag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.ProfileSequenceTag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.ProfileSequenceTag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.profile_sequence_desc_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.ProfileSequenceDescType(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.RedMatrixColumnTag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.RedMatrixColumnTag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.RedMatrixColumnTag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.xyz_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.XyzType(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.RedTrcTag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.RedTrcTag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.RedTrcTag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.curve_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.CurveType(self._io, self, self._root)
+  elseif _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.parametric_curve_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.ParametricCurveType(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.ResponseCurveSet16Type = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.ResponseCurveSet16Type:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.ResponseCurveSet16Type:_read()
+  self.reserved = self._io:read_bytes(4)
+  if not(self.reserved == "\000\000\000\000") then
+    error("not equal, expected " .. "\000\000\000\000" .. ", but got " .. self.reserved)
+  end
+  self.number_of_channels = self._io:read_u2be()
+  self.count_of_measurement_types = self._io:read_u2be()
+  self.response_curve_structure_offsets = {}
+  for i = 0, self.count_of_measurement_types - 1 do
+    self.response_curve_structure_offsets[i + 1] = self._io:read_u4be()
+  end
+  self.response_curve_structures = self._io:read_bytes_full()
+end
+
+
+Icc4.TagTable.TagDefinition.S15Fixed16ArrayType = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.S15Fixed16ArrayType:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.S15Fixed16ArrayType:_read()
+  self.reserved = self._io:read_bytes(4)
+  if not(self.reserved == "\000\000\000\000") then
+    error("not equal, expected " .. "\000\000\000\000" .. ", but got " .. self.reserved)
+  end
+  self.values = {}
+  local i = 0
+  while not self._io:is_eof() do
+    self.values[i + 1] = Icc4.S15Fixed16Number(self._io, self, self._root)
+    i = i + 1
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.SaturationRenderingIntentGamutTag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.SaturationRenderingIntentGamutTag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.SaturationRenderingIntentGamutTag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.signature_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.SignatureType(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.SignatureType = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.SignatureType:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.SignatureType:_read()
+  self.reserved = self._io:read_bytes(4)
+  if not(self.reserved == "\000\000\000\000") then
+    error("not equal, expected " .. "\000\000\000\000" .. ", but got " .. self.reserved)
+  end
+  self.signature = str_decode.decode(self._io:read_bytes(4), "ASCII")
+end
+
+
+Icc4.TagTable.TagDefinition.TechnologyTag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.TechnologyTag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.TechnologyTag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.signature_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.SignatureType(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.TextType = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.TextType:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.TextType:_read()
+  self.reserved = self._io:read_bytes(4)
+  if not(self.reserved == "\000\000\000\000") then
+    error("not equal, expected " .. "\000\000\000\000" .. ", but got " .. self.reserved)
+  end
+  self.value = str_decode.decode(KaitaiStream.bytes_terminate(self._io:read_bytes_full(), 0, false), "ASCII")
+end
+
+
+Icc4.TagTable.TagDefinition.U16Fixed16ArrayType = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.U16Fixed16ArrayType:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.U16Fixed16ArrayType:_read()
+  self.reserved = self._io:read_bytes(4)
+  if not(self.reserved == "\000\000\000\000") then
+    error("not equal, expected " .. "\000\000\000\000" .. ", but got " .. self.reserved)
+  end
+  self.values = {}
+  local i = 0
+  while not self._io:is_eof() do
+    self.values[i + 1] = Icc4.U16Fixed16Number(self._io, self, self._root)
+    i = i + 1
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.UInt16ArrayType = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.UInt16ArrayType:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.UInt16ArrayType:_read()
+  self.reserved = self._io:read_bytes(4)
+  if not(self.reserved == "\000\000\000\000") then
+    error("not equal, expected " .. "\000\000\000\000" .. ", but got " .. self.reserved)
+  end
+  self.values = {}
+  local i = 0
+  while not self._io:is_eof() do
+    self.values[i + 1] = self._io:read_u2be()
+    i = i + 1
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.UInt32ArrayType = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.UInt32ArrayType:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.UInt32ArrayType:_read()
+  self.reserved = self._io:read_bytes(4)
+  if not(self.reserved == "\000\000\000\000") then
+    error("not equal, expected " .. "\000\000\000\000" .. ", but got " .. self.reserved)
+  end
+  self.values = {}
+  local i = 0
+  while not self._io:is_eof() do
+    self.values[i + 1] = self._io:read_u4be()
+    i = i + 1
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.UInt64ArrayType = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.UInt64ArrayType:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.UInt64ArrayType:_read()
+  self.reserved = self._io:read_bytes(4)
+  if not(self.reserved == "\000\000\000\000") then
+    error("not equal, expected " .. "\000\000\000\000" .. ", but got " .. self.reserved)
+  end
+  self.values = {}
+  local i = 0
+  while not self._io:is_eof() do
+    self.values[i + 1] = self._io:read_u8be()
+    i = i + 1
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.UInt8ArrayType = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.UInt8ArrayType:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.UInt8ArrayType:_read()
+  self.reserved = self._io:read_bytes(4)
+  if not(self.reserved == "\000\000\000\000") then
+    error("not equal, expected " .. "\000\000\000\000" .. ", but got " .. self.reserved)
+  end
+  self.values = {}
+  local i = 0
+  while not self._io:is_eof() do
+    self.values[i + 1] = self._io:read_u1()
+    i = i + 1
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.ViewingCondDescTag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.ViewingCondDescTag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.ViewingCondDescTag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.multi_localized_unicode_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.MultiLocalizedUnicodeType(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.ViewingConditionsTag = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.ViewingConditionsTag:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.ViewingConditionsTag:_read()
+  self.tag_type = Icc4.TagTable.TagDefinition.TagTypeSignatures(self._io:read_u4be())
+  local _on = self.tag_type
+  if _on == Icc4.TagTable.TagDefinition.TagTypeSignatures.viewing_conditions_type then
+    self.tag_data = Icc4.TagTable.TagDefinition.ViewingConditionsType(self._io, self, self._root)
+  end
+end
+
+
+Icc4.TagTable.TagDefinition.ViewingConditionsType = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.ViewingConditionsType:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.ViewingConditionsType:_read()
+  self.reserved = self._io:read_bytes(4)
+  if not(self.reserved == "\000\000\000\000") then
+    error("not equal, expected " .. "\000\000\000\000" .. ", but got " .. self.reserved)
+  end
+  self.un_normalized_ciexyz_values_for_illuminant = Icc4.XyzNumber(self._io, self, self._root)
+  self.un_normalized_ciexyz_values_for_surround = Icc4.XyzNumber(self._io, self, self._root)
+  self.illuminant_type = Icc4.StandardIlluminantEncoding(self._io, self, self._root)
+end
+
+
+Icc4.TagTable.TagDefinition.XyzType = class.class(KaitaiStruct)
+
+function Icc4.TagTable.TagDefinition.XyzType:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.TagTable.TagDefinition.XyzType:_read()
+  self.reserved = self._io:read_bytes(4)
+  if not(self.reserved == "\000\000\000\000") then
+    error("not equal, expected " .. "\000\000\000\000" .. ", but got " .. self.reserved)
+  end
+  self.values = {}
+  local i = 0
+  while not self._io:is_eof() do
+    self.values[i + 1] = Icc4.XyzNumber(self._io, self, self._root)
+    i = i + 1
+  end
+end
+
+
+Icc4.U16Fixed16Number = class.class(KaitaiStruct)
+
+function Icc4.U16Fixed16Number:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.U16Fixed16Number:_read()
+  self.number = self._io:read_bytes(4)
+end
+
+
+Icc4.U1Fixed15Number = class.class(KaitaiStruct)
+
+function Icc4.U1Fixed15Number:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.U1Fixed15Number:_read()
+  self.number = self._io:read_bytes(2)
+end
+
+
+Icc4.U8Fixed8Number = class.class(KaitaiStruct)
+
+function Icc4.U8Fixed8Number:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.U8Fixed8Number:_read()
+  self.number = self._io:read_bytes(2)
+end
+
+
+Icc4.XyzNumber = class.class(KaitaiStruct)
+
+function Icc4.XyzNumber:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Icc4.XyzNumber:_read()
+  self.x = self._io:read_bytes(4)
+  self.y = self._io:read_bytes(4)
+  self.z = self._io:read_bytes(4)
+end
+
+

@@ -15,20 +15,20 @@ namespace Kaitai
         {
             m_parent = p__parent;
             m_root = p__root ?? this;
-            f_filenames = false;
-            f_ofsExtensions = false;
-            f_files = false;
             f_dataStart = false;
             f_extensions = false;
+            f_filenames = false;
+            f_files = false;
+            f_ofsExtensions = false;
             f_ofsFilenames = false;
             _read();
         }
         private void _read()
         {
             _magic = m_io.ReadBytes(5);
-            if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 206, 10, 137, 81, 4 }) == 0)))
+            if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 206, 10, 137, 81, 4 }) == 0)))
             {
-                throw new ValidationNotEqualError(new byte[] { 206, 10, 137, 81, 4 }, Magic, M_Io, "/seq/0");
+                throw new ValidationNotEqualError(new byte[] { 206, 10, 137, 81, 4 }, _magic, m_io, "/seq/0");
             }
             _pad1 = m_io.ReadBytes(335);
             _numFiles = m_io.ReadS4le();
@@ -77,9 +77,9 @@ namespace Kaitai
                 {
                     m_parent = p__parent;
                     m_root = p__root;
-                    f_filename = false;
-                    f_ext = false;
                     f_body = false;
+                    f_ext = false;
+                    f_filename = false;
                     _read();
                 }
                 private void _read()
@@ -92,21 +92,21 @@ namespace Kaitai
                     _alwaysMinus1 = m_io.ReadS4le();
                     _alwaysZero = m_io.ReadS4le();
                 }
-                private bool f_filename;
-                private string _filename;
-                public string Filename
+                private bool f_body;
+                private byte[] _body;
+                public byte[] Body
                 {
                     get
                     {
-                        if (f_filename)
-                            return _filename;
-                        KaitaiStream io = M_Root.Filenames.M_Io;
+                        if (f_body)
+                            return _body;
+                        f_body = true;
+                        KaitaiStream io = M_Root.M_Io;
                         long _pos = io.Pos;
-                        io.Seek(NameOfs);
-                        _filename = System.Text.Encoding.GetEncoding("UTF-8").GetString(io.ReadBytesTerm(0, false, true, true));
+                        io.Seek(M_Root.DataStart + OfsBody);
+                        _body = io.ReadBytes(LenBody);
                         io.Seek(_pos);
-                        f_filename = true;
-                        return _filename;
+                        return _body;
                     }
                 }
                 private bool f_ext;
@@ -117,30 +117,30 @@ namespace Kaitai
                     {
                         if (f_ext)
                             return _ext;
+                        f_ext = true;
                         KaitaiStream io = M_Root.Extensions.M_Io;
                         long _pos = io.Pos;
                         io.Seek(ExtOfs);
                         _ext = System.Text.Encoding.GetEncoding("UTF-8").GetString(io.ReadBytesTerm(0, false, true, true));
                         io.Seek(_pos);
-                        f_ext = true;
                         return _ext;
                     }
                 }
-                private bool f_body;
-                private byte[] _body;
-                public byte[] Body
+                private bool f_filename;
+                private string _filename;
+                public string Filename
                 {
                     get
                     {
-                        if (f_body)
-                            return _body;
-                        KaitaiStream io = M_Root.M_Io;
+                        if (f_filename)
+                            return _filename;
+                        f_filename = true;
+                        KaitaiStream io = M_Root.Filenames.M_Io;
                         long _pos = io.Pos;
-                        io.Seek((M_Root.DataStart + OfsBody));
-                        _body = io.ReadBytes(LenBody);
+                        io.Seek(NameOfs);
+                        _filename = System.Text.Encoding.GetEncoding("UTF-8").GetString(io.ReadBytesTerm(0, false, true, true));
                         io.Seek(_pos);
-                        f_body = true;
-                        return _body;
+                        return _filename;
                     }
                 }
                 private uint _nameOfs;
@@ -200,55 +200,6 @@ namespace Kaitai
             public SaintsRow2VppPc M_Root { get { return m_root; } }
             public SaintsRow2VppPc M_Parent { get { return m_parent; } }
         }
-        private bool f_filenames;
-        private Strings _filenames;
-        public Strings Filenames
-        {
-            get
-            {
-                if (f_filenames)
-                    return _filenames;
-                long _pos = m_io.Pos;
-                m_io.Seek(OfsFilenames);
-                __raw_filenames = m_io.ReadBytes(LenFilenames);
-                var io___raw_filenames = new KaitaiStream(__raw_filenames);
-                _filenames = new Strings(io___raw_filenames, this, m_root);
-                m_io.Seek(_pos);
-                f_filenames = true;
-                return _filenames;
-            }
-        }
-        private bool f_ofsExtensions;
-        private int _ofsExtensions;
-        public int OfsExtensions
-        {
-            get
-            {
-                if (f_ofsExtensions)
-                    return _ofsExtensions;
-                _ofsExtensions = (int) ((((OfsFilenames + LenFilenames) & 4294965248) + 2048));
-                f_ofsExtensions = true;
-                return _ofsExtensions;
-            }
-        }
-        private bool f_files;
-        private Offsets _files;
-        public Offsets Files
-        {
-            get
-            {
-                if (f_files)
-                    return _files;
-                long _pos = m_io.Pos;
-                m_io.Seek(2048);
-                __raw_files = m_io.ReadBytes(LenOffsets);
-                var io___raw_files = new KaitaiStream(__raw_files);
-                _files = new Offsets(io___raw_files, this, m_root);
-                m_io.Seek(_pos);
-                f_files = true;
-                return _files;
-            }
-        }
         private bool f_dataStart;
         private int _dataStart;
         public int DataStart
@@ -257,8 +208,8 @@ namespace Kaitai
             {
                 if (f_dataStart)
                     return _dataStart;
-                _dataStart = (int) ((((OfsExtensions + LenExtensions) & 4294965248) + 2048));
                 f_dataStart = true;
+                _dataStart = (int) ((OfsExtensions + LenExtensions & 4294965248) + 2048);
                 return _dataStart;
             }
         }
@@ -270,14 +221,63 @@ namespace Kaitai
             {
                 if (f_extensions)
                     return _extensions;
+                f_extensions = true;
                 long _pos = m_io.Pos;
                 m_io.Seek(OfsExtensions);
                 __raw_extensions = m_io.ReadBytes(LenExtensions);
                 var io___raw_extensions = new KaitaiStream(__raw_extensions);
                 _extensions = new Strings(io___raw_extensions, this, m_root);
                 m_io.Seek(_pos);
-                f_extensions = true;
                 return _extensions;
+            }
+        }
+        private bool f_filenames;
+        private Strings _filenames;
+        public Strings Filenames
+        {
+            get
+            {
+                if (f_filenames)
+                    return _filenames;
+                f_filenames = true;
+                long _pos = m_io.Pos;
+                m_io.Seek(OfsFilenames);
+                __raw_filenames = m_io.ReadBytes(LenFilenames);
+                var io___raw_filenames = new KaitaiStream(__raw_filenames);
+                _filenames = new Strings(io___raw_filenames, this, m_root);
+                m_io.Seek(_pos);
+                return _filenames;
+            }
+        }
+        private bool f_files;
+        private Offsets _files;
+        public Offsets Files
+        {
+            get
+            {
+                if (f_files)
+                    return _files;
+                f_files = true;
+                long _pos = m_io.Pos;
+                m_io.Seek(2048);
+                __raw_files = m_io.ReadBytes(LenOffsets);
+                var io___raw_files = new KaitaiStream(__raw_files);
+                _files = new Offsets(io___raw_files, this, m_root);
+                m_io.Seek(_pos);
+                return _files;
+            }
+        }
+        private bool f_ofsExtensions;
+        private int _ofsExtensions;
+        public int OfsExtensions
+        {
+            get
+            {
+                if (f_ofsExtensions)
+                    return _ofsExtensions;
+                f_ofsExtensions = true;
+                _ofsExtensions = (int) ((OfsFilenames + LenFilenames & 4294965248) + 2048);
+                return _ofsExtensions;
             }
         }
         private bool f_ofsFilenames;
@@ -288,8 +288,8 @@ namespace Kaitai
             {
                 if (f_ofsFilenames)
                     return _ofsFilenames;
-                _ofsFilenames = (int) ((((2048 + LenOffsets) & 4294965248) + 2048));
                 f_ofsFilenames = true;
+                _ofsFilenames = (int) ((2048 + LenOffsets & 4294965248) + 2048);
                 return _ofsFilenames;
             }
         }
@@ -307,9 +307,9 @@ namespace Kaitai
         private int _smth9;
         private SaintsRow2VppPc m_root;
         private KaitaiStruct m_parent;
+        private byte[] __raw_extensions;
         private byte[] __raw_filenames;
         private byte[] __raw_files;
-        private byte[] __raw_extensions;
         public byte[] Magic { get { return _magic; } }
         public byte[] Pad1 { get { return _pad1; } }
         public int NumFiles { get { return _numFiles; } }
@@ -324,8 +324,8 @@ namespace Kaitai
         public int Smth9 { get { return _smth9; } }
         public SaintsRow2VppPc M_Root { get { return m_root; } }
         public KaitaiStruct M_Parent { get { return m_parent; } }
+        public byte[] M_RawExtensions { get { return __raw_extensions; } }
         public byte[] M_RawFilenames { get { return __raw_filenames; } }
         public byte[] M_RawFiles { get { return __raw_files; } }
-        public byte[] M_RawExtensions { get { return __raw_extensions; } }
     }
 }

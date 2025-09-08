@@ -63,7 +63,7 @@ function Tga.property.footer:get()
   end
 
   local _pos = self._io:pos()
-  self._io:seek((self._io:size() - 26))
+  self._io:seek(self._io:size() - 26)
   self._m_footer = Tga.TgaFooter(self._io, self, self._root)
   self._io:seek(_pos)
   return self._m_footer
@@ -83,57 +83,12 @@ end
 -- 
 -- Color map.
 
-Tga.TgaFooter = class.class(KaitaiStruct)
-
-function Tga.TgaFooter:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Tga.TgaFooter:_read()
-  self.ext_area_ofs = self._io:read_u4le()
-  self.dev_dir_ofs = self._io:read_u4le()
-  self.version_magic = self._io:read_bytes(18)
-end
-
-Tga.TgaFooter.property.is_valid = {}
-function Tga.TgaFooter.property.is_valid:get()
-  if self._m_is_valid ~= nil then
-    return self._m_is_valid
-  end
-
-  self._m_is_valid = self.version_magic == "\084\082\085\069\086\073\083\073\079\078\045\088\070\073\076\069\046\000"
-  return self._m_is_valid
-end
-
-Tga.TgaFooter.property.ext_area = {}
-function Tga.TgaFooter.property.ext_area:get()
-  if self._m_ext_area ~= nil then
-    return self._m_ext_area
-  end
-
-  if self.is_valid then
-    local _pos = self._io:pos()
-    self._io:seek(self.ext_area_ofs)
-    self._m_ext_area = Tga.TgaExtArea(self._io, self, self._root)
-    self._io:seek(_pos)
-  end
-  return self._m_ext_area
-end
-
--- 
--- Offset to extension area.
--- 
--- Offset to developer directory.
-
 Tga.TgaExtArea = class.class(KaitaiStruct)
 
 function Tga.TgaExtArea:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -178,4 +133,49 @@ end
 -- Number of bytes from the beginning of the file to the scan lines table if present.
 -- 
 -- Specifies the alpha channel.
+
+Tga.TgaFooter = class.class(KaitaiStruct)
+
+function Tga.TgaFooter:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Tga.TgaFooter:_read()
+  self.ext_area_ofs = self._io:read_u4le()
+  self.dev_dir_ofs = self._io:read_u4le()
+  self.version_magic = self._io:read_bytes(18)
+end
+
+Tga.TgaFooter.property.ext_area = {}
+function Tga.TgaFooter.property.ext_area:get()
+  if self._m_ext_area ~= nil then
+    return self._m_ext_area
+  end
+
+  if self.is_valid then
+    local _pos = self._io:pos()
+    self._io:seek(self.ext_area_ofs)
+    self._m_ext_area = Tga.TgaExtArea(self._io, self, self._root)
+    self._io:seek(_pos)
+  end
+  return self._m_ext_area
+end
+
+Tga.TgaFooter.property.is_valid = {}
+function Tga.TgaFooter.property.is_valid:get()
+  if self._m_is_valid ~= nil then
+    return self._m_is_valid
+  end
+
+  self._m_is_valid = self.version_magic == "\084\082\085\069\086\073\083\073\079\078\045\088\070\073\076\069\046\000"
+  return self._m_is_valid
+end
+
+-- 
+-- Offset to extension area.
+-- 
+-- Offset to developer directory.
 

@@ -1,0 +1,656 @@
+# This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
+
+import kaitaistruct
+from kaitaistruct import ReadWriteKaitaiStruct, KaitaiStream, BytesIO
+import dcmp_variable_length_integer
+from enum import IntEnum
+
+
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
+
+class Dcmp1(ReadWriteKaitaiStruct):
+    """Compressed resource data in `'dcmp' (1)` format,
+    as stored in compressed resources with header type `8` and decompressor ID `1`.
+    
+    The `'dcmp' (1)` decompressor resource is included in the System file of System 7.0 and later.
+    This compression format is used for a few compressed resources in System 7.0's files
+    (such as the Finder Help file).
+    This decompressor is also included with and used by some other Apple applications,
+    such as ResEdit.
+    (Note: ResEdit includes the `'dcmp' (1)` resource,
+    but none of its resources actually use this decompressor.)
+    
+    This compression format supports some basic general-purpose compression schemes,
+    including backreferences to previous data and run-length encoding.
+    It also includes some types of compression tailored specifically to Mac OS resources,
+    including a set of single-byte codes that correspond to entries in a hard-coded lookup table.
+    
+    The `'dcmp' (0)` compression format (see dcmp_0.ksy) is very similar to this format,
+    with the main difference that it operates mostly on units of 2 or 4 bytes.
+    This makes the ``dcmp' (0)` format more suitable for word-aligned data,
+    such as executable code, bitmaps, sounds, etc.
+    The `'dcmp' (0)` format also appears to be generally preferred over `'dcmp' (1)`,
+    with the latter only being used in resource files that contain mostly unaligned data,
+    such as text.
+    
+    .. seealso::
+       Source - https://github.com/dgelessus/python-rsrcfork/blob/f891a6e/src/rsrcfork/compress/dcmp1.py
+    """
+    def __init__(self, _io=None, _parent=None, _root=None):
+        super(Dcmp1, self).__init__(_io)
+        self._parent = _parent
+        self._root = _root or self
+
+    def _read(self):
+        self.chunks = []
+        i = 0
+        while True:
+            _t_chunks = Dcmp1.Chunk(self._io, self, self._root)
+            try:
+                _t_chunks._read()
+            finally:
+                _ = _t_chunks
+                self.chunks.append(_)
+            if _.tag == 255:
+                break
+            i += 1
+        self._dirty = False
+
+
+    def _fetch_instances(self):
+        pass
+        for i in range(len(self.chunks)):
+            pass
+            self.chunks[i]._fetch_instances()
+
+
+
+    def _write__seq(self, io=None):
+        super(Dcmp1, self)._write__seq(io)
+        for i in range(len(self.chunks)):
+            pass
+            self.chunks[i]._write__seq(self._io)
+
+
+
+    def _check(self):
+        if len(self.chunks) == 0:
+            raise kaitaistruct.ConsistencyError(u"chunks", 0, len(self.chunks))
+        for i in range(len(self.chunks)):
+            pass
+            if self.chunks[i]._root != self._root:
+                raise kaitaistruct.ConsistencyError(u"chunks", self._root, self.chunks[i]._root)
+            if self.chunks[i]._parent != self:
+                raise kaitaistruct.ConsistencyError(u"chunks", self, self.chunks[i]._parent)
+            _ = self.chunks[i]
+            if (_.tag == 255) != (i == len(self.chunks) - 1):
+                raise kaitaistruct.ConsistencyError(u"chunks", i == len(self.chunks) - 1, _.tag == 255)
+
+        self._dirty = False
+
+    class Chunk(ReadWriteKaitaiStruct):
+        """A single chunk of compressed data.
+        Each chunk in the compressed data expands to a sequence of bytes in the uncompressed data,
+        except when `tag == 0xff`,
+        which marks the end of the data and does not correspond to any bytes in the uncompressed data.
+        
+        Most chunks are stateless and always expand to the same data,
+        regardless of where the chunk appears in the sequence.
+        However,
+        some chunks affect the behavior of future chunks,
+        or expand to different data depending on which chunks came before them.
+        """
+
+        class TagKind(IntEnum):
+            invalid = -1
+            literal = 0
+            backreference = 1
+            table_lookup = 2
+            extended = 3
+            end = 4
+        def __init__(self, _io=None, _parent=None, _root=None):
+            super(Dcmp1.Chunk, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+
+        def _read(self):
+            self.tag = self._io.read_u1()
+            _on = (Dcmp1.Chunk.TagKind.literal if  ((self.tag >= 0) and (self.tag <= 31))  else (Dcmp1.Chunk.TagKind.backreference if  ((self.tag >= 32) and (self.tag <= 207))  else (Dcmp1.Chunk.TagKind.literal if  ((self.tag >= 208) and (self.tag <= 209))  else (Dcmp1.Chunk.TagKind.backreference if self.tag == 210 else (Dcmp1.Chunk.TagKind.table_lookup if  ((self.tag >= 213) and (self.tag <= 253))  else (Dcmp1.Chunk.TagKind.extended if self.tag == 254 else (Dcmp1.Chunk.TagKind.end if self.tag == 255 else Dcmp1.Chunk.TagKind.invalid)))))))
+            if _on == Dcmp1.Chunk.TagKind.backreference:
+                pass
+                self.body = Dcmp1.Chunk.BackreferenceBody(self.tag, self._io, self, self._root)
+                self.body._read()
+            elif _on == Dcmp1.Chunk.TagKind.end:
+                pass
+                self.body = Dcmp1.Chunk.EndBody(self._io, self, self._root)
+                self.body._read()
+            elif _on == Dcmp1.Chunk.TagKind.extended:
+                pass
+                self.body = Dcmp1.Chunk.ExtendedBody(self._io, self, self._root)
+                self.body._read()
+            elif _on == Dcmp1.Chunk.TagKind.literal:
+                pass
+                self.body = Dcmp1.Chunk.LiteralBody(self.tag, self._io, self, self._root)
+                self.body._read()
+            elif _on == Dcmp1.Chunk.TagKind.table_lookup:
+                pass
+                self.body = Dcmp1.Chunk.TableLookupBody(self.tag, self._io, self, self._root)
+                self.body._read()
+            self._dirty = False
+
+
+        def _fetch_instances(self):
+            pass
+            _on = (Dcmp1.Chunk.TagKind.literal if  ((self.tag >= 0) and (self.tag <= 31))  else (Dcmp1.Chunk.TagKind.backreference if  ((self.tag >= 32) and (self.tag <= 207))  else (Dcmp1.Chunk.TagKind.literal if  ((self.tag >= 208) and (self.tag <= 209))  else (Dcmp1.Chunk.TagKind.backreference if self.tag == 210 else (Dcmp1.Chunk.TagKind.table_lookup if  ((self.tag >= 213) and (self.tag <= 253))  else (Dcmp1.Chunk.TagKind.extended if self.tag == 254 else (Dcmp1.Chunk.TagKind.end if self.tag == 255 else Dcmp1.Chunk.TagKind.invalid)))))))
+            if _on == Dcmp1.Chunk.TagKind.backreference:
+                pass
+                self.body._fetch_instances()
+            elif _on == Dcmp1.Chunk.TagKind.end:
+                pass
+                self.body._fetch_instances()
+            elif _on == Dcmp1.Chunk.TagKind.extended:
+                pass
+                self.body._fetch_instances()
+            elif _on == Dcmp1.Chunk.TagKind.literal:
+                pass
+                self.body._fetch_instances()
+            elif _on == Dcmp1.Chunk.TagKind.table_lookup:
+                pass
+                self.body._fetch_instances()
+
+
+        def _write__seq(self, io=None):
+            super(Dcmp1.Chunk, self)._write__seq(io)
+            self._io.write_u1(self.tag)
+            _on = (Dcmp1.Chunk.TagKind.literal if  ((self.tag >= 0) and (self.tag <= 31))  else (Dcmp1.Chunk.TagKind.backreference if  ((self.tag >= 32) and (self.tag <= 207))  else (Dcmp1.Chunk.TagKind.literal if  ((self.tag >= 208) and (self.tag <= 209))  else (Dcmp1.Chunk.TagKind.backreference if self.tag == 210 else (Dcmp1.Chunk.TagKind.table_lookup if  ((self.tag >= 213) and (self.tag <= 253))  else (Dcmp1.Chunk.TagKind.extended if self.tag == 254 else (Dcmp1.Chunk.TagKind.end if self.tag == 255 else Dcmp1.Chunk.TagKind.invalid)))))))
+            if _on == Dcmp1.Chunk.TagKind.backreference:
+                pass
+                self.body._write__seq(self._io)
+            elif _on == Dcmp1.Chunk.TagKind.end:
+                pass
+                self.body._write__seq(self._io)
+            elif _on == Dcmp1.Chunk.TagKind.extended:
+                pass
+                self.body._write__seq(self._io)
+            elif _on == Dcmp1.Chunk.TagKind.literal:
+                pass
+                self.body._write__seq(self._io)
+            elif _on == Dcmp1.Chunk.TagKind.table_lookup:
+                pass
+                self.body._write__seq(self._io)
+
+
+        def _check(self):
+            _on = (Dcmp1.Chunk.TagKind.literal if  ((self.tag >= 0) and (self.tag <= 31))  else (Dcmp1.Chunk.TagKind.backreference if  ((self.tag >= 32) and (self.tag <= 207))  else (Dcmp1.Chunk.TagKind.literal if  ((self.tag >= 208) and (self.tag <= 209))  else (Dcmp1.Chunk.TagKind.backreference if self.tag == 210 else (Dcmp1.Chunk.TagKind.table_lookup if  ((self.tag >= 213) and (self.tag <= 253))  else (Dcmp1.Chunk.TagKind.extended if self.tag == 254 else (Dcmp1.Chunk.TagKind.end if self.tag == 255 else Dcmp1.Chunk.TagKind.invalid)))))))
+            if _on == Dcmp1.Chunk.TagKind.backreference:
+                pass
+                if self.body._root != self._root:
+                    raise kaitaistruct.ConsistencyError(u"body", self._root, self.body._root)
+                if self.body._parent != self:
+                    raise kaitaistruct.ConsistencyError(u"body", self, self.body._parent)
+                if self.body.tag != self.tag:
+                    raise kaitaistruct.ConsistencyError(u"body", self.tag, self.body.tag)
+            elif _on == Dcmp1.Chunk.TagKind.end:
+                pass
+                if self.body._root != self._root:
+                    raise kaitaistruct.ConsistencyError(u"body", self._root, self.body._root)
+                if self.body._parent != self:
+                    raise kaitaistruct.ConsistencyError(u"body", self, self.body._parent)
+            elif _on == Dcmp1.Chunk.TagKind.extended:
+                pass
+                if self.body._root != self._root:
+                    raise kaitaistruct.ConsistencyError(u"body", self._root, self.body._root)
+                if self.body._parent != self:
+                    raise kaitaistruct.ConsistencyError(u"body", self, self.body._parent)
+            elif _on == Dcmp1.Chunk.TagKind.literal:
+                pass
+                if self.body._root != self._root:
+                    raise kaitaistruct.ConsistencyError(u"body", self._root, self.body._root)
+                if self.body._parent != self:
+                    raise kaitaistruct.ConsistencyError(u"body", self, self.body._parent)
+                if self.body.tag != self.tag:
+                    raise kaitaistruct.ConsistencyError(u"body", self.tag, self.body.tag)
+            elif _on == Dcmp1.Chunk.TagKind.table_lookup:
+                pass
+                if self.body._root != self._root:
+                    raise kaitaistruct.ConsistencyError(u"body", self._root, self.body._root)
+                if self.body._parent != self:
+                    raise kaitaistruct.ConsistencyError(u"body", self, self.body._parent)
+                if self.body.tag != self.tag:
+                    raise kaitaistruct.ConsistencyError(u"body", self.tag, self.body.tag)
+            self._dirty = False
+
+        class BackreferenceBody(ReadWriteKaitaiStruct):
+            """The body of a backreference chunk.
+            
+            This chunk expands to the data stored in a preceding literal chunk,
+            indicated by an index number (`index`).
+            """
+            def __init__(self, tag, _io=None, _parent=None, _root=None):
+                super(Dcmp1.Chunk.BackreferenceBody, self).__init__(_io)
+                self._parent = _parent
+                self._root = _root
+                self.tag = tag
+
+            def _read(self):
+                if self.is_index_separate:
+                    pass
+                    self.index_separate_minus = self._io.read_u1()
+
+                self._dirty = False
+
+
+            def _fetch_instances(self):
+                pass
+                if self.is_index_separate:
+                    pass
+
+
+
+            def _write__seq(self, io=None):
+                super(Dcmp1.Chunk.BackreferenceBody, self)._write__seq(io)
+                if self.is_index_separate:
+                    pass
+                    self._io.write_u1(self.index_separate_minus)
+
+
+
+            def _check(self):
+                if self.is_index_separate:
+                    pass
+
+                self._dirty = False
+
+            @property
+            def index(self):
+                """The index of the referenced literal chunk.
+                
+                Stored literals are assigned index numbers in the order in which they appear in the compressed data,
+                starting at 0.
+                Non-stored literals are not counted in the numbering and cannot be referenced using backreferences.
+                Once an index is assigned to a stored literal,
+                it is never changed or unassigned for the entire length of the compressed data.
+                
+                As the name indicates,
+                a backreference can only reference stored literal chunks found *before* the backreference,
+                not ones that come after it.
+                """
+                if hasattr(self, '_m_index'):
+                    return self._m_index
+
+                self._m_index = (self.index_separate if self.is_index_separate else self.index_in_tag)
+                return getattr(self, '_m_index', None)
+
+            def _invalidate_index(self):
+                del self._m_index
+            @property
+            def index_in_tag(self):
+                """The index of the referenced literal chunk,
+                as stored in the tag byte.
+                """
+                if hasattr(self, '_m_index_in_tag'):
+                    return self._m_index_in_tag
+
+                self._m_index_in_tag = self.tag - 32
+                return getattr(self, '_m_index_in_tag', None)
+
+            def _invalidate_index_in_tag(self):
+                del self._m_index_in_tag
+            @property
+            def index_separate(self):
+                """The index of the referenced literal chunk,
+                as stored separately from the tag byte,
+                with the implicit offset corrected for.
+                """
+                if hasattr(self, '_m_index_separate'):
+                    return self._m_index_separate
+
+                if self.is_index_separate:
+                    pass
+                    self._m_index_separate = self.index_separate_minus + 176
+
+                return getattr(self, '_m_index_separate', None)
+
+            def _invalidate_index_separate(self):
+                del self._m_index_separate
+            @property
+            def is_index_separate(self):
+                """Whether the index is stored separately from the tag.
+                """
+                if hasattr(self, '_m_is_index_separate'):
+                    return self._m_is_index_separate
+
+                self._m_is_index_separate = self.tag == 210
+                return getattr(self, '_m_is_index_separate', None)
+
+            def _invalidate_is_index_separate(self):
+                del self._m_is_index_separate
+
+        class EndBody(ReadWriteKaitaiStruct):
+            """The body of an end chunk.
+            This body is always empty.
+            
+            The last chunk in the compressed data must always be an end chunk.
+            An end chunk cannot appear elsewhere in the compressed data.
+            """
+            def __init__(self, _io=None, _parent=None, _root=None):
+                super(Dcmp1.Chunk.EndBody, self).__init__(_io)
+                self._parent = _parent
+                self._root = _root
+
+            def _read(self):
+                pass
+                self._dirty = False
+
+
+            def _fetch_instances(self):
+                pass
+
+
+            def _write__seq(self, io=None):
+                super(Dcmp1.Chunk.EndBody, self)._write__seq(io)
+
+
+            def _check(self):
+                self._dirty = False
+
+
+        class ExtendedBody(ReadWriteKaitaiStruct):
+            """The body of an extended chunk.
+            The meaning of this chunk depends on the extended tag byte stored in the chunk data.
+            """
+            def __init__(self, _io=None, _parent=None, _root=None):
+                super(Dcmp1.Chunk.ExtendedBody, self).__init__(_io)
+                self._parent = _parent
+                self._root = _root
+
+            def _read(self):
+                self.tag = self._io.read_u1()
+                _on = self.tag
+                if _on == 2:
+                    pass
+                    self.body = Dcmp1.Chunk.ExtendedBody.RepeatBody(self._io, self, self._root)
+                    self.body._read()
+                self._dirty = False
+
+
+            def _fetch_instances(self):
+                pass
+                _on = self.tag
+                if _on == 2:
+                    pass
+                    self.body._fetch_instances()
+
+
+            def _write__seq(self, io=None):
+                super(Dcmp1.Chunk.ExtendedBody, self)._write__seq(io)
+                self._io.write_u1(self.tag)
+                _on = self.tag
+                if _on == 2:
+                    pass
+                    self.body._write__seq(self._io)
+
+
+            def _check(self):
+                _on = self.tag
+                if _on == 2:
+                    pass
+                    if self.body._root != self._root:
+                        raise kaitaistruct.ConsistencyError(u"body", self._root, self.body._root)
+                    if self.body._parent != self:
+                        raise kaitaistruct.ConsistencyError(u"body", self, self.body._parent)
+                self._dirty = False
+
+            class RepeatBody(ReadWriteKaitaiStruct):
+                """The body of a repeat chunk.
+                
+                This chunk expands to the same byte repeated a number of times,
+                i. e. it implements a form of run-length encoding.
+                """
+                def __init__(self, _io=None, _parent=None, _root=None):
+                    super(Dcmp1.Chunk.ExtendedBody.RepeatBody, self).__init__(_io)
+                    self._parent = _parent
+                    self._root = _root
+
+                def _read(self):
+                    self.to_repeat_raw = dcmp_variable_length_integer.DcmpVariableLengthInteger(self._io)
+                    self.to_repeat_raw._read()
+                    self.repeat_count_m1_raw = dcmp_variable_length_integer.DcmpVariableLengthInteger(self._io)
+                    self.repeat_count_m1_raw._read()
+                    self._dirty = False
+
+
+                def _fetch_instances(self):
+                    pass
+                    self.to_repeat_raw._fetch_instances()
+                    self.repeat_count_m1_raw._fetch_instances()
+
+
+                def _write__seq(self, io=None):
+                    super(Dcmp1.Chunk.ExtendedBody.RepeatBody, self)._write__seq(io)
+                    self.to_repeat_raw._write__seq(self._io)
+                    self.repeat_count_m1_raw._write__seq(self._io)
+
+
+                def _check(self):
+                    self._dirty = False
+
+                @property
+                def repeat_count(self):
+                    """The number of times to repeat the value.
+                    
+                    This value must be positive.
+                    """
+                    if hasattr(self, '_m_repeat_count'):
+                        return self._m_repeat_count
+
+                    self._m_repeat_count = self.repeat_count_m1 + 1
+                    return getattr(self, '_m_repeat_count', None)
+
+                def _invalidate_repeat_count(self):
+                    del self._m_repeat_count
+                @property
+                def repeat_count_m1(self):
+                    """The number of times to repeat the value,
+                    minus one.
+                    
+                    This value must not be negative.
+                    """
+                    if hasattr(self, '_m_repeat_count_m1'):
+                        return self._m_repeat_count_m1
+
+                    self._m_repeat_count_m1 = self.repeat_count_m1_raw.value
+                    return getattr(self, '_m_repeat_count_m1', None)
+
+                def _invalidate_repeat_count_m1(self):
+                    del self._m_repeat_count_m1
+                @property
+                def to_repeat(self):
+                    """The value to repeat.
+                    
+                    Although it is stored as a variable-length integer,
+                    this value must fit into an unsigned 8-bit integer.
+                    """
+                    if hasattr(self, '_m_to_repeat'):
+                        return self._m_to_repeat
+
+                    self._m_to_repeat = self.to_repeat_raw.value
+                    return getattr(self, '_m_to_repeat', None)
+
+                def _invalidate_to_repeat(self):
+                    del self._m_to_repeat
+
+
+        class LiteralBody(ReadWriteKaitaiStruct):
+            """The body of a literal data chunk.
+            
+            The data that this chunk expands to is stored literally in the body (`literal`).
+            Optionally,
+            the literal data may also be stored for use by future backreference chunks (`do_store`).
+            """
+            def __init__(self, tag, _io=None, _parent=None, _root=None):
+                super(Dcmp1.Chunk.LiteralBody, self).__init__(_io)
+                self._parent = _parent
+                self._root = _root
+                self.tag = tag
+
+            def _read(self):
+                if self.is_len_literal_separate:
+                    pass
+                    self.len_literal_separate = self._io.read_u1()
+
+                self.literal = self._io.read_bytes(self.len_literal)
+                self._dirty = False
+
+
+            def _fetch_instances(self):
+                pass
+                if self.is_len_literal_separate:
+                    pass
+
+
+
+            def _write__seq(self, io=None):
+                super(Dcmp1.Chunk.LiteralBody, self)._write__seq(io)
+                if self.is_len_literal_separate:
+                    pass
+                    self._io.write_u1(self.len_literal_separate)
+
+                self._io.write_bytes(self.literal)
+
+
+            def _check(self):
+                if self.is_len_literal_separate:
+                    pass
+
+                if len(self.literal) != self.len_literal:
+                    raise kaitaistruct.ConsistencyError(u"literal", self.len_literal, len(self.literal))
+                self._dirty = False
+
+            @property
+            def do_store(self):
+                """Whether this literal should be stored for use by future backreference chunks.
+                
+                See the documentation of the `backreference_body` type for details about backreference chunks.
+                """
+                if hasattr(self, '_m_do_store'):
+                    return self._m_do_store
+
+                self._m_do_store = (self.tag == 209 if self.is_len_literal_separate else self.tag & 16 != 0)
+                return getattr(self, '_m_do_store', None)
+
+            def _invalidate_do_store(self):
+                del self._m_do_store
+            @property
+            def is_len_literal_separate(self):
+                """Whether the length of the literal is stored separately from the tag.
+                """
+                if hasattr(self, '_m_is_len_literal_separate'):
+                    return self._m_is_len_literal_separate
+
+                self._m_is_len_literal_separate = self.tag >= 208
+                return getattr(self, '_m_is_len_literal_separate', None)
+
+            def _invalidate_is_len_literal_separate(self):
+                del self._m_is_len_literal_separate
+            @property
+            def len_literal(self):
+                """The length of the literal data,
+                in bytes.
+                
+                In practice,
+                this value is always greater than zero,
+                as there is no use in storing a zero-length literal.
+                """
+                if hasattr(self, '_m_len_literal'):
+                    return self._m_len_literal
+
+                self._m_len_literal = (self.len_literal_separate if self.is_len_literal_separate else self.len_literal_m1_in_tag + 1)
+                return getattr(self, '_m_len_literal', None)
+
+            def _invalidate_len_literal(self):
+                del self._m_len_literal
+            @property
+            def len_literal_m1_in_tag(self):
+                """The part of the tag byte that indicates the length of the literal data,
+                in bytes,
+                minus one.
+                
+                If the tag byte is 0xd0 or 0xd1,
+                the length is stored in a separate byte after the tag byte and before the literal data.
+                """
+                if hasattr(self, '_m_len_literal_m1_in_tag'):
+                    return self._m_len_literal_m1_in_tag
+
+                if (not (self.is_len_literal_separate)):
+                    pass
+                    self._m_len_literal_m1_in_tag = self.tag & 15
+
+                return getattr(self, '_m_len_literal_m1_in_tag', None)
+
+            def _invalidate_len_literal_m1_in_tag(self):
+                del self._m_len_literal_m1_in_tag
+
+        class TableLookupBody(ReadWriteKaitaiStruct):
+            """The body of a table lookup chunk.
+            This body is always empty.
+            
+            This chunk always expands to two bytes (`value`),
+            determined from the tag byte using a fixed lookup table (`lookup_table`).
+            This lookup table is hardcoded in the decompressor and always the same for all compressed data.
+            """
+            def __init__(self, tag, _io=None, _parent=None, _root=None):
+                super(Dcmp1.Chunk.TableLookupBody, self).__init__(_io)
+                self._parent = _parent
+                self._root = _root
+                self.tag = tag
+
+            def _read(self):
+                pass
+                self._dirty = False
+
+
+            def _fetch_instances(self):
+                pass
+
+
+            def _write__seq(self, io=None):
+                super(Dcmp1.Chunk.TableLookupBody, self)._write__seq(io)
+
+
+            def _check(self):
+                self._dirty = False
+
+            @property
+            def lookup_table(self):
+                """Fixed lookup table that maps tag byte numbers to two bytes each.
+                
+                The entries in the lookup table are offset -
+                index 0 stands for tag 0xd5, 1 for 0xd6, etc.
+                """
+                if hasattr(self, '_m_lookup_table'):
+                    return self._m_lookup_table
+
+                self._m_lookup_table = [b"\x00\x00", b"\x00\x01", b"\x00\x02", b"\x00\x03", b"\x2E\x01", b"\x3E\x01", b"\x01\x01", b"\x1E\x01", b"\xFF\xFF", b"\x0E\x01", b"\x31\x00", b"\x11\x12", b"\x01\x07", b"\x33\x32", b"\x12\x39", b"\xED\x10", b"\x01\x27", b"\x23\x22", b"\x01\x37", b"\x07\x06", b"\x01\x17", b"\x01\x23", b"\x00\xFF", b"\x00\x2F", b"\x07\x0E", b"\xFD\x3C", b"\x01\x35", b"\x01\x15", b"\x01\x02", b"\x00\x07", b"\x00\x3E", b"\x05\xD5", b"\x02\x01", b"\x06\x07", b"\x07\x08", b"\x30\x01", b"\x01\x33", b"\x00\x10", b"\x17\x16", b"\x37\x3E", b"\x36\x37"]
+                return getattr(self, '_m_lookup_table', None)
+
+            def _invalidate_lookup_table(self):
+                del self._m_lookup_table
+            @property
+            def value(self):
+                """The two bytes that the tag byte expands to,
+                based on the fixed lookup table.
+                """
+                if hasattr(self, '_m_value'):
+                    return self._m_value
+
+                self._m_value = self.lookup_table[self.tag - 213]
+                return getattr(self, '_m_value', None)
+
+            def _invalidate_value(self):
+                del self._m_value
+
+
+

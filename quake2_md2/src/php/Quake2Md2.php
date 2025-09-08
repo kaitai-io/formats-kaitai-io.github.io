@@ -68,19 +68,19 @@
 
 namespace {
     class Quake2Md2 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Quake2Md2 $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Quake2Md2 $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic = $this->_io->readBytes(4);
-            if (!($this->magic() == "\x49\x44\x50\x32")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x49\x44\x50\x32", $this->magic(), $this->_io(), "/seq/0");
+            if (!($this->_m_magic == "\x49\x44\x50\x32")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x49\x44\x50\x32", $this->_m_magic, $this->_io, "/seq/0");
             }
             $this->_m_version = $this->_io->readU4le();
-            if (!($this->version() == 8)) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError(8, $this->version(), $this->_io(), "/seq/1");
+            if (!($this->_m_version == 8)) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError(8, $this->_m_version, $this->_io, "/seq/1");
             }
             $this->_m_skinWidthPx = $this->_io->readU4le();
             $this->_m_skinHeightPx = $this->_io->readU4le();
@@ -98,6 +98,13 @@ namespace {
             $this->_m_ofsGlCmds = $this->_io->readU4le();
             $this->_m_ofsEof = $this->_io->readU4le();
         }
+        protected $_m_animNames;
+        public function animNames() {
+            if ($this->_m_animNames !== null)
+                return $this->_m_animNames;
+            $this->_m_animNames = ["stand", "run", "attack", "pain1", "pain2", "pain3", "jump", "flip", "salute", "taunt", "wave", "point", "crstnd", "crwalk", "crattak", "crpain", "crdeath", "death1", "death2", "death3"];
+            return $this->_m_animNames;
+        }
         protected $_m_animNumFrames;
         public function animNumFrames() {
             if ($this->_m_animNumFrames !== null)
@@ -105,12 +112,62 @@ namespace {
             $this->_m_animNumFrames = "\x28\x06\x08\x04\x04\x04\x06\x0C\x0B\x11\x0B\x0C\x13\x06\x09\x04\x05\x06\x06\x08";
             return $this->_m_animNumFrames;
         }
+        protected $_m_animStartIndices;
+        public function animStartIndices() {
+            if ($this->_m_animStartIndices !== null)
+                return $this->_m_animStartIndices;
+            $this->_m_animStartIndices = "\x00\x28\x2E\x36\x3A\x3E\x42\x48\x54\x5F\x70\x7B\x87\x9A\xA0\xA9\xAD\xB2\xB8\xBE";
+            return $this->_m_animStartIndices;
+        }
         protected $_m_anormsTable;
         public function anormsTable() {
             if ($this->_m_anormsTable !== null)
                 return $this->_m_anormsTable;
             $this->_m_anormsTable = [[-0.525731, 0.000000, 0.850651], [-0.442863, 0.238856, 0.864188], [-0.295242, 0.000000, 0.955423], [-0.309017, 0.500000, 0.809017], [-0.162460, 0.262866, 0.951056], [0.000000, 0.000000, 1.000000], [0.000000, 0.850651, 0.525731], [-0.147621, 0.716567, 0.681718], [0.147621, 0.716567, 0.681718], [0.000000, 0.525731, 0.850651], [0.309017, 0.500000, 0.809017], [0.525731, 0.000000, 0.850651], [0.295242, 0.000000, 0.955423], [0.442863, 0.238856, 0.864188], [0.162460, 0.262866, 0.951056], [-0.681718, 0.147621, 0.716567], [-0.809017, 0.309017, 0.500000], [-0.587785, 0.425325, 0.688191], [-0.850651, 0.525731, 0.000000], [-0.864188, 0.442863, 0.238856], [-0.716567, 0.681718, 0.147621], [-0.688191, 0.587785, 0.425325], [-0.500000, 0.809017, 0.309017], [-0.238856, 0.864188, 0.442863], [-0.425325, 0.688191, 0.587785], [-0.716567, 0.681718, -0.147621], [-0.500000, 0.809017, -0.309017], [-0.525731, 0.850651, 0.000000], [0.000000, 0.850651, -0.525731], [-0.238856, 0.864188, -0.442863], [0.000000, 0.955423, -0.295242], [-0.262866, 0.951056, -0.162460], [0.000000, 1.000000, 0.000000], [0.000000, 0.955423, 0.295242], [-0.262866, 0.951056, 0.162460], [0.238856, 0.864188, 0.442863], [0.262866, 0.951056, 0.162460], [0.500000, 0.809017, 0.309017], [0.238856, 0.864188, -0.442863], [0.262866, 0.951056, -0.162460], [0.500000, 0.809017, -0.309017], [0.850651, 0.525731, 0.000000], [0.716567, 0.681718, 0.147621], [0.716567, 0.681718, -0.147621], [0.525731, 0.850651, 0.000000], [0.425325, 0.688191, 0.587785], [0.864188, 0.442863, 0.238856], [0.688191, 0.587785, 0.425325], [0.809017, 0.309017, 0.500000], [0.681718, 0.147621, 0.716567], [0.587785, 0.425325, 0.688191], [0.955423, 0.295242, 0.000000], [1.000000, 0.000000, 0.000000], [0.951056, 0.162460, 0.262866], [0.850651, -0.525731, 0.000000], [0.955423, -0.295242, 0.000000], [0.864188, -0.442863, 0.238856], [0.951056, -0.162460, 0.262866], [0.809017, -0.309017, 0.500000], [0.681718, -0.147621, 0.716567], [0.850651, 0.000000, 0.525731], [0.864188, 0.442863, -0.238856], [0.809017, 0.309017, -0.500000], [0.951056, 0.162460, -0.262866], [0.525731, 0.000000, -0.850651], [0.681718, 0.147621, -0.716567], [0.681718, -0.147621, -0.716567], [0.850651, 0.000000, -0.525731], [0.809017, -0.309017, -0.500000], [0.864188, -0.442863, -0.238856], [0.951056, -0.162460, -0.262866], [0.147621, 0.716567, -0.681718], [0.309017, 0.500000, -0.809017], [0.425325, 0.688191, -0.587785], [0.442863, 0.238856, -0.864188], [0.587785, 0.425325, -0.688191], [0.688191, 0.587785, -0.425325], [-0.147621, 0.716567, -0.681718], [-0.309017, 0.500000, -0.809017], [0.000000, 0.525731, -0.850651], [-0.525731, 0.000000, -0.850651], [-0.442863, 0.238856, -0.864188], [-0.295242, 0.000000, -0.955423], [-0.162460, 0.262866, -0.951056], [0.000000, 0.000000, -1.000000], [0.295242, 0.000000, -0.955423], [0.162460, 0.262866, -0.951056], [-0.442863, -0.238856, -0.864188], [-0.309017, -0.500000, -0.809017], [-0.162460, -0.262866, -0.951056], [0.000000, -0.850651, -0.525731], [-0.147621, -0.716567, -0.681718], [0.147621, -0.716567, -0.681718], [0.000000, -0.525731, -0.850651], [0.309017, -0.500000, -0.809017], [0.442863, -0.238856, -0.864188], [0.162460, -0.262866, -0.951056], [0.238856, -0.864188, -0.442863], [0.500000, -0.809017, -0.309017], [0.425325, -0.688191, -0.587785], [0.716567, -0.681718, -0.147621], [0.688191, -0.587785, -0.425325], [0.587785, -0.425325, -0.688191], [0.000000, -0.955423, -0.295242], [0.000000, -1.000000, 0.000000], [0.262866, -0.951056, -0.162460], [0.000000, -0.850651, 0.525731], [0.000000, -0.955423, 0.295242], [0.238856, -0.864188, 0.442863], [0.262866, -0.951056, 0.162460], [0.500000, -0.809017, 0.309017], [0.716567, -0.681718, 0.147621], [0.525731, -0.850651, 0.000000], [-0.238856, -0.864188, -0.442863], [-0.500000, -0.809017, -0.309017], [-0.262866, -0.951056, -0.162460], [-0.850651, -0.525731, 0.000000], [-0.716567, -0.681718, -0.147621], [-0.716567, -0.681718, 0.147621], [-0.525731, -0.850651, 0.000000], [-0.500000, -0.809017, 0.309017], [-0.238856, -0.864188, 0.442863], [-0.262866, -0.951056, 0.162460], [-0.864188, -0.442863, 0.238856], [-0.809017, -0.309017, 0.500000], [-0.688191, -0.587785, 0.425325], [-0.681718, -0.147621, 0.716567], [-0.442863, -0.238856, 0.864188], [-0.587785, -0.425325, 0.688191], [-0.309017, -0.500000, 0.809017], [-0.147621, -0.716567, 0.681718], [-0.425325, -0.688191, 0.587785], [-0.162460, -0.262866, 0.951056], [0.442863, -0.238856, 0.864188], [0.162460, -0.262866, 0.951056], [0.309017, -0.500000, 0.809017], [0.147621, -0.716567, 0.681718], [0.000000, -0.525731, 0.850651], [0.425325, -0.688191, 0.587785], [0.587785, -0.425325, 0.688191], [0.688191, -0.587785, 0.425325], [-0.955423, 0.295242, 0.000000], [-0.951056, 0.162460, 0.262866], [-1.000000, 0.000000, 0.000000], [-0.850651, 0.000000, 0.525731], [-0.955423, -0.295242, 0.000000], [-0.951056, -0.162460, 0.262866], [-0.864188, 0.442863, -0.238856], [-0.951056, 0.162460, -0.262866], [-0.809017, 0.309017, -0.500000], [-0.864188, -0.442863, -0.238856], [-0.951056, -0.162460, -0.262866], [-0.809017, -0.309017, -0.500000], [-0.681718, 0.147621, -0.716567], [-0.681718, -0.147621, -0.716567], [-0.850651, 0.000000, -0.525731], [-0.688191, 0.587785, -0.425325], [-0.587785, 0.425325, -0.688191], [-0.425325, 0.688191, -0.587785], [-0.425325, -0.688191, -0.587785], [-0.587785, -0.425325, -0.688191], [-0.688191, -0.587785, -0.425325]];
             return $this->_m_anormsTable;
+        }
+        protected $_m_frames;
+        public function frames() {
+            if ($this->_m_frames !== null)
+                return $this->_m_frames;
+            $_pos = $this->_io->pos();
+            $this->_io->seek($this->ofsFrames());
+            $this->_m__raw_frames = [];
+            $this->_m_frames = [];
+            $n = $this->numFrames();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m__raw_frames[] = $this->_io->readBytes($this->bytesPerFrame());
+                $_io__raw_frames = new \Kaitai\Struct\Stream(end($this->_m__raw_frames));
+                $this->_m_frames[] = new \Quake2Md2\Frame($_io__raw_frames, $this, $this->_root);
+            }
+            $this->_io->seek($_pos);
+            return $this->_m_frames;
+        }
+        protected $_m_glCmds;
+        public function glCmds() {
+            if ($this->_m_glCmds !== null)
+                return $this->_m_glCmds;
+            $_pos = $this->_io->pos();
+            $this->_io->seek($this->ofsGlCmds());
+            $this->_m__raw_glCmds = $this->_io->readBytes(4 * $this->numGlCmds());
+            $_io__raw_glCmds = new \Kaitai\Struct\Stream($this->_m__raw_glCmds);
+            $this->_m_glCmds = new \Quake2Md2\GlCmdsList($_io__raw_glCmds, $this, $this->_root);
+            $this->_io->seek($_pos);
+            return $this->_m_glCmds;
+        }
+        protected $_m_skins;
+        public function skins() {
+            if ($this->_m_skins !== null)
+                return $this->_m_skins;
+            $_pos = $this->_io->pos();
+            $this->_io->seek($this->ofsSkins());
+            $this->_m_skins = [];
+            $n = $this->numSkins();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_skins[] = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($this->_io->readBytes(64), 0, false), "ASCII");
+            }
+            $this->_io->seek($_pos);
+            return $this->_m_skins;
         }
         protected $_m_texCoords;
         public function texCoords() {
@@ -139,63 +196,6 @@ namespace {
             }
             $this->_io->seek($_pos);
             return $this->_m_triangles;
-        }
-        protected $_m_frames;
-        public function frames() {
-            if ($this->_m_frames !== null)
-                return $this->_m_frames;
-            $_pos = $this->_io->pos();
-            $this->_io->seek($this->ofsFrames());
-            $this->_m__raw_frames = [];
-            $this->_m_frames = [];
-            $n = $this->numFrames();
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m__raw_frames[] = $this->_io->readBytes($this->bytesPerFrame());
-                $_io__raw_frames = new \Kaitai\Struct\Stream(end($this->_m__raw_frames));
-                $this->_m_frames[] = new \Quake2Md2\Frame($_io__raw_frames, $this, $this->_root);
-            }
-            $this->_io->seek($_pos);
-            return $this->_m_frames;
-        }
-        protected $_m_animNames;
-        public function animNames() {
-            if ($this->_m_animNames !== null)
-                return $this->_m_animNames;
-            $this->_m_animNames = ["stand", "run", "attack", "pain1", "pain2", "pain3", "jump", "flip", "salute", "taunt", "wave", "point", "crstnd", "crwalk", "crattak", "crpain", "crdeath", "death1", "death2", "death3"];
-            return $this->_m_animNames;
-        }
-        protected $_m_glCmds;
-        public function glCmds() {
-            if ($this->_m_glCmds !== null)
-                return $this->_m_glCmds;
-            $_pos = $this->_io->pos();
-            $this->_io->seek($this->ofsGlCmds());
-            $this->_m__raw_glCmds = $this->_io->readBytes((4 * $this->numGlCmds()));
-            $_io__raw_glCmds = new \Kaitai\Struct\Stream($this->_m__raw_glCmds);
-            $this->_m_glCmds = new \Quake2Md2\GlCmdsList($_io__raw_glCmds, $this, $this->_root);
-            $this->_io->seek($_pos);
-            return $this->_m_glCmds;
-        }
-        protected $_m_skins;
-        public function skins() {
-            if ($this->_m_skins !== null)
-                return $this->_m_skins;
-            $_pos = $this->_io->pos();
-            $this->_io->seek($this->ofsSkins());
-            $this->_m_skins = [];
-            $n = $this->numSkins();
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_skins[] = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($this->_io->readBytes(64), 0, false), "ascii");
-            }
-            $this->_io->seek($_pos);
-            return $this->_m_skins;
-        }
-        protected $_m_animStartIndices;
-        public function animStartIndices() {
-            if ($this->_m_animStartIndices !== null)
-                return $this->_m_animStartIndices;
-            $this->_m_animStartIndices = "\x00\x28\x2E\x36\x3A\x3E\x42\x48\x54\x5F\x70\x7B\x87\x9A\xA0\xA9\xAD\xB2\xB8\xBE";
-            return $this->_m_animStartIndices;
         }
         protected $_m_magic;
         protected $_m_version;
@@ -239,33 +239,8 @@ namespace {
 }
 
 namespace Quake2Md2 {
-    class Vertex extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Quake2Md2\Frame $_parent = null, \Quake2Md2 $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_position = new \Quake2Md2\CompressedVec($this->_io, $this, $this->_root);
-            $this->_m_normalIndex = $this->_io->readU1();
-        }
-        protected $_m_normal;
-        public function normal() {
-            if ($this->_m_normal !== null)
-                return $this->_m_normal;
-            $this->_m_normal = $this->_root()->anormsTable()[$this->normalIndex()];
-            return $this->_m_normal;
-        }
-        protected $_m_position;
-        protected $_m_normalIndex;
-        public function position() { return $this->_m_position; }
-        public function normalIndex() { return $this->_m_normalIndex; }
-    }
-}
-
-namespace Quake2Md2 {
     class CompressedVec extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Quake2Md2\Vertex $_parent = null, \Quake2Md2 $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Quake2Md2\Vertex $_parent = null, ?\Quake2Md2 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -279,21 +254,21 @@ namespace Quake2Md2 {
         public function x() {
             if ($this->_m_x !== null)
                 return $this->_m_x;
-            $this->_m_x = (($this->xCompressed() * $this->_parent()->_parent()->scale()->x()) + $this->_parent()->_parent()->translate()->x());
+            $this->_m_x = $this->xCompressed() * $this->_parent()->_parent()->scale()->x() + $this->_parent()->_parent()->translate()->x();
             return $this->_m_x;
         }
         protected $_m_y;
         public function y() {
             if ($this->_m_y !== null)
                 return $this->_m_y;
-            $this->_m_y = (($this->yCompressed() * $this->_parent()->_parent()->scale()->y()) + $this->_parent()->_parent()->translate()->y());
+            $this->_m_y = $this->yCompressed() * $this->_parent()->_parent()->scale()->y() + $this->_parent()->_parent()->translate()->y();
             return $this->_m_y;
         }
         protected $_m_z;
         public function z() {
             if ($this->_m_z !== null)
                 return $this->_m_z;
-            $this->_m_z = (($this->zCompressed() * $this->_parent()->_parent()->scale()->z()) + $this->_parent()->_parent()->translate()->z());
+            $this->_m_z = $this->zCompressed() * $this->_parent()->_parent()->scale()->z() + $this->_parent()->_parent()->translate()->z();
             return $this->_m_z;
         }
         protected $_m_xCompressed;
@@ -306,42 +281,8 @@ namespace Quake2Md2 {
 }
 
 namespace Quake2Md2 {
-    class Triangle extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Quake2Md2 $_parent = null, \Quake2Md2 $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_vertexIndices = [];
-            $n = 3;
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_vertexIndices[] = $this->_io->readU2le();
-            }
-            $this->_m_texPointIndices = [];
-            $n = 3;
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_texPointIndices[] = $this->_io->readU2le();
-            }
-        }
-        protected $_m_vertexIndices;
-        protected $_m_texPointIndices;
-
-        /**
-         * indices to `_root.frames[i].vertices` (for each frame with index `i`)
-         */
-        public function vertexIndices() { return $this->_m_vertexIndices; }
-
-        /**
-         * indices to `_root.tex_coords`
-         */
-        public function texPointIndices() { return $this->_m_texPointIndices; }
-    }
-}
-
-namespace Quake2Md2 {
     class Frame extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Quake2Md2 $_parent = null, \Quake2Md2 $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Quake2Md2 $_parent = null, ?\Quake2Md2 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -349,7 +290,7 @@ namespace Quake2Md2 {
         private function _read() {
             $this->_m_scale = new \Quake2Md2\Vec3f($this->_io, $this, $this->_root);
             $this->_m_translate = new \Quake2Md2\Vec3f($this->_io, $this, $this->_root);
-            $this->_m_name = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($this->_io->readBytes(16), 0, false), "ascii");
+            $this->_m_name = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($this->_io->readBytes(16), 0, false), "ASCII");
             $this->_m_vertices = [];
             $n = $this->_root()->verticesPerFrame();
             for ($i = 0; $i < $n; $i++) {
@@ -368,110 +309,8 @@ namespace Quake2Md2 {
 }
 
 namespace Quake2Md2 {
-    class GlCmdsList extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Quake2Md2 $_parent = null, \Quake2Md2 $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            if (!($this->_io()->isEof())) {
-                $this->_m_items = [];
-                $i = 0;
-                do {
-                    $_ = new \Quake2Md2\GlCmd($this->_io, $this, $this->_root);
-                    $this->_m_items[] = $_;
-                    $i++;
-                } while (!($_->cmdNumVertices() == 0));
-            }
-        }
-        protected $_m_items;
-        public function items() { return $this->_m_items; }
-    }
-}
-
-namespace Quake2Md2 {
-    class TexPoint extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Quake2Md2 $_parent = null, \Quake2Md2 $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_sPx = $this->_io->readU2le();
-            $this->_m_tPx = $this->_io->readU2le();
-        }
-        protected $_m_sNormalized;
-        public function sNormalized() {
-            if ($this->_m_sNormalized !== null)
-                return $this->_m_sNormalized;
-            $this->_m_sNormalized = (($this->sPx() + 0.0) / $this->_root()->skinWidthPx());
-            return $this->_m_sNormalized;
-        }
-        protected $_m_tNormalized;
-        public function tNormalized() {
-            if ($this->_m_tNormalized !== null)
-                return $this->_m_tNormalized;
-            $this->_m_tNormalized = (($this->tPx() + 0.0) / $this->_root()->skinHeightPx());
-            return $this->_m_tNormalized;
-        }
-        protected $_m_sPx;
-        protected $_m_tPx;
-        public function sPx() { return $this->_m_sPx; }
-        public function tPx() { return $this->_m_tPx; }
-    }
-}
-
-namespace Quake2Md2 {
-    class Vec3f extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Quake2Md2\Frame $_parent = null, \Quake2Md2 $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_x = $this->_io->readF4le();
-            $this->_m_y = $this->_io->readF4le();
-            $this->_m_z = $this->_io->readF4le();
-        }
-        protected $_m_x;
-        protected $_m_y;
-        protected $_m_z;
-        public function x() { return $this->_m_x; }
-        public function y() { return $this->_m_y; }
-        public function z() { return $this->_m_z; }
-    }
-}
-
-namespace Quake2Md2 {
-    class GlVertex extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Quake2Md2\GlCmd $_parent = null, \Quake2Md2 $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_texCoordsNormalized = [];
-            $n = 2;
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_texCoordsNormalized[] = $this->_io->readF4le();
-            }
-            $this->_m_vertexIndex = $this->_io->readU4le();
-        }
-        protected $_m_texCoordsNormalized;
-        protected $_m_vertexIndex;
-        public function texCoordsNormalized() { return $this->_m_texCoordsNormalized; }
-
-        /**
-         * index to `_root.frames[i].vertices` (for each frame with index `i`)
-         */
-        public function vertexIndex() { return $this->_m_vertexIndex; }
-    }
-}
-
-namespace Quake2Md2 {
     class GlCmd extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Quake2Md2\GlCmdsList $_parent = null, \Quake2Md2 $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Quake2Md2\GlCmdsList $_parent = null, ?\Quake2Md2 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -506,8 +345,175 @@ namespace Quake2Md2 {
 }
 
 namespace Quake2Md2 {
+    class GlCmdsList extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Quake2Md2 $_parent = null, ?\Quake2Md2 $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            if (!($this->_io()->isEof())) {
+                $this->_m_items = [];
+                $i = 0;
+                do {
+                    $_ = new \Quake2Md2\GlCmd($this->_io, $this, $this->_root);
+                    $this->_m_items[] = $_;
+                    $i++;
+                } while (!($_->cmdNumVertices() == 0));
+            }
+        }
+        protected $_m_items;
+        public function items() { return $this->_m_items; }
+    }
+}
+
+namespace Quake2Md2 {
+    class GlVertex extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Quake2Md2\GlCmd $_parent = null, ?\Quake2Md2 $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_texCoordsNormalized = [];
+            $n = 2;
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_texCoordsNormalized[] = $this->_io->readF4le();
+            }
+            $this->_m_vertexIndex = $this->_io->readU4le();
+        }
+        protected $_m_texCoordsNormalized;
+        protected $_m_vertexIndex;
+        public function texCoordsNormalized() { return $this->_m_texCoordsNormalized; }
+
+        /**
+         * index to `_root.frames[i].vertices` (for each frame with index `i`)
+         */
+        public function vertexIndex() { return $this->_m_vertexIndex; }
+    }
+}
+
+namespace Quake2Md2 {
+    class TexPoint extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Quake2Md2 $_parent = null, ?\Quake2Md2 $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_sPx = $this->_io->readU2le();
+            $this->_m_tPx = $this->_io->readU2le();
+        }
+        protected $_m_sNormalized;
+        public function sNormalized() {
+            if ($this->_m_sNormalized !== null)
+                return $this->_m_sNormalized;
+            $this->_m_sNormalized = ($this->sPx() + 0.0) / $this->_root()->skinWidthPx();
+            return $this->_m_sNormalized;
+        }
+        protected $_m_tNormalized;
+        public function tNormalized() {
+            if ($this->_m_tNormalized !== null)
+                return $this->_m_tNormalized;
+            $this->_m_tNormalized = ($this->tPx() + 0.0) / $this->_root()->skinHeightPx();
+            return $this->_m_tNormalized;
+        }
+        protected $_m_sPx;
+        protected $_m_tPx;
+        public function sPx() { return $this->_m_sPx; }
+        public function tPx() { return $this->_m_tPx; }
+    }
+}
+
+namespace Quake2Md2 {
+    class Triangle extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Quake2Md2 $_parent = null, ?\Quake2Md2 $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_vertexIndices = [];
+            $n = 3;
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_vertexIndices[] = $this->_io->readU2le();
+            }
+            $this->_m_texPointIndices = [];
+            $n = 3;
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_texPointIndices[] = $this->_io->readU2le();
+            }
+        }
+        protected $_m_vertexIndices;
+        protected $_m_texPointIndices;
+
+        /**
+         * indices to `_root.frames[i].vertices` (for each frame with index `i`)
+         */
+        public function vertexIndices() { return $this->_m_vertexIndices; }
+
+        /**
+         * indices to `_root.tex_coords`
+         */
+        public function texPointIndices() { return $this->_m_texPointIndices; }
+    }
+}
+
+namespace Quake2Md2 {
+    class Vec3f extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Quake2Md2\Frame $_parent = null, ?\Quake2Md2 $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_x = $this->_io->readF4le();
+            $this->_m_y = $this->_io->readF4le();
+            $this->_m_z = $this->_io->readF4le();
+        }
+        protected $_m_x;
+        protected $_m_y;
+        protected $_m_z;
+        public function x() { return $this->_m_x; }
+        public function y() { return $this->_m_y; }
+        public function z() { return $this->_m_z; }
+    }
+}
+
+namespace Quake2Md2 {
+    class Vertex extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Quake2Md2\Frame $_parent = null, ?\Quake2Md2 $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_position = new \Quake2Md2\CompressedVec($this->_io, $this, $this->_root);
+            $this->_m_normalIndex = $this->_io->readU1();
+        }
+        protected $_m_normal;
+        public function normal() {
+            if ($this->_m_normal !== null)
+                return $this->_m_normal;
+            $this->_m_normal = $this->_root()->anormsTable()[$this->normalIndex()];
+            return $this->_m_normal;
+        }
+        protected $_m_position;
+        protected $_m_normalIndex;
+        public function position() { return $this->_m_position; }
+        public function normalIndex() { return $this->_m_normalIndex; }
+    }
+}
+
+namespace Quake2Md2 {
     class GlPrimitive {
         const TRIANGLE_STRIP = 0;
         const TRIANGLE_FAN = 1;
+
+        private const _VALUES = [0 => true, 1 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

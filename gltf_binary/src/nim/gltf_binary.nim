@@ -9,29 +9,29 @@ type
   GltfBinary_ChunkType* = enum
     bin = 5130562
     json = 1313821514
-  GltfBinary_Header* = ref object of KaitaiStruct
-    `magic`*: seq[byte]
-    `version`*: uint32
-    `length`*: uint32
-    `parent`*: GltfBinary
+  GltfBinary_Bin* = ref object of KaitaiStruct
+    `data`*: seq[byte]
+    `parent`*: GltfBinary_Chunk
   GltfBinary_Chunk* = ref object of KaitaiStruct
     `lenData`*: uint32
     `type`*: GltfBinary_ChunkType
     `data`*: KaitaiStruct
     `parent`*: GltfBinary
     `rawData`*: seq[byte]
+  GltfBinary_Header* = ref object of KaitaiStruct
+    `magic`*: seq[byte]
+    `version`*: uint32
+    `length`*: uint32
+    `parent`*: GltfBinary
   GltfBinary_Json* = ref object of KaitaiStruct
     `data`*: string
     `parent`*: GltfBinary_Chunk
-  GltfBinary_Bin* = ref object of KaitaiStruct
-    `data`*: seq[byte]
-    `parent`*: GltfBinary_Chunk
 
 proc read*(_: typedesc[GltfBinary], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): GltfBinary
-proc read*(_: typedesc[GltfBinary_Header], io: KaitaiStream, root: KaitaiStruct, parent: GltfBinary): GltfBinary_Header
-proc read*(_: typedesc[GltfBinary_Chunk], io: KaitaiStream, root: KaitaiStruct, parent: GltfBinary): GltfBinary_Chunk
-proc read*(_: typedesc[GltfBinary_Json], io: KaitaiStream, root: KaitaiStruct, parent: GltfBinary_Chunk): GltfBinary_Json
 proc read*(_: typedesc[GltfBinary_Bin], io: KaitaiStream, root: KaitaiStruct, parent: GltfBinary_Chunk): GltfBinary_Bin
+proc read*(_: typedesc[GltfBinary_Chunk], io: KaitaiStream, root: KaitaiStruct, parent: GltfBinary): GltfBinary_Chunk
+proc read*(_: typedesc[GltfBinary_Header], io: KaitaiStream, root: KaitaiStruct, parent: GltfBinary): GltfBinary_Header
+proc read*(_: typedesc[GltfBinary_Json], io: KaitaiStream, root: KaitaiStruct, parent: GltfBinary_Chunk): GltfBinary_Json
 
 
 
@@ -59,6 +59,53 @@ proc read*(_: typedesc[GltfBinary], io: KaitaiStream, root: KaitaiStruct, parent
 
 proc fromFile*(_: typedesc[GltfBinary], filename: string): GltfBinary =
   GltfBinary.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[GltfBinary_Bin], io: KaitaiStream, root: KaitaiStruct, parent: GltfBinary_Chunk): GltfBinary_Bin =
+  template this: untyped = result
+  this = new(GltfBinary_Bin)
+  let root = if root == nil: cast[GltfBinary](this) else: cast[GltfBinary](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let dataExpr = this.io.readBytesFull()
+  this.data = dataExpr
+
+proc fromFile*(_: typedesc[GltfBinary_Bin], filename: string): GltfBinary_Bin =
+  GltfBinary_Bin.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[GltfBinary_Chunk], io: KaitaiStream, root: KaitaiStruct, parent: GltfBinary): GltfBinary_Chunk =
+  template this: untyped = result
+  this = new(GltfBinary_Chunk)
+  let root = if root == nil: cast[GltfBinary](this) else: cast[GltfBinary](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let lenDataExpr = this.io.readU4le()
+  this.lenData = lenDataExpr
+  let typeExpr = GltfBinary_ChunkType(this.io.readU4le())
+  this.type = typeExpr
+  block:
+    let on = this.type
+    if on == gltf_binary.bin:
+      let rawDataExpr = this.io.readBytes(int(this.lenData))
+      this.rawData = rawDataExpr
+      let rawDataIo = newKaitaiStream(rawDataExpr)
+      let dataExpr = GltfBinary_Bin.read(rawDataIo, this.root, this)
+      this.data = dataExpr
+    elif on == gltf_binary.json:
+      let rawDataExpr = this.io.readBytes(int(this.lenData))
+      this.rawData = rawDataExpr
+      let rawDataIo = newKaitaiStream(rawDataExpr)
+      let dataExpr = GltfBinary_Json.read(rawDataIo, this.root, this)
+      this.data = dataExpr
+    else:
+      let dataExpr = this.io.readBytes(int(this.lenData))
+      this.data = dataExpr
+
+proc fromFile*(_: typedesc[GltfBinary_Chunk], filename: string): GltfBinary_Chunk =
+  GltfBinary_Chunk.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[GltfBinary_Header], io: KaitaiStream, root: KaitaiStruct, parent: GltfBinary): GltfBinary_Header =
   template this: untyped = result
@@ -88,39 +135,6 @@ For this specification, should be set to 2.
 proc fromFile*(_: typedesc[GltfBinary_Header], filename: string): GltfBinary_Header =
   GltfBinary_Header.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[GltfBinary_Chunk], io: KaitaiStream, root: KaitaiStruct, parent: GltfBinary): GltfBinary_Chunk =
-  template this: untyped = result
-  this = new(GltfBinary_Chunk)
-  let root = if root == nil: cast[GltfBinary](this) else: cast[GltfBinary](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let lenDataExpr = this.io.readU4le()
-  this.lenData = lenDataExpr
-  let typeExpr = GltfBinary_ChunkType(this.io.readU4le())
-  this.type = typeExpr
-  block:
-    let on = this.type
-    if on == gltf_binary.json:
-      let rawDataExpr = this.io.readBytes(int(this.lenData))
-      this.rawData = rawDataExpr
-      let rawDataIo = newKaitaiStream(rawDataExpr)
-      let dataExpr = GltfBinary_Json.read(rawDataIo, this.root, this)
-      this.data = dataExpr
-    elif on == gltf_binary.bin:
-      let rawDataExpr = this.io.readBytes(int(this.lenData))
-      this.rawData = rawDataExpr
-      let rawDataIo = newKaitaiStream(rawDataExpr)
-      let dataExpr = GltfBinary_Bin.read(rawDataIo, this.root, this)
-      this.data = dataExpr
-    else:
-      let dataExpr = this.io.readBytes(int(this.lenData))
-      this.data = dataExpr
-
-proc fromFile*(_: typedesc[GltfBinary_Chunk], filename: string): GltfBinary_Chunk =
-  GltfBinary_Chunk.read(newKaitaiFileStream(filename), nil, nil)
-
 proc read*(_: typedesc[GltfBinary_Json], io: KaitaiStream, root: KaitaiStruct, parent: GltfBinary_Chunk): GltfBinary_Json =
   template this: untyped = result
   this = new(GltfBinary_Json)
@@ -140,18 +154,4 @@ To parse the rest of the file, you have to parse the JSON first.
 
 proc fromFile*(_: typedesc[GltfBinary_Json], filename: string): GltfBinary_Json =
   GltfBinary_Json.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[GltfBinary_Bin], io: KaitaiStream, root: KaitaiStruct, parent: GltfBinary_Chunk): GltfBinary_Bin =
-  template this: untyped = result
-  this = new(GltfBinary_Bin)
-  let root = if root == nil: cast[GltfBinary](this) else: cast[GltfBinary](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let dataExpr = this.io.readBytesFull()
-  this.data = dataExpr
-
-proc fromFile*(_: typedesc[GltfBinary_Bin], filename: string): GltfBinary_Bin =
-  GltfBinary_Bin.read(newKaitaiFileStream(filename), nil, nil)
 

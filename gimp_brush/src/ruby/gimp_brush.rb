@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -26,36 +26,50 @@ class GimpBrush < Kaitai::Struct::Struct
     4 => :color_depth_rgba,
   }
   I__COLOR_DEPTH = COLOR_DEPTH.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
     @len_header = @_io.read_u4be
-    @_raw_header = @_io.read_bytes((len_header - 4))
-    _io__raw_header = Kaitai::Struct::Stream.new(@_raw_header)
-    @header = Header.new(_io__raw_header, self, @_root)
+    _io_header = @_io.substream(len_header - 4)
+    @header = Header.new(_io_header, self, @_root)
     self
   end
+  class Bitmap < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @rows = []
+      (_root.header.height).times { |i|
+        @rows << Row.new(@_io, self, @_root)
+      }
+      self
+    end
+    attr_reader :rows
+  end
   class Header < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
       @version = @_io.read_u4be
-      raise Kaitai::Struct::ValidationNotEqualError.new(2, version, _io, "/types/header/seq/0") if not version == 2
+      raise Kaitai::Struct::ValidationNotEqualError.new(2, @version, @_io, "/types/header/seq/0") if not @version == 2
       @width = @_io.read_u4be
-      raise Kaitai::Struct::ValidationLessThanError.new(1, width, _io, "/types/header/seq/1") if not width >= 1
-      raise Kaitai::Struct::ValidationGreaterThanError.new(10000, width, _io, "/types/header/seq/1") if not width <= 10000
+      raise Kaitai::Struct::ValidationLessThanError.new(1, @width, @_io, "/types/header/seq/1") if not @width >= 1
+      raise Kaitai::Struct::ValidationGreaterThanError.new(10000, @width, @_io, "/types/header/seq/1") if not @width <= 10000
       @height = @_io.read_u4be
-      raise Kaitai::Struct::ValidationLessThanError.new(1, height, _io, "/types/header/seq/2") if not height >= 1
-      raise Kaitai::Struct::ValidationGreaterThanError.new(10000, height, _io, "/types/header/seq/2") if not height <= 10000
+      raise Kaitai::Struct::ValidationLessThanError.new(1, @height, @_io, "/types/header/seq/2") if not @height >= 1
+      raise Kaitai::Struct::ValidationGreaterThanError.new(10000, @height, @_io, "/types/header/seq/2") if not @height <= 10000
       @bytes_per_pixel = Kaitai::Struct::Stream::resolve_enum(GimpBrush::COLOR_DEPTH, @_io.read_u4be)
       @magic = @_io.read_bytes(4)
-      raise Kaitai::Struct::ValidationNotEqualError.new([71, 73, 77, 80].pack('C*'), magic, _io, "/types/header/seq/4") if not magic == [71, 73, 77, 80].pack('C*')
+      raise Kaitai::Struct::ValidationNotEqualError.new([71, 73, 77, 80].pack('C*'), @magic, @_io, "/types/header/seq/4") if not @magic == [71, 73, 77, 80].pack('C*')
       @spacing = @_io.read_u4be
       @brush_name = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes_full, 0, false)).force_encoding("UTF-8")
       self
@@ -79,23 +93,8 @@ class GimpBrush < Kaitai::Struct::Struct
     attr_reader :spacing
     attr_reader :brush_name
   end
-  class Bitmap < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @rows = []
-      (_root.header.height).times { |i|
-        @rows << Row.new(@_io, self, @_root)
-      }
-      self
-    end
-    attr_reader :rows
-  end
   class Row < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -113,7 +112,7 @@ class GimpBrush < Kaitai::Struct::Struct
       self
     end
     class PixelGray < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
@@ -122,30 +121,30 @@ class GimpBrush < Kaitai::Struct::Struct
         @gray = @_io.read_u1
         self
       end
-      def red
-        return @red unless @red.nil?
-        @red = 0
-        @red
-      end
-      def green
-        return @green unless @green.nil?
-        @green = 0
-        @green
+      def alpha
+        return @alpha unless @alpha.nil?
+        @alpha = gray
+        @alpha
       end
       def blue
         return @blue unless @blue.nil?
         @blue = 0
         @blue
       end
-      def alpha
-        return @alpha unless @alpha.nil?
-        @alpha = gray
-        @alpha
+      def green
+        return @green unless @green.nil?
+        @green = 0
+        @green
+      end
+      def red
+        return @red unless @red.nil?
+        @red = 0
+        @red
       end
       attr_reader :gray
     end
     class PixelRgba < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
@@ -164,11 +163,6 @@ class GimpBrush < Kaitai::Struct::Struct
     end
     attr_reader :pixels
   end
-  def len_body
-    return @len_body unless @len_body.nil?
-    @len_body = ((header.width * header.height) * I__COLOR_DEPTH[header.bytes_per_pixel])
-    @len_body
-  end
   def body
     return @body unless @body.nil?
     _pos = @_io.pos
@@ -176,6 +170,11 @@ class GimpBrush < Kaitai::Struct::Struct
     @body = @_io.read_bytes(len_body)
     @_io.seek(_pos)
     @body
+  end
+  def len_body
+    return @len_body unless @len_body.nil?
+    @len_body = (header.width * header.height) * (I__COLOR_DEPTH[header.bytes_per_pixel] || header.bytes_per_pixel)
+    @len_body
   end
   attr_reader :len_header
   attr_reader :header

@@ -183,32 +183,32 @@ namespace Kaitai
         private void _read()
         {
             switch (Protocol) {
-            case ProtocolEnum.Ipv6Nonxt: {
-                _body = new NoNextHeader(m_io, this, m_root);
-                break;
-            }
-            case ProtocolEnum.Ipv4: {
-                _body = new Ipv4Packet(m_io);
-                break;
-            }
-            case ProtocolEnum.Udp: {
-                _body = new UdpDatagram(m_io);
+            case ProtocolEnum.Hopopt: {
+                _body = new OptionHopByHop(m_io, this, m_root);
                 break;
             }
             case ProtocolEnum.Icmp: {
                 _body = new IcmpPacket(m_io);
                 break;
             }
-            case ProtocolEnum.Hopopt: {
-                _body = new OptionHopByHop(m_io, this, m_root);
+            case ProtocolEnum.Ipv4: {
+                _body = new Ipv4Packet(m_io);
                 break;
             }
             case ProtocolEnum.Ipv6: {
                 _body = new Ipv6Packet(m_io);
                 break;
             }
+            case ProtocolEnum.Ipv6Nonxt: {
+                _body = new NoNextHeader(m_io, this, m_root);
+                break;
+            }
             case ProtocolEnum.Tcp: {
                 _body = new TcpSegment(m_io);
+                break;
+            }
+            case ProtocolEnum.Udp: {
+                _body = new UdpDatagram(m_io);
                 break;
             }
             }
@@ -255,8 +255,8 @@ namespace Kaitai
             {
                 _nextHeaderType = m_io.ReadU1();
                 _hdrExtLen = m_io.ReadU1();
-                _body = m_io.ReadBytes((HdrExtLen > 0 ? (HdrExtLen - 1) : 1));
-                _nextHeader = new ProtocolBody(NextHeaderType, m_io);
+                _body = m_io.ReadBytes((HdrExtLen > 0 ? HdrExtLen - 1 : 1));
+                _nextHeader = new ProtocolBody(NextHeaderType, m_io, this, m_root);
             }
             private byte _nextHeaderType;
             private byte _hdrExtLen;
@@ -279,8 +279,8 @@ namespace Kaitai
             {
                 if (f_protocol)
                     return _protocol;
-                _protocol = (ProtocolEnum) (((ProtocolEnum) ProtocolNum));
                 f_protocol = true;
+                _protocol = (ProtocolEnum) (((ProtocolEnum) ProtocolNum));
                 return _protocol;
             }
         }

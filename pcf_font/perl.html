@@ -212,6 +212,11 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="Portable Compiled Format (PCF) font parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="Portable Compiled Format (PCF) font parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -242,7 +247,17 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="Portable Compiled Format (PCF) font parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="Portable Compiled Format (PCF) font parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="Portable Compiled Format (PCF) font parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -276,9 +291,9 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
 
 <span class="k">use</span><span class="w"> </span><span class="nn">strict</span><span class="p">;</span>
 <span class="k">use</span><span class="w"> </span><span class="nn">warnings</span><span class="p">;</span>
-<span class="k">use</span><span class="w"> </span><span class="nn">IO::KaitaiStruct</span><span class="w"> </span><span class="mf">0.009_000</span><span class="p">;</span>
-<span class="k">use</span><span class="w"> </span><span class="nn">Encode</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="nn">IO::KaitaiStruct</span><span class="w"> </span><span class="mf">0.011_000</span><span class="p">;</span>
 <span class="k">use</span><span class="w"> </span><span class="nn">BytesWithIo</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="nn">Encode</span><span class="p">;</span>
 
 <span class="c1">########################################################################</span>
 <span class="k">package</span><span class="w"> </span><span class="nn">PcfFont</span><span class="p">;</span>
@@ -310,7 +325,7 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
 
 <span class="w">    </span><span class="nb">bless</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$class</span><span class="p">;</span>
 <span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">;</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nv">$self</span><span class="p">;;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nv">$self</span><span class="p">;</span>
 
 <span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
 
@@ -322,7 +337,7 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
 
 <span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">magic</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
 <span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">num_tables</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">tables</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">tables</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span><span class="p">;</span>
 <span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$n_tables</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">num_tables</span><span class="p">();</span>
 <span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">my</span><span class="w"> </span><span class="nv">$i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="nv">$i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nv">$n_tables</span><span class="p">;</span><span class="w"> </span><span class="nv">$i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="nb">push</span><span class="w"> </span><span class="nv">@</span><span class="p">{</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">tables</span><span class="p">}},</span><span class="w"> </span><span class="nn">PcfFont::Table</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
@@ -345,6 +360,81 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
 <span class="p">}</span>
 
 <span class="c1">########################################################################</span>
+<span class="k">package</span><span class="w"> </span><span class="nn">PcfFont::Format</span><span class="p">;</span>
+
+<span class="k">our</span><span class="w"> </span><span class="nv">@ISA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">from_file</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$fd</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;&lt;&#39;</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">undef</span><span class="p">;</span>
+<span class="w">    </span><span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">new</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$_io</span><span class="p">,</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">,</span><span class="w"> </span><span class="nv">$_root</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$self</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
+
+<span class="w">    </span><span class="nb">bless</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$class</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">_read</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">padding1</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">scan_unit_mask</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">is_most_significant_bit_first</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">is_big_endian</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">glyph_pad_mask</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">align_to_byte</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="nb">format</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">padding</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">padding1</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">padding1</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">scan_unit_mask</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">scan_unit_mask</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">is_most_significant_bit_first</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">is_most_significant_bit_first</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">is_big_endian</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">is_big_endian</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">glyph_pad_mask</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">glyph_pad_mask</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">format</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="nb">format</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">padding</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">padding</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="c1">########################################################################</span>
 <span class="k">package</span><span class="w"> </span><span class="nn">PcfFont::Table</span><span class="p">;</span>
 
 <span class="k">our</span><span class="w"> </span><span class="nv">@ISA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
@@ -364,7 +454,7 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
 
 <span class="w">    </span><span class="nb">bless</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$class</span><span class="p">;</span>
 <span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">;</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nv">$self</span><span class="p">;;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="p">;</span>
 
 <span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
 
@@ -386,30 +476,30 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
 <span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="nb">pos</span><span class="p">();</span>
 <span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="nb">seek</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">ofs_body</span><span class="p">());</span>
 <span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$_on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">type</span><span class="p">();</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nv">$_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">$</span><span class="nn">PcfFont::</span><span class="nv">TYPES_PROPERTIES</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">len_body</span><span class="p">());</span>
-<span class="w">        </span><span class="k">my</span><span class="w"> </span><span class="nv">$io__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">});</span>
-<span class="w">        </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">body</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">PcfFont::Table::Properties</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$io__raw_body</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="k">elsif</span><span class="w"> </span><span class="p">(</span><span class="nv">$_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">$</span><span class="nn">PcfFont::</span><span class="nv">TYPES_BDF_ENCODINGS</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nv">$_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">$</span><span class="nn">PcfFont::</span><span class="nv">TYPES_BDF_ENCODINGS</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">len_body</span><span class="p">());</span>
 <span class="w">        </span><span class="k">my</span><span class="w"> </span><span class="nv">$io__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">});</span>
 <span class="w">        </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">body</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">PcfFont::Table::BdfEncodings</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$io__raw_body</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
 <span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="k">elsif</span><span class="w"> </span><span class="p">(</span><span class="nv">$_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">$</span><span class="nn">PcfFont::</span><span class="nv">TYPES_SWIDTHS</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">elsif</span><span class="w"> </span><span class="p">(</span><span class="nv">$_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">$</span><span class="nn">PcfFont::</span><span class="nv">TYPES_BITMAPS</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">len_body</span><span class="p">());</span>
 <span class="w">        </span><span class="k">my</span><span class="w"> </span><span class="nv">$io__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">});</span>
-<span class="w">        </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">body</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">PcfFont::Table::Swidths</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$io__raw_body</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+<span class="w">        </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">body</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">PcfFont::Table::Bitmaps</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$io__raw_body</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="k">elsif</span><span class="w"> </span><span class="p">(</span><span class="nv">$_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">$</span><span class="nn">PcfFont::</span><span class="nv">TYPES_GLYPH_NAMES</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">len_body</span><span class="p">());</span>
 <span class="w">        </span><span class="k">my</span><span class="w"> </span><span class="nv">$io__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">});</span>
 <span class="w">        </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">body</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">PcfFont::Table::GlyphNames</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$io__raw_body</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
 <span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="k">elsif</span><span class="w"> </span><span class="p">(</span><span class="nv">$_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">$</span><span class="nn">PcfFont::</span><span class="nv">TYPES_BITMAPS</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">elsif</span><span class="w"> </span><span class="p">(</span><span class="nv">$_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">$</span><span class="nn">PcfFont::</span><span class="nv">TYPES_PROPERTIES</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">len_body</span><span class="p">());</span>
 <span class="w">        </span><span class="k">my</span><span class="w"> </span><span class="nv">$io__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">});</span>
-<span class="w">        </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">body</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">PcfFont::Table::Bitmaps</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$io__raw_body</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+<span class="w">        </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">body</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">PcfFont::Table::Properties</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$io__raw_body</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">elsif</span><span class="w"> </span><span class="p">(</span><span class="nv">$_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">$</span><span class="nn">PcfFont::</span><span class="nv">TYPES_SWIDTHS</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">len_body</span><span class="p">());</span>
+<span class="w">        </span><span class="k">my</span><span class="w"> </span><span class="nv">$io__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">});</span>
+<span class="w">        </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">body</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">PcfFont::Table::Swidths</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$io__raw_body</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">body</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">len_body</span><span class="p">());</span>
@@ -444,7 +534,7 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
 <span class="p">}</span>
 
 <span class="c1">########################################################################</span>
-<span class="k">package</span><span class="w"> </span><span class="nn">PcfFont::Table::Swidths</span><span class="p">;</span>
+<span class="k">package</span><span class="w"> </span><span class="nn">PcfFont::Table::BdfEncodings</span><span class="p">;</span>
 
 <span class="k">our</span><span class="w"> </span><span class="nv">@ISA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
 
@@ -463,7 +553,85 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
 
 <span class="w">    </span><span class="nb">bless</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$class</span><span class="p">;</span>
 <span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">;</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nv">$self</span><span class="p">;;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">_read</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="nb">format</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">PcfFont::Format</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">min_char_or_byte2</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">max_char_or_byte2</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">min_byte1</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">max_byte1</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">default_char</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">glyph_indexes</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$n_glyph_indexes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">max_char_or_byte2</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">min_char_or_byte2</span><span class="p">())</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">((</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">max_byte1</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">min_byte1</span><span class="p">())</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">my</span><span class="w"> </span><span class="nv">$i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="nv">$i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nv">$n_glyph_indexes</span><span class="p">;</span><span class="w"> </span><span class="nv">$i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nb">push</span><span class="w"> </span><span class="nv">@</span><span class="p">{</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">glyph_indexes</span><span class="p">}},</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">format</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="nb">format</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">min_char_or_byte2</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">min_char_or_byte2</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">max_char_or_byte2</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">max_char_or_byte2</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">min_byte1</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">min_byte1</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">max_byte1</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">max_byte1</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">default_char</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">default_char</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">glyph_indexes</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">glyph_indexes</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="c1">########################################################################</span>
+<span class="k">package</span><span class="w"> </span><span class="nn">PcfFont::Table::Bitmaps</span><span class="p">;</span>
+
+<span class="k">our</span><span class="w"> </span><span class="nv">@ISA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">from_file</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$fd</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;&lt;&#39;</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">undef</span><span class="p">;</span>
+<span class="w">    </span><span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">new</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$_io</span><span class="p">,</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">,</span><span class="w"> </span><span class="nv">$_root</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$self</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
+
+<span class="w">    </span><span class="nb">bless</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$class</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="p">;</span>
 
 <span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
 
@@ -475,10 +643,15 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
 
 <span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="nb">format</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">PcfFont::Format</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
 <span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">num_glyphs</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">swidths</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">();</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$n_swidths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">num_glyphs</span><span class="p">();</span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">my</span><span class="w"> </span><span class="nv">$i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="nv">$i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nv">$n_swidths</span><span class="p">;</span><span class="w"> </span><span class="nv">$i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nb">push</span><span class="w"> </span><span class="nv">@</span><span class="p">{</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">swidths</span><span class="p">}},</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">offsets</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$n_offsets</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">num_glyphs</span><span class="p">();</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">my</span><span class="w"> </span><span class="nv">$i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="nv">$i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nv">$n_offsets</span><span class="p">;</span><span class="w"> </span><span class="nv">$i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nb">push</span><span class="w"> </span><span class="nv">@</span><span class="p">{</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">offsets</span><span class="p">}},</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">bitmap_sizes</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$n_bitmap_sizes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">my</span><span class="w"> </span><span class="nv">$i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="nv">$i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nv">$n_bitmap_sizes</span><span class="p">;</span><span class="w"> </span><span class="nv">$i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nb">push</span><span class="w"> </span><span class="nv">@</span><span class="p">{</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">bitmap_sizes</span><span class="p">}},</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 
@@ -492,9 +665,136 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">num_glyphs</span><span class="p">};</span>
 <span class="p">}</span>
 
-<span class="k">sub</span><span class="w"> </span><span class="nf">swidths</span><span class="w"> </span><span class="p">{</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">offsets</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">swidths</span><span class="p">};</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">offsets</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">bitmap_sizes</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">bitmap_sizes</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="c1">########################################################################</span>
+<span class="k">package</span><span class="w"> </span><span class="nn">PcfFont::Table::GlyphNames</span><span class="p">;</span>
+
+<span class="k">our</span><span class="w"> </span><span class="nv">@ISA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">from_file</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$fd</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;&lt;&#39;</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">undef</span><span class="p">;</span>
+<span class="w">    </span><span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">new</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$_io</span><span class="p">,</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">,</span><span class="w"> </span><span class="nv">$_root</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$self</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
+
+<span class="w">    </span><span class="nb">bless</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$class</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">_read</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="nb">format</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">PcfFont::Format</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">num_glyphs</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">names</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$n_names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">num_glyphs</span><span class="p">();</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">my</span><span class="w"> </span><span class="nv">$i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="nv">$i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nv">$n_names</span><span class="p">;</span><span class="w"> </span><span class="nv">$i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nb">push</span><span class="w"> </span><span class="nv">@</span><span class="p">{</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">names</span><span class="p">}},</span><span class="w"> </span><span class="nn">PcfFont::Table::GlyphNames::StringRef</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">len_strings</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_strings</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">len_strings</span><span class="p">());</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$io__raw_strings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_strings</span><span class="p">});</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">strings</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">BytesWithIo</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$io__raw_strings</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">format</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="nb">format</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">num_glyphs</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">num_glyphs</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">names</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">names</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">len_strings</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">len_strings</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">strings</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">strings</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">_raw_strings</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_strings</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="c1">########################################################################</span>
+<span class="k">package</span><span class="w"> </span><span class="nn">PcfFont::Table::GlyphNames::StringRef</span><span class="p">;</span>
+
+<span class="k">our</span><span class="w"> </span><span class="nv">@ISA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">from_file</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$fd</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;&lt;&#39;</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">undef</span><span class="p">;</span>
+<span class="w">    </span><span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">new</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$_io</span><span class="p">,</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">,</span><span class="w"> </span><span class="nv">$_root</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$self</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
+
+<span class="w">    </span><span class="nb">bless</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$class</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">_read</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">ofs_string</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">value</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">value</span><span class="p">}</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">value</span><span class="p">});</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">strings</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">_io</span><span class="p">();</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$io</span><span class="o">-&gt;</span><span class="nb">pos</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$io</span><span class="o">-&gt;</span><span class="nb">seek</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">ofs_string</span><span class="p">());</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">value</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">Encode::</span><span class="n">decode</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">,</span><span class="w"> </span><span class="nv">$io</span><span class="o">-&gt;</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">));</span>
+<span class="w">    </span><span class="nv">$io</span><span class="o">-&gt;</span><span class="nb">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">value</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">ofs_string</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">ofs_string</span><span class="p">};</span>
 <span class="p">}</span>
 
 <span class="c1">########################################################################</span>
@@ -517,7 +817,7 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
 
 <span class="w">    </span><span class="nb">bless</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$class</span><span class="p">;</span>
 <span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">;</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nv">$self</span><span class="p">;;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="p">;</span>
 
 <span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
 
@@ -529,12 +829,12 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
 
 <span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="nb">format</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">PcfFont::Format</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
 <span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">num_props</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">props</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">props</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span><span class="p">;</span>
 <span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$n_props</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">num_props</span><span class="p">();</span>
 <span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">my</span><span class="w"> </span><span class="nv">$i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="nv">$i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nv">$n_props</span><span class="p">;</span><span class="w"> </span><span class="nv">$i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="nb">push</span><span class="w"> </span><span class="nv">@</span><span class="p">{</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">props</span><span class="p">}},</span><span class="w"> </span><span class="nn">PcfFont::Table::Properties::Prop</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
 <span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">padding</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(((</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">num_props</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">(</span><span class="mi">4</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">num_props</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">3</span><span class="p">))));</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">padding</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(((</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">num_props</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">num_props</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">3</span><span class="p">)));</span>
 <span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">len_strings</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
 <span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_strings</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">len_strings</span><span class="p">());</span>
 <span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$io__raw_strings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_strings</span><span class="p">});</span>
@@ -596,7 +896,7 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
 
 <span class="w">    </span><span class="nb">bless</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$class</span><span class="p">;</span>
 <span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">;</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nv">$self</span><span class="p">;;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="p">;</span>
 
 <span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
 
@@ -609,6 +909,15 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
 <span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">ofs_name</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
 <span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">is_string</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
 <span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">value_or_ofs_value</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="k">sub</span><span class="w"> </span><span class="nf">int_value</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">int_value</span><span class="p">}</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">int_value</span><span class="p">});</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">is_string</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">int_value</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value_or_ofs_value</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">int_value</span><span class="p">};</span>
 <span class="p">}</span>
 
 <span class="k">sub</span><span class="w"> </span><span class="nf">name</span><span class="w"> </span><span class="p">{</span>
@@ -635,15 +944,6 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">str_value</span><span class="p">};</span>
 <span class="p">}</span>
 
-<span class="k">sub</span><span class="w"> </span><span class="nf">int_value</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">int_value</span><span class="p">}</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">int_value</span><span class="p">});</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">is_string</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">int_value</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value_or_ofs_value</span><span class="p">();</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">int_value</span><span class="p">};</span>
-<span class="p">}</span>
-
 <span class="k">sub</span><span class="w"> </span><span class="nf">ofs_name</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">ofs_name</span><span class="p">};</span>
@@ -660,7 +960,7 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
 <span class="p">}</span>
 
 <span class="c1">########################################################################</span>
-<span class="k">package</span><span class="w"> </span><span class="nn">PcfFont::Table::BdfEncodings</span><span class="p">;</span>
+<span class="k">package</span><span class="w"> </span><span class="nn">PcfFont::Table::Swidths</span><span class="p">;</span>
 
 <span class="k">our</span><span class="w"> </span><span class="nv">@ISA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
 
@@ -679,85 +979,7 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
 
 <span class="w">    </span><span class="nb">bless</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$class</span><span class="p">;</span>
 <span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">;</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nv">$self</span><span class="p">;;</span>
-
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
-
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="k">sub</span><span class="w"> </span><span class="nf">_read</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="nb">format</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">PcfFont::Format</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">min_char_or_byte2</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">max_char_or_byte2</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">min_byte1</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">max_byte1</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">default_char</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">glyph_indexes</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">();</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$n_glyph_indexes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(((</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">max_char_or_byte2</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">min_char_or_byte2</span><span class="p">())</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">((</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">max_byte1</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">min_byte1</span><span class="p">())</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">));</span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">my</span><span class="w"> </span><span class="nv">$i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="nv">$i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nv">$n_glyph_indexes</span><span class="p">;</span><span class="w"> </span><span class="nv">$i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nb">push</span><span class="w"> </span><span class="nv">@</span><span class="p">{</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">glyph_indexes</span><span class="p">}},</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-
-<span class="k">sub</span><span class="w"> </span><span class="nf">format</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="nb">format</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span><span class="w"> </span><span class="nf">min_char_or_byte2</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">min_char_or_byte2</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span><span class="w"> </span><span class="nf">max_char_or_byte2</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">max_char_or_byte2</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span><span class="w"> </span><span class="nf">min_byte1</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">min_byte1</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span><span class="w"> </span><span class="nf">max_byte1</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">max_byte1</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span><span class="w"> </span><span class="nf">default_char</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">default_char</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span><span class="w"> </span><span class="nf">glyph_indexes</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">glyph_indexes</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="c1">########################################################################</span>
-<span class="k">package</span><span class="w"> </span><span class="nn">PcfFont::Table::GlyphNames</span><span class="p">;</span>
-
-<span class="k">our</span><span class="w"> </span><span class="nv">@ISA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
-
-<span class="k">sub</span><span class="w"> </span><span class="nf">from_file</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$fd</span><span class="p">;</span>
-
-<span class="w">    </span><span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;&lt;&#39;</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">undef</span><span class="p">;</span>
-<span class="w">    </span><span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
-<span class="p">}</span>
-
-<span class="k">sub</span><span class="w"> </span><span class="nf">new</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$_io</span><span class="p">,</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">,</span><span class="w"> </span><span class="nv">$_root</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$self</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
-
-<span class="w">    </span><span class="nb">bless</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$class</span><span class="p">;</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">;</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nv">$self</span><span class="p">;;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="p">;</span>
 
 <span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
 
@@ -769,137 +991,10 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
 
 <span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="nb">format</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">PcfFont::Format</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
 <span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">num_glyphs</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">names</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">();</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$n_names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">num_glyphs</span><span class="p">();</span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">my</span><span class="w"> </span><span class="nv">$i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="nv">$i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nv">$n_names</span><span class="p">;</span><span class="w"> </span><span class="nv">$i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nb">push</span><span class="w"> </span><span class="nv">@</span><span class="p">{</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">names</span><span class="p">}},</span><span class="w"> </span><span class="nn">PcfFont::Table::GlyphNames::StringRef</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">len_strings</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_strings</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">len_strings</span><span class="p">());</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$io__raw_strings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_strings</span><span class="p">});</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">strings</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">BytesWithIo</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$io__raw_strings</span><span class="p">);</span>
-<span class="p">}</span>
-
-<span class="k">sub</span><span class="w"> </span><span class="nf">format</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="nb">format</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span><span class="w"> </span><span class="nf">num_glyphs</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">num_glyphs</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span><span class="w"> </span><span class="nf">names</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">names</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span><span class="w"> </span><span class="nf">len_strings</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">len_strings</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span><span class="w"> </span><span class="nf">strings</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">strings</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span><span class="w"> </span><span class="nf">_raw_strings</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_strings</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="c1">########################################################################</span>
-<span class="k">package</span><span class="w"> </span><span class="nn">PcfFont::Table::GlyphNames::StringRef</span><span class="p">;</span>
-
-<span class="k">our</span><span class="w"> </span><span class="nv">@ISA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
-
-<span class="k">sub</span><span class="w"> </span><span class="nf">from_file</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$fd</span><span class="p">;</span>
-
-<span class="w">    </span><span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;&lt;&#39;</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">undef</span><span class="p">;</span>
-<span class="w">    </span><span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
-<span class="p">}</span>
-
-<span class="k">sub</span><span class="w"> </span><span class="nf">new</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$_io</span><span class="p">,</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">,</span><span class="w"> </span><span class="nv">$_root</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$self</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
-
-<span class="w">    </span><span class="nb">bless</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$class</span><span class="p">;</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">;</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nv">$self</span><span class="p">;;</span>
-
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
-
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="k">sub</span><span class="w"> </span><span class="nf">_read</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">ofs_string</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
-<span class="p">}</span>
-
-<span class="k">sub</span><span class="w"> </span><span class="nf">value</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">value</span><span class="p">}</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">value</span><span class="p">});</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">strings</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">_io</span><span class="p">();</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$io</span><span class="o">-&gt;</span><span class="nb">pos</span><span class="p">();</span>
-<span class="w">    </span><span class="nv">$io</span><span class="o">-&gt;</span><span class="nb">seek</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">ofs_string</span><span class="p">());</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">value</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">Encode::</span><span class="n">decode</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">,</span><span class="w"> </span><span class="nv">$io</span><span class="o">-&gt;</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">));</span>
-<span class="w">    </span><span class="nv">$io</span><span class="o">-&gt;</span><span class="nb">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">value</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span><span class="w"> </span><span class="nf">ofs_string</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">ofs_string</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="c1">########################################################################</span>
-<span class="k">package</span><span class="w"> </span><span class="nn">PcfFont::Table::Bitmaps</span><span class="p">;</span>
-
-<span class="k">our</span><span class="w"> </span><span class="nv">@ISA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
-
-<span class="k">sub</span><span class="w"> </span><span class="nf">from_file</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$fd</span><span class="p">;</span>
-
-<span class="w">    </span><span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;&lt;&#39;</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">undef</span><span class="p">;</span>
-<span class="w">    </span><span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
-<span class="p">}</span>
-
-<span class="k">sub</span><span class="w"> </span><span class="nf">new</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$_io</span><span class="p">,</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">,</span><span class="w"> </span><span class="nv">$_root</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$self</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
-
-<span class="w">    </span><span class="nb">bless</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$class</span><span class="p">;</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">;</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nv">$self</span><span class="p">;;</span>
-
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
-
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="k">sub</span><span class="w"> </span><span class="nf">_read</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="nb">format</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">PcfFont::Format</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">num_glyphs</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">offsets</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">();</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$n_offsets</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">num_glyphs</span><span class="p">();</span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">my</span><span class="w"> </span><span class="nv">$i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="nv">$i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nv">$n_offsets</span><span class="p">;</span><span class="w"> </span><span class="nv">$i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nb">push</span><span class="w"> </span><span class="nv">@</span><span class="p">{</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">offsets</span><span class="p">}},</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">bitmap_sizes</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">();</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$n_bitmap_sizes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">my</span><span class="w"> </span><span class="nv">$i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="nv">$i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nv">$n_bitmap_sizes</span><span class="p">;</span><span class="w"> </span><span class="nv">$i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nb">push</span><span class="w"> </span><span class="nv">@</span><span class="p">{</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">bitmap_sizes</span><span class="p">}},</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">swidths</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span><span class="p">;</span>
+<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$n_swidths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">num_glyphs</span><span class="p">();</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">my</span><span class="w"> </span><span class="nv">$i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="nv">$i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nv">$n_swidths</span><span class="p">;</span><span class="w"> </span><span class="nv">$i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nb">push</span><span class="w"> </span><span class="nv">@</span><span class="p">{</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">swidths</span><span class="p">}},</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 
@@ -913,89 +1008,9 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">num_glyphs</span><span class="p">};</span>
 <span class="p">}</span>
 
-<span class="k">sub</span><span class="w"> </span><span class="nf">offsets</span><span class="w"> </span><span class="p">{</span>
+<span class="k">sub</span><span class="w"> </span><span class="nf">swidths</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">offsets</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span><span class="w"> </span><span class="nf">bitmap_sizes</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">bitmap_sizes</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="c1">########################################################################</span>
-<span class="k">package</span><span class="w"> </span><span class="nn">PcfFont::Format</span><span class="p">;</span>
-
-<span class="k">our</span><span class="w"> </span><span class="nv">@ISA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
-
-<span class="k">sub</span><span class="w"> </span><span class="nf">from_file</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$fd</span><span class="p">;</span>
-
-<span class="w">    </span><span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span><span class="w"> </span><span class="s">&#39;&lt;&#39;</span><span class="p">,</span><span class="w"> </span><span class="nv">$filename</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">undef</span><span class="p">;</span>
-<span class="w">    </span><span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
-<span class="p">}</span>
-
-<span class="k">sub</span><span class="w"> </span><span class="nf">new</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span><span class="w"> </span><span class="nv">$_io</span><span class="p">,</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">,</span><span class="w"> </span><span class="nv">$_root</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="nv">$self</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
-
-<span class="w">    </span><span class="nb">bless</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$class</span><span class="p">;</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">;</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nv">$self</span><span class="p">;;</span>
-
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
-
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="k">sub</span><span class="w"> </span><span class="nf">_read</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">padding1</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">scan_unit_mask</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">is_most_significant_bit_first</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">is_big_endian</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">glyph_pad_mask</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">align_to_byte</span><span class="p">();</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="nb">format</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">padding</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
-<span class="p">}</span>
-
-<span class="k">sub</span><span class="w"> </span><span class="nf">padding1</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">padding1</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span><span class="w"> </span><span class="nf">scan_unit_mask</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">scan_unit_mask</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span><span class="w"> </span><span class="nf">is_most_significant_bit_first</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">is_most_significant_bit_first</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span><span class="w"> </span><span class="nf">is_big_endian</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">is_big_endian</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span><span class="w"> </span><span class="nf">glyph_pad_mask</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">glyph_pad_mask</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span><span class="w"> </span><span class="nf">format</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="nb">format</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span><span class="w"> </span><span class="nf">padding</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">padding</span><span class="p">};</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">swidths</span><span class="p">};</span>
 <span class="p">}</span>
 
 <span class="mi">1</span><span class="p">;</span>

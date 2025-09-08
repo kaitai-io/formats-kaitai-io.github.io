@@ -2,13 +2,13 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 class CpioOldLe < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -22,24 +22,24 @@ class CpioOldLe < Kaitai::Struct::Struct
     self
   end
   class File < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
       @header = FileHeader.new(@_io, self, @_root)
-      @path_name = @_io.read_bytes((header.path_name_size - 1))
+      @path_name = @_io.read_bytes(header.path_name_size - 1)
       @string_terminator = @_io.read_bytes(1)
-      raise Kaitai::Struct::ValidationNotEqualError.new([0].pack('C*'), string_terminator, _io, "/types/file/seq/2") if not string_terminator == [0].pack('C*')
-      if (header.path_name_size % 2) == 1
+      raise Kaitai::Struct::ValidationNotEqualError.new([0].pack('C*'), @string_terminator, @_io, "/types/file/seq/2") if not @string_terminator == [0].pack('C*')
+      if header.path_name_size % 2 == 1
         @path_name_padding = @_io.read_bytes(1)
-        raise Kaitai::Struct::ValidationNotEqualError.new([0].pack('C*'), path_name_padding, _io, "/types/file/seq/3") if not path_name_padding == [0].pack('C*')
+        raise Kaitai::Struct::ValidationNotEqualError.new([0].pack('C*'), @path_name_padding, @_io, "/types/file/seq/3") if not @path_name_padding == [0].pack('C*')
       end
       @file_data = @_io.read_bytes(header.file_size.value)
-      if (header.file_size.value % 2) == 1
+      if header.file_size.value % 2 == 1
         @file_data_padding = @_io.read_bytes(1)
-        raise Kaitai::Struct::ValidationNotEqualError.new([0].pack('C*'), file_data_padding, _io, "/types/file/seq/5") if not file_data_padding == [0].pack('C*')
+        raise Kaitai::Struct::ValidationNotEqualError.new([0].pack('C*'), @file_data_padding, @_io, "/types/file/seq/5") if not @file_data_padding == [0].pack('C*')
       end
       if  ((path_name == [84, 82, 65, 73, 76, 69, 82, 33, 33, 33].pack('C*')) && (header.file_size.value == 0)) 
         @end_of_file_padding = @_io.read_bytes_full
@@ -55,14 +55,14 @@ class CpioOldLe < Kaitai::Struct::Struct
     attr_reader :end_of_file_padding
   end
   class FileHeader < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
       @magic = @_io.read_bytes(2)
-      raise Kaitai::Struct::ValidationNotEqualError.new([199, 113].pack('C*'), magic, _io, "/types/file_header/seq/0") if not magic == [199, 113].pack('C*')
+      raise Kaitai::Struct::ValidationNotEqualError.new([199, 113].pack('C*'), @magic, @_io, "/types/file_header/seq/0") if not @magic == [199, 113].pack('C*')
       @device_number = @_io.read_u2le
       @inode_number = @_io.read_u2le
       @mode = @_io.read_u2le
@@ -88,7 +88,7 @@ class CpioOldLe < Kaitai::Struct::Struct
     attr_reader :file_size
   end
   class FourByteUnsignedInteger < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -100,7 +100,7 @@ class CpioOldLe < Kaitai::Struct::Struct
     end
     def value
       return @value unless @value.nil?
-      @value = (least_significant_bits + (most_significant_bits << 16))
+      @value = least_significant_bits + (most_significant_bits << 16)
       @value
     end
     attr_reader :most_significant_bits

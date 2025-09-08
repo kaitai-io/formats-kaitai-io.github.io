@@ -4,7 +4,7 @@
 
 tcp_segment_t::tcp_segment_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, tcp_segment_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     m_flags = nullptr;
     _read();
 }
@@ -22,9 +22,9 @@ void tcp_segment_t::_read() {
     m_checksum = m__io->read_u2be();
     m_urgent_pointer = m__io->read_u2be();
     n_options = true;
-    if (((data_offset() * 4) - 20) != 0) {
+    if (data_offset() * 4 - 20 != 0) {
         n_options = false;
-        m_options = m__io->read_bytes(((data_offset() * 4) - 20));
+        m_options = m__io->read_bytes(data_offset() * 4 - 20);
     }
     m_body = m__io->read_bytes_full();
 }
@@ -60,4 +60,13 @@ tcp_segment_t::flags_t::~flags_t() {
 }
 
 void tcp_segment_t::flags_t::_clean_up() {
+}
+
+std::string tcp_segment_t::flags_t::_to_string() const {
+    return ((((((((cwr()) ? (std::string("|CWR")) : (std::string(""))) + ((ece()) ? (std::string("|ECE")) : (std::string("")))) + ((urg()) ? (std::string("|URG")) : (std::string("")))) + ((ack()) ? (std::string("|ACK")) : (std::string("")))) + ((psh()) ? (std::string("|PSH")) : (std::string("")))) + ((rst()) ? (std::string("|RST")) : (std::string("")))) + ((syn()) ? (std::string("|SYN")) : (std::string("")))) + ((fin()) ? (std::string("|FIN")) : (std::string("")));
+}
+
+std::ostream& operator<<(std::ostream& os, const tcp_segment_t::flags_t& obj) {
+    os << obj._to_string();
+    return os;
 }

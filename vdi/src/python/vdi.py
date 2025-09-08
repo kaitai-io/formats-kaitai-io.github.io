@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
-from enum import Enum
+from enum import IntEnum
 
 
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Vdi(KaitaiStruct):
     """A native VirtualBox file format
@@ -22,186 +23,40 @@ class Vdi(KaitaiStruct):
        Source - https://github.com/qemu/qemu/blob/master/block/vdi.c
     """
 
-    class ImageType(Enum):
+    class ImageType(IntEnum):
         dynamic = 1
         static = 2
         undo = 3
         diff = 4
     def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
+        super(Vdi, self).__init__(_io)
         self._parent = _parent
-        self._root = _root if _root else self
+        self._root = _root or self
         self._read()
 
     def _read(self):
         self.header = Vdi.Header(self._io, self, self._root)
 
-    class Header(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
 
-        def _read(self):
-            self.text = (self._io.read_bytes(64)).decode(u"utf-8")
-            self.signature = self._io.read_bytes(4)
-            if not self.signature == b"\x7F\x10\xDA\xBE":
-                raise kaitaistruct.ValidationNotEqualError(b"\x7F\x10\xDA\xBE", self.signature, self._io, u"/types/header/seq/1")
-            self.version = Vdi.Header.Version(self._io, self, self._root)
-            if self.subheader_size_is_dynamic:
-                self.header_size_optional = self._io.read_u4le()
+    def _fetch_instances(self):
+        pass
+        self.header._fetch_instances()
+        _ = self.blocks_map
+        if hasattr(self, '_m_blocks_map'):
+            pass
+            self._m_blocks_map._fetch_instances()
 
-            self._raw_header_main = self._io.read_bytes(self.header_size)
-            _io__raw_header_main = KaitaiStream(BytesIO(self._raw_header_main))
-            self.header_main = Vdi.Header.HeaderMain(_io__raw_header_main, self, self._root)
-
-        class Uuid(KaitaiStruct):
-            def __init__(self, _io, _parent=None, _root=None):
-                self._io = _io
-                self._parent = _parent
-                self._root = _root if _root else self
-                self._read()
-
-            def _read(self):
-                self.uuid = self._io.read_bytes(16)
-
-
-        class Version(KaitaiStruct):
-            def __init__(self, _io, _parent=None, _root=None):
-                self._io = _io
-                self._parent = _parent
-                self._root = _root if _root else self
-                self._read()
-
-            def _read(self):
-                self.major = self._io.read_u2le()
-                self.minor = self._io.read_u2le()
-
-
-        class HeaderMain(KaitaiStruct):
-            def __init__(self, _io, _parent=None, _root=None):
-                self._io = _io
-                self._parent = _parent
-                self._root = _root if _root else self
-                self._read()
-
-            def _read(self):
-                self.image_type = KaitaiStream.resolve_enum(Vdi.ImageType, self._io.read_u4le())
-                self.image_flags = Vdi.Header.HeaderMain.Flags(self._io, self, self._root)
-                self.description = (self._io.read_bytes(256)).decode(u"utf-8")
-                if self._parent.version.major >= 1:
-                    self.blocks_map_offset = self._io.read_u4le()
-
-                if self._parent.version.major >= 1:
-                    self.offset_data = self._io.read_u4le()
-
-                self.geometry = Vdi.Header.HeaderMain.Geometry(self._io, self, self._root)
-                if self._parent.version.major >= 1:
-                    self.reserved1 = self._io.read_u4le()
-
-                self.disk_size = self._io.read_u8le()
-                self.block_data_size = self._io.read_u4le()
-                if self._parent.version.major >= 1:
-                    self.block_metadata_size = self._io.read_u4le()
-
-                self.blocks_in_image = self._io.read_u4le()
-                self.blocks_allocated = self._io.read_u4le()
-                self.uuid_image = Vdi.Header.Uuid(self._io, self, self._root)
-                self.uuid_last_snap = Vdi.Header.Uuid(self._io, self, self._root)
-                self.uuid_link = Vdi.Header.Uuid(self._io, self, self._root)
-                if self._parent.version.major >= 1:
-                    self.uuid_parent = Vdi.Header.Uuid(self._io, self, self._root)
-
-                if  ((self._parent.version.major >= 1) and ((self._io.pos() + 16) <= self._io.size())) :
-                    self.lchc_geometry = Vdi.Header.HeaderMain.Geometry(self._io, self, self._root)
-
-
-            class Geometry(KaitaiStruct):
-                def __init__(self, _io, _parent=None, _root=None):
-                    self._io = _io
-                    self._parent = _parent
-                    self._root = _root if _root else self
-                    self._read()
-
-                def _read(self):
-                    self.cylinders = self._io.read_u4le()
-                    self.heads = self._io.read_u4le()
-                    self.sectors = self._io.read_u4le()
-                    self.sector_size = self._io.read_u4le()
-
-
-            class Flags(KaitaiStruct):
-                def __init__(self, _io, _parent=None, _root=None):
-                    self._io = _io
-                    self._parent = _parent
-                    self._root = _root if _root else self
-                    self._read()
-
-                def _read(self):
-                    self.reserved0 = self._io.read_bits_int_be(15)
-                    self.zero_expand = self._io.read_bits_int_be(1) != 0
-                    self.reserved1 = self._io.read_bits_int_be(6)
-                    self.diff = self._io.read_bits_int_be(1) != 0
-                    self.fixed = self._io.read_bits_int_be(1) != 0
-                    self.reserved2 = self._io.read_bits_int_be(8)
-
-
-
-        @property
-        def header_size(self):
-            if hasattr(self, '_m_header_size'):
-                return self._m_header_size
-
-            self._m_header_size = (self.header_size_optional if self.subheader_size_is_dynamic else 336)
-            return getattr(self, '_m_header_size', None)
-
-        @property
-        def blocks_map_offset(self):
-            if hasattr(self, '_m_blocks_map_offset'):
-                return self._m_blocks_map_offset
-
-            self._m_blocks_map_offset = self.header_main.blocks_map_offset
-            return getattr(self, '_m_blocks_map_offset', None)
-
-        @property
-        def subheader_size_is_dynamic(self):
-            if hasattr(self, '_m_subheader_size_is_dynamic'):
-                return self._m_subheader_size_is_dynamic
-
-            self._m_subheader_size_is_dynamic = self.version.major >= 1
-            return getattr(self, '_m_subheader_size_is_dynamic', None)
-
-        @property
-        def blocks_offset(self):
-            if hasattr(self, '_m_blocks_offset'):
-                return self._m_blocks_offset
-
-            self._m_blocks_offset = self.header_main.offset_data
-            return getattr(self, '_m_blocks_offset', None)
-
-        @property
-        def block_size(self):
-            if hasattr(self, '_m_block_size'):
-                return self._m_block_size
-
-            self._m_block_size = (self.header_main.block_metadata_size + self.header_main.block_data_size)
-            return getattr(self, '_m_block_size', None)
-
-        @property
-        def blocks_map_size(self):
-            if hasattr(self, '_m_blocks_map_size'):
-                return self._m_blocks_map_size
-
-            self._m_blocks_map_size = ((((self.header_main.blocks_in_image * 4) + self.header_main.geometry.sector_size) - 1) // self.header_main.geometry.sector_size * self.header_main.geometry.sector_size)
-            return getattr(self, '_m_blocks_map_size', None)
+        _ = self.disk
+        if hasattr(self, '_m_disk'):
+            pass
+            self._m_disk._fetch_instances()
 
 
     class BlocksMap(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(Vdi.BlocksMap, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -210,15 +65,38 @@ class Vdi(KaitaiStruct):
                 self.index.append(Vdi.BlocksMap.BlockIndex(self._io, self, self._root))
 
 
+
+        def _fetch_instances(self):
+            pass
+            for i in range(len(self.index)):
+                pass
+                self.index[i]._fetch_instances()
+
+
         class BlockIndex(KaitaiStruct):
             def __init__(self, _io, _parent=None, _root=None):
-                self._io = _io
+                super(Vdi.BlocksMap.BlockIndex, self).__init__(_io)
                 self._parent = _parent
-                self._root = _root if _root else self
+                self._root = _root
                 self._read()
 
             def _read(self):
                 self.index = self._io.read_u4le()
+
+
+            def _fetch_instances(self):
+                pass
+
+            @property
+            def block(self):
+                if hasattr(self, '_m_block'):
+                    return self._m_block
+
+                if self.is_allocated:
+                    pass
+                    self._m_block = self._root.disk.blocks[self.index]
+
+                return getattr(self, '_m_block', None)
 
             @property
             def is_allocated(self):
@@ -228,23 +106,13 @@ class Vdi(KaitaiStruct):
                 self._m_is_allocated = self.index < self._root.block_discarded
                 return getattr(self, '_m_is_allocated', None)
 
-            @property
-            def block(self):
-                if hasattr(self, '_m_block'):
-                    return self._m_block
-
-                if self.is_allocated:
-                    self._m_block = self._root.disk.blocks[self.index]
-
-                return getattr(self, '_m_block', None)
-
 
 
     class Disk(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(Vdi.Disk, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -253,11 +121,19 @@ class Vdi(KaitaiStruct):
                 self.blocks.append(Vdi.Disk.Block(self._io, self, self._root))
 
 
+
+        def _fetch_instances(self):
+            pass
+            for i in range(len(self.blocks)):
+                pass
+                self.blocks[i]._fetch_instances()
+
+
         class Block(KaitaiStruct):
             def __init__(self, _io, _parent=None, _root=None):
-                self._io = _io
+                super(Vdi.Disk.Block, self).__init__(_io)
                 self._parent = _parent
-                self._root = _root if _root else self
+                self._root = _root
                 self._read()
 
             def _read(self):
@@ -272,17 +148,251 @@ class Vdi(KaitaiStruct):
                     i += 1
 
 
+
+            def _fetch_instances(self):
+                pass
+                for i in range(len(self.data)):
+                    pass
+                    self.data[i]._fetch_instances()
+
+
             class Sector(KaitaiStruct):
                 def __init__(self, _io, _parent=None, _root=None):
-                    self._io = _io
+                    super(Vdi.Disk.Block.Sector, self).__init__(_io)
                     self._parent = _parent
-                    self._root = _root if _root else self
+                    self._root = _root
                     self._read()
 
                 def _read(self):
                     self.data = self._io.read_bytes(self._root.header.header_main.geometry.sector_size)
 
 
+                def _fetch_instances(self):
+                    pass
+
+
+
+
+    class Header(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(Vdi.Header, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.text = (self._io.read_bytes(64)).decode(u"UTF-8")
+            self.signature = self._io.read_bytes(4)
+            if not self.signature == b"\x7F\x10\xDA\xBE":
+                raise kaitaistruct.ValidationNotEqualError(b"\x7F\x10\xDA\xBE", self.signature, self._io, u"/types/header/seq/1")
+            self.version = Vdi.Header.Version(self._io, self, self._root)
+            if self.subheader_size_is_dynamic:
+                pass
+                self.header_size_optional = self._io.read_u4le()
+
+            self._raw_header_main = self._io.read_bytes(self.header_size)
+            _io__raw_header_main = KaitaiStream(BytesIO(self._raw_header_main))
+            self.header_main = Vdi.Header.HeaderMain(_io__raw_header_main, self, self._root)
+
+
+        def _fetch_instances(self):
+            pass
+            self.version._fetch_instances()
+            if self.subheader_size_is_dynamic:
+                pass
+
+            self.header_main._fetch_instances()
+
+        class HeaderMain(KaitaiStruct):
+            def __init__(self, _io, _parent=None, _root=None):
+                super(Vdi.Header.HeaderMain, self).__init__(_io)
+                self._parent = _parent
+                self._root = _root
+                self._read()
+
+            def _read(self):
+                self.image_type = KaitaiStream.resolve_enum(Vdi.ImageType, self._io.read_u4le())
+                self.image_flags = Vdi.Header.HeaderMain.Flags(self._io, self, self._root)
+                self.description = (self._io.read_bytes(256)).decode(u"UTF-8")
+                if self._parent.version.major >= 1:
+                    pass
+                    self.blocks_map_offset = self._io.read_u4le()
+
+                if self._parent.version.major >= 1:
+                    pass
+                    self.offset_data = self._io.read_u4le()
+
+                self.geometry = Vdi.Header.HeaderMain.Geometry(self._io, self, self._root)
+                if self._parent.version.major >= 1:
+                    pass
+                    self.reserved1 = self._io.read_u4le()
+
+                self.disk_size = self._io.read_u8le()
+                self.block_data_size = self._io.read_u4le()
+                if self._parent.version.major >= 1:
+                    pass
+                    self.block_metadata_size = self._io.read_u4le()
+
+                self.blocks_in_image = self._io.read_u4le()
+                self.blocks_allocated = self._io.read_u4le()
+                self.uuid_image = Vdi.Header.Uuid(self._io, self, self._root)
+                self.uuid_last_snap = Vdi.Header.Uuid(self._io, self, self._root)
+                self.uuid_link = Vdi.Header.Uuid(self._io, self, self._root)
+                if self._parent.version.major >= 1:
+                    pass
+                    self.uuid_parent = Vdi.Header.Uuid(self._io, self, self._root)
+
+                if  ((self._parent.version.major >= 1) and (self._io.pos() + 16 <= self._io.size())) :
+                    pass
+                    self.lchc_geometry = Vdi.Header.HeaderMain.Geometry(self._io, self, self._root)
+
+
+
+            def _fetch_instances(self):
+                pass
+                self.image_flags._fetch_instances()
+                if self._parent.version.major >= 1:
+                    pass
+
+                if self._parent.version.major >= 1:
+                    pass
+
+                self.geometry._fetch_instances()
+                if self._parent.version.major >= 1:
+                    pass
+
+                if self._parent.version.major >= 1:
+                    pass
+
+                self.uuid_image._fetch_instances()
+                self.uuid_last_snap._fetch_instances()
+                self.uuid_link._fetch_instances()
+                if self._parent.version.major >= 1:
+                    pass
+                    self.uuid_parent._fetch_instances()
+
+                if  ((self._parent.version.major >= 1) and (self._io.pos() + 16 <= self._io.size())) :
+                    pass
+                    self.lchc_geometry._fetch_instances()
+
+
+            class Flags(KaitaiStruct):
+                def __init__(self, _io, _parent=None, _root=None):
+                    super(Vdi.Header.HeaderMain.Flags, self).__init__(_io)
+                    self._parent = _parent
+                    self._root = _root
+                    self._read()
+
+                def _read(self):
+                    self.reserved0 = self._io.read_bits_int_be(15)
+                    self.zero_expand = self._io.read_bits_int_be(1) != 0
+                    self.reserved1 = self._io.read_bits_int_be(6)
+                    self.diff = self._io.read_bits_int_be(1) != 0
+                    self.fixed = self._io.read_bits_int_be(1) != 0
+                    self.reserved2 = self._io.read_bits_int_be(8)
+
+
+                def _fetch_instances(self):
+                    pass
+
+
+            class Geometry(KaitaiStruct):
+                def __init__(self, _io, _parent=None, _root=None):
+                    super(Vdi.Header.HeaderMain.Geometry, self).__init__(_io)
+                    self._parent = _parent
+                    self._root = _root
+                    self._read()
+
+                def _read(self):
+                    self.cylinders = self._io.read_u4le()
+                    self.heads = self._io.read_u4le()
+                    self.sectors = self._io.read_u4le()
+                    self.sector_size = self._io.read_u4le()
+
+
+                def _fetch_instances(self):
+                    pass
+
+
+
+        class Uuid(KaitaiStruct):
+            def __init__(self, _io, _parent=None, _root=None):
+                super(Vdi.Header.Uuid, self).__init__(_io)
+                self._parent = _parent
+                self._root = _root
+                self._read()
+
+            def _read(self):
+                self.uuid = self._io.read_bytes(16)
+
+
+            def _fetch_instances(self):
+                pass
+
+
+        class Version(KaitaiStruct):
+            def __init__(self, _io, _parent=None, _root=None):
+                super(Vdi.Header.Version, self).__init__(_io)
+                self._parent = _parent
+                self._root = _root
+                self._read()
+
+            def _read(self):
+                self.major = self._io.read_u2le()
+                self.minor = self._io.read_u2le()
+
+
+            def _fetch_instances(self):
+                pass
+
+
+        @property
+        def block_size(self):
+            if hasattr(self, '_m_block_size'):
+                return self._m_block_size
+
+            self._m_block_size = self.header_main.block_metadata_size + self.header_main.block_data_size
+            return getattr(self, '_m_block_size', None)
+
+        @property
+        def blocks_map_offset(self):
+            if hasattr(self, '_m_blocks_map_offset'):
+                return self._m_blocks_map_offset
+
+            self._m_blocks_map_offset = self.header_main.blocks_map_offset
+            return getattr(self, '_m_blocks_map_offset', None)
+
+        @property
+        def blocks_map_size(self):
+            if hasattr(self, '_m_blocks_map_size'):
+                return self._m_blocks_map_size
+
+            self._m_blocks_map_size = (((self.header_main.blocks_in_image * 4 + self.header_main.geometry.sector_size) - 1) // self.header_main.geometry.sector_size) * self.header_main.geometry.sector_size
+            return getattr(self, '_m_blocks_map_size', None)
+
+        @property
+        def blocks_offset(self):
+            if hasattr(self, '_m_blocks_offset'):
+                return self._m_blocks_offset
+
+            self._m_blocks_offset = self.header_main.offset_data
+            return getattr(self, '_m_blocks_offset', None)
+
+        @property
+        def header_size(self):
+            if hasattr(self, '_m_header_size'):
+                return self._m_header_size
+
+            self._m_header_size = (self.header_size_optional if self.subheader_size_is_dynamic else 336)
+            return getattr(self, '_m_header_size', None)
+
+        @property
+        def subheader_size_is_dynamic(self):
+            if hasattr(self, '_m_subheader_size_is_dynamic'):
+                return self._m_subheader_size_is_dynamic
+
+            self._m_subheader_size_is_dynamic = self.version.major >= 1
+            return getattr(self, '_m_subheader_size_is_dynamic', None)
 
 
     @property

@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.MonomakhSaprChg = factory(root.KaitaiStream);
+    factory(root.MonomakhSaprChg || (root.MonomakhSaprChg = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (MonomakhSaprChg_, KaitaiStream) {
 /**
  * CHG is a container format file used by
  * [MONOMAKH-SAPR](https://www.liraland.com/mono/), a software
@@ -30,7 +30,7 @@ var MonomakhSaprChg = (function() {
     this._read();
   }
   MonomakhSaprChg.prototype._read = function() {
-    this.title = KaitaiStream.bytesToStr(this._io.readBytes(10), "ascii");
+    this.title = KaitaiStream.bytesToStr(this._io.readBytes(10), "ASCII");
     this.ent = [];
     var i = 0;
     while (!this._io.isEof()) {
@@ -43,12 +43,12 @@ var MonomakhSaprChg = (function() {
     function Block(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     Block.prototype._read = function() {
-      this.header = KaitaiStream.bytesToStr(this._io.readBytes(13), "ascii");
+      this.header = KaitaiStream.bytesToStr(this._io.readBytes(13), "ASCII");
       this.fileSize = this._io.readU8le();
       this.file = this._io.readBytes(this.fileSize);
     }
@@ -58,5 +58,5 @@ var MonomakhSaprChg = (function() {
 
   return MonomakhSaprChg;
 })();
-return MonomakhSaprChg;
-}));
+MonomakhSaprChg_.MonomakhSaprChg = MonomakhSaprChg;
+});

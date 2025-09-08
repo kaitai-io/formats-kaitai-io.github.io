@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -25,15 +25,15 @@ end
 # for repetitive musical phrases.
 # @see http://hackipedia.org/browse.cgi/File%20formats/Music%20tracker/S3M%2c%20ScreamTracker%203/Scream%20Tracker%203.20%20by%20Future%20Crew.txt Source
 class S3m < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
     @song_name = Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(28), 0, false)
     @magic1 = @_io.read_bytes(1)
-    raise Kaitai::Struct::ValidationNotEqualError.new([26].pack('C*'), magic1, _io, "/seq/1") if not magic1 == [26].pack('C*')
+    raise Kaitai::Struct::ValidationNotEqualError.new([26].pack('C*'), @magic1, @_io, "/seq/1") if not @magic1 == [26].pack('C*')
     @file_type = @_io.read_u1
     @reserved1 = @_io.read_bytes(2)
     @num_orders = @_io.read_u2le
@@ -43,7 +43,7 @@ class S3m < Kaitai::Struct::Struct
     @version = @_io.read_u2le
     @samples_format = @_io.read_u2le
     @magic2 = @_io.read_bytes(4)
-    raise Kaitai::Struct::ValidationNotEqualError.new([83, 67, 82, 77].pack('C*'), magic2, _io, "/seq/10") if not magic2 == [83, 67, 82, 77].pack('C*')
+    raise Kaitai::Struct::ValidationNotEqualError.new([83, 67, 82, 77].pack('C*'), @magic2, @_io, "/seq/10") if not @magic2 == [83, 67, 82, 77].pack('C*')
     @global_volume = @_io.read_u1
     @initial_speed = @_io.read_u1
     @initial_tempo = @_io.read_u1
@@ -75,8 +75,25 @@ class S3m < Kaitai::Struct::Struct
     end
     self
   end
+  class Channel < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @is_disabled = @_io.read_bits_int_be(1) != 0
+      @ch_type = @_io.read_bits_int_be(7)
+      self
+    end
+    attr_reader :is_disabled
+
+    ##
+    # Channel type (0..7 = left sample channels, 8..15 = right sample channels, 16..31 = AdLib synth channels)
+    attr_reader :ch_type
+  end
   class ChannelPan < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -98,8 +115,140 @@ class S3m < Kaitai::Struct::Struct
     attr_reader :reserved2
     attr_reader :pan
   end
+  class Instrument < Kaitai::Struct::Struct
+
+    INST_TYPES = {
+      1 => :inst_types_sample,
+      2 => :inst_types_melodic,
+      3 => :inst_types_bass_drum,
+      4 => :inst_types_snare_drum,
+      5 => :inst_types_tom,
+      6 => :inst_types_cymbal,
+      7 => :inst_types_hihat,
+    }
+    I__INST_TYPES = INST_TYPES.invert
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @type = Kaitai::Struct::Stream::resolve_enum(INST_TYPES, @_io.read_u1)
+      @filename = Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(12), 0, false)
+      case type
+      when :inst_types_sample
+        @body = Sampled.new(@_io, self, @_root)
+      else
+        @body = Adlib.new(@_io, self, @_root)
+      end
+      @tuning_hz = @_io.read_u4le
+      @reserved2 = @_io.read_bytes(12)
+      @sample_name = Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(28), 0, false)
+      @magic = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([83, 67, 82, 83].pack('C*'), @magic, @_io, "/types/instrument/seq/6") if not @magic == [83, 67, 82, 83].pack('C*')
+      self
+    end
+    class Adlib < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = nil)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        @reserved1 = @_io.read_bytes(3)
+        raise Kaitai::Struct::ValidationNotEqualError.new([0, 0, 0].pack('C*'), @reserved1, @_io, "/types/instrument/types/adlib/seq/0") if not @reserved1 == [0, 0, 0].pack('C*')
+        @_unnamed1 = @_io.read_bytes(16)
+        self
+      end
+      attr_reader :reserved1
+      attr_reader :_unnamed1
+    end
+    class Sampled < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = nil)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        @paraptr_sample = SwappedU3.new(@_io, self, @_root)
+        @len_sample = @_io.read_u4le
+        @loop_begin = @_io.read_u4le
+        @loop_end = @_io.read_u4le
+        @default_volume = @_io.read_u1
+        @reserved1 = @_io.read_u1
+        @is_packed = @_io.read_u1
+        @flags = @_io.read_u1
+        self
+      end
+      def sample
+        return @sample unless @sample.nil?
+        _pos = @_io.pos
+        @_io.seek(paraptr_sample.value * 16)
+        @sample = @_io.read_bytes(len_sample)
+        @_io.seek(_pos)
+        @sample
+      end
+      attr_reader :paraptr_sample
+      attr_reader :len_sample
+      attr_reader :loop_begin
+      attr_reader :loop_end
+
+      ##
+      # Default volume
+      attr_reader :default_volume
+      attr_reader :reserved1
+
+      ##
+      # 0 = unpacked, 1 = DP30ADPCM packing
+      attr_reader :is_packed
+      attr_reader :flags
+    end
+    attr_reader :type
+    attr_reader :filename
+    attr_reader :body
+    attr_reader :tuning_hz
+    attr_reader :reserved2
+    attr_reader :sample_name
+    attr_reader :magic
+  end
+  class InstrumentPtr < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @paraptr = @_io.read_u2le
+      self
+    end
+    def body
+      return @body unless @body.nil?
+      _pos = @_io.pos
+      @_io.seek(paraptr * 16)
+      @body = Instrument.new(@_io, self, @_root)
+      @_io.seek(_pos)
+      @body
+    end
+    attr_reader :paraptr
+  end
+  class Pattern < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @size = @_io.read_u2le
+      _io_body = @_io.substream(size - 2)
+      @body = PatternCells.new(_io_body, self, @_root)
+      self
+    end
+    attr_reader :size
+    attr_reader :body
+    attr_reader :_raw_body
+  end
   class PatternCell < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -138,7 +287,7 @@ class S3m < Kaitai::Struct::Struct
     attr_reader :fx_value
   end
   class PatternCells < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -154,28 +303,31 @@ class S3m < Kaitai::Struct::Struct
     end
     attr_reader :cells
   end
-  class Channel < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  class PatternPtr < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @is_disabled = @_io.read_bits_int_be(1) != 0
-      @ch_type = @_io.read_bits_int_be(7)
+      @paraptr = @_io.read_u2le
       self
     end
-    attr_reader :is_disabled
-
-    ##
-    # Channel type (0..7 = left sample channels, 8..15 = right sample channels, 16..31 = AdLib synth channels)
-    attr_reader :ch_type
+    def body
+      return @body unless @body.nil?
+      _pos = @_io.pos
+      @_io.seek(paraptr * 16)
+      @body = Pattern.new(@_io, self, @_root)
+      @_io.seek(_pos)
+      @body
+    end
+    attr_reader :paraptr
   end
 
   ##
   # Custom 3-byte integer, stored in mixed endian manner.
   class SwappedU3 < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -187,164 +339,11 @@ class S3m < Kaitai::Struct::Struct
     end
     def value
       return @value unless @value.nil?
-      @value = (lo | (hi << 16))
+      @value = lo | hi << 16
       @value
     end
     attr_reader :hi
     attr_reader :lo
-  end
-  class Pattern < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @size = @_io.read_u2le
-      @_raw_body = @_io.read_bytes((size - 2))
-      _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = PatternCells.new(_io__raw_body, self, @_root)
-      self
-    end
-    attr_reader :size
-    attr_reader :body
-    attr_reader :_raw_body
-  end
-  class PatternPtr < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @paraptr = @_io.read_u2le
-      self
-    end
-    def body
-      return @body unless @body.nil?
-      _pos = @_io.pos
-      @_io.seek((paraptr * 16))
-      @body = Pattern.new(@_io, self, @_root)
-      @_io.seek(_pos)
-      @body
-    end
-    attr_reader :paraptr
-  end
-  class InstrumentPtr < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @paraptr = @_io.read_u2le
-      self
-    end
-    def body
-      return @body unless @body.nil?
-      _pos = @_io.pos
-      @_io.seek((paraptr * 16))
-      @body = Instrument.new(@_io, self, @_root)
-      @_io.seek(_pos)
-      @body
-    end
-    attr_reader :paraptr
-  end
-  class Instrument < Kaitai::Struct::Struct
-
-    INST_TYPES = {
-      1 => :inst_types_sample,
-      2 => :inst_types_melodic,
-      3 => :inst_types_bass_drum,
-      4 => :inst_types_snare_drum,
-      5 => :inst_types_tom,
-      6 => :inst_types_cymbal,
-      7 => :inst_types_hihat,
-    }
-    I__INST_TYPES = INST_TYPES.invert
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @type = Kaitai::Struct::Stream::resolve_enum(INST_TYPES, @_io.read_u1)
-      @filename = Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(12), 0, false)
-      case type
-      when :inst_types_sample
-        @body = Sampled.new(@_io, self, @_root)
-      else
-        @body = Adlib.new(@_io, self, @_root)
-      end
-      @tuning_hz = @_io.read_u4le
-      @reserved2 = @_io.read_bytes(12)
-      @sample_name = Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(28), 0, false)
-      @magic = @_io.read_bytes(4)
-      raise Kaitai::Struct::ValidationNotEqualError.new([83, 67, 82, 83].pack('C*'), magic, _io, "/types/instrument/seq/6") if not magic == [83, 67, 82, 83].pack('C*')
-      self
-    end
-    class Sampled < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
-
-      def _read
-        @paraptr_sample = SwappedU3.new(@_io, self, @_root)
-        @len_sample = @_io.read_u4le
-        @loop_begin = @_io.read_u4le
-        @loop_end = @_io.read_u4le
-        @default_volume = @_io.read_u1
-        @reserved1 = @_io.read_u1
-        @is_packed = @_io.read_u1
-        @flags = @_io.read_u1
-        self
-      end
-      def sample
-        return @sample unless @sample.nil?
-        _pos = @_io.pos
-        @_io.seek((paraptr_sample.value * 16))
-        @sample = @_io.read_bytes(len_sample)
-        @_io.seek(_pos)
-        @sample
-      end
-      attr_reader :paraptr_sample
-      attr_reader :len_sample
-      attr_reader :loop_begin
-      attr_reader :loop_end
-
-      ##
-      # Default volume
-      attr_reader :default_volume
-      attr_reader :reserved1
-
-      ##
-      # 0 = unpacked, 1 = DP30ADPCM packing
-      attr_reader :is_packed
-      attr_reader :flags
-    end
-    class Adlib < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
-
-      def _read
-        @reserved1 = @_io.read_bytes(3)
-        raise Kaitai::Struct::ValidationNotEqualError.new([0, 0, 0].pack('C*'), reserved1, _io, "/types/instrument/types/adlib/seq/0") if not reserved1 == [0, 0, 0].pack('C*')
-        @_unnamed1 = @_io.read_bytes(16)
-        self
-      end
-      attr_reader :reserved1
-      attr_reader :_unnamed1
-    end
-    attr_reader :type
-    attr_reader :filename
-    attr_reader :body
-    attr_reader :tuning_hz
-    attr_reader :reserved2
-    attr_reader :sample_name
-    attr_reader :magic
   end
   attr_reader :song_name
   attr_reader :magic1

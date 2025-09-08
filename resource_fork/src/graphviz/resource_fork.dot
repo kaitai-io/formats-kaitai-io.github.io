@@ -11,18 +11,28 @@ digraph {
 			<TR><TD PORT="system_data_pos">16</TD><TD PORT="system_data_size">112</TD><TD></TD><TD PORT="system_data_type">system_data</TD></TR>
 			<TR><TD PORT="application_data_pos">128</TD><TD PORT="application_data_size">128</TD><TD></TD><TD PORT="application_data_type">application_data</TD></TR>
 		</TABLE>>];
-		resource_fork__inst__data_blocks_with_io [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-			<TR><TD PORT="data_blocks_with_io_pos">header.ofs_data_blocks</TD><TD PORT="data_blocks_with_io_size">header.len_data_blocks</TD><TD>BytesWithIo</TD><TD PORT="data_blocks_with_io_type">data_blocks_with_io</TD></TR>
-		</TABLE>>];
 		resource_fork__inst__data_blocks [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
 			<TR><TD>data_blocks</TD><TD>data_blocks_with_io.data</TD></TR>
+		</TABLE>>];
+		resource_fork__inst__data_blocks_with_io [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="data_blocks_with_io_pos">header.ofs_data_blocks</TD><TD PORT="data_blocks_with_io_size">header.len_data_blocks</TD><TD>BytesWithIo</TD><TD PORT="data_blocks_with_io_type">data_blocks_with_io</TD></TR>
 		</TABLE>>];
 		resource_fork__inst__resource_map [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 			<TR><TD PORT="resource_map_pos">header.ofs_resource_map</TD><TD PORT="resource_map_size">header.len_resource_map</TD><TD>ResourceMap</TD><TD PORT="resource_map_type">resource_map</TD></TR>
 		</TABLE>>];
+		subgraph cluster__data_block {
+			label="ResourceFork::DataBlock";
+			graph[style=dotted];
+
+			data_block__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="len_data_pos">0</TD><TD PORT="len_data_size">4</TD><TD>u4be</TD><TD PORT="len_data_type">len_data</TD></TR>
+				<TR><TD PORT="data_pos">4</TD><TD PORT="data_size">len_data</TD><TD></TD><TD PORT="data_type">data</TD></TR>
+			</TABLE>>];
+		}
 		subgraph cluster__file_header {
 			label="ResourceFork::FileHeader";
 			graph[style=dotted];
@@ -33,16 +43,6 @@ digraph {
 				<TR><TD PORT="ofs_resource_map_pos">4</TD><TD PORT="ofs_resource_map_size">4</TD><TD>u4be</TD><TD PORT="ofs_resource_map_type">ofs_resource_map</TD></TR>
 				<TR><TD PORT="len_data_blocks_pos">8</TD><TD PORT="len_data_blocks_size">4</TD><TD>u4be</TD><TD PORT="len_data_blocks_type">len_data_blocks</TD></TR>
 				<TR><TD PORT="len_resource_map_pos">12</TD><TD PORT="len_resource_map_size">4</TD><TD>u4be</TD><TD PORT="len_resource_map_type">len_resource_map</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__data_block {
-			label="ResourceFork::DataBlock";
-			graph[style=dotted];
-
-			data_block__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="len_data_pos">0</TD><TD PORT="len_data_size">4</TD><TD>u4be</TD><TD PORT="len_data_type">len_data</TD></TR>
-				<TR><TD PORT="data_pos">4</TD><TD PORT="data_size">len_data</TD><TD></TD><TD PORT="data_type">data</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__resource_map {
@@ -58,17 +58,17 @@ digraph {
 				<TR><TD PORT="ofs_type_list_pos">24</TD><TD PORT="ofs_type_list_size">2</TD><TD>u2be</TD><TD PORT="ofs_type_list_type">ofs_type_list</TD></TR>
 				<TR><TD PORT="ofs_names_pos">26</TD><TD PORT="ofs_names_size">2</TD><TD>u2be</TD><TD PORT="ofs_names_type">ofs_names</TD></TR>
 			</TABLE>>];
-			resource_map__inst__type_list_and_reference_lists [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="type_list_and_reference_lists_pos">ofs_type_list</TD><TD PORT="type_list_and_reference_lists_size">(ofs_names - ofs_type_list)</TD><TD>TypeListAndReferenceLists</TD><TD PORT="type_list_and_reference_lists_type">type_list_and_reference_lists</TD></TR>
+			resource_map__inst__names [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>names</TD><TD>names_with_io.data</TD></TR>
 			</TABLE>>];
 			resource_map__inst__names_with_io [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="names_with_io_pos">ofs_names</TD><TD PORT="names_with_io_size">⇲</TD><TD>BytesWithIo</TD><TD PORT="names_with_io_type">names_with_io</TD></TR>
 			</TABLE>>];
-			resource_map__inst__names [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>names</TD><TD>names_with_io.data</TD></TR>
+			resource_map__inst__type_list_and_reference_lists [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="type_list_and_reference_lists_pos">ofs_type_list</TD><TD PORT="type_list_and_reference_lists_size">ofs_names - ofs_type_list</TD><TD>TypeListAndReferenceLists</TD><TD PORT="type_list_and_reference_lists_type">type_list_and_reference_lists</TD></TR>
 			</TABLE>>];
 			subgraph cluster__file_attributes {
 				label="ResourceFork::ResourceMap::FileAttributes";
@@ -76,17 +76,27 @@ digraph {
 
 				file_attributes__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="resources_locked_pos">0</TD><TD PORT="resources_locked_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="resources_locked_type">resources_locked</TD></TR>
-					<TR><TD PORT="reserved0_pos">0:1</TD><TD PORT="reserved0_size">6b</TD><TD>b6</TD><TD PORT="reserved0_type">reserved0</TD></TR>
-					<TR><TD PORT="printer_driver_multifinder_compatible_pos">0:7</TD><TD PORT="printer_driver_multifinder_compatible_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="printer_driver_multifinder_compatible_type">printer_driver_multifinder_compatible</TD></TR>
-					<TR><TD PORT="no_write_changes_pos">1</TD><TD PORT="no_write_changes_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="no_write_changes_type">no_write_changes</TD></TR>
-					<TR><TD PORT="needs_compact_pos">1:1</TD><TD PORT="needs_compact_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="needs_compact_type">needs_compact</TD></TR>
-					<TR><TD PORT="map_needs_write_pos">1:2</TD><TD PORT="map_needs_write_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="map_needs_write_type">map_needs_write</TD></TR>
-					<TR><TD PORT="reserved1_pos">1:3</TD><TD PORT="reserved1_size">5b</TD><TD>b5</TD><TD PORT="reserved1_type">reserved1</TD></TR>
+					<TR><TD PORT="resources_locked_pos">0</TD><TD PORT="resources_locked_size">1b</TD><TD>b1be→bool</TD><TD PORT="resources_locked_type">resources_locked</TD></TR>
+					<TR><TD PORT="reserved0_pos">0:1</TD><TD PORT="reserved0_size">6b</TD><TD>b6be</TD><TD PORT="reserved0_type">reserved0</TD></TR>
+					<TR><TD PORT="printer_driver_multifinder_compatible_pos">0:7</TD><TD PORT="printer_driver_multifinder_compatible_size">1b</TD><TD>b1be→bool</TD><TD PORT="printer_driver_multifinder_compatible_type">printer_driver_multifinder_compatible</TD></TR>
+					<TR><TD PORT="no_write_changes_pos">1</TD><TD PORT="no_write_changes_size">1b</TD><TD>b1be→bool</TD><TD PORT="no_write_changes_type">no_write_changes</TD></TR>
+					<TR><TD PORT="needs_compact_pos">1:1</TD><TD PORT="needs_compact_size">1b</TD><TD>b1be→bool</TD><TD PORT="needs_compact_type">needs_compact</TD></TR>
+					<TR><TD PORT="map_needs_write_pos">1:2</TD><TD PORT="map_needs_write_size">1b</TD><TD>b1be→bool</TD><TD PORT="map_needs_write_type">map_needs_write</TD></TR>
+					<TR><TD PORT="reserved1_pos">1:3</TD><TD PORT="reserved1_size">5b</TD><TD>b5be</TD><TD PORT="reserved1_type">reserved1</TD></TR>
 				</TABLE>>];
 				file_attributes__inst__as_int [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 					<TR><TD PORT="as_int_pos">0</TD><TD PORT="as_int_size">2</TD><TD>u2be</TD><TD PORT="as_int_type">as_int</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__name {
+				label="ResourceFork::ResourceMap::Name";
+				graph[style=dotted];
+
+				name__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="len_value_pos">0</TD><TD PORT="len_value_size">1</TD><TD>u1</TD><TD PORT="len_value_type">len_value</TD></TR>
+					<TR><TD PORT="value_pos">1</TD><TD PORT="value_size">len_value</TD><TD></TD><TD PORT="value_type">value</TD></TR>
 				</TABLE>>];
 			}
 			subgraph cluster__type_list_and_reference_lists {
@@ -98,40 +108,6 @@ digraph {
 					<TR><TD PORT="type_list_pos">0</TD><TD PORT="type_list_size">...</TD><TD>TypeList</TD><TD PORT="type_list_type">type_list</TD></TR>
 					<TR><TD PORT="reference_lists_pos">...</TD><TD PORT="reference_lists_size">⇲</TD><TD></TD><TD PORT="reference_lists_type">reference_lists</TD></TR>
 				</TABLE>>];
-				subgraph cluster__type_list {
-					label="ResourceFork::ResourceMap::TypeListAndReferenceLists::TypeList";
-					graph[style=dotted];
-
-					type_list__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-						<TR><TD PORT="num_types_m1_pos">0</TD><TD PORT="num_types_m1_size">2</TD><TD>u2be</TD><TD PORT="num_types_m1_type">num_types_m1</TD></TR>
-						<TR><TD PORT="entries_pos">2</TD><TD PORT="entries_size">8</TD><TD>TypeListEntry</TD><TD PORT="entries_type">entries</TD></TR>
-						<TR><TD COLSPAN="4" PORT="entries__repeat">repeat num_types times</TD></TR>
-					</TABLE>>];
-					type_list__inst__num_types [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-						<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-						<TR><TD>num_types</TD><TD>((num_types_m1 + 1) % 65536)</TD></TR>
-					</TABLE>>];
-					subgraph cluster__type_list_entry {
-						label="ResourceFork::ResourceMap::TypeListAndReferenceLists::TypeList::TypeListEntry";
-						graph[style=dotted];
-
-						type_list_entry__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-							<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-							<TR><TD PORT="type_pos">0</TD><TD PORT="type_size">4</TD><TD></TD><TD PORT="type_type">type</TD></TR>
-							<TR><TD PORT="num_references_m1_pos">4</TD><TD PORT="num_references_m1_size">2</TD><TD>u2be</TD><TD PORT="num_references_m1_type">num_references_m1</TD></TR>
-							<TR><TD PORT="ofs_reference_list_pos">6</TD><TD PORT="ofs_reference_list_size">2</TD><TD>u2be</TD><TD PORT="ofs_reference_list_type">ofs_reference_list</TD></TR>
-						</TABLE>>];
-						type_list_entry__inst__num_references [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-							<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-							<TR><TD>num_references</TD><TD>((num_references_m1 + 1) % 65536)</TD></TR>
-						</TABLE>>];
-						type_list_entry__inst__reference_list [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-							<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-							<TR><TD PORT="reference_list_pos">ofs_reference_list</TD><TD PORT="reference_list_size">...</TD><TD>ReferenceList</TD><TD PORT="reference_list_type">reference_list</TD></TR>
-						</TABLE>>];
-					}
-				}
 				subgraph cluster__reference_list {
 					label="ResourceFork::ResourceMap::TypeListAndReferenceLists::ReferenceList";
 					graph[style=dotted];
@@ -150,16 +126,17 @@ digraph {
 							<TR><TD PORT="id_pos">0</TD><TD PORT="id_size">2</TD><TD>s2be</TD><TD PORT="id_type">id</TD></TR>
 							<TR><TD PORT="ofs_name_pos">2</TD><TD PORT="ofs_name_size">2</TD><TD>u2be</TD><TD PORT="ofs_name_type">ofs_name</TD></TR>
 							<TR><TD PORT="attributes_pos">4</TD><TD PORT="attributes_size">1</TD><TD>Attributes</TD><TD PORT="attributes_type">attributes</TD></TR>
-							<TR><TD PORT="ofs_data_block_pos">5</TD><TD PORT="ofs_data_block_size">3</TD><TD>b24</TD><TD PORT="ofs_data_block_type">ofs_data_block</TD></TR>
+							<TR><TD PORT="ofs_data_block_pos">5</TD><TD PORT="ofs_data_block_size">3</TD><TD>b24be</TD><TD PORT="ofs_data_block_type">ofs_data_block</TD></TR>
 							<TR><TD PORT="reserved_handle_pos">8</TD><TD PORT="reserved_handle_size">4</TD><TD>u4be</TD><TD PORT="reserved_handle_type">reserved_handle</TD></TR>
-						</TABLE>>];
-						reference__inst__name [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-							<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-							<TR><TD PORT="name_pos">ofs_name</TD><TD PORT="name_size">...</TD><TD>Name</TD><TD PORT="name_type">name</TD></TR>
 						</TABLE>>];
 						reference__inst__data_block [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 							<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 							<TR><TD PORT="data_block_pos">ofs_data_block</TD><TD PORT="data_block_size">...</TD><TD>DataBlock</TD><TD PORT="data_block_type">data_block</TD></TR>
+						</TABLE>>];
+						reference__inst__name [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+							<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+							<TR><TD PORT="name_pos">ofs_name</TD><TD PORT="name_size">...</TD><TD>Name</TD><TD PORT="name_type">name</TD></TR>
+							<TR><TD COLSPAN="4" PORT="name__if">if ofs_name != 65535</TD></TR>
 						</TABLE>>];
 						subgraph cluster__attributes {
 							label="ResourceFork::ResourceMap::TypeListAndReferenceLists::ReferenceList::Reference::Attributes";
@@ -167,14 +144,14 @@ digraph {
 
 							attributes__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 								<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-								<TR><TD PORT="system_reference_pos">0</TD><TD PORT="system_reference_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="system_reference_type">system_reference</TD></TR>
-								<TR><TD PORT="load_into_system_heap_pos">0:1</TD><TD PORT="load_into_system_heap_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="load_into_system_heap_type">load_into_system_heap</TD></TR>
-								<TR><TD PORT="purgeable_pos">0:2</TD><TD PORT="purgeable_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="purgeable_type">purgeable</TD></TR>
-								<TR><TD PORT="locked_pos">0:3</TD><TD PORT="locked_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="locked_type">locked</TD></TR>
-								<TR><TD PORT="protected_pos">0:4</TD><TD PORT="protected_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="protected_type">protected</TD></TR>
-								<TR><TD PORT="preload_pos">0:5</TD><TD PORT="preload_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="preload_type">preload</TD></TR>
-								<TR><TD PORT="needs_write_pos">0:6</TD><TD PORT="needs_write_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="needs_write_type">needs_write</TD></TR>
-								<TR><TD PORT="compressed_pos">0:7</TD><TD PORT="compressed_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="compressed_type">compressed</TD></TR>
+								<TR><TD PORT="system_reference_pos">0</TD><TD PORT="system_reference_size">1b</TD><TD>b1be→bool</TD><TD PORT="system_reference_type">system_reference</TD></TR>
+								<TR><TD PORT="load_into_system_heap_pos">0:1</TD><TD PORT="load_into_system_heap_size">1b</TD><TD>b1be→bool</TD><TD PORT="load_into_system_heap_type">load_into_system_heap</TD></TR>
+								<TR><TD PORT="purgeable_pos">0:2</TD><TD PORT="purgeable_size">1b</TD><TD>b1be→bool</TD><TD PORT="purgeable_type">purgeable</TD></TR>
+								<TR><TD PORT="locked_pos">0:3</TD><TD PORT="locked_size">1b</TD><TD>b1be→bool</TD><TD PORT="locked_type">locked</TD></TR>
+								<TR><TD PORT="protected_pos">0:4</TD><TD PORT="protected_size">1b</TD><TD>b1be→bool</TD><TD PORT="protected_type">protected</TD></TR>
+								<TR><TD PORT="preload_pos">0:5</TD><TD PORT="preload_size">1b</TD><TD>b1be→bool</TD><TD PORT="preload_type">preload</TD></TR>
+								<TR><TD PORT="needs_write_pos">0:6</TD><TD PORT="needs_write_size">1b</TD><TD>b1be→bool</TD><TD PORT="needs_write_type">needs_write</TD></TR>
+								<TR><TD PORT="compressed_pos">0:7</TD><TD PORT="compressed_size">1b</TD><TD>b1be→bool</TD><TD PORT="compressed_type">compressed</TD></TR>
 							</TABLE>>];
 							attributes__inst__as_int [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 								<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
@@ -183,50 +160,75 @@ digraph {
 						}
 					}
 				}
-			}
-			subgraph cluster__name {
-				label="ResourceFork::ResourceMap::Name";
-				graph[style=dotted];
+				subgraph cluster__type_list {
+					label="ResourceFork::ResourceMap::TypeListAndReferenceLists::TypeList";
+					graph[style=dotted];
 
-				name__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="len_value_pos">0</TD><TD PORT="len_value_size">1</TD><TD>u1</TD><TD PORT="len_value_type">len_value</TD></TR>
-					<TR><TD PORT="value_pos">1</TD><TD PORT="value_size">len_value</TD><TD></TD><TD PORT="value_type">value</TD></TR>
-				</TABLE>>];
+					type_list__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="num_types_m1_pos">0</TD><TD PORT="num_types_m1_size">2</TD><TD>u2be</TD><TD PORT="num_types_m1_type">num_types_m1</TD></TR>
+						<TR><TD PORT="entries_pos">2</TD><TD PORT="entries_size">8</TD><TD>TypeListEntry</TD><TD PORT="entries_type">entries</TD></TR>
+						<TR><TD COLSPAN="4" PORT="entries__repeat">repeat num_types times</TD></TR>
+					</TABLE>>];
+					type_list__inst__num_types [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+						<TR><TD>num_types</TD><TD>(num_types_m1 + 1) % 65536</TD></TR>
+					</TABLE>>];
+					subgraph cluster__type_list_entry {
+						label="ResourceFork::ResourceMap::TypeListAndReferenceLists::TypeList::TypeListEntry";
+						graph[style=dotted];
+
+						type_list_entry__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+							<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+							<TR><TD PORT="type_pos">0</TD><TD PORT="type_size">4</TD><TD></TD><TD PORT="type_type">type</TD></TR>
+							<TR><TD PORT="num_references_m1_pos">4</TD><TD PORT="num_references_m1_size">2</TD><TD>u2be</TD><TD PORT="num_references_m1_type">num_references_m1</TD></TR>
+							<TR><TD PORT="ofs_reference_list_pos">6</TD><TD PORT="ofs_reference_list_size">2</TD><TD>u2be</TD><TD PORT="ofs_reference_list_type">ofs_reference_list</TD></TR>
+						</TABLE>>];
+						type_list_entry__inst__num_references [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+							<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+							<TR><TD>num_references</TD><TD>(num_references_m1 + 1) % 65536</TD></TR>
+						</TABLE>>];
+						type_list_entry__inst__reference_list [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+							<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+							<TR><TD PORT="reference_list_pos">ofs_reference_list</TD><TD PORT="reference_list_size">...</TD><TD>ReferenceList</TD><TD PORT="reference_list_type">reference_list</TD></TR>
+						</TABLE>>];
+					}
+				}
 			}
 		}
 	}
 	resource_fork__seq:header_type -> file_header__seq [style=bold];
+	bytes_with_io__seq:data_type -> resource_fork__inst__data_blocks [color="#404040"];
 	file_header__seq:ofs_data_blocks_type -> resource_fork__inst__data_blocks_with_io:data_blocks_with_io_pos [color="#404040"];
 	file_header__seq:len_data_blocks_type -> resource_fork__inst__data_blocks_with_io:data_blocks_with_io_size [color="#404040"];
 	resource_fork__inst__data_blocks_with_io:data_blocks_with_io_type -> bytes_with_io__seq [style=bold];
-	bytes_with_io__seq:data_type -> resource_fork__inst__data_blocks [color="#404040"];
 	file_header__seq:ofs_resource_map_type -> resource_fork__inst__resource_map:resource_map_pos [color="#404040"];
 	file_header__seq:len_resource_map_type -> resource_fork__inst__resource_map:resource_map_size [color="#404040"];
 	resource_fork__inst__resource_map:resource_map_type -> resource_map__seq [style=bold];
 	data_block__seq:len_data_type -> data_block__seq:data_size [color="#404040"];
 	resource_map__seq:reserved_file_header_copy_type -> file_header__seq [style=bold];
 	resource_map__seq:file_attributes_type -> file_attributes__seq [style=bold];
+	bytes_with_io__seq:data_type -> resource_map__inst__names [color="#404040"];
+	resource_map__seq:ofs_names_type -> resource_map__inst__names_with_io:names_with_io_pos [color="#404040"];
+	resource_map__inst__names_with_io:names_with_io_type -> bytes_with_io__seq [style=bold];
 	resource_map__seq:ofs_type_list_type -> resource_map__inst__type_list_and_reference_lists:type_list_and_reference_lists_pos [color="#404040"];
 	resource_map__seq:ofs_names_type -> resource_map__inst__type_list_and_reference_lists:type_list_and_reference_lists_size [color="#404040"];
 	resource_map__seq:ofs_type_list_type -> resource_map__inst__type_list_and_reference_lists:type_list_and_reference_lists_size [color="#404040"];
 	resource_map__inst__type_list_and_reference_lists:type_list_and_reference_lists_type -> type_list_and_reference_lists__seq [style=bold];
-	resource_map__seq:ofs_names_type -> resource_map__inst__names_with_io:names_with_io_pos [color="#404040"];
-	resource_map__inst__names_with_io:names_with_io_type -> bytes_with_io__seq [style=bold];
-	bytes_with_io__seq:data_type -> resource_map__inst__names [color="#404040"];
+	name__seq:len_value_type -> name__seq:value_size [color="#404040"];
 	type_list_and_reference_lists__seq:type_list_type -> type_list__seq [style=bold];
+	reference_list__seq:references_type -> reference__seq [style=bold];
+	reference_list__params:num_references_type -> reference_list__seq:references__repeat [color="#404040"];
+	reference__seq:attributes_type -> attributes__seq [style=bold];
+	reference__seq:ofs_data_block_type -> reference__inst__data_block:data_block_pos [color="#404040"];
+	reference__inst__data_block:data_block_type -> data_block__seq [style=bold];
+	reference__seq:ofs_name_type -> reference__inst__name:name_pos [color="#404040"];
+	reference__inst__name:name_type -> name__seq [style=bold];
+	reference__seq:ofs_name_type -> reference__inst__name:name__if [color="#404040"];
 	type_list__seq:entries_type -> type_list_entry__seq [style=bold];
 	type_list__inst__num_types:num_types_type -> type_list__seq:entries__repeat [color="#404040"];
 	type_list__seq:num_types_m1_type -> type_list__inst__num_types [color="#404040"];
 	type_list_entry__seq:num_references_m1_type -> type_list_entry__inst__num_references [color="#404040"];
 	type_list_entry__seq:ofs_reference_list_type -> type_list_entry__inst__reference_list:reference_list_pos [color="#404040"];
 	type_list_entry__inst__reference_list:reference_list_type -> reference_list__seq [style=bold];
-	reference_list__seq:references_type -> reference__seq [style=bold];
-	reference_list__params:num_references_type -> reference_list__seq:references__repeat [color="#404040"];
-	reference__seq:attributes_type -> attributes__seq [style=bold];
-	reference__seq:ofs_name_type -> reference__inst__name:name_pos [color="#404040"];
-	reference__inst__name:name_type -> name__seq [style=bold];
-	reference__seq:ofs_data_block_type -> reference__inst__data_block:data_block_pos [color="#404040"];
-	reference__inst__data_block:data_block_type -> data_block__seq [style=bold];
-	name__seq:len_value_type -> name__seq:value_size [color="#404040"];
 }

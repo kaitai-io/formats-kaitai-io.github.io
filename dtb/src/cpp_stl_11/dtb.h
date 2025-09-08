@@ -2,13 +2,16 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class dtb_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -40,13 +43,13 @@
 class dtb_t : public kaitai::kstruct {
 
 public:
-    class memory_block_t;
+    class fdt_begin_node_t;
     class fdt_block_t;
+    class fdt_node_t;
+    class fdt_prop_t;
+    class memory_block_t;
     class memory_block_entry_t;
     class strings_t;
-    class fdt_prop_t;
-    class fdt_node_t;
-    class fdt_begin_node_t;
 
     enum fdt_t {
         FDT_BEGIN_NODE = 1,
@@ -55,6 +58,12 @@ public:
         FDT_NOP = 4,
         FDT_END = 9
     };
+    static bool _is_defined_fdt_t(fdt_t v);
+
+private:
+    static const std::set<fdt_t> _values_fdt_t;
+
+public:
 
     dtb_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, dtb_t* p__root = nullptr);
 
@@ -65,28 +74,30 @@ private:
 public:
     ~dtb_t();
 
-    class memory_block_t : public kaitai::kstruct {
+    class fdt_begin_node_t : public kaitai::kstruct {
 
     public:
 
-        memory_block_t(kaitai::kstream* p__io, dtb_t* p__parent = nullptr, dtb_t* p__root = nullptr);
+        fdt_begin_node_t(kaitai::kstream* p__io, dtb_t::fdt_node_t* p__parent = nullptr, dtb_t* p__root = nullptr);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~memory_block_t();
+        ~fdt_begin_node_t();
 
     private:
-        std::unique_ptr<std::vector<std::unique_ptr<memory_block_entry_t>>> m_entries;
+        std::string m_name;
+        std::string m_padding;
         dtb_t* m__root;
-        dtb_t* m__parent;
+        dtb_t::fdt_node_t* m__parent;
 
     public:
-        std::vector<std::unique_ptr<memory_block_entry_t>>* entries() const { return m_entries.get(); }
+        std::string name() const { return m_name; }
+        std::string padding() const { return m_padding; }
         dtb_t* _root() const { return m__root; }
-        dtb_t* _parent() const { return m__parent; }
+        dtb_t::fdt_node_t* _parent() const { return m__parent; }
     };
 
     class fdt_block_t : public kaitai::kstruct {
@@ -109,6 +120,99 @@ public:
 
     public:
         std::vector<std::unique_ptr<fdt_node_t>>* nodes() const { return m_nodes.get(); }
+        dtb_t* _root() const { return m__root; }
+        dtb_t* _parent() const { return m__parent; }
+    };
+
+    class fdt_node_t : public kaitai::kstruct {
+
+    public:
+
+        fdt_node_t(kaitai::kstream* p__io, dtb_t::fdt_block_t* p__parent = nullptr, dtb_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~fdt_node_t();
+
+    private:
+        fdt_t m_type;
+        std::unique_ptr<kaitai::kstruct> m_body;
+        bool n_body;
+
+    public:
+        bool _is_null_body() { body(); return n_body; };
+
+    private:
+        dtb_t* m__root;
+        dtb_t::fdt_block_t* m__parent;
+
+    public:
+        fdt_t type() const { return m_type; }
+        kaitai::kstruct* body() const { return m_body.get(); }
+        dtb_t* _root() const { return m__root; }
+        dtb_t::fdt_block_t* _parent() const { return m__parent; }
+    };
+
+    class fdt_prop_t : public kaitai::kstruct {
+
+    public:
+
+        fdt_prop_t(kaitai::kstream* p__io, dtb_t::fdt_node_t* p__parent = nullptr, dtb_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~fdt_prop_t();
+
+    private:
+        bool f_name;
+        std::string m_name;
+
+    public:
+        std::string name();
+
+    private:
+        uint32_t m_len_property;
+        uint32_t m_ofs_name;
+        std::string m_property;
+        std::string m_padding;
+        dtb_t* m__root;
+        dtb_t::fdt_node_t* m__parent;
+
+    public:
+        uint32_t len_property() const { return m_len_property; }
+        uint32_t ofs_name() const { return m_ofs_name; }
+        std::string property() const { return m_property; }
+        std::string padding() const { return m_padding; }
+        dtb_t* _root() const { return m__root; }
+        dtb_t::fdt_node_t* _parent() const { return m__parent; }
+    };
+
+    class memory_block_t : public kaitai::kstruct {
+
+    public:
+
+        memory_block_t(kaitai::kstream* p__io, dtb_t* p__parent = nullptr, dtb_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~memory_block_t();
+
+    private:
+        std::unique_ptr<std::vector<std::unique_ptr<memory_block_entry_t>>> m_entries;
+        dtb_t* m__root;
+        dtb_t* m__parent;
+
+    public:
+        std::vector<std::unique_ptr<memory_block_entry_t>>* entries() const { return m_entries.get(); }
         dtb_t* _root() const { return m__root; }
         dtb_t* _parent() const { return m__parent; }
     };
@@ -171,101 +275,6 @@ public:
         dtb_t* _parent() const { return m__parent; }
     };
 
-    class fdt_prop_t : public kaitai::kstruct {
-
-    public:
-
-        fdt_prop_t(kaitai::kstream* p__io, dtb_t::fdt_node_t* p__parent = nullptr, dtb_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~fdt_prop_t();
-
-    private:
-        bool f_name;
-        std::string m_name;
-
-    public:
-        std::string name();
-
-    private:
-        uint32_t m_len_property;
-        uint32_t m_ofs_name;
-        std::string m_property;
-        std::string m_padding;
-        dtb_t* m__root;
-        dtb_t::fdt_node_t* m__parent;
-
-    public:
-        uint32_t len_property() const { return m_len_property; }
-        uint32_t ofs_name() const { return m_ofs_name; }
-        std::string property() const { return m_property; }
-        std::string padding() const { return m_padding; }
-        dtb_t* _root() const { return m__root; }
-        dtb_t::fdt_node_t* _parent() const { return m__parent; }
-    };
-
-    class fdt_node_t : public kaitai::kstruct {
-
-    public:
-
-        fdt_node_t(kaitai::kstream* p__io, dtb_t::fdt_block_t* p__parent = nullptr, dtb_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~fdt_node_t();
-
-    private:
-        fdt_t m_type;
-        std::unique_ptr<kaitai::kstruct> m_body;
-        bool n_body;
-
-    public:
-        bool _is_null_body() { body(); return n_body; };
-
-    private:
-        dtb_t* m__root;
-        dtb_t::fdt_block_t* m__parent;
-
-    public:
-        fdt_t type() const { return m_type; }
-        kaitai::kstruct* body() const { return m_body.get(); }
-        dtb_t* _root() const { return m__root; }
-        dtb_t::fdt_block_t* _parent() const { return m__parent; }
-    };
-
-    class fdt_begin_node_t : public kaitai::kstruct {
-
-    public:
-
-        fdt_begin_node_t(kaitai::kstream* p__io, dtb_t::fdt_node_t* p__parent = nullptr, dtb_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~fdt_begin_node_t();
-
-    private:
-        std::string m_name;
-        std::string m_padding;
-        dtb_t* m__root;
-        dtb_t::fdt_node_t* m__parent;
-
-    public:
-        std::string name() const { return m_name; }
-        std::string padding() const { return m_padding; }
-        dtb_t* _root() const { return m__root; }
-        dtb_t::fdt_node_t* _parent() const { return m__parent; }
-    };
-
 private:
     bool f_memory_reservation_block;
     std::unique_ptr<memory_block_t> m_memory_reservation_block;
@@ -274,18 +283,18 @@ public:
     memory_block_t* memory_reservation_block();
 
 private:
-    bool f_structure_block;
-    std::unique_ptr<fdt_block_t> m_structure_block;
-
-public:
-    fdt_block_t* structure_block();
-
-private:
     bool f_strings_block;
     std::unique_ptr<strings_t> m_strings_block;
 
 public:
     strings_t* strings_block();
+
+private:
+    bool f_structure_block;
+    std::unique_ptr<fdt_block_t> m_structure_block;
+
+public:
+    fdt_block_t* structure_block();
 
 private:
     std::string m_magic;
@@ -302,10 +311,10 @@ private:
     kaitai::kstruct* m__parent;
     std::string m__raw_memory_reservation_block;
     std::unique_ptr<kaitai::kstream> m__io__raw_memory_reservation_block;
-    std::string m__raw_structure_block;
-    std::unique_ptr<kaitai::kstream> m__io__raw_structure_block;
     std::string m__raw_strings_block;
     std::unique_ptr<kaitai::kstream> m__io__raw_strings_block;
+    std::string m__raw_structure_block;
+    std::unique_ptr<kaitai::kstream> m__io__raw_structure_block;
 
 public:
     std::string magic() const { return m_magic; }
@@ -322,8 +331,8 @@ public:
     kaitai::kstruct* _parent() const { return m__parent; }
     std::string _raw_memory_reservation_block() const { return m__raw_memory_reservation_block; }
     kaitai::kstream* _io__raw_memory_reservation_block() const { return m__io__raw_memory_reservation_block.get(); }
-    std::string _raw_structure_block() const { return m__raw_structure_block; }
-    kaitai::kstream* _io__raw_structure_block() const { return m__io__raw_structure_block.get(); }
     std::string _raw_strings_block() const { return m__raw_strings_block; }
     kaitai::kstream* _io__raw_strings_block() const { return m__io__raw_strings_block.get(); }
+    std::string _raw_structure_block() const { return m__raw_structure_block; }
+    kaitai::kstream* _io__raw_structure_block() const { return m__io__raw_structure_block.get(); }
 };

@@ -5,7 +5,7 @@
 
 android_opengl_shaders_cache_t::android_opengl_shaders_cache_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, android_opengl_shaders_cache_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     m_contents = nullptr;
     m__io__raw_contents = nullptr;
     _read();
@@ -13,8 +13,8 @@ android_opengl_shaders_cache_t::android_opengl_shaders_cache_t(kaitai::kstream* 
 
 void android_opengl_shaders_cache_t::_read() {
     m_magic = m__io->read_bytes(4);
-    if (!(magic() == std::string("\x45\x47\x4C\x24", 4))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\x45\x47\x4C\x24", 4), magic(), _io(), std::string("/seq/0"));
+    if (!(m_magic == std::string("\x45\x47\x4C\x24", 4))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\x45\x47\x4C\x24", 4), m_magic, m__io, std::string("/seq/0"));
     }
     m_crc32 = m__io->read_u4le();
     m__raw_contents = m__io->read_bytes_full();
@@ -36,7 +36,7 @@ android_opengl_shaders_cache_t::alignment_t::alignment_t(kaitai::kstream* p__io,
 }
 
 void android_opengl_shaders_cache_t::alignment_t::_read() {
-    m_alignment = m__io->read_bytes(((_io()->pos() + 3) & (~3 - _io()->pos())));
+    m_alignment = m__io->read_bytes(_io()->pos() + 3 & ~3 - _io()->pos());
 }
 
 android_opengl_shaders_cache_t::alignment_t::~alignment_t() {
@@ -44,26 +44,6 @@ android_opengl_shaders_cache_t::alignment_t::~alignment_t() {
 }
 
 void android_opengl_shaders_cache_t::alignment_t::_clean_up() {
-}
-
-android_opengl_shaders_cache_t::prefixed_string_t::prefixed_string_t(kaitai::kstream* p__io, android_opengl_shaders_cache_t::cache_t* p__parent, android_opengl_shaders_cache_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    m_alignment = nullptr;
-    _read();
-}
-
-void android_opengl_shaders_cache_t::prefixed_string_t::_read() {
-    m_len_str = m__io->read_u4le();
-    m_str = kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_terminate(m__io->read_bytes(len_str()), 0, false), std::string("ascii"));
-    m_alignment = std::unique_ptr<alignment_t>(new alignment_t(m__io, this, m__root));
-}
-
-android_opengl_shaders_cache_t::prefixed_string_t::~prefixed_string_t() {
-    _clean_up();
-}
-
-void android_opengl_shaders_cache_t::prefixed_string_t::_clean_up() {
 }
 
 android_opengl_shaders_cache_t::cache_t::cache_t(kaitai::kstream* p__io, android_opengl_shaders_cache_t* p__parent, android_opengl_shaders_cache_t* p__root) : kaitai::kstruct(p__io) {
@@ -76,8 +56,8 @@ android_opengl_shaders_cache_t::cache_t::cache_t(kaitai::kstream* p__io, android
 
 void android_opengl_shaders_cache_t::cache_t::_read() {
     m_magic = m__io->read_bytes(4);
-    if (!(magic() == std::string("\x24\x62\x42\x5F", 4))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\x24\x62\x42\x5F", 4), magic(), _io(), std::string("/types/cache/seq/0"));
+    if (!(m_magic == std::string("\x24\x62\x42\x5F", 4))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\x24\x62\x42\x5F", 4), m_magic, m__io, std::string("/types/cache/seq/0"));
     }
     m_version = m__io->read_u4le();
     m_device_version = m__io->read_u4le();
@@ -123,4 +103,24 @@ android_opengl_shaders_cache_t::cache_t::entry_t::~entry_t() {
 }
 
 void android_opengl_shaders_cache_t::cache_t::entry_t::_clean_up() {
+}
+
+android_opengl_shaders_cache_t::prefixed_string_t::prefixed_string_t(kaitai::kstream* p__io, android_opengl_shaders_cache_t::cache_t* p__parent, android_opengl_shaders_cache_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_alignment = nullptr;
+    _read();
+}
+
+void android_opengl_shaders_cache_t::prefixed_string_t::_read() {
+    m_len_str = m__io->read_u4le();
+    m_str = kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_terminate(m__io->read_bytes(len_str()), 0, false), "ASCII");
+    m_alignment = std::unique_ptr<alignment_t>(new alignment_t(m__io, this, m__root));
+}
+
+android_opengl_shaders_cache_t::prefixed_string_t::~prefixed_string_t() {
+    _clean_up();
+}
+
+void android_opengl_shaders_cache_t::prefixed_string_t::_clean_up() {
 }

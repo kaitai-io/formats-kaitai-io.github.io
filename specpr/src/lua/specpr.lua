@@ -44,12 +44,55 @@ function Specpr:_read()
 end
 
 
+Specpr.CoarseTimestamp = class.class(KaitaiStruct)
+
+function Specpr.CoarseTimestamp:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Specpr.CoarseTimestamp:_read()
+  self.scaled_seconds = self._io:read_s4be()
+end
+
+Specpr.CoarseTimestamp.property.seconds = {}
+function Specpr.CoarseTimestamp.property.seconds:get()
+  if self._m_seconds ~= nil then
+    return self._m_seconds
+  end
+
+  self._m_seconds = self.scaled_seconds * 24000
+  return self._m_seconds
+end
+
+
+Specpr.DataContinuation = class.class(KaitaiStruct)
+
+function Specpr.DataContinuation:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Specpr.DataContinuation:_read()
+  self.cdata = {}
+  for i = 0, 383 - 1 do
+    self.cdata[i + 1] = self._io:read_f4be()
+  end
+end
+
+-- 
+-- The continuation of the data values (383 channels of 32 bit real numbers).
+
 Specpr.DataInitial = class.class(KaitaiStruct)
 
 function Specpr.DataInitial:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -73,10 +116,10 @@ function Specpr.DataInitial:_read()
   self.irespt = self._io:read_s4be()
   self.irecno = self._io:read_s4be()
   self.itpntr = self._io:read_s4be()
-  self.ihist = str_decode.decode(KaitaiStream.bytes_strip_right(self._io:read_bytes(60), 32), "ascii")
+  self.ihist = str_decode.decode(KaitaiStream.bytes_strip_right(self._io:read_bytes(60), 32), "ASCII")
   self.mhist = {}
   for i = 0, 4 - 1 do
-    self.mhist[i + 1] = str_decode.decode(self._io:read_bytes(74), "ascii")
+    self.mhist[i + 1] = str_decode.decode(self._io:read_bytes(74), "ASCII")
   end
   self.nruns = self._io:read_s4be()
   self.siangl = Specpr.IllumAngle(self._io, self, self._root)
@@ -102,7 +145,7 @@ function Specpr.DataInitial.property.phase_angle_arcsec:get()
     return self._m_phase_angle_arcsec
   end
 
-  self._m_phase_angle_arcsec = (self.sphase / 1500)
+  self._m_phase_angle_arcsec = self.sphase / 1500
   return self._m_phase_angle_arcsec
 end
 
@@ -168,30 +211,6 @@ end
 -- 
 -- The spectral data (256 channels of 32 bit real data numbers).
 
-Specpr.CoarseTimestamp = class.class(KaitaiStruct)
-
-function Specpr.CoarseTimestamp:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Specpr.CoarseTimestamp:_read()
-  self.scaled_seconds = self._io:read_s4be()
-end
-
-Specpr.CoarseTimestamp.property.seconds = {}
-function Specpr.CoarseTimestamp.property.seconds:get()
-  if self._m_seconds ~= nil then
-    return self._m_seconds
-  end
-
-  self._m_seconds = (self.scaled_seconds * 24000)
-  return self._m_seconds
-end
-
-
 -- 
 -- it is big endian.
 Specpr.Icflag = class.class(KaitaiStruct)
@@ -199,7 +218,7 @@ Specpr.Icflag = class.class(KaitaiStruct)
 function Specpr.Icflag:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -219,7 +238,7 @@ function Specpr.Icflag.property.type:get()
     return self._m_type
   end
 
-  self._m_type = Specpr.RecordType((((self.text and 1 or 0) * 1) + ((self.continuation and 1 or 0) * 2)))
+  self._m_type = Specpr.RecordType((self.text and 1 or 0) * 1 + (self.continuation and 1 or 0) * 2)
   return self._m_type
 end
 
@@ -249,37 +268,18 @@ end
 --   # channels (limited by arrays of 4864)
 --   # or 19860 characters of text (bit 1=1).
 
-Specpr.DataContinuation = class.class(KaitaiStruct)
-
-function Specpr.DataContinuation:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Specpr.DataContinuation:_read()
-  self.cdata = {}
-  for i = 0, 383 - 1 do
-    self.cdata[i + 1] = self._io:read_f4be()
-  end
-end
-
--- 
--- The continuation of the data values (383 channels of 32 bit real numbers).
-
 Specpr.Identifiers = class.class(KaitaiStruct)
 
 function Specpr.Identifiers:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function Specpr.Identifiers:_read()
-  self.ititle = str_decode.decode(KaitaiStream.bytes_strip_right(self._io:read_bytes(40), 32), "ascii")
-  self.usernm = str_decode.decode(self._io:read_bytes(8), "ascii")
+  self.ititle = str_decode.decode(KaitaiStream.bytes_strip_right(self._io:read_bytes(40), 32), "ASCII")
+  self.usernm = str_decode.decode(self._io:read_bytes(8), "ASCII")
 end
 
 -- 
@@ -292,32 +292,12 @@ Specpr.IllumAngle = class.class(KaitaiStruct)
 function Specpr.IllumAngle:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function Specpr.IllumAngle:_read()
   self.angl = self._io:read_s4be()
-end
-
-Specpr.IllumAngle.property.seconds_total = {}
-function Specpr.IllumAngle.property.seconds_total:get()
-  if self._m_seconds_total ~= nil then
-    return self._m_seconds_total
-  end
-
-  self._m_seconds_total = math.floor(self.angl / 6000)
-  return self._m_seconds_total
-end
-
-Specpr.IllumAngle.property.minutes_total = {}
-function Specpr.IllumAngle.property.minutes_total:get()
-  if self._m_minutes_total ~= nil then
-    return self._m_minutes_total
-  end
-
-  self._m_minutes_total = math.floor(self.seconds_total / 60)
-  return self._m_minutes_total
 end
 
 Specpr.IllumAngle.property.degrees_total = {}
@@ -330,62 +310,59 @@ function Specpr.IllumAngle.property.degrees_total:get()
   return self._m_degrees_total
 end
 
+Specpr.IllumAngle.property.minutes_total = {}
+function Specpr.IllumAngle.property.minutes_total:get()
+  if self._m_minutes_total ~= nil then
+    return self._m_minutes_total
+  end
+
+  self._m_minutes_total = math.floor(self.seconds_total / 60)
+  return self._m_minutes_total
+end
+
+Specpr.IllumAngle.property.seconds_total = {}
+function Specpr.IllumAngle.property.seconds_total:get()
+  if self._m_seconds_total ~= nil then
+    return self._m_seconds_total
+  end
+
+  self._m_seconds_total = math.floor(self.angl / 6000)
+  return self._m_seconds_total
+end
+
 -- 
 -- (Integer*4 number, in arc-seconds*6000). (90 degrees=1944000000; -90 deg <= angle <= 90 deg)
-
-Specpr.TextInitial = class.class(KaitaiStruct)
-
-function Specpr.TextInitial:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Specpr.TextInitial:_read()
-  self.ids = Specpr.Identifiers(self._io, self, self._root)
-  self.itxtpt = self._io:read_u4be()
-  self.itxtch = self._io:read_s4be()
-  self.itext = str_decode.decode(self._io:read_bytes(1476), "ascii")
-end
-
--- 
--- Text data record pointer. This pointer points  to a data record where additional text may be may be found.
--- 
--- The number of text characters (maximum= 19860).
--- 
--- 1476 characters of text.  Text has embedded newlines so the number of lines available is limited only by the number of characters available.
 
 Specpr.Record = class.class(KaitaiStruct)
 
 function Specpr.Record:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function Specpr.Record:_read()
   self.icflag = Specpr.Icflag(self._io, self, self._root)
   local _on = self.icflag.type
-  if _on == Specpr.RecordType.data_initial then
-    self._raw_content = self._io:read_bytes((1536 - 4))
-    local _io = KaitaiStream(stringstream(self._raw_content))
-    self.content = Specpr.DataInitial(_io, self, self._root)
-  elseif _on == Specpr.RecordType.data_continuation then
-    self._raw_content = self._io:read_bytes((1536 - 4))
+  if _on == Specpr.RecordType.data_continuation then
+    self._raw_content = self._io:read_bytes(1536 - 4)
     local _io = KaitaiStream(stringstream(self._raw_content))
     self.content = Specpr.DataContinuation(_io, self, self._root)
+  elseif _on == Specpr.RecordType.data_initial then
+    self._raw_content = self._io:read_bytes(1536 - 4)
+    local _io = KaitaiStream(stringstream(self._raw_content))
+    self.content = Specpr.DataInitial(_io, self, self._root)
   elseif _on == Specpr.RecordType.text_continuation then
-    self._raw_content = self._io:read_bytes((1536 - 4))
+    self._raw_content = self._io:read_bytes(1536 - 4)
     local _io = KaitaiStream(stringstream(self._raw_content))
     self.content = Specpr.TextContinuation(_io, self, self._root)
   elseif _on == Specpr.RecordType.text_initial then
-    self._raw_content = self._io:read_bytes((1536 - 4))
+    self._raw_content = self._io:read_bytes(1536 - 4)
     local _io = KaitaiStream(stringstream(self._raw_content))
     self.content = Specpr.TextInitial(_io, self, self._root)
   else
-    self.content = self._io:read_bytes((1536 - 4))
+    self.content = self._io:read_bytes(1536 - 4)
   end
 end
 
@@ -397,14 +374,37 @@ Specpr.TextContinuation = class.class(KaitaiStruct)
 function Specpr.TextContinuation:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function Specpr.TextContinuation:_read()
-  self.tdata = str_decode.decode(self._io:read_bytes(1532), "ascii")
+  self.tdata = str_decode.decode(self._io:read_bytes(1532), "ASCII")
 end
 
 -- 
 -- 1532 characters of text.
+
+Specpr.TextInitial = class.class(KaitaiStruct)
+
+function Specpr.TextInitial:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Specpr.TextInitial:_read()
+  self.ids = Specpr.Identifiers(self._io, self, self._root)
+  self.itxtpt = self._io:read_u4be()
+  self.itxtch = self._io:read_s4be()
+  self.itext = str_decode.decode(self._io:read_bytes(1476), "ASCII")
+end
+
+-- 
+-- Text data record pointer. This pointer points  to a data record where additional text may be may be found.
+-- 
+-- The number of text characters (maximum= 19860).
+-- 
+-- 1476 characters of text.  Text has embedded newlines so the number of lines available is limited only by the number of characters available.
 

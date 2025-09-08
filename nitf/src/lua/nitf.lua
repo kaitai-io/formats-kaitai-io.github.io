@@ -4,8 +4,8 @@
 
 local class = require("class")
 require("kaitaistruct")
-local stringstream = require("string_stream")
 local str_decode = require("string_decode")
+local stringstream = require("string_stream")
 local utils = require("utils")
 
 -- 
@@ -54,81 +54,12 @@ function Nitf:_read()
 end
 
 
-Nitf.ReservedExtensionSegment = class.class(KaitaiStruct)
-
-function Nitf.ReservedExtensionSegment:_init(idx, io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self.idx = idx
-  self:_read()
-end
-
-function Nitf.ReservedExtensionSegment:_read()
-  self._raw_reserved_sub_header = self._io:read_bytes(tonumber(self._parent.header.lrnfo[self.idx + 1].length_reserved_extension_subheader))
-  local _io = KaitaiStream(stringstream(self._raw_reserved_sub_header))
-  self.reserved_sub_header = Nitf.ReservedSubHeader(_io, self, self._root)
-  self.reserved_data_field = self._io:read_bytes(tonumber(self._parent.header.lrnfo[self.idx + 1].length_reserved_extension_segment))
-end
-
-
-Nitf.ImageComment = class.class(KaitaiStruct)
-
-function Nitf.ImageComment:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Nitf.ImageComment:_read()
-  self._unnamed0 = str_decode.decode(self._io:read_bytes(80), "UTF-8")
-end
-
-
-Nitf.LengthReservedInfo = class.class(KaitaiStruct)
-
-function Nitf.LengthReservedInfo:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Nitf.LengthReservedInfo:_read()
-  self.length_reserved_extension_subheader = str_decode.decode(self._io:read_bytes(4), "UTF-8")
-  self.length_reserved_extension_segment = str_decode.decode(self._io:read_bytes(7), "UTF-8")
-end
-
-
-Nitf.Tre = class.class(KaitaiStruct)
-
-function Nitf.Tre:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Nitf.Tre:_read()
-  self.extension_type_id = str_decode.decode(self._io:read_bytes(6), "UTF-8")
-  self.edata_length = str_decode.decode(self._io:read_bytes(5), "UTF-8")
-  self.edata = str_decode.decode(self._io:read_bytes(tonumber(self.edata_length)), "UTF-8")
-end
-
--- 
--- RETAG or CETAG.
--- 
--- REL or CEL.
--- 
--- REDATA or CEDATA.
-
 Nitf.BandInfo = class.class(KaitaiStruct)
 
 function Nitf.BandInfo:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -137,7 +68,7 @@ function Nitf.BandInfo:_read()
   self.subcategory = str_decode.decode(self._io:read_bytes(6), "UTF-8")
   self.img_filter_condition = self._io:read_bytes(1)
   if not(self.img_filter_condition == "\078") then
-    error("not equal, expected " ..  "\078" .. ", but got " .. self.img_filter_condition)
+    error("not equal, expected " .. "\078" .. ", but got " .. self.img_filter_condition)
   end
   self.img_filter_code = str_decode.decode(self._io:read_bytes(3), "UTF-8")
   self.num_luts = str_decode.decode(self._io:read_bytes(1), "UTF-8")
@@ -157,97 +88,12 @@ end
 -- 
 -- Number of entries in each of the LUTs for the nth image band.
 
-Nitf.ImageSegment = class.class(KaitaiStruct)
-
-function Nitf.ImageSegment:_init(idx, io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self.idx = idx
-  self:_read()
-end
-
-function Nitf.ImageSegment:_read()
-  self.image_sub_header = Nitf.ImageSubHeader(self._io, self, self._root)
-  if self.has_mask then
-    self.image_data_mask = Nitf.ImageDataMask(self._io, self, self._root)
-  end
-  if self.has_mask then
-    self.image_data_field = self._io:read_bytes((tonumber(self._parent.header.linfo[self.idx + 1].length_image_segment) - self.image_data_mask.total_size))
-  end
-end
-
-Nitf.ImageSegment.property.has_mask = {}
-function Nitf.ImageSegment.property.has_mask:get()
-  if self._m_has_mask ~= nil then
-    return self._m_has_mask
-  end
-
-  self._m_has_mask = string.sub(self.image_sub_header.img_compression, 0 + 1, 2) == "MM"
-  return self._m_has_mask
-end
-
-
-Nitf.TextSegment = class.class(KaitaiStruct)
-
-function Nitf.TextSegment:_init(idx, io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self.idx = idx
-  self:_read()
-end
-
-function Nitf.TextSegment:_read()
-  self.text_sub_header = self._io:read_bytes(1)
-  self.text_data_field = self._io:read_bytes(tonumber(self._parent.header.ltnfo[self.idx + 1].length_text_segment))
-end
-
-
-Nitf.GraphicSubHeader = class.class(KaitaiStruct)
-
-function Nitf.GraphicSubHeader:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Nitf.GraphicSubHeader:_read()
-  self.file_part_type_sy = self._io:read_bytes(2)
-  if not(self.file_part_type_sy == "\083\089") then
-    error("not equal, expected " ..  "\083\089" .. ", but got " .. self.file_part_type_sy)
-  end
-  self.graphic_id = str_decode.decode(self._io:read_bytes(10), "UTF-8")
-  self.graphic_name = str_decode.decode(self._io:read_bytes(20), "UTF-8")
-  self.graphic_classification = Nitf.Clasnfo(self._io, self, self._root)
-  self.encryption = Nitf.Encrypt(self._io, self, self._root)
-  self.graphic_type = self._io:read_bytes(1)
-  if not(self.graphic_type == "\067") then
-    error("not equal, expected " ..  "\067" .. ", but got " .. self.graphic_type)
-  end
-  self.reserved1 = str_decode.decode(self._io:read_bytes(13), "UTF-8")
-  self.graphic_display_level = str_decode.decode(self._io:read_bytes(3), "UTF-8")
-  self.graphic_attachment_level = str_decode.decode(self._io:read_bytes(3), "UTF-8")
-  self.graphic_location = str_decode.decode(self._io:read_bytes(10), "UTF-8")
-  self.first_graphic_bound_loc = str_decode.decode(self._io:read_bytes(10), "UTF-8")
-  self.graphic_color = str_decode.decode(self._io:read_bytes(1), "UTF-8")
-  self.second_graphic_bound_loc = str_decode.decode(self._io:read_bytes(10), "UTF-8")
-  self.reserved2 = str_decode.decode(self._io:read_bytes(2), "UTF-8")
-  self.graphics_extended_sub_header = Nitf.TreHeader(self._io, self, self._root)
-end
-
--- 
--- Reserved.
--- 
--- Reserved.
-
 Nitf.Clasnfo = class.class(KaitaiStruct)
 
 function Nitf.Clasnfo:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -271,27 +117,156 @@ function Nitf.Clasnfo:_read()
 end
 
 
-Nitf.LengthGraphicInfo = class.class(KaitaiStruct)
+Nitf.DataExtensionSegment = class.class(KaitaiStruct)
 
-function Nitf.LengthGraphicInfo:_init(io, parent, root)
+function Nitf.DataExtensionSegment:_init(idx, io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
+  self.idx = idx
   self:_read()
 end
 
-function Nitf.LengthGraphicInfo:_read()
-  self.length_graphic_subheader = str_decode.decode(self._io:read_bytes(4), "UTF-8")
-  self.length_graphic_segment = str_decode.decode(self._io:read_bytes(6), "UTF-8")
+function Nitf.DataExtensionSegment:_read()
+  self._raw_data_sub_header = self._io:read_bytes(tonumber(self._parent.header.ldnfo[self.idx + 1].length_data_extension_subheader))
+  local _io = KaitaiStream(stringstream(self._raw_data_sub_header))
+  self.data_sub_header = Nitf.DataSubHeader(_io, self, self._root)
+  self.data_data_field = self._io:read_bytes(tonumber(self._parent.header.ldnfo[self.idx + 1].length_data_extension_segment))
 end
 
+
+Nitf.DataSubHeader = class.class(KaitaiStruct)
+
+function Nitf.DataSubHeader:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Nitf.DataSubHeader:_read()
+  self.des_base = Nitf.DataSubHeaderBase(self._io, self, self._root)
+  if self.tre_ofl then
+    self.overflowed_header_type = str_decode.decode(self._io:read_bytes(6), "UTF-8")
+  end
+  if self.tre_ofl then
+    self.data_item_overflowed = str_decode.decode(self._io:read_bytes(3), "UTF-8")
+  end
+  self.des_defined_subheader_fields_len = str_decode.decode(self._io:read_bytes(4), "UTF-8")
+  self.desshf = str_decode.decode(self._io:read_bytes(tonumber(self.des_defined_subheader_fields_len)), "UTF-8")
+  self.des_defined_data_field = str_decode.decode(self._io:read_bytes_full(), "UTF-8")
+end
+
+Nitf.DataSubHeader.property.tre_ofl = {}
+function Nitf.DataSubHeader.property.tre_ofl:get()
+  if self._m_tre_ofl ~= nil then
+    return self._m_tre_ofl
+  end
+
+  self._m_tre_ofl = self.des_base.desid == "TRE_OVERFLOW"
+  return self._m_tre_ofl
+end
+
+
+Nitf.DataSubHeaderBase = class.class(KaitaiStruct)
+
+function Nitf.DataSubHeaderBase:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Nitf.DataSubHeaderBase:_read()
+  self.file_part_type_de = self._io:read_bytes(2)
+  if not(self.file_part_type_de == "\068\069") then
+    error("not equal, expected " .. "\068\069" .. ", but got " .. self.file_part_type_de)
+  end
+  self.desid = str_decode.decode(self._io:read_bytes(25), "UTF-8")
+  self.data_definition_version = str_decode.decode(self._io:read_bytes(2), "UTF-8")
+  self.declasnfo = Nitf.Clasnfo(self._io, self, self._root)
+end
+
+-- 
+-- File Part Type desigantor for Data Extension.
+
+-- 
+-- Streaming file Header Data Extension Segment Subheader.
+Nitf.DataSubHeaderStreaming = class.class(KaitaiStruct)
+
+function Nitf.DataSubHeaderStreaming:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Nitf.DataSubHeaderStreaming:_read()
+  self.des_base = Nitf.DataSubHeaderBase(self._io, self, self._root)
+  self.des_defined_subheader_fields_len = str_decode.decode(self._io:read_bytes(4), "UTF-8")
+  self.sfh_l1 = str_decode.decode(self._io:read_bytes(7), "UTF-8")
+  self.sfh_delim1 = self._io:read_u4be()
+  self.sfh_dr = {}
+  for i = 0, tonumber(self.sfh_l1) - 1 do
+    self.sfh_dr[i + 1] = self._io:read_u1()
+  end
+  self.sfh_delim2 = self._io:read_u4be()
+  self.sfh_l2 = str_decode.decode(self._io:read_bytes(7), "UTF-8")
+end
+
+-- 
+-- SFH Length 1: number of bytes in sfh_dr field.
+-- 
+-- Shall contain the value 0x0A6E1D97.
+-- 
+-- Shall contain the value 0x0ECA14BF.
+-- 
+-- A repeat of sfh_l1.
+
+Nitf.DataSubHeaderTre = class.class(KaitaiStruct)
+
+function Nitf.DataSubHeaderTre:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Nitf.DataSubHeaderTre:_read()
+  self.des_base = Nitf.DataSubHeaderBase(self._io, self, self._root)
+  if self.des_base.desid == "TRE_OVERFLOW" then
+    self.overflowed_header_type = str_decode.decode(self._io:read_bytes(6), "UTF-8")
+  end
+  if self.des_base.desid == "TRE_OVERFLOW" then
+    self.data_item_overflowed = str_decode.decode(self._io:read_bytes(3), "UTF-8")
+  end
+  self.des_defined_subheader_fields_len = str_decode.decode(self._io:read_bytes(4), "UTF-8")
+  self.des_defined_data_field = str_decode.decode(self._io:read_bytes(tonumber(self.des_defined_subheader_fields_len)), "UTF-8")
+end
+
+
+Nitf.DateTime = class.class(KaitaiStruct)
+
+function Nitf.DateTime:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Nitf.DateTime:_read()
+  self._unnamed0 = str_decode.decode(self._io:read_bytes(14), "UTF-8")
+end
+
+-- 
+-- UTC time of image acquisition in the format CCYYMMDDhhmmss: CC century, YY last two digits of the year, MM month, DD day, hh hour, mm minute, ss second.
 
 Nitf.Encrypt = class.class(KaitaiStruct)
 
 function Nitf.Encrypt:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -300,12 +275,148 @@ function Nitf.Encrypt:_read()
 end
 
 
+Nitf.GraphicSubHeader = class.class(KaitaiStruct)
+
+function Nitf.GraphicSubHeader:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Nitf.GraphicSubHeader:_read()
+  self.file_part_type_sy = self._io:read_bytes(2)
+  if not(self.file_part_type_sy == "\083\089") then
+    error("not equal, expected " .. "\083\089" .. ", but got " .. self.file_part_type_sy)
+  end
+  self.graphic_id = str_decode.decode(self._io:read_bytes(10), "UTF-8")
+  self.graphic_name = str_decode.decode(self._io:read_bytes(20), "UTF-8")
+  self.graphic_classification = Nitf.Clasnfo(self._io, self, self._root)
+  self.encryption = Nitf.Encrypt(self._io, self, self._root)
+  self.graphic_type = self._io:read_bytes(1)
+  if not(self.graphic_type == "\067") then
+    error("not equal, expected " .. "\067" .. ", but got " .. self.graphic_type)
+  end
+  self.reserved1 = str_decode.decode(self._io:read_bytes(13), "UTF-8")
+  self.graphic_display_level = str_decode.decode(self._io:read_bytes(3), "UTF-8")
+  self.graphic_attachment_level = str_decode.decode(self._io:read_bytes(3), "UTF-8")
+  self.graphic_location = str_decode.decode(self._io:read_bytes(10), "UTF-8")
+  self.first_graphic_bound_loc = str_decode.decode(self._io:read_bytes(10), "UTF-8")
+  self.graphic_color = str_decode.decode(self._io:read_bytes(1), "UTF-8")
+  self.second_graphic_bound_loc = str_decode.decode(self._io:read_bytes(10), "UTF-8")
+  self.reserved2 = str_decode.decode(self._io:read_bytes(2), "UTF-8")
+  self.graphics_extended_sub_header = Nitf.TreHeader(self._io, self, self._root)
+end
+
+-- 
+-- Reserved.
+-- 
+-- Reserved.
+
+Nitf.GraphicsSegment = class.class(KaitaiStruct)
+
+function Nitf.GraphicsSegment:_init(idx, io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self.idx = idx
+  self:_read()
+end
+
+function Nitf.GraphicsSegment:_read()
+  self.graphic_sub_header = Nitf.GraphicSubHeader(self._io, self, self._root)
+  self.graphic_data_field = self._io:read_bytes(tonumber(self._parent.header.lnnfo[self.idx + 1].length_graphic_segment))
+end
+
+
+Nitf.Header = class.class(KaitaiStruct)
+
+function Nitf.Header:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Nitf.Header:_read()
+  self.file_profile_name = self._io:read_bytes(4)
+  if not(self.file_profile_name == "\078\073\084\070") then
+    error("not equal, expected " .. "\078\073\084\070" .. ", but got " .. self.file_profile_name)
+  end
+  self.file_version = self._io:read_bytes(5)
+  if not(self.file_version == "\048\050\046\049\048") then
+    error("not equal, expected " .. "\048\050\046\049\048" .. ", but got " .. self.file_version)
+  end
+  self.complexity_level = self._io:read_bytes(2)
+  self.standard_type = self._io:read_bytes(4)
+  if not(self.standard_type == "\066\070\048\049") then
+    error("not equal, expected " .. "\066\070\048\049" .. ", but got " .. self.standard_type)
+  end
+  self.originating_station_id = str_decode.decode(self._io:read_bytes(10), "UTF-8")
+  self.file_date_time = Nitf.DateTime(self._io, self, self._root)
+  self.file_title = str_decode.decode(self._io:read_bytes(80), "UTF-8")
+  self.file_security = Nitf.Clasnfo(self._io, self, self._root)
+  self.file_copy_number = str_decode.decode(self._io:read_bytes(5), "UTF-8")
+  self.file_num_of_copys = str_decode.decode(self._io:read_bytes(5), "UTF-8")
+  self.encryption = Nitf.Encrypt(self._io, self, self._root)
+  self.file_bg_color = self._io:read_bytes(3)
+  self.originator_name = str_decode.decode(self._io:read_bytes(24), "UTF-8")
+  self.originator_phone = str_decode.decode(self._io:read_bytes(18), "UTF-8")
+  self.file_length = str_decode.decode(self._io:read_bytes(12), "UTF-8")
+  self.file_header_length = str_decode.decode(self._io:read_bytes(6), "UTF-8")
+  self.num_image_segments = str_decode.decode(self._io:read_bytes(3), "UTF-8")
+  self.linfo = {}
+  for i = 0, tonumber(self.num_image_segments) - 1 do
+    self.linfo[i + 1] = Nitf.LengthImageInfo(self._io, self, self._root)
+  end
+  self.num_graphics_segments = str_decode.decode(self._io:read_bytes(3), "UTF-8")
+  self.lnnfo = {}
+  for i = 0, tonumber(self.num_graphics_segments) - 1 do
+    self.lnnfo[i + 1] = Nitf.LengthGraphicInfo(self._io, self, self._root)
+  end
+  self.reserved_numx = str_decode.decode(self._io:read_bytes(3), "UTF-8")
+  self.num_text_files = str_decode.decode(self._io:read_bytes(3), "UTF-8")
+  self.ltnfo = {}
+  for i = 0, tonumber(self.num_text_files) - 1 do
+    self.ltnfo[i + 1] = Nitf.LengthTextInfo(self._io, self, self._root)
+  end
+  self.num_data_extension = str_decode.decode(self._io:read_bytes(3), "UTF-8")
+  self.ldnfo = {}
+  for i = 0, tonumber(self.num_data_extension) - 1 do
+    self.ldnfo[i + 1] = Nitf.LengthDataInfo(self._io, self, self._root)
+  end
+  self.num_reserved_extension = str_decode.decode(self._io:read_bytes(3), "UTF-8")
+  self.lrnfo = {}
+  for i = 0, tonumber(self.num_reserved_extension) - 1 do
+    self.lrnfo[i + 1] = Nitf.LengthReservedInfo(self._io, self, self._root)
+  end
+  self.user_defined_header = Nitf.TreHeader(self._io, self, self._root)
+  self.extended_header = Nitf.TreHeader(self._io, self, self._root)
+end
+
+-- 
+-- Value of BF01 indicates the file is formatted using ISO/IEC IS 12087-5.
+
+Nitf.ImageComment = class.class(KaitaiStruct)
+
+function Nitf.ImageComment:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Nitf.ImageComment:_read()
+  self._unnamed0 = str_decode.decode(self._io:read_bytes(80), "UTF-8")
+end
+
+
 Nitf.ImageDataMask = class.class(KaitaiStruct)
 
 function Nitf.ImageDataMask:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -327,6 +438,26 @@ function Nitf.ImageDataMask:_read()
       self.tmrbnd[i + 1] = self._io:read_u4be()
     end
   end
+end
+
+Nitf.ImageDataMask.property.bmrbnd_size = {}
+function Nitf.ImageDataMask.property.bmrbnd_size:get()
+  if self._m_bmrbnd_size ~= nil then
+    return self._m_bmrbnd_size
+  end
+
+  self._m_bmrbnd_size = utils.box_unwrap((self.has_bmr) and utils.box_wrap(self.bmrtmr_count * 4) or (0))
+  return self._m_bmrbnd_size
+end
+
+Nitf.ImageDataMask.property.bmrtmr_count = {}
+function Nitf.ImageDataMask.property.bmrtmr_count:get()
+  if self._m_bmrtmr_count ~= nil then
+    return self._m_bmrtmr_count
+  end
+
+  self._m_bmrtmr_count = (tonumber(self._parent.image_sub_header.num_blocks_per_row) * tonumber(self._parent.image_sub_header.num_blocks_per_col)) * utils.box_unwrap((self._parent.image_sub_header.img_mode ~= "S") and utils.box_wrap(1) or (utils.box_unwrap((tonumber(self._parent.image_sub_header.num_bands) ~= 0) and utils.box_wrap(tonumber(self._parent.image_sub_header.num_bands)) or (tonumber(self._parent.image_sub_header.num_multispectral_bands)))))
+  return self._m_bmrtmr_count
 end
 
 Nitf.ImageDataMask.property.has_bmr = {}
@@ -355,18 +486,8 @@ function Nitf.ImageDataMask.property.tmrbnd_size:get()
     return self._m_tmrbnd_size
   end
 
-  self._m_tmrbnd_size = utils.box_unwrap((self.has_tmr) and utils.box_wrap((self.bmrtmr_count * 4)) or (0))
+  self._m_tmrbnd_size = utils.box_unwrap((self.has_tmr) and utils.box_wrap(self.bmrtmr_count * 4) or (0))
   return self._m_tmrbnd_size
-end
-
-Nitf.ImageDataMask.property.tpxcd_size = {}
-function Nitf.ImageDataMask.property.tpxcd_size:get()
-  if self._m_tpxcd_size ~= nil then
-    return self._m_tpxcd_size
-  end
-
-  self._m_tpxcd_size = math.floor(utils.box_unwrap(((self.tpxcdlnth % 8) == 0) and utils.box_wrap(self.tpxcdlnth) or ((self.tpxcdlnth + (8 - (self.tpxcdlnth % 8))))) / 8)
-  return self._m_tpxcd_size
 end
 
 Nitf.ImageDataMask.property.total_size = {}
@@ -375,28 +496,18 @@ function Nitf.ImageDataMask.property.total_size:get()
     return self._m_total_size
   end
 
-  self._m_total_size = ((((((4 + 2) + 2) + 2) + self.tpxcd_size) + self.bmrbnd_size) + self.tmrbnd_size)
+  self._m_total_size = (((((4 + 2) + 2) + 2) + self.tpxcd_size) + self.bmrbnd_size) + self.tmrbnd_size
   return self._m_total_size
 end
 
-Nitf.ImageDataMask.property.bmrbnd_size = {}
-function Nitf.ImageDataMask.property.bmrbnd_size:get()
-  if self._m_bmrbnd_size ~= nil then
-    return self._m_bmrbnd_size
+Nitf.ImageDataMask.property.tpxcd_size = {}
+function Nitf.ImageDataMask.property.tpxcd_size:get()
+  if self._m_tpxcd_size ~= nil then
+    return self._m_tpxcd_size
   end
 
-  self._m_bmrbnd_size = utils.box_unwrap((self.has_bmr) and utils.box_wrap((self.bmrtmr_count * 4)) or (0))
-  return self._m_bmrbnd_size
-end
-
-Nitf.ImageDataMask.property.bmrtmr_count = {}
-function Nitf.ImageDataMask.property.bmrtmr_count:get()
-  if self._m_bmrtmr_count ~= nil then
-    return self._m_bmrtmr_count
-  end
-
-  self._m_bmrtmr_count = ((tonumber(self._parent.image_sub_header.num_blocks_per_row) * tonumber(self._parent.image_sub_header.num_blocks_per_col)) * utils.box_unwrap((self._parent.image_sub_header.img_mode ~= "S") and utils.box_wrap(1) or (utils.box_unwrap((tonumber(self._parent.image_sub_header.num_bands) ~= 0) and utils.box_wrap(tonumber(self._parent.image_sub_header.num_bands)) or (tonumber(self._parent.image_sub_header.num_multispectral_bands))))))
-  return self._m_bmrtmr_count
+  self._m_tpxcd_size = math.floor(utils.box_unwrap((self.tpxcdlnth % 8 == 0) and utils.box_wrap(self.tpxcdlnth) or (self.tpxcdlnth + (8 - self.tpxcdlnth % 8))) / 8)
+  return self._m_tpxcd_size
 end
 
 -- 
@@ -412,92 +523,34 @@ end
 -- 
 -- Pad Pixel n, Band m.
 
-Nitf.GraphicsSegment = class.class(KaitaiStruct)
+Nitf.ImageSegment = class.class(KaitaiStruct)
 
-function Nitf.GraphicsSegment:_init(idx, io, parent, root)
+function Nitf.ImageSegment:_init(idx, io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self.idx = idx
   self:_read()
 end
 
-function Nitf.GraphicsSegment:_read()
-  self.graphic_sub_header = Nitf.GraphicSubHeader(self._io, self, self._root)
-  self.graphic_data_field = self._io:read_bytes(tonumber(self._parent.header.lnnfo[self.idx + 1].length_graphic_segment))
-end
-
-
-Nitf.DataSubHeader = class.class(KaitaiStruct)
-
-function Nitf.DataSubHeader:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Nitf.DataSubHeader:_read()
-  self.des_base = Nitf.DataSubHeaderBase(self._io, self, self._root)
-  if self.tre_ofl then
-    self.overflowed_header_type = str_decode.decode(self._io:read_bytes(6), "UTF-8")
+function Nitf.ImageSegment:_read()
+  self.image_sub_header = Nitf.ImageSubHeader(self._io, self, self._root)
+  if self.has_mask then
+    self.image_data_mask = Nitf.ImageDataMask(self._io, self, self._root)
   end
-  if self.tre_ofl then
-    self.data_item_overflowed = str_decode.decode(self._io:read_bytes(3), "UTF-8")
+  if self.has_mask then
+    self.image_data_field = self._io:read_bytes(tonumber(self._parent.header.linfo[self.idx + 1].length_image_segment) - self.image_data_mask.total_size)
   end
-  self.des_defined_subheader_fields_len = str_decode.decode(self._io:read_bytes(4), "UTF-8")
-  self.desshf = str_decode.decode(self._io:read_bytes(tonumber(self.des_defined_subheader_fields_len)), "UTF-8")
-  self.des_defined_data_field = str_decode.decode(self._io:read_bytes_full(), "UTF-8")
 end
 
-Nitf.DataSubHeader.property.tre_ofl = {}
-function Nitf.DataSubHeader.property.tre_ofl:get()
-  if self._m_tre_ofl ~= nil then
-    return self._m_tre_ofl
+Nitf.ImageSegment.property.has_mask = {}
+function Nitf.ImageSegment.property.has_mask:get()
+  if self._m_has_mask ~= nil then
+    return self._m_has_mask
   end
 
-  self._m_tre_ofl = self.des_base.desid == "TRE_OVERFLOW"
-  return self._m_tre_ofl
-end
-
-
-Nitf.DataExtensionSegment = class.class(KaitaiStruct)
-
-function Nitf.DataExtensionSegment:_init(idx, io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self.idx = idx
-  self:_read()
-end
-
-function Nitf.DataExtensionSegment:_read()
-  self._raw_data_sub_header = self._io:read_bytes(tonumber(self._parent.header.ldnfo[self.idx + 1].length_data_extension_subheader))
-  local _io = KaitaiStream(stringstream(self._raw_data_sub_header))
-  self.data_sub_header = Nitf.DataSubHeader(_io, self, self._root)
-  self.data_data_field = self._io:read_bytes(tonumber(self._parent.header.ldnfo[self.idx + 1].length_data_extension_segment))
-end
-
-
-Nitf.DataSubHeaderTre = class.class(KaitaiStruct)
-
-function Nitf.DataSubHeaderTre:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Nitf.DataSubHeaderTre:_read()
-  self.des_base = Nitf.DataSubHeaderBase(self._io, self, self._root)
-  if self.des_base.desid == "TRE_OVERFLOW" then
-    self.overflowed_header_type = str_decode.decode(self._io:read_bytes(6), "UTF-8")
-  end
-  if self.des_base.desid == "TRE_OVERFLOW" then
-    self.data_item_overflowed = str_decode.decode(self._io:read_bytes(3), "UTF-8")
-  end
-  self.des_defined_subheader_fields_len = str_decode.decode(self._io:read_bytes(4), "UTF-8")
-  self.des_defined_data_field = str_decode.decode(self._io:read_bytes(tonumber(self.des_defined_subheader_fields_len)), "UTF-8")
+  self._m_has_mask = string.sub(self.image_sub_header.img_compression, 0 + 1, 2) == "MM"
+  return self._m_has_mask
 end
 
 
@@ -506,14 +559,14 @@ Nitf.ImageSubHeader = class.class(KaitaiStruct)
 function Nitf.ImageSubHeader:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function Nitf.ImageSubHeader:_read()
   self.file_part_type = self._io:read_bytes(2)
   if not(self.file_part_type == "\073\077") then
-    error("not equal, expected " ..  "\073\077" .. ", but got " .. self.file_part_type)
+    error("not equal, expected " .. "\073\077" .. ", but got " .. self.file_part_type)
   end
   self.image_id_1 = str_decode.decode(self._io:read_bytes(10), "UTF-8")
   self.image_date_time = Nitf.DateTime(self._io, self, self._root)
@@ -563,7 +616,7 @@ function Nitf.ImageSubHeader:_read()
   end
   if tonumber(self.user_def_img_data_len) > 2 then
     self.user_def_img_data = {}
-    for i = 0, (tonumber(self.user_def_img_data_len) - 3) - 1 do
+    for i = 0, tonumber(self.user_def_img_data_len) - 3 - 1 do
       self.user_def_img_data[i + 1] = self._io:read_u1()
     end
   end
@@ -581,19 +634,112 @@ end
 -- 
 -- B = Band Interleaved by Block, P = Band Interleaved by Pixel, R = Band Interleaved by Row, S = Band Sequential.
 
+Nitf.LengthDataInfo = class.class(KaitaiStruct)
+
+function Nitf.LengthDataInfo:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Nitf.LengthDataInfo:_read()
+  self.length_data_extension_subheader = str_decode.decode(self._io:read_bytes(4), "UTF-8")
+  self.length_data_extension_segment = str_decode.decode(self._io:read_bytes(9), "UTF-8")
+end
+
+
+Nitf.LengthGraphicInfo = class.class(KaitaiStruct)
+
+function Nitf.LengthGraphicInfo:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Nitf.LengthGraphicInfo:_read()
+  self.length_graphic_subheader = str_decode.decode(self._io:read_bytes(4), "UTF-8")
+  self.length_graphic_segment = str_decode.decode(self._io:read_bytes(6), "UTF-8")
+end
+
+
+Nitf.LengthImageInfo = class.class(KaitaiStruct)
+
+function Nitf.LengthImageInfo:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Nitf.LengthImageInfo:_read()
+  self.length_image_subheader = str_decode.decode(self._io:read_bytes(6), "UTF-8")
+  self.length_image_segment = str_decode.decode(self._io:read_bytes(10), "UTF-8")
+end
+
+
+Nitf.LengthReservedInfo = class.class(KaitaiStruct)
+
+function Nitf.LengthReservedInfo:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Nitf.LengthReservedInfo:_read()
+  self.length_reserved_extension_subheader = str_decode.decode(self._io:read_bytes(4), "UTF-8")
+  self.length_reserved_extension_segment = str_decode.decode(self._io:read_bytes(7), "UTF-8")
+end
+
+
+Nitf.LengthTextInfo = class.class(KaitaiStruct)
+
+function Nitf.LengthTextInfo:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Nitf.LengthTextInfo:_read()
+  self.length_text_subheader = str_decode.decode(self._io:read_bytes(4), "UTF-8")
+  self.length_text_segment = str_decode.decode(self._io:read_bytes(5), "UTF-8")
+end
+
+
+Nitf.ReservedExtensionSegment = class.class(KaitaiStruct)
+
+function Nitf.ReservedExtensionSegment:_init(idx, io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self.idx = idx
+  self:_read()
+end
+
+function Nitf.ReservedExtensionSegment:_read()
+  self._raw_reserved_sub_header = self._io:read_bytes(tonumber(self._parent.header.lrnfo[self.idx + 1].length_reserved_extension_subheader))
+  local _io = KaitaiStream(stringstream(self._raw_reserved_sub_header))
+  self.reserved_sub_header = Nitf.ReservedSubHeader(_io, self, self._root)
+  self.reserved_data_field = self._io:read_bytes(tonumber(self._parent.header.lrnfo[self.idx + 1].length_reserved_extension_segment))
+end
+
+
 Nitf.ReservedSubHeader = class.class(KaitaiStruct)
 
 function Nitf.ReservedSubHeader:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function Nitf.ReservedSubHeader:_read()
   self.file_part_type_re = self._io:read_bytes(2)
   if not(self.file_part_type_re == "\082\069") then
-    error("not equal, expected " ..  "\082\069" .. ", but got " .. self.file_part_type_re)
+    error("not equal, expected " .. "\082\069" .. ", but got " .. self.file_part_type_re)
   end
   self.res_type_id = str_decode.decode(self._io:read_bytes(25), "UTF-8")
   self.res_version = str_decode.decode(self._io:read_bytes(2), "UTF-8")
@@ -604,34 +750,28 @@ function Nitf.ReservedSubHeader:_read()
 end
 
 
-Nitf.DataSubHeaderBase = class.class(KaitaiStruct)
+Nitf.TextSegment = class.class(KaitaiStruct)
 
-function Nitf.DataSubHeaderBase:_init(io, parent, root)
+function Nitf.TextSegment:_init(idx, io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
+  self.idx = idx
   self:_read()
 end
 
-function Nitf.DataSubHeaderBase:_read()
-  self.file_part_type_de = self._io:read_bytes(2)
-  if not(self.file_part_type_de == "\068\069") then
-    error("not equal, expected " ..  "\068\069" .. ", but got " .. self.file_part_type_de)
-  end
-  self.desid = str_decode.decode(self._io:read_bytes(25), "UTF-8")
-  self.data_definition_version = str_decode.decode(self._io:read_bytes(2), "UTF-8")
-  self.declasnfo = Nitf.Clasnfo(self._io, self, self._root)
+function Nitf.TextSegment:_read()
+  self.text_sub_header = self._io:read_bytes(1)
+  self.text_data_field = self._io:read_bytes(tonumber(self._parent.header.ltnfo[self.idx + 1].length_text_segment))
 end
 
--- 
--- File Part Type desigantor for Data Extension.
 
 Nitf.TextSubHeader = class.class(KaitaiStruct)
 
 function Nitf.TextSubHeader:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -647,129 +787,34 @@ end
 -- 
 -- MTF (USMTF see MIL-STD-6040), STA (indicates BCS), UT1 (indicates ECS), U8S.
 
-Nitf.DateTime = class.class(KaitaiStruct)
+Nitf.Tre = class.class(KaitaiStruct)
 
-function Nitf.DateTime:_init(io, parent, root)
+function Nitf.Tre:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function Nitf.DateTime:_read()
-  self._unnamed0 = str_decode.decode(self._io:read_bytes(14), "UTF-8")
+function Nitf.Tre:_read()
+  self.extension_type_id = str_decode.decode(self._io:read_bytes(6), "UTF-8")
+  self.edata_length = str_decode.decode(self._io:read_bytes(5), "UTF-8")
+  self.edata = str_decode.decode(self._io:read_bytes(tonumber(self.edata_length)), "UTF-8")
 end
 
 -- 
--- UTC time of image acquisition in the format CCYYMMDDhhmmss: CC century, YY last two digits of the year, MM month, DD day, hh hour, mm minute, ss second.
-
-Nitf.Header = class.class(KaitaiStruct)
-
-function Nitf.Header:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Nitf.Header:_read()
-  self.file_profile_name = self._io:read_bytes(4)
-  if not(self.file_profile_name == "\078\073\084\070") then
-    error("not equal, expected " ..  "\078\073\084\070" .. ", but got " .. self.file_profile_name)
-  end
-  self.file_version = self._io:read_bytes(5)
-  if not(self.file_version == "\048\050\046\049\048") then
-    error("not equal, expected " ..  "\048\050\046\049\048" .. ", but got " .. self.file_version)
-  end
-  self.complexity_level = self._io:read_bytes(2)
-  self.standard_type = self._io:read_bytes(4)
-  if not(self.standard_type == "\066\070\048\049") then
-    error("not equal, expected " ..  "\066\070\048\049" .. ", but got " .. self.standard_type)
-  end
-  self.originating_station_id = str_decode.decode(self._io:read_bytes(10), "UTF-8")
-  self.file_date_time = Nitf.DateTime(self._io, self, self._root)
-  self.file_title = str_decode.decode(self._io:read_bytes(80), "UTF-8")
-  self.file_security = Nitf.Clasnfo(self._io, self, self._root)
-  self.file_copy_number = str_decode.decode(self._io:read_bytes(5), "UTF-8")
-  self.file_num_of_copys = str_decode.decode(self._io:read_bytes(5), "UTF-8")
-  self.encryption = Nitf.Encrypt(self._io, self, self._root)
-  self.file_bg_color = self._io:read_bytes(3)
-  self.originator_name = str_decode.decode(self._io:read_bytes(24), "UTF-8")
-  self.originator_phone = str_decode.decode(self._io:read_bytes(18), "UTF-8")
-  self.file_length = str_decode.decode(self._io:read_bytes(12), "UTF-8")
-  self.file_header_length = str_decode.decode(self._io:read_bytes(6), "UTF-8")
-  self.num_image_segments = str_decode.decode(self._io:read_bytes(3), "UTF-8")
-  self.linfo = {}
-  for i = 0, tonumber(self.num_image_segments) - 1 do
-    self.linfo[i + 1] = Nitf.LengthImageInfo(self._io, self, self._root)
-  end
-  self.num_graphics_segments = str_decode.decode(self._io:read_bytes(3), "UTF-8")
-  self.lnnfo = {}
-  for i = 0, tonumber(self.num_graphics_segments) - 1 do
-    self.lnnfo[i + 1] = Nitf.LengthGraphicInfo(self._io, self, self._root)
-  end
-  self.reserved_numx = str_decode.decode(self._io:read_bytes(3), "UTF-8")
-  self.num_text_files = str_decode.decode(self._io:read_bytes(3), "UTF-8")
-  self.ltnfo = {}
-  for i = 0, tonumber(self.num_text_files) - 1 do
-    self.ltnfo[i + 1] = Nitf.LengthTextInfo(self._io, self, self._root)
-  end
-  self.num_data_extension = str_decode.decode(self._io:read_bytes(3), "UTF-8")
-  self.ldnfo = {}
-  for i = 0, tonumber(self.num_data_extension) - 1 do
-    self.ldnfo[i + 1] = Nitf.LengthDataInfo(self._io, self, self._root)
-  end
-  self.num_reserved_extension = str_decode.decode(self._io:read_bytes(3), "UTF-8")
-  self.lrnfo = {}
-  for i = 0, tonumber(self.num_reserved_extension) - 1 do
-    self.lrnfo[i + 1] = Nitf.LengthReservedInfo(self._io, self, self._root)
-  end
-  self.user_defined_header = Nitf.TreHeader(self._io, self, self._root)
-  self.extended_header = Nitf.TreHeader(self._io, self, self._root)
-end
-
+-- RETAG or CETAG.
 -- 
--- Value of BF01 indicates the file is formatted using ISO/IEC IS 12087-5.
-
+-- REL or CEL.
 -- 
--- Streaming file Header Data Extension Segment Subheader.
-Nitf.DataSubHeaderStreaming = class.class(KaitaiStruct)
-
-function Nitf.DataSubHeaderStreaming:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Nitf.DataSubHeaderStreaming:_read()
-  self.des_base = Nitf.DataSubHeaderBase(self._io, self, self._root)
-  self.des_defined_subheader_fields_len = str_decode.decode(self._io:read_bytes(4), "UTF-8")
-  self.sfh_l1 = str_decode.decode(self._io:read_bytes(7), "UTF-8")
-  self.sfh_delim1 = self._io:read_u4be()
-  self.sfh_dr = {}
-  for i = 0, tonumber(self.sfh_l1) - 1 do
-    self.sfh_dr[i + 1] = self._io:read_u1()
-  end
-  self.sfh_delim2 = self._io:read_u4be()
-  self.sfh_l2 = str_decode.decode(self._io:read_bytes(7), "UTF-8")
-end
-
--- 
--- SFH Length 1: number of bytes in sfh_dr field.
--- 
--- Shall contain the value 0x0A6E1D97.
--- 
--- Shall contain the value 0x0ECA14BF.
--- 
--- A repeat of sfh_l1.
+-- REDATA or CEDATA.
 
 Nitf.TreHeader = class.class(KaitaiStruct)
 
 function Nitf.TreHeader:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -780,55 +825,10 @@ function Nitf.TreHeader:_read()
   end
   if tonumber(self.header_data_length) > 2 then
     self.header_data = {}
-    for i = 0, (tonumber(self.header_data_length) - 3) - 1 do
+    for i = 0, tonumber(self.header_data_length) - 3 - 1 do
       self.header_data[i + 1] = self._io:read_u1()
     end
   end
-end
-
-
-Nitf.LengthImageInfo = class.class(KaitaiStruct)
-
-function Nitf.LengthImageInfo:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Nitf.LengthImageInfo:_read()
-  self.length_image_subheader = str_decode.decode(self._io:read_bytes(6), "UTF-8")
-  self.length_image_segment = str_decode.decode(self._io:read_bytes(10), "UTF-8")
-end
-
-
-Nitf.LengthDataInfo = class.class(KaitaiStruct)
-
-function Nitf.LengthDataInfo:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Nitf.LengthDataInfo:_read()
-  self.length_data_extension_subheader = str_decode.decode(self._io:read_bytes(4), "UTF-8")
-  self.length_data_extension_segment = str_decode.decode(self._io:read_bytes(9), "UTF-8")
-end
-
-
-Nitf.LengthTextInfo = class.class(KaitaiStruct)
-
-function Nitf.LengthTextInfo:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Nitf.LengthTextInfo:_read()
-  self.length_text_subheader = str_decode.decode(self._io:read_bytes(4), "UTF-8")
-  self.length_text_segment = str_decode.decode(self._io:read_bytes(5), "UTF-8")
 end
 
 

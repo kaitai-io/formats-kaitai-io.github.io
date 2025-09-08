@@ -241,6 +241,11 @@ such as custom file icons.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="Macintosh resource fork data parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="Macintosh resource fork data parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -271,7 +276,17 @@ such as custom file icons.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="Macintosh resource fork data parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="Macintosh resource fork data parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="Macintosh resource fork data parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -411,8 +426,8 @@ can also be found there.</p>
 <span class="w">        </span><span class="p">{</span>
 <span class="w">            </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
 <span class="w">            </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
-<span class="w">            </span><span class="n">f_dataBlocksWithIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
 <span class="w">            </span><span class="n">f_dataBlocks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">            </span><span class="n">f_dataBlocksWithIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
 <span class="w">            </span><span class="n">f_resourceMap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
 <span class="w">            </span><span class="n">_read</span><span class="p">();</span>
 <span class="w">        </span><span class="p">}</span>
@@ -421,6 +436,49 @@ can also be found there.</p>
 <span class="w">            </span><span class="n">_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">FileHeader</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
 <span class="w">            </span><span class="n">_systemData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="mi">112</span><span class="p">);</span>
 <span class="w">            </span><span class="n">_applicationData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="mi">128</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">        </span><span class="c1">/// A resource data block,</span>
+<span class="w">        </span><span class="c1">/// as stored in the resource data area.</span>
+<span class="w">        </span><span class="c1">/// </span>
+<span class="w">        </span><span class="c1">/// Each data block stores the data contained in a resource,</span>
+<span class="w">        </span><span class="c1">/// along with its length.</span>
+<span class="w">        </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">DataBlock</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">DataBlock</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">DataBlock</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="nf">DataBlock</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">ResourceFork</span><span class="p">.</span><span class="n">ResourceMap</span><span class="p">.</span><span class="n">TypeListAndReferenceLists</span><span class="p">.</span><span class="n">ReferenceList</span><span class="p">.</span><span class="n">Reference</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">ResourceFork</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_lenData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+<span class="w">                </span><span class="n">_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenData</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">_lenData</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_data</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">ResourceFork</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">ResourceFork</span><span class="p">.</span><span class="n">ResourceMap</span><span class="p">.</span><span class="n">TypeListAndReferenceLists</span><span class="p">.</span><span class="n">ReferenceList</span><span class="p">.</span><span class="n">Reference</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// The length of the resource data stored in this block.</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">LenData</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_lenData</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// The data stored in this block.</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">Data</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_data</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">ResourceFork</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">ResourceFork</span><span class="p">.</span><span class="n">ResourceMap</span><span class="p">.</span><span class="n">TypeListAndReferenceLists</span><span class="p">.</span><span class="n">ReferenceList</span><span class="p">.</span><span class="n">Reference</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 <span class="w">        </span><span class="p">}</span>
 
 <span class="w">        </span><span class="c1">/// &lt;summary&gt;</span>
@@ -492,49 +550,6 @@ can also be found there.</p>
 <span class="w">        </span><span class="p">}</span>
 
 <span class="w">        </span><span class="c1">/// &lt;summary&gt;</span>
-<span class="w">        </span><span class="c1">/// A resource data block,</span>
-<span class="w">        </span><span class="c1">/// as stored in the resource data area.</span>
-<span class="w">        </span><span class="c1">/// </span>
-<span class="w">        </span><span class="c1">/// Each data block stores the data contained in a resource,</span>
-<span class="w">        </span><span class="c1">/// along with its length.</span>
-<span class="w">        </span><span class="c1">/// &lt;/summary&gt;</span>
-<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">DataBlock</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
-<span class="w">        </span><span class="p">{</span>
-<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">DataBlock</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
-<span class="w">            </span><span class="p">{</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">DataBlock</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-<span class="w">            </span><span class="p">}</span>
-
-<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="nf">DataBlock</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">ResourceFork</span><span class="p">.</span><span class="n">ResourceMap</span><span class="p">.</span><span class="n">TypeListAndReferenceLists</span><span class="p">.</span><span class="n">ReferenceList</span><span class="p">.</span><span class="n">Reference</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">ResourceFork</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-<span class="w">            </span><span class="p">{</span>
-<span class="w">                </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
-<span class="w">                </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
-<span class="w">                </span><span class="n">_read</span><span class="p">();</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
-<span class="w">            </span><span class="p">{</span>
-<span class="w">                </span><span class="n">_lenData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
-<span class="w">                </span><span class="n">_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenData</span><span class="p">);</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">_lenData</span><span class="p">;</span>
-<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_data</span><span class="p">;</span>
-<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">ResourceFork</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
-<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">ResourceFork</span><span class="p">.</span><span class="n">ResourceMap</span><span class="p">.</span><span class="n">TypeListAndReferenceLists</span><span class="p">.</span><span class="n">ReferenceList</span><span class="p">.</span><span class="n">Reference</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
-
-<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
-<span class="w">            </span><span class="c1">/// The length of the resource data stored in this block.</span>
-<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
-<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">uint</span><span class="w"> </span><span class="n">LenData</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_lenData</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
-
-<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
-<span class="w">            </span><span class="c1">/// The data stored in this block.</span>
-<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
-<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">Data</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_data</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
-<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">ResourceFork</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
-<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">ResourceFork</span><span class="p">.</span><span class="n">ResourceMap</span><span class="p">.</span><span class="n">TypeListAndReferenceLists</span><span class="p">.</span><span class="n">ReferenceList</span><span class="p">.</span><span class="n">Reference</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-
-<span class="w">        </span><span class="c1">/// &lt;summary&gt;</span>
 <span class="w">        </span><span class="c1">/// Resource map,</span>
 <span class="w">        </span><span class="c1">/// containing information about the resources in the file and where they are located in the data area.</span>
 <span class="w">        </span><span class="c1">/// &lt;/summary&gt;</span>
@@ -549,9 +564,9 @@ can also be found there.</p>
 <span class="w">            </span><span class="p">{</span>
 <span class="w">                </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
 <span class="w">                </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
-<span class="w">                </span><span class="n">f_typeListAndReferenceLists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
-<span class="w">                </span><span class="n">f_namesWithIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
 <span class="w">                </span><span class="n">f_names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_namesWithIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_typeListAndReferenceLists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
 <span class="w">                </span><span class="n">_read</span><span class="p">();</span>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
@@ -610,11 +625,11 @@ can also be found there.</p>
 <span class="w">                    </span><span class="p">{</span>
 <span class="w">                        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_asInt</span><span class="p">)</span>
 <span class="w">                            </span><span class="k">return</span><span class="w"> </span><span class="n">_asInt</span><span class="p">;</span>
+<span class="w">                        </span><span class="n">f_asInt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
 <span class="w">                        </span><span class="kt">long</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
 <span class="w">                        </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
 <span class="w">                        </span><span class="n">_asInt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
 <span class="w">                        </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
-<span class="w">                        </span><span class="n">f_asInt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
 <span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_asInt</span><span class="p">;</span>
 <span class="w">                    </span><span class="p">}</span>
 <span class="w">                </span><span class="p">}</span>
@@ -694,6 +709,74 @@ can also be found there.</p>
 <span class="w">            </span><span class="p">}</span>
 
 <span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">            </span><span class="c1">/// A resource name,</span>
+<span class="w">            </span><span class="c1">/// as stored in the resource name storage area in the resource map.</span>
+<span class="w">            </span><span class="c1">/// </span>
+<span class="w">            </span><span class="c1">/// The resource names are not required to appear in any particular order.</span>
+<span class="w">            </span><span class="c1">/// There may be unused space between and around resource names,</span>
+<span class="w">            </span><span class="c1">/// but in practice they are often contiguous.</span>
+<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Name</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">Name</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">Name</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">                </span><span class="p">}</span>
+
+<span class="w">                </span><span class="k">public</span><span class="w"> </span><span class="nf">Name</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">ResourceFork</span><span class="p">.</span><span class="n">ResourceMap</span><span class="p">.</span><span class="n">TypeListAndReferenceLists</span><span class="p">.</span><span class="n">ReferenceList</span><span class="p">.</span><span class="n">Reference</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">ResourceFork</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">_lenValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+<span class="w">                    </span><span class="n">_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenValue</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">_lenValue</span><span class="p">;</span>
+<span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_value</span><span class="p">;</span>
+<span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="n">ResourceFork</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="n">ResourceFork</span><span class="p">.</span><span class="n">ResourceMap</span><span class="p">.</span><span class="n">TypeListAndReferenceLists</span><span class="p">.</span><span class="n">ReferenceList</span><span class="p">.</span><span class="n">Reference</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+
+<span class="w">                </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">                </span><span class="c1">/// The length of the resource name, in bytes.</span>
+<span class="w">                </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">                </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">LenValue</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_lenValue</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">                </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">                </span><span class="c1">/// The resource name.</span>
+<span class="w">                </span><span class="c1">/// </span>
+<span class="w">                </span><span class="c1">/// This field is exposed as a byte array,</span>
+<span class="w">                </span><span class="c1">/// because there is no universal encoding for resource names.</span>
+<span class="w">                </span><span class="c1">/// Most Classic Mac software does not deal with encodings explicitly and instead assumes that all strings,</span>
+<span class="w">                </span><span class="c1">/// including resource names,</span>
+<span class="w">                </span><span class="c1">/// use the system encoding,</span>
+<span class="w">                </span><span class="c1">/// which varies depending on the system language.</span>
+<span class="w">                </span><span class="c1">/// This means that resource names can use different encodings depending on what system language they were created with.</span>
+<span class="w">                </span><span class="c1">/// </span>
+<span class="w">                </span><span class="c1">/// Many resource names are plain ASCII,</span>
+<span class="w">                </span><span class="c1">/// meaning that the encoding often does not matter</span>
+<span class="w">                </span><span class="c1">/// (because all Mac OS encodings are ASCII-compatible).</span>
+<span class="w">                </span><span class="c1">/// For non-ASCII resource names,</span>
+<span class="w">                </span><span class="c1">/// the most common encoding is perhaps MacRoman</span>
+<span class="w">                </span><span class="c1">/// (used for English and other Western languages),</span>
+<span class="w">                </span><span class="c1">/// but other encodings are also sometimes used,</span>
+<span class="w">                </span><span class="c1">/// especially for software in non-Western languages.</span>
+<span class="w">                </span><span class="c1">/// </span>
+<span class="w">                </span><span class="c1">/// There is no requirement that all names in a single resource file use the same encoding.</span>
+<span class="w">                </span><span class="c1">/// For example,</span>
+<span class="w">                </span><span class="c1">/// localized software may have some (but not all) of its resource names translated.</span>
+<span class="w">                </span><span class="c1">/// For non-Western languages,</span>
+<span class="w">                </span><span class="c1">/// this can lead to some resource names using MacRoman,</span>
+<span class="w">                </span><span class="c1">/// and others using a different encoding.</span>
+<span class="w">                </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">                </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">Value</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_value</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">                </span><span class="k">public</span><span class="w"> </span><span class="n">ResourceFork</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">                </span><span class="k">public</span><span class="w"> </span><span class="n">ResourceFork</span><span class="p">.</span><span class="n">ResourceMap</span><span class="p">.</span><span class="n">TypeListAndReferenceLists</span><span class="p">.</span><span class="n">ReferenceList</span><span class="p">.</span><span class="n">Reference</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
 <span class="w">            </span><span class="c1">/// Resource type list and storage area for resource reference lists in the resource map.</span>
 <span class="w">            </span><span class="c1">/// </span>
 <span class="w">            </span><span class="c1">/// The two parts are combined into a single type here for technical reasons:</span>
@@ -718,170 +801,6 @@ can also be found there.</p>
 <span class="w">                </span><span class="p">{</span>
 <span class="w">                    </span><span class="n">_typeList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">TypeList</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
 <span class="w">                    </span><span class="n">_referenceLists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytesFull</span><span class="p">();</span>
-<span class="w">                </span><span class="p">}</span>
-
-<span class="w">                </span><span class="c1">/// &lt;summary&gt;</span>
-<span class="w">                </span><span class="c1">/// Resource type list in the resource map.</span>
-<span class="w">                </span><span class="c1">/// &lt;/summary&gt;</span>
-<span class="w">                </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">TypeList</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
-<span class="w">                </span><span class="p">{</span>
-<span class="w">                    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">TypeList</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
-<span class="w">                    </span><span class="p">{</span>
-<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">TypeList</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-<span class="w">                    </span><span class="p">}</span>
-
-<span class="w">                    </span><span class="k">public</span><span class="w"> </span><span class="nf">TypeList</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">ResourceFork</span><span class="p">.</span><span class="n">ResourceMap</span><span class="p">.</span><span class="n">TypeListAndReferenceLists</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">ResourceFork</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-<span class="w">                    </span><span class="p">{</span>
-<span class="w">                        </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
-<span class="w">                        </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
-<span class="w">                        </span><span class="n">f_numTypes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
-<span class="w">                        </span><span class="n">_read</span><span class="p">();</span>
-<span class="w">                    </span><span class="p">}</span>
-<span class="w">                    </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
-<span class="w">                    </span><span class="p">{</span>
-<span class="w">                        </span><span class="n">_numTypesM1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
-<span class="w">                        </span><span class="n">_entries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">TypeListEntry</span><span class="o">&gt;</span><span class="p">();</span>
-<span class="w">                        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">NumTypes</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
-<span class="w">                        </span><span class="p">{</span>
-<span class="w">                            </span><span class="n">_entries</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">TypeListEntry</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">));</span>
-<span class="w">                        </span><span class="p">}</span>
-<span class="w">                    </span><span class="p">}</span>
-
-<span class="w">                    </span><span class="c1">/// &lt;summary&gt;</span>
-<span class="w">                    </span><span class="c1">/// A single entry in the resource type list.</span>
-<span class="w">                    </span><span class="c1">/// </span>
-<span class="w">                    </span><span class="c1">/// Each entry corresponds to exactly one resource reference list.</span>
-<span class="w">                    </span><span class="c1">/// &lt;/summary&gt;</span>
-<span class="w">                    </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">TypeListEntry</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
-<span class="w">                    </span><span class="p">{</span>
-<span class="w">                        </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">TypeListEntry</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
-<span class="w">                        </span><span class="p">{</span>
-<span class="w">                            </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">TypeListEntry</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-<span class="w">                        </span><span class="p">}</span>
-
-<span class="w">                        </span><span class="k">public</span><span class="w"> </span><span class="nf">TypeListEntry</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">ResourceFork</span><span class="p">.</span><span class="n">ResourceMap</span><span class="p">.</span><span class="n">TypeListAndReferenceLists</span><span class="p">.</span><span class="n">TypeList</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">ResourceFork</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-<span class="w">                        </span><span class="p">{</span>
-<span class="w">                            </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
-<span class="w">                            </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
-<span class="w">                            </span><span class="n">f_numReferences</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
-<span class="w">                            </span><span class="n">f_referenceList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
-<span class="w">                            </span><span class="n">_read</span><span class="p">();</span>
-<span class="w">                        </span><span class="p">}</span>
-<span class="w">                        </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
-<span class="w">                        </span><span class="p">{</span>
-<span class="w">                            </span><span class="n">_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
-<span class="w">                            </span><span class="n">_numReferencesM1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
-<span class="w">                            </span><span class="n">_ofsReferenceList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
-<span class="w">                        </span><span class="p">}</span>
-<span class="w">                        </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_numReferences</span><span class="p">;</span>
-<span class="w">                        </span><span class="k">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">_numReferences</span><span class="p">;</span>
-
-<span class="w">                        </span><span class="c1">/// &lt;summary&gt;</span>
-<span class="w">                        </span><span class="c1">/// The number of resources in the reference list for this type.</span>
-<span class="w">                        </span><span class="c1">/// &lt;/summary&gt;</span>
-<span class="w">                        </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">NumReferences</span>
-<span class="w">                        </span><span class="p">{</span>
-<span class="w">                            </span><span class="k">get</span>
-<span class="w">                            </span><span class="p">{</span>
-<span class="w">                                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_numReferences</span><span class="p">)</span>
-<span class="w">                                    </span><span class="k">return</span><span class="w"> </span><span class="n">_numReferences</span><span class="p">;</span>
-<span class="w">                                </span><span class="n">_numReferences</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">Mod</span><span class="p">((</span><span class="n">NumReferencesM1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="mi">65536</span><span class="p">));</span>
-<span class="w">                                </span><span class="n">f_numReferences</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
-<span class="w">                                </span><span class="k">return</span><span class="w"> </span><span class="n">_numReferences</span><span class="p">;</span>
-<span class="w">                            </span><span class="p">}</span>
-<span class="w">                        </span><span class="p">}</span>
-<span class="w">                        </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_referenceList</span><span class="p">;</span>
-<span class="w">                        </span><span class="k">private</span><span class="w"> </span><span class="n">ReferenceList</span><span class="w"> </span><span class="n">_referenceList</span><span class="p">;</span>
-
-<span class="w">                        </span><span class="c1">/// &lt;summary&gt;</span>
-<span class="w">                        </span><span class="c1">/// The resource reference list for this resource type.</span>
-<span class="w">                        </span><span class="c1">/// &lt;/summary&gt;</span>
-<span class="w">                        </span><span class="k">public</span><span class="w"> </span><span class="n">ReferenceList</span><span class="w"> </span><span class="n">ReferenceList</span>
-<span class="w">                        </span><span class="p">{</span>
-<span class="w">                            </span><span class="k">get</span>
-<span class="w">                            </span><span class="p">{</span>
-<span class="w">                                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_referenceList</span><span class="p">)</span>
-<span class="w">                                    </span><span class="k">return</span><span class="w"> </span><span class="n">_referenceList</span><span class="p">;</span>
-<span class="w">                                </span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">M_Parent</span><span class="p">.</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">M_Io</span><span class="p">;</span>
-<span class="w">                                </span><span class="kt">long</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
-<span class="w">                                </span><span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">OfsReferenceList</span><span class="p">);</span>
-<span class="w">                                </span><span class="n">_referenceList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ReferenceList</span><span class="p">(</span><span class="n">NumReferences</span><span class="p">,</span><span class="w"> </span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
-<span class="w">                                </span><span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
-<span class="w">                                </span><span class="n">f_referenceList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
-<span class="w">                                </span><span class="k">return</span><span class="w"> </span><span class="n">_referenceList</span><span class="p">;</span>
-<span class="w">                            </span><span class="p">}</span>
-<span class="w">                        </span><span class="p">}</span>
-<span class="w">                        </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_type</span><span class="p">;</span>
-<span class="w">                        </span><span class="k">private</span><span class="w"> </span><span class="kt">ushort</span><span class="w"> </span><span class="n">_numReferencesM1</span><span class="p">;</span>
-<span class="w">                        </span><span class="k">private</span><span class="w"> </span><span class="kt">ushort</span><span class="w"> </span><span class="n">_ofsReferenceList</span><span class="p">;</span>
-<span class="w">                        </span><span class="k">private</span><span class="w"> </span><span class="n">ResourceFork</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
-<span class="w">                        </span><span class="k">private</span><span class="w"> </span><span class="n">ResourceFork</span><span class="p">.</span><span class="n">ResourceMap</span><span class="p">.</span><span class="n">TypeListAndReferenceLists</span><span class="p">.</span><span class="n">TypeList</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
-
-<span class="w">                        </span><span class="c1">/// &lt;summary&gt;</span>
-<span class="w">                        </span><span class="c1">/// The four-character type code of the resources in the reference list.</span>
-<span class="w">                        </span><span class="c1">/// &lt;/summary&gt;</span>
-<span class="w">                        </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">Type</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_type</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
-
-<span class="w">                        </span><span class="c1">/// &lt;summary&gt;</span>
-<span class="w">                        </span><span class="c1">/// The number of resources in the reference list for this type,</span>
-<span class="w">                        </span><span class="c1">/// minus one.</span>
-<span class="w">                        </span><span class="c1">/// </span>
-<span class="w">                        </span><span class="c1">/// Empty reference lists should never exist.</span>
-<span class="w">                        </span><span class="c1">/// &lt;/summary&gt;</span>
-<span class="w">                        </span><span class="k">public</span><span class="w"> </span><span class="kt">ushort</span><span class="w"> </span><span class="n">NumReferencesM1</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_numReferencesM1</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
-
-<span class="w">                        </span><span class="c1">/// &lt;summary&gt;</span>
-<span class="w">                        </span><span class="c1">/// Offset of the resource reference list for this resource type,</span>
-<span class="w">                        </span><span class="c1">/// from the start of the resource type list.</span>
-<span class="w">                        </span><span class="c1">/// </span>
-<span class="w">                        </span><span class="c1">/// Although the offset is relative to the start of the type list,</span>
-<span class="w">                        </span><span class="c1">/// it should never point into the type list itself,</span>
-<span class="w">                        </span><span class="c1">/// but into the reference list storage area that directly follows it.</span>
-<span class="w">                        </span><span class="c1">/// That is,</span>
-<span class="w">                        </span><span class="c1">/// it should always be at least `_parent._sizeof`.</span>
-<span class="w">                        </span><span class="c1">/// &lt;/summary&gt;</span>
-<span class="w">                        </span><span class="k">public</span><span class="w"> </span><span class="kt">ushort</span><span class="w"> </span><span class="n">OfsReferenceList</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_ofsReferenceList</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
-<span class="w">                        </span><span class="k">public</span><span class="w"> </span><span class="n">ResourceFork</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
-<span class="w">                        </span><span class="k">public</span><span class="w"> </span><span class="n">ResourceFork</span><span class="p">.</span><span class="n">ResourceMap</span><span class="p">.</span><span class="n">TypeListAndReferenceLists</span><span class="p">.</span><span class="n">TypeList</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
-<span class="w">                    </span><span class="p">}</span>
-<span class="w">                    </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_numTypes</span><span class="p">;</span>
-<span class="w">                    </span><span class="k">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">_numTypes</span><span class="p">;</span>
-
-<span class="w">                    </span><span class="c1">/// &lt;summary&gt;</span>
-<span class="w">                    </span><span class="c1">/// The number of resource types in this list.</span>
-<span class="w">                    </span><span class="c1">/// &lt;/summary&gt;</span>
-<span class="w">                    </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">NumTypes</span>
-<span class="w">                    </span><span class="p">{</span>
-<span class="w">                        </span><span class="k">get</span>
-<span class="w">                        </span><span class="p">{</span>
-<span class="w">                            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_numTypes</span><span class="p">)</span>
-<span class="w">                                </span><span class="k">return</span><span class="w"> </span><span class="n">_numTypes</span><span class="p">;</span>
-<span class="w">                            </span><span class="n">_numTypes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">Mod</span><span class="p">((</span><span class="n">NumTypesM1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="mi">65536</span><span class="p">));</span>
-<span class="w">                            </span><span class="n">f_numTypes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
-<span class="w">                            </span><span class="k">return</span><span class="w"> </span><span class="n">_numTypes</span><span class="p">;</span>
-<span class="w">                        </span><span class="p">}</span>
-<span class="w">                    </span><span class="p">}</span>
-<span class="w">                    </span><span class="k">private</span><span class="w"> </span><span class="kt">ushort</span><span class="w"> </span><span class="n">_numTypesM1</span><span class="p">;</span>
-<span class="w">                    </span><span class="k">private</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">TypeListEntry</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_entries</span><span class="p">;</span>
-<span class="w">                    </span><span class="k">private</span><span class="w"> </span><span class="n">ResourceFork</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
-<span class="w">                    </span><span class="k">private</span><span class="w"> </span><span class="n">ResourceFork</span><span class="p">.</span><span class="n">ResourceMap</span><span class="p">.</span><span class="n">TypeListAndReferenceLists</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
-
-<span class="w">                    </span><span class="c1">/// &lt;summary&gt;</span>
-<span class="w">                    </span><span class="c1">/// The number of resource types in this list,</span>
-<span class="w">                    </span><span class="c1">/// minus one.</span>
-<span class="w">                    </span><span class="c1">/// </span>
-<span class="w">                    </span><span class="c1">/// If the resource list is empty,</span>
-<span class="w">                    </span><span class="c1">/// the value of this field is `0xffff`,</span>
-<span class="w">                    </span><span class="c1">/// i. e. `-1` truncated to a 16-bit unsigned integer.</span>
-<span class="w">                    </span><span class="c1">/// &lt;/summary&gt;</span>
-<span class="w">                    </span><span class="k">public</span><span class="w"> </span><span class="kt">ushort</span><span class="w"> </span><span class="n">NumTypesM1</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_numTypesM1</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
-
-<span class="w">                    </span><span class="c1">/// &lt;summary&gt;</span>
-<span class="w">                    </span><span class="c1">/// Entries in the resource type list.</span>
-<span class="w">                    </span><span class="c1">/// &lt;/summary&gt;</span>
-<span class="w">                    </span><span class="k">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">TypeListEntry</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Entries</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_entries</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
-<span class="w">                    </span><span class="k">public</span><span class="w"> </span><span class="n">ResourceFork</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
-<span class="w">                    </span><span class="k">public</span><span class="w"> </span><span class="n">ResourceFork</span><span class="p">.</span><span class="n">ResourceMap</span><span class="p">.</span><span class="n">TypeListAndReferenceLists</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 <span class="w">                </span><span class="p">}</span>
 
 <span class="w">                </span><span class="c1">/// &lt;summary&gt;</span>
@@ -923,8 +842,8 @@ can also be found there.</p>
 <span class="w">                        </span><span class="p">{</span>
 <span class="w">                            </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
 <span class="w">                            </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
-<span class="w">                            </span><span class="n">f_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
 <span class="w">                            </span><span class="n">f_dataBlock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                            </span><span class="n">f_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
 <span class="w">                            </span><span class="n">_read</span><span class="p">();</span>
 <span class="w">                        </span><span class="p">}</span>
 <span class="w">                        </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
@@ -981,11 +900,11 @@ can also be found there.</p>
 <span class="w">                                </span><span class="p">{</span>
 <span class="w">                                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_asInt</span><span class="p">)</span>
 <span class="w">                                        </span><span class="k">return</span><span class="w"> </span><span class="n">_asInt</span><span class="p">;</span>
+<span class="w">                                    </span><span class="n">f_asInt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
 <span class="w">                                    </span><span class="kt">long</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
 <span class="w">                                    </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
 <span class="w">                                    </span><span class="n">_asInt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
 <span class="w">                                    </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
-<span class="w">                                    </span><span class="n">f_asInt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
 <span class="w">                                    </span><span class="k">return</span><span class="w"> </span><span class="n">_asInt</span><span class="p">;</span>
 <span class="w">                                </span><span class="p">}</span>
 <span class="w">                            </span><span class="p">}</span>
@@ -1108,29 +1027,6 @@ can also be found there.</p>
 <span class="w">                            </span><span class="k">public</span><span class="w"> </span><span class="n">ResourceFork</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 <span class="w">                            </span><span class="k">public</span><span class="w"> </span><span class="n">ResourceFork</span><span class="p">.</span><span class="n">ResourceMap</span><span class="p">.</span><span class="n">TypeListAndReferenceLists</span><span class="p">.</span><span class="n">ReferenceList</span><span class="p">.</span><span class="n">Reference</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 <span class="w">                        </span><span class="p">}</span>
-<span class="w">                        </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_name</span><span class="p">;</span>
-<span class="w">                        </span><span class="k">private</span><span class="w"> </span><span class="n">Name</span><span class="w"> </span><span class="n">_name</span><span class="p">;</span>
-
-<span class="w">                        </span><span class="c1">/// &lt;summary&gt;</span>
-<span class="w">                        </span><span class="c1">/// The name (if any) of the resource described by this reference.</span>
-<span class="w">                        </span><span class="c1">/// &lt;/summary&gt;</span>
-<span class="w">                        </span><span class="k">public</span><span class="w"> </span><span class="n">Name</span><span class="w"> </span><span class="n">Name</span>
-<span class="w">                        </span><span class="p">{</span>
-<span class="w">                            </span><span class="k">get</span>
-<span class="w">                            </span><span class="p">{</span>
-<span class="w">                                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_name</span><span class="p">)</span>
-<span class="w">                                    </span><span class="k">return</span><span class="w"> </span><span class="n">_name</span><span class="p">;</span>
-<span class="w">                                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">OfsName</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">65535</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                                    </span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">M_Root</span><span class="p">.</span><span class="n">ResourceMap</span><span class="p">.</span><span class="n">NamesWithIo</span><span class="p">.</span><span class="n">M_Io</span><span class="p">;</span>
-<span class="w">                                    </span><span class="kt">long</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
-<span class="w">                                    </span><span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">OfsName</span><span class="p">);</span>
-<span class="w">                                    </span><span class="n">_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Name</span><span class="p">(</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
-<span class="w">                                    </span><span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
-<span class="w">                                    </span><span class="n">f_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
-<span class="w">                                </span><span class="p">}</span>
-<span class="w">                                </span><span class="k">return</span><span class="w"> </span><span class="n">_name</span><span class="p">;</span>
-<span class="w">                            </span><span class="p">}</span>
-<span class="w">                        </span><span class="p">}</span>
 <span class="w">                        </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_dataBlock</span><span class="p">;</span>
 <span class="w">                        </span><span class="k">private</span><span class="w"> </span><span class="n">DataBlock</span><span class="w"> </span><span class="n">_dataBlock</span><span class="p">;</span>
 
@@ -1143,13 +1039,36 @@ can also be found there.</p>
 <span class="w">                            </span><span class="p">{</span>
 <span class="w">                                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_dataBlock</span><span class="p">)</span>
 <span class="w">                                    </span><span class="k">return</span><span class="w"> </span><span class="n">_dataBlock</span><span class="p">;</span>
+<span class="w">                                </span><span class="n">f_dataBlock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
 <span class="w">                                </span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">M_Root</span><span class="p">.</span><span class="n">DataBlocksWithIo</span><span class="p">.</span><span class="n">M_Io</span><span class="p">;</span>
 <span class="w">                                </span><span class="kt">long</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
 <span class="w">                                </span><span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">OfsDataBlock</span><span class="p">);</span>
 <span class="w">                                </span><span class="n">_dataBlock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DataBlock</span><span class="p">(</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
 <span class="w">                                </span><span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
-<span class="w">                                </span><span class="n">f_dataBlock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
 <span class="w">                                </span><span class="k">return</span><span class="w"> </span><span class="n">_dataBlock</span><span class="p">;</span>
+<span class="w">                            </span><span class="p">}</span>
+<span class="w">                        </span><span class="p">}</span>
+<span class="w">                        </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_name</span><span class="p">;</span>
+<span class="w">                        </span><span class="k">private</span><span class="w"> </span><span class="n">Name</span><span class="w"> </span><span class="n">_name</span><span class="p">;</span>
+
+<span class="w">                        </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">                        </span><span class="c1">/// The name (if any) of the resource described by this reference.</span>
+<span class="w">                        </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">                        </span><span class="k">public</span><span class="w"> </span><span class="n">Name</span><span class="w"> </span><span class="n">Name</span>
+<span class="w">                        </span><span class="p">{</span>
+<span class="w">                            </span><span class="k">get</span>
+<span class="w">                            </span><span class="p">{</span>
+<span class="w">                                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_name</span><span class="p">)</span>
+<span class="w">                                    </span><span class="k">return</span><span class="w"> </span><span class="n">_name</span><span class="p">;</span>
+<span class="w">                                </span><span class="n">f_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">OfsName</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">65535</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                                    </span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">M_Root</span><span class="p">.</span><span class="n">ResourceMap</span><span class="p">.</span><span class="n">NamesWithIo</span><span class="p">.</span><span class="n">M_Io</span><span class="p">;</span>
+<span class="w">                                    </span><span class="kt">long</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
+<span class="w">                                    </span><span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">OfsName</span><span class="p">);</span>
+<span class="w">                                    </span><span class="n">_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Name</span><span class="p">(</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">                                    </span><span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+<span class="w">                                </span><span class="p">}</span>
+<span class="w">                                </span><span class="k">return</span><span class="w"> </span><span class="n">_name</span><span class="p">;</span>
 <span class="w">                            </span><span class="p">}</span>
 <span class="w">                        </span><span class="p">}</span>
 <span class="w">                        </span><span class="k">private</span><span class="w"> </span><span class="kt">short</span><span class="w"> </span><span class="n">_id</span><span class="p">;</span>
@@ -1216,6 +1135,170 @@ can also be found there.</p>
 <span class="w">                    </span><span class="k">public</span><span class="w"> </span><span class="n">ResourceFork</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 <span class="w">                    </span><span class="k">public</span><span class="w"> </span><span class="n">ResourceFork</span><span class="p">.</span><span class="n">ResourceMap</span><span class="p">.</span><span class="n">TypeListAndReferenceLists</span><span class="p">.</span><span class="n">TypeList</span><span class="p">.</span><span class="n">TypeListEntry</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 <span class="w">                </span><span class="p">}</span>
+
+<span class="w">                </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">                </span><span class="c1">/// Resource type list in the resource map.</span>
+<span class="w">                </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">                </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">TypeList</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">TypeList</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">                    </span><span class="p">{</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">TypeList</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">                    </span><span class="p">}</span>
+
+<span class="w">                    </span><span class="k">public</span><span class="w"> </span><span class="nf">TypeList</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">ResourceFork</span><span class="p">.</span><span class="n">ResourceMap</span><span class="p">.</span><span class="n">TypeListAndReferenceLists</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">ResourceFork</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">                    </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                        </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                        </span><span class="n">f_numTypes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                        </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">                    </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">_numTypesM1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+<span class="w">                        </span><span class="n">_entries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">TypeListEntry</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">                        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">NumTypes</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">                        </span><span class="p">{</span>
+<span class="w">                            </span><span class="n">_entries</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">TypeListEntry</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">));</span>
+<span class="w">                        </span><span class="p">}</span>
+<span class="w">                    </span><span class="p">}</span>
+
+<span class="w">                    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">                    </span><span class="c1">/// A single entry in the resource type list.</span>
+<span class="w">                    </span><span class="c1">/// </span>
+<span class="w">                    </span><span class="c1">/// Each entry corresponds to exactly one resource reference list.</span>
+<span class="w">                    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">                    </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">TypeListEntry</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">                    </span><span class="p">{</span>
+<span class="w">                        </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">TypeListEntry</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
+<span class="w">                        </span><span class="p">{</span>
+<span class="w">                            </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">TypeListEntry</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">                        </span><span class="p">}</span>
+
+<span class="w">                        </span><span class="k">public</span><span class="w"> </span><span class="nf">TypeListEntry</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">ResourceFork</span><span class="p">.</span><span class="n">ResourceMap</span><span class="p">.</span><span class="n">TypeListAndReferenceLists</span><span class="p">.</span><span class="n">TypeList</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">ResourceFork</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+<span class="w">                        </span><span class="p">{</span>
+<span class="w">                            </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">                            </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">                            </span><span class="n">f_numReferences</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                            </span><span class="n">f_referenceList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                            </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">                        </span><span class="p">}</span>
+<span class="w">                        </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">                        </span><span class="p">{</span>
+<span class="w">                            </span><span class="n">_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+<span class="w">                            </span><span class="n">_numReferencesM1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+<span class="w">                            </span><span class="n">_ofsReferenceList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+<span class="w">                        </span><span class="p">}</span>
+<span class="w">                        </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_numReferences</span><span class="p">;</span>
+<span class="w">                        </span><span class="k">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">_numReferences</span><span class="p">;</span>
+
+<span class="w">                        </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">                        </span><span class="c1">/// The number of resources in the reference list for this type.</span>
+<span class="w">                        </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">                        </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">NumReferences</span>
+<span class="w">                        </span><span class="p">{</span>
+<span class="w">                            </span><span class="k">get</span>
+<span class="w">                            </span><span class="p">{</span>
+<span class="w">                                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_numReferences</span><span class="p">)</span>
+<span class="w">                                    </span><span class="k">return</span><span class="w"> </span><span class="n">_numReferences</span><span class="p">;</span>
+<span class="w">                                </span><span class="n">f_numReferences</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                                </span><span class="n">_numReferences</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">Mod</span><span class="p">(</span><span class="n">NumReferencesM1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">65536</span><span class="p">));</span>
+<span class="w">                                </span><span class="k">return</span><span class="w"> </span><span class="n">_numReferences</span><span class="p">;</span>
+<span class="w">                            </span><span class="p">}</span>
+<span class="w">                        </span><span class="p">}</span>
+<span class="w">                        </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_referenceList</span><span class="p">;</span>
+<span class="w">                        </span><span class="k">private</span><span class="w"> </span><span class="n">ReferenceList</span><span class="w"> </span><span class="n">_referenceList</span><span class="p">;</span>
+
+<span class="w">                        </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">                        </span><span class="c1">/// The resource reference list for this resource type.</span>
+<span class="w">                        </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">                        </span><span class="k">public</span><span class="w"> </span><span class="n">ReferenceList</span><span class="w"> </span><span class="n">ReferenceList</span>
+<span class="w">                        </span><span class="p">{</span>
+<span class="w">                            </span><span class="k">get</span>
+<span class="w">                            </span><span class="p">{</span>
+<span class="w">                                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_referenceList</span><span class="p">)</span>
+<span class="w">                                    </span><span class="k">return</span><span class="w"> </span><span class="n">_referenceList</span><span class="p">;</span>
+<span class="w">                                </span><span class="n">f_referenceList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                                </span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">M_Parent</span><span class="p">.</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">M_Io</span><span class="p">;</span>
+<span class="w">                                </span><span class="kt">long</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
+<span class="w">                                </span><span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">OfsReferenceList</span><span class="p">);</span>
+<span class="w">                                </span><span class="n">_referenceList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ReferenceList</span><span class="p">(</span><span class="n">NumReferences</span><span class="p">,</span><span class="w"> </span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">                                </span><span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+<span class="w">                                </span><span class="k">return</span><span class="w"> </span><span class="n">_referenceList</span><span class="p">;</span>
+<span class="w">                            </span><span class="p">}</span>
+<span class="w">                        </span><span class="p">}</span>
+<span class="w">                        </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_type</span><span class="p">;</span>
+<span class="w">                        </span><span class="k">private</span><span class="w"> </span><span class="kt">ushort</span><span class="w"> </span><span class="n">_numReferencesM1</span><span class="p">;</span>
+<span class="w">                        </span><span class="k">private</span><span class="w"> </span><span class="kt">ushort</span><span class="w"> </span><span class="n">_ofsReferenceList</span><span class="p">;</span>
+<span class="w">                        </span><span class="k">private</span><span class="w"> </span><span class="n">ResourceFork</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">                        </span><span class="k">private</span><span class="w"> </span><span class="n">ResourceFork</span><span class="p">.</span><span class="n">ResourceMap</span><span class="p">.</span><span class="n">TypeListAndReferenceLists</span><span class="p">.</span><span class="n">TypeList</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+
+<span class="w">                        </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">                        </span><span class="c1">/// The four-character type code of the resources in the reference list.</span>
+<span class="w">                        </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">                        </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">Type</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_type</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">                        </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">                        </span><span class="c1">/// The number of resources in the reference list for this type,</span>
+<span class="w">                        </span><span class="c1">/// minus one.</span>
+<span class="w">                        </span><span class="c1">/// </span>
+<span class="w">                        </span><span class="c1">/// Empty reference lists should never exist.</span>
+<span class="w">                        </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">                        </span><span class="k">public</span><span class="w"> </span><span class="kt">ushort</span><span class="w"> </span><span class="n">NumReferencesM1</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_numReferencesM1</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">                        </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">                        </span><span class="c1">/// Offset of the resource reference list for this resource type,</span>
+<span class="w">                        </span><span class="c1">/// from the start of the resource type list.</span>
+<span class="w">                        </span><span class="c1">/// </span>
+<span class="w">                        </span><span class="c1">/// Although the offset is relative to the start of the type list,</span>
+<span class="w">                        </span><span class="c1">/// it should never point into the type list itself,</span>
+<span class="w">                        </span><span class="c1">/// but into the reference list storage area that directly follows it.</span>
+<span class="w">                        </span><span class="c1">/// That is,</span>
+<span class="w">                        </span><span class="c1">/// it should always be at least `_parent._sizeof`.</span>
+<span class="w">                        </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">                        </span><span class="k">public</span><span class="w"> </span><span class="kt">ushort</span><span class="w"> </span><span class="n">OfsReferenceList</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_ofsReferenceList</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">                        </span><span class="k">public</span><span class="w"> </span><span class="n">ResourceFork</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">                        </span><span class="k">public</span><span class="w"> </span><span class="n">ResourceFork</span><span class="p">.</span><span class="n">ResourceMap</span><span class="p">.</span><span class="n">TypeListAndReferenceLists</span><span class="p">.</span><span class="n">TypeList</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_numTypes</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">_numTypes</span><span class="p">;</span>
+
+<span class="w">                    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">                    </span><span class="c1">/// The number of resource types in this list.</span>
+<span class="w">                    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">                    </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">NumTypes</span>
+<span class="w">                    </span><span class="p">{</span>
+<span class="w">                        </span><span class="k">get</span>
+<span class="w">                        </span><span class="p">{</span>
+<span class="w">                            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_numTypes</span><span class="p">)</span>
+<span class="w">                                </span><span class="k">return</span><span class="w"> </span><span class="n">_numTypes</span><span class="p">;</span>
+<span class="w">                            </span><span class="n">f_numTypes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                            </span><span class="n">_numTypes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">Mod</span><span class="p">(</span><span class="n">NumTypesM1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">65536</span><span class="p">));</span>
+<span class="w">                            </span><span class="k">return</span><span class="w"> </span><span class="n">_numTypes</span><span class="p">;</span>
+<span class="w">                        </span><span class="p">}</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="k">private</span><span class="w"> </span><span class="kt">ushort</span><span class="w"> </span><span class="n">_numTypesM1</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">private</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">TypeListEntry</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_entries</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">private</span><span class="w"> </span><span class="n">ResourceFork</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">private</span><span class="w"> </span><span class="n">ResourceFork</span><span class="p">.</span><span class="n">ResourceMap</span><span class="p">.</span><span class="n">TypeListAndReferenceLists</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
+
+<span class="w">                    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">                    </span><span class="c1">/// The number of resource types in this list,</span>
+<span class="w">                    </span><span class="c1">/// minus one.</span>
+<span class="w">                    </span><span class="c1">/// </span>
+<span class="w">                    </span><span class="c1">/// If the resource list is empty,</span>
+<span class="w">                    </span><span class="c1">/// the value of this field is `0xffff`,</span>
+<span class="w">                    </span><span class="c1">/// i. e. `-1` truncated to a 16-bit unsigned integer.</span>
+<span class="w">                    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">                    </span><span class="k">public</span><span class="w"> </span><span class="kt">ushort</span><span class="w"> </span><span class="n">NumTypesM1</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_numTypesM1</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">                    </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">                    </span><span class="c1">/// Entries in the resource type list.</span>
+<span class="w">                    </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">                    </span><span class="k">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">TypeListEntry</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Entries</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_entries</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">                    </span><span class="k">public</span><span class="w"> </span><span class="n">ResourceFork</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">                    </span><span class="k">public</span><span class="w"> </span><span class="n">ResourceFork</span><span class="p">.</span><span class="n">ResourceMap</span><span class="p">.</span><span class="n">TypeListAndReferenceLists</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">                </span><span class="p">}</span>
 <span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="n">TypeList</span><span class="w"> </span><span class="n">_typeList</span><span class="p">;</span>
 <span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_referenceLists</span><span class="p">;</span>
 <span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="n">ResourceFork</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
@@ -1237,94 +1320,21 @@ can also be found there.</p>
 <span class="w">                </span><span class="k">public</span><span class="w"> </span><span class="n">ResourceFork</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 <span class="w">                </span><span class="k">public</span><span class="w"> </span><span class="n">ResourceFork</span><span class="p">.</span><span class="n">ResourceMap</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 <span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_names</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_names</span><span class="p">;</span>
 
 <span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
-<span class="w">            </span><span class="c1">/// A resource name,</span>
-<span class="w">            </span><span class="c1">/// as stored in the resource name storage area in the resource map.</span>
-<span class="w">            </span><span class="c1">/// </span>
-<span class="w">            </span><span class="c1">/// The resource names are not required to appear in any particular order.</span>
-<span class="w">            </span><span class="c1">/// There may be unused space between and around resource names,</span>
-<span class="w">            </span><span class="c1">/// but in practice they are often contiguous.</span>
+<span class="w">            </span><span class="c1">/// Storage area for the names of all resources.</span>
 <span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
-<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="k">partial</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Name</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
-<span class="w">            </span><span class="p">{</span>
-<span class="w">                </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">Name</span><span class="w"> </span><span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span>
-<span class="w">                </span><span class="p">{</span>
-<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">Name</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-<span class="w">                </span><span class="p">}</span>
-
-<span class="w">                </span><span class="k">public</span><span class="w"> </span><span class="nf">Name</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">ResourceFork</span><span class="p">.</span><span class="n">ResourceMap</span><span class="p">.</span><span class="n">TypeListAndReferenceLists</span><span class="p">.</span><span class="n">ReferenceList</span><span class="p">.</span><span class="n">Reference</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="n">ResourceFork</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-<span class="w">                </span><span class="p">{</span>
-<span class="w">                    </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
-<span class="w">                    </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
-<span class="w">                    </span><span class="n">_read</span><span class="p">();</span>
-<span class="w">                </span><span class="p">}</span>
-<span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
-<span class="w">                </span><span class="p">{</span>
-<span class="w">                    </span><span class="n">_lenValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
-<span class="w">                    </span><span class="n">_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenValue</span><span class="p">);</span>
-<span class="w">                </span><span class="p">}</span>
-<span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">_lenValue</span><span class="p">;</span>
-<span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_value</span><span class="p">;</span>
-<span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="n">ResourceFork</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
-<span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="n">ResourceFork</span><span class="p">.</span><span class="n">ResourceMap</span><span class="p">.</span><span class="n">TypeListAndReferenceLists</span><span class="p">.</span><span class="n">ReferenceList</span><span class="p">.</span><span class="n">Reference</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
-
-<span class="w">                </span><span class="c1">/// &lt;summary&gt;</span>
-<span class="w">                </span><span class="c1">/// The length of the resource name, in bytes.</span>
-<span class="w">                </span><span class="c1">/// &lt;/summary&gt;</span>
-<span class="w">                </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="w"> </span><span class="n">LenValue</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_lenValue</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
-
-<span class="w">                </span><span class="c1">/// &lt;summary&gt;</span>
-<span class="w">                </span><span class="c1">/// The resource name.</span>
-<span class="w">                </span><span class="c1">/// </span>
-<span class="w">                </span><span class="c1">/// This field is exposed as a byte array,</span>
-<span class="w">                </span><span class="c1">/// because there is no universal encoding for resource names.</span>
-<span class="w">                </span><span class="c1">/// Most Classic Mac software does not deal with encodings explicitly and instead assumes that all strings,</span>
-<span class="w">                </span><span class="c1">/// including resource names,</span>
-<span class="w">                </span><span class="c1">/// use the system encoding,</span>
-<span class="w">                </span><span class="c1">/// which varies depending on the system language.</span>
-<span class="w">                </span><span class="c1">/// This means that resource names can use different encodings depending on what system language they were created with.</span>
-<span class="w">                </span><span class="c1">/// </span>
-<span class="w">                </span><span class="c1">/// Many resource names are plain ASCII,</span>
-<span class="w">                </span><span class="c1">/// meaning that the encoding often does not matter</span>
-<span class="w">                </span><span class="c1">/// (because all Mac OS encodings are ASCII-compatible).</span>
-<span class="w">                </span><span class="c1">/// For non-ASCII resource names,</span>
-<span class="w">                </span><span class="c1">/// the most common encoding is perhaps MacRoman</span>
-<span class="w">                </span><span class="c1">/// (used for English and other Western languages),</span>
-<span class="w">                </span><span class="c1">/// but other encodings are also sometimes used,</span>
-<span class="w">                </span><span class="c1">/// especially for software in non-Western languages.</span>
-<span class="w">                </span><span class="c1">/// </span>
-<span class="w">                </span><span class="c1">/// There is no requirement that all names in a single resource file use the same encoding.</span>
-<span class="w">                </span><span class="c1">/// For example,</span>
-<span class="w">                </span><span class="c1">/// localized software may have some (but not all) of its resource names translated.</span>
-<span class="w">                </span><span class="c1">/// For non-Western languages,</span>
-<span class="w">                </span><span class="c1">/// this can lead to some resource names using MacRoman,</span>
-<span class="w">                </span><span class="c1">/// and others using a different encoding.</span>
-<span class="w">                </span><span class="c1">/// &lt;/summary&gt;</span>
-<span class="w">                </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">Value</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_value</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
-<span class="w">                </span><span class="k">public</span><span class="w"> </span><span class="n">ResourceFork</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
-<span class="w">                </span><span class="k">public</span><span class="w"> </span><span class="n">ResourceFork</span><span class="p">.</span><span class="n">ResourceMap</span><span class="p">.</span><span class="n">TypeListAndReferenceLists</span><span class="p">.</span><span class="n">ReferenceList</span><span class="p">.</span><span class="n">Reference</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_typeListAndReferenceLists</span><span class="p">;</span>
-<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">TypeListAndReferenceLists</span><span class="w"> </span><span class="n">_typeListAndReferenceLists</span><span class="p">;</span>
-
-<span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
-<span class="w">            </span><span class="c1">/// The resource map&#39;s resource type list, followed by the resource reference list area.</span>
-<span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
-<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">TypeListAndReferenceLists</span><span class="w"> </span><span class="n">TypeListAndReferenceLists</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">Names</span>
 <span class="w">            </span><span class="p">{</span>
 <span class="w">                </span><span class="k">get</span>
 <span class="w">                </span><span class="p">{</span>
-<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_typeListAndReferenceLists</span><span class="p">)</span>
-<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_typeListAndReferenceLists</span><span class="p">;</span>
-<span class="w">                    </span><span class="kt">long</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
-<span class="w">                    </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">OfsTypeList</span><span class="p">);</span>
-<span class="w">                    </span><span class="n">__raw_typeListAndReferenceLists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">OfsNames</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">OfsTypeList</span><span class="p">));</span>
-<span class="w">                    </span><span class="kt">var</span><span class="w"> </span><span class="n">io___raw_typeListAndReferenceLists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_typeListAndReferenceLists</span><span class="p">);</span>
-<span class="w">                    </span><span class="n">_typeListAndReferenceLists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">TypeListAndReferenceLists</span><span class="p">(</span><span class="n">io___raw_typeListAndReferenceLists</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
-<span class="w">                    </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
-<span class="w">                    </span><span class="n">f_typeListAndReferenceLists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
-<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_typeListAndReferenceLists</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_names</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_names</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">f_names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">_names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">byte</span><span class="p">[])</span><span class="w"> </span><span class="p">(</span><span class="n">NamesWithIo</span><span class="p">.</span><span class="n">Data</span><span class="p">);</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_names</span><span class="p">;</span>
 <span class="w">                </span><span class="p">}</span>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_namesWithIo</span><span class="p">;</span>
@@ -1340,31 +1350,36 @@ can also be found there.</p>
 <span class="w">                </span><span class="p">{</span>
 <span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_namesWithIo</span><span class="p">)</span>
 <span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_namesWithIo</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">f_namesWithIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
 <span class="w">                    </span><span class="kt">long</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
 <span class="w">                    </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">OfsNames</span><span class="p">);</span>
 <span class="w">                    </span><span class="n">__raw_namesWithIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytesFull</span><span class="p">();</span>
 <span class="w">                    </span><span class="kt">var</span><span class="w"> </span><span class="n">io___raw_namesWithIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_namesWithIo</span><span class="p">);</span>
 <span class="w">                    </span><span class="n">_namesWithIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">BytesWithIo</span><span class="p">(</span><span class="n">io___raw_namesWithIo</span><span class="p">);</span>
 <span class="w">                    </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
-<span class="w">                    </span><span class="n">f_namesWithIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
 <span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_namesWithIo</span><span class="p">;</span>
 <span class="w">                </span><span class="p">}</span>
 <span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_names</span><span class="p">;</span>
-<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_names</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_typeListAndReferenceLists</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">TypeListAndReferenceLists</span><span class="w"> </span><span class="n">_typeListAndReferenceLists</span><span class="p">;</span>
 
 <span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
-<span class="w">            </span><span class="c1">/// Storage area for the names of all resources.</span>
+<span class="w">            </span><span class="c1">/// The resource map&#39;s resource type list, followed by the resource reference list area.</span>
 <span class="w">            </span><span class="c1">/// &lt;/summary&gt;</span>
-<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">Names</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">TypeListAndReferenceLists</span><span class="w"> </span><span class="n">TypeListAndReferenceLists</span>
 <span class="w">            </span><span class="p">{</span>
 <span class="w">                </span><span class="k">get</span>
 <span class="w">                </span><span class="p">{</span>
-<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_names</span><span class="p">)</span>
-<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_names</span><span class="p">;</span>
-<span class="w">                    </span><span class="n">_names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">byte</span><span class="p">[])</span><span class="w"> </span><span class="p">(</span><span class="n">NamesWithIo</span><span class="p">.</span><span class="n">Data</span><span class="p">);</span>
-<span class="w">                    </span><span class="n">f_names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
-<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_names</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_typeListAndReferenceLists</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_typeListAndReferenceLists</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">f_typeListAndReferenceLists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                    </span><span class="kt">long</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">OfsTypeList</span><span class="p">);</span>
+<span class="w">                    </span><span class="n">__raw_typeListAndReferenceLists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">OfsNames</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">OfsTypeList</span><span class="p">);</span>
+<span class="w">                    </span><span class="kt">var</span><span class="w"> </span><span class="n">io___raw_typeListAndReferenceLists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_typeListAndReferenceLists</span><span class="p">);</span>
+<span class="w">                    </span><span class="n">_typeListAndReferenceLists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">TypeListAndReferenceLists</span><span class="p">(</span><span class="n">io___raw_typeListAndReferenceLists</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
+<span class="w">                    </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_typeListAndReferenceLists</span><span class="p">;</span>
 <span class="w">                </span><span class="p">}</span>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">FileHeader</span><span class="w"> </span><span class="n">_reservedFileHeaderCopy</span><span class="p">;</span>
@@ -1376,8 +1391,8 @@ can also be found there.</p>
 <span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">ResourceFork</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span>
 <span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="n">ResourceFork</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span>
 <span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">__raw_fileAttributes</span><span class="p">;</span>
-<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">__raw_typeListAndReferenceLists</span><span class="p">;</span>
 <span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">__raw_namesWithIo</span><span class="p">;</span>
+<span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">__raw_typeListAndReferenceLists</span><span class="p">;</span>
 
 <span class="w">            </span><span class="c1">/// &lt;summary&gt;</span>
 <span class="w">            </span><span class="c1">/// Reserved space for a copy of the resource file header.</span>
@@ -1417,31 +1432,8 @@ can also be found there.</p>
 <span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">ResourceFork</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 <span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">ResourceFork</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 <span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">M_RawFileAttributes</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">__raw_fileAttributes</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
-<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">M_RawTypeListAndReferenceLists</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">__raw_typeListAndReferenceLists</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 <span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">M_RawNamesWithIo</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">__raw_namesWithIo</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_dataBlocksWithIo</span><span class="p">;</span>
-<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">BytesWithIo</span><span class="w"> </span><span class="n">_dataBlocksWithIo</span><span class="p">;</span>
-
-<span class="w">        </span><span class="c1">/// &lt;summary&gt;</span>
-<span class="w">        </span><span class="c1">/// Use `data_blocks` instead,</span>
-<span class="w">        </span><span class="c1">/// unless you need access to this instance&#39;s `_io`.</span>
-<span class="w">        </span><span class="c1">/// &lt;/summary&gt;</span>
-<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">BytesWithIo</span><span class="w"> </span><span class="n">DataBlocksWithIo</span>
-<span class="w">        </span><span class="p">{</span>
-<span class="w">            </span><span class="k">get</span>
-<span class="w">            </span><span class="p">{</span>
-<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_dataBlocksWithIo</span><span class="p">)</span>
-<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_dataBlocksWithIo</span><span class="p">;</span>
-<span class="w">                </span><span class="kt">long</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
-<span class="w">                </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">Header</span><span class="p">.</span><span class="n">OfsDataBlocks</span><span class="p">);</span>
-<span class="w">                </span><span class="n">__raw_dataBlocksWithIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Header</span><span class="p">.</span><span class="n">LenDataBlocks</span><span class="p">);</span>
-<span class="w">                </span><span class="kt">var</span><span class="w"> </span><span class="n">io___raw_dataBlocksWithIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_dataBlocksWithIo</span><span class="p">);</span>
-<span class="w">                </span><span class="n">_dataBlocksWithIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">BytesWithIo</span><span class="p">(</span><span class="n">io___raw_dataBlocksWithIo</span><span class="p">);</span>
-<span class="w">                </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
-<span class="w">                </span><span class="n">f_dataBlocksWithIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">_dataBlocksWithIo</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">M_RawTypeListAndReferenceLists</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">__raw_typeListAndReferenceLists</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_dataBlocks</span><span class="p">;</span>
 <span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_dataBlocks</span><span class="p">;</span>
@@ -1467,9 +1459,32 @@ can also be found there.</p>
 <span class="w">            </span><span class="p">{</span>
 <span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_dataBlocks</span><span class="p">)</span>
 <span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_dataBlocks</span><span class="p">;</span>
-<span class="w">                </span><span class="n">_dataBlocks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">byte</span><span class="p">[])</span><span class="w"> </span><span class="p">(</span><span class="n">DataBlocksWithIo</span><span class="p">.</span><span class="n">Data</span><span class="p">);</span>
 <span class="w">                </span><span class="n">f_dataBlocks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_dataBlocks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">byte</span><span class="p">[])</span><span class="w"> </span><span class="p">(</span><span class="n">DataBlocksWithIo</span><span class="p">.</span><span class="n">Data</span><span class="p">);</span>
 <span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">_dataBlocks</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_dataBlocksWithIo</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="n">BytesWithIo</span><span class="w"> </span><span class="n">_dataBlocksWithIo</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">/// &lt;summary&gt;</span>
+<span class="w">        </span><span class="c1">/// Use `data_blocks` instead,</span>
+<span class="w">        </span><span class="c1">/// unless you need access to this instance&#39;s `_io`.</span>
+<span class="w">        </span><span class="c1">/// &lt;/summary&gt;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">BytesWithIo</span><span class="w"> </span><span class="n">DataBlocksWithIo</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">get</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_dataBlocksWithIo</span><span class="p">)</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_dataBlocksWithIo</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_dataBlocksWithIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                </span><span class="kt">long</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">Header</span><span class="p">.</span><span class="n">OfsDataBlocks</span><span class="p">);</span>
+<span class="w">                </span><span class="n">__raw_dataBlocksWithIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Header</span><span class="p">.</span><span class="n">LenDataBlocks</span><span class="p">);</span>
+<span class="w">                </span><span class="kt">var</span><span class="w"> </span><span class="n">io___raw_dataBlocksWithIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_dataBlocksWithIo</span><span class="p">);</span>
+<span class="w">                </span><span class="n">_dataBlocksWithIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">BytesWithIo</span><span class="p">(</span><span class="n">io___raw_dataBlocksWithIo</span><span class="p">);</span>
+<span class="w">                </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">_dataBlocksWithIo</span><span class="p">;</span>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_resourceMap</span><span class="p">;</span>
@@ -1484,13 +1499,13 @@ can also be found there.</p>
 <span class="w">            </span><span class="p">{</span>
 <span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_resourceMap</span><span class="p">)</span>
 <span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_resourceMap</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_resourceMap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
 <span class="w">                </span><span class="kt">long</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
 <span class="w">                </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">Header</span><span class="p">.</span><span class="n">OfsResourceMap</span><span class="p">);</span>
 <span class="w">                </span><span class="n">__raw_resourceMap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Header</span><span class="p">.</span><span class="n">LenResourceMap</span><span class="p">);</span>
 <span class="w">                </span><span class="kt">var</span><span class="w"> </span><span class="n">io___raw_resourceMap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_resourceMap</span><span class="p">);</span>
 <span class="w">                </span><span class="n">_resourceMap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ResourceMap</span><span class="p">(</span><span class="n">io___raw_resourceMap</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
 <span class="w">                </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
-<span class="w">                </span><span class="n">f_resourceMap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
 <span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">_resourceMap</span><span class="p">;</span>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">        </span><span class="p">}</span>

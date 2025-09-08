@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.AndesFirmware = factory(root.KaitaiStream);
+    factory(root.AndesFirmware || (root.AndesFirmware = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (AndesFirmware_, KaitaiStream) {
 /**
  * Firmware image found with MediaTek MT76xx wifi chipsets.
  */
@@ -33,7 +33,7 @@ var AndesFirmware = (function() {
     function ImageHeader(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -51,5 +51,5 @@ var AndesFirmware = (function() {
 
   return AndesFirmware;
 })();
-return AndesFirmware;
-}));
+AndesFirmware_.AndesFirmware = AndesFirmware;
+});

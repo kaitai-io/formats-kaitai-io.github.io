@@ -7,7 +7,8 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
-import java.nio.charset.Charset;
+import java.util.List;
+import java.nio.charset.StandardCharsets;
 
 
 /**
@@ -120,151 +121,116 @@ public class DnsPacket extends KaitaiStruct {
             }
         }
     }
-    public static class MxInfo extends KaitaiStruct {
-        public static MxInfo fromFile(String fileName) throws IOException {
-            return new MxInfo(new ByteBufferKaitaiStream(fileName));
+
+    public void _fetchInstances() {
+        this.flags._fetchInstances();
+        if (flags().isOpcodeValid()) {
+        }
+        if (flags().isOpcodeValid()) {
+        }
+        if (flags().isOpcodeValid()) {
+        }
+        if (flags().isOpcodeValid()) {
+        }
+        if (flags().isOpcodeValid()) {
+            for (int i = 0; i < this.queries.size(); i++) {
+                this.queries.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        if (flags().isOpcodeValid()) {
+            for (int i = 0; i < this.answers.size(); i++) {
+                this.answers.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        if (flags().isOpcodeValid()) {
+            for (int i = 0; i < this.authorities.size(); i++) {
+                this.authorities.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        if (flags().isOpcodeValid()) {
+            for (int i = 0; i < this.additionals.size(); i++) {
+                this.additionals.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+    }
+    public static class Address extends KaitaiStruct {
+        public static Address fromFile(String fileName) throws IOException {
+            return new Address(new ByteBufferKaitaiStream(fileName));
         }
 
-        public MxInfo(KaitaiStream _io) {
+        public Address(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public MxInfo(KaitaiStream _io, DnsPacket.Answer _parent) {
+        public Address(KaitaiStream _io, DnsPacket.Answer _parent) {
             this(_io, _parent, null);
         }
 
-        public MxInfo(KaitaiStream _io, DnsPacket.Answer _parent, DnsPacket _root) {
+        public Address(KaitaiStream _io, DnsPacket.Answer _parent, DnsPacket _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.preference = this._io.readU2be();
-            this.mx = new DomainName(this._io, this, _root);
+            this.ip = this._io.readBytes(4);
         }
-        private int preference;
-        private DomainName mx;
+
+        public void _fetchInstances() {
+        }
+        private byte[] ip;
         private DnsPacket _root;
         private DnsPacket.Answer _parent;
-        public int preference() { return preference; }
-        public DomainName mx() { return mx; }
+        public byte[] ip() { return ip; }
         public DnsPacket _root() { return _root; }
         public DnsPacket.Answer _parent() { return _parent; }
     }
-    public static class PointerStruct extends KaitaiStruct {
-        public static PointerStruct fromFile(String fileName) throws IOException {
-            return new PointerStruct(new ByteBufferKaitaiStream(fileName));
+    public static class AddressV6 extends KaitaiStruct {
+        public static AddressV6 fromFile(String fileName) throws IOException {
+            return new AddressV6(new ByteBufferKaitaiStream(fileName));
         }
 
-        public PointerStruct(KaitaiStream _io) {
+        public AddressV6(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public PointerStruct(KaitaiStream _io, DnsPacket.Label _parent) {
+        public AddressV6(KaitaiStream _io, DnsPacket.Answer _parent) {
             this(_io, _parent, null);
         }
 
-        public PointerStruct(KaitaiStream _io, DnsPacket.Label _parent, DnsPacket _root) {
+        public AddressV6(KaitaiStream _io, DnsPacket.Answer _parent, DnsPacket _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.value = this._io.readU1();
+            this.ipV6 = this._io.readBytes(16);
         }
-        private DomainName contents;
-        public DomainName contents() {
-            if (this.contents != null)
-                return this.contents;
-            KaitaiStream io = _root()._io();
-            long _pos = io.pos();
-            io.seek((value() + ((_parent().length() - 192) << 8)));
-            this.contents = new DomainName(io, this, _root);
-            io.seek(_pos);
-            return this.contents;
+
+        public void _fetchInstances() {
         }
-        private int value;
+        private byte[] ipV6;
         private DnsPacket _root;
-        private DnsPacket.Label _parent;
-
-        /**
-         * Read one byte, then offset to that position, read one domain-name and return
-         */
-        public int value() { return value; }
+        private DnsPacket.Answer _parent;
+        public byte[] ipV6() { return ipV6; }
         public DnsPacket _root() { return _root; }
-        public DnsPacket.Label _parent() { return _parent; }
+        public DnsPacket.Answer _parent() { return _parent; }
     }
-    public static class Label extends KaitaiStruct {
-        public static Label fromFile(String fileName) throws IOException {
-            return new Label(new ByteBufferKaitaiStream(fileName));
+    public static class Answer extends KaitaiStruct {
+        public static Answer fromFile(String fileName) throws IOException {
+            return new Answer(new ByteBufferKaitaiStream(fileName));
         }
 
-        public Label(KaitaiStream _io) {
+        public Answer(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public Label(KaitaiStream _io, DnsPacket.DomainName _parent) {
+        public Answer(KaitaiStream _io, DnsPacket _parent) {
             this(_io, _parent, null);
         }
 
-        public Label(KaitaiStream _io, DnsPacket.DomainName _parent, DnsPacket _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.length = this._io.readU1();
-            if (isPointer()) {
-                this.pointer = new PointerStruct(this._io, this, _root);
-            }
-            if (!(isPointer())) {
-                this.name = new String(this._io.readBytes(length()), Charset.forName("utf-8"));
-            }
-        }
-        private Boolean isPointer;
-        public Boolean isPointer() {
-            if (this.isPointer != null)
-                return this.isPointer;
-            boolean _tmp = (boolean) (length() >= 192);
-            this.isPointer = _tmp;
-            return this.isPointer;
-        }
-        private int length;
-        private PointerStruct pointer;
-        private String name;
-        private DnsPacket _root;
-        private DnsPacket.DomainName _parent;
-
-        /**
-         * RFC1035 4.1.4: If the first two bits are raised it's a pointer-offset to a previously defined name
-         */
-        public int length() { return length; }
-        public PointerStruct pointer() { return pointer; }
-
-        /**
-         * Otherwise its a string the length of the length value
-         */
-        public String name() { return name; }
-        public DnsPacket _root() { return _root; }
-        public DnsPacket.DomainName _parent() { return _parent; }
-    }
-    public static class Query extends KaitaiStruct {
-        public static Query fromFile(String fileName) throws IOException {
-            return new Query(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Query(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Query(KaitaiStream _io, DnsPacket _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Query(KaitaiStream _io, DnsPacket _parent, DnsPacket _root) {
+        public Answer(KaitaiStream _io, DnsPacket _parent, DnsPacket _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
@@ -273,18 +239,195 @@ public class DnsPacket extends KaitaiStruct {
         private void _read() {
             this.name = new DomainName(this._io, this, _root);
             this.type = DnsPacket.TypeType.byId(this._io.readU2be());
-            this.queryClass = DnsPacket.ClassType.byId(this._io.readU2be());
+            this.answerClass = DnsPacket.ClassType.byId(this._io.readU2be());
+            this.ttl = this._io.readS4be();
+            this.rdlength = this._io.readU2be();
+            {
+                TypeType on = type();
+                if (on != null) {
+                    switch (type()) {
+                    case A: {
+                        KaitaiStream _io_payload = this._io.substream(rdlength());
+                        this.payload = new Address(_io_payload, this, _root);
+                        break;
+                    }
+                    case AAAA: {
+                        KaitaiStream _io_payload = this._io.substream(rdlength());
+                        this.payload = new AddressV6(_io_payload, this, _root);
+                        break;
+                    }
+                    case CNAME: {
+                        KaitaiStream _io_payload = this._io.substream(rdlength());
+                        this.payload = new DomainName(_io_payload, this, _root);
+                        break;
+                    }
+                    case MX: {
+                        KaitaiStream _io_payload = this._io.substream(rdlength());
+                        this.payload = new MxInfo(_io_payload, this, _root);
+                        break;
+                    }
+                    case NS: {
+                        KaitaiStream _io_payload = this._io.substream(rdlength());
+                        this.payload = new DomainName(_io_payload, this, _root);
+                        break;
+                    }
+                    case PTR: {
+                        KaitaiStream _io_payload = this._io.substream(rdlength());
+                        this.payload = new DomainName(_io_payload, this, _root);
+                        break;
+                    }
+                    case SOA: {
+                        KaitaiStream _io_payload = this._io.substream(rdlength());
+                        this.payload = new AuthorityInfo(_io_payload, this, _root);
+                        break;
+                    }
+                    case SRV: {
+                        KaitaiStream _io_payload = this._io.substream(rdlength());
+                        this.payload = new Service(_io_payload, this, _root);
+                        break;
+                    }
+                    case TXT: {
+                        KaitaiStream _io_payload = this._io.substream(rdlength());
+                        this.payload = new TxtBody(_io_payload, this, _root);
+                        break;
+                    }
+                    default: {
+                        this.payload = this._io.readBytes(rdlength());
+                        break;
+                    }
+                    }
+                } else {
+                    this.payload = this._io.readBytes(rdlength());
+                }
+            }
+        }
+
+        public void _fetchInstances() {
+            this.name._fetchInstances();
+            {
+                TypeType on = type();
+                if (on != null) {
+                    switch (type()) {
+                    case A: {
+                        ((Address) (this.payload))._fetchInstances();
+                        break;
+                    }
+                    case AAAA: {
+                        ((AddressV6) (this.payload))._fetchInstances();
+                        break;
+                    }
+                    case CNAME: {
+                        ((DomainName) (this.payload))._fetchInstances();
+                        break;
+                    }
+                    case MX: {
+                        ((MxInfo) (this.payload))._fetchInstances();
+                        break;
+                    }
+                    case NS: {
+                        ((DomainName) (this.payload))._fetchInstances();
+                        break;
+                    }
+                    case PTR: {
+                        ((DomainName) (this.payload))._fetchInstances();
+                        break;
+                    }
+                    case SOA: {
+                        ((AuthorityInfo) (this.payload))._fetchInstances();
+                        break;
+                    }
+                    case SRV: {
+                        ((Service) (this.payload))._fetchInstances();
+                        break;
+                    }
+                    case TXT: {
+                        ((TxtBody) (this.payload))._fetchInstances();
+                        break;
+                    }
+                    default: {
+                        break;
+                    }
+                    }
+                } else {
+                }
+            }
         }
         private DomainName name;
         private TypeType type;
-        private ClassType queryClass;
+        private ClassType answerClass;
+        private int ttl;
+        private int rdlength;
+        private Object payload;
         private DnsPacket _root;
         private DnsPacket _parent;
         public DomainName name() { return name; }
         public TypeType type() { return type; }
-        public ClassType queryClass() { return queryClass; }
+        public ClassType answerClass() { return answerClass; }
+
+        /**
+         * Time to live (in seconds)
+         */
+        public int ttl() { return ttl; }
+
+        /**
+         * Length in octets of the following payload
+         */
+        public int rdlength() { return rdlength; }
+        public Object payload() { return payload; }
         public DnsPacket _root() { return _root; }
         public DnsPacket _parent() { return _parent; }
+    }
+    public static class AuthorityInfo extends KaitaiStruct {
+        public static AuthorityInfo fromFile(String fileName) throws IOException {
+            return new AuthorityInfo(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public AuthorityInfo(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public AuthorityInfo(KaitaiStream _io, DnsPacket.Answer _parent) {
+            this(_io, _parent, null);
+        }
+
+        public AuthorityInfo(KaitaiStream _io, DnsPacket.Answer _parent, DnsPacket _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.primaryNs = new DomainName(this._io, this, _root);
+            this.resoponsibleMailbox = new DomainName(this._io, this, _root);
+            this.serial = this._io.readU4be();
+            this.refreshInterval = this._io.readU4be();
+            this.retryInterval = this._io.readU4be();
+            this.expireLimit = this._io.readU4be();
+            this.minTtl = this._io.readU4be();
+        }
+
+        public void _fetchInstances() {
+            this.primaryNs._fetchInstances();
+            this.resoponsibleMailbox._fetchInstances();
+        }
+        private DomainName primaryNs;
+        private DomainName resoponsibleMailbox;
+        private long serial;
+        private long refreshInterval;
+        private long retryInterval;
+        private long expireLimit;
+        private long minTtl;
+        private DnsPacket _root;
+        private DnsPacket.Answer _parent;
+        public DomainName primaryNs() { return primaryNs; }
+        public DomainName resoponsibleMailbox() { return resoponsibleMailbox; }
+        public long serial() { return serial; }
+        public long refreshInterval() { return refreshInterval; }
+        public long retryInterval() { return retryInterval; }
+        public long expireLimit() { return expireLimit; }
+        public long minTtl() { return minTtl; }
+        public DnsPacket _root() { return _root; }
+        public DnsPacket.Answer _parent() { return _parent; }
     }
     public static class DomainName extends KaitaiStruct {
         public static DomainName fromFile(String fileName) throws IOException {
@@ -317,45 +460,319 @@ public class DnsPacket extends KaitaiStruct {
                 } while (!( ((_it.length() == 0) || (_it.length() >= 192)) ));
             }
         }
-        private ArrayList<Label> name;
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.name.size(); i++) {
+                this.name.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private List<Label> name;
         private DnsPacket _root;
         private KaitaiStruct _parent;
 
         /**
          * Repeat until the length is 0 or it is a pointer (bit-hack to get around lack of OR operator)
          */
-        public ArrayList<Label> name() { return name; }
+        public List<Label> name() { return name; }
         public DnsPacket _root() { return _root; }
         public KaitaiStruct _parent() { return _parent; }
     }
-    public static class AddressV6 extends KaitaiStruct {
-        public static AddressV6 fromFile(String fileName) throws IOException {
-            return new AddressV6(new ByteBufferKaitaiStream(fileName));
+    public static class Label extends KaitaiStruct {
+        public static Label fromFile(String fileName) throws IOException {
+            return new Label(new ByteBufferKaitaiStream(fileName));
         }
 
-        public AddressV6(KaitaiStream _io) {
+        public Label(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public AddressV6(KaitaiStream _io, DnsPacket.Answer _parent) {
+        public Label(KaitaiStream _io, DnsPacket.DomainName _parent) {
             this(_io, _parent, null);
         }
 
-        public AddressV6(KaitaiStream _io, DnsPacket.Answer _parent, DnsPacket _root) {
+        public Label(KaitaiStream _io, DnsPacket.DomainName _parent, DnsPacket _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.ipV6 = this._io.readBytes(16);
+            this.length = this._io.readU1();
+            if (isPointer()) {
+                this.pointer = new PointerStruct(this._io, this, _root);
+            }
+            if (!(isPointer())) {
+                this.name = new String(this._io.readBytes(length()), StandardCharsets.UTF_8);
+            }
         }
-        private byte[] ipV6;
+
+        public void _fetchInstances() {
+            if (isPointer()) {
+                this.pointer._fetchInstances();
+            }
+            if (!(isPointer())) {
+            }
+        }
+        private Boolean isPointer;
+        public Boolean isPointer() {
+            if (this.isPointer != null)
+                return this.isPointer;
+            this.isPointer = length() >= 192;
+            return this.isPointer;
+        }
+        private int length;
+        private PointerStruct pointer;
+        private String name;
+        private DnsPacket _root;
+        private DnsPacket.DomainName _parent;
+
+        /**
+         * RFC1035 4.1.4: If the first two bits are raised it's a pointer-offset to a previously defined name
+         */
+        public int length() { return length; }
+        public PointerStruct pointer() { return pointer; }
+
+        /**
+         * Otherwise its a string the length of the length value
+         */
+        public String name() { return name; }
+        public DnsPacket _root() { return _root; }
+        public DnsPacket.DomainName _parent() { return _parent; }
+    }
+    public static class MxInfo extends KaitaiStruct {
+        public static MxInfo fromFile(String fileName) throws IOException {
+            return new MxInfo(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public MxInfo(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public MxInfo(KaitaiStream _io, DnsPacket.Answer _parent) {
+            this(_io, _parent, null);
+        }
+
+        public MxInfo(KaitaiStream _io, DnsPacket.Answer _parent, DnsPacket _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.preference = this._io.readU2be();
+            this.mx = new DomainName(this._io, this, _root);
+        }
+
+        public void _fetchInstances() {
+            this.mx._fetchInstances();
+        }
+        private int preference;
+        private DomainName mx;
         private DnsPacket _root;
         private DnsPacket.Answer _parent;
-        public byte[] ipV6() { return ipV6; }
+        public int preference() { return preference; }
+        public DomainName mx() { return mx; }
         public DnsPacket _root() { return _root; }
         public DnsPacket.Answer _parent() { return _parent; }
+    }
+    public static class PacketFlags extends KaitaiStruct {
+        public static PacketFlags fromFile(String fileName) throws IOException {
+            return new PacketFlags(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public PacketFlags(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public PacketFlags(KaitaiStream _io, DnsPacket _parent) {
+            this(_io, _parent, null);
+        }
+
+        public PacketFlags(KaitaiStream _io, DnsPacket _parent, DnsPacket _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.flag = this._io.readU2be();
+        }
+
+        public void _fetchInstances() {
+        }
+        private Integer aa;
+        public Integer aa() {
+            if (this.aa != null)
+                return this.aa;
+            this.aa = ((Number) ((flag() & 1024) >> 10)).intValue();
+            return this.aa;
+        }
+        private Integer ad;
+        public Integer ad() {
+            if (this.ad != null)
+                return this.ad;
+            this.ad = ((Number) ((flag() & 32) >> 5)).intValue();
+            return this.ad;
+        }
+        private Integer cd;
+        public Integer cd() {
+            if (this.cd != null)
+                return this.cd;
+            this.cd = ((Number) ((flag() & 16) >> 4)).intValue();
+            return this.cd;
+        }
+        private Boolean isOpcodeValid;
+        public Boolean isOpcodeValid() {
+            if (this.isOpcodeValid != null)
+                return this.isOpcodeValid;
+            this.isOpcodeValid =  ((opcode() == 0) || (opcode() == 1) || (opcode() == 2)) ;
+            return this.isOpcodeValid;
+        }
+        private Integer opcode;
+        public Integer opcode() {
+            if (this.opcode != null)
+                return this.opcode;
+            this.opcode = ((Number) ((flag() & 30720) >> 11)).intValue();
+            return this.opcode;
+        }
+        private Integer qr;
+        public Integer qr() {
+            if (this.qr != null)
+                return this.qr;
+            this.qr = ((Number) ((flag() & 32768) >> 15)).intValue();
+            return this.qr;
+        }
+        private Integer ra;
+        public Integer ra() {
+            if (this.ra != null)
+                return this.ra;
+            this.ra = ((Number) ((flag() & 128) >> 7)).intValue();
+            return this.ra;
+        }
+        private Integer rcode;
+        public Integer rcode() {
+            if (this.rcode != null)
+                return this.rcode;
+            this.rcode = ((Number) ((flag() & 15) >> 0)).intValue();
+            return this.rcode;
+        }
+        private Integer rd;
+        public Integer rd() {
+            if (this.rd != null)
+                return this.rd;
+            this.rd = ((Number) ((flag() & 256) >> 8)).intValue();
+            return this.rd;
+        }
+        private Integer tc;
+        public Integer tc() {
+            if (this.tc != null)
+                return this.tc;
+            this.tc = ((Number) ((flag() & 512) >> 9)).intValue();
+            return this.tc;
+        }
+        private Integer z;
+        public Integer z() {
+            if (this.z != null)
+                return this.z;
+            this.z = ((Number) ((flag() & 64) >> 6)).intValue();
+            return this.z;
+        }
+        private int flag;
+        private DnsPacket _root;
+        private DnsPacket _parent;
+        public int flag() { return flag; }
+        public DnsPacket _root() { return _root; }
+        public DnsPacket _parent() { return _parent; }
+    }
+    public static class PointerStruct extends KaitaiStruct {
+        public static PointerStruct fromFile(String fileName) throws IOException {
+            return new PointerStruct(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public PointerStruct(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public PointerStruct(KaitaiStream _io, DnsPacket.Label _parent) {
+            this(_io, _parent, null);
+        }
+
+        public PointerStruct(KaitaiStream _io, DnsPacket.Label _parent, DnsPacket _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.value = this._io.readU1();
+        }
+
+        public void _fetchInstances() {
+            contents();
+            if (this.contents != null) {
+                this.contents._fetchInstances();
+            }
+        }
+        private DomainName contents;
+        public DomainName contents() {
+            if (this.contents != null)
+                return this.contents;
+            KaitaiStream io = _root()._io();
+            long _pos = io.pos();
+            io.seek(value() + (_parent().length() - 192 << 8));
+            this.contents = new DomainName(io, this, _root);
+            io.seek(_pos);
+            return this.contents;
+        }
+        private int value;
+        private DnsPacket _root;
+        private DnsPacket.Label _parent;
+
+        /**
+         * Read one byte, then offset to that position, read one domain-name and return
+         */
+        public int value() { return value; }
+        public DnsPacket _root() { return _root; }
+        public DnsPacket.Label _parent() { return _parent; }
+    }
+    public static class Query extends KaitaiStruct {
+        public static Query fromFile(String fileName) throws IOException {
+            return new Query(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Query(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Query(KaitaiStream _io, DnsPacket _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Query(KaitaiStream _io, DnsPacket _parent, DnsPacket _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.name = new DomainName(this._io, this, _root);
+            this.type = DnsPacket.TypeType.byId(this._io.readU2be());
+            this.queryClass = DnsPacket.ClassType.byId(this._io.readU2be());
+        }
+
+        public void _fetchInstances() {
+            this.name._fetchInstances();
+        }
+        private DomainName name;
+        private TypeType type;
+        private ClassType queryClass;
+        private DnsPacket _root;
+        private DnsPacket _parent;
+        public DomainName name() { return name; }
+        public TypeType type() { return type; }
+        public ClassType queryClass() { return queryClass; }
+        public DnsPacket _root() { return _root; }
+        public DnsPacket _parent() { return _parent; }
     }
     public static class Service extends KaitaiStruct {
         public static Service fromFile(String fileName) throws IOException {
@@ -381,6 +798,10 @@ public class DnsPacket extends KaitaiStruct {
             this.weight = this._io.readU2be();
             this.port = this._io.readU2be();
             this.target = new DomainName(this._io, this, _root);
+        }
+
+        public void _fetchInstances() {
+            this.target._fetchInstances();
         }
         private int priority;
         private int weight;
@@ -416,7 +837,10 @@ public class DnsPacket extends KaitaiStruct {
         }
         private void _read() {
             this.length = this._io.readU1();
-            this.text = new String(this._io.readBytes(length()), Charset.forName("utf-8"));
+            this.text = new String(this._io.readBytes(length()), StandardCharsets.UTF_8);
+        }
+
+        public void _fetchInstances() {
         }
         private int length;
         private String text;
@@ -456,323 +880,16 @@ public class DnsPacket extends KaitaiStruct {
                 }
             }
         }
-        private ArrayList<Txt> data;
-        private DnsPacket _root;
-        private DnsPacket.Answer _parent;
-        public ArrayList<Txt> data() { return data; }
-        public DnsPacket _root() { return _root; }
-        public DnsPacket.Answer _parent() { return _parent; }
-    }
-    public static class Address extends KaitaiStruct {
-        public static Address fromFile(String fileName) throws IOException {
-            return new Address(new ByteBufferKaitaiStream(fileName));
-        }
 
-        public Address(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Address(KaitaiStream _io, DnsPacket.Answer _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Address(KaitaiStream _io, DnsPacket.Answer _parent, DnsPacket _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.ip = this._io.readBytes(4);
-        }
-        private byte[] ip;
-        private DnsPacket _root;
-        private DnsPacket.Answer _parent;
-        public byte[] ip() { return ip; }
-        public DnsPacket _root() { return _root; }
-        public DnsPacket.Answer _parent() { return _parent; }
-    }
-    public static class Answer extends KaitaiStruct {
-        public static Answer fromFile(String fileName) throws IOException {
-            return new Answer(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Answer(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Answer(KaitaiStream _io, DnsPacket _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Answer(KaitaiStream _io, DnsPacket _parent, DnsPacket _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.name = new DomainName(this._io, this, _root);
-            this.type = DnsPacket.TypeType.byId(this._io.readU2be());
-            this.answerClass = DnsPacket.ClassType.byId(this._io.readU2be());
-            this.ttl = this._io.readS4be();
-            this.rdlength = this._io.readU2be();
-            {
-                TypeType on = type();
-                if (on != null) {
-                    switch (type()) {
-                    case SRV: {
-                        this._raw_payload = this._io.readBytes(rdlength());
-                        KaitaiStream _io__raw_payload = new ByteBufferKaitaiStream(_raw_payload);
-                        this.payload = new Service(_io__raw_payload, this, _root);
-                        break;
-                    }
-                    case A: {
-                        this._raw_payload = this._io.readBytes(rdlength());
-                        KaitaiStream _io__raw_payload = new ByteBufferKaitaiStream(_raw_payload);
-                        this.payload = new Address(_io__raw_payload, this, _root);
-                        break;
-                    }
-                    case CNAME: {
-                        this._raw_payload = this._io.readBytes(rdlength());
-                        KaitaiStream _io__raw_payload = new ByteBufferKaitaiStream(_raw_payload);
-                        this.payload = new DomainName(_io__raw_payload, this, _root);
-                        break;
-                    }
-                    case NS: {
-                        this._raw_payload = this._io.readBytes(rdlength());
-                        KaitaiStream _io__raw_payload = new ByteBufferKaitaiStream(_raw_payload);
-                        this.payload = new DomainName(_io__raw_payload, this, _root);
-                        break;
-                    }
-                    case SOA: {
-                        this._raw_payload = this._io.readBytes(rdlength());
-                        KaitaiStream _io__raw_payload = new ByteBufferKaitaiStream(_raw_payload);
-                        this.payload = new AuthorityInfo(_io__raw_payload, this, _root);
-                        break;
-                    }
-                    case MX: {
-                        this._raw_payload = this._io.readBytes(rdlength());
-                        KaitaiStream _io__raw_payload = new ByteBufferKaitaiStream(_raw_payload);
-                        this.payload = new MxInfo(_io__raw_payload, this, _root);
-                        break;
-                    }
-                    case TXT: {
-                        this._raw_payload = this._io.readBytes(rdlength());
-                        KaitaiStream _io__raw_payload = new ByteBufferKaitaiStream(_raw_payload);
-                        this.payload = new TxtBody(_io__raw_payload, this, _root);
-                        break;
-                    }
-                    case PTR: {
-                        this._raw_payload = this._io.readBytes(rdlength());
-                        KaitaiStream _io__raw_payload = new ByteBufferKaitaiStream(_raw_payload);
-                        this.payload = new DomainName(_io__raw_payload, this, _root);
-                        break;
-                    }
-                    case AAAA: {
-                        this._raw_payload = this._io.readBytes(rdlength());
-                        KaitaiStream _io__raw_payload = new ByteBufferKaitaiStream(_raw_payload);
-                        this.payload = new AddressV6(_io__raw_payload, this, _root);
-                        break;
-                    }
-                    default: {
-                        this.payload = this._io.readBytes(rdlength());
-                        break;
-                    }
-                    }
-                } else {
-                    this.payload = this._io.readBytes(rdlength());
-                }
+        public void _fetchInstances() {
+            for (int i = 0; i < this.data.size(); i++) {
+                this.data.get(((Number) (i)).intValue())._fetchInstances();
             }
         }
-        private DomainName name;
-        private TypeType type;
-        private ClassType answerClass;
-        private int ttl;
-        private int rdlength;
-        private Object payload;
-        private DnsPacket _root;
-        private DnsPacket _parent;
-        private byte[] _raw_payload;
-        public DomainName name() { return name; }
-        public TypeType type() { return type; }
-        public ClassType answerClass() { return answerClass; }
-
-        /**
-         * Time to live (in seconds)
-         */
-        public int ttl() { return ttl; }
-
-        /**
-         * Length in octets of the following payload
-         */
-        public int rdlength() { return rdlength; }
-        public Object payload() { return payload; }
-        public DnsPacket _root() { return _root; }
-        public DnsPacket _parent() { return _parent; }
-        public byte[] _raw_payload() { return _raw_payload; }
-    }
-    public static class PacketFlags extends KaitaiStruct {
-        public static PacketFlags fromFile(String fileName) throws IOException {
-            return new PacketFlags(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public PacketFlags(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public PacketFlags(KaitaiStream _io, DnsPacket _parent) {
-            this(_io, _parent, null);
-        }
-
-        public PacketFlags(KaitaiStream _io, DnsPacket _parent, DnsPacket _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.flag = this._io.readU2be();
-        }
-        private Integer qr;
-        public Integer qr() {
-            if (this.qr != null)
-                return this.qr;
-            int _tmp = (int) (((flag() & 32768) >> 15));
-            this.qr = _tmp;
-            return this.qr;
-        }
-        private Integer ra;
-        public Integer ra() {
-            if (this.ra != null)
-                return this.ra;
-            int _tmp = (int) (((flag() & 128) >> 7));
-            this.ra = _tmp;
-            return this.ra;
-        }
-        private Integer tc;
-        public Integer tc() {
-            if (this.tc != null)
-                return this.tc;
-            int _tmp = (int) (((flag() & 512) >> 9));
-            this.tc = _tmp;
-            return this.tc;
-        }
-        private Boolean isOpcodeValid;
-        public Boolean isOpcodeValid() {
-            if (this.isOpcodeValid != null)
-                return this.isOpcodeValid;
-            boolean _tmp = (boolean) ( ((opcode() == 0) || (opcode() == 1) || (opcode() == 2)) );
-            this.isOpcodeValid = _tmp;
-            return this.isOpcodeValid;
-        }
-        private Integer rcode;
-        public Integer rcode() {
-            if (this.rcode != null)
-                return this.rcode;
-            int _tmp = (int) (((flag() & 15) >> 0));
-            this.rcode = _tmp;
-            return this.rcode;
-        }
-        private Integer opcode;
-        public Integer opcode() {
-            if (this.opcode != null)
-                return this.opcode;
-            int _tmp = (int) (((flag() & 30720) >> 11));
-            this.opcode = _tmp;
-            return this.opcode;
-        }
-        private Integer aa;
-        public Integer aa() {
-            if (this.aa != null)
-                return this.aa;
-            int _tmp = (int) (((flag() & 1024) >> 10));
-            this.aa = _tmp;
-            return this.aa;
-        }
-        private Integer z;
-        public Integer z() {
-            if (this.z != null)
-                return this.z;
-            int _tmp = (int) (((flag() & 64) >> 6));
-            this.z = _tmp;
-            return this.z;
-        }
-        private Integer rd;
-        public Integer rd() {
-            if (this.rd != null)
-                return this.rd;
-            int _tmp = (int) (((flag() & 256) >> 8));
-            this.rd = _tmp;
-            return this.rd;
-        }
-        private Integer cd;
-        public Integer cd() {
-            if (this.cd != null)
-                return this.cd;
-            int _tmp = (int) (((flag() & 16) >> 4));
-            this.cd = _tmp;
-            return this.cd;
-        }
-        private Integer ad;
-        public Integer ad() {
-            if (this.ad != null)
-                return this.ad;
-            int _tmp = (int) (((flag() & 32) >> 5));
-            this.ad = _tmp;
-            return this.ad;
-        }
-        private int flag;
-        private DnsPacket _root;
-        private DnsPacket _parent;
-        public int flag() { return flag; }
-        public DnsPacket _root() { return _root; }
-        public DnsPacket _parent() { return _parent; }
-    }
-    public static class AuthorityInfo extends KaitaiStruct {
-        public static AuthorityInfo fromFile(String fileName) throws IOException {
-            return new AuthorityInfo(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public AuthorityInfo(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public AuthorityInfo(KaitaiStream _io, DnsPacket.Answer _parent) {
-            this(_io, _parent, null);
-        }
-
-        public AuthorityInfo(KaitaiStream _io, DnsPacket.Answer _parent, DnsPacket _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.primaryNs = new DomainName(this._io, this, _root);
-            this.resoponsibleMailbox = new DomainName(this._io, this, _root);
-            this.serial = this._io.readU4be();
-            this.refreshInterval = this._io.readU4be();
-            this.retryInterval = this._io.readU4be();
-            this.expireLimit = this._io.readU4be();
-            this.minTtl = this._io.readU4be();
-        }
-        private DomainName primaryNs;
-        private DomainName resoponsibleMailbox;
-        private long serial;
-        private long refreshInterval;
-        private long retryInterval;
-        private long expireLimit;
-        private long minTtl;
+        private List<Txt> data;
         private DnsPacket _root;
         private DnsPacket.Answer _parent;
-        public DomainName primaryNs() { return primaryNs; }
-        public DomainName resoponsibleMailbox() { return resoponsibleMailbox; }
-        public long serial() { return serial; }
-        public long refreshInterval() { return refreshInterval; }
-        public long retryInterval() { return retryInterval; }
-        public long expireLimit() { return expireLimit; }
-        public long minTtl() { return minTtl; }
+        public List<Txt> data() { return data; }
         public DnsPacket _root() { return _root; }
         public DnsPacket.Answer _parent() { return _parent; }
     }
@@ -782,10 +899,10 @@ public class DnsPacket extends KaitaiStruct {
     private Integer ancount;
     private Integer nscount;
     private Integer arcount;
-    private ArrayList<Query> queries;
-    private ArrayList<Answer> answers;
-    private ArrayList<Answer> authorities;
-    private ArrayList<Answer> additionals;
+    private List<Query> queries;
+    private List<Answer> answers;
+    private List<Answer> authorities;
+    private List<Answer> additionals;
     private DnsPacket _root;
     private KaitaiStruct _parent;
 
@@ -814,10 +931,10 @@ public class DnsPacket extends KaitaiStruct {
      * Number of resource records holding additional information
      */
     public Integer arcount() { return arcount; }
-    public ArrayList<Query> queries() { return queries; }
-    public ArrayList<Answer> answers() { return answers; }
-    public ArrayList<Answer> authorities() { return authorities; }
-    public ArrayList<Answer> additionals() { return additionals; }
+    public List<Query> queries() { return queries; }
+    public List<Answer> answers() { return answers; }
+    public List<Answer> authorities() { return authorities; }
+    public List<Answer> additionals() { return additionals; }
     public DnsPacket _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

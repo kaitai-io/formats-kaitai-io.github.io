@@ -67,10 +67,10 @@ end
 function Au:_read()
   self.magic = self._io:read_bytes(4)
   if not(self.magic == "\046\115\110\100") then
-    error("not equal, expected " ..  "\046\115\110\100" .. ", but got " .. self.magic)
+    error("not equal, expected " .. "\046\115\110\100" .. ", but got " .. self.magic)
   end
   self.ofs_data = self._io:read_u4be()
-  self._raw_header = self._io:read_bytes(((self.ofs_data - 4) - 4))
+  self._raw_header = self._io:read_bytes((self.ofs_data - 4) - 4)
   local _io = KaitaiStream(stringstream(self._raw_header))
   self.header = Au.Header(_io, self, self._root)
 end
@@ -81,7 +81,7 @@ function Au.property.len_data:get()
     return self._m_len_data
   end
 
-  self._m_len_data = utils.box_unwrap((self.header.data_size == 4294967295) and utils.box_wrap((self._io:size() - self.ofs_data)) or (self.header.data_size))
+  self._m_len_data = utils.box_unwrap((self.header.data_size == 4294967295) and utils.box_wrap(self._io:size() - self.ofs_data) or (self.header.data_size))
   return self._m_len_data
 end
 
@@ -91,7 +91,7 @@ Au.Header = class.class(KaitaiStruct)
 function Au.Header:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 

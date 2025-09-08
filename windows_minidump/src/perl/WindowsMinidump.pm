@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Encode;
 
 ########################################################################
@@ -75,7 +75,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -100,7 +100,7 @@ sub streams {
     return $self->{streams} if ($self->{streams});
     my $_pos = $self->{_io}->pos();
     $self->{_io}->seek($self->ofs_streams());
-    $self->{streams} = ();
+    $self->{streams} = [];
     my $n_streams = $self->num_streams();
     for (my $i = 0; $i < $n_streams; $i++) {
         push @{$self->{streams}}, WindowsMinidump::Dir->new($self->{_io}, $self, $self->{_root});
@@ -150,7 +150,7 @@ sub flags {
 }
 
 ########################################################################
-package WindowsMinidump::ThreadList;
+package WindowsMinidump::Dir;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -169,7 +169,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -179,22 +179,201 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{num_threads} = $self->{_io}->read_u4le();
-    $self->{threads} = ();
-    my $n_threads = $self->num_threads();
-    for (my $i = 0; $i < $n_threads; $i++) {
-        push @{$self->{threads}}, WindowsMinidump::Thread->new($self->{_io}, $self, $self->{_root});
+    $self->{stream_type} = $self->{_io}->read_u4le();
+    $self->{len_data} = $self->{_io}->read_u4le();
+    $self->{ofs_data} = $self->{_io}->read_u4le();
+}
+
+sub data {
+    my ($self) = @_;
+    return $self->{data} if ($self->{data});
+    my $_pos = $self->{_io}->pos();
+    $self->{_io}->seek($self->ofs_data());
+    my $_on = $self->stream_type();
+    if ($_on == $WindowsMinidump::STREAM_TYPES_EXCEPTION) {
+        $self->{_raw_data} = $self->{_io}->read_bytes($self->len_data());
+        my $io__raw_data = IO::KaitaiStruct::Stream->new($self->{_raw_data});
+        $self->{data} = WindowsMinidump::ExceptionStream->new($io__raw_data, $self, $self->{_root});
+    }
+    elsif ($_on == $WindowsMinidump::STREAM_TYPES_MEMORY_LIST) {
+        $self->{_raw_data} = $self->{_io}->read_bytes($self->len_data());
+        my $io__raw_data = IO::KaitaiStruct::Stream->new($self->{_raw_data});
+        $self->{data} = WindowsMinidump::MemoryList->new($io__raw_data, $self, $self->{_root});
+    }
+    elsif ($_on == $WindowsMinidump::STREAM_TYPES_MISC_INFO) {
+        $self->{_raw_data} = $self->{_io}->read_bytes($self->len_data());
+        my $io__raw_data = IO::KaitaiStruct::Stream->new($self->{_raw_data});
+        $self->{data} = WindowsMinidump::MiscInfo->new($io__raw_data, $self, $self->{_root});
+    }
+    elsif ($_on == $WindowsMinidump::STREAM_TYPES_SYSTEM_INFO) {
+        $self->{_raw_data} = $self->{_io}->read_bytes($self->len_data());
+        my $io__raw_data = IO::KaitaiStruct::Stream->new($self->{_raw_data});
+        $self->{data} = WindowsMinidump::SystemInfo->new($io__raw_data, $self, $self->{_root});
+    }
+    elsif ($_on == $WindowsMinidump::STREAM_TYPES_THREAD_LIST) {
+        $self->{_raw_data} = $self->{_io}->read_bytes($self->len_data());
+        my $io__raw_data = IO::KaitaiStruct::Stream->new($self->{_raw_data});
+        $self->{data} = WindowsMinidump::ThreadList->new($io__raw_data, $self, $self->{_root});
+    }
+    else {
+        $self->{data} = $self->{_io}->read_bytes($self->len_data());
+    }
+    $self->{_io}->seek($_pos);
+    return $self->{data};
+}
+
+sub stream_type {
+    my ($self) = @_;
+    return $self->{stream_type};
+}
+
+sub len_data {
+    my ($self) = @_;
+    return $self->{len_data};
+}
+
+sub ofs_data {
+    my ($self) = @_;
+    return $self->{ofs_data};
+}
+
+sub _raw_data {
+    my ($self) = @_;
+    return $self->{_raw_data};
+}
+
+########################################################################
+package WindowsMinidump::ExceptionRecord;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{code} = $self->{_io}->read_u4le();
+    $self->{flags} = $self->{_io}->read_u4le();
+    $self->{inner_exception} = $self->{_io}->read_u8le();
+    $self->{addr} = $self->{_io}->read_u8le();
+    $self->{num_params} = $self->{_io}->read_u4le();
+    $self->{reserved} = $self->{_io}->read_u4le();
+    $self->{params} = [];
+    my $n_params = 15;
+    for (my $i = 0; $i < $n_params; $i++) {
+        push @{$self->{params}}, $self->{_io}->read_u8le();
     }
 }
 
-sub num_threads {
+sub code {
     my ($self) = @_;
-    return $self->{num_threads};
+    return $self->{code};
 }
 
-sub threads {
+sub flags {
     my ($self) = @_;
-    return $self->{threads};
+    return $self->{flags};
+}
+
+sub inner_exception {
+    my ($self) = @_;
+    return $self->{inner_exception};
+}
+
+sub addr {
+    my ($self) = @_;
+    return $self->{addr};
+}
+
+sub num_params {
+    my ($self) = @_;
+    return $self->{num_params};
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self->{reserved};
+}
+
+sub params {
+    my ($self) = @_;
+    return $self->{params};
+}
+
+########################################################################
+package WindowsMinidump::ExceptionStream;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{thread_id} = $self->{_io}->read_u4le();
+    $self->{reserved} = $self->{_io}->read_u4le();
+    $self->{exception_rec} = WindowsMinidump::ExceptionRecord->new($self->{_io}, $self, $self->{_root});
+    $self->{thread_context} = WindowsMinidump::LocationDescriptor->new($self->{_io}, $self, $self->{_root});
+}
+
+sub thread_id {
+    my ($self) = @_;
+    return $self->{thread_id};
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self->{reserved};
+}
+
+sub exception_rec {
+    my ($self) = @_;
+    return $self->{exception_rec};
+}
+
+sub thread_context {
+    my ($self) = @_;
+    return $self->{thread_context};
 }
 
 ########################################################################
@@ -217,7 +396,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -253,6 +432,98 @@ sub ofs_data {
 }
 
 ########################################################################
+package WindowsMinidump::MemoryDescriptor;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{addr_memory_range} = $self->{_io}->read_u8le();
+    $self->{memory} = WindowsMinidump::LocationDescriptor->new($self->{_io}, $self, $self->{_root});
+}
+
+sub addr_memory_range {
+    my ($self) = @_;
+    return $self->{addr_memory_range};
+}
+
+sub memory {
+    my ($self) = @_;
+    return $self->{memory};
+}
+
+########################################################################
+package WindowsMinidump::MemoryList;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{num_mem_ranges} = $self->{_io}->read_u4le();
+    $self->{mem_ranges} = [];
+    my $n_mem_ranges = $self->num_mem_ranges();
+    for (my $i = 0; $i < $n_mem_ranges; $i++) {
+        push @{$self->{mem_ranges}}, WindowsMinidump::MemoryDescriptor->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub num_mem_ranges {
+    my ($self) = @_;
+    return $self->{num_mem_ranges};
+}
+
+sub mem_ranges {
+    my ($self) = @_;
+    return $self->{mem_ranges};
+}
+
+########################################################################
 package WindowsMinidump::MinidumpString;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -272,7 +543,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -294,6 +565,104 @@ sub len_str {
 sub str {
     my ($self) = @_;
     return $self->{str};
+}
+
+########################################################################
+package WindowsMinidump::MiscInfo;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{len_info} = $self->{_io}->read_u4le();
+    $self->{flags1} = $self->{_io}->read_u4le();
+    $self->{process_id} = $self->{_io}->read_u4le();
+    $self->{process_create_time} = $self->{_io}->read_u4le();
+    $self->{process_user_time} = $self->{_io}->read_u4le();
+    $self->{process_kernel_time} = $self->{_io}->read_u4le();
+    $self->{cpu_max_mhz} = $self->{_io}->read_u4le();
+    $self->{cpu_cur_mhz} = $self->{_io}->read_u4le();
+    $self->{cpu_limit_mhz} = $self->{_io}->read_u4le();
+    $self->{cpu_max_idle_state} = $self->{_io}->read_u4le();
+    $self->{cpu_cur_idle_state} = $self->{_io}->read_u4le();
+}
+
+sub len_info {
+    my ($self) = @_;
+    return $self->{len_info};
+}
+
+sub flags1 {
+    my ($self) = @_;
+    return $self->{flags1};
+}
+
+sub process_id {
+    my ($self) = @_;
+    return $self->{process_id};
+}
+
+sub process_create_time {
+    my ($self) = @_;
+    return $self->{process_create_time};
+}
+
+sub process_user_time {
+    my ($self) = @_;
+    return $self->{process_user_time};
+}
+
+sub process_kernel_time {
+    my ($self) = @_;
+    return $self->{process_kernel_time};
+}
+
+sub cpu_max_mhz {
+    my ($self) = @_;
+    return $self->{cpu_max_mhz};
+}
+
+sub cpu_cur_mhz {
+    my ($self) = @_;
+    return $self->{cpu_cur_mhz};
+}
+
+sub cpu_limit_mhz {
+    my ($self) = @_;
+    return $self->{cpu_limit_mhz};
+}
+
+sub cpu_max_idle_state {
+    my ($self) = @_;
+    return $self->{cpu_max_idle_state};
+}
+
+sub cpu_cur_idle_state {
+    my ($self) = @_;
+    return $self->{cpu_cur_idle_state};
 }
 
 ########################################################################
@@ -322,7 +691,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -420,275 +789,6 @@ sub reserved2 {
 }
 
 ########################################################################
-package WindowsMinidump::ExceptionRecord;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{code} = $self->{_io}->read_u4le();
-    $self->{flags} = $self->{_io}->read_u4le();
-    $self->{inner_exception} = $self->{_io}->read_u8le();
-    $self->{addr} = $self->{_io}->read_u8le();
-    $self->{num_params} = $self->{_io}->read_u4le();
-    $self->{reserved} = $self->{_io}->read_u4le();
-    $self->{params} = ();
-    my $n_params = 15;
-    for (my $i = 0; $i < $n_params; $i++) {
-        push @{$self->{params}}, $self->{_io}->read_u8le();
-    }
-}
-
-sub code {
-    my ($self) = @_;
-    return $self->{code};
-}
-
-sub flags {
-    my ($self) = @_;
-    return $self->{flags};
-}
-
-sub inner_exception {
-    my ($self) = @_;
-    return $self->{inner_exception};
-}
-
-sub addr {
-    my ($self) = @_;
-    return $self->{addr};
-}
-
-sub num_params {
-    my ($self) = @_;
-    return $self->{num_params};
-}
-
-sub reserved {
-    my ($self) = @_;
-    return $self->{reserved};
-}
-
-sub params {
-    my ($self) = @_;
-    return $self->{params};
-}
-
-########################################################################
-package WindowsMinidump::MiscInfo;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{len_info} = $self->{_io}->read_u4le();
-    $self->{flags1} = $self->{_io}->read_u4le();
-    $self->{process_id} = $self->{_io}->read_u4le();
-    $self->{process_create_time} = $self->{_io}->read_u4le();
-    $self->{process_user_time} = $self->{_io}->read_u4le();
-    $self->{process_kernel_time} = $self->{_io}->read_u4le();
-    $self->{cpu_max_mhz} = $self->{_io}->read_u4le();
-    $self->{cpu_cur_mhz} = $self->{_io}->read_u4le();
-    $self->{cpu_limit_mhz} = $self->{_io}->read_u4le();
-    $self->{cpu_max_idle_state} = $self->{_io}->read_u4le();
-    $self->{cpu_cur_idle_state} = $self->{_io}->read_u4le();
-}
-
-sub len_info {
-    my ($self) = @_;
-    return $self->{len_info};
-}
-
-sub flags1 {
-    my ($self) = @_;
-    return $self->{flags1};
-}
-
-sub process_id {
-    my ($self) = @_;
-    return $self->{process_id};
-}
-
-sub process_create_time {
-    my ($self) = @_;
-    return $self->{process_create_time};
-}
-
-sub process_user_time {
-    my ($self) = @_;
-    return $self->{process_user_time};
-}
-
-sub process_kernel_time {
-    my ($self) = @_;
-    return $self->{process_kernel_time};
-}
-
-sub cpu_max_mhz {
-    my ($self) = @_;
-    return $self->{cpu_max_mhz};
-}
-
-sub cpu_cur_mhz {
-    my ($self) = @_;
-    return $self->{cpu_cur_mhz};
-}
-
-sub cpu_limit_mhz {
-    my ($self) = @_;
-    return $self->{cpu_limit_mhz};
-}
-
-sub cpu_max_idle_state {
-    my ($self) = @_;
-    return $self->{cpu_max_idle_state};
-}
-
-sub cpu_cur_idle_state {
-    my ($self) = @_;
-    return $self->{cpu_cur_idle_state};
-}
-
-########################################################################
-package WindowsMinidump::Dir;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{stream_type} = $self->{_io}->read_u4le();
-    $self->{len_data} = $self->{_io}->read_u4le();
-    $self->{ofs_data} = $self->{_io}->read_u4le();
-}
-
-sub data {
-    my ($self) = @_;
-    return $self->{data} if ($self->{data});
-    my $_pos = $self->{_io}->pos();
-    $self->{_io}->seek($self->ofs_data());
-    my $_on = $self->stream_type();
-    if ($_on == $WindowsMinidump::STREAM_TYPES_MEMORY_LIST) {
-        $self->{_raw_data} = $self->{_io}->read_bytes($self->len_data());
-        my $io__raw_data = IO::KaitaiStruct::Stream->new($self->{_raw_data});
-        $self->{data} = WindowsMinidump::MemoryList->new($io__raw_data, $self, $self->{_root});
-    }
-    elsif ($_on == $WindowsMinidump::STREAM_TYPES_MISC_INFO) {
-        $self->{_raw_data} = $self->{_io}->read_bytes($self->len_data());
-        my $io__raw_data = IO::KaitaiStruct::Stream->new($self->{_raw_data});
-        $self->{data} = WindowsMinidump::MiscInfo->new($io__raw_data, $self, $self->{_root});
-    }
-    elsif ($_on == $WindowsMinidump::STREAM_TYPES_THREAD_LIST) {
-        $self->{_raw_data} = $self->{_io}->read_bytes($self->len_data());
-        my $io__raw_data = IO::KaitaiStruct::Stream->new($self->{_raw_data});
-        $self->{data} = WindowsMinidump::ThreadList->new($io__raw_data, $self, $self->{_root});
-    }
-    elsif ($_on == $WindowsMinidump::STREAM_TYPES_EXCEPTION) {
-        $self->{_raw_data} = $self->{_io}->read_bytes($self->len_data());
-        my $io__raw_data = IO::KaitaiStruct::Stream->new($self->{_raw_data});
-        $self->{data} = WindowsMinidump::ExceptionStream->new($io__raw_data, $self, $self->{_root});
-    }
-    elsif ($_on == $WindowsMinidump::STREAM_TYPES_SYSTEM_INFO) {
-        $self->{_raw_data} = $self->{_io}->read_bytes($self->len_data());
-        my $io__raw_data = IO::KaitaiStruct::Stream->new($self->{_raw_data});
-        $self->{data} = WindowsMinidump::SystemInfo->new($io__raw_data, $self, $self->{_root});
-    }
-    else {
-        $self->{data} = $self->{_io}->read_bytes($self->len_data());
-    }
-    $self->{_io}->seek($_pos);
-    return $self->{data};
-}
-
-sub stream_type {
-    my ($self) = @_;
-    return $self->{stream_type};
-}
-
-sub len_data {
-    my ($self) = @_;
-    return $self->{len_data};
-}
-
-sub ofs_data {
-    my ($self) = @_;
-    return $self->{ofs_data};
-}
-
-sub _raw_data {
-    my ($self) = @_;
-    return $self->{_raw_data};
-}
-
-########################################################################
 package WindowsMinidump::Thread;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -708,7 +808,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -763,7 +863,7 @@ sub thread_context {
 }
 
 ########################################################################
-package WindowsMinidump::MemoryList;
+package WindowsMinidump::ThreadList;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -782,7 +882,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -792,122 +892,22 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{num_mem_ranges} = $self->{_io}->read_u4le();
-    $self->{mem_ranges} = ();
-    my $n_mem_ranges = $self->num_mem_ranges();
-    for (my $i = 0; $i < $n_mem_ranges; $i++) {
-        push @{$self->{mem_ranges}}, WindowsMinidump::MemoryDescriptor->new($self->{_io}, $self, $self->{_root});
+    $self->{num_threads} = $self->{_io}->read_u4le();
+    $self->{threads} = [];
+    my $n_threads = $self->num_threads();
+    for (my $i = 0; $i < $n_threads; $i++) {
+        push @{$self->{threads}}, WindowsMinidump::Thread->new($self->{_io}, $self, $self->{_root});
     }
 }
 
-sub num_mem_ranges {
+sub num_threads {
     my ($self) = @_;
-    return $self->{num_mem_ranges};
+    return $self->{num_threads};
 }
 
-sub mem_ranges {
+sub threads {
     my ($self) = @_;
-    return $self->{mem_ranges};
-}
-
-########################################################################
-package WindowsMinidump::MemoryDescriptor;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{addr_memory_range} = $self->{_io}->read_u8le();
-    $self->{memory} = WindowsMinidump::LocationDescriptor->new($self->{_io}, $self, $self->{_root});
-}
-
-sub addr_memory_range {
-    my ($self) = @_;
-    return $self->{addr_memory_range};
-}
-
-sub memory {
-    my ($self) = @_;
-    return $self->{memory};
-}
-
-########################################################################
-package WindowsMinidump::ExceptionStream;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{thread_id} = $self->{_io}->read_u4le();
-    $self->{reserved} = $self->{_io}->read_u4le();
-    $self->{exception_rec} = WindowsMinidump::ExceptionRecord->new($self->{_io}, $self, $self->{_root});
-    $self->{thread_context} = WindowsMinidump::LocationDescriptor->new($self->{_io}, $self, $self->{_root});
-}
-
-sub thread_id {
-    my ($self) = @_;
-    return $self->{thread_id};
-}
-
-sub reserved {
-    my ($self) = @_;
-    return $self->{reserved};
-}
-
-sub exception_rec {
-    my ($self) = @_;
-    return $self->{exception_rec};
-}
-
-sub thread_context {
-    my ($self) = @_;
-    return $self->{thread_context};
+    return $self->{threads};
 }
 
 1;

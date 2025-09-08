@@ -2,18 +2,19 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class pcap_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
-#include "packet_ppi.h"
 #include "ethernet_frame.h"
+#include "packet_ppi.h"
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
-class packet_ppi_t;
-class ethernet_frame_t;
 
 /**
  * PCAP (named after libpcap / winpcap) is a popular format for saving
@@ -240,6 +241,12 @@ public:
         LINKTYPE_SILABS_DEBUG_CHANNEL = 298,
         LINKTYPE_FIRA_UCI = 299
     };
+    static bool _is_defined_linktype_t(linktype_t v);
+
+private:
+    static const std::set<linktype_t> _values_linktype_t;
+
+public:
 
     pcap_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, pcap_t* p__root = nullptr);
 

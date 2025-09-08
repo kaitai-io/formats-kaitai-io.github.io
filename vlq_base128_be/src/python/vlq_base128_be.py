@@ -1,11 +1,12 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class VlqBase128Be(KaitaiStruct):
     """A variable-length unsigned integer using base128 encoding. 1-byte groups
@@ -24,9 +25,9 @@ class VlqBase128Be(KaitaiStruct):
     This particular implementation supports serialized values to up 8 bytes long.
     """
     def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
+        super(VlqBase128Be, self).__init__(_io)
         self._parent = _parent
-        self._root = _root if _root else self
+        self._root = _root or self
         self._read()
 
     def _read(self):
@@ -35,17 +36,25 @@ class VlqBase128Be(KaitaiStruct):
         while True:
             _ = VlqBase128Be.Group(self._io, self, self._root)
             self.groups.append(_)
-            if not (_.has_next):
+            if (not (_.has_next)):
                 break
             i += 1
+
+
+    def _fetch_instances(self):
+        pass
+        for i in range(len(self.groups)):
+            pass
+            self.groups[i]._fetch_instances()
+
 
     class Group(KaitaiStruct):
         """One byte group, clearly divided into 7-bit "value" chunk and 1-bit "continuation" flag.
         """
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(VlqBase128Be.Group, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -53,12 +62,16 @@ class VlqBase128Be(KaitaiStruct):
             self.value = self._io.read_bits_int_be(7)
 
 
+        def _fetch_instances(self):
+            pass
+
+
     @property
     def last(self):
         if hasattr(self, '_m_last'):
             return self._m_last
 
-        self._m_last = (len(self.groups) - 1)
+        self._m_last = len(self.groups) - 1
         return getattr(self, '_m_last', None)
 
     @property
@@ -67,7 +80,7 @@ class VlqBase128Be(KaitaiStruct):
         if hasattr(self, '_m_value'):
             return self._m_value
 
-        self._m_value = (((((((self.groups[self.last].value + ((self.groups[(self.last - 1)].value << 7) if self.last >= 1 else 0)) + ((self.groups[(self.last - 2)].value << 14) if self.last >= 2 else 0)) + ((self.groups[(self.last - 3)].value << 21) if self.last >= 3 else 0)) + ((self.groups[(self.last - 4)].value << 28) if self.last >= 4 else 0)) + ((self.groups[(self.last - 5)].value << 35) if self.last >= 5 else 0)) + ((self.groups[(self.last - 6)].value << 42) if self.last >= 6 else 0)) + ((self.groups[(self.last - 7)].value << 49) if self.last >= 7 else 0))
+        self._m_value = (((((((self.groups[self.last].value + (self.groups[self.last - 1].value << 7 if self.last >= 1 else 0)) + (self.groups[self.last - 2].value << 14 if self.last >= 2 else 0)) + (self.groups[self.last - 3].value << 21 if self.last >= 3 else 0)) + (self.groups[self.last - 4].value << 28 if self.last >= 4 else 0)) + (self.groups[self.last - 5].value << 35 if self.last >= 5 else 0)) + (self.groups[self.last - 6].value << 42 if self.last >= 6 else 0)) + (self.groups[self.last - 7].value << 49 if self.last >= 7 else 0))
         return getattr(self, '_m_value', None)
 
 

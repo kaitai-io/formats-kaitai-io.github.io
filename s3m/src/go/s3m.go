@@ -53,14 +53,18 @@ type S3m struct {
 	ChannelPans []*S3m_ChannelPan
 	_io *kaitai.Stream
 	_root *S3m
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewS3m() *S3m {
 	return &S3m{
 	}
 }
 
-func (this *S3m) Read(io *kaitai.Stream, parent interface{}, root *S3m) (err error) {
+func (this S3m) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *S3m) Read(io *kaitai.Stream, parent kaitai.Struct, root *S3m) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -247,6 +251,43 @@ func (this *S3m) Read(io *kaitai.Stream, parent interface{}, root *S3m) (err err
 /**
  * Offset of special data, not used by Scream Tracker directly.
  */
+type S3m_Channel struct {
+	IsDisabled bool
+	ChType uint64
+	_io *kaitai.Stream
+	_root *S3m
+	_parent *S3m
+}
+func NewS3m_Channel() *S3m_Channel {
+	return &S3m_Channel{
+	}
+}
+
+func (this S3m_Channel) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *S3m_Channel) Read(io *kaitai.Stream, parent *S3m, root *S3m) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp26, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.IsDisabled = tmp26 != 0
+	tmp27, err := this._io.ReadBitsIntBe(7)
+	if err != nil {
+		return err
+	}
+	this.ChType = tmp27
+	return err
+}
+
+/**
+ * Channel type (0..7 = left sample channels, 8..15 = right sample channels, 16..31 = AdLib synth channels)
+ */
 type S3m_ChannelPan struct {
 	Reserved1 uint64
 	HasCustomPan bool
@@ -261,31 +302,35 @@ func NewS3m_ChannelPan() *S3m_ChannelPan {
 	}
 }
 
+func (this S3m_ChannelPan) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *S3m_ChannelPan) Read(io *kaitai.Stream, parent *S3m, root *S3m) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp26, err := this._io.ReadBitsIntBe(2)
+	tmp28, err := this._io.ReadBitsIntBe(2)
 	if err != nil {
 		return err
 	}
-	this.Reserved1 = tmp26
-	tmp27, err := this._io.ReadBitsIntBe(1)
+	this.Reserved1 = tmp28
+	tmp29, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.HasCustomPan = tmp27 != 0
-	tmp28, err := this._io.ReadBitsIntBe(1)
+	this.HasCustomPan = tmp29 != 0
+	tmp30, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Reserved2 = tmp28 != 0
-	tmp29, err := this._io.ReadBitsIntBe(4)
+	this.Reserved2 = tmp30 != 0
+	tmp31, err := this._io.ReadBitsIntBe(4)
 	if err != nil {
 		return err
 	}
-	this.Pan = tmp29
+	this.Pan = tmp31
 	return err
 }
 
@@ -294,337 +339,6 @@ func (this *S3m_ChannelPan) Read(io *kaitai.Stream, parent *S3m, root *S3m) (err
  * field. If false, the channel would use the default setting
  * (0x7 for mono, 0x3 or 0xc for stereo).
  */
-type S3m_PatternCell struct {
-	HasFx bool
-	HasVolume bool
-	HasNoteAndInstrument bool
-	ChannelNum uint64
-	Note uint8
-	Instrument uint8
-	Volume uint8
-	FxType uint8
-	FxValue uint8
-	_io *kaitai.Stream
-	_root *S3m
-	_parent *S3m_PatternCells
-}
-func NewS3m_PatternCell() *S3m_PatternCell {
-	return &S3m_PatternCell{
-	}
-}
-
-func (this *S3m_PatternCell) Read(io *kaitai.Stream, parent *S3m_PatternCells, root *S3m) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp30, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.HasFx = tmp30 != 0
-	tmp31, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.HasVolume = tmp31 != 0
-	tmp32, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.HasNoteAndInstrument = tmp32 != 0
-	tmp33, err := this._io.ReadBitsIntBe(5)
-	if err != nil {
-		return err
-	}
-	this.ChannelNum = tmp33
-	this._io.AlignToByte()
-	if (this.HasNoteAndInstrument) {
-		tmp34, err := this._io.ReadU1()
-		if err != nil {
-			return err
-		}
-		this.Note = tmp34
-	}
-	if (this.HasNoteAndInstrument) {
-		tmp35, err := this._io.ReadU1()
-		if err != nil {
-			return err
-		}
-		this.Instrument = tmp35
-	}
-	if (this.HasVolume) {
-		tmp36, err := this._io.ReadU1()
-		if err != nil {
-			return err
-		}
-		this.Volume = tmp36
-	}
-	if (this.HasFx) {
-		tmp37, err := this._io.ReadU1()
-		if err != nil {
-			return err
-		}
-		this.FxType = tmp37
-	}
-	if (this.HasFx) {
-		tmp38, err := this._io.ReadU1()
-		if err != nil {
-			return err
-		}
-		this.FxValue = tmp38
-	}
-	return err
-}
-type S3m_PatternCells struct {
-	Cells []*S3m_PatternCell
-	_io *kaitai.Stream
-	_root *S3m
-	_parent *S3m_Pattern
-}
-func NewS3m_PatternCells() *S3m_PatternCells {
-	return &S3m_PatternCells{
-	}
-}
-
-func (this *S3m_PatternCells) Read(io *kaitai.Stream, parent *S3m_Pattern, root *S3m) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	for i := 1;; i++ {
-		tmp39, err := this._io.EOF()
-		if err != nil {
-			return err
-		}
-		if tmp39 {
-			break
-		}
-		tmp40 := NewS3m_PatternCell()
-		err = tmp40.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Cells = append(this.Cells, tmp40)
-	}
-	return err
-}
-type S3m_Channel struct {
-	IsDisabled bool
-	ChType uint64
-	_io *kaitai.Stream
-	_root *S3m
-	_parent *S3m
-}
-func NewS3m_Channel() *S3m_Channel {
-	return &S3m_Channel{
-	}
-}
-
-func (this *S3m_Channel) Read(io *kaitai.Stream, parent *S3m, root *S3m) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp41, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.IsDisabled = tmp41 != 0
-	tmp42, err := this._io.ReadBitsIntBe(7)
-	if err != nil {
-		return err
-	}
-	this.ChType = tmp42
-	return err
-}
-
-/**
- * Channel type (0..7 = left sample channels, 8..15 = right sample channels, 16..31 = AdLib synth channels)
- */
-
-/**
- * Custom 3-byte integer, stored in mixed endian manner.
- */
-type S3m_SwappedU3 struct {
-	Hi uint8
-	Lo uint16
-	_io *kaitai.Stream
-	_root *S3m
-	_parent *S3m_Instrument_Sampled
-	_f_value bool
-	value int
-}
-func NewS3m_SwappedU3() *S3m_SwappedU3 {
-	return &S3m_SwappedU3{
-	}
-}
-
-func (this *S3m_SwappedU3) Read(io *kaitai.Stream, parent *S3m_Instrument_Sampled, root *S3m) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp43, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Hi = tmp43
-	tmp44, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.Lo = uint16(tmp44)
-	return err
-}
-func (this *S3m_SwappedU3) Value() (v int, err error) {
-	if (this._f_value) {
-		return this.value, nil
-	}
-	this.value = int((this.Lo | (this.Hi << 16)))
-	this._f_value = true
-	return this.value, nil
-}
-type S3m_Pattern struct {
-	Size uint16
-	Body *S3m_PatternCells
-	_io *kaitai.Stream
-	_root *S3m
-	_parent *S3m_PatternPtr
-	_raw_Body []byte
-}
-func NewS3m_Pattern() *S3m_Pattern {
-	return &S3m_Pattern{
-	}
-}
-
-func (this *S3m_Pattern) Read(io *kaitai.Stream, parent *S3m_PatternPtr, root *S3m) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp45, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.Size = uint16(tmp45)
-	tmp46, err := this._io.ReadBytes(int((this.Size - 2)))
-	if err != nil {
-		return err
-	}
-	tmp46 = tmp46
-	this._raw_Body = tmp46
-	_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-	tmp47 := NewS3m_PatternCells()
-	err = tmp47.Read(_io__raw_Body, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Body = tmp47
-	return err
-}
-type S3m_PatternPtr struct {
-	Paraptr uint16
-	_io *kaitai.Stream
-	_root *S3m
-	_parent *S3m
-	_f_body bool
-	body *S3m_Pattern
-}
-func NewS3m_PatternPtr() *S3m_PatternPtr {
-	return &S3m_PatternPtr{
-	}
-}
-
-func (this *S3m_PatternPtr) Read(io *kaitai.Stream, parent *S3m, root *S3m) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp48, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.Paraptr = uint16(tmp48)
-	return err
-}
-func (this *S3m_PatternPtr) Body() (v *S3m_Pattern, err error) {
-	if (this._f_body) {
-		return this.body, nil
-	}
-	_pos, err := this._io.Pos()
-	if err != nil {
-		return nil, err
-	}
-	_, err = this._io.Seek(int64((this.Paraptr * 16)), io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	tmp49 := NewS3m_Pattern()
-	err = tmp49.Read(this._io, this, this._root)
-	if err != nil {
-		return nil, err
-	}
-	this.body = tmp49
-	_, err = this._io.Seek(_pos, io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	this._f_body = true
-	this._f_body = true
-	return this.body, nil
-}
-type S3m_InstrumentPtr struct {
-	Paraptr uint16
-	_io *kaitai.Stream
-	_root *S3m
-	_parent *S3m
-	_f_body bool
-	body *S3m_Instrument
-}
-func NewS3m_InstrumentPtr() *S3m_InstrumentPtr {
-	return &S3m_InstrumentPtr{
-	}
-}
-
-func (this *S3m_InstrumentPtr) Read(io *kaitai.Stream, parent *S3m, root *S3m) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp50, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.Paraptr = uint16(tmp50)
-	return err
-}
-func (this *S3m_InstrumentPtr) Body() (v *S3m_Instrument, err error) {
-	if (this._f_body) {
-		return this.body, nil
-	}
-	_pos, err := this._io.Pos()
-	if err != nil {
-		return nil, err
-	}
-	_, err = this._io.Seek(int64((this.Paraptr * 16)), io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	tmp51 := NewS3m_Instrument()
-	err = tmp51.Read(this._io, this, this._root)
-	if err != nil {
-		return nil, err
-	}
-	this.body = tmp51
-	_, err = this._io.Seek(_pos, io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	this._f_body = true
-	this._f_body = true
-	return this.body, nil
-}
 
 type S3m_Instrument_InstTypes int
 const (
@@ -636,10 +350,15 @@ const (
 	S3m_Instrument_InstTypes__Cymbal S3m_Instrument_InstTypes = 6
 	S3m_Instrument_InstTypes__Hihat S3m_Instrument_InstTypes = 7
 )
+var values_S3m_Instrument_InstTypes = map[S3m_Instrument_InstTypes]struct{}{1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}}
+func (v S3m_Instrument_InstTypes) isDefined() bool {
+	_, ok := values_S3m_Instrument_InstTypes[v]
+	return ok
+}
 type S3m_Instrument struct {
 	Type S3m_Instrument_InstTypes
 	Filename []byte
-	Body interface{}
+	Body kaitai.Struct
 	TuningHz uint32
 	Reserved2 []byte
 	SampleName []byte
@@ -653,64 +372,106 @@ func NewS3m_Instrument() *S3m_Instrument {
 	}
 }
 
+func (this S3m_Instrument) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *S3m_Instrument) Read(io *kaitai.Stream, parent *S3m_InstrumentPtr, root *S3m) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp52, err := this._io.ReadU1()
+	tmp32, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Type = S3m_Instrument_InstTypes(tmp52)
-	tmp53, err := this._io.ReadBytes(int(12))
+	this.Type = S3m_Instrument_InstTypes(tmp32)
+	tmp33, err := this._io.ReadBytes(int(12))
 	if err != nil {
 		return err
 	}
-	tmp53 = kaitai.BytesTerminate(tmp53, 0, false)
-	this.Filename = tmp53
+	tmp33 = kaitai.BytesTerminate(tmp33, 0, false)
+	this.Filename = tmp33
 	switch (this.Type) {
 	case S3m_Instrument_InstTypes__Sample:
-		tmp54 := NewS3m_Instrument_Sampled()
-		err = tmp54.Read(this._io, this, this._root)
+		tmp34 := NewS3m_Instrument_Sampled()
+		err = tmp34.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Body = tmp54
+		this.Body = tmp34
 	default:
-		tmp55 := NewS3m_Instrument_Adlib()
-		err = tmp55.Read(this._io, this, this._root)
+		tmp35 := NewS3m_Instrument_Adlib()
+		err = tmp35.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Body = tmp55
+		this.Body = tmp35
 	}
-	tmp56, err := this._io.ReadU4le()
+	tmp36, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.TuningHz = uint32(tmp56)
-	tmp57, err := this._io.ReadBytes(int(12))
+	this.TuningHz = uint32(tmp36)
+	tmp37, err := this._io.ReadBytes(int(12))
 	if err != nil {
 		return err
 	}
-	tmp57 = tmp57
-	this.Reserved2 = tmp57
-	tmp58, err := this._io.ReadBytes(int(28))
+	tmp37 = tmp37
+	this.Reserved2 = tmp37
+	tmp38, err := this._io.ReadBytes(int(28))
 	if err != nil {
 		return err
 	}
-	tmp58 = kaitai.BytesTerminate(tmp58, 0, false)
-	this.SampleName = tmp58
-	tmp59, err := this._io.ReadBytes(int(4))
+	tmp38 = kaitai.BytesTerminate(tmp38, 0, false)
+	this.SampleName = tmp38
+	tmp39, err := this._io.ReadBytes(int(4))
 	if err != nil {
 		return err
 	}
-	tmp59 = tmp59
-	this.Magic = tmp59
+	tmp39 = tmp39
+	this.Magic = tmp39
 	if !(bytes.Equal(this.Magic, []uint8{83, 67, 82, 83})) {
 		return kaitai.NewValidationNotEqualError([]uint8{83, 67, 82, 83}, this.Magic, this._io, "/types/instrument/seq/6")
 	}
+	return err
+}
+type S3m_Instrument_Adlib struct {
+	Reserved1 []byte
+	_unnamed1 []byte
+	_io *kaitai.Stream
+	_root *S3m
+	_parent *S3m_Instrument
+}
+func NewS3m_Instrument_Adlib() *S3m_Instrument_Adlib {
+	return &S3m_Instrument_Adlib{
+	}
+}
+
+func (this S3m_Instrument_Adlib) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *S3m_Instrument_Adlib) Read(io *kaitai.Stream, parent *S3m_Instrument, root *S3m) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp40, err := this._io.ReadBytes(int(3))
+	if err != nil {
+		return err
+	}
+	tmp40 = tmp40
+	this.Reserved1 = tmp40
+	if !(bytes.Equal(this.Reserved1, []uint8{0, 0, 0})) {
+		return kaitai.NewValidationNotEqualError([]uint8{0, 0, 0}, this.Reserved1, this._io, "/types/instrument/types/adlib/seq/0")
+	}
+	tmp41, err := this._io.ReadBytes(int(16))
+	if err != nil {
+		return err
+	}
+	tmp41 = tmp41
+	this._unnamed1 = tmp41
 	return err
 }
 type S3m_Instrument_Sampled struct {
@@ -733,82 +494,85 @@ func NewS3m_Instrument_Sampled() *S3m_Instrument_Sampled {
 	}
 }
 
+func (this S3m_Instrument_Sampled) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *S3m_Instrument_Sampled) Read(io *kaitai.Stream, parent *S3m_Instrument, root *S3m) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp60 := NewS3m_SwappedU3()
-	err = tmp60.Read(this._io, this, this._root)
+	tmp42 := NewS3m_SwappedU3()
+	err = tmp42.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.ParaptrSample = tmp60
-	tmp61, err := this._io.ReadU4le()
+	this.ParaptrSample = tmp42
+	tmp43, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.LenSample = uint32(tmp61)
-	tmp62, err := this._io.ReadU4le()
+	this.LenSample = uint32(tmp43)
+	tmp44, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.LoopBegin = uint32(tmp62)
-	tmp63, err := this._io.ReadU4le()
+	this.LoopBegin = uint32(tmp44)
+	tmp45, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.LoopEnd = uint32(tmp63)
-	tmp64, err := this._io.ReadU1()
+	this.LoopEnd = uint32(tmp45)
+	tmp46, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.DefaultVolume = tmp64
-	tmp65, err := this._io.ReadU1()
+	this.DefaultVolume = tmp46
+	tmp47, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Reserved1 = tmp65
-	tmp66, err := this._io.ReadU1()
+	this.Reserved1 = tmp47
+	tmp48, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.IsPacked = tmp66
-	tmp67, err := this._io.ReadU1()
+	this.IsPacked = tmp48
+	tmp49, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Flags = tmp67
+	this.Flags = tmp49
 	return err
 }
 func (this *S3m_Instrument_Sampled) Sample() (v []byte, err error) {
 	if (this._f_sample) {
 		return this.sample, nil
 	}
+	this._f_sample = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
 	}
-	tmp68, err := this.ParaptrSample.Value()
+	tmp50, err := this.ParaptrSample.Value()
 	if err != nil {
 		return nil, err
 	}
-	_, err = this._io.Seek(int64((tmp68 * 16)), io.SeekStart)
+	_, err = this._io.Seek(int64(tmp50 * 16), io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
-	tmp69, err := this._io.ReadBytes(int(this.LenSample))
+	tmp51, err := this._io.ReadBytes(int(this.LenSample))
 	if err != nil {
 		return nil, err
 	}
-	tmp69 = tmp69
-	this.sample = tmp69
+	tmp51 = tmp51
+	this.sample = tmp51
 	_, err = this._io.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
-	this._f_sample = true
-	this._f_sample = true
 	return this.sample, nil
 }
 
@@ -819,37 +583,323 @@ func (this *S3m_Instrument_Sampled) Sample() (v []byte, err error) {
 /**
  * 0 = unpacked, 1 = DP30ADPCM packing
  */
-type S3m_Instrument_Adlib struct {
-	Reserved1 []byte
-	_unnamed1 []byte
+type S3m_InstrumentPtr struct {
+	Paraptr uint16
 	_io *kaitai.Stream
 	_root *S3m
-	_parent *S3m_Instrument
+	_parent *S3m
+	_f_body bool
+	body *S3m_Instrument
 }
-func NewS3m_Instrument_Adlib() *S3m_Instrument_Adlib {
-	return &S3m_Instrument_Adlib{
+func NewS3m_InstrumentPtr() *S3m_InstrumentPtr {
+	return &S3m_InstrumentPtr{
 	}
 }
 
-func (this *S3m_Instrument_Adlib) Read(io *kaitai.Stream, parent *S3m_Instrument, root *S3m) (err error) {
+func (this S3m_InstrumentPtr) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *S3m_InstrumentPtr) Read(io *kaitai.Stream, parent *S3m, root *S3m) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp70, err := this._io.ReadBytes(int(3))
+	tmp52, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	tmp70 = tmp70
-	this.Reserved1 = tmp70
-	if !(bytes.Equal(this.Reserved1, []uint8{0, 0, 0})) {
-		return kaitai.NewValidationNotEqualError([]uint8{0, 0, 0}, this.Reserved1, this._io, "/types/instrument/types/adlib/seq/0")
-	}
-	tmp71, err := this._io.ReadBytes(int(16))
-	if err != nil {
-		return err
-	}
-	tmp71 = tmp71
-	this._unnamed1 = tmp71
+	this.Paraptr = uint16(tmp52)
 	return err
+}
+func (this *S3m_InstrumentPtr) Body() (v *S3m_Instrument, err error) {
+	if (this._f_body) {
+		return this.body, nil
+	}
+	this._f_body = true
+	_pos, err := this._io.Pos()
+	if err != nil {
+		return nil, err
+	}
+	_, err = this._io.Seek(int64(this.Paraptr * 16), io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	tmp53 := NewS3m_Instrument()
+	err = tmp53.Read(this._io, this, this._root)
+	if err != nil {
+		return nil, err
+	}
+	this.body = tmp53
+	_, err = this._io.Seek(_pos, io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	return this.body, nil
+}
+type S3m_Pattern struct {
+	Size uint16
+	Body *S3m_PatternCells
+	_io *kaitai.Stream
+	_root *S3m
+	_parent *S3m_PatternPtr
+	_raw_Body []byte
+}
+func NewS3m_Pattern() *S3m_Pattern {
+	return &S3m_Pattern{
+	}
+}
+
+func (this S3m_Pattern) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *S3m_Pattern) Read(io *kaitai.Stream, parent *S3m_PatternPtr, root *S3m) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp54, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.Size = uint16(tmp54)
+	tmp55, err := this._io.ReadBytes(int(this.Size - 2))
+	if err != nil {
+		return err
+	}
+	tmp55 = tmp55
+	this._raw_Body = tmp55
+	_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+	tmp56 := NewS3m_PatternCells()
+	err = tmp56.Read(_io__raw_Body, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Body = tmp56
+	return err
+}
+type S3m_PatternCell struct {
+	HasFx bool
+	HasVolume bool
+	HasNoteAndInstrument bool
+	ChannelNum uint64
+	Note uint8
+	Instrument uint8
+	Volume uint8
+	FxType uint8
+	FxValue uint8
+	_io *kaitai.Stream
+	_root *S3m
+	_parent *S3m_PatternCells
+}
+func NewS3m_PatternCell() *S3m_PatternCell {
+	return &S3m_PatternCell{
+	}
+}
+
+func (this S3m_PatternCell) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *S3m_PatternCell) Read(io *kaitai.Stream, parent *S3m_PatternCells, root *S3m) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp57, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.HasFx = tmp57 != 0
+	tmp58, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.HasVolume = tmp58 != 0
+	tmp59, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.HasNoteAndInstrument = tmp59 != 0
+	tmp60, err := this._io.ReadBitsIntBe(5)
+	if err != nil {
+		return err
+	}
+	this.ChannelNum = tmp60
+	this._io.AlignToByte()
+	if (this.HasNoteAndInstrument) {
+		tmp61, err := this._io.ReadU1()
+		if err != nil {
+			return err
+		}
+		this.Note = tmp61
+	}
+	if (this.HasNoteAndInstrument) {
+		tmp62, err := this._io.ReadU1()
+		if err != nil {
+			return err
+		}
+		this.Instrument = tmp62
+	}
+	if (this.HasVolume) {
+		tmp63, err := this._io.ReadU1()
+		if err != nil {
+			return err
+		}
+		this.Volume = tmp63
+	}
+	if (this.HasFx) {
+		tmp64, err := this._io.ReadU1()
+		if err != nil {
+			return err
+		}
+		this.FxType = tmp64
+	}
+	if (this.HasFx) {
+		tmp65, err := this._io.ReadU1()
+		if err != nil {
+			return err
+		}
+		this.FxValue = tmp65
+	}
+	return err
+}
+type S3m_PatternCells struct {
+	Cells []*S3m_PatternCell
+	_io *kaitai.Stream
+	_root *S3m
+	_parent *S3m_Pattern
+}
+func NewS3m_PatternCells() *S3m_PatternCells {
+	return &S3m_PatternCells{
+	}
+}
+
+func (this S3m_PatternCells) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *S3m_PatternCells) Read(io *kaitai.Stream, parent *S3m_Pattern, root *S3m) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	for i := 0;; i++ {
+		tmp66, err := this._io.EOF()
+		if err != nil {
+			return err
+		}
+		if tmp66 {
+			break
+		}
+		tmp67 := NewS3m_PatternCell()
+		err = tmp67.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Cells = append(this.Cells, tmp67)
+	}
+	return err
+}
+type S3m_PatternPtr struct {
+	Paraptr uint16
+	_io *kaitai.Stream
+	_root *S3m
+	_parent *S3m
+	_f_body bool
+	body *S3m_Pattern
+}
+func NewS3m_PatternPtr() *S3m_PatternPtr {
+	return &S3m_PatternPtr{
+	}
+}
+
+func (this S3m_PatternPtr) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *S3m_PatternPtr) Read(io *kaitai.Stream, parent *S3m, root *S3m) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp68, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.Paraptr = uint16(tmp68)
+	return err
+}
+func (this *S3m_PatternPtr) Body() (v *S3m_Pattern, err error) {
+	if (this._f_body) {
+		return this.body, nil
+	}
+	this._f_body = true
+	_pos, err := this._io.Pos()
+	if err != nil {
+		return nil, err
+	}
+	_, err = this._io.Seek(int64(this.Paraptr * 16), io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	tmp69 := NewS3m_Pattern()
+	err = tmp69.Read(this._io, this, this._root)
+	if err != nil {
+		return nil, err
+	}
+	this.body = tmp69
+	_, err = this._io.Seek(_pos, io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	return this.body, nil
+}
+
+/**
+ * Custom 3-byte integer, stored in mixed endian manner.
+ */
+type S3m_SwappedU3 struct {
+	Hi uint8
+	Lo uint16
+	_io *kaitai.Stream
+	_root *S3m
+	_parent *S3m_Instrument_Sampled
+	_f_value bool
+	value int
+}
+func NewS3m_SwappedU3() *S3m_SwappedU3 {
+	return &S3m_SwappedU3{
+	}
+}
+
+func (this S3m_SwappedU3) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *S3m_SwappedU3) Read(io *kaitai.Stream, parent *S3m_Instrument_Sampled, root *S3m) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp70, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Hi = tmp70
+	tmp71, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.Lo = uint16(tmp71)
+	return err
+}
+func (this *S3m_SwappedU3) Value() (v int, err error) {
+	if (this._f_value) {
+		return this.value, nil
+	}
+	this._f_value = true
+	this.value = int(this.Lo | this.Hi << 16)
+	return this.value, nil
 }

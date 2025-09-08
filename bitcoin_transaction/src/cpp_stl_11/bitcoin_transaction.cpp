@@ -5,7 +5,7 @@
 
 bitcoin_transaction_t::bitcoin_transaction_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, bitcoin_transaction_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     m_vins = nullptr;
     m_vouts = nullptr;
     _read();
@@ -51,8 +51,8 @@ void bitcoin_transaction_t::vin_t::_read() {
     m__io__raw_script_sig = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_script_sig));
     m_script_sig = std::unique_ptr<script_signature_t>(new script_signature_t(m__io__raw_script_sig.get(), this, m__root));
     m_end_of_vin = m__io->read_bytes(4);
-    if (!(end_of_vin() == std::string("\xFF\xFF\xFF\xFF", 4))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\xFF\xFF\xFF\xFF", 4), end_of_vin(), _io(), std::string("/types/vin/seq/4"));
+    if (!(m_end_of_vin == std::string("\xFF\xFF\xFF\xFF", 4))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\xFF\xFF\xFF\xFF", 4), m_end_of_vin, m__io, std::string("/types/vin/seq/4"));
     }
 }
 
@@ -61,6 +61,15 @@ bitcoin_transaction_t::vin_t::~vin_t() {
 }
 
 void bitcoin_transaction_t::vin_t::_clean_up() {
+}
+const std::set<bitcoin_transaction_t::vin_t::script_signature_t::sighash_type_t> bitcoin_transaction_t::vin_t::script_signature_t::_values_sighash_type_t{
+    bitcoin_transaction_t::vin_t::script_signature_t::SIGHASH_TYPE_SIGHASH_ALL,
+    bitcoin_transaction_t::vin_t::script_signature_t::SIGHASH_TYPE_SIGHASH_NONE,
+    bitcoin_transaction_t::vin_t::script_signature_t::SIGHASH_TYPE_SIGHASH_SINGLE,
+    bitcoin_transaction_t::vin_t::script_signature_t::SIGHASH_TYPE_SIGHASH_ANYONECANPAY,
+};
+bool bitcoin_transaction_t::vin_t::script_signature_t::_is_defined_sighash_type_t(bitcoin_transaction_t::vin_t::script_signature_t::sighash_type_t v) {
+    return bitcoin_transaction_t::vin_t::script_signature_t::_values_sighash_type_t.find(v) != bitcoin_transaction_t::vin_t::script_signature_t::_values_sighash_type_t.end();
 }
 
 bitcoin_transaction_t::vin_t::script_signature_t::script_signature_t(kaitai::kstream* p__io, bitcoin_transaction_t::vin_t* p__parent, bitcoin_transaction_t* p__root) : kaitai::kstruct(p__io) {
@@ -94,19 +103,19 @@ bitcoin_transaction_t::vin_t::script_signature_t::der_signature_t::der_signature
 
 void bitcoin_transaction_t::vin_t::script_signature_t::der_signature_t::_read() {
     m_sequence = m__io->read_bytes(1);
-    if (!(sequence() == std::string("\x30", 1))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\x30", 1), sequence(), _io(), std::string("/types/vin/types/script_signature/types/der_signature/seq/0"));
+    if (!(m_sequence == std::string("\x30", 1))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\x30", 1), m_sequence, m__io, std::string("/types/vin/types/script_signature/types/der_signature/seq/0"));
     }
     m_len_sig = m__io->read_u1();
     m_sep_1 = m__io->read_bytes(1);
-    if (!(sep_1() == std::string("\x02", 1))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\x02", 1), sep_1(), _io(), std::string("/types/vin/types/script_signature/types/der_signature/seq/2"));
+    if (!(m_sep_1 == std::string("\x02", 1))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\x02", 1), m_sep_1, m__io, std::string("/types/vin/types/script_signature/types/der_signature/seq/2"));
     }
     m_len_sig_r = m__io->read_u1();
     m_sig_r = m__io->read_bytes(len_sig_r());
     m_sep_2 = m__io->read_bytes(1);
-    if (!(sep_2() == std::string("\x02", 1))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\x02", 1), sep_2(), _io(), std::string("/types/vin/types/script_signature/types/der_signature/seq/5"));
+    if (!(m_sep_2 == std::string("\x02", 1))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\x02", 1), m_sep_2, m__io, std::string("/types/vin/types/script_signature/types/der_signature/seq/5"));
     }
     m_len_sig_s = m__io->read_u1();
     m_sig_s = m__io->read_bytes(len_sig_s());

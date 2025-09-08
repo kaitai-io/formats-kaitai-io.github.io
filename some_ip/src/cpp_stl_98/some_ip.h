@@ -3,14 +3,16 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class some_ip_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include "some_ip_sd.h"
+#include <set>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
-class some_ip_sd_t;
 
 /**
  * SOME/IP (Scalable service-Oriented MiddlewarE over IP) is an automotive/embedded
@@ -51,6 +53,13 @@ public:
             MESSAGE_TYPE_ENUM_RESPONSE_ACK = 192,
             MESSAGE_TYPE_ENUM_ERROR_ACK = 193
         };
+        static bool _is_defined_message_type_enum_t(message_type_enum_t v);
+
+    private:
+        static const std::set<message_type_enum_t> _values_message_type_enum_t;
+        static std::set<message_type_enum_t> _build_values_message_type_enum_t();
+
+    public:
 
         enum return_code_enum_t {
             RETURN_CODE_ENUM_OK = 0,
@@ -65,6 +74,13 @@ public:
             RETURN_CODE_ENUM_MALFORMED_MESSAGE = 9,
             RETURN_CODE_ENUM_WRONG_MESSAGE_TYPE = 10
         };
+        static bool _is_defined_return_code_enum_t(return_code_enum_t v);
+
+    private:
+        static const std::set<return_code_enum_t> _values_return_code_enum_t;
+        static std::set<return_code_enum_t> _build_values_return_code_enum_t();
+
+    public:
 
         header_t(kaitai::kstream* p__io, some_ip_t* p__parent = 0, some_ip_t* p__root = 0);
 

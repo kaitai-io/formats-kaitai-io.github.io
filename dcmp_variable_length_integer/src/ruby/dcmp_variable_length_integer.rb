@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -28,8 +28,8 @@ end
 # but technically any of the larger formats could be used as well.
 # @see https://github.com/dgelessus/python-rsrcfork/blob/f891a6e/src/rsrcfork/compress/common.py Source
 class DcmpVariableLengthInteger < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -50,7 +50,7 @@ class DcmpVariableLengthInteger < Kaitai::Struct::Struct
   # The decoded value of the variable-length integer.
   def value
     return @value unless @value.nil?
-    @value = (first == 255 ? more : (first >= 128 ? (((first << 8) | more) - 49152) : first))
+    @value = (first == 255 ? more : (first >= 128 ? (first << 8 | more) - 49152 : first))
     @value
   end
 

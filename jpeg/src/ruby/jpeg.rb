@@ -1,9 +1,10 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 require 'kaitai/struct/struct'
+require_relative 'exif'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -34,8 +35,8 @@ class Jpeg < Kaitai::Struct::Struct
     5 => :component_id_q,
   }
   I__COMPONENT_ID = COMPONENT_ID.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -47,6 +48,24 @@ class Jpeg < Kaitai::Struct::Struct
       i += 1
     end
     self
+  end
+  class ExifInJpeg < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @extra_zero = @_io.read_bytes(1)
+      raise Kaitai::Struct::ValidationNotEqualError.new([0].pack('C*'), @extra_zero, @_io, "/types/exif_in_jpeg/seq/0") if not @extra_zero == [0].pack('C*')
+      @_raw_data = @_io.read_bytes_full
+      _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
+      @data = Exif.new(_io__raw_data)
+      self
+    end
+    attr_reader :extra_zero
+    attr_reader :data
+    attr_reader :_raw_data
   end
   class Segment < Kaitai::Struct::Struct
 
@@ -86,38 +105,34 @@ class Jpeg < Kaitai::Struct::Struct
       254 => :marker_enum_com,
     }
     I__MARKER_ENUM = MARKER_ENUM.invert
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
       @magic = @_io.read_bytes(1)
-      raise Kaitai::Struct::ValidationNotEqualError.new([255].pack('C*'), magic, _io, "/types/segment/seq/0") if not magic == [255].pack('C*')
+      raise Kaitai::Struct::ValidationNotEqualError.new([255].pack('C*'), @magic, @_io, "/types/segment/seq/0") if not @magic == [255].pack('C*')
       @marker = Kaitai::Struct::Stream::resolve_enum(MARKER_ENUM, @_io.read_u1)
       if  ((marker != :marker_enum_soi) && (marker != :marker_enum_eoi)) 
         @length = @_io.read_u2be
       end
       if  ((marker != :marker_enum_soi) && (marker != :marker_enum_eoi)) 
         case marker
-        when :marker_enum_app1
-          @_raw_data = @_io.read_bytes((length - 2))
-          _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
-          @data = SegmentApp1.new(_io__raw_data, self, @_root)
         when :marker_enum_app0
-          @_raw_data = @_io.read_bytes((length - 2))
-          _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
-          @data = SegmentApp0.new(_io__raw_data, self, @_root)
+          _io_data = @_io.substream(length - 2)
+          @data = SegmentApp0.new(_io_data, self, @_root)
+        when :marker_enum_app1
+          _io_data = @_io.substream(length - 2)
+          @data = SegmentApp1.new(_io_data, self, @_root)
         when :marker_enum_sof0
-          @_raw_data = @_io.read_bytes((length - 2))
-          _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
-          @data = SegmentSof0.new(_io__raw_data, self, @_root)
+          _io_data = @_io.substream(length - 2)
+          @data = SegmentSof0.new(_io_data, self, @_root)
         when :marker_enum_sos
-          @_raw_data = @_io.read_bytes((length - 2))
-          _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
-          @data = SegmentSos.new(_io__raw_data, self, @_root)
+          _io_data = @_io.substream(length - 2)
+          @data = SegmentSos.new(_io_data, self, @_root)
         else
-          @data = @_io.read_bytes((length - 2))
+          @data = @_io.read_bytes(length - 2)
         end
       end
       if marker == :marker_enum_sos
@@ -132,8 +147,127 @@ class Jpeg < Kaitai::Struct::Struct
     attr_reader :image_data
     attr_reader :_raw_data
   end
+  class SegmentApp0 < Kaitai::Struct::Struct
+
+    DENSITY_UNIT = {
+      0 => :density_unit_no_units,
+      1 => :density_unit_pixels_per_inch,
+      2 => :density_unit_pixels_per_cm,
+    }
+    I__DENSITY_UNIT = DENSITY_UNIT.invert
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @magic = (@_io.read_bytes(5)).force_encoding("ASCII").encode('UTF-8')
+      @version_major = @_io.read_u1
+      @version_minor = @_io.read_u1
+      @density_units = Kaitai::Struct::Stream::resolve_enum(DENSITY_UNIT, @_io.read_u1)
+      @density_x = @_io.read_u2be
+      @density_y = @_io.read_u2be
+      @thumbnail_x = @_io.read_u1
+      @thumbnail_y = @_io.read_u1
+      @thumbnail = @_io.read_bytes((thumbnail_x * thumbnail_y) * 3)
+      self
+    end
+    attr_reader :magic
+    attr_reader :version_major
+    attr_reader :version_minor
+    attr_reader :density_units
+
+    ##
+    # Horizontal pixel density. Must not be zero.
+    attr_reader :density_x
+
+    ##
+    # Vertical pixel density. Must not be zero.
+    attr_reader :density_y
+
+    ##
+    # Horizontal pixel count of the following embedded RGB thumbnail. May be zero.
+    attr_reader :thumbnail_x
+
+    ##
+    # Vertical pixel count of the following embedded RGB thumbnail. May be zero.
+    attr_reader :thumbnail_y
+
+    ##
+    # Uncompressed 24 bit RGB (8 bits per color channel) raster thumbnail data in the order R0, G0, B0, ... Rn, Gn, Bn
+    attr_reader :thumbnail
+  end
+  class SegmentApp1 < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @magic = (@_io.read_bytes_term(0, false, true, true)).force_encoding("ASCII").encode('UTF-8')
+      case magic
+      when "Exif"
+        @body = ExifInJpeg.new(@_io, self, @_root)
+      end
+      self
+    end
+    attr_reader :magic
+    attr_reader :body
+  end
+  class SegmentSof0 < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @bits_per_sample = @_io.read_u1
+      @image_height = @_io.read_u2be
+      @image_width = @_io.read_u2be
+      @num_components = @_io.read_u1
+      @components = []
+      (num_components).times { |i|
+        @components << Component.new(@_io, self, @_root)
+      }
+      self
+    end
+    class Component < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = nil)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        @id = Kaitai::Struct::Stream::resolve_enum(Jpeg::COMPONENT_ID, @_io.read_u1)
+        @sampling_factors = @_io.read_u1
+        @quantization_table_id = @_io.read_u1
+        self
+      end
+      def sampling_x
+        return @sampling_x unless @sampling_x.nil?
+        @sampling_x = (sampling_factors & 240) >> 4
+        @sampling_x
+      end
+      def sampling_y
+        return @sampling_y unless @sampling_y.nil?
+        @sampling_y = sampling_factors & 15
+        @sampling_y
+      end
+
+      ##
+      # Component selector
+      attr_reader :id
+      attr_reader :sampling_factors
+      attr_reader :quantization_table_id
+    end
+    attr_reader :bits_per_sample
+    attr_reader :image_height
+    attr_reader :image_width
+    attr_reader :num_components
+    attr_reader :components
+  end
   class SegmentSos < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -150,7 +284,7 @@ class Jpeg < Kaitai::Struct::Struct
       self
     end
     class Component < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
@@ -186,143 +320,6 @@ class Jpeg < Kaitai::Struct::Struct
     ##
     # Successive approximation bit position high + Successive approximation bit position low or point transform
     attr_reader :appr_bit_pos
-  end
-  class SegmentApp1 < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @magic = (@_io.read_bytes_term(0, false, true, true)).force_encoding("ASCII")
-      case magic
-      when "Exif"
-        @body = ExifInJpeg.new(@_io, self, @_root)
-      end
-      self
-    end
-    attr_reader :magic
-    attr_reader :body
-  end
-  class SegmentSof0 < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @bits_per_sample = @_io.read_u1
-      @image_height = @_io.read_u2be
-      @image_width = @_io.read_u2be
-      @num_components = @_io.read_u1
-      @components = []
-      (num_components).times { |i|
-        @components << Component.new(@_io, self, @_root)
-      }
-      self
-    end
-    class Component < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
-
-      def _read
-        @id = Kaitai::Struct::Stream::resolve_enum(Jpeg::COMPONENT_ID, @_io.read_u1)
-        @sampling_factors = @_io.read_u1
-        @quantization_table_id = @_io.read_u1
-        self
-      end
-      def sampling_x
-        return @sampling_x unless @sampling_x.nil?
-        @sampling_x = ((sampling_factors & 240) >> 4)
-        @sampling_x
-      end
-      def sampling_y
-        return @sampling_y unless @sampling_y.nil?
-        @sampling_y = (sampling_factors & 15)
-        @sampling_y
-      end
-
-      ##
-      # Component selector
-      attr_reader :id
-      attr_reader :sampling_factors
-      attr_reader :quantization_table_id
-    end
-    attr_reader :bits_per_sample
-    attr_reader :image_height
-    attr_reader :image_width
-    attr_reader :num_components
-    attr_reader :components
-  end
-  class ExifInJpeg < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @extra_zero = @_io.read_bytes(1)
-      raise Kaitai::Struct::ValidationNotEqualError.new([0].pack('C*'), extra_zero, _io, "/types/exif_in_jpeg/seq/0") if not extra_zero == [0].pack('C*')
-      @_raw_data = @_io.read_bytes_full
-      _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
-      @data = Exif.new(_io__raw_data)
-      self
-    end
-    attr_reader :extra_zero
-    attr_reader :data
-    attr_reader :_raw_data
-  end
-  class SegmentApp0 < Kaitai::Struct::Struct
-
-    DENSITY_UNIT = {
-      0 => :density_unit_no_units,
-      1 => :density_unit_pixels_per_inch,
-      2 => :density_unit_pixels_per_cm,
-    }
-    I__DENSITY_UNIT = DENSITY_UNIT.invert
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @magic = (@_io.read_bytes(5)).force_encoding("ASCII")
-      @version_major = @_io.read_u1
-      @version_minor = @_io.read_u1
-      @density_units = Kaitai::Struct::Stream::resolve_enum(DENSITY_UNIT, @_io.read_u1)
-      @density_x = @_io.read_u2be
-      @density_y = @_io.read_u2be
-      @thumbnail_x = @_io.read_u1
-      @thumbnail_y = @_io.read_u1
-      @thumbnail = @_io.read_bytes(((thumbnail_x * thumbnail_y) * 3))
-      self
-    end
-    attr_reader :magic
-    attr_reader :version_major
-    attr_reader :version_minor
-    attr_reader :density_units
-
-    ##
-    # Horizontal pixel density. Must not be zero.
-    attr_reader :density_x
-
-    ##
-    # Vertical pixel density. Must not be zero.
-    attr_reader :density_y
-
-    ##
-    # Horizontal pixel count of the following embedded RGB thumbnail. May be zero.
-    attr_reader :thumbnail_x
-
-    ##
-    # Vertical pixel count of the following embedded RGB thumbnail. May be zero.
-    attr_reader :thumbnail_y
-
-    ##
-    # Uncompressed 24 bit RGB (8 bits per color channel) raster thumbnail data in the order R0, G0, B0, ... Rn, Gn, Bn
-    attr_reader :thumbnail
   end
   attr_reader :segments
 end

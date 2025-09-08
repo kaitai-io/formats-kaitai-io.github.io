@@ -5,6 +5,7 @@ import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -43,6 +44,41 @@ public class Hccap extends KaitaiStruct {
             }
         }
     }
+
+    public void _fetchInstances() {
+        for (int i = 0; i < this.records.size(); i++) {
+            this.records.get(((Number) (i)).intValue())._fetchInstances();
+        }
+    }
+    public static class EapolDummy extends KaitaiStruct {
+        public static EapolDummy fromFile(String fileName) throws IOException {
+            return new EapolDummy(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public EapolDummy(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public EapolDummy(KaitaiStream _io, Hccap.HccapRecord _parent) {
+            this(_io, _parent, null);
+        }
+
+        public EapolDummy(KaitaiStream _io, Hccap.HccapRecord _parent, Hccap _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+        }
+
+        public void _fetchInstances() {
+        }
+        private Hccap _root;
+        private Hccap.HccapRecord _parent;
+        public Hccap _root() { return _root; }
+        public Hccap.HccapRecord _parent() { return _parent; }
+    }
     public static class HccapRecord extends KaitaiStruct {
         public static HccapRecord fromFile(String fileName) throws IOException {
             return new HccapRecord(new ByteBufferKaitaiStream(fileName));
@@ -68,12 +104,18 @@ public class Hccap extends KaitaiStruct {
             this.macStation = this._io.readBytes(6);
             this.nonceStation = this._io.readBytes(32);
             this.nonceAp = this._io.readBytes(32);
-            this._raw_eapolBuffer = this._io.readBytes(256);
-            KaitaiStream _io__raw_eapolBuffer = new ByteBufferKaitaiStream(_raw_eapolBuffer);
-            this.eapolBuffer = new EapolDummy(_io__raw_eapolBuffer, this, _root);
+            KaitaiStream _io_eapolBuffer = this._io.substream(256);
+            this.eapolBuffer = new EapolDummy(_io_eapolBuffer, this, _root);
             this.lenEapol = this._io.readU4le();
             this.keyver = this._io.readU4le();
             this.keymic = this._io.readBytes(16);
+        }
+
+        public void _fetchInstances() {
+            this.eapolBuffer._fetchInstances();
+            eapol();
+            if (this.eapol != null) {
+            }
         }
         private byte[] eapol;
         public byte[] eapol() {
@@ -97,7 +139,6 @@ public class Hccap extends KaitaiStruct {
         private byte[] keymic;
         private Hccap _root;
         private Hccap _parent;
-        private byte[] _raw_eapolBuffer;
         public byte[] essid() { return essid; }
 
         /**
@@ -143,38 +184,11 @@ public class Hccap extends KaitaiStruct {
         public byte[] keymic() { return keymic; }
         public Hccap _root() { return _root; }
         public Hccap _parent() { return _parent; }
-        public byte[] _raw_eapolBuffer() { return _raw_eapolBuffer; }
     }
-    public static class EapolDummy extends KaitaiStruct {
-        public static EapolDummy fromFile(String fileName) throws IOException {
-            return new EapolDummy(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public EapolDummy(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public EapolDummy(KaitaiStream _io, Hccap.HccapRecord _parent) {
-            this(_io, _parent, null);
-        }
-
-        public EapolDummy(KaitaiStream _io, Hccap.HccapRecord _parent, Hccap _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-        }
-        private Hccap _root;
-        private Hccap.HccapRecord _parent;
-        public Hccap _root() { return _root; }
-        public Hccap.HccapRecord _parent() { return _parent; }
-    }
-    private ArrayList<HccapRecord> records;
+    private List<HccapRecord> records;
     private Hccap _root;
     private KaitaiStruct _parent;
-    public ArrayList<HccapRecord> records() { return records; }
+    public List<HccapRecord> records() { return records; }
     public Hccap _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

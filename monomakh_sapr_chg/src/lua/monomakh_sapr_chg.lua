@@ -26,7 +26,7 @@ function MonomakhSaprChg:_init(io, parent, root)
 end
 
 function MonomakhSaprChg:_read()
-  self.title = str_decode.decode(self._io:read_bytes(10), "ascii")
+  self.title = str_decode.decode(self._io:read_bytes(10), "ASCII")
   self.ent = {}
   local i = 0
   while not self._io:is_eof() do
@@ -41,12 +41,12 @@ MonomakhSaprChg.Block = class.class(KaitaiStruct)
 function MonomakhSaprChg.Block:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function MonomakhSaprChg.Block:_read()
-  self.header = str_decode.decode(self._io:read_bytes(13), "ascii")
+  self.header = str_decode.decode(self._io:read_bytes(13), "ASCII")
   self.file_size = self._io:read_u8le()
   self.file = self._io:read_bytes(self.file_size)
 end

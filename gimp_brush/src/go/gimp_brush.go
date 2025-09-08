@@ -26,24 +26,33 @@ const (
 	GimpBrush_ColorDepth__Grayscale GimpBrush_ColorDepth = 1
 	GimpBrush_ColorDepth__Rgba GimpBrush_ColorDepth = 4
 )
+var values_GimpBrush_ColorDepth = map[GimpBrush_ColorDepth]struct{}{1: {}, 4: {}}
+func (v GimpBrush_ColorDepth) isDefined() bool {
+	_, ok := values_GimpBrush_ColorDepth[v]
+	return ok
+}
 type GimpBrush struct {
 	LenHeader uint32
 	Header *GimpBrush_Header
 	_io *kaitai.Stream
 	_root *GimpBrush
-	_parent interface{}
+	_parent kaitai.Struct
 	_raw_Header []byte
-	_f_lenBody bool
-	lenBody int
 	_f_body bool
 	body []byte
+	_f_lenBody bool
+	lenBody int
 }
 func NewGimpBrush() *GimpBrush {
 	return &GimpBrush{
 	}
 }
 
-func (this *GimpBrush) Read(io *kaitai.Stream, parent interface{}, root *GimpBrush) (err error) {
+func (this GimpBrush) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *GimpBrush) Read(io *kaitai.Stream, parent kaitai.Struct, root *GimpBrush) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -53,7 +62,7 @@ func (this *GimpBrush) Read(io *kaitai.Stream, parent interface{}, root *GimpBru
 		return err
 	}
 	this.LenHeader = uint32(tmp1)
-	tmp2, err := this._io.ReadBytes(int((this.LenHeader - 4)))
+	tmp2, err := this._io.ReadBytes(int(this.LenHeader - 4))
 	if err != nil {
 		return err
 	}
@@ -68,18 +77,11 @@ func (this *GimpBrush) Read(io *kaitai.Stream, parent interface{}, root *GimpBru
 	this.Header = tmp3
 	return err
 }
-func (this *GimpBrush) LenBody() (v int, err error) {
-	if (this._f_lenBody) {
-		return this.lenBody, nil
-	}
-	this.lenBody = int(((this.Header.Width * this.Header.Height) * this.Header.BytesPerPixel))
-	this._f_lenBody = true
-	return this.lenBody, nil
-}
 func (this *GimpBrush) Body() (v []byte, err error) {
 	if (this._f_body) {
 		return this.body, nil
 	}
+	this._f_body = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
@@ -102,9 +104,46 @@ func (this *GimpBrush) Body() (v []byte, err error) {
 	if err != nil {
 		return nil, err
 	}
-	this._f_body = true
-	this._f_body = true
 	return this.body, nil
+}
+func (this *GimpBrush) LenBody() (v int, err error) {
+	if (this._f_lenBody) {
+		return this.lenBody, nil
+	}
+	this._f_lenBody = true
+	this.lenBody = int((this.Header.Width * this.Header.Height) * this.Header.BytesPerPixel)
+	return this.lenBody, nil
+}
+type GimpBrush_Bitmap struct {
+	Rows []*GimpBrush_Row
+	_io *kaitai.Stream
+	_root *GimpBrush
+	_parent kaitai.Struct
+}
+func NewGimpBrush_Bitmap() *GimpBrush_Bitmap {
+	return &GimpBrush_Bitmap{
+	}
+}
+
+func (this GimpBrush_Bitmap) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *GimpBrush_Bitmap) Read(io *kaitai.Stream, parent kaitai.Struct, root *GimpBrush) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	for i := 0; i < int(this._root.Header.Height); i++ {
+		_ = i
+		tmp6 := NewGimpBrush_Row()
+		err = tmp6.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Rows = append(this.Rows, tmp6)
+	}
+	return err
 }
 type GimpBrush_Header struct {
 	Version uint32
@@ -123,66 +162,70 @@ func NewGimpBrush_Header() *GimpBrush_Header {
 	}
 }
 
+func (this GimpBrush_Header) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *GimpBrush_Header) Read(io *kaitai.Stream, parent *GimpBrush, root *GimpBrush) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp6, err := this._io.ReadU4be()
-	if err != nil {
-		return err
-	}
-	this.Version = uint32(tmp6)
-	if !(this.Version == 2) {
-		return kaitai.NewValidationNotEqualError(2, this.Version, this._io, "/types/header/seq/0")
-	}
 	tmp7, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.Width = uint32(tmp7)
+	this.Version = uint32(tmp7)
+	if !(this.Version == 2) {
+		return kaitai.NewValidationNotEqualError(2, this.Version, this._io, "/types/header/seq/0")
+	}
+	tmp8, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.Width = uint32(tmp8)
 	if !(this.Width >= 1) {
 		return kaitai.NewValidationLessThanError(1, this.Width, this._io, "/types/header/seq/1")
 	}
 	if !(this.Width <= 10000) {
 		return kaitai.NewValidationGreaterThanError(10000, this.Width, this._io, "/types/header/seq/1")
 	}
-	tmp8, err := this._io.ReadU4be()
+	tmp9, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.Height = uint32(tmp8)
+	this.Height = uint32(tmp9)
 	if !(this.Height >= 1) {
 		return kaitai.NewValidationLessThanError(1, this.Height, this._io, "/types/header/seq/2")
 	}
 	if !(this.Height <= 10000) {
 		return kaitai.NewValidationGreaterThanError(10000, this.Height, this._io, "/types/header/seq/2")
 	}
-	tmp9, err := this._io.ReadU4be()
+	tmp10, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.BytesPerPixel = GimpBrush_ColorDepth(tmp9)
-	tmp10, err := this._io.ReadBytes(int(4))
+	this.BytesPerPixel = GimpBrush_ColorDepth(tmp10)
+	tmp11, err := this._io.ReadBytes(int(4))
 	if err != nil {
 		return err
 	}
-	tmp10 = tmp10
-	this.Magic = tmp10
+	tmp11 = tmp11
+	this.Magic = tmp11
 	if !(bytes.Equal(this.Magic, []uint8{71, 73, 77, 80})) {
 		return kaitai.NewValidationNotEqualError([]uint8{71, 73, 77, 80}, this.Magic, this._io, "/types/header/seq/4")
 	}
-	tmp11, err := this._io.ReadU4be()
+	tmp12, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.Spacing = uint32(tmp11)
-	tmp12, err := this._io.ReadBytesFull()
+	this.Spacing = uint32(tmp12)
+	tmp13, err := this._io.ReadBytesFull()
 	if err != nil {
 		return err
 	}
-	tmp12 = kaitai.BytesTerminate(tmp12, 0, false)
-	this.BrushName = string(tmp12)
+	tmp13 = kaitai.BytesTerminate(tmp13, 0, false)
+	this.BrushName = string(tmp13)
 	return err
 }
 
@@ -199,45 +242,22 @@ func (this *GimpBrush_Header) Read(io *kaitai.Stream, parent *GimpBrush, root *G
 /**
  * Default spacing to be used for brush. Percentage of brush width.
  */
-type GimpBrush_Bitmap struct {
-	Rows []*GimpBrush_Row
-	_io *kaitai.Stream
-	_root *GimpBrush
-	_parent interface{}
-}
-func NewGimpBrush_Bitmap() *GimpBrush_Bitmap {
-	return &GimpBrush_Bitmap{
-	}
-}
-
-func (this *GimpBrush_Bitmap) Read(io *kaitai.Stream, parent interface{}, root *GimpBrush) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	for i := 0; i < int(this._root.Header.Height); i++ {
-		_ = i
-		tmp13 := NewGimpBrush_Row()
-		err = tmp13.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Rows = append(this.Rows, tmp13)
-	}
-	return err
-}
 type GimpBrush_Row struct {
-	Pixels []interface{}
+	Pixels []kaitai.Struct
 	_io *kaitai.Stream
 	_root *GimpBrush
-	_parent interface{}
+	_parent *GimpBrush_Bitmap
 }
 func NewGimpBrush_Row() *GimpBrush_Row {
 	return &GimpBrush_Row{
 	}
 }
 
-func (this *GimpBrush_Row) Read(io *kaitai.Stream, parent interface{}, root *GimpBrush) (err error) {
+func (this GimpBrush_Row) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *GimpBrush_Row) Read(io *kaitai.Stream, parent *GimpBrush_Bitmap, root *GimpBrush) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -267,22 +287,26 @@ type GimpBrush_Row_PixelGray struct {
 	Gray uint8
 	_io *kaitai.Stream
 	_root *GimpBrush
-	_parent interface{}
-	_f_red bool
-	red int8
-	_f_green bool
-	green int8
-	_f_blue bool
-	blue int8
+	_parent *GimpBrush_Row
 	_f_alpha bool
 	alpha uint8
+	_f_blue bool
+	blue int8
+	_f_green bool
+	green int8
+	_f_red bool
+	red int8
 }
 func NewGimpBrush_Row_PixelGray() *GimpBrush_Row_PixelGray {
 	return &GimpBrush_Row_PixelGray{
 	}
 }
 
-func (this *GimpBrush_Row_PixelGray) Read(io *kaitai.Stream, parent interface{}, root *GimpBrush) (err error) {
+func (this GimpBrush_Row_PixelGray) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *GimpBrush_Row_PixelGray) Read(io *kaitai.Stream, parent *GimpBrush_Row, root *GimpBrush) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -294,37 +318,37 @@ func (this *GimpBrush_Row_PixelGray) Read(io *kaitai.Stream, parent interface{},
 	this.Gray = tmp16
 	return err
 }
-func (this *GimpBrush_Row_PixelGray) Red() (v int8, err error) {
-	if (this._f_red) {
-		return this.red, nil
+func (this *GimpBrush_Row_PixelGray) Alpha() (v uint8, err error) {
+	if (this._f_alpha) {
+		return this.alpha, nil
 	}
-	this.red = int8(0)
-	this._f_red = true
-	return this.red, nil
-}
-func (this *GimpBrush_Row_PixelGray) Green() (v int8, err error) {
-	if (this._f_green) {
-		return this.green, nil
-	}
-	this.green = int8(0)
-	this._f_green = true
-	return this.green, nil
+	this._f_alpha = true
+	this.alpha = uint8(this.Gray)
+	return this.alpha, nil
 }
 func (this *GimpBrush_Row_PixelGray) Blue() (v int8, err error) {
 	if (this._f_blue) {
 		return this.blue, nil
 	}
-	this.blue = int8(0)
 	this._f_blue = true
+	this.blue = int8(0)
 	return this.blue, nil
 }
-func (this *GimpBrush_Row_PixelGray) Alpha() (v uint8, err error) {
-	if (this._f_alpha) {
-		return this.alpha, nil
+func (this *GimpBrush_Row_PixelGray) Green() (v int8, err error) {
+	if (this._f_green) {
+		return this.green, nil
 	}
-	this.alpha = uint8(this.Gray)
-	this._f_alpha = true
-	return this.alpha, nil
+	this._f_green = true
+	this.green = int8(0)
+	return this.green, nil
+}
+func (this *GimpBrush_Row_PixelGray) Red() (v int8, err error) {
+	if (this._f_red) {
+		return this.red, nil
+	}
+	this._f_red = true
+	this.red = int8(0)
+	return this.red, nil
 }
 type GimpBrush_Row_PixelRgba struct {
 	Red uint8
@@ -333,14 +357,18 @@ type GimpBrush_Row_PixelRgba struct {
 	Alpha uint8
 	_io *kaitai.Stream
 	_root *GimpBrush
-	_parent interface{}
+	_parent *GimpBrush_Row
 }
 func NewGimpBrush_Row_PixelRgba() *GimpBrush_Row_PixelRgba {
 	return &GimpBrush_Row_PixelRgba{
 	}
 }
 
-func (this *GimpBrush_Row_PixelRgba) Read(io *kaitai.Stream, parent interface{}, root *GimpBrush) (err error) {
+func (this GimpBrush_Row_PixelRgba) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *GimpBrush_Row_PixelRgba) Read(io *kaitai.Stream, parent *GimpBrush_Row, root *GimpBrush) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root

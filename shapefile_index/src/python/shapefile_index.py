@@ -1,16 +1,17 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
-from enum import Enum
+from enum import IntEnum
 
 
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class ShapefileIndex(KaitaiStruct):
 
-    class ShapeType(Enum):
+    class ShapeType(IntEnum):
         null_shape = 0
         point = 1
         poly_line = 3
@@ -26,9 +27,9 @@ class ShapefileIndex(KaitaiStruct):
         multi_point_m = 28
         multi_patch = 31
     def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
+        super(ShapefileIndex, self).__init__(_io)
         self._parent = _parent
-        self._root = _root if _root else self
+        self._root = _root or self
         self._read()
 
     def _read(self):
@@ -40,11 +41,58 @@ class ShapefileIndex(KaitaiStruct):
             i += 1
 
 
+
+    def _fetch_instances(self):
+        pass
+        self.header._fetch_instances()
+        for i in range(len(self.records)):
+            pass
+            self.records[i]._fetch_instances()
+
+
+    class BoundingBoxXYZM(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(ShapefileIndex.BoundingBoxXYZM, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.x = ShapefileIndex.BoundsMinMax(self._io, self, self._root)
+            self.y = ShapefileIndex.BoundsMinMax(self._io, self, self._root)
+            self.z = ShapefileIndex.BoundsMinMax(self._io, self, self._root)
+            self.m = ShapefileIndex.BoundsMinMax(self._io, self, self._root)
+
+
+        def _fetch_instances(self):
+            pass
+            self.x._fetch_instances()
+            self.y._fetch_instances()
+            self.z._fetch_instances()
+            self.m._fetch_instances()
+
+
+    class BoundsMinMax(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(ShapefileIndex.BoundsMinMax, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.min = self._io.read_f8be()
+            self.max = self._io.read_f8be()
+
+
+        def _fetch_instances(self):
+            pass
+
+
     class FileHeader(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(ShapefileIndex.FileHeader, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -74,11 +122,16 @@ class ShapefileIndex(KaitaiStruct):
             self.bounding_box = ShapefileIndex.BoundingBoxXYZM(self._io, self, self._root)
 
 
+        def _fetch_instances(self):
+            pass
+            self.bounding_box._fetch_instances()
+
+
     class Record(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(ShapefileIndex.Record, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -86,30 +139,8 @@ class ShapefileIndex(KaitaiStruct):
             self.content_length = self._io.read_s4be()
 
 
-    class BoundingBoxXYZM(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.x = ShapefileIndex.BoundsMinMax(self._io, self, self._root)
-            self.y = ShapefileIndex.BoundsMinMax(self._io, self, self._root)
-            self.z = ShapefileIndex.BoundsMinMax(self._io, self, self._root)
-            self.m = ShapefileIndex.BoundsMinMax(self._io, self, self._root)
-
-
-    class BoundsMinMax(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.min = self._io.read_f8be()
-            self.max = self._io.read_f8be()
+        def _fetch_instances(self):
+            pass
 
 
 

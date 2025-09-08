@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.ChromePak = factory(root.KaitaiStream);
+    factory(root.ChromePak || (root.ChromePak = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (ChromePak_, KaitaiStream) {
 /**
  * Format mostly used by Google Chrome and various Android apps to store
  * resources such as translated strings, help messages and images.
@@ -48,7 +48,7 @@ var ChromePak = (function() {
       this.v5Part = new HeaderV5Part(this._io, this, this._root);
     }
     this.resources = [];
-    for (var i = 0; i < (this.numResources + 1); i++) {
+    for (var i = 0; i < this.numResources + 1; i++) {
       this.resources.push(new Resource(this._io, this, this._root, i, i < this.numResources));
     }
     this.aliases = [];
@@ -57,11 +57,38 @@ var ChromePak = (function() {
     }
   }
 
+  var Alias = ChromePak.Alias = (function() {
+    function Alias(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Alias.prototype._read = function() {
+      this.id = this._io.readU2le();
+      this.resourceIdx = this._io.readU2le();
+      if (!(this.resourceIdx <= this._parent.numResources - 1)) {
+        throw new KaitaiStream.ValidationGreaterThanError(this._parent.numResources - 1, this.resourceIdx, this._io, "/types/alias/seq/1");
+      }
+    }
+    Object.defineProperty(Alias.prototype, 'resource', {
+      get: function() {
+        if (this._m_resource !== undefined)
+          return this._m_resource;
+        this._m_resource = this._parent.resources[this.resourceIdx];
+        return this._m_resource;
+      }
+    });
+
+    return Alias;
+  })();
+
   var HeaderV5Part = ChromePak.HeaderV5Part = (function() {
     function HeaderV5Part(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -78,7 +105,7 @@ var ChromePak = (function() {
     function Resource(_io, _parent, _root, idx, hasBody) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
       this.idx = idx;
       this.hasBody = hasBody;
 
@@ -88,20 +115,6 @@ var ChromePak = (function() {
       this.id = this._io.readU2le();
       this.ofsBody = this._io.readU4le();
     }
-
-    /**
-     * MUST NOT be accessed until the next `resource` is parsed
-     */
-    Object.defineProperty(Resource.prototype, 'lenBody', {
-      get: function() {
-        if (this._m_lenBody !== undefined)
-          return this._m_lenBody;
-        if (this.hasBody) {
-          this._m_lenBody = (this._parent.resources[(this.idx + 1)].ofsBody - this.ofsBody);
-        }
-        return this._m_lenBody;
-      }
-    });
 
     /**
      * MUST NOT be accessed until the next `resource` is parsed
@@ -120,49 +133,36 @@ var ChromePak = (function() {
       }
     });
 
-    return Resource;
-  })();
-
-  var Alias = ChromePak.Alias = (function() {
-    function Alias(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Alias.prototype._read = function() {
-      this.id = this._io.readU2le();
-      this.resourceIdx = this._io.readU2le();
-      if (!(this.resourceIdx <= (this._parent.numResources - 1))) {
-        throw new KaitaiStream.ValidationGreaterThanError((this._parent.numResources - 1), this.resourceIdx, this._io, "/types/alias/seq/1");
-      }
-    }
-    Object.defineProperty(Alias.prototype, 'resource', {
+    /**
+     * MUST NOT be accessed until the next `resource` is parsed
+     */
+    Object.defineProperty(Resource.prototype, 'lenBody', {
       get: function() {
-        if (this._m_resource !== undefined)
-          return this._m_resource;
-        this._m_resource = this._parent.resources[this.resourceIdx];
-        return this._m_resource;
+        if (this._m_lenBody !== undefined)
+          return this._m_lenBody;
+        if (this.hasBody) {
+          this._m_lenBody = this._parent.resources[this.idx + 1].ofsBody - this.ofsBody;
+        }
+        return this._m_lenBody;
       }
     });
 
-    return Alias;
+    return Resource;
   })();
-  Object.defineProperty(ChromePak.prototype, 'numResources', {
-    get: function() {
-      if (this._m_numResources !== undefined)
-        return this._m_numResources;
-      this._m_numResources = (this.version == 5 ? this.v5Part.numResources : this.numResourcesV4);
-      return this._m_numResources;
-    }
-  });
   Object.defineProperty(ChromePak.prototype, 'numAliases', {
     get: function() {
       if (this._m_numAliases !== undefined)
         return this._m_numAliases;
       this._m_numAliases = (this.version == 5 ? this.v5Part.numAliases : 0);
       return this._m_numAliases;
+    }
+  });
+  Object.defineProperty(ChromePak.prototype, 'numResources', {
+    get: function() {
+      if (this._m_numResources !== undefined)
+        return this._m_numResources;
+      this._m_numResources = (this.version == 5 ? this.v5Part.numResources : this.numResourcesV4);
+      return this._m_numResources;
     }
   });
 
@@ -190,5 +190,5 @@ var ChromePak = (function() {
 
   return ChromePak;
 })();
-return ChromePak;
-}));
+ChromePak_.ChromePak = ChromePak;
+});

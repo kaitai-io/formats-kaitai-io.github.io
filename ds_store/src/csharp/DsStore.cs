@@ -28,71 +28,283 @@ namespace Kaitai
         {
             m_parent = p__parent;
             m_root = p__root ?? this;
-            f_buddyAllocatorBody = false;
             f_blockAddressMask = false;
+            f_buddyAllocatorBody = false;
             _read();
         }
         private void _read()
         {
             _alignmentHeader = m_io.ReadBytes(4);
-            if (!((KaitaiStream.ByteArrayCompare(AlignmentHeader, new byte[] { 0, 0, 0, 1 }) == 0)))
+            if (!((KaitaiStream.ByteArrayCompare(_alignmentHeader, new byte[] { 0, 0, 0, 1 }) == 0)))
             {
-                throw new ValidationNotEqualError(new byte[] { 0, 0, 0, 1 }, AlignmentHeader, M_Io, "/seq/0");
+                throw new ValidationNotEqualError(new byte[] { 0, 0, 0, 1 }, _alignmentHeader, m_io, "/seq/0");
             }
             _buddyAllocatorHeader = new BuddyAllocatorHeader(m_io, this, m_root);
         }
-        public partial class BuddyAllocatorHeader : KaitaiStruct
+        public partial class Block : KaitaiStruct
         {
-            public static BuddyAllocatorHeader FromFile(string fileName)
+            public static Block FromFile(string fileName)
             {
-                return new BuddyAllocatorHeader(new KaitaiStream(fileName));
+                return new Block(new KaitaiStream(fileName));
             }
 
-            public BuddyAllocatorHeader(KaitaiStream p__io, DsStore p__parent = null, DsStore p__root = null) : base(p__io)
+            public Block(KaitaiStream p__io, KaitaiStruct p__parent = null, DsStore p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
+                f_rightmostBlock = false;
                 _read();
             }
             private void _read()
             {
-                _magic = m_io.ReadBytes(4);
-                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 66, 117, 100, 49 }) == 0)))
+                _mode = m_io.ReadU4be();
+                _counter = m_io.ReadU4be();
+                _data = new List<BlockData>();
+                for (var i = 0; i < Counter; i++)
                 {
-                    throw new ValidationNotEqualError(new byte[] { 66, 117, 100, 49 }, Magic, M_Io, "/types/buddy_allocator_header/seq/0");
+                    _data.Add(new BlockData(Mode, m_io, this, m_root));
                 }
-                _ofsBookkeepingInfoBlock = m_io.ReadU4be();
-                _lenBookkeepingInfoBlock = m_io.ReadU4be();
-                _copyOfsBookkeepingInfoBlock = m_io.ReadU4be();
-                __unnamed4 = m_io.ReadBytes(16);
             }
-            private byte[] _magic;
-            private uint _ofsBookkeepingInfoBlock;
-            private uint _lenBookkeepingInfoBlock;
-            private uint _copyOfsBookkeepingInfoBlock;
-            private byte[] __unnamed4;
+            public partial class BlockData : KaitaiStruct
+            {
+                public BlockData(uint p_mode, KaitaiStream p__io, DsStore.Block p__parent = null, DsStore p__root = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    _mode = p_mode;
+                    f_block = false;
+                    _read();
+                }
+                private void _read()
+                {
+                    if (Mode > 0) {
+                        _blockId = m_io.ReadU4be();
+                    }
+                    _record = new Record(m_io, this, m_root);
+                }
+                public partial class Record : KaitaiStruct
+                {
+                    public static Record FromFile(string fileName)
+                    {
+                        return new Record(new KaitaiStream(fileName));
+                    }
+
+                    public Record(KaitaiStream p__io, DsStore.Block.BlockData p__parent = null, DsStore p__root = null) : base(p__io)
+                    {
+                        m_parent = p__parent;
+                        m_root = p__root;
+                        _read();
+                    }
+                    private void _read()
+                    {
+                        _filename = new Ustr(m_io, this, m_root);
+                        _structureType = new FourCharCode(m_io, this, m_root);
+                        _dataType = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(4));
+                        switch (DataType) {
+                        case "blob": {
+                            _value = new RecordBlob(m_io, this, m_root);
+                            break;
+                        }
+                        case "bool": {
+                            _value = m_io.ReadU1();
+                            break;
+                        }
+                        case "comp": {
+                            _value = m_io.ReadU8be();
+                            break;
+                        }
+                        case "dutc": {
+                            _value = m_io.ReadU8be();
+                            break;
+                        }
+                        case "long": {
+                            _value = m_io.ReadU4be();
+                            break;
+                        }
+                        case "shor": {
+                            _value = m_io.ReadU4be();
+                            break;
+                        }
+                        case "type": {
+                            _value = new FourCharCode(m_io, this, m_root);
+                            break;
+                        }
+                        case "ustr": {
+                            _value = new Ustr(m_io, this, m_root);
+                            break;
+                        }
+                        }
+                    }
+                    public partial class FourCharCode : KaitaiStruct
+                    {
+                        public static FourCharCode FromFile(string fileName)
+                        {
+                            return new FourCharCode(new KaitaiStream(fileName));
+                        }
+
+                        public FourCharCode(KaitaiStream p__io, DsStore.Block.BlockData.Record p__parent = null, DsStore p__root = null) : base(p__io)
+                        {
+                            m_parent = p__parent;
+                            m_root = p__root;
+                            _read();
+                        }
+                        private void _read()
+                        {
+                            _value = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(4));
+                        }
+                        private string _value;
+                        private DsStore m_root;
+                        private DsStore.Block.BlockData.Record m_parent;
+                        public string Value { get { return _value; } }
+                        public DsStore M_Root { get { return m_root; } }
+                        public DsStore.Block.BlockData.Record M_Parent { get { return m_parent; } }
+                    }
+                    public partial class RecordBlob : KaitaiStruct
+                    {
+                        public static RecordBlob FromFile(string fileName)
+                        {
+                            return new RecordBlob(new KaitaiStream(fileName));
+                        }
+
+                        public RecordBlob(KaitaiStream p__io, DsStore.Block.BlockData.Record p__parent = null, DsStore p__root = null) : base(p__io)
+                        {
+                            m_parent = p__parent;
+                            m_root = p__root;
+                            _read();
+                        }
+                        private void _read()
+                        {
+                            _length = m_io.ReadU4be();
+                            _value = m_io.ReadBytes(Length);
+                        }
+                        private uint _length;
+                        private byte[] _value;
+                        private DsStore m_root;
+                        private DsStore.Block.BlockData.Record m_parent;
+                        public uint Length { get { return _length; } }
+                        public byte[] Value { get { return _value; } }
+                        public DsStore M_Root { get { return m_root; } }
+                        public DsStore.Block.BlockData.Record M_Parent { get { return m_parent; } }
+                    }
+                    public partial class Ustr : KaitaiStruct
+                    {
+                        public static Ustr FromFile(string fileName)
+                        {
+                            return new Ustr(new KaitaiStream(fileName));
+                        }
+
+                        public Ustr(KaitaiStream p__io, DsStore.Block.BlockData.Record p__parent = null, DsStore p__root = null) : base(p__io)
+                        {
+                            m_parent = p__parent;
+                            m_root = p__root;
+                            _read();
+                        }
+                        private void _read()
+                        {
+                            _length = m_io.ReadU4be();
+                            _value = System.Text.Encoding.GetEncoding("UTF-16BE").GetString(m_io.ReadBytes(2 * Length));
+                        }
+                        private uint _length;
+                        private string _value;
+                        private DsStore m_root;
+                        private DsStore.Block.BlockData.Record m_parent;
+                        public uint Length { get { return _length; } }
+                        public string Value { get { return _value; } }
+                        public DsStore M_Root { get { return m_root; } }
+                        public DsStore.Block.BlockData.Record M_Parent { get { return m_parent; } }
+                    }
+                    private Ustr _filename;
+                    private FourCharCode _structureType;
+                    private string _dataType;
+                    private object _value;
+                    private DsStore m_root;
+                    private DsStore.Block.BlockData m_parent;
+                    public Ustr Filename { get { return _filename; } }
+
+                    /// <summary>
+                    /// Description of the entry's property.
+                    /// </summary>
+                    public FourCharCode StructureType { get { return _structureType; } }
+
+                    /// <summary>
+                    /// Data type of the value.
+                    /// </summary>
+                    public string DataType { get { return _dataType; } }
+                    public object Value { get { return _value; } }
+                    public DsStore M_Root { get { return m_root; } }
+                    public DsStore.Block.BlockData M_Parent { get { return m_parent; } }
+                }
+                private bool f_block;
+                private Block _block;
+                public Block Block
+                {
+                    get
+                    {
+                        if (f_block)
+                            return _block;
+                        f_block = true;
+                        if (Mode > 0) {
+                            KaitaiStream io = M_Root.M_Io;
+                            long _pos = io.Pos;
+                            io.Seek(M_Root.BuddyAllocatorBody.BlockAddresses[((uint) (BlockId))].Offset);
+                            _block = new Block(io, this, m_root);
+                            io.Seek(_pos);
+                        }
+                        return _block;
+                    }
+                }
+                private uint? _blockId;
+                private Record _record;
+                private uint _mode;
+                private DsStore m_root;
+                private DsStore.Block m_parent;
+                public uint? BlockId { get { return _blockId; } }
+                public Record Record { get { return _record; } }
+                public uint Mode { get { return _mode; } }
+                public DsStore M_Root { get { return m_root; } }
+                public DsStore.Block M_Parent { get { return m_parent; } }
+            }
+            private bool f_rightmostBlock;
+            private Block _rightmostBlock;
+
+            /// <summary>
+            /// Rightmost child block pointer.
+            /// </summary>
+            public Block RightmostBlock
+            {
+                get
+                {
+                    if (f_rightmostBlock)
+                        return _rightmostBlock;
+                    f_rightmostBlock = true;
+                    if (Mode > 0) {
+                        KaitaiStream io = M_Root.M_Io;
+                        long _pos = io.Pos;
+                        io.Seek(M_Root.BuddyAllocatorBody.BlockAddresses[Mode].Offset);
+                        _rightmostBlock = new Block(io, this, m_root);
+                        io.Seek(_pos);
+                    }
+                    return _rightmostBlock;
+                }
+            }
+            private uint _mode;
+            private uint _counter;
+            private List<BlockData> _data;
             private DsStore m_root;
-            private DsStore m_parent;
+            private KaitaiStruct m_parent;
 
             /// <summary>
-            /// Magic number 'Bud1'.
+            /// If mode is 0, this is a leaf node, otherwise it is an internal node.
             /// </summary>
-            public byte[] Magic { get { return _magic; } }
-            public uint OfsBookkeepingInfoBlock { get { return _ofsBookkeepingInfoBlock; } }
-            public uint LenBookkeepingInfoBlock { get { return _lenBookkeepingInfoBlock; } }
+            public uint Mode { get { return _mode; } }
 
             /// <summary>
-            /// Needs to match 'offset_bookkeeping_info_block'.
+            /// Number of records or number of block id + record pairs.
             /// </summary>
-            public uint CopyOfsBookkeepingInfoBlock { get { return _copyOfsBookkeepingInfoBlock; } }
-
-            /// <summary>
-            /// Unused field which might simply be the unused space at the end of the block,
-            /// since the minimum allocation size is 32 bytes.
-            /// </summary>
-            public byte[] Unnamed_4 { get { return __unnamed4; } }
+            public uint Counter { get { return _counter; } }
+            public List<BlockData> Data { get { return _data; } }
             public DsStore M_Root { get { return m_root; } }
-            public DsStore M_Parent { get { return m_parent; } }
+            public KaitaiStruct M_Parent { get { return m_parent; } }
         }
         public partial class BuddyAllocatorBody : KaitaiStruct
         {
@@ -105,9 +317,9 @@ namespace Kaitai
             {
                 m_parent = p__parent;
                 m_root = p__root;
+                f_directories = false;
                 f_numBlockAddresses = false;
                 f_numFreeLists = false;
-                f_directories = false;
                 _read();
             }
             private void _read()
@@ -158,8 +370,8 @@ namespace Kaitai
                     {
                         if (f_offset)
                             return _offset;
-                        _offset = (int) (((AddressRaw & ~(M_Root.BlockAddressMask)) + 4));
                         f_offset = true;
+                        _offset = (int) ((AddressRaw & ~(M_Root.BlockAddressMask)) + 4);
                         return _offset;
                     }
                 }
@@ -171,8 +383,8 @@ namespace Kaitai
                     {
                         if (f_size)
                             return _size;
-                        _size = (int) ((1 << (AddressRaw & M_Root.BlockAddressMask)));
                         f_size = true;
+                        _size = (int) (1 << (AddressRaw & M_Root.BlockAddressMask));
                         return _size;
                     }
                 }
@@ -244,32 +456,6 @@ namespace Kaitai
                 public DsStore M_Root { get { return m_root; } }
                 public DsStore.BuddyAllocatorBody M_Parent { get { return m_parent; } }
             }
-            private bool f_numBlockAddresses;
-            private int _numBlockAddresses;
-            public int NumBlockAddresses
-            {
-                get
-                {
-                    if (f_numBlockAddresses)
-                        return _numBlockAddresses;
-                    _numBlockAddresses = (int) (256);
-                    f_numBlockAddresses = true;
-                    return _numBlockAddresses;
-                }
-            }
-            private bool f_numFreeLists;
-            private sbyte _numFreeLists;
-            public sbyte NumFreeLists
-            {
-                get
-                {
-                    if (f_numFreeLists)
-                        return _numFreeLists;
-                    _numFreeLists = (sbyte) (32);
-                    f_numFreeLists = true;
-                    return _numFreeLists;
-                }
-            }
             private bool f_directories;
             private List<MasterBlockRef> _directories;
 
@@ -282,14 +468,40 @@ namespace Kaitai
                 {
                     if (f_directories)
                         return _directories;
+                    f_directories = true;
                     KaitaiStream io = M_Root.M_Io;
                     _directories = new List<MasterBlockRef>();
                     for (var i = 0; i < NumDirectories; i++)
                     {
                         _directories.Add(new MasterBlockRef(i, io, this, m_root));
                     }
-                    f_directories = true;
                     return _directories;
+                }
+            }
+            private bool f_numBlockAddresses;
+            private int _numBlockAddresses;
+            public int NumBlockAddresses
+            {
+                get
+                {
+                    if (f_numBlockAddresses)
+                        return _numBlockAddresses;
+                    f_numBlockAddresses = true;
+                    _numBlockAddresses = (int) (256);
+                    return _numBlockAddresses;
+                }
+            }
+            private bool f_numFreeLists;
+            private sbyte _numFreeLists;
+            public sbyte NumFreeLists
+            {
+                get
+                {
+                    if (f_numFreeLists)
+                        return _numFreeLists;
+                    f_numFreeLists = true;
+                    _numFreeLists = (sbyte) (32);
+                    return _numFreeLists;
                 }
             }
             private uint _numBlocks;
@@ -326,6 +538,59 @@ namespace Kaitai
             /// </summary>
             public List<DirectoryEntry> DirectoryEntries { get { return _directoryEntries; } }
             public List<FreeList> FreeLists { get { return _freeLists; } }
+            public DsStore M_Root { get { return m_root; } }
+            public DsStore M_Parent { get { return m_parent; } }
+        }
+        public partial class BuddyAllocatorHeader : KaitaiStruct
+        {
+            public static BuddyAllocatorHeader FromFile(string fileName)
+            {
+                return new BuddyAllocatorHeader(new KaitaiStream(fileName));
+            }
+
+            public BuddyAllocatorHeader(KaitaiStream p__io, DsStore p__parent = null, DsStore p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _magic = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 66, 117, 100, 49 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 66, 117, 100, 49 }, _magic, m_io, "/types/buddy_allocator_header/seq/0");
+                }
+                _ofsBookkeepingInfoBlock = m_io.ReadU4be();
+                _lenBookkeepingInfoBlock = m_io.ReadU4be();
+                _copyOfsBookkeepingInfoBlock = m_io.ReadU4be();
+                __unnamed4 = m_io.ReadBytes(16);
+            }
+            private byte[] _magic;
+            private uint _ofsBookkeepingInfoBlock;
+            private uint _lenBookkeepingInfoBlock;
+            private uint _copyOfsBookkeepingInfoBlock;
+            private byte[] __unnamed4;
+            private DsStore m_root;
+            private DsStore m_parent;
+
+            /// <summary>
+            /// Magic number 'Bud1'.
+            /// </summary>
+            public byte[] Magic { get { return _magic; } }
+            public uint OfsBookkeepingInfoBlock { get { return _ofsBookkeepingInfoBlock; } }
+            public uint LenBookkeepingInfoBlock { get { return _lenBookkeepingInfoBlock; } }
+
+            /// <summary>
+            /// Needs to match 'offset_bookkeeping_info_block'.
+            /// </summary>
+            public uint CopyOfsBookkeepingInfoBlock { get { return _copyOfsBookkeepingInfoBlock; } }
+
+            /// <summary>
+            /// Unused field which might simply be the unused space at the end of the block,
+            /// since the minimum allocation size is 32 bytes.
+            /// </summary>
+            public byte[] Unnamed_4 { get { return __unnamed4; } }
             public DsStore M_Root { get { return m_root; } }
             public DsStore M_Parent { get { return m_parent; } }
         }
@@ -372,12 +637,12 @@ namespace Kaitai
                     {
                         if (f_rootBlock)
                             return _rootBlock;
+                        f_rootBlock = true;
                         KaitaiStream io = M_Root.M_Io;
                         long _pos = io.Pos;
                         io.Seek(M_Root.BuddyAllocatorBody.BlockAddresses[BlockId].Offset);
                         _rootBlock = new Block(io, this, m_root);
                         io.Seek(_pos);
-                        f_rootBlock = true;
                         return _rootBlock;
                     }
                 }
@@ -424,13 +689,13 @@ namespace Kaitai
                 {
                     if (f_masterBlock)
                         return _masterBlock;
+                    f_masterBlock = true;
                     long _pos = m_io.Pos;
                     m_io.Seek(M_Parent.BlockAddresses[M_Parent.DirectoryEntries[Idx].BlockId].Offset);
                     __raw_masterBlock = m_io.ReadBytes(M_Parent.BlockAddresses[M_Parent.DirectoryEntries[Idx].BlockId].Size);
                     var io___raw_masterBlock = new KaitaiStream(__raw_masterBlock);
                     _masterBlock = new MasterBlock(io___raw_masterBlock, this, m_root);
                     m_io.Seek(_pos);
-                    f_masterBlock = true;
                     return _masterBlock;
                 }
             }
@@ -442,289 +707,6 @@ namespace Kaitai
             public DsStore M_Root { get { return m_root; } }
             public DsStore.BuddyAllocatorBody M_Parent { get { return m_parent; } }
             public byte[] M_RawMasterBlock { get { return __raw_masterBlock; } }
-        }
-        public partial class Block : KaitaiStruct
-        {
-            public static Block FromFile(string fileName)
-            {
-                return new Block(new KaitaiStream(fileName));
-            }
-
-            public Block(KaitaiStream p__io, KaitaiStruct p__parent = null, DsStore p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_rightmostBlock = false;
-                _read();
-            }
-            private void _read()
-            {
-                _mode = m_io.ReadU4be();
-                _counter = m_io.ReadU4be();
-                _data = new List<BlockData>();
-                for (var i = 0; i < Counter; i++)
-                {
-                    _data.Add(new BlockData(Mode, m_io, this, m_root));
-                }
-            }
-            public partial class BlockData : KaitaiStruct
-            {
-                public BlockData(uint p_mode, KaitaiStream p__io, DsStore.Block p__parent = null, DsStore p__root = null) : base(p__io)
-                {
-                    m_parent = p__parent;
-                    m_root = p__root;
-                    _mode = p_mode;
-                    f_block = false;
-                    _read();
-                }
-                private void _read()
-                {
-                    if (Mode > 0) {
-                        _blockId = m_io.ReadU4be();
-                    }
-                    _record = new Record(m_io, this, m_root);
-                }
-                public partial class Record : KaitaiStruct
-                {
-                    public static Record FromFile(string fileName)
-                    {
-                        return new Record(new KaitaiStream(fileName));
-                    }
-
-                    public Record(KaitaiStream p__io, DsStore.Block.BlockData p__parent = null, DsStore p__root = null) : base(p__io)
-                    {
-                        m_parent = p__parent;
-                        m_root = p__root;
-                        _read();
-                    }
-                    private void _read()
-                    {
-                        _filename = new Ustr(m_io, this, m_root);
-                        _structureType = new FourCharCode(m_io, this, m_root);
-                        _dataType = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(4));
-                        switch (DataType) {
-                        case "long": {
-                            _value = m_io.ReadU4be();
-                            break;
-                        }
-                        case "shor": {
-                            _value = m_io.ReadU4be();
-                            break;
-                        }
-                        case "comp": {
-                            _value = m_io.ReadU8be();
-                            break;
-                        }
-                        case "bool": {
-                            _value = m_io.ReadU1();
-                            break;
-                        }
-                        case "ustr": {
-                            _value = new Ustr(m_io, this, m_root);
-                            break;
-                        }
-                        case "dutc": {
-                            _value = m_io.ReadU8be();
-                            break;
-                        }
-                        case "type": {
-                            _value = new FourCharCode(m_io, this, m_root);
-                            break;
-                        }
-                        case "blob": {
-                            _value = new RecordBlob(m_io, this, m_root);
-                            break;
-                        }
-                        }
-                    }
-                    public partial class RecordBlob : KaitaiStruct
-                    {
-                        public static RecordBlob FromFile(string fileName)
-                        {
-                            return new RecordBlob(new KaitaiStream(fileName));
-                        }
-
-                        public RecordBlob(KaitaiStream p__io, DsStore.Block.BlockData.Record p__parent = null, DsStore p__root = null) : base(p__io)
-                        {
-                            m_parent = p__parent;
-                            m_root = p__root;
-                            _read();
-                        }
-                        private void _read()
-                        {
-                            _length = m_io.ReadU4be();
-                            _value = m_io.ReadBytes(Length);
-                        }
-                        private uint _length;
-                        private byte[] _value;
-                        private DsStore m_root;
-                        private DsStore.Block.BlockData.Record m_parent;
-                        public uint Length { get { return _length; } }
-                        public byte[] Value { get { return _value; } }
-                        public DsStore M_Root { get { return m_root; } }
-                        public DsStore.Block.BlockData.Record M_Parent { get { return m_parent; } }
-                    }
-                    public partial class Ustr : KaitaiStruct
-                    {
-                        public static Ustr FromFile(string fileName)
-                        {
-                            return new Ustr(new KaitaiStream(fileName));
-                        }
-
-                        public Ustr(KaitaiStream p__io, DsStore.Block.BlockData.Record p__parent = null, DsStore p__root = null) : base(p__io)
-                        {
-                            m_parent = p__parent;
-                            m_root = p__root;
-                            _read();
-                        }
-                        private void _read()
-                        {
-                            _length = m_io.ReadU4be();
-                            _value = System.Text.Encoding.GetEncoding("UTF-16BE").GetString(m_io.ReadBytes((2 * Length)));
-                        }
-                        private uint _length;
-                        private string _value;
-                        private DsStore m_root;
-                        private DsStore.Block.BlockData.Record m_parent;
-                        public uint Length { get { return _length; } }
-                        public string Value { get { return _value; } }
-                        public DsStore M_Root { get { return m_root; } }
-                        public DsStore.Block.BlockData.Record M_Parent { get { return m_parent; } }
-                    }
-                    public partial class FourCharCode : KaitaiStruct
-                    {
-                        public static FourCharCode FromFile(string fileName)
-                        {
-                            return new FourCharCode(new KaitaiStream(fileName));
-                        }
-
-                        public FourCharCode(KaitaiStream p__io, DsStore.Block.BlockData.Record p__parent = null, DsStore p__root = null) : base(p__io)
-                        {
-                            m_parent = p__parent;
-                            m_root = p__root;
-                            _read();
-                        }
-                        private void _read()
-                        {
-                            _value = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(4));
-                        }
-                        private string _value;
-                        private DsStore m_root;
-                        private DsStore.Block.BlockData.Record m_parent;
-                        public string Value { get { return _value; } }
-                        public DsStore M_Root { get { return m_root; } }
-                        public DsStore.Block.BlockData.Record M_Parent { get { return m_parent; } }
-                    }
-                    private Ustr _filename;
-                    private FourCharCode _structureType;
-                    private string _dataType;
-                    private object _value;
-                    private DsStore m_root;
-                    private DsStore.Block.BlockData m_parent;
-                    public Ustr Filename { get { return _filename; } }
-
-                    /// <summary>
-                    /// Description of the entry's property.
-                    /// </summary>
-                    public FourCharCode StructureType { get { return _structureType; } }
-
-                    /// <summary>
-                    /// Data type of the value.
-                    /// </summary>
-                    public string DataType { get { return _dataType; } }
-                    public object Value { get { return _value; } }
-                    public DsStore M_Root { get { return m_root; } }
-                    public DsStore.Block.BlockData M_Parent { get { return m_parent; } }
-                }
-                private bool f_block;
-                private Block _block;
-                public Block Block
-                {
-                    get
-                    {
-                        if (f_block)
-                            return _block;
-                        if (Mode > 0) {
-                            KaitaiStream io = M_Root.M_Io;
-                            long _pos = io.Pos;
-                            io.Seek(M_Root.BuddyAllocatorBody.BlockAddresses[((uint) (BlockId))].Offset);
-                            _block = new Block(io, this, m_root);
-                            io.Seek(_pos);
-                            f_block = true;
-                        }
-                        return _block;
-                    }
-                }
-                private uint? _blockId;
-                private Record _record;
-                private uint _mode;
-                private DsStore m_root;
-                private DsStore.Block m_parent;
-                public uint? BlockId { get { return _blockId; } }
-                public Record Record { get { return _record; } }
-                public uint Mode { get { return _mode; } }
-                public DsStore M_Root { get { return m_root; } }
-                public DsStore.Block M_Parent { get { return m_parent; } }
-            }
-            private bool f_rightmostBlock;
-            private Block _rightmostBlock;
-
-            /// <summary>
-            /// Rightmost child block pointer.
-            /// </summary>
-            public Block RightmostBlock
-            {
-                get
-                {
-                    if (f_rightmostBlock)
-                        return _rightmostBlock;
-                    if (Mode > 0) {
-                        KaitaiStream io = M_Root.M_Io;
-                        long _pos = io.Pos;
-                        io.Seek(M_Root.BuddyAllocatorBody.BlockAddresses[Mode].Offset);
-                        _rightmostBlock = new Block(io, this, m_root);
-                        io.Seek(_pos);
-                        f_rightmostBlock = true;
-                    }
-                    return _rightmostBlock;
-                }
-            }
-            private uint _mode;
-            private uint _counter;
-            private List<BlockData> _data;
-            private DsStore m_root;
-            private KaitaiStruct m_parent;
-
-            /// <summary>
-            /// If mode is 0, this is a leaf node, otherwise it is an internal node.
-            /// </summary>
-            public uint Mode { get { return _mode; } }
-
-            /// <summary>
-            /// Number of records or number of block id + record pairs.
-            /// </summary>
-            public uint Counter { get { return _counter; } }
-            public List<BlockData> Data { get { return _data; } }
-            public DsStore M_Root { get { return m_root; } }
-            public KaitaiStruct M_Parent { get { return m_parent; } }
-        }
-        private bool f_buddyAllocatorBody;
-        private BuddyAllocatorBody _buddyAllocatorBody;
-        public BuddyAllocatorBody BuddyAllocatorBody
-        {
-            get
-            {
-                if (f_buddyAllocatorBody)
-                    return _buddyAllocatorBody;
-                long _pos = m_io.Pos;
-                m_io.Seek((BuddyAllocatorHeader.OfsBookkeepingInfoBlock + 4));
-                __raw_buddyAllocatorBody = m_io.ReadBytes(BuddyAllocatorHeader.LenBookkeepingInfoBlock);
-                var io___raw_buddyAllocatorBody = new KaitaiStream(__raw_buddyAllocatorBody);
-                _buddyAllocatorBody = new BuddyAllocatorBody(io___raw_buddyAllocatorBody, this, m_root);
-                m_io.Seek(_pos);
-                f_buddyAllocatorBody = true;
-                return _buddyAllocatorBody;
-            }
         }
         private bool f_blockAddressMask;
         private sbyte _blockAddressMask;
@@ -739,9 +721,27 @@ namespace Kaitai
             {
                 if (f_blockAddressMask)
                     return _blockAddressMask;
-                _blockAddressMask = (sbyte) (31);
                 f_blockAddressMask = true;
+                _blockAddressMask = (sbyte) (31);
                 return _blockAddressMask;
+            }
+        }
+        private bool f_buddyAllocatorBody;
+        private BuddyAllocatorBody _buddyAllocatorBody;
+        public BuddyAllocatorBody BuddyAllocatorBody
+        {
+            get
+            {
+                if (f_buddyAllocatorBody)
+                    return _buddyAllocatorBody;
+                f_buddyAllocatorBody = true;
+                long _pos = m_io.Pos;
+                m_io.Seek(BuddyAllocatorHeader.OfsBookkeepingInfoBlock + 4);
+                __raw_buddyAllocatorBody = m_io.ReadBytes(BuddyAllocatorHeader.LenBookkeepingInfoBlock);
+                var io___raw_buddyAllocatorBody = new KaitaiStream(__raw_buddyAllocatorBody);
+                _buddyAllocatorBody = new BuddyAllocatorBody(io___raw_buddyAllocatorBody, this, m_root);
+                m_io.Seek(_pos);
+                return _buddyAllocatorBody;
             }
         }
         private byte[] _alignmentHeader;

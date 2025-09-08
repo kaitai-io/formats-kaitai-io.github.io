@@ -30,6 +30,17 @@ import (
  * @see <a href="https://github.com/php/php-src/blob/php-7.3.5/ext/standard/var.c#L822">Source</a>
  */
 
+type PhpSerializedValue_BoolValue int
+const (
+	PhpSerializedValue_BoolValue__False PhpSerializedValue_BoolValue = 48
+	PhpSerializedValue_BoolValue__True PhpSerializedValue_BoolValue = 49
+)
+var values_PhpSerializedValue_BoolValue = map[PhpSerializedValue_BoolValue]struct{}{48: {}, 49: {}}
+func (v PhpSerializedValue_BoolValue) isDefined() bool {
+	_, ok := values_PhpSerializedValue_BoolValue[v]
+	return ok
+}
+
 type PhpSerializedValue_ValueType int
 const (
 	PhpSerializedValue_ValueType__CustomSerializedObject PhpSerializedValue_ValueType = 67
@@ -45,25 +56,28 @@ const (
 	PhpSerializedValue_ValueType__ObjectReference PhpSerializedValue_ValueType = 114
 	PhpSerializedValue_ValueType__String PhpSerializedValue_ValueType = 115
 )
-
-type PhpSerializedValue_BoolValue int
-const (
-	PhpSerializedValue_BoolValue__False PhpSerializedValue_BoolValue = 48
-	PhpSerializedValue_BoolValue__True PhpSerializedValue_BoolValue = 49
-)
+var values_PhpSerializedValue_ValueType = map[PhpSerializedValue_ValueType]struct{}{67: {}, 78: {}, 79: {}, 82: {}, 83: {}, 97: {}, 98: {}, 100: {}, 105: {}, 111: {}, 114: {}, 115: {}}
+func (v PhpSerializedValue_ValueType) isDefined() bool {
+	_, ok := values_PhpSerializedValue_ValueType[v]
+	return ok
+}
 type PhpSerializedValue struct {
 	Type PhpSerializedValue_ValueType
-	Contents interface{}
+	Contents kaitai.Struct
 	_io *kaitai.Stream
 	_root *PhpSerializedValue
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewPhpSerializedValue() *PhpSerializedValue {
 	return &PhpSerializedValue{
 	}
 }
 
-func (this *PhpSerializedValue) Read(io *kaitai.Stream, parent interface{}, root *PhpSerializedValue) (err error) {
+func (this PhpSerializedValue) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PhpSerializedValue) Read(io *kaitai.Stream, parent kaitai.Struct, root *PhpSerializedValue) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -74,85 +88,85 @@ func (this *PhpSerializedValue) Read(io *kaitai.Stream, parent interface{}, root
 	}
 	this.Type = PhpSerializedValue_ValueType(tmp1)
 	switch (this.Type) {
-	case PhpSerializedValue_ValueType__CustomSerializedObject:
-		tmp2 := NewPhpSerializedValue_CustomSerializedObjectContents()
+	case PhpSerializedValue_ValueType__Array:
+		tmp2 := NewPhpSerializedValue_ArrayContents()
 		err = tmp2.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Contents = tmp2
-	case PhpSerializedValue_ValueType__Php3Object:
-		tmp3 := NewPhpSerializedValue_Php3ObjectContents()
+	case PhpSerializedValue_ValueType__Bool:
+		tmp3 := NewPhpSerializedValue_BoolContents()
 		err = tmp3.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Contents = tmp3
-	case PhpSerializedValue_ValueType__Object:
-		tmp4 := NewPhpSerializedValue_ObjectContents()
+	case PhpSerializedValue_ValueType__CustomSerializedObject:
+		tmp4 := NewPhpSerializedValue_CustomSerializedObjectContents()
 		err = tmp4.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Contents = tmp4
-	case PhpSerializedValue_ValueType__VariableReference:
-		tmp5 := NewPhpSerializedValue_IntContents()
+	case PhpSerializedValue_ValueType__Float:
+		tmp5 := NewPhpSerializedValue_FloatContents()
 		err = tmp5.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Contents = tmp5
-	case PhpSerializedValue_ValueType__Php6String:
-		tmp6 := NewPhpSerializedValue_StringContents()
+	case PhpSerializedValue_ValueType__Int:
+		tmp6 := NewPhpSerializedValue_IntContents()
 		err = tmp6.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Contents = tmp6
-	case PhpSerializedValue_ValueType__Float:
-		tmp7 := NewPhpSerializedValue_FloatContents()
+	case PhpSerializedValue_ValueType__Null:
+		tmp7 := NewPhpSerializedValue_NullContents()
 		err = tmp7.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Contents = tmp7
-	case PhpSerializedValue_ValueType__ObjectReference:
-		tmp8 := NewPhpSerializedValue_IntContents()
+	case PhpSerializedValue_ValueType__Object:
+		tmp8 := NewPhpSerializedValue_ObjectContents()
 		err = tmp8.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Contents = tmp8
-	case PhpSerializedValue_ValueType__Null:
-		tmp9 := NewPhpSerializedValue_NullContents()
+	case PhpSerializedValue_ValueType__ObjectReference:
+		tmp9 := NewPhpSerializedValue_IntContents()
 		err = tmp9.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Contents = tmp9
-	case PhpSerializedValue_ValueType__Bool:
-		tmp10 := NewPhpSerializedValue_BoolContents()
+	case PhpSerializedValue_ValueType__Php3Object:
+		tmp10 := NewPhpSerializedValue_Php3ObjectContents()
 		err = tmp10.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Contents = tmp10
-	case PhpSerializedValue_ValueType__Int:
-		tmp11 := NewPhpSerializedValue_IntContents()
+	case PhpSerializedValue_ValueType__Php6String:
+		tmp11 := NewPhpSerializedValue_StringContents()
 		err = tmp11.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Contents = tmp11
-	case PhpSerializedValue_ValueType__Array:
-		tmp12 := NewPhpSerializedValue_ArrayContents()
+	case PhpSerializedValue_ValueType__String:
+		tmp12 := NewPhpSerializedValue_StringContents()
 		err = tmp12.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Contents = tmp12
-	case PhpSerializedValue_ValueType__String:
-		tmp13 := NewPhpSerializedValue_StringContents()
+	case PhpSerializedValue_ValueType__VariableReference:
+		tmp13 := NewPhpSerializedValue_IntContents()
 		err = tmp13.Read(this._io, this, this._root)
 		if err != nil {
 			return err
@@ -171,297 +185,6 @@ func (this *PhpSerializedValue) Read(io *kaitai.Stream, parent interface{}, root
  */
 
 /**
- * A mapping (a sequence of key-value pairs) prefixed with its size.
- */
-type PhpSerializedValue_CountPrefixedMapping struct {
-	NumEntriesDec string
-	OpeningBrace []byte
-	Entries []*PhpSerializedValue_MappingEntry
-	ClosingBrace []byte
-	_io *kaitai.Stream
-	_root *PhpSerializedValue
-	_parent interface{}
-	_f_numEntries bool
-	numEntries int
-}
-func NewPhpSerializedValue_CountPrefixedMapping() *PhpSerializedValue_CountPrefixedMapping {
-	return &PhpSerializedValue_CountPrefixedMapping{
-	}
-}
-
-func (this *PhpSerializedValue_CountPrefixedMapping) Read(io *kaitai.Stream, parent interface{}, root *PhpSerializedValue) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp14, err := this._io.ReadBytesTerm(58, false, true, true)
-	if err != nil {
-		return err
-	}
-	this.NumEntriesDec = string(tmp14)
-	tmp15, err := this._io.ReadBytes(int(1))
-	if err != nil {
-		return err
-	}
-	tmp15 = tmp15
-	this.OpeningBrace = tmp15
-	if !(bytes.Equal(this.OpeningBrace, []uint8{123})) {
-		return kaitai.NewValidationNotEqualError([]uint8{123}, this.OpeningBrace, this._io, "/types/count_prefixed_mapping/seq/1")
-	}
-	tmp16, err := this.NumEntries()
-	if err != nil {
-		return err
-	}
-	for i := 0; i < int(tmp16); i++ {
-		_ = i
-		tmp17 := NewPhpSerializedValue_MappingEntry()
-		err = tmp17.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Entries = append(this.Entries, tmp17)
-	}
-	tmp18, err := this._io.ReadBytes(int(1))
-	if err != nil {
-		return err
-	}
-	tmp18 = tmp18
-	this.ClosingBrace = tmp18
-	if !(bytes.Equal(this.ClosingBrace, []uint8{125})) {
-		return kaitai.NewValidationNotEqualError([]uint8{125}, this.ClosingBrace, this._io, "/types/count_prefixed_mapping/seq/3")
-	}
-	return err
-}
-
-/**
- * The number of key-value pairs in the mapping, parsed as an integer.
- */
-func (this *PhpSerializedValue_CountPrefixedMapping) NumEntries() (v int, err error) {
-	if (this._f_numEntries) {
-		return this.numEntries, nil
-	}
-	tmp19, err := strconv.ParseInt(this.NumEntriesDec, 10, 0)
-	if err != nil {
-		return 0, err
-	}
-	this.numEntries = int(tmp19)
-	this._f_numEntries = true
-	return this.numEntries, nil
-}
-
-/**
- * The number of key-value pairs in the mapping, in ASCII decimal.
- */
-
-/**
- * The key-value pairs contained in the mapping.
- */
-
-/**
- * The contents of a floating-point value.
- */
-type PhpSerializedValue_FloatContents struct {
-	Colon []byte
-	ValueDec string
-	_io *kaitai.Stream
-	_root *PhpSerializedValue
-	_parent *PhpSerializedValue
-}
-func NewPhpSerializedValue_FloatContents() *PhpSerializedValue_FloatContents {
-	return &PhpSerializedValue_FloatContents{
-	}
-}
-
-func (this *PhpSerializedValue_FloatContents) Read(io *kaitai.Stream, parent *PhpSerializedValue, root *PhpSerializedValue) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp20, err := this._io.ReadBytes(int(1))
-	if err != nil {
-		return err
-	}
-	tmp20 = tmp20
-	this.Colon = tmp20
-	if !(bytes.Equal(this.Colon, []uint8{58})) {
-		return kaitai.NewValidationNotEqualError([]uint8{58}, this.Colon, this._io, "/types/float_contents/seq/0")
-	}
-	tmp21, err := this._io.ReadBytesTerm(59, false, true, true)
-	if err != nil {
-		return err
-	}
-	this.ValueDec = string(tmp21)
-	return err
-}
-
-/**
- * The value of the `float`, in ASCII decimal, as generated by PHP's
- * usual double-to-string conversion. In particular, this means that:
- * 
- * * A decimal point may not be included (for integral numbers)
- * * The number may use exponent notation (e. g. `1.0E+16`)
- * * Positive and negative infinity are represented as `INF`
- *   and `-INF`, respectively
- * * Not-a-number is represented as `NAN`
- */
-
-/**
- * A quoted string prefixed with its length.
- * 
- * Despite the quotes surrounding the string data, it can contain
- * arbitrary bytes, which are never escaped in any way.
- * This does not cause any ambiguities when parsing - the bounds of
- * the string are determined only by the length field, not by the quotes.
- */
-type PhpSerializedValue_LengthPrefixedQuotedString struct {
-	LenDataDec string
-	OpeningQuote []byte
-	Data []byte
-	ClosingQuote []byte
-	_io *kaitai.Stream
-	_root *PhpSerializedValue
-	_parent interface{}
-	_f_lenData bool
-	lenData int
-}
-func NewPhpSerializedValue_LengthPrefixedQuotedString() *PhpSerializedValue_LengthPrefixedQuotedString {
-	return &PhpSerializedValue_LengthPrefixedQuotedString{
-	}
-}
-
-func (this *PhpSerializedValue_LengthPrefixedQuotedString) Read(io *kaitai.Stream, parent interface{}, root *PhpSerializedValue) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp22, err := this._io.ReadBytesTerm(58, false, true, true)
-	if err != nil {
-		return err
-	}
-	this.LenDataDec = string(tmp22)
-	tmp23, err := this._io.ReadBytes(int(1))
-	if err != nil {
-		return err
-	}
-	tmp23 = tmp23
-	this.OpeningQuote = tmp23
-	if !(bytes.Equal(this.OpeningQuote, []uint8{34})) {
-		return kaitai.NewValidationNotEqualError([]uint8{34}, this.OpeningQuote, this._io, "/types/length_prefixed_quoted_string/seq/1")
-	}
-	tmp24, err := this.LenData()
-	if err != nil {
-		return err
-	}
-	tmp25, err := this._io.ReadBytes(int(tmp24))
-	if err != nil {
-		return err
-	}
-	tmp25 = tmp25
-	this.Data = tmp25
-	tmp26, err := this._io.ReadBytes(int(1))
-	if err != nil {
-		return err
-	}
-	tmp26 = tmp26
-	this.ClosingQuote = tmp26
-	if !(bytes.Equal(this.ClosingQuote, []uint8{34})) {
-		return kaitai.NewValidationNotEqualError([]uint8{34}, this.ClosingQuote, this._io, "/types/length_prefixed_quoted_string/seq/3")
-	}
-	return err
-}
-
-/**
- * The length of the string's contents in bytes, parsed as an integer.
- * The quotes are not counted in this size number.
- */
-func (this *PhpSerializedValue_LengthPrefixedQuotedString) LenData() (v int, err error) {
-	if (this._f_lenData) {
-		return this.lenData, nil
-	}
-	tmp27, err := strconv.ParseInt(this.LenDataDec, 10, 0)
-	if err != nil {
-		return 0, err
-	}
-	this.lenData = int(tmp27)
-	this._f_lenData = true
-	return this.lenData, nil
-}
-
-/**
- * The length of the string's data in bytes, in ASCII decimal.
- * The quotes are not counted in this length number.
- */
-
-/**
- * The data contained in the string. The quotes are not included.
- */
-
-/**
- * The contents of an object value serialized in the default format.
- * Unlike its PHP 3 counterpart, it contains a class name.
- */
-type PhpSerializedValue_ObjectContents struct {
-	Colon1 []byte
-	ClassName *PhpSerializedValue_LengthPrefixedQuotedString
-	Colon2 []byte
-	Properties *PhpSerializedValue_CountPrefixedMapping
-	_io *kaitai.Stream
-	_root *PhpSerializedValue
-	_parent *PhpSerializedValue
-}
-func NewPhpSerializedValue_ObjectContents() *PhpSerializedValue_ObjectContents {
-	return &PhpSerializedValue_ObjectContents{
-	}
-}
-
-func (this *PhpSerializedValue_ObjectContents) Read(io *kaitai.Stream, parent *PhpSerializedValue, root *PhpSerializedValue) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp28, err := this._io.ReadBytes(int(1))
-	if err != nil {
-		return err
-	}
-	tmp28 = tmp28
-	this.Colon1 = tmp28
-	if !(bytes.Equal(this.Colon1, []uint8{58})) {
-		return kaitai.NewValidationNotEqualError([]uint8{58}, this.Colon1, this._io, "/types/object_contents/seq/0")
-	}
-	tmp29 := NewPhpSerializedValue_LengthPrefixedQuotedString()
-	err = tmp29.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.ClassName = tmp29
-	tmp30, err := this._io.ReadBytes(int(1))
-	if err != nil {
-		return err
-	}
-	tmp30 = tmp30
-	this.Colon2 = tmp30
-	if !(bytes.Equal(this.Colon2, []uint8{58})) {
-		return kaitai.NewValidationNotEqualError([]uint8{58}, this.Colon2, this._io, "/types/object_contents/seq/2")
-	}
-	tmp31 := NewPhpSerializedValue_CountPrefixedMapping()
-	err = tmp31.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Properties = tmp31
-	return err
-}
-
-/**
- * The name of the object's class.
- */
-
-/**
- * The object's properties. Keys ust be of type `string`,
- * values may have any type.
- */
-
-/**
  * The contents of an array value.
  */
 type PhpSerializedValue_ArrayContents struct {
@@ -476,32 +199,196 @@ func NewPhpSerializedValue_ArrayContents() *PhpSerializedValue_ArrayContents {
 	}
 }
 
+func (this PhpSerializedValue_ArrayContents) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *PhpSerializedValue_ArrayContents) Read(io *kaitai.Stream, parent *PhpSerializedValue, root *PhpSerializedValue) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp32, err := this._io.ReadBytes(int(1))
+	tmp14, err := this._io.ReadBytes(int(1))
 	if err != nil {
 		return err
 	}
-	tmp32 = tmp32
-	this.Colon = tmp32
+	tmp14 = tmp14
+	this.Colon = tmp14
 	if !(bytes.Equal(this.Colon, []uint8{58})) {
 		return kaitai.NewValidationNotEqualError([]uint8{58}, this.Colon, this._io, "/types/array_contents/seq/0")
 	}
-	tmp33 := NewPhpSerializedValue_CountPrefixedMapping()
-	err = tmp33.Read(this._io, this, this._root)
+	tmp15 := NewPhpSerializedValue_CountPrefixedMapping()
+	err = tmp15.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Elements = tmp33
+	this.Elements = tmp15
 	return err
 }
 
 /**
  * The array's elements. Keys must be of type `int` or `string`,
  * values may have any type.
+ */
+
+/**
+ * The contents of a boolean value (`value_type::bool`).
+ */
+type PhpSerializedValue_BoolContents struct {
+	Colon []byte
+	ValueDec PhpSerializedValue_BoolValue
+	Semicolon []byte
+	_io *kaitai.Stream
+	_root *PhpSerializedValue
+	_parent *PhpSerializedValue
+	_f_value bool
+	value bool
+}
+func NewPhpSerializedValue_BoolContents() *PhpSerializedValue_BoolContents {
+	return &PhpSerializedValue_BoolContents{
+	}
+}
+
+func (this PhpSerializedValue_BoolContents) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PhpSerializedValue_BoolContents) Read(io *kaitai.Stream, parent *PhpSerializedValue, root *PhpSerializedValue) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp16, err := this._io.ReadBytes(int(1))
+	if err != nil {
+		return err
+	}
+	tmp16 = tmp16
+	this.Colon = tmp16
+	if !(bytes.Equal(this.Colon, []uint8{58})) {
+		return kaitai.NewValidationNotEqualError([]uint8{58}, this.Colon, this._io, "/types/bool_contents/seq/0")
+	}
+	tmp17, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.ValueDec = PhpSerializedValue_BoolValue(tmp17)
+	tmp18, err := this._io.ReadBytes(int(1))
+	if err != nil {
+		return err
+	}
+	tmp18 = tmp18
+	this.Semicolon = tmp18
+	if !(bytes.Equal(this.Semicolon, []uint8{59})) {
+		return kaitai.NewValidationNotEqualError([]uint8{59}, this.Semicolon, this._io, "/types/bool_contents/seq/2")
+	}
+	return err
+}
+
+/**
+ * The value of the `bool`, parsed as a boolean.
+ */
+func (this *PhpSerializedValue_BoolContents) Value() (v bool, err error) {
+	if (this._f_value) {
+		return this.value, nil
+	}
+	this._f_value = true
+	this.value = bool(this.ValueDec == PhpSerializedValue_BoolValue__True)
+	return this.value, nil
+}
+
+/**
+ * The value of the `bool`: `0` for `false` or `1` for `true`.
+ */
+
+/**
+ * A mapping (a sequence of key-value pairs) prefixed with its size.
+ */
+type PhpSerializedValue_CountPrefixedMapping struct {
+	NumEntriesDec string
+	OpeningBrace []byte
+	Entries []*PhpSerializedValue_MappingEntry
+	ClosingBrace []byte
+	_io *kaitai.Stream
+	_root *PhpSerializedValue
+	_parent kaitai.Struct
+	_f_numEntries bool
+	numEntries int
+}
+func NewPhpSerializedValue_CountPrefixedMapping() *PhpSerializedValue_CountPrefixedMapping {
+	return &PhpSerializedValue_CountPrefixedMapping{
+	}
+}
+
+func (this PhpSerializedValue_CountPrefixedMapping) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PhpSerializedValue_CountPrefixedMapping) Read(io *kaitai.Stream, parent kaitai.Struct, root *PhpSerializedValue) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp19, err := this._io.ReadBytesTerm(58, false, true, true)
+	if err != nil {
+		return err
+	}
+	this.NumEntriesDec = string(tmp19)
+	tmp20, err := this._io.ReadBytes(int(1))
+	if err != nil {
+		return err
+	}
+	tmp20 = tmp20
+	this.OpeningBrace = tmp20
+	if !(bytes.Equal(this.OpeningBrace, []uint8{123})) {
+		return kaitai.NewValidationNotEqualError([]uint8{123}, this.OpeningBrace, this._io, "/types/count_prefixed_mapping/seq/1")
+	}
+	tmp21, err := this.NumEntries()
+	if err != nil {
+		return err
+	}
+	for i := 0; i < int(tmp21); i++ {
+		_ = i
+		tmp22 := NewPhpSerializedValue_MappingEntry()
+		err = tmp22.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Entries = append(this.Entries, tmp22)
+	}
+	tmp23, err := this._io.ReadBytes(int(1))
+	if err != nil {
+		return err
+	}
+	tmp23 = tmp23
+	this.ClosingBrace = tmp23
+	if !(bytes.Equal(this.ClosingBrace, []uint8{125})) {
+		return kaitai.NewValidationNotEqualError([]uint8{125}, this.ClosingBrace, this._io, "/types/count_prefixed_mapping/seq/3")
+	}
+	return err
+}
+
+/**
+ * The number of key-value pairs in the mapping, parsed as an integer.
+ */
+func (this *PhpSerializedValue_CountPrefixedMapping) NumEntries() (v int, err error) {
+	if (this._f_numEntries) {
+		return this.numEntries, nil
+	}
+	this._f_numEntries = true
+	tmp24, err := strconv.ParseInt(this.NumEntriesDec, 10, 0)
+	if err != nil {
+		return 0, err
+	}
+	this.numEntries = int(tmp24)
+	return this.numEntries, nil
+}
+
+/**
+ * The number of key-value pairs in the mapping, in ASCII decimal.
+ */
+
+/**
+ * The key-value pairs contained in the mapping.
  */
 
 /**
@@ -527,65 +414,69 @@ func NewPhpSerializedValue_CustomSerializedObjectContents() *PhpSerializedValue_
 	}
 }
 
+func (this PhpSerializedValue_CustomSerializedObjectContents) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *PhpSerializedValue_CustomSerializedObjectContents) Read(io *kaitai.Stream, parent *PhpSerializedValue, root *PhpSerializedValue) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp34, err := this._io.ReadBytes(int(1))
+	tmp25, err := this._io.ReadBytes(int(1))
 	if err != nil {
 		return err
 	}
-	tmp34 = tmp34
-	this.Colon1 = tmp34
+	tmp25 = tmp25
+	this.Colon1 = tmp25
 	if !(bytes.Equal(this.Colon1, []uint8{58})) {
 		return kaitai.NewValidationNotEqualError([]uint8{58}, this.Colon1, this._io, "/types/custom_serialized_object_contents/seq/0")
 	}
-	tmp35 := NewPhpSerializedValue_LengthPrefixedQuotedString()
-	err = tmp35.Read(this._io, this, this._root)
+	tmp26 := NewPhpSerializedValue_LengthPrefixedQuotedString()
+	err = tmp26.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.ClassName = tmp35
-	tmp36, err := this._io.ReadBytes(int(1))
+	this.ClassName = tmp26
+	tmp27, err := this._io.ReadBytes(int(1))
 	if err != nil {
 		return err
 	}
-	tmp36 = tmp36
-	this.Colon2 = tmp36
+	tmp27 = tmp27
+	this.Colon2 = tmp27
 	if !(bytes.Equal(this.Colon2, []uint8{58})) {
 		return kaitai.NewValidationNotEqualError([]uint8{58}, this.Colon2, this._io, "/types/custom_serialized_object_contents/seq/2")
 	}
-	tmp37, err := this._io.ReadBytesTerm(58, false, true, true)
+	tmp28, err := this._io.ReadBytesTerm(58, false, true, true)
 	if err != nil {
 		return err
 	}
-	this.LenDataDec = string(tmp37)
-	tmp38, err := this._io.ReadBytes(int(1))
+	this.LenDataDec = string(tmp28)
+	tmp29, err := this._io.ReadBytes(int(1))
 	if err != nil {
 		return err
 	}
-	tmp38 = tmp38
-	this.OpeningBrace = tmp38
+	tmp29 = tmp29
+	this.OpeningBrace = tmp29
 	if !(bytes.Equal(this.OpeningBrace, []uint8{123})) {
 		return kaitai.NewValidationNotEqualError([]uint8{123}, this.OpeningBrace, this._io, "/types/custom_serialized_object_contents/seq/4")
 	}
-	tmp39, err := this.LenData()
+	tmp30, err := this.LenData()
 	if err != nil {
 		return err
 	}
-	tmp40, err := this._io.ReadBytes(int(tmp39))
+	tmp31, err := this._io.ReadBytes(int(tmp30))
 	if err != nil {
 		return err
 	}
-	tmp40 = tmp40
-	this.Data = tmp40
-	tmp41, err := this._io.ReadBytes(int(1))
+	tmp31 = tmp31
+	this.Data = tmp31
+	tmp32, err := this._io.ReadBytes(int(1))
 	if err != nil {
 		return err
 	}
-	tmp41 = tmp41
-	this.ClosingQuote = tmp41
+	tmp32 = tmp32
+	this.ClosingQuote = tmp32
 	if !(bytes.Equal(this.ClosingQuote, []uint8{125})) {
 		return kaitai.NewValidationNotEqualError([]uint8{125}, this.ClosingQuote, this._io, "/types/custom_serialized_object_contents/seq/6")
 	}
@@ -600,12 +491,12 @@ func (this *PhpSerializedValue_CustomSerializedObjectContents) LenData() (v int,
 	if (this._f_lenData) {
 		return this.lenData, nil
 	}
-	tmp42, err := strconv.ParseInt(this.LenDataDec, 10, 0)
+	this._f_lenData = true
+	tmp33, err := strconv.ParseInt(this.LenDataDec, 10, 0)
 	if err != nil {
 		return 0, err
 	}
-	this.lenData = int(tmp42)
-	this._f_lenData = true
+	this.lenData = int(tmp33)
 	return this.lenData, nil
 }
 
@@ -628,6 +519,265 @@ func (this *PhpSerializedValue_CustomSerializedObjectContents) LenData() (v int,
  */
 
 /**
+ * The contents of a floating-point value.
+ */
+type PhpSerializedValue_FloatContents struct {
+	Colon []byte
+	ValueDec string
+	_io *kaitai.Stream
+	_root *PhpSerializedValue
+	_parent *PhpSerializedValue
+}
+func NewPhpSerializedValue_FloatContents() *PhpSerializedValue_FloatContents {
+	return &PhpSerializedValue_FloatContents{
+	}
+}
+
+func (this PhpSerializedValue_FloatContents) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PhpSerializedValue_FloatContents) Read(io *kaitai.Stream, parent *PhpSerializedValue, root *PhpSerializedValue) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp34, err := this._io.ReadBytes(int(1))
+	if err != nil {
+		return err
+	}
+	tmp34 = tmp34
+	this.Colon = tmp34
+	if !(bytes.Equal(this.Colon, []uint8{58})) {
+		return kaitai.NewValidationNotEqualError([]uint8{58}, this.Colon, this._io, "/types/float_contents/seq/0")
+	}
+	tmp35, err := this._io.ReadBytesTerm(59, false, true, true)
+	if err != nil {
+		return err
+	}
+	this.ValueDec = string(tmp35)
+	return err
+}
+
+/**
+ * The value of the `float`, in ASCII decimal, as generated by PHP's
+ * usual double-to-string conversion. In particular, this means that:
+ * 
+ * * A decimal point may not be included (for integral numbers)
+ * * The number may use exponent notation (e. g. `1.0E+16`)
+ * * Positive and negative infinity are represented as `INF`
+ *   and `-INF`, respectively
+ * * Not-a-number is represented as `NAN`
+ */
+
+/**
+ * The contents of an integer-like value:
+ * either an actual integer (`value_type::int`) or a reference
+ * (`value_type::variable_reference`, `value_type::object_reference`).
+ */
+type PhpSerializedValue_IntContents struct {
+	Colon []byte
+	ValueDec string
+	_io *kaitai.Stream
+	_root *PhpSerializedValue
+	_parent *PhpSerializedValue
+	_f_value bool
+	value int
+}
+func NewPhpSerializedValue_IntContents() *PhpSerializedValue_IntContents {
+	return &PhpSerializedValue_IntContents{
+	}
+}
+
+func (this PhpSerializedValue_IntContents) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PhpSerializedValue_IntContents) Read(io *kaitai.Stream, parent *PhpSerializedValue, root *PhpSerializedValue) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp36, err := this._io.ReadBytes(int(1))
+	if err != nil {
+		return err
+	}
+	tmp36 = tmp36
+	this.Colon = tmp36
+	if !(bytes.Equal(this.Colon, []uint8{58})) {
+		return kaitai.NewValidationNotEqualError([]uint8{58}, this.Colon, this._io, "/types/int_contents/seq/0")
+	}
+	tmp37, err := this._io.ReadBytesTerm(59, false, true, true)
+	if err != nil {
+		return err
+	}
+	this.ValueDec = string(tmp37)
+	return err
+}
+
+/**
+ * The value of the `int`, parsed as an integer.
+ */
+func (this *PhpSerializedValue_IntContents) Value() (v int, err error) {
+	if (this._f_value) {
+		return this.value, nil
+	}
+	this._f_value = true
+	tmp38, err := strconv.ParseInt(this.ValueDec, 10, 0)
+	if err != nil {
+		return 0, err
+	}
+	this.value = int(tmp38)
+	return this.value, nil
+}
+
+/**
+ * The value of the `int`, in ASCII decimal.
+ */
+
+/**
+ * A quoted string prefixed with its length.
+ * 
+ * Despite the quotes surrounding the string data, it can contain
+ * arbitrary bytes, which are never escaped in any way.
+ * This does not cause any ambiguities when parsing - the bounds of
+ * the string are determined only by the length field, not by the quotes.
+ */
+type PhpSerializedValue_LengthPrefixedQuotedString struct {
+	LenDataDec string
+	OpeningQuote []byte
+	Data []byte
+	ClosingQuote []byte
+	_io *kaitai.Stream
+	_root *PhpSerializedValue
+	_parent kaitai.Struct
+	_f_lenData bool
+	lenData int
+}
+func NewPhpSerializedValue_LengthPrefixedQuotedString() *PhpSerializedValue_LengthPrefixedQuotedString {
+	return &PhpSerializedValue_LengthPrefixedQuotedString{
+	}
+}
+
+func (this PhpSerializedValue_LengthPrefixedQuotedString) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PhpSerializedValue_LengthPrefixedQuotedString) Read(io *kaitai.Stream, parent kaitai.Struct, root *PhpSerializedValue) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp39, err := this._io.ReadBytesTerm(58, false, true, true)
+	if err != nil {
+		return err
+	}
+	this.LenDataDec = string(tmp39)
+	tmp40, err := this._io.ReadBytes(int(1))
+	if err != nil {
+		return err
+	}
+	tmp40 = tmp40
+	this.OpeningQuote = tmp40
+	if !(bytes.Equal(this.OpeningQuote, []uint8{34})) {
+		return kaitai.NewValidationNotEqualError([]uint8{34}, this.OpeningQuote, this._io, "/types/length_prefixed_quoted_string/seq/1")
+	}
+	tmp41, err := this.LenData()
+	if err != nil {
+		return err
+	}
+	tmp42, err := this._io.ReadBytes(int(tmp41))
+	if err != nil {
+		return err
+	}
+	tmp42 = tmp42
+	this.Data = tmp42
+	tmp43, err := this._io.ReadBytes(int(1))
+	if err != nil {
+		return err
+	}
+	tmp43 = tmp43
+	this.ClosingQuote = tmp43
+	if !(bytes.Equal(this.ClosingQuote, []uint8{34})) {
+		return kaitai.NewValidationNotEqualError([]uint8{34}, this.ClosingQuote, this._io, "/types/length_prefixed_quoted_string/seq/3")
+	}
+	return err
+}
+
+/**
+ * The length of the string's contents in bytes, parsed as an integer.
+ * The quotes are not counted in this size number.
+ */
+func (this *PhpSerializedValue_LengthPrefixedQuotedString) LenData() (v int, err error) {
+	if (this._f_lenData) {
+		return this.lenData, nil
+	}
+	this._f_lenData = true
+	tmp44, err := strconv.ParseInt(this.LenDataDec, 10, 0)
+	if err != nil {
+		return 0, err
+	}
+	this.lenData = int(tmp44)
+	return this.lenData, nil
+}
+
+/**
+ * The length of the string's data in bytes, in ASCII decimal.
+ * The quotes are not counted in this length number.
+ */
+
+/**
+ * The data contained in the string. The quotes are not included.
+ */
+
+/**
+ * A mapping entry consisting of a key and a value.
+ */
+type PhpSerializedValue_MappingEntry struct {
+	Key *PhpSerializedValue
+	Value *PhpSerializedValue
+	_io *kaitai.Stream
+	_root *PhpSerializedValue
+	_parent *PhpSerializedValue_CountPrefixedMapping
+}
+func NewPhpSerializedValue_MappingEntry() *PhpSerializedValue_MappingEntry {
+	return &PhpSerializedValue_MappingEntry{
+	}
+}
+
+func (this PhpSerializedValue_MappingEntry) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PhpSerializedValue_MappingEntry) Read(io *kaitai.Stream, parent *PhpSerializedValue_CountPrefixedMapping, root *PhpSerializedValue) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp45 := NewPhpSerializedValue()
+	err = tmp45.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Key = tmp45
+	tmp46 := NewPhpSerializedValue()
+	err = tmp46.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Value = tmp46
+	return err
+}
+
+/**
+ * The key of the entry.
+ */
+
+/**
+ * The value of the entry.
+ */
+
+/**
  * The contents of a null value (`value_type::null`). This structure
  * contains no actual data, since there is only a single `NULL` value.
  */
@@ -642,22 +792,95 @@ func NewPhpSerializedValue_NullContents() *PhpSerializedValue_NullContents {
 	}
 }
 
+func (this PhpSerializedValue_NullContents) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *PhpSerializedValue_NullContents) Read(io *kaitai.Stream, parent *PhpSerializedValue, root *PhpSerializedValue) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp43, err := this._io.ReadBytes(int(1))
+	tmp47, err := this._io.ReadBytes(int(1))
 	if err != nil {
 		return err
 	}
-	tmp43 = tmp43
-	this.Semicolon = tmp43
+	tmp47 = tmp47
+	this.Semicolon = tmp47
 	if !(bytes.Equal(this.Semicolon, []uint8{59})) {
 		return kaitai.NewValidationNotEqualError([]uint8{59}, this.Semicolon, this._io, "/types/null_contents/seq/0")
 	}
 	return err
 }
+
+/**
+ * The contents of an object value serialized in the default format.
+ * Unlike its PHP 3 counterpart, it contains a class name.
+ */
+type PhpSerializedValue_ObjectContents struct {
+	Colon1 []byte
+	ClassName *PhpSerializedValue_LengthPrefixedQuotedString
+	Colon2 []byte
+	Properties *PhpSerializedValue_CountPrefixedMapping
+	_io *kaitai.Stream
+	_root *PhpSerializedValue
+	_parent *PhpSerializedValue
+}
+func NewPhpSerializedValue_ObjectContents() *PhpSerializedValue_ObjectContents {
+	return &PhpSerializedValue_ObjectContents{
+	}
+}
+
+func (this PhpSerializedValue_ObjectContents) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PhpSerializedValue_ObjectContents) Read(io *kaitai.Stream, parent *PhpSerializedValue, root *PhpSerializedValue) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp48, err := this._io.ReadBytes(int(1))
+	if err != nil {
+		return err
+	}
+	tmp48 = tmp48
+	this.Colon1 = tmp48
+	if !(bytes.Equal(this.Colon1, []uint8{58})) {
+		return kaitai.NewValidationNotEqualError([]uint8{58}, this.Colon1, this._io, "/types/object_contents/seq/0")
+	}
+	tmp49 := NewPhpSerializedValue_LengthPrefixedQuotedString()
+	err = tmp49.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.ClassName = tmp49
+	tmp50, err := this._io.ReadBytes(int(1))
+	if err != nil {
+		return err
+	}
+	tmp50 = tmp50
+	this.Colon2 = tmp50
+	if !(bytes.Equal(this.Colon2, []uint8{58})) {
+		return kaitai.NewValidationNotEqualError([]uint8{58}, this.Colon2, this._io, "/types/object_contents/seq/2")
+	}
+	tmp51 := NewPhpSerializedValue_CountPrefixedMapping()
+	err = tmp51.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Properties = tmp51
+	return err
+}
+
+/**
+ * The name of the object's class.
+ */
+
+/**
+ * The object's properties. Keys ust be of type `string`,
+ * values may have any type.
+ */
 
 /**
  * The contents of a PHP 3 object value. Unlike its counterpart in PHP 4
@@ -675,97 +898,36 @@ func NewPhpSerializedValue_Php3ObjectContents() *PhpSerializedValue_Php3ObjectCo
 	}
 }
 
+func (this PhpSerializedValue_Php3ObjectContents) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *PhpSerializedValue_Php3ObjectContents) Read(io *kaitai.Stream, parent *PhpSerializedValue, root *PhpSerializedValue) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp44, err := this._io.ReadBytes(int(1))
+	tmp52, err := this._io.ReadBytes(int(1))
 	if err != nil {
 		return err
 	}
-	tmp44 = tmp44
-	this.Colon = tmp44
+	tmp52 = tmp52
+	this.Colon = tmp52
 	if !(bytes.Equal(this.Colon, []uint8{58})) {
 		return kaitai.NewValidationNotEqualError([]uint8{58}, this.Colon, this._io, "/types/php_3_object_contents/seq/0")
 	}
-	tmp45 := NewPhpSerializedValue_CountPrefixedMapping()
-	err = tmp45.Read(this._io, this, this._root)
+	tmp53 := NewPhpSerializedValue_CountPrefixedMapping()
+	err = tmp53.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Properties = tmp45
+	this.Properties = tmp53
 	return err
 }
 
 /**
  * The object's properties. Keys must be of type `string`,
  * values may have any type.
- */
-
-/**
- * The contents of a boolean value (`value_type::bool`).
- */
-type PhpSerializedValue_BoolContents struct {
-	Colon []byte
-	ValueDec PhpSerializedValue_BoolValue
-	Semicolon []byte
-	_io *kaitai.Stream
-	_root *PhpSerializedValue
-	_parent *PhpSerializedValue
-	_f_value bool
-	value bool
-}
-func NewPhpSerializedValue_BoolContents() *PhpSerializedValue_BoolContents {
-	return &PhpSerializedValue_BoolContents{
-	}
-}
-
-func (this *PhpSerializedValue_BoolContents) Read(io *kaitai.Stream, parent *PhpSerializedValue, root *PhpSerializedValue) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp46, err := this._io.ReadBytes(int(1))
-	if err != nil {
-		return err
-	}
-	tmp46 = tmp46
-	this.Colon = tmp46
-	if !(bytes.Equal(this.Colon, []uint8{58})) {
-		return kaitai.NewValidationNotEqualError([]uint8{58}, this.Colon, this._io, "/types/bool_contents/seq/0")
-	}
-	tmp47, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.ValueDec = PhpSerializedValue_BoolValue(tmp47)
-	tmp48, err := this._io.ReadBytes(int(1))
-	if err != nil {
-		return err
-	}
-	tmp48 = tmp48
-	this.Semicolon = tmp48
-	if !(bytes.Equal(this.Semicolon, []uint8{59})) {
-		return kaitai.NewValidationNotEqualError([]uint8{59}, this.Semicolon, this._io, "/types/bool_contents/seq/2")
-	}
-	return err
-}
-
-/**
- * The value of the `bool`, parsed as a boolean.
- */
-func (this *PhpSerializedValue_BoolContents) Value() (v bool, err error) {
-	if (this._f_value) {
-		return this.value, nil
-	}
-	this.value = bool(this.ValueDec == PhpSerializedValue_BoolValue__True)
-	this._f_value = true
-	return this.value, nil
-}
-
-/**
- * The value of the `bool`: `0` for `false` or `1` for `true`.
  */
 
 /**
@@ -789,32 +951,36 @@ func NewPhpSerializedValue_StringContents() *PhpSerializedValue_StringContents {
 	}
 }
 
+func (this PhpSerializedValue_StringContents) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *PhpSerializedValue_StringContents) Read(io *kaitai.Stream, parent *PhpSerializedValue, root *PhpSerializedValue) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp49, err := this._io.ReadBytes(int(1))
+	tmp54, err := this._io.ReadBytes(int(1))
 	if err != nil {
 		return err
 	}
-	tmp49 = tmp49
-	this.Colon = tmp49
+	tmp54 = tmp54
+	this.Colon = tmp54
 	if !(bytes.Equal(this.Colon, []uint8{58})) {
 		return kaitai.NewValidationNotEqualError([]uint8{58}, this.Colon, this._io, "/types/string_contents/seq/0")
 	}
-	tmp50 := NewPhpSerializedValue_LengthPrefixedQuotedString()
-	err = tmp50.Read(this._io, this, this._root)
+	tmp55 := NewPhpSerializedValue_LengthPrefixedQuotedString()
+	err = tmp55.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.String = tmp50
-	tmp51, err := this._io.ReadBytes(int(1))
+	this.String = tmp55
+	tmp56, err := this._io.ReadBytes(int(1))
 	if err != nil {
 		return err
 	}
-	tmp51 = tmp51
-	this.Semicolon = tmp51
+	tmp56 = tmp56
+	this.Semicolon = tmp56
 	if !(bytes.Equal(this.Semicolon, []uint8{59})) {
 		return kaitai.NewValidationNotEqualError([]uint8{59}, this.Semicolon, this._io, "/types/string_contents/seq/2")
 	}
@@ -828,111 +994,7 @@ func (this *PhpSerializedValue_StringContents) Value() (v []byte, err error) {
 	if (this._f_value) {
 		return this.value, nil
 	}
+	this._f_value = true
 	this.value = []byte(this.String.Data)
-	this._f_value = true
 	return this.value, nil
 }
-
-/**
- * The contents of an integer-like value:
- * either an actual integer (`value_type::int`) or a reference
- * (`value_type::variable_reference`, `value_type::object_reference`).
- */
-type PhpSerializedValue_IntContents struct {
-	Colon []byte
-	ValueDec string
-	_io *kaitai.Stream
-	_root *PhpSerializedValue
-	_parent *PhpSerializedValue
-	_f_value bool
-	value int
-}
-func NewPhpSerializedValue_IntContents() *PhpSerializedValue_IntContents {
-	return &PhpSerializedValue_IntContents{
-	}
-}
-
-func (this *PhpSerializedValue_IntContents) Read(io *kaitai.Stream, parent *PhpSerializedValue, root *PhpSerializedValue) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp52, err := this._io.ReadBytes(int(1))
-	if err != nil {
-		return err
-	}
-	tmp52 = tmp52
-	this.Colon = tmp52
-	if !(bytes.Equal(this.Colon, []uint8{58})) {
-		return kaitai.NewValidationNotEqualError([]uint8{58}, this.Colon, this._io, "/types/int_contents/seq/0")
-	}
-	tmp53, err := this._io.ReadBytesTerm(59, false, true, true)
-	if err != nil {
-		return err
-	}
-	this.ValueDec = string(tmp53)
-	return err
-}
-
-/**
- * The value of the `int`, parsed as an integer.
- */
-func (this *PhpSerializedValue_IntContents) Value() (v int, err error) {
-	if (this._f_value) {
-		return this.value, nil
-	}
-	tmp54, err := strconv.ParseInt(this.ValueDec, 10, 0)
-	if err != nil {
-		return 0, err
-	}
-	this.value = int(tmp54)
-	this._f_value = true
-	return this.value, nil
-}
-
-/**
- * The value of the `int`, in ASCII decimal.
- */
-
-/**
- * A mapping entry consisting of a key and a value.
- */
-type PhpSerializedValue_MappingEntry struct {
-	Key *PhpSerializedValue
-	Value *PhpSerializedValue
-	_io *kaitai.Stream
-	_root *PhpSerializedValue
-	_parent *PhpSerializedValue_CountPrefixedMapping
-}
-func NewPhpSerializedValue_MappingEntry() *PhpSerializedValue_MappingEntry {
-	return &PhpSerializedValue_MappingEntry{
-	}
-}
-
-func (this *PhpSerializedValue_MappingEntry) Read(io *kaitai.Stream, parent *PhpSerializedValue_CountPrefixedMapping, root *PhpSerializedValue) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp55 := NewPhpSerializedValue()
-	err = tmp55.Read(this._io, this, nil)
-	if err != nil {
-		return err
-	}
-	this.Key = tmp55
-	tmp56 := NewPhpSerializedValue()
-	err = tmp56.Read(this._io, this, nil)
-	if err != nil {
-		return err
-	}
-	this.Value = tmp56
-	return err
-}
-
-/**
- * The key of the entry.
- */
-
-/**
- * The value of the entry.
- */

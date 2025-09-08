@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.AvantesRoh60 = factory(root.KaitaiStream);
+    factory(root.AvantesRoh60 || (root.AvantesRoh60 = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (AvantesRoh60_, KaitaiStream) {
 /**
  * Avantes USB spectrometers are supplied with a Windows binary which
  * generates one ROH and one RCM file when the user clicks "Save
@@ -64,7 +64,7 @@ var AvantesRoh60 = (function() {
       this.unknown3.push(this._io.readF4le());
     }
     this.spectrum = [];
-    for (var i = 0; i < ((Math.trunc(this.ipixlast) - Math.trunc(this.ipixfirst)) - 1); i++) {
+    for (var i = 0; i < (Math.trunc(this.ipixlast) - Math.trunc(this.ipixfirst)) - 1; i++) {
       this.spectrum.push(this._io.readF4le());
     }
     this.integrationMs = this._io.readF4le();
@@ -74,5 +74,5 @@ var AvantesRoh60 = (function() {
 
   return AvantesRoh60;
 })();
-return AvantesRoh60;
-}));
+AvantesRoh60_.AvantesRoh60 = AvantesRoh60;
+});

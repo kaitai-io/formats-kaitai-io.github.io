@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 
 ########################################################################
 package CpioOldLe;
@@ -24,7 +24,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -34,7 +34,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{files} = ();
+    $self->{files} = [];
     while (!$self->{_io}->is_eof()) {
         push @{$self->{files}}, CpioOldLe::File->new($self->{_io}, $self, $self->{_root});
     }
@@ -65,7 +65,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -76,13 +76,13 @@ sub _read {
     my ($self) = @_;
 
     $self->{header} = CpioOldLe::FileHeader->new($self->{_io}, $self, $self->{_root});
-    $self->{path_name} = $self->{_io}->read_bytes(($self->header()->path_name_size() - 1));
+    $self->{path_name} = $self->{_io}->read_bytes($self->header()->path_name_size() - 1);
     $self->{string_terminator} = $self->{_io}->read_bytes(1);
-    if (($self->header()->path_name_size() % 2) == 1) {
+    if ($self->header()->path_name_size() % 2 == 1) {
         $self->{path_name_padding} = $self->{_io}->read_bytes(1);
     }
     $self->{file_data} = $self->{_io}->read_bytes($self->header()->file_size()->value());
-    if (($self->header()->file_size()->value() % 2) == 1) {
+    if ($self->header()->file_size()->value() % 2 == 1) {
         $self->{file_data_padding} = $self->{_io}->read_bytes(1);
     }
     if ( (($self->path_name() eq pack('C*', (84, 82, 65, 73, 76, 69, 82, 33, 33, 33))) && ($self->header()->file_size()->value() == 0)) ) {
@@ -145,7 +145,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -243,7 +243,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -260,7 +260,7 @@ sub _read {
 sub value {
     my ($self) = @_;
     return $self->{value} if ($self->{value});
-    $self->{value} = ($self->least_significant_bits() + ($self->most_significant_bits() << 16));
+    $self->{value} = $self->least_significant_bits() + ($self->most_significant_bits() << 16);
     return $self->{value};
 }
 

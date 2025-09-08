@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 
 ########################################################################
 package AppleSingleDouble;
@@ -27,7 +27,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -41,7 +41,7 @@ sub _read {
     $self->{version} = $self->{_io}->read_u4be();
     $self->{reserved} = $self->{_io}->read_bytes(16);
     $self->{num_entries} = $self->{_io}->read_u2be();
-    $self->{entries} = ();
+    $self->{entries} = [];
     my $n_entries = $self->num_entries();
     for (my $i = 0; $i < $n_entries; $i++) {
         push @{$self->{entries}}, AppleSingleDouble::Entry->new($self->{_io}, $self, $self->{_root});
@@ -108,7 +108,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -181,7 +181,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -243,7 +243,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 

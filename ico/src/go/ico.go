@@ -20,14 +20,18 @@ type Ico struct {
 	Images []*Ico_IconDirEntry
 	_io *kaitai.Stream
 	_root *Ico
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewIco() *Ico {
 	return &Ico{
 	}
 }
 
-func (this *Ico) Read(io *kaitai.Stream, parent interface{}, root *Ico) (err error) {
+func (this Ico) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Ico) Read(io *kaitai.Stream, parent kaitai.Struct, root *Ico) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -75,14 +79,18 @@ type Ico_IconDirEntry struct {
 	_parent *Ico
 	_f_img bool
 	img []byte
-	_f_pngHeader bool
-	pngHeader []byte
 	_f_isPng bool
 	isPng bool
+	_f_pngHeader bool
+	pngHeader []byte
 }
 func NewIco_IconDirEntry() *Ico_IconDirEntry {
 	return &Ico_IconDirEntry{
 	}
+}
+
+func (this Ico_IconDirEntry) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Ico_IconDirEntry) Read(io *kaitai.Stream, parent *Ico, root *Ico) (err error) {
@@ -146,6 +154,7 @@ func (this *Ico_IconDirEntry) Img() (v []byte, err error) {
 	if (this._f_img) {
 		return this.img, nil
 	}
+	this._f_img = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
@@ -164,9 +173,23 @@ func (this *Ico_IconDirEntry) Img() (v []byte, err error) {
 	if err != nil {
 		return nil, err
 	}
-	this._f_img = true
-	this._f_img = true
 	return this.img, nil
+}
+
+/**
+ * True if this image is in PNG format.
+ */
+func (this *Ico_IconDirEntry) IsPng() (v bool, err error) {
+	if (this._f_isPng) {
+		return this.isPng, nil
+	}
+	this._f_isPng = true
+	tmp13, err := this.PngHeader()
+	if err != nil {
+		return false, err
+	}
+	this.isPng = bool(bytes.Equal(tmp13, []uint8{137, 80, 78, 71, 13, 10, 26, 10}))
+	return this.isPng, nil
 }
 
 /**
@@ -177,6 +200,7 @@ func (this *Ico_IconDirEntry) PngHeader() (v []byte, err error) {
 	if (this._f_pngHeader) {
 		return this.pngHeader, nil
 	}
+	this._f_pngHeader = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
@@ -185,35 +209,17 @@ func (this *Ico_IconDirEntry) PngHeader() (v []byte, err error) {
 	if err != nil {
 		return nil, err
 	}
-	tmp13, err := this._io.ReadBytes(int(8))
+	tmp14, err := this._io.ReadBytes(int(8))
 	if err != nil {
 		return nil, err
 	}
-	tmp13 = tmp13
-	this.pngHeader = tmp13
+	tmp14 = tmp14
+	this.pngHeader = tmp14
 	_, err = this._io.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
-	this._f_pngHeader = true
-	this._f_pngHeader = true
 	return this.pngHeader, nil
-}
-
-/**
- * True if this image is in PNG format.
- */
-func (this *Ico_IconDirEntry) IsPng() (v bool, err error) {
-	if (this._f_isPng) {
-		return this.isPng, nil
-	}
-	tmp14, err := this.PngHeader()
-	if err != nil {
-		return false, err
-	}
-	this.isPng = bool(bytes.Equal(tmp14, []uint8{137, 80, 78, 71, 13, 10, 26, 10}))
-	this._f_isPng = true
-	return this.isPng, nil
 }
 
 /**

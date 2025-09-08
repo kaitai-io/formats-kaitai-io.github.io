@@ -3,12 +3,15 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class avi_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -18,13 +21,13 @@
 class avi_t : public kaitai::kstruct {
 
 public:
-    class list_body_t;
-    class rect_t;
-    class blocks_t;
     class avih_body_t;
     class block_t;
-    class strh_body_t;
+    class blocks_t;
+    class list_body_t;
+    class rect_t;
     class strf_body_t;
+    class strh_body_t;
 
     enum chunk_type_t {
         CHUNK_TYPE_IDX1 = 829973609,
@@ -39,13 +42,13 @@ public:
         CHUNK_TYPE_HDRL = 1819436136,
         CHUNK_TYPE_STRL = 1819440243
     };
+    static bool _is_defined_chunk_type_t(chunk_type_t v);
 
-    enum stream_type_t {
-        STREAM_TYPE_MIDS = 1935960429,
-        STREAM_TYPE_VIDS = 1935960438,
-        STREAM_TYPE_AUDS = 1935963489,
-        STREAM_TYPE_TXTS = 1937012852
-    };
+private:
+    static const std::set<chunk_type_t> _values_chunk_type_t;
+    static std::set<chunk_type_t> _build_values_chunk_type_t();
+
+public:
 
     enum handler_type_t {
         HANDLER_TYPE_MP3 = 85,
@@ -54,6 +57,27 @@ public:
         HANDLER_TYPE_CVID = 1684633187,
         HANDLER_TYPE_XVID = 1684633208
     };
+    static bool _is_defined_handler_type_t(handler_type_t v);
+
+private:
+    static const std::set<handler_type_t> _values_handler_type_t;
+    static std::set<handler_type_t> _build_values_handler_type_t();
+
+public:
+
+    enum stream_type_t {
+        STREAM_TYPE_MIDS = 1935960429,
+        STREAM_TYPE_VIDS = 1935960438,
+        STREAM_TYPE_AUDS = 1935963489,
+        STREAM_TYPE_TXTS = 1937012852
+    };
+    static bool _is_defined_stream_type_t(stream_type_t v);
+
+private:
+    static const std::set<stream_type_t> _values_stream_type_t;
+    static std::set<stream_type_t> _build_values_stream_type_t();
+
+public:
 
     avi_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, avi_t* p__root = 0);
 
@@ -63,86 +87,6 @@ private:
 
 public:
     ~avi_t();
-
-    class list_body_t : public kaitai::kstruct {
-
-    public:
-
-        list_body_t(kaitai::kstream* p__io, avi_t::block_t* p__parent = 0, avi_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~list_body_t();
-
-    private:
-        chunk_type_t m_list_type;
-        blocks_t* m_data;
-        avi_t* m__root;
-        avi_t::block_t* m__parent;
-
-    public:
-        chunk_type_t list_type() const { return m_list_type; }
-        blocks_t* data() const { return m_data; }
-        avi_t* _root() const { return m__root; }
-        avi_t::block_t* _parent() const { return m__parent; }
-    };
-
-    class rect_t : public kaitai::kstruct {
-
-    public:
-
-        rect_t(kaitai::kstream* p__io, avi_t::strh_body_t* p__parent = 0, avi_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~rect_t();
-
-    private:
-        int16_t m_left;
-        int16_t m_top;
-        int16_t m_right;
-        int16_t m_bottom;
-        avi_t* m__root;
-        avi_t::strh_body_t* m__parent;
-
-    public:
-        int16_t left() const { return m_left; }
-        int16_t top() const { return m_top; }
-        int16_t right() const { return m_right; }
-        int16_t bottom() const { return m_bottom; }
-        avi_t* _root() const { return m__root; }
-        avi_t::strh_body_t* _parent() const { return m__parent; }
-    };
-
-    class blocks_t : public kaitai::kstruct {
-
-    public:
-
-        blocks_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, avi_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~blocks_t();
-
-    private:
-        std::vector<block_t*>* m_entries;
-        avi_t* m__root;
-        kaitai::kstruct* m__parent;
-
-    public:
-        std::vector<block_t*>* entries() const { return m_entries; }
-        avi_t* _root() const { return m__root; }
-        kaitai::kstruct* _parent() const { return m__parent; }
-    };
 
     /**
      * Main header of an AVI file, defined as AVIMAINHEADER structure
@@ -231,6 +175,112 @@ public:
         kaitai::kstream* _io__raw_data() const { return m__io__raw_data; }
     };
 
+    class blocks_t : public kaitai::kstruct {
+
+    public:
+
+        blocks_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, avi_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~blocks_t();
+
+    private:
+        std::vector<block_t*>* m_entries;
+        avi_t* m__root;
+        kaitai::kstruct* m__parent;
+
+    public:
+        std::vector<block_t*>* entries() const { return m_entries; }
+        avi_t* _root() const { return m__root; }
+        kaitai::kstruct* _parent() const { return m__parent; }
+    };
+
+    class list_body_t : public kaitai::kstruct {
+
+    public:
+
+        list_body_t(kaitai::kstream* p__io, avi_t::block_t* p__parent = 0, avi_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~list_body_t();
+
+    private:
+        chunk_type_t m_list_type;
+        blocks_t* m_data;
+        avi_t* m__root;
+        avi_t::block_t* m__parent;
+
+    public:
+        chunk_type_t list_type() const { return m_list_type; }
+        blocks_t* data() const { return m_data; }
+        avi_t* _root() const { return m__root; }
+        avi_t::block_t* _parent() const { return m__parent; }
+    };
+
+    class rect_t : public kaitai::kstruct {
+
+    public:
+
+        rect_t(kaitai::kstream* p__io, avi_t::strh_body_t* p__parent = 0, avi_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~rect_t();
+
+    private:
+        int16_t m_left;
+        int16_t m_top;
+        int16_t m_right;
+        int16_t m_bottom;
+        avi_t* m__root;
+        avi_t::strh_body_t* m__parent;
+
+    public:
+        int16_t left() const { return m_left; }
+        int16_t top() const { return m_top; }
+        int16_t right() const { return m_right; }
+        int16_t bottom() const { return m_bottom; }
+        avi_t* _root() const { return m__root; }
+        avi_t::strh_body_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * Stream format description
+     */
+
+    class strf_body_t : public kaitai::kstruct {
+
+    public:
+
+        strf_body_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, avi_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~strf_body_t();
+
+    private:
+        avi_t* m__root;
+        kaitai::kstruct* m__parent;
+
+    public:
+        avi_t* _root() const { return m__root; }
+        kaitai::kstruct* _parent() const { return m__parent; }
+    };
+
     /**
      * Stream header (one header per stream), defined as AVISTREAMHEADER structure
      * \sa https://learn.microsoft.com/en-us/previous-versions/ms779638(v=vs.85) Source
@@ -292,32 +342,6 @@ public:
         rect_t* frame() const { return m_frame; }
         avi_t* _root() const { return m__root; }
         avi_t::block_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * Stream format description
-     */
-
-    class strf_body_t : public kaitai::kstruct {
-
-    public:
-
-        strf_body_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, avi_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~strf_body_t();
-
-    private:
-        avi_t* m__root;
-        kaitai::kstruct* m__parent;
-
-    public:
-        avi_t* _root() const { return m__root; }
-        kaitai::kstruct* _parent() const { return m__parent; }
     };
 
 private:

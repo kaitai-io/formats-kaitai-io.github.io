@@ -3,8 +3,8 @@
 
 namespace {
     class Exif extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Exif $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Exif $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -23,7 +23,7 @@ namespace Exif {
     class ExifBody extends \Kaitai\Struct\Struct {
         protected $_m__is_le;
 
-        public function __construct(\Kaitai\Struct\Stream $_io, \Exif $_parent = null, \Exif $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Exif $_parent = null, ?\Exif $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -81,7 +81,7 @@ namespace Exif\ExifBody {
     class Ifd extends \Kaitai\Struct\Struct {
         protected $_m__is_le;
 
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Exif $_root = null, $is_le = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Exif $_root = null, $is_le = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_m__is_le = $is_le;
             $this->_read();
@@ -146,7 +146,7 @@ namespace Exif\ExifBody {
     class IfdField extends \Kaitai\Struct\Struct {
         protected $_m__is_le;
 
-        public function __construct(\Kaitai\Struct\Stream $_io, \Exif\ExifBody\Ifd $_parent = null, \Exif $_root = null, $is_le = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Exif\ExifBody\Ifd $_parent = null, ?\Exif $_root = null, $is_le = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_m__is_le = $is_le;
             $this->_read();
@@ -176,26 +176,12 @@ namespace Exif\ExifBody {
             $this->_m_length = $this->_io->readU4be();
             $this->_m_ofsOrData = $this->_io->readU4be();
         }
-        protected $_m_typeByteLength;
-        public function typeByteLength() {
-            if ($this->_m_typeByteLength !== null)
-                return $this->_m_typeByteLength;
-            $this->_m_typeByteLength = ($this->fieldType() == \Exif\ExifBody\IfdField\FieldTypeEnum::WORD ? 2 : ($this->fieldType() == \Exif\ExifBody\IfdField\FieldTypeEnum::DWORD ? 4 : 1));
-            return $this->_m_typeByteLength;
-        }
         protected $_m_byteLength;
         public function byteLength() {
             if ($this->_m_byteLength !== null)
                 return $this->_m_byteLength;
-            $this->_m_byteLength = ($this->length() * $this->typeByteLength());
+            $this->_m_byteLength = $this->length() * $this->typeByteLength();
             return $this->_m_byteLength;
-        }
-        protected $_m_isImmediateData;
-        public function isImmediateData() {
-            if ($this->_m_isImmediateData !== null)
-                return $this->_m_isImmediateData;
-            $this->_m_isImmediateData = $this->byteLength() <= 4;
-            return $this->_m_isImmediateData;
         }
         protected $_m_data;
         public function data() {
@@ -213,6 +199,20 @@ namespace Exif\ExifBody {
                 $io->seek($_pos);
             }
             return $this->_m_data;
+        }
+        protected $_m_isImmediateData;
+        public function isImmediateData() {
+            if ($this->_m_isImmediateData !== null)
+                return $this->_m_isImmediateData;
+            $this->_m_isImmediateData = $this->byteLength() <= 4;
+            return $this->_m_isImmediateData;
+        }
+        protected $_m_typeByteLength;
+        public function typeByteLength() {
+            if ($this->_m_typeByteLength !== null)
+                return $this->_m_typeByteLength;
+            $this->_m_typeByteLength = ($this->fieldType() == \Exif\ExifBody\IfdField\FieldTypeEnum::WORD ? 2 : ($this->fieldType() == \Exif\ExifBody\IfdField\FieldTypeEnum::DWORD ? 4 : 1));
+            return $this->_m_typeByteLength;
         }
         protected $_m_tag;
         protected $_m_fieldType;
@@ -235,6 +235,12 @@ namespace Exif\ExifBody\IfdField {
         const UNDEFINED = 7;
         const SLONG = 9;
         const SRATIONAL = 10;
+
+        private const _VALUES = [1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 7 => true, 9 => true, 10 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
@@ -698,5 +704,11 @@ namespace Exif\ExifBody\IfdField {
         const SHARPNESS2 = 65110;
         const SMOOTHNESS = 65111;
         const MOIRE_FILTER = 65112;
+
+        private const _VALUES = [256 => true, 257 => true, 258 => true, 259 => true, 262 => true, 263 => true, 264 => true, 265 => true, 266 => true, 269 => true, 270 => true, 271 => true, 272 => true, 273 => true, 274 => true, 277 => true, 278 => true, 279 => true, 280 => true, 281 => true, 282 => true, 283 => true, 284 => true, 285 => true, 286 => true, 287 => true, 288 => true, 289 => true, 290 => true, 291 => true, 292 => true, 293 => true, 296 => true, 297 => true, 300 => true, 301 => true, 305 => true, 306 => true, 315 => true, 316 => true, 317 => true, 318 => true, 319 => true, 320 => true, 321 => true, 322 => true, 323 => true, 324 => true, 325 => true, 326 => true, 327 => true, 328 => true, 330 => true, 332 => true, 333 => true, 334 => true, 336 => true, 337 => true, 338 => true, 339 => true, 340 => true, 341 => true, 342 => true, 343 => true, 344 => true, 345 => true, 346 => true, 347 => true, 351 => true, 400 => true, 401 => true, 402 => true, 403 => true, 404 => true, 405 => true, 433 => true, 434 => true, 435 => true, 437 => true, 512 => true, 513 => true, 514 => true, 515 => true, 517 => true, 518 => true, 519 => true, 520 => true, 521 => true, 529 => true, 530 => true, 531 => true, 532 => true, 559 => true, 700 => true, 999 => true, 4096 => true, 4097 => true, 4098 => true, 18246 => true, 18247 => true, 18248 => true, 18249 => true, 28672 => true, 28722 => true, 28725 => true, 28727 => true, 32781 => true, 32931 => true, 32932 => true, 32933 => true, 32934 => true, 32953 => true, 32954 => true, 32955 => true, 32956 => true, 32995 => true, 32996 => true, 32997 => true, 32998 => true, 33300 => true, 33301 => true, 33302 => true, 33303 => true, 33304 => true, 33305 => true, 33306 => true, 33405 => true, 33421 => true, 33422 => true, 33423 => true, 33424 => true, 33432 => true, 33434 => true, 33437 => true, 33445 => true, 33446 => true, 33447 => true, 33448 => true, 33449 => true, 33450 => true, 33451 => true, 33452 => true, 33550 => true, 33589 => true, 33590 => true, 33628 => true, 33629 => true, 33630 => true, 33631 => true, 33723 => true, 33918 => true, 33919 => true, 33920 => true, 33921 => true, 33922 => true, 34016 => true, 34017 => true, 34018 => true, 34019 => true, 34020 => true, 34021 => true, 34022 => true, 34023 => true, 34024 => true, 34025 => true, 34026 => true, 34027 => true, 34028 => true, 34029 => true, 34030 => true, 34031 => true, 34032 => true, 34118 => true, 34152 => true, 34232 => true, 34263 => true, 34264 => true, 34306 => true, 34310 => true, 34377 => true, 34665 => true, 34675 => true, 34687 => true, 34688 => true, 34689 => true, 34690 => true, 34732 => true, 34735 => true, 34736 => true, 34737 => true, 34750 => true, 34850 => true, 34852 => true, 34853 => true, 34855 => true, 34856 => true, 34857 => true, 34858 => true, 34859 => true, 34864 => true, 34865 => true, 34866 => true, 34867 => true, 34868 => true, 34869 => true, 34908 => true, 34909 => true, 34910 => true, 34929 => true, 34954 => true, 36864 => true, 36867 => true, 36868 => true, 36873 => true, 36880 => true, 36881 => true, 36882 => true, 37121 => true, 37122 => true, 37377 => true, 37378 => true, 37379 => true, 37380 => true, 37381 => true, 37382 => true, 37383 => true, 37384 => true, 37385 => true, 37386 => true, 37387 => true, 37388 => true, 37389 => true, 37390 => true, 37391 => true, 37392 => true, 37393 => true, 37394 => true, 37395 => true, 37396 => true, 37397 => true, 37398 => true, 37399 => true, 37434 => true, 37435 => true, 37436 => true, 37439 => true, 37500 => true, 37510 => true, 37520 => true, 37521 => true, 37522 => true, 37679 => true, 37680 => true, 37681 => true, 37724 => true, 37888 => true, 37889 => true, 37890 => true, 37891 => true, 37892 => true, 37893 => true, 40091 => true, 40092 => true, 40093 => true, 40094 => true, 40095 => true, 40960 => true, 40961 => true, 40962 => true, 40963 => true, 40964 => true, 40965 => true, 40976 => true, 40977 => true, 41217 => true, 41218 => true, 41483 => true, 41484 => true, 41485 => true, 41486 => true, 41487 => true, 41488 => true, 41489 => true, 41490 => true, 41491 => true, 41492 => true, 41493 => true, 41494 => true, 41495 => true, 41728 => true, 41729 => true, 41730 => true, 41985 => true, 41986 => true, 41987 => true, 41988 => true, 41989 => true, 41990 => true, 41991 => true, 41992 => true, 41993 => true, 41994 => true, 41995 => true, 41996 => true, 42016 => true, 42032 => true, 42033 => true, 42034 => true, 42035 => true, 42036 => true, 42037 => true, 42112 => true, 42113 => true, 42240 => true, 44992 => true, 44993 => true, 44994 => true, 44995 => true, 44996 => true, 44997 => true, 48129 => true, 48130 => true, 48131 => true, 48132 => true, 48256 => true, 48257 => true, 48258 => true, 48259 => true, 48320 => true, 48321 => true, 48322 => true, 48323 => true, 48324 => true, 48325 => true, 50215 => true, 50216 => true, 50217 => true, 50218 => true, 50255 => true, 50341 => true, 50547 => true, 50560 => true, 50706 => true, 50707 => true, 50708 => true, 50709 => true, 50710 => true, 50711 => true, 50712 => true, 50713 => true, 50714 => true, 50715 => true, 50716 => true, 50717 => true, 50718 => true, 50719 => true, 50720 => true, 50721 => true, 50722 => true, 50723 => true, 50724 => true, 50725 => true, 50726 => true, 50727 => true, 50728 => true, 50729 => true, 50730 => true, 50731 => true, 50732 => true, 50733 => true, 50734 => true, 50735 => true, 50736 => true, 50737 => true, 50738 => true, 50739 => true, 50740 => true, 50741 => true, 50752 => true, 50778 => true, 50779 => true, 50780 => true, 50781 => true, 50784 => true, 50827 => true, 50828 => true, 50829 => true, 50830 => true, 50831 => true, 50832 => true, 50833 => true, 50834 => true, 50879 => true, 50885 => true, 50898 => true, 50899 => true, 50931 => true, 50932 => true, 50933 => true, 50934 => true, 50935 => true, 50936 => true, 50937 => true, 50938 => true, 50939 => true, 50940 => true, 50941 => true, 50942 => true, 50964 => true, 50965 => true, 50966 => true, 50967 => true, 50968 => true, 50969 => true, 50970 => true, 50971 => true, 50972 => true, 50973 => true, 50974 => true, 50975 => true, 50981 => true, 50982 => true, 51008 => true, 51009 => true, 51022 => true, 51041 => true, 51043 => true, 51044 => true, 51058 => true, 51081 => true, 51089 => true, 51090 => true, 51091 => true, 51105 => true, 51107 => true, 51108 => true, 51109 => true, 51110 => true, 51111 => true, 51112 => true, 51125 => true, 59932 => true, 59933 => true, 65000 => true, 65001 => true, 65002 => true, 65024 => true, 65100 => true, 65101 => true, 65102 => true, 65105 => true, 65106 => true, 65107 => true, 65108 => true, 65109 => true, 65110 => true, 65111 => true, 65112 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

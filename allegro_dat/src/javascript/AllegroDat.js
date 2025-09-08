@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.AllegroDat = factory(root.KaitaiStream);
+    factory(root.AllegroDat || (root.AllegroDat = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (AllegroDat_, KaitaiStream) {
 /**
  * Allegro library for C (mostly used for game and multimedia apps
  * programming) used its own container file format.
@@ -41,8 +41,8 @@ var AllegroDat = (function() {
   AllegroDat.prototype._read = function() {
     this.packMagic = this._io.readU4be();
     this.datMagic = this._io.readBytes(4);
-    if (!((KaitaiStream.byteArrayCompare(this.datMagic, [65, 76, 76, 46]) == 0))) {
-      throw new KaitaiStream.ValidationNotEqualError([65, 76, 76, 46], this.datMagic, this._io, "/seq/1");
+    if (!((KaitaiStream.byteArrayCompare(this.datMagic, new Uint8Array([65, 76, 76, 46])) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([65, 76, 76, 46]), this.datMagic, this._io, "/seq/1");
     }
     this.numObjects = this._io.readU4be();
     this.objects = [];
@@ -51,34 +51,11 @@ var AllegroDat = (function() {
     }
   }
 
-  /**
-   * Simple monochrome monospaced font, 95 characters, 8x16 px
-   * characters.
-   */
-
-  var DatFont16 = AllegroDat.DatFont16 = (function() {
-    function DatFont16(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    DatFont16.prototype._read = function() {
-      this.chars = [];
-      for (var i = 0; i < 95; i++) {
-        this.chars.push(this._io.readBytes(16));
-      }
-    }
-
-    return DatFont16;
-  })();
-
   var DatBitmap = AllegroDat.DatBitmap = (function() {
     function DatBitmap(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -96,26 +73,120 @@ var AllegroDat = (function() {
     function DatFont(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     DatFont.prototype._read = function() {
       this.fontSize = this._io.readS2be();
       switch (this.fontSize) {
-      case 8:
-        this.body = new DatFont8(this._io, this, this._root);
+      case 0:
+        this.body = new DatFont39(this._io, this, this._root);
         break;
       case 16:
         this.body = new DatFont16(this._io, this, this._root);
         break;
-      case 0:
-        this.body = new DatFont39(this._io, this, this._root);
+      case 8:
+        this.body = new DatFont8(this._io, this, this._root);
         break;
       }
     }
 
     return DatFont;
+  })();
+
+  /**
+   * Simple monochrome monospaced font, 95 characters, 8x16 px
+   * characters.
+   */
+
+  var DatFont16 = AllegroDat.DatFont16 = (function() {
+    function DatFont16(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    DatFont16.prototype._read = function() {
+      this.chars = [];
+      for (var i = 0; i < 95; i++) {
+        this.chars.push(this._io.readBytes(16));
+      }
+    }
+
+    return DatFont16;
+  })();
+
+  /**
+   * New bitmap font format introduced since Allegro 3.9: allows
+   * flexible designation of character ranges, 8-bit colored
+   * characters, etc.
+   */
+
+  var DatFont39 = AllegroDat.DatFont39 = (function() {
+    function DatFont39(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    DatFont39.prototype._read = function() {
+      this.numRanges = this._io.readS2be();
+      this.ranges = [];
+      for (var i = 0; i < this.numRanges; i++) {
+        this.ranges.push(new Range(this._io, this, this._root));
+      }
+    }
+
+    var FontChar = DatFont39.FontChar = (function() {
+      function FontChar(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+
+        this._read();
+      }
+      FontChar.prototype._read = function() {
+        this.width = this._io.readU2be();
+        this.height = this._io.readU2be();
+        this.body = this._io.readBytes(this.width * this.height);
+      }
+
+      return FontChar;
+    })();
+
+    var Range = DatFont39.Range = (function() {
+      function Range(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+
+        this._read();
+      }
+      Range.prototype._read = function() {
+        this.mono = this._io.readU1();
+        this.startChar = this._io.readU4be();
+        this.endChar = this._io.readU4be();
+        this.chars = [];
+        for (var i = 0; i < (this.endChar - this.startChar) + 1; i++) {
+          this.chars.push(new FontChar(this._io, this, this._root));
+        }
+      }
+
+      /**
+       * First character in range
+       */
+
+      /**
+       * Last character in range (inclusive)
+       */
+
+      return Range;
+    })();
+
+    return DatFont39;
   })();
 
   /**
@@ -127,7 +198,7 @@ var AllegroDat = (function() {
     function DatFont8(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -145,7 +216,7 @@ var AllegroDat = (function() {
     function DatObject(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -165,15 +236,15 @@ var AllegroDat = (function() {
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new DatBitmap(_io__raw_body, this, this._root);
         break;
-      case "RLE ":
-        this._raw_body = this._io.readBytes(this.lenCompressed);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new DatRleSprite(_io__raw_body, this, this._root);
-        break;
       case "FONT":
         this._raw_body = this._io.readBytes(this.lenCompressed);
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new DatFont(_io__raw_body, this, this._root);
+        break;
+      case "RLE ":
+        this._raw_body = this._io.readBytes(this.lenCompressed);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new DatRleSprite(_io__raw_body, this, this._root);
         break;
       default:
         this.body = this._io.readBytes(this.lenCompressed);
@@ -192,82 +263,30 @@ var AllegroDat = (function() {
     return DatObject;
   })();
 
-  /**
-   * New bitmap font format introduced since Allegro 3.9: allows
-   * flexible designation of character ranges, 8-bit colored
-   * characters, etc.
-   */
-
-  var DatFont39 = AllegroDat.DatFont39 = (function() {
-    function DatFont39(_io, _parent, _root) {
+  var DatRleSprite = AllegroDat.DatRleSprite = (function() {
+    function DatRleSprite(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    DatFont39.prototype._read = function() {
-      this.numRanges = this._io.readS2be();
-      this.ranges = [];
-      for (var i = 0; i < this.numRanges; i++) {
-        this.ranges.push(new Range(this._io, this, this._root));
-      }
+    DatRleSprite.prototype._read = function() {
+      this.bitsPerPixel = this._io.readS2be();
+      this.width = this._io.readU2be();
+      this.height = this._io.readU2be();
+      this.lenImage = this._io.readU4be();
+      this.image = this._io.readBytesFull();
     }
 
-    var Range = DatFont39.Range = (function() {
-      function Range(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      Range.prototype._read = function() {
-        this.mono = this._io.readU1();
-        this.startChar = this._io.readU4be();
-        this.endChar = this._io.readU4be();
-        this.chars = [];
-        for (var i = 0; i < ((this.endChar - this.startChar) + 1); i++) {
-          this.chars.push(new FontChar(this._io, this, this._root));
-        }
-      }
-
-      /**
-       * First character in range
-       */
-
-      /**
-       * Last character in range (inclusive)
-       */
-
-      return Range;
-    })();
-
-    var FontChar = DatFont39.FontChar = (function() {
-      function FontChar(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      FontChar.prototype._read = function() {
-        this.width = this._io.readU2be();
-        this.height = this._io.readU2be();
-        this.body = this._io.readBytes((this.width * this.height));
-      }
-
-      return FontChar;
-    })();
-
-    return DatFont39;
+    return DatRleSprite;
   })();
 
   var Property = AllegroDat.Property = (function() {
     function Property(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -295,26 +314,7 @@ var AllegroDat = (function() {
     return Property;
   })();
 
-  var DatRleSprite = AllegroDat.DatRleSprite = (function() {
-    function DatRleSprite(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    DatRleSprite.prototype._read = function() {
-      this.bitsPerPixel = this._io.readS2be();
-      this.width = this._io.readU2be();
-      this.height = this._io.readU2be();
-      this.lenImage = this._io.readU4be();
-      this.image = this._io.readBytesFull();
-    }
-
-    return DatRleSprite;
-  })();
-
   return AllegroDat;
 })();
-return AllegroDat;
-}));
+AllegroDat_.AllegroDat = AllegroDat;
+});

@@ -7,10 +7,10 @@ type
     `parent`*: KaitaiStruct
     `lenInst`: int
     `lenInstFlag`: bool
-    `valueInst`: uint64
-    `valueInstFlag`: bool
     `signBitInst`: uint64
     `signBitInstFlag`: bool
+    `valueInst`: uint64
+    `valueInstFlag`: bool
     `valueSignedInst`: int64
     `valueSignedInstFlag`: bool
   VlqBase128Le_Group* = ref object of KaitaiStruct
@@ -27,8 +27,8 @@ proc read*(_: typedesc[VlqBase128Le], io: KaitaiStream, root: KaitaiStruct, pare
 proc read*(_: typedesc[VlqBase128Le_Group], io: KaitaiStream, root: KaitaiStruct, parent: VlqBase128Le, idx: any, prevIntermValue: any, multiplier: any): VlqBase128Le_Group
 
 proc len*(this: VlqBase128Le): int
-proc value*(this: VlqBase128Le): uint64
 proc signBit*(this: VlqBase128Le): uint64
+proc value*(this: VlqBase128Le): uint64
 proc valueSigned*(this: VlqBase128Le): int64
 proc intermValue*(this: VlqBase128Le_Group): uint64
 
@@ -76,7 +76,7 @@ proc read*(_: typedesc[VlqBase128Le], io: KaitaiStream, root: KaitaiStruct, pare
   block:
     var i: int
     while true:
-      let it = VlqBase128Le_Group.read(this.io, this.root, this, i, (if i != 0: this.groups[(i - 1)].intermValue else: 0), (if i != 0: (if i == 9: 9223372036854775808'u64 else: (this.groups[(i - 1)].multiplier * 128)) else: 1))
+      let it = VlqBase128Le_Group.read(this.io, this.root, this, i, (if i != 0: this.groups[i - 1].intermValue else: 0), (if i != 0: (if i == 9: 9223372036854775808'u64 else: this.groups[i - 1].multiplier * 128) else: 1))
       this.groups.add(it)
       if not(it.hasNext):
         break
@@ -90,6 +90,14 @@ proc len(this: VlqBase128Le): int =
   this.lenInstFlag = true
   return this.lenInst
 
+proc signBit(this: VlqBase128Le): uint64 = 
+  if this.signBitInstFlag:
+    return this.signBitInst
+  let signBitInstExpr = uint64((uint64((if this.len == 10: 9223372036854775808'u64 else: this.groups[^1].multiplier * 64))))
+  this.signBitInst = signBitInstExpr
+  this.signBitInstFlag = true
+  return this.signBitInst
+
 proc value(this: VlqBase128Le): uint64 = 
 
   ##[
@@ -102,18 +110,10 @@ proc value(this: VlqBase128Le): uint64 =
   this.valueInstFlag = true
   return this.valueInst
 
-proc signBit(this: VlqBase128Le): uint64 = 
-  if this.signBitInstFlag:
-    return this.signBitInst
-  let signBitInstExpr = uint64((uint64((if this.len == 10: 9223372036854775808'u64 else: (this.groups[^1].multiplier * 64)))))
-  this.signBitInst = signBitInstExpr
-  this.signBitInstFlag = true
-  return this.signBitInst
-
 proc valueSigned(this: VlqBase128Le): int64 = 
   if this.valueSignedInstFlag:
     return this.valueSignedInst
-  let valueSignedInstExpr = int64((if  ((this.signBit > 0) and (this.value >= this.signBit)) : -((int64((this.signBit - (this.value - this.signBit))))) else: (int64(this.value))))
+  let valueSignedInstExpr = int64((if  ((this.signBit > 0) and (this.value >= this.signBit)) : -((int64(this.signBit - (this.value - this.signBit)))) else: (int64(this.value))))
   this.valueSignedInst = valueSignedInstExpr
   this.valueSignedInstFlag = true
   return this.valueSignedInst
@@ -166,7 +166,7 @@ more, which is not supported).
 proc intermValue(this: VlqBase128Le_Group): uint64 = 
   if this.intermValueInstFlag:
     return this.intermValueInst
-  let intermValueInstExpr = uint64((uint64((this.prevIntermValue + (this.value * this.multiplier)))))
+  let intermValueInstExpr = uint64((uint64(this.prevIntermValue + this.value * this.multiplier)))
   this.intermValueInst = intermValueInstExpr
   this.intermValueInstFlag = true
   return this.intermValueInst

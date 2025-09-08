@@ -7,8 +7,9 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.HashMap;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.nio.charset.Charset;
+import java.util.List;
 
 
 /**
@@ -38,49 +39,16 @@ public class Bson extends KaitaiStruct {
     }
     private void _read() {
         this.len = this._io.readS4le();
-        this._raw_fields = this._io.readBytes((len() - 5));
-        KaitaiStream _io__raw_fields = new ByteBufferKaitaiStream(_raw_fields);
-        this.fields = new ElementsList(_io__raw_fields, this, _root);
+        KaitaiStream _io_fields = this._io.substream(len() - 5);
+        this.fields = new ElementsList(_io_fields, this, _root);
         this.terminator = this._io.readBytes(1);
-        if (!(Arrays.equals(terminator(), new byte[] { 0 }))) {
-            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0 }, terminator(), _io(), "/seq/2");
+        if (!(Arrays.equals(this.terminator, new byte[] { 0 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0 }, this.terminator, this._io, "/seq/2");
         }
     }
 
-    /**
-     * Special internal type used by MongoDB replication and sharding. First 4 bytes are an increment, second 4 are a timestamp.
-     */
-    public static class Timestamp extends KaitaiStruct {
-        public static Timestamp fromFile(String fileName) throws IOException {
-            return new Timestamp(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Timestamp(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Timestamp(KaitaiStream _io, Bson.Element _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Timestamp(KaitaiStream _io, Bson.Element _parent, Bson _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.increment = this._io.readU4le();
-            this.timestamp = this._io.readU4le();
-        }
-        private long increment;
-        private long timestamp;
-        private Bson _root;
-        private Bson.Element _parent;
-        public long increment() { return increment; }
-        public long timestamp() { return timestamp; }
-        public Bson _root() { return _root; }
-        public Bson.Element _parent() { return _parent; }
+    public void _fetchInstances() {
+        this.fields._fetchInstances();
     }
 
     /**
@@ -133,9 +101,8 @@ public class Bson extends KaitaiStruct {
                 if (on != null) {
                     switch (subtype()) {
                     case BYTE_ARRAY_DEPRECATED: {
-                        this._raw_content = this._io.readBytes(len());
-                        KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
-                        this.content = new ByteArrayDeprecated(_io__raw_content, this, _root);
+                        KaitaiStream _io_content = this._io.substream(len());
+                        this.content = new ByteArrayDeprecated(_io_content, this, _root);
                         break;
                     }
                     default: {
@@ -145,6 +112,24 @@ public class Bson extends KaitaiStruct {
                     }
                 } else {
                     this.content = this._io.readBytes(len());
+                }
+            }
+        }
+
+        public void _fetchInstances() {
+            {
+                Subtype on = subtype();
+                if (on != null) {
+                    switch (subtype()) {
+                    case BYTE_ARRAY_DEPRECATED: {
+                        ((ByteArrayDeprecated) (this.content))._fetchInstances();
+                        break;
+                    }
+                    default: {
+                        break;
+                    }
+                    }
+                } else {
                 }
             }
         }
@@ -175,6 +160,9 @@ public class Bson extends KaitaiStruct {
                 this.len = this._io.readS4le();
                 this.content = this._io.readBytes(len());
             }
+
+            public void _fetchInstances() {
+            }
             private int len;
             private byte[] content;
             private Bson _root;
@@ -189,49 +177,55 @@ public class Bson extends KaitaiStruct {
         private Object content;
         private Bson _root;
         private Bson.Element _parent;
-        private byte[] _raw_content;
         public int len() { return len; }
         public Subtype subtype() { return subtype; }
         public Object content() { return content; }
         public Bson _root() { return _root; }
         public Bson.Element _parent() { return _parent; }
-        public byte[] _raw_content() { return _raw_content; }
     }
-    public static class ElementsList extends KaitaiStruct {
-        public static ElementsList fromFile(String fileName) throws IOException {
-            return new ElementsList(new ByteBufferKaitaiStream(fileName));
+    public static class CodeWithScope extends KaitaiStruct {
+        public static CodeWithScope fromFile(String fileName) throws IOException {
+            return new CodeWithScope(new ByteBufferKaitaiStream(fileName));
         }
 
-        public ElementsList(KaitaiStream _io) {
+        public CodeWithScope(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public ElementsList(KaitaiStream _io, Bson _parent) {
+        public CodeWithScope(KaitaiStream _io, Bson.Element _parent) {
             this(_io, _parent, null);
         }
 
-        public ElementsList(KaitaiStream _io, Bson _parent, Bson _root) {
+        public CodeWithScope(KaitaiStream _io, Bson.Element _parent, Bson _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.elements = new ArrayList<Element>();
-            {
-                int i = 0;
-                while (!this._io.isEof()) {
-                    this.elements.add(new Element(this._io, this, _root));
-                    i++;
-                }
-            }
+            this.id = this._io.readS4le();
+            this.source = new String(this._io, this, _root);
+            this.scope = new Bson(this._io, this, _root);
         }
-        private ArrayList<Element> elements;
+
+        public void _fetchInstances() {
+            this.source._fetchInstances();
+            this.scope._fetchInstances();
+        }
+        private int id;
+        private String source;
+        private Bson scope;
         private Bson _root;
-        private Bson _parent;
-        public ArrayList<Element> elements() { return elements; }
+        private Bson.Element _parent;
+        public int id() { return id; }
+        public String source() { return source; }
+
+        /**
+         * mapping from identifiers to values, representing the scope in which the string should be evaluated.
+         */
+        public Bson scope() { return scope; }
         public Bson _root() { return _root; }
-        public Bson _parent() { return _parent; }
+        public Bson.Element _parent() { return _parent; }
     }
     public static class Cstring extends KaitaiStruct {
         public static Cstring fromFile(String fileName) throws IOException {
@@ -253,7 +247,10 @@ public class Bson extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.str = new String(this._io.readBytesTerm((byte) 0, false, true, true), Charset.forName("UTF-8"));
+            this.str = new String(this._io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.UTF_8);
+        }
+
+        public void _fetchInstances() {
         }
         private String str;
         private Bson _root;
@@ -266,43 +263,42 @@ public class Bson extends KaitaiStruct {
         public Bson _root() { return _root; }
         public KaitaiStruct _parent() { return _parent; }
     }
-    public static class String extends KaitaiStruct {
-        public static String fromFile(String fileName) throws IOException {
-            return new String(new ByteBufferKaitaiStream(fileName));
+    public static class DbPointer extends KaitaiStruct {
+        public static DbPointer fromFile(String fileName) throws IOException {
+            return new DbPointer(new ByteBufferKaitaiStream(fileName));
         }
 
-        public String(KaitaiStream _io) {
+        public DbPointer(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public String(KaitaiStream _io, KaitaiStruct _parent) {
+        public DbPointer(KaitaiStream _io, Bson.Element _parent) {
             this(_io, _parent, null);
         }
 
-        public String(KaitaiStream _io, KaitaiStruct _parent, Bson _root) {
+        public DbPointer(KaitaiStream _io, Bson.Element _parent, Bson _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.len = this._io.readS4le();
-            this.str = new String(this._io.readBytes((len() - 1)), Charset.forName("UTF-8"));
-            this.terminator = this._io.readBytes(1);
-            if (!(Arrays.equals(terminator(), new byte[] { 0 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0 }, terminator(), _io(), "/types/string/seq/2");
-            }
+            this.namespace = new String(this._io, this, _root);
+            this.id = new ObjectId(this._io, this, _root);
         }
-        private int len;
-        private String str;
-        private byte[] terminator;
+
+        public void _fetchInstances() {
+            this.namespace._fetchInstances();
+            this.id._fetchInstances();
+        }
+        private String namespace;
+        private ObjectId id;
         private Bson _root;
-        private KaitaiStruct _parent;
-        public int len() { return len; }
-        public String str() { return str; }
-        public byte[] terminator() { return terminator; }
+        private Bson.Element _parent;
+        public String namespace() { return namespace; }
+        public ObjectId id() { return id; }
         public Bson _root() { return _root; }
-        public KaitaiStruct _parent() { return _parent; }
+        public Bson.Element _parent() { return _parent; }
     }
     public static class Element extends KaitaiStruct {
         public static Element fromFile(String fileName) throws IOException {
@@ -365,16 +361,60 @@ public class Bson extends KaitaiStruct {
                 BsonType on = typeByte();
                 if (on != null) {
                     switch (typeByte()) {
+                    case ARRAY: {
+                        this.content = new Bson(this._io, this, _root);
+                        break;
+                    }
+                    case BIN_DATA: {
+                        this.content = new BinData(this._io, this, _root);
+                        break;
+                    }
+                    case BOOLEAN: {
+                        this.content = ((Object) (this._io.readU1()));
+                        break;
+                    }
                     case CODE_WITH_SCOPE: {
                         this.content = new CodeWithScope(this._io, this, _root);
+                        break;
+                    }
+                    case DB_POINTER: {
+                        this.content = new DbPointer(this._io, this, _root);
+                        break;
+                    }
+                    case DOCUMENT: {
+                        this.content = new Bson(this._io, this, _root);
+                        break;
+                    }
+                    case JAVASCRIPT: {
+                        this.content = new String(this._io, this, _root);
+                        break;
+                    }
+                    case NUMBER_DECIMAL: {
+                        this.content = new F16(this._io, this, _root);
+                        break;
+                    }
+                    case NUMBER_DOUBLE: {
+                        this.content = ((Object) (this._io.readF8le()));
+                        break;
+                    }
+                    case NUMBER_INT: {
+                        this.content = ((Object) (this._io.readS4le()));
+                        break;
+                    }
+                    case NUMBER_LONG: {
+                        this.content = ((Object) (this._io.readS8le()));
+                        break;
+                    }
+                    case OBJECT_ID: {
+                        this.content = new ObjectId(this._io, this, _root);
                         break;
                     }
                     case REG_EX: {
                         this.content = new RegEx(this._io, this, _root);
                         break;
                     }
-                    case NUMBER_DOUBLE: {
-                        this.content = (Object) (this._io.readF8le());
+                    case STRING: {
+                        this.content = new String(this._io, this, _root);
                         break;
                     }
                     case SYMBOL: {
@@ -385,52 +425,82 @@ public class Bson extends KaitaiStruct {
                         this.content = new Timestamp(this._io, this, _root);
                         break;
                     }
-                    case NUMBER_INT: {
-                        this.content = (Object) (this._io.readS4le());
-                        break;
-                    }
-                    case DOCUMENT: {
-                        this.content = new Bson(this._io);
-                        break;
-                    }
-                    case OBJECT_ID: {
-                        this.content = new ObjectId(this._io, this, _root);
-                        break;
-                    }
-                    case JAVASCRIPT: {
-                        this.content = new String(this._io, this, _root);
-                        break;
-                    }
                     case UTC_DATETIME: {
-                        this.content = (Object) (this._io.readS8le());
+                        this.content = ((Object) (this._io.readS8le()));
                         break;
                     }
-                    case BOOLEAN: {
-                        this.content = (Object) (this._io.readU1());
-                        break;
                     }
-                    case NUMBER_LONG: {
-                        this.content = (Object) (this._io.readS8le());
+                }
+            }
+        }
+
+        public void _fetchInstances() {
+            this.name._fetchInstances();
+            {
+                BsonType on = typeByte();
+                if (on != null) {
+                    switch (typeByte()) {
+                    case ARRAY: {
+                        ((Bson) (this.content))._fetchInstances();
                         break;
                     }
                     case BIN_DATA: {
-                        this.content = new BinData(this._io, this, _root);
+                        ((BinData) (this.content))._fetchInstances();
                         break;
                     }
-                    case STRING: {
-                        this.content = new String(this._io, this, _root);
+                    case BOOLEAN: {
+                        break;
+                    }
+                    case CODE_WITH_SCOPE: {
+                        ((CodeWithScope) (this.content))._fetchInstances();
                         break;
                     }
                     case DB_POINTER: {
-                        this.content = new DbPointer(this._io, this, _root);
+                        ((DbPointer) (this.content))._fetchInstances();
                         break;
                     }
-                    case ARRAY: {
-                        this.content = new Bson(this._io);
+                    case DOCUMENT: {
+                        ((Bson) (this.content))._fetchInstances();
+                        break;
+                    }
+                    case JAVASCRIPT: {
+                        ((String) (this.content))._fetchInstances();
                         break;
                     }
                     case NUMBER_DECIMAL: {
-                        this.content = new F16(this._io, this, _root);
+                        ((F16) (this.content))._fetchInstances();
+                        break;
+                    }
+                    case NUMBER_DOUBLE: {
+                        break;
+                    }
+                    case NUMBER_INT: {
+                        break;
+                    }
+                    case NUMBER_LONG: {
+                        break;
+                    }
+                    case OBJECT_ID: {
+                        ((ObjectId) (this.content))._fetchInstances();
+                        break;
+                    }
+                    case REG_EX: {
+                        ((RegEx) (this.content))._fetchInstances();
+                        break;
+                    }
+                    case STRING: {
+                        ((String) (this.content))._fetchInstances();
+                        break;
+                    }
+                    case SYMBOL: {
+                        ((String) (this.content))._fetchInstances();
+                        break;
+                    }
+                    case TIMESTAMP: {
+                        ((Timestamp) (this.content))._fetchInstances();
+                        break;
+                    }
+                    case UTC_DATETIME: {
                         break;
                     }
                     }
@@ -448,123 +518,47 @@ public class Bson extends KaitaiStruct {
         public Bson _root() { return _root; }
         public Bson.ElementsList _parent() { return _parent; }
     }
-    public static class DbPointer extends KaitaiStruct {
-        public static DbPointer fromFile(String fileName) throws IOException {
-            return new DbPointer(new ByteBufferKaitaiStream(fileName));
+    public static class ElementsList extends KaitaiStruct {
+        public static ElementsList fromFile(String fileName) throws IOException {
+            return new ElementsList(new ByteBufferKaitaiStream(fileName));
         }
 
-        public DbPointer(KaitaiStream _io) {
+        public ElementsList(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public DbPointer(KaitaiStream _io, Bson.Element _parent) {
+        public ElementsList(KaitaiStream _io, Bson _parent) {
             this(_io, _parent, null);
         }
 
-        public DbPointer(KaitaiStream _io, Bson.Element _parent, Bson _root) {
+        public ElementsList(KaitaiStream _io, Bson _parent, Bson _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.namespace = new String(this._io, this, _root);
-            this.id = new ObjectId(this._io, this, _root);
+            this.elements = new ArrayList<Element>();
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.elements.add(new Element(this._io, this, _root));
+                    i++;
+                }
+            }
         }
-        private String namespace;
-        private ObjectId id;
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.elements.size(); i++) {
+                this.elements.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private List<Element> elements;
         private Bson _root;
-        private Bson.Element _parent;
-        public String namespace() { return namespace; }
-        public ObjectId id() { return id; }
+        private Bson _parent;
+        public List<Element> elements() { return elements; }
         public Bson _root() { return _root; }
-        public Bson.Element _parent() { return _parent; }
-    }
-
-    /**
-     * Implements unsigned 24-bit (3 byte) integer.
-     */
-    public static class U3 extends KaitaiStruct {
-        public static U3 fromFile(String fileName) throws IOException {
-            return new U3(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public U3(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public U3(KaitaiStream _io, Bson.ObjectId _parent) {
-            this(_io, _parent, null);
-        }
-
-        public U3(KaitaiStream _io, Bson.ObjectId _parent, Bson _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.b1 = this._io.readU1();
-            this.b2 = this._io.readU1();
-            this.b3 = this._io.readU1();
-        }
-        private Integer value;
-        public Integer value() {
-            if (this.value != null)
-                return this.value;
-            int _tmp = (int) (((b1() | (b2() << 8)) | (b3() << 16)));
-            this.value = _tmp;
-            return this.value;
-        }
-        private int b1;
-        private int b2;
-        private int b3;
-        private Bson _root;
-        private Bson.ObjectId _parent;
-        public int b1() { return b1; }
-        public int b2() { return b2; }
-        public int b3() { return b3; }
-        public Bson _root() { return _root; }
-        public Bson.ObjectId _parent() { return _parent; }
-    }
-    public static class CodeWithScope extends KaitaiStruct {
-        public static CodeWithScope fromFile(String fileName) throws IOException {
-            return new CodeWithScope(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public CodeWithScope(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public CodeWithScope(KaitaiStream _io, Bson.Element _parent) {
-            this(_io, _parent, null);
-        }
-
-        public CodeWithScope(KaitaiStream _io, Bson.Element _parent, Bson _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.id = this._io.readS4le();
-            this.source = new String(this._io, this, _root);
-            this.scope = new Bson(this._io);
-        }
-        private int id;
-        private String source;
-        private Bson scope;
-        private Bson _root;
-        private Bson.Element _parent;
-        public int id() { return id; }
-        public String source() { return source; }
-
-        /**
-         * mapping from identifiers to values, representing the scope in which the string should be evaluated.
-         */
-        public Bson scope() { return scope; }
-        public Bson _root() { return _root; }
-        public Bson.Element _parent() { return _parent; }
+        public Bson _parent() { return _parent; }
     }
 
     /**
@@ -593,8 +587,10 @@ public class Bson extends KaitaiStruct {
             this.str = this._io.readBitsIntBe(1) != 0;
             this.exponent = this._io.readBitsIntBe(15);
             this.significandHi = this._io.readBitsIntBe(49);
-            this._io.alignToByte();
             this.significandLo = this._io.readU8le();
+        }
+
+        public void _fetchInstances() {
         }
         private boolean str;
         private long exponent;
@@ -637,6 +633,11 @@ public class Bson extends KaitaiStruct {
             this.machineId = new U3(this._io, this, _root);
             this.processId = this._io.readU2le();
             this.counter = new U3(this._io, this, _root);
+        }
+
+        public void _fetchInstances() {
+            this.machineId._fetchInstances();
+            this.counter._fetchInstances();
         }
         private long epochTime;
         private U3 machineId;
@@ -682,6 +683,11 @@ public class Bson extends KaitaiStruct {
             this.pattern = new Cstring(this._io, this, _root);
             this.options = new Cstring(this._io, this, _root);
         }
+
+        public void _fetchInstances() {
+            this.pattern._fetchInstances();
+            this.options._fetchInstances();
+        }
         private Cstring pattern;
         private Cstring options;
         private Bson _root;
@@ -691,12 +697,140 @@ public class Bson extends KaitaiStruct {
         public Bson _root() { return _root; }
         public Bson.Element _parent() { return _parent; }
     }
+    public static class String extends KaitaiStruct {
+        public static String fromFile(String fileName) throws IOException {
+            return new String(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public String(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public String(KaitaiStream _io, KaitaiStruct _parent) {
+            this(_io, _parent, null);
+        }
+
+        public String(KaitaiStream _io, KaitaiStruct _parent, Bson _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.len = this._io.readS4le();
+            this.str = new String(this._io.readBytes(len() - 1), StandardCharsets.UTF_8);
+            this.terminator = this._io.readBytes(1);
+            if (!(Arrays.equals(this.terminator, new byte[] { 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0 }, this.terminator, this._io, "/types/string/seq/2");
+            }
+        }
+
+        public void _fetchInstances() {
+        }
+        private int len;
+        private String str;
+        private byte[] terminator;
+        private Bson _root;
+        private KaitaiStruct _parent;
+        public int len() { return len; }
+        public String str() { return str; }
+        public byte[] terminator() { return terminator; }
+        public Bson _root() { return _root; }
+        public KaitaiStruct _parent() { return _parent; }
+    }
+
+    /**
+     * Special internal type used by MongoDB replication and sharding. First 4 bytes are an increment, second 4 are a timestamp.
+     */
+    public static class Timestamp extends KaitaiStruct {
+        public static Timestamp fromFile(String fileName) throws IOException {
+            return new Timestamp(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Timestamp(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Timestamp(KaitaiStream _io, Bson.Element _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Timestamp(KaitaiStream _io, Bson.Element _parent, Bson _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.increment = this._io.readU4le();
+            this.timestamp = this._io.readU4le();
+        }
+
+        public void _fetchInstances() {
+        }
+        private long increment;
+        private long timestamp;
+        private Bson _root;
+        private Bson.Element _parent;
+        public long increment() { return increment; }
+        public long timestamp() { return timestamp; }
+        public Bson _root() { return _root; }
+        public Bson.Element _parent() { return _parent; }
+    }
+
+    /**
+     * Implements unsigned 24-bit (3 byte) integer.
+     */
+    public static class U3 extends KaitaiStruct {
+        public static U3 fromFile(String fileName) throws IOException {
+            return new U3(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public U3(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public U3(KaitaiStream _io, Bson.ObjectId _parent) {
+            this(_io, _parent, null);
+        }
+
+        public U3(KaitaiStream _io, Bson.ObjectId _parent, Bson _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.b1 = this._io.readU1();
+            this.b2 = this._io.readU1();
+            this.b3 = this._io.readU1();
+        }
+
+        public void _fetchInstances() {
+        }
+        private Integer value;
+        public Integer value() {
+            if (this.value != null)
+                return this.value;
+            this.value = ((Number) ((b1() | b2() << 8) | b3() << 16)).intValue();
+            return this.value;
+        }
+        private int b1;
+        private int b2;
+        private int b3;
+        private Bson _root;
+        private Bson.ObjectId _parent;
+        public int b1() { return b1; }
+        public int b2() { return b2; }
+        public int b3() { return b3; }
+        public Bson _root() { return _root; }
+        public Bson.ObjectId _parent() { return _parent; }
+    }
     private int len;
     private ElementsList fields;
     private byte[] terminator;
     private Bson _root;
     private KaitaiStruct _parent;
-    private byte[] _raw_fields;
 
     /**
      * Total number of bytes comprising the document.
@@ -706,5 +840,4 @@ public class Bson extends KaitaiStruct {
     public byte[] terminator() { return terminator; }
     public Bson _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
-    public byte[] _raw_fields() { return _raw_fields; }
 }

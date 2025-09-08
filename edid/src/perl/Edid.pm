@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Encode;
 
 ########################################################################
@@ -25,7 +25,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -50,8 +50,8 @@ sub _read {
     $self->{features_flags} = $self->{_io}->read_u1();
     $self->{chromacity} = Edid::ChromacityInfo->new($self->{_io}, $self, $self->{_root});
     $self->{est_timings} = Edid::EstTimingsInfo->new($self->{_io}, $self, $self->{_root});
-    $self->{_raw_std_timings} = ();
-    $self->{std_timings} = ();
+    $self->{_raw_std_timings} = [];
+    $self->{std_timings} = [];
     my $n_std_timings = 8;
     for (my $i = 0; $i < $n_std_timings; $i++) {
         push @{$self->{_raw_std_timings}}, $self->{_io}->read_bytes(2);
@@ -60,48 +60,48 @@ sub _read {
     }
 }
 
-sub mfg_year {
+sub gamma {
     my ($self) = @_;
-    return $self->{mfg_year} if ($self->{mfg_year});
-    $self->{mfg_year} = ($self->mfg_year_mod() + 1990);
-    return $self->{mfg_year};
+    return $self->{gamma} if ($self->{gamma});
+    if ($self->gamma_mod() != 255) {
+        $self->{gamma} = ($self->gamma_mod() + 100) / 100.0;
+    }
+    return $self->{gamma};
 }
 
 sub mfg_id_ch1 {
     my ($self) = @_;
     return $self->{mfg_id_ch1} if ($self->{mfg_id_ch1});
-    $self->{mfg_id_ch1} = (($self->mfg_bytes() & 31744) >> 10);
+    $self->{mfg_id_ch1} = ($self->mfg_bytes() & 31744) >> 10;
     return $self->{mfg_id_ch1};
-}
-
-sub mfg_id_ch3 {
-    my ($self) = @_;
-    return $self->{mfg_id_ch3} if ($self->{mfg_id_ch3});
-    $self->{mfg_id_ch3} = ($self->mfg_bytes() & 31);
-    return $self->{mfg_id_ch3};
-}
-
-sub gamma {
-    my ($self) = @_;
-    return $self->{gamma} if ($self->{gamma});
-    if ($self->gamma_mod() != 255) {
-        $self->{gamma} = (($self->gamma_mod() + 100) / 100.0);
-    }
-    return $self->{gamma};
-}
-
-sub mfg_str {
-    my ($self) = @_;
-    return $self->{mfg_str} if ($self->{mfg_str});
-    $self->{mfg_str} = Encode::decode("ASCII", pack('C*', (($self->mfg_id_ch1() + 64), ($self->mfg_id_ch2() + 64), ($self->mfg_id_ch3() + 64))));
-    return $self->{mfg_str};
 }
 
 sub mfg_id_ch2 {
     my ($self) = @_;
     return $self->{mfg_id_ch2} if ($self->{mfg_id_ch2});
-    $self->{mfg_id_ch2} = (($self->mfg_bytes() & 992) >> 5);
+    $self->{mfg_id_ch2} = ($self->mfg_bytes() & 992) >> 5;
     return $self->{mfg_id_ch2};
+}
+
+sub mfg_id_ch3 {
+    my ($self) = @_;
+    return $self->{mfg_id_ch3} if ($self->{mfg_id_ch3});
+    $self->{mfg_id_ch3} = $self->mfg_bytes() & 31;
+    return $self->{mfg_id_ch3};
+}
+
+sub mfg_str {
+    my ($self) = @_;
+    return $self->{mfg_str} if ($self->{mfg_str});
+    $self->{mfg_str} = Encode::decode("ASCII", pack('C*', ($self->mfg_id_ch1() + 64, $self->mfg_id_ch2() + 64, $self->mfg_id_ch3() + 64)));
+    return $self->{mfg_str};
+}
+
+sub mfg_year {
+    my ($self) = @_;
+    return $self->{mfg_year} if ($self->{mfg_year});
+    $self->{mfg_year} = $self->mfg_year_mod() + 1990;
+    return $self->{mfg_year};
 }
 
 sub magic {
@@ -209,7 +209,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -238,116 +238,116 @@ sub _read {
     $self->{white_y_9_2} = $self->{_io}->read_u1();
 }
 
-sub green_x_int {
-    my ($self) = @_;
-    return $self->{green_x_int} if ($self->{green_x_int});
-    $self->{green_x_int} = (($self->green_x_9_2() << 2) | $self->green_x_1_0());
-    return $self->{green_x_int};
-}
-
-sub red_y {
-    my ($self) = @_;
-    return $self->{red_y} if ($self->{red_y});
-    $self->{red_y} = ($self->red_y_int() / 1024.0);
-    return $self->{red_y};
-}
-
-sub green_y_int {
-    my ($self) = @_;
-    return $self->{green_y_int} if ($self->{green_y_int});
-    $self->{green_y_int} = (($self->green_y_9_2() << 2) | $self->green_y_1_0());
-    return $self->{green_y_int};
-}
-
-sub white_y {
-    my ($self) = @_;
-    return $self->{white_y} if ($self->{white_y});
-    $self->{white_y} = ($self->white_y_int() / 1024.0);
-    return $self->{white_y};
-}
-
-sub red_x {
-    my ($self) = @_;
-    return $self->{red_x} if ($self->{red_x});
-    $self->{red_x} = ($self->red_x_int() / 1024.0);
-    return $self->{red_x};
-}
-
-sub white_x {
-    my ($self) = @_;
-    return $self->{white_x} if ($self->{white_x});
-    $self->{white_x} = ($self->white_x_int() / 1024.0);
-    return $self->{white_x};
-}
-
 sub blue_x {
     my ($self) = @_;
     return $self->{blue_x} if ($self->{blue_x});
-    $self->{blue_x} = ($self->blue_x_int() / 1024.0);
+    $self->{blue_x} = $self->blue_x_int() / 1024.0;
     return $self->{blue_x};
-}
-
-sub white_x_int {
-    my ($self) = @_;
-    return $self->{white_x_int} if ($self->{white_x_int});
-    $self->{white_x_int} = (($self->white_x_9_2() << 2) | $self->white_x_1_0());
-    return $self->{white_x_int};
-}
-
-sub white_y_int {
-    my ($self) = @_;
-    return $self->{white_y_int} if ($self->{white_y_int});
-    $self->{white_y_int} = (($self->white_y_9_2() << 2) | $self->white_y_1_0());
-    return $self->{white_y_int};
-}
-
-sub green_x {
-    my ($self) = @_;
-    return $self->{green_x} if ($self->{green_x});
-    $self->{green_x} = ($self->green_x_int() / 1024.0);
-    return $self->{green_x};
-}
-
-sub red_x_int {
-    my ($self) = @_;
-    return $self->{red_x_int} if ($self->{red_x_int});
-    $self->{red_x_int} = (($self->red_x_9_2() << 2) | $self->red_x_1_0());
-    return $self->{red_x_int};
-}
-
-sub red_y_int {
-    my ($self) = @_;
-    return $self->{red_y_int} if ($self->{red_y_int});
-    $self->{red_y_int} = (($self->red_y_9_2() << 2) | $self->red_y_1_0());
-    return $self->{red_y_int};
 }
 
 sub blue_x_int {
     my ($self) = @_;
     return $self->{blue_x_int} if ($self->{blue_x_int});
-    $self->{blue_x_int} = (($self->blue_x_9_2() << 2) | $self->blue_x_1_0());
+    $self->{blue_x_int} = $self->blue_x_9_2() << 2 | $self->blue_x_1_0();
     return $self->{blue_x_int};
 }
 
 sub blue_y {
     my ($self) = @_;
     return $self->{blue_y} if ($self->{blue_y});
-    $self->{blue_y} = ($self->blue_y_int() / 1024.0);
+    $self->{blue_y} = $self->blue_y_int() / 1024.0;
     return $self->{blue_y};
-}
-
-sub green_y {
-    my ($self) = @_;
-    return $self->{green_y} if ($self->{green_y});
-    $self->{green_y} = ($self->green_y_int() / 1024.0);
-    return $self->{green_y};
 }
 
 sub blue_y_int {
     my ($self) = @_;
     return $self->{blue_y_int} if ($self->{blue_y_int});
-    $self->{blue_y_int} = (($self->blue_y_9_2() << 2) | $self->blue_y_1_0());
+    $self->{blue_y_int} = $self->blue_y_9_2() << 2 | $self->blue_y_1_0();
     return $self->{blue_y_int};
+}
+
+sub green_x {
+    my ($self) = @_;
+    return $self->{green_x} if ($self->{green_x});
+    $self->{green_x} = $self->green_x_int() / 1024.0;
+    return $self->{green_x};
+}
+
+sub green_x_int {
+    my ($self) = @_;
+    return $self->{green_x_int} if ($self->{green_x_int});
+    $self->{green_x_int} = $self->green_x_9_2() << 2 | $self->green_x_1_0();
+    return $self->{green_x_int};
+}
+
+sub green_y {
+    my ($self) = @_;
+    return $self->{green_y} if ($self->{green_y});
+    $self->{green_y} = $self->green_y_int() / 1024.0;
+    return $self->{green_y};
+}
+
+sub green_y_int {
+    my ($self) = @_;
+    return $self->{green_y_int} if ($self->{green_y_int});
+    $self->{green_y_int} = $self->green_y_9_2() << 2 | $self->green_y_1_0();
+    return $self->{green_y_int};
+}
+
+sub red_x {
+    my ($self) = @_;
+    return $self->{red_x} if ($self->{red_x});
+    $self->{red_x} = $self->red_x_int() / 1024.0;
+    return $self->{red_x};
+}
+
+sub red_x_int {
+    my ($self) = @_;
+    return $self->{red_x_int} if ($self->{red_x_int});
+    $self->{red_x_int} = $self->red_x_9_2() << 2 | $self->red_x_1_0();
+    return $self->{red_x_int};
+}
+
+sub red_y {
+    my ($self) = @_;
+    return $self->{red_y} if ($self->{red_y});
+    $self->{red_y} = $self->red_y_int() / 1024.0;
+    return $self->{red_y};
+}
+
+sub red_y_int {
+    my ($self) = @_;
+    return $self->{red_y_int} if ($self->{red_y_int});
+    $self->{red_y_int} = $self->red_y_9_2() << 2 | $self->red_y_1_0();
+    return $self->{red_y_int};
+}
+
+sub white_x {
+    my ($self) = @_;
+    return $self->{white_x} if ($self->{white_x});
+    $self->{white_x} = $self->white_x_int() / 1024.0;
+    return $self->{white_x};
+}
+
+sub white_x_int {
+    my ($self) = @_;
+    return $self->{white_x_int} if ($self->{white_x_int});
+    $self->{white_x_int} = $self->white_x_9_2() << 2 | $self->white_x_1_0();
+    return $self->{white_x_int};
+}
+
+sub white_y {
+    my ($self) = @_;
+    return $self->{white_y} if ($self->{white_y});
+    $self->{white_y} = $self->white_y_int() / 1024.0;
+    return $self->{white_y};
+}
+
+sub white_y_int {
+    my ($self) = @_;
+    return $self->{white_y_int} if ($self->{white_y_int});
+    $self->{white_y_int} = $self->white_y_9_2() << 2 | $self->white_y_1_0();
+    return $self->{white_y_int};
 }
 
 sub red_x_1_0 {
@@ -450,7 +450,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -595,7 +595,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -620,6 +620,15 @@ sub bytes_lookahead {
     return $self->{bytes_lookahead};
 }
 
+sub horiz_active_pixels {
+    my ($self) = @_;
+    return $self->{horiz_active_pixels} if ($self->{horiz_active_pixels});
+    if ($self->is_used()) {
+        $self->{horiz_active_pixels} = ($self->horiz_active_pixels_mod() + 31) * 8;
+    }
+    return $self->{horiz_active_pixels};
+}
+
 sub is_used {
     my ($self) = @_;
     return $self->{is_used} if ($self->{is_used});
@@ -627,20 +636,11 @@ sub is_used {
     return $self->{is_used};
 }
 
-sub horiz_active_pixels {
-    my ($self) = @_;
-    return $self->{horiz_active_pixels} if ($self->{horiz_active_pixels});
-    if ($self->is_used()) {
-        $self->{horiz_active_pixels} = (($self->horiz_active_pixels_mod() + 31) * 8);
-    }
-    return $self->{horiz_active_pixels};
-}
-
 sub refresh_rate {
     my ($self) = @_;
     return $self->{refresh_rate} if ($self->{refresh_rate});
     if ($self->is_used()) {
-        $self->{refresh_rate} = ($self->refresh_rate_mod() + 60);
+        $self->{refresh_rate} = $self->refresh_rate_mod() + 60;
     }
     return $self->{refresh_rate};
 }

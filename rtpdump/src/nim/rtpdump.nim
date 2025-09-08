@@ -1,8 +1,7 @@
 import kaitai_struct_nim_runtime
 import options
-import /network/rtp_packet
+import rtp_packet
 
-import "rtp_packet"
 type
   Rtpdump* = ref object of KaitaiStruct
     `fileHeader`*: Rtpdump_HeaderT
@@ -71,9 +70,9 @@ proc read*(_: typedesc[Rtpdump_HeaderT], io: KaitaiStream, root: KaitaiStruct, p
   this.shebang = shebangExpr
   let spaceExpr = this.io.readBytes(int(1))
   this.space = spaceExpr
-  let ipExpr = encode(this.io.readBytesTerm(47, false, true, true), "ascii")
+  let ipExpr = encode(this.io.readBytesTerm(47, false, true, true), "ASCII")
   this.ip = ipExpr
-  let portExpr = encode(this.io.readBytesTerm(10, false, true, true), "ascii")
+  let portExpr = encode(this.io.readBytesTerm(10, false, true, true), "ASCII")
   this.port = portExpr
 
   ##[
@@ -146,7 +145,7 @@ proc read*(_: typedesc[Rtpdump_PacketT], io: KaitaiStream, root: KaitaiStruct, p
   let rawBodyExpr = this.io.readBytes(int(this.lenBody))
   this.rawBody = rawBodyExpr
   let rawBodyIo = newKaitaiStream(rawBodyExpr)
-  let bodyExpr = RtpPacket.read(rawBodyIo, this.root, this)
+  let bodyExpr = RtpPacket.read(rawBodyIo, nil, nil)
   this.body = bodyExpr
 
 proc fromFile*(_: typedesc[Rtpdump_PacketT], filename: string): Rtpdump_PacketT =

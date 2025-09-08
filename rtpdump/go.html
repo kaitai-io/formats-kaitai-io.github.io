@@ -175,6 +175,11 @@ rtp data from network capture.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="Rtpdump (rtptools) parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="Rtpdump (rtptools) parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -205,7 +210,17 @@ rtp data from network capture.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="Rtpdump (rtptools) parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="Rtpdump (rtptools) parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="Rtpdump (rtptools) parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -253,14 +268,18 @@ rtp data from network capture.</p>
 <span class="w">	</span><span class="nx">Packets</span><span class="w"> </span><span class="p">[]</span><span class="o">*</span><span class="nx">Rtpdump_PacketT</span>
 <span class="w">	</span><span class="nx">_io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
 <span class="w">	</span><span class="nx">_root</span><span class="w"> </span><span class="o">*</span><span class="nx">Rtpdump</span>
-<span class="w">	</span><span class="nx">_parent</span><span class="w"> </span><span class="kd">interface</span><span class="p">{}</span>
+<span class="w">	</span><span class="nx">_parent</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Struct</span>
 <span class="p">}</span>
 <span class="kd">func</span><span class="w"> </span><span class="nx">NewRtpdump</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">Rtpdump</span><span class="w"> </span><span class="p">{</span>
 <span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">Rtpdump</span><span class="p">{</span>
 <span class="w">	</span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Rtpdump</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="kd">interface</span><span class="p">{},</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">Rtpdump</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="nx">Rtpdump</span><span class="p">)</span><span class="w"> </span><span class="nx">IO_</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Rtpdump</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Struct</span><span class="p">,</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">Rtpdump</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">io</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">parent</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">root</span>
@@ -271,7 +290,7 @@ rtp data from network capture.</p>
 <span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">	</span><span class="p">}</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">FileHeader</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp1</span>
-<span class="w">	</span><span class="k">for</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="mi">1</span><span class="p">;;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">for</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="mi">0</span><span class="p">;;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="w"> </span><span class="p">{</span>
 <span class="w">		</span><span class="nx">tmp2</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">EOF</span><span class="p">()</span>
 <span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
@@ -305,6 +324,10 @@ rtp data from network capture.</p>
 <span class="kd">func</span><span class="w"> </span><span class="nx">NewRtpdump_HeaderT</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">Rtpdump_HeaderT</span><span class="w"> </span><span class="p">{</span>
 <span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">Rtpdump_HeaderT</span><span class="p">{</span>
 <span class="w">	</span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="nx">Rtpdump_HeaderT</span><span class="p">)</span><span class="w"> </span><span class="nx">IO_</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span>
 <span class="p">}</span>
 
 <span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Rtpdump_HeaderT</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="o">*</span><span class="nx">Rtpdump</span><span class="p">,</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">Rtpdump</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
@@ -402,6 +425,10 @@ rtp data from network capture.</p>
 <span class="w">	</span><span class="p">}</span>
 <span class="p">}</span>
 
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="nx">Rtpdump_PacketT</span><span class="p">)</span><span class="w"> </span><span class="nx">IO_</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span>
+<span class="p">}</span>
+
 <span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Rtpdump_PacketT</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="o">*</span><span class="nx">Rtpdump</span><span class="p">,</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">Rtpdump</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">io</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">parent</span>
@@ -430,7 +457,7 @@ rtp data from network capture.</p>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Body</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp16</span>
 <span class="w">	</span><span class="nx">_io__raw_Body</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Body</span><span class="p">))</span>
 <span class="w">	</span><span class="nx">tmp17</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewRtpPacket</span><span class="p">()</span>
-<span class="w">	</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp17</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_Body</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="p">)</span>
+<span class="w">	</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp17</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_Body</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="p">)</span>
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">	</span><span class="p">}</span>

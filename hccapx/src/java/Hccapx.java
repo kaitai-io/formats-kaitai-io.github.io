@@ -6,6 +6,7 @@ import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -41,6 +42,12 @@ public class Hccapx extends KaitaiStruct {
             }
         }
     }
+
+    public void _fetchInstances() {
+        for (int i = 0; i < this.records.size(); i++) {
+            this.records.get(((Number) (i)).intValue())._fetchInstances();
+        }
+    }
     public static class HccapxRecord extends KaitaiStruct {
         public static HccapxRecord fromFile(String fileName) throws IOException {
             return new HccapxRecord(new ByteBufferKaitaiStream(fileName));
@@ -62,16 +69,15 @@ public class Hccapx extends KaitaiStruct {
         }
         private void _read() {
             this.magic = this._io.readBytes(4);
-            if (!(Arrays.equals(magic(), new byte[] { 72, 67, 80, 88 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 72, 67, 80, 88 }, magic(), _io(), "/types/hccapx_record/seq/0");
+            if (!(Arrays.equals(this.magic, new byte[] { 72, 67, 80, 88 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 72, 67, 80, 88 }, this.magic, this._io, "/types/hccapx_record/seq/0");
             }
             this.version = this._io.readU4le();
             this.ignoreReplayCounter = this._io.readBitsIntBe(1) != 0;
             this.messagePair = this._io.readBitsIntBe(7);
-            this._io.alignToByte();
             this.lenEssid = this._io.readU1();
             this.essid = this._io.readBytes(lenEssid());
-            this.padding1 = this._io.readBytes((32 - lenEssid()));
+            this.padding1 = this._io.readBytes(32 - lenEssid());
             this.keyver = this._io.readU1();
             this.keymic = this._io.readBytes(16);
             this.macAp = this._io.readBytes(6);
@@ -80,7 +86,10 @@ public class Hccapx extends KaitaiStruct {
             this.nonceStation = this._io.readBytes(32);
             this.lenEapol = this._io.readU2le();
             this.eapol = this._io.readBytes(lenEapol());
-            this.padding2 = this._io.readBytes((256 - lenEapol()));
+            this.padding2 = this._io.readBytes(256 - lenEapol());
+        }
+
+        public void _fetchInstances() {
         }
         private byte[] magic;
         private long version;
@@ -188,10 +197,10 @@ public class Hccapx extends KaitaiStruct {
         public Hccapx _root() { return _root; }
         public Hccapx _parent() { return _parent; }
     }
-    private ArrayList<HccapxRecord> records;
+    private List<HccapxRecord> records;
     private Hccapx _root;
     private KaitaiStruct _parent;
-    public ArrayList<HccapxRecord> records() { return records; }
+    public List<HccapxRecord> records() { return records; }
     public Hccapx _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

@@ -9,15 +9,15 @@
 
 namespace {
     class MachOFat extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \MachOFat $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\MachOFat $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic = $this->_io->readBytes(4);
-            if (!($this->magic() == "\xCA\xFE\xBA\xBE")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\xCA\xFE\xBA\xBE", $this->magic(), $this->_io(), "/seq/0");
+            if (!($this->_m_magic == "\xCA\xFE\xBA\xBE")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\xCA\xFE\xBA\xBE", $this->_m_magic, $this->_io, "/seq/0");
             }
             $this->_m_numFatArch = $this->_io->readU4be();
             $this->_m_fatArchs = [];
@@ -37,7 +37,7 @@ namespace {
 
 namespace MachOFat {
     class FatArch extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \MachOFat $_parent = null, \MachOFat $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\MachOFat $_parent = null, ?\MachOFat $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }

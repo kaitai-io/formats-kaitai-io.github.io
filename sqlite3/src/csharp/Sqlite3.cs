@@ -31,17 +31,17 @@ namespace Kaitai
         }
 
 
-        public enum Versions
-        {
-            Legacy = 1,
-            Wal = 2,
-        }
-
         public enum Encodings
         {
             Utf8 = 1,
             Utf16le = 2,
             Utf16be = 3,
+        }
+
+        public enum Versions
+        {
+            Legacy = 1,
+            Wal = 2,
         }
         public Sqlite3(KaitaiStream p__io, KaitaiStruct p__parent = null, Sqlite3 p__root = null) : base(p__io)
         {
@@ -53,9 +53,9 @@ namespace Kaitai
         private void _read()
         {
             _magic = m_io.ReadBytes(16);
-            if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 83, 81, 76, 105, 116, 101, 32, 102, 111, 114, 109, 97, 116, 32, 51, 0 }) == 0)))
+            if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 83, 81, 76, 105, 116, 101, 32, 102, 111, 114, 109, 97, 116, 32, 51, 0 }) == 0)))
             {
-                throw new ValidationNotEqualError(new byte[] { 83, 81, 76, 105, 116, 101, 32, 102, 111, 114, 109, 97, 116, 32, 51, 0 }, Magic, M_Io, "/seq/0");
+                throw new ValidationNotEqualError(new byte[] { 83, 81, 76, 105, 116, 101, 32, 102, 111, 114, 109, 97, 116, 32, 51, 0 }, _magic, m_io, "/seq/0");
             }
             _lenPageMod = m_io.ReadU2be();
             _writeVersion = ((Versions) m_io.ReadU1());
@@ -80,74 +80,6 @@ namespace Kaitai
             _versionValidFor = m_io.ReadU4be();
             _sqliteVersionNumber = m_io.ReadU4be();
             _rootPage = new BtreePage(m_io, this, m_root);
-        }
-        public partial class Serial : KaitaiStruct
-        {
-            public static Serial FromFile(string fileName)
-            {
-                return new Serial(new KaitaiStream(fileName));
-            }
-
-            public Serial(KaitaiStream p__io, Sqlite3.Serials p__parent = null, Sqlite3 p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_isBlob = false;
-                f_isString = false;
-                f_lenContent = false;
-                _read();
-            }
-            private void _read()
-            {
-                _code = new VlqBase128Be(m_io);
-            }
-            private bool f_isBlob;
-            private bool _isBlob;
-            public bool IsBlob
-            {
-                get
-                {
-                    if (f_isBlob)
-                        return _isBlob;
-                    _isBlob = (bool) ( ((Code.Value >= 12) && (KaitaiStream.Mod(Code.Value, 2) == 0)) );
-                    f_isBlob = true;
-                    return _isBlob;
-                }
-            }
-            private bool f_isString;
-            private bool _isString;
-            public bool IsString
-            {
-                get
-                {
-                    if (f_isString)
-                        return _isString;
-                    _isString = (bool) ( ((Code.Value >= 13) && (KaitaiStream.Mod(Code.Value, 2) == 1)) );
-                    f_isString = true;
-                    return _isString;
-                }
-            }
-            private bool f_lenContent;
-            private int? _lenContent;
-            public int? LenContent
-            {
-                get
-                {
-                    if (f_lenContent)
-                        return _lenContent;
-                    if (Code.Value >= 12) {
-                        _lenContent = (int) (((Code.Value - 12) / 2));
-                    }
-                    f_lenContent = true;
-                    return _lenContent;
-                }
-            }
-            private VlqBase128Be _code;
-            private Sqlite3 m_root;
-            private Sqlite3.Serials m_parent;
-            public VlqBase128Be Code { get { return _code; } }
-            public Sqlite3 M_Root { get { return m_root; } }
-            public Sqlite3.Serials M_Parent { get { return m_parent; } }
         }
         public partial class BtreePage : KaitaiStruct
         {
@@ -201,6 +133,44 @@ namespace Kaitai
         /// <remarks>
         /// Reference: <a href="https://www.sqlite.org/fileformat.html#b_tree_pages">Source</a>
         /// </remarks>
+        public partial class CellIndexInterior : KaitaiStruct
+        {
+            public static CellIndexInterior FromFile(string fileName)
+            {
+                return new CellIndexInterior(new KaitaiStream(fileName));
+            }
+
+            public CellIndexInterior(KaitaiStream p__io, Sqlite3.RefCell p__parent = null, Sqlite3 p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _leftChildPage = m_io.ReadU4be();
+                _lenPayload = new VlqBase128Be(m_io);
+                __raw_payload = m_io.ReadBytes(LenPayload.Value);
+                var io___raw_payload = new KaitaiStream(__raw_payload);
+                _payload = new CellPayload(io___raw_payload, this, m_root);
+            }
+            private uint _leftChildPage;
+            private VlqBase128Be _lenPayload;
+            private CellPayload _payload;
+            private Sqlite3 m_root;
+            private Sqlite3.RefCell m_parent;
+            private byte[] __raw_payload;
+            public uint LeftChildPage { get { return _leftChildPage; } }
+            public VlqBase128Be LenPayload { get { return _lenPayload; } }
+            public CellPayload Payload { get { return _payload; } }
+            public Sqlite3 M_Root { get { return m_root; } }
+            public Sqlite3.RefCell M_Parent { get { return m_parent; } }
+            public byte[] M_RawPayload { get { return __raw_payload; } }
+        }
+
+        /// <remarks>
+        /// Reference: <a href="https://www.sqlite.org/fileformat.html#b_tree_pages">Source</a>
+        /// </remarks>
         public partial class CellIndexLeaf : KaitaiStruct
         {
             public static CellIndexLeaf FromFile(string fileName)
@@ -232,75 +202,6 @@ namespace Kaitai
             public Sqlite3.RefCell M_Parent { get { return m_parent; } }
             public byte[] M_RawPayload { get { return __raw_payload; } }
         }
-        public partial class Serials : KaitaiStruct
-        {
-            public static Serials FromFile(string fileName)
-            {
-                return new Serials(new KaitaiStream(fileName));
-            }
-
-            public Serials(KaitaiStream p__io, Sqlite3.CellPayload p__parent = null, Sqlite3 p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _entries = new List<Serial>();
-                {
-                    var i = 0;
-                    while (!m_io.IsEof) {
-                        _entries.Add(new Serial(m_io, this, m_root));
-                        i++;
-                    }
-                }
-            }
-            private List<Serial> _entries;
-            private Sqlite3 m_root;
-            private Sqlite3.CellPayload m_parent;
-            public List<Serial> Entries { get { return _entries; } }
-            public Sqlite3 M_Root { get { return m_root; } }
-            public Sqlite3.CellPayload M_Parent { get { return m_parent; } }
-        }
-
-        /// <remarks>
-        /// Reference: <a href="https://www.sqlite.org/fileformat.html#b_tree_pages">Source</a>
-        /// </remarks>
-        public partial class CellTableLeaf : KaitaiStruct
-        {
-            public static CellTableLeaf FromFile(string fileName)
-            {
-                return new CellTableLeaf(new KaitaiStream(fileName));
-            }
-
-            public CellTableLeaf(KaitaiStream p__io, Sqlite3.RefCell p__parent = null, Sqlite3 p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _lenPayload = new VlqBase128Be(m_io);
-                _rowId = new VlqBase128Be(m_io);
-                __raw_payload = m_io.ReadBytes(LenPayload.Value);
-                var io___raw_payload = new KaitaiStream(__raw_payload);
-                _payload = new CellPayload(io___raw_payload, this, m_root);
-            }
-            private VlqBase128Be _lenPayload;
-            private VlqBase128Be _rowId;
-            private CellPayload _payload;
-            private Sqlite3 m_root;
-            private Sqlite3.RefCell m_parent;
-            private byte[] __raw_payload;
-            public VlqBase128Be LenPayload { get { return _lenPayload; } }
-            public VlqBase128Be RowId { get { return _rowId; } }
-            public CellPayload Payload { get { return _payload; } }
-            public Sqlite3 M_Root { get { return m_root; } }
-            public Sqlite3.RefCell M_Parent { get { return m_parent; } }
-            public byte[] M_RawPayload { get { return __raw_payload; } }
-        }
 
         /// <remarks>
         /// Reference: <a href="https://sqlite.org/fileformat2.html#record_format">Source</a>
@@ -321,7 +222,7 @@ namespace Kaitai
             private void _read()
             {
                 _lenHeaderAndLen = new VlqBase128Be(m_io);
-                __raw_columnSerials = m_io.ReadBytes((LenHeaderAndLen.Value - 1));
+                __raw_columnSerials = m_io.ReadBytes(LenHeaderAndLen.Value - 1);
                 var io___raw_columnSerials = new KaitaiStream(__raw_columnSerials);
                 _columnSerials = new Serials(io___raw_columnSerials, this, m_root);
                 _columnContents = new List<ColumnContent>();
@@ -378,14 +279,14 @@ namespace Kaitai
         /// <remarks>
         /// Reference: <a href="https://www.sqlite.org/fileformat.html#b_tree_pages">Source</a>
         /// </remarks>
-        public partial class CellIndexInterior : KaitaiStruct
+        public partial class CellTableLeaf : KaitaiStruct
         {
-            public static CellIndexInterior FromFile(string fileName)
+            public static CellTableLeaf FromFile(string fileName)
             {
-                return new CellIndexInterior(new KaitaiStream(fileName));
+                return new CellTableLeaf(new KaitaiStream(fileName));
             }
 
-            public CellIndexInterior(KaitaiStream p__io, Sqlite3.RefCell p__parent = null, Sqlite3 p__root = null) : base(p__io)
+            public CellTableLeaf(KaitaiStream p__io, Sqlite3.RefCell p__parent = null, Sqlite3 p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -393,20 +294,20 @@ namespace Kaitai
             }
             private void _read()
             {
-                _leftChildPage = m_io.ReadU4be();
                 _lenPayload = new VlqBase128Be(m_io);
+                _rowId = new VlqBase128Be(m_io);
                 __raw_payload = m_io.ReadBytes(LenPayload.Value);
                 var io___raw_payload = new KaitaiStream(__raw_payload);
                 _payload = new CellPayload(io___raw_payload, this, m_root);
             }
-            private uint _leftChildPage;
             private VlqBase128Be _lenPayload;
+            private VlqBase128Be _rowId;
             private CellPayload _payload;
             private Sqlite3 m_root;
             private Sqlite3.RefCell m_parent;
             private byte[] __raw_payload;
-            public uint LeftChildPage { get { return _leftChildPage; } }
             public VlqBase128Be LenPayload { get { return _lenPayload; } }
+            public VlqBase128Be RowId { get { return _rowId; } }
             public CellPayload Payload { get { return _payload; } }
             public Sqlite3 M_Root { get { return m_root; } }
             public Sqlite3.RefCell M_Parent { get { return m_parent; } }
@@ -425,28 +326,28 @@ namespace Kaitai
             {
                 if ( ((SerialType.Code.Value >= 1) && (SerialType.Code.Value <= 6)) ) {
                     switch (SerialType.Code.Value) {
-                    case 4: {
-                        _asInt = m_io.ReadU4be();
-                        break;
-                    }
-                    case 6: {
-                        _asInt = m_io.ReadU8be();
-                        break;
-                    }
                     case 1: {
                         _asInt = m_io.ReadU1();
+                        break;
+                    }
+                    case 2: {
+                        _asInt = m_io.ReadU2be();
                         break;
                     }
                     case 3: {
                         _asInt = m_io.ReadBitsIntBe(24);
                         break;
                     }
+                    case 4: {
+                        _asInt = m_io.ReadU4be();
+                        break;
+                    }
                     case 5: {
                         _asInt = m_io.ReadBitsIntBe(48);
                         break;
                     }
-                    case 2: {
-                        _asInt = m_io.ReadU2be();
+                    case 6: {
+                        _asInt = m_io.ReadU8be();
                         break;
                     }
                     }
@@ -500,28 +401,28 @@ namespace Kaitai
                 {
                     if (f_body)
                         return _body;
+                    f_body = true;
                     long _pos = m_io.Pos;
                     m_io.Seek(OfsBody);
                     switch (M_Parent.PageType) {
-                    case 13: {
-                        _body = new CellTableLeaf(m_io, this, m_root);
-                        break;
-                    }
-                    case 5: {
-                        _body = new CellTableInterior(m_io, this, m_root);
-                        break;
-                    }
                     case 10: {
                         _body = new CellIndexLeaf(m_io, this, m_root);
+                        break;
+                    }
+                    case 13: {
+                        _body = new CellTableLeaf(m_io, this, m_root);
                         break;
                     }
                     case 2: {
                         _body = new CellIndexInterior(m_io, this, m_root);
                         break;
                     }
+                    case 5: {
+                        _body = new CellTableInterior(m_io, this, m_root);
+                        break;
+                    }
                     }
                     m_io.Seek(_pos);
-                    f_body = true;
                     return _body;
                 }
             }
@@ -532,6 +433,105 @@ namespace Kaitai
             public Sqlite3 M_Root { get { return m_root; } }
             public Sqlite3.BtreePage M_Parent { get { return m_parent; } }
         }
+        public partial class Serial : KaitaiStruct
+        {
+            public static Serial FromFile(string fileName)
+            {
+                return new Serial(new KaitaiStream(fileName));
+            }
+
+            public Serial(KaitaiStream p__io, Sqlite3.Serials p__parent = null, Sqlite3 p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_isBlob = false;
+                f_isString = false;
+                f_lenContent = false;
+                _read();
+            }
+            private void _read()
+            {
+                _code = new VlqBase128Be(m_io);
+            }
+            private bool f_isBlob;
+            private bool _isBlob;
+            public bool IsBlob
+            {
+                get
+                {
+                    if (f_isBlob)
+                        return _isBlob;
+                    f_isBlob = true;
+                    _isBlob = (bool) ( ((Code.Value >= 12) && (KaitaiStream.Mod(Code.Value, 2) == 0)) );
+                    return _isBlob;
+                }
+            }
+            private bool f_isString;
+            private bool _isString;
+            public bool IsString
+            {
+                get
+                {
+                    if (f_isString)
+                        return _isString;
+                    f_isString = true;
+                    _isString = (bool) ( ((Code.Value >= 13) && (KaitaiStream.Mod(Code.Value, 2) == 1)) );
+                    return _isString;
+                }
+            }
+            private bool f_lenContent;
+            private int? _lenContent;
+            public int? LenContent
+            {
+                get
+                {
+                    if (f_lenContent)
+                        return _lenContent;
+                    f_lenContent = true;
+                    if (Code.Value >= 12) {
+                        _lenContent = (int) ((Code.Value - 12) / 2);
+                    }
+                    return _lenContent;
+                }
+            }
+            private VlqBase128Be _code;
+            private Sqlite3 m_root;
+            private Sqlite3.Serials m_parent;
+            public VlqBase128Be Code { get { return _code; } }
+            public Sqlite3 M_Root { get { return m_root; } }
+            public Sqlite3.Serials M_Parent { get { return m_parent; } }
+        }
+        public partial class Serials : KaitaiStruct
+        {
+            public static Serials FromFile(string fileName)
+            {
+                return new Serials(new KaitaiStream(fileName));
+            }
+
+            public Serials(KaitaiStream p__io, Sqlite3.CellPayload p__parent = null, Sqlite3 p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _entries = new List<Serial>();
+                {
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _entries.Add(new Serial(m_io, this, m_root));
+                        i++;
+                    }
+                }
+            }
+            private List<Serial> _entries;
+            private Sqlite3 m_root;
+            private Sqlite3.CellPayload m_parent;
+            public List<Serial> Entries { get { return _entries; } }
+            public Sqlite3 M_Root { get { return m_root; } }
+            public Sqlite3.CellPayload M_Parent { get { return m_parent; } }
+        }
         private bool f_lenPage;
         private int _lenPage;
         public int LenPage
@@ -540,8 +540,8 @@ namespace Kaitai
             {
                 if (f_lenPage)
                     return _lenPage;
-                _lenPage = (int) ((LenPageMod == 1 ? 65536 : LenPageMod));
                 f_lenPage = true;
+                _lenPage = (int) ((LenPageMod == 1 ? 65536 : LenPageMod));
                 return _lenPage;
             }
         }

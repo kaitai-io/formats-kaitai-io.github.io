@@ -16,15 +16,15 @@
 
 namespace {
     class CreativeVoiceFile extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \CreativeVoiceFile $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\CreativeVoiceFile $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic = $this->_io->readBytes(20);
-            if (!($this->magic() == "\x43\x72\x65\x61\x74\x69\x76\x65\x20\x56\x6F\x69\x63\x65\x20\x46\x69\x6C\x65\x1A")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x43\x72\x65\x61\x74\x69\x76\x65\x20\x56\x6F\x69\x63\x65\x20\x46\x69\x6C\x65\x1A", $this->magic(), $this->_io(), "/seq/0");
+            if (!($this->_m_magic == "\x43\x72\x65\x61\x74\x69\x76\x65\x20\x56\x6F\x69\x63\x65\x20\x46\x69\x6C\x65\x1A")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x43\x72\x65\x61\x74\x69\x76\x65\x20\x56\x6F\x69\x63\x65\x20\x46\x69\x6C\x65\x1A", $this->_m_magic, $this->_io, "/seq/0");
             }
             $this->_m_headerSize = $this->_io->readU2le();
             $this->_m_version = $this->_io->readU2le();
@@ -62,8 +62,144 @@ namespace {
 }
 
 namespace CreativeVoiceFile {
+    class Block extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\CreativeVoiceFile $_parent = null, ?\CreativeVoiceFile $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_blockType = $this->_io->readU1();
+            if ($this->blockType() != \CreativeVoiceFile\BlockTypes::TERMINATOR) {
+                $this->_m_bodySize1 = $this->_io->readU2le();
+            }
+            if ($this->blockType() != \CreativeVoiceFile\BlockTypes::TERMINATOR) {
+                $this->_m_bodySize2 = $this->_io->readU1();
+            }
+            if ($this->blockType() != \CreativeVoiceFile\BlockTypes::TERMINATOR) {
+                switch ($this->blockType()) {
+                    case \CreativeVoiceFile\BlockTypes::EXTRA_INFO:
+                        $this->_m__raw_body = $this->_io->readBytes($this->bodySize());
+                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                        $this->_m_body = new \CreativeVoiceFile\BlockExtraInfo($_io__raw_body, $this, $this->_root);
+                        break;
+                    case \CreativeVoiceFile\BlockTypes::MARKER:
+                        $this->_m__raw_body = $this->_io->readBytes($this->bodySize());
+                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                        $this->_m_body = new \CreativeVoiceFile\BlockMarker($_io__raw_body, $this, $this->_root);
+                        break;
+                    case \CreativeVoiceFile\BlockTypes::REPEAT_START:
+                        $this->_m__raw_body = $this->_io->readBytes($this->bodySize());
+                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                        $this->_m_body = new \CreativeVoiceFile\BlockRepeatStart($_io__raw_body, $this, $this->_root);
+                        break;
+                    case \CreativeVoiceFile\BlockTypes::SILENCE:
+                        $this->_m__raw_body = $this->_io->readBytes($this->bodySize());
+                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                        $this->_m_body = new \CreativeVoiceFile\BlockSilence($_io__raw_body, $this, $this->_root);
+                        break;
+                    case \CreativeVoiceFile\BlockTypes::SOUND_DATA:
+                        $this->_m__raw_body = $this->_io->readBytes($this->bodySize());
+                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                        $this->_m_body = new \CreativeVoiceFile\BlockSoundData($_io__raw_body, $this, $this->_root);
+                        break;
+                    case \CreativeVoiceFile\BlockTypes::SOUND_DATA_NEW:
+                        $this->_m__raw_body = $this->_io->readBytes($this->bodySize());
+                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                        $this->_m_body = new \CreativeVoiceFile\BlockSoundDataNew($_io__raw_body, $this, $this->_root);
+                        break;
+                    default:
+                        $this->_m_body = $this->_io->readBytes($this->bodySize());
+                        break;
+                }
+            }
+        }
+        protected $_m_bodySize;
+
+        /**
+         * body_size is a 24-bit little-endian integer, so we're
+         * emulating that by adding two standard-sized integers
+         * (body_size1 and body_size2).
+         */
+        public function bodySize() {
+            if ($this->_m_bodySize !== null)
+                return $this->_m_bodySize;
+            if ($this->blockType() != \CreativeVoiceFile\BlockTypes::TERMINATOR) {
+                $this->_m_bodySize = $this->bodySize1() + ($this->bodySize2() << 16);
+            }
+            return $this->_m_bodySize;
+        }
+        protected $_m_blockType;
+        protected $_m_bodySize1;
+        protected $_m_bodySize2;
+        protected $_m_body;
+        protected $_m__raw_body;
+
+        /**
+         * Byte that determines type of block content
+         */
+        public function blockType() { return $this->_m_blockType; }
+        public function bodySize1() { return $this->_m_bodySize1; }
+        public function bodySize2() { return $this->_m_bodySize2; }
+
+        /**
+         * Block body, type depends on block type byte
+         */
+        public function body() { return $this->_m_body; }
+        public function _raw_body() { return $this->_m__raw_body; }
+    }
+}
+
+namespace CreativeVoiceFile {
+    class BlockExtraInfo extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\CreativeVoiceFile\Block $_parent = null, ?\CreativeVoiceFile $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_freqDiv = $this->_io->readU2le();
+            $this->_m_codec = $this->_io->readU1();
+            $this->_m_numChannels1 = $this->_io->readU1();
+        }
+        protected $_m_numChannels;
+
+        /**
+         * Number of channels (1 = mono, 2 = stereo)
+         */
+        public function numChannels() {
+            if ($this->_m_numChannels !== null)
+                return $this->_m_numChannels;
+            $this->_m_numChannels = $this->numChannels1() + 1;
+            return $this->_m_numChannels;
+        }
+        protected $_m_sampleRate;
+        public function sampleRate() {
+            if ($this->_m_sampleRate !== null)
+                return $this->_m_sampleRate;
+            $this->_m_sampleRate = 256000000.0 / ($this->numChannels() * (65536 - $this->freqDiv()));
+            return $this->_m_sampleRate;
+        }
+        protected $_m_freqDiv;
+        protected $_m_codec;
+        protected $_m_numChannels1;
+
+        /**
+         * Frequency divisor
+         */
+        public function freqDiv() { return $this->_m_freqDiv; }
+        public function codec() { return $this->_m_codec; }
+
+        /**
+         * Number of channels minus 1 (0 = mono, 1 = stereo)
+         */
+        public function numChannels1() { return $this->_m_numChannels1; }
+    }
+}
+
+namespace CreativeVoiceFile {
     class BlockMarker extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \CreativeVoiceFile\Block $_parent = null, \CreativeVoiceFile $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\CreativeVoiceFile\Block $_parent = null, ?\CreativeVoiceFile $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -81,8 +217,27 @@ namespace CreativeVoiceFile {
 }
 
 namespace CreativeVoiceFile {
+    class BlockRepeatStart extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\CreativeVoiceFile\Block $_parent = null, ?\CreativeVoiceFile $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_repeatCount1 = $this->_io->readU2le();
+        }
+        protected $_m_repeatCount1;
+
+        /**
+         * Number of repetitions minus 1; 0xffff means infinite repetitions
+         */
+        public function repeatCount1() { return $this->_m_repeatCount1; }
+    }
+}
+
+namespace CreativeVoiceFile {
     class BlockSilence extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \CreativeVoiceFile\Block $_parent = null, \CreativeVoiceFile $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\CreativeVoiceFile\Block $_parent = null, ?\CreativeVoiceFile $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -90,13 +245,6 @@ namespace CreativeVoiceFile {
         private function _read() {
             $this->_m_durationSamples = $this->_io->readU2le();
             $this->_m_freqDiv = $this->_io->readU1();
-        }
-        protected $_m_sampleRate;
-        public function sampleRate() {
-            if ($this->_m_sampleRate !== null)
-                return $this->_m_sampleRate;
-            $this->_m_sampleRate = (1000000.0 / (256 - $this->freqDiv()));
-            return $this->_m_sampleRate;
         }
         protected $_m_durationSec;
 
@@ -106,8 +254,15 @@ namespace CreativeVoiceFile {
         public function durationSec() {
             if ($this->_m_durationSec !== null)
                 return $this->_m_durationSec;
-            $this->_m_durationSec = ($this->durationSamples() / $this->sampleRate());
+            $this->_m_durationSec = $this->durationSamples() / $this->sampleRate();
             return $this->_m_durationSec;
+        }
+        protected $_m_sampleRate;
+        public function sampleRate() {
+            if ($this->_m_sampleRate !== null)
+                return $this->_m_sampleRate;
+            $this->_m_sampleRate = 1000000.0 / (256 - $this->freqDiv());
+            return $this->_m_sampleRate;
         }
         protected $_m_durationSamples;
         protected $_m_freqDiv;
@@ -125,8 +280,40 @@ namespace CreativeVoiceFile {
 }
 
 namespace CreativeVoiceFile {
+    class BlockSoundData extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\CreativeVoiceFile\Block $_parent = null, ?\CreativeVoiceFile $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_freqDiv = $this->_io->readU1();
+            $this->_m_codec = $this->_io->readU1();
+            $this->_m_wave = $this->_io->readBytesFull();
+        }
+        protected $_m_sampleRate;
+        public function sampleRate() {
+            if ($this->_m_sampleRate !== null)
+                return $this->_m_sampleRate;
+            $this->_m_sampleRate = 1000000.0 / (256 - $this->freqDiv());
+            return $this->_m_sampleRate;
+        }
+        protected $_m_freqDiv;
+        protected $_m_codec;
+        protected $_m_wave;
+
+        /**
+         * Frequency divisor, used to determine sample rate
+         */
+        public function freqDiv() { return $this->_m_freqDiv; }
+        public function codec() { return $this->_m_codec; }
+        public function wave() { return $this->_m_wave; }
+    }
+}
+
+namespace CreativeVoiceFile {
     class BlockSoundDataNew extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \CreativeVoiceFile\Block $_parent = null, \CreativeVoiceFile $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\CreativeVoiceFile\Block $_parent = null, ?\CreativeVoiceFile $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -155,193 +342,6 @@ namespace CreativeVoiceFile {
 }
 
 namespace CreativeVoiceFile {
-    class Block extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \CreativeVoiceFile $_parent = null, \CreativeVoiceFile $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_blockType = $this->_io->readU1();
-            if ($this->blockType() != \CreativeVoiceFile\BlockTypes::TERMINATOR) {
-                $this->_m_bodySize1 = $this->_io->readU2le();
-            }
-            if ($this->blockType() != \CreativeVoiceFile\BlockTypes::TERMINATOR) {
-                $this->_m_bodySize2 = $this->_io->readU1();
-            }
-            if ($this->blockType() != \CreativeVoiceFile\BlockTypes::TERMINATOR) {
-                switch ($this->blockType()) {
-                    case \CreativeVoiceFile\BlockTypes::SOUND_DATA_NEW:
-                        $this->_m__raw_body = $this->_io->readBytes($this->bodySize());
-                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                        $this->_m_body = new \CreativeVoiceFile\BlockSoundDataNew($_io__raw_body, $this, $this->_root);
-                        break;
-                    case \CreativeVoiceFile\BlockTypes::REPEAT_START:
-                        $this->_m__raw_body = $this->_io->readBytes($this->bodySize());
-                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                        $this->_m_body = new \CreativeVoiceFile\BlockRepeatStart($_io__raw_body, $this, $this->_root);
-                        break;
-                    case \CreativeVoiceFile\BlockTypes::MARKER:
-                        $this->_m__raw_body = $this->_io->readBytes($this->bodySize());
-                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                        $this->_m_body = new \CreativeVoiceFile\BlockMarker($_io__raw_body, $this, $this->_root);
-                        break;
-                    case \CreativeVoiceFile\BlockTypes::SOUND_DATA:
-                        $this->_m__raw_body = $this->_io->readBytes($this->bodySize());
-                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                        $this->_m_body = new \CreativeVoiceFile\BlockSoundData($_io__raw_body, $this, $this->_root);
-                        break;
-                    case \CreativeVoiceFile\BlockTypes::EXTRA_INFO:
-                        $this->_m__raw_body = $this->_io->readBytes($this->bodySize());
-                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                        $this->_m_body = new \CreativeVoiceFile\BlockExtraInfo($_io__raw_body, $this, $this->_root);
-                        break;
-                    case \CreativeVoiceFile\BlockTypes::SILENCE:
-                        $this->_m__raw_body = $this->_io->readBytes($this->bodySize());
-                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                        $this->_m_body = new \CreativeVoiceFile\BlockSilence($_io__raw_body, $this, $this->_root);
-                        break;
-                    default:
-                        $this->_m_body = $this->_io->readBytes($this->bodySize());
-                        break;
-                }
-            }
-        }
-        protected $_m_bodySize;
-
-        /**
-         * body_size is a 24-bit little-endian integer, so we're
-         * emulating that by adding two standard-sized integers
-         * (body_size1 and body_size2).
-         */
-        public function bodySize() {
-            if ($this->_m_bodySize !== null)
-                return $this->_m_bodySize;
-            if ($this->blockType() != \CreativeVoiceFile\BlockTypes::TERMINATOR) {
-                $this->_m_bodySize = ($this->bodySize1() + ($this->bodySize2() << 16));
-            }
-            return $this->_m_bodySize;
-        }
-        protected $_m_blockType;
-        protected $_m_bodySize1;
-        protected $_m_bodySize2;
-        protected $_m_body;
-        protected $_m__raw_body;
-
-        /**
-         * Byte that determines type of block content
-         */
-        public function blockType() { return $this->_m_blockType; }
-        public function bodySize1() { return $this->_m_bodySize1; }
-        public function bodySize2() { return $this->_m_bodySize2; }
-
-        /**
-         * Block body, type depends on block type byte
-         */
-        public function body() { return $this->_m_body; }
-        public function _raw_body() { return $this->_m__raw_body; }
-    }
-}
-
-namespace CreativeVoiceFile {
-    class BlockRepeatStart extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \CreativeVoiceFile\Block $_parent = null, \CreativeVoiceFile $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_repeatCount1 = $this->_io->readU2le();
-        }
-        protected $_m_repeatCount1;
-
-        /**
-         * Number of repetitions minus 1; 0xffff means infinite repetitions
-         */
-        public function repeatCount1() { return $this->_m_repeatCount1; }
-    }
-}
-
-namespace CreativeVoiceFile {
-    class BlockSoundData extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \CreativeVoiceFile\Block $_parent = null, \CreativeVoiceFile $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_freqDiv = $this->_io->readU1();
-            $this->_m_codec = $this->_io->readU1();
-            $this->_m_wave = $this->_io->readBytesFull();
-        }
-        protected $_m_sampleRate;
-        public function sampleRate() {
-            if ($this->_m_sampleRate !== null)
-                return $this->_m_sampleRate;
-            $this->_m_sampleRate = (1000000.0 / (256 - $this->freqDiv()));
-            return $this->_m_sampleRate;
-        }
-        protected $_m_freqDiv;
-        protected $_m_codec;
-        protected $_m_wave;
-
-        /**
-         * Frequency divisor, used to determine sample rate
-         */
-        public function freqDiv() { return $this->_m_freqDiv; }
-        public function codec() { return $this->_m_codec; }
-        public function wave() { return $this->_m_wave; }
-    }
-}
-
-namespace CreativeVoiceFile {
-    class BlockExtraInfo extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \CreativeVoiceFile\Block $_parent = null, \CreativeVoiceFile $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_freqDiv = $this->_io->readU2le();
-            $this->_m_codec = $this->_io->readU1();
-            $this->_m_numChannels1 = $this->_io->readU1();
-        }
-        protected $_m_numChannels;
-
-        /**
-         * Number of channels (1 = mono, 2 = stereo)
-         */
-        public function numChannels() {
-            if ($this->_m_numChannels !== null)
-                return $this->_m_numChannels;
-            $this->_m_numChannels = ($this->numChannels1() + 1);
-            return $this->_m_numChannels;
-        }
-        protected $_m_sampleRate;
-        public function sampleRate() {
-            if ($this->_m_sampleRate !== null)
-                return $this->_m_sampleRate;
-            $this->_m_sampleRate = (256000000.0 / ($this->numChannels() * (65536 - $this->freqDiv())));
-            return $this->_m_sampleRate;
-        }
-        protected $_m_freqDiv;
-        protected $_m_codec;
-        protected $_m_numChannels1;
-
-        /**
-         * Frequency divisor
-         */
-        public function freqDiv() { return $this->_m_freqDiv; }
-        public function codec() { return $this->_m_codec; }
-
-        /**
-         * Number of channels minus 1 (0 = mono, 1 = stereo)
-         */
-        public function numChannels1() { return $this->_m_numChannels1; }
-    }
-}
-
-namespace CreativeVoiceFile {
     class BlockTypes {
         const TERMINATOR = 0;
         const SOUND_DATA = 1;
@@ -353,6 +353,12 @@ namespace CreativeVoiceFile {
         const REPEAT_END = 7;
         const EXTRA_INFO = 8;
         const SOUND_DATA_NEW = 9;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 7 => true, 8 => true, 9 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
@@ -366,5 +372,11 @@ namespace CreativeVoiceFile {
         const ALAW = 6;
         const ULAW = 7;
         const ADPCM_4_TO_16BIT = 512;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 6 => true, 7 => true, 512 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

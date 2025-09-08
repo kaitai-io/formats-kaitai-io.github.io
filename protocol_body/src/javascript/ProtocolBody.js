@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream', './UdpDatagram', './Ipv4Packet', './IcmpPacket', './Ipv6Packet', './TcpSegment'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./UdpDatagram'), require('./Ipv4Packet'), require('./IcmpPacket'), require('./Ipv6Packet'), require('./TcpSegment'));
+    define(['exports', 'kaitai-struct/KaitaiStream', './Ipv6Packet', './UdpDatagram', './IcmpPacket', './TcpSegment', './Ipv4Packet'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'), require('./Ipv6Packet'), require('./UdpDatagram'), require('./IcmpPacket'), require('./TcpSegment'), require('./Ipv4Packet'));
   } else {
-    root.ProtocolBody = factory(root.KaitaiStream, root.UdpDatagram, root.Ipv4Packet, root.IcmpPacket, root.Ipv6Packet, root.TcpSegment);
+    factory(root.ProtocolBody || (root.ProtocolBody = {}), root.KaitaiStream, root.Ipv6Packet || (root.Ipv6Packet = {}), root.UdpDatagram || (root.UdpDatagram = {}), root.IcmpPacket || (root.IcmpPacket = {}), root.TcpSegment || (root.TcpSegment = {}), root.Ipv4Packet || (root.Ipv4Packet = {}));
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, UdpDatagram, Ipv4Packet, IcmpPacket, Ipv6Packet, TcpSegment) {
+})(typeof self !== 'undefined' ? self : this, function (ProtocolBody_, KaitaiStream, Ipv6Packet_, UdpDatagram_, IcmpPacket_, TcpSegment_, Ipv4Packet_) {
 /**
  * Protocol body represents particular payload on transport level (OSI
  * layer 4).
@@ -328,26 +328,26 @@ var ProtocolBody = (function() {
   }
   ProtocolBody.prototype._read = function() {
     switch (this.protocol) {
-    case ProtocolBody.ProtocolEnum.IPV6_NONXT:
-      this.body = new NoNextHeader(this._io, this, this._root);
-      break;
-    case ProtocolBody.ProtocolEnum.IPV4:
-      this.body = new Ipv4Packet(this._io, this, null);
-      break;
-    case ProtocolBody.ProtocolEnum.UDP:
-      this.body = new UdpDatagram(this._io, this, null);
-      break;
-    case ProtocolBody.ProtocolEnum.ICMP:
-      this.body = new IcmpPacket(this._io, this, null);
-      break;
     case ProtocolBody.ProtocolEnum.HOPOPT:
       this.body = new OptionHopByHop(this._io, this, this._root);
       break;
+    case ProtocolBody.ProtocolEnum.ICMP:
+      this.body = new IcmpPacket_.IcmpPacket(this._io, null, null);
+      break;
+    case ProtocolBody.ProtocolEnum.IPV4:
+      this.body = new Ipv4Packet_.Ipv4Packet(this._io, null, null);
+      break;
     case ProtocolBody.ProtocolEnum.IPV6:
-      this.body = new Ipv6Packet(this._io, this, null);
+      this.body = new Ipv6Packet_.Ipv6Packet(this._io, null, null);
+      break;
+    case ProtocolBody.ProtocolEnum.IPV6_NONXT:
+      this.body = new NoNextHeader(this._io, this, this._root);
       break;
     case ProtocolBody.ProtocolEnum.TCP:
-      this.body = new TcpSegment(this._io, this, null);
+      this.body = new TcpSegment_.TcpSegment(this._io, null, null);
+      break;
+    case ProtocolBody.ProtocolEnum.UDP:
+      this.body = new UdpDatagram_.UdpDatagram(this._io, null, null);
       break;
     }
   }
@@ -360,7 +360,7 @@ var ProtocolBody = (function() {
     function NoNextHeader(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -374,15 +374,15 @@ var ProtocolBody = (function() {
     function OptionHopByHop(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     OptionHopByHop.prototype._read = function() {
       this.nextHeaderType = this._io.readU1();
       this.hdrExtLen = this._io.readU1();
-      this.body = this._io.readBytes((this.hdrExtLen > 0 ? (this.hdrExtLen - 1) : 1));
-      this.nextHeader = new ProtocolBody(this._io, this, null, this.nextHeaderType);
+      this.body = this._io.readBytes((this.hdrExtLen > 0 ? this.hdrExtLen - 1 : 1));
+      this.nextHeader = new ProtocolBody(this._io, this, this._root, this.nextHeaderType);
     }
 
     return OptionHopByHop;
@@ -402,5 +402,5 @@ var ProtocolBody = (function() {
 
   return ProtocolBody;
 })();
-return ProtocolBody;
-}));
+ProtocolBody_.ProtocolBody = ProtocolBody;
+});

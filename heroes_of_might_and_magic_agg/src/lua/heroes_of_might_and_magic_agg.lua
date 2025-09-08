@@ -33,7 +33,7 @@ function HeroesOfMightAndMagicAgg.property.filenames:get()
   end
 
   local _pos = self._io:pos()
-  self._io:seek((self.entries[#self.entries].offset + self.entries[#self.entries].size))
+  self._io:seek(self.entries[#self.entries].offset + self.entries[#self.entries].size)
   self._raw__m_filenames = {}
   self._m_filenames = {}
   for i = 0, self.num_files - 1 do
@@ -51,7 +51,7 @@ HeroesOfMightAndMagicAgg.Entry = class.class(KaitaiStruct)
 function HeroesOfMightAndMagicAgg.Entry:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -81,7 +81,7 @@ HeroesOfMightAndMagicAgg.Filename = class.class(KaitaiStruct)
 function HeroesOfMightAndMagicAgg.Filename:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 

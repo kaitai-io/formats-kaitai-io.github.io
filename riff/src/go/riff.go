@@ -23,11 +23,16 @@ const (
 	Riff_Fourcc__Info Riff_Fourcc = 1330007625
 	Riff_Fourcc__List Riff_Fourcc = 1414744396
 )
+var values_Riff_Fourcc = map[Riff_Fourcc]struct{}{1179011410: {}, 1330007625: {}, 1414744396: {}}
+func (v Riff_Fourcc) isDefined() bool {
+	_, ok := values_Riff_Fourcc[v]
+	return ok
+}
 type Riff struct {
 	Chunk *Riff_Chunk
 	_io *kaitai.Stream
 	_root *Riff
-	_parent interface{}
+	_parent kaitai.Struct
 	_f_chunkId bool
 	chunkId Riff_Fourcc
 	_f_isRiffChunk bool
@@ -42,7 +47,11 @@ func NewRiff() *Riff {
 	}
 }
 
-func (this *Riff) Read(io *kaitai.Stream, parent interface{}, root *Riff) (err error) {
+func (this Riff) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Riff) Read(io *kaitai.Stream, parent kaitai.Struct, root *Riff) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -59,26 +68,27 @@ func (this *Riff) ChunkId() (v Riff_Fourcc, err error) {
 	if (this._f_chunkId) {
 		return this.chunkId, nil
 	}
-	this.chunkId = Riff_Fourcc(Riff_Fourcc(this.Chunk.Id))
 	this._f_chunkId = true
+	this.chunkId = Riff_Fourcc(Riff_Fourcc(this.Chunk.Id))
 	return this.chunkId, nil
 }
 func (this *Riff) IsRiffChunk() (v bool, err error) {
 	if (this._f_isRiffChunk) {
 		return this.isRiffChunk, nil
 	}
+	this._f_isRiffChunk = true
 	tmp2, err := this.ChunkId()
 	if err != nil {
 		return false, err
 	}
 	this.isRiffChunk = bool(tmp2 == Riff_Fourcc__Riff)
-	this._f_isRiffChunk = true
 	return this.isRiffChunk, nil
 }
 func (this *Riff) ParentChunkData() (v *Riff_ParentChunkData, err error) {
 	if (this._f_parentChunkData) {
 		return this.parentChunkData, nil
 	}
+	this._f_parentChunkData = true
 	tmp3, err := this.IsRiffChunk()
 	if err != nil {
 		return nil, err
@@ -103,15 +113,14 @@ func (this *Riff) ParentChunkData() (v *Riff_ParentChunkData, err error) {
 		if err != nil {
 			return nil, err
 		}
-		this._f_parentChunkData = true
 	}
-	this._f_parentChunkData = true
 	return this.parentChunkData, nil
 }
 func (this *Riff) Subchunks() (v []*Riff_ChunkType, err error) {
 	if (this._f_subchunks) {
 		return this.subchunks, nil
 	}
+	this._f_subchunks = true
 	tmp5, err := this.IsRiffChunk()
 	if err != nil {
 		return nil, err
@@ -130,7 +139,7 @@ func (this *Riff) Subchunks() (v []*Riff_ChunkType, err error) {
 		if err != nil {
 			return nil, err
 		}
-		for i := 1;; i++ {
+		for i := 0;; i++ {
 			tmp7, err := this._io.EOF()
 			if err != nil {
 				return nil, err
@@ -149,154 +158,7 @@ func (this *Riff) Subchunks() (v []*Riff_ChunkType, err error) {
 		if err != nil {
 			return nil, err
 		}
-		this._f_subchunks = true
 	}
-	this._f_subchunks = true
-	return this.subchunks, nil
-}
-type Riff_ListChunkData struct {
-	SaveParentChunkDataOfs []byte
-	ParentChunkData *Riff_ParentChunkData
-	_io *kaitai.Stream
-	_root *Riff
-	_parent *Riff_ChunkType
-	_f_parentChunkDataOfs bool
-	parentChunkDataOfs int
-	_f_formType bool
-	formType Riff_Fourcc
-	_f_formTypeReadable bool
-	formTypeReadable string
-	_f_subchunks bool
-	subchunks []interface{}
-}
-func NewRiff_ListChunkData() *Riff_ListChunkData {
-	return &Riff_ListChunkData{
-	}
-}
-
-func (this *Riff_ListChunkData) Read(io *kaitai.Stream, parent *Riff_ChunkType, root *Riff) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp9, err := this.ParentChunkDataOfs()
-	if err != nil {
-		return err
-	}
-	if (tmp9 < 0) {
-		tmp10, err := this._io.ReadBytes(int(0))
-		if err != nil {
-			return err
-		}
-		tmp10 = tmp10
-		this.SaveParentChunkDataOfs = tmp10
-	}
-	tmp11 := NewRiff_ParentChunkData()
-	err = tmp11.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.ParentChunkData = tmp11
-	return err
-}
-func (this *Riff_ListChunkData) ParentChunkDataOfs() (v int, err error) {
-	if (this._f_parentChunkDataOfs) {
-		return this.parentChunkDataOfs, nil
-	}
-	tmp12, err := this._io.Pos()
-	if err != nil {
-		return 0, err
-	}
-	this.parentChunkDataOfs = int(tmp12)
-	this._f_parentChunkDataOfs = true
-	return this.parentChunkDataOfs, nil
-}
-func (this *Riff_ListChunkData) FormType() (v Riff_Fourcc, err error) {
-	if (this._f_formType) {
-		return this.formType, nil
-	}
-	this.formType = Riff_Fourcc(Riff_Fourcc(this.ParentChunkData.FormType))
-	this._f_formType = true
-	return this.formType, nil
-}
-func (this *Riff_ListChunkData) FormTypeReadable() (v string, err error) {
-	if (this._f_formTypeReadable) {
-		return this.formTypeReadable, nil
-	}
-	_pos, err := this._io.Pos()
-	if err != nil {
-		return "", err
-	}
-	tmp13, err := this.ParentChunkDataOfs()
-	if err != nil {
-		return "", err
-	}
-	_, err = this._io.Seek(int64(tmp13), io.SeekStart)
-	if err != nil {
-		return "", err
-	}
-	tmp14, err := this._io.ReadBytes(int(4))
-	if err != nil {
-		return "", err
-	}
-	tmp14 = tmp14
-	this.formTypeReadable = string(tmp14)
-	_, err = this._io.Seek(_pos, io.SeekStart)
-	if err != nil {
-		return "", err
-	}
-	this._f_formTypeReadable = true
-	this._f_formTypeReadable = true
-	return this.formTypeReadable, nil
-}
-func (this *Riff_ListChunkData) Subchunks() (v []interface{}, err error) {
-	if (this._f_subchunks) {
-		return this.subchunks, nil
-	}
-	thisIo := this.ParentChunkData.SubchunksSlot._io
-	_pos, err := thisIo.Pos()
-	if err != nil {
-		return nil, err
-	}
-	_, err = thisIo.Seek(int64(0), io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	for i := 1;; i++ {
-		tmp15, err := this._io.EOF()
-		if err != nil {
-			return nil, err
-		}
-		if tmp15 {
-			break
-		}
-		tmp16, err := this.FormType()
-		if err != nil {
-			return nil, err
-		}
-		switch (tmp16) {
-		case Riff_Fourcc__Info:
-			tmp17 := NewRiff_InfoSubchunk()
-			err = tmp17.Read(thisIo, this, this._root)
-			if err != nil {
-				return nil, err
-			}
-			this.subchunks = append(this.subchunks, tmp17)
-		default:
-			tmp18 := NewRiff_ChunkType()
-			err = tmp18.Read(thisIo, this, this._root)
-			if err != nil {
-				return nil, err
-			}
-			this.subchunks = append(this.subchunks, tmp18)
-		}
-	}
-	_, err = thisIo.Seek(_pos, io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	this._f_subchunks = true
-	this._f_subchunks = true
 	return this.subchunks, nil
 }
 type Riff_Chunk struct {
@@ -306,7 +168,7 @@ type Riff_Chunk struct {
 	PadByte []byte
 	_io *kaitai.Stream
 	_root *Riff
-	_parent interface{}
+	_parent kaitai.Struct
 	_raw_DataSlot []byte
 }
 func NewRiff_Chunk() *Riff_Chunk {
@@ -314,44 +176,48 @@ func NewRiff_Chunk() *Riff_Chunk {
 	}
 }
 
-func (this *Riff_Chunk) Read(io *kaitai.Stream, parent interface{}, root *Riff) (err error) {
+func (this Riff_Chunk) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Riff_Chunk) Read(io *kaitai.Stream, parent kaitai.Struct, root *Riff) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp19, err := this._io.ReadU4le()
+	tmp9, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Id = uint32(tmp19)
-	tmp20, err := this._io.ReadU4le()
+	this.Id = uint32(tmp9)
+	tmp10, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Len = uint32(tmp20)
-	tmp21, err := this._io.ReadBytes(int(this.Len))
+	this.Len = uint32(tmp10)
+	tmp11, err := this._io.ReadBytes(int(this.Len))
 	if err != nil {
 		return err
 	}
-	tmp21 = tmp21
-	this._raw_DataSlot = tmp21
+	tmp11 = tmp11
+	this._raw_DataSlot = tmp11
 	_io__raw_DataSlot := kaitai.NewStream(bytes.NewReader(this._raw_DataSlot))
-	tmp22 := NewRiff_Chunk_Slot()
-	err = tmp22.Read(_io__raw_DataSlot, this, this._root)
+	tmp12 := NewRiff_Chunk_Slot()
+	err = tmp12.Read(_io__raw_DataSlot, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.DataSlot = tmp22
-	tmp23 := this.Len % 2
-	if tmp23 < 0 {
-		tmp23 += 2
+	this.DataSlot = tmp12
+	tmp13 := this.Len % 2
+	if tmp13 < 0 {
+		tmp13 += 2
 	}
-	tmp24, err := this._io.ReadBytes(int(tmp23))
+	tmp14, err := this._io.ReadBytes(int(tmp13))
 	if err != nil {
 		return err
 	}
-	tmp24 = tmp24
-	this.PadByte = tmp24
+	tmp14 = tmp14
+	this.PadByte = tmp14
 	return err
 }
 type Riff_Chunk_Slot struct {
@@ -364,6 +230,10 @@ func NewRiff_Chunk_Slot() *Riff_Chunk_Slot {
 	}
 }
 
+func (this Riff_Chunk_Slot) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Riff_Chunk_Slot) Read(io *kaitai.Stream, parent *Riff_Chunk, root *Riff) (err error) {
 	this._io = io
 	this._parent = parent
@@ -371,60 +241,136 @@ func (this *Riff_Chunk_Slot) Read(io *kaitai.Stream, parent *Riff_Chunk, root *R
 
 	return err
 }
-type Riff_ParentChunkData struct {
-	FormType uint32
-	SubchunksSlot *Riff_ParentChunkData_Slot
+type Riff_ChunkType struct {
+	SaveChunkOfs []byte
+	Chunk *Riff_Chunk
 	_io *kaitai.Stream
 	_root *Riff
-	_parent interface{}
-	_raw_SubchunksSlot []byte
+	_parent kaitai.Struct
+	_f_chunkData bool
+	chunkData *Riff_ListChunkData
+	_f_chunkId bool
+	chunkId Riff_Fourcc
+	_f_chunkIdReadable bool
+	chunkIdReadable string
+	_f_chunkOfs bool
+	chunkOfs int
 }
-func NewRiff_ParentChunkData() *Riff_ParentChunkData {
-	return &Riff_ParentChunkData{
+func NewRiff_ChunkType() *Riff_ChunkType {
+	return &Riff_ChunkType{
 	}
 }
 
-func (this *Riff_ParentChunkData) Read(io *kaitai.Stream, parent interface{}, root *Riff) (err error) {
+func (this Riff_ChunkType) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Riff_ChunkType) Read(io *kaitai.Stream, parent kaitai.Struct, root *Riff) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp25, err := this._io.ReadU4le()
+	tmp15, err := this.ChunkOfs()
 	if err != nil {
 		return err
 	}
-	this.FormType = uint32(tmp25)
-	tmp26, err := this._io.ReadBytesFull()
+	if (tmp15 < 0) {
+		tmp16, err := this._io.ReadBytes(int(0))
+		if err != nil {
+			return err
+		}
+		tmp16 = tmp16
+		this.SaveChunkOfs = tmp16
+	}
+	tmp17 := NewRiff_Chunk()
+	err = tmp17.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	tmp26 = tmp26
-	this._raw_SubchunksSlot = tmp26
-	_io__raw_SubchunksSlot := kaitai.NewStream(bytes.NewReader(this._raw_SubchunksSlot))
-	tmp27 := NewRiff_ParentChunkData_Slot()
-	err = tmp27.Read(_io__raw_SubchunksSlot, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.SubchunksSlot = tmp27
+	this.Chunk = tmp17
 	return err
 }
-type Riff_ParentChunkData_Slot struct {
-	_io *kaitai.Stream
-	_root *Riff
-	_parent *Riff_ParentChunkData
-}
-func NewRiff_ParentChunkData_Slot() *Riff_ParentChunkData_Slot {
-	return &Riff_ParentChunkData_Slot{
+func (this *Riff_ChunkType) ChunkData() (v *Riff_ListChunkData, err error) {
+	if (this._f_chunkData) {
+		return this.chunkData, nil
 	}
+	this._f_chunkData = true
+	thisIo := this.Chunk.DataSlot._io
+	_pos, err := thisIo.Pos()
+	if err != nil {
+		return nil, err
+	}
+	_, err = thisIo.Seek(int64(0), io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	tmp18, err := this.ChunkId()
+	if err != nil {
+		return nil, err
+	}
+	switch (tmp18) {
+	case Riff_Fourcc__List:
+		tmp19 := NewRiff_ListChunkData()
+		err = tmp19.Read(thisIo, this, this._root)
+		if err != nil {
+			return nil, err
+		}
+		this.chunkData = tmp19
+	}
+	_, err = thisIo.Seek(_pos, io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	return this.chunkData, nil
 }
-
-func (this *Riff_ParentChunkData_Slot) Read(io *kaitai.Stream, parent *Riff_ParentChunkData, root *Riff) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	return err
+func (this *Riff_ChunkType) ChunkId() (v Riff_Fourcc, err error) {
+	if (this._f_chunkId) {
+		return this.chunkId, nil
+	}
+	this._f_chunkId = true
+	this.chunkId = Riff_Fourcc(Riff_Fourcc(this.Chunk.Id))
+	return this.chunkId, nil
+}
+func (this *Riff_ChunkType) ChunkIdReadable() (v string, err error) {
+	if (this._f_chunkIdReadable) {
+		return this.chunkIdReadable, nil
+	}
+	this._f_chunkIdReadable = true
+	_pos, err := this._io.Pos()
+	if err != nil {
+		return "", err
+	}
+	tmp20, err := this.ChunkOfs()
+	if err != nil {
+		return "", err
+	}
+	_, err = this._io.Seek(int64(tmp20), io.SeekStart)
+	if err != nil {
+		return "", err
+	}
+	tmp21, err := this._io.ReadBytes(int(4))
+	if err != nil {
+		return "", err
+	}
+	tmp21 = tmp21
+	this.chunkIdReadable = string(tmp21)
+	_, err = this._io.Seek(_pos, io.SeekStart)
+	if err != nil {
+		return "", err
+	}
+	return this.chunkIdReadable, nil
+}
+func (this *Riff_ChunkType) ChunkOfs() (v int, err error) {
+	if (this._f_chunkOfs) {
+		return this.chunkOfs, nil
+	}
+	this._f_chunkOfs = true
+	tmp22, err := this._io.Pos()
+	if err != nil {
+		return 0, err
+	}
+	this.chunkOfs = int(tmp22)
+	return this.chunkOfs, nil
 }
 
 /**
@@ -444,18 +390,22 @@ type Riff_InfoSubchunk struct {
 	_parent *Riff_ListChunkData
 	_f_chunkData bool
 	chunkData string
-	_f_isUnregisteredTag bool
-	isUnregisteredTag bool
-	_f_idChars bool
-	idChars []byte
 	_f_chunkIdReadable bool
 	chunkIdReadable string
 	_f_chunkOfs bool
 	chunkOfs int
+	_f_idChars bool
+	idChars []byte
+	_f_isUnregisteredTag bool
+	isUnregisteredTag bool
 }
 func NewRiff_InfoSubchunk() *Riff_InfoSubchunk {
 	return &Riff_InfoSubchunk{
 	}
+}
+
+func (this Riff_InfoSubchunk) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Riff_InfoSubchunk) Read(io *kaitai.Stream, parent *Riff_ListChunkData, root *Riff) (err error) {
@@ -463,30 +413,31 @@ func (this *Riff_InfoSubchunk) Read(io *kaitai.Stream, parent *Riff_ListChunkDat
 	this._parent = parent
 	this._root = root
 
-	tmp28, err := this.ChunkOfs()
+	tmp23, err := this.ChunkOfs()
 	if err != nil {
 		return err
 	}
-	if (tmp28 < 0) {
-		tmp29, err := this._io.ReadBytes(int(0))
+	if (tmp23 < 0) {
+		tmp24, err := this._io.ReadBytes(int(0))
 		if err != nil {
 			return err
 		}
-		tmp29 = tmp29
-		this.SaveChunkOfs = tmp29
+		tmp24 = tmp24
+		this.SaveChunkOfs = tmp24
 	}
-	tmp30 := NewRiff_Chunk()
-	err = tmp30.Read(this._io, this, this._root)
+	tmp25 := NewRiff_Chunk()
+	err = tmp25.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Chunk = tmp30
+	this.Chunk = tmp25
 	return err
 }
 func (this *Riff_InfoSubchunk) ChunkData() (v string, err error) {
 	if (this._f_chunkData) {
 		return this.chunkData, nil
 	}
+	this._f_chunkData = true
 	thisIo := this.Chunk.DataSlot._io
 	_pos, err := thisIo.Pos()
 	if err != nil {
@@ -496,25 +447,76 @@ func (this *Riff_InfoSubchunk) ChunkData() (v string, err error) {
 	if err != nil {
 		return nil, err
 	}
-	tmp31, err := this.IsUnregisteredTag()
+	tmp26, err := this.IsUnregisteredTag()
 	if err != nil {
 		return nil, err
 	}
-	switch (tmp31) {
+	switch (tmp26) {
 	case false:
-		tmp32, err := thisIo.ReadBytesTerm(0, false, true, true)
+		tmp27, err := thisIo.ReadBytesTerm(0, false, true, true)
 		if err != nil {
 			return nil, err
 		}
-		this.chunkData = string(tmp32)
+		this.chunkData = string(tmp27)
 	}
 	_, err = thisIo.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
-	this._f_chunkData = true
-	this._f_chunkData = true
 	return this.chunkData, nil
+}
+func (this *Riff_InfoSubchunk) ChunkIdReadable() (v string, err error) {
+	if (this._f_chunkIdReadable) {
+		return this.chunkIdReadable, nil
+	}
+	this._f_chunkIdReadable = true
+	tmp28, err := this.IdChars()
+	if err != nil {
+		return "", err
+	}
+	this.chunkIdReadable = string(string(tmp28))
+	return this.chunkIdReadable, nil
+}
+func (this *Riff_InfoSubchunk) ChunkOfs() (v int, err error) {
+	if (this._f_chunkOfs) {
+		return this.chunkOfs, nil
+	}
+	this._f_chunkOfs = true
+	tmp29, err := this._io.Pos()
+	if err != nil {
+		return 0, err
+	}
+	this.chunkOfs = int(tmp29)
+	return this.chunkOfs, nil
+}
+func (this *Riff_InfoSubchunk) IdChars() (v []byte, err error) {
+	if (this._f_idChars) {
+		return this.idChars, nil
+	}
+	this._f_idChars = true
+	_pos, err := this._io.Pos()
+	if err != nil {
+		return nil, err
+	}
+	tmp30, err := this.ChunkOfs()
+	if err != nil {
+		return nil, err
+	}
+	_, err = this._io.Seek(int64(tmp30), io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	tmp31, err := this._io.ReadBytes(int(4))
+	if err != nil {
+		return nil, err
+	}
+	tmp31 = tmp31
+	this.idChars = tmp31
+	_, err = this._io.Seek(_pos, io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	return this.idChars, nil
 }
 
 /**
@@ -523,6 +525,11 @@ func (this *Riff_InfoSubchunk) ChunkData() (v string, err error) {
 func (this *Riff_InfoSubchunk) IsUnregisteredTag() (v bool, err error) {
 	if (this._f_isUnregisteredTag) {
 		return this.isUnregisteredTag, nil
+	}
+	this._f_isUnregisteredTag = true
+	tmp32, err := this.IdChars()
+	if err != nil {
+		return false, err
 	}
 	tmp33, err := this.IdChars()
 	if err != nil {
@@ -552,168 +559,113 @@ func (this *Riff_InfoSubchunk) IsUnregisteredTag() (v bool, err error) {
 	if err != nil {
 		return false, err
 	}
-	tmp40, err := this.IdChars()
-	if err != nil {
-		return false, err
-	}
-	this.isUnregisteredTag = bool( (( ((tmp33[0] >= 97) && (tmp34[0] <= 122)) ) || ( ((tmp35[1] >= 97) && (tmp36[1] <= 122)) ) || ( ((tmp37[2] >= 97) && (tmp38[2] <= 122)) ) || ( ((tmp39[3] >= 97) && (tmp40[3] <= 122)) )) )
-	this._f_isUnregisteredTag = true
+	this.isUnregisteredTag = bool( (( ((tmp32[0] >= 97) && (tmp33[0] <= 122)) ) || ( ((tmp34[1] >= 97) && (tmp35[1] <= 122)) ) || ( ((tmp36[2] >= 97) && (tmp37[2] <= 122)) ) || ( ((tmp38[3] >= 97) && (tmp39[3] <= 122)) )) )
 	return this.isUnregisteredTag, nil
 }
-func (this *Riff_InfoSubchunk) IdChars() (v []byte, err error) {
-	if (this._f_idChars) {
-		return this.idChars, nil
-	}
-	_pos, err := this._io.Pos()
-	if err != nil {
-		return nil, err
-	}
-	tmp41, err := this.ChunkOfs()
-	if err != nil {
-		return nil, err
-	}
-	_, err = this._io.Seek(int64(tmp41), io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	tmp42, err := this._io.ReadBytes(int(4))
-	if err != nil {
-		return nil, err
-	}
-	tmp42 = tmp42
-	this.idChars = tmp42
-	_, err = this._io.Seek(_pos, io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	this._f_idChars = true
-	this._f_idChars = true
-	return this.idChars, nil
-}
-func (this *Riff_InfoSubchunk) ChunkIdReadable() (v string, err error) {
-	if (this._f_chunkIdReadable) {
-		return this.chunkIdReadable, nil
-	}
-	tmp43, err := this.IdChars()
-	if err != nil {
-		return "", err
-	}
-	this.chunkIdReadable = string(string(tmp43))
-	this._f_chunkIdReadable = true
-	return this.chunkIdReadable, nil
-}
-func (this *Riff_InfoSubchunk) ChunkOfs() (v int, err error) {
-	if (this._f_chunkOfs) {
-		return this.chunkOfs, nil
-	}
-	tmp44, err := this._io.Pos()
-	if err != nil {
-		return 0, err
-	}
-	this.chunkOfs = int(tmp44)
-	this._f_chunkOfs = true
-	return this.chunkOfs, nil
-}
-type Riff_ChunkType struct {
-	SaveChunkOfs []byte
-	Chunk *Riff_Chunk
+type Riff_ListChunkData struct {
+	SaveParentChunkDataOfs []byte
+	ParentChunkData *Riff_ParentChunkData
 	_io *kaitai.Stream
 	_root *Riff
-	_parent interface{}
-	_f_chunkOfs bool
-	chunkOfs int
-	_f_chunkId bool
-	chunkId Riff_Fourcc
-	_f_chunkIdReadable bool
-	chunkIdReadable string
-	_f_chunkData bool
-	chunkData *Riff_ListChunkData
+	_parent *Riff_ChunkType
+	_f_formType bool
+	formType Riff_Fourcc
+	_f_formTypeReadable bool
+	formTypeReadable string
+	_f_parentChunkDataOfs bool
+	parentChunkDataOfs int
+	_f_subchunks bool
+	subchunks []kaitai.Struct
 }
-func NewRiff_ChunkType() *Riff_ChunkType {
-	return &Riff_ChunkType{
+func NewRiff_ListChunkData() *Riff_ListChunkData {
+	return &Riff_ListChunkData{
 	}
 }
 
-func (this *Riff_ChunkType) Read(io *kaitai.Stream, parent interface{}, root *Riff) (err error) {
+func (this Riff_ListChunkData) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Riff_ListChunkData) Read(io *kaitai.Stream, parent *Riff_ChunkType, root *Riff) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp45, err := this.ChunkOfs()
+	tmp40, err := this.ParentChunkDataOfs()
 	if err != nil {
 		return err
 	}
-	if (tmp45 < 0) {
-		tmp46, err := this._io.ReadBytes(int(0))
+	if (tmp40 < 0) {
+		tmp41, err := this._io.ReadBytes(int(0))
 		if err != nil {
 			return err
 		}
-		tmp46 = tmp46
-		this.SaveChunkOfs = tmp46
+		tmp41 = tmp41
+		this.SaveParentChunkDataOfs = tmp41
 	}
-	tmp47 := NewRiff_Chunk()
-	err = tmp47.Read(this._io, this, this._root)
+	tmp42 := NewRiff_ParentChunkData()
+	err = tmp42.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Chunk = tmp47
+	this.ParentChunkData = tmp42
 	return err
 }
-func (this *Riff_ChunkType) ChunkOfs() (v int, err error) {
-	if (this._f_chunkOfs) {
-		return this.chunkOfs, nil
+func (this *Riff_ListChunkData) FormType() (v Riff_Fourcc, err error) {
+	if (this._f_formType) {
+		return this.formType, nil
 	}
-	tmp48, err := this._io.Pos()
-	if err != nil {
-		return 0, err
-	}
-	this.chunkOfs = int(tmp48)
-	this._f_chunkOfs = true
-	return this.chunkOfs, nil
+	this._f_formType = true
+	this.formType = Riff_Fourcc(Riff_Fourcc(this.ParentChunkData.FormType))
+	return this.formType, nil
 }
-func (this *Riff_ChunkType) ChunkId() (v Riff_Fourcc, err error) {
-	if (this._f_chunkId) {
-		return this.chunkId, nil
+func (this *Riff_ListChunkData) FormTypeReadable() (v string, err error) {
+	if (this._f_formTypeReadable) {
+		return this.formTypeReadable, nil
 	}
-	this.chunkId = Riff_Fourcc(Riff_Fourcc(this.Chunk.Id))
-	this._f_chunkId = true
-	return this.chunkId, nil
-}
-func (this *Riff_ChunkType) ChunkIdReadable() (v string, err error) {
-	if (this._f_chunkIdReadable) {
-		return this.chunkIdReadable, nil
-	}
+	this._f_formTypeReadable = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return "", err
 	}
-	tmp49, err := this.ChunkOfs()
+	tmp43, err := this.ParentChunkDataOfs()
 	if err != nil {
 		return "", err
 	}
-	_, err = this._io.Seek(int64(tmp49), io.SeekStart)
+	_, err = this._io.Seek(int64(tmp43), io.SeekStart)
 	if err != nil {
 		return "", err
 	}
-	tmp50, err := this._io.ReadBytes(int(4))
+	tmp44, err := this._io.ReadBytes(int(4))
 	if err != nil {
 		return "", err
 	}
-	tmp50 = tmp50
-	this.chunkIdReadable = string(tmp50)
+	tmp44 = tmp44
+	this.formTypeReadable = string(tmp44)
 	_, err = this._io.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return "", err
 	}
-	this._f_chunkIdReadable = true
-	this._f_chunkIdReadable = true
-	return this.chunkIdReadable, nil
+	return this.formTypeReadable, nil
 }
-func (this *Riff_ChunkType) ChunkData() (v *Riff_ListChunkData, err error) {
-	if (this._f_chunkData) {
-		return this.chunkData, nil
+func (this *Riff_ListChunkData) ParentChunkDataOfs() (v int, err error) {
+	if (this._f_parentChunkDataOfs) {
+		return this.parentChunkDataOfs, nil
 	}
-	thisIo := this.Chunk.DataSlot._io
+	this._f_parentChunkDataOfs = true
+	tmp45, err := this._io.Pos()
+	if err != nil {
+		return 0, err
+	}
+	this.parentChunkDataOfs = int(tmp45)
+	return this.parentChunkDataOfs, nil
+}
+func (this *Riff_ListChunkData) Subchunks() (v []kaitai.Struct, err error) {
+	if (this._f_subchunks) {
+		return this.subchunks, nil
+	}
+	this._f_subchunks = true
+	thisIo := this.ParentChunkData.SubchunksSlot._io
 	_pos, err := thisIo.Pos()
 	if err != nil {
 		return nil, err
@@ -722,24 +674,101 @@ func (this *Riff_ChunkType) ChunkData() (v *Riff_ListChunkData, err error) {
 	if err != nil {
 		return nil, err
 	}
-	tmp51, err := this.ChunkId()
-	if err != nil {
-		return nil, err
-	}
-	switch (tmp51) {
-	case Riff_Fourcc__List:
-		tmp52 := NewRiff_ListChunkData()
-		err = tmp52.Read(thisIo, this, this._root)
+	for i := 0;; i++ {
+		tmp46, err := this._io.EOF()
 		if err != nil {
 			return nil, err
 		}
-		this.chunkData = tmp52
+		if tmp46 {
+			break
+		}
+		tmp47, err := this.FormType()
+		if err != nil {
+			return nil, err
+		}
+		switch (tmp47) {
+		case Riff_Fourcc__Info:
+			tmp48 := NewRiff_InfoSubchunk()
+			err = tmp48.Read(thisIo, this, this._root)
+			if err != nil {
+				return nil, err
+			}
+			this.subchunks = append(this.subchunks, tmp48)
+		default:
+			tmp49 := NewRiff_ChunkType()
+			err = tmp49.Read(thisIo, this, this._root)
+			if err != nil {
+				return nil, err
+			}
+			this.subchunks = append(this.subchunks, tmp49)
+		}
 	}
 	_, err = thisIo.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
-	this._f_chunkData = true
-	this._f_chunkData = true
-	return this.chunkData, nil
+	return this.subchunks, nil
+}
+type Riff_ParentChunkData struct {
+	FormType uint32
+	SubchunksSlot *Riff_ParentChunkData_Slot
+	_io *kaitai.Stream
+	_root *Riff
+	_parent kaitai.Struct
+	_raw_SubchunksSlot []byte
+}
+func NewRiff_ParentChunkData() *Riff_ParentChunkData {
+	return &Riff_ParentChunkData{
+	}
+}
+
+func (this Riff_ParentChunkData) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Riff_ParentChunkData) Read(io *kaitai.Stream, parent kaitai.Struct, root *Riff) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp50, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.FormType = uint32(tmp50)
+	tmp51, err := this._io.ReadBytesFull()
+	if err != nil {
+		return err
+	}
+	tmp51 = tmp51
+	this._raw_SubchunksSlot = tmp51
+	_io__raw_SubchunksSlot := kaitai.NewStream(bytes.NewReader(this._raw_SubchunksSlot))
+	tmp52 := NewRiff_ParentChunkData_Slot()
+	err = tmp52.Read(_io__raw_SubchunksSlot, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.SubchunksSlot = tmp52
+	return err
+}
+type Riff_ParentChunkData_Slot struct {
+	_io *kaitai.Stream
+	_root *Riff
+	_parent *Riff_ParentChunkData
+}
+func NewRiff_ParentChunkData_Slot() *Riff_ParentChunkData_Slot {
+	return &Riff_ParentChunkData_Slot{
+	}
+}
+
+func (this Riff_ParentChunkData_Slot) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Riff_ParentChunkData_Slot) Read(io *kaitai.Stream, parent *Riff_ParentChunkData, root *Riff) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	return err
 }

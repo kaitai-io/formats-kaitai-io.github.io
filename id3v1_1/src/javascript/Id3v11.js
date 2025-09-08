@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.Id3v11 = factory(root.KaitaiStream);
+    factory(root.Id3v11 || (root.Id3v11 = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Id3v11_, KaitaiStream) {
 /**
  * ID3v1.1 tag is a method to store simple metadata in .mp3 files. The
  * tag is appended to the end of file and spans exactly 128 bytes.
@@ -302,14 +302,14 @@ var Id3v11 = (function() {
     function Id3V11Tag(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     Id3V11Tag.prototype._read = function() {
       this.magic = this._io.readBytes(3);
-      if (!((KaitaiStream.byteArrayCompare(this.magic, [84, 65, 71]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([84, 65, 71], this.magic, this._io, "/types/id3_v1_1_tag/seq/0");
+      if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([84, 65, 71])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([84, 65, 71]), this.magic, this._io, "/types/id3_v1_1_tag/seq/0");
       }
       this.title = this._io.readBytes(30);
       this.artist = this._io.readBytes(30);
@@ -346,7 +346,7 @@ var Id3v11 = (function() {
       if (this._m_id3v1Tag !== undefined)
         return this._m_id3v1Tag;
       var _pos = this._io.pos;
-      this._io.seek((this._io.size - 128));
+      this._io.seek(this._io.size - 128);
       this._m_id3v1Tag = new Id3V11Tag(this._io, this, this._root);
       this._io.seek(_pos);
       return this._m_id3v1Tag;
@@ -355,5 +355,5 @@ var Id3v11 = (function() {
 
   return Id3v11;
 })();
-return Id3v11;
-}));
+Id3v11_.Id3v11 = Id3v11;
+});

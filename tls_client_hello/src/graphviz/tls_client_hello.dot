@@ -13,16 +13,75 @@ digraph {
 			<TR><TD PORT="cipher_suites_pos">...</TD><TD PORT="cipher_suites_size">...</TD><TD>CipherSuites</TD><TD PORT="cipher_suites_type">cipher_suites</TD></TR>
 			<TR><TD PORT="compression_methods_pos">...</TD><TD PORT="compression_methods_size">...</TD><TD>CompressionMethods</TD><TD PORT="compression_methods_type">compression_methods</TD></TR>
 			<TR><TD PORT="extensions_pos">...</TD><TD PORT="extensions_size">...</TD><TD>Extensions</TD><TD PORT="extensions_type">extensions</TD></TR>
+			<TR><TD COLSPAN="4" PORT="extensions__if">if _io.eof? == false</TD></TR>
 		</TABLE>>];
-		subgraph cluster__server_name {
-			label="TlsClientHello::ServerName";
+		subgraph cluster__alpn {
+			label="TlsClientHello::Alpn";
 			graph[style=dotted];
 
-			server_name__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			alpn__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="name_type_pos">0</TD><TD PORT="name_type_size">1</TD><TD>u1</TD><TD PORT="name_type_type">name_type</TD></TR>
-				<TR><TD PORT="length_pos">1</TD><TD PORT="length_size">2</TD><TD>u2be</TD><TD PORT="length_type">length</TD></TR>
-				<TR><TD PORT="host_name_pos">3</TD><TD PORT="host_name_size">length</TD><TD></TD><TD PORT="host_name_type">host_name</TD></TR>
+				<TR><TD PORT="ext_len_pos">0</TD><TD PORT="ext_len_size">2</TD><TD>u2be</TD><TD PORT="ext_len_type">ext_len</TD></TR>
+				<TR><TD PORT="alpn_protocols_pos">2</TD><TD PORT="alpn_protocols_size">...</TD><TD>Protocol</TD><TD PORT="alpn_protocols_type">alpn_protocols</TD></TR>
+				<TR><TD COLSPAN="4" PORT="alpn_protocols__repeat">repeat to end of stream</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__cipher_suites {
+			label="TlsClientHello::CipherSuites";
+			graph[style=dotted];
+
+			cipher_suites__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="len_pos">0</TD><TD PORT="len_size">2</TD><TD>u2be</TD><TD PORT="len_type">len</TD></TR>
+				<TR><TD PORT="cipher_suites_pos">2</TD><TD PORT="cipher_suites_size">2</TD><TD>u2be</TD><TD PORT="cipher_suites_type">cipher_suites</TD></TR>
+				<TR><TD COLSPAN="4" PORT="cipher_suites__repeat">repeat len / 2 times</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__compression_methods {
+			label="TlsClientHello::CompressionMethods";
+			graph[style=dotted];
+
+			compression_methods__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="len_pos">0</TD><TD PORT="len_size">1</TD><TD>u1</TD><TD PORT="len_type">len</TD></TR>
+				<TR><TD PORT="compression_methods_pos">1</TD><TD PORT="compression_methods_size">len</TD><TD></TD><TD PORT="compression_methods_type">compression_methods</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__extension {
+			label="TlsClientHello::Extension";
+			graph[style=dotted];
+
+			extension__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="type_pos">0</TD><TD PORT="type_size">2</TD><TD>u2be</TD><TD PORT="type_type">type</TD></TR>
+				<TR><TD PORT="len_pos">2</TD><TD PORT="len_size">2</TD><TD>u2be</TD><TD PORT="len_type">len</TD></TR>
+				<TR><TD PORT="body_pos">4</TD><TD PORT="body_size">...</TD><TD>switch (type)</TD><TD PORT="body_type">body</TD></TR>
+			</TABLE>>];
+extension__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>0</TD><TD PORT="case0">Sni</TD></TR>
+	<TR><TD>16</TD><TD PORT="case1">Alpn</TD></TR>
+</TABLE>>];
+		}
+		subgraph cluster__extensions {
+			label="TlsClientHello::Extensions";
+			graph[style=dotted];
+
+			extensions__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="len_pos">0</TD><TD PORT="len_size">2</TD><TD>u2be</TD><TD PORT="len_type">len</TD></TR>
+				<TR><TD PORT="extensions_pos">2</TD><TD PORT="extensions_size">...</TD><TD>Extension</TD><TD PORT="extensions_type">extensions</TD></TR>
+				<TR><TD COLSPAN="4" PORT="extensions__repeat">repeat to end of stream</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__protocol {
+			label="TlsClientHello::Protocol";
+			graph[style=dotted];
+
+			protocol__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="strlen_pos">0</TD><TD PORT="strlen_size">1</TD><TD>u1</TD><TD PORT="strlen_type">strlen</TD></TR>
+				<TR><TD PORT="name_pos">1</TD><TD PORT="name_size">strlen</TD><TD></TD><TD PORT="name_type">name</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__random {
@@ -33,6 +92,17 @@ digraph {
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="gmt_unix_time_pos">0</TD><TD PORT="gmt_unix_time_size">4</TD><TD>u4be</TD><TD PORT="gmt_unix_time_type">gmt_unix_time</TD></TR>
 				<TR><TD PORT="random_pos">4</TD><TD PORT="random_size">28</TD><TD></TD><TD PORT="random_type">random</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__server_name {
+			label="TlsClientHello::ServerName";
+			graph[style=dotted];
+
+			server_name__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="name_type_pos">0</TD><TD PORT="name_type_size">1</TD><TD>u1</TD><TD PORT="name_type_type">name_type</TD></TR>
+				<TR><TD PORT="length_pos">1</TD><TD PORT="length_size">2</TD><TD>u2be</TD><TD PORT="length_type">length</TD></TR>
+				<TR><TD PORT="host_name_pos">3</TD><TD PORT="host_name_size">length</TD><TD></TD><TD PORT="host_name_type">host_name</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__session_id {
@@ -56,49 +126,6 @@ digraph {
 				<TR><TD COLSPAN="4" PORT="server_names__repeat">repeat to end of stream</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__cipher_suites {
-			label="TlsClientHello::CipherSuites";
-			graph[style=dotted];
-
-			cipher_suites__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="len_pos">0</TD><TD PORT="len_size">2</TD><TD>u2be</TD><TD PORT="len_type">len</TD></TR>
-				<TR><TD PORT="cipher_suites_pos">2</TD><TD PORT="cipher_suites_size">2</TD><TD>u2be</TD><TD PORT="cipher_suites_type">cipher_suites</TD></TR>
-				<TR><TD COLSPAN="4" PORT="cipher_suites__repeat">repeat (len / 2) times</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__compression_methods {
-			label="TlsClientHello::CompressionMethods";
-			graph[style=dotted];
-
-			compression_methods__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="len_pos">0</TD><TD PORT="len_size">1</TD><TD>u1</TD><TD PORT="len_type">len</TD></TR>
-				<TR><TD PORT="compression_methods_pos">1</TD><TD PORT="compression_methods_size">len</TD><TD></TD><TD PORT="compression_methods_type">compression_methods</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__alpn {
-			label="TlsClientHello::Alpn";
-			graph[style=dotted];
-
-			alpn__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="ext_len_pos">0</TD><TD PORT="ext_len_size">2</TD><TD>u2be</TD><TD PORT="ext_len_type">ext_len</TD></TR>
-				<TR><TD PORT="alpn_protocols_pos">2</TD><TD PORT="alpn_protocols_size">...</TD><TD>Protocol</TD><TD PORT="alpn_protocols_type">alpn_protocols</TD></TR>
-				<TR><TD COLSPAN="4" PORT="alpn_protocols__repeat">repeat to end of stream</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__extensions {
-			label="TlsClientHello::Extensions";
-			graph[style=dotted];
-
-			extensions__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="len_pos">0</TD><TD PORT="len_size">2</TD><TD>u2be</TD><TD PORT="len_type">len</TD></TR>
-				<TR><TD PORT="extensions_pos">2</TD><TD PORT="extensions_size">...</TD><TD>Extension</TD><TD PORT="extensions_type">extensions</TD></TR>
-				<TR><TD COLSPAN="4" PORT="extensions__repeat">repeat to end of stream</TD></TR>
-			</TABLE>>];
-		}
 		subgraph cluster__version {
 			label="TlsClientHello::Version";
 			graph[style=dotted];
@@ -109,32 +136,6 @@ digraph {
 				<TR><TD PORT="minor_pos">1</TD><TD PORT="minor_size">1</TD><TD>u1</TD><TD PORT="minor_type">minor</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__protocol {
-			label="TlsClientHello::Protocol";
-			graph[style=dotted];
-
-			protocol__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="strlen_pos">0</TD><TD PORT="strlen_size">1</TD><TD>u1</TD><TD PORT="strlen_type">strlen</TD></TR>
-				<TR><TD PORT="name_pos">1</TD><TD PORT="name_size">strlen</TD><TD></TD><TD PORT="name_type">name</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__extension {
-			label="TlsClientHello::Extension";
-			graph[style=dotted];
-
-			extension__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="type_pos">0</TD><TD PORT="type_size">2</TD><TD>u2be</TD><TD PORT="type_type">type</TD></TR>
-				<TR><TD PORT="len_pos">2</TD><TD PORT="len_size">2</TD><TD>u2be</TD><TD PORT="len_type">len</TD></TR>
-				<TR><TD PORT="body_pos">4</TD><TD PORT="body_size">...</TD><TD>switch (type)</TD><TD PORT="body_type">body</TD></TR>
-			</TABLE>>];
-extension__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
-	<TR><TD>0</TD><TD PORT="case0">Sni</TD></TR>
-	<TR><TD>16</TD><TD PORT="case1">Alpn</TD></TR>
-</TABLE>>];
-		}
 	}
 	tls_client_hello__seq:version_type -> version__seq [style=bold];
 	tls_client_hello__seq:random_type -> random__seq [style=bold];
@@ -142,16 +143,16 @@ extension__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING=
 	tls_client_hello__seq:cipher_suites_type -> cipher_suites__seq [style=bold];
 	tls_client_hello__seq:compression_methods_type -> compression_methods__seq [style=bold];
 	tls_client_hello__seq:extensions_type -> extensions__seq [style=bold];
-	server_name__seq:length_type -> server_name__seq:host_name_size [color="#404040"];
-	session_id__seq:len_type -> session_id__seq:sid_size [color="#404040"];
-	sni__seq:server_names_type -> server_name__seq [style=bold];
+	alpn__seq:alpn_protocols_type -> protocol__seq [style=bold];
 	cipher_suites__seq:len_type -> cipher_suites__seq:cipher_suites__repeat [color="#404040"];
 	compression_methods__seq:len_type -> compression_methods__seq:compression_methods_size [color="#404040"];
-	alpn__seq:alpn_protocols_type -> protocol__seq [style=bold];
-	extensions__seq:extensions_type -> extension__seq [style=bold];
-	protocol__seq:strlen_type -> protocol__seq:name_size [color="#404040"];
 	extension__seq:body_type -> extension__seq_body_switch [style=bold];
 	extension__seq_body_switch:case0 -> sni__seq [style=bold];
 	extension__seq_body_switch:case1 -> alpn__seq [style=bold];
 	extension__seq:type_type -> extension__seq:body_type [color="#404040"];
+	extensions__seq:extensions_type -> extension__seq [style=bold];
+	protocol__seq:strlen_type -> protocol__seq:name_size [color="#404040"];
+	server_name__seq:length_type -> server_name__seq:host_name_size [color="#404040"];
+	session_id__seq:len_type -> session_id__seq:sid_size [color="#404040"];
+	sni__seq:server_names_type -> server_name__seq [style=bold];
 }

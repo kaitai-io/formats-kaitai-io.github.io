@@ -3,12 +3,15 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class swf_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -30,21 +33,28 @@
 class swf_t : public kaitai::kstruct {
 
 public:
-    class rgb_t;
-    class do_abc_body_t;
-    class swf_body_t;
-    class rect_t;
-    class tag_t;
-    class symbol_class_body_t;
     class define_sound_body_t;
+    class do_abc_body_t;
     class record_header_t;
+    class rect_t;
+    class rgb_t;
     class script_limits_body_t;
+    class swf_body_t;
+    class symbol_class_body_t;
+    class tag_t;
 
     enum compressions_t {
         COMPRESSIONS_ZLIB = 67,
         COMPRESSIONS_NONE = 70,
         COMPRESSIONS_LZMA = 90
     };
+    static bool _is_defined_compressions_t(compressions_t v);
+
+private:
+    static const std::set<compressions_t> _values_compressions_t;
+    static std::set<compressions_t> _build_values_compressions_t();
+
+public:
 
     enum tag_type_t {
         TAG_TYPE_END_OF_FILE = 0,
@@ -65,6 +75,13 @@ public:
         TAG_TYPE_DO_ABC = 82,
         TAG_TYPE_DEFINE_SCENE_AND_FRAME_LABEL_DATA = 86
     };
+    static bool _is_defined_tag_type_t(tag_type_t v);
+
+private:
+    static const std::set<tag_type_t> _values_tag_type_t;
+    static std::set<tag_type_t> _build_values_tag_type_t();
+
+public:
 
     swf_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, swf_t* p__root = 0);
 
@@ -75,30 +92,78 @@ private:
 public:
     ~swf_t();
 
-    class rgb_t : public kaitai::kstruct {
+    class define_sound_body_t : public kaitai::kstruct {
 
     public:
 
-        rgb_t(kaitai::kstream* p__io, swf_t::tag_t* p__parent = 0, swf_t* p__root = 0);
+        enum bps_t {
+            BPS_SOUND_8_BIT = 0,
+            BPS_SOUND_16_BIT = 1
+        };
+        static bool _is_defined_bps_t(bps_t v);
+
+    private:
+        static const std::set<bps_t> _values_bps_t;
+        static std::set<bps_t> _build_values_bps_t();
+
+    public:
+
+        enum channels_t {
+            CHANNELS_MONO = 0,
+            CHANNELS_STEREO = 1
+        };
+        static bool _is_defined_channels_t(channels_t v);
+
+    private:
+        static const std::set<channels_t> _values_channels_t;
+        static std::set<channels_t> _build_values_channels_t();
+
+    public:
+
+        enum sampling_rates_t {
+            SAMPLING_RATES_RATE_5_5_KHZ = 0,
+            SAMPLING_RATES_RATE_11_KHZ = 1,
+            SAMPLING_RATES_RATE_22_KHZ = 2,
+            SAMPLING_RATES_RATE_44_KHZ = 3
+        };
+        static bool _is_defined_sampling_rates_t(sampling_rates_t v);
+
+    private:
+        static const std::set<sampling_rates_t> _values_sampling_rates_t;
+        static std::set<sampling_rates_t> _build_values_sampling_rates_t();
+
+    public:
+
+        define_sound_body_t(kaitai::kstream* p__io, swf_t::tag_t* p__parent = 0, swf_t* p__root = 0);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~rgb_t();
+        ~define_sound_body_t();
 
     private:
-        uint8_t m_r;
-        uint8_t m_g;
-        uint8_t m_b;
+        uint16_t m_id;
+        uint64_t m_format;
+        sampling_rates_t m_sampling_rate;
+        bps_t m_bits_per_sample;
+        channels_t m_num_channels;
+        uint32_t m_num_samples;
         swf_t* m__root;
         swf_t::tag_t* m__parent;
 
     public:
-        uint8_t r() const { return m_r; }
-        uint8_t g() const { return m_g; }
-        uint8_t b() const { return m_b; }
+        uint16_t id() const { return m_id; }
+        uint64_t format() const { return m_format; }
+
+        /**
+         * Sound sampling rate, as per enum. Ignored for Nellymoser and Speex codecs.
+         */
+        sampling_rates_t sampling_rate() const { return m_sampling_rate; }
+        bps_t bits_per_sample() const { return m_bits_per_sample; }
+        channels_t num_channels() const { return m_num_channels; }
+        uint32_t num_samples() const { return m_num_samples; }
         swf_t* _root() const { return m__root; }
         swf_t::tag_t* _parent() const { return m__parent; }
     };
@@ -131,42 +196,57 @@ public:
         swf_t::tag_t* _parent() const { return m__parent; }
     };
 
-    class swf_body_t : public kaitai::kstruct {
+    class record_header_t : public kaitai::kstruct {
 
     public:
 
-        swf_body_t(kaitai::kstream* p__io, swf_t* p__parent = 0, swf_t* p__root = 0);
+        record_header_t(kaitai::kstream* p__io, swf_t::tag_t* p__parent = 0, swf_t* p__root = 0);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~swf_body_t();
+        ~record_header_t();
 
     private:
-        rect_t* m_rect;
-        uint16_t m_frame_rate;
-        uint16_t m_frame_count;
-        tag_t* m_file_attributes_tag;
-        bool n_file_attributes_tag;
+        bool f_len;
+        int32_t m_len;
 
     public:
-        bool _is_null_file_attributes_tag() { file_attributes_tag(); return n_file_attributes_tag; };
+        int32_t len();
 
     private:
-        std::vector<tag_t*>* m_tags;
+        bool f_small_len;
+        int32_t m_small_len;
+
+    public:
+        int32_t small_len();
+
+    private:
+        bool f_tag_type;
+        tag_type_t m_tag_type;
+
+    public:
+        tag_type_t tag_type();
+
+    private:
+        uint16_t m_tag_code_and_length;
+        int32_t m_big_len;
+        bool n_big_len;
+
+    public:
+        bool _is_null_big_len() { big_len(); return n_big_len; };
+
+    private:
         swf_t* m__root;
-        swf_t* m__parent;
+        swf_t::tag_t* m__parent;
 
     public:
-        rect_t* rect() const { return m_rect; }
-        uint16_t frame_rate() const { return m_frame_rate; }
-        uint16_t frame_count() const { return m_frame_count; }
-        tag_t* file_attributes_tag() const { return m_file_attributes_tag; }
-        std::vector<tag_t*>* tags() const { return m_tags; }
+        uint16_t tag_code_and_length() const { return m_tag_code_and_length; }
+        int32_t big_len() const { return m_big_len; }
         swf_t* _root() const { return m__root; }
-        swf_t* _parent() const { return m__parent; }
+        swf_t::tag_t* _parent() const { return m__parent; }
     };
 
     class rect_t : public kaitai::kstruct {
@@ -209,40 +289,96 @@ public:
         swf_t::swf_body_t* _parent() const { return m__parent; }
     };
 
-    class tag_t : public kaitai::kstruct {
+    class rgb_t : public kaitai::kstruct {
 
     public:
 
-        tag_t(kaitai::kstream* p__io, swf_t::swf_body_t* p__parent = 0, swf_t* p__root = 0);
+        rgb_t(kaitai::kstream* p__io, swf_t::tag_t* p__parent = 0, swf_t* p__root = 0);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~tag_t();
+        ~rgb_t();
 
     private:
-        record_header_t* m_record_header;
-        kaitai::kstruct* m_tag_body;
-        bool n_tag_body;
-
-    public:
-        bool _is_null_tag_body() { tag_body(); return n_tag_body; };
-
-    private:
+        uint8_t m_r;
+        uint8_t m_g;
+        uint8_t m_b;
         swf_t* m__root;
-        swf_t::swf_body_t* m__parent;
-        std::string m__raw_tag_body;
-        kaitai::kstream* m__io__raw_tag_body;
+        swf_t::tag_t* m__parent;
 
     public:
-        record_header_t* record_header() const { return m_record_header; }
-        kaitai::kstruct* tag_body() const { return m_tag_body; }
+        uint8_t r() const { return m_r; }
+        uint8_t g() const { return m_g; }
+        uint8_t b() const { return m_b; }
         swf_t* _root() const { return m__root; }
-        swf_t::swf_body_t* _parent() const { return m__parent; }
-        std::string _raw_tag_body() const { return m__raw_tag_body; }
-        kaitai::kstream* _io__raw_tag_body() const { return m__io__raw_tag_body; }
+        swf_t::tag_t* _parent() const { return m__parent; }
+    };
+
+    class script_limits_body_t : public kaitai::kstruct {
+
+    public:
+
+        script_limits_body_t(kaitai::kstream* p__io, swf_t::tag_t* p__parent = 0, swf_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~script_limits_body_t();
+
+    private:
+        uint16_t m_max_recursion_depth;
+        uint16_t m_script_timeout_seconds;
+        swf_t* m__root;
+        swf_t::tag_t* m__parent;
+
+    public:
+        uint16_t max_recursion_depth() const { return m_max_recursion_depth; }
+        uint16_t script_timeout_seconds() const { return m_script_timeout_seconds; }
+        swf_t* _root() const { return m__root; }
+        swf_t::tag_t* _parent() const { return m__parent; }
+    };
+
+    class swf_body_t : public kaitai::kstruct {
+
+    public:
+
+        swf_body_t(kaitai::kstream* p__io, swf_t* p__parent = 0, swf_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~swf_body_t();
+
+    private:
+        rect_t* m_rect;
+        uint16_t m_frame_rate;
+        uint16_t m_frame_count;
+        tag_t* m_file_attributes_tag;
+        bool n_file_attributes_tag;
+
+    public:
+        bool _is_null_file_attributes_tag() { file_attributes_tag(); return n_file_attributes_tag; };
+
+    private:
+        std::vector<tag_t*>* m_tags;
+        swf_t* m__root;
+        swf_t* m__parent;
+
+    public:
+        rect_t* rect() const { return m_rect; }
+        uint16_t frame_rate() const { return m_frame_rate; }
+        uint16_t frame_count() const { return m_frame_count; }
+        tag_t* file_attributes_tag() const { return m_file_attributes_tag; }
+        std::vector<tag_t*>* tags() const { return m_tags; }
+        swf_t* _root() const { return m__root; }
+        swf_t* _parent() const { return m__parent; }
     };
 
     class symbol_class_body_t : public kaitai::kstruct {
@@ -298,138 +434,40 @@ public:
         swf_t::tag_t* _parent() const { return m__parent; }
     };
 
-    class define_sound_body_t : public kaitai::kstruct {
+    class tag_t : public kaitai::kstruct {
 
     public:
 
-        enum sampling_rates_t {
-            SAMPLING_RATES_RATE_5_5_KHZ = 0,
-            SAMPLING_RATES_RATE_11_KHZ = 1,
-            SAMPLING_RATES_RATE_22_KHZ = 2,
-            SAMPLING_RATES_RATE_44_KHZ = 3
-        };
-
-        enum bps_t {
-            BPS_SOUND_8_BIT = 0,
-            BPS_SOUND_16_BIT = 1
-        };
-
-        enum channels_t {
-            CHANNELS_MONO = 0,
-            CHANNELS_STEREO = 1
-        };
-
-        define_sound_body_t(kaitai::kstream* p__io, swf_t::tag_t* p__parent = 0, swf_t* p__root = 0);
+        tag_t(kaitai::kstream* p__io, swf_t::swf_body_t* p__parent = 0, swf_t* p__root = 0);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~define_sound_body_t();
+        ~tag_t();
 
     private:
-        uint16_t m_id;
-        uint64_t m_format;
-        sampling_rates_t m_sampling_rate;
-        bps_t m_bits_per_sample;
-        channels_t m_num_channels;
-        uint32_t m_num_samples;
-        swf_t* m__root;
-        swf_t::tag_t* m__parent;
+        record_header_t* m_record_header;
+        kaitai::kstruct* m_tag_body;
+        bool n_tag_body;
 
     public:
-        uint16_t id() const { return m_id; }
-        uint64_t format() const { return m_format; }
-
-        /**
-         * Sound sampling rate, as per enum. Ignored for Nellymoser and Speex codecs.
-         */
-        sampling_rates_t sampling_rate() const { return m_sampling_rate; }
-        bps_t bits_per_sample() const { return m_bits_per_sample; }
-        channels_t num_channels() const { return m_num_channels; }
-        uint32_t num_samples() const { return m_num_samples; }
-        swf_t* _root() const { return m__root; }
-        swf_t::tag_t* _parent() const { return m__parent; }
-    };
-
-    class record_header_t : public kaitai::kstruct {
-
-    public:
-
-        record_header_t(kaitai::kstream* p__io, swf_t::tag_t* p__parent = 0, swf_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~record_header_t();
-
-    private:
-        bool f_tag_type;
-        tag_type_t m_tag_type;
-
-    public:
-        tag_type_t tag_type();
-
-    private:
-        bool f_small_len;
-        int32_t m_small_len;
-
-    public:
-        int32_t small_len();
-
-    private:
-        bool f_len;
-        int32_t m_len;
-
-    public:
-        int32_t len();
-
-    private:
-        uint16_t m_tag_code_and_length;
-        int32_t m_big_len;
-        bool n_big_len;
-
-    public:
-        bool _is_null_big_len() { big_len(); return n_big_len; };
+        bool _is_null_tag_body() { tag_body(); return n_tag_body; };
 
     private:
         swf_t* m__root;
-        swf_t::tag_t* m__parent;
+        swf_t::swf_body_t* m__parent;
+        std::string m__raw_tag_body;
+        kaitai::kstream* m__io__raw_tag_body;
 
     public:
-        uint16_t tag_code_and_length() const { return m_tag_code_and_length; }
-        int32_t big_len() const { return m_big_len; }
+        record_header_t* record_header() const { return m_record_header; }
+        kaitai::kstruct* tag_body() const { return m_tag_body; }
         swf_t* _root() const { return m__root; }
-        swf_t::tag_t* _parent() const { return m__parent; }
-    };
-
-    class script_limits_body_t : public kaitai::kstruct {
-
-    public:
-
-        script_limits_body_t(kaitai::kstream* p__io, swf_t::tag_t* p__parent = 0, swf_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~script_limits_body_t();
-
-    private:
-        uint16_t m_max_recursion_depth;
-        uint16_t m_script_timeout_seconds;
-        swf_t* m__root;
-        swf_t::tag_t* m__parent;
-
-    public:
-        uint16_t max_recursion_depth() const { return m_max_recursion_depth; }
-        uint16_t script_timeout_seconds() const { return m_script_timeout_seconds; }
-        swf_t* _root() const { return m__root; }
-        swf_t::tag_t* _parent() const { return m__parent; }
+        swf_t::swf_body_t* _parent() const { return m__parent; }
+        std::string _raw_tag_body() const { return m__raw_tag_body; }
+        kaitai::kstream* _io__raw_tag_body() const { return m__io__raw_tag_body; }
     };
 
 private:

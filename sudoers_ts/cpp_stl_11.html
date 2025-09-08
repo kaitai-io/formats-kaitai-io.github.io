@@ -168,6 +168,11 @@ such as /run/sudo/ts/$USER or /var/lib/sudo/ts/$USER.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="Sudoers Time Stamp file parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="Sudoers Time Stamp file parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -198,7 +203,17 @@ such as /run/sudo/ts/$USER or /var/lib/sudo/ts/$USER.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="Sudoers Time Stamp file parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="Sudoers Time Stamp file parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="Sudoers Time Stamp file parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -311,13 +326,16 @@ and build them along with your project.</p>
 
 <span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
+<span class="k">class</span><span class="w"> </span><span class="nc">sudoers_ts_t</span><span class="p">;</span>
+
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;kaitai/kaitaistruct.h&quot;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdint.h&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;memory&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;set&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;vector&gt;</span>
 
-<span class="cp">#if KAITAI_STRUCT_VERSION &lt; 9000L</span>
-<span class="cp">#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required&quot;</span>
+<span class="cp">#if KAITAI_STRUCT_VERSION &lt; 11000L</span>
+<span class="cp">#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required&quot;</span>
 <span class="cp">#endif</span>
 
 <span class="cm">/**</span>
@@ -329,11 +347,11 @@ and build them along with your project.</p>
 <span class="k">class</span><span class="w"> </span><span class="nc">sudoers_ts_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
 
 <span class="k">public</span><span class="o">:</span>
-<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">record_v2_t</span><span class="p">;</span>
-<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">ts_flag_t</span><span class="p">;</span>
-<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">record_v1_t</span><span class="p">;</span>
-<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">timespec_t</span><span class="p">;</span>
 <span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">record_t</span><span class="p">;</span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">record_v1_t</span><span class="p">;</span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">record_v2_t</span><span class="p">;</span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">timespec_t</span><span class="p">;</span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">ts_flag_t</span><span class="p">;</span>
 
 <span class="w">    </span><span class="k">enum</span><span class="w"> </span><span class="nc">ts_type_t</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="n">TS_TYPE_GLOBAL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
@@ -341,6 +359,12 @@ and build them along with your project.</p>
 <span class="w">        </span><span class="n">TS_TYPE_PPID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
 <span class="w">        </span><span class="n">TS_TYPE_LOCKEXCL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span>
 <span class="w">    </span><span class="p">};</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">_is_defined_ts_type_t</span><span class="p">(</span><span class="n">ts_type_t</span><span class="w"> </span><span class="n">v</span><span class="p">);</span>
+
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">ts_type_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_values_ts_type_t</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
 
 <span class="w">    </span><span class="n">sudoers_ts_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span>
 
@@ -350,6 +374,128 @@ and build them along with your project.</p>
 
 <span class="k">public</span><span class="o">:</span>
 <span class="w">    </span><span class="o">~</span><span class="n">sudoers_ts_t</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">record_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="n">record_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="o">~</span><span class="n">record_t</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_version</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_len_record</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m_payload</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">n_payload</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">_is_null_payload</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">payload</span><span class="p">();</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">n_payload</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="n">sudoers_ts_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
+<span class="w">        </span><span class="n">sudoers_ts_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m__raw_payload</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m__io__raw_payload</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * version number of the timestamp_entry struct</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">version</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_version</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * size of the record in bytes</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">len_record</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_len_record</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">payload</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_payload</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">sudoers_ts_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">sudoers_ts_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">_raw_payload</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__raw_payload</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">_io__raw_payload</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__io__raw_payload</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">};</span>
+
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">record_v1_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="n">record_v1_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="o">~</span><span class="n">record_v1_t</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="n">ts_type_t</span><span class="w"> </span><span class="n">m_type</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">ts_flag_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m_flags</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_auth_uid</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_sid</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">timespec_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m_ts</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_ttydev</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">n_ttydev</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">_is_null_ttydev</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">ttydev</span><span class="p">();</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">n_ttydev</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_ppid</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">n_ppid</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">_is_null_ppid</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">ppid</span><span class="p">();</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">n_ppid</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="n">sudoers_ts_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
+<span class="w">        </span><span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * record type</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="n">ts_type_t</span><span class="w"> </span><span class="n">type</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_type</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * record flags</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="n">ts_flag_t</span><span class="o">*</span><span class="w"> </span><span class="n">flags</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_flags</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * user ID that was used for authentication</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">auth_uid</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_auth_uid</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * session ID associated with tty/ppid</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">sid</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_sid</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * time stamp, from a monotonic time source</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="n">timespec_t</span><span class="o">*</span><span class="w"> </span><span class="n">ts</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_ts</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * device number of the terminal associated with the session</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">ttydev</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_ttydev</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * ID of the parent process</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">ppid</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_ppid</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">sudoers_ts_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">};</span>
 
 <span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">record_v2_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
 
@@ -433,6 +579,40 @@ and build them along with your project.</p>
 <span class="w">        </span><span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">    </span><span class="p">};</span>
 
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">timespec_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="n">timespec_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="o">~</span><span class="n">timespec_t</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">m_sec</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">m_nsec</span><span class="p">;</span>
+<span class="w">        </span><span class="n">sudoers_ts_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
+<span class="w">        </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * seconds</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">sec</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_sec</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * nanoseconds</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">nsec</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_nsec</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">sudoers_ts_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">};</span>
+
 <span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">ts_flag_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
 
 <span class="w">    </span><span class="k">public</span><span class="o">:</span>
@@ -479,162 +659,6 @@ and build them along with your project.</p>
 <span class="w">        </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">    </span><span class="p">};</span>
 
-<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">record_v1_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
-
-<span class="w">    </span><span class="k">public</span><span class="o">:</span>
-
-<span class="w">        </span><span class="n">record_v1_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span>
-
-<span class="w">    </span><span class="k">private</span><span class="o">:</span>
-<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span>
-<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span>
-
-<span class="w">    </span><span class="k">public</span><span class="o">:</span>
-<span class="w">        </span><span class="o">~</span><span class="n">record_v1_t</span><span class="p">();</span>
-
-<span class="w">    </span><span class="k">private</span><span class="o">:</span>
-<span class="w">        </span><span class="n">ts_type_t</span><span class="w"> </span><span class="n">m_type</span><span class="p">;</span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">ts_flag_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m_flags</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_auth_uid</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_sid</span><span class="p">;</span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">timespec_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m_ts</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_ttydev</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">n_ttydev</span><span class="p">;</span>
-
-<span class="w">    </span><span class="k">public</span><span class="o">:</span>
-<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">_is_null_ttydev</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">ttydev</span><span class="p">();</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">n_ttydev</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
-
-<span class="w">    </span><span class="k">private</span><span class="o">:</span>
-<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_ppid</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">n_ppid</span><span class="p">;</span>
-
-<span class="w">    </span><span class="k">public</span><span class="o">:</span>
-<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">_is_null_ppid</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">ppid</span><span class="p">();</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">n_ppid</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
-
-<span class="w">    </span><span class="k">private</span><span class="o">:</span>
-<span class="w">        </span><span class="n">sudoers_ts_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
-<span class="w">        </span><span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
-
-<span class="w">    </span><span class="k">public</span><span class="o">:</span>
-
-<span class="w">        </span><span class="cm">/**</span>
-<span class="cm">         * record type</span>
-<span class="cm">         */</span>
-<span class="w">        </span><span class="n">ts_type_t</span><span class="w"> </span><span class="n">type</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_type</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-
-<span class="w">        </span><span class="cm">/**</span>
-<span class="cm">         * record flags</span>
-<span class="cm">         */</span>
-<span class="w">        </span><span class="n">ts_flag_t</span><span class="o">*</span><span class="w"> </span><span class="n">flags</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_flags</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
-
-<span class="w">        </span><span class="cm">/**</span>
-<span class="cm">         * user ID that was used for authentication</span>
-<span class="cm">         */</span>
-<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">auth_uid</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_auth_uid</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-
-<span class="w">        </span><span class="cm">/**</span>
-<span class="cm">         * session ID associated with tty/ppid</span>
-<span class="cm">         */</span>
-<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">sid</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_sid</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-
-<span class="w">        </span><span class="cm">/**</span>
-<span class="cm">         * time stamp, from a monotonic time source</span>
-<span class="cm">         */</span>
-<span class="w">        </span><span class="n">timespec_t</span><span class="o">*</span><span class="w"> </span><span class="n">ts</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_ts</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
-
-<span class="w">        </span><span class="cm">/**</span>
-<span class="cm">         * device number of the terminal associated with the session</span>
-<span class="cm">         */</span>
-<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">ttydev</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_ttydev</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-
-<span class="w">        </span><span class="cm">/**</span>
-<span class="cm">         * ID of the parent process</span>
-<span class="cm">         */</span>
-<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">ppid</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_ppid</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="n">sudoers_ts_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">    </span><span class="p">};</span>
-
-<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">timespec_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
-
-<span class="w">    </span><span class="k">public</span><span class="o">:</span>
-
-<span class="w">        </span><span class="n">timespec_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span>
-
-<span class="w">    </span><span class="k">private</span><span class="o">:</span>
-<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span>
-<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span>
-
-<span class="w">    </span><span class="k">public</span><span class="o">:</span>
-<span class="w">        </span><span class="o">~</span><span class="n">timespec_t</span><span class="p">();</span>
-
-<span class="w">    </span><span class="k">private</span><span class="o">:</span>
-<span class="w">        </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">m_sec</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">m_nsec</span><span class="p">;</span>
-<span class="w">        </span><span class="n">sudoers_ts_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
-<span class="w">        </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
-
-<span class="w">    </span><span class="k">public</span><span class="o">:</span>
-
-<span class="w">        </span><span class="cm">/**</span>
-<span class="cm">         * seconds</span>
-<span class="cm">         */</span>
-<span class="w">        </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">sec</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_sec</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-
-<span class="w">        </span><span class="cm">/**</span>
-<span class="cm">         * nanoseconds</span>
-<span class="cm">         */</span>
-<span class="w">        </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">nsec</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_nsec</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="n">sudoers_ts_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">    </span><span class="p">};</span>
-
-<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">record_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
-
-<span class="w">    </span><span class="k">public</span><span class="o">:</span>
-
-<span class="w">        </span><span class="n">record_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span>
-
-<span class="w">    </span><span class="k">private</span><span class="o">:</span>
-<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span>
-<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span>
-
-<span class="w">    </span><span class="k">public</span><span class="o">:</span>
-<span class="w">        </span><span class="o">~</span><span class="n">record_t</span><span class="p">();</span>
-
-<span class="w">    </span><span class="k">private</span><span class="o">:</span>
-<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_version</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_len_record</span><span class="p">;</span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m_payload</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">n_payload</span><span class="p">;</span>
-
-<span class="w">    </span><span class="k">public</span><span class="o">:</span>
-<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">_is_null_payload</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">payload</span><span class="p">();</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">n_payload</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
-
-<span class="w">    </span><span class="k">private</span><span class="o">:</span>
-<span class="w">        </span><span class="n">sudoers_ts_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
-<span class="w">        </span><span class="n">sudoers_ts_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m__raw_payload</span><span class="p">;</span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m__io__raw_payload</span><span class="p">;</span>
-
-<span class="w">    </span><span class="k">public</span><span class="o">:</span>
-
-<span class="w">        </span><span class="cm">/**</span>
-<span class="cm">         * version number of the timestamp_entry struct</span>
-<span class="cm">         */</span>
-<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">version</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_version</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-
-<span class="w">        </span><span class="cm">/**</span>
-<span class="cm">         * size of the record in bytes</span>
-<span class="cm">         */</span>
-<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">len_record</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_len_record</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">payload</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_payload</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="n">sudoers_ts_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="n">sudoers_ts_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">_raw_payload</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__raw_payload</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">_io__raw_payload</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__io__raw_payload</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
-<span class="w">    </span><span class="p">};</span>
-
 <span class="k">private</span><span class="o">:</span>
 <span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">record_t</span><span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="n">m_records</span><span class="p">;</span>
 <span class="w">    </span><span class="n">sudoers_ts_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
@@ -664,10 +688,19 @@ and build them along with your project.</p>
             <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;sudoers_ts.h&quot;</span>
+<span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">ts_type_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">_values_ts_type_t</span><span class="p">{</span>
+<span class="w">    </span><span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">TS_TYPE_GLOBAL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">TS_TYPE_TTY</span><span class="p">,</span>
+<span class="w">    </span><span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">TS_TYPE_PPID</span><span class="p">,</span>
+<span class="w">    </span><span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">TS_TYPE_LOCKEXCL</span><span class="p">,</span>
+<span class="p">};</span>
+<span class="kt">bool</span><span class="w"> </span><span class="nf">sudoers_ts_t::_is_defined_ts_type_t</span><span class="p">(</span><span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">ts_type_t</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">_values_ts_type_t</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">_values_ts_type_t</span><span class="p">.</span><span class="n">end</span><span class="p">();</span>
+<span class="p">}</span>
 
 <span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">sudoers_ts_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
-<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
 <span class="w">    </span><span class="n">m_records</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
 <span class="w">    </span><span class="n">_read</span><span class="p">();</span>
 <span class="p">}</span>
@@ -688,6 +721,85 @@ and build them along with your project.</p>
 <span class="p">}</span>
 
 <span class="kt">void</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="p">}</span>
+
+<span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">::</span><span class="n">record_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__io__raw_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
+<span class="w">    </span><span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_len_record</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+<span class="w">    </span><span class="n">n_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">version</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="mi">1</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">n_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="n">m__raw_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_record</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">4</span><span class="p">);</span>
+<span class="w">        </span><span class="n">m__io__raw_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_payload</span><span class="p">));</span>
+<span class="w">        </span><span class="n">m_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">record_v1_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">record_v1_t</span><span class="p">(</span><span class="n">m__io__raw_payload</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">));</span>
+<span class="w">        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="mi">2</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">n_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="n">m__raw_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_record</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">4</span><span class="p">);</span>
+<span class="w">        </span><span class="n">m__io__raw_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_payload</span><span class="p">));</span>
+<span class="w">        </span><span class="n">m_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">record_v2_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">record_v2_t</span><span class="p">(</span><span class="n">m__io__raw_payload</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">));</span>
+<span class="w">        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">default</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">m__raw_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_record</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">4</span><span class="p">);</span>
+<span class="w">        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">::~</span><span class="n">record_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">n_payload</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">record_v1_t</span><span class="o">::</span><span class="n">record_v1_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_ts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
+<span class="w">    </span><span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">record_v1_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">ts_type_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">());</span>
+<span class="w">    </span><span class="n">m_flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">ts_flag_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">ts_flag_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">));</span>
+<span class="w">    </span><span class="n">m_auth_uid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_sid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_ts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">timespec_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">timespec_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">));</span>
+<span class="w">    </span><span class="n">n_ttydev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">type</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">TS_TYPE_TTY</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">n_ttydev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="n">m_ttydev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">n_ppid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">type</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">TS_TYPE_PPID</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">n_ppid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="n">m_ppid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">record_v1_t</span><span class="o">::~</span><span class="n">record_v1_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">record_v1_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">n_ttydev</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">n_ppid</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 
 <span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">record_v2_t</span><span class="o">::</span><span class="n">record_v2_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
@@ -729,63 +841,6 @@ and build them along with your project.</p>
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">ts_flag_t</span><span class="o">::</span><span class="n">ts_flag_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
-<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
-<span class="w">    </span><span class="n">_read</span><span class="p">();</span>
-<span class="p">}</span>
-
-<span class="kt">void</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">ts_flag_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">m_reserved0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
-<span class="w">    </span><span class="n">m_anyuid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-<span class="w">    </span><span class="n">m_disabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-<span class="w">    </span><span class="n">m_reserved1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
-<span class="p">}</span>
-
-<span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">ts_flag_t</span><span class="o">::~</span><span class="n">ts_flag_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
-<span class="p">}</span>
-
-<span class="kt">void</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">ts_flag_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="p">}</span>
-
-<span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">record_v1_t</span><span class="o">::</span><span class="n">record_v1_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
-<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
-<span class="w">    </span><span class="n">m_flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
-<span class="w">    </span><span class="n">m_ts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
-<span class="w">    </span><span class="n">_read</span><span class="p">();</span>
-<span class="p">}</span>
-
-<span class="kt">void</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">record_v1_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">m_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">ts_type_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">());</span>
-<span class="w">    </span><span class="n">m_flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">ts_flag_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">ts_flag_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">));</span>
-<span class="w">    </span><span class="n">m_auth_uid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
-<span class="w">    </span><span class="n">m_sid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
-<span class="w">    </span><span class="n">m_ts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">timespec_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">timespec_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">));</span>
-<span class="w">    </span><span class="n">n_ttydev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">type</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">TS_TYPE_TTY</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">n_ttydev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
-<span class="w">        </span><span class="n">m_ttydev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="n">n_ppid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">type</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">TS_TYPE_PPID</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">n_ppid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
-<span class="w">        </span><span class="n">m_ppid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-
-<span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">record_v1_t</span><span class="o">::~</span><span class="n">record_v1_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
-<span class="p">}</span>
-
-<span class="kt">void</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">record_v1_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">n_ttydev</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">n_ppid</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-
 <span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">timespec_t</span><span class="o">::</span><span class="n">timespec_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
 <span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
@@ -804,46 +859,24 @@ and build them along with your project.</p>
 <span class="kt">void</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">timespec_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="p">}</span>
 
-<span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">::</span><span class="n">record_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">ts_flag_t</span><span class="o">::</span><span class="n">ts_flag_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
 <span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
-<span class="w">    </span><span class="n">m__io__raw_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
 <span class="w">    </span><span class="n">_read</span><span class="p">();</span>
 <span class="p">}</span>
 
-<span class="kt">void</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">m_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
-<span class="w">    </span><span class="n">m_len_record</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
-<span class="w">    </span><span class="n">n_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
-<span class="w">    </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">version</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="mi">1</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">n_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
-<span class="w">        </span><span class="n">m__raw_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">len_record</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">4</span><span class="p">));</span>
-<span class="w">        </span><span class="n">m__io__raw_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_payload</span><span class="p">));</span>
-<span class="w">        </span><span class="n">m_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">record_v1_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">record_v1_t</span><span class="p">(</span><span class="n">m__io__raw_payload</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">));</span>
-<span class="w">        </span><span class="k">break</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="mi">2</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">n_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
-<span class="w">        </span><span class="n">m__raw_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">len_record</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">4</span><span class="p">));</span>
-<span class="w">        </span><span class="n">m__io__raw_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_payload</span><span class="p">));</span>
-<span class="w">        </span><span class="n">m_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">record_v2_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">record_v2_t</span><span class="p">(</span><span class="n">m__io__raw_payload</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">));</span>
-<span class="w">        </span><span class="k">break</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="k">default</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">m__raw_payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">len_record</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">4</span><span class="p">));</span>
-<span class="w">        </span><span class="k">break</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
+<span class="kt">void</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">ts_flag_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m_reserved0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
+<span class="w">    </span><span class="n">m_anyuid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="w">    </span><span class="n">m_disabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="w">    </span><span class="n">m_reserved1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
 <span class="p">}</span>
 
-<span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">::~</span><span class="n">record_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">ts_flag_t</span><span class="o">::~</span><span class="n">ts_flag_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
 <span class="p">}</span>
 
-<span class="kt">void</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">n_payload</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="p">}</span>
+<span class="kt">void</span><span class="w"> </span><span class="n">sudoers_ts_t</span><span class="o">::</span><span class="n">ts_flag_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="p">}</span>
 </pre></div>
 

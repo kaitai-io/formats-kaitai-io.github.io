@@ -35,65 +35,6 @@ namespace Kaitai
         private void _read()
         {
         }
-        public partial class Root : KaitaiStruct
-        {
-            public static Root FromFile(string fileName)
-            {
-                return new Root(new KaitaiStream(fileName));
-            }
-
-            public Root(KaitaiStream p__io, AndroidSuper p__parent = null, AndroidSuper p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                __raw_primaryGeometry = m_io.ReadBytes(4096);
-                var io___raw_primaryGeometry = new KaitaiStream(__raw_primaryGeometry);
-                _primaryGeometry = new Geometry(io___raw_primaryGeometry, this, m_root);
-                __raw_backupGeometry = m_io.ReadBytes(4096);
-                var io___raw_backupGeometry = new KaitaiStream(__raw_backupGeometry);
-                _backupGeometry = new Geometry(io___raw_backupGeometry, this, m_root);
-                __raw_primaryMetadata = new List<byte[]>();
-                _primaryMetadata = new List<Metadata>();
-                for (var i = 0; i < PrimaryGeometry.MetadataSlotCount; i++)
-                {
-                    __raw_primaryMetadata.Add(m_io.ReadBytes(PrimaryGeometry.MetadataMaxSize));
-                    var io___raw_primaryMetadata = new KaitaiStream(__raw_primaryMetadata[__raw_primaryMetadata.Count - 1]);
-                    _primaryMetadata.Add(new Metadata(io___raw_primaryMetadata, this, m_root));
-                }
-                __raw_backupMetadata = new List<byte[]>();
-                _backupMetadata = new List<Metadata>();
-                for (var i = 0; i < PrimaryGeometry.MetadataSlotCount; i++)
-                {
-                    __raw_backupMetadata.Add(m_io.ReadBytes(PrimaryGeometry.MetadataMaxSize));
-                    var io___raw_backupMetadata = new KaitaiStream(__raw_backupMetadata[__raw_backupMetadata.Count - 1]);
-                    _backupMetadata.Add(new Metadata(io___raw_backupMetadata, this, m_root));
-                }
-            }
-            private Geometry _primaryGeometry;
-            private Geometry _backupGeometry;
-            private List<Metadata> _primaryMetadata;
-            private List<Metadata> _backupMetadata;
-            private AndroidSuper m_root;
-            private AndroidSuper m_parent;
-            private byte[] __raw_primaryGeometry;
-            private byte[] __raw_backupGeometry;
-            private List<byte[]> __raw_primaryMetadata;
-            private List<byte[]> __raw_backupMetadata;
-            public Geometry PrimaryGeometry { get { return _primaryGeometry; } }
-            public Geometry BackupGeometry { get { return _backupGeometry; } }
-            public List<Metadata> PrimaryMetadata { get { return _primaryMetadata; } }
-            public List<Metadata> BackupMetadata { get { return _backupMetadata; } }
-            public AndroidSuper M_Root { get { return m_root; } }
-            public AndroidSuper M_Parent { get { return m_parent; } }
-            public byte[] M_RawPrimaryGeometry { get { return __raw_primaryGeometry; } }
-            public byte[] M_RawBackupGeometry { get { return __raw_backupGeometry; } }
-            public List<byte[]> M_RawPrimaryMetadata { get { return __raw_primaryMetadata; } }
-            public List<byte[]> M_RawBackupMetadata { get { return __raw_backupMetadata; } }
-        }
         public partial class Geometry : KaitaiStruct
         {
             public static Geometry FromFile(string fileName)
@@ -110,9 +51,9 @@ namespace Kaitai
             private void _read()
             {
                 _magic = m_io.ReadBytes(4);
-                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 103, 68, 108, 97 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 103, 68, 108, 97 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 103, 68, 108, 97 }, Magic, M_Io, "/types/geometry/seq/0");
+                    throw new ValidationNotEqualError(new byte[] { 103, 68, 108, 97 }, _magic, m_io, "/types/geometry/seq/0");
                 }
                 _structSize = m_io.ReadU4le();
                 _checksum = m_io.ReadBytes(32);
@@ -166,9 +107,9 @@ namespace Kaitai
             private void _read()
             {
                 _magic = m_io.ReadBytes(4);
-                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 48, 80, 76, 65 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 48, 80, 76, 65 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 48, 80, 76, 65 }, Magic, M_Io, "/types/metadata/seq/0");
+                    throw new ValidationNotEqualError(new byte[] { 48, 80, 76, 65 }, _magic, m_io, "/types/metadata/seq/0");
                 }
                 _majorVersion = m_io.ReadU2le();
                 _minorVersion = m_io.ReadU2le();
@@ -262,86 +203,39 @@ namespace Kaitai
                 public AndroidSuper M_Root { get { return m_root; } }
                 public AndroidSuper.Metadata.TableDescriptor M_Parent { get { return m_parent; } }
             }
-            public partial class TableDescriptor : KaitaiStruct
+            public partial class Group : KaitaiStruct
             {
-                public TableDescriptor(TableKind p_kind, KaitaiStream p__io, AndroidSuper.Metadata p__parent = null, AndroidSuper p__root = null) : base(p__io)
+                public static Group FromFile(string fileName)
+                {
+                    return new Group(new KaitaiStream(fileName));
+                }
+
+                public Group(KaitaiStream p__io, AndroidSuper.Metadata.TableDescriptor p__parent = null, AndroidSuper p__root = null) : base(p__io)
                 {
                     m_parent = p__parent;
                     m_root = p__root;
-                    _kind = p_kind;
-                    f_table = false;
                     _read();
                 }
                 private void _read()
                 {
-                    _offset = m_io.ReadU4le();
-                    _numEntries = m_io.ReadU4le();
-                    _entrySize = m_io.ReadU4le();
+                    _name = System.Text.Encoding.GetEncoding("UTF-8").GetString(KaitaiStream.BytesTerminate(m_io.ReadBytes(36), 0, false));
+                    _flagSlotSuffixed = m_io.ReadBitsIntLe(1) != 0;
+                    _flagsReserved = m_io.ReadBitsIntLe(31);
+                    m_io.AlignToByte();
+                    _maximumSize = m_io.ReadU8le();
                 }
-                private bool f_table;
-                private List<object> _table;
-                public List<object> Table
-                {
-                    get
-                    {
-                        if (f_table)
-                            return _table;
-                        long _pos = m_io.Pos;
-                        m_io.Seek((M_Parent.HeaderSize + Offset));
-                        __raw_table = new List<byte[]>();
-                        _table = new List<object>();
-                        for (var i = 0; i < NumEntries; i++)
-                        {
-                            switch (Kind) {
-                            case AndroidSuper.Metadata.TableKind.Partitions: {
-                                __raw_table.Add(m_io.ReadBytes(EntrySize));
-                                var io___raw_table = new KaitaiStream(__raw_table[__raw_table.Count - 1]);
-                                _table.Add(new Partition(io___raw_table, this, m_root));
-                                break;
-                            }
-                            case AndroidSuper.Metadata.TableKind.Extents: {
-                                __raw_table.Add(m_io.ReadBytes(EntrySize));
-                                var io___raw_table = new KaitaiStream(__raw_table[__raw_table.Count - 1]);
-                                _table.Add(new Extent(io___raw_table, this, m_root));
-                                break;
-                            }
-                            case AndroidSuper.Metadata.TableKind.Groups: {
-                                __raw_table.Add(m_io.ReadBytes(EntrySize));
-                                var io___raw_table = new KaitaiStream(__raw_table[__raw_table.Count - 1]);
-                                _table.Add(new Group(io___raw_table, this, m_root));
-                                break;
-                            }
-                            case AndroidSuper.Metadata.TableKind.BlockDevices: {
-                                __raw_table.Add(m_io.ReadBytes(EntrySize));
-                                var io___raw_table = new KaitaiStream(__raw_table[__raw_table.Count - 1]);
-                                _table.Add(new BlockDevice(io___raw_table, this, m_root));
-                                break;
-                            }
-                            default: {
-                                _table.Add(m_io.ReadBytes(EntrySize));
-                                break;
-                            }
-                            }
-                        }
-                        m_io.Seek(_pos);
-                        f_table = true;
-                        return _table;
-                    }
-                }
-                private uint _offset;
-                private uint _numEntries;
-                private uint _entrySize;
-                private TableKind _kind;
+                private string _name;
+                private bool _flagSlotSuffixed;
+                private ulong _flagsReserved;
+                private ulong _maximumSize;
                 private AndroidSuper m_root;
-                private AndroidSuper.Metadata m_parent;
-                private List<byte[]> __raw_table;
-                public uint Offset { get { return _offset; } }
-                public uint NumEntries { get { return _numEntries; } }
-                public uint EntrySize { get { return _entrySize; } }
-                public TableKind Kind { get { return _kind; } }
+                private AndroidSuper.Metadata.TableDescriptor m_parent;
+                public string Name { get { return _name; } }
+                public bool FlagSlotSuffixed { get { return _flagSlotSuffixed; } }
+                public ulong FlagsReserved { get { return _flagsReserved; } }
+                public ulong MaximumSize { get { return _maximumSize; } }
                 public AndroidSuper M_Root { get { return m_root; } }
-                public AndroidSuper.Metadata M_Parent { get { return m_parent; } }
-                public List<byte[]> M_RawTable { get { return __raw_table; } }
+                public AndroidSuper.Metadata.TableDescriptor M_Parent { get { return m_parent; } }
             }
             public partial class Partition : KaitaiStruct
             {
@@ -392,39 +286,86 @@ namespace Kaitai
                 public AndroidSuper M_Root { get { return m_root; } }
                 public AndroidSuper.Metadata.TableDescriptor M_Parent { get { return m_parent; } }
             }
-            public partial class Group : KaitaiStruct
+            public partial class TableDescriptor : KaitaiStruct
             {
-                public static Group FromFile(string fileName)
-                {
-                    return new Group(new KaitaiStream(fileName));
-                }
-
-                public Group(KaitaiStream p__io, AndroidSuper.Metadata.TableDescriptor p__parent = null, AndroidSuper p__root = null) : base(p__io)
+                public TableDescriptor(TableKind p_kind, KaitaiStream p__io, AndroidSuper.Metadata p__parent = null, AndroidSuper p__root = null) : base(p__io)
                 {
                     m_parent = p__parent;
                     m_root = p__root;
+                    _kind = p_kind;
+                    f_table = false;
                     _read();
                 }
                 private void _read()
                 {
-                    _name = System.Text.Encoding.GetEncoding("UTF-8").GetString(KaitaiStream.BytesTerminate(m_io.ReadBytes(36), 0, false));
-                    _flagSlotSuffixed = m_io.ReadBitsIntLe(1) != 0;
-                    _flagsReserved = m_io.ReadBitsIntLe(31);
-                    m_io.AlignToByte();
-                    _maximumSize = m_io.ReadU8le();
+                    _offset = m_io.ReadU4le();
+                    _numEntries = m_io.ReadU4le();
+                    _entrySize = m_io.ReadU4le();
                 }
-                private string _name;
-                private bool _flagSlotSuffixed;
-                private ulong _flagsReserved;
-                private ulong _maximumSize;
+                private bool f_table;
+                private List<object> _table;
+                public List<object> Table
+                {
+                    get
+                    {
+                        if (f_table)
+                            return _table;
+                        f_table = true;
+                        long _pos = m_io.Pos;
+                        m_io.Seek(M_Parent.HeaderSize + Offset);
+                        __raw_table = new List<byte[]>();
+                        _table = new List<object>();
+                        for (var i = 0; i < NumEntries; i++)
+                        {
+                            switch (Kind) {
+                            case AndroidSuper.Metadata.TableKind.BlockDevices: {
+                                __raw_table.Add(m_io.ReadBytes(EntrySize));
+                                var io___raw_table = new KaitaiStream(__raw_table[__raw_table.Count - 1]);
+                                _table.Add(new BlockDevice(io___raw_table, this, m_root));
+                                break;
+                            }
+                            case AndroidSuper.Metadata.TableKind.Extents: {
+                                __raw_table.Add(m_io.ReadBytes(EntrySize));
+                                var io___raw_table = new KaitaiStream(__raw_table[__raw_table.Count - 1]);
+                                _table.Add(new Extent(io___raw_table, this, m_root));
+                                break;
+                            }
+                            case AndroidSuper.Metadata.TableKind.Groups: {
+                                __raw_table.Add(m_io.ReadBytes(EntrySize));
+                                var io___raw_table = new KaitaiStream(__raw_table[__raw_table.Count - 1]);
+                                _table.Add(new Group(io___raw_table, this, m_root));
+                                break;
+                            }
+                            case AndroidSuper.Metadata.TableKind.Partitions: {
+                                __raw_table.Add(m_io.ReadBytes(EntrySize));
+                                var io___raw_table = new KaitaiStream(__raw_table[__raw_table.Count - 1]);
+                                _table.Add(new Partition(io___raw_table, this, m_root));
+                                break;
+                            }
+                            default: {
+                                _table.Add(m_io.ReadBytes(EntrySize));
+                                break;
+                            }
+                            }
+                        }
+                        m_io.Seek(_pos);
+                        return _table;
+                    }
+                }
+                private uint _offset;
+                private uint _numEntries;
+                private uint _entrySize;
+                private TableKind _kind;
                 private AndroidSuper m_root;
-                private AndroidSuper.Metadata.TableDescriptor m_parent;
-                public string Name { get { return _name; } }
-                public bool FlagSlotSuffixed { get { return _flagSlotSuffixed; } }
-                public ulong FlagsReserved { get { return _flagsReserved; } }
-                public ulong MaximumSize { get { return _maximumSize; } }
+                private AndroidSuper.Metadata m_parent;
+                private List<byte[]> __raw_table;
+                public uint Offset { get { return _offset; } }
+                public uint NumEntries { get { return _numEntries; } }
+                public uint EntrySize { get { return _entrySize; } }
+                public TableKind Kind { get { return _kind; } }
                 public AndroidSuper M_Root { get { return m_root; } }
-                public AndroidSuper.Metadata.TableDescriptor M_Parent { get { return m_parent; } }
+                public AndroidSuper.Metadata M_Parent { get { return m_parent; } }
+                public List<byte[]> M_RawTable { get { return __raw_table; } }
             }
             private byte[] _magic;
             private ushort _majorVersion;
@@ -462,6 +403,65 @@ namespace Kaitai
             public AndroidSuper M_Root { get { return m_root; } }
             public AndroidSuper.Root M_Parent { get { return m_parent; } }
         }
+        public partial class Root : KaitaiStruct
+        {
+            public static Root FromFile(string fileName)
+            {
+                return new Root(new KaitaiStream(fileName));
+            }
+
+            public Root(KaitaiStream p__io, AndroidSuper p__parent = null, AndroidSuper p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                __raw_primaryGeometry = m_io.ReadBytes(4096);
+                var io___raw_primaryGeometry = new KaitaiStream(__raw_primaryGeometry);
+                _primaryGeometry = new Geometry(io___raw_primaryGeometry, this, m_root);
+                __raw_backupGeometry = m_io.ReadBytes(4096);
+                var io___raw_backupGeometry = new KaitaiStream(__raw_backupGeometry);
+                _backupGeometry = new Geometry(io___raw_backupGeometry, this, m_root);
+                __raw_primaryMetadata = new List<byte[]>();
+                _primaryMetadata = new List<Metadata>();
+                for (var i = 0; i < PrimaryGeometry.MetadataSlotCount; i++)
+                {
+                    __raw_primaryMetadata.Add(m_io.ReadBytes(PrimaryGeometry.MetadataMaxSize));
+                    var io___raw_primaryMetadata = new KaitaiStream(__raw_primaryMetadata[__raw_primaryMetadata.Count - 1]);
+                    _primaryMetadata.Add(new Metadata(io___raw_primaryMetadata, this, m_root));
+                }
+                __raw_backupMetadata = new List<byte[]>();
+                _backupMetadata = new List<Metadata>();
+                for (var i = 0; i < PrimaryGeometry.MetadataSlotCount; i++)
+                {
+                    __raw_backupMetadata.Add(m_io.ReadBytes(PrimaryGeometry.MetadataMaxSize));
+                    var io___raw_backupMetadata = new KaitaiStream(__raw_backupMetadata[__raw_backupMetadata.Count - 1]);
+                    _backupMetadata.Add(new Metadata(io___raw_backupMetadata, this, m_root));
+                }
+            }
+            private Geometry _primaryGeometry;
+            private Geometry _backupGeometry;
+            private List<Metadata> _primaryMetadata;
+            private List<Metadata> _backupMetadata;
+            private AndroidSuper m_root;
+            private AndroidSuper m_parent;
+            private byte[] __raw_primaryGeometry;
+            private byte[] __raw_backupGeometry;
+            private List<byte[]> __raw_primaryMetadata;
+            private List<byte[]> __raw_backupMetadata;
+            public Geometry PrimaryGeometry { get { return _primaryGeometry; } }
+            public Geometry BackupGeometry { get { return _backupGeometry; } }
+            public List<Metadata> PrimaryMetadata { get { return _primaryMetadata; } }
+            public List<Metadata> BackupMetadata { get { return _backupMetadata; } }
+            public AndroidSuper M_Root { get { return m_root; } }
+            public AndroidSuper M_Parent { get { return m_parent; } }
+            public byte[] M_RawPrimaryGeometry { get { return __raw_primaryGeometry; } }
+            public byte[] M_RawBackupGeometry { get { return __raw_backupGeometry; } }
+            public List<byte[]> M_RawPrimaryMetadata { get { return __raw_primaryMetadata; } }
+            public List<byte[]> M_RawBackupMetadata { get { return __raw_backupMetadata; } }
+        }
         private bool f_root;
         private Root _root;
         public Root Root
@@ -470,11 +470,11 @@ namespace Kaitai
             {
                 if (f_root)
                     return _root;
+                f_root = true;
                 long _pos = m_io.Pos;
                 m_io.Seek(4096);
                 _root = new Root(m_io, this, m_root);
                 m_io.Seek(_pos);
-                f_root = true;
                 return _root;
             }
         }

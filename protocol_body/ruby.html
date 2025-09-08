@@ -180,6 +180,11 @@ on that parameter.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="protocol_body parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="protocol_body parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -208,9 +213,19 @@ on that parameter.</p>
                 <a href="python.html" title="protocol_body parsing Python library">Python</a></li>
                 
                 
+                <li>
+                
+                <a href="python-write.html" title="protocol_body parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
                 <li class="active">
                 
                 <a href="ruby.html" title="protocol_body parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="protocol_body parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -285,9 +300,14 @@ on that parameter.</p>
             <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
 <span class="nb">require</span><span class="w"> </span><span class="s1">&#39;kaitai/struct/struct&#39;</span>
+<span class="n">require_relative</span><span class="w"> </span><span class="s1">&#39;ipv6_packet&#39;</span>
+<span class="n">require_relative</span><span class="w"> </span><span class="s1">&#39;udp_datagram&#39;</span>
+<span class="n">require_relative</span><span class="w"> </span><span class="s1">&#39;icmp_packet&#39;</span>
+<span class="n">require_relative</span><span class="w"> </span><span class="s1">&#39;tcp_segment&#39;</span>
+<span class="n">require_relative</span><span class="w"> </span><span class="s1">&#39;ipv4_packet&#39;</span>
 
-<span class="k">unless</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.9&#39;</span><span class="p">)</span>
-<span class="w">  </span><span class="k">raise</span><span class="w"> </span><span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">unless</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.11&#39;</span><span class="p">)</span>
+<span class="w">  </span><span class="k">raise</span><span class="w"> </span><span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
 <span class="k">end</span>
 
 
@@ -454,28 +474,28 @@ on that parameter.</p>
 <span class="w">    </span><span class="mi">255</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:protocol_enum_reserved_255</span><span class="p">,</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="w">  </span><span class="no">I__PROTOCOL_ENUM</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">PROTOCOL_ENUM</span><span class="o">.</span><span class="n">invert</span>
-<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="n">protocol_num</span><span class="p">)</span>
-<span class="w">    </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">protocol_num</span><span class="p">)</span>
+<span class="w">    </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
 <span class="w">    </span><span class="vi">@protocol_num</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">protocol_num</span>
 <span class="w">    </span><span class="n">_read</span>
 <span class="w">  </span><span class="k">end</span>
 
 <span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
 <span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="n">protocol</span>
-<span class="w">    </span><span class="k">when</span><span class="w"> </span><span class="ss">:protocol_enum_ipv6_nonxt</span>
-<span class="w">      </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">NoNextHeader</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">    </span><span class="k">when</span><span class="w"> </span><span class="ss">:protocol_enum_ipv4</span>
-<span class="w">      </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Ipv4Packet</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">)</span>
-<span class="w">    </span><span class="k">when</span><span class="w"> </span><span class="ss">:protocol_enum_udp</span>
-<span class="w">      </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">UdpDatagram</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">)</span>
-<span class="w">    </span><span class="k">when</span><span class="w"> </span><span class="ss">:protocol_enum_icmp</span>
-<span class="w">      </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">IcmpPacket</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">)</span>
 <span class="w">    </span><span class="k">when</span><span class="w"> </span><span class="ss">:protocol_enum_hopopt</span>
 <span class="w">      </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">OptionHopByHop</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">    </span><span class="k">when</span><span class="w"> </span><span class="ss">:protocol_enum_icmp</span>
+<span class="w">      </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">IcmpPacket</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">)</span>
+<span class="w">    </span><span class="k">when</span><span class="w"> </span><span class="ss">:protocol_enum_ipv4</span>
+<span class="w">      </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Ipv4Packet</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">)</span>
 <span class="w">    </span><span class="k">when</span><span class="w"> </span><span class="ss">:protocol_enum_ipv6</span>
 <span class="w">      </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Ipv6Packet</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">)</span>
+<span class="w">    </span><span class="k">when</span><span class="w"> </span><span class="ss">:protocol_enum_ipv6_nonxt</span>
+<span class="w">      </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">NoNextHeader</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
 <span class="w">    </span><span class="k">when</span><span class="w"> </span><span class="ss">:protocol_enum_tcp</span>
 <span class="w">      </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">TcpSegment</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">)</span>
+<span class="w">    </span><span class="k">when</span><span class="w"> </span><span class="ss">:protocol_enum_udp</span>
+<span class="w">      </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">UdpDatagram</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">)</span>
 <span class="w">    </span><span class="k">end</span>
 <span class="w">    </span><span class="nb">self</span>
 <span class="w">  </span><span class="k">end</span>
@@ -483,7 +503,7 @@ on that parameter.</p>
 <span class="w">  </span><span class="c1">##</span>
 <span class="w">  </span><span class="c1"># Dummy type for IPv6 &quot;no next header&quot; type, which signifies end of headers chain.</span>
 <span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">NoNextHeader</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 <span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
 <span class="w">      </span><span class="n">_read</span>
 <span class="w">    </span><span class="k">end</span>
@@ -493,7 +513,7 @@ on that parameter.</p>
 <span class="w">    </span><span class="k">end</span>
 <span class="w">  </span><span class="k">end</span>
 <span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">OptionHopByHop</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 <span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
 <span class="w">      </span><span class="n">_read</span>
 <span class="w">    </span><span class="k">end</span>
@@ -501,8 +521,8 @@ on that parameter.</p>
 <span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
 <span class="w">      </span><span class="vi">@next_header_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
 <span class="w">      </span><span class="vi">@hdr_ext_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-<span class="w">      </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">hdr_ext_len</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="p">(</span><span class="n">hdr_ext_len</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
-<span class="w">      </span><span class="vi">@next_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">ProtocolBody</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="n">next_header_type</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">hdr_ext_len</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">hdr_ext_len</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
+<span class="w">      </span><span class="vi">@next_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">ProtocolBody</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">,</span><span class="w"> </span><span class="n">next_header_type</span><span class="p">)</span>
 <span class="w">      </span><span class="nb">self</span>
 <span class="w">    </span><span class="k">end</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:next_header_type</span>

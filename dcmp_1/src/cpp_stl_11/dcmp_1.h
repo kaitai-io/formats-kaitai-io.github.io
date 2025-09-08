@@ -2,16 +2,18 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class dcmp_1_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
 #include "dcmp_variable_length_integer.h"
 #include <vector>
+#include <set>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
-class dcmp_variable_length_integer_t;
 
 /**
  * Compressed resource data in `'dcmp' (1)` format,
@@ -70,11 +72,11 @@ public:
     class chunk_t : public kaitai::kstruct {
 
     public:
-        class literal_body_t;
         class backreference_body_t;
-        class table_lookup_body_t;
         class end_body_t;
         class extended_body_t;
+        class literal_body_t;
+        class table_lookup_body_t;
 
         enum tag_kind_t {
             TAG_KIND_INVALID = -1,
@@ -84,6 +86,12 @@ public:
             TAG_KIND_EXTENDED = 3,
             TAG_KIND_END = 4
         };
+        static bool _is_defined_tag_kind_t(tag_kind_t v);
+
+    private:
+        static const std::set<tag_kind_t> _values_tag_kind_t;
+
+    public:
 
         chunk_t(kaitai::kstream* p__io, dcmp_1_t* p__parent = nullptr, dcmp_1_t* p__root = nullptr);
 
@@ -93,128 +101,6 @@ public:
 
     public:
         ~chunk_t();
-
-        /**
-         * The body of a literal data chunk.
-         * 
-         * The data that this chunk expands to is stored literally in the body (`literal`).
-         * Optionally,
-         * the literal data may also be stored for use by future backreference chunks (`do_store`).
-         */
-
-        class literal_body_t : public kaitai::kstruct {
-
-        public:
-
-            literal_body_t(uint8_t p_tag, kaitai::kstream* p__io, dcmp_1_t::chunk_t* p__parent = nullptr, dcmp_1_t* p__root = nullptr);
-
-        private:
-            void _read();
-            void _clean_up();
-
-        public:
-            ~literal_body_t();
-
-        private:
-            bool f_do_store;
-            bool m_do_store;
-
-        public:
-
-            /**
-             * Whether this literal should be stored for use by future backreference chunks.
-             * 
-             * See the documentation of the `backreference_body` type for details about backreference chunks.
-             */
-            bool do_store();
-
-        private:
-            bool f_len_literal_m1_in_tag;
-            int32_t m_len_literal_m1_in_tag;
-            bool n_len_literal_m1_in_tag;
-
-        public:
-            bool _is_null_len_literal_m1_in_tag() { len_literal_m1_in_tag(); return n_len_literal_m1_in_tag; };
-
-        private:
-
-        public:
-
-            /**
-             * The part of the tag byte that indicates the length of the literal data,
-             * in bytes,
-             * minus one.
-             * 
-             * If the tag byte is 0xd0 or 0xd1,
-             * the length is stored in a separate byte after the tag byte and before the literal data.
-             */
-            int32_t len_literal_m1_in_tag();
-
-        private:
-            bool f_is_len_literal_separate;
-            bool m_is_len_literal_separate;
-
-        public:
-
-            /**
-             * Whether the length of the literal is stored separately from the tag.
-             */
-            bool is_len_literal_separate();
-
-        private:
-            bool f_len_literal;
-            int32_t m_len_literal;
-
-        public:
-
-            /**
-             * The length of the literal data,
-             * in bytes.
-             * 
-             * In practice,
-             * this value is always greater than zero,
-             * as there is no use in storing a zero-length literal.
-             */
-            int32_t len_literal();
-
-        private:
-            uint8_t m_len_literal_separate;
-            bool n_len_literal_separate;
-
-        public:
-            bool _is_null_len_literal_separate() { len_literal_separate(); return n_len_literal_separate; };
-
-        private:
-            std::string m_literal;
-            uint8_t m_tag;
-            dcmp_1_t* m__root;
-            dcmp_1_t::chunk_t* m__parent;
-
-        public:
-
-            /**
-             * The length of the literal data,
-             * in bytes.
-             * 
-             * This field is only present if the tag byte is 0xd0 or 0xd1.
-             * In practice,
-             * this only happens if the length is 0x11 or greater,
-             * because smaller lengths can be encoded into the tag byte.
-             */
-            uint8_t len_literal_separate() const { return m_len_literal_separate; }
-
-            /**
-             * The literal data.
-             */
-            std::string literal() const { return m_literal; }
-
-            /**
-             * The tag byte preceding this chunk body.
-             */
-            uint8_t tag() const { return m_tag; }
-            dcmp_1_t* _root() const { return m__root; }
-            dcmp_1_t::chunk_t* _parent() const { return m__parent; }
-        };
 
         /**
          * The body of a backreference chunk.
@@ -237,15 +123,25 @@ public:
             ~backreference_body_t();
 
         private:
-            bool f_is_index_separate;
-            bool m_is_index_separate;
+            bool f_index;
+            int32_t m_index;
 
         public:
 
             /**
-             * Whether the index is stored separately from the tag.
+             * The index of the referenced literal chunk.
+             * 
+             * Stored literals are assigned index numbers in the order in which they appear in the compressed data,
+             * starting at 0.
+             * Non-stored literals are not counted in the numbering and cannot be referenced using backreferences.
+             * Once an index is assigned to a stored literal,
+             * it is never changed or unassigned for the entire length of the compressed data.
+             * 
+             * As the name indicates,
+             * a backreference can only reference stored literal chunks found *before* the backreference,
+             * not ones that come after it.
              */
-            bool is_index_separate();
+            int32_t index();
 
         private:
             bool f_index_in_tag;
@@ -279,25 +175,15 @@ public:
             int32_t index_separate();
 
         private:
-            bool f_index;
-            int32_t m_index;
+            bool f_is_index_separate;
+            bool m_is_index_separate;
 
         public:
 
             /**
-             * The index of the referenced literal chunk.
-             * 
-             * Stored literals are assigned index numbers in the order in which they appear in the compressed data,
-             * starting at 0.
-             * Non-stored literals are not counted in the numbering and cannot be referenced using backreferences.
-             * Once an index is assigned to a stored literal,
-             * it is never changed or unassigned for the entire length of the compressed data.
-             * 
-             * As the name indicates,
-             * a backreference can only reference stored literal chunks found *before* the backreference,
-             * not ones that come after it.
+             * Whether the index is stored separately from the tag.
              */
-            int32_t index();
+            bool is_index_separate();
 
         private:
             uint8_t m_index_separate_minus;
@@ -325,69 +211,6 @@ public:
              * they must always be encoded in the tag byte.
              */
             uint8_t index_separate_minus() const { return m_index_separate_minus; }
-
-            /**
-             * The tag byte preceding this chunk body.
-             */
-            uint8_t tag() const { return m_tag; }
-            dcmp_1_t* _root() const { return m__root; }
-            dcmp_1_t::chunk_t* _parent() const { return m__parent; }
-        };
-
-        /**
-         * The body of a table lookup chunk.
-         * This body is always empty.
-         * 
-         * This chunk always expands to two bytes (`value`),
-         * determined from the tag byte using a fixed lookup table (`lookup_table`).
-         * This lookup table is hardcoded in the decompressor and always the same for all compressed data.
-         */
-
-        class table_lookup_body_t : public kaitai::kstruct {
-
-        public:
-
-            table_lookup_body_t(uint8_t p_tag, kaitai::kstream* p__io, dcmp_1_t::chunk_t* p__parent = nullptr, dcmp_1_t* p__root = nullptr);
-
-        private:
-            void _read();
-            void _clean_up();
-
-        public:
-            ~table_lookup_body_t();
-
-        private:
-            bool f_lookup_table;
-            std::unique_ptr<std::vector<std::string>> m_lookup_table;
-
-        public:
-
-            /**
-             * Fixed lookup table that maps tag byte numbers to two bytes each.
-             * 
-             * The entries in the lookup table are offset -
-             * index 0 stands for tag 0xd5, 1 for 0xd6, etc.
-             */
-            std::vector<std::string>* lookup_table();
-
-        private:
-            bool f_value;
-            std::string m_value;
-
-        public:
-
-            /**
-             * The two bytes that the tag byte expands to,
-             * based on the fixed lookup table.
-             */
-            std::string value();
-
-        private:
-            uint8_t m_tag;
-            dcmp_1_t* m__root;
-            dcmp_1_t::chunk_t* m__parent;
-
-        public:
 
             /**
              * The tag byte preceding this chunk body.
@@ -467,18 +290,17 @@ public:
                 ~repeat_body_t();
 
             private:
-                bool f_to_repeat;
-                int32_t m_to_repeat;
+                bool f_repeat_count;
+                int32_t m_repeat_count;
 
             public:
 
                 /**
-                 * The value to repeat.
+                 * The number of times to repeat the value.
                  * 
-                 * Although it is stored as a variable-length integer,
-                 * this value must fit into an unsigned 8-bit integer.
+                 * This value must be positive.
                  */
-                int32_t to_repeat();
+                int32_t repeat_count();
 
             private:
                 bool f_repeat_count_m1;
@@ -495,17 +317,18 @@ public:
                 int32_t repeat_count_m1();
 
             private:
-                bool f_repeat_count;
-                int32_t m_repeat_count;
+                bool f_to_repeat;
+                int32_t m_to_repeat;
 
             public:
 
                 /**
-                 * The number of times to repeat the value.
+                 * The value to repeat.
                  * 
-                 * This value must be positive.
+                 * Although it is stored as a variable-length integer,
+                 * this value must fit into an unsigned 8-bit integer.
                  */
-                int32_t repeat_count();
+                int32_t to_repeat();
 
             private:
                 std::unique_ptr<dcmp_variable_length_integer_t> m_to_repeat_raw;
@@ -552,6 +375,191 @@ public:
              * The chunk's body.
              */
             repeat_body_t* body() const { return m_body.get(); }
+            dcmp_1_t* _root() const { return m__root; }
+            dcmp_1_t::chunk_t* _parent() const { return m__parent; }
+        };
+
+        /**
+         * The body of a literal data chunk.
+         * 
+         * The data that this chunk expands to is stored literally in the body (`literal`).
+         * Optionally,
+         * the literal data may also be stored for use by future backreference chunks (`do_store`).
+         */
+
+        class literal_body_t : public kaitai::kstruct {
+
+        public:
+
+            literal_body_t(uint8_t p_tag, kaitai::kstream* p__io, dcmp_1_t::chunk_t* p__parent = nullptr, dcmp_1_t* p__root = nullptr);
+
+        private:
+            void _read();
+            void _clean_up();
+
+        public:
+            ~literal_body_t();
+
+        private:
+            bool f_do_store;
+            bool m_do_store;
+
+        public:
+
+            /**
+             * Whether this literal should be stored for use by future backreference chunks.
+             * 
+             * See the documentation of the `backreference_body` type for details about backreference chunks.
+             */
+            bool do_store();
+
+        private:
+            bool f_is_len_literal_separate;
+            bool m_is_len_literal_separate;
+
+        public:
+
+            /**
+             * Whether the length of the literal is stored separately from the tag.
+             */
+            bool is_len_literal_separate();
+
+        private:
+            bool f_len_literal;
+            int32_t m_len_literal;
+
+        public:
+
+            /**
+             * The length of the literal data,
+             * in bytes.
+             * 
+             * In practice,
+             * this value is always greater than zero,
+             * as there is no use in storing a zero-length literal.
+             */
+            int32_t len_literal();
+
+        private:
+            bool f_len_literal_m1_in_tag;
+            int32_t m_len_literal_m1_in_tag;
+            bool n_len_literal_m1_in_tag;
+
+        public:
+            bool _is_null_len_literal_m1_in_tag() { len_literal_m1_in_tag(); return n_len_literal_m1_in_tag; };
+
+        private:
+
+        public:
+
+            /**
+             * The part of the tag byte that indicates the length of the literal data,
+             * in bytes,
+             * minus one.
+             * 
+             * If the tag byte is 0xd0 or 0xd1,
+             * the length is stored in a separate byte after the tag byte and before the literal data.
+             */
+            int32_t len_literal_m1_in_tag();
+
+        private:
+            uint8_t m_len_literal_separate;
+            bool n_len_literal_separate;
+
+        public:
+            bool _is_null_len_literal_separate() { len_literal_separate(); return n_len_literal_separate; };
+
+        private:
+            std::string m_literal;
+            uint8_t m_tag;
+            dcmp_1_t* m__root;
+            dcmp_1_t::chunk_t* m__parent;
+
+        public:
+
+            /**
+             * The length of the literal data,
+             * in bytes.
+             * 
+             * This field is only present if the tag byte is 0xd0 or 0xd1.
+             * In practice,
+             * this only happens if the length is 0x11 or greater,
+             * because smaller lengths can be encoded into the tag byte.
+             */
+            uint8_t len_literal_separate() const { return m_len_literal_separate; }
+
+            /**
+             * The literal data.
+             */
+            std::string literal() const { return m_literal; }
+
+            /**
+             * The tag byte preceding this chunk body.
+             */
+            uint8_t tag() const { return m_tag; }
+            dcmp_1_t* _root() const { return m__root; }
+            dcmp_1_t::chunk_t* _parent() const { return m__parent; }
+        };
+
+        /**
+         * The body of a table lookup chunk.
+         * This body is always empty.
+         * 
+         * This chunk always expands to two bytes (`value`),
+         * determined from the tag byte using a fixed lookup table (`lookup_table`).
+         * This lookup table is hardcoded in the decompressor and always the same for all compressed data.
+         */
+
+        class table_lookup_body_t : public kaitai::kstruct {
+
+        public:
+
+            table_lookup_body_t(uint8_t p_tag, kaitai::kstream* p__io, dcmp_1_t::chunk_t* p__parent = nullptr, dcmp_1_t* p__root = nullptr);
+
+        private:
+            void _read();
+            void _clean_up();
+
+        public:
+            ~table_lookup_body_t();
+
+        private:
+            bool f_lookup_table;
+            std::unique_ptr<std::vector<std::string>> m_lookup_table;
+
+        public:
+
+            /**
+             * Fixed lookup table that maps tag byte numbers to two bytes each.
+             * 
+             * The entries in the lookup table are offset -
+             * index 0 stands for tag 0xd5, 1 for 0xd6, etc.
+             */
+            std::vector<std::string>* lookup_table();
+
+        private:
+            bool f_value;
+            std::string m_value;
+
+        public:
+
+            /**
+             * The two bytes that the tag byte expands to,
+             * based on the fixed lookup table.
+             */
+            std::string value();
+
+        private:
+            uint8_t m_tag;
+            dcmp_1_t* m__root;
+            dcmp_1_t::chunk_t* m__parent;
+
+        public:
+
+            /**
+             * The tag byte preceding this chunk body.
+             */
+            uint8_t tag() const { return m_tag; }
             dcmp_1_t* _root() const { return m__root; }
             dcmp_1_t::chunk_t* _parent() const { return m__parent; }
         };

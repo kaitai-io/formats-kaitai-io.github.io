@@ -8,10 +8,24 @@ digraph {
 		xwd__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 			<TR><TD PORT="len_header_pos">0</TD><TD PORT="len_header_size">4</TD><TD>u4be</TD><TD PORT="len_header_type">len_header</TD></TR>
-			<TR><TD PORT="hdr_pos">4</TD><TD PORT="hdr_size">(len_header - 4)</TD><TD>Header</TD><TD PORT="hdr_type">hdr</TD></TR>
+			<TR><TD PORT="hdr_pos">4</TD><TD PORT="hdr_size">len_header - 4</TD><TD>Header</TD><TD PORT="hdr_type">hdr</TD></TR>
 			<TR><TD PORT="color_map_pos">...</TD><TD PORT="color_map_size">12</TD><TD>ColorMapEntry</TD><TD PORT="color_map_type">color_map</TD></TR>
 			<TR><TD COLSPAN="4" PORT="color_map__repeat">repeat hdr.color_map_entries times</TD></TR>
 		</TABLE>>];
+		subgraph cluster__color_map_entry {
+			label="Xwd::ColorMapEntry";
+			graph[style=dotted];
+
+			color_map_entry__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="entry_number_pos">0</TD><TD PORT="entry_number_size">4</TD><TD>u4be</TD><TD PORT="entry_number_type">entry_number</TD></TR>
+				<TR><TD PORT="red_pos">4</TD><TD PORT="red_size">2</TD><TD>u2be</TD><TD PORT="red_type">red</TD></TR>
+				<TR><TD PORT="green_pos">6</TD><TD PORT="green_size">2</TD><TD>u2be</TD><TD PORT="green_type">green</TD></TR>
+				<TR><TD PORT="blue_pos">8</TD><TD PORT="blue_size">2</TD><TD>u2be</TD><TD PORT="blue_type">blue</TD></TR>
+				<TR><TD PORT="flags_pos">10</TD><TD PORT="flags_size">1</TD><TD>u1</TD><TD PORT="flags_type">flags</TD></TR>
+				<TR><TD PORT="padding_pos">11</TD><TD PORT="padding_size">1</TD><TD>u1</TD><TD PORT="padding_type">padding</TD></TR>
+			</TABLE>>];
+		}
 		subgraph cluster__header {
 			label="Xwd::Header";
 			graph[style=dotted];
@@ -42,21 +56,7 @@ digraph {
 				<TR><TD PORT="window_x_pos">84</TD><TD PORT="window_x_size">4</TD><TD>s4be</TD><TD PORT="window_x_type">window_x</TD></TR>
 				<TR><TD PORT="window_y_pos">88</TD><TD PORT="window_y_size">4</TD><TD>s4be</TD><TD PORT="window_y_type">window_y</TD></TR>
 				<TR><TD PORT="window_border_width_pos">92</TD><TD PORT="window_border_width_size">4</TD><TD>u4be</TD><TD PORT="window_border_width_type">window_border_width</TD></TR>
-				<TR><TD PORT="creator_pos">96</TD><TD PORT="creator_size">...</TD><TD>str(UTF-8)</TD><TD PORT="creator_type">creator</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__color_map_entry {
-			label="Xwd::ColorMapEntry";
-			graph[style=dotted];
-
-			color_map_entry__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="entry_number_pos">0</TD><TD PORT="entry_number_size">4</TD><TD>u4be</TD><TD PORT="entry_number_type">entry_number</TD></TR>
-				<TR><TD PORT="red_pos">4</TD><TD PORT="red_size">2</TD><TD>u2be</TD><TD PORT="red_type">red</TD></TR>
-				<TR><TD PORT="green_pos">6</TD><TD PORT="green_size">2</TD><TD>u2be</TD><TD PORT="green_type">green</TD></TR>
-				<TR><TD PORT="blue_pos">8</TD><TD PORT="blue_size">2</TD><TD>u2be</TD><TD PORT="blue_type">blue</TD></TR>
-				<TR><TD PORT="flags_pos">10</TD><TD PORT="flags_size">1</TD><TD>u1</TD><TD PORT="flags_type">flags</TD></TR>
-				<TR><TD PORT="padding_pos">11</TD><TD PORT="padding_size">1</TD><TD>u1</TD><TD PORT="padding_type">padding</TD></TR>
+				<TR><TD PORT="creator_pos">96</TD><TD PORT="creator_size">...</TD><TD>str(term=0, UTF-8)</TD><TD PORT="creator_type">creator</TD></TR>
 			</TABLE>>];
 		}
 	}

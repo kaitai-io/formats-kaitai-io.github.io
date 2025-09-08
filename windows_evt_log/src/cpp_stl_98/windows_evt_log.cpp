@@ -5,7 +5,7 @@
 
 windows_evt_log_t::windows_evt_log_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, windows_evt_log_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     m_header = 0;
     m_records = 0;
 
@@ -45,6 +45,36 @@ void windows_evt_log_t::_clean_up() {
     }
 }
 
+windows_evt_log_t::cursor_record_body_t::cursor_record_body_t(kaitai::kstream* p__io, windows_evt_log_t::record_t* p__parent, windows_evt_log_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void windows_evt_log_t::cursor_record_body_t::_read() {
+    m_magic = m__io->read_bytes(12);
+    if (!(m_magic == std::string("\x22\x22\x22\x22\x33\x33\x33\x33\x44\x44\x44\x44", 12))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\x22\x22\x22\x22\x33\x33\x33\x33\x44\x44\x44\x44", 12), m_magic, m__io, std::string("/types/cursor_record_body/seq/0"));
+    }
+    m_ofs_first_record = m__io->read_u4le();
+    m_ofs_next_record = m__io->read_u4le();
+    m_idx_next_record = m__io->read_u4le();
+    m_idx_first_record = m__io->read_u4le();
+}
+
+windows_evt_log_t::cursor_record_body_t::~cursor_record_body_t() {
+    _clean_up();
+}
+
+void windows_evt_log_t::cursor_record_body_t::_clean_up() {
+}
+
 windows_evt_log_t::header_t::header_t(kaitai::kstream* p__io, windows_evt_log_t* p__parent, windows_evt_log_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
@@ -61,8 +91,8 @@ windows_evt_log_t::header_t::header_t(kaitai::kstream* p__io, windows_evt_log_t*
 void windows_evt_log_t::header_t::_read() {
     m_len_header = m__io->read_u4le();
     m_magic = m__io->read_bytes(4);
-    if (!(magic() == std::string("\x4C\x66\x4C\x65", 4))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\x4C\x66\x4C\x65", 4), magic(), _io(), std::string("/types/header/seq/1"));
+    if (!(m_magic == std::string("\x4C\x66\x4C\x65", 4))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\x4C\x66\x4C\x65", 4), m_magic, m__io, std::string("/types/header/seq/1"));
     }
     m_version_major = m__io->read_u4le();
     m_version_minor = m__io->read_u4le();
@@ -133,20 +163,20 @@ void windows_evt_log_t::record_t::_read() {
     switch (type()) {
     case 1699505740: {
         n_body = false;
-        m__raw_body = m__io->read_bytes((len_record() - 12));
+        m__raw_body = m__io->read_bytes(len_record() - 12);
         m__io__raw_body = new kaitai::kstream(m__raw_body);
         m_body = new record_body_t(m__io__raw_body, this, m__root);
         break;
     }
     case 286331153: {
         n_body = false;
-        m__raw_body = m__io->read_bytes((len_record() - 12));
+        m__raw_body = m__io->read_bytes(len_record() - 12);
         m__io__raw_body = new kaitai::kstream(m__raw_body);
         m_body = new cursor_record_body_t(m__io__raw_body, this, m__root);
         break;
     }
     default: {
-        m__raw_body = m__io->read_bytes((len_record() - 12));
+        m__raw_body = m__io->read_bytes(len_record() - 12);
         break;
     }
     }
@@ -167,12 +197,25 @@ void windows_evt_log_t::record_t::_clean_up() {
         }
     }
 }
+std::set<windows_evt_log_t::record_body_t::event_types_t> windows_evt_log_t::record_body_t::_build_values_event_types_t() {
+    std::set<windows_evt_log_t::record_body_t::event_types_t> _t;
+    _t.insert(windows_evt_log_t::record_body_t::EVENT_TYPES_ERROR);
+    _t.insert(windows_evt_log_t::record_body_t::EVENT_TYPES_AUDIT_FAILURE);
+    _t.insert(windows_evt_log_t::record_body_t::EVENT_TYPES_AUDIT_SUCCESS);
+    _t.insert(windows_evt_log_t::record_body_t::EVENT_TYPES_INFO);
+    _t.insert(windows_evt_log_t::record_body_t::EVENT_TYPES_WARNING);
+    return _t;
+}
+const std::set<windows_evt_log_t::record_body_t::event_types_t> windows_evt_log_t::record_body_t::_values_event_types_t = windows_evt_log_t::record_body_t::_build_values_event_types_t();
+bool windows_evt_log_t::record_body_t::_is_defined_event_types_t(windows_evt_log_t::record_body_t::event_types_t v) {
+    return windows_evt_log_t::record_body_t::_values_event_types_t.find(v) != windows_evt_log_t::record_body_t::_values_event_types_t.end();
+}
 
 windows_evt_log_t::record_body_t::record_body_t(kaitai::kstream* p__io, windows_evt_log_t::record_t* p__parent, windows_evt_log_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
-    f_user_sid = false;
     f_data = false;
+    f_user_sid = false;
 
     try {
         _read();
@@ -203,60 +246,30 @@ windows_evt_log_t::record_body_t::~record_body_t() {
 }
 
 void windows_evt_log_t::record_body_t::_clean_up() {
-    if (f_user_sid) {
-    }
     if (f_data) {
     }
-}
-
-std::string windows_evt_log_t::record_body_t::user_sid() {
-    if (f_user_sid)
-        return m_user_sid;
-    std::streampos _pos = m__io->pos();
-    m__io->seek((ofs_user_sid() - 8));
-    m_user_sid = m__io->read_bytes(len_user_sid());
-    m__io->seek(_pos);
-    f_user_sid = true;
-    return m_user_sid;
+    if (f_user_sid) {
+    }
 }
 
 std::string windows_evt_log_t::record_body_t::data() {
     if (f_data)
         return m_data;
+    f_data = true;
     std::streampos _pos = m__io->pos();
-    m__io->seek((ofs_data() - 8));
+    m__io->seek(ofs_data() - 8);
     m_data = m__io->read_bytes(len_data());
     m__io->seek(_pos);
-    f_data = true;
     return m_data;
 }
 
-windows_evt_log_t::cursor_record_body_t::cursor_record_body_t(kaitai::kstream* p__io, windows_evt_log_t::record_t* p__parent, windows_evt_log_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void windows_evt_log_t::cursor_record_body_t::_read() {
-    m_magic = m__io->read_bytes(12);
-    if (!(magic() == std::string("\x22\x22\x22\x22\x33\x33\x33\x33\x44\x44\x44\x44", 12))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\x22\x22\x22\x22\x33\x33\x33\x33\x44\x44\x44\x44", 12), magic(), _io(), std::string("/types/cursor_record_body/seq/0"));
-    }
-    m_ofs_first_record = m__io->read_u4le();
-    m_ofs_next_record = m__io->read_u4le();
-    m_idx_next_record = m__io->read_u4le();
-    m_idx_first_record = m__io->read_u4le();
-}
-
-windows_evt_log_t::cursor_record_body_t::~cursor_record_body_t() {
-    _clean_up();
-}
-
-void windows_evt_log_t::cursor_record_body_t::_clean_up() {
+std::string windows_evt_log_t::record_body_t::user_sid() {
+    if (f_user_sid)
+        return m_user_sid;
+    f_user_sid = true;
+    std::streampos _pos = m__io->pos();
+    m__io->seek(ofs_user_sid() - 8);
+    m_user_sid = m__io->read_bytes(len_user_sid());
+    m__io->seek(_pos);
+    return m_user_sid;
 }

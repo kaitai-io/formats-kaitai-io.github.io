@@ -5,7 +5,7 @@
 
 uefi_te_t::uefi_te_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, uefi_te_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     m_te_hdr = nullptr;
     m__io__raw_te_hdr = nullptr;
     m_sections = nullptr;
@@ -30,33 +30,22 @@ uefi_te_t::~uefi_te_t() {
 void uefi_te_t::_clean_up() {
 }
 
-uefi_te_t::te_header_t::te_header_t(kaitai::kstream* p__io, uefi_te_t* p__parent, uefi_te_t* p__root) : kaitai::kstruct(p__io) {
+uefi_te_t::data_dir_t::data_dir_t(kaitai::kstream* p__io, uefi_te_t::header_data_dirs_t* p__parent, uefi_te_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
-    m_data_dirs = nullptr;
     _read();
 }
 
-void uefi_te_t::te_header_t::_read() {
-    m_magic = m__io->read_bytes(2);
-    if (!(magic() == std::string("\x56\x5A", 2))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\x56\x5A", 2), magic(), _io(), std::string("/types/te_header/seq/0"));
-    }
-    m_machine = static_cast<uefi_te_t::te_header_t::machine_type_t>(m__io->read_u2le());
-    m_num_sections = m__io->read_u1();
-    m_subsystem = static_cast<uefi_te_t::te_header_t::subsystem_enum_t>(m__io->read_u1());
-    m_stripped_size = m__io->read_u2le();
-    m_entry_point_addr = m__io->read_u4le();
-    m_base_of_code = m__io->read_u4le();
-    m_image_base = m__io->read_u8le();
-    m_data_dirs = std::unique_ptr<header_data_dirs_t>(new header_data_dirs_t(m__io, this, m__root));
+void uefi_te_t::data_dir_t::_read() {
+    m_virtual_address = m__io->read_u4le();
+    m_size = m__io->read_u4le();
 }
 
-uefi_te_t::te_header_t::~te_header_t() {
+uefi_te_t::data_dir_t::~data_dir_t() {
     _clean_up();
 }
 
-void uefi_te_t::te_header_t::_clean_up() {
+void uefi_te_t::data_dir_t::_clean_up() {
 }
 
 uefi_te_t::header_data_dirs_t::header_data_dirs_t(kaitai::kstream* p__io, uefi_te_t::te_header_t* p__parent, uefi_te_t* p__root) : kaitai::kstruct(p__io) {
@@ -79,24 +68,6 @@ uefi_te_t::header_data_dirs_t::~header_data_dirs_t() {
 void uefi_te_t::header_data_dirs_t::_clean_up() {
 }
 
-uefi_te_t::data_dir_t::data_dir_t(kaitai::kstream* p__io, uefi_te_t::header_data_dirs_t* p__parent, uefi_te_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
-
-void uefi_te_t::data_dir_t::_read() {
-    m_virtual_address = m__io->read_u4le();
-    m_size = m__io->read_u4le();
-}
-
-uefi_te_t::data_dir_t::~data_dir_t() {
-    _clean_up();
-}
-
-void uefi_te_t::data_dir_t::_clean_up() {
-}
-
 uefi_te_t::section_t::section_t(kaitai::kstream* p__io, uefi_te_t* p__parent, uefi_te_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
@@ -105,7 +76,7 @@ uefi_te_t::section_t::section_t(kaitai::kstream* p__io, uefi_te_t* p__parent, ue
 }
 
 void uefi_te_t::section_t::_read() {
-    m_name = kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_strip_right(m__io->read_bytes(8), 0), std::string("UTF-8"));
+    m_name = kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_strip_right(m__io->read_bytes(8), 0), "UTF-8");
     m_virtual_size = m__io->read_u4le();
     m_virtual_address = m__io->read_u4le();
     m_size_of_raw_data = m__io->read_u4le();
@@ -129,10 +100,90 @@ void uefi_te_t::section_t::_clean_up() {
 std::string uefi_te_t::section_t::body() {
     if (f_body)
         return m_body;
+    f_body = true;
     std::streampos _pos = m__io->pos();
-    m__io->seek(((pointer_to_raw_data() - _root()->te_hdr()->stripped_size()) + _root()->te_hdr()->_io()->size()));
+    m__io->seek((pointer_to_raw_data() - _root()->te_hdr()->stripped_size()) + _root()->te_hdr()->_io()->size());
     m_body = m__io->read_bytes(size_of_raw_data());
     m__io->seek(_pos);
-    f_body = true;
     return m_body;
+}
+const std::set<uefi_te_t::te_header_t::machine_type_t> uefi_te_t::te_header_t::_values_machine_type_t{
+    uefi_te_t::te_header_t::MACHINE_TYPE_UNKNOWN,
+    uefi_te_t::te_header_t::MACHINE_TYPE_I386,
+    uefi_te_t::te_header_t::MACHINE_TYPE_R4000,
+    uefi_te_t::te_header_t::MACHINE_TYPE_WCE_MIPS_V2,
+    uefi_te_t::te_header_t::MACHINE_TYPE_ALPHA,
+    uefi_te_t::te_header_t::MACHINE_TYPE_SH3,
+    uefi_te_t::te_header_t::MACHINE_TYPE_SH3_DSP,
+    uefi_te_t::te_header_t::MACHINE_TYPE_SH4,
+    uefi_te_t::te_header_t::MACHINE_TYPE_SH5,
+    uefi_te_t::te_header_t::MACHINE_TYPE_ARM,
+    uefi_te_t::te_header_t::MACHINE_TYPE_THUMB,
+    uefi_te_t::te_header_t::MACHINE_TYPE_ARM_NT,
+    uefi_te_t::te_header_t::MACHINE_TYPE_AM33,
+    uefi_te_t::te_header_t::MACHINE_TYPE_POWERPC,
+    uefi_te_t::te_header_t::MACHINE_TYPE_POWERPC_FP,
+    uefi_te_t::te_header_t::MACHINE_TYPE_IA64,
+    uefi_te_t::te_header_t::MACHINE_TYPE_MIPS16,
+    uefi_te_t::te_header_t::MACHINE_TYPE_ALPHA64_OR_AXP64,
+    uefi_te_t::te_header_t::MACHINE_TYPE_MIPS_FPU,
+    uefi_te_t::te_header_t::MACHINE_TYPE_MIPS16_FPU,
+    uefi_te_t::te_header_t::MACHINE_TYPE_EBC,
+    uefi_te_t::te_header_t::MACHINE_TYPE_RISCV32,
+    uefi_te_t::te_header_t::MACHINE_TYPE_RISCV64,
+    uefi_te_t::te_header_t::MACHINE_TYPE_RISCV128,
+    uefi_te_t::te_header_t::MACHINE_TYPE_LOONGARCH32,
+    uefi_te_t::te_header_t::MACHINE_TYPE_LOONGARCH64,
+    uefi_te_t::te_header_t::MACHINE_TYPE_AMD64,
+    uefi_te_t::te_header_t::MACHINE_TYPE_M32R,
+    uefi_te_t::te_header_t::MACHINE_TYPE_ARM64,
+};
+bool uefi_te_t::te_header_t::_is_defined_machine_type_t(uefi_te_t::te_header_t::machine_type_t v) {
+    return uefi_te_t::te_header_t::_values_machine_type_t.find(v) != uefi_te_t::te_header_t::_values_machine_type_t.end();
+}
+const std::set<uefi_te_t::te_header_t::subsystem_enum_t> uefi_te_t::te_header_t::_values_subsystem_enum_t{
+    uefi_te_t::te_header_t::SUBSYSTEM_ENUM_UNKNOWN,
+    uefi_te_t::te_header_t::SUBSYSTEM_ENUM_NATIVE,
+    uefi_te_t::te_header_t::SUBSYSTEM_ENUM_WINDOWS_GUI,
+    uefi_te_t::te_header_t::SUBSYSTEM_ENUM_WINDOWS_CUI,
+    uefi_te_t::te_header_t::SUBSYSTEM_ENUM_POSIX_CUI,
+    uefi_te_t::te_header_t::SUBSYSTEM_ENUM_WINDOWS_CE_GUI,
+    uefi_te_t::te_header_t::SUBSYSTEM_ENUM_EFI_APPLICATION,
+    uefi_te_t::te_header_t::SUBSYSTEM_ENUM_EFI_BOOT_SERVICE_DRIVER,
+    uefi_te_t::te_header_t::SUBSYSTEM_ENUM_EFI_RUNTIME_DRIVER,
+    uefi_te_t::te_header_t::SUBSYSTEM_ENUM_EFI_ROM,
+    uefi_te_t::te_header_t::SUBSYSTEM_ENUM_XBOX,
+    uefi_te_t::te_header_t::SUBSYSTEM_ENUM_WINDOWS_BOOT_APPLICATION,
+};
+bool uefi_te_t::te_header_t::_is_defined_subsystem_enum_t(uefi_te_t::te_header_t::subsystem_enum_t v) {
+    return uefi_te_t::te_header_t::_values_subsystem_enum_t.find(v) != uefi_te_t::te_header_t::_values_subsystem_enum_t.end();
+}
+
+uefi_te_t::te_header_t::te_header_t(kaitai::kstream* p__io, uefi_te_t* p__parent, uefi_te_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_data_dirs = nullptr;
+    _read();
+}
+
+void uefi_te_t::te_header_t::_read() {
+    m_magic = m__io->read_bytes(2);
+    if (!(m_magic == std::string("\x56\x5A", 2))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\x56\x5A", 2), m_magic, m__io, std::string("/types/te_header/seq/0"));
+    }
+    m_machine = static_cast<uefi_te_t::te_header_t::machine_type_t>(m__io->read_u2le());
+    m_num_sections = m__io->read_u1();
+    m_subsystem = static_cast<uefi_te_t::te_header_t::subsystem_enum_t>(m__io->read_u1());
+    m_stripped_size = m__io->read_u2le();
+    m_entry_point_addr = m__io->read_u4le();
+    m_base_of_code = m__io->read_u4le();
+    m_image_base = m__io->read_u8le();
+    m_data_dirs = std::unique_ptr<header_data_dirs_t>(new header_data_dirs_t(m__io, this, m__root));
+}
+
+uefi_te_t::te_header_t::~te_header_t() {
+    _clean_up();
+}
+
+void uefi_te_t::te_header_t::_clean_up() {
 }

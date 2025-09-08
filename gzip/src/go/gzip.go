@@ -22,6 +22,11 @@ type Gzip_CompressionMethods int
 const (
 	Gzip_CompressionMethods__Deflate Gzip_CompressionMethods = 8
 )
+var values_Gzip_CompressionMethods = map[Gzip_CompressionMethods]struct{}{8: {}}
+func (v Gzip_CompressionMethods) isDefined() bool {
+	_, ok := values_Gzip_CompressionMethods[v]
+	return ok
+}
 
 type Gzip_Oses int
 const (
@@ -41,6 +46,11 @@ const (
 	Gzip_Oses__AcornRiscos Gzip_Oses = 13
 	Gzip_Oses__Unknown Gzip_Oses = 255
 )
+var values_Gzip_Oses = map[Gzip_Oses]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}, 10: {}, 11: {}, 12: {}, 13: {}, 255: {}}
+func (v Gzip_Oses) isDefined() bool {
+	_, ok := values_Gzip_Oses[v]
+	return ok
+}
 type Gzip struct {
 	Magic []byte
 	CompressionMethod Gzip_CompressionMethods
@@ -57,14 +67,18 @@ type Gzip struct {
 	LenUncompressed uint32
 	_io *kaitai.Stream
 	_root *Gzip
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewGzip() *Gzip {
 	return &Gzip{
 	}
 }
 
-func (this *Gzip) Read(io *kaitai.Stream, parent interface{}, root *Gzip) (err error) {
+func (this Gzip) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Gzip) Read(io *kaitai.Stream, parent kaitai.Struct, root *Gzip) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -145,7 +159,7 @@ func (this *Gzip) Read(io *kaitai.Stream, parent interface{}, root *Gzip) (err e
 	if err != nil {
 		return err
 	}
-	tmp13, err := this._io.ReadBytes(int(((tmp11 - tmp12) - 8)))
+	tmp13, err := this._io.ReadBytes(int((tmp11 - tmp12) - 8))
 	if err != nil {
 		return err
 	}
@@ -194,6 +208,86 @@ func (this *Gzip) Read(io *kaitai.Stream, parent interface{}, root *Gzip) (err e
  * Size of original uncompressed data in bytes (truncated to 32
  * bits).
  */
+
+type Gzip_ExtraFlagsDeflate_CompressionStrengths int
+const (
+	Gzip_ExtraFlagsDeflate_CompressionStrengths__Best Gzip_ExtraFlagsDeflate_CompressionStrengths = 2
+	Gzip_ExtraFlagsDeflate_CompressionStrengths__Fast Gzip_ExtraFlagsDeflate_CompressionStrengths = 4
+)
+var values_Gzip_ExtraFlagsDeflate_CompressionStrengths = map[Gzip_ExtraFlagsDeflate_CompressionStrengths]struct{}{2: {}, 4: {}}
+func (v Gzip_ExtraFlagsDeflate_CompressionStrengths) isDefined() bool {
+	_, ok := values_Gzip_ExtraFlagsDeflate_CompressionStrengths[v]
+	return ok
+}
+type Gzip_ExtraFlagsDeflate struct {
+	CompressionStrength Gzip_ExtraFlagsDeflate_CompressionStrengths
+	_io *kaitai.Stream
+	_root *Gzip
+	_parent *Gzip
+}
+func NewGzip_ExtraFlagsDeflate() *Gzip_ExtraFlagsDeflate {
+	return &Gzip_ExtraFlagsDeflate{
+	}
+}
+
+func (this Gzip_ExtraFlagsDeflate) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Gzip_ExtraFlagsDeflate) Read(io *kaitai.Stream, parent *Gzip, root *Gzip) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp16, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.CompressionStrength = Gzip_ExtraFlagsDeflate_CompressionStrengths(tmp16)
+	return err
+}
+type Gzip_Extras struct {
+	LenSubfields uint16
+	Subfields *Gzip_Subfields
+	_io *kaitai.Stream
+	_root *Gzip
+	_parent *Gzip
+	_raw_Subfields []byte
+}
+func NewGzip_Extras() *Gzip_Extras {
+	return &Gzip_Extras{
+	}
+}
+
+func (this Gzip_Extras) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Gzip_Extras) Read(io *kaitai.Stream, parent *Gzip, root *Gzip) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp17, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.LenSubfields = uint16(tmp17)
+	tmp18, err := this._io.ReadBytes(int(this.LenSubfields))
+	if err != nil {
+		return err
+	}
+	tmp18 = tmp18
+	this._raw_Subfields = tmp18
+	_io__raw_Subfields := kaitai.NewStream(bytes.NewReader(this._raw_Subfields))
+	tmp19 := NewGzip_Subfields()
+	err = tmp19.Read(_io__raw_Subfields, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Subfields = tmp19
+	return err
+}
 type Gzip_Flags struct {
 	Reserved1 uint64
 	HasComment bool
@@ -210,41 +304,45 @@ func NewGzip_Flags() *Gzip_Flags {
 	}
 }
 
+func (this Gzip_Flags) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Gzip_Flags) Read(io *kaitai.Stream, parent *Gzip, root *Gzip) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp16, err := this._io.ReadBitsIntBe(3)
+	tmp20, err := this._io.ReadBitsIntBe(3)
 	if err != nil {
 		return err
 	}
-	this.Reserved1 = tmp16
-	tmp17, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.HasComment = tmp17 != 0
-	tmp18, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.HasName = tmp18 != 0
-	tmp19, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.HasExtra = tmp19 != 0
-	tmp20, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.HasHeaderCrc = tmp20 != 0
+	this.Reserved1 = tmp20
 	tmp21, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.IsText = tmp21 != 0
+	this.HasComment = tmp21 != 0
+	tmp22, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.HasName = tmp22 != 0
+	tmp23, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.HasExtra = tmp23 != 0
+	tmp24, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.HasHeaderCrc = tmp24 != 0
+	tmp25, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.IsText = tmp25 != 0
 	return err
 }
 
@@ -260,72 +358,6 @@ func (this *Gzip_Flags) Read(io *kaitai.Stream, parent *Gzip, root *Gzip) (err e
  * If true, file inside this archive is a text file from
  * compressor's point of view.
  */
-
-type Gzip_ExtraFlagsDeflate_CompressionStrengths int
-const (
-	Gzip_ExtraFlagsDeflate_CompressionStrengths__Best Gzip_ExtraFlagsDeflate_CompressionStrengths = 2
-	Gzip_ExtraFlagsDeflate_CompressionStrengths__Fast Gzip_ExtraFlagsDeflate_CompressionStrengths = 4
-)
-type Gzip_ExtraFlagsDeflate struct {
-	CompressionStrength Gzip_ExtraFlagsDeflate_CompressionStrengths
-	_io *kaitai.Stream
-	_root *Gzip
-	_parent *Gzip
-}
-func NewGzip_ExtraFlagsDeflate() *Gzip_ExtraFlagsDeflate {
-	return &Gzip_ExtraFlagsDeflate{
-	}
-}
-
-func (this *Gzip_ExtraFlagsDeflate) Read(io *kaitai.Stream, parent *Gzip, root *Gzip) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp22, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.CompressionStrength = Gzip_ExtraFlagsDeflate_CompressionStrengths(tmp22)
-	return err
-}
-
-/**
- * Container for many subfields, constrained by size of stream.
- */
-type Gzip_Subfields struct {
-	Entries []*Gzip_Subfield
-	_io *kaitai.Stream
-	_root *Gzip
-	_parent *Gzip_Extras
-}
-func NewGzip_Subfields() *Gzip_Subfields {
-	return &Gzip_Subfields{
-	}
-}
-
-func (this *Gzip_Subfields) Read(io *kaitai.Stream, parent *Gzip_Extras, root *Gzip) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	for i := 1;; i++ {
-		tmp23, err := this._io.EOF()
-		if err != nil {
-			return err
-		}
-		if tmp23 {
-			break
-		}
-		tmp24 := NewGzip_Subfield()
-		err = tmp24.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Entries = append(this.Entries, tmp24)
-	}
-	return err
-}
 
 /**
  * Every subfield follows typical [TLV scheme](https://en.wikipedia.org/wiki/Type-length-value):
@@ -350,68 +382,75 @@ func NewGzip_Subfield() *Gzip_Subfield {
 	}
 }
 
+func (this Gzip_Subfield) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Gzip_Subfield) Read(io *kaitai.Stream, parent *Gzip_Subfields, root *Gzip) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp25, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.Id = uint16(tmp25)
 	tmp26, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.LenData = uint16(tmp26)
-	tmp27, err := this._io.ReadBytes(int(this.LenData))
+	this.Id = uint16(tmp26)
+	tmp27, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	tmp27 = tmp27
-	this.Data = tmp27
+	this.LenData = uint16(tmp27)
+	tmp28, err := this._io.ReadBytes(int(this.LenData))
+	if err != nil {
+		return err
+	}
+	tmp28 = tmp28
+	this.Data = tmp28
 	return err
 }
 
 /**
  * Subfield ID, typically two ASCII letters.
  */
-type Gzip_Extras struct {
-	LenSubfields uint16
-	Subfields *Gzip_Subfields
+
+/**
+ * Container for many subfields, constrained by size of stream.
+ */
+type Gzip_Subfields struct {
+	Entries []*Gzip_Subfield
 	_io *kaitai.Stream
 	_root *Gzip
-	_parent *Gzip
-	_raw_Subfields []byte
+	_parent *Gzip_Extras
 }
-func NewGzip_Extras() *Gzip_Extras {
-	return &Gzip_Extras{
+func NewGzip_Subfields() *Gzip_Subfields {
+	return &Gzip_Subfields{
 	}
 }
 
-func (this *Gzip_Extras) Read(io *kaitai.Stream, parent *Gzip, root *Gzip) (err error) {
+func (this Gzip_Subfields) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Gzip_Subfields) Read(io *kaitai.Stream, parent *Gzip_Extras, root *Gzip) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp28, err := this._io.ReadU2le()
-	if err != nil {
-		return err
+	for i := 0;; i++ {
+		tmp29, err := this._io.EOF()
+		if err != nil {
+			return err
+		}
+		if tmp29 {
+			break
+		}
+		tmp30 := NewGzip_Subfield()
+		err = tmp30.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Entries = append(this.Entries, tmp30)
 	}
-	this.LenSubfields = uint16(tmp28)
-	tmp29, err := this._io.ReadBytes(int(this.LenSubfields))
-	if err != nil {
-		return err
-	}
-	tmp29 = tmp29
-	this._raw_Subfields = tmp29
-	_io__raw_Subfields := kaitai.NewStream(bytes.NewReader(this._raw_Subfields))
-	tmp30 := NewGzip_Subfields()
-	err = tmp30.Read(_io__raw_Subfields, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Subfields = tmp30
 	return err
 }

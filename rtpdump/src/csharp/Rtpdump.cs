@@ -53,17 +53,17 @@ namespace Kaitai
             private void _read()
             {
                 _shebang = m_io.ReadBytes(12);
-                if (!((KaitaiStream.ByteArrayCompare(Shebang, new byte[] { 35, 33, 114, 116, 112, 112, 108, 97, 121, 49, 46, 48 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_shebang, new byte[] { 35, 33, 114, 116, 112, 112, 108, 97, 121, 49, 46, 48 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 35, 33, 114, 116, 112, 112, 108, 97, 121, 49, 46, 48 }, Shebang, M_Io, "/types/header_t/seq/0");
+                    throw new ValidationNotEqualError(new byte[] { 35, 33, 114, 116, 112, 112, 108, 97, 121, 49, 46, 48 }, _shebang, m_io, "/types/header_t/seq/0");
                 }
                 _space = m_io.ReadBytes(1);
-                if (!((KaitaiStream.ByteArrayCompare(Space, new byte[] { 32 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_space, new byte[] { 32 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 32 }, Space, M_Io, "/types/header_t/seq/1");
+                    throw new ValidationNotEqualError(new byte[] { 32 }, _space, m_io, "/types/header_t/seq/1");
                 }
-                _ip = System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytesTerm(47, false, true, true));
-                _port = System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytesTerm(10, false, true, true));
+                _ip = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytesTerm(47, false, true, true));
+                _port = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytesTerm(10, false, true, true));
                 _startSec = m_io.ReadU4be();
                 _startUsec = m_io.ReadU4be();
                 _ip2 = m_io.ReadU4be();

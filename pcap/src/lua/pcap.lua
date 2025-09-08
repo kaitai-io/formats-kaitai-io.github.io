@@ -4,12 +4,12 @@
 
 local class = require("class")
 require("kaitaistruct")
+require("ethernet_frame")
+require("packet_ppi")
 local enum = require("enum")
 local utils = require("utils")
 local stringstream = require("string_stream")
 
-require("packet_ppi")
-require("ethernet_frame")
 -- 
 -- PCAP (named after libpcap / winpcap) is a popular format for saving
 -- network traffic grabbed by network sniffers. It is typically
@@ -255,18 +255,18 @@ Pcap.Header = class.class(KaitaiStruct)
 function Pcap.Header:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function Pcap.Header:_read()
   self.magic_number = self._io:read_bytes(4)
   if not(self.magic_number == "\212\195\178\161") then
-    error("not equal, expected " ..  "\212\195\178\161" .. ", but got " .. self.magic_number)
+    error("not equal, expected " .. "\212\195\178\161" .. ", but got " .. self.magic_number)
   end
   self.version_major = self._io:read_u2le()
   if not(self.version_major == 2) then
-    error("not equal, expected " ..  2 .. ", but got " .. self.version_major)
+    error("not equal, expected " .. 2 .. ", but got " .. self.version_major)
   end
   self.version_minor = self._io:read_u2le()
   self.thiszone = self._io:read_s4le()
@@ -296,7 +296,7 @@ Pcap.Packet = class.class(KaitaiStruct)
 function Pcap.Packet:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -306,14 +306,14 @@ function Pcap.Packet:_read()
   self.incl_len = self._io:read_u4le()
   self.orig_len = self._io:read_u4le()
   local _on = self._root.hdr.network
-  if _on == Pcap.Linktype.ppi then
-    self._raw_body = self._io:read_bytes(utils.box_unwrap((self.incl_len < self._root.hdr.snaplen) and utils.box_wrap(self.incl_len) or (self._root.hdr.snaplen)))
-    local _io = KaitaiStream(stringstream(self._raw_body))
-    self.body = PacketPpi(_io)
-  elseif _on == Pcap.Linktype.ethernet then
+  if _on == Pcap.Linktype.ethernet then
     self._raw_body = self._io:read_bytes(utils.box_unwrap((self.incl_len < self._root.hdr.snaplen) and utils.box_wrap(self.incl_len) or (self._root.hdr.snaplen)))
     local _io = KaitaiStream(stringstream(self._raw_body))
     self.body = EthernetFrame(_io)
+  elseif _on == Pcap.Linktype.ppi then
+    self._raw_body = self._io:read_bytes(utils.box_unwrap((self.incl_len < self._root.hdr.snaplen) and utils.box_wrap(self.incl_len) or (self._root.hdr.snaplen)))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = PacketPpi(_io)
   else
     self.body = self._io:read_bytes(utils.box_unwrap((self.incl_len < self._root.hdr.snaplen) and utils.box_wrap(self.incl_len) or (self._root.hdr.snaplen)))
   end

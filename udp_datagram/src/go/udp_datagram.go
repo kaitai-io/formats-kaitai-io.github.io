@@ -17,14 +17,18 @@ type UdpDatagram struct {
 	Body []byte
 	_io *kaitai.Stream
 	_root *UdpDatagram
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewUdpDatagram() *UdpDatagram {
 	return &UdpDatagram{
 	}
 }
 
-func (this *UdpDatagram) Read(io *kaitai.Stream, parent interface{}, root *UdpDatagram) (err error) {
+func (this UdpDatagram) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *UdpDatagram) Read(io *kaitai.Stream, parent kaitai.Struct, root *UdpDatagram) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -49,7 +53,7 @@ func (this *UdpDatagram) Read(io *kaitai.Stream, parent interface{}, root *UdpDa
 		return err
 	}
 	this.Checksum = uint16(tmp4)
-	tmp5, err := this._io.ReadBytes(int((this.Length - 8)))
+	tmp5, err := this._io.ReadBytes(int(this.Length - 8))
 	if err != nil {
 		return err
 	}

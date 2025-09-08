@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -15,18 +15,18 @@ end
 # <https://chromium.googlesource.com/webm/vp8-test-vectors>
 # @see https://wiki.multimedia.cx/index.php/Duck_IVF Source
 class Vp8DuckIvf < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
     @magic1 = @_io.read_bytes(4)
-    raise Kaitai::Struct::ValidationNotEqualError.new([68, 75, 73, 70].pack('C*'), magic1, _io, "/seq/0") if not magic1 == [68, 75, 73, 70].pack('C*')
+    raise Kaitai::Struct::ValidationNotEqualError.new([68, 75, 73, 70].pack('C*'), @magic1, @_io, "/seq/0") if not @magic1 == [68, 75, 73, 70].pack('C*')
     @version = @_io.read_u2le
     @len_header = @_io.read_u2le
     @codec = @_io.read_bytes(4)
-    raise Kaitai::Struct::ValidationNotEqualError.new([86, 80, 56, 48].pack('C*'), codec, _io, "/seq/3") if not codec == [86, 80, 56, 48].pack('C*')
+    raise Kaitai::Struct::ValidationNotEqualError.new([86, 80, 56, 48].pack('C*'), @codec, @_io, "/seq/3") if not @codec == [86, 80, 56, 48].pack('C*')
     @width = @_io.read_u2le
     @height = @_io.read_u2le
     @framerate = @_io.read_u4le
@@ -39,20 +39,8 @@ class Vp8DuckIvf < Kaitai::Struct::Struct
     }
     self
   end
-  class Blocks < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @entries = Block.new(@_io, self, @_root)
-      self
-    end
-    attr_reader :entries
-  end
   class Block < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -69,6 +57,18 @@ class Vp8DuckIvf < Kaitai::Struct::Struct
     attr_reader :len_frame
     attr_reader :timestamp
     attr_reader :framedata
+  end
+  class Blocks < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @entries = Block.new(@_io, self, @_root)
+      self
+    end
+    attr_reader :entries
   end
 
   ##

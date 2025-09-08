@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Encode;
 
 ########################################################################
@@ -25,7 +25,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -61,47 +61,6 @@ sub _raw_dir {
 }
 
 ########################################################################
-package Dune2Pak::Files;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{files} = ();
-    while (!$self->{_io}->is_eof()) {
-        push @{$self->{files}}, Dune2Pak::File->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub files {
-    my ($self) = @_;
-    return $self->{files};
-}
-
-########################################################################
 package Dune2Pak::File;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -121,7 +80,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -137,13 +96,17 @@ sub _read {
     }
 }
 
-sub next_ofs0 {
+sub body {
     my ($self) = @_;
-    return $self->{next_ofs0} if ($self->{next_ofs0});
+    return $self->{body} if ($self->{body});
     if ($self->ofs() != 0) {
-        $self->{next_ofs0} = @{$self->_root()->dir()->files()}[($self->idx() + 1)]->ofs();
+        my $io = $self->_root()->_io();
+        my $_pos = $io->pos();
+        $io->seek($self->ofs());
+        $self->{body} = $io->read_bytes($self->next_ofs() - $self->ofs());
+        $io->seek($_pos);
     }
-    return $self->{next_ofs0};
+    return $self->{body};
 }
 
 sub next_ofs {
@@ -155,17 +118,13 @@ sub next_ofs {
     return $self->{next_ofs};
 }
 
-sub body {
+sub next_ofs0 {
     my ($self) = @_;
-    return $self->{body} if ($self->{body});
+    return $self->{next_ofs0} if ($self->{next_ofs0});
     if ($self->ofs() != 0) {
-        my $io = $self->_root()->_io();
-        my $_pos = $io->pos();
-        $io->seek($self->ofs());
-        $self->{body} = $io->read_bytes(($self->next_ofs() - $self->ofs()));
-        $io->seek($_pos);
+        $self->{next_ofs0} = @{$self->_root()->dir()->files()}[$self->idx() + 1]->ofs();
     }
-    return $self->{body};
+    return $self->{next_ofs0};
 }
 
 sub ofs {
@@ -181,6 +140,47 @@ sub file_name {
 sub idx {
     my ($self) = @_;
     return $self->{idx};
+}
+
+########################################################################
+package Dune2Pak::Files;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{files} = [];
+    while (!$self->{_io}->is_eof()) {
+        push @{$self->{files}}, Dune2Pak::File->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub files {
+    my ($self) = @_;
+    return $self->{files};
 }
 
 1;

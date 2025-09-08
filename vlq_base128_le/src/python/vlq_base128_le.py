@@ -1,11 +1,12 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class VlqBase128Le(KaitaiStruct):
     """A variable-length unsigned/signed integer using base128 encoding. 1-byte groups
@@ -39,28 +40,36 @@ class VlqBase128Le(KaitaiStruct):
     see <https://github.com/protocolbuffers/protoscope/blob/8e7a6aafa2c9958527b1e0747e66e1bfff045819/writer.go#L644-L648>.
     """
     def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
+        super(VlqBase128Le, self).__init__(_io)
         self._parent = _parent
-        self._root = _root if _root else self
+        self._root = _root or self
         self._read()
 
     def _read(self):
         self.groups = []
         i = 0
         while True:
-            _ = VlqBase128Le.Group(i, (self.groups[(i - 1)].interm_value if i != 0 else 0), ((9223372036854775808 if i == 9 else (self.groups[(i - 1)].multiplier * 128)) if i != 0 else 1), self._io, self, self._root)
+            _ = VlqBase128Le.Group(i, (self.groups[i - 1].interm_value if i != 0 else 0), ((9223372036854775808 if i == 9 else self.groups[i - 1].multiplier * 128) if i != 0 else 1), self._io, self, self._root)
             self.groups.append(_)
-            if not (_.has_next):
+            if (not (_.has_next)):
                 break
             i += 1
+
+
+    def _fetch_instances(self):
+        pass
+        for i in range(len(self.groups)):
+            pass
+            self.groups[i]._fetch_instances()
+
 
     class Group(KaitaiStruct):
         """One byte group, clearly divided into 7-bit "value" chunk and 1-bit "continuation" flag.
         """
         def __init__(self, idx, prev_interm_value, multiplier, _io, _parent=None, _root=None):
-            self._io = _io
+            super(VlqBase128Le.Group, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self.idx = idx
             self.prev_interm_value = prev_interm_value
             self.multiplier = multiplier
@@ -74,12 +83,16 @@ class VlqBase128Le(KaitaiStruct):
             if not self.value <= (1 if self.idx == 9 else 127):
                 raise kaitaistruct.ValidationGreaterThanError((1 if self.idx == 9 else 127), self.value, self._io, u"/types/group/seq/1")
 
+
+        def _fetch_instances(self):
+            pass
+
         @property
         def interm_value(self):
             if hasattr(self, '_m_interm_value'):
                 return self._m_interm_value
 
-            self._m_interm_value = (self.prev_interm_value + (self.value * self.multiplier))
+            self._m_interm_value = (self.prev_interm_value + self.value * self.multiplier)
             return getattr(self, '_m_interm_value', None)
 
 
@@ -92,6 +105,14 @@ class VlqBase128Le(KaitaiStruct):
         return getattr(self, '_m_len', None)
 
     @property
+    def sign_bit(self):
+        if hasattr(self, '_m_sign_bit'):
+            return self._m_sign_bit
+
+        self._m_sign_bit = (9223372036854775808 if self.len == 10 else self.groups[-1].multiplier * 64)
+        return getattr(self, '_m_sign_bit', None)
+
+    @property
     def value(self):
         """Resulting unsigned value as normal integer."""
         if hasattr(self, '_m_value'):
@@ -99,14 +120,6 @@ class VlqBase128Le(KaitaiStruct):
 
         self._m_value = self.groups[-1].interm_value
         return getattr(self, '_m_value', None)
-
-    @property
-    def sign_bit(self):
-        if hasattr(self, '_m_sign_bit'):
-            return self._m_sign_bit
-
-        self._m_sign_bit = (9223372036854775808 if self.len == 10 else (self.groups[-1].multiplier * 64))
-        return getattr(self, '_m_sign_bit', None)
 
     @property
     def value_signed(self):

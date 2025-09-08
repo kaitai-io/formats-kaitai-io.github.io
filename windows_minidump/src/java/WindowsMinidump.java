@@ -8,7 +8,8 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Arrays;
 import java.util.ArrayList;
-import java.nio.charset.Charset;
+import java.util.List;
+import java.nio.charset.StandardCharsets;
 
 
 /**
@@ -105,12 +106,12 @@ public class WindowsMinidump extends KaitaiStruct {
     }
     private void _read() {
         this.magic1 = this._io.readBytes(4);
-        if (!(Arrays.equals(magic1(), new byte[] { 77, 68, 77, 80 }))) {
-            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 77, 68, 77, 80 }, magic1(), _io(), "/seq/0");
+        if (!(Arrays.equals(this.magic1, new byte[] { 77, 68, 77, 80 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 77, 68, 77, 80 }, this.magic1, this._io, "/seq/0");
         }
         this.magic2 = this._io.readBytes(2);
-        if (!(Arrays.equals(magic2(), new byte[] { -109, -89 }))) {
-            throw new KaitaiStream.ValidationNotEqualError(new byte[] { -109, -89 }, magic2(), _io(), "/seq/1");
+        if (!(Arrays.equals(this.magic2, new byte[] { -109, -89 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { -109, -89 }, this.magic2, this._io, "/seq/1");
         }
         this.version = this._io.readU2le();
         this.numStreams = this._io.readU4le();
@@ -120,41 +121,257 @@ public class WindowsMinidump extends KaitaiStruct {
         this.flags = this._io.readU8le();
     }
 
+    public void _fetchInstances() {
+        streams();
+        if (this.streams != null) {
+            for (int i = 0; i < this.streams.size(); i++) {
+                this.streams.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+    }
+
     /**
-     * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread_list">Source</a>
+     * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_directory">Source</a>
      */
-    public static class ThreadList extends KaitaiStruct {
-        public static ThreadList fromFile(String fileName) throws IOException {
-            return new ThreadList(new ByteBufferKaitaiStream(fileName));
+    public static class Dir extends KaitaiStruct {
+        public static Dir fromFile(String fileName) throws IOException {
+            return new Dir(new ByteBufferKaitaiStream(fileName));
         }
 
-        public ThreadList(KaitaiStream _io) {
+        public Dir(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public ThreadList(KaitaiStream _io, WindowsMinidump.Dir _parent) {
+        public Dir(KaitaiStream _io, WindowsMinidump _parent) {
             this(_io, _parent, null);
         }
 
-        public ThreadList(KaitaiStream _io, WindowsMinidump.Dir _parent, WindowsMinidump _root) {
+        public Dir(KaitaiStream _io, WindowsMinidump _parent, WindowsMinidump _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.numThreads = this._io.readU4le();
-            this.threads = new ArrayList<Thread>();
-            for (int i = 0; i < numThreads(); i++) {
-                this.threads.add(new Thread(this._io, this, _root));
+            this.streamType = WindowsMinidump.StreamTypes.byId(this._io.readU4le());
+            this.lenData = this._io.readU4le();
+            this.ofsData = this._io.readU4le();
+        }
+
+        public void _fetchInstances() {
+            data();
+            if (this.data != null) {
+                {
+                    StreamTypes on = streamType();
+                    if (on != null) {
+                        switch (streamType()) {
+                        case EXCEPTION: {
+                            ((ExceptionStream) (this.data))._fetchInstances();
+                            break;
+                        }
+                        case MEMORY_LIST: {
+                            ((MemoryList) (this.data))._fetchInstances();
+                            break;
+                        }
+                        case MISC_INFO: {
+                            ((MiscInfo) (this.data))._fetchInstances();
+                            break;
+                        }
+                        case SYSTEM_INFO: {
+                            ((SystemInfo) (this.data))._fetchInstances();
+                            break;
+                        }
+                        case THREAD_LIST: {
+                            ((ThreadList) (this.data))._fetchInstances();
+                            break;
+                        }
+                        default: {
+                            break;
+                        }
+                        }
+                    } else {
+                    }
+                }
             }
         }
-        private long numThreads;
-        private ArrayList<Thread> threads;
+        private Object data;
+        public Object data() {
+            if (this.data != null)
+                return this.data;
+            long _pos = this._io.pos();
+            this._io.seek(ofsData());
+            {
+                StreamTypes on = streamType();
+                if (on != null) {
+                    switch (streamType()) {
+                    case EXCEPTION: {
+                        KaitaiStream _io_data = this._io.substream(lenData());
+                        this.data = new ExceptionStream(_io_data, this, _root);
+                        break;
+                    }
+                    case MEMORY_LIST: {
+                        KaitaiStream _io_data = this._io.substream(lenData());
+                        this.data = new MemoryList(_io_data, this, _root);
+                        break;
+                    }
+                    case MISC_INFO: {
+                        KaitaiStream _io_data = this._io.substream(lenData());
+                        this.data = new MiscInfo(_io_data, this, _root);
+                        break;
+                    }
+                    case SYSTEM_INFO: {
+                        KaitaiStream _io_data = this._io.substream(lenData());
+                        this.data = new SystemInfo(_io_data, this, _root);
+                        break;
+                    }
+                    case THREAD_LIST: {
+                        KaitaiStream _io_data = this._io.substream(lenData());
+                        this.data = new ThreadList(_io_data, this, _root);
+                        break;
+                    }
+                    default: {
+                        this.data = this._io.readBytes(lenData());
+                        break;
+                    }
+                    }
+                } else {
+                    this.data = this._io.readBytes(lenData());
+                }
+            }
+            this._io.seek(_pos);
+            return this.data;
+        }
+        private StreamTypes streamType;
+        private long lenData;
+        private long ofsData;
+        private WindowsMinidump _root;
+        private WindowsMinidump _parent;
+        public StreamTypes streamType() { return streamType; }
+
+        /**
+         * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_location_descriptor">Source</a>
+         */
+        public long lenData() { return lenData; }
+        public long ofsData() { return ofsData; }
+        public WindowsMinidump _root() { return _root; }
+        public WindowsMinidump _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception">Source</a>
+     */
+    public static class ExceptionRecord extends KaitaiStruct {
+        public static ExceptionRecord fromFile(String fileName) throws IOException {
+            return new ExceptionRecord(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public ExceptionRecord(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public ExceptionRecord(KaitaiStream _io, WindowsMinidump.ExceptionStream _parent) {
+            this(_io, _parent, null);
+        }
+
+        public ExceptionRecord(KaitaiStream _io, WindowsMinidump.ExceptionStream _parent, WindowsMinidump _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.code = this._io.readU4le();
+            this.flags = this._io.readU4le();
+            this.innerException = this._io.readU8le();
+            this.addr = this._io.readU8le();
+            this.numParams = this._io.readU4le();
+            this.reserved = this._io.readU4le();
+            this.params = new ArrayList<Long>();
+            for (int i = 0; i < 15; i++) {
+                this.params.add(this._io.readU8le());
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.params.size(); i++) {
+            }
+        }
+        private long code;
+        private long flags;
+        private long innerException;
+        private long addr;
+        private long numParams;
+        private long reserved;
+        private List<Long> params;
+        private WindowsMinidump _root;
+        private WindowsMinidump.ExceptionStream _parent;
+        public long code() { return code; }
+        public long flags() { return flags; }
+        public long innerException() { return innerException; }
+
+        /**
+         * Memory address where exception has occurred
+         */
+        public long addr() { return addr; }
+        public long numParams() { return numParams; }
+        public long reserved() { return reserved; }
+
+        /**
+         * Additional parameters passed along with exception raise
+         * function (for WinAPI, that is `RaiseException`). Meaning is
+         * exception-specific. Given that this type is originally
+         * defined by a C structure, it is described there as array of
+         * fixed number of elements (`EXCEPTION_MAXIMUM_PARAMETERS` =
+         * 15), but in reality only first `num_params` would be used.
+         */
+        public List<Long> params() { return params; }
+        public WindowsMinidump _root() { return _root; }
+        public WindowsMinidump.ExceptionStream _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception_stream">Source</a>
+     */
+    public static class ExceptionStream extends KaitaiStruct {
+        public static ExceptionStream fromFile(String fileName) throws IOException {
+            return new ExceptionStream(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public ExceptionStream(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public ExceptionStream(KaitaiStream _io, WindowsMinidump.Dir _parent) {
+            this(_io, _parent, null);
+        }
+
+        public ExceptionStream(KaitaiStream _io, WindowsMinidump.Dir _parent, WindowsMinidump _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.threadId = this._io.readU4le();
+            this.reserved = this._io.readU4le();
+            this.exceptionRec = new ExceptionRecord(this._io, this, _root);
+            this.threadContext = new LocationDescriptor(this._io, this, _root);
+        }
+
+        public void _fetchInstances() {
+            this.exceptionRec._fetchInstances();
+            this.threadContext._fetchInstances();
+        }
+        private long threadId;
+        private long reserved;
+        private ExceptionRecord exceptionRec;
+        private LocationDescriptor threadContext;
         private WindowsMinidump _root;
         private WindowsMinidump.Dir _parent;
-        public long numThreads() { return numThreads; }
-        public ArrayList<Thread> threads() { return threads; }
+        public long threadId() { return threadId; }
+        public long reserved() { return reserved; }
+        public ExceptionRecord exceptionRec() { return exceptionRec; }
+        public LocationDescriptor threadContext() { return threadContext; }
         public WindowsMinidump _root() { return _root; }
         public WindowsMinidump.Dir _parent() { return _parent; }
     }
@@ -185,6 +402,12 @@ public class WindowsMinidump extends KaitaiStruct {
             this.lenData = this._io.readU4le();
             this.ofsData = this._io.readU4le();
         }
+
+        public void _fetchInstances() {
+            data();
+            if (this.data != null) {
+            }
+        }
         private byte[] data;
         public byte[] data() {
             if (this.data != null)
@@ -204,6 +427,91 @@ public class WindowsMinidump extends KaitaiStruct {
         public long ofsData() { return ofsData; }
         public WindowsMinidump _root() { return _root; }
         public KaitaiStruct _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor">Source</a>
+     */
+    public static class MemoryDescriptor extends KaitaiStruct {
+        public static MemoryDescriptor fromFile(String fileName) throws IOException {
+            return new MemoryDescriptor(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public MemoryDescriptor(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public MemoryDescriptor(KaitaiStream _io, KaitaiStruct _parent) {
+            this(_io, _parent, null);
+        }
+
+        public MemoryDescriptor(KaitaiStream _io, KaitaiStruct _parent, WindowsMinidump _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.addrMemoryRange = this._io.readU8le();
+            this.memory = new LocationDescriptor(this._io, this, _root);
+        }
+
+        public void _fetchInstances() {
+            this.memory._fetchInstances();
+        }
+        private long addrMemoryRange;
+        private LocationDescriptor memory;
+        private WindowsMinidump _root;
+        private KaitaiStruct _parent;
+        public long addrMemoryRange() { return addrMemoryRange; }
+        public LocationDescriptor memory() { return memory; }
+        public WindowsMinidump _root() { return _root; }
+        public KaitaiStruct _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list">Source</a>
+     */
+    public static class MemoryList extends KaitaiStruct {
+        public static MemoryList fromFile(String fileName) throws IOException {
+            return new MemoryList(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public MemoryList(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public MemoryList(KaitaiStream _io, WindowsMinidump.Dir _parent) {
+            this(_io, _parent, null);
+        }
+
+        public MemoryList(KaitaiStream _io, WindowsMinidump.Dir _parent, WindowsMinidump _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.numMemRanges = this._io.readU4le();
+            this.memRanges = new ArrayList<MemoryDescriptor>();
+            for (int i = 0; i < numMemRanges(); i++) {
+                this.memRanges.add(new MemoryDescriptor(this._io, this, _root));
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.memRanges.size(); i++) {
+                this.memRanges.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private long numMemRanges;
+        private List<MemoryDescriptor> memRanges;
+        private WindowsMinidump _root;
+        private WindowsMinidump.Dir _parent;
+        public long numMemRanges() { return numMemRanges; }
+        public List<MemoryDescriptor> memRanges() { return memRanges; }
+        public WindowsMinidump _root() { return _root; }
+        public WindowsMinidump.Dir _parent() { return _parent; }
     }
 
     /**
@@ -232,7 +540,10 @@ public class WindowsMinidump extends KaitaiStruct {
         }
         private void _read() {
             this.lenStr = this._io.readU4le();
-            this.str = new String(this._io.readBytes(lenStr()), Charset.forName("UTF-16LE"));
+            this.str = new String(this._io.readBytes(lenStr()), StandardCharsets.UTF_16LE);
+        }
+
+        public void _fetchInstances() {
         }
         private long lenStr;
         private String str;
@@ -242,6 +553,72 @@ public class WindowsMinidump extends KaitaiStruct {
         public String str() { return str; }
         public WindowsMinidump _root() { return _root; }
         public WindowsMinidump.SystemInfo _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_misc_info">Source</a>
+     */
+    public static class MiscInfo extends KaitaiStruct {
+        public static MiscInfo fromFile(String fileName) throws IOException {
+            return new MiscInfo(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public MiscInfo(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public MiscInfo(KaitaiStream _io, WindowsMinidump.Dir _parent) {
+            this(_io, _parent, null);
+        }
+
+        public MiscInfo(KaitaiStream _io, WindowsMinidump.Dir _parent, WindowsMinidump _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.lenInfo = this._io.readU4le();
+            this.flags1 = this._io.readU4le();
+            this.processId = this._io.readU4le();
+            this.processCreateTime = this._io.readU4le();
+            this.processUserTime = this._io.readU4le();
+            this.processKernelTime = this._io.readU4le();
+            this.cpuMaxMhz = this._io.readU4le();
+            this.cpuCurMhz = this._io.readU4le();
+            this.cpuLimitMhz = this._io.readU4le();
+            this.cpuMaxIdleState = this._io.readU4le();
+            this.cpuCurIdleState = this._io.readU4le();
+        }
+
+        public void _fetchInstances() {
+        }
+        private long lenInfo;
+        private long flags1;
+        private long processId;
+        private long processCreateTime;
+        private long processUserTime;
+        private long processKernelTime;
+        private long cpuMaxMhz;
+        private long cpuCurMhz;
+        private long cpuLimitMhz;
+        private long cpuMaxIdleState;
+        private long cpuCurIdleState;
+        private WindowsMinidump _root;
+        private WindowsMinidump.Dir _parent;
+        public long lenInfo() { return lenInfo; }
+        public long flags1() { return flags1; }
+        public long processId() { return processId; }
+        public long processCreateTime() { return processCreateTime; }
+        public long processUserTime() { return processUserTime; }
+        public long processKernelTime() { return processKernelTime; }
+        public long cpuMaxMhz() { return cpuMaxMhz; }
+        public long cpuCurMhz() { return cpuCurMhz; }
+        public long cpuLimitMhz() { return cpuLimitMhz; }
+        public long cpuMaxIdleState() { return cpuMaxIdleState; }
+        public long cpuCurIdleState() { return cpuCurIdleState; }
+        public WindowsMinidump _root() { return _root; }
+        public WindowsMinidump.Dir _parent() { return _parent; }
     }
 
     /**
@@ -300,6 +677,13 @@ public class WindowsMinidump extends KaitaiStruct {
             this.osSuiteMask = this._io.readU2le();
             this.reserved2 = this._io.readU2le();
         }
+
+        public void _fetchInstances() {
+            servicePack();
+            if (this.servicePack != null) {
+                this.servicePack._fetchInstances();
+            }
+        }
         private MinidumpString servicePack;
         public MinidumpString servicePack() {
             if (this.servicePack != null)
@@ -344,233 +728,6 @@ public class WindowsMinidump extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception">Source</a>
-     */
-    public static class ExceptionRecord extends KaitaiStruct {
-        public static ExceptionRecord fromFile(String fileName) throws IOException {
-            return new ExceptionRecord(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public ExceptionRecord(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public ExceptionRecord(KaitaiStream _io, WindowsMinidump.ExceptionStream _parent) {
-            this(_io, _parent, null);
-        }
-
-        public ExceptionRecord(KaitaiStream _io, WindowsMinidump.ExceptionStream _parent, WindowsMinidump _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.code = this._io.readU4le();
-            this.flags = this._io.readU4le();
-            this.innerException = this._io.readU8le();
-            this.addr = this._io.readU8le();
-            this.numParams = this._io.readU4le();
-            this.reserved = this._io.readU4le();
-            this.params = new ArrayList<Long>();
-            for (int i = 0; i < 15; i++) {
-                this.params.add(this._io.readU8le());
-            }
-        }
-        private long code;
-        private long flags;
-        private long innerException;
-        private long addr;
-        private long numParams;
-        private long reserved;
-        private ArrayList<Long> params;
-        private WindowsMinidump _root;
-        private WindowsMinidump.ExceptionStream _parent;
-        public long code() { return code; }
-        public long flags() { return flags; }
-        public long innerException() { return innerException; }
-
-        /**
-         * Memory address where exception has occurred
-         */
-        public long addr() { return addr; }
-        public long numParams() { return numParams; }
-        public long reserved() { return reserved; }
-
-        /**
-         * Additional parameters passed along with exception raise
-         * function (for WinAPI, that is `RaiseException`). Meaning is
-         * exception-specific. Given that this type is originally
-         * defined by a C structure, it is described there as array of
-         * fixed number of elements (`EXCEPTION_MAXIMUM_PARAMETERS` =
-         * 15), but in reality only first `num_params` would be used.
-         */
-        public ArrayList<Long> params() { return params; }
-        public WindowsMinidump _root() { return _root; }
-        public WindowsMinidump.ExceptionStream _parent() { return _parent; }
-    }
-
-    /**
-     * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_misc_info">Source</a>
-     */
-    public static class MiscInfo extends KaitaiStruct {
-        public static MiscInfo fromFile(String fileName) throws IOException {
-            return new MiscInfo(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public MiscInfo(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public MiscInfo(KaitaiStream _io, WindowsMinidump.Dir _parent) {
-            this(_io, _parent, null);
-        }
-
-        public MiscInfo(KaitaiStream _io, WindowsMinidump.Dir _parent, WindowsMinidump _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.lenInfo = this._io.readU4le();
-            this.flags1 = this._io.readU4le();
-            this.processId = this._io.readU4le();
-            this.processCreateTime = this._io.readU4le();
-            this.processUserTime = this._io.readU4le();
-            this.processKernelTime = this._io.readU4le();
-            this.cpuMaxMhz = this._io.readU4le();
-            this.cpuCurMhz = this._io.readU4le();
-            this.cpuLimitMhz = this._io.readU4le();
-            this.cpuMaxIdleState = this._io.readU4le();
-            this.cpuCurIdleState = this._io.readU4le();
-        }
-        private long lenInfo;
-        private long flags1;
-        private long processId;
-        private long processCreateTime;
-        private long processUserTime;
-        private long processKernelTime;
-        private long cpuMaxMhz;
-        private long cpuCurMhz;
-        private long cpuLimitMhz;
-        private long cpuMaxIdleState;
-        private long cpuCurIdleState;
-        private WindowsMinidump _root;
-        private WindowsMinidump.Dir _parent;
-        public long lenInfo() { return lenInfo; }
-        public long flags1() { return flags1; }
-        public long processId() { return processId; }
-        public long processCreateTime() { return processCreateTime; }
-        public long processUserTime() { return processUserTime; }
-        public long processKernelTime() { return processKernelTime; }
-        public long cpuMaxMhz() { return cpuMaxMhz; }
-        public long cpuCurMhz() { return cpuCurMhz; }
-        public long cpuLimitMhz() { return cpuLimitMhz; }
-        public long cpuMaxIdleState() { return cpuMaxIdleState; }
-        public long cpuCurIdleState() { return cpuCurIdleState; }
-        public WindowsMinidump _root() { return _root; }
-        public WindowsMinidump.Dir _parent() { return _parent; }
-    }
-
-    /**
-     * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_directory">Source</a>
-     */
-    public static class Dir extends KaitaiStruct {
-        public static Dir fromFile(String fileName) throws IOException {
-            return new Dir(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Dir(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Dir(KaitaiStream _io, WindowsMinidump _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Dir(KaitaiStream _io, WindowsMinidump _parent, WindowsMinidump _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.streamType = WindowsMinidump.StreamTypes.byId(this._io.readU4le());
-            this.lenData = this._io.readU4le();
-            this.ofsData = this._io.readU4le();
-        }
-        private Object data;
-        public Object data() {
-            if (this.data != null)
-                return this.data;
-            long _pos = this._io.pos();
-            this._io.seek(ofsData());
-            {
-                StreamTypes on = streamType();
-                if (on != null) {
-                    switch (streamType()) {
-                    case MEMORY_LIST: {
-                        this._raw_data = this._io.readBytes(lenData());
-                        KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
-                        this.data = new MemoryList(_io__raw_data, this, _root);
-                        break;
-                    }
-                    case MISC_INFO: {
-                        this._raw_data = this._io.readBytes(lenData());
-                        KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
-                        this.data = new MiscInfo(_io__raw_data, this, _root);
-                        break;
-                    }
-                    case THREAD_LIST: {
-                        this._raw_data = this._io.readBytes(lenData());
-                        KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
-                        this.data = new ThreadList(_io__raw_data, this, _root);
-                        break;
-                    }
-                    case EXCEPTION: {
-                        this._raw_data = this._io.readBytes(lenData());
-                        KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
-                        this.data = new ExceptionStream(_io__raw_data, this, _root);
-                        break;
-                    }
-                    case SYSTEM_INFO: {
-                        this._raw_data = this._io.readBytes(lenData());
-                        KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
-                        this.data = new SystemInfo(_io__raw_data, this, _root);
-                        break;
-                    }
-                    default: {
-                        this.data = this._io.readBytes(lenData());
-                        break;
-                    }
-                    }
-                } else {
-                    this.data = this._io.readBytes(lenData());
-                }
-            }
-            this._io.seek(_pos);
-            return this.data;
-        }
-        private StreamTypes streamType;
-        private long lenData;
-        private long ofsData;
-        private WindowsMinidump _root;
-        private WindowsMinidump _parent;
-        private byte[] _raw_data;
-        public StreamTypes streamType() { return streamType; }
-
-        /**
-         * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_location_descriptor">Source</a>
-         */
-        public long lenData() { return lenData; }
-        public long ofsData() { return ofsData; }
-        public WindowsMinidump _root() { return _root; }
-        public WindowsMinidump _parent() { return _parent; }
-        public byte[] _raw_data() { return _raw_data; }
-    }
-
-    /**
      * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread">Source</a>
      */
     public static class Thread extends KaitaiStruct {
@@ -601,6 +758,11 @@ public class WindowsMinidump extends KaitaiStruct {
             this.stack = new MemoryDescriptor(this._io, this, _root);
             this.threadContext = new LocationDescriptor(this._io, this, _root);
         }
+
+        public void _fetchInstances() {
+            this.stack._fetchInstances();
+            this.threadContext._fetchInstances();
+        }
         private long threadId;
         private long suspendCount;
         private long priorityClass;
@@ -626,123 +788,51 @@ public class WindowsMinidump extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list">Source</a>
+     * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread_list">Source</a>
      */
-    public static class MemoryList extends KaitaiStruct {
-        public static MemoryList fromFile(String fileName) throws IOException {
-            return new MemoryList(new ByteBufferKaitaiStream(fileName));
+    public static class ThreadList extends KaitaiStruct {
+        public static ThreadList fromFile(String fileName) throws IOException {
+            return new ThreadList(new ByteBufferKaitaiStream(fileName));
         }
 
-        public MemoryList(KaitaiStream _io) {
+        public ThreadList(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public MemoryList(KaitaiStream _io, WindowsMinidump.Dir _parent) {
+        public ThreadList(KaitaiStream _io, WindowsMinidump.Dir _parent) {
             this(_io, _parent, null);
         }
 
-        public MemoryList(KaitaiStream _io, WindowsMinidump.Dir _parent, WindowsMinidump _root) {
+        public ThreadList(KaitaiStream _io, WindowsMinidump.Dir _parent, WindowsMinidump _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.numMemRanges = this._io.readU4le();
-            this.memRanges = new ArrayList<MemoryDescriptor>();
-            for (int i = 0; i < numMemRanges(); i++) {
-                this.memRanges.add(new MemoryDescriptor(this._io, this, _root));
+            this.numThreads = this._io.readU4le();
+            this.threads = new ArrayList<Thread>();
+            for (int i = 0; i < numThreads(); i++) {
+                this.threads.add(new Thread(this._io, this, _root));
             }
         }
-        private long numMemRanges;
-        private ArrayList<MemoryDescriptor> memRanges;
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.threads.size(); i++) {
+                this.threads.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private long numThreads;
+        private List<Thread> threads;
         private WindowsMinidump _root;
         private WindowsMinidump.Dir _parent;
-        public long numMemRanges() { return numMemRanges; }
-        public ArrayList<MemoryDescriptor> memRanges() { return memRanges; }
+        public long numThreads() { return numThreads; }
+        public List<Thread> threads() { return threads; }
         public WindowsMinidump _root() { return _root; }
         public WindowsMinidump.Dir _parent() { return _parent; }
     }
-
-    /**
-     * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor">Source</a>
-     */
-    public static class MemoryDescriptor extends KaitaiStruct {
-        public static MemoryDescriptor fromFile(String fileName) throws IOException {
-            return new MemoryDescriptor(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public MemoryDescriptor(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public MemoryDescriptor(KaitaiStream _io, KaitaiStruct _parent) {
-            this(_io, _parent, null);
-        }
-
-        public MemoryDescriptor(KaitaiStream _io, KaitaiStruct _parent, WindowsMinidump _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.addrMemoryRange = this._io.readU8le();
-            this.memory = new LocationDescriptor(this._io, this, _root);
-        }
-        private long addrMemoryRange;
-        private LocationDescriptor memory;
-        private WindowsMinidump _root;
-        private KaitaiStruct _parent;
-        public long addrMemoryRange() { return addrMemoryRange; }
-        public LocationDescriptor memory() { return memory; }
-        public WindowsMinidump _root() { return _root; }
-        public KaitaiStruct _parent() { return _parent; }
-    }
-
-    /**
-     * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception_stream">Source</a>
-     */
-    public static class ExceptionStream extends KaitaiStruct {
-        public static ExceptionStream fromFile(String fileName) throws IOException {
-            return new ExceptionStream(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public ExceptionStream(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public ExceptionStream(KaitaiStream _io, WindowsMinidump.Dir _parent) {
-            this(_io, _parent, null);
-        }
-
-        public ExceptionStream(KaitaiStream _io, WindowsMinidump.Dir _parent, WindowsMinidump _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.threadId = this._io.readU4le();
-            this.reserved = this._io.readU4le();
-            this.exceptionRec = new ExceptionRecord(this._io, this, _root);
-            this.threadContext = new LocationDescriptor(this._io, this, _root);
-        }
-        private long threadId;
-        private long reserved;
-        private ExceptionRecord exceptionRec;
-        private LocationDescriptor threadContext;
-        private WindowsMinidump _root;
-        private WindowsMinidump.Dir _parent;
-        public long threadId() { return threadId; }
-        public long reserved() { return reserved; }
-        public ExceptionRecord exceptionRec() { return exceptionRec; }
-        public LocationDescriptor threadContext() { return threadContext; }
-        public WindowsMinidump _root() { return _root; }
-        public WindowsMinidump.Dir _parent() { return _parent; }
-    }
-    private ArrayList<Dir> streams;
-    public ArrayList<Dir> streams() {
+    private List<Dir> streams;
+    public List<Dir> streams() {
         if (this.streams != null)
             return this.streams;
         long _pos = this._io.pos();

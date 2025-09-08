@@ -15,6 +15,11 @@ const (
 	IcmpPacket_IcmpTypeEnum__Echo IcmpPacket_IcmpTypeEnum = 8
 	IcmpPacket_IcmpTypeEnum__TimeExceeded IcmpPacket_IcmpTypeEnum = 11
 )
+var values_IcmpPacket_IcmpTypeEnum = map[IcmpPacket_IcmpTypeEnum]struct{}{0: {}, 3: {}, 4: {}, 5: {}, 8: {}, 11: {}}
+func (v IcmpPacket_IcmpTypeEnum) isDefined() bool {
+	_, ok := values_IcmpPacket_IcmpTypeEnum[v]
+	return ok
+}
 type IcmpPacket struct {
 	IcmpType IcmpPacket_IcmpTypeEnum
 	DestinationUnreachable *IcmpPacket_DestinationUnreachableMsg
@@ -22,14 +27,18 @@ type IcmpPacket struct {
 	Echo *IcmpPacket_EchoMsg
 	_io *kaitai.Stream
 	_root *IcmpPacket
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewIcmpPacket() *IcmpPacket {
 	return &IcmpPacket{
 	}
 }
 
-func (this *IcmpPacket) Read(io *kaitai.Stream, parent interface{}, root *IcmpPacket) (err error) {
+func (this IcmpPacket) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *IcmpPacket) Read(io *kaitai.Stream, parent kaitai.Struct, root *IcmpPacket) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -85,6 +94,11 @@ const (
 	IcmpPacket_DestinationUnreachableMsg_DestinationUnreachableCode__HostPrecedenceViolation IcmpPacket_DestinationUnreachableMsg_DestinationUnreachableCode = 14
 	IcmpPacket_DestinationUnreachableMsg_DestinationUnreachableCode__PrecedenceCuttoffInEffect IcmpPacket_DestinationUnreachableMsg_DestinationUnreachableCode = 15
 )
+var values_IcmpPacket_DestinationUnreachableMsg_DestinationUnreachableCode = map[IcmpPacket_DestinationUnreachableMsg_DestinationUnreachableCode]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}, 10: {}, 11: {}, 12: {}, 13: {}, 14: {}, 15: {}}
+func (v IcmpPacket_DestinationUnreachableMsg_DestinationUnreachableCode) isDefined() bool {
+	_, ok := values_IcmpPacket_DestinationUnreachableMsg_DestinationUnreachableCode[v]
+	return ok
+}
 type IcmpPacket_DestinationUnreachableMsg struct {
 	Code IcmpPacket_DestinationUnreachableMsg_DestinationUnreachableCode
 	Checksum uint16
@@ -95,6 +109,10 @@ type IcmpPacket_DestinationUnreachableMsg struct {
 func NewIcmpPacket_DestinationUnreachableMsg() *IcmpPacket_DestinationUnreachableMsg {
 	return &IcmpPacket_DestinationUnreachableMsg{
 	}
+}
+
+func (this IcmpPacket_DestinationUnreachableMsg) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *IcmpPacket_DestinationUnreachableMsg) Read(io *kaitai.Stream, parent *IcmpPacket, root *IcmpPacket) (err error) {
@@ -114,41 +132,6 @@ func (this *IcmpPacket_DestinationUnreachableMsg) Read(io *kaitai.Stream, parent
 	this.Checksum = uint16(tmp6)
 	return err
 }
-
-type IcmpPacket_TimeExceededMsg_TimeExceededCode int
-const (
-	IcmpPacket_TimeExceededMsg_TimeExceededCode__TimeToLiveExceededInTransit IcmpPacket_TimeExceededMsg_TimeExceededCode = 0
-	IcmpPacket_TimeExceededMsg_TimeExceededCode__FragmentReassemblyTimeExceeded IcmpPacket_TimeExceededMsg_TimeExceededCode = 1
-)
-type IcmpPacket_TimeExceededMsg struct {
-	Code IcmpPacket_TimeExceededMsg_TimeExceededCode
-	Checksum uint16
-	_io *kaitai.Stream
-	_root *IcmpPacket
-	_parent *IcmpPacket
-}
-func NewIcmpPacket_TimeExceededMsg() *IcmpPacket_TimeExceededMsg {
-	return &IcmpPacket_TimeExceededMsg{
-	}
-}
-
-func (this *IcmpPacket_TimeExceededMsg) Read(io *kaitai.Stream, parent *IcmpPacket, root *IcmpPacket) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp7, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Code = IcmpPacket_TimeExceededMsg_TimeExceededCode(tmp7)
-	tmp8, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.Checksum = uint16(tmp8)
-	return err
-}
 type IcmpPacket_EchoMsg struct {
 	Code []byte
 	Checksum uint16
@@ -164,40 +147,88 @@ func NewIcmpPacket_EchoMsg() *IcmpPacket_EchoMsg {
 	}
 }
 
+func (this IcmpPacket_EchoMsg) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *IcmpPacket_EchoMsg) Read(io *kaitai.Stream, parent *IcmpPacket, root *IcmpPacket) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp9, err := this._io.ReadBytes(int(1))
+	tmp7, err := this._io.ReadBytes(int(1))
 	if err != nil {
 		return err
 	}
-	tmp9 = tmp9
-	this.Code = tmp9
+	tmp7 = tmp7
+	this.Code = tmp7
 	if !(bytes.Equal(this.Code, []uint8{0})) {
 		return kaitai.NewValidationNotEqualError([]uint8{0}, this.Code, this._io, "/types/echo_msg/seq/0")
 	}
+	tmp8, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.Checksum = uint16(tmp8)
+	tmp9, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.Identifier = uint16(tmp9)
 	tmp10, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.Checksum = uint16(tmp10)
-	tmp11, err := this._io.ReadU2be()
+	this.SeqNum = uint16(tmp10)
+	tmp11, err := this._io.ReadBytesFull()
 	if err != nil {
 		return err
 	}
-	this.Identifier = uint16(tmp11)
-	tmp12, err := this._io.ReadU2be()
+	tmp11 = tmp11
+	this.Data = tmp11
+	return err
+}
+
+type IcmpPacket_TimeExceededMsg_TimeExceededCode int
+const (
+	IcmpPacket_TimeExceededMsg_TimeExceededCode__TimeToLiveExceededInTransit IcmpPacket_TimeExceededMsg_TimeExceededCode = 0
+	IcmpPacket_TimeExceededMsg_TimeExceededCode__FragmentReassemblyTimeExceeded IcmpPacket_TimeExceededMsg_TimeExceededCode = 1
+)
+var values_IcmpPacket_TimeExceededMsg_TimeExceededCode = map[IcmpPacket_TimeExceededMsg_TimeExceededCode]struct{}{0: {}, 1: {}}
+func (v IcmpPacket_TimeExceededMsg_TimeExceededCode) isDefined() bool {
+	_, ok := values_IcmpPacket_TimeExceededMsg_TimeExceededCode[v]
+	return ok
+}
+type IcmpPacket_TimeExceededMsg struct {
+	Code IcmpPacket_TimeExceededMsg_TimeExceededCode
+	Checksum uint16
+	_io *kaitai.Stream
+	_root *IcmpPacket
+	_parent *IcmpPacket
+}
+func NewIcmpPacket_TimeExceededMsg() *IcmpPacket_TimeExceededMsg {
+	return &IcmpPacket_TimeExceededMsg{
+	}
+}
+
+func (this IcmpPacket_TimeExceededMsg) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *IcmpPacket_TimeExceededMsg) Read(io *kaitai.Stream, parent *IcmpPacket, root *IcmpPacket) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp12, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.SeqNum = uint16(tmp12)
-	tmp13, err := this._io.ReadBytesFull()
+	this.Code = IcmpPacket_TimeExceededMsg_TimeExceededCode(tmp12)
+	tmp13, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	tmp13 = tmp13
-	this.Data = tmp13
+	this.Checksum = uint16(tmp13)
 	return err
 }

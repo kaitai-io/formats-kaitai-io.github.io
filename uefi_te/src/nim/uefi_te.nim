@@ -7,6 +7,28 @@ type
     `sections`*: seq[UefiTe_Section]
     `parent`*: KaitaiStruct
     `rawTeHdr`*: seq[byte]
+  UefiTe_DataDir* = ref object of KaitaiStruct
+    `virtualAddress`*: uint32
+    `size`*: uint32
+    `parent`*: UefiTe_HeaderDataDirs
+  UefiTe_HeaderDataDirs* = ref object of KaitaiStruct
+    `baseRelocationTable`*: UefiTe_DataDir
+    `debug`*: UefiTe_DataDir
+    `parent`*: UefiTe_TeHeader
+  UefiTe_Section* = ref object of KaitaiStruct
+    `name`*: string
+    `virtualSize`*: uint32
+    `virtualAddress`*: uint32
+    `sizeOfRawData`*: uint32
+    `pointerToRawData`*: uint32
+    `pointerToRelocations`*: uint32
+    `pointerToLinenumbers`*: uint32
+    `numRelocations`*: uint16
+    `numLinenumbers`*: uint16
+    `characteristics`*: uint32
+    `parent`*: UefiTe
+    `bodyInst`: seq[byte]
+    `bodyInstFlag`: bool
   UefiTe_TeHeader* = ref object of KaitaiStruct
     `magic`*: seq[byte]
     `machine`*: UefiTe_TeHeader_MachineType
@@ -61,34 +83,12 @@ type
     efi_rom = 13
     xbox = 14
     windows_boot_application = 16
-  UefiTe_HeaderDataDirs* = ref object of KaitaiStruct
-    `baseRelocationTable`*: UefiTe_DataDir
-    `debug`*: UefiTe_DataDir
-    `parent`*: UefiTe_TeHeader
-  UefiTe_DataDir* = ref object of KaitaiStruct
-    `virtualAddress`*: uint32
-    `size`*: uint32
-    `parent`*: UefiTe_HeaderDataDirs
-  UefiTe_Section* = ref object of KaitaiStruct
-    `name`*: string
-    `virtualSize`*: uint32
-    `virtualAddress`*: uint32
-    `sizeOfRawData`*: uint32
-    `pointerToRawData`*: uint32
-    `pointerToRelocations`*: uint32
-    `pointerToLinenumbers`*: uint32
-    `numRelocations`*: uint16
-    `numLinenumbers`*: uint16
-    `characteristics`*: uint32
-    `parent`*: UefiTe
-    `bodyInst`: seq[byte]
-    `bodyInstFlag`: bool
 
 proc read*(_: typedesc[UefiTe], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): UefiTe
-proc read*(_: typedesc[UefiTe_TeHeader], io: KaitaiStream, root: KaitaiStruct, parent: UefiTe): UefiTe_TeHeader
-proc read*(_: typedesc[UefiTe_HeaderDataDirs], io: KaitaiStream, root: KaitaiStruct, parent: UefiTe_TeHeader): UefiTe_HeaderDataDirs
 proc read*(_: typedesc[UefiTe_DataDir], io: KaitaiStream, root: KaitaiStruct, parent: UefiTe_HeaderDataDirs): UefiTe_DataDir
+proc read*(_: typedesc[UefiTe_HeaderDataDirs], io: KaitaiStream, root: KaitaiStruct, parent: UefiTe_TeHeader): UefiTe_HeaderDataDirs
 proc read*(_: typedesc[UefiTe_Section], io: KaitaiStream, root: KaitaiStruct, parent: UefiTe): UefiTe_Section
+proc read*(_: typedesc[UefiTe_TeHeader], io: KaitaiStream, root: KaitaiStruct, parent: UefiTe): UefiTe_TeHeader
 
 proc body*(this: UefiTe_Section): seq[byte]
 
@@ -135,35 +135,21 @@ proc read*(_: typedesc[UefiTe], io: KaitaiStream, root: KaitaiStruct, parent: Ka
 proc fromFile*(_: typedesc[UefiTe], filename: string): UefiTe =
   UefiTe.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[UefiTe_TeHeader], io: KaitaiStream, root: KaitaiStruct, parent: UefiTe): UefiTe_TeHeader =
+proc read*(_: typedesc[UefiTe_DataDir], io: KaitaiStream, root: KaitaiStruct, parent: UefiTe_HeaderDataDirs): UefiTe_DataDir =
   template this: untyped = result
-  this = new(UefiTe_TeHeader)
+  this = new(UefiTe_DataDir)
   let root = if root == nil: cast[UefiTe](this) else: cast[UefiTe](root)
   this.io = io
   this.root = root
   this.parent = parent
 
-  let magicExpr = this.io.readBytes(int(2))
-  this.magic = magicExpr
-  let machineExpr = UefiTe_TeHeader_MachineType(this.io.readU2le())
-  this.machine = machineExpr
-  let numSectionsExpr = this.io.readU1()
-  this.numSections = numSectionsExpr
-  let subsystemExpr = UefiTe_TeHeader_SubsystemEnum(this.io.readU1())
-  this.subsystem = subsystemExpr
-  let strippedSizeExpr = this.io.readU2le()
-  this.strippedSize = strippedSizeExpr
-  let entryPointAddrExpr = this.io.readU4le()
-  this.entryPointAddr = entryPointAddrExpr
-  let baseOfCodeExpr = this.io.readU4le()
-  this.baseOfCode = baseOfCodeExpr
-  let imageBaseExpr = this.io.readU8le()
-  this.imageBase = imageBaseExpr
-  let dataDirsExpr = UefiTe_HeaderDataDirs.read(this.io, this.root, this)
-  this.dataDirs = dataDirsExpr
+  let virtualAddressExpr = this.io.readU4le()
+  this.virtualAddress = virtualAddressExpr
+  let sizeExpr = this.io.readU4le()
+  this.size = sizeExpr
 
-proc fromFile*(_: typedesc[UefiTe_TeHeader], filename: string): UefiTe_TeHeader =
-  UefiTe_TeHeader.read(newKaitaiFileStream(filename), nil, nil)
+proc fromFile*(_: typedesc[UefiTe_DataDir], filename: string): UefiTe_DataDir =
+  UefiTe_DataDir.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[UefiTe_HeaderDataDirs], io: KaitaiStream, root: KaitaiStruct, parent: UefiTe_TeHeader): UefiTe_HeaderDataDirs =
   template this: untyped = result
@@ -180,22 +166,6 @@ proc read*(_: typedesc[UefiTe_HeaderDataDirs], io: KaitaiStream, root: KaitaiStr
 
 proc fromFile*(_: typedesc[UefiTe_HeaderDataDirs], filename: string): UefiTe_HeaderDataDirs =
   UefiTe_HeaderDataDirs.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[UefiTe_DataDir], io: KaitaiStream, root: KaitaiStruct, parent: UefiTe_HeaderDataDirs): UefiTe_DataDir =
-  template this: untyped = result
-  this = new(UefiTe_DataDir)
-  let root = if root == nil: cast[UefiTe](this) else: cast[UefiTe](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let virtualAddressExpr = this.io.readU4le()
-  this.virtualAddress = virtualAddressExpr
-  let sizeExpr = this.io.readU4le()
-  this.size = sizeExpr
-
-proc fromFile*(_: typedesc[UefiTe_DataDir], filename: string): UefiTe_DataDir =
-  UefiTe_DataDir.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[UefiTe_Section], io: KaitaiStream, root: KaitaiStruct, parent: UefiTe): UefiTe_Section =
   template this: untyped = result
@@ -230,7 +200,7 @@ proc body(this: UefiTe_Section): seq[byte] =
   if this.bodyInstFlag:
     return this.bodyInst
   let pos = this.io.pos()
-  this.io.seek(int(((this.pointerToRawData - UefiTe(this.root).teHdr.strippedSize) + UefiTe(this.root).teHdr.io.size)))
+  this.io.seek(int((this.pointerToRawData - UefiTe(this.root).teHdr.strippedSize) + UefiTe(this.root).teHdr.io.size))
   let bodyInstExpr = this.io.readBytes(int(this.sizeOfRawData))
   this.bodyInst = bodyInstExpr
   this.io.seek(pos)
@@ -239,4 +209,34 @@ proc body(this: UefiTe_Section): seq[byte] =
 
 proc fromFile*(_: typedesc[UefiTe_Section], filename: string): UefiTe_Section =
   UefiTe_Section.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[UefiTe_TeHeader], io: KaitaiStream, root: KaitaiStruct, parent: UefiTe): UefiTe_TeHeader =
+  template this: untyped = result
+  this = new(UefiTe_TeHeader)
+  let root = if root == nil: cast[UefiTe](this) else: cast[UefiTe](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let magicExpr = this.io.readBytes(int(2))
+  this.magic = magicExpr
+  let machineExpr = UefiTe_TeHeader_MachineType(this.io.readU2le())
+  this.machine = machineExpr
+  let numSectionsExpr = this.io.readU1()
+  this.numSections = numSectionsExpr
+  let subsystemExpr = UefiTe_TeHeader_SubsystemEnum(this.io.readU1())
+  this.subsystem = subsystemExpr
+  let strippedSizeExpr = this.io.readU2le()
+  this.strippedSize = strippedSizeExpr
+  let entryPointAddrExpr = this.io.readU4le()
+  this.entryPointAddr = entryPointAddrExpr
+  let baseOfCodeExpr = this.io.readU4le()
+  this.baseOfCode = baseOfCodeExpr
+  let imageBaseExpr = this.io.readU8le()
+  this.imageBase = imageBaseExpr
+  let dataDirsExpr = UefiTe_HeaderDataDirs.read(this.io, this.root, this)
+  this.dataDirs = dataDirsExpr
+
+proc fromFile*(_: typedesc[UefiTe_TeHeader], filename: string): UefiTe_TeHeader =
+  UefiTe_TeHeader.read(newKaitaiFileStream(filename), nil, nil)
 

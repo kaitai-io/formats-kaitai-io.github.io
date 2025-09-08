@@ -45,12 +45,33 @@ function ZxSpectrumTap:_read()
 end
 
 
+ZxSpectrumTap.ArrayParams = class.class(KaitaiStruct)
+
+function ZxSpectrumTap.ArrayParams:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function ZxSpectrumTap.ArrayParams:_read()
+  self.reserved = self._io:read_u1()
+  self.var_name = self._io:read_u1()
+  self.reserved1 = self._io:read_bytes(2)
+  if not(self.reserved1 == "\000\128") then
+    error("not equal, expected " .. "\000\128" .. ", but got " .. self.reserved1)
+  end
+end
+
+-- 
+-- Variable name (1..26 meaning A$..Z$ +192).
+
 ZxSpectrumTap.Block = class.class(KaitaiStruct)
 
 function ZxSpectrumTap.Block:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -61,26 +82,11 @@ function ZxSpectrumTap.Block:_read()
     self.header = ZxSpectrumTap.Header(self._io, self, self._root)
   end
   if self.len_block == 19 then
-    self.data = self._io:read_bytes((self.header.len_data + 4))
+    self.data = self._io:read_bytes(self.header.len_data + 4)
   end
   if self.flag == ZxSpectrumTap.FlagEnum.data then
-    self.headerless_data = self._io:read_bytes((self.len_block - 1))
+    self.headerless_data = self._io:read_bytes(self.len_block - 1)
   end
-end
-
-
-ZxSpectrumTap.ProgramParams = class.class(KaitaiStruct)
-
-function ZxSpectrumTap.ProgramParams:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function ZxSpectrumTap.ProgramParams:_read()
-  self.autostart_line = self._io:read_u2le()
-  self.len_program = self._io:read_u2le()
 end
 
 
@@ -89,7 +95,7 @@ ZxSpectrumTap.BytesParams = class.class(KaitaiStruct)
 function ZxSpectrumTap.BytesParams:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -104,7 +110,7 @@ ZxSpectrumTap.Header = class.class(KaitaiStruct)
 function ZxSpectrumTap.Header:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -113,14 +119,14 @@ function ZxSpectrumTap.Header:_read()
   self.filename = KaitaiStream.bytes_strip_right(self._io:read_bytes(10), 32)
   self.len_data = self._io:read_u2le()
   local _on = self.header_type
-  if _on == ZxSpectrumTap.HeaderTypeEnum.program then
-    self.params = ZxSpectrumTap.ProgramParams(self._io, self, self._root)
-  elseif _on == ZxSpectrumTap.HeaderTypeEnum.num_array then
-    self.params = ZxSpectrumTap.ArrayParams(self._io, self, self._root)
+  if _on == ZxSpectrumTap.HeaderTypeEnum.bytes then
+    self.params = ZxSpectrumTap.BytesParams(self._io, self, self._root)
   elseif _on == ZxSpectrumTap.HeaderTypeEnum.char_array then
     self.params = ZxSpectrumTap.ArrayParams(self._io, self, self._root)
-  elseif _on == ZxSpectrumTap.HeaderTypeEnum.bytes then
-    self.params = ZxSpectrumTap.BytesParams(self._io, self, self._root)
+  elseif _on == ZxSpectrumTap.HeaderTypeEnum.num_array then
+    self.params = ZxSpectrumTap.ArrayParams(self._io, self, self._root)
+  elseif _on == ZxSpectrumTap.HeaderTypeEnum.program then
+    self.params = ZxSpectrumTap.ProgramParams(self._io, self, self._root)
   end
   self.checksum = self._io:read_u1()
 end
@@ -128,24 +134,18 @@ end
 -- 
 -- Bitwise XOR of all bytes including the flag byte.
 
-ZxSpectrumTap.ArrayParams = class.class(KaitaiStruct)
+ZxSpectrumTap.ProgramParams = class.class(KaitaiStruct)
 
-function ZxSpectrumTap.ArrayParams:_init(io, parent, root)
+function ZxSpectrumTap.ProgramParams:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function ZxSpectrumTap.ArrayParams:_read()
-  self.reserved = self._io:read_u1()
-  self.var_name = self._io:read_u1()
-  self.reserved1 = self._io:read_bytes(2)
-  if not(self.reserved1 == "\000\128") then
-    error("not equal, expected " ..  "\000\128" .. ", but got " .. self.reserved1)
-  end
+function ZxSpectrumTap.ProgramParams:_read()
+  self.autostart_line = self._io:read_u2le()
+  self.len_program = self._io:read_u2le()
 end
 
--- 
--- Variable name (1..26 meaning A$..Z$ +192).
 

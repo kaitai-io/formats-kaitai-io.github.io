@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.Gzip = factory(root.KaitaiStream);
+    factory(root.Gzip || (root.Gzip = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Gzip_, KaitaiStream) {
 /**
  * Gzip is a popular and standard single-file archiving format. It
  * essentially provides a container that stores original file name,
@@ -71,8 +71,8 @@ var Gzip = (function() {
   }
   Gzip.prototype._read = function() {
     this.magic = this._io.readBytes(2);
-    if (!((KaitaiStream.byteArrayCompare(this.magic, [31, 139]) == 0))) {
-      throw new KaitaiStream.ValidationNotEqualError([31, 139], this.magic, this._io, "/seq/0");
+    if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([31, 139])) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([31, 139]), this.magic, this._io, "/seq/0");
     }
     this.compressionMethod = this._io.readU1();
     this.flags = new Flags(this._io, this, this._root);
@@ -95,16 +95,57 @@ var Gzip = (function() {
     if (this.flags.hasHeaderCrc) {
       this.headerCrc16 = this._io.readU2le();
     }
-    this.body = this._io.readBytes(((this._io.size - this._io.pos) - 8));
+    this.body = this._io.readBytes((this._io.size - this._io.pos) - 8);
     this.bodyCrc32 = this._io.readU4le();
     this.lenUncompressed = this._io.readU4le();
   }
+
+  var ExtraFlagsDeflate = Gzip.ExtraFlagsDeflate = (function() {
+    ExtraFlagsDeflate.CompressionStrengths = Object.freeze({
+      BEST: 2,
+      FAST: 4,
+
+      2: "BEST",
+      4: "FAST",
+    });
+
+    function ExtraFlagsDeflate(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    ExtraFlagsDeflate.prototype._read = function() {
+      this.compressionStrength = this._io.readU1();
+    }
+
+    return ExtraFlagsDeflate;
+  })();
+
+  var Extras = Gzip.Extras = (function() {
+    function Extras(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Extras.prototype._read = function() {
+      this.lenSubfields = this._io.readU2le();
+      this._raw_subfields = this._io.readBytes(this.lenSubfields);
+      var _io__raw_subfields = new KaitaiStream(this._raw_subfields);
+      this.subfields = new Subfields(_io__raw_subfields, this, this._root);
+    }
+
+    return Extras;
+  })();
 
   var Flags = Gzip.Flags = (function() {
     function Flags(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -133,53 +174,6 @@ var Gzip = (function() {
     return Flags;
   })();
 
-  var ExtraFlagsDeflate = Gzip.ExtraFlagsDeflate = (function() {
-    ExtraFlagsDeflate.CompressionStrengths = Object.freeze({
-      BEST: 2,
-      FAST: 4,
-
-      2: "BEST",
-      4: "FAST",
-    });
-
-    function ExtraFlagsDeflate(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    ExtraFlagsDeflate.prototype._read = function() {
-      this.compressionStrength = this._io.readU1();
-    }
-
-    return ExtraFlagsDeflate;
-  })();
-
-  /**
-   * Container for many subfields, constrained by size of stream.
-   */
-
-  var Subfields = Gzip.Subfields = (function() {
-    function Subfields(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Subfields.prototype._read = function() {
-      this.entries = [];
-      var i = 0;
-      while (!this._io.isEof()) {
-        this.entries.push(new Subfield(this._io, this, this._root));
-        i++;
-      }
-    }
-
-    return Subfields;
-  })();
-
   /**
    * Every subfield follows typical [TLV scheme](https://en.wikipedia.org/wiki/Type-length-value):
    * 
@@ -195,7 +189,7 @@ var Gzip = (function() {
     function Subfield(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -212,22 +206,28 @@ var Gzip = (function() {
     return Subfield;
   })();
 
-  var Extras = Gzip.Extras = (function() {
-    function Extras(_io, _parent, _root) {
+  /**
+   * Container for many subfields, constrained by size of stream.
+   */
+
+  var Subfields = Gzip.Subfields = (function() {
+    function Subfields(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    Extras.prototype._read = function() {
-      this.lenSubfields = this._io.readU2le();
-      this._raw_subfields = this._io.readBytes(this.lenSubfields);
-      var _io__raw_subfields = new KaitaiStream(this._raw_subfields);
-      this.subfields = new Subfields(_io__raw_subfields, this, this._root);
+    Subfields.prototype._read = function() {
+      this.entries = [];
+      var i = 0;
+      while (!this._io.isEof()) {
+        this.entries.push(new Subfield(this._io, this, this._root));
+        i++;
+      }
     }
 
-    return Extras;
+    return Subfields;
   })();
 
   /**
@@ -263,5 +263,5 @@ var Gzip = (function() {
 
   return Gzip;
 })();
-return Gzip;
-}));
+Gzip_.Gzip = Gzip;
+});

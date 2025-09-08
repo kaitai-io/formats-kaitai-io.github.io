@@ -1,9 +1,10 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 require 'kaitai/struct/struct'
+require_relative 'php_serialized_value'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -61,8 +62,8 @@ class PharWithoutStub < Kaitai::Struct::Struct
     16 => :signature_type_openssl,
   }
   I__SIGNATURE_TYPE = SIGNATURE_TYPE.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -78,95 +79,6 @@ class PharWithoutStub < Kaitai::Struct::Struct
       @signature = Signature.new(_io__raw_signature, self, @_root)
     end
     self
-  end
-  class SerializedValue < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @raw = @_io.read_bytes_full
-      self
-    end
-
-    ##
-    # The serialized value, parsed as a structure.
-    def parsed
-      return @parsed unless @parsed.nil?
-      _pos = @_io.pos
-      @_io.seek(0)
-      @parsed = PhpSerializedValue.new(@_io)
-      @_io.seek(_pos)
-      @parsed
-    end
-
-    ##
-    # The serialized value, as a raw byte array.
-    attr_reader :raw
-  end
-  class Signature < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @data = @_io.read_bytes(((_io.size - _io.pos) - 8))
-      @type = Kaitai::Struct::Stream::resolve_enum(PharWithoutStub::SIGNATURE_TYPE, @_io.read_u4le)
-      @magic = @_io.read_bytes(4)
-      raise Kaitai::Struct::ValidationNotEqualError.new([71, 66, 77, 66].pack('C*'), magic, _io, "/types/signature/seq/2") if not magic == [71, 66, 77, 66].pack('C*')
-      self
-    end
-
-    ##
-    # The signature data. The size and contents depend on the
-    # signature type.
-    attr_reader :data
-
-    ##
-    # The signature type.
-    attr_reader :type
-    attr_reader :magic
-  end
-  class FileFlags < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @value = @_io.read_u4le
-      self
-    end
-
-    ##
-    # The file's permission bits.
-    def permissions
-      return @permissions unless @permissions.nil?
-      @permissions = (value & 511)
-      @permissions
-    end
-
-    ##
-    # Whether this file's data is stored using zlib compression.
-    def zlib_compressed
-      return @zlib_compressed unless @zlib_compressed.nil?
-      @zlib_compressed = (value & 4096) != 0
-      @zlib_compressed
-    end
-
-    ##
-    # Whether this file's data is stored using bzip2 compression.
-    def bzip2_compressed
-      return @bzip2_compressed unless @bzip2_compressed.nil?
-      @bzip2_compressed = (value & 8192) != 0
-      @bzip2_compressed
-    end
-
-    ##
-    # The unparsed flag bits.
-    attr_reader :value
   end
 
   ##
@@ -203,7 +115,7 @@ class PharWithoutStub < Kaitai::Struct::Struct
   #   Adds the OpenSSL signature type and support for storing
   #   empty directories.
   class ApiVersion < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -220,8 +132,114 @@ class PharWithoutStub < Kaitai::Struct::Struct
     attr_reader :minor
     attr_reader :unused
   end
+  class FileEntry < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @len_filename = @_io.read_u4le
+      @filename = @_io.read_bytes(len_filename)
+      @len_data_uncompressed = @_io.read_u4le
+      @timestamp = @_io.read_u4le
+      @len_data_compressed = @_io.read_u4le
+      @crc32 = @_io.read_u4le
+      @flags = FileFlags.new(@_io, self, @_root)
+      @len_metadata = @_io.read_u4le
+      if len_metadata != 0
+        _io_metadata = @_io.substream(len_metadata)
+        @metadata = SerializedValue.new(_io_metadata, self, @_root)
+      end
+      self
+    end
+
+    ##
+    # The length of the file name, in bytes.
+    attr_reader :len_filename
+
+    ##
+    # The name of this file. If the name ends with a slash, this entry
+    # represents a directory, otherwise a regular file. Directory entries
+    # are supported since phar API version 1.1.1.
+    # (Explicit directory entries are only needed for empty directories.
+    # Non-empty directories are implied by the files located inside them.)
+    attr_reader :filename
+
+    ##
+    # The length of the file's data when uncompressed, in bytes.
+    attr_reader :len_data_uncompressed
+
+    ##
+    # The time at which the file was added or last updated, as a
+    # Unix timestamp.
+    attr_reader :timestamp
+
+    ##
+    # The length of the file's data when compressed, in bytes.
+    attr_reader :len_data_compressed
+
+    ##
+    # The CRC32 checksum of the file's uncompressed data.
+    attr_reader :crc32
+
+    ##
+    # Flags for this file.
+    attr_reader :flags
+
+    ##
+    # The length of the metadata, in bytes, or 0 if there is none.
+    attr_reader :len_metadata
+
+    ##
+    # Metadata for this file, in the format used by PHP's
+    # `serialize` function. The meaning of the serialized data is not
+    # specified further, it may be used to store arbitrary custom data
+    # about the file.
+    attr_reader :metadata
+    attr_reader :_raw_metadata
+  end
+  class FileFlags < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @value = @_io.read_u4le
+      self
+    end
+
+    ##
+    # Whether this file's data is stored using bzip2 compression.
+    def bzip2_compressed
+      return @bzip2_compressed unless @bzip2_compressed.nil?
+      @bzip2_compressed = value & 8192 != 0
+      @bzip2_compressed
+    end
+
+    ##
+    # The file's permission bits.
+    def permissions
+      return @permissions unless @permissions.nil?
+      @permissions = value & 511
+      @permissions
+    end
+
+    ##
+    # Whether this file's data is stored using zlib compression.
+    def zlib_compressed
+      return @zlib_compressed unless @zlib_compressed.nil?
+      @zlib_compressed = value & 4096 != 0
+      @zlib_compressed
+    end
+
+    ##
+    # The unparsed flag bits.
+    attr_reader :value
+  end
   class GlobalFlags < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -233,27 +251,27 @@ class PharWithoutStub < Kaitai::Struct::Struct
 
     ##
     # Whether any of the files in this phar are stored using
-    # zlib compression.
-    def any_zlib_compressed
-      return @any_zlib_compressed unless @any_zlib_compressed.nil?
-      @any_zlib_compressed = (value & 4096) != 0
-      @any_zlib_compressed
+    # bzip2 compression.
+    def any_bzip2_compressed
+      return @any_bzip2_compressed unless @any_bzip2_compressed.nil?
+      @any_bzip2_compressed = value & 8192 != 0
+      @any_bzip2_compressed
     end
 
     ##
     # Whether any of the files in this phar are stored using
-    # bzip2 compression.
-    def any_bzip2_compressed
-      return @any_bzip2_compressed unless @any_bzip2_compressed.nil?
-      @any_bzip2_compressed = (value & 8192) != 0
-      @any_bzip2_compressed
+    # zlib compression.
+    def any_zlib_compressed
+      return @any_zlib_compressed unless @any_zlib_compressed.nil?
+      @any_zlib_compressed = value & 4096 != 0
+      @any_zlib_compressed
     end
 
     ##
     # Whether this phar contains a signature.
     def has_signature
       return @has_signature unless @has_signature.nil?
-      @has_signature = (value & 65536) != 0
+      @has_signature = value & 65536 != 0
       @has_signature
     end
 
@@ -262,7 +280,7 @@ class PharWithoutStub < Kaitai::Struct::Struct
     attr_reader :value
   end
   class Manifest < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -276,9 +294,8 @@ class PharWithoutStub < Kaitai::Struct::Struct
       @alias = @_io.read_bytes(len_alias)
       @len_metadata = @_io.read_u4le
       if len_metadata != 0
-        @_raw_metadata = @_io.read_bytes(len_metadata)
-        _io__raw_metadata = Kaitai::Struct::Stream.new(@_raw_metadata)
-        @metadata = SerializedValue.new(_io__raw_metadata, self, @_root)
+        _io_metadata = @_io.substream(len_metadata)
+        @metadata = SerializedValue.new(_io_metadata, self, @_root)
       end
       @file_entries = []
       (num_files).times { |i|
@@ -330,73 +347,55 @@ class PharWithoutStub < Kaitai::Struct::Struct
     attr_reader :file_entries
     attr_reader :_raw_metadata
   end
-  class FileEntry < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  class SerializedValue < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @len_filename = @_io.read_u4le
-      @filename = @_io.read_bytes(len_filename)
-      @len_data_uncompressed = @_io.read_u4le
-      @timestamp = @_io.read_u4le
-      @len_data_compressed = @_io.read_u4le
-      @crc32 = @_io.read_u4le
-      @flags = FileFlags.new(@_io, self, @_root)
-      @len_metadata = @_io.read_u4le
-      if len_metadata != 0
-        @_raw_metadata = @_io.read_bytes(len_metadata)
-        _io__raw_metadata = Kaitai::Struct::Stream.new(@_raw_metadata)
-        @metadata = SerializedValue.new(_io__raw_metadata, self, @_root)
-      end
+      @raw = @_io.read_bytes_full
       self
     end
 
     ##
-    # The length of the file name, in bytes.
-    attr_reader :len_filename
+    # The serialized value, parsed as a structure.
+    def parsed
+      return @parsed unless @parsed.nil?
+      _pos = @_io.pos
+      @_io.seek(0)
+      @parsed = PhpSerializedValue.new(@_io)
+      @_io.seek(_pos)
+      @parsed
+    end
 
     ##
-    # The name of this file. If the name ends with a slash, this entry
-    # represents a directory, otherwise a regular file. Directory entries
-    # are supported since phar API version 1.1.1.
-    # (Explicit directory entries are only needed for empty directories.
-    # Non-empty directories are implied by the files located inside them.)
-    attr_reader :filename
+    # The serialized value, as a raw byte array.
+    attr_reader :raw
+  end
+  class Signature < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @data = @_io.read_bytes((_io.size - _io.pos) - 8)
+      @type = Kaitai::Struct::Stream::resolve_enum(PharWithoutStub::SIGNATURE_TYPE, @_io.read_u4le)
+      @magic = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([71, 66, 77, 66].pack('C*'), @magic, @_io, "/types/signature/seq/2") if not @magic == [71, 66, 77, 66].pack('C*')
+      self
+    end
 
     ##
-    # The length of the file's data when uncompressed, in bytes.
-    attr_reader :len_data_uncompressed
+    # The signature data. The size and contents depend on the
+    # signature type.
+    attr_reader :data
 
     ##
-    # The time at which the file was added or last updated, as a
-    # Unix timestamp.
-    attr_reader :timestamp
-
-    ##
-    # The length of the file's data when compressed, in bytes.
-    attr_reader :len_data_compressed
-
-    ##
-    # The CRC32 checksum of the file's uncompressed data.
-    attr_reader :crc32
-
-    ##
-    # Flags for this file.
-    attr_reader :flags
-
-    ##
-    # The length of the metadata, in bytes, or 0 if there is none.
-    attr_reader :len_metadata
-
-    ##
-    # Metadata for this file, in the format used by PHP's
-    # `serialize` function. The meaning of the serialized data is not
-    # specified further, it may be used to store arbitrary custom data
-    # about the file.
-    attr_reader :metadata
-    attr_reader :_raw_metadata
+    # The signature type.
+    attr_reader :type
+    attr_reader :magic
   end
 
   ##

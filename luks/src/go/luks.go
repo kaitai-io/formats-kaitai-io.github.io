@@ -16,7 +16,7 @@ type Luks struct {
 	PartitionHeader *Luks_PartitionHeader
 	_io *kaitai.Stream
 	_root *Luks
-	_parent interface{}
+	_parent kaitai.Struct
 	_f_payload bool
 	payload []byte
 }
@@ -25,7 +25,11 @@ func NewLuks() *Luks {
 	}
 }
 
-func (this *Luks) Read(io *kaitai.Stream, parent interface{}, root *Luks) (err error) {
+func (this Luks) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Luks) Read(io *kaitai.Stream, parent kaitai.Struct, root *Luks) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -42,11 +46,12 @@ func (this *Luks) Payload() (v []byte, err error) {
 	if (this._f_payload) {
 		return this.payload, nil
 	}
+	this._f_payload = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
 	}
-	_, err = this._io.Seek(int64((this.PartitionHeader.PayloadOffset * 512)), io.SeekStart)
+	_, err = this._io.Seek(int64(this.PartitionHeader.PayloadOffset * 512), io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
@@ -60,8 +65,6 @@ func (this *Luks) Payload() (v []byte, err error) {
 	if err != nil {
 		return nil, err
 	}
-	this._f_payload = true
-	this._f_payload = true
 	return this.payload, nil
 }
 type Luks_PartitionHeader struct {
@@ -84,6 +87,10 @@ type Luks_PartitionHeader struct {
 func NewLuks_PartitionHeader() *Luks_PartitionHeader {
 	return &Luks_PartitionHeader{
 	}
+}
+
+func (this Luks_PartitionHeader) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Luks_PartitionHeader) Read(io *kaitai.Stream, parent *Luks, root *Luks) (err error) {
@@ -177,6 +184,11 @@ const (
 	Luks_PartitionHeader_KeySlot_KeySlotStates__DisabledKeySlot Luks_PartitionHeader_KeySlot_KeySlotStates = 57005
 	Luks_PartitionHeader_KeySlot_KeySlotStates__EnabledKeySlot Luks_PartitionHeader_KeySlot_KeySlotStates = 11301363
 )
+var values_Luks_PartitionHeader_KeySlot_KeySlotStates = map[Luks_PartitionHeader_KeySlot_KeySlotStates]struct{}{57005: {}, 11301363: {}}
+func (v Luks_PartitionHeader_KeySlot_KeySlotStates) isDefined() bool {
+	_, ok := values_Luks_PartitionHeader_KeySlot_KeySlotStates[v]
+	return ok
+}
 type Luks_PartitionHeader_KeySlot struct {
 	StateOfKeySlot Luks_PartitionHeader_KeySlot_KeySlotStates
 	IterationParameter uint32
@@ -192,6 +204,10 @@ type Luks_PartitionHeader_KeySlot struct {
 func NewLuks_PartitionHeader_KeySlot() *Luks_PartitionHeader_KeySlot {
 	return &Luks_PartitionHeader_KeySlot{
 	}
+}
+
+func (this Luks_PartitionHeader_KeySlot) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Luks_PartitionHeader_KeySlot) Read(io *kaitai.Stream, parent *Luks_PartitionHeader, root *Luks) (err error) {
@@ -231,15 +247,16 @@ func (this *Luks_PartitionHeader_KeySlot) KeyMaterial() (v []byte, err error) {
 	if (this._f_keyMaterial) {
 		return this.keyMaterial, nil
 	}
+	this._f_keyMaterial = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
 	}
-	_, err = this._io.Seek(int64((this.StartSectorOfKeyMaterial * 512)), io.SeekStart)
+	_, err = this._io.Seek(int64(this.StartSectorOfKeyMaterial * 512), io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
-	tmp20, err := this._io.ReadBytes(int((this._parent.NumberOfKeyBytes * this.NumberOfAntiForensicStripes)))
+	tmp20, err := this._io.ReadBytes(int(this._parent.NumberOfKeyBytes * this.NumberOfAntiForensicStripes))
 	if err != nil {
 		return nil, err
 	}
@@ -249,7 +266,5 @@ func (this *Luks_PartitionHeader_KeySlot) KeyMaterial() (v []byte, err error) {
 	if err != nil {
 		return nil, err
 	}
-	this._f_keyMaterial = true
-	this._f_keyMaterial = true
 	return this.keyMaterial, nil
 }

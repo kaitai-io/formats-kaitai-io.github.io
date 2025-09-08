@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -13,104 +13,125 @@ end
 # @see https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/elf-application-binary-interface.html Source
 class Elf < Kaitai::Struct::Struct
 
-  SYMBOL_VISIBILITY = {
-    0 => :symbol_visibility_default,
-    1 => :symbol_visibility_internal,
-    2 => :symbol_visibility_hidden,
-    3 => :symbol_visibility_protected,
-    4 => :symbol_visibility_exported,
-    5 => :symbol_visibility_singleton,
-    6 => :symbol_visibility_eliminate,
+  BITS = {
+    1 => :bits_b32,
+    2 => :bits_b64,
   }
-  I__SYMBOL_VISIBILITY = SYMBOL_VISIBILITY.invert
+  I__BITS = BITS.invert
 
-  SYMBOL_BINDING = {
-    0 => :symbol_binding_local,
-    1 => :symbol_binding_global_symbol,
-    2 => :symbol_binding_weak,
-    10 => :symbol_binding_os10,
-    11 => :symbol_binding_os11,
-    12 => :symbol_binding_os12,
-    13 => :symbol_binding_proc13,
-    14 => :symbol_binding_proc14,
-    15 => :symbol_binding_proc15,
+  DYNAMIC_ARRAY_TAGS = {
+    0 => :dynamic_array_tags_null,
+    1 => :dynamic_array_tags_needed,
+    2 => :dynamic_array_tags_pltrelsz,
+    3 => :dynamic_array_tags_pltgot,
+    4 => :dynamic_array_tags_hash,
+    5 => :dynamic_array_tags_strtab,
+    6 => :dynamic_array_tags_symtab,
+    7 => :dynamic_array_tags_rela,
+    8 => :dynamic_array_tags_relasz,
+    9 => :dynamic_array_tags_relaent,
+    10 => :dynamic_array_tags_strsz,
+    11 => :dynamic_array_tags_syment,
+    12 => :dynamic_array_tags_init,
+    13 => :dynamic_array_tags_fini,
+    14 => :dynamic_array_tags_soname,
+    15 => :dynamic_array_tags_rpath,
+    16 => :dynamic_array_tags_symbolic,
+    17 => :dynamic_array_tags_rel,
+    18 => :dynamic_array_tags_relsz,
+    19 => :dynamic_array_tags_relent,
+    20 => :dynamic_array_tags_pltrel,
+    21 => :dynamic_array_tags_debug,
+    22 => :dynamic_array_tags_textrel,
+    23 => :dynamic_array_tags_jmprel,
+    24 => :dynamic_array_tags_bind_now,
+    25 => :dynamic_array_tags_init_array,
+    26 => :dynamic_array_tags_fini_array,
+    27 => :dynamic_array_tags_init_arraysz,
+    28 => :dynamic_array_tags_fini_arraysz,
+    29 => :dynamic_array_tags_runpath,
+    30 => :dynamic_array_tags_flags,
+    32 => :dynamic_array_tags_preinit_array,
+    33 => :dynamic_array_tags_preinit_arraysz,
+    34 => :dynamic_array_tags_symtab_shndx,
+    35 => :dynamic_array_tags_relrsz,
+    36 => :dynamic_array_tags_relr,
+    37 => :dynamic_array_tags_relrent,
+    117440513 => :dynamic_array_tags_deprecated_sparc_register,
+    1610612749 => :dynamic_array_tags_sunw_auxiliary,
+    1610612750 => :dynamic_array_tags_sunw_rtldinf,
+    1610612751 => :dynamic_array_tags_sunw_filter,
+    1610612752 => :dynamic_array_tags_sunw_cap,
+    1610612753 => :dynamic_array_tags_sunw_symtab,
+    1610612754 => :dynamic_array_tags_sunw_symsz,
+    1610612755 => :dynamic_array_tags_sunw_sortent,
+    1610612756 => :dynamic_array_tags_sunw_symsort,
+    1610612757 => :dynamic_array_tags_sunw_symsortsz,
+    1610612758 => :dynamic_array_tags_sunw_tlssort,
+    1610612759 => :dynamic_array_tags_sunw_tlssortsz,
+    1610612760 => :dynamic_array_tags_sunw_capinfo,
+    1610612761 => :dynamic_array_tags_sunw_strpad,
+    1610612762 => :dynamic_array_tags_sunw_capchain,
+    1610612763 => :dynamic_array_tags_sunw_ldmach,
+    1610612764 => :dynamic_array_tags_sunw_symtab_shndx,
+    1610612765 => :dynamic_array_tags_sunw_capchainent,
+    1610612766 => :dynamic_array_tags_sunw_deferred,
+    1610612767 => :dynamic_array_tags_sunw_capchainsz,
+    1610612768 => :dynamic_array_tags_sunw_phname,
+    1610612769 => :dynamic_array_tags_sunw_parent,
+    1610612771 => :dynamic_array_tags_sunw_sx_aslr,
+    1610612773 => :dynamic_array_tags_sunw_relax,
+    1610612775 => :dynamic_array_tags_sunw_kmod,
+    1610612777 => :dynamic_array_tags_sunw_sx_nxheap,
+    1610612779 => :dynamic_array_tags_sunw_sx_nxstack,
+    1610612781 => :dynamic_array_tags_sunw_sx_adiheap,
+    1610612783 => :dynamic_array_tags_sunw_sx_adistack,
+    1610612785 => :dynamic_array_tags_sunw_sx_ssbd,
+    1610612786 => :dynamic_array_tags_sunw_symnsort,
+    1610612787 => :dynamic_array_tags_sunw_symnsortsz,
+    1879047668 => :dynamic_array_tags_gnu_flags_1,
+    1879047669 => :dynamic_array_tags_gnu_prelinked,
+    1879047670 => :dynamic_array_tags_gnu_conflictsz,
+    1879047671 => :dynamic_array_tags_gnu_liblistsz,
+    1879047672 => :dynamic_array_tags_checksum,
+    1879047673 => :dynamic_array_tags_pltpadsz,
+    1879047674 => :dynamic_array_tags_moveent,
+    1879047675 => :dynamic_array_tags_movesz,
+    1879047676 => :dynamic_array_tags_feature_1,
+    1879047677 => :dynamic_array_tags_posflag_1,
+    1879047678 => :dynamic_array_tags_syminsz,
+    1879047679 => :dynamic_array_tags_syminent,
+    1879047925 => :dynamic_array_tags_gnu_hash,
+    1879047926 => :dynamic_array_tags_tlsdesc_plt,
+    1879047927 => :dynamic_array_tags_tlsdesc_got,
+    1879047928 => :dynamic_array_tags_gnu_conflict,
+    1879047929 => :dynamic_array_tags_gnu_liblist,
+    1879047930 => :dynamic_array_tags_config,
+    1879047931 => :dynamic_array_tags_depaudit,
+    1879047932 => :dynamic_array_tags_audit,
+    1879047933 => :dynamic_array_tags_pltpad,
+    1879047934 => :dynamic_array_tags_movetab,
+    1879047935 => :dynamic_array_tags_syminfo,
+    1879048176 => :dynamic_array_tags_versym,
+    1879048185 => :dynamic_array_tags_relacount,
+    1879048186 => :dynamic_array_tags_relcount,
+    1879048187 => :dynamic_array_tags_flags_1,
+    1879048188 => :dynamic_array_tags_verdef,
+    1879048189 => :dynamic_array_tags_verdefnum,
+    1879048190 => :dynamic_array_tags_verneed,
+    1879048191 => :dynamic_array_tags_verneednum,
+    1879048193 => :dynamic_array_tags_sparc_register,
+    2147483645 => :dynamic_array_tags_auxiliary,
+    2147483646 => :dynamic_array_tags_used,
+    2147483647 => :dynamic_array_tags_filter,
   }
-  I__SYMBOL_BINDING = SYMBOL_BINDING.invert
+  I__DYNAMIC_ARRAY_TAGS = DYNAMIC_ARRAY_TAGS.invert
 
   ENDIAN = {
     1 => :endian_le,
     2 => :endian_be,
   }
   I__ENDIAN = ENDIAN.invert
-
-  SH_TYPE = {
-    0 => :sh_type_null_type,
-    1 => :sh_type_progbits,
-    2 => :sh_type_symtab,
-    3 => :sh_type_strtab,
-    4 => :sh_type_rela,
-    5 => :sh_type_hash,
-    6 => :sh_type_dynamic,
-    7 => :sh_type_note,
-    8 => :sh_type_nobits,
-    9 => :sh_type_rel,
-    10 => :sh_type_shlib,
-    11 => :sh_type_dynsym,
-    14 => :sh_type_init_array,
-    15 => :sh_type_fini_array,
-    16 => :sh_type_preinit_array,
-    17 => :sh_type_group,
-    18 => :sh_type_symtab_shndx,
-    19 => :sh_type_relr,
-    1879048172 => :sh_type_sunw_symnsort,
-    1879048173 => :sh_type_sunw_phname,
-    1879048174 => :sh_type_sunw_ancillary,
-    1879048175 => :sh_type_sunw_capchain,
-    1879048176 => :sh_type_sunw_capinfo,
-    1879048177 => :sh_type_sunw_symsort,
-    1879048178 => :sh_type_sunw_tlssort,
-    1879048179 => :sh_type_sunw_ldynsym,
-    1879048180 => :sh_type_sunw_dof,
-    1879048181 => :sh_type_sunw_cap,
-    1879048182 => :sh_type_sunw_signature,
-    1879048183 => :sh_type_sunw_annotate,
-    1879048184 => :sh_type_sunw_debugstr,
-    1879048185 => :sh_type_sunw_debug,
-    1879048186 => :sh_type_sunw_move,
-    1879048187 => :sh_type_sunw_comdat,
-    1879048188 => :sh_type_sunw_syminfo,
-    1879048189 => :sh_type_sunw_verdef,
-    1879048190 => :sh_type_sunw_verneed,
-    1879048191 => :sh_type_sunw_versym,
-    1879048192 => :sh_type_sparc_gotdata,
-    1879048193 => :sh_type_amd64_unwind,
-    1879048194 => :sh_type_arm_preemptmap,
-    1879048195 => :sh_type_arm_attributes,
-    1879048196 => :sh_type_arm_debugoverlay,
-    1879048197 => :sh_type_arm_overlaysection,
-  }
-  I__SH_TYPE = SH_TYPE.invert
-
-  OS_ABI = {
-    0 => :os_abi_system_v,
-    1 => :os_abi_hp_ux,
-    2 => :os_abi_netbsd,
-    3 => :os_abi_gnu,
-    6 => :os_abi_solaris,
-    7 => :os_abi_aix,
-    8 => :os_abi_irix,
-    9 => :os_abi_freebsd,
-    10 => :os_abi_tru64,
-    11 => :os_abi_modesto,
-    12 => :os_abi_openbsd,
-    13 => :os_abi_openvms,
-    14 => :os_abi_nsk,
-    15 => :os_abi_aros,
-    16 => :os_abi_fenixos,
-    17 => :os_abi_cloudabi,
-    18 => :os_abi_openvos,
-  }
-  I__OS_ABI = OS_ABI.invert
 
   MACHINE = {
     0 => :machine_no_machine,
@@ -345,138 +366,35 @@ class Elf < Kaitai::Struct::Struct
   }
   I__MACHINE = MACHINE.invert
 
-  SYMBOL_TYPE = {
-    0 => :symbol_type_no_type,
-    1 => :symbol_type_object,
-    2 => :symbol_type_func,
-    3 => :symbol_type_section,
-    4 => :symbol_type_file,
-    5 => :symbol_type_common,
-    6 => :symbol_type_tls,
-    8 => :symbol_type_relc,
-    9 => :symbol_type_srelc,
-    10 => :symbol_type_gnu_ifunc,
-    11 => :symbol_type_os11,
-    12 => :symbol_type_os12,
-    13 => :symbol_type_proc13,
-    14 => :symbol_type_proc14,
-    15 => :symbol_type_proc15,
+  OBJ_TYPE = {
+    0 => :obj_type_no_file_type,
+    1 => :obj_type_relocatable,
+    2 => :obj_type_executable,
+    3 => :obj_type_shared,
+    4 => :obj_type_core,
   }
-  I__SYMBOL_TYPE = SYMBOL_TYPE.invert
+  I__OBJ_TYPE = OBJ_TYPE.invert
 
-  DYNAMIC_ARRAY_TAGS = {
-    0 => :dynamic_array_tags_null,
-    1 => :dynamic_array_tags_needed,
-    2 => :dynamic_array_tags_pltrelsz,
-    3 => :dynamic_array_tags_pltgot,
-    4 => :dynamic_array_tags_hash,
-    5 => :dynamic_array_tags_strtab,
-    6 => :dynamic_array_tags_symtab,
-    7 => :dynamic_array_tags_rela,
-    8 => :dynamic_array_tags_relasz,
-    9 => :dynamic_array_tags_relaent,
-    10 => :dynamic_array_tags_strsz,
-    11 => :dynamic_array_tags_syment,
-    12 => :dynamic_array_tags_init,
-    13 => :dynamic_array_tags_fini,
-    14 => :dynamic_array_tags_soname,
-    15 => :dynamic_array_tags_rpath,
-    16 => :dynamic_array_tags_symbolic,
-    17 => :dynamic_array_tags_rel,
-    18 => :dynamic_array_tags_relsz,
-    19 => :dynamic_array_tags_relent,
-    20 => :dynamic_array_tags_pltrel,
-    21 => :dynamic_array_tags_debug,
-    22 => :dynamic_array_tags_textrel,
-    23 => :dynamic_array_tags_jmprel,
-    24 => :dynamic_array_tags_bind_now,
-    25 => :dynamic_array_tags_init_array,
-    26 => :dynamic_array_tags_fini_array,
-    27 => :dynamic_array_tags_init_arraysz,
-    28 => :dynamic_array_tags_fini_arraysz,
-    29 => :dynamic_array_tags_runpath,
-    30 => :dynamic_array_tags_flags,
-    32 => :dynamic_array_tags_preinit_array,
-    33 => :dynamic_array_tags_preinit_arraysz,
-    34 => :dynamic_array_tags_symtab_shndx,
-    35 => :dynamic_array_tags_relrsz,
-    36 => :dynamic_array_tags_relr,
-    37 => :dynamic_array_tags_relrent,
-    117440513 => :dynamic_array_tags_deprecated_sparc_register,
-    1610612749 => :dynamic_array_tags_sunw_auxiliary,
-    1610612750 => :dynamic_array_tags_sunw_rtldinf,
-    1610612751 => :dynamic_array_tags_sunw_filter,
-    1610612752 => :dynamic_array_tags_sunw_cap,
-    1610612753 => :dynamic_array_tags_sunw_symtab,
-    1610612754 => :dynamic_array_tags_sunw_symsz,
-    1610612755 => :dynamic_array_tags_sunw_sortent,
-    1610612756 => :dynamic_array_tags_sunw_symsort,
-    1610612757 => :dynamic_array_tags_sunw_symsortsz,
-    1610612758 => :dynamic_array_tags_sunw_tlssort,
-    1610612759 => :dynamic_array_tags_sunw_tlssortsz,
-    1610612760 => :dynamic_array_tags_sunw_capinfo,
-    1610612761 => :dynamic_array_tags_sunw_strpad,
-    1610612762 => :dynamic_array_tags_sunw_capchain,
-    1610612763 => :dynamic_array_tags_sunw_ldmach,
-    1610612764 => :dynamic_array_tags_sunw_symtab_shndx,
-    1610612765 => :dynamic_array_tags_sunw_capchainent,
-    1610612766 => :dynamic_array_tags_sunw_deferred,
-    1610612767 => :dynamic_array_tags_sunw_capchainsz,
-    1610612768 => :dynamic_array_tags_sunw_phname,
-    1610612769 => :dynamic_array_tags_sunw_parent,
-    1610612771 => :dynamic_array_tags_sunw_sx_aslr,
-    1610612773 => :dynamic_array_tags_sunw_relax,
-    1610612775 => :dynamic_array_tags_sunw_kmod,
-    1610612777 => :dynamic_array_tags_sunw_sx_nxheap,
-    1610612779 => :dynamic_array_tags_sunw_sx_nxstack,
-    1610612781 => :dynamic_array_tags_sunw_sx_adiheap,
-    1610612783 => :dynamic_array_tags_sunw_sx_adistack,
-    1610612785 => :dynamic_array_tags_sunw_sx_ssbd,
-    1610612786 => :dynamic_array_tags_sunw_symnsort,
-    1610612787 => :dynamic_array_tags_sunw_symnsortsz,
-    1879047668 => :dynamic_array_tags_gnu_flags_1,
-    1879047669 => :dynamic_array_tags_gnu_prelinked,
-    1879047670 => :dynamic_array_tags_gnu_conflictsz,
-    1879047671 => :dynamic_array_tags_gnu_liblistsz,
-    1879047672 => :dynamic_array_tags_checksum,
-    1879047673 => :dynamic_array_tags_pltpadsz,
-    1879047674 => :dynamic_array_tags_moveent,
-    1879047675 => :dynamic_array_tags_movesz,
-    1879047676 => :dynamic_array_tags_feature_1,
-    1879047677 => :dynamic_array_tags_posflag_1,
-    1879047678 => :dynamic_array_tags_syminsz,
-    1879047679 => :dynamic_array_tags_syminent,
-    1879047925 => :dynamic_array_tags_gnu_hash,
-    1879047926 => :dynamic_array_tags_tlsdesc_plt,
-    1879047927 => :dynamic_array_tags_tlsdesc_got,
-    1879047928 => :dynamic_array_tags_gnu_conflict,
-    1879047929 => :dynamic_array_tags_gnu_liblist,
-    1879047930 => :dynamic_array_tags_config,
-    1879047931 => :dynamic_array_tags_depaudit,
-    1879047932 => :dynamic_array_tags_audit,
-    1879047933 => :dynamic_array_tags_pltpad,
-    1879047934 => :dynamic_array_tags_movetab,
-    1879047935 => :dynamic_array_tags_syminfo,
-    1879048176 => :dynamic_array_tags_versym,
-    1879048185 => :dynamic_array_tags_relacount,
-    1879048186 => :dynamic_array_tags_relcount,
-    1879048187 => :dynamic_array_tags_flags_1,
-    1879048188 => :dynamic_array_tags_verdef,
-    1879048189 => :dynamic_array_tags_verdefnum,
-    1879048190 => :dynamic_array_tags_verneed,
-    1879048191 => :dynamic_array_tags_verneednum,
-    1879048193 => :dynamic_array_tags_sparc_register,
-    2147483645 => :dynamic_array_tags_auxiliary,
-    2147483646 => :dynamic_array_tags_used,
-    2147483647 => :dynamic_array_tags_filter,
+  OS_ABI = {
+    0 => :os_abi_system_v,
+    1 => :os_abi_hp_ux,
+    2 => :os_abi_netbsd,
+    3 => :os_abi_gnu,
+    6 => :os_abi_solaris,
+    7 => :os_abi_aix,
+    8 => :os_abi_irix,
+    9 => :os_abi_freebsd,
+    10 => :os_abi_tru64,
+    11 => :os_abi_modesto,
+    12 => :os_abi_openbsd,
+    13 => :os_abi_openvms,
+    14 => :os_abi_nsk,
+    15 => :os_abi_aros,
+    16 => :os_abi_fenixos,
+    17 => :os_abi_cloudabi,
+    18 => :os_abi_openvos,
   }
-  I__DYNAMIC_ARRAY_TAGS = DYNAMIC_ARRAY_TAGS.invert
-
-  BITS = {
-    1 => :bits_b32,
-    2 => :bits_b64,
-  }
-  I__BITS = BITS.invert
+  I__OS_ABI = OS_ABI.invert
 
   PH_TYPE = {
     0 => :ph_type_null_type,
@@ -496,15 +414,6 @@ class Elf < Kaitai::Struct::Struct
   }
   I__PH_TYPE = PH_TYPE.invert
 
-  OBJ_TYPE = {
-    0 => :obj_type_no_file_type,
-    1 => :obj_type_relocatable,
-    2 => :obj_type_executable,
-    3 => :obj_type_shared,
-    4 => :obj_type_core,
-  }
-  I__OBJ_TYPE = OBJ_TYPE.invert
-
   SECTION_HEADER_IDX_SPECIAL = {
     0 => :section_header_idx_special_undefined,
     65280 => :section_header_idx_special_before,
@@ -516,27 +425,391 @@ class Elf < Kaitai::Struct::Struct
     65535 => :section_header_idx_special_xindex,
   }
   I__SECTION_HEADER_IDX_SPECIAL = SECTION_HEADER_IDX_SPECIAL.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+
+  SH_TYPE = {
+    0 => :sh_type_null_type,
+    1 => :sh_type_progbits,
+    2 => :sh_type_symtab,
+    3 => :sh_type_strtab,
+    4 => :sh_type_rela,
+    5 => :sh_type_hash,
+    6 => :sh_type_dynamic,
+    7 => :sh_type_note,
+    8 => :sh_type_nobits,
+    9 => :sh_type_rel,
+    10 => :sh_type_shlib,
+    11 => :sh_type_dynsym,
+    14 => :sh_type_init_array,
+    15 => :sh_type_fini_array,
+    16 => :sh_type_preinit_array,
+    17 => :sh_type_group,
+    18 => :sh_type_symtab_shndx,
+    19 => :sh_type_relr,
+    1879048172 => :sh_type_sunw_symnsort,
+    1879048173 => :sh_type_sunw_phname,
+    1879048174 => :sh_type_sunw_ancillary,
+    1879048175 => :sh_type_sunw_capchain,
+    1879048176 => :sh_type_sunw_capinfo,
+    1879048177 => :sh_type_sunw_symsort,
+    1879048178 => :sh_type_sunw_tlssort,
+    1879048179 => :sh_type_sunw_ldynsym,
+    1879048180 => :sh_type_sunw_dof,
+    1879048181 => :sh_type_sunw_cap,
+    1879048182 => :sh_type_sunw_signature,
+    1879048183 => :sh_type_sunw_annotate,
+    1879048184 => :sh_type_sunw_debugstr,
+    1879048185 => :sh_type_sunw_debug,
+    1879048186 => :sh_type_sunw_move,
+    1879048187 => :sh_type_sunw_comdat,
+    1879048188 => :sh_type_sunw_syminfo,
+    1879048189 => :sh_type_sunw_verdef,
+    1879048190 => :sh_type_sunw_verneed,
+    1879048191 => :sh_type_sunw_versym,
+    1879048192 => :sh_type_sparc_gotdata,
+    1879048193 => :sh_type_amd64_unwind,
+    1879048194 => :sh_type_arm_preemptmap,
+    1879048195 => :sh_type_arm_attributes,
+    1879048196 => :sh_type_arm_debugoverlay,
+    1879048197 => :sh_type_arm_overlaysection,
+  }
+  I__SH_TYPE = SH_TYPE.invert
+
+  SYMBOL_BINDING = {
+    0 => :symbol_binding_local,
+    1 => :symbol_binding_global_symbol,
+    2 => :symbol_binding_weak,
+    10 => :symbol_binding_os10,
+    11 => :symbol_binding_os11,
+    12 => :symbol_binding_os12,
+    13 => :symbol_binding_proc13,
+    14 => :symbol_binding_proc14,
+    15 => :symbol_binding_proc15,
+  }
+  I__SYMBOL_BINDING = SYMBOL_BINDING.invert
+
+  SYMBOL_TYPE = {
+    0 => :symbol_type_no_type,
+    1 => :symbol_type_object,
+    2 => :symbol_type_func,
+    3 => :symbol_type_section,
+    4 => :symbol_type_file,
+    5 => :symbol_type_common,
+    6 => :symbol_type_tls,
+    8 => :symbol_type_relc,
+    9 => :symbol_type_srelc,
+    10 => :symbol_type_gnu_ifunc,
+    11 => :symbol_type_os11,
+    12 => :symbol_type_os12,
+    13 => :symbol_type_proc13,
+    14 => :symbol_type_proc14,
+    15 => :symbol_type_proc15,
+  }
+  I__SYMBOL_TYPE = SYMBOL_TYPE.invert
+
+  SYMBOL_VISIBILITY = {
+    0 => :symbol_visibility_default,
+    1 => :symbol_visibility_internal,
+    2 => :symbol_visibility_hidden,
+    3 => :symbol_visibility_protected,
+    4 => :symbol_visibility_exported,
+    5 => :symbol_visibility_singleton,
+    6 => :symbol_visibility_eliminate,
+  }
+  I__SYMBOL_VISIBILITY = SYMBOL_VISIBILITY.invert
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
     @magic = @_io.read_bytes(4)
-    raise Kaitai::Struct::ValidationNotEqualError.new([127, 69, 76, 70].pack('C*'), magic, _io, "/seq/0") if not magic == [127, 69, 76, 70].pack('C*')
+    raise Kaitai::Struct::ValidationNotEqualError.new([127, 69, 76, 70].pack('C*'), @magic, @_io, "/seq/0") if not @magic == [127, 69, 76, 70].pack('C*')
     @bits = Kaitai::Struct::Stream::resolve_enum(BITS, @_io.read_u1)
     @endian = Kaitai::Struct::Stream::resolve_enum(ENDIAN, @_io.read_u1)
     @ei_version = @_io.read_u1
-    raise Kaitai::Struct::ValidationNotEqualError.new(1, ei_version, _io, "/seq/3") if not ei_version == 1
+    raise Kaitai::Struct::ValidationNotEqualError.new(1, @ei_version, @_io, "/seq/3") if not @ei_version == 1
     @abi = Kaitai::Struct::Stream::resolve_enum(OS_ABI, @_io.read_u1)
     @abi_version = @_io.read_u1
     @pad = @_io.read_bytes(7)
-    raise Kaitai::Struct::ValidationNotEqualError.new([0, 0, 0, 0, 0, 0, 0].pack('C*'), pad, _io, "/seq/6") if not pad == [0, 0, 0, 0, 0, 0, 0].pack('C*')
+    raise Kaitai::Struct::ValidationNotEqualError.new([0, 0, 0, 0, 0, 0, 0].pack('C*'), @pad, @_io, "/seq/6") if not @pad == [0, 0, 0, 0, 0, 0, 0].pack('C*')
     @header = EndianElf.new(@_io, self, @_root)
     self
   end
+  class DtFlag1Values < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil, value)
+      super(_io, _parent, _root)
+      @value = value
+      _read
+    end
+
+    def _read
+      self
+    end
+
+    ##
+    # Configuration alternative created.
+    def confalt
+      return @confalt unless @confalt.nil?
+      @confalt = value & 8192 != 0
+      @confalt
+    end
+
+    ##
+    # Direct binding enabled.
+    def direct
+      return @direct unless @direct.nil?
+      @direct = value & 256 != 0
+      @direct
+    end
+
+    ##
+    # Disp reloc applied at build time.
+    def dispreldne
+      return @dispreldne unless @dispreldne.nil?
+      @dispreldne = value & 32768 != 0
+      @dispreldne
+    end
+
+    ##
+    # Disp reloc applied at run-time.
+    def disprelpnd
+      return @disprelpnd unless @disprelpnd.nil?
+      @disprelpnd = value & 65536 != 0
+      @disprelpnd
+    end
+
+    ##
+    # Object is modified after built.
+    def edited
+      return @edited unless @edited.nil?
+      @edited = value & 2097152 != 0
+      @edited
+    end
+
+    ##
+    # Filtee terminates filters search.
+    def endfiltee
+      return @endfiltee unless @endfiltee.nil?
+      @endfiltee = value & 16384 != 0
+      @endfiltee
+    end
+
+    ##
+    # Global auditing required.
+    def globaudit
+      return @globaudit unless @globaudit.nil?
+      @globaudit = value & 16777216 != 0
+      @globaudit
+    end
+
+    ##
+    # Set RTLD_GROUP for this object.
+    def group
+      return @group unless @group.nil?
+      @group = value & 4 != 0
+      @group
+    end
+    def ignmuldef
+      return @ignmuldef unless @ignmuldef.nil?
+      @ignmuldef = value & 262144 != 0
+      @ignmuldef
+    end
+
+    ##
+    # Set RTLD_INITFIRST for this object
+    def initfirst
+      return @initfirst unless @initfirst.nil?
+      @initfirst = value & 32 != 0
+      @initfirst
+    end
+
+    ##
+    # Object is used to interpose.
+    def interpose
+      return @interpose unless @interpose.nil?
+      @interpose = value & 1024 != 0
+      @interpose
+    end
+
+    ##
+    # Trigger filtee loading at runtime.
+    def loadfltr
+      return @loadfltr unless @loadfltr.nil?
+      @loadfltr = value & 16 != 0
+      @loadfltr
+    end
+
+    ##
+    # Ignore default lib search path.
+    def nodeflib
+      return @nodeflib unless @nodeflib.nil?
+      @nodeflib = value & 2048 != 0
+      @nodeflib
+    end
+
+    ##
+    # Set RTLD_NODELETE for this object.
+    def nodelete
+      return @nodelete unless @nodelete.nil?
+      @nodelete = value & 8 != 0
+      @nodelete
+    end
+
+    ##
+    # Object has no-direct binding.
+    def nodirect
+      return @nodirect unless @nodirect.nil?
+      @nodirect = value & 131072 != 0
+      @nodirect
+    end
+
+    ##
+    # Object can't be dldump'ed.
+    def nodump
+      return @nodump unless @nodump.nil?
+      @nodump = value & 4096 != 0
+      @nodump
+    end
+    def nohdr
+      return @nohdr unless @nohdr.nil?
+      @nohdr = value & 1048576 != 0
+      @nohdr
+    end
+    def noksyms
+      return @noksyms unless @noksyms.nil?
+      @noksyms = value & 524288 != 0
+      @noksyms
+    end
+
+    ##
+    # Set RTLD_NOOPEN for this object.
+    def noopen
+      return @noopen unless @noopen.nil?
+      @noopen = value & 64 != 0
+      @noopen
+    end
+    def noreloc
+      return @noreloc unless @noreloc.nil?
+      @noreloc = value & 4194304 != 0
+      @noreloc
+    end
+
+    ##
+    # Set RTLD_NOW for this object.
+    def now
+      return @now unless @now.nil?
+      @now = value & 1 != 0
+      @now
+    end
+
+    ##
+    # $ORIGIN must be handled.
+    def origin
+      return @origin unless @origin.nil?
+      @origin = value & 128 != 0
+      @origin
+    end
+    def pie
+      return @pie unless @pie.nil?
+      @pie = value & 134217728 != 0
+      @pie
+    end
+
+    ##
+    # Set RTLD_GLOBAL for this object.
+    def rtld_global
+      return @rtld_global unless @rtld_global.nil?
+      @rtld_global = value & 2 != 0
+      @rtld_global
+    end
+
+    ##
+    # Singleton symbols are used.
+    def singleton
+      return @singleton unless @singleton.nil?
+      @singleton = value & 33554432 != 0
+      @singleton
+    end
+    def stub
+      return @stub unless @stub.nil?
+      @stub = value & 67108864 != 0
+      @stub
+    end
+
+    ##
+    # Object has individual interposers.
+    def symintpose
+      return @symintpose unless @symintpose.nil?
+      @symintpose = value & 8388608 != 0
+      @symintpose
+    end
+    def trans
+      return @trans unless @trans.nil?
+      @trans = value & 512 != 0
+      @trans
+    end
+    attr_reader :value
+  end
+
+  ##
+  # @see https://refspecs.linuxbase.org/elf/gabi4+/ch5.dynamic.html Figure 5-11: DT_FLAGS values
+  # @see https://github.com/golang/go/blob/48dfddbab3/src/debug/elf/elf.go#L1079-L1095 Source
+  # @see https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/dynamic-section.html#GUID-4336A69A-D905-4FCE-A398-80375A9E6464__CHAPTER7-TBL-5 Source
+  class DtFlagValues < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil, value)
+      super(_io, _parent, _root)
+      @value = value
+      _read
+    end
+
+    def _read
+      self
+    end
+
+    ##
+    # all relocations for this object must be processed before returning
+    # control to the program
+    def bind_now
+      return @bind_now unless @bind_now.nil?
+      @bind_now = value & 8 != 0
+      @bind_now
+    end
+
+    ##
+    # object may reference the $ORIGIN substitution string
+    def origin
+      return @origin unless @origin.nil?
+      @origin = value & 1 != 0
+      @origin
+    end
+
+    ##
+    # object uses static thread-local storage scheme
+    def static_tls
+      return @static_tls unless @static_tls.nil?
+      @static_tls = value & 16 != 0
+      @static_tls
+    end
+
+    ##
+    # symbolic linking
+    def symbolic
+      return @symbolic unless @symbolic.nil?
+      @symbolic = value & 2 != 0
+      @symbolic
+    end
+
+    ##
+    # relocation entries might request modifications to a non-writable segment
+    def textrel
+      return @textrel unless @textrel.nil?
+      @textrel = value & 4 != 0
+      @textrel
+    end
+    attr_reader :value
+  end
   class EndianElf < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -622,8 +895,334 @@ class Elf < Kaitai::Struct::Struct
       @section_names_idx = @_io.read_u2be
       self
     end
+    class DynamicSection < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = nil, _is_le = nil)
+        super(_io, _parent, _root)
+        @_is_le = _is_le
+        _read
+      end
+
+      def _read
+
+        if @_is_le == true
+          _read_le
+        elsif @_is_le == false
+          _read_be
+        else
+          raise Kaitai::Struct::UndecidedEndiannessError.new("/types/endian_elf/types/dynamic_section")
+        end
+        self
+      end
+
+      def _read_le
+        @entries = []
+        i = 0
+        while not @_io.eof?
+          @entries << DynamicSectionEntry.new(@_io, self, @_root, @_is_le)
+          i += 1
+        end
+        self
+      end
+
+      def _read_be
+        @entries = []
+        i = 0
+        while not @_io.eof?
+          @entries << DynamicSectionEntry.new(@_io, self, @_root, @_is_le)
+          i += 1
+        end
+        self
+      end
+      def is_string_table_linked
+        return @is_string_table_linked unless @is_string_table_linked.nil?
+        @is_string_table_linked = _parent.linked_section.type == :sh_type_strtab
+        @is_string_table_linked
+      end
+      attr_reader :entries
+    end
+
+    ##
+    # @see https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/dynamic-section.html Source
+    # @see https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.dynamic.html#dynamic_section Source
+    class DynamicSectionEntry < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = nil, _is_le = nil)
+        super(_io, _parent, _root)
+        @_is_le = _is_le
+        _read
+      end
+
+      def _read
+
+        if @_is_le == true
+          _read_le
+        elsif @_is_le == false
+          _read_be
+        else
+          raise Kaitai::Struct::UndecidedEndiannessError.new("/types/endian_elf/types/dynamic_section_entry")
+        end
+        self
+      end
+
+      def _read_le
+        case _root.bits
+        when :bits_b32
+          @tag = @_io.read_u4le
+        when :bits_b64
+          @tag = @_io.read_u8le
+        end
+        case _root.bits
+        when :bits_b32
+          @value_or_ptr = @_io.read_u4le
+        when :bits_b64
+          @value_or_ptr = @_io.read_u8le
+        end
+        self
+      end
+
+      def _read_be
+        case _root.bits
+        when :bits_b32
+          @tag = @_io.read_u4be
+        when :bits_b64
+          @tag = @_io.read_u8be
+        end
+        case _root.bits
+        when :bits_b32
+          @value_or_ptr = @_io.read_u4be
+        when :bits_b64
+          @value_or_ptr = @_io.read_u8be
+        end
+        self
+      end
+      def flag_1_values
+        return @flag_1_values unless @flag_1_values.nil?
+        if tag_enum == :dynamic_array_tags_flags_1
+          if @_is_le
+            @flag_1_values = DtFlag1Values.new(@_io, self, @_root, value_or_ptr)
+          else
+            @flag_1_values = DtFlag1Values.new(@_io, self, @_root, value_or_ptr)
+          end
+        end
+        @flag_1_values
+      end
+      def flag_values
+        return @flag_values unless @flag_values.nil?
+        if tag_enum == :dynamic_array_tags_flags
+          if @_is_le
+            @flag_values = DtFlagValues.new(@_io, self, @_root, value_or_ptr)
+          else
+            @flag_values = DtFlagValues.new(@_io, self, @_root, value_or_ptr)
+          end
+        end
+        @flag_values
+      end
+      def is_value_str
+        return @is_value_str unless @is_value_str.nil?
+        @is_value_str =  ((value_or_ptr != 0) && ( ((tag_enum == :dynamic_array_tags_needed) || (tag_enum == :dynamic_array_tags_soname) || (tag_enum == :dynamic_array_tags_rpath) || (tag_enum == :dynamic_array_tags_runpath) || (tag_enum == :dynamic_array_tags_sunw_auxiliary) || (tag_enum == :dynamic_array_tags_sunw_filter) || (tag_enum == :dynamic_array_tags_auxiliary) || (tag_enum == :dynamic_array_tags_filter) || (tag_enum == :dynamic_array_tags_config) || (tag_enum == :dynamic_array_tags_depaudit) || (tag_enum == :dynamic_array_tags_audit)) )) 
+        @is_value_str
+      end
+      def tag_enum
+        return @tag_enum unless @tag_enum.nil?
+        @tag_enum = Kaitai::Struct::Stream::resolve_enum(Elf::DYNAMIC_ARRAY_TAGS, tag)
+        @tag_enum
+      end
+      def value_str
+        return @value_str unless @value_str.nil?
+        if  ((is_value_str) && (_parent.is_string_table_linked)) 
+          io = _parent._parent.linked_section.body._io
+          _pos = io.pos
+          io.seek(value_or_ptr)
+          if @_is_le
+            @value_str = (io.read_bytes_term(0, false, true, true)).force_encoding("ASCII").encode('UTF-8')
+          else
+            @value_str = (io.read_bytes_term(0, false, true, true)).force_encoding("ASCII").encode('UTF-8')
+          end
+          io.seek(_pos)
+        end
+        @value_str
+      end
+      attr_reader :tag
+      attr_reader :value_or_ptr
+    end
+    class DynsymSection < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = nil, _is_le = nil)
+        super(_io, _parent, _root)
+        @_is_le = _is_le
+        _read
+      end
+
+      def _read
+
+        if @_is_le == true
+          _read_le
+        elsif @_is_le == false
+          _read_be
+        else
+          raise Kaitai::Struct::UndecidedEndiannessError.new("/types/endian_elf/types/dynsym_section")
+        end
+        self
+      end
+
+      def _read_le
+        @entries = []
+        i = 0
+        while not @_io.eof?
+          @entries << DynsymSectionEntry.new(@_io, self, @_root, @_is_le)
+          i += 1
+        end
+        self
+      end
+
+      def _read_be
+        @entries = []
+        i = 0
+        while not @_io.eof?
+          @entries << DynsymSectionEntry.new(@_io, self, @_root, @_is_le)
+          i += 1
+        end
+        self
+      end
+      def is_string_table_linked
+        return @is_string_table_linked unless @is_string_table_linked.nil?
+        @is_string_table_linked = _parent.linked_section.type == :sh_type_strtab
+        @is_string_table_linked
+      end
+      attr_reader :entries
+    end
+
+    ##
+    # @see https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/symbol-table-section.html Source
+    # @see https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.symtab.html Source
+    class DynsymSectionEntry < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = nil, _is_le = nil)
+        super(_io, _parent, _root)
+        @_is_le = _is_le
+        _read
+      end
+
+      def _read
+
+        if @_is_le == true
+          _read_le
+        elsif @_is_le == false
+          _read_be
+        else
+          raise Kaitai::Struct::UndecidedEndiannessError.new("/types/endian_elf/types/dynsym_section_entry")
+        end
+        self
+      end
+
+      def _read_le
+        @ofs_name = @_io.read_u4le
+        if _root.bits == :bits_b32
+          @value_b32 = @_io.read_u4le
+        end
+        if _root.bits == :bits_b32
+          @size_b32 = @_io.read_u4le
+        end
+        @bind = Kaitai::Struct::Stream::resolve_enum(Elf::SYMBOL_BINDING, @_io.read_bits_int_be(4))
+        @type = Kaitai::Struct::Stream::resolve_enum(Elf::SYMBOL_TYPE, @_io.read_bits_int_be(4))
+        @_io.align_to_byte
+        @other = @_io.read_u1
+        @sh_idx = @_io.read_u2le
+        if _root.bits == :bits_b64
+          @value_b64 = @_io.read_u8le
+        end
+        if _root.bits == :bits_b64
+          @size_b64 = @_io.read_u8le
+        end
+        self
+      end
+
+      def _read_be
+        @ofs_name = @_io.read_u4be
+        if _root.bits == :bits_b32
+          @value_b32 = @_io.read_u4be
+        end
+        if _root.bits == :bits_b32
+          @size_b32 = @_io.read_u4be
+        end
+        @bind = Kaitai::Struct::Stream::resolve_enum(Elf::SYMBOL_BINDING, @_io.read_bits_int_be(4))
+        @type = Kaitai::Struct::Stream::resolve_enum(Elf::SYMBOL_TYPE, @_io.read_bits_int_be(4))
+        @_io.align_to_byte
+        @other = @_io.read_u1
+        @sh_idx = @_io.read_u2be
+        if _root.bits == :bits_b64
+          @value_b64 = @_io.read_u8be
+        end
+        if _root.bits == :bits_b64
+          @size_b64 = @_io.read_u8be
+        end
+        self
+      end
+      def is_sh_idx_os
+        return @is_sh_idx_os unless @is_sh_idx_os.nil?
+        @is_sh_idx_os =  ((sh_idx >= _root.sh_idx_lo_os) && (sh_idx <= _root.sh_idx_hi_os)) 
+        @is_sh_idx_os
+      end
+      def is_sh_idx_proc
+        return @is_sh_idx_proc unless @is_sh_idx_proc.nil?
+        @is_sh_idx_proc =  ((sh_idx >= _root.sh_idx_lo_proc) && (sh_idx <= _root.sh_idx_hi_proc)) 
+        @is_sh_idx_proc
+      end
+      def is_sh_idx_reserved
+        return @is_sh_idx_reserved unless @is_sh_idx_reserved.nil?
+        @is_sh_idx_reserved =  ((sh_idx >= _root.sh_idx_lo_reserved) && (sh_idx <= _root.sh_idx_hi_reserved)) 
+        @is_sh_idx_reserved
+      end
+      def name
+        return @name unless @name.nil?
+        if  ((ofs_name != 0) && (_parent.is_string_table_linked)) 
+          io = _parent._parent.linked_section.body._io
+          _pos = io.pos
+          io.seek(ofs_name)
+          if @_is_le
+            @name = (io.read_bytes_term(0, false, true, true)).force_encoding("UTF-8")
+          else
+            @name = (io.read_bytes_term(0, false, true, true)).force_encoding("UTF-8")
+          end
+          io.seek(_pos)
+        end
+        @name
+      end
+      def sh_idx_special
+        return @sh_idx_special unless @sh_idx_special.nil?
+        @sh_idx_special = Kaitai::Struct::Stream::resolve_enum(Elf::SECTION_HEADER_IDX_SPECIAL, sh_idx)
+        @sh_idx_special
+      end
+      def size
+        return @size unless @size.nil?
+        @size = (_root.bits == :bits_b32 ? size_b32 : (_root.bits == :bits_b64 ? size_b64 : 0))
+        @size
+      end
+      def value
+        return @value unless @value.nil?
+        @value = (_root.bits == :bits_b32 ? value_b32 : (_root.bits == :bits_b64 ? value_b64 : 0))
+        @value
+      end
+      def visibility
+        return @visibility unless @visibility.nil?
+        @visibility = Kaitai::Struct::Stream::resolve_enum(Elf::SYMBOL_VISIBILITY, other & 3)
+        @visibility
+      end
+      attr_reader :ofs_name
+      attr_reader :value_b32
+      attr_reader :size_b32
+      attr_reader :bind
+      attr_reader :type
+
+      ##
+      # don't read this field, access `visibility` instead
+      attr_reader :other
+
+      ##
+      # section header index
+      attr_reader :sh_idx
+      attr_reader :value_b64
+      attr_reader :size_b64
+    end
     class NoteSection < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self, _is_le = nil)
+      def initialize(_io, _parent = nil, _root = nil, _is_le = nil)
         super(_io, _parent, _root)
         @_is_le = _is_le
         _read
@@ -662,8 +1261,66 @@ class Elf < Kaitai::Struct::Struct
       end
       attr_reader :entries
     end
+
+    ##
+    # @see https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/note-section.html Source
+    # @see https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.pheader.html#note_section Source
+    class NoteSectionEntry < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = nil, _is_le = nil)
+        super(_io, _parent, _root)
+        @_is_le = _is_le
+        _read
+      end
+
+      def _read
+
+        if @_is_le == true
+          _read_le
+        elsif @_is_le == false
+          _read_be
+        else
+          raise Kaitai::Struct::UndecidedEndiannessError.new("/types/endian_elf/types/note_section_entry")
+        end
+        self
+      end
+
+      def _read_le
+        @len_name = @_io.read_u4le
+        @len_descriptor = @_io.read_u4le
+        @type = @_io.read_u4le
+        @name = Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(len_name), 0, false)
+        @name_padding = @_io.read_bytes(-(len_name) % 4)
+        @descriptor = @_io.read_bytes(len_descriptor)
+        @descriptor_padding = @_io.read_bytes(-(len_descriptor) % 4)
+        self
+      end
+
+      def _read_be
+        @len_name = @_io.read_u4be
+        @len_descriptor = @_io.read_u4be
+        @type = @_io.read_u4be
+        @name = Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(len_name), 0, false)
+        @name_padding = @_io.read_bytes(-(len_name) % 4)
+        @descriptor = @_io.read_bytes(len_descriptor)
+        @descriptor_padding = @_io.read_bytes(-(len_descriptor) % 4)
+        self
+      end
+      attr_reader :len_name
+      attr_reader :len_descriptor
+      attr_reader :type
+
+      ##
+      # Although the ELF specification seems to hint that the `note_name` field
+      # is ASCII this isn't the case for Linux binaries that have a
+      # `.gnu.build.attributes` section.
+      # @see https://fedoraproject.org/wiki/Toolchain/Watermark#Proposed_Specification_for_non-loaded_notes Source
+      attr_reader :name
+      attr_reader :name_padding
+      attr_reader :descriptor
+      attr_reader :descriptor_padding
+    end
     class ProgramHeader < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self, _is_le = nil)
+      def initialize(_io, _parent = nil, _root = nil, _is_le = nil)
         super(_io, _parent, _root)
         @_is_le = _is_le
         _read
@@ -805,10 +1462,52 @@ class Elf < Kaitai::Struct::Struct
     end
 
     ##
-    # @see https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/dynamic-section.html Source
-    # @see https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.dynamic.html#dynamic_section Source
-    class DynamicSectionEntry < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self, _is_le = nil)
+    # @see https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/relocation-sections.html Source
+    # @see https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.reloc.html Source
+    class RelocationSection < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = nil, _is_le = nil, has_addend)
+        super(_io, _parent, _root)
+        @_is_le = _is_le
+        @has_addend = has_addend
+        _read
+      end
+
+      def _read
+
+        if @_is_le == true
+          _read_le
+        elsif @_is_le == false
+          _read_be
+        else
+          raise Kaitai::Struct::UndecidedEndiannessError.new("/types/endian_elf/types/relocation_section")
+        end
+        self
+      end
+
+      def _read_le
+        @entries = []
+        i = 0
+        while not @_io.eof?
+          @entries << RelocationSectionEntry.new(@_io, self, @_root, @_is_le)
+          i += 1
+        end
+        self
+      end
+
+      def _read_be
+        @entries = []
+        i = 0
+        while not @_io.eof?
+          @entries << RelocationSectionEntry.new(@_io, self, @_root, @_is_le)
+          i += 1
+        end
+        self
+      end
+      attr_reader :entries
+      attr_reader :has_addend
+    end
+    class RelocationSectionEntry < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = nil, _is_le = nil)
         super(_io, _parent, _root)
         @_is_le = _is_le
         _read
@@ -821,7 +1520,7 @@ class Elf < Kaitai::Struct::Struct
         elsif @_is_le == false
           _read_be
         else
-          raise Kaitai::Struct::UndecidedEndiannessError.new("/types/endian_elf/types/dynamic_section_entry")
+          raise Kaitai::Struct::UndecidedEndiannessError.new("/types/endian_elf/types/relocation_section_entry")
         end
         self
       end
@@ -829,15 +1528,23 @@ class Elf < Kaitai::Struct::Struct
       def _read_le
         case _root.bits
         when :bits_b32
-          @tag = @_io.read_u4le
+          @offset = @_io.read_u4le
         when :bits_b64
-          @tag = @_io.read_u8le
+          @offset = @_io.read_u8le
         end
         case _root.bits
         when :bits_b32
-          @value_or_ptr = @_io.read_u4le
+          @info = @_io.read_u4le
         when :bits_b64
-          @value_or_ptr = @_io.read_u8le
+          @info = @_io.read_u8le
+        end
+        if _parent.has_addend
+          case _root.bits
+          when :bits_b32
+            @addend = @_io.read_s4le
+          when :bits_b64
+            @addend = @_io.read_s8le
+          end
         end
         self
       end
@@ -845,70 +1552,32 @@ class Elf < Kaitai::Struct::Struct
       def _read_be
         case _root.bits
         when :bits_b32
-          @tag = @_io.read_u4be
+          @offset = @_io.read_u4be
         when :bits_b64
-          @tag = @_io.read_u8be
+          @offset = @_io.read_u8be
         end
         case _root.bits
         when :bits_b32
-          @value_or_ptr = @_io.read_u4be
+          @info = @_io.read_u4be
         when :bits_b64
-          @value_or_ptr = @_io.read_u8be
+          @info = @_io.read_u8be
+        end
+        if _parent.has_addend
+          case _root.bits
+          when :bits_b32
+            @addend = @_io.read_s4be
+          when :bits_b64
+            @addend = @_io.read_s8be
+          end
         end
         self
       end
-      def flag_1_values
-        return @flag_1_values unless @flag_1_values.nil?
-        if tag_enum == :dynamic_array_tags_flags_1
-          if @_is_le
-            @flag_1_values = DtFlag1Values.new(@_io, self, @_root, value_or_ptr)
-          else
-            @flag_1_values = DtFlag1Values.new(@_io, self, @_root, value_or_ptr)
-          end
-        end
-        @flag_1_values
-      end
-      def value_str
-        return @value_str unless @value_str.nil?
-        if  ((is_value_str) && (_parent.is_string_table_linked)) 
-          io = _parent._parent.linked_section.body._io
-          _pos = io.pos
-          io.seek(value_or_ptr)
-          if @_is_le
-            @value_str = (io.read_bytes_term(0, false, true, true)).force_encoding("ASCII")
-          else
-            @value_str = (io.read_bytes_term(0, false, true, true)).force_encoding("ASCII")
-          end
-          io.seek(_pos)
-        end
-        @value_str
-      end
-      def tag_enum
-        return @tag_enum unless @tag_enum.nil?
-        @tag_enum = Kaitai::Struct::Stream::resolve_enum(Elf::DYNAMIC_ARRAY_TAGS, tag)
-        @tag_enum
-      end
-      def flag_values
-        return @flag_values unless @flag_values.nil?
-        if tag_enum == :dynamic_array_tags_flags
-          if @_is_le
-            @flag_values = DtFlagValues.new(@_io, self, @_root, value_or_ptr)
-          else
-            @flag_values = DtFlagValues.new(@_io, self, @_root, value_or_ptr)
-          end
-        end
-        @flag_values
-      end
-      def is_value_str
-        return @is_value_str unless @is_value_str.nil?
-        @is_value_str =  ((value_or_ptr != 0) && ( ((tag_enum == :dynamic_array_tags_needed) || (tag_enum == :dynamic_array_tags_soname) || (tag_enum == :dynamic_array_tags_rpath) || (tag_enum == :dynamic_array_tags_runpath) || (tag_enum == :dynamic_array_tags_sunw_auxiliary) || (tag_enum == :dynamic_array_tags_sunw_filter) || (tag_enum == :dynamic_array_tags_auxiliary) || (tag_enum == :dynamic_array_tags_filter) || (tag_enum == :dynamic_array_tags_config) || (tag_enum == :dynamic_array_tags_depaudit) || (tag_enum == :dynamic_array_tags_audit)) )) 
-        @is_value_str
-      end
-      attr_reader :tag
-      attr_reader :value_or_ptr
+      attr_reader :offset
+      attr_reader :info
+      attr_reader :addend
     end
     class SectionHeader < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self, _is_le = nil)
+      def initialize(_io, _parent = nil, _root = nil, _is_le = nil)
         super(_io, _parent, _root)
         @_is_le = _is_le
         _read
@@ -1021,67 +1690,53 @@ class Elf < Kaitai::Struct::Struct
           io.seek(ofs_body)
           if @_is_le
             case type
-            when :sh_type_rel
-              @_raw_body = io.read_bytes(len_body)
-              _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-              @body = RelocationSection.new(_io__raw_body, self, @_root, @_is_le, false)
-            when :sh_type_note
-              @_raw_body = io.read_bytes(len_body)
-              _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-              @body = NoteSection.new(_io__raw_body, self, @_root, @_is_le)
-            when :sh_type_symtab
-              @_raw_body = io.read_bytes(len_body)
-              _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-              @body = DynsymSection.new(_io__raw_body, self, @_root, @_is_le)
-            when :sh_type_strtab
-              @_raw_body = io.read_bytes(len_body)
-              _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-              @body = StringsStruct.new(_io__raw_body, self, @_root, @_is_le)
             when :sh_type_dynamic
-              @_raw_body = io.read_bytes(len_body)
-              _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-              @body = DynamicSection.new(_io__raw_body, self, @_root, @_is_le)
+              _io_body = io.substream(len_body)
+              @body = DynamicSection.new(_io_body, self, @_root, @_is_le)
             when :sh_type_dynsym
-              @_raw_body = io.read_bytes(len_body)
-              _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-              @body = DynsymSection.new(_io__raw_body, self, @_root, @_is_le)
+              _io_body = io.substream(len_body)
+              @body = DynsymSection.new(_io_body, self, @_root, @_is_le)
+            when :sh_type_note
+              _io_body = io.substream(len_body)
+              @body = NoteSection.new(_io_body, self, @_root, @_is_le)
+            when :sh_type_rel
+              _io_body = io.substream(len_body)
+              @body = RelocationSection.new(_io_body, self, @_root, @_is_le, false)
             when :sh_type_rela
-              @_raw_body = io.read_bytes(len_body)
-              _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-              @body = RelocationSection.new(_io__raw_body, self, @_root, @_is_le, true)
+              _io_body = io.substream(len_body)
+              @body = RelocationSection.new(_io_body, self, @_root, @_is_le, true)
+            when :sh_type_strtab
+              _io_body = io.substream(len_body)
+              @body = StringsStruct.new(_io_body, self, @_root, @_is_le)
+            when :sh_type_symtab
+              _io_body = io.substream(len_body)
+              @body = DynsymSection.new(_io_body, self, @_root, @_is_le)
             else
               @body = io.read_bytes(len_body)
             end
           else
             case type
-            when :sh_type_rel
-              @_raw_body = io.read_bytes(len_body)
-              _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-              @body = RelocationSection.new(_io__raw_body, self, @_root, @_is_le, false)
-            when :sh_type_note
-              @_raw_body = io.read_bytes(len_body)
-              _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-              @body = NoteSection.new(_io__raw_body, self, @_root, @_is_le)
-            when :sh_type_symtab
-              @_raw_body = io.read_bytes(len_body)
-              _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-              @body = DynsymSection.new(_io__raw_body, self, @_root, @_is_le)
-            when :sh_type_strtab
-              @_raw_body = io.read_bytes(len_body)
-              _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-              @body = StringsStruct.new(_io__raw_body, self, @_root, @_is_le)
             when :sh_type_dynamic
-              @_raw_body = io.read_bytes(len_body)
-              _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-              @body = DynamicSection.new(_io__raw_body, self, @_root, @_is_le)
+              _io_body = io.substream(len_body)
+              @body = DynamicSection.new(_io_body, self, @_root, @_is_le)
             when :sh_type_dynsym
-              @_raw_body = io.read_bytes(len_body)
-              _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-              @body = DynsymSection.new(_io__raw_body, self, @_root, @_is_le)
+              _io_body = io.substream(len_body)
+              @body = DynsymSection.new(_io_body, self, @_root, @_is_le)
+            when :sh_type_note
+              _io_body = io.substream(len_body)
+              @body = NoteSection.new(_io_body, self, @_root, @_is_le)
+            when :sh_type_rel
+              _io_body = io.substream(len_body)
+              @body = RelocationSection.new(_io_body, self, @_root, @_is_le, false)
             when :sh_type_rela
-              @_raw_body = io.read_bytes(len_body)
-              _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-              @body = RelocationSection.new(_io__raw_body, self, @_root, @_is_le, true)
+              _io_body = io.substream(len_body)
+              @body = RelocationSection.new(_io_body, self, @_root, @_is_le, true)
+            when :sh_type_strtab
+              _io_body = io.substream(len_body)
+              @body = StringsStruct.new(_io_body, self, @_root, @_is_le)
+            when :sh_type_symtab
+              _io_body = io.substream(len_body)
+              @body = DynsymSection.new(_io_body, self, @_root, @_is_le)
             else
               @body = io.read_bytes(len_body)
             end
@@ -1090,13 +1745,22 @@ class Elf < Kaitai::Struct::Struct
         end
         @body
       end
+      def flags_obj
+        return @flags_obj unless @flags_obj.nil?
+        if @_is_le
+          @flags_obj = SectionHeaderFlags.new(@_io, self, @_root, flags)
+        else
+          @flags_obj = SectionHeaderFlags.new(@_io, self, @_root, flags)
+        end
+        @flags_obj
+      end
 
       ##
       # may reference a later section header, so don't try to access too early (use only lazy `instances`)
       # @see https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.sheader.html#sh_link Source
       def linked_section
         return @linked_section unless @linked_section.nil?
-        if  ((linked_section_idx != Elf::I__SECTION_HEADER_IDX_SPECIAL[:section_header_idx_special_undefined]) && (linked_section_idx < _root.header.num_section_headers)) 
+        if  ((linked_section_idx != (Elf::I__SECTION_HEADER_IDX_SPECIAL[:section_header_idx_special_undefined] || :section_header_idx_special_undefined)) && (linked_section_idx < _root.header.num_section_headers)) 
           @linked_section = _root.header.section_headers[linked_section_idx]
         end
         @linked_section
@@ -1107,21 +1771,12 @@ class Elf < Kaitai::Struct::Struct
         _pos = io.pos
         io.seek(ofs_name)
         if @_is_le
-          @name = (io.read_bytes_term(0, false, true, true)).force_encoding("ASCII")
+          @name = (io.read_bytes_term(0, false, true, true)).force_encoding("ASCII").encode('UTF-8')
         else
-          @name = (io.read_bytes_term(0, false, true, true)).force_encoding("ASCII")
+          @name = (io.read_bytes_term(0, false, true, true)).force_encoding("ASCII").encode('UTF-8')
         end
         io.seek(_pos)
         @name
-      end
-      def flags_obj
-        return @flags_obj unless @flags_obj.nil?
-        if @_is_le
-          @flags_obj = SectionHeaderFlags.new(@_io, self, @_root, flags)
-        else
-          @flags_obj = SectionHeaderFlags.new(@_io, self, @_root, flags)
-        end
-        @flags_obj
       end
       attr_reader :ofs_name
       attr_reader :type
@@ -1135,404 +1790,8 @@ class Elf < Kaitai::Struct::Struct
       attr_reader :entry_size
       attr_reader :_raw_body
     end
-
-    ##
-    # @see https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/relocation-sections.html Source
-    # @see https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.reloc.html Source
-    class RelocationSection < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self, _is_le = nil, has_addend)
-        super(_io, _parent, _root)
-        @_is_le = _is_le
-        @has_addend = has_addend
-        _read
-      end
-
-      def _read
-
-        if @_is_le == true
-          _read_le
-        elsif @_is_le == false
-          _read_be
-        else
-          raise Kaitai::Struct::UndecidedEndiannessError.new("/types/endian_elf/types/relocation_section")
-        end
-        self
-      end
-
-      def _read_le
-        @entries = []
-        i = 0
-        while not @_io.eof?
-          @entries << RelocationSectionEntry.new(@_io, self, @_root, @_is_le)
-          i += 1
-        end
-        self
-      end
-
-      def _read_be
-        @entries = []
-        i = 0
-        while not @_io.eof?
-          @entries << RelocationSectionEntry.new(@_io, self, @_root, @_is_le)
-          i += 1
-        end
-        self
-      end
-      attr_reader :entries
-      attr_reader :has_addend
-    end
-    class DynamicSection < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self, _is_le = nil)
-        super(_io, _parent, _root)
-        @_is_le = _is_le
-        _read
-      end
-
-      def _read
-
-        if @_is_le == true
-          _read_le
-        elsif @_is_le == false
-          _read_be
-        else
-          raise Kaitai::Struct::UndecidedEndiannessError.new("/types/endian_elf/types/dynamic_section")
-        end
-        self
-      end
-
-      def _read_le
-        @entries = []
-        i = 0
-        while not @_io.eof?
-          @entries << DynamicSectionEntry.new(@_io, self, @_root, @_is_le)
-          i += 1
-        end
-        self
-      end
-
-      def _read_be
-        @entries = []
-        i = 0
-        while not @_io.eof?
-          @entries << DynamicSectionEntry.new(@_io, self, @_root, @_is_le)
-          i += 1
-        end
-        self
-      end
-      def is_string_table_linked
-        return @is_string_table_linked unless @is_string_table_linked.nil?
-        @is_string_table_linked = _parent.linked_section.type == :sh_type_strtab
-        @is_string_table_linked
-      end
-      attr_reader :entries
-    end
-    class DynsymSection < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self, _is_le = nil)
-        super(_io, _parent, _root)
-        @_is_le = _is_le
-        _read
-      end
-
-      def _read
-
-        if @_is_le == true
-          _read_le
-        elsif @_is_le == false
-          _read_be
-        else
-          raise Kaitai::Struct::UndecidedEndiannessError.new("/types/endian_elf/types/dynsym_section")
-        end
-        self
-      end
-
-      def _read_le
-        @entries = []
-        i = 0
-        while not @_io.eof?
-          @entries << DynsymSectionEntry.new(@_io, self, @_root, @_is_le)
-          i += 1
-        end
-        self
-      end
-
-      def _read_be
-        @entries = []
-        i = 0
-        while not @_io.eof?
-          @entries << DynsymSectionEntry.new(@_io, self, @_root, @_is_le)
-          i += 1
-        end
-        self
-      end
-      def is_string_table_linked
-        return @is_string_table_linked unless @is_string_table_linked.nil?
-        @is_string_table_linked = _parent.linked_section.type == :sh_type_strtab
-        @is_string_table_linked
-      end
-      attr_reader :entries
-    end
-    class RelocationSectionEntry < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self, _is_le = nil)
-        super(_io, _parent, _root)
-        @_is_le = _is_le
-        _read
-      end
-
-      def _read
-
-        if @_is_le == true
-          _read_le
-        elsif @_is_le == false
-          _read_be
-        else
-          raise Kaitai::Struct::UndecidedEndiannessError.new("/types/endian_elf/types/relocation_section_entry")
-        end
-        self
-      end
-
-      def _read_le
-        case _root.bits
-        when :bits_b32
-          @offset = @_io.read_u4le
-        when :bits_b64
-          @offset = @_io.read_u8le
-        end
-        case _root.bits
-        when :bits_b32
-          @info = @_io.read_u4le
-        when :bits_b64
-          @info = @_io.read_u8le
-        end
-        if _parent.has_addend
-          case _root.bits
-          when :bits_b32
-            @addend = @_io.read_s4le
-          when :bits_b64
-            @addend = @_io.read_s8le
-          end
-        end
-        self
-      end
-
-      def _read_be
-        case _root.bits
-        when :bits_b32
-          @offset = @_io.read_u4be
-        when :bits_b64
-          @offset = @_io.read_u8be
-        end
-        case _root.bits
-        when :bits_b32
-          @info = @_io.read_u4be
-        when :bits_b64
-          @info = @_io.read_u8be
-        end
-        if _parent.has_addend
-          case _root.bits
-          when :bits_b32
-            @addend = @_io.read_s4be
-          when :bits_b64
-            @addend = @_io.read_s8be
-          end
-        end
-        self
-      end
-      attr_reader :offset
-      attr_reader :info
-      attr_reader :addend
-    end
-
-    ##
-    # @see https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/symbol-table-section.html Source
-    # @see https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.symtab.html Source
-    class DynsymSectionEntry < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self, _is_le = nil)
-        super(_io, _parent, _root)
-        @_is_le = _is_le
-        _read
-      end
-
-      def _read
-
-        if @_is_le == true
-          _read_le
-        elsif @_is_le == false
-          _read_be
-        else
-          raise Kaitai::Struct::UndecidedEndiannessError.new("/types/endian_elf/types/dynsym_section_entry")
-        end
-        self
-      end
-
-      def _read_le
-        @ofs_name = @_io.read_u4le
-        if _root.bits == :bits_b32
-          @value_b32 = @_io.read_u4le
-        end
-        if _root.bits == :bits_b32
-          @size_b32 = @_io.read_u4le
-        end
-        @bind = Kaitai::Struct::Stream::resolve_enum(Elf::SYMBOL_BINDING, @_io.read_bits_int_be(4))
-        @type = Kaitai::Struct::Stream::resolve_enum(Elf::SYMBOL_TYPE, @_io.read_bits_int_be(4))
-        @_io.align_to_byte
-        @other = @_io.read_u1
-        @sh_idx = @_io.read_u2le
-        if _root.bits == :bits_b64
-          @value_b64 = @_io.read_u8le
-        end
-        if _root.bits == :bits_b64
-          @size_b64 = @_io.read_u8le
-        end
-        self
-      end
-
-      def _read_be
-        @ofs_name = @_io.read_u4be
-        if _root.bits == :bits_b32
-          @value_b32 = @_io.read_u4be
-        end
-        if _root.bits == :bits_b32
-          @size_b32 = @_io.read_u4be
-        end
-        @bind = Kaitai::Struct::Stream::resolve_enum(Elf::SYMBOL_BINDING, @_io.read_bits_int_be(4))
-        @type = Kaitai::Struct::Stream::resolve_enum(Elf::SYMBOL_TYPE, @_io.read_bits_int_be(4))
-        @_io.align_to_byte
-        @other = @_io.read_u1
-        @sh_idx = @_io.read_u2be
-        if _root.bits == :bits_b64
-          @value_b64 = @_io.read_u8be
-        end
-        if _root.bits == :bits_b64
-          @size_b64 = @_io.read_u8be
-        end
-        self
-      end
-      def is_sh_idx_reserved
-        return @is_sh_idx_reserved unless @is_sh_idx_reserved.nil?
-        @is_sh_idx_reserved =  ((sh_idx >= _root.sh_idx_lo_reserved) && (sh_idx <= _root.sh_idx_hi_reserved)) 
-        @is_sh_idx_reserved
-      end
-      def is_sh_idx_os
-        return @is_sh_idx_os unless @is_sh_idx_os.nil?
-        @is_sh_idx_os =  ((sh_idx >= _root.sh_idx_lo_os) && (sh_idx <= _root.sh_idx_hi_os)) 
-        @is_sh_idx_os
-      end
-      def is_sh_idx_proc
-        return @is_sh_idx_proc unless @is_sh_idx_proc.nil?
-        @is_sh_idx_proc =  ((sh_idx >= _root.sh_idx_lo_proc) && (sh_idx <= _root.sh_idx_hi_proc)) 
-        @is_sh_idx_proc
-      end
-      def size
-        return @size unless @size.nil?
-        @size = (_root.bits == :bits_b32 ? size_b32 : (_root.bits == :bits_b64 ? size_b64 : 0))
-        @size
-      end
-      def visibility
-        return @visibility unless @visibility.nil?
-        @visibility = Kaitai::Struct::Stream::resolve_enum(Elf::SYMBOL_VISIBILITY, (other & 3))
-        @visibility
-      end
-      def value
-        return @value unless @value.nil?
-        @value = (_root.bits == :bits_b32 ? value_b32 : (_root.bits == :bits_b64 ? value_b64 : 0))
-        @value
-      end
-      def name
-        return @name unless @name.nil?
-        if  ((ofs_name != 0) && (_parent.is_string_table_linked)) 
-          io = _parent._parent.linked_section.body._io
-          _pos = io.pos
-          io.seek(ofs_name)
-          if @_is_le
-            @name = (io.read_bytes_term(0, false, true, true)).force_encoding("UTF-8")
-          else
-            @name = (io.read_bytes_term(0, false, true, true)).force_encoding("UTF-8")
-          end
-          io.seek(_pos)
-        end
-        @name
-      end
-      def sh_idx_special
-        return @sh_idx_special unless @sh_idx_special.nil?
-        @sh_idx_special = Kaitai::Struct::Stream::resolve_enum(Elf::SECTION_HEADER_IDX_SPECIAL, sh_idx)
-        @sh_idx_special
-      end
-      attr_reader :ofs_name
-      attr_reader :value_b32
-      attr_reader :size_b32
-      attr_reader :bind
-      attr_reader :type
-
-      ##
-      # don't read this field, access `visibility` instead
-      attr_reader :other
-
-      ##
-      # section header index
-      attr_reader :sh_idx
-      attr_reader :value_b64
-      attr_reader :size_b64
-    end
-
-    ##
-    # @see https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/note-section.html Source
-    # @see https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.pheader.html#note_section Source
-    class NoteSectionEntry < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self, _is_le = nil)
-        super(_io, _parent, _root)
-        @_is_le = _is_le
-        _read
-      end
-
-      def _read
-
-        if @_is_le == true
-          _read_le
-        elsif @_is_le == false
-          _read_be
-        else
-          raise Kaitai::Struct::UndecidedEndiannessError.new("/types/endian_elf/types/note_section_entry")
-        end
-        self
-      end
-
-      def _read_le
-        @len_name = @_io.read_u4le
-        @len_descriptor = @_io.read_u4le
-        @type = @_io.read_u4le
-        @name = Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(len_name), 0, false)
-        @name_padding = @_io.read_bytes((-(len_name) % 4))
-        @descriptor = @_io.read_bytes(len_descriptor)
-        @descriptor_padding = @_io.read_bytes((-(len_descriptor) % 4))
-        self
-      end
-
-      def _read_be
-        @len_name = @_io.read_u4be
-        @len_descriptor = @_io.read_u4be
-        @type = @_io.read_u4be
-        @name = Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(len_name), 0, false)
-        @name_padding = @_io.read_bytes((-(len_name) % 4))
-        @descriptor = @_io.read_bytes(len_descriptor)
-        @descriptor_padding = @_io.read_bytes((-(len_descriptor) % 4))
-        self
-      end
-      attr_reader :len_name
-      attr_reader :len_descriptor
-      attr_reader :type
-
-      ##
-      # Although the ELF specification seems to hint that the `note_name` field
-      # is ASCII this isn't the case for Linux binaries that have a
-      # `.gnu.build.attributes` section.
-      # @see https://fedoraproject.org/wiki/Toolchain/Watermark#Proposed_Specification_for_non-loaded_notes Source
-      attr_reader :name
-      attr_reader :name_padding
-      attr_reader :descriptor
-      attr_reader :descriptor_padding
-    end
     class StringsStruct < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self, _is_le = nil)
+      def initialize(_io, _parent = nil, _root = nil, _is_le = nil)
         super(_io, _parent, _root)
         @_is_le = _is_le
         _read
@@ -1579,17 +1838,15 @@ class Elf < Kaitai::Struct::Struct
         @_raw_program_headers = []
         @program_headers = []
         (num_program_headers).times { |i|
-          @_raw_program_headers << @_io.read_bytes(program_header_size)
-          _io__raw_program_headers = Kaitai::Struct::Stream.new(@_raw_program_headers[i])
-          @program_headers << ProgramHeader.new(_io__raw_program_headers, self, @_root, @_is_le)
+          _io_program_headers = @_io.substream(program_header_size)
+          @program_headers << ProgramHeader.new(_io_program_headers, self, @_root, @_is_le)
         }
       else
         @_raw_program_headers = []
         @program_headers = []
         (num_program_headers).times { |i|
-          @_raw_program_headers << @_io.read_bytes(program_header_size)
-          _io__raw_program_headers = Kaitai::Struct::Stream.new(@_raw_program_headers[i])
-          @program_headers << ProgramHeader.new(_io__raw_program_headers, self, @_root, @_is_le)
+          _io_program_headers = @_io.substream(program_header_size)
+          @program_headers << ProgramHeader.new(_io_program_headers, self, @_root, @_is_le)
         }
       end
       @_io.seek(_pos)
@@ -1603,17 +1860,15 @@ class Elf < Kaitai::Struct::Struct
         @_raw_section_headers = []
         @section_headers = []
         (num_section_headers).times { |i|
-          @_raw_section_headers << @_io.read_bytes(section_header_size)
-          _io__raw_section_headers = Kaitai::Struct::Stream.new(@_raw_section_headers[i])
-          @section_headers << SectionHeader.new(_io__raw_section_headers, self, @_root, @_is_le)
+          _io_section_headers = @_io.substream(section_header_size)
+          @section_headers << SectionHeader.new(_io_section_headers, self, @_root, @_is_le)
         }
       else
         @_raw_section_headers = []
         @section_headers = []
         (num_section_headers).times { |i|
-          @_raw_section_headers << @_io.read_bytes(section_header_size)
-          _io__raw_section_headers = Kaitai::Struct::Stream.new(@_raw_section_headers[i])
-          @section_headers << SectionHeader.new(_io__raw_section_headers, self, @_root, @_is_le)
+          _io_section_headers = @_io.substream(section_header_size)
+          @section_headers << SectionHeader.new(_io_section_headers, self, @_root, @_is_le)
         }
       end
       @_io.seek(_pos)
@@ -1621,17 +1876,15 @@ class Elf < Kaitai::Struct::Struct
     end
     def section_names
       return @section_names unless @section_names.nil?
-      if  ((section_names_idx != Elf::I__SECTION_HEADER_IDX_SPECIAL[:section_header_idx_special_undefined]) && (section_names_idx < _root.header.num_section_headers)) 
+      if  ((section_names_idx != (Elf::I__SECTION_HEADER_IDX_SPECIAL[:section_header_idx_special_undefined] || :section_header_idx_special_undefined)) && (section_names_idx < _root.header.num_section_headers)) 
         _pos = @_io.pos
         @_io.seek(section_headers[section_names_idx].ofs_body)
         if @_is_le
-          @_raw_section_names = @_io.read_bytes(section_headers[section_names_idx].len_body)
-          _io__raw_section_names = Kaitai::Struct::Stream.new(@_raw_section_names)
-          @section_names = StringsStruct.new(_io__raw_section_names, self, @_root, @_is_le)
+          _io_section_names = @_io.substream(section_headers[section_names_idx].len_body)
+          @section_names = StringsStruct.new(_io_section_names, self, @_root, @_is_le)
         else
-          @_raw_section_names = @_io.read_bytes(section_headers[section_names_idx].len_body)
-          _io__raw_section_names = Kaitai::Struct::Stream.new(@_raw_section_names)
-          @section_names = StringsStruct.new(_io__raw_section_names, self, @_root, @_is_le)
+          _io_section_names = @_io.substream(section_headers[section_names_idx].len_body)
+          @section_names = StringsStruct.new(_io_section_names, self, @_root, @_is_le)
         end
         @_io.seek(_pos)
       end
@@ -1654,8 +1907,8 @@ class Elf < Kaitai::Struct::Struct
     attr_reader :_raw_section_headers
     attr_reader :_raw_section_names
   end
-  class DtFlag1Values < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self, value)
+  class PhdrTypeFlags < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil, value)
       super(_io, _parent, _root)
       @value = value
       _read
@@ -1664,213 +1917,30 @@ class Elf < Kaitai::Struct::Struct
     def _read
       self
     end
-
-    ##
-    # Singleton symbols are used.
-    def singleton
-      return @singleton unless @singleton.nil?
-      @singleton = (value & 33554432) != 0
-      @singleton
+    def execute
+      return @execute unless @execute.nil?
+      @execute = value & 1 != 0
+      @execute
     end
-    def ignmuldef
-      return @ignmuldef unless @ignmuldef.nil?
-      @ignmuldef = (value & 262144) != 0
-      @ignmuldef
+    def mask_proc
+      return @mask_proc unless @mask_proc.nil?
+      @mask_proc = value & 4026531840 != 0
+      @mask_proc
     end
-
-    ##
-    # Trigger filtee loading at runtime.
-    def loadfltr
-      return @loadfltr unless @loadfltr.nil?
-      @loadfltr = (value & 16) != 0
-      @loadfltr
+    def read
+      return @read unless @read.nil?
+      @read = value & 4 != 0
+      @read
     end
-
-    ##
-    # Set RTLD_INITFIRST for this object
-    def initfirst
-      return @initfirst unless @initfirst.nil?
-      @initfirst = (value & 32) != 0
-      @initfirst
-    end
-
-    ##
-    # Object has individual interposers.
-    def symintpose
-      return @symintpose unless @symintpose.nil?
-      @symintpose = (value & 8388608) != 0
-      @symintpose
-    end
-    def noreloc
-      return @noreloc unless @noreloc.nil?
-      @noreloc = (value & 4194304) != 0
-      @noreloc
-    end
-
-    ##
-    # Configuration alternative created.
-    def confalt
-      return @confalt unless @confalt.nil?
-      @confalt = (value & 8192) != 0
-      @confalt
-    end
-
-    ##
-    # Disp reloc applied at build time.
-    def dispreldne
-      return @dispreldne unless @dispreldne.nil?
-      @dispreldne = (value & 32768) != 0
-      @dispreldne
-    end
-
-    ##
-    # Set RTLD_GLOBAL for this object.
-    def rtld_global
-      return @rtld_global unless @rtld_global.nil?
-      @rtld_global = (value & 2) != 0
-      @rtld_global
-    end
-
-    ##
-    # Set RTLD_NODELETE for this object.
-    def nodelete
-      return @nodelete unless @nodelete.nil?
-      @nodelete = (value & 8) != 0
-      @nodelete
-    end
-    def trans
-      return @trans unless @trans.nil?
-      @trans = (value & 512) != 0
-      @trans
-    end
-
-    ##
-    # $ORIGIN must be handled.
-    def origin
-      return @origin unless @origin.nil?
-      @origin = (value & 128) != 0
-      @origin
-    end
-
-    ##
-    # Set RTLD_NOW for this object.
-    def now
-      return @now unless @now.nil?
-      @now = (value & 1) != 0
-      @now
-    end
-    def nohdr
-      return @nohdr unless @nohdr.nil?
-      @nohdr = (value & 1048576) != 0
-      @nohdr
-    end
-
-    ##
-    # Filtee terminates filters search.
-    def endfiltee
-      return @endfiltee unless @endfiltee.nil?
-      @endfiltee = (value & 16384) != 0
-      @endfiltee
-    end
-
-    ##
-    # Object has no-direct binding.
-    def nodirect
-      return @nodirect unless @nodirect.nil?
-      @nodirect = (value & 131072) != 0
-      @nodirect
-    end
-
-    ##
-    # Global auditing required.
-    def globaudit
-      return @globaudit unless @globaudit.nil?
-      @globaudit = (value & 16777216) != 0
-      @globaudit
-    end
-    def noksyms
-      return @noksyms unless @noksyms.nil?
-      @noksyms = (value & 524288) != 0
-      @noksyms
-    end
-
-    ##
-    # Object is used to interpose.
-    def interpose
-      return @interpose unless @interpose.nil?
-      @interpose = (value & 1024) != 0
-      @interpose
-    end
-
-    ##
-    # Object can't be dldump'ed.
-    def nodump
-      return @nodump unless @nodump.nil?
-      @nodump = (value & 4096) != 0
-      @nodump
-    end
-
-    ##
-    # Disp reloc applied at run-time.
-    def disprelpnd
-      return @disprelpnd unless @disprelpnd.nil?
-      @disprelpnd = (value & 65536) != 0
-      @disprelpnd
-    end
-
-    ##
-    # Set RTLD_NOOPEN for this object.
-    def noopen
-      return @noopen unless @noopen.nil?
-      @noopen = (value & 64) != 0
-      @noopen
-    end
-    def stub
-      return @stub unless @stub.nil?
-      @stub = (value & 67108864) != 0
-      @stub
-    end
-
-    ##
-    # Direct binding enabled.
-    def direct
-      return @direct unless @direct.nil?
-      @direct = (value & 256) != 0
-      @direct
-    end
-
-    ##
-    # Object is modified after built.
-    def edited
-      return @edited unless @edited.nil?
-      @edited = (value & 2097152) != 0
-      @edited
-    end
-
-    ##
-    # Set RTLD_GROUP for this object.
-    def group
-      return @group unless @group.nil?
-      @group = (value & 4) != 0
-      @group
-    end
-    def pie
-      return @pie unless @pie.nil?
-      @pie = (value & 134217728) != 0
-      @pie
-    end
-
-    ##
-    # Ignore default lib search path.
-    def nodeflib
-      return @nodeflib unless @nodeflib.nil?
-      @nodeflib = (value & 2048) != 0
-      @nodeflib
+    def write
+      return @write unless @write.nil?
+      @write = value & 2 != 0
+      @write
     end
     attr_reader :value
   end
   class SectionHeaderFlags < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self, value)
+    def initialize(_io, _parent = nil, _root = nil, value)
       super(_io, _parent, _root)
       @value = value
       _read
@@ -1878,240 +1948,150 @@ class Elf < Kaitai::Struct::Struct
 
     def _read
       self
-    end
-
-    ##
-    # might be merged
-    def merge
-      return @merge unless @merge.nil?
-      @merge = (value & 16) != 0
-      @merge
-    end
-
-    ##
-    # OS-specific
-    def mask_os
-      return @mask_os unless @mask_os.nil?
-      @mask_os = (value & 267386880) != 0
-      @mask_os
-    end
-
-    ##
-    # section is excluded unless referenced or allocated (Solaris)
-    def exclude
-      return @exclude unless @exclude.nil?
-      @exclude = (value & 134217728) != 0
-      @exclude
-    end
-
-    ##
-    # Processor-specific
-    def mask_proc
-      return @mask_proc unless @mask_proc.nil?
-      @mask_proc = (value & 4026531840) != 0
-      @mask_proc
-    end
-
-    ##
-    # contains nul-terminated strings
-    def strings
-      return @strings unless @strings.nil?
-      @strings = (value & 32) != 0
-      @strings
-    end
-
-    ##
-    # non-standard OS specific handling required
-    def os_non_conforming
-      return @os_non_conforming unless @os_non_conforming.nil?
-      @os_non_conforming = (value & 256) != 0
-      @os_non_conforming
     end
 
     ##
     # occupies memory during execution
     def alloc
       return @alloc unless @alloc.nil?
-      @alloc = (value & 2) != 0
+      @alloc = value & 2 != 0
       @alloc
+    end
+
+    ##
+    # section is excluded unless referenced or allocated (Solaris)
+    def exclude
+      return @exclude unless @exclude.nil?
+      @exclude = value & 134217728 != 0
+      @exclude
     end
 
     ##
     # executable
     def exec_instr
       return @exec_instr unless @exec_instr.nil?
-      @exec_instr = (value & 4) != 0
+      @exec_instr = value & 4 != 0
       @exec_instr
-    end
-
-    ##
-    # 'sh_info' contains SHT index
-    def info_link
-      return @info_link unless @info_link.nil?
-      @info_link = (value & 64) != 0
-      @info_link
-    end
-
-    ##
-    # writable
-    def write
-      return @write unless @write.nil?
-      @write = (value & 1) != 0
-      @write
-    end
-
-    ##
-    # preserve order after combining
-    def link_order
-      return @link_order unless @link_order.nil?
-      @link_order = (value & 128) != 0
-      @link_order
-    end
-
-    ##
-    # special ordering requirement (Solaris)
-    def ordered
-      return @ordered unless @ordered.nil?
-      @ordered = (value & 67108864) != 0
-      @ordered
-    end
-
-    ##
-    # section hold thread-local data
-    def tls
-      return @tls unless @tls.nil?
-      @tls = (value & 1024) != 0
-      @tls
     end
 
     ##
     # section is member of a group
     def group
       return @group unless @group.nil?
-      @group = (value & 512) != 0
+      @group = value & 512 != 0
       @group
     end
-    attr_reader :value
-  end
-  class PhdrTypeFlags < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self, value)
-      super(_io, _parent, _root)
-      @value = value
-      _read
+
+    ##
+    # 'sh_info' contains SHT index
+    def info_link
+      return @info_link unless @info_link.nil?
+      @info_link = value & 64 != 0
+      @info_link
     end
 
-    def _read
-      self
+    ##
+    # preserve order after combining
+    def link_order
+      return @link_order unless @link_order.nil?
+      @link_order = value & 128 != 0
+      @link_order
     end
-    def read
-      return @read unless @read.nil?
-      @read = (value & 4) != 0
-      @read
+
+    ##
+    # OS-specific
+    def mask_os
+      return @mask_os unless @mask_os.nil?
+      @mask_os = value & 267386880 != 0
+      @mask_os
     end
-    def write
-      return @write unless @write.nil?
-      @write = (value & 2) != 0
-      @write
-    end
-    def execute
-      return @execute unless @execute.nil?
-      @execute = (value & 1) != 0
-      @execute
-    end
+
+    ##
+    # Processor-specific
     def mask_proc
       return @mask_proc unless @mask_proc.nil?
-      @mask_proc = (value & 4026531840) != 0
+      @mask_proc = value & 4026531840 != 0
       @mask_proc
     end
-    attr_reader :value
-  end
 
-  ##
-  # @see https://refspecs.linuxbase.org/elf/gabi4+/ch5.dynamic.html Figure 5-11: DT_FLAGS values
-  # @see https://github.com/golang/go/blob/48dfddbab3/src/debug/elf/elf.go#L1079-L1095 Source
-  # @see https://docs.oracle.com/en/operating-systems/solaris/oracle-solaris/11.4/linkers-libraries/dynamic-section.html#GUID-4336A69A-D905-4FCE-A398-80375A9E6464__CHAPTER7-TBL-5 Source
-  class DtFlagValues < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self, value)
-      super(_io, _parent, _root)
-      @value = value
-      _read
-    end
-
-    def _read
-      self
+    ##
+    # might be merged
+    def merge
+      return @merge unless @merge.nil?
+      @merge = value & 16 != 0
+      @merge
     end
 
     ##
-    # all relocations for this object must be processed before returning
-    # control to the program
-    def bind_now
-      return @bind_now unless @bind_now.nil?
-      @bind_now = (value & 8) != 0
-      @bind_now
+    # special ordering requirement (Solaris)
+    def ordered
+      return @ordered unless @ordered.nil?
+      @ordered = value & 67108864 != 0
+      @ordered
     end
 
     ##
-    # object may reference the $ORIGIN substitution string
-    def origin
-      return @origin unless @origin.nil?
-      @origin = (value & 1) != 0
-      @origin
+    # non-standard OS specific handling required
+    def os_non_conforming
+      return @os_non_conforming unless @os_non_conforming.nil?
+      @os_non_conforming = value & 256 != 0
+      @os_non_conforming
     end
 
     ##
-    # relocation entries might request modifications to a non-writable segment
-    def textrel
-      return @textrel unless @textrel.nil?
-      @textrel = (value & 4) != 0
-      @textrel
+    # contains nul-terminated strings
+    def strings
+      return @strings unless @strings.nil?
+      @strings = value & 32 != 0
+      @strings
     end
 
     ##
-    # object uses static thread-local storage scheme
-    def static_tls
-      return @static_tls unless @static_tls.nil?
-      @static_tls = (value & 16) != 0
-      @static_tls
+    # section hold thread-local data
+    def tls
+      return @tls unless @tls.nil?
+      @tls = value & 1024 != 0
+      @tls
     end
 
     ##
-    # symbolic linking
-    def symbolic
-      return @symbolic unless @symbolic.nil?
-      @symbolic = (value & 2) != 0
-      @symbolic
+    # writable
+    def write
+      return @write unless @write.nil?
+      @write = value & 1 != 0
+      @write
     end
     attr_reader :value
-  end
-  def sh_idx_lo_os
-    return @sh_idx_lo_os unless @sh_idx_lo_os.nil?
-    @sh_idx_lo_os = 65312
-    @sh_idx_lo_os
-  end
-  def sh_idx_lo_reserved
-    return @sh_idx_lo_reserved unless @sh_idx_lo_reserved.nil?
-    @sh_idx_lo_reserved = 65280
-    @sh_idx_lo_reserved
-  end
-  def sh_idx_hi_proc
-    return @sh_idx_hi_proc unless @sh_idx_hi_proc.nil?
-    @sh_idx_hi_proc = 65311
-    @sh_idx_hi_proc
-  end
-  def sh_idx_lo_proc
-    return @sh_idx_lo_proc unless @sh_idx_lo_proc.nil?
-    @sh_idx_lo_proc = 65280
-    @sh_idx_lo_proc
   end
   def sh_idx_hi_os
     return @sh_idx_hi_os unless @sh_idx_hi_os.nil?
     @sh_idx_hi_os = 65343
     @sh_idx_hi_os
   end
+  def sh_idx_hi_proc
+    return @sh_idx_hi_proc unless @sh_idx_hi_proc.nil?
+    @sh_idx_hi_proc = 65311
+    @sh_idx_hi_proc
+  end
   def sh_idx_hi_reserved
     return @sh_idx_hi_reserved unless @sh_idx_hi_reserved.nil?
     @sh_idx_hi_reserved = 65535
     @sh_idx_hi_reserved
+  end
+  def sh_idx_lo_os
+    return @sh_idx_lo_os unless @sh_idx_lo_os.nil?
+    @sh_idx_lo_os = 65312
+    @sh_idx_lo_os
+  end
+  def sh_idx_lo_proc
+    return @sh_idx_lo_proc unless @sh_idx_lo_proc.nil?
+    @sh_idx_lo_proc = 65280
+    @sh_idx_lo_proc
+  end
+  def sh_idx_lo_reserved
+    return @sh_idx_lo_reserved unless @sh_idx_lo_reserved.nil?
+    @sh_idx_lo_reserved = 65280
+    @sh_idx_lo_reserved
   end
 
   ##

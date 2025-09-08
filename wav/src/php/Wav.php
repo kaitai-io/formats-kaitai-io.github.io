@@ -20,13 +20,54 @@
 
 namespace {
     class Wav extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Wav $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Wav $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_chunk = new \Riff\Chunk($this->_io, $this, $this->_root);
+            $this->_m_chunk = new \Riff\Chunk($this->_io);
+        }
+        protected $_m_chunkId;
+        public function chunkId() {
+            if ($this->_m_chunkId !== null)
+                return $this->_m_chunkId;
+            $this->_m_chunkId = $this->chunk()->id();
+            return $this->_m_chunkId;
+        }
+        protected $_m_formType;
+        public function formType() {
+            if ($this->_m_formType !== null)
+                return $this->_m_formType;
+            $this->_m_formType = $this->parentChunkData()->formType();
+            return $this->_m_formType;
+        }
+        protected $_m_isFormTypeWave;
+        public function isFormTypeWave() {
+            if ($this->_m_isFormTypeWave !== null)
+                return $this->_m_isFormTypeWave;
+            $this->_m_isFormTypeWave =  (($this->isRiffChunk()) && ($this->formType() == \Wav\Fourcc::WAVE)) ;
+            return $this->_m_isFormTypeWave;
+        }
+        protected $_m_isRiffChunk;
+        public function isRiffChunk() {
+            if ($this->_m_isRiffChunk !== null)
+                return $this->_m_isRiffChunk;
+            $this->_m_isRiffChunk = $this->chunkId() == \Wav\Fourcc::RIFF;
+            return $this->_m_isRiffChunk;
+        }
+        protected $_m_parentChunkData;
+        public function parentChunkData() {
+            if ($this->_m_parentChunkData !== null)
+                return $this->_m_parentChunkData;
+            if ($this->isRiffChunk()) {
+                $io = $this->chunk()->dataSlot()->_io();
+                $_pos = $io->pos();
+                $io->seek(0);
+                $this->_m_parentChunkData = new \Riff\ParentChunkData($io);
+                $io->seek($_pos);
+            }
+            return $this->_m_parentChunkData;
         }
         protected $_m_subchunks;
         public function subchunks() {
@@ -46,210 +87,46 @@ namespace {
             }
             return $this->_m_subchunks;
         }
-        protected $_m_parentChunkData;
-        public function parentChunkData() {
-            if ($this->_m_parentChunkData !== null)
-                return $this->_m_parentChunkData;
-            if ($this->isRiffChunk()) {
-                $io = $this->chunk()->dataSlot()->_io();
-                $_pos = $io->pos();
-                $io->seek(0);
-                $this->_m_parentChunkData = new \Riff\ParentChunkData($io, $this, $this->_root);
-                $io->seek($_pos);
-            }
-            return $this->_m_parentChunkData;
-        }
-        protected $_m_isFormTypeWave;
-        public function isFormTypeWave() {
-            if ($this->_m_isFormTypeWave !== null)
-                return $this->_m_isFormTypeWave;
-            $this->_m_isFormTypeWave =  (($this->isRiffChunk()) && ($this->formType() == \Wav\Fourcc::WAVE)) ;
-            return $this->_m_isFormTypeWave;
-        }
-        protected $_m_isRiffChunk;
-        public function isRiffChunk() {
-            if ($this->_m_isRiffChunk !== null)
-                return $this->_m_isRiffChunk;
-            $this->_m_isRiffChunk = $this->chunkId() == \Wav\Fourcc::RIFF;
-            return $this->_m_isRiffChunk;
-        }
-        protected $_m_chunkId;
-        public function chunkId() {
-            if ($this->_m_chunkId !== null)
-                return $this->_m_chunkId;
-            $this->_m_chunkId = $this->chunk()->id();
-            return $this->_m_chunkId;
-        }
-        protected $_m_formType;
-        public function formType() {
-            if ($this->_m_formType !== null)
-                return $this->_m_formType;
-            $this->_m_formType = $this->parentChunkData()->formType();
-            return $this->_m_formType;
-        }
         protected $_m_chunk;
         public function chunk() { return $this->_m_chunk; }
     }
 }
 
 namespace Wav {
-    class SampleType extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Wav $_root = null) {
+    class AfspChunkType extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Wav\ChunkType $_parent = null, ?\Wav $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_sample = $this->_io->readU2le();
-        }
-        protected $_m_sample;
-        public function sample() { return $this->_m_sample; }
-    }
-}
-
-namespace Wav {
-    class FormatChunkType extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Wav\ChunkType $_parent = null, \Wav $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_wFormatTag = $this->_io->readU2le();
-            $this->_m_nChannels = $this->_io->readU2le();
-            $this->_m_nSamplesPerSec = $this->_io->readU4le();
-            $this->_m_nAvgBytesPerSec = $this->_io->readU4le();
-            $this->_m_nBlockAlign = $this->_io->readU2le();
-            $this->_m_wBitsPerSample = $this->_io->readU2le();
-            if (!($this->isBasicPcm())) {
-                $this->_m_cbSize = $this->_io->readU2le();
+            $this->_m_magic = $this->_io->readBytes(4);
+            if (!($this->_m_magic == "\x41\x46\x73\x70")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x41\x46\x73\x70", $this->_m_magic, $this->_io, "/types/afsp_chunk_type/seq/0");
             }
-            if ($this->isCbSizeMeaningful()) {
-                $this->_m_wValidBitsPerSample = $this->_io->readU2le();
-            }
-            if ($this->isExtensible()) {
-                $this->_m_channelMaskAndSubformat = new \Wav\ChannelMaskAndSubformatType($this->_io, $this, $this->_root);
+            $this->_m_infoRecords = [];
+            $i = 0;
+            while (!$this->_io->isEof()) {
+                $this->_m_infoRecords[] = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, true), "ASCII");
+                $i++;
             }
         }
-        protected $_m_isExtensible;
-        public function isExtensible() {
-            if ($this->_m_isExtensible !== null)
-                return $this->_m_isExtensible;
-            $this->_m_isExtensible = $this->wFormatTag() == \Wav\WFormatTagType::EXTENSIBLE;
-            return $this->_m_isExtensible;
-        }
-        protected $_m_isBasicPcm;
-        public function isBasicPcm() {
-            if ($this->_m_isBasicPcm !== null)
-                return $this->_m_isBasicPcm;
-            $this->_m_isBasicPcm = $this->wFormatTag() == \Wav\WFormatTagType::PCM;
-            return $this->_m_isBasicPcm;
-        }
-        protected $_m_isBasicFloat;
-        public function isBasicFloat() {
-            if ($this->_m_isBasicFloat !== null)
-                return $this->_m_isBasicFloat;
-            $this->_m_isBasicFloat = $this->wFormatTag() == \Wav\WFormatTagType::IEEE_FLOAT;
-            return $this->_m_isBasicFloat;
-        }
-        protected $_m_isCbSizeMeaningful;
-        public function isCbSizeMeaningful() {
-            if ($this->_m_isCbSizeMeaningful !== null)
-                return $this->_m_isCbSizeMeaningful;
-            $this->_m_isCbSizeMeaningful =  ((!($this->isBasicPcm())) && ($this->cbSize() != 0)) ;
-            return $this->_m_isCbSizeMeaningful;
-        }
-        protected $_m_wFormatTag;
-        protected $_m_nChannels;
-        protected $_m_nSamplesPerSec;
-        protected $_m_nAvgBytesPerSec;
-        protected $_m_nBlockAlign;
-        protected $_m_wBitsPerSample;
-        protected $_m_cbSize;
-        protected $_m_wValidBitsPerSample;
-        protected $_m_channelMaskAndSubformat;
-        public function wFormatTag() { return $this->_m_wFormatTag; }
-        public function nChannels() { return $this->_m_nChannels; }
-        public function nSamplesPerSec() { return $this->_m_nSamplesPerSec; }
-        public function nAvgBytesPerSec() { return $this->_m_nAvgBytesPerSec; }
-        public function nBlockAlign() { return $this->_m_nBlockAlign; }
-        public function wBitsPerSample() { return $this->_m_wBitsPerSample; }
-        public function cbSize() { return $this->_m_cbSize; }
-        public function wValidBitsPerSample() { return $this->_m_wValidBitsPerSample; }
-        public function channelMaskAndSubformat() { return $this->_m_channelMaskAndSubformat; }
-    }
-}
-
-namespace Wav {
-    class PmxChunkType extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Wav\ChunkType $_parent = null, \Wav $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_data = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesFull(), "UTF-8");
-        }
-        protected $_m_data;
+        protected $_m_magic;
+        protected $_m_infoRecords;
+        public function magic() { return $this->_m_magic; }
 
         /**
-         * XMP data
+         * An array of AFsp information records, in the `<field_name>: <value>`
+         * format (e.g. "`program: CopyAudio`"). The list of existing information
+         * record types are available in the `doc-ref` links.
          */
-        public function data() { return $this->_m_data; }
-    }
-}
-
-/**
- * required for all non-PCM formats
- * (`w_format_tag != w_format_tag_type::pcm` or `not is_basic_pcm` in
- * `format_chunk_type` context)
- */
-
-namespace Wav {
-    class FactChunkType extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Wav\ChunkType $_parent = null, \Wav $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_numSamplesPerChannel = $this->_io->readU4le();
-        }
-        protected $_m_numSamplesPerChannel;
-        public function numSamplesPerChannel() { return $this->_m_numSamplesPerChannel; }
+        public function infoRecords() { return $this->_m_infoRecords; }
     }
 }
 
 namespace Wav {
-    class GuidType extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Wav\ChannelMaskAndSubformatType $_parent = null, \Wav $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_data1 = $this->_io->readU4le();
-            $this->_m_data2 = $this->_io->readU2le();
-            $this->_m_data3 = $this->_io->readU2le();
-            $this->_m_data4 = $this->_io->readU4be();
-            $this->_m_data4a = $this->_io->readU4be();
-        }
-        protected $_m_data1;
-        protected $_m_data2;
-        protected $_m_data3;
-        protected $_m_data4;
-        protected $_m_data4a;
-        public function data1() { return $this->_m_data1; }
-        public function data2() { return $this->_m_data2; }
-        public function data3() { return $this->_m_data3; }
-        public function data4() { return $this->_m_data4; }
-        public function data4a() { return $this->_m_data4a; }
-    }
-}
-
-namespace Wav {
-    class IxmlChunkType extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Wav\ChunkType $_parent = null, \Wav $_root = null) {
+    class AxmlChunkType extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Wav\ChunkType $_parent = null, ?\Wav $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -263,94 +140,62 @@ namespace Wav {
 }
 
 namespace Wav {
-    class InfoChunkType extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Wav\ListChunkType $_parent = null, \Wav $_root = null) {
+    class BextChunkType extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Wav\ChunkType $_parent = null, ?\Wav $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_chunk = new \Riff\Chunk($this->_io, $this, $this->_root);
+            $this->_m_description = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($this->_io->readBytes(256), 0, false), "ASCII");
+            $this->_m_originator = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($this->_io->readBytes(32), 0, false), "ASCII");
+            $this->_m_originatorReference = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($this->_io->readBytes(32), 0, false), "ASCII");
+            $this->_m_originationDate = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(10), "ASCII");
+            $this->_m_originationTime = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(8), "ASCII");
+            $this->_m_timeReferenceLow = $this->_io->readU4le();
+            $this->_m_timeReferenceHigh = $this->_io->readU4le();
+            $this->_m_version = $this->_io->readU2le();
+            $this->_m_umid = $this->_io->readBytes(64);
+            $this->_m_loudnessValue = $this->_io->readU2le();
+            $this->_m_loudnessRange = $this->_io->readU2le();
+            $this->_m_maxTruePeakLevel = $this->_io->readU2le();
+            $this->_m_maxMomentaryLoudness = $this->_io->readU2le();
+            $this->_m_maxShortTermLoudness = $this->_io->readU2le();
         }
-        protected $_m_chunkData;
-        public function chunkData() {
-            if ($this->_m_chunkData !== null)
-                return $this->_m_chunkData;
-            $io = $this->chunk()->dataSlot()->_io();
-            $_pos = $io->pos();
-            $io->seek(0);
-            $this->_m_chunkData = \Kaitai\Struct\Stream::bytesToStr($io->readBytesTerm(0, false, true, true), "ASCII");
-            $io->seek($_pos);
-            return $this->_m_chunkData;
-        }
-        protected $_m_chunk;
-        public function chunk() { return $this->_m_chunk; }
-    }
-}
-
-namespace Wav {
-    class CuePointType extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Wav\CueChunkType $_parent = null, \Wav $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_dwName = $this->_io->readU4le();
-            $this->_m_dwPosition = $this->_io->readU4le();
-            $this->_m_fccChunk = $this->_io->readU4le();
-            $this->_m_dwChunkStart = $this->_io->readU4le();
-            $this->_m_dwBlockStart = $this->_io->readU4le();
-            $this->_m_dwSampleOffset = $this->_io->readU4le();
-        }
-        protected $_m_dwName;
-        protected $_m_dwPosition;
-        protected $_m_fccChunk;
-        protected $_m_dwChunkStart;
-        protected $_m_dwBlockStart;
-        protected $_m_dwSampleOffset;
-        public function dwName() { return $this->_m_dwName; }
-        public function dwPosition() { return $this->_m_dwPosition; }
-        public function fccChunk() { return $this->_m_fccChunk; }
-        public function dwChunkStart() { return $this->_m_dwChunkStart; }
-        public function dwBlockStart() { return $this->_m_dwBlockStart; }
-        public function dwSampleOffset() { return $this->_m_dwSampleOffset; }
-    }
-}
-
-namespace Wav {
-    class DataChunkType extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Wav\ChunkType $_parent = null, \Wav $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_data = $this->_io->readBytesFull();
-        }
-        protected $_m_data;
-        public function data() { return $this->_m_data; }
-    }
-}
-
-namespace Wav {
-    class SamplesType extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Wav $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_samples = $this->_io->readU4le();
-        }
-        protected $_m_samples;
-        public function samples() { return $this->_m_samples; }
+        protected $_m_description;
+        protected $_m_originator;
+        protected $_m_originatorReference;
+        protected $_m_originationDate;
+        protected $_m_originationTime;
+        protected $_m_timeReferenceLow;
+        protected $_m_timeReferenceHigh;
+        protected $_m_version;
+        protected $_m_umid;
+        protected $_m_loudnessValue;
+        protected $_m_loudnessRange;
+        protected $_m_maxTruePeakLevel;
+        protected $_m_maxMomentaryLoudness;
+        protected $_m_maxShortTermLoudness;
+        public function description() { return $this->_m_description; }
+        public function originator() { return $this->_m_originator; }
+        public function originatorReference() { return $this->_m_originatorReference; }
+        public function originationDate() { return $this->_m_originationDate; }
+        public function originationTime() { return $this->_m_originationTime; }
+        public function timeReferenceLow() { return $this->_m_timeReferenceLow; }
+        public function timeReferenceHigh() { return $this->_m_timeReferenceHigh; }
+        public function version() { return $this->_m_version; }
+        public function umid() { return $this->_m_umid; }
+        public function loudnessValue() { return $this->_m_loudnessValue; }
+        public function loudnessRange() { return $this->_m_loudnessRange; }
+        public function maxTruePeakLevel() { return $this->_m_maxTruePeakLevel; }
+        public function maxMomentaryLoudness() { return $this->_m_maxMomentaryLoudness; }
+        public function maxShortTermLoudness() { return $this->_m_maxShortTermLoudness; }
     }
 }
 
 namespace Wav {
     class ChannelMaskAndSubformatType extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Wav\FormatChunkType $_parent = null, \Wav $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Wav\FormatChunkType $_parent = null, ?\Wav $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -367,72 +212,8 @@ namespace Wav {
 }
 
 namespace Wav {
-    class CueChunkType extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Wav\ChunkType $_parent = null, \Wav $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_dwCuePoints = $this->_io->readU4le();
-            $this->_m_cuePoints = [];
-            $n = $this->dwCuePoints();
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_cuePoints[] = new \Wav\CuePointType($this->_io, $this, $this->_root);
-            }
-        }
-        protected $_m_dwCuePoints;
-        protected $_m_cuePoints;
-        public function dwCuePoints() { return $this->_m_dwCuePoints; }
-        public function cuePoints() { return $this->_m_cuePoints; }
-    }
-}
-
-namespace Wav {
-    class ListChunkType extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Wav\ChunkType $_parent = null, \Wav $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_parentChunkData = new \Riff\ParentChunkData($this->_io, $this, $this->_root);
-        }
-        protected $_m_formType;
-        public function formType() {
-            if ($this->_m_formType !== null)
-                return $this->_m_formType;
-            $this->_m_formType = $this->parentChunkData()->formType();
-            return $this->_m_formType;
-        }
-        protected $_m_subchunks;
-        public function subchunks() {
-            if ($this->_m_subchunks !== null)
-                return $this->_m_subchunks;
-            $io = $this->parentChunkData()->subchunksSlot()->_io();
-            $_pos = $io->pos();
-            $io->seek(0);
-            $this->_m_subchunks = [];
-            $i = 0;
-            while (!$io->isEof()) {
-                switch ($this->formType()) {
-                    case \Wav\Fourcc::INFO:
-                        $this->_m_subchunks[] = new \Wav\InfoChunkType($io, $this, $this->_root);
-                        break;
-                }
-                $i++;
-            }
-            $io->seek($_pos);
-            return $this->_m_subchunks;
-        }
-        protected $_m_parentChunkData;
-        public function parentChunkData() { return $this->_m_parentChunkData; }
-    }
-}
-
-namespace Wav {
     class ChannelMaskType extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Wav\ChannelMaskAndSubformatType $_parent = null, \Wav $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Wav\ChannelMaskAndSubformatType $_parent = null, ?\Wav $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -503,40 +284,286 @@ namespace Wav {
 }
 
 namespace Wav {
-    class AfspChunkType extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Wav\ChunkType $_parent = null, \Wav $_root = null) {
+    class ChunkType extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Wav $_parent = null, ?\Wav $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_magic = $this->_io->readBytes(4);
-            if (!($this->magic() == "\x41\x46\x73\x70")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x41\x46\x73\x70", $this->magic(), $this->_io(), "/types/afsp_chunk_type/seq/0");
-            }
-            $this->_m_infoRecords = [];
-            $i = 0;
-            while (!$this->_io->isEof()) {
-                $this->_m_infoRecords[] = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, true), "ASCII");
-                $i++;
-            }
+            $this->_m_chunk = new \Riff\Chunk($this->_io);
         }
-        protected $_m_magic;
-        protected $_m_infoRecords;
-        public function magic() { return $this->_m_magic; }
-
-        /**
-         * An array of AFsp information records, in the `<field_name>: <value>`
-         * format (e.g. "`program: CopyAudio`"). The list of existing information
-         * record types are available in the `doc-ref` links.
-         */
-        public function infoRecords() { return $this->_m_infoRecords; }
+        protected $_m_chunkData;
+        public function chunkData() {
+            if ($this->_m_chunkData !== null)
+                return $this->_m_chunkData;
+            $io = $this->chunk()->dataSlot()->_io();
+            $_pos = $io->pos();
+            $io->seek(0);
+            switch ($this->chunkId()) {
+                case \Wav\Fourcc::AFSP:
+                    $this->_m_chunkData = new \Wav\AfspChunkType($io, $this, $this->_root);
+                    break;
+                case \Wav\Fourcc::AXML:
+                    $this->_m_chunkData = new \Wav\AxmlChunkType($io, $this, $this->_root);
+                    break;
+                case \Wav\Fourcc::BEXT:
+                    $this->_m_chunkData = new \Wav\BextChunkType($io, $this, $this->_root);
+                    break;
+                case \Wav\Fourcc::CUE:
+                    $this->_m_chunkData = new \Wav\CueChunkType($io, $this, $this->_root);
+                    break;
+                case \Wav\Fourcc::DATA:
+                    $this->_m_chunkData = new \Wav\DataChunkType($io, $this, $this->_root);
+                    break;
+                case \Wav\Fourcc::FACT:
+                    $this->_m_chunkData = new \Wav\FactChunkType($io, $this, $this->_root);
+                    break;
+                case \Wav\Fourcc::FMT:
+                    $this->_m_chunkData = new \Wav\FormatChunkType($io, $this, $this->_root);
+                    break;
+                case \Wav\Fourcc::IXML:
+                    $this->_m_chunkData = new \Wav\IxmlChunkType($io, $this, $this->_root);
+                    break;
+                case \Wav\Fourcc::LIST:
+                    $this->_m_chunkData = new \Wav\ListChunkType($io, $this, $this->_root);
+                    break;
+                case \Wav\Fourcc::PMX:
+                    $this->_m_chunkData = new \Wav\PmxChunkType($io, $this, $this->_root);
+                    break;
+            }
+            $io->seek($_pos);
+            return $this->_m_chunkData;
+        }
+        protected $_m_chunkId;
+        public function chunkId() {
+            if ($this->_m_chunkId !== null)
+                return $this->_m_chunkId;
+            $this->_m_chunkId = $this->chunk()->id();
+            return $this->_m_chunkId;
+        }
+        protected $_m_chunk;
+        public function chunk() { return $this->_m_chunk; }
     }
 }
 
 namespace Wav {
-    class AxmlChunkType extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Wav\ChunkType $_parent = null, \Wav $_root = null) {
+    class CueChunkType extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Wav\ChunkType $_parent = null, ?\Wav $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_dwCuePoints = $this->_io->readU4le();
+            $this->_m_cuePoints = [];
+            $n = $this->dwCuePoints();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_cuePoints[] = new \Wav\CuePointType($this->_io, $this, $this->_root);
+            }
+        }
+        protected $_m_dwCuePoints;
+        protected $_m_cuePoints;
+        public function dwCuePoints() { return $this->_m_dwCuePoints; }
+        public function cuePoints() { return $this->_m_cuePoints; }
+    }
+}
+
+namespace Wav {
+    class CuePointType extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Wav\CueChunkType $_parent = null, ?\Wav $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_dwName = $this->_io->readU4le();
+            $this->_m_dwPosition = $this->_io->readU4le();
+            $this->_m_fccChunk = $this->_io->readU4le();
+            $this->_m_dwChunkStart = $this->_io->readU4le();
+            $this->_m_dwBlockStart = $this->_io->readU4le();
+            $this->_m_dwSampleOffset = $this->_io->readU4le();
+        }
+        protected $_m_dwName;
+        protected $_m_dwPosition;
+        protected $_m_fccChunk;
+        protected $_m_dwChunkStart;
+        protected $_m_dwBlockStart;
+        protected $_m_dwSampleOffset;
+        public function dwName() { return $this->_m_dwName; }
+        public function dwPosition() { return $this->_m_dwPosition; }
+        public function fccChunk() { return $this->_m_fccChunk; }
+        public function dwChunkStart() { return $this->_m_dwChunkStart; }
+        public function dwBlockStart() { return $this->_m_dwBlockStart; }
+        public function dwSampleOffset() { return $this->_m_dwSampleOffset; }
+    }
+}
+
+namespace Wav {
+    class DataChunkType extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Wav\ChunkType $_parent = null, ?\Wav $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_data = $this->_io->readBytesFull();
+        }
+        protected $_m_data;
+        public function data() { return $this->_m_data; }
+    }
+}
+
+/**
+ * required for all non-PCM formats
+ * (`w_format_tag != w_format_tag_type::pcm` or `not is_basic_pcm` in
+ * `format_chunk_type` context)
+ */
+
+namespace Wav {
+    class FactChunkType extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Wav\ChunkType $_parent = null, ?\Wav $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_numSamplesPerChannel = $this->_io->readU4le();
+        }
+        protected $_m_numSamplesPerChannel;
+        public function numSamplesPerChannel() { return $this->_m_numSamplesPerChannel; }
+    }
+}
+
+namespace Wav {
+    class FormatChunkType extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Wav\ChunkType $_parent = null, ?\Wav $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_wFormatTag = $this->_io->readU2le();
+            $this->_m_nChannels = $this->_io->readU2le();
+            $this->_m_nSamplesPerSec = $this->_io->readU4le();
+            $this->_m_nAvgBytesPerSec = $this->_io->readU4le();
+            $this->_m_nBlockAlign = $this->_io->readU2le();
+            $this->_m_wBitsPerSample = $this->_io->readU2le();
+            if (!($this->isBasicPcm())) {
+                $this->_m_cbSize = $this->_io->readU2le();
+            }
+            if ($this->isCbSizeMeaningful()) {
+                $this->_m_wValidBitsPerSample = $this->_io->readU2le();
+            }
+            if ($this->isExtensible()) {
+                $this->_m_channelMaskAndSubformat = new \Wav\ChannelMaskAndSubformatType($this->_io, $this, $this->_root);
+            }
+        }
+        protected $_m_isBasicFloat;
+        public function isBasicFloat() {
+            if ($this->_m_isBasicFloat !== null)
+                return $this->_m_isBasicFloat;
+            $this->_m_isBasicFloat = $this->wFormatTag() == \Wav\WFormatTagType::IEEE_FLOAT;
+            return $this->_m_isBasicFloat;
+        }
+        protected $_m_isBasicPcm;
+        public function isBasicPcm() {
+            if ($this->_m_isBasicPcm !== null)
+                return $this->_m_isBasicPcm;
+            $this->_m_isBasicPcm = $this->wFormatTag() == \Wav\WFormatTagType::PCM;
+            return $this->_m_isBasicPcm;
+        }
+        protected $_m_isCbSizeMeaningful;
+        public function isCbSizeMeaningful() {
+            if ($this->_m_isCbSizeMeaningful !== null)
+                return $this->_m_isCbSizeMeaningful;
+            $this->_m_isCbSizeMeaningful =  ((!($this->isBasicPcm())) && ($this->cbSize() != 0)) ;
+            return $this->_m_isCbSizeMeaningful;
+        }
+        protected $_m_isExtensible;
+        public function isExtensible() {
+            if ($this->_m_isExtensible !== null)
+                return $this->_m_isExtensible;
+            $this->_m_isExtensible = $this->wFormatTag() == \Wav\WFormatTagType::EXTENSIBLE;
+            return $this->_m_isExtensible;
+        }
+        protected $_m_wFormatTag;
+        protected $_m_nChannels;
+        protected $_m_nSamplesPerSec;
+        protected $_m_nAvgBytesPerSec;
+        protected $_m_nBlockAlign;
+        protected $_m_wBitsPerSample;
+        protected $_m_cbSize;
+        protected $_m_wValidBitsPerSample;
+        protected $_m_channelMaskAndSubformat;
+        public function wFormatTag() { return $this->_m_wFormatTag; }
+        public function nChannels() { return $this->_m_nChannels; }
+        public function nSamplesPerSec() { return $this->_m_nSamplesPerSec; }
+        public function nAvgBytesPerSec() { return $this->_m_nAvgBytesPerSec; }
+        public function nBlockAlign() { return $this->_m_nBlockAlign; }
+        public function wBitsPerSample() { return $this->_m_wBitsPerSample; }
+        public function cbSize() { return $this->_m_cbSize; }
+        public function wValidBitsPerSample() { return $this->_m_wValidBitsPerSample; }
+        public function channelMaskAndSubformat() { return $this->_m_channelMaskAndSubformat; }
+    }
+}
+
+namespace Wav {
+    class GuidType extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Wav\ChannelMaskAndSubformatType $_parent = null, ?\Wav $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_data1 = $this->_io->readU4le();
+            $this->_m_data2 = $this->_io->readU2le();
+            $this->_m_data3 = $this->_io->readU2le();
+            $this->_m_data4 = $this->_io->readU4be();
+            $this->_m_data4a = $this->_io->readU4be();
+        }
+        protected $_m_data1;
+        protected $_m_data2;
+        protected $_m_data3;
+        protected $_m_data4;
+        protected $_m_data4a;
+        public function data1() { return $this->_m_data1; }
+        public function data2() { return $this->_m_data2; }
+        public function data3() { return $this->_m_data3; }
+        public function data4() { return $this->_m_data4; }
+        public function data4a() { return $this->_m_data4a; }
+    }
+}
+
+namespace Wav {
+    class InfoChunkType extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Wav\ListChunkType $_parent = null, ?\Wav $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_chunk = new \Riff\Chunk($this->_io);
+        }
+        protected $_m_chunkData;
+        public function chunkData() {
+            if ($this->_m_chunkData !== null)
+                return $this->_m_chunkData;
+            $io = $this->chunk()->dataSlot()->_io();
+            $_pos = $io->pos();
+            $io->seek(0);
+            $this->_m_chunkData = \Kaitai\Struct\Stream::bytesToStr($io->readBytesTerm(0, false, true, true), "ASCII");
+            $io->seek($_pos);
+            return $this->_m_chunkData;
+        }
+        protected $_m_chunk;
+        public function chunk() { return $this->_m_chunk; }
+    }
+}
+
+namespace Wav {
+    class IxmlChunkType extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Wav\ChunkType $_parent = null, ?\Wav $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -550,120 +577,131 @@ namespace Wav {
 }
 
 namespace Wav {
-    class ChunkType extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Wav $_parent = null, \Wav $_root = null) {
+    class ListChunkType extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Wav\ChunkType $_parent = null, ?\Wav $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_chunk = new \Riff\Chunk($this->_io, $this, $this->_root);
+            $this->_m_parentChunkData = new \Riff\ParentChunkData($this->_io);
         }
-        protected $_m_chunkId;
-        public function chunkId() {
-            if ($this->_m_chunkId !== null)
-                return $this->_m_chunkId;
-            $this->_m_chunkId = $this->chunk()->id();
-            return $this->_m_chunkId;
+        protected $_m_formType;
+        public function formType() {
+            if ($this->_m_formType !== null)
+                return $this->_m_formType;
+            $this->_m_formType = $this->parentChunkData()->formType();
+            return $this->_m_formType;
         }
-        protected $_m_chunkData;
-        public function chunkData() {
-            if ($this->_m_chunkData !== null)
-                return $this->_m_chunkData;
-            $io = $this->chunk()->dataSlot()->_io();
+        protected $_m_subchunks;
+        public function subchunks() {
+            if ($this->_m_subchunks !== null)
+                return $this->_m_subchunks;
+            $io = $this->parentChunkData()->subchunksSlot()->_io();
             $_pos = $io->pos();
             $io->seek(0);
-            switch ($this->chunkId()) {
-                case \Wav\Fourcc::FACT:
-                    $this->_m_chunkData = new \Wav\FactChunkType($io, $this, $this->_root);
-                    break;
-                case \Wav\Fourcc::LIST:
-                    $this->_m_chunkData = new \Wav\ListChunkType($io, $this, $this->_root);
-                    break;
-                case \Wav\Fourcc::FMT:
-                    $this->_m_chunkData = new \Wav\FormatChunkType($io, $this, $this->_root);
-                    break;
-                case \Wav\Fourcc::AFSP:
-                    $this->_m_chunkData = new \Wav\AfspChunkType($io, $this, $this->_root);
-                    break;
-                case \Wav\Fourcc::BEXT:
-                    $this->_m_chunkData = new \Wav\BextChunkType($io, $this, $this->_root);
-                    break;
-                case \Wav\Fourcc::CUE:
-                    $this->_m_chunkData = new \Wav\CueChunkType($io, $this, $this->_root);
-                    break;
-                case \Wav\Fourcc::IXML:
-                    $this->_m_chunkData = new \Wav\IxmlChunkType($io, $this, $this->_root);
-                    break;
-                case \Wav\Fourcc::PMX:
-                    $this->_m_chunkData = new \Wav\PmxChunkType($io, $this, $this->_root);
-                    break;
-                case \Wav\Fourcc::AXML:
-                    $this->_m_chunkData = new \Wav\AxmlChunkType($io, $this, $this->_root);
-                    break;
-                case \Wav\Fourcc::DATA:
-                    $this->_m_chunkData = new \Wav\DataChunkType($io, $this, $this->_root);
-                    break;
+            $this->_m_subchunks = [];
+            $i = 0;
+            while (!$io->isEof()) {
+                switch ($this->formType()) {
+                    case \Wav\Fourcc::INFO:
+                        $this->_m_subchunks[] = new \Wav\InfoChunkType($io, $this, $this->_root);
+                        break;
+                }
+                $i++;
             }
             $io->seek($_pos);
-            return $this->_m_chunkData;
+            return $this->_m_subchunks;
         }
-        protected $_m_chunk;
-        public function chunk() { return $this->_m_chunk; }
+        protected $_m_parentChunkData;
+        public function parentChunkData() { return $this->_m_parentChunkData; }
     }
 }
 
 namespace Wav {
-    class BextChunkType extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Wav\ChunkType $_parent = null, \Wav $_root = null) {
+    class PmxChunkType extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Wav\ChunkType $_parent = null, ?\Wav $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_description = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($this->_io->readBytes(256), 0, false), "ASCII");
-            $this->_m_originator = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($this->_io->readBytes(32), 0, false), "ASCII");
-            $this->_m_originatorReference = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($this->_io->readBytes(32), 0, false), "ASCII");
-            $this->_m_originationDate = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(10), "ASCII");
-            $this->_m_originationTime = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(8), "ASCII");
-            $this->_m_timeReferenceLow = $this->_io->readU4le();
-            $this->_m_timeReferenceHigh = $this->_io->readU4le();
-            $this->_m_version = $this->_io->readU2le();
-            $this->_m_umid = $this->_io->readBytes(64);
-            $this->_m_loudnessValue = $this->_io->readU2le();
-            $this->_m_loudnessRange = $this->_io->readU2le();
-            $this->_m_maxTruePeakLevel = $this->_io->readU2le();
-            $this->_m_maxMomentaryLoudness = $this->_io->readU2le();
-            $this->_m_maxShortTermLoudness = $this->_io->readU2le();
+            $this->_m_data = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesFull(), "UTF-8");
         }
-        protected $_m_description;
-        protected $_m_originator;
-        protected $_m_originatorReference;
-        protected $_m_originationDate;
-        protected $_m_originationTime;
-        protected $_m_timeReferenceLow;
-        protected $_m_timeReferenceHigh;
-        protected $_m_version;
-        protected $_m_umid;
-        protected $_m_loudnessValue;
-        protected $_m_loudnessRange;
-        protected $_m_maxTruePeakLevel;
-        protected $_m_maxMomentaryLoudness;
-        protected $_m_maxShortTermLoudness;
-        public function description() { return $this->_m_description; }
-        public function originator() { return $this->_m_originator; }
-        public function originatorReference() { return $this->_m_originatorReference; }
-        public function originationDate() { return $this->_m_originationDate; }
-        public function originationTime() { return $this->_m_originationTime; }
-        public function timeReferenceLow() { return $this->_m_timeReferenceLow; }
-        public function timeReferenceHigh() { return $this->_m_timeReferenceHigh; }
-        public function version() { return $this->_m_version; }
-        public function umid() { return $this->_m_umid; }
-        public function loudnessValue() { return $this->_m_loudnessValue; }
-        public function loudnessRange() { return $this->_m_loudnessRange; }
-        public function maxTruePeakLevel() { return $this->_m_maxTruePeakLevel; }
-        public function maxMomentaryLoudness() { return $this->_m_maxMomentaryLoudness; }
-        public function maxShortTermLoudness() { return $this->_m_maxShortTermLoudness; }
+        protected $_m_data;
+
+        /**
+         * XMP data
+         */
+        public function data() { return $this->_m_data; }
+    }
+}
+
+namespace Wav {
+    class SampleType extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Wav $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_sample = $this->_io->readU2le();
+        }
+        protected $_m_sample;
+        public function sample() { return $this->_m_sample; }
+    }
+}
+
+namespace Wav {
+    class SamplesType extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Wav $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_samples = $this->_io->readU4le();
+        }
+        protected $_m_samples;
+        public function samples() { return $this->_m_samples; }
+    }
+}
+
+namespace Wav {
+    class Fourcc {
+        const ID3 = 540238953;
+        const CUE = 543520099;
+        const FMT = 544501094;
+        const WAVE = 1163280727;
+        const RIFF = 1179011410;
+        const PEAK = 1262568784;
+        const IXML = 1280137321;
+        const INFO = 1330007625;
+        const LIST = 1414744396;
+        const PMX = 1481461855;
+
+        /**
+         * Audio definition model
+         */
+        const CHNA = 1634625635;
+        const DATA = 1635017060;
+        const UMID = 1684630901;
+        const MINF = 1718511981;
+        const AXML = 1819113569;
+        const REGN = 1852269938;
+
+        /**
+         * AFsp metadata
+         */
+        const AFSP = 1886611041;
+        const FACT = 1952670054;
+        const BEXT = 1954047330;
+
+        private const _VALUES = [540238953 => true, 543520099 => true, 544501094 => true, 1163280727 => true, 1179011410 => true, 1262568784 => true, 1280137321 => true, 1330007625 => true, 1414744396 => true, 1481461855 => true, 1634625635 => true, 1635017060 => true, 1684630901 => true, 1718511981 => true, 1819113569 => true, 1852269938 => true, 1886611041 => true, 1952670054 => true, 1954047330 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
@@ -934,37 +972,11 @@ namespace Wav {
         const FLAC = 61868;
         const EXTENSIBLE = 65534;
         const DEVELOPMENT = 65535;
-    }
-}
 
-namespace Wav {
-    class Fourcc {
-        const ID3 = 540238953;
-        const CUE = 543520099;
-        const FMT = 544501094;
-        const WAVE = 1163280727;
-        const RIFF = 1179011410;
-        const PEAK = 1262568784;
-        const IXML = 1280137321;
-        const INFO = 1330007625;
-        const LIST = 1414744396;
-        const PMX = 1481461855;
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 7 => true, 8 => true, 9 => true, 10 => true, 11 => true, 16 => true, 17 => true, 18 => true, 19 => true, 20 => true, 21 => true, 22 => true, 23 => true, 24 => true, 25 => true, 26 => true, 32 => true, 33 => true, 34 => true, 35 => true, 36 => true, 37 => true, 38 => true, 39 => true, 40 => true, 48 => true, 49 => true, 50 => true, 51 => true, 52 => true, 53 => true, 54 => true, 55 => true, 56 => true, 57 => true, 58 => true, 59 => true, 60 => true, 61 => true, 64 => true, 65 => true, 66 => true, 67 => true, 68 => true, 69 => true, 80 => true, 82 => true, 83 => true, 85 => true, 89 => true, 96 => true, 97 => true, 98 => true, 99 => true, 100 => true, 101 => true, 102 => true, 103 => true, 105 => true, 112 => true, 113 => true, 114 => true, 115 => true, 116 => true, 117 => true, 118 => true, 119 => true, 120 => true, 121 => true, 122 => true, 123 => true, 128 => true, 129 => true, 130 => true, 131 => true, 132 => true, 133 => true, 134 => true, 136 => true, 137 => true, 138 => true, 139 => true, 140 => true, 141 => true, 145 => true, 146 => true, 147 => true, 148 => true, 151 => true, 152 => true, 153 => true, 160 => true, 161 => true, 162 => true, 163 => true, 164 => true, 176 => true, 255 => true, 256 => true, 257 => true, 273 => true, 274 => true, 288 => true, 289 => true, 291 => true, 293 => true, 304 => true, 305 => true, 306 => true, 307 => true, 308 => true, 309 => true, 310 => true, 320 => true, 321 => true, 322 => true, 336 => true, 337 => true, 341 => true, 352 => true, 353 => true, 354 => true, 355 => true, 356 => true, 368 => true, 369 => true, 370 => true, 371 => true, 372 => true, 373 => true, 374 => true, 375 => true, 376 => true, 384 => true, 400 => true, 512 => true, 514 => true, 515 => true, 528 => true, 533 => true, 534 => true, 544 => true, 560 => true, 576 => true, 577 => true, 585 => true, 592 => true, 593 => true, 608 => true, 624 => true, 625 => true, 626 => true, 627 => true, 640 => true, 641 => true, 645 => true, 768 => true, 848 => true, 849 => true, 1024 => true, 1025 => true, 1026 => true, 1104 => true, 1280 => true, 1281 => true, 1664 => true, 1665 => true, 2222 => true, 4096 => true, 4097 => true, 4098 => true, 4099 => true, 4100 => true, 4352 => true, 4353 => true, 4354 => true, 4355 => true, 4356 => true, 5120 => true, 5121 => true, 5376 => true, 5632 => true, 5633 => true, 5634 => true, 5640 => true, 5641 => true, 5642 => true, 5643 => true, 5648 => true, 6172 => true, 6513 => true, 6521 => true, 7175 => true, 7180 => true, 7939 => true, 8132 => true, 8192 => true, 8193 => true, 13075 => true, 16707 => true, 16897 => true, 16963 => true, 17228 => true, 22092 => true, 22358 => true, 26447 => true, 26448 => true, 26449 => true, 26479 => true, 26480 => true, 26481 => true, 28672 => true, 28781 => true, 29537 => true, 29538 => true, 29539 => true, 31265 => true, 31266 => true, 41216 => true, 41217 => true, 41218 => true, 41219 => true, 41220 => true, 41221 => true, 41222 => true, 41223 => true, 41224 => true, 41225 => true, 41226 => true, 41227 => true, 41228 => true, 41229 => true, 41230 => true, 41231 => true, 41232 => true, 41233 => true, 41234 => true, 41235 => true, 41236 => true, 41237 => true, 41238 => true, 41239 => true, 41240 => true, 41241 => true, 41242 => true, 41243 => true, 41244 => true, 41245 => true, 41246 => true, 41247 => true, 41248 => true, 41249 => true, 41250 => true, 41251 => true, 41252 => true, 61868 => true, 65534 => true, 65535 => true];
 
-        /**
-         * Audio definition model
-         */
-        const CHNA = 1634625635;
-        const DATA = 1635017060;
-        const UMID = 1684630901;
-        const MINF = 1718511981;
-        const AXML = 1819113569;
-        const REGN = 1852269938;
-
-        /**
-         * AFsp metadata
-         */
-        const AFSP = 1886611041;
-        const FACT = 1952670054;
-        const BEXT = 1954047330;
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

@@ -5,8 +5,8 @@
 local class = require("class")
 require("kaitaistruct")
 local str_decode = require("string_decode")
-local enum = require("enum")
 local stringstream = require("string_stream")
+local enum = require("enum")
 
 DoomWad = class.class(KaitaiStruct)
 
@@ -44,153 +44,152 @@ end
 -- 
 -- Offset to the start of the index.
 
-DoomWad.Sectors = class.class(KaitaiStruct)
+DoomWad.Blockmap = class.class(KaitaiStruct)
 
-function DoomWad.Sectors:_init(io, parent, root)
+function DoomWad.Blockmap:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function DoomWad.Sectors:_read()
-  self.entries = {}
-  local i = 0
-  while not self._io:is_eof() do
-    self.entries[i + 1] = DoomWad.Sector(self._io, self, self._root)
-    i = i + 1
-  end
-end
-
-
-DoomWad.Vertex = class.class(KaitaiStruct)
-
-function DoomWad.Vertex:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function DoomWad.Vertex:_read()
-  self.x = self._io:read_s2le()
-  self.y = self._io:read_s2le()
-end
-
-
--- 
--- Used for TEXTURE1 and TEXTURE2 lumps, which designate how to
--- combine wall patches to make wall textures. This essentially
--- provides a very simple form of image compression, allowing
--- certain elements ("patches") to be reused / recombined on
--- different textures for more variety in the game.
--- See also: Source (https://doom.fandom.com/wiki/TEXTURE1_and_TEXTURE2)
-DoomWad.Texture12 = class.class(KaitaiStruct)
-
-function DoomWad.Texture12:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function DoomWad.Texture12:_read()
-  self.num_textures = self._io:read_s4le()
-  self.textures = {}
-  for i = 0, self.num_textures - 1 do
-    self.textures[i + 1] = DoomWad.Texture12.TextureIndex(self._io, self, self._root)
+function DoomWad.Blockmap:_read()
+  self.origin_x = self._io:read_s2le()
+  self.origin_y = self._io:read_s2le()
+  self.num_cols = self._io:read_s2le()
+  self.num_rows = self._io:read_s2le()
+  self.linedefs_in_block = {}
+  for i = 0, self.num_cols * self.num_rows - 1 do
+    self.linedefs_in_block[i + 1] = DoomWad.Blockmap.Blocklist(self._io, self, self._root)
   end
 end
 
 -- 
--- Number of wall textures.
+-- Grid origin, X coord.
+-- 
+-- Grid origin, Y coord.
+-- 
+-- Number of columns.
+-- 
+-- Number of rows.
+-- 
+-- Lists of linedefs for every block.
 
-DoomWad.Texture12.TextureIndex = class.class(KaitaiStruct)
+DoomWad.Blockmap.Blocklist = class.class(KaitaiStruct)
 
-function DoomWad.Texture12.TextureIndex:_init(io, parent, root)
+function DoomWad.Blockmap.Blocklist:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function DoomWad.Texture12.TextureIndex:_read()
-  self.offset = self._io:read_s4le()
+function DoomWad.Blockmap.Blocklist:_read()
+  self.offset = self._io:read_u2le()
 end
 
-DoomWad.Texture12.TextureIndex.property.body = {}
-function DoomWad.Texture12.TextureIndex.property.body:get()
-  if self._m_body ~= nil then
-    return self._m_body
+-- 
+-- List of linedefs found in this block.
+DoomWad.Blockmap.Blocklist.property.linedefs = {}
+function DoomWad.Blockmap.Blocklist.property.linedefs:get()
+  if self._m_linedefs ~= nil then
+    return self._m_linedefs
   end
 
   local _pos = self._io:pos()
-  self._io:seek(self.offset)
-  self._m_body = DoomWad.Texture12.TextureBody(self._io, self, self._root)
-  self._io:seek(_pos)
-  return self._m_body
-end
-
-
-DoomWad.Texture12.TextureBody = class.class(KaitaiStruct)
-
-function DoomWad.Texture12.TextureBody:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function DoomWad.Texture12.TextureBody:_read()
-  self.name = str_decode.decode(KaitaiStream.bytes_strip_right(self._io:read_bytes(8), 0), "ASCII")
-  self.masked = self._io:read_u4le()
-  self.width = self._io:read_u2le()
-  self.height = self._io:read_u2le()
-  self.column_directory = self._io:read_u4le()
-  self.num_patches = self._io:read_u2le()
-  self.patches = {}
-  for i = 0, self.num_patches - 1 do
-    self.patches[i + 1] = DoomWad.Texture12.Patch(self._io, self, self._root)
+  self._io:seek(self.offset * 2)
+  self._m_linedefs = {}
+  local i = 0
+  while true do
+    local _ = self._io:read_s2le()
+    self._m_linedefs[i + 1] = _
+    if _ == -1 then
+      break
+    end
+    i = i + 1
   end
+  self._io:seek(_pos)
+  return self._m_linedefs
 end
 
 -- 
--- Name of a texture, only `A-Z`, `0-9`, `[]_-` are valid.
--- 
--- Obsolete, ignored by all DOOM versions.
--- 
--- Number of patches that are used in a texture.
+-- Offset to the list of linedefs.
 
-DoomWad.Texture12.Patch = class.class(KaitaiStruct)
+DoomWad.IndexEntry = class.class(KaitaiStruct)
 
-function DoomWad.Texture12.Patch:_init(io, parent, root)
+function DoomWad.IndexEntry:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function DoomWad.Texture12.Patch:_read()
-  self.origin_x = self._io:read_s2le()
-  self.origin_y = self._io:read_s2le()
-  self.patch_id = self._io:read_u2le()
-  self.step_dir = self._io:read_u2le()
-  self.colormap = self._io:read_u2le()
+function DoomWad.IndexEntry:_read()
+  self.offset = self._io:read_s4le()
+  self.size = self._io:read_s4le()
+  self.name = str_decode.decode(KaitaiStream.bytes_strip_right(self._io:read_bytes(8), 0), "ASCII")
 end
 
--- 
--- X offset to draw a patch at (pixels from left boundary of a texture).
--- 
--- Y offset to draw a patch at (pixels from upper boundary of a texture).
--- 
--- Identifier of a patch (as listed in PNAMES lump) to draw.
+DoomWad.IndexEntry.property.contents = {}
+function DoomWad.IndexEntry.property.contents:get()
+  if self._m_contents ~= nil then
+    return self._m_contents
+  end
+
+  local _io = self._root._io
+  local _pos = _io:pos()
+  _io:seek(self.offset)
+  local _on = self.name
+  if _on == "BLOCKMAP" then
+    self._raw__m_contents = _io:read_bytes(self.size)
+    local _io = KaitaiStream(stringstream(self._raw__m_contents))
+    self._m_contents = DoomWad.Blockmap(_io, self, self._root)
+  elseif _on == "LINEDEFS" then
+    self._raw__m_contents = _io:read_bytes(self.size)
+    local _io = KaitaiStream(stringstream(self._raw__m_contents))
+    self._m_contents = DoomWad.Linedefs(_io, self, self._root)
+  elseif _on == "PNAMES" then
+    self._raw__m_contents = _io:read_bytes(self.size)
+    local _io = KaitaiStream(stringstream(self._raw__m_contents))
+    self._m_contents = DoomWad.Pnames(_io, self, self._root)
+  elseif _on == "SECTORS" then
+    self._raw__m_contents = _io:read_bytes(self.size)
+    local _io = KaitaiStream(stringstream(self._raw__m_contents))
+    self._m_contents = DoomWad.Sectors(_io, self, self._root)
+  elseif _on == "SIDEDEFS" then
+    self._raw__m_contents = _io:read_bytes(self.size)
+    local _io = KaitaiStream(stringstream(self._raw__m_contents))
+    self._m_contents = DoomWad.Sidedefs(_io, self, self._root)
+  elseif _on == "TEXTURE1" then
+    self._raw__m_contents = _io:read_bytes(self.size)
+    local _io = KaitaiStream(stringstream(self._raw__m_contents))
+    self._m_contents = DoomWad.Texture12(_io, self, self._root)
+  elseif _on == "TEXTURE2" then
+    self._raw__m_contents = _io:read_bytes(self.size)
+    local _io = KaitaiStream(stringstream(self._raw__m_contents))
+    self._m_contents = DoomWad.Texture12(_io, self, self._root)
+  elseif _on == "THINGS" then
+    self._raw__m_contents = _io:read_bytes(self.size)
+    local _io = KaitaiStream(stringstream(self._raw__m_contents))
+    self._m_contents = DoomWad.Things(_io, self, self._root)
+  elseif _on == "VERTEXES" then
+    self._raw__m_contents = _io:read_bytes(self.size)
+    local _io = KaitaiStream(stringstream(self._raw__m_contents))
+    self._m_contents = DoomWad.Vertexes(_io, self, self._root)
+  else
+    self._m_contents = _io:read_bytes(self.size)
+  end
+  _io:seek(_pos)
+  return self._m_contents
+end
+
 
 DoomWad.Linedef = class.class(KaitaiStruct)
 
 function DoomWad.Linedef:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -205,6 +204,25 @@ function DoomWad.Linedef:_read()
 end
 
 
+DoomWad.Linedefs = class.class(KaitaiStruct)
+
+function DoomWad.Linedefs:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function DoomWad.Linedefs:_read()
+  self.entries = {}
+  local i = 0
+  while not self._io:is_eof() do
+    self.entries[i + 1] = DoomWad.Linedef(self._io, self, self._root)
+    i = i + 1
+  end
+end
+
+
 -- 
 -- See also: Source (https://doom.fandom.com/wiki/PNAMES)
 DoomWad.Pnames = class.class(KaitaiStruct)
@@ -212,7 +230,7 @@ DoomWad.Pnames = class.class(KaitaiStruct)
 function DoomWad.Pnames:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -226,24 +244,6 @@ end
 
 -- 
 -- Number of patches registered in this global game directory.
-
-DoomWad.Thing = class.class(KaitaiStruct)
-
-function DoomWad.Thing:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function DoomWad.Thing:_read()
-  self.x = self._io:read_s2le()
-  self.y = self._io:read_s2le()
-  self.angle = self._io:read_u2le()
-  self.type = self._io:read_u2le()
-  self.flags = self._io:read_u2le()
-end
-
 
 DoomWad.Sector = class.class(KaitaiStruct)
 
@@ -277,7 +277,7 @@ DoomWad.Sector.SpecialSector = enum.Enum {
 function DoomWad.Sector:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -299,20 +299,20 @@ end
 -- Tag number. When the linedef with the same tag number is
 -- activated, some effect will be triggered in this sector.
 
-DoomWad.Vertexes = class.class(KaitaiStruct)
+DoomWad.Sectors = class.class(KaitaiStruct)
 
-function DoomWad.Vertexes:_init(io, parent, root)
+function DoomWad.Sectors:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function DoomWad.Vertexes:_read()
+function DoomWad.Sectors:_read()
   self.entries = {}
   local i = 0
   while not self._io:is_eof() do
-    self.entries[i + 1] = DoomWad.Vertex(self._io, self, self._root)
+    self.entries[i + 1] = DoomWad.Sector(self._io, self, self._root)
     i = i + 1
   end
 end
@@ -323,7 +323,7 @@ DoomWad.Sidedef = class.class(KaitaiStruct)
 function DoomWad.Sidedef:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -337,119 +337,12 @@ function DoomWad.Sidedef:_read()
 end
 
 
-DoomWad.Things = class.class(KaitaiStruct)
-
-function DoomWad.Things:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function DoomWad.Things:_read()
-  self.entries = {}
-  local i = 0
-  while not self._io:is_eof() do
-    self.entries[i + 1] = DoomWad.Thing(self._io, self, self._root)
-    i = i + 1
-  end
-end
-
-
-DoomWad.Linedefs = class.class(KaitaiStruct)
-
-function DoomWad.Linedefs:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function DoomWad.Linedefs:_read()
-  self.entries = {}
-  local i = 0
-  while not self._io:is_eof() do
-    self.entries[i + 1] = DoomWad.Linedef(self._io, self, self._root)
-    i = i + 1
-  end
-end
-
-
-DoomWad.IndexEntry = class.class(KaitaiStruct)
-
-function DoomWad.IndexEntry:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function DoomWad.IndexEntry:_read()
-  self.offset = self._io:read_s4le()
-  self.size = self._io:read_s4le()
-  self.name = str_decode.decode(KaitaiStream.bytes_strip_right(self._io:read_bytes(8), 0), "ASCII")
-end
-
-DoomWad.IndexEntry.property.contents = {}
-function DoomWad.IndexEntry.property.contents:get()
-  if self._m_contents ~= nil then
-    return self._m_contents
-  end
-
-  local _io = self._root._io
-  local _pos = _io:pos()
-  _io:seek(self.offset)
-  local _on = self.name
-  if _on == "SECTORS" then
-    self._raw__m_contents = _io:read_bytes(self.size)
-    local _io = KaitaiStream(stringstream(self._raw__m_contents))
-    self._m_contents = DoomWad.Sectors(_io, self, self._root)
-  elseif _on == "TEXTURE1" then
-    self._raw__m_contents = _io:read_bytes(self.size)
-    local _io = KaitaiStream(stringstream(self._raw__m_contents))
-    self._m_contents = DoomWad.Texture12(_io, self, self._root)
-  elseif _on == "VERTEXES" then
-    self._raw__m_contents = _io:read_bytes(self.size)
-    local _io = KaitaiStream(stringstream(self._raw__m_contents))
-    self._m_contents = DoomWad.Vertexes(_io, self, self._root)
-  elseif _on == "BLOCKMAP" then
-    self._raw__m_contents = _io:read_bytes(self.size)
-    local _io = KaitaiStream(stringstream(self._raw__m_contents))
-    self._m_contents = DoomWad.Blockmap(_io, self, self._root)
-  elseif _on == "PNAMES" then
-    self._raw__m_contents = _io:read_bytes(self.size)
-    local _io = KaitaiStream(stringstream(self._raw__m_contents))
-    self._m_contents = DoomWad.Pnames(_io, self, self._root)
-  elseif _on == "TEXTURE2" then
-    self._raw__m_contents = _io:read_bytes(self.size)
-    local _io = KaitaiStream(stringstream(self._raw__m_contents))
-    self._m_contents = DoomWad.Texture12(_io, self, self._root)
-  elseif _on == "THINGS" then
-    self._raw__m_contents = _io:read_bytes(self.size)
-    local _io = KaitaiStream(stringstream(self._raw__m_contents))
-    self._m_contents = DoomWad.Things(_io, self, self._root)
-  elseif _on == "LINEDEFS" then
-    self._raw__m_contents = _io:read_bytes(self.size)
-    local _io = KaitaiStream(stringstream(self._raw__m_contents))
-    self._m_contents = DoomWad.Linedefs(_io, self, self._root)
-  elseif _on == "SIDEDEFS" then
-    self._raw__m_contents = _io:read_bytes(self.size)
-    local _io = KaitaiStream(stringstream(self._raw__m_contents))
-    self._m_contents = DoomWad.Sidedefs(_io, self, self._root)
-  else
-    self._m_contents = _io:read_bytes(self.size)
-  end
-  _io:seek(_pos)
-  return self._m_contents
-end
-
-
 DoomWad.Sidedefs = class.class(KaitaiStruct)
 
 function DoomWad.Sidedefs:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -463,74 +356,181 @@ function DoomWad.Sidedefs:_read()
 end
 
 
-DoomWad.Blockmap = class.class(KaitaiStruct)
+-- 
+-- Used for TEXTURE1 and TEXTURE2 lumps, which designate how to
+-- combine wall patches to make wall textures. This essentially
+-- provides a very simple form of image compression, allowing
+-- certain elements ("patches") to be reused / recombined on
+-- different textures for more variety in the game.
+-- See also: Source (https://doom.fandom.com/wiki/TEXTURE1_and_TEXTURE2)
+DoomWad.Texture12 = class.class(KaitaiStruct)
 
-function DoomWad.Blockmap:_init(io, parent, root)
+function DoomWad.Texture12:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function DoomWad.Blockmap:_read()
-  self.origin_x = self._io:read_s2le()
-  self.origin_y = self._io:read_s2le()
-  self.num_cols = self._io:read_s2le()
-  self.num_rows = self._io:read_s2le()
-  self.linedefs_in_block = {}
-  for i = 0, (self.num_cols * self.num_rows) - 1 do
-    self.linedefs_in_block[i + 1] = DoomWad.Blockmap.Blocklist(self._io, self, self._root)
+function DoomWad.Texture12:_read()
+  self.num_textures = self._io:read_s4le()
+  self.textures = {}
+  for i = 0, self.num_textures - 1 do
+    self.textures[i + 1] = DoomWad.Texture12.TextureIndex(self._io, self, self._root)
   end
 end
 
 -- 
--- Grid origin, X coord.
--- 
--- Grid origin, Y coord.
--- 
--- Number of columns.
--- 
--- Number of rows.
--- 
--- Lists of linedefs for every block.
+-- Number of wall textures.
 
-DoomWad.Blockmap.Blocklist = class.class(KaitaiStruct)
+DoomWad.Texture12.Patch = class.class(KaitaiStruct)
 
-function DoomWad.Blockmap.Blocklist:_init(io, parent, root)
+function DoomWad.Texture12.Patch:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function DoomWad.Blockmap.Blocklist:_read()
-  self.offset = self._io:read_u2le()
+function DoomWad.Texture12.Patch:_read()
+  self.origin_x = self._io:read_s2le()
+  self.origin_y = self._io:read_s2le()
+  self.patch_id = self._io:read_u2le()
+  self.step_dir = self._io:read_u2le()
+  self.colormap = self._io:read_u2le()
 end
 
 -- 
--- List of linedefs found in this block.
-DoomWad.Blockmap.Blocklist.property.linedefs = {}
-function DoomWad.Blockmap.Blocklist.property.linedefs:get()
-  if self._m_linedefs ~= nil then
-    return self._m_linedefs
+-- X offset to draw a patch at (pixels from left boundary of a texture).
+-- 
+-- Y offset to draw a patch at (pixels from upper boundary of a texture).
+-- 
+-- Identifier of a patch (as listed in PNAMES lump) to draw.
+
+DoomWad.Texture12.TextureBody = class.class(KaitaiStruct)
+
+function DoomWad.Texture12.TextureBody:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function DoomWad.Texture12.TextureBody:_read()
+  self.name = str_decode.decode(KaitaiStream.bytes_strip_right(self._io:read_bytes(8), 0), "ASCII")
+  self.masked = self._io:read_u4le()
+  self.width = self._io:read_u2le()
+  self.height = self._io:read_u2le()
+  self.column_directory = self._io:read_u4le()
+  self.num_patches = self._io:read_u2le()
+  self.patches = {}
+  for i = 0, self.num_patches - 1 do
+    self.patches[i + 1] = DoomWad.Texture12.Patch(self._io, self, self._root)
+  end
+end
+
+-- 
+-- Name of a texture, only `A-Z`, `0-9`, `[]_-` are valid.
+-- 
+-- Obsolete, ignored by all DOOM versions.
+-- 
+-- Number of patches that are used in a texture.
+
+DoomWad.Texture12.TextureIndex = class.class(KaitaiStruct)
+
+function DoomWad.Texture12.TextureIndex:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function DoomWad.Texture12.TextureIndex:_read()
+  self.offset = self._io:read_s4le()
+end
+
+DoomWad.Texture12.TextureIndex.property.body = {}
+function DoomWad.Texture12.TextureIndex.property.body:get()
+  if self._m_body ~= nil then
+    return self._m_body
   end
 
   local _pos = self._io:pos()
-  self._io:seek((self.offset * 2))
-  self._m_linedefs = {}
-  local i = 0
-  while true do
-    local _ = self._io:read_s2le()
-    self._m_linedefs[i + 1] = _
-    if _ == -1 then
-      break
-    end
-    i = i + 1
-  end
+  self._io:seek(self.offset)
+  self._m_body = DoomWad.Texture12.TextureBody(self._io, self, self._root)
   self._io:seek(_pos)
-  return self._m_linedefs
+  return self._m_body
 end
 
--- 
--- Offset to the list of linedefs.
+
+DoomWad.Thing = class.class(KaitaiStruct)
+
+function DoomWad.Thing:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function DoomWad.Thing:_read()
+  self.x = self._io:read_s2le()
+  self.y = self._io:read_s2le()
+  self.angle = self._io:read_u2le()
+  self.type = self._io:read_u2le()
+  self.flags = self._io:read_u2le()
+end
+
+
+DoomWad.Things = class.class(KaitaiStruct)
+
+function DoomWad.Things:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function DoomWad.Things:_read()
+  self.entries = {}
+  local i = 0
+  while not self._io:is_eof() do
+    self.entries[i + 1] = DoomWad.Thing(self._io, self, self._root)
+    i = i + 1
+  end
+end
+
+
+DoomWad.Vertex = class.class(KaitaiStruct)
+
+function DoomWad.Vertex:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function DoomWad.Vertex:_read()
+  self.x = self._io:read_s2le()
+  self.y = self._io:read_s2le()
+end
+
+
+DoomWad.Vertexes = class.class(KaitaiStruct)
+
+function DoomWad.Vertexes:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function DoomWad.Vertexes:_read()
+  self.entries = {}
+  local i = 0
+  while not self._io:is_eof() do
+    self.entries[i + 1] = DoomWad.Vertex(self._io, self, self._root)
+    i = i + 1
+  end
+end
+
 

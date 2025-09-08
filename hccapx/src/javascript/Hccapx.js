@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.Hccapx = factory(root.KaitaiStream);
+    factory(root.Hccapx || (root.Hccapx = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Hccapx_, KaitaiStream) {
 /**
  * Native format of Hashcat password "recovery" utility
  * @see {@link https://hashcat.net/wiki/doku.php?id=hccapx|Source}
@@ -35,14 +35,14 @@ var Hccapx = (function() {
     function HccapxRecord(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     HccapxRecord.prototype._read = function() {
       this.magic = this._io.readBytes(4);
-      if (!((KaitaiStream.byteArrayCompare(this.magic, [72, 67, 80, 88]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([72, 67, 80, 88], this.magic, this._io, "/types/hccapx_record/seq/0");
+      if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([72, 67, 80, 88])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([72, 67, 80, 88]), this.magic, this._io, "/types/hccapx_record/seq/0");
       }
       this.version = this._io.readU4le();
       this.ignoreReplayCounter = this._io.readBitsIntBe(1) != 0;
@@ -50,7 +50,7 @@ var Hccapx = (function() {
       this._io.alignToByte();
       this.lenEssid = this._io.readU1();
       this.essid = this._io.readBytes(this.lenEssid);
-      this.padding1 = this._io.readBytes((32 - this.lenEssid));
+      this.padding1 = this._io.readBytes(32 - this.lenEssid);
       this.keyver = this._io.readU1();
       this.keymic = this._io.readBytes(16);
       this.macAp = this._io.readBytes(6);
@@ -59,7 +59,7 @@ var Hccapx = (function() {
       this.nonceStation = this._io.readBytes(32);
       this.lenEapol = this._io.readU2le();
       this.eapol = this._io.readBytes(this.lenEapol);
-      this.padding2 = this._io.readBytes((256 - this.lenEapol));
+      this.padding2 = this._io.readBytes(256 - this.lenEapol);
     }
 
     /**
@@ -136,5 +136,5 @@ var Hccapx = (function() {
 
   return Hccapx;
 })();
-return Hccapx;
-}));
+Hccapx_.Hccapx = Hccapx;
+});

@@ -25,19 +25,19 @@ Avi.ChunkType = enum.Enum {
   strl = 1819440243,
 }
 
-Avi.StreamType = enum.Enum {
-  mids = 1935960429,
-  vids = 1935960438,
-  auds = 1935963489,
-  txts = 1937012852,
-}
-
 Avi.HandlerType = enum.Enum {
   mp3 = 85,
   ac3 = 8192,
   dts = 8193,
   cvid = 1684633187,
   xvid = 1684633208,
+}
+
+Avi.StreamType = enum.Enum {
+  mids = 1935960429,
+  vids = 1935960438,
+  auds = 1935963489,
+  txts = 1937012852,
 }
 
 function Avi:_init(io, parent, root)
@@ -50,67 +50,16 @@ end
 function Avi:_read()
   self.magic1 = self._io:read_bytes(4)
   if not(self.magic1 == "\082\073\070\070") then
-    error("not equal, expected " ..  "\082\073\070\070" .. ", but got " .. self.magic1)
+    error("not equal, expected " .. "\082\073\070\070" .. ", but got " .. self.magic1)
   end
   self.file_size = self._io:read_u4le()
   self.magic2 = self._io:read_bytes(4)
   if not(self.magic2 == "\065\086\073\032") then
-    error("not equal, expected " ..  "\065\086\073\032" .. ", but got " .. self.magic2)
+    error("not equal, expected " .. "\065\086\073\032" .. ", but got " .. self.magic2)
   end
-  self._raw_data = self._io:read_bytes((self.file_size - 4))
+  self._raw_data = self._io:read_bytes(self.file_size - 4)
   local _io = KaitaiStream(stringstream(self._raw_data))
   self.data = Avi.Blocks(_io, self, self._root)
-end
-
-
-Avi.ListBody = class.class(KaitaiStruct)
-
-function Avi.ListBody:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Avi.ListBody:_read()
-  self.list_type = Avi.ChunkType(self._io:read_u4le())
-  self.data = Avi.Blocks(self._io, self, self._root)
-end
-
-
-Avi.Rect = class.class(KaitaiStruct)
-
-function Avi.Rect:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Avi.Rect:_read()
-  self.left = self._io:read_s2le()
-  self.top = self._io:read_s2le()
-  self.right = self._io:read_s2le()
-  self.bottom = self._io:read_s2le()
-end
-
-
-Avi.Blocks = class.class(KaitaiStruct)
-
-function Avi.Blocks:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Avi.Blocks:_read()
-  self.entries = {}
-  local i = 0
-  while not self._io:is_eof() do
-    self.entries[i + 1] = Avi.Block(self._io, self, self._root)
-    i = i + 1
-  end
 end
 
 
@@ -122,7 +71,7 @@ Avi.AvihBody = class.class(KaitaiStruct)
 function Avi.AvihBody:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -146,7 +95,7 @@ Avi.Block = class.class(KaitaiStruct)
 function Avi.Block:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -154,14 +103,14 @@ function Avi.Block:_read()
   self.four_cc = Avi.ChunkType(self._io:read_u4le())
   self.block_size = self._io:read_u4le()
   local _on = self.four_cc
-  if _on == Avi.ChunkType.list then
-    self._raw_data = self._io:read_bytes(self.block_size)
-    local _io = KaitaiStream(stringstream(self._raw_data))
-    self.data = Avi.ListBody(_io, self, self._root)
-  elseif _on == Avi.ChunkType.avih then
+  if _on == Avi.ChunkType.avih then
     self._raw_data = self._io:read_bytes(self.block_size)
     local _io = KaitaiStream(stringstream(self._raw_data))
     self.data = Avi.AvihBody(_io, self, self._root)
+  elseif _on == Avi.ChunkType.list then
+    self._raw_data = self._io:read_bytes(self.block_size)
+    local _io = KaitaiStream(stringstream(self._raw_data))
+    self.data = Avi.ListBody(_io, self, self._root)
   elseif _on == Avi.ChunkType.strh then
     self._raw_data = self._io:read_bytes(self.block_size)
     local _io = KaitaiStream(stringstream(self._raw_data))
@@ -169,6 +118,72 @@ function Avi.Block:_read()
   else
     self.data = self._io:read_bytes(self.block_size)
   end
+end
+
+
+Avi.Blocks = class.class(KaitaiStruct)
+
+function Avi.Blocks:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Avi.Blocks:_read()
+  self.entries = {}
+  local i = 0
+  while not self._io:is_eof() do
+    self.entries[i + 1] = Avi.Block(self._io, self, self._root)
+    i = i + 1
+  end
+end
+
+
+Avi.ListBody = class.class(KaitaiStruct)
+
+function Avi.ListBody:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Avi.ListBody:_read()
+  self.list_type = Avi.ChunkType(self._io:read_u4le())
+  self.data = Avi.Blocks(self._io, self, self._root)
+end
+
+
+Avi.Rect = class.class(KaitaiStruct)
+
+function Avi.Rect:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Avi.Rect:_read()
+  self.left = self._io:read_s2le()
+  self.top = self._io:read_s2le()
+  self.right = self._io:read_s2le()
+  self.bottom = self._io:read_s2le()
+end
+
+
+-- 
+-- Stream format description.
+Avi.StrfBody = class.class(KaitaiStruct)
+
+function Avi.StrfBody:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Avi.StrfBody:_read()
 end
 
 
@@ -180,7 +195,7 @@ Avi.StrhBody = class.class(KaitaiStruct)
 function Avi.StrhBody:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -205,19 +220,4 @@ end
 -- Type of the data contained in the stream.
 -- 
 -- Type of preferred data handler for the stream (specifies codec for audio / video streams).
-
--- 
--- Stream format description.
-Avi.StrfBody = class.class(KaitaiStruct)
-
-function Avi.StrfBody:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Avi.StrfBody:_read()
-end
-
 

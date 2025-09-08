@@ -25,12 +25,60 @@ namespace Kaitai
         private void _read()
         {
             _magic = m_io.ReadBytes(4);
-            if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 80, 65, 67, 75 }) == 0)))
+            if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 80, 65, 67, 75 }) == 0)))
             {
-                throw new ValidationNotEqualError(new byte[] { 80, 65, 67, 75 }, Magic, M_Io, "/seq/0");
+                throw new ValidationNotEqualError(new byte[] { 80, 65, 67, 75 }, _magic, m_io, "/seq/0");
             }
             _ofsIndex = m_io.ReadU4le();
             _lenIndex = m_io.ReadU4le();
+        }
+        public partial class IndexEntry : KaitaiStruct
+        {
+            public static IndexEntry FromFile(string fileName)
+            {
+                return new IndexEntry(new KaitaiStream(fileName));
+            }
+
+            public IndexEntry(KaitaiStream p__io, QuakePak.IndexStruct p__parent = null, QuakePak p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_body = false;
+                _read();
+            }
+            private void _read()
+            {
+                _name = System.Text.Encoding.GetEncoding("UTF-8").GetString(KaitaiStream.BytesTerminate(KaitaiStream.BytesStripRight(m_io.ReadBytes(56), 0), 0, false));
+                _ofs = m_io.ReadU4le();
+                _size = m_io.ReadU4le();
+            }
+            private bool f_body;
+            private byte[] _body;
+            public byte[] Body
+            {
+                get
+                {
+                    if (f_body)
+                        return _body;
+                    f_body = true;
+                    KaitaiStream io = M_Root.M_Io;
+                    long _pos = io.Pos;
+                    io.Seek(Ofs);
+                    _body = io.ReadBytes(Size);
+                    io.Seek(_pos);
+                    return _body;
+                }
+            }
+            private string _name;
+            private uint _ofs;
+            private uint _size;
+            private QuakePak m_root;
+            private QuakePak.IndexStruct m_parent;
+            public string Name { get { return _name; } }
+            public uint Ofs { get { return _ofs; } }
+            public uint Size { get { return _size; } }
+            public QuakePak M_Root { get { return m_root; } }
+            public QuakePak.IndexStruct M_Parent { get { return m_parent; } }
         }
         public partial class IndexStruct : KaitaiStruct
         {
@@ -63,54 +111,6 @@ namespace Kaitai
             public QuakePak M_Root { get { return m_root; } }
             public QuakePak M_Parent { get { return m_parent; } }
         }
-        public partial class IndexEntry : KaitaiStruct
-        {
-            public static IndexEntry FromFile(string fileName)
-            {
-                return new IndexEntry(new KaitaiStream(fileName));
-            }
-
-            public IndexEntry(KaitaiStream p__io, QuakePak.IndexStruct p__parent = null, QuakePak p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_body = false;
-                _read();
-            }
-            private void _read()
-            {
-                _name = System.Text.Encoding.GetEncoding("UTF-8").GetString(KaitaiStream.BytesTerminate(KaitaiStream.BytesStripRight(m_io.ReadBytes(56), 0), 0, false));
-                _ofs = m_io.ReadU4le();
-                _size = m_io.ReadU4le();
-            }
-            private bool f_body;
-            private byte[] _body;
-            public byte[] Body
-            {
-                get
-                {
-                    if (f_body)
-                        return _body;
-                    KaitaiStream io = M_Root.M_Io;
-                    long _pos = io.Pos;
-                    io.Seek(Ofs);
-                    _body = io.ReadBytes(Size);
-                    io.Seek(_pos);
-                    f_body = true;
-                    return _body;
-                }
-            }
-            private string _name;
-            private uint _ofs;
-            private uint _size;
-            private QuakePak m_root;
-            private QuakePak.IndexStruct m_parent;
-            public string Name { get { return _name; } }
-            public uint Ofs { get { return _ofs; } }
-            public uint Size { get { return _size; } }
-            public QuakePak M_Root { get { return m_root; } }
-            public QuakePak.IndexStruct M_Parent { get { return m_parent; } }
-        }
         private bool f_index;
         private IndexStruct _index;
         public IndexStruct Index
@@ -119,13 +119,13 @@ namespace Kaitai
             {
                 if (f_index)
                     return _index;
+                f_index = true;
                 long _pos = m_io.Pos;
                 m_io.Seek(OfsIndex);
                 __raw_index = m_io.ReadBytes(LenIndex);
                 var io___raw_index = new KaitaiStream(__raw_index);
                 _index = new IndexStruct(io___raw_index, this, m_root);
                 m_io.Seek(_pos);
-                f_index = true;
                 return _index;
             }
         }

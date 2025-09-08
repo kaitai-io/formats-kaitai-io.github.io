@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Encode;
 
 ########################################################################
@@ -25,7 +25,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -48,100 +48,6 @@ sub root {
 }
 
 ########################################################################
-package AndroidSuper::Root;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{_raw_primary_geometry} = $self->{_io}->read_bytes(4096);
-    my $io__raw_primary_geometry = IO::KaitaiStruct::Stream->new($self->{_raw_primary_geometry});
-    $self->{primary_geometry} = AndroidSuper::Geometry->new($io__raw_primary_geometry, $self, $self->{_root});
-    $self->{_raw_backup_geometry} = $self->{_io}->read_bytes(4096);
-    my $io__raw_backup_geometry = IO::KaitaiStruct::Stream->new($self->{_raw_backup_geometry});
-    $self->{backup_geometry} = AndroidSuper::Geometry->new($io__raw_backup_geometry, $self, $self->{_root});
-    $self->{_raw_primary_metadata} = ();
-    $self->{primary_metadata} = ();
-    my $n_primary_metadata = $self->primary_geometry()->metadata_slot_count();
-    for (my $i = 0; $i < $n_primary_metadata; $i++) {
-        push @{$self->{_raw_primary_metadata}}, $self->{_io}->read_bytes($self->primary_geometry()->metadata_max_size());
-        my $io__raw_primary_metadata = IO::KaitaiStruct::Stream->new($self->{_raw_primary_metadata}[$i]);
-        push @{$self->{primary_metadata}}, AndroidSuper::Metadata->new($io__raw_primary_metadata, $self, $self->{_root});
-    }
-    $self->{_raw_backup_metadata} = ();
-    $self->{backup_metadata} = ();
-    my $n_backup_metadata = $self->primary_geometry()->metadata_slot_count();
-    for (my $i = 0; $i < $n_backup_metadata; $i++) {
-        push @{$self->{_raw_backup_metadata}}, $self->{_io}->read_bytes($self->primary_geometry()->metadata_max_size());
-        my $io__raw_backup_metadata = IO::KaitaiStruct::Stream->new($self->{_raw_backup_metadata}[$i]);
-        push @{$self->{backup_metadata}}, AndroidSuper::Metadata->new($io__raw_backup_metadata, $self, $self->{_root});
-    }
-}
-
-sub primary_geometry {
-    my ($self) = @_;
-    return $self->{primary_geometry};
-}
-
-sub backup_geometry {
-    my ($self) = @_;
-    return $self->{backup_geometry};
-}
-
-sub primary_metadata {
-    my ($self) = @_;
-    return $self->{primary_metadata};
-}
-
-sub backup_metadata {
-    my ($self) = @_;
-    return $self->{backup_metadata};
-}
-
-sub _raw_primary_geometry {
-    my ($self) = @_;
-    return $self->{_raw_primary_geometry};
-}
-
-sub _raw_backup_geometry {
-    my ($self) = @_;
-    return $self->{_raw_backup_geometry};
-}
-
-sub _raw_primary_metadata {
-    my ($self) = @_;
-    return $self->{_raw_primary_metadata};
-}
-
-sub _raw_backup_metadata {
-    my ($self) = @_;
-    return $self->{_raw_backup_metadata};
-}
-
-########################################################################
 package AndroidSuper::Geometry;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -161,7 +67,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -234,7 +140,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -332,7 +238,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -409,7 +315,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -446,7 +352,7 @@ sub target_source {
 }
 
 ########################################################################
-package AndroidSuper::Metadata::TableDescriptor;
+package AndroidSuper::Metadata::Group;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -465,7 +371,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -475,72 +381,31 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{offset} = $self->{_io}->read_u4le();
-    $self->{num_entries} = $self->{_io}->read_u4le();
-    $self->{entry_size} = $self->{_io}->read_u4le();
+    $self->{name} = Encode::decode("UTF-8", IO::KaitaiStruct::Stream::bytes_terminate($self->{_io}->read_bytes(36), 0, 0));
+    $self->{flag_slot_suffixed} = $self->{_io}->read_bits_int_le(1);
+    $self->{flags_reserved} = $self->{_io}->read_bits_int_le(31);
+    $self->{_io}->align_to_byte();
+    $self->{maximum_size} = $self->{_io}->read_u8le();
 }
 
-sub table {
+sub name {
     my ($self) = @_;
-    return $self->{table} if ($self->{table});
-    my $_pos = $self->{_io}->pos();
-    $self->{_io}->seek(($self->_parent()->header_size() + $self->offset()));
-    $self->{_raw_table} = ();
-    $self->{table} = ();
-    my $n_table = $self->num_entries();
-    for (my $i = 0; $i < $n_table; $i++) {
-        my $_on = $self->kind();
-        if ($_on == $AndroidSuper::Metadata::TABLE_KIND_PARTITIONS) {
-            push @{$self->{_raw_table}}, $self->{_io}->read_bytes($self->entry_size());
-            my $io__raw_table = IO::KaitaiStruct::Stream->new($self->{_raw_table}[$i]);
-            push @{$self->{table}}, AndroidSuper::Metadata::Partition->new($io__raw_table, $self, $self->{_root});
-        }
-        elsif ($_on == $AndroidSuper::Metadata::TABLE_KIND_EXTENTS) {
-            push @{$self->{_raw_table}}, $self->{_io}->read_bytes($self->entry_size());
-            my $io__raw_table = IO::KaitaiStruct::Stream->new($self->{_raw_table}[$i]);
-            push @{$self->{table}}, AndroidSuper::Metadata::Extent->new($io__raw_table, $self, $self->{_root});
-        }
-        elsif ($_on == $AndroidSuper::Metadata::TABLE_KIND_GROUPS) {
-            push @{$self->{_raw_table}}, $self->{_io}->read_bytes($self->entry_size());
-            my $io__raw_table = IO::KaitaiStruct::Stream->new($self->{_raw_table}[$i]);
-            push @{$self->{table}}, AndroidSuper::Metadata::Group->new($io__raw_table, $self, $self->{_root});
-        }
-        elsif ($_on == $AndroidSuper::Metadata::TABLE_KIND_BLOCK_DEVICES) {
-            push @{$self->{_raw_table}}, $self->{_io}->read_bytes($self->entry_size());
-            my $io__raw_table = IO::KaitaiStruct::Stream->new($self->{_raw_table}[$i]);
-            push @{$self->{table}}, AndroidSuper::Metadata::BlockDevice->new($io__raw_table, $self, $self->{_root});
-        }
-        else {
-            push @{$self->{table}}, $self->{_io}->read_bytes($self->entry_size());
-        }
-    }
-    $self->{_io}->seek($_pos);
-    return $self->{table};
+    return $self->{name};
 }
 
-sub offset {
+sub flag_slot_suffixed {
     my ($self) = @_;
-    return $self->{offset};
+    return $self->{flag_slot_suffixed};
 }
 
-sub num_entries {
+sub flags_reserved {
     my ($self) = @_;
-    return $self->{num_entries};
+    return $self->{flags_reserved};
 }
 
-sub entry_size {
+sub maximum_size {
     my ($self) = @_;
-    return $self->{entry_size};
-}
-
-sub kind {
-    my ($self) = @_;
-    return $self->{kind};
-}
-
-sub _raw_table {
-    my ($self) = @_;
-    return $self->{_raw_table};
+    return $self->{maximum_size};
 }
 
 ########################################################################
@@ -563,7 +428,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -631,7 +496,7 @@ sub group_index {
 }
 
 ########################################################################
-package AndroidSuper::Metadata::Group;
+package AndroidSuper::Metadata::TableDescriptor;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -650,7 +515,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -660,31 +525,166 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{name} = Encode::decode("UTF-8", IO::KaitaiStruct::Stream::bytes_terminate($self->{_io}->read_bytes(36), 0, 0));
-    $self->{flag_slot_suffixed} = $self->{_io}->read_bits_int_le(1);
-    $self->{flags_reserved} = $self->{_io}->read_bits_int_le(31);
-    $self->{_io}->align_to_byte();
-    $self->{maximum_size} = $self->{_io}->read_u8le();
+    $self->{offset} = $self->{_io}->read_u4le();
+    $self->{num_entries} = $self->{_io}->read_u4le();
+    $self->{entry_size} = $self->{_io}->read_u4le();
 }
 
-sub name {
+sub table {
     my ($self) = @_;
-    return $self->{name};
+    return $self->{table} if ($self->{table});
+    my $_pos = $self->{_io}->pos();
+    $self->{_io}->seek($self->_parent()->header_size() + $self->offset());
+    $self->{_raw_table} = [];
+    $self->{table} = [];
+    my $n_table = $self->num_entries();
+    for (my $i = 0; $i < $n_table; $i++) {
+        my $_on = $self->kind();
+        if ($_on == $AndroidSuper::Metadata::TABLE_KIND_BLOCK_DEVICES) {
+            push @{$self->{_raw_table}}, $self->{_io}->read_bytes($self->entry_size());
+            my $io__raw_table = IO::KaitaiStruct::Stream->new($self->{_raw_table}[$i]);
+            push @{$self->{table}}, AndroidSuper::Metadata::BlockDevice->new($io__raw_table, $self, $self->{_root});
+        }
+        elsif ($_on == $AndroidSuper::Metadata::TABLE_KIND_EXTENTS) {
+            push @{$self->{_raw_table}}, $self->{_io}->read_bytes($self->entry_size());
+            my $io__raw_table = IO::KaitaiStruct::Stream->new($self->{_raw_table}[$i]);
+            push @{$self->{table}}, AndroidSuper::Metadata::Extent->new($io__raw_table, $self, $self->{_root});
+        }
+        elsif ($_on == $AndroidSuper::Metadata::TABLE_KIND_GROUPS) {
+            push @{$self->{_raw_table}}, $self->{_io}->read_bytes($self->entry_size());
+            my $io__raw_table = IO::KaitaiStruct::Stream->new($self->{_raw_table}[$i]);
+            push @{$self->{table}}, AndroidSuper::Metadata::Group->new($io__raw_table, $self, $self->{_root});
+        }
+        elsif ($_on == $AndroidSuper::Metadata::TABLE_KIND_PARTITIONS) {
+            push @{$self->{_raw_table}}, $self->{_io}->read_bytes($self->entry_size());
+            my $io__raw_table = IO::KaitaiStruct::Stream->new($self->{_raw_table}[$i]);
+            push @{$self->{table}}, AndroidSuper::Metadata::Partition->new($io__raw_table, $self, $self->{_root});
+        }
+        else {
+            push @{$self->{table}}, $self->{_io}->read_bytes($self->entry_size());
+        }
+    }
+    $self->{_io}->seek($_pos);
+    return $self->{table};
 }
 
-sub flag_slot_suffixed {
+sub offset {
     my ($self) = @_;
-    return $self->{flag_slot_suffixed};
+    return $self->{offset};
 }
 
-sub flags_reserved {
+sub num_entries {
     my ($self) = @_;
-    return $self->{flags_reserved};
+    return $self->{num_entries};
 }
 
-sub maximum_size {
+sub entry_size {
     my ($self) = @_;
-    return $self->{maximum_size};
+    return $self->{entry_size};
+}
+
+sub kind {
+    my ($self) = @_;
+    return $self->{kind};
+}
+
+sub _raw_table {
+    my ($self) = @_;
+    return $self->{_raw_table};
+}
+
+########################################################################
+package AndroidSuper::Root;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{_raw_primary_geometry} = $self->{_io}->read_bytes(4096);
+    my $io__raw_primary_geometry = IO::KaitaiStruct::Stream->new($self->{_raw_primary_geometry});
+    $self->{primary_geometry} = AndroidSuper::Geometry->new($io__raw_primary_geometry, $self, $self->{_root});
+    $self->{_raw_backup_geometry} = $self->{_io}->read_bytes(4096);
+    my $io__raw_backup_geometry = IO::KaitaiStruct::Stream->new($self->{_raw_backup_geometry});
+    $self->{backup_geometry} = AndroidSuper::Geometry->new($io__raw_backup_geometry, $self, $self->{_root});
+    $self->{_raw_primary_metadata} = [];
+    $self->{primary_metadata} = [];
+    my $n_primary_metadata = $self->primary_geometry()->metadata_slot_count();
+    for (my $i = 0; $i < $n_primary_metadata; $i++) {
+        push @{$self->{_raw_primary_metadata}}, $self->{_io}->read_bytes($self->primary_geometry()->metadata_max_size());
+        my $io__raw_primary_metadata = IO::KaitaiStruct::Stream->new($self->{_raw_primary_metadata}[$i]);
+        push @{$self->{primary_metadata}}, AndroidSuper::Metadata->new($io__raw_primary_metadata, $self, $self->{_root});
+    }
+    $self->{_raw_backup_metadata} = [];
+    $self->{backup_metadata} = [];
+    my $n_backup_metadata = $self->primary_geometry()->metadata_slot_count();
+    for (my $i = 0; $i < $n_backup_metadata; $i++) {
+        push @{$self->{_raw_backup_metadata}}, $self->{_io}->read_bytes($self->primary_geometry()->metadata_max_size());
+        my $io__raw_backup_metadata = IO::KaitaiStruct::Stream->new($self->{_raw_backup_metadata}[$i]);
+        push @{$self->{backup_metadata}}, AndroidSuper::Metadata->new($io__raw_backup_metadata, $self, $self->{_root});
+    }
+}
+
+sub primary_geometry {
+    my ($self) = @_;
+    return $self->{primary_geometry};
+}
+
+sub backup_geometry {
+    my ($self) = @_;
+    return $self->{backup_geometry};
+}
+
+sub primary_metadata {
+    my ($self) = @_;
+    return $self->{primary_metadata};
+}
+
+sub backup_metadata {
+    my ($self) = @_;
+    return $self->{backup_metadata};
+}
+
+sub _raw_primary_geometry {
+    my ($self) = @_;
+    return $self->{_raw_primary_geometry};
+}
+
+sub _raw_backup_geometry {
+    my ($self) = @_;
+    return $self->{_raw_backup_geometry};
+}
+
+sub _raw_primary_metadata {
+    my ($self) = @_;
+    return $self->{_raw_primary_metadata};
+}
+
+sub _raw_backup_metadata {
+    my ($self) = @_;
+    return $self->{_raw_backup_metadata};
 }
 
 1;

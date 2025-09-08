@@ -3,11 +3,14 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class au_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
+#include <set>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -62,6 +65,13 @@ public:
         ENCODINGS_AES = 28,
         ENCODINGS_DELTA_MULAW_8 = 29
     };
+    static bool _is_defined_encodings_t(encodings_t v);
+
+private:
+    static const std::set<encodings_t> _values_encodings_t;
+    static std::set<encodings_t> _build_values_encodings_t();
+
+public:
 
     au_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, au_t* p__root = 0);
 

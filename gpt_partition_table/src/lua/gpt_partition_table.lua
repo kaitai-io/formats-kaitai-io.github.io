@@ -21,14 +21,18 @@ end
 function GptPartitionTable:_read()
 end
 
-GptPartitionTable.property.sector_size = {}
-function GptPartitionTable.property.sector_size:get()
-  if self._m_sector_size ~= nil then
-    return self._m_sector_size
+GptPartitionTable.property.backup = {}
+function GptPartitionTable.property.backup:get()
+  if self._m_backup ~= nil then
+    return self._m_backup
   end
 
-  self._m_sector_size = 512
-  return self._m_sector_size
+  local _io = self._root._io
+  local _pos = _io:pos()
+  _io:seek(self._io:size() - self._root.sector_size)
+  self._m_backup = GptPartitionTable.PartitionHeader(_io, self, self._root)
+  _io:seek(_pos)
+  return self._m_backup
 end
 
 GptPartitionTable.property.primary = {}
@@ -45,18 +49,14 @@ function GptPartitionTable.property.primary:get()
   return self._m_primary
 end
 
-GptPartitionTable.property.backup = {}
-function GptPartitionTable.property.backup:get()
-  if self._m_backup ~= nil then
-    return self._m_backup
+GptPartitionTable.property.sector_size = {}
+function GptPartitionTable.property.sector_size:get()
+  if self._m_sector_size ~= nil then
+    return self._m_sector_size
   end
 
-  local _io = self._root._io
-  local _pos = _io:pos()
-  _io:seek((self._io:size() - self._root.sector_size))
-  self._m_backup = GptPartitionTable.PartitionHeader(_io, self, self._root)
-  _io:seek(_pos)
-  return self._m_backup
+  self._m_sector_size = 512
+  return self._m_sector_size
 end
 
 
@@ -65,7 +65,7 @@ GptPartitionTable.PartitionEntry = class.class(KaitaiStruct)
 function GptPartitionTable.PartitionEntry:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -84,14 +84,14 @@ GptPartitionTable.PartitionHeader = class.class(KaitaiStruct)
 function GptPartitionTable.PartitionHeader:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function GptPartitionTable.PartitionHeader:_read()
   self.signature = self._io:read_bytes(8)
   if not(self.signature == "\069\070\073\032\080\065\082\084") then
-    error("not equal, expected " ..  "\069\070\073\032\080\065\082\084" .. ", but got " .. self.signature)
+    error("not equal, expected " .. "\069\070\073\032\080\065\082\084" .. ", but got " .. self.signature)
   end
   self.revision = self._io:read_u4le()
   self.header_size = self._io:read_u4le()
@@ -116,7 +116,7 @@ function GptPartitionTable.PartitionHeader.property.entries:get()
 
   local _io = self._root._io
   local _pos = _io:pos()
-  _io:seek((self.entries_start * self._root.sector_size))
+  _io:seek(self.entries_start * self._root.sector_size)
   self._raw__m_entries = {}
   self._m_entries = {}
   for i = 0, self.entries_count - 1 do

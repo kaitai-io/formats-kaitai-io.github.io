@@ -181,6 +181,11 @@ contain different information according to the following scheme.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="SPECtrum Processing Routines Data Format 3/4/88 parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="SPECtrum Processing Routines Data Format 3/4/88 parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -211,7 +216,17 @@ contain different information according to the following scheme.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="SPECtrum Processing Routines Data Format 3/4/88 parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="SPECtrum Processing Routines Data Format 3/4/88 parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="SPECtrum Processing Routines Data Format 3/4/88 parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -258,8 +273,8 @@ contain different information according to the following scheme.</p>
 
 <span class="k">namespace</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">Specpr</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Specpr</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Specpr</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span> <span class="o">===</span> <span class="k">null</span> <span class="o">?</span> <span class="nv">$this</span> <span class="o">:</span> <span class="nv">$_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
         <span class="p">}</span>
 
@@ -277,8 +292,53 @@ contain different information according to the following scheme.</p>
 <span class="p">}</span>
 
 <span class="k">namespace</span> <span class="nx">Specpr</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">CoarseTimestamp</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Specpr\DataInitial</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Specpr</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_scaledSeconds</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4be</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_seconds</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">seconds</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_seconds</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_seconds</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_seconds</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">scaledSeconds</span><span class="p">()</span> <span class="o">*</span> <span class="mi">24000</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_seconds</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_scaledSeconds</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">scaledSeconds</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_scaledSeconds</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Specpr</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">DataContinuation</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Specpr\Record</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Specpr</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_cdata</span> <span class="o">=</span> <span class="p">[];</span>
+            <span class="nv">$n</span> <span class="o">=</span> <span class="mi">383</span><span class="p">;</span>
+            <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_cdata</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readF4be</span><span class="p">();</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_cdata</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * The continuation of the data values (383 channels of 32 bit real numbers).</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">cdata</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_cdata</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Specpr</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">DataInitial</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Specpr\Record</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Specpr</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Specpr\Record</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Specpr</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
         <span class="p">}</span>
@@ -304,11 +364,11 @@ contain different information according to the following scheme.</p>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_irespt</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4be</span><span class="p">();</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_irecno</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4be</span><span class="p">();</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_itpntr</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4be</span><span class="p">();</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ihist</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesStripRight</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">60</span><span class="p">),</span> <span class="mi">32</span><span class="p">),</span> <span class="s2">&quot;ascii&quot;</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ihist</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesStripRight</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">60</span><span class="p">),</span> <span class="mi">32</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_mhist</span> <span class="o">=</span> <span class="p">[];</span>
             <span class="nv">$n</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
             <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_mhist</span><span class="p">[]</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">74</span><span class="p">),</span> <span class="s2">&quot;ascii&quot;</span><span class="p">);</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_mhist</span><span class="p">[]</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">74</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
             <span class="p">}</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nruns</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4be</span><span class="p">();</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_siangl</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Specpr\IllumAngle</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
@@ -334,7 +394,7 @@ contain different information according to the following scheme.</p>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">phaseAngleArcsec</span><span class="p">()</span> <span class="p">{</span>
             <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_phaseAngleArcsec</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
                 <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_phaseAngleArcsec</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_phaseAngleArcsec</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">sphase</span><span class="p">()</span> <span class="o">/</span> <span class="mi">1500</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_phaseAngleArcsec</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">sphase</span><span class="p">()</span> <span class="o">/</span> <span class="mi">1500</span><span class="p">;</span>
             <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_phaseAngleArcsec</span><span class="p">;</span>
         <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_ids</span><span class="p">;</span>
@@ -515,35 +575,13 @@ contain different information according to the following scheme.</p>
     <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="k">namespace</span> <span class="nx">Specpr</span> <span class="p">{</span>
-    <span class="k">class</span> <span class="nc">CoarseTimestamp</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Specpr\DataInitial</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Specpr</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
-        <span class="p">}</span>
-
-        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_scaledSeconds</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4be</span><span class="p">();</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_seconds</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">seconds</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_seconds</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_seconds</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_seconds</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">scaledSeconds</span><span class="p">()</span> <span class="o">*</span> <span class="mi">24000</span><span class="p">);</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_seconds</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_scaledSeconds</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">scaledSeconds</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_scaledSeconds</span><span class="p">;</span> <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
 <span class="sd">/**</span>
 <span class="sd"> * it is big endian</span>
 <span class="sd"> */</span>
 
 <span class="k">namespace</span> <span class="nx">Specpr</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">Icflag</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Specpr\Record</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Specpr</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Specpr\Record</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Specpr</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
         <span class="p">}</span>
@@ -561,7 +599,7 @@ contain different information according to the following scheme.</p>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">type</span><span class="p">()</span> <span class="p">{</span>
             <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_type</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
                 <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_type</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_type</span> <span class="o">=</span> <span class="p">((</span><span class="nb">intval</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">text</span><span class="p">())</span> <span class="o">*</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="nb">intval</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">continuation</span><span class="p">())</span> <span class="o">*</span> <span class="mi">2</span><span class="p">));</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_type</span> <span class="o">=</span> <span class="nb">intval</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">text</span><span class="p">())</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">+</span> <span class="nb">intval</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">continuation</span><span class="p">())</span> <span class="o">*</span> <span class="mi">2</span><span class="p">;</span>
             <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_type</span><span class="p">;</span>
         <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_reserved</span><span class="p">;</span>
@@ -619,38 +657,15 @@ contain different information according to the following scheme.</p>
 <span class="p">}</span>
 
 <span class="k">namespace</span> <span class="nx">Specpr</span> <span class="p">{</span>
-    <span class="k">class</span> <span class="nc">DataContinuation</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Specpr\Record</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Specpr</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
-        <span class="p">}</span>
-
-        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_cdata</span> <span class="o">=</span> <span class="p">[];</span>
-            <span class="nv">$n</span> <span class="o">=</span> <span class="mi">383</span><span class="p">;</span>
-            <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_cdata</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readF4be</span><span class="p">();</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_cdata</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * The continuation of the data values (383 channels of 32 bit real numbers).</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">cdata</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_cdata</span><span class="p">;</span> <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="k">namespace</span> <span class="nx">Specpr</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">Identifiers</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Specpr</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Specpr</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
         <span class="p">}</span>
 
         <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ititle</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesStripRight</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">40</span><span class="p">),</span> <span class="mi">32</span><span class="p">),</span> <span class="s2">&quot;ascii&quot;</span><span class="p">);</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_usernm</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span> <span class="s2">&quot;ascii&quot;</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ititle</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesStripRight</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">40</span><span class="p">),</span> <span class="mi">32</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_usernm</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
         <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_ititle</span><span class="p">;</span>
         <span class="k">protected</span> <span class="nv">$_m_usernm</span><span class="p">;</span>
@@ -669,7 +684,7 @@ contain different information according to the following scheme.</p>
 
 <span class="k">namespace</span> <span class="nx">Specpr</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">IllumAngle</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Specpr\DataInitial</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Specpr</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Specpr\DataInitial</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Specpr</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
         <span class="p">}</span>
@@ -677,12 +692,12 @@ contain different information according to the following scheme.</p>
         <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_angl</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4be</span><span class="p">();</span>
         <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_secondsTotal</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">secondsTotal</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_secondsTotal</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_secondsTotal</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_secondsTotal</span> <span class="o">=</span> <span class="nb">intval</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">angl</span><span class="p">()</span> <span class="o">/</span> <span class="mi">6000</span><span class="p">);</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_secondsTotal</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_degreesTotal</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">degreesTotal</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_degreesTotal</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_degreesTotal</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_degreesTotal</span> <span class="o">=</span> <span class="nb">intval</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">minutesTotal</span><span class="p">()</span> <span class="o">/</span> <span class="mi">60</span><span class="p">);</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_degreesTotal</span><span class="p">;</span>
         <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_minutesTotal</span><span class="p">;</span>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">minutesTotal</span><span class="p">()</span> <span class="p">{</span>
@@ -691,12 +706,12 @@ contain different information according to the following scheme.</p>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_minutesTotal</span> <span class="o">=</span> <span class="nb">intval</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">secondsTotal</span><span class="p">()</span> <span class="o">/</span> <span class="mi">60</span><span class="p">);</span>
             <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_minutesTotal</span><span class="p">;</span>
         <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_degreesTotal</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">degreesTotal</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_degreesTotal</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_degreesTotal</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_degreesTotal</span> <span class="o">=</span> <span class="nb">intval</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">minutesTotal</span><span class="p">()</span> <span class="o">/</span> <span class="mi">60</span><span class="p">);</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_degreesTotal</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_secondsTotal</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">secondsTotal</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_secondsTotal</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_secondsTotal</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_secondsTotal</span> <span class="o">=</span> <span class="nb">intval</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">angl</span><span class="p">()</span> <span class="o">/</span> <span class="mi">6000</span><span class="p">);</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_secondsTotal</span><span class="p">;</span>
         <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_angl</span><span class="p">;</span>
 
@@ -708,8 +723,75 @@ contain different information according to the following scheme.</p>
 <span class="p">}</span>
 
 <span class="k">namespace</span> <span class="nx">Specpr</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">Record</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Specpr</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Specpr</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_icflag</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Specpr\Icflag</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="k">switch</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">icflag</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">type</span><span class="p">())</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="nx">\Specpr\RecordType</span><span class="o">::</span><span class="na">DATA_CONTINUATION</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_content</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">1536</span> <span class="o">-</span> <span class="mi">4</span><span class="p">);</span>
+                    <span class="nv">$_io__raw_content</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_content</span><span class="p">);</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_content</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Specpr\DataContinuation</span><span class="p">(</span><span class="nv">$_io__raw_content</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="nx">\Specpr\RecordType</span><span class="o">::</span><span class="na">DATA_INITIAL</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_content</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">1536</span> <span class="o">-</span> <span class="mi">4</span><span class="p">);</span>
+                    <span class="nv">$_io__raw_content</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_content</span><span class="p">);</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_content</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Specpr\DataInitial</span><span class="p">(</span><span class="nv">$_io__raw_content</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="nx">\Specpr\RecordType</span><span class="o">::</span><span class="na">TEXT_CONTINUATION</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_content</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">1536</span> <span class="o">-</span> <span class="mi">4</span><span class="p">);</span>
+                    <span class="nv">$_io__raw_content</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_content</span><span class="p">);</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_content</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Specpr\TextContinuation</span><span class="p">(</span><span class="nv">$_io__raw_content</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="nx">\Specpr\RecordType</span><span class="o">::</span><span class="na">TEXT_INITIAL</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_content</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">1536</span> <span class="o">-</span> <span class="mi">4</span><span class="p">);</span>
+                    <span class="nv">$_io__raw_content</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_content</span><span class="p">);</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_content</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Specpr\TextInitial</span><span class="p">(</span><span class="nv">$_io__raw_content</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="k">default</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_content</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">1536</span> <span class="o">-</span> <span class="mi">4</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_icflag</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_content</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m__raw_content</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Total number of bytes comprising the document.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">icflag</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_icflag</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">content</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_content</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw_content</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_content</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Specpr</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">TextContinuation</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Specpr\Record</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Specpr</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tdata</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">1532</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_tdata</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * 1532 characters of text.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">tdata</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tdata</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Specpr</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">TextInitial</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Specpr\Record</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Specpr</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Specpr\Record</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Specpr</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
         <span class="p">}</span>
@@ -718,7 +800,7 @@ contain different information according to the following scheme.</p>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ids</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Specpr\Identifiers</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_itxtpt</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_itxtch</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4be</span><span class="p">();</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_itext</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">1476</span><span class="p">),</span> <span class="s2">&quot;ascii&quot;</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_itext</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">1476</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
         <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_ids</span><span class="p">;</span>
         <span class="k">protected</span> <span class="nv">$_m_itxtpt</span><span class="p">;</span>
@@ -744,78 +826,17 @@ contain different information according to the following scheme.</p>
 <span class="p">}</span>
 
 <span class="k">namespace</span> <span class="nx">Specpr</span> <span class="p">{</span>
-    <span class="k">class</span> <span class="nc">Record</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Specpr</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Specpr</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
-        <span class="p">}</span>
-
-        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_icflag</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Specpr\Icflag</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-            <span class="k">switch</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">icflag</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">type</span><span class="p">())</span> <span class="p">{</span>
-                <span class="k">case</span> <span class="nx">\Specpr\RecordType</span><span class="o">::</span><span class="na">DATA_INITIAL</span><span class="o">:</span>
-                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_content</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">((</span><span class="mi">1536</span> <span class="o">-</span> <span class="mi">4</span><span class="p">));</span>
-                    <span class="nv">$_io__raw_content</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_content</span><span class="p">);</span>
-                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_content</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Specpr\DataInitial</span><span class="p">(</span><span class="nv">$_io__raw_content</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="k">case</span> <span class="nx">\Specpr\RecordType</span><span class="o">::</span><span class="na">DATA_CONTINUATION</span><span class="o">:</span>
-                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_content</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">((</span><span class="mi">1536</span> <span class="o">-</span> <span class="mi">4</span><span class="p">));</span>
-                    <span class="nv">$_io__raw_content</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_content</span><span class="p">);</span>
-                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_content</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Specpr\DataContinuation</span><span class="p">(</span><span class="nv">$_io__raw_content</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="k">case</span> <span class="nx">\Specpr\RecordType</span><span class="o">::</span><span class="na">TEXT_CONTINUATION</span><span class="o">:</span>
-                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_content</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">((</span><span class="mi">1536</span> <span class="o">-</span> <span class="mi">4</span><span class="p">));</span>
-                    <span class="nv">$_io__raw_content</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_content</span><span class="p">);</span>
-                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_content</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Specpr\TextContinuation</span><span class="p">(</span><span class="nv">$_io__raw_content</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="k">case</span> <span class="nx">\Specpr\RecordType</span><span class="o">::</span><span class="na">TEXT_INITIAL</span><span class="o">:</span>
-                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_content</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">((</span><span class="mi">1536</span> <span class="o">-</span> <span class="mi">4</span><span class="p">));</span>
-                    <span class="nv">$_io__raw_content</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_content</span><span class="p">);</span>
-                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_content</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Specpr\TextInitial</span><span class="p">(</span><span class="nv">$_io__raw_content</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="k">default</span><span class="o">:</span>
-                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_content</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">((</span><span class="mi">1536</span> <span class="o">-</span> <span class="mi">4</span><span class="p">));</span>
-                    <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_icflag</span><span class="p">;</span>
-        <span class="k">protected</span> <span class="nv">$_m_content</span><span class="p">;</span>
-        <span class="k">protected</span> <span class="nv">$_m__raw_content</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * Total number of bytes comprising the document.</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">icflag</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_icflag</span><span class="p">;</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">content</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_content</span><span class="p">;</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw_content</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_content</span><span class="p">;</span> <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="k">namespace</span> <span class="nx">Specpr</span> <span class="p">{</span>
-    <span class="k">class</span> <span class="nc">TextContinuation</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Specpr\Record</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Specpr</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
-        <span class="p">}</span>
-
-        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tdata</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">1532</span><span class="p">),</span> <span class="s2">&quot;ascii&quot;</span><span class="p">);</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_tdata</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * 1532 characters of text.</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">tdata</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tdata</span><span class="p">;</span> <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="k">namespace</span> <span class="nx">Specpr</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">RecordType</span> <span class="p">{</span>
         <span class="k">const</span> <span class="no">DATA_INITIAL</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">TEXT_INITIAL</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">DATA_CONTINUATION</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">TEXT_CONTINUATION</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+
+        <span class="k">private</span> <span class="k">const</span> <span class="no">_VALUES</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">1</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">2</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">3</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">];</span>
+
+        <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">isDefined</span><span class="p">(</span><span class="nx">int</span> <span class="nv">$v</span><span class="p">)</span><span class="o">:</span> <span class="nx">bool</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nb">isset</span><span class="p">(</span><span class="nx">self</span><span class="o">::</span><span class="na">_VALUES</span><span class="p">[</span><span class="nv">$v</span><span class="p">]);</span>
+        <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>

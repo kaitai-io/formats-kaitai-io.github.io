@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.WindowsMinidump = factory(root.KaitaiStream);
+    factory(root.WindowsMinidump || (root.WindowsMinidump = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (WindowsMinidump_, KaitaiStream) {
 /**
  * Windows MiniDump (MDMP) file provides a concise way to store process
  * core dumps, which is useful for debugging. Given its small size,
@@ -133,12 +133,12 @@ var WindowsMinidump = (function() {
   }
   WindowsMinidump.prototype._read = function() {
     this.magic1 = this._io.readBytes(4);
-    if (!((KaitaiStream.byteArrayCompare(this.magic1, [77, 68, 77, 80]) == 0))) {
-      throw new KaitaiStream.ValidationNotEqualError([77, 68, 77, 80], this.magic1, this._io, "/seq/0");
+    if (!((KaitaiStream.byteArrayCompare(this.magic1, new Uint8Array([77, 68, 77, 80])) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([77, 68, 77, 80]), this.magic1, this._io, "/seq/0");
     }
     this.magic2 = this._io.readBytes(2);
-    if (!((KaitaiStream.byteArrayCompare(this.magic2, [147, 167]) == 0))) {
-      throw new KaitaiStream.ValidationNotEqualError([147, 167], this.magic2, this._io, "/seq/1");
+    if (!((KaitaiStream.byteArrayCompare(this.magic2, new Uint8Array([147, 167])) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([147, 167]), this.magic2, this._io, "/seq/1");
     }
     this.version = this._io.readU2le();
     this.numStreams = this._io.readU4le();
@@ -149,26 +149,131 @@ var WindowsMinidump = (function() {
   }
 
   /**
-   * @see {@link https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread_list|Source}
+   * @see {@link https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_directory|Source}
    */
 
-  var ThreadList = WindowsMinidump.ThreadList = (function() {
-    function ThreadList(_io, _parent, _root) {
+  var Dir = WindowsMinidump.Dir = (function() {
+    function Dir(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    ThreadList.prototype._read = function() {
-      this.numThreads = this._io.readU4le();
-      this.threads = [];
-      for (var i = 0; i < this.numThreads; i++) {
-        this.threads.push(new Thread(this._io, this, this._root));
+    Dir.prototype._read = function() {
+      this.streamType = this._io.readU4le();
+      this.lenData = this._io.readU4le();
+      this.ofsData = this._io.readU4le();
+    }
+    Object.defineProperty(Dir.prototype, 'data', {
+      get: function() {
+        if (this._m_data !== undefined)
+          return this._m_data;
+        var _pos = this._io.pos;
+        this._io.seek(this.ofsData);
+        switch (this.streamType) {
+        case WindowsMinidump.StreamTypes.EXCEPTION:
+          this._raw__m_data = this._io.readBytes(this.lenData);
+          var _io__raw__m_data = new KaitaiStream(this._raw__m_data);
+          this._m_data = new ExceptionStream(_io__raw__m_data, this, this._root);
+          break;
+        case WindowsMinidump.StreamTypes.MEMORY_LIST:
+          this._raw__m_data = this._io.readBytes(this.lenData);
+          var _io__raw__m_data = new KaitaiStream(this._raw__m_data);
+          this._m_data = new MemoryList(_io__raw__m_data, this, this._root);
+          break;
+        case WindowsMinidump.StreamTypes.MISC_INFO:
+          this._raw__m_data = this._io.readBytes(this.lenData);
+          var _io__raw__m_data = new KaitaiStream(this._raw__m_data);
+          this._m_data = new MiscInfo(_io__raw__m_data, this, this._root);
+          break;
+        case WindowsMinidump.StreamTypes.SYSTEM_INFO:
+          this._raw__m_data = this._io.readBytes(this.lenData);
+          var _io__raw__m_data = new KaitaiStream(this._raw__m_data);
+          this._m_data = new SystemInfo(_io__raw__m_data, this, this._root);
+          break;
+        case WindowsMinidump.StreamTypes.THREAD_LIST:
+          this._raw__m_data = this._io.readBytes(this.lenData);
+          var _io__raw__m_data = new KaitaiStream(this._raw__m_data);
+          this._m_data = new ThreadList(_io__raw__m_data, this, this._root);
+          break;
+        default:
+          this._m_data = this._io.readBytes(this.lenData);
+          break;
+        }
+        this._io.seek(_pos);
+        return this._m_data;
+      }
+    });
+
+    /**
+     * @see {@link https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_location_descriptor|Source}
+     */
+
+    return Dir;
+  })();
+
+  /**
+   * @see {@link https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception|Source}
+   */
+
+  var ExceptionRecord = WindowsMinidump.ExceptionRecord = (function() {
+    function ExceptionRecord(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    ExceptionRecord.prototype._read = function() {
+      this.code = this._io.readU4le();
+      this.flags = this._io.readU4le();
+      this.innerException = this._io.readU8le();
+      this.addr = this._io.readU8le();
+      this.numParams = this._io.readU4le();
+      this.reserved = this._io.readU4le();
+      this.params = [];
+      for (var i = 0; i < 15; i++) {
+        this.params.push(this._io.readU8le());
       }
     }
 
-    return ThreadList;
+    /**
+     * Memory address where exception has occurred
+     */
+
+    /**
+     * Additional parameters passed along with exception raise
+     * function (for WinAPI, that is `RaiseException`). Meaning is
+     * exception-specific. Given that this type is originally
+     * defined by a C structure, it is described there as array of
+     * fixed number of elements (`EXCEPTION_MAXIMUM_PARAMETERS` =
+     * 15), but in reality only first `num_params` would be used.
+     */
+
+    return ExceptionRecord;
+  })();
+
+  /**
+   * @see {@link https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception_stream|Source}
+   */
+
+  var ExceptionStream = WindowsMinidump.ExceptionStream = (function() {
+    function ExceptionStream(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    ExceptionStream.prototype._read = function() {
+      this.threadId = this._io.readU4le();
+      this.reserved = this._io.readU4le();
+      this.exceptionRec = new ExceptionRecord(this._io, this, this._root);
+      this.threadContext = new LocationDescriptor(this._io, this, this._root);
+    }
+
+    return ExceptionStream;
   })();
 
   /**
@@ -179,7 +284,7 @@ var WindowsMinidump = (function() {
     function LocationDescriptor(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -204,6 +309,49 @@ var WindowsMinidump = (function() {
   })();
 
   /**
+   * @see {@link https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor|Source}
+   */
+
+  var MemoryDescriptor = WindowsMinidump.MemoryDescriptor = (function() {
+    function MemoryDescriptor(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    MemoryDescriptor.prototype._read = function() {
+      this.addrMemoryRange = this._io.readU8le();
+      this.memory = new LocationDescriptor(this._io, this, this._root);
+    }
+
+    return MemoryDescriptor;
+  })();
+
+  /**
+   * @see {@link https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list|Source}
+   */
+
+  var MemoryList = WindowsMinidump.MemoryList = (function() {
+    function MemoryList(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    MemoryList.prototype._read = function() {
+      this.numMemRanges = this._io.readU4le();
+      this.memRanges = [];
+      for (var i = 0; i < this.numMemRanges; i++) {
+        this.memRanges.push(new MemoryDescriptor(this._io, this, this._root));
+      }
+    }
+
+    return MemoryList;
+  })();
+
+  /**
    * Specific string serialization scheme used in MiniDump format is
    * actually a simple 32-bit length-prefixed UTF-16 string.
    * @see {@link https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_string|Source}
@@ -213,7 +361,7 @@ var WindowsMinidump = (function() {
     function MinidumpString(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -223,6 +371,35 @@ var WindowsMinidump = (function() {
     }
 
     return MinidumpString;
+  })();
+
+  /**
+   * @see {@link https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_misc_info|Source}
+   */
+
+  var MiscInfo = WindowsMinidump.MiscInfo = (function() {
+    function MiscInfo(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    MiscInfo.prototype._read = function() {
+      this.lenInfo = this._io.readU4le();
+      this.flags1 = this._io.readU4le();
+      this.processId = this._io.readU4le();
+      this.processCreateTime = this._io.readU4le();
+      this.processUserTime = this._io.readU4le();
+      this.processKernelTime = this._io.readU4le();
+      this.cpuMaxMhz = this._io.readU4le();
+      this.cpuCurMhz = this._io.readU4le();
+      this.cpuLimitMhz = this._io.readU4le();
+      this.cpuMaxIdleState = this._io.readU4le();
+      this.cpuCurIdleState = this._io.readU4le();
+    }
+
+    return MiscInfo;
   })();
 
   /**
@@ -249,7 +426,7 @@ var WindowsMinidump = (function() {
     function SystemInfo(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -286,141 +463,6 @@ var WindowsMinidump = (function() {
   })();
 
   /**
-   * @see {@link https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception|Source}
-   */
-
-  var ExceptionRecord = WindowsMinidump.ExceptionRecord = (function() {
-    function ExceptionRecord(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    ExceptionRecord.prototype._read = function() {
-      this.code = this._io.readU4le();
-      this.flags = this._io.readU4le();
-      this.innerException = this._io.readU8le();
-      this.addr = this._io.readU8le();
-      this.numParams = this._io.readU4le();
-      this.reserved = this._io.readU4le();
-      this.params = [];
-      for (var i = 0; i < 15; i++) {
-        this.params.push(this._io.readU8le());
-      }
-    }
-
-    /**
-     * Memory address where exception has occurred
-     */
-
-    /**
-     * Additional parameters passed along with exception raise
-     * function (for WinAPI, that is `RaiseException`). Meaning is
-     * exception-specific. Given that this type is originally
-     * defined by a C structure, it is described there as array of
-     * fixed number of elements (`EXCEPTION_MAXIMUM_PARAMETERS` =
-     * 15), but in reality only first `num_params` would be used.
-     */
-
-    return ExceptionRecord;
-  })();
-
-  /**
-   * @see {@link https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_misc_info|Source}
-   */
-
-  var MiscInfo = WindowsMinidump.MiscInfo = (function() {
-    function MiscInfo(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    MiscInfo.prototype._read = function() {
-      this.lenInfo = this._io.readU4le();
-      this.flags1 = this._io.readU4le();
-      this.processId = this._io.readU4le();
-      this.processCreateTime = this._io.readU4le();
-      this.processUserTime = this._io.readU4le();
-      this.processKernelTime = this._io.readU4le();
-      this.cpuMaxMhz = this._io.readU4le();
-      this.cpuCurMhz = this._io.readU4le();
-      this.cpuLimitMhz = this._io.readU4le();
-      this.cpuMaxIdleState = this._io.readU4le();
-      this.cpuCurIdleState = this._io.readU4le();
-    }
-
-    return MiscInfo;
-  })();
-
-  /**
-   * @see {@link https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_directory|Source}
-   */
-
-  var Dir = WindowsMinidump.Dir = (function() {
-    function Dir(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Dir.prototype._read = function() {
-      this.streamType = this._io.readU4le();
-      this.lenData = this._io.readU4le();
-      this.ofsData = this._io.readU4le();
-    }
-    Object.defineProperty(Dir.prototype, 'data', {
-      get: function() {
-        if (this._m_data !== undefined)
-          return this._m_data;
-        var _pos = this._io.pos;
-        this._io.seek(this.ofsData);
-        switch (this.streamType) {
-        case WindowsMinidump.StreamTypes.MEMORY_LIST:
-          this._raw__m_data = this._io.readBytes(this.lenData);
-          var _io__raw__m_data = new KaitaiStream(this._raw__m_data);
-          this._m_data = new MemoryList(_io__raw__m_data, this, this._root);
-          break;
-        case WindowsMinidump.StreamTypes.MISC_INFO:
-          this._raw__m_data = this._io.readBytes(this.lenData);
-          var _io__raw__m_data = new KaitaiStream(this._raw__m_data);
-          this._m_data = new MiscInfo(_io__raw__m_data, this, this._root);
-          break;
-        case WindowsMinidump.StreamTypes.THREAD_LIST:
-          this._raw__m_data = this._io.readBytes(this.lenData);
-          var _io__raw__m_data = new KaitaiStream(this._raw__m_data);
-          this._m_data = new ThreadList(_io__raw__m_data, this, this._root);
-          break;
-        case WindowsMinidump.StreamTypes.EXCEPTION:
-          this._raw__m_data = this._io.readBytes(this.lenData);
-          var _io__raw__m_data = new KaitaiStream(this._raw__m_data);
-          this._m_data = new ExceptionStream(_io__raw__m_data, this, this._root);
-          break;
-        case WindowsMinidump.StreamTypes.SYSTEM_INFO:
-          this._raw__m_data = this._io.readBytes(this.lenData);
-          var _io__raw__m_data = new KaitaiStream(this._raw__m_data);
-          this._m_data = new SystemInfo(_io__raw__m_data, this, this._root);
-          break;
-        default:
-          this._m_data = this._io.readBytes(this.lenData);
-          break;
-        }
-        this._io.seek(_pos);
-        return this._m_data;
-      }
-    });
-
-    /**
-     * @see {@link https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_location_descriptor|Source}
-     */
-
-    return Dir;
-  })();
-
-  /**
    * @see {@link https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread|Source}
    */
 
@@ -428,7 +470,7 @@ var WindowsMinidump = (function() {
     function Thread(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -450,68 +492,26 @@ var WindowsMinidump = (function() {
   })();
 
   /**
-   * @see {@link https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list|Source}
+   * @see {@link https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread_list|Source}
    */
 
-  var MemoryList = WindowsMinidump.MemoryList = (function() {
-    function MemoryList(_io, _parent, _root) {
+  var ThreadList = WindowsMinidump.ThreadList = (function() {
+    function ThreadList(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    MemoryList.prototype._read = function() {
-      this.numMemRanges = this._io.readU4le();
-      this.memRanges = [];
-      for (var i = 0; i < this.numMemRanges; i++) {
-        this.memRanges.push(new MemoryDescriptor(this._io, this, this._root));
+    ThreadList.prototype._read = function() {
+      this.numThreads = this._io.readU4le();
+      this.threads = [];
+      for (var i = 0; i < this.numThreads; i++) {
+        this.threads.push(new Thread(this._io, this, this._root));
       }
     }
 
-    return MemoryList;
-  })();
-
-  /**
-   * @see {@link https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor|Source}
-   */
-
-  var MemoryDescriptor = WindowsMinidump.MemoryDescriptor = (function() {
-    function MemoryDescriptor(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    MemoryDescriptor.prototype._read = function() {
-      this.addrMemoryRange = this._io.readU8le();
-      this.memory = new LocationDescriptor(this._io, this, this._root);
-    }
-
-    return MemoryDescriptor;
-  })();
-
-  /**
-   * @see {@link https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception_stream|Source}
-   */
-
-  var ExceptionStream = WindowsMinidump.ExceptionStream = (function() {
-    function ExceptionStream(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    ExceptionStream.prototype._read = function() {
-      this.threadId = this._io.readU4le();
-      this.reserved = this._io.readU4le();
-      this.exceptionRec = new ExceptionRecord(this._io, this, this._root);
-      this.threadContext = new LocationDescriptor(this._io, this, this._root);
-    }
-
-    return ExceptionStream;
+    return ThreadList;
   })();
   Object.defineProperty(WindowsMinidump.prototype, 'streams', {
     get: function() {
@@ -530,5 +530,5 @@ var WindowsMinidump = (function() {
 
   return WindowsMinidump;
 })();
-return WindowsMinidump;
-}));
+WindowsMinidump_.WindowsMinidump = WindowsMinidump;
+});

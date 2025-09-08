@@ -15,14 +15,14 @@
 
 namespace {
     class AndroidSparse extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \AndroidSparse $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\AndroidSparse $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_headerPrefix = new \AndroidSparse\FileHeaderPrefix($this->_io, $this, $this->_root);
-            $this->_m__raw_header = $this->_io->readBytes(($this->headerPrefix()->lenHeader() - 10));
+            $this->_m__raw_header = $this->_io->readBytes($this->headerPrefix()->lenHeader() - 10);
             $_io__raw_header = new \Kaitai\Struct\Stream($this->_m__raw_header);
             $this->_m_header = new \AndroidSparse\FileHeader($_io__raw_header, $this, $this->_root);
             $this->_m_chunks = [];
@@ -47,40 +47,86 @@ namespace {
 }
 
 namespace AndroidSparse {
-    class FileHeaderPrefix extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \AndroidSparse $_parent = null, \AndroidSparse $_root = null) {
+    class Chunk extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\AndroidSparse $_parent = null, ?\AndroidSparse $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_magic = $this->_io->readBytes(4);
-            if (!($this->magic() == "\x3A\xFF\x26\xED")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x3A\xFF\x26\xED", $this->magic(), $this->_io(), "/types/file_header_prefix/seq/0");
+            $this->_m__raw_header = $this->_io->readBytes($this->_root()->header()->lenChunkHeader());
+            $_io__raw_header = new \Kaitai\Struct\Stream($this->_m__raw_header);
+            $this->_m_header = new \AndroidSparse\Chunk\ChunkHeader($_io__raw_header, $this, $this->_root);
+            switch ($this->header()->chunkType()) {
+                case \AndroidSparse\ChunkTypes::CRC32:
+                    $this->_m_body = $this->_io->readU4le();
+                    break;
+                default:
+                    $this->_m_body = $this->_io->readBytes($this->header()->lenBody());
+                    break;
             }
-            $this->_m_version = new \AndroidSparse\Version($this->_io, $this, $this->_root);
-            $this->_m_lenHeader = $this->_io->readU2le();
         }
-        protected $_m_magic;
-        protected $_m_version;
-        protected $_m_lenHeader;
-        public function magic() { return $this->_m_magic; }
+        protected $_m_header;
+        protected $_m_body;
+        protected $_m__raw_header;
+        public function header() { return $this->_m_header; }
+        public function body() { return $this->_m_body; }
+        public function _raw_header() { return $this->_m__raw_header; }
+    }
+}
+
+namespace AndroidSparse\Chunk {
+    class ChunkHeader extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\AndroidSparse\Chunk $_parent = null, ?\AndroidSparse $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_chunkType = $this->_io->readU2le();
+            $this->_m_reserved1 = $this->_io->readU2le();
+            $this->_m_numBodyBlocks = $this->_io->readU4le();
+            $this->_m_lenChunk = $this->_io->readU4le();
+            if (!($this->_m_lenChunk == ($this->lenBodyExpected() != -1 ? $this->_root()->header()->lenChunkHeader() + $this->lenBodyExpected() : $this->lenChunk()))) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError(($this->lenBodyExpected() != -1 ? $this->_root()->header()->lenChunkHeader() + $this->lenBodyExpected() : $this->lenChunk()), $this->_m_lenChunk, $this->_io, "/types/chunk/types/chunk_header/seq/3");
+            }
+        }
+        protected $_m_lenBody;
+        public function lenBody() {
+            if ($this->_m_lenBody !== null)
+                return $this->_m_lenBody;
+            $this->_m_lenBody = $this->lenChunk() - $this->_root()->header()->lenChunkHeader();
+            return $this->_m_lenBody;
+        }
+        protected $_m_lenBodyExpected;
+        public function lenBodyExpected() {
+            if ($this->_m_lenBodyExpected !== null)
+                return $this->_m_lenBodyExpected;
+            $this->_m_lenBodyExpected = ($this->chunkType() == \AndroidSparse\ChunkTypes::RAW ? $this->_root()->header()->blockSize() * $this->numBodyBlocks() : ($this->chunkType() == \AndroidSparse\ChunkTypes::FILL ? 4 : ($this->chunkType() == \AndroidSparse\ChunkTypes::DONT_CARE ? 0 : ($this->chunkType() == \AndroidSparse\ChunkTypes::CRC32 ? 4 : -1))));
+            return $this->_m_lenBodyExpected;
+        }
+        protected $_m_chunkType;
+        protected $_m_reserved1;
+        protected $_m_numBodyBlocks;
+        protected $_m_lenChunk;
+        public function chunkType() { return $this->_m_chunkType; }
+        public function reserved1() { return $this->_m_reserved1; }
 
         /**
-         * internal; access `_root.header.version` instead
+         * size of the chunk body in blocks in output image
          */
-        public function version() { return $this->_m_version; }
+        public function numBodyBlocks() { return $this->_m_numBodyBlocks; }
 
         /**
-         * internal; access `_root.header.len_header` instead
+         * in bytes of chunk input file including chunk header and data
          */
-        public function lenHeader() { return $this->_m_lenHeader; }
+        public function lenChunk() { return $this->_m_lenChunk; }
     }
 }
 
 namespace AndroidSparse {
     class FileHeader extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \AndroidSparse $_parent = null, \AndroidSparse $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\AndroidSparse $_parent = null, ?\AndroidSparse $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -88,20 +134,13 @@ namespace AndroidSparse {
         private function _read() {
             $this->_m_lenChunkHeader = $this->_io->readU2le();
             $this->_m_blockSize = $this->_io->readU4le();
-            $_ = $this->blockSize();
+            $_ = $this->_m_blockSize;
             if (!(\Kaitai\Struct\Stream::mod($_, 4) == 0)) {
-                throw new \Kaitai\Struct\Error\ValidationExprError($this->blockSize(), $this->_io(), "/types/file_header/seq/1");
+                throw new \Kaitai\Struct\Error\ValidationExprError($this->_m_blockSize, $this->_io, "/types/file_header/seq/1");
             }
             $this->_m_numBlocks = $this->_io->readU4le();
             $this->_m_numChunks = $this->_io->readU4le();
             $this->_m_checksum = $this->_io->readU4le();
-        }
-        protected $_m_version;
-        public function version() {
-            if ($this->_m_version !== null)
-                return $this->_m_version;
-            $this->_m_version = $this->_root()->headerPrefix()->version();
-            return $this->_m_version;
         }
         protected $_m_lenHeader;
 
@@ -113,6 +152,13 @@ namespace AndroidSparse {
                 return $this->_m_lenHeader;
             $this->_m_lenHeader = $this->_root()->headerPrefix()->lenHeader();
             return $this->_m_lenHeader;
+        }
+        protected $_m_version;
+        public function version() {
+            if ($this->_m_version !== null)
+                return $this->_m_version;
+            $this->_m_version = $this->_root()->headerPrefix()->version();
+            return $this->_m_version;
         }
         protected $_m_lenChunkHeader;
         protected $_m_blockSize;
@@ -149,94 +195,48 @@ namespace AndroidSparse {
 }
 
 namespace AndroidSparse {
-    class Chunk extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \AndroidSparse $_parent = null, \AndroidSparse $_root = null) {
+    class FileHeaderPrefix extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\AndroidSparse $_parent = null, ?\AndroidSparse $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m__raw_header = $this->_io->readBytes($this->_root()->header()->lenChunkHeader());
-            $_io__raw_header = new \Kaitai\Struct\Stream($this->_m__raw_header);
-            $this->_m_header = new \AndroidSparse\Chunk\ChunkHeader($_io__raw_header, $this, $this->_root);
-            switch ($this->header()->chunkType()) {
-                case \AndroidSparse\ChunkTypes::CRC32:
-                    $this->_m_body = $this->_io->readU4le();
-                    break;
-                default:
-                    $this->_m_body = $this->_io->readBytes($this->header()->lenBody());
-                    break;
+            $this->_m_magic = $this->_io->readBytes(4);
+            if (!($this->_m_magic == "\x3A\xFF\x26\xED")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x3A\xFF\x26\xED", $this->_m_magic, $this->_io, "/types/file_header_prefix/seq/0");
             }
+            $this->_m_version = new \AndroidSparse\Version($this->_io, $this, $this->_root);
+            $this->_m_lenHeader = $this->_io->readU2le();
         }
-        protected $_m_header;
-        protected $_m_body;
-        protected $_m__raw_header;
-        public function header() { return $this->_m_header; }
-        public function body() { return $this->_m_body; }
-        public function _raw_header() { return $this->_m__raw_header; }
-    }
-}
-
-namespace AndroidSparse\Chunk {
-    class ChunkHeader extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \AndroidSparse\Chunk $_parent = null, \AndroidSparse $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_chunkType = $this->_io->readU2le();
-            $this->_m_reserved1 = $this->_io->readU2le();
-            $this->_m_numBodyBlocks = $this->_io->readU4le();
-            $this->_m_lenChunk = $this->_io->readU4le();
-            if (!($this->lenChunk() == ($this->lenBodyExpected() != -1 ? ($this->_root()->header()->lenChunkHeader() + $this->lenBodyExpected()) : $this->lenChunk()))) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError(($this->lenBodyExpected() != -1 ? ($this->_root()->header()->lenChunkHeader() + $this->lenBodyExpected()) : $this->lenChunk()), $this->lenChunk(), $this->_io(), "/types/chunk/types/chunk_header/seq/3");
-            }
-        }
-        protected $_m_lenBody;
-        public function lenBody() {
-            if ($this->_m_lenBody !== null)
-                return $this->_m_lenBody;
-            $this->_m_lenBody = ($this->lenChunk() - $this->_root()->header()->lenChunkHeader());
-            return $this->_m_lenBody;
-        }
-        protected $_m_lenBodyExpected;
-        public function lenBodyExpected() {
-            if ($this->_m_lenBodyExpected !== null)
-                return $this->_m_lenBodyExpected;
-            $this->_m_lenBodyExpected = ($this->chunkType() == \AndroidSparse\ChunkTypes::RAW ? ($this->_root()->header()->blockSize() * $this->numBodyBlocks()) : ($this->chunkType() == \AndroidSparse\ChunkTypes::FILL ? 4 : ($this->chunkType() == \AndroidSparse\ChunkTypes::DONT_CARE ? 0 : ($this->chunkType() == \AndroidSparse\ChunkTypes::CRC32 ? 4 : -1))));
-            return $this->_m_lenBodyExpected;
-        }
-        protected $_m_chunkType;
-        protected $_m_reserved1;
-        protected $_m_numBodyBlocks;
-        protected $_m_lenChunk;
-        public function chunkType() { return $this->_m_chunkType; }
-        public function reserved1() { return $this->_m_reserved1; }
+        protected $_m_magic;
+        protected $_m_version;
+        protected $_m_lenHeader;
+        public function magic() { return $this->_m_magic; }
 
         /**
-         * size of the chunk body in blocks in output image
+         * internal; access `_root.header.version` instead
          */
-        public function numBodyBlocks() { return $this->_m_numBodyBlocks; }
+        public function version() { return $this->_m_version; }
 
         /**
-         * in bytes of chunk input file including chunk header and data
+         * internal; access `_root.header.len_header` instead
          */
-        public function lenChunk() { return $this->_m_lenChunk; }
+        public function lenHeader() { return $this->_m_lenHeader; }
     }
 }
 
 namespace AndroidSparse {
     class Version extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \AndroidSparse\FileHeaderPrefix $_parent = null, \AndroidSparse $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\AndroidSparse\FileHeaderPrefix $_parent = null, ?\AndroidSparse $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_major = $this->_io->readU2le();
-            if (!($this->major() == 1)) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError(1, $this->major(), $this->_io(), "/types/version/seq/0");
+            if (!($this->_m_major == 1)) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError(1, $this->_m_major, $this->_io, "/types/version/seq/0");
             }
             $this->_m_minor = $this->_io->readU2le();
         }
@@ -253,5 +253,11 @@ namespace AndroidSparse {
         const FILL = 51906;
         const DONT_CARE = 51907;
         const CRC32 = 51908;
+
+        private const _VALUES = [51905 => true, 51906 => true, 51907 => true, 51908 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

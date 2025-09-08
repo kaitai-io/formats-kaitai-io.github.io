@@ -49,6 +49,41 @@ namespace Kaitai
                 }
             }
         }
+        public partial class ExitStatus : KaitaiStruct
+        {
+            public static ExitStatus FromFile(string fileName)
+            {
+                return new ExitStatus(new KaitaiStream(fileName));
+            }
+
+            public ExitStatus(KaitaiStream p__io, AixUtmp.Record p__parent = null, AixUtmp p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _terminationCode = m_io.ReadS2be();
+                _exitCode = m_io.ReadS2be();
+            }
+            private short _terminationCode;
+            private short _exitCode;
+            private AixUtmp m_root;
+            private AixUtmp.Record m_parent;
+
+            /// <summary>
+            /// process termination status
+            /// </summary>
+            public short TerminationCode { get { return _terminationCode; } }
+
+            /// <summary>
+            /// process exit status
+            /// </summary>
+            public short ExitCode { get { return _exitCode; } }
+            public AixUtmp M_Root { get { return m_root; } }
+            public AixUtmp.Record M_Parent { get { return m_parent; } }
+        }
         public partial class Record : KaitaiStruct
         {
             public static Record FromFile(string fileName)
@@ -64,14 +99,14 @@ namespace Kaitai
             }
             private void _read()
             {
-                _user = System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytes(256));
-                _inittabId = System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytes(14));
-                _device = System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytes(64));
+                _user = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(256));
+                _inittabId = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(14));
+                _device = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(64));
                 _pid = m_io.ReadU8be();
                 _type = ((AixUtmp.EntryType) m_io.ReadS2be());
                 _timestamp = m_io.ReadS8be();
                 _exitStatus = new ExitStatus(m_io, this, m_root);
-                _hostname = System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytes(256));
+                _hostname = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(256));
                 _dblWordPad = m_io.ReadS4be();
                 _reservedA = m_io.ReadBytes(8);
                 _reservedV = m_io.ReadBytes(24);
@@ -134,41 +169,6 @@ namespace Kaitai
             public byte[] ReservedV { get { return _reservedV; } }
             public AixUtmp M_Root { get { return m_root; } }
             public AixUtmp M_Parent { get { return m_parent; } }
-        }
-        public partial class ExitStatus : KaitaiStruct
-        {
-            public static ExitStatus FromFile(string fileName)
-            {
-                return new ExitStatus(new KaitaiStream(fileName));
-            }
-
-            public ExitStatus(KaitaiStream p__io, AixUtmp.Record p__parent = null, AixUtmp p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _terminationCode = m_io.ReadS2be();
-                _exitCode = m_io.ReadS2be();
-            }
-            private short _terminationCode;
-            private short _exitCode;
-            private AixUtmp m_root;
-            private AixUtmp.Record m_parent;
-
-            /// <summary>
-            /// process termination status
-            /// </summary>
-            public short TerminationCode { get { return _terminationCode; } }
-
-            /// <summary>
-            /// process exit status
-            /// </summary>
-            public short ExitCode { get { return _exitCode; } }
-            public AixUtmp M_Root { get { return m_root; } }
-            public AixUtmp.Record M_Parent { get { return m_parent; } }
         }
         private List<Record> _records;
         private AixUtmp m_root;

@@ -5,6 +5,7 @@ import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -53,6 +54,12 @@ public class Stl extends KaitaiStruct {
         }
     }
 
+    public void _fetchInstances() {
+        for (int i = 0; i < this.triangles.size(); i++) {
+            this.triangles.get(((Number) (i)).intValue())._fetchInstances();
+        }
+    }
+
     /**
      * Each STL triangle is defined by its 3 points in 3D space and a
      * normal vector, which is generally used to determine where is
@@ -85,13 +92,20 @@ public class Stl extends KaitaiStruct {
             }
             this.abr = this._io.readU2le();
         }
+
+        public void _fetchInstances() {
+            this.normal._fetchInstances();
+            for (int i = 0; i < this.vertices.size(); i++) {
+                this.vertices.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
         private Vec3d normal;
-        private ArrayList<Vec3d> vertices;
+        private List<Vec3d> vertices;
         private int abr;
         private Stl _root;
         private Stl _parent;
         public Vec3d normal() { return normal; }
-        public ArrayList<Vec3d> vertices() { return vertices; }
+        public List<Vec3d> vertices() { return vertices; }
 
         /**
          * In theory (per standard), it's "attribute byte count" with
@@ -131,6 +145,9 @@ public class Stl extends KaitaiStruct {
             this.y = this._io.readF4le();
             this.z = this._io.readF4le();
         }
+
+        public void _fetchInstances() {
+        }
         private float x;
         private float y;
         private float z;
@@ -144,12 +161,12 @@ public class Stl extends KaitaiStruct {
     }
     private byte[] header;
     private long numTriangles;
-    private ArrayList<Triangle> triangles;
+    private List<Triangle> triangles;
     private Stl _root;
     private KaitaiStruct _parent;
     public byte[] header() { return header; }
     public long numTriangles() { return numTriangles; }
-    public ArrayList<Triangle> triangles() { return triangles; }
+    public List<Triangle> triangles() { return triangles; }
     public Stl _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

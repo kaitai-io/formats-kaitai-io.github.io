@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Encode;
 
 ########################################################################
@@ -19,45 +19,30 @@ sub from_file {
     return new($class, IO::KaitaiStruct::Stream->new($fd));
 }
 
-our $OPERATING_SYSTEMS_LINUX = 1;
-our $OPERATING_SYSTEMS_IRIX = 2;
-our $OPERATING_SYSTEMS_NO_OS = 255;
-
-our $SIGNATURE_TAGS_SIGNATURES = 62;
-our $SIGNATURE_TAGS_HEADER_IMMUTABLE = 63;
-our $SIGNATURE_TAGS_I18N_TABLE = 100;
-our $SIGNATURE_TAGS_BAD_SHA1_1_OBSOLETE = 264;
-our $SIGNATURE_TAGS_BAD_SHA1_2_OBSOLETE = 265;
-our $SIGNATURE_TAGS_DSA = 267;
-our $SIGNATURE_TAGS_RSA = 268;
-our $SIGNATURE_TAGS_SHA1 = 269;
-our $SIGNATURE_TAGS_LONG_SIZE = 270;
-our $SIGNATURE_TAGS_LONG_ARCHIVE_SIZE = 271;
-our $SIGNATURE_TAGS_SHA256 = 273;
-our $SIGNATURE_TAGS_FILE_SIGNATURES = 274;
-our $SIGNATURE_TAGS_FILE_SIGNATURE_LENGTH = 275;
-our $SIGNATURE_TAGS_VERITY_SIGNATURES = 276;
-our $SIGNATURE_TAGS_VERITY_SIGNATURE_ALGO = 277;
-our $SIGNATURE_TAGS_SIZE = 1000;
-our $SIGNATURE_TAGS_LE_MD5_1_OBSOLETE = 1001;
-our $SIGNATURE_TAGS_PGP = 1002;
-our $SIGNATURE_TAGS_LE_MD5_2_OBSOLETE = 1003;
-our $SIGNATURE_TAGS_MD5 = 1004;
-our $SIGNATURE_TAGS_GPG = 1005;
-our $SIGNATURE_TAGS_PGP5_OBSOLETE = 1006;
-our $SIGNATURE_TAGS_PAYLOAD_SIZE = 1007;
-our $SIGNATURE_TAGS_RESERVED_SPACE = 1008;
-
-our $RECORD_TYPES_NOT_IMPLEMENTED = 0;
-our $RECORD_TYPES_CHAR = 1;
-our $RECORD_TYPES_UINT8 = 2;
-our $RECORD_TYPES_UINT16 = 3;
-our $RECORD_TYPES_UINT32 = 4;
-our $RECORD_TYPES_UINT64 = 5;
-our $RECORD_TYPES_STRING = 6;
-our $RECORD_TYPES_BIN = 7;
-our $RECORD_TYPES_STRING_ARRAY = 8;
-our $RECORD_TYPES_I18N_STRING = 9;
+our $ARCHITECTURES_X86 = 1;
+our $ARCHITECTURES_ALPHA = 2;
+our $ARCHITECTURES_SPARC = 3;
+our $ARCHITECTURES_MIPS = 4;
+our $ARCHITECTURES_PPC = 5;
+our $ARCHITECTURES_M68K = 6;
+our $ARCHITECTURES_SGI = 7;
+our $ARCHITECTURES_RS6000 = 8;
+our $ARCHITECTURES_IA64 = 9;
+our $ARCHITECTURES_SPARC64 = 10;
+our $ARCHITECTURES_MIPS64 = 11;
+our $ARCHITECTURES_ARM = 12;
+our $ARCHITECTURES_M68K_MINT = 13;
+our $ARCHITECTURES_S390 = 14;
+our $ARCHITECTURES_S390X = 15;
+our $ARCHITECTURES_PPC64 = 16;
+our $ARCHITECTURES_SH = 17;
+our $ARCHITECTURES_XTENSA = 18;
+our $ARCHITECTURES_AARCH64 = 19;
+our $ARCHITECTURES_MIPS_R6 = 20;
+our $ARCHITECTURES_MIPS64_R6 = 21;
+our $ARCHITECTURES_RISCV = 22;
+our $ARCHITECTURES_LOONGARCH64 = 23;
+our $ARCHITECTURES_NO_ARCH = 255;
 
 our $HEADER_TAGS_SIGNATURES = 62;
 our $HEADER_TAGS_HEADER_IMMUTABLE = 63;
@@ -360,33 +345,48 @@ our $HEADER_TAGS_PRE_UNTRANS_FLAGS = 5107;
 our $HEADER_TAGS_POST_UNTRANS_FLAGS = 5108;
 our $HEADER_TAGS_SYS_USERS = 5109;
 
+our $OPERATING_SYSTEMS_LINUX = 1;
+our $OPERATING_SYSTEMS_IRIX = 2;
+our $OPERATING_SYSTEMS_NO_OS = 255;
+
+our $RECORD_TYPES_NOT_IMPLEMENTED = 0;
+our $RECORD_TYPES_CHAR = 1;
+our $RECORD_TYPES_UINT8 = 2;
+our $RECORD_TYPES_UINT16 = 3;
+our $RECORD_TYPES_UINT32 = 4;
+our $RECORD_TYPES_UINT64 = 5;
+our $RECORD_TYPES_STRING = 6;
+our $RECORD_TYPES_BIN = 7;
+our $RECORD_TYPES_STRING_ARRAY = 8;
+our $RECORD_TYPES_I18N_STRING = 9;
+
 our $RPM_TYPES_BINARY = 0;
 our $RPM_TYPES_SOURCE = 1;
 
-our $ARCHITECTURES_X86 = 1;
-our $ARCHITECTURES_ALPHA = 2;
-our $ARCHITECTURES_SPARC = 3;
-our $ARCHITECTURES_MIPS = 4;
-our $ARCHITECTURES_PPC = 5;
-our $ARCHITECTURES_M68K = 6;
-our $ARCHITECTURES_SGI = 7;
-our $ARCHITECTURES_RS6000 = 8;
-our $ARCHITECTURES_IA64 = 9;
-our $ARCHITECTURES_SPARC64 = 10;
-our $ARCHITECTURES_MIPS64 = 11;
-our $ARCHITECTURES_ARM = 12;
-our $ARCHITECTURES_M68K_MINT = 13;
-our $ARCHITECTURES_S390 = 14;
-our $ARCHITECTURES_S390X = 15;
-our $ARCHITECTURES_PPC64 = 16;
-our $ARCHITECTURES_SH = 17;
-our $ARCHITECTURES_XTENSA = 18;
-our $ARCHITECTURES_AARCH64 = 19;
-our $ARCHITECTURES_MIPS_R6 = 20;
-our $ARCHITECTURES_MIPS64_R6 = 21;
-our $ARCHITECTURES_RISCV = 22;
-our $ARCHITECTURES_LOONGARCH64 = 23;
-our $ARCHITECTURES_NO_ARCH = 255;
+our $SIGNATURE_TAGS_SIGNATURES = 62;
+our $SIGNATURE_TAGS_HEADER_IMMUTABLE = 63;
+our $SIGNATURE_TAGS_I18N_TABLE = 100;
+our $SIGNATURE_TAGS_BAD_SHA1_1_OBSOLETE = 264;
+our $SIGNATURE_TAGS_BAD_SHA1_2_OBSOLETE = 265;
+our $SIGNATURE_TAGS_DSA = 267;
+our $SIGNATURE_TAGS_RSA = 268;
+our $SIGNATURE_TAGS_SHA1 = 269;
+our $SIGNATURE_TAGS_LONG_SIZE = 270;
+our $SIGNATURE_TAGS_LONG_ARCHIVE_SIZE = 271;
+our $SIGNATURE_TAGS_SHA256 = 273;
+our $SIGNATURE_TAGS_FILE_SIGNATURES = 274;
+our $SIGNATURE_TAGS_FILE_SIGNATURE_LENGTH = 275;
+our $SIGNATURE_TAGS_VERITY_SIGNATURES = 276;
+our $SIGNATURE_TAGS_VERITY_SIGNATURE_ALGO = 277;
+our $SIGNATURE_TAGS_SIZE = 1000;
+our $SIGNATURE_TAGS_LE_MD5_1_OBSOLETE = 1001;
+our $SIGNATURE_TAGS_PGP = 1002;
+our $SIGNATURE_TAGS_LE_MD5_2_OBSOLETE = 1003;
+our $SIGNATURE_TAGS_MD5 = 1004;
+our $SIGNATURE_TAGS_GPG = 1005;
+our $SIGNATURE_TAGS_PGP5_OBSOLETE = 1006;
+our $SIGNATURE_TAGS_PAYLOAD_SIZE = 1007;
+our $SIGNATURE_TAGS_RESERVED_SPACE = 1008;
 
 sub new {
     my ($class, $_io, $_parent, $_root) = @_;
@@ -394,7 +394,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -406,7 +406,7 @@ sub _read {
 
     $self->{lead} = Rpm::Lead->new($self->{_io}, $self, $self->{_root});
     $self->{signature} = Rpm::Header->new($self->{_io}, $self, $self->{_root});
-    $self->{signature_padding} = $self->{_io}->read_bytes((-($self->_io()->pos()) % 8));
+    $self->{signature_padding} = $self->{_io}->read_bytes(-($self->_io()->pos()) % 8);
     if ($self->ofs_header() < 0) {
         $self->{_unnamed3} = $self->{_io}->read_bytes(0);
     }
@@ -414,7 +414,7 @@ sub _read {
     if ($self->ofs_payload() < 0) {
         $self->{_unnamed5} = $self->{_io}->read_bytes(0);
     }
-    $self->{signature_tags_steps} = ();
+    $self->{signature_tags_steps} = [];
     my $n_signature_tags_steps = $self->signature()->header_record()->num_index_records();
     for (my $i = 0; $i < $n_signature_tags_steps; $i++) {
         push @{$self->{signature_tags_steps}}, Rpm::SignatureTagsStep->new($self->{_io}, $self, $self->{_root});
@@ -428,41 +428,20 @@ sub has_signature_size_tag {
     return $self->{has_signature_size_tag};
 }
 
-sub signature_size_tag {
+sub len_header {
     my ($self) = @_;
-    return $self->{signature_size_tag} if ($self->{signature_size_tag});
-    if ($self->has_signature_size_tag()) {
-        $self->{signature_size_tag} = @{$self->signature()->index_records()}[@{$self->signature_tags_steps()}[-1]->size_tag_idx()];
-    }
-    return $self->{signature_size_tag};
+    return $self->{len_header} if ($self->{len_header});
+    $self->{len_header} = $self->ofs_payload() - $self->ofs_header();
+    return $self->{len_header};
 }
 
 sub len_payload {
     my ($self) = @_;
     return $self->{len_payload} if ($self->{len_payload});
     if ($self->has_signature_size_tag()) {
-        $self->{len_payload} = (@{$self->signature_size_tag()->body()->values()}[0] - $self->len_header());
+        $self->{len_payload} = @{$self->signature_size_tag()->body()->values()}[0] - $self->len_header();
     }
     return $self->{len_payload};
-}
-
-sub payload {
-    my ($self) = @_;
-    return $self->{payload} if ($self->{payload});
-    if ($self->has_signature_size_tag()) {
-        my $_pos = $self->{_io}->pos();
-        $self->{_io}->seek($self->ofs_payload());
-        $self->{payload} = $self->{_io}->read_bytes($self->len_payload());
-        $self->{_io}->seek($_pos);
-    }
-    return $self->{payload};
-}
-
-sub len_header {
-    my ($self) = @_;
-    return $self->{len_header} if ($self->{len_header});
-    $self->{len_header} = ($self->ofs_payload() - $self->ofs_header());
-    return $self->{len_header};
 }
 
 sub ofs_header {
@@ -477,6 +456,27 @@ sub ofs_payload {
     return $self->{ofs_payload} if ($self->{ofs_payload});
     $self->{ofs_payload} = $self->_io()->pos();
     return $self->{ofs_payload};
+}
+
+sub payload {
+    my ($self) = @_;
+    return $self->{payload} if ($self->{payload});
+    if ($self->has_signature_size_tag()) {
+        my $_pos = $self->{_io}->pos();
+        $self->{_io}->seek($self->ofs_payload());
+        $self->{payload} = $self->{_io}->read_bytes($self->len_payload());
+        $self->{_io}->seek($_pos);
+    }
+    return $self->{payload};
+}
+
+sub signature_size_tag {
+    my ($self) = @_;
+    return $self->{signature_size_tag} if ($self->{signature_size_tag});
+    if ($self->has_signature_size_tag()) {
+        $self->{signature_size_tag} = @{$self->signature()->index_records()}[@{$self->signature_tags_steps()}[-1]->size_tag_idx()];
+    }
+    return $self->{signature_size_tag};
 }
 
 sub lead {
@@ -515,7 +515,7 @@ sub signature_tags_steps {
 }
 
 ########################################################################
-package Rpm::RecordTypeStringArray;
+package Rpm::Dummy;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -534,7 +534,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -544,21 +544,265 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{values} = ();
-    my $n_values = $self->num_values();
-    for (my $i = 0; $i < $n_values; $i++) {
-        push @{$self->{values}}, Encode::decode("UTF-8", $self->{_io}->read_bytes_term(0, 0, 1, 1));
-    }
 }
 
-sub values {
+########################################################################
+package Rpm::Header;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
     my ($self) = @_;
-    return $self->{values};
+
+    $self->{header_record} = Rpm::HeaderRecord->new($self->{_io}, $self, $self->{_root});
+    $self->{index_records} = [];
+    my $n_index_records = $self->header_record()->num_index_records();
+    for (my $i = 0; $i < $n_index_records; $i++) {
+        push @{$self->{index_records}}, Rpm::HeaderIndexRecord->new($self->{_io}, $self, $self->{_root});
+    }
+    $self->{_raw_storage_section} = $self->{_io}->read_bytes($self->header_record()->len_storage_section());
+    my $io__raw_storage_section = IO::KaitaiStruct::Stream->new($self->{_raw_storage_section});
+    $self->{storage_section} = Rpm::Dummy->new($io__raw_storage_section, $self, $self->{_root});
+}
+
+sub is_header {
+    my ($self) = @_;
+    return $self->{is_header} if ($self->{is_header});
+    $self->{is_header} = !($self->is_signature());
+    return $self->{is_header};
+}
+
+sub header_record {
+    my ($self) = @_;
+    return $self->{header_record};
+}
+
+sub index_records {
+    my ($self) = @_;
+    return $self->{index_records};
+}
+
+sub storage_section {
+    my ($self) = @_;
+    return $self->{storage_section};
+}
+
+sub is_signature {
+    my ($self) = @_;
+    return $self->{is_signature};
+}
+
+sub _raw_storage_section {
+    my ($self) = @_;
+    return $self->{_raw_storage_section};
+}
+
+########################################################################
+package Rpm::HeaderIndexRecord;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_raw} = $self->{_io}->read_u4be();
+    $self->{record_type} = $self->{_io}->read_u4be();
+    $self->{ofs_body} = $self->{_io}->read_u4be();
+    $self->{count} = $self->{_io}->read_u4be();
+}
+
+sub body {
+    my ($self) = @_;
+    return $self->{body} if ($self->{body});
+    my $io = $self->_parent()->storage_section()->_io();
+    my $_pos = $io->pos();
+    $io->seek($self->ofs_body());
+    my $_on = $self->record_type();
+    if ($_on == $Rpm::RECORD_TYPES_BIN) {
+        $self->{body} = Rpm::RecordTypeBin->new($io, $self, $self->{_root});
+    }
+    elsif ($_on == $Rpm::RECORD_TYPES_CHAR) {
+        $self->{body} = Rpm::RecordTypeUint8->new($io, $self, $self->{_root});
+    }
+    elsif ($_on == $Rpm::RECORD_TYPES_I18N_STRING) {
+        $self->{body} = Rpm::RecordTypeStringArray->new($io, $self, $self->{_root});
+    }
+    elsif ($_on == $Rpm::RECORD_TYPES_STRING) {
+        $self->{body} = Rpm::RecordTypeString->new($io, $self, $self->{_root});
+    }
+    elsif ($_on == $Rpm::RECORD_TYPES_STRING_ARRAY) {
+        $self->{body} = Rpm::RecordTypeStringArray->new($io, $self, $self->{_root});
+    }
+    elsif ($_on == $Rpm::RECORD_TYPES_UINT16) {
+        $self->{body} = Rpm::RecordTypeUint16->new($io, $self, $self->{_root});
+    }
+    elsif ($_on == $Rpm::RECORD_TYPES_UINT32) {
+        $self->{body} = Rpm::RecordTypeUint32->new($io, $self, $self->{_root});
+    }
+    elsif ($_on == $Rpm::RECORD_TYPES_UINT64) {
+        $self->{body} = Rpm::RecordTypeUint64->new($io, $self, $self->{_root});
+    }
+    elsif ($_on == $Rpm::RECORD_TYPES_UINT8) {
+        $self->{body} = Rpm::RecordTypeUint8->new($io, $self, $self->{_root});
+    }
+    $io->seek($_pos);
+    return $self->{body};
+}
+
+sub header_tag {
+    my ($self) = @_;
+    return $self->{header_tag} if ($self->{header_tag});
+    if ($self->_parent()->is_header()) {
+        $self->{header_tag} = $self->tag_raw();
+    }
+    return $self->{header_tag};
+}
+
+sub len_value {
+    my ($self) = @_;
+    return $self->{len_value} if ($self->{len_value});
+    if ($self->record_type() == $Rpm::RECORD_TYPES_BIN) {
+        $self->{len_value} = $self->count();
+    }
+    return $self->{len_value};
 }
 
 sub num_values {
     my ($self) = @_;
+    return $self->{num_values} if ($self->{num_values});
+    if ($self->record_type() != $Rpm::RECORD_TYPES_BIN) {
+        $self->{num_values} = $self->count();
+    }
     return $self->{num_values};
+}
+
+sub signature_tag {
+    my ($self) = @_;
+    return $self->{signature_tag} if ($self->{signature_tag});
+    if ($self->_parent()->is_signature()) {
+        $self->{signature_tag} = $self->tag_raw();
+    }
+    return $self->{signature_tag};
+}
+
+sub tag_raw {
+    my ($self) = @_;
+    return $self->{tag_raw};
+}
+
+sub record_type {
+    my ($self) = @_;
+    return $self->{record_type};
+}
+
+sub ofs_body {
+    my ($self) = @_;
+    return $self->{ofs_body};
+}
+
+sub count {
+    my ($self) = @_;
+    return $self->{count};
+}
+
+########################################################################
+package Rpm::HeaderRecord;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{magic} = $self->{_io}->read_bytes(4);
+    $self->{reserved} = $self->{_io}->read_bytes(4);
+    $self->{num_index_records} = $self->{_io}->read_u4be();
+    $self->{len_storage_section} = $self->{_io}->read_u4be();
+}
+
+sub magic {
+    my ($self) = @_;
+    return $self->{magic};
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self->{reserved};
+}
+
+sub num_index_records {
+    my ($self) = @_;
+    return $self->{num_index_records};
+}
+
+sub len_storage_section {
+    my ($self) = @_;
+    return $self->{len_storage_section};
 }
 
 ########################################################################
@@ -581,7 +825,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -642,6 +886,53 @@ sub reserved {
 }
 
 ########################################################################
+package Rpm::RecordTypeBin;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{values} = [];
+    my $n_values = 1;
+    for (my $i = 0; $i < $n_values; $i++) {
+        push @{$self->{values}}, $self->{_io}->read_bytes($self->len_value());
+    }
+}
+
+sub values {
+    my ($self) = @_;
+    return $self->{values};
+}
+
+sub len_value {
+    my ($self) = @_;
+    return $self->{len_value};
+}
+
+########################################################################
 package Rpm::RecordTypeString;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -661,7 +952,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -671,7 +962,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{values} = ();
+    $self->{values} = [];
     my $n_values = 1;
     for (my $i = 0; $i < $n_values; $i++) {
         push @{$self->{values}}, Encode::decode("UTF-8", $self->{_io}->read_bytes_term(0, 0, 1, 1));
@@ -684,7 +975,7 @@ sub values {
 }
 
 ########################################################################
-package Rpm::SignatureTagsStep;
+package Rpm::RecordTypeStringArray;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -703,7 +994,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -713,59 +1004,10 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-}
-
-sub size_tag_idx {
-    my ($self) = @_;
-    return $self->{size_tag_idx} if ($self->{size_tag_idx});
-    $self->{size_tag_idx} = ($self->prev_size_tag_idx() != -1 ? $self->prev_size_tag_idx() : ( ((@{$self->_parent()->signature()->index_records()}[$self->idx()]->signature_tag() == $Rpm::SIGNATURE_TAGS_SIZE) && (@{$self->_parent()->signature()->index_records()}[$self->idx()]->record_type() == $Rpm::RECORD_TYPES_UINT32) && (@{$self->_parent()->signature()->index_records()}[$self->idx()]->num_values() >= 1))  ? $self->idx() : -1));
-    return $self->{size_tag_idx};
-}
-
-sub idx {
-    my ($self) = @_;
-    return $self->{idx};
-}
-
-sub prev_size_tag_idx {
-    my ($self) = @_;
-    return $self->{prev_size_tag_idx};
-}
-
-########################################################################
-package Rpm::RecordTypeUint32;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{values} = ();
+    $self->{values} = [];
     my $n_values = $self->num_values();
     for (my $i = 0; $i < $n_values; $i++) {
-        push @{$self->{values}}, $self->{_io}->read_u4be();
+        push @{$self->{values}}, Encode::decode("UTF-8", $self->{_io}->read_bytes_term(0, 0, 1, 1));
     }
 }
 
@@ -799,7 +1041,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -809,7 +1051,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{values} = ();
+    $self->{values} = [];
     my $n_values = $self->num_values();
     for (my $i = 0; $i < $n_values; $i++) {
         push @{$self->{values}}, $self->{_io}->read_u2be();
@@ -827,7 +1069,7 @@ sub num_values {
 }
 
 ########################################################################
-package Rpm::HeaderIndexRecord;
+package Rpm::RecordTypeUint32;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -846,7 +1088,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -856,216 +1098,10 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{tag_raw} = $self->{_io}->read_u4be();
-    $self->{record_type} = $self->{_io}->read_u4be();
-    $self->{ofs_body} = $self->{_io}->read_u4be();
-    $self->{count} = $self->{_io}->read_u4be();
-}
-
-sub num_values {
-    my ($self) = @_;
-    return $self->{num_values} if ($self->{num_values});
-    if ($self->record_type() != $Rpm::RECORD_TYPES_BIN) {
-        $self->{num_values} = $self->count();
-    }
-    return $self->{num_values};
-}
-
-sub body {
-    my ($self) = @_;
-    return $self->{body} if ($self->{body});
-    my $io = $self->_parent()->storage_section()->_io();
-    my $_pos = $io->pos();
-    $io->seek($self->ofs_body());
-    my $_on = $self->record_type();
-    if ($_on == $Rpm::RECORD_TYPES_UINT32) {
-        $self->{body} = Rpm::RecordTypeUint32->new($io, $self, $self->{_root});
-    }
-    elsif ($_on == $Rpm::RECORD_TYPES_UINT64) {
-        $self->{body} = Rpm::RecordTypeUint64->new($io, $self, $self->{_root});
-    }
-    elsif ($_on == $Rpm::RECORD_TYPES_BIN) {
-        $self->{body} = Rpm::RecordTypeBin->new($io, $self, $self->{_root});
-    }
-    elsif ($_on == $Rpm::RECORD_TYPES_STRING) {
-        $self->{body} = Rpm::RecordTypeString->new($io, $self, $self->{_root});
-    }
-    elsif ($_on == $Rpm::RECORD_TYPES_UINT8) {
-        $self->{body} = Rpm::RecordTypeUint8->new($io, $self, $self->{_root});
-    }
-    elsif ($_on == $Rpm::RECORD_TYPES_I18N_STRING) {
-        $self->{body} = Rpm::RecordTypeStringArray->new($io, $self, $self->{_root});
-    }
-    elsif ($_on == $Rpm::RECORD_TYPES_UINT16) {
-        $self->{body} = Rpm::RecordTypeUint16->new($io, $self, $self->{_root});
-    }
-    elsif ($_on == $Rpm::RECORD_TYPES_CHAR) {
-        $self->{body} = Rpm::RecordTypeUint8->new($io, $self, $self->{_root});
-    }
-    elsif ($_on == $Rpm::RECORD_TYPES_STRING_ARRAY) {
-        $self->{body} = Rpm::RecordTypeStringArray->new($io, $self, $self->{_root});
-    }
-    $io->seek($_pos);
-    return $self->{body};
-}
-
-sub signature_tag {
-    my ($self) = @_;
-    return $self->{signature_tag} if ($self->{signature_tag});
-    if ($self->_parent()->is_signature()) {
-        $self->{signature_tag} = $self->tag_raw();
-    }
-    return $self->{signature_tag};
-}
-
-sub len_value {
-    my ($self) = @_;
-    return $self->{len_value} if ($self->{len_value});
-    if ($self->record_type() == $Rpm::RECORD_TYPES_BIN) {
-        $self->{len_value} = $self->count();
-    }
-    return $self->{len_value};
-}
-
-sub header_tag {
-    my ($self) = @_;
-    return $self->{header_tag} if ($self->{header_tag});
-    if ($self->_parent()->is_header()) {
-        $self->{header_tag} = $self->tag_raw();
-    }
-    return $self->{header_tag};
-}
-
-sub tag_raw {
-    my ($self) = @_;
-    return $self->{tag_raw};
-}
-
-sub record_type {
-    my ($self) = @_;
-    return $self->{record_type};
-}
-
-sub ofs_body {
-    my ($self) = @_;
-    return $self->{ofs_body};
-}
-
-sub count {
-    my ($self) = @_;
-    return $self->{count};
-}
-
-########################################################################
-package Rpm::RpmVersion;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{major} = $self->{_io}->read_u1();
-    $self->{minor} = $self->{_io}->read_u1();
-}
-
-sub major {
-    my ($self) = @_;
-    return $self->{major};
-}
-
-sub minor {
-    my ($self) = @_;
-    return $self->{minor};
-}
-
-########################################################################
-package Rpm::Dummy;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-}
-
-########################################################################
-package Rpm::RecordTypeUint8;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{values} = ();
+    $self->{values} = [];
     my $n_values = $self->num_values();
     for (my $i = 0; $i < $n_values; $i++) {
-        push @{$self->{values}}, $self->{_io}->read_u1();
+        push @{$self->{values}}, $self->{_io}->read_u4be();
     }
 }
 
@@ -1099,7 +1135,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -1109,7 +1145,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{values} = ();
+    $self->{values} = [];
     my $n_values = $self->num_values();
     for (my $i = 0; $i < $n_values; $i++) {
         push @{$self->{values}}, $self->{_io}->read_u8be();
@@ -1127,7 +1163,7 @@ sub num_values {
 }
 
 ########################################################################
-package Rpm::RecordTypeBin;
+package Rpm::RecordTypeUint8;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -1146,7 +1182,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -1156,10 +1192,10 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{values} = ();
-    my $n_values = 1;
+    $self->{values} = [];
+    my $n_values = $self->num_values();
     for (my $i = 0; $i < $n_values; $i++) {
-        push @{$self->{values}}, $self->{_io}->read_bytes($self->len_value());
+        push @{$self->{values}}, $self->{_io}->read_u1();
     }
 }
 
@@ -1168,13 +1204,13 @@ sub values {
     return $self->{values};
 }
 
-sub len_value {
+sub num_values {
     my ($self) = @_;
-    return $self->{len_value};
+    return $self->{num_values};
 }
 
 ########################################################################
-package Rpm::HeaderRecord;
+package Rpm::RpmVersion;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -1193,7 +1229,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -1203,34 +1239,22 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic} = $self->{_io}->read_bytes(4);
-    $self->{reserved} = $self->{_io}->read_bytes(4);
-    $self->{num_index_records} = $self->{_io}->read_u4be();
-    $self->{len_storage_section} = $self->{_io}->read_u4be();
+    $self->{major} = $self->{_io}->read_u1();
+    $self->{minor} = $self->{_io}->read_u1();
 }
 
-sub magic {
+sub major {
     my ($self) = @_;
-    return $self->{magic};
+    return $self->{major};
 }
 
-sub reserved {
+sub minor {
     my ($self) = @_;
-    return $self->{reserved};
-}
-
-sub num_index_records {
-    my ($self) = @_;
-    return $self->{num_index_records};
-}
-
-sub len_storage_section {
-    my ($self) = @_;
-    return $self->{len_storage_section};
+    return $self->{minor};
 }
 
 ########################################################################
-package Rpm::Header;
+package Rpm::SignatureTagsStep;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -1249,7 +1273,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -1259,47 +1283,23 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{header_record} = Rpm::HeaderRecord->new($self->{_io}, $self, $self->{_root});
-    $self->{index_records} = ();
-    my $n_index_records = $self->header_record()->num_index_records();
-    for (my $i = 0; $i < $n_index_records; $i++) {
-        push @{$self->{index_records}}, Rpm::HeaderIndexRecord->new($self->{_io}, $self, $self->{_root});
-    }
-    $self->{_raw_storage_section} = $self->{_io}->read_bytes($self->header_record()->len_storage_section());
-    my $io__raw_storage_section = IO::KaitaiStruct::Stream->new($self->{_raw_storage_section});
-    $self->{storage_section} = Rpm::Dummy->new($io__raw_storage_section, $self, $self->{_root});
 }
 
-sub is_header {
+sub size_tag_idx {
     my ($self) = @_;
-    return $self->{is_header} if ($self->{is_header});
-    $self->{is_header} = !($self->is_signature());
-    return $self->{is_header};
+    return $self->{size_tag_idx} if ($self->{size_tag_idx});
+    $self->{size_tag_idx} = ($self->prev_size_tag_idx() != -1 ? $self->prev_size_tag_idx() : ( ((@{$self->_parent()->signature()->index_records()}[$self->idx()]->signature_tag() == $Rpm::SIGNATURE_TAGS_SIZE) && (@{$self->_parent()->signature()->index_records()}[$self->idx()]->record_type() == $Rpm::RECORD_TYPES_UINT32) && (@{$self->_parent()->signature()->index_records()}[$self->idx()]->num_values() >= 1))  ? $self->idx() : -1));
+    return $self->{size_tag_idx};
 }
 
-sub header_record {
+sub idx {
     my ($self) = @_;
-    return $self->{header_record};
+    return $self->{idx};
 }
 
-sub index_records {
+sub prev_size_tag_idx {
     my ($self) = @_;
-    return $self->{index_records};
-}
-
-sub storage_section {
-    my ($self) = @_;
-    return $self->{storage_section};
-}
-
-sub is_signature {
-    my ($self) = @_;
-    return $self->{is_signature};
-}
-
-sub _raw_storage_section {
-    my ($self) = @_;
-    return $self->{_raw_storage_section};
+    return $self->{prev_size_tag_idx};
 }
 
 1;

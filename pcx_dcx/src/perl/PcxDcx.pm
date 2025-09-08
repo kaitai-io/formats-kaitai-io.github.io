@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Pcx;
 
 ########################################################################
@@ -25,7 +25,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -36,11 +36,14 @@ sub _read {
     my ($self) = @_;
 
     $self->{magic} = $self->{_io}->read_bytes(4);
-    $self->{files} = ();
-    do {
-        $_ = PcxDcx::PcxOffset->new($self->{_io}, $self, $self->{_root});
-        push @{$self->{files}}, $_;
-    } until ($_->ofs_body() == 0);
+    $self->{files} = [];
+    {
+        my $_it;
+        do {
+            $_it = PcxDcx::PcxOffset->new($self->{_io}, $self, $self->{_root});
+            push @{$self->{files}}, $_it;
+        } until ($_it->ofs_body() == 0);
+    }
 }
 
 sub magic {
@@ -73,7 +76,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 

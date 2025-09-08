@@ -10,14 +10,18 @@ type Exif struct {
 	Body *Exif_ExifBody
 	_io *kaitai.Stream
 	_root *Exif
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewExif() *Exif {
 	return &Exif{
 	}
 }
 
-func (this *Exif) Read(io *kaitai.Stream, parent interface{}, root *Exif) (err error) {
+func (this Exif) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Exif) Read(io *kaitai.Stream, parent kaitai.Struct, root *Exif) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -48,6 +52,10 @@ type Exif_ExifBody struct {
 func NewExif_ExifBody() *Exif_ExifBody {
 	return &Exif_ExifBody{
 	}
+}
+
+func (this Exif_ExifBody) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Exif_ExifBody) Read(io *kaitai.Stream, parent *Exif, root *Exif) (err error) {
@@ -105,6 +113,7 @@ func (this *Exif_ExifBody) Ifd0() (v *Exif_ExifBody_Ifd, err error) {
 	if (this._f_ifd0) {
 		return this.ifd0, nil
 	}
+	this._f_ifd0 = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
@@ -135,8 +144,6 @@ func (this *Exif_ExifBody) Ifd0() (v *Exif_ExifBody_Ifd, err error) {
 	if err != nil {
 		return nil, err
 	}
-	this._f_ifd0 = true
-	this._f_ifd0 = true
 	return this.ifd0, nil
 }
 type Exif_ExifBody_Ifd struct {
@@ -145,7 +152,7 @@ type Exif_ExifBody_Ifd struct {
 	NextIfdOfs uint32
 	_io *kaitai.Stream
 	_root *Exif
-	_parent interface{}
+	_parent kaitai.Struct
 	_f_nextIfd bool
 	nextIfd *Exif_ExifBody_Ifd
 	_is_le int
@@ -155,7 +162,11 @@ func NewExif_ExifBody_Ifd() *Exif_ExifBody_Ifd {
 	}
 }
 
-func (this *Exif_ExifBody_Ifd) Read(io *kaitai.Stream, parent interface{}, root *Exif) (err error) {
+func (this Exif_ExifBody_Ifd) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Exif_ExifBody_Ifd) Read(io *kaitai.Stream, parent kaitai.Struct, root *Exif) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -222,6 +233,7 @@ func (this *Exif_ExifBody_Ifd) NextIfd() (v *Exif_ExifBody_Ifd, err error) {
 	if (this._f_nextIfd) {
 		return this.nextIfd, nil
 	}
+	this._f_nextIfd = true
 	if (this.NextIfdOfs != 0) {
 		_pos, err := this._io.Pos()
 		if err != nil {
@@ -253,9 +265,7 @@ func (this *Exif_ExifBody_Ifd) NextIfd() (v *Exif_ExifBody_Ifd, err error) {
 		if err != nil {
 			return nil, err
 		}
-		this._f_nextIfd = true
 	}
-	this._f_nextIfd = true
 	return this.nextIfd, nil
 }
 
@@ -270,6 +280,11 @@ const (
 	Exif_ExifBody_IfdField_FieldTypeEnum__Slong Exif_ExifBody_IfdField_FieldTypeEnum = 9
 	Exif_ExifBody_IfdField_FieldTypeEnum__Srational Exif_ExifBody_IfdField_FieldTypeEnum = 10
 )
+var values_Exif_ExifBody_IfdField_FieldTypeEnum = map[Exif_ExifBody_IfdField_FieldTypeEnum]struct{}{1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 7: {}, 9: {}, 10: {}}
+func (v Exif_ExifBody_IfdField_FieldTypeEnum) isDefined() bool {
+	_, ok := values_Exif_ExifBody_IfdField_FieldTypeEnum[v]
+	return ok
+}
 
 type Exif_ExifBody_IfdField_TagEnum int
 const (
@@ -732,6 +747,11 @@ const (
 	Exif_ExifBody_IfdField_TagEnum__Smoothness Exif_ExifBody_IfdField_TagEnum = 65111
 	Exif_ExifBody_IfdField_TagEnum__MoireFilter Exif_ExifBody_IfdField_TagEnum = 65112
 )
+var values_Exif_ExifBody_IfdField_TagEnum = map[Exif_ExifBody_IfdField_TagEnum]struct{}{256: {}, 257: {}, 258: {}, 259: {}, 262: {}, 263: {}, 264: {}, 265: {}, 266: {}, 269: {}, 270: {}, 271: {}, 272: {}, 273: {}, 274: {}, 277: {}, 278: {}, 279: {}, 280: {}, 281: {}, 282: {}, 283: {}, 284: {}, 285: {}, 286: {}, 287: {}, 288: {}, 289: {}, 290: {}, 291: {}, 292: {}, 293: {}, 296: {}, 297: {}, 300: {}, 301: {}, 305: {}, 306: {}, 315: {}, 316: {}, 317: {}, 318: {}, 319: {}, 320: {}, 321: {}, 322: {}, 323: {}, 324: {}, 325: {}, 326: {}, 327: {}, 328: {}, 330: {}, 332: {}, 333: {}, 334: {}, 336: {}, 337: {}, 338: {}, 339: {}, 340: {}, 341: {}, 342: {}, 343: {}, 344: {}, 345: {}, 346: {}, 347: {}, 351: {}, 400: {}, 401: {}, 402: {}, 403: {}, 404: {}, 405: {}, 433: {}, 434: {}, 435: {}, 437: {}, 512: {}, 513: {}, 514: {}, 515: {}, 517: {}, 518: {}, 519: {}, 520: {}, 521: {}, 529: {}, 530: {}, 531: {}, 532: {}, 559: {}, 700: {}, 999: {}, 4096: {}, 4097: {}, 4098: {}, 18246: {}, 18247: {}, 18248: {}, 18249: {}, 28672: {}, 28722: {}, 28725: {}, 28727: {}, 32781: {}, 32931: {}, 32932: {}, 32933: {}, 32934: {}, 32953: {}, 32954: {}, 32955: {}, 32956: {}, 32995: {}, 32996: {}, 32997: {}, 32998: {}, 33300: {}, 33301: {}, 33302: {}, 33303: {}, 33304: {}, 33305: {}, 33306: {}, 33405: {}, 33421: {}, 33422: {}, 33423: {}, 33424: {}, 33432: {}, 33434: {}, 33437: {}, 33445: {}, 33446: {}, 33447: {}, 33448: {}, 33449: {}, 33450: {}, 33451: {}, 33452: {}, 33550: {}, 33589: {}, 33590: {}, 33628: {}, 33629: {}, 33630: {}, 33631: {}, 33723: {}, 33918: {}, 33919: {}, 33920: {}, 33921: {}, 33922: {}, 34016: {}, 34017: {}, 34018: {}, 34019: {}, 34020: {}, 34021: {}, 34022: {}, 34023: {}, 34024: {}, 34025: {}, 34026: {}, 34027: {}, 34028: {}, 34029: {}, 34030: {}, 34031: {}, 34032: {}, 34118: {}, 34152: {}, 34232: {}, 34263: {}, 34264: {}, 34306: {}, 34310: {}, 34377: {}, 34665: {}, 34675: {}, 34687: {}, 34688: {}, 34689: {}, 34690: {}, 34732: {}, 34735: {}, 34736: {}, 34737: {}, 34750: {}, 34850: {}, 34852: {}, 34853: {}, 34855: {}, 34856: {}, 34857: {}, 34858: {}, 34859: {}, 34864: {}, 34865: {}, 34866: {}, 34867: {}, 34868: {}, 34869: {}, 34908: {}, 34909: {}, 34910: {}, 34929: {}, 34954: {}, 36864: {}, 36867: {}, 36868: {}, 36873: {}, 36880: {}, 36881: {}, 36882: {}, 37121: {}, 37122: {}, 37377: {}, 37378: {}, 37379: {}, 37380: {}, 37381: {}, 37382: {}, 37383: {}, 37384: {}, 37385: {}, 37386: {}, 37387: {}, 37388: {}, 37389: {}, 37390: {}, 37391: {}, 37392: {}, 37393: {}, 37394: {}, 37395: {}, 37396: {}, 37397: {}, 37398: {}, 37399: {}, 37434: {}, 37435: {}, 37436: {}, 37439: {}, 37500: {}, 37510: {}, 37520: {}, 37521: {}, 37522: {}, 37679: {}, 37680: {}, 37681: {}, 37724: {}, 37888: {}, 37889: {}, 37890: {}, 37891: {}, 37892: {}, 37893: {}, 40091: {}, 40092: {}, 40093: {}, 40094: {}, 40095: {}, 40960: {}, 40961: {}, 40962: {}, 40963: {}, 40964: {}, 40965: {}, 40976: {}, 40977: {}, 41217: {}, 41218: {}, 41483: {}, 41484: {}, 41485: {}, 41486: {}, 41487: {}, 41488: {}, 41489: {}, 41490: {}, 41491: {}, 41492: {}, 41493: {}, 41494: {}, 41495: {}, 41728: {}, 41729: {}, 41730: {}, 41985: {}, 41986: {}, 41987: {}, 41988: {}, 41989: {}, 41990: {}, 41991: {}, 41992: {}, 41993: {}, 41994: {}, 41995: {}, 41996: {}, 42016: {}, 42032: {}, 42033: {}, 42034: {}, 42035: {}, 42036: {}, 42037: {}, 42112: {}, 42113: {}, 42240: {}, 44992: {}, 44993: {}, 44994: {}, 44995: {}, 44996: {}, 44997: {}, 48129: {}, 48130: {}, 48131: {}, 48132: {}, 48256: {}, 48257: {}, 48258: {}, 48259: {}, 48320: {}, 48321: {}, 48322: {}, 48323: {}, 48324: {}, 48325: {}, 50215: {}, 50216: {}, 50217: {}, 50218: {}, 50255: {}, 50341: {}, 50547: {}, 50560: {}, 50706: {}, 50707: {}, 50708: {}, 50709: {}, 50710: {}, 50711: {}, 50712: {}, 50713: {}, 50714: {}, 50715: {}, 50716: {}, 50717: {}, 50718: {}, 50719: {}, 50720: {}, 50721: {}, 50722: {}, 50723: {}, 50724: {}, 50725: {}, 50726: {}, 50727: {}, 50728: {}, 50729: {}, 50730: {}, 50731: {}, 50732: {}, 50733: {}, 50734: {}, 50735: {}, 50736: {}, 50737: {}, 50738: {}, 50739: {}, 50740: {}, 50741: {}, 50752: {}, 50778: {}, 50779: {}, 50780: {}, 50781: {}, 50784: {}, 50827: {}, 50828: {}, 50829: {}, 50830: {}, 50831: {}, 50832: {}, 50833: {}, 50834: {}, 50879: {}, 50885: {}, 50898: {}, 50899: {}, 50931: {}, 50932: {}, 50933: {}, 50934: {}, 50935: {}, 50936: {}, 50937: {}, 50938: {}, 50939: {}, 50940: {}, 50941: {}, 50942: {}, 50964: {}, 50965: {}, 50966: {}, 50967: {}, 50968: {}, 50969: {}, 50970: {}, 50971: {}, 50972: {}, 50973: {}, 50974: {}, 50975: {}, 50981: {}, 50982: {}, 51008: {}, 51009: {}, 51022: {}, 51041: {}, 51043: {}, 51044: {}, 51058: {}, 51081: {}, 51089: {}, 51090: {}, 51091: {}, 51105: {}, 51107: {}, 51108: {}, 51109: {}, 51110: {}, 51111: {}, 51112: {}, 51125: {}, 59932: {}, 59933: {}, 65000: {}, 65001: {}, 65002: {}, 65024: {}, 65100: {}, 65101: {}, 65102: {}, 65105: {}, 65106: {}, 65107: {}, 65108: {}, 65109: {}, 65110: {}, 65111: {}, 65112: {}}
+func (v Exif_ExifBody_IfdField_TagEnum) isDefined() bool {
+	_, ok := values_Exif_ExifBody_IfdField_TagEnum[v]
+	return ok
+}
 type Exif_ExifBody_IfdField struct {
 	Tag Exif_ExifBody_IfdField_TagEnum
 	FieldType Exif_ExifBody_IfdField_FieldTypeEnum
@@ -740,19 +760,23 @@ type Exif_ExifBody_IfdField struct {
 	_io *kaitai.Stream
 	_root *Exif
 	_parent *Exif_ExifBody_Ifd
-	_f_typeByteLength bool
-	typeByteLength int8
 	_f_byteLength bool
 	byteLength int
-	_f_isImmediateData bool
-	isImmediateData bool
 	_f_data bool
 	data []byte
+	_f_isImmediateData bool
+	isImmediateData bool
+	_f_typeByteLength bool
+	typeByteLength int8
 	_is_le int
 }
 func NewExif_ExifBody_IfdField() *Exif_ExifBody_IfdField {
 	return &Exif_ExifBody_IfdField{
 	}
+}
+
+func (this Exif_ExifBody_IfdField) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Exif_ExifBody_IfdField) Read(io *kaitai.Stream, parent *Exif_ExifBody_Ifd, root *Exif) (err error) {
@@ -820,59 +844,28 @@ func (this *Exif_ExifBody_IfdField) _read_be() (err error) {
 	this.OfsOrData = uint32(tmp24)
 	return err
 }
-func (this *Exif_ExifBody_IfdField) TypeByteLength() (v int8, err error) {
-	if (this._f_typeByteLength) {
-		return this.typeByteLength, nil
-	}
-	var tmp25 int8;
-	if (this.FieldType == Exif_ExifBody_IfdField_FieldTypeEnum__Word) {
-		tmp25 = 2
-	} else {
-		var tmp26 int8;
-		if (this.FieldType == Exif_ExifBody_IfdField_FieldTypeEnum__Dword) {
-			tmp26 = 4
-		} else {
-			tmp26 = 1
-		}
-		tmp25 = tmp26
-	}
-	this.typeByteLength = int8(tmp25)
-	this._f_typeByteLength = true
-	return this.typeByteLength, nil
-}
 func (this *Exif_ExifBody_IfdField) ByteLength() (v int, err error) {
 	if (this._f_byteLength) {
 		return this.byteLength, nil
 	}
-	tmp27, err := this.TypeByteLength()
+	this._f_byteLength = true
+	tmp25, err := this.TypeByteLength()
 	if err != nil {
 		return 0, err
 	}
-	this.byteLength = int((this.Length * tmp27))
-	this._f_byteLength = true
+	this.byteLength = int(this.Length * tmp25)
 	return this.byteLength, nil
-}
-func (this *Exif_ExifBody_IfdField) IsImmediateData() (v bool, err error) {
-	if (this._f_isImmediateData) {
-		return this.isImmediateData, nil
-	}
-	tmp28, err := this.ByteLength()
-	if err != nil {
-		return false, err
-	}
-	this.isImmediateData = bool(tmp28 <= 4)
-	this._f_isImmediateData = true
-	return this.isImmediateData, nil
 }
 func (this *Exif_ExifBody_IfdField) Data() (v []byte, err error) {
 	if (this._f_data) {
 		return this.data, nil
 	}
-	tmp29, err := this.IsImmediateData()
+	this._f_data = true
+	tmp26, err := this.IsImmediateData()
 	if err != nil {
 		return nil, err
 	}
-	if (!(tmp29)) {
+	if (!(tmp26)) {
 		thisIo := this._root._io
 		_pos, err := thisIo.Pos()
 		if err != nil {
@@ -884,27 +877,27 @@ func (this *Exif_ExifBody_IfdField) Data() (v []byte, err error) {
 		}
 		switch this._is_le {
 		case 0:
-			tmp30, err := this.ByteLength()
+			tmp27, err := this.ByteLength()
 			if err != nil {
 				return nil, err
 			}
-			tmp31, err := thisIo.ReadBytes(int(tmp30))
+			tmp28, err := thisIo.ReadBytes(int(tmp27))
 			if err != nil {
 				return nil, err
 			}
-			tmp31 = tmp31
-			this.data = tmp31
+			tmp28 = tmp28
+			this.data = tmp28
 		case 1:
-			tmp32, err := this.ByteLength()
+			tmp29, err := this.ByteLength()
 			if err != nil {
 				return nil, err
 			}
-			tmp33, err := thisIo.ReadBytes(int(tmp32))
+			tmp30, err := thisIo.ReadBytes(int(tmp29))
 			if err != nil {
 				return nil, err
 			}
-			tmp33 = tmp33
-			this.data = tmp33
+			tmp30 = tmp30
+			this.data = tmp30
 		default:
 			err = kaitai.UndecidedEndiannessError{}
 		}
@@ -912,8 +905,38 @@ func (this *Exif_ExifBody_IfdField) Data() (v []byte, err error) {
 		if err != nil {
 			return nil, err
 		}
-		this._f_data = true
 	}
-	this._f_data = true
 	return this.data, nil
+}
+func (this *Exif_ExifBody_IfdField) IsImmediateData() (v bool, err error) {
+	if (this._f_isImmediateData) {
+		return this.isImmediateData, nil
+	}
+	this._f_isImmediateData = true
+	tmp31, err := this.ByteLength()
+	if err != nil {
+		return false, err
+	}
+	this.isImmediateData = bool(tmp31 <= 4)
+	return this.isImmediateData, nil
+}
+func (this *Exif_ExifBody_IfdField) TypeByteLength() (v int8, err error) {
+	if (this._f_typeByteLength) {
+		return this.typeByteLength, nil
+	}
+	this._f_typeByteLength = true
+	var tmp32 int8;
+	if (this.FieldType == Exif_ExifBody_IfdField_FieldTypeEnum__Word) {
+		tmp32 = 2
+	} else {
+		var tmp33 int8;
+		if (this.FieldType == Exif_ExifBody_IfdField_FieldTypeEnum__Dword) {
+			tmp33 = 4
+		} else {
+			tmp33 = 1
+		}
+		tmp32 = tmp33
+	}
+	this.typeByteLength = int8(tmp32)
+	return this.typeByteLength, nil
 }

@@ -22,7 +22,7 @@ namespace Kaitai
             _magic = m_io.ReadU2le();
             _width = m_io.ReadU2le();
             _height = m_io.ReadU2le();
-            _data = m_io.ReadBytes((Width * Height));
+            _data = m_io.ReadBytes(Width * Height);
         }
         private ushort _magic;
         private ushort _width;

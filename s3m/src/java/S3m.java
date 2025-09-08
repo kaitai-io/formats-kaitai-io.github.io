@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
 
 
 /**
@@ -50,8 +51,8 @@ public class S3m extends KaitaiStruct {
     private void _read() {
         this.songName = KaitaiStream.bytesTerminate(this._io.readBytes(28), (byte) 0, false);
         this.magic1 = this._io.readBytes(1);
-        if (!(Arrays.equals(magic1(), new byte[] { 26 }))) {
-            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 26 }, magic1(), _io(), "/seq/1");
+        if (!(Arrays.equals(this.magic1, new byte[] { 26 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 26 }, this.magic1, this._io, "/seq/1");
         }
         this.fileType = this._io.readU1();
         this.reserved1 = this._io.readBytes(2);
@@ -62,15 +63,14 @@ public class S3m extends KaitaiStruct {
         this.version = this._io.readU2le();
         this.samplesFormat = this._io.readU2le();
         this.magic2 = this._io.readBytes(4);
-        if (!(Arrays.equals(magic2(), new byte[] { 83, 67, 82, 77 }))) {
-            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 83, 67, 82, 77 }, magic2(), _io(), "/seq/10");
+        if (!(Arrays.equals(this.magic2, new byte[] { 83, 67, 82, 77 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 83, 67, 82, 77 }, this.magic2, this._io, "/seq/10");
         }
         this.globalVolume = this._io.readU1();
         this.initialSpeed = this._io.readU1();
         this.initialTempo = this._io.readU1();
         this.isStereo = this._io.readBitsIntBe(1) != 0;
         this.masterVolume = this._io.readBitsIntBe(7);
-        this._io.alignToByte();
         this.ultraClickRemoval = this._io.readU1();
         this.hasCustomPan = this._io.readU1();
         this.reserved2 = this._io.readBytes(8);
@@ -94,6 +94,62 @@ public class S3m extends KaitaiStruct {
                 this.channelPans.add(new ChannelPan(this._io, this, _root));
             }
         }
+    }
+
+    public void _fetchInstances() {
+        for (int i = 0; i < this.channels.size(); i++) {
+            this.channels.get(((Number) (i)).intValue())._fetchInstances();
+        }
+        for (int i = 0; i < this.instruments.size(); i++) {
+            this.instruments.get(((Number) (i)).intValue())._fetchInstances();
+        }
+        for (int i = 0; i < this.patterns.size(); i++) {
+            this.patterns.get(((Number) (i)).intValue())._fetchInstances();
+        }
+        if (hasCustomPan() == 252) {
+            for (int i = 0; i < this.channelPans.size(); i++) {
+                this.channelPans.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+    }
+    public static class Channel extends KaitaiStruct {
+        public static Channel fromFile(String fileName) throws IOException {
+            return new Channel(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Channel(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Channel(KaitaiStream _io, S3m _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Channel(KaitaiStream _io, S3m _parent, S3m _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.isDisabled = this._io.readBitsIntBe(1) != 0;
+            this.chType = this._io.readBitsIntBe(7);
+        }
+
+        public void _fetchInstances() {
+        }
+        private boolean isDisabled;
+        private long chType;
+        private S3m _root;
+        private S3m _parent;
+        public boolean isDisabled() { return isDisabled; }
+
+        /**
+         * Channel type (0..7 = left sample channels, 8..15 = right sample channels, 16..31 = AdLib synth channels)
+         */
+        public long chType() { return chType; }
+        public S3m _root() { return _root; }
+        public S3m _parent() { return _parent; }
     }
     public static class ChannelPan extends KaitaiStruct {
         public static ChannelPan fromFile(String fileName) throws IOException {
@@ -120,6 +176,9 @@ public class S3m extends KaitaiStruct {
             this.reserved2 = this._io.readBitsIntBe(1) != 0;
             this.pan = this._io.readBitsIntBe(4);
         }
+
+        public void _fetchInstances() {
+        }
         private long reserved1;
         private boolean hasCustomPan;
         private boolean reserved2;
@@ -136,300 +195,6 @@ public class S3m extends KaitaiStruct {
         public boolean hasCustomPan() { return hasCustomPan; }
         public boolean reserved2() { return reserved2; }
         public long pan() { return pan; }
-        public S3m _root() { return _root; }
-        public S3m _parent() { return _parent; }
-    }
-    public static class PatternCell extends KaitaiStruct {
-        public static PatternCell fromFile(String fileName) throws IOException {
-            return new PatternCell(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public PatternCell(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public PatternCell(KaitaiStream _io, S3m.PatternCells _parent) {
-            this(_io, _parent, null);
-        }
-
-        public PatternCell(KaitaiStream _io, S3m.PatternCells _parent, S3m _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.hasFx = this._io.readBitsIntBe(1) != 0;
-            this.hasVolume = this._io.readBitsIntBe(1) != 0;
-            this.hasNoteAndInstrument = this._io.readBitsIntBe(1) != 0;
-            this.channelNum = this._io.readBitsIntBe(5);
-            this._io.alignToByte();
-            if (hasNoteAndInstrument()) {
-                this.note = this._io.readU1();
-            }
-            if (hasNoteAndInstrument()) {
-                this.instrument = this._io.readU1();
-            }
-            if (hasVolume()) {
-                this.volume = this._io.readU1();
-            }
-            if (hasFx()) {
-                this.fxType = this._io.readU1();
-            }
-            if (hasFx()) {
-                this.fxValue = this._io.readU1();
-            }
-        }
-        private boolean hasFx;
-        private boolean hasVolume;
-        private boolean hasNoteAndInstrument;
-        private long channelNum;
-        private Integer note;
-        private Integer instrument;
-        private Integer volume;
-        private Integer fxType;
-        private Integer fxValue;
-        private S3m _root;
-        private S3m.PatternCells _parent;
-        public boolean hasFx() { return hasFx; }
-        public boolean hasVolume() { return hasVolume; }
-        public boolean hasNoteAndInstrument() { return hasNoteAndInstrument; }
-        public long channelNum() { return channelNum; }
-        public Integer note() { return note; }
-        public Integer instrument() { return instrument; }
-        public Integer volume() { return volume; }
-        public Integer fxType() { return fxType; }
-        public Integer fxValue() { return fxValue; }
-        public S3m _root() { return _root; }
-        public S3m.PatternCells _parent() { return _parent; }
-    }
-    public static class PatternCells extends KaitaiStruct {
-        public static PatternCells fromFile(String fileName) throws IOException {
-            return new PatternCells(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public PatternCells(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public PatternCells(KaitaiStream _io, S3m.Pattern _parent) {
-            this(_io, _parent, null);
-        }
-
-        public PatternCells(KaitaiStream _io, S3m.Pattern _parent, S3m _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.cells = new ArrayList<PatternCell>();
-            {
-                int i = 0;
-                while (!this._io.isEof()) {
-                    this.cells.add(new PatternCell(this._io, this, _root));
-                    i++;
-                }
-            }
-        }
-        private ArrayList<PatternCell> cells;
-        private S3m _root;
-        private S3m.Pattern _parent;
-        public ArrayList<PatternCell> cells() { return cells; }
-        public S3m _root() { return _root; }
-        public S3m.Pattern _parent() { return _parent; }
-    }
-    public static class Channel extends KaitaiStruct {
-        public static Channel fromFile(String fileName) throws IOException {
-            return new Channel(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Channel(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Channel(KaitaiStream _io, S3m _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Channel(KaitaiStream _io, S3m _parent, S3m _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.isDisabled = this._io.readBitsIntBe(1) != 0;
-            this.chType = this._io.readBitsIntBe(7);
-        }
-        private boolean isDisabled;
-        private long chType;
-        private S3m _root;
-        private S3m _parent;
-        public boolean isDisabled() { return isDisabled; }
-
-        /**
-         * Channel type (0..7 = left sample channels, 8..15 = right sample channels, 16..31 = AdLib synth channels)
-         */
-        public long chType() { return chType; }
-        public S3m _root() { return _root; }
-        public S3m _parent() { return _parent; }
-    }
-
-    /**
-     * Custom 3-byte integer, stored in mixed endian manner.
-     */
-    public static class SwappedU3 extends KaitaiStruct {
-        public static SwappedU3 fromFile(String fileName) throws IOException {
-            return new SwappedU3(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public SwappedU3(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public SwappedU3(KaitaiStream _io, S3m.Instrument.Sampled _parent) {
-            this(_io, _parent, null);
-        }
-
-        public SwappedU3(KaitaiStream _io, S3m.Instrument.Sampled _parent, S3m _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.hi = this._io.readU1();
-            this.lo = this._io.readU2le();
-        }
-        private Integer value;
-        public Integer value() {
-            if (this.value != null)
-                return this.value;
-            int _tmp = (int) ((lo() | (hi() << 16)));
-            this.value = _tmp;
-            return this.value;
-        }
-        private int hi;
-        private int lo;
-        private S3m _root;
-        private S3m.Instrument.Sampled _parent;
-        public int hi() { return hi; }
-        public int lo() { return lo; }
-        public S3m _root() { return _root; }
-        public S3m.Instrument.Sampled _parent() { return _parent; }
-    }
-    public static class Pattern extends KaitaiStruct {
-        public static Pattern fromFile(String fileName) throws IOException {
-            return new Pattern(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Pattern(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Pattern(KaitaiStream _io, S3m.PatternPtr _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Pattern(KaitaiStream _io, S3m.PatternPtr _parent, S3m _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.size = this._io.readU2le();
-            this._raw_body = this._io.readBytes((size() - 2));
-            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-            this.body = new PatternCells(_io__raw_body, this, _root);
-        }
-        private int size;
-        private PatternCells body;
-        private S3m _root;
-        private S3m.PatternPtr _parent;
-        private byte[] _raw_body;
-        public int size() { return size; }
-        public PatternCells body() { return body; }
-        public S3m _root() { return _root; }
-        public S3m.PatternPtr _parent() { return _parent; }
-        public byte[] _raw_body() { return _raw_body; }
-    }
-    public static class PatternPtr extends KaitaiStruct {
-        public static PatternPtr fromFile(String fileName) throws IOException {
-            return new PatternPtr(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public PatternPtr(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public PatternPtr(KaitaiStream _io, S3m _parent) {
-            this(_io, _parent, null);
-        }
-
-        public PatternPtr(KaitaiStream _io, S3m _parent, S3m _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.paraptr = this._io.readU2le();
-        }
-        private Pattern body;
-        public Pattern body() {
-            if (this.body != null)
-                return this.body;
-            long _pos = this._io.pos();
-            this._io.seek((paraptr() * 16));
-            this.body = new Pattern(this._io, this, _root);
-            this._io.seek(_pos);
-            return this.body;
-        }
-        private int paraptr;
-        private S3m _root;
-        private S3m _parent;
-        public int paraptr() { return paraptr; }
-        public S3m _root() { return _root; }
-        public S3m _parent() { return _parent; }
-    }
-    public static class InstrumentPtr extends KaitaiStruct {
-        public static InstrumentPtr fromFile(String fileName) throws IOException {
-            return new InstrumentPtr(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public InstrumentPtr(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public InstrumentPtr(KaitaiStream _io, S3m _parent) {
-            this(_io, _parent, null);
-        }
-
-        public InstrumentPtr(KaitaiStream _io, S3m _parent, S3m _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.paraptr = this._io.readU2le();
-        }
-        private Instrument body;
-        public Instrument body() {
-            if (this.body != null)
-                return this.body;
-            long _pos = this._io.pos();
-            this._io.seek((paraptr() * 16));
-            this.body = new Instrument(this._io, this, _root);
-            this._io.seek(_pos);
-            return this.body;
-        }
-        private int paraptr;
-        private S3m _root;
-        private S3m _parent;
-        public int paraptr() { return paraptr; }
         public S3m _root() { return _root; }
         public S3m _parent() { return _parent; }
     }
@@ -496,9 +261,67 @@ public class S3m extends KaitaiStruct {
             this.reserved2 = this._io.readBytes(12);
             this.sampleName = KaitaiStream.bytesTerminate(this._io.readBytes(28), (byte) 0, false);
             this.magic = this._io.readBytes(4);
-            if (!(Arrays.equals(magic(), new byte[] { 83, 67, 82, 83 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 83, 67, 82, 83 }, magic(), _io(), "/types/instrument/seq/6");
+            if (!(Arrays.equals(this.magic, new byte[] { 83, 67, 82, 83 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 83, 67, 82, 83 }, this.magic, this._io, "/types/instrument/seq/6");
             }
+        }
+
+        public void _fetchInstances() {
+            {
+                InstTypes on = type();
+                if (on != null) {
+                    switch (type()) {
+                    case SAMPLE: {
+                        ((Sampled) (this.body))._fetchInstances();
+                        break;
+                    }
+                    default: {
+                        ((Adlib) (this.body))._fetchInstances();
+                        break;
+                    }
+                    }
+                } else {
+                    ((Adlib) (this.body))._fetchInstances();
+                }
+            }
+        }
+        public static class Adlib extends KaitaiStruct {
+            public static Adlib fromFile(String fileName) throws IOException {
+                return new Adlib(new ByteBufferKaitaiStream(fileName));
+            }
+
+            public Adlib(KaitaiStream _io) {
+                this(_io, null, null);
+            }
+
+            public Adlib(KaitaiStream _io, S3m.Instrument _parent) {
+                this(_io, _parent, null);
+            }
+
+            public Adlib(KaitaiStream _io, S3m.Instrument _parent, S3m _root) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                _read();
+            }
+            private void _read() {
+                this.reserved1 = this._io.readBytes(3);
+                if (!(Arrays.equals(this.reserved1, new byte[] { 0, 0, 0 }))) {
+                    throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0 }, this.reserved1, this._io, "/types/instrument/types/adlib/seq/0");
+                }
+                this._unnamed1 = this._io.readBytes(16);
+            }
+
+            public void _fetchInstances() {
+            }
+            private byte[] reserved1;
+            private byte[] _unnamed1;
+            private S3m _root;
+            private S3m.Instrument _parent;
+            public byte[] reserved1() { return reserved1; }
+            public byte[] _unnamed1() { return _unnamed1; }
+            public S3m _root() { return _root; }
+            public S3m.Instrument _parent() { return _parent; }
         }
         public static class Sampled extends KaitaiStruct {
             public static Sampled fromFile(String fileName) throws IOException {
@@ -529,12 +352,19 @@ public class S3m extends KaitaiStruct {
                 this.isPacked = this._io.readU1();
                 this.flags = this._io.readU1();
             }
+
+            public void _fetchInstances() {
+                this.paraptrSample._fetchInstances();
+                sample();
+                if (this.sample != null) {
+                }
+            }
             private byte[] sample;
             public byte[] sample() {
                 if (this.sample != null)
                     return this.sample;
                 long _pos = this._io.pos();
-                this._io.seek((paraptrSample().value() * 16));
+                this._io.seek(paraptrSample().value() * 16);
                 this.sample = this._io.readBytes(lenSample());
                 this._io.seek(_pos);
                 return this.sample;
@@ -568,41 +398,6 @@ public class S3m extends KaitaiStruct {
             public S3m _root() { return _root; }
             public S3m.Instrument _parent() { return _parent; }
         }
-        public static class Adlib extends KaitaiStruct {
-            public static Adlib fromFile(String fileName) throws IOException {
-                return new Adlib(new ByteBufferKaitaiStream(fileName));
-            }
-
-            public Adlib(KaitaiStream _io) {
-                this(_io, null, null);
-            }
-
-            public Adlib(KaitaiStream _io, S3m.Instrument _parent) {
-                this(_io, _parent, null);
-            }
-
-            public Adlib(KaitaiStream _io, S3m.Instrument _parent, S3m _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.reserved1 = this._io.readBytes(3);
-                if (!(Arrays.equals(reserved1(), new byte[] { 0, 0, 0 }))) {
-                    throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0 }, reserved1(), _io(), "/types/instrument/types/adlib/seq/0");
-                }
-                this._unnamed1 = this._io.readBytes(16);
-            }
-            private byte[] reserved1;
-            private byte[] _unnamed1;
-            private S3m _root;
-            private S3m.Instrument _parent;
-            public byte[] reserved1() { return reserved1; }
-            public byte[] _unnamed1() { return _unnamed1; }
-            public S3m _root() { return _root; }
-            public S3m.Instrument _parent() { return _parent; }
-        }
         private InstTypes type;
         private byte[] filename;
         private KaitaiStruct body;
@@ -621,6 +416,299 @@ public class S3m extends KaitaiStruct {
         public byte[] magic() { return magic; }
         public S3m _root() { return _root; }
         public S3m.InstrumentPtr _parent() { return _parent; }
+    }
+    public static class InstrumentPtr extends KaitaiStruct {
+        public static InstrumentPtr fromFile(String fileName) throws IOException {
+            return new InstrumentPtr(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public InstrumentPtr(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public InstrumentPtr(KaitaiStream _io, S3m _parent) {
+            this(_io, _parent, null);
+        }
+
+        public InstrumentPtr(KaitaiStream _io, S3m _parent, S3m _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.paraptr = this._io.readU2le();
+        }
+
+        public void _fetchInstances() {
+            body();
+            if (this.body != null) {
+                this.body._fetchInstances();
+            }
+        }
+        private Instrument body;
+        public Instrument body() {
+            if (this.body != null)
+                return this.body;
+            long _pos = this._io.pos();
+            this._io.seek(paraptr() * 16);
+            this.body = new Instrument(this._io, this, _root);
+            this._io.seek(_pos);
+            return this.body;
+        }
+        private int paraptr;
+        private S3m _root;
+        private S3m _parent;
+        public int paraptr() { return paraptr; }
+        public S3m _root() { return _root; }
+        public S3m _parent() { return _parent; }
+    }
+    public static class Pattern extends KaitaiStruct {
+        public static Pattern fromFile(String fileName) throws IOException {
+            return new Pattern(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Pattern(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Pattern(KaitaiStream _io, S3m.PatternPtr _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Pattern(KaitaiStream _io, S3m.PatternPtr _parent, S3m _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.size = this._io.readU2le();
+            KaitaiStream _io_body = this._io.substream(size() - 2);
+            this.body = new PatternCells(_io_body, this, _root);
+        }
+
+        public void _fetchInstances() {
+            this.body._fetchInstances();
+        }
+        private int size;
+        private PatternCells body;
+        private S3m _root;
+        private S3m.PatternPtr _parent;
+        public int size() { return size; }
+        public PatternCells body() { return body; }
+        public S3m _root() { return _root; }
+        public S3m.PatternPtr _parent() { return _parent; }
+    }
+    public static class PatternCell extends KaitaiStruct {
+        public static PatternCell fromFile(String fileName) throws IOException {
+            return new PatternCell(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public PatternCell(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public PatternCell(KaitaiStream _io, S3m.PatternCells _parent) {
+            this(_io, _parent, null);
+        }
+
+        public PatternCell(KaitaiStream _io, S3m.PatternCells _parent, S3m _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.hasFx = this._io.readBitsIntBe(1) != 0;
+            this.hasVolume = this._io.readBitsIntBe(1) != 0;
+            this.hasNoteAndInstrument = this._io.readBitsIntBe(1) != 0;
+            this.channelNum = this._io.readBitsIntBe(5);
+            if (hasNoteAndInstrument()) {
+                this.note = this._io.readU1();
+            }
+            if (hasNoteAndInstrument()) {
+                this.instrument = this._io.readU1();
+            }
+            if (hasVolume()) {
+                this.volume = this._io.readU1();
+            }
+            if (hasFx()) {
+                this.fxType = this._io.readU1();
+            }
+            if (hasFx()) {
+                this.fxValue = this._io.readU1();
+            }
+        }
+
+        public void _fetchInstances() {
+            if (hasNoteAndInstrument()) {
+            }
+            if (hasNoteAndInstrument()) {
+            }
+            if (hasVolume()) {
+            }
+            if (hasFx()) {
+            }
+            if (hasFx()) {
+            }
+        }
+        private boolean hasFx;
+        private boolean hasVolume;
+        private boolean hasNoteAndInstrument;
+        private long channelNum;
+        private Integer note;
+        private Integer instrument;
+        private Integer volume;
+        private Integer fxType;
+        private Integer fxValue;
+        private S3m _root;
+        private S3m.PatternCells _parent;
+        public boolean hasFx() { return hasFx; }
+        public boolean hasVolume() { return hasVolume; }
+        public boolean hasNoteAndInstrument() { return hasNoteAndInstrument; }
+        public long channelNum() { return channelNum; }
+        public Integer note() { return note; }
+        public Integer instrument() { return instrument; }
+        public Integer volume() { return volume; }
+        public Integer fxType() { return fxType; }
+        public Integer fxValue() { return fxValue; }
+        public S3m _root() { return _root; }
+        public S3m.PatternCells _parent() { return _parent; }
+    }
+    public static class PatternCells extends KaitaiStruct {
+        public static PatternCells fromFile(String fileName) throws IOException {
+            return new PatternCells(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public PatternCells(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public PatternCells(KaitaiStream _io, S3m.Pattern _parent) {
+            this(_io, _parent, null);
+        }
+
+        public PatternCells(KaitaiStream _io, S3m.Pattern _parent, S3m _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.cells = new ArrayList<PatternCell>();
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.cells.add(new PatternCell(this._io, this, _root));
+                    i++;
+                }
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.cells.size(); i++) {
+                this.cells.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private List<PatternCell> cells;
+        private S3m _root;
+        private S3m.Pattern _parent;
+        public List<PatternCell> cells() { return cells; }
+        public S3m _root() { return _root; }
+        public S3m.Pattern _parent() { return _parent; }
+    }
+    public static class PatternPtr extends KaitaiStruct {
+        public static PatternPtr fromFile(String fileName) throws IOException {
+            return new PatternPtr(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public PatternPtr(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public PatternPtr(KaitaiStream _io, S3m _parent) {
+            this(_io, _parent, null);
+        }
+
+        public PatternPtr(KaitaiStream _io, S3m _parent, S3m _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.paraptr = this._io.readU2le();
+        }
+
+        public void _fetchInstances() {
+            body();
+            if (this.body != null) {
+                this.body._fetchInstances();
+            }
+        }
+        private Pattern body;
+        public Pattern body() {
+            if (this.body != null)
+                return this.body;
+            long _pos = this._io.pos();
+            this._io.seek(paraptr() * 16);
+            this.body = new Pattern(this._io, this, _root);
+            this._io.seek(_pos);
+            return this.body;
+        }
+        private int paraptr;
+        private S3m _root;
+        private S3m _parent;
+        public int paraptr() { return paraptr; }
+        public S3m _root() { return _root; }
+        public S3m _parent() { return _parent; }
+    }
+
+    /**
+     * Custom 3-byte integer, stored in mixed endian manner.
+     */
+    public static class SwappedU3 extends KaitaiStruct {
+        public static SwappedU3 fromFile(String fileName) throws IOException {
+            return new SwappedU3(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public SwappedU3(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public SwappedU3(KaitaiStream _io, S3m.Instrument.Sampled _parent) {
+            this(_io, _parent, null);
+        }
+
+        public SwappedU3(KaitaiStream _io, S3m.Instrument.Sampled _parent, S3m _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.hi = this._io.readU1();
+            this.lo = this._io.readU2le();
+        }
+
+        public void _fetchInstances() {
+        }
+        private Integer value;
+        public Integer value() {
+            if (this.value != null)
+                return this.value;
+            this.value = ((Number) (lo() | hi() << 16)).intValue();
+            return this.value;
+        }
+        private int hi;
+        private int lo;
+        private S3m _root;
+        private S3m.Instrument.Sampled _parent;
+        public int hi() { return hi; }
+        public int lo() { return lo; }
+        public S3m _root() { return _root; }
+        public S3m.Instrument.Sampled _parent() { return _parent; }
     }
     private byte[] songName;
     private byte[] magic1;
@@ -642,11 +730,11 @@ public class S3m extends KaitaiStruct {
     private int hasCustomPan;
     private byte[] reserved2;
     private int ofsSpecial;
-    private ArrayList<Channel> channels;
+    private List<Channel> channels;
     private byte[] orders;
-    private ArrayList<InstrumentPtr> instruments;
-    private ArrayList<PatternPtr> patterns;
-    private ArrayList<ChannelPan> channelPans;
+    private List<InstrumentPtr> instruments;
+    private List<PatternPtr> patterns;
+    private List<ChannelPan> channelPans;
     private S3m _root;
     private KaitaiStruct _parent;
     public byte[] songName() { return songName; }
@@ -693,11 +781,11 @@ public class S3m extends KaitaiStruct {
      * Offset of special data, not used by Scream Tracker directly.
      */
     public int ofsSpecial() { return ofsSpecial; }
-    public ArrayList<Channel> channels() { return channels; }
+    public List<Channel> channels() { return channels; }
     public byte[] orders() { return orders; }
-    public ArrayList<InstrumentPtr> instruments() { return instruments; }
-    public ArrayList<PatternPtr> patterns() { return patterns; }
-    public ArrayList<ChannelPan> channelPans() { return channelPans; }
+    public List<InstrumentPtr> instruments() { return instruments; }
+    public List<PatternPtr> patterns() { return patterns; }
+    public List<ChannelPan> channelPans() { return channelPans; }
     public S3m _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

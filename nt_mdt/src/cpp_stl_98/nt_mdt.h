@@ -3,12 +3,15 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class nt_mdt_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -29,12 +32,12 @@
 class nt_mdt_t : public kaitai::kstruct {
 
 public:
-    class uuid_t;
-    class framez_t;
     class frame_t;
+    class framez_t;
+    class title_t;
+    class uuid_t;
     class version_t;
     class xml_t;
-    class title_t;
 
     enum adc_mode_t {
         ADC_MODE_HEIGHT = 0,
@@ -58,17 +61,29 @@ public:
         ADC_MODE_SNAP_BACK = 18,
         ADC_MODE_FALSE = 255
     };
+    static bool _is_defined_adc_mode_t(adc_mode_t v);
 
-    enum xml_scan_location_t {
-        XML_SCAN_LOCATION_HLT = 0,
-        XML_SCAN_LOCATION_HLB = 1,
-        XML_SCAN_LOCATION_HRT = 2,
-        XML_SCAN_LOCATION_HRB = 3,
-        XML_SCAN_LOCATION_VLT = 4,
-        XML_SCAN_LOCATION_VLB = 5,
-        XML_SCAN_LOCATION_VRT = 6,
-        XML_SCAN_LOCATION_VRB = 7
+private:
+    static const std::set<adc_mode_t> _values_adc_mode_t;
+    static std::set<adc_mode_t> _build_values_adc_mode_t();
+
+public:
+
+    enum consts_t {
+        CONSTS_FRAME_MODE_SIZE = 8,
+        CONSTS_FRAME_HEADER_SIZE = 22,
+        CONSTS_AXIS_SCALES_SIZE = 30,
+        CONSTS_FILE_HEADER_SIZE = 32,
+        CONSTS_SPECTRO_VARS_MIN_SIZE = 38,
+        CONSTS_SCAN_VARS_MIN_SIZE = 77
     };
+    static bool _is_defined_consts_t(consts_t v);
+
+private:
+    static const std::set<consts_t> _values_consts_t;
+    static std::set<consts_t> _build_values_consts_t();
+
+public:
 
     enum data_type_t {
         DATA_TYPE_FLOATFIX = -65544,
@@ -86,13 +101,13 @@ public:
         DATA_TYPE_UINT32 = 4,
         DATA_TYPE_UINT64 = 8
     };
+    static bool _is_defined_data_type_t(data_type_t v);
 
-    enum xml_param_type_t {
-        XML_PARAM_TYPE_NONE = 0,
-        XML_PARAM_TYPE_LASER_WAVELENGTH = 1,
-        XML_PARAM_TYPE_UNITS = 2,
-        XML_PARAM_TYPE_DATA_ARRAY = 255
-    };
+private:
+    static const std::set<data_type_t> _values_data_type_t;
+    static std::set<data_type_t> _build_values_data_type_t();
+
+public:
 
     enum spm_mode_t {
         SPM_MODE_CONSTANT_FORCE = 0,
@@ -122,6 +137,27 @@ public:
         SPM_MODE_SNOM_ALL = 24,
         SPM_MODE_SNOM = 25
     };
+    static bool _is_defined_spm_mode_t(spm_mode_t v);
+
+private:
+    static const std::set<spm_mode_t> _values_spm_mode_t;
+    static std::set<spm_mode_t> _build_values_spm_mode_t();
+
+public:
+
+    enum spm_technique_t {
+        SPM_TECHNIQUE_CONTACT_MODE = 0,
+        SPM_TECHNIQUE_SEMICONTACT_MODE = 1,
+        SPM_TECHNIQUE_TUNNEL_CURRENT = 2,
+        SPM_TECHNIQUE_SNOM = 3
+    };
+    static bool _is_defined_spm_technique_t(spm_technique_t v);
+
+private:
+    static const std::set<spm_technique_t> _values_spm_technique_t;
+    static std::set<spm_technique_t> _build_values_spm_technique_t();
+
+public:
 
     enum unit_t {
         UNIT_RAMAN_SHIFT = -10,
@@ -175,22 +211,45 @@ public:
         UNIT_RESERVED_DOS3 = 38,
         UNIT_RESERVED_DOS4 = 39
     };
+    static bool _is_defined_unit_t(unit_t v);
 
-    enum spm_technique_t {
-        SPM_TECHNIQUE_CONTACT_MODE = 0,
-        SPM_TECHNIQUE_SEMICONTACT_MODE = 1,
-        SPM_TECHNIQUE_TUNNEL_CURRENT = 2,
-        SPM_TECHNIQUE_SNOM = 3
-    };
+private:
+    static const std::set<unit_t> _values_unit_t;
+    static std::set<unit_t> _build_values_unit_t();
 
-    enum consts_t {
-        CONSTS_FRAME_MODE_SIZE = 8,
-        CONSTS_FRAME_HEADER_SIZE = 22,
-        CONSTS_AXIS_SCALES_SIZE = 30,
-        CONSTS_FILE_HEADER_SIZE = 32,
-        CONSTS_SPECTRO_VARS_MIN_SIZE = 38,
-        CONSTS_SCAN_VARS_MIN_SIZE = 77
+public:
+
+    enum xml_param_type_t {
+        XML_PARAM_TYPE_NONE = 0,
+        XML_PARAM_TYPE_LASER_WAVELENGTH = 1,
+        XML_PARAM_TYPE_UNITS = 2,
+        XML_PARAM_TYPE_DATA_ARRAY = 255
     };
+    static bool _is_defined_xml_param_type_t(xml_param_type_t v);
+
+private:
+    static const std::set<xml_param_type_t> _values_xml_param_type_t;
+    static std::set<xml_param_type_t> _build_values_xml_param_type_t();
+
+public:
+
+    enum xml_scan_location_t {
+        XML_SCAN_LOCATION_HLT = 0,
+        XML_SCAN_LOCATION_HLB = 1,
+        XML_SCAN_LOCATION_HRT = 2,
+        XML_SCAN_LOCATION_HRB = 3,
+        XML_SCAN_LOCATION_VLT = 4,
+        XML_SCAN_LOCATION_VLB = 5,
+        XML_SCAN_LOCATION_VRT = 6,
+        XML_SCAN_LOCATION_VRB = 7
+    };
+    static bool _is_defined_xml_scan_location_t(xml_scan_location_t v);
+
+private:
+    static const std::set<xml_scan_location_t> _values_xml_scan_location_t;
+    static std::set<xml_scan_location_t> _build_values_xml_scan_location_t();
+
+public:
 
     nt_mdt_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, nt_mdt_t* p__root = 0);
 
@@ -201,65 +260,17 @@ private:
 public:
     ~nt_mdt_t();
 
-    class uuid_t : public kaitai::kstruct {
-
-    public:
-
-        uuid_t(kaitai::kstream* p__io, nt_mdt_t::frame_t::fd_meta_data_t* p__parent = 0, nt_mdt_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~uuid_t();
-
-    private:
-        std::vector<uint8_t>* m_data;
-        nt_mdt_t* m__root;
-        nt_mdt_t::frame_t::fd_meta_data_t* m__parent;
-
-    public:
-        std::vector<uint8_t>* data() const { return m_data; }
-        nt_mdt_t* _root() const { return m__root; }
-        nt_mdt_t::frame_t::fd_meta_data_t* _parent() const { return m__parent; }
-    };
-
-    class framez_t : public kaitai::kstruct {
-
-    public:
-
-        framez_t(kaitai::kstream* p__io, nt_mdt_t* p__parent = 0, nt_mdt_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~framez_t();
-
-    private:
-        std::vector<frame_t*>* m_frames;
-        nt_mdt_t* m__root;
-        nt_mdt_t* m__parent;
-
-    public:
-        std::vector<frame_t*>* frames() const { return m_frames; }
-        nt_mdt_t* _root() const { return m__root; }
-        nt_mdt_t* _parent() const { return m__parent; }
-    };
-
     class frame_t : public kaitai::kstruct {
 
     public:
+        class axis_scale_t;
+        class date_time_t;
         class dots_t;
-        class frame_main_t;
         class fd_curves_new_t;
         class fd_meta_data_t;
-        class fd_spectroscopy_t;
-        class date_time_t;
-        class axis_scale_t;
         class fd_scanned_t;
+        class fd_spectroscopy_t;
+        class frame_main_t;
 
         enum frame_type_t {
             FRAME_TYPE_SCANNED = 0,
@@ -271,6 +282,13 @@ public:
             FRAME_TYPE_CURVES_NEW = 190,
             FRAME_TYPE_CURVES = 201
         };
+        static bool _is_defined_frame_type_t(frame_type_t v);
+
+    private:
+        static const std::set<frame_type_t> _values_frame_type_t;
+        static std::set<frame_type_t> _build_values_frame_type_t();
+
+    public:
 
         frame_t(kaitai::kstream* p__io, nt_mdt_t::framez_t* p__parent = 0, nt_mdt_t* p__root = 0);
 
@@ -281,567 +299,47 @@ public:
     public:
         ~frame_t();
 
-        class dots_t : public kaitai::kstruct {
+        class axis_scale_t : public kaitai::kstruct {
 
         public:
-            class dots_header_t;
-            class dots_data_t;
-            class data_linez_t;
 
-            dots_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, nt_mdt_t* p__root = 0);
+            axis_scale_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, nt_mdt_t* p__root = 0);
 
         private:
             void _read();
             void _clean_up();
 
         public:
-            ~dots_t();
-
-            class dots_header_t : public kaitai::kstruct {
-
-            public:
-                class header__t;
-
-                dots_header_t(kaitai::kstream* p__io, nt_mdt_t::frame_t::dots_t* p__parent = 0, nt_mdt_t* p__root = 0);
-
-            private:
-                void _read();
-                void _clean_up();
-
-            public:
-                ~dots_header_t();
-
-                class header__t : public kaitai::kstruct {
-
-                public:
-
-                    header__t(kaitai::kstream* p__io, nt_mdt_t::frame_t::dots_t::dots_header_t* p__parent = 0, nt_mdt_t* p__root = 0);
-
-                private:
-                    void _read();
-                    void _clean_up();
-
-                public:
-                    ~header__t();
-
-                private:
-                    int32_t m_coord_size;
-                    int32_t m_version;
-                    unit_t m_xyunits;
-                    nt_mdt_t* m__root;
-                    nt_mdt_t::frame_t::dots_t::dots_header_t* m__parent;
-
-                public:
-                    int32_t coord_size() const { return m_coord_size; }
-                    int32_t version() const { return m_version; }
-                    unit_t xyunits() const { return m_xyunits; }
-                    nt_mdt_t* _root() const { return m__root; }
-                    nt_mdt_t::frame_t::dots_t::dots_header_t* _parent() const { return m__parent; }
-                };
-
-            private:
-                int32_t m_header_size;
-                header__t* m_header;
-                nt_mdt_t* m__root;
-                nt_mdt_t::frame_t::dots_t* m__parent;
-                std::string m__raw_header;
-                kaitai::kstream* m__io__raw_header;
-
-            public:
-                int32_t header_size() const { return m_header_size; }
-                header__t* header() const { return m_header; }
-                nt_mdt_t* _root() const { return m__root; }
-                nt_mdt_t::frame_t::dots_t* _parent() const { return m__parent; }
-                std::string _raw_header() const { return m__raw_header; }
-                kaitai::kstream* _io__raw_header() const { return m__io__raw_header; }
-            };
-
-            class dots_data_t : public kaitai::kstruct {
-
-            public:
-
-                dots_data_t(kaitai::kstream* p__io, nt_mdt_t::frame_t::dots_t* p__parent = 0, nt_mdt_t* p__root = 0);
-
-            private:
-                void _read();
-                void _clean_up();
-
-            public:
-                ~dots_data_t();
-
-            private:
-                float m_coord_x;
-                float m_coord_y;
-                int32_t m_forward_size;
-                int32_t m_backward_size;
-                nt_mdt_t* m__root;
-                nt_mdt_t::frame_t::dots_t* m__parent;
-
-            public:
-                float coord_x() const { return m_coord_x; }
-                float coord_y() const { return m_coord_y; }
-                int32_t forward_size() const { return m_forward_size; }
-                int32_t backward_size() const { return m_backward_size; }
-                nt_mdt_t* _root() const { return m__root; }
-                nt_mdt_t::frame_t::dots_t* _parent() const { return m__parent; }
-            };
-
-            class data_linez_t : public kaitai::kstruct {
-
-            public:
-
-                data_linez_t(uint16_t p_index, kaitai::kstream* p__io, nt_mdt_t::frame_t::dots_t* p__parent = 0, nt_mdt_t* p__root = 0);
-
-            private:
-                void _read();
-                void _clean_up();
-
-            public:
-                ~data_linez_t();
-
-            private:
-                std::vector<int16_t>* m_forward;
-                std::vector<int16_t>* m_backward;
-                uint16_t m_index;
-                nt_mdt_t* m__root;
-                nt_mdt_t::frame_t::dots_t* m__parent;
-
-            public:
-                std::vector<int16_t>* forward() const { return m_forward; }
-                std::vector<int16_t>* backward() const { return m_backward; }
-                uint16_t index() const { return m_index; }
-                nt_mdt_t* _root() const { return m__root; }
-                nt_mdt_t::frame_t::dots_t* _parent() const { return m__parent; }
-            };
+            ~axis_scale_t();
 
         private:
-            uint16_t m_fm_ndots;
-            dots_header_t* m_coord_header;
-            bool n_coord_header;
-
-        public:
-            bool _is_null_coord_header() { coord_header(); return n_coord_header; };
-
-        private:
-            std::vector<dots_data_t*>* m_coordinates;
-            std::vector<data_linez_t*>* m_data;
+            float m_offset;
+            float m_step;
+            unit_t m_unit;
             nt_mdt_t* m__root;
             kaitai::kstruct* m__parent;
 
         public:
-            uint16_t fm_ndots() const { return m_fm_ndots; }
-            dots_header_t* coord_header() const { return m_coord_header; }
-            std::vector<dots_data_t*>* coordinates() const { return m_coordinates; }
-            std::vector<data_linez_t*>* data() const { return m_data; }
+
+            /**
+             * x_scale->offset = gwy_get_gfloat_le(&p);# r0 (physical units)
+             */
+            float offset() const { return m_offset; }
+
+            /**
+             * x_scale->step = gwy_get_gfloat_le(&p); r (physical units) x_scale->step = fabs(x_scale->step); if (!x_scale->step) {
+             *   g_warning("x_scale.step == 0, changing to 1");
+             *   x_scale->step = 1.0;
+             * }
+             */
+            float step() const { return m_step; }
+
+            /**
+             * U
+             */
+            unit_t unit() const { return m_unit; }
             nt_mdt_t* _root() const { return m__root; }
             kaitai::kstruct* _parent() const { return m__parent; }
-        };
-
-        class frame_main_t : public kaitai::kstruct {
-
-        public:
-
-            frame_main_t(kaitai::kstream* p__io, nt_mdt_t::frame_t* p__parent = 0, nt_mdt_t* p__root = 0);
-
-        private:
-            void _read();
-            void _clean_up();
-
-        public:
-            ~frame_main_t();
-
-        private:
-            frame_type_t m_type;
-            version_t* m_version;
-            date_time_t* m_date_time;
-            uint16_t m_var_size;
-            kaitai::kstruct* m_frame_data;
-            bool n_frame_data;
-
-        public:
-            bool _is_null_frame_data() { frame_data(); return n_frame_data; };
-
-        private:
-            nt_mdt_t* m__root;
-            nt_mdt_t::frame_t* m__parent;
-            std::string m__raw_frame_data;
-            kaitai::kstream* m__io__raw_frame_data;
-
-        public:
-
-            /**
-             * h_what
-             */
-            frame_type_t type() const { return m_type; }
-            version_t* version() const { return m_version; }
-            date_time_t* date_time() const { return m_date_time; }
-
-            /**
-             * h_am, v6 and older only
-             */
-            uint16_t var_size() const { return m_var_size; }
-
-            /**
-             * 
-             */
-            kaitai::kstruct* frame_data() const { return m_frame_data; }
-            nt_mdt_t* _root() const { return m__root; }
-            nt_mdt_t::frame_t* _parent() const { return m__parent; }
-            std::string _raw_frame_data() const { return m__raw_frame_data; }
-            kaitai::kstream* _io__raw_frame_data() const { return m__io__raw_frame_data; }
-        };
-
-        class fd_curves_new_t : public kaitai::kstruct {
-
-        public:
-            class block_descr_t;
-
-            fd_curves_new_t(kaitai::kstream* p__io, nt_mdt_t::frame_t::frame_main_t* p__parent = 0, nt_mdt_t* p__root = 0);
-
-        private:
-            void _read();
-            void _clean_up();
-
-        public:
-            ~fd_curves_new_t();
-
-            class block_descr_t : public kaitai::kstruct {
-
-            public:
-
-                block_descr_t(kaitai::kstream* p__io, nt_mdt_t::frame_t::fd_curves_new_t* p__parent = 0, nt_mdt_t* p__root = 0);
-
-            private:
-                void _read();
-                void _clean_up();
-
-            public:
-                ~block_descr_t();
-
-            private:
-                uint32_t m_name_len;
-                uint32_t m_len;
-                nt_mdt_t* m__root;
-                nt_mdt_t::frame_t::fd_curves_new_t* m__parent;
-
-            public:
-                uint32_t name_len() const { return m_name_len; }
-                uint32_t len() const { return m_len; }
-                nt_mdt_t* _root() const { return m__root; }
-                nt_mdt_t::frame_t::fd_curves_new_t* _parent() const { return m__parent; }
-            };
-
-        private:
-            uint32_t m_block_count;
-            std::vector<block_descr_t*>* m_blocks_headers;
-            std::vector<std::string>* m_blocks_names;
-            std::vector<std::string>* m_blocks_data;
-            nt_mdt_t* m__root;
-            nt_mdt_t::frame_t::frame_main_t* m__parent;
-
-        public:
-            uint32_t block_count() const { return m_block_count; }
-            std::vector<block_descr_t*>* blocks_headers() const { return m_blocks_headers; }
-            std::vector<std::string>* blocks_names() const { return m_blocks_names; }
-            std::vector<std::string>* blocks_data() const { return m_blocks_data; }
-            nt_mdt_t* _root() const { return m__root; }
-            nt_mdt_t::frame_t::frame_main_t* _parent() const { return m__parent; }
-        };
-
-        class fd_meta_data_t : public kaitai::kstruct {
-
-        public:
-            class image_t;
-            class calibration_t;
-
-            fd_meta_data_t(kaitai::kstream* p__io, nt_mdt_t::frame_t::frame_main_t* p__parent = 0, nt_mdt_t* p__root = 0);
-
-        private:
-            void _read();
-            void _clean_up();
-
-        public:
-            ~fd_meta_data_t();
-
-            class image_t : public kaitai::kstruct {
-
-            public:
-                class vec_t;
-
-                image_t(kaitai::kstream* p__io, nt_mdt_t::frame_t::fd_meta_data_t* p__parent = 0, nt_mdt_t* p__root = 0);
-
-            private:
-                void _read();
-                void _clean_up();
-
-            public:
-                ~image_t();
-
-                class vec_t : public kaitai::kstruct {
-
-                public:
-
-                    vec_t(kaitai::kstream* p__io, nt_mdt_t::frame_t::fd_meta_data_t::image_t* p__parent = 0, nt_mdt_t* p__root = 0);
-
-                private:
-                    void _read();
-                    void _clean_up();
-
-                public:
-                    ~vec_t();
-
-                private:
-                    std::vector<double>* m_items;
-                    nt_mdt_t* m__root;
-                    nt_mdt_t::frame_t::fd_meta_data_t::image_t* m__parent;
-
-                public:
-                    std::vector<double>* items() const { return m_items; }
-                    nt_mdt_t* _root() const { return m__root; }
-                    nt_mdt_t::frame_t::fd_meta_data_t::image_t* _parent() const { return m__parent; }
-                };
-
-            private:
-                std::vector<vec_t*>* m_image;
-                nt_mdt_t* m__root;
-                nt_mdt_t::frame_t::fd_meta_data_t* m__parent;
-
-            public:
-                std::vector<vec_t*>* image() const { return m_image; }
-                nt_mdt_t* _root() const { return m__root; }
-                nt_mdt_t::frame_t::fd_meta_data_t* _parent() const { return m__parent; }
-            };
-
-            class calibration_t : public kaitai::kstruct {
-
-            public:
-
-                calibration_t(kaitai::kstream* p__io, nt_mdt_t::frame_t::fd_meta_data_t* p__parent = 0, nt_mdt_t* p__root = 0);
-
-            private:
-                void _read();
-                void _clean_up();
-
-            public:
-                ~calibration_t();
-
-            private:
-                bool f_count;
-                int32_t m_count;
-
-            public:
-                int32_t count();
-
-            private:
-                uint32_t m_len_tot;
-                uint32_t m_len_struct;
-                uint32_t m_len_name;
-                uint32_t m_len_comment;
-                uint32_t m_len_unit;
-                uint64_t m_si_unit;
-                double m_accuracy;
-                uint64_t m_function_id_and_dimensions;
-                double m_bias;
-                double m_scale;
-                uint64_t m_min_index;
-                uint64_t m_max_index;
-                data_type_t m_data_type;
-                uint32_t m_len_author;
-                std::string m_name;
-                std::string m_comment;
-                std::string m_unit;
-                std::string m_author;
-                nt_mdt_t* m__root;
-                nt_mdt_t::frame_t::fd_meta_data_t* m__parent;
-
-            public:
-                uint32_t len_tot() const { return m_len_tot; }
-                uint32_t len_struct() const { return m_len_struct; }
-                uint32_t len_name() const { return m_len_name; }
-                uint32_t len_comment() const { return m_len_comment; }
-                uint32_t len_unit() const { return m_len_unit; }
-                uint64_t si_unit() const { return m_si_unit; }
-                double accuracy() const { return m_accuracy; }
-                uint64_t function_id_and_dimensions() const { return m_function_id_and_dimensions; }
-                double bias() const { return m_bias; }
-                double scale() const { return m_scale; }
-                uint64_t min_index() const { return m_min_index; }
-                uint64_t max_index() const { return m_max_index; }
-                data_type_t data_type() const { return m_data_type; }
-                uint32_t len_author() const { return m_len_author; }
-                std::string name() const { return m_name; }
-                std::string comment() const { return m_comment; }
-                std::string unit() const { return m_unit; }
-                std::string author() const { return m_author; }
-                nt_mdt_t* _root() const { return m__root; }
-                nt_mdt_t::frame_t::fd_meta_data_t* _parent() const { return m__parent; }
-            };
-
-        private:
-            bool f_image;
-            image_t* m_image;
-
-        public:
-            image_t* image();
-
-        private:
-            uint32_t m_head_size;
-            uint32_t m_tot_len;
-            std::vector<uuid_t*>* m_guids;
-            std::string m_frame_status;
-            uint32_t m_name_size;
-            uint32_t m_comm_size;
-            uint32_t m_view_info_size;
-            uint32_t m_spec_size;
-            uint32_t m_source_info_size;
-            uint32_t m_var_size;
-            uint32_t m_data_offset;
-            uint32_t m_data_size;
-            std::string m_title;
-            std::string m_xml;
-            uint32_t m_struct_len;
-            uint64_t m_array_size;
-            uint32_t m_cell_size;
-            uint32_t m_n_dimensions;
-            uint32_t m_n_mesurands;
-            std::vector<calibration_t*>* m_dimensions;
-            std::vector<calibration_t*>* m_mesurands;
-            nt_mdt_t* m__root;
-            nt_mdt_t::frame_t::frame_main_t* m__parent;
-            std::string m__raw_image;
-            kaitai::kstream* m__io__raw_image;
-
-        public:
-            uint32_t head_size() const { return m_head_size; }
-            uint32_t tot_len() const { return m_tot_len; }
-            std::vector<uuid_t*>* guids() const { return m_guids; }
-            std::string frame_status() const { return m_frame_status; }
-            uint32_t name_size() const { return m_name_size; }
-            uint32_t comm_size() const { return m_comm_size; }
-            uint32_t view_info_size() const { return m_view_info_size; }
-            uint32_t spec_size() const { return m_spec_size; }
-            uint32_t source_info_size() const { return m_source_info_size; }
-            uint32_t var_size() const { return m_var_size; }
-            uint32_t data_offset() const { return m_data_offset; }
-            uint32_t data_size() const { return m_data_size; }
-            std::string title() const { return m_title; }
-            std::string xml() const { return m_xml; }
-            uint32_t struct_len() const { return m_struct_len; }
-            uint64_t array_size() const { return m_array_size; }
-            uint32_t cell_size() const { return m_cell_size; }
-            uint32_t n_dimensions() const { return m_n_dimensions; }
-            uint32_t n_mesurands() const { return m_n_mesurands; }
-            std::vector<calibration_t*>* dimensions() const { return m_dimensions; }
-            std::vector<calibration_t*>* mesurands() const { return m_mesurands; }
-            nt_mdt_t* _root() const { return m__root; }
-            nt_mdt_t::frame_t::frame_main_t* _parent() const { return m__parent; }
-            std::string _raw_image() const { return m__raw_image; }
-            kaitai::kstream* _io__raw_image() const { return m__io__raw_image; }
-        };
-
-        class fd_spectroscopy_t : public kaitai::kstruct {
-
-        public:
-            class vars_t;
-
-            fd_spectroscopy_t(kaitai::kstream* p__io, nt_mdt_t::frame_t::frame_main_t* p__parent = 0, nt_mdt_t* p__root = 0);
-
-        private:
-            void _read();
-            void _clean_up();
-
-        public:
-            ~fd_spectroscopy_t();
-
-            class vars_t : public kaitai::kstruct {
-
-            public:
-
-                vars_t(kaitai::kstream* p__io, nt_mdt_t::frame_t::fd_spectroscopy_t* p__parent = 0, nt_mdt_t* p__root = 0);
-
-            private:
-                void _read();
-                void _clean_up();
-
-            public:
-                ~vars_t();
-
-            private:
-                axis_scale_t* m_x_scale;
-                axis_scale_t* m_y_scale;
-                axis_scale_t* m_z_scale;
-                uint16_t m_sp_mode;
-                uint16_t m_sp_filter;
-                float m_u_begin;
-                float m_u_end;
-                int16_t m_z_up;
-                int16_t m_z_down;
-                uint16_t m_sp_averaging;
-                uint8_t m_sp_repeat;
-                uint8_t m_sp_back;
-                int16_t m_sp_4nx;
-                uint8_t m_sp_osc;
-                uint8_t m_sp_n4;
-                float m_sp_4x0;
-                float m_sp_4xr;
-                int16_t m_sp_4u;
-                int16_t m_sp_4i;
-                int16_t m_sp_nx;
-                nt_mdt_t* m__root;
-                nt_mdt_t::frame_t::fd_spectroscopy_t* m__parent;
-
-            public:
-                axis_scale_t* x_scale() const { return m_x_scale; }
-                axis_scale_t* y_scale() const { return m_y_scale; }
-                axis_scale_t* z_scale() const { return m_z_scale; }
-                uint16_t sp_mode() const { return m_sp_mode; }
-                uint16_t sp_filter() const { return m_sp_filter; }
-                float u_begin() const { return m_u_begin; }
-                float u_end() const { return m_u_end; }
-                int16_t z_up() const { return m_z_up; }
-                int16_t z_down() const { return m_z_down; }
-                uint16_t sp_averaging() const { return m_sp_averaging; }
-                uint8_t sp_repeat() const { return m_sp_repeat; }
-                uint8_t sp_back() const { return m_sp_back; }
-                int16_t sp_4nx() const { return m_sp_4nx; }
-                uint8_t sp_osc() const { return m_sp_osc; }
-                uint8_t sp_n4() const { return m_sp_n4; }
-                float sp_4x0() const { return m_sp_4x0; }
-                float sp_4xr() const { return m_sp_4xr; }
-                int16_t sp_4u() const { return m_sp_4u; }
-                int16_t sp_4i() const { return m_sp_4i; }
-                int16_t sp_nx() const { return m_sp_nx; }
-                nt_mdt_t* _root() const { return m__root; }
-                nt_mdt_t::frame_t::fd_spectroscopy_t* _parent() const { return m__parent; }
-            };
-
-        private:
-            vars_t* m_vars;
-            uint16_t m_fm_mode;
-            uint16_t m_fm_xres;
-            uint16_t m_fm_yres;
-            dots_t* m_dots;
-            std::vector<int16_t>* m_data;
-            title_t* m_title;
-            xml_t* m_xml;
-            nt_mdt_t* m__root;
-            nt_mdt_t::frame_t::frame_main_t* m__parent;
-            std::string m__raw_vars;
-            kaitai::kstream* m__io__raw_vars;
-
-        public:
-            vars_t* vars() const { return m_vars; }
-            uint16_t fm_mode() const { return m_fm_mode; }
-            uint16_t fm_xres() const { return m_fm_xres; }
-            uint16_t fm_yres() const { return m_fm_yres; }
-            dots_t* dots() const { return m_dots; }
-            std::vector<int16_t>* data() const { return m_data; }
-            title_t* title() const { return m_title; }
-            xml_t* xml() const { return m_xml; }
-            nt_mdt_t* _root() const { return m__root; }
-            nt_mdt_t::frame_t::frame_main_t* _parent() const { return m__parent; }
-            std::string _raw_vars() const { return m__raw_vars; }
-            kaitai::kstream* _io__raw_vars() const { return m__io__raw_vars; }
         };
 
         class date_time_t : public kaitai::kstruct {
@@ -952,55 +450,442 @@ public:
             nt_mdt_t::frame_t::frame_main_t* _parent() const { return m__parent; }
         };
 
-        class axis_scale_t : public kaitai::kstruct {
+        class dots_t : public kaitai::kstruct {
 
         public:
+            class data_linez_t;
+            class dots_data_t;
+            class dots_header_t;
 
-            axis_scale_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, nt_mdt_t* p__root = 0);
+            dots_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, nt_mdt_t* p__root = 0);
 
         private:
             void _read();
             void _clean_up();
 
         public:
-            ~axis_scale_t();
+            ~dots_t();
+
+            class data_linez_t : public kaitai::kstruct {
+
+            public:
+
+                data_linez_t(uint16_t p_index, kaitai::kstream* p__io, nt_mdt_t::frame_t::dots_t* p__parent = 0, nt_mdt_t* p__root = 0);
+
+            private:
+                void _read();
+                void _clean_up();
+
+            public:
+                ~data_linez_t();
+
+            private:
+                std::vector<int16_t>* m_forward;
+                std::vector<int16_t>* m_backward;
+                uint16_t m_index;
+                nt_mdt_t* m__root;
+                nt_mdt_t::frame_t::dots_t* m__parent;
+
+            public:
+                std::vector<int16_t>* forward() const { return m_forward; }
+                std::vector<int16_t>* backward() const { return m_backward; }
+                uint16_t index() const { return m_index; }
+                nt_mdt_t* _root() const { return m__root; }
+                nt_mdt_t::frame_t::dots_t* _parent() const { return m__parent; }
+            };
+
+            class dots_data_t : public kaitai::kstruct {
+
+            public:
+
+                dots_data_t(kaitai::kstream* p__io, nt_mdt_t::frame_t::dots_t* p__parent = 0, nt_mdt_t* p__root = 0);
+
+            private:
+                void _read();
+                void _clean_up();
+
+            public:
+                ~dots_data_t();
+
+            private:
+                float m_coord_x;
+                float m_coord_y;
+                int32_t m_forward_size;
+                int32_t m_backward_size;
+                nt_mdt_t* m__root;
+                nt_mdt_t::frame_t::dots_t* m__parent;
+
+            public:
+                float coord_x() const { return m_coord_x; }
+                float coord_y() const { return m_coord_y; }
+                int32_t forward_size() const { return m_forward_size; }
+                int32_t backward_size() const { return m_backward_size; }
+                nt_mdt_t* _root() const { return m__root; }
+                nt_mdt_t::frame_t::dots_t* _parent() const { return m__parent; }
+            };
+
+            class dots_header_t : public kaitai::kstruct {
+
+            public:
+                class header__t;
+
+                dots_header_t(kaitai::kstream* p__io, nt_mdt_t::frame_t::dots_t* p__parent = 0, nt_mdt_t* p__root = 0);
+
+            private:
+                void _read();
+                void _clean_up();
+
+            public:
+                ~dots_header_t();
+
+                class header__t : public kaitai::kstruct {
+
+                public:
+
+                    header__t(kaitai::kstream* p__io, nt_mdt_t::frame_t::dots_t::dots_header_t* p__parent = 0, nt_mdt_t* p__root = 0);
+
+                private:
+                    void _read();
+                    void _clean_up();
+
+                public:
+                    ~header__t();
+
+                private:
+                    int32_t m_coord_size;
+                    int32_t m_version;
+                    unit_t m_xyunits;
+                    nt_mdt_t* m__root;
+                    nt_mdt_t::frame_t::dots_t::dots_header_t* m__parent;
+
+                public:
+                    int32_t coord_size() const { return m_coord_size; }
+                    int32_t version() const { return m_version; }
+                    unit_t xyunits() const { return m_xyunits; }
+                    nt_mdt_t* _root() const { return m__root; }
+                    nt_mdt_t::frame_t::dots_t::dots_header_t* _parent() const { return m__parent; }
+                };
+
+            private:
+                int32_t m_header_size;
+                header__t* m_header;
+                nt_mdt_t* m__root;
+                nt_mdt_t::frame_t::dots_t* m__parent;
+                std::string m__raw_header;
+                kaitai::kstream* m__io__raw_header;
+
+            public:
+                int32_t header_size() const { return m_header_size; }
+                header__t* header() const { return m_header; }
+                nt_mdt_t* _root() const { return m__root; }
+                nt_mdt_t::frame_t::dots_t* _parent() const { return m__parent; }
+                std::string _raw_header() const { return m__raw_header; }
+                kaitai::kstream* _io__raw_header() const { return m__io__raw_header; }
+            };
 
         private:
-            float m_offset;
-            float m_step;
-            unit_t m_unit;
+            uint16_t m_fm_ndots;
+            dots_header_t* m_coord_header;
+            bool n_coord_header;
+
+        public:
+            bool _is_null_coord_header() { coord_header(); return n_coord_header; };
+
+        private:
+            std::vector<dots_data_t*>* m_coordinates;
+            std::vector<data_linez_t*>* m_data;
             nt_mdt_t* m__root;
             kaitai::kstruct* m__parent;
 
         public:
-
-            /**
-             * x_scale->offset = gwy_get_gfloat_le(&p);# r0 (physical units)
-             */
-            float offset() const { return m_offset; }
-
-            /**
-             * x_scale->step = gwy_get_gfloat_le(&p); r (physical units) x_scale->step = fabs(x_scale->step); if (!x_scale->step) {
-             *   g_warning("x_scale.step == 0, changing to 1");
-             *   x_scale->step = 1.0;
-             * }
-             */
-            float step() const { return m_step; }
-
-            /**
-             * U
-             */
-            unit_t unit() const { return m_unit; }
+            uint16_t fm_ndots() const { return m_fm_ndots; }
+            dots_header_t* coord_header() const { return m_coord_header; }
+            std::vector<dots_data_t*>* coordinates() const { return m_coordinates; }
+            std::vector<data_linez_t*>* data() const { return m_data; }
             nt_mdt_t* _root() const { return m__root; }
             kaitai::kstruct* _parent() const { return m__parent; }
+        };
+
+        class fd_curves_new_t : public kaitai::kstruct {
+
+        public:
+            class block_descr_t;
+
+            fd_curves_new_t(kaitai::kstream* p__io, nt_mdt_t::frame_t::frame_main_t* p__parent = 0, nt_mdt_t* p__root = 0);
+
+        private:
+            void _read();
+            void _clean_up();
+
+        public:
+            ~fd_curves_new_t();
+
+            class block_descr_t : public kaitai::kstruct {
+
+            public:
+
+                block_descr_t(kaitai::kstream* p__io, nt_mdt_t::frame_t::fd_curves_new_t* p__parent = 0, nt_mdt_t* p__root = 0);
+
+            private:
+                void _read();
+                void _clean_up();
+
+            public:
+                ~block_descr_t();
+
+            private:
+                uint32_t m_name_len;
+                uint32_t m_len;
+                nt_mdt_t* m__root;
+                nt_mdt_t::frame_t::fd_curves_new_t* m__parent;
+
+            public:
+                uint32_t name_len() const { return m_name_len; }
+                uint32_t len() const { return m_len; }
+                nt_mdt_t* _root() const { return m__root; }
+                nt_mdt_t::frame_t::fd_curves_new_t* _parent() const { return m__parent; }
+            };
+
+        private:
+            uint32_t m_block_count;
+            std::vector<block_descr_t*>* m_blocks_headers;
+            std::vector<std::string>* m_blocks_names;
+            std::vector<std::string>* m_blocks_data;
+            nt_mdt_t* m__root;
+            nt_mdt_t::frame_t::frame_main_t* m__parent;
+
+        public:
+            uint32_t block_count() const { return m_block_count; }
+            std::vector<block_descr_t*>* blocks_headers() const { return m_blocks_headers; }
+            std::vector<std::string>* blocks_names() const { return m_blocks_names; }
+            std::vector<std::string>* blocks_data() const { return m_blocks_data; }
+            nt_mdt_t* _root() const { return m__root; }
+            nt_mdt_t::frame_t::frame_main_t* _parent() const { return m__parent; }
+        };
+
+        class fd_meta_data_t : public kaitai::kstruct {
+
+        public:
+            class calibration_t;
+            class image_t;
+
+            fd_meta_data_t(kaitai::kstream* p__io, nt_mdt_t::frame_t::frame_main_t* p__parent = 0, nt_mdt_t* p__root = 0);
+
+        private:
+            void _read();
+            void _clean_up();
+
+        public:
+            ~fd_meta_data_t();
+
+            class calibration_t : public kaitai::kstruct {
+
+            public:
+
+                calibration_t(kaitai::kstream* p__io, nt_mdt_t::frame_t::fd_meta_data_t* p__parent = 0, nt_mdt_t* p__root = 0);
+
+            private:
+                void _read();
+                void _clean_up();
+
+            public:
+                ~calibration_t();
+
+            private:
+                bool f_count;
+                int32_t m_count;
+
+            public:
+                int32_t count();
+
+            private:
+                uint32_t m_len_tot;
+                uint32_t m_len_struct;
+                uint32_t m_len_name;
+                uint32_t m_len_comment;
+                uint32_t m_len_unit;
+                uint64_t m_si_unit;
+                double m_accuracy;
+                uint64_t m_function_id_and_dimensions;
+                double m_bias;
+                double m_scale;
+                uint64_t m_min_index;
+                uint64_t m_max_index;
+                data_type_t m_data_type;
+                uint32_t m_len_author;
+                std::string m_name;
+                std::string m_comment;
+                std::string m_unit;
+                std::string m_author;
+                nt_mdt_t* m__root;
+                nt_mdt_t::frame_t::fd_meta_data_t* m__parent;
+
+            public:
+                uint32_t len_tot() const { return m_len_tot; }
+                uint32_t len_struct() const { return m_len_struct; }
+                uint32_t len_name() const { return m_len_name; }
+                uint32_t len_comment() const { return m_len_comment; }
+                uint32_t len_unit() const { return m_len_unit; }
+                uint64_t si_unit() const { return m_si_unit; }
+                double accuracy() const { return m_accuracy; }
+                uint64_t function_id_and_dimensions() const { return m_function_id_and_dimensions; }
+                double bias() const { return m_bias; }
+                double scale() const { return m_scale; }
+                uint64_t min_index() const { return m_min_index; }
+                uint64_t max_index() const { return m_max_index; }
+                data_type_t data_type() const { return m_data_type; }
+                uint32_t len_author() const { return m_len_author; }
+                std::string name() const { return m_name; }
+                std::string comment() const { return m_comment; }
+                std::string unit() const { return m_unit; }
+                std::string author() const { return m_author; }
+                nt_mdt_t* _root() const { return m__root; }
+                nt_mdt_t::frame_t::fd_meta_data_t* _parent() const { return m__parent; }
+            };
+
+            class image_t : public kaitai::kstruct {
+
+            public:
+                class vec_t;
+
+                image_t(kaitai::kstream* p__io, nt_mdt_t::frame_t::fd_meta_data_t* p__parent = 0, nt_mdt_t* p__root = 0);
+
+            private:
+                void _read();
+                void _clean_up();
+
+            public:
+                ~image_t();
+
+                class vec_t : public kaitai::kstruct {
+
+                public:
+
+                    vec_t(kaitai::kstream* p__io, nt_mdt_t::frame_t::fd_meta_data_t::image_t* p__parent = 0, nt_mdt_t* p__root = 0);
+
+                private:
+                    void _read();
+                    void _clean_up();
+
+                public:
+                    ~vec_t();
+
+                private:
+                    std::vector<double>* m_items;
+                    nt_mdt_t* m__root;
+                    nt_mdt_t::frame_t::fd_meta_data_t::image_t* m__parent;
+
+                public:
+                    std::vector<double>* items() const { return m_items; }
+                    nt_mdt_t* _root() const { return m__root; }
+                    nt_mdt_t::frame_t::fd_meta_data_t::image_t* _parent() const { return m__parent; }
+                };
+
+            private:
+                std::vector<vec_t*>* m_image;
+                nt_mdt_t* m__root;
+                nt_mdt_t::frame_t::fd_meta_data_t* m__parent;
+
+            public:
+                std::vector<vec_t*>* image() const { return m_image; }
+                nt_mdt_t* _root() const { return m__root; }
+                nt_mdt_t::frame_t::fd_meta_data_t* _parent() const { return m__parent; }
+            };
+
+        private:
+            bool f_image;
+            image_t* m_image;
+
+        public:
+            image_t* image();
+
+        private:
+            uint32_t m_head_size;
+            uint32_t m_tot_len;
+            std::vector<uuid_t*>* m_guids;
+            std::string m_frame_status;
+            uint32_t m_name_size;
+            uint32_t m_comm_size;
+            uint32_t m_view_info_size;
+            uint32_t m_spec_size;
+            uint32_t m_source_info_size;
+            uint32_t m_var_size;
+            uint32_t m_data_offset;
+            uint32_t m_data_size;
+            std::string m_title;
+            std::string m_xml;
+            uint32_t m_struct_len;
+            uint64_t m_array_size;
+            uint32_t m_cell_size;
+            uint32_t m_n_dimensions;
+            uint32_t m_n_mesurands;
+            std::vector<calibration_t*>* m_dimensions;
+            std::vector<calibration_t*>* m_mesurands;
+            nt_mdt_t* m__root;
+            nt_mdt_t::frame_t::frame_main_t* m__parent;
+            std::string m__raw_image;
+            kaitai::kstream* m__io__raw_image;
+
+        public:
+            uint32_t head_size() const { return m_head_size; }
+            uint32_t tot_len() const { return m_tot_len; }
+            std::vector<uuid_t*>* guids() const { return m_guids; }
+            std::string frame_status() const { return m_frame_status; }
+            uint32_t name_size() const { return m_name_size; }
+            uint32_t comm_size() const { return m_comm_size; }
+            uint32_t view_info_size() const { return m_view_info_size; }
+            uint32_t spec_size() const { return m_spec_size; }
+            uint32_t source_info_size() const { return m_source_info_size; }
+            uint32_t var_size() const { return m_var_size; }
+            uint32_t data_offset() const { return m_data_offset; }
+            uint32_t data_size() const { return m_data_size; }
+            std::string title() const { return m_title; }
+            std::string xml() const { return m_xml; }
+            uint32_t struct_len() const { return m_struct_len; }
+            uint64_t array_size() const { return m_array_size; }
+            uint32_t cell_size() const { return m_cell_size; }
+            uint32_t n_dimensions() const { return m_n_dimensions; }
+            uint32_t n_mesurands() const { return m_n_mesurands; }
+            std::vector<calibration_t*>* dimensions() const { return m_dimensions; }
+            std::vector<calibration_t*>* mesurands() const { return m_mesurands; }
+            nt_mdt_t* _root() const { return m__root; }
+            nt_mdt_t::frame_t::frame_main_t* _parent() const { return m__parent; }
+            std::string _raw_image() const { return m__raw_image; }
+            kaitai::kstream* _io__raw_image() const { return m__io__raw_image; }
         };
 
         class fd_scanned_t : public kaitai::kstruct {
 
         public:
-            class vars_t;
             class dot_t;
             class scan_dir_t;
+            class vars_t;
+
+            enum input_signal_t {
+                INPUT_SIGNAL_EXTENSION_SLOT = 0,
+                INPUT_SIGNAL_BIAS_V = 1,
+                INPUT_SIGNAL_GROUND = 2
+            };
+            static bool _is_defined_input_signal_t(input_signal_t v);
+
+        private:
+            static const std::set<input_signal_t> _values_input_signal_t;
+            static std::set<input_signal_t> _build_values_input_signal_t();
+
+        public:
+
+            enum lift_mode_t {
+                LIFT_MODE_STEP = 0,
+                LIFT_MODE_FINE = 1,
+                LIFT_MODE_SLOPE = 2
+            };
+            static bool _is_defined_lift_mode_t(lift_mode_t v);
+
+        private:
+            static const std::set<lift_mode_t> _values_lift_mode_t;
+            static std::set<lift_mode_t> _build_values_lift_mode_t();
+
+        public:
 
             enum mode_t {
                 MODE_STM = 0,
@@ -1009,18 +894,13 @@ public:
                 MODE_UNKNOWN3 = 3,
                 MODE_UNKNOWN4 = 4
             };
+            static bool _is_defined_mode_t(mode_t v);
 
-            enum input_signal_t {
-                INPUT_SIGNAL_EXTENSION_SLOT = 0,
-                INPUT_SIGNAL_BIAS_V = 1,
-                INPUT_SIGNAL_GROUND = 2
-            };
+        private:
+            static const std::set<mode_t> _values_mode_t;
+            static std::set<mode_t> _build_values_mode_t();
 
-            enum lift_mode_t {
-                LIFT_MODE_STEP = 0,
-                LIFT_MODE_FINE = 1,
-                LIFT_MODE_SLOPE = 2
-            };
+        public:
 
             fd_scanned_t(kaitai::kstream* p__io, nt_mdt_t::frame_t::frame_main_t* p__parent = 0, nt_mdt_t* p__root = 0);
 
@@ -1030,6 +910,76 @@ public:
 
         public:
             ~fd_scanned_t();
+
+            class dot_t : public kaitai::kstruct {
+
+            public:
+
+                dot_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, nt_mdt_t* p__root = 0);
+
+            private:
+                void _read();
+                void _clean_up();
+
+            public:
+                ~dot_t();
+
+            private:
+                int16_t m_x;
+                int16_t m_y;
+                nt_mdt_t* m__root;
+                kaitai::kstruct* m__parent;
+
+            public:
+                int16_t x() const { return m_x; }
+                int16_t y() const { return m_y; }
+                nt_mdt_t* _root() const { return m__root; }
+                kaitai::kstruct* _parent() const { return m__parent; }
+            };
+
+            class scan_dir_t : public kaitai::kstruct {
+
+            public:
+
+                scan_dir_t(kaitai::kstream* p__io, nt_mdt_t::frame_t::fd_scanned_t::vars_t* p__parent = 0, nt_mdt_t* p__root = 0);
+
+            private:
+                void _read();
+                void _clean_up();
+
+            public:
+                ~scan_dir_t();
+
+            private:
+                uint64_t m_unkn;
+                bool m_double_pass;
+                bool m_bottom;
+                bool m_left;
+                bool m_horizontal;
+                nt_mdt_t* m__root;
+                nt_mdt_t::frame_t::fd_scanned_t::vars_t* m__parent;
+
+            public:
+                uint64_t unkn() const { return m_unkn; }
+                bool double_pass() const { return m_double_pass; }
+
+                /**
+                 * Bottom - 1 Top - 0
+                 */
+                bool bottom() const { return m_bottom; }
+
+                /**
+                 * Left - 1 Right - 0
+                 */
+                bool left() const { return m_left; }
+
+                /**
+                 * Horizontal - 1 Vertical - 0
+                 */
+                bool horizontal() const { return m_horizontal; }
+                nt_mdt_t* _root() const { return m__root; }
+                nt_mdt_t::frame_t::fd_scanned_t::vars_t* _parent() const { return m__parent; }
+            };
 
             class vars_t : public kaitai::kstruct {
 
@@ -1181,76 +1131,6 @@ public:
                 nt_mdt_t::frame_t::fd_scanned_t* _parent() const { return m__parent; }
             };
 
-            class dot_t : public kaitai::kstruct {
-
-            public:
-
-                dot_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, nt_mdt_t* p__root = 0);
-
-            private:
-                void _read();
-                void _clean_up();
-
-            public:
-                ~dot_t();
-
-            private:
-                int16_t m_x;
-                int16_t m_y;
-                nt_mdt_t* m__root;
-                kaitai::kstruct* m__parent;
-
-            public:
-                int16_t x() const { return m_x; }
-                int16_t y() const { return m_y; }
-                nt_mdt_t* _root() const { return m__root; }
-                kaitai::kstruct* _parent() const { return m__parent; }
-            };
-
-            class scan_dir_t : public kaitai::kstruct {
-
-            public:
-
-                scan_dir_t(kaitai::kstream* p__io, nt_mdt_t::frame_t::fd_scanned_t::vars_t* p__parent = 0, nt_mdt_t* p__root = 0);
-
-            private:
-                void _read();
-                void _clean_up();
-
-            public:
-                ~scan_dir_t();
-
-            private:
-                uint64_t m_unkn;
-                bool m_double_pass;
-                bool m_bottom;
-                bool m_left;
-                bool m_horizontal;
-                nt_mdt_t* m__root;
-                nt_mdt_t::frame_t::fd_scanned_t::vars_t* m__parent;
-
-            public:
-                uint64_t unkn() const { return m_unkn; }
-                bool double_pass() const { return m_double_pass; }
-
-                /**
-                 * Bottom - 1 Top - 0
-                 */
-                bool bottom() const { return m_bottom; }
-
-                /**
-                 * Left - 1 Right - 0
-                 */
-                bool left() const { return m_left; }
-
-                /**
-                 * Horizontal - 1 Vertical - 0
-                 */
-                bool horizontal() const { return m_horizontal; }
-                nt_mdt_t* _root() const { return m__root; }
-                nt_mdt_t::frame_t::fd_scanned_t::vars_t* _parent() const { return m__parent; }
-            };
-
         private:
             vars_t* m_vars;
             uint32_t m_orig_format;
@@ -1352,6 +1232,165 @@ public:
             kaitai::kstream* _io__raw_vars() const { return m__io__raw_vars; }
         };
 
+        class fd_spectroscopy_t : public kaitai::kstruct {
+
+        public:
+            class vars_t;
+
+            fd_spectroscopy_t(kaitai::kstream* p__io, nt_mdt_t::frame_t::frame_main_t* p__parent = 0, nt_mdt_t* p__root = 0);
+
+        private:
+            void _read();
+            void _clean_up();
+
+        public:
+            ~fd_spectroscopy_t();
+
+            class vars_t : public kaitai::kstruct {
+
+            public:
+
+                vars_t(kaitai::kstream* p__io, nt_mdt_t::frame_t::fd_spectroscopy_t* p__parent = 0, nt_mdt_t* p__root = 0);
+
+            private:
+                void _read();
+                void _clean_up();
+
+            public:
+                ~vars_t();
+
+            private:
+                axis_scale_t* m_x_scale;
+                axis_scale_t* m_y_scale;
+                axis_scale_t* m_z_scale;
+                uint16_t m_sp_mode;
+                uint16_t m_sp_filter;
+                float m_u_begin;
+                float m_u_end;
+                int16_t m_z_up;
+                int16_t m_z_down;
+                uint16_t m_sp_averaging;
+                uint8_t m_sp_repeat;
+                uint8_t m_sp_back;
+                int16_t m_sp_4nx;
+                uint8_t m_sp_osc;
+                uint8_t m_sp_n4;
+                float m_sp_4x0;
+                float m_sp_4xr;
+                int16_t m_sp_4u;
+                int16_t m_sp_4i;
+                int16_t m_sp_nx;
+                nt_mdt_t* m__root;
+                nt_mdt_t::frame_t::fd_spectroscopy_t* m__parent;
+
+            public:
+                axis_scale_t* x_scale() const { return m_x_scale; }
+                axis_scale_t* y_scale() const { return m_y_scale; }
+                axis_scale_t* z_scale() const { return m_z_scale; }
+                uint16_t sp_mode() const { return m_sp_mode; }
+                uint16_t sp_filter() const { return m_sp_filter; }
+                float u_begin() const { return m_u_begin; }
+                float u_end() const { return m_u_end; }
+                int16_t z_up() const { return m_z_up; }
+                int16_t z_down() const { return m_z_down; }
+                uint16_t sp_averaging() const { return m_sp_averaging; }
+                uint8_t sp_repeat() const { return m_sp_repeat; }
+                uint8_t sp_back() const { return m_sp_back; }
+                int16_t sp_4nx() const { return m_sp_4nx; }
+                uint8_t sp_osc() const { return m_sp_osc; }
+                uint8_t sp_n4() const { return m_sp_n4; }
+                float sp_4x0() const { return m_sp_4x0; }
+                float sp_4xr() const { return m_sp_4xr; }
+                int16_t sp_4u() const { return m_sp_4u; }
+                int16_t sp_4i() const { return m_sp_4i; }
+                int16_t sp_nx() const { return m_sp_nx; }
+                nt_mdt_t* _root() const { return m__root; }
+                nt_mdt_t::frame_t::fd_spectroscopy_t* _parent() const { return m__parent; }
+            };
+
+        private:
+            vars_t* m_vars;
+            uint16_t m_fm_mode;
+            uint16_t m_fm_xres;
+            uint16_t m_fm_yres;
+            dots_t* m_dots;
+            std::vector<int16_t>* m_data;
+            title_t* m_title;
+            xml_t* m_xml;
+            nt_mdt_t* m__root;
+            nt_mdt_t::frame_t::frame_main_t* m__parent;
+            std::string m__raw_vars;
+            kaitai::kstream* m__io__raw_vars;
+
+        public:
+            vars_t* vars() const { return m_vars; }
+            uint16_t fm_mode() const { return m_fm_mode; }
+            uint16_t fm_xres() const { return m_fm_xres; }
+            uint16_t fm_yres() const { return m_fm_yres; }
+            dots_t* dots() const { return m_dots; }
+            std::vector<int16_t>* data() const { return m_data; }
+            title_t* title() const { return m_title; }
+            xml_t* xml() const { return m_xml; }
+            nt_mdt_t* _root() const { return m__root; }
+            nt_mdt_t::frame_t::frame_main_t* _parent() const { return m__parent; }
+            std::string _raw_vars() const { return m__raw_vars; }
+            kaitai::kstream* _io__raw_vars() const { return m__io__raw_vars; }
+        };
+
+        class frame_main_t : public kaitai::kstruct {
+
+        public:
+
+            frame_main_t(kaitai::kstream* p__io, nt_mdt_t::frame_t* p__parent = 0, nt_mdt_t* p__root = 0);
+
+        private:
+            void _read();
+            void _clean_up();
+
+        public:
+            ~frame_main_t();
+
+        private:
+            frame_type_t m_type;
+            version_t* m_version;
+            date_time_t* m_date_time;
+            uint16_t m_var_size;
+            kaitai::kstruct* m_frame_data;
+            bool n_frame_data;
+
+        public:
+            bool _is_null_frame_data() { frame_data(); return n_frame_data; };
+
+        private:
+            nt_mdt_t* m__root;
+            nt_mdt_t::frame_t* m__parent;
+            std::string m__raw_frame_data;
+            kaitai::kstream* m__io__raw_frame_data;
+
+        public:
+
+            /**
+             * h_what
+             */
+            frame_type_t type() const { return m_type; }
+            version_t* version() const { return m_version; }
+            date_time_t* date_time() const { return m_date_time; }
+
+            /**
+             * h_am, v6 and older only
+             */
+            uint16_t var_size() const { return m_var_size; }
+
+            /**
+             * 
+             */
+            kaitai::kstruct* frame_data() const { return m_frame_data; }
+            nt_mdt_t* _root() const { return m__root; }
+            nt_mdt_t::frame_t* _parent() const { return m__parent; }
+            std::string _raw_frame_data() const { return m__raw_frame_data; }
+            kaitai::kstream* _io__raw_frame_data() const { return m__io__raw_frame_data; }
+        };
+
     private:
         uint32_t m_size;
         frame_main_t* m_main;
@@ -1371,6 +1410,80 @@ public:
         nt_mdt_t::framez_t* _parent() const { return m__parent; }
         std::string _raw_main() const { return m__raw_main; }
         kaitai::kstream* _io__raw_main() const { return m__io__raw_main; }
+    };
+
+    class framez_t : public kaitai::kstruct {
+
+    public:
+
+        framez_t(kaitai::kstream* p__io, nt_mdt_t* p__parent = 0, nt_mdt_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~framez_t();
+
+    private:
+        std::vector<frame_t*>* m_frames;
+        nt_mdt_t* m__root;
+        nt_mdt_t* m__parent;
+
+    public:
+        std::vector<frame_t*>* frames() const { return m_frames; }
+        nt_mdt_t* _root() const { return m__root; }
+        nt_mdt_t* _parent() const { return m__parent; }
+    };
+
+    class title_t : public kaitai::kstruct {
+
+    public:
+
+        title_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, nt_mdt_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~title_t();
+
+    private:
+        uint32_t m_title_len;
+        std::string m_title;
+        nt_mdt_t* m__root;
+        kaitai::kstruct* m__parent;
+
+    public:
+        uint32_t title_len() const { return m_title_len; }
+        std::string title() const { return m_title; }
+        nt_mdt_t* _root() const { return m__root; }
+        kaitai::kstruct* _parent() const { return m__parent; }
+    };
+
+    class uuid_t : public kaitai::kstruct {
+
+    public:
+
+        uuid_t(kaitai::kstream* p__io, nt_mdt_t::frame_t::fd_meta_data_t* p__parent = 0, nt_mdt_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~uuid_t();
+
+    private:
+        std::vector<uint8_t>* m_data;
+        nt_mdt_t* m__root;
+        nt_mdt_t::frame_t::fd_meta_data_t* m__parent;
+
+    public:
+        std::vector<uint8_t>* data() const { return m_data; }
+        nt_mdt_t* _root() const { return m__root; }
+        nt_mdt_t::frame_t::fd_meta_data_t* _parent() const { return m__parent; }
     };
 
     class version_t : public kaitai::kstruct {
@@ -1421,32 +1534,6 @@ public:
     public:
         uint32_t xml_len() const { return m_xml_len; }
         std::string xml() const { return m_xml; }
-        nt_mdt_t* _root() const { return m__root; }
-        kaitai::kstruct* _parent() const { return m__parent; }
-    };
-
-    class title_t : public kaitai::kstruct {
-
-    public:
-
-        title_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, nt_mdt_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~title_t();
-
-    private:
-        uint32_t m_title_len;
-        std::string m_title;
-        nt_mdt_t* m__root;
-        kaitai::kstruct* m__parent;
-
-    public:
-        uint32_t title_len() const { return m_title_len; }
-        std::string title() const { return m_title; }
         nt_mdt_t* _root() const { return m__root; }
         kaitai::kstruct* _parent() const { return m__parent; }
     };

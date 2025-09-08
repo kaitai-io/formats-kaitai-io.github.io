@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Variable length quantity, unsigned/signed integer, base128, little-endian: Go parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="/pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li><a href="//kaitai.io/news/">News</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../">Format Gallery</a></li>
+        <li>Commonly Used Data Types</li>
+        <li class="active">Variable length quantity, unsigned/signed integer, base128, little-endian</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Variable length quantity, unsigned/signed integer, base128, little-endian:
+            
+            Go parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>A variable-length unsigned/signed integer using base128 encoding. 1-byte groups
+consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered
+&quot;least significant group first&quot;, i.e. in &quot;little-endian&quot; manner.</p>
+<p>This particular encoding is specified and used in:</p>
+<ul>
+<li>DWARF debug file format, where it's dubbed &quot;unsigned LEB128&quot; or &quot;ULEB128&quot;.
+<a href="https://dwarfstd.org/doc/dwarf-2.0.0.pdf">https://dwarfstd.org/doc/dwarf-2.0.0.pdf</a> - page 139</li>
+<li>Google Protocol Buffers, where it's called &quot;Base 128 Varints&quot;.
+<a href="https://protobuf.dev/programming-guides/encoding/#varints">https://protobuf.dev/programming-guides/encoding/#varints</a></li>
+<li>Apache Lucene, where it's called &quot;VInt&quot;
+<a href="https://lucene.apache.org/core/3_5_0/fileformats.html#VInt">https://lucene.apache.org/core/3_5_0/fileformats.html#VInt</a></li>
+<li>Apache Avro uses this as a basis for integer encoding, adding ZigZag on
+top of it for signed ints
+<a href="https://avro.apache.org/docs/1.12.0/specification/#primitive-types-1">https://avro.apache.org/docs/1.12.0/specification/#primitive-types-1</a></li>
+</ul>
+<p>More information on this encoding is available at <a href="https://en.wikipedia.org/wiki/LEB128">https://en.wikipedia.org/wiki/LEB128</a></p>
+<p>This particular implementation supports integer values up to 64 bits (i.e. the
+maximum unsigned value supported is <code>2**64 - 1</code>), which implies that serialized
+values can be up to 10 bytes in length.</p>
+<p>If the most significant 10th byte (<code>groups[9]</code>) is present, its <code>has_next</code>
+must be <code>false</code> (otherwise we would have 11 or more bytes, which is not
+supported) and its <code>value</code> can be only <code>0</code> or <code>1</code> (because a 9-byte VLQ can
+represent <code>9 * 7 = 63</code> bits already, so the 10th byte can only add 1 bit,
+since only integers up to 64 bits are supported). These restrictions are
+enforced by this implementation. They were inspired by the Protoscope tool,
+see <a href="https://github.com/protocolbuffers/protoscope/blob/8e7a6aafa2c9958527b1e0747e66e1bfff045819/writer.go#L644-L648">https://github.com/protocolbuffers/protoscope/blob/8e7a6aafa2c9958527b1e0747e66e1bfff045819/writer.go#L644-L648</a>.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.10
+                    </div>
+                    
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="https://www.wikidata.org/wiki/Q6457577">Wikidata Q6457577</a></li>
+                            
+                            
+                            
+                            <li><a href="http://fileformats.archiveteam.org/wiki/Variable-length_quantity">Variable-length quantity in Just Solve the File Format Problem</a></li>
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Variable length quantity, unsigned/signed integer, base128, little-endian
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="Variable length quantity, unsigned/signed integer, base128, little-endian parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_11.html" title="Variable length quantity, unsigned/signed integer, base128, little-endian parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="Variable length quantity, unsigned/signed integer, base128, little-endian parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="Variable length quantity, unsigned/signed integer, base128, little-endian parsing C# library">C#</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="go.html" title="Variable length quantity, unsigned/signed integer, base128, little-endian parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Variable length quantity, unsigned/signed integer, base128, little-endian parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="Variable length quantity, unsigned/signed integer, base128, little-endian parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="java-write.html" title="Variable length quantity, unsigned/signed integer, base128, little-endian parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="Variable length quantity, unsigned/signed integer, base128, little-endian parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="Variable length quantity, unsigned/signed integer, base128, little-endian parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="Variable length quantity, unsigned/signed integer, base128, little-endian parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="Variable length quantity, unsigned/signed integer, base128, little-endian parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="Variable length quantity, unsigned/signed integer, base128, little-endian parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="Variable length quantity, unsigned/signed integer, base128, little-endian parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="python-write.html" title="Variable length quantity, unsigned/signed integer, base128, little-endian parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="Variable length quantity, unsigned/signed integer, base128, little-endian parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="Variable length quantity, unsigned/signed integer, base128, little-endian parsing Rust library">Rust</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Go source code to parse Variable length quantity, unsigned/signed integer, base128, little-endian
+            
+        </h2>
+
+        
+
+        <h3>vlq_base128_le.go</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/go/vlq_base128_le.go" download="vlq_base128_le.go" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">// Code generated by kaitai-struct-compiler from a .ksy source file. DO NOT EDIT.</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="s">&quot;github.com/kaitai-io/kaitai_struct_go_runtime/kaitai&quot;</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * A variable-length unsigned/signed integer using base128 encoding. 1-byte groups</span>
+<span class="cm"> * consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered</span>
+<span class="cm"> * &quot;least significant group first&quot;, i.e. in &quot;little-endian&quot; manner.</span>
+<span class="cm"> * </span>
+<span class="cm"> * This particular encoding is specified and used in:</span>
+<span class="cm"> * </span>
+<span class="cm"> * * DWARF debug file format, where it&#39;s dubbed &quot;unsigned LEB128&quot; or &quot;ULEB128&quot;.</span>
+<span class="cm"> *   &lt;https://dwarfstd.org/doc/dwarf-2.0.0.pdf&gt; - page 139</span>
+<span class="cm"> * * Google Protocol Buffers, where it&#39;s called &quot;Base 128 Varints&quot;.</span>
+<span class="cm"> *   &lt;https://protobuf.dev/programming-guides/encoding/#varints&gt;</span>
+<span class="cm"> * * Apache Lucene, where it&#39;s called &quot;VInt&quot;</span>
+<span class="cm"> *   &lt;https://lucene.apache.org/core/3_5_0/fileformats.html#VInt&gt;</span>
+<span class="cm"> * * Apache Avro uses this as a basis for integer encoding, adding ZigZag on</span>
+<span class="cm"> *   top of it for signed ints</span>
+<span class="cm"> *   &lt;https://avro.apache.org/docs/1.12.0/specification/#primitive-types-1&gt;</span>
+<span class="cm"> * </span>
+<span class="cm"> * More information on this encoding is available at &lt;https://en.wikipedia.org/wiki/LEB128&gt;</span>
+<span class="cm"> * </span>
+<span class="cm"> * This particular implementation supports integer values up to 64 bits (i.e. the</span>
+<span class="cm"> * maximum unsigned value supported is `2**64 - 1`), which implies that serialized</span>
+<span class="cm"> * values can be up to 10 bytes in length.</span>
+<span class="cm"> * </span>
+<span class="cm"> * If the most significant 10th byte (`groups[9]`) is present, its `has_next`</span>
+<span class="cm"> * must be `false` (otherwise we would have 11 or more bytes, which is not</span>
+<span class="cm"> * supported) and its `value` can be only `0` or `1` (because a 9-byte VLQ can</span>
+<span class="cm"> * represent `9 * 7 = 63` bits already, so the 10th byte can only add 1 bit,</span>
+<span class="cm"> * since only integers up to 64 bits are supported). These restrictions are</span>
+<span class="cm"> * enforced by this implementation. They were inspired by the Protoscope tool,</span>
+<span class="cm"> * see &lt;https://github.com/protocolbuffers/protoscope/blob/8e7a6aafa2c9958527b1e0747e66e1bfff045819/writer.go#L644-L648&gt;.</span>
+<span class="cm"> */</span>
+<span class="kd">type</span><span class="w"> </span><span class="nx">VlqBase128Le</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">Groups</span><span class="w"> </span><span class="p">[]</span><span class="o">*</span><span class="nx">VlqBase128Le_Group</span>
+<span class="w">	</span><span class="nx">_io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+<span class="w">	</span><span class="nx">_root</span><span class="w"> </span><span class="o">*</span><span class="nx">VlqBase128Le</span>
+<span class="w">	</span><span class="nx">_parent</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Struct</span>
+<span class="w">	</span><span class="nx">_f_len</span><span class="w"> </span><span class="kt">bool</span>
+<span class="w">	</span><span class="nx">len</span><span class="w"> </span><span class="kt">int</span>
+<span class="w">	</span><span class="nx">_f_signBit</span><span class="w"> </span><span class="kt">bool</span>
+<span class="w">	</span><span class="nx">signBit</span><span class="w"> </span><span class="kt">uint64</span>
+<span class="w">	</span><span class="nx">_f_value</span><span class="w"> </span><span class="kt">bool</span>
+<span class="w">	</span><span class="nx">value</span><span class="w"> </span><span class="kt">uint64</span>
+<span class="w">	</span><span class="nx">_f_valueSigned</span><span class="w"> </span><span class="kt">bool</span>
+<span class="w">	</span><span class="nx">valueSigned</span><span class="w"> </span><span class="kt">int64</span>
+<span class="p">}</span>
+<span class="kd">func</span><span class="w"> </span><span class="nx">NewVlqBase128Le</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">VlqBase128Le</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">VlqBase128Le</span><span class="p">{</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="nx">VlqBase128Le</span><span class="p">)</span><span class="w"> </span><span class="nx">IO_</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">VlqBase128Le</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Struct</span><span class="p">,</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">VlqBase128Le</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">io</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">parent</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">root</span>
+
+<span class="w">	</span><span class="k">for</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="mi">1</span><span class="p">;;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="kd">var</span><span class="w"> </span><span class="nx">tmp1</span><span class="w"> </span><span class="kt">uint64</span><span class="p">;</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">i</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="nx">tmp2</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">Groups</span><span class="p">[</span><span class="nx">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">].</span><span class="nx">IntermValue</span><span class="p">()</span>
+<span class="w">			</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">				</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">			</span><span class="p">}</span>
+<span class="w">			</span><span class="nx">tmp1</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp2</span>
+<span class="w">		</span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="nx">tmp1</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="kd">var</span><span class="w"> </span><span class="nx">tmp3</span><span class="w"> </span><span class="kt">int</span><span class="p">;</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">i</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="kd">var</span><span class="w"> </span><span class="nx">tmp4</span><span class="w"> </span><span class="kt">int</span><span class="p">;</span>
+<span class="w">			</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">i</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">9</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">				</span><span class="nx">tmp4</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint64</span><span class="p">(</span><span class="mi">9223372036854775808</span><span class="p">)</span>
+<span class="w">			</span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">				</span><span class="nx">tmp4</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">Groups</span><span class="p">[</span><span class="nx">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">].</span><span class="nx">Multiplier</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">128</span>
+<span class="w">			</span><span class="p">}</span>
+<span class="w">			</span><span class="nx">tmp3</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp4</span>
+<span class="w">		</span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="nx">tmp3</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">tmp5</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewVlqBase128Le_Group</span><span class="p">(</span><span class="nx">i</span><span class="p">,</span><span class="w"> </span><span class="nx">tmp1</span><span class="p">,</span><span class="w"> </span><span class="nx">tmp3</span><span class="p">)</span>
+<span class="w">		</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp5</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">_it</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">tmp5</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">Groups</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">append</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Groups</span><span class="p">,</span><span class="w"> </span><span class="nx">_it</span><span class="p">)</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="p">!(</span><span class="nx">_it</span><span class="p">.</span><span class="nx">HasNext</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">break</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">VlqBase128Le</span><span class="p">)</span><span class="w"> </span><span class="nx">Len</span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="w"> </span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_len</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">len</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_len</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">len</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Groups</span><span class="p">))</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">len</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="p">}</span>
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">VlqBase128Le</span><span class="p">)</span><span class="w"> </span><span class="nx">SignBit</span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="w"> </span><span class="kt">uint64</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_signBit</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">signBit</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_signBit</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">	</span><span class="kd">var</span><span class="w"> </span><span class="nx">tmp6</span><span class="w"> </span><span class="kt">int</span><span class="p">;</span>
+<span class="w">	</span><span class="nx">tmp7</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">Len</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">tmp7</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp6</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint64</span><span class="p">(</span><span class="mi">9223372036854775808</span><span class="p">)</span>
+<span class="w">	</span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp8</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">Groups</span>
+<span class="w">		</span><span class="nx">tmp6</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp8</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="nx">tmp8</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">].</span><span class="nx">Multiplier</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">64</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">signBit</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint64</span><span class="p">(</span><span class="nb">uint64</span><span class="p">(</span><span class="nx">tmp6</span><span class="p">))</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">signBit</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Resulting unsigned value as normal integer</span>
+<span class="cm"> */</span>
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">VlqBase128Le</span><span class="p">)</span><span class="w"> </span><span class="nx">Value</span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="w"> </span><span class="kt">uint64</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_value</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">value</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_value</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">	</span><span class="nx">tmp9</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">Groups</span>
+<span class="w">	</span><span class="nx">tmp10</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">tmp9</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="nx">tmp9</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">].</span><span class="nx">IntermValue</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">value</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint64</span><span class="p">(</span><span class="nx">tmp10</span><span class="p">)</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">value</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="p">}</span>
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">VlqBase128Le</span><span class="p">)</span><span class="w"> </span><span class="nx">ValueSigned</span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="w"> </span><span class="kt">int64</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_valueSigned</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">valueSigned</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_valueSigned</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">	</span><span class="kd">var</span><span class="w"> </span><span class="nx">tmp11</span><span class="w"> </span><span class="kt">int64</span><span class="p">;</span>
+<span class="w">	</span><span class="nx">tmp12</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">SignBit</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp13</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">Value</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp14</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">SignBit</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="nx">tmp12</span><span class="w"> </span><span class="p">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="nx">tmp13</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="nx">tmp14</span><span class="p">))</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp15</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">SignBit</span><span class="p">()</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">tmp16</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">Value</span><span class="p">()</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">tmp17</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">SignBit</span><span class="p">()</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">tmp11</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="o">-</span><span class="p">(</span><span class="nb">int64</span><span class="p">(</span><span class="nx">tmp15</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="nx">tmp16</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">tmp17</span><span class="p">)))</span>
+<span class="w">	</span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp18</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">Value</span><span class="p">()</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">tmp11</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">int64</span><span class="p">(</span><span class="nx">tmp18</span><span class="p">)</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">valueSigned</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">int64</span><span class="p">(</span><span class="nx">tmp11</span><span class="p">)</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">valueSigned</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * One byte group, clearly divided into 7-bit &quot;value&quot; chunk and 1-bit &quot;continuation&quot; flag.</span>
+<span class="cm"> */</span>
+<span class="kd">type</span><span class="w"> </span><span class="nx">VlqBase128Le_Group</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">HasNext</span><span class="w"> </span><span class="kt">bool</span>
+<span class="w">	</span><span class="nx">Value</span><span class="w"> </span><span class="kt">uint64</span>
+<span class="w">	</span><span class="nx">Idx</span><span class="w"> </span><span class="kt">int32</span>
+<span class="w">	</span><span class="nx">PrevIntermValue</span><span class="w"> </span><span class="kt">uint64</span>
+<span class="w">	</span><span class="nx">Multiplier</span><span class="w"> </span><span class="kt">uint64</span>
+<span class="w">	</span><span class="nx">_io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+<span class="w">	</span><span class="nx">_root</span><span class="w"> </span><span class="o">*</span><span class="nx">VlqBase128Le</span>
+<span class="w">	</span><span class="nx">_parent</span><span class="w"> </span><span class="o">*</span><span class="nx">VlqBase128Le</span>
+<span class="w">	</span><span class="nx">_f_intermValue</span><span class="w"> </span><span class="kt">bool</span>
+<span class="w">	</span><span class="nx">intermValue</span><span class="w"> </span><span class="kt">uint64</span>
+<span class="p">}</span>
+<span class="kd">func</span><span class="w"> </span><span class="nx">NewVlqBase128Le_Group</span><span class="p">(</span><span class="nx">idx</span><span class="w"> </span><span class="kt">int32</span><span class="p">,</span><span class="w"> </span><span class="nx">prevIntermValue</span><span class="w"> </span><span class="kt">uint64</span><span class="p">,</span><span class="w"> </span><span class="nx">multiplier</span><span class="w"> </span><span class="kt">uint64</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="nx">VlqBase128Le_Group</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">VlqBase128Le_Group</span><span class="p">{</span>
+<span class="w">		</span><span class="nx">Idx</span><span class="p">:</span><span class="w"> </span><span class="nx">idx</span><span class="p">,</span>
+<span class="w">		</span><span class="nx">PrevIntermValue</span><span class="p">:</span><span class="w"> </span><span class="nx">prevIntermValue</span><span class="p">,</span>
+<span class="w">		</span><span class="nx">Multiplier</span><span class="p">:</span><span class="w"> </span><span class="nx">multiplier</span><span class="p">,</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="nx">VlqBase128Le_Group</span><span class="p">)</span><span class="w"> </span><span class="nx">IO_</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">VlqBase128Le_Group</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="o">*</span><span class="nx">VlqBase128Le</span><span class="p">,</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">VlqBase128Le</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">io</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">parent</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">root</span>
+
+<span class="w">	</span><span class="nx">tmp19</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">HasNext</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp19</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">	</span><span class="kd">var</span><span class="w"> </span><span class="nx">tmp20</span><span class="w"> </span><span class="kt">bool</span><span class="p">;</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Idx</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">9</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp20</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">	</span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp20</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">HasNext</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="kd">var</span><span class="w"> </span><span class="nx">tmp21</span><span class="w"> </span><span class="kt">bool</span><span class="p">;</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Idx</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">9</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp21</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">	</span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp21</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">HasNext</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">!(</span><span class="nx">this</span><span class="p">.</span><span class="nx">HasNext</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nx">tmp20</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">(</span><span class="nx">tmp21</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">HasNext</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/types/group/seq/0&quot;</span><span class="p">)</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp22</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Value</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp22</span>
+<span class="w">	</span><span class="kd">var</span><span class="w"> </span><span class="nx">tmp23</span><span class="w"> </span><span class="kt">int8</span><span class="p">;</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Idx</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">9</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp23</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">	</span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp23</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">127</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="kd">var</span><span class="w"> </span><span class="nx">tmp24</span><span class="w"> </span><span class="kt">int8</span><span class="p">;</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Idx</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">9</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp24</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">	</span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp24</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">127</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">!(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Value</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="nb">uint64</span><span class="p">(</span><span class="nx">tmp23</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationGreaterThanError</span><span class="p">(</span><span class="nb">uint64</span><span class="p">(</span><span class="nx">tmp24</span><span class="p">),</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">Value</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/types/group/seq/1&quot;</span><span class="p">)</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">VlqBase128Le_Group</span><span class="p">)</span><span class="w"> </span><span class="nx">IntermValue</span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="w"> </span><span class="kt">uint64</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_intermValue</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">intermValue</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_intermValue</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">intermValue</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint64</span><span class="p">(</span><span class="nb">uint64</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">PrevIntermValue</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">Value</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">Multiplier</span><span class="p">))</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">intermValue</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * If `true`, then we have more bytes to read.</span>
+<span class="cm"> * </span>
+<span class="cm"> * Since this implementation only supports serialized values up to 10</span>
+<span class="cm"> * bytes, this must be `false` in the 10th group (`groups[9]`).</span>
+<span class="cm"> */</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * The 7-bit (base128) numeric value chunk of this group</span>
+<span class="cm"> * </span>
+<span class="cm"> * Since this implementation only supports integer values up to 64 bits,</span>
+<span class="cm"> * the `value` in the 10th group (`groups[9]`) can only be `0` or `1`</span>
+<span class="cm"> * (otherwise the width of the represented value would be 65 bits or</span>
+<span class="cm"> * more, which is not supported).</span>
+<span class="cm"> */</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015&ndash;2025 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">format repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+</body>
+</html>

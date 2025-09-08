@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.HeroesOfMightAndMagicBmp = factory(root.KaitaiStream);
+    factory(root.HeroesOfMightAndMagicBmp || (root.HeroesOfMightAndMagicBmp = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (HeroesOfMightAndMagicBmp_, KaitaiStream) {
 var HeroesOfMightAndMagicBmp = (function() {
   function HeroesOfMightAndMagicBmp(_io, _parent, _root) {
     this._io = _io;
@@ -21,10 +21,10 @@ var HeroesOfMightAndMagicBmp = (function() {
     this.magic = this._io.readU2le();
     this.width = this._io.readU2le();
     this.height = this._io.readU2le();
-    this.data = this._io.readBytes((this.width * this.height));
+    this.data = this._io.readBytes(this.width * this.height);
   }
 
   return HeroesOfMightAndMagicBmp;
 })();
-return HeroesOfMightAndMagicBmp;
-}));
+HeroesOfMightAndMagicBmp_.HeroesOfMightAndMagicBmp = HeroesOfMightAndMagicBmp;
+});

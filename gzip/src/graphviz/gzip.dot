@@ -7,17 +7,21 @@ digraph {
 
 		gzip__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-			<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">2</TD><TD></TD><TD PORT="magic_type">magic</TD></TR>
+			<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">2</TD><TD>1F 8B</TD><TD PORT="magic_type">magic</TD></TR>
 			<TR><TD PORT="compression_method_pos">2</TD><TD PORT="compression_method_size">1</TD><TD>u1→CompressionMethods</TD><TD PORT="compression_method_type">compression_method</TD></TR>
 			<TR><TD PORT="flags_pos">3</TD><TD PORT="flags_size">1</TD><TD>Flags</TD><TD PORT="flags_type">flags</TD></TR>
 			<TR><TD PORT="mod_time_pos">4</TD><TD PORT="mod_time_size">4</TD><TD>u4le</TD><TD PORT="mod_time_type">mod_time</TD></TR>
 			<TR><TD PORT="extra_flags_pos">8</TD><TD PORT="extra_flags_size">...</TD><TD>switch (compression_method)</TD><TD PORT="extra_flags_type">extra_flags</TD></TR>
 			<TR><TD PORT="os_pos">...</TD><TD PORT="os_size">1</TD><TD>u1→Oses</TD><TD PORT="os_type">os</TD></TR>
 			<TR><TD PORT="extras_pos">...</TD><TD PORT="extras_size">...</TD><TD>Extras</TD><TD PORT="extras_type">extras</TD></TR>
-			<TR><TD PORT="name_pos">...</TD><TD PORT="name_size">...</TD><TD></TD><TD PORT="name_type">name</TD></TR>
-			<TR><TD PORT="comment_pos">...</TD><TD PORT="comment_size">...</TD><TD></TD><TD PORT="comment_type">comment</TD></TR>
+			<TR><TD COLSPAN="4" PORT="extras__if">if flags.has_extra</TD></TR>
+			<TR><TD PORT="name_pos">...</TD><TD PORT="name_size">...</TD><TD>term=0</TD><TD PORT="name_type">name</TD></TR>
+			<TR><TD COLSPAN="4" PORT="name__if">if flags.has_name</TD></TR>
+			<TR><TD PORT="comment_pos">...</TD><TD PORT="comment_size">...</TD><TD>term=0</TD><TD PORT="comment_type">comment</TD></TR>
+			<TR><TD COLSPAN="4" PORT="comment__if">if flags.has_comment</TD></TR>
 			<TR><TD PORT="header_crc16_pos">...</TD><TD PORT="header_crc16_size">2</TD><TD>u2le</TD><TD PORT="header_crc16_type">header_crc16</TD></TR>
-			<TR><TD PORT="body_pos">...</TD><TD PORT="body_size">((_io.size - _io.pos) - 8)</TD><TD></TD><TD PORT="body_type">body</TD></TR>
+			<TR><TD COLSPAN="4" PORT="header_crc16__if">if flags.has_header_crc</TD></TR>
+			<TR><TD PORT="body_pos">...</TD><TD PORT="body_size">(_io.size - _io.pos) - 8</TD><TD></TD><TD PORT="body_type">body</TD></TR>
 			<TR><TD PORT="body_crc32_pos">...</TD><TD PORT="body_crc32_size">4</TD><TD>u4le</TD><TD PORT="body_crc32_type">body_crc32</TD></TR>
 			<TR><TD PORT="len_uncompressed_pos">...</TD><TD PORT="len_uncompressed_size">4</TD><TD>u4le</TD><TD PORT="len_uncompressed_type">len_uncompressed</TD></TR>
 		</TABLE>>];
@@ -25,20 +29,6 @@ gzip__seq_extra_flags_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACIN
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
 	<TR><TD>:compression_methods_deflate</TD><TD PORT="case0">ExtraFlagsDeflate</TD></TR>
 </TABLE>>];
-		subgraph cluster__flags {
-			label="Gzip::Flags";
-			graph[style=dotted];
-
-			flags__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="reserved1_pos">0</TD><TD PORT="reserved1_size">3b</TD><TD>b3</TD><TD PORT="reserved1_type">reserved1</TD></TR>
-				<TR><TD PORT="has_comment_pos">0:3</TD><TD PORT="has_comment_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="has_comment_type">has_comment</TD></TR>
-				<TR><TD PORT="has_name_pos">0:4</TD><TD PORT="has_name_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="has_name_type">has_name</TD></TR>
-				<TR><TD PORT="has_extra_pos">0:5</TD><TD PORT="has_extra_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="has_extra_type">has_extra</TD></TR>
-				<TR><TD PORT="has_header_crc_pos">0:6</TD><TD PORT="has_header_crc_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="has_header_crc_type">has_header_crc</TD></TR>
-				<TR><TD PORT="is_text_pos">0:7</TD><TD PORT="is_text_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="is_text_type">is_text</TD></TR>
-			</TABLE>>];
-		}
 		subgraph cluster__extra_flags_deflate {
 			label="Gzip::ExtraFlagsDeflate";
 			graph[style=dotted];
@@ -48,14 +38,28 @@ gzip__seq_extra_flags_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACIN
 				<TR><TD PORT="compression_strength_pos">0</TD><TD PORT="compression_strength_size">1</TD><TD>u1→CompressionStrengths</TD><TD PORT="compression_strength_type">compression_strength</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__subfields {
-			label="Gzip::Subfields";
+		subgraph cluster__extras {
+			label="Gzip::Extras";
 			graph[style=dotted];
 
-			subfields__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			extras__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="entries_pos">0</TD><TD PORT="entries_size">...</TD><TD>Subfield</TD><TD PORT="entries_type">entries</TD></TR>
-				<TR><TD COLSPAN="4" PORT="entries__repeat">repeat to end of stream</TD></TR>
+				<TR><TD PORT="len_subfields_pos">0</TD><TD PORT="len_subfields_size">2</TD><TD>u2le</TD><TD PORT="len_subfields_type">len_subfields</TD></TR>
+				<TR><TD PORT="subfields_pos">2</TD><TD PORT="subfields_size">len_subfields</TD><TD>Subfields</TD><TD PORT="subfields_type">subfields</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__flags {
+			label="Gzip::Flags";
+			graph[style=dotted];
+
+			flags__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="reserved1_pos">0</TD><TD PORT="reserved1_size">3b</TD><TD>b3be</TD><TD PORT="reserved1_type">reserved1</TD></TR>
+				<TR><TD PORT="has_comment_pos">0:3</TD><TD PORT="has_comment_size">1b</TD><TD>b1be→bool</TD><TD PORT="has_comment_type">has_comment</TD></TR>
+				<TR><TD PORT="has_name_pos">0:4</TD><TD PORT="has_name_size">1b</TD><TD>b1be→bool</TD><TD PORT="has_name_type">has_name</TD></TR>
+				<TR><TD PORT="has_extra_pos">0:5</TD><TD PORT="has_extra_size">1b</TD><TD>b1be→bool</TD><TD PORT="has_extra_type">has_extra</TD></TR>
+				<TR><TD PORT="has_header_crc_pos">0:6</TD><TD PORT="has_header_crc_size">1b</TD><TD>b1be→bool</TD><TD PORT="has_header_crc_type">has_header_crc</TD></TR>
+				<TR><TD PORT="is_text_pos">0:7</TD><TD PORT="is_text_size">1b</TD><TD>b1be→bool</TD><TD PORT="is_text_type">is_text</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__subfield {
@@ -69,14 +73,14 @@ gzip__seq_extra_flags_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACIN
 				<TR><TD PORT="data_pos">4</TD><TD PORT="data_size">len_data</TD><TD></TD><TD PORT="data_type">data</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__extras {
-			label="Gzip::Extras";
+		subgraph cluster__subfields {
+			label="Gzip::Subfields";
 			graph[style=dotted];
 
-			extras__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			subfields__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="len_subfields_pos">0</TD><TD PORT="len_subfields_size">2</TD><TD>u2le</TD><TD PORT="len_subfields_type">len_subfields</TD></TR>
-				<TR><TD PORT="subfields_pos">2</TD><TD PORT="subfields_size">len_subfields</TD><TD>Subfields</TD><TD PORT="subfields_type">subfields</TD></TR>
+				<TR><TD PORT="entries_pos">0</TD><TD PORT="entries_size">...</TD><TD>Subfield</TD><TD PORT="entries_type">entries</TD></TR>
+				<TR><TD COLSPAN="4" PORT="entries__repeat">repeat to end of stream</TD></TR>
 			</TABLE>>];
 		}
 	}
@@ -85,8 +89,12 @@ gzip__seq_extra_flags_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACIN
 	gzip__seq_extra_flags_switch:case0 -> extra_flags_deflate__seq [style=bold];
 	gzip__seq:compression_method_type -> gzip__seq:extra_flags_type [color="#404040"];
 	gzip__seq:extras_type -> extras__seq [style=bold];
-	subfields__seq:entries_type -> subfield__seq [style=bold];
-	subfield__seq:len_data_type -> subfield__seq:data_size [color="#404040"];
+	flags__seq:has_extra_type -> gzip__seq:extras__if [color="#404040"];
+	flags__seq:has_name_type -> gzip__seq:name__if [color="#404040"];
+	flags__seq:has_comment_type -> gzip__seq:comment__if [color="#404040"];
+	flags__seq:has_header_crc_type -> gzip__seq:header_crc16__if [color="#404040"];
 	extras__seq:len_subfields_type -> extras__seq:subfields_size [color="#404040"];
 	extras__seq:subfields_type -> subfields__seq [style=bold];
+	subfield__seq:len_data_type -> subfield__seq:data_size [color="#404040"];
+	subfields__seq:entries_type -> subfield__seq [style=bold];
 }

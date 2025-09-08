@@ -4,11 +4,11 @@
 
 local class = require("class")
 require("kaitaistruct")
+require("dos_datetime")
 local enum = require("enum")
 local stringstream = require("string_stream")
 local utils = require("utils")
 
-require("dos_datetime")
 -- 
 -- RAR is a archive format used by popular proprietary RAR archiver,
 -- created by Eugene Roshal. There are two major versions of format
@@ -34,15 +34,6 @@ Rar.BlockTypes = enum.Enum {
   terminator = 123,
 }
 
-Rar.Oses = enum.Enum {
-  ms_dos = 0,
-  os_2 = 1,
-  windows = 2,
-  unix = 3,
-  mac_os = 4,
-  beos = 5,
-}
-
 Rar.Methods = enum.Enum {
   store = 48,
   fastest = 49,
@@ -50,6 +41,15 @@ Rar.Methods = enum.Enum {
   normal = 51,
   good = 52,
   best = 53,
+}
+
+Rar.Oses = enum.Enum {
+  ms_dos = 0,
+  os_2 = 1,
+  windows = 2,
+  unix = 3,
+  mac_os = 4,
+  beos = 5,
 }
 
 function Rar:_init(io, parent, root)
@@ -80,45 +80,6 @@ end
 -- Sequence of blocks that constitute the RAR file.
 
 -- 
--- RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and
--- 8-byte magic (and pretty different block format) for v5+. This
--- type would parse and validate both versions of signature. Note
--- that actually this signature is a valid RAR "block": in theory,
--- one can omit signature reading at all, and read this normally,
--- as a block, if exact RAR version is known (and thus it's
--- possible to choose correct block format).
-Rar.MagicSignature = class.class(KaitaiStruct)
-
-function Rar.MagicSignature:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Rar.MagicSignature:_read()
-  self.magic1 = self._io:read_bytes(6)
-  if not(self.magic1 == "\082\097\114\033\026\007") then
-    error("not equal, expected " ..  "\082\097\114\033\026\007" .. ", but got " .. self.magic1)
-  end
-  self.version = self._io:read_u1()
-  if self.version == 1 then
-    self.magic3 = self._io:read_bytes(1)
-    if not(self.magic3 == "\000") then
-      error("not equal, expected " ..  "\000" .. ", but got " .. self.magic3)
-    end
-  end
-end
-
--- 
--- Fixed part of file's magic signature that doesn't change with RAR version.
--- 
--- Variable part of magic signature: 0 means old (RAR 1.5-4.0)
--- format, 1 means new (RAR 5+) format
--- 
--- New format (RAR 5+) magic contains extra byte.
-
--- 
 -- Basic block that RAR files consist of. There are several block
 -- types (see `block_type`), which have different `body` and
 -- `add_body`.
@@ -127,7 +88,7 @@ Rar.Block = class.class(KaitaiStruct)
 function Rar.Block:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -152,6 +113,16 @@ function Rar.Block:_read()
   end
 end
 
+Rar.Block.property.body_size = {}
+function Rar.Block.property.body_size:get()
+  if self._m_body_size ~= nil then
+    return self._m_body_size
+  end
+
+  self._m_body_size = self.block_size - self.header_size
+  return self._m_body_size
+end
+
 -- 
 -- True if block has additional content attached to it.
 Rar.Block.property.has_add = {}
@@ -160,7 +131,7 @@ function Rar.Block.property.has_add:get()
     return self._m_has_add
   end
 
-  self._m_has_add = (self.flags & 32768) ~= 0
+  self._m_has_add = self.flags & 32768 ~= 0
   return self._m_has_add
 end
 
@@ -172,16 +143,6 @@ function Rar.Block.property.header_size:get()
 
   self._m_header_size = utils.box_unwrap((self.has_add) and utils.box_wrap(11) or (7))
   return self._m_header_size
-end
-
-Rar.Block.property.body_size = {}
-function Rar.Block.property.body_size:get()
-  if self._m_body_size ~= nil then
-    return self._m_body_size
-  end
-
-  self._m_body_size = (self.block_size - self.header_size)
-  return self._m_body_size
 end
 
 -- 
@@ -198,7 +159,7 @@ Rar.BlockFileHeader = class.class(KaitaiStruct)
 function Rar.BlockFileHeader:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -213,11 +174,11 @@ function Rar.BlockFileHeader:_read()
   self.method = Rar.Methods(self._io:read_u1())
   self.name_size = self._io:read_u2le()
   self.attr = self._io:read_u4le()
-  if (self._parent.flags & 256) ~= 0 then
+  if self._parent.flags & 256 ~= 0 then
     self.high_pack_size = self._io:read_u4le()
   end
   self.file_name = self._io:read_bytes(self.name_size)
-  if (self._parent.flags & 1024) ~= 0 then
+  if self._parent.flags & 1024 ~= 0 then
     self.salt = self._io:read_u8le()
   end
 end
@@ -244,11 +205,50 @@ Rar.BlockV5 = class.class(KaitaiStruct)
 function Rar.BlockV5:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function Rar.BlockV5:_read()
 end
 
+
+-- 
+-- RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and
+-- 8-byte magic (and pretty different block format) for v5+. This
+-- type would parse and validate both versions of signature. Note
+-- that actually this signature is a valid RAR "block": in theory,
+-- one can omit signature reading at all, and read this normally,
+-- as a block, if exact RAR version is known (and thus it's
+-- possible to choose correct block format).
+Rar.MagicSignature = class.class(KaitaiStruct)
+
+function Rar.MagicSignature:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Rar.MagicSignature:_read()
+  self.magic1 = self._io:read_bytes(6)
+  if not(self.magic1 == "\082\097\114\033\026\007") then
+    error("not equal, expected " .. "\082\097\114\033\026\007" .. ", but got " .. self.magic1)
+  end
+  self.version = self._io:read_u1()
+  if self.version == 1 then
+    self.magic3 = self._io:read_bytes(1)
+    if not(self.magic3 == "\000") then
+      error("not equal, expected " .. "\000" .. ", but got " .. self.magic3)
+    end
+  end
+end
+
+-- 
+-- Fixed part of file's magic signature that doesn't change with RAR version.
+-- 
+-- Variable part of magic signature: 0 means old (RAR 1.5-4.0)
+-- format, 1 means new (RAR 5+) format
+-- 
+-- New format (RAR 5+) magic contains extra byte.
 

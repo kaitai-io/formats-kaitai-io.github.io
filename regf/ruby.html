@@ -214,6 +214,11 @@ filesystem with a running Windows OS.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="Windows registry database parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="Windows registry database parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -242,9 +247,19 @@ filesystem with a running Windows OS.</p>
                 <a href="python.html" title="Windows registry database parsing Python library">Python</a></li>
                 
                 
+                <li>
+                
+                <a href="python-write.html" title="Windows registry database parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
                 <li class="active">
                 
                 <a href="ruby.html" title="Windows registry database parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="Windows registry database parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -320,8 +335,8 @@ filesystem with a running Windows OS.</p>
 
 <span class="nb">require</span><span class="w"> </span><span class="s1">&#39;kaitai/struct/struct&#39;</span>
 
-<span class="k">unless</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.9&#39;</span><span class="p">)</span>
-<span class="w">  </span><span class="k">raise</span><span class="w"> </span><span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">unless</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.11&#39;</span><span class="p">)</span>
+<span class="w">  </span><span class="k">raise</span><span class="w"> </span><span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
 <span class="k">end</span>
 
 
@@ -343,8 +358,8 @@ filesystem with a running Windows OS.</p>
 <span class="c1"># filesystem with a running Windows OS.</span>
 <span class="c1"># @see https://github.com/libyal/libregf/blob/main/documentation/Windows%20NT%20Registry%20File%20(REGF)%20format.asciidoc Source</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Regf</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
-<span class="w">    </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">    </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
 <span class="w">    </span><span class="n">_read</span>
 <span class="w">  </span><span class="k">end</span>
 
@@ -354,386 +369,32 @@ filesystem with a running Windows OS.</p>
 <span class="w">    </span><span class="vi">@hive_bins</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span>
 <span class="w">    </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
 <span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
-<span class="w">      </span><span class="vi">@_raw_hive_bins</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4096</span><span class="p">)</span>
-<span class="w">      </span><span class="n">_io__raw_hive_bins</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_hive_bins</span><span class="o">.</span><span class="n">last</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@hive_bins</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="no">HiveBin</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_hive_bins</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_io_hive_bins</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">(</span><span class="mi">4096</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@hive_bins</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="no">HiveBin</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_hive_bins</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
 <span class="w">      </span><span class="n">i</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span>
 <span class="w">    </span><span class="k">end</span>
 <span class="w">    </span><span class="nb">self</span>
 <span class="w">  </span><span class="k">end</span>
-<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">Filetime</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
-<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
-<span class="w">      </span><span class="n">_read</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">      </span><span class="vi">@value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
-<span class="w">      </span><span class="nb">self</span>
-<span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:value</span>
-<span class="w">  </span><span class="k">end</span>
-<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">HiveBin</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
-<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
-<span class="w">      </span><span class="n">_read</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">      </span><span class="vi">@header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">HiveBinHeader</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span>
-<span class="w">      </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
-<span class="w">      </span><span class="k">while</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
-<span class="w">        </span><span class="vi">@cells</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="no">HiveBinCell</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">        </span><span class="n">i</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span>
-<span class="w">      </span><span class="k">end</span>
-<span class="w">      </span><span class="nb">self</span>
-<span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:header</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:cells</span>
-<span class="w">  </span><span class="k">end</span>
-<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">HiveBinHeader</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
-<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
-<span class="w">      </span><span class="n">_read</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">      </span><span class="vi">@signature</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">104</span><span class="p">,</span><span class="w"> </span><span class="mi">98</span><span class="p">,</span><span class="w"> </span><span class="mi">105</span><span class="p">,</span><span class="w"> </span><span class="mi">110</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span><span class="w"> </span><span class="n">signature</span><span class="p">,</span><span class="w"> </span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/hive_bin_header/seq/0&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">signature</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">104</span><span class="p">,</span><span class="w"> </span><span class="mi">98</span><span class="p">,</span><span class="w"> </span><span class="mi">105</span><span class="p">,</span><span class="w"> </span><span class="mi">110</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-<span class="w">      </span><span class="vi">@size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-<span class="w">      </span><span class="vi">@unknown1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-<span class="w">      </span><span class="vi">@unknown2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-<span class="w">      </span><span class="vi">@timestamp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Filetime</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@unknown4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-<span class="w">      </span><span class="nb">self</span>
-<span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:signature</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># The offset of the hive bin, Value in bytes and relative from</span>
-<span class="w">    </span><span class="c1"># the start of the hive bin data</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:offset</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># Size of the hive bin</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:size</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># 0 most of the time, can contain remnant data</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:unknown1</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># 0 most of the time, can contain remnant data</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:unknown2</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># Only the root (first) hive bin seems to contain a valid FILETIME</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:timestamp</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># Contains number of bytes</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:unknown4</span>
-<span class="w">  </span><span class="k">end</span>
-<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">HiveBinCell</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
-<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
-<span class="w">      </span><span class="n">_read</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">      </span><span class="vi">@cell_size_raw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4le</span>
-<span class="w">      </span><span class="vi">@identifier</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
-<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="n">identifier</span>
-<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;li&quot;</span>
-<span class="w">        </span><span class="vi">@_raw_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(((</span><span class="n">cell_size</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">4</span><span class="p">))</span>
-<span class="w">        </span><span class="n">_io__raw_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_data</span><span class="p">)</span>
-<span class="w">        </span><span class="vi">@data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SubKeyListLi</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_data</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;vk&quot;</span>
-<span class="w">        </span><span class="vi">@_raw_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(((</span><span class="n">cell_size</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">4</span><span class="p">))</span>
-<span class="w">        </span><span class="n">_io__raw_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_data</span><span class="p">)</span>
-<span class="w">        </span><span class="vi">@data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SubKeyListVk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_data</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;lf&quot;</span>
-<span class="w">        </span><span class="vi">@_raw_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(((</span><span class="n">cell_size</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">4</span><span class="p">))</span>
-<span class="w">        </span><span class="n">_io__raw_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_data</span><span class="p">)</span>
-<span class="w">        </span><span class="vi">@data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SubKeyListLhLf</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_data</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;ri&quot;</span>
-<span class="w">        </span><span class="vi">@_raw_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(((</span><span class="n">cell_size</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">4</span><span class="p">))</span>
-<span class="w">        </span><span class="n">_io__raw_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_data</span><span class="p">)</span>
-<span class="w">        </span><span class="vi">@data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SubKeyListRi</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_data</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;lh&quot;</span>
-<span class="w">        </span><span class="vi">@_raw_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(((</span><span class="n">cell_size</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">4</span><span class="p">))</span>
-<span class="w">        </span><span class="n">_io__raw_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_data</span><span class="p">)</span>
-<span class="w">        </span><span class="vi">@data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SubKeyListLhLf</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_data</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;nk&quot;</span>
-<span class="w">        </span><span class="vi">@_raw_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(((</span><span class="n">cell_size</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">4</span><span class="p">))</span>
-<span class="w">        </span><span class="n">_io__raw_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_data</span><span class="p">)</span>
-<span class="w">        </span><span class="vi">@data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">NamedKey</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_data</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;sk&quot;</span>
-<span class="w">        </span><span class="vi">@_raw_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(((</span><span class="n">cell_size</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">4</span><span class="p">))</span>
-<span class="w">        </span><span class="n">_io__raw_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_data</span><span class="p">)</span>
-<span class="w">        </span><span class="vi">@data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SubKeyListSk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_data</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">      </span><span class="k">else</span>
-<span class="w">        </span><span class="vi">@data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(((</span><span class="n">cell_size</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">4</span><span class="p">))</span>
-<span class="w">      </span><span class="k">end</span>
-<span class="w">      </span><span class="nb">self</span>
-<span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">SubKeyListVk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-
-<span class="w">      </span><span class="no">DATA_TYPE_ENUM</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="mi">0</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:data_type_enum_reg_none</span><span class="p">,</span>
-<span class="w">        </span><span class="mi">1</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:data_type_enum_reg_sz</span><span class="p">,</span>
-<span class="w">        </span><span class="mi">2</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:data_type_enum_reg_expand_sz</span><span class="p">,</span>
-<span class="w">        </span><span class="mi">3</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:data_type_enum_reg_binary</span><span class="p">,</span>
-<span class="w">        </span><span class="mi">4</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:data_type_enum_reg_dword</span><span class="p">,</span>
-<span class="w">        </span><span class="mi">5</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:data_type_enum_reg_dword_big_endian</span><span class="p">,</span>
-<span class="w">        </span><span class="mi">6</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:data_type_enum_reg_link</span><span class="p">,</span>
-<span class="w">        </span><span class="mi">7</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:data_type_enum_reg_multi_sz</span><span class="p">,</span>
-<span class="w">        </span><span class="mi">8</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:data_type_enum_reg_resource_list</span><span class="p">,</span>
-<span class="w">        </span><span class="mi">9</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:data_type_enum_reg_full_resource_descriptor</span><span class="p">,</span>
-<span class="w">        </span><span class="mi">10</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:data_type_enum_reg_resource_requirements_list</span><span class="p">,</span>
-<span class="w">        </span><span class="mi">11</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:data_type_enum_reg_qword</span><span class="p">,</span>
-<span class="w">      </span><span class="p">}</span>
-<span class="w">      </span><span class="no">I__DATA_TYPE_ENUM</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">DATA_TYPE_ENUM</span><span class="o">.</span><span class="n">invert</span>
-
-<span class="w">      </span><span class="no">VK_FLAGS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="mi">1</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:vk_flags_value_comp_name</span><span class="p">,</span>
-<span class="w">      </span><span class="p">}</span>
-<span class="w">      </span><span class="no">I__VK_FLAGS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">VK_FLAGS</span><span class="o">.</span><span class="n">invert</span>
-<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
-<span class="w">        </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
-<span class="w">        </span><span class="n">_read</span>
-<span class="w">      </span><span class="k">end</span>
-
-<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">        </span><span class="vi">@value_name_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-<span class="w">        </span><span class="vi">@data_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-<span class="w">        </span><span class="vi">@data_offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-<span class="w">        </span><span class="vi">@data_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">DATA_TYPE_ENUM</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">)</span>
-<span class="w">        </span><span class="vi">@flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">VK_FLAGS</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">)</span>
-<span class="w">        </span><span class="vi">@padding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">flags</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="ss">:vk_flags_value_comp_name</span>
-<span class="w">          </span><span class="vi">@value_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">value_name_size</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
-<span class="w">        </span><span class="k">end</span>
-<span class="w">        </span><span class="nb">self</span>
-<span class="w">      </span><span class="k">end</span>
-<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:value_name_size</span>
-<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:data_size</span>
-<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:data_offset</span>
-<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:data_type</span>
-<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:flags</span>
-<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:padding</span>
-<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:value_name</span>
-<span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">SubKeyListLhLf</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
-<span class="w">        </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
-<span class="w">        </span><span class="n">_read</span>
-<span class="w">      </span><span class="k">end</span>
-
-<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">        </span><span class="vi">@count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-<span class="w">        </span><span class="vi">@items</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span>
-<span class="w">        </span><span class="p">(</span><span class="n">count</span><span class="p">)</span><span class="o">.</span><span class="n">times</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">|</span><span class="n">i</span><span class="o">|</span>
-<span class="w">          </span><span class="vi">@items</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="no">Item</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="nb">self</span>
-<span class="w">      </span><span class="k">end</span>
-<span class="w">      </span><span class="k">class</span><span class="w"> </span><span class="nc">Item</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
-<span class="w">          </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
-<span class="w">          </span><span class="n">_read</span>
-<span class="w">        </span><span class="k">end</span>
-
-<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">          </span><span class="vi">@named_key_offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-<span class="w">          </span><span class="vi">@hash_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-<span class="w">          </span><span class="nb">self</span>
-<span class="w">        </span><span class="k">end</span>
-<span class="w">        </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:named_key_offset</span>
-<span class="w">        </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:hash_value</span>
-<span class="w">      </span><span class="k">end</span>
-<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:count</span>
-<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:items</span>
-<span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">SubKeyListSk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
-<span class="w">        </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
-<span class="w">        </span><span class="n">_read</span>
-<span class="w">      </span><span class="k">end</span>
-
-<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">        </span><span class="vi">@unknown1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-<span class="w">        </span><span class="vi">@previous_security_key_offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-<span class="w">        </span><span class="vi">@next_security_key_offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-<span class="w">        </span><span class="vi">@reference_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-<span class="w">        </span><span class="nb">self</span>
-<span class="w">      </span><span class="k">end</span>
-<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:unknown1</span>
-<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:previous_security_key_offset</span>
-<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:next_security_key_offset</span>
-<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:reference_count</span>
-<span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">SubKeyListLi</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
-<span class="w">        </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
-<span class="w">        </span><span class="n">_read</span>
-<span class="w">      </span><span class="k">end</span>
-
-<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">        </span><span class="vi">@count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-<span class="w">        </span><span class="vi">@items</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span>
-<span class="w">        </span><span class="p">(</span><span class="n">count</span><span class="p">)</span><span class="o">.</span><span class="n">times</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">|</span><span class="n">i</span><span class="o">|</span>
-<span class="w">          </span><span class="vi">@items</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="no">Item</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="nb">self</span>
-<span class="w">      </span><span class="k">end</span>
-<span class="w">      </span><span class="k">class</span><span class="w"> </span><span class="nc">Item</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
-<span class="w">          </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
-<span class="w">          </span><span class="n">_read</span>
-<span class="w">        </span><span class="k">end</span>
-
-<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">          </span><span class="vi">@named_key_offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-<span class="w">          </span><span class="nb">self</span>
-<span class="w">        </span><span class="k">end</span>
-<span class="w">        </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:named_key_offset</span>
-<span class="w">      </span><span class="k">end</span>
-<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:count</span>
-<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:items</span>
-<span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">NamedKey</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-
-<span class="w">      </span><span class="no">NK_FLAGS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="mi">1</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:nk_flags_key_is_volatile</span><span class="p">,</span>
-<span class="w">        </span><span class="mi">2</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:nk_flags_key_hive_exit</span><span class="p">,</span>
-<span class="w">        </span><span class="mi">4</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:nk_flags_key_hive_entry</span><span class="p">,</span>
-<span class="w">        </span><span class="mi">8</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:nk_flags_key_no_delete</span><span class="p">,</span>
-<span class="w">        </span><span class="mi">16</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:nk_flags_key_sym_link</span><span class="p">,</span>
-<span class="w">        </span><span class="mi">32</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:nk_flags_key_comp_name</span><span class="p">,</span>
-<span class="w">        </span><span class="mi">64</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:nk_flags_key_prefef_handle</span><span class="p">,</span>
-<span class="w">        </span><span class="mi">128</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:nk_flags_key_virt_mirrored</span><span class="p">,</span>
-<span class="w">        </span><span class="mi">256</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:nk_flags_key_virt_target</span><span class="p">,</span>
-<span class="w">        </span><span class="mi">512</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:nk_flags_key_virtual_store</span><span class="p">,</span>
-<span class="w">        </span><span class="mi">4096</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:nk_flags_unknown1</span><span class="p">,</span>
-<span class="w">        </span><span class="mi">16384</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:nk_flags_unknown2</span><span class="p">,</span>
-<span class="w">      </span><span class="p">}</span>
-<span class="w">      </span><span class="no">I__NK_FLAGS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">NK_FLAGS</span><span class="o">.</span><span class="n">invert</span>
-<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
-<span class="w">        </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
-<span class="w">        </span><span class="n">_read</span>
-<span class="w">      </span><span class="k">end</span>
-
-<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">        </span><span class="vi">@flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">NK_FLAGS</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">)</span>
-<span class="w">        </span><span class="vi">@last_key_written_date_and_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Filetime</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">        </span><span class="vi">@unknown1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-<span class="w">        </span><span class="vi">@parent_key_offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-<span class="w">        </span><span class="vi">@number_of_sub_keys</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-<span class="w">        </span><span class="vi">@number_of_volatile_sub_keys</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-<span class="w">        </span><span class="vi">@sub_keys_list_offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-<span class="w">        </span><span class="vi">@number_of_values</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-<span class="w">        </span><span class="vi">@values_list_offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-<span class="w">        </span><span class="vi">@security_key_offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-<span class="w">        </span><span class="vi">@class_name_offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-<span class="w">        </span><span class="vi">@largest_sub_key_name_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-<span class="w">        </span><span class="vi">@largest_sub_key_class_name_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-<span class="w">        </span><span class="vi">@largest_value_name_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-<span class="w">        </span><span class="vi">@largest_value_data_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-<span class="w">        </span><span class="vi">@unknown2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-<span class="w">        </span><span class="vi">@key_name_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-<span class="w">        </span><span class="vi">@class_name_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-<span class="w">        </span><span class="vi">@unknown_string_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-<span class="w">        </span><span class="vi">@unknown_string</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">unknown_string_size</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
-<span class="w">        </span><span class="nb">self</span>
-<span class="w">      </span><span class="k">end</span>
-<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:flags</span>
-<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:last_key_written_date_and_time</span>
-<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:unknown1</span>
-<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:parent_key_offset</span>
-<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:number_of_sub_keys</span>
-<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:number_of_volatile_sub_keys</span>
-<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:sub_keys_list_offset</span>
-<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:number_of_values</span>
-<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:values_list_offset</span>
-<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:security_key_offset</span>
-<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:class_name_offset</span>
-<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:largest_sub_key_name_size</span>
-<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:largest_sub_key_class_name_size</span>
-<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:largest_value_name_size</span>
-<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:largest_value_data_size</span>
-<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:unknown2</span>
-<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:key_name_size</span>
-<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:class_name_size</span>
-<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:unknown_string_size</span>
-<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:unknown_string</span>
-<span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">SubKeyListRi</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
-<span class="w">        </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
-<span class="w">        </span><span class="n">_read</span>
-<span class="w">      </span><span class="k">end</span>
-
-<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">        </span><span class="vi">@count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
-<span class="w">        </span><span class="vi">@items</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span>
-<span class="w">        </span><span class="p">(</span><span class="n">count</span><span class="p">)</span><span class="o">.</span><span class="n">times</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">|</span><span class="n">i</span><span class="o">|</span>
-<span class="w">          </span><span class="vi">@items</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="no">Item</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="nb">self</span>
-<span class="w">      </span><span class="k">end</span>
-<span class="w">      </span><span class="k">class</span><span class="w"> </span><span class="nc">Item</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
-<span class="w">          </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
-<span class="w">          </span><span class="n">_read</span>
-<span class="w">        </span><span class="k">end</span>
-
-<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">          </span><span class="vi">@sub_key_list_offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-<span class="w">          </span><span class="nb">self</span>
-<span class="w">        </span><span class="k">end</span>
-<span class="w">        </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:sub_key_list_offset</span>
-<span class="w">      </span><span class="k">end</span>
-<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:count</span>
-<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:items</span>
-<span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">cell_size</span>
-<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@cell_size</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@cell_size</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">      </span><span class="vi">@cell_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">cell_size_raw</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">cell_size_raw</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@cell_size</span>
-<span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">is_allocated</span>
-<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@is_allocated</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@is_allocated</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">      </span><span class="vi">@is_allocated</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cell_size_raw</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span>
-<span class="w">      </span><span class="vi">@is_allocated</span>
-<span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:cell_size_raw</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:identifier</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:data</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:_raw_data</span>
-<span class="w">  </span><span class="k">end</span>
 <span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">FileHeader</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+
+<span class="w">    </span><span class="no">FILE_FORMAT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="mi">1</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:file_format_direct_memory_load</span><span class="p">,</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="no">I__FILE_FORMAT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">FILE_FORMAT</span><span class="o">.</span><span class="n">invert</span>
 
 <span class="w">    </span><span class="no">FILE_TYPE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="mi">0</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:file_type_normal</span><span class="p">,</span>
 <span class="w">      </span><span class="mi">1</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:file_type_transaction_log</span><span class="p">,</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="no">I__FILE_TYPE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">FILE_TYPE</span><span class="o">.</span><span class="n">invert</span>
-
-<span class="w">    </span><span class="no">FILE_FORMAT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="mi">1</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:file_format_direct_memory_load</span><span class="p">,</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="no">I__FILE_FORMAT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">FILE_FORMAT</span><span class="o">.</span><span class="n">invert</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 <span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
 <span class="w">      </span><span class="n">_read</span>
 <span class="w">    </span><span class="k">end</span>
 
 <span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
 <span class="w">      </span><span class="vi">@signature</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">114</span><span class="p">,</span><span class="w"> </span><span class="mi">101</span><span class="p">,</span><span class="w"> </span><span class="mi">103</span><span class="p">,</span><span class="w"> </span><span class="mi">102</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span><span class="w"> </span><span class="n">signature</span><span class="p">,</span><span class="w"> </span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/file_header/seq/0&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">signature</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">114</span><span class="p">,</span><span class="w"> </span><span class="mi">101</span><span class="p">,</span><span class="w"> </span><span class="mi">103</span><span class="p">,</span><span class="w"> </span><span class="mi">102</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
+<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">114</span><span class="p">,</span><span class="w"> </span><span class="mi">101</span><span class="p">,</span><span class="w"> </span><span class="mi">103</span><span class="p">,</span><span class="w"> </span><span class="mi">102</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span><span class="w"> </span><span class="vi">@signature</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/file_header/seq/0&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@signature</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">114</span><span class="p">,</span><span class="w"> </span><span class="mi">101</span><span class="p">,</span><span class="w"> </span><span class="mi">103</span><span class="p">,</span><span class="w"> </span><span class="mi">102</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
 <span class="w">      </span><span class="vi">@primary_sequence_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
 <span class="w">      </span><span class="vi">@secondary_sequence_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
 <span class="w">      </span><span class="vi">@last_modification_date_and_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Filetime</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
@@ -769,6 +430,352 @@ filesystem with a running Windows OS.</p>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:reserved</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:boot_type</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:boot_recover</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">Filetime</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:value</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">HiveBin</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">HiveBinHeader</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span>
+<span class="w">      </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">      </span><span class="k">while</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
+<span class="w">        </span><span class="vi">@cells</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="no">HiveBinCell</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">        </span><span class="n">i</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:header</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:cells</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">HiveBinCell</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@cell_size_raw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4le</span>
+<span class="w">      </span><span class="vi">@identifier</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;UTF-8&#39;</span><span class="p">)</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="n">identifier</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;lf&quot;</span>
+<span class="w">        </span><span class="n">_io_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">((</span><span class="n">cell_size</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SubKeyListLhLf</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_data</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;lh&quot;</span>
+<span class="w">        </span><span class="n">_io_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">((</span><span class="n">cell_size</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SubKeyListLhLf</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_data</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;li&quot;</span>
+<span class="w">        </span><span class="n">_io_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">((</span><span class="n">cell_size</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SubKeyListLi</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_data</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;nk&quot;</span>
+<span class="w">        </span><span class="n">_io_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">((</span><span class="n">cell_size</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">NamedKey</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_data</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;ri&quot;</span>
+<span class="w">        </span><span class="n">_io_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">((</span><span class="n">cell_size</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SubKeyListRi</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_data</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;sk&quot;</span>
+<span class="w">        </span><span class="n">_io_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">((</span><span class="n">cell_size</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SubKeyListSk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_data</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;vk&quot;</span>
+<span class="w">        </span><span class="n">_io_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">((</span><span class="n">cell_size</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SubKeyListVk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_data</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="k">else</span>
+<span class="w">        </span><span class="vi">@data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">cell_size</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">NamedKey</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+
+<span class="w">      </span><span class="no">NK_FLAGS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="mi">1</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:nk_flags_key_is_volatile</span><span class="p">,</span>
+<span class="w">        </span><span class="mi">2</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:nk_flags_key_hive_exit</span><span class="p">,</span>
+<span class="w">        </span><span class="mi">4</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:nk_flags_key_hive_entry</span><span class="p">,</span>
+<span class="w">        </span><span class="mi">8</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:nk_flags_key_no_delete</span><span class="p">,</span>
+<span class="w">        </span><span class="mi">16</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:nk_flags_key_sym_link</span><span class="p">,</span>
+<span class="w">        </span><span class="mi">32</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:nk_flags_key_comp_name</span><span class="p">,</span>
+<span class="w">        </span><span class="mi">64</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:nk_flags_key_prefef_handle</span><span class="p">,</span>
+<span class="w">        </span><span class="mi">128</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:nk_flags_key_virt_mirrored</span><span class="p">,</span>
+<span class="w">        </span><span class="mi">256</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:nk_flags_key_virt_target</span><span class="p">,</span>
+<span class="w">        </span><span class="mi">512</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:nk_flags_key_virtual_store</span><span class="p">,</span>
+<span class="w">        </span><span class="mi">4096</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:nk_flags_unknown1</span><span class="p">,</span>
+<span class="w">        </span><span class="mi">16384</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:nk_flags_unknown2</span><span class="p">,</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">      </span><span class="no">I__NK_FLAGS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">NK_FLAGS</span><span class="o">.</span><span class="n">invert</span>
+<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">        </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">        </span><span class="n">_read</span>
+<span class="w">      </span><span class="k">end</span>
+
+<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">        </span><span class="vi">@flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">NK_FLAGS</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@last_key_written_date_and_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Filetime</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@unknown1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+<span class="w">        </span><span class="vi">@parent_key_offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+<span class="w">        </span><span class="vi">@number_of_sub_keys</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+<span class="w">        </span><span class="vi">@number_of_volatile_sub_keys</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+<span class="w">        </span><span class="vi">@sub_keys_list_offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+<span class="w">        </span><span class="vi">@number_of_values</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+<span class="w">        </span><span class="vi">@values_list_offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+<span class="w">        </span><span class="vi">@security_key_offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+<span class="w">        </span><span class="vi">@class_name_offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+<span class="w">        </span><span class="vi">@largest_sub_key_name_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+<span class="w">        </span><span class="vi">@largest_sub_key_class_name_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+<span class="w">        </span><span class="vi">@largest_value_name_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+<span class="w">        </span><span class="vi">@largest_value_data_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+<span class="w">        </span><span class="vi">@unknown2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+<span class="w">        </span><span class="vi">@key_name_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+<span class="w">        </span><span class="vi">@class_name_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+<span class="w">        </span><span class="vi">@unknown_string_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+<span class="w">        </span><span class="vi">@unknown_string</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">unknown_string_size</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;UTF-8&#39;</span><span class="p">)</span>
+<span class="w">        </span><span class="nb">self</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:flags</span>
+<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:last_key_written_date_and_time</span>
+<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:unknown1</span>
+<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:parent_key_offset</span>
+<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:number_of_sub_keys</span>
+<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:number_of_volatile_sub_keys</span>
+<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:sub_keys_list_offset</span>
+<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:number_of_values</span>
+<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:values_list_offset</span>
+<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:security_key_offset</span>
+<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:class_name_offset</span>
+<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:largest_sub_key_name_size</span>
+<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:largest_sub_key_class_name_size</span>
+<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:largest_value_name_size</span>
+<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:largest_value_data_size</span>
+<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:unknown2</span>
+<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:key_name_size</span>
+<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:class_name_size</span>
+<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:unknown_string_size</span>
+<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:unknown_string</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">SubKeyListLhLf</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">        </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">        </span><span class="n">_read</span>
+<span class="w">      </span><span class="k">end</span>
+
+<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">        </span><span class="vi">@count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+<span class="w">        </span><span class="vi">@items</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span>
+<span class="w">        </span><span class="p">(</span><span class="n">count</span><span class="p">)</span><span class="o">.</span><span class="n">times</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">|</span><span class="n">i</span><span class="o">|</span>
+<span class="w">          </span><span class="vi">@items</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="no">Item</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="nb">self</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="k">class</span><span class="w"> </span><span class="nc">Item</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">          </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">          </span><span class="n">_read</span>
+<span class="w">        </span><span class="k">end</span>
+
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">          </span><span class="vi">@named_key_offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+<span class="w">          </span><span class="vi">@hash_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+<span class="w">          </span><span class="nb">self</span>
+<span class="w">        </span><span class="k">end</span>
+<span class="w">        </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:named_key_offset</span>
+<span class="w">        </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:hash_value</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:count</span>
+<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:items</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">SubKeyListLi</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">        </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">        </span><span class="n">_read</span>
+<span class="w">      </span><span class="k">end</span>
+
+<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">        </span><span class="vi">@count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+<span class="w">        </span><span class="vi">@items</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span>
+<span class="w">        </span><span class="p">(</span><span class="n">count</span><span class="p">)</span><span class="o">.</span><span class="n">times</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">|</span><span class="n">i</span><span class="o">|</span>
+<span class="w">          </span><span class="vi">@items</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="no">Item</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="nb">self</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="k">class</span><span class="w"> </span><span class="nc">Item</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">          </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">          </span><span class="n">_read</span>
+<span class="w">        </span><span class="k">end</span>
+
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">          </span><span class="vi">@named_key_offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+<span class="w">          </span><span class="nb">self</span>
+<span class="w">        </span><span class="k">end</span>
+<span class="w">        </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:named_key_offset</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:count</span>
+<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:items</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">SubKeyListRi</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">        </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">        </span><span class="n">_read</span>
+<span class="w">      </span><span class="k">end</span>
+
+<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">        </span><span class="vi">@count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+<span class="w">        </span><span class="vi">@items</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span>
+<span class="w">        </span><span class="p">(</span><span class="n">count</span><span class="p">)</span><span class="o">.</span><span class="n">times</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">|</span><span class="n">i</span><span class="o">|</span>
+<span class="w">          </span><span class="vi">@items</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="no">Item</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="nb">self</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="k">class</span><span class="w"> </span><span class="nc">Item</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">          </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">          </span><span class="n">_read</span>
+<span class="w">        </span><span class="k">end</span>
+
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">          </span><span class="vi">@sub_key_list_offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+<span class="w">          </span><span class="nb">self</span>
+<span class="w">        </span><span class="k">end</span>
+<span class="w">        </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:sub_key_list_offset</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:count</span>
+<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:items</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">SubKeyListSk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">        </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">        </span><span class="n">_read</span>
+<span class="w">      </span><span class="k">end</span>
+
+<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">        </span><span class="vi">@unknown1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+<span class="w">        </span><span class="vi">@previous_security_key_offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+<span class="w">        </span><span class="vi">@next_security_key_offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+<span class="w">        </span><span class="vi">@reference_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+<span class="w">        </span><span class="nb">self</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:unknown1</span>
+<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:previous_security_key_offset</span>
+<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:next_security_key_offset</span>
+<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:reference_count</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">SubKeyListVk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+
+<span class="w">      </span><span class="no">DATA_TYPE_ENUM</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="mi">0</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:data_type_enum_reg_none</span><span class="p">,</span>
+<span class="w">        </span><span class="mi">1</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:data_type_enum_reg_sz</span><span class="p">,</span>
+<span class="w">        </span><span class="mi">2</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:data_type_enum_reg_expand_sz</span><span class="p">,</span>
+<span class="w">        </span><span class="mi">3</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:data_type_enum_reg_binary</span><span class="p">,</span>
+<span class="w">        </span><span class="mi">4</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:data_type_enum_reg_dword</span><span class="p">,</span>
+<span class="w">        </span><span class="mi">5</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:data_type_enum_reg_dword_big_endian</span><span class="p">,</span>
+<span class="w">        </span><span class="mi">6</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:data_type_enum_reg_link</span><span class="p">,</span>
+<span class="w">        </span><span class="mi">7</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:data_type_enum_reg_multi_sz</span><span class="p">,</span>
+<span class="w">        </span><span class="mi">8</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:data_type_enum_reg_resource_list</span><span class="p">,</span>
+<span class="w">        </span><span class="mi">9</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:data_type_enum_reg_full_resource_descriptor</span><span class="p">,</span>
+<span class="w">        </span><span class="mi">10</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:data_type_enum_reg_resource_requirements_list</span><span class="p">,</span>
+<span class="w">        </span><span class="mi">11</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:data_type_enum_reg_qword</span><span class="p">,</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">      </span><span class="no">I__DATA_TYPE_ENUM</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">DATA_TYPE_ENUM</span><span class="o">.</span><span class="n">invert</span>
+
+<span class="w">      </span><span class="no">VK_FLAGS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="mi">1</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:vk_flags_value_comp_name</span><span class="p">,</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">      </span><span class="no">I__VK_FLAGS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">VK_FLAGS</span><span class="o">.</span><span class="n">invert</span>
+<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">        </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">        </span><span class="n">_read</span>
+<span class="w">      </span><span class="k">end</span>
+
+<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">        </span><span class="vi">@value_name_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+<span class="w">        </span><span class="vi">@data_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+<span class="w">        </span><span class="vi">@data_offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+<span class="w">        </span><span class="vi">@data_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">DATA_TYPE_ENUM</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">VK_FLAGS</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@padding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">flags</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="ss">:vk_flags_value_comp_name</span>
+<span class="w">          </span><span class="vi">@value_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">value_name_size</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;UTF-8&#39;</span><span class="p">)</span>
+<span class="w">        </span><span class="k">end</span>
+<span class="w">        </span><span class="nb">self</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:value_name_size</span>
+<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:data_size</span>
+<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:data_offset</span>
+<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:data_type</span>
+<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:flags</span>
+<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:padding</span>
+<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:value_name</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">cell_size</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@cell_size</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@cell_size</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@cell_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">cell_size_raw</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">cell_size_raw</span>
+<span class="w">      </span><span class="vi">@cell_size</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">is_allocated</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@is_allocated</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@is_allocated</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@is_allocated</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cell_size_raw</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">      </span><span class="vi">@is_allocated</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:cell_size_raw</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:identifier</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:data</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:_raw_data</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">HiveBinHeader</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@signature</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">104</span><span class="p">,</span><span class="w"> </span><span class="mi">98</span><span class="p">,</span><span class="w"> </span><span class="mi">105</span><span class="p">,</span><span class="w"> </span><span class="mi">110</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span><span class="w"> </span><span class="vi">@signature</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/hive_bin_header/seq/0&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@signature</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">104</span><span class="p">,</span><span class="w"> </span><span class="mi">98</span><span class="p">,</span><span class="w"> </span><span class="mi">105</span><span class="p">,</span><span class="w"> </span><span class="mi">110</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+<span class="w">      </span><span class="vi">@size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+<span class="w">      </span><span class="vi">@unknown1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+<span class="w">      </span><span class="vi">@unknown2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+<span class="w">      </span><span class="vi">@timestamp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Filetime</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@unknown4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:signature</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># The offset of the hive bin, Value in bytes and relative from</span>
+<span class="w">    </span><span class="c1"># the start of the hive bin data</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:offset</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Size of the hive bin</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:size</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># 0 most of the time, can contain remnant data</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:unknown1</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># 0 most of the time, can contain remnant data</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:unknown2</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Only the root (first) hive bin seems to contain a valid FILETIME</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:timestamp</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Contains number of bytes</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:unknown4</span>
 <span class="w">  </span><span class="k">end</span>
 <span class="w">  </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:header</span>
 <span class="w">  </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:hive_bins</span>

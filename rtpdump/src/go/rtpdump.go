@@ -16,14 +16,18 @@ type Rtpdump struct {
 	Packets []*Rtpdump_PacketT
 	_io *kaitai.Stream
 	_root *Rtpdump
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewRtpdump() *Rtpdump {
 	return &Rtpdump{
 	}
 }
 
-func (this *Rtpdump) Read(io *kaitai.Stream, parent interface{}, root *Rtpdump) (err error) {
+func (this Rtpdump) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Rtpdump) Read(io *kaitai.Stream, parent kaitai.Struct, root *Rtpdump) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -34,7 +38,7 @@ func (this *Rtpdump) Read(io *kaitai.Stream, parent interface{}, root *Rtpdump) 
 		return err
 	}
 	this.FileHeader = tmp1
-	for i := 1;; i++ {
+	for i := 0;; i++ {
 		tmp2, err := this._io.EOF()
 		if err != nil {
 			return err
@@ -68,6 +72,10 @@ type Rtpdump_HeaderT struct {
 func NewRtpdump_HeaderT() *Rtpdump_HeaderT {
 	return &Rtpdump_HeaderT{
 	}
+}
+
+func (this Rtpdump_HeaderT) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Rtpdump_HeaderT) Read(io *kaitai.Stream, parent *Rtpdump, root *Rtpdump) (err error) {
@@ -165,6 +173,10 @@ func NewRtpdump_PacketT() *Rtpdump_PacketT {
 	}
 }
 
+func (this Rtpdump_PacketT) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Rtpdump_PacketT) Read(io *kaitai.Stream, parent *Rtpdump, root *Rtpdump) (err error) {
 	this._io = io
 	this._parent = parent
@@ -193,7 +205,7 @@ func (this *Rtpdump_PacketT) Read(io *kaitai.Stream, parent *Rtpdump, root *Rtpd
 	this._raw_Body = tmp16
 	_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
 	tmp17 := NewRtpPacket()
-	err = tmp17.Read(_io__raw_Body, this, nil)
+	err = tmp17.Read(_io__raw_Body, nil, nil)
 	if err != nil {
 		return err
 	}

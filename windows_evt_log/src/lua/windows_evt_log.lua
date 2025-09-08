@@ -51,13 +51,36 @@ end
 
 
 -- 
+-- See also: Source (https://forensics.wiki/windows_event_log_(evt)/#cursor-record)
+WindowsEvtLog.CursorRecordBody = class.class(KaitaiStruct)
+
+function WindowsEvtLog.CursorRecordBody:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function WindowsEvtLog.CursorRecordBody:_read()
+  self.magic = self._io:read_bytes(12)
+  if not(self.magic == "\034\034\034\034\051\051\051\051\068\068\068\068") then
+    error("not equal, expected " .. "\034\034\034\034\051\051\051\051\068\068\068\068" .. ", but got " .. self.magic)
+  end
+  self.ofs_first_record = self._io:read_u4le()
+  self.ofs_next_record = self._io:read_u4le()
+  self.idx_next_record = self._io:read_u4le()
+  self.idx_first_record = self._io:read_u4le()
+end
+
+
+-- 
 -- See also: Source (https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb309024(v=vs.85))
 WindowsEvtLog.Header = class.class(KaitaiStruct)
 
 function WindowsEvtLog.Header:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -65,7 +88,7 @@ function WindowsEvtLog.Header:_read()
   self.len_header = self._io:read_u4le()
   self.magic = self._io:read_bytes(4)
   if not(self.magic == "\076\102\076\101") then
-    error("not equal, expected " ..  "\076\102\076\101" .. ", but got " .. self.magic)
+    error("not equal, expected " .. "\076\102\076\101" .. ", but got " .. self.magic)
   end
   self.version_major = self._io:read_u4le()
   self.version_minor = self._io:read_u4le()
@@ -100,7 +123,7 @@ WindowsEvtLog.Header.Flags = class.class(KaitaiStruct)
 function WindowsEvtLog.Header.Flags:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -129,7 +152,7 @@ WindowsEvtLog.Record = class.class(KaitaiStruct)
 function WindowsEvtLog.Record:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -138,15 +161,15 @@ function WindowsEvtLog.Record:_read()
   self.type = self._io:read_u4le()
   local _on = self.type
   if _on == 1699505740 then
-    self._raw_body = self._io:read_bytes((self.len_record - 12))
+    self._raw_body = self._io:read_bytes(self.len_record - 12)
     local _io = KaitaiStream(stringstream(self._raw_body))
     self.body = WindowsEvtLog.RecordBody(_io, self, self._root)
   elseif _on == 286331153 then
-    self._raw_body = self._io:read_bytes((self.len_record - 12))
+    self._raw_body = self._io:read_bytes(self.len_record - 12)
     local _io = KaitaiStream(stringstream(self._raw_body))
     self.body = WindowsEvtLog.CursorRecordBody(_io, self, self._root)
   else
-    self.body = self._io:read_bytes((self.len_record - 12))
+    self.body = self._io:read_bytes(self.len_record - 12)
   end
   self.len_record2 = self._io:read_u4le()
 end
@@ -179,7 +202,7 @@ WindowsEvtLog.RecordBody.EventTypes = enum.Enum {
 function WindowsEvtLog.RecordBody:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -199,19 +222,6 @@ function WindowsEvtLog.RecordBody:_read()
   self.ofs_data = self._io:read_u4le()
 end
 
-WindowsEvtLog.RecordBody.property.user_sid = {}
-function WindowsEvtLog.RecordBody.property.user_sid:get()
-  if self._m_user_sid ~= nil then
-    return self._m_user_sid
-  end
-
-  local _pos = self._io:pos()
-  self._io:seek((self.ofs_user_sid - 8))
-  self._m_user_sid = self._io:read_bytes(self.len_user_sid)
-  self._io:seek(_pos)
-  return self._m_user_sid
-end
-
 WindowsEvtLog.RecordBody.property.data = {}
 function WindowsEvtLog.RecordBody.property.data:get()
   if self._m_data ~= nil then
@@ -219,10 +229,23 @@ function WindowsEvtLog.RecordBody.property.data:get()
   end
 
   local _pos = self._io:pos()
-  self._io:seek((self.ofs_data - 8))
+  self._io:seek(self.ofs_data - 8)
   self._m_data = self._io:read_bytes(self.len_data)
   self._io:seek(_pos)
   return self._m_data
+end
+
+WindowsEvtLog.RecordBody.property.user_sid = {}
+function WindowsEvtLog.RecordBody.property.user_sid:get()
+  if self._m_user_sid ~= nil then
+    return self._m_user_sid
+  end
+
+  local _pos = self._io:pos()
+  self._io:seek(self.ofs_user_sid - 8)
+  self._m_user_sid = self._io:read_bytes(self.len_user_sid)
+  self._io:seek(_pos)
+  return self._m_user_sid
 end
 
 -- 
@@ -243,27 +266,4 @@ end
 -- See also: Source (https://learn.microsoft.com/en-us/windows/win32/eventlog/event-categories)
 -- 
 -- Offset of strings present in the log.
-
--- 
--- See also: Source (https://forensics.wiki/windows_event_log_(evt)/#cursor-record)
-WindowsEvtLog.CursorRecordBody = class.class(KaitaiStruct)
-
-function WindowsEvtLog.CursorRecordBody:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function WindowsEvtLog.CursorRecordBody:_read()
-  self.magic = self._io:read_bytes(12)
-  if not(self.magic == "\034\034\034\034\051\051\051\051\068\068\068\068") then
-    error("not equal, expected " ..  "\034\034\034\034\051\051\051\051\068\068\068\068" .. ", but got " .. self.magic)
-  end
-  self.ofs_first_record = self._io:read_u4le()
-  self.ofs_next_record = self._io:read_u4le()
-  self.idx_next_record = self._io:read_u4le()
-  self.idx_first_record = self._io:read_u4le()
-end
-
 

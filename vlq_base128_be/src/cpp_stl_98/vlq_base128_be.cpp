@@ -4,7 +4,7 @@
 
 vlq_base128_be_t::vlq_base128_be_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, vlq_base128_be_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     m_groups = 0;
     f_last = false;
     f_value = false;
@@ -70,15 +70,15 @@ void vlq_base128_be_t::group_t::_clean_up() {
 int32_t vlq_base128_be_t::last() {
     if (f_last)
         return m_last;
-    m_last = (groups()->size() - 1);
     f_last = true;
+    m_last = groups()->size() - 1;
     return m_last;
 }
 
 uint64_t vlq_base128_be_t::value() {
     if (f_value)
         return m_value;
-    m_value = static_cast<uint64_t>((((((((groups()->at(last())->value() + ((last() >= 1) ? ((groups()->at((last() - 1))->value() << 7)) : (0))) + ((last() >= 2) ? ((groups()->at((last() - 2))->value() << 14)) : (0))) + ((last() >= 3) ? ((groups()->at((last() - 3))->value() << 21)) : (0))) + ((last() >= 4) ? ((groups()->at((last() - 4))->value() << 28)) : (0))) + ((last() >= 5) ? ((groups()->at((last() - 5))->value() << 35)) : (0))) + ((last() >= 6) ? ((groups()->at((last() - 6))->value() << 42)) : (0))) + ((last() >= 7) ? ((groups()->at((last() - 7))->value() << 49)) : (0))));
     f_value = true;
+    m_value = static_cast<uint64_t>(((((((groups()->at(last())->value() + ((last() >= 1) ? (groups()->at(last() - 1)->value() << 7) : (0))) + ((last() >= 2) ? (groups()->at(last() - 2)->value() << 14) : (0))) + ((last() >= 3) ? (groups()->at(last() - 3)->value() << 21) : (0))) + ((last() >= 4) ? (groups()->at(last() - 4)->value() << 28) : (0))) + ((last() >= 5) ? (groups()->at(last() - 5)->value() << 35) : (0))) + ((last() >= 6) ? (groups()->at(last() - 6)->value() << 42) : (0))) + ((last() >= 7) ? (groups()->at(last() - 7)->value() << 49) : (0)));
     return m_value;
 }

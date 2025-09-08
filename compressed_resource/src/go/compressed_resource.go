@@ -35,14 +35,18 @@ type CompressedResource struct {
 	CompressedData []byte
 	_io *kaitai.Stream
 	_root *CompressedResource
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewCompressedResource() *CompressedResource {
 	return &CompressedResource{
 	}
 }
 
-func (this *CompressedResource) Read(io *kaitai.Stream, parent interface{}, root *CompressedResource) (err error) {
+func (this CompressedResource) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *CompressedResource) Read(io *kaitai.Stream, parent kaitai.Struct, root *CompressedResource) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -86,14 +90,18 @@ type CompressedResource_Header struct {
 	_root *CompressedResource
 	_parent *CompressedResource
 	_raw_TypeSpecificPartRawWithIo []byte
+	_f_typeSpecificPart bool
+	typeSpecificPart kaitai.Struct
 	_f_typeSpecificPartRaw bool
 	typeSpecificPartRaw []byte
-	_f_typeSpecificPart bool
-	typeSpecificPart interface{}
 }
 func NewCompressedResource_Header() *CompressedResource_Header {
 	return &CompressedResource_Header{
 	}
+}
+
+func (this CompressedResource_Header) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *CompressedResource_Header) Read(io *kaitai.Stream, parent *CompressedResource, root *CompressedResource) (err error) {
@@ -107,7 +115,7 @@ func (this *CompressedResource_Header) Read(io *kaitai.Stream, parent *Compresse
 		return err
 	}
 	this.CommonPart = tmp3
-	tmp4, err := this._io.ReadBytes(int((this.CommonPart.LenHeader - 12)))
+	tmp4, err := this._io.ReadBytes(int(this.CommonPart.LenHeader - 12))
 	if err != nil {
 		return err
 	}
@@ -115,7 +123,7 @@ func (this *CompressedResource_Header) Read(io *kaitai.Stream, parent *Compresse
 	this._raw_TypeSpecificPartRawWithIo = tmp4
 	_io__raw_TypeSpecificPartRawWithIo := kaitai.NewStream(bytes.NewReader(this._raw_TypeSpecificPartRawWithIo))
 	tmp5 := NewBytesWithIo()
-	err = tmp5.Read(_io__raw_TypeSpecificPartRawWithIo, this, nil)
+	err = tmp5.Read(_io__raw_TypeSpecificPartRawWithIo, nil, nil)
 	if err != nil {
 		return err
 	}
@@ -125,25 +133,13 @@ func (this *CompressedResource_Header) Read(io *kaitai.Stream, parent *Compresse
 
 /**
  * The type-specific part of the header,
- * as a raw byte array.
- */
-func (this *CompressedResource_Header) TypeSpecificPartRaw() (v []byte, err error) {
-	if (this._f_typeSpecificPartRaw) {
-		return this.typeSpecificPartRaw, nil
-	}
-	this.typeSpecificPartRaw = []byte(this.TypeSpecificPartRawWithIo.Data)
-	this._f_typeSpecificPartRaw = true
-	return this.typeSpecificPartRaw, nil
-}
-
-/**
- * The type-specific part of the header,
  * parsed according to the type from the common part.
  */
-func (this *CompressedResource_Header) TypeSpecificPart() (v interface{}, err error) {
+func (this *CompressedResource_Header) TypeSpecificPart() (v kaitai.Struct, err error) {
 	if (this._f_typeSpecificPart) {
 		return this.typeSpecificPart, nil
 	}
+	this._f_typeSpecificPart = true
 	thisIo := this.TypeSpecificPartRawWithIo._io
 	_pos, err := thisIo.Pos()
 	if err != nil {
@@ -173,9 +169,20 @@ func (this *CompressedResource_Header) TypeSpecificPart() (v interface{}, err er
 	if err != nil {
 		return nil, err
 	}
-	this._f_typeSpecificPart = true
-	this._f_typeSpecificPart = true
 	return this.typeSpecificPart, nil
+}
+
+/**
+ * The type-specific part of the header,
+ * as a raw byte array.
+ */
+func (this *CompressedResource_Header) TypeSpecificPartRaw() (v []byte, err error) {
+	if (this._f_typeSpecificPartRaw) {
+		return this.typeSpecificPartRaw, nil
+	}
+	this._f_typeSpecificPartRaw = true
+	this.typeSpecificPartRaw = []byte(this.TypeSpecificPartRawWithIo.Data)
+	return this.typeSpecificPartRaw, nil
 }
 
 /**
@@ -207,6 +214,10 @@ type CompressedResource_Header_CommonPart struct {
 func NewCompressedResource_Header_CommonPart() *CompressedResource_Header_CommonPart {
 	return &CompressedResource_Header_CommonPart{
 	}
+}
+
+func (this CompressedResource_Header_CommonPart) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *CompressedResource_Header_CommonPart) Read(io *kaitai.Stream, parent *CompressedResource_Header, root *CompressedResource) (err error) {
@@ -303,6 +314,10 @@ func NewCompressedResource_Header_TypeSpecificPartType8() *CompressedResource_He
 	}
 }
 
+func (this CompressedResource_Header_TypeSpecificPartType8) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *CompressedResource_Header_TypeSpecificPartType8) Read(io *kaitai.Stream, parent *CompressedResource_Header, root *CompressedResource) (err error) {
 	this._io = io
 	this._parent = parent
@@ -381,6 +396,10 @@ func NewCompressedResource_Header_TypeSpecificPartType9() *CompressedResource_He
 	}
 }
 
+func (this CompressedResource_Header_TypeSpecificPartType9) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *CompressedResource_Header_TypeSpecificPartType9) Read(io *kaitai.Stream, parent *CompressedResource_Header, root *CompressedResource) (err error) {
 	this._io = io
 	this._parent = parent
@@ -399,7 +418,7 @@ func (this *CompressedResource_Header_TypeSpecificPartType9) Read(io *kaitai.Str
 	this._raw_DecompressorSpecificParametersWithIo = tmp18
 	_io__raw_DecompressorSpecificParametersWithIo := kaitai.NewStream(bytes.NewReader(this._raw_DecompressorSpecificParametersWithIo))
 	tmp19 := NewBytesWithIo()
-	err = tmp19.Read(_io__raw_DecompressorSpecificParametersWithIo, this, nil)
+	err = tmp19.Read(_io__raw_DecompressorSpecificParametersWithIo, nil, nil)
 	if err != nil {
 		return err
 	}
@@ -419,8 +438,8 @@ func (this *CompressedResource_Header_TypeSpecificPartType9) DecompressorSpecifi
 	if (this._f_decompressorSpecificParameters) {
 		return this.decompressorSpecificParameters, nil
 	}
-	this.decompressorSpecificParameters = []byte(this.DecompressorSpecificParametersWithIo.Data)
 	this._f_decompressorSpecificParameters = true
+	this.decompressorSpecificParameters = []byte(this.DecompressorSpecificParametersWithIo.Data)
 	return this.decompressorSpecificParameters, nil
 }
 

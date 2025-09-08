@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.IcmpPacket = factory(root.KaitaiStream);
+    factory(root.IcmpPacket || (root.IcmpPacket = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (IcmpPacket_, KaitaiStream) {
 var IcmpPacket = (function() {
   IcmpPacket.IcmpTypeEnum = Object.freeze({
     ECHO_REPLY: 0,
@@ -86,7 +86,7 @@ var IcmpPacket = (function() {
     function DestinationUnreachableMsg(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -96,6 +96,28 @@ var IcmpPacket = (function() {
     }
 
     return DestinationUnreachableMsg;
+  })();
+
+  var EchoMsg = IcmpPacket.EchoMsg = (function() {
+    function EchoMsg(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    EchoMsg.prototype._read = function() {
+      this.code = this._io.readBytes(1);
+      if (!((KaitaiStream.byteArrayCompare(this.code, new Uint8Array([0])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([0]), this.code, this._io, "/types/echo_msg/seq/0");
+      }
+      this.checksum = this._io.readU2be();
+      this.identifier = this._io.readU2be();
+      this.seqNum = this._io.readU2be();
+      this.data = this._io.readBytesFull();
+    }
+
+    return EchoMsg;
   })();
 
   var TimeExceededMsg = IcmpPacket.TimeExceededMsg = (function() {
@@ -110,7 +132,7 @@ var IcmpPacket = (function() {
     function TimeExceededMsg(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -122,29 +144,7 @@ var IcmpPacket = (function() {
     return TimeExceededMsg;
   })();
 
-  var EchoMsg = IcmpPacket.EchoMsg = (function() {
-    function EchoMsg(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    EchoMsg.prototype._read = function() {
-      this.code = this._io.readBytes(1);
-      if (!((KaitaiStream.byteArrayCompare(this.code, [0]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([0], this.code, this._io, "/types/echo_msg/seq/0");
-      }
-      this.checksum = this._io.readU2be();
-      this.identifier = this._io.readU2be();
-      this.seqNum = this._io.readU2be();
-      this.data = this._io.readBytesFull();
-    }
-
-    return EchoMsg;
-  })();
-
   return IcmpPacket;
 })();
-return IcmpPacket;
-}));
+IcmpPacket_.IcmpPacket = IcmpPacket;
+});

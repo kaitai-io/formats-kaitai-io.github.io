@@ -191,6 +191,11 @@ together.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title=".chg file format of MONOMAKH-SAPR parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title=".chg file format of MONOMAKH-SAPR parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -221,7 +226,17 @@ together.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title=".chg file format of MONOMAKH-SAPR parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title=".chg file format of MONOMAKH-SAPR parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title=".chg file format of MONOMAKH-SAPR parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -301,8 +316,9 @@ for instructions how to add it into your project with the build tool that you us
 <span class="kn">import</span><span class="w"> </span><span class="nn">io.kaitai.struct.KaitaiStruct</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">io.kaitai.struct.KaitaiStream</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">java.io.IOException</span><span class="p">;</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">java.nio.charset.Charset</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.nio.charset.StandardCharsets</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">java.util.ArrayList</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
 
 
 <span class="cm">/**</span>
@@ -336,7 +352,7 @@ for instructions how to add it into your project with the build tool that you us
 <span class="w">        </span><span class="n">_read</span><span class="p">();</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span><span class="w"> </span><span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;ascii&quot;</span><span class="p">));</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span><span class="w"> </span><span class="n">StandardCharsets</span><span class="p">.</span><span class="na">US_ASCII</span><span class="p">);</span>
 <span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">ent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Block</span><span class="o">&gt;</span><span class="p">();</span>
 <span class="w">        </span><span class="p">{</span>
 <span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
@@ -344,6 +360,12 @@ for instructions how to add it into your project with the build tool that you us
 <span class="w">                </span><span class="k">this</span><span class="p">.</span><span class="na">ent</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">Block</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">));</span>
 <span class="w">                </span><span class="n">i</span><span class="o">++</span><span class="p">;</span>
 <span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">_fetchInstances</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">ent</span><span class="p">.</span><span class="na">size</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">this</span><span class="p">.</span><span class="na">ent</span><span class="p">.</span><span class="na">get</span><span class="p">(((</span><span class="n">Number</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="p">)).</span><span class="na">intValue</span><span class="p">()).</span><span class="na">_fetchInstances</span><span class="p">();</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Block</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="p">{</span>
@@ -366,9 +388,12 @@ for instructions how to add it into your project with the build tool that you us
 <span class="w">            </span><span class="n">_read</span><span class="p">();</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">        </span><span class="kd">private</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">this</span><span class="p">.</span><span class="na">header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">13</span><span class="p">),</span><span class="w"> </span><span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;ascii&quot;</span><span class="p">));</span>
+<span class="w">            </span><span class="k">this</span><span class="p">.</span><span class="na">header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">13</span><span class="p">),</span><span class="w"> </span><span class="n">StandardCharsets</span><span class="p">.</span><span class="na">US_ASCII</span><span class="p">);</span>
 <span class="w">            </span><span class="k">this</span><span class="p">.</span><span class="na">fileSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
 <span class="w">            </span><span class="k">this</span><span class="p">.</span><span class="na">file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">fileSize</span><span class="p">());</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">_fetchInstances</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">        </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">header</span><span class="p">;</span>
 <span class="w">        </span><span class="kd">private</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">fileSize</span><span class="p">;</span>
@@ -382,11 +407,11 @@ for instructions how to add it into your project with the build tool that you us
 <span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="n">MonomakhSaprChg</span><span class="w"> </span><span class="nf">_parent</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">title</span><span class="p">;</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Block</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ent</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Block</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ent</span><span class="p">;</span>
 <span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">MonomakhSaprChg</span><span class="w"> </span><span class="n">_root</span><span class="p">;</span>
 <span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">_parent</span><span class="p">;</span>
 <span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">title</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">title</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Block</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">ent</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">ent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Block</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">ent</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">ent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">MonomakhSaprChg</span><span class="w"> </span><span class="nf">_root</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="nf">_parent</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="p">}</span>

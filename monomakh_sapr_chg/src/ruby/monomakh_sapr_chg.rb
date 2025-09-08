@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -18,13 +18,13 @@ end
 # 
 # Written and tested by Vladimir Shulzhitskiy, 2017
 class MonomakhSaprChg < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
-    @title = (@_io.read_bytes(10)).force_encoding("ascii")
+    @title = (@_io.read_bytes(10)).force_encoding("ASCII").encode('UTF-8')
     @ent = []
     i = 0
     while not @_io.eof?
@@ -34,13 +34,13 @@ class MonomakhSaprChg < Kaitai::Struct::Struct
     self
   end
   class Block < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @header = (@_io.read_bytes(13)).force_encoding("ascii")
+      @header = (@_io.read_bytes(13)).force_encoding("ASCII").encode('UTF-8')
       @file_size = @_io.read_u8le
       @file = @_io.read_bytes(file_size)
       self

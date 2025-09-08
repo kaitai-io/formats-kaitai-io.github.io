@@ -78,7 +78,7 @@ AppleSingleDouble.Entry.Types = enum.Enum {
 function AppleSingleDouble.Entry:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -117,7 +117,7 @@ AppleSingleDouble.FinderInfo = class.class(KaitaiStruct)
 function AppleSingleDouble.FinderInfo:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -141,7 +141,7 @@ AppleSingleDouble.Point = class.class(KaitaiStruct)
 function AppleSingleDouble.Point:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 

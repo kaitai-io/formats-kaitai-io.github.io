@@ -180,6 +180,11 @@ const (
 	RenderwareBinaryStream_Sections__Frame RenderwareBinaryStream_Sections = 39056126
 	RenderwareBinaryStream_Sections__Unused16 RenderwareBinaryStream_Sections = 39056127
 )
+var values_RenderwareBinaryStream_Sections = map[RenderwareBinaryStream_Sections]struct{}{1: {}, 2: {}, 3: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}, 10: {}, 11: {}, 12: {}, 13: {}, 14: {}, 15: {}, 16: {}, 18: {}, 19: {}, 20: {}, 21: {}, 22: {}, 23: {}, 24: {}, 25: {}, 26: {}, 27: {}, 28: {}, 29: {}, 30: {}, 31: {}, 32: {}, 33: {}, 34: {}, 35: {}, 36: {}, 37: {}, 38: {}, 39: {}, 40: {}, 41: {}, 42: {}, 43: {}, 44: {}, 257: {}, 258: {}, 259: {}, 260: {}, 261: {}, 262: {}, 263: {}, 264: {}, 265: {}, 266: {}, 267: {}, 268: {}, 269: {}, 270: {}, 271: {}, 272: {}, 273: {}, 274: {}, 275: {}, 276: {}, 277: {}, 278: {}, 279: {}, 280: {}, 281: {}, 282: {}, 283: {}, 284: {}, 285: {}, 286: {}, 287: {}, 288: {}, 289: {}, 290: {}, 291: {}, 292: {}, 293: {}, 294: {}, 295: {}, 297: {}, 298: {}, 299: {}, 300: {}, 301: {}, 302: {}, 303: {}, 304: {}, 305: {}, 306: {}, 307: {}, 308: {}, 309: {}, 384: {}, 385: {}, 386: {}, 387: {}, 388: {}, 389: {}, 390: {}, 391: {}, 392: {}, 393: {}, 400: {}, 401: {}, 402: {}, 403: {}, 404: {}, 405: {}, 406: {}, 407: {}, 408: {}, 409: {}, 410: {}, 411: {}, 412: {}, 413: {}, 414: {}, 415: {}, 416: {}, 417: {}, 418: {}, 419: {}, 420: {}, 421: {}, 422: {}, 423: {}, 424: {}, 425: {}, 432: {}, 433: {}, 434: {}, 435: {}, 436: {}, 437: {}, 438: {}, 439: {}, 440: {}, 441: {}, 442: {}, 443: {}, 444: {}, 445: {}, 446: {}, 447: {}, 448: {}, 449: {}, 1294: {}, 1296: {}, 61982: {}, 39055872: {}, 39055873: {}, 39055874: {}, 39056115: {}, 39056116: {}, 39056117: {}, 39056118: {}, 39056119: {}, 39056120: {}, 39056121: {}, 39056122: {}, 39056123: {}, 39056124: {}, 39056125: {}, 39056126: {}, 39056127: {}}
+func (v RenderwareBinaryStream_Sections) isDefined() bool {
+	_, ok := values_RenderwareBinaryStream_Sections[v]
+	return ok
+}
 type RenderwareBinaryStream struct {
 	Code RenderwareBinaryStream_Sections
 	Size uint32
@@ -187,7 +192,7 @@ type RenderwareBinaryStream struct {
 	Body interface{}
 	_io *kaitai.Stream
 	_root *RenderwareBinaryStream
-	_parent interface{}
+	_parent kaitai.Struct
 	_raw_Body []byte
 	_f_version bool
 	version int
@@ -197,7 +202,11 @@ func NewRenderwareBinaryStream() *RenderwareBinaryStream {
 	}
 }
 
-func (this *RenderwareBinaryStream) Read(io *kaitai.Stream, parent interface{}, root *RenderwareBinaryStream) (err error) {
+func (this RenderwareBinaryStream) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *RenderwareBinaryStream) Read(io *kaitai.Stream, parent kaitai.Struct, root *RenderwareBinaryStream) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -232,7 +241,7 @@ func (this *RenderwareBinaryStream) Read(io *kaitai.Stream, parent interface{}, 
 			return err
 		}
 		this.Body = tmp5
-	case RenderwareBinaryStream_Sections__Geometry:
+	case RenderwareBinaryStream_Sections__Clump:
 		tmp6, err := this._io.ReadBytes(int(this.Size))
 		if err != nil {
 			return err
@@ -246,7 +255,7 @@ func (this *RenderwareBinaryStream) Read(io *kaitai.Stream, parent interface{}, 
 			return err
 		}
 		this.Body = tmp7
-	case RenderwareBinaryStream_Sections__TextureDictionary:
+	case RenderwareBinaryStream_Sections__FrameList:
 		tmp8, err := this._io.ReadBytes(int(this.Size))
 		if err != nil {
 			return err
@@ -260,7 +269,7 @@ func (this *RenderwareBinaryStream) Read(io *kaitai.Stream, parent interface{}, 
 			return err
 		}
 		this.Body = tmp9
-	case RenderwareBinaryStream_Sections__GeometryList:
+	case RenderwareBinaryStream_Sections__Geometry:
 		tmp10, err := this._io.ReadBytes(int(this.Size))
 		if err != nil {
 			return err
@@ -274,7 +283,7 @@ func (this *RenderwareBinaryStream) Read(io *kaitai.Stream, parent interface{}, 
 			return err
 		}
 		this.Body = tmp11
-	case RenderwareBinaryStream_Sections__TextureNative:
+	case RenderwareBinaryStream_Sections__GeometryList:
 		tmp12, err := this._io.ReadBytes(int(this.Size))
 		if err != nil {
 			return err
@@ -288,7 +297,7 @@ func (this *RenderwareBinaryStream) Read(io *kaitai.Stream, parent interface{}, 
 			return err
 		}
 		this.Body = tmp13
-	case RenderwareBinaryStream_Sections__Clump:
+	case RenderwareBinaryStream_Sections__TextureDictionary:
 		tmp14, err := this._io.ReadBytes(int(this.Size))
 		if err != nil {
 			return err
@@ -302,7 +311,7 @@ func (this *RenderwareBinaryStream) Read(io *kaitai.Stream, parent interface{}, 
 			return err
 		}
 		this.Body = tmp15
-	case RenderwareBinaryStream_Sections__FrameList:
+	case RenderwareBinaryStream_Sections__TextureNative:
 		tmp16, err := this._io.ReadBytes(int(this.Size))
 		if err != nil {
 			return err
@@ -330,241 +339,66 @@ func (this *RenderwareBinaryStream) Version() (v int, err error) {
 	if (this._f_version) {
 		return this.version, nil
 	}
+	this._f_version = true
 	var tmp19 int;
-	if ((this.LibraryIdStamp & uint32(4294901760)) != 0) {
-		tmp19 = ((((this.LibraryIdStamp >> 14) & 261888) + 196608) | ((this.LibraryIdStamp >> 16) & 63))
+	if (this.LibraryIdStamp & uint32(4294901760) != 0) {
+		tmp19 = ((this.LibraryIdStamp >> 14) & 261888 + 196608) | (this.LibraryIdStamp >> 16) & 63
 	} else {
-		tmp19 = (this.LibraryIdStamp << 8)
+		tmp19 = this.LibraryIdStamp << 8
 	}
 	this.version = int(tmp19)
-	this._f_version = true
 	return this.version, nil
 }
 
 /**
- * @see <a href="https://gtamods.com/wiki/RpClump">Source</a>
+ * @see <a href="https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
  */
-type RenderwareBinaryStream_StructClump struct {
-	NumAtomics uint32
-	NumLights uint32
-	NumCameras uint32
+type RenderwareBinaryStream_Frame struct {
+	RotationMatrix *RenderwareBinaryStream_Matrix
+	Position *RenderwareBinaryStream_Vector3d
+	CurFrameIdx int32
+	MatrixCreationFlags uint32
 	_io *kaitai.Stream
 	_root *RenderwareBinaryStream
-	_parent *RenderwareBinaryStream_ListWithHeader
+	_parent *RenderwareBinaryStream_StructFrameList
 }
-func NewRenderwareBinaryStream_StructClump() *RenderwareBinaryStream_StructClump {
-	return &RenderwareBinaryStream_StructClump{
+func NewRenderwareBinaryStream_Frame() *RenderwareBinaryStream_Frame {
+	return &RenderwareBinaryStream_Frame{
 	}
 }
 
-func (this *RenderwareBinaryStream_StructClump) Read(io *kaitai.Stream, parent *RenderwareBinaryStream_ListWithHeader, root *RenderwareBinaryStream) (err error) {
+func (this RenderwareBinaryStream_Frame) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *RenderwareBinaryStream_Frame) Read(io *kaitai.Stream, parent *RenderwareBinaryStream_StructFrameList, root *RenderwareBinaryStream) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp20, err := this._io.ReadU4le()
+	tmp20 := NewRenderwareBinaryStream_Matrix()
+	err = tmp20.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.NumAtomics = uint32(tmp20)
-	tmp21, err := this._parent.Version()
+	this.RotationMatrix = tmp20
+	tmp21 := NewRenderwareBinaryStream_Vector3d()
+	err = tmp21.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	if (tmp21 >= 208896) {
-		tmp22, err := this._io.ReadU4le()
-		if err != nil {
-			return err
-		}
-		this.NumLights = uint32(tmp22)
-	}
-	tmp23, err := this._parent.Version()
+	this.Position = tmp21
+	tmp22, err := this._io.ReadS4le()
 	if err != nil {
 		return err
 	}
-	if (tmp23 >= 208896) {
-		tmp24, err := this._io.ReadU4le()
-		if err != nil {
-			return err
-		}
-		this.NumCameras = uint32(tmp24)
+	this.CurFrameIdx = int32(tmp22)
+	tmp23, err := this._io.ReadU4le()
+	if err != nil {
+		return err
 	}
+	this.MatrixCreationFlags = uint32(tmp23)
 	return err
-}
-
-/**
- * @see <a href="https://gtamods.com/wiki/RpGeometry">Source</a>
- */
-type RenderwareBinaryStream_StructGeometry struct {
-	Format uint32
-	NumTriangles uint32
-	NumVertices uint32
-	NumMorphTargets uint32
-	SurfProp *RenderwareBinaryStream_SurfaceProperties
-	Geometry *RenderwareBinaryStream_GeometryNonNative
-	MorphTargets []*RenderwareBinaryStream_MorphTarget
-	_io *kaitai.Stream
-	_root *RenderwareBinaryStream
-	_parent *RenderwareBinaryStream_ListWithHeader
-	_f_numUvLayersRaw bool
-	numUvLayersRaw int
-	_f_isTextured bool
-	isTextured bool
-	_f_isNative bool
-	isNative bool
-	_f_numUvLayers bool
-	numUvLayers int
-	_f_isTextured2 bool
-	isTextured2 bool
-	_f_isPrelit bool
-	isPrelit bool
-}
-func NewRenderwareBinaryStream_StructGeometry() *RenderwareBinaryStream_StructGeometry {
-	return &RenderwareBinaryStream_StructGeometry{
-	}
-}
-
-func (this *RenderwareBinaryStream_StructGeometry) Read(io *kaitai.Stream, parent *RenderwareBinaryStream_ListWithHeader, root *RenderwareBinaryStream) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp25, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Format = uint32(tmp25)
-	tmp26, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.NumTriangles = uint32(tmp26)
-	tmp27, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.NumVertices = uint32(tmp27)
-	tmp28, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.NumMorphTargets = uint32(tmp28)
-	tmp29, err := this._parent.Version()
-	if err != nil {
-		return err
-	}
-	if (tmp29 < 212992) {
-		tmp30 := NewRenderwareBinaryStream_SurfaceProperties()
-		err = tmp30.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.SurfProp = tmp30
-	}
-	tmp31, err := this.IsNative()
-	if err != nil {
-		return err
-	}
-	if (!(tmp31)) {
-		tmp32 := NewRenderwareBinaryStream_GeometryNonNative()
-		err = tmp32.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Geometry = tmp32
-	}
-	for i := 0; i < int(this.NumMorphTargets); i++ {
-		_ = i
-		tmp33 := NewRenderwareBinaryStream_MorphTarget()
-		err = tmp33.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.MorphTargets = append(this.MorphTargets, tmp33)
-	}
-	return err
-}
-func (this *RenderwareBinaryStream_StructGeometry) NumUvLayersRaw() (v int, err error) {
-	if (this._f_numUvLayersRaw) {
-		return this.numUvLayersRaw, nil
-	}
-	this.numUvLayersRaw = int(((this.Format & 16711680) >> 16))
-	this._f_numUvLayersRaw = true
-	return this.numUvLayersRaw, nil
-}
-func (this *RenderwareBinaryStream_StructGeometry) IsTextured() (v bool, err error) {
-	if (this._f_isTextured) {
-		return this.isTextured, nil
-	}
-	this.isTextured = bool((this.Format & 4) != 0)
-	this._f_isTextured = true
-	return this.isTextured, nil
-}
-func (this *RenderwareBinaryStream_StructGeometry) IsNative() (v bool, err error) {
-	if (this._f_isNative) {
-		return this.isNative, nil
-	}
-	this.isNative = bool((this.Format & 16777216) != 0)
-	this._f_isNative = true
-	return this.isNative, nil
-}
-func (this *RenderwareBinaryStream_StructGeometry) NumUvLayers() (v int, err error) {
-	if (this._f_numUvLayers) {
-		return this.numUvLayers, nil
-	}
-	var tmp34 int8;
-	tmp35, err := this.NumUvLayersRaw()
-	if err != nil {
-		return 0, err
-	}
-	if (tmp35 == 0) {
-		var tmp36 int8;
-		tmp37, err := this.IsTextured2()
-		if err != nil {
-			return 0, err
-		}
-		if (tmp37) {
-			tmp36 = 2
-		} else {
-			var tmp38 int8;
-			tmp39, err := this.IsTextured()
-			if err != nil {
-				return 0, err
-			}
-			if (tmp39) {
-				tmp38 = 1
-			} else {
-				tmp38 = 0
-			}
-			tmp36 = tmp38
-		}
-		tmp34 = tmp36
-	} else {
-		tmp40, err := this.NumUvLayersRaw()
-		if err != nil {
-			return 0, err
-		}
-		tmp34 = tmp40
-	}
-	this.numUvLayers = int(tmp34)
-	this._f_numUvLayers = true
-	return this.numUvLayers, nil
-}
-func (this *RenderwareBinaryStream_StructGeometry) IsTextured2() (v bool, err error) {
-	if (this._f_isTextured2) {
-		return this.isTextured2, nil
-	}
-	this.isTextured2 = bool((this.Format & 128) != 0)
-	this._f_isTextured2 = true
-	return this.isTextured2, nil
-}
-func (this *RenderwareBinaryStream_StructGeometry) IsPrelit() (v bool, err error) {
-	if (this._f_isPrelit) {
-		return this.isPrelit, nil
-	}
-	this.isPrelit = bool((this.Format & 8) != 0)
-	this._f_isPrelit = true
-	return this.isPrelit, nil
 }
 type RenderwareBinaryStream_GeometryNonNative struct {
 	PrelitColors []*RenderwareBinaryStream_Rgba
@@ -579,427 +413,52 @@ func NewRenderwareBinaryStream_GeometryNonNative() *RenderwareBinaryStream_Geome
 	}
 }
 
+func (this RenderwareBinaryStream_GeometryNonNative) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *RenderwareBinaryStream_GeometryNonNative) Read(io *kaitai.Stream, parent *RenderwareBinaryStream_StructGeometry, root *RenderwareBinaryStream) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp41, err := this._parent.IsPrelit()
+	tmp24, err := this._parent.IsPrelit()
 	if err != nil {
 		return err
 	}
-	if (tmp41) {
+	if (tmp24) {
 		for i := 0; i < int(this._parent.NumVertices); i++ {
 			_ = i
-			tmp42 := NewRenderwareBinaryStream_Rgba()
-			err = tmp42.Read(this._io, this, this._root)
+			tmp25 := NewRenderwareBinaryStream_Rgba()
+			err = tmp25.Read(this._io, this, this._root)
 			if err != nil {
 				return err
 			}
-			this.PrelitColors = append(this.PrelitColors, tmp42)
+			this.PrelitColors = append(this.PrelitColors, tmp25)
 		}
 	}
-	tmp43, err := this._parent.NumUvLayers()
+	tmp26, err := this._parent.NumUvLayers()
 	if err != nil {
 		return err
 	}
-	for i := 0; i < int(tmp43); i++ {
+	for i := 0; i < int(tmp26); i++ {
 		_ = i
-		tmp44 := NewRenderwareBinaryStream_UvLayer(this._parent.NumVertices)
-		err = tmp44.Read(this._io, this, this._root)
+		tmp27 := NewRenderwareBinaryStream_UvLayer(this._parent.NumVertices)
+		err = tmp27.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.UvLayers = append(this.UvLayers, tmp44)
+		this.UvLayers = append(this.UvLayers, tmp27)
 	}
 	for i := 0; i < int(this._parent.NumTriangles); i++ {
 		_ = i
-		tmp45 := NewRenderwareBinaryStream_Triangle()
-		err = tmp45.Read(this._io, this, this._root)
+		tmp28 := NewRenderwareBinaryStream_Triangle()
+		err = tmp28.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Triangles = append(this.Triangles, tmp45)
+		this.Triangles = append(this.Triangles, tmp28)
 	}
-	return err
-}
-
-/**
- * @see <a href="https://gtamods.com/wiki/Geometry_List_(RW_Section)#Structure">Source</a>
- */
-type RenderwareBinaryStream_StructGeometryList struct {
-	NumGeometries uint32
-	_io *kaitai.Stream
-	_root *RenderwareBinaryStream
-	_parent *RenderwareBinaryStream_ListWithHeader
-}
-func NewRenderwareBinaryStream_StructGeometryList() *RenderwareBinaryStream_StructGeometryList {
-	return &RenderwareBinaryStream_StructGeometryList{
-	}
-}
-
-func (this *RenderwareBinaryStream_StructGeometryList) Read(io *kaitai.Stream, parent *RenderwareBinaryStream_ListWithHeader, root *RenderwareBinaryStream) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp46, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.NumGeometries = uint32(tmp46)
-	return err
-}
-type RenderwareBinaryStream_Rgba struct {
-	R uint8
-	G uint8
-	B uint8
-	A uint8
-	_io *kaitai.Stream
-	_root *RenderwareBinaryStream
-	_parent *RenderwareBinaryStream_GeometryNonNative
-}
-func NewRenderwareBinaryStream_Rgba() *RenderwareBinaryStream_Rgba {
-	return &RenderwareBinaryStream_Rgba{
-	}
-}
-
-func (this *RenderwareBinaryStream_Rgba) Read(io *kaitai.Stream, parent *RenderwareBinaryStream_GeometryNonNative, root *RenderwareBinaryStream) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp47, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.R = tmp47
-	tmp48, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.G = tmp48
-	tmp49, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.B = tmp49
-	tmp50, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.A = tmp50
-	return err
-}
-type RenderwareBinaryStream_Sphere struct {
-	X float32
-	Y float32
-	Z float32
-	Radius float32
-	_io *kaitai.Stream
-	_root *RenderwareBinaryStream
-	_parent *RenderwareBinaryStream_MorphTarget
-}
-func NewRenderwareBinaryStream_Sphere() *RenderwareBinaryStream_Sphere {
-	return &RenderwareBinaryStream_Sphere{
-	}
-}
-
-func (this *RenderwareBinaryStream_Sphere) Read(io *kaitai.Stream, parent *RenderwareBinaryStream_MorphTarget, root *RenderwareBinaryStream) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp51, err := this._io.ReadF4le()
-	if err != nil {
-		return err
-	}
-	this.X = float32(tmp51)
-	tmp52, err := this._io.ReadF4le()
-	if err != nil {
-		return err
-	}
-	this.Y = float32(tmp52)
-	tmp53, err := this._io.ReadF4le()
-	if err != nil {
-		return err
-	}
-	this.Z = float32(tmp53)
-	tmp54, err := this._io.ReadF4le()
-	if err != nil {
-		return err
-	}
-	this.Radius = float32(tmp54)
-	return err
-}
-type RenderwareBinaryStream_MorphTarget struct {
-	BoundingSphere *RenderwareBinaryStream_Sphere
-	HasVertices uint32
-	HasNormals uint32
-	Vertices []*RenderwareBinaryStream_Vector3d
-	Normals []*RenderwareBinaryStream_Vector3d
-	_io *kaitai.Stream
-	_root *RenderwareBinaryStream
-	_parent *RenderwareBinaryStream_StructGeometry
-}
-func NewRenderwareBinaryStream_MorphTarget() *RenderwareBinaryStream_MorphTarget {
-	return &RenderwareBinaryStream_MorphTarget{
-	}
-}
-
-func (this *RenderwareBinaryStream_MorphTarget) Read(io *kaitai.Stream, parent *RenderwareBinaryStream_StructGeometry, root *RenderwareBinaryStream) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp55 := NewRenderwareBinaryStream_Sphere()
-	err = tmp55.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.BoundingSphere = tmp55
-	tmp56, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.HasVertices = uint32(tmp56)
-	tmp57, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.HasNormals = uint32(tmp57)
-	if (this.HasVertices != 0) {
-		for i := 0; i < int(this._parent.NumVertices); i++ {
-			_ = i
-			tmp58 := NewRenderwareBinaryStream_Vector3d()
-			err = tmp58.Read(this._io, this, this._root)
-			if err != nil {
-				return err
-			}
-			this.Vertices = append(this.Vertices, tmp58)
-		}
-	}
-	if (this.HasNormals != 0) {
-		for i := 0; i < int(this._parent.NumVertices); i++ {
-			_ = i
-			tmp59 := NewRenderwareBinaryStream_Vector3d()
-			err = tmp59.Read(this._io, this, this._root)
-			if err != nil {
-				return err
-			}
-			this.Normals = append(this.Normals, tmp59)
-		}
-	}
-	return err
-}
-
-/**
- * @see <a href="https://gtamods.com/wiki/Atomic_(RW_Section)#Structure">Source</a>
- */
-type RenderwareBinaryStream_StructAtomic struct {
-	FrameIndex uint32
-	GeometryIndex uint32
-	FlagRender bool
-	_unnamed3 bool
-	FlagCollisionTest bool
-	_unnamed5 uint64
-	Unused uint32
-	_io *kaitai.Stream
-	_root *RenderwareBinaryStream
-	_parent *RenderwareBinaryStream_ListWithHeader
-}
-func NewRenderwareBinaryStream_StructAtomic() *RenderwareBinaryStream_StructAtomic {
-	return &RenderwareBinaryStream_StructAtomic{
-	}
-}
-
-func (this *RenderwareBinaryStream_StructAtomic) Read(io *kaitai.Stream, parent *RenderwareBinaryStream_ListWithHeader, root *RenderwareBinaryStream) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp60, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.FrameIndex = uint32(tmp60)
-	tmp61, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.GeometryIndex = uint32(tmp61)
-	tmp62, err := this._io.ReadBitsIntLe(1)
-	if err != nil {
-		return err
-	}
-	this.FlagRender = tmp62 != 0
-	tmp63, err := this._io.ReadBitsIntLe(1)
-	if err != nil {
-		return err
-	}
-	this._unnamed3 = tmp63 != 0
-	tmp64, err := this._io.ReadBitsIntLe(1)
-	if err != nil {
-		return err
-	}
-	this.FlagCollisionTest = tmp64 != 0
-	tmp65, err := this._io.ReadBitsIntLe(29)
-	if err != nil {
-		return err
-	}
-	this._unnamed5 = tmp65
-	this._io.AlignToByte()
-	tmp66, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Unused = uint32(tmp66)
-	return err
-}
-
-/**
- * @see <a href="https://gtamods.com/wiki/RpGeometry">Source</a>
- */
-type RenderwareBinaryStream_SurfaceProperties struct {
-	Ambient float32
-	Specular float32
-	Diffuse float32
-	_io *kaitai.Stream
-	_root *RenderwareBinaryStream
-	_parent *RenderwareBinaryStream_StructGeometry
-}
-func NewRenderwareBinaryStream_SurfaceProperties() *RenderwareBinaryStream_SurfaceProperties {
-	return &RenderwareBinaryStream_SurfaceProperties{
-	}
-}
-
-func (this *RenderwareBinaryStream_SurfaceProperties) Read(io *kaitai.Stream, parent *RenderwareBinaryStream_StructGeometry, root *RenderwareBinaryStream) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp67, err := this._io.ReadF4le()
-	if err != nil {
-		return err
-	}
-	this.Ambient = float32(tmp67)
-	tmp68, err := this._io.ReadF4le()
-	if err != nil {
-		return err
-	}
-	this.Specular = float32(tmp68)
-	tmp69, err := this._io.ReadF4le()
-	if err != nil {
-		return err
-	}
-	this.Diffuse = float32(tmp69)
-	return err
-}
-
-/**
- * @see <a href="https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
- */
-type RenderwareBinaryStream_StructFrameList struct {
-	NumFrames uint32
-	Frames []*RenderwareBinaryStream_Frame
-	_io *kaitai.Stream
-	_root *RenderwareBinaryStream
-	_parent *RenderwareBinaryStream_ListWithHeader
-}
-func NewRenderwareBinaryStream_StructFrameList() *RenderwareBinaryStream_StructFrameList {
-	return &RenderwareBinaryStream_StructFrameList{
-	}
-}
-
-func (this *RenderwareBinaryStream_StructFrameList) Read(io *kaitai.Stream, parent *RenderwareBinaryStream_ListWithHeader, root *RenderwareBinaryStream) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp70, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.NumFrames = uint32(tmp70)
-	for i := 0; i < int(this.NumFrames); i++ {
-		_ = i
-		tmp71 := NewRenderwareBinaryStream_Frame()
-		err = tmp71.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Frames = append(this.Frames, tmp71)
-	}
-	return err
-}
-
-/**
- * @see <a href="https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
- */
-type RenderwareBinaryStream_Matrix struct {
-	Entries []*RenderwareBinaryStream_Vector3d
-	_io *kaitai.Stream
-	_root *RenderwareBinaryStream
-	_parent *RenderwareBinaryStream_Frame
-}
-func NewRenderwareBinaryStream_Matrix() *RenderwareBinaryStream_Matrix {
-	return &RenderwareBinaryStream_Matrix{
-	}
-}
-
-func (this *RenderwareBinaryStream_Matrix) Read(io *kaitai.Stream, parent *RenderwareBinaryStream_Frame, root *RenderwareBinaryStream) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	for i := 0; i < int(3); i++ {
-		_ = i
-		tmp72 := NewRenderwareBinaryStream_Vector3d()
-		err = tmp72.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Entries = append(this.Entries, tmp72)
-	}
-	return err
-}
-
-/**
- * @see <a href="https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
- */
-type RenderwareBinaryStream_Vector3d struct {
-	X float32
-	Y float32
-	Z float32
-	_io *kaitai.Stream
-	_root *RenderwareBinaryStream
-	_parent interface{}
-}
-func NewRenderwareBinaryStream_Vector3d() *RenderwareBinaryStream_Vector3d {
-	return &RenderwareBinaryStream_Vector3d{
-	}
-}
-
-func (this *RenderwareBinaryStream_Vector3d) Read(io *kaitai.Stream, parent interface{}, root *RenderwareBinaryStream) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp73, err := this._io.ReadF4le()
-	if err != nil {
-		return err
-	}
-	this.X = float32(tmp73)
-	tmp74, err := this._io.ReadF4le()
-	if err != nil {
-		return err
-	}
-	this.Y = float32(tmp74)
-	tmp75, err := this._io.ReadF4le()
-	if err != nil {
-		return err
-	}
-	this.Z = float32(tmp75)
 	return err
 }
 
@@ -1029,137 +488,141 @@ func NewRenderwareBinaryStream_ListWithHeader() *RenderwareBinaryStream_ListWith
 	}
 }
 
+func (this RenderwareBinaryStream_ListWithHeader) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *RenderwareBinaryStream_ListWithHeader) Read(io *kaitai.Stream, parent *RenderwareBinaryStream, root *RenderwareBinaryStream) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp76, err := this._io.ReadBytes(int(4))
+	tmp29, err := this._io.ReadBytes(int(4))
 	if err != nil {
 		return err
 	}
-	tmp76 = tmp76
-	this.Code = tmp76
+	tmp29 = tmp29
+	this.Code = tmp29
 	if !(bytes.Equal(this.Code, []uint8{1, 0, 0, 0})) {
 		return kaitai.NewValidationNotEqualError([]uint8{1, 0, 0, 0}, this.Code, this._io, "/types/list_with_header/seq/0")
 	}
-	tmp77, err := this._io.ReadU4le()
+	tmp30, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.HeaderSize = uint32(tmp77)
-	tmp78, err := this._io.ReadU4le()
+	this.HeaderSize = uint32(tmp30)
+	tmp31, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.LibraryIdStamp = uint32(tmp78)
+	this.LibraryIdStamp = uint32(tmp31)
 	switch (this._parent.Code) {
 	case RenderwareBinaryStream_Sections__Atomic:
-		tmp79, err := this._io.ReadBytes(int(this.HeaderSize))
+		tmp32, err := this._io.ReadBytes(int(this.HeaderSize))
 		if err != nil {
 			return err
 		}
-		tmp79 = tmp79
-		this._raw_Header = tmp79
+		tmp32 = tmp32
+		this._raw_Header = tmp32
 		_io__raw_Header := kaitai.NewStream(bytes.NewReader(this._raw_Header))
-		tmp80 := NewRenderwareBinaryStream_StructAtomic()
-		err = tmp80.Read(_io__raw_Header, this, this._root)
+		tmp33 := NewRenderwareBinaryStream_StructAtomic()
+		err = tmp33.Read(_io__raw_Header, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Header = tmp80
-	case RenderwareBinaryStream_Sections__Geometry:
-		tmp81, err := this._io.ReadBytes(int(this.HeaderSize))
-		if err != nil {
-			return err
-		}
-		tmp81 = tmp81
-		this._raw_Header = tmp81
-		_io__raw_Header := kaitai.NewStream(bytes.NewReader(this._raw_Header))
-		tmp82 := NewRenderwareBinaryStream_StructGeometry()
-		err = tmp82.Read(_io__raw_Header, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Header = tmp82
-	case RenderwareBinaryStream_Sections__TextureDictionary:
-		tmp83, err := this._io.ReadBytes(int(this.HeaderSize))
-		if err != nil {
-			return err
-		}
-		tmp83 = tmp83
-		this._raw_Header = tmp83
-		_io__raw_Header := kaitai.NewStream(bytes.NewReader(this._raw_Header))
-		tmp84 := NewRenderwareBinaryStream_StructTextureDictionary()
-		err = tmp84.Read(_io__raw_Header, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Header = tmp84
-	case RenderwareBinaryStream_Sections__GeometryList:
-		tmp85, err := this._io.ReadBytes(int(this.HeaderSize))
-		if err != nil {
-			return err
-		}
-		tmp85 = tmp85
-		this._raw_Header = tmp85
-		_io__raw_Header := kaitai.NewStream(bytes.NewReader(this._raw_Header))
-		tmp86 := NewRenderwareBinaryStream_StructGeometryList()
-		err = tmp86.Read(_io__raw_Header, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Header = tmp86
+		this.Header = tmp33
 	case RenderwareBinaryStream_Sections__Clump:
-		tmp87, err := this._io.ReadBytes(int(this.HeaderSize))
+		tmp34, err := this._io.ReadBytes(int(this.HeaderSize))
 		if err != nil {
 			return err
 		}
-		tmp87 = tmp87
-		this._raw_Header = tmp87
+		tmp34 = tmp34
+		this._raw_Header = tmp34
 		_io__raw_Header := kaitai.NewStream(bytes.NewReader(this._raw_Header))
-		tmp88 := NewRenderwareBinaryStream_StructClump()
-		err = tmp88.Read(_io__raw_Header, this, this._root)
+		tmp35 := NewRenderwareBinaryStream_StructClump()
+		err = tmp35.Read(_io__raw_Header, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Header = tmp88
+		this.Header = tmp35
 	case RenderwareBinaryStream_Sections__FrameList:
-		tmp89, err := this._io.ReadBytes(int(this.HeaderSize))
+		tmp36, err := this._io.ReadBytes(int(this.HeaderSize))
 		if err != nil {
 			return err
 		}
-		tmp89 = tmp89
-		this._raw_Header = tmp89
+		tmp36 = tmp36
+		this._raw_Header = tmp36
 		_io__raw_Header := kaitai.NewStream(bytes.NewReader(this._raw_Header))
-		tmp90 := NewRenderwareBinaryStream_StructFrameList()
-		err = tmp90.Read(_io__raw_Header, this, this._root)
+		tmp37 := NewRenderwareBinaryStream_StructFrameList()
+		err = tmp37.Read(_io__raw_Header, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Header = tmp90
+		this.Header = tmp37
+	case RenderwareBinaryStream_Sections__Geometry:
+		tmp38, err := this._io.ReadBytes(int(this.HeaderSize))
+		if err != nil {
+			return err
+		}
+		tmp38 = tmp38
+		this._raw_Header = tmp38
+		_io__raw_Header := kaitai.NewStream(bytes.NewReader(this._raw_Header))
+		tmp39 := NewRenderwareBinaryStream_StructGeometry()
+		err = tmp39.Read(_io__raw_Header, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Header = tmp39
+	case RenderwareBinaryStream_Sections__GeometryList:
+		tmp40, err := this._io.ReadBytes(int(this.HeaderSize))
+		if err != nil {
+			return err
+		}
+		tmp40 = tmp40
+		this._raw_Header = tmp40
+		_io__raw_Header := kaitai.NewStream(bytes.NewReader(this._raw_Header))
+		tmp41 := NewRenderwareBinaryStream_StructGeometryList()
+		err = tmp41.Read(_io__raw_Header, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Header = tmp41
+	case RenderwareBinaryStream_Sections__TextureDictionary:
+		tmp42, err := this._io.ReadBytes(int(this.HeaderSize))
+		if err != nil {
+			return err
+		}
+		tmp42 = tmp42
+		this._raw_Header = tmp42
+		_io__raw_Header := kaitai.NewStream(bytes.NewReader(this._raw_Header))
+		tmp43 := NewRenderwareBinaryStream_StructTextureDictionary()
+		err = tmp43.Read(_io__raw_Header, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Header = tmp43
 	default:
-		tmp91, err := this._io.ReadBytes(int(this.HeaderSize))
+		tmp44, err := this._io.ReadBytes(int(this.HeaderSize))
 		if err != nil {
 			return err
 		}
-		tmp91 = tmp91
-		this._raw_Header = tmp91
+		tmp44 = tmp44
+		this._raw_Header = tmp44
 	}
-	for i := 1;; i++ {
-		tmp92, err := this._io.EOF()
+	for i := 0;; i++ {
+		tmp45, err := this._io.EOF()
 		if err != nil {
 			return err
 		}
-		if tmp92 {
+		if tmp45 {
 			break
 		}
-		tmp93 := NewRenderwareBinaryStream()
-		err = tmp93.Read(this._io, this, nil)
+		tmp46 := NewRenderwareBinaryStream()
+		err = tmp46.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Entries = append(this.Entries, tmp93)
+		this.Entries = append(this.Entries, tmp46)
 	}
 	return err
 }
@@ -1167,15 +630,681 @@ func (this *RenderwareBinaryStream_ListWithHeader) Version() (v int, err error) 
 	if (this._f_version) {
 		return this.version, nil
 	}
-	var tmp94 int;
-	if ((this.LibraryIdStamp & uint32(4294901760)) != 0) {
-		tmp94 = ((((this.LibraryIdStamp >> 14) & 261888) + 196608) | ((this.LibraryIdStamp >> 16) & 63))
-	} else {
-		tmp94 = (this.LibraryIdStamp << 8)
-	}
-	this.version = int(tmp94)
 	this._f_version = true
+	var tmp47 int;
+	if (this.LibraryIdStamp & uint32(4294901760) != 0) {
+		tmp47 = ((this.LibraryIdStamp >> 14) & 261888 + 196608) | (this.LibraryIdStamp >> 16) & 63
+	} else {
+		tmp47 = this.LibraryIdStamp << 8
+	}
+	this.version = int(tmp47)
 	return this.version, nil
+}
+
+/**
+ * @see <a href="https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
+ */
+type RenderwareBinaryStream_Matrix struct {
+	Entries []*RenderwareBinaryStream_Vector3d
+	_io *kaitai.Stream
+	_root *RenderwareBinaryStream
+	_parent *RenderwareBinaryStream_Frame
+}
+func NewRenderwareBinaryStream_Matrix() *RenderwareBinaryStream_Matrix {
+	return &RenderwareBinaryStream_Matrix{
+	}
+}
+
+func (this RenderwareBinaryStream_Matrix) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *RenderwareBinaryStream_Matrix) Read(io *kaitai.Stream, parent *RenderwareBinaryStream_Frame, root *RenderwareBinaryStream) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	for i := 0; i < int(3); i++ {
+		_ = i
+		tmp48 := NewRenderwareBinaryStream_Vector3d()
+		err = tmp48.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Entries = append(this.Entries, tmp48)
+	}
+	return err
+}
+type RenderwareBinaryStream_MorphTarget struct {
+	BoundingSphere *RenderwareBinaryStream_Sphere
+	HasVertices uint32
+	HasNormals uint32
+	Vertices []*RenderwareBinaryStream_Vector3d
+	Normals []*RenderwareBinaryStream_Vector3d
+	_io *kaitai.Stream
+	_root *RenderwareBinaryStream
+	_parent *RenderwareBinaryStream_StructGeometry
+}
+func NewRenderwareBinaryStream_MorphTarget() *RenderwareBinaryStream_MorphTarget {
+	return &RenderwareBinaryStream_MorphTarget{
+	}
+}
+
+func (this RenderwareBinaryStream_MorphTarget) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *RenderwareBinaryStream_MorphTarget) Read(io *kaitai.Stream, parent *RenderwareBinaryStream_StructGeometry, root *RenderwareBinaryStream) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp49 := NewRenderwareBinaryStream_Sphere()
+	err = tmp49.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.BoundingSphere = tmp49
+	tmp50, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.HasVertices = uint32(tmp50)
+	tmp51, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.HasNormals = uint32(tmp51)
+	if (this.HasVertices != 0) {
+		for i := 0; i < int(this._parent.NumVertices); i++ {
+			_ = i
+			tmp52 := NewRenderwareBinaryStream_Vector3d()
+			err = tmp52.Read(this._io, this, this._root)
+			if err != nil {
+				return err
+			}
+			this.Vertices = append(this.Vertices, tmp52)
+		}
+	}
+	if (this.HasNormals != 0) {
+		for i := 0; i < int(this._parent.NumVertices); i++ {
+			_ = i
+			tmp53 := NewRenderwareBinaryStream_Vector3d()
+			err = tmp53.Read(this._io, this, this._root)
+			if err != nil {
+				return err
+			}
+			this.Normals = append(this.Normals, tmp53)
+		}
+	}
+	return err
+}
+type RenderwareBinaryStream_Rgba struct {
+	R uint8
+	G uint8
+	B uint8
+	A uint8
+	_io *kaitai.Stream
+	_root *RenderwareBinaryStream
+	_parent *RenderwareBinaryStream_GeometryNonNative
+}
+func NewRenderwareBinaryStream_Rgba() *RenderwareBinaryStream_Rgba {
+	return &RenderwareBinaryStream_Rgba{
+	}
+}
+
+func (this RenderwareBinaryStream_Rgba) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *RenderwareBinaryStream_Rgba) Read(io *kaitai.Stream, parent *RenderwareBinaryStream_GeometryNonNative, root *RenderwareBinaryStream) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp54, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.R = tmp54
+	tmp55, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.G = tmp55
+	tmp56, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.B = tmp56
+	tmp57, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.A = tmp57
+	return err
+}
+type RenderwareBinaryStream_Sphere struct {
+	X float32
+	Y float32
+	Z float32
+	Radius float32
+	_io *kaitai.Stream
+	_root *RenderwareBinaryStream
+	_parent *RenderwareBinaryStream_MorphTarget
+}
+func NewRenderwareBinaryStream_Sphere() *RenderwareBinaryStream_Sphere {
+	return &RenderwareBinaryStream_Sphere{
+	}
+}
+
+func (this RenderwareBinaryStream_Sphere) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *RenderwareBinaryStream_Sphere) Read(io *kaitai.Stream, parent *RenderwareBinaryStream_MorphTarget, root *RenderwareBinaryStream) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp58, err := this._io.ReadF4le()
+	if err != nil {
+		return err
+	}
+	this.X = float32(tmp58)
+	tmp59, err := this._io.ReadF4le()
+	if err != nil {
+		return err
+	}
+	this.Y = float32(tmp59)
+	tmp60, err := this._io.ReadF4le()
+	if err != nil {
+		return err
+	}
+	this.Z = float32(tmp60)
+	tmp61, err := this._io.ReadF4le()
+	if err != nil {
+		return err
+	}
+	this.Radius = float32(tmp61)
+	return err
+}
+
+/**
+ * @see <a href="https://gtamods.com/wiki/Atomic_(RW_Section)#Structure">Source</a>
+ */
+type RenderwareBinaryStream_StructAtomic struct {
+	FrameIndex uint32
+	GeometryIndex uint32
+	FlagRender bool
+	_unnamed3 bool
+	FlagCollisionTest bool
+	_unnamed5 uint64
+	Unused uint32
+	_io *kaitai.Stream
+	_root *RenderwareBinaryStream
+	_parent *RenderwareBinaryStream_ListWithHeader
+}
+func NewRenderwareBinaryStream_StructAtomic() *RenderwareBinaryStream_StructAtomic {
+	return &RenderwareBinaryStream_StructAtomic{
+	}
+}
+
+func (this RenderwareBinaryStream_StructAtomic) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *RenderwareBinaryStream_StructAtomic) Read(io *kaitai.Stream, parent *RenderwareBinaryStream_ListWithHeader, root *RenderwareBinaryStream) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp62, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.FrameIndex = uint32(tmp62)
+	tmp63, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.GeometryIndex = uint32(tmp63)
+	tmp64, err := this._io.ReadBitsIntLe(1)
+	if err != nil {
+		return err
+	}
+	this.FlagRender = tmp64 != 0
+	tmp65, err := this._io.ReadBitsIntLe(1)
+	if err != nil {
+		return err
+	}
+	this._unnamed3 = tmp65 != 0
+	tmp66, err := this._io.ReadBitsIntLe(1)
+	if err != nil {
+		return err
+	}
+	this.FlagCollisionTest = tmp66 != 0
+	tmp67, err := this._io.ReadBitsIntLe(29)
+	if err != nil {
+		return err
+	}
+	this._unnamed5 = tmp67
+	this._io.AlignToByte()
+	tmp68, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Unused = uint32(tmp68)
+	return err
+}
+
+/**
+ * @see <a href="https://gtamods.com/wiki/RpClump">Source</a>
+ */
+type RenderwareBinaryStream_StructClump struct {
+	NumAtomics uint32
+	NumLights uint32
+	NumCameras uint32
+	_io *kaitai.Stream
+	_root *RenderwareBinaryStream
+	_parent *RenderwareBinaryStream_ListWithHeader
+}
+func NewRenderwareBinaryStream_StructClump() *RenderwareBinaryStream_StructClump {
+	return &RenderwareBinaryStream_StructClump{
+	}
+}
+
+func (this RenderwareBinaryStream_StructClump) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *RenderwareBinaryStream_StructClump) Read(io *kaitai.Stream, parent *RenderwareBinaryStream_ListWithHeader, root *RenderwareBinaryStream) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp69, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.NumAtomics = uint32(tmp69)
+	tmp70, err := this._parent.Version()
+	if err != nil {
+		return err
+	}
+	if (tmp70 >= 208896) {
+		tmp71, err := this._io.ReadU4le()
+		if err != nil {
+			return err
+		}
+		this.NumLights = uint32(tmp71)
+	}
+	tmp72, err := this._parent.Version()
+	if err != nil {
+		return err
+	}
+	if (tmp72 >= 208896) {
+		tmp73, err := this._io.ReadU4le()
+		if err != nil {
+			return err
+		}
+		this.NumCameras = uint32(tmp73)
+	}
+	return err
+}
+
+/**
+ * @see <a href="https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
+ */
+type RenderwareBinaryStream_StructFrameList struct {
+	NumFrames uint32
+	Frames []*RenderwareBinaryStream_Frame
+	_io *kaitai.Stream
+	_root *RenderwareBinaryStream
+	_parent *RenderwareBinaryStream_ListWithHeader
+}
+func NewRenderwareBinaryStream_StructFrameList() *RenderwareBinaryStream_StructFrameList {
+	return &RenderwareBinaryStream_StructFrameList{
+	}
+}
+
+func (this RenderwareBinaryStream_StructFrameList) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *RenderwareBinaryStream_StructFrameList) Read(io *kaitai.Stream, parent *RenderwareBinaryStream_ListWithHeader, root *RenderwareBinaryStream) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp74, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.NumFrames = uint32(tmp74)
+	for i := 0; i < int(this.NumFrames); i++ {
+		_ = i
+		tmp75 := NewRenderwareBinaryStream_Frame()
+		err = tmp75.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Frames = append(this.Frames, tmp75)
+	}
+	return err
+}
+
+/**
+ * @see <a href="https://gtamods.com/wiki/RpGeometry">Source</a>
+ */
+type RenderwareBinaryStream_StructGeometry struct {
+	Format uint32
+	NumTriangles uint32
+	NumVertices uint32
+	NumMorphTargets uint32
+	SurfProp *RenderwareBinaryStream_SurfaceProperties
+	Geometry *RenderwareBinaryStream_GeometryNonNative
+	MorphTargets []*RenderwareBinaryStream_MorphTarget
+	_io *kaitai.Stream
+	_root *RenderwareBinaryStream
+	_parent *RenderwareBinaryStream_ListWithHeader
+	_f_isNative bool
+	isNative bool
+	_f_isPrelit bool
+	isPrelit bool
+	_f_isTextured bool
+	isTextured bool
+	_f_isTextured2 bool
+	isTextured2 bool
+	_f_numUvLayers bool
+	numUvLayers int
+	_f_numUvLayersRaw bool
+	numUvLayersRaw int
+}
+func NewRenderwareBinaryStream_StructGeometry() *RenderwareBinaryStream_StructGeometry {
+	return &RenderwareBinaryStream_StructGeometry{
+	}
+}
+
+func (this RenderwareBinaryStream_StructGeometry) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *RenderwareBinaryStream_StructGeometry) Read(io *kaitai.Stream, parent *RenderwareBinaryStream_ListWithHeader, root *RenderwareBinaryStream) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp76, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Format = uint32(tmp76)
+	tmp77, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.NumTriangles = uint32(tmp77)
+	tmp78, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.NumVertices = uint32(tmp78)
+	tmp79, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.NumMorphTargets = uint32(tmp79)
+	tmp80, err := this._parent.Version()
+	if err != nil {
+		return err
+	}
+	if (tmp80 < 212992) {
+		tmp81 := NewRenderwareBinaryStream_SurfaceProperties()
+		err = tmp81.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.SurfProp = tmp81
+	}
+	tmp82, err := this.IsNative()
+	if err != nil {
+		return err
+	}
+	if (!(tmp82)) {
+		tmp83 := NewRenderwareBinaryStream_GeometryNonNative()
+		err = tmp83.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Geometry = tmp83
+	}
+	for i := 0; i < int(this.NumMorphTargets); i++ {
+		_ = i
+		tmp84 := NewRenderwareBinaryStream_MorphTarget()
+		err = tmp84.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.MorphTargets = append(this.MorphTargets, tmp84)
+	}
+	return err
+}
+func (this *RenderwareBinaryStream_StructGeometry) IsNative() (v bool, err error) {
+	if (this._f_isNative) {
+		return this.isNative, nil
+	}
+	this._f_isNative = true
+	this.isNative = bool(this.Format & 16777216 != 0)
+	return this.isNative, nil
+}
+func (this *RenderwareBinaryStream_StructGeometry) IsPrelit() (v bool, err error) {
+	if (this._f_isPrelit) {
+		return this.isPrelit, nil
+	}
+	this._f_isPrelit = true
+	this.isPrelit = bool(this.Format & 8 != 0)
+	return this.isPrelit, nil
+}
+func (this *RenderwareBinaryStream_StructGeometry) IsTextured() (v bool, err error) {
+	if (this._f_isTextured) {
+		return this.isTextured, nil
+	}
+	this._f_isTextured = true
+	this.isTextured = bool(this.Format & 4 != 0)
+	return this.isTextured, nil
+}
+func (this *RenderwareBinaryStream_StructGeometry) IsTextured2() (v bool, err error) {
+	if (this._f_isTextured2) {
+		return this.isTextured2, nil
+	}
+	this._f_isTextured2 = true
+	this.isTextured2 = bool(this.Format & 128 != 0)
+	return this.isTextured2, nil
+}
+func (this *RenderwareBinaryStream_StructGeometry) NumUvLayers() (v int, err error) {
+	if (this._f_numUvLayers) {
+		return this.numUvLayers, nil
+	}
+	this._f_numUvLayers = true
+	var tmp85 int8;
+	tmp86, err := this.NumUvLayersRaw()
+	if err != nil {
+		return 0, err
+	}
+	if (tmp86 == 0) {
+		var tmp87 int8;
+		tmp88, err := this.IsTextured2()
+		if err != nil {
+			return 0, err
+		}
+		if (tmp88) {
+			tmp87 = 2
+		} else {
+			var tmp89 int8;
+			tmp90, err := this.IsTextured()
+			if err != nil {
+				return 0, err
+			}
+			if (tmp90) {
+				tmp89 = 1
+			} else {
+				tmp89 = 0
+			}
+			tmp87 = tmp89
+		}
+		tmp85 = tmp87
+	} else {
+		tmp91, err := this.NumUvLayersRaw()
+		if err != nil {
+			return 0, err
+		}
+		tmp85 = tmp91
+	}
+	this.numUvLayers = int(tmp85)
+	return this.numUvLayers, nil
+}
+func (this *RenderwareBinaryStream_StructGeometry) NumUvLayersRaw() (v int, err error) {
+	if (this._f_numUvLayersRaw) {
+		return this.numUvLayersRaw, nil
+	}
+	this._f_numUvLayersRaw = true
+	this.numUvLayersRaw = int((this.Format & 16711680) >> 16)
+	return this.numUvLayersRaw, nil
+}
+
+/**
+ * @see <a href="https://gtamods.com/wiki/Geometry_List_(RW_Section)#Structure">Source</a>
+ */
+type RenderwareBinaryStream_StructGeometryList struct {
+	NumGeometries uint32
+	_io *kaitai.Stream
+	_root *RenderwareBinaryStream
+	_parent *RenderwareBinaryStream_ListWithHeader
+}
+func NewRenderwareBinaryStream_StructGeometryList() *RenderwareBinaryStream_StructGeometryList {
+	return &RenderwareBinaryStream_StructGeometryList{
+	}
+}
+
+func (this RenderwareBinaryStream_StructGeometryList) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *RenderwareBinaryStream_StructGeometryList) Read(io *kaitai.Stream, parent *RenderwareBinaryStream_ListWithHeader, root *RenderwareBinaryStream) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp92, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.NumGeometries = uint32(tmp92)
+	return err
+}
+type RenderwareBinaryStream_StructTextureDictionary struct {
+	NumTextures uint32
+	_io *kaitai.Stream
+	_root *RenderwareBinaryStream
+	_parent *RenderwareBinaryStream_ListWithHeader
+}
+func NewRenderwareBinaryStream_StructTextureDictionary() *RenderwareBinaryStream_StructTextureDictionary {
+	return &RenderwareBinaryStream_StructTextureDictionary{
+	}
+}
+
+func (this RenderwareBinaryStream_StructTextureDictionary) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *RenderwareBinaryStream_StructTextureDictionary) Read(io *kaitai.Stream, parent *RenderwareBinaryStream_ListWithHeader, root *RenderwareBinaryStream) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp93, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.NumTextures = uint32(tmp93)
+	return err
+}
+
+/**
+ * @see <a href="https://gtamods.com/wiki/RpGeometry">Source</a>
+ */
+type RenderwareBinaryStream_SurfaceProperties struct {
+	Ambient float32
+	Specular float32
+	Diffuse float32
+	_io *kaitai.Stream
+	_root *RenderwareBinaryStream
+	_parent *RenderwareBinaryStream_StructGeometry
+}
+func NewRenderwareBinaryStream_SurfaceProperties() *RenderwareBinaryStream_SurfaceProperties {
+	return &RenderwareBinaryStream_SurfaceProperties{
+	}
+}
+
+func (this RenderwareBinaryStream_SurfaceProperties) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *RenderwareBinaryStream_SurfaceProperties) Read(io *kaitai.Stream, parent *RenderwareBinaryStream_StructGeometry, root *RenderwareBinaryStream) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp94, err := this._io.ReadF4le()
+	if err != nil {
+		return err
+	}
+	this.Ambient = float32(tmp94)
+	tmp95, err := this._io.ReadF4le()
+	if err != nil {
+		return err
+	}
+	this.Specular = float32(tmp95)
+	tmp96, err := this._io.ReadF4le()
+	if err != nil {
+		return err
+	}
+	this.Diffuse = float32(tmp96)
+	return err
+}
+type RenderwareBinaryStream_TexCoord struct {
+	U float32
+	V float32
+	_io *kaitai.Stream
+	_root *RenderwareBinaryStream
+	_parent *RenderwareBinaryStream_UvLayer
+}
+func NewRenderwareBinaryStream_TexCoord() *RenderwareBinaryStream_TexCoord {
+	return &RenderwareBinaryStream_TexCoord{
+	}
+}
+
+func (this RenderwareBinaryStream_TexCoord) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *RenderwareBinaryStream_TexCoord) Read(io *kaitai.Stream, parent *RenderwareBinaryStream_UvLayer, root *RenderwareBinaryStream) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp97, err := this._io.ReadF4le()
+	if err != nil {
+		return err
+	}
+	this.U = float32(tmp97)
+	tmp98, err := this._io.ReadF4le()
+	if err != nil {
+		return err
+	}
+	this.V = float32(tmp98)
+	return err
 }
 type RenderwareBinaryStream_Triangle struct {
 	Vertex2 uint16
@@ -1191,107 +1320,35 @@ func NewRenderwareBinaryStream_Triangle() *RenderwareBinaryStream_Triangle {
 	}
 }
 
+func (this RenderwareBinaryStream_Triangle) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *RenderwareBinaryStream_Triangle) Read(io *kaitai.Stream, parent *RenderwareBinaryStream_GeometryNonNative, root *RenderwareBinaryStream) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp95, err := this._io.ReadU2le()
+	tmp99, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.Vertex2 = uint16(tmp95)
-	tmp96, err := this._io.ReadU2le()
+	this.Vertex2 = uint16(tmp99)
+	tmp100, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.Vertex1 = uint16(tmp96)
-	tmp97, err := this._io.ReadU2le()
+	this.Vertex1 = uint16(tmp100)
+	tmp101, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.MaterialId = uint16(tmp97)
-	tmp98, err := this._io.ReadU2le()
+	this.MaterialId = uint16(tmp101)
+	tmp102, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.Vertex3 = uint16(tmp98)
-	return err
-}
-
-/**
- * @see <a href="https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
- */
-type RenderwareBinaryStream_Frame struct {
-	RotationMatrix *RenderwareBinaryStream_Matrix
-	Position *RenderwareBinaryStream_Vector3d
-	CurFrameIdx int32
-	MatrixCreationFlags uint32
-	_io *kaitai.Stream
-	_root *RenderwareBinaryStream
-	_parent *RenderwareBinaryStream_StructFrameList
-}
-func NewRenderwareBinaryStream_Frame() *RenderwareBinaryStream_Frame {
-	return &RenderwareBinaryStream_Frame{
-	}
-}
-
-func (this *RenderwareBinaryStream_Frame) Read(io *kaitai.Stream, parent *RenderwareBinaryStream_StructFrameList, root *RenderwareBinaryStream) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp99 := NewRenderwareBinaryStream_Matrix()
-	err = tmp99.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.RotationMatrix = tmp99
-	tmp100 := NewRenderwareBinaryStream_Vector3d()
-	err = tmp100.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Position = tmp100
-	tmp101, err := this._io.ReadS4le()
-	if err != nil {
-		return err
-	}
-	this.CurFrameIdx = int32(tmp101)
-	tmp102, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.MatrixCreationFlags = uint32(tmp102)
-	return err
-}
-type RenderwareBinaryStream_TexCoord struct {
-	U float32
-	V float32
-	_io *kaitai.Stream
-	_root *RenderwareBinaryStream
-	_parent *RenderwareBinaryStream_UvLayer
-}
-func NewRenderwareBinaryStream_TexCoord() *RenderwareBinaryStream_TexCoord {
-	return &RenderwareBinaryStream_TexCoord{
-	}
-}
-
-func (this *RenderwareBinaryStream_TexCoord) Read(io *kaitai.Stream, parent *RenderwareBinaryStream_UvLayer, root *RenderwareBinaryStream) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp103, err := this._io.ReadF4le()
-	if err != nil {
-		return err
-	}
-	this.U = float32(tmp103)
-	tmp104, err := this._io.ReadF4le()
-	if err != nil {
-		return err
-	}
-	this.V = float32(tmp104)
+	this.Vertex3 = uint16(tmp102)
 	return err
 }
 type RenderwareBinaryStream_UvLayer struct {
@@ -1307,6 +1364,10 @@ func NewRenderwareBinaryStream_UvLayer(numVertices uint32) *RenderwareBinaryStre
 	}
 }
 
+func (this RenderwareBinaryStream_UvLayer) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *RenderwareBinaryStream_UvLayer) Read(io *kaitai.Stream, parent *RenderwareBinaryStream_GeometryNonNative, root *RenderwareBinaryStream) (err error) {
 	this._io = io
 	this._parent = parent
@@ -1314,35 +1375,55 @@ func (this *RenderwareBinaryStream_UvLayer) Read(io *kaitai.Stream, parent *Rend
 
 	for i := 0; i < int(this.NumVertices); i++ {
 		_ = i
-		tmp105 := NewRenderwareBinaryStream_TexCoord()
-		err = tmp105.Read(this._io, this, this._root)
+		tmp103 := NewRenderwareBinaryStream_TexCoord()
+		err = tmp103.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.TexCoords = append(this.TexCoords, tmp105)
+		this.TexCoords = append(this.TexCoords, tmp103)
 	}
 	return err
 }
-type RenderwareBinaryStream_StructTextureDictionary struct {
-	NumTextures uint32
+
+/**
+ * @see <a href="https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
+ */
+type RenderwareBinaryStream_Vector3d struct {
+	X float32
+	Y float32
+	Z float32
 	_io *kaitai.Stream
 	_root *RenderwareBinaryStream
-	_parent *RenderwareBinaryStream_ListWithHeader
+	_parent kaitai.Struct
 }
-func NewRenderwareBinaryStream_StructTextureDictionary() *RenderwareBinaryStream_StructTextureDictionary {
-	return &RenderwareBinaryStream_StructTextureDictionary{
+func NewRenderwareBinaryStream_Vector3d() *RenderwareBinaryStream_Vector3d {
+	return &RenderwareBinaryStream_Vector3d{
 	}
 }
 
-func (this *RenderwareBinaryStream_StructTextureDictionary) Read(io *kaitai.Stream, parent *RenderwareBinaryStream_ListWithHeader, root *RenderwareBinaryStream) (err error) {
+func (this RenderwareBinaryStream_Vector3d) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *RenderwareBinaryStream_Vector3d) Read(io *kaitai.Stream, parent kaitai.Struct, root *RenderwareBinaryStream) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp106, err := this._io.ReadU4le()
+	tmp104, err := this._io.ReadF4le()
 	if err != nil {
 		return err
 	}
-	this.NumTextures = uint32(tmp106)
+	this.X = float32(tmp104)
+	tmp105, err := this._io.ReadF4le()
+	if err != nil {
+		return err
+	}
+	this.Y = float32(tmp105)
+	tmp106, err := this._io.ReadF4le()
+	if err != nil {
+		return err
+	}
+	this.Z = float32(tmp106)
 	return err
 }

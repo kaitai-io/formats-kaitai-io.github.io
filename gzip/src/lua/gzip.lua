@@ -51,7 +51,7 @@ end
 function Gzip:_read()
   self.magic = self._io:read_bytes(2)
   if not(self.magic == "\031\139") then
-    error("not equal, expected " ..  "\031\139" .. ", but got " .. self.magic)
+    error("not equal, expected " .. "\031\139" .. ", but got " .. self.magic)
   end
   self.compression_method = Gzip.CompressionMethods(self._io:read_u1())
   self.flags = Gzip.Flags(self._io, self, self._root)
@@ -73,7 +73,7 @@ function Gzip:_read()
   if self.flags.has_header_crc then
     self.header_crc16 = self._io:read_u2le()
   end
-  self.body = self._io:read_bytes(((self._io:size() - self._io:pos()) - 8))
+  self.body = self._io:read_bytes((self._io:size() - self._io:pos()) - 8)
   self.body_crc32 = self._io:read_u4le()
   self.len_uncompressed = self._io:read_u4le()
 end
@@ -96,12 +96,48 @@ end
 -- Size of original uncompressed data in bytes (truncated to 32
 -- bits).
 
+Gzip.ExtraFlagsDeflate = class.class(KaitaiStruct)
+
+Gzip.ExtraFlagsDeflate.CompressionStrengths = enum.Enum {
+  best = 2,
+  fast = 4,
+}
+
+function Gzip.ExtraFlagsDeflate:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Gzip.ExtraFlagsDeflate:_read()
+  self.compression_strength = Gzip.ExtraFlagsDeflate.CompressionStrengths(self._io:read_u1())
+end
+
+
+Gzip.Extras = class.class(KaitaiStruct)
+
+function Gzip.Extras:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Gzip.Extras:_read()
+  self.len_subfields = self._io:read_u2le()
+  self._raw_subfields = self._io:read_bytes(self.len_subfields)
+  local _io = KaitaiStream(stringstream(self._raw_subfields))
+  self.subfields = Gzip.Subfields(_io, self, self._root)
+end
+
+
 Gzip.Flags = class.class(KaitaiStruct)
 
 function Gzip.Flags:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -122,46 +158,6 @@ end
 -- If true, file inside this archive is a text file from
 -- compressor's point of view.
 
-Gzip.ExtraFlagsDeflate = class.class(KaitaiStruct)
-
-Gzip.ExtraFlagsDeflate.CompressionStrengths = enum.Enum {
-  best = 2,
-  fast = 4,
-}
-
-function Gzip.ExtraFlagsDeflate:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Gzip.ExtraFlagsDeflate:_read()
-  self.compression_strength = Gzip.ExtraFlagsDeflate.CompressionStrengths(self._io:read_u1())
-end
-
-
--- 
--- Container for many subfields, constrained by size of stream.
-Gzip.Subfields = class.class(KaitaiStruct)
-
-function Gzip.Subfields:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Gzip.Subfields:_read()
-  self.entries = {}
-  local i = 0
-  while not self._io:is_eof() do
-    self.entries[i + 1] = Gzip.Subfield(self._io, self, self._root)
-    i = i + 1
-  end
-end
-
-
 -- 
 -- Every subfield follows typical [TLV scheme](https://en.wikipedia.org/wiki/Type-length-value):
 -- 
@@ -176,7 +172,7 @@ Gzip.Subfield = class.class(KaitaiStruct)
 function Gzip.Subfield:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -189,20 +185,24 @@ end
 -- 
 -- Subfield ID, typically two ASCII letters.
 
-Gzip.Extras = class.class(KaitaiStruct)
+-- 
+-- Container for many subfields, constrained by size of stream.
+Gzip.Subfields = class.class(KaitaiStruct)
 
-function Gzip.Extras:_init(io, parent, root)
+function Gzip.Subfields:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function Gzip.Extras:_read()
-  self.len_subfields = self._io:read_u2le()
-  self._raw_subfields = self._io:read_bytes(self.len_subfields)
-  local _io = KaitaiStream(stringstream(self._raw_subfields))
-  self.subfields = Gzip.Subfields(_io, self, self._root)
+function Gzip.Subfields:_read()
+  self.entries = {}
+  local i = 0
+  while not self._io:is_eof() do
+    self.entries[i + 1] = Gzip.Subfield(self._io, self, self._root)
+    i = i + 1
+  end
 end
 
 

@@ -3,19 +3,23 @@
 
 namespace {
     class GptPartitionTable extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \GptPartitionTable $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\GptPartitionTable $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
         }
-        protected $_m_sectorSize;
-        public function sectorSize() {
-            if ($this->_m_sectorSize !== null)
-                return $this->_m_sectorSize;
-            $this->_m_sectorSize = 512;
-            return $this->_m_sectorSize;
+        protected $_m_backup;
+        public function backup() {
+            if ($this->_m_backup !== null)
+                return $this->_m_backup;
+            $io = $this->_root()->_io();
+            $_pos = $io->pos();
+            $io->seek($this->_io()->size() - $this->_root()->sectorSize());
+            $this->_m_backup = new \GptPartitionTable\PartitionHeader($io, $this, $this->_root);
+            $io->seek($_pos);
+            return $this->_m_backup;
         }
         protected $_m_primary;
         public function primary() {
@@ -28,23 +32,19 @@ namespace {
             $io->seek($_pos);
             return $this->_m_primary;
         }
-        protected $_m_backup;
-        public function backup() {
-            if ($this->_m_backup !== null)
-                return $this->_m_backup;
-            $io = $this->_root()->_io();
-            $_pos = $io->pos();
-            $io->seek(($this->_io()->size() - $this->_root()->sectorSize()));
-            $this->_m_backup = new \GptPartitionTable\PartitionHeader($io, $this, $this->_root);
-            $io->seek($_pos);
-            return $this->_m_backup;
+        protected $_m_sectorSize;
+        public function sectorSize() {
+            if ($this->_m_sectorSize !== null)
+                return $this->_m_sectorSize;
+            $this->_m_sectorSize = 512;
+            return $this->_m_sectorSize;
         }
     }
 }
 
 namespace GptPartitionTable {
     class PartitionEntry extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \GptPartitionTable\PartitionHeader $_parent = null, \GptPartitionTable $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\GptPartitionTable\PartitionHeader $_parent = null, ?\GptPartitionTable $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -74,15 +74,15 @@ namespace GptPartitionTable {
 
 namespace GptPartitionTable {
     class PartitionHeader extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \GptPartitionTable $_parent = null, \GptPartitionTable $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\GptPartitionTable $_parent = null, ?\GptPartitionTable $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_signature = $this->_io->readBytes(8);
-            if (!($this->signature() == "\x45\x46\x49\x20\x50\x41\x52\x54")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x45\x46\x49\x20\x50\x41\x52\x54", $this->signature(), $this->_io(), "/types/partition_header/seq/0");
+            if (!($this->_m_signature == "\x45\x46\x49\x20\x50\x41\x52\x54")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x45\x46\x49\x20\x50\x41\x52\x54", $this->_m_signature, $this->_io, "/types/partition_header/seq/0");
             }
             $this->_m_revision = $this->_io->readU4le();
             $this->_m_headerSize = $this->_io->readU4le();
@@ -104,7 +104,7 @@ namespace GptPartitionTable {
                 return $this->_m_entries;
             $io = $this->_root()->_io();
             $_pos = $io->pos();
-            $io->seek(($this->entriesStart() * $this->_root()->sectorSize()));
+            $io->seek($this->entriesStart() * $this->_root()->sectorSize());
             $this->_m__raw_entries = [];
             $this->_m_entries = [];
             $n = $this->entriesCount();

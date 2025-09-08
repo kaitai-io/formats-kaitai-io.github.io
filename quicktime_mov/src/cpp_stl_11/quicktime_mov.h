@@ -2,13 +2,16 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class quicktime_mov_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -18,13 +21,13 @@
 class quicktime_mov_t : public kaitai::kstruct {
 
 public:
-    class mvhd_body_t;
-    class ftyp_body_t;
-    class fixed32_t;
-    class fixed16_t;
     class atom_t;
-    class tkhd_body_t;
     class atom_list_t;
+    class fixed16_t;
+    class fixed32_t;
+    class ftyp_body_t;
+    class mvhd_body_t;
+    class tkhd_body_t;
 
     enum atom_type_t {
         ATOM_TYPE_XTRA = 1484026465,
@@ -58,6 +61,12 @@ public:
         ATOM_TYPE_UDTA = 1969517665,
         ATOM_TYPE_VMHD = 1986881636
     };
+    static bool _is_defined_atom_type_t(atom_type_t v);
+
+private:
+    static const std::set<atom_type_t> _values_atom_type_t;
+
+public:
 
     enum brand_t {
         BRAND_X_3G2A = 862401121,
@@ -316,6 +325,12 @@ public:
         BRAND_VWPT = 1987539060,
         BRAND_YT4 = 2037658656
     };
+    static bool _is_defined_brand_t(brand_t v);
+
+private:
+    static const std::set<brand_t> _values_brand_t;
+
+public:
 
     quicktime_mov_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, quicktime_mov_t* p__root = nullptr);
 
@@ -325,6 +340,175 @@ private:
 
 public:
     ~quicktime_mov_t();
+
+    class atom_t : public kaitai::kstruct {
+
+    public:
+
+        atom_t(kaitai::kstream* p__io, quicktime_mov_t::atom_list_t* p__parent = nullptr, quicktime_mov_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~atom_t();
+
+    private:
+        bool f_len;
+        int32_t m_len;
+
+    public:
+        int32_t len();
+
+    private:
+        uint32_t m_len32;
+        atom_type_t m_atom_type;
+        uint64_t m_len64;
+        bool n_len64;
+
+    public:
+        bool _is_null_len64() { len64(); return n_len64; };
+
+    private:
+        std::unique_ptr<kaitai::kstruct> m_body;
+        bool n_body;
+
+    public:
+        bool _is_null_body() { body(); return n_body; };
+
+    private:
+        quicktime_mov_t* m__root;
+        quicktime_mov_t::atom_list_t* m__parent;
+        std::string m__raw_body;
+        std::unique_ptr<kaitai::kstream> m__io__raw_body;
+
+    public:
+        uint32_t len32() const { return m_len32; }
+        atom_type_t atom_type() const { return m_atom_type; }
+        uint64_t len64() const { return m_len64; }
+        kaitai::kstruct* body() const { return m_body.get(); }
+        quicktime_mov_t* _root() const { return m__root; }
+        quicktime_mov_t::atom_list_t* _parent() const { return m__parent; }
+        std::string _raw_body() const { return m__raw_body; }
+        kaitai::kstream* _io__raw_body() const { return m__io__raw_body.get(); }
+    };
+
+    class atom_list_t : public kaitai::kstruct {
+
+    public:
+
+        atom_list_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, quicktime_mov_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~atom_list_t();
+
+    private:
+        std::unique_ptr<std::vector<std::unique_ptr<atom_t>>> m_items;
+        quicktime_mov_t* m__root;
+        kaitai::kstruct* m__parent;
+
+    public:
+        std::vector<std::unique_ptr<atom_t>>* items() const { return m_items.get(); }
+        quicktime_mov_t* _root() const { return m__root; }
+        kaitai::kstruct* _parent() const { return m__parent; }
+    };
+
+    /**
+     * Fixed-point 16-bit number.
+     */
+
+    class fixed16_t : public kaitai::kstruct {
+
+    public:
+
+        fixed16_t(kaitai::kstream* p__io, quicktime_mov_t::mvhd_body_t* p__parent = nullptr, quicktime_mov_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~fixed16_t();
+
+    private:
+        int8_t m_int_part;
+        uint8_t m_frac_part;
+        quicktime_mov_t* m__root;
+        quicktime_mov_t::mvhd_body_t* m__parent;
+
+    public:
+        int8_t int_part() const { return m_int_part; }
+        uint8_t frac_part() const { return m_frac_part; }
+        quicktime_mov_t* _root() const { return m__root; }
+        quicktime_mov_t::mvhd_body_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * Fixed-point 32-bit number.
+     */
+
+    class fixed32_t : public kaitai::kstruct {
+
+    public:
+
+        fixed32_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, quicktime_mov_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~fixed32_t();
+
+    private:
+        int16_t m_int_part;
+        uint16_t m_frac_part;
+        quicktime_mov_t* m__root;
+        kaitai::kstruct* m__parent;
+
+    public:
+        int16_t int_part() const { return m_int_part; }
+        uint16_t frac_part() const { return m_frac_part; }
+        quicktime_mov_t* _root() const { return m__root; }
+        kaitai::kstruct* _parent() const { return m__parent; }
+    };
+
+    /**
+     * \sa https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-CJBCBIFF Source
+     */
+
+    class ftyp_body_t : public kaitai::kstruct {
+
+    public:
+
+        ftyp_body_t(kaitai::kstream* p__io, quicktime_mov_t::atom_t* p__parent = nullptr, quicktime_mov_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~ftyp_body_t();
+
+    private:
+        brand_t m_major_brand;
+        std::string m_minor_version;
+        std::unique_ptr<std::vector<brand_t>> m_compatible_brands;
+        quicktime_mov_t* m__root;
+        quicktime_mov_t::atom_t* m__parent;
+
+    public:
+        brand_t major_brand() const { return m_major_brand; }
+        std::string minor_version() const { return m_minor_version; }
+        std::vector<brand_t>* compatible_brands() const { return m_compatible_brands.get(); }
+        quicktime_mov_t* _root() const { return m__root; }
+        quicktime_mov_t::atom_t* _parent() const { return m__parent; }
+    };
 
     /**
      * \sa https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-BBCGFGJG Source
@@ -448,151 +632,6 @@ public:
     };
 
     /**
-     * \sa https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-CJBCBIFF Source
-     */
-
-    class ftyp_body_t : public kaitai::kstruct {
-
-    public:
-
-        ftyp_body_t(kaitai::kstream* p__io, quicktime_mov_t::atom_t* p__parent = nullptr, quicktime_mov_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~ftyp_body_t();
-
-    private:
-        brand_t m_major_brand;
-        std::string m_minor_version;
-        std::unique_ptr<std::vector<brand_t>> m_compatible_brands;
-        quicktime_mov_t* m__root;
-        quicktime_mov_t::atom_t* m__parent;
-
-    public:
-        brand_t major_brand() const { return m_major_brand; }
-        std::string minor_version() const { return m_minor_version; }
-        std::vector<brand_t>* compatible_brands() const { return m_compatible_brands.get(); }
-        quicktime_mov_t* _root() const { return m__root; }
-        quicktime_mov_t::atom_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * Fixed-point 32-bit number.
-     */
-
-    class fixed32_t : public kaitai::kstruct {
-
-    public:
-
-        fixed32_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, quicktime_mov_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~fixed32_t();
-
-    private:
-        int16_t m_int_part;
-        uint16_t m_frac_part;
-        quicktime_mov_t* m__root;
-        kaitai::kstruct* m__parent;
-
-    public:
-        int16_t int_part() const { return m_int_part; }
-        uint16_t frac_part() const { return m_frac_part; }
-        quicktime_mov_t* _root() const { return m__root; }
-        kaitai::kstruct* _parent() const { return m__parent; }
-    };
-
-    /**
-     * Fixed-point 16-bit number.
-     */
-
-    class fixed16_t : public kaitai::kstruct {
-
-    public:
-
-        fixed16_t(kaitai::kstream* p__io, quicktime_mov_t::mvhd_body_t* p__parent = nullptr, quicktime_mov_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~fixed16_t();
-
-    private:
-        int8_t m_int_part;
-        uint8_t m_frac_part;
-        quicktime_mov_t* m__root;
-        quicktime_mov_t::mvhd_body_t* m__parent;
-
-    public:
-        int8_t int_part() const { return m_int_part; }
-        uint8_t frac_part() const { return m_frac_part; }
-        quicktime_mov_t* _root() const { return m__root; }
-        quicktime_mov_t::mvhd_body_t* _parent() const { return m__parent; }
-    };
-
-    class atom_t : public kaitai::kstruct {
-
-    public:
-
-        atom_t(kaitai::kstream* p__io, quicktime_mov_t::atom_list_t* p__parent = nullptr, quicktime_mov_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~atom_t();
-
-    private:
-        bool f_len;
-        int32_t m_len;
-
-    public:
-        int32_t len();
-
-    private:
-        uint32_t m_len32;
-        atom_type_t m_atom_type;
-        uint64_t m_len64;
-        bool n_len64;
-
-    public:
-        bool _is_null_len64() { len64(); return n_len64; };
-
-    private:
-        std::unique_ptr<kaitai::kstruct> m_body;
-        bool n_body;
-
-    public:
-        bool _is_null_body() { body(); return n_body; };
-
-    private:
-        quicktime_mov_t* m__root;
-        quicktime_mov_t::atom_list_t* m__parent;
-        std::string m__raw_body;
-        std::unique_ptr<kaitai::kstream> m__io__raw_body;
-
-    public:
-        uint32_t len32() const { return m_len32; }
-        atom_type_t atom_type() const { return m_atom_type; }
-        uint64_t len64() const { return m_len64; }
-        kaitai::kstruct* body() const { return m_body.get(); }
-        quicktime_mov_t* _root() const { return m__root; }
-        quicktime_mov_t::atom_list_t* _parent() const { return m__parent; }
-        std::string _raw_body() const { return m__raw_body; }
-        kaitai::kstream* _io__raw_body() const { return m__io__raw_body.get(); }
-    };
-
-    /**
      * \sa https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-25550 Source
      */
 
@@ -650,30 +689,6 @@ public:
         fixed32_t* height() const { return m_height.get(); }
         quicktime_mov_t* _root() const { return m__root; }
         quicktime_mov_t::atom_t* _parent() const { return m__parent; }
-    };
-
-    class atom_list_t : public kaitai::kstruct {
-
-    public:
-
-        atom_list_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, quicktime_mov_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~atom_list_t();
-
-    private:
-        std::unique_ptr<std::vector<std::unique_ptr<atom_t>>> m_items;
-        quicktime_mov_t* m__root;
-        kaitai::kstruct* m__parent;
-
-    public:
-        std::vector<std::unique_ptr<atom_t>>* items() const { return m_items.get(); }
-        quicktime_mov_t* _root() const { return m__root; }
-        kaitai::kstruct* _parent() const { return m__parent; }
     };
 
 private:

@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.SudoersTs = factory(root.KaitaiStream);
+    factory(root.SudoersTs || (root.SudoersTs = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (SudoersTs_, KaitaiStream) {
 /**
  * This spec can be used to parse sudo time stamp files located in directories
  * such as /run/sudo/ts/$USER or /var/lib/sudo/ts/$USER.
@@ -44,11 +44,103 @@ var SudoersTs = (function() {
     }
   }
 
+  var Record = SudoersTs.Record = (function() {
+    function Record(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Record.prototype._read = function() {
+      this.version = this._io.readU2le();
+      this.lenRecord = this._io.readU2le();
+      switch (this.version) {
+      case 1:
+        this._raw_payload = this._io.readBytes(this.lenRecord - 4);
+        var _io__raw_payload = new KaitaiStream(this._raw_payload);
+        this.payload = new RecordV1(_io__raw_payload, this, this._root);
+        break;
+      case 2:
+        this._raw_payload = this._io.readBytes(this.lenRecord - 4);
+        var _io__raw_payload = new KaitaiStream(this._raw_payload);
+        this.payload = new RecordV2(_io__raw_payload, this, this._root);
+        break;
+      default:
+        this.payload = this._io.readBytes(this.lenRecord - 4);
+        break;
+      }
+    }
+
+    /**
+     * version number of the timestamp_entry struct
+     */
+
+    /**
+     * size of the record in bytes
+     */
+
+    return Record;
+  })();
+
+  var RecordV1 = SudoersTs.RecordV1 = (function() {
+    function RecordV1(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    RecordV1.prototype._read = function() {
+      this.type = this._io.readU2le();
+      this.flags = new TsFlag(this._io, this, this._root);
+      this.authUid = this._io.readU4le();
+      this.sid = this._io.readU4le();
+      this.ts = new Timespec(this._io, this, this._root);
+      if (this.type == SudoersTs.TsType.TTY) {
+        this.ttydev = this._io.readU4le();
+      }
+      if (this.type == SudoersTs.TsType.PPID) {
+        this.ppid = this._io.readU4le();
+      }
+    }
+
+    /**
+     * record type
+     */
+
+    /**
+     * record flags
+     */
+
+    /**
+     * user ID that was used for authentication
+     */
+
+    /**
+     * session ID associated with tty/ppid
+     */
+
+    /**
+     * time stamp, from a monotonic time source
+     */
+
+    /**
+     * device number of the terminal associated with the session
+     */
+
+    /**
+     * ID of the parent process
+     */
+
+    return RecordV1;
+  })();
+
   var RecordV2 = SudoersTs.RecordV2 = (function() {
     function RecordV2(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -102,11 +194,35 @@ var SudoersTs = (function() {
     return RecordV2;
   })();
 
+  var Timespec = SudoersTs.Timespec = (function() {
+    function Timespec(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Timespec.prototype._read = function() {
+      this.sec = this._io.readS8le();
+      this.nsec = this._io.readS8le();
+    }
+
+    /**
+     * seconds
+     */
+
+    /**
+     * nanoseconds
+     */
+
+    return Timespec;
+  })();
+
   var TsFlag = SudoersTs.TsFlag = (function() {
     function TsFlag(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -136,123 +252,7 @@ var SudoersTs = (function() {
     return TsFlag;
   })();
 
-  var RecordV1 = SudoersTs.RecordV1 = (function() {
-    function RecordV1(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    RecordV1.prototype._read = function() {
-      this.type = this._io.readU2le();
-      this.flags = new TsFlag(this._io, this, this._root);
-      this.authUid = this._io.readU4le();
-      this.sid = this._io.readU4le();
-      this.ts = new Timespec(this._io, this, this._root);
-      if (this.type == SudoersTs.TsType.TTY) {
-        this.ttydev = this._io.readU4le();
-      }
-      if (this.type == SudoersTs.TsType.PPID) {
-        this.ppid = this._io.readU4le();
-      }
-    }
-
-    /**
-     * record type
-     */
-
-    /**
-     * record flags
-     */
-
-    /**
-     * user ID that was used for authentication
-     */
-
-    /**
-     * session ID associated with tty/ppid
-     */
-
-    /**
-     * time stamp, from a monotonic time source
-     */
-
-    /**
-     * device number of the terminal associated with the session
-     */
-
-    /**
-     * ID of the parent process
-     */
-
-    return RecordV1;
-  })();
-
-  var Timespec = SudoersTs.Timespec = (function() {
-    function Timespec(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Timespec.prototype._read = function() {
-      this.sec = this._io.readS8le();
-      this.nsec = this._io.readS8le();
-    }
-
-    /**
-     * seconds
-     */
-
-    /**
-     * nanoseconds
-     */
-
-    return Timespec;
-  })();
-
-  var Record = SudoersTs.Record = (function() {
-    function Record(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Record.prototype._read = function() {
-      this.version = this._io.readU2le();
-      this.lenRecord = this._io.readU2le();
-      switch (this.version) {
-      case 1:
-        this._raw_payload = this._io.readBytes((this.lenRecord - 4));
-        var _io__raw_payload = new KaitaiStream(this._raw_payload);
-        this.payload = new RecordV1(_io__raw_payload, this, this._root);
-        break;
-      case 2:
-        this._raw_payload = this._io.readBytes((this.lenRecord - 4));
-        var _io__raw_payload = new KaitaiStream(this._raw_payload);
-        this.payload = new RecordV2(_io__raw_payload, this, this._root);
-        break;
-      default:
-        this.payload = this._io.readBytes((this.lenRecord - 4));
-        break;
-      }
-    }
-
-    /**
-     * version number of the timestamp_entry struct
-     */
-
-    /**
-     * size of the record in bytes
-     */
-
-    return Record;
-  })();
-
   return SudoersTs;
 })();
-return SudoersTs;
-}));
+SudoersTs_.SudoersTs = SudoersTs;
+});

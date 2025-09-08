@@ -18,18 +18,28 @@ import (
  * and thus is probably a poor choice for true cross-platform usage.
  */
 
+type Xwd_ByteOrder int
+const (
+	Xwd_ByteOrder__Le Xwd_ByteOrder = 0
+	Xwd_ByteOrder__Be Xwd_ByteOrder = 1
+)
+var values_Xwd_ByteOrder = map[Xwd_ByteOrder]struct{}{0: {}, 1: {}}
+func (v Xwd_ByteOrder) isDefined() bool {
+	_, ok := values_Xwd_ByteOrder[v]
+	return ok
+}
+
 type Xwd_PixmapFormat int
 const (
 	Xwd_PixmapFormat__XYBitmap Xwd_PixmapFormat = 0
 	Xwd_PixmapFormat__XYPixmap Xwd_PixmapFormat = 1
 	Xwd_PixmapFormat__ZPixmap Xwd_PixmapFormat = 2
 )
-
-type Xwd_ByteOrder int
-const (
-	Xwd_ByteOrder__Le Xwd_ByteOrder = 0
-	Xwd_ByteOrder__Be Xwd_ByteOrder = 1
-)
+var values_Xwd_PixmapFormat = map[Xwd_PixmapFormat]struct{}{0: {}, 1: {}, 2: {}}
+func (v Xwd_PixmapFormat) isDefined() bool {
+	_, ok := values_Xwd_PixmapFormat[v]
+	return ok
+}
 
 type Xwd_VisualClass int
 const (
@@ -40,13 +50,18 @@ const (
 	Xwd_VisualClass__TrueColor Xwd_VisualClass = 4
 	Xwd_VisualClass__DirectColor Xwd_VisualClass = 5
 )
+var values_Xwd_VisualClass = map[Xwd_VisualClass]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}}
+func (v Xwd_VisualClass) isDefined() bool {
+	_, ok := values_Xwd_VisualClass[v]
+	return ok
+}
 type Xwd struct {
 	LenHeader uint32
 	Hdr *Xwd_Header
 	ColorMap []*Xwd_ColorMapEntry
 	_io *kaitai.Stream
 	_root *Xwd
-	_parent interface{}
+	_parent kaitai.Struct
 	_raw_Hdr []byte
 	_raw_ColorMap [][]byte
 }
@@ -55,7 +70,11 @@ func NewXwd() *Xwd {
 	}
 }
 
-func (this *Xwd) Read(io *kaitai.Stream, parent interface{}, root *Xwd) (err error) {
+func (this Xwd) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Xwd) Read(io *kaitai.Stream, parent kaitai.Struct, root *Xwd) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -65,7 +84,7 @@ func (this *Xwd) Read(io *kaitai.Stream, parent interface{}, root *Xwd) (err err
 		return err
 	}
 	this.LenHeader = uint32(tmp1)
-	tmp2, err := this._io.ReadBytes(int((this.LenHeader - 4)))
+	tmp2, err := this._io.ReadBytes(int(this.LenHeader - 4))
 	if err != nil {
 		return err
 	}
@@ -99,6 +118,67 @@ func (this *Xwd) Read(io *kaitai.Stream, parent interface{}, root *Xwd) (err err
 
 /**
  * Size of the header in bytes
+ */
+type Xwd_ColorMapEntry struct {
+	EntryNumber uint32
+	Red uint16
+	Green uint16
+	Blue uint16
+	Flags uint8
+	Padding uint8
+	_io *kaitai.Stream
+	_root *Xwd
+	_parent *Xwd
+}
+func NewXwd_ColorMapEntry() *Xwd_ColorMapEntry {
+	return &Xwd_ColorMapEntry{
+	}
+}
+
+func (this Xwd_ColorMapEntry) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Xwd_ColorMapEntry) Read(io *kaitai.Stream, parent *Xwd, root *Xwd) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp6, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.EntryNumber = uint32(tmp6)
+	tmp7, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.Red = uint16(tmp7)
+	tmp8, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.Green = uint16(tmp8)
+	tmp9, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.Blue = uint16(tmp9)
+	tmp10, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Flags = tmp10
+	tmp11, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Padding = tmp11
+	return err
+}
+
+/**
+ * Number of the color map entry
  */
 type Xwd_Header struct {
 	FileVersion uint32
@@ -135,136 +215,140 @@ func NewXwd_Header() *Xwd_Header {
 	}
 }
 
+func (this Xwd_Header) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Xwd_Header) Read(io *kaitai.Stream, parent *Xwd, root *Xwd) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp6, err := this._io.ReadU4be()
-	if err != nil {
-		return err
-	}
-	this.FileVersion = uint32(tmp6)
-	tmp7, err := this._io.ReadU4be()
-	if err != nil {
-		return err
-	}
-	this.PixmapFormat = Xwd_PixmapFormat(tmp7)
-	tmp8, err := this._io.ReadU4be()
-	if err != nil {
-		return err
-	}
-	this.PixmapDepth = uint32(tmp8)
-	tmp9, err := this._io.ReadU4be()
-	if err != nil {
-		return err
-	}
-	this.PixmapWidth = uint32(tmp9)
-	tmp10, err := this._io.ReadU4be()
-	if err != nil {
-		return err
-	}
-	this.PixmapHeight = uint32(tmp10)
-	tmp11, err := this._io.ReadU4be()
-	if err != nil {
-		return err
-	}
-	this.XOffset = uint32(tmp11)
 	tmp12, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.ByteOrder = Xwd_ByteOrder(tmp12)
+	this.FileVersion = uint32(tmp12)
 	tmp13, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.BitmapUnit = uint32(tmp13)
+	this.PixmapFormat = Xwd_PixmapFormat(tmp13)
 	tmp14, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.BitmapBitOrder = uint32(tmp14)
+	this.PixmapDepth = uint32(tmp14)
 	tmp15, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.BitmapPad = uint32(tmp15)
+	this.PixmapWidth = uint32(tmp15)
 	tmp16, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.BitsPerPixel = uint32(tmp16)
+	this.PixmapHeight = uint32(tmp16)
 	tmp17, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.BytesPerLine = uint32(tmp17)
+	this.XOffset = uint32(tmp17)
 	tmp18, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.VisualClass = Xwd_VisualClass(tmp18)
+	this.ByteOrder = Xwd_ByteOrder(tmp18)
 	tmp19, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.RedMask = uint32(tmp19)
+	this.BitmapUnit = uint32(tmp19)
 	tmp20, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.GreenMask = uint32(tmp20)
+	this.BitmapBitOrder = uint32(tmp20)
 	tmp21, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.BlueMask = uint32(tmp21)
+	this.BitmapPad = uint32(tmp21)
 	tmp22, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.BitsPerRgb = uint32(tmp22)
+	this.BitsPerPixel = uint32(tmp22)
 	tmp23, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.NumberOfColors = uint32(tmp23)
+	this.BytesPerLine = uint32(tmp23)
 	tmp24, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.ColorMapEntries = uint32(tmp24)
+	this.VisualClass = Xwd_VisualClass(tmp24)
 	tmp25, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.WindowWidth = uint32(tmp25)
+	this.RedMask = uint32(tmp25)
 	tmp26, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.WindowHeight = uint32(tmp26)
-	tmp27, err := this._io.ReadS4be()
+	this.GreenMask = uint32(tmp26)
+	tmp27, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.WindowX = int32(tmp27)
-	tmp28, err := this._io.ReadS4be()
+	this.BlueMask = uint32(tmp27)
+	tmp28, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.WindowY = int32(tmp28)
+	this.BitsPerRgb = uint32(tmp28)
 	tmp29, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.WindowBorderWidth = uint32(tmp29)
-	tmp30, err := this._io.ReadBytesTerm(0, false, true, true)
+	this.NumberOfColors = uint32(tmp29)
+	tmp30, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.Creator = string(tmp30)
+	this.ColorMapEntries = uint32(tmp30)
+	tmp31, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.WindowWidth = uint32(tmp31)
+	tmp32, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.WindowHeight = uint32(tmp32)
+	tmp33, err := this._io.ReadS4be()
+	if err != nil {
+		return err
+	}
+	this.WindowX = int32(tmp33)
+	tmp34, err := this._io.ReadS4be()
+	if err != nil {
+		return err
+	}
+	this.WindowY = int32(tmp34)
+	tmp35, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.WindowBorderWidth = uint32(tmp35)
+	tmp36, err := this._io.ReadBytesTerm(0, false, true, true)
+	if err != nil {
+		return err
+	}
+	this.Creator = string(tmp36)
 	return err
 }
 
@@ -366,61 +450,4 @@ func (this *Xwd_Header) Read(io *kaitai.Stream, parent *Xwd, root *Xwd) (err err
 
 /**
  * Program that created this xwd file
- */
-type Xwd_ColorMapEntry struct {
-	EntryNumber uint32
-	Red uint16
-	Green uint16
-	Blue uint16
-	Flags uint8
-	Padding uint8
-	_io *kaitai.Stream
-	_root *Xwd
-	_parent *Xwd
-}
-func NewXwd_ColorMapEntry() *Xwd_ColorMapEntry {
-	return &Xwd_ColorMapEntry{
-	}
-}
-
-func (this *Xwd_ColorMapEntry) Read(io *kaitai.Stream, parent *Xwd, root *Xwd) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp31, err := this._io.ReadU4be()
-	if err != nil {
-		return err
-	}
-	this.EntryNumber = uint32(tmp31)
-	tmp32, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.Red = uint16(tmp32)
-	tmp33, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.Green = uint16(tmp33)
-	tmp34, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.Blue = uint16(tmp34)
-	tmp35, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Flags = tmp35
-	tmp36, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Padding = tmp36
-	return err
-}
-
-/**
- * Number of the color map entry
  */

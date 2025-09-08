@@ -13,18 +13,18 @@
 
 namespace {
     class Au extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Au $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Au $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic = $this->_io->readBytes(4);
-            if (!($this->magic() == "\x2E\x73\x6E\x64")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x2E\x73\x6E\x64", $this->magic(), $this->_io(), "/seq/0");
+            if (!($this->_m_magic == "\x2E\x73\x6E\x64")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x2E\x73\x6E\x64", $this->_m_magic, $this->_io, "/seq/0");
             }
             $this->_m_ofsData = $this->_io->readU4be();
-            $this->_m__raw_header = $this->_io->readBytes((($this->ofsData() - 4) - 4));
+            $this->_m__raw_header = $this->_io->readBytes(($this->ofsData() - 4) - 4);
             $_io__raw_header = new \Kaitai\Struct\Stream($this->_m__raw_header);
             $this->_m_header = new \Au\Header($_io__raw_header, $this, $this->_root);
         }
@@ -32,7 +32,7 @@ namespace {
         public function lenData() {
             if ($this->_m_lenData !== null)
                 return $this->_m_lenData;
-            $this->_m_lenData = ($this->header()->dataSize() == 4294967295 ? ($this->_io()->size() - $this->ofsData()) : $this->header()->dataSize());
+            $this->_m_lenData = ($this->header()->dataSize() == 4294967295 ? $this->_io()->size() - $this->ofsData() : $this->header()->dataSize());
             return $this->_m_lenData;
         }
         protected $_m_magic;
@@ -48,7 +48,7 @@ namespace {
 
 namespace Au {
     class Header extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Au $_parent = null, \Au $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Au $_parent = null, ?\Au $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -58,8 +58,8 @@ namespace Au {
             $this->_m_encoding = $this->_io->readU4be();
             $this->_m_sampleRate = $this->_io->readU4be();
             $this->_m_numChannels = $this->_io->readU4be();
-            if (!($this->numChannels() >= 1)) {
-                throw new \Kaitai\Struct\Error\ValidationLessThanError(1, $this->numChannels(), $this->_io(), "/types/header/seq/3");
+            if (!($this->_m_numChannels >= 1)) {
+                throw new \Kaitai\Struct\Error\ValidationLessThanError(1, $this->_m_numChannels, $this->_io, "/types/header/seq/3");
             }
             $this->_m_comment = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($this->_io->readBytesFull(), 0, false), "ASCII");
         }
@@ -222,5 +222,11 @@ namespace Au {
         const ALAW_8 = 27;
         const AES = 28;
         const DELTA_MULAW_8 = 29;
+
+        private const _VALUES = [1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 7 => true, 8 => true, 9 => true, 10 => true, 11 => true, 12 => true, 13 => true, 14 => true, 16 => true, 17 => true, 18 => true, 19 => true, 20 => true, 21 => true, 22 => true, 23 => true, 24 => true, 25 => true, 26 => true, 27 => true, 28 => true, 29 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

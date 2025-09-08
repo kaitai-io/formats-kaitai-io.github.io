@@ -6,9 +6,10 @@ import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.Arrays;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.nio.charset.Charset;
+import java.util.List;
+import java.util.Arrays;
 
 
 /**
@@ -51,6 +52,107 @@ public class MicrosoftPe extends KaitaiStruct {
     }
     private void _read() {
         this.mz = new MzPlaceholder(this._io, this, _root);
+    }
+
+    public void _fetchInstances() {
+        this.mz._fetchInstances();
+        pe();
+        if (this.pe != null) {
+            this.pe._fetchInstances();
+        }
+    }
+    public static class Annoyingstring extends KaitaiStruct {
+        public static Annoyingstring fromFile(String fileName) throws IOException {
+            return new Annoyingstring(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Annoyingstring(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Annoyingstring(KaitaiStream _io, MicrosoftPe.CoffSymbol _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Annoyingstring(KaitaiStream _io, MicrosoftPe.CoffSymbol _parent, MicrosoftPe _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+        }
+
+        public void _fetchInstances() {
+            nameFromOffset();
+            if (this.nameFromOffset != null) {
+            }
+            nameFromShort();
+            if (this.nameFromShort != null) {
+            }
+            nameOffset();
+            if (this.nameOffset != null) {
+            }
+            nameZeroes();
+            if (this.nameZeroes != null) {
+            }
+        }
+        private String name;
+        public String name() {
+            if (this.name != null)
+                return this.name;
+            this.name = (nameZeroes() == 0 ? nameFromOffset() : nameFromShort());
+            return this.name;
+        }
+        private String nameFromOffset;
+        public String nameFromOffset() {
+            if (this.nameFromOffset != null)
+                return this.nameFromOffset;
+            if (nameZeroes() == 0) {
+                KaitaiStream io = _root()._io();
+                long _pos = io.pos();
+                io.seek((nameZeroes() == 0 ? _parent()._parent().symbolNameTableOffset() + nameOffset() : 0));
+                this.nameFromOffset = new String(io.readBytesTerm((byte) 0, false, true, false), StandardCharsets.US_ASCII);
+                io.seek(_pos);
+            }
+            return this.nameFromOffset;
+        }
+        private String nameFromShort;
+        public String nameFromShort() {
+            if (this.nameFromShort != null)
+                return this.nameFromShort;
+            if (nameZeroes() != 0) {
+                long _pos = this._io.pos();
+                this._io.seek(0);
+                this.nameFromShort = new String(this._io.readBytesTerm((byte) 0, false, true, false), StandardCharsets.US_ASCII);
+                this._io.seek(_pos);
+            }
+            return this.nameFromShort;
+        }
+        private Long nameOffset;
+        public Long nameOffset() {
+            if (this.nameOffset != null)
+                return this.nameOffset;
+            long _pos = this._io.pos();
+            this._io.seek(4);
+            this.nameOffset = this._io.readU4le();
+            this._io.seek(_pos);
+            return this.nameOffset;
+        }
+        private Long nameZeroes;
+        public Long nameZeroes() {
+            if (this.nameZeroes != null)
+                return this.nameZeroes;
+            long _pos = this._io.pos();
+            this._io.seek(0);
+            this.nameZeroes = this._io.readU4le();
+            this._io.seek(_pos);
+            return this.nameZeroes;
+        }
+        private MicrosoftPe _root;
+        private MicrosoftPe.CoffSymbol _parent;
+        public MicrosoftPe _root() { return _root; }
+        public MicrosoftPe.CoffSymbol _parent() { return _parent; }
     }
 
     /**
@@ -111,7 +213,10 @@ public class MicrosoftPe extends KaitaiStruct {
             this.length = this._io.readU4le();
             this.revision = CertificateRevision.byId(this._io.readU2le());
             this.certificateType = CertificateTypeEnum.byId(this._io.readU2le());
-            this.certificateBytes = this._io.readBytes((length() - 8));
+            this.certificateBytes = this._io.readBytes(length() - 8);
+        }
+
+        public void _fetchInstances() {
         }
         private long length;
         private CertificateRevision revision;
@@ -141,6 +246,529 @@ public class MicrosoftPe extends KaitaiStruct {
         public byte[] certificateBytes() { return certificateBytes; }
         public MicrosoftPe _root() { return _root; }
         public MicrosoftPe.CertificateTable _parent() { return _parent; }
+    }
+    public static class CertificateTable extends KaitaiStruct {
+        public static CertificateTable fromFile(String fileName) throws IOException {
+            return new CertificateTable(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public CertificateTable(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public CertificateTable(KaitaiStream _io, MicrosoftPe.PeHeader _parent) {
+            this(_io, _parent, null);
+        }
+
+        public CertificateTable(KaitaiStream _io, MicrosoftPe.PeHeader _parent, MicrosoftPe _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.items = new ArrayList<CertificateEntry>();
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.items.add(new CertificateEntry(this._io, this, _root));
+                    i++;
+                }
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.items.size(); i++) {
+                this.items.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private List<CertificateEntry> items;
+        private MicrosoftPe _root;
+        private MicrosoftPe.PeHeader _parent;
+        public List<CertificateEntry> items() { return items; }
+        public MicrosoftPe _root() { return _root; }
+        public MicrosoftPe.PeHeader _parent() { return _parent; }
+    }
+
+    /**
+     * @see "3.3. COFF File Header (Object and Image)"
+     */
+    public static class CoffHeader extends KaitaiStruct {
+        public static CoffHeader fromFile(String fileName) throws IOException {
+            return new CoffHeader(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public enum MachineType {
+            UNKNOWN(0),
+            I386(332),
+            R4000(358),
+            WCE_MIPS_V2(361),
+            ALPHA(388),
+            SH3(418),
+            SH3_DSP(419),
+            SH4(422),
+            SH5(424),
+            ARM(448),
+            THUMB(450),
+            ARM_NT(452),
+            AM33(467),
+            POWERPC(496),
+            POWERPC_FP(497),
+            IA64(512),
+            MIPS16(614),
+            ALPHA64_OR_AXP64(644),
+            MIPS_FPU(870),
+            MIPS16_FPU(1126),
+            EBC(3772),
+            RISCV32(20530),
+            RISCV64(20580),
+            RISCV128(20776),
+            LOONGARCH32(25138),
+            LOONGARCH64(25188),
+            AMD64(34404),
+            M32R(36929),
+            ARM64(43620);
+
+            private final long id;
+            MachineType(long id) { this.id = id; }
+            public long id() { return id; }
+            private static final Map<Long, MachineType> byId = new HashMap<Long, MachineType>(29);
+            static {
+                for (MachineType e : MachineType.values())
+                    byId.put(e.id(), e);
+            }
+            public static MachineType byId(long id) { return byId.get(id); }
+        }
+
+        public CoffHeader(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public CoffHeader(KaitaiStream _io, MicrosoftPe.PeHeader _parent) {
+            this(_io, _parent, null);
+        }
+
+        public CoffHeader(KaitaiStream _io, MicrosoftPe.PeHeader _parent, MicrosoftPe _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.machine = MachineType.byId(this._io.readU2le());
+            this.numberOfSections = this._io.readU2le();
+            this.timeDateStamp = this._io.readU4le();
+            this.pointerToSymbolTable = this._io.readU4le();
+            this.numberOfSymbols = this._io.readU4le();
+            this.sizeOfOptionalHeader = this._io.readU2le();
+            this.characteristics = this._io.readU2le();
+        }
+
+        public void _fetchInstances() {
+            symbolNameTableSize();
+            if (this.symbolNameTableSize != null) {
+            }
+            symbolTable();
+            if (this.symbolTable != null) {
+                for (int i = 0; i < this.symbolTable.size(); i++) {
+                    this.symbolTable.get(((Number) (i)).intValue())._fetchInstances();
+                }
+            }
+        }
+        private Integer symbolNameTableOffset;
+        public Integer symbolNameTableOffset() {
+            if (this.symbolNameTableOffset != null)
+                return this.symbolNameTableOffset;
+            this.symbolNameTableOffset = ((Number) (pointerToSymbolTable() + symbolTableSize())).intValue();
+            return this.symbolNameTableOffset;
+        }
+        private Long symbolNameTableSize;
+        public Long symbolNameTableSize() {
+            if (this.symbolNameTableSize != null)
+                return this.symbolNameTableSize;
+            long _pos = this._io.pos();
+            this._io.seek(symbolNameTableOffset());
+            this.symbolNameTableSize = this._io.readU4le();
+            this._io.seek(_pos);
+            return this.symbolNameTableSize;
+        }
+        private List<CoffSymbol> symbolTable;
+        public List<CoffSymbol> symbolTable() {
+            if (this.symbolTable != null)
+                return this.symbolTable;
+            long _pos = this._io.pos();
+            this._io.seek(pointerToSymbolTable());
+            this.symbolTable = new ArrayList<CoffSymbol>();
+            for (int i = 0; i < numberOfSymbols(); i++) {
+                this.symbolTable.add(new CoffSymbol(this._io, this, _root));
+            }
+            this._io.seek(_pos);
+            return this.symbolTable;
+        }
+        private Integer symbolTableSize;
+        public Integer symbolTableSize() {
+            if (this.symbolTableSize != null)
+                return this.symbolTableSize;
+            this.symbolTableSize = ((Number) (numberOfSymbols() * 18)).intValue();
+            return this.symbolTableSize;
+        }
+        private MachineType machine;
+        private int numberOfSections;
+        private long timeDateStamp;
+        private long pointerToSymbolTable;
+        private long numberOfSymbols;
+        private int sizeOfOptionalHeader;
+        private int characteristics;
+        private MicrosoftPe _root;
+        private MicrosoftPe.PeHeader _parent;
+        public MachineType machine() { return machine; }
+        public int numberOfSections() { return numberOfSections; }
+        public long timeDateStamp() { return timeDateStamp; }
+        public long pointerToSymbolTable() { return pointerToSymbolTable; }
+        public long numberOfSymbols() { return numberOfSymbols; }
+        public int sizeOfOptionalHeader() { return sizeOfOptionalHeader; }
+        public int characteristics() { return characteristics; }
+        public MicrosoftPe _root() { return _root; }
+        public MicrosoftPe.PeHeader _parent() { return _parent; }
+    }
+    public static class CoffSymbol extends KaitaiStruct {
+        public static CoffSymbol fromFile(String fileName) throws IOException {
+            return new CoffSymbol(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public CoffSymbol(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public CoffSymbol(KaitaiStream _io, MicrosoftPe.CoffHeader _parent) {
+            this(_io, _parent, null);
+        }
+
+        public CoffSymbol(KaitaiStream _io, MicrosoftPe.CoffHeader _parent, MicrosoftPe _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            KaitaiStream _io_nameAnnoying = this._io.substream(8);
+            this.nameAnnoying = new Annoyingstring(_io_nameAnnoying, this, _root);
+            this.value = this._io.readU4le();
+            this.sectionNumber = this._io.readU2le();
+            this.type = this._io.readU2le();
+            this.storageClass = this._io.readU1();
+            this.numberOfAuxSymbols = this._io.readU1();
+        }
+
+        public void _fetchInstances() {
+            this.nameAnnoying._fetchInstances();
+            data();
+            if (this.data != null) {
+            }
+        }
+        private byte[] data;
+        public byte[] data() {
+            if (this.data != null)
+                return this.data;
+            long _pos = this._io.pos();
+            this._io.seek(section().pointerToRawData() + value());
+            this.data = this._io.readBytes(1);
+            this._io.seek(_pos);
+            return this.data;
+        }
+        private Section section;
+        public Section section() {
+            if (this.section != null)
+                return this.section;
+            this.section = _root().pe().sections().get(((Number) (sectionNumber() - 1)).intValue());
+            return this.section;
+        }
+        private Annoyingstring nameAnnoying;
+        private long value;
+        private int sectionNumber;
+        private int type;
+        private int storageClass;
+        private int numberOfAuxSymbols;
+        private MicrosoftPe _root;
+        private MicrosoftPe.CoffHeader _parent;
+        public Annoyingstring nameAnnoying() { return nameAnnoying; }
+        public long value() { return value; }
+        public int sectionNumber() { return sectionNumber; }
+        public int type() { return type; }
+        public int storageClass() { return storageClass; }
+        public int numberOfAuxSymbols() { return numberOfAuxSymbols; }
+        public MicrosoftPe _root() { return _root; }
+        public MicrosoftPe.CoffHeader _parent() { return _parent; }
+    }
+    public static class DataDir extends KaitaiStruct {
+        public static DataDir fromFile(String fileName) throws IOException {
+            return new DataDir(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public DataDir(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public DataDir(KaitaiStream _io, MicrosoftPe.OptionalHeaderDataDirs _parent) {
+            this(_io, _parent, null);
+        }
+
+        public DataDir(KaitaiStream _io, MicrosoftPe.OptionalHeaderDataDirs _parent, MicrosoftPe _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.virtualAddress = this._io.readU4le();
+            this.size = this._io.readU4le();
+        }
+
+        public void _fetchInstances() {
+        }
+        private long virtualAddress;
+        private long size;
+        private MicrosoftPe _root;
+        private MicrosoftPe.OptionalHeaderDataDirs _parent;
+        public long virtualAddress() { return virtualAddress; }
+        public long size() { return size; }
+        public MicrosoftPe _root() { return _root; }
+        public MicrosoftPe.OptionalHeaderDataDirs _parent() { return _parent; }
+    }
+    public static class MzPlaceholder extends KaitaiStruct {
+        public static MzPlaceholder fromFile(String fileName) throws IOException {
+            return new MzPlaceholder(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public MzPlaceholder(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public MzPlaceholder(KaitaiStream _io, MicrosoftPe _parent) {
+            this(_io, _parent, null);
+        }
+
+        public MzPlaceholder(KaitaiStream _io, MicrosoftPe _parent, MicrosoftPe _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.magic = this._io.readBytes(2);
+            if (!(Arrays.equals(this.magic, new byte[] { 77, 90 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 77, 90 }, this.magic, this._io, "/types/mz_placeholder/seq/0");
+            }
+            this.data1 = this._io.readBytes(58);
+            this.ofsPe = this._io.readU4le();
+        }
+
+        public void _fetchInstances() {
+        }
+        private byte[] magic;
+        private byte[] data1;
+        private long ofsPe;
+        private MicrosoftPe _root;
+        private MicrosoftPe _parent;
+        public byte[] magic() { return magic; }
+        public byte[] data1() { return data1; }
+
+        /**
+         * In PE file, an offset to PE header
+         */
+        public long ofsPe() { return ofsPe; }
+        public MicrosoftPe _root() { return _root; }
+        public MicrosoftPe _parent() { return _parent; }
+    }
+    public static class OptionalHeader extends KaitaiStruct {
+        public static OptionalHeader fromFile(String fileName) throws IOException {
+            return new OptionalHeader(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public OptionalHeader(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public OptionalHeader(KaitaiStream _io, MicrosoftPe.PeHeader _parent) {
+            this(_io, _parent, null);
+        }
+
+        public OptionalHeader(KaitaiStream _io, MicrosoftPe.PeHeader _parent, MicrosoftPe _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.std = new OptionalHeaderStd(this._io, this, _root);
+            this.windows = new OptionalHeaderWindows(this._io, this, _root);
+            this.dataDirs = new OptionalHeaderDataDirs(this._io, this, _root);
+        }
+
+        public void _fetchInstances() {
+            this.std._fetchInstances();
+            this.windows._fetchInstances();
+            this.dataDirs._fetchInstances();
+        }
+        private OptionalHeaderStd std;
+        private OptionalHeaderWindows windows;
+        private OptionalHeaderDataDirs dataDirs;
+        private MicrosoftPe _root;
+        private MicrosoftPe.PeHeader _parent;
+        public OptionalHeaderStd std() { return std; }
+        public OptionalHeaderWindows windows() { return windows; }
+        public OptionalHeaderDataDirs dataDirs() { return dataDirs; }
+        public MicrosoftPe _root() { return _root; }
+        public MicrosoftPe.PeHeader _parent() { return _parent; }
+    }
+    public static class OptionalHeaderDataDirs extends KaitaiStruct {
+        public static OptionalHeaderDataDirs fromFile(String fileName) throws IOException {
+            return new OptionalHeaderDataDirs(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public OptionalHeaderDataDirs(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public OptionalHeaderDataDirs(KaitaiStream _io, MicrosoftPe.OptionalHeader _parent) {
+            this(_io, _parent, null);
+        }
+
+        public OptionalHeaderDataDirs(KaitaiStream _io, MicrosoftPe.OptionalHeader _parent, MicrosoftPe _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.exportTable = new DataDir(this._io, this, _root);
+            this.importTable = new DataDir(this._io, this, _root);
+            this.resourceTable = new DataDir(this._io, this, _root);
+            this.exceptionTable = new DataDir(this._io, this, _root);
+            this.certificateTable = new DataDir(this._io, this, _root);
+            this.baseRelocationTable = new DataDir(this._io, this, _root);
+            this.debug = new DataDir(this._io, this, _root);
+            this.architecture = new DataDir(this._io, this, _root);
+            this.globalPtr = new DataDir(this._io, this, _root);
+            this.tlsTable = new DataDir(this._io, this, _root);
+            this.loadConfigTable = new DataDir(this._io, this, _root);
+            this.boundImport = new DataDir(this._io, this, _root);
+            this.iat = new DataDir(this._io, this, _root);
+            this.delayImportDescriptor = new DataDir(this._io, this, _root);
+            this.clrRuntimeHeader = new DataDir(this._io, this, _root);
+        }
+
+        public void _fetchInstances() {
+            this.exportTable._fetchInstances();
+            this.importTable._fetchInstances();
+            this.resourceTable._fetchInstances();
+            this.exceptionTable._fetchInstances();
+            this.certificateTable._fetchInstances();
+            this.baseRelocationTable._fetchInstances();
+            this.debug._fetchInstances();
+            this.architecture._fetchInstances();
+            this.globalPtr._fetchInstances();
+            this.tlsTable._fetchInstances();
+            this.loadConfigTable._fetchInstances();
+            this.boundImport._fetchInstances();
+            this.iat._fetchInstances();
+            this.delayImportDescriptor._fetchInstances();
+            this.clrRuntimeHeader._fetchInstances();
+        }
+        private DataDir exportTable;
+        private DataDir importTable;
+        private DataDir resourceTable;
+        private DataDir exceptionTable;
+        private DataDir certificateTable;
+        private DataDir baseRelocationTable;
+        private DataDir debug;
+        private DataDir architecture;
+        private DataDir globalPtr;
+        private DataDir tlsTable;
+        private DataDir loadConfigTable;
+        private DataDir boundImport;
+        private DataDir iat;
+        private DataDir delayImportDescriptor;
+        private DataDir clrRuntimeHeader;
+        private MicrosoftPe _root;
+        private MicrosoftPe.OptionalHeader _parent;
+        public DataDir exportTable() { return exportTable; }
+        public DataDir importTable() { return importTable; }
+        public DataDir resourceTable() { return resourceTable; }
+        public DataDir exceptionTable() { return exceptionTable; }
+        public DataDir certificateTable() { return certificateTable; }
+        public DataDir baseRelocationTable() { return baseRelocationTable; }
+        public DataDir debug() { return debug; }
+        public DataDir architecture() { return architecture; }
+        public DataDir globalPtr() { return globalPtr; }
+        public DataDir tlsTable() { return tlsTable; }
+        public DataDir loadConfigTable() { return loadConfigTable; }
+        public DataDir boundImport() { return boundImport; }
+        public DataDir iat() { return iat; }
+        public DataDir delayImportDescriptor() { return delayImportDescriptor; }
+        public DataDir clrRuntimeHeader() { return clrRuntimeHeader; }
+        public MicrosoftPe _root() { return _root; }
+        public MicrosoftPe.OptionalHeader _parent() { return _parent; }
+    }
+    public static class OptionalHeaderStd extends KaitaiStruct {
+        public static OptionalHeaderStd fromFile(String fileName) throws IOException {
+            return new OptionalHeaderStd(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public OptionalHeaderStd(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public OptionalHeaderStd(KaitaiStream _io, MicrosoftPe.OptionalHeader _parent) {
+            this(_io, _parent, null);
+        }
+
+        public OptionalHeaderStd(KaitaiStream _io, MicrosoftPe.OptionalHeader _parent, MicrosoftPe _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.format = MicrosoftPe.PeFormat.byId(this._io.readU2le());
+            this.majorLinkerVersion = this._io.readU1();
+            this.minorLinkerVersion = this._io.readU1();
+            this.sizeOfCode = this._io.readU4le();
+            this.sizeOfInitializedData = this._io.readU4le();
+            this.sizeOfUninitializedData = this._io.readU4le();
+            this.addressOfEntryPoint = this._io.readU4le();
+            this.baseOfCode = this._io.readU4le();
+            if (format() == MicrosoftPe.PeFormat.PE32) {
+                this.baseOfData = this._io.readU4le();
+            }
+        }
+
+        public void _fetchInstances() {
+            if (format() == MicrosoftPe.PeFormat.PE32) {
+            }
+        }
+        private PeFormat format;
+        private int majorLinkerVersion;
+        private int minorLinkerVersion;
+        private long sizeOfCode;
+        private long sizeOfInitializedData;
+        private long sizeOfUninitializedData;
+        private long addressOfEntryPoint;
+        private long baseOfCode;
+        private Long baseOfData;
+        private MicrosoftPe _root;
+        private MicrosoftPe.OptionalHeader _parent;
+        public PeFormat format() { return format; }
+        public int majorLinkerVersion() { return majorLinkerVersion; }
+        public int minorLinkerVersion() { return minorLinkerVersion; }
+        public long sizeOfCode() { return sizeOfCode; }
+        public long sizeOfInitializedData() { return sizeOfInitializedData; }
+        public long sizeOfUninitializedData() { return sizeOfUninitializedData; }
+        public long addressOfEntryPoint() { return addressOfEntryPoint; }
+        public long baseOfCode() { return baseOfCode; }
+        public Long baseOfData() { return baseOfData; }
+        public MicrosoftPe _root() { return _root; }
+        public MicrosoftPe.OptionalHeader _parent() { return _parent; }
     }
     public static class OptionalHeaderWindows extends KaitaiStruct {
         public static OptionalHeaderWindows fromFile(String fileName) throws IOException {
@@ -234,6 +862,29 @@ public class MicrosoftPe extends KaitaiStruct {
             this.loaderFlags = this._io.readU4le();
             this.numberOfRvaAndSizes = this._io.readU4le();
         }
+
+        public void _fetchInstances() {
+            if (_parent().std().format() == MicrosoftPe.PeFormat.PE32) {
+            }
+            if (_parent().std().format() == MicrosoftPe.PeFormat.PE32_PLUS) {
+            }
+            if (_parent().std().format() == MicrosoftPe.PeFormat.PE32) {
+            }
+            if (_parent().std().format() == MicrosoftPe.PeFormat.PE32_PLUS) {
+            }
+            if (_parent().std().format() == MicrosoftPe.PeFormat.PE32) {
+            }
+            if (_parent().std().format() == MicrosoftPe.PeFormat.PE32_PLUS) {
+            }
+            if (_parent().std().format() == MicrosoftPe.PeFormat.PE32) {
+            }
+            if (_parent().std().format() == MicrosoftPe.PeFormat.PE32_PLUS) {
+            }
+            if (_parent().std().format() == MicrosoftPe.PeFormat.PE32) {
+            }
+            if (_parent().std().format() == MicrosoftPe.PeFormat.PE32_PLUS) {
+            }
+        }
         private Long imageBase32;
         private Long imageBase64;
         private long sectionAlignment;
@@ -291,174 +942,6 @@ public class MicrosoftPe extends KaitaiStruct {
         public MicrosoftPe _root() { return _root; }
         public MicrosoftPe.OptionalHeader _parent() { return _parent; }
     }
-    public static class OptionalHeaderDataDirs extends KaitaiStruct {
-        public static OptionalHeaderDataDirs fromFile(String fileName) throws IOException {
-            return new OptionalHeaderDataDirs(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public OptionalHeaderDataDirs(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public OptionalHeaderDataDirs(KaitaiStream _io, MicrosoftPe.OptionalHeader _parent) {
-            this(_io, _parent, null);
-        }
-
-        public OptionalHeaderDataDirs(KaitaiStream _io, MicrosoftPe.OptionalHeader _parent, MicrosoftPe _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.exportTable = new DataDir(this._io, this, _root);
-            this.importTable = new DataDir(this._io, this, _root);
-            this.resourceTable = new DataDir(this._io, this, _root);
-            this.exceptionTable = new DataDir(this._io, this, _root);
-            this.certificateTable = new DataDir(this._io, this, _root);
-            this.baseRelocationTable = new DataDir(this._io, this, _root);
-            this.debug = new DataDir(this._io, this, _root);
-            this.architecture = new DataDir(this._io, this, _root);
-            this.globalPtr = new DataDir(this._io, this, _root);
-            this.tlsTable = new DataDir(this._io, this, _root);
-            this.loadConfigTable = new DataDir(this._io, this, _root);
-            this.boundImport = new DataDir(this._io, this, _root);
-            this.iat = new DataDir(this._io, this, _root);
-            this.delayImportDescriptor = new DataDir(this._io, this, _root);
-            this.clrRuntimeHeader = new DataDir(this._io, this, _root);
-        }
-        private DataDir exportTable;
-        private DataDir importTable;
-        private DataDir resourceTable;
-        private DataDir exceptionTable;
-        private DataDir certificateTable;
-        private DataDir baseRelocationTable;
-        private DataDir debug;
-        private DataDir architecture;
-        private DataDir globalPtr;
-        private DataDir tlsTable;
-        private DataDir loadConfigTable;
-        private DataDir boundImport;
-        private DataDir iat;
-        private DataDir delayImportDescriptor;
-        private DataDir clrRuntimeHeader;
-        private MicrosoftPe _root;
-        private MicrosoftPe.OptionalHeader _parent;
-        public DataDir exportTable() { return exportTable; }
-        public DataDir importTable() { return importTable; }
-        public DataDir resourceTable() { return resourceTable; }
-        public DataDir exceptionTable() { return exceptionTable; }
-        public DataDir certificateTable() { return certificateTable; }
-        public DataDir baseRelocationTable() { return baseRelocationTable; }
-        public DataDir debug() { return debug; }
-        public DataDir architecture() { return architecture; }
-        public DataDir globalPtr() { return globalPtr; }
-        public DataDir tlsTable() { return tlsTable; }
-        public DataDir loadConfigTable() { return loadConfigTable; }
-        public DataDir boundImport() { return boundImport; }
-        public DataDir iat() { return iat; }
-        public DataDir delayImportDescriptor() { return delayImportDescriptor; }
-        public DataDir clrRuntimeHeader() { return clrRuntimeHeader; }
-        public MicrosoftPe _root() { return _root; }
-        public MicrosoftPe.OptionalHeader _parent() { return _parent; }
-    }
-    public static class DataDir extends KaitaiStruct {
-        public static DataDir fromFile(String fileName) throws IOException {
-            return new DataDir(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public DataDir(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public DataDir(KaitaiStream _io, MicrosoftPe.OptionalHeaderDataDirs _parent) {
-            this(_io, _parent, null);
-        }
-
-        public DataDir(KaitaiStream _io, MicrosoftPe.OptionalHeaderDataDirs _parent, MicrosoftPe _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.virtualAddress = this._io.readU4le();
-            this.size = this._io.readU4le();
-        }
-        private long virtualAddress;
-        private long size;
-        private MicrosoftPe _root;
-        private MicrosoftPe.OptionalHeaderDataDirs _parent;
-        public long virtualAddress() { return virtualAddress; }
-        public long size() { return size; }
-        public MicrosoftPe _root() { return _root; }
-        public MicrosoftPe.OptionalHeaderDataDirs _parent() { return _parent; }
-    }
-    public static class CoffSymbol extends KaitaiStruct {
-        public static CoffSymbol fromFile(String fileName) throws IOException {
-            return new CoffSymbol(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public CoffSymbol(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public CoffSymbol(KaitaiStream _io, MicrosoftPe.CoffHeader _parent) {
-            this(_io, _parent, null);
-        }
-
-        public CoffSymbol(KaitaiStream _io, MicrosoftPe.CoffHeader _parent, MicrosoftPe _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this._raw_nameAnnoying = this._io.readBytes(8);
-            KaitaiStream _io__raw_nameAnnoying = new ByteBufferKaitaiStream(_raw_nameAnnoying);
-            this.nameAnnoying = new Annoyingstring(_io__raw_nameAnnoying, this, _root);
-            this.value = this._io.readU4le();
-            this.sectionNumber = this._io.readU2le();
-            this.type = this._io.readU2le();
-            this.storageClass = this._io.readU1();
-            this.numberOfAuxSymbols = this._io.readU1();
-        }
-        private Section section;
-        public Section section() {
-            if (this.section != null)
-                return this.section;
-            this.section = _root().pe().sections().get((int) (sectionNumber() - 1));
-            return this.section;
-        }
-        private byte[] data;
-        public byte[] data() {
-            if (this.data != null)
-                return this.data;
-            long _pos = this._io.pos();
-            this._io.seek((section().pointerToRawData() + value()));
-            this.data = this._io.readBytes(1);
-            this._io.seek(_pos);
-            return this.data;
-        }
-        private Annoyingstring nameAnnoying;
-        private long value;
-        private int sectionNumber;
-        private int type;
-        private int storageClass;
-        private int numberOfAuxSymbols;
-        private MicrosoftPe _root;
-        private MicrosoftPe.CoffHeader _parent;
-        private byte[] _raw_nameAnnoying;
-        public Annoyingstring nameAnnoying() { return nameAnnoying; }
-        public long value() { return value; }
-        public int sectionNumber() { return sectionNumber; }
-        public int type() { return type; }
-        public int storageClass() { return storageClass; }
-        public int numberOfAuxSymbols() { return numberOfAuxSymbols; }
-        public MicrosoftPe _root() { return _root; }
-        public MicrosoftPe.CoffHeader _parent() { return _parent; }
-        public byte[] _raw_nameAnnoying() { return _raw_nameAnnoying; }
-    }
     public static class PeHeader extends KaitaiStruct {
         public static PeHeader fromFile(String fileName) throws IOException {
             return new PeHeader(new ByteBufferKaitaiStream(fileName));
@@ -480,16 +963,27 @@ public class MicrosoftPe extends KaitaiStruct {
         }
         private void _read() {
             this.peSignature = this._io.readBytes(4);
-            if (!(Arrays.equals(peSignature(), new byte[] { 80, 69, 0, 0 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 80, 69, 0, 0 }, peSignature(), _io(), "/types/pe_header/seq/0");
+            if (!(Arrays.equals(this.peSignature, new byte[] { 80, 69, 0, 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 80, 69, 0, 0 }, this.peSignature, this._io, "/types/pe_header/seq/0");
             }
             this.coffHdr = new CoffHeader(this._io, this, _root);
-            this._raw_optionalHdr = this._io.readBytes(coffHdr().sizeOfOptionalHeader());
-            KaitaiStream _io__raw_optionalHdr = new ByteBufferKaitaiStream(_raw_optionalHdr);
-            this.optionalHdr = new OptionalHeader(_io__raw_optionalHdr, this, _root);
+            KaitaiStream _io_optionalHdr = this._io.substream(coffHdr().sizeOfOptionalHeader());
+            this.optionalHdr = new OptionalHeader(_io_optionalHdr, this, _root);
             this.sections = new ArrayList<Section>();
             for (int i = 0; i < coffHdr().numberOfSections(); i++) {
                 this.sections.add(new Section(this._io, this, _root));
+            }
+        }
+
+        public void _fetchInstances() {
+            this.coffHdr._fetchInstances();
+            this.optionalHdr._fetchInstances();
+            for (int i = 0; i < this.sections.size(); i++) {
+                this.sections.get(((Number) (i)).intValue())._fetchInstances();
+            }
+            certificateTable();
+            if (this.certificateTable != null) {
+                this.certificateTable._fetchInstances();
             }
         }
         private CertificateTable certificateTable;
@@ -499,9 +993,8 @@ public class MicrosoftPe extends KaitaiStruct {
             if (optionalHdr().dataDirs().certificateTable().virtualAddress() != 0) {
                 long _pos = this._io.pos();
                 this._io.seek(optionalHdr().dataDirs().certificateTable().virtualAddress());
-                this._raw_certificateTable = this._io.readBytes(optionalHdr().dataDirs().certificateTable().size());
-                KaitaiStream _io__raw_certificateTable = new ByteBufferKaitaiStream(_raw_certificateTable);
-                this.certificateTable = new CertificateTable(_io__raw_certificateTable, this, _root);
+                KaitaiStream _io_certificateTable = this._io.substream(optionalHdr().dataDirs().certificateTable().size());
+                this.certificateTable = new CertificateTable(_io_certificateTable, this, _root);
                 this._io.seek(_pos);
             }
             return this.certificateTable;
@@ -509,54 +1002,15 @@ public class MicrosoftPe extends KaitaiStruct {
         private byte[] peSignature;
         private CoffHeader coffHdr;
         private OptionalHeader optionalHdr;
-        private ArrayList<Section> sections;
+        private List<Section> sections;
         private MicrosoftPe _root;
         private MicrosoftPe _parent;
-        private byte[] _raw_optionalHdr;
-        private byte[] _raw_certificateTable;
         public byte[] peSignature() { return peSignature; }
         public CoffHeader coffHdr() { return coffHdr; }
         public OptionalHeader optionalHdr() { return optionalHdr; }
-        public ArrayList<Section> sections() { return sections; }
+        public List<Section> sections() { return sections; }
         public MicrosoftPe _root() { return _root; }
         public MicrosoftPe _parent() { return _parent; }
-        public byte[] _raw_optionalHdr() { return _raw_optionalHdr; }
-        public byte[] _raw_certificateTable() { return _raw_certificateTable; }
-    }
-    public static class OptionalHeader extends KaitaiStruct {
-        public static OptionalHeader fromFile(String fileName) throws IOException {
-            return new OptionalHeader(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public OptionalHeader(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public OptionalHeader(KaitaiStream _io, MicrosoftPe.PeHeader _parent) {
-            this(_io, _parent, null);
-        }
-
-        public OptionalHeader(KaitaiStream _io, MicrosoftPe.PeHeader _parent, MicrosoftPe _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.std = new OptionalHeaderStd(this._io, this, _root);
-            this.windows = new OptionalHeaderWindows(this._io, this, _root);
-            this.dataDirs = new OptionalHeaderDataDirs(this._io, this, _root);
-        }
-        private OptionalHeaderStd std;
-        private OptionalHeaderWindows windows;
-        private OptionalHeaderDataDirs dataDirs;
-        private MicrosoftPe _root;
-        private MicrosoftPe.PeHeader _parent;
-        public OptionalHeaderStd std() { return std; }
-        public OptionalHeaderWindows windows() { return windows; }
-        public OptionalHeaderDataDirs dataDirs() { return dataDirs; }
-        public MicrosoftPe _root() { return _root; }
-        public MicrosoftPe.PeHeader _parent() { return _parent; }
     }
     public static class Section extends KaitaiStruct {
         public static Section fromFile(String fileName) throws IOException {
@@ -578,7 +1032,7 @@ public class MicrosoftPe extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.name = new String(KaitaiStream.bytesStripRight(this._io.readBytes(8), (byte) 0), Charset.forName("UTF-8"));
+            this.name = new String(KaitaiStream.bytesStripRight(this._io.readBytes(8), (byte) 0), StandardCharsets.UTF_8);
             this.virtualSize = this._io.readU4le();
             this.virtualAddress = this._io.readU4le();
             this.sizeOfRawData = this._io.readU4le();
@@ -588,6 +1042,12 @@ public class MicrosoftPe extends KaitaiStruct {
             this.numberOfRelocations = this._io.readU2le();
             this.numberOfLinenumbers = this._io.readU2le();
             this.characteristics = this._io.readU4le();
+        }
+
+        public void _fetchInstances() {
+            body();
+            if (this.body != null) {
+            }
         }
         private byte[] body;
         public byte[] body() {
@@ -623,349 +1083,6 @@ public class MicrosoftPe extends KaitaiStruct {
         public long characteristics() { return characteristics; }
         public MicrosoftPe _root() { return _root; }
         public MicrosoftPe.PeHeader _parent() { return _parent; }
-    }
-    public static class CertificateTable extends KaitaiStruct {
-        public static CertificateTable fromFile(String fileName) throws IOException {
-            return new CertificateTable(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public CertificateTable(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public CertificateTable(KaitaiStream _io, MicrosoftPe.PeHeader _parent) {
-            this(_io, _parent, null);
-        }
-
-        public CertificateTable(KaitaiStream _io, MicrosoftPe.PeHeader _parent, MicrosoftPe _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.items = new ArrayList<CertificateEntry>();
-            {
-                int i = 0;
-                while (!this._io.isEof()) {
-                    this.items.add(new CertificateEntry(this._io, this, _root));
-                    i++;
-                }
-            }
-        }
-        private ArrayList<CertificateEntry> items;
-        private MicrosoftPe _root;
-        private MicrosoftPe.PeHeader _parent;
-        public ArrayList<CertificateEntry> items() { return items; }
-        public MicrosoftPe _root() { return _root; }
-        public MicrosoftPe.PeHeader _parent() { return _parent; }
-    }
-    public static class MzPlaceholder extends KaitaiStruct {
-        public static MzPlaceholder fromFile(String fileName) throws IOException {
-            return new MzPlaceholder(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public MzPlaceholder(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public MzPlaceholder(KaitaiStream _io, MicrosoftPe _parent) {
-            this(_io, _parent, null);
-        }
-
-        public MzPlaceholder(KaitaiStream _io, MicrosoftPe _parent, MicrosoftPe _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.magic = this._io.readBytes(2);
-            if (!(Arrays.equals(magic(), new byte[] { 77, 90 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 77, 90 }, magic(), _io(), "/types/mz_placeholder/seq/0");
-            }
-            this.data1 = this._io.readBytes(58);
-            this.ofsPe = this._io.readU4le();
-        }
-        private byte[] magic;
-        private byte[] data1;
-        private long ofsPe;
-        private MicrosoftPe _root;
-        private MicrosoftPe _parent;
-        public byte[] magic() { return magic; }
-        public byte[] data1() { return data1; }
-
-        /**
-         * In PE file, an offset to PE header
-         */
-        public long ofsPe() { return ofsPe; }
-        public MicrosoftPe _root() { return _root; }
-        public MicrosoftPe _parent() { return _parent; }
-    }
-    public static class OptionalHeaderStd extends KaitaiStruct {
-        public static OptionalHeaderStd fromFile(String fileName) throws IOException {
-            return new OptionalHeaderStd(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public OptionalHeaderStd(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public OptionalHeaderStd(KaitaiStream _io, MicrosoftPe.OptionalHeader _parent) {
-            this(_io, _parent, null);
-        }
-
-        public OptionalHeaderStd(KaitaiStream _io, MicrosoftPe.OptionalHeader _parent, MicrosoftPe _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.format = MicrosoftPe.PeFormat.byId(this._io.readU2le());
-            this.majorLinkerVersion = this._io.readU1();
-            this.minorLinkerVersion = this._io.readU1();
-            this.sizeOfCode = this._io.readU4le();
-            this.sizeOfInitializedData = this._io.readU4le();
-            this.sizeOfUninitializedData = this._io.readU4le();
-            this.addressOfEntryPoint = this._io.readU4le();
-            this.baseOfCode = this._io.readU4le();
-            if (format() == MicrosoftPe.PeFormat.PE32) {
-                this.baseOfData = this._io.readU4le();
-            }
-        }
-        private PeFormat format;
-        private int majorLinkerVersion;
-        private int minorLinkerVersion;
-        private long sizeOfCode;
-        private long sizeOfInitializedData;
-        private long sizeOfUninitializedData;
-        private long addressOfEntryPoint;
-        private long baseOfCode;
-        private Long baseOfData;
-        private MicrosoftPe _root;
-        private MicrosoftPe.OptionalHeader _parent;
-        public PeFormat format() { return format; }
-        public int majorLinkerVersion() { return majorLinkerVersion; }
-        public int minorLinkerVersion() { return minorLinkerVersion; }
-        public long sizeOfCode() { return sizeOfCode; }
-        public long sizeOfInitializedData() { return sizeOfInitializedData; }
-        public long sizeOfUninitializedData() { return sizeOfUninitializedData; }
-        public long addressOfEntryPoint() { return addressOfEntryPoint; }
-        public long baseOfCode() { return baseOfCode; }
-        public Long baseOfData() { return baseOfData; }
-        public MicrosoftPe _root() { return _root; }
-        public MicrosoftPe.OptionalHeader _parent() { return _parent; }
-    }
-
-    /**
-     * @see "3.3. COFF File Header (Object and Image)"
-     */
-    public static class CoffHeader extends KaitaiStruct {
-        public static CoffHeader fromFile(String fileName) throws IOException {
-            return new CoffHeader(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public enum MachineType {
-            UNKNOWN(0),
-            I386(332),
-            R4000(358),
-            WCE_MIPS_V2(361),
-            ALPHA(388),
-            SH3(418),
-            SH3_DSP(419),
-            SH4(422),
-            SH5(424),
-            ARM(448),
-            THUMB(450),
-            ARM_NT(452),
-            AM33(467),
-            POWERPC(496),
-            POWERPC_FP(497),
-            IA64(512),
-            MIPS16(614),
-            ALPHA64_OR_AXP64(644),
-            MIPS_FPU(870),
-            MIPS16_FPU(1126),
-            EBC(3772),
-            RISCV32(20530),
-            RISCV64(20580),
-            RISCV128(20776),
-            LOONGARCH32(25138),
-            LOONGARCH64(25188),
-            AMD64(34404),
-            M32R(36929),
-            ARM64(43620);
-
-            private final long id;
-            MachineType(long id) { this.id = id; }
-            public long id() { return id; }
-            private static final Map<Long, MachineType> byId = new HashMap<Long, MachineType>(29);
-            static {
-                for (MachineType e : MachineType.values())
-                    byId.put(e.id(), e);
-            }
-            public static MachineType byId(long id) { return byId.get(id); }
-        }
-
-        public CoffHeader(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public CoffHeader(KaitaiStream _io, MicrosoftPe.PeHeader _parent) {
-            this(_io, _parent, null);
-        }
-
-        public CoffHeader(KaitaiStream _io, MicrosoftPe.PeHeader _parent, MicrosoftPe _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.machine = MachineType.byId(this._io.readU2le());
-            this.numberOfSections = this._io.readU2le();
-            this.timeDateStamp = this._io.readU4le();
-            this.pointerToSymbolTable = this._io.readU4le();
-            this.numberOfSymbols = this._io.readU4le();
-            this.sizeOfOptionalHeader = this._io.readU2le();
-            this.characteristics = this._io.readU2le();
-        }
-        private Integer symbolTableSize;
-        public Integer symbolTableSize() {
-            if (this.symbolTableSize != null)
-                return this.symbolTableSize;
-            int _tmp = (int) ((numberOfSymbols() * 18));
-            this.symbolTableSize = _tmp;
-            return this.symbolTableSize;
-        }
-        private Integer symbolNameTableOffset;
-        public Integer symbolNameTableOffset() {
-            if (this.symbolNameTableOffset != null)
-                return this.symbolNameTableOffset;
-            int _tmp = (int) ((pointerToSymbolTable() + symbolTableSize()));
-            this.symbolNameTableOffset = _tmp;
-            return this.symbolNameTableOffset;
-        }
-        private Long symbolNameTableSize;
-        public Long symbolNameTableSize() {
-            if (this.symbolNameTableSize != null)
-                return this.symbolNameTableSize;
-            long _pos = this._io.pos();
-            this._io.seek(symbolNameTableOffset());
-            this.symbolNameTableSize = this._io.readU4le();
-            this._io.seek(_pos);
-            return this.symbolNameTableSize;
-        }
-        private ArrayList<CoffSymbol> symbolTable;
-        public ArrayList<CoffSymbol> symbolTable() {
-            if (this.symbolTable != null)
-                return this.symbolTable;
-            long _pos = this._io.pos();
-            this._io.seek(pointerToSymbolTable());
-            this.symbolTable = new ArrayList<CoffSymbol>();
-            for (int i = 0; i < numberOfSymbols(); i++) {
-                this.symbolTable.add(new CoffSymbol(this._io, this, _root));
-            }
-            this._io.seek(_pos);
-            return this.symbolTable;
-        }
-        private MachineType machine;
-        private int numberOfSections;
-        private long timeDateStamp;
-        private long pointerToSymbolTable;
-        private long numberOfSymbols;
-        private int sizeOfOptionalHeader;
-        private int characteristics;
-        private MicrosoftPe _root;
-        private MicrosoftPe.PeHeader _parent;
-        public MachineType machine() { return machine; }
-        public int numberOfSections() { return numberOfSections; }
-        public long timeDateStamp() { return timeDateStamp; }
-        public long pointerToSymbolTable() { return pointerToSymbolTable; }
-        public long numberOfSymbols() { return numberOfSymbols; }
-        public int sizeOfOptionalHeader() { return sizeOfOptionalHeader; }
-        public int characteristics() { return characteristics; }
-        public MicrosoftPe _root() { return _root; }
-        public MicrosoftPe.PeHeader _parent() { return _parent; }
-    }
-    public static class Annoyingstring extends KaitaiStruct {
-        public static Annoyingstring fromFile(String fileName) throws IOException {
-            return new Annoyingstring(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Annoyingstring(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Annoyingstring(KaitaiStream _io, MicrosoftPe.CoffSymbol _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Annoyingstring(KaitaiStream _io, MicrosoftPe.CoffSymbol _parent, MicrosoftPe _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-        }
-        private String nameFromOffset;
-        public String nameFromOffset() {
-            if (this.nameFromOffset != null)
-                return this.nameFromOffset;
-            if (nameZeroes() == 0) {
-                KaitaiStream io = _root()._io();
-                long _pos = io.pos();
-                io.seek((nameZeroes() == 0 ? (_parent()._parent().symbolNameTableOffset() + nameOffset()) : 0));
-                this.nameFromOffset = new String(io.readBytesTerm((byte) 0, false, true, false), Charset.forName("ascii"));
-                io.seek(_pos);
-            }
-            return this.nameFromOffset;
-        }
-        private Long nameOffset;
-        public Long nameOffset() {
-            if (this.nameOffset != null)
-                return this.nameOffset;
-            long _pos = this._io.pos();
-            this._io.seek(4);
-            this.nameOffset = this._io.readU4le();
-            this._io.seek(_pos);
-            return this.nameOffset;
-        }
-        private String name;
-        public String name() {
-            if (this.name != null)
-                return this.name;
-            this.name = (nameZeroes() == 0 ? nameFromOffset() : nameFromShort());
-            return this.name;
-        }
-        private Long nameZeroes;
-        public Long nameZeroes() {
-            if (this.nameZeroes != null)
-                return this.nameZeroes;
-            long _pos = this._io.pos();
-            this._io.seek(0);
-            this.nameZeroes = this._io.readU4le();
-            this._io.seek(_pos);
-            return this.nameZeroes;
-        }
-        private String nameFromShort;
-        public String nameFromShort() {
-            if (this.nameFromShort != null)
-                return this.nameFromShort;
-            if (nameZeroes() != 0) {
-                long _pos = this._io.pos();
-                this._io.seek(0);
-                this.nameFromShort = new String(this._io.readBytesTerm((byte) 0, false, true, false), Charset.forName("ascii"));
-                this._io.seek(_pos);
-            }
-            return this.nameFromShort;
-        }
-        private MicrosoftPe _root;
-        private MicrosoftPe.CoffSymbol _parent;
-        public MicrosoftPe _root() { return _root; }
-        public MicrosoftPe.CoffSymbol _parent() { return _parent; }
     }
     private PeHeader pe;
     public PeHeader pe() {

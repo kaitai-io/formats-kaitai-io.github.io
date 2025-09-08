@@ -3,12 +3,14 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class android_opengl_shaders_cache_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -21,8 +23,8 @@ class android_opengl_shaders_cache_t : public kaitai::kstruct {
 
 public:
     class alignment_t;
-    class prefixed_string_t;
     class cache_t;
+    class prefixed_string_t;
 
     android_opengl_shaders_cache_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, android_opengl_shaders_cache_t* p__root = 0);
 
@@ -59,34 +61,6 @@ public:
         std::string alignment() const { return m_alignment; }
         android_opengl_shaders_cache_t* _root() const { return m__root; }
         kaitai::kstruct* _parent() const { return m__parent; }
-    };
-
-    class prefixed_string_t : public kaitai::kstruct {
-
-    public:
-
-        prefixed_string_t(kaitai::kstream* p__io, android_opengl_shaders_cache_t::cache_t* p__parent = 0, android_opengl_shaders_cache_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~prefixed_string_t();
-
-    private:
-        uint32_t m_len_str;
-        std::string m_str;
-        alignment_t* m_alignment;
-        android_opengl_shaders_cache_t* m__root;
-        android_opengl_shaders_cache_t::cache_t* m__parent;
-
-    public:
-        uint32_t len_str() const { return m_len_str; }
-        std::string str() const { return m_str; }
-        alignment_t* alignment() const { return m_alignment; }
-        android_opengl_shaders_cache_t* _root() const { return m__root; }
-        android_opengl_shaders_cache_t::cache_t* _parent() const { return m__parent; }
     };
 
     /**
@@ -164,6 +138,34 @@ public:
         std::vector<entry_t*>* entries() const { return m_entries; }
         android_opengl_shaders_cache_t* _root() const { return m__root; }
         android_opengl_shaders_cache_t* _parent() const { return m__parent; }
+    };
+
+    class prefixed_string_t : public kaitai::kstruct {
+
+    public:
+
+        prefixed_string_t(kaitai::kstream* p__io, android_opengl_shaders_cache_t::cache_t* p__parent = 0, android_opengl_shaders_cache_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~prefixed_string_t();
+
+    private:
+        uint32_t m_len_str;
+        std::string m_str;
+        alignment_t* m_alignment;
+        android_opengl_shaders_cache_t* m__root;
+        android_opengl_shaders_cache_t::cache_t* m__parent;
+
+    public:
+        uint32_t len_str() const { return m_len_str; }
+        std::string str() const { return m_str; }
+        alignment_t* alignment() const { return m_alignment; }
+        android_opengl_shaders_cache_t* _root() const { return m__root; }
+        android_opengl_shaders_cache_t::cache_t* _parent() const { return m__parent; }
     };
 
 private:

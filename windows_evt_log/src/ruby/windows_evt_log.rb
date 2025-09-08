@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -31,8 +31,8 @@ end
 # records.
 # @see https://learn.microsoft.com/en-us/windows/win32/eventlog/event-log-file-format Source
 class WindowsEvtLog < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -48,9 +48,33 @@ class WindowsEvtLog < Kaitai::Struct::Struct
   end
 
   ##
+  # @see https://forensics.wiki/windows_event_log_(evt)/#cursor-record Source
+  class CursorRecordBody < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @magic = @_io.read_bytes(12)
+      raise Kaitai::Struct::ValidationNotEqualError.new([34, 34, 34, 34, 51, 51, 51, 51, 68, 68, 68, 68].pack('C*'), @magic, @_io, "/types/cursor_record_body/seq/0") if not @magic == [34, 34, 34, 34, 51, 51, 51, 51, 68, 68, 68, 68].pack('C*')
+      @ofs_first_record = @_io.read_u4le
+      @ofs_next_record = @_io.read_u4le
+      @idx_next_record = @_io.read_u4le
+      @idx_first_record = @_io.read_u4le
+      self
+    end
+    attr_reader :magic
+    attr_reader :ofs_first_record
+    attr_reader :ofs_next_record
+    attr_reader :idx_next_record
+    attr_reader :idx_first_record
+  end
+
+  ##
   # @see https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb309024(v=vs.85) Source
   class Header < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -58,7 +82,7 @@ class WindowsEvtLog < Kaitai::Struct::Struct
     def _read
       @len_header = @_io.read_u4le
       @magic = @_io.read_bytes(4)
-      raise Kaitai::Struct::ValidationNotEqualError.new([76, 102, 76, 101].pack('C*'), magic, _io, "/types/header/seq/1") if not magic == [76, 102, 76, 101].pack('C*')
+      raise Kaitai::Struct::ValidationNotEqualError.new([76, 102, 76, 101].pack('C*'), @magic, @_io, "/types/header/seq/1") if not @magic == [76, 102, 76, 101].pack('C*')
       @version_major = @_io.read_u4le
       @version_minor = @_io.read_u4le
       @ofs_start = @_io.read_u4le
@@ -72,7 +96,7 @@ class WindowsEvtLog < Kaitai::Struct::Struct
       self
     end
     class Flags < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
@@ -143,7 +167,7 @@ class WindowsEvtLog < Kaitai::Struct::Struct
   ##
   # @see https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-eventlogrecord Source
   class Record < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -153,15 +177,13 @@ class WindowsEvtLog < Kaitai::Struct::Struct
       @type = @_io.read_u4le
       case type
       when 1699505740
-        @_raw_body = @_io.read_bytes((len_record - 12))
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = RecordBody.new(_io__raw_body, self, @_root)
+        _io_body = @_io.substream(len_record - 12)
+        @body = RecordBody.new(_io_body, self, @_root)
       when 286331153
-        @_raw_body = @_io.read_bytes((len_record - 12))
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = CursorRecordBody.new(_io__raw_body, self, @_root)
+        _io_body = @_io.substream(len_record - 12)
+        @body = CursorRecordBody.new(_io_body, self, @_root)
       else
-        @body = @_io.read_bytes((len_record - 12))
+        @body = @_io.read_bytes(len_record - 12)
       end
       @len_record2 = @_io.read_u4le
       self
@@ -201,7 +223,7 @@ class WindowsEvtLog < Kaitai::Struct::Struct
       5 => :event_types_warning,
     }
     I__EVENT_TYPES = EVENT_TYPES.invert
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -222,21 +244,21 @@ class WindowsEvtLog < Kaitai::Struct::Struct
       @ofs_data = @_io.read_u4le
       self
     end
-    def user_sid
-      return @user_sid unless @user_sid.nil?
-      _pos = @_io.pos
-      @_io.seek((ofs_user_sid - 8))
-      @user_sid = @_io.read_bytes(len_user_sid)
-      @_io.seek(_pos)
-      @user_sid
-    end
     def data
       return @data unless @data.nil?
       _pos = @_io.pos
-      @_io.seek((ofs_data - 8))
+      @_io.seek(ofs_data - 8)
       @data = @_io.read_bytes(len_data)
       @_io.seek(_pos)
       @data
+    end
+    def user_sid
+      return @user_sid unless @user_sid.nil?
+      _pos = @_io.pos
+      @_io.seek(ofs_user_sid - 8)
+      @user_sid = @_io.read_bytes(len_user_sid)
+      @_io.seek(_pos)
+      @user_sid
     end
 
     ##
@@ -277,30 +299,6 @@ class WindowsEvtLog < Kaitai::Struct::Struct
     attr_reader :ofs_user_sid
     attr_reader :len_data
     attr_reader :ofs_data
-  end
-
-  ##
-  # @see https://forensics.wiki/windows_event_log_(evt)/#cursor-record Source
-  class CursorRecordBody < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @magic = @_io.read_bytes(12)
-      raise Kaitai::Struct::ValidationNotEqualError.new([34, 34, 34, 34, 51, 51, 51, 51, 68, 68, 68, 68].pack('C*'), magic, _io, "/types/cursor_record_body/seq/0") if not magic == [34, 34, 34, 34, 51, 51, 51, 51, 68, 68, 68, 68].pack('C*')
-      @ofs_first_record = @_io.read_u4le
-      @ofs_next_record = @_io.read_u4le
-      @idx_next_record = @_io.read_u4le
-      @idx_first_record = @_io.read_u4le
-      self
-    end
-    attr_reader :magic
-    attr_reader :ofs_first_record
-    attr_reader :ofs_next_record
-    attr_reader :idx_next_record
-    attr_reader :idx_first_record
   end
   attr_reader :header
   attr_reader :records

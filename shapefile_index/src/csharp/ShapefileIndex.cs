@@ -47,6 +47,66 @@ namespace Kaitai
                 }
             }
         }
+        public partial class BoundingBoxXYZM : KaitaiStruct
+        {
+            public static BoundingBoxXYZM FromFile(string fileName)
+            {
+                return new BoundingBoxXYZM(new KaitaiStream(fileName));
+            }
+
+            public BoundingBoxXYZM(KaitaiStream p__io, ShapefileIndex.FileHeader p__parent = null, ShapefileIndex p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _x = new BoundsMinMax(m_io, this, m_root);
+                _y = new BoundsMinMax(m_io, this, m_root);
+                _z = new BoundsMinMax(m_io, this, m_root);
+                _m = new BoundsMinMax(m_io, this, m_root);
+            }
+            private BoundsMinMax _x;
+            private BoundsMinMax _y;
+            private BoundsMinMax _z;
+            private BoundsMinMax _m;
+            private ShapefileIndex m_root;
+            private ShapefileIndex.FileHeader m_parent;
+            public BoundsMinMax X { get { return _x; } }
+            public BoundsMinMax Y { get { return _y; } }
+            public BoundsMinMax Z { get { return _z; } }
+            public BoundsMinMax M { get { return _m; } }
+            public ShapefileIndex M_Root { get { return m_root; } }
+            public ShapefileIndex.FileHeader M_Parent { get { return m_parent; } }
+        }
+        public partial class BoundsMinMax : KaitaiStruct
+        {
+            public static BoundsMinMax FromFile(string fileName)
+            {
+                return new BoundsMinMax(new KaitaiStream(fileName));
+            }
+
+            public BoundsMinMax(KaitaiStream p__io, ShapefileIndex.BoundingBoxXYZM p__parent = null, ShapefileIndex p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _min = m_io.ReadF8be();
+                _max = m_io.ReadF8be();
+            }
+            private double _min;
+            private double _max;
+            private ShapefileIndex m_root;
+            private ShapefileIndex.BoundingBoxXYZM m_parent;
+            public double Min { get { return _min; } }
+            public double Max { get { return _max; } }
+            public ShapefileIndex M_Root { get { return m_root; } }
+            public ShapefileIndex.BoundingBoxXYZM M_Parent { get { return m_parent; } }
+        }
         public partial class FileHeader : KaitaiStruct
         {
             public static FileHeader FromFile(string fileName)
@@ -63,40 +123,40 @@ namespace Kaitai
             private void _read()
             {
                 _fileCode = m_io.ReadBytes(4);
-                if (!((KaitaiStream.ByteArrayCompare(FileCode, new byte[] { 0, 0, 39, 10 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_fileCode, new byte[] { 0, 0, 39, 10 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 0, 0, 39, 10 }, FileCode, M_Io, "/types/file_header/seq/0");
+                    throw new ValidationNotEqualError(new byte[] { 0, 0, 39, 10 }, _fileCode, m_io, "/types/file_header/seq/0");
                 }
                 _unusedField1 = m_io.ReadBytes(4);
-                if (!((KaitaiStream.ByteArrayCompare(UnusedField1, new byte[] { 0, 0, 0, 0 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_unusedField1, new byte[] { 0, 0, 0, 0 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, UnusedField1, M_Io, "/types/file_header/seq/1");
+                    throw new ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, _unusedField1, m_io, "/types/file_header/seq/1");
                 }
                 _unusedField2 = m_io.ReadBytes(4);
-                if (!((KaitaiStream.ByteArrayCompare(UnusedField2, new byte[] { 0, 0, 0, 0 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_unusedField2, new byte[] { 0, 0, 0, 0 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, UnusedField2, M_Io, "/types/file_header/seq/2");
+                    throw new ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, _unusedField2, m_io, "/types/file_header/seq/2");
                 }
                 _unusedField3 = m_io.ReadBytes(4);
-                if (!((KaitaiStream.ByteArrayCompare(UnusedField3, new byte[] { 0, 0, 0, 0 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_unusedField3, new byte[] { 0, 0, 0, 0 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, UnusedField3, M_Io, "/types/file_header/seq/3");
+                    throw new ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, _unusedField3, m_io, "/types/file_header/seq/3");
                 }
                 _unusedField4 = m_io.ReadBytes(4);
-                if (!((KaitaiStream.ByteArrayCompare(UnusedField4, new byte[] { 0, 0, 0, 0 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_unusedField4, new byte[] { 0, 0, 0, 0 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, UnusedField4, M_Io, "/types/file_header/seq/4");
+                    throw new ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, _unusedField4, m_io, "/types/file_header/seq/4");
                 }
                 _unusedField5 = m_io.ReadBytes(4);
-                if (!((KaitaiStream.ByteArrayCompare(UnusedField5, new byte[] { 0, 0, 0, 0 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_unusedField5, new byte[] { 0, 0, 0, 0 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, UnusedField5, M_Io, "/types/file_header/seq/5");
+                    throw new ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, _unusedField5, m_io, "/types/file_header/seq/5");
                 }
                 _fileLength = m_io.ReadS4be();
                 _version = m_io.ReadBytes(4);
-                if (!((KaitaiStream.ByteArrayCompare(Version, new byte[] { 232, 3, 0, 0 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_version, new byte[] { 232, 3, 0, 0 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 232, 3, 0, 0 }, Version, M_Io, "/types/file_header/seq/7");
+                    throw new ValidationNotEqualError(new byte[] { 232, 3, 0, 0 }, _version, m_io, "/types/file_header/seq/7");
                 }
                 _shapeType = ((ShapefileIndex.ShapeType) m_io.ReadS4le());
                 _boundingBox = new BoundingBoxXYZM(m_io, this, m_root);
@@ -160,66 +220,6 @@ namespace Kaitai
             public int ContentLength { get { return _contentLength; } }
             public ShapefileIndex M_Root { get { return m_root; } }
             public ShapefileIndex M_Parent { get { return m_parent; } }
-        }
-        public partial class BoundingBoxXYZM : KaitaiStruct
-        {
-            public static BoundingBoxXYZM FromFile(string fileName)
-            {
-                return new BoundingBoxXYZM(new KaitaiStream(fileName));
-            }
-
-            public BoundingBoxXYZM(KaitaiStream p__io, ShapefileIndex.FileHeader p__parent = null, ShapefileIndex p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _x = new BoundsMinMax(m_io, this, m_root);
-                _y = new BoundsMinMax(m_io, this, m_root);
-                _z = new BoundsMinMax(m_io, this, m_root);
-                _m = new BoundsMinMax(m_io, this, m_root);
-            }
-            private BoundsMinMax _x;
-            private BoundsMinMax _y;
-            private BoundsMinMax _z;
-            private BoundsMinMax _m;
-            private ShapefileIndex m_root;
-            private ShapefileIndex.FileHeader m_parent;
-            public BoundsMinMax X { get { return _x; } }
-            public BoundsMinMax Y { get { return _y; } }
-            public BoundsMinMax Z { get { return _z; } }
-            public BoundsMinMax M { get { return _m; } }
-            public ShapefileIndex M_Root { get { return m_root; } }
-            public ShapefileIndex.FileHeader M_Parent { get { return m_parent; } }
-        }
-        public partial class BoundsMinMax : KaitaiStruct
-        {
-            public static BoundsMinMax FromFile(string fileName)
-            {
-                return new BoundsMinMax(new KaitaiStream(fileName));
-            }
-
-            public BoundsMinMax(KaitaiStream p__io, ShapefileIndex.BoundingBoxXYZM p__parent = null, ShapefileIndex p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _min = m_io.ReadF8be();
-                _max = m_io.ReadF8be();
-            }
-            private double _min;
-            private double _max;
-            private ShapefileIndex m_root;
-            private ShapefileIndex.BoundingBoxXYZM m_parent;
-            public double Min { get { return _min; } }
-            public double Max { get { return _max; } }
-            public ShapefileIndex M_Root { get { return m_root; } }
-            public ShapefileIndex.BoundingBoxXYZM M_Parent { get { return m_parent; } }
         }
         private FileHeader _header;
         private List<Record> _records;

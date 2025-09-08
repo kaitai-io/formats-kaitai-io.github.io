@@ -19,11 +19,16 @@ const (
 	GlibcUtmp_EntryType__DeadProcess GlibcUtmp_EntryType = 8
 	GlibcUtmp_EntryType__Accounting GlibcUtmp_EntryType = 9
 )
+var values_GlibcUtmp_EntryType = map[GlibcUtmp_EntryType]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}}
+func (v GlibcUtmp_EntryType) isDefined() bool {
+	_, ok := values_GlibcUtmp_EntryType[v]
+	return ok
+}
 type GlibcUtmp struct {
 	Records []*GlibcUtmp_Record
 	_io *kaitai.Stream
 	_root *GlibcUtmp
-	_parent interface{}
+	_parent kaitai.Struct
 	_raw_Records [][]byte
 }
 func NewGlibcUtmp() *GlibcUtmp {
@@ -31,12 +36,16 @@ func NewGlibcUtmp() *GlibcUtmp {
 	}
 }
 
-func (this *GlibcUtmp) Read(io *kaitai.Stream, parent interface{}, root *GlibcUtmp) (err error) {
+func (this GlibcUtmp) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *GlibcUtmp) Read(io *kaitai.Stream, parent kaitai.Struct, root *GlibcUtmp) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	for i := 1;; i++ {
+	for i := 0;; i++ {
 		tmp1, err := this._io.EOF()
 		if err != nil {
 			return err
@@ -79,6 +88,10 @@ type GlibcUtmp_Record struct {
 func NewGlibcUtmp_Record() *GlibcUtmp_Record {
 	return &GlibcUtmp_Record{
 	}
+}
+
+func (this GlibcUtmp_Record) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *GlibcUtmp_Record) Read(io *kaitai.Stream, parent *GlibcUtmp, root *GlibcUtmp) (err error) {
@@ -200,6 +213,10 @@ type GlibcUtmp_Timeval struct {
 func NewGlibcUtmp_Timeval() *GlibcUtmp_Timeval {
 	return &GlibcUtmp_Timeval{
 	}
+}
+
+func (this GlibcUtmp_Timeval) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *GlibcUtmp_Timeval) Read(io *kaitai.Stream, parent *GlibcUtmp_Record, root *GlibcUtmp) (err error) {

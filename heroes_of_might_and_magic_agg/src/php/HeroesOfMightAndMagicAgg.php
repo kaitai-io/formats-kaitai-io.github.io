@@ -3,8 +3,8 @@
 
 namespace {
     class HeroesOfMightAndMagicAgg extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \HeroesOfMightAndMagicAgg $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\HeroesOfMightAndMagicAgg $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -21,7 +21,7 @@ namespace {
             if ($this->_m_filenames !== null)
                 return $this->_m_filenames;
             $_pos = $this->_io->pos();
-            $this->_io->seek(($this->entries()[count($this->entries()) - 1]->offset() + $this->entries()[count($this->entries()) - 1]->size()));
+            $this->_io->seek($this->entries()[count($this->entries()) - 1]->offset() + $this->entries()[count($this->entries()) - 1]->size());
             $this->_m__raw_filenames = [];
             $this->_m_filenames = [];
             $n = $this->numFiles();
@@ -44,7 +44,7 @@ namespace {
 
 namespace HeroesOfMightAndMagicAgg {
     class Entry extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \HeroesOfMightAndMagicAgg $_parent = null, \HeroesOfMightAndMagicAgg $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\HeroesOfMightAndMagicAgg $_parent = null, ?\HeroesOfMightAndMagicAgg $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -78,7 +78,7 @@ namespace HeroesOfMightAndMagicAgg {
 
 namespace HeroesOfMightAndMagicAgg {
     class Filename extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \HeroesOfMightAndMagicAgg $_parent = null, \HeroesOfMightAndMagicAgg $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\HeroesOfMightAndMagicAgg $_parent = null, ?\HeroesOfMightAndMagicAgg $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }

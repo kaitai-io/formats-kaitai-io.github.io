@@ -67,28 +67,20 @@ namespace Kaitai
             {
                 _header = new SdOptionHeader(m_io, this, m_root);
                 switch (Header.Type) {
-                case OptionTypes.LoadBalancingOption: {
-                    _content = new SdLoadBalancingOption(m_io, this, m_root);
-                    break;
-                }
                 case OptionTypes.ConfigurationOption: {
                     _content = new SdConfigurationOption(m_io, this, m_root);
-                    break;
-                }
-                case OptionTypes.Ipv4SdEndpointOption: {
-                    _content = new SdIpv4SdEndpointOption(m_io, this, m_root);
                     break;
                 }
                 case OptionTypes.Ipv4EndpointOption: {
                     _content = new SdIpv4EndpointOption(m_io, this, m_root);
                     break;
                 }
-                case OptionTypes.Ipv6SdEndpointOption: {
-                    _content = new SdIpv6SdEndpointOption(m_io, this, m_root);
-                    break;
-                }
                 case OptionTypes.Ipv4MulticastOption: {
                     _content = new SdIpv4MulticastOption(m_io, this, m_root);
+                    break;
+                }
+                case OptionTypes.Ipv4SdEndpointOption: {
+                    _content = new SdIpv4SdEndpointOption(m_io, this, m_root);
                     break;
                 }
                 case OptionTypes.Ipv6EndpointOption: {
@@ -99,16 +91,24 @@ namespace Kaitai
                     _content = new SdIpv6MulticastOption(m_io, this, m_root);
                     break;
                 }
+                case OptionTypes.Ipv6SdEndpointOption: {
+                    _content = new SdIpv6SdEndpointOption(m_io, this, m_root);
+                    break;
+                }
+                case OptionTypes.LoadBalancingOption: {
+                    _content = new SdLoadBalancingOption(m_io, this, m_root);
+                    break;
+                }
                 }
             }
-            public partial class SdOptionHeader : KaitaiStruct
+            public partial class SdConfigKvPair : KaitaiStruct
             {
-                public static SdOptionHeader FromFile(string fileName)
+                public static SdConfigKvPair FromFile(string fileName)
                 {
-                    return new SdOptionHeader(new KaitaiStream(fileName));
+                    return new SdConfigKvPair(new KaitaiStream(fileName));
                 }
 
-                public SdOptionHeader(KaitaiStream p__io, SomeIpSdOptions.SdOption p__parent = null, SomeIpSdOptions p__root = null) : base(p__io)
+                public SdConfigKvPair(KaitaiStream p__io, SomeIpSdOptions.SdOption.SdConfigString p__parent = null, SomeIpSdOptions p__root = null) : base(p__io)
                 {
                     m_parent = p__parent;
                     m_root = p__root;
@@ -116,17 +116,17 @@ namespace Kaitai
                 }
                 private void _read()
                 {
-                    _length = m_io.ReadU2be();
-                    _type = ((SomeIpSdOptions.SdOption.OptionTypes) m_io.ReadU1());
+                    _key = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytesTerm(61, false, true, true));
+                    _value = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytesFull());
                 }
-                private ushort _length;
-                private OptionTypes _type;
+                private string _key;
+                private string _value;
                 private SomeIpSdOptions m_root;
-                private SomeIpSdOptions.SdOption m_parent;
-                public ushort Length { get { return _length; } }
-                public OptionTypes Type { get { return _type; } }
+                private SomeIpSdOptions.SdOption.SdConfigString m_parent;
+                public string Key { get { return _key; } }
+                public string Value { get { return _value; } }
                 public SomeIpSdOptions M_Root { get { return m_root; } }
-                public SomeIpSdOptions.SdOption M_Parent { get { return m_parent; } }
+                public SomeIpSdOptions.SdOption.SdConfigString M_Parent { get { return m_parent; } }
             }
             public partial class SdConfigString : KaitaiStruct
             {
@@ -208,7 +208,7 @@ namespace Kaitai
                 private void _read()
                 {
                     _reserved = m_io.ReadU1();
-                    __raw_configurations = m_io.ReadBytes((M_Parent.Header.Length - 1));
+                    __raw_configurations = m_io.ReadBytes(M_Parent.Header.Length - 1);
                     var io___raw_configurations = new KaitaiStream(__raw_configurations);
                     _configurations = new SdConfigStringsContainer(io___raw_configurations, this, m_root);
                 }
@@ -222,6 +222,42 @@ namespace Kaitai
                 public SomeIpSdOptions M_Root { get { return m_root; } }
                 public SomeIpSdOptions.SdOption M_Parent { get { return m_parent; } }
                 public byte[] M_RawConfigurations { get { return __raw_configurations; } }
+            }
+            public partial class SdIpv4EndpointOption : KaitaiStruct
+            {
+                public static SdIpv4EndpointOption FromFile(string fileName)
+                {
+                    return new SdIpv4EndpointOption(new KaitaiStream(fileName));
+                }
+
+                public SdIpv4EndpointOption(KaitaiStream p__io, SomeIpSdOptions.SdOption p__parent = null, SomeIpSdOptions p__root = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    _read();
+                }
+                private void _read()
+                {
+                    _reserved = m_io.ReadU1();
+                    _address = m_io.ReadBytes(4);
+                    _reserved2 = m_io.ReadU1();
+                    _l4Protocol = m_io.ReadU1();
+                    _port = m_io.ReadU2be();
+                }
+                private byte _reserved;
+                private byte[] _address;
+                private byte _reserved2;
+                private byte _l4Protocol;
+                private ushort _port;
+                private SomeIpSdOptions m_root;
+                private SomeIpSdOptions.SdOption m_parent;
+                public byte Reserved { get { return _reserved; } }
+                public byte[] Address { get { return _address; } }
+                public byte Reserved2 { get { return _reserved2; } }
+                public byte L4Protocol { get { return _l4Protocol; } }
+                public ushort Port { get { return _port; } }
+                public SomeIpSdOptions M_Root { get { return m_root; } }
+                public SomeIpSdOptions.SdOption M_Parent { get { return m_parent; } }
             }
             public partial class SdIpv4MulticastOption : KaitaiStruct
             {
@@ -295,6 +331,42 @@ namespace Kaitai
                 public SomeIpSdOptions M_Root { get { return m_root; } }
                 public SomeIpSdOptions.SdOption M_Parent { get { return m_parent; } }
             }
+            public partial class SdIpv6EndpointOption : KaitaiStruct
+            {
+                public static SdIpv6EndpointOption FromFile(string fileName)
+                {
+                    return new SdIpv6EndpointOption(new KaitaiStream(fileName));
+                }
+
+                public SdIpv6EndpointOption(KaitaiStream p__io, SomeIpSdOptions.SdOption p__parent = null, SomeIpSdOptions p__root = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    _read();
+                }
+                private void _read()
+                {
+                    _reserved = m_io.ReadU1();
+                    _address = m_io.ReadBytes(16);
+                    _reserved2 = m_io.ReadU1();
+                    _l4Protocol = m_io.ReadU1();
+                    _port = m_io.ReadU2be();
+                }
+                private byte _reserved;
+                private byte[] _address;
+                private byte _reserved2;
+                private byte _l4Protocol;
+                private ushort _port;
+                private SomeIpSdOptions m_root;
+                private SomeIpSdOptions.SdOption m_parent;
+                public byte Reserved { get { return _reserved; } }
+                public byte[] Address { get { return _address; } }
+                public byte Reserved2 { get { return _reserved2; } }
+                public byte L4Protocol { get { return _l4Protocol; } }
+                public ushort Port { get { return _port; } }
+                public SomeIpSdOptions M_Root { get { return m_root; } }
+                public SomeIpSdOptions.SdOption M_Parent { get { return m_parent; } }
+            }
             public partial class SdIpv6MulticastOption : KaitaiStruct
             {
                 public static SdIpv6MulticastOption FromFile(string fileName)
@@ -331,33 +403,6 @@ namespace Kaitai
                 public SomeIpSdOptions M_Root { get { return m_root; } }
                 public SomeIpSdOptions.SdOption M_Parent { get { return m_parent; } }
             }
-            public partial class SdConfigKvPair : KaitaiStruct
-            {
-                public static SdConfigKvPair FromFile(string fileName)
-                {
-                    return new SdConfigKvPair(new KaitaiStream(fileName));
-                }
-
-                public SdConfigKvPair(KaitaiStream p__io, SomeIpSdOptions.SdOption.SdConfigString p__parent = null, SomeIpSdOptions p__root = null) : base(p__io)
-                {
-                    m_parent = p__parent;
-                    m_root = p__root;
-                    _read();
-                }
-                private void _read()
-                {
-                    _key = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytesTerm(61, false, true, true));
-                    _value = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytesFull());
-                }
-                private string _key;
-                private string _value;
-                private SomeIpSdOptions m_root;
-                private SomeIpSdOptions.SdOption.SdConfigString m_parent;
-                public string Key { get { return _key; } }
-                public string Value { get { return _value; } }
-                public SomeIpSdOptions M_Root { get { return m_root; } }
-                public SomeIpSdOptions.SdOption.SdConfigString M_Parent { get { return m_parent; } }
-            }
             public partial class SdIpv6SdEndpointOption : KaitaiStruct
             {
                 public static SdIpv6SdEndpointOption FromFile(string fileName)
@@ -366,78 +411,6 @@ namespace Kaitai
                 }
 
                 public SdIpv6SdEndpointOption(KaitaiStream p__io, SomeIpSdOptions.SdOption p__parent = null, SomeIpSdOptions p__root = null) : base(p__io)
-                {
-                    m_parent = p__parent;
-                    m_root = p__root;
-                    _read();
-                }
-                private void _read()
-                {
-                    _reserved = m_io.ReadU1();
-                    _address = m_io.ReadBytes(16);
-                    _reserved2 = m_io.ReadU1();
-                    _l4Protocol = m_io.ReadU1();
-                    _port = m_io.ReadU2be();
-                }
-                private byte _reserved;
-                private byte[] _address;
-                private byte _reserved2;
-                private byte _l4Protocol;
-                private ushort _port;
-                private SomeIpSdOptions m_root;
-                private SomeIpSdOptions.SdOption m_parent;
-                public byte Reserved { get { return _reserved; } }
-                public byte[] Address { get { return _address; } }
-                public byte Reserved2 { get { return _reserved2; } }
-                public byte L4Protocol { get { return _l4Protocol; } }
-                public ushort Port { get { return _port; } }
-                public SomeIpSdOptions M_Root { get { return m_root; } }
-                public SomeIpSdOptions.SdOption M_Parent { get { return m_parent; } }
-            }
-            public partial class SdIpv4EndpointOption : KaitaiStruct
-            {
-                public static SdIpv4EndpointOption FromFile(string fileName)
-                {
-                    return new SdIpv4EndpointOption(new KaitaiStream(fileName));
-                }
-
-                public SdIpv4EndpointOption(KaitaiStream p__io, SomeIpSdOptions.SdOption p__parent = null, SomeIpSdOptions p__root = null) : base(p__io)
-                {
-                    m_parent = p__parent;
-                    m_root = p__root;
-                    _read();
-                }
-                private void _read()
-                {
-                    _reserved = m_io.ReadU1();
-                    _address = m_io.ReadBytes(4);
-                    _reserved2 = m_io.ReadU1();
-                    _l4Protocol = m_io.ReadU1();
-                    _port = m_io.ReadU2be();
-                }
-                private byte _reserved;
-                private byte[] _address;
-                private byte _reserved2;
-                private byte _l4Protocol;
-                private ushort _port;
-                private SomeIpSdOptions m_root;
-                private SomeIpSdOptions.SdOption m_parent;
-                public byte Reserved { get { return _reserved; } }
-                public byte[] Address { get { return _address; } }
-                public byte Reserved2 { get { return _reserved2; } }
-                public byte L4Protocol { get { return _l4Protocol; } }
-                public ushort Port { get { return _port; } }
-                public SomeIpSdOptions M_Root { get { return m_root; } }
-                public SomeIpSdOptions.SdOption M_Parent { get { return m_parent; } }
-            }
-            public partial class SdIpv6EndpointOption : KaitaiStruct
-            {
-                public static SdIpv6EndpointOption FromFile(string fileName)
-                {
-                    return new SdIpv6EndpointOption(new KaitaiStream(fileName));
-                }
-
-                public SdIpv6EndpointOption(KaitaiStream p__io, SomeIpSdOptions.SdOption p__parent = null, SomeIpSdOptions p__root = null) : base(p__io)
                 {
                     m_parent = p__parent;
                     m_root = p__root;
@@ -493,6 +466,33 @@ namespace Kaitai
                 public byte Reserved { get { return _reserved; } }
                 public ushort Priority { get { return _priority; } }
                 public ushort Weight { get { return _weight; } }
+                public SomeIpSdOptions M_Root { get { return m_root; } }
+                public SomeIpSdOptions.SdOption M_Parent { get { return m_parent; } }
+            }
+            public partial class SdOptionHeader : KaitaiStruct
+            {
+                public static SdOptionHeader FromFile(string fileName)
+                {
+                    return new SdOptionHeader(new KaitaiStream(fileName));
+                }
+
+                public SdOptionHeader(KaitaiStream p__io, SomeIpSdOptions.SdOption p__parent = null, SomeIpSdOptions p__root = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    _read();
+                }
+                private void _read()
+                {
+                    _length = m_io.ReadU2be();
+                    _type = ((SomeIpSdOptions.SdOption.OptionTypes) m_io.ReadU1());
+                }
+                private ushort _length;
+                private OptionTypes _type;
+                private SomeIpSdOptions m_root;
+                private SomeIpSdOptions.SdOption m_parent;
+                public ushort Length { get { return _length; } }
+                public OptionTypes Type { get { return _type; } }
                 public SomeIpSdOptions M_Root { get { return m_root; } }
                 public SomeIpSdOptions.SdOption M_Parent { get { return m_parent; } }
             }

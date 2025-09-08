@@ -8,7 +8,8 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Arrays;
 import java.util.ArrayList;
-import java.nio.charset.Charset;
+import java.util.List;
+import java.nio.charset.StandardCharsets;
 
 
 /**
@@ -32,21 +33,6 @@ public class Sqlite3 extends KaitaiStruct {
         return new Sqlite3(new ByteBufferKaitaiStream(fileName));
     }
 
-    public enum Versions {
-        LEGACY(1),
-        WAL(2);
-
-        private final long id;
-        Versions(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map<Long, Versions> byId = new HashMap<Long, Versions>(2);
-        static {
-            for (Versions e : Versions.values())
-                byId.put(e.id(), e);
-        }
-        public static Versions byId(long id) { return byId.get(id); }
-    }
-
     public enum Encodings {
         UTF_8(1),
         UTF_16LE(2),
@@ -61,6 +47,21 @@ public class Sqlite3 extends KaitaiStruct {
                 byId.put(e.id(), e);
         }
         public static Encodings byId(long id) { return byId.get(id); }
+    }
+
+    public enum Versions {
+        LEGACY(1),
+        WAL(2);
+
+        private final long id;
+        Versions(long id) { this.id = id; }
+        public long id() { return id; }
+        private static final Map<Long, Versions> byId = new HashMap<Long, Versions>(2);
+        static {
+            for (Versions e : Versions.values())
+                byId.put(e.id(), e);
+        }
+        public static Versions byId(long id) { return byId.get(id); }
     }
 
     public Sqlite3(KaitaiStream _io) {
@@ -79,8 +80,8 @@ public class Sqlite3 extends KaitaiStruct {
     }
     private void _read() {
         this.magic = this._io.readBytes(16);
-        if (!(Arrays.equals(magic(), new byte[] { 83, 81, 76, 105, 116, 101, 32, 102, 111, 114, 109, 97, 116, 32, 51, 0 }))) {
-            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 83, 81, 76, 105, 116, 101, 32, 102, 111, 114, 109, 97, 116, 32, 51, 0 }, magic(), _io(), "/seq/0");
+        if (!(Arrays.equals(this.magic, new byte[] { 83, 81, 76, 105, 116, 101, 32, 102, 111, 114, 109, 97, 116, 32, 51, 0 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 83, 81, 76, 105, 116, 101, 32, 102, 111, 114, 109, 97, 116, 32, 51, 0 }, this.magic, this._io, "/seq/0");
         }
         this.lenPageMod = this._io.readU2be();
         this.writeVersion = Versions.byId(this._io.readU1());
@@ -106,60 +107,9 @@ public class Sqlite3 extends KaitaiStruct {
         this.sqliteVersionNumber = this._io.readU4be();
         this.rootPage = new BtreePage(this._io, this, _root);
     }
-    public static class Serial extends KaitaiStruct {
-        public static Serial fromFile(String fileName) throws IOException {
-            return new Serial(new ByteBufferKaitaiStream(fileName));
-        }
 
-        public Serial(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Serial(KaitaiStream _io, Sqlite3.Serials _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Serial(KaitaiStream _io, Sqlite3.Serials _parent, Sqlite3 _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.code = new VlqBase128Be(this._io);
-        }
-        private Boolean isBlob;
-        public Boolean isBlob() {
-            if (this.isBlob != null)
-                return this.isBlob;
-            boolean _tmp = (boolean) ( ((code().value() >= 12) && (KaitaiStream.mod(code().value(), 2) == 0)) );
-            this.isBlob = _tmp;
-            return this.isBlob;
-        }
-        private Boolean isString;
-        public Boolean isString() {
-            if (this.isString != null)
-                return this.isString;
-            boolean _tmp = (boolean) ( ((code().value() >= 13) && (KaitaiStream.mod(code().value(), 2) == 1)) );
-            this.isString = _tmp;
-            return this.isString;
-        }
-        private Integer lenContent;
-        public Integer lenContent() {
-            if (this.lenContent != null)
-                return this.lenContent;
-            if (code().value() >= 12) {
-                int _tmp = (int) (((code().value() - 12) / 2));
-                this.lenContent = _tmp;
-            }
-            return this.lenContent;
-        }
-        private VlqBase128Be code;
-        private Sqlite3 _root;
-        private Sqlite3.Serials _parent;
-        public VlqBase128Be code() { return code; }
-        public Sqlite3 _root() { return _root; }
-        public Sqlite3.Serials _parent() { return _parent; }
+    public void _fetchInstances() {
+        this.rootPage._fetchInstances();
     }
     public static class BtreePage extends KaitaiStruct {
         public static BtreePage fromFile(String fileName) throws IOException {
@@ -194,13 +144,21 @@ public class Sqlite3 extends KaitaiStruct {
                 this.cells.add(new RefCell(this._io, this, _root));
             }
         }
+
+        public void _fetchInstances() {
+            if ( ((pageType() == 2) || (pageType() == 5)) ) {
+            }
+            for (int i = 0; i < this.cells.size(); i++) {
+                this.cells.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
         private int pageType;
         private int firstFreeblock;
         private int numCells;
         private int ofsCells;
         private int numFragFreeBytes;
         private Long rightPtr;
-        private ArrayList<RefCell> cells;
+        private List<RefCell> cells;
         private Sqlite3 _root;
         private Sqlite3 _parent;
         public int pageType() { return pageType; }
@@ -209,9 +167,54 @@ public class Sqlite3 extends KaitaiStruct {
         public int ofsCells() { return ofsCells; }
         public int numFragFreeBytes() { return numFragFreeBytes; }
         public Long rightPtr() { return rightPtr; }
-        public ArrayList<RefCell> cells() { return cells; }
+        public List<RefCell> cells() { return cells; }
         public Sqlite3 _root() { return _root; }
         public Sqlite3 _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://www.sqlite.org/fileformat.html#b_tree_pages">Source</a>
+     */
+    public static class CellIndexInterior extends KaitaiStruct {
+        public static CellIndexInterior fromFile(String fileName) throws IOException {
+            return new CellIndexInterior(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public CellIndexInterior(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public CellIndexInterior(KaitaiStream _io, Sqlite3.RefCell _parent) {
+            this(_io, _parent, null);
+        }
+
+        public CellIndexInterior(KaitaiStream _io, Sqlite3.RefCell _parent, Sqlite3 _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.leftChildPage = this._io.readU4be();
+            this.lenPayload = new VlqBase128Be(this._io);
+            KaitaiStream _io_payload = this._io.substream(lenPayload().value());
+            this.payload = new CellPayload(_io_payload, this, _root);
+        }
+
+        public void _fetchInstances() {
+            this.lenPayload._fetchInstances();
+            this.payload._fetchInstances();
+        }
+        private long leftChildPage;
+        private VlqBase128Be lenPayload;
+        private CellPayload payload;
+        private Sqlite3 _root;
+        private Sqlite3.RefCell _parent;
+        public long leftChildPage() { return leftChildPage; }
+        public VlqBase128Be lenPayload() { return lenPayload; }
+        public CellPayload payload() { return payload; }
+        public Sqlite3 _root() { return _root; }
+        public Sqlite3.RefCell _parent() { return _parent; }
     }
 
     /**
@@ -238,99 +241,22 @@ public class Sqlite3 extends KaitaiStruct {
         }
         private void _read() {
             this.lenPayload = new VlqBase128Be(this._io);
-            this._raw_payload = this._io.readBytes(lenPayload().value());
-            KaitaiStream _io__raw_payload = new ByteBufferKaitaiStream(_raw_payload);
-            this.payload = new CellPayload(_io__raw_payload, this, _root);
+            KaitaiStream _io_payload = this._io.substream(lenPayload().value());
+            this.payload = new CellPayload(_io_payload, this, _root);
+        }
+
+        public void _fetchInstances() {
+            this.lenPayload._fetchInstances();
+            this.payload._fetchInstances();
         }
         private VlqBase128Be lenPayload;
         private CellPayload payload;
         private Sqlite3 _root;
         private Sqlite3.RefCell _parent;
-        private byte[] _raw_payload;
         public VlqBase128Be lenPayload() { return lenPayload; }
         public CellPayload payload() { return payload; }
         public Sqlite3 _root() { return _root; }
         public Sqlite3.RefCell _parent() { return _parent; }
-        public byte[] _raw_payload() { return _raw_payload; }
-    }
-    public static class Serials extends KaitaiStruct {
-        public static Serials fromFile(String fileName) throws IOException {
-            return new Serials(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Serials(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Serials(KaitaiStream _io, Sqlite3.CellPayload _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Serials(KaitaiStream _io, Sqlite3.CellPayload _parent, Sqlite3 _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.entries = new ArrayList<Serial>();
-            {
-                int i = 0;
-                while (!this._io.isEof()) {
-                    this.entries.add(new Serial(this._io, this, _root));
-                    i++;
-                }
-            }
-        }
-        private ArrayList<Serial> entries;
-        private Sqlite3 _root;
-        private Sqlite3.CellPayload _parent;
-        public ArrayList<Serial> entries() { return entries; }
-        public Sqlite3 _root() { return _root; }
-        public Sqlite3.CellPayload _parent() { return _parent; }
-    }
-
-    /**
-     * @see <a href="https://www.sqlite.org/fileformat.html#b_tree_pages">Source</a>
-     */
-    public static class CellTableLeaf extends KaitaiStruct {
-        public static CellTableLeaf fromFile(String fileName) throws IOException {
-            return new CellTableLeaf(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public CellTableLeaf(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public CellTableLeaf(KaitaiStream _io, Sqlite3.RefCell _parent) {
-            this(_io, _parent, null);
-        }
-
-        public CellTableLeaf(KaitaiStream _io, Sqlite3.RefCell _parent, Sqlite3 _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.lenPayload = new VlqBase128Be(this._io);
-            this.rowId = new VlqBase128Be(this._io);
-            this._raw_payload = this._io.readBytes(lenPayload().value());
-            KaitaiStream _io__raw_payload = new ByteBufferKaitaiStream(_raw_payload);
-            this.payload = new CellPayload(_io__raw_payload, this, _root);
-        }
-        private VlqBase128Be lenPayload;
-        private VlqBase128Be rowId;
-        private CellPayload payload;
-        private Sqlite3 _root;
-        private Sqlite3.RefCell _parent;
-        private byte[] _raw_payload;
-        public VlqBase128Be lenPayload() { return lenPayload; }
-        public VlqBase128Be rowId() { return rowId; }
-        public CellPayload payload() { return payload; }
-        public Sqlite3 _root() { return _root; }
-        public Sqlite3.RefCell _parent() { return _parent; }
-        public byte[] _raw_payload() { return _raw_payload; }
     }
 
     /**
@@ -357,26 +283,31 @@ public class Sqlite3 extends KaitaiStruct {
         }
         private void _read() {
             this.lenHeaderAndLen = new VlqBase128Be(this._io);
-            this._raw_columnSerials = this._io.readBytes((lenHeaderAndLen().value() - 1));
-            KaitaiStream _io__raw_columnSerials = new ByteBufferKaitaiStream(_raw_columnSerials);
-            this.columnSerials = new Serials(_io__raw_columnSerials, this, _root);
+            KaitaiStream _io_columnSerials = this._io.substream(lenHeaderAndLen().value() - 1);
+            this.columnSerials = new Serials(_io_columnSerials, this, _root);
             this.columnContents = new ArrayList<ColumnContent>();
             for (int i = 0; i < columnSerials().entries().size(); i++) {
-                this.columnContents.add(new ColumnContent(this._io, this, _root, columnSerials().entries().get((int) i)));
+                this.columnContents.add(new ColumnContent(this._io, this, _root, columnSerials().entries().get(((Number) (i)).intValue())));
+            }
+        }
+
+        public void _fetchInstances() {
+            this.lenHeaderAndLen._fetchInstances();
+            this.columnSerials._fetchInstances();
+            for (int i = 0; i < this.columnContents.size(); i++) {
+                this.columnContents.get(((Number) (i)).intValue())._fetchInstances();
             }
         }
         private VlqBase128Be lenHeaderAndLen;
         private Serials columnSerials;
-        private ArrayList<ColumnContent> columnContents;
+        private List<ColumnContent> columnContents;
         private Sqlite3 _root;
         private KaitaiStruct _parent;
-        private byte[] _raw_columnSerials;
         public VlqBase128Be lenHeaderAndLen() { return lenHeaderAndLen; }
         public Serials columnSerials() { return columnSerials; }
-        public ArrayList<ColumnContent> columnContents() { return columnContents; }
+        public List<ColumnContent> columnContents() { return columnContents; }
         public Sqlite3 _root() { return _root; }
         public KaitaiStruct _parent() { return _parent; }
-        public byte[] _raw_columnSerials() { return _raw_columnSerials; }
     }
 
     /**
@@ -405,6 +336,10 @@ public class Sqlite3 extends KaitaiStruct {
             this.leftChildPage = this._io.readU4be();
             this.rowId = new VlqBase128Be(this._io);
         }
+
+        public void _fetchInstances() {
+            this.rowId._fetchInstances();
+        }
         private long leftChildPage;
         private VlqBase128Be rowId;
         private Sqlite3 _root;
@@ -418,44 +353,47 @@ public class Sqlite3 extends KaitaiStruct {
     /**
      * @see <a href="https://www.sqlite.org/fileformat.html#b_tree_pages">Source</a>
      */
-    public static class CellIndexInterior extends KaitaiStruct {
-        public static CellIndexInterior fromFile(String fileName) throws IOException {
-            return new CellIndexInterior(new ByteBufferKaitaiStream(fileName));
+    public static class CellTableLeaf extends KaitaiStruct {
+        public static CellTableLeaf fromFile(String fileName) throws IOException {
+            return new CellTableLeaf(new ByteBufferKaitaiStream(fileName));
         }
 
-        public CellIndexInterior(KaitaiStream _io) {
+        public CellTableLeaf(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public CellIndexInterior(KaitaiStream _io, Sqlite3.RefCell _parent) {
+        public CellTableLeaf(KaitaiStream _io, Sqlite3.RefCell _parent) {
             this(_io, _parent, null);
         }
 
-        public CellIndexInterior(KaitaiStream _io, Sqlite3.RefCell _parent, Sqlite3 _root) {
+        public CellTableLeaf(KaitaiStream _io, Sqlite3.RefCell _parent, Sqlite3 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.leftChildPage = this._io.readU4be();
             this.lenPayload = new VlqBase128Be(this._io);
-            this._raw_payload = this._io.readBytes(lenPayload().value());
-            KaitaiStream _io__raw_payload = new ByteBufferKaitaiStream(_raw_payload);
-            this.payload = new CellPayload(_io__raw_payload, this, _root);
+            this.rowId = new VlqBase128Be(this._io);
+            KaitaiStream _io_payload = this._io.substream(lenPayload().value());
+            this.payload = new CellPayload(_io_payload, this, _root);
         }
-        private long leftChildPage;
+
+        public void _fetchInstances() {
+            this.lenPayload._fetchInstances();
+            this.rowId._fetchInstances();
+            this.payload._fetchInstances();
+        }
         private VlqBase128Be lenPayload;
+        private VlqBase128Be rowId;
         private CellPayload payload;
         private Sqlite3 _root;
         private Sqlite3.RefCell _parent;
-        private byte[] _raw_payload;
-        public long leftChildPage() { return leftChildPage; }
         public VlqBase128Be lenPayload() { return lenPayload; }
+        public VlqBase128Be rowId() { return rowId; }
         public CellPayload payload() { return payload; }
         public Sqlite3 _root() { return _root; }
         public Sqlite3.RefCell _parent() { return _parent; }
-        public byte[] _raw_payload() { return _raw_payload; }
     }
     public static class ColumnContent extends KaitaiStruct {
 
@@ -477,28 +415,28 @@ public class Sqlite3 extends KaitaiStruct {
         private void _read() {
             if ( ((serialType().code().value() >= 1) && (serialType().code().value() <= 6)) ) {
                 switch (serialType().code().value()) {
-                case 4: {
-                    this.asInt = (int) (this._io.readU4be());
-                    break;
-                }
-                case 6: {
-                    this.asInt = (int) (this._io.readU8be());
-                    break;
-                }
                 case 1: {
-                    this.asInt = (int) (this._io.readU1());
-                    break;
-                }
-                case 3: {
-                    this.asInt = (int) (this._io.readBitsIntBe(24));
-                    break;
-                }
-                case 5: {
-                    this.asInt = (int) (this._io.readBitsIntBe(48));
+                    this.asInt = ((Number) (this._io.readU1())).intValue();
                     break;
                 }
                 case 2: {
-                    this.asInt = (int) (this._io.readU2be());
+                    this.asInt = ((Number) (this._io.readU2be())).intValue();
+                    break;
+                }
+                case 3: {
+                    this.asInt = ((Number) (this._io.readBitsIntBe(24))).intValue();
+                    break;
+                }
+                case 4: {
+                    this.asInt = ((Number) (this._io.readU4be())).intValue();
+                    break;
+                }
+                case 5: {
+                    this.asInt = ((Number) (this._io.readBitsIntBe(48))).intValue();
+                    break;
+                }
+                case 6: {
+                    this.asInt = ((Number) (this._io.readU8be())).intValue();
                     break;
                 }
                 }
@@ -509,7 +447,36 @@ public class Sqlite3 extends KaitaiStruct {
             if (serialType().isBlob()) {
                 this.asBlob = this._io.readBytes(serialType().lenContent());
             }
-            this.asStr = new String(this._io.readBytes(serialType().lenContent()), Charset.forName("UTF-8"));
+            this.asStr = new String(this._io.readBytes(serialType().lenContent()), StandardCharsets.UTF_8);
+        }
+
+        public void _fetchInstances() {
+            if ( ((serialType().code().value() >= 1) && (serialType().code().value() <= 6)) ) {
+                switch (serialType().code().value()) {
+                case 1: {
+                    break;
+                }
+                case 2: {
+                    break;
+                }
+                case 3: {
+                    break;
+                }
+                case 4: {
+                    break;
+                }
+                case 5: {
+                    break;
+                }
+                case 6: {
+                    break;
+                }
+                }
+            }
+            if (serialType().code().value() == 7) {
+            }
+            if (serialType().isBlob()) {
+            }
         }
         private Integer asInt;
         private Double asFloat;
@@ -548,6 +515,30 @@ public class Sqlite3 extends KaitaiStruct {
         private void _read() {
             this.ofsBody = this._io.readU2be();
         }
+
+        public void _fetchInstances() {
+            body();
+            if (this.body != null) {
+                switch (_parent().pageType()) {
+                case 10: {
+                    ((CellIndexLeaf) (this.body))._fetchInstances();
+                    break;
+                }
+                case 13: {
+                    ((CellTableLeaf) (this.body))._fetchInstances();
+                    break;
+                }
+                case 2: {
+                    ((CellIndexInterior) (this.body))._fetchInstances();
+                    break;
+                }
+                case 5: {
+                    ((CellTableInterior) (this.body))._fetchInstances();
+                    break;
+                }
+                }
+            }
+        }
         private KaitaiStruct body;
         public KaitaiStruct body() {
             if (this.body != null)
@@ -555,20 +546,20 @@ public class Sqlite3 extends KaitaiStruct {
             long _pos = this._io.pos();
             this._io.seek(ofsBody());
             switch (_parent().pageType()) {
-            case 13: {
-                this.body = new CellTableLeaf(this._io, this, _root);
-                break;
-            }
-            case 5: {
-                this.body = new CellTableInterior(this._io, this, _root);
-                break;
-            }
             case 10: {
                 this.body = new CellIndexLeaf(this._io, this, _root);
                 break;
             }
+            case 13: {
+                this.body = new CellTableLeaf(this._io, this, _root);
+                break;
+            }
             case 2: {
                 this.body = new CellIndexInterior(this._io, this, _root);
+                break;
+            }
+            case 5: {
+                this.body = new CellTableInterior(this._io, this, _root);
                 break;
             }
             }
@@ -582,12 +573,109 @@ public class Sqlite3 extends KaitaiStruct {
         public Sqlite3 _root() { return _root; }
         public Sqlite3.BtreePage _parent() { return _parent; }
     }
+    public static class Serial extends KaitaiStruct {
+        public static Serial fromFile(String fileName) throws IOException {
+            return new Serial(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Serial(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Serial(KaitaiStream _io, Sqlite3.Serials _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Serial(KaitaiStream _io, Sqlite3.Serials _parent, Sqlite3 _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.code = new VlqBase128Be(this._io);
+        }
+
+        public void _fetchInstances() {
+            this.code._fetchInstances();
+        }
+        private Boolean isBlob;
+        public Boolean isBlob() {
+            if (this.isBlob != null)
+                return this.isBlob;
+            this.isBlob =  ((code().value() >= 12) && (KaitaiStream.mod(code().value(), 2) == 0)) ;
+            return this.isBlob;
+        }
+        private Boolean isString;
+        public Boolean isString() {
+            if (this.isString != null)
+                return this.isString;
+            this.isString =  ((code().value() >= 13) && (KaitaiStream.mod(code().value(), 2) == 1)) ;
+            return this.isString;
+        }
+        private Integer lenContent;
+        public Integer lenContent() {
+            if (this.lenContent != null)
+                return this.lenContent;
+            if (code().value() >= 12) {
+                this.lenContent = ((Number) ((code().value() - 12) / 2)).intValue();
+            }
+            return this.lenContent;
+        }
+        private VlqBase128Be code;
+        private Sqlite3 _root;
+        private Sqlite3.Serials _parent;
+        public VlqBase128Be code() { return code; }
+        public Sqlite3 _root() { return _root; }
+        public Sqlite3.Serials _parent() { return _parent; }
+    }
+    public static class Serials extends KaitaiStruct {
+        public static Serials fromFile(String fileName) throws IOException {
+            return new Serials(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Serials(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Serials(KaitaiStream _io, Sqlite3.CellPayload _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Serials(KaitaiStream _io, Sqlite3.CellPayload _parent, Sqlite3 _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.entries = new ArrayList<Serial>();
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.entries.add(new Serial(this._io, this, _root));
+                    i++;
+                }
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.entries.size(); i++) {
+                this.entries.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private List<Serial> entries;
+        private Sqlite3 _root;
+        private Sqlite3.CellPayload _parent;
+        public List<Serial> entries() { return entries; }
+        public Sqlite3 _root() { return _root; }
+        public Sqlite3.CellPayload _parent() { return _parent; }
+    }
     private Integer lenPage;
     public Integer lenPage() {
         if (this.lenPage != null)
             return this.lenPage;
-        int _tmp = (int) ((lenPageMod() == 1 ? 65536 : lenPageMod()));
-        this.lenPage = _tmp;
+        this.lenPage = ((Number) ((lenPageMod() == 1 ? 65536 : lenPageMod()))).intValue();
         return this.lenPage;
     }
     private byte[] magic;

@@ -191,9 +191,9 @@ namespace Kaitai
             private void _read()
             {
                 _magic = m_io.ReadBytes(3);
-                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 84, 65, 71 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 84, 65, 71 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 84, 65, 71 }, Magic, M_Io, "/types/id3_v1_1_tag/seq/0");
+                    throw new ValidationNotEqualError(new byte[] { 84, 65, 71 }, _magic, m_io, "/types/id3_v1_1_tag/seq/0");
                 }
                 _title = m_io.ReadBytes(30);
                 _artist = m_io.ReadBytes(30);
@@ -249,11 +249,11 @@ namespace Kaitai
             {
                 if (f_id3v1Tag)
                     return _id3v1Tag;
+                f_id3v1Tag = true;
                 long _pos = m_io.Pos;
-                m_io.Seek((M_Io.Size - 128));
+                m_io.Seek(M_Io.Size - 128);
                 _id3v1Tag = new Id3V11Tag(m_io, this, m_root);
                 m_io.Seek(_pos);
-                f_id3v1Tag = true;
                 return _id3v1Tag;
             }
         }

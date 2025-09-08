@@ -15,13 +15,13 @@
 
 namespace {
     class MonomakhSaprChg extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \MonomakhSaprChg $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\MonomakhSaprChg $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_title = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(10), "ascii");
+            $this->_m_title = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(10), "ASCII");
             $this->_m_ent = [];
             $i = 0;
             while (!$this->_io->isEof()) {
@@ -38,13 +38,13 @@ namespace {
 
 namespace MonomakhSaprChg {
     class Block extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \MonomakhSaprChg $_parent = null, \MonomakhSaprChg $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\MonomakhSaprChg $_parent = null, ?\MonomakhSaprChg $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_header = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(13), "ascii");
+            $this->_m_header = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(13), "ASCII");
             $this->_m_fileSize = $this->_io->readU8le();
             $this->_m_file = $this->_io->readBytes($this->fileSize());
         }

@@ -198,6 +198,11 @@ which are pointed to by original (&quot;primary&quot;) partitions in MBR.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="MBR (Master Boot Record) partition table parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="MBR (Master Boot Record) partition table parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -226,9 +231,19 @@ which are pointed to by original (&quot;primary&quot;) partitions in MBR.</p>
                 <a href="python.html" title="MBR (Master Boot Record) partition table parsing Python library">Python</a></li>
                 
                 
+                <li>
+                
+                <a href="python-write.html" title="MBR (Master Boot Record) partition table parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
                 <li class="active">
                 
                 <a href="ruby.html" title="MBR (Master Boot Record) partition table parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="MBR (Master Boot Record) partition table parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -304,8 +319,8 @@ which are pointed to by original (&quot;primary&quot;) partitions in MBR.</p>
 
 <span class="nb">require</span><span class="w"> </span><span class="s1">&#39;kaitai/struct/struct&#39;</span>
 
-<span class="k">unless</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.9&#39;</span><span class="p">)</span>
-<span class="w">  </span><span class="k">raise</span><span class="w"> </span><span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">unless</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.11&#39;</span><span class="p">)</span>
+<span class="w">  </span><span class="k">raise</span><span class="w"> </span><span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
 <span class="k">end</span>
 
 
@@ -320,8 +335,8 @@ which are pointed to by original (&quot;primary&quot;) partitions in MBR.</p>
 <span class="c1"># of &quot;extended partitions&quot;, which work as nested extra &quot;boot records&quot;</span>
 <span class="c1"># which are pointed to by original (&quot;primary&quot;) partitions in MBR.</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">MbrPartitionTable</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
-<span class="w">    </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">    </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
 <span class="w">    </span><span class="n">_read</span>
 <span class="w">  </span><span class="k">end</span>
 
@@ -332,11 +347,37 @@ which are pointed to by original (&quot;primary&quot;) partitions in MBR.</p>
 <span class="w">      </span><span class="vi">@partitions</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="no">PartitionEntry</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="vi">@boot_signature</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-<span class="w">    </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">85</span><span class="p">,</span><span class="w"> </span><span class="mi">170</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span><span class="w"> </span><span class="n">boot_signature</span><span class="p">,</span><span class="w"> </span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/seq/2&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">boot_signature</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">85</span><span class="p">,</span><span class="w"> </span><span class="mi">170</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
+<span class="w">    </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">85</span><span class="p">,</span><span class="w"> </span><span class="mi">170</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span><span class="w"> </span><span class="vi">@boot_signature</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/seq/2&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@boot_signature</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">85</span><span class="p">,</span><span class="w"> </span><span class="mi">170</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
 <span class="w">    </span><span class="nb">self</span>
 <span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">Chs</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@head</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="vi">@b2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="vi">@b3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">cylinder</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@cylinder</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@cylinder</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@cylinder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b3</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">((</span><span class="n">b2</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">192</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@cylinder</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">sector</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@sector</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@sector</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@sector</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b2</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">63</span>
+<span class="w">      </span><span class="vi">@sector</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:head</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:b2</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:b3</span>
+<span class="w">  </span><span class="k">end</span>
 <span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">PartitionEntry</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 <span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
 <span class="w">      </span><span class="n">_read</span>
 <span class="w">    </span><span class="k">end</span>
@@ -356,32 +397,6 @@ which are pointed to by original (&quot;primary&quot;) partitions in MBR.</p>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:chs_end</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:lba_start</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:num_sectors</span>
-<span class="w">  </span><span class="k">end</span>
-<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">Chs</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
-<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
-<span class="w">      </span><span class="n">_read</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">      </span><span class="vi">@head</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-<span class="w">      </span><span class="vi">@b2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-<span class="w">      </span><span class="vi">@b3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-<span class="w">      </span><span class="nb">self</span>
-<span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">sector</span>
-<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@sector</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@sector</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">      </span><span class="vi">@sector</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">b2</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">63</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@sector</span>
-<span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">cylinder</span>
-<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@cylinder</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@cylinder</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">      </span><span class="vi">@cylinder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">b3</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">((</span><span class="n">b2</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">192</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span>
-<span class="w">      </span><span class="vi">@cylinder</span>
-<span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:head</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:b2</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:b3</span>
 <span class="w">  </span><span class="k">end</span>
 <span class="w">  </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:bootstrap_code</span>
 <span class="w">  </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:partitions</span>

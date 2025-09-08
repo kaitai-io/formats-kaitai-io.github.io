@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream', './DosDatetime'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./DosDatetime'));
+    define(['exports', 'kaitai-struct/KaitaiStream', './DosDatetime'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'), require('./DosDatetime'));
   } else {
-    root.Vfat = factory(root.KaitaiStream, root.DosDatetime);
+    factory(root.Vfat || (root.Vfat = {}), root.KaitaiStream, root.DosDatetime || (root.DosDatetime = {}));
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, DosDatetime) {
+})(typeof self !== 'undefined' ? self : this, function (Vfat_, KaitaiStream, DosDatetime_) {
 /**
  * @see {@link https://download.microsoft.com/download/0/8/4/084c452b-b772-4fe5-89bb-a0cbf082286a/fatgen103.doc|Source}
  */
@@ -25,227 +25,11 @@ var Vfat = (function() {
     this.bootSector = new BootSector(this._io, this, this._root);
   }
 
-  /**
-   * Extended BIOS Parameter Block for FAT32
-   */
-
-  var ExtBiosParamBlockFat32 = Vfat.ExtBiosParamBlockFat32 = (function() {
-    function ExtBiosParamBlockFat32(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    ExtBiosParamBlockFat32.prototype._read = function() {
-      this.lsPerFat = this._io.readU4le();
-      this.hasActiveFat = this._io.readBitsIntLe(1) != 0;
-      this.reserved1 = this._io.readBitsIntLe(3);
-      this.activeFatId = this._io.readBitsIntLe(4);
-      this._io.alignToByte();
-      this.reserved2 = this._io.readBytes(1);
-      if (!((KaitaiStream.byteArrayCompare(this.reserved2, [0]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([0], this.reserved2, this._io, "/types/ext_bios_param_block_fat32/seq/4");
-      }
-      this.fatVersion = this._io.readU2le();
-      this.rootDirStartClus = this._io.readU4le();
-      this.lsFsInfo = this._io.readU2le();
-      this.bootSectorsCopyStartLs = this._io.readU2le();
-      this.reserved3 = this._io.readBytes(12);
-      this.physDriveNum = this._io.readU1();
-      this.reserved4 = this._io.readU1();
-      this.extBootSign = this._io.readU1();
-      this.volumeId = this._io.readBytes(4);
-      this.partitionVolumeLabel = KaitaiStream.bytesToStr(KaitaiStream.bytesStripRight(this._io.readBytes(11), 32), "ASCII");
-      this.fsTypeStr = KaitaiStream.bytesToStr(KaitaiStream.bytesStripRight(this._io.readBytes(8), 32), "ASCII");
-    }
-
-    /**
-     * Logical sectors per file allocation table (corresponds with
-     * the old entry `ls_per_fat` in the DOS 2.0 BPB).
-     */
-
-    /**
-     * If true, then there is "active" FAT, which is designated in
-     * `active_fat` attribute. If false, all FATs are mirrored as
-     * usual.
-     */
-
-    /**
-     * Zero-based number of active FAT, if `has_active_fat`
-     * attribute is true.
-     */
-
-    /**
-     * Cluster number of root directory start, typically 2 if it
-     * contains no bad sector. (Microsoft's FAT32 implementation
-     * imposes an artificial limit of 65,535 entries per directory,
-     * whilst many third-party implementations do not.)
-     */
-
-    /**
-     * Logical sector number of FS Information Sector, typically 1,
-     * i.e., the second of the three FAT32 boot sectors. Values
-     * like 0 and 0xFFFF are used by some FAT32 implementations to
-     * designate abscence of FS Information Sector.
-     */
-
-    /**
-     * First logical sector number of a copy of the three FAT32
-     * boot sectors, typically 6.
-     */
-
-    /**
-     * Physical drive number (0x00 for (first) removable media,
-     * 0x80 for (first) fixed disk as per INT 13h).
-     */
-
-    /**
-     * Should be 0x29 to indicate that an EBPB with the following 3
-     * entries exists.
-     */
-
-    /**
-     * Volume ID (serial number).
-     * 
-     * Typically the serial number "xxxx-xxxx" is created by a
-     * 16-bit addition of both DX values returned by INT 21h/AH=2Ah
-     * (get system date) and INT 21h/AH=2Ch (get system time) for
-     * the high word and another 16-bit addition of both CX values
-     * for the low word of the serial number. Alternatively, some
-     * DR-DOS disk utilities provide a /# option to generate a
-     * human-readable time stamp "mmdd-hhmm" build from BCD-encoded
-     * 8-bit values for the month, day, hour and minute instead of
-     * a serial number.
-     */
-
-    return ExtBiosParamBlockFat32;
-  })();
-
-  var BootSector = Vfat.BootSector = (function() {
-    function BootSector(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    BootSector.prototype._read = function() {
-      this.jmpInstruction = this._io.readBytes(3);
-      this.oemName = KaitaiStream.bytesToStr(KaitaiStream.bytesStripRight(this._io.readBytes(8), 32), "ASCII");
-      this.bpb = new BiosParamBlock(this._io, this, this._root);
-      if (!(this.isFat32)) {
-        this.ebpbFat16 = new ExtBiosParamBlockFat16(this._io, this, this._root);
-      }
-      if (this.isFat32) {
-        this.ebpbFat32 = new ExtBiosParamBlockFat32(this._io, this, this._root);
-      }
-    }
-
-    /**
-     * Offset of FATs in bytes from start of filesystem
-     */
-    Object.defineProperty(BootSector.prototype, 'posFats', {
-      get: function() {
-        if (this._m_posFats !== undefined)
-          return this._m_posFats;
-        this._m_posFats = (this.bpb.bytesPerLs * this.bpb.numReservedLs);
-        return this._m_posFats;
-      }
-    });
-    Object.defineProperty(BootSector.prototype, 'lsPerFat', {
-      get: function() {
-        if (this._m_lsPerFat !== undefined)
-          return this._m_lsPerFat;
-        this._m_lsPerFat = (this.isFat32 ? this.ebpbFat32.lsPerFat : this.bpb.lsPerFat);
-        return this._m_lsPerFat;
-      }
-    });
-
-    /**
-     * Size of root directory in logical sectors
-     * @see FAT: General Overview of On-Disk Format, section "FAT Data Structure"
-     */
-    Object.defineProperty(BootSector.prototype, 'lsPerRootDir', {
-      get: function() {
-        if (this._m_lsPerRootDir !== undefined)
-          return this._m_lsPerRootDir;
-        this._m_lsPerRootDir = Math.floor((((this.bpb.maxRootDirRec * 32) + this.bpb.bytesPerLs) - 1) / this.bpb.bytesPerLs);
-        return this._m_lsPerRootDir;
-      }
-    });
-
-    /**
-     * Determines if filesystem is FAT32 (true) or FAT12/16 (false)
-     * by analyzing some preliminary conditions in BPB. Used to
-     * determine whether we should parse post-BPB data as
-     * `ext_bios_param_block_fat16` or `ext_bios_param_block_fat32`.
-     */
-    Object.defineProperty(BootSector.prototype, 'isFat32', {
-      get: function() {
-        if (this._m_isFat32 !== undefined)
-          return this._m_isFat32;
-        this._m_isFat32 = this.bpb.maxRootDirRec == 0;
-        return this._m_isFat32;
-      }
-    });
-
-    /**
-     * Size of one FAT in bytes
-     */
-    Object.defineProperty(BootSector.prototype, 'sizeFat', {
-      get: function() {
-        if (this._m_sizeFat !== undefined)
-          return this._m_sizeFat;
-        this._m_sizeFat = (this.bpb.bytesPerLs * this.lsPerFat);
-        return this._m_sizeFat;
-      }
-    });
-
-    /**
-     * Offset of root directory in bytes from start of filesystem
-     */
-    Object.defineProperty(BootSector.prototype, 'posRootDir', {
-      get: function() {
-        if (this._m_posRootDir !== undefined)
-          return this._m_posRootDir;
-        this._m_posRootDir = (this.bpb.bytesPerLs * (this.bpb.numReservedLs + (this.lsPerFat * this.bpb.numFats)));
-        return this._m_posRootDir;
-      }
-    });
-
-    /**
-     * Size of root directory in bytes
-     */
-    Object.defineProperty(BootSector.prototype, 'sizeRootDir', {
-      get: function() {
-        if (this._m_sizeRootDir !== undefined)
-          return this._m_sizeRootDir;
-        this._m_sizeRootDir = (this.lsPerRootDir * this.bpb.bytesPerLs);
-        return this._m_sizeRootDir;
-      }
-    });
-
-    /**
-     * Basic BIOS parameter block, present in all versions of FAT
-     */
-
-    /**
-     * FAT12/16-specific extended BIOS parameter block
-     */
-
-    /**
-     * FAT32-specific extended BIOS parameter block
-     */
-
-    return BootSector;
-  })();
-
   var BiosParamBlock = Vfat.BiosParamBlock = (function() {
     function BiosParamBlock(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -331,75 +115,123 @@ var Vfat = (function() {
     return BiosParamBlock;
   })();
 
-  var RootDirectoryRec = Vfat.RootDirectoryRec = (function() {
-    function RootDirectoryRec(_io, _parent, _root) {
+  var BootSector = Vfat.BootSector = (function() {
+    function BootSector(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    RootDirectoryRec.prototype._read = function() {
-      this.fileName = this._io.readBytes(11);
-      this._raw_attrs = this._io.readBytes(1);
-      var _io__raw_attrs = new KaitaiStream(this._raw_attrs);
-      this.attrs = new AttrFlags(_io__raw_attrs, this, this._root);
-      this.reserved = this._io.readBytes(10);
-      this._raw_lastWriteTime = this._io.readBytes(4);
-      var _io__raw_lastWriteTime = new KaitaiStream(this._raw_lastWriteTime);
-      this.lastWriteTime = new DosDatetime(_io__raw_lastWriteTime, this, null);
-      this.startClus = this._io.readU2le();
-      this.fileSize = this._io.readU4le();
-    }
-
-    var AttrFlags = RootDirectoryRec.AttrFlags = (function() {
-      function AttrFlags(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
+    BootSector.prototype._read = function() {
+      this.jmpInstruction = this._io.readBytes(3);
+      this.oemName = KaitaiStream.bytesToStr(KaitaiStream.bytesStripRight(this._io.readBytes(8), 32), "ASCII");
+      this.bpb = new BiosParamBlock(this._io, this, this._root);
+      if (!(this.isFat32)) {
+        this.ebpbFat16 = new ExtBiosParamBlockFat16(this._io, this, this._root);
       }
-      AttrFlags.prototype._read = function() {
-        this.readOnly = this._io.readBitsIntLe(1) != 0;
-        this.hidden = this._io.readBitsIntLe(1) != 0;
-        this.system = this._io.readBitsIntLe(1) != 0;
-        this.volumeId = this._io.readBitsIntLe(1) != 0;
-        this.isDirectory = this._io.readBitsIntLe(1) != 0;
-        this.archive = this._io.readBitsIntLe(1) != 0;
-        this.reserved = this._io.readBitsIntLe(2);
-      }
-      Object.defineProperty(AttrFlags.prototype, 'longName', {
-        get: function() {
-          if (this._m_longName !== undefined)
-            return this._m_longName;
-          this._m_longName =  ((this.readOnly) && (this.hidden) && (this.system) && (this.volumeId)) ;
-          return this._m_longName;
-        }
-      });
-
-      return AttrFlags;
-    })();
-
-    return RootDirectoryRec;
-  })();
-
-  var RootDirectory = Vfat.RootDirectory = (function() {
-    function RootDirectory(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    RootDirectory.prototype._read = function() {
-      this.records = [];
-      for (var i = 0; i < this._root.bootSector.bpb.maxRootDirRec; i++) {
-        this.records.push(new RootDirectoryRec(this._io, this, this._root));
+      if (this.isFat32) {
+        this.ebpbFat32 = new ExtBiosParamBlockFat32(this._io, this, this._root);
       }
     }
 
-    return RootDirectory;
+    /**
+     * Determines if filesystem is FAT32 (true) or FAT12/16 (false)
+     * by analyzing some preliminary conditions in BPB. Used to
+     * determine whether we should parse post-BPB data as
+     * `ext_bios_param_block_fat16` or `ext_bios_param_block_fat32`.
+     */
+    Object.defineProperty(BootSector.prototype, 'isFat32', {
+      get: function() {
+        if (this._m_isFat32 !== undefined)
+          return this._m_isFat32;
+        this._m_isFat32 = this.bpb.maxRootDirRec == 0;
+        return this._m_isFat32;
+      }
+    });
+    Object.defineProperty(BootSector.prototype, 'lsPerFat', {
+      get: function() {
+        if (this._m_lsPerFat !== undefined)
+          return this._m_lsPerFat;
+        this._m_lsPerFat = (this.isFat32 ? this.ebpbFat32.lsPerFat : this.bpb.lsPerFat);
+        return this._m_lsPerFat;
+      }
+    });
+
+    /**
+     * Size of root directory in logical sectors
+     * @see FAT: General Overview of On-Disk Format, section "FAT Data Structure"
+     */
+    Object.defineProperty(BootSector.prototype, 'lsPerRootDir', {
+      get: function() {
+        if (this._m_lsPerRootDir !== undefined)
+          return this._m_lsPerRootDir;
+        this._m_lsPerRootDir = Math.floor(((this.bpb.maxRootDirRec * 32 + this.bpb.bytesPerLs) - 1) / this.bpb.bytesPerLs);
+        return this._m_lsPerRootDir;
+      }
+    });
+
+    /**
+     * Offset of FATs in bytes from start of filesystem
+     */
+    Object.defineProperty(BootSector.prototype, 'posFats', {
+      get: function() {
+        if (this._m_posFats !== undefined)
+          return this._m_posFats;
+        this._m_posFats = this.bpb.bytesPerLs * this.bpb.numReservedLs;
+        return this._m_posFats;
+      }
+    });
+
+    /**
+     * Offset of root directory in bytes from start of filesystem
+     */
+    Object.defineProperty(BootSector.prototype, 'posRootDir', {
+      get: function() {
+        if (this._m_posRootDir !== undefined)
+          return this._m_posRootDir;
+        this._m_posRootDir = this.bpb.bytesPerLs * (this.bpb.numReservedLs + this.lsPerFat * this.bpb.numFats);
+        return this._m_posRootDir;
+      }
+    });
+
+    /**
+     * Size of one FAT in bytes
+     */
+    Object.defineProperty(BootSector.prototype, 'sizeFat', {
+      get: function() {
+        if (this._m_sizeFat !== undefined)
+          return this._m_sizeFat;
+        this._m_sizeFat = this.bpb.bytesPerLs * this.lsPerFat;
+        return this._m_sizeFat;
+      }
+    });
+
+    /**
+     * Size of root directory in bytes
+     */
+    Object.defineProperty(BootSector.prototype, 'sizeRootDir', {
+      get: function() {
+        if (this._m_sizeRootDir !== undefined)
+          return this._m_sizeRootDir;
+        this._m_sizeRootDir = this.lsPerRootDir * this.bpb.bytesPerLs;
+        return this._m_sizeRootDir;
+      }
+    });
+
+    /**
+     * Basic BIOS parameter block, present in all versions of FAT
+     */
+
+    /**
+     * FAT12/16-specific extended BIOS parameter block
+     */
+
+    /**
+     * FAT32-specific extended BIOS parameter block
+     */
+
+    return BootSector;
   })();
 
   /**
@@ -411,7 +243,7 @@ var Vfat = (function() {
     function ExtBiosParamBlockFat16(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -450,6 +282,174 @@ var Vfat = (function() {
 
     return ExtBiosParamBlockFat16;
   })();
+
+  /**
+   * Extended BIOS Parameter Block for FAT32
+   */
+
+  var ExtBiosParamBlockFat32 = Vfat.ExtBiosParamBlockFat32 = (function() {
+    function ExtBiosParamBlockFat32(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    ExtBiosParamBlockFat32.prototype._read = function() {
+      this.lsPerFat = this._io.readU4le();
+      this.hasActiveFat = this._io.readBitsIntLe(1) != 0;
+      this.reserved1 = this._io.readBitsIntLe(3);
+      this.activeFatId = this._io.readBitsIntLe(4);
+      this._io.alignToByte();
+      this.reserved2 = this._io.readBytes(1);
+      if (!((KaitaiStream.byteArrayCompare(this.reserved2, new Uint8Array([0])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([0]), this.reserved2, this._io, "/types/ext_bios_param_block_fat32/seq/4");
+      }
+      this.fatVersion = this._io.readU2le();
+      this.rootDirStartClus = this._io.readU4le();
+      this.lsFsInfo = this._io.readU2le();
+      this.bootSectorsCopyStartLs = this._io.readU2le();
+      this.reserved3 = this._io.readBytes(12);
+      this.physDriveNum = this._io.readU1();
+      this.reserved4 = this._io.readU1();
+      this.extBootSign = this._io.readU1();
+      this.volumeId = this._io.readBytes(4);
+      this.partitionVolumeLabel = KaitaiStream.bytesToStr(KaitaiStream.bytesStripRight(this._io.readBytes(11), 32), "ASCII");
+      this.fsTypeStr = KaitaiStream.bytesToStr(KaitaiStream.bytesStripRight(this._io.readBytes(8), 32), "ASCII");
+    }
+
+    /**
+     * Logical sectors per file allocation table (corresponds with
+     * the old entry `ls_per_fat` in the DOS 2.0 BPB).
+     */
+
+    /**
+     * If true, then there is "active" FAT, which is designated in
+     * `active_fat` attribute. If false, all FATs are mirrored as
+     * usual.
+     */
+
+    /**
+     * Zero-based number of active FAT, if `has_active_fat`
+     * attribute is true.
+     */
+
+    /**
+     * Cluster number of root directory start, typically 2 if it
+     * contains no bad sector. (Microsoft's FAT32 implementation
+     * imposes an artificial limit of 65,535 entries per directory,
+     * whilst many third-party implementations do not.)
+     */
+
+    /**
+     * Logical sector number of FS Information Sector, typically 1,
+     * i.e., the second of the three FAT32 boot sectors. Values
+     * like 0 and 0xFFFF are used by some FAT32 implementations to
+     * designate abscence of FS Information Sector.
+     */
+
+    /**
+     * First logical sector number of a copy of the three FAT32
+     * boot sectors, typically 6.
+     */
+
+    /**
+     * Physical drive number (0x00 for (first) removable media,
+     * 0x80 for (first) fixed disk as per INT 13h).
+     */
+
+    /**
+     * Should be 0x29 to indicate that an EBPB with the following 3
+     * entries exists.
+     */
+
+    /**
+     * Volume ID (serial number).
+     * 
+     * Typically the serial number "xxxx-xxxx" is created by a
+     * 16-bit addition of both DX values returned by INT 21h/AH=2Ah
+     * (get system date) and INT 21h/AH=2Ch (get system time) for
+     * the high word and another 16-bit addition of both CX values
+     * for the low word of the serial number. Alternatively, some
+     * DR-DOS disk utilities provide a /# option to generate a
+     * human-readable time stamp "mmdd-hhmm" build from BCD-encoded
+     * 8-bit values for the month, day, hour and minute instead of
+     * a serial number.
+     */
+
+    return ExtBiosParamBlockFat32;
+  })();
+
+  var RootDirectory = Vfat.RootDirectory = (function() {
+    function RootDirectory(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    RootDirectory.prototype._read = function() {
+      this.records = [];
+      for (var i = 0; i < this._root.bootSector.bpb.maxRootDirRec; i++) {
+        this.records.push(new RootDirectoryRec(this._io, this, this._root));
+      }
+    }
+
+    return RootDirectory;
+  })();
+
+  var RootDirectoryRec = Vfat.RootDirectoryRec = (function() {
+    function RootDirectoryRec(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    RootDirectoryRec.prototype._read = function() {
+      this.fileName = this._io.readBytes(11);
+      this._raw_attrs = this._io.readBytes(1);
+      var _io__raw_attrs = new KaitaiStream(this._raw_attrs);
+      this.attrs = new AttrFlags(_io__raw_attrs, this, this._root);
+      this.reserved = this._io.readBytes(10);
+      this._raw_lastWriteTime = this._io.readBytes(4);
+      var _io__raw_lastWriteTime = new KaitaiStream(this._raw_lastWriteTime);
+      this.lastWriteTime = new DosDatetime_.DosDatetime(_io__raw_lastWriteTime, null, null);
+      this.startClus = this._io.readU2le();
+      this.fileSize = this._io.readU4le();
+    }
+
+    var AttrFlags = RootDirectoryRec.AttrFlags = (function() {
+      function AttrFlags(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+
+        this._read();
+      }
+      AttrFlags.prototype._read = function() {
+        this.readOnly = this._io.readBitsIntLe(1) != 0;
+        this.hidden = this._io.readBitsIntLe(1) != 0;
+        this.system = this._io.readBitsIntLe(1) != 0;
+        this.volumeId = this._io.readBitsIntLe(1) != 0;
+        this.isDirectory = this._io.readBitsIntLe(1) != 0;
+        this.archive = this._io.readBitsIntLe(1) != 0;
+        this.reserved = this._io.readBitsIntLe(2);
+      }
+      Object.defineProperty(AttrFlags.prototype, 'longName', {
+        get: function() {
+          if (this._m_longName !== undefined)
+            return this._m_longName;
+          this._m_longName =  ((this.readOnly) && (this.hidden) && (this.system) && (this.volumeId)) ;
+          return this._m_longName;
+        }
+      });
+
+      return AttrFlags;
+    })();
+
+    return RootDirectoryRec;
+  })();
   Object.defineProperty(Vfat.prototype, 'fats', {
     get: function() {
       if (this._m_fats !== undefined)
@@ -480,5 +480,5 @@ var Vfat = (function() {
 
   return Vfat;
 })();
-return Vfat;
-}));
+Vfat_.Vfat = Vfat;
+});

@@ -37,7 +37,7 @@ proc read*(_: typedesc[MonomakhSaprChg], io: KaitaiStream, root: KaitaiStruct, p
   this.root = root
   this.parent = parent
 
-  let titleExpr = encode(this.io.readBytes(int(10)), "ascii")
+  let titleExpr = encode(this.io.readBytes(int(10)), "ASCII")
   this.title = titleExpr
   block:
     var i: int
@@ -57,7 +57,7 @@ proc read*(_: typedesc[MonomakhSaprChg_Block], io: KaitaiStream, root: KaitaiStr
   this.root = root
   this.parent = parent
 
-  let headerExpr = encode(this.io.readBytes(int(13)), "ascii")
+  let headerExpr = encode(this.io.readBytes(int(13)), "ASCII")
   this.header = headerExpr
   let fileSizeExpr = this.io.readU8le()
   this.fileSize = fileSizeExpr

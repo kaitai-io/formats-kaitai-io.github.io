@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream', './EthernetFrame'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./EthernetFrame'));
+    define(['exports', 'kaitai-struct/KaitaiStream', './EthernetFrame'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'), require('./EthernetFrame'));
   } else {
-    root.PacketPpi = factory(root.KaitaiStream, root.EthernetFrame);
+    factory(root.PacketPpi || (root.PacketPpi = {}), root.KaitaiStream, root.EthernetFrame || (root.EthernetFrame = {}));
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, EthernetFrame) {
+})(typeof self !== 'undefined' ? self : this, function (PacketPpi_, KaitaiStream, EthernetFrame_) {
 /**
  * PPI is a standard for link layer packet encapsulation, proposed as
  * generic extensible container to store both captured in-band data and
@@ -21,22 +21,6 @@
  */
 
 var PacketPpi = (function() {
-  PacketPpi.PfhType = Object.freeze({
-    RADIO_802_11_COMMON: 2,
-    RADIO_802_11N_MAC_EXT: 3,
-    RADIO_802_11N_MAC_PHY_EXT: 4,
-    SPECTRUM_MAP: 5,
-    PROCESS_INFO: 6,
-    CAPTURE_INFO: 7,
-
-    2: "RADIO_802_11_COMMON",
-    3: "RADIO_802_11N_MAC_EXT",
-    4: "RADIO_802_11N_MAC_PHY_EXT",
-    5: "SPECTRUM_MAP",
-    6: "PROCESS_INFO",
-    7: "CAPTURE_INFO",
-  });
-
   PacketPpi.Linktype = Object.freeze({
     NULL_LINKTYPE: 0,
     ETHERNET: 1,
@@ -249,6 +233,22 @@ var PacketPpi = (function() {
     264: "ISO_14443",
   });
 
+  PacketPpi.PfhType = Object.freeze({
+    RADIO_802_11_COMMON: 2,
+    RADIO_802_11N_MAC_EXT: 3,
+    RADIO_802_11N_MAC_PHY_EXT: 4,
+    SPECTRUM_MAP: 5,
+    PROCESS_INFO: 6,
+    CAPTURE_INFO: 7,
+
+    2: "RADIO_802_11_COMMON",
+    3: "RADIO_802_11N_MAC_EXT",
+    4: "RADIO_802_11N_MAC_PHY_EXT",
+    5: "SPECTRUM_MAP",
+    6: "PROCESS_INFO",
+    7: "CAPTURE_INFO",
+  });
+
   function PacketPpi(_io, _parent, _root) {
     this._io = _io;
     this._parent = _parent;
@@ -258,19 +258,19 @@ var PacketPpi = (function() {
   }
   PacketPpi.prototype._read = function() {
     this.header = new PacketPpiHeader(this._io, this, this._root);
-    this._raw_fields = this._io.readBytes((this.header.pphLen - 8));
+    this._raw_fields = this._io.readBytes(this.header.pphLen - 8);
     var _io__raw_fields = new KaitaiStream(this._raw_fields);
     this.fields = new PacketPpiFields(_io__raw_fields, this, this._root);
     switch (this.header.pphDlt) {
-    case PacketPpi.Linktype.PPI:
-      this._raw_body = this._io.readBytesFull();
-      var _io__raw_body = new KaitaiStream(this._raw_body);
-      this.body = new PacketPpi(_io__raw_body, this, null);
-      break;
     case PacketPpi.Linktype.ETHERNET:
       this._raw_body = this._io.readBytesFull();
       var _io__raw_body = new KaitaiStream(this._raw_body);
-      this.body = new EthernetFrame(_io__raw_body, this, null);
+      this.body = new EthernetFrame_.EthernetFrame(_io__raw_body, null, null);
+      break;
+    case PacketPpi.Linktype.PPI:
+      this._raw_body = this._io.readBytesFull();
+      var _io__raw_body = new KaitaiStream(this._raw_body);
+      this.body = new PacketPpi(_io__raw_body, this, this._root);
       break;
     default:
       this.body = this._io.readBytesFull();
@@ -278,53 +278,11 @@ var PacketPpi = (function() {
     }
   }
 
-  var PacketPpiFields = PacketPpi.PacketPpiFields = (function() {
-    function PacketPpiFields(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    PacketPpiFields.prototype._read = function() {
-      this.entries = [];
-      var i = 0;
-      while (!this._io.isEof()) {
-        this.entries.push(new PacketPpiField(this._io, this, this._root));
-        i++;
-      }
-    }
-
-    return PacketPpiFields;
-  })();
-
-  /**
-   * @see {@link https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf|PPI header format spec, section 4.1.3}
-   */
-
-  var Radio80211nMacExtBody = PacketPpi.Radio80211nMacExtBody = (function() {
-    function Radio80211nMacExtBody(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Radio80211nMacExtBody.prototype._read = function() {
-      this.flags = new MacFlags(this._io, this, this._root);
-      this.aMpduId = this._io.readU4le();
-      this.numDelimiters = this._io.readU1();
-      this.reserved = this._io.readBytes(3);
-    }
-
-    return Radio80211nMacExtBody;
-  })();
-
   var MacFlags = PacketPpi.MacFlags = (function() {
     function MacFlags(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -376,60 +334,11 @@ var PacketPpi = (function() {
    * @see {@link https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf|PPI header format spec, section 3.1}
    */
 
-  var PacketPpiHeader = PacketPpi.PacketPpiHeader = (function() {
-    function PacketPpiHeader(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    PacketPpiHeader.prototype._read = function() {
-      this.pphVersion = this._io.readU1();
-      this.pphFlags = this._io.readU1();
-      this.pphLen = this._io.readU2le();
-      this.pphDlt = this._io.readU4le();
-    }
-
-    return PacketPpiHeader;
-  })();
-
-  /**
-   * @see {@link https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf|PPI header format spec, section 4.1.2}
-   */
-
-  var Radio80211CommonBody = PacketPpi.Radio80211CommonBody = (function() {
-    function Radio80211CommonBody(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Radio80211CommonBody.prototype._read = function() {
-      this.tsfTimer = this._io.readU8le();
-      this.flags = this._io.readU2le();
-      this.rate = this._io.readU2le();
-      this.channelFreq = this._io.readU2le();
-      this.channelFlags = this._io.readU2le();
-      this.fhssHopset = this._io.readU1();
-      this.fhssPattern = this._io.readU1();
-      this.dbmAntsignal = this._io.readS1();
-      this.dbmAntnoise = this._io.readS1();
-    }
-
-    return Radio80211CommonBody;
-  })();
-
-  /**
-   * @see {@link https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf|PPI header format spec, section 3.1}
-   */
-
   var PacketPpiField = PacketPpi.PacketPpiField = (function() {
     function PacketPpiField(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -461,6 +370,97 @@ var PacketPpi = (function() {
     return PacketPpiField;
   })();
 
+  var PacketPpiFields = PacketPpi.PacketPpiFields = (function() {
+    function PacketPpiFields(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    PacketPpiFields.prototype._read = function() {
+      this.entries = [];
+      var i = 0;
+      while (!this._io.isEof()) {
+        this.entries.push(new PacketPpiField(this._io, this, this._root));
+        i++;
+      }
+    }
+
+    return PacketPpiFields;
+  })();
+
+  /**
+   * @see {@link https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf|PPI header format spec, section 3.1}
+   */
+
+  var PacketPpiHeader = PacketPpi.PacketPpiHeader = (function() {
+    function PacketPpiHeader(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    PacketPpiHeader.prototype._read = function() {
+      this.pphVersion = this._io.readU1();
+      this.pphFlags = this._io.readU1();
+      this.pphLen = this._io.readU2le();
+      this.pphDlt = this._io.readU4le();
+    }
+
+    return PacketPpiHeader;
+  })();
+
+  /**
+   * @see {@link https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf|PPI header format spec, section 4.1.2}
+   */
+
+  var Radio80211CommonBody = PacketPpi.Radio80211CommonBody = (function() {
+    function Radio80211CommonBody(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Radio80211CommonBody.prototype._read = function() {
+      this.tsfTimer = this._io.readU8le();
+      this.flags = this._io.readU2le();
+      this.rate = this._io.readU2le();
+      this.channelFreq = this._io.readU2le();
+      this.channelFlags = this._io.readU2le();
+      this.fhssHopset = this._io.readU1();
+      this.fhssPattern = this._io.readU1();
+      this.dbmAntsignal = this._io.readS1();
+      this.dbmAntnoise = this._io.readS1();
+    }
+
+    return Radio80211CommonBody;
+  })();
+
+  /**
+   * @see {@link https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf|PPI header format spec, section 4.1.3}
+   */
+
+  var Radio80211nMacExtBody = PacketPpi.Radio80211nMacExtBody = (function() {
+    function Radio80211nMacExtBody(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Radio80211nMacExtBody.prototype._read = function() {
+      this.flags = new MacFlags(this._io, this, this._root);
+      this.aMpduId = this._io.readU4le();
+      this.numDelimiters = this._io.readU1();
+      this.reserved = this._io.readBytes(3);
+    }
+
+    return Radio80211nMacExtBody;
+  })();
+
   /**
    * @see {@link https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf|PPI header format spec, section 4.1.4}
    */
@@ -469,7 +469,7 @@ var PacketPpi = (function() {
     function Radio80211nMacPhyExtBody(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -504,7 +504,7 @@ var PacketPpi = (function() {
       function ChannelFlags(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -559,7 +559,7 @@ var PacketPpi = (function() {
       function SignalNoise(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -620,5 +620,5 @@ var PacketPpi = (function() {
 
   return PacketPpi;
 })();
-return PacketPpi;
-}));
+PacketPpi_.PacketPpi = PacketPpi;
+});

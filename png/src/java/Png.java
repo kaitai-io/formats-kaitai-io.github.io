@@ -8,7 +8,8 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Arrays;
 import java.util.ArrayList;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 
 /**
@@ -20,21 +21,6 @@ import java.nio.charset.Charset;
 public class Png extends KaitaiStruct {
     public static Png fromFile(String fileName) throws IOException {
         return new Png(new ByteBufferKaitaiStream(fileName));
-    }
-
-    public enum PhysUnit {
-        UNKNOWN(0),
-        METER(1);
-
-        private final long id;
-        PhysUnit(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map<Long, PhysUnit> byId = new HashMap<Long, PhysUnit>(2);
-        static {
-            for (PhysUnit e : PhysUnit.values())
-                byId.put(e.id(), e);
-        }
-        public static PhysUnit byId(long id) { return byId.get(id); }
     }
 
     public enum BlendOpValues {
@@ -50,6 +36,24 @@ public class Png extends KaitaiStruct {
                 byId.put(e.id(), e);
         }
         public static BlendOpValues byId(long id) { return byId.get(id); }
+    }
+
+    public enum ColorType {
+        GREYSCALE(0),
+        TRUECOLOR(2),
+        INDEXED(3),
+        GREYSCALE_ALPHA(4),
+        TRUECOLOR_ALPHA(6);
+
+        private final long id;
+        ColorType(long id) { this.id = id; }
+        public long id() { return id; }
+        private static final Map<Long, ColorType> byId = new HashMap<Long, ColorType>(5);
+        static {
+            for (ColorType e : ColorType.values())
+                byId.put(e.id(), e);
+        }
+        public static ColorType byId(long id) { return byId.get(id); }
     }
 
     public enum CompressionMethods {
@@ -82,22 +86,19 @@ public class Png extends KaitaiStruct {
         public static DisposeOpValues byId(long id) { return byId.get(id); }
     }
 
-    public enum ColorType {
-        GREYSCALE(0),
-        TRUECOLOR(2),
-        INDEXED(3),
-        GREYSCALE_ALPHA(4),
-        TRUECOLOR_ALPHA(6);
+    public enum PhysUnit {
+        UNKNOWN(0),
+        METER(1);
 
         private final long id;
-        ColorType(long id) { this.id = id; }
+        PhysUnit(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, ColorType> byId = new HashMap<Long, ColorType>(5);
+        private static final Map<Long, PhysUnit> byId = new HashMap<Long, PhysUnit>(2);
         static {
-            for (ColorType e : ColorType.values())
+            for (PhysUnit e : PhysUnit.values())
                 byId.put(e.id(), e);
         }
-        public static ColorType byId(long id) { return byId.get(id); }
+        public static PhysUnit byId(long id) { return byId.get(id); }
     }
 
     public Png(KaitaiStream _io) {
@@ -116,16 +117,16 @@ public class Png extends KaitaiStruct {
     }
     private void _read() {
         this.magic = this._io.readBytes(8);
-        if (!(Arrays.equals(magic(), new byte[] { -119, 80, 78, 71, 13, 10, 26, 10 }))) {
-            throw new KaitaiStream.ValidationNotEqualError(new byte[] { -119, 80, 78, 71, 13, 10, 26, 10 }, magic(), _io(), "/seq/0");
+        if (!(Arrays.equals(this.magic, new byte[] { -119, 80, 78, 71, 13, 10, 26, 10 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { -119, 80, 78, 71, 13, 10, 26, 10 }, this.magic, this._io, "/seq/0");
         }
         this.ihdrLen = this._io.readU4be();
-        if (!(ihdrLen() == 13)) {
-            throw new KaitaiStream.ValidationNotEqualError(13, ihdrLen(), _io(), "/seq/1");
+        if (!(this.ihdrLen == 13)) {
+            throw new KaitaiStream.ValidationNotEqualError(13, this.ihdrLen, this._io, "/seq/1");
         }
         this.ihdrType = this._io.readBytes(4);
-        if (!(Arrays.equals(ihdrType(), new byte[] { 73, 72, 68, 82 }))) {
-            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 73, 72, 68, 82 }, ihdrType(), _io(), "/seq/2");
+        if (!(Arrays.equals(this.ihdrType, new byte[] { 73, 72, 68, 82 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 73, 72, 68, 82 }, this.ihdrType, this._io, "/seq/2");
         }
         this.ihdr = new IhdrChunk(this._io, this, _root);
         this.ihdrCrc = this._io.readBytes(4);
@@ -140,637 +141,57 @@ public class Png extends KaitaiStruct {
             } while (!( ((_it.type().equals("IEND")) || (_io().isEof())) ));
         }
     }
-    public static class Rgb extends KaitaiStruct {
-        public static Rgb fromFile(String fileName) throws IOException {
-            return new Rgb(new ByteBufferKaitaiStream(fileName));
-        }
 
-        public Rgb(KaitaiStream _io) {
-            this(_io, null, null);
+    public void _fetchInstances() {
+        this.ihdr._fetchInstances();
+        for (int i = 0; i < this.chunks.size(); i++) {
+            this.chunks.get(((Number) (i)).intValue())._fetchInstances();
         }
-
-        public Rgb(KaitaiStream _io, Png.PlteChunk _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Rgb(KaitaiStream _io, Png.PlteChunk _parent, Png _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.r = this._io.readU1();
-            this.g = this._io.readU1();
-            this.b = this._io.readU1();
-        }
-        private int r;
-        private int g;
-        private int b;
-        private Png _root;
-        private Png.PlteChunk _parent;
-        public int r() { return r; }
-        public int g() { return g; }
-        public int b() { return b; }
-        public Png _root() { return _root; }
-        public Png.PlteChunk _parent() { return _parent; }
-    }
-    public static class Chunk extends KaitaiStruct {
-        public static Chunk fromFile(String fileName) throws IOException {
-            return new Chunk(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Chunk(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Chunk(KaitaiStream _io, Png _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Chunk(KaitaiStream _io, Png _parent, Png _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.len = this._io.readU4be();
-            this.type = new String(this._io.readBytes(4), Charset.forName("UTF-8"));
-            switch (type()) {
-            case "iTXt": {
-                this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new InternationalTextChunk(_io__raw_body, this, _root);
-                break;
-            }
-            case "gAMA": {
-                this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new GamaChunk(_io__raw_body, this, _root);
-                break;
-            }
-            case "tIME": {
-                this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new TimeChunk(_io__raw_body, this, _root);
-                break;
-            }
-            case "PLTE": {
-                this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new PlteChunk(_io__raw_body, this, _root);
-                break;
-            }
-            case "bKGD": {
-                this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new BkgdChunk(_io__raw_body, this, _root);
-                break;
-            }
-            case "pHYs": {
-                this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new PhysChunk(_io__raw_body, this, _root);
-                break;
-            }
-            case "fdAT": {
-                this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new FrameDataChunk(_io__raw_body, this, _root);
-                break;
-            }
-            case "tEXt": {
-                this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new TextChunk(_io__raw_body, this, _root);
-                break;
-            }
-            case "cHRM": {
-                this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new ChrmChunk(_io__raw_body, this, _root);
-                break;
-            }
-            case "acTL": {
-                this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new AnimationControlChunk(_io__raw_body, this, _root);
-                break;
-            }
-            case "sRGB": {
-                this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new SrgbChunk(_io__raw_body, this, _root);
-                break;
-            }
-            case "zTXt": {
-                this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new CompressedTextChunk(_io__raw_body, this, _root);
-                break;
-            }
-            case "fcTL": {
-                this._raw_body = this._io.readBytes(len());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new FrameControlChunk(_io__raw_body, this, _root);
-                break;
-            }
-            default: {
-                this.body = this._io.readBytes(len());
-                break;
-            }
-            }
-            this.crc = this._io.readBytes(4);
-        }
-        private long len;
-        private String type;
-        private Object body;
-        private byte[] crc;
-        private Png _root;
-        private Png _parent;
-        private byte[] _raw_body;
-        public long len() { return len; }
-        public String type() { return type; }
-        public Object body() { return body; }
-        public byte[] crc() { return crc; }
-        public Png _root() { return _root; }
-        public Png _parent() { return _parent; }
-        public byte[] _raw_body() { return _raw_body; }
     }
 
     /**
-     * Background chunk for images with indexed palette.
+     * @see <a href="https://wiki.mozilla.org/APNG_Specification#.60acTL.60:_The_Animation_Control_Chunk">Source</a>
      */
-    public static class BkgdIndexed extends KaitaiStruct {
-        public static BkgdIndexed fromFile(String fileName) throws IOException {
-            return new BkgdIndexed(new ByteBufferKaitaiStream(fileName));
+    public static class AnimationControlChunk extends KaitaiStruct {
+        public static AnimationControlChunk fromFile(String fileName) throws IOException {
+            return new AnimationControlChunk(new ByteBufferKaitaiStream(fileName));
         }
 
-        public BkgdIndexed(KaitaiStream _io) {
+        public AnimationControlChunk(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public BkgdIndexed(KaitaiStream _io, Png.BkgdChunk _parent) {
+        public AnimationControlChunk(KaitaiStream _io, Png.Chunk _parent) {
             this(_io, _parent, null);
         }
 
-        public BkgdIndexed(KaitaiStream _io, Png.BkgdChunk _parent, Png _root) {
+        public AnimationControlChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.paletteIndex = this._io.readU1();
-        }
-        private int paletteIndex;
-        private Png _root;
-        private Png.BkgdChunk _parent;
-        public int paletteIndex() { return paletteIndex; }
-        public Png _root() { return _root; }
-        public Png.BkgdChunk _parent() { return _parent; }
-    }
-    public static class Point extends KaitaiStruct {
-        public static Point fromFile(String fileName) throws IOException {
-            return new Point(new ByteBufferKaitaiStream(fileName));
+            this.numFrames = this._io.readU4be();
+            this.numPlays = this._io.readU4be();
         }
 
-        public Point(KaitaiStream _io) {
-            this(_io, null, null);
+        public void _fetchInstances() {
         }
-
-        public Point(KaitaiStream _io, Png.ChrmChunk _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Point(KaitaiStream _io, Png.ChrmChunk _parent, Png _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.xInt = this._io.readU4be();
-            this.yInt = this._io.readU4be();
-        }
-        private Double x;
-        public Double x() {
-            if (this.x != null)
-                return this.x;
-            double _tmp = (double) ((xInt() / 100000.0));
-            this.x = _tmp;
-            return this.x;
-        }
-        private Double y;
-        public Double y() {
-            if (this.y != null)
-                return this.y;
-            double _tmp = (double) ((yInt() / 100000.0));
-            this.y = _tmp;
-            return this.y;
-        }
-        private long xInt;
-        private long yInt;
-        private Png _root;
-        private Png.ChrmChunk _parent;
-        public long xInt() { return xInt; }
-        public long yInt() { return yInt; }
-        public Png _root() { return _root; }
-        public Png.ChrmChunk _parent() { return _parent; }
-    }
-
-    /**
-     * Background chunk for greyscale images.
-     */
-    public static class BkgdGreyscale extends KaitaiStruct {
-        public static BkgdGreyscale fromFile(String fileName) throws IOException {
-            return new BkgdGreyscale(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public BkgdGreyscale(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public BkgdGreyscale(KaitaiStream _io, Png.BkgdChunk _parent) {
-            this(_io, _parent, null);
-        }
-
-        public BkgdGreyscale(KaitaiStream _io, Png.BkgdChunk _parent, Png _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.value = this._io.readU2be();
-        }
-        private int value;
-        private Png _root;
-        private Png.BkgdChunk _parent;
-        public int value() { return value; }
-        public Png _root() { return _root; }
-        public Png.BkgdChunk _parent() { return _parent; }
-    }
-
-    /**
-     * @see <a href="https://www.w3.org/TR/png/#11cHRM">Source</a>
-     */
-    public static class ChrmChunk extends KaitaiStruct {
-        public static ChrmChunk fromFile(String fileName) throws IOException {
-            return new ChrmChunk(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public ChrmChunk(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public ChrmChunk(KaitaiStream _io, Png.Chunk _parent) {
-            this(_io, _parent, null);
-        }
-
-        public ChrmChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.whitePoint = new Point(this._io, this, _root);
-            this.red = new Point(this._io, this, _root);
-            this.green = new Point(this._io, this, _root);
-            this.blue = new Point(this._io, this, _root);
-        }
-        private Point whitePoint;
-        private Point red;
-        private Point green;
-        private Point blue;
-        private Png _root;
-        private Png.Chunk _parent;
-        public Point whitePoint() { return whitePoint; }
-        public Point red() { return red; }
-        public Point green() { return green; }
-        public Point blue() { return blue; }
-        public Png _root() { return _root; }
-        public Png.Chunk _parent() { return _parent; }
-    }
-
-    /**
-     * @see <a href="https://www.w3.org/TR/png/#11IHDR">Source</a>
-     */
-    public static class IhdrChunk extends KaitaiStruct {
-        public static IhdrChunk fromFile(String fileName) throws IOException {
-            return new IhdrChunk(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public IhdrChunk(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public IhdrChunk(KaitaiStream _io, Png _parent) {
-            this(_io, _parent, null);
-        }
-
-        public IhdrChunk(KaitaiStream _io, Png _parent, Png _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.width = this._io.readU4be();
-            this.height = this._io.readU4be();
-            this.bitDepth = this._io.readU1();
-            this.colorType = Png.ColorType.byId(this._io.readU1());
-            this.compressionMethod = this._io.readU1();
-            this.filterMethod = this._io.readU1();
-            this.interlaceMethod = this._io.readU1();
-        }
-        private long width;
-        private long height;
-        private int bitDepth;
-        private ColorType colorType;
-        private int compressionMethod;
-        private int filterMethod;
-        private int interlaceMethod;
-        private Png _root;
-        private Png _parent;
-        public long width() { return width; }
-        public long height() { return height; }
-        public int bitDepth() { return bitDepth; }
-        public ColorType colorType() { return colorType; }
-        public int compressionMethod() { return compressionMethod; }
-        public int filterMethod() { return filterMethod; }
-        public int interlaceMethod() { return interlaceMethod; }
-        public Png _root() { return _root; }
-        public Png _parent() { return _parent; }
-    }
-
-    /**
-     * @see <a href="https://www.w3.org/TR/png/#11PLTE">Source</a>
-     */
-    public static class PlteChunk extends KaitaiStruct {
-        public static PlteChunk fromFile(String fileName) throws IOException {
-            return new PlteChunk(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public PlteChunk(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public PlteChunk(KaitaiStream _io, Png.Chunk _parent) {
-            this(_io, _parent, null);
-        }
-
-        public PlteChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.entries = new ArrayList<Rgb>();
-            {
-                int i = 0;
-                while (!this._io.isEof()) {
-                    this.entries.add(new Rgb(this._io, this, _root));
-                    i++;
-                }
-            }
-        }
-        private ArrayList<Rgb> entries;
-        private Png _root;
-        private Png.Chunk _parent;
-        public ArrayList<Rgb> entries() { return entries; }
-        public Png _root() { return _root; }
-        public Png.Chunk _parent() { return _parent; }
-    }
-
-    /**
-     * @see <a href="https://www.w3.org/TR/png/#11sRGB">Source</a>
-     */
-    public static class SrgbChunk extends KaitaiStruct {
-        public static SrgbChunk fromFile(String fileName) throws IOException {
-            return new SrgbChunk(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public enum Intent {
-            PERCEPTUAL(0),
-            RELATIVE_COLORIMETRIC(1),
-            SATURATION(2),
-            ABSOLUTE_COLORIMETRIC(3);
-
-            private final long id;
-            Intent(long id) { this.id = id; }
-            public long id() { return id; }
-            private static final Map<Long, Intent> byId = new HashMap<Long, Intent>(4);
-            static {
-                for (Intent e : Intent.values())
-                    byId.put(e.id(), e);
-            }
-            public static Intent byId(long id) { return byId.get(id); }
-        }
-
-        public SrgbChunk(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public SrgbChunk(KaitaiStream _io, Png.Chunk _parent) {
-            this(_io, _parent, null);
-        }
-
-        public SrgbChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.renderIntent = Intent.byId(this._io.readU1());
-        }
-        private Intent renderIntent;
-        private Png _root;
-        private Png.Chunk _parent;
-        public Intent renderIntent() { return renderIntent; }
-        public Png _root() { return _root; }
-        public Png.Chunk _parent() { return _parent; }
-    }
-
-    /**
-     * Compressed text chunk effectively allows to store key-value
-     * string pairs in PNG container, compressing "value" part (which
-     * can be quite lengthy) with zlib compression.
-     * @see <a href="https://www.w3.org/TR/png/#11zTXt">Source</a>
-     */
-    public static class CompressedTextChunk extends KaitaiStruct {
-        public static CompressedTextChunk fromFile(String fileName) throws IOException {
-            return new CompressedTextChunk(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public CompressedTextChunk(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public CompressedTextChunk(KaitaiStream _io, Png.Chunk _parent) {
-            this(_io, _parent, null);
-        }
-
-        public CompressedTextChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.keyword = new String(this._io.readBytesTerm((byte) 0, false, true, true), Charset.forName("UTF-8"));
-            this.compressionMethod = Png.CompressionMethods.byId(this._io.readU1());
-            this._raw_textDatastream = this._io.readBytesFull();
-            this.textDatastream = KaitaiStream.processZlib(_raw_textDatastream);
-        }
-        private String keyword;
-        private CompressionMethods compressionMethod;
-        private byte[] textDatastream;
-        private Png _root;
-        private Png.Chunk _parent;
-        private byte[] _raw_textDatastream;
-
-        /**
-         * Indicates purpose of the following text data.
-         */
-        public String keyword() { return keyword; }
-        public CompressionMethods compressionMethod() { return compressionMethod; }
-        public byte[] textDatastream() { return textDatastream; }
-        public Png _root() { return _root; }
-        public Png.Chunk _parent() { return _parent; }
-        public byte[] _raw_textDatastream() { return _raw_textDatastream; }
-    }
-
-    /**
-     * @see <a href="https://wiki.mozilla.org/APNG_Specification#.60fdAT.60:_The_Frame_Data_Chunk">Source</a>
-     */
-    public static class FrameDataChunk extends KaitaiStruct {
-        public static FrameDataChunk fromFile(String fileName) throws IOException {
-            return new FrameDataChunk(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public FrameDataChunk(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public FrameDataChunk(KaitaiStream _io, Png.Chunk _parent) {
-            this(_io, _parent, null);
-        }
-
-        public FrameDataChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.sequenceNumber = this._io.readU4be();
-            this.frameData = this._io.readBytesFull();
-        }
-        private long sequenceNumber;
-        private byte[] frameData;
+        private long numFrames;
+        private long numPlays;
         private Png _root;
         private Png.Chunk _parent;
 
         /**
-         * Sequence number of the animation chunk. The fcTL and fdAT chunks
-         * have a 4 byte sequence number. Both chunk types share the sequence.
-         * The first fcTL chunk must contain sequence number 0, and the sequence
-         * numbers in the remaining fcTL and fdAT chunks must be in order, with
-         * no gaps or duplicates.
+         * Number of frames, must be equal to the number of `frame_control_chunk`s
          */
-        public long sequenceNumber() { return sequenceNumber; }
+        public long numFrames() { return numFrames; }
 
         /**
-         * Frame data for the frame. At least one fdAT chunk is required for
-         * each frame. The compressed datastream is the concatenation of the
-         * contents of the data fields of all the fdAT chunks within a frame.
+         * Number of times to loop, 0 indicates infinite looping.
          */
-        public byte[] frameData() { return frameData; }
-        public Png _root() { return _root; }
-        public Png.Chunk _parent() { return _parent; }
-    }
-
-    /**
-     * Background chunk for truecolor images.
-     */
-    public static class BkgdTruecolor extends KaitaiStruct {
-        public static BkgdTruecolor fromFile(String fileName) throws IOException {
-            return new BkgdTruecolor(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public BkgdTruecolor(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public BkgdTruecolor(KaitaiStream _io, Png.BkgdChunk _parent) {
-            this(_io, _parent, null);
-        }
-
-        public BkgdTruecolor(KaitaiStream _io, Png.BkgdChunk _parent, Png _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.red = this._io.readU2be();
-            this.green = this._io.readU2be();
-            this.blue = this._io.readU2be();
-        }
-        private int red;
-        private int green;
-        private int blue;
-        private Png _root;
-        private Png.BkgdChunk _parent;
-        public int red() { return red; }
-        public int green() { return green; }
-        public int blue() { return blue; }
-        public Png _root() { return _root; }
-        public Png.BkgdChunk _parent() { return _parent; }
-    }
-
-    /**
-     * @see <a href="https://www.w3.org/TR/png/#11gAMA">Source</a>
-     */
-    public static class GamaChunk extends KaitaiStruct {
-        public static GamaChunk fromFile(String fileName) throws IOException {
-            return new GamaChunk(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public GamaChunk(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public GamaChunk(KaitaiStream _io, Png.Chunk _parent) {
-            this(_io, _parent, null);
-        }
-
-        public GamaChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.gammaInt = this._io.readU4be();
-        }
-        private Double gammaRatio;
-        public Double gammaRatio() {
-            if (this.gammaRatio != null)
-                return this.gammaRatio;
-            double _tmp = (double) ((100000.0 / gammaInt()));
-            this.gammaRatio = _tmp;
-            return this.gammaRatio;
-        }
-        private long gammaInt;
-        private Png _root;
-        private Png.Chunk _parent;
-        public long gammaInt() { return gammaInt; }
+        public long numPlays() { return numPlays; }
         public Png _root() { return _root; }
         public Png.Chunk _parent() { return _parent; }
     }
@@ -804,24 +225,54 @@ public class Png extends KaitaiStruct {
                 ColorType on = _root().ihdr().colorType();
                 if (on != null) {
                     switch (_root().ihdr().colorType()) {
-                    case INDEXED: {
-                        this.bkgd = new BkgdIndexed(this._io, this, _root);
-                        break;
-                    }
-                    case TRUECOLOR_ALPHA: {
-                        this.bkgd = new BkgdTruecolor(this._io, this, _root);
+                    case GREYSCALE: {
+                        this.bkgd = new BkgdGreyscale(this._io, this, _root);
                         break;
                     }
                     case GREYSCALE_ALPHA: {
                         this.bkgd = new BkgdGreyscale(this._io, this, _root);
                         break;
                     }
+                    case INDEXED: {
+                        this.bkgd = new BkgdIndexed(this._io, this, _root);
+                        break;
+                    }
                     case TRUECOLOR: {
                         this.bkgd = new BkgdTruecolor(this._io, this, _root);
                         break;
                     }
+                    case TRUECOLOR_ALPHA: {
+                        this.bkgd = new BkgdTruecolor(this._io, this, _root);
+                        break;
+                    }
+                    }
+                }
+            }
+        }
+
+        public void _fetchInstances() {
+            {
+                ColorType on = _root().ihdr().colorType();
+                if (on != null) {
+                    switch (_root().ihdr().colorType()) {
                     case GREYSCALE: {
-                        this.bkgd = new BkgdGreyscale(this._io, this, _root);
+                        ((BkgdGreyscale) (this.bkgd))._fetchInstances();
+                        break;
+                    }
+                    case GREYSCALE_ALPHA: {
+                        ((BkgdGreyscale) (this.bkgd))._fetchInstances();
+                        break;
+                    }
+                    case INDEXED: {
+                        ((BkgdIndexed) (this.bkgd))._fetchInstances();
+                        break;
+                    }
+                    case TRUECOLOR: {
+                        ((BkgdTruecolor) (this.bkgd))._fetchInstances();
+                        break;
+                    }
+                    case TRUECOLOR_ALPHA: {
+                        ((BkgdTruecolor) (this.bkgd))._fetchInstances();
                         break;
                     }
                     }
@@ -837,54 +288,386 @@ public class Png extends KaitaiStruct {
     }
 
     /**
-     * "Physical size" chunk stores data that allows to translate
-     * logical pixels into physical units (meters, etc) and vice-versa.
-     * @see <a href="https://www.w3.org/TR/png/#11pHYs">Source</a>
+     * Background chunk for greyscale images.
      */
-    public static class PhysChunk extends KaitaiStruct {
-        public static PhysChunk fromFile(String fileName) throws IOException {
-            return new PhysChunk(new ByteBufferKaitaiStream(fileName));
+    public static class BkgdGreyscale extends KaitaiStruct {
+        public static BkgdGreyscale fromFile(String fileName) throws IOException {
+            return new BkgdGreyscale(new ByteBufferKaitaiStream(fileName));
         }
 
-        public PhysChunk(KaitaiStream _io) {
+        public BkgdGreyscale(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public PhysChunk(KaitaiStream _io, Png.Chunk _parent) {
+        public BkgdGreyscale(KaitaiStream _io, Png.BkgdChunk _parent) {
             this(_io, _parent, null);
         }
 
-        public PhysChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
+        public BkgdGreyscale(KaitaiStream _io, Png.BkgdChunk _parent, Png _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.pixelsPerUnitX = this._io.readU4be();
-            this.pixelsPerUnitY = this._io.readU4be();
-            this.unit = Png.PhysUnit.byId(this._io.readU1());
+            this.value = this._io.readU2be();
         }
-        private long pixelsPerUnitX;
-        private long pixelsPerUnitY;
-        private PhysUnit unit;
+
+        public void _fetchInstances() {
+        }
+        private int value;
+        private Png _root;
+        private Png.BkgdChunk _parent;
+        public int value() { return value; }
+        public Png _root() { return _root; }
+        public Png.BkgdChunk _parent() { return _parent; }
+    }
+
+    /**
+     * Background chunk for images with indexed palette.
+     */
+    public static class BkgdIndexed extends KaitaiStruct {
+        public static BkgdIndexed fromFile(String fileName) throws IOException {
+            return new BkgdIndexed(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public BkgdIndexed(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public BkgdIndexed(KaitaiStream _io, Png.BkgdChunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public BkgdIndexed(KaitaiStream _io, Png.BkgdChunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.paletteIndex = this._io.readU1();
+        }
+
+        public void _fetchInstances() {
+        }
+        private int paletteIndex;
+        private Png _root;
+        private Png.BkgdChunk _parent;
+        public int paletteIndex() { return paletteIndex; }
+        public Png _root() { return _root; }
+        public Png.BkgdChunk _parent() { return _parent; }
+    }
+
+    /**
+     * Background chunk for truecolor images.
+     */
+    public static class BkgdTruecolor extends KaitaiStruct {
+        public static BkgdTruecolor fromFile(String fileName) throws IOException {
+            return new BkgdTruecolor(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public BkgdTruecolor(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public BkgdTruecolor(KaitaiStream _io, Png.BkgdChunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public BkgdTruecolor(KaitaiStream _io, Png.BkgdChunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.red = this._io.readU2be();
+            this.green = this._io.readU2be();
+            this.blue = this._io.readU2be();
+        }
+
+        public void _fetchInstances() {
+        }
+        private int red;
+        private int green;
+        private int blue;
+        private Png _root;
+        private Png.BkgdChunk _parent;
+        public int red() { return red; }
+        public int green() { return green; }
+        public int blue() { return blue; }
+        public Png _root() { return _root; }
+        public Png.BkgdChunk _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://www.w3.org/TR/png/#11cHRM">Source</a>
+     */
+    public static class ChrmChunk extends KaitaiStruct {
+        public static ChrmChunk fromFile(String fileName) throws IOException {
+            return new ChrmChunk(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public ChrmChunk(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public ChrmChunk(KaitaiStream _io, Png.Chunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public ChrmChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.whitePoint = new Point(this._io, this, _root);
+            this.red = new Point(this._io, this, _root);
+            this.green = new Point(this._io, this, _root);
+            this.blue = new Point(this._io, this, _root);
+        }
+
+        public void _fetchInstances() {
+            this.whitePoint._fetchInstances();
+            this.red._fetchInstances();
+            this.green._fetchInstances();
+            this.blue._fetchInstances();
+        }
+        private Point whitePoint;
+        private Point red;
+        private Point green;
+        private Point blue;
         private Png _root;
         private Png.Chunk _parent;
-
-        /**
-         * Number of pixels per physical unit (typically, 1 meter) by X
-         * axis.
-         */
-        public long pixelsPerUnitX() { return pixelsPerUnitX; }
-
-        /**
-         * Number of pixels per physical unit (typically, 1 meter) by Y
-         * axis.
-         */
-        public long pixelsPerUnitY() { return pixelsPerUnitY; }
-        public PhysUnit unit() { return unit; }
+        public Point whitePoint() { return whitePoint; }
+        public Point red() { return red; }
+        public Point green() { return green; }
+        public Point blue() { return blue; }
         public Png _root() { return _root; }
         public Png.Chunk _parent() { return _parent; }
+    }
+    public static class Chunk extends KaitaiStruct {
+        public static Chunk fromFile(String fileName) throws IOException {
+            return new Chunk(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Chunk(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Chunk(KaitaiStream _io, Png _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Chunk(KaitaiStream _io, Png _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.len = this._io.readU4be();
+            this.type = new String(this._io.readBytes(4), StandardCharsets.UTF_8);
+            switch (type()) {
+            case "PLTE": {
+                KaitaiStream _io_body = this._io.substream(len());
+                this.body = new PlteChunk(_io_body, this, _root);
+                break;
+            }
+            case "acTL": {
+                KaitaiStream _io_body = this._io.substream(len());
+                this.body = new AnimationControlChunk(_io_body, this, _root);
+                break;
+            }
+            case "bKGD": {
+                KaitaiStream _io_body = this._io.substream(len());
+                this.body = new BkgdChunk(_io_body, this, _root);
+                break;
+            }
+            case "cHRM": {
+                KaitaiStream _io_body = this._io.substream(len());
+                this.body = new ChrmChunk(_io_body, this, _root);
+                break;
+            }
+            case "fcTL": {
+                KaitaiStream _io_body = this._io.substream(len());
+                this.body = new FrameControlChunk(_io_body, this, _root);
+                break;
+            }
+            case "fdAT": {
+                KaitaiStream _io_body = this._io.substream(len());
+                this.body = new FrameDataChunk(_io_body, this, _root);
+                break;
+            }
+            case "gAMA": {
+                KaitaiStream _io_body = this._io.substream(len());
+                this.body = new GamaChunk(_io_body, this, _root);
+                break;
+            }
+            case "iTXt": {
+                KaitaiStream _io_body = this._io.substream(len());
+                this.body = new InternationalTextChunk(_io_body, this, _root);
+                break;
+            }
+            case "pHYs": {
+                KaitaiStream _io_body = this._io.substream(len());
+                this.body = new PhysChunk(_io_body, this, _root);
+                break;
+            }
+            case "sRGB": {
+                KaitaiStream _io_body = this._io.substream(len());
+                this.body = new SrgbChunk(_io_body, this, _root);
+                break;
+            }
+            case "tEXt": {
+                KaitaiStream _io_body = this._io.substream(len());
+                this.body = new TextChunk(_io_body, this, _root);
+                break;
+            }
+            case "tIME": {
+                KaitaiStream _io_body = this._io.substream(len());
+                this.body = new TimeChunk(_io_body, this, _root);
+                break;
+            }
+            case "zTXt": {
+                KaitaiStream _io_body = this._io.substream(len());
+                this.body = new CompressedTextChunk(_io_body, this, _root);
+                break;
+            }
+            default: {
+                this.body = this._io.readBytes(len());
+                break;
+            }
+            }
+            this.crc = this._io.readBytes(4);
+        }
+
+        public void _fetchInstances() {
+            switch (type()) {
+            case "PLTE": {
+                ((PlteChunk) (this.body))._fetchInstances();
+                break;
+            }
+            case "acTL": {
+                ((AnimationControlChunk) (this.body))._fetchInstances();
+                break;
+            }
+            case "bKGD": {
+                ((BkgdChunk) (this.body))._fetchInstances();
+                break;
+            }
+            case "cHRM": {
+                ((ChrmChunk) (this.body))._fetchInstances();
+                break;
+            }
+            case "fcTL": {
+                ((FrameControlChunk) (this.body))._fetchInstances();
+                break;
+            }
+            case "fdAT": {
+                ((FrameDataChunk) (this.body))._fetchInstances();
+                break;
+            }
+            case "gAMA": {
+                ((GamaChunk) (this.body))._fetchInstances();
+                break;
+            }
+            case "iTXt": {
+                ((InternationalTextChunk) (this.body))._fetchInstances();
+                break;
+            }
+            case "pHYs": {
+                ((PhysChunk) (this.body))._fetchInstances();
+                break;
+            }
+            case "sRGB": {
+                ((SrgbChunk) (this.body))._fetchInstances();
+                break;
+            }
+            case "tEXt": {
+                ((TextChunk) (this.body))._fetchInstances();
+                break;
+            }
+            case "tIME": {
+                ((TimeChunk) (this.body))._fetchInstances();
+                break;
+            }
+            case "zTXt": {
+                ((CompressedTextChunk) (this.body))._fetchInstances();
+                break;
+            }
+            default: {
+                break;
+            }
+            }
+        }
+        private long len;
+        private String type;
+        private Object body;
+        private byte[] crc;
+        private Png _root;
+        private Png _parent;
+        public long len() { return len; }
+        public String type() { return type; }
+        public Object body() { return body; }
+        public byte[] crc() { return crc; }
+        public Png _root() { return _root; }
+        public Png _parent() { return _parent; }
+    }
+
+    /**
+     * Compressed text chunk effectively allows to store key-value
+     * string pairs in PNG container, compressing "value" part (which
+     * can be quite lengthy) with zlib compression.
+     * @see <a href="https://www.w3.org/TR/png/#11zTXt">Source</a>
+     */
+    public static class CompressedTextChunk extends KaitaiStruct {
+        public static CompressedTextChunk fromFile(String fileName) throws IOException {
+            return new CompressedTextChunk(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public CompressedTextChunk(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public CompressedTextChunk(KaitaiStream _io, Png.Chunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public CompressedTextChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.keyword = new String(this._io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.UTF_8);
+            this.compressionMethod = Png.CompressionMethods.byId(this._io.readU1());
+            this._raw_textDatastream = this._io.readBytesFull();
+            this.textDatastream = KaitaiStream.processZlib(this._raw_textDatastream);
+        }
+
+        public void _fetchInstances() {
+        }
+        private String keyword;
+        private CompressionMethods compressionMethod;
+        private byte[] textDatastream;
+        private Png _root;
+        private Png.Chunk _parent;
+        private byte[] _raw_textDatastream;
+
+        /**
+         * Indicates purpose of the following text data.
+         */
+        public String keyword() { return keyword; }
+        public CompressionMethods compressionMethod() { return compressionMethod; }
+        public byte[] textDatastream() { return textDatastream; }
+        public Png _root() { return _root; }
+        public Png.Chunk _parent() { return _parent; }
+        public byte[] _raw_textDatastream() { return _raw_textDatastream; }
     }
 
     /**
@@ -912,31 +695,34 @@ public class Png extends KaitaiStruct {
         private void _read() {
             this.sequenceNumber = this._io.readU4be();
             this.width = this._io.readU4be();
-            if (!(width() >= 1)) {
-                throw new KaitaiStream.ValidationLessThanError(1, width(), _io(), "/types/frame_control_chunk/seq/1");
+            if (!(this.width >= 1)) {
+                throw new KaitaiStream.ValidationLessThanError(1, this.width, this._io, "/types/frame_control_chunk/seq/1");
             }
-            if (!(width() <= _root().ihdr().width())) {
-                throw new KaitaiStream.ValidationGreaterThanError(_root().ihdr().width(), width(), _io(), "/types/frame_control_chunk/seq/1");
+            if (!(this.width <= _root().ihdr().width())) {
+                throw new KaitaiStream.ValidationGreaterThanError(_root().ihdr().width(), this.width, this._io, "/types/frame_control_chunk/seq/1");
             }
             this.height = this._io.readU4be();
-            if (!(height() >= 1)) {
-                throw new KaitaiStream.ValidationLessThanError(1, height(), _io(), "/types/frame_control_chunk/seq/2");
+            if (!(this.height >= 1)) {
+                throw new KaitaiStream.ValidationLessThanError(1, this.height, this._io, "/types/frame_control_chunk/seq/2");
             }
-            if (!(height() <= _root().ihdr().height())) {
-                throw new KaitaiStream.ValidationGreaterThanError(_root().ihdr().height(), height(), _io(), "/types/frame_control_chunk/seq/2");
+            if (!(this.height <= _root().ihdr().height())) {
+                throw new KaitaiStream.ValidationGreaterThanError(_root().ihdr().height(), this.height, this._io, "/types/frame_control_chunk/seq/2");
             }
             this.xOffset = this._io.readU4be();
-            if (!(xOffset() <= (_root().ihdr().width() - width()))) {
-                throw new KaitaiStream.ValidationGreaterThanError((_root().ihdr().width() - width()), xOffset(), _io(), "/types/frame_control_chunk/seq/3");
+            if (!(this.xOffset <= _root().ihdr().width() - width())) {
+                throw new KaitaiStream.ValidationGreaterThanError(_root().ihdr().width() - width(), this.xOffset, this._io, "/types/frame_control_chunk/seq/3");
             }
             this.yOffset = this._io.readU4be();
-            if (!(yOffset() <= (_root().ihdr().height() - height()))) {
-                throw new KaitaiStream.ValidationGreaterThanError((_root().ihdr().height() - height()), yOffset(), _io(), "/types/frame_control_chunk/seq/4");
+            if (!(this.yOffset <= _root().ihdr().height() - height())) {
+                throw new KaitaiStream.ValidationGreaterThanError(_root().ihdr().height() - height(), this.yOffset, this._io, "/types/frame_control_chunk/seq/4");
             }
             this.delayNum = this._io.readU2be();
             this.delayDen = this._io.readU2be();
             this.disposeOp = Png.DisposeOpValues.byId(this._io.readU1());
             this.blendOp = Png.BlendOpValues.byId(this._io.readU1());
+        }
+
+        public void _fetchInstances() {
         }
         private Double delay;
 
@@ -946,8 +732,7 @@ public class Png extends KaitaiStruct {
         public Double delay() {
             if (this.delay != null)
                 return this.delay;
-            double _tmp = (double) ((delayNum() / (delayDen() == 0 ? 100.0 : delayDen())));
-            this.delay = _tmp;
+            this.delay = ((Number) (delayNum() / (delayDen() == 0 ? 100.0 : delayDen()))).doubleValue();
             return this.delay;
         }
         private long sequenceNumber;
@@ -1011,6 +796,156 @@ public class Png extends KaitaiStruct {
     }
 
     /**
+     * @see <a href="https://wiki.mozilla.org/APNG_Specification#.60fdAT.60:_The_Frame_Data_Chunk">Source</a>
+     */
+    public static class FrameDataChunk extends KaitaiStruct {
+        public static FrameDataChunk fromFile(String fileName) throws IOException {
+            return new FrameDataChunk(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public FrameDataChunk(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public FrameDataChunk(KaitaiStream _io, Png.Chunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public FrameDataChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.sequenceNumber = this._io.readU4be();
+            this.frameData = this._io.readBytesFull();
+        }
+
+        public void _fetchInstances() {
+        }
+        private long sequenceNumber;
+        private byte[] frameData;
+        private Png _root;
+        private Png.Chunk _parent;
+
+        /**
+         * Sequence number of the animation chunk. The fcTL and fdAT chunks
+         * have a 4 byte sequence number. Both chunk types share the sequence.
+         * The first fcTL chunk must contain sequence number 0, and the sequence
+         * numbers in the remaining fcTL and fdAT chunks must be in order, with
+         * no gaps or duplicates.
+         */
+        public long sequenceNumber() { return sequenceNumber; }
+
+        /**
+         * Frame data for the frame. At least one fdAT chunk is required for
+         * each frame. The compressed datastream is the concatenation of the
+         * contents of the data fields of all the fdAT chunks within a frame.
+         */
+        public byte[] frameData() { return frameData; }
+        public Png _root() { return _root; }
+        public Png.Chunk _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://www.w3.org/TR/png/#11gAMA">Source</a>
+     */
+    public static class GamaChunk extends KaitaiStruct {
+        public static GamaChunk fromFile(String fileName) throws IOException {
+            return new GamaChunk(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public GamaChunk(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public GamaChunk(KaitaiStream _io, Png.Chunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public GamaChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.gammaInt = this._io.readU4be();
+        }
+
+        public void _fetchInstances() {
+        }
+        private Double gammaRatio;
+        public Double gammaRatio() {
+            if (this.gammaRatio != null)
+                return this.gammaRatio;
+            this.gammaRatio = ((Number) (100000.0 / gammaInt())).doubleValue();
+            return this.gammaRatio;
+        }
+        private long gammaInt;
+        private Png _root;
+        private Png.Chunk _parent;
+        public long gammaInt() { return gammaInt; }
+        public Png _root() { return _root; }
+        public Png.Chunk _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://www.w3.org/TR/png/#11IHDR">Source</a>
+     */
+    public static class IhdrChunk extends KaitaiStruct {
+        public static IhdrChunk fromFile(String fileName) throws IOException {
+            return new IhdrChunk(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public IhdrChunk(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public IhdrChunk(KaitaiStream _io, Png _parent) {
+            this(_io, _parent, null);
+        }
+
+        public IhdrChunk(KaitaiStream _io, Png _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.width = this._io.readU4be();
+            this.height = this._io.readU4be();
+            this.bitDepth = this._io.readU1();
+            this.colorType = Png.ColorType.byId(this._io.readU1());
+            this.compressionMethod = this._io.readU1();
+            this.filterMethod = this._io.readU1();
+            this.interlaceMethod = this._io.readU1();
+        }
+
+        public void _fetchInstances() {
+        }
+        private long width;
+        private long height;
+        private int bitDepth;
+        private ColorType colorType;
+        private int compressionMethod;
+        private int filterMethod;
+        private int interlaceMethod;
+        private Png _root;
+        private Png _parent;
+        public long width() { return width; }
+        public long height() { return height; }
+        public int bitDepth() { return bitDepth; }
+        public ColorType colorType() { return colorType; }
+        public int compressionMethod() { return compressionMethod; }
+        public int filterMethod() { return filterMethod; }
+        public int interlaceMethod() { return interlaceMethod; }
+        public Png _root() { return _root; }
+        public Png _parent() { return _parent; }
+    }
+
+    /**
      * International text chunk effectively allows to store key-value string pairs in
      * PNG container. Both "key" (keyword) and "value" (text) parts are
      * given in pre-defined subset of iso8859-1 without control
@@ -1037,12 +972,15 @@ public class Png extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.keyword = new String(this._io.readBytesTerm((byte) 0, false, true, true), Charset.forName("UTF-8"));
+            this.keyword = new String(this._io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.UTF_8);
             this.compressionFlag = this._io.readU1();
             this.compressionMethod = Png.CompressionMethods.byId(this._io.readU1());
-            this.languageTag = new String(this._io.readBytesTerm((byte) 0, false, true, true), Charset.forName("ASCII"));
-            this.translatedKeyword = new String(this._io.readBytesTerm((byte) 0, false, true, true), Charset.forName("UTF-8"));
-            this.text = new String(this._io.readBytesFull(), Charset.forName("UTF-8"));
+            this.languageTag = new String(this._io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.US_ASCII);
+            this.translatedKeyword = new String(this._io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.UTF_8);
+            this.text = new String(this._io.readBytesFull(), StandardCharsets.UTF_8);
+        }
+
+        public void _fetchInstances() {
         }
         private String keyword;
         private int compressionFlag;
@@ -1089,6 +1027,246 @@ public class Png extends KaitaiStruct {
     }
 
     /**
+     * "Physical size" chunk stores data that allows to translate
+     * logical pixels into physical units (meters, etc) and vice-versa.
+     * @see <a href="https://www.w3.org/TR/png/#11pHYs">Source</a>
+     */
+    public static class PhysChunk extends KaitaiStruct {
+        public static PhysChunk fromFile(String fileName) throws IOException {
+            return new PhysChunk(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public PhysChunk(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public PhysChunk(KaitaiStream _io, Png.Chunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public PhysChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.pixelsPerUnitX = this._io.readU4be();
+            this.pixelsPerUnitY = this._io.readU4be();
+            this.unit = Png.PhysUnit.byId(this._io.readU1());
+        }
+
+        public void _fetchInstances() {
+        }
+        private long pixelsPerUnitX;
+        private long pixelsPerUnitY;
+        private PhysUnit unit;
+        private Png _root;
+        private Png.Chunk _parent;
+
+        /**
+         * Number of pixels per physical unit (typically, 1 meter) by X
+         * axis.
+         */
+        public long pixelsPerUnitX() { return pixelsPerUnitX; }
+
+        /**
+         * Number of pixels per physical unit (typically, 1 meter) by Y
+         * axis.
+         */
+        public long pixelsPerUnitY() { return pixelsPerUnitY; }
+        public PhysUnit unit() { return unit; }
+        public Png _root() { return _root; }
+        public Png.Chunk _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://www.w3.org/TR/png/#11PLTE">Source</a>
+     */
+    public static class PlteChunk extends KaitaiStruct {
+        public static PlteChunk fromFile(String fileName) throws IOException {
+            return new PlteChunk(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public PlteChunk(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public PlteChunk(KaitaiStream _io, Png.Chunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public PlteChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.entries = new ArrayList<Rgb>();
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.entries.add(new Rgb(this._io, this, _root));
+                    i++;
+                }
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.entries.size(); i++) {
+                this.entries.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private List<Rgb> entries;
+        private Png _root;
+        private Png.Chunk _parent;
+        public List<Rgb> entries() { return entries; }
+        public Png _root() { return _root; }
+        public Png.Chunk _parent() { return _parent; }
+    }
+    public static class Point extends KaitaiStruct {
+        public static Point fromFile(String fileName) throws IOException {
+            return new Point(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Point(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Point(KaitaiStream _io, Png.ChrmChunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Point(KaitaiStream _io, Png.ChrmChunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.xInt = this._io.readU4be();
+            this.yInt = this._io.readU4be();
+        }
+
+        public void _fetchInstances() {
+        }
+        private Double x;
+        public Double x() {
+            if (this.x != null)
+                return this.x;
+            this.x = ((Number) (xInt() / 100000.0)).doubleValue();
+            return this.x;
+        }
+        private Double y;
+        public Double y() {
+            if (this.y != null)
+                return this.y;
+            this.y = ((Number) (yInt() / 100000.0)).doubleValue();
+            return this.y;
+        }
+        private long xInt;
+        private long yInt;
+        private Png _root;
+        private Png.ChrmChunk _parent;
+        public long xInt() { return xInt; }
+        public long yInt() { return yInt; }
+        public Png _root() { return _root; }
+        public Png.ChrmChunk _parent() { return _parent; }
+    }
+    public static class Rgb extends KaitaiStruct {
+        public static Rgb fromFile(String fileName) throws IOException {
+            return new Rgb(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Rgb(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Rgb(KaitaiStream _io, Png.PlteChunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Rgb(KaitaiStream _io, Png.PlteChunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.r = this._io.readU1();
+            this.g = this._io.readU1();
+            this.b = this._io.readU1();
+        }
+
+        public void _fetchInstances() {
+        }
+        private int r;
+        private int g;
+        private int b;
+        private Png _root;
+        private Png.PlteChunk _parent;
+        public int r() { return r; }
+        public int g() { return g; }
+        public int b() { return b; }
+        public Png _root() { return _root; }
+        public Png.PlteChunk _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://www.w3.org/TR/png/#11sRGB">Source</a>
+     */
+    public static class SrgbChunk extends KaitaiStruct {
+        public static SrgbChunk fromFile(String fileName) throws IOException {
+            return new SrgbChunk(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public enum Intent {
+            PERCEPTUAL(0),
+            RELATIVE_COLORIMETRIC(1),
+            SATURATION(2),
+            ABSOLUTE_COLORIMETRIC(3);
+
+            private final long id;
+            Intent(long id) { this.id = id; }
+            public long id() { return id; }
+            private static final Map<Long, Intent> byId = new HashMap<Long, Intent>(4);
+            static {
+                for (Intent e : Intent.values())
+                    byId.put(e.id(), e);
+            }
+            public static Intent byId(long id) { return byId.get(id); }
+        }
+
+        public SrgbChunk(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public SrgbChunk(KaitaiStream _io, Png.Chunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public SrgbChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.renderIntent = Intent.byId(this._io.readU1());
+        }
+
+        public void _fetchInstances() {
+        }
+        private Intent renderIntent;
+        private Png _root;
+        private Png.Chunk _parent;
+        public Intent renderIntent() { return renderIntent; }
+        public Png _root() { return _root; }
+        public Png.Chunk _parent() { return _parent; }
+    }
+
+    /**
      * Text chunk effectively allows to store key-value string pairs in
      * PNG container. Both "key" (keyword) and "value" (text) parts are
      * given in pre-defined subset of iso8859-1 without control
@@ -1115,8 +1293,11 @@ public class Png extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.keyword = new String(this._io.readBytesTerm((byte) 0, false, true, true), Charset.forName("iso8859-1"));
-            this.text = new String(this._io.readBytesFull(), Charset.forName("iso8859-1"));
+            this.keyword = new String(this._io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.ISO_8859_1);
+            this.text = new String(this._io.readBytesFull(), StandardCharsets.ISO_8859_1);
+        }
+
+        public void _fetchInstances() {
         }
         private String keyword;
         private String text;
@@ -1128,50 +1309,6 @@ public class Png extends KaitaiStruct {
          */
         public String keyword() { return keyword; }
         public String text() { return text; }
-        public Png _root() { return _root; }
-        public Png.Chunk _parent() { return _parent; }
-    }
-
-    /**
-     * @see <a href="https://wiki.mozilla.org/APNG_Specification#.60acTL.60:_The_Animation_Control_Chunk">Source</a>
-     */
-    public static class AnimationControlChunk extends KaitaiStruct {
-        public static AnimationControlChunk fromFile(String fileName) throws IOException {
-            return new AnimationControlChunk(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public AnimationControlChunk(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public AnimationControlChunk(KaitaiStream _io, Png.Chunk _parent) {
-            this(_io, _parent, null);
-        }
-
-        public AnimationControlChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.numFrames = this._io.readU4be();
-            this.numPlays = this._io.readU4be();
-        }
-        private long numFrames;
-        private long numPlays;
-        private Png _root;
-        private Png.Chunk _parent;
-
-        /**
-         * Number of frames, must be equal to the number of `frame_control_chunk`s
-         */
-        public long numFrames() { return numFrames; }
-
-        /**
-         * Number of times to loop, 0 indicates infinite looping.
-         */
-        public long numPlays() { return numPlays; }
         public Png _root() { return _root; }
         public Png.Chunk _parent() { return _parent; }
     }
@@ -1208,6 +1345,9 @@ public class Png extends KaitaiStruct {
             this.minute = this._io.readU1();
             this.second = this._io.readU1();
         }
+
+        public void _fetchInstances() {
+        }
         private int year;
         private int month;
         private int day;
@@ -1230,7 +1370,7 @@ public class Png extends KaitaiStruct {
     private byte[] ihdrType;
     private IhdrChunk ihdr;
     private byte[] ihdrCrc;
-    private ArrayList<Chunk> chunks;
+    private List<Chunk> chunks;
     private Png _root;
     private KaitaiStruct _parent;
     public byte[] magic() { return magic; }
@@ -1238,7 +1378,7 @@ public class Png extends KaitaiStruct {
     public byte[] ihdrType() { return ihdrType; }
     public IhdrChunk ihdr() { return ihdr; }
     public byte[] ihdrCrc() { return ihdrCrc; }
-    public ArrayList<Chunk> chunks() { return chunks; }
+    public List<Chunk> chunks() { return chunks; }
     public Png _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

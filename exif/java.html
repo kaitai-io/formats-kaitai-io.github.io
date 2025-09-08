@@ -193,6 +193,11 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="java-write.html" title="exif parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="exif parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -223,7 +228,17 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="python-write.html" title="exif parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="exif parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="exif parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -304,6 +319,7 @@ for instructions how to add it into your project with the build tool that you us
 <span class="kn">import</span><span class="w"> </span><span class="nn">io.kaitai.struct.KaitaiStream</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">java.io.IOException</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">java.util.ArrayList</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Map</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">java.util.HashMap</span><span class="p">;</span>
 
@@ -330,6 +346,10 @@ for instructions how to add it into your project with the build tool that you us
 <span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">endianness</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
 <span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ExifBody</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">);</span>
 <span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">_fetchInstances</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">body</span><span class="p">.</span><span class="na">_fetchInstances</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">class</span> <span class="nc">ExifBody</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">ExifBody</span><span class="w"> </span><span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">IOException</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ExifBody</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
@@ -353,13 +373,11 @@ for instructions how to add it into your project with the build tool that you us
 <span class="w">        </span><span class="kd">private</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">_root</span><span class="p">().</span><span class="na">endianness</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="mi">18761</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="kt">boolean</span><span class="w"> </span><span class="n">_tmp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">boolean</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
-<span class="w">                </span><span class="k">this</span><span class="p">.</span><span class="na">_is_le</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_tmp</span><span class="p">;</span>
+<span class="w">                </span><span class="k">this</span><span class="p">.</span><span class="na">_is_le</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
 <span class="w">                </span><span class="k">break</span><span class="p">;</span>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="mi">19789</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="kt">boolean</span><span class="w"> </span><span class="n">_tmp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">boolean</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
-<span class="w">                </span><span class="k">this</span><span class="p">.</span><span class="na">_is_le</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_tmp</span><span class="p">;</span>
+<span class="w">                </span><span class="k">this</span><span class="p">.</span><span class="na">_is_le</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
 <span class="w">                </span><span class="k">break</span><span class="p">;</span>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">            </span><span class="p">}</span>
@@ -379,6 +397,13 @@ for instructions how to add it into your project with the build tool that you us
 <span class="w">        </span><span class="kd">private</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">_readBE</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="k">this</span><span class="p">.</span><span class="na">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2be</span><span class="p">();</span>
 <span class="w">            </span><span class="k">this</span><span class="p">.</span><span class="na">ifd0Ofs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">_fetchInstances</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">ifd0</span><span class="p">();</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">ifd0</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">this</span><span class="p">.</span><span class="na">ifd0</span><span class="p">.</span><span class="na">_fetchInstances</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Ifd</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="kd">private</span><span class="w"> </span><span class="n">Boolean</span><span class="w"> </span><span class="n">_is_le</span><span class="p">;</span>
@@ -416,6 +441,16 @@ for instructions how to add it into your project with the build tool that you us
 <span class="w">                </span><span class="p">}</span>
 <span class="w">                </span><span class="k">this</span><span class="p">.</span><span class="na">nextIfdOfs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">();</span>
 <span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">_fetchInstances</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">fields</span><span class="p">.</span><span class="na">size</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">this</span><span class="p">.</span><span class="na">fields</span><span class="p">.</span><span class="na">get</span><span class="p">(((</span><span class="n">Number</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="p">)).</span><span class="na">intValue</span><span class="p">()).</span><span class="na">_fetchInstances</span><span class="p">();</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="n">nextIfd</span><span class="p">();</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">nextIfd</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">this</span><span class="p">.</span><span class="na">nextIfd</span><span class="p">.</span><span class="na">_fetchInstances</span><span class="p">();</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
 <span class="w">            </span><span class="kd">private</span><span class="w"> </span><span class="n">Ifd</span><span class="w"> </span><span class="n">nextIfd</span><span class="p">;</span>
 <span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="n">Ifd</span><span class="w"> </span><span class="nf">nextIfd</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">nextIfd</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span>
@@ -433,12 +468,12 @@ for instructions how to add it into your project with the build tool that you us
 <span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">nextIfd</span><span class="p">;</span>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">            </span><span class="kd">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">numFields</span><span class="p">;</span>
-<span class="w">            </span><span class="kd">private</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">IfdField</span><span class="o">&gt;</span><span class="w"> </span><span class="n">fields</span><span class="p">;</span>
+<span class="w">            </span><span class="kd">private</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">IfdField</span><span class="o">&gt;</span><span class="w"> </span><span class="n">fields</span><span class="p">;</span>
 <span class="w">            </span><span class="kd">private</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">nextIfdOfs</span><span class="p">;</span>
 <span class="w">            </span><span class="kd">private</span><span class="w"> </span><span class="n">Exif</span><span class="w"> </span><span class="n">_root</span><span class="p">;</span>
 <span class="w">            </span><span class="kd">private</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">_parent</span><span class="p">;</span>
 <span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">numFields</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">numFields</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">IfdField</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">fields</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">fields</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">IfdField</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">fields</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">fields</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="nf">nextIfdOfs</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">nextIfdOfs</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="n">Exif</span><span class="w"> </span><span class="nf">_root</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="nf">_parent</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
@@ -967,29 +1002,18 @@ for instructions how to add it into your project with the build tool that you us
 <span class="w">                </span><span class="k">this</span><span class="p">.</span><span class="na">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">();</span>
 <span class="w">                </span><span class="k">this</span><span class="p">.</span><span class="na">ofsOrData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">();</span>
 <span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="kd">private</span><span class="w"> </span><span class="n">Byte</span><span class="w"> </span><span class="n">typeByteLength</span><span class="p">;</span>
-<span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="n">Byte</span><span class="w"> </span><span class="nf">typeByteLength</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">typeByteLength</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span>
-<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">typeByteLength</span><span class="p">;</span>
-<span class="w">                </span><span class="kt">byte</span><span class="w"> </span><span class="n">_tmp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">byte</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">fieldType</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">FieldTypeEnum</span><span class="p">.</span><span class="na">WORD</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">(</span><span class="n">fieldType</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">FieldTypeEnum</span><span class="p">.</span><span class="na">DWORD</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">)));</span>
-<span class="w">                </span><span class="k">this</span><span class="p">.</span><span class="na">typeByteLength</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_tmp</span><span class="p">;</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">typeByteLength</span><span class="p">;</span>
+
+<span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">_fetchInstances</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">data</span><span class="p">();</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">data</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="p">}</span>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">            </span><span class="kd">private</span><span class="w"> </span><span class="n">Integer</span><span class="w"> </span><span class="n">byteLength</span><span class="p">;</span>
 <span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="n">Integer</span><span class="w"> </span><span class="nf">byteLength</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">byteLength</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span>
 <span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">byteLength</span><span class="p">;</span>
-<span class="w">                </span><span class="kt">int</span><span class="w"> </span><span class="n">_tmp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">length</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">typeByteLength</span><span class="p">()));</span>
-<span class="w">                </span><span class="k">this</span><span class="p">.</span><span class="na">byteLength</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_tmp</span><span class="p">;</span>
+<span class="w">                </span><span class="k">this</span><span class="p">.</span><span class="na">byteLength</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">Number</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">length</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">typeByteLength</span><span class="p">())).</span><span class="na">intValue</span><span class="p">();</span>
 <span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">byteLength</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="kd">private</span><span class="w"> </span><span class="n">Boolean</span><span class="w"> </span><span class="n">isImmediateData</span><span class="p">;</span>
-<span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="n">Boolean</span><span class="w"> </span><span class="nf">isImmediateData</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">isImmediateData</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span>
-<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">isImmediateData</span><span class="p">;</span>
-<span class="w">                </span><span class="kt">boolean</span><span class="w"> </span><span class="n">_tmp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">boolean</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">byteLength</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">4</span><span class="p">);</span>
-<span class="w">                </span><span class="k">this</span><span class="p">.</span><span class="na">isImmediateData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_tmp</span><span class="p">;</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">isImmediateData</span><span class="p">;</span>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">            </span><span class="kd">private</span><span class="w"> </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">data</span><span class="p">;</span>
 <span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="nf">data</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
@@ -1007,6 +1031,20 @@ for instructions how to add it into your project with the build tool that you us
 <span class="w">                    </span><span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
 <span class="w">                </span><span class="p">}</span>
 <span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">data</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="kd">private</span><span class="w"> </span><span class="n">Boolean</span><span class="w"> </span><span class="n">isImmediateData</span><span class="p">;</span>
+<span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="n">Boolean</span><span class="w"> </span><span class="nf">isImmediateData</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">isImmediateData</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">isImmediateData</span><span class="p">;</span>
+<span class="w">                </span><span class="k">this</span><span class="p">.</span><span class="na">isImmediateData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">byteLength</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">isImmediateData</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="kd">private</span><span class="w"> </span><span class="n">Byte</span><span class="w"> </span><span class="n">typeByteLength</span><span class="p">;</span>
+<span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="n">Byte</span><span class="w"> </span><span class="nf">typeByteLength</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">typeByteLength</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">typeByteLength</span><span class="p">;</span>
+<span class="w">                </span><span class="k">this</span><span class="p">.</span><span class="na">typeByteLength</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">Number</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">fieldType</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">FieldTypeEnum</span><span class="p">.</span><span class="na">WORD</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">(</span><span class="n">fieldType</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">FieldTypeEnum</span><span class="p">.</span><span class="na">DWORD</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">)))).</span><span class="na">byteValue</span><span class="p">();</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">typeByteLength</span><span class="p">;</span>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">            </span><span class="kd">private</span><span class="w"> </span><span class="n">TagEnum</span><span class="w"> </span><span class="n">tag</span><span class="p">;</span>
 <span class="w">            </span><span class="kd">private</span><span class="w"> </span><span class="n">FieldTypeEnum</span><span class="w"> </span><span class="n">fieldType</span><span class="p">;</span>

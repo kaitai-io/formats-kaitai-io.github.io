@@ -82,7 +82,7 @@ proc read*(_: typedesc[AvantesRoh60], io: KaitaiStream, root: KaitaiStruct, pare
   for i in 0 ..< int(4):
     let it = this.io.readF4le()
     this.unknown3.add(it)
-  for i in 0 ..< int(((int(this.ipixlast) - int(this.ipixfirst)) - 1)):
+  for i in 0 ..< int((int(this.ipixlast) - int(this.ipixfirst)) - 1):
     let it = this.io.readF4le()
     this.spectrum.add(it)
   let integrationMsExpr = this.io.readF4le()

@@ -25,7 +25,7 @@ type FasttrackerXmModule struct {
 	Instruments []*FasttrackerXmModule_Instrument
 	_io *kaitai.Stream
 	_root *FasttrackerXmModule
-	_parent interface{}
+	_parent kaitai.Struct
 	_raw_Header []byte
 }
 func NewFasttrackerXmModule() *FasttrackerXmModule {
@@ -33,7 +33,11 @@ func NewFasttrackerXmModule() *FasttrackerXmModule {
 	}
 }
 
-func (this *FasttrackerXmModule) Read(io *kaitai.Stream, parent interface{}, root *FasttrackerXmModule) (err error) {
+func (this FasttrackerXmModule) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *FasttrackerXmModule) Read(io *kaitai.Stream, parent kaitai.Struct, root *FasttrackerXmModule) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -44,7 +48,7 @@ func (this *FasttrackerXmModule) Read(io *kaitai.Stream, parent interface{}, roo
 		return err
 	}
 	this.Preheader = tmp1
-	tmp2, err := this._io.ReadBytes(int((this.Preheader.HeaderSize - 4)))
+	tmp2, err := this._io.ReadBytes(int(this.Preheader.HeaderSize - 4))
 	if err != nil {
 		return err
 	}
@@ -77,286 +81,6 @@ func (this *FasttrackerXmModule) Read(io *kaitai.Stream, parent interface{}, roo
 	}
 	return err
 }
-type FasttrackerXmModule_Preheader struct {
-	Signature0 []byte
-	ModuleName string
-	Signature1 []byte
-	TrackerName string
-	VersionNumber *FasttrackerXmModule_Preheader_Version
-	HeaderSize uint32
-	_io *kaitai.Stream
-	_root *FasttrackerXmModule
-	_parent *FasttrackerXmModule
-}
-func NewFasttrackerXmModule_Preheader() *FasttrackerXmModule_Preheader {
-	return &FasttrackerXmModule_Preheader{
-	}
-}
-
-func (this *FasttrackerXmModule_Preheader) Read(io *kaitai.Stream, parent *FasttrackerXmModule, root *FasttrackerXmModule) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp6, err := this._io.ReadBytes(int(17))
-	if err != nil {
-		return err
-	}
-	tmp6 = tmp6
-	this.Signature0 = tmp6
-	if !(bytes.Equal(this.Signature0, []uint8{69, 120, 116, 101, 110, 100, 101, 100, 32, 77, 111, 100, 117, 108, 101, 58, 32})) {
-		return kaitai.NewValidationNotEqualError([]uint8{69, 120, 116, 101, 110, 100, 101, 100, 32, 77, 111, 100, 117, 108, 101, 58, 32}, this.Signature0, this._io, "/types/preheader/seq/0")
-	}
-	tmp7, err := this._io.ReadBytes(int(20))
-	if err != nil {
-		return err
-	}
-	tmp7 = kaitai.BytesTerminate(tmp7, 0, false)
-	this.ModuleName = string(tmp7)
-	tmp8, err := this._io.ReadBytes(int(1))
-	if err != nil {
-		return err
-	}
-	tmp8 = tmp8
-	this.Signature1 = tmp8
-	if !(bytes.Equal(this.Signature1, []uint8{26})) {
-		return kaitai.NewValidationNotEqualError([]uint8{26}, this.Signature1, this._io, "/types/preheader/seq/2")
-	}
-	tmp9, err := this._io.ReadBytes(int(20))
-	if err != nil {
-		return err
-	}
-	tmp9 = kaitai.BytesTerminate(tmp9, 0, false)
-	this.TrackerName = string(tmp9)
-	tmp10 := NewFasttrackerXmModule_Preheader_Version()
-	err = tmp10.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.VersionNumber = tmp10
-	tmp11, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.HeaderSize = uint32(tmp11)
-	return err
-}
-
-/**
- * Module name, padded with zeroes
- */
-
-/**
- * Tracker name
- */
-
-/**
- * Format versions below [0x01, 0x04] have a LOT of differences. Check this field!
- */
-
-/**
- * Header size << Calculated FROM THIS OFFSET, not from the beginning of the file! >>
- */
-type FasttrackerXmModule_Preheader_Version struct {
-	Minor uint8
-	Major uint8
-	_io *kaitai.Stream
-	_root *FasttrackerXmModule
-	_parent *FasttrackerXmModule_Preheader
-	_f_value bool
-	value int
-}
-func NewFasttrackerXmModule_Preheader_Version() *FasttrackerXmModule_Preheader_Version {
-	return &FasttrackerXmModule_Preheader_Version{
-	}
-}
-
-func (this *FasttrackerXmModule_Preheader_Version) Read(io *kaitai.Stream, parent *FasttrackerXmModule_Preheader, root *FasttrackerXmModule) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp12, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Minor = tmp12
-	tmp13, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Major = tmp13
-	return err
-}
-func (this *FasttrackerXmModule_Preheader_Version) Value() (v int, err error) {
-	if (this._f_value) {
-		return this.value, nil
-	}
-	this.value = int(((this.Major << 8) | this.Minor))
-	this._f_value = true
-	return this.value, nil
-}
-
-/**
- * currently 0x04
- */
-
-/**
- * currently 0x01
- */
-type FasttrackerXmModule_Pattern struct {
-	Header *FasttrackerXmModule_Pattern_Header
-	PackedData []byte
-	_io *kaitai.Stream
-	_root *FasttrackerXmModule
-	_parent *FasttrackerXmModule
-}
-func NewFasttrackerXmModule_Pattern() *FasttrackerXmModule_Pattern {
-	return &FasttrackerXmModule_Pattern{
-	}
-}
-
-func (this *FasttrackerXmModule_Pattern) Read(io *kaitai.Stream, parent *FasttrackerXmModule, root *FasttrackerXmModule) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp14 := NewFasttrackerXmModule_Pattern_Header()
-	err = tmp14.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Header = tmp14
-	tmp15, err := this._io.ReadBytes(int(this.Header.Main.LenPackedPattern))
-	if err != nil {
-		return err
-	}
-	tmp15 = tmp15
-	this.PackedData = tmp15
-	return err
-}
-type FasttrackerXmModule_Pattern_Header struct {
-	HeaderLength uint32
-	Main *FasttrackerXmModule_Pattern_Header_HeaderMain
-	_io *kaitai.Stream
-	_root *FasttrackerXmModule
-	_parent *FasttrackerXmModule_Pattern
-	_raw_Main []byte
-}
-func NewFasttrackerXmModule_Pattern_Header() *FasttrackerXmModule_Pattern_Header {
-	return &FasttrackerXmModule_Pattern_Header{
-	}
-}
-
-func (this *FasttrackerXmModule_Pattern_Header) Read(io *kaitai.Stream, parent *FasttrackerXmModule_Pattern, root *FasttrackerXmModule) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp16, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.HeaderLength = uint32(tmp16)
-	tmp17, err := this._io.ReadBytes(int((this.HeaderLength - 4)))
-	if err != nil {
-		return err
-	}
-	tmp17 = tmp17
-	this._raw_Main = tmp17
-	_io__raw_Main := kaitai.NewStream(bytes.NewReader(this._raw_Main))
-	tmp18 := NewFasttrackerXmModule_Pattern_Header_HeaderMain()
-	err = tmp18.Read(_io__raw_Main, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Main = tmp18
-	return err
-}
-
-/**
- * Pattern header length
- */
-type FasttrackerXmModule_Pattern_Header_HeaderMain struct {
-	PackingType uint8
-	NumRowsRaw uint16
-	LenPackedPattern uint16
-	_io *kaitai.Stream
-	_root *FasttrackerXmModule
-	_parent *FasttrackerXmModule_Pattern_Header
-	_f_numRows bool
-	numRows int
-}
-func NewFasttrackerXmModule_Pattern_Header_HeaderMain() *FasttrackerXmModule_Pattern_Header_HeaderMain {
-	return &FasttrackerXmModule_Pattern_Header_HeaderMain{
-	}
-}
-
-func (this *FasttrackerXmModule_Pattern_Header_HeaderMain) Read(io *kaitai.Stream, parent *FasttrackerXmModule_Pattern_Header, root *FasttrackerXmModule) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp19, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.PackingType = tmp19
-	tmp20, err := this._root.Preheader.VersionNumber.Value()
-	if err != nil {
-		return err
-	}
-	switch (tmp20) {
-	case 258:
-		tmp21, err := this._io.ReadU1()
-		if err != nil {
-			return err
-		}
-		this.NumRowsRaw = uint16(tmp21)
-	default:
-		tmp22, err := this._io.ReadU2le()
-		if err != nil {
-			return err
-		}
-		this.NumRowsRaw = uint16(tmp22)
-	}
-	tmp23, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.LenPackedPattern = uint16(tmp23)
-	return err
-}
-func (this *FasttrackerXmModule_Pattern_Header_HeaderMain) NumRows() (v int, err error) {
-	if (this._f_numRows) {
-		return this.numRows, nil
-	}
-	var tmp24 int8;
-	tmp25, err := this._root.Preheader.VersionNumber.Value()
-	if err != nil {
-		return 0, err
-	}
-	if (tmp25 == 258) {
-		tmp24 = 1
-	} else {
-		tmp24 = 0
-	}
-	this.numRows = int((this.NumRowsRaw + tmp24))
-	this._f_numRows = true
-	return this.numRows, nil
-}
-
-/**
- * Packing type (always 0)
- */
-
-/**
- * Number of rows in pattern (1..256)
- */
-
-/**
- * Packed pattern data size
- */
 type FasttrackerXmModule_Flags struct {
 	Reserved uint64
 	FreqTableType bool
@@ -369,21 +93,25 @@ func NewFasttrackerXmModule_Flags() *FasttrackerXmModule_Flags {
 	}
 }
 
+func (this FasttrackerXmModule_Flags) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *FasttrackerXmModule_Flags) Read(io *kaitai.Stream, parent *FasttrackerXmModule_Header, root *FasttrackerXmModule) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp26, err := this._io.ReadBitsIntBe(15)
+	tmp6, err := this._io.ReadBitsIntBe(15)
 	if err != nil {
 		return err
 	}
-	this.Reserved = tmp26
-	tmp27, err := this._io.ReadBitsIntBe(1)
+	this.Reserved = tmp6
+	tmp7, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.FreqTableType = tmp27 != 0
+	this.FreqTableType = tmp7 != 0
 	return err
 }
 
@@ -409,59 +137,63 @@ func NewFasttrackerXmModule_Header() *FasttrackerXmModule_Header {
 	}
 }
 
+func (this FasttrackerXmModule_Header) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *FasttrackerXmModule_Header) Read(io *kaitai.Stream, parent *FasttrackerXmModule, root *FasttrackerXmModule) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp28, err := this._io.ReadU2le()
+	tmp8, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.SongLength = uint16(tmp28)
-	tmp29, err := this._io.ReadU2le()
+	this.SongLength = uint16(tmp8)
+	tmp9, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.RestartPosition = uint16(tmp29)
-	tmp30, err := this._io.ReadU2le()
+	this.RestartPosition = uint16(tmp9)
+	tmp10, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.NumChannels = uint16(tmp30)
-	tmp31, err := this._io.ReadU2le()
+	this.NumChannels = uint16(tmp10)
+	tmp11, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.NumPatterns = uint16(tmp31)
-	tmp32, err := this._io.ReadU2le()
+	this.NumPatterns = uint16(tmp11)
+	tmp12, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.NumInstruments = uint16(tmp32)
-	tmp33 := NewFasttrackerXmModule_Flags()
-	err = tmp33.Read(this._io, this, this._root)
+	this.NumInstruments = uint16(tmp12)
+	tmp13 := NewFasttrackerXmModule_Flags()
+	err = tmp13.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Flags = tmp33
-	tmp34, err := this._io.ReadU2le()
+	this.Flags = tmp13
+	tmp14, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.DefaultTempo = uint16(tmp34)
-	tmp35, err := this._io.ReadU2le()
+	this.DefaultTempo = uint16(tmp14)
+	tmp15, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.DefaultBpm = uint16(tmp35)
+	this.DefaultBpm = uint16(tmp15)
 	for i := 0; i < int(256); i++ {
 		_ = i
-		tmp36, err := this._io.ReadU1()
+		tmp16, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
-		this.PatternOrderTable = append(this.PatternOrderTable, tmp36)
+		this.PatternOrderTable = append(this.PatternOrderTable, tmp16)
 	}
 	return err
 }
@@ -511,46 +243,50 @@ func NewFasttrackerXmModule_Instrument() *FasttrackerXmModule_Instrument {
 	}
 }
 
+func (this FasttrackerXmModule_Instrument) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *FasttrackerXmModule_Instrument) Read(io *kaitai.Stream, parent *FasttrackerXmModule, root *FasttrackerXmModule) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp37, err := this._io.ReadU4le()
+	tmp17, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.HeaderSize = uint32(tmp37)
-	tmp38, err := this._io.ReadBytes(int((this.HeaderSize - 4)))
+	this.HeaderSize = uint32(tmp17)
+	tmp18, err := this._io.ReadBytes(int(this.HeaderSize - 4))
 	if err != nil {
 		return err
 	}
-	tmp38 = tmp38
-	this._raw_Header = tmp38
+	tmp18 = tmp18
+	this._raw_Header = tmp18
 	_io__raw_Header := kaitai.NewStream(bytes.NewReader(this._raw_Header))
-	tmp39 := NewFasttrackerXmModule_Instrument_Header()
-	err = tmp39.Read(_io__raw_Header, this, this._root)
+	tmp19 := NewFasttrackerXmModule_Instrument_Header()
+	err = tmp19.Read(_io__raw_Header, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Header = tmp39
+	this.Header = tmp19
 	for i := 0; i < int(this.Header.NumSamples); i++ {
 		_ = i
-		tmp40 := NewFasttrackerXmModule_Instrument_SampleHeader()
-		err = tmp40.Read(this._io, this, this._root)
+		tmp20 := NewFasttrackerXmModule_Instrument_SampleHeader()
+		err = tmp20.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.SamplesHeaders = append(this.SamplesHeaders, tmp40)
+		this.SamplesHeaders = append(this.SamplesHeaders, tmp20)
 	}
 	for i := 0; i < int(this.Header.NumSamples); i++ {
 		_ = i
-		tmp41 := NewFasttrackerXmModule_Instrument_SamplesData(this.SamplesHeaders[i])
-		err = tmp41.Read(this._io, this, this._root)
+		tmp21 := NewFasttrackerXmModule_Instrument_SamplesData(this.SamplesHeaders[i])
+		err = tmp21.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Samples = append(this.Samples, tmp41)
+		this.Samples = append(this.Samples, tmp21)
 	}
 	return err
 }
@@ -559,55 +295,6 @@ func (this *FasttrackerXmModule_Instrument) Read(io *kaitai.Stream, parent *Fast
  * Instrument size << header that is >>
  * << "Instrument Size" field tends to be more than the actual size of the structure documented here (it includes also the extended instrument sample header above). So remember to check it and skip the additional bytes before the first sample header >>
  */
-type FasttrackerXmModule_Instrument_Header struct {
-	Name string
-	Type uint8
-	NumSamples uint16
-	ExtraHeader *FasttrackerXmModule_Instrument_ExtraHeader
-	_io *kaitai.Stream
-	_root *FasttrackerXmModule
-	_parent *FasttrackerXmModule_Instrument
-}
-func NewFasttrackerXmModule_Instrument_Header() *FasttrackerXmModule_Instrument_Header {
-	return &FasttrackerXmModule_Instrument_Header{
-	}
-}
-
-func (this *FasttrackerXmModule_Instrument_Header) Read(io *kaitai.Stream, parent *FasttrackerXmModule_Instrument, root *FasttrackerXmModule) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp42, err := this._io.ReadBytes(int(22))
-	if err != nil {
-		return err
-	}
-	tmp42 = kaitai.BytesTerminate(tmp42, 0, false)
-	this.Name = string(tmp42)
-	tmp43, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Type = tmp43
-	tmp44, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.NumSamples = uint16(tmp44)
-	if (this.NumSamples > 0) {
-		tmp45 := NewFasttrackerXmModule_Instrument_ExtraHeader()
-		err = tmp45.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.ExtraHeader = tmp45
-	}
-	return err
-}
-
-/**
- * Usually zero, but this seems pretty random, don't assume it's zero
- */
 
 type FasttrackerXmModule_Instrument_ExtraHeader_Type int
 const (
@@ -615,6 +302,11 @@ const (
 	FasttrackerXmModule_Instrument_ExtraHeader_Type__Sustain FasttrackerXmModule_Instrument_ExtraHeader_Type = 1
 	FasttrackerXmModule_Instrument_ExtraHeader_Type__Loop FasttrackerXmModule_Instrument_ExtraHeader_Type = 2
 )
+var values_FasttrackerXmModule_Instrument_ExtraHeader_Type = map[FasttrackerXmModule_Instrument_ExtraHeader_Type]struct{}{0: {}, 1: {}, 2: {}}
+func (v FasttrackerXmModule_Instrument_ExtraHeader_Type) isDefined() bool {
+	_, ok := values_FasttrackerXmModule_Instrument_ExtraHeader_Type[v]
+	return ok
+}
 type FasttrackerXmModule_Instrument_ExtraHeader struct {
 	LenSampleHeader uint32
 	IdxSamplePerNote []uint8
@@ -645,122 +337,126 @@ func NewFasttrackerXmModule_Instrument_ExtraHeader() *FasttrackerXmModule_Instru
 	}
 }
 
+func (this FasttrackerXmModule_Instrument_ExtraHeader) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *FasttrackerXmModule_Instrument_ExtraHeader) Read(io *kaitai.Stream, parent *FasttrackerXmModule_Instrument_Header, root *FasttrackerXmModule) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp46, err := this._io.ReadU4le()
+	tmp22, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.LenSampleHeader = uint32(tmp46)
+	this.LenSampleHeader = uint32(tmp22)
 	for i := 0; i < int(96); i++ {
 		_ = i
-		tmp47, err := this._io.ReadU1()
+		tmp23, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
-		this.IdxSamplePerNote = append(this.IdxSamplePerNote, tmp47)
+		this.IdxSamplePerNote = append(this.IdxSamplePerNote, tmp23)
 	}
 	for i := 0; i < int(12); i++ {
 		_ = i
-		tmp48 := NewFasttrackerXmModule_Instrument_ExtraHeader_EnvelopePoint()
-		err = tmp48.Read(this._io, this, this._root)
+		tmp24 := NewFasttrackerXmModule_Instrument_ExtraHeader_EnvelopePoint()
+		err = tmp24.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.VolumePoints = append(this.VolumePoints, tmp48)
+		this.VolumePoints = append(this.VolumePoints, tmp24)
 	}
 	for i := 0; i < int(12); i++ {
 		_ = i
-		tmp49 := NewFasttrackerXmModule_Instrument_ExtraHeader_EnvelopePoint()
-		err = tmp49.Read(this._io, this, this._root)
+		tmp25 := NewFasttrackerXmModule_Instrument_ExtraHeader_EnvelopePoint()
+		err = tmp25.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.PanningPoints = append(this.PanningPoints, tmp49)
+		this.PanningPoints = append(this.PanningPoints, tmp25)
 	}
-	tmp50, err := this._io.ReadU1()
+	tmp26, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.NumVolumePoints = tmp50
-	tmp51, err := this._io.ReadU1()
+	this.NumVolumePoints = tmp26
+	tmp27, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.NumPanningPoints = tmp51
-	tmp52, err := this._io.ReadU1()
+	this.NumPanningPoints = tmp27
+	tmp28, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.VolumeSustainPoint = tmp52
-	tmp53, err := this._io.ReadU1()
+	this.VolumeSustainPoint = tmp28
+	tmp29, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.VolumeLoopStartPoint = tmp53
-	tmp54, err := this._io.ReadU1()
+	this.VolumeLoopStartPoint = tmp29
+	tmp30, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.VolumeLoopEndPoint = tmp54
-	tmp55, err := this._io.ReadU1()
+	this.VolumeLoopEndPoint = tmp30
+	tmp31, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.PanningSustainPoint = tmp55
-	tmp56, err := this._io.ReadU1()
+	this.PanningSustainPoint = tmp31
+	tmp32, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.PanningLoopStartPoint = tmp56
-	tmp57, err := this._io.ReadU1()
+	this.PanningLoopStartPoint = tmp32
+	tmp33, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.PanningLoopEndPoint = tmp57
-	tmp58, err := this._io.ReadU1()
+	this.PanningLoopEndPoint = tmp33
+	tmp34, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.VolumeType = FasttrackerXmModule_Instrument_ExtraHeader_Type(tmp58)
-	tmp59, err := this._io.ReadU1()
+	this.VolumeType = FasttrackerXmModule_Instrument_ExtraHeader_Type(tmp34)
+	tmp35, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.PanningType = FasttrackerXmModule_Instrument_ExtraHeader_Type(tmp59)
-	tmp60, err := this._io.ReadU1()
+	this.PanningType = FasttrackerXmModule_Instrument_ExtraHeader_Type(tmp35)
+	tmp36, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.VibratoType = tmp60
-	tmp61, err := this._io.ReadU1()
+	this.VibratoType = tmp36
+	tmp37, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.VibratoSweep = tmp61
-	tmp62, err := this._io.ReadU1()
+	this.VibratoSweep = tmp37
+	tmp38, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.VibratoDepth = tmp62
-	tmp63, err := this._io.ReadU1()
+	this.VibratoDepth = tmp38
+	tmp39, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.VibratoRate = tmp63
-	tmp64, err := this._io.ReadU2le()
+	this.VibratoRate = tmp39
+	tmp40, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.VolumeFadeout = uint16(tmp64)
-	tmp65, err := this._io.ReadU2le()
+	this.VolumeFadeout = uint16(tmp40)
+	tmp41, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.Reserved = uint16(tmp65)
+	this.Reserved = uint16(tmp41)
 	return err
 }
 
@@ -798,21 +494,25 @@ func NewFasttrackerXmModule_Instrument_ExtraHeader_EnvelopePoint() *FasttrackerX
 	}
 }
 
+func (this FasttrackerXmModule_Instrument_ExtraHeader_EnvelopePoint) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *FasttrackerXmModule_Instrument_ExtraHeader_EnvelopePoint) Read(io *kaitai.Stream, parent *FasttrackerXmModule_Instrument_ExtraHeader, root *FasttrackerXmModule) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp66, err := this._io.ReadU2le()
+	tmp42, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.X = uint16(tmp66)
-	tmp67, err := this._io.ReadU2le()
+	this.X = uint16(tmp42)
+	tmp43, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.Y = uint16(tmp67)
+	this.Y = uint16(tmp43)
 	return err
 }
 
@@ -823,6 +523,207 @@ func (this *FasttrackerXmModule_Instrument_ExtraHeader_EnvelopePoint) Read(io *k
 /**
  * Value of the point
  */
+type FasttrackerXmModule_Instrument_Header struct {
+	Name string
+	Type uint8
+	NumSamples uint16
+	ExtraHeader *FasttrackerXmModule_Instrument_ExtraHeader
+	_io *kaitai.Stream
+	_root *FasttrackerXmModule
+	_parent *FasttrackerXmModule_Instrument
+}
+func NewFasttrackerXmModule_Instrument_Header() *FasttrackerXmModule_Instrument_Header {
+	return &FasttrackerXmModule_Instrument_Header{
+	}
+}
+
+func (this FasttrackerXmModule_Instrument_Header) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *FasttrackerXmModule_Instrument_Header) Read(io *kaitai.Stream, parent *FasttrackerXmModule_Instrument, root *FasttrackerXmModule) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp44, err := this._io.ReadBytes(int(22))
+	if err != nil {
+		return err
+	}
+	tmp44 = kaitai.BytesTerminate(tmp44, 0, false)
+	this.Name = string(tmp44)
+	tmp45, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Type = tmp45
+	tmp46, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.NumSamples = uint16(tmp46)
+	if (this.NumSamples > 0) {
+		tmp47 := NewFasttrackerXmModule_Instrument_ExtraHeader()
+		err = tmp47.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.ExtraHeader = tmp47
+	}
+	return err
+}
+
+/**
+ * Usually zero, but this seems pretty random, don't assume it's zero
+ */
+type FasttrackerXmModule_Instrument_SampleHeader struct {
+	SampleLength uint32
+	SampleLoopStart uint32
+	SampleLoopLength uint32
+	Volume uint8
+	FineTune int8
+	Type *FasttrackerXmModule_Instrument_SampleHeader_LoopType
+	Panning uint8
+	RelativeNoteNumber int8
+	Reserved uint8
+	Name string
+	_io *kaitai.Stream
+	_root *FasttrackerXmModule
+	_parent *FasttrackerXmModule_Instrument
+}
+func NewFasttrackerXmModule_Instrument_SampleHeader() *FasttrackerXmModule_Instrument_SampleHeader {
+	return &FasttrackerXmModule_Instrument_SampleHeader{
+	}
+}
+
+func (this FasttrackerXmModule_Instrument_SampleHeader) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *FasttrackerXmModule_Instrument_SampleHeader) Read(io *kaitai.Stream, parent *FasttrackerXmModule_Instrument, root *FasttrackerXmModule) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp48, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.SampleLength = uint32(tmp48)
+	tmp49, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.SampleLoopStart = uint32(tmp49)
+	tmp50, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.SampleLoopLength = uint32(tmp50)
+	tmp51, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Volume = tmp51
+	tmp52, err := this._io.ReadS1()
+	if err != nil {
+		return err
+	}
+	this.FineTune = tmp52
+	tmp53 := NewFasttrackerXmModule_Instrument_SampleHeader_LoopType()
+	err = tmp53.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Type = tmp53
+	tmp54, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Panning = tmp54
+	tmp55, err := this._io.ReadS1()
+	if err != nil {
+		return err
+	}
+	this.RelativeNoteNumber = tmp55
+	tmp56, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Reserved = tmp56
+	tmp57, err := this._io.ReadBytes(int(22))
+	if err != nil {
+		return err
+	}
+	tmp57 = kaitai.BytesTerminate(tmp57, 0, false)
+	this.Name = string(tmp57)
+	return err
+}
+
+/**
+ * -16..+15
+ */
+
+/**
+ * (0-255)
+ */
+
+type FasttrackerXmModule_Instrument_SampleHeader_LoopType_LoopType int
+const (
+	FasttrackerXmModule_Instrument_SampleHeader_LoopType_LoopType__None FasttrackerXmModule_Instrument_SampleHeader_LoopType_LoopType = 0
+	FasttrackerXmModule_Instrument_SampleHeader_LoopType_LoopType__Forward FasttrackerXmModule_Instrument_SampleHeader_LoopType_LoopType = 1
+	FasttrackerXmModule_Instrument_SampleHeader_LoopType_LoopType__PingPong FasttrackerXmModule_Instrument_SampleHeader_LoopType_LoopType = 2
+)
+var values_FasttrackerXmModule_Instrument_SampleHeader_LoopType_LoopType = map[FasttrackerXmModule_Instrument_SampleHeader_LoopType_LoopType]struct{}{0: {}, 1: {}, 2: {}}
+func (v FasttrackerXmModule_Instrument_SampleHeader_LoopType_LoopType) isDefined() bool {
+	_, ok := values_FasttrackerXmModule_Instrument_SampleHeader_LoopType_LoopType[v]
+	return ok
+}
+type FasttrackerXmModule_Instrument_SampleHeader_LoopType struct {
+	Reserved0 uint64
+	IsSampleData16Bit bool
+	Reserved1 uint64
+	LoopType FasttrackerXmModule_Instrument_SampleHeader_LoopType_LoopType
+	_io *kaitai.Stream
+	_root *FasttrackerXmModule
+	_parent *FasttrackerXmModule_Instrument_SampleHeader
+}
+func NewFasttrackerXmModule_Instrument_SampleHeader_LoopType() *FasttrackerXmModule_Instrument_SampleHeader_LoopType {
+	return &FasttrackerXmModule_Instrument_SampleHeader_LoopType{
+	}
+}
+
+func (this FasttrackerXmModule_Instrument_SampleHeader_LoopType) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *FasttrackerXmModule_Instrument_SampleHeader_LoopType) Read(io *kaitai.Stream, parent *FasttrackerXmModule_Instrument_SampleHeader, root *FasttrackerXmModule) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp58, err := this._io.ReadBitsIntBe(3)
+	if err != nil {
+		return err
+	}
+	this.Reserved0 = tmp58
+	tmp59, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.IsSampleData16Bit = tmp59 != 0
+	tmp60, err := this._io.ReadBitsIntBe(2)
+	if err != nil {
+		return err
+	}
+	this.Reserved1 = tmp60
+	tmp61, err := this._io.ReadBitsIntBe(2)
+	if err != nil {
+		return err
+	}
+	this.LoopType = FasttrackerXmModule_Instrument_SampleHeader_LoopType_LoopType(tmp61)
+	return err
+}
 
 /**
  * The saved data uses simple delta-encoding to achieve better compression ratios (when compressed with pkzip, etc.)
@@ -846,157 +747,326 @@ func NewFasttrackerXmModule_Instrument_SamplesData(header *FasttrackerXmModule_I
 	}
 }
 
+func (this FasttrackerXmModule_Instrument_SamplesData) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *FasttrackerXmModule_Instrument_SamplesData) Read(io *kaitai.Stream, parent *FasttrackerXmModule_Instrument, root *FasttrackerXmModule) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	var tmp68 int8;
+	var tmp62 int8;
 	if (this.Header.Type.IsSampleData16Bit) {
-		tmp68 = 2
+		tmp62 = 2
 	} else {
-		tmp68 = 1
+		tmp62 = 1
 	}
-	tmp69, err := this._io.ReadBytes(int((this.Header.SampleLength * tmp68)))
+	tmp63, err := this._io.ReadBytes(int(this.Header.SampleLength * tmp62))
 	if err != nil {
 		return err
 	}
-	tmp69 = tmp69
-	this.Data = tmp69
+	tmp63 = tmp63
+	this.Data = tmp63
 	return err
 }
-type FasttrackerXmModule_Instrument_SampleHeader struct {
-	SampleLength uint32
-	SampleLoopStart uint32
-	SampleLoopLength uint32
-	Volume uint8
-	FineTune int8
-	Type *FasttrackerXmModule_Instrument_SampleHeader_LoopType
-	Panning uint8
-	RelativeNoteNumber int8
-	Reserved uint8
-	Name string
+type FasttrackerXmModule_Pattern struct {
+	Header *FasttrackerXmModule_Pattern_Header
+	PackedData []byte
 	_io *kaitai.Stream
 	_root *FasttrackerXmModule
-	_parent *FasttrackerXmModule_Instrument
+	_parent *FasttrackerXmModule
 }
-func NewFasttrackerXmModule_Instrument_SampleHeader() *FasttrackerXmModule_Instrument_SampleHeader {
-	return &FasttrackerXmModule_Instrument_SampleHeader{
+func NewFasttrackerXmModule_Pattern() *FasttrackerXmModule_Pattern {
+	return &FasttrackerXmModule_Pattern{
 	}
 }
 
-func (this *FasttrackerXmModule_Instrument_SampleHeader) Read(io *kaitai.Stream, parent *FasttrackerXmModule_Instrument, root *FasttrackerXmModule) (err error) {
+func (this FasttrackerXmModule_Pattern) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *FasttrackerXmModule_Pattern) Read(io *kaitai.Stream, parent *FasttrackerXmModule, root *FasttrackerXmModule) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp70, err := this._io.ReadU4le()
+	tmp64 := NewFasttrackerXmModule_Pattern_Header()
+	err = tmp64.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.SampleLength = uint32(tmp70)
-	tmp71, err := this._io.ReadU4le()
+	this.Header = tmp64
+	tmp65, err := this._io.ReadBytes(int(this.Header.Main.LenPackedPattern))
 	if err != nil {
 		return err
 	}
-	this.SampleLoopStart = uint32(tmp71)
-	tmp72, err := this._io.ReadU4le()
+	tmp65 = tmp65
+	this.PackedData = tmp65
+	return err
+}
+type FasttrackerXmModule_Pattern_Header struct {
+	HeaderLength uint32
+	Main *FasttrackerXmModule_Pattern_Header_HeaderMain
+	_io *kaitai.Stream
+	_root *FasttrackerXmModule
+	_parent *FasttrackerXmModule_Pattern
+	_raw_Main []byte
+}
+func NewFasttrackerXmModule_Pattern_Header() *FasttrackerXmModule_Pattern_Header {
+	return &FasttrackerXmModule_Pattern_Header{
+	}
+}
+
+func (this FasttrackerXmModule_Pattern_Header) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *FasttrackerXmModule_Pattern_Header) Read(io *kaitai.Stream, parent *FasttrackerXmModule_Pattern, root *FasttrackerXmModule) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp66, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.SampleLoopLength = uint32(tmp72)
-	tmp73, err := this._io.ReadU1()
+	this.HeaderLength = uint32(tmp66)
+	tmp67, err := this._io.ReadBytes(int(this.HeaderLength - 4))
 	if err != nil {
 		return err
 	}
-	this.Volume = tmp73
-	tmp74, err := this._io.ReadS1()
+	tmp67 = tmp67
+	this._raw_Main = tmp67
+	_io__raw_Main := kaitai.NewStream(bytes.NewReader(this._raw_Main))
+	tmp68 := NewFasttrackerXmModule_Pattern_Header_HeaderMain()
+	err = tmp68.Read(_io__raw_Main, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.FineTune = tmp74
-	tmp75 := NewFasttrackerXmModule_Instrument_SampleHeader_LoopType()
-	err = tmp75.Read(this._io, this, this._root)
+	this.Main = tmp68
+	return err
+}
+
+/**
+ * Pattern header length
+ */
+type FasttrackerXmModule_Pattern_Header_HeaderMain struct {
+	PackingType uint8
+	NumRowsRaw uint16
+	LenPackedPattern uint16
+	_io *kaitai.Stream
+	_root *FasttrackerXmModule
+	_parent *FasttrackerXmModule_Pattern_Header
+	_f_numRows bool
+	numRows int
+}
+func NewFasttrackerXmModule_Pattern_Header_HeaderMain() *FasttrackerXmModule_Pattern_Header_HeaderMain {
+	return &FasttrackerXmModule_Pattern_Header_HeaderMain{
+	}
+}
+
+func (this FasttrackerXmModule_Pattern_Header_HeaderMain) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *FasttrackerXmModule_Pattern_Header_HeaderMain) Read(io *kaitai.Stream, parent *FasttrackerXmModule_Pattern_Header, root *FasttrackerXmModule) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp69, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Type = tmp75
-	tmp76, err := this._io.ReadU1()
+	this.PackingType = tmp69
+	tmp70, err := this._root.Preheader.VersionNumber.Value()
 	if err != nil {
 		return err
 	}
-	this.Panning = tmp76
-	tmp77, err := this._io.ReadS1()
+	switch (tmp70) {
+	case 258:
+		tmp71, err := this._io.ReadU1()
+		if err != nil {
+			return err
+		}
+		this.NumRowsRaw = uint16(tmp71)
+	default:
+		tmp72, err := this._io.ReadU2le()
+		if err != nil {
+			return err
+		}
+		this.NumRowsRaw = uint16(tmp72)
+	}
+	tmp73, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.RelativeNoteNumber = tmp77
-	tmp78, err := this._io.ReadU1()
+	this.LenPackedPattern = uint16(tmp73)
+	return err
+}
+func (this *FasttrackerXmModule_Pattern_Header_HeaderMain) NumRows() (v int, err error) {
+	if (this._f_numRows) {
+		return this.numRows, nil
+	}
+	this._f_numRows = true
+	var tmp74 int8;
+	tmp75, err := this._root.Preheader.VersionNumber.Value()
+	if err != nil {
+		return 0, err
+	}
+	if (tmp75 == 258) {
+		tmp74 = 1
+	} else {
+		tmp74 = 0
+	}
+	this.numRows = int(this.NumRowsRaw + tmp74)
+	return this.numRows, nil
+}
+
+/**
+ * Packing type (always 0)
+ */
+
+/**
+ * Number of rows in pattern (1..256)
+ */
+
+/**
+ * Packed pattern data size
+ */
+type FasttrackerXmModule_Preheader struct {
+	Signature0 []byte
+	ModuleName string
+	Signature1 []byte
+	TrackerName string
+	VersionNumber *FasttrackerXmModule_Preheader_Version
+	HeaderSize uint32
+	_io *kaitai.Stream
+	_root *FasttrackerXmModule
+	_parent *FasttrackerXmModule
+}
+func NewFasttrackerXmModule_Preheader() *FasttrackerXmModule_Preheader {
+	return &FasttrackerXmModule_Preheader{
+	}
+}
+
+func (this FasttrackerXmModule_Preheader) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *FasttrackerXmModule_Preheader) Read(io *kaitai.Stream, parent *FasttrackerXmModule, root *FasttrackerXmModule) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp76, err := this._io.ReadBytes(int(17))
 	if err != nil {
 		return err
 	}
-	this.Reserved = tmp78
-	tmp79, err := this._io.ReadBytes(int(22))
+	tmp76 = tmp76
+	this.Signature0 = tmp76
+	if !(bytes.Equal(this.Signature0, []uint8{69, 120, 116, 101, 110, 100, 101, 100, 32, 77, 111, 100, 117, 108, 101, 58, 32})) {
+		return kaitai.NewValidationNotEqualError([]uint8{69, 120, 116, 101, 110, 100, 101, 100, 32, 77, 111, 100, 117, 108, 101, 58, 32}, this.Signature0, this._io, "/types/preheader/seq/0")
+	}
+	tmp77, err := this._io.ReadBytes(int(20))
+	if err != nil {
+		return err
+	}
+	tmp77 = kaitai.BytesTerminate(tmp77, 0, false)
+	this.ModuleName = string(tmp77)
+	tmp78, err := this._io.ReadBytes(int(1))
+	if err != nil {
+		return err
+	}
+	tmp78 = tmp78
+	this.Signature1 = tmp78
+	if !(bytes.Equal(this.Signature1, []uint8{26})) {
+		return kaitai.NewValidationNotEqualError([]uint8{26}, this.Signature1, this._io, "/types/preheader/seq/2")
+	}
+	tmp79, err := this._io.ReadBytes(int(20))
 	if err != nil {
 		return err
 	}
 	tmp79 = kaitai.BytesTerminate(tmp79, 0, false)
-	this.Name = string(tmp79)
+	this.TrackerName = string(tmp79)
+	tmp80 := NewFasttrackerXmModule_Preheader_Version()
+	err = tmp80.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.VersionNumber = tmp80
+	tmp81, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.HeaderSize = uint32(tmp81)
 	return err
 }
 
 /**
- * -16..+15
+ * Module name, padded with zeroes
  */
 
 /**
- * (0-255)
+ * Tracker name
  */
 
-type FasttrackerXmModule_Instrument_SampleHeader_LoopType_LoopType int
-const (
-	FasttrackerXmModule_Instrument_SampleHeader_LoopType_LoopType__None FasttrackerXmModule_Instrument_SampleHeader_LoopType_LoopType = 0
-	FasttrackerXmModule_Instrument_SampleHeader_LoopType_LoopType__Forward FasttrackerXmModule_Instrument_SampleHeader_LoopType_LoopType = 1
-	FasttrackerXmModule_Instrument_SampleHeader_LoopType_LoopType__PingPong FasttrackerXmModule_Instrument_SampleHeader_LoopType_LoopType = 2
-)
-type FasttrackerXmModule_Instrument_SampleHeader_LoopType struct {
-	Reserved0 uint64
-	IsSampleData16Bit bool
-	Reserved1 uint64
-	LoopType FasttrackerXmModule_Instrument_SampleHeader_LoopType_LoopType
+/**
+ * Format versions below [0x01, 0x04] have a LOT of differences. Check this field!
+ */
+
+/**
+ * Header size << Calculated FROM THIS OFFSET, not from the beginning of the file! >>
+ */
+type FasttrackerXmModule_Preheader_Version struct {
+	Minor uint8
+	Major uint8
 	_io *kaitai.Stream
 	_root *FasttrackerXmModule
-	_parent *FasttrackerXmModule_Instrument_SampleHeader
+	_parent *FasttrackerXmModule_Preheader
+	_f_value bool
+	value int
 }
-func NewFasttrackerXmModule_Instrument_SampleHeader_LoopType() *FasttrackerXmModule_Instrument_SampleHeader_LoopType {
-	return &FasttrackerXmModule_Instrument_SampleHeader_LoopType{
+func NewFasttrackerXmModule_Preheader_Version() *FasttrackerXmModule_Preheader_Version {
+	return &FasttrackerXmModule_Preheader_Version{
 	}
 }
 
-func (this *FasttrackerXmModule_Instrument_SampleHeader_LoopType) Read(io *kaitai.Stream, parent *FasttrackerXmModule_Instrument_SampleHeader, root *FasttrackerXmModule) (err error) {
+func (this FasttrackerXmModule_Preheader_Version) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *FasttrackerXmModule_Preheader_Version) Read(io *kaitai.Stream, parent *FasttrackerXmModule_Preheader, root *FasttrackerXmModule) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp80, err := this._io.ReadBitsIntBe(3)
+	tmp82, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Reserved0 = tmp80
-	tmp81, err := this._io.ReadBitsIntBe(1)
+	this.Minor = tmp82
+	tmp83, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.IsSampleData16Bit = tmp81 != 0
-	tmp82, err := this._io.ReadBitsIntBe(2)
-	if err != nil {
-		return err
-	}
-	this.Reserved1 = tmp82
-	tmp83, err := this._io.ReadBitsIntBe(2)
-	if err != nil {
-		return err
-	}
-	this.LoopType = FasttrackerXmModule_Instrument_SampleHeader_LoopType_LoopType(tmp83)
+	this.Major = tmp83
 	return err
 }
+func (this *FasttrackerXmModule_Preheader_Version) Value() (v int, err error) {
+	if (this._f_value) {
+		return this.value, nil
+	}
+	this._f_value = true
+	this.value = int(this.Major << 8 | this.Minor)
+	return this.value, nil
+}
+
+/**
+ * currently 0x04
+ */
+
+/**
+ * currently 0x01
+ */

@@ -39,31 +39,12 @@ function Dune2Pak.property.dir_size:get()
 end
 
 
-Dune2Pak.Files = class.class(KaitaiStruct)
-
-function Dune2Pak.Files:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Dune2Pak.Files:_read()
-  self.files = {}
-  local i = 0
-  while not self._io:is_eof() do
-    self.files[i + 1] = Dune2Pak.File(i, self._io, self, self._root)
-    i = i + 1
-  end
-end
-
-
 Dune2Pak.File = class.class(KaitaiStruct)
 
 function Dune2Pak.File:_init(idx, io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self.idx = idx
   self:_read()
 end
@@ -75,16 +56,20 @@ function Dune2Pak.File:_read()
   end
 end
 
-Dune2Pak.File.property.next_ofs0 = {}
-function Dune2Pak.File.property.next_ofs0:get()
-  if self._m_next_ofs0 ~= nil then
-    return self._m_next_ofs0
+Dune2Pak.File.property.body = {}
+function Dune2Pak.File.property.body:get()
+  if self._m_body ~= nil then
+    return self._m_body
   end
 
   if self.ofs ~= 0 then
-    self._m_next_ofs0 = self._root.dir.files[(self.idx + 1) + 1].ofs
+    local _io = self._root._io
+    local _pos = _io:pos()
+    _io:seek(self.ofs)
+    self._m_body = _io:read_bytes(self.next_ofs - self.ofs)
+    _io:seek(_pos)
   end
-  return self._m_next_ofs0
+  return self._m_body
 end
 
 Dune2Pak.File.property.next_ofs = {}
@@ -99,20 +84,35 @@ function Dune2Pak.File.property.next_ofs:get()
   return self._m_next_ofs
 end
 
-Dune2Pak.File.property.body = {}
-function Dune2Pak.File.property.body:get()
-  if self._m_body ~= nil then
-    return self._m_body
+Dune2Pak.File.property.next_ofs0 = {}
+function Dune2Pak.File.property.next_ofs0:get()
+  if self._m_next_ofs0 ~= nil then
+    return self._m_next_ofs0
   end
 
   if self.ofs ~= 0 then
-    local _io = self._root._io
-    local _pos = _io:pos()
-    _io:seek(self.ofs)
-    self._m_body = _io:read_bytes((self.next_ofs - self.ofs))
-    _io:seek(_pos)
+    self._m_next_ofs0 = self._root.dir.files[(self.idx + 1) + 1].ofs
   end
-  return self._m_body
+  return self._m_next_ofs0
+end
+
+
+Dune2Pak.Files = class.class(KaitaiStruct)
+
+function Dune2Pak.Files:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Dune2Pak.Files:_read()
+  self.files = {}
+  local i = 0
+  while not self._io:is_eof() do
+    self.files[i + 1] = Dune2Pak.File(i, self._io, self, self._root)
+    i = i + 1
+  end
 end
 
 

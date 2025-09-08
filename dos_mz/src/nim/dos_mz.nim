@@ -99,13 +99,13 @@ proc read*(_: typedesc[DosMz_ExeHeader], io: KaitaiStream, root: KaitaiStruct, p
 
   let mzExpr = DosMz_MzHeader.read(this.io, this.root, this)
   this.mz = mzExpr
-  let restOfHeaderExpr = this.io.readBytes(int((this.mz.lenHeader - 28)))
+  let restOfHeaderExpr = this.io.readBytes(int(this.mz.lenHeader - 28))
   this.restOfHeader = restOfHeaderExpr
 
 proc lenBody(this: DosMz_ExeHeader): int = 
   if this.lenBodyInstFlag:
     return this.lenBodyInst
-  let lenBodyInstExpr = int(((if this.mz.lastPageExtraBytes == 0: (this.mz.numPages * 512) else: (((this.mz.numPages - 1) * 512) + this.mz.lastPageExtraBytes)) - this.mz.lenHeader))
+  let lenBodyInstExpr = int((if this.mz.lastPageExtraBytes == 0: this.mz.numPages * 512 else: (this.mz.numPages - 1) * 512 + this.mz.lastPageExtraBytes) - this.mz.lenHeader)
   this.lenBodyInst = lenBodyInstExpr
   this.lenBodyInstFlag = true
   return this.lenBodyInst
@@ -153,7 +153,7 @@ proc read*(_: typedesc[DosMz_MzHeader], io: KaitaiStream, root: KaitaiStruct, pa
 proc lenHeader(this: DosMz_MzHeader): int = 
   if this.lenHeaderInstFlag:
     return this.lenHeaderInst
-  let lenHeaderInstExpr = int((this.headerSize * 16))
+  let lenHeaderInstExpr = int(this.headerSize * 16)
   this.lenHeaderInst = lenHeaderInstExpr
   this.lenHeaderInstFlag = true
   return this.lenHeaderInst

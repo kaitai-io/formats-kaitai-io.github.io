@@ -176,6 +176,11 @@ The solution described here is also known as SOME/IP-SD
                 
                 <li>
                 
+                <a href="java-write.html" title="AUTOSAR SOME/IP Service Discovery parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="AUTOSAR SOME/IP Service Discovery parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -204,9 +209,19 @@ The solution described here is also known as SOME/IP-SD
                 <a href="python.html" title="AUTOSAR SOME/IP Service Discovery parsing Python library">Python</a></li>
                 
                 
+                <li>
+                
+                <a href="python-write.html" title="AUTOSAR SOME/IP Service Discovery parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
                 <li class="active">
                 
                 <a href="ruby.html" title="AUTOSAR SOME/IP Service Discovery parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="AUTOSAR SOME/IP Service Discovery parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -281,9 +296,11 @@ The solution described here is also known as SOME/IP-SD
             <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
 <span class="nb">require</span><span class="w"> </span><span class="s1">&#39;kaitai/struct/struct&#39;</span>
+<span class="n">require_relative</span><span class="w"> </span><span class="s1">&#39;some_ip_sd_options&#39;</span>
+<span class="n">require_relative</span><span class="w"> </span><span class="s1">&#39;some_ip_sd_entries&#39;</span>
 
-<span class="k">unless</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.9&#39;</span><span class="p">)</span>
-<span class="w">  </span><span class="k">raise</span><span class="w"> </span><span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">unless</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.11&#39;</span><span class="p">)</span>
+<span class="w">  </span><span class="k">raise</span><span class="w"> </span><span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
 <span class="k">end</span>
 
 
@@ -296,8 +313,8 @@ The solution described here is also known as SOME/IP-SD
 <span class="c1"># (Scalable service-Oriented MiddlewarE over IP - Service Discovery).</span>
 <span class="c1"># @see https://www.autosar.org/fileadmin/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf Source</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">SomeIpSd</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
-<span class="w">    </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">    </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
 <span class="w">    </span><span class="n">_read</span>
 <span class="w">  </span><span class="k">end</span>
 
@@ -305,20 +322,18 @@ The solution described here is also known as SOME/IP-SD
 <span class="w">    </span><span class="vi">@flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SdFlags</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
 <span class="w">    </span><span class="vi">@reserved</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 <span class="w">    </span><span class="vi">@len_entries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
-<span class="w">    </span><span class="vi">@_raw_entries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_entries</span><span class="p">)</span>
-<span class="w">    </span><span class="n">_io__raw_entries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_entries</span><span class="p">)</span>
-<span class="w">    </span><span class="vi">@entries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SomeIpSdEntries</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_entries</span><span class="p">)</span>
+<span class="w">    </span><span class="n">_io_entries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">(</span><span class="n">len_entries</span><span class="p">)</span>
+<span class="w">    </span><span class="vi">@entries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SomeIpSdEntries</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_entries</span><span class="p">)</span>
 <span class="w">    </span><span class="vi">@len_options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
-<span class="w">    </span><span class="vi">@_raw_options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_options</span><span class="p">)</span>
-<span class="w">    </span><span class="n">_io__raw_options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_options</span><span class="p">)</span>
-<span class="w">    </span><span class="vi">@options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SomeIpSdOptions</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_options</span><span class="p">)</span>
+<span class="w">    </span><span class="n">_io_options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">(</span><span class="n">len_options</span><span class="p">)</span>
+<span class="w">    </span><span class="vi">@options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SomeIpSdOptions</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_options</span><span class="p">)</span>
 <span class="w">    </span><span class="nb">self</span>
 <span class="w">  </span><span class="k">end</span>
 
 <span class="w">  </span><span class="c1">##</span>
 <span class="w">  </span><span class="c1"># @see &#39;&#39; AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf - Figure 4.3</span>
 <span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">SdFlags</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 <span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
 <span class="w">      </span><span class="n">_read</span>
 <span class="w">    </span><span class="k">end</span>

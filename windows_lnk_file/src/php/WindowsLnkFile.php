@@ -10,8 +10,8 @@
 
 namespace {
     class WindowsLnkFile extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \WindowsLnkFile $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\WindowsLnkFile $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -59,304 +59,20 @@ namespace {
 }
 
 namespace WindowsLnkFile {
-    class LinkTargetIdList extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \WindowsLnkFile $_parent = null, \WindowsLnkFile $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_lenIdList = $this->_io->readU2le();
-            $this->_m__raw_idList = $this->_io->readBytes($this->lenIdList());
-            $_io__raw_idList = new \Kaitai\Struct\Stream($this->_m__raw_idList);
-            $this->_m_idList = new \WindowsShellItems($_io__raw_idList);
-        }
-        protected $_m_lenIdList;
-        protected $_m_idList;
-        protected $_m__raw_idList;
-        public function lenIdList() { return $this->_m_lenIdList; }
-        public function idList() { return $this->_m_idList; }
-        public function _raw_idList() { return $this->_m__raw_idList; }
-    }
-}
-
-namespace WindowsLnkFile {
-    class StringData extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \WindowsLnkFile $_parent = null, \WindowsLnkFile $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_charsStr = $this->_io->readU2le();
-            $this->_m_str = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(($this->charsStr() * 2)), "UTF-16LE");
-        }
-        protected $_m_charsStr;
-        protected $_m_str;
-        public function charsStr() { return $this->_m_charsStr; }
-        public function str() { return $this->_m_str; }
-    }
-}
-
-namespace WindowsLnkFile {
-    class LinkInfo extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \WindowsLnkFile $_parent = null, \WindowsLnkFile $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_lenAll = $this->_io->readU4le();
-            $this->_m__raw_all = $this->_io->readBytes(($this->lenAll() - 4));
-            $_io__raw_all = new \Kaitai\Struct\Stream($this->_m__raw_all);
-            $this->_m_all = new \WindowsLnkFile\LinkInfo\All($_io__raw_all, $this, $this->_root);
-        }
-        protected $_m_lenAll;
-        protected $_m_all;
-        protected $_m__raw_all;
-        public function lenAll() { return $this->_m_lenAll; }
-        public function all() { return $this->_m_all; }
-        public function _raw_all() { return $this->_m__raw_all; }
-    }
-}
-
-namespace WindowsLnkFile\LinkInfo {
-    class VolumeIdBody extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \WindowsLnkFile\LinkInfo\VolumeIdSpec $_parent = null, \WindowsLnkFile $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_driveType = $this->_io->readU4le();
-            $this->_m_driveSerialNumber = $this->_io->readU4le();
-            $this->_m_ofsVolumeLabel = $this->_io->readU4le();
-            if ($this->isUnicode()) {
-                $this->_m_ofsVolumeLabelUnicode = $this->_io->readU4le();
-            }
-        }
-        protected $_m_isUnicode;
-        public function isUnicode() {
-            if ($this->_m_isUnicode !== null)
-                return $this->_m_isUnicode;
-            $this->_m_isUnicode = $this->ofsVolumeLabel() == 20;
-            return $this->_m_isUnicode;
-        }
-        protected $_m_volumeLabelAnsi;
-        public function volumeLabelAnsi() {
-            if ($this->_m_volumeLabelAnsi !== null)
-                return $this->_m_volumeLabelAnsi;
-            if (!($this->isUnicode())) {
-                $_pos = $this->_io->pos();
-                $this->_io->seek(($this->ofsVolumeLabel() - 4));
-                $this->_m_volumeLabelAnsi = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, true), "cp437");
-                $this->_io->seek($_pos);
-            }
-            return $this->_m_volumeLabelAnsi;
-        }
-        protected $_m_driveType;
-        protected $_m_driveSerialNumber;
-        protected $_m_ofsVolumeLabel;
-        protected $_m_ofsVolumeLabelUnicode;
-        public function driveType() { return $this->_m_driveType; }
-        public function driveSerialNumber() { return $this->_m_driveSerialNumber; }
-        public function ofsVolumeLabel() { return $this->_m_ofsVolumeLabel; }
-        public function ofsVolumeLabelUnicode() { return $this->_m_ofsVolumeLabelUnicode; }
-    }
-}
-
-namespace WindowsLnkFile\LinkInfo {
-    class All extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \WindowsLnkFile\LinkInfo $_parent = null, \WindowsLnkFile $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_lenHeader = $this->_io->readU4le();
-            $this->_m__raw_header = $this->_io->readBytes(($this->lenHeader() - 8));
-            $_io__raw_header = new \Kaitai\Struct\Stream($this->_m__raw_header);
-            $this->_m_header = new \WindowsLnkFile\LinkInfo\Header($_io__raw_header, $this, $this->_root);
-        }
-        protected $_m_volumeId;
-        public function volumeId() {
-            if ($this->_m_volumeId !== null)
-                return $this->_m_volumeId;
-            if ($this->header()->flags()->hasVolumeIdAndLocalBasePath()) {
-                $_pos = $this->_io->pos();
-                $this->_io->seek(($this->header()->ofsVolumeId() - 4));
-                $this->_m_volumeId = new \WindowsLnkFile\LinkInfo\VolumeIdSpec($this->_io, $this, $this->_root);
-                $this->_io->seek($_pos);
-            }
-            return $this->_m_volumeId;
-        }
-        protected $_m_localBasePath;
-        public function localBasePath() {
-            if ($this->_m_localBasePath !== null)
-                return $this->_m_localBasePath;
-            if ($this->header()->flags()->hasVolumeIdAndLocalBasePath()) {
-                $_pos = $this->_io->pos();
-                $this->_io->seek(($this->header()->ofsLocalBasePath() - 4));
-                $this->_m_localBasePath = $this->_io->readBytesTerm(0, false, true, true);
-                $this->_io->seek($_pos);
-            }
-            return $this->_m_localBasePath;
-        }
-        protected $_m_lenHeader;
-        protected $_m_header;
-        protected $_m__raw_header;
-        public function lenHeader() { return $this->_m_lenHeader; }
-        public function header() { return $this->_m_header; }
-        public function _raw_header() { return $this->_m__raw_header; }
-    }
-}
-
-namespace WindowsLnkFile\LinkInfo {
-    class VolumeIdSpec extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \WindowsLnkFile\LinkInfo\All $_parent = null, \WindowsLnkFile $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_lenAll = $this->_io->readU4le();
-            $this->_m__raw_body = $this->_io->readBytes(($this->lenAll() - 4));
-            $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-            $this->_m_body = new \WindowsLnkFile\LinkInfo\VolumeIdBody($_io__raw_body, $this, $this->_root);
-        }
-        protected $_m_lenAll;
-        protected $_m_body;
-        protected $_m__raw_body;
-        public function lenAll() { return $this->_m_lenAll; }
-        public function body() { return $this->_m_body; }
-        public function _raw_body() { return $this->_m__raw_body; }
-    }
-}
-
-namespace WindowsLnkFile\LinkInfo {
-    class LinkInfoFlags extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \WindowsLnkFile\LinkInfo\Header $_parent = null, \WindowsLnkFile $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_reserved1 = $this->_io->readBitsIntBe(6);
-            $this->_m_hasCommonNetRelLink = $this->_io->readBitsIntBe(1) != 0;
-            $this->_m_hasVolumeIdAndLocalBasePath = $this->_io->readBitsIntBe(1) != 0;
-            $this->_m_reserved2 = $this->_io->readBitsIntBe(24);
-        }
-        protected $_m_reserved1;
-        protected $_m_hasCommonNetRelLink;
-        protected $_m_hasVolumeIdAndLocalBasePath;
-        protected $_m_reserved2;
-        public function reserved1() { return $this->_m_reserved1; }
-        public function hasCommonNetRelLink() { return $this->_m_hasCommonNetRelLink; }
-        public function hasVolumeIdAndLocalBasePath() { return $this->_m_hasVolumeIdAndLocalBasePath; }
-        public function reserved2() { return $this->_m_reserved2; }
-    }
-}
-
-namespace WindowsLnkFile\LinkInfo {
-    class Header extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \WindowsLnkFile\LinkInfo\All $_parent = null, \WindowsLnkFile $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_flags = new \WindowsLnkFile\LinkInfo\LinkInfoFlags($this->_io, $this, $this->_root);
-            $this->_m_ofsVolumeId = $this->_io->readU4le();
-            $this->_m_ofsLocalBasePath = $this->_io->readU4le();
-            $this->_m_ofsCommonNetRelLink = $this->_io->readU4le();
-            $this->_m_ofsCommonPathSuffix = $this->_io->readU4le();
-            if (!($this->_io()->isEof())) {
-                $this->_m_ofsLocalBasePathUnicode = $this->_io->readU4le();
-            }
-            if (!($this->_io()->isEof())) {
-                $this->_m_ofsCommonPathSuffixUnicode = $this->_io->readU4le();
-            }
-        }
-        protected $_m_flags;
-        protected $_m_ofsVolumeId;
-        protected $_m_ofsLocalBasePath;
-        protected $_m_ofsCommonNetRelLink;
-        protected $_m_ofsCommonPathSuffix;
-        protected $_m_ofsLocalBasePathUnicode;
-        protected $_m_ofsCommonPathSuffixUnicode;
-        public function flags() { return $this->_m_flags; }
-        public function ofsVolumeId() { return $this->_m_ofsVolumeId; }
-        public function ofsLocalBasePath() { return $this->_m_ofsLocalBasePath; }
-        public function ofsCommonNetRelLink() { return $this->_m_ofsCommonNetRelLink; }
-        public function ofsCommonPathSuffix() { return $this->_m_ofsCommonPathSuffix; }
-        public function ofsLocalBasePathUnicode() { return $this->_m_ofsLocalBasePathUnicode; }
-        public function ofsCommonPathSuffixUnicode() { return $this->_m_ofsCommonPathSuffixUnicode; }
-    }
-}
-
-namespace WindowsLnkFile {
-    class LinkFlags extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \WindowsLnkFile\FileHeader $_parent = null, \WindowsLnkFile $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_isUnicode = $this->_io->readBitsIntBe(1) != 0;
-            $this->_m_hasIconLocation = $this->_io->readBitsIntBe(1) != 0;
-            $this->_m_hasArguments = $this->_io->readBitsIntBe(1) != 0;
-            $this->_m_hasWorkDir = $this->_io->readBitsIntBe(1) != 0;
-            $this->_m_hasRelPath = $this->_io->readBitsIntBe(1) != 0;
-            $this->_m_hasName = $this->_io->readBitsIntBe(1) != 0;
-            $this->_m_hasLinkInfo = $this->_io->readBitsIntBe(1) != 0;
-            $this->_m_hasLinkTargetIdList = $this->_io->readBitsIntBe(1) != 0;
-            $this->_m__unnamed8 = $this->_io->readBitsIntBe(16);
-            $this->_m_reserved = $this->_io->readBitsIntBe(5);
-            $this->_m_keepLocalIdListForUncTarget = $this->_io->readBitsIntBe(1) != 0;
-            $this->_m__unnamed11 = $this->_io->readBitsIntBe(2);
-        }
-        protected $_m_isUnicode;
-        protected $_m_hasIconLocation;
-        protected $_m_hasArguments;
-        protected $_m_hasWorkDir;
-        protected $_m_hasRelPath;
-        protected $_m_hasName;
-        protected $_m_hasLinkInfo;
-        protected $_m_hasLinkTargetIdList;
-        protected $_m__unnamed8;
-        protected $_m_reserved;
-        protected $_m_keepLocalIdListForUncTarget;
-        protected $_m__unnamed11;
-        public function isUnicode() { return $this->_m_isUnicode; }
-        public function hasIconLocation() { return $this->_m_hasIconLocation; }
-        public function hasArguments() { return $this->_m_hasArguments; }
-        public function hasWorkDir() { return $this->_m_hasWorkDir; }
-        public function hasRelPath() { return $this->_m_hasRelPath; }
-        public function hasName() { return $this->_m_hasName; }
-        public function hasLinkInfo() { return $this->_m_hasLinkInfo; }
-        public function hasLinkTargetIdList() { return $this->_m_hasLinkTargetIdList; }
-        public function _unnamed8() { return $this->_m__unnamed8; }
-        public function reserved() { return $this->_m_reserved; }
-        public function keepLocalIdListForUncTarget() { return $this->_m_keepLocalIdListForUncTarget; }
-        public function _unnamed11() { return $this->_m__unnamed11; }
-    }
-}
-
-namespace WindowsLnkFile {
     class FileHeader extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \WindowsLnkFile $_parent = null, \WindowsLnkFile $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\WindowsLnkFile $_parent = null, ?\WindowsLnkFile $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_lenHeader = $this->_io->readBytes(4);
-            if (!($this->lenHeader() == "\x4C\x00\x00\x00")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x4C\x00\x00\x00", $this->lenHeader(), $this->_io(), "/types/file_header/seq/0");
+            if (!($this->_m_lenHeader == "\x4C\x00\x00\x00")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x4C\x00\x00\x00", $this->_m_lenHeader, $this->_io, "/types/file_header/seq/0");
             }
             $this->_m_linkClsid = $this->_io->readBytes(16);
-            if (!($this->linkClsid() == "\x01\x14\x02\x00\x00\x00\x00\x00\xC0\x00\x00\x00\x00\x00\x00\x46")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x01\x14\x02\x00\x00\x00\x00\x00\xC0\x00\x00\x00\x00\x00\x00\x46", $this->linkClsid(), $this->_io(), "/types/file_header/seq/1");
+            if (!($this->_m_linkClsid == "\x01\x14\x02\x00\x00\x00\x00\x00\xC0\x00\x00\x00\x00\x00\x00\x46")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x01\x14\x02\x00\x00\x00\x00\x00\xC0\x00\x00\x00\x00\x00\x00\x46", $this->_m_linkClsid, $this->_io, "/types/file_header/seq/1");
             }
             $this->_m__raw_flags = $this->_io->readBytes(4);
             $_io__raw_flags = new \Kaitai\Struct\Stream($this->_m__raw_flags);
@@ -370,8 +86,8 @@ namespace WindowsLnkFile {
             $this->_m_showCommand = $this->_io->readU4le();
             $this->_m_hotkey = $this->_io->readU2le();
             $this->_m_reserved = $this->_io->readBytes(10);
-            if (!($this->reserved() == "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00", $this->reserved(), $this->_io(), "/types/file_header/seq/11");
+            if (!($this->_m_reserved == "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00", $this->_m_reserved, $this->_io, "/types/file_header/seq/11");
             }
         }
         protected $_m_lenHeader;
@@ -426,10 +142,286 @@ namespace WindowsLnkFile {
 }
 
 namespace WindowsLnkFile {
-    class WindowState {
-        const NORMAL = 1;
-        const MAXIMIZED = 3;
-        const MIN_NO_ACTIVE = 7;
+    class LinkFlags extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\WindowsLnkFile\FileHeader $_parent = null, ?\WindowsLnkFile $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_isUnicode = $this->_io->readBitsIntBe(1) != 0;
+            $this->_m_hasIconLocation = $this->_io->readBitsIntBe(1) != 0;
+            $this->_m_hasArguments = $this->_io->readBitsIntBe(1) != 0;
+            $this->_m_hasWorkDir = $this->_io->readBitsIntBe(1) != 0;
+            $this->_m_hasRelPath = $this->_io->readBitsIntBe(1) != 0;
+            $this->_m_hasName = $this->_io->readBitsIntBe(1) != 0;
+            $this->_m_hasLinkInfo = $this->_io->readBitsIntBe(1) != 0;
+            $this->_m_hasLinkTargetIdList = $this->_io->readBitsIntBe(1) != 0;
+            $this->_m__unnamed8 = $this->_io->readBitsIntBe(16);
+            $this->_m_reserved = $this->_io->readBitsIntBe(5);
+            $this->_m_keepLocalIdListForUncTarget = $this->_io->readBitsIntBe(1) != 0;
+            $this->_m__unnamed11 = $this->_io->readBitsIntBe(2);
+        }
+        protected $_m_isUnicode;
+        protected $_m_hasIconLocation;
+        protected $_m_hasArguments;
+        protected $_m_hasWorkDir;
+        protected $_m_hasRelPath;
+        protected $_m_hasName;
+        protected $_m_hasLinkInfo;
+        protected $_m_hasLinkTargetIdList;
+        protected $_m__unnamed8;
+        protected $_m_reserved;
+        protected $_m_keepLocalIdListForUncTarget;
+        protected $_m__unnamed11;
+        public function isUnicode() { return $this->_m_isUnicode; }
+        public function hasIconLocation() { return $this->_m_hasIconLocation; }
+        public function hasArguments() { return $this->_m_hasArguments; }
+        public function hasWorkDir() { return $this->_m_hasWorkDir; }
+        public function hasRelPath() { return $this->_m_hasRelPath; }
+        public function hasName() { return $this->_m_hasName; }
+        public function hasLinkInfo() { return $this->_m_hasLinkInfo; }
+        public function hasLinkTargetIdList() { return $this->_m_hasLinkTargetIdList; }
+        public function _unnamed8() { return $this->_m__unnamed8; }
+        public function reserved() { return $this->_m_reserved; }
+        public function keepLocalIdListForUncTarget() { return $this->_m_keepLocalIdListForUncTarget; }
+        public function _unnamed11() { return $this->_m__unnamed11; }
+    }
+}
+
+namespace WindowsLnkFile {
+    class LinkInfo extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\WindowsLnkFile $_parent = null, ?\WindowsLnkFile $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_lenAll = $this->_io->readU4le();
+            $this->_m__raw_all = $this->_io->readBytes($this->lenAll() - 4);
+            $_io__raw_all = new \Kaitai\Struct\Stream($this->_m__raw_all);
+            $this->_m_all = new \WindowsLnkFile\LinkInfo\All($_io__raw_all, $this, $this->_root);
+        }
+        protected $_m_lenAll;
+        protected $_m_all;
+        protected $_m__raw_all;
+        public function lenAll() { return $this->_m_lenAll; }
+        public function all() { return $this->_m_all; }
+        public function _raw_all() { return $this->_m__raw_all; }
+    }
+}
+
+namespace WindowsLnkFile\LinkInfo {
+    class All extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\WindowsLnkFile\LinkInfo $_parent = null, ?\WindowsLnkFile $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_lenHeader = $this->_io->readU4le();
+            $this->_m__raw_header = $this->_io->readBytes($this->lenHeader() - 8);
+            $_io__raw_header = new \Kaitai\Struct\Stream($this->_m__raw_header);
+            $this->_m_header = new \WindowsLnkFile\LinkInfo\Header($_io__raw_header, $this, $this->_root);
+        }
+        protected $_m_localBasePath;
+        public function localBasePath() {
+            if ($this->_m_localBasePath !== null)
+                return $this->_m_localBasePath;
+            if ($this->header()->flags()->hasVolumeIdAndLocalBasePath()) {
+                $_pos = $this->_io->pos();
+                $this->_io->seek($this->header()->ofsLocalBasePath() - 4);
+                $this->_m_localBasePath = $this->_io->readBytesTerm(0, false, true, true);
+                $this->_io->seek($_pos);
+            }
+            return $this->_m_localBasePath;
+        }
+        protected $_m_volumeId;
+        public function volumeId() {
+            if ($this->_m_volumeId !== null)
+                return $this->_m_volumeId;
+            if ($this->header()->flags()->hasVolumeIdAndLocalBasePath()) {
+                $_pos = $this->_io->pos();
+                $this->_io->seek($this->header()->ofsVolumeId() - 4);
+                $this->_m_volumeId = new \WindowsLnkFile\LinkInfo\VolumeIdSpec($this->_io, $this, $this->_root);
+                $this->_io->seek($_pos);
+            }
+            return $this->_m_volumeId;
+        }
+        protected $_m_lenHeader;
+        protected $_m_header;
+        protected $_m__raw_header;
+        public function lenHeader() { return $this->_m_lenHeader; }
+        public function header() { return $this->_m_header; }
+        public function _raw_header() { return $this->_m__raw_header; }
+    }
+}
+
+namespace WindowsLnkFile\LinkInfo {
+    class Header extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\WindowsLnkFile\LinkInfo\All $_parent = null, ?\WindowsLnkFile $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_flags = new \WindowsLnkFile\LinkInfo\LinkInfoFlags($this->_io, $this, $this->_root);
+            $this->_m_ofsVolumeId = $this->_io->readU4le();
+            $this->_m_ofsLocalBasePath = $this->_io->readU4le();
+            $this->_m_ofsCommonNetRelLink = $this->_io->readU4le();
+            $this->_m_ofsCommonPathSuffix = $this->_io->readU4le();
+            if (!($this->_io()->isEof())) {
+                $this->_m_ofsLocalBasePathUnicode = $this->_io->readU4le();
+            }
+            if (!($this->_io()->isEof())) {
+                $this->_m_ofsCommonPathSuffixUnicode = $this->_io->readU4le();
+            }
+        }
+        protected $_m_flags;
+        protected $_m_ofsVolumeId;
+        protected $_m_ofsLocalBasePath;
+        protected $_m_ofsCommonNetRelLink;
+        protected $_m_ofsCommonPathSuffix;
+        protected $_m_ofsLocalBasePathUnicode;
+        protected $_m_ofsCommonPathSuffixUnicode;
+        public function flags() { return $this->_m_flags; }
+        public function ofsVolumeId() { return $this->_m_ofsVolumeId; }
+        public function ofsLocalBasePath() { return $this->_m_ofsLocalBasePath; }
+        public function ofsCommonNetRelLink() { return $this->_m_ofsCommonNetRelLink; }
+        public function ofsCommonPathSuffix() { return $this->_m_ofsCommonPathSuffix; }
+        public function ofsLocalBasePathUnicode() { return $this->_m_ofsLocalBasePathUnicode; }
+        public function ofsCommonPathSuffixUnicode() { return $this->_m_ofsCommonPathSuffixUnicode; }
+    }
+}
+
+namespace WindowsLnkFile\LinkInfo {
+    class LinkInfoFlags extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\WindowsLnkFile\LinkInfo\Header $_parent = null, ?\WindowsLnkFile $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_reserved1 = $this->_io->readBitsIntBe(6);
+            $this->_m_hasCommonNetRelLink = $this->_io->readBitsIntBe(1) != 0;
+            $this->_m_hasVolumeIdAndLocalBasePath = $this->_io->readBitsIntBe(1) != 0;
+            $this->_m_reserved2 = $this->_io->readBitsIntBe(24);
+        }
+        protected $_m_reserved1;
+        protected $_m_hasCommonNetRelLink;
+        protected $_m_hasVolumeIdAndLocalBasePath;
+        protected $_m_reserved2;
+        public function reserved1() { return $this->_m_reserved1; }
+        public function hasCommonNetRelLink() { return $this->_m_hasCommonNetRelLink; }
+        public function hasVolumeIdAndLocalBasePath() { return $this->_m_hasVolumeIdAndLocalBasePath; }
+        public function reserved2() { return $this->_m_reserved2; }
+    }
+}
+
+namespace WindowsLnkFile\LinkInfo {
+    class VolumeIdBody extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\WindowsLnkFile\LinkInfo\VolumeIdSpec $_parent = null, ?\WindowsLnkFile $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_driveType = $this->_io->readU4le();
+            $this->_m_driveSerialNumber = $this->_io->readU4le();
+            $this->_m_ofsVolumeLabel = $this->_io->readU4le();
+            if ($this->isUnicode()) {
+                $this->_m_ofsVolumeLabelUnicode = $this->_io->readU4le();
+            }
+        }
+        protected $_m_isUnicode;
+        public function isUnicode() {
+            if ($this->_m_isUnicode !== null)
+                return $this->_m_isUnicode;
+            $this->_m_isUnicode = $this->ofsVolumeLabel() == 20;
+            return $this->_m_isUnicode;
+        }
+        protected $_m_volumeLabelAnsi;
+        public function volumeLabelAnsi() {
+            if ($this->_m_volumeLabelAnsi !== null)
+                return $this->_m_volumeLabelAnsi;
+            if (!($this->isUnicode())) {
+                $_pos = $this->_io->pos();
+                $this->_io->seek($this->ofsVolumeLabel() - 4);
+                $this->_m_volumeLabelAnsi = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, true), "IBM437");
+                $this->_io->seek($_pos);
+            }
+            return $this->_m_volumeLabelAnsi;
+        }
+        protected $_m_driveType;
+        protected $_m_driveSerialNumber;
+        protected $_m_ofsVolumeLabel;
+        protected $_m_ofsVolumeLabelUnicode;
+        public function driveType() { return $this->_m_driveType; }
+        public function driveSerialNumber() { return $this->_m_driveSerialNumber; }
+        public function ofsVolumeLabel() { return $this->_m_ofsVolumeLabel; }
+        public function ofsVolumeLabelUnicode() { return $this->_m_ofsVolumeLabelUnicode; }
+    }
+}
+
+namespace WindowsLnkFile\LinkInfo {
+    class VolumeIdSpec extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\WindowsLnkFile\LinkInfo\All $_parent = null, ?\WindowsLnkFile $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_lenAll = $this->_io->readU4le();
+            $this->_m__raw_body = $this->_io->readBytes($this->lenAll() - 4);
+            $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+            $this->_m_body = new \WindowsLnkFile\LinkInfo\VolumeIdBody($_io__raw_body, $this, $this->_root);
+        }
+        protected $_m_lenAll;
+        protected $_m_body;
+        protected $_m__raw_body;
+        public function lenAll() { return $this->_m_lenAll; }
+        public function body() { return $this->_m_body; }
+        public function _raw_body() { return $this->_m__raw_body; }
+    }
+}
+
+namespace WindowsLnkFile {
+    class LinkTargetIdList extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\WindowsLnkFile $_parent = null, ?\WindowsLnkFile $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_lenIdList = $this->_io->readU2le();
+            $this->_m__raw_idList = $this->_io->readBytes($this->lenIdList());
+            $_io__raw_idList = new \Kaitai\Struct\Stream($this->_m__raw_idList);
+            $this->_m_idList = new \WindowsShellItems($_io__raw_idList);
+        }
+        protected $_m_lenIdList;
+        protected $_m_idList;
+        protected $_m__raw_idList;
+        public function lenIdList() { return $this->_m_lenIdList; }
+        public function idList() { return $this->_m_idList; }
+        public function _raw_idList() { return $this->_m__raw_idList; }
+    }
+}
+
+namespace WindowsLnkFile {
+    class StringData extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\WindowsLnkFile $_parent = null, ?\WindowsLnkFile $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_charsStr = $this->_io->readU2le();
+            $this->_m_str = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->charsStr() * 2), "UTF-16LE");
+        }
+        protected $_m_charsStr;
+        protected $_m_str;
+        public function charsStr() { return $this->_m_charsStr; }
+        public function str() { return $this->_m_str; }
     }
 }
 
@@ -442,5 +434,25 @@ namespace WindowsLnkFile {
         const REMOTE = 4;
         const CDROM = 5;
         const RAMDISK = 6;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
+    }
+}
+
+namespace WindowsLnkFile {
+    class WindowState {
+        const NORMAL = 1;
+        const MAXIMIZED = 3;
+        const MIN_NO_ACTIVE = 7;
+
+        private const _VALUES = [1 => true, 3 => true, 7 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

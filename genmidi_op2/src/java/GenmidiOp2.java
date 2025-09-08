@@ -6,7 +6,8 @@ import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.ArrayList;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 
 /**
@@ -44,8 +45,8 @@ public class GenmidiOp2 extends KaitaiStruct {
     }
     private void _read() {
         this.magic = this._io.readBytes(8);
-        if (!(Arrays.equals(magic(), new byte[] { 35, 79, 80, 76, 95, 73, 73, 35 }))) {
-            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 35, 79, 80, 76, 95, 73, 73, 35 }, magic(), _io(), "/seq/0");
+        if (!(Arrays.equals(this.magic, new byte[] { 35, 79, 80, 76, 95, 73, 73, 35 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 35, 79, 80, 76, 95, 73, 73, 35 }, this.magic, this._io, "/seq/0");
         }
         this.instruments = new ArrayList<InstrumentEntry>();
         for (int i = 0; i < 175; i++) {
@@ -53,8 +54,70 @@ public class GenmidiOp2 extends KaitaiStruct {
         }
         this.instrumentNames = new ArrayList<String>();
         for (int i = 0; i < 175; i++) {
-            this.instrumentNames.add(new String(KaitaiStream.bytesTerminate(KaitaiStream.bytesStripRight(this._io.readBytes(32), (byte) 0), (byte) 0, false), Charset.forName("ASCII")));
+            this.instrumentNames.add(new String(KaitaiStream.bytesTerminate(this._io.readBytes(32), (byte) 0, false), StandardCharsets.US_ASCII));
         }
+    }
+
+    public void _fetchInstances() {
+        for (int i = 0; i < this.instruments.size(); i++) {
+            this.instruments.get(((Number) (i)).intValue())._fetchInstances();
+        }
+        for (int i = 0; i < this.instrumentNames.size(); i++) {
+        }
+    }
+    public static class Instrument extends KaitaiStruct {
+        public static Instrument fromFile(String fileName) throws IOException {
+            return new Instrument(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Instrument(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Instrument(KaitaiStream _io, GenmidiOp2.InstrumentEntry _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Instrument(KaitaiStream _io, GenmidiOp2.InstrumentEntry _parent, GenmidiOp2 _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.op1 = new OpSettings(this._io, this, _root);
+            this.feedback = this._io.readU1();
+            this.op2 = new OpSettings(this._io, this, _root);
+            this.unused = this._io.readU1();
+            this.baseNote = this._io.readS2le();
+        }
+
+        public void _fetchInstances() {
+            this.op1._fetchInstances();
+            this.op2._fetchInstances();
+        }
+        private OpSettings op1;
+        private int feedback;
+        private OpSettings op2;
+        private int unused;
+        private short baseNote;
+        private GenmidiOp2 _root;
+        private GenmidiOp2.InstrumentEntry _parent;
+        public OpSettings op1() { return op1; }
+
+        /**
+         * Feedback/AM-FM (both operators)
+         */
+        public int feedback() { return feedback; }
+        public OpSettings op2() { return op2; }
+        public int unused() { return unused; }
+
+        /**
+         * Base note offset
+         */
+        public short baseNote() { return baseNote; }
+        public GenmidiOp2 _root() { return _root; }
+        public GenmidiOp2.InstrumentEntry _parent() { return _parent; }
     }
     public static class InstrumentEntry extends KaitaiStruct {
         public static InstrumentEntry fromFile(String fileName) throws IOException {
@@ -84,10 +147,16 @@ public class GenmidiOp2 extends KaitaiStruct {
                 this.instruments.add(new Instrument(this._io, this, _root));
             }
         }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.instruments.size(); i++) {
+                this.instruments.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
         private int flags;
         private int finetune;
         private int note;
-        private ArrayList<Instrument> instruments;
+        private List<Instrument> instruments;
         private GenmidiOp2 _root;
         private GenmidiOp2 _parent;
         public int flags() { return flags; }
@@ -97,58 +166,9 @@ public class GenmidiOp2 extends KaitaiStruct {
          * MIDI note for fixed instruments, 0 otherwise
          */
         public int note() { return note; }
-        public ArrayList<Instrument> instruments() { return instruments; }
+        public List<Instrument> instruments() { return instruments; }
         public GenmidiOp2 _root() { return _root; }
         public GenmidiOp2 _parent() { return _parent; }
-    }
-    public static class Instrument extends KaitaiStruct {
-        public static Instrument fromFile(String fileName) throws IOException {
-            return new Instrument(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Instrument(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Instrument(KaitaiStream _io, GenmidiOp2.InstrumentEntry _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Instrument(KaitaiStream _io, GenmidiOp2.InstrumentEntry _parent, GenmidiOp2 _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.op1 = new OpSettings(this._io, this, _root);
-            this.feedback = this._io.readU1();
-            this.op2 = new OpSettings(this._io, this, _root);
-            this.unused = this._io.readU1();
-            this.baseNote = this._io.readS2le();
-        }
-        private OpSettings op1;
-        private int feedback;
-        private OpSettings op2;
-        private int unused;
-        private short baseNote;
-        private GenmidiOp2 _root;
-        private GenmidiOp2.InstrumentEntry _parent;
-        public OpSettings op1() { return op1; }
-
-        /**
-         * Feedback/AM-FM (both operators)
-         */
-        public int feedback() { return feedback; }
-        public OpSettings op2() { return op2; }
-        public int unused() { return unused; }
-
-        /**
-         * Base note offset
-         */
-        public short baseNote() { return baseNote; }
-        public GenmidiOp2 _root() { return _root; }
-        public GenmidiOp2.InstrumentEntry _parent() { return _parent; }
     }
 
     /**
@@ -180,6 +200,9 @@ public class GenmidiOp2 extends KaitaiStruct {
             this.wave = this._io.readU1();
             this.scale = this._io.readU1();
             this.level = this._io.readU1();
+        }
+
+        public void _fetchInstances() {
         }
         private int tremVibr;
         private int attDec;
@@ -223,13 +246,13 @@ public class GenmidiOp2 extends KaitaiStruct {
         public GenmidiOp2.Instrument _parent() { return _parent; }
     }
     private byte[] magic;
-    private ArrayList<InstrumentEntry> instruments;
-    private ArrayList<String> instrumentNames;
+    private List<InstrumentEntry> instruments;
+    private List<String> instrumentNames;
     private GenmidiOp2 _root;
     private KaitaiStruct _parent;
     public byte[] magic() { return magic; }
-    public ArrayList<InstrumentEntry> instruments() { return instruments; }
-    public ArrayList<String> instrumentNames() { return instrumentNames; }
+    public List<InstrumentEntry> instruments() { return instruments; }
+    public List<String> instrumentNames() { return instrumentNames; }
     public GenmidiOp2 _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

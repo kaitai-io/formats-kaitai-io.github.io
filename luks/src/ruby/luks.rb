@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -12,8 +12,8 @@ end
 # encryption parameters and up to 8 user keys (which can unlock the master key).
 # @see https://gitlab.com/cryptsetup/cryptsetup/-/wikis/LUKS-standard/on-disk-format.pdf Source
 class Luks < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -22,25 +22,25 @@ class Luks < Kaitai::Struct::Struct
     self
   end
   class PartitionHeader < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
       @magic = @_io.read_bytes(6)
-      raise Kaitai::Struct::ValidationNotEqualError.new([76, 85, 75, 83, 186, 190].pack('C*'), magic, _io, "/types/partition_header/seq/0") if not magic == [76, 85, 75, 83, 186, 190].pack('C*')
+      raise Kaitai::Struct::ValidationNotEqualError.new([76, 85, 75, 83, 186, 190].pack('C*'), @magic, @_io, "/types/partition_header/seq/0") if not @magic == [76, 85, 75, 83, 186, 190].pack('C*')
       @version = @_io.read_bytes(2)
-      raise Kaitai::Struct::ValidationNotEqualError.new([0, 1].pack('C*'), version, _io, "/types/partition_header/seq/1") if not version == [0, 1].pack('C*')
-      @cipher_name_specification = (@_io.read_bytes(32)).force_encoding("ASCII")
-      @cipher_mode_specification = (@_io.read_bytes(32)).force_encoding("ASCII")
-      @hash_specification = (@_io.read_bytes(32)).force_encoding("ASCII")
+      raise Kaitai::Struct::ValidationNotEqualError.new([0, 1].pack('C*'), @version, @_io, "/types/partition_header/seq/1") if not @version == [0, 1].pack('C*')
+      @cipher_name_specification = (@_io.read_bytes(32)).force_encoding("ASCII").encode('UTF-8')
+      @cipher_mode_specification = (@_io.read_bytes(32)).force_encoding("ASCII").encode('UTF-8')
+      @hash_specification = (@_io.read_bytes(32)).force_encoding("ASCII").encode('UTF-8')
       @payload_offset = @_io.read_u4be
       @number_of_key_bytes = @_io.read_u4be
       @master_key_checksum = @_io.read_bytes(20)
       @master_key_salt_parameter = @_io.read_bytes(32)
       @master_key_iterations_parameter = @_io.read_u4be
-      @uuid = (@_io.read_bytes(40)).force_encoding("ASCII")
+      @uuid = (@_io.read_bytes(40)).force_encoding("ASCII").encode('UTF-8')
       @key_slots = []
       (8).times { |i|
         @key_slots << KeySlot.new(@_io, self, @_root)
@@ -54,7 +54,7 @@ class Luks < Kaitai::Struct::Struct
         11301363 => :key_slot_states_enabled_key_slot,
       }
       I__KEY_SLOT_STATES = KEY_SLOT_STATES.invert
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
@@ -70,8 +70,8 @@ class Luks < Kaitai::Struct::Struct
       def key_material
         return @key_material unless @key_material.nil?
         _pos = @_io.pos
-        @_io.seek((start_sector_of_key_material * 512))
-        @key_material = @_io.read_bytes((_parent.number_of_key_bytes * number_of_anti_forensic_stripes))
+        @_io.seek(start_sector_of_key_material * 512)
+        @key_material = @_io.read_bytes(_parent.number_of_key_bytes * number_of_anti_forensic_stripes)
         @_io.seek(_pos)
         @key_material
       end
@@ -97,7 +97,7 @@ class Luks < Kaitai::Struct::Struct
   def payload
     return @payload unless @payload.nil?
     _pos = @_io.pos
-    @_io.seek((partition_header.payload_offset * 512))
+    @_io.seek(partition_header.payload_offset * 512)
     @payload = @_io.read_bytes_full
     @_io.seek(_pos)
     @payload

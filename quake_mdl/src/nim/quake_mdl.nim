@@ -9,15 +9,15 @@ type
     `triangles`*: seq[QuakeMdl_MdlTriangle]
     `frames`*: seq[QuakeMdl_MdlFrame]
     `parent`*: KaitaiStruct
-  QuakeMdl_MdlVertex* = ref object of KaitaiStruct
-    `values`*: seq[uint8]
-    `normalIndex`*: uint8
-    `parent`*: KaitaiStruct
-  QuakeMdl_MdlTexcoord* = ref object of KaitaiStruct
-    `onSeam`*: int32
-    `s`*: int32
-    `t`*: int32
+  QuakeMdl_MdlFrame* = ref object of KaitaiStruct
+    `type`*: int32
+    `min`*: QuakeMdl_MdlVertex
+    `max`*: QuakeMdl_MdlVertex
+    `time`*: seq[float32]
+    `frames`*: seq[QuakeMdl_MdlSimpleFrame]
     `parent`*: QuakeMdl
+    `numSimpleFramesInst`: int32
+    `numSimpleFramesInstFlag`: bool
   QuakeMdl_MdlHeader* = ref object of KaitaiStruct
     `ident`*: seq[byte]
     `version`*: int32
@@ -37,6 +37,12 @@ type
     `parent`*: QuakeMdl
     `skinSizeInst`: int
     `skinSizeInstFlag`: bool
+  QuakeMdl_MdlSimpleFrame* = ref object of KaitaiStruct
+    `bboxMin`*: QuakeMdl_MdlVertex
+    `bboxMax`*: QuakeMdl_MdlVertex
+    `name`*: string
+    `vertices`*: seq[QuakeMdl_MdlVertex]
+    `parent`*: QuakeMdl_MdlFrame
   QuakeMdl_MdlSkin* = ref object of KaitaiStruct
     `group`*: int32
     `singleTextureData`*: seq[byte]
@@ -44,25 +50,19 @@ type
     `frameTimes`*: seq[float32]
     `groupTextureData`*: seq[seq[byte]]
     `parent`*: QuakeMdl
-  QuakeMdl_MdlFrame* = ref object of KaitaiStruct
-    `type`*: int32
-    `min`*: QuakeMdl_MdlVertex
-    `max`*: QuakeMdl_MdlVertex
-    `time`*: seq[float32]
-    `frames`*: seq[QuakeMdl_MdlSimpleFrame]
+  QuakeMdl_MdlTexcoord* = ref object of KaitaiStruct
+    `onSeam`*: int32
+    `s`*: int32
+    `t`*: int32
     `parent`*: QuakeMdl
-    `numSimpleFramesInst`: int32
-    `numSimpleFramesInstFlag`: bool
-  QuakeMdl_MdlSimpleFrame* = ref object of KaitaiStruct
-    `bboxMin`*: QuakeMdl_MdlVertex
-    `bboxMax`*: QuakeMdl_MdlVertex
-    `name`*: string
-    `vertices`*: seq[QuakeMdl_MdlVertex]
-    `parent`*: QuakeMdl_MdlFrame
   QuakeMdl_MdlTriangle* = ref object of KaitaiStruct
     `facesFront`*: int32
     `vertices`*: seq[int32]
     `parent`*: QuakeMdl
+  QuakeMdl_MdlVertex* = ref object of KaitaiStruct
+    `values`*: seq[uint8]
+    `normalIndex`*: uint8
+    `parent`*: KaitaiStruct
   QuakeMdl_Vec3* = ref object of KaitaiStruct
     `x`*: float32
     `y`*: float32
@@ -70,17 +70,17 @@ type
     `parent`*: QuakeMdl_MdlHeader
 
 proc read*(_: typedesc[QuakeMdl], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): QuakeMdl
-proc read*(_: typedesc[QuakeMdl_MdlVertex], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): QuakeMdl_MdlVertex
-proc read*(_: typedesc[QuakeMdl_MdlTexcoord], io: KaitaiStream, root: KaitaiStruct, parent: QuakeMdl): QuakeMdl_MdlTexcoord
-proc read*(_: typedesc[QuakeMdl_MdlHeader], io: KaitaiStream, root: KaitaiStruct, parent: QuakeMdl): QuakeMdl_MdlHeader
-proc read*(_: typedesc[QuakeMdl_MdlSkin], io: KaitaiStream, root: KaitaiStruct, parent: QuakeMdl): QuakeMdl_MdlSkin
 proc read*(_: typedesc[QuakeMdl_MdlFrame], io: KaitaiStream, root: KaitaiStruct, parent: QuakeMdl): QuakeMdl_MdlFrame
+proc read*(_: typedesc[QuakeMdl_MdlHeader], io: KaitaiStream, root: KaitaiStruct, parent: QuakeMdl): QuakeMdl_MdlHeader
 proc read*(_: typedesc[QuakeMdl_MdlSimpleFrame], io: KaitaiStream, root: KaitaiStruct, parent: QuakeMdl_MdlFrame): QuakeMdl_MdlSimpleFrame
+proc read*(_: typedesc[QuakeMdl_MdlSkin], io: KaitaiStream, root: KaitaiStruct, parent: QuakeMdl): QuakeMdl_MdlSkin
+proc read*(_: typedesc[QuakeMdl_MdlTexcoord], io: KaitaiStream, root: KaitaiStruct, parent: QuakeMdl): QuakeMdl_MdlTexcoord
 proc read*(_: typedesc[QuakeMdl_MdlTriangle], io: KaitaiStream, root: KaitaiStruct, parent: QuakeMdl): QuakeMdl_MdlTriangle
+proc read*(_: typedesc[QuakeMdl_MdlVertex], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): QuakeMdl_MdlVertex
 proc read*(_: typedesc[QuakeMdl_Vec3], io: KaitaiStream, root: KaitaiStruct, parent: QuakeMdl_MdlHeader): QuakeMdl_Vec3
 
-proc skinSize*(this: QuakeMdl_MdlHeader): int
 proc numSimpleFrames*(this: QuakeMdl_MdlFrame): int32
+proc skinSize*(this: QuakeMdl_MdlHeader): int
 
 
 ##[
@@ -147,45 +147,40 @@ proc read*(_: typedesc[QuakeMdl], io: KaitaiStream, root: KaitaiStruct, parent: 
 proc fromFile*(_: typedesc[QuakeMdl], filename: string): QuakeMdl =
   QuakeMdl.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[QuakeMdl_MdlVertex], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): QuakeMdl_MdlVertex =
+proc read*(_: typedesc[QuakeMdl_MdlFrame], io: KaitaiStream, root: KaitaiStruct, parent: QuakeMdl): QuakeMdl_MdlFrame =
   template this: untyped = result
-  this = new(QuakeMdl_MdlVertex)
+  this = new(QuakeMdl_MdlFrame)
   let root = if root == nil: cast[QuakeMdl](this) else: cast[QuakeMdl](root)
   this.io = io
   this.root = root
   this.parent = parent
 
-  for i in 0 ..< int(3):
-    let it = this.io.readU1()
-    this.values.add(it)
-  let normalIndexExpr = this.io.readU1()
-  this.normalIndex = normalIndexExpr
+  let typeExpr = this.io.readS4le()
+  this.type = typeExpr
+  if this.type != 0:
+    let minExpr = QuakeMdl_MdlVertex.read(this.io, this.root, this)
+    this.min = minExpr
+  if this.type != 0:
+    let maxExpr = QuakeMdl_MdlVertex.read(this.io, this.root, this)
+    this.max = maxExpr
+  if this.type != 0:
+    for i in 0 ..< int(this.type):
+      let it = this.io.readF4le()
+      this.time.add(it)
+  for i in 0 ..< int(this.numSimpleFrames):
+    let it = QuakeMdl_MdlSimpleFrame.read(this.io, this.root, this)
+    this.frames.add(it)
 
-proc fromFile*(_: typedesc[QuakeMdl_MdlVertex], filename: string): QuakeMdl_MdlVertex =
-  QuakeMdl_MdlVertex.read(newKaitaiFileStream(filename), nil, nil)
+proc numSimpleFrames(this: QuakeMdl_MdlFrame): int32 = 
+  if this.numSimpleFramesInstFlag:
+    return this.numSimpleFramesInst
+  let numSimpleFramesInstExpr = int32((if this.type == 0: 1 else: this.type))
+  this.numSimpleFramesInst = numSimpleFramesInstExpr
+  this.numSimpleFramesInstFlag = true
+  return this.numSimpleFramesInst
 
-
-##[
-@see <a href="https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L79-L83">Source</a>
-@see <a href="https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD2">Source</a>
-]##
-proc read*(_: typedesc[QuakeMdl_MdlTexcoord], io: KaitaiStream, root: KaitaiStruct, parent: QuakeMdl): QuakeMdl_MdlTexcoord =
-  template this: untyped = result
-  this = new(QuakeMdl_MdlTexcoord)
-  let root = if root == nil: cast[QuakeMdl](this) else: cast[QuakeMdl](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let onSeamExpr = this.io.readS4le()
-  this.onSeam = onSeamExpr
-  let sExpr = this.io.readS4le()
-  this.s = sExpr
-  let tExpr = this.io.readS4le()
-  this.t = tExpr
-
-proc fromFile*(_: typedesc[QuakeMdl_MdlTexcoord], filename: string): QuakeMdl_MdlTexcoord =
-  QuakeMdl_MdlTexcoord.read(newKaitaiFileStream(filename), nil, nil)
+proc fromFile*(_: typedesc[QuakeMdl_MdlFrame], filename: string): QuakeMdl_MdlFrame =
+  QuakeMdl_MdlFrame.read(newKaitaiFileStream(filename), nil, nil)
 
 
 ##[
@@ -285,13 +280,34 @@ proc skinSize(this: QuakeMdl_MdlHeader): int =
   ]##
   if this.skinSizeInstFlag:
     return this.skinSizeInst
-  let skinSizeInstExpr = int((this.skinWidth * this.skinHeight))
+  let skinSizeInstExpr = int(this.skinWidth * this.skinHeight)
   this.skinSizeInst = skinSizeInstExpr
   this.skinSizeInstFlag = true
   return this.skinSizeInst
 
 proc fromFile*(_: typedesc[QuakeMdl_MdlHeader], filename: string): QuakeMdl_MdlHeader =
   QuakeMdl_MdlHeader.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[QuakeMdl_MdlSimpleFrame], io: KaitaiStream, root: KaitaiStruct, parent: QuakeMdl_MdlFrame): QuakeMdl_MdlSimpleFrame =
+  template this: untyped = result
+  this = new(QuakeMdl_MdlSimpleFrame)
+  let root = if root == nil: cast[QuakeMdl](this) else: cast[QuakeMdl](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let bboxMinExpr = QuakeMdl_MdlVertex.read(this.io, this.root, this)
+  this.bboxMin = bboxMinExpr
+  let bboxMaxExpr = QuakeMdl_MdlVertex.read(this.io, this.root, this)
+  this.bboxMax = bboxMaxExpr
+  let nameExpr = encode(this.io.readBytes(int(16)).bytesStripRight(0).bytesTerminate(0, false), "ASCII")
+  this.name = nameExpr
+  for i in 0 ..< int(QuakeMdl(this.root).header.numVerts):
+    let it = QuakeMdl_MdlVertex.read(this.io, this.root, this)
+    this.vertices.add(it)
+
+proc fromFile*(_: typedesc[QuakeMdl_MdlSimpleFrame], filename: string): QuakeMdl_MdlSimpleFrame =
+  QuakeMdl_MdlSimpleFrame.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[QuakeMdl_MdlSkin], io: KaitaiStream, root: KaitaiStruct, parent: QuakeMdl): QuakeMdl_MdlSkin =
   template this: untyped = result
@@ -321,61 +337,28 @@ proc read*(_: typedesc[QuakeMdl_MdlSkin], io: KaitaiStream, root: KaitaiStruct, 
 proc fromFile*(_: typedesc[QuakeMdl_MdlSkin], filename: string): QuakeMdl_MdlSkin =
   QuakeMdl_MdlSkin.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[QuakeMdl_MdlFrame], io: KaitaiStream, root: KaitaiStruct, parent: QuakeMdl): QuakeMdl_MdlFrame =
+
+##[
+@see <a href="https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L79-L83">Source</a>
+@see <a href="https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD2">Source</a>
+]##
+proc read*(_: typedesc[QuakeMdl_MdlTexcoord], io: KaitaiStream, root: KaitaiStruct, parent: QuakeMdl): QuakeMdl_MdlTexcoord =
   template this: untyped = result
-  this = new(QuakeMdl_MdlFrame)
+  this = new(QuakeMdl_MdlTexcoord)
   let root = if root == nil: cast[QuakeMdl](this) else: cast[QuakeMdl](root)
   this.io = io
   this.root = root
   this.parent = parent
 
-  let typeExpr = this.io.readS4le()
-  this.type = typeExpr
-  if this.type != 0:
-    let minExpr = QuakeMdl_MdlVertex.read(this.io, this.root, this)
-    this.min = minExpr
-  if this.type != 0:
-    let maxExpr = QuakeMdl_MdlVertex.read(this.io, this.root, this)
-    this.max = maxExpr
-  if this.type != 0:
-    for i in 0 ..< int(this.type):
-      let it = this.io.readF4le()
-      this.time.add(it)
-  for i in 0 ..< int(this.numSimpleFrames):
-    let it = QuakeMdl_MdlSimpleFrame.read(this.io, this.root, this)
-    this.frames.add(it)
+  let onSeamExpr = this.io.readS4le()
+  this.onSeam = onSeamExpr
+  let sExpr = this.io.readS4le()
+  this.s = sExpr
+  let tExpr = this.io.readS4le()
+  this.t = tExpr
 
-proc numSimpleFrames(this: QuakeMdl_MdlFrame): int32 = 
-  if this.numSimpleFramesInstFlag:
-    return this.numSimpleFramesInst
-  let numSimpleFramesInstExpr = int32((if this.type == 0: 1 else: this.type))
-  this.numSimpleFramesInst = numSimpleFramesInstExpr
-  this.numSimpleFramesInstFlag = true
-  return this.numSimpleFramesInst
-
-proc fromFile*(_: typedesc[QuakeMdl_MdlFrame], filename: string): QuakeMdl_MdlFrame =
-  QuakeMdl_MdlFrame.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[QuakeMdl_MdlSimpleFrame], io: KaitaiStream, root: KaitaiStruct, parent: QuakeMdl_MdlFrame): QuakeMdl_MdlSimpleFrame =
-  template this: untyped = result
-  this = new(QuakeMdl_MdlSimpleFrame)
-  let root = if root == nil: cast[QuakeMdl](this) else: cast[QuakeMdl](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let bboxMinExpr = QuakeMdl_MdlVertex.read(this.io, this.root, this)
-  this.bboxMin = bboxMinExpr
-  let bboxMaxExpr = QuakeMdl_MdlVertex.read(this.io, this.root, this)
-  this.bboxMax = bboxMaxExpr
-  let nameExpr = encode(this.io.readBytes(int(16)).bytesStripRight(0).bytesTerminate(0, false), "ASCII")
-  this.name = nameExpr
-  for i in 0 ..< int(QuakeMdl(this.root).header.numVerts):
-    let it = QuakeMdl_MdlVertex.read(this.io, this.root, this)
-    this.vertices.add(it)
-
-proc fromFile*(_: typedesc[QuakeMdl_MdlSimpleFrame], filename: string): QuakeMdl_MdlSimpleFrame =
-  QuakeMdl_MdlSimpleFrame.read(newKaitaiFileStream(filename), nil, nil)
+proc fromFile*(_: typedesc[QuakeMdl_MdlTexcoord], filename: string): QuakeMdl_MdlTexcoord =
+  QuakeMdl_MdlTexcoord.read(newKaitaiFileStream(filename), nil, nil)
 
 
 ##[
@@ -401,6 +384,23 @@ proc read*(_: typedesc[QuakeMdl_MdlTriangle], io: KaitaiStream, root: KaitaiStru
 
 proc fromFile*(_: typedesc[QuakeMdl_MdlTriangle], filename: string): QuakeMdl_MdlTriangle =
   QuakeMdl_MdlTriangle.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[QuakeMdl_MdlVertex], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): QuakeMdl_MdlVertex =
+  template this: untyped = result
+  this = new(QuakeMdl_MdlVertex)
+  let root = if root == nil: cast[QuakeMdl](this) else: cast[QuakeMdl](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  for i in 0 ..< int(3):
+    let it = this.io.readU1()
+    this.values.add(it)
+  let normalIndexExpr = this.io.readU1()
+  this.normalIndex = normalIndexExpr
+
+proc fromFile*(_: typedesc[QuakeMdl_MdlVertex], filename: string): QuakeMdl_MdlVertex =
+  QuakeMdl_MdlVertex.read(newKaitaiFileStream(filename), nil, nil)
 
 
 ##[

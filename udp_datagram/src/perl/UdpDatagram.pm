@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 
 ########################################################################
 package UdpDatagram;
@@ -24,7 +24,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -38,7 +38,7 @@ sub _read {
     $self->{dst_port} = $self->{_io}->read_u2be();
     $self->{length} = $self->{_io}->read_u2be();
     $self->{checksum} = $self->{_io}->read_u2be();
-    $self->{body} = $self->{_io}->read_bytes(($self->length() - 8));
+    $self->{body} = $self->{_io}->read_bytes($self->length() - 8);
 }
 
 sub src_port {

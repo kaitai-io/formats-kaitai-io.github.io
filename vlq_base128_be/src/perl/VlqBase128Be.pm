@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 
 ########################################################################
 package VlqBase128Be;
@@ -24,7 +24,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -34,24 +34,27 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{groups} = ();
-    do {
-        $_ = VlqBase128Be::Group->new($self->{_io}, $self, $self->{_root});
-        push @{$self->{groups}}, $_;
-    } until (!($_->has_next()));
+    $self->{groups} = [];
+    {
+        my $_it;
+        do {
+            $_it = VlqBase128Be::Group->new($self->{_io}, $self, $self->{_root});
+            push @{$self->{groups}}, $_it;
+        } until (!($_it->has_next()));
+    }
 }
 
 sub last {
     my ($self) = @_;
     return $self->{last} if ($self->{last});
-    $self->{last} = (scalar(@{$self->groups()}) - 1);
+    $self->{last} = scalar(@{$self->groups()}) - 1;
     return $self->{last};
 }
 
 sub value {
     my ($self) = @_;
     return $self->{value} if ($self->{value});
-    $self->{value} = (((((((@{$self->groups()}[$self->last()]->value() + ($self->last() >= 1 ? (@{$self->groups()}[($self->last() - 1)]->value() << 7) : 0)) + ($self->last() >= 2 ? (@{$self->groups()}[($self->last() - 2)]->value() << 14) : 0)) + ($self->last() >= 3 ? (@{$self->groups()}[($self->last() - 3)]->value() << 21) : 0)) + ($self->last() >= 4 ? (@{$self->groups()}[($self->last() - 4)]->value() << 28) : 0)) + ($self->last() >= 5 ? (@{$self->groups()}[($self->last() - 5)]->value() << 35) : 0)) + ($self->last() >= 6 ? (@{$self->groups()}[($self->last() - 6)]->value() << 42) : 0)) + ($self->last() >= 7 ? (@{$self->groups()}[($self->last() - 7)]->value() << 49) : 0));
+    $self->{value} = (((((((@{$self->groups()}[$self->last()]->value() + ($self->last() >= 1 ? @{$self->groups()}[$self->last() - 1]->value() << 7 : 0)) + ($self->last() >= 2 ? @{$self->groups()}[$self->last() - 2]->value() << 14 : 0)) + ($self->last() >= 3 ? @{$self->groups()}[$self->last() - 3]->value() << 21 : 0)) + ($self->last() >= 4 ? @{$self->groups()}[$self->last() - 4]->value() << 28 : 0)) + ($self->last() >= 5 ? @{$self->groups()}[$self->last() - 5]->value() << 35 : 0)) + ($self->last() >= 6 ? @{$self->groups()}[$self->last() - 6]->value() << 42 : 0)) + ($self->last() >= 7 ? @{$self->groups()}[$self->last() - 7]->value() << 49 : 0));
     return $self->{value};
 }
 
@@ -80,7 +83,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 

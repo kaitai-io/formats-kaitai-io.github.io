@@ -1,8 +1,7 @@
 import kaitai_struct_nim_runtime
 import options
-import /network/some_ip/some_ip_sd
+import some_ip_sd
 
-import "some_ip_sd"
 type
   SomeIp* = ref object of KaitaiStruct
     `header`*: SomeIp_Header
@@ -90,13 +89,13 @@ proc read*(_: typedesc[SomeIp], io: KaitaiStream, root: KaitaiStruct, parent: Ka
   block:
     let on = this.header.messageId.value
     if on == 4294934784'i64:
-      let rawPayloadExpr = this.io.readBytes(int((this.header.length - 8)))
+      let rawPayloadExpr = this.io.readBytes(int(this.header.length - 8))
       this.rawPayload = rawPayloadExpr
       let rawPayloadIo = newKaitaiStream(rawPayloadExpr)
-      let payloadExpr = SomeIpSd.read(rawPayloadIo, this.root, this)
+      let payloadExpr = SomeIpSd.read(rawPayloadIo, nil, nil)
       this.payload = payloadExpr
     else:
-      let payloadExpr = this.io.readBytes(int((this.header.length - 8)))
+      let payloadExpr = this.io.readBytes(int(this.header.length - 8))
       this.payload = payloadExpr
 
 proc fromFile*(_: typedesc[SomeIp], filename: string): SomeIp =

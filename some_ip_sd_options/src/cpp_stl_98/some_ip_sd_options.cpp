@@ -4,7 +4,7 @@
 
 some_ip_sd_options_t::some_ip_sd_options_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, some_ip_sd_options_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     m_entries = 0;
 
     try {
@@ -38,6 +38,22 @@ void some_ip_sd_options_t::_clean_up() {
         delete m_entries; m_entries = 0;
     }
 }
+std::set<some_ip_sd_options_t::sd_option_t::option_types_t> some_ip_sd_options_t::sd_option_t::_build_values_option_types_t() {
+    std::set<some_ip_sd_options_t::sd_option_t::option_types_t> _t;
+    _t.insert(some_ip_sd_options_t::sd_option_t::OPTION_TYPES_CONFIGURATION_OPTION);
+    _t.insert(some_ip_sd_options_t::sd_option_t::OPTION_TYPES_LOAD_BALANCING_OPTION);
+    _t.insert(some_ip_sd_options_t::sd_option_t::OPTION_TYPES_IPV4_ENDPOINT_OPTION);
+    _t.insert(some_ip_sd_options_t::sd_option_t::OPTION_TYPES_IPV6_ENDPOINT_OPTION);
+    _t.insert(some_ip_sd_options_t::sd_option_t::OPTION_TYPES_IPV4_MULTICAST_OPTION);
+    _t.insert(some_ip_sd_options_t::sd_option_t::OPTION_TYPES_IPV6_MULTICAST_OPTION);
+    _t.insert(some_ip_sd_options_t::sd_option_t::OPTION_TYPES_IPV4_SD_ENDPOINT_OPTION);
+    _t.insert(some_ip_sd_options_t::sd_option_t::OPTION_TYPES_IPV6_SD_ENDPOINT_OPTION);
+    return _t;
+}
+const std::set<some_ip_sd_options_t::sd_option_t::option_types_t> some_ip_sd_options_t::sd_option_t::_values_option_types_t = some_ip_sd_options_t::sd_option_t::_build_values_option_types_t();
+bool some_ip_sd_options_t::sd_option_t::_is_defined_option_types_t(some_ip_sd_options_t::sd_option_t::option_types_t v) {
+    return some_ip_sd_options_t::sd_option_t::_values_option_types_t.find(v) != some_ip_sd_options_t::sd_option_t::_values_option_types_t.end();
+}
 
 some_ip_sd_options_t::sd_option_t::sd_option_t(kaitai::kstream* p__io, some_ip_sd_options_t* p__parent, some_ip_sd_options_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
@@ -56,19 +72,9 @@ void some_ip_sd_options_t::sd_option_t::_read() {
     m_header = new sd_option_header_t(m__io, this, m__root);
     n_content = true;
     switch (header()->type()) {
-    case some_ip_sd_options_t::sd_option_t::OPTION_TYPES_LOAD_BALANCING_OPTION: {
-        n_content = false;
-        m_content = new sd_load_balancing_option_t(m__io, this, m__root);
-        break;
-    }
     case some_ip_sd_options_t::sd_option_t::OPTION_TYPES_CONFIGURATION_OPTION: {
         n_content = false;
         m_content = new sd_configuration_option_t(m__io, this, m__root);
-        break;
-    }
-    case some_ip_sd_options_t::sd_option_t::OPTION_TYPES_IPV4_SD_ENDPOINT_OPTION: {
-        n_content = false;
-        m_content = new sd_ipv4_sd_endpoint_option_t(m__io, this, m__root);
         break;
     }
     case some_ip_sd_options_t::sd_option_t::OPTION_TYPES_IPV4_ENDPOINT_OPTION: {
@@ -76,14 +82,14 @@ void some_ip_sd_options_t::sd_option_t::_read() {
         m_content = new sd_ipv4_endpoint_option_t(m__io, this, m__root);
         break;
     }
-    case some_ip_sd_options_t::sd_option_t::OPTION_TYPES_IPV6_SD_ENDPOINT_OPTION: {
-        n_content = false;
-        m_content = new sd_ipv6_sd_endpoint_option_t(m__io, this, m__root);
-        break;
-    }
     case some_ip_sd_options_t::sd_option_t::OPTION_TYPES_IPV4_MULTICAST_OPTION: {
         n_content = false;
         m_content = new sd_ipv4_multicast_option_t(m__io, this, m__root);
+        break;
+    }
+    case some_ip_sd_options_t::sd_option_t::OPTION_TYPES_IPV4_SD_ENDPOINT_OPTION: {
+        n_content = false;
+        m_content = new sd_ipv4_sd_endpoint_option_t(m__io, this, m__root);
         break;
     }
     case some_ip_sd_options_t::sd_option_t::OPTION_TYPES_IPV6_ENDPOINT_OPTION: {
@@ -94,6 +100,16 @@ void some_ip_sd_options_t::sd_option_t::_read() {
     case some_ip_sd_options_t::sd_option_t::OPTION_TYPES_IPV6_MULTICAST_OPTION: {
         n_content = false;
         m_content = new sd_ipv6_multicast_option_t(m__io, this, m__root);
+        break;
+    }
+    case some_ip_sd_options_t::sd_option_t::OPTION_TYPES_IPV6_SD_ENDPOINT_OPTION: {
+        n_content = false;
+        m_content = new sd_ipv6_sd_endpoint_option_t(m__io, this, m__root);
+        break;
+    }
+    case some_ip_sd_options_t::sd_option_t::OPTION_TYPES_LOAD_BALANCING_OPTION: {
+        n_content = false;
+        m_content = new sd_load_balancing_option_t(m__io, this, m__root);
         break;
     }
     }
@@ -114,7 +130,7 @@ void some_ip_sd_options_t::sd_option_t::_clean_up() {
     }
 }
 
-some_ip_sd_options_t::sd_option_t::sd_option_header_t::sd_option_header_t(kaitai::kstream* p__io, some_ip_sd_options_t::sd_option_t* p__parent, some_ip_sd_options_t* p__root) : kaitai::kstruct(p__io) {
+some_ip_sd_options_t::sd_option_t::sd_config_kv_pair_t::sd_config_kv_pair_t(kaitai::kstream* p__io, some_ip_sd_options_t::sd_option_t::sd_config_string_t* p__parent, some_ip_sd_options_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
 
@@ -126,16 +142,16 @@ some_ip_sd_options_t::sd_option_t::sd_option_header_t::sd_option_header_t(kaitai
     }
 }
 
-void some_ip_sd_options_t::sd_option_t::sd_option_header_t::_read() {
-    m_length = m__io->read_u2be();
-    m_type = static_cast<some_ip_sd_options_t::sd_option_t::option_types_t>(m__io->read_u1());
+void some_ip_sd_options_t::sd_option_t::sd_config_kv_pair_t::_read() {
+    m_key = kaitai::kstream::bytes_to_str(m__io->read_bytes_term(61, false, true, true), "ASCII");
+    m_value = kaitai::kstream::bytes_to_str(m__io->read_bytes_full(), "ASCII");
 }
 
-some_ip_sd_options_t::sd_option_t::sd_option_header_t::~sd_option_header_t() {
+some_ip_sd_options_t::sd_option_t::sd_config_kv_pair_t::~sd_config_kv_pair_t() {
     _clean_up();
 }
 
-void some_ip_sd_options_t::sd_option_t::sd_option_header_t::_clean_up() {
+void some_ip_sd_options_t::sd_option_t::sd_config_kv_pair_t::_clean_up() {
 }
 
 some_ip_sd_options_t::sd_option_t::sd_config_string_t::sd_config_string_t(kaitai::kstream* p__io, some_ip_sd_options_t::sd_option_t::sd_config_strings_container_t* p__parent, some_ip_sd_options_t* p__root) : kaitai::kstruct(p__io) {
@@ -231,7 +247,7 @@ some_ip_sd_options_t::sd_option_t::sd_configuration_option_t::sd_configuration_o
 
 void some_ip_sd_options_t::sd_option_t::sd_configuration_option_t::_read() {
     m_reserved = m__io->read_u1();
-    m__raw_configurations = m__io->read_bytes((_parent()->header()->length() - 1));
+    m__raw_configurations = m__io->read_bytes(_parent()->header()->length() - 1);
     m__io__raw_configurations = new kaitai::kstream(m__raw_configurations);
     m_configurations = new sd_config_strings_container_t(m__io__raw_configurations, this, m__root);
 }
@@ -247,6 +263,33 @@ void some_ip_sd_options_t::sd_option_t::sd_configuration_option_t::_clean_up() {
     if (m_configurations) {
         delete m_configurations; m_configurations = 0;
     }
+}
+
+some_ip_sd_options_t::sd_option_t::sd_ipv4_endpoint_option_t::sd_ipv4_endpoint_option_t(kaitai::kstream* p__io, some_ip_sd_options_t::sd_option_t* p__parent, some_ip_sd_options_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void some_ip_sd_options_t::sd_option_t::sd_ipv4_endpoint_option_t::_read() {
+    m_reserved = m__io->read_u1();
+    m_address = m__io->read_bytes(4);
+    m_reserved2 = m__io->read_u1();
+    m_l4_protocol = m__io->read_u1();
+    m_port = m__io->read_u2be();
+}
+
+some_ip_sd_options_t::sd_option_t::sd_ipv4_endpoint_option_t::~sd_ipv4_endpoint_option_t() {
+    _clean_up();
+}
+
+void some_ip_sd_options_t::sd_option_t::sd_ipv4_endpoint_option_t::_clean_up() {
 }
 
 some_ip_sd_options_t::sd_option_t::sd_ipv4_multicast_option_t::sd_ipv4_multicast_option_t(kaitai::kstream* p__io, some_ip_sd_options_t::sd_option_t* p__parent, some_ip_sd_options_t* p__root) : kaitai::kstruct(p__io) {
@@ -303,6 +346,33 @@ some_ip_sd_options_t::sd_option_t::sd_ipv4_sd_endpoint_option_t::~sd_ipv4_sd_end
 void some_ip_sd_options_t::sd_option_t::sd_ipv4_sd_endpoint_option_t::_clean_up() {
 }
 
+some_ip_sd_options_t::sd_option_t::sd_ipv6_endpoint_option_t::sd_ipv6_endpoint_option_t(kaitai::kstream* p__io, some_ip_sd_options_t::sd_option_t* p__parent, some_ip_sd_options_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void some_ip_sd_options_t::sd_option_t::sd_ipv6_endpoint_option_t::_read() {
+    m_reserved = m__io->read_u1();
+    m_address = m__io->read_bytes(16);
+    m_reserved2 = m__io->read_u1();
+    m_l4_protocol = m__io->read_u1();
+    m_port = m__io->read_u2be();
+}
+
+some_ip_sd_options_t::sd_option_t::sd_ipv6_endpoint_option_t::~sd_ipv6_endpoint_option_t() {
+    _clean_up();
+}
+
+void some_ip_sd_options_t::sd_option_t::sd_ipv6_endpoint_option_t::_clean_up() {
+}
+
 some_ip_sd_options_t::sd_option_t::sd_ipv6_multicast_option_t::sd_ipv6_multicast_option_t(kaitai::kstream* p__io, some_ip_sd_options_t::sd_option_t* p__parent, some_ip_sd_options_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
@@ -328,30 +398,6 @@ some_ip_sd_options_t::sd_option_t::sd_ipv6_multicast_option_t::~sd_ipv6_multicas
 }
 
 void some_ip_sd_options_t::sd_option_t::sd_ipv6_multicast_option_t::_clean_up() {
-}
-
-some_ip_sd_options_t::sd_option_t::sd_config_kv_pair_t::sd_config_kv_pair_t(kaitai::kstream* p__io, some_ip_sd_options_t::sd_option_t::sd_config_string_t* p__parent, some_ip_sd_options_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void some_ip_sd_options_t::sd_option_t::sd_config_kv_pair_t::_read() {
-    m_key = kaitai::kstream::bytes_to_str(m__io->read_bytes_term(61, false, true, true), std::string("ASCII"));
-    m_value = kaitai::kstream::bytes_to_str(m__io->read_bytes_full(), std::string("ASCII"));
-}
-
-some_ip_sd_options_t::sd_option_t::sd_config_kv_pair_t::~sd_config_kv_pair_t() {
-    _clean_up();
-}
-
-void some_ip_sd_options_t::sd_option_t::sd_config_kv_pair_t::_clean_up() {
 }
 
 some_ip_sd_options_t::sd_option_t::sd_ipv6_sd_endpoint_option_t::sd_ipv6_sd_endpoint_option_t(kaitai::kstream* p__io, some_ip_sd_options_t::sd_option_t* p__parent, some_ip_sd_options_t* p__root) : kaitai::kstruct(p__io) {
@@ -381,60 +427,6 @@ some_ip_sd_options_t::sd_option_t::sd_ipv6_sd_endpoint_option_t::~sd_ipv6_sd_end
 void some_ip_sd_options_t::sd_option_t::sd_ipv6_sd_endpoint_option_t::_clean_up() {
 }
 
-some_ip_sd_options_t::sd_option_t::sd_ipv4_endpoint_option_t::sd_ipv4_endpoint_option_t(kaitai::kstream* p__io, some_ip_sd_options_t::sd_option_t* p__parent, some_ip_sd_options_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void some_ip_sd_options_t::sd_option_t::sd_ipv4_endpoint_option_t::_read() {
-    m_reserved = m__io->read_u1();
-    m_address = m__io->read_bytes(4);
-    m_reserved2 = m__io->read_u1();
-    m_l4_protocol = m__io->read_u1();
-    m_port = m__io->read_u2be();
-}
-
-some_ip_sd_options_t::sd_option_t::sd_ipv4_endpoint_option_t::~sd_ipv4_endpoint_option_t() {
-    _clean_up();
-}
-
-void some_ip_sd_options_t::sd_option_t::sd_ipv4_endpoint_option_t::_clean_up() {
-}
-
-some_ip_sd_options_t::sd_option_t::sd_ipv6_endpoint_option_t::sd_ipv6_endpoint_option_t(kaitai::kstream* p__io, some_ip_sd_options_t::sd_option_t* p__parent, some_ip_sd_options_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void some_ip_sd_options_t::sd_option_t::sd_ipv6_endpoint_option_t::_read() {
-    m_reserved = m__io->read_u1();
-    m_address = m__io->read_bytes(16);
-    m_reserved2 = m__io->read_u1();
-    m_l4_protocol = m__io->read_u1();
-    m_port = m__io->read_u2be();
-}
-
-some_ip_sd_options_t::sd_option_t::sd_ipv6_endpoint_option_t::~sd_ipv6_endpoint_option_t() {
-    _clean_up();
-}
-
-void some_ip_sd_options_t::sd_option_t::sd_ipv6_endpoint_option_t::_clean_up() {
-}
-
 some_ip_sd_options_t::sd_option_t::sd_load_balancing_option_t::sd_load_balancing_option_t(kaitai::kstream* p__io, some_ip_sd_options_t::sd_option_t* p__parent, some_ip_sd_options_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
@@ -458,4 +450,28 @@ some_ip_sd_options_t::sd_option_t::sd_load_balancing_option_t::~sd_load_balancin
 }
 
 void some_ip_sd_options_t::sd_option_t::sd_load_balancing_option_t::_clean_up() {
+}
+
+some_ip_sd_options_t::sd_option_t::sd_option_header_t::sd_option_header_t(kaitai::kstream* p__io, some_ip_sd_options_t::sd_option_t* p__parent, some_ip_sd_options_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void some_ip_sd_options_t::sd_option_t::sd_option_header_t::_read() {
+    m_length = m__io->read_u2be();
+    m_type = static_cast<some_ip_sd_options_t::sd_option_t::option_types_t>(m__io->read_u1());
+}
+
+some_ip_sd_options_t::sd_option_t::sd_option_header_t::~sd_option_header_t() {
+    _clean_up();
+}
+
+void some_ip_sd_options_t::sd_option_t::sd_option_header_t::_clean_up() {
 }

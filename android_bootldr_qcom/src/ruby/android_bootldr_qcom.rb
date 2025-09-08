@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -113,14 +113,14 @@ end
 # devices, however, these code names are the same.
 # @see https://android.googlesource.com/device/lge/hammerhead/+/7618a7d/releasetools.py Source
 class AndroidBootldrQcom < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
     @magic = @_io.read_bytes(8)
-    raise Kaitai::Struct::ValidationNotEqualError.new([66, 79, 79, 84, 76, 68, 82, 33].pack('C*'), magic, _io, "/seq/0") if not magic == [66, 79, 79, 84, 76, 68, 82, 33].pack('C*')
+    raise Kaitai::Struct::ValidationNotEqualError.new([66, 79, 79, 84, 76, 68, 82, 33].pack('C*'), @magic, @_io, "/seq/0") if not @magic == [66, 79, 79, 84, 76, 68, 82, 33].pack('C*')
     @num_images = @_io.read_u4le
     @ofs_img_bodies = @_io.read_u4le
     @bootloader_size = @_io.read_u4le
@@ -130,22 +130,8 @@ class AndroidBootldrQcom < Kaitai::Struct::Struct
     }
     self
   end
-  class ImgHeader < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @name = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(64), 0, false)).force_encoding("ASCII")
-      @len_body = @_io.read_u4le
-      self
-    end
-    attr_reader :name
-    attr_reader :len_body
-  end
   class ImgBody < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self, idx)
+    def initialize(_io, _parent = nil, _root = nil, idx)
       super(_io, _parent, _root)
       @idx = idx
       _read
@@ -162,6 +148,20 @@ class AndroidBootldrQcom < Kaitai::Struct::Struct
     end
     attr_reader :body
     attr_reader :idx
+  end
+  class ImgHeader < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @name = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(64), 0, false)).force_encoding("ASCII").encode('UTF-8')
+      @len_body = @_io.read_u4le
+      self
+    end
+    attr_reader :name
+    attr_reader :len_body
   end
   def img_bodies
     return @img_bodies unless @img_bodies.nil?

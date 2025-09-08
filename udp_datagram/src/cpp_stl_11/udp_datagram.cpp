@@ -4,7 +4,7 @@
 
 udp_datagram_t::udp_datagram_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, udp_datagram_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     _read();
 }
 
@@ -13,7 +13,7 @@ void udp_datagram_t::_read() {
     m_dst_port = m__io->read_u2be();
     m_length = m__io->read_u2be();
     m_checksum = m__io->read_u2be();
-    m_body = m__io->read_bytes((length() - 8));
+    m_body = m__io->read_bytes(length() - 8);
 }
 
 udp_datagram_t::~udp_datagram_t() {

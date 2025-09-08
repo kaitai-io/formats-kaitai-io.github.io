@@ -200,6 +200,11 @@ delivery.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="TCP (Transmission Control Protocol) segment parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="TCP (Transmission Control Protocol) segment parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -230,7 +235,17 @@ delivery.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="TCP (Transmission Control Protocol) segment parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="TCP (Transmission Control Protocol) segment parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="TCP (Transmission Control Protocol) segment parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -272,8 +287,8 @@ delivery.</p>
 
 <span class="k">namespace</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">TcpSegment</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\TcpSegment</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\TcpSegment</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span> <span class="o">===</span> <span class="k">null</span> <span class="o">?</span> <span class="nv">$this</span> <span class="o">:</span> <span class="nv">$_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
         <span class="p">}</span>
 
@@ -289,8 +304,8 @@ delivery.</p>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_windowSize</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2be</span><span class="p">();</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_checksum</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2be</span><span class="p">();</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_urgentPointer</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2be</span><span class="p">();</span>
-            <span class="k">if</span> <span class="p">(((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">dataOffset</span><span class="p">()</span> <span class="o">*</span> <span class="mi">4</span><span class="p">)</span> <span class="o">-</span> <span class="mi">20</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_options</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">dataOffset</span><span class="p">()</span> <span class="o">*</span> <span class="mi">4</span><span class="p">)</span> <span class="o">-</span> <span class="mi">20</span><span class="p">));</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">dataOffset</span><span class="p">()</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">-</span> <span class="mi">20</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_options</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">dataOffset</span><span class="p">()</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">-</span> <span class="mi">20</span><span class="p">);</span>
             <span class="p">}</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytesFull</span><span class="p">();</span>
         <span class="p">}</span>
@@ -347,7 +362,7 @@ delivery.</p>
 
 <span class="k">namespace</span> <span class="nx">TcpSegment</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">Flags</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\TcpSegment</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\TcpSegment</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\TcpSegment</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\TcpSegment</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
         <span class="p">}</span>
@@ -410,6 +425,10 @@ delivery.</p>
 <span class="sd">         * No more data from sender</span>
 <span class="sd">         */</span>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">fin</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_fin</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__toString</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="p">(((((((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">cwr</span><span class="p">()</span> <span class="o">?</span> <span class="s2">&quot;|CWR&quot;</span> <span class="o">:</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">.</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ece</span><span class="p">()</span> <span class="o">?</span> <span class="s2">&quot;|ECE&quot;</span> <span class="o">:</span> <span class="s2">&quot;&quot;</span><span class="p">))</span> <span class="o">.</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">urg</span><span class="p">()</span> <span class="o">?</span> <span class="s2">&quot;|URG&quot;</span> <span class="o">:</span> <span class="s2">&quot;&quot;</span><span class="p">))</span> <span class="o">.</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ack</span><span class="p">()</span> <span class="o">?</span> <span class="s2">&quot;|ACK&quot;</span> <span class="o">:</span> <span class="s2">&quot;&quot;</span><span class="p">))</span> <span class="o">.</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">psh</span><span class="p">()</span> <span class="o">?</span> <span class="s2">&quot;|PSH&quot;</span> <span class="o">:</span> <span class="s2">&quot;&quot;</span><span class="p">))</span> <span class="o">.</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">rst</span><span class="p">()</span> <span class="o">?</span> <span class="s2">&quot;|RST&quot;</span> <span class="o">:</span> <span class="s2">&quot;&quot;</span><span class="p">))</span> <span class="o">.</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">syn</span><span class="p">()</span> <span class="o">?</span> <span class="s2">&quot;|SYN&quot;</span> <span class="o">:</span> <span class="s2">&quot;&quot;</span><span class="p">))</span> <span class="o">.</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">fin</span><span class="p">()</span> <span class="o">?</span> <span class="s2">&quot;|FIN&quot;</span> <span class="o">:</span> <span class="s2">&quot;&quot;</span><span class="p">);</span>
+        <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>

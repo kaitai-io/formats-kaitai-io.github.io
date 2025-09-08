@@ -8,21 +8,26 @@ digraph {
 		swf__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 			<TR><TD PORT="compression_pos">0</TD><TD PORT="compression_size">1</TD><TD>u1→Compressions</TD><TD PORT="compression_type">compression</TD></TR>
-			<TR><TD PORT="signature_pos">1</TD><TD PORT="signature_size">2</TD><TD></TD><TD PORT="signature_type">signature</TD></TR>
+			<TR><TD PORT="signature_pos">1</TD><TD PORT="signature_size">2</TD><TD>57 53</TD><TD PORT="signature_type">signature</TD></TR>
 			<TR><TD PORT="version_pos">3</TD><TD PORT="version_size">1</TD><TD>u1</TD><TD PORT="version_type">version</TD></TR>
 			<TR><TD PORT="len_file_pos">4</TD><TD PORT="len_file_size">4</TD><TD>u4le</TD><TD PORT="len_file_type">len_file</TD></TR>
 			<TR><TD PORT="plain_body_pos">8</TD><TD PORT="plain_body_size">⇲</TD><TD>SwfBody</TD><TD PORT="plain_body_type">plain_body</TD></TR>
+			<TR><TD COLSPAN="4" PORT="plain_body__if">if compression == :compressions_none</TD></TR>
 			<TR><TD PORT="zlib_body_pos">...</TD><TD PORT="zlib_body_size">⇲</TD><TD>SwfBody</TD><TD PORT="zlib_body_type">zlib_body</TD></TR>
+			<TR><TD COLSPAN="4" PORT="zlib_body__if">if compression == :compressions_zlib</TD></TR>
 		</TABLE>>];
-		subgraph cluster__rgb {
-			label="Swf::Rgb";
+		subgraph cluster__define_sound_body {
+			label="Swf::DefineSoundBody";
 			graph[style=dotted];
 
-			rgb__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			define_sound_body__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="r_pos">0</TD><TD PORT="r_size">1</TD><TD>u1</TD><TD PORT="r_type">r</TD></TR>
-				<TR><TD PORT="g_pos">1</TD><TD PORT="g_size">1</TD><TD>u1</TD><TD PORT="g_type">g</TD></TR>
-				<TR><TD PORT="b_pos">2</TD><TD PORT="b_size">1</TD><TD>u1</TD><TD PORT="b_type">b</TD></TR>
+				<TR><TD PORT="id_pos">0</TD><TD PORT="id_size">2</TD><TD>u2le</TD><TD PORT="id_type">id</TD></TR>
+				<TR><TD PORT="format_pos">2</TD><TD PORT="format_size">4b</TD><TD>b4be</TD><TD PORT="format_type">format</TD></TR>
+				<TR><TD PORT="sampling_rate_pos">2:4</TD><TD PORT="sampling_rate_size">2b</TD><TD>b2be→SamplingRates</TD><TD PORT="sampling_rate_type">sampling_rate</TD></TR>
+				<TR><TD PORT="bits_per_sample_pos">2:6</TD><TD PORT="bits_per_sample_size">1b</TD><TD>b1be→Bps</TD><TD PORT="bits_per_sample_type">bits_per_sample</TD></TR>
+				<TR><TD PORT="num_channels_pos">2:7</TD><TD PORT="num_channels_size">1b</TD><TD>b1be→Channels</TD><TD PORT="num_channels_type">num_channels</TD></TR>
+				<TR><TD PORT="num_samples_pos">3</TD><TD PORT="num_samples_size">4</TD><TD>u4le</TD><TD PORT="num_samples_type">num_samples</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__do_abc_body {
@@ -32,22 +37,31 @@ digraph {
 			do_abc_body__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="flags_pos">0</TD><TD PORT="flags_size">4</TD><TD>u4le</TD><TD PORT="flags_type">flags</TD></TR>
-				<TR><TD PORT="name_pos">4</TD><TD PORT="name_size">...</TD><TD>str(ASCII)</TD><TD PORT="name_type">name</TD></TR>
+				<TR><TD PORT="name_pos">4</TD><TD PORT="name_size">...</TD><TD>str(term=0, ASCII)</TD><TD PORT="name_type">name</TD></TR>
 				<TR><TD PORT="abcdata_pos">...</TD><TD PORT="abcdata_size">⇲</TD><TD></TD><TD PORT="abcdata_type">abcdata</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__swf_body {
-			label="Swf::SwfBody";
+		subgraph cluster__record_header {
+			label="Swf::RecordHeader";
 			graph[style=dotted];
 
-			swf_body__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			record_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="rect_pos">0</TD><TD PORT="rect_size">...</TD><TD>Rect</TD><TD PORT="rect_type">rect</TD></TR>
-				<TR><TD PORT="frame_rate_pos">...</TD><TD PORT="frame_rate_size">2</TD><TD>u2le</TD><TD PORT="frame_rate_type">frame_rate</TD></TR>
-				<TR><TD PORT="frame_count_pos">...</TD><TD PORT="frame_count_size">2</TD><TD>u2le</TD><TD PORT="frame_count_type">frame_count</TD></TR>
-				<TR><TD PORT="file_attributes_tag_pos">...</TD><TD PORT="file_attributes_tag_size">...</TD><TD>Tag</TD><TD PORT="file_attributes_tag_type">file_attributes_tag</TD></TR>
-				<TR><TD PORT="tags_pos">...</TD><TD PORT="tags_size">...</TD><TD>Tag</TD><TD PORT="tags_type">tags</TD></TR>
-				<TR><TD COLSPAN="4" PORT="tags__repeat">repeat to end of stream</TD></TR>
+				<TR><TD PORT="tag_code_and_length_pos">0</TD><TD PORT="tag_code_and_length_size">2</TD><TD>u2le</TD><TD PORT="tag_code_and_length_type">tag_code_and_length</TD></TR>
+				<TR><TD PORT="big_len_pos">2</TD><TD PORT="big_len_size">4</TD><TD>s4le</TD><TD PORT="big_len_type">big_len</TD></TR>
+				<TR><TD COLSPAN="4" PORT="big_len__if">if small_len == 63</TD></TR>
+			</TABLE>>];
+			record_header__inst__len [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>len</TD><TD>(small_len == 63 ? big_len : small_len)</TD></TR>
+			</TABLE>>];
+			record_header__inst__small_len [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>small_len</TD><TD>tag_code_and_length &amp; 63</TD></TR>
+			</TABLE>>];
+			record_header__inst__tag_type [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>tag_type</TD><TD>Kaitai::Struct::Stream::resolve_enum(Swf::TAG_TYPE, tag_code_and_length &gt;&gt; 6)</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__rect {
@@ -61,31 +75,48 @@ digraph {
 			</TABLE>>];
 			rect__inst__num_bits [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>num_bits</TD><TD>(b1 &gt;&gt; 3)</TD></TR>
+				<TR><TD>num_bits</TD><TD>b1 &gt;&gt; 3</TD></TR>
 			</TABLE>>];
 			rect__inst__num_bytes [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>num_bytes</TD><TD>((((num_bits * 4) - 3) + 7) / 8)</TD></TR>
+				<TR><TD>num_bytes</TD><TD>((num_bits * 4 - 3) + 7) / 8</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__tag {
-			label="Swf::Tag";
+		subgraph cluster__rgb {
+			label="Swf::Rgb";
 			graph[style=dotted];
 
-			tag__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			rgb__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="record_header_pos">0</TD><TD PORT="record_header_size">6</TD><TD>RecordHeader</TD><TD PORT="record_header_type">record_header</TD></TR>
-				<TR><TD PORT="tag_body_pos">6</TD><TD PORT="tag_body_size">...</TD><TD>switch (record_header.tag_type)</TD><TD PORT="tag_body_type">tag_body</TD></TR>
+				<TR><TD PORT="r_pos">0</TD><TD PORT="r_size">1</TD><TD>u1</TD><TD PORT="r_type">r</TD></TR>
+				<TR><TD PORT="g_pos">1</TD><TD PORT="g_size">1</TD><TD>u1</TD><TD PORT="g_type">g</TD></TR>
+				<TR><TD PORT="b_pos">2</TD><TD PORT="b_size">1</TD><TD>u1</TD><TD PORT="b_type">b</TD></TR>
 			</TABLE>>];
-tag__seq_tag_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
-	<TR><TD>:tag_type_define_sound</TD><TD PORT="case0">DefineSoundBody</TD></TR>
-	<TR><TD>:tag_type_set_background_color</TD><TD PORT="case1">Rgb</TD></TR>
-	<TR><TD>:tag_type_script_limits</TD><TD PORT="case2">ScriptLimitsBody</TD></TR>
-	<TR><TD>:tag_type_do_abc</TD><TD PORT="case3">DoAbcBody</TD></TR>
-	<TR><TD>:tag_type_export_assets</TD><TD PORT="case4">SymbolClassBody</TD></TR>
-	<TR><TD>:tag_type_symbol_class</TD><TD PORT="case5">SymbolClassBody</TD></TR>
-</TABLE>>];
+		}
+		subgraph cluster__script_limits_body {
+			label="Swf::ScriptLimitsBody";
+			graph[style=dotted];
+
+			script_limits_body__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="max_recursion_depth_pos">0</TD><TD PORT="max_recursion_depth_size">2</TD><TD>u2le</TD><TD PORT="max_recursion_depth_type">max_recursion_depth</TD></TR>
+				<TR><TD PORT="script_timeout_seconds_pos">2</TD><TD PORT="script_timeout_seconds_size">2</TD><TD>u2le</TD><TD PORT="script_timeout_seconds_type">script_timeout_seconds</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__swf_body {
+			label="Swf::SwfBody";
+			graph[style=dotted];
+
+			swf_body__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="rect_pos">0</TD><TD PORT="rect_size">...</TD><TD>Rect</TD><TD PORT="rect_type">rect</TD></TR>
+				<TR><TD PORT="frame_rate_pos">...</TD><TD PORT="frame_rate_size">2</TD><TD>u2le</TD><TD PORT="frame_rate_type">frame_rate</TD></TR>
+				<TR><TD PORT="frame_count_pos">...</TD><TD PORT="frame_count_size">2</TD><TD>u2le</TD><TD PORT="frame_count_type">frame_count</TD></TR>
+				<TR><TD PORT="file_attributes_tag_pos">...</TD><TD PORT="file_attributes_tag_size">...</TD><TD>Tag</TD><TD PORT="file_attributes_tag_type">file_attributes_tag</TD></TR>
+				<TR><TD COLSPAN="4" PORT="file_attributes_tag__if">if _root.version &gt;= 8</TD></TR>
+				<TR><TD PORT="tags_pos">...</TD><TD PORT="tags_size">...</TD><TD>Tag</TD><TD PORT="tags_type">tags</TD></TR>
+				<TR><TD COLSPAN="4" PORT="tags__repeat">repeat to end of stream</TD></TR>
+			</TABLE>>];
 		}
 		subgraph cluster__symbol_class_body {
 			label="Swf::SymbolClassBody";
@@ -104,79 +135,55 @@ tag__seq_tag_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0
 				symbol__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 					<TR><TD PORT="tag_pos">0</TD><TD PORT="tag_size">2</TD><TD>u2le</TD><TD PORT="tag_type">tag</TD></TR>
-					<TR><TD PORT="name_pos">2</TD><TD PORT="name_size">...</TD><TD>str(ASCII)</TD><TD PORT="name_type">name</TD></TR>
+					<TR><TD PORT="name_pos">2</TD><TD PORT="name_size">...</TD><TD>str(term=0, ASCII)</TD><TD PORT="name_type">name</TD></TR>
 				</TABLE>>];
 			}
 		}
-		subgraph cluster__define_sound_body {
-			label="Swf::DefineSoundBody";
+		subgraph cluster__tag {
+			label="Swf::Tag";
 			graph[style=dotted];
 
-			define_sound_body__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			tag__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="id_pos">0</TD><TD PORT="id_size">2</TD><TD>u2le</TD><TD PORT="id_type">id</TD></TR>
-				<TR><TD PORT="format_pos">2</TD><TD PORT="format_size">4b</TD><TD>b4</TD><TD PORT="format_type">format</TD></TR>
-				<TR><TD PORT="sampling_rate_pos">2:4</TD><TD PORT="sampling_rate_size">2b</TD><TD>b2→SamplingRates</TD><TD PORT="sampling_rate_type">sampling_rate</TD></TR>
-				<TR><TD PORT="bits_per_sample_pos">2:6</TD><TD PORT="bits_per_sample_size">1b</TD><TD>b1→Bps</TD><TD PORT="bits_per_sample_type">bits_per_sample</TD></TR>
-				<TR><TD PORT="num_channels_pos">2:7</TD><TD PORT="num_channels_size">1b</TD><TD>b1→Channels</TD><TD PORT="num_channels_type">num_channels</TD></TR>
-				<TR><TD PORT="num_samples_pos">3</TD><TD PORT="num_samples_size">4</TD><TD>u4le</TD><TD PORT="num_samples_type">num_samples</TD></TR>
+				<TR><TD PORT="record_header_pos">0</TD><TD PORT="record_header_size">6</TD><TD>RecordHeader</TD><TD PORT="record_header_type">record_header</TD></TR>
+				<TR><TD PORT="tag_body_pos">6</TD><TD PORT="tag_body_size">...</TD><TD>switch (record_header.tag_type)</TD><TD PORT="tag_body_type">tag_body</TD></TR>
 			</TABLE>>];
-		}
-		subgraph cluster__record_header {
-			label="Swf::RecordHeader";
-			graph[style=dotted];
-
-			record_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="tag_code_and_length_pos">0</TD><TD PORT="tag_code_and_length_size">2</TD><TD>u2le</TD><TD PORT="tag_code_and_length_type">tag_code_and_length</TD></TR>
-				<TR><TD PORT="big_len_pos">2</TD><TD PORT="big_len_size">4</TD><TD>s4le</TD><TD PORT="big_len_type">big_len</TD></TR>
-			</TABLE>>];
-			record_header__inst__tag_type [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>tag_type</TD><TD>Kaitai::Struct::Stream::resolve_enum(Swf::TAG_TYPE, (tag_code_and_length &gt;&gt; 6))</TD></TR>
-			</TABLE>>];
-			record_header__inst__small_len [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>small_len</TD><TD>(tag_code_and_length &amp; 63)</TD></TR>
-			</TABLE>>];
-			record_header__inst__len [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>len</TD><TD>(small_len == 63 ? big_len : small_len)</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__script_limits_body {
-			label="Swf::ScriptLimitsBody";
-			graph[style=dotted];
-
-			script_limits_body__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="max_recursion_depth_pos">0</TD><TD PORT="max_recursion_depth_size">2</TD><TD>u2le</TD><TD PORT="max_recursion_depth_type">max_recursion_depth</TD></TR>
-				<TR><TD PORT="script_timeout_seconds_pos">2</TD><TD PORT="script_timeout_seconds_size">2</TD><TD>u2le</TD><TD PORT="script_timeout_seconds_type">script_timeout_seconds</TD></TR>
-			</TABLE>>];
+tag__seq_tag_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>:tag_type_define_sound</TD><TD PORT="case0">DefineSoundBody</TD></TR>
+	<TR><TD>:tag_type_do_abc</TD><TD PORT="case1">DoAbcBody</TD></TR>
+	<TR><TD>:tag_type_export_assets</TD><TD PORT="case2">SymbolClassBody</TD></TR>
+	<TR><TD>:tag_type_script_limits</TD><TD PORT="case3">ScriptLimitsBody</TD></TR>
+	<TR><TD>:tag_type_set_background_color</TD><TD PORT="case4">Rgb</TD></TR>
+	<TR><TD>:tag_type_symbol_class</TD><TD PORT="case5">SymbolClassBody</TD></TR>
+</TABLE>>];
 		}
 	}
 	swf__seq:plain_body_type -> swf_body__seq [style=bold];
+	swf__seq:compression_type -> swf__seq:plain_body__if [color="#404040"];
 	swf__seq:zlib_body_type -> swf_body__seq [style=bold];
-	swf_body__seq:rect_type -> rect__seq [style=bold];
-	swf_body__seq:file_attributes_tag_type -> tag__seq [style=bold];
-	swf_body__seq:tags_type -> tag__seq [style=bold];
+	swf__seq:compression_type -> swf__seq:zlib_body__if [color="#404040"];
+	record_header__inst__small_len:small_len_type -> record_header__seq:big_len__if [color="#404040"];
+	record_header__inst__small_len:small_len_type -> record_header__inst__len [color="#404040"];
+	record_header__seq:big_len_type -> record_header__inst__len [color="#404040"];
+	record_header__seq:tag_code_and_length_type -> record_header__inst__small_len [color="#404040"];
+	record_header__seq:tag_code_and_length_type -> record_header__inst__tag_type [color="#404040"];
 	rect__inst__num_bytes:num_bytes_type -> rect__seq:skip_size [color="#404040"];
 	rect__seq:b1_type -> rect__inst__num_bits [color="#404040"];
 	rect__inst__num_bits:num_bits_type -> rect__inst__num_bytes [color="#404040"];
+	swf_body__seq:rect_type -> rect__seq [style=bold];
+	swf_body__seq:file_attributes_tag_type -> tag__seq [style=bold];
+	swf__seq:version_type -> swf_body__seq:file_attributes_tag__if [color="#404040"];
+	swf_body__seq:tags_type -> tag__seq [style=bold];
+	symbol_class_body__seq:symbols_type -> symbol__seq [style=bold];
+	symbol_class_body__seq:num_symbols_type -> symbol_class_body__seq:symbols__repeat [color="#404040"];
 	tag__seq:record_header_type -> record_header__seq [style=bold];
 	tag__seq:tag_body_type -> tag__seq_tag_body_switch [style=bold];
 	tag__seq_tag_body_switch:case0 -> define_sound_body__seq [style=bold];
-	tag__seq_tag_body_switch:case1 -> rgb__seq [style=bold];
-	tag__seq_tag_body_switch:case2 -> script_limits_body__seq [style=bold];
-	tag__seq_tag_body_switch:case3 -> do_abc_body__seq [style=bold];
-	tag__seq_tag_body_switch:case4 -> symbol_class_body__seq [style=bold];
+	tag__seq_tag_body_switch:case1 -> do_abc_body__seq [style=bold];
+	tag__seq_tag_body_switch:case2 -> symbol_class_body__seq [style=bold];
+	tag__seq_tag_body_switch:case3 -> script_limits_body__seq [style=bold];
+	tag__seq_tag_body_switch:case4 -> rgb__seq [style=bold];
 	tag__seq_tag_body_switch:case5 -> symbol_class_body__seq [style=bold];
 	record_header__inst__tag_type:tag_type_type -> tag__seq:tag_body_type [color="#404040"];
-	symbol_class_body__seq:symbols_type -> symbol__seq [style=bold];
-	symbol_class_body__seq:num_symbols_type -> symbol_class_body__seq:symbols__repeat [color="#404040"];
-	record_header__seq:tag_code_and_length_type -> record_header__inst__tag_type [color="#404040"];
-	record_header__seq:tag_code_and_length_type -> record_header__inst__small_len [color="#404040"];
-	record_header__inst__small_len:small_len_type -> record_header__inst__len [color="#404040"];
-	record_header__seq:big_len_type -> record_header__inst__len [color="#404040"];
-	record_header__inst__small_len:small_len_type -> record_header__inst__len [color="#404040"];
 }

@@ -2,13 +2,16 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class chrome_pak_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -22,15 +25,21 @@
 class chrome_pak_t : public kaitai::kstruct {
 
 public:
+    class alias_t;
     class header_v5_part_t;
     class resource_t;
-    class alias_t;
 
     enum encodings_t {
         ENCODINGS_BINARY = 0,
         ENCODINGS_UTF8 = 1,
         ENCODINGS_UTF16 = 2
     };
+    static bool _is_defined_encodings_t(encodings_t v);
+
+private:
+    static const std::set<encodings_t> _values_encodings_t;
+
+public:
 
     chrome_pak_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, chrome_pak_t* p__root = nullptr);
 
@@ -40,6 +49,39 @@ private:
 
 public:
     ~chrome_pak_t();
+
+    class alias_t : public kaitai::kstruct {
+
+    public:
+
+        alias_t(kaitai::kstream* p__io, chrome_pak_t* p__parent = nullptr, chrome_pak_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~alias_t();
+
+    private:
+        bool f_resource;
+        resource_t* m_resource;
+
+    public:
+        resource_t* resource();
+
+    private:
+        uint16_t m_id;
+        uint16_t m_resource_idx;
+        chrome_pak_t* m__root;
+        chrome_pak_t* m__parent;
+
+    public:
+        uint16_t id() const { return m_id; }
+        uint16_t resource_idx() const { return m_resource_idx; }
+        chrome_pak_t* _root() const { return m__root; }
+        chrome_pak_t* _parent() const { return m__parent; }
+    };
 
     class header_v5_part_t : public kaitai::kstruct {
 
@@ -83,23 +125,6 @@ public:
         ~resource_t();
 
     private:
-        bool f_len_body;
-        int32_t m_len_body;
-        bool n_len_body;
-
-    public:
-        bool _is_null_len_body() { len_body(); return n_len_body; };
-
-    private:
-
-    public:
-
-        /**
-         * MUST NOT be accessed until the next `resource` is parsed
-         */
-        int32_t len_body();
-
-    private:
         bool f_body;
         std::string m_body;
         bool n_body;
@@ -115,6 +140,23 @@ public:
          * MUST NOT be accessed until the next `resource` is parsed
          */
         std::string body();
+
+    private:
+        bool f_len_body;
+        int32_t m_len_body;
+        bool n_len_body;
+
+    public:
+        bool _is_null_len_body() { len_body(); return n_len_body; };
+
+    private:
+
+    public:
+
+        /**
+         * MUST NOT be accessed until the next `resource` is parsed
+         */
+        int32_t len_body();
 
     private:
         uint16_t m_id;
@@ -133,38 +175,12 @@ public:
         chrome_pak_t* _parent() const { return m__parent; }
     };
 
-    class alias_t : public kaitai::kstruct {
+private:
+    bool f_num_aliases;
+    uint16_t m_num_aliases;
 
-    public:
-
-        alias_t(kaitai::kstream* p__io, chrome_pak_t* p__parent = nullptr, chrome_pak_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~alias_t();
-
-    private:
-        bool f_resource;
-        resource_t* m_resource;
-
-    public:
-        resource_t* resource();
-
-    private:
-        uint16_t m_id;
-        uint16_t m_resource_idx;
-        chrome_pak_t* m__root;
-        chrome_pak_t* m__parent;
-
-    public:
-        uint16_t id() const { return m_id; }
-        uint16_t resource_idx() const { return m_resource_idx; }
-        chrome_pak_t* _root() const { return m__root; }
-        chrome_pak_t* _parent() const { return m__parent; }
-    };
+public:
+    uint16_t num_aliases();
 
 private:
     bool f_num_resources;
@@ -172,13 +188,6 @@ private:
 
 public:
     uint32_t num_resources();
-
-private:
-    bool f_num_aliases;
-    uint16_t m_num_aliases;
-
-public:
-    uint16_t num_aliases();
 
 private:
     uint32_t m_version;

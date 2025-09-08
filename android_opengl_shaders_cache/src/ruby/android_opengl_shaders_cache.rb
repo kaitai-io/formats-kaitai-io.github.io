@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -12,14 +12,14 @@ end
 # into com.android.opengl.shaders_cache file.
 # @see https://android.googlesource.com/platform/frameworks/native/+/master/opengl/libs/EGL/FileBlobCache.cpp Source
 class AndroidOpenglShadersCache < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
     @magic = @_io.read_bytes(4)
-    raise Kaitai::Struct::ValidationNotEqualError.new([69, 71, 76, 36].pack('C*'), magic, _io, "/seq/0") if not magic == [69, 71, 76, 36].pack('C*')
+    raise Kaitai::Struct::ValidationNotEqualError.new([69, 71, 76, 36].pack('C*'), @magic, @_io, "/seq/0") if not @magic == [69, 71, 76, 36].pack('C*')
     @crc32 = @_io.read_u4le
     @_raw_contents = @_io.read_bytes_full
     _io__raw_contents = Kaitai::Struct::Stream.new(@_raw_contents)
@@ -27,13 +27,13 @@ class AndroidOpenglShadersCache < Kaitai::Struct::Struct
     self
   end
   class Alignment < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @alignment = @_io.read_bytes(((_io.pos + 3) & (~3 - _io.pos)))
+      @alignment = @_io.read_bytes(_io.pos + 3 & ~3 - _io.pos)
       self
     end
 
@@ -41,34 +41,18 @@ class AndroidOpenglShadersCache < Kaitai::Struct::Struct
     # garbage from memory
     attr_reader :alignment
   end
-  class PrefixedString < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @len_str = @_io.read_u4le
-      @str = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(len_str), 0, false)).force_encoding("ascii")
-      @alignment = Alignment.new(@_io, self, @_root)
-      self
-    end
-    attr_reader :len_str
-    attr_reader :str
-    attr_reader :alignment
-  end
 
   ##
   # @see https://android.googlesource.com/platform/frameworks/native/+/master/opengl/libs/EGL/BlobCache.cpp Source
   class Cache < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
       @magic = @_io.read_bytes(4)
-      raise Kaitai::Struct::ValidationNotEqualError.new([36, 98, 66, 95].pack('C*'), magic, _io, "/types/cache/seq/0") if not magic == [36, 98, 66, 95].pack('C*')
+      raise Kaitai::Struct::ValidationNotEqualError.new([36, 98, 66, 95].pack('C*'), @magic, @_io, "/types/cache/seq/0") if not @magic == [36, 98, 66, 95].pack('C*')
       @version = @_io.read_u4le
       @device_version = @_io.read_u4le
       @num_entries = @_io.read_u4le
@@ -82,7 +66,7 @@ class AndroidOpenglShadersCache < Kaitai::Struct::Struct
       self
     end
     class Entry < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
@@ -107,6 +91,22 @@ class AndroidOpenglShadersCache < Kaitai::Struct::Struct
     attr_reader :num_entries
     attr_reader :build_id
     attr_reader :entries
+  end
+  class PrefixedString < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @len_str = @_io.read_u4le
+      @str = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(len_str), 0, false)).force_encoding("ASCII").encode('UTF-8')
+      @alignment = Alignment.new(@_io, self, @_root)
+      self
+    end
+    attr_reader :len_str
+    attr_reader :str
+    attr_reader :alignment
   end
   attr_reader :magic
 

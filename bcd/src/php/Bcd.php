@@ -33,8 +33,8 @@
 
 namespace {
     class Bcd extends \Kaitai\Struct\Struct {
-        public function __construct(int $numDigits, int $bitsPerDigit, bool $isLe, \Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Bcd $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(int $numDigits, int $bitsPerDigit, bool $isLe, \Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Bcd $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_m_numDigits = $numDigits;
             $this->_m_bitsPerDigit = $bitsPerDigit;
             $this->_m_isLe = $isLe;
@@ -66,6 +66,17 @@ namespace {
             $this->_m_asInt = ($this->isLe() ? $this->asIntLe() : $this->asIntBe());
             return $this->_m_asInt;
         }
+        protected $_m_asIntBe;
+
+        /**
+         * Value of this BCD number as integer (treating digit order as big-endian).
+         */
+        public function asIntBe() {
+            if ($this->_m_asIntBe !== null)
+                return $this->_m_asIntBe;
+            $this->_m_asIntBe = $this->digits()[$this->lastIdx()] + ($this->numDigits() < 2 ? 0 : $this->digits()[$this->lastIdx() - 1] * 10 + ($this->numDigits() < 3 ? 0 : $this->digits()[$this->lastIdx() - 2] * 100 + ($this->numDigits() < 4 ? 0 : $this->digits()[$this->lastIdx() - 3] * 1000 + ($this->numDigits() < 5 ? 0 : $this->digits()[$this->lastIdx() - 4] * 10000 + ($this->numDigits() < 6 ? 0 : $this->digits()[$this->lastIdx() - 5] * 100000 + ($this->numDigits() < 7 ? 0 : $this->digits()[$this->lastIdx() - 6] * 1000000 + ($this->numDigits() < 8 ? 0 : $this->digits()[$this->lastIdx() - 7] * 10000000)))))));
+            return $this->_m_asIntBe;
+        }
         protected $_m_asIntLe;
 
         /**
@@ -74,7 +85,7 @@ namespace {
         public function asIntLe() {
             if ($this->_m_asIntLe !== null)
                 return $this->_m_asIntLe;
-            $this->_m_asIntLe = ($this->digits()[0] + ($this->numDigits() < 2 ? 0 : (($this->digits()[1] * 10) + ($this->numDigits() < 3 ? 0 : (($this->digits()[2] * 100) + ($this->numDigits() < 4 ? 0 : (($this->digits()[3] * 1000) + ($this->numDigits() < 5 ? 0 : (($this->digits()[4] * 10000) + ($this->numDigits() < 6 ? 0 : (($this->digits()[5] * 100000) + ($this->numDigits() < 7 ? 0 : (($this->digits()[6] * 1000000) + ($this->numDigits() < 8 ? 0 : ($this->digits()[7] * 10000000)))))))))))))));
+            $this->_m_asIntLe = $this->digits()[0] + ($this->numDigits() < 2 ? 0 : $this->digits()[1] * 10 + ($this->numDigits() < 3 ? 0 : $this->digits()[2] * 100 + ($this->numDigits() < 4 ? 0 : $this->digits()[3] * 1000 + ($this->numDigits() < 5 ? 0 : $this->digits()[4] * 10000 + ($this->numDigits() < 6 ? 0 : $this->digits()[5] * 100000 + ($this->numDigits() < 7 ? 0 : $this->digits()[6] * 1000000 + ($this->numDigits() < 8 ? 0 : $this->digits()[7] * 10000000)))))));
             return $this->_m_asIntLe;
         }
         protected $_m_lastIdx;
@@ -85,19 +96,8 @@ namespace {
         public function lastIdx() {
             if ($this->_m_lastIdx !== null)
                 return $this->_m_lastIdx;
-            $this->_m_lastIdx = ($this->numDigits() - 1);
+            $this->_m_lastIdx = $this->numDigits() - 1;
             return $this->_m_lastIdx;
-        }
-        protected $_m_asIntBe;
-
-        /**
-         * Value of this BCD number as integer (treating digit order as big-endian).
-         */
-        public function asIntBe() {
-            if ($this->_m_asIntBe !== null)
-                return $this->_m_asIntBe;
-            $this->_m_asIntBe = ($this->digits()[$this->lastIdx()] + ($this->numDigits() < 2 ? 0 : (($this->digits()[($this->lastIdx() - 1)] * 10) + ($this->numDigits() < 3 ? 0 : (($this->digits()[($this->lastIdx() - 2)] * 100) + ($this->numDigits() < 4 ? 0 : (($this->digits()[($this->lastIdx() - 3)] * 1000) + ($this->numDigits() < 5 ? 0 : (($this->digits()[($this->lastIdx() - 4)] * 10000) + ($this->numDigits() < 6 ? 0 : (($this->digits()[($this->lastIdx() - 5)] * 100000) + ($this->numDigits() < 7 ? 0 : (($this->digits()[($this->lastIdx() - 6)] * 1000000) + ($this->numDigits() < 8 ? 0 : ($this->digits()[($this->lastIdx() - 7)] * 10000000)))))))))))))));
-            return $this->_m_asIntBe;
         }
         protected $_m_digits;
         protected $_m_numDigits;

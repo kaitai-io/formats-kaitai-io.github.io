@@ -9,14 +9,18 @@ type HeroesOfMightAndMagicBmp struct {
 	Data []byte
 	_io *kaitai.Stream
 	_root *HeroesOfMightAndMagicBmp
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewHeroesOfMightAndMagicBmp() *HeroesOfMightAndMagicBmp {
 	return &HeroesOfMightAndMagicBmp{
 	}
 }
 
-func (this *HeroesOfMightAndMagicBmp) Read(io *kaitai.Stream, parent interface{}, root *HeroesOfMightAndMagicBmp) (err error) {
+func (this HeroesOfMightAndMagicBmp) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *HeroesOfMightAndMagicBmp) Read(io *kaitai.Stream, parent kaitai.Struct, root *HeroesOfMightAndMagicBmp) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -36,7 +40,7 @@ func (this *HeroesOfMightAndMagicBmp) Read(io *kaitai.Stream, parent interface{}
 		return err
 	}
 	this.Height = uint16(tmp3)
-	tmp4, err := this._io.ReadBytes(int((this.Width * this.Height)))
+	tmp4, err := this._io.ReadBytes(int(this.Width * this.Height))
 	if err != nil {
 		return err
 	}

@@ -211,6 +211,11 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="java-write.html" title="PNG (Portable Network Graphics) file parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="PNG (Portable Network Graphics) file parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -239,9 +244,19 @@ section#format-index .row {
                 <a href="python.html" title="PNG (Portable Network Graphics) file parsing Python library">Python</a></li>
                 
                 
+                <li>
+                
+                <a href="python-write.html" title="PNG (Portable Network Graphics) file parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
                 <li class="active">
                 
                 <a href="ruby.html" title="PNG (Portable Network Graphics) file parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="PNG (Portable Network Graphics) file parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -318,8 +333,8 @@ section#format-index .row {
 <span class="nb">require</span><span class="w"> </span><span class="s1">&#39;kaitai/struct/struct&#39;</span>
 <span class="nb">require</span><span class="w"> </span><span class="s1">&#39;zlib&#39;</span>
 
-<span class="k">unless</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.9&#39;</span><span class="p">)</span>
-<span class="w">  </span><span class="k">raise</span><span class="w"> </span><span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">unless</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.11&#39;</span><span class="p">)</span>
+<span class="w">  </span><span class="k">raise</span><span class="w"> </span><span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
 <span class="k">end</span>
 
 
@@ -330,17 +345,20 @@ section#format-index .row {
 <span class="c1">#   * &lt;http://littlesvr.ca/apng/&gt;</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Png</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 
-<span class="w">  </span><span class="no">PHYS_UNIT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="mi">0</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:phys_unit_unknown</span><span class="p">,</span>
-<span class="w">    </span><span class="mi">1</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:phys_unit_meter</span><span class="p">,</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="w">  </span><span class="no">I__PHYS_UNIT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">PHYS_UNIT</span><span class="o">.</span><span class="n">invert</span>
-
 <span class="w">  </span><span class="no">BLEND_OP_VALUES</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="mi">0</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:blend_op_values_source</span><span class="p">,</span>
 <span class="w">    </span><span class="mi">1</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:blend_op_values_over</span><span class="p">,</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="w">  </span><span class="no">I__BLEND_OP_VALUES</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">BLEND_OP_VALUES</span><span class="o">.</span><span class="n">invert</span>
+
+<span class="w">  </span><span class="no">COLOR_TYPE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="mi">0</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:color_type_greyscale</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">2</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:color_type_truecolor</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">3</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:color_type_indexed</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">4</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:color_type_greyscale_alpha</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">6</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:color_type_truecolor_alpha</span><span class="p">,</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="no">I__COLOR_TYPE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">COLOR_TYPE</span><span class="o">.</span><span class="n">invert</span>
 
 <span class="w">  </span><span class="no">COMPRESSION_METHODS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="mi">0</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:compression_methods_zlib</span><span class="p">,</span>
@@ -354,26 +372,23 @@ section#format-index .row {
 <span class="w">  </span><span class="p">}</span>
 <span class="w">  </span><span class="no">I__DISPOSE_OP_VALUES</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">DISPOSE_OP_VALUES</span><span class="o">.</span><span class="n">invert</span>
 
-<span class="w">  </span><span class="no">COLOR_TYPE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="mi">0</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:color_type_greyscale</span><span class="p">,</span>
-<span class="w">    </span><span class="mi">2</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:color_type_truecolor</span><span class="p">,</span>
-<span class="w">    </span><span class="mi">3</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:color_type_indexed</span><span class="p">,</span>
-<span class="w">    </span><span class="mi">4</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:color_type_greyscale_alpha</span><span class="p">,</span>
-<span class="w">    </span><span class="mi">6</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:color_type_truecolor_alpha</span><span class="p">,</span>
+<span class="w">  </span><span class="no">PHYS_UNIT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="mi">0</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:phys_unit_unknown</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">1</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:phys_unit_meter</span><span class="p">,</span>
 <span class="w">  </span><span class="p">}</span>
-<span class="w">  </span><span class="no">I__COLOR_TYPE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">COLOR_TYPE</span><span class="o">.</span><span class="n">invert</span>
-<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
-<span class="w">    </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="no">I__PHYS_UNIT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">PHYS_UNIT</span><span class="o">.</span><span class="n">invert</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">    </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
 <span class="w">    </span><span class="n">_read</span>
 <span class="w">  </span><span class="k">end</span>
 
 <span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
 <span class="w">    </span><span class="vi">@magic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
-<span class="w">    </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">137</span><span class="p">,</span><span class="w"> </span><span class="mi">80</span><span class="p">,</span><span class="w"> </span><span class="mi">78</span><span class="p">,</span><span class="w"> </span><span class="mi">71</span><span class="p">,</span><span class="w"> </span><span class="mi">13</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">26</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span><span class="w"> </span><span class="n">magic</span><span class="p">,</span><span class="w"> </span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/seq/0&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">magic</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">137</span><span class="p">,</span><span class="w"> </span><span class="mi">80</span><span class="p">,</span><span class="w"> </span><span class="mi">78</span><span class="p">,</span><span class="w"> </span><span class="mi">71</span><span class="p">,</span><span class="w"> </span><span class="mi">13</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">26</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
+<span class="w">    </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">137</span><span class="p">,</span><span class="w"> </span><span class="mi">80</span><span class="p">,</span><span class="w"> </span><span class="mi">78</span><span class="p">,</span><span class="w"> </span><span class="mi">71</span><span class="p">,</span><span class="w"> </span><span class="mi">13</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">26</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span><span class="w"> </span><span class="vi">@magic</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/seq/0&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@magic</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">137</span><span class="p">,</span><span class="w"> </span><span class="mi">80</span><span class="p">,</span><span class="w"> </span><span class="mi">78</span><span class="p">,</span><span class="w"> </span><span class="mi">71</span><span class="p">,</span><span class="w"> </span><span class="mi">13</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">26</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
 <span class="w">    </span><span class="vi">@ihdr_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
-<span class="w">    </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span><span class="w"> </span><span class="n">ihdr_len</span><span class="p">,</span><span class="w"> </span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/seq/1&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">ihdr_len</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">13</span>
+<span class="w">    </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span><span class="w"> </span><span class="vi">@ihdr_len</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/seq/1&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@ihdr_len</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">13</span>
 <span class="w">    </span><span class="vi">@ihdr_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-<span class="w">    </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">73</span><span class="p">,</span><span class="w"> </span><span class="mi">72</span><span class="p">,</span><span class="w"> </span><span class="mi">68</span><span class="p">,</span><span class="w"> </span><span class="mi">82</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span><span class="w"> </span><span class="n">ihdr_type</span><span class="p">,</span><span class="w"> </span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/seq/2&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">ihdr_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">73</span><span class="p">,</span><span class="w"> </span><span class="mi">72</span><span class="p">,</span><span class="w"> </span><span class="mi">68</span><span class="p">,</span><span class="w"> </span><span class="mi">82</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
+<span class="w">    </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">73</span><span class="p">,</span><span class="w"> </span><span class="mi">72</span><span class="p">,</span><span class="w"> </span><span class="mi">68</span><span class="p">,</span><span class="w"> </span><span class="mi">82</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span><span class="w"> </span><span class="vi">@ihdr_type</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/seq/2&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@ihdr_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">73</span><span class="p">,</span><span class="w"> </span><span class="mi">72</span><span class="p">,</span><span class="w"> </span><span class="mi">68</span><span class="p">,</span><span class="w"> </span><span class="mi">82</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
 <span class="w">    </span><span class="vi">@ihdr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">IhdrChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
 <span class="w">    </span><span class="vi">@ihdr_crc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
 <span class="w">    </span><span class="vi">@chunks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span>
@@ -385,140 +400,62 @@ section#format-index .row {
 <span class="w">    </span><span class="k">end</span><span class="w"> </span><span class="k">until</span><span class="w">  </span><span class="p">((</span><span class="n">_</span><span class="o">.</span><span class="n">type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;IEND&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="n">_io</span><span class="o">.</span><span class="n">eof?</span><span class="p">))</span><span class="w"> </span>
 <span class="w">    </span><span class="nb">self</span>
 <span class="w">  </span><span class="k">end</span>
-<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">Rgb</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+
+<span class="w">  </span><span class="c1">##</span>
+<span class="w">  </span><span class="c1"># @see https://wiki.mozilla.org/APNG_Specification#.60acTL.60:_The_Animation_Control_Chunk Source</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">AnimationControlChunk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 <span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
 <span class="w">      </span><span class="n">_read</span>
 <span class="w">    </span><span class="k">end</span>
 
 <span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">      </span><span class="vi">@r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-<span class="w">      </span><span class="vi">@g</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-<span class="w">      </span><span class="vi">@b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="vi">@num_frames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+<span class="w">      </span><span class="vi">@num_plays</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
 <span class="w">      </span><span class="nb">self</span>
-<span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:r</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:g</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:b</span>
-<span class="w">  </span><span class="k">end</span>
-<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">Chunk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
-<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
-<span class="w">      </span><span class="n">_read</span>
 <span class="w">    </span><span class="k">end</span>
 
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">      </span><span class="vi">@len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
-<span class="w">      </span><span class="vi">@type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
-<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="n">type</span>
-<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;iTXt&quot;</span>
-<span class="w">        </span><span class="vi">@_raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
-<span class="w">        </span><span class="n">_io__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
-<span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">InternationalTextChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;gAMA&quot;</span>
-<span class="w">        </span><span class="vi">@_raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
-<span class="w">        </span><span class="n">_io__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
-<span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">GamaChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;tIME&quot;</span>
-<span class="w">        </span><span class="vi">@_raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
-<span class="w">        </span><span class="n">_io__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
-<span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">TimeChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;PLTE&quot;</span>
-<span class="w">        </span><span class="vi">@_raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
-<span class="w">        </span><span class="n">_io__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
-<span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">PlteChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;bKGD&quot;</span>
-<span class="w">        </span><span class="vi">@_raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
-<span class="w">        </span><span class="n">_io__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
-<span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">BkgdChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;pHYs&quot;</span>
-<span class="w">        </span><span class="vi">@_raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
-<span class="w">        </span><span class="n">_io__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
-<span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">PhysChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;fdAT&quot;</span>
-<span class="w">        </span><span class="vi">@_raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
-<span class="w">        </span><span class="n">_io__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
-<span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">FrameDataChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;tEXt&quot;</span>
-<span class="w">        </span><span class="vi">@_raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
-<span class="w">        </span><span class="n">_io__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
-<span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">TextChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;cHRM&quot;</span>
-<span class="w">        </span><span class="vi">@_raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
-<span class="w">        </span><span class="n">_io__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
-<span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">ChrmChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;acTL&quot;</span>
-<span class="w">        </span><span class="vi">@_raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
-<span class="w">        </span><span class="n">_io__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
-<span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">AnimationControlChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;sRGB&quot;</span>
-<span class="w">        </span><span class="vi">@_raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
-<span class="w">        </span><span class="n">_io__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
-<span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SrgbChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;zTXt&quot;</span>
-<span class="w">        </span><span class="vi">@_raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
-<span class="w">        </span><span class="n">_io__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
-<span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">CompressedTextChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;fcTL&quot;</span>
-<span class="w">        </span><span class="vi">@_raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
-<span class="w">        </span><span class="n">_io__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
-<span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">FrameControlChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">      </span><span class="k">else</span>
-<span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
-<span class="w">      </span><span class="k">end</span>
-<span class="w">      </span><span class="vi">@crc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-<span class="w">      </span><span class="nb">self</span>
-<span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:len</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:type</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:body</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:crc</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:_raw_body</span>
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Number of frames, must be equal to the number of `frame_control_chunk`s</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:num_frames</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Number of times to loop, 0 indicates infinite looping.</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:num_plays</span>
 <span class="w">  </span><span class="k">end</span>
 
 <span class="w">  </span><span class="c1">##</span>
-<span class="w">  </span><span class="c1"># Background chunk for images with indexed palette.</span>
-<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">BkgdIndexed</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">  </span><span class="c1"># Background chunk stores default background color to display this</span>
+<span class="w">  </span><span class="c1"># image against. Contents depend on `color_type` of the image.</span>
+<span class="w">  </span><span class="c1"># @see https://www.w3.org/TR/png/#11bKGD Source</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">BkgdChunk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 <span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
 <span class="w">      </span><span class="n">_read</span>
 <span class="w">    </span><span class="k">end</span>
 
 <span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">      </span><span class="vi">@palette_index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="n">_root</span><span class="o">.</span><span class="n">ihdr</span><span class="o">.</span><span class="n">color_type</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="ss">:color_type_greyscale</span>
+<span class="w">        </span><span class="vi">@bkgd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">BkgdGreyscale</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="ss">:color_type_greyscale_alpha</span>
+<span class="w">        </span><span class="vi">@bkgd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">BkgdGreyscale</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="ss">:color_type_indexed</span>
+<span class="w">        </span><span class="vi">@bkgd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">BkgdIndexed</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="ss">:color_type_truecolor</span>
+<span class="w">        </span><span class="vi">@bkgd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">BkgdTruecolor</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="ss">:color_type_truecolor_alpha</span>
+<span class="w">        </span><span class="vi">@bkgd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">BkgdTruecolor</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="k">end</span>
 <span class="w">      </span><span class="nb">self</span>
 <span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:palette_index</span>
-<span class="w">  </span><span class="k">end</span>
-<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">Point</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
-<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
-<span class="w">      </span><span class="n">_read</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">      </span><span class="vi">@x_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
-<span class="w">      </span><span class="vi">@y_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
-<span class="w">      </span><span class="nb">self</span>
-<span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">x</span>
-<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@x</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@x</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">      </span><span class="vi">@x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">x_int</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">100000</span><span class="o">.</span><span class="mi">0</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@x</span>
-<span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">y</span>
-<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@y</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@y</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">      </span><span class="vi">@y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">y_int</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">100000</span><span class="o">.</span><span class="mi">0</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@y</span>
-<span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:x_int</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:y_int</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:bkgd</span>
 <span class="w">  </span><span class="k">end</span>
 
 <span class="w">  </span><span class="c1">##</span>
 <span class="w">  </span><span class="c1"># Background chunk for greyscale images.</span>
 <span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">BkgdGreyscale</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 <span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
 <span class="w">      </span><span class="n">_read</span>
 <span class="w">    </span><span class="k">end</span>
@@ -531,9 +468,43 @@ section#format-index .row {
 <span class="w">  </span><span class="k">end</span>
 
 <span class="w">  </span><span class="c1">##</span>
+<span class="w">  </span><span class="c1"># Background chunk for images with indexed palette.</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">BkgdIndexed</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@palette_index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:palette_index</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="c1">##</span>
+<span class="w">  </span><span class="c1"># Background chunk for truecolor images.</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">BkgdTruecolor</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@red</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+<span class="w">      </span><span class="vi">@green</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+<span class="w">      </span><span class="vi">@blue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:red</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:green</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:blue</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="c1">##</span>
 <span class="w">  </span><span class="c1"># @see https://www.w3.org/TR/png/#11cHRM Source</span>
 <span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">ChrmChunk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 <span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
 <span class="w">      </span><span class="n">_read</span>
 <span class="w">    </span><span class="k">end</span>
@@ -550,75 +521,66 @@ section#format-index .row {
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:green</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:blue</span>
 <span class="w">  </span><span class="k">end</span>
-
-<span class="w">  </span><span class="c1">##</span>
-<span class="w">  </span><span class="c1"># @see https://www.w3.org/TR/png/#11IHDR Source</span>
-<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">IhdrChunk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">Chunk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 <span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
 <span class="w">      </span><span class="n">_read</span>
 <span class="w">    </span><span class="k">end</span>
 
 <span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">      </span><span class="vi">@width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
-<span class="w">      </span><span class="vi">@height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
-<span class="w">      </span><span class="vi">@bit_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-<span class="w">      </span><span class="vi">@color_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Png</span><span class="o">::</span><span class="no">COLOR_TYPE</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@compression_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-<span class="w">      </span><span class="vi">@filter_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-<span class="w">      </span><span class="vi">@interlace_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-<span class="w">      </span><span class="nb">self</span>
-<span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:width</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:height</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:bit_depth</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:color_type</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:compression_method</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:filter_method</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:interlace_method</span>
-<span class="w">  </span><span class="k">end</span>
-
-<span class="w">  </span><span class="c1">##</span>
-<span class="w">  </span><span class="c1"># @see https://www.w3.org/TR/png/#11PLTE Source</span>
-<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">PlteChunk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
-<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
-<span class="w">      </span><span class="n">_read</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">      </span><span class="vi">@entries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span>
-<span class="w">      </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
-<span class="w">      </span><span class="k">while</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
-<span class="w">        </span><span class="vi">@entries</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="no">Rgb</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">        </span><span class="n">i</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">      </span><span class="vi">@len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+<span class="w">      </span><span class="vi">@type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="n">type</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;PLTE&quot;</span>
+<span class="w">        </span><span class="n">_io_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">PlteChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;acTL&quot;</span>
+<span class="w">        </span><span class="n">_io_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">AnimationControlChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;bKGD&quot;</span>
+<span class="w">        </span><span class="n">_io_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">BkgdChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;cHRM&quot;</span>
+<span class="w">        </span><span class="n">_io_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">ChrmChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;fcTL&quot;</span>
+<span class="w">        </span><span class="n">_io_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">FrameControlChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;fdAT&quot;</span>
+<span class="w">        </span><span class="n">_io_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">FrameDataChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;gAMA&quot;</span>
+<span class="w">        </span><span class="n">_io_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">GamaChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;iTXt&quot;</span>
+<span class="w">        </span><span class="n">_io_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">InternationalTextChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;pHYs&quot;</span>
+<span class="w">        </span><span class="n">_io_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">PhysChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;sRGB&quot;</span>
+<span class="w">        </span><span class="n">_io_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SrgbChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;tEXt&quot;</span>
+<span class="w">        </span><span class="n">_io_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">TextChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;tIME&quot;</span>
+<span class="w">        </span><span class="n">_io_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">TimeChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="s2">&quot;zTXt&quot;</span>
+<span class="w">        </span><span class="n">_io_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">CompressedTextChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_body</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="k">else</span>
+<span class="w">        </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
 <span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="vi">@crc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
 <span class="w">      </span><span class="nb">self</span>
 <span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:entries</span>
-<span class="w">  </span><span class="k">end</span>
-
-<span class="w">  </span><span class="c1">##</span>
-<span class="w">  </span><span class="c1"># @see https://www.w3.org/TR/png/#11sRGB Source</span>
-<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">SrgbChunk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-
-<span class="w">    </span><span class="no">INTENT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="mi">0</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:intent_perceptual</span><span class="p">,</span>
-<span class="w">      </span><span class="mi">1</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:intent_relative_colorimetric</span><span class="p">,</span>
-<span class="w">      </span><span class="mi">2</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:intent_saturation</span><span class="p">,</span>
-<span class="w">      </span><span class="mi">3</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:intent_absolute_colorimetric</span><span class="p">,</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="no">I__INTENT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">INTENT</span><span class="o">.</span><span class="n">invert</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
-<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
-<span class="w">      </span><span class="n">_read</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">      </span><span class="vi">@render_intent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">INTENT</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
-<span class="w">      </span><span class="nb">self</span>
-<span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:render_intent</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:len</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:type</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:body</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:crc</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:_raw_body</span>
 <span class="w">  </span><span class="k">end</span>
 
 <span class="w">  </span><span class="c1">##</span>
@@ -627,7 +589,7 @@ section#format-index .row {
 <span class="w">  </span><span class="c1"># can be quite lengthy) with zlib compression.</span>
 <span class="w">  </span><span class="c1"># @see https://www.w3.org/TR/png/#11zTXt Source</span>
 <span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">CompressedTextChunk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 <span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
 <span class="w">      </span><span class="n">_read</span>
 <span class="w">    </span><span class="k">end</span>
@@ -649,134 +611,9 @@ section#format-index .row {
 <span class="w">  </span><span class="k">end</span>
 
 <span class="w">  </span><span class="c1">##</span>
-<span class="w">  </span><span class="c1"># @see https://wiki.mozilla.org/APNG_Specification#.60fdAT.60:_The_Frame_Data_Chunk Source</span>
-<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">FrameDataChunk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
-<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
-<span class="w">      </span><span class="n">_read</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">      </span><span class="vi">@sequence_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
-<span class="w">      </span><span class="vi">@frame_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_full</span>
-<span class="w">      </span><span class="nb">self</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># Sequence number of the animation chunk. The fcTL and fdAT chunks</span>
-<span class="w">    </span><span class="c1"># have a 4 byte sequence number. Both chunk types share the sequence.</span>
-<span class="w">    </span><span class="c1"># The first fcTL chunk must contain sequence number 0, and the sequence</span>
-<span class="w">    </span><span class="c1"># numbers in the remaining fcTL and fdAT chunks must be in order, with</span>
-<span class="w">    </span><span class="c1"># no gaps or duplicates.</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:sequence_number</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># Frame data for the frame. At least one fdAT chunk is required for</span>
-<span class="w">    </span><span class="c1"># each frame. The compressed datastream is the concatenation of the</span>
-<span class="w">    </span><span class="c1"># contents of the data fields of all the fdAT chunks within a frame.</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:frame_data</span>
-<span class="w">  </span><span class="k">end</span>
-
-<span class="w">  </span><span class="c1">##</span>
-<span class="w">  </span><span class="c1"># Background chunk for truecolor images.</span>
-<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">BkgdTruecolor</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
-<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
-<span class="w">      </span><span class="n">_read</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">      </span><span class="vi">@red</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
-<span class="w">      </span><span class="vi">@green</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
-<span class="w">      </span><span class="vi">@blue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
-<span class="w">      </span><span class="nb">self</span>
-<span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:red</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:green</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:blue</span>
-<span class="w">  </span><span class="k">end</span>
-
-<span class="w">  </span><span class="c1">##</span>
-<span class="w">  </span><span class="c1"># @see https://www.w3.org/TR/png/#11gAMA Source</span>
-<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">GamaChunk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
-<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
-<span class="w">      </span><span class="n">_read</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">      </span><span class="vi">@gamma_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
-<span class="w">      </span><span class="nb">self</span>
-<span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">gamma_ratio</span>
-<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@gamma_ratio</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@gamma_ratio</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">      </span><span class="vi">@gamma_ratio</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mi">100000</span><span class="o">.</span><span class="mi">0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">gamma_int</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@gamma_ratio</span>
-<span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:gamma_int</span>
-<span class="w">  </span><span class="k">end</span>
-
-<span class="w">  </span><span class="c1">##</span>
-<span class="w">  </span><span class="c1"># Background chunk stores default background color to display this</span>
-<span class="w">  </span><span class="c1"># image against. Contents depend on `color_type` of the image.</span>
-<span class="w">  </span><span class="c1"># @see https://www.w3.org/TR/png/#11bKGD Source</span>
-<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">BkgdChunk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
-<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
-<span class="w">      </span><span class="n">_read</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="n">_root</span><span class="o">.</span><span class="n">ihdr</span><span class="o">.</span><span class="n">color_type</span>
-<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="ss">:color_type_indexed</span>
-<span class="w">        </span><span class="vi">@bkgd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">BkgdIndexed</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="ss">:color_type_truecolor_alpha</span>
-<span class="w">        </span><span class="vi">@bkgd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">BkgdTruecolor</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="ss">:color_type_greyscale_alpha</span>
-<span class="w">        </span><span class="vi">@bkgd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">BkgdGreyscale</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="ss">:color_type_truecolor</span>
-<span class="w">        </span><span class="vi">@bkgd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">BkgdTruecolor</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="ss">:color_type_greyscale</span>
-<span class="w">        </span><span class="vi">@bkgd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">BkgdGreyscale</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">      </span><span class="k">end</span>
-<span class="w">      </span><span class="nb">self</span>
-<span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:bkgd</span>
-<span class="w">  </span><span class="k">end</span>
-
-<span class="w">  </span><span class="c1">##</span>
-<span class="w">  </span><span class="c1"># &quot;Physical size&quot; chunk stores data that allows to translate</span>
-<span class="w">  </span><span class="c1"># logical pixels into physical units (meters, etc) and vice-versa.</span>
-<span class="w">  </span><span class="c1"># @see https://www.w3.org/TR/png/#11pHYs Source</span>
-<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">PhysChunk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
-<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
-<span class="w">      </span><span class="n">_read</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">      </span><span class="vi">@pixels_per_unit_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
-<span class="w">      </span><span class="vi">@pixels_per_unit_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
-<span class="w">      </span><span class="vi">@unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Png</span><span class="o">::</span><span class="no">PHYS_UNIT</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
-<span class="w">      </span><span class="nb">self</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># Number of pixels per physical unit (typically, 1 meter) by X</span>
-<span class="w">    </span><span class="c1"># axis.</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:pixels_per_unit_x</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># Number of pixels per physical unit (typically, 1 meter) by Y</span>
-<span class="w">    </span><span class="c1"># axis.</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:pixels_per_unit_y</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:unit</span>
-<span class="w">  </span><span class="k">end</span>
-
-<span class="w">  </span><span class="c1">##</span>
 <span class="w">  </span><span class="c1"># @see https://wiki.mozilla.org/APNG_Specification#.60fcTL.60:_The_Frame_Control_Chunk Source</span>
 <span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">FrameControlChunk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 <span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
 <span class="w">      </span><span class="n">_read</span>
 <span class="w">    </span><span class="k">end</span>
@@ -784,15 +621,15 @@ section#format-index .row {
 <span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
 <span class="w">      </span><span class="vi">@sequence_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
 <span class="w">      </span><span class="vi">@width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
-<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationLessThanError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="p">,</span><span class="w"> </span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/frame_control_chunk/seq/1&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">1</span>
-<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationGreaterThanError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_root</span><span class="o">.</span><span class="n">ihdr</span><span class="o">.</span><span class="n">width</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="p">,</span><span class="w"> </span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/frame_control_chunk/seq/1&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">_root</span><span class="o">.</span><span class="n">ihdr</span><span class="o">.</span><span class="n">width</span>
+<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationLessThanError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="vi">@width</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/frame_control_chunk/seq/1&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@width</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationGreaterThanError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_root</span><span class="o">.</span><span class="n">ihdr</span><span class="o">.</span><span class="n">width</span><span class="p">,</span><span class="w"> </span><span class="vi">@width</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/frame_control_chunk/seq/1&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@width</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">_root</span><span class="o">.</span><span class="n">ihdr</span><span class="o">.</span><span class="n">width</span>
 <span class="w">      </span><span class="vi">@height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
-<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationLessThanError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="p">,</span><span class="w"> </span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/frame_control_chunk/seq/2&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">height</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">1</span>
-<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationGreaterThanError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_root</span><span class="o">.</span><span class="n">ihdr</span><span class="o">.</span><span class="n">height</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="p">,</span><span class="w"> </span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/frame_control_chunk/seq/2&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">height</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">_root</span><span class="o">.</span><span class="n">ihdr</span><span class="o">.</span><span class="n">height</span>
+<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationLessThanError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="vi">@height</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/frame_control_chunk/seq/2&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@height</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationGreaterThanError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_root</span><span class="o">.</span><span class="n">ihdr</span><span class="o">.</span><span class="n">height</span><span class="p">,</span><span class="w"> </span><span class="vi">@height</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/frame_control_chunk/seq/2&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@height</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">_root</span><span class="o">.</span><span class="n">ihdr</span><span class="o">.</span><span class="n">height</span>
 <span class="w">      </span><span class="vi">@x_offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
-<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationGreaterThanError</span><span class="o">.</span><span class="n">new</span><span class="p">((</span><span class="n">_root</span><span class="o">.</span><span class="n">ihdr</span><span class="o">.</span><span class="n">width</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">width</span><span class="p">),</span><span class="w"> </span><span class="n">x_offset</span><span class="p">,</span><span class="w"> </span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/frame_control_chunk/seq/3&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">x_offset</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="p">(</span><span class="n">_root</span><span class="o">.</span><span class="n">ihdr</span><span class="o">.</span><span class="n">width</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">width</span><span class="p">)</span>
+<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationGreaterThanError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_root</span><span class="o">.</span><span class="n">ihdr</span><span class="o">.</span><span class="n">width</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">width</span><span class="p">,</span><span class="w"> </span><span class="vi">@x_offset</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/frame_control_chunk/seq/3&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@x_offset</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">_root</span><span class="o">.</span><span class="n">ihdr</span><span class="o">.</span><span class="n">width</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">width</span>
 <span class="w">      </span><span class="vi">@y_offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
-<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationGreaterThanError</span><span class="o">.</span><span class="n">new</span><span class="p">((</span><span class="n">_root</span><span class="o">.</span><span class="n">ihdr</span><span class="o">.</span><span class="n">height</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">height</span><span class="p">),</span><span class="w"> </span><span class="n">y_offset</span><span class="p">,</span><span class="w"> </span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/frame_control_chunk/seq/4&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">y_offset</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="p">(</span><span class="n">_root</span><span class="o">.</span><span class="n">ihdr</span><span class="o">.</span><span class="n">height</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">height</span><span class="p">)</span>
+<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationGreaterThanError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_root</span><span class="o">.</span><span class="n">ihdr</span><span class="o">.</span><span class="n">height</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">height</span><span class="p">,</span><span class="w"> </span><span class="vi">@y_offset</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/frame_control_chunk/seq/4&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@y_offset</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">_root</span><span class="o">.</span><span class="n">ihdr</span><span class="o">.</span><span class="n">height</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">height</span>
 <span class="w">      </span><span class="vi">@delay_num</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
 <span class="w">      </span><span class="vi">@delay_den</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
 <span class="w">      </span><span class="vi">@dispose_op</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Png</span><span class="o">::</span><span class="no">DISPOSE_OP_VALUES</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
@@ -804,7 +641,7 @@ section#format-index .row {
 <span class="w">    </span><span class="c1"># Time to display this frame, in seconds</span>
 <span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">delay</span>
 <span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@delay</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@delay</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">      </span><span class="vi">@delay</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">delay_num</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="n">delay_den</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mi">100</span><span class="o">.</span><span class="mi">0</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">delay_den</span><span class="p">))</span>
+<span class="w">      </span><span class="vi">@delay</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">delay_num</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="n">delay_den</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mi">100</span><span class="o">.</span><span class="mi">0</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">delay_den</span><span class="p">)</span>
 <span class="w">      </span><span class="vi">@delay</span>
 <span class="w">    </span><span class="k">end</span>
 
@@ -846,13 +683,89 @@ section#format-index .row {
 <span class="w">  </span><span class="k">end</span>
 
 <span class="w">  </span><span class="c1">##</span>
+<span class="w">  </span><span class="c1"># @see https://wiki.mozilla.org/APNG_Specification#.60fdAT.60:_The_Frame_Data_Chunk Source</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">FrameDataChunk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@sequence_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+<span class="w">      </span><span class="vi">@frame_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_full</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Sequence number of the animation chunk. The fcTL and fdAT chunks</span>
+<span class="w">    </span><span class="c1"># have a 4 byte sequence number. Both chunk types share the sequence.</span>
+<span class="w">    </span><span class="c1"># The first fcTL chunk must contain sequence number 0, and the sequence</span>
+<span class="w">    </span><span class="c1"># numbers in the remaining fcTL and fdAT chunks must be in order, with</span>
+<span class="w">    </span><span class="c1"># no gaps or duplicates.</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:sequence_number</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Frame data for the frame. At least one fdAT chunk is required for</span>
+<span class="w">    </span><span class="c1"># each frame. The compressed datastream is the concatenation of the</span>
+<span class="w">    </span><span class="c1"># contents of the data fields of all the fdAT chunks within a frame.</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:frame_data</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="c1">##</span>
+<span class="w">  </span><span class="c1"># @see https://www.w3.org/TR/png/#11gAMA Source</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">GamaChunk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@gamma_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">gamma_ratio</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@gamma_ratio</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@gamma_ratio</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@gamma_ratio</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100000</span><span class="o">.</span><span class="mi">0</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">gamma_int</span>
+<span class="w">      </span><span class="vi">@gamma_ratio</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:gamma_int</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="c1">##</span>
+<span class="w">  </span><span class="c1"># @see https://www.w3.org/TR/png/#11IHDR Source</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">IhdrChunk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+<span class="w">      </span><span class="vi">@height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+<span class="w">      </span><span class="vi">@bit_depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="vi">@color_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Png</span><span class="o">::</span><span class="no">COLOR_TYPE</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@compression_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="vi">@filter_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="vi">@interlace_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:width</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:height</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:bit_depth</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:color_type</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:compression_method</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:filter_method</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:interlace_method</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="c1">##</span>
 <span class="w">  </span><span class="c1"># International text chunk effectively allows to store key-value string pairs in</span>
 <span class="w">  </span><span class="c1"># PNG container. Both &quot;key&quot; (keyword) and &quot;value&quot; (text) parts are</span>
 <span class="w">  </span><span class="c1"># given in pre-defined subset of iso8859-1 without control</span>
 <span class="w">  </span><span class="c1"># characters.</span>
 <span class="w">  </span><span class="c1"># @see https://www.w3.org/TR/png/#11iTXt Source</span>
 <span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">InternationalTextChunk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 <span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
 <span class="w">      </span><span class="n">_read</span>
 <span class="w">    </span><span class="k">end</span>
@@ -861,7 +774,7 @@ section#format-index .row {
 <span class="w">      </span><span class="vi">@keyword</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kp">false</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
 <span class="w">      </span><span class="vi">@compression_flag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
 <span class="w">      </span><span class="vi">@compression_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Png</span><span class="o">::</span><span class="no">COMPRESSION_METHODS</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@language_tag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kp">false</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@language_tag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kp">false</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;UTF-8&#39;</span><span class="p">)</span>
 <span class="w">      </span><span class="vi">@translated_keyword</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kp">false</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
 <span class="w">      </span><span class="vi">@text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_full</span><span class="p">)</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
 <span class="w">      </span><span class="nb">self</span>
@@ -896,20 +809,132 @@ section#format-index .row {
 <span class="w">  </span><span class="k">end</span>
 
 <span class="w">  </span><span class="c1">##</span>
+<span class="w">  </span><span class="c1"># &quot;Physical size&quot; chunk stores data that allows to translate</span>
+<span class="w">  </span><span class="c1"># logical pixels into physical units (meters, etc) and vice-versa.</span>
+<span class="w">  </span><span class="c1"># @see https://www.w3.org/TR/png/#11pHYs Source</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">PhysChunk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@pixels_per_unit_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+<span class="w">      </span><span class="vi">@pixels_per_unit_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+<span class="w">      </span><span class="vi">@unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Png</span><span class="o">::</span><span class="no">PHYS_UNIT</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Number of pixels per physical unit (typically, 1 meter) by X</span>
+<span class="w">    </span><span class="c1"># axis.</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:pixels_per_unit_x</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Number of pixels per physical unit (typically, 1 meter) by Y</span>
+<span class="w">    </span><span class="c1"># axis.</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:pixels_per_unit_y</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:unit</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="c1">##</span>
+<span class="w">  </span><span class="c1"># @see https://www.w3.org/TR/png/#11PLTE Source</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">PlteChunk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@entries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span>
+<span class="w">      </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">      </span><span class="k">while</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
+<span class="w">        </span><span class="vi">@entries</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="no">Rgb</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">        </span><span class="n">i</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:entries</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">Point</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@x_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+<span class="w">      </span><span class="vi">@y_int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">x</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@x</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@x</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x_int</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">100000</span><span class="o">.</span><span class="mi">0</span>
+<span class="w">      </span><span class="vi">@x</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">y</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@y</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@y</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">y_int</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">100000</span><span class="o">.</span><span class="mi">0</span>
+<span class="w">      </span><span class="vi">@y</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:x_int</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:y_int</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">Rgb</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="vi">@g</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="vi">@b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:r</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:g</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:b</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="c1">##</span>
+<span class="w">  </span><span class="c1"># @see https://www.w3.org/TR/png/#11sRGB Source</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">SrgbChunk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+
+<span class="w">    </span><span class="no">INTENT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="mi">0</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:intent_perceptual</span><span class="p">,</span>
+<span class="w">      </span><span class="mi">1</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:intent_relative_colorimetric</span><span class="p">,</span>
+<span class="w">      </span><span class="mi">2</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:intent_saturation</span><span class="p">,</span>
+<span class="w">      </span><span class="mi">3</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:intent_absolute_colorimetric</span><span class="p">,</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="no">I__INTENT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">INTENT</span><span class="o">.</span><span class="n">invert</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@render_intent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">INTENT</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:render_intent</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="c1">##</span>
 <span class="w">  </span><span class="c1"># Text chunk effectively allows to store key-value string pairs in</span>
 <span class="w">  </span><span class="c1"># PNG container. Both &quot;key&quot; (keyword) and &quot;value&quot; (text) parts are</span>
 <span class="w">  </span><span class="c1"># given in pre-defined subset of iso8859-1 without control</span>
 <span class="w">  </span><span class="c1"># characters.</span>
 <span class="w">  </span><span class="c1"># @see https://www.w3.org/TR/png/#11tEXt Source</span>
 <span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">TextChunk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 <span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
 <span class="w">      </span><span class="n">_read</span>
 <span class="w">    </span><span class="k">end</span>
 
 <span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">      </span><span class="vi">@keyword</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kp">false</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;iso8859-1&quot;</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_full</span><span class="p">)</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;iso8859-1&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@keyword</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kp">false</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ISO-8859-1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;UTF-8&#39;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_full</span><span class="p">)</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ISO-8859-1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;UTF-8&#39;</span><span class="p">)</span>
 <span class="w">      </span><span class="nb">self</span>
 <span class="w">    </span><span class="k">end</span>
 
@@ -920,34 +945,11 @@ section#format-index .row {
 <span class="w">  </span><span class="k">end</span>
 
 <span class="w">  </span><span class="c1">##</span>
-<span class="w">  </span><span class="c1"># @see https://wiki.mozilla.org/APNG_Specification#.60acTL.60:_The_Animation_Control_Chunk Source</span>
-<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">AnimationControlChunk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
-<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
-<span class="w">      </span><span class="n">_read</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">      </span><span class="vi">@num_frames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
-<span class="w">      </span><span class="vi">@num_plays</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
-<span class="w">      </span><span class="nb">self</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># Number of frames, must be equal to the number of `frame_control_chunk`s</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:num_frames</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># Number of times to loop, 0 indicates infinite looping.</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:num_plays</span>
-<span class="w">  </span><span class="k">end</span>
-
-<span class="w">  </span><span class="c1">##</span>
 <span class="w">  </span><span class="c1"># Time chunk stores time stamp of last modification of this image,</span>
 <span class="w">  </span><span class="c1"># up to 1 second precision in UTC timezone.</span>
 <span class="w">  </span><span class="c1"># @see https://www.w3.org/TR/png/#11tIME Source</span>
 <span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">TimeChunk</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 <span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
 <span class="w">      </span><span class="n">_read</span>
 <span class="w">    </span><span class="k">end</span>

@@ -24,7 +24,7 @@ import (
 type BroadcomTrx struct {
 	_io *kaitai.Stream
 	_root *BroadcomTrx
-	_parent interface{}
+	_parent kaitai.Struct
 	_f_header bool
 	header *BroadcomTrx_Header
 	_f_tail bool
@@ -35,7 +35,11 @@ func NewBroadcomTrx() *BroadcomTrx {
 	}
 }
 
-func (this *BroadcomTrx) Read(io *kaitai.Stream, parent interface{}, root *BroadcomTrx) (err error) {
+func (this BroadcomTrx) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *BroadcomTrx) Read(io *kaitai.Stream, parent kaitai.Struct, root *BroadcomTrx) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -46,6 +50,7 @@ func (this *BroadcomTrx) Header() (v *BroadcomTrx_Header, err error) {
 	if (this._f_header) {
 		return this.header, nil
 	}
+	this._f_header = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
@@ -64,14 +69,13 @@ func (this *BroadcomTrx) Header() (v *BroadcomTrx_Header, err error) {
 	if err != nil {
 		return nil, err
 	}
-	this._f_header = true
-	this._f_header = true
 	return this.header, nil
 }
 func (this *BroadcomTrx) Tail() (v *BroadcomTrx_Tail, err error) {
 	if (this._f_tail) {
 		return this.tail, nil
 	}
+	this._f_tail = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
@@ -80,7 +84,7 @@ func (this *BroadcomTrx) Tail() (v *BroadcomTrx_Tail, err error) {
 	if err != nil {
 		return nil, err
 	}
-	_, err = this._io.Seek(int64((tmp2 - 64)), io.SeekStart)
+	_, err = this._io.Seek(int64(tmp2 - 64), io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
@@ -94,9 +98,249 @@ func (this *BroadcomTrx) Tail() (v *BroadcomTrx_Tail, err error) {
 	if err != nil {
 		return nil, err
 	}
-	this._f_tail = true
-	this._f_tail = true
 	return this.tail, nil
+}
+type BroadcomTrx_Header struct {
+	Magic []byte
+	Len uint32
+	Crc32 uint32
+	Version uint16
+	Flags *BroadcomTrx_Header_Flags
+	Partitions []*BroadcomTrx_Header_Partition
+	_io *kaitai.Stream
+	_root *BroadcomTrx
+	_parent *BroadcomTrx
+}
+func NewBroadcomTrx_Header() *BroadcomTrx_Header {
+	return &BroadcomTrx_Header{
+	}
+}
+
+func (this BroadcomTrx_Header) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *BroadcomTrx_Header) Read(io *kaitai.Stream, parent *BroadcomTrx, root *BroadcomTrx) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp4, err := this._io.ReadBytes(int(4))
+	if err != nil {
+		return err
+	}
+	tmp4 = tmp4
+	this.Magic = tmp4
+	if !(bytes.Equal(this.Magic, []uint8{72, 68, 82, 48})) {
+		return kaitai.NewValidationNotEqualError([]uint8{72, 68, 82, 48}, this.Magic, this._io, "/types/header/seq/0")
+	}
+	tmp5, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Len = uint32(tmp5)
+	tmp6, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Crc32 = uint32(tmp6)
+	tmp7, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.Version = uint16(tmp7)
+	tmp8 := NewBroadcomTrx_Header_Flags()
+	err = tmp8.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Flags = tmp8
+	for i := 1;; i++ {
+		tmp9 := NewBroadcomTrx_Header_Partition(i)
+		err = tmp9.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		_it := tmp9
+		this.Partitions = append(this.Partitions, _it)
+		tmp10, err := _it.IsPresent()
+		if err != nil {
+			return err
+		}
+		if  ((i >= 4) || (!(tmp10)))  {
+			break
+		}
+	}
+	return err
+}
+
+/**
+ * Length of file including header
+ */
+
+/**
+ * CRC from `version` (??? todo: see the original and disambiguate) to end of file
+ */
+
+/**
+ * Offsets of partitions from start of header
+ */
+type BroadcomTrx_Header_Flags struct {
+	Flags []bool
+	_io *kaitai.Stream
+	_root *BroadcomTrx
+	_parent *BroadcomTrx_Header
+}
+func NewBroadcomTrx_Header_Flags() *BroadcomTrx_Header_Flags {
+	return &BroadcomTrx_Header_Flags{
+	}
+}
+
+func (this BroadcomTrx_Header_Flags) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *BroadcomTrx_Header_Flags) Read(io *kaitai.Stream, parent *BroadcomTrx_Header, root *BroadcomTrx) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	for i := 0; i < int(16); i++ {
+		_ = i
+		tmp11, err := this._io.ReadBitsIntLe(1)
+		if err != nil {
+			return err
+		}
+		this.Flags = append(this.Flags, tmp11 != 0)
+	}
+	return err
+}
+type BroadcomTrx_Header_Partition struct {
+	OfsBody uint32
+	Idx uint8
+	_io *kaitai.Stream
+	_root *BroadcomTrx
+	_parent *BroadcomTrx_Header
+	_f_body bool
+	body []byte
+	_f_isLast bool
+	isLast bool
+	_f_isPresent bool
+	isPresent bool
+	_f_lenBody bool
+	lenBody int
+}
+func NewBroadcomTrx_Header_Partition(idx uint8) *BroadcomTrx_Header_Partition {
+	return &BroadcomTrx_Header_Partition{
+		Idx: idx,
+	}
+}
+
+func (this BroadcomTrx_Header_Partition) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *BroadcomTrx_Header_Partition) Read(io *kaitai.Stream, parent *BroadcomTrx_Header, root *BroadcomTrx) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp12, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.OfsBody = uint32(tmp12)
+	return err
+}
+func (this *BroadcomTrx_Header_Partition) Body() (v []byte, err error) {
+	if (this._f_body) {
+		return this.body, nil
+	}
+	this._f_body = true
+	tmp13, err := this.IsPresent()
+	if err != nil {
+		return nil, err
+	}
+	if (tmp13) {
+		thisIo := this._root._io
+		_pos, err := thisIo.Pos()
+		if err != nil {
+			return nil, err
+		}
+		_, err = thisIo.Seek(int64(this.OfsBody), io.SeekStart)
+		if err != nil {
+			return nil, err
+		}
+		tmp14, err := this.LenBody()
+		if err != nil {
+			return nil, err
+		}
+		tmp15, err := thisIo.ReadBytes(int(tmp14))
+		if err != nil {
+			return nil, err
+		}
+		tmp15 = tmp15
+		this.body = tmp15
+		_, err = thisIo.Seek(_pos, io.SeekStart)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return this.body, nil
+}
+func (this *BroadcomTrx_Header_Partition) IsLast() (v bool, err error) {
+	if (this._f_isLast) {
+		return this.isLast, nil
+	}
+	this._f_isLast = true
+	tmp16, err := this.IsPresent()
+	if err != nil {
+		return false, err
+	}
+	if (tmp16) {
+		tmp17, err := this._parent.Partitions[this.Idx + 1].IsPresent()
+		if err != nil {
+			return false, err
+		}
+		this.isLast = bool( ((this.Idx == len(this._parent.Partitions) - 1) || (!(tmp17))) )
+	}
+	return this.isLast, nil
+}
+func (this *BroadcomTrx_Header_Partition) IsPresent() (v bool, err error) {
+	if (this._f_isPresent) {
+		return this.isPresent, nil
+	}
+	this._f_isPresent = true
+	this.isPresent = bool(this.OfsBody != 0)
+	return this.isPresent, nil
+}
+func (this *BroadcomTrx_Header_Partition) LenBody() (v int, err error) {
+	if (this._f_lenBody) {
+		return this.lenBody, nil
+	}
+	this._f_lenBody = true
+	tmp18, err := this.IsPresent()
+	if err != nil {
+		return 0, err
+	}
+	if (tmp18) {
+		var tmp19 int;
+		tmp20, err := this.IsLast()
+		if err != nil {
+			return 0, err
+		}
+		if (tmp20) {
+			tmp21, err := this._root._io.Size()
+			if err != nil {
+				return 0, err
+			}
+			tmp19 = tmp21 - this.OfsBody
+		} else {
+			tmp19 = this._parent.Partitions[this.Idx + 1].OfsBody
+		}
+		this.lenBody = int(tmp19)
+	}
+	return this.lenBody, nil
 }
 type BroadcomTrx_Revision struct {
 	Major uint8
@@ -110,62 +354,25 @@ func NewBroadcomTrx_Revision() *BroadcomTrx_Revision {
 	}
 }
 
+func (this BroadcomTrx_Revision) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *BroadcomTrx_Revision) Read(io *kaitai.Stream, parent *BroadcomTrx_Tail_HwCompInfo, root *BroadcomTrx) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp4, err := this._io.ReadU1()
+	tmp22, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Major = tmp4
-	tmp5, err := this._io.ReadU1()
+	this.Major = tmp22
+	tmp23, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Minor = tmp5
-	return err
-}
-type BroadcomTrx_Version struct {
-	Major uint8
-	Minor uint8
-	Patch uint8
-	Tweak uint8
-	_io *kaitai.Stream
-	_root *BroadcomTrx
-	_parent *BroadcomTrx_Tail
-}
-func NewBroadcomTrx_Version() *BroadcomTrx_Version {
-	return &BroadcomTrx_Version{
-	}
-}
-
-func (this *BroadcomTrx_Version) Read(io *kaitai.Stream, parent *BroadcomTrx_Tail, root *BroadcomTrx) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp6, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Major = tmp6
-	tmp7, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Minor = tmp7
-	tmp8, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Patch = tmp8
-	tmp9, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Tweak = tmp9
+	this.Minor = tmp23
 	return err
 }
 
@@ -186,38 +393,42 @@ func NewBroadcomTrx_Tail() *BroadcomTrx_Tail {
 	}
 }
 
+func (this BroadcomTrx_Tail) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *BroadcomTrx_Tail) Read(io *kaitai.Stream, parent *BroadcomTrx, root *BroadcomTrx) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp10 := NewBroadcomTrx_Version()
-	err = tmp10.Read(this._io, this, this._root)
+	tmp24 := NewBroadcomTrx_Version()
+	err = tmp24.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Version = tmp10
-	tmp11, err := this._io.ReadBytes(int(12))
+	this.Version = tmp24
+	tmp25, err := this._io.ReadBytes(int(12))
 	if err != nil {
 		return err
 	}
-	tmp11 = kaitai.BytesTerminate(tmp11, 0, false)
-	this.ProductId = string(tmp11)
+	tmp25 = kaitai.BytesTerminate(tmp25, 0, false)
+	this.ProductId = string(tmp25)
 	for i := 0; i < int(4); i++ {
 		_ = i
-		tmp12 := NewBroadcomTrx_Tail_HwCompInfo()
-		err = tmp12.Read(this._io, this, this._root)
+		tmp26 := NewBroadcomTrx_Tail_HwCompInfo()
+		err = tmp26.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.CompHw = append(this.CompHw, tmp12)
+		this.CompHw = append(this.CompHw, tmp26)
 	}
-	tmp13, err := this._io.ReadBytes(int(32))
+	tmp27, err := this._io.ReadBytes(int(32))
 	if err != nil {
 		return err
 	}
-	tmp13 = tmp13
-	this.Reserved = tmp13
+	tmp27 = tmp27
+	this.Reserved = tmp27
 	return err
 }
 
@@ -240,253 +451,71 @@ func NewBroadcomTrx_Tail_HwCompInfo() *BroadcomTrx_Tail_HwCompInfo {
 	}
 }
 
+func (this BroadcomTrx_Tail_HwCompInfo) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *BroadcomTrx_Tail_HwCompInfo) Read(io *kaitai.Stream, parent *BroadcomTrx_Tail, root *BroadcomTrx) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp14 := NewBroadcomTrx_Revision()
-	err = tmp14.Read(this._io, this, this._root)
+	tmp28 := NewBroadcomTrx_Revision()
+	err = tmp28.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Min = tmp14
-	tmp15 := NewBroadcomTrx_Revision()
-	err = tmp15.Read(this._io, this, this._root)
+	this.Min = tmp28
+	tmp29 := NewBroadcomTrx_Revision()
+	err = tmp29.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Max = tmp15
+	this.Max = tmp29
 	return err
 }
-type BroadcomTrx_Header struct {
-	Magic []byte
-	Len uint32
-	Crc32 uint32
-	Version uint16
-	Flags *BroadcomTrx_Header_Flags
-	Partitions []*BroadcomTrx_Header_Partition
+type BroadcomTrx_Version struct {
+	Major uint8
+	Minor uint8
+	Patch uint8
+	Tweak uint8
 	_io *kaitai.Stream
 	_root *BroadcomTrx
-	_parent *BroadcomTrx
+	_parent *BroadcomTrx_Tail
 }
-func NewBroadcomTrx_Header() *BroadcomTrx_Header {
-	return &BroadcomTrx_Header{
+func NewBroadcomTrx_Version() *BroadcomTrx_Version {
+	return &BroadcomTrx_Version{
 	}
 }
 
-func (this *BroadcomTrx_Header) Read(io *kaitai.Stream, parent *BroadcomTrx, root *BroadcomTrx) (err error) {
+func (this BroadcomTrx_Version) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *BroadcomTrx_Version) Read(io *kaitai.Stream, parent *BroadcomTrx_Tail, root *BroadcomTrx) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp16, err := this._io.ReadBytes(int(4))
+	tmp30, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	tmp16 = tmp16
-	this.Magic = tmp16
-	if !(bytes.Equal(this.Magic, []uint8{72, 68, 82, 48})) {
-		return kaitai.NewValidationNotEqualError([]uint8{72, 68, 82, 48}, this.Magic, this._io, "/types/header/seq/0")
-	}
-	tmp17, err := this._io.ReadU4le()
+	this.Major = tmp30
+	tmp31, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Len = uint32(tmp17)
-	tmp18, err := this._io.ReadU4le()
+	this.Minor = tmp31
+	tmp32, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Crc32 = uint32(tmp18)
-	tmp19, err := this._io.ReadU2le()
+	this.Patch = tmp32
+	tmp33, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Version = uint16(tmp19)
-	tmp20 := NewBroadcomTrx_Header_Flags()
-	err = tmp20.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Flags = tmp20
-	for i := 1;; i++ {
-		tmp21 := NewBroadcomTrx_Header_Partition(i)
-		err = tmp21.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		_it := tmp21
-		this.Partitions = append(this.Partitions, _it)
-		tmp22, err := _it.IsPresent()
-		if err != nil {
-			return err
-		}
-		if  ((i >= 4) || (!(tmp22)))  {
-			break
-		}
-	}
-	return err
-}
-
-/**
- * Length of file including header
- */
-
-/**
- * CRC from `version` (??? todo: see the original and disambiguate) to end of file
- */
-
-/**
- * Offsets of partitions from start of header
- */
-type BroadcomTrx_Header_Partition struct {
-	OfsBody uint32
-	Idx uint8
-	_io *kaitai.Stream
-	_root *BroadcomTrx
-	_parent *BroadcomTrx_Header
-	_f_isPresent bool
-	isPresent bool
-	_f_isLast bool
-	isLast bool
-	_f_lenBody bool
-	lenBody int
-	_f_body bool
-	body []byte
-}
-func NewBroadcomTrx_Header_Partition(idx uint8) *BroadcomTrx_Header_Partition {
-	return &BroadcomTrx_Header_Partition{
-		Idx: idx,
-	}
-}
-
-func (this *BroadcomTrx_Header_Partition) Read(io *kaitai.Stream, parent *BroadcomTrx_Header, root *BroadcomTrx) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp23, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.OfsBody = uint32(tmp23)
-	return err
-}
-func (this *BroadcomTrx_Header_Partition) IsPresent() (v bool, err error) {
-	if (this._f_isPresent) {
-		return this.isPresent, nil
-	}
-	this.isPresent = bool(this.OfsBody != 0)
-	this._f_isPresent = true
-	return this.isPresent, nil
-}
-func (this *BroadcomTrx_Header_Partition) IsLast() (v bool, err error) {
-	if (this._f_isLast) {
-		return this.isLast, nil
-	}
-	tmp24, err := this.IsPresent()
-	if err != nil {
-		return false, err
-	}
-	if (tmp24) {
-		tmp25, err := this._parent.Partitions[(this.Idx + 1)].IsPresent()
-		if err != nil {
-			return false, err
-		}
-		this.isLast = bool( ((this.Idx == (len(this._parent.Partitions) - 1)) || (!(tmp25))) )
-	}
-	this._f_isLast = true
-	return this.isLast, nil
-}
-func (this *BroadcomTrx_Header_Partition) LenBody() (v int, err error) {
-	if (this._f_lenBody) {
-		return this.lenBody, nil
-	}
-	tmp26, err := this.IsPresent()
-	if err != nil {
-		return 0, err
-	}
-	if (tmp26) {
-		var tmp27 int;
-		tmp28, err := this.IsLast()
-		if err != nil {
-			return 0, err
-		}
-		if (tmp28) {
-			tmp29, err := this._root._io.Size()
-			if err != nil {
-				return 0, err
-			}
-			tmp27 = (tmp29 - this.OfsBody)
-		} else {
-			tmp27 = this._parent.Partitions[(this.Idx + 1)].OfsBody
-		}
-		this.lenBody = int(tmp27)
-	}
-	this._f_lenBody = true
-	return this.lenBody, nil
-}
-func (this *BroadcomTrx_Header_Partition) Body() (v []byte, err error) {
-	if (this._f_body) {
-		return this.body, nil
-	}
-	tmp30, err := this.IsPresent()
-	if err != nil {
-		return nil, err
-	}
-	if (tmp30) {
-		thisIo := this._root._io
-		_pos, err := thisIo.Pos()
-		if err != nil {
-			return nil, err
-		}
-		_, err = thisIo.Seek(int64(this.OfsBody), io.SeekStart)
-		if err != nil {
-			return nil, err
-		}
-		tmp31, err := this.LenBody()
-		if err != nil {
-			return nil, err
-		}
-		tmp32, err := thisIo.ReadBytes(int(tmp31))
-		if err != nil {
-			return nil, err
-		}
-		tmp32 = tmp32
-		this.body = tmp32
-		_, err = thisIo.Seek(_pos, io.SeekStart)
-		if err != nil {
-			return nil, err
-		}
-		this._f_body = true
-	}
-	this._f_body = true
-	return this.body, nil
-}
-type BroadcomTrx_Header_Flags struct {
-	Flags []bool
-	_io *kaitai.Stream
-	_root *BroadcomTrx
-	_parent *BroadcomTrx_Header
-}
-func NewBroadcomTrx_Header_Flags() *BroadcomTrx_Header_Flags {
-	return &BroadcomTrx_Header_Flags{
-	}
-}
-
-func (this *BroadcomTrx_Header_Flags) Read(io *kaitai.Stream, parent *BroadcomTrx_Header, root *BroadcomTrx) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	for i := 0; i < int(16); i++ {
-		_ = i
-		tmp33, err := this._io.ReadBitsIntLe(1)
-		if err != nil {
-			return err
-		}
-		this.Flags = append(this.Flags, tmp33 != 0)
-	}
+	this.Tweak = tmp33
 	return err
 }

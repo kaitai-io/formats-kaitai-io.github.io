@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use BytesWithIo;
 
 ########################################################################
@@ -25,7 +25,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -40,6 +40,13 @@ sub _read {
     $self->{application_data} = $self->{_io}->read_bytes(128);
 }
 
+sub data_blocks {
+    my ($self) = @_;
+    return $self->{data_blocks} if ($self->{data_blocks});
+    $self->{data_blocks} = $self->data_blocks_with_io()->data();
+    return $self->{data_blocks};
+}
+
 sub data_blocks_with_io {
     my ($self) = @_;
     return $self->{data_blocks_with_io} if ($self->{data_blocks_with_io});
@@ -50,13 +57,6 @@ sub data_blocks_with_io {
     $self->{data_blocks_with_io} = BytesWithIo->new($io__raw_data_blocks_with_io);
     $self->{_io}->seek($_pos);
     return $self->{data_blocks_with_io};
-}
-
-sub data_blocks {
-    my ($self) = @_;
-    return $self->{data_blocks} if ($self->{data_blocks});
-    $self->{data_blocks} = $self->data_blocks_with_io()->data();
-    return $self->{data_blocks};
 }
 
 sub resource_map {
@@ -97,6 +97,50 @@ sub _raw_resource_map {
 }
 
 ########################################################################
+package ResourceFork::DataBlock;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{len_data} = $self->{_io}->read_u4be();
+    $self->{data} = $self->{_io}->read_bytes($self->len_data());
+}
+
+sub len_data {
+    my ($self) = @_;
+    return $self->{len_data};
+}
+
+sub data {
+    my ($self) = @_;
+    return $self->{data};
+}
+
+########################################################################
 package ResourceFork::FileHeader;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -116,7 +160,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -153,50 +197,6 @@ sub len_resource_map {
 }
 
 ########################################################################
-package ResourceFork::DataBlock;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{len_data} = $self->{_io}->read_u4be();
-    $self->{data} = $self->{_io}->read_bytes($self->len_data());
-}
-
-sub len_data {
-    my ($self) = @_;
-    return $self->{len_data};
-}
-
-sub data {
-    my ($self) = @_;
-    return $self->{data};
-}
-
-########################################################################
 package ResourceFork::ResourceMap;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -216,7 +216,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -236,16 +236,11 @@ sub _read {
     $self->{ofs_names} = $self->{_io}->read_u2be();
 }
 
-sub type_list_and_reference_lists {
+sub names {
     my ($self) = @_;
-    return $self->{type_list_and_reference_lists} if ($self->{type_list_and_reference_lists});
-    my $_pos = $self->{_io}->pos();
-    $self->{_io}->seek($self->ofs_type_list());
-    $self->{_raw_type_list_and_reference_lists} = $self->{_io}->read_bytes(($self->ofs_names() - $self->ofs_type_list()));
-    my $io__raw_type_list_and_reference_lists = IO::KaitaiStruct::Stream->new($self->{_raw_type_list_and_reference_lists});
-    $self->{type_list_and_reference_lists} = ResourceFork::ResourceMap::TypeListAndReferenceLists->new($io__raw_type_list_and_reference_lists, $self, $self->{_root});
-    $self->{_io}->seek($_pos);
-    return $self->{type_list_and_reference_lists};
+    return $self->{names} if ($self->{names});
+    $self->{names} = $self->names_with_io()->data();
+    return $self->{names};
 }
 
 sub names_with_io {
@@ -260,11 +255,16 @@ sub names_with_io {
     return $self->{names_with_io};
 }
 
-sub names {
+sub type_list_and_reference_lists {
     my ($self) = @_;
-    return $self->{names} if ($self->{names});
-    $self->{names} = $self->names_with_io()->data();
-    return $self->{names};
+    return $self->{type_list_and_reference_lists} if ($self->{type_list_and_reference_lists});
+    my $_pos = $self->{_io}->pos();
+    $self->{_io}->seek($self->ofs_type_list());
+    $self->{_raw_type_list_and_reference_lists} = $self->{_io}->read_bytes($self->ofs_names() - $self->ofs_type_list());
+    my $io__raw_type_list_and_reference_lists = IO::KaitaiStruct::Stream->new($self->{_raw_type_list_and_reference_lists});
+    $self->{type_list_and_reference_lists} = ResourceFork::ResourceMap::TypeListAndReferenceLists->new($io__raw_type_list_and_reference_lists, $self, $self->{_root});
+    $self->{_io}->seek($_pos);
+    return $self->{type_list_and_reference_lists};
 }
 
 sub reserved_file_header_copy {
@@ -302,14 +302,14 @@ sub _raw_file_attributes {
     return $self->{_raw_file_attributes};
 }
 
-sub _raw_type_list_and_reference_lists {
-    my ($self) = @_;
-    return $self->{_raw_type_list_and_reference_lists};
-}
-
 sub _raw_names_with_io {
     my ($self) = @_;
     return $self->{_raw_names_with_io};
+}
+
+sub _raw_type_list_and_reference_lists {
+    my ($self) = @_;
+    return $self->{_raw_type_list_and_reference_lists};
 }
 
 ########################################################################
@@ -332,7 +332,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -397,6 +397,50 @@ sub reserved1 {
 }
 
 ########################################################################
+package ResourceFork::ResourceMap::Name;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{len_value} = $self->{_io}->read_u1();
+    $self->{value} = $self->{_io}->read_bytes($self->len_value());
+}
+
+sub len_value {
+    my ($self) = @_;
+    return $self->{len_value};
+}
+
+sub value {
+    my ($self) = @_;
+    return $self->{value};
+}
+
+########################################################################
 package ResourceFork::ResourceMap::TypeListAndReferenceLists;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -416,7 +460,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -441,129 +485,6 @@ sub reference_lists {
 }
 
 ########################################################################
-package ResourceFork::ResourceMap::TypeListAndReferenceLists::TypeList;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{num_types_m1} = $self->{_io}->read_u2be();
-    $self->{entries} = ();
-    my $n_entries = $self->num_types();
-    for (my $i = 0; $i < $n_entries; $i++) {
-        push @{$self->{entries}}, ResourceFork::ResourceMap::TypeListAndReferenceLists::TypeList::TypeListEntry->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub num_types {
-    my ($self) = @_;
-    return $self->{num_types} if ($self->{num_types});
-    $self->{num_types} = (($self->num_types_m1() + 1) % 65536);
-    return $self->{num_types};
-}
-
-sub num_types_m1 {
-    my ($self) = @_;
-    return $self->{num_types_m1};
-}
-
-sub entries {
-    my ($self) = @_;
-    return $self->{entries};
-}
-
-########################################################################
-package ResourceFork::ResourceMap::TypeListAndReferenceLists::TypeList::TypeListEntry;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{type} = $self->{_io}->read_bytes(4);
-    $self->{num_references_m1} = $self->{_io}->read_u2be();
-    $self->{ofs_reference_list} = $self->{_io}->read_u2be();
-}
-
-sub num_references {
-    my ($self) = @_;
-    return $self->{num_references} if ($self->{num_references});
-    $self->{num_references} = (($self->num_references_m1() + 1) % 65536);
-    return $self->{num_references};
-}
-
-sub reference_list {
-    my ($self) = @_;
-    return $self->{reference_list} if ($self->{reference_list});
-    my $io = $self->_parent()->_parent()->_io();
-    my $_pos = $io->pos();
-    $io->seek($self->ofs_reference_list());
-    $self->{reference_list} = ResourceFork::ResourceMap::TypeListAndReferenceLists::ReferenceList->new($io, $self, $self->{_root});
-    $io->seek($_pos);
-    return $self->{reference_list};
-}
-
-sub type {
-    my ($self) = @_;
-    return $self->{type};
-}
-
-sub num_references_m1 {
-    my ($self) = @_;
-    return $self->{num_references_m1};
-}
-
-sub ofs_reference_list {
-    my ($self) = @_;
-    return $self->{ofs_reference_list};
-}
-
-########################################################################
 package ResourceFork::ResourceMap::TypeListAndReferenceLists::ReferenceList;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -583,7 +504,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -593,7 +514,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{references} = ();
+    $self->{references} = [];
     my $n_references = $self->num_references();
     for (my $i = 0; $i < $n_references; $i++) {
         push @{$self->{references}}, ResourceFork::ResourceMap::TypeListAndReferenceLists::ReferenceList::Reference->new($self->{_io}, $self, $self->{_root});
@@ -630,7 +551,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -650,6 +571,17 @@ sub _read {
     $self->{reserved_handle} = $self->{_io}->read_u4be();
 }
 
+sub data_block {
+    my ($self) = @_;
+    return $self->{data_block} if ($self->{data_block});
+    my $io = $self->_root()->data_blocks_with_io()->_io();
+    my $_pos = $io->pos();
+    $io->seek($self->ofs_data_block());
+    $self->{data_block} = ResourceFork::DataBlock->new($io, $self, $self->{_root});
+    $io->seek($_pos);
+    return $self->{data_block};
+}
+
 sub name {
     my ($self) = @_;
     return $self->{name} if ($self->{name});
@@ -661,17 +593,6 @@ sub name {
         $io->seek($_pos);
     }
     return $self->{name};
-}
-
-sub data_block {
-    my ($self) = @_;
-    return $self->{data_block} if ($self->{data_block});
-    my $io = $self->_root()->data_blocks_with_io()->_io();
-    my $_pos = $io->pos();
-    $io->seek($self->ofs_data_block());
-    $self->{data_block} = ResourceFork::DataBlock->new($io, $self, $self->{_root});
-    $io->seek($_pos);
-    return $self->{data_block};
 }
 
 sub id {
@@ -724,7 +645,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -795,7 +716,7 @@ sub compressed {
 }
 
 ########################################################################
-package ResourceFork::ResourceMap::Name;
+package ResourceFork::ResourceMap::TypeListAndReferenceLists::TypeList;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -814,7 +735,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -824,18 +745,97 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{len_value} = $self->{_io}->read_u1();
-    $self->{value} = $self->{_io}->read_bytes($self->len_value());
+    $self->{num_types_m1} = $self->{_io}->read_u2be();
+    $self->{entries} = [];
+    my $n_entries = $self->num_types();
+    for (my $i = 0; $i < $n_entries; $i++) {
+        push @{$self->{entries}}, ResourceFork::ResourceMap::TypeListAndReferenceLists::TypeList::TypeListEntry->new($self->{_io}, $self, $self->{_root});
+    }
 }
 
-sub len_value {
+sub num_types {
     my ($self) = @_;
-    return $self->{len_value};
+    return $self->{num_types} if ($self->{num_types});
+    $self->{num_types} = ($self->num_types_m1() + 1) % 65536;
+    return $self->{num_types};
 }
 
-sub value {
+sub num_types_m1 {
     my ($self) = @_;
-    return $self->{value};
+    return $self->{num_types_m1};
+}
+
+sub entries {
+    my ($self) = @_;
+    return $self->{entries};
+}
+
+########################################################################
+package ResourceFork::ResourceMap::TypeListAndReferenceLists::TypeList::TypeListEntry;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{type} = $self->{_io}->read_bytes(4);
+    $self->{num_references_m1} = $self->{_io}->read_u2be();
+    $self->{ofs_reference_list} = $self->{_io}->read_u2be();
+}
+
+sub num_references {
+    my ($self) = @_;
+    return $self->{num_references} if ($self->{num_references});
+    $self->{num_references} = ($self->num_references_m1() + 1) % 65536;
+    return $self->{num_references};
+}
+
+sub reference_list {
+    my ($self) = @_;
+    return $self->{reference_list} if ($self->{reference_list});
+    my $io = $self->_parent()->_parent()->_io();
+    my $_pos = $io->pos();
+    $io->seek($self->ofs_reference_list());
+    $self->{reference_list} = ResourceFork::ResourceMap::TypeListAndReferenceLists::ReferenceList->new($io, $self, $self->{_root});
+    $io->seek($_pos);
+    return $self->{reference_list};
+}
+
+sub type {
+    my ($self) = @_;
+    return $self->{type};
+}
+
+sub num_references_m1 {
+    my ($self) = @_;
+    return $self->{num_references_m1};
+}
+
+sub ofs_reference_list {
+    my ($self) = @_;
+    return $self->{ofs_reference_list};
 }
 
 1;

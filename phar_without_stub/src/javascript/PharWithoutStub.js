@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream', './PhpSerializedValue'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./PhpSerializedValue'));
+    define(['exports', 'kaitai-struct/KaitaiStream', './PhpSerializedValue'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'), require('./PhpSerializedValue'));
   } else {
-    root.PharWithoutStub = factory(root.KaitaiStream, root.PhpSerializedValue);
+    factory(root.PharWithoutStub || (root.PharWithoutStub = {}), root.KaitaiStream, root.PhpSerializedValue || (root.PhpSerializedValue = {}));
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, PhpSerializedValue) {
+})(typeof self !== 'undefined' ? self : this, function (PharWithoutStub_, KaitaiStream, PhpSerializedValue_) {
 /**
  * A phar (PHP archive) file. The phar format is a custom archive format
  * from the PHP ecosystem that is used to package a complete PHP library
@@ -90,124 +90,6 @@ var PharWithoutStub = (function() {
     }
   }
 
-  var SerializedValue = PharWithoutStub.SerializedValue = (function() {
-    function SerializedValue(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    SerializedValue.prototype._read = function() {
-      this.raw = this._io.readBytesFull();
-    }
-
-    /**
-     * The serialized value, parsed as a structure.
-     */
-    Object.defineProperty(SerializedValue.prototype, 'parsed', {
-      get: function() {
-        if (this._m_parsed !== undefined)
-          return this._m_parsed;
-        var _pos = this._io.pos;
-        this._io.seek(0);
-        this._m_parsed = new PhpSerializedValue(this._io, this, null);
-        this._io.seek(_pos);
-        return this._m_parsed;
-      }
-    });
-
-    /**
-     * The serialized value, as a raw byte array.
-     */
-
-    return SerializedValue;
-  })();
-
-  var Signature = PharWithoutStub.Signature = (function() {
-    function Signature(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Signature.prototype._read = function() {
-      this.data = this._io.readBytes(((this._io.size - this._io.pos) - 8));
-      this.type = this._io.readU4le();
-      this.magic = this._io.readBytes(4);
-      if (!((KaitaiStream.byteArrayCompare(this.magic, [71, 66, 77, 66]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([71, 66, 77, 66], this.magic, this._io, "/types/signature/seq/2");
-      }
-    }
-
-    /**
-     * The signature data. The size and contents depend on the
-     * signature type.
-     */
-
-    /**
-     * The signature type.
-     */
-
-    return Signature;
-  })();
-
-  var FileFlags = PharWithoutStub.FileFlags = (function() {
-    function FileFlags(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    FileFlags.prototype._read = function() {
-      this.value = this._io.readU4le();
-    }
-
-    /**
-     * The file's permission bits.
-     */
-    Object.defineProperty(FileFlags.prototype, 'permissions', {
-      get: function() {
-        if (this._m_permissions !== undefined)
-          return this._m_permissions;
-        this._m_permissions = (this.value & 511);
-        return this._m_permissions;
-      }
-    });
-
-    /**
-     * Whether this file's data is stored using zlib compression.
-     */
-    Object.defineProperty(FileFlags.prototype, 'zlibCompressed', {
-      get: function() {
-        if (this._m_zlibCompressed !== undefined)
-          return this._m_zlibCompressed;
-        this._m_zlibCompressed = (this.value & 4096) != 0;
-        return this._m_zlibCompressed;
-      }
-    });
-
-    /**
-     * Whether this file's data is stored using bzip2 compression.
-     */
-    Object.defineProperty(FileFlags.prototype, 'bzip2Compressed', {
-      get: function() {
-        if (this._m_bzip2Compressed !== undefined)
-          return this._m_bzip2Compressed;
-        this._m_bzip2Compressed = (this.value & 8192) != 0;
-        return this._m_bzip2Compressed;
-      }
-    });
-
-    /**
-     * The unparsed flag bits.
-     */
-
-    return FileFlags;
-  })();
-
   /**
    * A phar API version number. This version number is meant to indicate
    * which features are used in a specific phar, so that tools reading
@@ -247,7 +129,7 @@ var PharWithoutStub = (function() {
     function ApiVersion(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -261,30 +143,143 @@ var PharWithoutStub = (function() {
     return ApiVersion;
   })();
 
+  var FileEntry = PharWithoutStub.FileEntry = (function() {
+    function FileEntry(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    FileEntry.prototype._read = function() {
+      this.lenFilename = this._io.readU4le();
+      this.filename = this._io.readBytes(this.lenFilename);
+      this.lenDataUncompressed = this._io.readU4le();
+      this.timestamp = this._io.readU4le();
+      this.lenDataCompressed = this._io.readU4le();
+      this.crc32 = this._io.readU4le();
+      this.flags = new FileFlags(this._io, this, this._root);
+      this.lenMetadata = this._io.readU4le();
+      if (this.lenMetadata != 0) {
+        this._raw_metadata = this._io.readBytes(this.lenMetadata);
+        var _io__raw_metadata = new KaitaiStream(this._raw_metadata);
+        this.metadata = new SerializedValue(_io__raw_metadata, this, this._root);
+      }
+    }
+
+    /**
+     * The length of the file name, in bytes.
+     */
+
+    /**
+     * The name of this file. If the name ends with a slash, this entry
+     * represents a directory, otherwise a regular file. Directory entries
+     * are supported since phar API version 1.1.1.
+     * (Explicit directory entries are only needed for empty directories.
+     * Non-empty directories are implied by the files located inside them.)
+     */
+
+    /**
+     * The length of the file's data when uncompressed, in bytes.
+     */
+
+    /**
+     * The time at which the file was added or last updated, as a
+     * Unix timestamp.
+     */
+
+    /**
+     * The length of the file's data when compressed, in bytes.
+     */
+
+    /**
+     * The CRC32 checksum of the file's uncompressed data.
+     */
+
+    /**
+     * Flags for this file.
+     */
+
+    /**
+     * The length of the metadata, in bytes, or 0 if there is none.
+     */
+
+    /**
+     * Metadata for this file, in the format used by PHP's
+     * `serialize` function. The meaning of the serialized data is not
+     * specified further, it may be used to store arbitrary custom data
+     * about the file.
+     */
+
+    return FileEntry;
+  })();
+
+  var FileFlags = PharWithoutStub.FileFlags = (function() {
+    function FileFlags(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    FileFlags.prototype._read = function() {
+      this.value = this._io.readU4le();
+    }
+
+    /**
+     * Whether this file's data is stored using bzip2 compression.
+     */
+    Object.defineProperty(FileFlags.prototype, 'bzip2Compressed', {
+      get: function() {
+        if (this._m_bzip2Compressed !== undefined)
+          return this._m_bzip2Compressed;
+        this._m_bzip2Compressed = (this.value & 8192) != 0;
+        return this._m_bzip2Compressed;
+      }
+    });
+
+    /**
+     * The file's permission bits.
+     */
+    Object.defineProperty(FileFlags.prototype, 'permissions', {
+      get: function() {
+        if (this._m_permissions !== undefined)
+          return this._m_permissions;
+        this._m_permissions = this.value & 511;
+        return this._m_permissions;
+      }
+    });
+
+    /**
+     * Whether this file's data is stored using zlib compression.
+     */
+    Object.defineProperty(FileFlags.prototype, 'zlibCompressed', {
+      get: function() {
+        if (this._m_zlibCompressed !== undefined)
+          return this._m_zlibCompressed;
+        this._m_zlibCompressed = (this.value & 4096) != 0;
+        return this._m_zlibCompressed;
+      }
+    });
+
+    /**
+     * The unparsed flag bits.
+     */
+
+    return FileFlags;
+  })();
+
   var GlobalFlags = PharWithoutStub.GlobalFlags = (function() {
     function GlobalFlags(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     GlobalFlags.prototype._read = function() {
       this.value = this._io.readU4le();
     }
-
-    /**
-     * Whether any of the files in this phar are stored using
-     * zlib compression.
-     */
-    Object.defineProperty(GlobalFlags.prototype, 'anyZlibCompressed', {
-      get: function() {
-        if (this._m_anyZlibCompressed !== undefined)
-          return this._m_anyZlibCompressed;
-        this._m_anyZlibCompressed = (this.value & 4096) != 0;
-        return this._m_anyZlibCompressed;
-      }
-    });
 
     /**
      * Whether any of the files in this phar are stored using
@@ -296,6 +291,19 @@ var PharWithoutStub = (function() {
           return this._m_anyBzip2Compressed;
         this._m_anyBzip2Compressed = (this.value & 8192) != 0;
         return this._m_anyBzip2Compressed;
+      }
+    });
+
+    /**
+     * Whether any of the files in this phar are stored using
+     * zlib compression.
+     */
+    Object.defineProperty(GlobalFlags.prototype, 'anyZlibCompressed', {
+      get: function() {
+        if (this._m_anyZlibCompressed !== undefined)
+          return this._m_anyZlibCompressed;
+        this._m_anyZlibCompressed = (this.value & 4096) != 0;
+        return this._m_anyZlibCompressed;
       }
     });
 
@@ -322,7 +330,7 @@ var PharWithoutStub = (function() {
     function Manifest(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -390,75 +398,67 @@ var PharWithoutStub = (function() {
     return Manifest;
   })();
 
-  var FileEntry = PharWithoutStub.FileEntry = (function() {
-    function FileEntry(_io, _parent, _root) {
+  var SerializedValue = PharWithoutStub.SerializedValue = (function() {
+    function SerializedValue(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    FileEntry.prototype._read = function() {
-      this.lenFilename = this._io.readU4le();
-      this.filename = this._io.readBytes(this.lenFilename);
-      this.lenDataUncompressed = this._io.readU4le();
-      this.timestamp = this._io.readU4le();
-      this.lenDataCompressed = this._io.readU4le();
-      this.crc32 = this._io.readU4le();
-      this.flags = new FileFlags(this._io, this, this._root);
-      this.lenMetadata = this._io.readU4le();
-      if (this.lenMetadata != 0) {
-        this._raw_metadata = this._io.readBytes(this.lenMetadata);
-        var _io__raw_metadata = new KaitaiStream(this._raw_metadata);
-        this.metadata = new SerializedValue(_io__raw_metadata, this, this._root);
+    SerializedValue.prototype._read = function() {
+      this.raw = this._io.readBytesFull();
+    }
+
+    /**
+     * The serialized value, parsed as a structure.
+     */
+    Object.defineProperty(SerializedValue.prototype, 'parsed', {
+      get: function() {
+        if (this._m_parsed !== undefined)
+          return this._m_parsed;
+        var _pos = this._io.pos;
+        this._io.seek(0);
+        this._m_parsed = new PhpSerializedValue_.PhpSerializedValue(this._io, null, null);
+        this._io.seek(_pos);
+        return this._m_parsed;
+      }
+    });
+
+    /**
+     * The serialized value, as a raw byte array.
+     */
+
+    return SerializedValue;
+  })();
+
+  var Signature = PharWithoutStub.Signature = (function() {
+    function Signature(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Signature.prototype._read = function() {
+      this.data = this._io.readBytes((this._io.size - this._io.pos) - 8);
+      this.type = this._io.readU4le();
+      this.magic = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([71, 66, 77, 66])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([71, 66, 77, 66]), this.magic, this._io, "/types/signature/seq/2");
       }
     }
 
     /**
-     * The length of the file name, in bytes.
+     * The signature data. The size and contents depend on the
+     * signature type.
      */
 
     /**
-     * The name of this file. If the name ends with a slash, this entry
-     * represents a directory, otherwise a regular file. Directory entries
-     * are supported since phar API version 1.1.1.
-     * (Explicit directory entries are only needed for empty directories.
-     * Non-empty directories are implied by the files located inside them.)
+     * The signature type.
      */
 
-    /**
-     * The length of the file's data when uncompressed, in bytes.
-     */
-
-    /**
-     * The time at which the file was added or last updated, as a
-     * Unix timestamp.
-     */
-
-    /**
-     * The length of the file's data when compressed, in bytes.
-     */
-
-    /**
-     * The CRC32 checksum of the file's uncompressed data.
-     */
-
-    /**
-     * Flags for this file.
-     */
-
-    /**
-     * The length of the metadata, in bytes, or 0 if there is none.
-     */
-
-    /**
-     * Metadata for this file, in the format used by PHP's
-     * `serialize` function. The meaning of the serialized data is not
-     * specified further, it may be used to store arbitrary custom data
-     * about the file.
-     */
-
-    return FileEntry;
+    return Signature;
   })();
 
   /**
@@ -484,5 +484,5 @@ var PharWithoutStub = (function() {
 
   return PharWithoutStub;
 })();
-return PharWithoutStub;
-}));
+PharWithoutStub_.PharWithoutStub = PharWithoutStub;
+});

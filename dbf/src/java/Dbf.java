@@ -8,7 +8,8 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Arrays;
 import java.util.ArrayList;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 
 /**
@@ -55,66 +56,25 @@ public class Dbf extends KaitaiStruct {
     }
     private void _read() {
         this.header1 = new Header1(this._io, this, _root);
-        this._raw_header2 = this._io.readBytes(((header1().lenHeader() - 12) - 1));
-        KaitaiStream _io__raw_header2 = new ByteBufferKaitaiStream(_raw_header2);
-        this.header2 = new Header2(_io__raw_header2, this, _root);
+        KaitaiStream _io_header2 = this._io.substream((header1().lenHeader() - 12) - 1);
+        this.header2 = new Header2(_io_header2, this, _root);
         this.headerTerminator = this._io.readBytes(1);
-        if (!(Arrays.equals(headerTerminator(), new byte[] { 13 }))) {
-            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 13 }, headerTerminator(), _io(), "/seq/2");
+        if (!(Arrays.equals(this.headerTerminator, new byte[] { 13 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 13 }, this.headerTerminator, this._io, "/seq/2");
         }
-        this._raw_records = new ArrayList<byte[]>();
         this.records = new ArrayList<Record>();
         for (int i = 0; i < header1().numRecords(); i++) {
-            this._raw_records.add(this._io.readBytes(header1().lenRecord()));
-            KaitaiStream _io__raw_records = new ByteBufferKaitaiStream(_raw_records.get(_raw_records.size() - 1));
-            this.records.add(new Record(_io__raw_records, this, _root));
+            KaitaiStream _io_records = this._io.substream(header1().lenRecord());
+            this.records.add(new Record(_io_records, this, _root));
         }
     }
-    public static class Header2 extends KaitaiStruct {
-        public static Header2 fromFile(String fileName) throws IOException {
-            return new Header2(new ByteBufferKaitaiStream(fileName));
-        }
 
-        public Header2(KaitaiStream _io) {
-            this(_io, null, null);
+    public void _fetchInstances() {
+        this.header1._fetchInstances();
+        this.header2._fetchInstances();
+        for (int i = 0; i < this.records.size(); i++) {
+            this.records.get(((Number) (i)).intValue())._fetchInstances();
         }
-
-        public Header2(KaitaiStream _io, Dbf _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Header2(KaitaiStream _io, Dbf _parent, Dbf _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            if (_root().header1().dbaseLevel() == 3) {
-                this.headerDbase3 = new HeaderDbase3(this._io, this, _root);
-            }
-            if (_root().header1().dbaseLevel() == 7) {
-                this.headerDbase7 = new HeaderDbase7(this._io, this, _root);
-            }
-            this.fields = new ArrayList<Field>();
-            {
-                int i = 0;
-                while (!this._io.isEof()) {
-                    this.fields.add(new Field(this._io, this, _root));
-                    i++;
-                }
-            }
-        }
-        private HeaderDbase3 headerDbase3;
-        private HeaderDbase7 headerDbase7;
-        private ArrayList<Field> fields;
-        private Dbf _root;
-        private Dbf _parent;
-        public HeaderDbase3 headerDbase3() { return headerDbase3; }
-        public HeaderDbase7 headerDbase7() { return headerDbase7; }
-        public ArrayList<Field> fields() { return fields; }
-        public Dbf _root() { return _root; }
-        public Dbf _parent() { return _parent; }
     }
     public static class Field extends KaitaiStruct {
         public static Field fromFile(String fileName) throws IOException {
@@ -136,7 +96,7 @@ public class Dbf extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.name = new String(KaitaiStream.bytesTerminate(this._io.readBytes(11), (byte) 0, false), Charset.forName("ASCII"));
+            this.name = new String(KaitaiStream.bytesTerminate(this._io.readBytes(11), (byte) 0, false), StandardCharsets.US_ASCII);
             this.datatype = this._io.readU1();
             this.dataAddress = this._io.readU4le();
             this.length = this._io.readU1();
@@ -146,6 +106,9 @@ public class Dbf extends KaitaiStruct {
             this.reserved2 = this._io.readBytes(2);
             this.setFieldsFlag = this._io.readU1();
             this.reserved3 = this._io.readBytes(8);
+        }
+
+        public void _fetchInstances() {
         }
         private String name;
         private int datatype;
@@ -204,12 +167,14 @@ public class Dbf extends KaitaiStruct {
             this.lenHeader = this._io.readU2le();
             this.lenRecord = this._io.readU2le();
         }
+
+        public void _fetchInstances() {
+        }
         private Integer dbaseLevel;
         public Integer dbaseLevel() {
             if (this.dbaseLevel != null)
                 return this.dbaseLevel;
-            int _tmp = (int) ((version() & 7));
-            this.dbaseLevel = _tmp;
+            this.dbaseLevel = ((Number) (version() & 7)).intValue();
             return this.dbaseLevel;
         }
         private int version;
@@ -228,6 +193,64 @@ public class Dbf extends KaitaiStruct {
         public long numRecords() { return numRecords; }
         public int lenHeader() { return lenHeader; }
         public int lenRecord() { return lenRecord; }
+        public Dbf _root() { return _root; }
+        public Dbf _parent() { return _parent; }
+    }
+    public static class Header2 extends KaitaiStruct {
+        public static Header2 fromFile(String fileName) throws IOException {
+            return new Header2(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Header2(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Header2(KaitaiStream _io, Dbf _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Header2(KaitaiStream _io, Dbf _parent, Dbf _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            if (_root().header1().dbaseLevel() == 3) {
+                this.headerDbase3 = new HeaderDbase3(this._io, this, _root);
+            }
+            if (_root().header1().dbaseLevel() == 7) {
+                this.headerDbase7 = new HeaderDbase7(this._io, this, _root);
+            }
+            this.fields = new ArrayList<Field>();
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.fields.add(new Field(this._io, this, _root));
+                    i++;
+                }
+            }
+        }
+
+        public void _fetchInstances() {
+            if (_root().header1().dbaseLevel() == 3) {
+                this.headerDbase3._fetchInstances();
+            }
+            if (_root().header1().dbaseLevel() == 7) {
+                this.headerDbase7._fetchInstances();
+            }
+            for (int i = 0; i < this.fields.size(); i++) {
+                this.fields.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private HeaderDbase3 headerDbase3;
+        private HeaderDbase7 headerDbase7;
+        private List<Field> fields;
+        private Dbf _root;
+        private Dbf _parent;
+        public HeaderDbase3 headerDbase3() { return headerDbase3; }
+        public HeaderDbase7 headerDbase7() { return headerDbase7; }
+        public List<Field> fields() { return fields; }
         public Dbf _root() { return _root; }
         public Dbf _parent() { return _parent; }
     }
@@ -254,6 +277,9 @@ public class Dbf extends KaitaiStruct {
             this.reserved1 = this._io.readBytes(3);
             this.reserved2 = this._io.readBytes(13);
             this.reserved3 = this._io.readBytes(4);
+        }
+
+        public void _fetchInstances() {
         }
         private byte[] reserved1;
         private byte[] reserved2;
@@ -287,8 +313,8 @@ public class Dbf extends KaitaiStruct {
         }
         private void _read() {
             this.reserved1 = this._io.readBytes(2);
-            if (!(Arrays.equals(reserved1(), new byte[] { 0, 0 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0 }, reserved1(), _io(), "/types/header_dbase_7/seq/0");
+            if (!(Arrays.equals(this.reserved1, new byte[] { 0, 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0 }, this.reserved1, this._io, "/types/header_dbase_7/seq/0");
             }
             this.hasIncompleteTransaction = this._io.readU1();
             this.dbaseIvEncryption = this._io.readU1();
@@ -296,11 +322,14 @@ public class Dbf extends KaitaiStruct {
             this.productionMdx = this._io.readU1();
             this.languageDriverId = this._io.readU1();
             this.reserved3 = this._io.readBytes(2);
-            if (!(Arrays.equals(reserved3(), new byte[] { 0, 0 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0 }, reserved3(), _io(), "/types/header_dbase_7/seq/6");
+            if (!(Arrays.equals(this.reserved3, new byte[] { 0, 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0 }, this.reserved3, this._io, "/types/header_dbase_7/seq/6");
             }
             this.languageDriverName = this._io.readBytes(32);
             this.reserved4 = this._io.readBytes(4);
+        }
+
+        public void _fetchInstances() {
         }
         private byte[] reserved1;
         private int hasIncompleteTransaction;
@@ -348,32 +377,33 @@ public class Dbf extends KaitaiStruct {
             this.deleted = Dbf.DeleteState.byId(this._io.readU1());
             this.recordFields = new ArrayList<byte[]>();
             for (int i = 0; i < _root().header2().fields().size(); i++) {
-                this.recordFields.add(this._io.readBytes(_root().header2().fields().get((int) i).length()));
+                this.recordFields.add(this._io.readBytes(_root().header2().fields().get(((Number) (i)).intValue()).length()));
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.recordFields.size(); i++) {
             }
         }
         private DeleteState deleted;
-        private ArrayList<byte[]> recordFields;
+        private List<byte[]> recordFields;
         private Dbf _root;
         private Dbf _parent;
         public DeleteState deleted() { return deleted; }
-        public ArrayList<byte[]> recordFields() { return recordFields; }
+        public List<byte[]> recordFields() { return recordFields; }
         public Dbf _root() { return _root; }
         public Dbf _parent() { return _parent; }
     }
     private Header1 header1;
     private Header2 header2;
     private byte[] headerTerminator;
-    private ArrayList<Record> records;
+    private List<Record> records;
     private Dbf _root;
     private KaitaiStruct _parent;
-    private byte[] _raw_header2;
-    private ArrayList<byte[]> _raw_records;
     public Header1 header1() { return header1; }
     public Header2 header2() { return header2; }
     public byte[] headerTerminator() { return headerTerminator; }
-    public ArrayList<Record> records() { return records; }
+    public List<Record> records() { return records; }
     public Dbf _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
-    public byte[] _raw_header2() { return _raw_header2; }
-    public ArrayList<byte[]> _raw_records() { return _raw_records; }
 }

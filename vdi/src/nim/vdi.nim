@@ -19,6 +19,27 @@ type
     static = 2
     undo = 3
     diff = 4
+  Vdi_BlocksMap* = ref object of KaitaiStruct
+    `index`*: seq[Vdi_BlocksMap_BlockIndex]
+    `parent`*: Vdi
+  Vdi_BlocksMap_BlockIndex* = ref object of KaitaiStruct
+    `index`*: uint32
+    `parent`*: Vdi_BlocksMap
+    `blockInst`: Vdi_Disk_Block
+    `blockInstFlag`: bool
+    `isAllocatedInst`: bool
+    `isAllocatedInstFlag`: bool
+  Vdi_Disk* = ref object of KaitaiStruct
+    `blocks`*: seq[Vdi_Disk_Block]
+    `parent`*: Vdi
+  Vdi_Disk_Block* = ref object of KaitaiStruct
+    `metadata`*: seq[byte]
+    `data`*: seq[Vdi_Disk_Block_Sector]
+    `parent`*: Vdi_Disk
+    `rawData`*: seq[seq[byte]]
+  Vdi_Disk_Block_Sector* = ref object of KaitaiStruct
+    `data`*: seq[byte]
+    `parent`*: Vdi_Disk_Block
   Vdi_Header* = ref object of KaitaiStruct
     `text`*: string
     `signature`*: seq[byte]
@@ -27,25 +48,18 @@ type
     `headerMain`*: Vdi_Header_HeaderMain
     `parent`*: Vdi
     `rawHeaderMain`*: seq[byte]
-    `headerSizeInst`: int
-    `headerSizeInstFlag`: bool
-    `blocksMapOffsetInst`: uint32
-    `blocksMapOffsetInstFlag`: bool
-    `subheaderSizeIsDynamicInst`: bool
-    `subheaderSizeIsDynamicInstFlag`: bool
-    `blocksOffsetInst`: uint32
-    `blocksOffsetInstFlag`: bool
     `blockSizeInst`: int
     `blockSizeInstFlag`: bool
+    `blocksMapOffsetInst`: uint32
+    `blocksMapOffsetInstFlag`: bool
     `blocksMapSizeInst`: int
     `blocksMapSizeInstFlag`: bool
-  Vdi_Header_Uuid* = ref object of KaitaiStruct
-    `uuid`*: seq[byte]
-    `parent`*: Vdi_Header_HeaderMain
-  Vdi_Header_Version* = ref object of KaitaiStruct
-    `major`*: uint16
-    `minor`*: uint16
-    `parent`*: Vdi_Header
+    `blocksOffsetInst`: uint32
+    `blocksOffsetInstFlag`: bool
+    `headerSizeInst`: int
+    `headerSizeInstFlag`: bool
+    `subheaderSizeIsDynamicInst`: bool
+    `subheaderSizeIsDynamicInstFlag`: bool
   Vdi_Header_HeaderMain* = ref object of KaitaiStruct
     `imageType`*: Vdi_ImageType
     `imageFlags`*: Vdi_Header_HeaderMain_Flags
@@ -65,12 +79,6 @@ type
     `uuidParent`*: Vdi_Header_Uuid
     `lchcGeometry`*: Vdi_Header_HeaderMain_Geometry
     `parent`*: Vdi_Header
-  Vdi_Header_HeaderMain_Geometry* = ref object of KaitaiStruct
-    `cylinders`*: uint32
-    `heads`*: uint32
-    `sectors`*: uint32
-    `sectorSize`*: uint32
-    `parent`*: Vdi_Header_HeaderMain
   Vdi_Header_HeaderMain_Flags* = ref object of KaitaiStruct
     `reserved0`*: uint64
     `zeroExpand`*: bool
@@ -79,53 +87,45 @@ type
     `fixed`*: bool
     `reserved2`*: uint64
     `parent`*: Vdi_Header_HeaderMain
-  Vdi_BlocksMap* = ref object of KaitaiStruct
-    `index`*: seq[Vdi_BlocksMap_BlockIndex]
-    `parent`*: Vdi
-  Vdi_BlocksMap_BlockIndex* = ref object of KaitaiStruct
-    `index`*: uint32
-    `parent`*: Vdi_BlocksMap
-    `isAllocatedInst`: bool
-    `isAllocatedInstFlag`: bool
-    `blockInst`: Vdi_Disk_Block
-    `blockInstFlag`: bool
-  Vdi_Disk* = ref object of KaitaiStruct
-    `blocks`*: seq[Vdi_Disk_Block]
-    `parent`*: Vdi
-  Vdi_Disk_Block* = ref object of KaitaiStruct
-    `metadata`*: seq[byte]
-    `data`*: seq[Vdi_Disk_Block_Sector]
-    `parent`*: Vdi_Disk
-    `rawData`*: seq[seq[byte]]
-  Vdi_Disk_Block_Sector* = ref object of KaitaiStruct
-    `data`*: seq[byte]
-    `parent`*: Vdi_Disk_Block
+  Vdi_Header_HeaderMain_Geometry* = ref object of KaitaiStruct
+    `cylinders`*: uint32
+    `heads`*: uint32
+    `sectors`*: uint32
+    `sectorSize`*: uint32
+    `parent`*: Vdi_Header_HeaderMain
+  Vdi_Header_Uuid* = ref object of KaitaiStruct
+    `uuid`*: seq[byte]
+    `parent`*: Vdi_Header_HeaderMain
+  Vdi_Header_Version* = ref object of KaitaiStruct
+    `major`*: uint16
+    `minor`*: uint16
+    `parent`*: Vdi_Header
 
 proc read*(_: typedesc[Vdi], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Vdi
-proc read*(_: typedesc[Vdi_Header], io: KaitaiStream, root: KaitaiStruct, parent: Vdi): Vdi_Header
-proc read*(_: typedesc[Vdi_Header_Uuid], io: KaitaiStream, root: KaitaiStruct, parent: Vdi_Header_HeaderMain): Vdi_Header_Uuid
-proc read*(_: typedesc[Vdi_Header_Version], io: KaitaiStream, root: KaitaiStruct, parent: Vdi_Header): Vdi_Header_Version
-proc read*(_: typedesc[Vdi_Header_HeaderMain], io: KaitaiStream, root: KaitaiStruct, parent: Vdi_Header): Vdi_Header_HeaderMain
-proc read*(_: typedesc[Vdi_Header_HeaderMain_Geometry], io: KaitaiStream, root: KaitaiStruct, parent: Vdi_Header_HeaderMain): Vdi_Header_HeaderMain_Geometry
-proc read*(_: typedesc[Vdi_Header_HeaderMain_Flags], io: KaitaiStream, root: KaitaiStruct, parent: Vdi_Header_HeaderMain): Vdi_Header_HeaderMain_Flags
 proc read*(_: typedesc[Vdi_BlocksMap], io: KaitaiStream, root: KaitaiStruct, parent: Vdi): Vdi_BlocksMap
 proc read*(_: typedesc[Vdi_BlocksMap_BlockIndex], io: KaitaiStream, root: KaitaiStruct, parent: Vdi_BlocksMap): Vdi_BlocksMap_BlockIndex
 proc read*(_: typedesc[Vdi_Disk], io: KaitaiStream, root: KaitaiStruct, parent: Vdi): Vdi_Disk
 proc read*(_: typedesc[Vdi_Disk_Block], io: KaitaiStream, root: KaitaiStruct, parent: Vdi_Disk): Vdi_Disk_Block
 proc read*(_: typedesc[Vdi_Disk_Block_Sector], io: KaitaiStream, root: KaitaiStruct, parent: Vdi_Disk_Block): Vdi_Disk_Block_Sector
+proc read*(_: typedesc[Vdi_Header], io: KaitaiStream, root: KaitaiStruct, parent: Vdi): Vdi_Header
+proc read*(_: typedesc[Vdi_Header_HeaderMain], io: KaitaiStream, root: KaitaiStruct, parent: Vdi_Header): Vdi_Header_HeaderMain
+proc read*(_: typedesc[Vdi_Header_HeaderMain_Flags], io: KaitaiStream, root: KaitaiStruct, parent: Vdi_Header_HeaderMain): Vdi_Header_HeaderMain_Flags
+proc read*(_: typedesc[Vdi_Header_HeaderMain_Geometry], io: KaitaiStream, root: KaitaiStruct, parent: Vdi_Header_HeaderMain): Vdi_Header_HeaderMain_Geometry
+proc read*(_: typedesc[Vdi_Header_Uuid], io: KaitaiStream, root: KaitaiStruct, parent: Vdi_Header_HeaderMain): Vdi_Header_Uuid
+proc read*(_: typedesc[Vdi_Header_Version], io: KaitaiStream, root: KaitaiStruct, parent: Vdi_Header): Vdi_Header_Version
 
 proc blockDiscarded*(this: Vdi): int
 proc blockUnallocated*(this: Vdi): int
 proc blocksMap*(this: Vdi): Vdi_BlocksMap
 proc disk*(this: Vdi): Vdi_Disk
-proc headerSize*(this: Vdi_Header): int
-proc blocksMapOffset*(this: Vdi_Header): uint32
-proc subheaderSizeIsDynamic*(this: Vdi_Header): bool
-proc blocksOffset*(this: Vdi_Header): uint32
-proc blockSize*(this: Vdi_Header): int
-proc blocksMapSize*(this: Vdi_Header): int
-proc isAllocated*(this: Vdi_BlocksMap_BlockIndex): bool
 proc block*(this: Vdi_BlocksMap_BlockIndex): Vdi_Disk_Block
+proc isAllocated*(this: Vdi_BlocksMap_BlockIndex): bool
+proc blockSize*(this: Vdi_Header): int
+proc blocksMapOffset*(this: Vdi_Header): uint32
+proc blocksMapSize*(this: Vdi_Header): int
+proc blocksOffset*(this: Vdi_Header): uint32
+proc headerSize*(this: Vdi_Header): int
+proc subheaderSizeIsDynamic*(this: Vdi_Header): bool
 
 
 ##[
@@ -201,210 +201,6 @@ proc disk(this: Vdi): Vdi_Disk =
 proc fromFile*(_: typedesc[Vdi], filename: string): Vdi =
   Vdi.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[Vdi_Header], io: KaitaiStream, root: KaitaiStruct, parent: Vdi): Vdi_Header =
-  template this: untyped = result
-  this = new(Vdi_Header)
-  let root = if root == nil: cast[Vdi](this) else: cast[Vdi](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let textExpr = encode(this.io.readBytes(int(64)), "utf-8")
-  this.text = textExpr
-  let signatureExpr = this.io.readBytes(int(4))
-  this.signature = signatureExpr
-  let versionExpr = Vdi_Header_Version.read(this.io, this.root, this)
-  this.version = versionExpr
-  if this.subheaderSizeIsDynamic:
-    let headerSizeOptionalExpr = this.io.readU4le()
-    this.headerSizeOptional = headerSizeOptionalExpr
-  let rawHeaderMainExpr = this.io.readBytes(int(this.headerSize))
-  this.rawHeaderMain = rawHeaderMainExpr
-  let rawHeaderMainIo = newKaitaiStream(rawHeaderMainExpr)
-  let headerMainExpr = Vdi_Header_HeaderMain.read(rawHeaderMainIo, this.root, this)
-  this.headerMain = headerMainExpr
-
-proc headerSize(this: Vdi_Header): int = 
-  if this.headerSizeInstFlag:
-    return this.headerSizeInst
-  let headerSizeInstExpr = int((if this.subheaderSizeIsDynamic: this.headerSizeOptional else: 336))
-  this.headerSizeInst = headerSizeInstExpr
-  this.headerSizeInstFlag = true
-  return this.headerSizeInst
-
-proc blocksMapOffset(this: Vdi_Header): uint32 = 
-  if this.blocksMapOffsetInstFlag:
-    return this.blocksMapOffsetInst
-  let blocksMapOffsetInstExpr = uint32(this.headerMain.blocksMapOffset)
-  this.blocksMapOffsetInst = blocksMapOffsetInstExpr
-  this.blocksMapOffsetInstFlag = true
-  return this.blocksMapOffsetInst
-
-proc subheaderSizeIsDynamic(this: Vdi_Header): bool = 
-  if this.subheaderSizeIsDynamicInstFlag:
-    return this.subheaderSizeIsDynamicInst
-  let subheaderSizeIsDynamicInstExpr = bool(this.version.major >= 1)
-  this.subheaderSizeIsDynamicInst = subheaderSizeIsDynamicInstExpr
-  this.subheaderSizeIsDynamicInstFlag = true
-  return this.subheaderSizeIsDynamicInst
-
-proc blocksOffset(this: Vdi_Header): uint32 = 
-  if this.blocksOffsetInstFlag:
-    return this.blocksOffsetInst
-  let blocksOffsetInstExpr = uint32(this.headerMain.offsetData)
-  this.blocksOffsetInst = blocksOffsetInstExpr
-  this.blocksOffsetInstFlag = true
-  return this.blocksOffsetInst
-
-proc blockSize(this: Vdi_Header): int = 
-  if this.blockSizeInstFlag:
-    return this.blockSizeInst
-  let blockSizeInstExpr = int((this.headerMain.blockMetadataSize + this.headerMain.blockDataSize))
-  this.blockSizeInst = blockSizeInstExpr
-  this.blockSizeInstFlag = true
-  return this.blockSizeInst
-
-proc blocksMapSize(this: Vdi_Header): int = 
-  if this.blocksMapSizeInstFlag:
-    return this.blocksMapSizeInst
-  let blocksMapSizeInstExpr = int((((((this.headerMain.blocksInImage * 4) + this.headerMain.geometry.sectorSize) - 1) div this.headerMain.geometry.sectorSize) * this.headerMain.geometry.sectorSize))
-  this.blocksMapSizeInst = blocksMapSizeInstExpr
-  this.blocksMapSizeInstFlag = true
-  return this.blocksMapSizeInst
-
-proc fromFile*(_: typedesc[Vdi_Header], filename: string): Vdi_Header =
-  Vdi_Header.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Vdi_Header_Uuid], io: KaitaiStream, root: KaitaiStruct, parent: Vdi_Header_HeaderMain): Vdi_Header_Uuid =
-  template this: untyped = result
-  this = new(Vdi_Header_Uuid)
-  let root = if root == nil: cast[Vdi](this) else: cast[Vdi](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let uuidExpr = this.io.readBytes(int(16))
-  this.uuid = uuidExpr
-
-proc fromFile*(_: typedesc[Vdi_Header_Uuid], filename: string): Vdi_Header_Uuid =
-  Vdi_Header_Uuid.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Vdi_Header_Version], io: KaitaiStream, root: KaitaiStruct, parent: Vdi_Header): Vdi_Header_Version =
-  template this: untyped = result
-  this = new(Vdi_Header_Version)
-  let root = if root == nil: cast[Vdi](this) else: cast[Vdi](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let majorExpr = this.io.readU2le()
-  this.major = majorExpr
-  let minorExpr = this.io.readU2le()
-  this.minor = minorExpr
-
-proc fromFile*(_: typedesc[Vdi_Header_Version], filename: string): Vdi_Header_Version =
-  Vdi_Header_Version.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Vdi_Header_HeaderMain], io: KaitaiStream, root: KaitaiStruct, parent: Vdi_Header): Vdi_Header_HeaderMain =
-  template this: untyped = result
-  this = new(Vdi_Header_HeaderMain)
-  let root = if root == nil: cast[Vdi](this) else: cast[Vdi](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let imageTypeExpr = Vdi_ImageType(this.io.readU4le())
-  this.imageType = imageTypeExpr
-  let imageFlagsExpr = Vdi_Header_HeaderMain_Flags.read(this.io, this.root, this)
-  this.imageFlags = imageFlagsExpr
-  let descriptionExpr = encode(this.io.readBytes(int(256)), "utf-8")
-  this.description = descriptionExpr
-  if this.parent.version.major >= 1:
-    let blocksMapOffsetExpr = this.io.readU4le()
-    this.blocksMapOffset = blocksMapOffsetExpr
-  if this.parent.version.major >= 1:
-    let offsetDataExpr = this.io.readU4le()
-    this.offsetData = offsetDataExpr
-  let geometryExpr = Vdi_Header_HeaderMain_Geometry.read(this.io, this.root, this)
-  this.geometry = geometryExpr
-  if this.parent.version.major >= 1:
-    let reserved1Expr = this.io.readU4le()
-    this.reserved1 = reserved1Expr
-  let diskSizeExpr = this.io.readU8le()
-  this.diskSize = diskSizeExpr
-
-  ##[
-  Size of block (bytes).
-  ]##
-  let blockDataSizeExpr = this.io.readU4le()
-  this.blockDataSize = blockDataSizeExpr
-  if this.parent.version.major >= 1:
-    let blockMetadataSizeExpr = this.io.readU4le()
-    this.blockMetadataSize = blockMetadataSizeExpr
-  let blocksInImageExpr = this.io.readU4le()
-  this.blocksInImage = blocksInImageExpr
-  let blocksAllocatedExpr = this.io.readU4le()
-  this.blocksAllocated = blocksAllocatedExpr
-  let uuidImageExpr = Vdi_Header_Uuid.read(this.io, this.root, this)
-  this.uuidImage = uuidImageExpr
-  let uuidLastSnapExpr = Vdi_Header_Uuid.read(this.io, this.root, this)
-  this.uuidLastSnap = uuidLastSnapExpr
-  let uuidLinkExpr = Vdi_Header_Uuid.read(this.io, this.root, this)
-  this.uuidLink = uuidLinkExpr
-  if this.parent.version.major >= 1:
-    let uuidParentExpr = Vdi_Header_Uuid.read(this.io, this.root, this)
-    this.uuidParent = uuidParentExpr
-  if  ((this.parent.version.major >= 1) and ((this.io.pos + 16) <= this.io.size)) :
-    let lchcGeometryExpr = Vdi_Header_HeaderMain_Geometry.read(this.io, this.root, this)
-    this.lchcGeometry = lchcGeometryExpr
-
-proc fromFile*(_: typedesc[Vdi_Header_HeaderMain], filename: string): Vdi_Header_HeaderMain =
-  Vdi_Header_HeaderMain.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Vdi_Header_HeaderMain_Geometry], io: KaitaiStream, root: KaitaiStruct, parent: Vdi_Header_HeaderMain): Vdi_Header_HeaderMain_Geometry =
-  template this: untyped = result
-  this = new(Vdi_Header_HeaderMain_Geometry)
-  let root = if root == nil: cast[Vdi](this) else: cast[Vdi](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let cylindersExpr = this.io.readU4le()
-  this.cylinders = cylindersExpr
-  let headsExpr = this.io.readU4le()
-  this.heads = headsExpr
-  let sectorsExpr = this.io.readU4le()
-  this.sectors = sectorsExpr
-  let sectorSizeExpr = this.io.readU4le()
-  this.sectorSize = sectorSizeExpr
-
-proc fromFile*(_: typedesc[Vdi_Header_HeaderMain_Geometry], filename: string): Vdi_Header_HeaderMain_Geometry =
-  Vdi_Header_HeaderMain_Geometry.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Vdi_Header_HeaderMain_Flags], io: KaitaiStream, root: KaitaiStruct, parent: Vdi_Header_HeaderMain): Vdi_Header_HeaderMain_Flags =
-  template this: untyped = result
-  this = new(Vdi_Header_HeaderMain_Flags)
-  let root = if root == nil: cast[Vdi](this) else: cast[Vdi](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let reserved0Expr = this.io.readBitsIntBe(15)
-  this.reserved0 = reserved0Expr
-  let zeroExpandExpr = this.io.readBitsIntBe(1) != 0
-  this.zeroExpand = zeroExpandExpr
-  let reserved1Expr = this.io.readBitsIntBe(6)
-  this.reserved1 = reserved1Expr
-  let diffExpr = this.io.readBitsIntBe(1) != 0
-  this.diff = diffExpr
-  let fixedExpr = this.io.readBitsIntBe(1) != 0
-  this.fixed = fixedExpr
-  let reserved2Expr = this.io.readBitsIntBe(8)
-  this.reserved2 = reserved2Expr
-
-proc fromFile*(_: typedesc[Vdi_Header_HeaderMain_Flags], filename: string): Vdi_Header_HeaderMain_Flags =
-  Vdi_Header_HeaderMain_Flags.read(newKaitaiFileStream(filename), nil, nil)
-
 proc read*(_: typedesc[Vdi_BlocksMap], io: KaitaiStream, root: KaitaiStruct, parent: Vdi): Vdi_BlocksMap =
   template this: untyped = result
   this = new(Vdi_BlocksMap)
@@ -431,14 +227,6 @@ proc read*(_: typedesc[Vdi_BlocksMap_BlockIndex], io: KaitaiStream, root: Kaitai
   let indexExpr = this.io.readU4le()
   this.index = indexExpr
 
-proc isAllocated(this: Vdi_BlocksMap_BlockIndex): bool = 
-  if this.isAllocatedInstFlag:
-    return this.isAllocatedInst
-  let isAllocatedInstExpr = bool(this.index < Vdi(this.root).blockDiscarded)
-  this.isAllocatedInst = isAllocatedInstExpr
-  this.isAllocatedInstFlag = true
-  return this.isAllocatedInst
-
 proc block(this: Vdi_BlocksMap_BlockIndex): Vdi_Disk_Block = 
   if this.blockInstFlag:
     return this.blockInst
@@ -447,6 +235,14 @@ proc block(this: Vdi_BlocksMap_BlockIndex): Vdi_Disk_Block =
     this.blockInst = blockInstExpr
   this.blockInstFlag = true
   return this.blockInst
+
+proc isAllocated(this: Vdi_BlocksMap_BlockIndex): bool = 
+  if this.isAllocatedInstFlag:
+    return this.isAllocatedInst
+  let isAllocatedInstExpr = bool(this.index < Vdi(this.root).blockDiscarded)
+  this.isAllocatedInst = isAllocatedInstExpr
+  this.isAllocatedInstFlag = true
+  return this.isAllocatedInst
 
 proc fromFile*(_: typedesc[Vdi_BlocksMap_BlockIndex], filename: string): Vdi_BlocksMap_BlockIndex =
   Vdi_BlocksMap_BlockIndex.read(newKaitaiFileStream(filename), nil, nil)
@@ -502,4 +298,208 @@ proc read*(_: typedesc[Vdi_Disk_Block_Sector], io: KaitaiStream, root: KaitaiStr
 
 proc fromFile*(_: typedesc[Vdi_Disk_Block_Sector], filename: string): Vdi_Disk_Block_Sector =
   Vdi_Disk_Block_Sector.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Vdi_Header], io: KaitaiStream, root: KaitaiStruct, parent: Vdi): Vdi_Header =
+  template this: untyped = result
+  this = new(Vdi_Header)
+  let root = if root == nil: cast[Vdi](this) else: cast[Vdi](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let textExpr = encode(this.io.readBytes(int(64)), "UTF-8")
+  this.text = textExpr
+  let signatureExpr = this.io.readBytes(int(4))
+  this.signature = signatureExpr
+  let versionExpr = Vdi_Header_Version.read(this.io, this.root, this)
+  this.version = versionExpr
+  if this.subheaderSizeIsDynamic:
+    let headerSizeOptionalExpr = this.io.readU4le()
+    this.headerSizeOptional = headerSizeOptionalExpr
+  let rawHeaderMainExpr = this.io.readBytes(int(this.headerSize))
+  this.rawHeaderMain = rawHeaderMainExpr
+  let rawHeaderMainIo = newKaitaiStream(rawHeaderMainExpr)
+  let headerMainExpr = Vdi_Header_HeaderMain.read(rawHeaderMainIo, this.root, this)
+  this.headerMain = headerMainExpr
+
+proc blockSize(this: Vdi_Header): int = 
+  if this.blockSizeInstFlag:
+    return this.blockSizeInst
+  let blockSizeInstExpr = int(this.headerMain.blockMetadataSize + this.headerMain.blockDataSize)
+  this.blockSizeInst = blockSizeInstExpr
+  this.blockSizeInstFlag = true
+  return this.blockSizeInst
+
+proc blocksMapOffset(this: Vdi_Header): uint32 = 
+  if this.blocksMapOffsetInstFlag:
+    return this.blocksMapOffsetInst
+  let blocksMapOffsetInstExpr = uint32(this.headerMain.blocksMapOffset)
+  this.blocksMapOffsetInst = blocksMapOffsetInstExpr
+  this.blocksMapOffsetInstFlag = true
+  return this.blocksMapOffsetInst
+
+proc blocksMapSize(this: Vdi_Header): int = 
+  if this.blocksMapSizeInstFlag:
+    return this.blocksMapSizeInst
+  let blocksMapSizeInstExpr = int((((this.headerMain.blocksInImage * 4 + this.headerMain.geometry.sectorSize) - 1) div this.headerMain.geometry.sectorSize) * this.headerMain.geometry.sectorSize)
+  this.blocksMapSizeInst = blocksMapSizeInstExpr
+  this.blocksMapSizeInstFlag = true
+  return this.blocksMapSizeInst
+
+proc blocksOffset(this: Vdi_Header): uint32 = 
+  if this.blocksOffsetInstFlag:
+    return this.blocksOffsetInst
+  let blocksOffsetInstExpr = uint32(this.headerMain.offsetData)
+  this.blocksOffsetInst = blocksOffsetInstExpr
+  this.blocksOffsetInstFlag = true
+  return this.blocksOffsetInst
+
+proc headerSize(this: Vdi_Header): int = 
+  if this.headerSizeInstFlag:
+    return this.headerSizeInst
+  let headerSizeInstExpr = int((if this.subheaderSizeIsDynamic: this.headerSizeOptional else: 336))
+  this.headerSizeInst = headerSizeInstExpr
+  this.headerSizeInstFlag = true
+  return this.headerSizeInst
+
+proc subheaderSizeIsDynamic(this: Vdi_Header): bool = 
+  if this.subheaderSizeIsDynamicInstFlag:
+    return this.subheaderSizeIsDynamicInst
+  let subheaderSizeIsDynamicInstExpr = bool(this.version.major >= 1)
+  this.subheaderSizeIsDynamicInst = subheaderSizeIsDynamicInstExpr
+  this.subheaderSizeIsDynamicInstFlag = true
+  return this.subheaderSizeIsDynamicInst
+
+proc fromFile*(_: typedesc[Vdi_Header], filename: string): Vdi_Header =
+  Vdi_Header.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Vdi_Header_HeaderMain], io: KaitaiStream, root: KaitaiStruct, parent: Vdi_Header): Vdi_Header_HeaderMain =
+  template this: untyped = result
+  this = new(Vdi_Header_HeaderMain)
+  let root = if root == nil: cast[Vdi](this) else: cast[Vdi](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let imageTypeExpr = Vdi_ImageType(this.io.readU4le())
+  this.imageType = imageTypeExpr
+  let imageFlagsExpr = Vdi_Header_HeaderMain_Flags.read(this.io, this.root, this)
+  this.imageFlags = imageFlagsExpr
+  let descriptionExpr = encode(this.io.readBytes(int(256)), "UTF-8")
+  this.description = descriptionExpr
+  if this.parent.version.major >= 1:
+    let blocksMapOffsetExpr = this.io.readU4le()
+    this.blocksMapOffset = blocksMapOffsetExpr
+  if this.parent.version.major >= 1:
+    let offsetDataExpr = this.io.readU4le()
+    this.offsetData = offsetDataExpr
+  let geometryExpr = Vdi_Header_HeaderMain_Geometry.read(this.io, this.root, this)
+  this.geometry = geometryExpr
+  if this.parent.version.major >= 1:
+    let reserved1Expr = this.io.readU4le()
+    this.reserved1 = reserved1Expr
+  let diskSizeExpr = this.io.readU8le()
+  this.diskSize = diskSizeExpr
+
+  ##[
+  Size of block (bytes).
+  ]##
+  let blockDataSizeExpr = this.io.readU4le()
+  this.blockDataSize = blockDataSizeExpr
+  if this.parent.version.major >= 1:
+    let blockMetadataSizeExpr = this.io.readU4le()
+    this.blockMetadataSize = blockMetadataSizeExpr
+  let blocksInImageExpr = this.io.readU4le()
+  this.blocksInImage = blocksInImageExpr
+  let blocksAllocatedExpr = this.io.readU4le()
+  this.blocksAllocated = blocksAllocatedExpr
+  let uuidImageExpr = Vdi_Header_Uuid.read(this.io, this.root, this)
+  this.uuidImage = uuidImageExpr
+  let uuidLastSnapExpr = Vdi_Header_Uuid.read(this.io, this.root, this)
+  this.uuidLastSnap = uuidLastSnapExpr
+  let uuidLinkExpr = Vdi_Header_Uuid.read(this.io, this.root, this)
+  this.uuidLink = uuidLinkExpr
+  if this.parent.version.major >= 1:
+    let uuidParentExpr = Vdi_Header_Uuid.read(this.io, this.root, this)
+    this.uuidParent = uuidParentExpr
+  if  ((this.parent.version.major >= 1) and (this.io.pos + 16 <= this.io.size)) :
+    let lchcGeometryExpr = Vdi_Header_HeaderMain_Geometry.read(this.io, this.root, this)
+    this.lchcGeometry = lchcGeometryExpr
+
+proc fromFile*(_: typedesc[Vdi_Header_HeaderMain], filename: string): Vdi_Header_HeaderMain =
+  Vdi_Header_HeaderMain.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Vdi_Header_HeaderMain_Flags], io: KaitaiStream, root: KaitaiStruct, parent: Vdi_Header_HeaderMain): Vdi_Header_HeaderMain_Flags =
+  template this: untyped = result
+  this = new(Vdi_Header_HeaderMain_Flags)
+  let root = if root == nil: cast[Vdi](this) else: cast[Vdi](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let reserved0Expr = this.io.readBitsIntBe(15)
+  this.reserved0 = reserved0Expr
+  let zeroExpandExpr = this.io.readBitsIntBe(1) != 0
+  this.zeroExpand = zeroExpandExpr
+  let reserved1Expr = this.io.readBitsIntBe(6)
+  this.reserved1 = reserved1Expr
+  let diffExpr = this.io.readBitsIntBe(1) != 0
+  this.diff = diffExpr
+  let fixedExpr = this.io.readBitsIntBe(1) != 0
+  this.fixed = fixedExpr
+  let reserved2Expr = this.io.readBitsIntBe(8)
+  this.reserved2 = reserved2Expr
+
+proc fromFile*(_: typedesc[Vdi_Header_HeaderMain_Flags], filename: string): Vdi_Header_HeaderMain_Flags =
+  Vdi_Header_HeaderMain_Flags.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Vdi_Header_HeaderMain_Geometry], io: KaitaiStream, root: KaitaiStruct, parent: Vdi_Header_HeaderMain): Vdi_Header_HeaderMain_Geometry =
+  template this: untyped = result
+  this = new(Vdi_Header_HeaderMain_Geometry)
+  let root = if root == nil: cast[Vdi](this) else: cast[Vdi](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let cylindersExpr = this.io.readU4le()
+  this.cylinders = cylindersExpr
+  let headsExpr = this.io.readU4le()
+  this.heads = headsExpr
+  let sectorsExpr = this.io.readU4le()
+  this.sectors = sectorsExpr
+  let sectorSizeExpr = this.io.readU4le()
+  this.sectorSize = sectorSizeExpr
+
+proc fromFile*(_: typedesc[Vdi_Header_HeaderMain_Geometry], filename: string): Vdi_Header_HeaderMain_Geometry =
+  Vdi_Header_HeaderMain_Geometry.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Vdi_Header_Uuid], io: KaitaiStream, root: KaitaiStruct, parent: Vdi_Header_HeaderMain): Vdi_Header_Uuid =
+  template this: untyped = result
+  this = new(Vdi_Header_Uuid)
+  let root = if root == nil: cast[Vdi](this) else: cast[Vdi](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let uuidExpr = this.io.readBytes(int(16))
+  this.uuid = uuidExpr
+
+proc fromFile*(_: typedesc[Vdi_Header_Uuid], filename: string): Vdi_Header_Uuid =
+  Vdi_Header_Uuid.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Vdi_Header_Version], io: KaitaiStream, root: KaitaiStruct, parent: Vdi_Header): Vdi_Header_Version =
+  template this: untyped = result
+  this = new(Vdi_Header_Version)
+  let root = if root == nil: cast[Vdi](this) else: cast[Vdi](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let majorExpr = this.io.readU2le()
+  this.major = majorExpr
+  let minorExpr = this.io.readU2le()
+  this.minor = minorExpr
+
+proc fromFile*(_: typedesc[Vdi_Header_Version], filename: string): Vdi_Header_Version =
+  Vdi_Header_Version.read(newKaitaiFileStream(filename), nil, nil)
 

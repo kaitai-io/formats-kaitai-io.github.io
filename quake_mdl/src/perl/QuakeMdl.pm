@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Encode;
 
 ########################################################################
@@ -25,7 +25,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -36,22 +36,22 @@ sub _read {
     my ($self) = @_;
 
     $self->{header} = QuakeMdl::MdlHeader->new($self->{_io}, $self, $self->{_root});
-    $self->{skins} = ();
+    $self->{skins} = [];
     my $n_skins = $self->header()->num_skins();
     for (my $i = 0; $i < $n_skins; $i++) {
         push @{$self->{skins}}, QuakeMdl::MdlSkin->new($self->{_io}, $self, $self->{_root});
     }
-    $self->{texture_coordinates} = ();
+    $self->{texture_coordinates} = [];
     my $n_texture_coordinates = $self->header()->num_verts();
     for (my $i = 0; $i < $n_texture_coordinates; $i++) {
         push @{$self->{texture_coordinates}}, QuakeMdl::MdlTexcoord->new($self->{_io}, $self, $self->{_root});
     }
-    $self->{triangles} = ();
+    $self->{triangles} = [];
     my $n_triangles = $self->header()->num_tris();
     for (my $i = 0; $i < $n_triangles; $i++) {
         push @{$self->{triangles}}, QuakeMdl::MdlTriangle->new($self->{_io}, $self, $self->{_root});
     }
-    $self->{frames} = ();
+    $self->{frames} = [];
     my $n_frames = $self->header()->num_frames();
     for (my $i = 0; $i < $n_frames; $i++) {
         push @{$self->{frames}}, QuakeMdl::MdlFrame->new($self->{_io}, $self, $self->{_root});
@@ -84,7 +84,7 @@ sub frames {
 }
 
 ########################################################################
-package QuakeMdl::MdlVertex;
+package QuakeMdl::MdlFrame;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -103,7 +103,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -113,72 +113,57 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{values} = ();
-    my $n_values = 3;
-    for (my $i = 0; $i < $n_values; $i++) {
-        push @{$self->{values}}, $self->{_io}->read_u1();
+    $self->{type} = $self->{_io}->read_s4le();
+    if ($self->type() != 0) {
+        $self->{min} = QuakeMdl::MdlVertex->new($self->{_io}, $self, $self->{_root});
     }
-    $self->{normal_index} = $self->{_io}->read_u1();
+    if ($self->type() != 0) {
+        $self->{max} = QuakeMdl::MdlVertex->new($self->{_io}, $self, $self->{_root});
+    }
+    if ($self->type() != 0) {
+        $self->{time} = [];
+        my $n_time = $self->type();
+        for (my $i = 0; $i < $n_time; $i++) {
+            push @{$self->{time}}, $self->{_io}->read_f4le();
+        }
+    }
+    $self->{frames} = [];
+    my $n_frames = $self->num_simple_frames();
+    for (my $i = 0; $i < $n_frames; $i++) {
+        push @{$self->{frames}}, QuakeMdl::MdlSimpleFrame->new($self->{_io}, $self, $self->{_root});
+    }
 }
 
-sub values {
+sub num_simple_frames {
     my ($self) = @_;
-    return $self->{values};
+    return $self->{num_simple_frames} if ($self->{num_simple_frames});
+    $self->{num_simple_frames} = ($self->type() == 0 ? 1 : $self->type());
+    return $self->{num_simple_frames};
 }
 
-sub normal_index {
+sub type {
     my ($self) = @_;
-    return $self->{normal_index};
+    return $self->{type};
 }
 
-########################################################################
-package QuakeMdl::MdlTexcoord;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
+sub min {
     my ($self) = @_;
-
-    $self->{on_seam} = $self->{_io}->read_s4le();
-    $self->{s} = $self->{_io}->read_s4le();
-    $self->{t} = $self->{_io}->read_s4le();
+    return $self->{min};
 }
 
-sub on_seam {
+sub max {
     my ($self) = @_;
-    return $self->{on_seam};
+    return $self->{max};
 }
 
-sub s {
+sub time {
     my ($self) = @_;
-    return $self->{s};
+    return $self->{time};
 }
 
-sub t {
+sub frames {
     my ($self) = @_;
-    return $self->{t};
+    return $self->{frames};
 }
 
 ########################################################################
@@ -201,7 +186,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -231,7 +216,7 @@ sub _read {
 sub skin_size {
     my ($self) = @_;
     return $self->{skin_size} if ($self->{skin_size});
-    $self->{skin_size} = ($self->skin_width() * $self->skin_height());
+    $self->{skin_size} = $self->skin_width() * $self->skin_height();
     return $self->{skin_size};
 }
 
@@ -311,6 +296,66 @@ sub size {
 }
 
 ########################################################################
+package QuakeMdl::MdlSimpleFrame;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{bbox_min} = QuakeMdl::MdlVertex->new($self->{_io}, $self, $self->{_root});
+    $self->{bbox_max} = QuakeMdl::MdlVertex->new($self->{_io}, $self, $self->{_root});
+    $self->{name} = Encode::decode("ASCII", IO::KaitaiStruct::Stream::bytes_terminate(IO::KaitaiStruct::Stream::bytes_strip_right($self->{_io}->read_bytes(16), 0), 0, 0));
+    $self->{vertices} = [];
+    my $n_vertices = $self->_root()->header()->num_verts();
+    for (my $i = 0; $i < $n_vertices; $i++) {
+        push @{$self->{vertices}}, QuakeMdl::MdlVertex->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub bbox_min {
+    my ($self) = @_;
+    return $self->{bbox_min};
+}
+
+sub bbox_max {
+    my ($self) = @_;
+    return $self->{bbox_max};
+}
+
+sub name {
+    my ($self) = @_;
+    return $self->{name};
+}
+
+sub vertices {
+    my ($self) = @_;
+    return $self->{vertices};
+}
+
+########################################################################
 package QuakeMdl::MdlSkin;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -330,7 +375,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -348,14 +393,14 @@ sub _read {
         $self->{num_frames} = $self->{_io}->read_u4le();
     }
     if ($self->group() != 0) {
-        $self->{frame_times} = ();
+        $self->{frame_times} = [];
         my $n_frame_times = $self->num_frames();
         for (my $i = 0; $i < $n_frame_times; $i++) {
             push @{$self->{frame_times}}, $self->{_io}->read_f4le();
         }
     }
     if ($self->group() != 0) {
-        $self->{group_texture_data} = ();
+        $self->{group_texture_data} = [];
         my $n_group_texture_data = $self->num_frames();
         for (my $i = 0; $i < $n_group_texture_data; $i++) {
             push @{$self->{group_texture_data}}, $self->{_io}->read_bytes($self->_root()->header()->skin_size());
@@ -389,7 +434,7 @@ sub group_texture_data {
 }
 
 ########################################################################
-package QuakeMdl::MdlFrame;
+package QuakeMdl::MdlTexcoord;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -408,7 +453,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -418,117 +463,24 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{type} = $self->{_io}->read_s4le();
-    if ($self->type() != 0) {
-        $self->{min} = QuakeMdl::MdlVertex->new($self->{_io}, $self, $self->{_root});
-    }
-    if ($self->type() != 0) {
-        $self->{max} = QuakeMdl::MdlVertex->new($self->{_io}, $self, $self->{_root});
-    }
-    if ($self->type() != 0) {
-        $self->{time} = ();
-        my $n_time = $self->type();
-        for (my $i = 0; $i < $n_time; $i++) {
-            push @{$self->{time}}, $self->{_io}->read_f4le();
-        }
-    }
-    $self->{frames} = ();
-    my $n_frames = $self->num_simple_frames();
-    for (my $i = 0; $i < $n_frames; $i++) {
-        push @{$self->{frames}}, QuakeMdl::MdlSimpleFrame->new($self->{_io}, $self, $self->{_root});
-    }
+    $self->{on_seam} = $self->{_io}->read_s4le();
+    $self->{s} = $self->{_io}->read_s4le();
+    $self->{t} = $self->{_io}->read_s4le();
 }
 
-sub num_simple_frames {
+sub on_seam {
     my ($self) = @_;
-    return $self->{num_simple_frames} if ($self->{num_simple_frames});
-    $self->{num_simple_frames} = ($self->type() == 0 ? 1 : $self->type());
-    return $self->{num_simple_frames};
+    return $self->{on_seam};
 }
 
-sub type {
+sub s {
     my ($self) = @_;
-    return $self->{type};
+    return $self->{s};
 }
 
-sub min {
+sub t {
     my ($self) = @_;
-    return $self->{min};
-}
-
-sub max {
-    my ($self) = @_;
-    return $self->{max};
-}
-
-sub time {
-    my ($self) = @_;
-    return $self->{time};
-}
-
-sub frames {
-    my ($self) = @_;
-    return $self->{frames};
-}
-
-########################################################################
-package QuakeMdl::MdlSimpleFrame;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{bbox_min} = QuakeMdl::MdlVertex->new($self->{_io}, $self, $self->{_root});
-    $self->{bbox_max} = QuakeMdl::MdlVertex->new($self->{_io}, $self, $self->{_root});
-    $self->{name} = Encode::decode("ASCII", IO::KaitaiStruct::Stream::bytes_terminate(IO::KaitaiStruct::Stream::bytes_strip_right($self->{_io}->read_bytes(16), 0), 0, 0));
-    $self->{vertices} = ();
-    my $n_vertices = $self->_root()->header()->num_verts();
-    for (my $i = 0; $i < $n_vertices; $i++) {
-        push @{$self->{vertices}}, QuakeMdl::MdlVertex->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub bbox_min {
-    my ($self) = @_;
-    return $self->{bbox_min};
-}
-
-sub bbox_max {
-    my ($self) = @_;
-    return $self->{bbox_max};
-}
-
-sub name {
-    my ($self) = @_;
-    return $self->{name};
-}
-
-sub vertices {
-    my ($self) = @_;
-    return $self->{vertices};
+    return $self->{t};
 }
 
 ########################################################################
@@ -551,7 +503,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -562,7 +514,7 @@ sub _read {
     my ($self) = @_;
 
     $self->{faces_front} = $self->{_io}->read_s4le();
-    $self->{vertices} = ();
+    $self->{vertices} = [];
     my $n_vertices = 3;
     for (my $i = 0; $i < $n_vertices; $i++) {
         push @{$self->{vertices}}, $self->{_io}->read_s4le();
@@ -577,6 +529,54 @@ sub faces_front {
 sub vertices {
     my ($self) = @_;
     return $self->{vertices};
+}
+
+########################################################################
+package QuakeMdl::MdlVertex;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{values} = [];
+    my $n_values = 3;
+    for (my $i = 0; $i < $n_values; $i++) {
+        push @{$self->{values}}, $self->{_io}->read_u1();
+    }
+    $self->{normal_index} = $self->{_io}->read_u1();
+}
+
+sub values {
+    my ($self) = @_;
+    return $self->{values};
+}
+
+sub normal_index {
+    my ($self) = @_;
+    return $self->{normal_index};
 }
 
 ########################################################################
@@ -599,7 +599,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 

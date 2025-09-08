@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.RenderwareBinaryStream = factory(root.KaitaiStream);
+    factory(root.RenderwareBinaryStream || (root.RenderwareBinaryStream = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (RenderwareBinaryStream_, KaitaiStream) {
 /**
  * @see {@link https://gtamods.com/wiki/RenderWare_binary_stream_file|Source}
  */
@@ -369,12 +369,17 @@ var RenderwareBinaryStream = (function() {
       var _io__raw_body = new KaitaiStream(this._raw_body);
       this.body = new ListWithHeader(_io__raw_body, this, this._root);
       break;
-    case RenderwareBinaryStream.Sections.GEOMETRY:
+    case RenderwareBinaryStream.Sections.CLUMP:
       this._raw_body = this._io.readBytes(this.size);
       var _io__raw_body = new KaitaiStream(this._raw_body);
       this.body = new ListWithHeader(_io__raw_body, this, this._root);
       break;
-    case RenderwareBinaryStream.Sections.TEXTURE_DICTIONARY:
+    case RenderwareBinaryStream.Sections.FRAME_LIST:
+      this._raw_body = this._io.readBytes(this.size);
+      var _io__raw_body = new KaitaiStream(this._raw_body);
+      this.body = new ListWithHeader(_io__raw_body, this, this._root);
+      break;
+    case RenderwareBinaryStream.Sections.GEOMETRY:
       this._raw_body = this._io.readBytes(this.size);
       var _io__raw_body = new KaitaiStream(this._raw_body);
       this.body = new ListWithHeader(_io__raw_body, this, this._root);
@@ -384,17 +389,12 @@ var RenderwareBinaryStream = (function() {
       var _io__raw_body = new KaitaiStream(this._raw_body);
       this.body = new ListWithHeader(_io__raw_body, this, this._root);
       break;
+    case RenderwareBinaryStream.Sections.TEXTURE_DICTIONARY:
+      this._raw_body = this._io.readBytes(this.size);
+      var _io__raw_body = new KaitaiStream(this._raw_body);
+      this.body = new ListWithHeader(_io__raw_body, this, this._root);
+      break;
     case RenderwareBinaryStream.Sections.TEXTURE_NATIVE:
-      this._raw_body = this._io.readBytes(this.size);
-      var _io__raw_body = new KaitaiStream(this._raw_body);
-      this.body = new ListWithHeader(_io__raw_body, this, this._root);
-      break;
-    case RenderwareBinaryStream.Sections.CLUMP:
-      this._raw_body = this._io.readBytes(this.size);
-      var _io__raw_body = new KaitaiStream(this._raw_body);
-      this.body = new ListWithHeader(_io__raw_body, this, this._root);
-      break;
-    case RenderwareBinaryStream.Sections.FRAME_LIST:
       this._raw_body = this._io.readBytes(this.size);
       var _io__raw_body = new KaitaiStream(this._raw_body);
       this.body = new ListWithHeader(_io__raw_body, this, this._root);
@@ -406,115 +406,32 @@ var RenderwareBinaryStream = (function() {
   }
 
   /**
-   * @see {@link https://gtamods.com/wiki/RpClump|Source}
+   * @see {@link https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure|Source}
    */
 
-  var StructClump = RenderwareBinaryStream.StructClump = (function() {
-    function StructClump(_io, _parent, _root) {
+  var Frame = RenderwareBinaryStream.Frame = (function() {
+    function Frame(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    StructClump.prototype._read = function() {
-      this.numAtomics = this._io.readU4le();
-      if (this._parent.version >= 208896) {
-        this.numLights = this._io.readU4le();
-      }
-      if (this._parent.version >= 208896) {
-        this.numCameras = this._io.readU4le();
-      }
+    Frame.prototype._read = function() {
+      this.rotationMatrix = new Matrix(this._io, this, this._root);
+      this.position = new Vector3d(this._io, this, this._root);
+      this.curFrameIdx = this._io.readS4le();
+      this.matrixCreationFlags = this._io.readU4le();
     }
 
-    return StructClump;
-  })();
-
-  /**
-   * @see {@link https://gtamods.com/wiki/RpGeometry|Source}
-   */
-
-  var StructGeometry = RenderwareBinaryStream.StructGeometry = (function() {
-    function StructGeometry(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    StructGeometry.prototype._read = function() {
-      this.format = this._io.readU4le();
-      this.numTriangles = this._io.readU4le();
-      this.numVertices = this._io.readU4le();
-      this.numMorphTargets = this._io.readU4le();
-      if (this._parent.version < 212992) {
-        this.surfProp = new SurfaceProperties(this._io, this, this._root);
-      }
-      if (!(this.isNative)) {
-        this.geometry = new GeometryNonNative(this._io, this, this._root);
-      }
-      this.morphTargets = [];
-      for (var i = 0; i < this.numMorphTargets; i++) {
-        this.morphTargets.push(new MorphTarget(this._io, this, this._root));
-      }
-    }
-    Object.defineProperty(StructGeometry.prototype, 'numUvLayersRaw', {
-      get: function() {
-        if (this._m_numUvLayersRaw !== undefined)
-          return this._m_numUvLayersRaw;
-        this._m_numUvLayersRaw = ((this.format & 16711680) >>> 16);
-        return this._m_numUvLayersRaw;
-      }
-    });
-    Object.defineProperty(StructGeometry.prototype, 'isTextured', {
-      get: function() {
-        if (this._m_isTextured !== undefined)
-          return this._m_isTextured;
-        this._m_isTextured = (this.format & 4) != 0;
-        return this._m_isTextured;
-      }
-    });
-    Object.defineProperty(StructGeometry.prototype, 'isNative', {
-      get: function() {
-        if (this._m_isNative !== undefined)
-          return this._m_isNative;
-        this._m_isNative = (this.format & 16777216) != 0;
-        return this._m_isNative;
-      }
-    });
-    Object.defineProperty(StructGeometry.prototype, 'numUvLayers', {
-      get: function() {
-        if (this._m_numUvLayers !== undefined)
-          return this._m_numUvLayers;
-        this._m_numUvLayers = (this.numUvLayersRaw == 0 ? (this.isTextured2 ? 2 : (this.isTextured ? 1 : 0)) : this.numUvLayersRaw);
-        return this._m_numUvLayers;
-      }
-    });
-    Object.defineProperty(StructGeometry.prototype, 'isTextured2', {
-      get: function() {
-        if (this._m_isTextured2 !== undefined)
-          return this._m_isTextured2;
-        this._m_isTextured2 = (this.format & 128) != 0;
-        return this._m_isTextured2;
-      }
-    });
-    Object.defineProperty(StructGeometry.prototype, 'isPrelit', {
-      get: function() {
-        if (this._m_isPrelit !== undefined)
-          return this._m_isPrelit;
-        this._m_isPrelit = (this.format & 8) != 0;
-        return this._m_isPrelit;
-      }
-    });
-
-    return StructGeometry;
+    return Frame;
   })();
 
   var GeometryNonNative = RenderwareBinaryStream.GeometryNonNative = (function() {
     function GeometryNonNative(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -539,65 +456,110 @@ var RenderwareBinaryStream = (function() {
   })();
 
   /**
-   * @see {@link https://gtamods.com/wiki/Geometry_List_(RW_Section)#Structure|Source}
+   * Typical structure used by many data types in RenderWare binary
+   * stream. Substream contains a list of binary stream entries,
+   * first entry always has type "struct" and carries some specific
+   * binary data it in, determined by the type of parent. All other
+   * entries, beside the first one, are normal, self-describing
+   * records.
    */
 
-  var StructGeometryList = RenderwareBinaryStream.StructGeometryList = (function() {
-    function StructGeometryList(_io, _parent, _root) {
+  var ListWithHeader = RenderwareBinaryStream.ListWithHeader = (function() {
+    function ListWithHeader(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    StructGeometryList.prototype._read = function() {
-      this.numGeometries = this._io.readU4le();
+    ListWithHeader.prototype._read = function() {
+      this.code = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.code, new Uint8Array([1, 0, 0, 0])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([1, 0, 0, 0]), this.code, this._io, "/types/list_with_header/seq/0");
+      }
+      this.headerSize = this._io.readU4le();
+      this.libraryIdStamp = this._io.readU4le();
+      switch (this._parent.code) {
+      case RenderwareBinaryStream.Sections.ATOMIC:
+        this._raw_header = this._io.readBytes(this.headerSize);
+        var _io__raw_header = new KaitaiStream(this._raw_header);
+        this.header = new StructAtomic(_io__raw_header, this, this._root);
+        break;
+      case RenderwareBinaryStream.Sections.CLUMP:
+        this._raw_header = this._io.readBytes(this.headerSize);
+        var _io__raw_header = new KaitaiStream(this._raw_header);
+        this.header = new StructClump(_io__raw_header, this, this._root);
+        break;
+      case RenderwareBinaryStream.Sections.FRAME_LIST:
+        this._raw_header = this._io.readBytes(this.headerSize);
+        var _io__raw_header = new KaitaiStream(this._raw_header);
+        this.header = new StructFrameList(_io__raw_header, this, this._root);
+        break;
+      case RenderwareBinaryStream.Sections.GEOMETRY:
+        this._raw_header = this._io.readBytes(this.headerSize);
+        var _io__raw_header = new KaitaiStream(this._raw_header);
+        this.header = new StructGeometry(_io__raw_header, this, this._root);
+        break;
+      case RenderwareBinaryStream.Sections.GEOMETRY_LIST:
+        this._raw_header = this._io.readBytes(this.headerSize);
+        var _io__raw_header = new KaitaiStream(this._raw_header);
+        this.header = new StructGeometryList(_io__raw_header, this, this._root);
+        break;
+      case RenderwareBinaryStream.Sections.TEXTURE_DICTIONARY:
+        this._raw_header = this._io.readBytes(this.headerSize);
+        var _io__raw_header = new KaitaiStream(this._raw_header);
+        this.header = new StructTextureDictionary(_io__raw_header, this, this._root);
+        break;
+      default:
+        this.header = this._io.readBytes(this.headerSize);
+        break;
+      }
+      this.entries = [];
+      var i = 0;
+      while (!this._io.isEof()) {
+        this.entries.push(new RenderwareBinaryStream(this._io, this, this._root));
+        i++;
+      }
     }
+    Object.defineProperty(ListWithHeader.prototype, 'version', {
+      get: function() {
+        if (this._m_version !== undefined)
+          return this._m_version;
+        this._m_version = ((this.libraryIdStamp & 4294901760) != 0 ? (this.libraryIdStamp >>> 14 & 261888) + 196608 | this.libraryIdStamp >>> 16 & 63 : this.libraryIdStamp << 8);
+        return this._m_version;
+      }
+    });
 
-    return StructGeometryList;
+    return ListWithHeader;
   })();
 
-  var Rgba = RenderwareBinaryStream.Rgba = (function() {
-    function Rgba(_io, _parent, _root) {
+  /**
+   * @see {@link https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure|Source}
+   */
+
+  var Matrix = RenderwareBinaryStream.Matrix = (function() {
+    function Matrix(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    Rgba.prototype._read = function() {
-      this.r = this._io.readU1();
-      this.g = this._io.readU1();
-      this.b = this._io.readU1();
-      this.a = this._io.readU1();
+    Matrix.prototype._read = function() {
+      this.entries = [];
+      for (var i = 0; i < 3; i++) {
+        this.entries.push(new Vector3d(this._io, this, this._root));
+      }
     }
 
-    return Rgba;
-  })();
-
-  var Sphere = RenderwareBinaryStream.Sphere = (function() {
-    function Sphere(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Sphere.prototype._read = function() {
-      this.x = this._io.readF4le();
-      this.y = this._io.readF4le();
-      this.z = this._io.readF4le();
-      this.radius = this._io.readF4le();
-    }
-
-    return Sphere;
+    return Matrix;
   })();
 
   var MorphTarget = RenderwareBinaryStream.MorphTarget = (function() {
     function MorphTarget(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -622,6 +584,42 @@ var RenderwareBinaryStream = (function() {
     return MorphTarget;
   })();
 
+  var Rgba = RenderwareBinaryStream.Rgba = (function() {
+    function Rgba(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Rgba.prototype._read = function() {
+      this.r = this._io.readU1();
+      this.g = this._io.readU1();
+      this.b = this._io.readU1();
+      this.a = this._io.readU1();
+    }
+
+    return Rgba;
+  })();
+
+  var Sphere = RenderwareBinaryStream.Sphere = (function() {
+    function Sphere(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Sphere.prototype._read = function() {
+      this.x = this._io.readF4le();
+      this.y = this._io.readF4le();
+      this.z = this._io.readF4le();
+      this.radius = this._io.readF4le();
+    }
+
+    return Sphere;
+  })();
+
   /**
    * @see {@link https://gtamods.com/wiki/Atomic_(RW_Section)#Structure|Source}
    */
@@ -630,7 +628,7 @@ var RenderwareBinaryStream = (function() {
     function StructAtomic(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -649,24 +647,28 @@ var RenderwareBinaryStream = (function() {
   })();
 
   /**
-   * @see {@link https://gtamods.com/wiki/RpGeometry|Source}
+   * @see {@link https://gtamods.com/wiki/RpClump|Source}
    */
 
-  var SurfaceProperties = RenderwareBinaryStream.SurfaceProperties = (function() {
-    function SurfaceProperties(_io, _parent, _root) {
+  var StructClump = RenderwareBinaryStream.StructClump = (function() {
+    function StructClump(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    SurfaceProperties.prototype._read = function() {
-      this.ambient = this._io.readF4le();
-      this.specular = this._io.readF4le();
-      this.diffuse = this._io.readF4le();
+    StructClump.prototype._read = function() {
+      this.numAtomics = this._io.readU4le();
+      if (this._parent.version >= 208896) {
+        this.numLights = this._io.readU4le();
+      }
+      if (this._parent.version >= 208896) {
+        this.numCameras = this._io.readU4le();
+      }
     }
 
-    return SurfaceProperties;
+    return StructClump;
   })();
 
   /**
@@ -677,7 +679,7 @@ var RenderwareBinaryStream = (function() {
     function StructFrameList(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -693,131 +695,161 @@ var RenderwareBinaryStream = (function() {
   })();
 
   /**
-   * @see {@link https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure|Source}
+   * @see {@link https://gtamods.com/wiki/RpGeometry|Source}
    */
 
-  var Matrix = RenderwareBinaryStream.Matrix = (function() {
-    function Matrix(_io, _parent, _root) {
+  var StructGeometry = RenderwareBinaryStream.StructGeometry = (function() {
+    function StructGeometry(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    Matrix.prototype._read = function() {
-      this.entries = [];
-      for (var i = 0; i < 3; i++) {
-        this.entries.push(new Vector3d(this._io, this, this._root));
+    StructGeometry.prototype._read = function() {
+      this.format = this._io.readU4le();
+      this.numTriangles = this._io.readU4le();
+      this.numVertices = this._io.readU4le();
+      this.numMorphTargets = this._io.readU4le();
+      if (this._parent.version < 212992) {
+        this.surfProp = new SurfaceProperties(this._io, this, this._root);
+      }
+      if (!(this.isNative)) {
+        this.geometry = new GeometryNonNative(this._io, this, this._root);
+      }
+      this.morphTargets = [];
+      for (var i = 0; i < this.numMorphTargets; i++) {
+        this.morphTargets.push(new MorphTarget(this._io, this, this._root));
       }
     }
-
-    return Matrix;
-  })();
-
-  /**
-   * @see {@link https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure|Source}
-   */
-
-  var Vector3d = RenderwareBinaryStream.Vector3d = (function() {
-    function Vector3d(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Vector3d.prototype._read = function() {
-      this.x = this._io.readF4le();
-      this.y = this._io.readF4le();
-      this.z = this._io.readF4le();
-    }
-
-    return Vector3d;
-  })();
-
-  /**
-   * Typical structure used by many data types in RenderWare binary
-   * stream. Substream contains a list of binary stream entries,
-   * first entry always has type "struct" and carries some specific
-   * binary data it in, determined by the type of parent. All other
-   * entries, beside the first one, are normal, self-describing
-   * records.
-   */
-
-  var ListWithHeader = RenderwareBinaryStream.ListWithHeader = (function() {
-    function ListWithHeader(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    ListWithHeader.prototype._read = function() {
-      this.code = this._io.readBytes(4);
-      if (!((KaitaiStream.byteArrayCompare(this.code, [1, 0, 0, 0]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([1, 0, 0, 0], this.code, this._io, "/types/list_with_header/seq/0");
-      }
-      this.headerSize = this._io.readU4le();
-      this.libraryIdStamp = this._io.readU4le();
-      switch (this._parent.code) {
-      case RenderwareBinaryStream.Sections.ATOMIC:
-        this._raw_header = this._io.readBytes(this.headerSize);
-        var _io__raw_header = new KaitaiStream(this._raw_header);
-        this.header = new StructAtomic(_io__raw_header, this, this._root);
-        break;
-      case RenderwareBinaryStream.Sections.GEOMETRY:
-        this._raw_header = this._io.readBytes(this.headerSize);
-        var _io__raw_header = new KaitaiStream(this._raw_header);
-        this.header = new StructGeometry(_io__raw_header, this, this._root);
-        break;
-      case RenderwareBinaryStream.Sections.TEXTURE_DICTIONARY:
-        this._raw_header = this._io.readBytes(this.headerSize);
-        var _io__raw_header = new KaitaiStream(this._raw_header);
-        this.header = new StructTextureDictionary(_io__raw_header, this, this._root);
-        break;
-      case RenderwareBinaryStream.Sections.GEOMETRY_LIST:
-        this._raw_header = this._io.readBytes(this.headerSize);
-        var _io__raw_header = new KaitaiStream(this._raw_header);
-        this.header = new StructGeometryList(_io__raw_header, this, this._root);
-        break;
-      case RenderwareBinaryStream.Sections.CLUMP:
-        this._raw_header = this._io.readBytes(this.headerSize);
-        var _io__raw_header = new KaitaiStream(this._raw_header);
-        this.header = new StructClump(_io__raw_header, this, this._root);
-        break;
-      case RenderwareBinaryStream.Sections.FRAME_LIST:
-        this._raw_header = this._io.readBytes(this.headerSize);
-        var _io__raw_header = new KaitaiStream(this._raw_header);
-        this.header = new StructFrameList(_io__raw_header, this, this._root);
-        break;
-      default:
-        this.header = this._io.readBytes(this.headerSize);
-        break;
-      }
-      this.entries = [];
-      var i = 0;
-      while (!this._io.isEof()) {
-        this.entries.push(new RenderwareBinaryStream(this._io, this, null));
-        i++;
-      }
-    }
-    Object.defineProperty(ListWithHeader.prototype, 'version', {
+    Object.defineProperty(StructGeometry.prototype, 'isNative', {
       get: function() {
-        if (this._m_version !== undefined)
-          return this._m_version;
-        this._m_version = ((this.libraryIdStamp & 4294901760) != 0 ? ((((this.libraryIdStamp >>> 14) & 261888) + 196608) | ((this.libraryIdStamp >>> 16) & 63)) : (this.libraryIdStamp << 8));
-        return this._m_version;
+        if (this._m_isNative !== undefined)
+          return this._m_isNative;
+        this._m_isNative = (this.format & 16777216) != 0;
+        return this._m_isNative;
+      }
+    });
+    Object.defineProperty(StructGeometry.prototype, 'isPrelit', {
+      get: function() {
+        if (this._m_isPrelit !== undefined)
+          return this._m_isPrelit;
+        this._m_isPrelit = (this.format & 8) != 0;
+        return this._m_isPrelit;
+      }
+    });
+    Object.defineProperty(StructGeometry.prototype, 'isTextured', {
+      get: function() {
+        if (this._m_isTextured !== undefined)
+          return this._m_isTextured;
+        this._m_isTextured = (this.format & 4) != 0;
+        return this._m_isTextured;
+      }
+    });
+    Object.defineProperty(StructGeometry.prototype, 'isTextured2', {
+      get: function() {
+        if (this._m_isTextured2 !== undefined)
+          return this._m_isTextured2;
+        this._m_isTextured2 = (this.format & 128) != 0;
+        return this._m_isTextured2;
+      }
+    });
+    Object.defineProperty(StructGeometry.prototype, 'numUvLayers', {
+      get: function() {
+        if (this._m_numUvLayers !== undefined)
+          return this._m_numUvLayers;
+        this._m_numUvLayers = (this.numUvLayersRaw == 0 ? (this.isTextured2 ? 2 : (this.isTextured ? 1 : 0)) : this.numUvLayersRaw);
+        return this._m_numUvLayers;
+      }
+    });
+    Object.defineProperty(StructGeometry.prototype, 'numUvLayersRaw', {
+      get: function() {
+        if (this._m_numUvLayersRaw !== undefined)
+          return this._m_numUvLayersRaw;
+        this._m_numUvLayersRaw = (this.format & 16711680) >>> 16;
+        return this._m_numUvLayersRaw;
       }
     });
 
-    return ListWithHeader;
+    return StructGeometry;
+  })();
+
+  /**
+   * @see {@link https://gtamods.com/wiki/Geometry_List_(RW_Section)#Structure|Source}
+   */
+
+  var StructGeometryList = RenderwareBinaryStream.StructGeometryList = (function() {
+    function StructGeometryList(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    StructGeometryList.prototype._read = function() {
+      this.numGeometries = this._io.readU4le();
+    }
+
+    return StructGeometryList;
+  })();
+
+  var StructTextureDictionary = RenderwareBinaryStream.StructTextureDictionary = (function() {
+    function StructTextureDictionary(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    StructTextureDictionary.prototype._read = function() {
+      this.numTextures = this._io.readU4le();
+    }
+
+    return StructTextureDictionary;
+  })();
+
+  /**
+   * @see {@link https://gtamods.com/wiki/RpGeometry|Source}
+   */
+
+  var SurfaceProperties = RenderwareBinaryStream.SurfaceProperties = (function() {
+    function SurfaceProperties(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    SurfaceProperties.prototype._read = function() {
+      this.ambient = this._io.readF4le();
+      this.specular = this._io.readF4le();
+      this.diffuse = this._io.readF4le();
+    }
+
+    return SurfaceProperties;
+  })();
+
+  var TexCoord = RenderwareBinaryStream.TexCoord = (function() {
+    function TexCoord(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    TexCoord.prototype._read = function() {
+      this.u = this._io.readF4le();
+      this.v = this._io.readF4le();
+    }
+
+    return TexCoord;
   })();
 
   var Triangle = RenderwareBinaryStream.Triangle = (function() {
     function Triangle(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -831,49 +863,11 @@ var RenderwareBinaryStream = (function() {
     return Triangle;
   })();
 
-  /**
-   * @see {@link https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure|Source}
-   */
-
-  var Frame = RenderwareBinaryStream.Frame = (function() {
-    function Frame(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Frame.prototype._read = function() {
-      this.rotationMatrix = new Matrix(this._io, this, this._root);
-      this.position = new Vector3d(this._io, this, this._root);
-      this.curFrameIdx = this._io.readS4le();
-      this.matrixCreationFlags = this._io.readU4le();
-    }
-
-    return Frame;
-  })();
-
-  var TexCoord = RenderwareBinaryStream.TexCoord = (function() {
-    function TexCoord(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    TexCoord.prototype._read = function() {
-      this.u = this._io.readF4le();
-      this.v = this._io.readF4le();
-    }
-
-    return TexCoord;
-  })();
-
   var UvLayer = RenderwareBinaryStream.UvLayer = (function() {
     function UvLayer(_io, _parent, _root, numVertices) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
       this.numVertices = numVertices;
 
       this._read();
@@ -888,30 +882,36 @@ var RenderwareBinaryStream = (function() {
     return UvLayer;
   })();
 
-  var StructTextureDictionary = RenderwareBinaryStream.StructTextureDictionary = (function() {
-    function StructTextureDictionary(_io, _parent, _root) {
+  /**
+   * @see {@link https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure|Source}
+   */
+
+  var Vector3d = RenderwareBinaryStream.Vector3d = (function() {
+    function Vector3d(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    StructTextureDictionary.prototype._read = function() {
-      this.numTextures = this._io.readU4le();
+    Vector3d.prototype._read = function() {
+      this.x = this._io.readF4le();
+      this.y = this._io.readF4le();
+      this.z = this._io.readF4le();
     }
 
-    return StructTextureDictionary;
+    return Vector3d;
   })();
   Object.defineProperty(RenderwareBinaryStream.prototype, 'version', {
     get: function() {
       if (this._m_version !== undefined)
         return this._m_version;
-      this._m_version = ((this.libraryIdStamp & 4294901760) != 0 ? ((((this.libraryIdStamp >>> 14) & 261888) + 196608) | ((this.libraryIdStamp >>> 16) & 63)) : (this.libraryIdStamp << 8));
+      this._m_version = ((this.libraryIdStamp & 4294901760) != 0 ? (this.libraryIdStamp >>> 14 & 261888) + 196608 | this.libraryIdStamp >>> 16 & 63 : this.libraryIdStamp << 8);
       return this._m_version;
     }
   });
 
   return RenderwareBinaryStream;
 })();
-return RenderwareBinaryStream;
-}));
+RenderwareBinaryStream_.RenderwareBinaryStream = RenderwareBinaryStream;
+});

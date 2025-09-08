@@ -12,14 +12,14 @@
 
 namespace {
     class Xar extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Xar $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Xar $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_headerPrefix = new \Xar\FileHeaderPrefix($this->_io, $this, $this->_root);
-            $this->_m__raw_header = $this->_io->readBytes(($this->headerPrefix()->lenHeader() - 6));
+            $this->_m__raw_header = $this->_io->readBytes($this->headerPrefix()->lenHeader() - 6);
             $_io__raw_header = new \Kaitai\Struct\Stream($this->_m__raw_header);
             $this->_m_header = new \Xar\FileHeader($_io__raw_header, $this, $this->_root);
             $this->_m__raw__raw_toc = $this->_io->readBytes($this->header()->lenTocCompressed());
@@ -58,50 +58,25 @@ namespace {
 }
 
 namespace Xar {
-    class FileHeaderPrefix extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Xar $_parent = null, \Xar $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_magic = $this->_io->readBytes(4);
-            if (!($this->magic() == "\x78\x61\x72\x21")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x78\x61\x72\x21", $this->magic(), $this->_io(), "/types/file_header_prefix/seq/0");
-            }
-            $this->_m_lenHeader = $this->_io->readU2be();
-        }
-        protected $_m_magic;
-        protected $_m_lenHeader;
-        public function magic() { return $this->_m_magic; }
-
-        /**
-         * internal; access `_root.header.len_header` instead
-         */
-        public function lenHeader() { return $this->_m_lenHeader; }
-    }
-}
-
-namespace Xar {
     class FileHeader extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Xar $_parent = null, \Xar $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Xar $_parent = null, ?\Xar $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_version = $this->_io->readU2be();
-            if (!($this->version() == 1)) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError(1, $this->version(), $this->_io(), "/types/file_header/seq/0");
+            if (!($this->_m_version == 1)) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError(1, $this->_m_version, $this->_io, "/types/file_header/seq/0");
             }
             $this->_m_lenTocCompressed = $this->_io->readU8be();
             $this->_m_tocLengthUncompressed = $this->_io->readU8be();
             $this->_m_checksumAlgorithmInt = $this->_io->readU4be();
             if ($this->hasChecksumAlgName()) {
                 $this->_m_checksumAlgName = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($this->_io->readBytesFull(), 0, false), "UTF-8");
-                $_ = $this->checksumAlgName();
+                $_ = $this->_m_checksumAlgName;
                 if (!( (($_ != "") && ($_ != "none")) )) {
-                    throw new \Kaitai\Struct\Error\ValidationExprError($this->checksumAlgName(), $this->_io(), "/types/file_header/seq/4");
+                    throw new \Kaitai\Struct\Error\ValidationExprError($this->_m_checksumAlgName, $this->_io, "/types/file_header/seq/4");
                 }
             }
         }
@@ -171,8 +146,33 @@ namespace Xar {
 }
 
 namespace Xar {
+    class FileHeaderPrefix extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Xar $_parent = null, ?\Xar $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_magic = $this->_io->readBytes(4);
+            if (!($this->_m_magic == "\x78\x61\x72\x21")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x78\x61\x72\x21", $this->_m_magic, $this->_io, "/types/file_header_prefix/seq/0");
+            }
+            $this->_m_lenHeader = $this->_io->readU2be();
+        }
+        protected $_m_magic;
+        protected $_m_lenHeader;
+        public function magic() { return $this->_m_magic; }
+
+        /**
+         * internal; access `_root.header.len_header` instead
+         */
+        public function lenHeader() { return $this->_m_lenHeader; }
+    }
+}
+
+namespace Xar {
     class TocType extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Xar $_parent = null, \Xar $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Xar $_parent = null, ?\Xar $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -192,5 +192,11 @@ namespace Xar {
         const MD5 = 2;
         const SHA256 = 3;
         const SHA512 = 4;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.DcmpVariableLengthInteger = factory(root.KaitaiStream);
+    factory(root.DcmpVariableLengthInteger || (root.DcmpVariableLengthInteger = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (DcmpVariableLengthInteger_, KaitaiStream) {
 /**
  * A variable-length integer,
  * in the format used by the 0xfe chunks in the `'dcmp' (0)` and `'dcmp' (1)` resource compression formats.
@@ -60,7 +60,7 @@ var DcmpVariableLengthInteger = (function() {
     get: function() {
       if (this._m_value !== undefined)
         return this._m_value;
-      this._m_value = (this.first == 255 ? this.more : (this.first >= 128 ? (((this.first << 8) | this.more) - 49152) : this.first));
+      this._m_value = (this.first == 255 ? this.more : (this.first >= 128 ? (this.first << 8 | this.more) - 49152 : this.first));
       return this._m_value;
     }
   });
@@ -94,5 +94,5 @@ var DcmpVariableLengthInteger = (function() {
 
   return DcmpVariableLengthInteger;
 })();
-return DcmpVariableLengthInteger;
-}));
+DcmpVariableLengthInteger_.DcmpVariableLengthInteger = DcmpVariableLengthInteger;
+});

@@ -64,8 +64,8 @@ namespace Kaitai
         {
             m_parent = p__parent;
             m_root = p__root ?? this;
-            f_dataBlocksWithIo = false;
             f_dataBlocks = false;
+            f_dataBlocksWithIo = false;
             f_resourceMap = false;
             _read();
         }
@@ -74,6 +74,49 @@ namespace Kaitai
             _header = new FileHeader(m_io, this, m_root);
             _systemData = m_io.ReadBytes(112);
             _applicationData = m_io.ReadBytes(128);
+        }
+
+        /// <summary>
+        /// A resource data block,
+        /// as stored in the resource data area.
+        /// 
+        /// Each data block stores the data contained in a resource,
+        /// along with its length.
+        /// </summary>
+        public partial class DataBlock : KaitaiStruct
+        {
+            public static DataBlock FromFile(string fileName)
+            {
+                return new DataBlock(new KaitaiStream(fileName));
+            }
+
+            public DataBlock(KaitaiStream p__io, ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList.Reference p__parent = null, ResourceFork p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _lenData = m_io.ReadU4be();
+                _data = m_io.ReadBytes(LenData);
+            }
+            private uint _lenData;
+            private byte[] _data;
+            private ResourceFork m_root;
+            private ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList.Reference m_parent;
+
+            /// <summary>
+            /// The length of the resource data stored in this block.
+            /// </summary>
+            public uint LenData { get { return _lenData; } }
+
+            /// <summary>
+            /// The data stored in this block.
+            /// </summary>
+            public byte[] Data { get { return _data; } }
+            public ResourceFork M_Root { get { return m_root; } }
+            public ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList.Reference M_Parent { get { return m_parent; } }
         }
 
         /// <summary>
@@ -145,49 +188,6 @@ namespace Kaitai
         }
 
         /// <summary>
-        /// A resource data block,
-        /// as stored in the resource data area.
-        /// 
-        /// Each data block stores the data contained in a resource,
-        /// along with its length.
-        /// </summary>
-        public partial class DataBlock : KaitaiStruct
-        {
-            public static DataBlock FromFile(string fileName)
-            {
-                return new DataBlock(new KaitaiStream(fileName));
-            }
-
-            public DataBlock(KaitaiStream p__io, ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList.Reference p__parent = null, ResourceFork p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _lenData = m_io.ReadU4be();
-                _data = m_io.ReadBytes(LenData);
-            }
-            private uint _lenData;
-            private byte[] _data;
-            private ResourceFork m_root;
-            private ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList.Reference m_parent;
-
-            /// <summary>
-            /// The length of the resource data stored in this block.
-            /// </summary>
-            public uint LenData { get { return _lenData; } }
-
-            /// <summary>
-            /// The data stored in this block.
-            /// </summary>
-            public byte[] Data { get { return _data; } }
-            public ResourceFork M_Root { get { return m_root; } }
-            public ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList.Reference M_Parent { get { return m_parent; } }
-        }
-
-        /// <summary>
         /// Resource map,
         /// containing information about the resources in the file and where they are located in the data area.
         /// </summary>
@@ -202,9 +202,9 @@ namespace Kaitai
             {
                 m_parent = p__parent;
                 m_root = p__root;
-                f_typeListAndReferenceLists = false;
-                f_namesWithIo = false;
                 f_names = false;
+                f_namesWithIo = false;
+                f_typeListAndReferenceLists = false;
                 _read();
             }
             private void _read()
@@ -263,11 +263,11 @@ namespace Kaitai
                     {
                         if (f_asInt)
                             return _asInt;
+                        f_asInt = true;
                         long _pos = m_io.Pos;
                         m_io.Seek(0);
                         _asInt = m_io.ReadU2be();
                         m_io.Seek(_pos);
-                        f_asInt = true;
                         return _asInt;
                     }
                 }
@@ -347,6 +347,74 @@ namespace Kaitai
             }
 
             /// <summary>
+            /// A resource name,
+            /// as stored in the resource name storage area in the resource map.
+            /// 
+            /// The resource names are not required to appear in any particular order.
+            /// There may be unused space between and around resource names,
+            /// but in practice they are often contiguous.
+            /// </summary>
+            public partial class Name : KaitaiStruct
+            {
+                public static Name FromFile(string fileName)
+                {
+                    return new Name(new KaitaiStream(fileName));
+                }
+
+                public Name(KaitaiStream p__io, ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList.Reference p__parent = null, ResourceFork p__root = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    _read();
+                }
+                private void _read()
+                {
+                    _lenValue = m_io.ReadU1();
+                    _value = m_io.ReadBytes(LenValue);
+                }
+                private byte _lenValue;
+                private byte[] _value;
+                private ResourceFork m_root;
+                private ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList.Reference m_parent;
+
+                /// <summary>
+                /// The length of the resource name, in bytes.
+                /// </summary>
+                public byte LenValue { get { return _lenValue; } }
+
+                /// <summary>
+                /// The resource name.
+                /// 
+                /// This field is exposed as a byte array,
+                /// because there is no universal encoding for resource names.
+                /// Most Classic Mac software does not deal with encodings explicitly and instead assumes that all strings,
+                /// including resource names,
+                /// use the system encoding,
+                /// which varies depending on the system language.
+                /// This means that resource names can use different encodings depending on what system language they were created with.
+                /// 
+                /// Many resource names are plain ASCII,
+                /// meaning that the encoding often does not matter
+                /// (because all Mac OS encodings are ASCII-compatible).
+                /// For non-ASCII resource names,
+                /// the most common encoding is perhaps MacRoman
+                /// (used for English and other Western languages),
+                /// but other encodings are also sometimes used,
+                /// especially for software in non-Western languages.
+                /// 
+                /// There is no requirement that all names in a single resource file use the same encoding.
+                /// For example,
+                /// localized software may have some (but not all) of its resource names translated.
+                /// For non-Western languages,
+                /// this can lead to some resource names using MacRoman,
+                /// and others using a different encoding.
+                /// </summary>
+                public byte[] Value { get { return _value; } }
+                public ResourceFork M_Root { get { return m_root; } }
+                public ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList.Reference M_Parent { get { return m_parent; } }
+            }
+
+            /// <summary>
             /// Resource type list and storage area for resource reference lists in the resource map.
             /// 
             /// The two parts are combined into a single type here for technical reasons:
@@ -371,170 +439,6 @@ namespace Kaitai
                 {
                     _typeList = new TypeList(m_io, this, m_root);
                     _referenceLists = m_io.ReadBytesFull();
-                }
-
-                /// <summary>
-                /// Resource type list in the resource map.
-                /// </summary>
-                public partial class TypeList : KaitaiStruct
-                {
-                    public static TypeList FromFile(string fileName)
-                    {
-                        return new TypeList(new KaitaiStream(fileName));
-                    }
-
-                    public TypeList(KaitaiStream p__io, ResourceFork.ResourceMap.TypeListAndReferenceLists p__parent = null, ResourceFork p__root = null) : base(p__io)
-                    {
-                        m_parent = p__parent;
-                        m_root = p__root;
-                        f_numTypes = false;
-                        _read();
-                    }
-                    private void _read()
-                    {
-                        _numTypesM1 = m_io.ReadU2be();
-                        _entries = new List<TypeListEntry>();
-                        for (var i = 0; i < NumTypes; i++)
-                        {
-                            _entries.Add(new TypeListEntry(m_io, this, m_root));
-                        }
-                    }
-
-                    /// <summary>
-                    /// A single entry in the resource type list.
-                    /// 
-                    /// Each entry corresponds to exactly one resource reference list.
-                    /// </summary>
-                    public partial class TypeListEntry : KaitaiStruct
-                    {
-                        public static TypeListEntry FromFile(string fileName)
-                        {
-                            return new TypeListEntry(new KaitaiStream(fileName));
-                        }
-
-                        public TypeListEntry(KaitaiStream p__io, ResourceFork.ResourceMap.TypeListAndReferenceLists.TypeList p__parent = null, ResourceFork p__root = null) : base(p__io)
-                        {
-                            m_parent = p__parent;
-                            m_root = p__root;
-                            f_numReferences = false;
-                            f_referenceList = false;
-                            _read();
-                        }
-                        private void _read()
-                        {
-                            _type = m_io.ReadBytes(4);
-                            _numReferencesM1 = m_io.ReadU2be();
-                            _ofsReferenceList = m_io.ReadU2be();
-                        }
-                        private bool f_numReferences;
-                        private int _numReferences;
-
-                        /// <summary>
-                        /// The number of resources in the reference list for this type.
-                        /// </summary>
-                        public int NumReferences
-                        {
-                            get
-                            {
-                                if (f_numReferences)
-                                    return _numReferences;
-                                _numReferences = (int) (KaitaiStream.Mod((NumReferencesM1 + 1), 65536));
-                                f_numReferences = true;
-                                return _numReferences;
-                            }
-                        }
-                        private bool f_referenceList;
-                        private ReferenceList _referenceList;
-
-                        /// <summary>
-                        /// The resource reference list for this resource type.
-                        /// </summary>
-                        public ReferenceList ReferenceList
-                        {
-                            get
-                            {
-                                if (f_referenceList)
-                                    return _referenceList;
-                                KaitaiStream io = M_Parent.M_Parent.M_Io;
-                                long _pos = io.Pos;
-                                io.Seek(OfsReferenceList);
-                                _referenceList = new ReferenceList(NumReferences, io, this, m_root);
-                                io.Seek(_pos);
-                                f_referenceList = true;
-                                return _referenceList;
-                            }
-                        }
-                        private byte[] _type;
-                        private ushort _numReferencesM1;
-                        private ushort _ofsReferenceList;
-                        private ResourceFork m_root;
-                        private ResourceFork.ResourceMap.TypeListAndReferenceLists.TypeList m_parent;
-
-                        /// <summary>
-                        /// The four-character type code of the resources in the reference list.
-                        /// </summary>
-                        public byte[] Type { get { return _type; } }
-
-                        /// <summary>
-                        /// The number of resources in the reference list for this type,
-                        /// minus one.
-                        /// 
-                        /// Empty reference lists should never exist.
-                        /// </summary>
-                        public ushort NumReferencesM1 { get { return _numReferencesM1; } }
-
-                        /// <summary>
-                        /// Offset of the resource reference list for this resource type,
-                        /// from the start of the resource type list.
-                        /// 
-                        /// Although the offset is relative to the start of the type list,
-                        /// it should never point into the type list itself,
-                        /// but into the reference list storage area that directly follows it.
-                        /// That is,
-                        /// it should always be at least `_parent._sizeof`.
-                        /// </summary>
-                        public ushort OfsReferenceList { get { return _ofsReferenceList; } }
-                        public ResourceFork M_Root { get { return m_root; } }
-                        public ResourceFork.ResourceMap.TypeListAndReferenceLists.TypeList M_Parent { get { return m_parent; } }
-                    }
-                    private bool f_numTypes;
-                    private int _numTypes;
-
-                    /// <summary>
-                    /// The number of resource types in this list.
-                    /// </summary>
-                    public int NumTypes
-                    {
-                        get
-                        {
-                            if (f_numTypes)
-                                return _numTypes;
-                            _numTypes = (int) (KaitaiStream.Mod((NumTypesM1 + 1), 65536));
-                            f_numTypes = true;
-                            return _numTypes;
-                        }
-                    }
-                    private ushort _numTypesM1;
-                    private List<TypeListEntry> _entries;
-                    private ResourceFork m_root;
-                    private ResourceFork.ResourceMap.TypeListAndReferenceLists m_parent;
-
-                    /// <summary>
-                    /// The number of resource types in this list,
-                    /// minus one.
-                    /// 
-                    /// If the resource list is empty,
-                    /// the value of this field is `0xffff`,
-                    /// i. e. `-1` truncated to a 16-bit unsigned integer.
-                    /// </summary>
-                    public ushort NumTypesM1 { get { return _numTypesM1; } }
-
-                    /// <summary>
-                    /// Entries in the resource type list.
-                    /// </summary>
-                    public List<TypeListEntry> Entries { get { return _entries; } }
-                    public ResourceFork M_Root { get { return m_root; } }
-                    public ResourceFork.ResourceMap.TypeListAndReferenceLists M_Parent { get { return m_parent; } }
                 }
 
                 /// <summary>
@@ -576,8 +480,8 @@ namespace Kaitai
                         {
                             m_parent = p__parent;
                             m_root = p__root;
-                            f_name = false;
                             f_dataBlock = false;
+                            f_name = false;
                             _read();
                         }
                         private void _read()
@@ -634,11 +538,11 @@ namespace Kaitai
                                 {
                                     if (f_asInt)
                                         return _asInt;
+                                    f_asInt = true;
                                     long _pos = m_io.Pos;
                                     m_io.Seek(0);
                                     _asInt = m_io.ReadU1();
                                     m_io.Seek(_pos);
-                                    f_asInt = true;
                                     return _asInt;
                                 }
                             }
@@ -761,29 +665,6 @@ namespace Kaitai
                             public ResourceFork M_Root { get { return m_root; } }
                             public ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList.Reference M_Parent { get { return m_parent; } }
                         }
-                        private bool f_name;
-                        private Name _name;
-
-                        /// <summary>
-                        /// The name (if any) of the resource described by this reference.
-                        /// </summary>
-                        public Name Name
-                        {
-                            get
-                            {
-                                if (f_name)
-                                    return _name;
-                                if (OfsName != 65535) {
-                                    KaitaiStream io = M_Root.ResourceMap.NamesWithIo.M_Io;
-                                    long _pos = io.Pos;
-                                    io.Seek(OfsName);
-                                    _name = new Name(io, this, m_root);
-                                    io.Seek(_pos);
-                                    f_name = true;
-                                }
-                                return _name;
-                            }
-                        }
                         private bool f_dataBlock;
                         private DataBlock _dataBlock;
 
@@ -796,13 +677,36 @@ namespace Kaitai
                             {
                                 if (f_dataBlock)
                                     return _dataBlock;
+                                f_dataBlock = true;
                                 KaitaiStream io = M_Root.DataBlocksWithIo.M_Io;
                                 long _pos = io.Pos;
                                 io.Seek(OfsDataBlock);
                                 _dataBlock = new DataBlock(io, this, m_root);
                                 io.Seek(_pos);
-                                f_dataBlock = true;
                                 return _dataBlock;
+                            }
+                        }
+                        private bool f_name;
+                        private Name _name;
+
+                        /// <summary>
+                        /// The name (if any) of the resource described by this reference.
+                        /// </summary>
+                        public Name Name
+                        {
+                            get
+                            {
+                                if (f_name)
+                                    return _name;
+                                f_name = true;
+                                if (OfsName != 65535) {
+                                    KaitaiStream io = M_Root.ResourceMap.NamesWithIo.M_Io;
+                                    long _pos = io.Pos;
+                                    io.Seek(OfsName);
+                                    _name = new Name(io, this, m_root);
+                                    io.Seek(_pos);
+                                }
+                                return _name;
                             }
                         }
                         private short _id;
@@ -869,6 +773,170 @@ namespace Kaitai
                     public ResourceFork M_Root { get { return m_root; } }
                     public ResourceFork.ResourceMap.TypeListAndReferenceLists.TypeList.TypeListEntry M_Parent { get { return m_parent; } }
                 }
+
+                /// <summary>
+                /// Resource type list in the resource map.
+                /// </summary>
+                public partial class TypeList : KaitaiStruct
+                {
+                    public static TypeList FromFile(string fileName)
+                    {
+                        return new TypeList(new KaitaiStream(fileName));
+                    }
+
+                    public TypeList(KaitaiStream p__io, ResourceFork.ResourceMap.TypeListAndReferenceLists p__parent = null, ResourceFork p__root = null) : base(p__io)
+                    {
+                        m_parent = p__parent;
+                        m_root = p__root;
+                        f_numTypes = false;
+                        _read();
+                    }
+                    private void _read()
+                    {
+                        _numTypesM1 = m_io.ReadU2be();
+                        _entries = new List<TypeListEntry>();
+                        for (var i = 0; i < NumTypes; i++)
+                        {
+                            _entries.Add(new TypeListEntry(m_io, this, m_root));
+                        }
+                    }
+
+                    /// <summary>
+                    /// A single entry in the resource type list.
+                    /// 
+                    /// Each entry corresponds to exactly one resource reference list.
+                    /// </summary>
+                    public partial class TypeListEntry : KaitaiStruct
+                    {
+                        public static TypeListEntry FromFile(string fileName)
+                        {
+                            return new TypeListEntry(new KaitaiStream(fileName));
+                        }
+
+                        public TypeListEntry(KaitaiStream p__io, ResourceFork.ResourceMap.TypeListAndReferenceLists.TypeList p__parent = null, ResourceFork p__root = null) : base(p__io)
+                        {
+                            m_parent = p__parent;
+                            m_root = p__root;
+                            f_numReferences = false;
+                            f_referenceList = false;
+                            _read();
+                        }
+                        private void _read()
+                        {
+                            _type = m_io.ReadBytes(4);
+                            _numReferencesM1 = m_io.ReadU2be();
+                            _ofsReferenceList = m_io.ReadU2be();
+                        }
+                        private bool f_numReferences;
+                        private int _numReferences;
+
+                        /// <summary>
+                        /// The number of resources in the reference list for this type.
+                        /// </summary>
+                        public int NumReferences
+                        {
+                            get
+                            {
+                                if (f_numReferences)
+                                    return _numReferences;
+                                f_numReferences = true;
+                                _numReferences = (int) (KaitaiStream.Mod(NumReferencesM1 + 1, 65536));
+                                return _numReferences;
+                            }
+                        }
+                        private bool f_referenceList;
+                        private ReferenceList _referenceList;
+
+                        /// <summary>
+                        /// The resource reference list for this resource type.
+                        /// </summary>
+                        public ReferenceList ReferenceList
+                        {
+                            get
+                            {
+                                if (f_referenceList)
+                                    return _referenceList;
+                                f_referenceList = true;
+                                KaitaiStream io = M_Parent.M_Parent.M_Io;
+                                long _pos = io.Pos;
+                                io.Seek(OfsReferenceList);
+                                _referenceList = new ReferenceList(NumReferences, io, this, m_root);
+                                io.Seek(_pos);
+                                return _referenceList;
+                            }
+                        }
+                        private byte[] _type;
+                        private ushort _numReferencesM1;
+                        private ushort _ofsReferenceList;
+                        private ResourceFork m_root;
+                        private ResourceFork.ResourceMap.TypeListAndReferenceLists.TypeList m_parent;
+
+                        /// <summary>
+                        /// The four-character type code of the resources in the reference list.
+                        /// </summary>
+                        public byte[] Type { get { return _type; } }
+
+                        /// <summary>
+                        /// The number of resources in the reference list for this type,
+                        /// minus one.
+                        /// 
+                        /// Empty reference lists should never exist.
+                        /// </summary>
+                        public ushort NumReferencesM1 { get { return _numReferencesM1; } }
+
+                        /// <summary>
+                        /// Offset of the resource reference list for this resource type,
+                        /// from the start of the resource type list.
+                        /// 
+                        /// Although the offset is relative to the start of the type list,
+                        /// it should never point into the type list itself,
+                        /// but into the reference list storage area that directly follows it.
+                        /// That is,
+                        /// it should always be at least `_parent._sizeof`.
+                        /// </summary>
+                        public ushort OfsReferenceList { get { return _ofsReferenceList; } }
+                        public ResourceFork M_Root { get { return m_root; } }
+                        public ResourceFork.ResourceMap.TypeListAndReferenceLists.TypeList M_Parent { get { return m_parent; } }
+                    }
+                    private bool f_numTypes;
+                    private int _numTypes;
+
+                    /// <summary>
+                    /// The number of resource types in this list.
+                    /// </summary>
+                    public int NumTypes
+                    {
+                        get
+                        {
+                            if (f_numTypes)
+                                return _numTypes;
+                            f_numTypes = true;
+                            _numTypes = (int) (KaitaiStream.Mod(NumTypesM1 + 1, 65536));
+                            return _numTypes;
+                        }
+                    }
+                    private ushort _numTypesM1;
+                    private List<TypeListEntry> _entries;
+                    private ResourceFork m_root;
+                    private ResourceFork.ResourceMap.TypeListAndReferenceLists m_parent;
+
+                    /// <summary>
+                    /// The number of resource types in this list,
+                    /// minus one.
+                    /// 
+                    /// If the resource list is empty,
+                    /// the value of this field is `0xffff`,
+                    /// i. e. `-1` truncated to a 16-bit unsigned integer.
+                    /// </summary>
+                    public ushort NumTypesM1 { get { return _numTypesM1; } }
+
+                    /// <summary>
+                    /// Entries in the resource type list.
+                    /// </summary>
+                    public List<TypeListEntry> Entries { get { return _entries; } }
+                    public ResourceFork M_Root { get { return m_root; } }
+                    public ResourceFork.ResourceMap.TypeListAndReferenceLists M_Parent { get { return m_parent; } }
+                }
                 private TypeList _typeList;
                 private byte[] _referenceLists;
                 private ResourceFork m_root;
@@ -890,94 +958,21 @@ namespace Kaitai
                 public ResourceFork M_Root { get { return m_root; } }
                 public ResourceFork.ResourceMap M_Parent { get { return m_parent; } }
             }
+            private bool f_names;
+            private byte[] _names;
 
             /// <summary>
-            /// A resource name,
-            /// as stored in the resource name storage area in the resource map.
-            /// 
-            /// The resource names are not required to appear in any particular order.
-            /// There may be unused space between and around resource names,
-            /// but in practice they are often contiguous.
+            /// Storage area for the names of all resources.
             /// </summary>
-            public partial class Name : KaitaiStruct
-            {
-                public static Name FromFile(string fileName)
-                {
-                    return new Name(new KaitaiStream(fileName));
-                }
-
-                public Name(KaitaiStream p__io, ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList.Reference p__parent = null, ResourceFork p__root = null) : base(p__io)
-                {
-                    m_parent = p__parent;
-                    m_root = p__root;
-                    _read();
-                }
-                private void _read()
-                {
-                    _lenValue = m_io.ReadU1();
-                    _value = m_io.ReadBytes(LenValue);
-                }
-                private byte _lenValue;
-                private byte[] _value;
-                private ResourceFork m_root;
-                private ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList.Reference m_parent;
-
-                /// <summary>
-                /// The length of the resource name, in bytes.
-                /// </summary>
-                public byte LenValue { get { return _lenValue; } }
-
-                /// <summary>
-                /// The resource name.
-                /// 
-                /// This field is exposed as a byte array,
-                /// because there is no universal encoding for resource names.
-                /// Most Classic Mac software does not deal with encodings explicitly and instead assumes that all strings,
-                /// including resource names,
-                /// use the system encoding,
-                /// which varies depending on the system language.
-                /// This means that resource names can use different encodings depending on what system language they were created with.
-                /// 
-                /// Many resource names are plain ASCII,
-                /// meaning that the encoding often does not matter
-                /// (because all Mac OS encodings are ASCII-compatible).
-                /// For non-ASCII resource names,
-                /// the most common encoding is perhaps MacRoman
-                /// (used for English and other Western languages),
-                /// but other encodings are also sometimes used,
-                /// especially for software in non-Western languages.
-                /// 
-                /// There is no requirement that all names in a single resource file use the same encoding.
-                /// For example,
-                /// localized software may have some (but not all) of its resource names translated.
-                /// For non-Western languages,
-                /// this can lead to some resource names using MacRoman,
-                /// and others using a different encoding.
-                /// </summary>
-                public byte[] Value { get { return _value; } }
-                public ResourceFork M_Root { get { return m_root; } }
-                public ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList.Reference M_Parent { get { return m_parent; } }
-            }
-            private bool f_typeListAndReferenceLists;
-            private TypeListAndReferenceLists _typeListAndReferenceLists;
-
-            /// <summary>
-            /// The resource map's resource type list, followed by the resource reference list area.
-            /// </summary>
-            public TypeListAndReferenceLists TypeListAndReferenceLists
+            public byte[] Names
             {
                 get
                 {
-                    if (f_typeListAndReferenceLists)
-                        return _typeListAndReferenceLists;
-                    long _pos = m_io.Pos;
-                    m_io.Seek(OfsTypeList);
-                    __raw_typeListAndReferenceLists = m_io.ReadBytes((OfsNames - OfsTypeList));
-                    var io___raw_typeListAndReferenceLists = new KaitaiStream(__raw_typeListAndReferenceLists);
-                    _typeListAndReferenceLists = new TypeListAndReferenceLists(io___raw_typeListAndReferenceLists, this, m_root);
-                    m_io.Seek(_pos);
-                    f_typeListAndReferenceLists = true;
-                    return _typeListAndReferenceLists;
+                    if (f_names)
+                        return _names;
+                    f_names = true;
+                    _names = (byte[]) (NamesWithIo.Data);
+                    return _names;
                 }
             }
             private bool f_namesWithIo;
@@ -993,31 +988,36 @@ namespace Kaitai
                 {
                     if (f_namesWithIo)
                         return _namesWithIo;
+                    f_namesWithIo = true;
                     long _pos = m_io.Pos;
                     m_io.Seek(OfsNames);
                     __raw_namesWithIo = m_io.ReadBytesFull();
                     var io___raw_namesWithIo = new KaitaiStream(__raw_namesWithIo);
                     _namesWithIo = new BytesWithIo(io___raw_namesWithIo);
                     m_io.Seek(_pos);
-                    f_namesWithIo = true;
                     return _namesWithIo;
                 }
             }
-            private bool f_names;
-            private byte[] _names;
+            private bool f_typeListAndReferenceLists;
+            private TypeListAndReferenceLists _typeListAndReferenceLists;
 
             /// <summary>
-            /// Storage area for the names of all resources.
+            /// The resource map's resource type list, followed by the resource reference list area.
             /// </summary>
-            public byte[] Names
+            public TypeListAndReferenceLists TypeListAndReferenceLists
             {
                 get
                 {
-                    if (f_names)
-                        return _names;
-                    _names = (byte[]) (NamesWithIo.Data);
-                    f_names = true;
-                    return _names;
+                    if (f_typeListAndReferenceLists)
+                        return _typeListAndReferenceLists;
+                    f_typeListAndReferenceLists = true;
+                    long _pos = m_io.Pos;
+                    m_io.Seek(OfsTypeList);
+                    __raw_typeListAndReferenceLists = m_io.ReadBytes(OfsNames - OfsTypeList);
+                    var io___raw_typeListAndReferenceLists = new KaitaiStream(__raw_typeListAndReferenceLists);
+                    _typeListAndReferenceLists = new TypeListAndReferenceLists(io___raw_typeListAndReferenceLists, this, m_root);
+                    m_io.Seek(_pos);
+                    return _typeListAndReferenceLists;
                 }
             }
             private FileHeader _reservedFileHeaderCopy;
@@ -1029,8 +1029,8 @@ namespace Kaitai
             private ResourceFork m_root;
             private ResourceFork m_parent;
             private byte[] __raw_fileAttributes;
-            private byte[] __raw_typeListAndReferenceLists;
             private byte[] __raw_namesWithIo;
+            private byte[] __raw_typeListAndReferenceLists;
 
             /// <summary>
             /// Reserved space for a copy of the resource file header.
@@ -1070,31 +1070,8 @@ namespace Kaitai
             public ResourceFork M_Root { get { return m_root; } }
             public ResourceFork M_Parent { get { return m_parent; } }
             public byte[] M_RawFileAttributes { get { return __raw_fileAttributes; } }
-            public byte[] M_RawTypeListAndReferenceLists { get { return __raw_typeListAndReferenceLists; } }
             public byte[] M_RawNamesWithIo { get { return __raw_namesWithIo; } }
-        }
-        private bool f_dataBlocksWithIo;
-        private BytesWithIo _dataBlocksWithIo;
-
-        /// <summary>
-        /// Use `data_blocks` instead,
-        /// unless you need access to this instance's `_io`.
-        /// </summary>
-        public BytesWithIo DataBlocksWithIo
-        {
-            get
-            {
-                if (f_dataBlocksWithIo)
-                    return _dataBlocksWithIo;
-                long _pos = m_io.Pos;
-                m_io.Seek(Header.OfsDataBlocks);
-                __raw_dataBlocksWithIo = m_io.ReadBytes(Header.LenDataBlocks);
-                var io___raw_dataBlocksWithIo = new KaitaiStream(__raw_dataBlocksWithIo);
-                _dataBlocksWithIo = new BytesWithIo(io___raw_dataBlocksWithIo);
-                m_io.Seek(_pos);
-                f_dataBlocksWithIo = true;
-                return _dataBlocksWithIo;
-            }
+            public byte[] M_RawTypeListAndReferenceLists { get { return __raw_typeListAndReferenceLists; } }
         }
         private bool f_dataBlocks;
         private byte[] _dataBlocks;
@@ -1120,9 +1097,32 @@ namespace Kaitai
             {
                 if (f_dataBlocks)
                     return _dataBlocks;
-                _dataBlocks = (byte[]) (DataBlocksWithIo.Data);
                 f_dataBlocks = true;
+                _dataBlocks = (byte[]) (DataBlocksWithIo.Data);
                 return _dataBlocks;
+            }
+        }
+        private bool f_dataBlocksWithIo;
+        private BytesWithIo _dataBlocksWithIo;
+
+        /// <summary>
+        /// Use `data_blocks` instead,
+        /// unless you need access to this instance's `_io`.
+        /// </summary>
+        public BytesWithIo DataBlocksWithIo
+        {
+            get
+            {
+                if (f_dataBlocksWithIo)
+                    return _dataBlocksWithIo;
+                f_dataBlocksWithIo = true;
+                long _pos = m_io.Pos;
+                m_io.Seek(Header.OfsDataBlocks);
+                __raw_dataBlocksWithIo = m_io.ReadBytes(Header.LenDataBlocks);
+                var io___raw_dataBlocksWithIo = new KaitaiStream(__raw_dataBlocksWithIo);
+                _dataBlocksWithIo = new BytesWithIo(io___raw_dataBlocksWithIo);
+                m_io.Seek(_pos);
+                return _dataBlocksWithIo;
             }
         }
         private bool f_resourceMap;
@@ -1137,13 +1137,13 @@ namespace Kaitai
             {
                 if (f_resourceMap)
                     return _resourceMap;
+                f_resourceMap = true;
                 long _pos = m_io.Pos;
                 m_io.Seek(Header.OfsResourceMap);
                 __raw_resourceMap = m_io.ReadBytes(Header.LenResourceMap);
                 var io___raw_resourceMap = new KaitaiStream(__raw_resourceMap);
                 _resourceMap = new ResourceMap(io___raw_resourceMap, this, m_root);
                 m_io.Seek(_pos);
-                f_resourceMap = true;
                 return _resourceMap;
             }
         }

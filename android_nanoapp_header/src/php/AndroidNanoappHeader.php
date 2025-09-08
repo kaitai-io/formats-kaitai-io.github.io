@@ -3,19 +3,19 @@
 
 namespace {
     class AndroidNanoappHeader extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \AndroidNanoappHeader $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\AndroidNanoappHeader $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_headerVersion = $this->_io->readU4le();
-            if (!($this->headerVersion() == 1)) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError(1, $this->headerVersion(), $this->_io(), "/seq/0");
+            if (!($this->_m_headerVersion == 1)) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError(1, $this->_m_headerVersion, $this->_io, "/seq/0");
             }
             $this->_m_magic = $this->_io->readBytes(4);
-            if (!($this->magic() == "\x4E\x41\x4E\x4F")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x4E\x41\x4E\x4F", $this->magic(), $this->_io(), "/seq/1");
+            if (!($this->_m_magic == "\x4E\x41\x4E\x4F")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x4E\x41\x4E\x4F", $this->_m_magic, $this->_io, "/seq/1");
             }
             $this->_m_appId = $this->_io->readU8le();
             $this->_m_appVersion = $this->_io->readU4le();
@@ -24,16 +24,9 @@ namespace {
             $this->_m_chreApiMajorVersion = $this->_io->readU1();
             $this->_m_chreApiMinorVersion = $this->_io->readU1();
             $this->_m_reserved = $this->_io->readBytes(6);
-            if (!($this->reserved() == "\x00\x00\x00\x00\x00\x00")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00\x00\x00\x00\x00\x00", $this->reserved(), $this->_io(), "/seq/8");
+            if (!($this->_m_reserved == "\x00\x00\x00\x00\x00\x00")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00\x00\x00\x00\x00\x00", $this->_m_reserved, $this->_io, "/seq/8");
             }
-        }
-        protected $_m_isSigned;
-        public function isSigned() {
-            if ($this->_m_isSigned !== null)
-                return $this->_m_isSigned;
-            $this->_m_isSigned = ($this->flags() & 1) != 0;
-            return $this->_m_isSigned;
         }
         protected $_m_isEncrypted;
         public function isEncrypted() {
@@ -41,6 +34,13 @@ namespace {
                 return $this->_m_isEncrypted;
             $this->_m_isEncrypted = ($this->flags() & 2) != 0;
             return $this->_m_isEncrypted;
+        }
+        protected $_m_isSigned;
+        public function isSigned() {
+            if ($this->_m_isSigned !== null)
+                return $this->_m_isSigned;
+            $this->_m_isSigned = ($this->flags() & 1) != 0;
+            return $this->_m_isSigned;
         }
         protected $_m_isTcmCapable;
         public function isTcmCapable() {

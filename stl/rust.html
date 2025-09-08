@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>.stl file format of 3D Systems Stereolithography: Rust parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="/pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li><a href="//kaitai.io/news/">News</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../">Format Gallery</a></li>
+        <li>Multimedia Files</li>
+        <li class="active">.stl file format of 3D Systems Stereolithography</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>.stl file format of 3D Systems Stereolithography:
+            
+            Rust parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>STL files are used to represent simple 3D models, defined using
+triangular 3D faces.</p>
+<p>Initially it was introduced as native format for 3D Systems
+Stereolithography CAD system, but due to its extreme simplicity, it
+was adopted by a wide range of 3D modelling, CAD, rapid prototyping
+and 3D printing applications as the simplest 3D model exchange
+format.</p>
+<p>STL is extremely bare-bones format: there are no complex headers, no
+texture / color support, no units specifications, no distinct vertex
+arrays. Whole model is specified as a collection of triangular
+faces.</p>
+<p>There are two versions of the format (text and binary), this spec
+describes binary version.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        3D Systems Stereolithography
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        stl
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="https://www.loc.gov/preservation/digital/formats/fdd/fdd000505.shtml">LOC fdd000505</a></li>
+                            
+                            <li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/865">PRONOM fmt/865</a></li>
+                            
+                            <li><a href="https://www.wikidata.org/wiki/Q1238229">Wikidata Q1238229</a></li>
+                            
+                            
+                            
+                            <li><a href="http://fileformats.archiveteam.org/wiki/STL">STL in Just Solve the File Format Problem</a></li>
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of .stl file format of 3D Systems Stereolithography
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title=".stl file format of 3D Systems Stereolithography parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_11.html" title=".stl file format of 3D Systems Stereolithography parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title=".stl file format of 3D Systems Stereolithography parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title=".stl file format of 3D Systems Stereolithography parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title=".stl file format of 3D Systems Stereolithography parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title=".stl file format of 3D Systems Stereolithography parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title=".stl file format of 3D Systems Stereolithography parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="java-write.html" title=".stl file format of 3D Systems Stereolithography parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title=".stl file format of 3D Systems Stereolithography parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title=".stl file format of 3D Systems Stereolithography parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title=".stl file format of 3D Systems Stereolithography parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title=".stl file format of 3D Systems Stereolithography parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title=".stl file format of 3D Systems Stereolithography parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title=".stl file format of 3D Systems Stereolithography parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="python-write.html" title=".stl file format of 3D Systems Stereolithography parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title=".stl file format of 3D Systems Stereolithography parsing Ruby library">Ruby</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="rust.html" title=".stl file format of 3D Systems Stereolithography parsing Rust library">Rust</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Rust source code to parse .stl file format of 3D Systems Stereolithography
+            
+        </h2>
+
+        
+
+        <h3>stl.rs</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/rust/stl.rs" download="stl.rs" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="cp">#![allow(unused_imports)]</span>
+<span class="cp">#![allow(non_snake_case)]</span>
+<span class="cp">#![allow(non_camel_case_types)]</span>
+<span class="cp">#![allow(irrefutable_let_patterns)]</span>
+<span class="cp">#![allow(unused_comparisons)]</span>
+
+<span class="k">extern</span><span class="w"> </span><span class="k">crate</span><span class="w"> </span><span class="n">kaitai</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="n">kaitai</span><span class="p">::</span><span class="o">*</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">convert</span><span class="p">::{</span><span class="n">TryFrom</span><span class="p">,</span><span class="w"> </span><span class="n">TryInto</span><span class="p">};</span>
+<span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">cell</span><span class="p">::{</span><span class="n">Ref</span><span class="p">,</span><span class="w"> </span><span class="n">Cell</span><span class="p">,</span><span class="w"> </span><span class="n">RefCell</span><span class="p">};</span>
+<span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">rc</span><span class="p">::{</span><span class="n">Rc</span><span class="p">,</span><span class="w"> </span><span class="n">Weak</span><span class="p">};</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * STL files are used to represent simple 3D models, defined using</span>
+<span class="sd"> * triangular 3D faces.</span>
+<span class="sd"> * </span>
+<span class="sd"> * Initially it was introduced as native format for 3D Systems</span>
+<span class="sd"> * Stereolithography CAD system, but due to its extreme simplicity, it</span>
+<span class="sd"> * was adopted by a wide range of 3D modelling, CAD, rapid prototyping</span>
+<span class="sd"> * and 3D printing applications as the simplest 3D model exchange</span>
+<span class="sd"> * format.</span>
+<span class="sd"> * </span>
+<span class="sd"> * STL is extremely bare-bones format: there are no complex headers, no</span>
+<span class="sd"> * texture / color support, no units specifications, no distinct vertex</span>
+<span class="sd"> * arrays. Whole model is specified as a collection of triangular</span>
+<span class="sd"> * faces.</span>
+<span class="sd"> * </span>
+<span class="sd"> * There are two versions of the format (text and binary), this spec</span>
+<span class="sd"> * describes binary version.</span>
+<span class="sd"> */</span>
+
+<span class="cp">#[derive(Default, Debug, Clone)]</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">Stl</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">_root</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="n">Stl</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">_parent</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="n">Stl</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">_self</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="bp">Self</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">header</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">u8</span><span class="o">&gt;&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">num_triangles</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="kt">u32</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">triangles</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="nb">Vec</span><span class="o">&lt;</span><span class="n">OptRc</span><span class="o">&lt;</span><span class="n">Stl_Triangle</span><span class="o">&gt;&gt;&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">_io</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="n">BytesReader</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">KStruct</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">Stl</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">type</span><span class="w"> </span><span class="nc">Root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Stl</span><span class="p">;</span>
+<span class="w">    </span><span class="k">type</span><span class="w"> </span><span class="nc">Parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Stl</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">read</span><span class="o">&lt;</span><span class="n">S</span><span class="p">:</span><span class="w"> </span><span class="nc">KStream</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">OptRc</span><span class="o">&lt;</span><span class="bp">Self</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">_io</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">S</span><span class="p">,</span>
+<span class="w">        </span><span class="n">_root</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="bp">Self</span><span class="p">::</span><span class="n">Root</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">_parent</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="bp">Self</span><span class="p">::</span><span class="n">Parent</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">KResult</span><span class="o">&lt;</span><span class="p">()</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">_io</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">_parent</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_self</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="nb">Ok</span><span class="p">(</span><span class="n">self_rc</span><span class="p">.</span><span class="n">clone</span><span class="p">()));</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_rrc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">get_value</span><span class="p">().</span><span class="n">borrow</span><span class="p">().</span><span class="n">upgrade</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_prc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">get_value</span><span class="p">().</span><span class="n">borrow</span><span class="p">().</span><span class="n">upgrade</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_rrc</span><span class="p">.</span><span class="n">as_ref</span><span class="p">().</span><span class="n">unwrap</span><span class="p">();</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">80</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">usize</span><span class="p">)</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">num_triangles</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">read_u4le</span><span class="p">()</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">triangles</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Vec</span><span class="p">::</span><span class="n">new</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">l_triangles</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">num_triangles</span><span class="p">();</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">_i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="n">l_triangles</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">Self</span><span class="p">::</span><span class="n">read_into</span><span class="p">::</span><span class="o">&lt;</span><span class="n">_</span><span class="p">,</span><span class="w"> </span><span class="n">Stl_Triangle</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;*</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="n">self_rc</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">clone</span><span class="p">()),</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="n">self_rc</span><span class="p">.</span><span class="n">_self</span><span class="p">.</span><span class="n">clone</span><span class="p">()))</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">            </span><span class="n">self_rc</span><span class="p">.</span><span class="n">triangles</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">().</span><span class="n">push</span><span class="p">(</span><span class="n">t</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="nb">Ok</span><span class="p">(())</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Stl</span><span class="w"> </span><span class="p">{</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Stl</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">header</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">u8</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Stl</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">num_triangles</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="kt">u32</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">num_triangles</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Stl</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">triangles</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="n">OptRc</span><span class="o">&lt;</span><span class="n">Stl_Triangle</span><span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">triangles</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Stl</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">_io</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="n">BytesReader</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">_io</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * Each STL triangle is defined by its 3 points in 3D space and a</span>
+<span class="sd"> * normal vector, which is generally used to determine where is</span>
+<span class="sd"> * &quot;inside&quot; and &quot;outside&quot; of the model.</span>
+<span class="sd"> */</span>
+
+<span class="cp">#[derive(Default, Debug, Clone)]</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">Stl_Triangle</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">_root</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="n">Stl</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">_parent</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="n">Stl</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">_self</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="bp">Self</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">normal</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="n">OptRc</span><span class="o">&lt;</span><span class="n">Stl_Vec3d</span><span class="o">&gt;&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">vertices</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="nb">Vec</span><span class="o">&lt;</span><span class="n">OptRc</span><span class="o">&lt;</span><span class="n">Stl_Vec3d</span><span class="o">&gt;&gt;&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">abr</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="kt">u16</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">_io</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="n">BytesReader</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">KStruct</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">Stl_Triangle</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">type</span><span class="w"> </span><span class="nc">Root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Stl</span><span class="p">;</span>
+<span class="w">    </span><span class="k">type</span><span class="w"> </span><span class="nc">Parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Stl</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">read</span><span class="o">&lt;</span><span class="n">S</span><span class="p">:</span><span class="w"> </span><span class="nc">KStream</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">OptRc</span><span class="o">&lt;</span><span class="bp">Self</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">_io</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">S</span><span class="p">,</span>
+<span class="w">        </span><span class="n">_root</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="bp">Self</span><span class="p">::</span><span class="n">Root</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">_parent</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="bp">Self</span><span class="p">::</span><span class="n">Parent</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">KResult</span><span class="o">&lt;</span><span class="p">()</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">_io</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">_parent</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_self</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="nb">Ok</span><span class="p">(</span><span class="n">self_rc</span><span class="p">.</span><span class="n">clone</span><span class="p">()));</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_rrc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">get_value</span><span class="p">().</span><span class="n">borrow</span><span class="p">().</span><span class="n">upgrade</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_prc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">get_value</span><span class="p">().</span><span class="n">borrow</span><span class="p">().</span><span class="n">upgrade</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_rrc</span><span class="p">.</span><span class="n">as_ref</span><span class="p">().</span><span class="n">unwrap</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">Self</span><span class="p">::</span><span class="n">read_into</span><span class="p">::</span><span class="o">&lt;</span><span class="n">_</span><span class="p">,</span><span class="w"> </span><span class="n">Stl_Vec3d</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;*</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="n">self_rc</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">clone</span><span class="p">()),</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="n">self_rc</span><span class="p">.</span><span class="n">_self</span><span class="p">.</span><span class="n">clone</span><span class="p">()))</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">normal</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t</span><span class="p">;</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">vertices</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Vec</span><span class="p">::</span><span class="n">new</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">l_vertices</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">_i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="n">l_vertices</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">Self</span><span class="p">::</span><span class="n">read_into</span><span class="p">::</span><span class="o">&lt;</span><span class="n">_</span><span class="p">,</span><span class="w"> </span><span class="n">Stl_Vec3d</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;*</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="n">self_rc</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">clone</span><span class="p">()),</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="n">self_rc</span><span class="p">.</span><span class="n">_self</span><span class="p">.</span><span class="n">clone</span><span class="p">()))</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">            </span><span class="n">self_rc</span><span class="p">.</span><span class="n">vertices</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">().</span><span class="n">push</span><span class="p">(</span><span class="n">t</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">abr</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">read_u2le</span><span class="p">()</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">        </span><span class="nb">Ok</span><span class="p">(())</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Stl_Triangle</span><span class="w"> </span><span class="p">{</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Stl_Triangle</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">normal</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="n">OptRc</span><span class="o">&lt;</span><span class="n">Stl_Vec3d</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">normal</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Stl_Triangle</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">vertices</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="n">OptRc</span><span class="o">&lt;</span><span class="n">Stl_Vec3d</span><span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">vertices</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * In theory (per standard), it&#39;s &quot;attribute byte count&quot; with</span>
+<span class="sd"> * no other details given on what &quot;attribute&quot; is and what</span>
+<span class="sd"> * should be stored in this field.</span>
+<span class="sd"> * </span>
+<span class="sd"> * In practice, software dealing with STL either expected to</span>
+<span class="sd"> * see 0 here, or uses this 16-bit field per se to store</span>
+<span class="sd"> * additional attributes (such as RGB color of a vertex or</span>
+<span class="sd"> * color index).</span>
+<span class="sd"> */</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Stl_Triangle</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">abr</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="kt">u16</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">abr</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Stl_Triangle</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">_io</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="n">BytesReader</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">_io</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="cp">#[derive(Default, Debug, Clone)]</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">Stl_Vec3d</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">_root</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="n">Stl</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">_parent</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="n">Stl_Triangle</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">_self</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="bp">Self</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="kt">f32</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">y</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="kt">f32</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">z</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="kt">f32</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">_io</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="n">BytesReader</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">KStruct</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">Stl_Vec3d</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">type</span><span class="w"> </span><span class="nc">Root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Stl</span><span class="p">;</span>
+<span class="w">    </span><span class="k">type</span><span class="w"> </span><span class="nc">Parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Stl_Triangle</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">read</span><span class="o">&lt;</span><span class="n">S</span><span class="p">:</span><span class="w"> </span><span class="nc">KStream</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">OptRc</span><span class="o">&lt;</span><span class="bp">Self</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">_io</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">S</span><span class="p">,</span>
+<span class="w">        </span><span class="n">_root</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="bp">Self</span><span class="p">::</span><span class="n">Root</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">_parent</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="bp">Self</span><span class="p">::</span><span class="n">Parent</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">KResult</span><span class="o">&lt;</span><span class="p">()</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">_io</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">_parent</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_self</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="nb">Ok</span><span class="p">(</span><span class="n">self_rc</span><span class="p">.</span><span class="n">clone</span><span class="p">()));</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_rrc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">get_value</span><span class="p">().</span><span class="n">borrow</span><span class="p">().</span><span class="n">upgrade</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_prc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">get_value</span><span class="p">().</span><span class="n">borrow</span><span class="p">().</span><span class="n">upgrade</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_rrc</span><span class="p">.</span><span class="n">as_ref</span><span class="p">().</span><span class="n">unwrap</span><span class="p">();</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">x</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">read_f4le</span><span class="p">()</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">y</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">read_f4le</span><span class="p">()</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">z</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">read_f4le</span><span class="p">()</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">        </span><span class="nb">Ok</span><span class="p">(())</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Stl_Vec3d</span><span class="w"> </span><span class="p">{</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Stl_Vec3d</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">x</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="kt">f32</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">x</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Stl_Vec3d</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">y</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="kt">f32</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">y</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Stl_Vec3d</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">z</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="kt">f32</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">z</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Stl_Vec3d</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">_io</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="n">BytesReader</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">_io</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015&ndash;2025 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">format repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+</body>
+</html>

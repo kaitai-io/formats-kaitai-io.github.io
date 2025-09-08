@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -40,8 +40,8 @@ class Gif < Kaitai::Struct::Struct
     255 => :extension_label_application,
   }
   I__EXTENSION_LABEL = EXTENSION_LABEL.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -49,9 +49,8 @@ class Gif < Kaitai::Struct::Struct
     @hdr = Header.new(@_io, self, @_root)
     @logical_screen_descriptor = LogicalScreenDescriptorStruct.new(@_io, self, @_root)
     if logical_screen_descriptor.has_color_table
-      @_raw_global_color_table = @_io.read_bytes((logical_screen_descriptor.color_table_size * 3))
-      _io__raw_global_color_table = Kaitai::Struct::Stream.new(@_raw_global_color_table)
-      @global_color_table = ColorTable.new(_io__raw_global_color_table, self, @_root)
+      _io_global_color_table = @_io.substream(logical_screen_descriptor.color_table_size * 3)
+      @global_color_table = ColorTable.new(_io_global_color_table, self, @_root)
     end
     @blocks = []
     i = 0
@@ -62,123 +61,25 @@ class Gif < Kaitai::Struct::Struct
     end until  ((_io.eof?) || (_.block_type == :block_type_end_of_file)) 
     self
   end
-
-  ##
-  # @see https://www.w3.org/Graphics/GIF/spec-gif89a.txt - section 22
-  class ImageData < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  class ApplicationId < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @lzw_min_code_size = @_io.read_u1
-      @subblocks = Subblocks.new(@_io, self, @_root)
+      @len_bytes = @_io.read_u1
+      raise Kaitai::Struct::ValidationNotEqualError.new(11, @len_bytes, @_io, "/types/application_id/seq/0") if not @len_bytes == 11
+      @application_identifier = (@_io.read_bytes(8)).force_encoding("ASCII").encode('UTF-8')
+      @application_auth_code = @_io.read_bytes(3)
       self
     end
-    attr_reader :lzw_min_code_size
-    attr_reader :subblocks
-  end
-  class ColorTableEntry < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @red = @_io.read_u1
-      @green = @_io.read_u1
-      @blue = @_io.read_u1
-      self
-    end
-    attr_reader :red
-    attr_reader :green
-    attr_reader :blue
-  end
-
-  ##
-  # @see https://www.w3.org/Graphics/GIF/spec-gif89a.txt - section 18
-  class LogicalScreenDescriptorStruct < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @screen_width = @_io.read_u2le
-      @screen_height = @_io.read_u2le
-      @flags = @_io.read_u1
-      @bg_color_index = @_io.read_u1
-      @pixel_aspect_ratio = @_io.read_u1
-      self
-    end
-    def has_color_table
-      return @has_color_table unless @has_color_table.nil?
-      @has_color_table = (flags & 128) != 0
-      @has_color_table
-    end
-    def color_table_size
-      return @color_table_size unless @color_table_size.nil?
-      @color_table_size = (2 << (flags & 7))
-      @color_table_size
-    end
-    attr_reader :screen_width
-    attr_reader :screen_height
-    attr_reader :flags
-    attr_reader :bg_color_index
-    attr_reader :pixel_aspect_ratio
-  end
-  class LocalImageDescriptor < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @left = @_io.read_u2le
-      @top = @_io.read_u2le
-      @width = @_io.read_u2le
-      @height = @_io.read_u2le
-      @flags = @_io.read_u1
-      if has_color_table
-        @_raw_local_color_table = @_io.read_bytes((color_table_size * 3))
-        _io__raw_local_color_table = Kaitai::Struct::Stream.new(@_raw_local_color_table)
-        @local_color_table = ColorTable.new(_io__raw_local_color_table, self, @_root)
-      end
-      @image_data = ImageData.new(@_io, self, @_root)
-      self
-    end
-    def has_color_table
-      return @has_color_table unless @has_color_table.nil?
-      @has_color_table = (flags & 128) != 0
-      @has_color_table
-    end
-    def has_interlace
-      return @has_interlace unless @has_interlace.nil?
-      @has_interlace = (flags & 64) != 0
-      @has_interlace
-    end
-    def has_sorted_color_table
-      return @has_sorted_color_table unless @has_sorted_color_table.nil?
-      @has_sorted_color_table = (flags & 32) != 0
-      @has_sorted_color_table
-    end
-    def color_table_size
-      return @color_table_size unless @color_table_size.nil?
-      @color_table_size = (2 << (flags & 7))
-      @color_table_size
-    end
-    attr_reader :left
-    attr_reader :top
-    attr_reader :width
-    attr_reader :height
-    attr_reader :flags
-    attr_reader :local_color_table
-    attr_reader :image_data
-    attr_reader :_raw_local_color_table
+    attr_reader :len_bytes
+    attr_reader :application_identifier
+    attr_reader :application_auth_code
   end
   class Block < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -200,7 +101,7 @@ class Gif < Kaitai::Struct::Struct
   ##
   # @see https://www.w3.org/Graphics/GIF/spec-gif89a.txt - section 19
   class ColorTable < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -216,92 +117,24 @@ class Gif < Kaitai::Struct::Struct
     end
     attr_reader :entries
   end
-
-  ##
-  # @see https://www.w3.org/Graphics/GIF/spec-gif89a.txt - section 17
-  class Header < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  class ColorTableEntry < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @magic = @_io.read_bytes(3)
-      raise Kaitai::Struct::ValidationNotEqualError.new([71, 73, 70].pack('C*'), magic, _io, "/types/header/seq/0") if not magic == [71, 73, 70].pack('C*')
-      @version = (@_io.read_bytes(3)).force_encoding("ASCII")
+      @red = @_io.read_u1
+      @green = @_io.read_u1
+      @blue = @_io.read_u1
       self
     end
-    attr_reader :magic
-    attr_reader :version
-  end
-
-  ##
-  # @see https://www.w3.org/Graphics/GIF/spec-gif89a.txt - section 23
-  class ExtGraphicControl < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @block_size = @_io.read_bytes(1)
-      raise Kaitai::Struct::ValidationNotEqualError.new([4].pack('C*'), block_size, _io, "/types/ext_graphic_control/seq/0") if not block_size == [4].pack('C*')
-      @flags = @_io.read_u1
-      @delay_time = @_io.read_u2le
-      @transparent_idx = @_io.read_u1
-      @terminator = @_io.read_bytes(1)
-      raise Kaitai::Struct::ValidationNotEqualError.new([0].pack('C*'), terminator, _io, "/types/ext_graphic_control/seq/4") if not terminator == [0].pack('C*')
-      self
-    end
-    def transparent_color_flag
-      return @transparent_color_flag unless @transparent_color_flag.nil?
-      @transparent_color_flag = (flags & 1) != 0
-      @transparent_color_flag
-    end
-    def user_input_flag
-      return @user_input_flag unless @user_input_flag.nil?
-      @user_input_flag = (flags & 2) != 0
-      @user_input_flag
-    end
-    attr_reader :block_size
-    attr_reader :flags
-    attr_reader :delay_time
-    attr_reader :transparent_idx
-    attr_reader :terminator
-  end
-  class Subblock < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @len_bytes = @_io.read_u1
-      @bytes = @_io.read_bytes(len_bytes)
-      self
-    end
-    attr_reader :len_bytes
-    attr_reader :bytes
-  end
-  class ApplicationId < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @len_bytes = @_io.read_u1
-      raise Kaitai::Struct::ValidationNotEqualError.new(11, len_bytes, _io, "/types/application_id/seq/0") if not len_bytes == 11
-      @application_identifier = (@_io.read_bytes(8)).force_encoding("ASCII")
-      @application_auth_code = @_io.read_bytes(3)
-      self
-    end
-    attr_reader :len_bytes
-    attr_reader :application_identifier
-    attr_reader :application_auth_code
+    attr_reader :red
+    attr_reader :green
+    attr_reader :blue
   end
   class ExtApplication < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -320,26 +153,43 @@ class Gif < Kaitai::Struct::Struct
     attr_reader :application_id
     attr_reader :subblocks
   end
-  class Subblocks < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+
+  ##
+  # @see https://www.w3.org/Graphics/GIF/spec-gif89a.txt - section 23
+  class ExtGraphicControl < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @entries = []
-      i = 0
-      begin
-        _ = Subblock.new(@_io, self, @_root)
-        @entries << _
-        i += 1
-      end until _.len_bytes == 0
+      @block_size = @_io.read_bytes(1)
+      raise Kaitai::Struct::ValidationNotEqualError.new([4].pack('C*'), @block_size, @_io, "/types/ext_graphic_control/seq/0") if not @block_size == [4].pack('C*')
+      @flags = @_io.read_u1
+      @delay_time = @_io.read_u2le
+      @transparent_idx = @_io.read_u1
+      @terminator = @_io.read_bytes(1)
+      raise Kaitai::Struct::ValidationNotEqualError.new([0].pack('C*'), @terminator, @_io, "/types/ext_graphic_control/seq/4") if not @terminator == [0].pack('C*')
       self
     end
-    attr_reader :entries
+    def transparent_color_flag
+      return @transparent_color_flag unless @transparent_color_flag.nil?
+      @transparent_color_flag = flags & 1 != 0
+      @transparent_color_flag
+    end
+    def user_input_flag
+      return @user_input_flag unless @user_input_flag.nil?
+      @user_input_flag = flags & 2 != 0
+      @user_input_flag
+    end
+    attr_reader :block_size
+    attr_reader :flags
+    attr_reader :delay_time
+    attr_reader :transparent_idx
+    attr_reader :terminator
   end
   class Extension < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -360,6 +210,154 @@ class Gif < Kaitai::Struct::Struct
     end
     attr_reader :label
     attr_reader :body
+  end
+
+  ##
+  # @see https://www.w3.org/Graphics/GIF/spec-gif89a.txt - section 17
+  class Header < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @magic = @_io.read_bytes(3)
+      raise Kaitai::Struct::ValidationNotEqualError.new([71, 73, 70].pack('C*'), @magic, @_io, "/types/header/seq/0") if not @magic == [71, 73, 70].pack('C*')
+      @version = (@_io.read_bytes(3)).force_encoding("ASCII").encode('UTF-8')
+      self
+    end
+    attr_reader :magic
+    attr_reader :version
+  end
+
+  ##
+  # @see https://www.w3.org/Graphics/GIF/spec-gif89a.txt - section 22
+  class ImageData < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @lzw_min_code_size = @_io.read_u1
+      @subblocks = Subblocks.new(@_io, self, @_root)
+      self
+    end
+    attr_reader :lzw_min_code_size
+    attr_reader :subblocks
+  end
+  class LocalImageDescriptor < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @left = @_io.read_u2le
+      @top = @_io.read_u2le
+      @width = @_io.read_u2le
+      @height = @_io.read_u2le
+      @flags = @_io.read_u1
+      if has_color_table
+        _io_local_color_table = @_io.substream(color_table_size * 3)
+        @local_color_table = ColorTable.new(_io_local_color_table, self, @_root)
+      end
+      @image_data = ImageData.new(@_io, self, @_root)
+      self
+    end
+    def color_table_size
+      return @color_table_size unless @color_table_size.nil?
+      @color_table_size = 2 << (flags & 7)
+      @color_table_size
+    end
+    def has_color_table
+      return @has_color_table unless @has_color_table.nil?
+      @has_color_table = flags & 128 != 0
+      @has_color_table
+    end
+    def has_interlace
+      return @has_interlace unless @has_interlace.nil?
+      @has_interlace = flags & 64 != 0
+      @has_interlace
+    end
+    def has_sorted_color_table
+      return @has_sorted_color_table unless @has_sorted_color_table.nil?
+      @has_sorted_color_table = flags & 32 != 0
+      @has_sorted_color_table
+    end
+    attr_reader :left
+    attr_reader :top
+    attr_reader :width
+    attr_reader :height
+    attr_reader :flags
+    attr_reader :local_color_table
+    attr_reader :image_data
+    attr_reader :_raw_local_color_table
+  end
+
+  ##
+  # @see https://www.w3.org/Graphics/GIF/spec-gif89a.txt - section 18
+  class LogicalScreenDescriptorStruct < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @screen_width = @_io.read_u2le
+      @screen_height = @_io.read_u2le
+      @flags = @_io.read_u1
+      @bg_color_index = @_io.read_u1
+      @pixel_aspect_ratio = @_io.read_u1
+      self
+    end
+    def color_table_size
+      return @color_table_size unless @color_table_size.nil?
+      @color_table_size = 2 << (flags & 7)
+      @color_table_size
+    end
+    def has_color_table
+      return @has_color_table unless @has_color_table.nil?
+      @has_color_table = flags & 128 != 0
+      @has_color_table
+    end
+    attr_reader :screen_width
+    attr_reader :screen_height
+    attr_reader :flags
+    attr_reader :bg_color_index
+    attr_reader :pixel_aspect_ratio
+  end
+  class Subblock < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @len_bytes = @_io.read_u1
+      @bytes = @_io.read_bytes(len_bytes)
+      self
+    end
+    attr_reader :len_bytes
+    attr_reader :bytes
+  end
+  class Subblocks < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @entries = []
+      i = 0
+      begin
+        _ = Subblock.new(@_io, self, @_root)
+        @entries << _
+        i += 1
+      end until _.len_bytes == 0
+      self
+    end
+    attr_reader :entries
   end
   attr_reader :hdr
   attr_reader :logical_screen_descriptor

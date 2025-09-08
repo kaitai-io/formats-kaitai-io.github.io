@@ -106,6 +106,7 @@ namespace Kaitai
                 {
                     if (f_body)
                         return _body;
+                    f_body = true;
                     long _pos = m_io.Pos;
                     m_io.Seek(OfsBody);
                     switch (Type) {
@@ -121,7 +122,6 @@ namespace Kaitai
                     }
                     }
                     m_io.Seek(_pos);
-                    f_body = true;
                     return _body;
                 }
             }

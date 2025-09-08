@@ -46,7 +46,7 @@ namespace Kaitai
         private void _read()
         {
             _headerPrefix = new FileHeaderPrefix(m_io, this, m_root);
-            __raw_header = m_io.ReadBytes((HeaderPrefix.LenHeader - 10));
+            __raw_header = m_io.ReadBytes(HeaderPrefix.LenHeader - 10);
             var io___raw_header = new KaitaiStream(__raw_header);
             _header = new FileHeader(io___raw_header, this, m_root);
             _chunks = new List<Chunk>();
@@ -54,144 +54,6 @@ namespace Kaitai
             {
                 _chunks.Add(new Chunk(m_io, this, m_root));
             }
-        }
-        public partial class FileHeaderPrefix : KaitaiStruct
-        {
-            public static FileHeaderPrefix FromFile(string fileName)
-            {
-                return new FileHeaderPrefix(new KaitaiStream(fileName));
-            }
-
-            public FileHeaderPrefix(KaitaiStream p__io, AndroidSparse p__parent = null, AndroidSparse p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _magic = m_io.ReadBytes(4);
-                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 58, 255, 38, 237 }) == 0)))
-                {
-                    throw new ValidationNotEqualError(new byte[] { 58, 255, 38, 237 }, Magic, M_Io, "/types/file_header_prefix/seq/0");
-                }
-                _version = new Version(m_io, this, m_root);
-                _lenHeader = m_io.ReadU2le();
-            }
-            private byte[] _magic;
-            private Version _version;
-            private ushort _lenHeader;
-            private AndroidSparse m_root;
-            private AndroidSparse m_parent;
-            public byte[] Magic { get { return _magic; } }
-
-            /// <summary>
-            /// internal; access `_root.header.version` instead
-            /// </summary>
-            public Version Version { get { return _version; } }
-
-            /// <summary>
-            /// internal; access `_root.header.len_header` instead
-            /// </summary>
-            public ushort LenHeader { get { return _lenHeader; } }
-            public AndroidSparse M_Root { get { return m_root; } }
-            public AndroidSparse M_Parent { get { return m_parent; } }
-        }
-        public partial class FileHeader : KaitaiStruct
-        {
-            public static FileHeader FromFile(string fileName)
-            {
-                return new FileHeader(new KaitaiStream(fileName));
-            }
-
-            public FileHeader(KaitaiStream p__io, AndroidSparse p__parent = null, AndroidSparse p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_version = false;
-                f_lenHeader = false;
-                _read();
-            }
-            private void _read()
-            {
-                _lenChunkHeader = m_io.ReadU2le();
-                _blockSize = m_io.ReadU4le();
-                {
-                    uint M_ = BlockSize;
-                    if (!(KaitaiStream.Mod(M_, 4) == 0))
-                    {
-                        throw new ValidationExprError(BlockSize, M_Io, "/types/file_header/seq/1");
-                    }
-                }
-                _numBlocks = m_io.ReadU4le();
-                _numChunks = m_io.ReadU4le();
-                _checksum = m_io.ReadU4le();
-            }
-            private bool f_version;
-            private Version _version;
-            public Version Version
-            {
-                get
-                {
-                    if (f_version)
-                        return _version;
-                    _version = (Version) (M_Root.HeaderPrefix.Version);
-                    f_version = true;
-                    return _version;
-                }
-            }
-            private bool f_lenHeader;
-            private ushort _lenHeader;
-
-            /// <summary>
-            /// size of file header, should be 28
-            /// </summary>
-            public ushort LenHeader
-            {
-                get
-                {
-                    if (f_lenHeader)
-                        return _lenHeader;
-                    _lenHeader = (ushort) (M_Root.HeaderPrefix.LenHeader);
-                    f_lenHeader = true;
-                    return _lenHeader;
-                }
-            }
-            private ushort _lenChunkHeader;
-            private uint _blockSize;
-            private uint _numBlocks;
-            private uint _numChunks;
-            private uint _checksum;
-            private AndroidSparse m_root;
-            private AndroidSparse m_parent;
-
-            /// <summary>
-            /// size of chunk header, should be 12
-            /// </summary>
-            public ushort LenChunkHeader { get { return _lenChunkHeader; } }
-
-            /// <summary>
-            /// block size in bytes, must be a multiple of 4
-            /// </summary>
-            public uint BlockSize { get { return _blockSize; } }
-
-            /// <summary>
-            /// blocks in the original data
-            /// </summary>
-            public uint NumBlocks { get { return _numBlocks; } }
-            public uint NumChunks { get { return _numChunks; } }
-
-            /// <summary>
-            /// CRC32 checksum of the original data
-            /// 
-            /// In practice always 0; if checksum writing is requested, a CRC32 chunk is written
-            /// at the end of the file instead. The canonical `libsparse` implementation does this
-            /// and other implementations tend to follow it, see
-            /// &lt;https://gitlab.com/teskje/android-sparse-rs/-/blob/57c2577/src/write.rs#L112-114&gt;
-            /// </summary>
-            public uint Checksum { get { return _checksum; } }
-            public AndroidSparse M_Root { get { return m_root; } }
-            public AndroidSparse M_Parent { get { return m_parent; } }
         }
         public partial class Chunk : KaitaiStruct
         {
@@ -243,9 +105,9 @@ namespace Kaitai
                     _reserved1 = m_io.ReadU2le();
                     _numBodyBlocks = m_io.ReadU4le();
                     _lenChunk = m_io.ReadU4le();
-                    if (!(LenChunk == (LenBodyExpected != -1 ? (M_Root.Header.LenChunkHeader + LenBodyExpected) : LenChunk)))
+                    if (!(_lenChunk == (LenBodyExpected != -1 ? M_Root.Header.LenChunkHeader + LenBodyExpected : LenChunk)))
                     {
-                        throw new ValidationNotEqualError((LenBodyExpected != -1 ? (M_Root.Header.LenChunkHeader + LenBodyExpected) : LenChunk), LenChunk, M_Io, "/types/chunk/types/chunk_header/seq/3");
+                        throw new ValidationNotEqualError((LenBodyExpected != -1 ? M_Root.Header.LenChunkHeader + LenBodyExpected : LenChunk), _lenChunk, m_io, "/types/chunk/types/chunk_header/seq/3");
                     }
                 }
                 private bool f_lenBody;
@@ -256,8 +118,8 @@ namespace Kaitai
                     {
                         if (f_lenBody)
                             return _lenBody;
-                        _lenBody = (int) ((LenChunk - M_Root.Header.LenChunkHeader));
                         f_lenBody = true;
+                        _lenBody = (int) (LenChunk - M_Root.Header.LenChunkHeader);
                         return _lenBody;
                     }
                 }
@@ -282,8 +144,8 @@ namespace Kaitai
                     {
                         if (f_lenBodyExpected)
                             return _lenBodyExpected;
-                        _lenBodyExpected = (int) ((ChunkType == AndroidSparse.ChunkTypes.Raw ? (M_Root.Header.BlockSize * NumBodyBlocks) : (ChunkType == AndroidSparse.ChunkTypes.Fill ? 4 : (ChunkType == AndroidSparse.ChunkTypes.DontCare ? 0 : (ChunkType == AndroidSparse.ChunkTypes.Crc32 ? 4 : -1)))));
                         f_lenBodyExpected = true;
+                        _lenBodyExpected = (int) ((ChunkType == AndroidSparse.ChunkTypes.Raw ? M_Root.Header.BlockSize * NumBodyBlocks : (ChunkType == AndroidSparse.ChunkTypes.Fill ? 4 : (ChunkType == AndroidSparse.ChunkTypes.DontCare ? 0 : (ChunkType == AndroidSparse.ChunkTypes.Crc32 ? 4 : -1)))));
                         return _lenBodyExpected;
                     }
                 }
@@ -319,6 +181,144 @@ namespace Kaitai
             public AndroidSparse M_Parent { get { return m_parent; } }
             public byte[] M_RawHeader { get { return __raw_header; } }
         }
+        public partial class FileHeader : KaitaiStruct
+        {
+            public static FileHeader FromFile(string fileName)
+            {
+                return new FileHeader(new KaitaiStream(fileName));
+            }
+
+            public FileHeader(KaitaiStream p__io, AndroidSparse p__parent = null, AndroidSparse p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_lenHeader = false;
+                f_version = false;
+                _read();
+            }
+            private void _read()
+            {
+                _lenChunkHeader = m_io.ReadU2le();
+                _blockSize = m_io.ReadU4le();
+                {
+                    uint M_ = _blockSize;
+                    if (!(KaitaiStream.Mod(M_, 4) == 0))
+                    {
+                        throw new ValidationExprError(_blockSize, m_io, "/types/file_header/seq/1");
+                    }
+                }
+                _numBlocks = m_io.ReadU4le();
+                _numChunks = m_io.ReadU4le();
+                _checksum = m_io.ReadU4le();
+            }
+            private bool f_lenHeader;
+            private ushort _lenHeader;
+
+            /// <summary>
+            /// size of file header, should be 28
+            /// </summary>
+            public ushort LenHeader
+            {
+                get
+                {
+                    if (f_lenHeader)
+                        return _lenHeader;
+                    f_lenHeader = true;
+                    _lenHeader = (ushort) (M_Root.HeaderPrefix.LenHeader);
+                    return _lenHeader;
+                }
+            }
+            private bool f_version;
+            private Version _version;
+            public Version Version
+            {
+                get
+                {
+                    if (f_version)
+                        return _version;
+                    f_version = true;
+                    _version = (Version) (M_Root.HeaderPrefix.Version);
+                    return _version;
+                }
+            }
+            private ushort _lenChunkHeader;
+            private uint _blockSize;
+            private uint _numBlocks;
+            private uint _numChunks;
+            private uint _checksum;
+            private AndroidSparse m_root;
+            private AndroidSparse m_parent;
+
+            /// <summary>
+            /// size of chunk header, should be 12
+            /// </summary>
+            public ushort LenChunkHeader { get { return _lenChunkHeader; } }
+
+            /// <summary>
+            /// block size in bytes, must be a multiple of 4
+            /// </summary>
+            public uint BlockSize { get { return _blockSize; } }
+
+            /// <summary>
+            /// blocks in the original data
+            /// </summary>
+            public uint NumBlocks { get { return _numBlocks; } }
+            public uint NumChunks { get { return _numChunks; } }
+
+            /// <summary>
+            /// CRC32 checksum of the original data
+            /// 
+            /// In practice always 0; if checksum writing is requested, a CRC32 chunk is written
+            /// at the end of the file instead. The canonical `libsparse` implementation does this
+            /// and other implementations tend to follow it, see
+            /// &lt;https://gitlab.com/teskje/android-sparse-rs/-/blob/57c2577/src/write.rs#L112-114&gt;
+            /// </summary>
+            public uint Checksum { get { return _checksum; } }
+            public AndroidSparse M_Root { get { return m_root; } }
+            public AndroidSparse M_Parent { get { return m_parent; } }
+        }
+        public partial class FileHeaderPrefix : KaitaiStruct
+        {
+            public static FileHeaderPrefix FromFile(string fileName)
+            {
+                return new FileHeaderPrefix(new KaitaiStream(fileName));
+            }
+
+            public FileHeaderPrefix(KaitaiStream p__io, AndroidSparse p__parent = null, AndroidSparse p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _magic = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 58, 255, 38, 237 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 58, 255, 38, 237 }, _magic, m_io, "/types/file_header_prefix/seq/0");
+                }
+                _version = new Version(m_io, this, m_root);
+                _lenHeader = m_io.ReadU2le();
+            }
+            private byte[] _magic;
+            private Version _version;
+            private ushort _lenHeader;
+            private AndroidSparse m_root;
+            private AndroidSparse m_parent;
+            public byte[] Magic { get { return _magic; } }
+
+            /// <summary>
+            /// internal; access `_root.header.version` instead
+            /// </summary>
+            public Version Version { get { return _version; } }
+
+            /// <summary>
+            /// internal; access `_root.header.len_header` instead
+            /// </summary>
+            public ushort LenHeader { get { return _lenHeader; } }
+            public AndroidSparse M_Root { get { return m_root; } }
+            public AndroidSparse M_Parent { get { return m_parent; } }
+        }
         public partial class Version : KaitaiStruct
         {
             public static Version FromFile(string fileName)
@@ -335,9 +335,9 @@ namespace Kaitai
             private void _read()
             {
                 _major = m_io.ReadU2le();
-                if (!(Major == 1))
+                if (!(_major == 1))
                 {
-                    throw new ValidationNotEqualError(1, Major, M_Io, "/types/version/seq/0");
+                    throw new ValidationNotEqualError(1, _major, m_io, "/types/version/seq/0");
                 }
                 _minor = m_io.ReadU2le();
             }

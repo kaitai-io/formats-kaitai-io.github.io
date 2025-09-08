@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.RubyMarshal = factory(root.KaitaiStream);
+    factory(root.RubyMarshal || (root.RubyMarshal = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (RubyMarshal_, KaitaiStream) {
 /**
  * Ruby's Marshal module allows serialization and deserialization of
  * many standard and arbitrary Ruby objects in a compact binary
@@ -73,30 +73,11 @@ var RubyMarshal = (function() {
   }
   RubyMarshal.prototype._read = function() {
     this.version = this._io.readBytes(2);
-    if (!((KaitaiStream.byteArrayCompare(this.version, [4, 8]) == 0))) {
-      throw new KaitaiStream.ValidationNotEqualError([4, 8], this.version, this._io, "/seq/0");
+    if (!((KaitaiStream.byteArrayCompare(this.version, new Uint8Array([4, 8])) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([4, 8]), this.version, this._io, "/seq/0");
     }
     this.records = new Record(this._io, this, this._root);
   }
-
-  var RubyArray = RubyMarshal.RubyArray = (function() {
-    function RubyArray(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    RubyArray.prototype._read = function() {
-      this.numElements = new PackedInt(this._io, this, this._root);
-      this.elements = [];
-      for (var i = 0; i < this.numElements.value; i++) {
-        this.elements.push(new Record(this._io, this, this._root));
-      }
-    }
-
-    return RubyArray;
-  })();
 
   /**
    * @see {@link https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Bignum|Source}
@@ -106,14 +87,14 @@ var RubyMarshal = (function() {
     function Bignum(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     Bignum.prototype._read = function() {
       this.sign = this._io.readU1();
       this.lenDiv2 = new PackedInt(this._io, this, this._root);
-      this.body = this._io.readBytes((this.lenDiv2.value * 2));
+      this.body = this._io.readBytes(this.lenDiv2.value * 2);
     }
 
     /**
@@ -132,55 +113,27 @@ var RubyMarshal = (function() {
   })();
 
   /**
-   * @see {@link https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Struct|Source}
+   * @see {@link https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Instance+Variables|Source}
    */
 
-  var RubyStruct = RubyMarshal.RubyStruct = (function() {
-    function RubyStruct(_io, _parent, _root) {
+  var InstanceVar = RubyMarshal.InstanceVar = (function() {
+    function InstanceVar(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    RubyStruct.prototype._read = function() {
-      this.name = new Record(this._io, this, this._root);
-      this.numMembers = new PackedInt(this._io, this, this._root);
-      this.members = [];
-      for (var i = 0; i < this.numMembers.value; i++) {
-        this.members.push(new Pair(this._io, this, this._root));
+    InstanceVar.prototype._read = function() {
+      this.obj = new Record(this._io, this, this._root);
+      this.numVars = new PackedInt(this._io, this, this._root);
+      this.vars = [];
+      for (var i = 0; i < this.numVars.value; i++) {
+        this.vars.push(new Pair(this._io, this, this._root));
       }
     }
 
-    /**
-     * Symbol containing the name of the struct.
-     */
-
-    /**
-     * Number of members in a struct
-     */
-
-    return RubyStruct;
-  })();
-
-  /**
-   * @see {@link https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Symbols+and+Byte+Sequence|Source}
-   */
-
-  var RubySymbol = RubyMarshal.RubySymbol = (function() {
-    function RubySymbol(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    RubySymbol.prototype._read = function() {
-      this.len = new PackedInt(this._io, this, this._root);
-      this.name = KaitaiStream.bytesToStr(this._io.readBytes(this.len.value), "UTF-8");
-    }
-
-    return RubySymbol;
+    return InstanceVar;
   })();
 
   /**
@@ -216,18 +169,18 @@ var RubyMarshal = (function() {
     function PackedInt(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     PackedInt.prototype._read = function() {
       this.code = this._io.readU1();
       switch (this.code) {
-      case 4:
-        this.encoded = this._io.readU4le();
-        break;
       case 1:
         this.encoded = this._io.readU1();
+        break;
+      case 2:
+        this.encoded = this._io.readU2le();
         break;
       case 252:
         this.encoded = this._io.readU4le();
@@ -235,24 +188,24 @@ var RubyMarshal = (function() {
       case 253:
         this.encoded = this._io.readU2le();
         break;
-      case 3:
-        this.encoded = this._io.readU2le();
-        break;
-      case 2:
+      case 254:
         this.encoded = this._io.readU2le();
         break;
       case 255:
         this.encoded = this._io.readU1();
         break;
-      case 254:
+      case 3:
         this.encoded = this._io.readU2le();
+        break;
+      case 4:
+        this.encoded = this._io.readU4le();
         break;
       }
       switch (this.code) {
-      case 3:
+      case 253:
         this.encoded2 = this._io.readU1();
         break;
-      case 253:
+      case 3:
         this.encoded2 = this._io.readU1();
         break;
       }
@@ -269,7 +222,7 @@ var RubyMarshal = (function() {
       get: function() {
         if (this._m_value !== undefined)
           return this._m_value;
-        this._m_value = (this.isImmediate ? (this.code < 128 ? (this.code - 5) : (4 - (~(this.code) & 127))) : (this.code == 0 ? 0 : (this.code == 255 ? (this.encoded - 256) : (this.code == 254 ? (this.encoded - 65536) : (this.code == 253 ? (((this.encoded2 << 16) | this.encoded) - 16777216) : (this.code == 3 ? ((this.encoded2 << 16) | this.encoded) : this.encoded))))));
+        this._m_value = (this.isImmediate ? (this.code < 128 ? this.code - 5 : 4 - (~(this.code) & 127)) : (this.code == 0 ? 0 : (this.code == 255 ? this.encoded - 256 : (this.code == 254 ? this.encoded - 65536 : (this.code == 253 ? (this.encoded2 << 16 | this.encoded) - 16777216 : (this.code == 3 ? this.encoded2 << 16 | this.encoded : this.encoded))))));
         return this._m_value;
       }
     });
@@ -286,7 +239,7 @@ var RubyMarshal = (function() {
     function Pair(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -299,30 +252,6 @@ var RubyMarshal = (function() {
   })();
 
   /**
-   * @see {@link https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Instance+Variables|Source}
-   */
-
-  var InstanceVar = RubyMarshal.InstanceVar = (function() {
-    function InstanceVar(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    InstanceVar.prototype._read = function() {
-      this.obj = new Record(this._io, this, this._root);
-      this.numVars = new PackedInt(this._io, this, this._root);
-      this.vars = [];
-      for (var i = 0; i < this.numVars.value; i++) {
-        this.vars.push(new Pair(this._io, this, this._root));
-      }
-    }
-
-    return InstanceVar;
-  })();
-
-  /**
    * Each record starts with a single byte that determines its type
    * (`code`) and contents. If necessary, additional info as parsed
    * as `body`, to be determined by `code`.
@@ -332,47 +261,66 @@ var RubyMarshal = (function() {
     function Record(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     Record.prototype._read = function() {
       this.code = this._io.readU1();
       switch (this.code) {
-      case RubyMarshal.Codes.PACKED_INT:
-        this.body = new PackedInt(this._io, this, this._root);
-        break;
       case RubyMarshal.Codes.BIGNUM:
         this.body = new Bignum(this._io, this, this._root);
-        break;
-      case RubyMarshal.Codes.RUBY_ARRAY:
-        this.body = new RubyArray(this._io, this, this._root);
-        break;
-      case RubyMarshal.Codes.RUBY_SYMBOL_LINK:
-        this.body = new PackedInt(this._io, this, this._root);
-        break;
-      case RubyMarshal.Codes.RUBY_STRUCT:
-        this.body = new RubyStruct(this._io, this, this._root);
-        break;
-      case RubyMarshal.Codes.RUBY_STRING:
-        this.body = new RubyString(this._io, this, this._root);
         break;
       case RubyMarshal.Codes.INSTANCE_VAR:
         this.body = new InstanceVar(this._io, this, this._root);
         break;
+      case RubyMarshal.Codes.PACKED_INT:
+        this.body = new PackedInt(this._io, this, this._root);
+        break;
+      case RubyMarshal.Codes.RUBY_ARRAY:
+        this.body = new RubyArray(this._io, this, this._root);
+        break;
       case RubyMarshal.Codes.RUBY_HASH:
         this.body = new RubyHash(this._io, this, this._root);
+        break;
+      case RubyMarshal.Codes.RUBY_OBJECT_LINK:
+        this.body = new PackedInt(this._io, this, this._root);
+        break;
+      case RubyMarshal.Codes.RUBY_STRING:
+        this.body = new RubyString(this._io, this, this._root);
+        break;
+      case RubyMarshal.Codes.RUBY_STRUCT:
+        this.body = new RubyStruct(this._io, this, this._root);
         break;
       case RubyMarshal.Codes.RUBY_SYMBOL:
         this.body = new RubySymbol(this._io, this, this._root);
         break;
-      case RubyMarshal.Codes.RUBY_OBJECT_LINK:
+      case RubyMarshal.Codes.RUBY_SYMBOL_LINK:
         this.body = new PackedInt(this._io, this, this._root);
         break;
       }
     }
 
     return Record;
+  })();
+
+  var RubyArray = RubyMarshal.RubyArray = (function() {
+    function RubyArray(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    RubyArray.prototype._read = function() {
+      this.numElements = new PackedInt(this._io, this, this._root);
+      this.elements = [];
+      for (var i = 0; i < this.numElements.value; i++) {
+        this.elements.push(new Record(this._io, this, this._root));
+      }
+    }
+
+    return RubyArray;
   })();
 
   /**
@@ -383,7 +331,7 @@ var RubyMarshal = (function() {
     function RubyHash(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -406,7 +354,7 @@ var RubyMarshal = (function() {
     function RubyString(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -418,7 +366,59 @@ var RubyMarshal = (function() {
     return RubyString;
   })();
 
+  /**
+   * @see {@link https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Struct|Source}
+   */
+
+  var RubyStruct = RubyMarshal.RubyStruct = (function() {
+    function RubyStruct(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    RubyStruct.prototype._read = function() {
+      this.name = new Record(this._io, this, this._root);
+      this.numMembers = new PackedInt(this._io, this, this._root);
+      this.members = [];
+      for (var i = 0; i < this.numMembers.value; i++) {
+        this.members.push(new Pair(this._io, this, this._root));
+      }
+    }
+
+    /**
+     * Symbol containing the name of the struct.
+     */
+
+    /**
+     * Number of members in a struct
+     */
+
+    return RubyStruct;
+  })();
+
+  /**
+   * @see {@link https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Symbols+and+Byte+Sequence|Source}
+   */
+
+  var RubySymbol = RubyMarshal.RubySymbol = (function() {
+    function RubySymbol(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    RubySymbol.prototype._read = function() {
+      this.len = new PackedInt(this._io, this, this._root);
+      this.name = KaitaiStream.bytesToStr(this._io.readBytes(this.len.value), "UTF-8");
+    }
+
+    return RubySymbol;
+  })();
+
   return RubyMarshal;
 })();
-return RubyMarshal;
-}));
+RubyMarshal_.RubyMarshal = RubyMarshal;
+});

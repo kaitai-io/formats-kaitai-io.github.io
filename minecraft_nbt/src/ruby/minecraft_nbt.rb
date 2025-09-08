@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -97,8 +97,8 @@ class MinecraftNbt < Kaitai::Struct::Struct
     12 => :tag_long_array,
   }
   I__TAG = TAG.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -109,30 +109,58 @@ class MinecraftNbt < Kaitai::Struct::Struct
     @root = NamedTag.new(@_io, self, @_root)
     self
   end
-  class TagLongArray < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  class NamedTag < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @num_tags = @_io.read_s4be
-      @tags = []
-      (num_tags).times { |i|
-        @tags << @_io.read_s8be
-      }
+      @type = Kaitai::Struct::Stream::resolve_enum(MinecraftNbt::TAG, @_io.read_u1)
+      if !(is_tag_end)
+        @name = TagString.new(@_io, self, @_root)
+      end
+      if !(is_tag_end)
+        case type
+        when :tag_byte
+          @payload = @_io.read_s1
+        when :tag_byte_array
+          @payload = TagByteArray.new(@_io, self, @_root)
+        when :tag_compound
+          @payload = TagCompound.new(@_io, self, @_root)
+        when :tag_double
+          @payload = @_io.read_f8be
+        when :tag_float
+          @payload = @_io.read_f4be
+        when :tag_int
+          @payload = @_io.read_s4be
+        when :tag_int_array
+          @payload = TagIntArray.new(@_io, self, @_root)
+        when :tag_list
+          @payload = TagList.new(@_io, self, @_root)
+        when :tag_long
+          @payload = @_io.read_s8be
+        when :tag_long_array
+          @payload = TagLongArray.new(@_io, self, @_root)
+        when :tag_short
+          @payload = @_io.read_s2be
+        when :tag_string
+          @payload = TagString.new(@_io, self, @_root)
+        end
+      end
       self
     end
-    def tags_type
-      return @tags_type unless @tags_type.nil?
-      @tags_type = :tag_long
-      @tags_type
+    def is_tag_end
+      return @is_tag_end unless @is_tag_end.nil?
+      @is_tag_end = type == :tag_end
+      @is_tag_end
     end
-    attr_reader :num_tags
-    attr_reader :tags
+    attr_reader :type
+    attr_reader :name
+    attr_reader :payload
   end
   class TagByteArray < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -145,8 +173,31 @@ class MinecraftNbt < Kaitai::Struct::Struct
     attr_reader :len_data
     attr_reader :data
   end
+  class TagCompound < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @tags = []
+      i = 0
+      begin
+        _ = NamedTag.new(@_io, self, @_root)
+        @tags << _
+        i += 1
+      end until _.is_tag_end
+      self
+    end
+    def dump_num_tags
+      return @dump_num_tags unless @dump_num_tags.nil?
+      @dump_num_tags = tags.length - ( ((tags.length >= 1) && (tags.last.is_tag_end))  ? 1 : 0)
+      @dump_num_tags
+    end
+    attr_reader :tags
+  end
   class TagIntArray < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -168,7 +219,7 @@ class MinecraftNbt < Kaitai::Struct::Struct
     attr_reader :tags
   end
   class TagList < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -179,30 +230,30 @@ class MinecraftNbt < Kaitai::Struct::Struct
       @tags = []
       (num_tags).times { |i|
         case tags_type
-        when :tag_long_array
-          @tags << TagLongArray.new(@_io, self, @_root)
+        when :tag_byte
+          @tags << @_io.read_s1
+        when :tag_byte_array
+          @tags << TagByteArray.new(@_io, self, @_root)
         when :tag_compound
           @tags << TagCompound.new(@_io, self, @_root)
         when :tag_double
           @tags << @_io.read_f8be
-        when :tag_list
-          @tags << TagList.new(@_io, self, @_root)
         when :tag_float
           @tags << @_io.read_f4be
-        when :tag_short
-          @tags << @_io.read_s2be
         when :tag_int
           @tags << @_io.read_s4be
-        when :tag_byte_array
-          @tags << TagByteArray.new(@_io, self, @_root)
-        when :tag_byte
-          @tags << @_io.read_s1
         when :tag_int_array
           @tags << TagIntArray.new(@_io, self, @_root)
-        when :tag_string
-          @tags << TagString.new(@_io, self, @_root)
+        when :tag_list
+          @tags << TagList.new(@_io, self, @_root)
         when :tag_long
           @tags << @_io.read_s8be
+        when :tag_long_array
+          @tags << TagLongArray.new(@_io, self, @_root)
+        when :tag_short
+          @tags << @_io.read_s2be
+        when :tag_string
+          @tags << TagString.new(@_io, self, @_root)
         end
       }
       self
@@ -211,15 +262,37 @@ class MinecraftNbt < Kaitai::Struct::Struct
     attr_reader :num_tags
     attr_reader :tags
   end
+  class TagLongArray < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @num_tags = @_io.read_s4be
+      @tags = []
+      (num_tags).times { |i|
+        @tags << @_io.read_s8be
+      }
+      self
+    end
+    def tags_type
+      return @tags_type unless @tags_type.nil?
+      @tags_type = :tag_long
+      @tags_type
+    end
+    attr_reader :num_tags
+    attr_reader :tags
+  end
   class TagString < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
       @len_data = @_io.read_u2be
-      @data = (@_io.read_bytes(len_data)).force_encoding("utf-8")
+      @data = (@_io.read_bytes(len_data)).force_encoding("UTF-8")
       self
     end
 
@@ -228,86 +301,13 @@ class MinecraftNbt < Kaitai::Struct::Struct
     attr_reader :len_data
     attr_reader :data
   end
-  class TagCompound < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @tags = []
-      i = 0
-      begin
-        _ = NamedTag.new(@_io, self, @_root)
-        @tags << _
-        i += 1
-      end until _.is_tag_end
-      self
-    end
-    def dump_num_tags
-      return @dump_num_tags unless @dump_num_tags.nil?
-      @dump_num_tags = (tags.length - ( ((tags.length >= 1) && (tags.last.is_tag_end))  ? 1 : 0))
-      @dump_num_tags
-    end
-    attr_reader :tags
-  end
-  class NamedTag < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @type = Kaitai::Struct::Stream::resolve_enum(MinecraftNbt::TAG, @_io.read_u1)
-      if !(is_tag_end)
-        @name = TagString.new(@_io, self, @_root)
-      end
-      if !(is_tag_end)
-        case type
-        when :tag_long_array
-          @payload = TagLongArray.new(@_io, self, @_root)
-        when :tag_compound
-          @payload = TagCompound.new(@_io, self, @_root)
-        when :tag_double
-          @payload = @_io.read_f8be
-        when :tag_list
-          @payload = TagList.new(@_io, self, @_root)
-        when :tag_float
-          @payload = @_io.read_f4be
-        when :tag_short
-          @payload = @_io.read_s2be
-        when :tag_int
-          @payload = @_io.read_s4be
-        when :tag_byte_array
-          @payload = TagByteArray.new(@_io, self, @_root)
-        when :tag_byte
-          @payload = @_io.read_s1
-        when :tag_int_array
-          @payload = TagIntArray.new(@_io, self, @_root)
-        when :tag_string
-          @payload = TagString.new(@_io, self, @_root)
-        when :tag_long
-          @payload = @_io.read_s8be
-        end
-      end
-      self
-    end
-    def is_tag_end
-      return @is_tag_end unless @is_tag_end.nil?
-      @is_tag_end = type == :tag_end
-      @is_tag_end
-    end
-    attr_reader :type
-    attr_reader :name
-    attr_reader :payload
-  end
   def root_type
     return @root_type unless @root_type.nil?
     _pos = @_io.pos
     @_io.seek(0)
     @root_type = Kaitai::Struct::Stream::resolve_enum(TAG, @_io.read_u1)
+    raise Kaitai::Struct::ValidationNotEqualError.new(:tag_compound, @root_type, @_io, "/instances/root_type") if not @root_type == :tag_compound
     @_io.seek(_pos)
-    raise Kaitai::Struct::ValidationNotEqualError.new(:tag_compound, root_type, _io, "/instances/root_type") if not root_type == :tag_compound
     @root_type
   end
   attr_reader :root_check

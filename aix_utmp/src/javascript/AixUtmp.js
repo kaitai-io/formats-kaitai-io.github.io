@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.AixUtmp = factory(root.KaitaiStream);
+    factory(root.AixUtmp || (root.AixUtmp = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (AixUtmp_, KaitaiStream) {
 /**
  * This spec can be used to parse utmp, wtmp and other similar as created by IBM AIX.
  * @see {@link https://www.ibm.com/docs/en/aix/7.1?topic=files-utmph-file|Source}
@@ -55,23 +55,47 @@ var AixUtmp = (function() {
     }
   }
 
+  var ExitStatus = AixUtmp.ExitStatus = (function() {
+    function ExitStatus(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    ExitStatus.prototype._read = function() {
+      this.terminationCode = this._io.readS2be();
+      this.exitCode = this._io.readS2be();
+    }
+
+    /**
+     * process termination status
+     */
+
+    /**
+     * process exit status
+     */
+
+    return ExitStatus;
+  })();
+
   var Record = AixUtmp.Record = (function() {
     function Record(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     Record.prototype._read = function() {
-      this.user = KaitaiStream.bytesToStr(this._io.readBytes(256), "ascii");
-      this.inittabId = KaitaiStream.bytesToStr(this._io.readBytes(14), "ascii");
-      this.device = KaitaiStream.bytesToStr(this._io.readBytes(64), "ascii");
+      this.user = KaitaiStream.bytesToStr(this._io.readBytes(256), "ASCII");
+      this.inittabId = KaitaiStream.bytesToStr(this._io.readBytes(14), "ASCII");
+      this.device = KaitaiStream.bytesToStr(this._io.readBytes(64), "ASCII");
       this.pid = this._io.readU8be();
       this.type = this._io.readS2be();
       this.timestamp = this._io.readS8be();
       this.exitStatus = new ExitStatus(this._io, this, this._root);
-      this.hostname = KaitaiStream.bytesToStr(this._io.readBytes(256), "ascii");
+      this.hostname = KaitaiStream.bytesToStr(this._io.readBytes(256), "ASCII");
       this.dblWordPad = this._io.readS4be();
       this.reservedA = this._io.readBytes(8);
       this.reservedV = this._io.readBytes(24);
@@ -112,31 +136,7 @@ var AixUtmp = (function() {
     return Record;
   })();
 
-  var ExitStatus = AixUtmp.ExitStatus = (function() {
-    function ExitStatus(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    ExitStatus.prototype._read = function() {
-      this.terminationCode = this._io.readS2be();
-      this.exitCode = this._io.readS2be();
-    }
-
-    /**
-     * process termination status
-     */
-
-    /**
-     * process exit status
-     */
-
-    return ExitStatus;
-  })();
-
   return AixUtmp;
 })();
-return AixUtmp;
-}));
+AixUtmp_.AixUtmp = AixUtmp;
+});

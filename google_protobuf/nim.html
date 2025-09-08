@@ -211,6 +211,11 @@ are the fields' default values, etc, etc.</li>
                 
                 <li>
                 
+                <a href="java-write.html" title="Google Protocol Buffers (protobuf) parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="Google Protocol Buffers (protobuf) parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -241,7 +246,17 @@ are the fields' default values, etc, etc.</li>
                 
                 <li>
                 
+                <a href="python-write.html" title="Google Protocol Buffers (protobuf) parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="Google Protocol Buffers (protobuf) parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="Google Protocol Buffers (protobuf) parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -273,21 +288,24 @@ are the fields' default values, etc, etc.</li>
         <div class="row">
             <div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="n">kaitai_struct_nim_runtime</span>
 <span class="kn">import</span><span class="w"> </span><span class="n">options</span>
-<span class="kn">import</span><span class="w"> </span><span class="o">/</span><span class="n">common</span><span class="o">/</span><span class="n">vlq_base128_le</span>
+<span class="kn">import</span><span class="w"> </span><span class="n">vlq_base128_le</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="s">&quot;vlq_base128_le&quot;</span>
 <span class="k">type</span>
 <span class="w">  </span><span class="n">GoogleProtobuf</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
 <span class="w">    </span><span class="p">`</span><span class="n">pairs</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">GoogleProtobuf_Pair</span><span class="o">]</span>
 <span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">  </span><span class="n">GoogleProtobuf_DelimitedBytes</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">len</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">VlqBase128Le</span>
+<span class="w">    </span><span class="p">`</span><span class="n">body</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">GoogleProtobuf_Pair</span>
 <span class="w">  </span><span class="n">GoogleProtobuf_Pair</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
 <span class="w">    </span><span class="p">`</span><span class="n">key</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">VlqBase128Le</span>
 <span class="w">    </span><span class="p">`</span><span class="n">value</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
 <span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">GoogleProtobuf</span>
-<span class="w">    </span><span class="p">`</span><span class="n">wireTypeInst</span><span class="p">`:</span><span class="w"> </span><span class="n">GoogleProtobuf_Pair_WireTypes</span>
-<span class="w">    </span><span class="p">`</span><span class="n">wireTypeInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
 <span class="w">    </span><span class="p">`</span><span class="n">fieldTagInst</span><span class="p">`:</span><span class="w"> </span><span class="nb">int</span>
 <span class="w">    </span><span class="p">`</span><span class="n">fieldTagInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">wireTypeInst</span><span class="p">`:</span><span class="w"> </span><span class="n">GoogleProtobuf_Pair_WireTypes</span>
+<span class="w">    </span><span class="p">`</span><span class="n">wireTypeInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
 <span class="w">  </span><span class="n">GoogleProtobuf_Pair_WireTypes</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">enum</span>
 <span class="w">    </span><span class="n">varint</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
 <span class="w">    </span><span class="n">bit_64</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
@@ -295,17 +313,13 @@ are the fields' default values, etc, etc.</li>
 <span class="w">    </span><span class="n">group_start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
 <span class="w">    </span><span class="n">group_end</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span>
 <span class="w">    </span><span class="n">bit_32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
-<span class="w">  </span><span class="n">GoogleProtobuf_DelimitedBytes</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
-<span class="w">    </span><span class="p">`</span><span class="n">len</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">VlqBase128Le</span>
-<span class="w">    </span><span class="p">`</span><span class="n">body</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">GoogleProtobuf_Pair</span>
 
 <span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[GoogleProtobuf], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): GoogleProtobuf</span>
-<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[GoogleProtobuf_Pair], io: KaitaiStream, root: KaitaiStruct, parent: GoogleProtobuf): GoogleProtobuf_Pair</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[GoogleProtobuf_DelimitedBytes], io: KaitaiStream, root: KaitaiStruct, parent: GoogleProtobuf_Pair): GoogleProtobuf_DelimitedBytes</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[GoogleProtobuf_Pair], io: KaitaiStream, root: KaitaiStruct, parent: GoogleProtobuf): GoogleProtobuf_Pair</span>
 
-<span class="k">proc</span><span class="w"> </span><span class="nf">wireType</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">GoogleProtobuf_Pair</span><span class="p">):</span><span class="w"> </span><span class="n">GoogleProtobuf_Pair_WireTypes</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">fieldTag</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">GoogleProtobuf_Pair</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">wireType</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">GoogleProtobuf_Pair</span><span class="p">):</span><span class="w"> </span><span class="n">GoogleProtobuf_Pair_WireTypes</span>
 
 
 <span class="sd">##[</span>
@@ -361,6 +375,22 @@ are the fields' default values, etc, etc.</li>
 <span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[GoogleProtobuf], filename: string): GoogleProtobuf =</span>
 <span class="w">  </span><span class="n">GoogleProtobuf</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[GoogleProtobuf_DelimitedBytes], io: KaitaiStream, root: KaitaiStruct, parent: GoogleProtobuf_Pair): GoogleProtobuf_DelimitedBytes =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">GoogleProtobuf_DelimitedBytes</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">GoogleProtobuf</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">GoogleProtobuf</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
+
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lenExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">VlqBase128Le</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lenExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">bodyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">len</span><span class="p">.</span><span class="n">value</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bodyExpr</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[GoogleProtobuf_DelimitedBytes], filename: string): GoogleProtobuf_DelimitedBytes =</span>
+<span class="w">  </span><span class="n">GoogleProtobuf_DelimitedBytes</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+
 
 <span class="sd">##[</span>
 <span class="sd">Key-value pair</span>
@@ -380,7 +410,7 @@ are the fields' default values, etc, etc.</li>
 <span class="sd">an integer &quot;field tag&quot;.</span>
 
 <span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">keyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">VlqBase128Le</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">keyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">VlqBase128Le</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">keyExpr</span>
 
 <span class="w">  </span><span class="sd">##[</span>
@@ -393,18 +423,32 @@ are the fields' default values, etc, etc.</li>
 <span class="sd">  ]##</span>
 <span class="w">  </span><span class="k">block</span><span class="p">:</span>
 <span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">wireType</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">google_protobuf</span><span class="p">.</span><span class="n">varint</span><span class="p">:</span>
-<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">valueExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">VlqBase128Le</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
-<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">valueExpr</span>
-<span class="w">    </span><span class="k">elif</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">google_protobuf</span><span class="p">.</span><span class="n">len_delimited</span><span class="p">:</span>
-<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">valueExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GoogleProtobuf_DelimitedBytes</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">google_protobuf</span><span class="p">.</span><span class="n">bit_32</span><span class="p">:</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">valueExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">())</span>
 <span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">valueExpr</span>
 <span class="w">    </span><span class="k">elif</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">google_protobuf</span><span class="p">.</span><span class="n">bit_64</span><span class="p">:</span>
 <span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">valueExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU8le</span><span class="p">())</span>
 <span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">valueExpr</span>
-<span class="w">    </span><span class="k">elif</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">google_protobuf</span><span class="p">.</span><span class="n">bit_32</span><span class="p">:</span>
-<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">valueExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">())</span>
+<span class="w">    </span><span class="k">elif</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">google_protobuf</span><span class="p">.</span><span class="n">len_delimited</span><span class="p">:</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">valueExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GoogleProtobuf_DelimitedBytes</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
 <span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">valueExpr</span>
+<span class="w">    </span><span class="k">elif</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">google_protobuf</span><span class="p">.</span><span class="n">varint</span><span class="p">:</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">valueExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">VlqBase128Le</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">valueExpr</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">fieldTag</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">GoogleProtobuf_Pair</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Identifies a field of protocol. One can look up symbolic</span>
+<span class="sd">field name in a `.proto` file by this field tag.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">fieldTagInstFlag</span><span class="p">:</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">fieldTagInst</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">fieldTagInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">key</span><span class="p">.</span><span class="n">value</span><span class="w"> </span><span class="ow">shr</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">fieldTagInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fieldTagInstExpr</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">fieldTagInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">fieldTagInst</span>
 
 <span class="k">proc</span><span class="w"> </span><span class="nf">wireType</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">GoogleProtobuf_Pair</span><span class="p">):</span><span class="w"> </span><span class="n">GoogleProtobuf_Pair_WireTypes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
 
@@ -420,43 +464,13 @@ are the fields' default values, etc, etc.</li>
 <span class="sd">  ]##</span>
 <span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">wireTypeInstFlag</span><span class="p">:</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">wireTypeInst</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">wireTypeInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GoogleProtobuf_Pair_WireTypes</span><span class="p">(</span><span class="n">GoogleProtobuf_Pair_WireTypes</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">key</span><span class="p">.</span><span class="n">value</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="mi">7</span><span class="p">)))</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">wireTypeInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GoogleProtobuf_Pair_WireTypes</span><span class="p">(</span><span class="n">GoogleProtobuf_Pair_WireTypes</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">key</span><span class="p">.</span><span class="n">value</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="mi">7</span><span class="p">))</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">wireTypeInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">wireTypeInstExpr</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">wireTypeInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
 <span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">wireTypeInst</span>
 
-<span class="k">proc</span><span class="w"> </span><span class="nf">fieldTag</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">GoogleProtobuf_Pair</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  Identifies a field of protocol. One can look up symbolic</span>
-<span class="sd">field name in a `.proto` file by this field tag.</span>
-
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">fieldTagInstFlag</span><span class="p">:</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">fieldTagInst</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">fieldTagInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">key</span><span class="p">.</span><span class="n">value</span><span class="w"> </span><span class="ow">shr</span><span class="w"> </span><span class="mi">3</span><span class="p">))</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">fieldTagInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fieldTagInstExpr</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">fieldTagInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">fieldTagInst</span>
-
 <span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[GoogleProtobuf_Pair], filename: string): GoogleProtobuf_Pair =</span>
 <span class="w">  </span><span class="n">GoogleProtobuf_Pair</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
-
-<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[GoogleProtobuf_DelimitedBytes], io: KaitaiStream, root: KaitaiStruct, parent: GoogleProtobuf_Pair): GoogleProtobuf_DelimitedBytes =</span>
-<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
-<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">GoogleProtobuf_DelimitedBytes</span><span class="p">)</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">GoogleProtobuf</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">GoogleProtobuf</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
-
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lenExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">VlqBase128Le</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lenExpr</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">bodyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">len</span><span class="p">.</span><span class="n">value</span><span class="p">))</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bodyExpr</span>
-
-<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[GoogleProtobuf_DelimitedBytes], filename: string): GoogleProtobuf_DelimitedBytes =</span>
-<span class="w">  </span><span class="n">GoogleProtobuf_DelimitedBytes</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 </pre></div>
 
         </div>

@@ -54,13 +54,18 @@ const (
 	Au_Encodings__Aes Au_Encodings = 28
 	Au_Encodings__DeltaMulaw8 Au_Encodings = 29
 )
+var values_Au_Encodings = map[Au_Encodings]struct{}{1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}, 10: {}, 11: {}, 12: {}, 13: {}, 14: {}, 16: {}, 17: {}, 18: {}, 19: {}, 20: {}, 21: {}, 22: {}, 23: {}, 24: {}, 25: {}, 26: {}, 27: {}, 28: {}, 29: {}}
+func (v Au_Encodings) isDefined() bool {
+	_, ok := values_Au_Encodings[v]
+	return ok
+}
 type Au struct {
 	Magic []byte
 	OfsData uint32
 	Header *Au_Header
 	_io *kaitai.Stream
 	_root *Au
-	_parent interface{}
+	_parent kaitai.Struct
 	_raw_Header []byte
 	_f_lenData bool
 	lenData int
@@ -70,7 +75,11 @@ func NewAu() *Au {
 	}
 }
 
-func (this *Au) Read(io *kaitai.Stream, parent interface{}, root *Au) (err error) {
+func (this Au) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Au) Read(io *kaitai.Stream, parent kaitai.Struct, root *Au) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -89,7 +98,7 @@ func (this *Au) Read(io *kaitai.Stream, parent interface{}, root *Au) (err error
 		return err
 	}
 	this.OfsData = uint32(tmp2)
-	tmp3, err := this._io.ReadBytes(int(((this.OfsData - 4) - 4)))
+	tmp3, err := this._io.ReadBytes(int((this.OfsData - 4) - 4))
 	if err != nil {
 		return err
 	}
@@ -108,18 +117,18 @@ func (this *Au) LenData() (v int, err error) {
 	if (this._f_lenData) {
 		return this.lenData, nil
 	}
+	this._f_lenData = true
 	var tmp5 int;
 	if (this.Header.DataSize == uint32(4294967295)) {
 		tmp6, err := this._io.Size()
 		if err != nil {
 			return 0, err
 		}
-		tmp5 = (tmp6 - this.OfsData)
+		tmp5 = tmp6 - this.OfsData
 	} else {
 		tmp5 = this.Header.DataSize
 	}
 	this.lenData = int(tmp5)
-	this._f_lenData = true
 	return this.lenData, nil
 }
 type Au_Header struct {
@@ -135,6 +144,10 @@ type Au_Header struct {
 func NewAu_Header() *Au_Header {
 	return &Au_Header{
 	}
+}
+
+func (this Au_Header) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Au_Header) Read(io *kaitai.Stream, parent *Au, root *Au) (err error) {

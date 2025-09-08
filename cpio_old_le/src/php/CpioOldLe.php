@@ -3,8 +3,8 @@
 
 namespace {
     class CpioOldLe extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \CpioOldLe $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\CpioOldLe $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -23,29 +23,29 @@ namespace {
 
 namespace CpioOldLe {
     class File extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \CpioOldLe $_parent = null, \CpioOldLe $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\CpioOldLe $_parent = null, ?\CpioOldLe $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_header = new \CpioOldLe\FileHeader($this->_io, $this, $this->_root);
-            $this->_m_pathName = $this->_io->readBytes(($this->header()->pathNameSize() - 1));
+            $this->_m_pathName = $this->_io->readBytes($this->header()->pathNameSize() - 1);
             $this->_m_stringTerminator = $this->_io->readBytes(1);
-            if (!($this->stringTerminator() == "\x00")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00", $this->stringTerminator(), $this->_io(), "/types/file/seq/2");
+            if (!($this->_m_stringTerminator == "\x00")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00", $this->_m_stringTerminator, $this->_io, "/types/file/seq/2");
             }
             if (\Kaitai\Struct\Stream::mod($this->header()->pathNameSize(), 2) == 1) {
                 $this->_m_pathNamePadding = $this->_io->readBytes(1);
-                if (!($this->pathNamePadding() == "\x00")) {
-                    throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00", $this->pathNamePadding(), $this->_io(), "/types/file/seq/3");
+                if (!($this->_m_pathNamePadding == "\x00")) {
+                    throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00", $this->_m_pathNamePadding, $this->_io, "/types/file/seq/3");
                 }
             }
             $this->_m_fileData = $this->_io->readBytes($this->header()->fileSize()->value());
             if (\Kaitai\Struct\Stream::mod($this->header()->fileSize()->value(), 2) == 1) {
                 $this->_m_fileDataPadding = $this->_io->readBytes(1);
-                if (!($this->fileDataPadding() == "\x00")) {
-                    throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00", $this->fileDataPadding(), $this->_io(), "/types/file/seq/5");
+                if (!($this->_m_fileDataPadding == "\x00")) {
+                    throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00", $this->_m_fileDataPadding, $this->_io, "/types/file/seq/5");
                 }
             }
             if ( (($this->pathName() == "\x54\x52\x41\x49\x4C\x45\x52\x21\x21\x21") && ($this->header()->fileSize()->value() == 0)) ) {
@@ -71,15 +71,15 @@ namespace CpioOldLe {
 
 namespace CpioOldLe {
     class FileHeader extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \CpioOldLe\File $_parent = null, \CpioOldLe $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\CpioOldLe\File $_parent = null, ?\CpioOldLe $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic = $this->_io->readBytes(2);
-            if (!($this->magic() == "\xC7\x71")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\xC7\x71", $this->magic(), $this->_io(), "/types/file_header/seq/0");
+            if (!($this->_m_magic == "\xC7\x71")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\xC7\x71", $this->_m_magic, $this->_io, "/types/file_header/seq/0");
             }
             $this->_m_deviceNumber = $this->_io->readU2le();
             $this->_m_inodeNumber = $this->_io->readU2le();
@@ -119,7 +119,7 @@ namespace CpioOldLe {
 
 namespace CpioOldLe {
     class FourByteUnsignedInteger extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \CpioOldLe\FileHeader $_parent = null, \CpioOldLe $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\CpioOldLe\FileHeader $_parent = null, ?\CpioOldLe $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -132,7 +132,7 @@ namespace CpioOldLe {
         public function value() {
             if ($this->_m_value !== null)
                 return $this->_m_value;
-            $this->_m_value = ($this->leastSignificantBits() + ($this->mostSignificantBits() << 16));
+            $this->_m_value = $this->leastSignificantBits() + ($this->mostSignificantBits() << 16);
             return $this->_m_value;
         }
         protected $_m_mostSignificantBits;

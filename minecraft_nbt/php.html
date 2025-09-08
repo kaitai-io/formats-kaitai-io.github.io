@@ -252,6 +252,11 @@ are replaced or ignored.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="Minecraft NBT (Named Binary Tag) parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="Minecraft NBT (Named Binary Tag) parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -282,7 +287,17 @@ are replaced or ignored.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="Minecraft NBT (Named Binary Tag) parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="Minecraft NBT (Named Binary Tag) parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="Minecraft NBT (Named Binary Tag) parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -388,8 +403,8 @@ are replaced or ignored.</p>
 
 <span class="k">namespace</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">MinecraftNbt</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\MinecraftNbt</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\MinecraftNbt</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span> <span class="o">===</span> <span class="k">null</span> <span class="o">?</span> <span class="nv">$this</span> <span class="o">:</span> <span class="nv">$_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
         <span class="p">}</span>
 
@@ -406,10 +421,10 @@ are replaced or ignored.</p>
             <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_rootType</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
-            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">rootType</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">COMPOUND</span><span class="p">))</span> <span class="p">{</span>
-                <span class="k">throw</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Error\ValidationNotEqualError</span><span class="p">(</span><span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">COMPOUND</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">rootType</span><span class="p">(),</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">(),</span> <span class="s2">&quot;/instances/root_type&quot;</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_rootType</span> <span class="o">==</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">COMPOUND</span><span class="p">))</span> <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Error\ValidationNotEqualError</span><span class="p">(</span><span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">COMPOUND</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_rootType</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="s2">&quot;/instances/root_type&quot;</span><span class="p">);</span>
             <span class="p">}</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
             <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_rootType</span><span class="p">;</span>
         <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_rootCheck</span><span class="p">;</span>
@@ -420,37 +435,77 @@ are replaced or ignored.</p>
 <span class="p">}</span>
 
 <span class="k">namespace</span> <span class="nx">MinecraftNbt</span> <span class="p">{</span>
-    <span class="k">class</span> <span class="nc">TagLongArray</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\MinecraftNbt</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">NamedTag</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\MinecraftNbt</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
         <span class="p">}</span>
 
         <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numTags</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4be</span><span class="p">();</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tags</span> <span class="o">=</span> <span class="p">[];</span>
-            <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numTags</span><span class="p">();</span>
-            <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tags</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS8be</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_type</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">isTagEnd</span><span class="p">()))</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_name</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MinecraftNbt\TagString</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">isTagEnd</span><span class="p">()))</span> <span class="p">{</span>
+                <span class="k">switch</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">type</span><span class="p">())</span> <span class="p">{</span>
+                    <span class="k">case</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">BYTE</span><span class="o">:</span>
+                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payload</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS1</span><span class="p">();</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="k">case</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">BYTE_ARRAY</span><span class="o">:</span>
+                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MinecraftNbt\TagByteArray</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="k">case</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">COMPOUND</span><span class="o">:</span>
+                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MinecraftNbt\TagCompound</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="k">case</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">DOUBLE</span><span class="o">:</span>
+                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payload</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readF8be</span><span class="p">();</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="k">case</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">FLOAT</span><span class="o">:</span>
+                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payload</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readF4be</span><span class="p">();</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="k">case</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">INT</span><span class="o">:</span>
+                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payload</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4be</span><span class="p">();</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="k">case</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">INT_ARRAY</span><span class="o">:</span>
+                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MinecraftNbt\TagIntArray</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="k">case</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">LIST</span><span class="o">:</span>
+                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MinecraftNbt\TagList</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="k">case</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">LONG</span><span class="o">:</span>
+                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payload</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS8be</span><span class="p">();</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="k">case</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">LONG_ARRAY</span><span class="o">:</span>
+                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MinecraftNbt\TagLongArray</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="k">case</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">SHORT</span><span class="o">:</span>
+                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payload</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS2be</span><span class="p">();</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="k">case</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">STRING</span><span class="o">:</span>
+                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MinecraftNbt\TagString</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
             <span class="p">}</span>
         <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_tagsType</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">tagsType</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tagsType</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tagsType</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tagsType</span> <span class="o">=</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">LONG</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tagsType</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_isTagEnd</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">isTagEnd</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isTagEnd</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isTagEnd</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isTagEnd</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">type</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">END</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isTagEnd</span><span class="p">;</span>
         <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_numTags</span><span class="p">;</span>
-        <span class="k">protected</span> <span class="nv">$_m_tags</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">numTags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numTags</span><span class="p">;</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">tags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tags</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_type</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_name</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_payload</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">type</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_type</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">name</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_name</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">payload</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payload</span><span class="p">;</span> <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
 <span class="k">namespace</span> <span class="nx">MinecraftNbt</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">TagByteArray</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\MinecraftNbt</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\MinecraftNbt</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
         <span class="p">}</span>
@@ -467,8 +522,36 @@ are replaced or ignored.</p>
 <span class="p">}</span>
 
 <span class="k">namespace</span> <span class="nx">MinecraftNbt</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">TagCompound</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\MinecraftNbt</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tags</span> <span class="o">=</span> <span class="p">[];</span>
+            <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">do</span> <span class="p">{</span>
+                <span class="nv">$_</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MinecraftNbt\NamedTag</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tags</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$_</span><span class="p">;</span>
+                <span class="nv">$i</span><span class="o">++</span><span class="p">;</span>
+            <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$_</span><span class="o">-&gt;</span><span class="na">isTagEnd</span><span class="p">()));</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_dumpNumTags</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">dumpNumTags</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dumpNumTags</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dumpNumTags</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dumpNumTags</span> <span class="o">=</span> <span class="nb">count</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">tags</span><span class="p">())</span> <span class="o">-</span> <span class="p">(</span> <span class="p">((</span><span class="nb">count</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">tags</span><span class="p">())</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">tags</span><span class="p">()[</span><span class="nb">count</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">tags</span><span class="p">())</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">isTagEnd</span><span class="p">()))</span>  <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dumpNumTags</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_tags</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">tags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tags</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">MinecraftNbt</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">TagIntArray</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\MinecraftNbt</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\MinecraftNbt</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
         <span class="p">}</span>
@@ -497,7 +580,7 @@ are replaced or ignored.</p>
 
 <span class="k">namespace</span> <span class="nx">MinecraftNbt</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">TagList</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\MinecraftNbt</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\MinecraftNbt</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
         <span class="p">}</span>
@@ -509,8 +592,11 @@ are replaced or ignored.</p>
             <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numTags</span><span class="p">();</span>
             <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
                 <span class="k">switch</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">tagsType</span><span class="p">())</span> <span class="p">{</span>
-                    <span class="k">case</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">LONG_ARRAY</span><span class="o">:</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tags</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MinecraftNbt\TagLongArray</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                    <span class="k">case</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">BYTE</span><span class="o">:</span>
+                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tags</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS1</span><span class="p">();</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="k">case</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">BYTE_ARRAY</span><span class="o">:</span>
+                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tags</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MinecraftNbt\TagByteArray</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
                         <span class="k">break</span><span class="p">;</span>
                     <span class="k">case</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">COMPOUND</span><span class="o">:</span>
                         <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tags</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MinecraftNbt\TagCompound</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
@@ -518,32 +604,29 @@ are replaced or ignored.</p>
                     <span class="k">case</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">DOUBLE</span><span class="o">:</span>
                         <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tags</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readF8be</span><span class="p">();</span>
                         <span class="k">break</span><span class="p">;</span>
-                    <span class="k">case</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">LIST</span><span class="o">:</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tags</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MinecraftNbt\TagList</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
                     <span class="k">case</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">FLOAT</span><span class="o">:</span>
                         <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tags</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readF4be</span><span class="p">();</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="k">case</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">SHORT</span><span class="o">:</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tags</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS2be</span><span class="p">();</span>
                         <span class="k">break</span><span class="p">;</span>
                     <span class="k">case</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">INT</span><span class="o">:</span>
                         <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tags</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4be</span><span class="p">();</span>
                         <span class="k">break</span><span class="p">;</span>
-                    <span class="k">case</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">BYTE_ARRAY</span><span class="o">:</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tags</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MinecraftNbt\TagByteArray</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="k">case</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">BYTE</span><span class="o">:</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tags</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS1</span><span class="p">();</span>
-                        <span class="k">break</span><span class="p">;</span>
                     <span class="k">case</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">INT_ARRAY</span><span class="o">:</span>
                         <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tags</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MinecraftNbt\TagIntArray</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
                         <span class="k">break</span><span class="p">;</span>
-                    <span class="k">case</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">STRING</span><span class="o">:</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tags</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MinecraftNbt\TagString</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                    <span class="k">case</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">LIST</span><span class="o">:</span>
+                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tags</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MinecraftNbt\TagList</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
                         <span class="k">break</span><span class="p">;</span>
                     <span class="k">case</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">LONG</span><span class="o">:</span>
                         <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tags</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS8be</span><span class="p">();</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="k">case</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">LONG_ARRAY</span><span class="o">:</span>
+                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tags</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MinecraftNbt\TagLongArray</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="k">case</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">SHORT</span><span class="o">:</span>
+                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tags</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS2be</span><span class="p">();</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="k">case</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">STRING</span><span class="o">:</span>
+                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tags</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MinecraftNbt\TagString</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
                         <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
             <span class="p">}</span>
@@ -558,15 +641,44 @@ are replaced or ignored.</p>
 <span class="p">}</span>
 
 <span class="k">namespace</span> <span class="nx">MinecraftNbt</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">TagLongArray</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\MinecraftNbt</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numTags</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4be</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tags</span> <span class="o">=</span> <span class="p">[];</span>
+            <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numTags</span><span class="p">();</span>
+            <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tags</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS8be</span><span class="p">();</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_tagsType</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">tagsType</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tagsType</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tagsType</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tagsType</span> <span class="o">=</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">LONG</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tagsType</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_numTags</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_tags</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">numTags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numTags</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">tags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tags</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">MinecraftNbt</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">TagString</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\MinecraftNbt</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\MinecraftNbt</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
         <span class="p">}</span>
 
         <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenData</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2be</span><span class="p">();</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenData</span><span class="p">()),</span> <span class="s2">&quot;utf-8&quot;</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenData</span><span class="p">()),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
         <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_lenData</span><span class="p">;</span>
         <span class="k">protected</span> <span class="nv">$_m_data</span><span class="p">;</span>
@@ -576,103 +688,6 @@ are replaced or ignored.</p>
 <span class="sd">         */</span>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">lenData</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenData</span><span class="p">;</span> <span class="p">}</span>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">data</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data</span><span class="p">;</span> <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="k">namespace</span> <span class="nx">MinecraftNbt</span> <span class="p">{</span>
-    <span class="k">class</span> <span class="nc">TagCompound</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\MinecraftNbt</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
-        <span class="p">}</span>
-
-        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tags</span> <span class="o">=</span> <span class="p">[];</span>
-            <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">do</span> <span class="p">{</span>
-                <span class="nv">$_</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MinecraftNbt\NamedTag</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tags</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$_</span><span class="p">;</span>
-                <span class="nv">$i</span><span class="o">++</span><span class="p">;</span>
-            <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$_</span><span class="o">-&gt;</span><span class="na">isTagEnd</span><span class="p">()));</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_dumpNumTags</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">dumpNumTags</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dumpNumTags</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dumpNumTags</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dumpNumTags</span> <span class="o">=</span> <span class="p">(</span><span class="nb">count</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">tags</span><span class="p">())</span> <span class="o">-</span> <span class="p">(</span> <span class="p">((</span><span class="nb">count</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">tags</span><span class="p">())</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">tags</span><span class="p">()[</span><span class="nb">count</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">tags</span><span class="p">())</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">isTagEnd</span><span class="p">()))</span>  <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="mi">0</span><span class="p">));</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dumpNumTags</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_tags</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">tags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tags</span><span class="p">;</span> <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="k">namespace</span> <span class="nx">MinecraftNbt</span> <span class="p">{</span>
-    <span class="k">class</span> <span class="nc">NamedTag</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\MinecraftNbt</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
-        <span class="p">}</span>
-
-        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_type</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
-            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">isTagEnd</span><span class="p">()))</span> <span class="p">{</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_name</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MinecraftNbt\TagString</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-            <span class="p">}</span>
-            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">isTagEnd</span><span class="p">()))</span> <span class="p">{</span>
-                <span class="k">switch</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">type</span><span class="p">())</span> <span class="p">{</span>
-                    <span class="k">case</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">LONG_ARRAY</span><span class="o">:</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MinecraftNbt\TagLongArray</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="k">case</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">COMPOUND</span><span class="o">:</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MinecraftNbt\TagCompound</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="k">case</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">DOUBLE</span><span class="o">:</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payload</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readF8be</span><span class="p">();</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="k">case</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">LIST</span><span class="o">:</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MinecraftNbt\TagList</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="k">case</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">FLOAT</span><span class="o">:</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payload</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readF4be</span><span class="p">();</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="k">case</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">SHORT</span><span class="o">:</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payload</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS2be</span><span class="p">();</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="k">case</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">INT</span><span class="o">:</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payload</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4be</span><span class="p">();</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="k">case</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">BYTE_ARRAY</span><span class="o">:</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MinecraftNbt\TagByteArray</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="k">case</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">BYTE</span><span class="o">:</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payload</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS1</span><span class="p">();</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="k">case</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">INT_ARRAY</span><span class="o">:</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MinecraftNbt\TagIntArray</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="k">case</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">STRING</span><span class="o">:</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MinecraftNbt\TagString</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="k">case</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">LONG</span><span class="o">:</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payload</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS8be</span><span class="p">();</span>
-                        <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_isTagEnd</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">isTagEnd</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isTagEnd</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isTagEnd</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isTagEnd</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">type</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">END</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isTagEnd</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_type</span><span class="p">;</span>
-        <span class="k">protected</span> <span class="nv">$_m_name</span><span class="p">;</span>
-        <span class="k">protected</span> <span class="nv">$_m_payload</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">type</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_type</span><span class="p">;</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">name</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_name</span><span class="p">;</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">payload</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payload</span><span class="p">;</span> <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
@@ -697,6 +712,12 @@ are replaced or ignored.</p>
         <span class="k">const</span> <span class="no">COMPOUND</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">INT_ARRAY</span> <span class="o">=</span> <span class="mi">11</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">LONG_ARRAY</span> <span class="o">=</span> <span class="mi">12</span><span class="p">;</span>
+
+        <span class="k">private</span> <span class="k">const</span> <span class="no">_VALUES</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">1</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">2</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">3</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">4</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">5</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">6</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">7</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">8</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">9</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">10</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">11</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">12</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">];</span>
+
+        <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">isDefined</span><span class="p">(</span><span class="nx">int</span> <span class="nv">$v</span><span class="p">)</span><span class="o">:</span> <span class="nx">bool</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nb">isset</span><span class="p">(</span><span class="nx">self</span><span class="o">::</span><span class="na">_VALUES</span><span class="p">[</span><span class="nv">$v</span><span class="p">]);</span>
+        <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>

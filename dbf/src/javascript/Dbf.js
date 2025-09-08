@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.Dbf = factory(root.KaitaiStream);
+    factory(root.Dbf || (root.Dbf = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Dbf_, KaitaiStream) {
 /**
  * .dbf is a relational database format introduced in DOS database
  * management system dBASE in 1982.
@@ -36,12 +36,12 @@ var Dbf = (function() {
   }
   Dbf.prototype._read = function() {
     this.header1 = new Header1(this._io, this, this._root);
-    this._raw_header2 = this._io.readBytes(((this.header1.lenHeader - 12) - 1));
+    this._raw_header2 = this._io.readBytes((this.header1.lenHeader - 12) - 1);
     var _io__raw_header2 = new KaitaiStream(this._raw_header2);
     this.header2 = new Header2(_io__raw_header2, this, this._root);
     this.headerTerminator = this._io.readBytes(1);
-    if (!((KaitaiStream.byteArrayCompare(this.headerTerminator, [13]) == 0))) {
-      throw new KaitaiStream.ValidationNotEqualError([13], this.headerTerminator, this._io, "/seq/2");
+    if (!((KaitaiStream.byteArrayCompare(this.headerTerminator, new Uint8Array([13])) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([13]), this.headerTerminator, this._io, "/seq/2");
     }
     this._raw_records = [];
     this.records = [];
@@ -52,37 +52,11 @@ var Dbf = (function() {
     }
   }
 
-  var Header2 = Dbf.Header2 = (function() {
-    function Header2(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Header2.prototype._read = function() {
-      if (this._root.header1.dbaseLevel == 3) {
-        this.headerDbase3 = new HeaderDbase3(this._io, this, this._root);
-      }
-      if (this._root.header1.dbaseLevel == 7) {
-        this.headerDbase7 = new HeaderDbase7(this._io, this, this._root);
-      }
-      this.fields = [];
-      var i = 0;
-      while (!this._io.isEof()) {
-        this.fields.push(new Field(this._io, this, this._root));
-        i++;
-      }
-    }
-
-    return Header2;
-  })();
-
   var Field = Dbf.Field = (function() {
     function Field(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -110,7 +84,7 @@ var Dbf = (function() {
     function Header1(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -127,7 +101,7 @@ var Dbf = (function() {
       get: function() {
         if (this._m_dbaseLevel !== undefined)
           return this._m_dbaseLevel;
-        this._m_dbaseLevel = (this.version & 7);
+        this._m_dbaseLevel = this.version & 7;
         return this._m_dbaseLevel;
       }
     });
@@ -135,11 +109,37 @@ var Dbf = (function() {
     return Header1;
   })();
 
+  var Header2 = Dbf.Header2 = (function() {
+    function Header2(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Header2.prototype._read = function() {
+      if (this._root.header1.dbaseLevel == 3) {
+        this.headerDbase3 = new HeaderDbase3(this._io, this, this._root);
+      }
+      if (this._root.header1.dbaseLevel == 7) {
+        this.headerDbase7 = new HeaderDbase7(this._io, this, this._root);
+      }
+      this.fields = [];
+      var i = 0;
+      while (!this._io.isEof()) {
+        this.fields.push(new Field(this._io, this, this._root));
+        i++;
+      }
+    }
+
+    return Header2;
+  })();
+
   var HeaderDbase3 = Dbf.HeaderDbase3 = (function() {
     function HeaderDbase3(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -156,14 +156,14 @@ var Dbf = (function() {
     function HeaderDbase7(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     HeaderDbase7.prototype._read = function() {
       this.reserved1 = this._io.readBytes(2);
-      if (!((KaitaiStream.byteArrayCompare(this.reserved1, [0, 0]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([0, 0], this.reserved1, this._io, "/types/header_dbase_7/seq/0");
+      if (!((KaitaiStream.byteArrayCompare(this.reserved1, new Uint8Array([0, 0])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([0, 0]), this.reserved1, this._io, "/types/header_dbase_7/seq/0");
       }
       this.hasIncompleteTransaction = this._io.readU1();
       this.dbaseIvEncryption = this._io.readU1();
@@ -171,8 +171,8 @@ var Dbf = (function() {
       this.productionMdx = this._io.readU1();
       this.languageDriverId = this._io.readU1();
       this.reserved3 = this._io.readBytes(2);
-      if (!((KaitaiStream.byteArrayCompare(this.reserved3, [0, 0]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([0, 0], this.reserved3, this._io, "/types/header_dbase_7/seq/6");
+      if (!((KaitaiStream.byteArrayCompare(this.reserved3, new Uint8Array([0, 0])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([0, 0]), this.reserved3, this._io, "/types/header_dbase_7/seq/6");
       }
       this.languageDriverName = this._io.readBytes(32);
       this.reserved4 = this._io.readBytes(4);
@@ -185,7 +185,7 @@ var Dbf = (function() {
     function Record(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -202,5 +202,5 @@ var Dbf = (function() {
 
   return Dbf;
 })();
-return Dbf;
-}));
+Dbf_.Dbf = Dbf;
+});

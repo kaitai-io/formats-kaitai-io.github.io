@@ -14,7 +14,7 @@ type Dune2Pak struct {
 	Dir *Dune2Pak_Files
 	_io *kaitai.Stream
 	_root *Dune2Pak
-	_parent interface{}
+	_parent kaitai.Struct
 	_raw_Dir []byte
 	_f_dirSize bool
 	dirSize uint32
@@ -24,7 +24,11 @@ func NewDune2Pak() *Dune2Pak {
 	}
 }
 
-func (this *Dune2Pak) Read(io *kaitai.Stream, parent interface{}, root *Dune2Pak) (err error) {
+func (this Dune2Pak) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Dune2Pak) Read(io *kaitai.Stream, parent kaitai.Struct, root *Dune2Pak) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -52,6 +56,7 @@ func (this *Dune2Pak) DirSize() (v uint32, err error) {
 	if (this._f_dirSize) {
 		return this.dirSize, nil
 	}
+	this._f_dirSize = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return 0, err
@@ -69,42 +74,7 @@ func (this *Dune2Pak) DirSize() (v uint32, err error) {
 	if err != nil {
 		return 0, err
 	}
-	this._f_dirSize = true
-	this._f_dirSize = true
 	return this.dirSize, nil
-}
-type Dune2Pak_Files struct {
-	Files []*Dune2Pak_File
-	_io *kaitai.Stream
-	_root *Dune2Pak
-	_parent *Dune2Pak
-}
-func NewDune2Pak_Files() *Dune2Pak_Files {
-	return &Dune2Pak_Files{
-	}
-}
-
-func (this *Dune2Pak_Files) Read(io *kaitai.Stream, parent *Dune2Pak, root *Dune2Pak) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	for i := 1;; i++ {
-		tmp5, err := this._io.EOF()
-		if err != nil {
-			return err
-		}
-		if tmp5 {
-			break
-		}
-		tmp6 := NewDune2Pak_File(i)
-		err = tmp6.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Files = append(this.Files, tmp6)
-	}
-	return err
 }
 type Dune2Pak_File struct {
 	Ofs uint32
@@ -113,12 +83,12 @@ type Dune2Pak_File struct {
 	_io *kaitai.Stream
 	_root *Dune2Pak
 	_parent *Dune2Pak_Files
-	_f_nextOfs0 bool
-	nextOfs0 uint32
-	_f_nextOfs bool
-	nextOfs int
 	_f_body bool
 	body []byte
+	_f_nextOfs bool
+	nextOfs int
+	_f_nextOfs0 bool
+	nextOfs0 uint32
 }
 func NewDune2Pak_File(idx uint32) *Dune2Pak_File {
 	return &Dune2Pak_File{
@@ -126,39 +96,66 @@ func NewDune2Pak_File(idx uint32) *Dune2Pak_File {
 	}
 }
 
+func (this Dune2Pak_File) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Dune2Pak_File) Read(io *kaitai.Stream, parent *Dune2Pak_Files, root *Dune2Pak) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp7, err := this._io.ReadU4le()
+	tmp5, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Ofs = uint32(tmp7)
+	this.Ofs = uint32(tmp5)
 	if (this.Ofs != 0) {
-		tmp8, err := this._io.ReadBytesTerm(0, false, true, true)
+		tmp6, err := this._io.ReadBytesTerm(0, false, true, true)
 		if err != nil {
 			return err
 		}
-		this.FileName = string(tmp8)
+		this.FileName = string(tmp6)
 	}
 	return err
 }
-func (this *Dune2Pak_File) NextOfs0() (v uint32, err error) {
-	if (this._f_nextOfs0) {
-		return this.nextOfs0, nil
+func (this *Dune2Pak_File) Body() (v []byte, err error) {
+	if (this._f_body) {
+		return this.body, nil
 	}
+	this._f_body = true
 	if (this.Ofs != 0) {
-		this.nextOfs0 = uint32(this._root.Dir.Files[(this.Idx + 1)].Ofs)
+		thisIo := this._root._io
+		_pos, err := thisIo.Pos()
+		if err != nil {
+			return nil, err
+		}
+		_, err = thisIo.Seek(int64(this.Ofs), io.SeekStart)
+		if err != nil {
+			return nil, err
+		}
+		tmp7, err := this.NextOfs()
+		if err != nil {
+			return nil, err
+		}
+		tmp8, err := thisIo.ReadBytes(int(tmp7 - this.Ofs))
+		if err != nil {
+			return nil, err
+		}
+		tmp8 = tmp8
+		this.body = tmp8
+		_, err = thisIo.Seek(_pos, io.SeekStart)
+		if err != nil {
+			return nil, err
+		}
 	}
-	this._f_nextOfs0 = true
-	return this.nextOfs0, nil
+	return this.body, nil
 }
 func (this *Dune2Pak_File) NextOfs() (v int, err error) {
 	if (this._f_nextOfs) {
 		return this.nextOfs, nil
 	}
+	this._f_nextOfs = true
 	if (this.Ofs != 0) {
 		var tmp9 int;
 		tmp10, err := this.NextOfs0()
@@ -180,39 +177,52 @@ func (this *Dune2Pak_File) NextOfs() (v int, err error) {
 		}
 		this.nextOfs = int(tmp9)
 	}
-	this._f_nextOfs = true
 	return this.nextOfs, nil
 }
-func (this *Dune2Pak_File) Body() (v []byte, err error) {
-	if (this._f_body) {
-		return this.body, nil
+func (this *Dune2Pak_File) NextOfs0() (v uint32, err error) {
+	if (this._f_nextOfs0) {
+		return this.nextOfs0, nil
 	}
+	this._f_nextOfs0 = true
 	if (this.Ofs != 0) {
-		thisIo := this._root._io
-		_pos, err := thisIo.Pos()
-		if err != nil {
-			return nil, err
-		}
-		_, err = thisIo.Seek(int64(this.Ofs), io.SeekStart)
-		if err != nil {
-			return nil, err
-		}
-		tmp13, err := this.NextOfs()
-		if err != nil {
-			return nil, err
-		}
-		tmp14, err := thisIo.ReadBytes(int((tmp13 - this.Ofs)))
-		if err != nil {
-			return nil, err
-		}
-		tmp14 = tmp14
-		this.body = tmp14
-		_, err = thisIo.Seek(_pos, io.SeekStart)
-		if err != nil {
-			return nil, err
-		}
-		this._f_body = true
+		this.nextOfs0 = uint32(this._root.Dir.Files[this.Idx + 1].Ofs)
 	}
-	this._f_body = true
-	return this.body, nil
+	return this.nextOfs0, nil
+}
+type Dune2Pak_Files struct {
+	Files []*Dune2Pak_File
+	_io *kaitai.Stream
+	_root *Dune2Pak
+	_parent *Dune2Pak
+}
+func NewDune2Pak_Files() *Dune2Pak_Files {
+	return &Dune2Pak_Files{
+	}
+}
+
+func (this Dune2Pak_Files) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Dune2Pak_Files) Read(io *kaitai.Stream, parent *Dune2Pak, root *Dune2Pak) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	for i := 0;; i++ {
+		tmp13, err := this._io.EOF()
+		if err != nil {
+			return err
+		}
+		if tmp13 {
+			break
+		}
+		tmp14 := NewDune2Pak_File(i)
+		err = tmp14.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Files = append(this.Files, tmp14)
+	}
+	return err
 }

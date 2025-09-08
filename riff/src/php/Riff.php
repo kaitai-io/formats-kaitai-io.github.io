@@ -12,8 +12,8 @@
 
 namespace {
     class Riff extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Riff $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Riff $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -71,8 +71,187 @@ namespace {
 }
 
 namespace Riff {
+    class Chunk extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Riff $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_id = $this->_io->readU4le();
+            $this->_m_len = $this->_io->readU4le();
+            $this->_m__raw_dataSlot = $this->_io->readBytes($this->len());
+            $_io__raw_dataSlot = new \Kaitai\Struct\Stream($this->_m__raw_dataSlot);
+            $this->_m_dataSlot = new \Riff\Chunk\Slot($_io__raw_dataSlot, $this, $this->_root);
+            $this->_m_padByte = $this->_io->readBytes(\Kaitai\Struct\Stream::mod($this->len(), 2));
+        }
+        protected $_m_id;
+        protected $_m_len;
+        protected $_m_dataSlot;
+        protected $_m_padByte;
+        protected $_m__raw_dataSlot;
+        public function id() { return $this->_m_id; }
+        public function len() { return $this->_m_len; }
+        public function dataSlot() { return $this->_m_dataSlot; }
+        public function padByte() { return $this->_m_padByte; }
+        public function _raw_dataSlot() { return $this->_m__raw_dataSlot; }
+    }
+}
+
+namespace Riff\Chunk {
+    class Slot extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Riff\Chunk $_parent = null, ?\Riff $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+        }
+    }
+}
+
+namespace Riff {
+    class ChunkType extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Riff $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            if ($this->chunkOfs() < 0) {
+                $this->_m_saveChunkOfs = $this->_io->readBytes(0);
+            }
+            $this->_m_chunk = new \Riff\Chunk($this->_io, $this, $this->_root);
+        }
+        protected $_m_chunkData;
+        public function chunkData() {
+            if ($this->_m_chunkData !== null)
+                return $this->_m_chunkData;
+            $io = $this->chunk()->dataSlot()->_io();
+            $_pos = $io->pos();
+            $io->seek(0);
+            switch ($this->chunkId()) {
+                case \Riff\Fourcc::LIST:
+                    $this->_m_chunkData = new \Riff\ListChunkData($io, $this, $this->_root);
+                    break;
+            }
+            $io->seek($_pos);
+            return $this->_m_chunkData;
+        }
+        protected $_m_chunkId;
+        public function chunkId() {
+            if ($this->_m_chunkId !== null)
+                return $this->_m_chunkId;
+            $this->_m_chunkId = $this->chunk()->id();
+            return $this->_m_chunkId;
+        }
+        protected $_m_chunkIdReadable;
+        public function chunkIdReadable() {
+            if ($this->_m_chunkIdReadable !== null)
+                return $this->_m_chunkIdReadable;
+            $_pos = $this->_io->pos();
+            $this->_io->seek($this->chunkOfs());
+            $this->_m_chunkIdReadable = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(4), "ASCII");
+            $this->_io->seek($_pos);
+            return $this->_m_chunkIdReadable;
+        }
+        protected $_m_chunkOfs;
+        public function chunkOfs() {
+            if ($this->_m_chunkOfs !== null)
+                return $this->_m_chunkOfs;
+            $this->_m_chunkOfs = $this->_io()->pos();
+            return $this->_m_chunkOfs;
+        }
+        protected $_m_saveChunkOfs;
+        protected $_m_chunk;
+        public function saveChunkOfs() { return $this->_m_saveChunkOfs; }
+        public function chunk() { return $this->_m_chunk; }
+    }
+}
+
+/**
+ * All registered subchunks in the INFO chunk are NULL-terminated strings,
+ * but the unregistered might not be. By convention, the registered
+ * chunk IDs are in uppercase and the unregistered IDs are in lowercase.
+ * 
+ * If the chunk ID of an INFO subchunk contains a lowercase
+ * letter, this chunk is considered as unregistered and thus we can make
+ * no assumptions about the type of data.
+ */
+
+namespace Riff {
+    class InfoSubchunk extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Riff\ListChunkData $_parent = null, ?\Riff $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            if ($this->chunkOfs() < 0) {
+                $this->_m_saveChunkOfs = $this->_io->readBytes(0);
+            }
+            $this->_m_chunk = new \Riff\Chunk($this->_io, $this, $this->_root);
+        }
+        protected $_m_chunkData;
+        public function chunkData() {
+            if ($this->_m_chunkData !== null)
+                return $this->_m_chunkData;
+            $io = $this->chunk()->dataSlot()->_io();
+            $_pos = $io->pos();
+            $io->seek(0);
+            switch ($this->isUnregisteredTag()) {
+                case false:
+                    $this->_m_chunkData = \Kaitai\Struct\Stream::bytesToStr($io->readBytesTerm(0, false, true, true), "UTF-8");
+                    break;
+            }
+            $io->seek($_pos);
+            return $this->_m_chunkData;
+        }
+        protected $_m_chunkIdReadable;
+        public function chunkIdReadable() {
+            if ($this->_m_chunkIdReadable !== null)
+                return $this->_m_chunkIdReadable;
+            $this->_m_chunkIdReadable = \Kaitai\Struct\Stream::bytesToStr($this->idChars(), "ASCII");
+            return $this->_m_chunkIdReadable;
+        }
+        protected $_m_chunkOfs;
+        public function chunkOfs() {
+            if ($this->_m_chunkOfs !== null)
+                return $this->_m_chunkOfs;
+            $this->_m_chunkOfs = $this->_io()->pos();
+            return $this->_m_chunkOfs;
+        }
+        protected $_m_idChars;
+        public function idChars() {
+            if ($this->_m_idChars !== null)
+                return $this->_m_idChars;
+            $_pos = $this->_io->pos();
+            $this->_io->seek($this->chunkOfs());
+            $this->_m_idChars = $this->_io->readBytes(4);
+            $this->_io->seek($_pos);
+            return $this->_m_idChars;
+        }
+        protected $_m_isUnregisteredTag;
+
+        /**
+         * Check if chunk_id contains lowercase characters ([a-z], ASCII 97 = a, ASCII 122 = z).
+         */
+        public function isUnregisteredTag() {
+            if ($this->_m_isUnregisteredTag !== null)
+                return $this->_m_isUnregisteredTag;
+            $this->_m_isUnregisteredTag =  (( ((ord($this->idChars()[0]) >= 97) && (ord($this->idChars()[0]) <= 122)) ) || ( ((ord($this->idChars()[1]) >= 97) && (ord($this->idChars()[1]) <= 122)) ) || ( ((ord($this->idChars()[2]) >= 97) && (ord($this->idChars()[2]) <= 122)) ) || ( ((ord($this->idChars()[3]) >= 97) && (ord($this->idChars()[3]) <= 122)) )) ;
+            return $this->_m_isUnregisteredTag;
+        }
+        protected $_m_saveChunkOfs;
+        protected $_m_chunk;
+        public function saveChunkOfs() { return $this->_m_saveChunkOfs; }
+        public function chunk() { return $this->_m_chunk; }
+    }
+}
+
+namespace Riff {
     class ListChunkData extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Riff\ChunkType $_parent = null, \Riff $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Riff\ChunkType $_parent = null, ?\Riff $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -82,13 +261,6 @@ namespace Riff {
                 $this->_m_saveParentChunkDataOfs = $this->_io->readBytes(0);
             }
             $this->_m_parentChunkData = new \Riff\ParentChunkData($this->_io, $this, $this->_root);
-        }
-        protected $_m_parentChunkDataOfs;
-        public function parentChunkDataOfs() {
-            if ($this->_m_parentChunkDataOfs !== null)
-                return $this->_m_parentChunkDataOfs;
-            $this->_m_parentChunkDataOfs = $this->_io()->pos();
-            return $this->_m_parentChunkDataOfs;
         }
         protected $_m_formType;
         public function formType() {
@@ -106,6 +278,13 @@ namespace Riff {
             $this->_m_formTypeReadable = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(4), "ASCII");
             $this->_io->seek($_pos);
             return $this->_m_formTypeReadable;
+        }
+        protected $_m_parentChunkDataOfs;
+        public function parentChunkDataOfs() {
+            if ($this->_m_parentChunkDataOfs !== null)
+                return $this->_m_parentChunkDataOfs;
+            $this->_m_parentChunkDataOfs = $this->_io()->pos();
+            return $this->_m_parentChunkDataOfs;
         }
         protected $_m_subchunks;
         public function subchunks() {
@@ -138,48 +317,8 @@ namespace Riff {
 }
 
 namespace Riff {
-    class Chunk extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Riff $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_id = $this->_io->readU4le();
-            $this->_m_len = $this->_io->readU4le();
-            $this->_m__raw_dataSlot = $this->_io->readBytes($this->len());
-            $_io__raw_dataSlot = new \Kaitai\Struct\Stream($this->_m__raw_dataSlot);
-            $this->_m_dataSlot = new \Riff\Chunk\Slot($_io__raw_dataSlot, $this, $this->_root);
-            $this->_m_padByte = $this->_io->readBytes(\Kaitai\Struct\Stream::mod($this->len(), 2));
-        }
-        protected $_m_id;
-        protected $_m_len;
-        protected $_m_dataSlot;
-        protected $_m_padByte;
-        protected $_m__raw_dataSlot;
-        public function id() { return $this->_m_id; }
-        public function len() { return $this->_m_len; }
-        public function dataSlot() { return $this->_m_dataSlot; }
-        public function padByte() { return $this->_m_padByte; }
-        public function _raw_dataSlot() { return $this->_m__raw_dataSlot; }
-    }
-}
-
-namespace Riff\Chunk {
-    class Slot extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Riff\Chunk $_parent = null, \Riff $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-        }
-    }
-}
-
-namespace Riff {
     class ParentChunkData extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Riff $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Riff $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -201,152 +340,13 @@ namespace Riff {
 
 namespace Riff\ParentChunkData {
     class Slot extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Riff\ParentChunkData $_parent = null, \Riff $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Riff\ParentChunkData $_parent = null, ?\Riff $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
         }
-    }
-}
-
-/**
- * All registered subchunks in the INFO chunk are NULL-terminated strings,
- * but the unregistered might not be. By convention, the registered
- * chunk IDs are in uppercase and the unregistered IDs are in lowercase.
- * 
- * If the chunk ID of an INFO subchunk contains a lowercase
- * letter, this chunk is considered as unregistered and thus we can make
- * no assumptions about the type of data.
- */
-
-namespace Riff {
-    class InfoSubchunk extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Riff\ListChunkData $_parent = null, \Riff $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            if ($this->chunkOfs() < 0) {
-                $this->_m_saveChunkOfs = $this->_io->readBytes(0);
-            }
-            $this->_m_chunk = new \Riff\Chunk($this->_io, $this, $this->_root);
-        }
-        protected $_m_chunkData;
-        public function chunkData() {
-            if ($this->_m_chunkData !== null)
-                return $this->_m_chunkData;
-            $io = $this->chunk()->dataSlot()->_io();
-            $_pos = $io->pos();
-            $io->seek(0);
-            switch ($this->isUnregisteredTag()) {
-                case false:
-                    $this->_m_chunkData = \Kaitai\Struct\Stream::bytesToStr($io->readBytesTerm(0, false, true, true), "UTF-8");
-                    break;
-            }
-            $io->seek($_pos);
-            return $this->_m_chunkData;
-        }
-        protected $_m_isUnregisteredTag;
-
-        /**
-         * Check if chunk_id contains lowercase characters ([a-z], ASCII 97 = a, ASCII 122 = z).
-         */
-        public function isUnregisteredTag() {
-            if ($this->_m_isUnregisteredTag !== null)
-                return $this->_m_isUnregisteredTag;
-            $this->_m_isUnregisteredTag =  (( ((ord($this->idChars()[0]) >= 97) && (ord($this->idChars()[0]) <= 122)) ) || ( ((ord($this->idChars()[1]) >= 97) && (ord($this->idChars()[1]) <= 122)) ) || ( ((ord($this->idChars()[2]) >= 97) && (ord($this->idChars()[2]) <= 122)) ) || ( ((ord($this->idChars()[3]) >= 97) && (ord($this->idChars()[3]) <= 122)) )) ;
-            return $this->_m_isUnregisteredTag;
-        }
-        protected $_m_idChars;
-        public function idChars() {
-            if ($this->_m_idChars !== null)
-                return $this->_m_idChars;
-            $_pos = $this->_io->pos();
-            $this->_io->seek($this->chunkOfs());
-            $this->_m_idChars = $this->_io->readBytes(4);
-            $this->_io->seek($_pos);
-            return $this->_m_idChars;
-        }
-        protected $_m_chunkIdReadable;
-        public function chunkIdReadable() {
-            if ($this->_m_chunkIdReadable !== null)
-                return $this->_m_chunkIdReadable;
-            $this->_m_chunkIdReadable = \Kaitai\Struct\Stream::bytesToStr($this->idChars(), "ASCII");
-            return $this->_m_chunkIdReadable;
-        }
-        protected $_m_chunkOfs;
-        public function chunkOfs() {
-            if ($this->_m_chunkOfs !== null)
-                return $this->_m_chunkOfs;
-            $this->_m_chunkOfs = $this->_io()->pos();
-            return $this->_m_chunkOfs;
-        }
-        protected $_m_saveChunkOfs;
-        protected $_m_chunk;
-        public function saveChunkOfs() { return $this->_m_saveChunkOfs; }
-        public function chunk() { return $this->_m_chunk; }
-    }
-}
-
-namespace Riff {
-    class ChunkType extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Riff $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            if ($this->chunkOfs() < 0) {
-                $this->_m_saveChunkOfs = $this->_io->readBytes(0);
-            }
-            $this->_m_chunk = new \Riff\Chunk($this->_io, $this, $this->_root);
-        }
-        protected $_m_chunkOfs;
-        public function chunkOfs() {
-            if ($this->_m_chunkOfs !== null)
-                return $this->_m_chunkOfs;
-            $this->_m_chunkOfs = $this->_io()->pos();
-            return $this->_m_chunkOfs;
-        }
-        protected $_m_chunkId;
-        public function chunkId() {
-            if ($this->_m_chunkId !== null)
-                return $this->_m_chunkId;
-            $this->_m_chunkId = $this->chunk()->id();
-            return $this->_m_chunkId;
-        }
-        protected $_m_chunkIdReadable;
-        public function chunkIdReadable() {
-            if ($this->_m_chunkIdReadable !== null)
-                return $this->_m_chunkIdReadable;
-            $_pos = $this->_io->pos();
-            $this->_io->seek($this->chunkOfs());
-            $this->_m_chunkIdReadable = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(4), "ASCII");
-            $this->_io->seek($_pos);
-            return $this->_m_chunkIdReadable;
-        }
-        protected $_m_chunkData;
-        public function chunkData() {
-            if ($this->_m_chunkData !== null)
-                return $this->_m_chunkData;
-            $io = $this->chunk()->dataSlot()->_io();
-            $_pos = $io->pos();
-            $io->seek(0);
-            switch ($this->chunkId()) {
-                case \Riff\Fourcc::LIST:
-                    $this->_m_chunkData = new \Riff\ListChunkData($io, $this, $this->_root);
-                    break;
-            }
-            $io->seek($_pos);
-            return $this->_m_chunkData;
-        }
-        protected $_m_saveChunkOfs;
-        protected $_m_chunk;
-        public function saveChunkOfs() { return $this->_m_saveChunkOfs; }
-        public function chunk() { return $this->_m_chunk; }
     }
 }
 
@@ -355,5 +355,11 @@ namespace Riff {
         const RIFF = 1179011410;
         const INFO = 1330007625;
         const LIST = 1414744396;
+
+        private const _VALUES = [1179011410 => true, 1330007625 => true, 1414744396 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

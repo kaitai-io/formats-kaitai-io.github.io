@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream', './DosDatetime'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./DosDatetime'));
+    define(['exports', 'kaitai-struct/KaitaiStream', './DosDatetime'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'), require('./DosDatetime'));
   } else {
-    root.Rar = factory(root.KaitaiStream, root.DosDatetime);
+    factory(root.Rar || (root.Rar = {}), root.KaitaiStream, root.DosDatetime || (root.DosDatetime = {}));
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, DosDatetime) {
+})(typeof self !== 'undefined' ? self : this, function (Rar_, KaitaiStream, DosDatetime_) {
 /**
  * RAR is a archive format used by popular proprietary RAR archiver,
  * created by Eugene Roshal. There are two major versions of format
@@ -46,22 +46,6 @@ var Rar = (function() {
     123: "TERMINATOR",
   });
 
-  Rar.Oses = Object.freeze({
-    MS_DOS: 0,
-    OS_2: 1,
-    WINDOWS: 2,
-    UNIX: 3,
-    MAC_OS: 4,
-    BEOS: 5,
-
-    0: "MS_DOS",
-    1: "OS_2",
-    2: "WINDOWS",
-    3: "UNIX",
-    4: "MAC_OS",
-    5: "BEOS",
-  });
-
   Rar.Methods = Object.freeze({
     STORE: 48,
     FASTEST: 49,
@@ -76,6 +60,22 @@ var Rar = (function() {
     51: "NORMAL",
     52: "GOOD",
     53: "BEST",
+  });
+
+  Rar.Oses = Object.freeze({
+    MS_DOS: 0,
+    OS_2: 1,
+    WINDOWS: 2,
+    UNIX: 3,
+    MAC_OS: 4,
+    BEOS: 5,
+
+    0: "MS_DOS",
+    1: "OS_2",
+    2: "WINDOWS",
+    3: "UNIX",
+    4: "MAC_OS",
+    5: "BEOS",
   });
 
   function Rar(_io, _parent, _root) {
@@ -103,54 +103,6 @@ var Rar = (function() {
   }
 
   /**
-   * RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and
-   * 8-byte magic (and pretty different block format) for v5+. This
-   * type would parse and validate both versions of signature. Note
-   * that actually this signature is a valid RAR "block": in theory,
-   * one can omit signature reading at all, and read this normally,
-   * as a block, if exact RAR version is known (and thus it's
-   * possible to choose correct block format).
-   */
-
-  var MagicSignature = Rar.MagicSignature = (function() {
-    function MagicSignature(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    MagicSignature.prototype._read = function() {
-      this.magic1 = this._io.readBytes(6);
-      if (!((KaitaiStream.byteArrayCompare(this.magic1, [82, 97, 114, 33, 26, 7]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([82, 97, 114, 33, 26, 7], this.magic1, this._io, "/types/magic_signature/seq/0");
-      }
-      this.version = this._io.readU1();
-      if (this.version == 1) {
-        this.magic3 = this._io.readBytes(1);
-        if (!((KaitaiStream.byteArrayCompare(this.magic3, [0]) == 0))) {
-          throw new KaitaiStream.ValidationNotEqualError([0], this.magic3, this._io, "/types/magic_signature/seq/2");
-        }
-      }
-    }
-
-    /**
-     * Fixed part of file's magic signature that doesn't change with RAR version
-     */
-
-    /**
-     * Variable part of magic signature: 0 means old (RAR 1.5-4.0)
-     * format, 1 means new (RAR 5+) format
-     */
-
-    /**
-     * New format (RAR 5+) magic contains extra byte
-     */
-
-    return MagicSignature;
-  })();
-
-  /**
    * Basic block that RAR files consist of. There are several block
    * types (see `block_type`), which have different `body` and
    * `add_body`.
@@ -160,7 +112,7 @@ var Rar = (function() {
     function Block(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -186,6 +138,14 @@ var Rar = (function() {
         this.addBody = this._io.readBytes(this.addSize);
       }
     }
+    Object.defineProperty(Block.prototype, 'bodySize', {
+      get: function() {
+        if (this._m_bodySize !== undefined)
+          return this._m_bodySize;
+        this._m_bodySize = this.blockSize - this.headerSize;
+        return this._m_bodySize;
+      }
+    });
 
     /**
      * True if block has additional content attached to it
@@ -204,14 +164,6 @@ var Rar = (function() {
           return this._m_headerSize;
         this._m_headerSize = (this.hasAdd ? 11 : 7);
         return this._m_headerSize;
-      }
-    });
-    Object.defineProperty(Block.prototype, 'bodySize', {
-      get: function() {
-        if (this._m_bodySize !== undefined)
-          return this._m_bodySize;
-        this._m_bodySize = (this.blockSize - this.headerSize);
-        return this._m_bodySize;
       }
     });
 
@@ -238,7 +190,7 @@ var Rar = (function() {
     function BlockFileHeader(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -248,7 +200,7 @@ var Rar = (function() {
       this.fileCrc32 = this._io.readU4le();
       this._raw_fileTime = this._io.readBytes(4);
       var _io__raw_fileTime = new KaitaiStream(this._raw_fileTime);
-      this.fileTime = new DosDatetime(_io__raw_fileTime, this, null);
+      this.fileTime = new DosDatetime_.DosDatetime(_io__raw_fileTime, null, null);
       this.rarVersion = this._io.readU1();
       this.method = this._io.readU1();
       this.nameSize = this._io.readU2le();
@@ -301,7 +253,7 @@ var Rar = (function() {
     function BlockV5(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -309,6 +261,54 @@ var Rar = (function() {
     }
 
     return BlockV5;
+  })();
+
+  /**
+   * RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and
+   * 8-byte magic (and pretty different block format) for v5+. This
+   * type would parse and validate both versions of signature. Note
+   * that actually this signature is a valid RAR "block": in theory,
+   * one can omit signature reading at all, and read this normally,
+   * as a block, if exact RAR version is known (and thus it's
+   * possible to choose correct block format).
+   */
+
+  var MagicSignature = Rar.MagicSignature = (function() {
+    function MagicSignature(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    MagicSignature.prototype._read = function() {
+      this.magic1 = this._io.readBytes(6);
+      if (!((KaitaiStream.byteArrayCompare(this.magic1, new Uint8Array([82, 97, 114, 33, 26, 7])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([82, 97, 114, 33, 26, 7]), this.magic1, this._io, "/types/magic_signature/seq/0");
+      }
+      this.version = this._io.readU1();
+      if (this.version == 1) {
+        this.magic3 = this._io.readBytes(1);
+        if (!((KaitaiStream.byteArrayCompare(this.magic3, new Uint8Array([0])) == 0))) {
+          throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([0]), this.magic3, this._io, "/types/magic_signature/seq/2");
+        }
+      }
+    }
+
+    /**
+     * Fixed part of file's magic signature that doesn't change with RAR version
+     */
+
+    /**
+     * Variable part of magic signature: 0 means old (RAR 1.5-4.0)
+     * format, 1 means new (RAR 5+) format
+     */
+
+    /**
+     * New format (RAR 5+) magic contains extra byte
+     */
+
+    return MagicSignature;
   })();
 
   /**
@@ -321,5 +321,5 @@ var Rar = (function() {
 
   return Rar;
 })();
-return Rar;
-}));
+Rar_.Rar = Rar;
+});

@@ -27,14 +27,14 @@ type
     `length`*: uint32
     `ofsOrData`*: uint32
     `parent`*: Exif_ExifBody_Ifd
-    `typeByteLengthInst`: int8
-    `typeByteLengthInstFlag`: bool
     `byteLengthInst`: int
     `byteLengthInstFlag`: bool
-    `isImmediateDataInst`: bool
-    `isImmediateDataInstFlag`: bool
     `dataInst`: seq[byte]
     `dataInstFlag`: bool
+    `isImmediateDataInst`: bool
+    `isImmediateDataInstFlag`: bool
+    `typeByteLengthInst`: int8
+    `typeByteLengthInstFlag`: bool
     isLe: bool
   Exif_ExifBody_IfdField_FieldTypeEnum* = enum
     byte = 1
@@ -512,10 +512,10 @@ proc read*(_: typedesc[Exif_ExifBody_IfdField], io: KaitaiStream, root: KaitaiSt
 
 proc ifd0*(this: Exif_ExifBody): Exif_ExifBody_Ifd
 proc nextIfd*(this: Exif_ExifBody_Ifd): Exif_ExifBody_Ifd
-proc typeByteLength*(this: Exif_ExifBody_IfdField): int8
 proc byteLength*(this: Exif_ExifBody_IfdField): int
-proc isImmediateData*(this: Exif_ExifBody_IfdField): bool
 proc data*(this: Exif_ExifBody_IfdField): seq[byte]
+proc isImmediateData*(this: Exif_ExifBody_IfdField): bool
+proc typeByteLength*(this: Exif_ExifBody_IfdField): int8
 
 proc read*(_: typedesc[Exif], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Exif =
   template this: untyped = result
@@ -679,29 +679,13 @@ proc read*(_: typedesc[Exif_ExifBody_IfdField], io: KaitaiStream, root: KaitaiSt
   else:
     readBe(this)
 
-proc typeByteLength(this: Exif_ExifBody_IfdField): int8 = 
-  if this.typeByteLengthInstFlag:
-    return this.typeByteLengthInst
-  let typeByteLengthInstExpr = int8((if this.fieldType == exif.word: 2 else: (if this.fieldType == exif.dword: 4 else: 1)))
-  this.typeByteLengthInst = typeByteLengthInstExpr
-  this.typeByteLengthInstFlag = true
-  return this.typeByteLengthInst
-
 proc byteLength(this: Exif_ExifBody_IfdField): int = 
   if this.byteLengthInstFlag:
     return this.byteLengthInst
-  let byteLengthInstExpr = int((this.length * this.typeByteLength))
+  let byteLengthInstExpr = int(this.length * this.typeByteLength)
   this.byteLengthInst = byteLengthInstExpr
   this.byteLengthInstFlag = true
   return this.byteLengthInst
-
-proc isImmediateData(this: Exif_ExifBody_IfdField): bool = 
-  if this.isImmediateDataInstFlag:
-    return this.isImmediateDataInst
-  let isImmediateDataInstExpr = bool(this.byteLength <= 4)
-  this.isImmediateDataInst = isImmediateDataInstExpr
-  this.isImmediateDataInstFlag = true
-  return this.isImmediateDataInst
 
 proc data(this: Exif_ExifBody_IfdField): seq[byte] = 
   if this.dataInstFlag:
@@ -719,6 +703,22 @@ proc data(this: Exif_ExifBody_IfdField): seq[byte] =
     io.seek(pos)
   this.dataInstFlag = true
   return this.dataInst
+
+proc isImmediateData(this: Exif_ExifBody_IfdField): bool = 
+  if this.isImmediateDataInstFlag:
+    return this.isImmediateDataInst
+  let isImmediateDataInstExpr = bool(this.byteLength <= 4)
+  this.isImmediateDataInst = isImmediateDataInstExpr
+  this.isImmediateDataInstFlag = true
+  return this.isImmediateDataInst
+
+proc typeByteLength(this: Exif_ExifBody_IfdField): int8 = 
+  if this.typeByteLengthInstFlag:
+    return this.typeByteLengthInst
+  let typeByteLengthInstExpr = int8((if this.fieldType == exif.word: 2 else: (if this.fieldType == exif.dword: 4 else: 1)))
+  this.typeByteLengthInst = typeByteLengthInstExpr
+  this.typeByteLengthInstFlag = true
+  return this.typeByteLengthInst
 
 proc fromFile*(_: typedesc[Exif_ExifBody_IfdField], filename: string): Exif_ExifBody_IfdField =
   Exif_ExifBody_IfdField.read(newKaitaiFileStream(filename), nil, nil)

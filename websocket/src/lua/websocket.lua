@@ -5,8 +5,8 @@
 local class = require("class")
 require("kaitaistruct")
 local enum = require("enum")
-local utils = require("utils")
 local str_decode = require("string_decode")
+local utils = require("utils")
 
 -- 
 -- The WebSocket protocol establishes a two-way communication channel via TCP.
@@ -57,12 +57,32 @@ function Websocket:_read()
 end
 
 
+Websocket.Dataframe = class.class(KaitaiStruct)
+
+function Websocket.Dataframe:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Websocket.Dataframe:_read()
+  self.header = Websocket.FrameHeader(self._io, self, self._root)
+  if self._root.initial_frame.header.opcode ~= Websocket.Opcode.text then
+    self.payload_bytes = self._io:read_bytes(self.header.len_payload)
+  end
+  if self._root.initial_frame.header.opcode == Websocket.Opcode.text then
+    self.payload_text = str_decode.decode(self._io:read_bytes(self.header.len_payload), "UTF-8")
+  end
+end
+
+
 Websocket.FrameHeader = class.class(KaitaiStruct)
 
 function Websocket.FrameHeader:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -100,7 +120,7 @@ Websocket.InitialFrame = class.class(KaitaiStruct)
 function Websocket.InitialFrame:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -110,26 +130,6 @@ function Websocket.InitialFrame:_read()
     self.payload_bytes = self._io:read_bytes(self.header.len_payload)
   end
   if self.header.opcode == Websocket.Opcode.text then
-    self.payload_text = str_decode.decode(self._io:read_bytes(self.header.len_payload), "UTF-8")
-  end
-end
-
-
-Websocket.Dataframe = class.class(KaitaiStruct)
-
-function Websocket.Dataframe:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Websocket.Dataframe:_read()
-  self.header = Websocket.FrameHeader(self._io, self, self._root)
-  if self._root.initial_frame.header.opcode ~= Websocket.Opcode.text then
-    self.payload_bytes = self._io:read_bytes(self.header.len_payload)
-  end
-  if self._root.initial_frame.header.opcode == Websocket.Opcode.text then
     self.payload_text = str_decode.decode(self._io:read_bytes(self.header.len_payload), "UTF-8")
   end
 end

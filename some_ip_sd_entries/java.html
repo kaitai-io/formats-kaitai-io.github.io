@@ -172,6 +172,11 @@ Publish/-Subscribe handling.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="AUTOSAR SOME/IP Service Discovery Entries parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="AUTOSAR SOME/IP Service Discovery Entries parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -202,7 +207,17 @@ Publish/-Subscribe handling.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="AUTOSAR SOME/IP Service Discovery Entries parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="AUTOSAR SOME/IP Service Discovery Entries parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="AUTOSAR SOME/IP Service Discovery Entries parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -285,6 +300,7 @@ for instructions how to add it into your project with the build tool that you us
 <span class="kn">import</span><span class="w"> </span><span class="nn">java.util.ArrayList</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Map</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">java.util.HashMap</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
 
 
 <span class="cm">/**</span>
@@ -320,6 +336,12 @@ for instructions how to add it into your project with the build tool that you us
 <span class="w">                </span><span class="k">this</span><span class="p">.</span><span class="na">entries</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">SdEntry</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">));</span>
 <span class="w">                </span><span class="n">i</span><span class="o">++</span><span class="p">;</span>
 <span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">_fetchInstances</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">entries</span><span class="p">.</span><span class="na">size</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">this</span><span class="p">.</span><span class="na">entries</span><span class="p">.</span><span class="na">get</span><span class="p">(((</span><span class="n">Number</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="p">)).</span><span class="na">intValue</span><span class="p">()).</span><span class="na">_fetchInstances</span><span class="p">();</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">class</span> <span class="nc">SdEntry</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="p">{</span>
@@ -384,6 +406,33 @@ for instructions how to add it into your project with the build tool that you us
 <span class="w">                </span><span class="p">}</span>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">_fetchInstances</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">this</span><span class="p">.</span><span class="na">header</span><span class="p">.</span><span class="na">_fetchInstances</span><span class="p">();</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">EntryTypes</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">header</span><span class="p">().</span><span class="na">type</span><span class="p">();</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">on</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">header</span><span class="p">().</span><span class="na">type</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">case</span><span class="w"> </span><span class="n">FIND</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="p">((</span><span class="n">SdServiceEntry</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">content</span><span class="p">)).</span><span class="na">_fetchInstances</span><span class="p">();</span>
+<span class="w">                        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="k">case</span><span class="w"> </span><span class="n">OFFER</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="p">((</span><span class="n">SdServiceEntry</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">content</span><span class="p">)).</span><span class="na">_fetchInstances</span><span class="p">();</span>
+<span class="w">                        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="k">case</span><span class="w"> </span><span class="n">SUBSCRIBE</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="p">((</span><span class="n">SdEventgroupEntry</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">content</span><span class="p">)).</span><span class="na">_fetchInstances</span><span class="p">();</span>
+<span class="w">                        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="k">case</span><span class="w"> </span><span class="n">SUBSCRIBE_ACK</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="p">((</span><span class="n">SdEventgroupEntry</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">content</span><span class="p">)).</span><span class="na">_fetchInstances</span><span class="p">();</span>
+<span class="w">                        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
 <span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">class</span> <span class="nc">SdEntryHeader</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">SdEntryHeader</span><span class="w"> </span><span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">IOException</span><span class="w"> </span><span class="p">{</span>
 <span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">SdEntryHeader</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
@@ -409,11 +458,13 @@ for instructions how to add it into your project with the build tool that you us
 <span class="w">                </span><span class="k">this</span><span class="p">.</span><span class="na">indexSecondOptions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
 <span class="w">                </span><span class="k">this</span><span class="p">.</span><span class="na">numberFirstOptions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntBe</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
 <span class="w">                </span><span class="k">this</span><span class="p">.</span><span class="na">numberSecondOptions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntBe</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
-<span class="w">                </span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">alignToByte</span><span class="p">();</span>
 <span class="w">                </span><span class="k">this</span><span class="p">.</span><span class="na">serviceId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2be</span><span class="p">();</span>
 <span class="w">                </span><span class="k">this</span><span class="p">.</span><span class="na">instanceId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2be</span><span class="p">();</span>
 <span class="w">                </span><span class="k">this</span><span class="p">.</span><span class="na">majorVersion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
 <span class="w">                </span><span class="k">this</span><span class="p">.</span><span class="na">ttl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntBe</span><span class="p">(</span><span class="mi">24</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">_fetchInstances</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">            </span><span class="kd">private</span><span class="w"> </span><span class="n">EntryTypes</span><span class="w"> </span><span class="n">type</span><span class="p">;</span>
 <span class="w">            </span><span class="kd">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">indexFirstOptions</span><span class="p">;</span>
@@ -435,35 +486,6 @@ for instructions how to add it into your project with the build tool that you us
 <span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">instanceId</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">instanceId</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">majorVersion</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">majorVersion</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="nf">ttl</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">ttl</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="n">SomeIpSdEntries</span><span class="w"> </span><span class="nf">_root</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="n">SomeIpSdEntries</span><span class="p">.</span><span class="na">SdEntry</span><span class="w"> </span><span class="nf">_parent</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">class</span> <span class="nc">SdServiceEntry</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">SdServiceEntry</span><span class="w"> </span><span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">IOException</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">SdServiceEntry</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-<span class="w">            </span><span class="p">}</span>
-
-<span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="nf">SdServiceEntry</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">_io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">);</span>
-<span class="w">            </span><span class="p">}</span>
-
-<span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="nf">SdServiceEntry</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">SomeIpSdEntries</span><span class="p">.</span><span class="na">SdEntry</span><span class="w"> </span><span class="n">_parent</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">);</span>
-<span class="w">            </span><span class="p">}</span>
-
-<span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="nf">SdServiceEntry</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">SomeIpSdEntries</span><span class="p">.</span><span class="na">SdEntry</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">SomeIpSdEntries</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
-<span class="w">                </span><span class="k">this</span><span class="p">.</span><span class="na">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_parent</span><span class="p">;</span>
-<span class="w">                </span><span class="k">this</span><span class="p">.</span><span class="na">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_root</span><span class="p">;</span>
-<span class="w">                </span><span class="n">_read</span><span class="p">();</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="kd">private</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="k">this</span><span class="p">.</span><span class="na">minorVersion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">();</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">            </span><span class="kd">private</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">minorVersion</span><span class="p">;</span>
-<span class="w">            </span><span class="kd">private</span><span class="w"> </span><span class="n">SomeIpSdEntries</span><span class="w"> </span><span class="n">_root</span><span class="p">;</span>
-<span class="w">            </span><span class="kd">private</span><span class="w"> </span><span class="n">SomeIpSdEntries</span><span class="p">.</span><span class="na">SdEntry</span><span class="w"> </span><span class="n">_parent</span><span class="p">;</span>
-<span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="nf">minorVersion</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">minorVersion</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="n">SomeIpSdEntries</span><span class="w"> </span><span class="nf">_root</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="n">SomeIpSdEntries</span><span class="p">.</span><span class="na">SdEntry</span><span class="w"> </span><span class="nf">_parent</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">        </span><span class="p">}</span>
@@ -491,8 +513,10 @@ for instructions how to add it into your project with the build tool that you us
 <span class="w">                </span><span class="k">this</span><span class="p">.</span><span class="na">initialDataRequested</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
 <span class="w">                </span><span class="k">this</span><span class="p">.</span><span class="na">reserved2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntBe</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
 <span class="w">                </span><span class="k">this</span><span class="p">.</span><span class="na">counter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntBe</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
-<span class="w">                </span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">alignToByte</span><span class="p">();</span>
 <span class="w">                </span><span class="k">this</span><span class="p">.</span><span class="na">eventGroupId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2be</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">_fetchInstances</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">            </span><span class="kd">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">reserved</span><span class="p">;</span>
 <span class="w">            </span><span class="kd">private</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="n">initialDataRequested</span><span class="p">;</span>
@@ -509,6 +533,38 @@ for instructions how to add it into your project with the build tool that you us
 <span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="n">SomeIpSdEntries</span><span class="w"> </span><span class="nf">_root</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="n">SomeIpSdEntries</span><span class="p">.</span><span class="na">SdEntry</span><span class="w"> </span><span class="nf">_parent</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">class</span> <span class="nc">SdServiceEntry</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">SdServiceEntry</span><span class="w"> </span><span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">IOException</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">SdServiceEntry</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="nf">SdServiceEntry</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">_io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="nf">SdServiceEntry</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">SomeIpSdEntries</span><span class="p">.</span><span class="na">SdEntry</span><span class="w"> </span><span class="n">_parent</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="nf">SdServiceEntry</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">SomeIpSdEntries</span><span class="p">.</span><span class="na">SdEntry</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">SomeIpSdEntries</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+<span class="w">                </span><span class="k">this</span><span class="p">.</span><span class="na">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_parent</span><span class="p">;</span>
+<span class="w">                </span><span class="k">this</span><span class="p">.</span><span class="na">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_root</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="kd">private</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">this</span><span class="p">.</span><span class="na">minorVersion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">_fetchInstances</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="kd">private</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">minorVersion</span><span class="p">;</span>
+<span class="w">            </span><span class="kd">private</span><span class="w"> </span><span class="n">SomeIpSdEntries</span><span class="w"> </span><span class="n">_root</span><span class="p">;</span>
+<span class="w">            </span><span class="kd">private</span><span class="w"> </span><span class="n">SomeIpSdEntries</span><span class="p">.</span><span class="na">SdEntry</span><span class="w"> </span><span class="n">_parent</span><span class="p">;</span>
+<span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="nf">minorVersion</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">minorVersion</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="n">SomeIpSdEntries</span><span class="w"> </span><span class="nf">_root</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="n">SomeIpSdEntries</span><span class="p">.</span><span class="na">SdEntry</span><span class="w"> </span><span class="nf">_parent</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
 <span class="w">        </span><span class="kd">private</span><span class="w"> </span><span class="n">SdEntryHeader</span><span class="w"> </span><span class="n">header</span><span class="p">;</span>
 <span class="w">        </span><span class="kd">private</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">content</span><span class="p">;</span>
 <span class="w">        </span><span class="kd">private</span><span class="w"> </span><span class="n">SomeIpSdEntries</span><span class="w"> </span><span class="n">_root</span><span class="p">;</span>
@@ -518,10 +574,10 @@ for instructions how to add it into your project with the build tool that you us
 <span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="n">SomeIpSdEntries</span><span class="w"> </span><span class="nf">_root</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="n">SomeIpSdEntries</span><span class="w"> </span><span class="nf">_parent</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">SdEntry</span><span class="o">&gt;</span><span class="w"> </span><span class="n">entries</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">SdEntry</span><span class="o">&gt;</span><span class="w"> </span><span class="n">entries</span><span class="p">;</span>
 <span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">SomeIpSdEntries</span><span class="w"> </span><span class="n">_root</span><span class="p">;</span>
 <span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="n">_parent</span><span class="p">;</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">SdEntry</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">entries</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">entries</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">SdEntry</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">entries</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">entries</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">SomeIpSdEntries</span><span class="w"> </span><span class="nf">_root</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="nf">_parent</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="p">}</span>

@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 
 ########################################################################
 package Stl;
@@ -24,7 +24,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -36,7 +36,7 @@ sub _read {
 
     $self->{header} = $self->{_io}->read_bytes(80);
     $self->{num_triangles} = $self->{_io}->read_u4le();
-    $self->{triangles} = ();
+    $self->{triangles} = [];
     my $n_triangles = $self->num_triangles();
     for (my $i = 0; $i < $n_triangles; $i++) {
         push @{$self->{triangles}}, Stl::Triangle->new($self->{_io}, $self, $self->{_root});
@@ -78,7 +78,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -89,7 +89,7 @@ sub _read {
     my ($self) = @_;
 
     $self->{normal} = Stl::Vec3d->new($self->{_io}, $self, $self->{_root});
-    $self->{vertices} = ();
+    $self->{vertices} = [];
     my $n_vertices = 3;
     for (my $i = 0; $i < $n_vertices; $i++) {
         push @{$self->{vertices}}, Stl::Vec3d->new($self->{_io}, $self, $self->{_root});
@@ -132,7 +132,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 

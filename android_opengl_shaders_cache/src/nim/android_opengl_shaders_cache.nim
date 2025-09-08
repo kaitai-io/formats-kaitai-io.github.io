@@ -11,11 +11,6 @@ type
   AndroidOpenglShadersCache_Alignment* = ref object of KaitaiStruct
     `alignment`*: seq[byte]
     `parent`*: KaitaiStruct
-  AndroidOpenglShadersCache_PrefixedString* = ref object of KaitaiStruct
-    `lenStr`*: uint32
-    `str`*: string
-    `alignment`*: AndroidOpenglShadersCache_Alignment
-    `parent`*: AndroidOpenglShadersCache_Cache
   AndroidOpenglShadersCache_Cache* = ref object of KaitaiStruct
     `magic`*: seq[byte]
     `version`*: uint32
@@ -31,12 +26,17 @@ type
     `value`*: seq[byte]
     `alignment`*: AndroidOpenglShadersCache_Alignment
     `parent`*: AndroidOpenglShadersCache_Cache
+  AndroidOpenglShadersCache_PrefixedString* = ref object of KaitaiStruct
+    `lenStr`*: uint32
+    `str`*: string
+    `alignment`*: AndroidOpenglShadersCache_Alignment
+    `parent`*: AndroidOpenglShadersCache_Cache
 
 proc read*(_: typedesc[AndroidOpenglShadersCache], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): AndroidOpenglShadersCache
 proc read*(_: typedesc[AndroidOpenglShadersCache_Alignment], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): AndroidOpenglShadersCache_Alignment
-proc read*(_: typedesc[AndroidOpenglShadersCache_PrefixedString], io: KaitaiStream, root: KaitaiStruct, parent: AndroidOpenglShadersCache_Cache): AndroidOpenglShadersCache_PrefixedString
 proc read*(_: typedesc[AndroidOpenglShadersCache_Cache], io: KaitaiStream, root: KaitaiStruct, parent: AndroidOpenglShadersCache): AndroidOpenglShadersCache_Cache
 proc read*(_: typedesc[AndroidOpenglShadersCache_Cache_Entry], io: KaitaiStream, root: KaitaiStruct, parent: AndroidOpenglShadersCache_Cache): AndroidOpenglShadersCache_Cache_Entry
+proc read*(_: typedesc[AndroidOpenglShadersCache_PrefixedString], io: KaitaiStream, root: KaitaiStruct, parent: AndroidOpenglShadersCache_Cache): AndroidOpenglShadersCache_PrefixedString
 
 
 
@@ -83,29 +83,11 @@ proc read*(_: typedesc[AndroidOpenglShadersCache_Alignment], io: KaitaiStream, r
   ##[
   garbage from memory
   ]##
-  let alignmentExpr = this.io.readBytes(int(((this.io.pos + 3) and (not3 - this.io.pos))))
+  let alignmentExpr = this.io.readBytes(int(this.io.pos + 3 and not3 - this.io.pos))
   this.alignment = alignmentExpr
 
 proc fromFile*(_: typedesc[AndroidOpenglShadersCache_Alignment], filename: string): AndroidOpenglShadersCache_Alignment =
   AndroidOpenglShadersCache_Alignment.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[AndroidOpenglShadersCache_PrefixedString], io: KaitaiStream, root: KaitaiStruct, parent: AndroidOpenglShadersCache_Cache): AndroidOpenglShadersCache_PrefixedString =
-  template this: untyped = result
-  this = new(AndroidOpenglShadersCache_PrefixedString)
-  let root = if root == nil: cast[AndroidOpenglShadersCache](this) else: cast[AndroidOpenglShadersCache](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let lenStrExpr = this.io.readU4le()
-  this.lenStr = lenStrExpr
-  let strExpr = encode(this.io.readBytes(int(this.lenStr)).bytesTerminate(0, false), "ascii")
-  this.str = strExpr
-  let alignmentExpr = AndroidOpenglShadersCache_Alignment.read(this.io, this.root, this)
-  this.alignment = alignmentExpr
-
-proc fromFile*(_: typedesc[AndroidOpenglShadersCache_PrefixedString], filename: string): AndroidOpenglShadersCache_PrefixedString =
-  AndroidOpenglShadersCache_PrefixedString.read(newKaitaiFileStream(filename), nil, nil)
 
 
 ##[
@@ -158,4 +140,22 @@ proc read*(_: typedesc[AndroidOpenglShadersCache_Cache_Entry], io: KaitaiStream,
 
 proc fromFile*(_: typedesc[AndroidOpenglShadersCache_Cache_Entry], filename: string): AndroidOpenglShadersCache_Cache_Entry =
   AndroidOpenglShadersCache_Cache_Entry.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[AndroidOpenglShadersCache_PrefixedString], io: KaitaiStream, root: KaitaiStruct, parent: AndroidOpenglShadersCache_Cache): AndroidOpenglShadersCache_PrefixedString =
+  template this: untyped = result
+  this = new(AndroidOpenglShadersCache_PrefixedString)
+  let root = if root == nil: cast[AndroidOpenglShadersCache](this) else: cast[AndroidOpenglShadersCache](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let lenStrExpr = this.io.readU4le()
+  this.lenStr = lenStrExpr
+  let strExpr = encode(this.io.readBytes(int(this.lenStr)).bytesTerminate(0, false), "ASCII")
+  this.str = strExpr
+  let alignmentExpr = AndroidOpenglShadersCache_Alignment.read(this.io, this.root, this)
+  this.alignment = alignmentExpr
+
+proc fromFile*(_: typedesc[AndroidOpenglShadersCache_PrefixedString], filename: string): AndroidOpenglShadersCache_PrefixedString =
+  AndroidOpenglShadersCache_PrefixedString.read(newKaitaiFileStream(filename), nil, nil)
 

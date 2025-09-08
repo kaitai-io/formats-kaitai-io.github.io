@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 
 ########################################################################
 package BitcoinTransaction;
@@ -24,7 +24,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -36,13 +36,13 @@ sub _read {
 
     $self->{version} = $self->{_io}->read_u4le();
     $self->{num_vins} = $self->{_io}->read_u1();
-    $self->{vins} = ();
+    $self->{vins} = [];
     my $n_vins = $self->num_vins();
     for (my $i = 0; $i < $n_vins; $i++) {
         push @{$self->{vins}}, BitcoinTransaction::Vin->new($self->{_io}, $self, $self->{_root});
     }
     $self->{num_vouts} = $self->{_io}->read_u1();
-    $self->{vouts} = ();
+    $self->{vouts} = [];
     my $n_vouts = $self->num_vouts();
     for (my $i = 0; $i < $n_vouts; $i++) {
         push @{$self->{vouts}}, BitcoinTransaction::Vout->new($self->{_io}, $self, $self->{_root});
@@ -100,7 +100,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -174,7 +174,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -236,7 +236,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -316,7 +316,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -366,7 +366,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 

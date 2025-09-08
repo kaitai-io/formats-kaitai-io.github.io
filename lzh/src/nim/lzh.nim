@@ -1,16 +1,11 @@
 import kaitai_struct_nim_runtime
 import options
-import /common/dos_datetime
+import dos_datetime
 
-import "dos_datetime"
 type
   Lzh* = ref object of KaitaiStruct
     `entries`*: seq[Lzh_Record]
     `parent`*: KaitaiStruct
-  Lzh_Record* = ref object of KaitaiStruct
-    `headerLen`*: uint8
-    `fileRecord`*: Lzh_FileRecord
-    `parent`*: Lzh
   Lzh_FileRecord* = ref object of KaitaiStruct
     `header`*: Lzh_Header
     `fileUncomprCrc16`*: uint16
@@ -35,12 +30,16 @@ type
     `lhaLevel`*: uint8
     `parent`*: Lzh_Header
     `rawFileTimestamp`*: seq[byte]
+  Lzh_Record* = ref object of KaitaiStruct
+    `headerLen`*: uint8
+    `fileRecord`*: Lzh_FileRecord
+    `parent`*: Lzh
 
 proc read*(_: typedesc[Lzh], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Lzh
-proc read*(_: typedesc[Lzh_Record], io: KaitaiStream, root: KaitaiStruct, parent: Lzh): Lzh_Record
 proc read*(_: typedesc[Lzh_FileRecord], io: KaitaiStream, root: KaitaiStruct, parent: Lzh_Record): Lzh_FileRecord
 proc read*(_: typedesc[Lzh_Header], io: KaitaiStream, root: KaitaiStruct, parent: Lzh_FileRecord): Lzh_Header
 proc read*(_: typedesc[Lzh_Header1], io: KaitaiStream, root: KaitaiStruct, parent: Lzh_Header): Lzh_Header1
+proc read*(_: typedesc[Lzh_Record], io: KaitaiStream, root: KaitaiStruct, parent: Lzh): Lzh_Record
 
 
 
@@ -72,23 +71,6 @@ proc read*(_: typedesc[Lzh], io: KaitaiStream, root: KaitaiStruct, parent: Kaita
 proc fromFile*(_: typedesc[Lzh], filename: string): Lzh =
   Lzh.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[Lzh_Record], io: KaitaiStream, root: KaitaiStruct, parent: Lzh): Lzh_Record =
-  template this: untyped = result
-  this = new(Lzh_Record)
-  let root = if root == nil: cast[Lzh](this) else: cast[Lzh](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let headerLenExpr = this.io.readU1()
-  this.headerLen = headerLenExpr
-  if this.headerLen > 0:
-    let fileRecordExpr = Lzh_FileRecord.read(this.io, this.root, this)
-    this.fileRecord = fileRecordExpr
-
-proc fromFile*(_: typedesc[Lzh_Record], filename: string): Lzh_Record =
-  Lzh_Record.read(newKaitaiFileStream(filename), nil, nil)
-
 proc read*(_: typedesc[Lzh_FileRecord], io: KaitaiStream, root: KaitaiStruct, parent: Lzh_Record): Lzh_FileRecord =
   template this: untyped = result
   this = new(Lzh_FileRecord)
@@ -97,7 +79,7 @@ proc read*(_: typedesc[Lzh_FileRecord], io: KaitaiStream, root: KaitaiStruct, pa
   this.root = root
   this.parent = parent
 
-  let rawHeaderExpr = this.io.readBytes(int((this.parent.headerLen - 1)))
+  let rawHeaderExpr = this.io.readBytes(int(this.parent.headerLen - 1))
   this.rawHeader = rawHeaderExpr
   let rawHeaderIo = newKaitaiStream(rawHeaderExpr)
   let headerExpr = Lzh_Header.read(rawHeaderIo, this.root, this)
@@ -176,7 +158,7 @@ proc read*(_: typedesc[Lzh_Header1], io: KaitaiStream, root: KaitaiStruct, paren
   let rawFileTimestampExpr = this.io.readBytes(int(4))
   this.rawFileTimestamp = rawFileTimestampExpr
   let rawFileTimestampIo = newKaitaiStream(rawFileTimestampExpr)
-  let fileTimestampExpr = DosDatetime.read(rawFileTimestampIo, this.root, this)
+  let fileTimestampExpr = DosDatetime.read(rawFileTimestampIo, nil, nil)
   this.fileTimestamp = fileTimestampExpr
 
   ##[
@@ -189,4 +171,21 @@ proc read*(_: typedesc[Lzh_Header1], io: KaitaiStream, root: KaitaiStruct, paren
 
 proc fromFile*(_: typedesc[Lzh_Header1], filename: string): Lzh_Header1 =
   Lzh_Header1.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Lzh_Record], io: KaitaiStream, root: KaitaiStruct, parent: Lzh): Lzh_Record =
+  template this: untyped = result
+  this = new(Lzh_Record)
+  let root = if root == nil: cast[Lzh](this) else: cast[Lzh](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let headerLenExpr = this.io.readU1()
+  this.headerLen = headerLenExpr
+  if this.headerLen > 0:
+    let fileRecordExpr = Lzh_FileRecord.read(this.io, this.root, this)
+    this.fileRecord = fileRecordExpr
+
+proc fromFile*(_: typedesc[Lzh_Record], filename: string): Lzh_Record =
+  Lzh_Record.read(newKaitaiFileStream(filename), nil, nil)
 

@@ -2,16 +2,17 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class lzh_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
 #include "dos_datetime.h"
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
-class dos_datetime_t;
 
 /**
  * LHA (LHarc, LZH) is a file format used by a popular freeware
@@ -26,10 +27,10 @@ class dos_datetime_t;
 class lzh_t : public kaitai::kstruct {
 
 public:
-    class record_t;
     class file_record_t;
     class header_t;
     class header1_t;
+    class record_t;
 
     lzh_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, lzh_t* p__root = nullptr);
 
@@ -39,38 +40,6 @@ private:
 
 public:
     ~lzh_t();
-
-    class record_t : public kaitai::kstruct {
-
-    public:
-
-        record_t(kaitai::kstream* p__io, lzh_t* p__parent = nullptr, lzh_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~record_t();
-
-    private:
-        uint8_t m_header_len;
-        std::unique_ptr<file_record_t> m_file_record;
-        bool n_file_record;
-
-    public:
-        bool _is_null_file_record() { file_record(); return n_file_record; };
-
-    private:
-        lzh_t* m__root;
-        lzh_t* m__parent;
-
-    public:
-        uint8_t header_len() const { return m_header_len; }
-        file_record_t* file_record() const { return m_file_record.get(); }
-        lzh_t* _root() const { return m__root; }
-        lzh_t* _parent() const { return m__parent; }
-    };
 
     class file_record_t : public kaitai::kstruct {
 
@@ -232,6 +201,38 @@ public:
         lzh_t::header_t* _parent() const { return m__parent; }
         std::string _raw_file_timestamp() const { return m__raw_file_timestamp; }
         kaitai::kstream* _io__raw_file_timestamp() const { return m__io__raw_file_timestamp.get(); }
+    };
+
+    class record_t : public kaitai::kstruct {
+
+    public:
+
+        record_t(kaitai::kstream* p__io, lzh_t* p__parent = nullptr, lzh_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~record_t();
+
+    private:
+        uint8_t m_header_len;
+        std::unique_ptr<file_record_t> m_file_record;
+        bool n_file_record;
+
+    public:
+        bool _is_null_file_record() { file_record(); return n_file_record; };
+
+    private:
+        lzh_t* m__root;
+        lzh_t* m__parent;
+
+    public:
+        uint8_t header_len() const { return m_header_len; }
+        file_record_t* file_record() const { return m_file_record.get(); }
+        lzh_t* _root() const { return m__root; }
+        lzh_t* _parent() const { return m__parent; }
     };
 
 private:

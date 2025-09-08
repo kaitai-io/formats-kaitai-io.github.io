@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.Id3v23 = factory(root.KaitaiStream);
+    factory(root.Id3v23 || (root.Id3v23 = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Id3v23_, KaitaiStream) {
 /**
  * @see {@link https://id3.org/id3v2.3.0|Source}
  */
@@ -25,102 +25,6 @@ var Id3v23 = (function() {
     this.tag = new Tag(this._io, this, this._root);
   }
 
-  var U1beSynchsafe = Id3v23.U1beSynchsafe = (function() {
-    function U1beSynchsafe(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    U1beSynchsafe.prototype._read = function() {
-      this.padding = this._io.readBitsIntBe(1) != 0;
-      this.value = this._io.readBitsIntBe(7);
-    }
-
-    return U1beSynchsafe;
-  })();
-
-  var U2beSynchsafe = Id3v23.U2beSynchsafe = (function() {
-    function U2beSynchsafe(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    U2beSynchsafe.prototype._read = function() {
-      this.byte0 = new U1beSynchsafe(this._io, this, this._root);
-      this.byte1 = new U1beSynchsafe(this._io, this, this._root);
-    }
-    Object.defineProperty(U2beSynchsafe.prototype, 'value', {
-      get: function() {
-        if (this._m_value !== undefined)
-          return this._m_value;
-        this._m_value = ((this.byte0.value << 7) | this.byte1.value);
-        return this._m_value;
-      }
-    });
-
-    return U2beSynchsafe;
-  })();
-
-  /**
-   * @see Section 3. ID3v2 overview
-   */
-
-  var Tag = Id3v23.Tag = (function() {
-    function Tag(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Tag.prototype._read = function() {
-      this.header = new Header(this._io, this, this._root);
-      if (this.header.flags.flagHeaderex) {
-        this.headerEx = new HeaderEx(this._io, this, this._root);
-      }
-      this.frames = [];
-      var i = 0;
-      do {
-        var _ = new Frame(this._io, this, this._root);
-        this.frames.push(_);
-        i++;
-      } while (!( (((this._io.pos + _.size) > this.header.size.value) || (_.isInvalid)) ));
-      if (this.header.flags.flagHeaderex) {
-        this.padding = this._io.readBytes((this.headerEx.paddingSize - this._io.pos));
-      }
-    }
-
-    return Tag;
-  })();
-
-  var U4beSynchsafe = Id3v23.U4beSynchsafe = (function() {
-    function U4beSynchsafe(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    U4beSynchsafe.prototype._read = function() {
-      this.short0 = new U2beSynchsafe(this._io, this, this._root);
-      this.short1 = new U2beSynchsafe(this._io, this, this._root);
-    }
-    Object.defineProperty(U4beSynchsafe.prototype, 'value', {
-      get: function() {
-        if (this._m_value !== undefined)
-          return this._m_value;
-        this._m_value = ((this.short0.value << 14) | this.short1.value);
-        return this._m_value;
-      }
-    });
-
-    return U4beSynchsafe;
-  })();
-
   /**
    * @see Section 3.3. ID3v2 frame overview
    */
@@ -129,7 +33,7 @@ var Id3v23 = (function() {
     function Frame(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -144,7 +48,7 @@ var Id3v23 = (function() {
       function Flags(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -174,47 +78,6 @@ var Id3v23 = (function() {
   })();
 
   /**
-   * ID3v2 extended header
-   * @see Section 3.2. ID3v2 extended header
-   */
-
-  var HeaderEx = Id3v23.HeaderEx = (function() {
-    function HeaderEx(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    HeaderEx.prototype._read = function() {
-      this.size = this._io.readU4be();
-      this.flagsEx = new FlagsEx(this._io, this, this._root);
-      this.paddingSize = this._io.readU4be();
-      if (this.flagsEx.flagCrc) {
-        this.crc = this._io.readU4be();
-      }
-    }
-
-    var FlagsEx = HeaderEx.FlagsEx = (function() {
-      function FlagsEx(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      FlagsEx.prototype._read = function() {
-        this.flagCrc = this._io.readBitsIntBe(1) != 0;
-        this.reserved = this._io.readBitsIntBe(15);
-      }
-
-      return FlagsEx;
-    })();
-
-    return HeaderEx;
-  })();
-
-  /**
    * ID3v2 fixed header
    * @see Section 3.1. ID3v2 header
    */
@@ -223,14 +86,14 @@ var Id3v23 = (function() {
     function Header(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     Header.prototype._read = function() {
       this.magic = this._io.readBytes(3);
-      if (!((KaitaiStream.byteArrayCompare(this.magic, [73, 68, 51]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([73, 68, 51], this.magic, this._io, "/types/header/seq/0");
+      if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([73, 68, 51])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([73, 68, 51]), this.magic, this._io, "/types/header/seq/0");
       }
       this.versionMajor = this._io.readU1();
       this.versionRevision = this._io.readU1();
@@ -242,7 +105,7 @@ var Id3v23 = (function() {
       function Flags(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -259,7 +122,144 @@ var Id3v23 = (function() {
     return Header;
   })();
 
+  /**
+   * ID3v2 extended header
+   * @see Section 3.2. ID3v2 extended header
+   */
+
+  var HeaderEx = Id3v23.HeaderEx = (function() {
+    function HeaderEx(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    HeaderEx.prototype._read = function() {
+      this.size = this._io.readU4be();
+      this.flagsEx = new FlagsEx(this._io, this, this._root);
+      this.paddingSize = this._io.readU4be();
+      if (this.flagsEx.flagCrc) {
+        this.crc = this._io.readU4be();
+      }
+    }
+
+    var FlagsEx = HeaderEx.FlagsEx = (function() {
+      function FlagsEx(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+
+        this._read();
+      }
+      FlagsEx.prototype._read = function() {
+        this.flagCrc = this._io.readBitsIntBe(1) != 0;
+        this.reserved = this._io.readBitsIntBe(15);
+      }
+
+      return FlagsEx;
+    })();
+
+    return HeaderEx;
+  })();
+
+  /**
+   * @see Section 3. ID3v2 overview
+   */
+
+  var Tag = Id3v23.Tag = (function() {
+    function Tag(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Tag.prototype._read = function() {
+      this.header = new Header(this._io, this, this._root);
+      if (this.header.flags.flagHeaderex) {
+        this.headerEx = new HeaderEx(this._io, this, this._root);
+      }
+      this.frames = [];
+      var i = 0;
+      do {
+        var _ = new Frame(this._io, this, this._root);
+        this.frames.push(_);
+        i++;
+      } while (!( ((this._io.pos + _.size > this.header.size.value) || (_.isInvalid)) ));
+      if (this.header.flags.flagHeaderex) {
+        this.padding = this._io.readBytes(this.headerEx.paddingSize - this._io.pos);
+      }
+    }
+
+    return Tag;
+  })();
+
+  var U1beSynchsafe = Id3v23.U1beSynchsafe = (function() {
+    function U1beSynchsafe(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    U1beSynchsafe.prototype._read = function() {
+      this.padding = this._io.readBitsIntBe(1) != 0;
+      this.value = this._io.readBitsIntBe(7);
+    }
+
+    return U1beSynchsafe;
+  })();
+
+  var U2beSynchsafe = Id3v23.U2beSynchsafe = (function() {
+    function U2beSynchsafe(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    U2beSynchsafe.prototype._read = function() {
+      this.byte0 = new U1beSynchsafe(this._io, this, this._root);
+      this.byte1 = new U1beSynchsafe(this._io, this, this._root);
+    }
+    Object.defineProperty(U2beSynchsafe.prototype, 'value', {
+      get: function() {
+        if (this._m_value !== undefined)
+          return this._m_value;
+        this._m_value = this.byte0.value << 7 | this.byte1.value;
+        return this._m_value;
+      }
+    });
+
+    return U2beSynchsafe;
+  })();
+
+  var U4beSynchsafe = Id3v23.U4beSynchsafe = (function() {
+    function U4beSynchsafe(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    U4beSynchsafe.prototype._read = function() {
+      this.short0 = new U2beSynchsafe(this._io, this, this._root);
+      this.short1 = new U2beSynchsafe(this._io, this, this._root);
+    }
+    Object.defineProperty(U4beSynchsafe.prototype, 'value', {
+      get: function() {
+        if (this._m_value !== undefined)
+          return this._m_value;
+        this._m_value = this.short0.value << 14 | this.short1.value;
+        return this._m_value;
+      }
+    });
+
+    return U4beSynchsafe;
+  })();
+
   return Id3v23;
 })();
-return Id3v23;
-}));
+Id3v23_.Id3v23 = Id3v23;
+});

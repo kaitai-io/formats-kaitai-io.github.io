@@ -29,51 +29,16 @@ type
     `patterns`*: seq[S3m_PatternPtr]
     `channelPans`*: seq[S3m_ChannelPan]
     `parent`*: KaitaiStruct
+  S3m_Channel* = ref object of KaitaiStruct
+    `isDisabled`*: bool
+    `chType`*: uint64
+    `parent`*: S3m
   S3m_ChannelPan* = ref object of KaitaiStruct
     `reserved1`*: uint64
     `hasCustomPan`*: bool
     `reserved2`*: bool
     `pan`*: uint64
     `parent`*: S3m
-  S3m_PatternCell* = ref object of KaitaiStruct
-    `hasFx`*: bool
-    `hasVolume`*: bool
-    `hasNoteAndInstrument`*: bool
-    `channelNum`*: uint64
-    `note`*: uint8
-    `instrument`*: uint8
-    `volume`*: uint8
-    `fxType`*: uint8
-    `fxValue`*: uint8
-    `parent`*: S3m_PatternCells
-  S3m_PatternCells* = ref object of KaitaiStruct
-    `cells`*: seq[S3m_PatternCell]
-    `parent`*: S3m_Pattern
-  S3m_Channel* = ref object of KaitaiStruct
-    `isDisabled`*: bool
-    `chType`*: uint64
-    `parent`*: S3m
-  S3m_SwappedU3* = ref object of KaitaiStruct
-    `hi`*: uint8
-    `lo`*: uint16
-    `parent`*: S3m_Instrument_Sampled
-    `valueInst`: int
-    `valueInstFlag`: bool
-  S3m_Pattern* = ref object of KaitaiStruct
-    `size`*: uint16
-    `body`*: S3m_PatternCells
-    `parent`*: S3m_PatternPtr
-    `rawBody`*: seq[byte]
-  S3m_PatternPtr* = ref object of KaitaiStruct
-    `paraptr`*: uint16
-    `parent`*: S3m
-    `bodyInst`: S3m_Pattern
-    `bodyInstFlag`: bool
-  S3m_InstrumentPtr* = ref object of KaitaiStruct
-    `paraptr`*: uint16
-    `parent`*: S3m
-    `bodyInst`: S3m_Instrument
-    `bodyInstFlag`: bool
   S3m_Instrument* = ref object of KaitaiStruct
     `type`*: S3m_Instrument_InstTypes
     `filename`*: seq[byte]
@@ -91,6 +56,10 @@ type
     tom = 5
     cymbal = 6
     hihat = 7
+  S3m_Instrument_Adlib* = ref object of KaitaiStruct
+    `reserved1`*: seq[byte]
+    `unnamed1`*: seq[byte]
+    `parent`*: S3m_Instrument
   S3m_Instrument_Sampled* = ref object of KaitaiStruct
     `paraptrSample`*: S3m_SwappedU3
     `lenSample`*: uint32
@@ -103,28 +72,59 @@ type
     `parent`*: S3m_Instrument
     `sampleInst`: seq[byte]
     `sampleInstFlag`: bool
-  S3m_Instrument_Adlib* = ref object of KaitaiStruct
-    `reserved1`*: seq[byte]
-    `unnamed1`*: seq[byte]
-    `parent`*: S3m_Instrument
+  S3m_InstrumentPtr* = ref object of KaitaiStruct
+    `paraptr`*: uint16
+    `parent`*: S3m
+    `bodyInst`: S3m_Instrument
+    `bodyInstFlag`: bool
+  S3m_Pattern* = ref object of KaitaiStruct
+    `size`*: uint16
+    `body`*: S3m_PatternCells
+    `parent`*: S3m_PatternPtr
+    `rawBody`*: seq[byte]
+  S3m_PatternCell* = ref object of KaitaiStruct
+    `hasFx`*: bool
+    `hasVolume`*: bool
+    `hasNoteAndInstrument`*: bool
+    `channelNum`*: uint64
+    `note`*: uint8
+    `instrument`*: uint8
+    `volume`*: uint8
+    `fxType`*: uint8
+    `fxValue`*: uint8
+    `parent`*: S3m_PatternCells
+  S3m_PatternCells* = ref object of KaitaiStruct
+    `cells`*: seq[S3m_PatternCell]
+    `parent`*: S3m_Pattern
+  S3m_PatternPtr* = ref object of KaitaiStruct
+    `paraptr`*: uint16
+    `parent`*: S3m
+    `bodyInst`: S3m_Pattern
+    `bodyInstFlag`: bool
+  S3m_SwappedU3* = ref object of KaitaiStruct
+    `hi`*: uint8
+    `lo`*: uint16
+    `parent`*: S3m_Instrument_Sampled
+    `valueInst`: int
+    `valueInstFlag`: bool
 
 proc read*(_: typedesc[S3m], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): S3m
+proc read*(_: typedesc[S3m_Channel], io: KaitaiStream, root: KaitaiStruct, parent: S3m): S3m_Channel
 proc read*(_: typedesc[S3m_ChannelPan], io: KaitaiStream, root: KaitaiStruct, parent: S3m): S3m_ChannelPan
+proc read*(_: typedesc[S3m_Instrument], io: KaitaiStream, root: KaitaiStruct, parent: S3m_InstrumentPtr): S3m_Instrument
+proc read*(_: typedesc[S3m_Instrument_Adlib], io: KaitaiStream, root: KaitaiStruct, parent: S3m_Instrument): S3m_Instrument_Adlib
+proc read*(_: typedesc[S3m_Instrument_Sampled], io: KaitaiStream, root: KaitaiStruct, parent: S3m_Instrument): S3m_Instrument_Sampled
+proc read*(_: typedesc[S3m_InstrumentPtr], io: KaitaiStream, root: KaitaiStruct, parent: S3m): S3m_InstrumentPtr
+proc read*(_: typedesc[S3m_Pattern], io: KaitaiStream, root: KaitaiStruct, parent: S3m_PatternPtr): S3m_Pattern
 proc read*(_: typedesc[S3m_PatternCell], io: KaitaiStream, root: KaitaiStruct, parent: S3m_PatternCells): S3m_PatternCell
 proc read*(_: typedesc[S3m_PatternCells], io: KaitaiStream, root: KaitaiStruct, parent: S3m_Pattern): S3m_PatternCells
-proc read*(_: typedesc[S3m_Channel], io: KaitaiStream, root: KaitaiStruct, parent: S3m): S3m_Channel
-proc read*(_: typedesc[S3m_SwappedU3], io: KaitaiStream, root: KaitaiStruct, parent: S3m_Instrument_Sampled): S3m_SwappedU3
-proc read*(_: typedesc[S3m_Pattern], io: KaitaiStream, root: KaitaiStruct, parent: S3m_PatternPtr): S3m_Pattern
 proc read*(_: typedesc[S3m_PatternPtr], io: KaitaiStream, root: KaitaiStruct, parent: S3m): S3m_PatternPtr
-proc read*(_: typedesc[S3m_InstrumentPtr], io: KaitaiStream, root: KaitaiStruct, parent: S3m): S3m_InstrumentPtr
-proc read*(_: typedesc[S3m_Instrument], io: KaitaiStream, root: KaitaiStruct, parent: S3m_InstrumentPtr): S3m_Instrument
-proc read*(_: typedesc[S3m_Instrument_Sampled], io: KaitaiStream, root: KaitaiStruct, parent: S3m_Instrument): S3m_Instrument_Sampled
-proc read*(_: typedesc[S3m_Instrument_Adlib], io: KaitaiStream, root: KaitaiStruct, parent: S3m_Instrument): S3m_Instrument_Adlib
+proc read*(_: typedesc[S3m_SwappedU3], io: KaitaiStream, root: KaitaiStruct, parent: S3m_Instrument_Sampled): S3m_SwappedU3
 
-proc value*(this: S3m_SwappedU3): int
-proc body*(this: S3m_PatternPtr): S3m_Pattern
-proc body*(this: S3m_InstrumentPtr): S3m_Instrument
 proc sample*(this: S3m_Instrument_Sampled): seq[byte]
+proc body*(this: S3m_InstrumentPtr): S3m_Instrument
+proc body*(this: S3m_PatternPtr): S3m_Pattern
+proc value*(this: S3m_SwappedU3): int
 
 
 ##[
@@ -238,6 +238,26 @@ proc read*(_: typedesc[S3m], io: KaitaiStream, root: KaitaiStruct, parent: Kaita
 proc fromFile*(_: typedesc[S3m], filename: string): S3m =
   S3m.read(newKaitaiFileStream(filename), nil, nil)
 
+proc read*(_: typedesc[S3m_Channel], io: KaitaiStream, root: KaitaiStruct, parent: S3m): S3m_Channel =
+  template this: untyped = result
+  this = new(S3m_Channel)
+  let root = if root == nil: cast[S3m](this) else: cast[S3m](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let isDisabledExpr = this.io.readBitsIntBe(1) != 0
+  this.isDisabled = isDisabledExpr
+
+  ##[
+  Channel type (0..7 = left sample channels, 8..15 = right sample channels, 16..31 = AdLib synth channels)
+  ]##
+  let chTypeExpr = this.io.readBitsIntBe(7)
+  this.chType = chTypeExpr
+
+proc fromFile*(_: typedesc[S3m_Channel], filename: string): S3m_Channel =
+  S3m_Channel.read(newKaitaiFileStream(filename), nil, nil)
+
 proc read*(_: typedesc[S3m_ChannelPan], io: KaitaiStream, root: KaitaiStruct, parent: S3m): S3m_ChannelPan =
   template this: untyped = result
   this = new(S3m_ChannelPan)
@@ -264,6 +284,145 @@ field. If false, the channel would use the default setting
 
 proc fromFile*(_: typedesc[S3m_ChannelPan], filename: string): S3m_ChannelPan =
   S3m_ChannelPan.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[S3m_Instrument], io: KaitaiStream, root: KaitaiStruct, parent: S3m_InstrumentPtr): S3m_Instrument =
+  template this: untyped = result
+  this = new(S3m_Instrument)
+  let root = if root == nil: cast[S3m](this) else: cast[S3m](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let typeExpr = S3m_Instrument_InstTypes(this.io.readU1())
+  this.type = typeExpr
+  let filenameExpr = this.io.readBytes(int(12)).bytesTerminate(0, false)
+  this.filename = filenameExpr
+  block:
+    let on = this.type
+    if on == s3m.sample:
+      let bodyExpr = S3m_Instrument_Sampled.read(this.io, this.root, this)
+      this.body = bodyExpr
+    else:
+      let bodyExpr = S3m_Instrument_Adlib.read(this.io, this.root, this)
+      this.body = bodyExpr
+  let tuningHzExpr = this.io.readU4le()
+  this.tuningHz = tuningHzExpr
+  let reserved2Expr = this.io.readBytes(int(12))
+  this.reserved2 = reserved2Expr
+  let sampleNameExpr = this.io.readBytes(int(28)).bytesTerminate(0, false)
+  this.sampleName = sampleNameExpr
+  let magicExpr = this.io.readBytes(int(4))
+  this.magic = magicExpr
+
+proc fromFile*(_: typedesc[S3m_Instrument], filename: string): S3m_Instrument =
+  S3m_Instrument.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[S3m_Instrument_Adlib], io: KaitaiStream, root: KaitaiStruct, parent: S3m_Instrument): S3m_Instrument_Adlib =
+  template this: untyped = result
+  this = new(S3m_Instrument_Adlib)
+  let root = if root == nil: cast[S3m](this) else: cast[S3m](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let reserved1Expr = this.io.readBytes(int(3))
+  this.reserved1 = reserved1Expr
+  let unnamed1Expr = this.io.readBytes(int(16))
+  this.unnamed1 = unnamed1Expr
+
+proc fromFile*(_: typedesc[S3m_Instrument_Adlib], filename: string): S3m_Instrument_Adlib =
+  S3m_Instrument_Adlib.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[S3m_Instrument_Sampled], io: KaitaiStream, root: KaitaiStruct, parent: S3m_Instrument): S3m_Instrument_Sampled =
+  template this: untyped = result
+  this = new(S3m_Instrument_Sampled)
+  let root = if root == nil: cast[S3m](this) else: cast[S3m](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let paraptrSampleExpr = S3m_SwappedU3.read(this.io, this.root, this)
+  this.paraptrSample = paraptrSampleExpr
+  let lenSampleExpr = this.io.readU4le()
+  this.lenSample = lenSampleExpr
+  let loopBeginExpr = this.io.readU4le()
+  this.loopBegin = loopBeginExpr
+  let loopEndExpr = this.io.readU4le()
+  this.loopEnd = loopEndExpr
+
+  ##[
+  Default volume
+  ]##
+  let defaultVolumeExpr = this.io.readU1()
+  this.defaultVolume = defaultVolumeExpr
+  let reserved1Expr = this.io.readU1()
+  this.reserved1 = reserved1Expr
+
+  ##[
+  0 = unpacked, 1 = DP30ADPCM packing
+  ]##
+  let isPackedExpr = this.io.readU1()
+  this.isPacked = isPackedExpr
+  let flagsExpr = this.io.readU1()
+  this.flags = flagsExpr
+
+proc sample(this: S3m_Instrument_Sampled): seq[byte] = 
+  if this.sampleInstFlag:
+    return this.sampleInst
+  let pos = this.io.pos()
+  this.io.seek(int(this.paraptrSample.value * 16))
+  let sampleInstExpr = this.io.readBytes(int(this.lenSample))
+  this.sampleInst = sampleInstExpr
+  this.io.seek(pos)
+  this.sampleInstFlag = true
+  return this.sampleInst
+
+proc fromFile*(_: typedesc[S3m_Instrument_Sampled], filename: string): S3m_Instrument_Sampled =
+  S3m_Instrument_Sampled.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[S3m_InstrumentPtr], io: KaitaiStream, root: KaitaiStruct, parent: S3m): S3m_InstrumentPtr =
+  template this: untyped = result
+  this = new(S3m_InstrumentPtr)
+  let root = if root == nil: cast[S3m](this) else: cast[S3m](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let paraptrExpr = this.io.readU2le()
+  this.paraptr = paraptrExpr
+
+proc body(this: S3m_InstrumentPtr): S3m_Instrument = 
+  if this.bodyInstFlag:
+    return this.bodyInst
+  let pos = this.io.pos()
+  this.io.seek(int(this.paraptr * 16))
+  let bodyInstExpr = S3m_Instrument.read(this.io, this.root, this)
+  this.bodyInst = bodyInstExpr
+  this.io.seek(pos)
+  this.bodyInstFlag = true
+  return this.bodyInst
+
+proc fromFile*(_: typedesc[S3m_InstrumentPtr], filename: string): S3m_InstrumentPtr =
+  S3m_InstrumentPtr.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[S3m_Pattern], io: KaitaiStream, root: KaitaiStruct, parent: S3m_PatternPtr): S3m_Pattern =
+  template this: untyped = result
+  this = new(S3m_Pattern)
+  let root = if root == nil: cast[S3m](this) else: cast[S3m](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let sizeExpr = this.io.readU2le()
+  this.size = sizeExpr
+  let rawBodyExpr = this.io.readBytes(int(this.size - 2))
+  this.rawBody = rawBodyExpr
+  let rawBodyIo = newKaitaiStream(rawBodyExpr)
+  let bodyExpr = S3m_PatternCells.read(rawBodyIo, this.root, this)
+  this.body = bodyExpr
+
+proc fromFile*(_: typedesc[S3m_Pattern], filename: string): S3m_Pattern =
+  S3m_Pattern.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[S3m_PatternCell], io: KaitaiStream, root: KaitaiStruct, parent: S3m_PatternCells): S3m_PatternCell =
   template this: untyped = result
@@ -319,25 +478,30 @@ proc read*(_: typedesc[S3m_PatternCells], io: KaitaiStream, root: KaitaiStruct, 
 proc fromFile*(_: typedesc[S3m_PatternCells], filename: string): S3m_PatternCells =
   S3m_PatternCells.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[S3m_Channel], io: KaitaiStream, root: KaitaiStruct, parent: S3m): S3m_Channel =
+proc read*(_: typedesc[S3m_PatternPtr], io: KaitaiStream, root: KaitaiStruct, parent: S3m): S3m_PatternPtr =
   template this: untyped = result
-  this = new(S3m_Channel)
+  this = new(S3m_PatternPtr)
   let root = if root == nil: cast[S3m](this) else: cast[S3m](root)
   this.io = io
   this.root = root
   this.parent = parent
 
-  let isDisabledExpr = this.io.readBitsIntBe(1) != 0
-  this.isDisabled = isDisabledExpr
+  let paraptrExpr = this.io.readU2le()
+  this.paraptr = paraptrExpr
 
-  ##[
-  Channel type (0..7 = left sample channels, 8..15 = right sample channels, 16..31 = AdLib synth channels)
-  ]##
-  let chTypeExpr = this.io.readBitsIntBe(7)
-  this.chType = chTypeExpr
+proc body(this: S3m_PatternPtr): S3m_Pattern = 
+  if this.bodyInstFlag:
+    return this.bodyInst
+  let pos = this.io.pos()
+  this.io.seek(int(this.paraptr * 16))
+  let bodyInstExpr = S3m_Pattern.read(this.io, this.root, this)
+  this.bodyInst = bodyInstExpr
+  this.io.seek(pos)
+  this.bodyInstFlag = true
+  return this.bodyInst
 
-proc fromFile*(_: typedesc[S3m_Channel], filename: string): S3m_Channel =
-  S3m_Channel.read(newKaitaiFileStream(filename), nil, nil)
+proc fromFile*(_: typedesc[S3m_PatternPtr], filename: string): S3m_PatternPtr =
+  S3m_PatternPtr.read(newKaitaiFileStream(filename), nil, nil)
 
 
 ##[
@@ -359,175 +523,11 @@ proc read*(_: typedesc[S3m_SwappedU3], io: KaitaiStream, root: KaitaiStruct, par
 proc value(this: S3m_SwappedU3): int = 
   if this.valueInstFlag:
     return this.valueInst
-  let valueInstExpr = int((this.lo or (this.hi shl 16)))
+  let valueInstExpr = int(this.lo or this.hi shl 16)
   this.valueInst = valueInstExpr
   this.valueInstFlag = true
   return this.valueInst
 
 proc fromFile*(_: typedesc[S3m_SwappedU3], filename: string): S3m_SwappedU3 =
   S3m_SwappedU3.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[S3m_Pattern], io: KaitaiStream, root: KaitaiStruct, parent: S3m_PatternPtr): S3m_Pattern =
-  template this: untyped = result
-  this = new(S3m_Pattern)
-  let root = if root == nil: cast[S3m](this) else: cast[S3m](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let sizeExpr = this.io.readU2le()
-  this.size = sizeExpr
-  let rawBodyExpr = this.io.readBytes(int((this.size - 2)))
-  this.rawBody = rawBodyExpr
-  let rawBodyIo = newKaitaiStream(rawBodyExpr)
-  let bodyExpr = S3m_PatternCells.read(rawBodyIo, this.root, this)
-  this.body = bodyExpr
-
-proc fromFile*(_: typedesc[S3m_Pattern], filename: string): S3m_Pattern =
-  S3m_Pattern.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[S3m_PatternPtr], io: KaitaiStream, root: KaitaiStruct, parent: S3m): S3m_PatternPtr =
-  template this: untyped = result
-  this = new(S3m_PatternPtr)
-  let root = if root == nil: cast[S3m](this) else: cast[S3m](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let paraptrExpr = this.io.readU2le()
-  this.paraptr = paraptrExpr
-
-proc body(this: S3m_PatternPtr): S3m_Pattern = 
-  if this.bodyInstFlag:
-    return this.bodyInst
-  let pos = this.io.pos()
-  this.io.seek(int((this.paraptr * 16)))
-  let bodyInstExpr = S3m_Pattern.read(this.io, this.root, this)
-  this.bodyInst = bodyInstExpr
-  this.io.seek(pos)
-  this.bodyInstFlag = true
-  return this.bodyInst
-
-proc fromFile*(_: typedesc[S3m_PatternPtr], filename: string): S3m_PatternPtr =
-  S3m_PatternPtr.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[S3m_InstrumentPtr], io: KaitaiStream, root: KaitaiStruct, parent: S3m): S3m_InstrumentPtr =
-  template this: untyped = result
-  this = new(S3m_InstrumentPtr)
-  let root = if root == nil: cast[S3m](this) else: cast[S3m](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let paraptrExpr = this.io.readU2le()
-  this.paraptr = paraptrExpr
-
-proc body(this: S3m_InstrumentPtr): S3m_Instrument = 
-  if this.bodyInstFlag:
-    return this.bodyInst
-  let pos = this.io.pos()
-  this.io.seek(int((this.paraptr * 16)))
-  let bodyInstExpr = S3m_Instrument.read(this.io, this.root, this)
-  this.bodyInst = bodyInstExpr
-  this.io.seek(pos)
-  this.bodyInstFlag = true
-  return this.bodyInst
-
-proc fromFile*(_: typedesc[S3m_InstrumentPtr], filename: string): S3m_InstrumentPtr =
-  S3m_InstrumentPtr.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[S3m_Instrument], io: KaitaiStream, root: KaitaiStruct, parent: S3m_InstrumentPtr): S3m_Instrument =
-  template this: untyped = result
-  this = new(S3m_Instrument)
-  let root = if root == nil: cast[S3m](this) else: cast[S3m](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let typeExpr = S3m_Instrument_InstTypes(this.io.readU1())
-  this.type = typeExpr
-  let filenameExpr = this.io.readBytes(int(12)).bytesTerminate(0, false)
-  this.filename = filenameExpr
-  block:
-    let on = this.type
-    if on == s3m.sample:
-      let bodyExpr = S3m_Instrument_Sampled.read(this.io, this.root, this)
-      this.body = bodyExpr
-    else:
-      let bodyExpr = S3m_Instrument_Adlib.read(this.io, this.root, this)
-      this.body = bodyExpr
-  let tuningHzExpr = this.io.readU4le()
-  this.tuningHz = tuningHzExpr
-  let reserved2Expr = this.io.readBytes(int(12))
-  this.reserved2 = reserved2Expr
-  let sampleNameExpr = this.io.readBytes(int(28)).bytesTerminate(0, false)
-  this.sampleName = sampleNameExpr
-  let magicExpr = this.io.readBytes(int(4))
-  this.magic = magicExpr
-
-proc fromFile*(_: typedesc[S3m_Instrument], filename: string): S3m_Instrument =
-  S3m_Instrument.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[S3m_Instrument_Sampled], io: KaitaiStream, root: KaitaiStruct, parent: S3m_Instrument): S3m_Instrument_Sampled =
-  template this: untyped = result
-  this = new(S3m_Instrument_Sampled)
-  let root = if root == nil: cast[S3m](this) else: cast[S3m](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let paraptrSampleExpr = S3m_SwappedU3.read(this.io, this.root, this)
-  this.paraptrSample = paraptrSampleExpr
-  let lenSampleExpr = this.io.readU4le()
-  this.lenSample = lenSampleExpr
-  let loopBeginExpr = this.io.readU4le()
-  this.loopBegin = loopBeginExpr
-  let loopEndExpr = this.io.readU4le()
-  this.loopEnd = loopEndExpr
-
-  ##[
-  Default volume
-  ]##
-  let defaultVolumeExpr = this.io.readU1()
-  this.defaultVolume = defaultVolumeExpr
-  let reserved1Expr = this.io.readU1()
-  this.reserved1 = reserved1Expr
-
-  ##[
-  0 = unpacked, 1 = DP30ADPCM packing
-  ]##
-  let isPackedExpr = this.io.readU1()
-  this.isPacked = isPackedExpr
-  let flagsExpr = this.io.readU1()
-  this.flags = flagsExpr
-
-proc sample(this: S3m_Instrument_Sampled): seq[byte] = 
-  if this.sampleInstFlag:
-    return this.sampleInst
-  let pos = this.io.pos()
-  this.io.seek(int((this.paraptrSample.value * 16)))
-  let sampleInstExpr = this.io.readBytes(int(this.lenSample))
-  this.sampleInst = sampleInstExpr
-  this.io.seek(pos)
-  this.sampleInstFlag = true
-  return this.sampleInst
-
-proc fromFile*(_: typedesc[S3m_Instrument_Sampled], filename: string): S3m_Instrument_Sampled =
-  S3m_Instrument_Sampled.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[S3m_Instrument_Adlib], io: KaitaiStream, root: KaitaiStruct, parent: S3m_Instrument): S3m_Instrument_Adlib =
-  template this: untyped = result
-  this = new(S3m_Instrument_Adlib)
-  let root = if root == nil: cast[S3m](this) else: cast[S3m](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let reserved1Expr = this.io.readBytes(int(3))
-  this.reserved1 = reserved1Expr
-  let unnamed1Expr = this.io.readBytes(int(16))
-  this.unnamed1 = unnamed1Expr
-
-proc fromFile*(_: typedesc[S3m_Instrument_Adlib], filename: string): S3m_Instrument_Adlib =
-  S3m_Instrument_Adlib.read(newKaitaiFileStream(filename), nil, nil)
 

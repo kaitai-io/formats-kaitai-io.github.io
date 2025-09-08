@@ -193,6 +193,11 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="java-write.html" title="exif parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="exif parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -223,7 +228,17 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="python-write.html" title="exif parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="exif parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="exif parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -421,6 +436,7 @@ can also be found there.</p>
 <span class="w">                    </span><span class="p">{</span>
 <span class="w">                        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_nextIfd</span><span class="p">)</span>
 <span class="w">                            </span><span class="k">return</span><span class="w"> </span><span class="n">_nextIfd</span><span class="p">;</span>
+<span class="w">                        </span><span class="n">f_nextIfd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
 <span class="w">                        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">NextIfdOfs</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">                            </span><span class="kt">long</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
 <span class="w">                            </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">NextIfdOfs</span><span class="p">);</span>
@@ -430,7 +446,6 @@ can also be found there.</p>
 <span class="w">                                </span><span class="n">_nextIfd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Ifd</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">,</span><span class="w"> </span><span class="n">m_isLe</span><span class="p">);</span>
 <span class="w">                            </span><span class="p">}</span>
 <span class="w">                            </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
-<span class="w">                            </span><span class="n">f_nextIfd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
 <span class="w">                        </span><span class="p">}</span>
 <span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_nextIfd</span><span class="p">;</span>
 <span class="w">                    </span><span class="p">}</span>
@@ -933,10 +948,10 @@ can also be found there.</p>
 <span class="w">                    </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
 <span class="w">                    </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
 <span class="w">                    </span><span class="n">m_isLe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">isLe</span><span class="p">;</span>
-<span class="w">                    </span><span class="n">f_typeByteLength</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
 <span class="w">                    </span><span class="n">f_byteLength</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
-<span class="w">                    </span><span class="n">f_isImmediateData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
 <span class="w">                    </span><span class="n">f_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">f_isImmediateData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">f_typeByteLength</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
 <span class="w">                    </span><span class="n">_read</span><span class="p">();</span>
 <span class="w">                </span><span class="p">}</span>
 <span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
@@ -964,19 +979,6 @@ can also be found there.</p>
 <span class="w">                    </span><span class="n">_length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
 <span class="w">                    </span><span class="n">_ofsOrData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
 <span class="w">                </span><span class="p">}</span>
-<span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_typeByteLength</span><span class="p">;</span>
-<span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="kt">sbyte</span><span class="w"> </span><span class="n">_typeByteLength</span><span class="p">;</span>
-<span class="w">                </span><span class="k">public</span><span class="w"> </span><span class="kt">sbyte</span><span class="w"> </span><span class="n">TypeByteLength</span>
-<span class="w">                </span><span class="p">{</span>
-<span class="w">                    </span><span class="k">get</span>
-<span class="w">                    </span><span class="p">{</span>
-<span class="w">                        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_typeByteLength</span><span class="p">)</span>
-<span class="w">                            </span><span class="k">return</span><span class="w"> </span><span class="n">_typeByteLength</span><span class="p">;</span>
-<span class="w">                        </span><span class="n">_typeByteLength</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">sbyte</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">FieldType</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">FieldTypeEnum</span><span class="p">.</span><span class="n">Word</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">(</span><span class="n">FieldType</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">FieldTypeEnum</span><span class="p">.</span><span class="n">Dword</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">)));</span>
-<span class="w">                        </span><span class="n">f_typeByteLength</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
-<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_typeByteLength</span><span class="p">;</span>
-<span class="w">                    </span><span class="p">}</span>
-<span class="w">                </span><span class="p">}</span>
 <span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_byteLength</span><span class="p">;</span>
 <span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">_byteLength</span><span class="p">;</span>
 <span class="w">                </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">ByteLength</span>
@@ -985,22 +987,9 @@ can also be found there.</p>
 <span class="w">                    </span><span class="p">{</span>
 <span class="w">                        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_byteLength</span><span class="p">)</span>
 <span class="w">                            </span><span class="k">return</span><span class="w"> </span><span class="n">_byteLength</span><span class="p">;</span>
-<span class="w">                        </span><span class="n">_byteLength</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">Length</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">TypeByteLength</span><span class="p">));</span>
 <span class="w">                        </span><span class="n">f_byteLength</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                        </span><span class="n">_byteLength</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">Length</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">TypeByteLength</span><span class="p">);</span>
 <span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_byteLength</span><span class="p">;</span>
-<span class="w">                    </span><span class="p">}</span>
-<span class="w">                </span><span class="p">}</span>
-<span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_isImmediateData</span><span class="p">;</span>
-<span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">_isImmediateData</span><span class="p">;</span>
-<span class="w">                </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">IsImmediateData</span>
-<span class="w">                </span><span class="p">{</span>
-<span class="w">                    </span><span class="k">get</span>
-<span class="w">                    </span><span class="p">{</span>
-<span class="w">                        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_isImmediateData</span><span class="p">)</span>
-<span class="w">                            </span><span class="k">return</span><span class="w"> </span><span class="n">_isImmediateData</span><span class="p">;</span>
-<span class="w">                        </span><span class="n">_isImmediateData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">bool</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">ByteLength</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">4</span><span class="p">);</span>
-<span class="w">                        </span><span class="n">f_isImmediateData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
-<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_isImmediateData</span><span class="p">;</span>
 <span class="w">                    </span><span class="p">}</span>
 <span class="w">                </span><span class="p">}</span>
 <span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_data</span><span class="p">;</span>
@@ -1011,6 +1000,7 @@ can also be found there.</p>
 <span class="w">                    </span><span class="p">{</span>
 <span class="w">                        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_data</span><span class="p">)</span>
 <span class="w">                            </span><span class="k">return</span><span class="w"> </span><span class="n">_data</span><span class="p">;</span>
+<span class="w">                        </span><span class="n">f_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
 <span class="w">                        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">IsImmediateData</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
 <span class="w">                            </span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">M_Root</span><span class="p">.</span><span class="n">M_Io</span><span class="p">;</span>
 <span class="w">                            </span><span class="kt">long</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
@@ -1021,9 +1011,34 @@ can also be found there.</p>
 <span class="w">                                </span><span class="n">_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">ByteLength</span><span class="p">);</span>
 <span class="w">                            </span><span class="p">}</span>
 <span class="w">                            </span><span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
-<span class="w">                            </span><span class="n">f_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
 <span class="w">                        </span><span class="p">}</span>
 <span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_data</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_isImmediateData</span><span class="p">;</span>
+<span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">_isImmediateData</span><span class="p">;</span>
+<span class="w">                </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">IsImmediateData</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">get</span>
+<span class="w">                    </span><span class="p">{</span>
+<span class="w">                        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_isImmediateData</span><span class="p">)</span>
+<span class="w">                            </span><span class="k">return</span><span class="w"> </span><span class="n">_isImmediateData</span><span class="p">;</span>
+<span class="w">                        </span><span class="n">f_isImmediateData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                        </span><span class="n">_isImmediateData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">bool</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">ByteLength</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">4</span><span class="p">);</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_isImmediateData</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_typeByteLength</span><span class="p">;</span>
+<span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="kt">sbyte</span><span class="w"> </span><span class="n">_typeByteLength</span><span class="p">;</span>
+<span class="w">                </span><span class="k">public</span><span class="w"> </span><span class="kt">sbyte</span><span class="w"> </span><span class="n">TypeByteLength</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">get</span>
+<span class="w">                    </span><span class="p">{</span>
+<span class="w">                        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_typeByteLength</span><span class="p">)</span>
+<span class="w">                            </span><span class="k">return</span><span class="w"> </span><span class="n">_typeByteLength</span><span class="p">;</span>
+<span class="w">                        </span><span class="n">f_typeByteLength</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                        </span><span class="n">_typeByteLength</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">sbyte</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">FieldType</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">FieldTypeEnum</span><span class="p">.</span><span class="n">Word</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">(</span><span class="n">FieldType</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">FieldTypeEnum</span><span class="p">.</span><span class="n">Dword</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">)));</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_typeByteLength</span><span class="p">;</span>
 <span class="w">                    </span><span class="p">}</span>
 <span class="w">                </span><span class="p">}</span>
 <span class="w">                </span><span class="k">private</span><span class="w"> </span><span class="n">TagEnum</span><span class="w"> </span><span class="n">_tag</span><span class="p">;</span>
@@ -1047,6 +1062,7 @@ can also be found there.</p>
 <span class="w">                </span><span class="p">{</span>
 <span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_ifd0</span><span class="p">)</span>
 <span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_ifd0</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">f_ifd0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
 <span class="w">                    </span><span class="kt">long</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
 <span class="w">                    </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">Ifd0Ofs</span><span class="p">);</span>
 <span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m_isLe</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="k">true</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
@@ -1055,7 +1071,6 @@ can also be found there.</p>
 <span class="w">                        </span><span class="n">_ifd0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Ifd</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">,</span><span class="w"> </span><span class="n">m_isLe</span><span class="p">);</span>
 <span class="w">                    </span><span class="p">}</span>
 <span class="w">                    </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
-<span class="w">                    </span><span class="n">f_ifd0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
 <span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_ifd0</span><span class="p">;</span>
 <span class="w">                </span><span class="p">}</span>
 <span class="w">            </span><span class="p">}</span>

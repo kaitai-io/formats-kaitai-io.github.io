@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.BtrfsStream = factory(root.KaitaiStream);
+    factory(root.BtrfsStream || (root.BtrfsStream = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (BtrfsStream_, KaitaiStream) {
 /**
  * Btrfs is a copy on write file system based on B-trees focusing on fault tolerance, repair and easy
  * administration. Btrfs is intended to address the lack of pooling, snapshots, checksums, and
@@ -23,56 +23,6 @@
  */
 
 var BtrfsStream = (function() {
-  BtrfsStream.Command = Object.freeze({
-    UNSPEC: 0,
-    SUBVOL: 1,
-    SNAPSHOT: 2,
-    MKFILE: 3,
-    MKDIR: 4,
-    MKNOD: 5,
-    MKFIFO: 6,
-    MKSOCK: 7,
-    SYMLINK: 8,
-    RENAME: 9,
-    LINK: 10,
-    UNLINK: 11,
-    RMDIR: 12,
-    SET_XATTR: 13,
-    REMOVE_XATTR: 14,
-    WRITE: 15,
-    CLONE: 16,
-    TRUNCATE: 17,
-    CHMOD: 18,
-    CHOWN: 19,
-    UTIMES: 20,
-    END: 21,
-    UPDATE_EXTENT: 22,
-
-    0: "UNSPEC",
-    1: "SUBVOL",
-    2: "SNAPSHOT",
-    3: "MKFILE",
-    4: "MKDIR",
-    5: "MKNOD",
-    6: "MKFIFO",
-    7: "MKSOCK",
-    8: "SYMLINK",
-    9: "RENAME",
-    10: "LINK",
-    11: "UNLINK",
-    12: "RMDIR",
-    13: "SET_XATTR",
-    14: "REMOVE_XATTR",
-    15: "WRITE",
-    16: "CLONE",
-    17: "TRUNCATE",
-    18: "CHMOD",
-    19: "CHOWN",
-    20: "UTIMES",
-    21: "END",
-    22: "UPDATE_EXTENT",
-  });
-
   BtrfsStream.Attribute = Object.freeze({
     UNSPEC: 0,
     UUID: 1,
@@ -127,6 +77,56 @@ var BtrfsStream = (function() {
     24: "CLONE_LEN",
   });
 
+  BtrfsStream.Command = Object.freeze({
+    UNSPEC: 0,
+    SUBVOL: 1,
+    SNAPSHOT: 2,
+    MKFILE: 3,
+    MKDIR: 4,
+    MKNOD: 5,
+    MKFIFO: 6,
+    MKSOCK: 7,
+    SYMLINK: 8,
+    RENAME: 9,
+    LINK: 10,
+    UNLINK: 11,
+    RMDIR: 12,
+    SET_XATTR: 13,
+    REMOVE_XATTR: 14,
+    WRITE: 15,
+    CLONE: 16,
+    TRUNCATE: 17,
+    CHMOD: 18,
+    CHOWN: 19,
+    UTIMES: 20,
+    END: 21,
+    UPDATE_EXTENT: 22,
+
+    0: "UNSPEC",
+    1: "SUBVOL",
+    2: "SNAPSHOT",
+    3: "MKFILE",
+    4: "MKDIR",
+    5: "MKNOD",
+    6: "MKFIFO",
+    7: "MKSOCK",
+    8: "SYMLINK",
+    9: "RENAME",
+    10: "LINK",
+    11: "UNLINK",
+    12: "RMDIR",
+    13: "SET_XATTR",
+    14: "REMOVE_XATTR",
+    15: "WRITE",
+    16: "CLONE",
+    17: "TRUNCATE",
+    18: "CHMOD",
+    19: "CHOWN",
+    20: "UTIMES",
+    21: "END",
+    22: "UPDATE_EXTENT",
+  });
+
   function BtrfsStream(_io, _parent, _root) {
     this._io = _io;
     this._parent = _parent;
@@ -144,30 +144,11 @@ var BtrfsStream = (function() {
     }
   }
 
-  var SendStreamHeader = BtrfsStream.SendStreamHeader = (function() {
-    function SendStreamHeader(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    SendStreamHeader.prototype._read = function() {
-      this.magic = this._io.readBytes(13);
-      if (!((KaitaiStream.byteArrayCompare(this.magic, [98, 116, 114, 102, 115, 45, 115, 116, 114, 101, 97, 109, 0]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([98, 116, 114, 102, 115, 45, 115, 116, 114, 101, 97, 109, 0], this.magic, this._io, "/types/send_stream_header/seq/0");
-      }
-      this.version = this._io.readU4le();
-    }
-
-    return SendStreamHeader;
-  })();
-
   var SendCommand = BtrfsStream.SendCommand = (function() {
     function SendCommand(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -180,11 +161,42 @@ var BtrfsStream = (function() {
       this.data = new Tlvs(_io__raw_data, this, this._root);
     }
 
+    var String = SendCommand.String = (function() {
+      function String(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+
+        this._read();
+      }
+      String.prototype._read = function() {
+        this.string = KaitaiStream.bytesToStr(this._io.readBytesFull(), "UTF-8");
+      }
+
+      return String;
+    })();
+
+    var Timespec = SendCommand.Timespec = (function() {
+      function Timespec(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+
+        this._read();
+      }
+      Timespec.prototype._read = function() {
+        this.tsSec = this._io.readS8le();
+        this.tsNsec = this._io.readS4le();
+      }
+
+      return Timespec;
+    })();
+
     var Tlv = SendCommand.Tlv = (function() {
       function Tlv(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -192,52 +204,42 @@ var BtrfsStream = (function() {
         this.type = this._io.readU2le();
         this.length = this._io.readU2le();
         switch (this.type) {
-        case BtrfsStream.Attribute.CTRANSID:
+        case BtrfsStream.Attribute.ATIME:
+          this._raw_value = this._io.readBytes(this.length);
+          var _io__raw_value = new KaitaiStream(this._raw_value);
+          this.value = new Timespec(_io__raw_value, this, this._root);
+          break;
+        case BtrfsStream.Attribute.CLONE_CTRANSID:
           this.value = this._io.readU8le();
           break;
-        case BtrfsStream.Attribute.SIZE:
+        case BtrfsStream.Attribute.CLONE_LEN:
           this.value = this._io.readU8le();
+          break;
+        case BtrfsStream.Attribute.CLONE_OFFSET:
+          this.value = this._io.readU8le();
+          break;
+        case BtrfsStream.Attribute.CLONE_PATH:
+          this._raw_value = this._io.readBytes(this.length);
+          var _io__raw_value = new KaitaiStream(this._raw_value);
+          this.value = new String(_io__raw_value, this, this._root);
           break;
         case BtrfsStream.Attribute.CLONE_UUID:
           this._raw_value = this._io.readBytes(this.length);
           var _io__raw_value = new KaitaiStream(this._raw_value);
           this.value = new Uuid(_io__raw_value, this, this._root);
           break;
-        case BtrfsStream.Attribute.FILE_OFFSET:
-          this.value = this._io.readU8le();
-          break;
-        case BtrfsStream.Attribute.OTIME:
-          this._raw_value = this._io.readBytes(this.length);
-          var _io__raw_value = new KaitaiStream(this._raw_value);
-          this.value = new Timespec(_io__raw_value, this, this._root);
-          break;
-        case BtrfsStream.Attribute.UID:
-          this.value = this._io.readU8le();
-          break;
-        case BtrfsStream.Attribute.ATIME:
-          this._raw_value = this._io.readBytes(this.length);
-          var _io__raw_value = new KaitaiStream(this._raw_value);
-          this.value = new Timespec(_io__raw_value, this, this._root);
-          break;
         case BtrfsStream.Attribute.CTIME:
           this._raw_value = this._io.readBytes(this.length);
           var _io__raw_value = new KaitaiStream(this._raw_value);
           this.value = new Timespec(_io__raw_value, this, this._root);
           break;
-        case BtrfsStream.Attribute.UUID:
-          this._raw_value = this._io.readBytes(this.length);
-          var _io__raw_value = new KaitaiStream(this._raw_value);
-          this.value = new Uuid(_io__raw_value, this, this._root);
-          break;
-        case BtrfsStream.Attribute.CLONE_LEN:
+        case BtrfsStream.Attribute.CTRANSID:
           this.value = this._io.readU8le();
           break;
-        case BtrfsStream.Attribute.XATTR_NAME:
-          this._raw_value = this._io.readBytes(this.length);
-          var _io__raw_value = new KaitaiStream(this._raw_value);
-          this.value = new String(_io__raw_value, this, this._root);
+        case BtrfsStream.Attribute.FILE_OFFSET:
+          this.value = this._io.readU8le();
           break;
-        case BtrfsStream.Attribute.CLONE_CTRANSID:
+        case BtrfsStream.Attribute.GID:
           this.value = this._io.readU8le();
           break;
         case BtrfsStream.Attribute.MODE:
@@ -248,7 +250,22 @@ var BtrfsStream = (function() {
           var _io__raw_value = new KaitaiStream(this._raw_value);
           this.value = new Timespec(_io__raw_value, this, this._root);
           break;
+        case BtrfsStream.Attribute.OTIME:
+          this._raw_value = this._io.readBytes(this.length);
+          var _io__raw_value = new KaitaiStream(this._raw_value);
+          this.value = new Timespec(_io__raw_value, this, this._root);
+          break;
+        case BtrfsStream.Attribute.PATH:
+          this._raw_value = this._io.readBytes(this.length);
+          var _io__raw_value = new KaitaiStream(this._raw_value);
+          this.value = new String(_io__raw_value, this, this._root);
+          break;
         case BtrfsStream.Attribute.PATH_LINK:
+          this._raw_value = this._io.readBytes(this.length);
+          var _io__raw_value = new KaitaiStream(this._raw_value);
+          this.value = new String(_io__raw_value, this, this._root);
+          break;
+        case BtrfsStream.Attribute.PATH_TO:
           this._raw_value = this._io.readBytes(this.length);
           var _io__raw_value = new KaitaiStream(this._raw_value);
           this.value = new String(_io__raw_value, this, this._root);
@@ -256,23 +273,18 @@ var BtrfsStream = (function() {
         case BtrfsStream.Attribute.RDEV:
           this.value = this._io.readU8le();
           break;
-        case BtrfsStream.Attribute.PATH_TO:
-          this._raw_value = this._io.readBytes(this.length);
-          var _io__raw_value = new KaitaiStream(this._raw_value);
-          this.value = new String(_io__raw_value, this, this._root);
-          break;
-        case BtrfsStream.Attribute.PATH:
-          this._raw_value = this._io.readBytes(this.length);
-          var _io__raw_value = new KaitaiStream(this._raw_value);
-          this.value = new String(_io__raw_value, this, this._root);
-          break;
-        case BtrfsStream.Attribute.CLONE_OFFSET:
+        case BtrfsStream.Attribute.SIZE:
           this.value = this._io.readU8le();
           break;
-        case BtrfsStream.Attribute.GID:
+        case BtrfsStream.Attribute.UID:
           this.value = this._io.readU8le();
           break;
-        case BtrfsStream.Attribute.CLONE_PATH:
+        case BtrfsStream.Attribute.UUID:
+          this._raw_value = this._io.readBytes(this.length);
+          var _io__raw_value = new KaitaiStream(this._raw_value);
+          this.value = new Uuid(_io__raw_value, this, this._root);
+          break;
+        case BtrfsStream.Attribute.XATTR_NAME:
           this._raw_value = this._io.readBytes(this.length);
           var _io__raw_value = new KaitaiStream(this._raw_value);
           this.value = new String(_io__raw_value, this, this._root);
@@ -286,26 +298,11 @@ var BtrfsStream = (function() {
       return Tlv;
     })();
 
-    var Uuid = SendCommand.Uuid = (function() {
-      function Uuid(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      Uuid.prototype._read = function() {
-        this.uuid = this._io.readBytes(16);
-      }
-
-      return Uuid;
-    })();
-
     var Tlvs = SendCommand.Tlvs = (function() {
       function Tlvs(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -321,35 +318,19 @@ var BtrfsStream = (function() {
       return Tlvs;
     })();
 
-    var String = SendCommand.String = (function() {
-      function String(_io, _parent, _root) {
+    var Uuid = SendCommand.Uuid = (function() {
+      function Uuid(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
-      String.prototype._read = function() {
-        this.string = KaitaiStream.bytesToStr(this._io.readBytesFull(), "UTF-8");
+      Uuid.prototype._read = function() {
+        this.uuid = this._io.readBytes(16);
       }
 
-      return String;
-    })();
-
-    var Timespec = SendCommand.Timespec = (function() {
-      function Timespec(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      Timespec.prototype._read = function() {
-        this.tsSec = this._io.readS8le();
-        this.tsNsec = this._io.readS4le();
-      }
-
-      return Timespec;
+      return Uuid;
     })();
 
     /**
@@ -359,7 +340,26 @@ var BtrfsStream = (function() {
     return SendCommand;
   })();
 
+  var SendStreamHeader = BtrfsStream.SendStreamHeader = (function() {
+    function SendStreamHeader(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    SendStreamHeader.prototype._read = function() {
+      this.magic = this._io.readBytes(13);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([98, 116, 114, 102, 115, 45, 115, 116, 114, 101, 97, 109, 0])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([98, 116, 114, 102, 115, 45, 115, 116, 114, 101, 97, 109, 0]), this.magic, this._io, "/types/send_stream_header/seq/0");
+      }
+      this.version = this._io.readU4le();
+    }
+
+    return SendStreamHeader;
+  })();
+
   return BtrfsStream;
 })();
-return BtrfsStream;
-}));
+BtrfsStream_.BtrfsStream = BtrfsStream;
+});

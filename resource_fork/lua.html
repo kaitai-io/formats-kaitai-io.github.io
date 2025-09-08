@@ -241,6 +241,11 @@ such as custom file icons.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="Macintosh resource fork data parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="Macintosh resource fork data parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -271,7 +276,17 @@ such as custom file icons.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="Macintosh resource fork data parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="Macintosh resource fork data parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="Macintosh resource fork data parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -307,9 +322,9 @@ such as custom file icons.</p>
 
 <span class="kd">local</span><span class="w"> </span><span class="nv">class</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
 <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;kaitaistruct&quot;</span><span class="p">)</span>
+<span class="nb">require</span><span class="p">(</span><span class="s2">&quot;bytes_with_io&quot;</span><span class="p">)</span>
 <span class="kd">local</span><span class="w"> </span><span class="nv">stringstream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_stream&quot;</span><span class="p">)</span>
 
-<span class="nb">require</span><span class="p">(</span><span class="s2">&quot;bytes_with_io&quot;</span><span class="p">)</span>
 <span class="c1">-- </span>
 <span class="c1">-- The data format of Macintosh resource forks,</span>
 <span class="c1">-- used on Classic Mac OS and Mac OS X/macOS to store additional structured data along with a file&#39;s main data (the data fork).</span>
@@ -365,24 +380,6 @@ such as custom file icons.</p>
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
-<span class="c1">-- Use `data_blocks` instead,</span>
-<span class="c1">-- unless you need access to this instance&#39;s `_io`.</span>
-<span class="nv">ResourceFork</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">data_blocks_with_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">ResourceFork</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">data_blocks_with_io</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_data_blocks_with_io</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_data_blocks_with_io</span>
-<span class="w">  </span><span class="kr">end</span>
-
-<span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">pos</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">header</span><span class="p">.</span><span class="py">ofs_data_blocks</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_raw__m_data_blocks_with_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">header</span><span class="p">.</span><span class="py">len_data_blocks</span><span class="p">)</span>
-<span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">KaitaiStream</span><span class="p">(</span><span class="nf">stringstream</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_raw__m_data_blocks_with_io</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_data_blocks_with_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">BytesWithIo</span><span class="p">(</span><span class="nv">_io</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">(</span><span class="nv">_pos</span><span class="p">)</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_data_blocks_with_io</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
 <span class="c1">-- Storage area for the data blocks of all resources.</span>
 <span class="c1">-- </span>
 <span class="c1">-- These data blocks are not required to appear in any particular order,</span>
@@ -404,6 +401,24 @@ such as custom file icons.</p>
 
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_data_blocks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">data_blocks_with_io</span><span class="p">.</span><span class="py">data</span>
 <span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_data_blocks</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Use `data_blocks` instead,</span>
+<span class="c1">-- unless you need access to this instance&#39;s `_io`.</span>
+<span class="nv">ResourceFork</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">data_blocks_with_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">ResourceFork</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">data_blocks_with_io</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_data_blocks_with_io</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_data_blocks_with_io</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">pos</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">header</span><span class="p">.</span><span class="py">ofs_data_blocks</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_raw__m_data_blocks_with_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">header</span><span class="p">.</span><span class="py">len_data_blocks</span><span class="p">)</span>
+<span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">KaitaiStream</span><span class="p">(</span><span class="nf">stringstream</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_raw__m_data_blocks_with_io</span><span class="p">))</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_data_blocks_with_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">BytesWithIo</span><span class="p">(</span><span class="nv">_io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">(</span><span class="nv">_pos</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_data_blocks_with_io</span>
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
@@ -448,6 +463,31 @@ such as custom file icons.</p>
 <span class="c1">-- this field is set to all zero bytes.</span>
 
 <span class="c1">-- </span>
+<span class="c1">-- A resource data block,</span>
+<span class="c1">-- as stored in the resource data area.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Each data block stores the data contained in a resource,</span>
+<span class="c1">-- along with its length.</span>
+<span class="nv">ResourceFork</span><span class="p">.</span><span class="py">DataBlock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">ResourceFork</span><span class="p">.</span><span class="nc">DataBlock</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">ResourceFork</span><span class="p">.</span><span class="nc">DataBlock</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">len_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_data</span><span class="p">)</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The length of the resource data stored in this block.</span>
+<span class="c1">-- </span>
+<span class="c1">-- The data stored in this block.</span>
+
+<span class="c1">-- </span>
 <span class="c1">-- Resource file header,</span>
 <span class="c1">-- containing the offsets and lengths of the resource data area and resource map.</span>
 <span class="nv">ResourceFork</span><span class="p">.</span><span class="py">FileHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
@@ -455,7 +495,7 @@ such as custom file icons.</p>
 <span class="kr">function</span><span class="w"> </span><span class="nc">ResourceFork</span><span class="p">.</span><span class="nc">FileHeader</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
@@ -490,31 +530,6 @@ such as custom file icons.</p>
 <span class="c1">-- i. e. the resource map should extend to the end of the resource file.</span>
 
 <span class="c1">-- </span>
-<span class="c1">-- A resource data block,</span>
-<span class="c1">-- as stored in the resource data area.</span>
-<span class="c1">-- </span>
-<span class="c1">-- Each data block stores the data contained in a resource,</span>
-<span class="c1">-- along with its length.</span>
-<span class="nv">ResourceFork</span><span class="p">.</span><span class="py">DataBlock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">ResourceFork</span><span class="p">.</span><span class="nc">DataBlock</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">ResourceFork</span><span class="p">.</span><span class="nc">DataBlock</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">len_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_data</span><span class="p">)</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- The length of the resource data stored in this block.</span>
-<span class="c1">-- </span>
-<span class="c1">-- The data stored in this block.</span>
-
-<span class="c1">-- </span>
 <span class="c1">-- Resource map,</span>
 <span class="c1">-- containing information about the resources in the file and where they are located in the data area.</span>
 <span class="nv">ResourceFork</span><span class="p">.</span><span class="py">ResourceMap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
@@ -522,7 +537,7 @@ such as custom file icons.</p>
 <span class="kr">function</span><span class="w"> </span><span class="nc">ResourceFork</span><span class="p">.</span><span class="nc">ResourceMap</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
@@ -538,20 +553,15 @@ such as custom file icons.</p>
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
-<span class="c1">-- The resource map&#39;s resource type list, followed by the resource reference list area.</span>
-<span class="nv">ResourceFork</span><span class="p">.</span><span class="py">ResourceMap</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">type_list_and_reference_lists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">ResourceFork</span><span class="p">.</span><span class="nc">ResourceMap</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">type_list_and_reference_lists</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_type_list_and_reference_lists</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_type_list_and_reference_lists</span>
+<span class="c1">-- Storage area for the names of all resources.</span>
+<span class="nv">ResourceFork</span><span class="p">.</span><span class="py">ResourceMap</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">ResourceFork</span><span class="p">.</span><span class="nc">ResourceMap</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">names</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_names</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_names</span>
 <span class="w">  </span><span class="kr">end</span>
 
-<span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">pos</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">ofs_type_list</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_raw__m_type_list_and_reference_lists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">ofs_names</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">ofs_type_list</span><span class="p">))</span>
-<span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">KaitaiStream</span><span class="p">(</span><span class="nf">stringstream</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_raw__m_type_list_and_reference_lists</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_type_list_and_reference_lists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">ResourceFork</span><span class="p">.</span><span class="py">ResourceMap</span><span class="p">.</span><span class="nf">TypeListAndReferenceLists</span><span class="p">(</span><span class="nv">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">(</span><span class="nv">_pos</span><span class="p">)</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_type_list_and_reference_lists</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">names_with_io</span><span class="p">.</span><span class="py">data</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_names</span>
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
@@ -573,15 +583,20 @@ such as custom file icons.</p>
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
-<span class="c1">-- Storage area for the names of all resources.</span>
-<span class="nv">ResourceFork</span><span class="p">.</span><span class="py">ResourceMap</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">ResourceFork</span><span class="p">.</span><span class="nc">ResourceMap</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">names</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_names</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_names</span>
+<span class="c1">-- The resource map&#39;s resource type list, followed by the resource reference list area.</span>
+<span class="nv">ResourceFork</span><span class="p">.</span><span class="py">ResourceMap</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">type_list_and_reference_lists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">ResourceFork</span><span class="p">.</span><span class="nc">ResourceMap</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">type_list_and_reference_lists</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_type_list_and_reference_lists</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_type_list_and_reference_lists</span>
 <span class="w">  </span><span class="kr">end</span>
 
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">names_with_io</span><span class="p">.</span><span class="py">data</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_names</span>
+<span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">pos</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">ofs_type_list</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_raw__m_type_list_and_reference_lists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">ofs_names</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">ofs_type_list</span><span class="p">)</span>
+<span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">KaitaiStream</span><span class="p">(</span><span class="nf">stringstream</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_raw__m_type_list_and_reference_lists</span><span class="p">))</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_type_list_and_reference_lists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">ResourceFork</span><span class="p">.</span><span class="py">ResourceMap</span><span class="p">.</span><span class="nf">TypeListAndReferenceLists</span><span class="p">(</span><span class="nv">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">(</span><span class="nv">_pos</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_type_list_and_reference_lists</span>
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
@@ -614,7 +629,7 @@ such as custom file icons.</p>
 <span class="kr">function</span><span class="w"> </span><span class="nc">ResourceFork</span><span class="p">.</span><span class="nc">ResourceMap</span><span class="p">.</span><span class="nc">FileAttributes</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
@@ -685,6 +700,56 @@ such as custom file icons.</p>
 <span class="c1">-- These attributes have no known usage or meaning and should always be zero.</span>
 
 <span class="c1">-- </span>
+<span class="c1">-- A resource name,</span>
+<span class="c1">-- as stored in the resource name storage area in the resource map.</span>
+<span class="c1">-- </span>
+<span class="c1">-- The resource names are not required to appear in any particular order.</span>
+<span class="c1">-- There may be unused space between and around resource names,</span>
+<span class="c1">-- but in practice they are often contiguous.</span>
+<span class="nv">ResourceFork</span><span class="p">.</span><span class="py">ResourceMap</span><span class="p">.</span><span class="py">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">ResourceFork</span><span class="p">.</span><span class="nc">ResourceMap</span><span class="p">.</span><span class="nc">Name</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">ResourceFork</span><span class="p">.</span><span class="nc">ResourceMap</span><span class="p">.</span><span class="nc">Name</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">len_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_value</span><span class="p">)</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The length of the resource name, in bytes.</span>
+<span class="c1">-- </span>
+<span class="c1">-- The resource name.</span>
+<span class="c1">-- </span>
+<span class="c1">-- This field is exposed as a byte array,</span>
+<span class="c1">-- because there is no universal encoding for resource names.</span>
+<span class="c1">-- Most Classic Mac software does not deal with encodings explicitly and instead assumes that all strings,</span>
+<span class="c1">-- including resource names,</span>
+<span class="c1">-- use the system encoding,</span>
+<span class="c1">-- which varies depending on the system language.</span>
+<span class="c1">-- This means that resource names can use different encodings depending on what system language they were created with.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Many resource names are plain ASCII,</span>
+<span class="c1">-- meaning that the encoding often does not matter</span>
+<span class="c1">-- (because all Mac OS encodings are ASCII-compatible).</span>
+<span class="c1">-- For non-ASCII resource names,</span>
+<span class="c1">-- the most common encoding is perhaps MacRoman</span>
+<span class="c1">-- (used for English and other Western languages),</span>
+<span class="c1">-- but other encodings are also sometimes used,</span>
+<span class="c1">-- especially for software in non-Western languages.</span>
+<span class="c1">-- </span>
+<span class="c1">-- There is no requirement that all names in a single resource file use the same encoding.</span>
+<span class="c1">-- For example,</span>
+<span class="c1">-- localized software may have some (but not all) of its resource names translated.</span>
+<span class="c1">-- For non-Western languages,</span>
+<span class="c1">-- this can lead to some resource names using MacRoman,</span>
+<span class="c1">-- and others using a different encoding.</span>
+
+<span class="c1">-- </span>
 <span class="c1">-- Resource type list and storage area for resource reference lists in the resource map.</span>
 <span class="c1">-- </span>
 <span class="c1">-- The two parts are combined into a single type here for technical reasons:</span>
@@ -696,7 +761,7 @@ such as custom file icons.</p>
 <span class="kr">function</span><span class="w"> </span><span class="nc">ResourceFork</span><span class="p">.</span><span class="nc">ResourceMap</span><span class="p">.</span><span class="nc">TypeListAndReferenceLists</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
@@ -715,111 +780,6 @@ such as custom file icons.</p>
 <span class="c1">-- in the same order as their corresponding resource type list entries.</span>
 
 <span class="c1">-- </span>
-<span class="c1">-- Resource type list in the resource map.</span>
-<span class="nv">ResourceFork</span><span class="p">.</span><span class="py">ResourceMap</span><span class="p">.</span><span class="py">TypeListAndReferenceLists</span><span class="p">.</span><span class="py">TypeList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">ResourceFork</span><span class="p">.</span><span class="nc">ResourceMap</span><span class="p">.</span><span class="nc">TypeListAndReferenceLists</span><span class="p">.</span><span class="nc">TypeList</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">ResourceFork</span><span class="p">.</span><span class="nc">ResourceMap</span><span class="p">.</span><span class="nc">TypeListAndReferenceLists</span><span class="p">.</span><span class="nc">TypeList</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">num_types_m1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2be</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">entries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="w">  </span><span class="kr">for</span><span class="w"> </span><span class="nv">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">num_types</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="kr">do</span>
-<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">entries</span><span class="p">[</span><span class="nv">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">ResourceFork</span><span class="p">.</span><span class="py">ResourceMap</span><span class="p">.</span><span class="py">TypeListAndReferenceLists</span><span class="p">.</span><span class="py">TypeList</span><span class="p">.</span><span class="nf">TypeListEntry</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
-<span class="w">  </span><span class="kr">end</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- The number of resource types in this list.</span>
-<span class="nv">ResourceFork</span><span class="p">.</span><span class="py">ResourceMap</span><span class="p">.</span><span class="py">TypeListAndReferenceLists</span><span class="p">.</span><span class="py">TypeList</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">num_types</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">ResourceFork</span><span class="p">.</span><span class="nc">ResourceMap</span><span class="p">.</span><span class="nc">TypeListAndReferenceLists</span><span class="p">.</span><span class="nc">TypeList</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">num_types</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_num_types</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_num_types</span>
-<span class="w">  </span><span class="kr">end</span>
-
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_num_types</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">num_types_m1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">65536</span><span class="p">)</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_num_types</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- The number of resource types in this list,</span>
-<span class="c1">-- minus one.</span>
-<span class="c1">-- </span>
-<span class="c1">-- If the resource list is empty,</span>
-<span class="c1">-- the value of this field is `0xffff`,</span>
-<span class="c1">-- i. e. `-1` truncated to a 16-bit unsigned integer.</span>
-<span class="c1">-- </span>
-<span class="c1">-- Entries in the resource type list.</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- A single entry in the resource type list.</span>
-<span class="c1">-- </span>
-<span class="c1">-- Each entry corresponds to exactly one resource reference list.</span>
-<span class="nv">ResourceFork</span><span class="p">.</span><span class="py">ResourceMap</span><span class="p">.</span><span class="py">TypeListAndReferenceLists</span><span class="p">.</span><span class="py">TypeList</span><span class="p">.</span><span class="py">TypeListEntry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">ResourceFork</span><span class="p">.</span><span class="nc">ResourceMap</span><span class="p">.</span><span class="nc">TypeListAndReferenceLists</span><span class="p">.</span><span class="nc">TypeList</span><span class="p">.</span><span class="nc">TypeListEntry</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">ResourceFork</span><span class="p">.</span><span class="nc">ResourceMap</span><span class="p">.</span><span class="nc">TypeListAndReferenceLists</span><span class="p">.</span><span class="nc">TypeList</span><span class="p">.</span><span class="nc">TypeListEntry</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">num_references_m1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2be</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">ofs_reference_list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2be</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- The number of resources in the reference list for this type.</span>
-<span class="nv">ResourceFork</span><span class="p">.</span><span class="py">ResourceMap</span><span class="p">.</span><span class="py">TypeListAndReferenceLists</span><span class="p">.</span><span class="py">TypeList</span><span class="p">.</span><span class="py">TypeListEntry</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">num_references</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">ResourceFork</span><span class="p">.</span><span class="nc">ResourceMap</span><span class="p">.</span><span class="nc">TypeListAndReferenceLists</span><span class="p">.</span><span class="nc">TypeList</span><span class="p">.</span><span class="nc">TypeListEntry</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">num_references</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_num_references</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_num_references</span>
-<span class="w">  </span><span class="kr">end</span>
-
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_num_references</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">num_references_m1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">65536</span><span class="p">)</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_num_references</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- The resource reference list for this resource type.</span>
-<span class="nv">ResourceFork</span><span class="p">.</span><span class="py">ResourceMap</span><span class="p">.</span><span class="py">TypeListAndReferenceLists</span><span class="p">.</span><span class="py">TypeList</span><span class="p">.</span><span class="py">TypeListEntry</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">reference_list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">ResourceFork</span><span class="p">.</span><span class="nc">ResourceMap</span><span class="p">.</span><span class="nc">TypeListAndReferenceLists</span><span class="p">.</span><span class="nc">TypeList</span><span class="p">.</span><span class="nc">TypeListEntry</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">reference_list</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_reference_list</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_reference_list</span>
-<span class="w">  </span><span class="kr">end</span>
-
-<span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="p">.</span><span class="py">_parent</span><span class="p">.</span><span class="py">_io</span>
-<span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">_io</span><span class="p">:</span><span class="nf">pos</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">ofs_reference_list</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_reference_list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">ResourceFork</span><span class="p">.</span><span class="py">ResourceMap</span><span class="p">.</span><span class="py">TypeListAndReferenceLists</span><span class="p">.</span><span class="nf">ReferenceList</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">num_references</span><span class="p">,</span><span class="w"> </span><span class="nv">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">(</span><span class="nv">_pos</span><span class="p">)</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_reference_list</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- The four-character type code of the resources in the reference list.</span>
-<span class="c1">-- </span>
-<span class="c1">-- The number of resources in the reference list for this type,</span>
-<span class="c1">-- minus one.</span>
-<span class="c1">-- </span>
-<span class="c1">-- Empty reference lists should never exist.</span>
-<span class="c1">-- </span>
-<span class="c1">-- Offset of the resource reference list for this resource type,</span>
-<span class="c1">-- from the start of the resource type list.</span>
-<span class="c1">-- </span>
-<span class="c1">-- Although the offset is relative to the start of the type list,</span>
-<span class="c1">-- it should never point into the type list itself,</span>
-<span class="c1">-- but into the reference list storage area that directly follows it.</span>
-<span class="c1">-- That is,</span>
-<span class="c1">-- it should always be at least `_parent._sizeof`.</span>
-
-<span class="c1">-- </span>
 <span class="c1">-- A resource reference list,</span>
 <span class="c1">-- as stored in the reference list area.</span>
 <span class="c1">-- </span>
@@ -830,7 +790,7 @@ such as custom file icons.</p>
 <span class="kr">function</span><span class="w"> </span><span class="nc">ResourceFork</span><span class="p">.</span><span class="nc">ResourceMap</span><span class="p">.</span><span class="nc">TypeListAndReferenceLists</span><span class="p">.</span><span class="nc">ReferenceList</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">num_references</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">num_references</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">num_references</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
@@ -858,7 +818,7 @@ such as custom file icons.</p>
 <span class="kr">function</span><span class="w"> </span><span class="nc">ResourceFork</span><span class="p">.</span><span class="nc">ResourceMap</span><span class="p">.</span><span class="nc">TypeListAndReferenceLists</span><span class="p">.</span><span class="nc">ReferenceList</span><span class="p">.</span><span class="nc">Reference</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
@@ -871,6 +831,22 @@ such as custom file icons.</p>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">ofs_data_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bits_int_be</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">align_to_byte</span><span class="p">()</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">reserved_handle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The data block containing the data for the resource described by this reference.</span>
+<span class="nv">ResourceFork</span><span class="p">.</span><span class="py">ResourceMap</span><span class="p">.</span><span class="py">TypeListAndReferenceLists</span><span class="p">.</span><span class="py">ReferenceList</span><span class="p">.</span><span class="py">Reference</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">data_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">ResourceFork</span><span class="p">.</span><span class="nc">ResourceMap</span><span class="p">.</span><span class="nc">TypeListAndReferenceLists</span><span class="p">.</span><span class="nc">ReferenceList</span><span class="p">.</span><span class="nc">Reference</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">data_block</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_data_block</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_data_block</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">data_blocks_with_io</span><span class="p">.</span><span class="py">_io</span>
+<span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">_io</span><span class="p">:</span><span class="nf">pos</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">ofs_data_block</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_data_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">ResourceFork</span><span class="p">.</span><span class="nf">DataBlock</span><span class="p">(</span><span class="nv">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">(</span><span class="nv">_pos</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_data_block</span>
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
@@ -889,22 +865,6 @@ such as custom file icons.</p>
 <span class="w">    </span><span class="nv">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">(</span><span class="nv">_pos</span><span class="p">)</span>
 <span class="w">  </span><span class="kr">end</span>
 <span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_name</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- The data block containing the data for the resource described by this reference.</span>
-<span class="nv">ResourceFork</span><span class="p">.</span><span class="py">ResourceMap</span><span class="p">.</span><span class="py">TypeListAndReferenceLists</span><span class="p">.</span><span class="py">ReferenceList</span><span class="p">.</span><span class="py">Reference</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">data_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">ResourceFork</span><span class="p">.</span><span class="nc">ResourceMap</span><span class="p">.</span><span class="nc">TypeListAndReferenceLists</span><span class="p">.</span><span class="nc">ReferenceList</span><span class="p">.</span><span class="nc">Reference</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">data_block</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_data_block</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_data_block</span>
-<span class="w">  </span><span class="kr">end</span>
-
-<span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">data_blocks_with_io</span><span class="p">.</span><span class="py">_io</span>
-<span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">_io</span><span class="p">:</span><span class="nf">pos</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">ofs_data_block</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_data_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">ResourceFork</span><span class="p">.</span><span class="nf">DataBlock</span><span class="p">(</span><span class="nv">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">(</span><span class="nv">_pos</span><span class="p">)</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_data_block</span>
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
@@ -932,7 +892,7 @@ such as custom file icons.</p>
 <span class="kr">function</span><span class="w"> </span><span class="nc">ResourceFork</span><span class="p">.</span><span class="nc">ResourceMap</span><span class="p">.</span><span class="nc">TypeListAndReferenceLists</span><span class="p">.</span><span class="nc">ReferenceList</span><span class="p">.</span><span class="nc">Reference</span><span class="p">.</span><span class="nc">Attributes</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
@@ -1047,54 +1007,109 @@ such as custom file icons.</p>
 <span class="c1">-- see the compressed_resource.ksy spec.</span>
 
 <span class="c1">-- </span>
-<span class="c1">-- A resource name,</span>
-<span class="c1">-- as stored in the resource name storage area in the resource map.</span>
-<span class="c1">-- </span>
-<span class="c1">-- The resource names are not required to appear in any particular order.</span>
-<span class="c1">-- There may be unused space between and around resource names,</span>
-<span class="c1">-- but in practice they are often contiguous.</span>
-<span class="nv">ResourceFork</span><span class="p">.</span><span class="py">ResourceMap</span><span class="p">.</span><span class="py">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
+<span class="c1">-- Resource type list in the resource map.</span>
+<span class="nv">ResourceFork</span><span class="p">.</span><span class="py">ResourceMap</span><span class="p">.</span><span class="py">TypeListAndReferenceLists</span><span class="p">.</span><span class="py">TypeList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
-<span class="kr">function</span><span class="w"> </span><span class="nc">ResourceFork</span><span class="p">.</span><span class="nc">ResourceMap</span><span class="p">.</span><span class="nc">Name</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">ResourceFork</span><span class="p">.</span><span class="nc">ResourceMap</span><span class="p">.</span><span class="nc">TypeListAndReferenceLists</span><span class="p">.</span><span class="nc">TypeList</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
-<span class="kr">function</span><span class="w"> </span><span class="nc">ResourceFork</span><span class="p">.</span><span class="nc">ResourceMap</span><span class="p">.</span><span class="nc">Name</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">len_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_value</span><span class="p">)</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">ResourceFork</span><span class="p">.</span><span class="nc">ResourceMap</span><span class="p">.</span><span class="nc">TypeListAndReferenceLists</span><span class="p">.</span><span class="nc">TypeList</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">num_types_m1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">entries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="w">  </span><span class="kr">for</span><span class="w"> </span><span class="nv">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">num_types</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="kr">do</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">entries</span><span class="p">[</span><span class="nv">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">ResourceFork</span><span class="p">.</span><span class="py">ResourceMap</span><span class="p">.</span><span class="py">TypeListAndReferenceLists</span><span class="p">.</span><span class="py">TypeList</span><span class="p">.</span><span class="nf">TypeListEntry</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">end</span>
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
-<span class="c1">-- The length of the resource name, in bytes.</span>
+<span class="c1">-- The number of resource types in this list.</span>
+<span class="nv">ResourceFork</span><span class="p">.</span><span class="py">ResourceMap</span><span class="p">.</span><span class="py">TypeListAndReferenceLists</span><span class="p">.</span><span class="py">TypeList</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">num_types</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">ResourceFork</span><span class="p">.</span><span class="nc">ResourceMap</span><span class="p">.</span><span class="nc">TypeListAndReferenceLists</span><span class="p">.</span><span class="nc">TypeList</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">num_types</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_num_types</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_num_types</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_num_types</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">num_types_m1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">65536</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_num_types</span>
+<span class="kr">end</span>
+
 <span class="c1">-- </span>
-<span class="c1">-- The resource name.</span>
+<span class="c1">-- The number of resource types in this list,</span>
+<span class="c1">-- minus one.</span>
 <span class="c1">-- </span>
-<span class="c1">-- This field is exposed as a byte array,</span>
-<span class="c1">-- because there is no universal encoding for resource names.</span>
-<span class="c1">-- Most Classic Mac software does not deal with encodings explicitly and instead assumes that all strings,</span>
-<span class="c1">-- including resource names,</span>
-<span class="c1">-- use the system encoding,</span>
-<span class="c1">-- which varies depending on the system language.</span>
-<span class="c1">-- This means that resource names can use different encodings depending on what system language they were created with.</span>
+<span class="c1">-- If the resource list is empty,</span>
+<span class="c1">-- the value of this field is `0xffff`,</span>
+<span class="c1">-- i. e. `-1` truncated to a 16-bit unsigned integer.</span>
 <span class="c1">-- </span>
-<span class="c1">-- Many resource names are plain ASCII,</span>
-<span class="c1">-- meaning that the encoding often does not matter</span>
-<span class="c1">-- (because all Mac OS encodings are ASCII-compatible).</span>
-<span class="c1">-- For non-ASCII resource names,</span>
-<span class="c1">-- the most common encoding is perhaps MacRoman</span>
-<span class="c1">-- (used for English and other Western languages),</span>
-<span class="c1">-- but other encodings are also sometimes used,</span>
-<span class="c1">-- especially for software in non-Western languages.</span>
+<span class="c1">-- Entries in the resource type list.</span>
+
 <span class="c1">-- </span>
-<span class="c1">-- There is no requirement that all names in a single resource file use the same encoding.</span>
-<span class="c1">-- For example,</span>
-<span class="c1">-- localized software may have some (but not all) of its resource names translated.</span>
-<span class="c1">-- For non-Western languages,</span>
-<span class="c1">-- this can lead to some resource names using MacRoman,</span>
-<span class="c1">-- and others using a different encoding.</span>
+<span class="c1">-- A single entry in the resource type list.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Each entry corresponds to exactly one resource reference list.</span>
+<span class="nv">ResourceFork</span><span class="p">.</span><span class="py">ResourceMap</span><span class="p">.</span><span class="py">TypeListAndReferenceLists</span><span class="p">.</span><span class="py">TypeList</span><span class="p">.</span><span class="py">TypeListEntry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">ResourceFork</span><span class="p">.</span><span class="nc">ResourceMap</span><span class="p">.</span><span class="nc">TypeListAndReferenceLists</span><span class="p">.</span><span class="nc">TypeList</span><span class="p">.</span><span class="nc">TypeListEntry</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">ResourceFork</span><span class="p">.</span><span class="nc">ResourceMap</span><span class="p">.</span><span class="nc">TypeListAndReferenceLists</span><span class="p">.</span><span class="nc">TypeList</span><span class="p">.</span><span class="nc">TypeListEntry</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">num_references_m1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">ofs_reference_list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2be</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The number of resources in the reference list for this type.</span>
+<span class="nv">ResourceFork</span><span class="p">.</span><span class="py">ResourceMap</span><span class="p">.</span><span class="py">TypeListAndReferenceLists</span><span class="p">.</span><span class="py">TypeList</span><span class="p">.</span><span class="py">TypeListEntry</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">num_references</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">ResourceFork</span><span class="p">.</span><span class="nc">ResourceMap</span><span class="p">.</span><span class="nc">TypeListAndReferenceLists</span><span class="p">.</span><span class="nc">TypeList</span><span class="p">.</span><span class="nc">TypeListEntry</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">num_references</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_num_references</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_num_references</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_num_references</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">num_references_m1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">65536</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_num_references</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The resource reference list for this resource type.</span>
+<span class="nv">ResourceFork</span><span class="p">.</span><span class="py">ResourceMap</span><span class="p">.</span><span class="py">TypeListAndReferenceLists</span><span class="p">.</span><span class="py">TypeList</span><span class="p">.</span><span class="py">TypeListEntry</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">reference_list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">ResourceFork</span><span class="p">.</span><span class="nc">ResourceMap</span><span class="p">.</span><span class="nc">TypeListAndReferenceLists</span><span class="p">.</span><span class="nc">TypeList</span><span class="p">.</span><span class="nc">TypeListEntry</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">reference_list</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_reference_list</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_reference_list</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="p">.</span><span class="py">_parent</span><span class="p">.</span><span class="py">_io</span>
+<span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">_io</span><span class="p">:</span><span class="nf">pos</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">ofs_reference_list</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_reference_list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">ResourceFork</span><span class="p">.</span><span class="py">ResourceMap</span><span class="p">.</span><span class="py">TypeListAndReferenceLists</span><span class="p">.</span><span class="nf">ReferenceList</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">num_references</span><span class="p">,</span><span class="w"> </span><span class="nv">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">(</span><span class="nv">_pos</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_reference_list</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The four-character type code of the resources in the reference list.</span>
+<span class="c1">-- </span>
+<span class="c1">-- The number of resources in the reference list for this type,</span>
+<span class="c1">-- minus one.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Empty reference lists should never exist.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Offset of the resource reference list for this resource type,</span>
+<span class="c1">-- from the start of the resource type list.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Although the offset is relative to the start of the type list,</span>
+<span class="c1">-- it should never point into the type list itself,</span>
+<span class="c1">-- but into the reference list storage area that directly follows it.</span>
+<span class="c1">-- That is,</span>
+<span class="c1">-- it should always be at least `_parent._sizeof`.</span>
 </pre></div>
 
         </div>

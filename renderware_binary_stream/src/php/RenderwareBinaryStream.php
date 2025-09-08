@@ -3,8 +3,8 @@
 
 namespace {
     class RenderwareBinaryStream extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \RenderwareBinaryStream $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\RenderwareBinaryStream $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -14,26 +14,6 @@ namespace {
             $this->_m_libraryIdStamp = $this->_io->readU4le();
             switch ($this->code()) {
                 case \RenderwareBinaryStream\Sections::ATOMIC:
-                    $this->_m__raw_body = $this->_io->readBytes($this->size());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \RenderwareBinaryStream\ListWithHeader($_io__raw_body, $this, $this->_root);
-                    break;
-                case \RenderwareBinaryStream\Sections::GEOMETRY:
-                    $this->_m__raw_body = $this->_io->readBytes($this->size());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \RenderwareBinaryStream\ListWithHeader($_io__raw_body, $this, $this->_root);
-                    break;
-                case \RenderwareBinaryStream\Sections::TEXTURE_DICTIONARY:
-                    $this->_m__raw_body = $this->_io->readBytes($this->size());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \RenderwareBinaryStream\ListWithHeader($_io__raw_body, $this, $this->_root);
-                    break;
-                case \RenderwareBinaryStream\Sections::GEOMETRY_LIST:
-                    $this->_m__raw_body = $this->_io->readBytes($this->size());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \RenderwareBinaryStream\ListWithHeader($_io__raw_body, $this, $this->_root);
-                    break;
-                case \RenderwareBinaryStream\Sections::TEXTURE_NATIVE:
                     $this->_m__raw_body = $this->_io->readBytes($this->size());
                     $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
                     $this->_m_body = new \RenderwareBinaryStream\ListWithHeader($_io__raw_body, $this, $this->_root);
@@ -48,6 +28,26 @@ namespace {
                     $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
                     $this->_m_body = new \RenderwareBinaryStream\ListWithHeader($_io__raw_body, $this, $this->_root);
                     break;
+                case \RenderwareBinaryStream\Sections::GEOMETRY:
+                    $this->_m__raw_body = $this->_io->readBytes($this->size());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \RenderwareBinaryStream\ListWithHeader($_io__raw_body, $this, $this->_root);
+                    break;
+                case \RenderwareBinaryStream\Sections::GEOMETRY_LIST:
+                    $this->_m__raw_body = $this->_io->readBytes($this->size());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \RenderwareBinaryStream\ListWithHeader($_io__raw_body, $this, $this->_root);
+                    break;
+                case \RenderwareBinaryStream\Sections::TEXTURE_DICTIONARY:
+                    $this->_m__raw_body = $this->_io->readBytes($this->size());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \RenderwareBinaryStream\ListWithHeader($_io__raw_body, $this, $this->_root);
+                    break;
+                case \RenderwareBinaryStream\Sections::TEXTURE_NATIVE:
+                    $this->_m__raw_body = $this->_io->readBytes($this->size());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \RenderwareBinaryStream\ListWithHeader($_io__raw_body, $this, $this->_root);
+                    break;
                 default:
                     $this->_m_body = $this->_io->readBytes($this->size());
                     break;
@@ -57,7 +57,7 @@ namespace {
         public function version() {
             if ($this->_m_version !== null)
                 return $this->_m_version;
-            $this->_m_version = (($this->libraryIdStamp() & 4294901760) != 0 ? (((($this->libraryIdStamp() >> 14) & 261888) + 196608) | (($this->libraryIdStamp() >> 16) & 63)) : ($this->libraryIdStamp() << 8));
+            $this->_m_version = (($this->libraryIdStamp() & 4294901760) != 0 ? ($this->libraryIdStamp() >> 14 & 261888) + 196608 | $this->libraryIdStamp() >> 16 & 63 : $this->libraryIdStamp() << 8);
             return $this->_m_version;
         }
         protected $_m_code;
@@ -74,116 +74,32 @@ namespace {
 }
 
 namespace RenderwareBinaryStream {
-    class StructClump extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \RenderwareBinaryStream\ListWithHeader $_parent = null, \RenderwareBinaryStream $_root = null) {
+    class Frame extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\RenderwareBinaryStream\StructFrameList $_parent = null, ?\RenderwareBinaryStream $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_numAtomics = $this->_io->readU4le();
-            if ($this->_parent()->version() >= 208896) {
-                $this->_m_numLights = $this->_io->readU4le();
-            }
-            if ($this->_parent()->version() >= 208896) {
-                $this->_m_numCameras = $this->_io->readU4le();
-            }
+            $this->_m_rotationMatrix = new \RenderwareBinaryStream\Matrix($this->_io, $this, $this->_root);
+            $this->_m_position = new \RenderwareBinaryStream\Vector3d($this->_io, $this, $this->_root);
+            $this->_m_curFrameIdx = $this->_io->readS4le();
+            $this->_m_matrixCreationFlags = $this->_io->readU4le();
         }
-        protected $_m_numAtomics;
-        protected $_m_numLights;
-        protected $_m_numCameras;
-        public function numAtomics() { return $this->_m_numAtomics; }
-        public function numLights() { return $this->_m_numLights; }
-        public function numCameras() { return $this->_m_numCameras; }
-    }
-}
-
-namespace RenderwareBinaryStream {
-    class StructGeometry extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \RenderwareBinaryStream\ListWithHeader $_parent = null, \RenderwareBinaryStream $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_format = $this->_io->readU4le();
-            $this->_m_numTriangles = $this->_io->readU4le();
-            $this->_m_numVertices = $this->_io->readU4le();
-            $this->_m_numMorphTargets = $this->_io->readU4le();
-            if ($this->_parent()->version() < 212992) {
-                $this->_m_surfProp = new \RenderwareBinaryStream\SurfaceProperties($this->_io, $this, $this->_root);
-            }
-            if (!($this->isNative())) {
-                $this->_m_geometry = new \RenderwareBinaryStream\GeometryNonNative($this->_io, $this, $this->_root);
-            }
-            $this->_m_morphTargets = [];
-            $n = $this->numMorphTargets();
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_morphTargets[] = new \RenderwareBinaryStream\MorphTarget($this->_io, $this, $this->_root);
-            }
-        }
-        protected $_m_numUvLayersRaw;
-        public function numUvLayersRaw() {
-            if ($this->_m_numUvLayersRaw !== null)
-                return $this->_m_numUvLayersRaw;
-            $this->_m_numUvLayersRaw = (($this->format() & 16711680) >> 16);
-            return $this->_m_numUvLayersRaw;
-        }
-        protected $_m_isTextured;
-        public function isTextured() {
-            if ($this->_m_isTextured !== null)
-                return $this->_m_isTextured;
-            $this->_m_isTextured = ($this->format() & 4) != 0;
-            return $this->_m_isTextured;
-        }
-        protected $_m_isNative;
-        public function isNative() {
-            if ($this->_m_isNative !== null)
-                return $this->_m_isNative;
-            $this->_m_isNative = ($this->format() & 16777216) != 0;
-            return $this->_m_isNative;
-        }
-        protected $_m_numUvLayers;
-        public function numUvLayers() {
-            if ($this->_m_numUvLayers !== null)
-                return $this->_m_numUvLayers;
-            $this->_m_numUvLayers = ($this->numUvLayersRaw() == 0 ? ($this->isTextured2() ? 2 : ($this->isTextured() ? 1 : 0)) : $this->numUvLayersRaw());
-            return $this->_m_numUvLayers;
-        }
-        protected $_m_isTextured2;
-        public function isTextured2() {
-            if ($this->_m_isTextured2 !== null)
-                return $this->_m_isTextured2;
-            $this->_m_isTextured2 = ($this->format() & 128) != 0;
-            return $this->_m_isTextured2;
-        }
-        protected $_m_isPrelit;
-        public function isPrelit() {
-            if ($this->_m_isPrelit !== null)
-                return $this->_m_isPrelit;
-            $this->_m_isPrelit = ($this->format() & 8) != 0;
-            return $this->_m_isPrelit;
-        }
-        protected $_m_format;
-        protected $_m_numTriangles;
-        protected $_m_numVertices;
-        protected $_m_numMorphTargets;
-        protected $_m_surfProp;
-        protected $_m_geometry;
-        protected $_m_morphTargets;
-        public function format() { return $this->_m_format; }
-        public function numTriangles() { return $this->_m_numTriangles; }
-        public function numVertices() { return $this->_m_numVertices; }
-        public function numMorphTargets() { return $this->_m_numMorphTargets; }
-        public function surfProp() { return $this->_m_surfProp; }
-        public function geometry() { return $this->_m_geometry; }
-        public function morphTargets() { return $this->_m_morphTargets; }
+        protected $_m_rotationMatrix;
+        protected $_m_position;
+        protected $_m_curFrameIdx;
+        protected $_m_matrixCreationFlags;
+        public function rotationMatrix() { return $this->_m_rotationMatrix; }
+        public function position() { return $this->_m_position; }
+        public function curFrameIdx() { return $this->_m_curFrameIdx; }
+        public function matrixCreationFlags() { return $this->_m_matrixCreationFlags; }
     }
 }
 
 namespace RenderwareBinaryStream {
     class GeometryNonNative extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \RenderwareBinaryStream\StructGeometry $_parent = null, \RenderwareBinaryStream $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\RenderwareBinaryStream\StructGeometry $_parent = null, ?\RenderwareBinaryStream $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -216,72 +132,115 @@ namespace RenderwareBinaryStream {
     }
 }
 
+/**
+ * Typical structure used by many data types in RenderWare binary
+ * stream. Substream contains a list of binary stream entries,
+ * first entry always has type "struct" and carries some specific
+ * binary data it in, determined by the type of parent. All other
+ * entries, beside the first one, are normal, self-describing
+ * records.
+ */
+
 namespace RenderwareBinaryStream {
-    class StructGeometryList extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \RenderwareBinaryStream\ListWithHeader $_parent = null, \RenderwareBinaryStream $_root = null) {
+    class ListWithHeader extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\RenderwareBinaryStream $_parent = null, ?\RenderwareBinaryStream $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_numGeometries = $this->_io->readU4le();
+            $this->_m_code = $this->_io->readBytes(4);
+            if (!($this->_m_code == "\x01\x00\x00\x00")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x01\x00\x00\x00", $this->_m_code, $this->_io, "/types/list_with_header/seq/0");
+            }
+            $this->_m_headerSize = $this->_io->readU4le();
+            $this->_m_libraryIdStamp = $this->_io->readU4le();
+            switch ($this->_parent()->code()) {
+                case \RenderwareBinaryStream\Sections::ATOMIC:
+                    $this->_m__raw_header = $this->_io->readBytes($this->headerSize());
+                    $_io__raw_header = new \Kaitai\Struct\Stream($this->_m__raw_header);
+                    $this->_m_header = new \RenderwareBinaryStream\StructAtomic($_io__raw_header, $this, $this->_root);
+                    break;
+                case \RenderwareBinaryStream\Sections::CLUMP:
+                    $this->_m__raw_header = $this->_io->readBytes($this->headerSize());
+                    $_io__raw_header = new \Kaitai\Struct\Stream($this->_m__raw_header);
+                    $this->_m_header = new \RenderwareBinaryStream\StructClump($_io__raw_header, $this, $this->_root);
+                    break;
+                case \RenderwareBinaryStream\Sections::FRAME_LIST:
+                    $this->_m__raw_header = $this->_io->readBytes($this->headerSize());
+                    $_io__raw_header = new \Kaitai\Struct\Stream($this->_m__raw_header);
+                    $this->_m_header = new \RenderwareBinaryStream\StructFrameList($_io__raw_header, $this, $this->_root);
+                    break;
+                case \RenderwareBinaryStream\Sections::GEOMETRY:
+                    $this->_m__raw_header = $this->_io->readBytes($this->headerSize());
+                    $_io__raw_header = new \Kaitai\Struct\Stream($this->_m__raw_header);
+                    $this->_m_header = new \RenderwareBinaryStream\StructGeometry($_io__raw_header, $this, $this->_root);
+                    break;
+                case \RenderwareBinaryStream\Sections::GEOMETRY_LIST:
+                    $this->_m__raw_header = $this->_io->readBytes($this->headerSize());
+                    $_io__raw_header = new \Kaitai\Struct\Stream($this->_m__raw_header);
+                    $this->_m_header = new \RenderwareBinaryStream\StructGeometryList($_io__raw_header, $this, $this->_root);
+                    break;
+                case \RenderwareBinaryStream\Sections::TEXTURE_DICTIONARY:
+                    $this->_m__raw_header = $this->_io->readBytes($this->headerSize());
+                    $_io__raw_header = new \Kaitai\Struct\Stream($this->_m__raw_header);
+                    $this->_m_header = new \RenderwareBinaryStream\StructTextureDictionary($_io__raw_header, $this, $this->_root);
+                    break;
+                default:
+                    $this->_m_header = $this->_io->readBytes($this->headerSize());
+                    break;
+            }
+            $this->_m_entries = [];
+            $i = 0;
+            while (!$this->_io->isEof()) {
+                $this->_m_entries[] = new \RenderwareBinaryStream($this->_io, $this, $this->_root);
+                $i++;
+            }
         }
-        protected $_m_numGeometries;
-        public function numGeometries() { return $this->_m_numGeometries; }
+        protected $_m_version;
+        public function version() {
+            if ($this->_m_version !== null)
+                return $this->_m_version;
+            $this->_m_version = (($this->libraryIdStamp() & 4294901760) != 0 ? ($this->libraryIdStamp() >> 14 & 261888) + 196608 | $this->libraryIdStamp() >> 16 & 63 : $this->libraryIdStamp() << 8);
+            return $this->_m_version;
+        }
+        protected $_m_code;
+        protected $_m_headerSize;
+        protected $_m_libraryIdStamp;
+        protected $_m_header;
+        protected $_m_entries;
+        protected $_m__raw_header;
+        public function code() { return $this->_m_code; }
+        public function headerSize() { return $this->_m_headerSize; }
+        public function libraryIdStamp() { return $this->_m_libraryIdStamp; }
+        public function header() { return $this->_m_header; }
+        public function entries() { return $this->_m_entries; }
+        public function _raw_header() { return $this->_m__raw_header; }
     }
 }
 
 namespace RenderwareBinaryStream {
-    class Rgba extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \RenderwareBinaryStream\GeometryNonNative $_parent = null, \RenderwareBinaryStream $_root = null) {
+    class Matrix extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\RenderwareBinaryStream\Frame $_parent = null, ?\RenderwareBinaryStream $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_r = $this->_io->readU1();
-            $this->_m_g = $this->_io->readU1();
-            $this->_m_b = $this->_io->readU1();
-            $this->_m_a = $this->_io->readU1();
+            $this->_m_entries = [];
+            $n = 3;
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_entries[] = new \RenderwareBinaryStream\Vector3d($this->_io, $this, $this->_root);
+            }
         }
-        protected $_m_r;
-        protected $_m_g;
-        protected $_m_b;
-        protected $_m_a;
-        public function r() { return $this->_m_r; }
-        public function g() { return $this->_m_g; }
-        public function b() { return $this->_m_b; }
-        public function a() { return $this->_m_a; }
-    }
-}
-
-namespace RenderwareBinaryStream {
-    class Sphere extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \RenderwareBinaryStream\MorphTarget $_parent = null, \RenderwareBinaryStream $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_x = $this->_io->readF4le();
-            $this->_m_y = $this->_io->readF4le();
-            $this->_m_z = $this->_io->readF4le();
-            $this->_m_radius = $this->_io->readF4le();
-        }
-        protected $_m_x;
-        protected $_m_y;
-        protected $_m_z;
-        protected $_m_radius;
-        public function x() { return $this->_m_x; }
-        public function y() { return $this->_m_y; }
-        public function z() { return $this->_m_z; }
-        public function radius() { return $this->_m_radius; }
+        protected $_m_entries;
+        public function entries() { return $this->_m_entries; }
     }
 }
 
 namespace RenderwareBinaryStream {
     class MorphTarget extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \RenderwareBinaryStream\StructGeometry $_parent = null, \RenderwareBinaryStream $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\RenderwareBinaryStream\StructGeometry $_parent = null, ?\RenderwareBinaryStream $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -319,8 +278,56 @@ namespace RenderwareBinaryStream {
 }
 
 namespace RenderwareBinaryStream {
+    class Rgba extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\RenderwareBinaryStream\GeometryNonNative $_parent = null, ?\RenderwareBinaryStream $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_r = $this->_io->readU1();
+            $this->_m_g = $this->_io->readU1();
+            $this->_m_b = $this->_io->readU1();
+            $this->_m_a = $this->_io->readU1();
+        }
+        protected $_m_r;
+        protected $_m_g;
+        protected $_m_b;
+        protected $_m_a;
+        public function r() { return $this->_m_r; }
+        public function g() { return $this->_m_g; }
+        public function b() { return $this->_m_b; }
+        public function a() { return $this->_m_a; }
+    }
+}
+
+namespace RenderwareBinaryStream {
+    class Sphere extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\RenderwareBinaryStream\MorphTarget $_parent = null, ?\RenderwareBinaryStream $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_x = $this->_io->readF4le();
+            $this->_m_y = $this->_io->readF4le();
+            $this->_m_z = $this->_io->readF4le();
+            $this->_m_radius = $this->_io->readF4le();
+        }
+        protected $_m_x;
+        protected $_m_y;
+        protected $_m_z;
+        protected $_m_radius;
+        public function x() { return $this->_m_x; }
+        public function y() { return $this->_m_y; }
+        public function z() { return $this->_m_z; }
+        public function radius() { return $this->_m_radius; }
+    }
+}
+
+namespace RenderwareBinaryStream {
     class StructAtomic extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \RenderwareBinaryStream\ListWithHeader $_parent = null, \RenderwareBinaryStream $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\RenderwareBinaryStream\ListWithHeader $_parent = null, ?\RenderwareBinaryStream $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -353,29 +360,33 @@ namespace RenderwareBinaryStream {
 }
 
 namespace RenderwareBinaryStream {
-    class SurfaceProperties extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \RenderwareBinaryStream\StructGeometry $_parent = null, \RenderwareBinaryStream $_root = null) {
+    class StructClump extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\RenderwareBinaryStream\ListWithHeader $_parent = null, ?\RenderwareBinaryStream $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_ambient = $this->_io->readF4le();
-            $this->_m_specular = $this->_io->readF4le();
-            $this->_m_diffuse = $this->_io->readF4le();
+            $this->_m_numAtomics = $this->_io->readU4le();
+            if ($this->_parent()->version() >= 208896) {
+                $this->_m_numLights = $this->_io->readU4le();
+            }
+            if ($this->_parent()->version() >= 208896) {
+                $this->_m_numCameras = $this->_io->readU4le();
+            }
         }
-        protected $_m_ambient;
-        protected $_m_specular;
-        protected $_m_diffuse;
-        public function ambient() { return $this->_m_ambient; }
-        public function specular() { return $this->_m_specular; }
-        public function diffuse() { return $this->_m_diffuse; }
+        protected $_m_numAtomics;
+        protected $_m_numLights;
+        protected $_m_numCameras;
+        public function numAtomics() { return $this->_m_numAtomics; }
+        public function numLights() { return $this->_m_numLights; }
+        public function numCameras() { return $this->_m_numCameras; }
     }
 }
 
 namespace RenderwareBinaryStream {
     class StructFrameList extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \RenderwareBinaryStream\ListWithHeader $_parent = null, \RenderwareBinaryStream $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\RenderwareBinaryStream\ListWithHeader $_parent = null, ?\RenderwareBinaryStream $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -396,135 +407,160 @@ namespace RenderwareBinaryStream {
 }
 
 namespace RenderwareBinaryStream {
-    class Matrix extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \RenderwareBinaryStream\Frame $_parent = null, \RenderwareBinaryStream $_root = null) {
+    class StructGeometry extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\RenderwareBinaryStream\ListWithHeader $_parent = null, ?\RenderwareBinaryStream $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_entries = [];
-            $n = 3;
+            $this->_m_format = $this->_io->readU4le();
+            $this->_m_numTriangles = $this->_io->readU4le();
+            $this->_m_numVertices = $this->_io->readU4le();
+            $this->_m_numMorphTargets = $this->_io->readU4le();
+            if ($this->_parent()->version() < 212992) {
+                $this->_m_surfProp = new \RenderwareBinaryStream\SurfaceProperties($this->_io, $this, $this->_root);
+            }
+            if (!($this->isNative())) {
+                $this->_m_geometry = new \RenderwareBinaryStream\GeometryNonNative($this->_io, $this, $this->_root);
+            }
+            $this->_m_morphTargets = [];
+            $n = $this->numMorphTargets();
             for ($i = 0; $i < $n; $i++) {
-                $this->_m_entries[] = new \RenderwareBinaryStream\Vector3d($this->_io, $this, $this->_root);
+                $this->_m_morphTargets[] = new \RenderwareBinaryStream\MorphTarget($this->_io, $this, $this->_root);
             }
         }
-        protected $_m_entries;
-        public function entries() { return $this->_m_entries; }
+        protected $_m_isNative;
+        public function isNative() {
+            if ($this->_m_isNative !== null)
+                return $this->_m_isNative;
+            $this->_m_isNative = ($this->format() & 16777216) != 0;
+            return $this->_m_isNative;
+        }
+        protected $_m_isPrelit;
+        public function isPrelit() {
+            if ($this->_m_isPrelit !== null)
+                return $this->_m_isPrelit;
+            $this->_m_isPrelit = ($this->format() & 8) != 0;
+            return $this->_m_isPrelit;
+        }
+        protected $_m_isTextured;
+        public function isTextured() {
+            if ($this->_m_isTextured !== null)
+                return $this->_m_isTextured;
+            $this->_m_isTextured = ($this->format() & 4) != 0;
+            return $this->_m_isTextured;
+        }
+        protected $_m_isTextured2;
+        public function isTextured2() {
+            if ($this->_m_isTextured2 !== null)
+                return $this->_m_isTextured2;
+            $this->_m_isTextured2 = ($this->format() & 128) != 0;
+            return $this->_m_isTextured2;
+        }
+        protected $_m_numUvLayers;
+        public function numUvLayers() {
+            if ($this->_m_numUvLayers !== null)
+                return $this->_m_numUvLayers;
+            $this->_m_numUvLayers = ($this->numUvLayersRaw() == 0 ? ($this->isTextured2() ? 2 : ($this->isTextured() ? 1 : 0)) : $this->numUvLayersRaw());
+            return $this->_m_numUvLayers;
+        }
+        protected $_m_numUvLayersRaw;
+        public function numUvLayersRaw() {
+            if ($this->_m_numUvLayersRaw !== null)
+                return $this->_m_numUvLayersRaw;
+            $this->_m_numUvLayersRaw = ($this->format() & 16711680) >> 16;
+            return $this->_m_numUvLayersRaw;
+        }
+        protected $_m_format;
+        protected $_m_numTriangles;
+        protected $_m_numVertices;
+        protected $_m_numMorphTargets;
+        protected $_m_surfProp;
+        protected $_m_geometry;
+        protected $_m_morphTargets;
+        public function format() { return $this->_m_format; }
+        public function numTriangles() { return $this->_m_numTriangles; }
+        public function numVertices() { return $this->_m_numVertices; }
+        public function numMorphTargets() { return $this->_m_numMorphTargets; }
+        public function surfProp() { return $this->_m_surfProp; }
+        public function geometry() { return $this->_m_geometry; }
+        public function morphTargets() { return $this->_m_morphTargets; }
     }
 }
 
 namespace RenderwareBinaryStream {
-    class Vector3d extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \RenderwareBinaryStream $_root = null) {
+    class StructGeometryList extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\RenderwareBinaryStream\ListWithHeader $_parent = null, ?\RenderwareBinaryStream $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_x = $this->_io->readF4le();
-            $this->_m_y = $this->_io->readF4le();
-            $this->_m_z = $this->_io->readF4le();
+            $this->_m_numGeometries = $this->_io->readU4le();
         }
-        protected $_m_x;
-        protected $_m_y;
-        protected $_m_z;
-        public function x() { return $this->_m_x; }
-        public function y() { return $this->_m_y; }
-        public function z() { return $this->_m_z; }
+        protected $_m_numGeometries;
+        public function numGeometries() { return $this->_m_numGeometries; }
     }
 }
 
-/**
- * Typical structure used by many data types in RenderWare binary
- * stream. Substream contains a list of binary stream entries,
- * first entry always has type "struct" and carries some specific
- * binary data it in, determined by the type of parent. All other
- * entries, beside the first one, are normal, self-describing
- * records.
- */
-
 namespace RenderwareBinaryStream {
-    class ListWithHeader extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \RenderwareBinaryStream $_parent = null, \RenderwareBinaryStream $_root = null) {
+    class StructTextureDictionary extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\RenderwareBinaryStream\ListWithHeader $_parent = null, ?\RenderwareBinaryStream $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_code = $this->_io->readBytes(4);
-            if (!($this->code() == "\x01\x00\x00\x00")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x01\x00\x00\x00", $this->code(), $this->_io(), "/types/list_with_header/seq/0");
-            }
-            $this->_m_headerSize = $this->_io->readU4le();
-            $this->_m_libraryIdStamp = $this->_io->readU4le();
-            switch ($this->_parent()->code()) {
-                case \RenderwareBinaryStream\Sections::ATOMIC:
-                    $this->_m__raw_header = $this->_io->readBytes($this->headerSize());
-                    $_io__raw_header = new \Kaitai\Struct\Stream($this->_m__raw_header);
-                    $this->_m_header = new \RenderwareBinaryStream\StructAtomic($_io__raw_header, $this, $this->_root);
-                    break;
-                case \RenderwareBinaryStream\Sections::GEOMETRY:
-                    $this->_m__raw_header = $this->_io->readBytes($this->headerSize());
-                    $_io__raw_header = new \Kaitai\Struct\Stream($this->_m__raw_header);
-                    $this->_m_header = new \RenderwareBinaryStream\StructGeometry($_io__raw_header, $this, $this->_root);
-                    break;
-                case \RenderwareBinaryStream\Sections::TEXTURE_DICTIONARY:
-                    $this->_m__raw_header = $this->_io->readBytes($this->headerSize());
-                    $_io__raw_header = new \Kaitai\Struct\Stream($this->_m__raw_header);
-                    $this->_m_header = new \RenderwareBinaryStream\StructTextureDictionary($_io__raw_header, $this, $this->_root);
-                    break;
-                case \RenderwareBinaryStream\Sections::GEOMETRY_LIST:
-                    $this->_m__raw_header = $this->_io->readBytes($this->headerSize());
-                    $_io__raw_header = new \Kaitai\Struct\Stream($this->_m__raw_header);
-                    $this->_m_header = new \RenderwareBinaryStream\StructGeometryList($_io__raw_header, $this, $this->_root);
-                    break;
-                case \RenderwareBinaryStream\Sections::CLUMP:
-                    $this->_m__raw_header = $this->_io->readBytes($this->headerSize());
-                    $_io__raw_header = new \Kaitai\Struct\Stream($this->_m__raw_header);
-                    $this->_m_header = new \RenderwareBinaryStream\StructClump($_io__raw_header, $this, $this->_root);
-                    break;
-                case \RenderwareBinaryStream\Sections::FRAME_LIST:
-                    $this->_m__raw_header = $this->_io->readBytes($this->headerSize());
-                    $_io__raw_header = new \Kaitai\Struct\Stream($this->_m__raw_header);
-                    $this->_m_header = new \RenderwareBinaryStream\StructFrameList($_io__raw_header, $this, $this->_root);
-                    break;
-                default:
-                    $this->_m_header = $this->_io->readBytes($this->headerSize());
-                    break;
-            }
-            $this->_m_entries = [];
-            $i = 0;
-            while (!$this->_io->isEof()) {
-                $this->_m_entries[] = new \RenderwareBinaryStream($this->_io);
-                $i++;
-            }
+            $this->_m_numTextures = $this->_io->readU4le();
         }
-        protected $_m_version;
-        public function version() {
-            if ($this->_m_version !== null)
-                return $this->_m_version;
-            $this->_m_version = (($this->libraryIdStamp() & 4294901760) != 0 ? (((($this->libraryIdStamp() >> 14) & 261888) + 196608) | (($this->libraryIdStamp() >> 16) & 63)) : ($this->libraryIdStamp() << 8));
-            return $this->_m_version;
+        protected $_m_numTextures;
+        public function numTextures() { return $this->_m_numTextures; }
+    }
+}
+
+namespace RenderwareBinaryStream {
+    class SurfaceProperties extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\RenderwareBinaryStream\StructGeometry $_parent = null, ?\RenderwareBinaryStream $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
         }
-        protected $_m_code;
-        protected $_m_headerSize;
-        protected $_m_libraryIdStamp;
-        protected $_m_header;
-        protected $_m_entries;
-        protected $_m__raw_header;
-        public function code() { return $this->_m_code; }
-        public function headerSize() { return $this->_m_headerSize; }
-        public function libraryIdStamp() { return $this->_m_libraryIdStamp; }
-        public function header() { return $this->_m_header; }
-        public function entries() { return $this->_m_entries; }
-        public function _raw_header() { return $this->_m__raw_header; }
+
+        private function _read() {
+            $this->_m_ambient = $this->_io->readF4le();
+            $this->_m_specular = $this->_io->readF4le();
+            $this->_m_diffuse = $this->_io->readF4le();
+        }
+        protected $_m_ambient;
+        protected $_m_specular;
+        protected $_m_diffuse;
+        public function ambient() { return $this->_m_ambient; }
+        public function specular() { return $this->_m_specular; }
+        public function diffuse() { return $this->_m_diffuse; }
+    }
+}
+
+namespace RenderwareBinaryStream {
+    class TexCoord extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\RenderwareBinaryStream\UvLayer $_parent = null, ?\RenderwareBinaryStream $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_u = $this->_io->readF4le();
+            $this->_m_v = $this->_io->readF4le();
+        }
+        protected $_m_u;
+        protected $_m_v;
+        public function u() { return $this->_m_u; }
+        public function v() { return $this->_m_v; }
     }
 }
 
 namespace RenderwareBinaryStream {
     class Triangle extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \RenderwareBinaryStream\GeometryNonNative $_parent = null, \RenderwareBinaryStream $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\RenderwareBinaryStream\GeometryNonNative $_parent = null, ?\RenderwareBinaryStream $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -547,50 +583,8 @@ namespace RenderwareBinaryStream {
 }
 
 namespace RenderwareBinaryStream {
-    class Frame extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \RenderwareBinaryStream\StructFrameList $_parent = null, \RenderwareBinaryStream $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_rotationMatrix = new \RenderwareBinaryStream\Matrix($this->_io, $this, $this->_root);
-            $this->_m_position = new \RenderwareBinaryStream\Vector3d($this->_io, $this, $this->_root);
-            $this->_m_curFrameIdx = $this->_io->readS4le();
-            $this->_m_matrixCreationFlags = $this->_io->readU4le();
-        }
-        protected $_m_rotationMatrix;
-        protected $_m_position;
-        protected $_m_curFrameIdx;
-        protected $_m_matrixCreationFlags;
-        public function rotationMatrix() { return $this->_m_rotationMatrix; }
-        public function position() { return $this->_m_position; }
-        public function curFrameIdx() { return $this->_m_curFrameIdx; }
-        public function matrixCreationFlags() { return $this->_m_matrixCreationFlags; }
-    }
-}
-
-namespace RenderwareBinaryStream {
-    class TexCoord extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \RenderwareBinaryStream\UvLayer $_parent = null, \RenderwareBinaryStream $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_u = $this->_io->readF4le();
-            $this->_m_v = $this->_io->readF4le();
-        }
-        protected $_m_u;
-        protected $_m_v;
-        public function u() { return $this->_m_u; }
-        public function v() { return $this->_m_v; }
-    }
-}
-
-namespace RenderwareBinaryStream {
     class UvLayer extends \Kaitai\Struct\Struct {
-        public function __construct(int $numVertices, \Kaitai\Struct\Stream $_io, \RenderwareBinaryStream\GeometryNonNative $_parent = null, \RenderwareBinaryStream $_root = null) {
+        public function __construct(int $numVertices, \Kaitai\Struct\Stream $_io, ?\RenderwareBinaryStream\GeometryNonNative $_parent = null, ?\RenderwareBinaryStream $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_m_numVertices = $numVertices;
             $this->_read();
@@ -611,17 +605,23 @@ namespace RenderwareBinaryStream {
 }
 
 namespace RenderwareBinaryStream {
-    class StructTextureDictionary extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \RenderwareBinaryStream\ListWithHeader $_parent = null, \RenderwareBinaryStream $_root = null) {
+    class Vector3d extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\RenderwareBinaryStream $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_numTextures = $this->_io->readU4le();
+            $this->_m_x = $this->_io->readF4le();
+            $this->_m_y = $this->_io->readF4le();
+            $this->_m_z = $this->_io->readF4le();
         }
-        protected $_m_numTextures;
-        public function numTextures() { return $this->_m_numTextures; }
+        protected $_m_x;
+        protected $_m_y;
+        protected $_m_z;
+        public function x() { return $this->_m_x; }
+        public function y() { return $this->_m_y; }
+        public function z() { return $this->_m_z; }
     }
 }
 
@@ -794,5 +794,11 @@ namespace RenderwareBinaryStream {
         const BREAKABLE = 39056125;
         const FRAME = 39056126;
         const UNUSED_16 = 39056127;
+
+        private const _VALUES = [1 => true, 2 => true, 3 => true, 5 => true, 6 => true, 7 => true, 8 => true, 9 => true, 10 => true, 11 => true, 12 => true, 13 => true, 14 => true, 15 => true, 16 => true, 18 => true, 19 => true, 20 => true, 21 => true, 22 => true, 23 => true, 24 => true, 25 => true, 26 => true, 27 => true, 28 => true, 29 => true, 30 => true, 31 => true, 32 => true, 33 => true, 34 => true, 35 => true, 36 => true, 37 => true, 38 => true, 39 => true, 40 => true, 41 => true, 42 => true, 43 => true, 44 => true, 257 => true, 258 => true, 259 => true, 260 => true, 261 => true, 262 => true, 263 => true, 264 => true, 265 => true, 266 => true, 267 => true, 268 => true, 269 => true, 270 => true, 271 => true, 272 => true, 273 => true, 274 => true, 275 => true, 276 => true, 277 => true, 278 => true, 279 => true, 280 => true, 281 => true, 282 => true, 283 => true, 284 => true, 285 => true, 286 => true, 287 => true, 288 => true, 289 => true, 290 => true, 291 => true, 292 => true, 293 => true, 294 => true, 295 => true, 297 => true, 298 => true, 299 => true, 300 => true, 301 => true, 302 => true, 303 => true, 304 => true, 305 => true, 306 => true, 307 => true, 308 => true, 309 => true, 384 => true, 385 => true, 386 => true, 387 => true, 388 => true, 389 => true, 390 => true, 391 => true, 392 => true, 393 => true, 400 => true, 401 => true, 402 => true, 403 => true, 404 => true, 405 => true, 406 => true, 407 => true, 408 => true, 409 => true, 410 => true, 411 => true, 412 => true, 413 => true, 414 => true, 415 => true, 416 => true, 417 => true, 418 => true, 419 => true, 420 => true, 421 => true, 422 => true, 423 => true, 424 => true, 425 => true, 432 => true, 433 => true, 434 => true, 435 => true, 436 => true, 437 => true, 438 => true, 439 => true, 440 => true, 441 => true, 442 => true, 443 => true, 444 => true, 445 => true, 446 => true, 447 => true, 448 => true, 449 => true, 1294 => true, 1296 => true, 61982 => true, 39055872 => true, 39055873 => true, 39055874 => true, 39056115 => true, 39056116 => true, 39056117 => true, 39056118 => true, 39056119 => true, 39056120 => true, 39056121 => true, 39056122 => true, 39056123 => true, 39056124 => true, 39056125 => true, 39056126 => true, 39056127 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

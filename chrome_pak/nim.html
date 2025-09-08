@@ -175,6 +175,11 @@ resources such as translated strings, help messages and images.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="Chrome PAK serialization format parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="Chrome PAK serialization format parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -205,7 +210,17 @@ resources such as translated strings, help messages and images.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="Chrome PAK serialization format parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="Chrome PAK serialization format parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="Chrome PAK serialization format parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -247,14 +262,20 @@ resources such as translated strings, help messages and images.</p>
 <span class="w">    </span><span class="p">`</span><span class="n">resources</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">ChromePak_Resource</span><span class="o">]</span>
 <span class="w">    </span><span class="p">`</span><span class="n">aliases</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">ChromePak_Alias</span><span class="o">]</span>
 <span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
-<span class="w">    </span><span class="p">`</span><span class="n">numResourcesInst</span><span class="p">`:</span><span class="w"> </span><span class="n">uint32</span>
-<span class="w">    </span><span class="p">`</span><span class="n">numResourcesInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
 <span class="w">    </span><span class="p">`</span><span class="n">numAliasesInst</span><span class="p">`:</span><span class="w"> </span><span class="n">uint16</span>
 <span class="w">    </span><span class="p">`</span><span class="n">numAliasesInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">numResourcesInst</span><span class="p">`:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">numResourcesInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
 <span class="w">  </span><span class="n">ChromePak_Encodings</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">enum</span>
 <span class="w">    </span><span class="n">binary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
 <span class="w">    </span><span class="n">utf8</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
 <span class="w">    </span><span class="n">utf16</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">  </span><span class="n">ChromePak_Alias</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">id</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">resourceIdx</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">ChromePak</span>
+<span class="w">    </span><span class="p">`</span><span class="n">resourceInst</span><span class="p">`:</span><span class="w"> </span><span class="n">ChromePak_Resource</span>
+<span class="w">    </span><span class="p">`</span><span class="n">resourceInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
 <span class="w">  </span><span class="n">ChromePak_HeaderV5Part</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
 <span class="w">    </span><span class="p">`</span><span class="n">encodingPadding</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
 <span class="w">    </span><span class="p">`</span><span class="n">numResources</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
@@ -266,27 +287,21 @@ resources such as translated strings, help messages and images.</p>
 <span class="w">    </span><span class="p">`</span><span class="n">idx</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">int32</span>
 <span class="w">    </span><span class="p">`</span><span class="n">hasBody</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">bool</span>
 <span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">ChromePak</span>
-<span class="w">    </span><span class="p">`</span><span class="n">lenBodyInst</span><span class="p">`:</span><span class="w"> </span><span class="nb">int</span>
-<span class="w">    </span><span class="p">`</span><span class="n">lenBodyInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
 <span class="w">    </span><span class="p">`</span><span class="n">bodyInst</span><span class="p">`:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
 <span class="w">    </span><span class="p">`</span><span class="n">bodyInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
-<span class="w">  </span><span class="n">ChromePak_Alias</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
-<span class="w">    </span><span class="p">`</span><span class="n">id</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
-<span class="w">    </span><span class="p">`</span><span class="n">resourceIdx</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
-<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">ChromePak</span>
-<span class="w">    </span><span class="p">`</span><span class="n">resourceInst</span><span class="p">`:</span><span class="w"> </span><span class="n">ChromePak_Resource</span>
-<span class="w">    </span><span class="p">`</span><span class="n">resourceInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">lenBodyInst</span><span class="p">`:</span><span class="w"> </span><span class="nb">int</span>
+<span class="w">    </span><span class="p">`</span><span class="n">lenBodyInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
 
 <span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ChromePak], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): ChromePak</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ChromePak_Alias], io: KaitaiStream, root: KaitaiStruct, parent: ChromePak): ChromePak_Alias</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ChromePak_HeaderV5Part], io: KaitaiStream, root: KaitaiStruct, parent: ChromePak): ChromePak_HeaderV5Part</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ChromePak_Resource], io: KaitaiStream, root: KaitaiStruct, parent: ChromePak, idx: any, hasBody: any): ChromePak_Resource</span>
-<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ChromePak_Alias], io: KaitaiStream, root: KaitaiStruct, parent: ChromePak): ChromePak_Alias</span>
 
-<span class="k">proc</span><span class="w"> </span><span class="nf">numResources</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ChromePak</span><span class="p">):</span><span class="w"> </span><span class="n">uint32</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">numAliases</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ChromePak</span><span class="p">):</span><span class="w"> </span><span class="n">uint16</span>
-<span class="k">proc</span><span class="w"> </span><span class="nf">lenBody</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ChromePak_Resource</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span>
-<span class="k">proc</span><span class="w"> </span><span class="nf">body</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ChromePak_Resource</span><span class="p">):</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">numResources</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ChromePak</span><span class="p">):</span><span class="w"> </span><span class="n">uint32</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">resource</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ChromePak_Alias</span><span class="p">):</span><span class="w"> </span><span class="n">ChromePak_Resource</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">body</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ChromePak_Resource</span><span class="p">):</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">lenBody</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ChromePak_Resource</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span>
 
 
 <span class="sd">##[</span>
@@ -339,20 +354,12 @@ resources such as translated strings, help messages and images.</p>
 <span class="sd">and offset pointing to the end of the resources.</span>
 
 <span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">..</span><span class="o">&lt;</span><span class="w"> </span><span class="nb">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">numResources</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)):</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">..</span><span class="o">&lt;</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">numResources</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">):</span>
 <span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ChromePak_Resource</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">numResources</span><span class="p">)</span>
 <span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">resources</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
 <span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">..</span><span class="o">&lt;</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">numAliases</span><span class="p">):</span>
 <span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ChromePak_Alias</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
 <span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">aliases</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
-
-<span class="k">proc</span><span class="w"> </span><span class="nf">numResources</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ChromePak</span><span class="p">):</span><span class="w"> </span><span class="n">uint32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">numResourcesInstFlag</span><span class="p">:</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">numResourcesInst</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">numResourcesInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">uint32</span><span class="p">((</span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">version</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">5</span><span class="p">:</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">v5Part</span><span class="p">.</span><span class="n">numResources</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">numResourcesV4</span><span class="p">))</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">numResourcesInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">numResourcesInstExpr</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">numResourcesInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">numResourcesInst</span>
 
 <span class="k">proc</span><span class="w"> </span><span class="nf">numAliases</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ChromePak</span><span class="p">):</span><span class="w"> </span><span class="n">uint16</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
 <span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">numAliasesInstFlag</span><span class="p">:</span>
@@ -362,8 +369,40 @@ resources such as translated strings, help messages and images.</p>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">numAliasesInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
 <span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">numAliasesInst</span>
 
+<span class="k">proc</span><span class="w"> </span><span class="nf">numResources</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ChromePak</span><span class="p">):</span><span class="w"> </span><span class="n">uint32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">numResourcesInstFlag</span><span class="p">:</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">numResourcesInst</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">numResourcesInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">uint32</span><span class="p">((</span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">version</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">5</span><span class="p">:</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">v5Part</span><span class="p">.</span><span class="n">numResources</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">numResourcesV4</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">numResourcesInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">numResourcesInstExpr</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">numResourcesInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">numResourcesInst</span>
+
 <span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ChromePak], filename: string): ChromePak =</span>
 <span class="w">  </span><span class="n">ChromePak</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ChromePak_Alias], io: KaitaiStream, root: KaitaiStruct, parent: ChromePak): ChromePak_Alias =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">ChromePak_Alias</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">ChromePak</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">ChromePak</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
+
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">idExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">idExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">resourceIdxExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">resourceIdx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">resourceIdxExpr</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">resource</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ChromePak_Alias</span><span class="p">):</span><span class="w"> </span><span class="n">ChromePak_Resource</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">resourceInstFlag</span><span class="p">:</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">resourceInst</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">resourceInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ChromePak_Resource</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">resources</span><span class="o">[</span><span class="n">this</span><span class="p">.</span><span class="n">resourceIdx</span><span class="o">]</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">resourceInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">resourceInstExpr</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">resourceInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">resourceInst</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ChromePak_Alias], filename: string): ChromePak_Alias =</span>
+<span class="w">  </span><span class="n">ChromePak_Alias</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 
 <span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ChromePak_HeaderV5Part], io: KaitaiStream, root: KaitaiStruct, parent: ChromePak): ChromePak_HeaderV5Part =</span>
 <span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
@@ -400,19 +439,6 @@ resources such as translated strings, help messages and images.</p>
 <span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">ofsBodyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">ofsBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ofsBodyExpr</span>
 
-<span class="k">proc</span><span class="w"> </span><span class="nf">lenBody</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ChromePak_Resource</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  MUST NOT be accessed until the next `resource` is parsed</span>
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">lenBodyInstFlag</span><span class="p">:</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">lenBodyInst</span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">hasBody</span><span class="p">:</span>
-<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">lenBodyInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">resources</span><span class="o">[</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="o">]</span><span class="p">.</span><span class="n">ofsBody</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">ofsBody</span><span class="p">))</span>
-<span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">lenBodyInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lenBodyInstExpr</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lenBodyInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">lenBodyInst</span>
-
 <span class="k">proc</span><span class="w"> </span><span class="nf">body</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ChromePak_Resource</span><span class="p">):</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
 
 <span class="w">  </span><span class="sd">##[</span>
@@ -429,32 +455,21 @@ resources such as translated strings, help messages and images.</p>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">bodyInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
 <span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span>
 
+<span class="k">proc</span><span class="w"> </span><span class="nf">lenBody</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ChromePak_Resource</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  MUST NOT be accessed until the next `resource` is parsed</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">lenBodyInstFlag</span><span class="p">:</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">lenBodyInst</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">hasBody</span><span class="p">:</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">lenBodyInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">resources</span><span class="o">[</span><span class="n">this</span><span class="p">.</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="o">]</span><span class="p">.</span><span class="n">ofsBody</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">ofsBody</span><span class="p">)</span>
+<span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">lenBodyInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lenBodyInstExpr</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lenBodyInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">lenBodyInst</span>
+
 <span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ChromePak_Resource], filename: string): ChromePak_Resource =</span>
 <span class="w">  </span><span class="n">ChromePak_Resource</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
-
-<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ChromePak_Alias], io: KaitaiStream, root: KaitaiStruct, parent: ChromePak): ChromePak_Alias =</span>
-<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
-<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">ChromePak_Alias</span><span class="p">)</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">ChromePak</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">ChromePak</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
-
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">idExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">idExpr</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">resourceIdxExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">resourceIdx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">resourceIdxExpr</span>
-
-<span class="k">proc</span><span class="w"> </span><span class="nf">resource</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ChromePak_Alias</span><span class="p">):</span><span class="w"> </span><span class="n">ChromePak_Resource</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">resourceInstFlag</span><span class="p">:</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">resourceInst</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">resourceInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ChromePak_Resource</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">resources</span><span class="o">[</span><span class="n">this</span><span class="p">.</span><span class="n">resourceIdx</span><span class="o">]</span><span class="p">)</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">resourceInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">resourceInstExpr</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">resourceInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">resourceInst</span>
-
-<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ChromePak_Alias], filename: string): ChromePak_Alias =</span>
-<span class="w">  </span><span class="n">ChromePak_Alias</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 </pre></div>
 
         </div>

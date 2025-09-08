@@ -8,8 +8,8 @@
 
 namespace {
     class SomeIpSdEntries extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \SomeIpSdEntries $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\SomeIpSdEntries $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -28,7 +28,7 @@ namespace {
 
 namespace SomeIpSdEntries {
     class SdEntry extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \SomeIpSdEntries $_parent = null, \SomeIpSdEntries $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\SomeIpSdEntries $_parent = null, ?\SomeIpSdEntries $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -59,7 +59,7 @@ namespace SomeIpSdEntries {
 
 namespace SomeIpSdEntries\SdEntry {
     class SdEntryHeader extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \SomeIpSdEntries\SdEntry $_parent = null, \SomeIpSdEntries $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\SomeIpSdEntries\SdEntry $_parent = null, ?\SomeIpSdEntries $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -98,23 +98,8 @@ namespace SomeIpSdEntries\SdEntry {
 }
 
 namespace SomeIpSdEntries\SdEntry {
-    class SdServiceEntry extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \SomeIpSdEntries\SdEntry $_parent = null, \SomeIpSdEntries $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_minorVersion = $this->_io->readU4be();
-        }
-        protected $_m_minorVersion;
-        public function minorVersion() { return $this->_m_minorVersion; }
-    }
-}
-
-namespace SomeIpSdEntries\SdEntry {
     class SdEventgroupEntry extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \SomeIpSdEntries\SdEntry $_parent = null, \SomeIpSdEntries $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\SomeIpSdEntries\SdEntry $_parent = null, ?\SomeIpSdEntries $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -141,10 +126,31 @@ namespace SomeIpSdEntries\SdEntry {
 }
 
 namespace SomeIpSdEntries\SdEntry {
+    class SdServiceEntry extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\SomeIpSdEntries\SdEntry $_parent = null, ?\SomeIpSdEntries $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_minorVersion = $this->_io->readU4be();
+        }
+        protected $_m_minorVersion;
+        public function minorVersion() { return $this->_m_minorVersion; }
+    }
+}
+
+namespace SomeIpSdEntries\SdEntry {
     class EntryTypes {
         const FIND = 0;
         const OFFER = 1;
         const SUBSCRIBE = 6;
         const SUBSCRIBE_ACK = 7;
+
+        private const _VALUES = [0 => true, 1 => true, 6 => true, 7 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

@@ -4,9 +4,9 @@
 
 local class = require("class")
 require("kaitaistruct")
+require("mach_o")
 local stringstream = require("string_stream")
 
-require("mach_o")
 -- 
 -- This is a simple container format that encapsulates multiple Mach-O files,
 -- each generally for a different architecture. XNU can execute these files just
@@ -24,7 +24,7 @@ end
 function MachOFat:_read()
   self.magic = self._io:read_bytes(4)
   if not(self.magic == "\202\254\186\190") then
-    error("not equal, expected " ..  "\202\254\186\190" .. ", but got " .. self.magic)
+    error("not equal, expected " .. "\202\254\186\190" .. ", but got " .. self.magic)
   end
   self.num_fat_arch = self._io:read_u4be()
   self.fat_archs = {}
@@ -39,7 +39,7 @@ MachOFat.FatArch = class.class(KaitaiStruct)
 function MachOFat.FatArch:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 

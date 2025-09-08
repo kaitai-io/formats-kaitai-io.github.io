@@ -3,21 +3,21 @@
 
 namespace {
     class GranTurismoVol extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \GranTurismoVol $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\GranTurismoVol $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic = $this->_io->readBytes(8);
-            if (!($this->magic() == "\x47\x54\x46\x53\x00\x00\x00\x00")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x47\x54\x46\x53\x00\x00\x00\x00", $this->magic(), $this->_io(), "/seq/0");
+            if (!($this->_m_magic == "\x47\x54\x46\x53\x00\x00\x00\x00")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x47\x54\x46\x53\x00\x00\x00\x00", $this->_m_magic, $this->_io, "/seq/0");
             }
             $this->_m_numFiles = $this->_io->readU2le();
             $this->_m_numEntries = $this->_io->readU2le();
             $this->_m_reserved = $this->_io->readBytes(4);
-            if (!($this->reserved() == "\x00\x00\x00\x00")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00\x00\x00\x00", $this->reserved(), $this->_io(), "/seq/3");
+            if (!($this->_m_reserved == "\x00\x00\x00\x00")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00\x00\x00\x00", $this->_m_reserved, $this->_io, "/seq/3");
             }
             $this->_m_offsets = [];
             $n = $this->numFiles();
@@ -25,19 +25,12 @@ namespace {
                 $this->_m_offsets[] = $this->_io->readU4le();
             }
         }
-        protected $_m_ofsDir;
-        public function ofsDir() {
-            if ($this->_m_ofsDir !== null)
-                return $this->_m_ofsDir;
-            $this->_m_ofsDir = $this->offsets()[1];
-            return $this->_m_ofsDir;
-        }
         protected $_m_files;
         public function files() {
             if ($this->_m_files !== null)
                 return $this->_m_files;
             $_pos = $this->_io->pos();
-            $this->_io->seek(($this->ofsDir() & 4294965248));
+            $this->_io->seek($this->ofsDir() & 4294965248);
             $this->_m_files = [];
             $n = $this->_root()->numEntries();
             for ($i = 0; $i < $n; $i++) {
@@ -45,6 +38,13 @@ namespace {
             }
             $this->_io->seek($_pos);
             return $this->_m_files;
+        }
+        protected $_m_ofsDir;
+        public function ofsDir() {
+            if ($this->_m_ofsDir !== null)
+                return $this->_m_ofsDir;
+            $this->_m_ofsDir = $this->offsets()[1];
+            return $this->_m_ofsDir;
         }
         protected $_m_magic;
         protected $_m_numFiles;
@@ -61,7 +61,7 @@ namespace {
 
 namespace GranTurismoVol {
     class FileInfo extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \GranTurismoVol $_parent = null, \GranTurismoVol $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\GranTurismoVol $_parent = null, ?\GranTurismoVol $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -72,20 +72,13 @@ namespace GranTurismoVol {
             $this->_m_flags = $this->_io->readU1();
             $this->_m_name = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate(\Kaitai\Struct\Stream::bytesStripRight($this->_io->readBytes(25), 0), 0, false), "ASCII");
         }
-        protected $_m_size;
-        public function size() {
-            if ($this->_m_size !== null)
-                return $this->_m_size;
-            $this->_m_size = (($this->_root()->offsets()[($this->offsetIdx() + 1)] & 4294965248) - $this->_root()->offsets()[$this->offsetIdx()]);
-            return $this->_m_size;
-        }
         protected $_m_body;
         public function body() {
             if ($this->_m_body !== null)
                 return $this->_m_body;
             if (!($this->isDir())) {
                 $_pos = $this->_io->pos();
-                $this->_io->seek(($this->_root()->offsets()[$this->offsetIdx()] & 4294965248));
+                $this->_io->seek($this->_root()->offsets()[$this->offsetIdx()] & 4294965248);
                 $this->_m_body = $this->_io->readBytes($this->size());
                 $this->_io->seek($_pos);
             }
@@ -104,6 +97,13 @@ namespace GranTurismoVol {
                 return $this->_m_isLastEntry;
             $this->_m_isLastEntry = ($this->flags() & 128) != 0;
             return $this->_m_isLastEntry;
+        }
+        protected $_m_size;
+        public function size() {
+            if ($this->_m_size !== null)
+                return $this->_m_size;
+            $this->_m_size = ($this->_root()->offsets()[$this->offsetIdx() + 1] & 4294965248) - $this->_root()->offsets()[$this->offsetIdx()];
+            return $this->_m_size;
         }
         protected $_m_timestamp;
         protected $_m_offsetIdx;

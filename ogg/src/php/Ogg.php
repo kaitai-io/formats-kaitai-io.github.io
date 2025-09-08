@@ -15,8 +15,8 @@
 
 namespace {
     class Ogg extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Ogg $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Ogg $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -40,19 +40,19 @@ namespace {
 
 namespace Ogg {
     class Page extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Ogg $_parent = null, \Ogg $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Ogg $_parent = null, ?\Ogg $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_syncCode = $this->_io->readBytes(4);
-            if (!($this->syncCode() == "\x4F\x67\x67\x53")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x4F\x67\x67\x53", $this->syncCode(), $this->_io(), "/types/page/seq/0");
+            if (!($this->_m_syncCode == "\x4F\x67\x67\x53")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x4F\x67\x67\x53", $this->_m_syncCode, $this->_io, "/types/page/seq/0");
             }
             $this->_m_version = $this->_io->readBytes(1);
-            if (!($this->version() == "\x00")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00", $this->version(), $this->_io(), "/types/page/seq/1");
+            if (!($this->_m_version == "\x00")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00", $this->_m_version, $this->_io, "/types/page/seq/1");
             }
             $this->_m_reserved1 = $this->_io->readBitsIntBe(5);
             $this->_m_isEndOfStream = $this->_io->readBitsIntBe(1) != 0;

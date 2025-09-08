@@ -3,12 +3,15 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class luks_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <vector>
+#include <set>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -53,6 +56,13 @@ public:
                 KEY_SLOT_STATES_DISABLED_KEY_SLOT = 57005,
                 KEY_SLOT_STATES_ENABLED_KEY_SLOT = 11301363
             };
+            static bool _is_defined_key_slot_states_t(key_slot_states_t v);
+
+        private:
+            static const std::set<key_slot_states_t> _values_key_slot_states_t;
+            static std::set<key_slot_states_t> _build_values_key_slot_states_t();
+
+        public:
 
             key_slot_t(kaitai::kstream* p__io, luks_t::partition_header_t* p__parent = 0, luks_t* p__root = 0);
 

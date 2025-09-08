@@ -3,8 +3,8 @@
 
 namespace {
     class HeroesOfMightAndMagicBmp extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \HeroesOfMightAndMagicBmp $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\HeroesOfMightAndMagicBmp $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -12,7 +12,7 @@ namespace {
             $this->_m_magic = $this->_io->readU2le();
             $this->_m_width = $this->_io->readU2le();
             $this->_m_height = $this->_io->readU2le();
-            $this->_m_data = $this->_io->readBytes(($this->width() * $this->height()));
+            $this->_m_data = $this->_io->readBytes($this->width() * $this->height());
         }
         protected $_m_magic;
         protected $_m_width;

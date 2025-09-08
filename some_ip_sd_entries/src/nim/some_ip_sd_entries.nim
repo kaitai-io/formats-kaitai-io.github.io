@@ -25,9 +25,6 @@ type
     `majorVersion`*: uint8
     `ttl`*: uint64
     `parent`*: SomeIpSdEntries_SdEntry
-  SomeIpSdEntries_SdEntry_SdServiceEntry* = ref object of KaitaiStruct
-    `minorVersion`*: uint32
-    `parent`*: SomeIpSdEntries_SdEntry
   SomeIpSdEntries_SdEntry_SdEventgroupEntry* = ref object of KaitaiStruct
     `reserved`*: uint8
     `initialDataRequested`*: bool
@@ -35,12 +32,15 @@ type
     `counter`*: uint64
     `eventGroupId`*: uint16
     `parent`*: SomeIpSdEntries_SdEntry
+  SomeIpSdEntries_SdEntry_SdServiceEntry* = ref object of KaitaiStruct
+    `minorVersion`*: uint32
+    `parent`*: SomeIpSdEntries_SdEntry
 
 proc read*(_: typedesc[SomeIpSdEntries], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): SomeIpSdEntries
 proc read*(_: typedesc[SomeIpSdEntries_SdEntry], io: KaitaiStream, root: KaitaiStruct, parent: SomeIpSdEntries): SomeIpSdEntries_SdEntry
 proc read*(_: typedesc[SomeIpSdEntries_SdEntry_SdEntryHeader], io: KaitaiStream, root: KaitaiStruct, parent: SomeIpSdEntries_SdEntry): SomeIpSdEntries_SdEntry_SdEntryHeader
-proc read*(_: typedesc[SomeIpSdEntries_SdEntry_SdServiceEntry], io: KaitaiStream, root: KaitaiStruct, parent: SomeIpSdEntries_SdEntry): SomeIpSdEntries_SdEntry_SdServiceEntry
 proc read*(_: typedesc[SomeIpSdEntries_SdEntry_SdEventgroupEntry], io: KaitaiStream, root: KaitaiStruct, parent: SomeIpSdEntries_SdEntry): SomeIpSdEntries_SdEntry_SdEventgroupEntry
+proc read*(_: typedesc[SomeIpSdEntries_SdEntry_SdServiceEntry], io: KaitaiStream, root: KaitaiStruct, parent: SomeIpSdEntries_SdEntry): SomeIpSdEntries_SdEntry_SdServiceEntry
 
 
 
@@ -128,20 +128,6 @@ proc read*(_: typedesc[SomeIpSdEntries_SdEntry_SdEntryHeader], io: KaitaiStream,
 proc fromFile*(_: typedesc[SomeIpSdEntries_SdEntry_SdEntryHeader], filename: string): SomeIpSdEntries_SdEntry_SdEntryHeader =
   SomeIpSdEntries_SdEntry_SdEntryHeader.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[SomeIpSdEntries_SdEntry_SdServiceEntry], io: KaitaiStream, root: KaitaiStruct, parent: SomeIpSdEntries_SdEntry): SomeIpSdEntries_SdEntry_SdServiceEntry =
-  template this: untyped = result
-  this = new(SomeIpSdEntries_SdEntry_SdServiceEntry)
-  let root = if root == nil: cast[SomeIpSdEntries](this) else: cast[SomeIpSdEntries](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let minorVersionExpr = this.io.readU4be()
-  this.minorVersion = minorVersionExpr
-
-proc fromFile*(_: typedesc[SomeIpSdEntries_SdEntry_SdServiceEntry], filename: string): SomeIpSdEntries_SdEntry_SdServiceEntry =
-  SomeIpSdEntries_SdEntry_SdServiceEntry.read(newKaitaiFileStream(filename), nil, nil)
-
 proc read*(_: typedesc[SomeIpSdEntries_SdEntry_SdEventgroupEntry], io: KaitaiStream, root: KaitaiStruct, parent: SomeIpSdEntries_SdEntry): SomeIpSdEntries_SdEntry_SdEventgroupEntry =
   template this: untyped = result
   this = new(SomeIpSdEntries_SdEntry_SdEventgroupEntry)
@@ -164,4 +150,18 @@ proc read*(_: typedesc[SomeIpSdEntries_SdEntry_SdEventgroupEntry], io: KaitaiStr
 
 proc fromFile*(_: typedesc[SomeIpSdEntries_SdEntry_SdEventgroupEntry], filename: string): SomeIpSdEntries_SdEntry_SdEventgroupEntry =
   SomeIpSdEntries_SdEntry_SdEventgroupEntry.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[SomeIpSdEntries_SdEntry_SdServiceEntry], io: KaitaiStream, root: KaitaiStruct, parent: SomeIpSdEntries_SdEntry): SomeIpSdEntries_SdEntry_SdServiceEntry =
+  template this: untyped = result
+  this = new(SomeIpSdEntries_SdEntry_SdServiceEntry)
+  let root = if root == nil: cast[SomeIpSdEntries](this) else: cast[SomeIpSdEntries](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let minorVersionExpr = this.io.readU4be()
+  this.minorVersion = minorVersionExpr
+
+proc fromFile*(_: typedesc[SomeIpSdEntries_SdEntry_SdServiceEntry], filename: string): SomeIpSdEntries_SdEntry_SdServiceEntry =
+  SomeIpSdEntries_SdEntry_SdServiceEntry.read(newKaitaiFileStream(filename), nil, nil)
 

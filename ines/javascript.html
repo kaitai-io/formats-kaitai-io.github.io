@@ -171,6 +171,11 @@ section#format-index .row {
                 <a href="java.html" title=".nes file format parsing Java library">Java</a></li>
                 
                 
+                <li>
+                
+                <a href="java-write.html" title=".nes file format parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
                 <li class="active">
                 
                 <a href="javascript.html" title=".nes file format parsing JavaScript library">JavaScript</a></li>
@@ -203,7 +208,17 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="python-write.html" title=".nes file format parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title=".nes file format parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title=".nes file format parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -276,13 +291,13 @@ section#format-index .row {
 
 <span class="p">(</span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">root</span><span class="p">,</span><span class="w"> </span><span class="nx">factory</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="ow">typeof</span><span class="w"> </span><span class="nx">define</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;function&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">define</span><span class="p">.</span><span class="nx">amd</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">define</span><span class="p">([</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">],</span><span class="w"> </span><span class="nx">factory</span><span class="p">);</span>
-<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="ow">typeof</span><span class="w"> </span><span class="nx">module</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;object&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">factory</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">));</span>
+<span class="w">    </span><span class="nx">define</span><span class="p">([</span><span class="s1">&#39;exports&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">],</span><span class="w"> </span><span class="nx">factory</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="ow">typeof</span><span class="w"> </span><span class="nx">exports</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;object&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">exports</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="ow">typeof</span><span class="w"> </span><span class="nx">exports</span><span class="p">.</span><span class="nx">nodeType</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s1">&#39;number&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">factory</span><span class="p">(</span><span class="nx">exports</span><span class="p">,</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">));</span>
 <span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">root</span><span class="p">.</span><span class="nx">Ines</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">KaitaiStream</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">Ines</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">Ines</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}),</span><span class="w"> </span><span class="nx">root</span><span class="p">.</span><span class="nx">KaitaiStream</span><span class="p">);</span>
 <span class="w">  </span><span class="p">}</span>
-<span class="p">}(</span><span class="ow">typeof</span><span class="w"> </span><span class="nx">self</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s1">&#39;undefined&#39;</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nx">self</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="p">})(</span><span class="ow">typeof</span><span class="w"> </span><span class="nx">self</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s1">&#39;undefined&#39;</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nx">self</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">Ines_</span><span class="p">,</span><span class="w"> </span><span class="nx">KaitaiStream</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="cm">/**</span>
 <span class="cm"> * @see {@link https://www.nesdev.org/wiki/INES|Source}</span>
 <span class="cm"> */</span>
@@ -302,8 +317,8 @@ section#format-index .row {
 <span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">f6</span><span class="p">.</span><span class="nx">trainer</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">trainer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mf">512</span><span class="p">);</span>
 <span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">prgRom</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">lenPrgRom</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">16384</span><span class="p">));</span>
-<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">chrRom</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">lenChrRom</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">8192</span><span class="p">));</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">prgRom</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">lenPrgRom</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">16384</span><span class="p">);</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">chrRom</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">lenChrRom</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">8192</span><span class="p">);</span>
 <span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">f7</span><span class="p">.</span><span class="nx">playchoice10</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">playchoice10</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Playchoice10</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
 <span class="w">    </span><span class="p">}</span>
@@ -316,14 +331,14 @@ section#format-index .row {
 <span class="w">    </span><span class="kd">function</span><span class="w"> </span><span class="nx">Header</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">_parent</span><span class="p">,</span><span class="w"> </span><span class="nx">_root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_io</span><span class="p">;</span>
 <span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_parent</span><span class="p">;</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="p">;</span>
 
 <span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="nx">Header</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">magic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mf">4</span><span class="p">);</span>
-<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">((</span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">byteArrayCompare</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">magic</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="mf">78</span><span class="p">,</span><span class="w"> </span><span class="mf">69</span><span class="p">,</span><span class="w"> </span><span class="mf">83</span><span class="p">,</span><span class="w"> </span><span class="mf">26</span><span class="p">])</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mf">0</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">ValidationNotEqualError</span><span class="p">([</span><span class="mf">78</span><span class="p">,</span><span class="w"> </span><span class="mf">69</span><span class="p">,</span><span class="w"> </span><span class="mf">83</span><span class="p">,</span><span class="w"> </span><span class="mf">26</span><span class="p">],</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">magic</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/header/seq/0&quot;</span><span class="p">);</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">((</span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">byteArrayCompare</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">magic</span><span class="p">,</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Uint8Array</span><span class="p">([</span><span class="mf">78</span><span class="p">,</span><span class="w"> </span><span class="mf">69</span><span class="p">,</span><span class="w"> </span><span class="mf">83</span><span class="p">,</span><span class="w"> </span><span class="mf">26</span><span class="p">]))</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mf">0</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">ValidationNotEqualError</span><span class="p">(</span><span class="ow">new</span><span class="w"> </span><span class="nb">Uint8Array</span><span class="p">([</span><span class="mf">78</span><span class="p">,</span><span class="w"> </span><span class="mf">69</span><span class="p">,</span><span class="w"> </span><span class="mf">83</span><span class="p">,</span><span class="w"> </span><span class="mf">26</span><span class="p">]),</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">magic</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/header/seq/0&quot;</span><span class="p">);</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">lenPrgRom</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
 <span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">lenChrRom</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
@@ -341,10 +356,57 @@ section#format-index .row {
 <span class="w">      </span><span class="kd">var</span><span class="w"> </span><span class="nx">_io__raw_f10</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_f10</span><span class="p">);</span>
 <span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">f10</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">F10</span><span class="p">(</span><span class="nx">_io__raw_f10</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
 <span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">reserved</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mf">5</span><span class="p">);</span>
-<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">((</span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">byteArrayCompare</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">reserved</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="p">])</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mf">0</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">ValidationNotEqualError</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="p">],</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">reserved</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/header/seq/8&quot;</span><span class="p">);</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">((</span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">byteArrayCompare</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">reserved</span><span class="p">,</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Uint8Array</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="p">]))</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mf">0</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">ValidationNotEqualError</span><span class="p">(</span><span class="ow">new</span><span class="w"> </span><span class="nb">Uint8Array</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="p">]),</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">reserved</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/header/seq/8&quot;</span><span class="p">);</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * @see {@link https://www.nesdev.org/wiki/INES#Flags_10|Source}</span>
+<span class="cm">     */</span>
+
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nx">F10</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Header</span><span class="p">.</span><span class="nx">F10</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">F10</span><span class="p">.</span><span class="nx">TvSystem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+<span class="w">        </span><span class="nx">NTSC</span><span class="o">:</span><span class="w"> </span><span class="mf">0</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">DUAL1</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">PAL</span><span class="o">:</span><span class="w"> </span><span class="mf">2</span><span class="p">,</span>
+<span class="w">        </span><span class="nx">DUAL2</span><span class="o">:</span><span class="w"> </span><span class="mf">3</span><span class="p">,</span>
+
+<span class="w">        </span><span class="mf">0</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;NTSC&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="mf">1</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;DUAL1&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="mf">2</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;PAL&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="mf">3</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;DUAL2&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="p">});</span>
+
+<span class="w">      </span><span class="kd">function</span><span class="w"> </span><span class="nx">F10</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">_parent</span><span class="p">,</span><span class="w"> </span><span class="nx">_root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_io</span><span class="p">;</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_parent</span><span class="p">;</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">      </span><span class="nx">F10</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">reserved1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mf">2</span><span class="p">);</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">busConflict</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mf">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">prgRam</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mf">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">reserved2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mf">2</span><span class="p">);</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">tvSystem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mf">2</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span>
+
+<span class="w">      </span><span class="cm">/**</span>
+<span class="cm">       * If 0, no bus conflicts. If 1, bus conflicts.</span>
+<span class="cm">       */</span>
+
+<span class="w">      </span><span class="cm">/**</span>
+<span class="cm">       * If 0, PRG ram is present. If 1, not present.</span>
+<span class="cm">       */</span>
+
+<span class="w">      </span><span class="cm">/**</span>
+<span class="cm">       * if 0, NTSC. If 2, PAL. If 1 or 3, dual compatible.</span>
+<span class="cm">       */</span>
+
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="nx">F10</span><span class="p">;</span>
+<span class="w">    </span><span class="p">})();</span>
 
 <span class="w">    </span><span class="cm">/**</span>
 <span class="cm">     * @see {@link https://www.nesdev.org/wiki/INES#Flags_6|Source}</span>
@@ -362,7 +424,7 @@ section#format-index .row {
 <span class="w">      </span><span class="kd">function</span><span class="w"> </span><span class="nx">F6</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">_parent</span><span class="p">,</span><span class="w"> </span><span class="nx">_root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_io</span><span class="p">;</span>
 <span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_parent</span><span class="p">;</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="p">;</span>
 
 <span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
 <span class="w">      </span><span class="p">}</span>
@@ -405,7 +467,7 @@ section#format-index .row {
 <span class="w">      </span><span class="kd">function</span><span class="w"> </span><span class="nx">F7</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">_parent</span><span class="p">,</span><span class="w"> </span><span class="nx">_root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_io</span><span class="p">;</span>
 <span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_parent</span><span class="p">;</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="p">;</span>
 
 <span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
 <span class="w">      </span><span class="p">}</span>
@@ -451,7 +513,7 @@ section#format-index .row {
 <span class="w">      </span><span class="kd">function</span><span class="w"> </span><span class="nx">F9</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">_parent</span><span class="p">,</span><span class="w"> </span><span class="nx">_root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_io</span><span class="p">;</span>
 <span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_parent</span><span class="p">;</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="p">;</span>
 
 <span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
 <span class="w">      </span><span class="p">}</span>
@@ -468,60 +530,13 @@ section#format-index .row {
 <span class="w">    </span><span class="p">})();</span>
 
 <span class="w">    </span><span class="cm">/**</span>
-<span class="cm">     * @see {@link https://www.nesdev.org/wiki/INES#Flags_10|Source}</span>
-<span class="cm">     */</span>
-
-<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nx">F10</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Header</span><span class="p">.</span><span class="nx">F10</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nx">F10</span><span class="p">.</span><span class="nx">TvSystem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
-<span class="w">        </span><span class="nx">NTSC</span><span class="o">:</span><span class="w"> </span><span class="mf">0</span><span class="p">,</span>
-<span class="w">        </span><span class="nx">DUAL1</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span>
-<span class="w">        </span><span class="nx">PAL</span><span class="o">:</span><span class="w"> </span><span class="mf">2</span><span class="p">,</span>
-<span class="w">        </span><span class="nx">DUAL2</span><span class="o">:</span><span class="w"> </span><span class="mf">3</span><span class="p">,</span>
-
-<span class="w">        </span><span class="mf">0</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;NTSC&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="mf">1</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;DUAL1&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="mf">2</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;PAL&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="mf">3</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;DUAL2&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="p">});</span>
-
-<span class="w">      </span><span class="kd">function</span><span class="w"> </span><span class="nx">F10</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">_parent</span><span class="p">,</span><span class="w"> </span><span class="nx">_root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_io</span><span class="p">;</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_parent</span><span class="p">;</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
-
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
-<span class="w">      </span><span class="p">}</span>
-<span class="w">      </span><span class="nx">F10</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">reserved1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mf">2</span><span class="p">);</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">busConflict</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mf">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">prgRam</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mf">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mf">0</span><span class="p">;</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">reserved2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mf">2</span><span class="p">);</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">tvSystem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mf">2</span><span class="p">);</span>
-<span class="w">      </span><span class="p">}</span>
-
-<span class="w">      </span><span class="cm">/**</span>
-<span class="cm">       * If 0, no bus conflicts. If 1, bus conflicts.</span>
-<span class="cm">       */</span>
-
-<span class="w">      </span><span class="cm">/**</span>
-<span class="cm">       * If 0, PRG ram is present. If 1, not present.</span>
-<span class="cm">       */</span>
-
-<span class="w">      </span><span class="cm">/**</span>
-<span class="cm">       * if 0, NTSC. If 2, PAL. If 1 or 3, dual compatible.</span>
-<span class="cm">       */</span>
-
-<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="nx">F10</span><span class="p">;</span>
-<span class="w">    </span><span class="p">})();</span>
-
-<span class="w">    </span><span class="cm">/**</span>
 <span class="cm">     * @see {@link https://www.nesdev.org/wiki/Mapper|Source}</span>
 <span class="cm">     */</span>
 <span class="w">    </span><span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">Header</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;mapper&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="nx">get</span><span class="o">:</span><span class="w"> </span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_mapper</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="kc">undefined</span><span class="p">)</span>
 <span class="w">          </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_m_mapper</span><span class="p">;</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_m_mapper</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">f6</span><span class="p">.</span><span class="nx">lowerMapper</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">f7</span><span class="p">.</span><span class="nx">upperMapper</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mf">4</span><span class="p">));</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_m_mapper</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">f6</span><span class="p">.</span><span class="nx">lowerMapper</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">f7</span><span class="p">.</span><span class="nx">upperMapper</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mf">4</span><span class="p">;</span>
 <span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_m_mapper</span><span class="p">;</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">    </span><span class="p">});</span>
@@ -553,7 +568,7 @@ section#format-index .row {
 <span class="w">    </span><span class="kd">function</span><span class="w"> </span><span class="nx">Playchoice10</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">_parent</span><span class="p">,</span><span class="w"> </span><span class="nx">_root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_io</span><span class="p">;</span>
 <span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_parent</span><span class="p">;</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="p">;</span>
 
 <span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
 <span class="w">    </span><span class="p">}</span>
@@ -566,7 +581,7 @@ section#format-index .row {
 <span class="w">      </span><span class="kd">function</span><span class="w"> </span><span class="nx">Prom</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">_parent</span><span class="p">,</span><span class="w"> </span><span class="nx">_root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_io</span><span class="p">;</span>
 <span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_parent</span><span class="p">;</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="p">;</span>
 
 <span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
 <span class="w">      </span><span class="p">}</span>
@@ -583,8 +598,8 @@ section#format-index .row {
 
 <span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">Ines</span><span class="p">;</span>
 <span class="p">})();</span>
-<span class="k">return</span><span class="w"> </span><span class="nx">Ines</span><span class="p">;</span>
-<span class="p">}));</span>
+<span class="nx">Ines_</span><span class="p">.</span><span class="nx">Ines</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Ines</span><span class="p">;</span>
+<span class="p">});</span>
 </pre></div>
 
         </div>

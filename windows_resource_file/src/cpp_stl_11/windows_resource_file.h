@@ -2,13 +2,16 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class windows_resource_file_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
 #include <vector>
+#include <set>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -87,6 +90,12 @@ public:
             PREDEF_TYPES_HTML = 23,
             PREDEF_TYPES_MANIFEST = 24
         };
+        static bool _is_defined_predef_types_t(predef_types_t v);
+
+    private:
+        static const std::set<predef_types_t> _values_predef_types_t;
+
+    public:
 
         resource_t(kaitai::kstream* p__io, windows_resource_file_t* p__parent = nullptr, windows_resource_file_t* p__root = nullptr);
 
@@ -189,6 +198,26 @@ public:
         ~unicode_or_id_t();
 
     private:
+        bool f_as_string;
+        std::string m_as_string;
+        bool n_as_string;
+
+    public:
+        bool _is_null_as_string() { as_string(); return n_as_string; };
+
+    private:
+
+    public:
+        std::string as_string();
+
+    private:
+        bool f_is_string;
+        bool m_is_string;
+
+    public:
+        bool is_string();
+
+    private:
         bool f_save_pos1;
         int32_t m_save_pos1;
 
@@ -201,26 +230,6 @@ public:
 
     public:
         int32_t save_pos2();
-
-    private:
-        bool f_is_string;
-        bool m_is_string;
-
-    public:
-        bool is_string();
-
-    private:
-        bool f_as_string;
-        std::string m_as_string;
-        bool n_as_string;
-
-    public:
-        bool _is_null_as_string() { as_string(); return n_as_string; };
-
-    private:
-
-    public:
-        std::string as_string();
 
     private:
         uint16_t m_first;

@@ -4,7 +4,7 @@
 
 windows_resource_file_t::windows_resource_file_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, windows_resource_file_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     m_resources = 0;
 
     try {
@@ -38,6 +38,35 @@ void windows_resource_file_t::_clean_up() {
         delete m_resources; m_resources = 0;
     }
 }
+std::set<windows_resource_file_t::resource_t::predef_types_t> windows_resource_file_t::resource_t::_build_values_predef_types_t() {
+    std::set<windows_resource_file_t::resource_t::predef_types_t> _t;
+    _t.insert(windows_resource_file_t::resource_t::PREDEF_TYPES_CURSOR);
+    _t.insert(windows_resource_file_t::resource_t::PREDEF_TYPES_BITMAP);
+    _t.insert(windows_resource_file_t::resource_t::PREDEF_TYPES_ICON);
+    _t.insert(windows_resource_file_t::resource_t::PREDEF_TYPES_MENU);
+    _t.insert(windows_resource_file_t::resource_t::PREDEF_TYPES_DIALOG);
+    _t.insert(windows_resource_file_t::resource_t::PREDEF_TYPES_STRING);
+    _t.insert(windows_resource_file_t::resource_t::PREDEF_TYPES_FONTDIR);
+    _t.insert(windows_resource_file_t::resource_t::PREDEF_TYPES_FONT);
+    _t.insert(windows_resource_file_t::resource_t::PREDEF_TYPES_ACCELERATOR);
+    _t.insert(windows_resource_file_t::resource_t::PREDEF_TYPES_RCDATA);
+    _t.insert(windows_resource_file_t::resource_t::PREDEF_TYPES_MESSAGETABLE);
+    _t.insert(windows_resource_file_t::resource_t::PREDEF_TYPES_GROUP_CURSOR);
+    _t.insert(windows_resource_file_t::resource_t::PREDEF_TYPES_GROUP_ICON);
+    _t.insert(windows_resource_file_t::resource_t::PREDEF_TYPES_VERSION);
+    _t.insert(windows_resource_file_t::resource_t::PREDEF_TYPES_DLGINCLUDE);
+    _t.insert(windows_resource_file_t::resource_t::PREDEF_TYPES_PLUGPLAY);
+    _t.insert(windows_resource_file_t::resource_t::PREDEF_TYPES_VXD);
+    _t.insert(windows_resource_file_t::resource_t::PREDEF_TYPES_ANICURSOR);
+    _t.insert(windows_resource_file_t::resource_t::PREDEF_TYPES_ANIICON);
+    _t.insert(windows_resource_file_t::resource_t::PREDEF_TYPES_HTML);
+    _t.insert(windows_resource_file_t::resource_t::PREDEF_TYPES_MANIFEST);
+    return _t;
+}
+const std::set<windows_resource_file_t::resource_t::predef_types_t> windows_resource_file_t::resource_t::_values_predef_types_t = windows_resource_file_t::resource_t::_build_values_predef_types_t();
+bool windows_resource_file_t::resource_t::_is_defined_predef_types_t(windows_resource_file_t::resource_t::predef_types_t v) {
+    return windows_resource_file_t::resource_t::_values_predef_types_t.find(v) != windows_resource_file_t::resource_t::_values_predef_types_t.end();
+}
 
 windows_resource_file_t::resource_t::resource_t(kaitai::kstream* p__io, windows_resource_file_t* p__parent, windows_resource_file_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
@@ -59,14 +88,14 @@ void windows_resource_file_t::resource_t::_read() {
     m_header_size = m__io->read_u4le();
     m_type = new unicode_or_id_t(m__io, this, m__root);
     m_name = new unicode_or_id_t(m__io, this, m__root);
-    m_padding1 = m__io->read_bytes(kaitai::kstream::mod((4 - _io()->pos()), 4));
+    m_padding1 = m__io->read_bytes(kaitai::kstream::mod(4 - _io()->pos(), 4));
     m_format_version = m__io->read_u4le();
     m_flags = m__io->read_u2le();
     m_language = m__io->read_u2le();
     m_value_version = m__io->read_u4le();
     m_characteristics = m__io->read_u4le();
     m_value = m__io->read_bytes(value_size());
-    m_padding2 = m__io->read_bytes(kaitai::kstream::mod((4 - _io()->pos()), 4));
+    m_padding2 = m__io->read_bytes(kaitai::kstream::mod(4 - _io()->pos(), 4));
 }
 
 windows_resource_file_t::resource_t::~resource_t() {
@@ -85,12 +114,12 @@ void windows_resource_file_t::resource_t::_clean_up() {
 windows_resource_file_t::resource_t::predef_types_t windows_resource_file_t::resource_t::type_as_predef() {
     if (f_type_as_predef)
         return m_type_as_predef;
+    f_type_as_predef = true;
     n_type_as_predef = true;
     if ( ((!(type()->is_string())) && (type()->as_numeric() <= 255)) ) {
         n_type_as_predef = false;
         m_type_as_predef = static_cast<windows_resource_file_t::resource_t::predef_types_t>(type()->as_numeric());
     }
-    f_type_as_predef = true;
     return m_type_as_predef;
 }
 
@@ -98,10 +127,10 @@ windows_resource_file_t::unicode_or_id_t::unicode_or_id_t(kaitai::kstream* p__io
     m__parent = p__parent;
     m__root = p__root;
     m_rest = 0;
+    f_as_string = false;
+    f_is_string = false;
     f_save_pos1 = false;
     f_save_pos2 = false;
-    f_is_string = false;
-    f_as_string = false;
 
     try {
         _read();
@@ -163,41 +192,41 @@ void windows_resource_file_t::unicode_or_id_t::_clean_up() {
     }
 }
 
+std::string windows_resource_file_t::unicode_or_id_t::as_string() {
+    if (f_as_string)
+        return m_as_string;
+    f_as_string = true;
+    n_as_string = true;
+    if (is_string()) {
+        n_as_string = false;
+        std::streampos _pos = m__io->pos();
+        m__io->seek(save_pos1());
+        m_as_string = kaitai::kstream::bytes_to_str(m__io->read_bytes((save_pos2() - save_pos1()) - 2), "UTF-16LE");
+        m__io->seek(_pos);
+    }
+    return m_as_string;
+}
+
+bool windows_resource_file_t::unicode_or_id_t::is_string() {
+    if (f_is_string)
+        return m_is_string;
+    f_is_string = true;
+    m_is_string = first() != 65535;
+    return m_is_string;
+}
+
 int32_t windows_resource_file_t::unicode_or_id_t::save_pos1() {
     if (f_save_pos1)
         return m_save_pos1;
-    m_save_pos1 = _io()->pos();
     f_save_pos1 = true;
+    m_save_pos1 = _io()->pos();
     return m_save_pos1;
 }
 
 int32_t windows_resource_file_t::unicode_or_id_t::save_pos2() {
     if (f_save_pos2)
         return m_save_pos2;
-    m_save_pos2 = _io()->pos();
     f_save_pos2 = true;
+    m_save_pos2 = _io()->pos();
     return m_save_pos2;
-}
-
-bool windows_resource_file_t::unicode_or_id_t::is_string() {
-    if (f_is_string)
-        return m_is_string;
-    m_is_string = first() != 65535;
-    f_is_string = true;
-    return m_is_string;
-}
-
-std::string windows_resource_file_t::unicode_or_id_t::as_string() {
-    if (f_as_string)
-        return m_as_string;
-    n_as_string = true;
-    if (is_string()) {
-        n_as_string = false;
-        std::streampos _pos = m__io->pos();
-        m__io->seek(save_pos1());
-        m_as_string = kaitai::kstream::bytes_to_str(m__io->read_bytes(((save_pos2() - save_pos1()) - 2)), std::string("UTF-16LE"));
-        m__io->seek(_pos);
-        f_as_string = true;
-    }
-    return m_as_string;
 }

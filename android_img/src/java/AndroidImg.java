@@ -5,7 +5,7 @@ import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.Arrays;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 
 /**
@@ -32,8 +32,8 @@ public class AndroidImg extends KaitaiStruct {
     }
     private void _read() {
         this.magic = this._io.readBytes(8);
-        if (!(Arrays.equals(magic(), new byte[] { 65, 78, 68, 82, 79, 73, 68, 33 }))) {
-            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 65, 78, 68, 82, 79, 73, 68, 33 }, magic(), _io(), "/seq/0");
+        if (!(Arrays.equals(this.magic, new byte[] { 65, 78, 68, 82, 79, 73, 68, 33 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 65, 78, 68, 82, 79, 73, 68, 33 }, this.magic, this._io, "/seq/0");
         }
         this.kernel = new Load(this._io, this, _root);
         this.ramdisk = new Load(this._io, this, _root);
@@ -42,10 +42,10 @@ public class AndroidImg extends KaitaiStruct {
         this.pageSize = this._io.readU4le();
         this.headerVersion = this._io.readU4le();
         this.osVersion = new OsVersion(this._io, this, _root);
-        this.name = new String(KaitaiStream.bytesTerminate(this._io.readBytes(16), (byte) 0, false), Charset.forName("ASCII"));
-        this.cmdline = new String(KaitaiStream.bytesTerminate(this._io.readBytes(512), (byte) 0, false), Charset.forName("ASCII"));
+        this.name = new String(KaitaiStream.bytesTerminate(this._io.readBytes(16), (byte) 0, false), StandardCharsets.US_ASCII);
+        this.cmdline = new String(KaitaiStream.bytesTerminate(this._io.readBytes(512), (byte) 0, false), StandardCharsets.US_ASCII);
         this.sha = this._io.readBytes(32);
-        this.extraCmdline = new String(KaitaiStream.bytesTerminate(this._io.readBytes(1024), (byte) 0, false), Charset.forName("ASCII"));
+        this.extraCmdline = new String(KaitaiStream.bytesTerminate(this._io.readBytes(1024), (byte) 0, false), StandardCharsets.US_ASCII);
         if (headerVersion() > 0) {
             this.recoveryDtbo = new SizeOffset(this._io, this, _root);
         }
@@ -54,6 +54,36 @@ public class AndroidImg extends KaitaiStruct {
         }
         if (headerVersion() > 1) {
             this.dtb = new LoadLong(this._io, this, _root);
+        }
+    }
+
+    public void _fetchInstances() {
+        this.kernel._fetchInstances();
+        this.ramdisk._fetchInstances();
+        this.second._fetchInstances();
+        this.osVersion._fetchInstances();
+        if (headerVersion() > 0) {
+            this.recoveryDtbo._fetchInstances();
+        }
+        if (headerVersion() > 0) {
+        }
+        if (headerVersion() > 1) {
+            this.dtb._fetchInstances();
+        }
+        dtbImg();
+        if (this.dtbImg != null) {
+        }
+        kernelImg();
+        if (this.kernelImg != null) {
+        }
+        ramdiskImg();
+        if (this.ramdiskImg != null) {
+        }
+        recoveryDtboImg();
+        if (this.recoveryDtboImg != null) {
+        }
+        secondImg();
+        if (this.secondImg != null) {
         }
     }
     public static class Load extends KaitaiStruct {
@@ -78,6 +108,9 @@ public class AndroidImg extends KaitaiStruct {
         private void _read() {
             this.size = this._io.readU4le();
             this.addr = this._io.readU4le();
+        }
+
+        public void _fetchInstances() {
         }
         private long size;
         private long addr;
@@ -111,12 +144,82 @@ public class AndroidImg extends KaitaiStruct {
             this.size = this._io.readU4le();
             this.addr = this._io.readU8le();
         }
+
+        public void _fetchInstances() {
+        }
         private long size;
         private long addr;
         private AndroidImg _root;
         private AndroidImg _parent;
         public long size() { return size; }
         public long addr() { return addr; }
+        public AndroidImg _root() { return _root; }
+        public AndroidImg _parent() { return _parent; }
+    }
+    public static class OsVersion extends KaitaiStruct {
+        public static OsVersion fromFile(String fileName) throws IOException {
+            return new OsVersion(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public OsVersion(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public OsVersion(KaitaiStream _io, AndroidImg _parent) {
+            this(_io, _parent, null);
+        }
+
+        public OsVersion(KaitaiStream _io, AndroidImg _parent, AndroidImg _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.version = this._io.readU4le();
+        }
+
+        public void _fetchInstances() {
+        }
+        private Integer major;
+        public Integer major() {
+            if (this.major != null)
+                return this.major;
+            this.major = ((Number) (version() >> 25 & 127)).intValue();
+            return this.major;
+        }
+        private Integer minor;
+        public Integer minor() {
+            if (this.minor != null)
+                return this.minor;
+            this.minor = ((Number) (version() >> 18 & 127)).intValue();
+            return this.minor;
+        }
+        private Integer month;
+        public Integer month() {
+            if (this.month != null)
+                return this.month;
+            this.month = ((Number) (version() & 15)).intValue();
+            return this.month;
+        }
+        private Integer patch;
+        public Integer patch() {
+            if (this.patch != null)
+                return this.patch;
+            this.patch = ((Number) (version() >> 11 & 127)).intValue();
+            return this.patch;
+        }
+        private Integer year;
+        public Integer year() {
+            if (this.year != null)
+                return this.year;
+            this.year = ((Number) ((version() >> 4 & 127) + 2000)).intValue();
+            return this.year;
+        }
+        private long version;
+        private AndroidImg _root;
+        private AndroidImg _parent;
+        public long version() { return version; }
         public AndroidImg _root() { return _root; }
         public AndroidImg _parent() { return _parent; }
     }
@@ -143,6 +246,9 @@ public class AndroidImg extends KaitaiStruct {
             this.size = this._io.readU4le();
             this.offset = this._io.readU8le();
         }
+
+        public void _fetchInstances() {
+        }
         private long size;
         private long offset;
         private AndroidImg _root;
@@ -152,74 +258,41 @@ public class AndroidImg extends KaitaiStruct {
         public AndroidImg _root() { return _root; }
         public AndroidImg _parent() { return _parent; }
     }
-    public static class OsVersion extends KaitaiStruct {
-        public static OsVersion fromFile(String fileName) throws IOException {
-            return new OsVersion(new ByteBufferKaitaiStream(fileName));
-        }
+    private Integer base;
 
-        public OsVersion(KaitaiStream _io) {
-            this(_io, null, null);
+    /**
+     * base loading address
+     */
+    public Integer base() {
+        if (this.base != null)
+            return this.base;
+        this.base = ((Number) (kernel().addr() - 32768)).intValue();
+        return this.base;
+    }
+    private byte[] dtbImg;
+    public byte[] dtbImg() {
+        if (this.dtbImg != null)
+            return this.dtbImg;
+        if ( ((headerVersion() > 1) && (dtb().size() > 0)) ) {
+            long _pos = this._io.pos();
+            this._io.seek((((((((pageSize() + kernel().size()) + ramdisk().size()) + second().size()) + recoveryDtbo().size()) + pageSize()) - 1) / pageSize()) * pageSize());
+            this.dtbImg = this._io.readBytes(dtb().size());
+            this._io.seek(_pos);
         }
+        return this.dtbImg;
+    }
+    private Integer dtbOffset;
 
-        public OsVersion(KaitaiStream _io, AndroidImg _parent) {
-            this(_io, _parent, null);
+    /**
+     * dtb offset from base
+     */
+    public Integer dtbOffset() {
+        if (this.dtbOffset != null)
+            return this.dtbOffset;
+        if (headerVersion() > 1) {
+            this.dtbOffset = ((Number) ((dtb().addr() > 0 ? dtb().addr() - base() : 0))).intValue();
         }
-
-        public OsVersion(KaitaiStream _io, AndroidImg _parent, AndroidImg _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.version = this._io.readU4le();
-        }
-        private Integer month;
-        public Integer month() {
-            if (this.month != null)
-                return this.month;
-            int _tmp = (int) ((version() & 15));
-            this.month = _tmp;
-            return this.month;
-        }
-        private Integer patch;
-        public Integer patch() {
-            if (this.patch != null)
-                return this.patch;
-            int _tmp = (int) (((version() >> 11) & 127));
-            this.patch = _tmp;
-            return this.patch;
-        }
-        private Integer year;
-        public Integer year() {
-            if (this.year != null)
-                return this.year;
-            int _tmp = (int) ((((version() >> 4) & 127) + 2000));
-            this.year = _tmp;
-            return this.year;
-        }
-        private Integer major;
-        public Integer major() {
-            if (this.major != null)
-                return this.major;
-            int _tmp = (int) (((version() >> 25) & 127));
-            this.major = _tmp;
-            return this.major;
-        }
-        private Integer minor;
-        public Integer minor() {
-            if (this.minor != null)
-                return this.minor;
-            int _tmp = (int) (((version() >> 18) & 127));
-            this.minor = _tmp;
-            return this.minor;
-        }
-        private long version;
-        private AndroidImg _root;
-        private AndroidImg _parent;
-        public long version() { return version; }
-        public AndroidImg _root() { return _root; }
-        public AndroidImg _parent() { return _parent; }
+        return this.dtbOffset;
     }
     private byte[] kernelImg;
     public byte[] kernelImg() {
@@ -231,17 +304,28 @@ public class AndroidImg extends KaitaiStruct {
         this._io.seek(_pos);
         return this.kernelImg;
     }
-    private Integer tagsOffset;
+    private Integer kernelOffset;
 
     /**
-     * tags offset from base
+     * kernel offset from base
      */
-    public Integer tagsOffset() {
-        if (this.tagsOffset != null)
-            return this.tagsOffset;
-        int _tmp = (int) ((tagsLoad() - base()));
-        this.tagsOffset = _tmp;
-        return this.tagsOffset;
+    public Integer kernelOffset() {
+        if (this.kernelOffset != null)
+            return this.kernelOffset;
+        this.kernelOffset = ((Number) (kernel().addr() - base())).intValue();
+        return this.kernelOffset;
+    }
+    private byte[] ramdiskImg;
+    public byte[] ramdiskImg() {
+        if (this.ramdiskImg != null)
+            return this.ramdiskImg;
+        if (ramdisk().size() > 0) {
+            long _pos = this._io.pos();
+            this._io.seek(((((pageSize() + kernel().size()) + pageSize()) - 1) / pageSize()) * pageSize());
+            this.ramdiskImg = this._io.readBytes(ramdisk().size());
+            this._io.seek(_pos);
+        }
+        return this.ramdiskImg;
     }
     private Integer ramdiskOffset;
 
@@ -251,71 +335,8 @@ public class AndroidImg extends KaitaiStruct {
     public Integer ramdiskOffset() {
         if (this.ramdiskOffset != null)
             return this.ramdiskOffset;
-        int _tmp = (int) ((ramdisk().addr() > 0 ? (ramdisk().addr() - base()) : 0));
-        this.ramdiskOffset = _tmp;
+        this.ramdiskOffset = ((Number) ((ramdisk().addr() > 0 ? ramdisk().addr() - base() : 0))).intValue();
         return this.ramdiskOffset;
-    }
-    private Integer secondOffset;
-
-    /**
-     * 2nd bootloader offset from base
-     */
-    public Integer secondOffset() {
-        if (this.secondOffset != null)
-            return this.secondOffset;
-        int _tmp = (int) ((second().addr() > 0 ? (second().addr() - base()) : 0));
-        this.secondOffset = _tmp;
-        return this.secondOffset;
-    }
-    private Integer kernelOffset;
-
-    /**
-     * kernel offset from base
-     */
-    public Integer kernelOffset() {
-        if (this.kernelOffset != null)
-            return this.kernelOffset;
-        int _tmp = (int) ((kernel().addr() - base()));
-        this.kernelOffset = _tmp;
-        return this.kernelOffset;
-    }
-    private Integer dtbOffset;
-
-    /**
-     * dtb offset from base
-     */
-    public Integer dtbOffset() {
-        if (this.dtbOffset != null)
-            return this.dtbOffset;
-        if (headerVersion() > 1) {
-            int _tmp = (int) ((dtb().addr() > 0 ? (dtb().addr() - base()) : 0));
-            this.dtbOffset = _tmp;
-        }
-        return this.dtbOffset;
-    }
-    private byte[] dtbImg;
-    public byte[] dtbImg() {
-        if (this.dtbImg != null)
-            return this.dtbImg;
-        if ( ((headerVersion() > 1) && (dtb().size() > 0)) ) {
-            long _pos = this._io.pos();
-            this._io.seek(((((((((pageSize() + kernel().size()) + ramdisk().size()) + second().size()) + recoveryDtbo().size()) + pageSize()) - 1) / pageSize()) * pageSize()));
-            this.dtbImg = this._io.readBytes(dtb().size());
-            this._io.seek(_pos);
-        }
-        return this.dtbImg;
-    }
-    private byte[] ramdiskImg;
-    public byte[] ramdiskImg() {
-        if (this.ramdiskImg != null)
-            return this.ramdiskImg;
-        if (ramdisk().size() > 0) {
-            long _pos = this._io.pos();
-            this._io.seek((((((pageSize() + kernel().size()) + pageSize()) - 1) / pageSize()) * pageSize()));
-            this.ramdiskImg = this._io.readBytes(ramdisk().size());
-            this._io.seek(_pos);
-        }
-        return this.ramdiskImg;
     }
     private byte[] recoveryDtboImg;
     public byte[] recoveryDtboImg() {
@@ -335,23 +356,33 @@ public class AndroidImg extends KaitaiStruct {
             return this.secondImg;
         if (second().size() > 0) {
             long _pos = this._io.pos();
-            this._io.seek(((((((pageSize() + kernel().size()) + ramdisk().size()) + pageSize()) - 1) / pageSize()) * pageSize()));
+            this._io.seek((((((pageSize() + kernel().size()) + ramdisk().size()) + pageSize()) - 1) / pageSize()) * pageSize());
             this.secondImg = this._io.readBytes(second().size());
             this._io.seek(_pos);
         }
         return this.secondImg;
     }
-    private Integer base;
+    private Integer secondOffset;
 
     /**
-     * base loading address
+     * 2nd bootloader offset from base
      */
-    public Integer base() {
-        if (this.base != null)
-            return this.base;
-        int _tmp = (int) ((kernel().addr() - 32768));
-        this.base = _tmp;
-        return this.base;
+    public Integer secondOffset() {
+        if (this.secondOffset != null)
+            return this.secondOffset;
+        this.secondOffset = ((Number) ((second().addr() > 0 ? second().addr() - base() : 0))).intValue();
+        return this.secondOffset;
+    }
+    private Integer tagsOffset;
+
+    /**
+     * tags offset from base
+     */
+    public Integer tagsOffset() {
+        if (this.tagsOffset != null)
+            return this.tagsOffset;
+        this.tagsOffset = ((Number) (tagsLoad() - base())).intValue();
+        return this.tagsOffset;
     }
     private byte[] magic;
     private Load kernel;

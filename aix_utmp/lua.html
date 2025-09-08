@@ -167,6 +167,11 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="java-write.html" title="utmp log file, IBM AIX version parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="utmp log file, IBM AIX version parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -197,7 +202,17 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="python-write.html" title="utmp log file, IBM AIX version parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="utmp log file, IBM AIX version parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="utmp log file, IBM AIX version parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -271,24 +286,43 @@ section#format-index .row {
 <span class="kr">end</span>
 
 
+<span class="nv">AixUtmp</span><span class="p">.</span><span class="py">ExitStatus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">AixUtmp</span><span class="p">.</span><span class="nc">ExitStatus</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">AixUtmp</span><span class="p">.</span><span class="nc">ExitStatus</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">termination_code</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_s2be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">exit_code</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_s2be</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- process termination status.</span>
+<span class="c1">-- </span>
+<span class="c1">-- process exit status.</span>
+
 <span class="nv">AixUtmp</span><span class="p">.</span><span class="py">Record</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
 <span class="kr">function</span><span class="w"> </span><span class="nc">AixUtmp</span><span class="p">.</span><span class="nc">Record</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
 <span class="kr">function</span><span class="w"> </span><span class="nc">AixUtmp</span><span class="p">.</span><span class="nc">Record</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">str_decode</span><span class="p">.</span><span class="nf">decode</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="mi">256</span><span class="p">),</span><span class="w"> </span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">inittab_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">str_decode</span><span class="p">.</span><span class="nf">decode</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="mi">14</span><span class="p">),</span><span class="w"> </span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">device</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">str_decode</span><span class="p">.</span><span class="nf">decode</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="mi">64</span><span class="p">),</span><span class="w"> </span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">str_decode</span><span class="p">.</span><span class="nf">decode</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="mi">256</span><span class="p">),</span><span class="w"> </span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">inittab_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">str_decode</span><span class="p">.</span><span class="nf">decode</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="mi">14</span><span class="p">),</span><span class="w"> </span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">device</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">str_decode</span><span class="p">.</span><span class="nf">decode</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="mi">64</span><span class="p">),</span><span class="w"> </span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">pid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u8be</span><span class="p">()</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">AixUtmp</span><span class="p">.</span><span class="nf">EntryType</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_s2be</span><span class="p">())</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">timestamp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_s8be</span><span class="p">()</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">exit_status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">AixUtmp</span><span class="p">.</span><span class="nf">ExitStatus</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">hostname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">str_decode</span><span class="p">.</span><span class="nf">decode</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="mi">256</span><span class="p">),</span><span class="w"> </span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">hostname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">str_decode</span><span class="p">.</span><span class="nf">decode</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="mi">256</span><span class="p">),</span><span class="w"> </span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">dbl_word_pad</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_s4be</span><span class="p">()</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">reserved_a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">reserved_v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span>
@@ -310,25 +344,6 @@ section#format-index .row {
 <span class="c1">-- the exit status of a process marked as DEAD PROCESS.</span>
 <span class="c1">-- </span>
 <span class="c1">-- host name.</span>
-
-<span class="nv">AixUtmp</span><span class="p">.</span><span class="py">ExitStatus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">AixUtmp</span><span class="p">.</span><span class="nc">ExitStatus</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">AixUtmp</span><span class="p">.</span><span class="nc">ExitStatus</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">termination_code</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_s2be</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">exit_code</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_s2be</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- process termination status.</span>
-<span class="c1">-- </span>
-<span class="c1">-- process exit status.</span>
 </pre></div>
 
         </div>

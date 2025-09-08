@@ -4,9 +4,9 @@
 
 local class = require("class")
 require("kaitaistruct")
+require("vlq_base128_le")
 local enum = require("enum")
 
-require("vlq_base128_le")
 -- 
 -- Google Protocol Buffers (AKA protobuf) is a popular data
 -- serialization scheme used for communication protocols, data storage,
@@ -57,6 +57,21 @@ end
 -- 
 -- Key-value pairs which constitute a message.
 
+GoogleProtobuf.DelimitedBytes = class.class(KaitaiStruct)
+
+function GoogleProtobuf.DelimitedBytes:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function GoogleProtobuf.DelimitedBytes:_read()
+  self.len = VlqBase128Le(self._io)
+  self.body = self._io:read_bytes(self.len.value)
+end
+
+
 -- 
 -- Key-value pair.
 GoogleProtobuf.Pair = class.class(KaitaiStruct)
@@ -73,22 +88,35 @@ GoogleProtobuf.Pair.WireTypes = enum.Enum {
 function GoogleProtobuf.Pair:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function GoogleProtobuf.Pair:_read()
   self.key = VlqBase128Le(self._io)
   local _on = self.wire_type
-  if _on == GoogleProtobuf.Pair.WireTypes.varint then
-    self.value = VlqBase128Le(self._io)
-  elseif _on == GoogleProtobuf.Pair.WireTypes.len_delimited then
-    self.value = GoogleProtobuf.DelimitedBytes(self._io, self, self._root)
+  if _on == GoogleProtobuf.Pair.WireTypes.bit_32 then
+    self.value = self._io:read_u4le()
   elseif _on == GoogleProtobuf.Pair.WireTypes.bit_64 then
     self.value = self._io:read_u8le()
-  elseif _on == GoogleProtobuf.Pair.WireTypes.bit_32 then
-    self.value = self._io:read_u4le()
+  elseif _on == GoogleProtobuf.Pair.WireTypes.len_delimited then
+    self.value = GoogleProtobuf.DelimitedBytes(self._io, self, self._root)
+  elseif _on == GoogleProtobuf.Pair.WireTypes.varint then
+    self.value = VlqBase128Le(self._io)
   end
+end
+
+-- 
+-- Identifies a field of protocol. One can look up symbolic
+-- field name in a `.proto` file by this field tag.
+GoogleProtobuf.Pair.property.field_tag = {}
+function GoogleProtobuf.Pair.property.field_tag:get()
+  if self._m_field_tag ~= nil then
+    return self._m_field_tag
+  end
+
+  self._m_field_tag = self.key.value >> 3
+  return self._m_field_tag
 end
 
 -- 
@@ -105,21 +133,8 @@ function GoogleProtobuf.Pair.property.wire_type:get()
     return self._m_wire_type
   end
 
-  self._m_wire_type = GoogleProtobuf.Pair.WireTypes((self.key.value & 7))
+  self._m_wire_type = GoogleProtobuf.Pair.WireTypes(self.key.value & 7)
   return self._m_wire_type
-end
-
--- 
--- Identifies a field of protocol. One can look up symbolic
--- field name in a `.proto` file by this field tag.
-GoogleProtobuf.Pair.property.field_tag = {}
-function GoogleProtobuf.Pair.property.field_tag:get()
-  if self._m_field_tag ~= nil then
-    return self._m_field_tag
-  end
-
-  self._m_field_tag = (self.key.value >> 3)
-  return self._m_field_tag
 end
 
 -- 
@@ -132,19 +147,4 @@ end
 -- enough information to parse it unambiguously from a stream,
 -- but further infromation from `.proto` file is required to
 -- interprete it properly.
-
-GoogleProtobuf.DelimitedBytes = class.class(KaitaiStruct)
-
-function GoogleProtobuf.DelimitedBytes:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function GoogleProtobuf.DelimitedBytes:_read()
-  self.len = VlqBase128Le(self._io)
-  self.body = self._io:read_bytes(self.len.value)
-end
-
 

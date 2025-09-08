@@ -64,9 +64,28 @@ type
     md_linux_auxv = 1197932552
     md_linux_maps = 1197932553
     md_linux_dso_debug = 1197932554
-  WindowsMinidump_ThreadList* = ref object of KaitaiStruct
-    `numThreads`*: uint32
-    `threads`*: seq[WindowsMinidump_Thread]
+  WindowsMinidump_Dir* = ref object of KaitaiStruct
+    `streamType`*: WindowsMinidump_StreamTypes
+    `lenData`*: uint32
+    `ofsData`*: uint32
+    `parent`*: WindowsMinidump
+    `rawDataInst`*: seq[byte]
+    `dataInst`: KaitaiStruct
+    `dataInstFlag`: bool
+  WindowsMinidump_ExceptionRecord* = ref object of KaitaiStruct
+    `code`*: uint32
+    `flags`*: uint32
+    `innerException`*: uint64
+    `addr`*: uint64
+    `numParams`*: uint32
+    `reserved`*: uint32
+    `params`*: seq[uint64]
+    `parent`*: WindowsMinidump_ExceptionStream
+  WindowsMinidump_ExceptionStream* = ref object of KaitaiStruct
+    `threadId`*: uint32
+    `reserved`*: uint32
+    `exceptionRec`*: WindowsMinidump_ExceptionRecord
+    `threadContext`*: WindowsMinidump_LocationDescriptor
     `parent`*: WindowsMinidump_Dir
   WindowsMinidump_LocationDescriptor* = ref object of KaitaiStruct
     `lenData`*: uint32
@@ -74,10 +93,31 @@ type
     `parent`*: KaitaiStruct
     `dataInst`: seq[byte]
     `dataInstFlag`: bool
+  WindowsMinidump_MemoryDescriptor* = ref object of KaitaiStruct
+    `addrMemoryRange`*: uint64
+    `memory`*: WindowsMinidump_LocationDescriptor
+    `parent`*: KaitaiStruct
+  WindowsMinidump_MemoryList* = ref object of KaitaiStruct
+    `numMemRanges`*: uint32
+    `memRanges`*: seq[WindowsMinidump_MemoryDescriptor]
+    `parent`*: WindowsMinidump_Dir
   WindowsMinidump_MinidumpString* = ref object of KaitaiStruct
     `lenStr`*: uint32
     `str`*: string
     `parent`*: WindowsMinidump_SystemInfo
+  WindowsMinidump_MiscInfo* = ref object of KaitaiStruct
+    `lenInfo`*: uint32
+    `flags1`*: uint32
+    `processId`*: uint32
+    `processCreateTime`*: uint32
+    `processUserTime`*: uint32
+    `processKernelTime`*: uint32
+    `cpuMaxMhz`*: uint32
+    `cpuCurMhz`*: uint32
+    `cpuLimitMhz`*: uint32
+    `cpuMaxIdleState`*: uint32
+    `cpuCurIdleState`*: uint32
+    `parent`*: WindowsMinidump_Dir
   WindowsMinidump_SystemInfo* = ref object of KaitaiStruct
     `cpuArch`*: WindowsMinidump_SystemInfo_CpuArchs
     `cpuLevel`*: uint16
@@ -100,36 +140,6 @@ type
     ia64 = 6
     amd64 = 9
     unknown = 65535
-  WindowsMinidump_ExceptionRecord* = ref object of KaitaiStruct
-    `code`*: uint32
-    `flags`*: uint32
-    `innerException`*: uint64
-    `addr`*: uint64
-    `numParams`*: uint32
-    `reserved`*: uint32
-    `params`*: seq[uint64]
-    `parent`*: WindowsMinidump_ExceptionStream
-  WindowsMinidump_MiscInfo* = ref object of KaitaiStruct
-    `lenInfo`*: uint32
-    `flags1`*: uint32
-    `processId`*: uint32
-    `processCreateTime`*: uint32
-    `processUserTime`*: uint32
-    `processKernelTime`*: uint32
-    `cpuMaxMhz`*: uint32
-    `cpuCurMhz`*: uint32
-    `cpuLimitMhz`*: uint32
-    `cpuMaxIdleState`*: uint32
-    `cpuCurIdleState`*: uint32
-    `parent`*: WindowsMinidump_Dir
-  WindowsMinidump_Dir* = ref object of KaitaiStruct
-    `streamType`*: WindowsMinidump_StreamTypes
-    `lenData`*: uint32
-    `ofsData`*: uint32
-    `parent`*: WindowsMinidump
-    `rawDataInst`*: seq[byte]
-    `dataInst`: KaitaiStruct
-    `dataInstFlag`: bool
   WindowsMinidump_Thread* = ref object of KaitaiStruct
     `threadId`*: uint32
     `suspendCount`*: uint32
@@ -139,38 +149,28 @@ type
     `stack`*: WindowsMinidump_MemoryDescriptor
     `threadContext`*: WindowsMinidump_LocationDescriptor
     `parent`*: WindowsMinidump_ThreadList
-  WindowsMinidump_MemoryList* = ref object of KaitaiStruct
-    `numMemRanges`*: uint32
-    `memRanges`*: seq[WindowsMinidump_MemoryDescriptor]
-    `parent`*: WindowsMinidump_Dir
-  WindowsMinidump_MemoryDescriptor* = ref object of KaitaiStruct
-    `addrMemoryRange`*: uint64
-    `memory`*: WindowsMinidump_LocationDescriptor
-    `parent`*: KaitaiStruct
-  WindowsMinidump_ExceptionStream* = ref object of KaitaiStruct
-    `threadId`*: uint32
-    `reserved`*: uint32
-    `exceptionRec`*: WindowsMinidump_ExceptionRecord
-    `threadContext`*: WindowsMinidump_LocationDescriptor
+  WindowsMinidump_ThreadList* = ref object of KaitaiStruct
+    `numThreads`*: uint32
+    `threads`*: seq[WindowsMinidump_Thread]
     `parent`*: WindowsMinidump_Dir
 
 proc read*(_: typedesc[WindowsMinidump], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): WindowsMinidump
-proc read*(_: typedesc[WindowsMinidump_ThreadList], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump_Dir): WindowsMinidump_ThreadList
-proc read*(_: typedesc[WindowsMinidump_LocationDescriptor], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): WindowsMinidump_LocationDescriptor
-proc read*(_: typedesc[WindowsMinidump_MinidumpString], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump_SystemInfo): WindowsMinidump_MinidumpString
-proc read*(_: typedesc[WindowsMinidump_SystemInfo], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump_Dir): WindowsMinidump_SystemInfo
-proc read*(_: typedesc[WindowsMinidump_ExceptionRecord], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump_ExceptionStream): WindowsMinidump_ExceptionRecord
-proc read*(_: typedesc[WindowsMinidump_MiscInfo], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump_Dir): WindowsMinidump_MiscInfo
 proc read*(_: typedesc[WindowsMinidump_Dir], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump): WindowsMinidump_Dir
-proc read*(_: typedesc[WindowsMinidump_Thread], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump_ThreadList): WindowsMinidump_Thread
-proc read*(_: typedesc[WindowsMinidump_MemoryList], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump_Dir): WindowsMinidump_MemoryList
-proc read*(_: typedesc[WindowsMinidump_MemoryDescriptor], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): WindowsMinidump_MemoryDescriptor
+proc read*(_: typedesc[WindowsMinidump_ExceptionRecord], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump_ExceptionStream): WindowsMinidump_ExceptionRecord
 proc read*(_: typedesc[WindowsMinidump_ExceptionStream], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump_Dir): WindowsMinidump_ExceptionStream
+proc read*(_: typedesc[WindowsMinidump_LocationDescriptor], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): WindowsMinidump_LocationDescriptor
+proc read*(_: typedesc[WindowsMinidump_MemoryDescriptor], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): WindowsMinidump_MemoryDescriptor
+proc read*(_: typedesc[WindowsMinidump_MemoryList], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump_Dir): WindowsMinidump_MemoryList
+proc read*(_: typedesc[WindowsMinidump_MinidumpString], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump_SystemInfo): WindowsMinidump_MinidumpString
+proc read*(_: typedesc[WindowsMinidump_MiscInfo], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump_Dir): WindowsMinidump_MiscInfo
+proc read*(_: typedesc[WindowsMinidump_SystemInfo], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump_Dir): WindowsMinidump_SystemInfo
+proc read*(_: typedesc[WindowsMinidump_Thread], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump_ThreadList): WindowsMinidump_Thread
+proc read*(_: typedesc[WindowsMinidump_ThreadList], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump_Dir): WindowsMinidump_ThreadList
 
 proc streams*(this: WindowsMinidump): seq[WindowsMinidump_Dir]
+proc data*(this: WindowsMinidump_Dir): KaitaiStruct
 proc data*(this: WindowsMinidump_LocationDescriptor): seq[byte]
 proc servicePack*(this: WindowsMinidump_SystemInfo): WindowsMinidump_MinidumpString
-proc data*(this: WindowsMinidump_Dir): KaitaiStruct
 
 
 ##[
@@ -227,24 +227,142 @@ proc fromFile*(_: typedesc[WindowsMinidump], filename: string): WindowsMinidump 
 
 
 ##[
-@see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread_list">Source</a>
+@see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_directory">Source</a>
 ]##
-proc read*(_: typedesc[WindowsMinidump_ThreadList], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump_Dir): WindowsMinidump_ThreadList =
+proc read*(_: typedesc[WindowsMinidump_Dir], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump): WindowsMinidump_Dir =
   template this: untyped = result
-  this = new(WindowsMinidump_ThreadList)
+  this = new(WindowsMinidump_Dir)
   let root = if root == nil: cast[WindowsMinidump](this) else: cast[WindowsMinidump](root)
   this.io = io
   this.root = root
   this.parent = parent
 
-  let numThreadsExpr = this.io.readU4le()
-  this.numThreads = numThreadsExpr
-  for i in 0 ..< int(this.numThreads):
-    let it = WindowsMinidump_Thread.read(this.io, this.root, this)
-    this.threads.add(it)
+  let streamTypeExpr = WindowsMinidump_StreamTypes(this.io.readU4le())
+  this.streamType = streamTypeExpr
 
-proc fromFile*(_: typedesc[WindowsMinidump_ThreadList], filename: string): WindowsMinidump_ThreadList =
-  WindowsMinidump_ThreadList.read(newKaitaiFileStream(filename), nil, nil)
+  ##[
+  @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_location_descriptor">Source</a>
+  ]##
+  let lenDataExpr = this.io.readU4le()
+  this.lenData = lenDataExpr
+  let ofsDataExpr = this.io.readU4le()
+  this.ofsData = ofsDataExpr
+
+proc data(this: WindowsMinidump_Dir): KaitaiStruct = 
+  if this.dataInstFlag:
+    return this.dataInst
+  let pos = this.io.pos()
+  this.io.seek(int(this.ofsData))
+  block:
+    let on = this.streamType
+    if on == windows_minidump.exception:
+      let rawDataInstExpr = this.io.readBytes(int(this.lenData))
+      this.rawDataInst = rawDataInstExpr
+      let rawDataInstIo = newKaitaiStream(rawDataInstExpr)
+      let dataInstExpr = WindowsMinidump_ExceptionStream.read(rawDataInstIo, this.root, this)
+      this.dataInst = dataInstExpr
+    elif on == windows_minidump.memory_list:
+      let rawDataInstExpr = this.io.readBytes(int(this.lenData))
+      this.rawDataInst = rawDataInstExpr
+      let rawDataInstIo = newKaitaiStream(rawDataInstExpr)
+      let dataInstExpr = WindowsMinidump_MemoryList.read(rawDataInstIo, this.root, this)
+      this.dataInst = dataInstExpr
+    elif on == windows_minidump.misc_info:
+      let rawDataInstExpr = this.io.readBytes(int(this.lenData))
+      this.rawDataInst = rawDataInstExpr
+      let rawDataInstIo = newKaitaiStream(rawDataInstExpr)
+      let dataInstExpr = WindowsMinidump_MiscInfo.read(rawDataInstIo, this.root, this)
+      this.dataInst = dataInstExpr
+    elif on == windows_minidump.system_info:
+      let rawDataInstExpr = this.io.readBytes(int(this.lenData))
+      this.rawDataInst = rawDataInstExpr
+      let rawDataInstIo = newKaitaiStream(rawDataInstExpr)
+      let dataInstExpr = WindowsMinidump_SystemInfo.read(rawDataInstIo, this.root, this)
+      this.dataInst = dataInstExpr
+    elif on == windows_minidump.thread_list:
+      let rawDataInstExpr = this.io.readBytes(int(this.lenData))
+      this.rawDataInst = rawDataInstExpr
+      let rawDataInstIo = newKaitaiStream(rawDataInstExpr)
+      let dataInstExpr = WindowsMinidump_ThreadList.read(rawDataInstIo, this.root, this)
+      this.dataInst = dataInstExpr
+    else:
+      let dataInstExpr = this.io.readBytes(int(this.lenData))
+      this.dataInst = dataInstExpr
+  this.io.seek(pos)
+  this.dataInstFlag = true
+  return this.dataInst
+
+proc fromFile*(_: typedesc[WindowsMinidump_Dir], filename: string): WindowsMinidump_Dir =
+  WindowsMinidump_Dir.read(newKaitaiFileStream(filename), nil, nil)
+
+
+##[
+@see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception">Source</a>
+]##
+proc read*(_: typedesc[WindowsMinidump_ExceptionRecord], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump_ExceptionStream): WindowsMinidump_ExceptionRecord =
+  template this: untyped = result
+  this = new(WindowsMinidump_ExceptionRecord)
+  let root = if root == nil: cast[WindowsMinidump](this) else: cast[WindowsMinidump](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let codeExpr = this.io.readU4le()
+  this.code = codeExpr
+  let flagsExpr = this.io.readU4le()
+  this.flags = flagsExpr
+  let innerExceptionExpr = this.io.readU8le()
+  this.innerException = innerExceptionExpr
+
+  ##[
+  Memory address where exception has occurred
+  ]##
+  let addrExpr = this.io.readU8le()
+  this.addr = addrExpr
+  let numParamsExpr = this.io.readU4le()
+  this.numParams = numParamsExpr
+  let reservedExpr = this.io.readU4le()
+  this.reserved = reservedExpr
+
+  ##[
+  Additional parameters passed along with exception raise
+function (for WinAPI, that is `RaiseException`). Meaning is
+exception-specific. Given that this type is originally
+defined by a C structure, it is described there as array of
+fixed number of elements (`EXCEPTION_MAXIMUM_PARAMETERS` =
+15), but in reality only first `num_params` would be used.
+
+  ]##
+  for i in 0 ..< int(15):
+    let it = this.io.readU8le()
+    this.params.add(it)
+
+proc fromFile*(_: typedesc[WindowsMinidump_ExceptionRecord], filename: string): WindowsMinidump_ExceptionRecord =
+  WindowsMinidump_ExceptionRecord.read(newKaitaiFileStream(filename), nil, nil)
+
+
+##[
+@see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception_stream">Source</a>
+]##
+proc read*(_: typedesc[WindowsMinidump_ExceptionStream], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump_Dir): WindowsMinidump_ExceptionStream =
+  template this: untyped = result
+  this = new(WindowsMinidump_ExceptionStream)
+  let root = if root == nil: cast[WindowsMinidump](this) else: cast[WindowsMinidump](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let threadIdExpr = this.io.readU4le()
+  this.threadId = threadIdExpr
+  let reservedExpr = this.io.readU4le()
+  this.reserved = reservedExpr
+  let exceptionRecExpr = WindowsMinidump_ExceptionRecord.read(this.io, this.root, this)
+  this.exceptionRec = exceptionRecExpr
+  let threadContextExpr = WindowsMinidump_LocationDescriptor.read(this.io, this.root, this)
+  this.threadContext = threadContextExpr
+
+proc fromFile*(_: typedesc[WindowsMinidump_ExceptionStream], filename: string): WindowsMinidump_ExceptionStream =
+  WindowsMinidump_ExceptionStream.read(newKaitaiFileStream(filename), nil, nil)
 
 
 ##[
@@ -280,6 +398,47 @@ proc fromFile*(_: typedesc[WindowsMinidump_LocationDescriptor], filename: string
 
 
 ##[
+@see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor">Source</a>
+]##
+proc read*(_: typedesc[WindowsMinidump_MemoryDescriptor], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): WindowsMinidump_MemoryDescriptor =
+  template this: untyped = result
+  this = new(WindowsMinidump_MemoryDescriptor)
+  let root = if root == nil: cast[WindowsMinidump](this) else: cast[WindowsMinidump](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let addrMemoryRangeExpr = this.io.readU8le()
+  this.addrMemoryRange = addrMemoryRangeExpr
+  let memoryExpr = WindowsMinidump_LocationDescriptor.read(this.io, this.root, this)
+  this.memory = memoryExpr
+
+proc fromFile*(_: typedesc[WindowsMinidump_MemoryDescriptor], filename: string): WindowsMinidump_MemoryDescriptor =
+  WindowsMinidump_MemoryDescriptor.read(newKaitaiFileStream(filename), nil, nil)
+
+
+##[
+@see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list">Source</a>
+]##
+proc read*(_: typedesc[WindowsMinidump_MemoryList], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump_Dir): WindowsMinidump_MemoryList =
+  template this: untyped = result
+  this = new(WindowsMinidump_MemoryList)
+  let root = if root == nil: cast[WindowsMinidump](this) else: cast[WindowsMinidump](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let numMemRangesExpr = this.io.readU4le()
+  this.numMemRanges = numMemRangesExpr
+  for i in 0 ..< int(this.numMemRanges):
+    let it = WindowsMinidump_MemoryDescriptor.read(this.io, this.root, this)
+    this.memRanges.add(it)
+
+proc fromFile*(_: typedesc[WindowsMinidump_MemoryList], filename: string): WindowsMinidump_MemoryList =
+  WindowsMinidump_MemoryList.read(newKaitaiFileStream(filename), nil, nil)
+
+
+##[
 Specific string serialization scheme used in MiniDump format is
 actually a simple 32-bit length-prefixed UTF-16 string.
 
@@ -300,6 +459,44 @@ proc read*(_: typedesc[WindowsMinidump_MinidumpString], io: KaitaiStream, root: 
 
 proc fromFile*(_: typedesc[WindowsMinidump_MinidumpString], filename: string): WindowsMinidump_MinidumpString =
   WindowsMinidump_MinidumpString.read(newKaitaiFileStream(filename), nil, nil)
+
+
+##[
+@see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_misc_info">Source</a>
+]##
+proc read*(_: typedesc[WindowsMinidump_MiscInfo], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump_Dir): WindowsMinidump_MiscInfo =
+  template this: untyped = result
+  this = new(WindowsMinidump_MiscInfo)
+  let root = if root == nil: cast[WindowsMinidump](this) else: cast[WindowsMinidump](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let lenInfoExpr = this.io.readU4le()
+  this.lenInfo = lenInfoExpr
+  let flags1Expr = this.io.readU4le()
+  this.flags1 = flags1Expr
+  let processIdExpr = this.io.readU4le()
+  this.processId = processIdExpr
+  let processCreateTimeExpr = this.io.readU4le()
+  this.processCreateTime = processCreateTimeExpr
+  let processUserTimeExpr = this.io.readU4le()
+  this.processUserTime = processUserTimeExpr
+  let processKernelTimeExpr = this.io.readU4le()
+  this.processKernelTime = processKernelTimeExpr
+  let cpuMaxMhzExpr = this.io.readU4le()
+  this.cpuMaxMhz = cpuMaxMhzExpr
+  let cpuCurMhzExpr = this.io.readU4le()
+  this.cpuCurMhz = cpuCurMhzExpr
+  let cpuLimitMhzExpr = this.io.readU4le()
+  this.cpuLimitMhz = cpuLimitMhzExpr
+  let cpuMaxIdleStateExpr = this.io.readU4le()
+  this.cpuMaxIdleState = cpuMaxIdleStateExpr
+  let cpuCurIdleStateExpr = this.io.readU4le()
+  this.cpuCurIdleState = cpuCurIdleStateExpr
+
+proc fromFile*(_: typedesc[WindowsMinidump_MiscInfo], filename: string): WindowsMinidump_MiscInfo =
+  WindowsMinidump_MiscInfo.read(newKaitaiFileStream(filename), nil, nil)
 
 
 ##[
@@ -359,159 +556,6 @@ proc fromFile*(_: typedesc[WindowsMinidump_SystemInfo], filename: string): Windo
 
 
 ##[
-@see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception">Source</a>
-]##
-proc read*(_: typedesc[WindowsMinidump_ExceptionRecord], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump_ExceptionStream): WindowsMinidump_ExceptionRecord =
-  template this: untyped = result
-  this = new(WindowsMinidump_ExceptionRecord)
-  let root = if root == nil: cast[WindowsMinidump](this) else: cast[WindowsMinidump](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let codeExpr = this.io.readU4le()
-  this.code = codeExpr
-  let flagsExpr = this.io.readU4le()
-  this.flags = flagsExpr
-  let innerExceptionExpr = this.io.readU8le()
-  this.innerException = innerExceptionExpr
-
-  ##[
-  Memory address where exception has occurred
-  ]##
-  let addrExpr = this.io.readU8le()
-  this.addr = addrExpr
-  let numParamsExpr = this.io.readU4le()
-  this.numParams = numParamsExpr
-  let reservedExpr = this.io.readU4le()
-  this.reserved = reservedExpr
-
-  ##[
-  Additional parameters passed along with exception raise
-function (for WinAPI, that is `RaiseException`). Meaning is
-exception-specific. Given that this type is originally
-defined by a C structure, it is described there as array of
-fixed number of elements (`EXCEPTION_MAXIMUM_PARAMETERS` =
-15), but in reality only first `num_params` would be used.
-
-  ]##
-  for i in 0 ..< int(15):
-    let it = this.io.readU8le()
-    this.params.add(it)
-
-proc fromFile*(_: typedesc[WindowsMinidump_ExceptionRecord], filename: string): WindowsMinidump_ExceptionRecord =
-  WindowsMinidump_ExceptionRecord.read(newKaitaiFileStream(filename), nil, nil)
-
-
-##[
-@see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_misc_info">Source</a>
-]##
-proc read*(_: typedesc[WindowsMinidump_MiscInfo], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump_Dir): WindowsMinidump_MiscInfo =
-  template this: untyped = result
-  this = new(WindowsMinidump_MiscInfo)
-  let root = if root == nil: cast[WindowsMinidump](this) else: cast[WindowsMinidump](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let lenInfoExpr = this.io.readU4le()
-  this.lenInfo = lenInfoExpr
-  let flags1Expr = this.io.readU4le()
-  this.flags1 = flags1Expr
-  let processIdExpr = this.io.readU4le()
-  this.processId = processIdExpr
-  let processCreateTimeExpr = this.io.readU4le()
-  this.processCreateTime = processCreateTimeExpr
-  let processUserTimeExpr = this.io.readU4le()
-  this.processUserTime = processUserTimeExpr
-  let processKernelTimeExpr = this.io.readU4le()
-  this.processKernelTime = processKernelTimeExpr
-  let cpuMaxMhzExpr = this.io.readU4le()
-  this.cpuMaxMhz = cpuMaxMhzExpr
-  let cpuCurMhzExpr = this.io.readU4le()
-  this.cpuCurMhz = cpuCurMhzExpr
-  let cpuLimitMhzExpr = this.io.readU4le()
-  this.cpuLimitMhz = cpuLimitMhzExpr
-  let cpuMaxIdleStateExpr = this.io.readU4le()
-  this.cpuMaxIdleState = cpuMaxIdleStateExpr
-  let cpuCurIdleStateExpr = this.io.readU4le()
-  this.cpuCurIdleState = cpuCurIdleStateExpr
-
-proc fromFile*(_: typedesc[WindowsMinidump_MiscInfo], filename: string): WindowsMinidump_MiscInfo =
-  WindowsMinidump_MiscInfo.read(newKaitaiFileStream(filename), nil, nil)
-
-
-##[
-@see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_directory">Source</a>
-]##
-proc read*(_: typedesc[WindowsMinidump_Dir], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump): WindowsMinidump_Dir =
-  template this: untyped = result
-  this = new(WindowsMinidump_Dir)
-  let root = if root == nil: cast[WindowsMinidump](this) else: cast[WindowsMinidump](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let streamTypeExpr = WindowsMinidump_StreamTypes(this.io.readU4le())
-  this.streamType = streamTypeExpr
-
-  ##[
-  @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_location_descriptor">Source</a>
-  ]##
-  let lenDataExpr = this.io.readU4le()
-  this.lenData = lenDataExpr
-  let ofsDataExpr = this.io.readU4le()
-  this.ofsData = ofsDataExpr
-
-proc data(this: WindowsMinidump_Dir): KaitaiStruct = 
-  if this.dataInstFlag:
-    return this.dataInst
-  let pos = this.io.pos()
-  this.io.seek(int(this.ofsData))
-  block:
-    let on = this.streamType
-    if on == windows_minidump.memory_list:
-      let rawDataInstExpr = this.io.readBytes(int(this.lenData))
-      this.rawDataInst = rawDataInstExpr
-      let rawDataInstIo = newKaitaiStream(rawDataInstExpr)
-      let dataInstExpr = WindowsMinidump_MemoryList.read(rawDataInstIo, this.root, this)
-      this.dataInst = dataInstExpr
-    elif on == windows_minidump.misc_info:
-      let rawDataInstExpr = this.io.readBytes(int(this.lenData))
-      this.rawDataInst = rawDataInstExpr
-      let rawDataInstIo = newKaitaiStream(rawDataInstExpr)
-      let dataInstExpr = WindowsMinidump_MiscInfo.read(rawDataInstIo, this.root, this)
-      this.dataInst = dataInstExpr
-    elif on == windows_minidump.thread_list:
-      let rawDataInstExpr = this.io.readBytes(int(this.lenData))
-      this.rawDataInst = rawDataInstExpr
-      let rawDataInstIo = newKaitaiStream(rawDataInstExpr)
-      let dataInstExpr = WindowsMinidump_ThreadList.read(rawDataInstIo, this.root, this)
-      this.dataInst = dataInstExpr
-    elif on == windows_minidump.exception:
-      let rawDataInstExpr = this.io.readBytes(int(this.lenData))
-      this.rawDataInst = rawDataInstExpr
-      let rawDataInstIo = newKaitaiStream(rawDataInstExpr)
-      let dataInstExpr = WindowsMinidump_ExceptionStream.read(rawDataInstIo, this.root, this)
-      this.dataInst = dataInstExpr
-    elif on == windows_minidump.system_info:
-      let rawDataInstExpr = this.io.readBytes(int(this.lenData))
-      this.rawDataInst = rawDataInstExpr
-      let rawDataInstIo = newKaitaiStream(rawDataInstExpr)
-      let dataInstExpr = WindowsMinidump_SystemInfo.read(rawDataInstIo, this.root, this)
-      this.dataInst = dataInstExpr
-    else:
-      let dataInstExpr = this.io.readBytes(int(this.lenData))
-      this.dataInst = dataInstExpr
-  this.io.seek(pos)
-  this.dataInstFlag = true
-  return this.dataInst
-
-proc fromFile*(_: typedesc[WindowsMinidump_Dir], filename: string): WindowsMinidump_Dir =
-  WindowsMinidump_Dir.read(newKaitaiFileStream(filename), nil, nil)
-
-
-##[
 @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread">Source</a>
 ]##
 proc read*(_: typedesc[WindowsMinidump_Thread], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump_ThreadList): WindowsMinidump_Thread =
@@ -546,66 +590,22 @@ proc fromFile*(_: typedesc[WindowsMinidump_Thread], filename: string): WindowsMi
 
 
 ##[
-@see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list">Source</a>
+@see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread_list">Source</a>
 ]##
-proc read*(_: typedesc[WindowsMinidump_MemoryList], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump_Dir): WindowsMinidump_MemoryList =
+proc read*(_: typedesc[WindowsMinidump_ThreadList], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump_Dir): WindowsMinidump_ThreadList =
   template this: untyped = result
-  this = new(WindowsMinidump_MemoryList)
+  this = new(WindowsMinidump_ThreadList)
   let root = if root == nil: cast[WindowsMinidump](this) else: cast[WindowsMinidump](root)
   this.io = io
   this.root = root
   this.parent = parent
 
-  let numMemRangesExpr = this.io.readU4le()
-  this.numMemRanges = numMemRangesExpr
-  for i in 0 ..< int(this.numMemRanges):
-    let it = WindowsMinidump_MemoryDescriptor.read(this.io, this.root, this)
-    this.memRanges.add(it)
+  let numThreadsExpr = this.io.readU4le()
+  this.numThreads = numThreadsExpr
+  for i in 0 ..< int(this.numThreads):
+    let it = WindowsMinidump_Thread.read(this.io, this.root, this)
+    this.threads.add(it)
 
-proc fromFile*(_: typedesc[WindowsMinidump_MemoryList], filename: string): WindowsMinidump_MemoryList =
-  WindowsMinidump_MemoryList.read(newKaitaiFileStream(filename), nil, nil)
-
-
-##[
-@see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor">Source</a>
-]##
-proc read*(_: typedesc[WindowsMinidump_MemoryDescriptor], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): WindowsMinidump_MemoryDescriptor =
-  template this: untyped = result
-  this = new(WindowsMinidump_MemoryDescriptor)
-  let root = if root == nil: cast[WindowsMinidump](this) else: cast[WindowsMinidump](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let addrMemoryRangeExpr = this.io.readU8le()
-  this.addrMemoryRange = addrMemoryRangeExpr
-  let memoryExpr = WindowsMinidump_LocationDescriptor.read(this.io, this.root, this)
-  this.memory = memoryExpr
-
-proc fromFile*(_: typedesc[WindowsMinidump_MemoryDescriptor], filename: string): WindowsMinidump_MemoryDescriptor =
-  WindowsMinidump_MemoryDescriptor.read(newKaitaiFileStream(filename), nil, nil)
-
-
-##[
-@see <a href="https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception_stream">Source</a>
-]##
-proc read*(_: typedesc[WindowsMinidump_ExceptionStream], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump_Dir): WindowsMinidump_ExceptionStream =
-  template this: untyped = result
-  this = new(WindowsMinidump_ExceptionStream)
-  let root = if root == nil: cast[WindowsMinidump](this) else: cast[WindowsMinidump](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let threadIdExpr = this.io.readU4le()
-  this.threadId = threadIdExpr
-  let reservedExpr = this.io.readU4le()
-  this.reserved = reservedExpr
-  let exceptionRecExpr = WindowsMinidump_ExceptionRecord.read(this.io, this.root, this)
-  this.exceptionRec = exceptionRecExpr
-  let threadContextExpr = WindowsMinidump_LocationDescriptor.read(this.io, this.root, this)
-  this.threadContext = threadContextExpr
-
-proc fromFile*(_: typedesc[WindowsMinidump_ExceptionStream], filename: string): WindowsMinidump_ExceptionStream =
-  WindowsMinidump_ExceptionStream.read(newKaitaiFileStream(filename), nil, nil)
+proc fromFile*(_: typedesc[WindowsMinidump_ThreadList], filename: string): WindowsMinidump_ThreadList =
+  WindowsMinidump_ThreadList.read(newKaitaiFileStream(filename), nil, nil)
 

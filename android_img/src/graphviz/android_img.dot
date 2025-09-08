@@ -7,7 +7,7 @@ digraph {
 
 		android_img__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-			<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">8</TD><TD></TD><TD PORT="magic_type">magic</TD></TR>
+			<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">8</TD><TD>41 4E 44 52 4F 49 44 21</TD><TD PORT="magic_type">magic</TD></TR>
 			<TR><TD PORT="kernel_pos">8</TD><TD PORT="kernel_size">8</TD><TD>Load</TD><TD PORT="kernel_type">kernel</TD></TR>
 			<TR><TD PORT="ramdisk_pos">16</TD><TD PORT="ramdisk_size">8</TD><TD>Load</TD><TD PORT="ramdisk_type">ramdisk</TD></TR>
 			<TR><TD PORT="second_pos">24</TD><TD PORT="second_size">8</TD><TD>Load</TD><TD PORT="second_type">second</TD></TR>
@@ -20,52 +20,59 @@ digraph {
 			<TR><TD PORT="sha_pos">576</TD><TD PORT="sha_size">32</TD><TD></TD><TD PORT="sha_type">sha</TD></TR>
 			<TR><TD PORT="extra_cmdline_pos">608</TD><TD PORT="extra_cmdline_size">1024</TD><TD>str(ASCII)</TD><TD PORT="extra_cmdline_type">extra_cmdline</TD></TR>
 			<TR><TD PORT="recovery_dtbo_pos">1632</TD><TD PORT="recovery_dtbo_size">12</TD><TD>SizeOffset</TD><TD PORT="recovery_dtbo_type">recovery_dtbo</TD></TR>
+			<TR><TD COLSPAN="4" PORT="recovery_dtbo__if">if header_version &gt; 0</TD></TR>
 			<TR><TD PORT="boot_header_size_pos">1644</TD><TD PORT="boot_header_size_size">4</TD><TD>u4le</TD><TD PORT="boot_header_size_type">boot_header_size</TD></TR>
+			<TR><TD COLSPAN="4" PORT="boot_header_size__if">if header_version &gt; 0</TD></TR>
 			<TR><TD PORT="dtb_pos">1648</TD><TD PORT="dtb_size">12</TD><TD>LoadLong</TD><TD PORT="dtb_type">dtb</TD></TR>
+			<TR><TD COLSPAN="4" PORT="dtb__if">if header_version &gt; 1</TD></TR>
+		</TABLE>>];
+		android_img__inst__base [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>base</TD><TD>kernel.addr - 32768</TD></TR>
+		</TABLE>>];
+		android_img__inst__dtb_img [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="dtb_img_pos">(((((((page_size + kernel.size) + ramdisk.size) + second.size) + recovery_dtbo.size) + page_size) - 1) / page_size) * page_size</TD><TD PORT="dtb_img_size">dtb.size</TD><TD></TD><TD PORT="dtb_img_type">dtb_img</TD></TR>
+			<TR><TD COLSPAN="4" PORT="dtb_img__if">if  ((header_version &gt; 1) &amp;&amp; (dtb.size &gt; 0)) </TD></TR>
+		</TABLE>>];
+		android_img__inst__dtb_offset [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>dtb_offset</TD><TD>(dtb.addr &gt; 0 ? dtb.addr - base : 0)</TD></TR>
 		</TABLE>>];
 		android_img__inst__kernel_img [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 			<TR><TD PORT="kernel_img_pos">page_size</TD><TD PORT="kernel_img_size">kernel.size</TD><TD></TD><TD PORT="kernel_img_type">kernel_img</TD></TR>
 		</TABLE>>];
-		android_img__inst__tags_offset [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-			<TR><TD>tags_offset</TD><TD>(tags_load - base)</TD></TR>
-		</TABLE>>];
-		android_img__inst__ramdisk_offset [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-			<TR><TD>ramdisk_offset</TD><TD>(ramdisk.addr &gt; 0 ? (ramdisk.addr - base) : 0)</TD></TR>
-		</TABLE>>];
-		android_img__inst__second_offset [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-			<TR><TD>second_offset</TD><TD>(second.addr &gt; 0 ? (second.addr - base) : 0)</TD></TR>
-		</TABLE>>];
 		android_img__inst__kernel_offset [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-			<TR><TD>kernel_offset</TD><TD>(kernel.addr - base)</TD></TR>
-		</TABLE>>];
-		android_img__inst__dtb_offset [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-			<TR><TD>dtb_offset</TD><TD>(dtb.addr &gt; 0 ? (dtb.addr - base) : 0)</TD></TR>
-		</TABLE>>];
-		android_img__inst__dtb_img [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-			<TR><TD PORT="dtb_img_pos">((((((((page_size + kernel.size) + ramdisk.size) + second.size) + recovery_dtbo.size) + page_size) - 1) / page_size) * page_size)</TD><TD PORT="dtb_img_size">dtb.size</TD><TD></TD><TD PORT="dtb_img_type">dtb_img</TD></TR>
+			<TR><TD>kernel_offset</TD><TD>kernel.addr - base</TD></TR>
 		</TABLE>>];
 		android_img__inst__ramdisk_img [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-			<TR><TD PORT="ramdisk_img_pos">(((((page_size + kernel.size) + page_size) - 1) / page_size) * page_size)</TD><TD PORT="ramdisk_img_size">ramdisk.size</TD><TD></TD><TD PORT="ramdisk_img_type">ramdisk_img</TD></TR>
+			<TR><TD PORT="ramdisk_img_pos">((((page_size + kernel.size) + page_size) - 1) / page_size) * page_size</TD><TD PORT="ramdisk_img_size">ramdisk.size</TD><TD></TD><TD PORT="ramdisk_img_type">ramdisk_img</TD></TR>
+			<TR><TD COLSPAN="4" PORT="ramdisk_img__if">if ramdisk.size &gt; 0</TD></TR>
+		</TABLE>>];
+		android_img__inst__ramdisk_offset [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>ramdisk_offset</TD><TD>(ramdisk.addr &gt; 0 ? ramdisk.addr - base : 0)</TD></TR>
 		</TABLE>>];
 		android_img__inst__recovery_dtbo_img [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 			<TR><TD PORT="recovery_dtbo_img_pos">recovery_dtbo.offset</TD><TD PORT="recovery_dtbo_img_size">recovery_dtbo.size</TD><TD></TD><TD PORT="recovery_dtbo_img_type">recovery_dtbo_img</TD></TR>
+			<TR><TD COLSPAN="4" PORT="recovery_dtbo_img__if">if  ((header_version &gt; 0) &amp;&amp; (recovery_dtbo.size &gt; 0)) </TD></TR>
 		</TABLE>>];
 		android_img__inst__second_img [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-			<TR><TD PORT="second_img_pos">((((((page_size + kernel.size) + ramdisk.size) + page_size) - 1) / page_size) * page_size)</TD><TD PORT="second_img_size">second.size</TD><TD></TD><TD PORT="second_img_type">second_img</TD></TR>
+			<TR><TD PORT="second_img_pos">(((((page_size + kernel.size) + ramdisk.size) + page_size) - 1) / page_size) * page_size</TD><TD PORT="second_img_size">second.size</TD><TD></TD><TD PORT="second_img_type">second_img</TD></TR>
+			<TR><TD COLSPAN="4" PORT="second_img__if">if second.size &gt; 0</TD></TR>
 		</TABLE>>];
-		android_img__inst__base [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+		android_img__inst__second_offset [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-			<TR><TD>base</TD><TD>(kernel.addr - 32768)</TD></TR>
+			<TR><TD>second_offset</TD><TD>(second.addr &gt; 0 ? second.addr - base : 0)</TD></TR>
+		</TABLE>>];
+		android_img__inst__tags_offset [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>tags_offset</TD><TD>tags_load - base</TD></TR>
 		</TABLE>>];
 		subgraph cluster__load {
 			label="AndroidImg::Load";
@@ -87,6 +94,35 @@ digraph {
 				<TR><TD PORT="addr_pos">4</TD><TD PORT="addr_size">8</TD><TD>u8le</TD><TD PORT="addr_type">addr</TD></TR>
 			</TABLE>>];
 		}
+		subgraph cluster__os_version {
+			label="AndroidImg::OsVersion";
+			graph[style=dotted];
+
+			os_version__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="version_pos">0</TD><TD PORT="version_size">4</TD><TD>u4le</TD><TD PORT="version_type">version</TD></TR>
+			</TABLE>>];
+			os_version__inst__major [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>major</TD><TD>version &gt;&gt; 25 &amp; 127</TD></TR>
+			</TABLE>>];
+			os_version__inst__minor [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>minor</TD><TD>version &gt;&gt; 18 &amp; 127</TD></TR>
+			</TABLE>>];
+			os_version__inst__month [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>month</TD><TD>version &amp; 15</TD></TR>
+			</TABLE>>];
+			os_version__inst__patch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>patch</TD><TD>version &gt;&gt; 11 &amp; 127</TD></TR>
+			</TABLE>>];
+			os_version__inst__year [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>year</TD><TD>(version &gt;&gt; 4 &amp; 127) + 2000</TD></TR>
+			</TABLE>>];
+		}
 		subgraph cluster__size_offset {
 			label="AndroidImg::SizeOffset";
 			graph[style=dotted];
@@ -97,85 +133,50 @@ digraph {
 				<TR><TD PORT="offset_pos">4</TD><TD PORT="offset_size">8</TD><TD>u8le</TD><TD PORT="offset_type">offset</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__os_version {
-			label="AndroidImg::OsVersion";
-			graph[style=dotted];
-
-			os_version__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="version_pos">0</TD><TD PORT="version_size">4</TD><TD>u4le</TD><TD PORT="version_type">version</TD></TR>
-			</TABLE>>];
-			os_version__inst__month [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>month</TD><TD>(version &amp; 15)</TD></TR>
-			</TABLE>>];
-			os_version__inst__patch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>patch</TD><TD>((version &gt;&gt; 11) &amp; 127)</TD></TR>
-			</TABLE>>];
-			os_version__inst__year [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>year</TD><TD>(((version &gt;&gt; 4) &amp; 127) + 2000)</TD></TR>
-			</TABLE>>];
-			os_version__inst__major [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>major</TD><TD>((version &gt;&gt; 25) &amp; 127)</TD></TR>
-			</TABLE>>];
-			os_version__inst__minor [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>minor</TD><TD>((version &gt;&gt; 18) &amp; 127)</TD></TR>
-			</TABLE>>];
-		}
 	}
 	android_img__seq:kernel_type -> load__seq [style=bold];
 	android_img__seq:ramdisk_type -> load__seq [style=bold];
 	android_img__seq:second_type -> load__seq [style=bold];
 	android_img__seq:os_version_type -> os_version__seq [style=bold];
 	android_img__seq:recovery_dtbo_type -> size_offset__seq [style=bold];
+	android_img__seq:header_version_type -> android_img__seq:recovery_dtbo__if [color="#404040"];
+	android_img__seq:header_version_type -> android_img__seq:boot_header_size__if [color="#404040"];
 	android_img__seq:dtb_type -> load_long__seq [style=bold];
-	android_img__seq:page_size_type -> android_img__inst__kernel_img:kernel_img_pos [color="#404040"];
-	load__seq:size_type -> android_img__inst__kernel_img:kernel_img_size [color="#404040"];
-	android_img__seq:tags_load_type -> android_img__inst__tags_offset [color="#404040"];
-	android_img__inst__base:base_type -> android_img__inst__tags_offset [color="#404040"];
-	load__seq:addr_type -> android_img__inst__ramdisk_offset [color="#404040"];
-	load__seq:addr_type -> android_img__inst__ramdisk_offset [color="#404040"];
-	android_img__inst__base:base_type -> android_img__inst__ramdisk_offset [color="#404040"];
-	load__seq:addr_type -> android_img__inst__second_offset [color="#404040"];
-	load__seq:addr_type -> android_img__inst__second_offset [color="#404040"];
-	android_img__inst__base:base_type -> android_img__inst__second_offset [color="#404040"];
-	load__seq:addr_type -> android_img__inst__kernel_offset [color="#404040"];
-	android_img__inst__base:base_type -> android_img__inst__kernel_offset [color="#404040"];
-	load_long__seq:addr_type -> android_img__inst__dtb_offset [color="#404040"];
-	load_long__seq:addr_type -> android_img__inst__dtb_offset [color="#404040"];
-	android_img__inst__base:base_type -> android_img__inst__dtb_offset [color="#404040"];
+	android_img__seq:header_version_type -> android_img__seq:dtb__if [color="#404040"];
+	load__seq:addr_type -> android_img__inst__base [color="#404040"];
 	android_img__seq:page_size_type -> android_img__inst__dtb_img:dtb_img_pos [color="#404040"];
-	load__seq:size_type -> android_img__inst__dtb_img:dtb_img_pos [color="#404040"];
-	load__seq:size_type -> android_img__inst__dtb_img:dtb_img_pos [color="#404040"];
 	load__seq:size_type -> android_img__inst__dtb_img:dtb_img_pos [color="#404040"];
 	size_offset__seq:size_type -> android_img__inst__dtb_img:dtb_img_pos [color="#404040"];
-	android_img__seq:page_size_type -> android_img__inst__dtb_img:dtb_img_pos [color="#404040"];
-	android_img__seq:page_size_type -> android_img__inst__dtb_img:dtb_img_pos [color="#404040"];
-	android_img__seq:page_size_type -> android_img__inst__dtb_img:dtb_img_pos [color="#404040"];
 	load_long__seq:size_type -> android_img__inst__dtb_img:dtb_img_size [color="#404040"];
+	android_img__seq:header_version_type -> android_img__inst__dtb_img:dtb_img__if [color="#404040"];
+	load_long__seq:size_type -> android_img__inst__dtb_img:dtb_img__if [color="#404040"];
+	load_long__seq:addr_type -> android_img__inst__dtb_offset [color="#404040"];
+	android_img__inst__base:base_type -> android_img__inst__dtb_offset [color="#404040"];
+	android_img__seq:page_size_type -> android_img__inst__kernel_img:kernel_img_pos [color="#404040"];
+	load__seq:size_type -> android_img__inst__kernel_img:kernel_img_size [color="#404040"];
+	load__seq:addr_type -> android_img__inst__kernel_offset [color="#404040"];
+	android_img__inst__base:base_type -> android_img__inst__kernel_offset [color="#404040"];
 	android_img__seq:page_size_type -> android_img__inst__ramdisk_img:ramdisk_img_pos [color="#404040"];
 	load__seq:size_type -> android_img__inst__ramdisk_img:ramdisk_img_pos [color="#404040"];
-	android_img__seq:page_size_type -> android_img__inst__ramdisk_img:ramdisk_img_pos [color="#404040"];
-	android_img__seq:page_size_type -> android_img__inst__ramdisk_img:ramdisk_img_pos [color="#404040"];
-	android_img__seq:page_size_type -> android_img__inst__ramdisk_img:ramdisk_img_pos [color="#404040"];
 	load__seq:size_type -> android_img__inst__ramdisk_img:ramdisk_img_size [color="#404040"];
+	load__seq:size_type -> android_img__inst__ramdisk_img:ramdisk_img__if [color="#404040"];
+	load__seq:addr_type -> android_img__inst__ramdisk_offset [color="#404040"];
+	android_img__inst__base:base_type -> android_img__inst__ramdisk_offset [color="#404040"];
 	size_offset__seq:offset_type -> android_img__inst__recovery_dtbo_img:recovery_dtbo_img_pos [color="#404040"];
 	size_offset__seq:size_type -> android_img__inst__recovery_dtbo_img:recovery_dtbo_img_size [color="#404040"];
+	android_img__seq:header_version_type -> android_img__inst__recovery_dtbo_img:recovery_dtbo_img__if [color="#404040"];
+	size_offset__seq:size_type -> android_img__inst__recovery_dtbo_img:recovery_dtbo_img__if [color="#404040"];
 	android_img__seq:page_size_type -> android_img__inst__second_img:second_img_pos [color="#404040"];
 	load__seq:size_type -> android_img__inst__second_img:second_img_pos [color="#404040"];
-	load__seq:size_type -> android_img__inst__second_img:second_img_pos [color="#404040"];
-	android_img__seq:page_size_type -> android_img__inst__second_img:second_img_pos [color="#404040"];
-	android_img__seq:page_size_type -> android_img__inst__second_img:second_img_pos [color="#404040"];
-	android_img__seq:page_size_type -> android_img__inst__second_img:second_img_pos [color="#404040"];
 	load__seq:size_type -> android_img__inst__second_img:second_img_size [color="#404040"];
-	load__seq:addr_type -> android_img__inst__base [color="#404040"];
+	load__seq:size_type -> android_img__inst__second_img:second_img__if [color="#404040"];
+	load__seq:addr_type -> android_img__inst__second_offset [color="#404040"];
+	android_img__inst__base:base_type -> android_img__inst__second_offset [color="#404040"];
+	android_img__seq:tags_load_type -> android_img__inst__tags_offset [color="#404040"];
+	android_img__inst__base:base_type -> android_img__inst__tags_offset [color="#404040"];
+	os_version__seq:version_type -> os_version__inst__major [color="#404040"];
+	os_version__seq:version_type -> os_version__inst__minor [color="#404040"];
 	os_version__seq:version_type -> os_version__inst__month [color="#404040"];
 	os_version__seq:version_type -> os_version__inst__patch [color="#404040"];
 	os_version__seq:version_type -> os_version__inst__year [color="#404040"];
-	os_version__seq:version_type -> os_version__inst__major [color="#404040"];
-	os_version__seq:version_type -> os_version__inst__minor [color="#404040"];
 }

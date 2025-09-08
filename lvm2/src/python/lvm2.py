@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
-from enum import Enum
+from enum import IntEnum
 
 
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Lvm2(KaitaiStruct):
     """### Building a test file
@@ -24,41 +25,57 @@ class Lvm2(KaitaiStruct):
        Source - https://github.com/libyal/libvslvm/blob/main/documentation/Logical%20Volume%20Manager%20(LVM)%20format.asciidoc
     """
     def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
+        super(Lvm2, self).__init__(_io)
         self._parent = _parent
-        self._root = _root if _root else self
+        self._root = _root or self
         self._read()
 
     def _read(self):
         self.pv = Lvm2.PhysicalVolume(self._io, self, self._root)
 
+
+    def _fetch_instances(self):
+        pass
+        self.pv._fetch_instances()
+
     class PhysicalVolume(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(Lvm2.PhysicalVolume, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
             self.empty_sector = self._io.read_bytes(self._root.sector_size)
             self.label = Lvm2.PhysicalVolume.Label(self._io, self, self._root)
 
+
+        def _fetch_instances(self):
+            pass
+            self.label._fetch_instances()
+
         class Label(KaitaiStruct):
             def __init__(self, _io, _parent=None, _root=None):
-                self._io = _io
+                super(Lvm2.PhysicalVolume.Label, self).__init__(_io)
                 self._parent = _parent
-                self._root = _root if _root else self
+                self._root = _root
                 self._read()
 
             def _read(self):
                 self.label_header = Lvm2.PhysicalVolume.Label.LabelHeader(self._io, self, self._root)
                 self.volume_header = Lvm2.PhysicalVolume.Label.VolumeHeader(self._io, self, self._root)
 
+
+            def _fetch_instances(self):
+                pass
+                self.label_header._fetch_instances()
+                self.volume_header._fetch_instances()
+
             class LabelHeader(KaitaiStruct):
                 def __init__(self, _io, _parent=None, _root=None):
-                    self._io = _io
+                    super(Lvm2.PhysicalVolume.Label.LabelHeader, self).__init__(_io)
                     self._parent = _parent
-                    self._root = _root if _root else self
+                    self._root = _root
                     self._read()
 
                 def _read(self):
@@ -69,11 +86,16 @@ class Lvm2(KaitaiStruct):
                     self.checksum = self._io.read_u4le()
                     self.label_header_ = Lvm2.PhysicalVolume.Label.LabelHeader.LabelHeader(self._io, self, self._root)
 
+
+                def _fetch_instances(self):
+                    pass
+                    self.label_header_._fetch_instances()
+
                 class LabelHeader(KaitaiStruct):
                     def __init__(self, _io, _parent=None, _root=None):
-                        self._io = _io
+                        super(Lvm2.PhysicalVolume.Label.LabelHeader.LabelHeader, self).__init__(_io)
                         self._parent = _parent
-                        self._root = _root if _root else self
+                        self._root = _root
                         self._read()
 
                     def _read(self):
@@ -83,16 +105,20 @@ class Lvm2(KaitaiStruct):
                             raise kaitaistruct.ValidationNotEqualError(b"\x4C\x56\x4D\x32\x20\x30\x30\x31", self.type_indicator, self._io, u"/types/physical_volume/types/label/types/label_header/types/label_header_/seq/1")
 
 
+                    def _fetch_instances(self):
+                        pass
+
+
 
             class VolumeHeader(KaitaiStruct):
                 def __init__(self, _io, _parent=None, _root=None):
-                    self._io = _io
+                    super(Lvm2.PhysicalVolume.Label.VolumeHeader, self).__init__(_io)
                     self._parent = _parent
-                    self._root = _root if _root else self
+                    self._root = _root
                     self._read()
 
                 def _read(self):
-                    self.id = (self._io.read_bytes(32)).decode(u"ascii")
+                    self.id = (self._io.read_bytes(32)).decode(u"ASCII")
                     self.size = self._io.read_u8le()
                     self.data_area_descriptors = []
                     i = 0
@@ -111,16 +137,36 @@ class Lvm2(KaitaiStruct):
                             break
                         i += 1
 
+
+                def _fetch_instances(self):
+                    pass
+                    for i in range(len(self.data_area_descriptors)):
+                        pass
+                        self.data_area_descriptors[i]._fetch_instances()
+
+                    for i in range(len(self.metadata_area_descriptors)):
+                        pass
+                        self.metadata_area_descriptors[i]._fetch_instances()
+
+
                 class DataAreaDescriptor(KaitaiStruct):
                     def __init__(self, _io, _parent=None, _root=None):
-                        self._io = _io
+                        super(Lvm2.PhysicalVolume.Label.VolumeHeader.DataAreaDescriptor, self).__init__(_io)
                         self._parent = _parent
-                        self._root = _root if _root else self
+                        self._root = _root
                         self._read()
 
                     def _read(self):
                         self.offset = self._io.read_u8le()
                         self.size = self._io.read_u8le()
+
+
+                    def _fetch_instances(self):
+                        pass
+                        _ = self.data
+                        if hasattr(self, '_m_data'):
+                            pass
+
 
                     @property
                     def data(self):
@@ -128,36 +174,10 @@ class Lvm2(KaitaiStruct):
                             return self._m_data
 
                         if self.size != 0:
+                            pass
                             _pos = self._io.pos()
                             self._io.seek(self.offset)
-                            self._m_data = (self._io.read_bytes(self.size)).decode(u"ascii")
-                            self._io.seek(_pos)
-
-                        return getattr(self, '_m_data', None)
-
-
-                class MetadataAreaDescriptor(KaitaiStruct):
-                    def __init__(self, _io, _parent=None, _root=None):
-                        self._io = _io
-                        self._parent = _parent
-                        self._root = _root if _root else self
-                        self._read()
-
-                    def _read(self):
-                        self.offset = self._io.read_u8le()
-                        self.size = self._io.read_u8le()
-
-                    @property
-                    def data(self):
-                        if hasattr(self, '_m_data'):
-                            return self._m_data
-
-                        if self.size != 0:
-                            _pos = self._io.pos()
-                            self._io.seek(self.offset)
-                            self._raw__m_data = self._io.read_bytes(self.size)
-                            _io__raw__m_data = KaitaiStream(BytesIO(self._raw__m_data))
-                            self._m_data = Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataArea(_io__raw__m_data, self, self._root)
+                            self._m_data = (self._io.read_bytes(self.size)).decode(u"ASCII")
                             self._io.seek(_pos)
 
                         return getattr(self, '_m_data', None)
@@ -166,19 +186,24 @@ class Lvm2(KaitaiStruct):
                 class MetadataArea(KaitaiStruct):
                     """According to `[REDHAT]` the metadata area is a circular buffer. New metadata is appended to the old metadata and then the pointer to the start of it is updated. The metadata area, therefore, can contain copies of older versions of the metadata."""
                     def __init__(self, _io, _parent=None, _root=None):
-                        self._io = _io
+                        super(Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataArea, self).__init__(_io)
                         self._parent = _parent
-                        self._root = _root if _root else self
+                        self._root = _root
                         self._read()
 
                     def _read(self):
                         self.header = Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataArea.MetadataAreaHeader(self._io, self, self._root)
 
+
+                    def _fetch_instances(self):
+                        pass
+                        self.header._fetch_instances()
+
                     class MetadataAreaHeader(KaitaiStruct):
                         def __init__(self, _io, _parent=None, _root=None):
-                            self._io = _io
+                            super(Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataArea.MetadataAreaHeader, self).__init__(_io)
                             self._parent = _parent
-                            self._root = _root if _root else self
+                            self._root = _root
                             self._read()
 
                         def _read(self):
@@ -198,15 +223,28 @@ class Lvm2(KaitaiStruct):
                                     break
                                 i += 1
 
+
+                        def _fetch_instances(self):
+                            pass
+                            self.checksum._fetch_instances()
+                            for i in range(len(self.raw_location_descriptors)):
+                                pass
+                                self.raw_location_descriptors[i]._fetch_instances()
+
+                            _ = self.metadata
+                            if hasattr(self, '_m_metadata'):
+                                pass
+
+
                         class RawLocationDescriptor(KaitaiStruct):
                             """The data area size can be 0. It is assumed it represents the remaining  available data."""
 
-                            class RawLocationDescriptorFlags(Enum):
+                            class RawLocationDescriptorFlags(IntEnum):
                                 raw_location_ignored = 1
                             def __init__(self, _io, _parent=None, _root=None):
-                                self._io = _io
+                                super(Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataArea.MetadataAreaHeader.RawLocationDescriptor, self).__init__(_io)
                                 self._parent = _parent
-                                self._root = _root if _root else self
+                                self._root = _root
                                 self._read()
 
                             def _read(self):
@@ -214,6 +252,10 @@ class Lvm2(KaitaiStruct):
                                 self.size = self._io.read_u8le()
                                 self.checksum = self._io.read_u4le()
                                 self.flags = KaitaiStream.resolve_enum(Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataArea.MetadataAreaHeader.RawLocationDescriptor.RawLocationDescriptorFlags, self._io.read_u4le())
+
+
+                            def _fetch_instances(self):
+                                pass
 
 
                         @property
@@ -227,6 +269,43 @@ class Lvm2(KaitaiStruct):
                             self._io.seek(_pos)
                             return getattr(self, '_m_metadata', None)
 
+
+
+                class MetadataAreaDescriptor(KaitaiStruct):
+                    def __init__(self, _io, _parent=None, _root=None):
+                        super(Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataAreaDescriptor, self).__init__(_io)
+                        self._parent = _parent
+                        self._root = _root
+                        self._read()
+
+                    def _read(self):
+                        self.offset = self._io.read_u8le()
+                        self.size = self._io.read_u8le()
+
+
+                    def _fetch_instances(self):
+                        pass
+                        _ = self.data
+                        if hasattr(self, '_m_data'):
+                            pass
+                            self._m_data._fetch_instances()
+
+
+                    @property
+                    def data(self):
+                        if hasattr(self, '_m_data'):
+                            return self._m_data
+
+                        if self.size != 0:
+                            pass
+                            _pos = self._io.pos()
+                            self._io.seek(self.offset)
+                            self._raw__m_data = self._io.read_bytes(self.size)
+                            _io__raw__m_data = KaitaiStream(BytesIO(self._raw__m_data))
+                            self._m_data = Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataArea(_io__raw__m_data, self, self._root)
+                            self._io.seek(_pos)
+
+                        return getattr(self, '_m_data', None)
 
 
 

@@ -1,11 +1,12 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class AndroidBootldrQcom(KaitaiStruct):
     """A bootloader for Android used on various devices powered by Qualcomm
@@ -116,9 +117,9 @@ class AndroidBootldrQcom(KaitaiStruct):
        Source - https://android.googlesource.com/device/lge/hammerhead/+/7618a7d/releasetools.py
     """
     def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
+        super(AndroidBootldrQcom, self).__init__(_io)
         self._parent = _parent
-        self._root = _root if _root else self
+        self._root = _root or self
         self._read()
 
     def _read(self):
@@ -133,28 +134,36 @@ class AndroidBootldrQcom(KaitaiStruct):
             self.img_headers.append(AndroidBootldrQcom.ImgHeader(self._io, self, self._root))
 
 
-    class ImgHeader(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
 
-        def _read(self):
-            self.name = (KaitaiStream.bytes_terminate(self._io.read_bytes(64), 0, False)).decode(u"ASCII")
-            self.len_body = self._io.read_u4le()
+    def _fetch_instances(self):
+        pass
+        for i in range(len(self.img_headers)):
+            pass
+            self.img_headers[i]._fetch_instances()
+
+        _ = self.img_bodies
+        if hasattr(self, '_m_img_bodies'):
+            pass
+            for i in range(len(self._m_img_bodies)):
+                pass
+                self._m_img_bodies[i]._fetch_instances()
+
 
 
     class ImgBody(KaitaiStruct):
         def __init__(self, idx, _io, _parent=None, _root=None):
-            self._io = _io
+            super(AndroidBootldrQcom.ImgBody, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self.idx = idx
             self._read()
 
         def _read(self):
             self.body = self._io.read_bytes(self.img_header.len_body)
+
+
+        def _fetch_instances(self):
+            pass
 
         @property
         def img_header(self):
@@ -163,6 +172,22 @@ class AndroidBootldrQcom(KaitaiStruct):
 
             self._m_img_header = self._root.img_headers[self.idx]
             return getattr(self, '_m_img_header', None)
+
+
+    class ImgHeader(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(AndroidBootldrQcom.ImgHeader, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.name = (KaitaiStream.bytes_terminate(self._io.read_bytes(64), 0, False)).decode(u"ASCII")
+            self.len_body = self._io.read_u4le()
+
+
+        def _fetch_instances(self):
+            pass
 
 
     @property

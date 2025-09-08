@@ -55,7 +55,7 @@ end
 function CreativeVoiceFile:_read()
   self.magic = self._io:read_bytes(20)
   if not(self.magic == "\067\114\101\097\116\105\118\101\032\086\111\105\099\101\032\070\105\108\101\026") then
-    error("not equal, expected " ..  "\067\114\101\097\116\105\118\101\032\086\111\105\099\101\032\070\105\108\101\026" .. ", but got " .. self.magic)
+    error("not equal, expected " .. "\067\114\101\097\116\105\118\101\032\086\111\105\099\101\032\070\105\108\101\026" .. ", but got " .. self.magic)
   end
   self.header_size = self._io:read_u2le()
   self.version = self._io:read_u2le()
@@ -75,94 +75,12 @@ end
 -- 
 -- Series of blocks that contain the actual audio data.
 
--- 
--- See also: Source (https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x04:_Marker)
-CreativeVoiceFile.BlockMarker = class.class(KaitaiStruct)
-
-function CreativeVoiceFile.BlockMarker:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function CreativeVoiceFile.BlockMarker:_read()
-  self.marker_id = self._io:read_u2le()
-end
-
--- 
--- Marker ID.
-
--- 
--- See also: Source (https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x03:_Silence)
-CreativeVoiceFile.BlockSilence = class.class(KaitaiStruct)
-
-function CreativeVoiceFile.BlockSilence:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function CreativeVoiceFile.BlockSilence:_read()
-  self.duration_samples = self._io:read_u2le()
-  self.freq_div = self._io:read_u1()
-end
-
-CreativeVoiceFile.BlockSilence.property.sample_rate = {}
-function CreativeVoiceFile.BlockSilence.property.sample_rate:get()
-  if self._m_sample_rate ~= nil then
-    return self._m_sample_rate
-  end
-
-  self._m_sample_rate = (1000000.0 / (256 - self.freq_div))
-  return self._m_sample_rate
-end
-
--- 
--- Duration of silence, in seconds.
-CreativeVoiceFile.BlockSilence.property.duration_sec = {}
-function CreativeVoiceFile.BlockSilence.property.duration_sec:get()
-  if self._m_duration_sec ~= nil then
-    return self._m_duration_sec
-  end
-
-  self._m_duration_sec = (self.duration_samples / self.sample_rate)
-  return self._m_duration_sec
-end
-
--- 
--- Duration of silence, in samples.
--- 
--- Frequency divisor, used to determine sample rate.
-
--- 
--- See also: Source (https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x09:_Sound_data_.28New_format.29)
-CreativeVoiceFile.BlockSoundDataNew = class.class(KaitaiStruct)
-
-function CreativeVoiceFile.BlockSoundDataNew:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function CreativeVoiceFile.BlockSoundDataNew:_read()
-  self.sample_rate = self._io:read_u4le()
-  self.bits_per_sample = self._io:read_u1()
-  self.num_channels = self._io:read_u1()
-  self.codec = CreativeVoiceFile.Codecs(self._io:read_u2le())
-  self.reserved = self._io:read_bytes(4)
-  self.wave = self._io:read_bytes_full()
-end
-
-
 CreativeVoiceFile.Block = class.class(KaitaiStruct)
 
 function CreativeVoiceFile.Block:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -176,30 +94,30 @@ function CreativeVoiceFile.Block:_read()
   end
   if self.block_type ~= CreativeVoiceFile.BlockTypes.terminator then
     local _on = self.block_type
-    if _on == CreativeVoiceFile.BlockTypes.sound_data_new then
+    if _on == CreativeVoiceFile.BlockTypes.extra_info then
       self._raw_body = self._io:read_bytes(self.body_size)
       local _io = KaitaiStream(stringstream(self._raw_body))
-      self.body = CreativeVoiceFile.BlockSoundDataNew(_io, self, self._root)
-    elseif _on == CreativeVoiceFile.BlockTypes.repeat_start then
-      self._raw_body = self._io:read_bytes(self.body_size)
-      local _io = KaitaiStream(stringstream(self._raw_body))
-      self.body = CreativeVoiceFile.BlockRepeatStart(_io, self, self._root)
+      self.body = CreativeVoiceFile.BlockExtraInfo(_io, self, self._root)
     elseif _on == CreativeVoiceFile.BlockTypes.marker then
       self._raw_body = self._io:read_bytes(self.body_size)
       local _io = KaitaiStream(stringstream(self._raw_body))
       self.body = CreativeVoiceFile.BlockMarker(_io, self, self._root)
-    elseif _on == CreativeVoiceFile.BlockTypes.sound_data then
+    elseif _on == CreativeVoiceFile.BlockTypes.repeat_start then
       self._raw_body = self._io:read_bytes(self.body_size)
       local _io = KaitaiStream(stringstream(self._raw_body))
-      self.body = CreativeVoiceFile.BlockSoundData(_io, self, self._root)
-    elseif _on == CreativeVoiceFile.BlockTypes.extra_info then
-      self._raw_body = self._io:read_bytes(self.body_size)
-      local _io = KaitaiStream(stringstream(self._raw_body))
-      self.body = CreativeVoiceFile.BlockExtraInfo(_io, self, self._root)
+      self.body = CreativeVoiceFile.BlockRepeatStart(_io, self, self._root)
     elseif _on == CreativeVoiceFile.BlockTypes.silence then
       self._raw_body = self._io:read_bytes(self.body_size)
       local _io = KaitaiStream(stringstream(self._raw_body))
       self.body = CreativeVoiceFile.BlockSilence(_io, self, self._root)
+    elseif _on == CreativeVoiceFile.BlockTypes.sound_data then
+      self._raw_body = self._io:read_bytes(self.body_size)
+      local _io = KaitaiStream(stringstream(self._raw_body))
+      self.body = CreativeVoiceFile.BlockSoundData(_io, self, self._root)
+    elseif _on == CreativeVoiceFile.BlockTypes.sound_data_new then
+      self._raw_body = self._io:read_bytes(self.body_size)
+      local _io = KaitaiStream(stringstream(self._raw_body))
+      self.body = CreativeVoiceFile.BlockSoundDataNew(_io, self, self._root)
     else
       self.body = self._io:read_bytes(self.body_size)
     end
@@ -217,7 +135,7 @@ function CreativeVoiceFile.Block.property.body_size:get()
   end
 
   if self.block_type ~= CreativeVoiceFile.BlockTypes.terminator then
-    self._m_body_size = (self.body_size1 + (self.body_size2 << 16))
+    self._m_body_size = self.body_size1 + (self.body_size2 << 16)
   end
   return self._m_body_size
 end
@@ -228,61 +146,13 @@ end
 -- Block body, type depends on block type byte.
 
 -- 
--- See also: Source (https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x06:_Repeat_start)
-CreativeVoiceFile.BlockRepeatStart = class.class(KaitaiStruct)
-
-function CreativeVoiceFile.BlockRepeatStart:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function CreativeVoiceFile.BlockRepeatStart:_read()
-  self.repeat_count_1 = self._io:read_u2le()
-end
-
--- 
--- Number of repetitions minus 1; 0xffff means infinite repetitions.
-
--- 
--- See also: Source (https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x01:_Sound_data)
-CreativeVoiceFile.BlockSoundData = class.class(KaitaiStruct)
-
-function CreativeVoiceFile.BlockSoundData:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function CreativeVoiceFile.BlockSoundData:_read()
-  self.freq_div = self._io:read_u1()
-  self.codec = CreativeVoiceFile.Codecs(self._io:read_u1())
-  self.wave = self._io:read_bytes_full()
-end
-
-CreativeVoiceFile.BlockSoundData.property.sample_rate = {}
-function CreativeVoiceFile.BlockSoundData.property.sample_rate:get()
-  if self._m_sample_rate ~= nil then
-    return self._m_sample_rate
-  end
-
-  self._m_sample_rate = (1000000.0 / (256 - self.freq_div))
-  return self._m_sample_rate
-end
-
--- 
--- Frequency divisor, used to determine sample rate.
-
--- 
 -- See also: Source (https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x08:_Extra_info)
 CreativeVoiceFile.BlockExtraInfo = class.class(KaitaiStruct)
 
 function CreativeVoiceFile.BlockExtraInfo:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -300,7 +170,7 @@ function CreativeVoiceFile.BlockExtraInfo.property.num_channels:get()
     return self._m_num_channels
   end
 
-  self._m_num_channels = (self.num_channels_1 + 1)
+  self._m_num_channels = self.num_channels_1 + 1
   return self._m_num_channels
 end
 
@@ -310,7 +180,7 @@ function CreativeVoiceFile.BlockExtraInfo.property.sample_rate:get()
     return self._m_sample_rate
   end
 
-  self._m_sample_rate = (256000000.0 / (self.num_channels * (65536 - self.freq_div)))
+  self._m_sample_rate = 256000000.0 / (self.num_channels * (65536 - self.freq_div))
   return self._m_sample_rate
 end
 
@@ -318,4 +188,134 @@ end
 -- Frequency divisor.
 -- 
 -- Number of channels minus 1 (0 = mono, 1 = stereo).
+
+-- 
+-- See also: Source (https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x04:_Marker)
+CreativeVoiceFile.BlockMarker = class.class(KaitaiStruct)
+
+function CreativeVoiceFile.BlockMarker:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function CreativeVoiceFile.BlockMarker:_read()
+  self.marker_id = self._io:read_u2le()
+end
+
+-- 
+-- Marker ID.
+
+-- 
+-- See also: Source (https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x06:_Repeat_start)
+CreativeVoiceFile.BlockRepeatStart = class.class(KaitaiStruct)
+
+function CreativeVoiceFile.BlockRepeatStart:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function CreativeVoiceFile.BlockRepeatStart:_read()
+  self.repeat_count_1 = self._io:read_u2le()
+end
+
+-- 
+-- Number of repetitions minus 1; 0xffff means infinite repetitions.
+
+-- 
+-- See also: Source (https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x03:_Silence)
+CreativeVoiceFile.BlockSilence = class.class(KaitaiStruct)
+
+function CreativeVoiceFile.BlockSilence:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function CreativeVoiceFile.BlockSilence:_read()
+  self.duration_samples = self._io:read_u2le()
+  self.freq_div = self._io:read_u1()
+end
+
+-- 
+-- Duration of silence, in seconds.
+CreativeVoiceFile.BlockSilence.property.duration_sec = {}
+function CreativeVoiceFile.BlockSilence.property.duration_sec:get()
+  if self._m_duration_sec ~= nil then
+    return self._m_duration_sec
+  end
+
+  self._m_duration_sec = self.duration_samples / self.sample_rate
+  return self._m_duration_sec
+end
+
+CreativeVoiceFile.BlockSilence.property.sample_rate = {}
+function CreativeVoiceFile.BlockSilence.property.sample_rate:get()
+  if self._m_sample_rate ~= nil then
+    return self._m_sample_rate
+  end
+
+  self._m_sample_rate = 1000000.0 / (256 - self.freq_div)
+  return self._m_sample_rate
+end
+
+-- 
+-- Duration of silence, in samples.
+-- 
+-- Frequency divisor, used to determine sample rate.
+
+-- 
+-- See also: Source (https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x01:_Sound_data)
+CreativeVoiceFile.BlockSoundData = class.class(KaitaiStruct)
+
+function CreativeVoiceFile.BlockSoundData:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function CreativeVoiceFile.BlockSoundData:_read()
+  self.freq_div = self._io:read_u1()
+  self.codec = CreativeVoiceFile.Codecs(self._io:read_u1())
+  self.wave = self._io:read_bytes_full()
+end
+
+CreativeVoiceFile.BlockSoundData.property.sample_rate = {}
+function CreativeVoiceFile.BlockSoundData.property.sample_rate:get()
+  if self._m_sample_rate ~= nil then
+    return self._m_sample_rate
+  end
+
+  self._m_sample_rate = 1000000.0 / (256 - self.freq_div)
+  return self._m_sample_rate
+end
+
+-- 
+-- Frequency divisor, used to determine sample rate.
+
+-- 
+-- See also: Source (https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x09:_Sound_data_.28New_format.29)
+CreativeVoiceFile.BlockSoundDataNew = class.class(KaitaiStruct)
+
+function CreativeVoiceFile.BlockSoundDataNew:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function CreativeVoiceFile.BlockSoundDataNew:_read()
+  self.sample_rate = self._io:read_u4le()
+  self.bits_per_sample = self._io:read_u1()
+  self.num_channels = self._io:read_u1()
+  self.codec = CreativeVoiceFile.Codecs(self._io:read_u2le())
+  self.reserved = self._io:read_bytes(4)
+  self.wave = self._io:read_bytes_full()
+end
+
 

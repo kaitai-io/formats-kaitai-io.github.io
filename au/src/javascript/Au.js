@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.Au = factory(root.KaitaiStream);
+    factory(root.Au || (root.Au = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Au_, KaitaiStream) {
 /**
  * The NeXT/Sun audio file format.
  * 
@@ -96,11 +96,11 @@ var Au = (function() {
   }
   Au.prototype._read = function() {
     this.magic = this._io.readBytes(4);
-    if (!((KaitaiStream.byteArrayCompare(this.magic, [46, 115, 110, 100]) == 0))) {
-      throw new KaitaiStream.ValidationNotEqualError([46, 115, 110, 100], this.magic, this._io, "/seq/0");
+    if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([46, 115, 110, 100])) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([46, 115, 110, 100]), this.magic, this._io, "/seq/0");
     }
     this.ofsData = this._io.readU4be();
-    this._raw_header = this._io.readBytes(((this.ofsData - 4) - 4));
+    this._raw_header = this._io.readBytes((this.ofsData - 4) - 4);
     var _io__raw_header = new KaitaiStream(this._raw_header);
     this.header = new Header(_io__raw_header, this, this._root);
   }
@@ -109,7 +109,7 @@ var Au = (function() {
     function Header(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -158,12 +158,12 @@ var Au = (function() {
     get: function() {
       if (this._m_lenData !== undefined)
         return this._m_lenData;
-      this._m_lenData = (this.header.dataSize == 4294967295 ? (this._io.size - this.ofsData) : this.header.dataSize);
+      this._m_lenData = (this.header.dataSize == 4294967295 ? this._io.size - this.ofsData : this.header.dataSize);
       return this._m_lenData;
     }
   });
 
   return Au;
 })();
-return Au;
-}));
+Au_.Au = Au;
+});

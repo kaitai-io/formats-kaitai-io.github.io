@@ -174,6 +174,11 @@ Implementation closely follows code in OpenSSH.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="SSH public key parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="SSH public key parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -204,7 +209,17 @@ Implementation closely follows code in OpenSSH.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="SSH public key parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="SSH public key parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="SSH public key parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -265,15 +280,151 @@ Implementation closely follows code in OpenSSH.</p>
 <span class="kr">function</span><span class="w"> </span><span class="nc">SshPublicKey</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">key_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">SshPublicKey</span><span class="p">.</span><span class="nf">Cstring</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
 <span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">key_name</span><span class="p">.</span><span class="py">value</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;ssh-rsa&quot;</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">SshPublicKey</span><span class="p">.</span><span class="nf">KeyRsa</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
-<span class="w">  </span><span class="kr">elseif</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;ecdsa-sha2-nistp256&quot;</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;ecdsa-sha2-nistp256&quot;</span><span class="w"> </span><span class="kr">then</span>
 <span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">SshPublicKey</span><span class="p">.</span><span class="nf">KeyEcdsa</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
-<span class="w">  </span><span class="kr">elseif</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;ssh-ed25519&quot;</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">SshPublicKey</span><span class="p">.</span><span class="nf">KeyEd25519</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
 <span class="w">  </span><span class="kr">elseif</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;ssh-dss&quot;</span><span class="w"> </span><span class="kr">then</span>
 <span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">SshPublicKey</span><span class="p">.</span><span class="nf">KeyDsa</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">elseif</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;ssh-ed25519&quot;</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">SshPublicKey</span><span class="p">.</span><span class="nf">KeyEd25519</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">elseif</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;ssh-rsa&quot;</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">SshPublicKey</span><span class="p">.</span><span class="nf">KeyRsa</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
 <span class="w">  </span><span class="kr">end</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- Big integers serialization format used by ssh, v2. In the code, the following</span>
+<span class="c1">-- routines are used to read/write it:</span>
+<span class="c1">-- </span>
+<span class="c1">-- * sshbuf_get_bignum2</span>
+<span class="c1">-- * sshbuf_get_bignum2_bytes_direct</span>
+<span class="c1">-- * sshbuf_put_bignum2</span>
+<span class="c1">-- * sshbuf_get_bignum2_bytes_direct</span>
+<span class="c1">-- See also: Source (https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-crypto.c#L35</span>
+<span class="c1">-- https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-basic.c#L431</span>
+<span class="c1">-- )</span>
+<span class="nv">SshPublicKey</span><span class="p">.</span><span class="py">Bignum2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">SshPublicKey</span><span class="p">.</span><span class="nc">Bignum2</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">SshPublicKey</span><span class="p">.</span><span class="nc">Bignum2</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len</span><span class="p">)</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Length of big integer in bits. In OpenSSH sources, this corresponds to</span>
+<span class="c1">-- `BN_num_bits` function.</span>
+<span class="nv">SshPublicKey</span><span class="p">.</span><span class="py">Bignum2</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">length_in_bits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">SshPublicKey</span><span class="p">.</span><span class="nc">Bignum2</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">length_in_bits</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_length_in_bits</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_length_in_bits</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_length_in_bits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">8</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_length_in_bits</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- A integer-prefixed string designed to be read using `sshbuf_get_cstring`</span>
+<span class="c1">-- and written by `sshbuf_put_cstring` routines in ssh sources. Name is an</span>
+<span class="c1">-- obscure misnomer, as typically &quot;C string&quot; means a null-terminated string.</span>
+<span class="c1">-- See also: Source (https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-basic.c#L181)</span>
+<span class="nv">SshPublicKey</span><span class="p">.</span><span class="py">Cstring</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">SshPublicKey</span><span class="p">.</span><span class="nc">Cstring</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">SshPublicKey</span><span class="p">.</span><span class="nc">Cstring</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">str_decode</span><span class="p">.</span><span class="nf">decode</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len</span><span class="p">),</span><span class="w"> </span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- Elliptic curve dump format used by ssh. In OpenSSH code, the following</span>
+<span class="c1">-- routines are used to read/write it:</span>
+<span class="c1">-- </span>
+<span class="c1">-- * sshbuf_get_ec</span>
+<span class="c1">-- * get_ec</span>
+<span class="c1">-- See also: Source (https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-crypto.c#L90</span>
+<span class="c1">-- https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-crypto.c#L76</span>
+<span class="c1">-- )</span>
+<span class="nv">SshPublicKey</span><span class="p">.</span><span class="py">EllipticCurve</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">SshPublicKey</span><span class="p">.</span><span class="nc">EllipticCurve</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">SshPublicKey</span><span class="p">.</span><span class="nc">EllipticCurve</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len</span><span class="p">)</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- See also: Source (https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2036-L2051)</span>
+<span class="nv">SshPublicKey</span><span class="p">.</span><span class="py">KeyDsa</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">SshPublicKey</span><span class="p">.</span><span class="nc">KeyDsa</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">SshPublicKey</span><span class="p">.</span><span class="nc">KeyDsa</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">dsa_p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">SshPublicKey</span><span class="p">.</span><span class="nf">Bignum2</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">dsa_q</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">SshPublicKey</span><span class="p">.</span><span class="nf">Bignum2</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">dsa_g</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">SshPublicKey</span><span class="p">.</span><span class="nf">Bignum2</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">dsa_pub_key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">SshPublicKey</span><span class="p">.</span><span class="nf">Bignum2</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- See also: Source (https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2060-L2103)</span>
+<span class="nv">SshPublicKey</span><span class="p">.</span><span class="py">KeyEcdsa</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">SshPublicKey</span><span class="p">.</span><span class="nc">KeyEcdsa</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">SshPublicKey</span><span class="p">.</span><span class="nc">KeyEcdsa</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">curve_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">SshPublicKey</span><span class="p">.</span><span class="nf">Cstring</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">ec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">SshPublicKey</span><span class="p">.</span><span class="nf">EllipticCurve</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- See also: Source (https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2111-L2124)</span>
+<span class="nv">SshPublicKey</span><span class="p">.</span><span class="py">KeyEd25519</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">SshPublicKey</span><span class="p">.</span><span class="nc">KeyEd25519</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">SshPublicKey</span><span class="p">.</span><span class="nc">KeyEd25519</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">len_pk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">pk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_pk</span><span class="p">)</span>
 <span class="kr">end</span>
 
 
@@ -284,7 +435,7 @@ Implementation closely follows code in OpenSSH.</p>
 <span class="kr">function</span><span class="w"> </span><span class="nc">SshPublicKey</span><span class="p">.</span><span class="nc">KeyRsa</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
@@ -310,141 +461,6 @@ Implementation closely follows code in OpenSSH.</p>
 <span class="c1">-- </span>
 <span class="c1">-- Modulus of both public and private keys, designated `n` in RSA</span>
 <span class="c1">-- documentation. Its length in bits is designated as &quot;key length&quot;.</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- See also: Source (https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2111-L2124)</span>
-<span class="nv">SshPublicKey</span><span class="p">.</span><span class="py">KeyEd25519</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">SshPublicKey</span><span class="p">.</span><span class="nc">KeyEd25519</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">SshPublicKey</span><span class="p">.</span><span class="nc">KeyEd25519</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">len_pk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">pk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_pk</span><span class="p">)</span>
-<span class="kr">end</span>
-
-
-<span class="c1">-- </span>
-<span class="c1">-- See also: Source (https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2060-L2103)</span>
-<span class="nv">SshPublicKey</span><span class="p">.</span><span class="py">KeyEcdsa</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">SshPublicKey</span><span class="p">.</span><span class="nc">KeyEcdsa</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">SshPublicKey</span><span class="p">.</span><span class="nc">KeyEcdsa</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">curve_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">SshPublicKey</span><span class="p">.</span><span class="nf">Cstring</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">ec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">SshPublicKey</span><span class="p">.</span><span class="nf">EllipticCurve</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
-<span class="kr">end</span>
-
-
-<span class="c1">-- </span>
-<span class="c1">-- A integer-prefixed string designed to be read using `sshbuf_get_cstring`</span>
-<span class="c1">-- and written by `sshbuf_put_cstring` routines in ssh sources. Name is an</span>
-<span class="c1">-- obscure misnomer, as typically &quot;C string&quot; means a null-terminated string.</span>
-<span class="c1">-- See also: Source (https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-basic.c#L181)</span>
-<span class="nv">SshPublicKey</span><span class="p">.</span><span class="py">Cstring</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">SshPublicKey</span><span class="p">.</span><span class="nc">Cstring</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">SshPublicKey</span><span class="p">.</span><span class="nc">Cstring</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">str_decode</span><span class="p">.</span><span class="nf">decode</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len</span><span class="p">),</span><span class="w"> </span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
-<span class="kr">end</span>
-
-
-<span class="c1">-- </span>
-<span class="c1">-- See also: Source (https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2036-L2051)</span>
-<span class="nv">SshPublicKey</span><span class="p">.</span><span class="py">KeyDsa</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">SshPublicKey</span><span class="p">.</span><span class="nc">KeyDsa</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">SshPublicKey</span><span class="p">.</span><span class="nc">KeyDsa</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">dsa_p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">SshPublicKey</span><span class="p">.</span><span class="nf">Bignum2</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">dsa_q</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">SshPublicKey</span><span class="p">.</span><span class="nf">Bignum2</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">dsa_g</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">SshPublicKey</span><span class="p">.</span><span class="nf">Bignum2</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">dsa_pub_key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">SshPublicKey</span><span class="p">.</span><span class="nf">Bignum2</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
-<span class="kr">end</span>
-
-
-<span class="c1">-- </span>
-<span class="c1">-- Elliptic curve dump format used by ssh. In OpenSSH code, the following</span>
-<span class="c1">-- routines are used to read/write it:</span>
-<span class="c1">-- </span>
-<span class="c1">-- * sshbuf_get_ec</span>
-<span class="c1">-- * get_ec</span>
-<span class="c1">-- See also: Source (https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-crypto.c#L90</span>
-<span class="c1">-- https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-crypto.c#L76</span>
-<span class="c1">-- )</span>
-<span class="nv">SshPublicKey</span><span class="p">.</span><span class="py">EllipticCurve</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">SshPublicKey</span><span class="p">.</span><span class="nc">EllipticCurve</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">SshPublicKey</span><span class="p">.</span><span class="nc">EllipticCurve</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len</span><span class="p">)</span>
-<span class="kr">end</span>
-
-
-<span class="c1">-- </span>
-<span class="c1">-- Big integers serialization format used by ssh, v2. In the code, the following</span>
-<span class="c1">-- routines are used to read/write it:</span>
-<span class="c1">-- </span>
-<span class="c1">-- * sshbuf_get_bignum2</span>
-<span class="c1">-- * sshbuf_get_bignum2_bytes_direct</span>
-<span class="c1">-- * sshbuf_put_bignum2</span>
-<span class="c1">-- * sshbuf_get_bignum2_bytes_direct</span>
-<span class="c1">-- See also: Source (https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-crypto.c#L35</span>
-<span class="c1">-- https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-basic.c#L431</span>
-<span class="c1">-- )</span>
-<span class="nv">SshPublicKey</span><span class="p">.</span><span class="py">Bignum2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">SshPublicKey</span><span class="p">.</span><span class="nc">Bignum2</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">SshPublicKey</span><span class="p">.</span><span class="nc">Bignum2</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len</span><span class="p">)</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- Length of big integer in bits. In OpenSSH sources, this corresponds to</span>
-<span class="c1">-- `BN_num_bits` function.</span>
-<span class="nv">SshPublicKey</span><span class="p">.</span><span class="py">Bignum2</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">length_in_bits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">SshPublicKey</span><span class="p">.</span><span class="nc">Bignum2</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">length_in_bits</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_length_in_bits</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_length_in_bits</span>
-<span class="w">  </span><span class="kr">end</span>
-
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_length_in_bits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">len</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">8</span><span class="p">)</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_length_in_bits</span>
-<span class="kr">end</span>
 </pre></div>
 
         </div>

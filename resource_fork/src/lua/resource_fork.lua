@@ -4,9 +4,9 @@
 
 local class = require("class")
 require("kaitaistruct")
+require("bytes_with_io")
 local stringstream = require("string_stream")
 
-require("bytes_with_io")
 -- 
 -- The data format of Macintosh resource forks,
 -- used on Classic Mac OS and Mac OS X/macOS to store additional structured data along with a file's main data (the data fork).
@@ -62,24 +62,6 @@ function ResourceFork:_read()
 end
 
 -- 
--- Use `data_blocks` instead,
--- unless you need access to this instance's `_io`.
-ResourceFork.property.data_blocks_with_io = {}
-function ResourceFork.property.data_blocks_with_io:get()
-  if self._m_data_blocks_with_io ~= nil then
-    return self._m_data_blocks_with_io
-  end
-
-  local _pos = self._io:pos()
-  self._io:seek(self.header.ofs_data_blocks)
-  self._raw__m_data_blocks_with_io = self._io:read_bytes(self.header.len_data_blocks)
-  local _io = KaitaiStream(stringstream(self._raw__m_data_blocks_with_io))
-  self._m_data_blocks_with_io = BytesWithIo(_io)
-  self._io:seek(_pos)
-  return self._m_data_blocks_with_io
-end
-
--- 
 -- Storage area for the data blocks of all resources.
 -- 
 -- These data blocks are not required to appear in any particular order,
@@ -101,6 +83,24 @@ function ResourceFork.property.data_blocks:get()
 
   self._m_data_blocks = self.data_blocks_with_io.data
   return self._m_data_blocks
+end
+
+-- 
+-- Use `data_blocks` instead,
+-- unless you need access to this instance's `_io`.
+ResourceFork.property.data_blocks_with_io = {}
+function ResourceFork.property.data_blocks_with_io:get()
+  if self._m_data_blocks_with_io ~= nil then
+    return self._m_data_blocks_with_io
+  end
+
+  local _pos = self._io:pos()
+  self._io:seek(self.header.ofs_data_blocks)
+  self._raw__m_data_blocks_with_io = self._io:read_bytes(self.header.len_data_blocks)
+  local _io = KaitaiStream(stringstream(self._raw__m_data_blocks_with_io))
+  self._m_data_blocks_with_io = BytesWithIo(_io)
+  self._io:seek(_pos)
+  return self._m_data_blocks_with_io
 end
 
 -- 
@@ -145,6 +145,31 @@ end
 -- this field is set to all zero bytes.
 
 -- 
+-- A resource data block,
+-- as stored in the resource data area.
+-- 
+-- Each data block stores the data contained in a resource,
+-- along with its length.
+ResourceFork.DataBlock = class.class(KaitaiStruct)
+
+function ResourceFork.DataBlock:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function ResourceFork.DataBlock:_read()
+  self.len_data = self._io:read_u4be()
+  self.data = self._io:read_bytes(self.len_data)
+end
+
+-- 
+-- The length of the resource data stored in this block.
+-- 
+-- The data stored in this block.
+
+-- 
 -- Resource file header,
 -- containing the offsets and lengths of the resource data area and resource map.
 ResourceFork.FileHeader = class.class(KaitaiStruct)
@@ -152,7 +177,7 @@ ResourceFork.FileHeader = class.class(KaitaiStruct)
 function ResourceFork.FileHeader:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -187,31 +212,6 @@ end
 -- i. e. the resource map should extend to the end of the resource file.
 
 -- 
--- A resource data block,
--- as stored in the resource data area.
--- 
--- Each data block stores the data contained in a resource,
--- along with its length.
-ResourceFork.DataBlock = class.class(KaitaiStruct)
-
-function ResourceFork.DataBlock:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function ResourceFork.DataBlock:_read()
-  self.len_data = self._io:read_u4be()
-  self.data = self._io:read_bytes(self.len_data)
-end
-
--- 
--- The length of the resource data stored in this block.
--- 
--- The data stored in this block.
-
--- 
 -- Resource map,
 -- containing information about the resources in the file and where they are located in the data area.
 ResourceFork.ResourceMap = class.class(KaitaiStruct)
@@ -219,7 +219,7 @@ ResourceFork.ResourceMap = class.class(KaitaiStruct)
 function ResourceFork.ResourceMap:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -235,20 +235,15 @@ function ResourceFork.ResourceMap:_read()
 end
 
 -- 
--- The resource map's resource type list, followed by the resource reference list area.
-ResourceFork.ResourceMap.property.type_list_and_reference_lists = {}
-function ResourceFork.ResourceMap.property.type_list_and_reference_lists:get()
-  if self._m_type_list_and_reference_lists ~= nil then
-    return self._m_type_list_and_reference_lists
+-- Storage area for the names of all resources.
+ResourceFork.ResourceMap.property.names = {}
+function ResourceFork.ResourceMap.property.names:get()
+  if self._m_names ~= nil then
+    return self._m_names
   end
 
-  local _pos = self._io:pos()
-  self._io:seek(self.ofs_type_list)
-  self._raw__m_type_list_and_reference_lists = self._io:read_bytes((self.ofs_names - self.ofs_type_list))
-  local _io = KaitaiStream(stringstream(self._raw__m_type_list_and_reference_lists))
-  self._m_type_list_and_reference_lists = ResourceFork.ResourceMap.TypeListAndReferenceLists(_io, self, self._root)
-  self._io:seek(_pos)
-  return self._m_type_list_and_reference_lists
+  self._m_names = self.names_with_io.data
+  return self._m_names
 end
 
 -- 
@@ -270,15 +265,20 @@ function ResourceFork.ResourceMap.property.names_with_io:get()
 end
 
 -- 
--- Storage area for the names of all resources.
-ResourceFork.ResourceMap.property.names = {}
-function ResourceFork.ResourceMap.property.names:get()
-  if self._m_names ~= nil then
-    return self._m_names
+-- The resource map's resource type list, followed by the resource reference list area.
+ResourceFork.ResourceMap.property.type_list_and_reference_lists = {}
+function ResourceFork.ResourceMap.property.type_list_and_reference_lists:get()
+  if self._m_type_list_and_reference_lists ~= nil then
+    return self._m_type_list_and_reference_lists
   end
 
-  self._m_names = self.names_with_io.data
-  return self._m_names
+  local _pos = self._io:pos()
+  self._io:seek(self.ofs_type_list)
+  self._raw__m_type_list_and_reference_lists = self._io:read_bytes(self.ofs_names - self.ofs_type_list)
+  local _io = KaitaiStream(stringstream(self._raw__m_type_list_and_reference_lists))
+  self._m_type_list_and_reference_lists = ResourceFork.ResourceMap.TypeListAndReferenceLists(_io, self, self._root)
+  self._io:seek(_pos)
+  return self._m_type_list_and_reference_lists
 end
 
 -- 
@@ -311,7 +311,7 @@ ResourceFork.ResourceMap.FileAttributes = class.class(KaitaiStruct)
 function ResourceFork.ResourceMap.FileAttributes:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -382,6 +382,56 @@ end
 -- These attributes have no known usage or meaning and should always be zero.
 
 -- 
+-- A resource name,
+-- as stored in the resource name storage area in the resource map.
+-- 
+-- The resource names are not required to appear in any particular order.
+-- There may be unused space between and around resource names,
+-- but in practice they are often contiguous.
+ResourceFork.ResourceMap.Name = class.class(KaitaiStruct)
+
+function ResourceFork.ResourceMap.Name:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function ResourceFork.ResourceMap.Name:_read()
+  self.len_value = self._io:read_u1()
+  self.value = self._io:read_bytes(self.len_value)
+end
+
+-- 
+-- The length of the resource name, in bytes.
+-- 
+-- The resource name.
+-- 
+-- This field is exposed as a byte array,
+-- because there is no universal encoding for resource names.
+-- Most Classic Mac software does not deal with encodings explicitly and instead assumes that all strings,
+-- including resource names,
+-- use the system encoding,
+-- which varies depending on the system language.
+-- This means that resource names can use different encodings depending on what system language they were created with.
+-- 
+-- Many resource names are plain ASCII,
+-- meaning that the encoding often does not matter
+-- (because all Mac OS encodings are ASCII-compatible).
+-- For non-ASCII resource names,
+-- the most common encoding is perhaps MacRoman
+-- (used for English and other Western languages),
+-- but other encodings are also sometimes used,
+-- especially for software in non-Western languages.
+-- 
+-- There is no requirement that all names in a single resource file use the same encoding.
+-- For example,
+-- localized software may have some (but not all) of its resource names translated.
+-- For non-Western languages,
+-- this can lead to some resource names using MacRoman,
+-- and others using a different encoding.
+
+-- 
 -- Resource type list and storage area for resource reference lists in the resource map.
 -- 
 -- The two parts are combined into a single type here for technical reasons:
@@ -393,7 +443,7 @@ ResourceFork.ResourceMap.TypeListAndReferenceLists = class.class(KaitaiStruct)
 function ResourceFork.ResourceMap.TypeListAndReferenceLists:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -412,111 +462,6 @@ end
 -- in the same order as their corresponding resource type list entries.
 
 -- 
--- Resource type list in the resource map.
-ResourceFork.ResourceMap.TypeListAndReferenceLists.TypeList = class.class(KaitaiStruct)
-
-function ResourceFork.ResourceMap.TypeListAndReferenceLists.TypeList:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function ResourceFork.ResourceMap.TypeListAndReferenceLists.TypeList:_read()
-  self.num_types_m1 = self._io:read_u2be()
-  self.entries = {}
-  for i = 0, self.num_types - 1 do
-    self.entries[i + 1] = ResourceFork.ResourceMap.TypeListAndReferenceLists.TypeList.TypeListEntry(self._io, self, self._root)
-  end
-end
-
--- 
--- The number of resource types in this list.
-ResourceFork.ResourceMap.TypeListAndReferenceLists.TypeList.property.num_types = {}
-function ResourceFork.ResourceMap.TypeListAndReferenceLists.TypeList.property.num_types:get()
-  if self._m_num_types ~= nil then
-    return self._m_num_types
-  end
-
-  self._m_num_types = ((self.num_types_m1 + 1) % 65536)
-  return self._m_num_types
-end
-
--- 
--- The number of resource types in this list,
--- minus one.
--- 
--- If the resource list is empty,
--- the value of this field is `0xffff`,
--- i. e. `-1` truncated to a 16-bit unsigned integer.
--- 
--- Entries in the resource type list.
-
--- 
--- A single entry in the resource type list.
--- 
--- Each entry corresponds to exactly one resource reference list.
-ResourceFork.ResourceMap.TypeListAndReferenceLists.TypeList.TypeListEntry = class.class(KaitaiStruct)
-
-function ResourceFork.ResourceMap.TypeListAndReferenceLists.TypeList.TypeListEntry:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function ResourceFork.ResourceMap.TypeListAndReferenceLists.TypeList.TypeListEntry:_read()
-  self.type = self._io:read_bytes(4)
-  self.num_references_m1 = self._io:read_u2be()
-  self.ofs_reference_list = self._io:read_u2be()
-end
-
--- 
--- The number of resources in the reference list for this type.
-ResourceFork.ResourceMap.TypeListAndReferenceLists.TypeList.TypeListEntry.property.num_references = {}
-function ResourceFork.ResourceMap.TypeListAndReferenceLists.TypeList.TypeListEntry.property.num_references:get()
-  if self._m_num_references ~= nil then
-    return self._m_num_references
-  end
-
-  self._m_num_references = ((self.num_references_m1 + 1) % 65536)
-  return self._m_num_references
-end
-
--- 
--- The resource reference list for this resource type.
-ResourceFork.ResourceMap.TypeListAndReferenceLists.TypeList.TypeListEntry.property.reference_list = {}
-function ResourceFork.ResourceMap.TypeListAndReferenceLists.TypeList.TypeListEntry.property.reference_list:get()
-  if self._m_reference_list ~= nil then
-    return self._m_reference_list
-  end
-
-  local _io = self._parent._parent._io
-  local _pos = _io:pos()
-  _io:seek(self.ofs_reference_list)
-  self._m_reference_list = ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList(self.num_references, _io, self, self._root)
-  _io:seek(_pos)
-  return self._m_reference_list
-end
-
--- 
--- The four-character type code of the resources in the reference list.
--- 
--- The number of resources in the reference list for this type,
--- minus one.
--- 
--- Empty reference lists should never exist.
--- 
--- Offset of the resource reference list for this resource type,
--- from the start of the resource type list.
--- 
--- Although the offset is relative to the start of the type list,
--- it should never point into the type list itself,
--- but into the reference list storage area that directly follows it.
--- That is,
--- it should always be at least `_parent._sizeof`.
-
--- 
 -- A resource reference list,
 -- as stored in the reference list area.
 -- 
@@ -527,7 +472,7 @@ ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList = class.class(K
 function ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList:_init(num_references, io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self.num_references = num_references
   self:_read()
 end
@@ -555,7 +500,7 @@ ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList.Reference = cla
 function ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList.Reference:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -568,6 +513,22 @@ function ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList.Refere
   self.ofs_data_block = self._io:read_bits_int_be(24)
   self._io:align_to_byte()
   self.reserved_handle = self._io:read_u4be()
+end
+
+-- 
+-- The data block containing the data for the resource described by this reference.
+ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList.Reference.property.data_block = {}
+function ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList.Reference.property.data_block:get()
+  if self._m_data_block ~= nil then
+    return self._m_data_block
+  end
+
+  local _io = self._root.data_blocks_with_io._io
+  local _pos = _io:pos()
+  _io:seek(self.ofs_data_block)
+  self._m_data_block = ResourceFork.DataBlock(_io, self, self._root)
+  _io:seek(_pos)
+  return self._m_data_block
 end
 
 -- 
@@ -586,22 +547,6 @@ function ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList.Refere
     _io:seek(_pos)
   end
   return self._m_name
-end
-
--- 
--- The data block containing the data for the resource described by this reference.
-ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList.Reference.property.data_block = {}
-function ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList.Reference.property.data_block:get()
-  if self._m_data_block ~= nil then
-    return self._m_data_block
-  end
-
-  local _io = self._root.data_blocks_with_io._io
-  local _pos = _io:pos()
-  _io:seek(self.ofs_data_block)
-  self._m_data_block = ResourceFork.DataBlock(_io, self, self._root)
-  _io:seek(_pos)
-  return self._m_data_block
 end
 
 -- 
@@ -629,7 +574,7 @@ ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList.Reference.Attri
 function ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList.Reference.Attributes:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -744,52 +689,107 @@ end
 -- see the compressed_resource.ksy spec.
 
 -- 
--- A resource name,
--- as stored in the resource name storage area in the resource map.
--- 
--- The resource names are not required to appear in any particular order.
--- There may be unused space between and around resource names,
--- but in practice they are often contiguous.
-ResourceFork.ResourceMap.Name = class.class(KaitaiStruct)
+-- Resource type list in the resource map.
+ResourceFork.ResourceMap.TypeListAndReferenceLists.TypeList = class.class(KaitaiStruct)
 
-function ResourceFork.ResourceMap.Name:_init(io, parent, root)
+function ResourceFork.ResourceMap.TypeListAndReferenceLists.TypeList:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function ResourceFork.ResourceMap.Name:_read()
-  self.len_value = self._io:read_u1()
-  self.value = self._io:read_bytes(self.len_value)
+function ResourceFork.ResourceMap.TypeListAndReferenceLists.TypeList:_read()
+  self.num_types_m1 = self._io:read_u2be()
+  self.entries = {}
+  for i = 0, self.num_types - 1 do
+    self.entries[i + 1] = ResourceFork.ResourceMap.TypeListAndReferenceLists.TypeList.TypeListEntry(self._io, self, self._root)
+  end
 end
 
 -- 
--- The length of the resource name, in bytes.
+-- The number of resource types in this list.
+ResourceFork.ResourceMap.TypeListAndReferenceLists.TypeList.property.num_types = {}
+function ResourceFork.ResourceMap.TypeListAndReferenceLists.TypeList.property.num_types:get()
+  if self._m_num_types ~= nil then
+    return self._m_num_types
+  end
+
+  self._m_num_types = (self.num_types_m1 + 1) % 65536
+  return self._m_num_types
+end
+
 -- 
--- The resource name.
+-- The number of resource types in this list,
+-- minus one.
 -- 
--- This field is exposed as a byte array,
--- because there is no universal encoding for resource names.
--- Most Classic Mac software does not deal with encodings explicitly and instead assumes that all strings,
--- including resource names,
--- use the system encoding,
--- which varies depending on the system language.
--- This means that resource names can use different encodings depending on what system language they were created with.
+-- If the resource list is empty,
+-- the value of this field is `0xffff`,
+-- i. e. `-1` truncated to a 16-bit unsigned integer.
 -- 
--- Many resource names are plain ASCII,
--- meaning that the encoding often does not matter
--- (because all Mac OS encodings are ASCII-compatible).
--- For non-ASCII resource names,
--- the most common encoding is perhaps MacRoman
--- (used for English and other Western languages),
--- but other encodings are also sometimes used,
--- especially for software in non-Western languages.
+-- Entries in the resource type list.
+
 -- 
--- There is no requirement that all names in a single resource file use the same encoding.
--- For example,
--- localized software may have some (but not all) of its resource names translated.
--- For non-Western languages,
--- this can lead to some resource names using MacRoman,
--- and others using a different encoding.
+-- A single entry in the resource type list.
+-- 
+-- Each entry corresponds to exactly one resource reference list.
+ResourceFork.ResourceMap.TypeListAndReferenceLists.TypeList.TypeListEntry = class.class(KaitaiStruct)
+
+function ResourceFork.ResourceMap.TypeListAndReferenceLists.TypeList.TypeListEntry:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function ResourceFork.ResourceMap.TypeListAndReferenceLists.TypeList.TypeListEntry:_read()
+  self.type = self._io:read_bytes(4)
+  self.num_references_m1 = self._io:read_u2be()
+  self.ofs_reference_list = self._io:read_u2be()
+end
+
+-- 
+-- The number of resources in the reference list for this type.
+ResourceFork.ResourceMap.TypeListAndReferenceLists.TypeList.TypeListEntry.property.num_references = {}
+function ResourceFork.ResourceMap.TypeListAndReferenceLists.TypeList.TypeListEntry.property.num_references:get()
+  if self._m_num_references ~= nil then
+    return self._m_num_references
+  end
+
+  self._m_num_references = (self.num_references_m1 + 1) % 65536
+  return self._m_num_references
+end
+
+-- 
+-- The resource reference list for this resource type.
+ResourceFork.ResourceMap.TypeListAndReferenceLists.TypeList.TypeListEntry.property.reference_list = {}
+function ResourceFork.ResourceMap.TypeListAndReferenceLists.TypeList.TypeListEntry.property.reference_list:get()
+  if self._m_reference_list ~= nil then
+    return self._m_reference_list
+  end
+
+  local _io = self._parent._parent._io
+  local _pos = _io:pos()
+  _io:seek(self.ofs_reference_list)
+  self._m_reference_list = ResourceFork.ResourceMap.TypeListAndReferenceLists.ReferenceList(self.num_references, _io, self, self._root)
+  _io:seek(_pos)
+  return self._m_reference_list
+end
+
+-- 
+-- The four-character type code of the resources in the reference list.
+-- 
+-- The number of resources in the reference list for this type,
+-- minus one.
+-- 
+-- Empty reference lists should never exist.
+-- 
+-- Offset of the resource reference list for this resource type,
+-- from the start of the resource type list.
+-- 
+-- Although the offset is relative to the start of the type list,
+-- it should never point into the type list itself,
+-- but into the reference list storage area that directly follows it.
+-- That is,
+-- it should always be at least `_parent._sizeof`.
 

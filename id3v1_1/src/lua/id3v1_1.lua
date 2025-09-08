@@ -34,7 +34,7 @@ function Id3v11.property.id3v1_tag:get()
   end
 
   local _pos = self._io:pos()
-  self._io:seek((self._io:size() - 128))
+  self._io:seek(self._io:size() - 128)
   self._m_id3v1_tag = Id3v11.Id3V11Tag(self._io, self, self._root)
   self._io:seek(_pos)
   return self._m_id3v1_tag
@@ -185,14 +185,14 @@ Id3v11.Id3V11Tag.GenreEnum = enum.Enum {
 function Id3v11.Id3V11Tag:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function Id3v11.Id3V11Tag:_read()
   self.magic = self._io:read_bytes(3)
   if not(self.magic == "\084\065\071") then
-    error("not equal, expected " ..  "\084\065\071" .. ", but got " .. self.magic)
+    error("not equal, expected " .. "\084\065\071" .. ", but got " .. self.magic)
   end
   self.title = self._io:read_bytes(30)
   self.artist = self._io:read_bytes(30)

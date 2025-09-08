@@ -2,13 +2,15 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class efivar_signature_list_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -35,9 +37,9 @@
 class efivar_signature_list_t : public kaitai::kstruct {
 
 public:
-    class signature_list_t;
-    class signature_data_t;
     class efi_var_attr_t;
+    class signature_data_t;
+    class signature_list_t;
 
     efivar_signature_list_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, efivar_signature_list_t* p__root = nullptr);
 
@@ -47,6 +49,92 @@ private:
 
 public:
     ~efivar_signature_list_t();
+
+    /**
+     * Attributes of a UEFI variable
+     */
+
+    class efi_var_attr_t : public kaitai::kstruct {
+
+    public:
+
+        efi_var_attr_t(kaitai::kstream* p__io, efivar_signature_list_t* p__parent = nullptr, efivar_signature_list_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~efi_var_attr_t();
+
+    private:
+        bool m_enhanced_authenticated_access;
+        bool m_append_write;
+        bool m_time_based_authenticated_write_access;
+        bool m_authenticated_write_access;
+        bool m_hardware_error_record;
+        bool m_runtime_access;
+        bool m_bootservice_access;
+        bool m_non_volatile;
+        uint64_t m_reserved1;
+        efivar_signature_list_t* m__root;
+        efivar_signature_list_t* m__parent;
+
+    public:
+        bool enhanced_authenticated_access() const { return m_enhanced_authenticated_access; }
+        bool append_write() const { return m_append_write; }
+        bool time_based_authenticated_write_access() const { return m_time_based_authenticated_write_access; }
+        bool authenticated_write_access() const { return m_authenticated_write_access; }
+        bool hardware_error_record() const { return m_hardware_error_record; }
+        bool runtime_access() const { return m_runtime_access; }
+        bool bootservice_access() const { return m_bootservice_access; }
+        bool non_volatile() const { return m_non_volatile; }
+
+        /**
+         * Reserved (unused) bits
+         */
+        uint64_t reserved1() const { return m_reserved1; }
+        efivar_signature_list_t* _root() const { return m__root; }
+        efivar_signature_list_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * \sa EFI_SIGNATURE_DATA
+     */
+
+    class signature_data_t : public kaitai::kstruct {
+
+    public:
+
+        signature_data_t(kaitai::kstream* p__io, efivar_signature_list_t::signature_list_t* p__parent = nullptr, efivar_signature_list_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~signature_data_t();
+
+    private:
+        std::string m_owner;
+        std::string m_data;
+        efivar_signature_list_t* m__root;
+        efivar_signature_list_t::signature_list_t* m__parent;
+
+    public:
+
+        /**
+         * An identifier which identifies the agent which added the signature to the list
+         */
+        std::string owner() const { return m_owner; }
+
+        /**
+         * The format of the signature is defined by the SignatureType.
+         */
+        std::string data() const { return m_data; }
+        efivar_signature_list_t* _root() const { return m__root; }
+        efivar_signature_list_t::signature_list_t* _parent() const { return m__parent; }
+    };
 
     /**
      * \sa EFI_SIGNATURE_LIST
@@ -66,52 +154,16 @@ public:
         ~signature_list_t();
 
     private:
-        bool f_is_cert_sha512_x509;
-        bool m_is_cert_sha512_x509;
+        bool f_is_cert_der_pkcs7;
+        bool m_is_cert_der_pkcs7;
 
     public:
 
         /**
-         * SHA512 hash of an X.509 certificate's To-Be-Signed contents, and a time of revocation
-         * \sa EFI_CERT_X509_SHA512_GUID
+         * DER-encoded PKCS #7 version 1.5 [RFC2315]
+         * \sa EFI_CERT_TYPE_PKCS7_GUID
          */
-        bool is_cert_sha512_x509();
-
-    private:
-        bool f_is_cert_sha224;
-        bool m_is_cert_sha224;
-
-    public:
-
-        /**
-         * SHA-224 hash
-         * \sa EFI_CERT_SHA224_GUID
-         */
-        bool is_cert_sha224();
-
-    private:
-        bool f_is_cert_x509;
-        bool m_is_cert_x509;
-
-    public:
-
-        /**
-         * X.509 certificate
-         * \sa EFI_CERT_X509_GUID
-         */
-        bool is_cert_x509();
-
-    private:
-        bool f_is_cert_sha256_x509;
-        bool m_is_cert_sha256_x509;
-
-    public:
-
-        /**
-         * SHA256 hash of an X.509 certificate's To-Be-Signed contents, and a time of revocation
-         * \sa EFI_CERT_X509_SHA256_GUID
-         */
-        bool is_cert_sha256_x509();
+        bool is_cert_der_pkcs7();
 
     private:
         bool f_is_cert_rsa2048_key;
@@ -126,42 +178,6 @@ public:
         bool is_cert_rsa2048_key();
 
     private:
-        bool f_is_cert_sha512;
-        bool m_is_cert_sha512;
-
-    public:
-
-        /**
-         * SHA-512 hash
-         * \sa EFI_CERT_SHA512_GUID
-         */
-        bool is_cert_sha512();
-
-    private:
-        bool f_is_cert_sha384;
-        bool m_is_cert_sha384;
-
-    public:
-
-        /**
-         * SHA-384 hash
-         * \sa EFI_CERT_SHA384_GUID
-         */
-        bool is_cert_sha384();
-
-    private:
-        bool f_is_cert_sha1;
-        bool m_is_cert_sha1;
-
-    public:
-
-        /**
-         * SHA-1 hash
-         * \sa EFI_CERT_SHA1_GUID
-         */
-        bool is_cert_sha1();
-
-    private:
         bool f_is_cert_rsa2048_sha1;
         bool m_is_cert_rsa2048_sha1;
 
@@ -172,30 +188,6 @@ public:
          * \sa EFI_CERT_RSA2048_SHA1_GUID
          */
         bool is_cert_rsa2048_sha1();
-
-    private:
-        bool f_is_cert_sha256;
-        bool m_is_cert_sha256;
-
-    public:
-
-        /**
-         * SHA-256 hash
-         * \sa EFI_CERT_SHA256_GUID
-         */
-        bool is_cert_sha256();
-
-    private:
-        bool f_is_cert_sha384_x509;
-        bool m_is_cert_sha384_x509;
-
-    public:
-
-        /**
-         * SHA384 hash of an X.509 certificate's To-Be-Signed contents, and a time of revocation
-         * \sa EFI_CERT_X509_SHA384_GUID
-         */
-        bool is_cert_sha384_x509();
 
     private:
         bool f_is_cert_rsa2048_sha256;
@@ -210,16 +202,112 @@ public:
         bool is_cert_rsa2048_sha256();
 
     private:
-        bool f_is_cert_der_pkcs7;
-        bool m_is_cert_der_pkcs7;
+        bool f_is_cert_sha1;
+        bool m_is_cert_sha1;
 
     public:
 
         /**
-         * DER-encoded PKCS #7 version 1.5 [RFC2315]
-         * \sa EFI_CERT_TYPE_PKCS7_GUID
+         * SHA-1 hash
+         * \sa EFI_CERT_SHA1_GUID
          */
-        bool is_cert_der_pkcs7();
+        bool is_cert_sha1();
+
+    private:
+        bool f_is_cert_sha224;
+        bool m_is_cert_sha224;
+
+    public:
+
+        /**
+         * SHA-224 hash
+         * \sa EFI_CERT_SHA224_GUID
+         */
+        bool is_cert_sha224();
+
+    private:
+        bool f_is_cert_sha256;
+        bool m_is_cert_sha256;
+
+    public:
+
+        /**
+         * SHA-256 hash
+         * \sa EFI_CERT_SHA256_GUID
+         */
+        bool is_cert_sha256();
+
+    private:
+        bool f_is_cert_sha256_x509;
+        bool m_is_cert_sha256_x509;
+
+    public:
+
+        /**
+         * SHA256 hash of an X.509 certificate's To-Be-Signed contents, and a time of revocation
+         * \sa EFI_CERT_X509_SHA256_GUID
+         */
+        bool is_cert_sha256_x509();
+
+    private:
+        bool f_is_cert_sha384;
+        bool m_is_cert_sha384;
+
+    public:
+
+        /**
+         * SHA-384 hash
+         * \sa EFI_CERT_SHA384_GUID
+         */
+        bool is_cert_sha384();
+
+    private:
+        bool f_is_cert_sha384_x509;
+        bool m_is_cert_sha384_x509;
+
+    public:
+
+        /**
+         * SHA384 hash of an X.509 certificate's To-Be-Signed contents, and a time of revocation
+         * \sa EFI_CERT_X509_SHA384_GUID
+         */
+        bool is_cert_sha384_x509();
+
+    private:
+        bool f_is_cert_sha512;
+        bool m_is_cert_sha512;
+
+    public:
+
+        /**
+         * SHA-512 hash
+         * \sa EFI_CERT_SHA512_GUID
+         */
+        bool is_cert_sha512();
+
+    private:
+        bool f_is_cert_sha512_x509;
+        bool m_is_cert_sha512_x509;
+
+    public:
+
+        /**
+         * SHA512 hash of an X.509 certificate's To-Be-Signed contents, and a time of revocation
+         * \sa EFI_CERT_X509_SHA512_GUID
+         */
+        bool is_cert_sha512_x509();
+
+    private:
+        bool f_is_cert_x509;
+        bool m_is_cert_x509;
+
+    public:
+
+        /**
+         * X.509 certificate
+         * \sa EFI_CERT_X509_GUID
+         */
+        bool is_cert_x509();
 
     private:
         std::string m_signature_type;
@@ -280,92 +368,6 @@ public:
         efivar_signature_list_t* _parent() const { return m__parent; }
         std::vector<std::string>* _raw_signatures() const { return m__raw_signatures.get(); }
         std::vector<std::unique_ptr<kaitai::kstream>>* _io__raw_signatures() const { return m__io__raw_signatures.get(); }
-    };
-
-    /**
-     * \sa EFI_SIGNATURE_DATA
-     */
-
-    class signature_data_t : public kaitai::kstruct {
-
-    public:
-
-        signature_data_t(kaitai::kstream* p__io, efivar_signature_list_t::signature_list_t* p__parent = nullptr, efivar_signature_list_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~signature_data_t();
-
-    private:
-        std::string m_owner;
-        std::string m_data;
-        efivar_signature_list_t* m__root;
-        efivar_signature_list_t::signature_list_t* m__parent;
-
-    public:
-
-        /**
-         * An identifier which identifies the agent which added the signature to the list
-         */
-        std::string owner() const { return m_owner; }
-
-        /**
-         * The format of the signature is defined by the SignatureType.
-         */
-        std::string data() const { return m_data; }
-        efivar_signature_list_t* _root() const { return m__root; }
-        efivar_signature_list_t::signature_list_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * Attributes of a UEFI variable
-     */
-
-    class efi_var_attr_t : public kaitai::kstruct {
-
-    public:
-
-        efi_var_attr_t(kaitai::kstream* p__io, efivar_signature_list_t* p__parent = nullptr, efivar_signature_list_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~efi_var_attr_t();
-
-    private:
-        bool m_enhanced_authenticated_access;
-        bool m_append_write;
-        bool m_time_based_authenticated_write_access;
-        bool m_authenticated_write_access;
-        bool m_hardware_error_record;
-        bool m_runtime_access;
-        bool m_bootservice_access;
-        bool m_non_volatile;
-        uint64_t m_reserved1;
-        efivar_signature_list_t* m__root;
-        efivar_signature_list_t* m__parent;
-
-    public:
-        bool enhanced_authenticated_access() const { return m_enhanced_authenticated_access; }
-        bool append_write() const { return m_append_write; }
-        bool time_based_authenticated_write_access() const { return m_time_based_authenticated_write_access; }
-        bool authenticated_write_access() const { return m_authenticated_write_access; }
-        bool hardware_error_record() const { return m_hardware_error_record; }
-        bool runtime_access() const { return m_runtime_access; }
-        bool bootservice_access() const { return m_bootservice_access; }
-        bool non_volatile() const { return m_non_volatile; }
-
-        /**
-         * Reserved (unused) bits
-         */
-        uint64_t reserved1() const { return m_reserved1; }
-        efivar_signature_list_t* _root() const { return m__root; }
-        efivar_signature_list_t* _parent() const { return m__parent; }
     };
 
 private:

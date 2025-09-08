@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Encode;
 
 ########################################################################
@@ -25,7 +25,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -58,6 +58,34 @@ sub _read {
     }
 }
 
+sub base {
+    my ($self) = @_;
+    return $self->{base} if ($self->{base});
+    $self->{base} = $self->kernel()->addr() - 32768;
+    return $self->{base};
+}
+
+sub dtb_img {
+    my ($self) = @_;
+    return $self->{dtb_img} if ($self->{dtb_img});
+    if ( (($self->header_version() > 1) && ($self->dtb()->size() > 0)) ) {
+        my $_pos = $self->{_io}->pos();
+        $self->{_io}->seek(int((((((($self->page_size() + $self->kernel()->size()) + $self->ramdisk()->size()) + $self->second()->size()) + $self->recovery_dtbo()->size()) + $self->page_size()) - 1) / $self->page_size()) * $self->page_size());
+        $self->{dtb_img} = $self->{_io}->read_bytes($self->dtb()->size());
+        $self->{_io}->seek($_pos);
+    }
+    return $self->{dtb_img};
+}
+
+sub dtb_offset {
+    my ($self) = @_;
+    return $self->{dtb_offset} if ($self->{dtb_offset});
+    if ($self->header_version() > 1) {
+        $self->{dtb_offset} = ($self->dtb()->addr() > 0 ? $self->dtb()->addr() - $self->base() : 0);
+    }
+    return $self->{dtb_offset};
+}
+
 sub kernel_img {
     my ($self) = @_;
     return $self->{kernel_img} if ($self->{kernel_img});
@@ -68,53 +96,11 @@ sub kernel_img {
     return $self->{kernel_img};
 }
 
-sub tags_offset {
-    my ($self) = @_;
-    return $self->{tags_offset} if ($self->{tags_offset});
-    $self->{tags_offset} = ($self->tags_load() - $self->base());
-    return $self->{tags_offset};
-}
-
-sub ramdisk_offset {
-    my ($self) = @_;
-    return $self->{ramdisk_offset} if ($self->{ramdisk_offset});
-    $self->{ramdisk_offset} = ($self->ramdisk()->addr() > 0 ? ($self->ramdisk()->addr() - $self->base()) : 0);
-    return $self->{ramdisk_offset};
-}
-
-sub second_offset {
-    my ($self) = @_;
-    return $self->{second_offset} if ($self->{second_offset});
-    $self->{second_offset} = ($self->second()->addr() > 0 ? ($self->second()->addr() - $self->base()) : 0);
-    return $self->{second_offset};
-}
-
 sub kernel_offset {
     my ($self) = @_;
     return $self->{kernel_offset} if ($self->{kernel_offset});
-    $self->{kernel_offset} = ($self->kernel()->addr() - $self->base());
+    $self->{kernel_offset} = $self->kernel()->addr() - $self->base();
     return $self->{kernel_offset};
-}
-
-sub dtb_offset {
-    my ($self) = @_;
-    return $self->{dtb_offset} if ($self->{dtb_offset});
-    if ($self->header_version() > 1) {
-        $self->{dtb_offset} = ($self->dtb()->addr() > 0 ? ($self->dtb()->addr() - $self->base()) : 0);
-    }
-    return $self->{dtb_offset};
-}
-
-sub dtb_img {
-    my ($self) = @_;
-    return $self->{dtb_img} if ($self->{dtb_img});
-    if ( (($self->header_version() > 1) && ($self->dtb()->size() > 0)) ) {
-        my $_pos = $self->{_io}->pos();
-        $self->{_io}->seek((int((((((($self->page_size() + $self->kernel()->size()) + $self->ramdisk()->size()) + $self->second()->size()) + $self->recovery_dtbo()->size()) + $self->page_size()) - 1) / $self->page_size()) * $self->page_size()));
-        $self->{dtb_img} = $self->{_io}->read_bytes($self->dtb()->size());
-        $self->{_io}->seek($_pos);
-    }
-    return $self->{dtb_img};
 }
 
 sub ramdisk_img {
@@ -122,11 +108,18 @@ sub ramdisk_img {
     return $self->{ramdisk_img} if ($self->{ramdisk_img});
     if ($self->ramdisk()->size() > 0) {
         my $_pos = $self->{_io}->pos();
-        $self->{_io}->seek((int(((($self->page_size() + $self->kernel()->size()) + $self->page_size()) - 1) / $self->page_size()) * $self->page_size()));
+        $self->{_io}->seek(int(((($self->page_size() + $self->kernel()->size()) + $self->page_size()) - 1) / $self->page_size()) * $self->page_size());
         $self->{ramdisk_img} = $self->{_io}->read_bytes($self->ramdisk()->size());
         $self->{_io}->seek($_pos);
     }
     return $self->{ramdisk_img};
+}
+
+sub ramdisk_offset {
+    my ($self) = @_;
+    return $self->{ramdisk_offset} if ($self->{ramdisk_offset});
+    $self->{ramdisk_offset} = ($self->ramdisk()->addr() > 0 ? $self->ramdisk()->addr() - $self->base() : 0);
+    return $self->{ramdisk_offset};
 }
 
 sub recovery_dtbo_img {
@@ -146,18 +139,25 @@ sub second_img {
     return $self->{second_img} if ($self->{second_img});
     if ($self->second()->size() > 0) {
         my $_pos = $self->{_io}->pos();
-        $self->{_io}->seek((int((((($self->page_size() + $self->kernel()->size()) + $self->ramdisk()->size()) + $self->page_size()) - 1) / $self->page_size()) * $self->page_size()));
+        $self->{_io}->seek(int((((($self->page_size() + $self->kernel()->size()) + $self->ramdisk()->size()) + $self->page_size()) - 1) / $self->page_size()) * $self->page_size());
         $self->{second_img} = $self->{_io}->read_bytes($self->second()->size());
         $self->{_io}->seek($_pos);
     }
     return $self->{second_img};
 }
 
-sub base {
+sub second_offset {
     my ($self) = @_;
-    return $self->{base} if ($self->{base});
-    $self->{base} = ($self->kernel()->addr() - 32768);
-    return $self->{base};
+    return $self->{second_offset} if ($self->{second_offset});
+    $self->{second_offset} = ($self->second()->addr() > 0 ? $self->second()->addr() - $self->base() : 0);
+    return $self->{second_offset};
+}
+
+sub tags_offset {
+    my ($self) = @_;
+    return $self->{tags_offset} if ($self->{tags_offset});
+    $self->{tags_offset} = $self->tags_load() - $self->base();
+    return $self->{tags_offset};
 }
 
 sub magic {
@@ -255,7 +255,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -299,7 +299,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -324,6 +324,79 @@ sub addr {
 }
 
 ########################################################################
+package AndroidImg::OsVersion;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{version} = $self->{_io}->read_u4le();
+}
+
+sub major {
+    my ($self) = @_;
+    return $self->{major} if ($self->{major});
+    $self->{major} = $self->version() >> 25 & 127;
+    return $self->{major};
+}
+
+sub minor {
+    my ($self) = @_;
+    return $self->{minor} if ($self->{minor});
+    $self->{minor} = $self->version() >> 18 & 127;
+    return $self->{minor};
+}
+
+sub month {
+    my ($self) = @_;
+    return $self->{month} if ($self->{month});
+    $self->{month} = $self->version() & 15;
+    return $self->{month};
+}
+
+sub patch {
+    my ($self) = @_;
+    return $self->{patch} if ($self->{patch});
+    $self->{patch} = $self->version() >> 11 & 127;
+    return $self->{patch};
+}
+
+sub year {
+    my ($self) = @_;
+    return $self->{year} if ($self->{year});
+    $self->{year} = ($self->version() >> 4 & 127) + 2000;
+    return $self->{year};
+}
+
+sub version {
+    my ($self) = @_;
+    return $self->{version};
+}
+
+########################################################################
 package AndroidImg::SizeOffset;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -343,7 +416,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -365,79 +438,6 @@ sub size {
 sub offset {
     my ($self) = @_;
     return $self->{offset};
-}
-
-########################################################################
-package AndroidImg::OsVersion;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{version} = $self->{_io}->read_u4le();
-}
-
-sub month {
-    my ($self) = @_;
-    return $self->{month} if ($self->{month});
-    $self->{month} = ($self->version() & 15);
-    return $self->{month};
-}
-
-sub patch {
-    my ($self) = @_;
-    return $self->{patch} if ($self->{patch});
-    $self->{patch} = (($self->version() >> 11) & 127);
-    return $self->{patch};
-}
-
-sub year {
-    my ($self) = @_;
-    return $self->{year} if ($self->{year});
-    $self->{year} = ((($self->version() >> 4) & 127) + 2000);
-    return $self->{year};
-}
-
-sub major {
-    my ($self) = @_;
-    return $self->{major} if ($self->{major});
-    $self->{major} = (($self->version() >> 25) & 127);
-    return $self->{major};
-}
-
-sub minor {
-    my ($self) = @_;
-    return $self->{minor} if ($self->{minor});
-    $self->{minor} = (($self->version() >> 18) & 127);
-    return $self->{minor};
-}
-
-sub version {
-    my ($self) = @_;
-    return $self->{version};
 }
 
 1;

@@ -57,9 +57,9 @@ namespace Kaitai
         private void _read()
         {
             _magic = m_io.ReadBytes(4);
-            if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 86, 79, 88, 32 }) == 0)))
+            if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 86, 79, 88, 32 }) == 0)))
             {
-                throw new ValidationNotEqualError(new byte[] { 86, 79, 88, 32 }, Magic, M_Io, "/seq/0");
+                throw new ValidationNotEqualError(new byte[] { 86, 79, 88, 32 }, _magic, m_io, "/seq/0");
             }
             _version = m_io.ReadU4le();
             _main = new Chunk(m_io, this, m_root);
@@ -84,16 +84,16 @@ namespace Kaitai
                 _numBytesOfChildrenChunks = m_io.ReadU4le();
                 if (NumBytesOfChunkContent != 0) {
                     switch (ChunkId) {
-                    case MagicavoxelVox.ChunkType.Size: {
-                        __raw_chunkContent = m_io.ReadBytes(NumBytesOfChunkContent);
-                        var io___raw_chunkContent = new KaitaiStream(__raw_chunkContent);
-                        _chunkContent = new Size(io___raw_chunkContent, this, m_root);
-                        break;
-                    }
                     case MagicavoxelVox.ChunkType.Matt: {
                         __raw_chunkContent = m_io.ReadBytes(NumBytesOfChunkContent);
                         var io___raw_chunkContent = new KaitaiStream(__raw_chunkContent);
                         _chunkContent = new Matt(io___raw_chunkContent, this, m_root);
+                        break;
+                    }
+                    case MagicavoxelVox.ChunkType.Pack: {
+                        __raw_chunkContent = m_io.ReadBytes(NumBytesOfChunkContent);
+                        var io___raw_chunkContent = new KaitaiStream(__raw_chunkContent);
+                        _chunkContent = new Pack(io___raw_chunkContent, this, m_root);
                         break;
                     }
                     case MagicavoxelVox.ChunkType.Rgba: {
@@ -102,16 +102,16 @@ namespace Kaitai
                         _chunkContent = new Rgba(io___raw_chunkContent, this, m_root);
                         break;
                     }
+                    case MagicavoxelVox.ChunkType.Size: {
+                        __raw_chunkContent = m_io.ReadBytes(NumBytesOfChunkContent);
+                        var io___raw_chunkContent = new KaitaiStream(__raw_chunkContent);
+                        _chunkContent = new Size(io___raw_chunkContent, this, m_root);
+                        break;
+                    }
                     case MagicavoxelVox.ChunkType.Xyzi: {
                         __raw_chunkContent = m_io.ReadBytes(NumBytesOfChunkContent);
                         var io___raw_chunkContent = new KaitaiStream(__raw_chunkContent);
                         _chunkContent = new Xyzi(io___raw_chunkContent, this, m_root);
-                        break;
-                    }
-                    case MagicavoxelVox.ChunkType.Pack: {
-                        __raw_chunkContent = m_io.ReadBytes(NumBytesOfChunkContent);
-                        var io___raw_chunkContent = new KaitaiStream(__raw_chunkContent);
-                        _chunkContent = new Pack(io___raw_chunkContent, this, m_root);
                         break;
                     }
                     default: {
@@ -148,304 +148,6 @@ namespace Kaitai
             public KaitaiStruct M_Parent { get { return m_parent; } }
             public byte[] M_RawChunkContent { get { return __raw_chunkContent; } }
         }
-        public partial class Size : KaitaiStruct
-        {
-            public static Size FromFile(string fileName)
-            {
-                return new Size(new KaitaiStream(fileName));
-            }
-
-            public Size(KaitaiStream p__io, MagicavoxelVox.Chunk p__parent = null, MagicavoxelVox p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _sizeX = m_io.ReadU4le();
-                _sizeY = m_io.ReadU4le();
-                _sizeZ = m_io.ReadU4le();
-            }
-            private uint _sizeX;
-            private uint _sizeY;
-            private uint _sizeZ;
-            private MagicavoxelVox m_root;
-            private MagicavoxelVox.Chunk m_parent;
-            public uint SizeX { get { return _sizeX; } }
-            public uint SizeY { get { return _sizeY; } }
-            public uint SizeZ { get { return _sizeZ; } }
-            public MagicavoxelVox M_Root { get { return m_root; } }
-            public MagicavoxelVox.Chunk M_Parent { get { return m_parent; } }
-        }
-        public partial class Rgba : KaitaiStruct
-        {
-            public static Rgba FromFile(string fileName)
-            {
-                return new Rgba(new KaitaiStream(fileName));
-            }
-
-            public Rgba(KaitaiStream p__io, MagicavoxelVox.Chunk p__parent = null, MagicavoxelVox p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _colors = new List<Color>();
-                for (var i = 0; i < 256; i++)
-                {
-                    _colors.Add(new Color(m_io, this, m_root));
-                }
-            }
-            private List<Color> _colors;
-            private MagicavoxelVox m_root;
-            private MagicavoxelVox.Chunk m_parent;
-            public List<Color> Colors { get { return _colors; } }
-            public MagicavoxelVox M_Root { get { return m_root; } }
-            public MagicavoxelVox.Chunk M_Parent { get { return m_parent; } }
-        }
-        public partial class Pack : KaitaiStruct
-        {
-            public static Pack FromFile(string fileName)
-            {
-                return new Pack(new KaitaiStream(fileName));
-            }
-
-            public Pack(KaitaiStream p__io, MagicavoxelVox.Chunk p__parent = null, MagicavoxelVox p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _numModels = m_io.ReadU4le();
-            }
-            private uint _numModels;
-            private MagicavoxelVox m_root;
-            private MagicavoxelVox.Chunk m_parent;
-            public uint NumModels { get { return _numModels; } }
-            public MagicavoxelVox M_Root { get { return m_root; } }
-            public MagicavoxelVox.Chunk M_Parent { get { return m_parent; } }
-        }
-        public partial class Matt : KaitaiStruct
-        {
-            public static Matt FromFile(string fileName)
-            {
-                return new Matt(new KaitaiStream(fileName));
-            }
-
-            public Matt(KaitaiStream p__io, MagicavoxelVox.Chunk p__parent = null, MagicavoxelVox p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_hasIsTotalPower = false;
-                f_hasPlastic = false;
-                f_hasAttenuation = false;
-                f_hasPower = false;
-                f_hasRoughness = false;
-                f_hasSpecular = false;
-                f_hasIor = false;
-                f_hasGlow = false;
-                _read();
-            }
-            private void _read()
-            {
-                _id = m_io.ReadU4le();
-                _materialType = ((MagicavoxelVox.MaterialType) m_io.ReadU4le());
-                _materialWeight = m_io.ReadF4le();
-                _propertyBits = m_io.ReadU4le();
-                if (HasPlastic) {
-                    _plastic = m_io.ReadF4le();
-                }
-                if (HasRoughness) {
-                    _roughness = m_io.ReadF4le();
-                }
-                if (HasSpecular) {
-                    _specular = m_io.ReadF4le();
-                }
-                if (HasIor) {
-                    _ior = m_io.ReadF4le();
-                }
-                if (HasAttenuation) {
-                    _attenuation = m_io.ReadF4le();
-                }
-                if (HasPower) {
-                    _power = m_io.ReadF4le();
-                }
-                if (HasGlow) {
-                    _glow = m_io.ReadF4le();
-                }
-                if (HasIsTotalPower) {
-                    _isTotalPower = m_io.ReadF4le();
-                }
-            }
-            private bool f_hasIsTotalPower;
-            private bool _hasIsTotalPower;
-            public bool HasIsTotalPower
-            {
-                get
-                {
-                    if (f_hasIsTotalPower)
-                        return _hasIsTotalPower;
-                    _hasIsTotalPower = (bool) ((PropertyBits & 128) != 0);
-                    f_hasIsTotalPower = true;
-                    return _hasIsTotalPower;
-                }
-            }
-            private bool f_hasPlastic;
-            private bool _hasPlastic;
-            public bool HasPlastic
-            {
-                get
-                {
-                    if (f_hasPlastic)
-                        return _hasPlastic;
-                    _hasPlastic = (bool) ((PropertyBits & 1) != 0);
-                    f_hasPlastic = true;
-                    return _hasPlastic;
-                }
-            }
-            private bool f_hasAttenuation;
-            private bool _hasAttenuation;
-            public bool HasAttenuation
-            {
-                get
-                {
-                    if (f_hasAttenuation)
-                        return _hasAttenuation;
-                    _hasAttenuation = (bool) ((PropertyBits & 16) != 0);
-                    f_hasAttenuation = true;
-                    return _hasAttenuation;
-                }
-            }
-            private bool f_hasPower;
-            private bool _hasPower;
-            public bool HasPower
-            {
-                get
-                {
-                    if (f_hasPower)
-                        return _hasPower;
-                    _hasPower = (bool) ((PropertyBits & 32) != 0);
-                    f_hasPower = true;
-                    return _hasPower;
-                }
-            }
-            private bool f_hasRoughness;
-            private bool _hasRoughness;
-            public bool HasRoughness
-            {
-                get
-                {
-                    if (f_hasRoughness)
-                        return _hasRoughness;
-                    _hasRoughness = (bool) ((PropertyBits & 2) != 0);
-                    f_hasRoughness = true;
-                    return _hasRoughness;
-                }
-            }
-            private bool f_hasSpecular;
-            private bool _hasSpecular;
-            public bool HasSpecular
-            {
-                get
-                {
-                    if (f_hasSpecular)
-                        return _hasSpecular;
-                    _hasSpecular = (bool) ((PropertyBits & 4) != 0);
-                    f_hasSpecular = true;
-                    return _hasSpecular;
-                }
-            }
-            private bool f_hasIor;
-            private bool _hasIor;
-            public bool HasIor
-            {
-                get
-                {
-                    if (f_hasIor)
-                        return _hasIor;
-                    _hasIor = (bool) ((PropertyBits & 8) != 0);
-                    f_hasIor = true;
-                    return _hasIor;
-                }
-            }
-            private bool f_hasGlow;
-            private bool _hasGlow;
-            public bool HasGlow
-            {
-                get
-                {
-                    if (f_hasGlow)
-                        return _hasGlow;
-                    _hasGlow = (bool) ((PropertyBits & 64) != 0);
-                    f_hasGlow = true;
-                    return _hasGlow;
-                }
-            }
-            private uint _id;
-            private MaterialType _materialType;
-            private float _materialWeight;
-            private uint _propertyBits;
-            private float? _plastic;
-            private float? _roughness;
-            private float? _specular;
-            private float? _ior;
-            private float? _attenuation;
-            private float? _power;
-            private float? _glow;
-            private float? _isTotalPower;
-            private MagicavoxelVox m_root;
-            private MagicavoxelVox.Chunk m_parent;
-            public uint Id { get { return _id; } }
-            public MaterialType MaterialType { get { return _materialType; } }
-            public float MaterialWeight { get { return _materialWeight; } }
-            public uint PropertyBits { get { return _propertyBits; } }
-            public float? Plastic { get { return _plastic; } }
-            public float? Roughness { get { return _roughness; } }
-            public float? Specular { get { return _specular; } }
-            public float? Ior { get { return _ior; } }
-            public float? Attenuation { get { return _attenuation; } }
-            public float? Power { get { return _power; } }
-            public float? Glow { get { return _glow; } }
-            public float? IsTotalPower { get { return _isTotalPower; } }
-            public MagicavoxelVox M_Root { get { return m_root; } }
-            public MagicavoxelVox.Chunk M_Parent { get { return m_parent; } }
-        }
-        public partial class Xyzi : KaitaiStruct
-        {
-            public static Xyzi FromFile(string fileName)
-            {
-                return new Xyzi(new KaitaiStream(fileName));
-            }
-
-            public Xyzi(KaitaiStream p__io, MagicavoxelVox.Chunk p__parent = null, MagicavoxelVox p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _numVoxels = m_io.ReadU4le();
-                _voxels = new List<Voxel>();
-                for (var i = 0; i < NumVoxels; i++)
-                {
-                    _voxels.Add(new Voxel(m_io, this, m_root));
-                }
-            }
-            private uint _numVoxels;
-            private List<Voxel> _voxels;
-            private MagicavoxelVox m_root;
-            private MagicavoxelVox.Chunk m_parent;
-            public uint NumVoxels { get { return _numVoxels; } }
-            public List<Voxel> Voxels { get { return _voxels; } }
-            public MagicavoxelVox M_Root { get { return m_root; } }
-            public MagicavoxelVox.Chunk M_Parent { get { return m_parent; } }
-        }
         public partial class Color : KaitaiStruct
         {
             public static Color FromFile(string fileName)
@@ -479,6 +181,273 @@ namespace Kaitai
             public MagicavoxelVox M_Root { get { return m_root; } }
             public MagicavoxelVox.Rgba M_Parent { get { return m_parent; } }
         }
+        public partial class Matt : KaitaiStruct
+        {
+            public static Matt FromFile(string fileName)
+            {
+                return new Matt(new KaitaiStream(fileName));
+            }
+
+            public Matt(KaitaiStream p__io, MagicavoxelVox.Chunk p__parent = null, MagicavoxelVox p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_hasAttenuation = false;
+                f_hasGlow = false;
+                f_hasIor = false;
+                f_hasIsTotalPower = false;
+                f_hasPlastic = false;
+                f_hasPower = false;
+                f_hasRoughness = false;
+                f_hasSpecular = false;
+                _read();
+            }
+            private void _read()
+            {
+                _id = m_io.ReadU4le();
+                _materialType = ((MagicavoxelVox.MaterialType) m_io.ReadU4le());
+                _materialWeight = m_io.ReadF4le();
+                _propertyBits = m_io.ReadU4le();
+                if (HasPlastic) {
+                    _plastic = m_io.ReadF4le();
+                }
+                if (HasRoughness) {
+                    _roughness = m_io.ReadF4le();
+                }
+                if (HasSpecular) {
+                    _specular = m_io.ReadF4le();
+                }
+                if (HasIor) {
+                    _ior = m_io.ReadF4le();
+                }
+                if (HasAttenuation) {
+                    _attenuation = m_io.ReadF4le();
+                }
+                if (HasPower) {
+                    _power = m_io.ReadF4le();
+                }
+                if (HasGlow) {
+                    _glow = m_io.ReadF4le();
+                }
+                if (HasIsTotalPower) {
+                    _isTotalPower = m_io.ReadF4le();
+                }
+            }
+            private bool f_hasAttenuation;
+            private bool _hasAttenuation;
+            public bool HasAttenuation
+            {
+                get
+                {
+                    if (f_hasAttenuation)
+                        return _hasAttenuation;
+                    f_hasAttenuation = true;
+                    _hasAttenuation = (bool) ((PropertyBits & 16) != 0);
+                    return _hasAttenuation;
+                }
+            }
+            private bool f_hasGlow;
+            private bool _hasGlow;
+            public bool HasGlow
+            {
+                get
+                {
+                    if (f_hasGlow)
+                        return _hasGlow;
+                    f_hasGlow = true;
+                    _hasGlow = (bool) ((PropertyBits & 64) != 0);
+                    return _hasGlow;
+                }
+            }
+            private bool f_hasIor;
+            private bool _hasIor;
+            public bool HasIor
+            {
+                get
+                {
+                    if (f_hasIor)
+                        return _hasIor;
+                    f_hasIor = true;
+                    _hasIor = (bool) ((PropertyBits & 8) != 0);
+                    return _hasIor;
+                }
+            }
+            private bool f_hasIsTotalPower;
+            private bool _hasIsTotalPower;
+            public bool HasIsTotalPower
+            {
+                get
+                {
+                    if (f_hasIsTotalPower)
+                        return _hasIsTotalPower;
+                    f_hasIsTotalPower = true;
+                    _hasIsTotalPower = (bool) ((PropertyBits & 128) != 0);
+                    return _hasIsTotalPower;
+                }
+            }
+            private bool f_hasPlastic;
+            private bool _hasPlastic;
+            public bool HasPlastic
+            {
+                get
+                {
+                    if (f_hasPlastic)
+                        return _hasPlastic;
+                    f_hasPlastic = true;
+                    _hasPlastic = (bool) ((PropertyBits & 1) != 0);
+                    return _hasPlastic;
+                }
+            }
+            private bool f_hasPower;
+            private bool _hasPower;
+            public bool HasPower
+            {
+                get
+                {
+                    if (f_hasPower)
+                        return _hasPower;
+                    f_hasPower = true;
+                    _hasPower = (bool) ((PropertyBits & 32) != 0);
+                    return _hasPower;
+                }
+            }
+            private bool f_hasRoughness;
+            private bool _hasRoughness;
+            public bool HasRoughness
+            {
+                get
+                {
+                    if (f_hasRoughness)
+                        return _hasRoughness;
+                    f_hasRoughness = true;
+                    _hasRoughness = (bool) ((PropertyBits & 2) != 0);
+                    return _hasRoughness;
+                }
+            }
+            private bool f_hasSpecular;
+            private bool _hasSpecular;
+            public bool HasSpecular
+            {
+                get
+                {
+                    if (f_hasSpecular)
+                        return _hasSpecular;
+                    f_hasSpecular = true;
+                    _hasSpecular = (bool) ((PropertyBits & 4) != 0);
+                    return _hasSpecular;
+                }
+            }
+            private uint _id;
+            private MaterialType _materialType;
+            private float _materialWeight;
+            private uint _propertyBits;
+            private float? _plastic;
+            private float? _roughness;
+            private float? _specular;
+            private float? _ior;
+            private float? _attenuation;
+            private float? _power;
+            private float? _glow;
+            private float? _isTotalPower;
+            private MagicavoxelVox m_root;
+            private MagicavoxelVox.Chunk m_parent;
+            public uint Id { get { return _id; } }
+            public MaterialType MaterialType { get { return _materialType; } }
+            public float MaterialWeight { get { return _materialWeight; } }
+            public uint PropertyBits { get { return _propertyBits; } }
+            public float? Plastic { get { return _plastic; } }
+            public float? Roughness { get { return _roughness; } }
+            public float? Specular { get { return _specular; } }
+            public float? Ior { get { return _ior; } }
+            public float? Attenuation { get { return _attenuation; } }
+            public float? Power { get { return _power; } }
+            public float? Glow { get { return _glow; } }
+            public float? IsTotalPower { get { return _isTotalPower; } }
+            public MagicavoxelVox M_Root { get { return m_root; } }
+            public MagicavoxelVox.Chunk M_Parent { get { return m_parent; } }
+        }
+        public partial class Pack : KaitaiStruct
+        {
+            public static Pack FromFile(string fileName)
+            {
+                return new Pack(new KaitaiStream(fileName));
+            }
+
+            public Pack(KaitaiStream p__io, MagicavoxelVox.Chunk p__parent = null, MagicavoxelVox p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _numModels = m_io.ReadU4le();
+            }
+            private uint _numModels;
+            private MagicavoxelVox m_root;
+            private MagicavoxelVox.Chunk m_parent;
+            public uint NumModels { get { return _numModels; } }
+            public MagicavoxelVox M_Root { get { return m_root; } }
+            public MagicavoxelVox.Chunk M_Parent { get { return m_parent; } }
+        }
+        public partial class Rgba : KaitaiStruct
+        {
+            public static Rgba FromFile(string fileName)
+            {
+                return new Rgba(new KaitaiStream(fileName));
+            }
+
+            public Rgba(KaitaiStream p__io, MagicavoxelVox.Chunk p__parent = null, MagicavoxelVox p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _colors = new List<Color>();
+                for (var i = 0; i < 256; i++)
+                {
+                    _colors.Add(new Color(m_io, this, m_root));
+                }
+            }
+            private List<Color> _colors;
+            private MagicavoxelVox m_root;
+            private MagicavoxelVox.Chunk m_parent;
+            public List<Color> Colors { get { return _colors; } }
+            public MagicavoxelVox M_Root { get { return m_root; } }
+            public MagicavoxelVox.Chunk M_Parent { get { return m_parent; } }
+        }
+        public partial class Size : KaitaiStruct
+        {
+            public static Size FromFile(string fileName)
+            {
+                return new Size(new KaitaiStream(fileName));
+            }
+
+            public Size(KaitaiStream p__io, MagicavoxelVox.Chunk p__parent = null, MagicavoxelVox p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _sizeX = m_io.ReadU4le();
+                _sizeY = m_io.ReadU4le();
+                _sizeZ = m_io.ReadU4le();
+            }
+            private uint _sizeX;
+            private uint _sizeY;
+            private uint _sizeZ;
+            private MagicavoxelVox m_root;
+            private MagicavoxelVox.Chunk m_parent;
+            public uint SizeX { get { return _sizeX; } }
+            public uint SizeY { get { return _sizeY; } }
+            public uint SizeZ { get { return _sizeZ; } }
+            public MagicavoxelVox M_Root { get { return m_root; } }
+            public MagicavoxelVox.Chunk M_Parent { get { return m_parent; } }
+        }
         public partial class Voxel : KaitaiStruct
         {
             public static Voxel FromFile(string fileName)
@@ -511,6 +480,37 @@ namespace Kaitai
             public byte ColorIndex { get { return _colorIndex; } }
             public MagicavoxelVox M_Root { get { return m_root; } }
             public MagicavoxelVox.Xyzi M_Parent { get { return m_parent; } }
+        }
+        public partial class Xyzi : KaitaiStruct
+        {
+            public static Xyzi FromFile(string fileName)
+            {
+                return new Xyzi(new KaitaiStream(fileName));
+            }
+
+            public Xyzi(KaitaiStream p__io, MagicavoxelVox.Chunk p__parent = null, MagicavoxelVox p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _numVoxels = m_io.ReadU4le();
+                _voxels = new List<Voxel>();
+                for (var i = 0; i < NumVoxels; i++)
+                {
+                    _voxels.Add(new Voxel(m_io, this, m_root));
+                }
+            }
+            private uint _numVoxels;
+            private List<Voxel> _voxels;
+            private MagicavoxelVox m_root;
+            private MagicavoxelVox.Chunk m_parent;
+            public uint NumVoxels { get { return _numVoxels; } }
+            public List<Voxel> Voxels { get { return _voxels; } }
+            public MagicavoxelVox M_Root { get { return m_root; } }
+            public MagicavoxelVox.Chunk M_Parent { get { return m_parent; } }
         }
         private byte[] _magic;
         private uint _version;

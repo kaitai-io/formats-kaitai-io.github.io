@@ -37,6 +37,7 @@ digraph {
 				ifd__inst__next_ifd [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 					<TR><TD PORT="next_ifd_pos">next_ifd_ofs</TD><TD PORT="next_ifd_size">...</TD><TD>Ifd</TD><TD PORT="next_ifd_type">next_ifd</TD></TR>
+					<TR><TD COLSPAN="4" PORT="next_ifd__if">if next_ifd_ofs != 0</TD></TR>
 				</TABLE>>];
 			}
 			subgraph cluster__ifd_field {
@@ -50,21 +51,22 @@ digraph {
 					<TR><TD PORT="length_pos">4</TD><TD PORT="length_size">4</TD><TD>u4</TD><TD PORT="length_type">length</TD></TR>
 					<TR><TD PORT="ofs_or_data_pos">8</TD><TD PORT="ofs_or_data_size">4</TD><TD>u4</TD><TD PORT="ofs_or_data_type">ofs_or_data</TD></TR>
 				</TABLE>>];
-				ifd_field__inst__type_byte_length [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-					<TR><TD>type_byte_length</TD><TD>(field_type == :field_type_enum_word ? 2 : (field_type == :field_type_enum_dword ? 4 : 1))</TD></TR>
-				</TABLE>>];
 				ifd_field__inst__byte_length [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-					<TR><TD>byte_length</TD><TD>(length * type_byte_length)</TD></TR>
+					<TR><TD>byte_length</TD><TD>length * type_byte_length</TD></TR>
+				</TABLE>>];
+				ifd_field__inst__data [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="data_pos">ofs_or_data</TD><TD PORT="data_size">byte_length</TD><TD></TD><TD PORT="data_type">data</TD></TR>
+					<TR><TD COLSPAN="4" PORT="data__if">if !(is_immediate_data)</TD></TR>
 				</TABLE>>];
 				ifd_field__inst__is_immediate_data [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
 					<TR><TD>is_immediate_data</TD><TD>byte_length &lt;= 4</TD></TR>
 				</TABLE>>];
-				ifd_field__inst__data [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="data_pos">ofs_or_data</TD><TD PORT="data_size">byte_length</TD><TD></TD><TD PORT="data_type">data</TD></TR>
+				ifd_field__inst__type_byte_length [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>type_byte_length</TD><TD>(field_type == :field_type_enum_word ? 2 : (field_type == :field_type_enum_dword ? 4 : 1))</TD></TR>
 				</TABLE>>];
 			}
 		}
@@ -76,11 +78,12 @@ digraph {
 	ifd__seq:num_fields_type -> ifd__seq:fields__repeat [color="#404040"];
 	ifd__seq:next_ifd_ofs_type -> ifd__inst__next_ifd:next_ifd_pos [color="#404040"];
 	ifd__inst__next_ifd:next_ifd_type -> ifd__seq [style=bold];
-	ifd_field__seq:field_type_type -> ifd_field__inst__type_byte_length [color="#404040"];
-	ifd_field__seq:field_type_type -> ifd_field__inst__type_byte_length [color="#404040"];
+	ifd__seq:next_ifd_ofs_type -> ifd__inst__next_ifd:next_ifd__if [color="#404040"];
 	ifd_field__seq:length_type -> ifd_field__inst__byte_length [color="#404040"];
 	ifd_field__inst__type_byte_length:type_byte_length_type -> ifd_field__inst__byte_length [color="#404040"];
-	ifd_field__inst__byte_length:byte_length_type -> ifd_field__inst__is_immediate_data [color="#404040"];
 	ifd_field__seq:ofs_or_data_type -> ifd_field__inst__data:data_pos [color="#404040"];
 	ifd_field__inst__byte_length:byte_length_type -> ifd_field__inst__data:data_size [color="#404040"];
+	ifd_field__inst__is_immediate_data:is_immediate_data_type -> ifd_field__inst__data:data__if [color="#404040"];
+	ifd_field__inst__byte_length:byte_length_type -> ifd_field__inst__is_immediate_data [color="#404040"];
+	ifd_field__seq:field_type_type -> ifd_field__inst__type_byte_length [color="#404040"];
 }

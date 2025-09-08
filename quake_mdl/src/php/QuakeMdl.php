@@ -41,8 +41,8 @@
 
 namespace {
     class QuakeMdl extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \QuakeMdl $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\QuakeMdl $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -83,63 +83,68 @@ namespace {
 }
 
 namespace QuakeMdl {
-    class MdlVertex extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \QuakeMdl $_root = null) {
+    class MdlFrame extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\QuakeMdl $_parent = null, ?\QuakeMdl $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_values = [];
-            $n = 3;
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_values[] = $this->_io->readU1();
+            $this->_m_type = $this->_io->readS4le();
+            if ($this->type() != 0) {
+                $this->_m_min = new \QuakeMdl\MdlVertex($this->_io, $this, $this->_root);
             }
-            $this->_m_normalIndex = $this->_io->readU1();
+            if ($this->type() != 0) {
+                $this->_m_max = new \QuakeMdl\MdlVertex($this->_io, $this, $this->_root);
+            }
+            if ($this->type() != 0) {
+                $this->_m_time = [];
+                $n = $this->type();
+                for ($i = 0; $i < $n; $i++) {
+                    $this->_m_time[] = $this->_io->readF4le();
+                }
+            }
+            $this->_m_frames = [];
+            $n = $this->numSimpleFrames();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_frames[] = new \QuakeMdl\MdlSimpleFrame($this->_io, $this, $this->_root);
+            }
         }
-        protected $_m_values;
-        protected $_m_normalIndex;
-        public function values() { return $this->_m_values; }
-        public function normalIndex() { return $this->_m_normalIndex; }
-    }
-}
-
-namespace QuakeMdl {
-    class MdlTexcoord extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \QuakeMdl $_parent = null, \QuakeMdl $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
+        protected $_m_numSimpleFrames;
+        public function numSimpleFrames() {
+            if ($this->_m_numSimpleFrames !== null)
+                return $this->_m_numSimpleFrames;
+            $this->_m_numSimpleFrames = ($this->type() == 0 ? 1 : $this->type());
+            return $this->_m_numSimpleFrames;
         }
-
-        private function _read() {
-            $this->_m_onSeam = $this->_io->readS4le();
-            $this->_m_s = $this->_io->readS4le();
-            $this->_m_t = $this->_io->readS4le();
-        }
-        protected $_m_onSeam;
-        protected $_m_s;
-        protected $_m_t;
-        public function onSeam() { return $this->_m_onSeam; }
-        public function s() { return $this->_m_s; }
-        public function t() { return $this->_m_t; }
+        protected $_m_type;
+        protected $_m_min;
+        protected $_m_max;
+        protected $_m_time;
+        protected $_m_frames;
+        public function type() { return $this->_m_type; }
+        public function min() { return $this->_m_min; }
+        public function max() { return $this->_m_max; }
+        public function time() { return $this->_m_time; }
+        public function frames() { return $this->_m_frames; }
     }
 }
 
 namespace QuakeMdl {
     class MdlHeader extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \QuakeMdl $_parent = null, \QuakeMdl $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\QuakeMdl $_parent = null, ?\QuakeMdl $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_ident = $this->_io->readBytes(4);
-            if (!($this->ident() == "\x49\x44\x50\x4F")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x49\x44\x50\x4F", $this->ident(), $this->_io(), "/types/mdl_header/seq/0");
+            if (!($this->_m_ident == "\x49\x44\x50\x4F")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x49\x44\x50\x4F", $this->_m_ident, $this->_io, "/types/mdl_header/seq/0");
             }
             $this->_m_version = $this->_io->readS4le();
-            if (!($this->version() == 6)) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError(6, $this->version(), $this->_io(), "/types/mdl_header/seq/1");
+            if (!($this->_m_version == 6)) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError(6, $this->_m_version, $this->_io, "/types/mdl_header/seq/1");
             }
             $this->_m_scale = new \QuakeMdl\Vec3($this->_io, $this, $this->_root);
             $this->_m_origin = new \QuakeMdl\Vec3($this->_io, $this, $this->_root);
@@ -163,7 +168,7 @@ namespace QuakeMdl {
         public function skinSize() {
             if ($this->_m_skinSize !== null)
                 return $this->_m_skinSize;
-            $this->_m_skinSize = ($this->skinWidth() * $this->skinHeight());
+            $this->_m_skinSize = $this->skinWidth() * $this->skinHeight();
             return $this->_m_skinSize;
         }
         protected $_m_ident;
@@ -237,8 +242,36 @@ namespace QuakeMdl {
 }
 
 namespace QuakeMdl {
+    class MdlSimpleFrame extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\QuakeMdl\MdlFrame $_parent = null, ?\QuakeMdl $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_bboxMin = new \QuakeMdl\MdlVertex($this->_io, $this, $this->_root);
+            $this->_m_bboxMax = new \QuakeMdl\MdlVertex($this->_io, $this, $this->_root);
+            $this->_m_name = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate(\Kaitai\Struct\Stream::bytesStripRight($this->_io->readBytes(16), 0), 0, false), "ASCII");
+            $this->_m_vertices = [];
+            $n = $this->_root()->header()->numVerts();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_vertices[] = new \QuakeMdl\MdlVertex($this->_io, $this, $this->_root);
+            }
+        }
+        protected $_m_bboxMin;
+        protected $_m_bboxMax;
+        protected $_m_name;
+        protected $_m_vertices;
+        public function bboxMin() { return $this->_m_bboxMin; }
+        public function bboxMax() { return $this->_m_bboxMax; }
+        public function name() { return $this->_m_name; }
+        public function vertices() { return $this->_m_vertices; }
+    }
+}
+
+namespace QuakeMdl {
     class MdlSkin extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \QuakeMdl $_parent = null, \QuakeMdl $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\QuakeMdl $_parent = null, ?\QuakeMdl $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -280,78 +313,23 @@ namespace QuakeMdl {
 }
 
 namespace QuakeMdl {
-    class MdlFrame extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \QuakeMdl $_parent = null, \QuakeMdl $_root = null) {
+    class MdlTexcoord extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\QuakeMdl $_parent = null, ?\QuakeMdl $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_type = $this->_io->readS4le();
-            if ($this->type() != 0) {
-                $this->_m_min = new \QuakeMdl\MdlVertex($this->_io, $this, $this->_root);
-            }
-            if ($this->type() != 0) {
-                $this->_m_max = new \QuakeMdl\MdlVertex($this->_io, $this, $this->_root);
-            }
-            if ($this->type() != 0) {
-                $this->_m_time = [];
-                $n = $this->type();
-                for ($i = 0; $i < $n; $i++) {
-                    $this->_m_time[] = $this->_io->readF4le();
-                }
-            }
-            $this->_m_frames = [];
-            $n = $this->numSimpleFrames();
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_frames[] = new \QuakeMdl\MdlSimpleFrame($this->_io, $this, $this->_root);
-            }
+            $this->_m_onSeam = $this->_io->readS4le();
+            $this->_m_s = $this->_io->readS4le();
+            $this->_m_t = $this->_io->readS4le();
         }
-        protected $_m_numSimpleFrames;
-        public function numSimpleFrames() {
-            if ($this->_m_numSimpleFrames !== null)
-                return $this->_m_numSimpleFrames;
-            $this->_m_numSimpleFrames = ($this->type() == 0 ? 1 : $this->type());
-            return $this->_m_numSimpleFrames;
-        }
-        protected $_m_type;
-        protected $_m_min;
-        protected $_m_max;
-        protected $_m_time;
-        protected $_m_frames;
-        public function type() { return $this->_m_type; }
-        public function min() { return $this->_m_min; }
-        public function max() { return $this->_m_max; }
-        public function time() { return $this->_m_time; }
-        public function frames() { return $this->_m_frames; }
-    }
-}
-
-namespace QuakeMdl {
-    class MdlSimpleFrame extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \QuakeMdl\MdlFrame $_parent = null, \QuakeMdl $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_bboxMin = new \QuakeMdl\MdlVertex($this->_io, $this, $this->_root);
-            $this->_m_bboxMax = new \QuakeMdl\MdlVertex($this->_io, $this, $this->_root);
-            $this->_m_name = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate(\Kaitai\Struct\Stream::bytesStripRight($this->_io->readBytes(16), 0), 0, false), "ASCII");
-            $this->_m_vertices = [];
-            $n = $this->_root()->header()->numVerts();
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_vertices[] = new \QuakeMdl\MdlVertex($this->_io, $this, $this->_root);
-            }
-        }
-        protected $_m_bboxMin;
-        protected $_m_bboxMax;
-        protected $_m_name;
-        protected $_m_vertices;
-        public function bboxMin() { return $this->_m_bboxMin; }
-        public function bboxMax() { return $this->_m_bboxMax; }
-        public function name() { return $this->_m_name; }
-        public function vertices() { return $this->_m_vertices; }
+        protected $_m_onSeam;
+        protected $_m_s;
+        protected $_m_t;
+        public function onSeam() { return $this->_m_onSeam; }
+        public function s() { return $this->_m_s; }
+        public function t() { return $this->_m_t; }
     }
 }
 
@@ -362,7 +340,7 @@ namespace QuakeMdl {
 
 namespace QuakeMdl {
     class MdlTriangle extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \QuakeMdl $_parent = null, \QuakeMdl $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\QuakeMdl $_parent = null, ?\QuakeMdl $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -382,6 +360,28 @@ namespace QuakeMdl {
     }
 }
 
+namespace QuakeMdl {
+    class MdlVertex extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\QuakeMdl $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_values = [];
+            $n = 3;
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_values[] = $this->_io->readU1();
+            }
+            $this->_m_normalIndex = $this->_io->readU1();
+        }
+        protected $_m_values;
+        protected $_m_normalIndex;
+        public function values() { return $this->_m_values; }
+        public function normalIndex() { return $this->_m_normalIndex; }
+    }
+}
+
 /**
  * Basic 3D vector (x, y, z) using single-precision floating point
  * coordnates. Can be used to specify a point in 3D space,
@@ -390,7 +390,7 @@ namespace QuakeMdl {
 
 namespace QuakeMdl {
     class Vec3 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \QuakeMdl\MdlHeader $_parent = null, \QuakeMdl $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\QuakeMdl\MdlHeader $_parent = null, ?\QuakeMdl $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }

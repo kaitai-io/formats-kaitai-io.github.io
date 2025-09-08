@@ -7,7 +7,8 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
-import java.nio.charset.Charset;
+import java.util.List;
+import java.nio.charset.StandardCharsets;
 
 
 /**
@@ -67,6 +68,92 @@ public class Specpr extends KaitaiStruct {
             }
         }
     }
+
+    public void _fetchInstances() {
+        for (int i = 0; i < this.records.size(); i++) {
+            this.records.get(((Number) (i)).intValue())._fetchInstances();
+        }
+    }
+    public static class CoarseTimestamp extends KaitaiStruct {
+        public static CoarseTimestamp fromFile(String fileName) throws IOException {
+            return new CoarseTimestamp(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public CoarseTimestamp(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public CoarseTimestamp(KaitaiStream _io, Specpr.DataInitial _parent) {
+            this(_io, _parent, null);
+        }
+
+        public CoarseTimestamp(KaitaiStream _io, Specpr.DataInitial _parent, Specpr _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.scaledSeconds = this._io.readS4be();
+        }
+
+        public void _fetchInstances() {
+        }
+        private Double seconds;
+        public Double seconds() {
+            if (this.seconds != null)
+                return this.seconds;
+            this.seconds = ((Number) (scaledSeconds() * 24000)).doubleValue();
+            return this.seconds;
+        }
+        private int scaledSeconds;
+        private Specpr _root;
+        private Specpr.DataInitial _parent;
+        public int scaledSeconds() { return scaledSeconds; }
+        public Specpr _root() { return _root; }
+        public Specpr.DataInitial _parent() { return _parent; }
+    }
+    public static class DataContinuation extends KaitaiStruct {
+        public static DataContinuation fromFile(String fileName) throws IOException {
+            return new DataContinuation(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public DataContinuation(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public DataContinuation(KaitaiStream _io, Specpr.Record _parent) {
+            this(_io, _parent, null);
+        }
+
+        public DataContinuation(KaitaiStream _io, Specpr.Record _parent, Specpr _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.cdata = new ArrayList<Float>();
+            for (int i = 0; i < 383; i++) {
+                this.cdata.add(this._io.readF4be());
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.cdata.size(); i++) {
+            }
+        }
+        private List<Float> cdata;
+        private Specpr _root;
+        private Specpr.Record _parent;
+
+        /**
+         * The continuation of the data values (383 channels of 32 bit real numbers).
+         */
+        public List<Float> cdata() { return cdata; }
+        public Specpr _root() { return _root; }
+        public Specpr.Record _parent() { return _parent; }
+    }
     public static class DataInitial extends KaitaiStruct {
         public static DataInitial fromFile(String fileName) throws IOException {
             return new DataInitial(new ByteBufferKaitaiStream(fileName));
@@ -106,10 +193,10 @@ public class Specpr extends KaitaiStruct {
             this.irespt = this._io.readS4be();
             this.irecno = this._io.readS4be();
             this.itpntr = this._io.readS4be();
-            this.ihist = new String(KaitaiStream.bytesStripRight(this._io.readBytes(60), (byte) 32), Charset.forName("ascii"));
+            this.ihist = new String(KaitaiStream.bytesStripRight(this._io.readBytes(60), (byte) 32), StandardCharsets.US_ASCII);
             this.mhist = new ArrayList<String>();
             for (int i = 0; i < 4; i++) {
-                this.mhist.add(new String(this._io.readBytes(74), Charset.forName("ascii")));
+                this.mhist.add(new String(this._io.readBytes(74), StandardCharsets.US_ASCII));
             }
             this.nruns = this._io.readS4be();
             this.siangl = new IllumAngle(this._io, this, _root);
@@ -126,6 +213,21 @@ public class Specpr extends KaitaiStruct {
                 this.data.add(this._io.readF4be());
             }
         }
+
+        public void _fetchInstances() {
+            this.ids._fetchInstances();
+            this.iscta._fetchInstances();
+            this.isctb._fetchInstances();
+            this.istb._fetchInstances();
+            for (int i = 0; i < this.iband.size(); i++) {
+            }
+            for (int i = 0; i < this.mhist.size(); i++) {
+            }
+            this.siangl._fetchInstances();
+            this.seangl._fetchInstances();
+            for (int i = 0; i < this.data.size(); i++) {
+            }
+        }
         private Double phaseAngleArcsec;
 
         /**
@@ -134,8 +236,7 @@ public class Specpr extends KaitaiStruct {
         public Double phaseAngleArcsec() {
             if (this.phaseAngleArcsec != null)
                 return this.phaseAngleArcsec;
-            double _tmp = (double) ((sphase() / 1500));
-            this.phaseAngleArcsec = _tmp;
+            this.phaseAngleArcsec = ((Number) (sphase() / 1500)).doubleValue();
             return this.phaseAngleArcsec;
         }
         private Identifiers ids;
@@ -149,13 +250,13 @@ public class Specpr extends KaitaiStruct {
         private int itchan;
         private int irmas;
         private int revs;
-        private ArrayList<Integer> iband;
+        private List<Integer> iband;
         private int irwav;
         private int irespt;
         private int irecno;
         private int itpntr;
         private String ihist;
-        private ArrayList<String> mhist;
+        private List<String> mhist;
         private int nruns;
         private IllumAngle siangl;
         private IllumAngle seangl;
@@ -166,7 +267,7 @@ public class Specpr extends KaitaiStruct {
         private float scatim;
         private float timint;
         private float tempd;
-        private ArrayList<Float> data;
+        private List<Float> data;
         private Specpr _root;
         private Specpr.Record _parent;
         public Identifiers ids() { return ids; }
@@ -224,7 +325,7 @@ public class Specpr extends KaitaiStruct {
         /**
          * The channel numbers which define the band normalization (scaling to unity). (integers*4).
          */
-        public ArrayList<Integer> iband() { return iband; }
+        public List<Integer> iband() { return iband; }
 
         /**
          * The record number within the file where the wavelengths are found (integer*4).
@@ -254,7 +355,7 @@ public class Specpr extends KaitaiStruct {
         /**
          * Manual history. Program automatic for large history requirements.
          */
-        public ArrayList<String> mhist() { return mhist; }
+        public List<String> mhist() { return mhist; }
 
         /**
          * The number of independent spectral runs which were summed or averaged to make this spectrum (integer*4).
@@ -314,46 +415,9 @@ public class Specpr extends KaitaiStruct {
         /**
          * The spectral data (256 channels of 32 bit real data numbers).
          */
-        public ArrayList<Float> data() { return data; }
+        public List<Float> data() { return data; }
         public Specpr _root() { return _root; }
         public Specpr.Record _parent() { return _parent; }
-    }
-    public static class CoarseTimestamp extends KaitaiStruct {
-        public static CoarseTimestamp fromFile(String fileName) throws IOException {
-            return new CoarseTimestamp(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public CoarseTimestamp(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public CoarseTimestamp(KaitaiStream _io, Specpr.DataInitial _parent) {
-            this(_io, _parent, null);
-        }
-
-        public CoarseTimestamp(KaitaiStream _io, Specpr.DataInitial _parent, Specpr _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.scaledSeconds = this._io.readS4be();
-        }
-        private Double seconds;
-        public Double seconds() {
-            if (this.seconds != null)
-                return this.seconds;
-            double _tmp = (double) ((scaledSeconds() * 24000));
-            this.seconds = _tmp;
-            return this.seconds;
-        }
-        private int scaledSeconds;
-        private Specpr _root;
-        private Specpr.DataInitial _parent;
-        public int scaledSeconds() { return scaledSeconds; }
-        public Specpr _root() { return _root; }
-        public Specpr.DataInitial _parent() { return _parent; }
     }
 
     /**
@@ -387,11 +451,14 @@ public class Specpr extends KaitaiStruct {
             this.text = this._io.readBitsIntBe(1) != 0;
             this.continuation = this._io.readBitsIntBe(1) != 0;
         }
+
+        public void _fetchInstances() {
+        }
         private RecordType type;
         public RecordType type() {
             if (this.type != null)
                 return this.type;
-            this.type = Specpr.RecordType.byId((((text() ? 1 : 0) * 1) + ((continuation() ? 1 : 0) * 2)));
+            this.type = Specpr.RecordType.byId((text() ? 1 : 0) * 1 + (continuation() ? 1 : 0) * 2);
             return this.type;
         }
         private long reserved;
@@ -450,42 +517,6 @@ public class Specpr extends KaitaiStruct {
         public Specpr _root() { return _root; }
         public Specpr.Record _parent() { return _parent; }
     }
-    public static class DataContinuation extends KaitaiStruct {
-        public static DataContinuation fromFile(String fileName) throws IOException {
-            return new DataContinuation(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public DataContinuation(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public DataContinuation(KaitaiStream _io, Specpr.Record _parent) {
-            this(_io, _parent, null);
-        }
-
-        public DataContinuation(KaitaiStream _io, Specpr.Record _parent, Specpr _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.cdata = new ArrayList<Float>();
-            for (int i = 0; i < 383; i++) {
-                this.cdata.add(this._io.readF4be());
-            }
-        }
-        private ArrayList<Float> cdata;
-        private Specpr _root;
-        private Specpr.Record _parent;
-
-        /**
-         * The continuation of the data values (383 channels of 32 bit real numbers).
-         */
-        public ArrayList<Float> cdata() { return cdata; }
-        public Specpr _root() { return _root; }
-        public Specpr.Record _parent() { return _parent; }
-    }
     public static class Identifiers extends KaitaiStruct {
         public static Identifiers fromFile(String fileName) throws IOException {
             return new Identifiers(new ByteBufferKaitaiStream(fileName));
@@ -506,8 +537,11 @@ public class Specpr extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.ititle = new String(KaitaiStream.bytesStripRight(this._io.readBytes(40), (byte) 32), Charset.forName("ascii"));
-            this.usernm = new String(this._io.readBytes(8), Charset.forName("ascii"));
+            this.ititle = new String(KaitaiStream.bytesStripRight(this._io.readBytes(40), (byte) 32), StandardCharsets.US_ASCII);
+            this.usernm = new String(this._io.readBytes(8), StandardCharsets.US_ASCII);
+        }
+
+        public void _fetchInstances() {
         }
         private String ititle;
         private String usernm;
@@ -548,29 +582,29 @@ public class Specpr extends KaitaiStruct {
         private void _read() {
             this.angl = this._io.readS4be();
         }
-        private Integer secondsTotal;
-        public Integer secondsTotal() {
-            if (this.secondsTotal != null)
-                return this.secondsTotal;
-            int _tmp = (int) ((angl() / 6000));
-            this.secondsTotal = _tmp;
-            return this.secondsTotal;
-        }
-        private Integer minutesTotal;
-        public Integer minutesTotal() {
-            if (this.minutesTotal != null)
-                return this.minutesTotal;
-            int _tmp = (int) ((secondsTotal() / 60));
-            this.minutesTotal = _tmp;
-            return this.minutesTotal;
+
+        public void _fetchInstances() {
         }
         private Integer degreesTotal;
         public Integer degreesTotal() {
             if (this.degreesTotal != null)
                 return this.degreesTotal;
-            int _tmp = (int) ((minutesTotal() / 60));
-            this.degreesTotal = _tmp;
+            this.degreesTotal = ((Number) (minutesTotal() / 60)).intValue();
             return this.degreesTotal;
+        }
+        private Integer minutesTotal;
+        public Integer minutesTotal() {
+            if (this.minutesTotal != null)
+                return this.minutesTotal;
+            this.minutesTotal = ((Number) (secondsTotal() / 60)).intValue();
+            return this.minutesTotal;
+        }
+        private Integer secondsTotal;
+        public Integer secondsTotal() {
+            if (this.secondsTotal != null)
+                return this.secondsTotal;
+            this.secondsTotal = ((Number) (angl() / 6000)).intValue();
+            return this.secondsTotal;
         }
         private int angl;
         private Specpr _root;
@@ -582,56 +616,6 @@ public class Specpr extends KaitaiStruct {
         public int angl() { return angl; }
         public Specpr _root() { return _root; }
         public Specpr.DataInitial _parent() { return _parent; }
-    }
-    public static class TextInitial extends KaitaiStruct {
-        public static TextInitial fromFile(String fileName) throws IOException {
-            return new TextInitial(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public TextInitial(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public TextInitial(KaitaiStream _io, Specpr.Record _parent) {
-            this(_io, _parent, null);
-        }
-
-        public TextInitial(KaitaiStream _io, Specpr.Record _parent, Specpr _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.ids = new Identifiers(this._io, this, _root);
-            this.itxtpt = this._io.readU4be();
-            this.itxtch = this._io.readS4be();
-            this.itext = new String(this._io.readBytes(1476), Charset.forName("ascii"));
-        }
-        private Identifiers ids;
-        private long itxtpt;
-        private int itxtch;
-        private String itext;
-        private Specpr _root;
-        private Specpr.Record _parent;
-        public Identifiers ids() { return ids; }
-
-        /**
-         * Text data record pointer. This pointer points  to a data record where additional text may be may be found.
-         */
-        public long itxtpt() { return itxtpt; }
-
-        /**
-         * The number of text characters (maximum= 19860).
-         */
-        public int itxtch() { return itxtch; }
-
-        /**
-         * 1476 characters of text.  Text has embedded newlines so the number of lines available is limited only by the number of characters available.
-         */
-        public String itext() { return itext; }
-        public Specpr _root() { return _root; }
-        public Specpr.Record _parent() { return _parent; }
     }
     public static class Record extends KaitaiStruct {
         public static Record fromFile(String fileName) throws IOException {
@@ -658,37 +642,64 @@ public class Specpr extends KaitaiStruct {
                 RecordType on = icflag().type();
                 if (on != null) {
                     switch (icflag().type()) {
-                    case DATA_INITIAL: {
-                        this._raw_content = this._io.readBytes((1536 - 4));
-                        KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
-                        this.content = new DataInitial(_io__raw_content, this, _root);
+                    case DATA_CONTINUATION: {
+                        KaitaiStream _io_content = this._io.substream(1536 - 4);
+                        this.content = new DataContinuation(_io_content, this, _root);
                         break;
                     }
-                    case DATA_CONTINUATION: {
-                        this._raw_content = this._io.readBytes((1536 - 4));
-                        KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
-                        this.content = new DataContinuation(_io__raw_content, this, _root);
+                    case DATA_INITIAL: {
+                        KaitaiStream _io_content = this._io.substream(1536 - 4);
+                        this.content = new DataInitial(_io_content, this, _root);
                         break;
                     }
                     case TEXT_CONTINUATION: {
-                        this._raw_content = this._io.readBytes((1536 - 4));
-                        KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
-                        this.content = new TextContinuation(_io__raw_content, this, _root);
+                        KaitaiStream _io_content = this._io.substream(1536 - 4);
+                        this.content = new TextContinuation(_io_content, this, _root);
                         break;
                     }
                     case TEXT_INITIAL: {
-                        this._raw_content = this._io.readBytes((1536 - 4));
-                        KaitaiStream _io__raw_content = new ByteBufferKaitaiStream(_raw_content);
-                        this.content = new TextInitial(_io__raw_content, this, _root);
+                        KaitaiStream _io_content = this._io.substream(1536 - 4);
+                        this.content = new TextInitial(_io_content, this, _root);
                         break;
                     }
                     default: {
-                        this.content = this._io.readBytes((1536 - 4));
+                        this.content = this._io.readBytes(1536 - 4);
                         break;
                     }
                     }
                 } else {
-                    this.content = this._io.readBytes((1536 - 4));
+                    this.content = this._io.readBytes(1536 - 4);
+                }
+            }
+        }
+
+        public void _fetchInstances() {
+            this.icflag._fetchInstances();
+            {
+                RecordType on = icflag().type();
+                if (on != null) {
+                    switch (icflag().type()) {
+                    case DATA_CONTINUATION: {
+                        ((DataContinuation) (this.content))._fetchInstances();
+                        break;
+                    }
+                    case DATA_INITIAL: {
+                        ((DataInitial) (this.content))._fetchInstances();
+                        break;
+                    }
+                    case TEXT_CONTINUATION: {
+                        ((TextContinuation) (this.content))._fetchInstances();
+                        break;
+                    }
+                    case TEXT_INITIAL: {
+                        ((TextInitial) (this.content))._fetchInstances();
+                        break;
+                    }
+                    default: {
+                        break;
+                    }
+                    }
+                } else {
                 }
             }
         }
@@ -696,7 +707,6 @@ public class Specpr extends KaitaiStruct {
         private Object content;
         private Specpr _root;
         private Specpr _parent;
-        private byte[] _raw_content;
 
         /**
          * Total number of bytes comprising the document.
@@ -705,7 +715,6 @@ public class Specpr extends KaitaiStruct {
         public Object content() { return content; }
         public Specpr _root() { return _root; }
         public Specpr _parent() { return _parent; }
-        public byte[] _raw_content() { return _raw_content; }
     }
     public static class TextContinuation extends KaitaiStruct {
         public static TextContinuation fromFile(String fileName) throws IOException {
@@ -727,7 +736,10 @@ public class Specpr extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.tdata = new String(this._io.readBytes(1532), Charset.forName("ascii"));
+            this.tdata = new String(this._io.readBytes(1532), StandardCharsets.US_ASCII);
+        }
+
+        public void _fetchInstances() {
         }
         private String tdata;
         private Specpr _root;
@@ -740,10 +752,64 @@ public class Specpr extends KaitaiStruct {
         public Specpr _root() { return _root; }
         public Specpr.Record _parent() { return _parent; }
     }
-    private ArrayList<Record> records;
+    public static class TextInitial extends KaitaiStruct {
+        public static TextInitial fromFile(String fileName) throws IOException {
+            return new TextInitial(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public TextInitial(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public TextInitial(KaitaiStream _io, Specpr.Record _parent) {
+            this(_io, _parent, null);
+        }
+
+        public TextInitial(KaitaiStream _io, Specpr.Record _parent, Specpr _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.ids = new Identifiers(this._io, this, _root);
+            this.itxtpt = this._io.readU4be();
+            this.itxtch = this._io.readS4be();
+            this.itext = new String(this._io.readBytes(1476), StandardCharsets.US_ASCII);
+        }
+
+        public void _fetchInstances() {
+            this.ids._fetchInstances();
+        }
+        private Identifiers ids;
+        private long itxtpt;
+        private int itxtch;
+        private String itext;
+        private Specpr _root;
+        private Specpr.Record _parent;
+        public Identifiers ids() { return ids; }
+
+        /**
+         * Text data record pointer. This pointer points  to a data record where additional text may be may be found.
+         */
+        public long itxtpt() { return itxtpt; }
+
+        /**
+         * The number of text characters (maximum= 19860).
+         */
+        public int itxtch() { return itxtch; }
+
+        /**
+         * 1476 characters of text.  Text has embedded newlines so the number of lines available is limited only by the number of characters available.
+         */
+        public String itext() { return itext; }
+        public Specpr _root() { return _root; }
+        public Specpr.Record _parent() { return _parent; }
+    }
+    private List<Record> records;
     private Specpr _root;
     private KaitaiStruct _parent;
-    public ArrayList<Record> records() { return records; }
+    public List<Record> records() { return records; }
     public Specpr _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

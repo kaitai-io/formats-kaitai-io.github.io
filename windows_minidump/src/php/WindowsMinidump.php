@@ -14,19 +14,19 @@
 
 namespace {
     class WindowsMinidump extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \WindowsMinidump $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\WindowsMinidump $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic1 = $this->_io->readBytes(4);
-            if (!($this->magic1() == "\x4D\x44\x4D\x50")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x4D\x44\x4D\x50", $this->magic1(), $this->_io(), "/seq/0");
+            if (!($this->_m_magic1 == "\x4D\x44\x4D\x50")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x4D\x44\x4D\x50", $this->_m_magic1, $this->_io, "/seq/0");
             }
             $this->_m_magic2 = $this->_io->readBytes(2);
-            if (!($this->magic2() == "\x93\xA7")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x93\xA7", $this->magic2(), $this->_io(), "/seq/1");
+            if (!($this->_m_magic2 == "\x93\xA7")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x93\xA7", $this->_m_magic2, $this->_io, "/seq/1");
             }
             $this->_m_version = $this->_io->readU2le();
             $this->_m_numStreams = $this->_io->readU4le();
@@ -69,30 +69,144 @@ namespace {
 }
 
 namespace WindowsMinidump {
-    class ThreadList extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \WindowsMinidump\Dir $_parent = null, \WindowsMinidump $_root = null) {
+    class Dir extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\WindowsMinidump $_parent = null, ?\WindowsMinidump $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_numThreads = $this->_io->readU4le();
-            $this->_m_threads = [];
-            $n = $this->numThreads();
+            $this->_m_streamType = $this->_io->readU4le();
+            $this->_m_lenData = $this->_io->readU4le();
+            $this->_m_ofsData = $this->_io->readU4le();
+        }
+        protected $_m_data;
+        public function data() {
+            if ($this->_m_data !== null)
+                return $this->_m_data;
+            $_pos = $this->_io->pos();
+            $this->_io->seek($this->ofsData());
+            switch ($this->streamType()) {
+                case \WindowsMinidump\StreamTypes::EXCEPTION:
+                    $this->_m__raw_data = $this->_io->readBytes($this->lenData());
+                    $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                    $this->_m_data = new \WindowsMinidump\ExceptionStream($_io__raw_data, $this, $this->_root);
+                    break;
+                case \WindowsMinidump\StreamTypes::MEMORY_LIST:
+                    $this->_m__raw_data = $this->_io->readBytes($this->lenData());
+                    $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                    $this->_m_data = new \WindowsMinidump\MemoryList($_io__raw_data, $this, $this->_root);
+                    break;
+                case \WindowsMinidump\StreamTypes::MISC_INFO:
+                    $this->_m__raw_data = $this->_io->readBytes($this->lenData());
+                    $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                    $this->_m_data = new \WindowsMinidump\MiscInfo($_io__raw_data, $this, $this->_root);
+                    break;
+                case \WindowsMinidump\StreamTypes::SYSTEM_INFO:
+                    $this->_m__raw_data = $this->_io->readBytes($this->lenData());
+                    $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                    $this->_m_data = new \WindowsMinidump\SystemInfo($_io__raw_data, $this, $this->_root);
+                    break;
+                case \WindowsMinidump\StreamTypes::THREAD_LIST:
+                    $this->_m__raw_data = $this->_io->readBytes($this->lenData());
+                    $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                    $this->_m_data = new \WindowsMinidump\ThreadList($_io__raw_data, $this, $this->_root);
+                    break;
+                default:
+                    $this->_m_data = $this->_io->readBytes($this->lenData());
+                    break;
+            }
+            $this->_io->seek($_pos);
+            return $this->_m_data;
+        }
+        protected $_m_streamType;
+        protected $_m_lenData;
+        protected $_m_ofsData;
+        protected $_m__raw_data;
+        public function streamType() { return $this->_m_streamType; }
+        public function lenData() { return $this->_m_lenData; }
+        public function ofsData() { return $this->_m_ofsData; }
+        public function _raw_data() { return $this->_m__raw_data; }
+    }
+}
+
+namespace WindowsMinidump {
+    class ExceptionRecord extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\WindowsMinidump\ExceptionStream $_parent = null, ?\WindowsMinidump $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_code = $this->_io->readU4le();
+            $this->_m_flags = $this->_io->readU4le();
+            $this->_m_innerException = $this->_io->readU8le();
+            $this->_m_addr = $this->_io->readU8le();
+            $this->_m_numParams = $this->_io->readU4le();
+            $this->_m_reserved = $this->_io->readU4le();
+            $this->_m_params = [];
+            $n = 15;
             for ($i = 0; $i < $n; $i++) {
-                $this->_m_threads[] = new \WindowsMinidump\Thread($this->_io, $this, $this->_root);
+                $this->_m_params[] = $this->_io->readU8le();
             }
         }
-        protected $_m_numThreads;
-        protected $_m_threads;
-        public function numThreads() { return $this->_m_numThreads; }
-        public function threads() { return $this->_m_threads; }
+        protected $_m_code;
+        protected $_m_flags;
+        protected $_m_innerException;
+        protected $_m_addr;
+        protected $_m_numParams;
+        protected $_m_reserved;
+        protected $_m_params;
+        public function code() { return $this->_m_code; }
+        public function flags() { return $this->_m_flags; }
+        public function innerException() { return $this->_m_innerException; }
+
+        /**
+         * Memory address where exception has occurred
+         */
+        public function addr() { return $this->_m_addr; }
+        public function numParams() { return $this->_m_numParams; }
+        public function reserved() { return $this->_m_reserved; }
+
+        /**
+         * Additional parameters passed along with exception raise
+         * function (for WinAPI, that is `RaiseException`). Meaning is
+         * exception-specific. Given that this type is originally
+         * defined by a C structure, it is described there as array of
+         * fixed number of elements (`EXCEPTION_MAXIMUM_PARAMETERS` =
+         * 15), but in reality only first `num_params` would be used.
+         */
+        public function params() { return $this->_m_params; }
+    }
+}
+
+namespace WindowsMinidump {
+    class ExceptionStream extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\WindowsMinidump\Dir $_parent = null, ?\WindowsMinidump $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_threadId = $this->_io->readU4le();
+            $this->_m_reserved = $this->_io->readU4le();
+            $this->_m_exceptionRec = new \WindowsMinidump\ExceptionRecord($this->_io, $this, $this->_root);
+            $this->_m_threadContext = new \WindowsMinidump\LocationDescriptor($this->_io, $this, $this->_root);
+        }
+        protected $_m_threadId;
+        protected $_m_reserved;
+        protected $_m_exceptionRec;
+        protected $_m_threadContext;
+        public function threadId() { return $this->_m_threadId; }
+        public function reserved() { return $this->_m_reserved; }
+        public function exceptionRec() { return $this->_m_exceptionRec; }
+        public function threadContext() { return $this->_m_threadContext; }
     }
 }
 
 namespace WindowsMinidump {
     class LocationDescriptor extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \WindowsMinidump $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\WindowsMinidump $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -119,6 +233,46 @@ namespace WindowsMinidump {
     }
 }
 
+namespace WindowsMinidump {
+    class MemoryDescriptor extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\WindowsMinidump $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_addrMemoryRange = $this->_io->readU8le();
+            $this->_m_memory = new \WindowsMinidump\LocationDescriptor($this->_io, $this, $this->_root);
+        }
+        protected $_m_addrMemoryRange;
+        protected $_m_memory;
+        public function addrMemoryRange() { return $this->_m_addrMemoryRange; }
+        public function memory() { return $this->_m_memory; }
+    }
+}
+
+namespace WindowsMinidump {
+    class MemoryList extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\WindowsMinidump\Dir $_parent = null, ?\WindowsMinidump $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_numMemRanges = $this->_io->readU4le();
+            $this->_m_memRanges = [];
+            $n = $this->numMemRanges();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_memRanges[] = new \WindowsMinidump\MemoryDescriptor($this->_io, $this, $this->_root);
+            }
+        }
+        protected $_m_numMemRanges;
+        protected $_m_memRanges;
+        public function numMemRanges() { return $this->_m_numMemRanges; }
+        public function memRanges() { return $this->_m_memRanges; }
+    }
+}
+
 /**
  * Specific string serialization scheme used in MiniDump format is
  * actually a simple 32-bit length-prefixed UTF-16 string.
@@ -126,7 +280,7 @@ namespace WindowsMinidump {
 
 namespace WindowsMinidump {
     class MinidumpString extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \WindowsMinidump\SystemInfo $_parent = null, \WindowsMinidump $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\WindowsMinidump\SystemInfo $_parent = null, ?\WindowsMinidump $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -142,6 +296,51 @@ namespace WindowsMinidump {
     }
 }
 
+namespace WindowsMinidump {
+    class MiscInfo extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\WindowsMinidump\Dir $_parent = null, ?\WindowsMinidump $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_lenInfo = $this->_io->readU4le();
+            $this->_m_flags1 = $this->_io->readU4le();
+            $this->_m_processId = $this->_io->readU4le();
+            $this->_m_processCreateTime = $this->_io->readU4le();
+            $this->_m_processUserTime = $this->_io->readU4le();
+            $this->_m_processKernelTime = $this->_io->readU4le();
+            $this->_m_cpuMaxMhz = $this->_io->readU4le();
+            $this->_m_cpuCurMhz = $this->_io->readU4le();
+            $this->_m_cpuLimitMhz = $this->_io->readU4le();
+            $this->_m_cpuMaxIdleState = $this->_io->readU4le();
+            $this->_m_cpuCurIdleState = $this->_io->readU4le();
+        }
+        protected $_m_lenInfo;
+        protected $_m_flags1;
+        protected $_m_processId;
+        protected $_m_processCreateTime;
+        protected $_m_processUserTime;
+        protected $_m_processKernelTime;
+        protected $_m_cpuMaxMhz;
+        protected $_m_cpuCurMhz;
+        protected $_m_cpuLimitMhz;
+        protected $_m_cpuMaxIdleState;
+        protected $_m_cpuCurIdleState;
+        public function lenInfo() { return $this->_m_lenInfo; }
+        public function flags1() { return $this->_m_flags1; }
+        public function processId() { return $this->_m_processId; }
+        public function processCreateTime() { return $this->_m_processCreateTime; }
+        public function processUserTime() { return $this->_m_processUserTime; }
+        public function processKernelTime() { return $this->_m_processKernelTime; }
+        public function cpuMaxMhz() { return $this->_m_cpuMaxMhz; }
+        public function cpuCurMhz() { return $this->_m_cpuCurMhz; }
+        public function cpuLimitMhz() { return $this->_m_cpuLimitMhz; }
+        public function cpuMaxIdleState() { return $this->_m_cpuMaxIdleState; }
+        public function cpuCurIdleState() { return $this->_m_cpuCurIdleState; }
+    }
+}
+
 /**
  * "System info" stream provides basic information about the
  * hardware and operating system which produces this dump.
@@ -149,7 +348,7 @@ namespace WindowsMinidump {
 
 namespace WindowsMinidump {
     class SystemInfo extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \WindowsMinidump\Dir $_parent = null, \WindowsMinidump $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\WindowsMinidump\Dir $_parent = null, ?\WindowsMinidump $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -215,169 +414,18 @@ namespace WindowsMinidump\SystemInfo {
         const IA64 = 6;
         const AMD64 = 9;
         const UNKNOWN = 65535;
-    }
-}
 
-namespace WindowsMinidump {
-    class ExceptionRecord extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \WindowsMinidump\ExceptionStream $_parent = null, \WindowsMinidump $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
+        private const _VALUES = [0 => true, 5 => true, 6 => true, 9 => true, 65535 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
         }
-
-        private function _read() {
-            $this->_m_code = $this->_io->readU4le();
-            $this->_m_flags = $this->_io->readU4le();
-            $this->_m_innerException = $this->_io->readU8le();
-            $this->_m_addr = $this->_io->readU8le();
-            $this->_m_numParams = $this->_io->readU4le();
-            $this->_m_reserved = $this->_io->readU4le();
-            $this->_m_params = [];
-            $n = 15;
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_params[] = $this->_io->readU8le();
-            }
-        }
-        protected $_m_code;
-        protected $_m_flags;
-        protected $_m_innerException;
-        protected $_m_addr;
-        protected $_m_numParams;
-        protected $_m_reserved;
-        protected $_m_params;
-        public function code() { return $this->_m_code; }
-        public function flags() { return $this->_m_flags; }
-        public function innerException() { return $this->_m_innerException; }
-
-        /**
-         * Memory address where exception has occurred
-         */
-        public function addr() { return $this->_m_addr; }
-        public function numParams() { return $this->_m_numParams; }
-        public function reserved() { return $this->_m_reserved; }
-
-        /**
-         * Additional parameters passed along with exception raise
-         * function (for WinAPI, that is `RaiseException`). Meaning is
-         * exception-specific. Given that this type is originally
-         * defined by a C structure, it is described there as array of
-         * fixed number of elements (`EXCEPTION_MAXIMUM_PARAMETERS` =
-         * 15), but in reality only first `num_params` would be used.
-         */
-        public function params() { return $this->_m_params; }
-    }
-}
-
-namespace WindowsMinidump {
-    class MiscInfo extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \WindowsMinidump\Dir $_parent = null, \WindowsMinidump $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_lenInfo = $this->_io->readU4le();
-            $this->_m_flags1 = $this->_io->readU4le();
-            $this->_m_processId = $this->_io->readU4le();
-            $this->_m_processCreateTime = $this->_io->readU4le();
-            $this->_m_processUserTime = $this->_io->readU4le();
-            $this->_m_processKernelTime = $this->_io->readU4le();
-            $this->_m_cpuMaxMhz = $this->_io->readU4le();
-            $this->_m_cpuCurMhz = $this->_io->readU4le();
-            $this->_m_cpuLimitMhz = $this->_io->readU4le();
-            $this->_m_cpuMaxIdleState = $this->_io->readU4le();
-            $this->_m_cpuCurIdleState = $this->_io->readU4le();
-        }
-        protected $_m_lenInfo;
-        protected $_m_flags1;
-        protected $_m_processId;
-        protected $_m_processCreateTime;
-        protected $_m_processUserTime;
-        protected $_m_processKernelTime;
-        protected $_m_cpuMaxMhz;
-        protected $_m_cpuCurMhz;
-        protected $_m_cpuLimitMhz;
-        protected $_m_cpuMaxIdleState;
-        protected $_m_cpuCurIdleState;
-        public function lenInfo() { return $this->_m_lenInfo; }
-        public function flags1() { return $this->_m_flags1; }
-        public function processId() { return $this->_m_processId; }
-        public function processCreateTime() { return $this->_m_processCreateTime; }
-        public function processUserTime() { return $this->_m_processUserTime; }
-        public function processKernelTime() { return $this->_m_processKernelTime; }
-        public function cpuMaxMhz() { return $this->_m_cpuMaxMhz; }
-        public function cpuCurMhz() { return $this->_m_cpuCurMhz; }
-        public function cpuLimitMhz() { return $this->_m_cpuLimitMhz; }
-        public function cpuMaxIdleState() { return $this->_m_cpuMaxIdleState; }
-        public function cpuCurIdleState() { return $this->_m_cpuCurIdleState; }
-    }
-}
-
-namespace WindowsMinidump {
-    class Dir extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \WindowsMinidump $_parent = null, \WindowsMinidump $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_streamType = $this->_io->readU4le();
-            $this->_m_lenData = $this->_io->readU4le();
-            $this->_m_ofsData = $this->_io->readU4le();
-        }
-        protected $_m_data;
-        public function data() {
-            if ($this->_m_data !== null)
-                return $this->_m_data;
-            $_pos = $this->_io->pos();
-            $this->_io->seek($this->ofsData());
-            switch ($this->streamType()) {
-                case \WindowsMinidump\StreamTypes::MEMORY_LIST:
-                    $this->_m__raw_data = $this->_io->readBytes($this->lenData());
-                    $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                    $this->_m_data = new \WindowsMinidump\MemoryList($_io__raw_data, $this, $this->_root);
-                    break;
-                case \WindowsMinidump\StreamTypes::MISC_INFO:
-                    $this->_m__raw_data = $this->_io->readBytes($this->lenData());
-                    $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                    $this->_m_data = new \WindowsMinidump\MiscInfo($_io__raw_data, $this, $this->_root);
-                    break;
-                case \WindowsMinidump\StreamTypes::THREAD_LIST:
-                    $this->_m__raw_data = $this->_io->readBytes($this->lenData());
-                    $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                    $this->_m_data = new \WindowsMinidump\ThreadList($_io__raw_data, $this, $this->_root);
-                    break;
-                case \WindowsMinidump\StreamTypes::EXCEPTION:
-                    $this->_m__raw_data = $this->_io->readBytes($this->lenData());
-                    $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                    $this->_m_data = new \WindowsMinidump\ExceptionStream($_io__raw_data, $this, $this->_root);
-                    break;
-                case \WindowsMinidump\StreamTypes::SYSTEM_INFO:
-                    $this->_m__raw_data = $this->_io->readBytes($this->lenData());
-                    $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                    $this->_m_data = new \WindowsMinidump\SystemInfo($_io__raw_data, $this, $this->_root);
-                    break;
-                default:
-                    $this->_m_data = $this->_io->readBytes($this->lenData());
-                    break;
-            }
-            $this->_io->seek($_pos);
-            return $this->_m_data;
-        }
-        protected $_m_streamType;
-        protected $_m_lenData;
-        protected $_m_ofsData;
-        protected $_m__raw_data;
-        public function streamType() { return $this->_m_streamType; }
-        public function lenData() { return $this->_m_lenData; }
-        public function ofsData() { return $this->_m_ofsData; }
-        public function _raw_data() { return $this->_m__raw_data; }
     }
 }
 
 namespace WindowsMinidump {
     class Thread extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \WindowsMinidump\ThreadList $_parent = null, \WindowsMinidump $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\WindowsMinidump\ThreadList $_parent = null, ?\WindowsMinidump $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -413,66 +461,24 @@ namespace WindowsMinidump {
 }
 
 namespace WindowsMinidump {
-    class MemoryList extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \WindowsMinidump\Dir $_parent = null, \WindowsMinidump $_root = null) {
+    class ThreadList extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\WindowsMinidump\Dir $_parent = null, ?\WindowsMinidump $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_numMemRanges = $this->_io->readU4le();
-            $this->_m_memRanges = [];
-            $n = $this->numMemRanges();
+            $this->_m_numThreads = $this->_io->readU4le();
+            $this->_m_threads = [];
+            $n = $this->numThreads();
             for ($i = 0; $i < $n; $i++) {
-                $this->_m_memRanges[] = new \WindowsMinidump\MemoryDescriptor($this->_io, $this, $this->_root);
+                $this->_m_threads[] = new \WindowsMinidump\Thread($this->_io, $this, $this->_root);
             }
         }
-        protected $_m_numMemRanges;
-        protected $_m_memRanges;
-        public function numMemRanges() { return $this->_m_numMemRanges; }
-        public function memRanges() { return $this->_m_memRanges; }
-    }
-}
-
-namespace WindowsMinidump {
-    class MemoryDescriptor extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \WindowsMinidump $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_addrMemoryRange = $this->_io->readU8le();
-            $this->_m_memory = new \WindowsMinidump\LocationDescriptor($this->_io, $this, $this->_root);
-        }
-        protected $_m_addrMemoryRange;
-        protected $_m_memory;
-        public function addrMemoryRange() { return $this->_m_addrMemoryRange; }
-        public function memory() { return $this->_m_memory; }
-    }
-}
-
-namespace WindowsMinidump {
-    class ExceptionStream extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \WindowsMinidump\Dir $_parent = null, \WindowsMinidump $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_threadId = $this->_io->readU4le();
-            $this->_m_reserved = $this->_io->readU4le();
-            $this->_m_exceptionRec = new \WindowsMinidump\ExceptionRecord($this->_io, $this, $this->_root);
-            $this->_m_threadContext = new \WindowsMinidump\LocationDescriptor($this->_io, $this, $this->_root);
-        }
-        protected $_m_threadId;
-        protected $_m_reserved;
-        protected $_m_exceptionRec;
-        protected $_m_threadContext;
-        public function threadId() { return $this->_m_threadId; }
-        public function reserved() { return $this->_m_reserved; }
-        public function exceptionRec() { return $this->_m_exceptionRec; }
-        public function threadContext() { return $this->_m_threadContext; }
+        protected $_m_numThreads;
+        protected $_m_threads;
+        public function numThreads() { return $this->_m_numThreads; }
+        public function threads() { return $this->_m_threads; }
     }
 }
 
@@ -527,5 +533,11 @@ namespace WindowsMinidump {
         const MD_LINUX_AUXV = 1197932552;
         const MD_LINUX_MAPS = 1197932553;
         const MD_LINUX_DSO_DEBUG = 1197932554;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 7 => true, 8 => true, 9 => true, 10 => true, 11 => true, 12 => true, 13 => true, 14 => true, 15 => true, 16 => true, 17 => true, 18 => true, 19 => true, 20 => true, 21 => true, 22 => true, 23 => true, 24 => true, 32768 => true, 32769 => true, 32770 => true, 32771 => true, 32772 => true, 32773 => true, 32774 => true, 32775 => true, 32776 => true, 32777 => true, 32778 => true, 32779 => true, 32780 => true, 1129316353 => true, 1197932545 => true, 1197932546 => true, 1197932547 => true, 1197932548 => true, 1197932549 => true, 1197932550 => true, 1197932551 => true, 1197932552 => true, 1197932553 => true, 1197932554 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

@@ -74,8 +74,8 @@
 
 namespace {
     class MinecraftNbt extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \MinecraftNbt $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\MinecraftNbt $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -92,10 +92,10 @@ namespace {
             $_pos = $this->_io->pos();
             $this->_io->seek(0);
             $this->_m_rootType = $this->_io->readU1();
-            $this->_io->seek($_pos);
-            if (!($this->rootType() == \MinecraftNbt\Tag::COMPOUND)) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError(\MinecraftNbt\Tag::COMPOUND, $this->rootType(), $this->_io(), "/instances/root_type");
+            if (!($this->_m_rootType == \MinecraftNbt\Tag::COMPOUND)) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError(\MinecraftNbt\Tag::COMPOUND, $this->_m_rootType, $this->_io, "/instances/root_type");
             }
+            $this->_io->seek($_pos);
             return $this->_m_rootType;
         }
         protected $_m_rootCheck;
@@ -106,37 +106,77 @@ namespace {
 }
 
 namespace MinecraftNbt {
-    class TagLongArray extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \MinecraftNbt $_root = null) {
+    class NamedTag extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\MinecraftNbt $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_numTags = $this->_io->readS4be();
-            $this->_m_tags = [];
-            $n = $this->numTags();
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_tags[] = $this->_io->readS8be();
+            $this->_m_type = $this->_io->readU1();
+            if (!($this->isTagEnd())) {
+                $this->_m_name = new \MinecraftNbt\TagString($this->_io, $this, $this->_root);
+            }
+            if (!($this->isTagEnd())) {
+                switch ($this->type()) {
+                    case \MinecraftNbt\Tag::BYTE:
+                        $this->_m_payload = $this->_io->readS1();
+                        break;
+                    case \MinecraftNbt\Tag::BYTE_ARRAY:
+                        $this->_m_payload = new \MinecraftNbt\TagByteArray($this->_io, $this, $this->_root);
+                        break;
+                    case \MinecraftNbt\Tag::COMPOUND:
+                        $this->_m_payload = new \MinecraftNbt\TagCompound($this->_io, $this, $this->_root);
+                        break;
+                    case \MinecraftNbt\Tag::DOUBLE:
+                        $this->_m_payload = $this->_io->readF8be();
+                        break;
+                    case \MinecraftNbt\Tag::FLOAT:
+                        $this->_m_payload = $this->_io->readF4be();
+                        break;
+                    case \MinecraftNbt\Tag::INT:
+                        $this->_m_payload = $this->_io->readS4be();
+                        break;
+                    case \MinecraftNbt\Tag::INT_ARRAY:
+                        $this->_m_payload = new \MinecraftNbt\TagIntArray($this->_io, $this, $this->_root);
+                        break;
+                    case \MinecraftNbt\Tag::LIST:
+                        $this->_m_payload = new \MinecraftNbt\TagList($this->_io, $this, $this->_root);
+                        break;
+                    case \MinecraftNbt\Tag::LONG:
+                        $this->_m_payload = $this->_io->readS8be();
+                        break;
+                    case \MinecraftNbt\Tag::LONG_ARRAY:
+                        $this->_m_payload = new \MinecraftNbt\TagLongArray($this->_io, $this, $this->_root);
+                        break;
+                    case \MinecraftNbt\Tag::SHORT:
+                        $this->_m_payload = $this->_io->readS2be();
+                        break;
+                    case \MinecraftNbt\Tag::STRING:
+                        $this->_m_payload = new \MinecraftNbt\TagString($this->_io, $this, $this->_root);
+                        break;
+                }
             }
         }
-        protected $_m_tagsType;
-        public function tagsType() {
-            if ($this->_m_tagsType !== null)
-                return $this->_m_tagsType;
-            $this->_m_tagsType = \MinecraftNbt\Tag::LONG;
-            return $this->_m_tagsType;
+        protected $_m_isTagEnd;
+        public function isTagEnd() {
+            if ($this->_m_isTagEnd !== null)
+                return $this->_m_isTagEnd;
+            $this->_m_isTagEnd = $this->type() == \MinecraftNbt\Tag::END;
+            return $this->_m_isTagEnd;
         }
-        protected $_m_numTags;
-        protected $_m_tags;
-        public function numTags() { return $this->_m_numTags; }
-        public function tags() { return $this->_m_tags; }
+        protected $_m_type;
+        protected $_m_name;
+        protected $_m_payload;
+        public function type() { return $this->_m_type; }
+        public function name() { return $this->_m_name; }
+        public function payload() { return $this->_m_payload; }
     }
 }
 
 namespace MinecraftNbt {
     class TagByteArray extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \MinecraftNbt $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\MinecraftNbt $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -153,8 +193,36 @@ namespace MinecraftNbt {
 }
 
 namespace MinecraftNbt {
+    class TagCompound extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\MinecraftNbt $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_tags = [];
+            $i = 0;
+            do {
+                $_ = new \MinecraftNbt\NamedTag($this->_io, $this, $this->_root);
+                $this->_m_tags[] = $_;
+                $i++;
+            } while (!($_->isTagEnd()));
+        }
+        protected $_m_dumpNumTags;
+        public function dumpNumTags() {
+            if ($this->_m_dumpNumTags !== null)
+                return $this->_m_dumpNumTags;
+            $this->_m_dumpNumTags = count($this->tags()) - ( ((count($this->tags()) >= 1) && ($this->tags()[count($this->tags()) - 1]->isTagEnd()))  ? 1 : 0);
+            return $this->_m_dumpNumTags;
+        }
+        protected $_m_tags;
+        public function tags() { return $this->_m_tags; }
+    }
+}
+
+namespace MinecraftNbt {
     class TagIntArray extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \MinecraftNbt $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\MinecraftNbt $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -183,7 +251,7 @@ namespace MinecraftNbt {
 
 namespace MinecraftNbt {
     class TagList extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \MinecraftNbt $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\MinecraftNbt $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -195,8 +263,11 @@ namespace MinecraftNbt {
             $n = $this->numTags();
             for ($i = 0; $i < $n; $i++) {
                 switch ($this->tagsType()) {
-                    case \MinecraftNbt\Tag::LONG_ARRAY:
-                        $this->_m_tags[] = new \MinecraftNbt\TagLongArray($this->_io, $this, $this->_root);
+                    case \MinecraftNbt\Tag::BYTE:
+                        $this->_m_tags[] = $this->_io->readS1();
+                        break;
+                    case \MinecraftNbt\Tag::BYTE_ARRAY:
+                        $this->_m_tags[] = new \MinecraftNbt\TagByteArray($this->_io, $this, $this->_root);
                         break;
                     case \MinecraftNbt\Tag::COMPOUND:
                         $this->_m_tags[] = new \MinecraftNbt\TagCompound($this->_io, $this, $this->_root);
@@ -204,32 +275,29 @@ namespace MinecraftNbt {
                     case \MinecraftNbt\Tag::DOUBLE:
                         $this->_m_tags[] = $this->_io->readF8be();
                         break;
-                    case \MinecraftNbt\Tag::LIST:
-                        $this->_m_tags[] = new \MinecraftNbt\TagList($this->_io, $this, $this->_root);
-                        break;
                     case \MinecraftNbt\Tag::FLOAT:
                         $this->_m_tags[] = $this->_io->readF4be();
-                        break;
-                    case \MinecraftNbt\Tag::SHORT:
-                        $this->_m_tags[] = $this->_io->readS2be();
                         break;
                     case \MinecraftNbt\Tag::INT:
                         $this->_m_tags[] = $this->_io->readS4be();
                         break;
-                    case \MinecraftNbt\Tag::BYTE_ARRAY:
-                        $this->_m_tags[] = new \MinecraftNbt\TagByteArray($this->_io, $this, $this->_root);
-                        break;
-                    case \MinecraftNbt\Tag::BYTE:
-                        $this->_m_tags[] = $this->_io->readS1();
-                        break;
                     case \MinecraftNbt\Tag::INT_ARRAY:
                         $this->_m_tags[] = new \MinecraftNbt\TagIntArray($this->_io, $this, $this->_root);
                         break;
-                    case \MinecraftNbt\Tag::STRING:
-                        $this->_m_tags[] = new \MinecraftNbt\TagString($this->_io, $this, $this->_root);
+                    case \MinecraftNbt\Tag::LIST:
+                        $this->_m_tags[] = new \MinecraftNbt\TagList($this->_io, $this, $this->_root);
                         break;
                     case \MinecraftNbt\Tag::LONG:
                         $this->_m_tags[] = $this->_io->readS8be();
+                        break;
+                    case \MinecraftNbt\Tag::LONG_ARRAY:
+                        $this->_m_tags[] = new \MinecraftNbt\TagLongArray($this->_io, $this, $this->_root);
+                        break;
+                    case \MinecraftNbt\Tag::SHORT:
+                        $this->_m_tags[] = $this->_io->readS2be();
+                        break;
+                    case \MinecraftNbt\Tag::STRING:
+                        $this->_m_tags[] = new \MinecraftNbt\TagString($this->_io, $this, $this->_root);
                         break;
                 }
             }
@@ -244,15 +312,44 @@ namespace MinecraftNbt {
 }
 
 namespace MinecraftNbt {
+    class TagLongArray extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\MinecraftNbt $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_numTags = $this->_io->readS4be();
+            $this->_m_tags = [];
+            $n = $this->numTags();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_tags[] = $this->_io->readS8be();
+            }
+        }
+        protected $_m_tagsType;
+        public function tagsType() {
+            if ($this->_m_tagsType !== null)
+                return $this->_m_tagsType;
+            $this->_m_tagsType = \MinecraftNbt\Tag::LONG;
+            return $this->_m_tagsType;
+        }
+        protected $_m_numTags;
+        protected $_m_tags;
+        public function numTags() { return $this->_m_numTags; }
+        public function tags() { return $this->_m_tags; }
+    }
+}
+
+namespace MinecraftNbt {
     class TagString extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \MinecraftNbt $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\MinecraftNbt $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_lenData = $this->_io->readU2be();
-            $this->_m_data = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->lenData()), "utf-8");
+            $this->_m_data = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->lenData()), "UTF-8");
         }
         protected $_m_lenData;
         protected $_m_data;
@@ -262,103 +359,6 @@ namespace MinecraftNbt {
          */
         public function lenData() { return $this->_m_lenData; }
         public function data() { return $this->_m_data; }
-    }
-}
-
-namespace MinecraftNbt {
-    class TagCompound extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \MinecraftNbt $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_tags = [];
-            $i = 0;
-            do {
-                $_ = new \MinecraftNbt\NamedTag($this->_io, $this, $this->_root);
-                $this->_m_tags[] = $_;
-                $i++;
-            } while (!($_->isTagEnd()));
-        }
-        protected $_m_dumpNumTags;
-        public function dumpNumTags() {
-            if ($this->_m_dumpNumTags !== null)
-                return $this->_m_dumpNumTags;
-            $this->_m_dumpNumTags = (count($this->tags()) - ( ((count($this->tags()) >= 1) && ($this->tags()[count($this->tags()) - 1]->isTagEnd()))  ? 1 : 0));
-            return $this->_m_dumpNumTags;
-        }
-        protected $_m_tags;
-        public function tags() { return $this->_m_tags; }
-    }
-}
-
-namespace MinecraftNbt {
-    class NamedTag extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \MinecraftNbt $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_type = $this->_io->readU1();
-            if (!($this->isTagEnd())) {
-                $this->_m_name = new \MinecraftNbt\TagString($this->_io, $this, $this->_root);
-            }
-            if (!($this->isTagEnd())) {
-                switch ($this->type()) {
-                    case \MinecraftNbt\Tag::LONG_ARRAY:
-                        $this->_m_payload = new \MinecraftNbt\TagLongArray($this->_io, $this, $this->_root);
-                        break;
-                    case \MinecraftNbt\Tag::COMPOUND:
-                        $this->_m_payload = new \MinecraftNbt\TagCompound($this->_io, $this, $this->_root);
-                        break;
-                    case \MinecraftNbt\Tag::DOUBLE:
-                        $this->_m_payload = $this->_io->readF8be();
-                        break;
-                    case \MinecraftNbt\Tag::LIST:
-                        $this->_m_payload = new \MinecraftNbt\TagList($this->_io, $this, $this->_root);
-                        break;
-                    case \MinecraftNbt\Tag::FLOAT:
-                        $this->_m_payload = $this->_io->readF4be();
-                        break;
-                    case \MinecraftNbt\Tag::SHORT:
-                        $this->_m_payload = $this->_io->readS2be();
-                        break;
-                    case \MinecraftNbt\Tag::INT:
-                        $this->_m_payload = $this->_io->readS4be();
-                        break;
-                    case \MinecraftNbt\Tag::BYTE_ARRAY:
-                        $this->_m_payload = new \MinecraftNbt\TagByteArray($this->_io, $this, $this->_root);
-                        break;
-                    case \MinecraftNbt\Tag::BYTE:
-                        $this->_m_payload = $this->_io->readS1();
-                        break;
-                    case \MinecraftNbt\Tag::INT_ARRAY:
-                        $this->_m_payload = new \MinecraftNbt\TagIntArray($this->_io, $this, $this->_root);
-                        break;
-                    case \MinecraftNbt\Tag::STRING:
-                        $this->_m_payload = new \MinecraftNbt\TagString($this->_io, $this, $this->_root);
-                        break;
-                    case \MinecraftNbt\Tag::LONG:
-                        $this->_m_payload = $this->_io->readS8be();
-                        break;
-                }
-            }
-        }
-        protected $_m_isTagEnd;
-        public function isTagEnd() {
-            if ($this->_m_isTagEnd !== null)
-                return $this->_m_isTagEnd;
-            $this->_m_isTagEnd = $this->type() == \MinecraftNbt\Tag::END;
-            return $this->_m_isTagEnd;
-        }
-        protected $_m_type;
-        protected $_m_name;
-        protected $_m_payload;
-        public function type() { return $this->_m_type; }
-        public function name() { return $this->_m_name; }
-        public function payload() { return $this->_m_payload; }
     }
 }
 
@@ -383,5 +383,11 @@ namespace MinecraftNbt {
         const COMPOUND = 10;
         const INT_ARRAY = 11;
         const LONG_ARRAY = 12;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 7 => true, 8 => true, 9 => true, 10 => true, 11 => true, 12 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

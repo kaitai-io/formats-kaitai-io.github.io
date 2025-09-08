@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -36,8 +36,8 @@ end
 # encoding parameters, and gets result using either `as_int` or
 # `as_str` attributes.
 class Bcd < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self, num_digits, bits_per_digit, is_le)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil, num_digits, bits_per_digit, is_le)
+    super(_io, _parent, _root || self)
     @num_digits = num_digits
     @bits_per_digit = bits_per_digit
     @is_le = is_le
@@ -66,10 +66,18 @@ class Bcd < Kaitai::Struct::Struct
   end
 
   ##
+  # Value of this BCD number as integer (treating digit order as big-endian).
+  def as_int_be
+    return @as_int_be unless @as_int_be.nil?
+    @as_int_be = digits[last_idx] + (num_digits < 2 ? 0 : digits[last_idx - 1] * 10 + (num_digits < 3 ? 0 : digits[last_idx - 2] * 100 + (num_digits < 4 ? 0 : digits[last_idx - 3] * 1000 + (num_digits < 5 ? 0 : digits[last_idx - 4] * 10000 + (num_digits < 6 ? 0 : digits[last_idx - 5] * 100000 + (num_digits < 7 ? 0 : digits[last_idx - 6] * 1000000 + (num_digits < 8 ? 0 : digits[last_idx - 7] * 10000000)))))))
+    @as_int_be
+  end
+
+  ##
   # Value of this BCD number as integer (treating digit order as little-endian).
   def as_int_le
     return @as_int_le unless @as_int_le.nil?
-    @as_int_le = (digits[0] + (num_digits < 2 ? 0 : ((digits[1] * 10) + (num_digits < 3 ? 0 : ((digits[2] * 100) + (num_digits < 4 ? 0 : ((digits[3] * 1000) + (num_digits < 5 ? 0 : ((digits[4] * 10000) + (num_digits < 6 ? 0 : ((digits[5] * 100000) + (num_digits < 7 ? 0 : ((digits[6] * 1000000) + (num_digits < 8 ? 0 : (digits[7] * 10000000)))))))))))))))
+    @as_int_le = digits[0] + (num_digits < 2 ? 0 : digits[1] * 10 + (num_digits < 3 ? 0 : digits[2] * 100 + (num_digits < 4 ? 0 : digits[3] * 1000 + (num_digits < 5 ? 0 : digits[4] * 10000 + (num_digits < 6 ? 0 : digits[5] * 100000 + (num_digits < 7 ? 0 : digits[6] * 1000000 + (num_digits < 8 ? 0 : digits[7] * 10000000)))))))
     @as_int_le
   end
 
@@ -77,16 +85,8 @@ class Bcd < Kaitai::Struct::Struct
   # Index of last digit (0-based).
   def last_idx
     return @last_idx unless @last_idx.nil?
-    @last_idx = (num_digits - 1)
+    @last_idx = num_digits - 1
     @last_idx
-  end
-
-  ##
-  # Value of this BCD number as integer (treating digit order as big-endian).
-  def as_int_be
-    return @as_int_be unless @as_int_be.nil?
-    @as_int_be = (digits[last_idx] + (num_digits < 2 ? 0 : ((digits[(last_idx - 1)] * 10) + (num_digits < 3 ? 0 : ((digits[(last_idx - 2)] * 100) + (num_digits < 4 ? 0 : ((digits[(last_idx - 3)] * 1000) + (num_digits < 5 ? 0 : ((digits[(last_idx - 4)] * 10000) + (num_digits < 6 ? 0 : ((digits[(last_idx - 5)] * 100000) + (num_digits < 7 ? 0 : ((digits[(last_idx - 6)] * 1000000) + (num_digits < 8 ? 0 : (digits[(last_idx - 7)] * 10000000)))))))))))))))
-    @as_int_be
   end
   attr_reader :digits
 

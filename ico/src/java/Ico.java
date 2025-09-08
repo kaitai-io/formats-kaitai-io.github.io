@@ -6,6 +6,7 @@ import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -36,13 +37,19 @@ public class Ico extends KaitaiStruct {
     }
     private void _read() {
         this.magic = this._io.readBytes(4);
-        if (!(Arrays.equals(magic(), new byte[] { 0, 0, 1, 0 }))) {
-            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 1, 0 }, magic(), _io(), "/seq/0");
+        if (!(Arrays.equals(this.magic, new byte[] { 0, 0, 1, 0 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 1, 0 }, this.magic, this._io, "/seq/0");
         }
         this.numImages = this._io.readU2le();
         this.images = new ArrayList<IconDirEntry>();
         for (int i = 0; i < numImages(); i++) {
             this.images.add(new IconDirEntry(this._io, this, _root));
+        }
+    }
+
+    public void _fetchInstances() {
+        for (int i = 0; i < this.images.size(); i++) {
+            this.images.get(((Number) (i)).intValue())._fetchInstances();
         }
     }
     public static class IconDirEntry extends KaitaiStruct {
@@ -69,13 +76,22 @@ public class Ico extends KaitaiStruct {
             this.height = this._io.readU1();
             this.numColors = this._io.readU1();
             this.reserved = this._io.readBytes(1);
-            if (!(Arrays.equals(reserved(), new byte[] { 0 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0 }, reserved(), _io(), "/types/icon_dir_entry/seq/3");
+            if (!(Arrays.equals(this.reserved, new byte[] { 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0 }, this.reserved, this._io, "/types/icon_dir_entry/seq/3");
             }
             this.numPlanes = this._io.readU2le();
             this.bpp = this._io.readU2le();
             this.lenImg = this._io.readU4le();
             this.ofsImg = this._io.readU4le();
+        }
+
+        public void _fetchInstances() {
+            img();
+            if (this.img != null) {
+            }
+            pngHeader();
+            if (this.pngHeader != null) {
+            }
         }
         private byte[] img;
 
@@ -93,6 +109,17 @@ public class Ico extends KaitaiStruct {
             this._io.seek(_pos);
             return this.img;
         }
+        private Boolean isPng;
+
+        /**
+         * True if this image is in PNG format.
+         */
+        public Boolean isPng() {
+            if (this.isPng != null)
+                return this.isPng;
+            this.isPng = Arrays.equals(pngHeader(), new byte[] { -119, 80, 78, 71, 13, 10, 26, 10 });
+            return this.isPng;
+        }
         private byte[] pngHeader;
 
         /**
@@ -107,18 +134,6 @@ public class Ico extends KaitaiStruct {
             this.pngHeader = this._io.readBytes(8);
             this._io.seek(_pos);
             return this.pngHeader;
-        }
-        private Boolean isPng;
-
-        /**
-         * True if this image is in PNG format.
-         */
-        public Boolean isPng() {
-            if (this.isPng != null)
-                return this.isPng;
-            boolean _tmp = (boolean) (Arrays.equals(pngHeader(), new byte[] { -119, 80, 78, 71, 13, 10, 26, 10 }));
-            this.isPng = _tmp;
-            return this.isPng;
         }
         private int width;
         private int height;
@@ -172,7 +187,7 @@ public class Ico extends KaitaiStruct {
     }
     private byte[] magic;
     private int numImages;
-    private ArrayList<IconDirEntry> images;
+    private List<IconDirEntry> images;
     private Ico _root;
     private KaitaiStruct _parent;
     public byte[] magic() { return magic; }
@@ -181,7 +196,7 @@ public class Ico extends KaitaiStruct {
      * Number of images contained in this file
      */
     public int numImages() { return numImages; }
-    public ArrayList<IconDirEntry> images() { return images; }
+    public List<IconDirEntry> images() { return images; }
     public Ico _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

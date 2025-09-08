@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.Quake2Md2 = factory(root.KaitaiStream);
+    factory(root.Quake2Md2 || (root.Quake2Md2 = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Quake2Md2_, KaitaiStream) {
 /**
  * The MD2 format is used for 3D animated models in id Sofware's Quake II.
  * 
@@ -96,8 +96,8 @@ var Quake2Md2 = (function() {
   }
   Quake2Md2.prototype._read = function() {
     this.magic = this._io.readBytes(4);
-    if (!((KaitaiStream.byteArrayCompare(this.magic, [73, 68, 80, 50]) == 0))) {
-      throw new KaitaiStream.ValidationNotEqualError([73, 68, 80, 50], this.magic, this._io, "/seq/0");
+    if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([73, 68, 80, 50])) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([73, 68, 80, 50]), this.magic, this._io, "/seq/0");
     }
     this.version = this._io.readU4le();
     if (!(this.version == 8)) {
@@ -120,35 +120,11 @@ var Quake2Md2 = (function() {
     this.ofsEof = this._io.readU4le();
   }
 
-  var Vertex = Quake2Md2.Vertex = (function() {
-    function Vertex(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Vertex.prototype._read = function() {
-      this.position = new CompressedVec(this._io, this, this._root);
-      this.normalIndex = this._io.readU1();
-    }
-    Object.defineProperty(Vertex.prototype, 'normal', {
-      get: function() {
-        if (this._m_normal !== undefined)
-          return this._m_normal;
-        this._m_normal = this._root.anormsTable[this.normalIndex];
-        return this._m_normal;
-      }
-    });
-
-    return Vertex;
-  })();
-
   var CompressedVec = Quake2Md2.CompressedVec = (function() {
     function CompressedVec(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -161,7 +137,7 @@ var Quake2Md2 = (function() {
       get: function() {
         if (this._m_x !== undefined)
           return this._m_x;
-        this._m_x = ((this.xCompressed * this._parent._parent.scale.x) + this._parent._parent.translate.x);
+        this._m_x = this.xCompressed * this._parent._parent.scale.x + this._parent._parent.translate.x;
         return this._m_x;
       }
     });
@@ -169,7 +145,7 @@ var Quake2Md2 = (function() {
       get: function() {
         if (this._m_y !== undefined)
           return this._m_y;
-        this._m_y = ((this.yCompressed * this._parent._parent.scale.y) + this._parent._parent.translate.y);
+        this._m_y = this.yCompressed * this._parent._parent.scale.y + this._parent._parent.translate.y;
         return this._m_y;
       }
     });
@@ -177,7 +153,7 @@ var Quake2Md2 = (function() {
       get: function() {
         if (this._m_z !== undefined)
           return this._m_z;
-        this._m_z = ((this.zCompressed * this._parent._parent.scale.z) + this._parent._parent.translate.z);
+        this._m_z = this.zCompressed * this._parent._parent.scale.z + this._parent._parent.translate.z;
         return this._m_z;
       }
     });
@@ -185,48 +161,18 @@ var Quake2Md2 = (function() {
     return CompressedVec;
   })();
 
-  var Triangle = Quake2Md2.Triangle = (function() {
-    function Triangle(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Triangle.prototype._read = function() {
-      this.vertexIndices = [];
-      for (var i = 0; i < 3; i++) {
-        this.vertexIndices.push(this._io.readU2le());
-      }
-      this.texPointIndices = [];
-      for (var i = 0; i < 3; i++) {
-        this.texPointIndices.push(this._io.readU2le());
-      }
-    }
-
-    /**
-     * indices to `_root.frames[i].vertices` (for each frame with index `i`)
-     */
-
-    /**
-     * indices to `_root.tex_coords`
-     */
-
-    return Triangle;
-  })();
-
   var Frame = Quake2Md2.Frame = (function() {
     function Frame(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     Frame.prototype._read = function() {
       this.scale = new Vec3f(this._io, this, this._root);
       this.translate = new Vec3f(this._io, this, this._root);
-      this.name = KaitaiStream.bytesToStr(KaitaiStream.bytesTerminate(this._io.readBytes(16), 0, false), "ascii");
+      this.name = KaitaiStream.bytesToStr(KaitaiStream.bytesTerminate(this._io.readBytes(16), 0, false), "ASCII");
       this.vertices = [];
       for (var i = 0; i < this._root.verticesPerFrame; i++) {
         this.vertices.push(new Vertex(this._io, this, this._root));
@@ -236,106 +182,11 @@ var Quake2Md2 = (function() {
     return Frame;
   })();
 
-  var GlCmdsList = Quake2Md2.GlCmdsList = (function() {
-    function GlCmdsList(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    GlCmdsList.prototype._read = function() {
-      if (!(this._io.isEof())) {
-        this.items = [];
-        var i = 0;
-        do {
-          var _ = new GlCmd(this._io, this, this._root);
-          this.items.push(_);
-          i++;
-        } while (!(_.cmdNumVertices == 0));
-      }
-    }
-
-    return GlCmdsList;
-  })();
-
-  var TexPoint = Quake2Md2.TexPoint = (function() {
-    function TexPoint(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    TexPoint.prototype._read = function() {
-      this.sPx = this._io.readU2le();
-      this.tPx = this._io.readU2le();
-    }
-    Object.defineProperty(TexPoint.prototype, 'sNormalized', {
-      get: function() {
-        if (this._m_sNormalized !== undefined)
-          return this._m_sNormalized;
-        this._m_sNormalized = ((this.sPx + 0.0) / this._root.skinWidthPx);
-        return this._m_sNormalized;
-      }
-    });
-    Object.defineProperty(TexPoint.prototype, 'tNormalized', {
-      get: function() {
-        if (this._m_tNormalized !== undefined)
-          return this._m_tNormalized;
-        this._m_tNormalized = ((this.tPx + 0.0) / this._root.skinHeightPx);
-        return this._m_tNormalized;
-      }
-    });
-
-    return TexPoint;
-  })();
-
-  var Vec3f = Quake2Md2.Vec3f = (function() {
-    function Vec3f(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Vec3f.prototype._read = function() {
-      this.x = this._io.readF4le();
-      this.y = this._io.readF4le();
-      this.z = this._io.readF4le();
-    }
-
-    return Vec3f;
-  })();
-
-  var GlVertex = Quake2Md2.GlVertex = (function() {
-    function GlVertex(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    GlVertex.prototype._read = function() {
-      this.texCoordsNormalized = [];
-      for (var i = 0; i < 2; i++) {
-        this.texCoordsNormalized.push(this._io.readF4le());
-      }
-      this.vertexIndex = this._io.readU4le();
-    }
-
-    /**
-     * index to `_root.frames[i].vertices` (for each frame with index `i`)
-     */
-
-    return GlVertex;
-  })();
-
   var GlCmd = Quake2Md2.GlCmd = (function() {
     function GlCmd(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -365,12 +216,177 @@ var Quake2Md2 = (function() {
 
     return GlCmd;
   })();
+
+  var GlCmdsList = Quake2Md2.GlCmdsList = (function() {
+    function GlCmdsList(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    GlCmdsList.prototype._read = function() {
+      if (!(this._io.isEof())) {
+        this.items = [];
+        var i = 0;
+        do {
+          var _ = new GlCmd(this._io, this, this._root);
+          this.items.push(_);
+          i++;
+        } while (!(_.cmdNumVertices == 0));
+      }
+    }
+
+    return GlCmdsList;
+  })();
+
+  var GlVertex = Quake2Md2.GlVertex = (function() {
+    function GlVertex(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    GlVertex.prototype._read = function() {
+      this.texCoordsNormalized = [];
+      for (var i = 0; i < 2; i++) {
+        this.texCoordsNormalized.push(this._io.readF4le());
+      }
+      this.vertexIndex = this._io.readU4le();
+    }
+
+    /**
+     * index to `_root.frames[i].vertices` (for each frame with index `i`)
+     */
+
+    return GlVertex;
+  })();
+
+  var TexPoint = Quake2Md2.TexPoint = (function() {
+    function TexPoint(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    TexPoint.prototype._read = function() {
+      this.sPx = this._io.readU2le();
+      this.tPx = this._io.readU2le();
+    }
+    Object.defineProperty(TexPoint.prototype, 'sNormalized', {
+      get: function() {
+        if (this._m_sNormalized !== undefined)
+          return this._m_sNormalized;
+        this._m_sNormalized = (this.sPx + 0.0) / this._root.skinWidthPx;
+        return this._m_sNormalized;
+      }
+    });
+    Object.defineProperty(TexPoint.prototype, 'tNormalized', {
+      get: function() {
+        if (this._m_tNormalized !== undefined)
+          return this._m_tNormalized;
+        this._m_tNormalized = (this.tPx + 0.0) / this._root.skinHeightPx;
+        return this._m_tNormalized;
+      }
+    });
+
+    return TexPoint;
+  })();
+
+  var Triangle = Quake2Md2.Triangle = (function() {
+    function Triangle(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Triangle.prototype._read = function() {
+      this.vertexIndices = [];
+      for (var i = 0; i < 3; i++) {
+        this.vertexIndices.push(this._io.readU2le());
+      }
+      this.texPointIndices = [];
+      for (var i = 0; i < 3; i++) {
+        this.texPointIndices.push(this._io.readU2le());
+      }
+    }
+
+    /**
+     * indices to `_root.frames[i].vertices` (for each frame with index `i`)
+     */
+
+    /**
+     * indices to `_root.tex_coords`
+     */
+
+    return Triangle;
+  })();
+
+  var Vec3f = Quake2Md2.Vec3f = (function() {
+    function Vec3f(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Vec3f.prototype._read = function() {
+      this.x = this._io.readF4le();
+      this.y = this._io.readF4le();
+      this.z = this._io.readF4le();
+    }
+
+    return Vec3f;
+  })();
+
+  var Vertex = Quake2Md2.Vertex = (function() {
+    function Vertex(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Vertex.prototype._read = function() {
+      this.position = new CompressedVec(this._io, this, this._root);
+      this.normalIndex = this._io.readU1();
+    }
+    Object.defineProperty(Vertex.prototype, 'normal', {
+      get: function() {
+        if (this._m_normal !== undefined)
+          return this._m_normal;
+        this._m_normal = this._root.anormsTable[this.normalIndex];
+        return this._m_normal;
+      }
+    });
+
+    return Vertex;
+  })();
+  Object.defineProperty(Quake2Md2.prototype, 'animNames', {
+    get: function() {
+      if (this._m_animNames !== undefined)
+        return this._m_animNames;
+      this._m_animNames = ["stand", "run", "attack", "pain1", "pain2", "pain3", "jump", "flip", "salute", "taunt", "wave", "point", "crstnd", "crwalk", "crattak", "crpain", "crdeath", "death1", "death2", "death3"];
+      return this._m_animNames;
+    }
+  });
   Object.defineProperty(Quake2Md2.prototype, 'animNumFrames', {
     get: function() {
       if (this._m_animNumFrames !== undefined)
         return this._m_animNumFrames;
-      this._m_animNumFrames = [40, 6, 8, 4, 4, 4, 6, 12, 11, 17, 11, 12, 19, 6, 9, 4, 5, 6, 6, 8];
+      this._m_animNumFrames = new Uint8Array([40, 6, 8, 4, 4, 4, 6, 12, 11, 17, 11, 12, 19, 6, 9, 4, 5, 6, 6, 8]);
       return this._m_animNumFrames;
+    }
+  });
+  Object.defineProperty(Quake2Md2.prototype, 'animStartIndices', {
+    get: function() {
+      if (this._m_animStartIndices !== undefined)
+        return this._m_animStartIndices;
+      this._m_animStartIndices = new Uint8Array([0, 40, 46, 54, 58, 62, 66, 72, 84, 95, 112, 123, 135, 154, 160, 169, 173, 178, 184, 190]);
+      return this._m_animStartIndices;
     }
   });
 
@@ -384,6 +400,50 @@ var Quake2Md2 = (function() {
         return this._m_anormsTable;
       this._m_anormsTable = [[-0.525731, 0.000000, 0.850651], [-0.442863, 0.238856, 0.864188], [-0.295242, 0.000000, 0.955423], [-0.309017, 0.500000, 0.809017], [-0.162460, 0.262866, 0.951056], [0.000000, 0.000000, 1.000000], [0.000000, 0.850651, 0.525731], [-0.147621, 0.716567, 0.681718], [0.147621, 0.716567, 0.681718], [0.000000, 0.525731, 0.850651], [0.309017, 0.500000, 0.809017], [0.525731, 0.000000, 0.850651], [0.295242, 0.000000, 0.955423], [0.442863, 0.238856, 0.864188], [0.162460, 0.262866, 0.951056], [-0.681718, 0.147621, 0.716567], [-0.809017, 0.309017, 0.500000], [-0.587785, 0.425325, 0.688191], [-0.850651, 0.525731, 0.000000], [-0.864188, 0.442863, 0.238856], [-0.716567, 0.681718, 0.147621], [-0.688191, 0.587785, 0.425325], [-0.500000, 0.809017, 0.309017], [-0.238856, 0.864188, 0.442863], [-0.425325, 0.688191, 0.587785], [-0.716567, 0.681718, -0.147621], [-0.500000, 0.809017, -0.309017], [-0.525731, 0.850651, 0.000000], [0.000000, 0.850651, -0.525731], [-0.238856, 0.864188, -0.442863], [0.000000, 0.955423, -0.295242], [-0.262866, 0.951056, -0.162460], [0.000000, 1.000000, 0.000000], [0.000000, 0.955423, 0.295242], [-0.262866, 0.951056, 0.162460], [0.238856, 0.864188, 0.442863], [0.262866, 0.951056, 0.162460], [0.500000, 0.809017, 0.309017], [0.238856, 0.864188, -0.442863], [0.262866, 0.951056, -0.162460], [0.500000, 0.809017, -0.309017], [0.850651, 0.525731, 0.000000], [0.716567, 0.681718, 0.147621], [0.716567, 0.681718, -0.147621], [0.525731, 0.850651, 0.000000], [0.425325, 0.688191, 0.587785], [0.864188, 0.442863, 0.238856], [0.688191, 0.587785, 0.425325], [0.809017, 0.309017, 0.500000], [0.681718, 0.147621, 0.716567], [0.587785, 0.425325, 0.688191], [0.955423, 0.295242, 0.000000], [1.000000, 0.000000, 0.000000], [0.951056, 0.162460, 0.262866], [0.850651, -0.525731, 0.000000], [0.955423, -0.295242, 0.000000], [0.864188, -0.442863, 0.238856], [0.951056, -0.162460, 0.262866], [0.809017, -0.309017, 0.500000], [0.681718, -0.147621, 0.716567], [0.850651, 0.000000, 0.525731], [0.864188, 0.442863, -0.238856], [0.809017, 0.309017, -0.500000], [0.951056, 0.162460, -0.262866], [0.525731, 0.000000, -0.850651], [0.681718, 0.147621, -0.716567], [0.681718, -0.147621, -0.716567], [0.850651, 0.000000, -0.525731], [0.809017, -0.309017, -0.500000], [0.864188, -0.442863, -0.238856], [0.951056, -0.162460, -0.262866], [0.147621, 0.716567, -0.681718], [0.309017, 0.500000, -0.809017], [0.425325, 0.688191, -0.587785], [0.442863, 0.238856, -0.864188], [0.587785, 0.425325, -0.688191], [0.688191, 0.587785, -0.425325], [-0.147621, 0.716567, -0.681718], [-0.309017, 0.500000, -0.809017], [0.000000, 0.525731, -0.850651], [-0.525731, 0.000000, -0.850651], [-0.442863, 0.238856, -0.864188], [-0.295242, 0.000000, -0.955423], [-0.162460, 0.262866, -0.951056], [0.000000, 0.000000, -1.000000], [0.295242, 0.000000, -0.955423], [0.162460, 0.262866, -0.951056], [-0.442863, -0.238856, -0.864188], [-0.309017, -0.500000, -0.809017], [-0.162460, -0.262866, -0.951056], [0.000000, -0.850651, -0.525731], [-0.147621, -0.716567, -0.681718], [0.147621, -0.716567, -0.681718], [0.000000, -0.525731, -0.850651], [0.309017, -0.500000, -0.809017], [0.442863, -0.238856, -0.864188], [0.162460, -0.262866, -0.951056], [0.238856, -0.864188, -0.442863], [0.500000, -0.809017, -0.309017], [0.425325, -0.688191, -0.587785], [0.716567, -0.681718, -0.147621], [0.688191, -0.587785, -0.425325], [0.587785, -0.425325, -0.688191], [0.000000, -0.955423, -0.295242], [0.000000, -1.000000, 0.000000], [0.262866, -0.951056, -0.162460], [0.000000, -0.850651, 0.525731], [0.000000, -0.955423, 0.295242], [0.238856, -0.864188, 0.442863], [0.262866, -0.951056, 0.162460], [0.500000, -0.809017, 0.309017], [0.716567, -0.681718, 0.147621], [0.525731, -0.850651, 0.000000], [-0.238856, -0.864188, -0.442863], [-0.500000, -0.809017, -0.309017], [-0.262866, -0.951056, -0.162460], [-0.850651, -0.525731, 0.000000], [-0.716567, -0.681718, -0.147621], [-0.716567, -0.681718, 0.147621], [-0.525731, -0.850651, 0.000000], [-0.500000, -0.809017, 0.309017], [-0.238856, -0.864188, 0.442863], [-0.262866, -0.951056, 0.162460], [-0.864188, -0.442863, 0.238856], [-0.809017, -0.309017, 0.500000], [-0.688191, -0.587785, 0.425325], [-0.681718, -0.147621, 0.716567], [-0.442863, -0.238856, 0.864188], [-0.587785, -0.425325, 0.688191], [-0.309017, -0.500000, 0.809017], [-0.147621, -0.716567, 0.681718], [-0.425325, -0.688191, 0.587785], [-0.162460, -0.262866, 0.951056], [0.442863, -0.238856, 0.864188], [0.162460, -0.262866, 0.951056], [0.309017, -0.500000, 0.809017], [0.147621, -0.716567, 0.681718], [0.000000, -0.525731, 0.850651], [0.425325, -0.688191, 0.587785], [0.587785, -0.425325, 0.688191], [0.688191, -0.587785, 0.425325], [-0.955423, 0.295242, 0.000000], [-0.951056, 0.162460, 0.262866], [-1.000000, 0.000000, 0.000000], [-0.850651, 0.000000, 0.525731], [-0.955423, -0.295242, 0.000000], [-0.951056, -0.162460, 0.262866], [-0.864188, 0.442863, -0.238856], [-0.951056, 0.162460, -0.262866], [-0.809017, 0.309017, -0.500000], [-0.864188, -0.442863, -0.238856], [-0.951056, -0.162460, -0.262866], [-0.809017, -0.309017, -0.500000], [-0.681718, 0.147621, -0.716567], [-0.681718, -0.147621, -0.716567], [-0.850651, 0.000000, -0.525731], [-0.688191, 0.587785, -0.425325], [-0.587785, 0.425325, -0.688191], [-0.425325, 0.688191, -0.587785], [-0.425325, -0.688191, -0.587785], [-0.587785, -0.425325, -0.688191], [-0.688191, -0.587785, -0.425325]];
       return this._m_anormsTable;
+    }
+  });
+  Object.defineProperty(Quake2Md2.prototype, 'frames', {
+    get: function() {
+      if (this._m_frames !== undefined)
+        return this._m_frames;
+      var _pos = this._io.pos;
+      this._io.seek(this.ofsFrames);
+      this._raw__m_frames = [];
+      this._m_frames = [];
+      for (var i = 0; i < this.numFrames; i++) {
+        this._raw__m_frames.push(this._io.readBytes(this.bytesPerFrame));
+        var _io__raw__m_frames = new KaitaiStream(this._raw__m_frames[i]);
+        this._m_frames.push(new Frame(_io__raw__m_frames, this, this._root));
+      }
+      this._io.seek(_pos);
+      return this._m_frames;
+    }
+  });
+  Object.defineProperty(Quake2Md2.prototype, 'glCmds', {
+    get: function() {
+      if (this._m_glCmds !== undefined)
+        return this._m_glCmds;
+      var _pos = this._io.pos;
+      this._io.seek(this.ofsGlCmds);
+      this._raw__m_glCmds = this._io.readBytes(4 * this.numGlCmds);
+      var _io__raw__m_glCmds = new KaitaiStream(this._raw__m_glCmds);
+      this._m_glCmds = new GlCmdsList(_io__raw__m_glCmds, this, this._root);
+      this._io.seek(_pos);
+      return this._m_glCmds;
+    }
+  });
+  Object.defineProperty(Quake2Md2.prototype, 'skins', {
+    get: function() {
+      if (this._m_skins !== undefined)
+        return this._m_skins;
+      var _pos = this._io.pos;
+      this._io.seek(this.ofsSkins);
+      this._m_skins = [];
+      for (var i = 0; i < this.numSkins; i++) {
+        this._m_skins.push(KaitaiStream.bytesToStr(KaitaiStream.bytesTerminate(this._io.readBytes(64), 0, false), "ASCII"));
+      }
+      this._io.seek(_pos);
+      return this._m_skins;
     }
   });
   Object.defineProperty(Quake2Md2.prototype, 'texCoords', {
@@ -414,68 +474,8 @@ var Quake2Md2 = (function() {
       return this._m_triangles;
     }
   });
-  Object.defineProperty(Quake2Md2.prototype, 'frames', {
-    get: function() {
-      if (this._m_frames !== undefined)
-        return this._m_frames;
-      var _pos = this._io.pos;
-      this._io.seek(this.ofsFrames);
-      this._raw__m_frames = [];
-      this._m_frames = [];
-      for (var i = 0; i < this.numFrames; i++) {
-        this._raw__m_frames.push(this._io.readBytes(this.bytesPerFrame));
-        var _io__raw__m_frames = new KaitaiStream(this._raw__m_frames[i]);
-        this._m_frames.push(new Frame(_io__raw__m_frames, this, this._root));
-      }
-      this._io.seek(_pos);
-      return this._m_frames;
-    }
-  });
-  Object.defineProperty(Quake2Md2.prototype, 'animNames', {
-    get: function() {
-      if (this._m_animNames !== undefined)
-        return this._m_animNames;
-      this._m_animNames = ["stand", "run", "attack", "pain1", "pain2", "pain3", "jump", "flip", "salute", "taunt", "wave", "point", "crstnd", "crwalk", "crattak", "crpain", "crdeath", "death1", "death2", "death3"];
-      return this._m_animNames;
-    }
-  });
-  Object.defineProperty(Quake2Md2.prototype, 'glCmds', {
-    get: function() {
-      if (this._m_glCmds !== undefined)
-        return this._m_glCmds;
-      var _pos = this._io.pos;
-      this._io.seek(this.ofsGlCmds);
-      this._raw__m_glCmds = this._io.readBytes((4 * this.numGlCmds));
-      var _io__raw__m_glCmds = new KaitaiStream(this._raw__m_glCmds);
-      this._m_glCmds = new GlCmdsList(_io__raw__m_glCmds, this, this._root);
-      this._io.seek(_pos);
-      return this._m_glCmds;
-    }
-  });
-  Object.defineProperty(Quake2Md2.prototype, 'skins', {
-    get: function() {
-      if (this._m_skins !== undefined)
-        return this._m_skins;
-      var _pos = this._io.pos;
-      this._io.seek(this.ofsSkins);
-      this._m_skins = [];
-      for (var i = 0; i < this.numSkins; i++) {
-        this._m_skins.push(KaitaiStream.bytesToStr(KaitaiStream.bytesTerminate(this._io.readBytes(64), 0, false), "ascii"));
-      }
-      this._io.seek(_pos);
-      return this._m_skins;
-    }
-  });
-  Object.defineProperty(Quake2Md2.prototype, 'animStartIndices', {
-    get: function() {
-      if (this._m_animStartIndices !== undefined)
-        return this._m_animStartIndices;
-      this._m_animStartIndices = [0, 40, 46, 54, 58, 62, 66, 72, 84, 95, 112, 123, 135, 154, 160, 169, 173, 178, 184, 190];
-      return this._m_animStartIndices;
-    }
-  });
 
   return Quake2Md2;
 })();
-return Quake2Md2;
-}));
+Quake2Md2_.Quake2Md2 = Quake2Md2;
+});

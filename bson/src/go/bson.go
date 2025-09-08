@@ -18,7 +18,7 @@ type Bson struct {
 	Terminator []byte
 	_io *kaitai.Stream
 	_root *Bson
-	_parent interface{}
+	_parent kaitai.Struct
 	_raw_Fields []byte
 }
 func NewBson() *Bson {
@@ -26,7 +26,11 @@ func NewBson() *Bson {
 	}
 }
 
-func (this *Bson) Read(io *kaitai.Stream, parent interface{}, root *Bson) (err error) {
+func (this Bson) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Bson) Read(io *kaitai.Stream, parent kaitai.Struct, root *Bson) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -36,7 +40,7 @@ func (this *Bson) Read(io *kaitai.Stream, parent interface{}, root *Bson) (err e
 		return err
 	}
 	this.Len = int32(tmp1)
-	tmp2, err := this._io.ReadBytes(int((this.Len - 5)))
+	tmp2, err := this._io.ReadBytes(int(this.Len - 5))
 	if err != nil {
 		return err
 	}
@@ -66,39 +70,6 @@ func (this *Bson) Read(io *kaitai.Stream, parent interface{}, root *Bson) (err e
  */
 
 /**
- * Special internal type used by MongoDB replication and sharding. First 4 bytes are an increment, second 4 are a timestamp.
- */
-type Bson_Timestamp struct {
-	Increment uint32
-	Timestamp uint32
-	_io *kaitai.Stream
-	_root *Bson
-	_parent *Bson_Element
-}
-func NewBson_Timestamp() *Bson_Timestamp {
-	return &Bson_Timestamp{
-	}
-}
-
-func (this *Bson_Timestamp) Read(io *kaitai.Stream, parent *Bson_Element, root *Bson) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp5, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Increment = uint32(tmp5)
-	tmp6, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Timestamp = uint32(tmp6)
-	return err
-}
-
-/**
  * The BSON "binary" or "BinData" datatype is used to represent arrays of bytes. It is somewhat analogous to the Java notion of a ByteArray. BSON binary values have a subtype. This is used to indicate what kind of data is in the byte array. Subtypes from zero to 127 are predefined or reserved. Subtypes from 128-255 are user-defined.
  */
 
@@ -112,6 +83,11 @@ const (
 	Bson_BinData_Subtype__Md5 Bson_BinData_Subtype = 5
 	Bson_BinData_Subtype__Custom Bson_BinData_Subtype = 128
 )
+var values_Bson_BinData_Subtype = map[Bson_BinData_Subtype]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 128: {}}
+func (v Bson_BinData_Subtype) isDefined() bool {
+	_, ok := values_Bson_BinData_Subtype[v]
+	return ok
+}
 type Bson_BinData struct {
 	Len int32
 	Subtype Bson_BinData_Subtype
@@ -126,43 +102,47 @@ func NewBson_BinData() *Bson_BinData {
 	}
 }
 
+func (this Bson_BinData) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Bson_BinData) Read(io *kaitai.Stream, parent *Bson_Element, root *Bson) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp7, err := this._io.ReadS4le()
+	tmp5, err := this._io.ReadS4le()
 	if err != nil {
 		return err
 	}
-	this.Len = int32(tmp7)
-	tmp8, err := this._io.ReadU1()
+	this.Len = int32(tmp5)
+	tmp6, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Subtype = Bson_BinData_Subtype(tmp8)
+	this.Subtype = Bson_BinData_Subtype(tmp6)
 	switch (this.Subtype) {
 	case Bson_BinData_Subtype__ByteArrayDeprecated:
+		tmp7, err := this._io.ReadBytes(int(this.Len))
+		if err != nil {
+			return err
+		}
+		tmp7 = tmp7
+		this._raw_Content = tmp7
+		_io__raw_Content := kaitai.NewStream(bytes.NewReader(this._raw_Content))
+		tmp8 := NewBson_BinData_ByteArrayDeprecated()
+		err = tmp8.Read(_io__raw_Content, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Content = tmp8
+	default:
 		tmp9, err := this._io.ReadBytes(int(this.Len))
 		if err != nil {
 			return err
 		}
 		tmp9 = tmp9
 		this._raw_Content = tmp9
-		_io__raw_Content := kaitai.NewStream(bytes.NewReader(this._raw_Content))
-		tmp10 := NewBson_BinData_ByteArrayDeprecated()
-		err = tmp10.Read(_io__raw_Content, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Content = tmp10
-	default:
-		tmp11, err := this._io.ReadBytes(int(this.Len))
-		if err != nil {
-			return err
-		}
-		tmp11 = tmp11
-		this._raw_Content = tmp11
 	}
 	return err
 }
@@ -182,7 +162,46 @@ func NewBson_BinData_ByteArrayDeprecated() *Bson_BinData_ByteArrayDeprecated {
 	}
 }
 
+func (this Bson_BinData_ByteArrayDeprecated) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Bson_BinData_ByteArrayDeprecated) Read(io *kaitai.Stream, parent *Bson_BinData, root *Bson) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp10, err := this._io.ReadS4le()
+	if err != nil {
+		return err
+	}
+	this.Len = int32(tmp10)
+	tmp11, err := this._io.ReadBytes(int(this.Len))
+	if err != nil {
+		return err
+	}
+	tmp11 = tmp11
+	this.Content = tmp11
+	return err
+}
+type Bson_CodeWithScope struct {
+	Id int32
+	Source *Bson_String
+	Scope *Bson
+	_io *kaitai.Stream
+	_root *Bson
+	_parent *Bson_Element
+}
+func NewBson_CodeWithScope() *Bson_CodeWithScope {
+	return &Bson_CodeWithScope{
+	}
+}
+
+func (this Bson_CodeWithScope) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Bson_CodeWithScope) Read(io *kaitai.Stream, parent *Bson_Element, root *Bson) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -191,113 +210,89 @@ func (this *Bson_BinData_ByteArrayDeprecated) Read(io *kaitai.Stream, parent *Bs
 	if err != nil {
 		return err
 	}
-	this.Len = int32(tmp12)
-	tmp13, err := this._io.ReadBytes(int(this.Len))
+	this.Id = int32(tmp12)
+	tmp13 := NewBson_String()
+	err = tmp13.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	tmp13 = tmp13
-	this.Content = tmp13
+	this.Source = tmp13
+	tmp14 := NewBson()
+	err = tmp14.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Scope = tmp14
 	return err
 }
-type Bson_ElementsList struct {
-	Elements []*Bson_Element
-	_io *kaitai.Stream
-	_root *Bson
-	_parent *Bson
-}
-func NewBson_ElementsList() *Bson_ElementsList {
-	return &Bson_ElementsList{
-	}
-}
 
-func (this *Bson_ElementsList) Read(io *kaitai.Stream, parent *Bson, root *Bson) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	for i := 1;; i++ {
-		tmp14, err := this._io.EOF()
-		if err != nil {
-			return err
-		}
-		if tmp14 {
-			break
-		}
-		tmp15 := NewBson_Element()
-		err = tmp15.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Elements = append(this.Elements, tmp15)
-	}
-	return err
-}
+/**
+ * mapping from identifiers to values, representing the scope in which the string should be evaluated.
+ */
 type Bson_Cstring struct {
 	Str string
 	_io *kaitai.Stream
 	_root *Bson
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewBson_Cstring() *Bson_Cstring {
 	return &Bson_Cstring{
 	}
 }
 
-func (this *Bson_Cstring) Read(io *kaitai.Stream, parent interface{}, root *Bson) (err error) {
+func (this Bson_Cstring) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Bson_Cstring) Read(io *kaitai.Stream, parent kaitai.Struct, root *Bson) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp16, err := this._io.ReadBytesTerm(0, false, true, true)
+	tmp15, err := this._io.ReadBytesTerm(0, false, true, true)
 	if err != nil {
 		return err
 	}
-	this.Str = string(tmp16)
+	this.Str = string(tmp15)
 	return err
 }
 
 /**
  * MUST NOT contain '\x00', hence it is not full UTF-8.
  */
-type Bson_String struct {
-	Len int32
-	Str string
-	Terminator []byte
+type Bson_DbPointer struct {
+	Namespace *Bson_String
+	Id *Bson_ObjectId
 	_io *kaitai.Stream
 	_root *Bson
-	_parent interface{}
+	_parent *Bson_Element
 }
-func NewBson_String() *Bson_String {
-	return &Bson_String{
+func NewBson_DbPointer() *Bson_DbPointer {
+	return &Bson_DbPointer{
 	}
 }
 
-func (this *Bson_String) Read(io *kaitai.Stream, parent interface{}, root *Bson) (err error) {
+func (this Bson_DbPointer) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Bson_DbPointer) Read(io *kaitai.Stream, parent *Bson_Element, root *Bson) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp17, err := this._io.ReadS4le()
+	tmp16 := NewBson_String()
+	err = tmp16.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Len = int32(tmp17)
-	tmp18, err := this._io.ReadBytes(int((this.Len - 1)))
+	this.Namespace = tmp16
+	tmp17 := NewBson_ObjectId()
+	err = tmp17.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	tmp18 = tmp18
-	this.Str = string(tmp18)
-	tmp19, err := this._io.ReadBytes(int(1))
-	if err != nil {
-		return err
-	}
-	tmp19 = tmp19
-	this.Terminator = tmp19
-	if !(bytes.Equal(this.Terminator, []uint8{0})) {
-		return kaitai.NewValidationNotEqualError([]uint8{0}, this.Terminator, this._io, "/types/string/seq/2")
-	}
+	this.Id = tmp17
 	return err
 }
 
@@ -326,6 +321,11 @@ const (
 	Bson_Element_BsonType__NumberDecimal Bson_Element_BsonType = 19
 	Bson_Element_BsonType__MaxKey Bson_Element_BsonType = 127
 )
+var values_Bson_Element_BsonType = map[Bson_Element_BsonType]struct{}{-1: {}, 0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}, 10: {}, 11: {}, 12: {}, 13: {}, 14: {}, 15: {}, 16: {}, 17: {}, 18: {}, 19: {}, 127: {}}
+func (v Bson_Element_BsonType) isDefined() bool {
+	_, ok := values_Bson_Element_BsonType[v]
+	return ok
+}
 type Bson_Element struct {
 	TypeByte Bson_Element_BsonType
 	Name *Bson_Cstring
@@ -339,261 +339,181 @@ func NewBson_Element() *Bson_Element {
 	}
 }
 
+func (this Bson_Element) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Bson_Element) Read(io *kaitai.Stream, parent *Bson_ElementsList, root *Bson) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp20, err := this._io.ReadU1()
+	tmp18, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.TypeByte = Bson_Element_BsonType(tmp20)
-	tmp21 := NewBson_Cstring()
-	err = tmp21.Read(this._io, this, this._root)
+	this.TypeByte = Bson_Element_BsonType(tmp18)
+	tmp19 := NewBson_Cstring()
+	err = tmp19.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Name = tmp21
+	this.Name = tmp19
 	switch (this.TypeByte) {
-	case Bson_Element_BsonType__CodeWithScope:
-		tmp22 := NewBson_CodeWithScope()
-		err = tmp22.Read(this._io, this, this._root)
+	case Bson_Element_BsonType__Array:
+		tmp20 := NewBson()
+		err = tmp20.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Content = tmp20
+	case Bson_Element_BsonType__BinData:
+		tmp21 := NewBson_BinData()
+		err = tmp21.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Content = tmp21
+	case Bson_Element_BsonType__Boolean:
+		tmp22, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Content = tmp22
-	case Bson_Element_BsonType__RegEx:
-		tmp23 := NewBson_RegEx()
+	case Bson_Element_BsonType__CodeWithScope:
+		tmp23 := NewBson_CodeWithScope()
 		err = tmp23.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Content = tmp23
-	case Bson_Element_BsonType__NumberDouble:
-		tmp24, err := this._io.ReadF8le()
+	case Bson_Element_BsonType__DbPointer:
+		tmp24 := NewBson_DbPointer()
+		err = tmp24.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Content = tmp24
-	case Bson_Element_BsonType__Symbol:
-		tmp25 := NewBson_String()
+	case Bson_Element_BsonType__Document:
+		tmp25 := NewBson()
 		err = tmp25.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Content = tmp25
-	case Bson_Element_BsonType__Timestamp:
-		tmp26 := NewBson_Timestamp()
+	case Bson_Element_BsonType__Javascript:
+		tmp26 := NewBson_String()
 		err = tmp26.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Content = tmp26
-	case Bson_Element_BsonType__NumberInt:
-		tmp27, err := this._io.ReadS4le()
+	case Bson_Element_BsonType__NumberDecimal:
+		tmp27 := NewBson_F16()
+		err = tmp27.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Content = tmp27
-	case Bson_Element_BsonType__Document:
-		tmp28 := NewBson()
-		err = tmp28.Read(this._io, this, nil)
+	case Bson_Element_BsonType__NumberDouble:
+		tmp28, err := this._io.ReadF8le()
 		if err != nil {
 			return err
 		}
 		this.Content = tmp28
-	case Bson_Element_BsonType__ObjectId:
-		tmp29 := NewBson_ObjectId()
-		err = tmp29.Read(this._io, this, this._root)
+	case Bson_Element_BsonType__NumberInt:
+		tmp29, err := this._io.ReadS4le()
 		if err != nil {
 			return err
 		}
 		this.Content = tmp29
-	case Bson_Element_BsonType__Javascript:
-		tmp30 := NewBson_String()
-		err = tmp30.Read(this._io, this, this._root)
+	case Bson_Element_BsonType__NumberLong:
+		tmp30, err := this._io.ReadS8le()
 		if err != nil {
 			return err
 		}
 		this.Content = tmp30
-	case Bson_Element_BsonType__UtcDatetime:
-		tmp31, err := this._io.ReadS8le()
+	case Bson_Element_BsonType__ObjectId:
+		tmp31 := NewBson_ObjectId()
+		err = tmp31.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Content = tmp31
-	case Bson_Element_BsonType__Boolean:
-		tmp32, err := this._io.ReadU1()
+	case Bson_Element_BsonType__RegEx:
+		tmp32 := NewBson_RegEx()
+		err = tmp32.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Content = tmp32
-	case Bson_Element_BsonType__NumberLong:
-		tmp33, err := this._io.ReadS8le()
+	case Bson_Element_BsonType__String:
+		tmp33 := NewBson_String()
+		err = tmp33.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Content = tmp33
-	case Bson_Element_BsonType__BinData:
-		tmp34 := NewBson_BinData()
+	case Bson_Element_BsonType__Symbol:
+		tmp34 := NewBson_String()
 		err = tmp34.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Content = tmp34
-	case Bson_Element_BsonType__String:
-		tmp35 := NewBson_String()
+	case Bson_Element_BsonType__Timestamp:
+		tmp35 := NewBson_Timestamp()
 		err = tmp35.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Content = tmp35
-	case Bson_Element_BsonType__DbPointer:
-		tmp36 := NewBson_DbPointer()
-		err = tmp36.Read(this._io, this, this._root)
+	case Bson_Element_BsonType__UtcDatetime:
+		tmp36, err := this._io.ReadS8le()
 		if err != nil {
 			return err
 		}
 		this.Content = tmp36
-	case Bson_Element_BsonType__Array:
-		tmp37 := NewBson()
-		err = tmp37.Read(this._io, this, nil)
+	}
+	return err
+}
+type Bson_ElementsList struct {
+	Elements []*Bson_Element
+	_io *kaitai.Stream
+	_root *Bson
+	_parent *Bson
+}
+func NewBson_ElementsList() *Bson_ElementsList {
+	return &Bson_ElementsList{
+	}
+}
+
+func (this Bson_ElementsList) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Bson_ElementsList) Read(io *kaitai.Stream, parent *Bson, root *Bson) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	for i := 0;; i++ {
+		tmp37, err := this._io.EOF()
 		if err != nil {
 			return err
 		}
-		this.Content = tmp37
-	case Bson_Element_BsonType__NumberDecimal:
-		tmp38 := NewBson_F16()
+		if tmp37 {
+			break
+		}
+		tmp38 := NewBson_Element()
 		err = tmp38.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Content = tmp38
+		this.Elements = append(this.Elements, tmp38)
 	}
 	return err
 }
-type Bson_DbPointer struct {
-	Namespace *Bson_String
-	Id *Bson_ObjectId
-	_io *kaitai.Stream
-	_root *Bson
-	_parent *Bson_Element
-}
-func NewBson_DbPointer() *Bson_DbPointer {
-	return &Bson_DbPointer{
-	}
-}
-
-func (this *Bson_DbPointer) Read(io *kaitai.Stream, parent *Bson_Element, root *Bson) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp39 := NewBson_String()
-	err = tmp39.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Namespace = tmp39
-	tmp40 := NewBson_ObjectId()
-	err = tmp40.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Id = tmp40
-	return err
-}
-
-/**
- * Implements unsigned 24-bit (3 byte) integer.
- */
-type Bson_U3 struct {
-	B1 uint8
-	B2 uint8
-	B3 uint8
-	_io *kaitai.Stream
-	_root *Bson
-	_parent *Bson_ObjectId
-	_f_value bool
-	value int
-}
-func NewBson_U3() *Bson_U3 {
-	return &Bson_U3{
-	}
-}
-
-func (this *Bson_U3) Read(io *kaitai.Stream, parent *Bson_ObjectId, root *Bson) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp41, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.B1 = tmp41
-	tmp42, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.B2 = tmp42
-	tmp43, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.B3 = tmp43
-	return err
-}
-func (this *Bson_U3) Value() (v int, err error) {
-	if (this._f_value) {
-		return this.value, nil
-	}
-	this.value = int(((this.B1 | (this.B2 << 8)) | (this.B3 << 16)))
-	this._f_value = true
-	return this.value, nil
-}
-type Bson_CodeWithScope struct {
-	Id int32
-	Source *Bson_String
-	Scope *Bson
-	_io *kaitai.Stream
-	_root *Bson
-	_parent *Bson_Element
-}
-func NewBson_CodeWithScope() *Bson_CodeWithScope {
-	return &Bson_CodeWithScope{
-	}
-}
-
-func (this *Bson_CodeWithScope) Read(io *kaitai.Stream, parent *Bson_Element, root *Bson) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp44, err := this._io.ReadS4le()
-	if err != nil {
-		return err
-	}
-	this.Id = int32(tmp44)
-	tmp45 := NewBson_String()
-	err = tmp45.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Source = tmp45
-	tmp46 := NewBson()
-	err = tmp46.Read(this._io, this, nil)
-	if err != nil {
-		return err
-	}
-	this.Scope = tmp46
-	return err
-}
-
-/**
- * mapping from identifiers to values, representing the scope in which the string should be evaluated.
- */
 
 /**
  * 128-bit IEEE 754-2008 decimal floating point
@@ -612,32 +532,36 @@ func NewBson_F16() *Bson_F16 {
 	}
 }
 
+func (this Bson_F16) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Bson_F16) Read(io *kaitai.Stream, parent *Bson_Element, root *Bson) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp47, err := this._io.ReadBitsIntBe(1)
+	tmp39, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Str = tmp47 != 0
-	tmp48, err := this._io.ReadBitsIntBe(15)
+	this.Str = tmp39 != 0
+	tmp40, err := this._io.ReadBitsIntBe(15)
 	if err != nil {
 		return err
 	}
-	this.Exponent = tmp48
-	tmp49, err := this._io.ReadBitsIntBe(49)
+	this.Exponent = tmp40
+	tmp41, err := this._io.ReadBitsIntBe(49)
 	if err != nil {
 		return err
 	}
-	this.SignificandHi = tmp49
+	this.SignificandHi = tmp41
 	this._io.AlignToByte()
-	tmp50, err := this._io.ReadU8le()
+	tmp42, err := this._io.ReadU8le()
 	if err != nil {
 		return err
 	}
-	this.SignificandLo = uint64(tmp50)
+	this.SignificandLo = uint64(tmp42)
 	return err
 }
 
@@ -651,40 +575,44 @@ type Bson_ObjectId struct {
 	Counter *Bson_U3
 	_io *kaitai.Stream
 	_root *Bson
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewBson_ObjectId() *Bson_ObjectId {
 	return &Bson_ObjectId{
 	}
 }
 
-func (this *Bson_ObjectId) Read(io *kaitai.Stream, parent interface{}, root *Bson) (err error) {
+func (this Bson_ObjectId) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Bson_ObjectId) Read(io *kaitai.Stream, parent kaitai.Struct, root *Bson) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp51, err := this._io.ReadU4le()
+	tmp43, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.EpochTime = uint32(tmp51)
-	tmp52 := NewBson_U3()
-	err = tmp52.Read(this._io, this, this._root)
+	this.EpochTime = uint32(tmp43)
+	tmp44 := NewBson_U3()
+	err = tmp44.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.MachineId = tmp52
-	tmp53, err := this._io.ReadU2le()
+	this.MachineId = tmp44
+	tmp45, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.ProcessId = uint16(tmp53)
-	tmp54 := NewBson_U3()
-	err = tmp54.Read(this._io, this, this._root)
+	this.ProcessId = uint16(tmp45)
+	tmp46 := NewBson_U3()
+	err = tmp46.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Counter = tmp54
+	this.Counter = tmp46
 	return err
 }
 
@@ -707,22 +635,160 @@ func NewBson_RegEx() *Bson_RegEx {
 	}
 }
 
+func (this Bson_RegEx) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Bson_RegEx) Read(io *kaitai.Stream, parent *Bson_Element, root *Bson) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp55 := NewBson_Cstring()
-	err = tmp55.Read(this._io, this, this._root)
+	tmp47 := NewBson_Cstring()
+	err = tmp47.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Pattern = tmp55
-	tmp56 := NewBson_Cstring()
-	err = tmp56.Read(this._io, this, this._root)
+	this.Pattern = tmp47
+	tmp48 := NewBson_Cstring()
+	err = tmp48.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Options = tmp56
+	this.Options = tmp48
 	return err
+}
+type Bson_String struct {
+	Len int32
+	Str string
+	Terminator []byte
+	_io *kaitai.Stream
+	_root *Bson
+	_parent kaitai.Struct
+}
+func NewBson_String() *Bson_String {
+	return &Bson_String{
+	}
+}
+
+func (this Bson_String) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Bson_String) Read(io *kaitai.Stream, parent kaitai.Struct, root *Bson) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp49, err := this._io.ReadS4le()
+	if err != nil {
+		return err
+	}
+	this.Len = int32(tmp49)
+	tmp50, err := this._io.ReadBytes(int(this.Len - 1))
+	if err != nil {
+		return err
+	}
+	tmp50 = tmp50
+	this.Str = string(tmp50)
+	tmp51, err := this._io.ReadBytes(int(1))
+	if err != nil {
+		return err
+	}
+	tmp51 = tmp51
+	this.Terminator = tmp51
+	if !(bytes.Equal(this.Terminator, []uint8{0})) {
+		return kaitai.NewValidationNotEqualError([]uint8{0}, this.Terminator, this._io, "/types/string/seq/2")
+	}
+	return err
+}
+
+/**
+ * Special internal type used by MongoDB replication and sharding. First 4 bytes are an increment, second 4 are a timestamp.
+ */
+type Bson_Timestamp struct {
+	Increment uint32
+	Timestamp uint32
+	_io *kaitai.Stream
+	_root *Bson
+	_parent *Bson_Element
+}
+func NewBson_Timestamp() *Bson_Timestamp {
+	return &Bson_Timestamp{
+	}
+}
+
+func (this Bson_Timestamp) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Bson_Timestamp) Read(io *kaitai.Stream, parent *Bson_Element, root *Bson) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp52, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Increment = uint32(tmp52)
+	tmp53, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Timestamp = uint32(tmp53)
+	return err
+}
+
+/**
+ * Implements unsigned 24-bit (3 byte) integer.
+ */
+type Bson_U3 struct {
+	B1 uint8
+	B2 uint8
+	B3 uint8
+	_io *kaitai.Stream
+	_root *Bson
+	_parent *Bson_ObjectId
+	_f_value bool
+	value int
+}
+func NewBson_U3() *Bson_U3 {
+	return &Bson_U3{
+	}
+}
+
+func (this Bson_U3) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Bson_U3) Read(io *kaitai.Stream, parent *Bson_ObjectId, root *Bson) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp54, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.B1 = tmp54
+	tmp55, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.B2 = tmp55
+	tmp56, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.B3 = tmp56
+	return err
+}
+func (this *Bson_U3) Value() (v int, err error) {
+	if (this._f_value) {
+		return this.value, nil
+	}
+	this._f_value = true
+	this.value = int((this.B1 | this.B2 << 8) | this.B3 << 16)
+	return this.value, nil
 }

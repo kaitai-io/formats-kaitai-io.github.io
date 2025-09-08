@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.Avi = factory(root.KaitaiStream);
+    factory(root.Avi || (root.Avi = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Avi_, KaitaiStream) {
 /**
  * @see {@link https://learn.microsoft.com/en-us/previous-versions/ms779636(v=vs.85)|Source}
  */
@@ -40,18 +40,6 @@ var Avi = (function() {
     1819440243: "STRL",
   });
 
-  Avi.StreamType = Object.freeze({
-    MIDS: 1935960429,
-    VIDS: 1935960438,
-    AUDS: 1935963489,
-    TXTS: 1937012852,
-
-    1935960429: "MIDS",
-    1935960438: "VIDS",
-    1935963489: "AUDS",
-    1937012852: "TXTS",
-  });
-
   Avi.HandlerType = Object.freeze({
     MP3: 85,
     AC3: 8192,
@@ -66,6 +54,18 @@ var Avi = (function() {
     1684633208: "XVID",
   });
 
+  Avi.StreamType = Object.freeze({
+    MIDS: 1935960429,
+    VIDS: 1935960438,
+    AUDS: 1935963489,
+    TXTS: 1937012852,
+
+    1935960429: "MIDS",
+    1935960438: "VIDS",
+    1935963489: "AUDS",
+    1937012852: "TXTS",
+  });
+
   function Avi(_io, _parent, _root) {
     this._io = _io;
     this._parent = _parent;
@@ -75,72 +75,18 @@ var Avi = (function() {
   }
   Avi.prototype._read = function() {
     this.magic1 = this._io.readBytes(4);
-    if (!((KaitaiStream.byteArrayCompare(this.magic1, [82, 73, 70, 70]) == 0))) {
-      throw new KaitaiStream.ValidationNotEqualError([82, 73, 70, 70], this.magic1, this._io, "/seq/0");
+    if (!((KaitaiStream.byteArrayCompare(this.magic1, new Uint8Array([82, 73, 70, 70])) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([82, 73, 70, 70]), this.magic1, this._io, "/seq/0");
     }
     this.fileSize = this._io.readU4le();
     this.magic2 = this._io.readBytes(4);
-    if (!((KaitaiStream.byteArrayCompare(this.magic2, [65, 86, 73, 32]) == 0))) {
-      throw new KaitaiStream.ValidationNotEqualError([65, 86, 73, 32], this.magic2, this._io, "/seq/2");
+    if (!((KaitaiStream.byteArrayCompare(this.magic2, new Uint8Array([65, 86, 73, 32])) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([65, 86, 73, 32]), this.magic2, this._io, "/seq/2");
     }
-    this._raw_data = this._io.readBytes((this.fileSize - 4));
+    this._raw_data = this._io.readBytes(this.fileSize - 4);
     var _io__raw_data = new KaitaiStream(this._raw_data);
     this.data = new Blocks(_io__raw_data, this, this._root);
   }
-
-  var ListBody = Avi.ListBody = (function() {
-    function ListBody(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    ListBody.prototype._read = function() {
-      this.listType = this._io.readU4le();
-      this.data = new Blocks(this._io, this, this._root);
-    }
-
-    return ListBody;
-  })();
-
-  var Rect = Avi.Rect = (function() {
-    function Rect(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Rect.prototype._read = function() {
-      this.left = this._io.readS2le();
-      this.top = this._io.readS2le();
-      this.right = this._io.readS2le();
-      this.bottom = this._io.readS2le();
-    }
-
-    return Rect;
-  })();
-
-  var Blocks = Avi.Blocks = (function() {
-    function Blocks(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Blocks.prototype._read = function() {
-      this.entries = [];
-      var i = 0;
-      while (!this._io.isEof()) {
-        this.entries.push(new Block(this._io, this, this._root));
-        i++;
-      }
-    }
-
-    return Blocks;
-  })();
 
   /**
    * Main header of an AVI file, defined as AVIMAINHEADER structure
@@ -151,7 +97,7 @@ var Avi = (function() {
     function AvihBody(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -176,7 +122,7 @@ var Avi = (function() {
     function Block(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -184,15 +130,15 @@ var Avi = (function() {
       this.fourCc = this._io.readU4le();
       this.blockSize = this._io.readU4le();
       switch (this.fourCc) {
-      case Avi.ChunkType.LIST:
-        this._raw_data = this._io.readBytes(this.blockSize);
-        var _io__raw_data = new KaitaiStream(this._raw_data);
-        this.data = new ListBody(_io__raw_data, this, this._root);
-        break;
       case Avi.ChunkType.AVIH:
         this._raw_data = this._io.readBytes(this.blockSize);
         var _io__raw_data = new KaitaiStream(this._raw_data);
         this.data = new AvihBody(_io__raw_data, this, this._root);
+        break;
+      case Avi.ChunkType.LIST:
+        this._raw_data = this._io.readBytes(this.blockSize);
+        var _io__raw_data = new KaitaiStream(this._raw_data);
+        this.data = new ListBody(_io__raw_data, this, this._root);
         break;
       case Avi.ChunkType.STRH:
         this._raw_data = this._io.readBytes(this.blockSize);
@@ -208,6 +154,78 @@ var Avi = (function() {
     return Block;
   })();
 
+  var Blocks = Avi.Blocks = (function() {
+    function Blocks(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Blocks.prototype._read = function() {
+      this.entries = [];
+      var i = 0;
+      while (!this._io.isEof()) {
+        this.entries.push(new Block(this._io, this, this._root));
+        i++;
+      }
+    }
+
+    return Blocks;
+  })();
+
+  var ListBody = Avi.ListBody = (function() {
+    function ListBody(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    ListBody.prototype._read = function() {
+      this.listType = this._io.readU4le();
+      this.data = new Blocks(this._io, this, this._root);
+    }
+
+    return ListBody;
+  })();
+
+  var Rect = Avi.Rect = (function() {
+    function Rect(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Rect.prototype._read = function() {
+      this.left = this._io.readS2le();
+      this.top = this._io.readS2le();
+      this.right = this._io.readS2le();
+      this.bottom = this._io.readS2le();
+    }
+
+    return Rect;
+  })();
+
+  /**
+   * Stream format description
+   */
+
+  var StrfBody = Avi.StrfBody = (function() {
+    function StrfBody(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    StrfBody.prototype._read = function() {
+    }
+
+    return StrfBody;
+  })();
+
   /**
    * Stream header (one header per stream), defined as AVISTREAMHEADER structure
    * @see {@link https://learn.microsoft.com/en-us/previous-versions/ms779638(v=vs.85)|Source}
@@ -217,7 +235,7 @@ var Avi = (function() {
     function StrhBody(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -249,25 +267,7 @@ var Avi = (function() {
     return StrhBody;
   })();
 
-  /**
-   * Stream format description
-   */
-
-  var StrfBody = Avi.StrfBody = (function() {
-    function StrfBody(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    StrfBody.prototype._read = function() {
-    }
-
-    return StrfBody;
-  })();
-
   return Avi;
 })();
-return Avi;
-}));
+Avi_.Avi = Avi;
+});

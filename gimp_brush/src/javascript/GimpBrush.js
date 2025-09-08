@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.GimpBrush = factory(root.KaitaiStream);
+    factory(root.GimpBrush || (root.GimpBrush = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (GimpBrush_, KaitaiStream) {
 /**
  * GIMP brush format is native to the GIMP image editor for storing a brush or a texture.
  * It can be used in all [Paint Tools](https://docs.gimp.org/2.10/en/gimp-tools-paint.html),
@@ -41,16 +41,34 @@ var GimpBrush = (function() {
   }
   GimpBrush.prototype._read = function() {
     this.lenHeader = this._io.readU4be();
-    this._raw_header = this._io.readBytes((this.lenHeader - 4));
+    this._raw_header = this._io.readBytes(this.lenHeader - 4);
     var _io__raw_header = new KaitaiStream(this._raw_header);
     this.header = new Header(_io__raw_header, this, this._root);
   }
+
+  var Bitmap = GimpBrush.Bitmap = (function() {
+    function Bitmap(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Bitmap.prototype._read = function() {
+      this.rows = [];
+      for (var i = 0; i < this._root.header.height; i++) {
+        this.rows.push(new Row(this._io, this, this._root));
+      }
+    }
+
+    return Bitmap;
+  })();
 
   var Header = GimpBrush.Header = (function() {
     function Header(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -75,8 +93,8 @@ var GimpBrush = (function() {
       }
       this.bytesPerPixel = this._io.readU4be();
       this.magic = this._io.readBytes(4);
-      if (!((KaitaiStream.byteArrayCompare(this.magic, [71, 73, 77, 80]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([71, 73, 77, 80], this.magic, this._io, "/types/header/seq/4");
+      if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([71, 73, 77, 80])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([71, 73, 77, 80]), this.magic, this._io, "/types/header/seq/4");
       }
       this.spacing = this._io.readU4be();
       this.brushName = KaitaiStream.bytesToStr(KaitaiStream.bytesTerminate(this._io.readBytesFull(), 0, false), "UTF-8");
@@ -99,29 +117,11 @@ var GimpBrush = (function() {
     return Header;
   })();
 
-  var Bitmap = GimpBrush.Bitmap = (function() {
-    function Bitmap(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Bitmap.prototype._read = function() {
-      this.rows = [];
-      for (var i = 0; i < this._root.header.height; i++) {
-        this.rows.push(new Row(this._io, this, this._root));
-      }
-    }
-
-    return Bitmap;
-  })();
-
   var Row = GimpBrush.Row = (function() {
     function Row(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -143,27 +143,19 @@ var GimpBrush = (function() {
       function PixelGray(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
       PixelGray.prototype._read = function() {
         this.gray = this._io.readU1();
       }
-      Object.defineProperty(PixelGray.prototype, 'red', {
+      Object.defineProperty(PixelGray.prototype, 'alpha', {
         get: function() {
-          if (this._m_red !== undefined)
-            return this._m_red;
-          this._m_red = 0;
-          return this._m_red;
-        }
-      });
-      Object.defineProperty(PixelGray.prototype, 'green', {
-        get: function() {
-          if (this._m_green !== undefined)
-            return this._m_green;
-          this._m_green = 0;
-          return this._m_green;
+          if (this._m_alpha !== undefined)
+            return this._m_alpha;
+          this._m_alpha = this.gray;
+          return this._m_alpha;
         }
       });
       Object.defineProperty(PixelGray.prototype, 'blue', {
@@ -174,12 +166,20 @@ var GimpBrush = (function() {
           return this._m_blue;
         }
       });
-      Object.defineProperty(PixelGray.prototype, 'alpha', {
+      Object.defineProperty(PixelGray.prototype, 'green', {
         get: function() {
-          if (this._m_alpha !== undefined)
-            return this._m_alpha;
-          this._m_alpha = this.gray;
-          return this._m_alpha;
+          if (this._m_green !== undefined)
+            return this._m_green;
+          this._m_green = 0;
+          return this._m_green;
+        }
+      });
+      Object.defineProperty(PixelGray.prototype, 'red', {
+        get: function() {
+          if (this._m_red !== undefined)
+            return this._m_red;
+          this._m_red = 0;
+          return this._m_red;
         }
       });
 
@@ -190,7 +190,7 @@ var GimpBrush = (function() {
       function PixelRgba(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -206,14 +206,6 @@ var GimpBrush = (function() {
 
     return Row;
   })();
-  Object.defineProperty(GimpBrush.prototype, 'lenBody', {
-    get: function() {
-      if (this._m_lenBody !== undefined)
-        return this._m_lenBody;
-      this._m_lenBody = ((this.header.width * this.header.height) * this.header.bytesPerPixel);
-      return this._m_lenBody;
-    }
-  });
   Object.defineProperty(GimpBrush.prototype, 'body', {
     get: function() {
       if (this._m_body !== undefined)
@@ -225,8 +217,16 @@ var GimpBrush = (function() {
       return this._m_body;
     }
   });
+  Object.defineProperty(GimpBrush.prototype, 'lenBody', {
+    get: function() {
+      if (this._m_lenBody !== undefined)
+        return this._m_lenBody;
+      this._m_lenBody = (this.header.width * this.header.height) * this.header.bytesPerPixel;
+      return this._m_lenBody;
+    }
+  });
 
   return GimpBrush;
 })();
-return GimpBrush;
-}));
+GimpBrush_.GimpBrush = GimpBrush;
+});

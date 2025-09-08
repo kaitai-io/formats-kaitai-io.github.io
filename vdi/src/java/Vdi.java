@@ -6,9 +6,10 @@ import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
-import java.nio.charset.Charset;
-import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.List;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 
 /**
@@ -61,6 +62,220 @@ public class Vdi extends KaitaiStruct {
     private void _read() {
         this.header = new Header(this._io, this, _root);
     }
+
+    public void _fetchInstances() {
+        this.header._fetchInstances();
+        blocksMap();
+        if (this.blocksMap != null) {
+            this.blocksMap._fetchInstances();
+        }
+        disk();
+        if (this.disk != null) {
+            this.disk._fetchInstances();
+        }
+    }
+    public static class BlocksMap extends KaitaiStruct {
+        public static BlocksMap fromFile(String fileName) throws IOException {
+            return new BlocksMap(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public BlocksMap(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public BlocksMap(KaitaiStream _io, Vdi _parent) {
+            this(_io, _parent, null);
+        }
+
+        public BlocksMap(KaitaiStream _io, Vdi _parent, Vdi _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.index = new ArrayList<BlockIndex>();
+            for (int i = 0; i < _root().header().headerMain().blocksInImage(); i++) {
+                this.index.add(new BlockIndex(this._io, this, _root));
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.index.size(); i++) {
+                this.index.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        public static class BlockIndex extends KaitaiStruct {
+            public static BlockIndex fromFile(String fileName) throws IOException {
+                return new BlockIndex(new ByteBufferKaitaiStream(fileName));
+            }
+
+            public BlockIndex(KaitaiStream _io) {
+                this(_io, null, null);
+            }
+
+            public BlockIndex(KaitaiStream _io, Vdi.BlocksMap _parent) {
+                this(_io, _parent, null);
+            }
+
+            public BlockIndex(KaitaiStream _io, Vdi.BlocksMap _parent, Vdi _root) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                _read();
+            }
+            private void _read() {
+                this.index = this._io.readU4le();
+            }
+
+            public void _fetchInstances() {
+            }
+            private Block block;
+            public Block block() {
+                if (this.block != null)
+                    return this.block;
+                if (isAllocated()) {
+                    this.block = _root().disk().blocks().get(((Number) (index())).intValue());
+                }
+                return this.block;
+            }
+            private Boolean isAllocated;
+            public Boolean isAllocated() {
+                if (this.isAllocated != null)
+                    return this.isAllocated;
+                this.isAllocated = index() < _root().blockDiscarded();
+                return this.isAllocated;
+            }
+            private long index;
+            private Vdi _root;
+            private Vdi.BlocksMap _parent;
+            public long index() { return index; }
+            public Vdi _root() { return _root; }
+            public Vdi.BlocksMap _parent() { return _parent; }
+        }
+        private List<BlockIndex> index;
+        private Vdi _root;
+        private Vdi _parent;
+        public List<BlockIndex> index() { return index; }
+        public Vdi _root() { return _root; }
+        public Vdi _parent() { return _parent; }
+    }
+    public static class Disk extends KaitaiStruct {
+        public static Disk fromFile(String fileName) throws IOException {
+            return new Disk(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Disk(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Disk(KaitaiStream _io, Vdi _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Disk(KaitaiStream _io, Vdi _parent, Vdi _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.blocks = new ArrayList<Block>();
+            for (int i = 0; i < _root().header().headerMain().blocksInImage(); i++) {
+                this.blocks.add(new Block(this._io, this, _root));
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.blocks.size(); i++) {
+                this.blocks.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        public static class Block extends KaitaiStruct {
+            public static Block fromFile(String fileName) throws IOException {
+                return new Block(new ByteBufferKaitaiStream(fileName));
+            }
+
+            public Block(KaitaiStream _io) {
+                this(_io, null, null);
+            }
+
+            public Block(KaitaiStream _io, Vdi.Disk _parent) {
+                this(_io, _parent, null);
+            }
+
+            public Block(KaitaiStream _io, Vdi.Disk _parent, Vdi _root) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                _read();
+            }
+            private void _read() {
+                this.metadata = this._io.readBytes(_root().header().headerMain().blockMetadataSize());
+                this.data = new ArrayList<Sector>();
+                {
+                    int i = 0;
+                    while (!this._io.isEof()) {
+                        KaitaiStream _io_data = this._io.substream(_root().header().headerMain().blockDataSize());
+                        this.data.add(new Sector(_io_data, this, _root));
+                        i++;
+                    }
+                }
+            }
+
+            public void _fetchInstances() {
+                for (int i = 0; i < this.data.size(); i++) {
+                    this.data.get(((Number) (i)).intValue())._fetchInstances();
+                }
+            }
+            public static class Sector extends KaitaiStruct {
+                public static Sector fromFile(String fileName) throws IOException {
+                    return new Sector(new ByteBufferKaitaiStream(fileName));
+                }
+
+                public Sector(KaitaiStream _io) {
+                    this(_io, null, null);
+                }
+
+                public Sector(KaitaiStream _io, Vdi.Disk.Block _parent) {
+                    this(_io, _parent, null);
+                }
+
+                public Sector(KaitaiStream _io, Vdi.Disk.Block _parent, Vdi _root) {
+                    super(_io);
+                    this._parent = _parent;
+                    this._root = _root;
+                    _read();
+                }
+                private void _read() {
+                    this.data = this._io.readBytes(_root().header().headerMain().geometry().sectorSize());
+                }
+
+                public void _fetchInstances() {
+                }
+                private byte[] data;
+                private Vdi _root;
+                private Vdi.Disk.Block _parent;
+                public byte[] data() { return data; }
+                public Vdi _root() { return _root; }
+                public Vdi.Disk.Block _parent() { return _parent; }
+            }
+            private byte[] metadata;
+            private List<Sector> data;
+            private Vdi _root;
+            private Vdi.Disk _parent;
+            public byte[] metadata() { return metadata; }
+            public List<Sector> data() { return data; }
+            public Vdi _root() { return _root; }
+            public Vdi.Disk _parent() { return _parent; }
+        }
+        private List<Block> blocks;
+        private Vdi _root;
+        private Vdi _parent;
+        public List<Block> blocks() { return blocks; }
+        public Vdi _root() { return _root; }
+        public Vdi _parent() { return _parent; }
+    }
     public static class Header extends KaitaiStruct {
         public static Header fromFile(String fileName) throws IOException {
             return new Header(new ByteBufferKaitaiStream(fileName));
@@ -81,79 +296,24 @@ public class Vdi extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.text = new String(this._io.readBytes(64), Charset.forName("utf-8"));
+            this.text = new String(this._io.readBytes(64), StandardCharsets.UTF_8);
             this.signature = this._io.readBytes(4);
-            if (!(Arrays.equals(signature(), new byte[] { 127, 16, -38, -66 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 127, 16, -38, -66 }, signature(), _io(), "/types/header/seq/1");
+            if (!(Arrays.equals(this.signature, new byte[] { 127, 16, -38, -66 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 127, 16, -38, -66 }, this.signature, this._io, "/types/header/seq/1");
             }
             this.version = new Version(this._io, this, _root);
             if (subheaderSizeIsDynamic()) {
                 this.headerSizeOptional = this._io.readU4le();
             }
-            this._raw_headerMain = this._io.readBytes(headerSize());
-            KaitaiStream _io__raw_headerMain = new ByteBufferKaitaiStream(_raw_headerMain);
-            this.headerMain = new HeaderMain(_io__raw_headerMain, this, _root);
+            KaitaiStream _io_headerMain = this._io.substream(headerSize());
+            this.headerMain = new HeaderMain(_io_headerMain, this, _root);
         }
-        public static class Uuid extends KaitaiStruct {
-            public static Uuid fromFile(String fileName) throws IOException {
-                return new Uuid(new ByteBufferKaitaiStream(fileName));
-            }
 
-            public Uuid(KaitaiStream _io) {
-                this(_io, null, null);
+        public void _fetchInstances() {
+            this.version._fetchInstances();
+            if (subheaderSizeIsDynamic()) {
             }
-
-            public Uuid(KaitaiStream _io, Vdi.Header.HeaderMain _parent) {
-                this(_io, _parent, null);
-            }
-
-            public Uuid(KaitaiStream _io, Vdi.Header.HeaderMain _parent, Vdi _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.uuid = this._io.readBytes(16);
-            }
-            private byte[] uuid;
-            private Vdi _root;
-            private Vdi.Header.HeaderMain _parent;
-            public byte[] uuid() { return uuid; }
-            public Vdi _root() { return _root; }
-            public Vdi.Header.HeaderMain _parent() { return _parent; }
-        }
-        public static class Version extends KaitaiStruct {
-            public static Version fromFile(String fileName) throws IOException {
-                return new Version(new ByteBufferKaitaiStream(fileName));
-            }
-
-            public Version(KaitaiStream _io) {
-                this(_io, null, null);
-            }
-
-            public Version(KaitaiStream _io, Vdi.Header _parent) {
-                this(_io, _parent, null);
-            }
-
-            public Version(KaitaiStream _io, Vdi.Header _parent, Vdi _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.major = this._io.readU2le();
-                this.minor = this._io.readU2le();
-            }
-            private int major;
-            private int minor;
-            private Vdi _root;
-            private Vdi.Header _parent;
-            public int major() { return major; }
-            public int minor() { return minor; }
-            public Vdi _root() { return _root; }
-            public Vdi.Header _parent() { return _parent; }
+            this.headerMain._fetchInstances();
         }
         public static class HeaderMain extends KaitaiStruct {
             public static HeaderMain fromFile(String fileName) throws IOException {
@@ -177,7 +337,7 @@ public class Vdi extends KaitaiStruct {
             private void _read() {
                 this.imageType = Vdi.ImageType.byId(this._io.readU4le());
                 this.imageFlags = new Flags(this._io, this, _root);
-                this.description = new String(this._io.readBytes(256), Charset.forName("utf-8"));
+                this.description = new String(this._io.readBytes(256), StandardCharsets.UTF_8);
                 if (_parent().version().major() >= 1) {
                     this.blocksMapOffset = this._io.readU4le();
                 }
@@ -201,47 +361,31 @@ public class Vdi extends KaitaiStruct {
                 if (_parent().version().major() >= 1) {
                     this.uuidParent = new Uuid(this._io, this, _root);
                 }
-                if ( ((_parent().version().major() >= 1) && ((_io().pos() + 16) <= _io().size())) ) {
+                if ( ((_parent().version().major() >= 1) && (_io().pos() + 16 <= _io().size())) ) {
                     this.lchcGeometry = new Geometry(this._io, this, _root);
                 }
             }
-            public static class Geometry extends KaitaiStruct {
-                public static Geometry fromFile(String fileName) throws IOException {
-                    return new Geometry(new ByteBufferKaitaiStream(fileName));
-                }
 
-                public Geometry(KaitaiStream _io) {
-                    this(_io, null, null);
+            public void _fetchInstances() {
+                this.imageFlags._fetchInstances();
+                if (_parent().version().major() >= 1) {
                 }
-
-                public Geometry(KaitaiStream _io, Vdi.Header.HeaderMain _parent) {
-                    this(_io, _parent, null);
+                if (_parent().version().major() >= 1) {
                 }
-
-                public Geometry(KaitaiStream _io, Vdi.Header.HeaderMain _parent, Vdi _root) {
-                    super(_io);
-                    this._parent = _parent;
-                    this._root = _root;
-                    _read();
+                this.geometry._fetchInstances();
+                if (_parent().version().major() >= 1) {
                 }
-                private void _read() {
-                    this.cylinders = this._io.readU4le();
-                    this.heads = this._io.readU4le();
-                    this.sectors = this._io.readU4le();
-                    this.sectorSize = this._io.readU4le();
+                if (_parent().version().major() >= 1) {
                 }
-                private long cylinders;
-                private long heads;
-                private long sectors;
-                private long sectorSize;
-                private Vdi _root;
-                private Vdi.Header.HeaderMain _parent;
-                public long cylinders() { return cylinders; }
-                public long heads() { return heads; }
-                public long sectors() { return sectors; }
-                public long sectorSize() { return sectorSize; }
-                public Vdi _root() { return _root; }
-                public Vdi.Header.HeaderMain _parent() { return _parent; }
+                this.uuidImage._fetchInstances();
+                this.uuidLastSnap._fetchInstances();
+                this.uuidLink._fetchInstances();
+                if (_parent().version().major() >= 1) {
+                    this.uuidParent._fetchInstances();
+                }
+                if ( ((_parent().version().major() >= 1) && (_io().pos() + 16 <= _io().size())) ) {
+                    this.lchcGeometry._fetchInstances();
+                }
             }
             public static class Flags extends KaitaiStruct {
                 public static Flags fromFile(String fileName) throws IOException {
@@ -270,6 +414,9 @@ public class Vdi extends KaitaiStruct {
                     this.fixed = this._io.readBitsIntBe(1) != 0;
                     this.reserved2 = this._io.readBitsIntBe(8);
                 }
+
+                public void _fetchInstances() {
+                }
                 private long reserved0;
                 private boolean zeroExpand;
                 private long reserved1;
@@ -284,6 +431,47 @@ public class Vdi extends KaitaiStruct {
                 public boolean diff() { return diff; }
                 public boolean fixed() { return fixed; }
                 public long reserved2() { return reserved2; }
+                public Vdi _root() { return _root; }
+                public Vdi.Header.HeaderMain _parent() { return _parent; }
+            }
+            public static class Geometry extends KaitaiStruct {
+                public static Geometry fromFile(String fileName) throws IOException {
+                    return new Geometry(new ByteBufferKaitaiStream(fileName));
+                }
+
+                public Geometry(KaitaiStream _io) {
+                    this(_io, null, null);
+                }
+
+                public Geometry(KaitaiStream _io, Vdi.Header.HeaderMain _parent) {
+                    this(_io, _parent, null);
+                }
+
+                public Geometry(KaitaiStream _io, Vdi.Header.HeaderMain _parent, Vdi _root) {
+                    super(_io);
+                    this._parent = _parent;
+                    this._root = _root;
+                    _read();
+                }
+                private void _read() {
+                    this.cylinders = this._io.readU4le();
+                    this.heads = this._io.readU4le();
+                    this.sectors = this._io.readU4le();
+                    this.sectorSize = this._io.readU4le();
+                }
+
+                public void _fetchInstances() {
+                }
+                private long cylinders;
+                private long heads;
+                private long sectors;
+                private long sectorSize;
+                private Vdi _root;
+                private Vdi.Header.HeaderMain _parent;
+                public long cylinders() { return cylinders; }
+                public long heads() { return heads; }
+                public long sectors() { return sectors; }
+                public long sectorSize() { return sectorSize; }
                 public Vdi _root() { return _root; }
                 public Vdi.Header.HeaderMain _parent() { return _parent; }
             }
@@ -330,53 +518,114 @@ public class Vdi extends KaitaiStruct {
             public Vdi _root() { return _root; }
             public Vdi.Header _parent() { return _parent; }
         }
-        private Integer headerSize;
-        public Integer headerSize() {
-            if (this.headerSize != null)
-                return this.headerSize;
-            int _tmp = (int) ((subheaderSizeIsDynamic() ? headerSizeOptional() : 336));
-            this.headerSize = _tmp;
-            return this.headerSize;
+        public static class Uuid extends KaitaiStruct {
+            public static Uuid fromFile(String fileName) throws IOException {
+                return new Uuid(new ByteBufferKaitaiStream(fileName));
+            }
+
+            public Uuid(KaitaiStream _io) {
+                this(_io, null, null);
+            }
+
+            public Uuid(KaitaiStream _io, Vdi.Header.HeaderMain _parent) {
+                this(_io, _parent, null);
+            }
+
+            public Uuid(KaitaiStream _io, Vdi.Header.HeaderMain _parent, Vdi _root) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                _read();
+            }
+            private void _read() {
+                this.uuid = this._io.readBytes(16);
+            }
+
+            public void _fetchInstances() {
+            }
+            private byte[] uuid;
+            private Vdi _root;
+            private Vdi.Header.HeaderMain _parent;
+            public byte[] uuid() { return uuid; }
+            public Vdi _root() { return _root; }
+            public Vdi.Header.HeaderMain _parent() { return _parent; }
         }
-        private Long blocksMapOffset;
-        public Long blocksMapOffset() {
-            if (this.blocksMapOffset != null)
-                return this.blocksMapOffset;
-            long _tmp = (long) (headerMain().blocksMapOffset());
-            this.blocksMapOffset = _tmp;
-            return this.blocksMapOffset;
-        }
-        private Boolean subheaderSizeIsDynamic;
-        public Boolean subheaderSizeIsDynamic() {
-            if (this.subheaderSizeIsDynamic != null)
-                return this.subheaderSizeIsDynamic;
-            boolean _tmp = (boolean) (version().major() >= 1);
-            this.subheaderSizeIsDynamic = _tmp;
-            return this.subheaderSizeIsDynamic;
-        }
-        private Long blocksOffset;
-        public Long blocksOffset() {
-            if (this.blocksOffset != null)
-                return this.blocksOffset;
-            long _tmp = (long) (headerMain().offsetData());
-            this.blocksOffset = _tmp;
-            return this.blocksOffset;
+        public static class Version extends KaitaiStruct {
+            public static Version fromFile(String fileName) throws IOException {
+                return new Version(new ByteBufferKaitaiStream(fileName));
+            }
+
+            public Version(KaitaiStream _io) {
+                this(_io, null, null);
+            }
+
+            public Version(KaitaiStream _io, Vdi.Header _parent) {
+                this(_io, _parent, null);
+            }
+
+            public Version(KaitaiStream _io, Vdi.Header _parent, Vdi _root) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                _read();
+            }
+            private void _read() {
+                this.major = this._io.readU2le();
+                this.minor = this._io.readU2le();
+            }
+
+            public void _fetchInstances() {
+            }
+            private int major;
+            private int minor;
+            private Vdi _root;
+            private Vdi.Header _parent;
+            public int major() { return major; }
+            public int minor() { return minor; }
+            public Vdi _root() { return _root; }
+            public Vdi.Header _parent() { return _parent; }
         }
         private Integer blockSize;
         public Integer blockSize() {
             if (this.blockSize != null)
                 return this.blockSize;
-            int _tmp = (int) ((headerMain().blockMetadataSize() + headerMain().blockDataSize()));
-            this.blockSize = _tmp;
+            this.blockSize = ((Number) (headerMain().blockMetadataSize() + headerMain().blockDataSize())).intValue();
             return this.blockSize;
+        }
+        private Long blocksMapOffset;
+        public Long blocksMapOffset() {
+            if (this.blocksMapOffset != null)
+                return this.blocksMapOffset;
+            this.blocksMapOffset = ((Number) (headerMain().blocksMapOffset())).longValue();
+            return this.blocksMapOffset;
         }
         private Integer blocksMapSize;
         public Integer blocksMapSize() {
             if (this.blocksMapSize != null)
                 return this.blocksMapSize;
-            int _tmp = (int) ((((((headerMain().blocksInImage() * 4) + headerMain().geometry().sectorSize()) - 1) / headerMain().geometry().sectorSize()) * headerMain().geometry().sectorSize()));
-            this.blocksMapSize = _tmp;
+            this.blocksMapSize = ((Number) ((((headerMain().blocksInImage() * 4 + headerMain().geometry().sectorSize()) - 1) / headerMain().geometry().sectorSize()) * headerMain().geometry().sectorSize())).intValue();
             return this.blocksMapSize;
+        }
+        private Long blocksOffset;
+        public Long blocksOffset() {
+            if (this.blocksOffset != null)
+                return this.blocksOffset;
+            this.blocksOffset = ((Number) (headerMain().offsetData())).longValue();
+            return this.blocksOffset;
+        }
+        private Integer headerSize;
+        public Integer headerSize() {
+            if (this.headerSize != null)
+                return this.headerSize;
+            this.headerSize = ((Number) ((subheaderSizeIsDynamic() ? headerSizeOptional() : 336))).intValue();
+            return this.headerSize;
+        }
+        private Boolean subheaderSizeIsDynamic;
+        public Boolean subheaderSizeIsDynamic() {
+            if (this.subheaderSizeIsDynamic != null)
+                return this.subheaderSizeIsDynamic;
+            this.subheaderSizeIsDynamic = version().major() >= 1;
+            return this.subheaderSizeIsDynamic;
         }
         private String text;
         private byte[] signature;
@@ -385,7 +634,6 @@ public class Vdi extends KaitaiStruct {
         private HeaderMain headerMain;
         private Vdi _root;
         private Vdi _parent;
-        private byte[] _raw_headerMain;
         public String text() { return text; }
         public byte[] signature() { return signature; }
         public Version version() { return version; }
@@ -393,205 +641,19 @@ public class Vdi extends KaitaiStruct {
         public HeaderMain headerMain() { return headerMain; }
         public Vdi _root() { return _root; }
         public Vdi _parent() { return _parent; }
-        public byte[] _raw_headerMain() { return _raw_headerMain; }
-    }
-    public static class BlocksMap extends KaitaiStruct {
-        public static BlocksMap fromFile(String fileName) throws IOException {
-            return new BlocksMap(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public BlocksMap(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public BlocksMap(KaitaiStream _io, Vdi _parent) {
-            this(_io, _parent, null);
-        }
-
-        public BlocksMap(KaitaiStream _io, Vdi _parent, Vdi _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.index = new ArrayList<BlockIndex>();
-            for (int i = 0; i < _root().header().headerMain().blocksInImage(); i++) {
-                this.index.add(new BlockIndex(this._io, this, _root));
-            }
-        }
-        public static class BlockIndex extends KaitaiStruct {
-            public static BlockIndex fromFile(String fileName) throws IOException {
-                return new BlockIndex(new ByteBufferKaitaiStream(fileName));
-            }
-
-            public BlockIndex(KaitaiStream _io) {
-                this(_io, null, null);
-            }
-
-            public BlockIndex(KaitaiStream _io, Vdi.BlocksMap _parent) {
-                this(_io, _parent, null);
-            }
-
-            public BlockIndex(KaitaiStream _io, Vdi.BlocksMap _parent, Vdi _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.index = this._io.readU4le();
-            }
-            private Boolean isAllocated;
-            public Boolean isAllocated() {
-                if (this.isAllocated != null)
-                    return this.isAllocated;
-                boolean _tmp = (boolean) (index() < _root().blockDiscarded());
-                this.isAllocated = _tmp;
-                return this.isAllocated;
-            }
-            private Block block;
-            public Block block() {
-                if (this.block != null)
-                    return this.block;
-                if (isAllocated()) {
-                    this.block = _root().disk().blocks().get((int) index());
-                }
-                return this.block;
-            }
-            private long index;
-            private Vdi _root;
-            private Vdi.BlocksMap _parent;
-            public long index() { return index; }
-            public Vdi _root() { return _root; }
-            public Vdi.BlocksMap _parent() { return _parent; }
-        }
-        private ArrayList<BlockIndex> index;
-        private Vdi _root;
-        private Vdi _parent;
-        public ArrayList<BlockIndex> index() { return index; }
-        public Vdi _root() { return _root; }
-        public Vdi _parent() { return _parent; }
-    }
-    public static class Disk extends KaitaiStruct {
-        public static Disk fromFile(String fileName) throws IOException {
-            return new Disk(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Disk(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Disk(KaitaiStream _io, Vdi _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Disk(KaitaiStream _io, Vdi _parent, Vdi _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.blocks = new ArrayList<Block>();
-            for (int i = 0; i < _root().header().headerMain().blocksInImage(); i++) {
-                this.blocks.add(new Block(this._io, this, _root));
-            }
-        }
-        public static class Block extends KaitaiStruct {
-            public static Block fromFile(String fileName) throws IOException {
-                return new Block(new ByteBufferKaitaiStream(fileName));
-            }
-
-            public Block(KaitaiStream _io) {
-                this(_io, null, null);
-            }
-
-            public Block(KaitaiStream _io, Vdi.Disk _parent) {
-                this(_io, _parent, null);
-            }
-
-            public Block(KaitaiStream _io, Vdi.Disk _parent, Vdi _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.metadata = this._io.readBytes(_root().header().headerMain().blockMetadataSize());
-                this._raw_data = new ArrayList<byte[]>();
-                this.data = new ArrayList<Sector>();
-                {
-                    int i = 0;
-                    while (!this._io.isEof()) {
-                        this._raw_data.add(this._io.readBytes(_root().header().headerMain().blockDataSize()));
-                        KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data.get(_raw_data.size() - 1));
-                        this.data.add(new Sector(_io__raw_data, this, _root));
-                        i++;
-                    }
-                }
-            }
-            public static class Sector extends KaitaiStruct {
-                public static Sector fromFile(String fileName) throws IOException {
-                    return new Sector(new ByteBufferKaitaiStream(fileName));
-                }
-
-                public Sector(KaitaiStream _io) {
-                    this(_io, null, null);
-                }
-
-                public Sector(KaitaiStream _io, Vdi.Disk.Block _parent) {
-                    this(_io, _parent, null);
-                }
-
-                public Sector(KaitaiStream _io, Vdi.Disk.Block _parent, Vdi _root) {
-                    super(_io);
-                    this._parent = _parent;
-                    this._root = _root;
-                    _read();
-                }
-                private void _read() {
-                    this.data = this._io.readBytes(_root().header().headerMain().geometry().sectorSize());
-                }
-                private byte[] data;
-                private Vdi _root;
-                private Vdi.Disk.Block _parent;
-                public byte[] data() { return data; }
-                public Vdi _root() { return _root; }
-                public Vdi.Disk.Block _parent() { return _parent; }
-            }
-            private byte[] metadata;
-            private ArrayList<Sector> data;
-            private Vdi _root;
-            private Vdi.Disk _parent;
-            private ArrayList<byte[]> _raw_data;
-            public byte[] metadata() { return metadata; }
-            public ArrayList<Sector> data() { return data; }
-            public Vdi _root() { return _root; }
-            public Vdi.Disk _parent() { return _parent; }
-            public ArrayList<byte[]> _raw_data() { return _raw_data; }
-        }
-        private ArrayList<Block> blocks;
-        private Vdi _root;
-        private Vdi _parent;
-        public ArrayList<Block> blocks() { return blocks; }
-        public Vdi _root() { return _root; }
-        public Vdi _parent() { return _parent; }
     }
     private Integer blockDiscarded;
     public Integer blockDiscarded() {
         if (this.blockDiscarded != null)
             return this.blockDiscarded;
-        int _tmp = (int) (4294967294L);
-        this.blockDiscarded = _tmp;
+        this.blockDiscarded = ((int) 4294967294L);
         return this.blockDiscarded;
     }
     private Integer blockUnallocated;
     public Integer blockUnallocated() {
         if (this.blockUnallocated != null)
             return this.blockUnallocated;
-        int _tmp = (int) (4294967295L);
-        this.blockUnallocated = _tmp;
+        this.blockUnallocated = ((int) 4294967295L);
         return this.blockUnallocated;
     }
     private BlocksMap blocksMap;
@@ -605,9 +667,8 @@ public class Vdi extends KaitaiStruct {
             return this.blocksMap;
         long _pos = this._io.pos();
         this._io.seek(header().blocksMapOffset());
-        this._raw_blocksMap = this._io.readBytes(header().blocksMapSize());
-        KaitaiStream _io__raw_blocksMap = new ByteBufferKaitaiStream(_raw_blocksMap);
-        this.blocksMap = new BlocksMap(_io__raw_blocksMap, this, _root);
+        KaitaiStream _io_blocksMap = this._io.substream(header().blocksMapSize());
+        this.blocksMap = new BlocksMap(_io_blocksMap, this, _root);
         this._io.seek(_pos);
         return this.blocksMap;
     }
@@ -624,9 +685,7 @@ public class Vdi extends KaitaiStruct {
     private Header header;
     private Vdi _root;
     private KaitaiStruct _parent;
-    private byte[] _raw_blocksMap;
     public Header header() { return header; }
     public Vdi _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
-    public byte[] _raw_blocksMap() { return _raw_blocksMap; }
 }

@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.RtcpPayload = factory(root.KaitaiStream);
+    factory(root.RtcpPayload || (root.RtcpPayload = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (RtcpPayload_, KaitaiStream) {
 /**
  * RTCP is the Real-Time Control Protocol
  * @see {@link https://www.rfc-editor.org/rfc/rfc3550|Source}
@@ -45,28 +45,6 @@ var RtcpPayload = (function() {
     209: "RSI",
   });
 
-  RtcpPayload.SdesSubtype = Object.freeze({
-    PAD: 0,
-    CNAME: 1,
-    NAME: 2,
-    EMAIL: 3,
-    PHONE: 4,
-    LOC: 5,
-    TOOL: 6,
-    NOTE: 7,
-    PRIV: 8,
-
-    0: "PAD",
-    1: "CNAME",
-    2: "NAME",
-    3: "EMAIL",
-    4: "PHONE",
-    5: "LOC",
-    6: "TOOL",
-    7: "NOTE",
-    8: "PRIV",
-  });
-
   RtcpPayload.PsfbSubtype = Object.freeze({
     PLI: 1,
     SLI: 2,
@@ -101,6 +79,28 @@ var RtcpPayload = (function() {
     15: "TRANSPORT_FEEDBACK",
   });
 
+  RtcpPayload.SdesSubtype = Object.freeze({
+    PAD: 0,
+    CNAME: 1,
+    NAME: 2,
+    EMAIL: 3,
+    PHONE: 4,
+    LOC: 5,
+    TOOL: 6,
+    NOTE: 7,
+    PRIV: 8,
+
+    0: "PAD",
+    1: "CNAME",
+    2: "NAME",
+    3: "EMAIL",
+    4: "PHONE",
+    5: "LOC",
+    6: "TOOL",
+    7: "NOTE",
+    8: "PRIV",
+  });
+
   function RtcpPayload(_io, _parent, _root) {
     this._io = _io;
     this._parent = _parent;
@@ -117,364 +117,11 @@ var RtcpPayload = (function() {
     }
   }
 
-  var PsfbAfbRembPacket = RtcpPayload.PsfbAfbRembPacket = (function() {
-    function PsfbAfbRembPacket(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    PsfbAfbRembPacket.prototype._read = function() {
-      this.numSsrc = this._io.readU1();
-      this.brExp = this._io.readBitsIntBe(6);
-      this.brMantissa = this._io.readBitsIntBe(18);
-      this._io.alignToByte();
-      this.ssrcList = [];
-      for (var i = 0; i < this.numSsrc; i++) {
-        this.ssrcList.push(this._io.readU4be());
-      }
-    }
-    Object.defineProperty(PsfbAfbRembPacket.prototype, 'maxTotalBitrate', {
-      get: function() {
-        if (this._m_maxTotalBitrate !== undefined)
-          return this._m_maxTotalBitrate;
-        this._m_maxTotalBitrate = (this.brMantissa * (1 << this.brExp));
-        return this._m_maxTotalBitrate;
-      }
-    });
-
-    return PsfbAfbRembPacket;
-  })();
-
-  var SrPacket = RtcpPayload.SrPacket = (function() {
-    function SrPacket(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    SrPacket.prototype._read = function() {
-      this.ssrc = this._io.readU4be();
-      this.ntpMsw = this._io.readU4be();
-      this.ntpLsw = this._io.readU4be();
-      this.rtpTimestamp = this._io.readU4be();
-      this.senderPacketCount = this._io.readU4be();
-      this.senderOctetCount = this._io.readU4be();
-      this.reportBlock = [];
-      for (var i = 0; i < this._parent.subtype; i++) {
-        this.reportBlock.push(new ReportBlock(this._io, this, this._root));
-      }
-    }
-    Object.defineProperty(SrPacket.prototype, 'ntp', {
-      get: function() {
-        if (this._m_ntp !== undefined)
-          return this._m_ntp;
-        this._m_ntp = ((this.ntpMsw << 32) & this.ntpLsw);
-        return this._m_ntp;
-      }
-    });
-
-    return SrPacket;
-  })();
-
-  var RrPacket = RtcpPayload.RrPacket = (function() {
-    function RrPacket(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    RrPacket.prototype._read = function() {
-      this.ssrc = this._io.readU4be();
-      this.reportBlock = [];
-      for (var i = 0; i < this._parent.subtype; i++) {
-        this.reportBlock.push(new ReportBlock(this._io, this, this._root));
-      }
-    }
-
-    return RrPacket;
-  })();
-
-  var RtcpPacket = RtcpPayload.RtcpPacket = (function() {
-    function RtcpPacket(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    RtcpPacket.prototype._read = function() {
-      this.version = this._io.readBitsIntBe(2);
-      this.padding = this._io.readBitsIntBe(1) != 0;
-      this.subtype = this._io.readBitsIntBe(5);
-      this._io.alignToByte();
-      this.payloadType = this._io.readU1();
-      this.length = this._io.readU2be();
-      switch (this.payloadType) {
-      case RtcpPayload.PayloadType.SR:
-        this._raw_body = this._io.readBytes((4 * this.length));
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new SrPacket(_io__raw_body, this, this._root);
-        break;
-      case RtcpPayload.PayloadType.PSFB:
-        this._raw_body = this._io.readBytes((4 * this.length));
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new PsfbPacket(_io__raw_body, this, this._root);
-        break;
-      case RtcpPayload.PayloadType.RR:
-        this._raw_body = this._io.readBytes((4 * this.length));
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new RrPacket(_io__raw_body, this, this._root);
-        break;
-      case RtcpPayload.PayloadType.RTPFB:
-        this._raw_body = this._io.readBytes((4 * this.length));
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new RtpfbPacket(_io__raw_body, this, this._root);
-        break;
-      case RtcpPayload.PayloadType.SDES:
-        this._raw_body = this._io.readBytes((4 * this.length));
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new SdesPacket(_io__raw_body, this, this._root);
-        break;
-      default:
-        this.body = this._io.readBytes((4 * this.length));
-        break;
-      }
-    }
-
-    return RtcpPacket;
-  })();
-
-  var SdesTlv = RtcpPayload.SdesTlv = (function() {
-    function SdesTlv(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    SdesTlv.prototype._read = function() {
-      this.type = this._io.readU1();
-      if (this.type != RtcpPayload.SdesSubtype.PAD) {
-        this.length = this._io.readU1();
-      }
-      if (this.type != RtcpPayload.SdesSubtype.PAD) {
-        this.value = this._io.readBytes(this.length);
-      }
-    }
-
-    return SdesTlv;
-  })();
-
-  var ReportBlock = RtcpPayload.ReportBlock = (function() {
-    function ReportBlock(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    ReportBlock.prototype._read = function() {
-      this.ssrcSource = this._io.readU4be();
-      this.lostVal = this._io.readU1();
-      this.highestSeqNumReceived = this._io.readU4be();
-      this.interarrivalJitter = this._io.readU4be();
-      this.lsr = this._io.readU4be();
-      this.dlsr = this._io.readU4be();
-    }
-    Object.defineProperty(ReportBlock.prototype, 'fractionLost', {
-      get: function() {
-        if (this._m_fractionLost !== undefined)
-          return this._m_fractionLost;
-        this._m_fractionLost = (this.lostVal >>> 24);
-        return this._m_fractionLost;
-      }
-    });
-    Object.defineProperty(ReportBlock.prototype, 'cumulativePacketsLost', {
-      get: function() {
-        if (this._m_cumulativePacketsLost !== undefined)
-          return this._m_cumulativePacketsLost;
-        this._m_cumulativePacketsLost = (this.lostVal & 16777215);
-        return this._m_cumulativePacketsLost;
-      }
-    });
-
-    return ReportBlock;
-  })();
-
-  var RtpfbTransportFeedbackPacket = RtcpPayload.RtpfbTransportFeedbackPacket = (function() {
-    function RtpfbTransportFeedbackPacket(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    RtpfbTransportFeedbackPacket.prototype._read = function() {
-      this.baseSequenceNumber = this._io.readU2be();
-      this.packetStatusCount = this._io.readU2be();
-      this.b4 = this._io.readU4be();
-      this.remaining = this._io.readBytesFull();
-    }
-    Object.defineProperty(RtpfbTransportFeedbackPacket.prototype, 'referenceTime', {
-      get: function() {
-        if (this._m_referenceTime !== undefined)
-          return this._m_referenceTime;
-        this._m_referenceTime = (this.b4 >>> 8);
-        return this._m_referenceTime;
-      }
-    });
-    Object.defineProperty(RtpfbTransportFeedbackPacket.prototype, 'fbPktCount', {
-      get: function() {
-        if (this._m_fbPktCount !== undefined)
-          return this._m_fbPktCount;
-        this._m_fbPktCount = (this.b4 & 255);
-        return this._m_fbPktCount;
-      }
-    });
-    Object.defineProperty(RtpfbTransportFeedbackPacket.prototype, 'packetStatus', {
-      get: function() {
-        if (this._m_packetStatus !== undefined)
-          return this._m_packetStatus;
-        this._m_packetStatus = this._io.readBytes(0);
-        return this._m_packetStatus;
-      }
-    });
-    Object.defineProperty(RtpfbTransportFeedbackPacket.prototype, 'recvDelta', {
-      get: function() {
-        if (this._m_recvDelta !== undefined)
-          return this._m_recvDelta;
-        this._m_recvDelta = this._io.readBytes(0);
-        return this._m_recvDelta;
-      }
-    });
-
-    return RtpfbTransportFeedbackPacket;
-  })();
-
-  var PsfbPacket = RtcpPayload.PsfbPacket = (function() {
-    function PsfbPacket(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    PsfbPacket.prototype._read = function() {
-      this.ssrc = this._io.readU4be();
-      this.ssrcMediaSource = this._io.readU4be();
-      switch (this.fmt) {
-      case RtcpPayload.PsfbSubtype.AFB:
-        this._raw_fciBlock = this._io.readBytesFull();
-        var _io__raw_fciBlock = new KaitaiStream(this._raw_fciBlock);
-        this.fciBlock = new PsfbAfbPacket(_io__raw_fciBlock, this, this._root);
-        break;
-      default:
-        this.fciBlock = this._io.readBytesFull();
-        break;
-      }
-    }
-    Object.defineProperty(PsfbPacket.prototype, 'fmt', {
-      get: function() {
-        if (this._m_fmt !== undefined)
-          return this._m_fmt;
-        this._m_fmt = this._parent.subtype;
-        return this._m_fmt;
-      }
-    });
-
-    return PsfbPacket;
-  })();
-
-  var SourceChunk = RtcpPayload.SourceChunk = (function() {
-    function SourceChunk(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    SourceChunk.prototype._read = function() {
-      this.ssrc = this._io.readU4be();
-      this.sdesTlv = [];
-      var i = 0;
-      while (!this._io.isEof()) {
-        this.sdesTlv.push(new SdesTlv(this._io, this, this._root));
-        i++;
-      }
-    }
-
-    return SourceChunk;
-  })();
-
-  var SdesPacket = RtcpPayload.SdesPacket = (function() {
-    function SdesPacket(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    SdesPacket.prototype._read = function() {
-      this.sourceChunk = [];
-      for (var i = 0; i < this.sourceCount; i++) {
-        this.sourceChunk.push(new SourceChunk(this._io, this, this._root));
-      }
-    }
-    Object.defineProperty(SdesPacket.prototype, 'sourceCount', {
-      get: function() {
-        if (this._m_sourceCount !== undefined)
-          return this._m_sourceCount;
-        this._m_sourceCount = this._parent.subtype;
-        return this._m_sourceCount;
-      }
-    });
-
-    return SdesPacket;
-  })();
-
-  var RtpfbPacket = RtcpPayload.RtpfbPacket = (function() {
-    function RtpfbPacket(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    RtpfbPacket.prototype._read = function() {
-      this.ssrc = this._io.readU4be();
-      this.ssrcMediaSource = this._io.readU4be();
-      switch (this.fmt) {
-      case RtcpPayload.RtpfbSubtype.TRANSPORT_FEEDBACK:
-        this._raw_fciBlock = this._io.readBytesFull();
-        var _io__raw_fciBlock = new KaitaiStream(this._raw_fciBlock);
-        this.fciBlock = new RtpfbTransportFeedbackPacket(_io__raw_fciBlock, this, this._root);
-        break;
-      default:
-        this.fciBlock = this._io.readBytesFull();
-        break;
-      }
-    }
-    Object.defineProperty(RtpfbPacket.prototype, 'fmt', {
-      get: function() {
-        if (this._m_fmt !== undefined)
-          return this._m_fmt;
-        this._m_fmt = this._parent.subtype;
-        return this._m_fmt;
-      }
-    });
-
-    return RtpfbPacket;
-  })();
-
   var PacketStatusChunk = RtcpPayload.PacketStatusChunk = (function() {
     function PacketStatusChunk(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -509,7 +156,7 @@ var RtcpPayload = (function() {
     function PsfbAfbPacket(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -530,7 +177,360 @@ var RtcpPayload = (function() {
     return PsfbAfbPacket;
   })();
 
+  var PsfbAfbRembPacket = RtcpPayload.PsfbAfbRembPacket = (function() {
+    function PsfbAfbRembPacket(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    PsfbAfbRembPacket.prototype._read = function() {
+      this.numSsrc = this._io.readU1();
+      this.brExp = this._io.readBitsIntBe(6);
+      this.brMantissa = this._io.readBitsIntBe(18);
+      this._io.alignToByte();
+      this.ssrcList = [];
+      for (var i = 0; i < this.numSsrc; i++) {
+        this.ssrcList.push(this._io.readU4be());
+      }
+    }
+    Object.defineProperty(PsfbAfbRembPacket.prototype, 'maxTotalBitrate', {
+      get: function() {
+        if (this._m_maxTotalBitrate !== undefined)
+          return this._m_maxTotalBitrate;
+        this._m_maxTotalBitrate = this.brMantissa * (1 << this.brExp);
+        return this._m_maxTotalBitrate;
+      }
+    });
+
+    return PsfbAfbRembPacket;
+  })();
+
+  var PsfbPacket = RtcpPayload.PsfbPacket = (function() {
+    function PsfbPacket(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    PsfbPacket.prototype._read = function() {
+      this.ssrc = this._io.readU4be();
+      this.ssrcMediaSource = this._io.readU4be();
+      switch (this.fmt) {
+      case RtcpPayload.PsfbSubtype.AFB:
+        this._raw_fciBlock = this._io.readBytesFull();
+        var _io__raw_fciBlock = new KaitaiStream(this._raw_fciBlock);
+        this.fciBlock = new PsfbAfbPacket(_io__raw_fciBlock, this, this._root);
+        break;
+      default:
+        this.fciBlock = this._io.readBytesFull();
+        break;
+      }
+    }
+    Object.defineProperty(PsfbPacket.prototype, 'fmt', {
+      get: function() {
+        if (this._m_fmt !== undefined)
+          return this._m_fmt;
+        this._m_fmt = this._parent.subtype;
+        return this._m_fmt;
+      }
+    });
+
+    return PsfbPacket;
+  })();
+
+  var ReportBlock = RtcpPayload.ReportBlock = (function() {
+    function ReportBlock(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    ReportBlock.prototype._read = function() {
+      this.ssrcSource = this._io.readU4be();
+      this.lostVal = this._io.readU1();
+      this.highestSeqNumReceived = this._io.readU4be();
+      this.interarrivalJitter = this._io.readU4be();
+      this.lsr = this._io.readU4be();
+      this.dlsr = this._io.readU4be();
+    }
+    Object.defineProperty(ReportBlock.prototype, 'cumulativePacketsLost', {
+      get: function() {
+        if (this._m_cumulativePacketsLost !== undefined)
+          return this._m_cumulativePacketsLost;
+        this._m_cumulativePacketsLost = this.lostVal & 16777215;
+        return this._m_cumulativePacketsLost;
+      }
+    });
+    Object.defineProperty(ReportBlock.prototype, 'fractionLost', {
+      get: function() {
+        if (this._m_fractionLost !== undefined)
+          return this._m_fractionLost;
+        this._m_fractionLost = this.lostVal >>> 24;
+        return this._m_fractionLost;
+      }
+    });
+
+    return ReportBlock;
+  })();
+
+  var RrPacket = RtcpPayload.RrPacket = (function() {
+    function RrPacket(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    RrPacket.prototype._read = function() {
+      this.ssrc = this._io.readU4be();
+      this.reportBlock = [];
+      for (var i = 0; i < this._parent.subtype; i++) {
+        this.reportBlock.push(new ReportBlock(this._io, this, this._root));
+      }
+    }
+
+    return RrPacket;
+  })();
+
+  var RtcpPacket = RtcpPayload.RtcpPacket = (function() {
+    function RtcpPacket(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    RtcpPacket.prototype._read = function() {
+      this.version = this._io.readBitsIntBe(2);
+      this.padding = this._io.readBitsIntBe(1) != 0;
+      this.subtype = this._io.readBitsIntBe(5);
+      this._io.alignToByte();
+      this.payloadType = this._io.readU1();
+      this.length = this._io.readU2be();
+      switch (this.payloadType) {
+      case RtcpPayload.PayloadType.PSFB:
+        this._raw_body = this._io.readBytes(4 * this.length);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new PsfbPacket(_io__raw_body, this, this._root);
+        break;
+      case RtcpPayload.PayloadType.RR:
+        this._raw_body = this._io.readBytes(4 * this.length);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new RrPacket(_io__raw_body, this, this._root);
+        break;
+      case RtcpPayload.PayloadType.RTPFB:
+        this._raw_body = this._io.readBytes(4 * this.length);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new RtpfbPacket(_io__raw_body, this, this._root);
+        break;
+      case RtcpPayload.PayloadType.SDES:
+        this._raw_body = this._io.readBytes(4 * this.length);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new SdesPacket(_io__raw_body, this, this._root);
+        break;
+      case RtcpPayload.PayloadType.SR:
+        this._raw_body = this._io.readBytes(4 * this.length);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new SrPacket(_io__raw_body, this, this._root);
+        break;
+      default:
+        this.body = this._io.readBytes(4 * this.length);
+        break;
+      }
+    }
+
+    return RtcpPacket;
+  })();
+
+  var RtpfbPacket = RtcpPayload.RtpfbPacket = (function() {
+    function RtpfbPacket(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    RtpfbPacket.prototype._read = function() {
+      this.ssrc = this._io.readU4be();
+      this.ssrcMediaSource = this._io.readU4be();
+      switch (this.fmt) {
+      case RtcpPayload.RtpfbSubtype.TRANSPORT_FEEDBACK:
+        this._raw_fciBlock = this._io.readBytesFull();
+        var _io__raw_fciBlock = new KaitaiStream(this._raw_fciBlock);
+        this.fciBlock = new RtpfbTransportFeedbackPacket(_io__raw_fciBlock, this, this._root);
+        break;
+      default:
+        this.fciBlock = this._io.readBytesFull();
+        break;
+      }
+    }
+    Object.defineProperty(RtpfbPacket.prototype, 'fmt', {
+      get: function() {
+        if (this._m_fmt !== undefined)
+          return this._m_fmt;
+        this._m_fmt = this._parent.subtype;
+        return this._m_fmt;
+      }
+    });
+
+    return RtpfbPacket;
+  })();
+
+  var RtpfbTransportFeedbackPacket = RtcpPayload.RtpfbTransportFeedbackPacket = (function() {
+    function RtpfbTransportFeedbackPacket(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    RtpfbTransportFeedbackPacket.prototype._read = function() {
+      this.baseSequenceNumber = this._io.readU2be();
+      this.packetStatusCount = this._io.readU2be();
+      this.b4 = this._io.readU4be();
+      this.remaining = this._io.readBytesFull();
+    }
+    Object.defineProperty(RtpfbTransportFeedbackPacket.prototype, 'fbPktCount', {
+      get: function() {
+        if (this._m_fbPktCount !== undefined)
+          return this._m_fbPktCount;
+        this._m_fbPktCount = this.b4 & 255;
+        return this._m_fbPktCount;
+      }
+    });
+    Object.defineProperty(RtpfbTransportFeedbackPacket.prototype, 'packetStatus', {
+      get: function() {
+        if (this._m_packetStatus !== undefined)
+          return this._m_packetStatus;
+        this._m_packetStatus = this._io.readBytes(0);
+        return this._m_packetStatus;
+      }
+    });
+    Object.defineProperty(RtpfbTransportFeedbackPacket.prototype, 'recvDelta', {
+      get: function() {
+        if (this._m_recvDelta !== undefined)
+          return this._m_recvDelta;
+        this._m_recvDelta = this._io.readBytes(0);
+        return this._m_recvDelta;
+      }
+    });
+    Object.defineProperty(RtpfbTransportFeedbackPacket.prototype, 'referenceTime', {
+      get: function() {
+        if (this._m_referenceTime !== undefined)
+          return this._m_referenceTime;
+        this._m_referenceTime = this.b4 >>> 8;
+        return this._m_referenceTime;
+      }
+    });
+
+    return RtpfbTransportFeedbackPacket;
+  })();
+
+  var SdesPacket = RtcpPayload.SdesPacket = (function() {
+    function SdesPacket(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    SdesPacket.prototype._read = function() {
+      this.sourceChunk = [];
+      for (var i = 0; i < this.sourceCount; i++) {
+        this.sourceChunk.push(new SourceChunk(this._io, this, this._root));
+      }
+    }
+    Object.defineProperty(SdesPacket.prototype, 'sourceCount', {
+      get: function() {
+        if (this._m_sourceCount !== undefined)
+          return this._m_sourceCount;
+        this._m_sourceCount = this._parent.subtype;
+        return this._m_sourceCount;
+      }
+    });
+
+    return SdesPacket;
+  })();
+
+  var SdesTlv = RtcpPayload.SdesTlv = (function() {
+    function SdesTlv(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    SdesTlv.prototype._read = function() {
+      this.type = this._io.readU1();
+      if (this.type != RtcpPayload.SdesSubtype.PAD) {
+        this.length = this._io.readU1();
+      }
+      if (this.type != RtcpPayload.SdesSubtype.PAD) {
+        this.value = this._io.readBytes(this.length);
+      }
+    }
+
+    return SdesTlv;
+  })();
+
+  var SourceChunk = RtcpPayload.SourceChunk = (function() {
+    function SourceChunk(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    SourceChunk.prototype._read = function() {
+      this.ssrc = this._io.readU4be();
+      this.sdesTlv = [];
+      var i = 0;
+      while (!this._io.isEof()) {
+        this.sdesTlv.push(new SdesTlv(this._io, this, this._root));
+        i++;
+      }
+    }
+
+    return SourceChunk;
+  })();
+
+  var SrPacket = RtcpPayload.SrPacket = (function() {
+    function SrPacket(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    SrPacket.prototype._read = function() {
+      this.ssrc = this._io.readU4be();
+      this.ntpMsw = this._io.readU4be();
+      this.ntpLsw = this._io.readU4be();
+      this.rtpTimestamp = this._io.readU4be();
+      this.senderPacketCount = this._io.readU4be();
+      this.senderOctetCount = this._io.readU4be();
+      this.reportBlock = [];
+      for (var i = 0; i < this._parent.subtype; i++) {
+        this.reportBlock.push(new ReportBlock(this._io, this, this._root));
+      }
+    }
+    Object.defineProperty(SrPacket.prototype, 'ntp', {
+      get: function() {
+        if (this._m_ntp !== undefined)
+          return this._m_ntp;
+        this._m_ntp = this.ntpMsw << 32 & this.ntpLsw;
+        return this._m_ntp;
+      }
+    });
+
+    return SrPacket;
+  })();
+
   return RtcpPayload;
 })();
-return RtcpPayload;
-}));
+RtcpPayload_.RtcpPayload = RtcpPayload;
+});

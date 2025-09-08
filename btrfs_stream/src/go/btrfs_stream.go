@@ -19,33 +19,6 @@ import (
  * @see <a href="https://archive.kernel.org/oldwiki/btrfs.wiki.kernel.org/index.php/Design_notes_on_Send/Receive.html">Source</a>
  */
 
-type BtrfsStream_Command int
-const (
-	BtrfsStream_Command__Unspec BtrfsStream_Command = 0
-	BtrfsStream_Command__Subvol BtrfsStream_Command = 1
-	BtrfsStream_Command__Snapshot BtrfsStream_Command = 2
-	BtrfsStream_Command__Mkfile BtrfsStream_Command = 3
-	BtrfsStream_Command__Mkdir BtrfsStream_Command = 4
-	BtrfsStream_Command__Mknod BtrfsStream_Command = 5
-	BtrfsStream_Command__Mkfifo BtrfsStream_Command = 6
-	BtrfsStream_Command__Mksock BtrfsStream_Command = 7
-	BtrfsStream_Command__Symlink BtrfsStream_Command = 8
-	BtrfsStream_Command__Rename BtrfsStream_Command = 9
-	BtrfsStream_Command__Link BtrfsStream_Command = 10
-	BtrfsStream_Command__Unlink BtrfsStream_Command = 11
-	BtrfsStream_Command__Rmdir BtrfsStream_Command = 12
-	BtrfsStream_Command__SetXattr BtrfsStream_Command = 13
-	BtrfsStream_Command__RemoveXattr BtrfsStream_Command = 14
-	BtrfsStream_Command__Write BtrfsStream_Command = 15
-	BtrfsStream_Command__Clone BtrfsStream_Command = 16
-	BtrfsStream_Command__Truncate BtrfsStream_Command = 17
-	BtrfsStream_Command__Chmod BtrfsStream_Command = 18
-	BtrfsStream_Command__Chown BtrfsStream_Command = 19
-	BtrfsStream_Command__Utimes BtrfsStream_Command = 20
-	BtrfsStream_Command__End BtrfsStream_Command = 21
-	BtrfsStream_Command__UpdateExtent BtrfsStream_Command = 22
-)
-
 type BtrfsStream_Attribute int
 const (
 	BtrfsStream_Attribute__Unspec BtrfsStream_Attribute = 0
@@ -74,19 +47,60 @@ const (
 	BtrfsStream_Attribute__CloneOffset BtrfsStream_Attribute = 23
 	BtrfsStream_Attribute__CloneLen BtrfsStream_Attribute = 24
 )
+var values_BtrfsStream_Attribute = map[BtrfsStream_Attribute]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}, 10: {}, 11: {}, 12: {}, 13: {}, 14: {}, 15: {}, 16: {}, 17: {}, 18: {}, 19: {}, 20: {}, 21: {}, 22: {}, 23: {}, 24: {}}
+func (v BtrfsStream_Attribute) isDefined() bool {
+	_, ok := values_BtrfsStream_Attribute[v]
+	return ok
+}
+
+type BtrfsStream_Command int
+const (
+	BtrfsStream_Command__Unspec BtrfsStream_Command = 0
+	BtrfsStream_Command__Subvol BtrfsStream_Command = 1
+	BtrfsStream_Command__Snapshot BtrfsStream_Command = 2
+	BtrfsStream_Command__Mkfile BtrfsStream_Command = 3
+	BtrfsStream_Command__Mkdir BtrfsStream_Command = 4
+	BtrfsStream_Command__Mknod BtrfsStream_Command = 5
+	BtrfsStream_Command__Mkfifo BtrfsStream_Command = 6
+	BtrfsStream_Command__Mksock BtrfsStream_Command = 7
+	BtrfsStream_Command__Symlink BtrfsStream_Command = 8
+	BtrfsStream_Command__Rename BtrfsStream_Command = 9
+	BtrfsStream_Command__Link BtrfsStream_Command = 10
+	BtrfsStream_Command__Unlink BtrfsStream_Command = 11
+	BtrfsStream_Command__Rmdir BtrfsStream_Command = 12
+	BtrfsStream_Command__SetXattr BtrfsStream_Command = 13
+	BtrfsStream_Command__RemoveXattr BtrfsStream_Command = 14
+	BtrfsStream_Command__Write BtrfsStream_Command = 15
+	BtrfsStream_Command__Clone BtrfsStream_Command = 16
+	BtrfsStream_Command__Truncate BtrfsStream_Command = 17
+	BtrfsStream_Command__Chmod BtrfsStream_Command = 18
+	BtrfsStream_Command__Chown BtrfsStream_Command = 19
+	BtrfsStream_Command__Utimes BtrfsStream_Command = 20
+	BtrfsStream_Command__End BtrfsStream_Command = 21
+	BtrfsStream_Command__UpdateExtent BtrfsStream_Command = 22
+)
+var values_BtrfsStream_Command = map[BtrfsStream_Command]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}, 10: {}, 11: {}, 12: {}, 13: {}, 14: {}, 15: {}, 16: {}, 17: {}, 18: {}, 19: {}, 20: {}, 21: {}, 22: {}}
+func (v BtrfsStream_Command) isDefined() bool {
+	_, ok := values_BtrfsStream_Command[v]
+	return ok
+}
 type BtrfsStream struct {
 	Header *BtrfsStream_SendStreamHeader
 	Commands []*BtrfsStream_SendCommand
 	_io *kaitai.Stream
 	_root *BtrfsStream
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewBtrfsStream() *BtrfsStream {
 	return &BtrfsStream{
 	}
 }
 
-func (this *BtrfsStream) Read(io *kaitai.Stream, parent interface{}, root *BtrfsStream) (err error) {
+func (this BtrfsStream) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *BtrfsStream) Read(io *kaitai.Stream, parent kaitai.Struct, root *BtrfsStream) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -97,7 +111,7 @@ func (this *BtrfsStream) Read(io *kaitai.Stream, parent interface{}, root *Btrfs
 		return err
 	}
 	this.Header = tmp1
-	for i := 1;; i++ {
+	for i := 0;; i++ {
 		tmp2, err := this._io.EOF()
 		if err != nil {
 			return err
@@ -112,39 +126,6 @@ func (this *BtrfsStream) Read(io *kaitai.Stream, parent interface{}, root *Btrfs
 		}
 		this.Commands = append(this.Commands, tmp3)
 	}
-	return err
-}
-type BtrfsStream_SendStreamHeader struct {
-	Magic []byte
-	Version uint32
-	_io *kaitai.Stream
-	_root *BtrfsStream
-	_parent *BtrfsStream
-}
-func NewBtrfsStream_SendStreamHeader() *BtrfsStream_SendStreamHeader {
-	return &BtrfsStream_SendStreamHeader{
-	}
-}
-
-func (this *BtrfsStream_SendStreamHeader) Read(io *kaitai.Stream, parent *BtrfsStream, root *BtrfsStream) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp4, err := this._io.ReadBytes(int(13))
-	if err != nil {
-		return err
-	}
-	tmp4 = tmp4
-	this.Magic = tmp4
-	if !(bytes.Equal(this.Magic, []uint8{98, 116, 114, 102, 115, 45, 115, 116, 114, 101, 97, 109, 0})) {
-		return kaitai.NewValidationNotEqualError([]uint8{98, 116, 114, 102, 115, 45, 115, 116, 114, 101, 97, 109, 0}, this.Magic, this._io, "/types/send_stream_header/seq/0")
-	}
-	tmp5, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Version = uint32(tmp5)
 	return err
 }
 type BtrfsStream_SendCommand struct {
@@ -162,46 +143,111 @@ func NewBtrfsStream_SendCommand() *BtrfsStream_SendCommand {
 	}
 }
 
+func (this BtrfsStream_SendCommand) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *BtrfsStream_SendCommand) Read(io *kaitai.Stream, parent *BtrfsStream, root *BtrfsStream) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp6, err := this._io.ReadU4le()
+	tmp4, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.LenData = uint32(tmp6)
-	tmp7, err := this._io.ReadU2le()
+	this.LenData = uint32(tmp4)
+	tmp5, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.Type = BtrfsStream_Command(tmp7)
-	tmp8, err := this._io.ReadBytes(int(4))
+	this.Type = BtrfsStream_Command(tmp5)
+	tmp6, err := this._io.ReadBytes(int(4))
 	if err != nil {
 		return err
 	}
-	tmp8 = tmp8
-	this.Checksum = tmp8
-	tmp9, err := this._io.ReadBytes(int(this.LenData))
+	tmp6 = tmp6
+	this.Checksum = tmp6
+	tmp7, err := this._io.ReadBytes(int(this.LenData))
 	if err != nil {
 		return err
 	}
-	tmp9 = tmp9
-	this._raw_Data = tmp9
+	tmp7 = tmp7
+	this._raw_Data = tmp7
 	_io__raw_Data := kaitai.NewStream(bytes.NewReader(this._raw_Data))
-	tmp10 := NewBtrfsStream_SendCommand_Tlvs()
-	err = tmp10.Read(_io__raw_Data, this, this._root)
+	tmp8 := NewBtrfsStream_SendCommand_Tlvs()
+	err = tmp8.Read(_io__raw_Data, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Data = tmp10
+	this.Data = tmp8
 	return err
 }
 
 /**
  * CRC32 checksum of a whole send command, including the header, with this attribute set to 0.
  */
+type BtrfsStream_SendCommand_String struct {
+	String string
+	_io *kaitai.Stream
+	_root *BtrfsStream
+	_parent *BtrfsStream_SendCommand_Tlv
+}
+func NewBtrfsStream_SendCommand_String() *BtrfsStream_SendCommand_String {
+	return &BtrfsStream_SendCommand_String{
+	}
+}
+
+func (this BtrfsStream_SendCommand_String) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *BtrfsStream_SendCommand_String) Read(io *kaitai.Stream, parent *BtrfsStream_SendCommand_Tlv, root *BtrfsStream) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp9, err := this._io.ReadBytesFull()
+	if err != nil {
+		return err
+	}
+	tmp9 = tmp9
+	this.String = string(tmp9)
+	return err
+}
+type BtrfsStream_SendCommand_Timespec struct {
+	TsSec int64
+	TsNsec int32
+	_io *kaitai.Stream
+	_root *BtrfsStream
+	_parent *BtrfsStream_SendCommand_Tlv
+}
+func NewBtrfsStream_SendCommand_Timespec() *BtrfsStream_SendCommand_Timespec {
+	return &BtrfsStream_SendCommand_Timespec{
+	}
+}
+
+func (this BtrfsStream_SendCommand_Timespec) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *BtrfsStream_SendCommand_Timespec) Read(io *kaitai.Stream, parent *BtrfsStream_SendCommand_Tlv, root *BtrfsStream) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp10, err := this._io.ReadS8le()
+	if err != nil {
+		return err
+	}
+	this.TsSec = int64(tmp10)
+	tmp11, err := this._io.ReadS4le()
+	if err != nil {
+		return err
+	}
+	this.TsNsec = int32(tmp11)
+	return err
+}
 type BtrfsStream_SendCommand_Tlv struct {
 	Type BtrfsStream_Attribute
 	Length uint16
@@ -216,75 +262,73 @@ func NewBtrfsStream_SendCommand_Tlv() *BtrfsStream_SendCommand_Tlv {
 	}
 }
 
+func (this BtrfsStream_SendCommand_Tlv) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *BtrfsStream_SendCommand_Tlv) Read(io *kaitai.Stream, parent *BtrfsStream_SendCommand_Tlvs, root *BtrfsStream) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp11, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.Type = BtrfsStream_Attribute(tmp11)
 	tmp12, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.Length = uint16(tmp12)
+	this.Type = BtrfsStream_Attribute(tmp12)
+	tmp13, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.Length = uint16(tmp13)
 	switch (this.Type) {
-	case BtrfsStream_Attribute__Ctransid:
-		tmp13, err := this._io.ReadU8le()
+	case BtrfsStream_Attribute__Atime:
+		tmp14, err := this._io.ReadBytes(int(this.Length))
 		if err != nil {
 			return err
 		}
-		this.Value = tmp13
-	case BtrfsStream_Attribute__Size:
-		tmp14, err := this._io.ReadU8le()
-		if err != nil {
-			return err
-		}
-		this.Value = tmp14
-	case BtrfsStream_Attribute__CloneUuid:
-		tmp15, err := this._io.ReadBytes(int(this.Length))
-		if err != nil {
-			return err
-		}
-		tmp15 = tmp15
-		this._raw_Value = tmp15
+		tmp14 = tmp14
+		this._raw_Value = tmp14
 		_io__raw_Value := kaitai.NewStream(bytes.NewReader(this._raw_Value))
-		tmp16 := NewBtrfsStream_SendCommand_Uuid()
-		err = tmp16.Read(_io__raw_Value, this, this._root)
+		tmp15 := NewBtrfsStream_SendCommand_Timespec()
+		err = tmp15.Read(_io__raw_Value, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Value = tmp15
+	case BtrfsStream_Attribute__CloneCtransid:
+		tmp16, err := this._io.ReadU8le()
 		if err != nil {
 			return err
 		}
 		this.Value = tmp16
-	case BtrfsStream_Attribute__FileOffset:
+	case BtrfsStream_Attribute__CloneLen:
 		tmp17, err := this._io.ReadU8le()
 		if err != nil {
 			return err
 		}
 		this.Value = tmp17
-	case BtrfsStream_Attribute__Otime:
-		tmp18, err := this._io.ReadBytes(int(this.Length))
+	case BtrfsStream_Attribute__CloneOffset:
+		tmp18, err := this._io.ReadU8le()
 		if err != nil {
 			return err
 		}
-		tmp18 = tmp18
-		this._raw_Value = tmp18
+		this.Value = tmp18
+	case BtrfsStream_Attribute__ClonePath:
+		tmp19, err := this._io.ReadBytes(int(this.Length))
+		if err != nil {
+			return err
+		}
+		tmp19 = tmp19
+		this._raw_Value = tmp19
 		_io__raw_Value := kaitai.NewStream(bytes.NewReader(this._raw_Value))
-		tmp19 := NewBtrfsStream_SendCommand_Timespec()
-		err = tmp19.Read(_io__raw_Value, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Value = tmp19
-	case BtrfsStream_Attribute__Uid:
-		tmp20, err := this._io.ReadU8le()
+		tmp20 := NewBtrfsStream_SendCommand_String()
+		err = tmp20.Read(_io__raw_Value, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Value = tmp20
-	case BtrfsStream_Attribute__Atime:
+	case BtrfsStream_Attribute__CloneUuid:
 		tmp21, err := this._io.ReadBytes(int(this.Length))
 		if err != nil {
 			return err
@@ -292,7 +336,7 @@ func (this *BtrfsStream_SendCommand_Tlv) Read(io *kaitai.Stream, parent *BtrfsSt
 		tmp21 = tmp21
 		this._raw_Value = tmp21
 		_io__raw_Value := kaitai.NewStream(bytes.NewReader(this._raw_Value))
-		tmp22 := NewBtrfsStream_SendCommand_Timespec()
+		tmp22 := NewBtrfsStream_SendCommand_Uuid()
 		err = tmp22.Read(_io__raw_Value, this, this._root)
 		if err != nil {
 			return err
@@ -312,82 +356,82 @@ func (this *BtrfsStream_SendCommand_Tlv) Read(io *kaitai.Stream, parent *BtrfsSt
 			return err
 		}
 		this.Value = tmp24
-	case BtrfsStream_Attribute__Uuid:
-		tmp25, err := this._io.ReadBytes(int(this.Length))
+	case BtrfsStream_Attribute__Ctransid:
+		tmp25, err := this._io.ReadU8le()
 		if err != nil {
 			return err
 		}
-		tmp25 = tmp25
-		this._raw_Value = tmp25
-		_io__raw_Value := kaitai.NewStream(bytes.NewReader(this._raw_Value))
-		tmp26 := NewBtrfsStream_SendCommand_Uuid()
-		err = tmp26.Read(_io__raw_Value, this, this._root)
+		this.Value = tmp25
+	case BtrfsStream_Attribute__FileOffset:
+		tmp26, err := this._io.ReadU8le()
 		if err != nil {
 			return err
 		}
 		this.Value = tmp26
-	case BtrfsStream_Attribute__CloneLen:
+	case BtrfsStream_Attribute__Gid:
 		tmp27, err := this._io.ReadU8le()
 		if err != nil {
 			return err
 		}
 		this.Value = tmp27
-	case BtrfsStream_Attribute__XattrName:
-		tmp28, err := this._io.ReadBytes(int(this.Length))
+	case BtrfsStream_Attribute__Mode:
+		tmp28, err := this._io.ReadU8le()
 		if err != nil {
 			return err
 		}
-		tmp28 = tmp28
-		this._raw_Value = tmp28
+		this.Value = tmp28
+	case BtrfsStream_Attribute__Mtime:
+		tmp29, err := this._io.ReadBytes(int(this.Length))
+		if err != nil {
+			return err
+		}
+		tmp29 = tmp29
+		this._raw_Value = tmp29
 		_io__raw_Value := kaitai.NewStream(bytes.NewReader(this._raw_Value))
-		tmp29 := NewBtrfsStream_SendCommand_String()
-		err = tmp29.Read(_io__raw_Value, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Value = tmp29
-	case BtrfsStream_Attribute__CloneCtransid:
-		tmp30, err := this._io.ReadU8le()
+		tmp30 := NewBtrfsStream_SendCommand_Timespec()
+		err = tmp30.Read(_io__raw_Value, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Value = tmp30
-	case BtrfsStream_Attribute__Mode:
-		tmp31, err := this._io.ReadU8le()
+	case BtrfsStream_Attribute__Otime:
+		tmp31, err := this._io.ReadBytes(int(this.Length))
 		if err != nil {
 			return err
 		}
-		this.Value = tmp31
-	case BtrfsStream_Attribute__Mtime:
-		tmp32, err := this._io.ReadBytes(int(this.Length))
-		if err != nil {
-			return err
-		}
-		tmp32 = tmp32
-		this._raw_Value = tmp32
+		tmp31 = tmp31
+		this._raw_Value = tmp31
 		_io__raw_Value := kaitai.NewStream(bytes.NewReader(this._raw_Value))
-		tmp33 := NewBtrfsStream_SendCommand_Timespec()
-		err = tmp33.Read(_io__raw_Value, this, this._root)
+		tmp32 := NewBtrfsStream_SendCommand_Timespec()
+		err = tmp32.Read(_io__raw_Value, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Value = tmp33
+		this.Value = tmp32
+	case BtrfsStream_Attribute__Path:
+		tmp33, err := this._io.ReadBytes(int(this.Length))
+		if err != nil {
+			return err
+		}
+		tmp33 = tmp33
+		this._raw_Value = tmp33
+		_io__raw_Value := kaitai.NewStream(bytes.NewReader(this._raw_Value))
+		tmp34 := NewBtrfsStream_SendCommand_String()
+		err = tmp34.Read(_io__raw_Value, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Value = tmp34
 	case BtrfsStream_Attribute__PathLink:
-		tmp34, err := this._io.ReadBytes(int(this.Length))
+		tmp35, err := this._io.ReadBytes(int(this.Length))
 		if err != nil {
 			return err
 		}
-		tmp34 = tmp34
-		this._raw_Value = tmp34
+		tmp35 = tmp35
+		this._raw_Value = tmp35
 		_io__raw_Value := kaitai.NewStream(bytes.NewReader(this._raw_Value))
-		tmp35 := NewBtrfsStream_SendCommand_String()
-		err = tmp35.Read(_io__raw_Value, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Value = tmp35
-	case BtrfsStream_Attribute__Rdev:
-		tmp36, err := this._io.ReadU8le()
+		tmp36 := NewBtrfsStream_SendCommand_String()
+		err = tmp36.Read(_io__raw_Value, this, this._root)
 		if err != nil {
 			return err
 		}
@@ -406,78 +450,60 @@ func (this *BtrfsStream_SendCommand_Tlv) Read(io *kaitai.Stream, parent *BtrfsSt
 			return err
 		}
 		this.Value = tmp38
-	case BtrfsStream_Attribute__Path:
-		tmp39, err := this._io.ReadBytes(int(this.Length))
+	case BtrfsStream_Attribute__Rdev:
+		tmp39, err := this._io.ReadU8le()
 		if err != nil {
 			return err
 		}
-		tmp39 = tmp39
-		this._raw_Value = tmp39
-		_io__raw_Value := kaitai.NewStream(bytes.NewReader(this._raw_Value))
-		tmp40 := NewBtrfsStream_SendCommand_String()
-		err = tmp40.Read(_io__raw_Value, this, this._root)
+		this.Value = tmp39
+	case BtrfsStream_Attribute__Size:
+		tmp40, err := this._io.ReadU8le()
 		if err != nil {
 			return err
 		}
 		this.Value = tmp40
-	case BtrfsStream_Attribute__CloneOffset:
+	case BtrfsStream_Attribute__Uid:
 		tmp41, err := this._io.ReadU8le()
 		if err != nil {
 			return err
 		}
 		this.Value = tmp41
-	case BtrfsStream_Attribute__Gid:
-		tmp42, err := this._io.ReadU8le()
+	case BtrfsStream_Attribute__Uuid:
+		tmp42, err := this._io.ReadBytes(int(this.Length))
 		if err != nil {
 			return err
 		}
-		this.Value = tmp42
-	case BtrfsStream_Attribute__ClonePath:
-		tmp43, err := this._io.ReadBytes(int(this.Length))
-		if err != nil {
-			return err
-		}
-		tmp43 = tmp43
-		this._raw_Value = tmp43
+		tmp42 = tmp42
+		this._raw_Value = tmp42
 		_io__raw_Value := kaitai.NewStream(bytes.NewReader(this._raw_Value))
-		tmp44 := NewBtrfsStream_SendCommand_String()
-		err = tmp44.Read(_io__raw_Value, this, this._root)
+		tmp43 := NewBtrfsStream_SendCommand_Uuid()
+		err = tmp43.Read(_io__raw_Value, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Value = tmp44
+		this.Value = tmp43
+	case BtrfsStream_Attribute__XattrName:
+		tmp44, err := this._io.ReadBytes(int(this.Length))
+		if err != nil {
+			return err
+		}
+		tmp44 = tmp44
+		this._raw_Value = tmp44
+		_io__raw_Value := kaitai.NewStream(bytes.NewReader(this._raw_Value))
+		tmp45 := NewBtrfsStream_SendCommand_String()
+		err = tmp45.Read(_io__raw_Value, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Value = tmp45
 	default:
-		tmp45, err := this._io.ReadBytes(int(this.Length))
+		tmp46, err := this._io.ReadBytes(int(this.Length))
 		if err != nil {
 			return err
 		}
-		tmp45 = tmp45
-		this._raw_Value = tmp45
+		tmp46 = tmp46
+		this._raw_Value = tmp46
 	}
-	return err
-}
-type BtrfsStream_SendCommand_Uuid struct {
-	Uuid []byte
-	_io *kaitai.Stream
-	_root *BtrfsStream
-	_parent *BtrfsStream_SendCommand_Tlv
-}
-func NewBtrfsStream_SendCommand_Uuid() *BtrfsStream_SendCommand_Uuid {
-	return &BtrfsStream_SendCommand_Uuid{
-	}
-}
-
-func (this *BtrfsStream_SendCommand_Uuid) Read(io *kaitai.Stream, parent *BtrfsStream_SendCommand_Tlv, root *BtrfsStream) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp46, err := this._io.ReadBytes(int(16))
-	if err != nil {
-		return err
-	}
-	tmp46 = tmp46
-	this.Uuid = tmp46
 	return err
 }
 type BtrfsStream_SendCommand_Tlvs struct {
@@ -491,12 +517,16 @@ func NewBtrfsStream_SendCommand_Tlvs() *BtrfsStream_SendCommand_Tlvs {
 	}
 }
 
+func (this BtrfsStream_SendCommand_Tlvs) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *BtrfsStream_SendCommand_Tlvs) Read(io *kaitai.Stream, parent *BtrfsStream_SendCommand, root *BtrfsStream) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	for i := 1;; i++ {
+	for i := 0;; i++ {
 		tmp47, err := this._io.EOF()
 		if err != nil {
 			return err
@@ -513,56 +543,68 @@ func (this *BtrfsStream_SendCommand_Tlvs) Read(io *kaitai.Stream, parent *BtrfsS
 	}
 	return err
 }
-type BtrfsStream_SendCommand_String struct {
-	String string
+type BtrfsStream_SendCommand_Uuid struct {
+	Uuid []byte
 	_io *kaitai.Stream
 	_root *BtrfsStream
 	_parent *BtrfsStream_SendCommand_Tlv
 }
-func NewBtrfsStream_SendCommand_String() *BtrfsStream_SendCommand_String {
-	return &BtrfsStream_SendCommand_String{
+func NewBtrfsStream_SendCommand_Uuid() *BtrfsStream_SendCommand_Uuid {
+	return &BtrfsStream_SendCommand_Uuid{
 	}
 }
 
-func (this *BtrfsStream_SendCommand_String) Read(io *kaitai.Stream, parent *BtrfsStream_SendCommand_Tlv, root *BtrfsStream) (err error) {
+func (this BtrfsStream_SendCommand_Uuid) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *BtrfsStream_SendCommand_Uuid) Read(io *kaitai.Stream, parent *BtrfsStream_SendCommand_Tlv, root *BtrfsStream) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp49, err := this._io.ReadBytesFull()
+	tmp49, err := this._io.ReadBytes(int(16))
 	if err != nil {
 		return err
 	}
 	tmp49 = tmp49
-	this.String = string(tmp49)
+	this.Uuid = tmp49
 	return err
 }
-type BtrfsStream_SendCommand_Timespec struct {
-	TsSec int64
-	TsNsec int32
+type BtrfsStream_SendStreamHeader struct {
+	Magic []byte
+	Version uint32
 	_io *kaitai.Stream
 	_root *BtrfsStream
-	_parent *BtrfsStream_SendCommand_Tlv
+	_parent *BtrfsStream
 }
-func NewBtrfsStream_SendCommand_Timespec() *BtrfsStream_SendCommand_Timespec {
-	return &BtrfsStream_SendCommand_Timespec{
+func NewBtrfsStream_SendStreamHeader() *BtrfsStream_SendStreamHeader {
+	return &BtrfsStream_SendStreamHeader{
 	}
 }
 
-func (this *BtrfsStream_SendCommand_Timespec) Read(io *kaitai.Stream, parent *BtrfsStream_SendCommand_Tlv, root *BtrfsStream) (err error) {
+func (this BtrfsStream_SendStreamHeader) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *BtrfsStream_SendStreamHeader) Read(io *kaitai.Stream, parent *BtrfsStream, root *BtrfsStream) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp50, err := this._io.ReadS8le()
+	tmp50, err := this._io.ReadBytes(int(13))
 	if err != nil {
 		return err
 	}
-	this.TsSec = int64(tmp50)
-	tmp51, err := this._io.ReadS4le()
+	tmp50 = tmp50
+	this.Magic = tmp50
+	if !(bytes.Equal(this.Magic, []uint8{98, 116, 114, 102, 115, 45, 115, 116, 114, 101, 97, 109, 0})) {
+		return kaitai.NewValidationNotEqualError([]uint8{98, 116, 114, 102, 115, 45, 115, 116, 114, 101, 97, 109, 0}, this.Magic, this._io, "/types/send_stream_header/seq/0")
+	}
+	tmp51, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.TsNsec = int32(tmp51)
+	this.Version = uint32(tmp51)
 	return err
 }

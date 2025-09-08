@@ -60,6 +60,267 @@ namespace Kaitai
                 } while (!(M_.IsTerminator));
             }
         }
+        public partial class File : KaitaiStruct
+        {
+            public static File FromFile(string fileName)
+            {
+                return new File(new KaitaiStream(fileName));
+            }
+
+            public File(KaitaiStream p__io, TrDosImage p__parent = null, TrDosImage p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_contents = false;
+                f_isDeleted = false;
+                f_isTerminator = false;
+                _read();
+            }
+            private void _read()
+            {
+                __raw_name = m_io.ReadBytes(8);
+                var io___raw_name = new KaitaiStream(__raw_name);
+                _name = new Filename(io___raw_name, this, m_root);
+                _extension = m_io.ReadU1();
+                switch (Extension) {
+                case 35: {
+                    _positionAndLength = new PositionAndLengthPrint(m_io, this, m_root);
+                    break;
+                }
+                case 66: {
+                    _positionAndLength = new PositionAndLengthBasic(m_io, this, m_root);
+                    break;
+                }
+                case 67: {
+                    _positionAndLength = new PositionAndLengthCode(m_io, this, m_root);
+                    break;
+                }
+                default: {
+                    _positionAndLength = new PositionAndLengthGeneric(m_io, this, m_root);
+                    break;
+                }
+                }
+                _lengthSectors = m_io.ReadU1();
+                _startingSector = m_io.ReadU1();
+                _startingTrack = m_io.ReadU1();
+            }
+            private bool f_contents;
+            private byte[] _contents;
+            public byte[] Contents
+            {
+                get
+                {
+                    if (f_contents)
+                        return _contents;
+                    f_contents = true;
+                    long _pos = m_io.Pos;
+                    m_io.Seek((StartingTrack * 256) * 16 + StartingSector * 256);
+                    _contents = m_io.ReadBytes(LengthSectors * 256);
+                    m_io.Seek(_pos);
+                    return _contents;
+                }
+            }
+            private bool f_isDeleted;
+            private bool _isDeleted;
+            public bool IsDeleted
+            {
+                get
+                {
+                    if (f_isDeleted)
+                        return _isDeleted;
+                    f_isDeleted = true;
+                    _isDeleted = (bool) (Name.FirstByte == 1);
+                    return _isDeleted;
+                }
+            }
+            private bool f_isTerminator;
+            private bool _isTerminator;
+            public bool IsTerminator
+            {
+                get
+                {
+                    if (f_isTerminator)
+                        return _isTerminator;
+                    f_isTerminator = true;
+                    _isTerminator = (bool) (Name.FirstByte == 0);
+                    return _isTerminator;
+                }
+            }
+            private Filename _name;
+            private byte _extension;
+            private KaitaiStruct _positionAndLength;
+            private byte _lengthSectors;
+            private byte _startingSector;
+            private byte _startingTrack;
+            private TrDosImage m_root;
+            private TrDosImage m_parent;
+            private byte[] __raw_name;
+            public Filename Name { get { return _name; } }
+            public byte Extension { get { return _extension; } }
+            public KaitaiStruct PositionAndLength { get { return _positionAndLength; } }
+            public byte LengthSectors { get { return _lengthSectors; } }
+            public byte StartingSector { get { return _startingSector; } }
+            public byte StartingTrack { get { return _startingTrack; } }
+            public TrDosImage M_Root { get { return m_root; } }
+            public TrDosImage M_Parent { get { return m_parent; } }
+            public byte[] M_RawName { get { return __raw_name; } }
+        }
+        public partial class Filename : KaitaiStruct
+        {
+            public static Filename FromFile(string fileName)
+            {
+                return new Filename(new KaitaiStream(fileName));
+            }
+
+            public Filename(KaitaiStream p__io, TrDosImage.File p__parent = null, TrDosImage p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_firstByte = false;
+                _read();
+            }
+            private void _read()
+            {
+                _name = m_io.ReadBytes(8);
+            }
+            private bool f_firstByte;
+            private byte _firstByte;
+            public byte FirstByte
+            {
+                get
+                {
+                    if (f_firstByte)
+                        return _firstByte;
+                    f_firstByte = true;
+                    long _pos = m_io.Pos;
+                    m_io.Seek(0);
+                    _firstByte = m_io.ReadU1();
+                    m_io.Seek(_pos);
+                    return _firstByte;
+                }
+            }
+            private byte[] _name;
+            private TrDosImage m_root;
+            private TrDosImage.File m_parent;
+            public byte[] Name { get { return _name; } }
+            public TrDosImage M_Root { get { return m_root; } }
+            public TrDosImage.File M_Parent { get { return m_parent; } }
+        }
+        public partial class PositionAndLengthBasic : KaitaiStruct
+        {
+            public static PositionAndLengthBasic FromFile(string fileName)
+            {
+                return new PositionAndLengthBasic(new KaitaiStream(fileName));
+            }
+
+            public PositionAndLengthBasic(KaitaiStream p__io, TrDosImage.File p__parent = null, TrDosImage p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _programAndDataLength = m_io.ReadU2le();
+                _programLength = m_io.ReadU2le();
+            }
+            private ushort _programAndDataLength;
+            private ushort _programLength;
+            private TrDosImage m_root;
+            private TrDosImage.File m_parent;
+            public ushort ProgramAndDataLength { get { return _programAndDataLength; } }
+            public ushort ProgramLength { get { return _programLength; } }
+            public TrDosImage M_Root { get { return m_root; } }
+            public TrDosImage.File M_Parent { get { return m_parent; } }
+        }
+        public partial class PositionAndLengthCode : KaitaiStruct
+        {
+            public static PositionAndLengthCode FromFile(string fileName)
+            {
+                return new PositionAndLengthCode(new KaitaiStream(fileName));
+            }
+
+            public PositionAndLengthCode(KaitaiStream p__io, TrDosImage.File p__parent = null, TrDosImage p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _startAddress = m_io.ReadU2le();
+                _length = m_io.ReadU2le();
+            }
+            private ushort _startAddress;
+            private ushort _length;
+            private TrDosImage m_root;
+            private TrDosImage.File m_parent;
+
+            /// <summary>
+            /// Default memory address to load this byte array into
+            /// </summary>
+            public ushort StartAddress { get { return _startAddress; } }
+            public ushort Length { get { return _length; } }
+            public TrDosImage M_Root { get { return m_root; } }
+            public TrDosImage.File M_Parent { get { return m_parent; } }
+        }
+        public partial class PositionAndLengthGeneric : KaitaiStruct
+        {
+            public static PositionAndLengthGeneric FromFile(string fileName)
+            {
+                return new PositionAndLengthGeneric(new KaitaiStream(fileName));
+            }
+
+            public PositionAndLengthGeneric(KaitaiStream p__io, TrDosImage.File p__parent = null, TrDosImage p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _reserved = m_io.ReadU2le();
+                _length = m_io.ReadU2le();
+            }
+            private ushort _reserved;
+            private ushort _length;
+            private TrDosImage m_root;
+            private TrDosImage.File m_parent;
+            public ushort Reserved { get { return _reserved; } }
+            public ushort Length { get { return _length; } }
+            public TrDosImage M_Root { get { return m_root; } }
+            public TrDosImage.File M_Parent { get { return m_parent; } }
+        }
+        public partial class PositionAndLengthPrint : KaitaiStruct
+        {
+            public static PositionAndLengthPrint FromFile(string fileName)
+            {
+                return new PositionAndLengthPrint(new KaitaiStream(fileName));
+            }
+
+            public PositionAndLengthPrint(KaitaiStream p__io, TrDosImage.File p__parent = null, TrDosImage p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _extentNo = m_io.ReadU1();
+                _reserved = m_io.ReadU1();
+                _length = m_io.ReadU2le();
+            }
+            private byte _extentNo;
+            private byte _reserved;
+            private ushort _length;
+            private TrDosImage m_root;
+            private TrDosImage.File m_parent;
+            public byte ExtentNo { get { return _extentNo; } }
+            public byte Reserved { get { return _reserved; } }
+            public ushort Length { get { return _length; } }
+            public TrDosImage M_Root { get { return m_root; } }
+            public TrDosImage.File M_Parent { get { return m_parent; } }
+        }
         public partial class VolumeInfo : KaitaiStruct
         {
             public static VolumeInfo FromFile(string fileName)
@@ -71,16 +332,16 @@ namespace Kaitai
             {
                 m_parent = p__parent;
                 m_root = p__root;
-                f_numTracks = false;
                 f_numSides = false;
+                f_numTracks = false;
                 _read();
             }
             private void _read()
             {
                 _catalogEnd = m_io.ReadBytes(1);
-                if (!((KaitaiStream.ByteArrayCompare(CatalogEnd, new byte[] { 0 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_catalogEnd, new byte[] { 0 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 0 }, CatalogEnd, M_Io, "/types/volume_info/seq/0");
+                    throw new ValidationNotEqualError(new byte[] { 0 }, _catalogEnd, m_io, "/types/volume_info/seq/0");
                 }
                 _unused = m_io.ReadBytes(224);
                 _firstFreeSectorSector = m_io.ReadU1();
@@ -89,9 +350,9 @@ namespace Kaitai
                 _numFiles = m_io.ReadU1();
                 _numFreeSectors = m_io.ReadU2le();
                 _trDosId = m_io.ReadBytes(1);
-                if (!((KaitaiStream.ByteArrayCompare(TrDosId, new byte[] { 16 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_trDosId, new byte[] { 16 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 16 }, TrDosId, M_Io, "/types/volume_info/seq/7");
+                    throw new ValidationNotEqualError(new byte[] { 16 }, _trDosId, m_io, "/types/volume_info/seq/7");
                 }
                 _unused2 = m_io.ReadBytes(2);
                 _password = m_io.ReadBytes(9);
@@ -99,19 +360,6 @@ namespace Kaitai
                 _numDeletedFiles = m_io.ReadU1();
                 _label = m_io.ReadBytes(8);
                 _unused4 = m_io.ReadBytes(3);
-            }
-            private bool f_numTracks;
-            private sbyte _numTracks;
-            public sbyte NumTracks
-            {
-                get
-                {
-                    if (f_numTracks)
-                        return _numTracks;
-                    _numTracks = (sbyte) (((DiskType & 1) != 0 ? 40 : 80));
-                    f_numTracks = true;
-                    return _numTracks;
-                }
             }
             private bool f_numSides;
             private sbyte _numSides;
@@ -121,9 +369,22 @@ namespace Kaitai
                 {
                     if (f_numSides)
                         return _numSides;
-                    _numSides = (sbyte) (((DiskType & 8) != 0 ? 1 : 2));
                     f_numSides = true;
+                    _numSides = (sbyte) (((((int) DiskType) & 8) != 0 ? 1 : 2));
                     return _numSides;
+                }
+            }
+            private bool f_numTracks;
+            private sbyte _numTracks;
+            public sbyte NumTracks
+            {
+                get
+                {
+                    if (f_numTracks)
+                        return _numTracks;
+                    f_numTracks = true;
+                    _numTracks = (sbyte) (((((int) DiskType) & 1) != 0 ? 40 : 80));
+                    return _numTracks;
                 }
             }
             private byte[] _catalogEnd;
@@ -170,267 +431,6 @@ namespace Kaitai
             public TrDosImage M_Root { get { return m_root; } }
             public TrDosImage M_Parent { get { return m_parent; } }
         }
-        public partial class PositionAndLengthCode : KaitaiStruct
-        {
-            public static PositionAndLengthCode FromFile(string fileName)
-            {
-                return new PositionAndLengthCode(new KaitaiStream(fileName));
-            }
-
-            public PositionAndLengthCode(KaitaiStream p__io, TrDosImage.File p__parent = null, TrDosImage p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _startAddress = m_io.ReadU2le();
-                _length = m_io.ReadU2le();
-            }
-            private ushort _startAddress;
-            private ushort _length;
-            private TrDosImage m_root;
-            private TrDosImage.File m_parent;
-
-            /// <summary>
-            /// Default memory address to load this byte array into
-            /// </summary>
-            public ushort StartAddress { get { return _startAddress; } }
-            public ushort Length { get { return _length; } }
-            public TrDosImage M_Root { get { return m_root; } }
-            public TrDosImage.File M_Parent { get { return m_parent; } }
-        }
-        public partial class Filename : KaitaiStruct
-        {
-            public static Filename FromFile(string fileName)
-            {
-                return new Filename(new KaitaiStream(fileName));
-            }
-
-            public Filename(KaitaiStream p__io, TrDosImage.File p__parent = null, TrDosImage p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_firstByte = false;
-                _read();
-            }
-            private void _read()
-            {
-                _name = m_io.ReadBytes(8);
-            }
-            private bool f_firstByte;
-            private byte _firstByte;
-            public byte FirstByte
-            {
-                get
-                {
-                    if (f_firstByte)
-                        return _firstByte;
-                    long _pos = m_io.Pos;
-                    m_io.Seek(0);
-                    _firstByte = m_io.ReadU1();
-                    m_io.Seek(_pos);
-                    f_firstByte = true;
-                    return _firstByte;
-                }
-            }
-            private byte[] _name;
-            private TrDosImage m_root;
-            private TrDosImage.File m_parent;
-            public byte[] Name { get { return _name; } }
-            public TrDosImage M_Root { get { return m_root; } }
-            public TrDosImage.File M_Parent { get { return m_parent; } }
-        }
-        public partial class PositionAndLengthPrint : KaitaiStruct
-        {
-            public static PositionAndLengthPrint FromFile(string fileName)
-            {
-                return new PositionAndLengthPrint(new KaitaiStream(fileName));
-            }
-
-            public PositionAndLengthPrint(KaitaiStream p__io, TrDosImage.File p__parent = null, TrDosImage p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _extentNo = m_io.ReadU1();
-                _reserved = m_io.ReadU1();
-                _length = m_io.ReadU2le();
-            }
-            private byte _extentNo;
-            private byte _reserved;
-            private ushort _length;
-            private TrDosImage m_root;
-            private TrDosImage.File m_parent;
-            public byte ExtentNo { get { return _extentNo; } }
-            public byte Reserved { get { return _reserved; } }
-            public ushort Length { get { return _length; } }
-            public TrDosImage M_Root { get { return m_root; } }
-            public TrDosImage.File M_Parent { get { return m_parent; } }
-        }
-        public partial class PositionAndLengthGeneric : KaitaiStruct
-        {
-            public static PositionAndLengthGeneric FromFile(string fileName)
-            {
-                return new PositionAndLengthGeneric(new KaitaiStream(fileName));
-            }
-
-            public PositionAndLengthGeneric(KaitaiStream p__io, TrDosImage.File p__parent = null, TrDosImage p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _reserved = m_io.ReadU2le();
-                _length = m_io.ReadU2le();
-            }
-            private ushort _reserved;
-            private ushort _length;
-            private TrDosImage m_root;
-            private TrDosImage.File m_parent;
-            public ushort Reserved { get { return _reserved; } }
-            public ushort Length { get { return _length; } }
-            public TrDosImage M_Root { get { return m_root; } }
-            public TrDosImage.File M_Parent { get { return m_parent; } }
-        }
-        public partial class PositionAndLengthBasic : KaitaiStruct
-        {
-            public static PositionAndLengthBasic FromFile(string fileName)
-            {
-                return new PositionAndLengthBasic(new KaitaiStream(fileName));
-            }
-
-            public PositionAndLengthBasic(KaitaiStream p__io, TrDosImage.File p__parent = null, TrDosImage p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _programAndDataLength = m_io.ReadU2le();
-                _programLength = m_io.ReadU2le();
-            }
-            private ushort _programAndDataLength;
-            private ushort _programLength;
-            private TrDosImage m_root;
-            private TrDosImage.File m_parent;
-            public ushort ProgramAndDataLength { get { return _programAndDataLength; } }
-            public ushort ProgramLength { get { return _programLength; } }
-            public TrDosImage M_Root { get { return m_root; } }
-            public TrDosImage.File M_Parent { get { return m_parent; } }
-        }
-        public partial class File : KaitaiStruct
-        {
-            public static File FromFile(string fileName)
-            {
-                return new File(new KaitaiStream(fileName));
-            }
-
-            public File(KaitaiStream p__io, TrDosImage p__parent = null, TrDosImage p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_isDeleted = false;
-                f_isTerminator = false;
-                f_contents = false;
-                _read();
-            }
-            private void _read()
-            {
-                __raw_name = m_io.ReadBytes(8);
-                var io___raw_name = new KaitaiStream(__raw_name);
-                _name = new Filename(io___raw_name, this, m_root);
-                _extension = m_io.ReadU1();
-                switch (Extension) {
-                case 66: {
-                    _positionAndLength = new PositionAndLengthBasic(m_io, this, m_root);
-                    break;
-                }
-                case 67: {
-                    _positionAndLength = new PositionAndLengthCode(m_io, this, m_root);
-                    break;
-                }
-                case 35: {
-                    _positionAndLength = new PositionAndLengthPrint(m_io, this, m_root);
-                    break;
-                }
-                default: {
-                    _positionAndLength = new PositionAndLengthGeneric(m_io, this, m_root);
-                    break;
-                }
-                }
-                _lengthSectors = m_io.ReadU1();
-                _startingSector = m_io.ReadU1();
-                _startingTrack = m_io.ReadU1();
-            }
-            private bool f_isDeleted;
-            private bool _isDeleted;
-            public bool IsDeleted
-            {
-                get
-                {
-                    if (f_isDeleted)
-                        return _isDeleted;
-                    _isDeleted = (bool) (Name.FirstByte == 1);
-                    f_isDeleted = true;
-                    return _isDeleted;
-                }
-            }
-            private bool f_isTerminator;
-            private bool _isTerminator;
-            public bool IsTerminator
-            {
-                get
-                {
-                    if (f_isTerminator)
-                        return _isTerminator;
-                    _isTerminator = (bool) (Name.FirstByte == 0);
-                    f_isTerminator = true;
-                    return _isTerminator;
-                }
-            }
-            private bool f_contents;
-            private byte[] _contents;
-            public byte[] Contents
-            {
-                get
-                {
-                    if (f_contents)
-                        return _contents;
-                    long _pos = m_io.Pos;
-                    m_io.Seek((((StartingTrack * 256) * 16) + (StartingSector * 256)));
-                    _contents = m_io.ReadBytes((LengthSectors * 256));
-                    m_io.Seek(_pos);
-                    f_contents = true;
-                    return _contents;
-                }
-            }
-            private Filename _name;
-            private byte _extension;
-            private KaitaiStruct _positionAndLength;
-            private byte _lengthSectors;
-            private byte _startingSector;
-            private byte _startingTrack;
-            private TrDosImage m_root;
-            private TrDosImage m_parent;
-            private byte[] __raw_name;
-            public Filename Name { get { return _name; } }
-            public byte Extension { get { return _extension; } }
-            public KaitaiStruct PositionAndLength { get { return _positionAndLength; } }
-            public byte LengthSectors { get { return _lengthSectors; } }
-            public byte StartingSector { get { return _startingSector; } }
-            public byte StartingTrack { get { return _startingTrack; } }
-            public TrDosImage M_Root { get { return m_root; } }
-            public TrDosImage M_Parent { get { return m_parent; } }
-            public byte[] M_RawName { get { return __raw_name; } }
-        }
         private bool f_volumeInfo;
         private VolumeInfo _volumeInfo;
         public VolumeInfo VolumeInfo
@@ -439,11 +439,11 @@ namespace Kaitai
             {
                 if (f_volumeInfo)
                     return _volumeInfo;
+                f_volumeInfo = true;
                 long _pos = m_io.Pos;
                 m_io.Seek(2048);
                 _volumeInfo = new VolumeInfo(m_io, this, m_root);
                 m_io.Seek(_pos);
-                f_volumeInfo = true;
                 return _volumeInfo;
             }
         }

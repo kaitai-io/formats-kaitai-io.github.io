@@ -3,12 +3,15 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class pcx_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -33,8 +36,19 @@ class pcx_t : public kaitai::kstruct {
 
 public:
     class header_t;
-    class t_palette_256_t;
     class rgb_t;
+    class t_palette_256_t;
+
+    enum encodings_t {
+        ENCODINGS_RLE = 1
+    };
+    static bool _is_defined_encodings_t(encodings_t v);
+
+private:
+    static const std::set<encodings_t> _values_encodings_t;
+    static std::set<encodings_t> _build_values_encodings_t();
+
+public:
 
     enum versions_t {
         VERSIONS_V2_5 = 0,
@@ -43,10 +57,13 @@ public:
         VERSIONS_PAINTBRUSH_FOR_WINDOWS = 4,
         VERSIONS_V3_0 = 5
     };
+    static bool _is_defined_versions_t(versions_t v);
 
-    enum encodings_t {
-        ENCODINGS_RLE = 1
-    };
+private:
+    static const std::set<versions_t> _values_versions_t;
+    static std::set<versions_t> _build_values_versions_t();
+
+public:
 
     pcx_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, pcx_t* p__root = 0);
 
@@ -125,32 +142,6 @@ public:
         pcx_t* _parent() const { return m__parent; }
     };
 
-    class t_palette_256_t : public kaitai::kstruct {
-
-    public:
-
-        t_palette_256_t(kaitai::kstream* p__io, pcx_t* p__parent = 0, pcx_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~t_palette_256_t();
-
-    private:
-        std::string m_magic;
-        std::vector<rgb_t*>* m_colors;
-        pcx_t* m__root;
-        pcx_t* m__parent;
-
-    public:
-        std::string magic() const { return m_magic; }
-        std::vector<rgb_t*>* colors() const { return m_colors; }
-        pcx_t* _root() const { return m__root; }
-        pcx_t* _parent() const { return m__parent; }
-    };
-
     class rgb_t : public kaitai::kstruct {
 
     public:
@@ -177,6 +168,32 @@ public:
         uint8_t b() const { return m_b; }
         pcx_t* _root() const { return m__root; }
         pcx_t::t_palette_256_t* _parent() const { return m__parent; }
+    };
+
+    class t_palette_256_t : public kaitai::kstruct {
+
+    public:
+
+        t_palette_256_t(kaitai::kstream* p__io, pcx_t* p__parent = 0, pcx_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~t_palette_256_t();
+
+    private:
+        std::string m_magic;
+        std::vector<rgb_t*>* m_colors;
+        pcx_t* m__root;
+        pcx_t* m__parent;
+
+    public:
+        std::string magic() const { return m_magic; }
+        std::vector<rgb_t*>* colors() const { return m_colors; }
+        pcx_t* _root() const { return m__root; }
+        pcx_t* _parent() const { return m__parent; }
     };
 
 private:

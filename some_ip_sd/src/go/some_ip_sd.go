@@ -24,7 +24,7 @@ type SomeIpSd struct {
 	Options *SomeIpSdOptions
 	_io *kaitai.Stream
 	_root *SomeIpSd
-	_parent interface{}
+	_parent kaitai.Struct
 	_raw_Entries []byte
 	_raw_Options []byte
 }
@@ -33,7 +33,11 @@ func NewSomeIpSd() *SomeIpSd {
 	}
 }
 
-func (this *SomeIpSd) Read(io *kaitai.Stream, parent interface{}, root *SomeIpSd) (err error) {
+func (this SomeIpSd) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *SomeIpSd) Read(io *kaitai.Stream, parent kaitai.Struct, root *SomeIpSd) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -63,7 +67,7 @@ func (this *SomeIpSd) Read(io *kaitai.Stream, parent interface{}, root *SomeIpSd
 	this._raw_Entries = tmp4
 	_io__raw_Entries := kaitai.NewStream(bytes.NewReader(this._raw_Entries))
 	tmp5 := NewSomeIpSdEntries()
-	err = tmp5.Read(_io__raw_Entries, this, nil)
+	err = tmp5.Read(_io__raw_Entries, nil, nil)
 	if err != nil {
 		return err
 	}
@@ -81,7 +85,7 @@ func (this *SomeIpSd) Read(io *kaitai.Stream, parent interface{}, root *SomeIpSd
 	this._raw_Options = tmp7
 	_io__raw_Options := kaitai.NewStream(bytes.NewReader(this._raw_Options))
 	tmp8 := NewSomeIpSdOptions()
-	err = tmp8.Read(_io__raw_Options, this, nil)
+	err = tmp8.Read(_io__raw_Options, nil, nil)
 	if err != nil {
 		return err
 	}
@@ -108,6 +112,10 @@ type SomeIpSd_SdFlags struct {
 func NewSomeIpSd_SdFlags() *SomeIpSd_SdFlags {
 	return &SomeIpSd_SdFlags{
 	}
+}
+
+func (this SomeIpSd_SdFlags) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *SomeIpSd_SdFlags) Read(io *kaitai.Stream, parent *SomeIpSd, root *SomeIpSd) (err error) {

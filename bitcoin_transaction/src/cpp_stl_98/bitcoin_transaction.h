@@ -3,12 +3,15 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class bitcoin_transaction_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <vector>
+#include <set>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -58,6 +61,13 @@ public:
                 SIGHASH_TYPE_SIGHASH_SINGLE = 3,
                 SIGHASH_TYPE_SIGHASH_ANYONECANPAY = 80
             };
+            static bool _is_defined_sighash_type_t(sighash_type_t v);
+
+        private:
+            static const std::set<sighash_type_t> _values_sighash_type_t;
+            static std::set<sighash_type_t> _build_values_sighash_type_t();
+
+        public:
 
             script_signature_t(kaitai::kstream* p__io, bitcoin_transaction_t::vin_t* p__parent = 0, bitcoin_transaction_t* p__root = 0);
 

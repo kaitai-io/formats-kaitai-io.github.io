@@ -1,18 +1,19 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class NtMdtPal(KaitaiStruct):
     """It is a color scheme for visualising SPM scans."""
     def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
+        super(NtMdtPal, self).__init__(_io)
         self._parent = _parent
-        self._root = _root if _root else self
+        self._root = _root or self
         self._read()
 
     def _read(self):
@@ -30,11 +31,68 @@ class NtMdtPal(KaitaiStruct):
             self.tables.append(NtMdtPal.ColTable(i, self._io, self, self._root))
 
 
+
+    def _fetch_instances(self):
+        pass
+        for i in range(len(self.meta)):
+            pass
+            self.meta[i]._fetch_instances()
+
+        for i in range(len(self.tables)):
+            pass
+            self.tables[i]._fetch_instances()
+
+
+    class ColTable(KaitaiStruct):
+        def __init__(self, index, _io, _parent=None, _root=None):
+            super(NtMdtPal.ColTable, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self.index = index
+            self._read()
+
+        def _read(self):
+            self.size1 = self._io.read_u1()
+            self.unkn = self._io.read_u1()
+            self.title = (self._io.read_bytes(self._root.meta[self.index].name_size)).decode(u"UTF-16LE")
+            self.unkn1 = self._io.read_u2be()
+            self.colors = []
+            for i in range(self._root.meta[self.index].colors_count - 1):
+                self.colors.append(NtMdtPal.Color(self._io, self, self._root))
+
+
+
+        def _fetch_instances(self):
+            pass
+            for i in range(len(self.colors)):
+                pass
+                self.colors[i]._fetch_instances()
+
+
+
+    class Color(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(NtMdtPal.Color, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.red = self._io.read_u1()
+            self.unkn = self._io.read_u1()
+            self.blue = self._io.read_u1()
+            self.green = self._io.read_u1()
+
+
+        def _fetch_instances(self):
+            pass
+
+
     class Meta(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(NtMdtPal.Meta, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -49,37 +107,8 @@ class NtMdtPal(KaitaiStruct):
             self.name_size = self._io.read_u2be()
 
 
-    class Color(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.red = self._io.read_u1()
-            self.unkn = self._io.read_u1()
-            self.blue = self._io.read_u1()
-            self.green = self._io.read_u1()
-
-
-    class ColTable(KaitaiStruct):
-        def __init__(self, index, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self.index = index
-            self._read()
-
-        def _read(self):
-            self.size1 = self._io.read_u1()
-            self.unkn = self._io.read_u1()
-            self.title = (self._io.read_bytes(self._root.meta[self.index].name_size)).decode(u"UTF-16LE")
-            self.unkn1 = self._io.read_u2be()
-            self.colors = []
-            for i in range((self._root.meta[self.index].colors_count - 1)):
-                self.colors.append(NtMdtPal.Color(self._io, self, self._root))
-
+        def _fetch_instances(self):
+            pass
 
 
 

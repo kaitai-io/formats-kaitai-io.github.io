@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.Ogg = factory(root.KaitaiStream);
+    factory(root.Ogg || (root.Ogg = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Ogg_, KaitaiStream) {
 /**
  * Ogg is a popular media container format, which provides basic
  * streaming / buffering mechanisms and is content-agnostic. Most
@@ -47,18 +47,18 @@ var Ogg = (function() {
     function Page(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     Page.prototype._read = function() {
       this.syncCode = this._io.readBytes(4);
-      if (!((KaitaiStream.byteArrayCompare(this.syncCode, [79, 103, 103, 83]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([79, 103, 103, 83], this.syncCode, this._io, "/types/page/seq/0");
+      if (!((KaitaiStream.byteArrayCompare(this.syncCode, new Uint8Array([79, 103, 103, 83])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([79, 103, 103, 83]), this.syncCode, this._io, "/types/page/seq/0");
       }
       this.version = this._io.readBytes(1);
-      if (!((KaitaiStream.byteArrayCompare(this.version, [0]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([0], this.version, this._io, "/types/page/seq/1");
+      if (!((KaitaiStream.byteArrayCompare(this.version, new Uint8Array([0])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([0]), this.version, this._io, "/types/page/seq/1");
       }
       this.reserved1 = this._io.readBitsIntBe(5);
       this.isEndOfStream = this._io.readBitsIntBe(1) != 0;
@@ -152,5 +152,5 @@ var Ogg = (function() {
 
   return Ogg;
 })();
-return Ogg;
-}));
+Ogg_.Ogg = Ogg;
+});

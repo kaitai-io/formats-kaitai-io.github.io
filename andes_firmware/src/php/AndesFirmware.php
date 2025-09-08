@@ -7,8 +7,8 @@
 
 namespace {
     class AndesFirmware extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \AndesFirmware $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\AndesFirmware $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -32,7 +32,7 @@ namespace {
 
 namespace AndesFirmware {
     class ImageHeader extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \AndesFirmware $_parent = null, \AndesFirmware $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\AndesFirmware $_parent = null, ?\AndesFirmware $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }

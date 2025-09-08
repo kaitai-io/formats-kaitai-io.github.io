@@ -17,26 +17,26 @@ digraph {
 			<TR><TD PORT="frames_pos">...</TD><TD PORT="frames_size">...</TD><TD>MdlFrame</TD><TD PORT="frames_type">frames</TD></TR>
 			<TR><TD COLSPAN="4" PORT="frames__repeat">repeat header.num_frames times</TD></TR>
 		</TABLE>>];
-		subgraph cluster__mdl_vertex {
-			label="QuakeMdl::MdlVertex";
+		subgraph cluster__mdl_frame {
+			label="QuakeMdl::MdlFrame";
 			graph[style=dotted];
 
-			mdl_vertex__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			mdl_frame__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="values_pos">0</TD><TD PORT="values_size">1</TD><TD>u1</TD><TD PORT="values_type">values</TD></TR>
-				<TR><TD COLSPAN="4" PORT="values__repeat">repeat 3 times</TD></TR>
-				<TR><TD PORT="normal_index_pos">3</TD><TD PORT="normal_index_size">1</TD><TD>u1</TD><TD PORT="normal_index_type">normal_index</TD></TR>
+				<TR><TD PORT="type_pos">0</TD><TD PORT="type_size">4</TD><TD>s4le</TD><TD PORT="type_type">type</TD></TR>
+				<TR><TD PORT="min_pos">4</TD><TD PORT="min_size">4</TD><TD>MdlVertex</TD><TD PORT="min_type">min</TD></TR>
+				<TR><TD COLSPAN="4" PORT="min__if">if type != 0</TD></TR>
+				<TR><TD PORT="max_pos">8</TD><TD PORT="max_size">4</TD><TD>MdlVertex</TD><TD PORT="max_type">max</TD></TR>
+				<TR><TD COLSPAN="4" PORT="max__if">if type != 0</TD></TR>
+				<TR><TD PORT="time_pos">12</TD><TD PORT="time_size">4</TD><TD>f4le</TD><TD PORT="time_type">time</TD></TR>
+				<TR><TD COLSPAN="4" PORT="time__repeat">repeat type times</TD></TR>
+				<TR><TD COLSPAN="4" PORT="time__if">if type != 0</TD></TR>
+				<TR><TD PORT="frames_pos">...</TD><TD PORT="frames_size">...</TD><TD>MdlSimpleFrame</TD><TD PORT="frames_type">frames</TD></TR>
+				<TR><TD COLSPAN="4" PORT="frames__repeat">repeat num_simple_frames times</TD></TR>
 			</TABLE>>];
-		}
-		subgraph cluster__mdl_texcoord {
-			label="QuakeMdl::MdlTexcoord";
-			graph[style=dotted];
-
-			mdl_texcoord__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="on_seam_pos">0</TD><TD PORT="on_seam_size">4</TD><TD>s4le</TD><TD PORT="on_seam_type">on_seam</TD></TR>
-				<TR><TD PORT="s_pos">4</TD><TD PORT="s_size">4</TD><TD>s4le</TD><TD PORT="s_type">s</TD></TR>
-				<TR><TD PORT="t_pos">8</TD><TD PORT="t_size">4</TD><TD>s4le</TD><TD PORT="t_type">t</TD></TR>
+			mdl_frame__inst__num_simple_frames [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>num_simple_frames</TD><TD>(type == 0 ? 1 : type)</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__mdl_header {
@@ -45,8 +45,9 @@ digraph {
 
 			mdl_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="ident_pos">0</TD><TD PORT="ident_size">4</TD><TD></TD><TD PORT="ident_type">ident</TD></TR>
+				<TR><TD PORT="ident_pos">0</TD><TD PORT="ident_size">4</TD><TD>49 44 50 4F</TD><TD PORT="ident_type">ident</TD></TR>
 				<TR><TD PORT="version_pos">4</TD><TD PORT="version_size">4</TD><TD>s4le</TD><TD PORT="version_type">version</TD></TR>
+				<TR><TD COLSPAN="4" PORT="version__valid">must be equal to 6</TD></TR>
 				<TR><TD PORT="scale_pos">8</TD><TD PORT="scale_size">12</TD><TD>Vec3</TD><TD PORT="scale_type">scale</TD></TR>
 				<TR><TD PORT="origin_pos">20</TD><TD PORT="origin_size">12</TD><TD>Vec3</TD><TD PORT="origin_type">origin</TD></TR>
 				<TR><TD PORT="radius_pos">32</TD><TD PORT="radius_size">4</TD><TD>f4le</TD><TD PORT="radius_type">radius</TD></TR>
@@ -63,41 +64,7 @@ digraph {
 			</TABLE>>];
 			mdl_header__inst__skin_size [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>skin_size</TD><TD>(skin_width * skin_height)</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__mdl_skin {
-			label="QuakeMdl::MdlSkin";
-			graph[style=dotted];
-
-			mdl_skin__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="group_pos">0</TD><TD PORT="group_size">4</TD><TD>s4le</TD><TD PORT="group_type">group</TD></TR>
-				<TR><TD PORT="single_texture_data_pos">4</TD><TD PORT="single_texture_data_size">_root.header.skin_size</TD><TD></TD><TD PORT="single_texture_data_type">single_texture_data</TD></TR>
-				<TR><TD PORT="num_frames_pos">...</TD><TD PORT="num_frames_size">4</TD><TD>u4le</TD><TD PORT="num_frames_type">num_frames</TD></TR>
-				<TR><TD PORT="frame_times_pos">...</TD><TD PORT="frame_times_size">4</TD><TD>f4le</TD><TD PORT="frame_times_type">frame_times</TD></TR>
-				<TR><TD COLSPAN="4" PORT="frame_times__repeat">repeat num_frames times</TD></TR>
-				<TR><TD PORT="group_texture_data_pos">...</TD><TD PORT="group_texture_data_size">_root.header.skin_size</TD><TD></TD><TD PORT="group_texture_data_type">group_texture_data</TD></TR>
-				<TR><TD COLSPAN="4" PORT="group_texture_data__repeat">repeat num_frames times</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__mdl_frame {
-			label="QuakeMdl::MdlFrame";
-			graph[style=dotted];
-
-			mdl_frame__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="type_pos">0</TD><TD PORT="type_size">4</TD><TD>s4le</TD><TD PORT="type_type">type</TD></TR>
-				<TR><TD PORT="min_pos">4</TD><TD PORT="min_size">4</TD><TD>MdlVertex</TD><TD PORT="min_type">min</TD></TR>
-				<TR><TD PORT="max_pos">8</TD><TD PORT="max_size">4</TD><TD>MdlVertex</TD><TD PORT="max_type">max</TD></TR>
-				<TR><TD PORT="time_pos">12</TD><TD PORT="time_size">4</TD><TD>f4le</TD><TD PORT="time_type">time</TD></TR>
-				<TR><TD COLSPAN="4" PORT="time__repeat">repeat type times</TD></TR>
-				<TR><TD PORT="frames_pos">...</TD><TD PORT="frames_size">...</TD><TD>MdlSimpleFrame</TD><TD PORT="frames_type">frames</TD></TR>
-				<TR><TD COLSPAN="4" PORT="frames__repeat">repeat num_simple_frames times</TD></TR>
-			</TABLE>>];
-			mdl_frame__inst__num_simple_frames [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>num_simple_frames</TD><TD>(type == 0 ? 1 : type)</TD></TR>
+				<TR><TD>skin_size</TD><TD>skin_width * skin_height</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__mdl_simple_frame {
@@ -113,6 +80,36 @@ digraph {
 				<TR><TD COLSPAN="4" PORT="vertices__repeat">repeat _root.header.num_verts times</TD></TR>
 			</TABLE>>];
 		}
+		subgraph cluster__mdl_skin {
+			label="QuakeMdl::MdlSkin";
+			graph[style=dotted];
+
+			mdl_skin__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="group_pos">0</TD><TD PORT="group_size">4</TD><TD>s4le</TD><TD PORT="group_type">group</TD></TR>
+				<TR><TD PORT="single_texture_data_pos">4</TD><TD PORT="single_texture_data_size">_root.header.skin_size</TD><TD></TD><TD PORT="single_texture_data_type">single_texture_data</TD></TR>
+				<TR><TD COLSPAN="4" PORT="single_texture_data__if">if group == 0</TD></TR>
+				<TR><TD PORT="num_frames_pos">...</TD><TD PORT="num_frames_size">4</TD><TD>u4le</TD><TD PORT="num_frames_type">num_frames</TD></TR>
+				<TR><TD COLSPAN="4" PORT="num_frames__if">if group != 0</TD></TR>
+				<TR><TD PORT="frame_times_pos">...</TD><TD PORT="frame_times_size">4</TD><TD>f4le</TD><TD PORT="frame_times_type">frame_times</TD></TR>
+				<TR><TD COLSPAN="4" PORT="frame_times__repeat">repeat num_frames times</TD></TR>
+				<TR><TD COLSPAN="4" PORT="frame_times__if">if group != 0</TD></TR>
+				<TR><TD PORT="group_texture_data_pos">...</TD><TD PORT="group_texture_data_size">_root.header.skin_size</TD><TD></TD><TD PORT="group_texture_data_type">group_texture_data</TD></TR>
+				<TR><TD COLSPAN="4" PORT="group_texture_data__repeat">repeat num_frames times</TD></TR>
+				<TR><TD COLSPAN="4" PORT="group_texture_data__if">if group != 0</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__mdl_texcoord {
+			label="QuakeMdl::MdlTexcoord";
+			graph[style=dotted];
+
+			mdl_texcoord__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="on_seam_pos">0</TD><TD PORT="on_seam_size">4</TD><TD>s4le</TD><TD PORT="on_seam_type">on_seam</TD></TR>
+				<TR><TD PORT="s_pos">4</TD><TD PORT="s_size">4</TD><TD>s4le</TD><TD PORT="s_type">s</TD></TR>
+				<TR><TD PORT="t_pos">8</TD><TD PORT="t_size">4</TD><TD>s4le</TD><TD PORT="t_type">t</TD></TR>
+			</TABLE>>];
+		}
 		subgraph cluster__mdl_triangle {
 			label="QuakeMdl::MdlTriangle";
 			graph[style=dotted];
@@ -122,6 +119,17 @@ digraph {
 				<TR><TD PORT="faces_front_pos">0</TD><TD PORT="faces_front_size">4</TD><TD>s4le</TD><TD PORT="faces_front_type">faces_front</TD></TR>
 				<TR><TD PORT="vertices_pos">4</TD><TD PORT="vertices_size">4</TD><TD>s4le</TD><TD PORT="vertices_type">vertices</TD></TR>
 				<TR><TD COLSPAN="4" PORT="vertices__repeat">repeat 3 times</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__mdl_vertex {
+			label="QuakeMdl::MdlVertex";
+			graph[style=dotted];
+
+			mdl_vertex__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="values_pos">0</TD><TD PORT="values_size">1</TD><TD>u1</TD><TD PORT="values_type">values</TD></TR>
+				<TR><TD COLSPAN="4" PORT="values__repeat">repeat 3 times</TD></TR>
+				<TR><TD PORT="normal_index_pos">3</TD><TD PORT="normal_index_size">1</TD><TD>u1</TD><TD PORT="normal_index_type">normal_index</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__vec3 {
@@ -145,24 +153,30 @@ digraph {
 	mdl_header__seq:num_tris_type -> quake_mdl__seq:triangles__repeat [color="#404040"];
 	quake_mdl__seq:frames_type -> mdl_frame__seq [style=bold];
 	mdl_header__seq:num_frames_type -> quake_mdl__seq:frames__repeat [color="#404040"];
+	mdl_frame__seq:min_type -> mdl_vertex__seq [style=bold];
+	mdl_frame__seq:type_type -> mdl_frame__seq:min__if [color="#404040"];
+	mdl_frame__seq:max_type -> mdl_vertex__seq [style=bold];
+	mdl_frame__seq:type_type -> mdl_frame__seq:max__if [color="#404040"];
+	mdl_frame__seq:type_type -> mdl_frame__seq:time__repeat [color="#404040"];
+	mdl_frame__seq:type_type -> mdl_frame__seq:time__if [color="#404040"];
+	mdl_frame__seq:frames_type -> mdl_simple_frame__seq [style=bold];
+	mdl_frame__inst__num_simple_frames:num_simple_frames_type -> mdl_frame__seq:frames__repeat [color="#404040"];
+	mdl_frame__seq:type_type -> mdl_frame__inst__num_simple_frames [color="#404040"];
 	mdl_header__seq:scale_type -> vec3__seq [style=bold];
 	mdl_header__seq:origin_type -> vec3__seq [style=bold];
 	mdl_header__seq:eye_position_type -> vec3__seq [style=bold];
 	mdl_header__seq:skin_width_type -> mdl_header__inst__skin_size [color="#404040"];
 	mdl_header__seq:skin_height_type -> mdl_header__inst__skin_size [color="#404040"];
-	mdl_header__inst__skin_size:skin_size_type -> mdl_skin__seq:single_texture_data_size [color="#404040"];
-	mdl_skin__seq:num_frames_type -> mdl_skin__seq:frame_times__repeat [color="#404040"];
-	mdl_header__inst__skin_size:skin_size_type -> mdl_skin__seq:group_texture_data_size [color="#404040"];
-	mdl_skin__seq:num_frames_type -> mdl_skin__seq:group_texture_data__repeat [color="#404040"];
-	mdl_frame__seq:min_type -> mdl_vertex__seq [style=bold];
-	mdl_frame__seq:max_type -> mdl_vertex__seq [style=bold];
-	mdl_frame__seq:type_type -> mdl_frame__seq:time__repeat [color="#404040"];
-	mdl_frame__seq:frames_type -> mdl_simple_frame__seq [style=bold];
-	mdl_frame__inst__num_simple_frames:num_simple_frames_type -> mdl_frame__seq:frames__repeat [color="#404040"];
-	mdl_frame__seq:type_type -> mdl_frame__inst__num_simple_frames [color="#404040"];
-	mdl_frame__seq:type_type -> mdl_frame__inst__num_simple_frames [color="#404040"];
 	mdl_simple_frame__seq:bbox_min_type -> mdl_vertex__seq [style=bold];
 	mdl_simple_frame__seq:bbox_max_type -> mdl_vertex__seq [style=bold];
 	mdl_simple_frame__seq:vertices_type -> mdl_vertex__seq [style=bold];
 	mdl_header__seq:num_verts_type -> mdl_simple_frame__seq:vertices__repeat [color="#404040"];
+	mdl_header__inst__skin_size:skin_size_type -> mdl_skin__seq:single_texture_data_size [color="#404040"];
+	mdl_skin__seq:group_type -> mdl_skin__seq:single_texture_data__if [color="#404040"];
+	mdl_skin__seq:group_type -> mdl_skin__seq:num_frames__if [color="#404040"];
+	mdl_skin__seq:num_frames_type -> mdl_skin__seq:frame_times__repeat [color="#404040"];
+	mdl_skin__seq:group_type -> mdl_skin__seq:frame_times__if [color="#404040"];
+	mdl_header__inst__skin_size:skin_size_type -> mdl_skin__seq:group_texture_data_size [color="#404040"];
+	mdl_skin__seq:num_frames_type -> mdl_skin__seq:group_texture_data__repeat [color="#404040"];
+	mdl_skin__seq:group_type -> mdl_skin__seq:group_texture_data__if [color="#404040"];
 }

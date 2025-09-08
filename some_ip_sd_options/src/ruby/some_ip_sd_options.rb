@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -14,8 +14,8 @@ end
 # @see https://www.autosar.org/fileadmin/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf
 #   - section 4.1.2.4 Options Format
 class SomeIpSdOptions < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -41,7 +41,7 @@ class SomeIpSdOptions < Kaitai::Struct::Struct
       38 => :option_types_ipv6_sd_endpoint_option,
     }
     I__OPTION_TYPES = OPTION_TYPES.invert
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -49,41 +49,41 @@ class SomeIpSdOptions < Kaitai::Struct::Struct
     def _read
       @header = SdOptionHeader.new(@_io, self, @_root)
       case header.type
-      when :option_types_load_balancing_option
-        @content = SdLoadBalancingOption.new(@_io, self, @_root)
       when :option_types_configuration_option
         @content = SdConfigurationOption.new(@_io, self, @_root)
-      when :option_types_ipv4_sd_endpoint_option
-        @content = SdIpv4SdEndpointOption.new(@_io, self, @_root)
       when :option_types_ipv4_endpoint_option
         @content = SdIpv4EndpointOption.new(@_io, self, @_root)
-      when :option_types_ipv6_sd_endpoint_option
-        @content = SdIpv6SdEndpointOption.new(@_io, self, @_root)
       when :option_types_ipv4_multicast_option
         @content = SdIpv4MulticastOption.new(@_io, self, @_root)
+      when :option_types_ipv4_sd_endpoint_option
+        @content = SdIpv4SdEndpointOption.new(@_io, self, @_root)
       when :option_types_ipv6_endpoint_option
         @content = SdIpv6EndpointOption.new(@_io, self, @_root)
       when :option_types_ipv6_multicast_option
         @content = SdIpv6MulticastOption.new(@_io, self, @_root)
+      when :option_types_ipv6_sd_endpoint_option
+        @content = SdIpv6SdEndpointOption.new(@_io, self, @_root)
+      when :option_types_load_balancing_option
+        @content = SdLoadBalancingOption.new(@_io, self, @_root)
       end
       self
     end
-    class SdOptionHeader < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
+    class SdConfigKvPair < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
 
       def _read
-        @length = @_io.read_u2be
-        @type = Kaitai::Struct::Stream::resolve_enum(SomeIpSdOptions::SdOption::OPTION_TYPES, @_io.read_u1)
+        @key = (@_io.read_bytes_term(61, false, true, true)).force_encoding("ASCII").encode('UTF-8')
+        @value = (@_io.read_bytes_full).force_encoding("ASCII").encode('UTF-8')
         self
       end
-      attr_reader :length
-      attr_reader :type
+      attr_reader :key
+      attr_reader :value
     end
     class SdConfigString < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
@@ -91,9 +91,8 @@ class SomeIpSdOptions < Kaitai::Struct::Struct
       def _read
         @length = @_io.read_u1
         if length != 0
-          @_raw_config = @_io.read_bytes(length)
-          _io__raw_config = Kaitai::Struct::Stream.new(@_raw_config)
-          @config = SdConfigKvPair.new(_io__raw_config, self, @_root)
+          _io_config = @_io.substream(length)
+          @config = SdConfigKvPair.new(_io_config, self, @_root)
         end
         self
       end
@@ -102,7 +101,7 @@ class SomeIpSdOptions < Kaitai::Struct::Struct
       attr_reader :_raw_config
     end
     class SdConfigStringsContainer < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
@@ -119,24 +118,43 @@ class SomeIpSdOptions < Kaitai::Struct::Struct
       attr_reader :config_strings
     end
     class SdConfigurationOption < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
 
       def _read
         @reserved = @_io.read_u1
-        @_raw_configurations = @_io.read_bytes((_parent.header.length - 1))
-        _io__raw_configurations = Kaitai::Struct::Stream.new(@_raw_configurations)
-        @configurations = SdConfigStringsContainer.new(_io__raw_configurations, self, @_root)
+        _io_configurations = @_io.substream(_parent.header.length - 1)
+        @configurations = SdConfigStringsContainer.new(_io_configurations, self, @_root)
         self
       end
       attr_reader :reserved
       attr_reader :configurations
       attr_reader :_raw_configurations
     end
+    class SdIpv4EndpointOption < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = nil)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        @reserved = @_io.read_u1
+        @address = @_io.read_bytes(4)
+        @reserved2 = @_io.read_u1
+        @l4_protocol = @_io.read_u1
+        @port = @_io.read_u2be
+        self
+      end
+      attr_reader :reserved
+      attr_reader :address
+      attr_reader :reserved2
+      attr_reader :l4_protocol
+      attr_reader :port
+    end
     class SdIpv4MulticastOption < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
@@ -156,81 +174,7 @@ class SomeIpSdOptions < Kaitai::Struct::Struct
       attr_reader :port
     end
     class SdIpv4SdEndpointOption < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
-
-      def _read
-        @reserved = @_io.read_u1
-        @address = @_io.read_bytes(4)
-        @reserved2 = @_io.read_u1
-        @l4_protocol = @_io.read_u1
-        @port = @_io.read_u2be
-        self
-      end
-      attr_reader :reserved
-      attr_reader :address
-      attr_reader :reserved2
-      attr_reader :l4_protocol
-      attr_reader :port
-    end
-    class SdIpv6MulticastOption < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
-
-      def _read
-        @reserved = @_io.read_u1
-        @address = @_io.read_bytes(16)
-        @reserved2 = @_io.read_u1
-        @l4_protocol = @_io.read_u1
-        @port = @_io.read_u2be
-        self
-      end
-      attr_reader :reserved
-      attr_reader :address
-      attr_reader :reserved2
-      attr_reader :l4_protocol
-      attr_reader :port
-    end
-    class SdConfigKvPair < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
-
-      def _read
-        @key = (@_io.read_bytes_term(61, false, true, true)).force_encoding("ASCII")
-        @value = (@_io.read_bytes_full).force_encoding("ASCII")
-        self
-      end
-      attr_reader :key
-      attr_reader :value
-    end
-    class SdIpv6SdEndpointOption < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
-
-      def _read
-        @reserved = @_io.read_u1
-        @address = @_io.read_bytes(16)
-        @reserved2 = @_io.read_u1
-        @l4_protocol = @_io.read_u1
-        @port = @_io.read_u2be
-        self
-      end
-      attr_reader :reserved
-      attr_reader :address
-      attr_reader :reserved2
-      attr_reader :l4_protocol
-      attr_reader :port
-    end
-    class SdIpv4EndpointOption < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
@@ -250,7 +194,47 @@ class SomeIpSdOptions < Kaitai::Struct::Struct
       attr_reader :port
     end
     class SdIpv6EndpointOption < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        @reserved = @_io.read_u1
+        @address = @_io.read_bytes(16)
+        @reserved2 = @_io.read_u1
+        @l4_protocol = @_io.read_u1
+        @port = @_io.read_u2be
+        self
+      end
+      attr_reader :reserved
+      attr_reader :address
+      attr_reader :reserved2
+      attr_reader :l4_protocol
+      attr_reader :port
+    end
+    class SdIpv6MulticastOption < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = nil)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        @reserved = @_io.read_u1
+        @address = @_io.read_bytes(16)
+        @reserved2 = @_io.read_u1
+        @l4_protocol = @_io.read_u1
+        @port = @_io.read_u2be
+        self
+      end
+      attr_reader :reserved
+      attr_reader :address
+      attr_reader :reserved2
+      attr_reader :l4_protocol
+      attr_reader :port
+    end
+    class SdIpv6SdEndpointOption < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
@@ -270,7 +254,7 @@ class SomeIpSdOptions < Kaitai::Struct::Struct
       attr_reader :port
     end
     class SdLoadBalancingOption < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
@@ -284,6 +268,20 @@ class SomeIpSdOptions < Kaitai::Struct::Struct
       attr_reader :reserved
       attr_reader :priority
       attr_reader :weight
+    end
+    class SdOptionHeader < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = nil)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        @length = @_io.read_u2be
+        @type = Kaitai::Struct::Stream::resolve_enum(SomeIpSdOptions::SdOption::OPTION_TYPES, @_io.read_u1)
+        self
+      end
+      attr_reader :length
+      attr_reader :type
     end
     attr_reader :header
     attr_reader :content

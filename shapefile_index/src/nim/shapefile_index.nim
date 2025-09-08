@@ -21,6 +21,16 @@ type
     polygon_m = 25
     multi_point_m = 28
     multi_patch = 31
+  ShapefileIndex_BoundingBoxXYZM* = ref object of KaitaiStruct
+    `x`*: ShapefileIndex_BoundsMinMax
+    `y`*: ShapefileIndex_BoundsMinMax
+    `z`*: ShapefileIndex_BoundsMinMax
+    `m`*: ShapefileIndex_BoundsMinMax
+    `parent`*: ShapefileIndex_FileHeader
+  ShapefileIndex_BoundsMinMax* = ref object of KaitaiStruct
+    `min`*: float64
+    `max`*: float64
+    `parent`*: ShapefileIndex_BoundingBoxXYZM
   ShapefileIndex_FileHeader* = ref object of KaitaiStruct
     `fileCode`*: seq[byte]
     `unusedField1`*: seq[byte]
@@ -37,22 +47,12 @@ type
     `offset`*: int32
     `contentLength`*: int32
     `parent`*: ShapefileIndex
-  ShapefileIndex_BoundingBoxXYZM* = ref object of KaitaiStruct
-    `x`*: ShapefileIndex_BoundsMinMax
-    `y`*: ShapefileIndex_BoundsMinMax
-    `z`*: ShapefileIndex_BoundsMinMax
-    `m`*: ShapefileIndex_BoundsMinMax
-    `parent`*: ShapefileIndex_FileHeader
-  ShapefileIndex_BoundsMinMax* = ref object of KaitaiStruct
-    `min`*: float64
-    `max`*: float64
-    `parent`*: ShapefileIndex_BoundingBoxXYZM
 
 proc read*(_: typedesc[ShapefileIndex], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): ShapefileIndex
-proc read*(_: typedesc[ShapefileIndex_FileHeader], io: KaitaiStream, root: KaitaiStruct, parent: ShapefileIndex): ShapefileIndex_FileHeader
-proc read*(_: typedesc[ShapefileIndex_Record], io: KaitaiStream, root: KaitaiStruct, parent: ShapefileIndex): ShapefileIndex_Record
 proc read*(_: typedesc[ShapefileIndex_BoundingBoxXYZM], io: KaitaiStream, root: KaitaiStruct, parent: ShapefileIndex_FileHeader): ShapefileIndex_BoundingBoxXYZM
 proc read*(_: typedesc[ShapefileIndex_BoundsMinMax], io: KaitaiStream, root: KaitaiStruct, parent: ShapefileIndex_BoundingBoxXYZM): ShapefileIndex_BoundsMinMax
+proc read*(_: typedesc[ShapefileIndex_FileHeader], io: KaitaiStream, root: KaitaiStruct, parent: ShapefileIndex): ShapefileIndex_FileHeader
+proc read*(_: typedesc[ShapefileIndex_Record], io: KaitaiStream, root: KaitaiStruct, parent: ShapefileIndex): ShapefileIndex_Record
 
 
 proc read*(_: typedesc[ShapefileIndex], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): ShapefileIndex =
@@ -78,6 +78,42 @@ proc read*(_: typedesc[ShapefileIndex], io: KaitaiStream, root: KaitaiStruct, pa
 
 proc fromFile*(_: typedesc[ShapefileIndex], filename: string): ShapefileIndex =
   ShapefileIndex.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[ShapefileIndex_BoundingBoxXYZM], io: KaitaiStream, root: KaitaiStruct, parent: ShapefileIndex_FileHeader): ShapefileIndex_BoundingBoxXYZM =
+  template this: untyped = result
+  this = new(ShapefileIndex_BoundingBoxXYZM)
+  let root = if root == nil: cast[ShapefileIndex](this) else: cast[ShapefileIndex](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let xExpr = ShapefileIndex_BoundsMinMax.read(this.io, this.root, this)
+  this.x = xExpr
+  let yExpr = ShapefileIndex_BoundsMinMax.read(this.io, this.root, this)
+  this.y = yExpr
+  let zExpr = ShapefileIndex_BoundsMinMax.read(this.io, this.root, this)
+  this.z = zExpr
+  let mExpr = ShapefileIndex_BoundsMinMax.read(this.io, this.root, this)
+  this.m = mExpr
+
+proc fromFile*(_: typedesc[ShapefileIndex_BoundingBoxXYZM], filename: string): ShapefileIndex_BoundingBoxXYZM =
+  ShapefileIndex_BoundingBoxXYZM.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[ShapefileIndex_BoundsMinMax], io: KaitaiStream, root: KaitaiStruct, parent: ShapefileIndex_BoundingBoxXYZM): ShapefileIndex_BoundsMinMax =
+  template this: untyped = result
+  this = new(ShapefileIndex_BoundsMinMax)
+  let root = if root == nil: cast[ShapefileIndex](this) else: cast[ShapefileIndex](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let minExpr = this.io.readF8be()
+  this.min = minExpr
+  let maxExpr = this.io.readF8be()
+  this.max = maxExpr
+
+proc fromFile*(_: typedesc[ShapefileIndex_BoundsMinMax], filename: string): ShapefileIndex_BoundsMinMax =
+  ShapefileIndex_BoundsMinMax.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[ShapefileIndex_FileHeader], io: KaitaiStream, root: KaitaiStruct, parent: ShapefileIndex): ShapefileIndex_FileHeader =
   template this: untyped = result
@@ -134,40 +170,4 @@ proc read*(_: typedesc[ShapefileIndex_Record], io: KaitaiStream, root: KaitaiStr
 
 proc fromFile*(_: typedesc[ShapefileIndex_Record], filename: string): ShapefileIndex_Record =
   ShapefileIndex_Record.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[ShapefileIndex_BoundingBoxXYZM], io: KaitaiStream, root: KaitaiStruct, parent: ShapefileIndex_FileHeader): ShapefileIndex_BoundingBoxXYZM =
-  template this: untyped = result
-  this = new(ShapefileIndex_BoundingBoxXYZM)
-  let root = if root == nil: cast[ShapefileIndex](this) else: cast[ShapefileIndex](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let xExpr = ShapefileIndex_BoundsMinMax.read(this.io, this.root, this)
-  this.x = xExpr
-  let yExpr = ShapefileIndex_BoundsMinMax.read(this.io, this.root, this)
-  this.y = yExpr
-  let zExpr = ShapefileIndex_BoundsMinMax.read(this.io, this.root, this)
-  this.z = zExpr
-  let mExpr = ShapefileIndex_BoundsMinMax.read(this.io, this.root, this)
-  this.m = mExpr
-
-proc fromFile*(_: typedesc[ShapefileIndex_BoundingBoxXYZM], filename: string): ShapefileIndex_BoundingBoxXYZM =
-  ShapefileIndex_BoundingBoxXYZM.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[ShapefileIndex_BoundsMinMax], io: KaitaiStream, root: KaitaiStruct, parent: ShapefileIndex_BoundingBoxXYZM): ShapefileIndex_BoundsMinMax =
-  template this: untyped = result
-  this = new(ShapefileIndex_BoundsMinMax)
-  let root = if root == nil: cast[ShapefileIndex](this) else: cast[ShapefileIndex](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let minExpr = this.io.readF8be()
-  this.min = minExpr
-  let maxExpr = this.io.readF8be()
-  this.max = maxExpr
-
-proc fromFile*(_: typedesc[ShapefileIndex_BoundsMinMax], filename: string): ShapefileIndex_BoundsMinMax =
-  ShapefileIndex_BoundsMinMax.read(newKaitaiFileStream(filename), nil, nil)
 

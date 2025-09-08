@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.FalloutDat = factory(root.KaitaiStream);
+    factory(root.FalloutDat || (root.FalloutDat = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (FalloutDat_, KaitaiStream) {
 var FalloutDat = (function() {
   FalloutDat.Compression = Object.freeze({
     NONE: 32,
@@ -40,49 +40,11 @@ var FalloutDat = (function() {
     }
   }
 
-  var Pstr = FalloutDat.Pstr = (function() {
-    function Pstr(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Pstr.prototype._read = function() {
-      this.size = this._io.readU1();
-      this.str = KaitaiStream.bytesToStr(this._io.readBytes(this.size), "ASCII");
-    }
-
-    return Pstr;
-  })();
-
-  var Folder = FalloutDat.Folder = (function() {
-    function Folder(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Folder.prototype._read = function() {
-      this.fileCount = this._io.readU4be();
-      this.unknown = this._io.readU4be();
-      this.flags = this._io.readU4be();
-      this.timestamp = this._io.readU4be();
-      this.files = [];
-      for (var i = 0; i < this.fileCount; i++) {
-        this.files.push(new File(this._io, this, this._root));
-      }
-    }
-
-    return Folder;
-  })();
-
   var File = FalloutDat.File = (function() {
     function File(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -109,7 +71,45 @@ var FalloutDat = (function() {
     return File;
   })();
 
+  var Folder = FalloutDat.Folder = (function() {
+    function Folder(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Folder.prototype._read = function() {
+      this.fileCount = this._io.readU4be();
+      this.unknown = this._io.readU4be();
+      this.flags = this._io.readU4be();
+      this.timestamp = this._io.readU4be();
+      this.files = [];
+      for (var i = 0; i < this.fileCount; i++) {
+        this.files.push(new File(this._io, this, this._root));
+      }
+    }
+
+    return Folder;
+  })();
+
+  var Pstr = FalloutDat.Pstr = (function() {
+    function Pstr(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Pstr.prototype._read = function() {
+      this.size = this._io.readU1();
+      this.str = KaitaiStream.bytesToStr(this._io.readBytes(this.size), "ASCII");
+    }
+
+    return Pstr;
+  })();
+
   return FalloutDat;
 })();
-return FalloutDat;
-}));
+FalloutDat_.FalloutDat = FalloutDat;
+});

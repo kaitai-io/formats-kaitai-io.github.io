@@ -54,6 +54,10 @@ public class CompressedResource extends KaitaiStruct {
         this.compressedData = this._io.readBytesFull();
     }
 
+    public void _fetchInstances() {
+        this.header._fetchInstances();
+    }
+
     /**
      * Compressed resource data header,
      * as stored at the start of all compressed resources.
@@ -79,9 +83,26 @@ public class CompressedResource extends KaitaiStruct {
         }
         private void _read() {
             this.commonPart = new CommonPart(this._io, this, _root);
-            this._raw_typeSpecificPartRawWithIo = this._io.readBytes((commonPart().lenHeader() - 12));
-            KaitaiStream _io__raw_typeSpecificPartRawWithIo = new ByteBufferKaitaiStream(_raw_typeSpecificPartRawWithIo);
-            this.typeSpecificPartRawWithIo = new BytesWithIo(_io__raw_typeSpecificPartRawWithIo);
+            KaitaiStream _io_typeSpecificPartRawWithIo = this._io.substream(commonPart().lenHeader() - 12);
+            this.typeSpecificPartRawWithIo = new BytesWithIo(_io_typeSpecificPartRawWithIo);
+        }
+
+        public void _fetchInstances() {
+            this.commonPart._fetchInstances();
+            this.typeSpecificPartRawWithIo._fetchInstances();
+            typeSpecificPart();
+            if (this.typeSpecificPart != null) {
+                switch (commonPart().headerType()) {
+                case 8: {
+                    ((TypeSpecificPartType8) (this.typeSpecificPart))._fetchInstances();
+                    break;
+                }
+                case 9: {
+                    ((TypeSpecificPartType9) (this.typeSpecificPart))._fetchInstances();
+                    break;
+                }
+                }
+            }
         }
 
         /**
@@ -109,19 +130,22 @@ public class CompressedResource extends KaitaiStruct {
             }
             private void _read() {
                 this.magic = this._io.readBytes(4);
-                if (!(Arrays.equals(magic(), new byte[] { -88, -97, 101, 114 }))) {
-                    throw new KaitaiStream.ValidationNotEqualError(new byte[] { -88, -97, 101, 114 }, magic(), _io(), "/types/header/types/common_part/seq/0");
+                if (!(Arrays.equals(this.magic, new byte[] { -88, -97, 101, 114 }))) {
+                    throw new KaitaiStream.ValidationNotEqualError(new byte[] { -88, -97, 101, 114 }, this.magic, this._io, "/types/header/types/common_part/seq/0");
                 }
                 this.lenHeader = this._io.readU2be();
-                if (!(lenHeader() == 18)) {
-                    throw new KaitaiStream.ValidationNotEqualError(18, lenHeader(), _io(), "/types/header/types/common_part/seq/1");
+                if (!(this.lenHeader == 18)) {
+                    throw new KaitaiStream.ValidationNotEqualError(18, this.lenHeader, this._io, "/types/header/types/common_part/seq/1");
                 }
                 this.headerType = this._io.readU1();
                 this.unknown = this._io.readU1();
-                if (!(unknown() == 1)) {
-                    throw new KaitaiStream.ValidationNotEqualError(1, unknown(), _io(), "/types/header/types/common_part/seq/3");
+                if (!(this.unknown == 1)) {
+                    throw new KaitaiStream.ValidationNotEqualError(1, this.unknown, this._io, "/types/header/types/common_part/seq/3");
                 }
                 this.lenDecompressed = this._io.readU4be();
+            }
+
+            public void _fetchInstances() {
             }
             private byte[] magic;
             private int lenHeader;
@@ -200,9 +224,12 @@ public class CompressedResource extends KaitaiStruct {
                 this.expansionBufferSize = this._io.readU1();
                 this.decompressorId = this._io.readS2be();
                 this.reserved = this._io.readU2be();
-                if (!(reserved() == 0)) {
-                    throw new KaitaiStream.ValidationNotEqualError(0, reserved(), _io(), "/types/header/types/type_specific_part_type_8/seq/3");
+                if (!(this.reserved == 0)) {
+                    throw new KaitaiStream.ValidationNotEqualError(0, this.reserved, this._io, "/types/header/types/type_specific_part_type_8/seq/3");
                 }
+            }
+
+            public void _fetchInstances() {
             }
             private int workingBufferFractionalSize;
             private int expansionBufferSize;
@@ -271,9 +298,12 @@ public class CompressedResource extends KaitaiStruct {
             }
             private void _read() {
                 this.decompressorId = this._io.readS2be();
-                this._raw_decompressorSpecificParametersWithIo = this._io.readBytes(4);
-                KaitaiStream _io__raw_decompressorSpecificParametersWithIo = new ByteBufferKaitaiStream(_raw_decompressorSpecificParametersWithIo);
-                this.decompressorSpecificParametersWithIo = new BytesWithIo(_io__raw_decompressorSpecificParametersWithIo);
+                KaitaiStream _io_decompressorSpecificParametersWithIo = this._io.substream(4);
+                this.decompressorSpecificParametersWithIo = new BytesWithIo(_io_decompressorSpecificParametersWithIo);
+            }
+
+            public void _fetchInstances() {
+                this.decompressorSpecificParametersWithIo._fetchInstances();
             }
             private byte[] decompressorSpecificParameters;
 
@@ -295,7 +325,6 @@ public class CompressedResource extends KaitaiStruct {
             private BytesWithIo decompressorSpecificParametersWithIo;
             private CompressedResource _root;
             private CompressedResource.Header _parent;
-            private byte[] _raw_decompressorSpecificParametersWithIo;
 
             /**
              * The ID of the `'dcmp'` resource that should be used to decompress this resource.
@@ -309,19 +338,6 @@ public class CompressedResource extends KaitaiStruct {
             public BytesWithIo decompressorSpecificParametersWithIo() { return decompressorSpecificParametersWithIo; }
             public CompressedResource _root() { return _root; }
             public CompressedResource.Header _parent() { return _parent; }
-            public byte[] _raw_decompressorSpecificParametersWithIo() { return _raw_decompressorSpecificParametersWithIo; }
-        }
-        private byte[] typeSpecificPartRaw;
-
-        /**
-         * The type-specific part of the header,
-         * as a raw byte array.
-         */
-        public byte[] typeSpecificPartRaw() {
-            if (this.typeSpecificPartRaw != null)
-                return this.typeSpecificPartRaw;
-            this.typeSpecificPartRaw = typeSpecificPartRawWithIo().data();
-            return this.typeSpecificPartRaw;
         }
         private KaitaiStruct typeSpecificPart;
 
@@ -348,11 +364,22 @@ public class CompressedResource extends KaitaiStruct {
             io.seek(_pos);
             return this.typeSpecificPart;
         }
+        private byte[] typeSpecificPartRaw;
+
+        /**
+         * The type-specific part of the header,
+         * as a raw byte array.
+         */
+        public byte[] typeSpecificPartRaw() {
+            if (this.typeSpecificPartRaw != null)
+                return this.typeSpecificPartRaw;
+            this.typeSpecificPartRaw = typeSpecificPartRawWithIo().data();
+            return this.typeSpecificPartRaw;
+        }
         private CommonPart commonPart;
         private BytesWithIo typeSpecificPartRawWithIo;
         private CompressedResource _root;
         private CompressedResource _parent;
-        private byte[] _raw_typeSpecificPartRawWithIo;
 
         /**
          * The common part of the header.
@@ -369,7 +396,6 @@ public class CompressedResource extends KaitaiStruct {
         public BytesWithIo typeSpecificPartRawWithIo() { return typeSpecificPartRawWithIo; }
         public CompressedResource _root() { return _root; }
         public CompressedResource _parent() { return _parent; }
-        public byte[] _raw_typeSpecificPartRawWithIo() { return _raw_typeSpecificPartRawWithIo; }
     }
     private Header header;
     private byte[] compressedData;

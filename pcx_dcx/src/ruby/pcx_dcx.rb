@@ -1,9 +1,10 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 require 'kaitai/struct/struct'
+require_relative 'pcx'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -13,14 +14,14 @@ end
 # some limited use in DOS-era fax software, but was largely
 # superseded with multi-page TIFFs and PDFs since then.
 class PcxDcx < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
     @magic = @_io.read_bytes(4)
-    raise Kaitai::Struct::ValidationNotEqualError.new([177, 104, 222, 58].pack('C*'), magic, _io, "/seq/0") if not magic == [177, 104, 222, 58].pack('C*')
+    raise Kaitai::Struct::ValidationNotEqualError.new([177, 104, 222, 58].pack('C*'), @magic, @_io, "/seq/0") if not @magic == [177, 104, 222, 58].pack('C*')
     @files = []
     i = 0
     begin
@@ -31,7 +32,7 @@ class PcxDcx < Kaitai::Struct::Struct
     self
   end
   class PcxOffset < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end

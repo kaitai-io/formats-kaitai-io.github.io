@@ -25,8 +25,8 @@
 
 namespace {
     class Dcmp2 extends \Kaitai\Struct\Struct {
-        public function __construct(int $lenDecompressed, \BytesWithIo $headerParametersWithIo, \Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Dcmp2 $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(int $lenDecompressed, \BytesWithIo $headerParametersWithIo, \Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Dcmp2 $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_m_lenDecompressed = $lenDecompressed;
             $this->_m_headerParametersWithIo = $headerParametersWithIo;
             $this->_read();
@@ -42,12 +42,12 @@ namespace {
             }
             switch ($this->headerParameters()->flags()->tagged()) {
                 case true:
-                    $this->_m__raw_data = $this->_io->readBytes((($this->_io()->size() - $this->_io()->pos()) - ($this->isLenDecompressedOdd() ? 1 : 0)));
+                    $this->_m__raw_data = $this->_io->readBytes(($this->_io()->size() - $this->_io()->pos()) - ($this->isLenDecompressedOdd() ? 1 : 0));
                     $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
                     $this->_m_data = new \Dcmp2\TaggedData($_io__raw_data, $this, $this->_root);
                     break;
                 default:
-                    $this->_m__raw_data = $this->_io->readBytes((($this->_io()->size() - $this->_io()->pos()) - ($this->isLenDecompressedOdd() ? 1 : 0)));
+                    $this->_m__raw_data = $this->_io->readBytes(($this->_io()->size() - $this->_io()->pos()) - ($this->isLenDecompressedOdd() ? 1 : 0));
                     $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
                     $this->_m_data = new \Dcmp2\UntaggedData($_io__raw_data, $this, $this->_root);
                     break;
@@ -55,6 +55,18 @@ namespace {
             if ($this->isLenDecompressedOdd()) {
                 $this->_m_lastByte = $this->_io->readBytes(1);
             }
+        }
+        protected $_m_defaultLookupTable;
+
+        /**
+         * The default lookup table,
+         * which is used if no custom lookup table is included with the compressed data.
+         */
+        public function defaultLookupTable() {
+            if ($this->_m_defaultLookupTable !== null)
+                return $this->_m_defaultLookupTable;
+            $this->_m_defaultLookupTable = ["\x00\x00", "\x00\x08", "\x4E\xBA", "\x20\x6E", "\x4E\x75", "\x00\x0C", "\x00\x04", "\x70\x00", "\x00\x10", "\x00\x02", "\x48\x6E", "\xFF\xFC", "\x60\x00", "\x00\x01", "\x48\xE7", "\x2F\x2E", "\x4E\x56", "\x00\x06", "\x4E\x5E", "\x2F\x00", "\x61\x00", "\xFF\xF8", "\x2F\x0B", "\xFF\xFF", "\x00\x14", "\x00\x0A", "\x00\x18", "\x20\x5F", "\x00\x0E", "\x20\x50", "\x3F\x3C", "\xFF\xF4", "\x4C\xEE", "\x30\x2E", "\x67\x00", "\x4C\xDF", "\x26\x6E", "\x00\x12", "\x00\x1C", "\x42\x67", "\xFF\xF0", "\x30\x3C", "\x2F\x0C", "\x00\x03", "\x4E\xD0", "\x00\x20", "\x70\x01", "\x00\x16", "\x2D\x40", "\x48\xC0", "\x20\x78", "\x72\x00", "\x58\x8F", "\x66\x00", "\x4F\xEF", "\x42\xA7", "\x67\x06", "\xFF\xFA", "\x55\x8F", "\x28\x6E", "\x3F\x00", "\xFF\xFE", "\x2F\x3C", "\x67\x04", "\x59\x8F", "\x20\x6B", "\x00\x24", "\x20\x1F", "\x41\xFA", "\x81\xE1", "\x66\x04", "\x67\x08", "\x00\x1A", "\x4E\xB9", "\x50\x8F", "\x20\x2E", "\x00\x07", "\x4E\xB0", "\xFF\xF2", "\x3D\x40", "\x00\x1E", "\x20\x68", "\x66\x06", "\xFF\xF6", "\x4E\xF9", "\x08\x00", "\x0C\x40", "\x3D\x7C", "\xFF\xEC", "\x00\x05", "\x20\x3C", "\xFF\xE8", "\xDE\xFC", "\x4A\x2E", "\x00\x30", "\x00\x28", "\x2F\x08", "\x20\x0B", "\x60\x02", "\x42\x6E", "\x2D\x48", "\x20\x53", "\x20\x40", "\x18\x00", "\x60\x04", "\x41\xEE", "\x2F\x28", "\x2F\x01", "\x67\x0A", "\x48\x40", "\x20\x07", "\x66\x08", "\x01\x18", "\x2F\x07", "\x30\x28", "\x3F\x2E", "\x30\x2B", "\x22\x6E", "\x2F\x2B", "\x00\x2C", "\x67\x0C", "\x22\x5F", "\x60\x06", "\x00\xFF", "\x30\x07", "\xFF\xEE", "\x53\x40", "\x00\x40", "\xFF\xE4", "\x4A\x40", "\x66\x0A", "\x00\x0F", "\x4E\xAD", "\x70\xFF", "\x22\xD8", "\x48\x6B", "\x00\x22", "\x20\x4B", "\x67\x0E", "\x4A\xAE", "\x4E\x90", "\xFF\xE0", "\xFF\xC0", "\x00\x2A", "\x27\x40", "\x67\x02", "\x51\xC8", "\x02\xB6", "\x48\x7A", "\x22\x78", "\xB0\x6E", "\xFF\xE6", "\x00\x09", "\x32\x2E", "\x3E\x00", "\x48\x41", "\xFF\xEA", "\x43\xEE", "\x4E\x71", "\x74\x00", "\x2F\x2C", "\x20\x6C", "\x00\x3C", "\x00\x26", "\x00\x50", "\x18\x80", "\x30\x1F", "\x22\x00", "\x66\x0C", "\xFF\xDA", "\x00\x38", "\x66\x02", "\x30\x2C", "\x20\x0C", "\x2D\x6E", "\x42\x40", "\xFF\xE2", "\xA9\xF0", "\xFF\x00", "\x37\x7C", "\xE5\x80", "\xFF\xDC", "\x48\x68", "\x59\x4F", "\x00\x34", "\x3E\x1F", "\x60\x08", "\x2F\x06", "\xFF\xDE", "\x60\x0A", "\x70\x02", "\x00\x32", "\xFF\xCC", "\x00\x80", "\x22\x51", "\x10\x1F", "\x31\x7C", "\xA0\x29", "\xFF\xD8", "\x52\x40", "\x01\x00", "\x67\x10", "\xA0\x23", "\xFF\xCE", "\xFF\xD4", "\x20\x06", "\x48\x78", "\x00\x2E", "\x50\x4F", "\x43\xFA", "\x67\x12", "\x76\x00", "\x41\xE8", "\x4A\x6E", "\x20\xD9", "\x00\x5A", "\x7F\xFF", "\x51\xCA", "\x00\x5C", "\x2E\x00", "\x02\x40", "\x48\xC7", "\x67\x14", "\x0C\x80", "\x2E\x9F", "\xFF\xD6", "\x80\x00", "\x10\x00", "\x48\x42", "\x4A\x6B", "\xFF\xD2", "\x00\x48", "\x4A\x47", "\x4E\xD1", "\x20\x6F", "\x00\x41", "\x60\x0C", "\x2A\x78", "\x42\x2E", "\x32\x00", "\x65\x74", "\x67\x16", "\x00\x44", "\x48\x6D", "\x20\x08", "\x48\x6C", "\x0B\x7C", "\x26\x40", "\x04\x00", "\x00\x68", "\x20\x6D", "\x00\x0D", "\x2A\x40", "\x00\x0B", "\x00\x3E", "\x02\x20"];
+            return $this->_m_defaultLookupTable;
         }
         protected $_m_headerParameters;
 
@@ -82,18 +94,6 @@ namespace {
                 return $this->_m_isLenDecompressedOdd;
             $this->_m_isLenDecompressedOdd = \Kaitai\Struct\Stream::mod($this->lenDecompressed(), 2) != 0;
             return $this->_m_isLenDecompressedOdd;
-        }
-        protected $_m_defaultLookupTable;
-
-        /**
-         * The default lookup table,
-         * which is used if no custom lookup table is included with the compressed data.
-         */
-        public function defaultLookupTable() {
-            if ($this->_m_defaultLookupTable !== null)
-                return $this->_m_defaultLookupTable;
-            $this->_m_defaultLookupTable = ["\x00\x00", "\x00\x08", "\x4E\xBA", "\x20\x6E", "\x4E\x75", "\x00\x0C", "\x00\x04", "\x70\x00", "\x00\x10", "\x00\x02", "\x48\x6E", "\xFF\xFC", "\x60\x00", "\x00\x01", "\x48\xE7", "\x2F\x2E", "\x4E\x56", "\x00\x06", "\x4E\x5E", "\x2F\x00", "\x61\x00", "\xFF\xF8", "\x2F\x0B", "\xFF\xFF", "\x00\x14", "\x00\x0A", "\x00\x18", "\x20\x5F", "\x00\x0E", "\x20\x50", "\x3F\x3C", "\xFF\xF4", "\x4C\xEE", "\x30\x2E", "\x67\x00", "\x4C\xDF", "\x26\x6E", "\x00\x12", "\x00\x1C", "\x42\x67", "\xFF\xF0", "\x30\x3C", "\x2F\x0C", "\x00\x03", "\x4E\xD0", "\x00\x20", "\x70\x01", "\x00\x16", "\x2D\x40", "\x48\xC0", "\x20\x78", "\x72\x00", "\x58\x8F", "\x66\x00", "\x4F\xEF", "\x42\xA7", "\x67\x06", "\xFF\xFA", "\x55\x8F", "\x28\x6E", "\x3F\x00", "\xFF\xFE", "\x2F\x3C", "\x67\x04", "\x59\x8F", "\x20\x6B", "\x00\x24", "\x20\x1F", "\x41\xFA", "\x81\xE1", "\x66\x04", "\x67\x08", "\x00\x1A", "\x4E\xB9", "\x50\x8F", "\x20\x2E", "\x00\x07", "\x4E\xB0", "\xFF\xF2", "\x3D\x40", "\x00\x1E", "\x20\x68", "\x66\x06", "\xFF\xF6", "\x4E\xF9", "\x08\x00", "\x0C\x40", "\x3D\x7C", "\xFF\xEC", "\x00\x05", "\x20\x3C", "\xFF\xE8", "\xDE\xFC", "\x4A\x2E", "\x00\x30", "\x00\x28", "\x2F\x08", "\x20\x0B", "\x60\x02", "\x42\x6E", "\x2D\x48", "\x20\x53", "\x20\x40", "\x18\x00", "\x60\x04", "\x41\xEE", "\x2F\x28", "\x2F\x01", "\x67\x0A", "\x48\x40", "\x20\x07", "\x66\x08", "\x01\x18", "\x2F\x07", "\x30\x28", "\x3F\x2E", "\x30\x2B", "\x22\x6E", "\x2F\x2B", "\x00\x2C", "\x67\x0C", "\x22\x5F", "\x60\x06", "\x00\xFF", "\x30\x07", "\xFF\xEE", "\x53\x40", "\x00\x40", "\xFF\xE4", "\x4A\x40", "\x66\x0A", "\x00\x0F", "\x4E\xAD", "\x70\xFF", "\x22\xD8", "\x48\x6B", "\x00\x22", "\x20\x4B", "\x67\x0E", "\x4A\xAE", "\x4E\x90", "\xFF\xE0", "\xFF\xC0", "\x00\x2A", "\x27\x40", "\x67\x02", "\x51\xC8", "\x02\xB6", "\x48\x7A", "\x22\x78", "\xB0\x6E", "\xFF\xE6", "\x00\x09", "\x32\x2E", "\x3E\x00", "\x48\x41", "\xFF\xEA", "\x43\xEE", "\x4E\x71", "\x74\x00", "\x2F\x2C", "\x20\x6C", "\x00\x3C", "\x00\x26", "\x00\x50", "\x18\x80", "\x30\x1F", "\x22\x00", "\x66\x0C", "\xFF\xDA", "\x00\x38", "\x66\x02", "\x30\x2C", "\x20\x0C", "\x2D\x6E", "\x42\x40", "\xFF\xE2", "\xA9\xF0", "\xFF\x00", "\x37\x7C", "\xE5\x80", "\xFF\xDC", "\x48\x68", "\x59\x4F", "\x00\x34", "\x3E\x1F", "\x60\x08", "\x2F\x06", "\xFF\xDE", "\x60\x0A", "\x70\x02", "\x00\x32", "\xFF\xCC", "\x00\x80", "\x22\x51", "\x10\x1F", "\x31\x7C", "\xA0\x29", "\xFF\xD8", "\x52\x40", "\x01\x00", "\x67\x10", "\xA0\x23", "\xFF\xCE", "\xFF\xD4", "\x20\x06", "\x48\x78", "\x00\x2E", "\x50\x4F", "\x43\xFA", "\x67\x12", "\x76\x00", "\x41\xE8", "\x4A\x6E", "\x20\xD9", "\x00\x5A", "\x7F\xFF", "\x51\xCA", "\x00\x5C", "\x2E\x00", "\x02\x40", "\x48\xC7", "\x67\x14", "\x0C\x80", "\x2E\x9F", "\xFF\xD6", "\x80\x00", "\x10\x00", "\x48\x42", "\x4A\x6B", "\xFF\xD2", "\x00\x48", "\x4A\x47", "\x4E\xD1", "\x20\x6F", "\x00\x41", "\x60\x0C", "\x2A\x78", "\x42\x2E", "\x32\x00", "\x65\x74", "\x67\x16", "\x00\x44", "\x48\x6D", "\x20\x08", "\x48\x6C", "\x0B\x7C", "\x26\x40", "\x04\x00", "\x00\x68", "\x20\x6D", "\x00\x0D", "\x2A\x40", "\x00\x0B", "\x00\x3E", "\x02\x20"];
-            return $this->_m_defaultLookupTable;
         }
         protected $_m_lookupTable;
 
@@ -157,7 +157,7 @@ namespace {
 
 namespace Dcmp2 {
     class HeaderParameters extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Dcmp2 $_parent = null, \Dcmp2 $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Dcmp2 $_parent = null, ?\Dcmp2 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -177,7 +177,7 @@ namespace Dcmp2 {
             if ($this->_m_numCustomLookupTableEntries !== null)
                 return $this->_m_numCustomLookupTableEntries;
             if ($this->flags()->hasCustomLookupTable()) {
-                $this->_m_numCustomLookupTableEntries = ($this->numCustomLookupTableEntriesM1() + 1);
+                $this->_m_numCustomLookupTableEntries = $this->numCustomLookupTableEntriesM1() + 1;
             }
             return $this->_m_numCustomLookupTableEntries;
         }
@@ -219,7 +219,7 @@ namespace Dcmp2 {
 
 namespace Dcmp2\HeaderParameters {
     class Flags extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Dcmp2\HeaderParameters $_parent = null, \Dcmp2 $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Dcmp2\HeaderParameters $_parent = null, ?\Dcmp2 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -268,41 +268,12 @@ namespace Dcmp2\HeaderParameters {
 }
 
 /**
- * Compressed data in the "untagged" variant of the format.
- */
-
-namespace Dcmp2 {
-    class UntaggedData extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Dcmp2 $_parent = null, \Dcmp2 $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_tableReferences = [];
-            $i = 0;
-            while (!$this->_io->isEof()) {
-                $this->_m_tableReferences[] = $this->_io->readU1();
-                $i++;
-            }
-        }
-        protected $_m_tableReferences;
-
-        /**
-         * References into the lookup table.
-         * Each reference is an integer that is expanded to two bytes by looking it up in the table.
-         */
-        public function tableReferences() { return $this->_m_tableReferences; }
-    }
-}
-
-/**
  * Compressed data in the "tagged" variant of the format.
  */
 
 namespace Dcmp2 {
     class TaggedData extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Dcmp2 $_parent = null, \Dcmp2 $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Dcmp2 $_parent = null, ?\Dcmp2 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -336,7 +307,7 @@ namespace Dcmp2 {
 
 namespace Dcmp2\TaggedData {
     class Chunk extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Dcmp2\TaggedData $_parent = null, \Dcmp2 $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Dcmp2\TaggedData $_parent = null, ?\Dcmp2 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -348,7 +319,6 @@ namespace Dcmp2\TaggedData {
                 $this->_m_tag[] = $this->_io->readBitsIntBe(1) != 0;
             }
             $this->_io->alignToByte();
-            $this->_m__raw_units = [];
             $this->_m_units = [];
             $i = 0;
             do {
@@ -385,5 +355,34 @@ namespace Dcmp2\TaggedData {
          * an integer which is expanded to two bytes by looking it up in the table.
          */
         public function units() { return $this->_m_units; }
+    }
+}
+
+/**
+ * Compressed data in the "untagged" variant of the format.
+ */
+
+namespace Dcmp2 {
+    class UntaggedData extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Dcmp2 $_parent = null, ?\Dcmp2 $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_tableReferences = [];
+            $i = 0;
+            while (!$this->_io->isEof()) {
+                $this->_m_tableReferences[] = $this->_io->readU1();
+                $i++;
+            }
+        }
+        protected $_m_tableReferences;
+
+        /**
+         * References into the lookup table.
+         * Each reference is an integer that is expanded to two bytes by looking it up in the table.
+         */
+        public function tableReferences() { return $this->_m_tableReferences; }
     }
 }

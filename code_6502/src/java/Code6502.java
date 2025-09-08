@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -208,6 +209,12 @@ public class Code6502 extends KaitaiStruct {
             }
         }
     }
+
+    public void _fetchInstances() {
+        for (int i = 0; i < this.operations.size(); i++) {
+            this.operations.get(((Number) (i)).intValue())._fetchInstances();
+        }
+    }
     public static class Operation extends KaitaiStruct {
         public static Operation fromFile(String fileName) throws IOException {
             return new Operation(new ByteBufferKaitaiStream(fileName));
@@ -233,67 +240,7 @@ public class Code6502 extends KaitaiStruct {
                 Opcode on = code();
                 if (on != null) {
                     switch (code()) {
-                    case BCC_REL: {
-                        this.args = (int) (this._io.readS1());
-                        break;
-                    }
-                    case ORA_IND_Y: {
-                        this.args = (int) (this._io.readU1());
-                        break;
-                    }
-                    case LDA_IND_Y: {
-                        this.args = (int) (this._io.readU1());
-                        break;
-                    }
-                    case CPX_ZPG: {
-                        this.args = (int) (this._io.readU1());
-                        break;
-                    }
-                    case STA_ZPG_X: {
-                        this.args = (int) (this._io.readU1());
-                        break;
-                    }
-                    case STA_ZPG: {
-                        this.args = (int) (this._io.readU1());
-                        break;
-                    }
-                    case BCS_REL: {
-                        this.args = (int) (this._io.readS1());
-                        break;
-                    }
-                    case LDY_ZPG_X: {
-                        this.args = (int) (this._io.readU1());
-                        break;
-                    }
-                    case LSR_ABS_X: {
-                        this.args = this._io.readU2le();
-                        break;
-                    }
-                    case AND_ABS_X: {
-                        this.args = this._io.readU2le();
-                        break;
-                    }
                     case ADC_ABS: {
-                        this.args = this._io.readU2le();
-                        break;
-                    }
-                    case STA_ABS: {
-                        this.args = this._io.readU2le();
-                        break;
-                    }
-                    case BNE_REL: {
-                        this.args = (int) (this._io.readS1());
-                        break;
-                    }
-                    case LDA_IMM: {
-                        this.args = (int) (this._io.readU1());
-                        break;
-                    }
-                    case ADC_IMM: {
-                        this.args = (int) (this._io.readU1());
-                        break;
-                    }
-                    case LSR_ABS: {
                         this.args = this._io.readU2le();
                         break;
                     }
@@ -301,143 +248,119 @@ public class Code6502 extends KaitaiStruct {
                         this.args = this._io.readU2le();
                         break;
                     }
-                    case STA_ABS_X: {
+                    case ADC_ABS_Y: {
                         this.args = this._io.readU2le();
                         break;
                     }
-                    case CPX_IMM: {
-                        this.args = (int) (this._io.readU1());
-                        break;
-                    }
-                    case JMP_IND: {
-                        this.args = this._io.readU2le();
-                        break;
-                    }
-                    case ADC_ZPG: {
-                        this.args = (int) (this._io.readU1());
-                        break;
-                    }
-                    case EOR_IMM: {
-                        this.args = (int) (this._io.readU1());
-                        break;
-                    }
-                    case EOR_ABS_X: {
-                        this.args = this._io.readU2le();
-                        break;
-                    }
-                    case STA_X_IND: {
-                        this.args = (int) (this._io.readU1());
-                        break;
-                    }
-                    case SBC_IMM: {
-                        this.args = (int) (this._io.readU1());
-                        break;
-                    }
-                    case CPY_ABS: {
-                        this.args = this._io.readU2le();
-                        break;
-                    }
-                    case LDX_ABS_Y: {
-                        this.args = this._io.readU2le();
-                        break;
-                    }
-                    case ADC_ZPG_X: {
-                        this.args = (int) (this._io.readU1());
-                        break;
-                    }
-                    case BPL_REL: {
-                        this.args = (int) (this._io.readS1());
-                        break;
-                    }
-                    case ORA_IMM: {
-                        this.args = (int) (this._io.readU1());
-                        break;
-                    }
-                    case ROR_ABS_X: {
-                        this.args = this._io.readU2le();
+                    case ADC_IMM: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
                         break;
                     }
                     case ADC_IND_Y: {
-                        this.args = (int) (this._io.readU1());
-                        break;
-                    }
-                    case EOR_IND_Y: {
-                        this.args = (int) (this._io.readU1());
-                        break;
-                    }
-                    case LDA_ABS: {
-                        this.args = this._io.readU2le();
-                        break;
-                    }
-                    case BIT_ZPG: {
-                        this.args = (int) (this._io.readU1());
-                        break;
-                    }
-                    case ROL_ZPG: {
-                        this.args = (int) (this._io.readU1());
-                        break;
-                    }
-                    case STY_ZPG: {
-                        this.args = (int) (this._io.readU1());
-                        break;
-                    }
-                    case JSR_ABS: {
-                        this.args = this._io.readU2le();
-                        break;
-                    }
-                    case EOR_ZPG: {
-                        this.args = (int) (this._io.readU1());
-                        break;
-                    }
-                    case EOR_ABS: {
-                        this.args = this._io.readU2le();
-                        break;
-                    }
-                    case LDA_ABS_Y: {
-                        this.args = this._io.readU2le();
-                        break;
-                    }
-                    case LDA_ZPG_X: {
-                        this.args = (int) (this._io.readU1());
-                        break;
-                    }
-                    case BMI_REL: {
-                        this.args = (int) (this._io.readS1());
-                        break;
-                    }
-                    case STY_ZPG_X: {
-                        this.args = (int) (this._io.readU1());
+                        this.args = ((Number) (this._io.readU1())).intValue();
                         break;
                     }
                     case ADC_X_IND: {
-                        this.args = (int) (this._io.readU1());
+                        this.args = ((Number) (this._io.readU1())).intValue();
                         break;
                     }
-                    case ROL_ABS_X: {
+                    case ADC_ZPG: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
+                        break;
+                    }
+                    case ADC_ZPG_X: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
+                        break;
+                    }
+                    case AND_ABS: {
                         this.args = this._io.readU2le();
                         break;
                     }
-                    case STX_ZPG: {
-                        this.args = (int) (this._io.readU1());
+                    case AND_ABS_X: {
+                        this.args = this._io.readU2le();
+                        break;
+                    }
+                    case AND_ABS_Y: {
+                        this.args = this._io.readU2le();
+                        break;
+                    }
+                    case AND_IMM: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
+                        break;
+                    }
+                    case AND_IND_Y: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
+                        break;
+                    }
+                    case AND_X_IND: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
+                        break;
+                    }
+                    case AND_ZPG: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
+                        break;
+                    }
+                    case AND_ZPG_X: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
+                        break;
+                    }
+                    case ASL_ABS: {
+                        this.args = this._io.readU2le();
                         break;
                     }
                     case ASL_ABS_X: {
                         this.args = this._io.readU2le();
                         break;
                     }
-                    case LSR_ZPG_X: {
-                        this.args = (int) (this._io.readU1());
+                    case ASL_ZPG: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
                         break;
                     }
-                    case ORA_ZPG_X: {
-                        this.args = (int) (this._io.readU1());
+                    case ASL_ZPG_X: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
                         break;
                     }
-                    case ADC_ABS_Y: {
+                    case BCC_REL: {
+                        this.args = ((Number) (this._io.readS1())).intValue();
+                        break;
+                    }
+                    case BCS_REL: {
+                        this.args = ((Number) (this._io.readS1())).intValue();
+                        break;
+                    }
+                    case BEQ_REL: {
+                        this.args = ((Number) (this._io.readS1())).intValue();
+                        break;
+                    }
+                    case BIT_ABS: {
                         this.args = this._io.readU2le();
                         break;
                     }
-                    case LDY_ABS: {
+                    case BIT_ZPG: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
+                        break;
+                    }
+                    case BMI_REL: {
+                        this.args = ((Number) (this._io.readS1())).intValue();
+                        break;
+                    }
+                    case BNE_REL: {
+                        this.args = ((Number) (this._io.readS1())).intValue();
+                        break;
+                    }
+                    case BPL_REL: {
+                        this.args = ((Number) (this._io.readS1())).intValue();
+                        break;
+                    }
+                    case BVC_REL: {
+                        this.args = ((Number) (this._io.readS1())).intValue();
+                        break;
+                    }
+                    case BVS_REL: {
+                        this.args = ((Number) (this._io.readS1())).intValue();
+                        break;
+                    }
+                    case CMP_ABS: {
                         this.args = this._io.readU2le();
                         break;
                     }
@@ -445,127 +368,75 @@ public class Code6502 extends KaitaiStruct {
                         this.args = this._io.readU2le();
                         break;
                     }
-                    case LDA_ABS_X: {
+                    case CMP_ABS_Y: {
                         this.args = this._io.readU2le();
-                        break;
-                    }
-                    case BVS_REL: {
-                        this.args = (int) (this._io.readS1());
-                        break;
-                    }
-                    case LDA_X_IND: {
-                        this.args = (int) (this._io.readU1());
                         break;
                     }
                     case CMP_IMM: {
-                        this.args = (int) (this._io.readU1());
+                        this.args = ((Number) (this._io.readU1())).intValue();
                         break;
                     }
-                    case INC_ZPG_X: {
-                        this.args = (int) (this._io.readU1());
+                    case CMP_IND_Y: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
                         break;
                     }
-                    case ASL_ZPG: {
-                        this.args = (int) (this._io.readU1());
+                    case CMP_X_IND: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
                         break;
                     }
-                    case AND_ABS_Y: {
-                        this.args = this._io.readU2le();
+                    case CMP_ZPG: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
                         break;
                     }
-                    case LDX_IMM: {
-                        this.args = (int) (this._io.readU1());
-                        break;
-                    }
-                    case AND_ZPG: {
-                        this.args = (int) (this._io.readU1());
+                    case CMP_ZPG_X: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
                         break;
                     }
                     case CPX_ABS: {
                         this.args = this._io.readU2le();
                         break;
                     }
+                    case CPX_IMM: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
+                        break;
+                    }
+                    case CPX_ZPG: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
+                        break;
+                    }
+                    case CPY_ABS: {
+                        this.args = this._io.readU2le();
+                        break;
+                    }
+                    case CPY_IMM: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
+                        break;
+                    }
+                    case CPY_ZPG: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
+                        break;
+                    }
+                    case DEC_ABS: {
+                        this.args = this._io.readU2le();
+                        break;
+                    }
+                    case DEC_ABS_X: {
+                        this.args = this._io.readU2le();
+                        break;
+                    }
                     case DEC_ZPG: {
-                        this.args = (int) (this._io.readU1());
-                        break;
-                    }
-                    case ROR_ZPG_X: {
-                        this.args = (int) (this._io.readU1());
-                        break;
-                    }
-                    case LDX_ZPG: {
-                        this.args = (int) (this._io.readU1());
+                        this.args = ((Number) (this._io.readU1())).intValue();
                         break;
                     }
                     case DEC_ZPG_X: {
-                        this.args = (int) (this._io.readU1());
+                        this.args = ((Number) (this._io.readU1())).intValue();
                         break;
                     }
-                    case SBC_ZPG: {
-                        this.args = (int) (this._io.readU1());
-                        break;
-                    }
-                    case CMP_ABS: {
+                    case EOR_ABS: {
                         this.args = this._io.readU2le();
                         break;
                     }
-                    case ROR_ZPG: {
-                        this.args = (int) (this._io.readU1());
-                        break;
-                    }
-                    case INC_ABS: {
-                        this.args = this._io.readU2le();
-                        break;
-                    }
-                    case AND_X_IND: {
-                        this.args = (int) (this._io.readU1());
-                        break;
-                    }
-                    case SBC_ABS_X: {
-                        this.args = this._io.readU2le();
-                        break;
-                    }
-                    case ASL_ABS: {
-                        this.args = this._io.readU2le();
-                        break;
-                    }
-                    case EOR_X_IND: {
-                        this.args = (int) (this._io.readU1());
-                        break;
-                    }
-                    case ORA_ABS_X: {
-                        this.args = this._io.readU2le();
-                        break;
-                    }
-                    case LDY_ABS_X: {
-                        this.args = this._io.readU2le();
-                        break;
-                    }
-                    case SBC_X_IND: {
-                        this.args = (int) (this._io.readU1());
-                        break;
-                    }
-                    case ASL_ZPG_X: {
-                        this.args = (int) (this._io.readU1());
-                        break;
-                    }
-                    case SBC_ABS_Y: {
-                        this.args = this._io.readU2le();
-                        break;
-                    }
-                    case ROL_ABS: {
-                        this.args = this._io.readU2le();
-                        break;
-                    }
-                    case LSR_ZPG: {
-                        this.args = (int) (this._io.readU1());
-                        break;
-                    }
-                    case STX_ZPG_Y: {
-                        this.args = (int) (this._io.readU1());
-                        break;
-                    }
-                    case ORA_ABS_Y: {
+                    case EOR_ABS_X: {
                         this.args = this._io.readU2le();
                         break;
                     }
@@ -573,83 +444,27 @@ public class Code6502 extends KaitaiStruct {
                         this.args = this._io.readU2le();
                         break;
                     }
-                    case BIT_ABS: {
-                        this.args = this._io.readU2le();
+                    case EOR_IMM: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
                         break;
                     }
-                    case LDX_ABS: {
-                        this.args = this._io.readU2le();
+                    case EOR_IND_Y: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
                         break;
                     }
-                    case LDY_IMM: {
-                        this.args = (int) (this._io.readU1());
+                    case EOR_X_IND: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
                         break;
                     }
-                    case JMP_ABS: {
-                        this.args = this._io.readU2le();
-                        break;
-                    }
-                    case BEQ_REL: {
-                        this.args = (int) (this._io.readS1());
-                        break;
-                    }
-                    case DEC_ABS_X: {
-                        this.args = this._io.readU2le();
-                        break;
-                    }
-                    case AND_IND_Y: {
-                        this.args = (int) (this._io.readU1());
-                        break;
-                    }
-                    case AND_ZPG_X: {
-                        this.args = (int) (this._io.readU1());
-                        break;
-                    }
-                    case CMP_ZPG_X: {
-                        this.args = (int) (this._io.readU1());
+                    case EOR_ZPG: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
                         break;
                     }
                     case EOR_ZPG_X: {
-                        this.args = (int) (this._io.readU1());
+                        this.args = ((Number) (this._io.readU1())).intValue();
                         break;
                     }
-                    case SBC_ABS: {
-                        this.args = this._io.readU2le();
-                        break;
-                    }
-                    case CMP_ABS_Y: {
-                        this.args = this._io.readU2le();
-                        break;
-                    }
-                    case SBC_IND_Y: {
-                        this.args = (int) (this._io.readU1());
-                        break;
-                    }
-                    case CMP_ZPG: {
-                        this.args = (int) (this._io.readU1());
-                        break;
-                    }
-                    case STX_ABS: {
-                        this.args = this._io.readU2le();
-                        break;
-                    }
-                    case STY_ABS: {
-                        this.args = this._io.readU2le();
-                        break;
-                    }
-                    case CPY_ZPG: {
-                        this.args = (int) (this._io.readU1());
-                        break;
-                    }
-                    case DEC_ABS: {
-                        this.args = this._io.readU2le();
-                        break;
-                    }
-                    case ROR_ABS: {
-                        this.args = this._io.readU2le();
-                        break;
-                    }
-                    case STA_ABS_Y: {
+                    case INC_ABS: {
                         this.args = this._io.readU2le();
                         break;
                     }
@@ -657,68 +472,636 @@ public class Code6502 extends KaitaiStruct {
                         this.args = this._io.readU2le();
                         break;
                     }
+                    case INC_ZPG: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
+                        break;
+                    }
+                    case INC_ZPG_X: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
+                        break;
+                    }
+                    case JMP_ABS: {
+                        this.args = this._io.readU2le();
+                        break;
+                    }
+                    case JMP_IND: {
+                        this.args = this._io.readU2le();
+                        break;
+                    }
+                    case JSR_ABS: {
+                        this.args = this._io.readU2le();
+                        break;
+                    }
+                    case LDA_ABS: {
+                        this.args = this._io.readU2le();
+                        break;
+                    }
+                    case LDA_ABS_X: {
+                        this.args = this._io.readU2le();
+                        break;
+                    }
+                    case LDA_ABS_Y: {
+                        this.args = this._io.readU2le();
+                        break;
+                    }
+                    case LDA_IMM: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
+                        break;
+                    }
+                    case LDA_IND_Y: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
+                        break;
+                    }
+                    case LDA_X_IND: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
+                        break;
+                    }
                     case LDA_ZPG: {
-                        this.args = (int) (this._io.readU1());
+                        this.args = ((Number) (this._io.readU1())).intValue();
                         break;
                     }
-                    case CMP_IND_Y: {
-                        this.args = (int) (this._io.readU1());
+                    case LDA_ZPG_X: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
                         break;
                     }
-                    case CPY_IMM: {
-                        this.args = (int) (this._io.readU1());
+                    case LDX_ABS: {
+                        this.args = this._io.readU2le();
+                        break;
+                    }
+                    case LDX_ABS_Y: {
+                        this.args = this._io.readU2le();
+                        break;
+                    }
+                    case LDX_IMM: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
+                        break;
+                    }
+                    case LDX_ZPG: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
                         break;
                     }
                     case LDX_ZPG_Y: {
-                        this.args = (int) (this._io.readU1());
+                        this.args = ((Number) (this._io.readU1())).intValue();
                         break;
                     }
-                    case SBC_ZPG_X: {
-                        this.args = (int) (this._io.readU1());
+                    case LDY_ABS: {
+                        this.args = this._io.readU2le();
                         break;
                     }
-                    case ORA_X_IND: {
-                        this.args = (int) (this._io.readU1());
+                    case LDY_ABS_X: {
+                        this.args = this._io.readU2le();
                         break;
                     }
-                    case ROL_ZPG_X: {
-                        this.args = (int) (this._io.readU1());
+                    case LDY_IMM: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
+                        break;
+                    }
+                    case LDY_ZPG: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
+                        break;
+                    }
+                    case LDY_ZPG_X: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
+                        break;
+                    }
+                    case LSR_ABS: {
+                        this.args = this._io.readU2le();
+                        break;
+                    }
+                    case LSR_ABS_X: {
+                        this.args = this._io.readU2le();
+                        break;
+                    }
+                    case LSR_ZPG: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
+                        break;
+                    }
+                    case LSR_ZPG_X: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
                         break;
                     }
                     case ORA_ABS: {
                         this.args = this._io.readU2le();
                         break;
                     }
-                    case STA_IND_Y: {
-                        this.args = (int) (this._io.readU1());
-                        break;
-                    }
-                    case AND_ABS: {
+                    case ORA_ABS_X: {
                         this.args = this._io.readU2le();
                         break;
                     }
-                    case AND_IMM: {
-                        this.args = (int) (this._io.readU1());
+                    case ORA_ABS_Y: {
+                        this.args = this._io.readU2le();
                         break;
                     }
-                    case CMP_X_IND: {
-                        this.args = (int) (this._io.readU1());
+                    case ORA_IMM: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
                         break;
                     }
-                    case LDY_ZPG: {
-                        this.args = (int) (this._io.readU1());
+                    case ORA_IND_Y: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
                         break;
                     }
-                    case INC_ZPG: {
-                        this.args = (int) (this._io.readU1());
-                        break;
-                    }
-                    case BVC_REL: {
-                        this.args = (int) (this._io.readS1());
+                    case ORA_X_IND: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
                         break;
                     }
                     case ORA_ZPG: {
-                        this.args = (int) (this._io.readU1());
+                        this.args = ((Number) (this._io.readU1())).intValue();
+                        break;
+                    }
+                    case ORA_ZPG_X: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
+                        break;
+                    }
+                    case ROL_ABS: {
+                        this.args = this._io.readU2le();
+                        break;
+                    }
+                    case ROL_ABS_X: {
+                        this.args = this._io.readU2le();
+                        break;
+                    }
+                    case ROL_ZPG: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
+                        break;
+                    }
+                    case ROL_ZPG_X: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
+                        break;
+                    }
+                    case ROR_ABS: {
+                        this.args = this._io.readU2le();
+                        break;
+                    }
+                    case ROR_ABS_X: {
+                        this.args = this._io.readU2le();
+                        break;
+                    }
+                    case ROR_ZPG: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
+                        break;
+                    }
+                    case ROR_ZPG_X: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
+                        break;
+                    }
+                    case SBC_ABS: {
+                        this.args = this._io.readU2le();
+                        break;
+                    }
+                    case SBC_ABS_X: {
+                        this.args = this._io.readU2le();
+                        break;
+                    }
+                    case SBC_ABS_Y: {
+                        this.args = this._io.readU2le();
+                        break;
+                    }
+                    case SBC_IMM: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
+                        break;
+                    }
+                    case SBC_IND_Y: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
+                        break;
+                    }
+                    case SBC_X_IND: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
+                        break;
+                    }
+                    case SBC_ZPG: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
+                        break;
+                    }
+                    case SBC_ZPG_X: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
+                        break;
+                    }
+                    case STA_ABS: {
+                        this.args = this._io.readU2le();
+                        break;
+                    }
+                    case STA_ABS_X: {
+                        this.args = this._io.readU2le();
+                        break;
+                    }
+                    case STA_ABS_Y: {
+                        this.args = this._io.readU2le();
+                        break;
+                    }
+                    case STA_IND_Y: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
+                        break;
+                    }
+                    case STA_X_IND: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
+                        break;
+                    }
+                    case STA_ZPG: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
+                        break;
+                    }
+                    case STA_ZPG_X: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
+                        break;
+                    }
+                    case STX_ABS: {
+                        this.args = this._io.readU2le();
+                        break;
+                    }
+                    case STX_ZPG: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
+                        break;
+                    }
+                    case STX_ZPG_Y: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
+                        break;
+                    }
+                    case STY_ABS: {
+                        this.args = this._io.readU2le();
+                        break;
+                    }
+                    case STY_ZPG: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
+                        break;
+                    }
+                    case STY_ZPG_X: {
+                        this.args = ((Number) (this._io.readU1())).intValue();
+                        break;
+                    }
+                    }
+                }
+            }
+        }
+
+        public void _fetchInstances() {
+            {
+                Opcode on = code();
+                if (on != null) {
+                    switch (code()) {
+                    case ADC_ABS: {
+                        break;
+                    }
+                    case ADC_ABS_X: {
+                        break;
+                    }
+                    case ADC_ABS_Y: {
+                        break;
+                    }
+                    case ADC_IMM: {
+                        break;
+                    }
+                    case ADC_IND_Y: {
+                        break;
+                    }
+                    case ADC_X_IND: {
+                        break;
+                    }
+                    case ADC_ZPG: {
+                        break;
+                    }
+                    case ADC_ZPG_X: {
+                        break;
+                    }
+                    case AND_ABS: {
+                        break;
+                    }
+                    case AND_ABS_X: {
+                        break;
+                    }
+                    case AND_ABS_Y: {
+                        break;
+                    }
+                    case AND_IMM: {
+                        break;
+                    }
+                    case AND_IND_Y: {
+                        break;
+                    }
+                    case AND_X_IND: {
+                        break;
+                    }
+                    case AND_ZPG: {
+                        break;
+                    }
+                    case AND_ZPG_X: {
+                        break;
+                    }
+                    case ASL_ABS: {
+                        break;
+                    }
+                    case ASL_ABS_X: {
+                        break;
+                    }
+                    case ASL_ZPG: {
+                        break;
+                    }
+                    case ASL_ZPG_X: {
+                        break;
+                    }
+                    case BCC_REL: {
+                        break;
+                    }
+                    case BCS_REL: {
+                        break;
+                    }
+                    case BEQ_REL: {
+                        break;
+                    }
+                    case BIT_ABS: {
+                        break;
+                    }
+                    case BIT_ZPG: {
+                        break;
+                    }
+                    case BMI_REL: {
+                        break;
+                    }
+                    case BNE_REL: {
+                        break;
+                    }
+                    case BPL_REL: {
+                        break;
+                    }
+                    case BVC_REL: {
+                        break;
+                    }
+                    case BVS_REL: {
+                        break;
+                    }
+                    case CMP_ABS: {
+                        break;
+                    }
+                    case CMP_ABS_X: {
+                        break;
+                    }
+                    case CMP_ABS_Y: {
+                        break;
+                    }
+                    case CMP_IMM: {
+                        break;
+                    }
+                    case CMP_IND_Y: {
+                        break;
+                    }
+                    case CMP_X_IND: {
+                        break;
+                    }
+                    case CMP_ZPG: {
+                        break;
+                    }
+                    case CMP_ZPG_X: {
+                        break;
+                    }
+                    case CPX_ABS: {
+                        break;
+                    }
+                    case CPX_IMM: {
+                        break;
+                    }
+                    case CPX_ZPG: {
+                        break;
+                    }
+                    case CPY_ABS: {
+                        break;
+                    }
+                    case CPY_IMM: {
+                        break;
+                    }
+                    case CPY_ZPG: {
+                        break;
+                    }
+                    case DEC_ABS: {
+                        break;
+                    }
+                    case DEC_ABS_X: {
+                        break;
+                    }
+                    case DEC_ZPG: {
+                        break;
+                    }
+                    case DEC_ZPG_X: {
+                        break;
+                    }
+                    case EOR_ABS: {
+                        break;
+                    }
+                    case EOR_ABS_X: {
+                        break;
+                    }
+                    case EOR_ABS_Y: {
+                        break;
+                    }
+                    case EOR_IMM: {
+                        break;
+                    }
+                    case EOR_IND_Y: {
+                        break;
+                    }
+                    case EOR_X_IND: {
+                        break;
+                    }
+                    case EOR_ZPG: {
+                        break;
+                    }
+                    case EOR_ZPG_X: {
+                        break;
+                    }
+                    case INC_ABS: {
+                        break;
+                    }
+                    case INC_ABS_X: {
+                        break;
+                    }
+                    case INC_ZPG: {
+                        break;
+                    }
+                    case INC_ZPG_X: {
+                        break;
+                    }
+                    case JMP_ABS: {
+                        break;
+                    }
+                    case JMP_IND: {
+                        break;
+                    }
+                    case JSR_ABS: {
+                        break;
+                    }
+                    case LDA_ABS: {
+                        break;
+                    }
+                    case LDA_ABS_X: {
+                        break;
+                    }
+                    case LDA_ABS_Y: {
+                        break;
+                    }
+                    case LDA_IMM: {
+                        break;
+                    }
+                    case LDA_IND_Y: {
+                        break;
+                    }
+                    case LDA_X_IND: {
+                        break;
+                    }
+                    case LDA_ZPG: {
+                        break;
+                    }
+                    case LDA_ZPG_X: {
+                        break;
+                    }
+                    case LDX_ABS: {
+                        break;
+                    }
+                    case LDX_ABS_Y: {
+                        break;
+                    }
+                    case LDX_IMM: {
+                        break;
+                    }
+                    case LDX_ZPG: {
+                        break;
+                    }
+                    case LDX_ZPG_Y: {
+                        break;
+                    }
+                    case LDY_ABS: {
+                        break;
+                    }
+                    case LDY_ABS_X: {
+                        break;
+                    }
+                    case LDY_IMM: {
+                        break;
+                    }
+                    case LDY_ZPG: {
+                        break;
+                    }
+                    case LDY_ZPG_X: {
+                        break;
+                    }
+                    case LSR_ABS: {
+                        break;
+                    }
+                    case LSR_ABS_X: {
+                        break;
+                    }
+                    case LSR_ZPG: {
+                        break;
+                    }
+                    case LSR_ZPG_X: {
+                        break;
+                    }
+                    case ORA_ABS: {
+                        break;
+                    }
+                    case ORA_ABS_X: {
+                        break;
+                    }
+                    case ORA_ABS_Y: {
+                        break;
+                    }
+                    case ORA_IMM: {
+                        break;
+                    }
+                    case ORA_IND_Y: {
+                        break;
+                    }
+                    case ORA_X_IND: {
+                        break;
+                    }
+                    case ORA_ZPG: {
+                        break;
+                    }
+                    case ORA_ZPG_X: {
+                        break;
+                    }
+                    case ROL_ABS: {
+                        break;
+                    }
+                    case ROL_ABS_X: {
+                        break;
+                    }
+                    case ROL_ZPG: {
+                        break;
+                    }
+                    case ROL_ZPG_X: {
+                        break;
+                    }
+                    case ROR_ABS: {
+                        break;
+                    }
+                    case ROR_ABS_X: {
+                        break;
+                    }
+                    case ROR_ZPG: {
+                        break;
+                    }
+                    case ROR_ZPG_X: {
+                        break;
+                    }
+                    case SBC_ABS: {
+                        break;
+                    }
+                    case SBC_ABS_X: {
+                        break;
+                    }
+                    case SBC_ABS_Y: {
+                        break;
+                    }
+                    case SBC_IMM: {
+                        break;
+                    }
+                    case SBC_IND_Y: {
+                        break;
+                    }
+                    case SBC_X_IND: {
+                        break;
+                    }
+                    case SBC_ZPG: {
+                        break;
+                    }
+                    case SBC_ZPG_X: {
+                        break;
+                    }
+                    case STA_ABS: {
+                        break;
+                    }
+                    case STA_ABS_X: {
+                        break;
+                    }
+                    case STA_ABS_Y: {
+                        break;
+                    }
+                    case STA_IND_Y: {
+                        break;
+                    }
+                    case STA_X_IND: {
+                        break;
+                    }
+                    case STA_ZPG: {
+                        break;
+                    }
+                    case STA_ZPG_X: {
+                        break;
+                    }
+                    case STX_ABS: {
+                        break;
+                    }
+                    case STX_ZPG: {
+                        break;
+                    }
+                    case STX_ZPG_Y: {
+                        break;
+                    }
+                    case STY_ABS: {
+                        break;
+                    }
+                    case STY_ZPG: {
+                        break;
+                    }
+                    case STY_ZPG_X: {
                         break;
                     }
                     }
@@ -734,10 +1117,10 @@ public class Code6502 extends KaitaiStruct {
         public Code6502 _root() { return _root; }
         public Code6502 _parent() { return _parent; }
     }
-    private ArrayList<Operation> operations;
+    private List<Operation> operations;
     private Code6502 _root;
     private KaitaiStruct _parent;
-    public ArrayList<Operation> operations() { return operations; }
+    public List<Operation> operations() { return operations; }
     public Code6502 _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

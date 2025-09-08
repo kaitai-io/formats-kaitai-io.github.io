@@ -20,8 +20,8 @@
 
 namespace {
     class VlqBase128Be extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \VlqBase128Be $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\VlqBase128Be $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -38,7 +38,7 @@ namespace {
         public function last() {
             if ($this->_m_last !== null)
                 return $this->_m_last;
-            $this->_m_last = (count($this->groups()) - 1);
+            $this->_m_last = count($this->groups()) - 1;
             return $this->_m_last;
         }
         protected $_m_value;
@@ -49,7 +49,7 @@ namespace {
         public function value() {
             if ($this->_m_value !== null)
                 return $this->_m_value;
-            $this->_m_value = ((((((($this->groups()[$this->last()]->value() + ($this->last() >= 1 ? ($this->groups()[($this->last() - 1)]->value() << 7) : 0)) + ($this->last() >= 2 ? ($this->groups()[($this->last() - 2)]->value() << 14) : 0)) + ($this->last() >= 3 ? ($this->groups()[($this->last() - 3)]->value() << 21) : 0)) + ($this->last() >= 4 ? ($this->groups()[($this->last() - 4)]->value() << 28) : 0)) + ($this->last() >= 5 ? ($this->groups()[($this->last() - 5)]->value() << 35) : 0)) + ($this->last() >= 6 ? ($this->groups()[($this->last() - 6)]->value() << 42) : 0)) + ($this->last() >= 7 ? ($this->groups()[($this->last() - 7)]->value() << 49) : 0));
+            $this->_m_value = ((((((($this->groups()[$this->last()]->value() + ($this->last() >= 1 ? $this->groups()[$this->last() - 1]->value() << 7 : 0)) + ($this->last() >= 2 ? $this->groups()[$this->last() - 2]->value() << 14 : 0)) + ($this->last() >= 3 ? $this->groups()[$this->last() - 3]->value() << 21 : 0)) + ($this->last() >= 4 ? $this->groups()[$this->last() - 4]->value() << 28 : 0)) + ($this->last() >= 5 ? $this->groups()[$this->last() - 5]->value() << 35 : 0)) + ($this->last() >= 6 ? $this->groups()[$this->last() - 6]->value() << 42 : 0)) + ($this->last() >= 7 ? $this->groups()[$this->last() - 7]->value() << 49 : 0));
             return $this->_m_value;
         }
         protected $_m_groups;
@@ -63,7 +63,7 @@ namespace {
 
 namespace VlqBase128Be {
     class Group extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \VlqBase128Be $_parent = null, \VlqBase128Be $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\VlqBase128Be $_parent = null, ?\VlqBase128Be $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }

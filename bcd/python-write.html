@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>BCD (Binary Coded Decimals): Python (read-write) parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="/pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li><a href="//kaitai.io/news/">News</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../">Format Gallery</a></li>
+        <li>Commonly Used Data Types</li>
+        <li class="active">BCD (Binary Coded Decimals)</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>BCD (Binary Coded Decimals):
+            
+            Python (read-write) parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>BCD (Binary Coded Decimals) is a common way to encode integer
+numbers in a way that makes human-readable output somewhat
+simpler. In this encoding scheme, every decimal digit is encoded as
+either a single byte (8 bits), or a nibble (half of a byte, 4
+bits). This obviously wastes a lot of bits, but it makes translation
+into human-readable string much easier than traditional
+binary-to-decimal conversion process, which includes lots of
+divisions by 10.</p>
+<p>For example, encoding integer 31337 in 8-digit, 8 bits per digit,
+big endian order of digits BCD format yields</p>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">00 00 00 03 01 03 03 07
+</span></code></pre>
+<p>Encoding the same integer as 8-digit, 4 bits per digit, little
+endian order BCD format would yield:</p>
+<pre style="background-color:#2b303b;"><code><span style="color:#c0c5ce;">73 31 30 00
+</span></code></pre>
+<p>Using this type of encoding in Kaitai Struct is pretty
+straightforward: one calls for this type, specifying desired
+encoding parameters, and gets result using either <code>as_int</code> or
+<code>as_str</code> attributes.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.8
+                    </div>
+                    
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="https://www.wikidata.org/wiki/Q276582">Wikidata Q276582</a></li>
+                            
+                            
+                            
+                            <li><a href="http://fileformats.archiveteam.org/wiki/Binary-coded_decimal">Binary-coded decimal in Just Solve the File Format Problem</a></li>
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of BCD (Binary Coded Decimals)
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="BCD (Binary Coded Decimals) parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_11.html" title="BCD (Binary Coded Decimals) parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="BCD (Binary Coded Decimals) parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="BCD (Binary Coded Decimals) parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="BCD (Binary Coded Decimals) parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="BCD (Binary Coded Decimals) parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="BCD (Binary Coded Decimals) parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="java-write.html" title="BCD (Binary Coded Decimals) parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="BCD (Binary Coded Decimals) parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="BCD (Binary Coded Decimals) parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="BCD (Binary Coded Decimals) parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="BCD (Binary Coded Decimals) parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="BCD (Binary Coded Decimals) parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="BCD (Binary Coded Decimals) parsing Python library">Python</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="python-write.html" title="BCD (Binary Coded Decimals) parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="BCD (Binary Coded Decimals) parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="BCD (Binary Coded Decimals) parsing Rust library">Rust</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Python (read-write) source code to parse BCD (Binary Coded Decimals)
+            
+        </h2>
+
+        
+
+        <h3>bcd.py</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/python-write/bcd.py" download="bcd.py" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+<span class="c1"># type: ignore</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">kaitaistruct</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">kaitaistruct</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReadWriteKaitaiStruct</span><span class="p">,</span> <span class="n">KaitaiStream</span><span class="p">,</span> <span class="n">BytesIO</span>
+
+
+<span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">kaitaistruct</span><span class="p">,</span> <span class="s1">&#39;API_VERSION&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">kaitaistruct</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Bcd</span><span class="p">(</span><span class="n">ReadWriteKaitaiStruct</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;BCD (Binary Coded Decimals) is a common way to encode integer</span>
+<span class="sd">    numbers in a way that makes human-readable output somewhat</span>
+<span class="sd">    simpler. In this encoding scheme, every decimal digit is encoded as</span>
+<span class="sd">    either a single byte (8 bits), or a nibble (half of a byte, 4</span>
+<span class="sd">    bits). This obviously wastes a lot of bits, but it makes translation</span>
+<span class="sd">    into human-readable string much easier than traditional</span>
+<span class="sd">    binary-to-decimal conversion process, which includes lots of</span>
+<span class="sd">    divisions by 10.</span>
+<span class="sd">    </span>
+<span class="sd">    For example, encoding integer 31337 in 8-digit, 8 bits per digit,</span>
+<span class="sd">    big endian order of digits BCD format yields</span>
+<span class="sd">    </span>
+<span class="sd">    ```</span>
+<span class="sd">    00 00 00 03 01 03 03 07</span>
+<span class="sd">    ```</span>
+<span class="sd">    </span>
+<span class="sd">    Encoding the same integer as 8-digit, 4 bits per digit, little</span>
+<span class="sd">    endian order BCD format would yield:</span>
+<span class="sd">    </span>
+<span class="sd">    ```</span>
+<span class="sd">    73 31 30 00</span>
+<span class="sd">    ```</span>
+<span class="sd">    </span>
+<span class="sd">    Using this type of encoding in Kaitai Struct is pretty</span>
+<span class="sd">    straightforward: one calls for this type, specifying desired</span>
+<span class="sd">    encoding parameters, and gets result using either `as_int` or</span>
+<span class="sd">    `as_str` attributes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_digits</span><span class="p">,</span> <span class="n">bits_per_digit</span><span class="p">,</span> <span class="n">is_le</span><span class="p">,</span> <span class="n">_io</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Bcd</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="ow">or</span> <span class="bp">self</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_digits</span> <span class="o">=</span> <span class="n">num_digits</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bits_per_digit</span> <span class="o">=</span> <span class="n">bits_per_digit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_le</span> <span class="o">=</span> <span class="n">is_le</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">digits</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_digits</span><span class="p">):</span>
+            <span class="n">_on</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bits_per_digit</span>
+            <span class="k">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">digits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="mi">8</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">digits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">())</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dirty</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">digits</span><span class="p">)):</span>
+            <span class="k">pass</span>
+            <span class="n">_on</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bits_per_digit</span>
+            <span class="k">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="mi">8</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_write__seq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">io</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Bcd</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_write__seq</span><span class="p">(</span><span class="n">io</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">digits</span><span class="p">)):</span>
+            <span class="k">pass</span>
+            <span class="n">_on</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bits_per_digit</span>
+            <span class="k">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">write_bits_int_be</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">digits</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="mi">8</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">write_u1</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">digits</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">digits</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_digits</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ConsistencyError</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;digits&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_digits</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">digits</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">digits</span><span class="p">)):</span>
+            <span class="k">pass</span>
+            <span class="n">_on</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bits_per_digit</span>
+            <span class="k">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="mi">8</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dirty</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">as_int</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Value of this BCD number as integer. Endianness would be selected based on `is_le` parameter given.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_as_int&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_as_int</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_m_as_int</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">as_int_le</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_le</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">as_int_be</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_as_int&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_invalidate_as_int</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_as_int</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">as_int_be</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Value of this BCD number as integer (treating digit order as big-endian).&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_as_int_be&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_as_int_be</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_m_as_int_be</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">digits</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">last_idx</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="mi">0</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_digits</span> <span class="o">&lt;</span> <span class="mi">2</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">digits</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">last_idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="p">(</span><span class="mi">0</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_digits</span> <span class="o">&lt;</span> <span class="mi">3</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">digits</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">last_idx</span> <span class="o">-</span> <span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">+</span> <span class="p">(</span><span class="mi">0</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_digits</span> <span class="o">&lt;</span> <span class="mi">4</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">digits</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">last_idx</span> <span class="o">-</span> <span class="mi">3</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1000</span> <span class="o">+</span> <span class="p">(</span><span class="mi">0</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_digits</span> <span class="o">&lt;</span> <span class="mi">5</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">digits</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">last_idx</span> <span class="o">-</span> <span class="mi">4</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10000</span> <span class="o">+</span> <span class="p">(</span><span class="mi">0</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_digits</span> <span class="o">&lt;</span> <span class="mi">6</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">digits</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">last_idx</span> <span class="o">-</span> <span class="mi">5</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100000</span> <span class="o">+</span> <span class="p">(</span><span class="mi">0</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_digits</span> <span class="o">&lt;</span> <span class="mi">7</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">digits</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">last_idx</span> <span class="o">-</span> <span class="mi">6</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1000000</span> <span class="o">+</span> <span class="p">(</span><span class="mi">0</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_digits</span> <span class="o">&lt;</span> <span class="mi">8</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">digits</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">last_idx</span> <span class="o">-</span> <span class="mi">7</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10000000</span><span class="p">)))))))</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_as_int_be&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_invalidate_as_int_be</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_as_int_be</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">as_int_le</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Value of this BCD number as integer (treating digit order as little-endian).&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_as_int_le&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_as_int_le</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_m_as_int_le</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">digits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="mi">0</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_digits</span> <span class="o">&lt;</span> <span class="mi">2</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">digits</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="p">(</span><span class="mi">0</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_digits</span> <span class="o">&lt;</span> <span class="mi">3</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">digits</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">+</span> <span class="p">(</span><span class="mi">0</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_digits</span> <span class="o">&lt;</span> <span class="mi">4</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">digits</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1000</span> <span class="o">+</span> <span class="p">(</span><span class="mi">0</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_digits</span> <span class="o">&lt;</span> <span class="mi">5</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">digits</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10000</span> <span class="o">+</span> <span class="p">(</span><span class="mi">0</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_digits</span> <span class="o">&lt;</span> <span class="mi">6</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">digits</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100000</span> <span class="o">+</span> <span class="p">(</span><span class="mi">0</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_digits</span> <span class="o">&lt;</span> <span class="mi">7</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">digits</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1000000</span> <span class="o">+</span> <span class="p">(</span><span class="mi">0</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_digits</span> <span class="o">&lt;</span> <span class="mi">8</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">digits</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10000000</span><span class="p">)))))))</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_as_int_le&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_invalidate_as_int_le</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_as_int_le</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">last_idx</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Index of last digit (0-based).&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_last_idx&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_last_idx</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_m_last_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_digits</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_last_idx&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_invalidate_last_idx</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_last_idx</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015&ndash;2025 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">format repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+</body>
+</html>

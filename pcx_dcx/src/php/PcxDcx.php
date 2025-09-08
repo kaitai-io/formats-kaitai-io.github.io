@@ -10,15 +10,15 @@
 
 namespace {
     class PcxDcx extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \PcxDcx $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\PcxDcx $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic = $this->_io->readBytes(4);
-            if (!($this->magic() == "\xB1\x68\xDE\x3A")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\xB1\x68\xDE\x3A", $this->magic(), $this->_io(), "/seq/0");
+            if (!($this->_m_magic == "\xB1\x68\xDE\x3A")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\xB1\x68\xDE\x3A", $this->_m_magic, $this->_io, "/seq/0");
             }
             $this->_m_files = [];
             $i = 0;
@@ -37,7 +37,7 @@ namespace {
 
 namespace PcxDcx {
     class PcxOffset extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PcxDcx $_parent = null, \PcxDcx $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PcxDcx $_parent = null, ?\PcxDcx $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }

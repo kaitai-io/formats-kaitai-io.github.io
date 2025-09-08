@@ -7,8 +7,9 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
-import java.nio.charset.Charset;
+import java.util.List;
 import java.util.Arrays;
+import java.nio.charset.StandardCharsets;
 
 
 /**
@@ -27,80 +28,41 @@ public class Rpm extends KaitaiStruct {
         return new Rpm(new ByteBufferKaitaiStream(fileName));
     }
 
-    public enum OperatingSystems {
-        LINUX(1),
-        IRIX(2),
-        NO_OS(255);
+    public enum Architectures {
+        X86(1),
+        ALPHA(2),
+        SPARC(3),
+        MIPS(4),
+        PPC(5),
+        M68K(6),
+        SGI(7),
+        RS6000(8),
+        IA64(9),
+        SPARC64(10),
+        MIPS64(11),
+        ARM(12),
+        M68K_MINT(13),
+        S390(14),
+        S390X(15),
+        PPC64(16),
+        SH(17),
+        XTENSA(18),
+        AARCH64(19),
+        MIPS_R6(20),
+        MIPS64_R6(21),
+        RISCV(22),
+        LOONGARCH64(23),
+        NO_ARCH(255);
 
         private final long id;
-        OperatingSystems(long id) { this.id = id; }
+        Architectures(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, OperatingSystems> byId = new HashMap<Long, OperatingSystems>(3);
+        private static final Map<Long, Architectures> byId = new HashMap<Long, Architectures>(24);
         static {
-            for (OperatingSystems e : OperatingSystems.values())
+            for (Architectures e : Architectures.values())
                 byId.put(e.id(), e);
         }
-        public static OperatingSystems byId(long id) { return byId.get(id); }
-    }
-
-    public enum SignatureTags {
-        SIGNATURES(62),
-        HEADER_IMMUTABLE(63),
-        I18N_TABLE(100),
-        BAD_SHA1_1_OBSOLETE(264),
-        BAD_SHA1_2_OBSOLETE(265),
-        DSA(267),
-        RSA(268),
-        SHA1(269),
-        LONG_SIZE(270),
-        LONG_ARCHIVE_SIZE(271),
-        SHA256(273),
-        FILE_SIGNATURES(274),
-        FILE_SIGNATURE_LENGTH(275),
-        VERITY_SIGNATURES(276),
-        VERITY_SIGNATURE_ALGO(277),
-        SIZE(1000),
-        LE_MD5_1_OBSOLETE(1001),
-        PGP(1002),
-        LE_MD5_2_OBSOLETE(1003),
-        MD5(1004),
-        GPG(1005),
-        PGP5_OBSOLETE(1006),
-        PAYLOAD_SIZE(1007),
-        RESERVED_SPACE(1008);
-
-        private final long id;
-        SignatureTags(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map<Long, SignatureTags> byId = new HashMap<Long, SignatureTags>(24);
-        static {
-            for (SignatureTags e : SignatureTags.values())
-                byId.put(e.id(), e);
-        }
-        public static SignatureTags byId(long id) { return byId.get(id); }
-    }
-
-    public enum RecordTypes {
-        NOT_IMPLEMENTED(0),
-        CHAR(1),
-        UINT8(2),
-        UINT16(3),
-        UINT32(4),
-        UINT64(5),
-        STRING(6),
-        BIN(7),
-        STRING_ARRAY(8),
-        I18N_STRING(9);
-
-        private final long id;
-        RecordTypes(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map<Long, RecordTypes> byId = new HashMap<Long, RecordTypes>(10);
-        static {
-            for (RecordTypes e : RecordTypes.values())
-                byId.put(e.id(), e);
-        }
-        public static RecordTypes byId(long id) { return byId.get(id); }
+        public static Architectures byId(long id) { return byId.get(id); }
     }
 
     public enum HeaderTags {
@@ -416,6 +378,45 @@ public class Rpm extends KaitaiStruct {
         public static HeaderTags byId(long id) { return byId.get(id); }
     }
 
+    public enum OperatingSystems {
+        LINUX(1),
+        IRIX(2),
+        NO_OS(255);
+
+        private final long id;
+        OperatingSystems(long id) { this.id = id; }
+        public long id() { return id; }
+        private static final Map<Long, OperatingSystems> byId = new HashMap<Long, OperatingSystems>(3);
+        static {
+            for (OperatingSystems e : OperatingSystems.values())
+                byId.put(e.id(), e);
+        }
+        public static OperatingSystems byId(long id) { return byId.get(id); }
+    }
+
+    public enum RecordTypes {
+        NOT_IMPLEMENTED(0),
+        CHAR(1),
+        UINT8(2),
+        UINT16(3),
+        UINT32(4),
+        UINT64(5),
+        STRING(6),
+        BIN(7),
+        STRING_ARRAY(8),
+        I18N_STRING(9);
+
+        private final long id;
+        RecordTypes(long id) { this.id = id; }
+        public long id() { return id; }
+        private static final Map<Long, RecordTypes> byId = new HashMap<Long, RecordTypes>(10);
+        static {
+            for (RecordTypes e : RecordTypes.values())
+                byId.put(e.id(), e);
+        }
+        public static RecordTypes byId(long id) { return byId.get(id); }
+    }
+
     public enum RpmTypes {
         BINARY(0),
         SOURCE(1);
@@ -431,41 +432,41 @@ public class Rpm extends KaitaiStruct {
         public static RpmTypes byId(long id) { return byId.get(id); }
     }
 
-    public enum Architectures {
-        X86(1),
-        ALPHA(2),
-        SPARC(3),
-        MIPS(4),
-        PPC(5),
-        M68K(6),
-        SGI(7),
-        RS6000(8),
-        IA64(9),
-        SPARC64(10),
-        MIPS64(11),
-        ARM(12),
-        M68K_MINT(13),
-        S390(14),
-        S390X(15),
-        PPC64(16),
-        SH(17),
-        XTENSA(18),
-        AARCH64(19),
-        MIPS_R6(20),
-        MIPS64_R6(21),
-        RISCV(22),
-        LOONGARCH64(23),
-        NO_ARCH(255);
+    public enum SignatureTags {
+        SIGNATURES(62),
+        HEADER_IMMUTABLE(63),
+        I18N_TABLE(100),
+        BAD_SHA1_1_OBSOLETE(264),
+        BAD_SHA1_2_OBSOLETE(265),
+        DSA(267),
+        RSA(268),
+        SHA1(269),
+        LONG_SIZE(270),
+        LONG_ARCHIVE_SIZE(271),
+        SHA256(273),
+        FILE_SIGNATURES(274),
+        FILE_SIGNATURE_LENGTH(275),
+        VERITY_SIGNATURES(276),
+        VERITY_SIGNATURE_ALGO(277),
+        SIZE(1000),
+        LE_MD5_1_OBSOLETE(1001),
+        PGP(1002),
+        LE_MD5_2_OBSOLETE(1003),
+        MD5(1004),
+        GPG(1005),
+        PGP5_OBSOLETE(1006),
+        PAYLOAD_SIZE(1007),
+        RESERVED_SPACE(1008);
 
         private final long id;
-        Architectures(long id) { this.id = id; }
+        SignatureTags(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, Architectures> byId = new HashMap<Long, Architectures>(24);
+        private static final Map<Long, SignatureTags> byId = new HashMap<Long, SignatureTags>(24);
         static {
-            for (Architectures e : Architectures.values())
+            for (SignatureTags e : SignatureTags.values())
                 byId.put(e.id(), e);
         }
-        public static Architectures byId(long id) { return byId.get(id); }
+        public static SignatureTags byId(long id) { return byId.get(id); }
     }
 
     public Rpm(KaitaiStream _io) {
@@ -495,40 +496,352 @@ public class Rpm extends KaitaiStruct {
         }
         this.signatureTagsSteps = new ArrayList<SignatureTagsStep>();
         for (int i = 0; i < signature().headerRecord().numIndexRecords(); i++) {
-            this.signatureTagsSteps.add(new SignatureTagsStep(this._io, this, _root, i, (i < 1 ? -1 : signatureTagsSteps().get((int) (i - 1)).sizeTagIdx())));
+            this.signatureTagsSteps.add(new SignatureTagsStep(this._io, this, _root, i, (i < 1 ? -1 : signatureTagsSteps().get(((Number) (i - 1)).intValue()).sizeTagIdx())));
         }
     }
-    public static class RecordTypeStringArray extends KaitaiStruct {
 
-        public RecordTypeStringArray(KaitaiStream _io, long numValues) {
-            this(_io, null, null, numValues);
+    public void _fetchInstances() {
+        this.lead._fetchInstances();
+        this.signature._fetchInstances();
+        if (ofsHeader() < 0) {
+        }
+        this.header._fetchInstances();
+        if (ofsPayload() < 0) {
+        }
+        for (int i = 0; i < this.signatureTagsSteps.size(); i++) {
+            this.signatureTagsSteps.get(((Number) (i)).intValue())._fetchInstances();
+        }
+        payload();
+        if (this.payload != null) {
+        }
+    }
+    public static class Dummy extends KaitaiStruct {
+        public static Dummy fromFile(String fileName) throws IOException {
+            return new Dummy(new ByteBufferKaitaiStream(fileName));
         }
 
-        public RecordTypeStringArray(KaitaiStream _io, Rpm.HeaderIndexRecord _parent, long numValues) {
-            this(_io, _parent, null, numValues);
+        public Dummy(KaitaiStream _io) {
+            this(_io, null, null);
         }
 
-        public RecordTypeStringArray(KaitaiStream _io, Rpm.HeaderIndexRecord _parent, Rpm _root, long numValues) {
+        public Dummy(KaitaiStream _io, Rpm.Header _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Dummy(KaitaiStream _io, Rpm.Header _parent, Rpm _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            this.numValues = numValues;
             _read();
         }
         private void _read() {
-            this.values = new ArrayList<String>();
-            for (int i = 0; i < numValues(); i++) {
-                this.values.add(new String(this._io.readBytesTerm((byte) 0, false, true, true), Charset.forName("UTF-8")));
+        }
+
+        public void _fetchInstances() {
+        }
+        private Rpm _root;
+        private Rpm.Header _parent;
+        public Rpm _root() { return _root; }
+        public Rpm.Header _parent() { return _parent; }
+    }
+
+    /**
+     * header structure used for both the "header" and "signature", but some tag
+     * values have different meanings in signature and header (hence they use
+     * different enums)
+     */
+    public static class Header extends KaitaiStruct {
+
+        public Header(KaitaiStream _io, boolean isSignature) {
+            this(_io, null, null, isSignature);
+        }
+
+        public Header(KaitaiStream _io, Rpm _parent, boolean isSignature) {
+            this(_io, _parent, null, isSignature);
+        }
+
+        public Header(KaitaiStream _io, Rpm _parent, Rpm _root, boolean isSignature) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            this.isSignature = isSignature;
+            _read();
+        }
+        private void _read() {
+            this.headerRecord = new HeaderRecord(this._io, this, _root);
+            this.indexRecords = new ArrayList<HeaderIndexRecord>();
+            for (int i = 0; i < headerRecord().numIndexRecords(); i++) {
+                this.indexRecords.add(new HeaderIndexRecord(this._io, this, _root));
+            }
+            KaitaiStream _io_storageSection = this._io.substream(headerRecord().lenStorageSection());
+            this.storageSection = new Dummy(_io_storageSection, this, _root);
+        }
+
+        public void _fetchInstances() {
+            this.headerRecord._fetchInstances();
+            for (int i = 0; i < this.indexRecords.size(); i++) {
+                this.indexRecords.get(((Number) (i)).intValue())._fetchInstances();
+            }
+            this.storageSection._fetchInstances();
+        }
+        private Boolean isHeader;
+        public Boolean isHeader() {
+            if (this.isHeader != null)
+                return this.isHeader;
+            this.isHeader = !(isSignature());
+            return this.isHeader;
+        }
+        private HeaderRecord headerRecord;
+        private List<HeaderIndexRecord> indexRecords;
+        private Dummy storageSection;
+        private boolean isSignature;
+        private Rpm _root;
+        private Rpm _parent;
+        public HeaderRecord headerRecord() { return headerRecord; }
+        public List<HeaderIndexRecord> indexRecords() { return indexRecords; }
+        public Dummy storageSection() { return storageSection; }
+        public boolean isSignature() { return isSignature; }
+        public Rpm _root() { return _root; }
+        public Rpm _parent() { return _parent; }
+    }
+    public static class HeaderIndexRecord extends KaitaiStruct {
+        public static HeaderIndexRecord fromFile(String fileName) throws IOException {
+            return new HeaderIndexRecord(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public HeaderIndexRecord(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public HeaderIndexRecord(KaitaiStream _io, Rpm.Header _parent) {
+            this(_io, _parent, null);
+        }
+
+        public HeaderIndexRecord(KaitaiStream _io, Rpm.Header _parent, Rpm _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.tagRaw = this._io.readU4be();
+            this.recordType = Rpm.RecordTypes.byId(this._io.readU4be());
+            this.ofsBody = this._io.readU4be();
+            this.count = this._io.readU4be();
+        }
+
+        public void _fetchInstances() {
+            body();
+            if (this.body != null) {
+                {
+                    RecordTypes on = recordType();
+                    if (on != null) {
+                        switch (recordType()) {
+                        case BIN: {
+                            ((RecordTypeBin) (this.body))._fetchInstances();
+                            break;
+                        }
+                        case CHAR: {
+                            ((RecordTypeUint8) (this.body))._fetchInstances();
+                            break;
+                        }
+                        case I18N_STRING: {
+                            ((RecordTypeStringArray) (this.body))._fetchInstances();
+                            break;
+                        }
+                        case STRING: {
+                            ((RecordTypeString) (this.body))._fetchInstances();
+                            break;
+                        }
+                        case STRING_ARRAY: {
+                            ((RecordTypeStringArray) (this.body))._fetchInstances();
+                            break;
+                        }
+                        case UINT16: {
+                            ((RecordTypeUint16) (this.body))._fetchInstances();
+                            break;
+                        }
+                        case UINT32: {
+                            ((RecordTypeUint32) (this.body))._fetchInstances();
+                            break;
+                        }
+                        case UINT64: {
+                            ((RecordTypeUint64) (this.body))._fetchInstances();
+                            break;
+                        }
+                        case UINT8: {
+                            ((RecordTypeUint8) (this.body))._fetchInstances();
+                            break;
+                        }
+                        }
+                    }
+                }
             }
         }
-        private ArrayList<String> values;
-        private long numValues;
+        private KaitaiStruct body;
+        public KaitaiStruct body() {
+            if (this.body != null)
+                return this.body;
+            KaitaiStream io = _parent().storageSection()._io();
+            long _pos = io.pos();
+            io.seek(ofsBody());
+            {
+                RecordTypes on = recordType();
+                if (on != null) {
+                    switch (recordType()) {
+                    case BIN: {
+                        this.body = new RecordTypeBin(io, this, _root, lenValue());
+                        break;
+                    }
+                    case CHAR: {
+                        this.body = new RecordTypeUint8(io, this, _root, numValues());
+                        break;
+                    }
+                    case I18N_STRING: {
+                        this.body = new RecordTypeStringArray(io, this, _root, numValues());
+                        break;
+                    }
+                    case STRING: {
+                        this.body = new RecordTypeString(io, this, _root);
+                        break;
+                    }
+                    case STRING_ARRAY: {
+                        this.body = new RecordTypeStringArray(io, this, _root, numValues());
+                        break;
+                    }
+                    case UINT16: {
+                        this.body = new RecordTypeUint16(io, this, _root, numValues());
+                        break;
+                    }
+                    case UINT32: {
+                        this.body = new RecordTypeUint32(io, this, _root, numValues());
+                        break;
+                    }
+                    case UINT64: {
+                        this.body = new RecordTypeUint64(io, this, _root, numValues());
+                        break;
+                    }
+                    case UINT8: {
+                        this.body = new RecordTypeUint8(io, this, _root, numValues());
+                        break;
+                    }
+                    }
+                }
+            }
+            io.seek(_pos);
+            return this.body;
+        }
+        private HeaderTags headerTag;
+        public HeaderTags headerTag() {
+            if (this.headerTag != null)
+                return this.headerTag;
+            if (_parent().isHeader()) {
+                this.headerTag = Rpm.HeaderTags.byId(tagRaw());
+            }
+            return this.headerTag;
+        }
+        private Long lenValue;
+        public Long lenValue() {
+            if (this.lenValue != null)
+                return this.lenValue;
+            if (recordType() == Rpm.RecordTypes.BIN) {
+                this.lenValue = ((Number) (count())).longValue();
+            }
+            return this.lenValue;
+        }
+        private Long numValues;
+        public Long numValues() {
+            if (this.numValues != null)
+                return this.numValues;
+            if (recordType() != Rpm.RecordTypes.BIN) {
+                this.numValues = ((Number) (count())).longValue();
+            }
+            return this.numValues;
+        }
+        private SignatureTags signatureTag;
+        public SignatureTags signatureTag() {
+            if (this.signatureTag != null)
+                return this.signatureTag;
+            if (_parent().isSignature()) {
+                this.signatureTag = Rpm.SignatureTags.byId(tagRaw());
+            }
+            return this.signatureTag;
+        }
+        private long tagRaw;
+        private RecordTypes recordType;
+        private long ofsBody;
+        private long count;
         private Rpm _root;
-        private Rpm.HeaderIndexRecord _parent;
-        public ArrayList<String> values() { return values; }
-        public long numValues() { return numValues; }
+        private Rpm.Header _parent;
+
+        /**
+         * prefer to access `signature_tag` and `header_tag` instead
+         */
+        public long tagRaw() { return tagRaw; }
+        public RecordTypes recordType() { return recordType; }
+        public long ofsBody() { return ofsBody; }
+
+        /**
+         * internal; access `num_values` and `len_value` instead
+         */
+        public long count() { return count; }
         public Rpm _root() { return _root; }
-        public Rpm.HeaderIndexRecord _parent() { return _parent; }
+        public Rpm.Header _parent() { return _parent; }
+    }
+    public static class HeaderRecord extends KaitaiStruct {
+        public static HeaderRecord fromFile(String fileName) throws IOException {
+            return new HeaderRecord(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public HeaderRecord(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public HeaderRecord(KaitaiStream _io, Rpm.Header _parent) {
+            this(_io, _parent, null);
+        }
+
+        public HeaderRecord(KaitaiStream _io, Rpm.Header _parent, Rpm _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.magic = this._io.readBytes(4);
+            if (!(Arrays.equals(this.magic, new byte[] { -114, -83, -24, 1 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { -114, -83, -24, 1 }, this.magic, this._io, "/types/header_record/seq/0");
+            }
+            this.reserved = this._io.readBytes(4);
+            if (!(Arrays.equals(this.reserved, new byte[] { 0, 0, 0, 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, this.reserved, this._io, "/types/header_record/seq/1");
+            }
+            this.numIndexRecords = this._io.readU4be();
+            if (!(this.numIndexRecords >= 1)) {
+                throw new KaitaiStream.ValidationLessThanError(1, this.numIndexRecords, this._io, "/types/header_record/seq/2");
+            }
+            this.lenStorageSection = this._io.readU4be();
+        }
+
+        public void _fetchInstances() {
+        }
+        private byte[] magic;
+        private byte[] reserved;
+        private long numIndexRecords;
+        private long lenStorageSection;
+        private Rpm _root;
+        private Rpm.Header _parent;
+        public byte[] magic() { return magic; }
+        public byte[] reserved() { return reserved; }
+        public long numIndexRecords() { return numIndexRecords; }
+
+        /**
+         * Size of the storage area for the data
+         * pointed to by the Index Records.
+         */
+        public long lenStorageSection() { return lenStorageSection; }
+        public Rpm _root() { return _root; }
+        public Rpm.Header _parent() { return _parent; }
     }
 
     /**
@@ -567,19 +880,23 @@ public class Rpm extends KaitaiStruct {
         }
         private void _read() {
             this.magic = this._io.readBytes(4);
-            if (!(Arrays.equals(magic(), new byte[] { -19, -85, -18, -37 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { -19, -85, -18, -37 }, magic(), _io(), "/types/lead/seq/0");
+            if (!(Arrays.equals(this.magic, new byte[] { -19, -85, -18, -37 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { -19, -85, -18, -37 }, this.magic, this._io, "/types/lead/seq/0");
             }
             this.version = new RpmVersion(this._io, this, _root);
             this.type = Rpm.RpmTypes.byId(this._io.readU2be());
             this.architecture = Rpm.Architectures.byId(this._io.readU2be());
-            this.packageName = new String(KaitaiStream.bytesTerminate(this._io.readBytes(66), (byte) 0, false), Charset.forName("UTF-8"));
+            this.packageName = new String(KaitaiStream.bytesTerminate(this._io.readBytes(66), (byte) 0, false), StandardCharsets.UTF_8);
             this.os = Rpm.OperatingSystems.byId(this._io.readU2be());
             this.signatureType = this._io.readU2be();
-            if (!(signatureType() == 5)) {
-                throw new KaitaiStream.ValidationNotEqualError(5, signatureType(), _io(), "/types/lead/seq/6");
+            if (!(this.signatureType == 5)) {
+                throw new KaitaiStream.ValidationNotEqualError(5, this.signatureType, this._io, "/types/lead/seq/6");
             }
             this.reserved = this._io.readBytes(16);
+        }
+
+        public void _fetchInstances() {
+            this.version._fetchInstances();
         }
         private byte[] magic;
         private RpmVersion version;
@@ -601,6 +918,43 @@ public class Rpm extends KaitaiStruct {
         public byte[] reserved() { return reserved; }
         public Rpm _root() { return _root; }
         public Rpm _parent() { return _parent; }
+    }
+    public static class RecordTypeBin extends KaitaiStruct {
+
+        public RecordTypeBin(KaitaiStream _io, long lenValue) {
+            this(_io, null, null, lenValue);
+        }
+
+        public RecordTypeBin(KaitaiStream _io, Rpm.HeaderIndexRecord _parent, long lenValue) {
+            this(_io, _parent, null, lenValue);
+        }
+
+        public RecordTypeBin(KaitaiStream _io, Rpm.HeaderIndexRecord _parent, Rpm _root, long lenValue) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            this.lenValue = lenValue;
+            _read();
+        }
+        private void _read() {
+            this.values = new ArrayList<byte[]>();
+            for (int i = 0; i < 1; i++) {
+                this.values.add(this._io.readBytes(lenValue()));
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.values.size(); i++) {
+            }
+        }
+        private List<byte[]> values;
+        private long lenValue;
+        private Rpm _root;
+        private Rpm.HeaderIndexRecord _parent;
+        public List<byte[]> values() { return values; }
+        public long lenValue() { return lenValue; }
+        public Rpm _root() { return _root; }
+        public Rpm.HeaderIndexRecord _parent() { return _parent; }
     }
     public static class RecordTypeString extends KaitaiStruct {
         public static RecordTypeString fromFile(String fileName) throws IOException {
@@ -624,64 +978,32 @@ public class Rpm extends KaitaiStruct {
         private void _read() {
             this.values = new ArrayList<String>();
             for (int i = 0; i < 1; i++) {
-                this.values.add(new String(this._io.readBytesTerm((byte) 0, false, true, true), Charset.forName("UTF-8")));
+                this.values.add(new String(this._io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.UTF_8));
             }
         }
-        private ArrayList<String> values;
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.values.size(); i++) {
+            }
+        }
+        private List<String> values;
         private Rpm _root;
         private Rpm.HeaderIndexRecord _parent;
-        public ArrayList<String> values() { return values; }
+        public List<String> values() { return values; }
         public Rpm _root() { return _root; }
         public Rpm.HeaderIndexRecord _parent() { return _parent; }
     }
-    public static class SignatureTagsStep extends KaitaiStruct {
+    public static class RecordTypeStringArray extends KaitaiStruct {
 
-        public SignatureTagsStep(KaitaiStream _io, int idx, int prevSizeTagIdx) {
-            this(_io, null, null, idx, prevSizeTagIdx);
-        }
-
-        public SignatureTagsStep(KaitaiStream _io, Rpm _parent, int idx, int prevSizeTagIdx) {
-            this(_io, _parent, null, idx, prevSizeTagIdx);
-        }
-
-        public SignatureTagsStep(KaitaiStream _io, Rpm _parent, Rpm _root, int idx, int prevSizeTagIdx) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            this.idx = idx;
-            this.prevSizeTagIdx = prevSizeTagIdx;
-            _read();
-        }
-        private void _read() {
-        }
-        private Integer sizeTagIdx;
-        public Integer sizeTagIdx() {
-            if (this.sizeTagIdx != null)
-                return this.sizeTagIdx;
-            int _tmp = (int) ((prevSizeTagIdx() != -1 ? prevSizeTagIdx() : ( ((_parent().signature().indexRecords().get((int) idx()).signatureTag() == Rpm.SignatureTags.SIZE) && (_parent().signature().indexRecords().get((int) idx()).recordType() == Rpm.RecordTypes.UINT32) && (_parent().signature().indexRecords().get((int) idx()).numValues() >= 1))  ? idx() : -1)));
-            this.sizeTagIdx = _tmp;
-            return this.sizeTagIdx;
-        }
-        private int idx;
-        private int prevSizeTagIdx;
-        private Rpm _root;
-        private Rpm _parent;
-        public int idx() { return idx; }
-        public int prevSizeTagIdx() { return prevSizeTagIdx; }
-        public Rpm _root() { return _root; }
-        public Rpm _parent() { return _parent; }
-    }
-    public static class RecordTypeUint32 extends KaitaiStruct {
-
-        public RecordTypeUint32(KaitaiStream _io, long numValues) {
+        public RecordTypeStringArray(KaitaiStream _io, long numValues) {
             this(_io, null, null, numValues);
         }
 
-        public RecordTypeUint32(KaitaiStream _io, Rpm.HeaderIndexRecord _parent, long numValues) {
+        public RecordTypeStringArray(KaitaiStream _io, Rpm.HeaderIndexRecord _parent, long numValues) {
             this(_io, _parent, null, numValues);
         }
 
-        public RecordTypeUint32(KaitaiStream _io, Rpm.HeaderIndexRecord _parent, Rpm _root, long numValues) {
+        public RecordTypeStringArray(KaitaiStream _io, Rpm.HeaderIndexRecord _parent, Rpm _root, long numValues) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
@@ -689,16 +1011,21 @@ public class Rpm extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.values = new ArrayList<Long>();
+            this.values = new ArrayList<String>();
             for (int i = 0; i < numValues(); i++) {
-                this.values.add(this._io.readU4be());
+                this.values.add(new String(this._io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.UTF_8));
             }
         }
-        private ArrayList<Long> values;
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.values.size(); i++) {
+            }
+        }
+        private List<String> values;
         private long numValues;
         private Rpm _root;
         private Rpm.HeaderIndexRecord _parent;
-        public ArrayList<Long> values() { return values; }
+        public List<String> values() { return values; }
         public long numValues() { return numValues; }
         public Rpm _root() { return _root; }
         public Rpm.HeaderIndexRecord _parent() { return _parent; }
@@ -726,231 +1053,31 @@ public class Rpm extends KaitaiStruct {
                 this.values.add(this._io.readU2be());
             }
         }
-        private ArrayList<Integer> values;
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.values.size(); i++) {
+            }
+        }
+        private List<Integer> values;
         private long numValues;
         private Rpm _root;
         private Rpm.HeaderIndexRecord _parent;
-        public ArrayList<Integer> values() { return values; }
+        public List<Integer> values() { return values; }
         public long numValues() { return numValues; }
         public Rpm _root() { return _root; }
         public Rpm.HeaderIndexRecord _parent() { return _parent; }
     }
-    public static class HeaderIndexRecord extends KaitaiStruct {
-        public static HeaderIndexRecord fromFile(String fileName) throws IOException {
-            return new HeaderIndexRecord(new ByteBufferKaitaiStream(fileName));
-        }
+    public static class RecordTypeUint32 extends KaitaiStruct {
 
-        public HeaderIndexRecord(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public HeaderIndexRecord(KaitaiStream _io, Rpm.Header _parent) {
-            this(_io, _parent, null);
-        }
-
-        public HeaderIndexRecord(KaitaiStream _io, Rpm.Header _parent, Rpm _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.tagRaw = this._io.readU4be();
-            this.recordType = Rpm.RecordTypes.byId(this._io.readU4be());
-            this.ofsBody = this._io.readU4be();
-            this.count = this._io.readU4be();
-        }
-        private Long numValues;
-        public Long numValues() {
-            if (this.numValues != null)
-                return this.numValues;
-            if (recordType() != Rpm.RecordTypes.BIN) {
-                long _tmp = (long) (count());
-                this.numValues = _tmp;
-            }
-            return this.numValues;
-        }
-        private KaitaiStruct body;
-        public KaitaiStruct body() {
-            if (this.body != null)
-                return this.body;
-            KaitaiStream io = _parent().storageSection()._io();
-            long _pos = io.pos();
-            io.seek(ofsBody());
-            {
-                RecordTypes on = recordType();
-                if (on != null) {
-                    switch (recordType()) {
-                    case UINT32: {
-                        this.body = new RecordTypeUint32(io, this, _root, numValues());
-                        break;
-                    }
-                    case UINT64: {
-                        this.body = new RecordTypeUint64(io, this, _root, numValues());
-                        break;
-                    }
-                    case BIN: {
-                        this.body = new RecordTypeBin(io, this, _root, lenValue());
-                        break;
-                    }
-                    case STRING: {
-                        this.body = new RecordTypeString(io, this, _root);
-                        break;
-                    }
-                    case UINT8: {
-                        this.body = new RecordTypeUint8(io, this, _root, numValues());
-                        break;
-                    }
-                    case I18N_STRING: {
-                        this.body = new RecordTypeStringArray(io, this, _root, numValues());
-                        break;
-                    }
-                    case UINT16: {
-                        this.body = new RecordTypeUint16(io, this, _root, numValues());
-                        break;
-                    }
-                    case CHAR: {
-                        this.body = new RecordTypeUint8(io, this, _root, numValues());
-                        break;
-                    }
-                    case STRING_ARRAY: {
-                        this.body = new RecordTypeStringArray(io, this, _root, numValues());
-                        break;
-                    }
-                    }
-                }
-            }
-            io.seek(_pos);
-            return this.body;
-        }
-        private SignatureTags signatureTag;
-        public SignatureTags signatureTag() {
-            if (this.signatureTag != null)
-                return this.signatureTag;
-            if (_parent().isSignature()) {
-                this.signatureTag = Rpm.SignatureTags.byId(tagRaw());
-            }
-            return this.signatureTag;
-        }
-        private Long lenValue;
-        public Long lenValue() {
-            if (this.lenValue != null)
-                return this.lenValue;
-            if (recordType() == Rpm.RecordTypes.BIN) {
-                long _tmp = (long) (count());
-                this.lenValue = _tmp;
-            }
-            return this.lenValue;
-        }
-        private HeaderTags headerTag;
-        public HeaderTags headerTag() {
-            if (this.headerTag != null)
-                return this.headerTag;
-            if (_parent().isHeader()) {
-                this.headerTag = Rpm.HeaderTags.byId(tagRaw());
-            }
-            return this.headerTag;
-        }
-        private long tagRaw;
-        private RecordTypes recordType;
-        private long ofsBody;
-        private long count;
-        private Rpm _root;
-        private Rpm.Header _parent;
-
-        /**
-         * prefer to access `signature_tag` and `header_tag` instead
-         */
-        public long tagRaw() { return tagRaw; }
-        public RecordTypes recordType() { return recordType; }
-        public long ofsBody() { return ofsBody; }
-
-        /**
-         * internal; access `num_values` and `len_value` instead
-         */
-        public long count() { return count; }
-        public Rpm _root() { return _root; }
-        public Rpm.Header _parent() { return _parent; }
-    }
-    public static class RpmVersion extends KaitaiStruct {
-        public static RpmVersion fromFile(String fileName) throws IOException {
-            return new RpmVersion(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public RpmVersion(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public RpmVersion(KaitaiStream _io, Rpm.Lead _parent) {
-            this(_io, _parent, null);
-        }
-
-        public RpmVersion(KaitaiStream _io, Rpm.Lead _parent, Rpm _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.major = this._io.readU1();
-            if (!(major() >= 3)) {
-                throw new KaitaiStream.ValidationLessThanError(3, major(), _io(), "/types/rpm_version/seq/0");
-            }
-            if (!(major() <= 4)) {
-                throw new KaitaiStream.ValidationGreaterThanError(4, major(), _io(), "/types/rpm_version/seq/0");
-            }
-            this.minor = this._io.readU1();
-        }
-        private int major;
-        private int minor;
-        private Rpm _root;
-        private Rpm.Lead _parent;
-
-        /**
-         * @see <a href="https://github.com/rpm-software-management/rpm/blob/afad3167/lib/rpmlead.c#L102">Source</a>
-         */
-        public int major() { return major; }
-        public int minor() { return minor; }
-        public Rpm _root() { return _root; }
-        public Rpm.Lead _parent() { return _parent; }
-    }
-    public static class Dummy extends KaitaiStruct {
-        public static Dummy fromFile(String fileName) throws IOException {
-            return new Dummy(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Dummy(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Dummy(KaitaiStream _io, Rpm.Header _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Dummy(KaitaiStream _io, Rpm.Header _parent, Rpm _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-        }
-        private Rpm _root;
-        private Rpm.Header _parent;
-        public Rpm _root() { return _root; }
-        public Rpm.Header _parent() { return _parent; }
-    }
-    public static class RecordTypeUint8 extends KaitaiStruct {
-
-        public RecordTypeUint8(KaitaiStream _io, long numValues) {
+        public RecordTypeUint32(KaitaiStream _io, long numValues) {
             this(_io, null, null, numValues);
         }
 
-        public RecordTypeUint8(KaitaiStream _io, Rpm.HeaderIndexRecord _parent, long numValues) {
+        public RecordTypeUint32(KaitaiStream _io, Rpm.HeaderIndexRecord _parent, long numValues) {
             this(_io, _parent, null, numValues);
         }
 
-        public RecordTypeUint8(KaitaiStream _io, Rpm.HeaderIndexRecord _parent, Rpm _root, long numValues) {
+        public RecordTypeUint32(KaitaiStream _io, Rpm.HeaderIndexRecord _parent, Rpm _root, long numValues) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
@@ -958,16 +1085,21 @@ public class Rpm extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.values = new ArrayList<Integer>();
+            this.values = new ArrayList<Long>();
             for (int i = 0; i < numValues(); i++) {
-                this.values.add(this._io.readU1());
+                this.values.add(this._io.readU4be());
             }
         }
-        private ArrayList<Integer> values;
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.values.size(); i++) {
+            }
+        }
+        private List<Long> values;
         private long numValues;
         private Rpm _root;
         private Rpm.HeaderIndexRecord _parent;
-        public ArrayList<Integer> values() { return values; }
+        public List<Long> values() { return values; }
         public long numValues() { return numValues; }
         public Rpm _root() { return _root; }
         public Rpm.HeaderIndexRecord _parent() { return _parent; }
@@ -995,181 +1127,177 @@ public class Rpm extends KaitaiStruct {
                 this.values.add(this._io.readU8be());
             }
         }
-        private ArrayList<Long> values;
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.values.size(); i++) {
+            }
+        }
+        private List<Long> values;
         private long numValues;
         private Rpm _root;
         private Rpm.HeaderIndexRecord _parent;
-        public ArrayList<Long> values() { return values; }
+        public List<Long> values() { return values; }
         public long numValues() { return numValues; }
         public Rpm _root() { return _root; }
         public Rpm.HeaderIndexRecord _parent() { return _parent; }
     }
-    public static class RecordTypeBin extends KaitaiStruct {
+    public static class RecordTypeUint8 extends KaitaiStruct {
 
-        public RecordTypeBin(KaitaiStream _io, long lenValue) {
-            this(_io, null, null, lenValue);
+        public RecordTypeUint8(KaitaiStream _io, long numValues) {
+            this(_io, null, null, numValues);
         }
 
-        public RecordTypeBin(KaitaiStream _io, Rpm.HeaderIndexRecord _parent, long lenValue) {
-            this(_io, _parent, null, lenValue);
+        public RecordTypeUint8(KaitaiStream _io, Rpm.HeaderIndexRecord _parent, long numValues) {
+            this(_io, _parent, null, numValues);
         }
 
-        public RecordTypeBin(KaitaiStream _io, Rpm.HeaderIndexRecord _parent, Rpm _root, long lenValue) {
+        public RecordTypeUint8(KaitaiStream _io, Rpm.HeaderIndexRecord _parent, Rpm _root, long numValues) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            this.lenValue = lenValue;
+            this.numValues = numValues;
             _read();
         }
         private void _read() {
-            this.values = new ArrayList<byte[]>();
-            for (int i = 0; i < 1; i++) {
-                this.values.add(this._io.readBytes(lenValue()));
+            this.values = new ArrayList<Integer>();
+            for (int i = 0; i < numValues(); i++) {
+                this.values.add(this._io.readU1());
             }
         }
-        private ArrayList<byte[]> values;
-        private long lenValue;
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.values.size(); i++) {
+            }
+        }
+        private List<Integer> values;
+        private long numValues;
         private Rpm _root;
         private Rpm.HeaderIndexRecord _parent;
-        public ArrayList<byte[]> values() { return values; }
-        public long lenValue() { return lenValue; }
+        public List<Integer> values() { return values; }
+        public long numValues() { return numValues; }
         public Rpm _root() { return _root; }
         public Rpm.HeaderIndexRecord _parent() { return _parent; }
     }
-    public static class HeaderRecord extends KaitaiStruct {
-        public static HeaderRecord fromFile(String fileName) throws IOException {
-            return new HeaderRecord(new ByteBufferKaitaiStream(fileName));
+    public static class RpmVersion extends KaitaiStruct {
+        public static RpmVersion fromFile(String fileName) throws IOException {
+            return new RpmVersion(new ByteBufferKaitaiStream(fileName));
         }
 
-        public HeaderRecord(KaitaiStream _io) {
+        public RpmVersion(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public HeaderRecord(KaitaiStream _io, Rpm.Header _parent) {
+        public RpmVersion(KaitaiStream _io, Rpm.Lead _parent) {
             this(_io, _parent, null);
         }
 
-        public HeaderRecord(KaitaiStream _io, Rpm.Header _parent, Rpm _root) {
+        public RpmVersion(KaitaiStream _io, Rpm.Lead _parent, Rpm _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.magic = this._io.readBytes(4);
-            if (!(Arrays.equals(magic(), new byte[] { -114, -83, -24, 1 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { -114, -83, -24, 1 }, magic(), _io(), "/types/header_record/seq/0");
+            this.major = this._io.readU1();
+            if (!(this.major >= 3)) {
+                throw new KaitaiStream.ValidationLessThanError(3, this.major, this._io, "/types/rpm_version/seq/0");
             }
-            this.reserved = this._io.readBytes(4);
-            if (!(Arrays.equals(reserved(), new byte[] { 0, 0, 0, 0 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, reserved(), _io(), "/types/header_record/seq/1");
+            if (!(this.major <= 4)) {
+                throw new KaitaiStream.ValidationGreaterThanError(4, this.major, this._io, "/types/rpm_version/seq/0");
             }
-            this.numIndexRecords = this._io.readU4be();
-            if (!(numIndexRecords() >= 1)) {
-                throw new KaitaiStream.ValidationLessThanError(1, numIndexRecords(), _io(), "/types/header_record/seq/2");
-            }
-            this.lenStorageSection = this._io.readU4be();
+            this.minor = this._io.readU1();
         }
-        private byte[] magic;
-        private byte[] reserved;
-        private long numIndexRecords;
-        private long lenStorageSection;
+
+        public void _fetchInstances() {
+        }
+        private int major;
+        private int minor;
         private Rpm _root;
-        private Rpm.Header _parent;
-        public byte[] magic() { return magic; }
-        public byte[] reserved() { return reserved; }
-        public long numIndexRecords() { return numIndexRecords; }
+        private Rpm.Lead _parent;
 
         /**
-         * Size of the storage area for the data
-         * pointed to by the Index Records.
+         * @see <a href="https://github.com/rpm-software-management/rpm/blob/afad3167/lib/rpmlead.c#L102">Source</a>
          */
-        public long lenStorageSection() { return lenStorageSection; }
+        public int major() { return major; }
+        public int minor() { return minor; }
         public Rpm _root() { return _root; }
-        public Rpm.Header _parent() { return _parent; }
+        public Rpm.Lead _parent() { return _parent; }
     }
+    public static class SignatureTagsStep extends KaitaiStruct {
 
-    /**
-     * header structure used for both the "header" and "signature", but some tag
-     * values have different meanings in signature and header (hence they use
-     * different enums)
-     */
-    public static class Header extends KaitaiStruct {
-
-        public Header(KaitaiStream _io, boolean isSignature) {
-            this(_io, null, null, isSignature);
+        public SignatureTagsStep(KaitaiStream _io, int idx, int prevSizeTagIdx) {
+            this(_io, null, null, idx, prevSizeTagIdx);
         }
 
-        public Header(KaitaiStream _io, Rpm _parent, boolean isSignature) {
-            this(_io, _parent, null, isSignature);
+        public SignatureTagsStep(KaitaiStream _io, Rpm _parent, int idx, int prevSizeTagIdx) {
+            this(_io, _parent, null, idx, prevSizeTagIdx);
         }
 
-        public Header(KaitaiStream _io, Rpm _parent, Rpm _root, boolean isSignature) {
+        public SignatureTagsStep(KaitaiStream _io, Rpm _parent, Rpm _root, int idx, int prevSizeTagIdx) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
-            this.isSignature = isSignature;
+            this.idx = idx;
+            this.prevSizeTagIdx = prevSizeTagIdx;
             _read();
         }
         private void _read() {
-            this.headerRecord = new HeaderRecord(this._io, this, _root);
-            this.indexRecords = new ArrayList<HeaderIndexRecord>();
-            for (int i = 0; i < headerRecord().numIndexRecords(); i++) {
-                this.indexRecords.add(new HeaderIndexRecord(this._io, this, _root));
-            }
-            this._raw_storageSection = this._io.readBytes(headerRecord().lenStorageSection());
-            KaitaiStream _io__raw_storageSection = new ByteBufferKaitaiStream(_raw_storageSection);
-            this.storageSection = new Dummy(_io__raw_storageSection, this, _root);
         }
-        private Boolean isHeader;
-        public Boolean isHeader() {
-            if (this.isHeader != null)
-                return this.isHeader;
-            boolean _tmp = (boolean) (!(isSignature()));
-            this.isHeader = _tmp;
-            return this.isHeader;
+
+        public void _fetchInstances() {
         }
-        private HeaderRecord headerRecord;
-        private ArrayList<HeaderIndexRecord> indexRecords;
-        private Dummy storageSection;
-        private boolean isSignature;
+        private Integer sizeTagIdx;
+        public Integer sizeTagIdx() {
+            if (this.sizeTagIdx != null)
+                return this.sizeTagIdx;
+            this.sizeTagIdx = ((Number) ((prevSizeTagIdx() != -1 ? prevSizeTagIdx() : ( ((_parent().signature().indexRecords().get(((Number) (idx())).intValue()).signatureTag() == Rpm.SignatureTags.SIZE) && (_parent().signature().indexRecords().get(((Number) (idx())).intValue()).recordType() == Rpm.RecordTypes.UINT32) && (_parent().signature().indexRecords().get(((Number) (idx())).intValue()).numValues() >= 1))  ? idx() : -1)))).intValue();
+            return this.sizeTagIdx;
+        }
+        private int idx;
+        private int prevSizeTagIdx;
         private Rpm _root;
         private Rpm _parent;
-        private byte[] _raw_storageSection;
-        public HeaderRecord headerRecord() { return headerRecord; }
-        public ArrayList<HeaderIndexRecord> indexRecords() { return indexRecords; }
-        public Dummy storageSection() { return storageSection; }
-        public boolean isSignature() { return isSignature; }
+        public int idx() { return idx; }
+        public int prevSizeTagIdx() { return prevSizeTagIdx; }
         public Rpm _root() { return _root; }
         public Rpm _parent() { return _parent; }
-        public byte[] _raw_storageSection() { return _raw_storageSection; }
     }
     private Boolean hasSignatureSizeTag;
     public Boolean hasSignatureSizeTag() {
         if (this.hasSignatureSizeTag != null)
             return this.hasSignatureSizeTag;
-        boolean _tmp = (boolean) (signatureTagsSteps().get(signatureTagsSteps().size() - 1).sizeTagIdx() != -1);
-        this.hasSignatureSizeTag = _tmp;
+        this.hasSignatureSizeTag = signatureTagsSteps().get(signatureTagsSteps().size() - 1).sizeTagIdx() != -1;
         return this.hasSignatureSizeTag;
     }
-    private HeaderIndexRecord signatureSizeTag;
-    public HeaderIndexRecord signatureSizeTag() {
-        if (this.signatureSizeTag != null)
-            return this.signatureSizeTag;
-        if (hasSignatureSizeTag()) {
-            this.signatureSizeTag = signature().indexRecords().get((int) signatureTagsSteps().get(signatureTagsSteps().size() - 1).sizeTagIdx());
-        }
-        return this.signatureSizeTag;
+    private Integer lenHeader;
+    public Integer lenHeader() {
+        if (this.lenHeader != null)
+            return this.lenHeader;
+        this.lenHeader = ((Number) (ofsPayload() - ofsHeader())).intValue();
+        return this.lenHeader;
     }
     private Integer lenPayload;
     public Integer lenPayload() {
         if (this.lenPayload != null)
             return this.lenPayload;
         if (hasSignatureSizeTag()) {
-            int _tmp = (int) ((((Rpm.RecordTypeUint32) (signatureSizeTag().body())).values().get((int) 0) - lenHeader()));
-            this.lenPayload = _tmp;
+            this.lenPayload = ((Number) (((Rpm.RecordTypeUint32) (signatureSizeTag().body())).values().get(((int) 0)) - lenHeader())).intValue();
         }
         return this.lenPayload;
+    }
+    private Integer ofsHeader;
+    public Integer ofsHeader() {
+        if (this.ofsHeader != null)
+            return this.ofsHeader;
+        this.ofsHeader = ((Number) (_io().pos())).intValue();
+        return this.ofsHeader;
+    }
+    private Integer ofsPayload;
+    public Integer ofsPayload() {
+        if (this.ofsPayload != null)
+            return this.ofsPayload;
+        this.ofsPayload = ((Number) (_io().pos())).intValue();
+        return this.ofsPayload;
     }
     private byte[] payload;
     public byte[] payload() {
@@ -1183,29 +1311,14 @@ public class Rpm extends KaitaiStruct {
         }
         return this.payload;
     }
-    private Integer lenHeader;
-    public Integer lenHeader() {
-        if (this.lenHeader != null)
-            return this.lenHeader;
-        int _tmp = (int) ((ofsPayload() - ofsHeader()));
-        this.lenHeader = _tmp;
-        return this.lenHeader;
-    }
-    private Integer ofsHeader;
-    public Integer ofsHeader() {
-        if (this.ofsHeader != null)
-            return this.ofsHeader;
-        int _tmp = (int) (_io().pos());
-        this.ofsHeader = _tmp;
-        return this.ofsHeader;
-    }
-    private Integer ofsPayload;
-    public Integer ofsPayload() {
-        if (this.ofsPayload != null)
-            return this.ofsPayload;
-        int _tmp = (int) (_io().pos());
-        this.ofsPayload = _tmp;
-        return this.ofsPayload;
+    private HeaderIndexRecord signatureSizeTag;
+    public HeaderIndexRecord signatureSizeTag() {
+        if (this.signatureSizeTag != null)
+            return this.signatureSizeTag;
+        if (hasSignatureSizeTag()) {
+            this.signatureSizeTag = signature().indexRecords().get(((Number) (signatureTagsSteps().get(signatureTagsSteps().size() - 1).sizeTagIdx())).intValue());
+        }
+        return this.signatureSizeTag;
     }
     private Lead lead;
     private Header signature;
@@ -1213,7 +1326,7 @@ public class Rpm extends KaitaiStruct {
     private byte[] _unnamed3;
     private Header header;
     private byte[] _unnamed5;
-    private ArrayList<SignatureTagsStep> signatureTagsSteps;
+    private List<SignatureTagsStep> signatureTagsSteps;
     private Rpm _root;
     private KaitaiStruct _parent;
     public Lead lead() { return lead; }
@@ -1222,7 +1335,7 @@ public class Rpm extends KaitaiStruct {
     public byte[] _unnamed3() { return _unnamed3; }
     public Header header() { return header; }
     public byte[] _unnamed5() { return _unnamed5; }
-    public ArrayList<SignatureTagsStep> signatureTagsSteps() { return signatureTagsSteps; }
+    public List<SignatureTagsStep> signatureTagsSteps() { return signatureTagsSteps; }
     public Rpm _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

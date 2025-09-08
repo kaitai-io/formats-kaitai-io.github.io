@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use WindowsSystemtime;
 use EthernetFrame;
 
@@ -131,7 +131,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -263,96 +263,6 @@ sub _raw_frame_table {
 }
 
 ########################################################################
-package MicrosoftNetworkMonitorV2::FrameIndex;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{entries} = ();
-    while (!$self->{_io}->is_eof()) {
-        push @{$self->{entries}}, MicrosoftNetworkMonitorV2::FrameIndexEntry->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub entries {
-    my ($self) = @_;
-    return $self->{entries};
-}
-
-########################################################################
-package MicrosoftNetworkMonitorV2::FrameIndexEntry;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{ofs} = $self->{_io}->read_u4le();
-}
-
-sub body {
-    my ($self) = @_;
-    return $self->{body} if ($self->{body});
-    my $io = $self->_root()->_io();
-    my $_pos = $io->pos();
-    $io->seek($self->ofs());
-    $self->{body} = MicrosoftNetworkMonitorV2::Frame->new($io, $self, $self->{_root});
-    $io->seek($_pos);
-    return $self->{body};
-}
-
-sub ofs {
-    my ($self) = @_;
-    return $self->{ofs};
-}
-
-########################################################################
 package MicrosoftNetworkMonitorV2::Frame;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -372,7 +282,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -419,6 +329,96 @@ sub body {
 sub _raw_body {
     my ($self) = @_;
     return $self->{_raw_body};
+}
+
+########################################################################
+package MicrosoftNetworkMonitorV2::FrameIndex;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{entries} = [];
+    while (!$self->{_io}->is_eof()) {
+        push @{$self->{entries}}, MicrosoftNetworkMonitorV2::FrameIndexEntry->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub entries {
+    my ($self) = @_;
+    return $self->{entries};
+}
+
+########################################################################
+package MicrosoftNetworkMonitorV2::FrameIndexEntry;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{ofs} = $self->{_io}->read_u4le();
+}
+
+sub body {
+    my ($self) = @_;
+    return $self->{body} if ($self->{body});
+    my $io = $self->_root()->_io();
+    my $_pos = $io->pos();
+    $io->seek($self->ofs());
+    $self->{body} = MicrosoftNetworkMonitorV2::Frame->new($io, $self, $self->{_root});
+    $io->seek($_pos);
+    return $self->{body};
+}
+
+sub ofs {
+    my ($self) = @_;
+    return $self->{ofs};
 }
 
 1;

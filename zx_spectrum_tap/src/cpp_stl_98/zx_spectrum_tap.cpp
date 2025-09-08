@@ -2,10 +2,32 @@
 
 #include "zx_spectrum_tap.h"
 #include "kaitai/exceptions.h"
+std::set<zx_spectrum_tap_t::flag_enum_t> zx_spectrum_tap_t::_build_values_flag_enum_t() {
+    std::set<zx_spectrum_tap_t::flag_enum_t> _t;
+    _t.insert(zx_spectrum_tap_t::FLAG_ENUM_HEADER);
+    _t.insert(zx_spectrum_tap_t::FLAG_ENUM_DATA);
+    return _t;
+}
+const std::set<zx_spectrum_tap_t::flag_enum_t> zx_spectrum_tap_t::_values_flag_enum_t = zx_spectrum_tap_t::_build_values_flag_enum_t();
+bool zx_spectrum_tap_t::_is_defined_flag_enum_t(zx_spectrum_tap_t::flag_enum_t v) {
+    return zx_spectrum_tap_t::_values_flag_enum_t.find(v) != zx_spectrum_tap_t::_values_flag_enum_t.end();
+}
+std::set<zx_spectrum_tap_t::header_type_enum_t> zx_spectrum_tap_t::_build_values_header_type_enum_t() {
+    std::set<zx_spectrum_tap_t::header_type_enum_t> _t;
+    _t.insert(zx_spectrum_tap_t::HEADER_TYPE_ENUM_PROGRAM);
+    _t.insert(zx_spectrum_tap_t::HEADER_TYPE_ENUM_NUM_ARRAY);
+    _t.insert(zx_spectrum_tap_t::HEADER_TYPE_ENUM_CHAR_ARRAY);
+    _t.insert(zx_spectrum_tap_t::HEADER_TYPE_ENUM_BYTES);
+    return _t;
+}
+const std::set<zx_spectrum_tap_t::header_type_enum_t> zx_spectrum_tap_t::_values_header_type_enum_t = zx_spectrum_tap_t::_build_values_header_type_enum_t();
+bool zx_spectrum_tap_t::_is_defined_header_type_enum_t(zx_spectrum_tap_t::header_type_enum_t v) {
+    return zx_spectrum_tap_t::_values_header_type_enum_t.find(v) != zx_spectrum_tap_t::_values_header_type_enum_t.end();
+}
 
 zx_spectrum_tap_t::zx_spectrum_tap_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, zx_spectrum_tap_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     m_blocks = 0;
 
     try {
@@ -40,6 +62,34 @@ void zx_spectrum_tap_t::_clean_up() {
     }
 }
 
+zx_spectrum_tap_t::array_params_t::array_params_t(kaitai::kstream* p__io, zx_spectrum_tap_t::header_t* p__parent, zx_spectrum_tap_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void zx_spectrum_tap_t::array_params_t::_read() {
+    m_reserved = m__io->read_u1();
+    m_var_name = m__io->read_u1();
+    m_reserved1 = m__io->read_bytes(2);
+    if (!(m_reserved1 == std::string("\x00\x80", 2))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\x00\x80", 2), m_reserved1, m__io, std::string("/types/array_params/seq/2"));
+    }
+}
+
+zx_spectrum_tap_t::array_params_t::~array_params_t() {
+    _clean_up();
+}
+
+void zx_spectrum_tap_t::array_params_t::_clean_up() {
+}
+
 zx_spectrum_tap_t::block_t::block_t(kaitai::kstream* p__io, zx_spectrum_tap_t* p__parent, zx_spectrum_tap_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
@@ -64,12 +114,12 @@ void zx_spectrum_tap_t::block_t::_read() {
     n_data = true;
     if (len_block() == 19) {
         n_data = false;
-        m_data = m__io->read_bytes((header()->len_data() + 4));
+        m_data = m__io->read_bytes(header()->len_data() + 4);
     }
     n_headerless_data = true;
     if (flag() == zx_spectrum_tap_t::FLAG_ENUM_DATA) {
         n_headerless_data = false;
-        m_headerless_data = m__io->read_bytes((len_block() - 1));
+        m_headerless_data = m__io->read_bytes(len_block() - 1);
     }
 }
 
@@ -87,30 +137,6 @@ void zx_spectrum_tap_t::block_t::_clean_up() {
     }
     if (!n_headerless_data) {
     }
-}
-
-zx_spectrum_tap_t::program_params_t::program_params_t(kaitai::kstream* p__io, zx_spectrum_tap_t::header_t* p__parent, zx_spectrum_tap_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void zx_spectrum_tap_t::program_params_t::_read() {
-    m_autostart_line = m__io->read_u2le();
-    m_len_program = m__io->read_u2le();
-}
-
-zx_spectrum_tap_t::program_params_t::~program_params_t() {
-    _clean_up();
-}
-
-void zx_spectrum_tap_t::program_params_t::_clean_up() {
 }
 
 zx_spectrum_tap_t::bytes_params_t::bytes_params_t(kaitai::kstream* p__io, zx_spectrum_tap_t::header_t* p__parent, zx_spectrum_tap_t* p__root) : kaitai::kstruct(p__io) {
@@ -155,14 +181,9 @@ void zx_spectrum_tap_t::header_t::_read() {
     m_len_data = m__io->read_u2le();
     n_params = true;
     switch (header_type()) {
-    case zx_spectrum_tap_t::HEADER_TYPE_ENUM_PROGRAM: {
+    case zx_spectrum_tap_t::HEADER_TYPE_ENUM_BYTES: {
         n_params = false;
-        m_params = new program_params_t(m__io, this, m__root);
-        break;
-    }
-    case zx_spectrum_tap_t::HEADER_TYPE_ENUM_NUM_ARRAY: {
-        n_params = false;
-        m_params = new array_params_t(m__io, this, m__root);
+        m_params = new bytes_params_t(m__io, this, m__root);
         break;
     }
     case zx_spectrum_tap_t::HEADER_TYPE_ENUM_CHAR_ARRAY: {
@@ -170,9 +191,14 @@ void zx_spectrum_tap_t::header_t::_read() {
         m_params = new array_params_t(m__io, this, m__root);
         break;
     }
-    case zx_spectrum_tap_t::HEADER_TYPE_ENUM_BYTES: {
+    case zx_spectrum_tap_t::HEADER_TYPE_ENUM_NUM_ARRAY: {
         n_params = false;
-        m_params = new bytes_params_t(m__io, this, m__root);
+        m_params = new array_params_t(m__io, this, m__root);
+        break;
+    }
+    case zx_spectrum_tap_t::HEADER_TYPE_ENUM_PROGRAM: {
+        n_params = false;
+        m_params = new program_params_t(m__io, this, m__root);
         break;
     }
     }
@@ -191,7 +217,7 @@ void zx_spectrum_tap_t::header_t::_clean_up() {
     }
 }
 
-zx_spectrum_tap_t::array_params_t::array_params_t(kaitai::kstream* p__io, zx_spectrum_tap_t::header_t* p__parent, zx_spectrum_tap_t* p__root) : kaitai::kstruct(p__io) {
+zx_spectrum_tap_t::program_params_t::program_params_t(kaitai::kstream* p__io, zx_spectrum_tap_t::header_t* p__parent, zx_spectrum_tap_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
 
@@ -203,18 +229,14 @@ zx_spectrum_tap_t::array_params_t::array_params_t(kaitai::kstream* p__io, zx_spe
     }
 }
 
-void zx_spectrum_tap_t::array_params_t::_read() {
-    m_reserved = m__io->read_u1();
-    m_var_name = m__io->read_u1();
-    m_reserved1 = m__io->read_bytes(2);
-    if (!(reserved1() == std::string("\x00\x80", 2))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\x00\x80", 2), reserved1(), _io(), std::string("/types/array_params/seq/2"));
-    }
+void zx_spectrum_tap_t::program_params_t::_read() {
+    m_autostart_line = m__io->read_u2le();
+    m_len_program = m__io->read_u2le();
 }
 
-zx_spectrum_tap_t::array_params_t::~array_params_t() {
+zx_spectrum_tap_t::program_params_t::~program_params_t() {
     _clean_up();
 }
 
-void zx_spectrum_tap_t::array_params_t::_clean_up() {
+void zx_spectrum_tap_t::program_params_t::_clean_up() {
 }

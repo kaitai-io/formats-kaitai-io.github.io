@@ -211,6 +211,11 @@ are the fields' default values, etc, etc.</li>
                 
                 <li>
                 
+                <a href="java-write.html" title="Google Protocol Buffers (protobuf) parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="Google Protocol Buffers (protobuf) parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -239,9 +244,19 @@ are the fields' default values, etc, etc.</li>
                 <a href="python.html" title="Google Protocol Buffers (protobuf) parsing Python library">Python</a></li>
                 
                 
+                <li>
+                
+                <a href="python-write.html" title="Google Protocol Buffers (protobuf) parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
                 <li class="active">
                 
                 <a href="ruby.html" title="Google Protocol Buffers (protobuf) parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="Google Protocol Buffers (protobuf) parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -316,9 +331,10 @@ are the fields' default values, etc, etc.</li>
             <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
 <span class="nb">require</span><span class="w"> </span><span class="s1">&#39;kaitai/struct/struct&#39;</span>
+<span class="n">require_relative</span><span class="w"> </span><span class="s1">&#39;vlq_base128_le&#39;</span>
 
-<span class="k">unless</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.9&#39;</span><span class="p">)</span>
-<span class="w">  </span><span class="k">raise</span><span class="w"> </span><span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">unless</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.11&#39;</span><span class="p">)</span>
+<span class="w">  </span><span class="k">raise</span><span class="w"> </span><span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
 <span class="k">end</span>
 
 
@@ -352,8 +368,8 @@ are the fields' default values, etc, etc.</li>
 <span class="c1">#   are the fields&#39; default values, etc, etc.</span>
 <span class="c1"># @see https://protobuf.dev/programming-guides/encoding/ Source</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">GoogleProtobuf</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
-<span class="w">    </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">    </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
 <span class="w">    </span><span class="n">_read</span>
 <span class="w">  </span><span class="k">end</span>
 
@@ -365,6 +381,20 @@ are the fields' default values, etc, etc.</li>
 <span class="w">      </span><span class="n">i</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span>
 <span class="w">    </span><span class="k">end</span>
 <span class="w">    </span><span class="nb">self</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">DelimitedBytes</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">VlqBase128Le</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:len</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:body</span>
 <span class="w">  </span><span class="k">end</span>
 
 <span class="w">  </span><span class="c1">##</span>
@@ -380,7 +410,7 @@ are the fields' default values, etc, etc.</li>
 <span class="w">      </span><span class="mi">5</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:wire_types_bit_32</span><span class="p">,</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="no">I__WIRE_TYPES</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">WIRE_TYPES</span><span class="o">.</span><span class="n">invert</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 <span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
 <span class="w">      </span><span class="n">_read</span>
 <span class="w">    </span><span class="k">end</span>
@@ -388,16 +418,25 @@ are the fields' default values, etc, etc.</li>
 <span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
 <span class="w">      </span><span class="vi">@key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">VlqBase128Le</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">)</span>
 <span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="n">wire_type</span>
-<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="ss">:wire_types_varint</span>
-<span class="w">        </span><span class="vi">@value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">VlqBase128Le</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">)</span>
-<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="ss">:wire_types_len_delimited</span>
-<span class="w">        </span><span class="vi">@value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">DelimitedBytes</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="ss">:wire_types_bit_64</span>
-<span class="w">        </span><span class="vi">@value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
 <span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="ss">:wire_types_bit_32</span>
 <span class="w">        </span><span class="vi">@value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="ss">:wire_types_bit_64</span>
+<span class="w">        </span><span class="vi">@value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="ss">:wire_types_len_delimited</span>
+<span class="w">        </span><span class="vi">@value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">DelimitedBytes</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="k">when</span><span class="w"> </span><span class="ss">:wire_types_varint</span>
+<span class="w">        </span><span class="vi">@value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">VlqBase128Le</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">)</span>
 <span class="w">      </span><span class="k">end</span>
 <span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Identifies a field of protocol. One can look up symbolic</span>
+<span class="w">    </span><span class="c1"># field name in a `.proto` file by this field tag.</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">field_tag</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@field_tag</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@field_tag</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@field_tag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">key</span><span class="o">.</span><span class="n">value</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="mi">3</span>
+<span class="w">      </span><span class="vi">@field_tag</span>
 <span class="w">    </span><span class="k">end</span>
 
 <span class="w">    </span><span class="c1">##</span>
@@ -410,17 +449,8 @@ are the fields' default values, etc, etc.</li>
 <span class="w">    </span><span class="c1"># arbitrary bytes from UTF-8 encoded strings, etc.</span>
 <span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">wire_type</span>
 <span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@wire_type</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@wire_type</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">      </span><span class="vi">@wire_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">WIRE_TYPES</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">value</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">7</span><span class="p">))</span>
+<span class="w">      </span><span class="vi">@wire_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">WIRE_TYPES</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="o">.</span><span class="n">value</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">7</span><span class="p">)</span>
 <span class="w">      </span><span class="vi">@wire_type</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># Identifies a field of protocol. One can look up symbolic</span>
-<span class="w">    </span><span class="c1"># field name in a `.proto` file by this field tag.</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">field_tag</span>
-<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@field_tag</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@field_tag</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">      </span><span class="vi">@field_tag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">value</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@field_tag</span>
 <span class="w">    </span><span class="k">end</span>
 
 <span class="w">    </span><span class="c1">##</span>
@@ -436,20 +466,6 @@ are the fields' default values, etc, etc.</li>
 <span class="w">    </span><span class="c1"># but further infromation from `.proto` file is required to</span>
 <span class="w">    </span><span class="c1"># interprete it properly.</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:value</span>
-<span class="w">  </span><span class="k">end</span>
-<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">DelimitedBytes</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
-<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
-<span class="w">      </span><span class="n">_read</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">      </span><span class="vi">@len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">VlqBase128Le</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
-<span class="w">      </span><span class="nb">self</span>
-<span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:len</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:body</span>
 <span class="w">  </span><span class="k">end</span>
 
 <span class="w">  </span><span class="c1">##</span>

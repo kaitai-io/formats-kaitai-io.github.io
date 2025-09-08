@@ -7,7 +7,8 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 
 /**
@@ -66,6 +67,55 @@ public class AixUtmp extends KaitaiStruct {
             }
         }
     }
+
+    public void _fetchInstances() {
+        for (int i = 0; i < this.records.size(); i++) {
+            this.records.get(((Number) (i)).intValue())._fetchInstances();
+        }
+    }
+    public static class ExitStatus extends KaitaiStruct {
+        public static ExitStatus fromFile(String fileName) throws IOException {
+            return new ExitStatus(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public ExitStatus(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public ExitStatus(KaitaiStream _io, AixUtmp.Record _parent) {
+            this(_io, _parent, null);
+        }
+
+        public ExitStatus(KaitaiStream _io, AixUtmp.Record _parent, AixUtmp _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.terminationCode = this._io.readS2be();
+            this.exitCode = this._io.readS2be();
+        }
+
+        public void _fetchInstances() {
+        }
+        private short terminationCode;
+        private short exitCode;
+        private AixUtmp _root;
+        private AixUtmp.Record _parent;
+
+        /**
+         * process termination status
+         */
+        public short terminationCode() { return terminationCode; }
+
+        /**
+         * process exit status
+         */
+        public short exitCode() { return exitCode; }
+        public AixUtmp _root() { return _root; }
+        public AixUtmp.Record _parent() { return _parent; }
+    }
     public static class Record extends KaitaiStruct {
         public static Record fromFile(String fileName) throws IOException {
             return new Record(new ByteBufferKaitaiStream(fileName));
@@ -86,17 +136,21 @@ public class AixUtmp extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.user = new String(this._io.readBytes(256), Charset.forName("ascii"));
-            this.inittabId = new String(this._io.readBytes(14), Charset.forName("ascii"));
-            this.device = new String(this._io.readBytes(64), Charset.forName("ascii"));
+            this.user = new String(this._io.readBytes(256), StandardCharsets.US_ASCII);
+            this.inittabId = new String(this._io.readBytes(14), StandardCharsets.US_ASCII);
+            this.device = new String(this._io.readBytes(64), StandardCharsets.US_ASCII);
             this.pid = this._io.readU8be();
             this.type = AixUtmp.EntryType.byId(this._io.readS2be());
             this.timestamp = this._io.readS8be();
             this.exitStatus = new ExitStatus(this._io, this, _root);
-            this.hostname = new String(this._io.readBytes(256), Charset.forName("ascii"));
+            this.hostname = new String(this._io.readBytes(256), StandardCharsets.US_ASCII);
             this.dblWordPad = this._io.readS4be();
             this.reservedA = this._io.readBytes(8);
             this.reservedV = this._io.readBytes(24);
+        }
+
+        public void _fetchInstances() {
+            this.exitStatus._fetchInstances();
         }
         private String user;
         private String inittabId;
@@ -157,50 +211,10 @@ public class AixUtmp extends KaitaiStruct {
         public AixUtmp _root() { return _root; }
         public AixUtmp _parent() { return _parent; }
     }
-    public static class ExitStatus extends KaitaiStruct {
-        public static ExitStatus fromFile(String fileName) throws IOException {
-            return new ExitStatus(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public ExitStatus(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public ExitStatus(KaitaiStream _io, AixUtmp.Record _parent) {
-            this(_io, _parent, null);
-        }
-
-        public ExitStatus(KaitaiStream _io, AixUtmp.Record _parent, AixUtmp _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.terminationCode = this._io.readS2be();
-            this.exitCode = this._io.readS2be();
-        }
-        private short terminationCode;
-        private short exitCode;
-        private AixUtmp _root;
-        private AixUtmp.Record _parent;
-
-        /**
-         * process termination status
-         */
-        public short terminationCode() { return terminationCode; }
-
-        /**
-         * process exit status
-         */
-        public short exitCode() { return exitCode; }
-        public AixUtmp _root() { return _root; }
-        public AixUtmp.Record _parent() { return _parent; }
-    }
-    private ArrayList<Record> records;
+    private List<Record> records;
     private AixUtmp _root;
     private KaitaiStruct _parent;
-    public ArrayList<Record> records() { return records; }
+    public List<Record> records() { return records; }
     public AixUtmp _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

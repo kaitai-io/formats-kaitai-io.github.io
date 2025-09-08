@@ -54,77 +54,12 @@ function DosDatetime:_read()
 end
 
 
-DosDatetime.Time = class.class(KaitaiStruct)
-
-function DosDatetime.Time:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function DosDatetime.Time:_read()
-  self.second_div_2 = self._io:read_bits_int_le(5)
-  if not(self.second_div_2 <= 29) then
-    error("ValidationGreaterThanError")
-  end
-  self.minute = self._io:read_bits_int_le(6)
-  if not(self.minute <= 59) then
-    error("ValidationGreaterThanError")
-  end
-  self.hour = self._io:read_bits_int_le(5)
-  if not(self.hour <= 23) then
-    error("ValidationGreaterThanError")
-  end
-end
-
-DosDatetime.Time.property.second = {}
-function DosDatetime.Time.property.second:get()
-  if self._m_second ~= nil then
-    return self._m_second
-  end
-
-  self._m_second = (2 * self.second_div_2)
-  return self._m_second
-end
-
-DosDatetime.Time.property.padded_second = {}
-function DosDatetime.Time.property.padded_second:get()
-  if self._m_padded_second ~= nil then
-    return self._m_padded_second
-  end
-
-  self._m_padded_second = utils.box_unwrap((self.second <= 9) and utils.box_wrap("0") or ("")) .. tostring(self.second)
-  return self._m_padded_second
-end
-
-DosDatetime.Time.property.padded_minute = {}
-function DosDatetime.Time.property.padded_minute:get()
-  if self._m_padded_minute ~= nil then
-    return self._m_padded_minute
-  end
-
-  self._m_padded_minute = utils.box_unwrap((self.minute <= 9) and utils.box_wrap("0") or ("")) .. tostring(self.minute)
-  return self._m_padded_minute
-end
-
-DosDatetime.Time.property.padded_hour = {}
-function DosDatetime.Time.property.padded_hour:get()
-  if self._m_padded_hour ~= nil then
-    return self._m_padded_hour
-  end
-
-  self._m_padded_hour = utils.box_unwrap((self.hour <= 9) and utils.box_wrap("0") or ("")) .. tostring(self.hour)
-  return self._m_padded_hour
-end
-
-
 DosDatetime.Date = class.class(KaitaiStruct)
 
 function DosDatetime.Date:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -141,18 +76,6 @@ function DosDatetime.Date:_read()
     error("ValidationGreaterThanError")
   end
   self.year_minus_1980 = self._io:read_bits_int_le(7)
-end
-
--- 
--- only years from 1980 to 2107 (1980 + 127) can be represented.
-DosDatetime.Date.property.year = {}
-function DosDatetime.Date.property.year:get()
-  if self._m_year ~= nil then
-    return self._m_year
-  end
-
-  self._m_year = (1980 + self.year_minus_1980)
-  return self._m_year
 end
 
 DosDatetime.Date.property.padded_day = {}
@@ -183,6 +106,83 @@ function DosDatetime.Date.property.padded_year:get()
 
   self._m_padded_year = utils.box_unwrap((self.year <= 999) and utils.box_wrap("0" .. utils.box_unwrap((self.year <= 99) and utils.box_wrap("0" .. utils.box_unwrap((self.year <= 9) and utils.box_wrap("0") or (""))) or (""))) or ("")) .. tostring(self.year)
   return self._m_padded_year
+end
+
+-- 
+-- only years from 1980 to 2107 (1980 + 127) can be represented.
+DosDatetime.Date.property.year = {}
+function DosDatetime.Date.property.year:get()
+  if self._m_year ~= nil then
+    return self._m_year
+  end
+
+  self._m_year = 1980 + self.year_minus_1980
+  return self._m_year
+end
+
+
+DosDatetime.Time = class.class(KaitaiStruct)
+
+function DosDatetime.Time:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function DosDatetime.Time:_read()
+  self.second_div_2 = self._io:read_bits_int_le(5)
+  if not(self.second_div_2 <= 29) then
+    error("ValidationGreaterThanError")
+  end
+  self.minute = self._io:read_bits_int_le(6)
+  if not(self.minute <= 59) then
+    error("ValidationGreaterThanError")
+  end
+  self.hour = self._io:read_bits_int_le(5)
+  if not(self.hour <= 23) then
+    error("ValidationGreaterThanError")
+  end
+end
+
+DosDatetime.Time.property.padded_hour = {}
+function DosDatetime.Time.property.padded_hour:get()
+  if self._m_padded_hour ~= nil then
+    return self._m_padded_hour
+  end
+
+  self._m_padded_hour = utils.box_unwrap((self.hour <= 9) and utils.box_wrap("0") or ("")) .. tostring(self.hour)
+  return self._m_padded_hour
+end
+
+DosDatetime.Time.property.padded_minute = {}
+function DosDatetime.Time.property.padded_minute:get()
+  if self._m_padded_minute ~= nil then
+    return self._m_padded_minute
+  end
+
+  self._m_padded_minute = utils.box_unwrap((self.minute <= 9) and utils.box_wrap("0") or ("")) .. tostring(self.minute)
+  return self._m_padded_minute
+end
+
+DosDatetime.Time.property.padded_second = {}
+function DosDatetime.Time.property.padded_second:get()
+  if self._m_padded_second ~= nil then
+    return self._m_padded_second
+  end
+
+  self._m_padded_second = utils.box_unwrap((self.second <= 9) and utils.box_wrap("0") or ("")) .. tostring(self.second)
+  return self._m_padded_second
+end
+
+DosDatetime.Time.property.second = {}
+function DosDatetime.Time.property.second:get()
+  if self._m_second ~= nil then
+    return self._m_second
+  end
+
+  self._m_second = 2 * self.second_div_2
+  return self._m_second
 end
 
 

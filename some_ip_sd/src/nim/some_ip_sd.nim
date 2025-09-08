@@ -1,10 +1,8 @@
 import kaitai_struct_nim_runtime
 import options
-import /network/some_ip/some_ip_sd_entries
-import /network/some_ip/some_ip_sd_options
+import some_ip_sd_options
+import some_ip_sd_entries
 
-import "some_ip_sd_entries"
-import "some_ip_sd_options"
 type
   SomeIpSd* = ref object of KaitaiStruct
     `flags`*: SomeIpSd_SdFlags
@@ -59,14 +57,14 @@ proc read*(_: typedesc[SomeIpSd], io: KaitaiStream, root: KaitaiStruct, parent: 
   let rawEntriesExpr = this.io.readBytes(int(this.lenEntries))
   this.rawEntries = rawEntriesExpr
   let rawEntriesIo = newKaitaiStream(rawEntriesExpr)
-  let entriesExpr = SomeIpSdEntries.read(rawEntriesIo, this.root, this)
+  let entriesExpr = SomeIpSdEntries.read(rawEntriesIo, nil, nil)
   this.entries = entriesExpr
   let lenOptionsExpr = this.io.readU4be()
   this.lenOptions = lenOptionsExpr
   let rawOptionsExpr = this.io.readBytes(int(this.lenOptions))
   this.rawOptions = rawOptionsExpr
   let rawOptionsIo = newKaitaiStream(rawOptionsExpr)
-  let optionsExpr = SomeIpSdOptions.read(rawOptionsIo, this.root, this)
+  let optionsExpr = SomeIpSdOptions.read(rawOptionsIo, nil, nil)
   this.options = optionsExpr
 
 proc fromFile*(_: typedesc[SomeIpSd], filename: string): SomeIpSd =

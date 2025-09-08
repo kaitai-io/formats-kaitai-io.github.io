@@ -4066,20 +4066,36 @@ function Dicom:_read()
 end
 
 
-Dicom.TFileHeader = class.class(KaitaiStruct)
+Dicom.SeqItem = class.class(KaitaiStruct)
 
-function Dicom.TFileHeader:_init(io, parent, root)
+function Dicom.SeqItem:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function Dicom.TFileHeader:_read()
-  self.preamble = self._io:read_bytes(128)
-  self.magic = self._io:read_bytes(4)
-  if not(self.magic == "\068\073\067\077") then
-    error("not equal, expected " ..  "\068\073\067\077" .. ", but got " .. self.magic)
+function Dicom.SeqItem:_read()
+  self.tag_group = self._io:read_bytes(2)
+  if not(self.tag_group == "\254\255") then
+    error("not equal, expected " .. "\254\255" .. ", but got " .. self.tag_group)
+  end
+  self.tag_elem = self._io:read_u2le()
+  self.value_len = self._io:read_u4le()
+  if self.value_len ~= 4294967295 then
+    self.value = self._io:read_bytes(self.value_len)
+  end
+  if self.value_len == 4294967295 then
+    self.items = {}
+    local i = 0
+    while true do
+      local _ = Dicom.TDataElementExplicit(self._io, self, self._root)
+      self.items[i + 1] = _
+      if  ((_.tag_group == 65534) and (_.tag_elem == 57357))  then
+        break
+      end
+      i = i + 1
+    end
   end
 end
 
@@ -4091,7 +4107,7 @@ Dicom.TDataElementExplicit = class.class(KaitaiStruct)
 function Dicom.TDataElementExplicit:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -4171,7 +4187,7 @@ function Dicom.TDataElementExplicit.property.tag:get()
     return self._m_tag
   end
 
-  self._m_tag = Dicom.Tags(((self.tag_group << 16) | self.tag_elem))
+  self._m_tag = Dicom.Tags(self.tag_group << 16 | self.tag_elem)
   return self._m_tag
 end
 
@@ -4183,7 +4199,7 @@ Dicom.TDataElementImplicit = class.class(KaitaiStruct)
 function Dicom.TDataElementImplicit:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -4227,24 +4243,14 @@ function Dicom.TDataElementImplicit:_read()
   end
 end
 
-Dicom.TDataElementImplicit.property.tag = {}
-function Dicom.TDataElementImplicit.property.tag:get()
-  if self._m_tag ~= nil then
-    return self._m_tag
+Dicom.TDataElementImplicit.property.is_forced_explicit = {}
+function Dicom.TDataElementImplicit.property.is_forced_explicit:get()
+  if self._m_is_forced_explicit ~= nil then
+    return self._m_is_forced_explicit
   end
 
-  self._m_tag = Dicom.Tags(((self.tag_group << 16) | self.tag_elem))
-  return self._m_tag
-end
-
-Dicom.TDataElementImplicit.property.is_transfer_syntax_change_explicit = {}
-function Dicom.TDataElementImplicit.property.is_transfer_syntax_change_explicit:get()
-  if self._m_is_transfer_syntax_change_explicit ~= nil then
-    return self._m_is_transfer_syntax_change_explicit
-  end
-
-  self._m_is_transfer_syntax_change_explicit = self.p_is_transfer_syntax_change_explicit
-  return self._m_is_transfer_syntax_change_explicit
+  self._m_is_forced_explicit = self.tag_group == 2
+  return self._m_is_forced_explicit
 end
 
 Dicom.TDataElementImplicit.property.is_long_len = {}
@@ -4257,6 +4263,16 @@ function Dicom.TDataElementImplicit.property.is_long_len:get()
   return self._m_is_long_len
 end
 
+Dicom.TDataElementImplicit.property.is_transfer_syntax_change_explicit = {}
+function Dicom.TDataElementImplicit.property.is_transfer_syntax_change_explicit:get()
+  if self._m_is_transfer_syntax_change_explicit ~= nil then
+    return self._m_is_transfer_syntax_change_explicit
+  end
+
+  self._m_is_transfer_syntax_change_explicit = self.p_is_transfer_syntax_change_explicit
+  return self._m_is_transfer_syntax_change_explicit
+end
+
 Dicom.TDataElementImplicit.property.p_is_transfer_syntax_change_explicit = {}
 function Dicom.TDataElementImplicit.property.p_is_transfer_syntax_change_explicit:get()
   if self._m_p_is_transfer_syntax_change_explicit ~= nil then
@@ -4267,47 +4283,31 @@ function Dicom.TDataElementImplicit.property.p_is_transfer_syntax_change_explici
   return self._m_p_is_transfer_syntax_change_explicit
 end
 
-Dicom.TDataElementImplicit.property.is_forced_explicit = {}
-function Dicom.TDataElementImplicit.property.is_forced_explicit:get()
-  if self._m_is_forced_explicit ~= nil then
-    return self._m_is_forced_explicit
+Dicom.TDataElementImplicit.property.tag = {}
+function Dicom.TDataElementImplicit.property.tag:get()
+  if self._m_tag ~= nil then
+    return self._m_tag
   end
 
-  self._m_is_forced_explicit = self.tag_group == 2
-  return self._m_is_forced_explicit
+  self._m_tag = Dicom.Tags(self.tag_group << 16 | self.tag_elem)
+  return self._m_tag
 end
 
 
-Dicom.SeqItem = class.class(KaitaiStruct)
+Dicom.TFileHeader = class.class(KaitaiStruct)
 
-function Dicom.SeqItem:_init(io, parent, root)
+function Dicom.TFileHeader:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function Dicom.SeqItem:_read()
-  self.tag_group = self._io:read_bytes(2)
-  if not(self.tag_group == "\254\255") then
-    error("not equal, expected " ..  "\254\255" .. ", but got " .. self.tag_group)
-  end
-  self.tag_elem = self._io:read_u2le()
-  self.value_len = self._io:read_u4le()
-  if self.value_len ~= 4294967295 then
-    self.value = self._io:read_bytes(self.value_len)
-  end
-  if self.value_len == 4294967295 then
-    self.items = {}
-    local i = 0
-    while true do
-      local _ = Dicom.TDataElementExplicit(self._io, self, self._root)
-      self.items[i + 1] = _
-      if  ((_.tag_group == 65534) and (_.tag_elem == 57357))  then
-        break
-      end
-      i = i + 1
-    end
+function Dicom.TFileHeader:_read()
+  self.preamble = self._io:read_bytes(128)
+  self.magic = self._io:read_bytes(4)
+  if not(self.magic == "\068\073\067\077") then
+    error("not equal, expected " .. "\068\073\067\077" .. ", but got " .. self.magic)
   end
 end
 

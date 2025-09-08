@@ -18,19 +18,23 @@ type Hccap struct {
 	Records []*Hccap_HccapRecord
 	_io *kaitai.Stream
 	_root *Hccap
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewHccap() *Hccap {
 	return &Hccap{
 	}
 }
 
-func (this *Hccap) Read(io *kaitai.Stream, parent interface{}, root *Hccap) (err error) {
+func (this Hccap) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Hccap) Read(io *kaitai.Stream, parent kaitai.Struct, root *Hccap) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	for i := 1;; i++ {
+	for i := 0;; i++ {
 		tmp1, err := this._io.EOF()
 		if err != nil {
 			return err
@@ -45,6 +49,27 @@ func (this *Hccap) Read(io *kaitai.Stream, parent interface{}, root *Hccap) (err
 		}
 		this.Records = append(this.Records, tmp2)
 	}
+	return err
+}
+type Hccap_EapolDummy struct {
+	_io *kaitai.Stream
+	_root *Hccap
+	_parent *Hccap_HccapRecord
+}
+func NewHccap_EapolDummy() *Hccap_EapolDummy {
+	return &Hccap_EapolDummy{
+	}
+}
+
+func (this Hccap_EapolDummy) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Hccap_EapolDummy) Read(io *kaitai.Stream, parent *Hccap_HccapRecord, root *Hccap) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
 	return err
 }
 type Hccap_HccapRecord struct {
@@ -67,6 +92,10 @@ type Hccap_HccapRecord struct {
 func NewHccap_HccapRecord() *Hccap_HccapRecord {
 	return &Hccap_HccapRecord{
 	}
+}
+
+func (this Hccap_HccapRecord) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Hccap_HccapRecord) Read(io *kaitai.Stream, parent *Hccap, root *Hccap) (err error) {
@@ -139,6 +168,7 @@ func (this *Hccap_HccapRecord) Eapol() (v []byte, err error) {
 	if (this._f_eapol) {
 		return this.eapol, nil
 	}
+	this._f_eapol = true
 	thisIo := this.EapolBuffer._io
 	_pos, err := thisIo.Pos()
 	if err != nil {
@@ -158,8 +188,6 @@ func (this *Hccap_HccapRecord) Eapol() (v []byte, err error) {
 	if err != nil {
 		return nil, err
 	}
-	this._f_eapol = true
-	this._f_eapol = true
 	return this.eapol, nil
 }
 
@@ -196,20 +224,3 @@ func (this *Hccap_HccapRecord) Eapol() (v []byte, err error) {
  * The final hash value. MD5 for WPA and SHA-1 for WPA2
  * (truncated to 128 bit).
  */
-type Hccap_EapolDummy struct {
-	_io *kaitai.Stream
-	_root *Hccap
-	_parent *Hccap_HccapRecord
-}
-func NewHccap_EapolDummy() *Hccap_EapolDummy {
-	return &Hccap_EapolDummy{
-	}
-}
-
-func (this *Hccap_EapolDummy) Read(io *kaitai.Stream, parent *Hccap_HccapRecord, root *Hccap) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	return err
-}

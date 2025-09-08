@@ -2,13 +2,16 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class some_ip_sd_entries_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
 #include <vector>
+#include <set>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -36,8 +39,8 @@ public:
 
     public:
         class sd_entry_header_t;
-        class sd_service_entry_t;
         class sd_eventgroup_entry_t;
+        class sd_service_entry_t;
 
         enum entry_types_t {
             ENTRY_TYPES_FIND = 0,
@@ -45,6 +48,12 @@ public:
             ENTRY_TYPES_SUBSCRIBE = 6,
             ENTRY_TYPES_SUBSCRIBE_ACK = 7
         };
+        static bool _is_defined_entry_types_t(entry_types_t v);
+
+    private:
+        static const std::set<entry_types_t> _values_entry_types_t;
+
+    public:
 
         sd_entry_t(kaitai::kstream* p__io, some_ip_sd_entries_t* p__parent = nullptr, some_ip_sd_entries_t* p__root = nullptr);
 
@@ -95,30 +104,6 @@ public:
             some_ip_sd_entries_t::sd_entry_t* _parent() const { return m__parent; }
         };
 
-        class sd_service_entry_t : public kaitai::kstruct {
-
-        public:
-
-            sd_service_entry_t(kaitai::kstream* p__io, some_ip_sd_entries_t::sd_entry_t* p__parent = nullptr, some_ip_sd_entries_t* p__root = nullptr);
-
-        private:
-            void _read();
-            void _clean_up();
-
-        public:
-            ~sd_service_entry_t();
-
-        private:
-            uint32_t m_minor_version;
-            some_ip_sd_entries_t* m__root;
-            some_ip_sd_entries_t::sd_entry_t* m__parent;
-
-        public:
-            uint32_t minor_version() const { return m_minor_version; }
-            some_ip_sd_entries_t* _root() const { return m__root; }
-            some_ip_sd_entries_t::sd_entry_t* _parent() const { return m__parent; }
-        };
-
         class sd_eventgroup_entry_t : public kaitai::kstruct {
 
         public:
@@ -147,6 +132,30 @@ public:
             uint64_t reserved2() const { return m_reserved2; }
             uint64_t counter() const { return m_counter; }
             uint16_t event_group_id() const { return m_event_group_id; }
+            some_ip_sd_entries_t* _root() const { return m__root; }
+            some_ip_sd_entries_t::sd_entry_t* _parent() const { return m__parent; }
+        };
+
+        class sd_service_entry_t : public kaitai::kstruct {
+
+        public:
+
+            sd_service_entry_t(kaitai::kstream* p__io, some_ip_sd_entries_t::sd_entry_t* p__parent = nullptr, some_ip_sd_entries_t* p__root = nullptr);
+
+        private:
+            void _read();
+            void _clean_up();
+
+        public:
+            ~sd_service_entry_t();
+
+        private:
+            uint32_t m_minor_version;
+            some_ip_sd_entries_t* m__root;
+            some_ip_sd_entries_t::sd_entry_t* m__parent;
+
+        public:
+            uint32_t minor_version() const { return m_minor_version; }
             some_ip_sd_entries_t* _root() const { return m__root; }
             some_ip_sd_entries_t::sd_entry_t* _parent() const { return m__parent; }
         };

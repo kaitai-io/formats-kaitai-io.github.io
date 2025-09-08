@@ -3,8 +3,8 @@
 
 namespace {
     class Ines extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Ines $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Ines $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -15,8 +15,8 @@ namespace {
             if ($this->header()->f6()->trainer()) {
                 $this->_m_trainer = $this->_io->readBytes(512);
             }
-            $this->_m_prgRom = $this->_io->readBytes(($this->header()->lenPrgRom() * 16384));
-            $this->_m_chrRom = $this->_io->readBytes(($this->header()->lenChrRom() * 8192));
+            $this->_m_prgRom = $this->_io->readBytes($this->header()->lenPrgRom() * 16384);
+            $this->_m_chrRom = $this->_io->readBytes($this->header()->lenChrRom() * 8192);
             if ($this->header()->f7()->playchoice10()) {
                 $this->_m_playchoice10 = new \Ines\Playchoice10($this->_io, $this, $this->_root);
             }
@@ -43,15 +43,15 @@ namespace {
 
 namespace Ines {
     class Header extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Ines $_parent = null, \Ines $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Ines $_parent = null, ?\Ines $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic = $this->_io->readBytes(4);
-            if (!($this->magic() == "\x4E\x45\x53\x1A")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x4E\x45\x53\x1A", $this->magic(), $this->_io(), "/types/header/seq/0");
+            if (!($this->_m_magic == "\x4E\x45\x53\x1A")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x4E\x45\x53\x1A", $this->_m_magic, $this->_io, "/types/header/seq/0");
             }
             $this->_m_lenPrgRom = $this->_io->readU1();
             $this->_m_lenChrRom = $this->_io->readU1();
@@ -69,15 +69,15 @@ namespace Ines {
             $_io__raw_f10 = new \Kaitai\Struct\Stream($this->_m__raw_f10);
             $this->_m_f10 = new \Ines\Header\F10($_io__raw_f10, $this, $this->_root);
             $this->_m_reserved = $this->_io->readBytes(5);
-            if (!($this->reserved() == "\x00\x00\x00\x00\x00")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00\x00\x00\x00\x00", $this->reserved(), $this->_io(), "/types/header/seq/8");
+            if (!($this->_m_reserved == "\x00\x00\x00\x00\x00")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00\x00\x00\x00\x00", $this->_m_reserved, $this->_io, "/types/header/seq/8");
             }
         }
         protected $_m_mapper;
         public function mapper() {
             if ($this->_m_mapper !== null)
                 return $this->_m_mapper;
-            $this->_m_mapper = ($this->f6()->lowerMapper() | ($this->f7()->upperMapper() << 4));
+            $this->_m_mapper = $this->f6()->lowerMapper() | $this->f7()->upperMapper() << 4;
             return $this->_m_mapper;
         }
         protected $_m_magic;
@@ -126,8 +126,62 @@ namespace Ines {
 }
 
 namespace Ines\Header {
+    class F10 extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Ines\Header $_parent = null, ?\Ines $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_reserved1 = $this->_io->readBitsIntBe(2);
+            $this->_m_busConflict = $this->_io->readBitsIntBe(1) != 0;
+            $this->_m_prgRam = $this->_io->readBitsIntBe(1) != 0;
+            $this->_m_reserved2 = $this->_io->readBitsIntBe(2);
+            $this->_m_tvSystem = $this->_io->readBitsIntBe(2);
+        }
+        protected $_m_reserved1;
+        protected $_m_busConflict;
+        protected $_m_prgRam;
+        protected $_m_reserved2;
+        protected $_m_tvSystem;
+        public function reserved1() { return $this->_m_reserved1; }
+
+        /**
+         * If 0, no bus conflicts. If 1, bus conflicts.
+         */
+        public function busConflict() { return $this->_m_busConflict; }
+
+        /**
+         * If 0, PRG ram is present. If 1, not present.
+         */
+        public function prgRam() { return $this->_m_prgRam; }
+        public function reserved2() { return $this->_m_reserved2; }
+
+        /**
+         * if 0, NTSC. If 2, PAL. If 1 or 3, dual compatible.
+         */
+        public function tvSystem() { return $this->_m_tvSystem; }
+    }
+}
+
+namespace Ines\Header\F10 {
+    class TvSystem {
+        const NTSC = 0;
+        const DUAL1 = 1;
+        const PAL = 2;
+        const DUAL2 = 3;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
+    }
+}
+
+namespace Ines\Header {
     class F6 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Ines\Header $_parent = null, \Ines $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Ines\Header $_parent = null, ?\Ines $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -176,12 +230,18 @@ namespace Ines\Header\F6 {
     class Mirroring {
         const HORIZONTAL = 0;
         const VERTICAL = 1;
+
+        private const _VALUES = [0 => true, 1 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
 namespace Ines\Header {
     class F7 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Ines\Header $_parent = null, \Ines $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Ines\Header $_parent = null, ?\Ines $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -221,7 +281,7 @@ namespace Ines\Header {
 
 namespace Ines\Header {
     class F9 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Ines\Header $_parent = null, \Ines $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Ines\Header $_parent = null, ?\Ines $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -245,60 +305,18 @@ namespace Ines\Header\F9 {
     class TvSystem {
         const NTSC = 0;
         const PAL = 1;
-    }
-}
 
-namespace Ines\Header {
-    class F10 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Ines\Header $_parent = null, \Ines $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
+        private const _VALUES = [0 => true, 1 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
         }
-
-        private function _read() {
-            $this->_m_reserved1 = $this->_io->readBitsIntBe(2);
-            $this->_m_busConflict = $this->_io->readBitsIntBe(1) != 0;
-            $this->_m_prgRam = $this->_io->readBitsIntBe(1) != 0;
-            $this->_m_reserved2 = $this->_io->readBitsIntBe(2);
-            $this->_m_tvSystem = $this->_io->readBitsIntBe(2);
-        }
-        protected $_m_reserved1;
-        protected $_m_busConflict;
-        protected $_m_prgRam;
-        protected $_m_reserved2;
-        protected $_m_tvSystem;
-        public function reserved1() { return $this->_m_reserved1; }
-
-        /**
-         * If 0, no bus conflicts. If 1, bus conflicts.
-         */
-        public function busConflict() { return $this->_m_busConflict; }
-
-        /**
-         * If 0, PRG ram is present. If 1, not present.
-         */
-        public function prgRam() { return $this->_m_prgRam; }
-        public function reserved2() { return $this->_m_reserved2; }
-
-        /**
-         * if 0, NTSC. If 2, PAL. If 1 or 3, dual compatible.
-         */
-        public function tvSystem() { return $this->_m_tvSystem; }
-    }
-}
-
-namespace Ines\Header\F10 {
-    class TvSystem {
-        const NTSC = 0;
-        const DUAL1 = 1;
-        const PAL = 2;
-        const DUAL2 = 3;
     }
 }
 
 namespace Ines {
     class Playchoice10 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Ines $_parent = null, \Ines $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Ines $_parent = null, ?\Ines $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -316,7 +334,7 @@ namespace Ines {
 
 namespace Ines\Playchoice10 {
     class Prom extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Ines\Playchoice10 $_parent = null, \Ines $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Ines\Playchoice10 $_parent = null, ?\Ines $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }

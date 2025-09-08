@@ -1,9 +1,11 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 require 'kaitai/struct/struct'
+require_relative 'ethernet_frame'
+require_relative 'packet_ppi'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -227,8 +229,8 @@ class Pcap < Kaitai::Struct::Struct
     299 => :linktype_fira_uci,
   }
   I__LINKTYPE = LINKTYPE.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -246,16 +248,16 @@ class Pcap < Kaitai::Struct::Struct
   ##
   # @see https://wiki.wireshark.org/Development/LibpcapFileFormat#Global_Header Source
   class Header < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
       @magic_number = @_io.read_bytes(4)
-      raise Kaitai::Struct::ValidationNotEqualError.new([212, 195, 178, 161].pack('C*'), magic_number, _io, "/types/header/seq/0") if not magic_number == [212, 195, 178, 161].pack('C*')
+      raise Kaitai::Struct::ValidationNotEqualError.new([212, 195, 178, 161].pack('C*'), @magic_number, @_io, "/types/header/seq/0") if not @magic_number == [212, 195, 178, 161].pack('C*')
       @version_major = @_io.read_u2le
-      raise Kaitai::Struct::ValidationNotEqualError.new(2, version_major, _io, "/types/header/seq/1") if not version_major == 2
+      raise Kaitai::Struct::ValidationNotEqualError.new(2, @version_major, @_io, "/types/header/seq/1") if not @version_major == 2
       @version_minor = @_io.read_u2le
       @thiszone = @_io.read_s4le
       @sigfigs = @_io.read_u4le
@@ -292,7 +294,7 @@ class Pcap < Kaitai::Struct::Struct
   ##
   # @see https://wiki.wireshark.org/Development/LibpcapFileFormat#Record_.28Packet.29_Header Source
   class Packet < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -303,14 +305,12 @@ class Pcap < Kaitai::Struct::Struct
       @incl_len = @_io.read_u4le
       @orig_len = @_io.read_u4le
       case _root.hdr.network
-      when :linktype_ppi
-        @_raw_body = @_io.read_bytes((incl_len < _root.hdr.snaplen ? incl_len : _root.hdr.snaplen))
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = PacketPpi.new(_io__raw_body)
       when :linktype_ethernet
-        @_raw_body = @_io.read_bytes((incl_len < _root.hdr.snaplen ? incl_len : _root.hdr.snaplen))
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = EthernetFrame.new(_io__raw_body)
+        _io_body = @_io.substream((incl_len < _root.hdr.snaplen ? incl_len : _root.hdr.snaplen))
+        @body = EthernetFrame.new(_io_body)
+      when :linktype_ppi
+        _io_body = @_io.substream((incl_len < _root.hdr.snaplen ? incl_len : _root.hdr.snaplen))
+        @body = PacketPpi.new(_io_body)
       else
         @body = @_io.read_bytes((incl_len < _root.hdr.snaplen ? incl_len : _root.hdr.snaplen))
       end

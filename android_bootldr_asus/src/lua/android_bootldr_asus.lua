@@ -27,7 +27,7 @@ end
 function AndroidBootldrAsus:_read()
   self.magic = self._io:read_bytes(8)
   if not(self.magic == "\066\079\079\084\076\068\082\033") then
-    error("not equal, expected " ..  "\066\079\079\084\076\068\082\033" .. ", but got " .. self.magic)
+    error("not equal, expected " .. "\066\079\079\084\076\068\082\033" .. ", but got " .. self.magic)
   end
   self.revision = self._io:read_u2le()
   if not(self.revision >= 2) then
@@ -50,7 +50,7 @@ AndroidBootldrAsus.Image = class.class(KaitaiStruct)
 function AndroidBootldrAsus.Image:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -62,7 +62,7 @@ function AndroidBootldrAsus.Image:_read()
   self.len_body = self._io:read_u4le()
   self.flags = self._io:read_u1()
   local _ = self.flags
-  if not((_ & 1) ~= 0) then
+  if not(_ & 1 ~= 0) then
     error("ValidationExprError")
   end
   self.reserved1 = self._io:read_u1()

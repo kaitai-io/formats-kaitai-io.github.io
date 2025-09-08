@@ -47,77 +47,10 @@ namespace Kaitai
         private void _read()
         {
             _metaHeader = new MetaHdr(m_io, this, m_root);
-            _headerExt = m_io.ReadBytes((MetaHeader.LenMetaHeader - 76));
+            _headerExt = m_io.ReadBytes(MetaHeader.LenMetaHeader - 76);
             __raw_imageHeader = m_io.ReadBytes(MetaHeader.LenImageHeader);
             var io___raw_imageHeader = new KaitaiStream(__raw_imageHeader);
             _imageHeader = new ImageHdr(io___raw_imageHeader, this, m_root);
-        }
-        public partial class MetaHdr : KaitaiStruct
-        {
-            public static MetaHdr FromFile(string fileName)
-            {
-                return new MetaHdr(new KaitaiStream(fileName));
-            }
-
-            public MetaHdr(KaitaiStream p__io, AndroidBootldrHuawei p__parent = null, AndroidBootldrHuawei p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _magic = m_io.ReadBytes(4);
-                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 60, 214, 26, 206 }) == 0)))
-                {
-                    throw new ValidationNotEqualError(new byte[] { 60, 214, 26, 206 }, Magic, M_Io, "/types/meta_hdr/seq/0");
-                }
-                _version = new Version(m_io, this, m_root);
-                _imageVersion = System.Text.Encoding.GetEncoding("ASCII").GetString(KaitaiStream.BytesTerminate(m_io.ReadBytes(64), 0, false));
-                _lenMetaHeader = m_io.ReadU2le();
-                _lenImageHeader = m_io.ReadU2le();
-            }
-            private byte[] _magic;
-            private Version _version;
-            private string _imageVersion;
-            private ushort _lenMetaHeader;
-            private ushort _lenImageHeader;
-            private AndroidBootldrHuawei m_root;
-            private AndroidBootldrHuawei m_parent;
-            public byte[] Magic { get { return _magic; } }
-            public Version Version { get { return _version; } }
-            public string ImageVersion { get { return _imageVersion; } }
-            public ushort LenMetaHeader { get { return _lenMetaHeader; } }
-            public ushort LenImageHeader { get { return _lenImageHeader; } }
-            public AndroidBootldrHuawei M_Root { get { return m_root; } }
-            public AndroidBootldrHuawei M_Parent { get { return m_parent; } }
-        }
-        public partial class Version : KaitaiStruct
-        {
-            public static Version FromFile(string fileName)
-            {
-                return new Version(new KaitaiStream(fileName));
-            }
-
-            public Version(KaitaiStream p__io, AndroidBootldrHuawei.MetaHdr p__parent = null, AndroidBootldrHuawei p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _major = m_io.ReadU2le();
-                _minor = m_io.ReadU2le();
-            }
-            private ushort _major;
-            private ushort _minor;
-            private AndroidBootldrHuawei m_root;
-            private AndroidBootldrHuawei.MetaHdr m_parent;
-            public ushort Major { get { return _major; } }
-            public ushort Minor { get { return _minor; } }
-            public AndroidBootldrHuawei M_Root { get { return m_root; } }
-            public AndroidBootldrHuawei.MetaHdr M_Parent { get { return m_parent; } }
         }
         public partial class ImageHdr : KaitaiStruct
         {
@@ -174,8 +107,8 @@ namespace Kaitai
             {
                 m_parent = p__parent;
                 m_root = p__root;
-                f_isUsed = false;
                 f_body = false;
+                f_isUsed = false;
                 _read();
             }
             private void _read()
@@ -183,6 +116,25 @@ namespace Kaitai
                 _name = System.Text.Encoding.GetEncoding("ASCII").GetString(KaitaiStream.BytesTerminate(m_io.ReadBytes(72), 0, false));
                 _ofsBody = m_io.ReadU4le();
                 _lenBody = m_io.ReadU4le();
+            }
+            private bool f_body;
+            private byte[] _body;
+            public byte[] Body
+            {
+                get
+                {
+                    if (f_body)
+                        return _body;
+                    f_body = true;
+                    if (IsUsed) {
+                        KaitaiStream io = M_Root.M_Io;
+                        long _pos = io.Pos;
+                        io.Seek(OfsBody);
+                        _body = io.ReadBytes(LenBody);
+                        io.Seek(_pos);
+                    }
+                    return _body;
+                }
             }
             private bool f_isUsed;
             private bool _isUsed;
@@ -196,28 +148,9 @@ namespace Kaitai
                 {
                     if (f_isUsed)
                         return _isUsed;
-                    _isUsed = (bool) ( ((OfsBody != 0) && (LenBody != 0)) );
                     f_isUsed = true;
+                    _isUsed = (bool) ( ((OfsBody != 0) && (LenBody != 0)) );
                     return _isUsed;
-                }
-            }
-            private bool f_body;
-            private byte[] _body;
-            public byte[] Body
-            {
-                get
-                {
-                    if (f_body)
-                        return _body;
-                    if (IsUsed) {
-                        KaitaiStream io = M_Root.M_Io;
-                        long _pos = io.Pos;
-                        io.Seek(OfsBody);
-                        _body = io.ReadBytes(LenBody);
-                        io.Seek(_pos);
-                        f_body = true;
-                    }
-                    return _body;
                 }
             }
             private string _name;
@@ -234,6 +167,73 @@ namespace Kaitai
             public uint LenBody { get { return _lenBody; } }
             public AndroidBootldrHuawei M_Root { get { return m_root; } }
             public AndroidBootldrHuawei.ImageHdr M_Parent { get { return m_parent; } }
+        }
+        public partial class MetaHdr : KaitaiStruct
+        {
+            public static MetaHdr FromFile(string fileName)
+            {
+                return new MetaHdr(new KaitaiStream(fileName));
+            }
+
+            public MetaHdr(KaitaiStream p__io, AndroidBootldrHuawei p__parent = null, AndroidBootldrHuawei p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _magic = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 60, 214, 26, 206 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 60, 214, 26, 206 }, _magic, m_io, "/types/meta_hdr/seq/0");
+                }
+                _version = new Version(m_io, this, m_root);
+                _imageVersion = System.Text.Encoding.GetEncoding("ASCII").GetString(KaitaiStream.BytesTerminate(m_io.ReadBytes(64), 0, false));
+                _lenMetaHeader = m_io.ReadU2le();
+                _lenImageHeader = m_io.ReadU2le();
+            }
+            private byte[] _magic;
+            private Version _version;
+            private string _imageVersion;
+            private ushort _lenMetaHeader;
+            private ushort _lenImageHeader;
+            private AndroidBootldrHuawei m_root;
+            private AndroidBootldrHuawei m_parent;
+            public byte[] Magic { get { return _magic; } }
+            public Version Version { get { return _version; } }
+            public string ImageVersion { get { return _imageVersion; } }
+            public ushort LenMetaHeader { get { return _lenMetaHeader; } }
+            public ushort LenImageHeader { get { return _lenImageHeader; } }
+            public AndroidBootldrHuawei M_Root { get { return m_root; } }
+            public AndroidBootldrHuawei M_Parent { get { return m_parent; } }
+        }
+        public partial class Version : KaitaiStruct
+        {
+            public static Version FromFile(string fileName)
+            {
+                return new Version(new KaitaiStream(fileName));
+            }
+
+            public Version(KaitaiStream p__io, AndroidBootldrHuawei.MetaHdr p__parent = null, AndroidBootldrHuawei p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _major = m_io.ReadU2le();
+                _minor = m_io.ReadU2le();
+            }
+            private ushort _major;
+            private ushort _minor;
+            private AndroidBootldrHuawei m_root;
+            private AndroidBootldrHuawei.MetaHdr m_parent;
+            public ushort Major { get { return _major; } }
+            public ushort Minor { get { return _minor; } }
+            public AndroidBootldrHuawei M_Root { get { return m_root; } }
+            public AndroidBootldrHuawei.MetaHdr M_Parent { get { return m_parent; } }
         }
         private MetaHdr _metaHeader;
         private byte[] _headerExt;

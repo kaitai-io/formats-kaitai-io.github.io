@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.HeroesOfMightAndMagicAgg = factory(root.KaitaiStream);
+    factory(root.HeroesOfMightAndMagicAgg || (root.HeroesOfMightAndMagicAgg = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (HeroesOfMightAndMagicAgg_, KaitaiStream) {
 /**
  * @see {@link https://web.archive.org/web/20170215190034/http://rewiki.regengedanken.de/wiki/.AGG_(Heroes_of_Might_and_Magic)|Source}
  */
@@ -33,7 +33,7 @@ var HeroesOfMightAndMagicAgg = (function() {
     function Entry(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -62,7 +62,7 @@ var HeroesOfMightAndMagicAgg = (function() {
     function Filename(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -77,7 +77,7 @@ var HeroesOfMightAndMagicAgg = (function() {
       if (this._m_filenames !== undefined)
         return this._m_filenames;
       var _pos = this._io.pos;
-      this._io.seek((this.entries[this.entries.length - 1].offset + this.entries[this.entries.length - 1].size));
+      this._io.seek(this.entries[this.entries.length - 1].offset + this.entries[this.entries.length - 1].size);
       this._raw__m_filenames = [];
       this._m_filenames = [];
       for (var i = 0; i < this.numFiles; i++) {
@@ -92,5 +92,5 @@ var HeroesOfMightAndMagicAgg = (function() {
 
   return HeroesOfMightAndMagicAgg;
 })();
-return HeroesOfMightAndMagicAgg;
-}));
+HeroesOfMightAndMagicAgg_.HeroesOfMightAndMagicAgg = HeroesOfMightAndMagicAgg;
+});

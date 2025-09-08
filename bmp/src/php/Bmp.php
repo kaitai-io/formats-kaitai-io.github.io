@@ -77,14 +77,14 @@
 
 namespace {
     class Bmp extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Bmp $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Bmp $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_fileHdr = new \Bmp\FileHeader($this->_io, $this, $this->_root);
-            $this->_m__raw_dibInfo = $this->_io->readBytes(($this->fileHdr()->ofsBitmap() - 14));
+            $this->_m__raw_dibInfo = $this->_io->readBytes($this->fileHdr()->ofsBitmap() - 14);
             $_io__raw_dibInfo = new \Kaitai\Struct\Stream($this->_m__raw_dibInfo);
             $this->_m_dibInfo = new \Bmp\BitmapInfo($_io__raw_dibInfo, $this, $this->_root);
             $this->_m__raw_bitmap = $this->_io->readBytesFull();
@@ -104,237 +104,6 @@ namespace {
     }
 }
 
-namespace Bmp {
-    class CieXyz extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Bmp\BitmapV4Extension $_parent = null, \Bmp $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_x = new \Bmp\FixedPoint2Dot30($this->_io, $this, $this->_root);
-            $this->_m_y = new \Bmp\FixedPoint2Dot30($this->_io, $this, $this->_root);
-            $this->_m_z = new \Bmp\FixedPoint2Dot30($this->_io, $this, $this->_root);
-        }
-        protected $_m_x;
-        protected $_m_y;
-        protected $_m_z;
-        public function x() { return $this->_m_x; }
-        public function y() { return $this->_m_y; }
-        public function z() { return $this->_m_z; }
-    }
-}
-
-namespace Bmp {
-    class RgbRecord extends \Kaitai\Struct\Struct {
-        public function __construct(bool $hasReservedField, \Kaitai\Struct\Stream $_io, \Bmp\ColorTable $_parent = null, \Bmp $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_m_hasReservedField = $hasReservedField;
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_blue = $this->_io->readU1();
-            $this->_m_green = $this->_io->readU1();
-            $this->_m_red = $this->_io->readU1();
-            if ($this->hasReservedField()) {
-                $this->_m_reserved = $this->_io->readU1();
-            }
-        }
-        protected $_m_blue;
-        protected $_m_green;
-        protected $_m_red;
-        protected $_m_reserved;
-        protected $_m_hasReservedField;
-        public function blue() { return $this->_m_blue; }
-        public function green() { return $this->_m_green; }
-        public function red() { return $this->_m_red; }
-        public function reserved() { return $this->_m_reserved; }
-        public function hasReservedField() { return $this->_m_hasReservedField; }
-    }
-}
-
-namespace Bmp {
-    class BitmapV5Extension extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Bmp\BitmapHeader $_parent = null, \Bmp $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_intent = $this->_io->readU4le();
-            $this->_m_ofsProfile = $this->_io->readU4le();
-            $this->_m_lenProfile = $this->_io->readU4le();
-            $this->_m_reserved = $this->_io->readU4le();
-        }
-        protected $_m_hasProfile;
-        public function hasProfile() {
-            if ($this->_m_hasProfile !== null)
-                return $this->_m_hasProfile;
-            $this->_m_hasProfile =  (($this->_parent()->bitmapV4Ext()->colorSpaceType() == \Bmp\ColorSpace::PROFILE_LINKED) || ($this->_parent()->bitmapV4Ext()->colorSpaceType() == \Bmp\ColorSpace::PROFILE_EMBEDDED)) ;
-            return $this->_m_hasProfile;
-        }
-        protected $_m_profileData;
-        public function profileData() {
-            if ($this->_m_profileData !== null)
-                return $this->_m_profileData;
-            if ($this->hasProfile()) {
-                $io = $this->_root()->_io();
-                $_pos = $io->pos();
-                $io->seek((14 + $this->ofsProfile()));
-                switch ($this->_parent()->bitmapV4Ext()->colorSpaceType() == \Bmp\ColorSpace::PROFILE_LINKED) {
-                    case true:
-                        $this->_m_profileData = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($io->readBytes($this->lenProfile()), 0, false), "windows-1252");
-                        break;
-                    default:
-                        $this->_m_profileData = $io->readBytes($this->lenProfile());
-                        break;
-                }
-                $io->seek($_pos);
-            }
-            return $this->_m_profileData;
-        }
-        protected $_m_intent;
-        protected $_m_ofsProfile;
-        protected $_m_lenProfile;
-        protected $_m_reserved;
-        public function intent() { return $this->_m_intent; }
-
-        /**
-         * The offset, in bytes, from the beginning of the BITMAPV5HEADER structure to the start of the profile data.
-         */
-        public function ofsProfile() { return $this->_m_ofsProfile; }
-        public function lenProfile() { return $this->_m_lenProfile; }
-        public function reserved() { return $this->_m_reserved; }
-    }
-}
-
-namespace Bmp {
-    class ColorMask extends \Kaitai\Struct\Struct {
-        public function __construct(bool $hasAlphaMask, \Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Bmp $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_m_hasAlphaMask = $hasAlphaMask;
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_redMask = $this->_io->readU4le();
-            $this->_m_greenMask = $this->_io->readU4le();
-            $this->_m_blueMask = $this->_io->readU4le();
-            if ($this->hasAlphaMask()) {
-                $this->_m_alphaMask = $this->_io->readU4le();
-            }
-        }
-        protected $_m_redMask;
-        protected $_m_greenMask;
-        protected $_m_blueMask;
-        protected $_m_alphaMask;
-        protected $_m_hasAlphaMask;
-        public function redMask() { return $this->_m_redMask; }
-        public function greenMask() { return $this->_m_greenMask; }
-        public function blueMask() { return $this->_m_blueMask; }
-        public function alphaMask() { return $this->_m_alphaMask; }
-        public function hasAlphaMask() { return $this->_m_hasAlphaMask; }
-    }
-}
-
-namespace Bmp {
-    class BitmapV4Extension extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Bmp\BitmapHeader $_parent = null, \Bmp $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_colorSpaceType = $this->_io->readU4le();
-            $this->_m_endpointRed = new \Bmp\CieXyz($this->_io, $this, $this->_root);
-            $this->_m_endpointGreen = new \Bmp\CieXyz($this->_io, $this, $this->_root);
-            $this->_m_endpointBlue = new \Bmp\CieXyz($this->_io, $this, $this->_root);
-            $this->_m_gammaRed = new \Bmp\FixedPoint16Dot16($this->_io, $this, $this->_root);
-            $this->_m_gammaBlue = new \Bmp\FixedPoint16Dot16($this->_io, $this, $this->_root);
-            $this->_m_gammaGreen = new \Bmp\FixedPoint16Dot16($this->_io, $this, $this->_root);
-        }
-        protected $_m_colorSpaceType;
-        protected $_m_endpointRed;
-        protected $_m_endpointGreen;
-        protected $_m_endpointBlue;
-        protected $_m_gammaRed;
-        protected $_m_gammaBlue;
-        protected $_m_gammaGreen;
-        public function colorSpaceType() { return $this->_m_colorSpaceType; }
-        public function endpointRed() { return $this->_m_endpointRed; }
-        public function endpointGreen() { return $this->_m_endpointGreen; }
-        public function endpointBlue() { return $this->_m_endpointBlue; }
-        public function gammaRed() { return $this->_m_gammaRed; }
-        public function gammaBlue() { return $this->_m_gammaBlue; }
-        public function gammaGreen() { return $this->_m_gammaGreen; }
-    }
-}
-
-namespace Bmp {
-    class BitmapInfoExtension extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Bmp\BitmapHeader $_parent = null, \Bmp $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            if (!($this->_parent()->extendsOs22xBitmap())) {
-                $this->_m_compression = $this->_io->readU4le();
-            }
-            if ($this->_parent()->extendsOs22xBitmap()) {
-                $this->_m_os2Compression = $this->_io->readU4le();
-            }
-            $this->_m_lenImage = $this->_io->readU4le();
-            $this->_m_xResolution = $this->_io->readU4le();
-            $this->_m_yResolution = $this->_io->readU4le();
-            $this->_m_numColorsUsed = $this->_io->readU4le();
-            $this->_m_numColorsImportant = $this->_io->readU4le();
-        }
-        protected $_m_compression;
-        protected $_m_os2Compression;
-        protected $_m_lenImage;
-        protected $_m_xResolution;
-        protected $_m_yResolution;
-        protected $_m_numColorsUsed;
-        protected $_m_numColorsImportant;
-        public function compression() { return $this->_m_compression; }
-        public function os2Compression() { return $this->_m_os2Compression; }
-
-        /**
-         * If biCompression is BI_JPEG or BI_PNG, indicates the size of the JPEG or PNG image buffer.
-         * This may be set to zero for BI_RGB bitmaps.
-         */
-        public function lenImage() { return $this->_m_lenImage; }
-        public function xResolution() { return $this->_m_xResolution; }
-        public function yResolution() { return $this->_m_yResolution; }
-        public function numColorsUsed() { return $this->_m_numColorsUsed; }
-        public function numColorsImportant() { return $this->_m_numColorsImportant; }
-    }
-}
-
-namespace Bmp {
-    class FixedPoint2Dot30 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Bmp\CieXyz $_parent = null, \Bmp $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_raw = $this->_io->readU4le();
-        }
-        protected $_m_value;
-        public function value() {
-            if ($this->_m_value !== null)
-                return $this->_m_value;
-            $this->_m_value = (($this->raw() + 0.0) / (1 << 30));
-            return $this->_m_value;
-        }
-        protected $_m_raw;
-        public function raw() { return $this->_m_raw; }
-    }
-}
-
 /**
  * Replace with an opaque type if you care about the pixels. You can look at
  * an example of a JavaScript implementation:
@@ -346,7 +115,7 @@ namespace Bmp {
 
 namespace Bmp {
     class Bitmap extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Bmp $_parent = null, \Bmp $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Bmp $_parent = null, ?\Bmp $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -358,7 +127,7 @@ namespace Bmp {
 
 namespace Bmp {
     class BitmapHeader extends \Kaitai\Struct\Struct {
-        public function __construct(int $lenHeader, \Kaitai\Struct\Stream $_io, \Bmp\BitmapInfo $_parent = null, \Bmp $_root = null) {
+        public function __construct(int $lenHeader, \Kaitai\Struct\Stream $_io, ?\Bmp\BitmapInfo $_parent = null, ?\Bmp $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_m_lenHeader = $lenHeader;
             $this->_read();
@@ -366,19 +135,19 @@ namespace Bmp {
 
         private function _read() {
             switch ($this->isCoreHeader()) {
-                case true:
-                    $this->_m_imageWidth = $this->_io->readU2le();
-                    break;
                 case false:
                     $this->_m_imageWidth = $this->_io->readU4le();
                     break;
+                case true:
+                    $this->_m_imageWidth = $this->_io->readU2le();
+                    break;
             }
             switch ($this->isCoreHeader()) {
-                case true:
-                    $this->_m_imageHeightRaw = $this->_io->readS2le();
-                    break;
                 case false:
                     $this->_m_imageHeightRaw = $this->_io->readS4le();
+                    break;
+                case true:
+                    $this->_m_imageHeightRaw = $this->_io->readS2le();
                     break;
             }
             $this->_m_numPlanes = $this->_io->readU2le();
@@ -399,26 +168,12 @@ namespace Bmp {
                 $this->_m_bitmapV5Ext = new \Bmp\BitmapV5Extension($this->_io, $this, $this->_root);
             }
         }
-        protected $_m_extendsBitmapV4;
-        public function extendsBitmapV4() {
-            if ($this->_m_extendsBitmapV4 !== null)
-                return $this->_m_extendsBitmapV4;
-            $this->_m_extendsBitmapV4 = $this->lenHeader() >= \Bmp\HeaderType::BITMAP_V4_HEADER;
-            return $this->_m_extendsBitmapV4;
-        }
-        protected $_m_extendsOs22xBitmap;
-        public function extendsOs22xBitmap() {
-            if ($this->_m_extendsOs22xBitmap !== null)
-                return $this->_m_extendsOs22xBitmap;
-            $this->_m_extendsOs22xBitmap = $this->lenHeader() == \Bmp\HeaderType::OS2_2X_BITMAP_HEADER;
-            return $this->_m_extendsOs22xBitmap;
-        }
-        protected $_m_usesFixedPalette;
-        public function usesFixedPalette() {
-            if ($this->_m_usesFixedPalette !== null)
-                return $this->_m_usesFixedPalette;
-            $this->_m_usesFixedPalette =  ((!( (($this->bitsPerPixel() == 16) || ($this->bitsPerPixel() == 24) || ($this->bitsPerPixel() == 32)) )) && (!( (($this->extendsBitmapInfo()) && (!($this->extendsOs22xBitmap())) && ( (($this->bitmapInfoExt()->compression() == \Bmp\Compressions::JPEG) || ($this->bitmapInfoExt()->compression() == \Bmp\Compressions::PNG)) )) ))) ;
-            return $this->_m_usesFixedPalette;
+        protected $_m_bottomUp;
+        public function bottomUp() {
+            if ($this->_m_bottomUp !== null)
+                return $this->_m_bottomUp;
+            $this->_m_bottomUp = $this->imageHeightRaw() > 0;
+            return $this->_m_bottomUp;
         }
         protected $_m_extendsBitmapInfo;
         public function extendsBitmapInfo() {
@@ -427,19 +182,12 @@ namespace Bmp {
             $this->_m_extendsBitmapInfo = $this->lenHeader() >= \Bmp\HeaderType::BITMAP_INFO_HEADER;
             return $this->_m_extendsBitmapInfo;
         }
-        protected $_m_imageHeight;
-        public function imageHeight() {
-            if ($this->_m_imageHeight !== null)
-                return $this->_m_imageHeight;
-            $this->_m_imageHeight = ($this->imageHeightRaw() < 0 ? -($this->imageHeightRaw()) : $this->imageHeightRaw());
-            return $this->_m_imageHeight;
-        }
-        protected $_m_isCoreHeader;
-        public function isCoreHeader() {
-            if ($this->_m_isCoreHeader !== null)
-                return $this->_m_isCoreHeader;
-            $this->_m_isCoreHeader = $this->lenHeader() == \Bmp\HeaderType::BITMAP_CORE_HEADER;
-            return $this->_m_isCoreHeader;
+        protected $_m_extendsBitmapV4;
+        public function extendsBitmapV4() {
+            if ($this->_m_extendsBitmapV4 !== null)
+                return $this->_m_extendsBitmapV4;
+            $this->_m_extendsBitmapV4 = $this->lenHeader() >= \Bmp\HeaderType::BITMAP_V4_HEADER;
+            return $this->_m_extendsBitmapV4;
         }
         protected $_m_extendsBitmapV5;
         public function extendsBitmapV5() {
@@ -448,6 +196,20 @@ namespace Bmp {
             $this->_m_extendsBitmapV5 = $this->lenHeader() >= \Bmp\HeaderType::BITMAP_V5_HEADER;
             return $this->_m_extendsBitmapV5;
         }
+        protected $_m_extendsOs22xBitmap;
+        public function extendsOs22xBitmap() {
+            if ($this->_m_extendsOs22xBitmap !== null)
+                return $this->_m_extendsOs22xBitmap;
+            $this->_m_extendsOs22xBitmap = $this->lenHeader() == \Bmp\HeaderType::OS2_2X_BITMAP_HEADER;
+            return $this->_m_extendsOs22xBitmap;
+        }
+        protected $_m_imageHeight;
+        public function imageHeight() {
+            if ($this->_m_imageHeight !== null)
+                return $this->_m_imageHeight;
+            $this->_m_imageHeight = ($this->imageHeightRaw() < 0 ? -($this->imageHeightRaw()) : $this->imageHeightRaw());
+            return $this->_m_imageHeight;
+        }
         protected $_m_isColorMaskHere;
         public function isColorMaskHere() {
             if ($this->_m_isColorMaskHere !== null)
@@ -455,12 +217,19 @@ namespace Bmp {
             $this->_m_isColorMaskHere =  (($this->lenHeader() == \Bmp\HeaderType::BITMAP_V2_INFO_HEADER) || ($this->lenHeader() == \Bmp\HeaderType::BITMAP_V3_INFO_HEADER) || ($this->extendsBitmapV4())) ;
             return $this->_m_isColorMaskHere;
         }
-        protected $_m_bottomUp;
-        public function bottomUp() {
-            if ($this->_m_bottomUp !== null)
-                return $this->_m_bottomUp;
-            $this->_m_bottomUp = $this->imageHeightRaw() > 0;
-            return $this->_m_bottomUp;
+        protected $_m_isCoreHeader;
+        public function isCoreHeader() {
+            if ($this->_m_isCoreHeader !== null)
+                return $this->_m_isCoreHeader;
+            $this->_m_isCoreHeader = $this->lenHeader() == \Bmp\HeaderType::BITMAP_CORE_HEADER;
+            return $this->_m_isCoreHeader;
+        }
+        protected $_m_usesFixedPalette;
+        public function usesFixedPalette() {
+            if ($this->_m_usesFixedPalette !== null)
+                return $this->_m_usesFixedPalette;
+            $this->_m_usesFixedPalette =  ((!( (($this->bitsPerPixel() == 16) || ($this->bitsPerPixel() == 24) || ($this->bitsPerPixel() == 32)) )) && (!( (($this->extendsBitmapInfo()) && (!($this->extendsOs22xBitmap())) && ( (($this->bitmapInfoExt()->compression() == \Bmp\Compressions::JPEG) || ($this->bitmapInfoExt()->compression() == \Bmp\Compressions::PNG)) )) ))) ;
+            return $this->_m_usesFixedPalette;
         }
         protected $_m_imageWidth;
         protected $_m_imageHeightRaw;
@@ -502,8 +271,400 @@ namespace Bmp {
 }
 
 namespace Bmp {
+    class BitmapInfo extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Bmp $_parent = null, ?\Bmp $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_lenHeader = $this->_io->readU4le();
+            $this->_m__raw_header = $this->_io->readBytes($this->lenHeader() - 4);
+            $_io__raw_header = new \Kaitai\Struct\Stream($this->_m__raw_header);
+            $this->_m_header = new \Bmp\BitmapHeader($this->lenHeader(), $_io__raw_header, $this, $this->_root);
+            if ($this->isColorMaskHere()) {
+                $this->_m_colorMask = new \Bmp\ColorMask($this->header()->bitmapInfoExt()->compression() == \Bmp\Compressions::ALPHA_BITFIELDS, $this->_io, $this, $this->_root);
+            }
+            if (!($this->_io()->isEof())) {
+                $this->_m__raw_colorTable = $this->_io->readBytesFull();
+                $_io__raw_colorTable = new \Kaitai\Struct\Stream($this->_m__raw_colorTable);
+                $this->_m_colorTable = new \Bmp\ColorTable(!($this->header()->isCoreHeader()), ($this->header()->extendsBitmapInfo() ? $this->header()->bitmapInfoExt()->numColorsUsed() : 0), $_io__raw_colorTable, $this, $this->_root);
+            }
+        }
+        protected $_m_colorMaskAlpha;
+        public function colorMaskAlpha() {
+            if ($this->_m_colorMaskAlpha !== null)
+                return $this->_m_colorMaskAlpha;
+            $this->_m_colorMaskAlpha = ( (($this->isColorMaskGiven()) && ($this->colorMaskGiven()->hasAlphaMask()))  ? $this->colorMaskGiven()->alphaMask() : 0);
+            return $this->_m_colorMaskAlpha;
+        }
+        protected $_m_colorMaskBlue;
+        public function colorMaskBlue() {
+            if ($this->_m_colorMaskBlue !== null)
+                return $this->_m_colorMaskBlue;
+            $this->_m_colorMaskBlue = ($this->isColorMaskGiven() ? $this->colorMaskGiven()->blueMask() : ($this->header()->bitsPerPixel() == 16 ? 31 : ( (($this->header()->bitsPerPixel() == 24) || ($this->header()->bitsPerPixel() == 32))  ? 255 : 0)));
+            return $this->_m_colorMaskBlue;
+        }
+        protected $_m_colorMaskGiven;
+        public function colorMaskGiven() {
+            if ($this->_m_colorMaskGiven !== null)
+                return $this->_m_colorMaskGiven;
+            if ($this->isColorMaskGiven()) {
+                $this->_m_colorMaskGiven = ($this->isColorMaskHere() ? $this->colorMask() : $this->header()->colorMask());
+            }
+            return $this->_m_colorMaskGiven;
+        }
+        protected $_m_colorMaskGreen;
+        public function colorMaskGreen() {
+            if ($this->_m_colorMaskGreen !== null)
+                return $this->_m_colorMaskGreen;
+            $this->_m_colorMaskGreen = ($this->isColorMaskGiven() ? $this->colorMaskGiven()->greenMask() : ($this->header()->bitsPerPixel() == 16 ? 992 : ( (($this->header()->bitsPerPixel() == 24) || ($this->header()->bitsPerPixel() == 32))  ? 65280 : 0)));
+            return $this->_m_colorMaskGreen;
+        }
+        protected $_m_colorMaskRed;
+        public function colorMaskRed() {
+            if ($this->_m_colorMaskRed !== null)
+                return $this->_m_colorMaskRed;
+            $this->_m_colorMaskRed = ($this->isColorMaskGiven() ? $this->colorMaskGiven()->redMask() : ($this->header()->bitsPerPixel() == 16 ? 31744 : ( (($this->header()->bitsPerPixel() == 24) || ($this->header()->bitsPerPixel() == 32))  ? 16711680 : 0)));
+            return $this->_m_colorMaskRed;
+        }
+        protected $_m_isColorMaskGiven;
+        public function isColorMaskGiven() {
+            if ($this->_m_isColorMaskGiven !== null)
+                return $this->_m_isColorMaskGiven;
+            $this->_m_isColorMaskGiven =  (($this->header()->extendsBitmapInfo()) && ( (($this->header()->bitmapInfoExt()->compression() == \Bmp\Compressions::BITFIELDS) || ($this->header()->bitmapInfoExt()->compression() == \Bmp\Compressions::ALPHA_BITFIELDS)) ) && ( (($this->isColorMaskHere()) || ($this->header()->isColorMaskHere())) )) ;
+            return $this->_m_isColorMaskGiven;
+        }
+        protected $_m_isColorMaskHere;
+        public function isColorMaskHere() {
+            if ($this->_m_isColorMaskHere !== null)
+                return $this->_m_isColorMaskHere;
+            $this->_m_isColorMaskHere =  ((!($this->_io()->isEof())) && ($this->header()->lenHeader() == \Bmp\HeaderType::BITMAP_INFO_HEADER) && ( (($this->header()->bitmapInfoExt()->compression() == \Bmp\Compressions::BITFIELDS) || ($this->header()->bitmapInfoExt()->compression() == \Bmp\Compressions::ALPHA_BITFIELDS)) )) ;
+            return $this->_m_isColorMaskHere;
+        }
+        protected $_m_lenHeader;
+        protected $_m_header;
+        protected $_m_colorMask;
+        protected $_m_colorTable;
+        protected $_m__raw_header;
+        protected $_m__raw_colorTable;
+        public function lenHeader() { return $this->_m_lenHeader; }
+        public function header() { return $this->_m_header; }
+
+        /**
+         * Valid only for BITMAPINFOHEADER, in all headers extending it the masks are contained in the header itself.
+         */
+        public function colorMask() { return $this->_m_colorMask; }
+        public function colorTable() { return $this->_m_colorTable; }
+        public function _raw_header() { return $this->_m__raw_header; }
+        public function _raw_colorTable() { return $this->_m__raw_colorTable; }
+    }
+}
+
+namespace Bmp {
+    class BitmapInfoExtension extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Bmp\BitmapHeader $_parent = null, ?\Bmp $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            if (!($this->_parent()->extendsOs22xBitmap())) {
+                $this->_m_compression = $this->_io->readU4le();
+            }
+            if ($this->_parent()->extendsOs22xBitmap()) {
+                $this->_m_os2Compression = $this->_io->readU4le();
+            }
+            $this->_m_lenImage = $this->_io->readU4le();
+            $this->_m_xResolution = $this->_io->readU4le();
+            $this->_m_yResolution = $this->_io->readU4le();
+            $this->_m_numColorsUsed = $this->_io->readU4le();
+            $this->_m_numColorsImportant = $this->_io->readU4le();
+        }
+        protected $_m_compression;
+        protected $_m_os2Compression;
+        protected $_m_lenImage;
+        protected $_m_xResolution;
+        protected $_m_yResolution;
+        protected $_m_numColorsUsed;
+        protected $_m_numColorsImportant;
+        public function compression() { return $this->_m_compression; }
+        public function os2Compression() { return $this->_m_os2Compression; }
+
+        /**
+         * If biCompression is BI_JPEG or BI_PNG, indicates the size of the JPEG or PNG image buffer.
+         * This may be set to zero for BI_RGB bitmaps.
+         */
+        public function lenImage() { return $this->_m_lenImage; }
+        public function xResolution() { return $this->_m_xResolution; }
+        public function yResolution() { return $this->_m_yResolution; }
+        public function numColorsUsed() { return $this->_m_numColorsUsed; }
+        public function numColorsImportant() { return $this->_m_numColorsImportant; }
+    }
+}
+
+namespace Bmp {
+    class BitmapV4Extension extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Bmp\BitmapHeader $_parent = null, ?\Bmp $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_colorSpaceType = $this->_io->readU4le();
+            $this->_m_endpointRed = new \Bmp\CieXyz($this->_io, $this, $this->_root);
+            $this->_m_endpointGreen = new \Bmp\CieXyz($this->_io, $this, $this->_root);
+            $this->_m_endpointBlue = new \Bmp\CieXyz($this->_io, $this, $this->_root);
+            $this->_m_gammaRed = new \Bmp\FixedPoint16Dot16($this->_io, $this, $this->_root);
+            $this->_m_gammaBlue = new \Bmp\FixedPoint16Dot16($this->_io, $this, $this->_root);
+            $this->_m_gammaGreen = new \Bmp\FixedPoint16Dot16($this->_io, $this, $this->_root);
+        }
+        protected $_m_colorSpaceType;
+        protected $_m_endpointRed;
+        protected $_m_endpointGreen;
+        protected $_m_endpointBlue;
+        protected $_m_gammaRed;
+        protected $_m_gammaBlue;
+        protected $_m_gammaGreen;
+        public function colorSpaceType() { return $this->_m_colorSpaceType; }
+        public function endpointRed() { return $this->_m_endpointRed; }
+        public function endpointGreen() { return $this->_m_endpointGreen; }
+        public function endpointBlue() { return $this->_m_endpointBlue; }
+        public function gammaRed() { return $this->_m_gammaRed; }
+        public function gammaBlue() { return $this->_m_gammaBlue; }
+        public function gammaGreen() { return $this->_m_gammaGreen; }
+    }
+}
+
+namespace Bmp {
+    class BitmapV5Extension extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Bmp\BitmapHeader $_parent = null, ?\Bmp $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_intent = $this->_io->readU4le();
+            $this->_m_ofsProfile = $this->_io->readU4le();
+            $this->_m_lenProfile = $this->_io->readU4le();
+            $this->_m_reserved = $this->_io->readU4le();
+        }
+        protected $_m_hasProfile;
+        public function hasProfile() {
+            if ($this->_m_hasProfile !== null)
+                return $this->_m_hasProfile;
+            $this->_m_hasProfile =  (($this->_parent()->bitmapV4Ext()->colorSpaceType() == \Bmp\ColorSpace::PROFILE_LINKED) || ($this->_parent()->bitmapV4Ext()->colorSpaceType() == \Bmp\ColorSpace::PROFILE_EMBEDDED)) ;
+            return $this->_m_hasProfile;
+        }
+        protected $_m_profileData;
+        public function profileData() {
+            if ($this->_m_profileData !== null)
+                return $this->_m_profileData;
+            if ($this->hasProfile()) {
+                $io = $this->_root()->_io();
+                $_pos = $io->pos();
+                $io->seek(14 + $this->ofsProfile());
+                switch ($this->_parent()->bitmapV4Ext()->colorSpaceType() == \Bmp\ColorSpace::PROFILE_LINKED) {
+                    case true:
+                        $this->_m_profileData = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($io->readBytes($this->lenProfile()), 0, false), "windows-1252");
+                        break;
+                    default:
+                        $this->_m_profileData = $io->readBytes($this->lenProfile());
+                        break;
+                }
+                $io->seek($_pos);
+            }
+            return $this->_m_profileData;
+        }
+        protected $_m_intent;
+        protected $_m_ofsProfile;
+        protected $_m_lenProfile;
+        protected $_m_reserved;
+        public function intent() { return $this->_m_intent; }
+
+        /**
+         * The offset, in bytes, from the beginning of the BITMAPV5HEADER structure to the start of the profile data.
+         */
+        public function ofsProfile() { return $this->_m_ofsProfile; }
+        public function lenProfile() { return $this->_m_lenProfile; }
+        public function reserved() { return $this->_m_reserved; }
+    }
+}
+
+namespace Bmp {
+    class CieXyz extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Bmp\BitmapV4Extension $_parent = null, ?\Bmp $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_x = new \Bmp\FixedPoint2Dot30($this->_io, $this, $this->_root);
+            $this->_m_y = new \Bmp\FixedPoint2Dot30($this->_io, $this, $this->_root);
+            $this->_m_z = new \Bmp\FixedPoint2Dot30($this->_io, $this, $this->_root);
+        }
+        protected $_m_x;
+        protected $_m_y;
+        protected $_m_z;
+        public function x() { return $this->_m_x; }
+        public function y() { return $this->_m_y; }
+        public function z() { return $this->_m_z; }
+    }
+}
+
+namespace Bmp {
+    class ColorMask extends \Kaitai\Struct\Struct {
+        public function __construct(bool $hasAlphaMask, \Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Bmp $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_m_hasAlphaMask = $hasAlphaMask;
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_redMask = $this->_io->readU4le();
+            $this->_m_greenMask = $this->_io->readU4le();
+            $this->_m_blueMask = $this->_io->readU4le();
+            if ($this->hasAlphaMask()) {
+                $this->_m_alphaMask = $this->_io->readU4le();
+            }
+        }
+        protected $_m_redMask;
+        protected $_m_greenMask;
+        protected $_m_blueMask;
+        protected $_m_alphaMask;
+        protected $_m_hasAlphaMask;
+        public function redMask() { return $this->_m_redMask; }
+        public function greenMask() { return $this->_m_greenMask; }
+        public function blueMask() { return $this->_m_blueMask; }
+        public function alphaMask() { return $this->_m_alphaMask; }
+        public function hasAlphaMask() { return $this->_m_hasAlphaMask; }
+    }
+}
+
+namespace Bmp {
+    class ColorTable extends \Kaitai\Struct\Struct {
+        public function __construct(bool $hasReservedField, int $numColors, \Kaitai\Struct\Stream $_io, ?\Bmp\BitmapInfo $_parent = null, ?\Bmp $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_m_hasReservedField = $hasReservedField;
+            $this->_m_numColors = $numColors;
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_colors = [];
+            $n = ( (($this->numColors() > 0) && ($this->numColors() < $this->numColorsPresent()))  ? $this->numColors() : $this->numColorsPresent());
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_colors[] = new \Bmp\RgbRecord($this->hasReservedField(), $this->_io, $this, $this->_root);
+            }
+        }
+        protected $_m_numColorsPresent;
+        public function numColorsPresent() {
+            if ($this->_m_numColorsPresent !== null)
+                return $this->_m_numColorsPresent;
+            $this->_m_numColorsPresent = intval($this->_io()->size() / ($this->hasReservedField() ? 4 : 3));
+            return $this->_m_numColorsPresent;
+        }
+        protected $_m_colors;
+        protected $_m_hasReservedField;
+        protected $_m_numColors;
+        public function colors() { return $this->_m_colors; }
+        public function hasReservedField() { return $this->_m_hasReservedField; }
+
+        /**
+         * If equal to 0, the pallete should contain as many colors as can fit into the pixel value
+         * according to the `bits_per_pixel` field (if `bits_per_pixel` = 8, then the pixel can
+         * represent 2 ** 8 = 256 values, so exactly 256 colors should be present). For more flexibility,
+         * it reads as many colors as it can until EOS is reached (and the image data begin).
+         */
+        public function numColors() { return $this->_m_numColors; }
+    }
+}
+
+namespace Bmp {
+    class FileHeader extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Bmp $_parent = null, ?\Bmp $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_fileType = $this->_io->readBytes(2);
+            if (!($this->_m_fileType == "\x42\x4D")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x42\x4D", $this->_m_fileType, $this->_io, "/types/file_header/seq/0");
+            }
+            $this->_m_lenFile = $this->_io->readU4le();
+            $this->_m_reserved1 = $this->_io->readU2le();
+            $this->_m_reserved2 = $this->_io->readU2le();
+            $this->_m_ofsBitmap = $this->_io->readS4le();
+        }
+        protected $_m_fileType;
+        protected $_m_lenFile;
+        protected $_m_reserved1;
+        protected $_m_reserved2;
+        protected $_m_ofsBitmap;
+        public function fileType() { return $this->_m_fileType; }
+
+        /**
+         * not reliable, mostly ignored by BMP decoders
+         */
+        public function lenFile() { return $this->_m_lenFile; }
+        public function reserved1() { return $this->_m_reserved1; }
+        public function reserved2() { return $this->_m_reserved2; }
+
+        /**
+         * Offset to actual raw pixel data of the image
+         */
+        public function ofsBitmap() { return $this->_m_ofsBitmap; }
+    }
+}
+
+namespace Bmp {
+    class FixedPoint16Dot16 extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Bmp\BitmapV4Extension $_parent = null, ?\Bmp $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_raw = $this->_io->readU4le();
+        }
+        protected $_m_value;
+        public function value() {
+            if ($this->_m_value !== null)
+                return $this->_m_value;
+            $this->_m_value = ($this->raw() + 0.0) / (1 << 16);
+            return $this->_m_value;
+        }
+        protected $_m_raw;
+        public function raw() { return $this->_m_raw; }
+    }
+}
+
+namespace Bmp {
+    class FixedPoint2Dot30 extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Bmp\CieXyz $_parent = null, ?\Bmp $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_raw = $this->_io->readU4le();
+        }
+        protected $_m_value;
+        public function value() {
+            if ($this->_m_value !== null)
+                return $this->_m_value;
+            $this->_m_value = ($this->raw() + 0.0) / (1 << 30);
+            return $this->_m_value;
+        }
+        protected $_m_raw;
+        public function raw() { return $this->_m_raw; }
+    }
+}
+
+namespace Bmp {
     class Os22xBitmapExtension extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Bmp\BitmapHeader $_parent = null, \Bmp $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Bmp\BitmapHeader $_parent = null, ?\Bmp $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -571,217 +732,31 @@ namespace Bmp {
 }
 
 namespace Bmp {
-    class FixedPoint16Dot16 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Bmp\BitmapV4Extension $_parent = null, \Bmp $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_raw = $this->_io->readU4le();
-        }
-        protected $_m_value;
-        public function value() {
-            if ($this->_m_value !== null)
-                return $this->_m_value;
-            $this->_m_value = (($this->raw() + 0.0) / (1 << 16));
-            return $this->_m_value;
-        }
-        protected $_m_raw;
-        public function raw() { return $this->_m_raw; }
-    }
-}
-
-namespace Bmp {
-    class ColorTable extends \Kaitai\Struct\Struct {
-        public function __construct(bool $hasReservedField, int $numColors, \Kaitai\Struct\Stream $_io, \Bmp\BitmapInfo $_parent = null, \Bmp $_root = null) {
+    class RgbRecord extends \Kaitai\Struct\Struct {
+        public function __construct(bool $hasReservedField, \Kaitai\Struct\Stream $_io, ?\Bmp\ColorTable $_parent = null, ?\Bmp $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_m_hasReservedField = $hasReservedField;
-            $this->_m_numColors = $numColors;
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_colors = [];
-            $n = ( (($this->numColors() > 0) && ($this->numColors() < $this->numColorsPresent()))  ? $this->numColors() : $this->numColorsPresent());
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_colors[] = new \Bmp\RgbRecord($this->hasReservedField(), $this->_io, $this, $this->_root);
+            $this->_m_blue = $this->_io->readU1();
+            $this->_m_green = $this->_io->readU1();
+            $this->_m_red = $this->_io->readU1();
+            if ($this->hasReservedField()) {
+                $this->_m_reserved = $this->_io->readU1();
             }
         }
-        protected $_m_numColorsPresent;
-        public function numColorsPresent() {
-            if ($this->_m_numColorsPresent !== null)
-                return $this->_m_numColorsPresent;
-            $this->_m_numColorsPresent = intval($this->_io()->size() / ($this->hasReservedField() ? 4 : 3));
-            return $this->_m_numColorsPresent;
-        }
-        protected $_m_colors;
+        protected $_m_blue;
+        protected $_m_green;
+        protected $_m_red;
+        protected $_m_reserved;
         protected $_m_hasReservedField;
-        protected $_m_numColors;
-        public function colors() { return $this->_m_colors; }
+        public function blue() { return $this->_m_blue; }
+        public function green() { return $this->_m_green; }
+        public function red() { return $this->_m_red; }
+        public function reserved() { return $this->_m_reserved; }
         public function hasReservedField() { return $this->_m_hasReservedField; }
-
-        /**
-         * If equal to 0, the pallete should contain as many colors as can fit into the pixel value
-         * according to the `bits_per_pixel` field (if `bits_per_pixel` = 8, then the pixel can
-         * represent 2 ** 8 = 256 values, so exactly 256 colors should be present). For more flexibility,
-         * it reads as many colors as it can until EOS is reached (and the image data begin).
-         */
-        public function numColors() { return $this->_m_numColors; }
-    }
-}
-
-namespace Bmp {
-    class FileHeader extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Bmp $_parent = null, \Bmp $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_fileType = $this->_io->readBytes(2);
-            if (!($this->fileType() == "\x42\x4D")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x42\x4D", $this->fileType(), $this->_io(), "/types/file_header/seq/0");
-            }
-            $this->_m_lenFile = $this->_io->readU4le();
-            $this->_m_reserved1 = $this->_io->readU2le();
-            $this->_m_reserved2 = $this->_io->readU2le();
-            $this->_m_ofsBitmap = $this->_io->readS4le();
-        }
-        protected $_m_fileType;
-        protected $_m_lenFile;
-        protected $_m_reserved1;
-        protected $_m_reserved2;
-        protected $_m_ofsBitmap;
-        public function fileType() { return $this->_m_fileType; }
-
-        /**
-         * not reliable, mostly ignored by BMP decoders
-         */
-        public function lenFile() { return $this->_m_lenFile; }
-        public function reserved1() { return $this->_m_reserved1; }
-        public function reserved2() { return $this->_m_reserved2; }
-
-        /**
-         * Offset to actual raw pixel data of the image
-         */
-        public function ofsBitmap() { return $this->_m_ofsBitmap; }
-    }
-}
-
-namespace Bmp {
-    class BitmapInfo extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Bmp $_parent = null, \Bmp $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_lenHeader = $this->_io->readU4le();
-            $this->_m__raw_header = $this->_io->readBytes(($this->lenHeader() - 4));
-            $_io__raw_header = new \Kaitai\Struct\Stream($this->_m__raw_header);
-            $this->_m_header = new \Bmp\BitmapHeader($this->lenHeader(), $_io__raw_header, $this, $this->_root);
-            if ($this->isColorMaskHere()) {
-                $this->_m_colorMask = new \Bmp\ColorMask($this->header()->bitmapInfoExt()->compression() == \Bmp\Compressions::ALPHA_BITFIELDS, $this->_io, $this, $this->_root);
-            }
-            if (!($this->_io()->isEof())) {
-                $this->_m__raw_colorTable = $this->_io->readBytesFull();
-                $_io__raw_colorTable = new \Kaitai\Struct\Stream($this->_m__raw_colorTable);
-                $this->_m_colorTable = new \Bmp\ColorTable(!($this->header()->isCoreHeader()), ($this->header()->extendsBitmapInfo() ? $this->header()->bitmapInfoExt()->numColorsUsed() : 0), $_io__raw_colorTable, $this, $this->_root);
-            }
-        }
-        protected $_m_isColorMaskGiven;
-        public function isColorMaskGiven() {
-            if ($this->_m_isColorMaskGiven !== null)
-                return $this->_m_isColorMaskGiven;
-            $this->_m_isColorMaskGiven =  (($this->header()->extendsBitmapInfo()) && ( (($this->header()->bitmapInfoExt()->compression() == \Bmp\Compressions::BITFIELDS) || ($this->header()->bitmapInfoExt()->compression() == \Bmp\Compressions::ALPHA_BITFIELDS)) ) && ( (($this->isColorMaskHere()) || ($this->header()->isColorMaskHere())) )) ;
-            return $this->_m_isColorMaskGiven;
-        }
-        protected $_m_colorMaskGiven;
-        public function colorMaskGiven() {
-            if ($this->_m_colorMaskGiven !== null)
-                return $this->_m_colorMaskGiven;
-            if ($this->isColorMaskGiven()) {
-                $this->_m_colorMaskGiven = ($this->isColorMaskHere() ? $this->colorMask() : $this->header()->colorMask());
-            }
-            return $this->_m_colorMaskGiven;
-        }
-        protected $_m_colorMaskBlue;
-        public function colorMaskBlue() {
-            if ($this->_m_colorMaskBlue !== null)
-                return $this->_m_colorMaskBlue;
-            $this->_m_colorMaskBlue = ($this->isColorMaskGiven() ? $this->colorMaskGiven()->blueMask() : ($this->header()->bitsPerPixel() == 16 ? 31 : ( (($this->header()->bitsPerPixel() == 24) || ($this->header()->bitsPerPixel() == 32))  ? 255 : 0)));
-            return $this->_m_colorMaskBlue;
-        }
-        protected $_m_colorMaskAlpha;
-        public function colorMaskAlpha() {
-            if ($this->_m_colorMaskAlpha !== null)
-                return $this->_m_colorMaskAlpha;
-            $this->_m_colorMaskAlpha = ( (($this->isColorMaskGiven()) && ($this->colorMaskGiven()->hasAlphaMask()))  ? $this->colorMaskGiven()->alphaMask() : 0);
-            return $this->_m_colorMaskAlpha;
-        }
-        protected $_m_colorMaskGreen;
-        public function colorMaskGreen() {
-            if ($this->_m_colorMaskGreen !== null)
-                return $this->_m_colorMaskGreen;
-            $this->_m_colorMaskGreen = ($this->isColorMaskGiven() ? $this->colorMaskGiven()->greenMask() : ($this->header()->bitsPerPixel() == 16 ? 992 : ( (($this->header()->bitsPerPixel() == 24) || ($this->header()->bitsPerPixel() == 32))  ? 65280 : 0)));
-            return $this->_m_colorMaskGreen;
-        }
-        protected $_m_isColorMaskHere;
-        public function isColorMaskHere() {
-            if ($this->_m_isColorMaskHere !== null)
-                return $this->_m_isColorMaskHere;
-            $this->_m_isColorMaskHere =  ((!($this->_io()->isEof())) && ($this->header()->lenHeader() == \Bmp\HeaderType::BITMAP_INFO_HEADER) && ( (($this->header()->bitmapInfoExt()->compression() == \Bmp\Compressions::BITFIELDS) || ($this->header()->bitmapInfoExt()->compression() == \Bmp\Compressions::ALPHA_BITFIELDS)) )) ;
-            return $this->_m_isColorMaskHere;
-        }
-        protected $_m_colorMaskRed;
-        public function colorMaskRed() {
-            if ($this->_m_colorMaskRed !== null)
-                return $this->_m_colorMaskRed;
-            $this->_m_colorMaskRed = ($this->isColorMaskGiven() ? $this->colorMaskGiven()->redMask() : ($this->header()->bitsPerPixel() == 16 ? 31744 : ( (($this->header()->bitsPerPixel() == 24) || ($this->header()->bitsPerPixel() == 32))  ? 16711680 : 0)));
-            return $this->_m_colorMaskRed;
-        }
-        protected $_m_lenHeader;
-        protected $_m_header;
-        protected $_m_colorMask;
-        protected $_m_colorTable;
-        protected $_m__raw_header;
-        protected $_m__raw_colorTable;
-        public function lenHeader() { return $this->_m_lenHeader; }
-        public function header() { return $this->_m_header; }
-
-        /**
-         * Valid only for BITMAPINFOHEADER, in all headers extending it the masks are contained in the header itself.
-         */
-        public function colorMask() { return $this->_m_colorMask; }
-        public function colorTable() { return $this->_m_colorTable; }
-        public function _raw_header() { return $this->_m__raw_header; }
-        public function _raw_colorTable() { return $this->_m__raw_colorTable; }
-    }
-}
-
-namespace Bmp {
-    class Intent {
-
-        /**
-         * Maintains saturation. Used for business charts and other situations in which undithered colors are required.
-         */
-        const BUSINESS = 1;
-
-        /**
-         * Maintains colorimetric match. Used for graphic designs and named colors.
-         */
-        const GRAPHICS = 2;
-
-        /**
-         * Maintains contrast. Used for photographs and natural images.
-         */
-        const IMAGES = 4;
-
-        /**
-         * Maintains the white point. Matches the colors to their nearest color in the destination gamut.
-         */
-        const ABS_COLORIMETRIC = 8;
     }
 }
 
@@ -817,31 +792,12 @@ namespace Bmp {
          * Specifies that the bitmap is in sRGB color space.
          */
         const S_RGB = 1934772034;
-    }
-}
 
-namespace Bmp {
-    class Os2Rendering {
-        const NO_HALFTONING = 0;
-        const ERROR_DIFFUSION = 1;
+        private const _VALUES = [0 => true, 1279872587 => true, 1296188740 => true, 1466527264 => true, 1934772034 => true];
 
-        /**
-         * Processing Algorithm for Noncoded Document Acquisition (PANDA)
-         */
-        const PANDA = 2;
-        const SUPER_CIRCLE = 3;
-    }
-}
-
-namespace Bmp {
-    class HeaderType {
-        const BITMAP_CORE_HEADER = 12;
-        const BITMAP_INFO_HEADER = 40;
-        const BITMAP_V2_INFO_HEADER = 52;
-        const BITMAP_V3_INFO_HEADER = 56;
-        const OS2_2X_BITMAP_HEADER = 64;
-        const BITMAP_V4_HEADER = 108;
-        const BITMAP_V5_HEADER = 124;
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
@@ -878,6 +834,61 @@ namespace Bmp {
          * only Windows CE 5.0 with .NET 4.0 or later
          */
         const ALPHA_BITFIELDS = 6;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
+    }
+}
+
+namespace Bmp {
+    class HeaderType {
+        const BITMAP_CORE_HEADER = 12;
+        const BITMAP_INFO_HEADER = 40;
+        const BITMAP_V2_INFO_HEADER = 52;
+        const BITMAP_V3_INFO_HEADER = 56;
+        const OS2_2X_BITMAP_HEADER = 64;
+        const BITMAP_V4_HEADER = 108;
+        const BITMAP_V5_HEADER = 124;
+
+        private const _VALUES = [12 => true, 40 => true, 52 => true, 56 => true, 64 => true, 108 => true, 124 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
+    }
+}
+
+namespace Bmp {
+    class Intent {
+
+        /**
+         * Maintains saturation. Used for business charts and other situations in which undithered colors are required.
+         */
+        const BUSINESS = 1;
+
+        /**
+         * Maintains colorimetric match. Used for graphic designs and named colors.
+         */
+        const GRAPHICS = 2;
+
+        /**
+         * Maintains contrast. Used for photographs and natural images.
+         */
+        const IMAGES = 4;
+
+        /**
+         * Maintains the white point. Matches the colors to their nearest color in the destination gamut.
+         */
+        const ABS_COLORIMETRIC = 8;
+
+        private const _VALUES = [1 => true, 2 => true, 4 => true, 8 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
@@ -896,5 +907,30 @@ namespace Bmp {
          * RLE compression, 24 bits per pixel
          */
         const RLE24 = 4;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
+    }
+}
+
+namespace Bmp {
+    class Os2Rendering {
+        const NO_HALFTONING = 0;
+        const ERROR_DIFFUSION = 1;
+
+        /**
+         * Processing Algorithm for Noncoded Document Acquisition (PANDA)
+         */
+        const PANDA = 2;
+        const SUPER_CIRCLE = 3;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

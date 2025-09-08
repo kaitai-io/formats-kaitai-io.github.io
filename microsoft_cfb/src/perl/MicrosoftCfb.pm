@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Encode;
 
 ########################################################################
@@ -25,7 +25,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -38,11 +38,14 @@ sub _read {
     $self->{header} = MicrosoftCfb::CfbHeader->new($self->{_io}, $self, $self->{_root});
 }
 
-sub sector_size {
+sub dir {
     my ($self) = @_;
-    return $self->{sector_size} if ($self->{sector_size});
-    $self->{sector_size} = (1 << $self->header()->sector_shift());
-    return $self->{sector_size};
+    return $self->{dir} if ($self->{dir});
+    my $_pos = $self->{_io}->pos();
+    $self->{_io}->seek(($self->header()->ofs_dir() + 1) * $self->sector_size());
+    $self->{dir} = MicrosoftCfb::DirEntry->new($self->{_io}, $self, $self->{_root});
+    $self->{_io}->seek($_pos);
+    return $self->{dir};
 }
 
 sub fat {
@@ -50,21 +53,18 @@ sub fat {
     return $self->{fat} if ($self->{fat});
     my $_pos = $self->{_io}->pos();
     $self->{_io}->seek($self->sector_size());
-    $self->{_raw_fat} = $self->{_io}->read_bytes(($self->header()->size_fat() * $self->sector_size()));
+    $self->{_raw_fat} = $self->{_io}->read_bytes($self->header()->size_fat() * $self->sector_size());
     my $io__raw_fat = IO::KaitaiStruct::Stream->new($self->{_raw_fat});
     $self->{fat} = MicrosoftCfb::FatEntries->new($io__raw_fat, $self, $self->{_root});
     $self->{_io}->seek($_pos);
     return $self->{fat};
 }
 
-sub dir {
+sub sector_size {
     my ($self) = @_;
-    return $self->{dir} if ($self->{dir});
-    my $_pos = $self->{_io}->pos();
-    $self->{_io}->seek((($self->header()->ofs_dir() + 1) * $self->sector_size()));
-    $self->{dir} = MicrosoftCfb::DirEntry->new($self->{_io}, $self, $self->{_root});
-    $self->{_io}->seek($_pos);
-    return $self->{dir};
+    return $self->{sector_size} if ($self->{sector_size});
+    $self->{sector_size} = 1 << $self->header()->sector_shift();
+    return $self->{sector_size};
 }
 
 sub header {
@@ -97,7 +97,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -124,7 +124,7 @@ sub _read {
     $self->{size_mini_fat} = $self->{_io}->read_s4le();
     $self->{ofs_difat} = $self->{_io}->read_s4le();
     $self->{size_difat} = $self->{_io}->read_s4le();
-    $self->{difat} = ();
+    $self->{difat} = [];
     my $n_difat = 109;
     for (my $i = 0; $i < $n_difat; $i++) {
         push @{$self->{difat}}, $self->{_io}->read_s4le();
@@ -222,47 +222,6 @@ sub difat {
 }
 
 ########################################################################
-package MicrosoftCfb::FatEntries;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{entries} = ();
-    while (!$self->{_io}->is_eof()) {
-        push @{$self->{entries}}, $self->{_io}->read_s4le();
-    }
-}
-
-sub entries {
-    my ($self) = @_;
-    return $self->{entries};
-}
-
-########################################################################
 package MicrosoftCfb::DirEntry;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -290,7 +249,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -315,26 +274,13 @@ sub _read {
     $self->{size} = $self->{_io}->read_u8le();
 }
 
-sub mini_stream {
-    my ($self) = @_;
-    return $self->{mini_stream} if ($self->{mini_stream});
-    if ($self->object_type() == $MicrosoftCfb::DirEntry::OBJ_TYPE_ROOT_STORAGE) {
-        my $io = $self->_root()->_io();
-        my $_pos = $io->pos();
-        $io->seek((($self->ofs() + 1) * $self->_root()->sector_size()));
-        $self->{mini_stream} = $io->read_bytes($self->size());
-        $io->seek($_pos);
-    }
-    return $self->{mini_stream};
-}
-
 sub child {
     my ($self) = @_;
     return $self->{child} if ($self->{child});
     if ($self->child_id() != -1) {
         my $io = $self->_root()->_io();
         my $_pos = $io->pos();
-        $io->seek(((($self->_root()->header()->ofs_dir() + 1) * $self->_root()->sector_size()) + ($self->child_id() * 128)));
+        $io->seek(($self->_root()->header()->ofs_dir() + 1) * $self->_root()->sector_size() + $self->child_id() * 128);
         $self->{child} = MicrosoftCfb::DirEntry->new($io, $self, $self->{_root});
         $io->seek($_pos);
     }
@@ -347,11 +293,24 @@ sub left_sibling {
     if ($self->left_sibling_id() != -1) {
         my $io = $self->_root()->_io();
         my $_pos = $io->pos();
-        $io->seek(((($self->_root()->header()->ofs_dir() + 1) * $self->_root()->sector_size()) + ($self->left_sibling_id() * 128)));
+        $io->seek(($self->_root()->header()->ofs_dir() + 1) * $self->_root()->sector_size() + $self->left_sibling_id() * 128);
         $self->{left_sibling} = MicrosoftCfb::DirEntry->new($io, $self, $self->{_root});
         $io->seek($_pos);
     }
     return $self->{left_sibling};
+}
+
+sub mini_stream {
+    my ($self) = @_;
+    return $self->{mini_stream} if ($self->{mini_stream});
+    if ($self->object_type() == $MicrosoftCfb::DirEntry::OBJ_TYPE_ROOT_STORAGE) {
+        my $io = $self->_root()->_io();
+        my $_pos = $io->pos();
+        $io->seek(($self->ofs() + 1) * $self->_root()->sector_size());
+        $self->{mini_stream} = $io->read_bytes($self->size());
+        $io->seek($_pos);
+    }
+    return $self->{mini_stream};
 }
 
 sub right_sibling {
@@ -360,7 +319,7 @@ sub right_sibling {
     if ($self->right_sibling_id() != -1) {
         my $io = $self->_root()->_io();
         my $_pos = $io->pos();
-        $io->seek(((($self->_root()->header()->ofs_dir() + 1) * $self->_root()->sector_size()) + ($self->right_sibling_id() * 128)));
+        $io->seek(($self->_root()->header()->ofs_dir() + 1) * $self->_root()->sector_size() + $self->right_sibling_id() * 128);
         $self->{right_sibling} = MicrosoftCfb::DirEntry->new($io, $self, $self->{_root});
         $io->seek($_pos);
     }
@@ -430,6 +389,47 @@ sub ofs {
 sub size {
     my ($self) = @_;
     return $self->{size};
+}
+
+########################################################################
+package MicrosoftCfb::FatEntries;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{entries} = [];
+    while (!$self->{_io}->is_eof()) {
+        push @{$self->{entries}}, $self->{_io}->read_s4le();
+    }
+}
+
+sub entries {
+    my ($self) = @_;
+    return $self->{entries};
 }
 
 1;

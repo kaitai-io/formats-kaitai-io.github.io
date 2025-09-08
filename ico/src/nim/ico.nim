@@ -19,17 +19,17 @@ type
     `parent`*: Ico
     `imgInst`: seq[byte]
     `imgInstFlag`: bool
-    `pngHeaderInst`: seq[byte]
-    `pngHeaderInstFlag`: bool
     `isPngInst`: bool
     `isPngInstFlag`: bool
+    `pngHeaderInst`: seq[byte]
+    `pngHeaderInstFlag`: bool
 
 proc read*(_: typedesc[Ico], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Ico
 proc read*(_: typedesc[Ico_IconDirEntry], io: KaitaiStream, root: KaitaiStruct, parent: Ico): Ico_IconDirEntry
 
 proc img*(this: Ico_IconDirEntry): seq[byte]
-proc pngHeader*(this: Ico_IconDirEntry): seq[byte]
 proc isPng*(this: Ico_IconDirEntry): bool
+proc pngHeader*(this: Ico_IconDirEntry): seq[byte]
 
 
 ##[
@@ -136,6 +136,18 @@ relevant parser, if needed to parse image data further.
   this.imgInstFlag = true
   return this.imgInst
 
+proc isPng(this: Ico_IconDirEntry): bool = 
+
+  ##[
+  True if this image is in PNG format.
+  ]##
+  if this.isPngInstFlag:
+    return this.isPngInst
+  let isPngInstExpr = bool(this.pngHeader == @[137'u8, 80'u8, 78'u8, 71'u8, 13'u8, 10'u8, 26'u8, 10'u8])
+  this.isPngInst = isPngInstExpr
+  this.isPngInstFlag = true
+  return this.isPngInst
+
 proc pngHeader(this: Ico_IconDirEntry): seq[byte] = 
 
   ##[
@@ -152,18 +164,6 @@ embedded PNG file.
   this.io.seek(pos)
   this.pngHeaderInstFlag = true
   return this.pngHeaderInst
-
-proc isPng(this: Ico_IconDirEntry): bool = 
-
-  ##[
-  True if this image is in PNG format.
-  ]##
-  if this.isPngInstFlag:
-    return this.isPngInst
-  let isPngInstExpr = bool(this.pngHeader == @[137'u8, 80'u8, 78'u8, 71'u8, 13'u8, 10'u8, 26'u8, 10'u8])
-  this.isPngInst = isPngInstExpr
-  this.isPngInstFlag = true
-  return this.isPngInst
 
 proc fromFile*(_: typedesc[Ico_IconDirEntry], filename: string): Ico_IconDirEntry =
   Ico_IconDirEntry.read(newKaitaiFileStream(filename), nil, nil)

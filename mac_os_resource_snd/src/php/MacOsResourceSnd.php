@@ -9,8 +9,8 @@
 
 namespace {
     class MacOsResourceSnd extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \MacOsResourceSnd $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\MacOsResourceSnd $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -64,218 +64,8 @@ namespace {
 }
 
 namespace MacOsResourceSnd {
-    class Extended extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \MacOsResourceSnd\ExtendedOrCompressed $_parent = null, \MacOsResourceSnd $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_instrumentChunkPtr = $this->_io->readU4be();
-            $this->_m_aesRecordingPtr = $this->_io->readU4be();
-        }
-        protected $_m_instrumentChunkPtr;
-        protected $_m_aesRecordingPtr;
-
-        /**
-         * pointer to instrument info
-         */
-        public function instrumentChunkPtr() { return $this->_m_instrumentChunkPtr; }
-
-        /**
-         * pointer to audio info
-         */
-        public function aesRecordingPtr() { return $this->_m_aesRecordingPtr; }
-    }
-}
-
-namespace MacOsResourceSnd {
-    class SoundHeader extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \MacOsResourceSnd\SoundCommand $_parent = null, \MacOsResourceSnd $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            if ($this->startOfs() < 0) {
-                $this->_m__unnamed0 = $this->_io->readBytes(0);
-            }
-            $this->_m_samplePtr = $this->_io->readU4be();
-            if ($this->soundHeaderType() == \MacOsResourceSnd\SoundHeaderType::STANDARD) {
-                $this->_m_numSamples = $this->_io->readU4be();
-            }
-            if ( (($this->soundHeaderType() == \MacOsResourceSnd\SoundHeaderType::EXTENDED) || ($this->soundHeaderType() == \MacOsResourceSnd\SoundHeaderType::COMPRESSED)) ) {
-                $this->_m_numChannels = $this->_io->readU4be();
-            }
-            $this->_m_sampleRate = new \MacOsResourceSnd\UnsignedFixedPoint($this->_io, $this, $this->_root);
-            $this->_m_loopStart = $this->_io->readU4be();
-            $this->_m_loopEnd = $this->_io->readU4be();
-            $this->_m_encode = $this->_io->readU1();
-            $this->_m_midiNote = $this->_io->readU1();
-            if ( (($this->soundHeaderType() == \MacOsResourceSnd\SoundHeaderType::EXTENDED) || ($this->soundHeaderType() == \MacOsResourceSnd\SoundHeaderType::COMPRESSED)) ) {
-                $this->_m_extendedOrCompressed = new \MacOsResourceSnd\ExtendedOrCompressed($this->_io, $this, $this->_root);
-            }
-            if ($this->samplePtr() == 0) {
-                $this->_m_sampleArea = $this->_io->readBytes(($this->soundHeaderType() == \MacOsResourceSnd\SoundHeaderType::STANDARD ? $this->numSamples() : ($this->soundHeaderType() == \MacOsResourceSnd\SoundHeaderType::EXTENDED ? intval((($this->extendedOrCompressed()->numFrames() * $this->numChannels()) * $this->extendedOrCompressed()->bitsPerSample()) / 8) : ($this->_io()->size() - $this->_io()->pos()))));
-            }
-        }
-        protected $_m_startOfs;
-        public function startOfs() {
-            if ($this->_m_startOfs !== null)
-                return $this->_m_startOfs;
-            $this->_m_startOfs = $this->_io()->pos();
-            return $this->_m_startOfs;
-        }
-        protected $_m_baseFreqeuncy;
-
-        /**
-         * base frequency of sample in Hz
-         * Calculated with the formula (2 ** ((midi_note - 69) / 12)) * 440
-         */
-        public function baseFreqeuncy() {
-            if ($this->_m_baseFreqeuncy !== null)
-                return $this->_m_baseFreqeuncy;
-            if ( (($this->midiNote() >= 0) && ($this->midiNote() < 128)) ) {
-                $this->_m_baseFreqeuncy = $this->_root()->midiNoteToFrequency()[$this->midiNote()];
-            }
-            return $this->_m_baseFreqeuncy;
-        }
-        protected $_m_soundHeaderType;
-        public function soundHeaderType() {
-            if ($this->_m_soundHeaderType !== null)
-                return $this->_m_soundHeaderType;
-            $_pos = $this->_io->pos();
-            $this->_io->seek(($this->startOfs() + 20));
-            $this->_m_soundHeaderType = $this->_io->readU1();
-            $this->_io->seek($_pos);
-            return $this->_m_soundHeaderType;
-        }
-        protected $_m__unnamed0;
-        protected $_m_samplePtr;
-        protected $_m_numSamples;
-        protected $_m_numChannels;
-        protected $_m_sampleRate;
-        protected $_m_loopStart;
-        protected $_m_loopEnd;
-        protected $_m_encode;
-        protected $_m_midiNote;
-        protected $_m_extendedOrCompressed;
-        protected $_m_sampleArea;
-        public function _unnamed0() { return $this->_m__unnamed0; }
-
-        /**
-         * pointer to samples (or 0 if samples follow data structure)
-         */
-        public function samplePtr() { return $this->_m_samplePtr; }
-
-        /**
-         * number of samples
-         */
-        public function numSamples() { return $this->_m_numSamples; }
-
-        /**
-         * number of channels in sample
-         */
-        public function numChannels() { return $this->_m_numChannels; }
-
-        /**
-         * The rate at which the sample was originally recorded.
-         */
-        public function sampleRate() { return $this->_m_sampleRate; }
-
-        /**
-         * loop point beginning
-         */
-        public function loopStart() { return $this->_m_loopStart; }
-
-        /**
-         * loop point ending
-         */
-        public function loopEnd() { return $this->_m_loopEnd; }
-
-        /**
-         * sample's encoding option
-         */
-        public function encode() { return $this->_m_encode; }
-
-        /**
-         * base frequency of sample, expressed as MIDI note values, 60 is middle C
-         */
-        public function midiNote() { return $this->_m_midiNote; }
-        public function extendedOrCompressed() { return $this->_m_extendedOrCompressed; }
-
-        /**
-         * sampled-sound data
-         */
-        public function sampleArea() { return $this->_m_sampleArea; }
-    }
-}
-
-namespace MacOsResourceSnd {
-    class UnsignedFixedPoint extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \MacOsResourceSnd\SoundHeader $_parent = null, \MacOsResourceSnd $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_integerPart = $this->_io->readU2be();
-            $this->_m_fractionPart = $this->_io->readU2be();
-        }
-        protected $_m_value;
-        public function value() {
-            if ($this->_m_value !== null)
-                return $this->_m_value;
-            $this->_m_value = ($this->integerPart() + ($this->fractionPart() / 65535.0));
-            return $this->_m_value;
-        }
-        protected $_m_integerPart;
-        protected $_m_fractionPart;
-        public function integerPart() { return $this->_m_integerPart; }
-        public function fractionPart() { return $this->_m_fractionPart; }
-    }
-}
-
-namespace MacOsResourceSnd {
-    class SoundCommand extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \MacOsResourceSnd $_parent = null, \MacOsResourceSnd $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_isDataOffset = $this->_io->readBitsIntBe(1) != 0;
-            $this->_m_cmd = $this->_io->readBitsIntBe(15);
-            $this->_io->alignToByte();
-            $this->_m_param1 = $this->_io->readU2be();
-            $this->_m_param2 = $this->_io->readU4be();
-        }
-        protected $_m_soundHeader;
-        public function soundHeader() {
-            if ($this->_m_soundHeader !== null)
-                return $this->_m_soundHeader;
-            if ( (($this->isDataOffset()) && ($this->cmd() == \MacOsResourceSnd\CmdType::BUFFER_CMD)) ) {
-                $_pos = $this->_io->pos();
-                $this->_io->seek($this->param2());
-                $this->_m_soundHeader = new \MacOsResourceSnd\SoundHeader($this->_io, $this, $this->_root);
-                $this->_io->seek($_pos);
-            }
-            return $this->_m_soundHeader;
-        }
-        protected $_m_isDataOffset;
-        protected $_m_cmd;
-        protected $_m_param1;
-        protected $_m_param2;
-        public function isDataOffset() { return $this->_m_isDataOffset; }
-        public function cmd() { return $this->_m_cmd; }
-        public function param1() { return $this->_m_param1; }
-        public function param2() { return $this->_m_param2; }
-    }
-}
-
-namespace MacOsResourceSnd {
     class Compressed extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \MacOsResourceSnd\ExtendedOrCompressed $_parent = null, \MacOsResourceSnd $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\MacOsResourceSnd\ExtendedOrCompressed $_parent = null, ?\MacOsResourceSnd $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -341,8 +131,130 @@ namespace MacOsResourceSnd {
 }
 
 namespace MacOsResourceSnd {
+    class DataFormat extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\MacOsResourceSnd $_parent = null, ?\MacOsResourceSnd $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_id = $this->_io->readU2be();
+            $this->_m_options = $this->_io->readU4be();
+        }
+        protected $_m_compInit;
+        public function compInit() {
+            if ($this->_m_compInit !== null)
+                return $this->_m_compInit;
+            $this->_m_compInit = $this->options() & $this->initCompMask();
+            return $this->_m_compInit;
+        }
+        protected $_m_initCompMask;
+
+        /**
+         * mask for compression IDs
+         */
+        public function initCompMask() {
+            if ($this->_m_initCompMask !== null)
+                return $this->_m_initCompMask;
+            $this->_m_initCompMask = 65280;
+            return $this->_m_initCompMask;
+        }
+        protected $_m_initPanMask;
+
+        /**
+         * mask for right/left pan values
+         */
+        public function initPanMask() {
+            if ($this->_m_initPanMask !== null)
+                return $this->_m_initPanMask;
+            $this->_m_initPanMask = 3;
+            return $this->_m_initPanMask;
+        }
+        protected $_m_initStereoMask;
+
+        /**
+         * mask for mono/stereo values
+         */
+        public function initStereoMask() {
+            if ($this->_m_initStereoMask !== null)
+                return $this->_m_initStereoMask;
+            $this->_m_initStereoMask = 192;
+            return $this->_m_initStereoMask;
+        }
+        protected $_m_panInit;
+        public function panInit() {
+            if ($this->_m_panInit !== null)
+                return $this->_m_panInit;
+            $this->_m_panInit = $this->options() & $this->initPanMask();
+            return $this->_m_panInit;
+        }
+        protected $_m_stereoInit;
+        public function stereoInit() {
+            if ($this->_m_stereoInit !== null)
+                return $this->_m_stereoInit;
+            $this->_m_stereoInit = $this->options() & $this->initStereoMask();
+            return $this->_m_stereoInit;
+        }
+        protected $_m_waveInit;
+        public function waveInit() {
+            if ($this->_m_waveInit !== null)
+                return $this->_m_waveInit;
+            if ($this->id() == \MacOsResourceSnd\DataType::WAVE_TABLE_SYNTH) {
+                $this->_m_waveInit = $this->options() & $this->waveInitChannelMask();
+            }
+            return $this->_m_waveInit;
+        }
+        protected $_m_waveInitChannelMask;
+
+        /**
+         * wave table only, Sound Manager 2.0 and earlier
+         */
+        public function waveInitChannelMask() {
+            if ($this->_m_waveInitChannelMask !== null)
+                return $this->_m_waveInitChannelMask;
+            $this->_m_waveInitChannelMask = 7;
+            return $this->_m_waveInitChannelMask;
+        }
+        protected $_m_id;
+        protected $_m_options;
+        public function id() { return $this->_m_id; }
+
+        /**
+         * contains initialisation options for the SndNewChannel function
+         */
+        public function options() { return $this->_m_options; }
+    }
+}
+
+namespace MacOsResourceSnd {
+    class Extended extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\MacOsResourceSnd\ExtendedOrCompressed $_parent = null, ?\MacOsResourceSnd $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_instrumentChunkPtr = $this->_io->readU4be();
+            $this->_m_aesRecordingPtr = $this->_io->readU4be();
+        }
+        protected $_m_instrumentChunkPtr;
+        protected $_m_aesRecordingPtr;
+
+        /**
+         * pointer to instrument info
+         */
+        public function instrumentChunkPtr() { return $this->_m_instrumentChunkPtr; }
+
+        /**
+         * pointer to audio info
+         */
+        public function aesRecordingPtr() { return $this->_m_aesRecordingPtr; }
+    }
+}
+
+namespace MacOsResourceSnd {
     class ExtendedOrCompressed extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \MacOsResourceSnd\SoundHeader $_parent = null, \MacOsResourceSnd $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\MacOsResourceSnd\SoundHeader $_parent = null, ?\MacOsResourceSnd $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -396,98 +308,186 @@ namespace MacOsResourceSnd {
 }
 
 namespace MacOsResourceSnd {
-    class DataFormat extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \MacOsResourceSnd $_parent = null, \MacOsResourceSnd $_root = null) {
+    class SoundCommand extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\MacOsResourceSnd $_parent = null, ?\MacOsResourceSnd $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_id = $this->_io->readU2be();
-            $this->_m_options = $this->_io->readU4be();
+            $this->_m_isDataOffset = $this->_io->readBitsIntBe(1) != 0;
+            $this->_m_cmd = $this->_io->readBitsIntBe(15);
+            $this->_io->alignToByte();
+            $this->_m_param1 = $this->_io->readU2be();
+            $this->_m_param2 = $this->_io->readU4be();
         }
-        protected $_m_initPanMask;
-
-        /**
-         * mask for right/left pan values
-         */
-        public function initPanMask() {
-            if ($this->_m_initPanMask !== null)
-                return $this->_m_initPanMask;
-            $this->_m_initPanMask = 3;
-            return $this->_m_initPanMask;
-        }
-        protected $_m_waveInitChannelMask;
-
-        /**
-         * wave table only, Sound Manager 2.0 and earlier
-         */
-        public function waveInitChannelMask() {
-            if ($this->_m_waveInitChannelMask !== null)
-                return $this->_m_waveInitChannelMask;
-            $this->_m_waveInitChannelMask = 7;
-            return $this->_m_waveInitChannelMask;
-        }
-        protected $_m_initStereoMask;
-
-        /**
-         * mask for mono/stereo values
-         */
-        public function initStereoMask() {
-            if ($this->_m_initStereoMask !== null)
-                return $this->_m_initStereoMask;
-            $this->_m_initStereoMask = 192;
-            return $this->_m_initStereoMask;
-        }
-        protected $_m_waveInit;
-        public function waveInit() {
-            if ($this->_m_waveInit !== null)
-                return $this->_m_waveInit;
-            if ($this->id() == \MacOsResourceSnd\DataType::WAVE_TABLE_SYNTH) {
-                $this->_m_waveInit = ($this->options() & $this->waveInitChannelMask());
+        protected $_m_soundHeader;
+        public function soundHeader() {
+            if ($this->_m_soundHeader !== null)
+                return $this->_m_soundHeader;
+            if ( (($this->isDataOffset()) && ($this->cmd() == \MacOsResourceSnd\CmdType::BUFFER_CMD)) ) {
+                $_pos = $this->_io->pos();
+                $this->_io->seek($this->param2());
+                $this->_m_soundHeader = new \MacOsResourceSnd\SoundHeader($this->_io, $this, $this->_root);
+                $this->_io->seek($_pos);
             }
-            return $this->_m_waveInit;
+            return $this->_m_soundHeader;
         }
-        protected $_m_panInit;
-        public function panInit() {
-            if ($this->_m_panInit !== null)
-                return $this->_m_panInit;
-            $this->_m_panInit = ($this->options() & $this->initPanMask());
-            return $this->_m_panInit;
+        protected $_m_isDataOffset;
+        protected $_m_cmd;
+        protected $_m_param1;
+        protected $_m_param2;
+        public function isDataOffset() { return $this->_m_isDataOffset; }
+        public function cmd() { return $this->_m_cmd; }
+        public function param1() { return $this->_m_param1; }
+        public function param2() { return $this->_m_param2; }
+    }
+}
+
+namespace MacOsResourceSnd {
+    class SoundHeader extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\MacOsResourceSnd\SoundCommand $_parent = null, ?\MacOsResourceSnd $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
         }
-        protected $_m_initCompMask;
+
+        private function _read() {
+            if ($this->startOfs() < 0) {
+                $this->_m__unnamed0 = $this->_io->readBytes(0);
+            }
+            $this->_m_samplePtr = $this->_io->readU4be();
+            if ($this->soundHeaderType() == \MacOsResourceSnd\SoundHeaderType::STANDARD) {
+                $this->_m_numSamples = $this->_io->readU4be();
+            }
+            if ( (($this->soundHeaderType() == \MacOsResourceSnd\SoundHeaderType::EXTENDED) || ($this->soundHeaderType() == \MacOsResourceSnd\SoundHeaderType::COMPRESSED)) ) {
+                $this->_m_numChannels = $this->_io->readU4be();
+            }
+            $this->_m_sampleRate = new \MacOsResourceSnd\UnsignedFixedPoint($this->_io, $this, $this->_root);
+            $this->_m_loopStart = $this->_io->readU4be();
+            $this->_m_loopEnd = $this->_io->readU4be();
+            $this->_m_encode = $this->_io->readU1();
+            $this->_m_midiNote = $this->_io->readU1();
+            if ( (($this->soundHeaderType() == \MacOsResourceSnd\SoundHeaderType::EXTENDED) || ($this->soundHeaderType() == \MacOsResourceSnd\SoundHeaderType::COMPRESSED)) ) {
+                $this->_m_extendedOrCompressed = new \MacOsResourceSnd\ExtendedOrCompressed($this->_io, $this, $this->_root);
+            }
+            if ($this->samplePtr() == 0) {
+                $this->_m_sampleArea = $this->_io->readBytes(($this->soundHeaderType() == \MacOsResourceSnd\SoundHeaderType::STANDARD ? $this->numSamples() : ($this->soundHeaderType() == \MacOsResourceSnd\SoundHeaderType::EXTENDED ? intval((($this->extendedOrCompressed()->numFrames() * $this->numChannels()) * $this->extendedOrCompressed()->bitsPerSample()) / 8) : $this->_io()->size() - $this->_io()->pos())));
+            }
+        }
+        protected $_m_baseFreqeuncy;
 
         /**
-         * mask for compression IDs
+         * base frequency of sample in Hz
+         * Calculated with the formula (2 ** ((midi_note - 69) / 12)) * 440
          */
-        public function initCompMask() {
-            if ($this->_m_initCompMask !== null)
-                return $this->_m_initCompMask;
-            $this->_m_initCompMask = 65280;
-            return $this->_m_initCompMask;
+        public function baseFreqeuncy() {
+            if ($this->_m_baseFreqeuncy !== null)
+                return $this->_m_baseFreqeuncy;
+            if ( (($this->midiNote() >= 0) && ($this->midiNote() < 128)) ) {
+                $this->_m_baseFreqeuncy = $this->_root()->midiNoteToFrequency()[$this->midiNote()];
+            }
+            return $this->_m_baseFreqeuncy;
         }
-        protected $_m_stereoInit;
-        public function stereoInit() {
-            if ($this->_m_stereoInit !== null)
-                return $this->_m_stereoInit;
-            $this->_m_stereoInit = ($this->options() & $this->initStereoMask());
-            return $this->_m_stereoInit;
+        protected $_m_soundHeaderType;
+        public function soundHeaderType() {
+            if ($this->_m_soundHeaderType !== null)
+                return $this->_m_soundHeaderType;
+            $_pos = $this->_io->pos();
+            $this->_io->seek($this->startOfs() + 20);
+            $this->_m_soundHeaderType = $this->_io->readU1();
+            $this->_io->seek($_pos);
+            return $this->_m_soundHeaderType;
         }
-        protected $_m_compInit;
-        public function compInit() {
-            if ($this->_m_compInit !== null)
-                return $this->_m_compInit;
-            $this->_m_compInit = ($this->options() & $this->initCompMask());
-            return $this->_m_compInit;
+        protected $_m_startOfs;
+        public function startOfs() {
+            if ($this->_m_startOfs !== null)
+                return $this->_m_startOfs;
+            $this->_m_startOfs = $this->_io()->pos();
+            return $this->_m_startOfs;
         }
-        protected $_m_id;
-        protected $_m_options;
-        public function id() { return $this->_m_id; }
+        protected $_m__unnamed0;
+        protected $_m_samplePtr;
+        protected $_m_numSamples;
+        protected $_m_numChannels;
+        protected $_m_sampleRate;
+        protected $_m_loopStart;
+        protected $_m_loopEnd;
+        protected $_m_encode;
+        protected $_m_midiNote;
+        protected $_m_extendedOrCompressed;
+        protected $_m_sampleArea;
+        public function _unnamed0() { return $this->_m__unnamed0; }
 
         /**
-         * contains initialisation options for the SndNewChannel function
+         * pointer to samples (or 0 if samples follow data structure)
          */
-        public function options() { return $this->_m_options; }
+        public function samplePtr() { return $this->_m_samplePtr; }
+
+        /**
+         * number of samples
+         */
+        public function numSamples() { return $this->_m_numSamples; }
+
+        /**
+         * number of channels in sample
+         */
+        public function numChannels() { return $this->_m_numChannels; }
+
+        /**
+         * The rate at which the sample was originally recorded.
+         */
+        public function sampleRate() { return $this->_m_sampleRate; }
+
+        /**
+         * loop point beginning
+         */
+        public function loopStart() { return $this->_m_loopStart; }
+
+        /**
+         * loop point ending
+         */
+        public function loopEnd() { return $this->_m_loopEnd; }
+
+        /**
+         * sample's encoding option
+         */
+        public function encode() { return $this->_m_encode; }
+
+        /**
+         * base frequency of sample, expressed as MIDI note values, 60 is middle C
+         */
+        public function midiNote() { return $this->_m_midiNote; }
+        public function extendedOrCompressed() { return $this->_m_extendedOrCompressed; }
+
+        /**
+         * sampled-sound data
+         */
+        public function sampleArea() { return $this->_m_sampleArea; }
+    }
+}
+
+namespace MacOsResourceSnd {
+    class UnsignedFixedPoint extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\MacOsResourceSnd\SoundHeader $_parent = null, ?\MacOsResourceSnd $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_integerPart = $this->_io->readU2be();
+            $this->_m_fractionPart = $this->_io->readU2be();
+        }
+        protected $_m_value;
+        public function value() {
+            if ($this->_m_value !== null)
+                return $this->_m_value;
+            $this->_m_value = $this->integerPart() + $this->fractionPart() / 65535.0;
+            return $this->_m_value;
+        }
+        protected $_m_integerPart;
+        protected $_m_fractionPart;
+        public function integerPart() { return $this->_m_integerPart; }
+        public function fractionPart() { return $this->_m_fractionPart; }
     }
 }
 
@@ -636,14 +636,30 @@ namespace MacOsResourceSnd {
          * get the pitch of a sampled sound
          */
         const GET_RATE_CMD = 85;
+
+        private const _VALUES = [0 => true, 3 => true, 4 => true, 5 => true, 10 => true, 11 => true, 12 => true, 13 => true, 14 => true, 15 => true, 24 => true, 25 => true, 26 => true, 27 => true, 40 => true, 41 => true, 42 => true, 43 => true, 44 => true, 45 => true, 46 => true, 47 => true, 60 => true, 61 => true, 80 => true, 81 => true, 82 => true, 85 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
 namespace MacOsResourceSnd {
-    class SoundHeaderType {
-        const STANDARD = 0;
-        const COMPRESSED = 254;
-        const EXTENDED = 255;
+    class CompressionTypeEnum {
+        const VARIABLE_COMPRESSION = -2;
+        const FIXED_COMPRESSION = -1;
+        const NOT_COMPRESSED = 0;
+        const TWO_TO_ONE = 1;
+        const EIGHT_TO_THREE = 2;
+        const THREE_TO_ONE = 3;
+        const SIX_TO_ONE = 4;
+
+        private const _VALUES = [-2 => true, -1 => true, 0 => true, 1 => true, 2 => true, 3 => true, 4 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
@@ -652,31 +668,12 @@ namespace MacOsResourceSnd {
         const SQUARE_WAVE_SYNTH = 1;
         const WAVE_TABLE_SYNTH = 3;
         const SAMPLED_SYNTH = 5;
-    }
-}
 
-namespace MacOsResourceSnd {
-    class WaveInitOption {
+        private const _VALUES = [1 => true, 3 => true, 5 => true];
 
-        /**
-         * Play sounds through the first wave-table channel
-         */
-        const CHANNEL0 = 4;
-
-        /**
-         * Play sounds through the second wave-table channel
-         */
-        const CHANNEL1 = 5;
-
-        /**
-         * Play sounds through the third wave-table channel
-         */
-        const CHANNEL2 = 6;
-
-        /**
-         * Play sounds through the fourth wave-table channel
-         */
-        const CHANNEL3 = 7;
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
@@ -722,17 +719,56 @@ namespace MacOsResourceSnd {
          * MACE 6:1
          */
         const MACE6 = 1024;
+
+        private const _VALUES = [2 => true, 3 => true, 4 => true, 8 => true, 128 => true, 192 => true, 768 => true, 1024 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
 namespace MacOsResourceSnd {
-    class CompressionTypeEnum {
-        const VARIABLE_COMPRESSION = -2;
-        const FIXED_COMPRESSION = -1;
-        const NOT_COMPRESSED = 0;
-        const TWO_TO_ONE = 1;
-        const EIGHT_TO_THREE = 2;
-        const THREE_TO_ONE = 3;
-        const SIX_TO_ONE = 4;
+    class SoundHeaderType {
+        const STANDARD = 0;
+        const COMPRESSED = 254;
+        const EXTENDED = 255;
+
+        private const _VALUES = [0 => true, 254 => true, 255 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
+    }
+}
+
+namespace MacOsResourceSnd {
+    class WaveInitOption {
+
+        /**
+         * Play sounds through the first wave-table channel
+         */
+        const CHANNEL0 = 4;
+
+        /**
+         * Play sounds through the second wave-table channel
+         */
+        const CHANNEL1 = 5;
+
+        /**
+         * Play sounds through the third wave-table channel
+         */
+        const CHANNEL2 = 6;
+
+        /**
+         * Play sounds through the fourth wave-table channel
+         */
+        const CHANNEL3 = 7;
+
+        private const _VALUES = [4 => true, 5 => true, 6 => true, 7 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

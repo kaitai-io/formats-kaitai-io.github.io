@@ -1,0 +1,114 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__pif {
+		label="Pif";
+		graph[style=dotted];
+
+		pif__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="file_header_pos">0</TD><TD PORT="file_header_size">12</TD><TD>PifHeader</TD><TD PORT="file_header_type">file_header</TD></TR>
+			<TR><TD PORT="info_header_pos">12</TD><TD PORT="info_header_size">16</TD><TD>InformationHeader</TD><TD PORT="info_header_type">info_header</TD></TR>
+			<TR><TD PORT="color_table_pos">28</TD><TD PORT="color_table_size">info_header.len_color_table</TD><TD>ColorTableData</TD><TD PORT="color_table_type">color_table</TD></TR>
+			<TR><TD COLSPAN="4" PORT="color_table__if">if info_header.uses_indexed_mode</TD></TR>
+		</TABLE>>];
+		pif__inst__image_data [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="image_data_pos">file_header.ofs_image_data</TD><TD PORT="image_data_size">info_header.len_image_data</TD><TD></TD><TD PORT="image_data_type">image_data</TD></TR>
+		</TABLE>>];
+		subgraph cluster__color_table_data {
+			label="Pif::ColorTableData";
+			graph[style=dotted];
+
+			color_table_data__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="entries_pos">0</TD><TD PORT="entries_size">...</TD><TD>switch (_root.info_header.image_type)</TD><TD PORT="entries_type">entries</TD></TR>
+				<TR><TD COLSPAN="4" PORT="entries__repeat">repeat to end of stream</TD></TR>
+			</TABLE>>];
+color_table_data__seq_entries_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+</TABLE>>];
+		}
+		subgraph cluster__information_header {
+			label="Pif::InformationHeader";
+			graph[style=dotted];
+
+			information_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="image_type_pos">0</TD><TD PORT="image_type_size">2</TD><TD>u2le→ImageType</TD><TD PORT="image_type_type">image_type</TD></TR>
+				<TR><TD COLSPAN="4" PORT="image_type__valid">must be any of :image_type_rgb888, :image_type_rgb565, :image_type_rgb332, :image_type_rgb16c, :image_type_black_white, :image_type_indexed_rgb888, :image_type_indexed_rgb565, :image_type_indexed_rgb332</TD></TR>
+				<TR><TD PORT="bits_per_pixel_pos">2</TD><TD PORT="bits_per_pixel_size">2</TD><TD>u2le</TD><TD PORT="bits_per_pixel_type">bits_per_pixel</TD></TR>
+				<TR><TD COLSPAN="4" PORT="bits_per_pixel__valid">must satisfy (image_type == :image_type_rgb888 ? _ == 24 : (image_type == :image_type_rgb565 ? _ == 16 : (image_type == :image_type_rgb332 ? _ == 8 : (image_type == :image_type_rgb16c ? _ == 4 : (image_type == :image_type_black_white ? _ == 1 : (uses_indexed_mode ? _ &lt;= 8 : true))))))</TD></TR>
+				<TR><TD PORT="width_pos">4</TD><TD PORT="width_size">2</TD><TD>u2le</TD><TD PORT="width_type">width</TD></TR>
+				<TR><TD PORT="height_pos">6</TD><TD PORT="height_size">2</TD><TD>u2le</TD><TD PORT="height_type">height</TD></TR>
+				<TR><TD PORT="len_image_data_pos">8</TD><TD PORT="len_image_data_size">4</TD><TD>u4le</TD><TD PORT="len_image_data_type">len_image_data</TD></TR>
+				<TR><TD COLSPAN="4" PORT="len_image_data__valid">must be at most _root.file_header.len_file - _root.file_header.ofs_image_data</TD></TR>
+				<TR><TD PORT="len_color_table_pos">12</TD><TD PORT="len_color_table_size">2</TD><TD>u2le</TD><TD PORT="len_color_table_type">len_color_table</TD></TR>
+				<TR><TD COLSPAN="4" PORT="len_color_table__valid">must be between (uses_indexed_mode ? len_color_table_entry * 1 : 0) and (uses_indexed_mode ? (len_color_table_max &lt; len_color_table_full ? len_color_table_max : len_color_table_full) : 0)</TD></TR>
+				<TR><TD PORT="compression_pos">14</TD><TD PORT="compression_size">2</TD><TD>u2le→CompressionType</TD><TD PORT="compression_type">compression</TD></TR>
+				<TR><TD COLSPAN="4" PORT="compression__valid">must be any of :compression_type_none, :compression_type_rle</TD></TR>
+			</TABLE>>];
+			information_header__inst__len_color_table_entry [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>len_color_table_entry</TD><TD>(image_type == :image_type_indexed_rgb888 ? 3 : (image_type == :image_type_indexed_rgb565 ? 2 : (image_type == :image_type_indexed_rgb332 ? 1 : 0)))</TD></TR>
+			</TABLE>>];
+			information_header__inst__len_color_table_full [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>len_color_table_full</TD><TD>len_color_table_entry * (1 &lt;&lt; bits_per_pixel)</TD></TR>
+			</TABLE>>];
+			information_header__inst__len_color_table_max [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>len_color_table_max</TD><TD>_root.file_header.ofs_image_data - _root.file_header.ofs_image_data_min</TD></TR>
+			</TABLE>>];
+			information_header__inst__uses_indexed_mode [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>uses_indexed_mode</TD><TD>len_color_table_entry != 0</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__pif_header {
+			label="Pif::PifHeader";
+			graph[style=dotted];
+
+			pif_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD>50 49 46 00</TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD PORT="len_file_pos">4</TD><TD PORT="len_file_size">4</TD><TD>u4le</TD><TD PORT="len_file_type">len_file</TD></TR>
+				<TR><TD COLSPAN="4" PORT="len_file__valid">must be at least ofs_image_data_min</TD></TR>
+				<TR><TD PORT="ofs_image_data_pos">8</TD><TD PORT="ofs_image_data_size">4</TD><TD>u4le</TD><TD PORT="ofs_image_data_type">ofs_image_data</TD></TR>
+				<TR><TD COLSPAN="4" PORT="ofs_image_data__valid">must be between ofs_image_data_min and len_file</TD></TR>
+			</TABLE>>];
+			pif_header__inst__ofs_image_data_min [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>ofs_image_data_min</TD><TD>12 + 16</TD></TR>
+			</TABLE>>];
+		}
+	}
+	pif__seq:file_header_type -> pif_header__seq [style=bold];
+	pif__seq:info_header_type -> information_header__seq [style=bold];
+	information_header__seq:len_color_table_type -> pif__seq:color_table_size [color="#404040"];
+	pif__seq:color_table_type -> color_table_data__seq [style=bold];
+	information_header__inst__uses_indexed_mode:uses_indexed_mode_type -> pif__seq:color_table__if [color="#404040"];
+	pif_header__seq:ofs_image_data_type -> pif__inst__image_data:image_data_pos [color="#404040"];
+	information_header__seq:len_image_data_type -> pif__inst__image_data:image_data_size [color="#404040"];
+	color_table_data__seq:entries_type -> color_table_data__seq_entries_switch [style=bold];
+	information_header__seq:image_type_type -> color_table_data__seq:entries_type [color="#404040"];
+	information_header__seq:image_type_type -> information_header__seq:bits_per_pixel__valid [color="#404040"];
+	information_header__inst__uses_indexed_mode:uses_indexed_mode_type -> information_header__seq:bits_per_pixel__valid [color="#404040"];
+	pif_header__seq:len_file_type -> information_header__seq:len_image_data__valid [color="#404040"];
+	pif_header__seq:ofs_image_data_type -> information_header__seq:len_image_data__valid [color="#404040"];
+	information_header__inst__uses_indexed_mode:uses_indexed_mode_type -> information_header__seq:len_color_table__valid [color="#404040"];
+	information_header__inst__len_color_table_entry:len_color_table_entry_type -> information_header__seq:len_color_table__valid [color="#404040"];
+	information_header__inst__len_color_table_max:len_color_table_max_type -> information_header__seq:len_color_table__valid [color="#404040"];
+	information_header__inst__len_color_table_full:len_color_table_full_type -> information_header__seq:len_color_table__valid [color="#404040"];
+	information_header__seq:image_type_type -> information_header__inst__len_color_table_entry [color="#404040"];
+	information_header__inst__len_color_table_entry:len_color_table_entry_type -> information_header__inst__len_color_table_full [color="#404040"];
+	information_header__seq:bits_per_pixel_type -> information_header__inst__len_color_table_full [color="#404040"];
+	pif_header__seq:ofs_image_data_type -> information_header__inst__len_color_table_max [color="#404040"];
+	pif_header__inst__ofs_image_data_min:ofs_image_data_min_type -> information_header__inst__len_color_table_max [color="#404040"];
+	information_header__inst__len_color_table_entry:len_color_table_entry_type -> information_header__inst__uses_indexed_mode [color="#404040"];
+	pif_header__inst__ofs_image_data_min:ofs_image_data_min_type -> pif_header__seq:len_file__valid [color="#404040"];
+	pif_header__inst__ofs_image_data_min:ofs_image_data_min_type -> pif_header__seq:ofs_image_data__valid [color="#404040"];
+	pif_header__seq:len_file_type -> pif_header__seq:ofs_image_data__valid [color="#404040"];
+	pif__seq:file_header_size -> pif_header__inst__ofs_image_data_min [color="#404040"];
+	pif__seq:info_header_size -> pif_header__inst__ofs_image_data_min [color="#404040"];
+}

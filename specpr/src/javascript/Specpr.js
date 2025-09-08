@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.Specpr = factory(root.KaitaiStream);
+    factory(root.Specpr || (root.Specpr = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Specpr_, KaitaiStream) {
 /**
  * Specpr records are fixed format, 1536 bytes/record. Record number
  * counting starts at 0. Binary data are in IEEE format real numbers
@@ -50,11 +50,56 @@ var Specpr = (function() {
     }
   }
 
+  var CoarseTimestamp = Specpr.CoarseTimestamp = (function() {
+    function CoarseTimestamp(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    CoarseTimestamp.prototype._read = function() {
+      this.scaledSeconds = this._io.readS4be();
+    }
+    Object.defineProperty(CoarseTimestamp.prototype, 'seconds', {
+      get: function() {
+        if (this._m_seconds !== undefined)
+          return this._m_seconds;
+        this._m_seconds = this.scaledSeconds * 24000;
+        return this._m_seconds;
+      }
+    });
+
+    return CoarseTimestamp;
+  })();
+
+  var DataContinuation = Specpr.DataContinuation = (function() {
+    function DataContinuation(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    DataContinuation.prototype._read = function() {
+      this.cdata = [];
+      for (var i = 0; i < 383; i++) {
+        this.cdata.push(this._io.readF4be());
+      }
+    }
+
+    /**
+     * The continuation of the data values (383 channels of 32 bit real numbers).
+     */
+
+    return DataContinuation;
+  })();
+
   var DataInitial = Specpr.DataInitial = (function() {
     function DataInitial(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -78,10 +123,10 @@ var Specpr = (function() {
       this.irespt = this._io.readS4be();
       this.irecno = this._io.readS4be();
       this.itpntr = this._io.readS4be();
-      this.ihist = KaitaiStream.bytesToStr(KaitaiStream.bytesStripRight(this._io.readBytes(60), 32), "ascii");
+      this.ihist = KaitaiStream.bytesToStr(KaitaiStream.bytesStripRight(this._io.readBytes(60), 32), "ASCII");
       this.mhist = [];
       for (var i = 0; i < 4; i++) {
-        this.mhist.push(KaitaiStream.bytesToStr(this._io.readBytes(74), "ascii"));
+        this.mhist.push(KaitaiStream.bytesToStr(this._io.readBytes(74), "ASCII"));
       }
       this.nruns = this._io.readS4be();
       this.siangl = new IllumAngle(this._io, this, this._root);
@@ -106,7 +151,7 @@ var Specpr = (function() {
       get: function() {
         if (this._m_phaseAngleArcsec !== undefined)
           return this._m_phaseAngleArcsec;
-        this._m_phaseAngleArcsec = (this.sphase / 1500);
+        this._m_phaseAngleArcsec = this.sphase / 1500;
         return this._m_phaseAngleArcsec;
       }
     });
@@ -231,29 +276,6 @@ var Specpr = (function() {
     return DataInitial;
   })();
 
-  var CoarseTimestamp = Specpr.CoarseTimestamp = (function() {
-    function CoarseTimestamp(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    CoarseTimestamp.prototype._read = function() {
-      this.scaledSeconds = this._io.readS4be();
-    }
-    Object.defineProperty(CoarseTimestamp.prototype, 'seconds', {
-      get: function() {
-        if (this._m_seconds !== undefined)
-          return this._m_seconds;
-        this._m_seconds = (this.scaledSeconds * 24000);
-        return this._m_seconds;
-      }
-    });
-
-    return CoarseTimestamp;
-  })();
-
   /**
    * it is big endian
    */
@@ -262,7 +284,7 @@ var Specpr = (function() {
     function Icflag(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -279,7 +301,7 @@ var Specpr = (function() {
       get: function() {
         if (this._m_type !== undefined)
           return this._m_type;
-        this._m_type = (((this.text | 0) * 1) + ((this.continuation | 0) * 2));
+        this._m_type = (this.text | 0) * 1 + (this.continuation | 0) * 2;
         return this._m_type;
       }
     });
@@ -324,39 +346,17 @@ var Specpr = (function() {
     return Icflag;
   })();
 
-  var DataContinuation = Specpr.DataContinuation = (function() {
-    function DataContinuation(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    DataContinuation.prototype._read = function() {
-      this.cdata = [];
-      for (var i = 0; i < 383; i++) {
-        this.cdata.push(this._io.readF4be());
-      }
-    }
-
-    /**
-     * The continuation of the data values (383 channels of 32 bit real numbers).
-     */
-
-    return DataContinuation;
-  })();
-
   var Identifiers = Specpr.Identifiers = (function() {
     function Identifiers(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     Identifiers.prototype._read = function() {
-      this.ititle = KaitaiStream.bytesToStr(KaitaiStream.bytesStripRight(this._io.readBytes(40), 32), "ascii");
-      this.usernm = KaitaiStream.bytesToStr(this._io.readBytes(8), "ascii");
+      this.ititle = KaitaiStream.bytesToStr(KaitaiStream.bytesStripRight(this._io.readBytes(40), 32), "ASCII");
+      this.usernm = KaitaiStream.bytesToStr(this._io.readBytes(8), "ASCII");
     }
 
     /**
@@ -374,19 +374,19 @@ var Specpr = (function() {
     function IllumAngle(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     IllumAngle.prototype._read = function() {
       this.angl = this._io.readS4be();
     }
-    Object.defineProperty(IllumAngle.prototype, 'secondsTotal', {
+    Object.defineProperty(IllumAngle.prototype, 'degreesTotal', {
       get: function() {
-        if (this._m_secondsTotal !== undefined)
-          return this._m_secondsTotal;
-        this._m_secondsTotal = Math.floor(this.angl / 6000);
-        return this._m_secondsTotal;
+        if (this._m_degreesTotal !== undefined)
+          return this._m_degreesTotal;
+        this._m_degreesTotal = Math.floor(this.minutesTotal / 60);
+        return this._m_degreesTotal;
       }
     });
     Object.defineProperty(IllumAngle.prototype, 'minutesTotal', {
@@ -397,12 +397,12 @@ var Specpr = (function() {
         return this._m_minutesTotal;
       }
     });
-    Object.defineProperty(IllumAngle.prototype, 'degreesTotal', {
+    Object.defineProperty(IllumAngle.prototype, 'secondsTotal', {
       get: function() {
-        if (this._m_degreesTotal !== undefined)
-          return this._m_degreesTotal;
-        this._m_degreesTotal = Math.floor(this.minutesTotal / 60);
-        return this._m_degreesTotal;
+        if (this._m_secondsTotal !== undefined)
+          return this._m_secondsTotal;
+        this._m_secondsTotal = Math.floor(this.angl / 6000);
+        return this._m_secondsTotal;
       }
     });
 
@@ -413,11 +413,74 @@ var Specpr = (function() {
     return IllumAngle;
   })();
 
+  var Record = Specpr.Record = (function() {
+    function Record(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Record.prototype._read = function() {
+      this.icflag = new Icflag(this._io, this, this._root);
+      switch (this.icflag.type) {
+      case Specpr.RecordType.DATA_CONTINUATION:
+        this._raw_content = this._io.readBytes(1536 - 4);
+        var _io__raw_content = new KaitaiStream(this._raw_content);
+        this.content = new DataContinuation(_io__raw_content, this, this._root);
+        break;
+      case Specpr.RecordType.DATA_INITIAL:
+        this._raw_content = this._io.readBytes(1536 - 4);
+        var _io__raw_content = new KaitaiStream(this._raw_content);
+        this.content = new DataInitial(_io__raw_content, this, this._root);
+        break;
+      case Specpr.RecordType.TEXT_CONTINUATION:
+        this._raw_content = this._io.readBytes(1536 - 4);
+        var _io__raw_content = new KaitaiStream(this._raw_content);
+        this.content = new TextContinuation(_io__raw_content, this, this._root);
+        break;
+      case Specpr.RecordType.TEXT_INITIAL:
+        this._raw_content = this._io.readBytes(1536 - 4);
+        var _io__raw_content = new KaitaiStream(this._raw_content);
+        this.content = new TextInitial(_io__raw_content, this, this._root);
+        break;
+      default:
+        this.content = this._io.readBytes(1536 - 4);
+        break;
+      }
+    }
+
+    /**
+     * Total number of bytes comprising the document.
+     */
+
+    return Record;
+  })();
+
+  var TextContinuation = Specpr.TextContinuation = (function() {
+    function TextContinuation(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    TextContinuation.prototype._read = function() {
+      this.tdata = KaitaiStream.bytesToStr(this._io.readBytes(1532), "ASCII");
+    }
+
+    /**
+     * 1532 characters of text.
+     */
+
+    return TextContinuation;
+  })();
+
   var TextInitial = Specpr.TextInitial = (function() {
     function TextInitial(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -425,7 +488,7 @@ var Specpr = (function() {
       this.ids = new Identifiers(this._io, this, this._root);
       this.itxtpt = this._io.readU4be();
       this.itxtch = this._io.readS4be();
-      this.itext = KaitaiStream.bytesToStr(this._io.readBytes(1476), "ascii");
+      this.itext = KaitaiStream.bytesToStr(this._io.readBytes(1476), "ASCII");
     }
 
     /**
@@ -443,70 +506,7 @@ var Specpr = (function() {
     return TextInitial;
   })();
 
-  var Record = Specpr.Record = (function() {
-    function Record(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Record.prototype._read = function() {
-      this.icflag = new Icflag(this._io, this, this._root);
-      switch (this.icflag.type) {
-      case Specpr.RecordType.DATA_INITIAL:
-        this._raw_content = this._io.readBytes((1536 - 4));
-        var _io__raw_content = new KaitaiStream(this._raw_content);
-        this.content = new DataInitial(_io__raw_content, this, this._root);
-        break;
-      case Specpr.RecordType.DATA_CONTINUATION:
-        this._raw_content = this._io.readBytes((1536 - 4));
-        var _io__raw_content = new KaitaiStream(this._raw_content);
-        this.content = new DataContinuation(_io__raw_content, this, this._root);
-        break;
-      case Specpr.RecordType.TEXT_CONTINUATION:
-        this._raw_content = this._io.readBytes((1536 - 4));
-        var _io__raw_content = new KaitaiStream(this._raw_content);
-        this.content = new TextContinuation(_io__raw_content, this, this._root);
-        break;
-      case Specpr.RecordType.TEXT_INITIAL:
-        this._raw_content = this._io.readBytes((1536 - 4));
-        var _io__raw_content = new KaitaiStream(this._raw_content);
-        this.content = new TextInitial(_io__raw_content, this, this._root);
-        break;
-      default:
-        this.content = this._io.readBytes((1536 - 4));
-        break;
-      }
-    }
-
-    /**
-     * Total number of bytes comprising the document.
-     */
-
-    return Record;
-  })();
-
-  var TextContinuation = Specpr.TextContinuation = (function() {
-    function TextContinuation(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    TextContinuation.prototype._read = function() {
-      this.tdata = KaitaiStream.bytesToStr(this._io.readBytes(1532), "ascii");
-    }
-
-    /**
-     * 1532 characters of text.
-     */
-
-    return TextContinuation;
-  })();
-
   return Specpr;
 })();
-return Specpr;
-}));
+Specpr_.Specpr = Specpr;
+});

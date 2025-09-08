@@ -1,0 +1,91 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__compressed_resource {
+		label="CompressedResource";
+		graph[style=dotted];
+
+		compressed_resource__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="header_pos">0</TD><TD PORT="header_size">...</TD><TD>Header</TD><TD PORT="header_type">header</TD></TR>
+			<TR><TD PORT="compressed_data_pos">...</TD><TD PORT="compressed_data_size">⇲</TD><TD></TD><TD PORT="compressed_data_type">compressed_data</TD></TR>
+		</TABLE>>];
+		subgraph cluster__header {
+			label="CompressedResource::Header";
+			graph[style=dotted];
+
+			header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="common_part_pos">0</TD><TD PORT="common_part_size">12</TD><TD>CommonPart</TD><TD PORT="common_part_type">common_part</TD></TR>
+				<TR><TD PORT="type_specific_part_raw_with_io_pos">12</TD><TD PORT="type_specific_part_raw_with_io_size">common_part.len_header - 12</TD><TD>BytesWithIo</TD><TD PORT="type_specific_part_raw_with_io_type">type_specific_part_raw_with_io</TD></TR>
+			</TABLE>>];
+			header__inst__type_specific_part [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="type_specific_part_pos">0</TD><TD PORT="type_specific_part_size">...</TD><TD>switch (common_part.header_type)</TD><TD PORT="type_specific_part_type">type_specific_part</TD></TR>
+			</TABLE>>];
+			header__inst__type_specific_part_raw [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>type_specific_part_raw</TD><TD>type_specific_part_raw_with_io.data</TD></TR>
+			</TABLE>>];
+header__inst__type_specific_part_type_specific_part_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>8</TD><TD PORT="case0">TypeSpecificPartType8</TD></TR>
+	<TR><TD>9</TD><TD PORT="case1">TypeSpecificPartType9</TD></TR>
+</TABLE>>];
+			subgraph cluster__common_part {
+				label="CompressedResource::Header::CommonPart";
+				graph[style=dotted];
+
+				common_part__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD>A8 9F 65 72</TD><TD PORT="magic_type">magic</TD></TR>
+					<TR><TD PORT="len_header_pos">4</TD><TD PORT="len_header_size">2</TD><TD>u2be</TD><TD PORT="len_header_type">len_header</TD></TR>
+					<TR><TD COLSPAN="4" PORT="len_header__valid">must be equal to 18</TD></TR>
+					<TR><TD PORT="header_type_pos">6</TD><TD PORT="header_type_size">1</TD><TD>u1</TD><TD PORT="header_type_type">header_type</TD></TR>
+					<TR><TD PORT="unknown_pos">7</TD><TD PORT="unknown_size">1</TD><TD>u1</TD><TD PORT="unknown_type">unknown</TD></TR>
+					<TR><TD COLSPAN="4" PORT="unknown__valid">must be equal to 1</TD></TR>
+					<TR><TD PORT="len_decompressed_pos">8</TD><TD PORT="len_decompressed_size">4</TD><TD>u4be</TD><TD PORT="len_decompressed_type">len_decompressed</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__type_specific_part_type_8 {
+				label="CompressedResource::Header::TypeSpecificPartType8";
+				graph[style=dotted];
+
+				type_specific_part_type_8__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="working_buffer_fractional_size_pos">0</TD><TD PORT="working_buffer_fractional_size_size">1</TD><TD>u1</TD><TD PORT="working_buffer_fractional_size_type">working_buffer_fractional_size</TD></TR>
+					<TR><TD PORT="expansion_buffer_size_pos">1</TD><TD PORT="expansion_buffer_size_size">1</TD><TD>u1</TD><TD PORT="expansion_buffer_size_type">expansion_buffer_size</TD></TR>
+					<TR><TD PORT="decompressor_id_pos">2</TD><TD PORT="decompressor_id_size">2</TD><TD>s2be</TD><TD PORT="decompressor_id_type">decompressor_id</TD></TR>
+					<TR><TD PORT="reserved_pos">4</TD><TD PORT="reserved_size">2</TD><TD>u2be</TD><TD PORT="reserved_type">reserved</TD></TR>
+					<TR><TD COLSPAN="4" PORT="reserved__valid">must be equal to 0</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__type_specific_part_type_9 {
+				label="CompressedResource::Header::TypeSpecificPartType9";
+				graph[style=dotted];
+
+				type_specific_part_type_9__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="decompressor_id_pos">0</TD><TD PORT="decompressor_id_size">2</TD><TD>s2be</TD><TD PORT="decompressor_id_type">decompressor_id</TD></TR>
+					<TR><TD PORT="decompressor_specific_parameters_with_io_pos">2</TD><TD PORT="decompressor_specific_parameters_with_io_size">4</TD><TD>BytesWithIo</TD><TD PORT="decompressor_specific_parameters_with_io_type">decompressor_specific_parameters_with_io</TD></TR>
+				</TABLE>>];
+				type_specific_part_type_9__inst__decompressor_specific_parameters [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>decompressor_specific_parameters</TD><TD>decompressor_specific_parameters_with_io.data</TD></TR>
+				</TABLE>>];
+			}
+		}
+	}
+	compressed_resource__seq:header_type -> header__seq [style=bold];
+	header__seq:common_part_type -> common_part__seq [style=bold];
+	common_part__seq:len_header_type -> header__seq:type_specific_part_raw_with_io_size [color="#404040"];
+	header__seq:common_part_size -> header__seq:type_specific_part_raw_with_io_size [color="#404040"];
+	header__seq:type_specific_part_raw_with_io_type -> bytes_with_io__seq [style=bold];
+	header__inst__type_specific_part:type_specific_part_type -> header__inst__type_specific_part_type_specific_part_switch [style=bold];
+	header__inst__type_specific_part_type_specific_part_switch:case0 -> type_specific_part_type_8__seq [style=bold];
+	header__inst__type_specific_part_type_specific_part_switch:case1 -> type_specific_part_type_9__seq [style=bold];
+	common_part__seq:header_type_type -> header__inst__type_specific_part:type_specific_part_type [color="#404040"];
+	bytes_with_io__seq:data_type -> header__inst__type_specific_part_raw [color="#404040"];
+	type_specific_part_type_9__seq:decompressor_specific_parameters_with_io_type -> bytes_with_io__seq [style=bold];
+	bytes_with_io__seq:data_type -> type_specific_part_type_9__inst__decompressor_specific_parameters [color="#404040"];
+}

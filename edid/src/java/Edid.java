@@ -8,7 +8,8 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 public class Edid extends KaitaiStruct {
     public static Edid fromFile(String fileName) throws IOException {
@@ -31,8 +32,8 @@ public class Edid extends KaitaiStruct {
     }
     private void _read() {
         this.magic = this._io.readBytes(8);
-        if (!(Arrays.equals(magic(), new byte[] { 0, -1, -1, -1, -1, -1, -1, 0 }))) {
-            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, -1, -1, -1, -1, -1, -1, 0 }, magic(), _io(), "/seq/0");
+        if (!(Arrays.equals(this.magic, new byte[] { 0, -1, -1, -1, -1, -1, -1, 0 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, -1, -1, -1, -1, -1, -1, 0 }, this.magic, this._io, "/seq/0");
         }
         this.mfgBytes = this._io.readU2be();
         this.productCode = this._io.readU2le();
@@ -48,12 +49,18 @@ public class Edid extends KaitaiStruct {
         this.featuresFlags = this._io.readU1();
         this.chromacity = new ChromacityInfo(this._io, this, _root);
         this.estTimings = new EstTimingsInfo(this._io, this, _root);
-        this._raw_stdTimings = new ArrayList<byte[]>();
         this.stdTimings = new ArrayList<StdTiming>();
         for (int i = 0; i < 8; i++) {
-            this._raw_stdTimings.add(this._io.readBytes(2));
-            KaitaiStream _io__raw_stdTimings = new ByteBufferKaitaiStream(_raw_stdTimings.get(_raw_stdTimings.size() - 1));
-            this.stdTimings.add(new StdTiming(_io__raw_stdTimings, this, _root));
+            KaitaiStream _io_stdTimings = this._io.substream(2);
+            this.stdTimings.add(new StdTiming(_io_stdTimings, this, _root));
+        }
+    }
+
+    public void _fetchInstances() {
+        this.chromacity._fetchInstances();
+        this.estTimings._fetchInstances();
+        for (int i = 0; i < this.stdTimings.size(); i++) {
+            this.stdTimings.get(((Number) (i)).intValue())._fetchInstances();
         }
     }
 
@@ -90,7 +97,6 @@ public class Edid extends KaitaiStruct {
             this.blueY10 = this._io.readBitsIntBe(2);
             this.whiteX10 = this._io.readBitsIntBe(2);
             this.whiteY10 = this._io.readBitsIntBe(2);
-            this._io.alignToByte();
             this.redX92 = this._io.readU1();
             this.redY92 = this._io.readU1();
             this.greenX92 = this._io.readU1();
@@ -100,69 +106,8 @@ public class Edid extends KaitaiStruct {
             this.whiteX92 = this._io.readU1();
             this.whiteY92 = this._io.readU1();
         }
-        private Integer greenXInt;
-        public Integer greenXInt() {
-            if (this.greenXInt != null)
-                return this.greenXInt;
-            int _tmp = (int) (((greenX92() << 2) | greenX10()));
-            this.greenXInt = _tmp;
-            return this.greenXInt;
-        }
-        private Double redY;
 
-        /**
-         * Red Y coordinate
-         */
-        public Double redY() {
-            if (this.redY != null)
-                return this.redY;
-            double _tmp = (double) ((redYInt() / 1024.0));
-            this.redY = _tmp;
-            return this.redY;
-        }
-        private Integer greenYInt;
-        public Integer greenYInt() {
-            if (this.greenYInt != null)
-                return this.greenYInt;
-            int _tmp = (int) (((greenY92() << 2) | greenY10()));
-            this.greenYInt = _tmp;
-            return this.greenYInt;
-        }
-        private Double whiteY;
-
-        /**
-         * White Y coordinate
-         */
-        public Double whiteY() {
-            if (this.whiteY != null)
-                return this.whiteY;
-            double _tmp = (double) ((whiteYInt() / 1024.0));
-            this.whiteY = _tmp;
-            return this.whiteY;
-        }
-        private Double redX;
-
-        /**
-         * Red X coordinate
-         */
-        public Double redX() {
-            if (this.redX != null)
-                return this.redX;
-            double _tmp = (double) ((redXInt() / 1024.0));
-            this.redX = _tmp;
-            return this.redX;
-        }
-        private Double whiteX;
-
-        /**
-         * White X coordinate
-         */
-        public Double whiteX() {
-            if (this.whiteX != null)
-                return this.whiteX;
-            double _tmp = (double) ((whiteXInt() / 1024.0));
-            this.whiteX = _tmp;
-            return this.whiteX;
+        public void _fetchInstances() {
         }
         private Double blueX;
 
@@ -172,60 +117,14 @@ public class Edid extends KaitaiStruct {
         public Double blueX() {
             if (this.blueX != null)
                 return this.blueX;
-            double _tmp = (double) ((blueXInt() / 1024.0));
-            this.blueX = _tmp;
+            this.blueX = ((Number) (blueXInt() / 1024.0)).doubleValue();
             return this.blueX;
-        }
-        private Integer whiteXInt;
-        public Integer whiteXInt() {
-            if (this.whiteXInt != null)
-                return this.whiteXInt;
-            int _tmp = (int) (((whiteX92() << 2) | whiteX10()));
-            this.whiteXInt = _tmp;
-            return this.whiteXInt;
-        }
-        private Integer whiteYInt;
-        public Integer whiteYInt() {
-            if (this.whiteYInt != null)
-                return this.whiteYInt;
-            int _tmp = (int) (((whiteY92() << 2) | whiteY10()));
-            this.whiteYInt = _tmp;
-            return this.whiteYInt;
-        }
-        private Double greenX;
-
-        /**
-         * Green X coordinate
-         */
-        public Double greenX() {
-            if (this.greenX != null)
-                return this.greenX;
-            double _tmp = (double) ((greenXInt() / 1024.0));
-            this.greenX = _tmp;
-            return this.greenX;
-        }
-        private Integer redXInt;
-        public Integer redXInt() {
-            if (this.redXInt != null)
-                return this.redXInt;
-            int _tmp = (int) (((redX92() << 2) | redX10()));
-            this.redXInt = _tmp;
-            return this.redXInt;
-        }
-        private Integer redYInt;
-        public Integer redYInt() {
-            if (this.redYInt != null)
-                return this.redYInt;
-            int _tmp = (int) (((redY92() << 2) | redY10()));
-            this.redYInt = _tmp;
-            return this.redYInt;
         }
         private Integer blueXInt;
         public Integer blueXInt() {
             if (this.blueXInt != null)
                 return this.blueXInt;
-            int _tmp = (int) (((blueX92() << 2) | blueX10()));
-            this.blueXInt = _tmp;
+            this.blueXInt = ((Number) (blueX92() << 2 | blueX10())).intValue();
             return this.blueXInt;
         }
         private Double blueY;
@@ -236,9 +135,33 @@ public class Edid extends KaitaiStruct {
         public Double blueY() {
             if (this.blueY != null)
                 return this.blueY;
-            double _tmp = (double) ((blueYInt() / 1024.0));
-            this.blueY = _tmp;
+            this.blueY = ((Number) (blueYInt() / 1024.0)).doubleValue();
             return this.blueY;
+        }
+        private Integer blueYInt;
+        public Integer blueYInt() {
+            if (this.blueYInt != null)
+                return this.blueYInt;
+            this.blueYInt = ((Number) (blueY92() << 2 | blueY10())).intValue();
+            return this.blueYInt;
+        }
+        private Double greenX;
+
+        /**
+         * Green X coordinate
+         */
+        public Double greenX() {
+            if (this.greenX != null)
+                return this.greenX;
+            this.greenX = ((Number) (greenXInt() / 1024.0)).doubleValue();
+            return this.greenX;
+        }
+        private Integer greenXInt;
+        public Integer greenXInt() {
+            if (this.greenXInt != null)
+                return this.greenXInt;
+            this.greenXInt = ((Number) (greenX92() << 2 | greenX10())).intValue();
+            return this.greenXInt;
         }
         private Double greenY;
 
@@ -248,17 +171,87 @@ public class Edid extends KaitaiStruct {
         public Double greenY() {
             if (this.greenY != null)
                 return this.greenY;
-            double _tmp = (double) ((greenYInt() / 1024.0));
-            this.greenY = _tmp;
+            this.greenY = ((Number) (greenYInt() / 1024.0)).doubleValue();
             return this.greenY;
         }
-        private Integer blueYInt;
-        public Integer blueYInt() {
-            if (this.blueYInt != null)
-                return this.blueYInt;
-            int _tmp = (int) (((blueY92() << 2) | blueY10()));
-            this.blueYInt = _tmp;
-            return this.blueYInt;
+        private Integer greenYInt;
+        public Integer greenYInt() {
+            if (this.greenYInt != null)
+                return this.greenYInt;
+            this.greenYInt = ((Number) (greenY92() << 2 | greenY10())).intValue();
+            return this.greenYInt;
+        }
+        private Double redX;
+
+        /**
+         * Red X coordinate
+         */
+        public Double redX() {
+            if (this.redX != null)
+                return this.redX;
+            this.redX = ((Number) (redXInt() / 1024.0)).doubleValue();
+            return this.redX;
+        }
+        private Integer redXInt;
+        public Integer redXInt() {
+            if (this.redXInt != null)
+                return this.redXInt;
+            this.redXInt = ((Number) (redX92() << 2 | redX10())).intValue();
+            return this.redXInt;
+        }
+        private Double redY;
+
+        /**
+         * Red Y coordinate
+         */
+        public Double redY() {
+            if (this.redY != null)
+                return this.redY;
+            this.redY = ((Number) (redYInt() / 1024.0)).doubleValue();
+            return this.redY;
+        }
+        private Integer redYInt;
+        public Integer redYInt() {
+            if (this.redYInt != null)
+                return this.redYInt;
+            this.redYInt = ((Number) (redY92() << 2 | redY10())).intValue();
+            return this.redYInt;
+        }
+        private Double whiteX;
+
+        /**
+         * White X coordinate
+         */
+        public Double whiteX() {
+            if (this.whiteX != null)
+                return this.whiteX;
+            this.whiteX = ((Number) (whiteXInt() / 1024.0)).doubleValue();
+            return this.whiteX;
+        }
+        private Integer whiteXInt;
+        public Integer whiteXInt() {
+            if (this.whiteXInt != null)
+                return this.whiteXInt;
+            this.whiteXInt = ((Number) (whiteX92() << 2 | whiteX10())).intValue();
+            return this.whiteXInt;
+        }
+        private Double whiteY;
+
+        /**
+         * White Y coordinate
+         */
+        public Double whiteY() {
+            if (this.whiteY != null)
+                return this.whiteY;
+            this.whiteY = ((Number) (whiteYInt() / 1024.0)).doubleValue();
+            return this.whiteY;
+        }
+        private Integer whiteYInt;
+        public Integer whiteYInt() {
+            if (this.whiteYInt != null)
+                return this.whiteYInt;
+            this.whiteYInt = ((Number) (whiteY92() << 2 | whiteY10())).intValue();
+            return this.whiteYInt;
         }
         private long redX10;
         private long redY10;
@@ -399,6 +392,9 @@ public class Edid extends KaitaiStruct {
             this.can1280x1024px75hz = this._io.readBitsIntBe(1) != 0;
             this.can1152x870px75hz = this._io.readBitsIntBe(1) != 0;
             this.reserved = this._io.readBitsIntBe(7);
+        }
+
+        public void _fetchInstances() {
         }
         private boolean can720x400px70hz;
         private boolean can720x400px88hz;
@@ -550,6 +546,12 @@ public class Edid extends KaitaiStruct {
             this.aspectRatio = AspectRatios.byId(this._io.readBitsIntBe(2));
             this.refreshRateMod = this._io.readBitsIntBe(6);
         }
+
+        public void _fetchInstances() {
+            bytesLookahead();
+            if (this.bytesLookahead != null) {
+            }
+        }
         private byte[] bytesLookahead;
         public byte[] bytesLookahead() {
             if (this.bytesLookahead != null)
@@ -560,14 +562,6 @@ public class Edid extends KaitaiStruct {
             this._io.seek(_pos);
             return this.bytesLookahead;
         }
-        private Boolean isUsed;
-        public Boolean isUsed() {
-            if (this.isUsed != null)
-                return this.isUsed;
-            boolean _tmp = (boolean) (!Arrays.equals(bytesLookahead(), new byte[] { 1, 1 }));
-            this.isUsed = _tmp;
-            return this.isUsed;
-        }
         private Integer horizActivePixels;
 
         /**
@@ -577,10 +571,16 @@ public class Edid extends KaitaiStruct {
             if (this.horizActivePixels != null)
                 return this.horizActivePixels;
             if (isUsed()) {
-                int _tmp = (int) (((horizActivePixelsMod() + 31) * 8));
-                this.horizActivePixels = _tmp;
+                this.horizActivePixels = ((Number) ((horizActivePixelsMod() + 31) * 8)).intValue();
             }
             return this.horizActivePixels;
+        }
+        private Boolean isUsed;
+        public Boolean isUsed() {
+            if (this.isUsed != null)
+                return this.isUsed;
+            this.isUsed = !Arrays.equals(bytesLookahead(), new byte[] { 1, 1 });
+            return this.isUsed;
         }
         private Integer refreshRate;
 
@@ -591,8 +591,7 @@ public class Edid extends KaitaiStruct {
             if (this.refreshRate != null)
                 return this.refreshRate;
             if (isUsed()) {
-                int _tmp = (int) ((refreshRateMod() + 60));
-                this.refreshRate = _tmp;
+                this.refreshRate = ((Number) (refreshRateMod() + 60)).intValue();
             }
             return this.refreshRate;
         }
@@ -623,54 +622,49 @@ public class Edid extends KaitaiStruct {
         public Edid _root() { return _root; }
         public Edid _parent() { return _parent; }
     }
-    private Integer mfgYear;
-    public Integer mfgYear() {
-        if (this.mfgYear != null)
-            return this.mfgYear;
-        int _tmp = (int) ((mfgYearMod() + 1990));
-        this.mfgYear = _tmp;
-        return this.mfgYear;
-    }
-    private Integer mfgIdCh1;
-    public Integer mfgIdCh1() {
-        if (this.mfgIdCh1 != null)
-            return this.mfgIdCh1;
-        int _tmp = (int) (((mfgBytes() & 31744) >> 10));
-        this.mfgIdCh1 = _tmp;
-        return this.mfgIdCh1;
-    }
-    private Integer mfgIdCh3;
-    public Integer mfgIdCh3() {
-        if (this.mfgIdCh3 != null)
-            return this.mfgIdCh3;
-        int _tmp = (int) ((mfgBytes() & 31));
-        this.mfgIdCh3 = _tmp;
-        return this.mfgIdCh3;
-    }
     private Double gamma;
     public Double gamma() {
         if (this.gamma != null)
             return this.gamma;
         if (gammaMod() != 255) {
-            double _tmp = (double) (((gammaMod() + 100) / 100.0));
-            this.gamma = _tmp;
+            this.gamma = ((Number) ((gammaMod() + 100) / 100.0)).doubleValue();
         }
         return this.gamma;
     }
-    private String mfgStr;
-    public String mfgStr() {
-        if (this.mfgStr != null)
-            return this.mfgStr;
-        this.mfgStr = new String(new byte[] { (mfgIdCh1() + 64), (mfgIdCh2() + 64), (mfgIdCh3() + 64) }, Charset.forName("ASCII"));
-        return this.mfgStr;
+    private Integer mfgIdCh1;
+    public Integer mfgIdCh1() {
+        if (this.mfgIdCh1 != null)
+            return this.mfgIdCh1;
+        this.mfgIdCh1 = ((Number) ((mfgBytes() & 31744) >> 10)).intValue();
+        return this.mfgIdCh1;
     }
     private Integer mfgIdCh2;
     public Integer mfgIdCh2() {
         if (this.mfgIdCh2 != null)
             return this.mfgIdCh2;
-        int _tmp = (int) (((mfgBytes() & 992) >> 5));
-        this.mfgIdCh2 = _tmp;
+        this.mfgIdCh2 = ((Number) ((mfgBytes() & 992) >> 5)).intValue();
         return this.mfgIdCh2;
+    }
+    private Integer mfgIdCh3;
+    public Integer mfgIdCh3() {
+        if (this.mfgIdCh3 != null)
+            return this.mfgIdCh3;
+        this.mfgIdCh3 = ((Number) (mfgBytes() & 31)).intValue();
+        return this.mfgIdCh3;
+    }
+    private String mfgStr;
+    public String mfgStr() {
+        if (this.mfgStr != null)
+            return this.mfgStr;
+        this.mfgStr = new String(new byte[] { mfgIdCh1() + 64, mfgIdCh2() + 64, mfgIdCh3() + 64 }, StandardCharsets.US_ASCII);
+        return this.mfgStr;
+    }
+    private Integer mfgYear;
+    public Integer mfgYear() {
+        if (this.mfgYear != null)
+            return this.mfgYear;
+        this.mfgYear = ((Number) (mfgYearMod() + 1990)).intValue();
+        return this.mfgYear;
     }
     private byte[] magic;
     private int mfgBytes;
@@ -687,10 +681,9 @@ public class Edid extends KaitaiStruct {
     private int featuresFlags;
     private ChromacityInfo chromacity;
     private EstTimingsInfo estTimings;
-    private ArrayList<StdTiming> stdTimings;
+    private List<StdTiming> stdTimings;
     private Edid _root;
     private KaitaiStruct _parent;
-    private ArrayList<byte[]> _raw_stdTimings;
     public byte[] magic() { return magic; }
     public int mfgBytes() { return mfgBytes; }
 
@@ -760,8 +753,7 @@ public class Edid extends KaitaiStruct {
      * used to specify up to 8 additional timings not included in
      * "established timings".
      */
-    public ArrayList<StdTiming> stdTimings() { return stdTimings; }
+    public List<StdTiming> stdTimings() { return stdTimings; }
     public Edid _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
-    public ArrayList<byte[]> _raw_stdTimings() { return _raw_stdTimings; }
 }

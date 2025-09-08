@@ -1,9 +1,10 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 require 'kaitai/struct/struct'
+require_relative 'riff'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -26,6 +27,29 @@ end
 # @see https://www.mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/WAVE.html Source
 # @see https://web.archive.org/web/20101031101749/http://www.ebu.ch/fr/technical/publications/userguides/bwf_user_guide.php Source
 class Wav < Kaitai::Struct::Struct
+
+  FOURCC = {
+    540238953 => :fourcc_id3,
+    543520099 => :fourcc_cue,
+    544501094 => :fourcc_fmt,
+    1163280727 => :fourcc_wave,
+    1179011410 => :fourcc_riff,
+    1262568784 => :fourcc_peak,
+    1280137321 => :fourcc_ixml,
+    1330007625 => :fourcc_info,
+    1414744396 => :fourcc_list,
+    1481461855 => :fourcc_pmx,
+    1634625635 => :fourcc_chna,
+    1635017060 => :fourcc_data,
+    1684630901 => :fourcc_umid,
+    1718511981 => :fourcc_minf,
+    1819113569 => :fourcc_axml,
+    1852269938 => :fourcc_regn,
+    1886611041 => :fourcc_afsp,
+    1952670054 => :fourcc_fact,
+    1954047330 => :fourcc_bext,
+  }
+  I__FOURCC = FOURCC.invert
 
   W_FORMAT_TAG_TYPE = {
     0 => :w_format_tag_type_unknown,
@@ -295,162 +319,50 @@ class Wav < Kaitai::Struct::Struct
     65535 => :w_format_tag_type_development,
   }
   I__W_FORMAT_TAG_TYPE = W_FORMAT_TAG_TYPE.invert
-
-  FOURCC = {
-    540238953 => :fourcc_id3,
-    543520099 => :fourcc_cue,
-    544501094 => :fourcc_fmt,
-    1163280727 => :fourcc_wave,
-    1179011410 => :fourcc_riff,
-    1262568784 => :fourcc_peak,
-    1280137321 => :fourcc_ixml,
-    1330007625 => :fourcc_info,
-    1414744396 => :fourcc_list,
-    1481461855 => :fourcc_pmx,
-    1634625635 => :fourcc_chna,
-    1635017060 => :fourcc_data,
-    1684630901 => :fourcc_umid,
-    1718511981 => :fourcc_minf,
-    1819113569 => :fourcc_axml,
-    1852269938 => :fourcc_regn,
-    1886611041 => :fourcc_afsp,
-    1952670054 => :fourcc_fact,
-    1954047330 => :fourcc_bext,
-  }
-  I__FOURCC = FOURCC.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
-    @chunk = Riff::Chunk.new(@_io, self, @_root)
+    @chunk = Riff::Chunk.new(@_io)
     self
   end
-  class SampleType < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+
+  ##
+  # @see https://www.mmsp.ece.mcgill.ca/Documents/Downloads/AFsp/ Source
+  class AfspChunkType < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @sample = @_io.read_u2le
-      self
-    end
-    attr_reader :sample
-  end
-  class FormatChunkType < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @w_format_tag = Kaitai::Struct::Stream::resolve_enum(Wav::W_FORMAT_TAG_TYPE, @_io.read_u2le)
-      @n_channels = @_io.read_u2le
-      @n_samples_per_sec = @_io.read_u4le
-      @n_avg_bytes_per_sec = @_io.read_u4le
-      @n_block_align = @_io.read_u2le
-      @w_bits_per_sample = @_io.read_u2le
-      if !(is_basic_pcm)
-        @cb_size = @_io.read_u2le
-      end
-      if is_cb_size_meaningful
-        @w_valid_bits_per_sample = @_io.read_u2le
-      end
-      if is_extensible
-        @channel_mask_and_subformat = ChannelMaskAndSubformatType.new(@_io, self, @_root)
+      @magic = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([65, 70, 115, 112].pack('C*'), @magic, @_io, "/types/afsp_chunk_type/seq/0") if not @magic == [65, 70, 115, 112].pack('C*')
+      @info_records = []
+      i = 0
+      while not @_io.eof?
+        @info_records << (@_io.read_bytes_term(0, false, true, true)).force_encoding("ASCII").encode('UTF-8')
+        i += 1
       end
       self
     end
-    def is_extensible
-      return @is_extensible unless @is_extensible.nil?
-      @is_extensible = w_format_tag == :w_format_tag_type_extensible
-      @is_extensible
-    end
-    def is_basic_pcm
-      return @is_basic_pcm unless @is_basic_pcm.nil?
-      @is_basic_pcm = w_format_tag == :w_format_tag_type_pcm
-      @is_basic_pcm
-    end
-    def is_basic_float
-      return @is_basic_float unless @is_basic_float.nil?
-      @is_basic_float = w_format_tag == :w_format_tag_type_ieee_float
-      @is_basic_float
-    end
-    def is_cb_size_meaningful
-      return @is_cb_size_meaningful unless @is_cb_size_meaningful.nil?
-      @is_cb_size_meaningful =  ((!(is_basic_pcm)) && (cb_size != 0)) 
-      @is_cb_size_meaningful
-    end
-    attr_reader :w_format_tag
-    attr_reader :n_channels
-    attr_reader :n_samples_per_sec
-    attr_reader :n_avg_bytes_per_sec
-    attr_reader :n_block_align
-    attr_reader :w_bits_per_sample
-    attr_reader :cb_size
-    attr_reader :w_valid_bits_per_sample
-    attr_reader :channel_mask_and_subformat
-  end
-  class PmxChunkType < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @data = (@_io.read_bytes_full).force_encoding("UTF-8")
-      self
-    end
+    attr_reader :magic
 
     ##
-    # XMP data
-    # @see https://github.com/adobe/XMP-Toolkit-SDK/blob/v2022.06/docs/XMPSpecificationPart3.pdf Source
-    attr_reader :data
+    # An array of AFsp information records, in the `<field_name>: <value>`
+    # format (e.g. "`program: CopyAudio`"). The list of existing information
+    # record types are available in the `doc-ref` links.
+    # @see https://www.mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AF/AFsetInfo.html Source
+    # @see https://www.mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AF/AFprintInfoRecs.html Source
+    attr_reader :info_records
   end
 
   ##
-  # required for all non-PCM formats
-  # (`w_format_tag != w_format_tag_type::pcm` or `not is_basic_pcm` in
-  # `format_chunk_type` context)
-  class FactChunkType < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @num_samples_per_channel = @_io.read_u4le
-      self
-    end
-    attr_reader :num_samples_per_channel
-  end
-  class GuidType < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @data1 = @_io.read_u4le
-      @data2 = @_io.read_u2le
-      @data3 = @_io.read_u2le
-      @data4 = @_io.read_u4be
-      @data4a = @_io.read_u4be
-      self
-    end
-    attr_reader :data1
-    attr_reader :data2
-    attr_reader :data3
-    attr_reader :data4
-    attr_reader :data4a
-  end
-
-  ##
-  # @see https://en.wikipedia.org/wiki/IXML Source
-  class IxmlChunkType < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  # @see https://tech.ebu.ch/docs/tech/tech3285s5.pdf Source
+  class AxmlChunkType < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -461,75 +373,49 @@ class Wav < Kaitai::Struct::Struct
     end
     attr_reader :data
   end
-  class InfoChunkType < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+
+  ##
+  # @see https://en.wikipedia.org/wiki/Broadcast_Wave_Format Source
+  class BextChunkType < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @chunk = Riff::Chunk.new(@_io, self, @_root)
+      @description = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(256), 0, false)).force_encoding("ASCII").encode('UTF-8')
+      @originator = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(32), 0, false)).force_encoding("ASCII").encode('UTF-8')
+      @originator_reference = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(32), 0, false)).force_encoding("ASCII").encode('UTF-8')
+      @origination_date = (@_io.read_bytes(10)).force_encoding("ASCII").encode('UTF-8')
+      @origination_time = (@_io.read_bytes(8)).force_encoding("ASCII").encode('UTF-8')
+      @time_reference_low = @_io.read_u4le
+      @time_reference_high = @_io.read_u4le
+      @version = @_io.read_u2le
+      @umid = @_io.read_bytes(64)
+      @loudness_value = @_io.read_u2le
+      @loudness_range = @_io.read_u2le
+      @max_true_peak_level = @_io.read_u2le
+      @max_momentary_loudness = @_io.read_u2le
+      @max_short_term_loudness = @_io.read_u2le
       self
     end
-    def chunk_data
-      return @chunk_data unless @chunk_data.nil?
-      io = chunk.data_slot._io
-      _pos = io.pos
-      io.seek(0)
-      @chunk_data = (io.read_bytes_term(0, false, true, true)).force_encoding("ASCII")
-      io.seek(_pos)
-      @chunk_data
-    end
-    attr_reader :chunk
-  end
-  class CuePointType < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @dw_name = @_io.read_u4le
-      @dw_position = @_io.read_u4le
-      @fcc_chunk = @_io.read_u4le
-      @dw_chunk_start = @_io.read_u4le
-      @dw_block_start = @_io.read_u4le
-      @dw_sample_offset = @_io.read_u4le
-      self
-    end
-    attr_reader :dw_name
-    attr_reader :dw_position
-    attr_reader :fcc_chunk
-    attr_reader :dw_chunk_start
-    attr_reader :dw_block_start
-    attr_reader :dw_sample_offset
-  end
-  class DataChunkType < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @data = @_io.read_bytes_full
-      self
-    end
-    attr_reader :data
-  end
-  class SamplesType < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @samples = @_io.read_u4le
-      self
-    end
-    attr_reader :samples
+    attr_reader :description
+    attr_reader :originator
+    attr_reader :originator_reference
+    attr_reader :origination_date
+    attr_reader :origination_time
+    attr_reader :time_reference_low
+    attr_reader :time_reference_high
+    attr_reader :version
+    attr_reader :umid
+    attr_reader :loudness_value
+    attr_reader :loudness_range
+    attr_reader :max_true_peak_level
+    attr_reader :max_momentary_loudness
+    attr_reader :max_short_term_loudness
   end
   class ChannelMaskAndSubformatType < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -542,59 +428,8 @@ class Wav < Kaitai::Struct::Struct
     attr_reader :dw_channel_mask
     attr_reader :subformat
   end
-  class CueChunkType < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @dw_cue_points = @_io.read_u4le
-      @cue_points = []
-      (dw_cue_points).times { |i|
-        @cue_points << CuePointType.new(@_io, self, @_root)
-      }
-      self
-    end
-    attr_reader :dw_cue_points
-    attr_reader :cue_points
-  end
-  class ListChunkType < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @parent_chunk_data = Riff::ParentChunkData.new(@_io, self, @_root)
-      self
-    end
-    def form_type
-      return @form_type unless @form_type.nil?
-      @form_type = Kaitai::Struct::Stream::resolve_enum(Wav::FOURCC, parent_chunk_data.form_type)
-      @form_type
-    end
-    def subchunks
-      return @subchunks unless @subchunks.nil?
-      io = parent_chunk_data.subchunks_slot._io
-      _pos = io.pos
-      io.seek(0)
-      @subchunks = []
-      i = 0
-      while not io.eof?
-        case form_type
-        when :fourcc_info
-          @subchunks << InfoChunkType.new(io, self, @_root)
-        end
-        i += 1
-      end
-      io.seek(_pos)
-      @subchunks
-    end
-    attr_reader :parent_chunk_data
-  end
   class ChannelMaskType < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -643,41 +478,221 @@ class Wav < Kaitai::Struct::Struct
     attr_reader :top_back_center
     attr_reader :unused2
   end
-
-  ##
-  # @see https://www.mmsp.ece.mcgill.ca/Documents/Downloads/AFsp/ Source
-  class AfspChunkType < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  class ChunkType < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @magic = @_io.read_bytes(4)
-      raise Kaitai::Struct::ValidationNotEqualError.new([65, 70, 115, 112].pack('C*'), magic, _io, "/types/afsp_chunk_type/seq/0") if not magic == [65, 70, 115, 112].pack('C*')
-      @info_records = []
-      i = 0
-      while not @_io.eof?
-        @info_records << (@_io.read_bytes_term(0, false, true, true)).force_encoding("ASCII")
-        i += 1
-      end
+      @chunk = Riff::Chunk.new(@_io)
       self
     end
-    attr_reader :magic
+    def chunk_data
+      return @chunk_data unless @chunk_data.nil?
+      io = chunk.data_slot._io
+      _pos = io.pos
+      io.seek(0)
+      case chunk_id
+      when :fourcc_afsp
+        @chunk_data = AfspChunkType.new(io, self, @_root)
+      when :fourcc_axml
+        @chunk_data = AxmlChunkType.new(io, self, @_root)
+      when :fourcc_bext
+        @chunk_data = BextChunkType.new(io, self, @_root)
+      when :fourcc_cue
+        @chunk_data = CueChunkType.new(io, self, @_root)
+      when :fourcc_data
+        @chunk_data = DataChunkType.new(io, self, @_root)
+      when :fourcc_fact
+        @chunk_data = FactChunkType.new(io, self, @_root)
+      when :fourcc_fmt
+        @chunk_data = FormatChunkType.new(io, self, @_root)
+      when :fourcc_ixml
+        @chunk_data = IxmlChunkType.new(io, self, @_root)
+      when :fourcc_list
+        @chunk_data = ListChunkType.new(io, self, @_root)
+      when :fourcc_pmx
+        @chunk_data = PmxChunkType.new(io, self, @_root)
+      end
+      io.seek(_pos)
+      @chunk_data
+    end
+    def chunk_id
+      return @chunk_id unless @chunk_id.nil?
+      @chunk_id = Kaitai::Struct::Stream::resolve_enum(Wav::FOURCC, chunk.id)
+      @chunk_id
+    end
+    attr_reader :chunk
+  end
+  class CueChunkType < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
 
-    ##
-    # An array of AFsp information records, in the `<field_name>: <value>`
-    # format (e.g. "`program: CopyAudio`"). The list of existing information
-    # record types are available in the `doc-ref` links.
-    # @see https://www.mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AF/AFsetInfo.html Source
-    # @see https://www.mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AF/AFprintInfoRecs.html Source
-    attr_reader :info_records
+    def _read
+      @dw_cue_points = @_io.read_u4le
+      @cue_points = []
+      (dw_cue_points).times { |i|
+        @cue_points << CuePointType.new(@_io, self, @_root)
+      }
+      self
+    end
+    attr_reader :dw_cue_points
+    attr_reader :cue_points
+  end
+  class CuePointType < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @dw_name = @_io.read_u4le
+      @dw_position = @_io.read_u4le
+      @fcc_chunk = @_io.read_u4le
+      @dw_chunk_start = @_io.read_u4le
+      @dw_block_start = @_io.read_u4le
+      @dw_sample_offset = @_io.read_u4le
+      self
+    end
+    attr_reader :dw_name
+    attr_reader :dw_position
+    attr_reader :fcc_chunk
+    attr_reader :dw_chunk_start
+    attr_reader :dw_block_start
+    attr_reader :dw_sample_offset
+  end
+  class DataChunkType < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @data = @_io.read_bytes_full
+      self
+    end
+    attr_reader :data
   end
 
   ##
-  # @see https://tech.ebu.ch/docs/tech/tech3285s5.pdf Source
-  class AxmlChunkType < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  # required for all non-PCM formats
+  # (`w_format_tag != w_format_tag_type::pcm` or `not is_basic_pcm` in
+  # `format_chunk_type` context)
+  class FactChunkType < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @num_samples_per_channel = @_io.read_u4le
+      self
+    end
+    attr_reader :num_samples_per_channel
+  end
+  class FormatChunkType < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @w_format_tag = Kaitai::Struct::Stream::resolve_enum(Wav::W_FORMAT_TAG_TYPE, @_io.read_u2le)
+      @n_channels = @_io.read_u2le
+      @n_samples_per_sec = @_io.read_u4le
+      @n_avg_bytes_per_sec = @_io.read_u4le
+      @n_block_align = @_io.read_u2le
+      @w_bits_per_sample = @_io.read_u2le
+      if !(is_basic_pcm)
+        @cb_size = @_io.read_u2le
+      end
+      if is_cb_size_meaningful
+        @w_valid_bits_per_sample = @_io.read_u2le
+      end
+      if is_extensible
+        @channel_mask_and_subformat = ChannelMaskAndSubformatType.new(@_io, self, @_root)
+      end
+      self
+    end
+    def is_basic_float
+      return @is_basic_float unless @is_basic_float.nil?
+      @is_basic_float = w_format_tag == :w_format_tag_type_ieee_float
+      @is_basic_float
+    end
+    def is_basic_pcm
+      return @is_basic_pcm unless @is_basic_pcm.nil?
+      @is_basic_pcm = w_format_tag == :w_format_tag_type_pcm
+      @is_basic_pcm
+    end
+    def is_cb_size_meaningful
+      return @is_cb_size_meaningful unless @is_cb_size_meaningful.nil?
+      @is_cb_size_meaningful =  ((!(is_basic_pcm)) && (cb_size != 0)) 
+      @is_cb_size_meaningful
+    end
+    def is_extensible
+      return @is_extensible unless @is_extensible.nil?
+      @is_extensible = w_format_tag == :w_format_tag_type_extensible
+      @is_extensible
+    end
+    attr_reader :w_format_tag
+    attr_reader :n_channels
+    attr_reader :n_samples_per_sec
+    attr_reader :n_avg_bytes_per_sec
+    attr_reader :n_block_align
+    attr_reader :w_bits_per_sample
+    attr_reader :cb_size
+    attr_reader :w_valid_bits_per_sample
+    attr_reader :channel_mask_and_subformat
+  end
+  class GuidType < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @data1 = @_io.read_u4le
+      @data2 = @_io.read_u2le
+      @data3 = @_io.read_u2le
+      @data4 = @_io.read_u4be
+      @data4a = @_io.read_u4be
+      self
+    end
+    attr_reader :data1
+    attr_reader :data2
+    attr_reader :data3
+    attr_reader :data4
+    attr_reader :data4a
+  end
+  class InfoChunkType < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @chunk = Riff::Chunk.new(@_io)
+      self
+    end
+    def chunk_data
+      return @chunk_data unless @chunk_data.nil?
+      io = chunk.data_slot._io
+      _pos = io.pos
+      io.seek(0)
+      @chunk_data = (io.read_bytes_term(0, false, true, true)).force_encoding("ASCII").encode('UTF-8')
+      io.seek(_pos)
+      @chunk_data
+    end
+    attr_reader :chunk
+  end
+
+  ##
+  # @see https://en.wikipedia.org/wiki/IXML Source
+  class IxmlChunkType < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -688,93 +703,110 @@ class Wav < Kaitai::Struct::Struct
     end
     attr_reader :data
   end
-  class ChunkType < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  class ListChunkType < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @chunk = Riff::Chunk.new(@_io, self, @_root)
+      @parent_chunk_data = Riff::ParentChunkData.new(@_io)
       self
     end
-    def chunk_id
-      return @chunk_id unless @chunk_id.nil?
-      @chunk_id = Kaitai::Struct::Stream::resolve_enum(Wav::FOURCC, chunk.id)
-      @chunk_id
+    def form_type
+      return @form_type unless @form_type.nil?
+      @form_type = Kaitai::Struct::Stream::resolve_enum(Wav::FOURCC, parent_chunk_data.form_type)
+      @form_type
     end
-    def chunk_data
-      return @chunk_data unless @chunk_data.nil?
+    def subchunks
+      return @subchunks unless @subchunks.nil?
+      io = parent_chunk_data.subchunks_slot._io
+      _pos = io.pos
+      io.seek(0)
+      @subchunks = []
+      i = 0
+      while not io.eof?
+        case form_type
+        when :fourcc_info
+          @subchunks << InfoChunkType.new(io, self, @_root)
+        end
+        i += 1
+      end
+      io.seek(_pos)
+      @subchunks
+    end
+    attr_reader :parent_chunk_data
+  end
+  class PmxChunkType < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @data = (@_io.read_bytes_full).force_encoding("UTF-8")
+      self
+    end
+
+    ##
+    # XMP data
+    # @see https://github.com/adobe/XMP-Toolkit-SDK/blob/v2022.06/docs/XMPSpecificationPart3.pdf Source
+    attr_reader :data
+  end
+  class SampleType < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @sample = @_io.read_u2le
+      self
+    end
+    attr_reader :sample
+  end
+  class SamplesType < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @samples = @_io.read_u4le
+      self
+    end
+    attr_reader :samples
+  end
+  def chunk_id
+    return @chunk_id unless @chunk_id.nil?
+    @chunk_id = Kaitai::Struct::Stream::resolve_enum(FOURCC, chunk.id)
+    @chunk_id
+  end
+  def form_type
+    return @form_type unless @form_type.nil?
+    @form_type = Kaitai::Struct::Stream::resolve_enum(FOURCC, parent_chunk_data.form_type)
+    @form_type
+  end
+  def is_form_type_wave
+    return @is_form_type_wave unless @is_form_type_wave.nil?
+    @is_form_type_wave =  ((is_riff_chunk) && (form_type == :fourcc_wave)) 
+    @is_form_type_wave
+  end
+  def is_riff_chunk
+    return @is_riff_chunk unless @is_riff_chunk.nil?
+    @is_riff_chunk = chunk_id == :fourcc_riff
+    @is_riff_chunk
+  end
+  def parent_chunk_data
+    return @parent_chunk_data unless @parent_chunk_data.nil?
+    if is_riff_chunk
       io = chunk.data_slot._io
       _pos = io.pos
       io.seek(0)
-      case chunk_id
-      when :fourcc_fact
-        @chunk_data = FactChunkType.new(io, self, @_root)
-      when :fourcc_list
-        @chunk_data = ListChunkType.new(io, self, @_root)
-      when :fourcc_fmt
-        @chunk_data = FormatChunkType.new(io, self, @_root)
-      when :fourcc_afsp
-        @chunk_data = AfspChunkType.new(io, self, @_root)
-      when :fourcc_bext
-        @chunk_data = BextChunkType.new(io, self, @_root)
-      when :fourcc_cue
-        @chunk_data = CueChunkType.new(io, self, @_root)
-      when :fourcc_ixml
-        @chunk_data = IxmlChunkType.new(io, self, @_root)
-      when :fourcc_pmx
-        @chunk_data = PmxChunkType.new(io, self, @_root)
-      when :fourcc_axml
-        @chunk_data = AxmlChunkType.new(io, self, @_root)
-      when :fourcc_data
-        @chunk_data = DataChunkType.new(io, self, @_root)
-      end
+      @parent_chunk_data = Riff::ParentChunkData.new(io)
       io.seek(_pos)
-      @chunk_data
     end
-    attr_reader :chunk
-  end
-
-  ##
-  # @see https://en.wikipedia.org/wiki/Broadcast_Wave_Format Source
-  class BextChunkType < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @description = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(256), 0, false)).force_encoding("ASCII")
-      @originator = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(32), 0, false)).force_encoding("ASCII")
-      @originator_reference = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(32), 0, false)).force_encoding("ASCII")
-      @origination_date = (@_io.read_bytes(10)).force_encoding("ASCII")
-      @origination_time = (@_io.read_bytes(8)).force_encoding("ASCII")
-      @time_reference_low = @_io.read_u4le
-      @time_reference_high = @_io.read_u4le
-      @version = @_io.read_u2le
-      @umid = @_io.read_bytes(64)
-      @loudness_value = @_io.read_u2le
-      @loudness_range = @_io.read_u2le
-      @max_true_peak_level = @_io.read_u2le
-      @max_momentary_loudness = @_io.read_u2le
-      @max_short_term_loudness = @_io.read_u2le
-      self
-    end
-    attr_reader :description
-    attr_reader :originator
-    attr_reader :originator_reference
-    attr_reader :origination_date
-    attr_reader :origination_time
-    attr_reader :time_reference_low
-    attr_reader :time_reference_high
-    attr_reader :version
-    attr_reader :umid
-    attr_reader :loudness_value
-    attr_reader :loudness_range
-    attr_reader :max_true_peak_level
-    attr_reader :max_momentary_loudness
-    attr_reader :max_short_term_loudness
+    @parent_chunk_data
   end
   def subchunks
     return @subchunks unless @subchunks.nil?
@@ -791,37 +823,6 @@ class Wav < Kaitai::Struct::Struct
       io.seek(_pos)
     end
     @subchunks
-  end
-  def parent_chunk_data
-    return @parent_chunk_data unless @parent_chunk_data.nil?
-    if is_riff_chunk
-      io = chunk.data_slot._io
-      _pos = io.pos
-      io.seek(0)
-      @parent_chunk_data = Riff::ParentChunkData.new(io, self, @_root)
-      io.seek(_pos)
-    end
-    @parent_chunk_data
-  end
-  def is_form_type_wave
-    return @is_form_type_wave unless @is_form_type_wave.nil?
-    @is_form_type_wave =  ((is_riff_chunk) && (form_type == :fourcc_wave)) 
-    @is_form_type_wave
-  end
-  def is_riff_chunk
-    return @is_riff_chunk unless @is_riff_chunk.nil?
-    @is_riff_chunk = chunk_id == :fourcc_riff
-    @is_riff_chunk
-  end
-  def chunk_id
-    return @chunk_id unless @chunk_id.nil?
-    @chunk_id = Kaitai::Struct::Stream::resolve_enum(FOURCC, chunk.id)
-    @chunk_id
-  end
-  def form_type
-    return @form_type unless @form_type.nil?
-    @form_type = Kaitai::Struct::Stream::resolve_enum(FOURCC, parent_chunk_data.form_type)
-    @form_type
   end
   attr_reader :chunk
 end

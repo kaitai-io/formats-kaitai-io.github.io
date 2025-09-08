@@ -7,8 +7,9 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Arrays;
-import java.nio.charset.Charset;
 
 
 /**
@@ -204,39 +205,182 @@ public class Warcraft2Pud extends KaitaiStruct {
             }
         }
     }
-    public static class SectionStartingResource extends KaitaiStruct {
-        public static SectionStartingResource fromFile(String fileName) throws IOException {
-            return new SectionStartingResource(new ByteBufferKaitaiStream(fileName));
+
+    public void _fetchInstances() {
+        for (int i = 0; i < this.sections.size(); i++) {
+            this.sections.get(((Number) (i)).intValue())._fetchInstances();
+        }
+    }
+    public static class Section extends KaitaiStruct {
+        public static Section fromFile(String fileName) throws IOException {
+            return new Section(new ByteBufferKaitaiStream(fileName));
         }
 
-        public SectionStartingResource(KaitaiStream _io) {
+        public Section(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public SectionStartingResource(KaitaiStream _io, Warcraft2Pud.Section _parent) {
+        public Section(KaitaiStream _io, Warcraft2Pud _parent) {
             this(_io, _parent, null);
         }
 
-        public SectionStartingResource(KaitaiStream _io, Warcraft2Pud.Section _parent, Warcraft2Pud _root) {
+        public Section(KaitaiStream _io, Warcraft2Pud _parent, Warcraft2Pud _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.resourcesByPlayer = new ArrayList<Integer>();
-            {
-                int i = 0;
-                while (!this._io.isEof()) {
-                    this.resourcesByPlayer.add(this._io.readU2le());
-                    i++;
-                }
+            this.name = new String(this._io.readBytes(4), StandardCharsets.US_ASCII);
+            this.size = this._io.readU4le();
+            switch (name()) {
+            case "DIM ": {
+                KaitaiStream _io_body = this._io.substream(size());
+                this.body = new SectionDim(_io_body, this, _root);
+                break;
+            }
+            case "ERA ": {
+                KaitaiStream _io_body = this._io.substream(size());
+                this.body = new SectionEra(_io_body, this, _root);
+                break;
+            }
+            case "ERAX": {
+                KaitaiStream _io_body = this._io.substream(size());
+                this.body = new SectionEra(_io_body, this, _root);
+                break;
+            }
+            case "OWNR": {
+                KaitaiStream _io_body = this._io.substream(size());
+                this.body = new SectionOwnr(_io_body, this, _root);
+                break;
+            }
+            case "SGLD": {
+                KaitaiStream _io_body = this._io.substream(size());
+                this.body = new SectionStartingResource(_io_body, this, _root);
+                break;
+            }
+            case "SLBR": {
+                KaitaiStream _io_body = this._io.substream(size());
+                this.body = new SectionStartingResource(_io_body, this, _root);
+                break;
+            }
+            case "SOIL": {
+                KaitaiStream _io_body = this._io.substream(size());
+                this.body = new SectionStartingResource(_io_body, this, _root);
+                break;
+            }
+            case "TYPE": {
+                KaitaiStream _io_body = this._io.substream(size());
+                this.body = new SectionType(_io_body, this, _root);
+                break;
+            }
+            case "UNIT": {
+                KaitaiStream _io_body = this._io.substream(size());
+                this.body = new SectionUnit(_io_body, this, _root);
+                break;
+            }
+            case "VER ": {
+                KaitaiStream _io_body = this._io.substream(size());
+                this.body = new SectionVer(_io_body, this, _root);
+                break;
+            }
+            default: {
+                this.body = this._io.readBytes(size());
+                break;
+            }
             }
         }
-        private ArrayList<Integer> resourcesByPlayer;
+
+        public void _fetchInstances() {
+            switch (name()) {
+            case "DIM ": {
+                ((SectionDim) (this.body))._fetchInstances();
+                break;
+            }
+            case "ERA ": {
+                ((SectionEra) (this.body))._fetchInstances();
+                break;
+            }
+            case "ERAX": {
+                ((SectionEra) (this.body))._fetchInstances();
+                break;
+            }
+            case "OWNR": {
+                ((SectionOwnr) (this.body))._fetchInstances();
+                break;
+            }
+            case "SGLD": {
+                ((SectionStartingResource) (this.body))._fetchInstances();
+                break;
+            }
+            case "SLBR": {
+                ((SectionStartingResource) (this.body))._fetchInstances();
+                break;
+            }
+            case "SOIL": {
+                ((SectionStartingResource) (this.body))._fetchInstances();
+                break;
+            }
+            case "TYPE": {
+                ((SectionType) (this.body))._fetchInstances();
+                break;
+            }
+            case "UNIT": {
+                ((SectionUnit) (this.body))._fetchInstances();
+                break;
+            }
+            case "VER ": {
+                ((SectionVer) (this.body))._fetchInstances();
+                break;
+            }
+            default: {
+                break;
+            }
+            }
+        }
+        private String name;
+        private long size;
+        private Object body;
+        private Warcraft2Pud _root;
+        private Warcraft2Pud _parent;
+        public String name() { return name; }
+        public long size() { return size; }
+        public Object body() { return body; }
+        public Warcraft2Pud _root() { return _root; }
+        public Warcraft2Pud _parent() { return _parent; }
+    }
+    public static class SectionDim extends KaitaiStruct {
+        public static SectionDim fromFile(String fileName) throws IOException {
+            return new SectionDim(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public SectionDim(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public SectionDim(KaitaiStream _io, Warcraft2Pud.Section _parent) {
+            this(_io, _parent, null);
+        }
+
+        public SectionDim(KaitaiStream _io, Warcraft2Pud.Section _parent, Warcraft2Pud _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.x = this._io.readU2le();
+            this.y = this._io.readU2le();
+        }
+
+        public void _fetchInstances() {
+        }
+        private int x;
+        private int y;
         private Warcraft2Pud _root;
         private Warcraft2Pud.Section _parent;
-        public ArrayList<Integer> resourcesByPlayer() { return resourcesByPlayer; }
+        public int x() { return x; }
+        public int y() { return y; }
         public Warcraft2Pud _root() { return _root; }
         public Warcraft2Pud.Section _parent() { return _parent; }
     }
@@ -266,6 +410,9 @@ public class Warcraft2Pud extends KaitaiStruct {
         private void _read() {
             this.terrain = Warcraft2Pud.TerrainType.byId(this._io.readU2le());
         }
+
+        public void _fetchInstances() {
+        }
         private TerrainType terrain;
         private Warcraft2Pud _root;
         private Warcraft2Pud.Section _parent;
@@ -275,66 +422,87 @@ public class Warcraft2Pud extends KaitaiStruct {
     }
 
     /**
-     * Section that specifies format version.
+     * Section that specifies who controls each player.
      */
-    public static class SectionVer extends KaitaiStruct {
-        public static SectionVer fromFile(String fileName) throws IOException {
-            return new SectionVer(new ByteBufferKaitaiStream(fileName));
+    public static class SectionOwnr extends KaitaiStruct {
+        public static SectionOwnr fromFile(String fileName) throws IOException {
+            return new SectionOwnr(new ByteBufferKaitaiStream(fileName));
         }
 
-        public SectionVer(KaitaiStream _io) {
+        public SectionOwnr(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public SectionVer(KaitaiStream _io, Warcraft2Pud.Section _parent) {
+        public SectionOwnr(KaitaiStream _io, Warcraft2Pud.Section _parent) {
             this(_io, _parent, null);
         }
 
-        public SectionVer(KaitaiStream _io, Warcraft2Pud.Section _parent, Warcraft2Pud _root) {
+        public SectionOwnr(KaitaiStream _io, Warcraft2Pud.Section _parent, Warcraft2Pud _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.version = this._io.readU2le();
+            this.controllerByPlayer = new ArrayList<Controller>();
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.controllerByPlayer.add(Warcraft2Pud.Controller.byId(this._io.readU1()));
+                    i++;
+                }
+            }
         }
-        private int version;
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.controllerByPlayer.size(); i++) {
+            }
+        }
+        private List<Controller> controllerByPlayer;
         private Warcraft2Pud _root;
         private Warcraft2Pud.Section _parent;
-        public int version() { return version; }
+        public List<Controller> controllerByPlayer() { return controllerByPlayer; }
         public Warcraft2Pud _root() { return _root; }
         public Warcraft2Pud.Section _parent() { return _parent; }
     }
-    public static class SectionDim extends KaitaiStruct {
-        public static SectionDim fromFile(String fileName) throws IOException {
-            return new SectionDim(new ByteBufferKaitaiStream(fileName));
+    public static class SectionStartingResource extends KaitaiStruct {
+        public static SectionStartingResource fromFile(String fileName) throws IOException {
+            return new SectionStartingResource(new ByteBufferKaitaiStream(fileName));
         }
 
-        public SectionDim(KaitaiStream _io) {
+        public SectionStartingResource(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public SectionDim(KaitaiStream _io, Warcraft2Pud.Section _parent) {
+        public SectionStartingResource(KaitaiStream _io, Warcraft2Pud.Section _parent) {
             this(_io, _parent, null);
         }
 
-        public SectionDim(KaitaiStream _io, Warcraft2Pud.Section _parent, Warcraft2Pud _root) {
+        public SectionStartingResource(KaitaiStream _io, Warcraft2Pud.Section _parent, Warcraft2Pud _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.x = this._io.readU2le();
-            this.y = this._io.readU2le();
+            this.resourcesByPlayer = new ArrayList<Integer>();
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.resourcesByPlayer.add(this._io.readU2le());
+                    i++;
+                }
+            }
         }
-        private int x;
-        private int y;
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.resourcesByPlayer.size(); i++) {
+            }
+        }
+        private List<Integer> resourcesByPlayer;
         private Warcraft2Pud _root;
         private Warcraft2Pud.Section _parent;
-        public int x() { return x; }
-        public int y() { return y; }
+        public List<Integer> resourcesByPlayer() { return resourcesByPlayer; }
         public Warcraft2Pud _root() { return _root; }
         public Warcraft2Pud.Section _parent() { return _parent; }
     }
@@ -366,11 +534,14 @@ public class Warcraft2Pud extends KaitaiStruct {
         }
         private void _read() {
             this.magic = this._io.readBytes(10);
-            if (!(Arrays.equals(magic(), new byte[] { 87, 65, 82, 50, 32, 77, 65, 80, 0, 0 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 87, 65, 82, 50, 32, 77, 65, 80, 0, 0 }, magic(), _io(), "/types/section_type/seq/0");
+            if (!(Arrays.equals(this.magic, new byte[] { 87, 65, 82, 50, 32, 77, 65, 80, 0, 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 87, 65, 82, 50, 32, 77, 65, 80, 0, 0 }, this.magic, this._io, "/types/section_type/seq/0");
             }
             this.unused = this._io.readBytes(2);
             this.idTag = this._io.readU4le();
+        }
+
+        public void _fetchInstances() {
         }
         private byte[] magic;
         private byte[] unused;
@@ -420,152 +591,52 @@ public class Warcraft2Pud extends KaitaiStruct {
                 }
             }
         }
-        private ArrayList<Unit> units;
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.units.size(); i++) {
+                this.units.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private List<Unit> units;
         private Warcraft2Pud _root;
         private Warcraft2Pud.Section _parent;
-        public ArrayList<Unit> units() { return units; }
+        public List<Unit> units() { return units; }
         public Warcraft2Pud _root() { return _root; }
         public Warcraft2Pud.Section _parent() { return _parent; }
     }
-    public static class Section extends KaitaiStruct {
-        public static Section fromFile(String fileName) throws IOException {
-            return new Section(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Section(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Section(KaitaiStream _io, Warcraft2Pud _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Section(KaitaiStream _io, Warcraft2Pud _parent, Warcraft2Pud _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.name = new String(this._io.readBytes(4), Charset.forName("ASCII"));
-            this.size = this._io.readU4le();
-            switch (name()) {
-            case "SLBR": {
-                this._raw_body = this._io.readBytes(size());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new SectionStartingResource(_io__raw_body, this, _root);
-                break;
-            }
-            case "ERAX": {
-                this._raw_body = this._io.readBytes(size());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new SectionEra(_io__raw_body, this, _root);
-                break;
-            }
-            case "OWNR": {
-                this._raw_body = this._io.readBytes(size());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new SectionOwnr(_io__raw_body, this, _root);
-                break;
-            }
-            case "ERA ": {
-                this._raw_body = this._io.readBytes(size());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new SectionEra(_io__raw_body, this, _root);
-                break;
-            }
-            case "SGLD": {
-                this._raw_body = this._io.readBytes(size());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new SectionStartingResource(_io__raw_body, this, _root);
-                break;
-            }
-            case "VER ": {
-                this._raw_body = this._io.readBytes(size());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new SectionVer(_io__raw_body, this, _root);
-                break;
-            }
-            case "SOIL": {
-                this._raw_body = this._io.readBytes(size());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new SectionStartingResource(_io__raw_body, this, _root);
-                break;
-            }
-            case "UNIT": {
-                this._raw_body = this._io.readBytes(size());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new SectionUnit(_io__raw_body, this, _root);
-                break;
-            }
-            case "DIM ": {
-                this._raw_body = this._io.readBytes(size());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new SectionDim(_io__raw_body, this, _root);
-                break;
-            }
-            case "TYPE": {
-                this._raw_body = this._io.readBytes(size());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new SectionType(_io__raw_body, this, _root);
-                break;
-            }
-            default: {
-                this.body = this._io.readBytes(size());
-                break;
-            }
-            }
-        }
-        private String name;
-        private long size;
-        private Object body;
-        private Warcraft2Pud _root;
-        private Warcraft2Pud _parent;
-        private byte[] _raw_body;
-        public String name() { return name; }
-        public long size() { return size; }
-        public Object body() { return body; }
-        public Warcraft2Pud _root() { return _root; }
-        public Warcraft2Pud _parent() { return _parent; }
-        public byte[] _raw_body() { return _raw_body; }
-    }
 
     /**
-     * Section that specifies who controls each player.
+     * Section that specifies format version.
      */
-    public static class SectionOwnr extends KaitaiStruct {
-        public static SectionOwnr fromFile(String fileName) throws IOException {
-            return new SectionOwnr(new ByteBufferKaitaiStream(fileName));
+    public static class SectionVer extends KaitaiStruct {
+        public static SectionVer fromFile(String fileName) throws IOException {
+            return new SectionVer(new ByteBufferKaitaiStream(fileName));
         }
 
-        public SectionOwnr(KaitaiStream _io) {
+        public SectionVer(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public SectionOwnr(KaitaiStream _io, Warcraft2Pud.Section _parent) {
+        public SectionVer(KaitaiStream _io, Warcraft2Pud.Section _parent) {
             this(_io, _parent, null);
         }
 
-        public SectionOwnr(KaitaiStream _io, Warcraft2Pud.Section _parent, Warcraft2Pud _root) {
+        public SectionVer(KaitaiStream _io, Warcraft2Pud.Section _parent, Warcraft2Pud _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.controllerByPlayer = new ArrayList<Controller>();
-            {
-                int i = 0;
-                while (!this._io.isEof()) {
-                    this.controllerByPlayer.add(Warcraft2Pud.Controller.byId(this._io.readU1()));
-                    i++;
-                }
-            }
+            this.version = this._io.readU2le();
         }
-        private ArrayList<Controller> controllerByPlayer;
+
+        public void _fetchInstances() {
+        }
+        private int version;
         private Warcraft2Pud _root;
         private Warcraft2Pud.Section _parent;
-        public ArrayList<Controller> controllerByPlayer() { return controllerByPlayer; }
+        public int version() { return version; }
         public Warcraft2Pud _root() { return _root; }
         public Warcraft2Pud.Section _parent() { return _parent; }
     }
@@ -595,13 +666,15 @@ public class Warcraft2Pud extends KaitaiStruct {
             this.owner = this._io.readU1();
             this.options = this._io.readU2le();
         }
+
+        public void _fetchInstances() {
+        }
         private Integer resource;
         public Integer resource() {
             if (this.resource != null)
                 return this.resource;
             if ( ((uType() == Warcraft2Pud.UnitType.GOLD_MINE) || (uType() == Warcraft2Pud.UnitType.HUMAN_OIL_WELL) || (uType() == Warcraft2Pud.UnitType.ORC_OIL_WELL) || (uType() == Warcraft2Pud.UnitType.OIL_PATCH)) ) {
-                int _tmp = (int) ((options() * 2500));
-                this.resource = _tmp;
+                this.resource = ((Number) (options() * 2500)).intValue();
             }
             return this.resource;
         }
@@ -624,10 +697,10 @@ public class Warcraft2Pud extends KaitaiStruct {
         public Warcraft2Pud _root() { return _root; }
         public Warcraft2Pud.SectionUnit _parent() { return _parent; }
     }
-    private ArrayList<Section> sections;
+    private List<Section> sections;
     private Warcraft2Pud _root;
     private KaitaiStruct _parent;
-    public ArrayList<Section> sections() { return sections; }
+    public List<Section> sections() { return sections; }
     public Warcraft2Pud _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

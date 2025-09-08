@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Encode;
 
 ########################################################################
@@ -25,7 +25,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -43,7 +43,7 @@ sub _read {
     $self->{current_restore_point} = $self->{_io}->read_u8le();
     $self->{argc} = $self->{_io}->read_u4le();
     $self->{padding2} = $self->{_io}->read_bytes(12);
-    $self->{argv} = ();
+    $self->{argv} = [];
     my $n_argv = $self->argc();
     for (my $i = 0; $i < $n_argv; $i++) {
         push @{$self->{argv}}, Encode::decode("UTF-8", $self->{_io}->read_bytes_term(10, 0, 1, 1));

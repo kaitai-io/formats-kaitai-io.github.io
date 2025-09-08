@@ -8,17 +8,17 @@ digraph {
 		gpt_partition_table__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 		</TABLE>>];
-		gpt_partition_table__inst__sector_size [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-			<TR><TD>sector_size</TD><TD>512</TD></TR>
+		gpt_partition_table__inst__backup [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="backup_pos">_io.size - _root.sector_size</TD><TD PORT="backup_size">92</TD><TD>PartitionHeader</TD><TD PORT="backup_type">backup</TD></TR>
 		</TABLE>>];
 		gpt_partition_table__inst__primary [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 			<TR><TD PORT="primary_pos">_root.sector_size</TD><TD PORT="primary_size">92</TD><TD>PartitionHeader</TD><TD PORT="primary_type">primary</TD></TR>
 		</TABLE>>];
-		gpt_partition_table__inst__backup [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-			<TR><TD PORT="backup_pos">(_io.size - _root.sector_size)</TD><TD PORT="backup_size">92</TD><TD>PartitionHeader</TD><TD PORT="backup_type">backup</TD></TR>
+		gpt_partition_table__inst__sector_size [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>sector_size</TD><TD>512</TD></TR>
 		</TABLE>>];
 		subgraph cluster__partition_entry {
 			label="GptPartitionTable::PartitionEntry";
@@ -40,7 +40,7 @@ digraph {
 
 			partition_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="signature_pos">0</TD><TD PORT="signature_size">8</TD><TD></TD><TD PORT="signature_type">signature</TD></TR>
+				<TR><TD PORT="signature_pos">0</TD><TD PORT="signature_size">8</TD><TD>45 46 49 20 50 41 52 54</TD><TD PORT="signature_type">signature</TD></TR>
 				<TR><TD PORT="revision_pos">8</TD><TD PORT="revision_size">4</TD><TD>u4le</TD><TD PORT="revision_type">revision</TD></TR>
 				<TR><TD PORT="header_size_pos">12</TD><TD PORT="header_size_size">4</TD><TD>u4le</TD><TD PORT="header_size_type">header_size</TD></TR>
 				<TR><TD PORT="crc32_header_pos">16</TD><TD PORT="crc32_header_size">4</TD><TD>u4le</TD><TD PORT="crc32_header_type">crc32_header</TD></TR>
@@ -57,15 +57,15 @@ digraph {
 			</TABLE>>];
 			partition_header__inst__entries [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="entries_pos">(entries_start * _root.sector_size)</TD><TD PORT="entries_size">entries_size</TD><TD>PartitionEntry</TD><TD PORT="entries_type">entries</TD></TR>
+				<TR><TD PORT="entries_pos">entries_start * _root.sector_size</TD><TD PORT="entries_size">entries_size</TD><TD>PartitionEntry</TD><TD PORT="entries_type">entries</TD></TR>
 				<TR><TD COLSPAN="4" PORT="entries__repeat">repeat entries_count times</TD></TR>
 			</TABLE>>];
 		}
 	}
-	gpt_partition_table__inst__sector_size:sector_size_type -> gpt_partition_table__inst__primary:primary_pos [color="#404040"];
-	gpt_partition_table__inst__primary:primary_type -> partition_header__seq [style=bold];
 	gpt_partition_table__inst__sector_size:sector_size_type -> gpt_partition_table__inst__backup:backup_pos [color="#404040"];
 	gpt_partition_table__inst__backup:backup_type -> partition_header__seq [style=bold];
+	gpt_partition_table__inst__sector_size:sector_size_type -> gpt_partition_table__inst__primary:primary_pos [color="#404040"];
+	gpt_partition_table__inst__primary:primary_type -> partition_header__seq [style=bold];
 	partition_header__seq:entries_start_type -> partition_header__inst__entries:entries_pos [color="#404040"];
 	gpt_partition_table__inst__sector_size:sector_size_type -> partition_header__inst__entries:entries_pos [color="#404040"];
 	partition_header__seq:entries_size_type -> partition_header__inst__entries:entries_size [color="#404040"];

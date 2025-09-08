@@ -16,6 +16,10 @@ type
     user_process = 7
     dead_process = 8
     accounting = 9
+  AixUtmp_ExitStatus* = ref object of KaitaiStruct
+    `terminationCode`*: int16
+    `exitCode`*: int16
+    `parent`*: AixUtmp_Record
   AixUtmp_Record* = ref object of KaitaiStruct
     `user`*: string
     `inittabId`*: string
@@ -29,14 +33,10 @@ type
     `reservedA`*: seq[byte]
     `reservedV`*: seq[byte]
     `parent`*: AixUtmp
-  AixUtmp_ExitStatus* = ref object of KaitaiStruct
-    `terminationCode`*: int16
-    `exitCode`*: int16
-    `parent`*: AixUtmp_Record
 
 proc read*(_: typedesc[AixUtmp], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): AixUtmp
-proc read*(_: typedesc[AixUtmp_Record], io: KaitaiStream, root: KaitaiStruct, parent: AixUtmp): AixUtmp_Record
 proc read*(_: typedesc[AixUtmp_ExitStatus], io: KaitaiStream, root: KaitaiStruct, parent: AixUtmp_Record): AixUtmp_ExitStatus
+proc read*(_: typedesc[AixUtmp_Record], io: KaitaiStream, root: KaitaiStruct, parent: AixUtmp): AixUtmp_Record
 
 
 
@@ -62,6 +62,30 @@ proc read*(_: typedesc[AixUtmp], io: KaitaiStream, root: KaitaiStruct, parent: K
 proc fromFile*(_: typedesc[AixUtmp], filename: string): AixUtmp =
   AixUtmp.read(newKaitaiFileStream(filename), nil, nil)
 
+proc read*(_: typedesc[AixUtmp_ExitStatus], io: KaitaiStream, root: KaitaiStruct, parent: AixUtmp_Record): AixUtmp_ExitStatus =
+  template this: untyped = result
+  this = new(AixUtmp_ExitStatus)
+  let root = if root == nil: cast[AixUtmp](this) else: cast[AixUtmp](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+
+  ##[
+  process termination status
+  ]##
+  let terminationCodeExpr = this.io.readS2be()
+  this.terminationCode = terminationCodeExpr
+
+  ##[
+  process exit status
+  ]##
+  let exitCodeExpr = this.io.readS2be()
+  this.exitCode = exitCodeExpr
+
+proc fromFile*(_: typedesc[AixUtmp_ExitStatus], filename: string): AixUtmp_ExitStatus =
+  AixUtmp_ExitStatus.read(newKaitaiFileStream(filename), nil, nil)
+
 proc read*(_: typedesc[AixUtmp_Record], io: KaitaiStream, root: KaitaiStruct, parent: AixUtmp): AixUtmp_Record =
   template this: untyped = result
   this = new(AixUtmp_Record)
@@ -74,19 +98,19 @@ proc read*(_: typedesc[AixUtmp_Record], io: KaitaiStream, root: KaitaiStruct, pa
   ##[
   User login name
   ]##
-  let userExpr = encode(this.io.readBytes(int(256)), "ascii")
+  let userExpr = encode(this.io.readBytes(int(256)), "ASCII")
   this.user = userExpr
 
   ##[
   /etc/inittab id
   ]##
-  let inittabIdExpr = encode(this.io.readBytes(int(14)), "ascii")
+  let inittabIdExpr = encode(this.io.readBytes(int(14)), "ASCII")
   this.inittabId = inittabIdExpr
 
   ##[
   device name (console, lnxx)
   ]##
-  let deviceExpr = encode(this.io.readBytes(int(64)), "ascii")
+  let deviceExpr = encode(this.io.readBytes(int(64)), "ASCII")
   this.device = deviceExpr
 
   ##[
@@ -116,7 +140,7 @@ proc read*(_: typedesc[AixUtmp_Record], io: KaitaiStream, root: KaitaiStruct, pa
   ##[
   host name
   ]##
-  let hostnameExpr = encode(this.io.readBytes(int(256)), "ascii")
+  let hostnameExpr = encode(this.io.readBytes(int(256)), "ASCII")
   this.hostname = hostnameExpr
   let dblWordPadExpr = this.io.readS4be()
   this.dblWordPad = dblWordPadExpr
@@ -127,28 +151,4 @@ proc read*(_: typedesc[AixUtmp_Record], io: KaitaiStream, root: KaitaiStruct, pa
 
 proc fromFile*(_: typedesc[AixUtmp_Record], filename: string): AixUtmp_Record =
   AixUtmp_Record.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[AixUtmp_ExitStatus], io: KaitaiStream, root: KaitaiStruct, parent: AixUtmp_Record): AixUtmp_ExitStatus =
-  template this: untyped = result
-  this = new(AixUtmp_ExitStatus)
-  let root = if root == nil: cast[AixUtmp](this) else: cast[AixUtmp](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-
-  ##[
-  process termination status
-  ]##
-  let terminationCodeExpr = this.io.readS2be()
-  this.terminationCode = terminationCodeExpr
-
-  ##[
-  process exit status
-  ]##
-  let exitCodeExpr = this.io.readS2be()
-  this.exitCode = exitCodeExpr
-
-proc fromFile*(_: typedesc[AixUtmp_ExitStatus], filename: string): AixUtmp_ExitStatus =
-  AixUtmp_ExitStatus.read(newKaitaiFileStream(filename), nil, nil)
 

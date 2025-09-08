@@ -213,6 +213,11 @@ to 4.4.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="Allegro data file parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="Allegro data file parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -243,7 +248,17 @@ to 4.4.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="Allegro data file parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="Allegro data file parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="Allegro data file parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -313,7 +328,7 @@ to 4.4.</p>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">pack_magic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">AllegroDat</span><span class="p">.</span><span class="nf">PackEnum</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">())</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">dat_magic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
 <span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">dat_magic</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\065\076\076\046</span><span class="s2">&quot;</span><span class="p">)</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span><span class="w"> </span><span class="o">..</span><span class="w">  </span><span class="s2">&quot;</span><span class="se">\065\076\076\046</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s2">&quot;, but got &quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">dat_magic</span><span class="p">)</span>
+<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\065\076\076\046</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s2">&quot;, but got &quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">dat_magic</span><span class="p">)</span>
 <span class="w">  </span><span class="kr">end</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">num_objects</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">objects</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
@@ -323,32 +338,12 @@ to 4.4.</p>
 <span class="kr">end</span>
 
 
-<span class="c1">-- </span>
-<span class="c1">-- Simple monochrome monospaced font, 95 characters, 8x16 px</span>
-<span class="c1">-- characters.</span>
-<span class="nv">AllegroDat</span><span class="p">.</span><span class="py">DatFont16</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">AllegroDat</span><span class="p">.</span><span class="nc">DatFont16</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">AllegroDat</span><span class="p">.</span><span class="nc">DatFont16</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">chars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="w">  </span><span class="kr">for</span><span class="w"> </span><span class="nv">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">95</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="kr">do</span>
-<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">chars</span><span class="p">[</span><span class="nv">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
-<span class="w">  </span><span class="kr">end</span>
-<span class="kr">end</span>
-
-
 <span class="nv">AllegroDat</span><span class="p">.</span><span class="py">DatBitmap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
 <span class="kr">function</span><span class="w"> </span><span class="nc">AllegroDat</span><span class="p">.</span><span class="nc">DatBitmap</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
@@ -365,22 +360,104 @@ to 4.4.</p>
 <span class="kr">function</span><span class="w"> </span><span class="nc">AllegroDat</span><span class="p">.</span><span class="nc">DatFont</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
 <span class="kr">function</span><span class="w"> </span><span class="nc">AllegroDat</span><span class="p">.</span><span class="nc">DatFont</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">font_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_s2be</span><span class="p">()</span>
 <span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">font_size</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">AllegroDat</span><span class="p">.</span><span class="nf">DatFont8</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">AllegroDat</span><span class="p">.</span><span class="nf">DatFont39</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
 <span class="w">  </span><span class="kr">elseif</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">16</span><span class="w"> </span><span class="kr">then</span>
 <span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">AllegroDat</span><span class="p">.</span><span class="nf">DatFont16</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
-<span class="w">  </span><span class="kr">elseif</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">AllegroDat</span><span class="p">.</span><span class="nf">DatFont39</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">elseif</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">AllegroDat</span><span class="p">.</span><span class="nf">DatFont8</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
 <span class="w">  </span><span class="kr">end</span>
 <span class="kr">end</span>
 
+
+<span class="c1">-- </span>
+<span class="c1">-- Simple monochrome monospaced font, 95 characters, 8x16 px</span>
+<span class="c1">-- characters.</span>
+<span class="nv">AllegroDat</span><span class="p">.</span><span class="py">DatFont16</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">AllegroDat</span><span class="p">.</span><span class="nc">DatFont16</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">AllegroDat</span><span class="p">.</span><span class="nc">DatFont16</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">chars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="w">  </span><span class="kr">for</span><span class="w"> </span><span class="nv">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">95</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="kr">do</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">chars</span><span class="p">[</span><span class="nv">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- New bitmap font format introduced since Allegro 3.9: allows</span>
+<span class="c1">-- flexible designation of character ranges, 8-bit colored</span>
+<span class="c1">-- characters, etc.</span>
+<span class="nv">AllegroDat</span><span class="p">.</span><span class="py">DatFont39</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">AllegroDat</span><span class="p">.</span><span class="nc">DatFont39</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">AllegroDat</span><span class="p">.</span><span class="nc">DatFont39</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">num_ranges</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_s2be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">ranges</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="w">  </span><span class="kr">for</span><span class="w"> </span><span class="nv">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">num_ranges</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="kr">do</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">ranges</span><span class="p">[</span><span class="nv">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">AllegroDat</span><span class="p">.</span><span class="py">DatFont39</span><span class="p">.</span><span class="nf">Range</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="kr">end</span>
+
+
+<span class="nv">AllegroDat</span><span class="p">.</span><span class="py">DatFont39</span><span class="p">.</span><span class="py">FontChar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">AllegroDat</span><span class="p">.</span><span class="nc">DatFont39</span><span class="p">.</span><span class="nc">FontChar</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">AllegroDat</span><span class="p">.</span><span class="nc">DatFont39</span><span class="p">.</span><span class="nc">FontChar</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">width</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">height</span><span class="p">)</span>
+<span class="kr">end</span>
+
+
+<span class="nv">AllegroDat</span><span class="p">.</span><span class="py">DatFont39</span><span class="p">.</span><span class="py">Range</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">AllegroDat</span><span class="p">.</span><span class="nc">DatFont39</span><span class="p">.</span><span class="nc">Range</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">AllegroDat</span><span class="p">.</span><span class="nc">DatFont39</span><span class="p">.</span><span class="nc">Range</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">mono</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">start_char</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">end_char</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">chars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="w">  </span><span class="kr">for</span><span class="w"> </span><span class="nv">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">end_char</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">start_char</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="kr">do</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">chars</span><span class="p">[</span><span class="nv">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">AllegroDat</span><span class="p">.</span><span class="py">DatFont39</span><span class="p">.</span><span class="nf">FontChar</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- First character in range.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Last character in range (inclusive).</span>
 
 <span class="c1">-- </span>
 <span class="c1">-- Simple monochrome monospaced font, 95 characters, 8x8 px</span>
@@ -390,7 +467,7 @@ to 4.4.</p>
 <span class="kr">function</span><span class="w"> </span><span class="nc">AllegroDat</span><span class="p">.</span><span class="nc">DatFont8</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
@@ -407,7 +484,7 @@ to 4.4.</p>
 <span class="kr">function</span><span class="w"> </span><span class="nc">AllegroDat</span><span class="p">.</span><span class="nc">DatObject</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
@@ -429,14 +506,14 @@ to 4.4.</p>
 <span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_compressed</span><span class="p">)</span>
 <span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">KaitaiStream</span><span class="p">(</span><span class="nf">stringstream</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_body</span><span class="p">))</span>
 <span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">AllegroDat</span><span class="p">.</span><span class="nf">DatBitmap</span><span class="p">(</span><span class="nv">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
-<span class="w">  </span><span class="kr">elseif</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;RLE &quot;</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_compressed</span><span class="p">)</span>
-<span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">KaitaiStream</span><span class="p">(</span><span class="nf">stringstream</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_body</span><span class="p">))</span>
-<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">AllegroDat</span><span class="p">.</span><span class="nf">DatRleSprite</span><span class="p">(</span><span class="nv">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
 <span class="w">  </span><span class="kr">elseif</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;FONT&quot;</span><span class="w"> </span><span class="kr">then</span>
 <span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_compressed</span><span class="p">)</span>
 <span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">KaitaiStream</span><span class="p">(</span><span class="nf">stringstream</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_body</span><span class="p">))</span>
 <span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">AllegroDat</span><span class="p">.</span><span class="nf">DatFont</span><span class="p">(</span><span class="nv">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">elseif</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;RLE &quot;</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_compressed</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">KaitaiStream</span><span class="p">(</span><span class="nf">stringstream</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_body</span><span class="p">))</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">AllegroDat</span><span class="p">.</span><span class="nf">DatRleSprite</span><span class="p">(</span><span class="nv">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
 <span class="w">  </span><span class="kr">else</span>
 <span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_compressed</span><span class="p">)</span>
 <span class="w">  </span><span class="kr">end</span>
@@ -453,65 +530,21 @@ to 4.4.</p>
 <span class="kr">end</span>
 
 
-<span class="c1">-- </span>
-<span class="c1">-- New bitmap font format introduced since Allegro 3.9: allows</span>
-<span class="c1">-- flexible designation of character ranges, 8-bit colored</span>
-<span class="c1">-- characters, etc.</span>
-<span class="nv">AllegroDat</span><span class="p">.</span><span class="py">DatFont39</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
+<span class="nv">AllegroDat</span><span class="p">.</span><span class="py">DatRleSprite</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
-<span class="kr">function</span><span class="w"> </span><span class="nc">AllegroDat</span><span class="p">.</span><span class="nc">DatFont39</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">AllegroDat</span><span class="p">.</span><span class="nc">DatRleSprite</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
-<span class="kr">function</span><span class="w"> </span><span class="nc">AllegroDat</span><span class="p">.</span><span class="nc">DatFont39</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">num_ranges</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_s2be</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">ranges</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="w">  </span><span class="kr">for</span><span class="w"> </span><span class="nv">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">num_ranges</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="kr">do</span>
-<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">ranges</span><span class="p">[</span><span class="nv">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">AllegroDat</span><span class="p">.</span><span class="py">DatFont39</span><span class="p">.</span><span class="nf">Range</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
-<span class="w">  </span><span class="kr">end</span>
-<span class="kr">end</span>
-
-
-<span class="nv">AllegroDat</span><span class="p">.</span><span class="py">DatFont39</span><span class="p">.</span><span class="py">Range</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">AllegroDat</span><span class="p">.</span><span class="nc">DatFont39</span><span class="p">.</span><span class="nc">Range</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">AllegroDat</span><span class="p">.</span><span class="nc">DatFont39</span><span class="p">.</span><span class="nc">Range</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">mono</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">start_char</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">end_char</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">chars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="w">  </span><span class="kr">for</span><span class="w"> </span><span class="nv">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">end_char</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">start_char</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="kr">do</span>
-<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">chars</span><span class="p">[</span><span class="nv">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">AllegroDat</span><span class="p">.</span><span class="py">DatFont39</span><span class="p">.</span><span class="nf">FontChar</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
-<span class="w">  </span><span class="kr">end</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- First character in range.</span>
-<span class="c1">-- </span>
-<span class="c1">-- Last character in range (inclusive).</span>
-
-<span class="nv">AllegroDat</span><span class="p">.</span><span class="py">DatFont39</span><span class="p">.</span><span class="py">FontChar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">AllegroDat</span><span class="p">.</span><span class="nc">DatFont39</span><span class="p">.</span><span class="nc">FontChar</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">AllegroDat</span><span class="p">.</span><span class="nc">DatFont39</span><span class="p">.</span><span class="nc">FontChar</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">AllegroDat</span><span class="p">.</span><span class="nc">DatRleSprite</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">bits_per_pixel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_s2be</span><span class="p">()</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2be</span><span class="p">()</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2be</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">width</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">height</span><span class="p">))</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">len_image</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">image</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes_full</span><span class="p">()</span>
 <span class="kr">end</span>
 
 
@@ -520,7 +553,7 @@ to 4.4.</p>
 <span class="kr">function</span><span class="w"> </span><span class="nc">AllegroDat</span><span class="p">.</span><span class="nc">Property</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
@@ -545,24 +578,6 @@ to 4.4.</p>
 
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_valid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">magic</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;prop&quot;</span>
 <span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_valid</span>
-<span class="kr">end</span>
-
-
-<span class="nv">AllegroDat</span><span class="p">.</span><span class="py">DatRleSprite</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">AllegroDat</span><span class="p">.</span><span class="nc">DatRleSprite</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">AllegroDat</span><span class="p">.</span><span class="nc">DatRleSprite</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">bits_per_pixel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_s2be</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2be</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2be</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">len_image</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">image</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes_full</span><span class="p">()</span>
 <span class="kr">end</span>
 </pre></div>
 

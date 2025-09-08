@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -38,8 +38,8 @@ end
 # enforced by this implementation. They were inspired by the Protoscope tool,
 # see <https://github.com/protocolbuffers/protoscope/blob/8e7a6aafa2c9958527b1e0747e66e1bfff045819/writer.go#L644-L648>.
 class VlqBase128Le < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -47,7 +47,7 @@ class VlqBase128Le < Kaitai::Struct::Struct
     @groups = []
     i = 0
     begin
-      _ = Group.new(@_io, self, @_root, i, (i != 0 ? groups[(i - 1)].interm_value : 0), (i != 0 ? (i == 9 ? 9223372036854775808 : (groups[(i - 1)].multiplier * 128)) : 1))
+      _ = Group.new(@_io, self, @_root, i, (i != 0 ? groups[i - 1].interm_value : 0), (i != 0 ? (i == 9 ? 9223372036854775808 : groups[i - 1].multiplier * 128) : 1))
       @groups << _
       i += 1
     end until !(_.has_next)
@@ -57,7 +57,7 @@ class VlqBase128Le < Kaitai::Struct::Struct
   ##
   # One byte group, clearly divided into 7-bit "value" chunk and 1-bit "continuation" flag.
   class Group < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self, idx, prev_interm_value, multiplier)
+    def initialize(_io, _parent = nil, _root = nil, idx, prev_interm_value, multiplier)
       super(_io, _parent, _root)
       @idx = idx
       @prev_interm_value = prev_interm_value
@@ -67,14 +67,14 @@ class VlqBase128Le < Kaitai::Struct::Struct
 
     def _read
       @has_next = @_io.read_bits_int_be(1) != 0
-      raise Kaitai::Struct::ValidationNotEqualError.new((idx == 9 ? false : has_next), has_next, _io, "/types/group/seq/0") if not has_next == (idx == 9 ? false : has_next)
+      raise Kaitai::Struct::ValidationNotEqualError.new((idx == 9 ? false : has_next), @has_next, @_io, "/types/group/seq/0") if not @has_next == (idx == 9 ? false : has_next)
       @value = @_io.read_bits_int_be(7)
-      raise Kaitai::Struct::ValidationGreaterThanError.new((idx == 9 ? 1 : 127), value, _io, "/types/group/seq/1") if not value <= (idx == 9 ? 1 : 127)
+      raise Kaitai::Struct::ValidationGreaterThanError.new((idx == 9 ? 1 : 127), @value, @_io, "/types/group/seq/1") if not @value <= (idx == 9 ? 1 : 127)
       self
     end
     def interm_value
       return @interm_value unless @interm_value.nil?
-      @interm_value = (prev_interm_value + (value * multiplier))
+      @interm_value = (prev_interm_value + value * multiplier)
       @interm_value
     end
 
@@ -102,6 +102,11 @@ class VlqBase128Le < Kaitai::Struct::Struct
     @len = groups.length
     @len
   end
+  def sign_bit
+    return @sign_bit unless @sign_bit.nil?
+    @sign_bit = (len == 10 ? 9223372036854775808 : groups.last.multiplier * 64)
+    @sign_bit
+  end
 
   ##
   # Resulting unsigned value as normal integer
@@ -109,11 +114,6 @@ class VlqBase128Le < Kaitai::Struct::Struct
     return @value unless @value.nil?
     @value = groups.last.interm_value
     @value
-  end
-  def sign_bit
-    return @sign_bit unless @sign_bit.nil?
-    @sign_bit = (len == 10 ? 9223372036854775808 : (groups.last.multiplier * 64))
-    @sign_bit
   end
   def value_signed
     return @value_signed unless @value_signed.nil?

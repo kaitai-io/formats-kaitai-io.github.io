@@ -1,0 +1,232 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__edid {
+		label="Edid";
+		graph[style=dotted];
+
+		edid__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">8</TD><TD>00 FF FF FF FF FF FF 00</TD><TD PORT="magic_type">magic</TD></TR>
+			<TR><TD PORT="mfg_bytes_pos">8</TD><TD PORT="mfg_bytes_size">2</TD><TD>u2be</TD><TD PORT="mfg_bytes_type">mfg_bytes</TD></TR>
+			<TR><TD PORT="product_code_pos">10</TD><TD PORT="product_code_size">2</TD><TD>u2le</TD><TD PORT="product_code_type">product_code</TD></TR>
+			<TR><TD PORT="serial_pos">12</TD><TD PORT="serial_size">4</TD><TD>u4le</TD><TD PORT="serial_type">serial</TD></TR>
+			<TR><TD PORT="mfg_week_pos">16</TD><TD PORT="mfg_week_size">1</TD><TD>u1</TD><TD PORT="mfg_week_type">mfg_week</TD></TR>
+			<TR><TD PORT="mfg_year_mod_pos">17</TD><TD PORT="mfg_year_mod_size">1</TD><TD>u1</TD><TD PORT="mfg_year_mod_type">mfg_year_mod</TD></TR>
+			<TR><TD PORT="edid_version_major_pos">18</TD><TD PORT="edid_version_major_size">1</TD><TD>u1</TD><TD PORT="edid_version_major_type">edid_version_major</TD></TR>
+			<TR><TD PORT="edid_version_minor_pos">19</TD><TD PORT="edid_version_minor_size">1</TD><TD>u1</TD><TD PORT="edid_version_minor_type">edid_version_minor</TD></TR>
+			<TR><TD PORT="input_flags_pos">20</TD><TD PORT="input_flags_size">1</TD><TD>u1</TD><TD PORT="input_flags_type">input_flags</TD></TR>
+			<TR><TD PORT="screen_size_h_pos">21</TD><TD PORT="screen_size_h_size">1</TD><TD>u1</TD><TD PORT="screen_size_h_type">screen_size_h</TD></TR>
+			<TR><TD PORT="screen_size_v_pos">22</TD><TD PORT="screen_size_v_size">1</TD><TD>u1</TD><TD PORT="screen_size_v_type">screen_size_v</TD></TR>
+			<TR><TD PORT="gamma_mod_pos">23</TD><TD PORT="gamma_mod_size">1</TD><TD>u1</TD><TD PORT="gamma_mod_type">gamma_mod</TD></TR>
+			<TR><TD PORT="features_flags_pos">24</TD><TD PORT="features_flags_size">1</TD><TD>u1</TD><TD PORT="features_flags_type">features_flags</TD></TR>
+			<TR><TD PORT="chromacity_pos">25</TD><TD PORT="chromacity_size">10</TD><TD>ChromacityInfo</TD><TD PORT="chromacity_type">chromacity</TD></TR>
+			<TR><TD PORT="est_timings_pos">35</TD><TD PORT="est_timings_size">3</TD><TD>EstTimingsInfo</TD><TD PORT="est_timings_type">est_timings</TD></TR>
+			<TR><TD PORT="std_timings_pos">38</TD><TD PORT="std_timings_size">2</TD><TD>StdTiming</TD><TD PORT="std_timings_type">std_timings</TD></TR>
+			<TR><TD COLSPAN="4" PORT="std_timings__repeat">repeat 8 times</TD></TR>
+		</TABLE>>];
+		edid__inst__gamma [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>gamma</TD><TD>(gamma_mod + 100) / 100.0</TD></TR>
+		</TABLE>>];
+		edid__inst__mfg_id_ch1 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>mfg_id_ch1</TD><TD>(mfg_bytes &amp; 31744) &gt;&gt; 10</TD></TR>
+		</TABLE>>];
+		edid__inst__mfg_id_ch2 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>mfg_id_ch2</TD><TD>(mfg_bytes &amp; 992) &gt;&gt; 5</TD></TR>
+		</TABLE>>];
+		edid__inst__mfg_id_ch3 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>mfg_id_ch3</TD><TD>mfg_bytes &amp; 31</TD></TR>
+		</TABLE>>];
+		edid__inst__mfg_str [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>mfg_str</TD><TD>([mfg_id_ch1 + 64, mfg_id_ch2 + 64, mfg_id_ch3 + 64].pack('C*')).force_encoding(&quot;ASCII&quot;).encode('UTF-8')</TD></TR>
+		</TABLE>>];
+		edid__inst__mfg_year [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>mfg_year</TD><TD>mfg_year_mod + 1990</TD></TR>
+		</TABLE>>];
+		subgraph cluster__chromacity_info {
+			label="Edid::ChromacityInfo";
+			graph[style=dotted];
+
+			chromacity_info__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="red_x_1_0_pos">0</TD><TD PORT="red_x_1_0_size">2b</TD><TD>b2be</TD><TD PORT="red_x_1_0_type">red_x_1_0</TD></TR>
+				<TR><TD PORT="red_y_1_0_pos">0:2</TD><TD PORT="red_y_1_0_size">2b</TD><TD>b2be</TD><TD PORT="red_y_1_0_type">red_y_1_0</TD></TR>
+				<TR><TD PORT="green_x_1_0_pos">0:4</TD><TD PORT="green_x_1_0_size">2b</TD><TD>b2be</TD><TD PORT="green_x_1_0_type">green_x_1_0</TD></TR>
+				<TR><TD PORT="green_y_1_0_pos">0:6</TD><TD PORT="green_y_1_0_size">2b</TD><TD>b2be</TD><TD PORT="green_y_1_0_type">green_y_1_0</TD></TR>
+				<TR><TD PORT="blue_x_1_0_pos">1</TD><TD PORT="blue_x_1_0_size">2b</TD><TD>b2be</TD><TD PORT="blue_x_1_0_type">blue_x_1_0</TD></TR>
+				<TR><TD PORT="blue_y_1_0_pos">1:2</TD><TD PORT="blue_y_1_0_size">2b</TD><TD>b2be</TD><TD PORT="blue_y_1_0_type">blue_y_1_0</TD></TR>
+				<TR><TD PORT="white_x_1_0_pos">1:4</TD><TD PORT="white_x_1_0_size">2b</TD><TD>b2be</TD><TD PORT="white_x_1_0_type">white_x_1_0</TD></TR>
+				<TR><TD PORT="white_y_1_0_pos">1:6</TD><TD PORT="white_y_1_0_size">2b</TD><TD>b2be</TD><TD PORT="white_y_1_0_type">white_y_1_0</TD></TR>
+				<TR><TD PORT="red_x_9_2_pos">2</TD><TD PORT="red_x_9_2_size">1</TD><TD>u1</TD><TD PORT="red_x_9_2_type">red_x_9_2</TD></TR>
+				<TR><TD PORT="red_y_9_2_pos">3</TD><TD PORT="red_y_9_2_size">1</TD><TD>u1</TD><TD PORT="red_y_9_2_type">red_y_9_2</TD></TR>
+				<TR><TD PORT="green_x_9_2_pos">4</TD><TD PORT="green_x_9_2_size">1</TD><TD>u1</TD><TD PORT="green_x_9_2_type">green_x_9_2</TD></TR>
+				<TR><TD PORT="green_y_9_2_pos">5</TD><TD PORT="green_y_9_2_size">1</TD><TD>u1</TD><TD PORT="green_y_9_2_type">green_y_9_2</TD></TR>
+				<TR><TD PORT="blue_x_9_2_pos">6</TD><TD PORT="blue_x_9_2_size">1</TD><TD>u1</TD><TD PORT="blue_x_9_2_type">blue_x_9_2</TD></TR>
+				<TR><TD PORT="blue_y_9_2_pos">7</TD><TD PORT="blue_y_9_2_size">1</TD><TD>u1</TD><TD PORT="blue_y_9_2_type">blue_y_9_2</TD></TR>
+				<TR><TD PORT="white_x_9_2_pos">8</TD><TD PORT="white_x_9_2_size">1</TD><TD>u1</TD><TD PORT="white_x_9_2_type">white_x_9_2</TD></TR>
+				<TR><TD PORT="white_y_9_2_pos">9</TD><TD PORT="white_y_9_2_size">1</TD><TD>u1</TD><TD PORT="white_y_9_2_type">white_y_9_2</TD></TR>
+			</TABLE>>];
+			chromacity_info__inst__blue_x [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>blue_x</TD><TD>blue_x_int / 1024.0</TD></TR>
+			</TABLE>>];
+			chromacity_info__inst__blue_x_int [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>blue_x_int</TD><TD>blue_x_9_2 &lt;&lt; 2 | blue_x_1_0</TD></TR>
+			</TABLE>>];
+			chromacity_info__inst__blue_y [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>blue_y</TD><TD>blue_y_int / 1024.0</TD></TR>
+			</TABLE>>];
+			chromacity_info__inst__blue_y_int [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>blue_y_int</TD><TD>blue_y_9_2 &lt;&lt; 2 | blue_y_1_0</TD></TR>
+			</TABLE>>];
+			chromacity_info__inst__green_x [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>green_x</TD><TD>green_x_int / 1024.0</TD></TR>
+			</TABLE>>];
+			chromacity_info__inst__green_x_int [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>green_x_int</TD><TD>green_x_9_2 &lt;&lt; 2 | green_x_1_0</TD></TR>
+			</TABLE>>];
+			chromacity_info__inst__green_y [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>green_y</TD><TD>green_y_int / 1024.0</TD></TR>
+			</TABLE>>];
+			chromacity_info__inst__green_y_int [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>green_y_int</TD><TD>green_y_9_2 &lt;&lt; 2 | green_y_1_0</TD></TR>
+			</TABLE>>];
+			chromacity_info__inst__red_x [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>red_x</TD><TD>red_x_int / 1024.0</TD></TR>
+			</TABLE>>];
+			chromacity_info__inst__red_x_int [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>red_x_int</TD><TD>red_x_9_2 &lt;&lt; 2 | red_x_1_0</TD></TR>
+			</TABLE>>];
+			chromacity_info__inst__red_y [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>red_y</TD><TD>red_y_int / 1024.0</TD></TR>
+			</TABLE>>];
+			chromacity_info__inst__red_y_int [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>red_y_int</TD><TD>red_y_9_2 &lt;&lt; 2 | red_y_1_0</TD></TR>
+			</TABLE>>];
+			chromacity_info__inst__white_x [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>white_x</TD><TD>white_x_int / 1024.0</TD></TR>
+			</TABLE>>];
+			chromacity_info__inst__white_x_int [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>white_x_int</TD><TD>white_x_9_2 &lt;&lt; 2 | white_x_1_0</TD></TR>
+			</TABLE>>];
+			chromacity_info__inst__white_y [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>white_y</TD><TD>white_y_int / 1024.0</TD></TR>
+			</TABLE>>];
+			chromacity_info__inst__white_y_int [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>white_y_int</TD><TD>white_y_9_2 &lt;&lt; 2 | white_y_1_0</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__est_timings_info {
+			label="Edid::EstTimingsInfo";
+			graph[style=dotted];
+
+			est_timings_info__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="can_720x400px_70hz_pos">0</TD><TD PORT="can_720x400px_70hz_size">1b</TD><TD>b1be→bool</TD><TD PORT="can_720x400px_70hz_type">can_720x400px_70hz</TD></TR>
+				<TR><TD PORT="can_720x400px_88hz_pos">0:1</TD><TD PORT="can_720x400px_88hz_size">1b</TD><TD>b1be→bool</TD><TD PORT="can_720x400px_88hz_type">can_720x400px_88hz</TD></TR>
+				<TR><TD PORT="can_640x480px_60hz_pos">0:2</TD><TD PORT="can_640x480px_60hz_size">1b</TD><TD>b1be→bool</TD><TD PORT="can_640x480px_60hz_type">can_640x480px_60hz</TD></TR>
+				<TR><TD PORT="can_640x480px_67hz_pos">0:3</TD><TD PORT="can_640x480px_67hz_size">1b</TD><TD>b1be→bool</TD><TD PORT="can_640x480px_67hz_type">can_640x480px_67hz</TD></TR>
+				<TR><TD PORT="can_640x480px_72hz_pos">0:4</TD><TD PORT="can_640x480px_72hz_size">1b</TD><TD>b1be→bool</TD><TD PORT="can_640x480px_72hz_type">can_640x480px_72hz</TD></TR>
+				<TR><TD PORT="can_640x480px_75hz_pos">0:5</TD><TD PORT="can_640x480px_75hz_size">1b</TD><TD>b1be→bool</TD><TD PORT="can_640x480px_75hz_type">can_640x480px_75hz</TD></TR>
+				<TR><TD PORT="can_800x600px_56hz_pos">0:6</TD><TD PORT="can_800x600px_56hz_size">1b</TD><TD>b1be→bool</TD><TD PORT="can_800x600px_56hz_type">can_800x600px_56hz</TD></TR>
+				<TR><TD PORT="can_800x600px_60hz_pos">0:7</TD><TD PORT="can_800x600px_60hz_size">1b</TD><TD>b1be→bool</TD><TD PORT="can_800x600px_60hz_type">can_800x600px_60hz</TD></TR>
+				<TR><TD PORT="can_800x600px_72hz_pos">1</TD><TD PORT="can_800x600px_72hz_size">1b</TD><TD>b1be→bool</TD><TD PORT="can_800x600px_72hz_type">can_800x600px_72hz</TD></TR>
+				<TR><TD PORT="can_800x600px_75hz_pos">1:1</TD><TD PORT="can_800x600px_75hz_size">1b</TD><TD>b1be→bool</TD><TD PORT="can_800x600px_75hz_type">can_800x600px_75hz</TD></TR>
+				<TR><TD PORT="can_832x624px_75hz_pos">1:2</TD><TD PORT="can_832x624px_75hz_size">1b</TD><TD>b1be→bool</TD><TD PORT="can_832x624px_75hz_type">can_832x624px_75hz</TD></TR>
+				<TR><TD PORT="can_1024x768px_87hz_i_pos">1:3</TD><TD PORT="can_1024x768px_87hz_i_size">1b</TD><TD>b1be→bool</TD><TD PORT="can_1024x768px_87hz_i_type">can_1024x768px_87hz_i</TD></TR>
+				<TR><TD PORT="can_1024x768px_60hz_pos">1:4</TD><TD PORT="can_1024x768px_60hz_size">1b</TD><TD>b1be→bool</TD><TD PORT="can_1024x768px_60hz_type">can_1024x768px_60hz</TD></TR>
+				<TR><TD PORT="can_1024x768px_70hz_pos">1:5</TD><TD PORT="can_1024x768px_70hz_size">1b</TD><TD>b1be→bool</TD><TD PORT="can_1024x768px_70hz_type">can_1024x768px_70hz</TD></TR>
+				<TR><TD PORT="can_1024x768px_75hz_pos">1:6</TD><TD PORT="can_1024x768px_75hz_size">1b</TD><TD>b1be→bool</TD><TD PORT="can_1024x768px_75hz_type">can_1024x768px_75hz</TD></TR>
+				<TR><TD PORT="can_1280x1024px_75hz_pos">1:7</TD><TD PORT="can_1280x1024px_75hz_size">1b</TD><TD>b1be→bool</TD><TD PORT="can_1280x1024px_75hz_type">can_1280x1024px_75hz</TD></TR>
+				<TR><TD PORT="can_1152x870px_75hz_pos">2</TD><TD PORT="can_1152x870px_75hz_size">1b</TD><TD>b1be→bool</TD><TD PORT="can_1152x870px_75hz_type">can_1152x870px_75hz</TD></TR>
+				<TR><TD PORT="reserved_pos">2:1</TD><TD PORT="reserved_size">7b</TD><TD>b7be</TD><TD PORT="reserved_type">reserved</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__std_timing {
+			label="Edid::StdTiming";
+			graph[style=dotted];
+
+			std_timing__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="horiz_active_pixels_mod_pos">0</TD><TD PORT="horiz_active_pixels_mod_size">1</TD><TD>u1</TD><TD PORT="horiz_active_pixels_mod_type">horiz_active_pixels_mod</TD></TR>
+				<TR><TD PORT="aspect_ratio_pos">1</TD><TD PORT="aspect_ratio_size">2b</TD><TD>b2be→AspectRatios</TD><TD PORT="aspect_ratio_type">aspect_ratio</TD></TR>
+				<TR><TD PORT="refresh_rate_mod_pos">1:2</TD><TD PORT="refresh_rate_mod_size">6b</TD><TD>b6be</TD><TD PORT="refresh_rate_mod_type">refresh_rate_mod</TD></TR>
+			</TABLE>>];
+			std_timing__inst__bytes_lookahead [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="bytes_lookahead_pos">0</TD><TD PORT="bytes_lookahead_size">2</TD><TD></TD><TD PORT="bytes_lookahead_type">bytes_lookahead</TD></TR>
+			</TABLE>>];
+			std_timing__inst__horiz_active_pixels [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>horiz_active_pixels</TD><TD>(horiz_active_pixels_mod + 31) * 8</TD></TR>
+			</TABLE>>];
+			std_timing__inst__is_used [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_used</TD><TD>bytes_lookahead != [1, 1].pack('C*')</TD></TR>
+			</TABLE>>];
+			std_timing__inst__refresh_rate [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>refresh_rate</TD><TD>refresh_rate_mod + 60</TD></TR>
+			</TABLE>>];
+		}
+	}
+	edid__seq:chromacity_type -> chromacity_info__seq [style=bold];
+	edid__seq:est_timings_type -> est_timings_info__seq [style=bold];
+	edid__seq:std_timings_type -> std_timing__seq [style=bold];
+	edid__seq:gamma_mod_type -> edid__inst__gamma [color="#404040"];
+	edid__seq:mfg_bytes_type -> edid__inst__mfg_id_ch1 [color="#404040"];
+	edid__seq:mfg_bytes_type -> edid__inst__mfg_id_ch2 [color="#404040"];
+	edid__seq:mfg_bytes_type -> edid__inst__mfg_id_ch3 [color="#404040"];
+	edid__inst__mfg_id_ch1:mfg_id_ch1_type -> edid__inst__mfg_str [color="#404040"];
+	edid__inst__mfg_id_ch2:mfg_id_ch2_type -> edid__inst__mfg_str [color="#404040"];
+	edid__inst__mfg_id_ch3:mfg_id_ch3_type -> edid__inst__mfg_str [color="#404040"];
+	edid__seq:mfg_year_mod_type -> edid__inst__mfg_year [color="#404040"];
+	chromacity_info__inst__blue_x_int:blue_x_int_type -> chromacity_info__inst__blue_x [color="#404040"];
+	chromacity_info__seq:blue_x_9_2_type -> chromacity_info__inst__blue_x_int [color="#404040"];
+	chromacity_info__seq:blue_x_1_0_type -> chromacity_info__inst__blue_x_int [color="#404040"];
+	chromacity_info__inst__blue_y_int:blue_y_int_type -> chromacity_info__inst__blue_y [color="#404040"];
+	chromacity_info__seq:blue_y_9_2_type -> chromacity_info__inst__blue_y_int [color="#404040"];
+	chromacity_info__seq:blue_y_1_0_type -> chromacity_info__inst__blue_y_int [color="#404040"];
+	chromacity_info__inst__green_x_int:green_x_int_type -> chromacity_info__inst__green_x [color="#404040"];
+	chromacity_info__seq:green_x_9_2_type -> chromacity_info__inst__green_x_int [color="#404040"];
+	chromacity_info__seq:green_x_1_0_type -> chromacity_info__inst__green_x_int [color="#404040"];
+	chromacity_info__inst__green_y_int:green_y_int_type -> chromacity_info__inst__green_y [color="#404040"];
+	chromacity_info__seq:green_y_9_2_type -> chromacity_info__inst__green_y_int [color="#404040"];
+	chromacity_info__seq:green_y_1_0_type -> chromacity_info__inst__green_y_int [color="#404040"];
+	chromacity_info__inst__red_x_int:red_x_int_type -> chromacity_info__inst__red_x [color="#404040"];
+	chromacity_info__seq:red_x_9_2_type -> chromacity_info__inst__red_x_int [color="#404040"];
+	chromacity_info__seq:red_x_1_0_type -> chromacity_info__inst__red_x_int [color="#404040"];
+	chromacity_info__inst__red_y_int:red_y_int_type -> chromacity_info__inst__red_y [color="#404040"];
+	chromacity_info__seq:red_y_9_2_type -> chromacity_info__inst__red_y_int [color="#404040"];
+	chromacity_info__seq:red_y_1_0_type -> chromacity_info__inst__red_y_int [color="#404040"];
+	chromacity_info__inst__white_x_int:white_x_int_type -> chromacity_info__inst__white_x [color="#404040"];
+	chromacity_info__seq:white_x_9_2_type -> chromacity_info__inst__white_x_int [color="#404040"];
+	chromacity_info__seq:white_x_1_0_type -> chromacity_info__inst__white_x_int [color="#404040"];
+	chromacity_info__inst__white_y_int:white_y_int_type -> chromacity_info__inst__white_y [color="#404040"];
+	chromacity_info__seq:white_y_9_2_type -> chromacity_info__inst__white_y_int [color="#404040"];
+	chromacity_info__seq:white_y_1_0_type -> chromacity_info__inst__white_y_int [color="#404040"];
+	std_timing__seq:horiz_active_pixels_mod_type -> std_timing__inst__horiz_active_pixels [color="#404040"];
+	std_timing__inst__bytes_lookahead:bytes_lookahead_type -> std_timing__inst__is_used [color="#404040"];
+	std_timing__seq:refresh_rate_mod_type -> std_timing__inst__refresh_rate [color="#404040"];
+}

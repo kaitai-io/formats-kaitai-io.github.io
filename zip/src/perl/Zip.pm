@@ -2,9 +2,9 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
-use Encode;
+use IO::KaitaiStruct 0.011_000;
 use DosDatetime;
+use Encode;
 
 ########################################################################
 package Zip;
@@ -75,7 +75,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -85,7 +85,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{sections} = ();
+    $self->{sections} = [];
     while (!$self->{_io}->is_eof()) {
         push @{$self->{sections}}, Zip::PkSection->new($self->{_io}, $self, $self->{_root});
     }
@@ -94,520 +94,6 @@ sub _read {
 sub sections {
     my ($self) = @_;
     return $self->{sections};
-}
-
-########################################################################
-package Zip::LocalFile;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{header} = Zip::LocalFileHeader->new($self->{_io}, $self, $self->{_root});
-    $self->{body} = $self->{_io}->read_bytes($self->header()->len_body_compressed());
-}
-
-sub header {
-    my ($self) = @_;
-    return $self->{header};
-}
-
-sub body {
-    my ($self) = @_;
-    return $self->{body};
-}
-
-########################################################################
-package Zip::DataDescriptor;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{crc32} = $self->{_io}->read_u4le();
-    $self->{len_body_compressed} = $self->{_io}->read_u4le();
-    $self->{len_body_uncompressed} = $self->{_io}->read_u4le();
-}
-
-sub crc32 {
-    my ($self) = @_;
-    return $self->{crc32};
-}
-
-sub len_body_compressed {
-    my ($self) = @_;
-    return $self->{len_body_compressed};
-}
-
-sub len_body_uncompressed {
-    my ($self) = @_;
-    return $self->{len_body_uncompressed};
-}
-
-########################################################################
-package Zip::ExtraField;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{code} = $self->{_io}->read_u2le();
-    $self->{len_body} = $self->{_io}->read_u2le();
-    my $_on = $self->code();
-    if ($_on == $Zip::EXTRA_CODES_NTFS) {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->len_body());
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = Zip::ExtraField::Ntfs->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $Zip::EXTRA_CODES_EXTENDED_TIMESTAMP) {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->len_body());
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = Zip::ExtraField::ExtendedTimestamp->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $Zip::EXTRA_CODES_INFOZIP_UNIX_VAR_SIZE) {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->len_body());
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = Zip::ExtraField::InfozipUnixVarSize->new($io__raw_body, $self, $self->{_root});
-    }
-    else {
-        $self->{body} = $self->{_io}->read_bytes($self->len_body());
-    }
-}
-
-sub code {
-    my ($self) = @_;
-    return $self->{code};
-}
-
-sub len_body {
-    my ($self) = @_;
-    return $self->{len_body};
-}
-
-sub body {
-    my ($self) = @_;
-    return $self->{body};
-}
-
-sub _raw_body {
-    my ($self) = @_;
-    return $self->{_raw_body};
-}
-
-########################################################################
-package Zip::ExtraField::Ntfs;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{reserved} = $self->{_io}->read_u4le();
-    $self->{attributes} = ();
-    while (!$self->{_io}->is_eof()) {
-        push @{$self->{attributes}}, Zip::ExtraField::Ntfs::Attribute->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub reserved {
-    my ($self) = @_;
-    return $self->{reserved};
-}
-
-sub attributes {
-    my ($self) = @_;
-    return $self->{attributes};
-}
-
-########################################################################
-package Zip::ExtraField::Ntfs::Attribute;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag} = $self->{_io}->read_u2le();
-    $self->{len_body} = $self->{_io}->read_u2le();
-    my $_on = $self->tag();
-    if ($_on == 1) {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->len_body());
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = Zip::ExtraField::Ntfs::Attribute1->new($io__raw_body, $self, $self->{_root});
-    }
-    else {
-        $self->{body} = $self->{_io}->read_bytes($self->len_body());
-    }
-}
-
-sub tag {
-    my ($self) = @_;
-    return $self->{tag};
-}
-
-sub len_body {
-    my ($self) = @_;
-    return $self->{len_body};
-}
-
-sub body {
-    my ($self) = @_;
-    return $self->{body};
-}
-
-sub _raw_body {
-    my ($self) = @_;
-    return $self->{_raw_body};
-}
-
-########################################################################
-package Zip::ExtraField::Ntfs::Attribute1;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{last_mod_time} = $self->{_io}->read_u8le();
-    $self->{last_access_time} = $self->{_io}->read_u8le();
-    $self->{creation_time} = $self->{_io}->read_u8le();
-}
-
-sub last_mod_time {
-    my ($self) = @_;
-    return $self->{last_mod_time};
-}
-
-sub last_access_time {
-    my ($self) = @_;
-    return $self->{last_access_time};
-}
-
-sub creation_time {
-    my ($self) = @_;
-    return $self->{creation_time};
-}
-
-########################################################################
-package Zip::ExtraField::ExtendedTimestamp;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{_raw_flags} = $self->{_io}->read_bytes(1);
-    my $io__raw_flags = IO::KaitaiStruct::Stream->new($self->{_raw_flags});
-    $self->{flags} = Zip::ExtraField::ExtendedTimestamp::InfoFlags->new($io__raw_flags, $self, $self->{_root});
-    if ($self->flags()->has_mod_time()) {
-        $self->{mod_time} = $self->{_io}->read_u4le();
-    }
-    if ($self->flags()->has_access_time()) {
-        $self->{access_time} = $self->{_io}->read_u4le();
-    }
-    if ($self->flags()->has_create_time()) {
-        $self->{create_time} = $self->{_io}->read_u4le();
-    }
-}
-
-sub flags {
-    my ($self) = @_;
-    return $self->{flags};
-}
-
-sub mod_time {
-    my ($self) = @_;
-    return $self->{mod_time};
-}
-
-sub access_time {
-    my ($self) = @_;
-    return $self->{access_time};
-}
-
-sub create_time {
-    my ($self) = @_;
-    return $self->{create_time};
-}
-
-sub _raw_flags {
-    my ($self) = @_;
-    return $self->{_raw_flags};
-}
-
-########################################################################
-package Zip::ExtraField::ExtendedTimestamp::InfoFlags;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{has_mod_time} = $self->{_io}->read_bits_int_le(1);
-    $self->{has_access_time} = $self->{_io}->read_bits_int_le(1);
-    $self->{has_create_time} = $self->{_io}->read_bits_int_le(1);
-    $self->{reserved} = $self->{_io}->read_bits_int_le(5);
-}
-
-sub has_mod_time {
-    my ($self) = @_;
-    return $self->{has_mod_time};
-}
-
-sub has_access_time {
-    my ($self) = @_;
-    return $self->{has_access_time};
-}
-
-sub has_create_time {
-    my ($self) = @_;
-    return $self->{has_create_time};
-}
-
-sub reserved {
-    my ($self) = @_;
-    return $self->{reserved};
-}
-
-########################################################################
-package Zip::ExtraField::InfozipUnixVarSize;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{version} = $self->{_io}->read_u1();
-    $self->{len_uid} = $self->{_io}->read_u1();
-    $self->{uid} = $self->{_io}->read_bytes($self->len_uid());
-    $self->{len_gid} = $self->{_io}->read_u1();
-    $self->{gid} = $self->{_io}->read_bytes($self->len_gid());
-}
-
-sub version {
-    my ($self) = @_;
-    return $self->{version};
-}
-
-sub len_uid {
-    my ($self) = @_;
-    return $self->{len_uid};
-}
-
-sub uid {
-    my ($self) = @_;
-    return $self->{uid};
-}
-
-sub len_gid {
-    my ($self) = @_;
-    return $self->{len_gid};
-}
-
-sub gid {
-    my ($self) = @_;
-    return $self->{gid};
 }
 
 ########################################################################
@@ -630,7 +116,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -775,7 +261,7 @@ sub _raw_extra {
 }
 
 ########################################################################
-package Zip::PkSection;
+package Zip::DataDescriptor;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -794,7 +280,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -804,36 +290,524 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic} = $self->{_io}->read_bytes(2);
-    $self->{section_type} = $self->{_io}->read_u2le();
-    my $_on = $self->section_type();
-    if ($_on == 513) {
-        $self->{body} = Zip::CentralDirEntry->new($self->{_io}, $self, $self->{_root});
+    $self->{crc32} = $self->{_io}->read_u4le();
+    $self->{len_body_compressed} = $self->{_io}->read_u4le();
+    $self->{len_body_uncompressed} = $self->{_io}->read_u4le();
+}
+
+sub crc32 {
+    my ($self) = @_;
+    return $self->{crc32};
+}
+
+sub len_body_compressed {
+    my ($self) = @_;
+    return $self->{len_body_compressed};
+}
+
+sub len_body_uncompressed {
+    my ($self) = @_;
+    return $self->{len_body_uncompressed};
+}
+
+########################################################################
+package Zip::EndOfCentralDir;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{disk_of_end_of_central_dir} = $self->{_io}->read_u2le();
+    $self->{disk_of_central_dir} = $self->{_io}->read_u2le();
+    $self->{num_central_dir_entries_on_disk} = $self->{_io}->read_u2le();
+    $self->{num_central_dir_entries_total} = $self->{_io}->read_u2le();
+    $self->{len_central_dir} = $self->{_io}->read_u4le();
+    $self->{ofs_central_dir} = $self->{_io}->read_u4le();
+    $self->{len_comment} = $self->{_io}->read_u2le();
+    $self->{comment} = Encode::decode("UTF-8", $self->{_io}->read_bytes($self->len_comment()));
+}
+
+sub disk_of_end_of_central_dir {
+    my ($self) = @_;
+    return $self->{disk_of_end_of_central_dir};
+}
+
+sub disk_of_central_dir {
+    my ($self) = @_;
+    return $self->{disk_of_central_dir};
+}
+
+sub num_central_dir_entries_on_disk {
+    my ($self) = @_;
+    return $self->{num_central_dir_entries_on_disk};
+}
+
+sub num_central_dir_entries_total {
+    my ($self) = @_;
+    return $self->{num_central_dir_entries_total};
+}
+
+sub len_central_dir {
+    my ($self) = @_;
+    return $self->{len_central_dir};
+}
+
+sub ofs_central_dir {
+    my ($self) = @_;
+    return $self->{ofs_central_dir};
+}
+
+sub len_comment {
+    my ($self) = @_;
+    return $self->{len_comment};
+}
+
+sub comment {
+    my ($self) = @_;
+    return $self->{comment};
+}
+
+########################################################################
+package Zip::ExtraField;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{code} = $self->{_io}->read_u2le();
+    $self->{len_body} = $self->{_io}->read_u2le();
+    my $_on = $self->code();
+    if ($_on == $Zip::EXTRA_CODES_EXTENDED_TIMESTAMP) {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len_body());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = Zip::ExtraField::ExtendedTimestamp->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on == 1027) {
-        $self->{body} = Zip::LocalFile->new($self->{_io}, $self, $self->{_root});
+    elsif ($_on == $Zip::EXTRA_CODES_INFOZIP_UNIX_VAR_SIZE) {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len_body());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = Zip::ExtraField::InfozipUnixVarSize->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on == 1541) {
-        $self->{body} = Zip::EndOfCentralDir->new($self->{_io}, $self, $self->{_root});
+    elsif ($_on == $Zip::EXTRA_CODES_NTFS) {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len_body());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = Zip::ExtraField::Ntfs->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on == 2055) {
-        $self->{body} = Zip::DataDescriptor->new($self->{_io}, $self, $self->{_root});
+    else {
+        $self->{body} = $self->{_io}->read_bytes($self->len_body());
     }
 }
 
-sub magic {
+sub code {
     my ($self) = @_;
-    return $self->{magic};
+    return $self->{code};
 }
 
-sub section_type {
+sub len_body {
     my ($self) = @_;
-    return $self->{section_type};
+    return $self->{len_body};
 }
 
 sub body {
     my ($self) = @_;
     return $self->{body};
+}
+
+sub _raw_body {
+    my ($self) = @_;
+    return $self->{_raw_body};
+}
+
+########################################################################
+package Zip::ExtraField::ExtendedTimestamp;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{_raw_flags} = $self->{_io}->read_bytes(1);
+    my $io__raw_flags = IO::KaitaiStruct::Stream->new($self->{_raw_flags});
+    $self->{flags} = Zip::ExtraField::ExtendedTimestamp::InfoFlags->new($io__raw_flags, $self, $self->{_root});
+    if ($self->flags()->has_mod_time()) {
+        $self->{mod_time} = $self->{_io}->read_u4le();
+    }
+    if ($self->flags()->has_access_time()) {
+        $self->{access_time} = $self->{_io}->read_u4le();
+    }
+    if ($self->flags()->has_create_time()) {
+        $self->{create_time} = $self->{_io}->read_u4le();
+    }
+}
+
+sub flags {
+    my ($self) = @_;
+    return $self->{flags};
+}
+
+sub mod_time {
+    my ($self) = @_;
+    return $self->{mod_time};
+}
+
+sub access_time {
+    my ($self) = @_;
+    return $self->{access_time};
+}
+
+sub create_time {
+    my ($self) = @_;
+    return $self->{create_time};
+}
+
+sub _raw_flags {
+    my ($self) = @_;
+    return $self->{_raw_flags};
+}
+
+########################################################################
+package Zip::ExtraField::ExtendedTimestamp::InfoFlags;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{has_mod_time} = $self->{_io}->read_bits_int_le(1);
+    $self->{has_access_time} = $self->{_io}->read_bits_int_le(1);
+    $self->{has_create_time} = $self->{_io}->read_bits_int_le(1);
+    $self->{reserved} = $self->{_io}->read_bits_int_le(5);
+}
+
+sub has_mod_time {
+    my ($self) = @_;
+    return $self->{has_mod_time};
+}
+
+sub has_access_time {
+    my ($self) = @_;
+    return $self->{has_access_time};
+}
+
+sub has_create_time {
+    my ($self) = @_;
+    return $self->{has_create_time};
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self->{reserved};
+}
+
+########################################################################
+package Zip::ExtraField::InfozipUnixVarSize;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{version} = $self->{_io}->read_u1();
+    $self->{len_uid} = $self->{_io}->read_u1();
+    $self->{uid} = $self->{_io}->read_bytes($self->len_uid());
+    $self->{len_gid} = $self->{_io}->read_u1();
+    $self->{gid} = $self->{_io}->read_bytes($self->len_gid());
+}
+
+sub version {
+    my ($self) = @_;
+    return $self->{version};
+}
+
+sub len_uid {
+    my ($self) = @_;
+    return $self->{len_uid};
+}
+
+sub uid {
+    my ($self) = @_;
+    return $self->{uid};
+}
+
+sub len_gid {
+    my ($self) = @_;
+    return $self->{len_gid};
+}
+
+sub gid {
+    my ($self) = @_;
+    return $self->{gid};
+}
+
+########################################################################
+package Zip::ExtraField::Ntfs;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{reserved} = $self->{_io}->read_u4le();
+    $self->{attributes} = [];
+    while (!$self->{_io}->is_eof()) {
+        push @{$self->{attributes}}, Zip::ExtraField::Ntfs::Attribute->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self->{reserved};
+}
+
+sub attributes {
+    my ($self) = @_;
+    return $self->{attributes};
+}
+
+########################################################################
+package Zip::ExtraField::Ntfs::Attribute;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag} = $self->{_io}->read_u2le();
+    $self->{len_body} = $self->{_io}->read_u2le();
+    my $_on = $self->tag();
+    if ($_on == 1) {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len_body());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = Zip::ExtraField::Ntfs::Attribute1->new($io__raw_body, $self, $self->{_root});
+    }
+    else {
+        $self->{body} = $self->{_io}->read_bytes($self->len_body());
+    }
+}
+
+sub tag {
+    my ($self) = @_;
+    return $self->{tag};
+}
+
+sub len_body {
+    my ($self) = @_;
+    return $self->{len_body};
+}
+
+sub body {
+    my ($self) = @_;
+    return $self->{body};
+}
+
+sub _raw_body {
+    my ($self) = @_;
+    return $self->{_raw_body};
+}
+
+########################################################################
+package Zip::ExtraField::Ntfs::Attribute1;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{last_mod_time} = $self->{_io}->read_u8le();
+    $self->{last_access_time} = $self->{_io}->read_u8le();
+    $self->{creation_time} = $self->{_io}->read_u8le();
+}
+
+sub last_mod_time {
+    my ($self) = @_;
+    return $self->{last_mod_time};
+}
+
+sub last_access_time {
+    my ($self) = @_;
+    return $self->{last_access_time};
+}
+
+sub creation_time {
+    my ($self) = @_;
+    return $self->{creation_time};
 }
 
 ########################################################################
@@ -856,7 +830,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -866,7 +840,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{entries} = ();
+    $self->{entries} = [];
     while (!$self->{_io}->is_eof()) {
         push @{$self->{entries}}, Zip::ExtraField->new($self->{_io}, $self, $self->{_root});
     }
@@ -875,6 +849,50 @@ sub _read {
 sub entries {
     my ($self) = @_;
     return $self->{entries};
+}
+
+########################################################################
+package Zip::LocalFile;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{header} = Zip::LocalFileHeader->new($self->{_io}, $self, $self->{_root});
+    $self->{body} = $self->{_io}->read_bytes($self->header()->len_body_compressed());
+}
+
+sub header {
+    my ($self) = @_;
+    return $self->{header};
+}
+
+sub body {
+    my ($self) = @_;
+    return $self->{body};
 }
 
 ########################################################################
@@ -897,7 +915,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -1021,7 +1039,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -1057,7 +1075,7 @@ sub imploded_dict_byte_size {
     my ($self) = @_;
     return $self->{imploded_dict_byte_size} if ($self->{imploded_dict_byte_size});
     if ($self->_parent()->compression_method() == $Zip::COMPRESSION_IMPLODED) {
-        $self->{imploded_dict_byte_size} = ((($self->comp_options_raw() & 1) != 0 ? 8 : 4) * 1024);
+        $self->{imploded_dict_byte_size} = (($self->comp_options_raw() & 1) != 0 ? 8 : 4) * 1024;
     }
     return $self->{imploded_dict_byte_size};
 }
@@ -1136,7 +1154,7 @@ sub reserved_4 {
 }
 
 ########################################################################
-package Zip::EndOfCentralDir;
+package Zip::PkSection;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -1155,7 +1173,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -1165,54 +1183,36 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{disk_of_end_of_central_dir} = $self->{_io}->read_u2le();
-    $self->{disk_of_central_dir} = $self->{_io}->read_u2le();
-    $self->{num_central_dir_entries_on_disk} = $self->{_io}->read_u2le();
-    $self->{num_central_dir_entries_total} = $self->{_io}->read_u2le();
-    $self->{len_central_dir} = $self->{_io}->read_u4le();
-    $self->{ofs_central_dir} = $self->{_io}->read_u4le();
-    $self->{len_comment} = $self->{_io}->read_u2le();
-    $self->{comment} = Encode::decode("UTF-8", $self->{_io}->read_bytes($self->len_comment()));
+    $self->{magic} = $self->{_io}->read_bytes(2);
+    $self->{section_type} = $self->{_io}->read_u2le();
+    my $_on = $self->section_type();
+    if ($_on == 1027) {
+        $self->{body} = Zip::LocalFile->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == 1541) {
+        $self->{body} = Zip::EndOfCentralDir->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == 2055) {
+        $self->{body} = Zip::DataDescriptor->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == 513) {
+        $self->{body} = Zip::CentralDirEntry->new($self->{_io}, $self, $self->{_root});
+    }
 }
 
-sub disk_of_end_of_central_dir {
+sub magic {
     my ($self) = @_;
-    return $self->{disk_of_end_of_central_dir};
+    return $self->{magic};
 }
 
-sub disk_of_central_dir {
+sub section_type {
     my ($self) = @_;
-    return $self->{disk_of_central_dir};
+    return $self->{section_type};
 }
 
-sub num_central_dir_entries_on_disk {
+sub body {
     my ($self) = @_;
-    return $self->{num_central_dir_entries_on_disk};
-}
-
-sub num_central_dir_entries_total {
-    my ($self) = @_;
-    return $self->{num_central_dir_entries_total};
-}
-
-sub len_central_dir {
-    my ($self) = @_;
-    return $self->{len_central_dir};
-}
-
-sub ofs_central_dir {
-    my ($self) = @_;
-    return $self->{ofs_central_dir};
-}
-
-sub len_comment {
-    my ($self) = @_;
-    return $self->{len_comment};
-}
-
-sub comment {
-    my ($self) = @_;
-    return $self->{comment};
+    return $self->{body};
 }
 
 1;

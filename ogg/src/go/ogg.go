@@ -21,19 +21,23 @@ type Ogg struct {
 	Pages []*Ogg_Page
 	_io *kaitai.Stream
 	_root *Ogg
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewOgg() *Ogg {
 	return &Ogg{
 	}
 }
 
-func (this *Ogg) Read(io *kaitai.Stream, parent interface{}, root *Ogg) (err error) {
+func (this Ogg) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Ogg) Read(io *kaitai.Stream, parent kaitai.Struct, root *Ogg) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	for i := 1;; i++ {
+	for i := 0;; i++ {
 		tmp1, err := this._io.EOF()
 		if err != nil {
 			return err
@@ -76,6 +80,10 @@ type Ogg_Page struct {
 func NewOgg_Page() *Ogg_Page {
 	return &Ogg_Page{
 	}
+}
+
+func (this Ogg_Page) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Ogg_Page) Read(io *kaitai.Stream, parent *Ogg, root *Ogg) (err error) {

@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -28,20 +28,85 @@ end
 # So the TE format is basically a stripped version of PE.
 # @see https://uefi.org/sites/default/files/resources/PI_Spec_1_6.pdf Source
 class UefiTe < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
-    @_raw_te_hdr = @_io.read_bytes(40)
-    _io__raw_te_hdr = Kaitai::Struct::Stream.new(@_raw_te_hdr)
-    @te_hdr = TeHeader.new(_io__raw_te_hdr, self, @_root)
+    _io_te_hdr = @_io.substream(40)
+    @te_hdr = TeHeader.new(_io_te_hdr, self, @_root)
     @sections = []
     (te_hdr.num_sections).times { |i|
       @sections << Section.new(@_io, self, @_root)
     }
     self
+  end
+  class DataDir < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @virtual_address = @_io.read_u4le
+      @size = @_io.read_u4le
+      self
+    end
+    attr_reader :virtual_address
+    attr_reader :size
+  end
+  class HeaderDataDirs < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @base_relocation_table = DataDir.new(@_io, self, @_root)
+      @debug = DataDir.new(@_io, self, @_root)
+      self
+    end
+    attr_reader :base_relocation_table
+    attr_reader :debug
+  end
+  class Section < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @name = (Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(8), 0)).force_encoding("UTF-8")
+      @virtual_size = @_io.read_u4le
+      @virtual_address = @_io.read_u4le
+      @size_of_raw_data = @_io.read_u4le
+      @pointer_to_raw_data = @_io.read_u4le
+      @pointer_to_relocations = @_io.read_u4le
+      @pointer_to_linenumbers = @_io.read_u4le
+      @num_relocations = @_io.read_u2le
+      @num_linenumbers = @_io.read_u2le
+      @characteristics = @_io.read_u4le
+      self
+    end
+    def body
+      return @body unless @body.nil?
+      _pos = @_io.pos
+      @_io.seek((pointer_to_raw_data - _root.te_hdr.stripped_size) + _root.te_hdr._io.size)
+      @body = @_io.read_bytes(size_of_raw_data)
+      @_io.seek(_pos)
+      @body
+    end
+    attr_reader :name
+    attr_reader :virtual_size
+    attr_reader :virtual_address
+    attr_reader :size_of_raw_data
+    attr_reader :pointer_to_raw_data
+    attr_reader :pointer_to_relocations
+    attr_reader :pointer_to_linenumbers
+    attr_reader :num_relocations
+    attr_reader :num_linenumbers
+    attr_reader :characteristics
   end
   class TeHeader < Kaitai::Struct::Struct
 
@@ -93,14 +158,14 @@ class UefiTe < Kaitai::Struct::Struct
       16 => :subsystem_enum_windows_boot_application,
     }
     I__SUBSYSTEM_ENUM = SUBSYSTEM_ENUM.invert
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
       @magic = @_io.read_bytes(2)
-      raise Kaitai::Struct::ValidationNotEqualError.new([86, 90].pack('C*'), magic, _io, "/types/te_header/seq/0") if not magic == [86, 90].pack('C*')
+      raise Kaitai::Struct::ValidationNotEqualError.new([86, 90].pack('C*'), @magic, @_io, "/types/te_header/seq/0") if not @magic == [86, 90].pack('C*')
       @machine = Kaitai::Struct::Stream::resolve_enum(MACHINE_TYPE, @_io.read_u2le)
       @num_sections = @_io.read_u1
       @subsystem = Kaitai::Struct::Stream::resolve_enum(SUBSYSTEM_ENUM, @_io.read_u1)
@@ -120,72 +185,6 @@ class UefiTe < Kaitai::Struct::Struct
     attr_reader :base_of_code
     attr_reader :image_base
     attr_reader :data_dirs
-  end
-  class HeaderDataDirs < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @base_relocation_table = DataDir.new(@_io, self, @_root)
-      @debug = DataDir.new(@_io, self, @_root)
-      self
-    end
-    attr_reader :base_relocation_table
-    attr_reader :debug
-  end
-  class DataDir < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @virtual_address = @_io.read_u4le
-      @size = @_io.read_u4le
-      self
-    end
-    attr_reader :virtual_address
-    attr_reader :size
-  end
-  class Section < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @name = (Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(8), 0)).force_encoding("UTF-8")
-      @virtual_size = @_io.read_u4le
-      @virtual_address = @_io.read_u4le
-      @size_of_raw_data = @_io.read_u4le
-      @pointer_to_raw_data = @_io.read_u4le
-      @pointer_to_relocations = @_io.read_u4le
-      @pointer_to_linenumbers = @_io.read_u4le
-      @num_relocations = @_io.read_u2le
-      @num_linenumbers = @_io.read_u2le
-      @characteristics = @_io.read_u4le
-      self
-    end
-    def body
-      return @body unless @body.nil?
-      _pos = @_io.pos
-      @_io.seek(((pointer_to_raw_data - _root.te_hdr.stripped_size) + _root.te_hdr._io.size))
-      @body = @_io.read_bytes(size_of_raw_data)
-      @_io.seek(_pos)
-      @body
-    end
-    attr_reader :name
-    attr_reader :virtual_size
-    attr_reader :virtual_address
-    attr_reader :size_of_raw_data
-    attr_reader :pointer_to_raw_data
-    attr_reader :pointer_to_relocations
-    attr_reader :pointer_to_linenumbers
-    attr_reader :num_relocations
-    attr_reader :num_linenumbers
-    attr_reader :characteristics
   end
   attr_reader :te_hdr
   attr_reader :sections

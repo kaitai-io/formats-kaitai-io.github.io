@@ -39,19 +39,19 @@ namespace Kaitai
         private void _read()
         {
             _magic = m_io.ReadBytes(4);
-            if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 77, 80, 84, 0 }) == 0)))
+            if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 77, 80, 84, 0 }) == 0)))
             {
-                throw new ValidationNotEqualError(new byte[] { 77, 80, 84, 0 }, Magic, M_Io, "/seq/0");
+                throw new ValidationNotEqualError(new byte[] { 77, 80, 84, 0 }, _magic, m_io, "/seq/0");
             }
             _version = System.Text.Encoding.GetEncoding("UTF-8").GetString(KaitaiStream.BytesTerminate(m_io.ReadBytes(12), 0, false));
             _numPartitions = m_io.ReadS4le();
-            if (!(NumPartitions >= 1))
+            if (!(_numPartitions >= 1))
             {
-                throw new ValidationLessThanError(1, NumPartitions, M_Io, "/seq/2");
+                throw new ValidationLessThanError(1, _numPartitions, m_io, "/seq/2");
             }
-            if (!(NumPartitions <= 32))
+            if (!(_numPartitions <= 32))
             {
-                throw new ValidationGreaterThanError(32, NumPartitions, M_Io, "/seq/2");
+                throw new ValidationGreaterThanError(32, _numPartitions, m_io, "/seq/2");
             }
             _checksum = m_io.ReadU4le();
             _partitions = new List<Partition>();

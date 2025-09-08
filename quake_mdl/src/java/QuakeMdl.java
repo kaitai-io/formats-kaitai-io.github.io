@@ -5,8 +5,9 @@ import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Arrays;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 
 /**
@@ -84,78 +85,95 @@ public class QuakeMdl extends KaitaiStruct {
             this.frames.add(new MdlFrame(this._io, this, _root));
         }
     }
-    public static class MdlVertex extends KaitaiStruct {
-        public static MdlVertex fromFile(String fileName) throws IOException {
-            return new MdlVertex(new ByteBufferKaitaiStream(fileName));
-        }
 
-        public MdlVertex(KaitaiStream _io) {
-            this(_io, null, null);
+    public void _fetchInstances() {
+        this.header._fetchInstances();
+        for (int i = 0; i < this.skins.size(); i++) {
+            this.skins.get(((Number) (i)).intValue())._fetchInstances();
         }
-
-        public MdlVertex(KaitaiStream _io, KaitaiStruct _parent) {
-            this(_io, _parent, null);
+        for (int i = 0; i < this.textureCoordinates.size(); i++) {
+            this.textureCoordinates.get(((Number) (i)).intValue())._fetchInstances();
         }
-
-        public MdlVertex(KaitaiStream _io, KaitaiStruct _parent, QuakeMdl _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
+        for (int i = 0; i < this.triangles.size(); i++) {
+            this.triangles.get(((Number) (i)).intValue())._fetchInstances();
         }
-        private void _read() {
-            this.values = new ArrayList<Integer>();
-            for (int i = 0; i < 3; i++) {
-                this.values.add(this._io.readU1());
-            }
-            this.normalIndex = this._io.readU1();
+        for (int i = 0; i < this.frames.size(); i++) {
+            this.frames.get(((Number) (i)).intValue())._fetchInstances();
         }
-        private ArrayList<Integer> values;
-        private int normalIndex;
-        private QuakeMdl _root;
-        private KaitaiStruct _parent;
-        public ArrayList<Integer> values() { return values; }
-        public int normalIndex() { return normalIndex; }
-        public QuakeMdl _root() { return _root; }
-        public KaitaiStruct _parent() { return _parent; }
     }
-
-    /**
-     * @see <a href="https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L79-L83">Source</a>
-     * @see <a href="https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD2">Source</a>
-     */
-    public static class MdlTexcoord extends KaitaiStruct {
-        public static MdlTexcoord fromFile(String fileName) throws IOException {
-            return new MdlTexcoord(new ByteBufferKaitaiStream(fileName));
+    public static class MdlFrame extends KaitaiStruct {
+        public static MdlFrame fromFile(String fileName) throws IOException {
+            return new MdlFrame(new ByteBufferKaitaiStream(fileName));
         }
 
-        public MdlTexcoord(KaitaiStream _io) {
+        public MdlFrame(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public MdlTexcoord(KaitaiStream _io, QuakeMdl _parent) {
+        public MdlFrame(KaitaiStream _io, QuakeMdl _parent) {
             this(_io, _parent, null);
         }
 
-        public MdlTexcoord(KaitaiStream _io, QuakeMdl _parent, QuakeMdl _root) {
+        public MdlFrame(KaitaiStream _io, QuakeMdl _parent, QuakeMdl _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.onSeam = this._io.readS4le();
-            this.s = this._io.readS4le();
-            this.t = this._io.readS4le();
+            this.type = this._io.readS4le();
+            if (type() != 0) {
+                this.min = new MdlVertex(this._io, this, _root);
+            }
+            if (type() != 0) {
+                this.max = new MdlVertex(this._io, this, _root);
+            }
+            if (type() != 0) {
+                this.time = new ArrayList<Float>();
+                for (int i = 0; i < type(); i++) {
+                    this.time.add(this._io.readF4le());
+                }
+            }
+            this.frames = new ArrayList<MdlSimpleFrame>();
+            for (int i = 0; i < numSimpleFrames(); i++) {
+                this.frames.add(new MdlSimpleFrame(this._io, this, _root));
+            }
         }
-        private int onSeam;
-        private int s;
-        private int t;
+
+        public void _fetchInstances() {
+            if (type() != 0) {
+                this.min._fetchInstances();
+            }
+            if (type() != 0) {
+                this.max._fetchInstances();
+            }
+            if (type() != 0) {
+                for (int i = 0; i < this.time.size(); i++) {
+                }
+            }
+            for (int i = 0; i < this.frames.size(); i++) {
+                this.frames.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private Integer numSimpleFrames;
+        public Integer numSimpleFrames() {
+            if (this.numSimpleFrames != null)
+                return this.numSimpleFrames;
+            this.numSimpleFrames = ((Number) ((type() == 0 ? 1 : type()))).intValue();
+            return this.numSimpleFrames;
+        }
+        private int type;
+        private MdlVertex min;
+        private MdlVertex max;
+        private List<Float> time;
+        private List<MdlSimpleFrame> frames;
         private QuakeMdl _root;
         private QuakeMdl _parent;
-        public int onSeam() { return onSeam; }
-        public int s() { return s; }
-        public int t() { return t; }
+        public int type() { return type; }
+        public MdlVertex min() { return min; }
+        public MdlVertex max() { return max; }
+        public List<Float> time() { return time; }
+        public List<MdlSimpleFrame> frames() { return frames; }
         public QuakeMdl _root() { return _root; }
         public QuakeMdl _parent() { return _parent; }
     }
@@ -185,12 +203,12 @@ public class QuakeMdl extends KaitaiStruct {
         }
         private void _read() {
             this.ident = this._io.readBytes(4);
-            if (!(Arrays.equals(ident(), new byte[] { 73, 68, 80, 79 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 73, 68, 80, 79 }, ident(), _io(), "/types/mdl_header/seq/0");
+            if (!(Arrays.equals(this.ident, new byte[] { 73, 68, 80, 79 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 73, 68, 80, 79 }, this.ident, this._io, "/types/mdl_header/seq/0");
             }
             this.version = this._io.readS4le();
-            if (!(version() == 6)) {
-                throw new KaitaiStream.ValidationNotEqualError(6, version(), _io(), "/types/mdl_header/seq/1");
+            if (!(this.version == 6)) {
+                throw new KaitaiStream.ValidationNotEqualError(6, this.version, this._io, "/types/mdl_header/seq/1");
             }
             this.scale = new Vec3(this._io, this, _root);
             this.origin = new Vec3(this._io, this, _root);
@@ -206,6 +224,12 @@ public class QuakeMdl extends KaitaiStruct {
             this.flags = this._io.readS4le();
             this.size = this._io.readF4le();
         }
+
+        public void _fetchInstances() {
+            this.scale._fetchInstances();
+            this.origin._fetchInstances();
+            this.eyePosition._fetchInstances();
+        }
         private Integer skinSize;
 
         /**
@@ -214,8 +238,7 @@ public class QuakeMdl extends KaitaiStruct {
         public Integer skinSize() {
             if (this.skinSize != null)
                 return this.skinSize;
-            int _tmp = (int) ((skinWidth() * skinHeight()));
-            this.skinSize = _tmp;
+            this.skinSize = ((Number) (skinWidth() * skinHeight())).intValue();
             return this.skinSize;
         }
         private byte[] ident;
@@ -291,6 +314,55 @@ public class QuakeMdl extends KaitaiStruct {
         public QuakeMdl _root() { return _root; }
         public QuakeMdl _parent() { return _parent; }
     }
+    public static class MdlSimpleFrame extends KaitaiStruct {
+        public static MdlSimpleFrame fromFile(String fileName) throws IOException {
+            return new MdlSimpleFrame(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public MdlSimpleFrame(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public MdlSimpleFrame(KaitaiStream _io, QuakeMdl.MdlFrame _parent) {
+            this(_io, _parent, null);
+        }
+
+        public MdlSimpleFrame(KaitaiStream _io, QuakeMdl.MdlFrame _parent, QuakeMdl _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.bboxMin = new MdlVertex(this._io, this, _root);
+            this.bboxMax = new MdlVertex(this._io, this, _root);
+            this.name = new String(KaitaiStream.bytesTerminate(this._io.readBytes(16), (byte) 0, false), StandardCharsets.US_ASCII);
+            this.vertices = new ArrayList<MdlVertex>();
+            for (int i = 0; i < _root().header().numVerts(); i++) {
+                this.vertices.add(new MdlVertex(this._io, this, _root));
+            }
+        }
+
+        public void _fetchInstances() {
+            this.bboxMin._fetchInstances();
+            this.bboxMax._fetchInstances();
+            for (int i = 0; i < this.vertices.size(); i++) {
+                this.vertices.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private MdlVertex bboxMin;
+        private MdlVertex bboxMax;
+        private String name;
+        private List<MdlVertex> vertices;
+        private QuakeMdl _root;
+        private QuakeMdl.MdlFrame _parent;
+        public MdlVertex bboxMin() { return bboxMin; }
+        public MdlVertex bboxMax() { return bboxMax; }
+        public String name() { return name; }
+        public List<MdlVertex> vertices() { return vertices; }
+        public QuakeMdl _root() { return _root; }
+        public QuakeMdl.MdlFrame _parent() { return _parent; }
+    }
     public static class MdlSkin extends KaitaiStruct {
         public static MdlSkin fromFile(String fileName) throws IOException {
             return new MdlSkin(new ByteBufferKaitaiStream(fileName));
@@ -331,122 +403,78 @@ public class QuakeMdl extends KaitaiStruct {
                 }
             }
         }
+
+        public void _fetchInstances() {
+            if (group() == 0) {
+            }
+            if (group() != 0) {
+            }
+            if (group() != 0) {
+                for (int i = 0; i < this.frameTimes.size(); i++) {
+                }
+            }
+            if (group() != 0) {
+                for (int i = 0; i < this.groupTextureData.size(); i++) {
+                }
+            }
+        }
         private int group;
         private byte[] singleTextureData;
         private Long numFrames;
-        private ArrayList<Float> frameTimes;
-        private ArrayList<byte[]> groupTextureData;
+        private List<Float> frameTimes;
+        private List<byte[]> groupTextureData;
         private QuakeMdl _root;
         private QuakeMdl _parent;
         public int group() { return group; }
         public byte[] singleTextureData() { return singleTextureData; }
         public Long numFrames() { return numFrames; }
-        public ArrayList<Float> frameTimes() { return frameTimes; }
-        public ArrayList<byte[]> groupTextureData() { return groupTextureData; }
+        public List<Float> frameTimes() { return frameTimes; }
+        public List<byte[]> groupTextureData() { return groupTextureData; }
         public QuakeMdl _root() { return _root; }
         public QuakeMdl _parent() { return _parent; }
     }
-    public static class MdlFrame extends KaitaiStruct {
-        public static MdlFrame fromFile(String fileName) throws IOException {
-            return new MdlFrame(new ByteBufferKaitaiStream(fileName));
+
+    /**
+     * @see <a href="https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L79-L83">Source</a>
+     * @see <a href="https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD2">Source</a>
+     */
+    public static class MdlTexcoord extends KaitaiStruct {
+        public static MdlTexcoord fromFile(String fileName) throws IOException {
+            return new MdlTexcoord(new ByteBufferKaitaiStream(fileName));
         }
 
-        public MdlFrame(KaitaiStream _io) {
+        public MdlTexcoord(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public MdlFrame(KaitaiStream _io, QuakeMdl _parent) {
+        public MdlTexcoord(KaitaiStream _io, QuakeMdl _parent) {
             this(_io, _parent, null);
         }
 
-        public MdlFrame(KaitaiStream _io, QuakeMdl _parent, QuakeMdl _root) {
+        public MdlTexcoord(KaitaiStream _io, QuakeMdl _parent, QuakeMdl _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.type = this._io.readS4le();
-            if (type() != 0) {
-                this.min = new MdlVertex(this._io, this, _root);
-            }
-            if (type() != 0) {
-                this.max = new MdlVertex(this._io, this, _root);
-            }
-            if (type() != 0) {
-                this.time = new ArrayList<Float>();
-                for (int i = 0; i < type(); i++) {
-                    this.time.add(this._io.readF4le());
-                }
-            }
-            this.frames = new ArrayList<MdlSimpleFrame>();
-            for (int i = 0; i < numSimpleFrames(); i++) {
-                this.frames.add(new MdlSimpleFrame(this._io, this, _root));
-            }
+            this.onSeam = this._io.readS4le();
+            this.s = this._io.readS4le();
+            this.t = this._io.readS4le();
         }
-        private Integer numSimpleFrames;
-        public Integer numSimpleFrames() {
-            if (this.numSimpleFrames != null)
-                return this.numSimpleFrames;
-            int _tmp = (int) ((type() == 0 ? 1 : type()));
-            this.numSimpleFrames = _tmp;
-            return this.numSimpleFrames;
+
+        public void _fetchInstances() {
         }
-        private int type;
-        private MdlVertex min;
-        private MdlVertex max;
-        private ArrayList<Float> time;
-        private ArrayList<MdlSimpleFrame> frames;
+        private int onSeam;
+        private int s;
+        private int t;
         private QuakeMdl _root;
         private QuakeMdl _parent;
-        public int type() { return type; }
-        public MdlVertex min() { return min; }
-        public MdlVertex max() { return max; }
-        public ArrayList<Float> time() { return time; }
-        public ArrayList<MdlSimpleFrame> frames() { return frames; }
+        public int onSeam() { return onSeam; }
+        public int s() { return s; }
+        public int t() { return t; }
         public QuakeMdl _root() { return _root; }
         public QuakeMdl _parent() { return _parent; }
-    }
-    public static class MdlSimpleFrame extends KaitaiStruct {
-        public static MdlSimpleFrame fromFile(String fileName) throws IOException {
-            return new MdlSimpleFrame(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public MdlSimpleFrame(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public MdlSimpleFrame(KaitaiStream _io, QuakeMdl.MdlFrame _parent) {
-            this(_io, _parent, null);
-        }
-
-        public MdlSimpleFrame(KaitaiStream _io, QuakeMdl.MdlFrame _parent, QuakeMdl _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.bboxMin = new MdlVertex(this._io, this, _root);
-            this.bboxMax = new MdlVertex(this._io, this, _root);
-            this.name = new String(KaitaiStream.bytesTerminate(KaitaiStream.bytesStripRight(this._io.readBytes(16), (byte) 0), (byte) 0, false), Charset.forName("ASCII"));
-            this.vertices = new ArrayList<MdlVertex>();
-            for (int i = 0; i < _root().header().numVerts(); i++) {
-                this.vertices.add(new MdlVertex(this._io, this, _root));
-            }
-        }
-        private MdlVertex bboxMin;
-        private MdlVertex bboxMax;
-        private String name;
-        private ArrayList<MdlVertex> vertices;
-        private QuakeMdl _root;
-        private QuakeMdl.MdlFrame _parent;
-        public MdlVertex bboxMin() { return bboxMin; }
-        public MdlVertex bboxMax() { return bboxMax; }
-        public String name() { return name; }
-        public ArrayList<MdlVertex> vertices() { return vertices; }
-        public QuakeMdl _root() { return _root; }
-        public QuakeMdl.MdlFrame _parent() { return _parent; }
     }
 
     /**
@@ -481,14 +509,59 @@ public class QuakeMdl extends KaitaiStruct {
                 this.vertices.add(this._io.readS4le());
             }
         }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.vertices.size(); i++) {
+            }
+        }
         private int facesFront;
-        private ArrayList<Integer> vertices;
+        private List<Integer> vertices;
         private QuakeMdl _root;
         private QuakeMdl _parent;
         public int facesFront() { return facesFront; }
-        public ArrayList<Integer> vertices() { return vertices; }
+        public List<Integer> vertices() { return vertices; }
         public QuakeMdl _root() { return _root; }
         public QuakeMdl _parent() { return _parent; }
+    }
+    public static class MdlVertex extends KaitaiStruct {
+        public static MdlVertex fromFile(String fileName) throws IOException {
+            return new MdlVertex(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public MdlVertex(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public MdlVertex(KaitaiStream _io, KaitaiStruct _parent) {
+            this(_io, _parent, null);
+        }
+
+        public MdlVertex(KaitaiStream _io, KaitaiStruct _parent, QuakeMdl _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.values = new ArrayList<Integer>();
+            for (int i = 0; i < 3; i++) {
+                this.values.add(this._io.readU1());
+            }
+            this.normalIndex = this._io.readU1();
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.values.size(); i++) {
+            }
+        }
+        private List<Integer> values;
+        private int normalIndex;
+        private QuakeMdl _root;
+        private KaitaiStruct _parent;
+        public List<Integer> values() { return values; }
+        public int normalIndex() { return normalIndex; }
+        public QuakeMdl _root() { return _root; }
+        public KaitaiStruct _parent() { return _parent; }
     }
 
     /**
@@ -520,6 +593,9 @@ public class QuakeMdl extends KaitaiStruct {
             this.y = this._io.readF4le();
             this.z = this._io.readF4le();
         }
+
+        public void _fetchInstances() {
+        }
         private float x;
         private float y;
         private float z;
@@ -532,17 +608,17 @@ public class QuakeMdl extends KaitaiStruct {
         public QuakeMdl.MdlHeader _parent() { return _parent; }
     }
     private MdlHeader header;
-    private ArrayList<MdlSkin> skins;
-    private ArrayList<MdlTexcoord> textureCoordinates;
-    private ArrayList<MdlTriangle> triangles;
-    private ArrayList<MdlFrame> frames;
+    private List<MdlSkin> skins;
+    private List<MdlTexcoord> textureCoordinates;
+    private List<MdlTriangle> triangles;
+    private List<MdlFrame> frames;
     private QuakeMdl _root;
     private KaitaiStruct _parent;
     public MdlHeader header() { return header; }
-    public ArrayList<MdlSkin> skins() { return skins; }
-    public ArrayList<MdlTexcoord> textureCoordinates() { return textureCoordinates; }
-    public ArrayList<MdlTriangle> triangles() { return triangles; }
-    public ArrayList<MdlFrame> frames() { return frames; }
+    public List<MdlSkin> skins() { return skins; }
+    public List<MdlTexcoord> textureCoordinates() { return textureCoordinates; }
+    public List<MdlTriangle> triangles() { return triangles; }
+    public List<MdlFrame> frames() { return frames; }
     public QuakeMdl _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

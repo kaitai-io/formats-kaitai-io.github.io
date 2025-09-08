@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -27,56 +27,20 @@ end
 # @see https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_format.h?h=LA.UM.6.1.1&id=a68d284aee85 Source
 # @see https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&id=a68d284aee85 Source
 class AndroidBootldrHuawei < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
     @meta_header = MetaHdr.new(@_io, self, @_root)
-    @header_ext = @_io.read_bytes((meta_header.len_meta_header - 76))
-    @_raw_image_header = @_io.read_bytes(meta_header.len_image_header)
-    _io__raw_image_header = Kaitai::Struct::Stream.new(@_raw_image_header)
-    @image_header = ImageHdr.new(_io__raw_image_header, self, @_root)
+    @header_ext = @_io.read_bytes(meta_header.len_meta_header - 76)
+    _io_image_header = @_io.substream(meta_header.len_image_header)
+    @image_header = ImageHdr.new(_io_image_header, self, @_root)
     self
   end
-  class MetaHdr < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @magic = @_io.read_bytes(4)
-      raise Kaitai::Struct::ValidationNotEqualError.new([60, 214, 26, 206].pack('C*'), magic, _io, "/types/meta_hdr/seq/0") if not magic == [60, 214, 26, 206].pack('C*')
-      @version = Version.new(@_io, self, @_root)
-      @image_version = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(64), 0, false)).force_encoding("ASCII")
-      @len_meta_header = @_io.read_u2le
-      @len_image_header = @_io.read_u2le
-      self
-    end
-    attr_reader :magic
-    attr_reader :version
-    attr_reader :image_version
-    attr_reader :len_meta_header
-    attr_reader :len_image_header
-  end
-  class Version < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @major = @_io.read_u2le
-      @minor = @_io.read_u2le
-      self
-    end
-    attr_reader :major
-    attr_reader :minor
-  end
   class ImageHdr < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -105,24 +69,16 @@ class AndroidBootldrHuawei < Kaitai::Struct::Struct
     attr_reader :entries
   end
   class ImageHdrEntry < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @name = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(72), 0, false)).force_encoding("ASCII")
+      @name = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(72), 0, false)).force_encoding("ASCII").encode('UTF-8')
       @ofs_body = @_io.read_u4le
       @len_body = @_io.read_u4le
       self
-    end
-
-    ##
-    # @see https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&id=a68d284aee85#n119 Source
-    def is_used
-      return @is_used unless @is_used.nil?
-      @is_used =  ((ofs_body != 0) && (len_body != 0)) 
-      @is_used
     end
     def body
       return @body unless @body.nil?
@@ -137,10 +93,53 @@ class AndroidBootldrHuawei < Kaitai::Struct::Struct
     end
 
     ##
+    # @see https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&id=a68d284aee85#n119 Source
+    def is_used
+      return @is_used unless @is_used.nil?
+      @is_used =  ((ofs_body != 0) && (len_body != 0)) 
+      @is_used
+    end
+
+    ##
     # partition name
     attr_reader :name
     attr_reader :ofs_body
     attr_reader :len_body
+  end
+  class MetaHdr < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @magic = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([60, 214, 26, 206].pack('C*'), @magic, @_io, "/types/meta_hdr/seq/0") if not @magic == [60, 214, 26, 206].pack('C*')
+      @version = Version.new(@_io, self, @_root)
+      @image_version = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(64), 0, false)).force_encoding("ASCII").encode('UTF-8')
+      @len_meta_header = @_io.read_u2le
+      @len_image_header = @_io.read_u2le
+      self
+    end
+    attr_reader :magic
+    attr_reader :version
+    attr_reader :image_version
+    attr_reader :len_meta_header
+    attr_reader :len_image_header
+  end
+  class Version < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @major = @_io.read_u2le
+      @minor = @_io.read_u2le
+      self
+    end
+    attr_reader :major
+    attr_reader :minor
   end
   attr_reader :meta_header
   attr_reader :header_ext

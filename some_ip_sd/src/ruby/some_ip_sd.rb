@@ -1,9 +1,11 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 require 'kaitai/struct/struct'
+require_relative 'some_ip_sd_options'
+require_relative 'some_ip_sd_entries'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -16,8 +18,8 @@ end
 # (Scalable service-Oriented MiddlewarE over IP - Service Discovery).
 # @see https://www.autosar.org/fileadmin/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf Source
 class SomeIpSd < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -25,20 +27,18 @@ class SomeIpSd < Kaitai::Struct::Struct
     @flags = SdFlags.new(@_io, self, @_root)
     @reserved = @_io.read_bytes(3)
     @len_entries = @_io.read_u4be
-    @_raw_entries = @_io.read_bytes(len_entries)
-    _io__raw_entries = Kaitai::Struct::Stream.new(@_raw_entries)
-    @entries = SomeIpSdEntries.new(_io__raw_entries)
+    _io_entries = @_io.substream(len_entries)
+    @entries = SomeIpSdEntries.new(_io_entries)
     @len_options = @_io.read_u4be
-    @_raw_options = @_io.read_bytes(len_options)
-    _io__raw_options = Kaitai::Struct::Stream.new(@_raw_options)
-    @options = SomeIpSdOptions.new(_io__raw_options)
+    _io_options = @_io.substream(len_options)
+    @options = SomeIpSdOptions.new(_io_options)
     self
   end
 
   ##
   # @see '' AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf - Figure 4.3
   class SdFlags < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end

@@ -13,8 +13,8 @@
 
 namespace {
     class Wmf extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Wmf $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Wmf $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -39,127 +39,32 @@ namespace {
 }
 
 namespace Wmf {
-    class ParamsSetwindoworg extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Wmf\Record $_parent = null, \Wmf $_root = null) {
+    class ColorRef extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Wmf\Record $_parent = null, ?\Wmf $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_y = $this->_io->readS2le();
-            $this->_m_x = $this->_io->readS2le();
+            $this->_m_red = $this->_io->readU1();
+            $this->_m_green = $this->_io->readU1();
+            $this->_m_blue = $this->_io->readU1();
+            $this->_m_reserved = $this->_io->readU1();
         }
-        protected $_m_y;
-        protected $_m_x;
-
-        /**
-         * Y coordinate of the window origin, in logical units.
-         */
-        public function y() { return $this->_m_y; }
-
-        /**
-         * X coordinate of the window origin, in logical units.
-         */
-        public function x() { return $this->_m_x; }
-    }
-}
-
-namespace Wmf {
-    class ParamsSetbkmode extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Wmf\Record $_parent = null, \Wmf $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_bkMode = $this->_io->readU2le();
-        }
-        protected $_m_bkMode;
-
-        /**
-         * Defines current graphic context background mix mode.
-         */
-        public function bkMode() { return $this->_m_bkMode; }
-    }
-}
-
-namespace Wmf {
-    class PointS extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Wmf $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_x = $this->_io->readS2le();
-            $this->_m_y = $this->_io->readS2le();
-        }
-        protected $_m_x;
-        protected $_m_y;
-
-        /**
-         * X coordinate of the point, in logical units.
-         */
-        public function x() { return $this->_m_x; }
-
-        /**
-         * Y coordinate of the point, in logical units.
-         */
-        public function y() { return $this->_m_y; }
-    }
-}
-
-namespace Wmf {
-    class ParamsSetwindowext extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Wmf\Record $_parent = null, \Wmf $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_y = $this->_io->readS2le();
-            $this->_m_x = $this->_io->readS2le();
-        }
-        protected $_m_y;
-        protected $_m_x;
-
-        /**
-         * Vertical extent of the window in logical units.
-         */
-        public function y() { return $this->_m_y; }
-
-        /**
-         * Horizontal extent of the window in logical units.
-         */
-        public function x() { return $this->_m_x; }
-    }
-}
-
-namespace Wmf {
-    class ParamsPolygon extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Wmf\Record $_parent = null, \Wmf $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_numPoints = $this->_io->readS2le();
-            $this->_m_points = [];
-            $n = $this->numPoints();
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_points[] = new \Wmf\PointS($this->_io, $this, $this->_root);
-            }
-        }
-        protected $_m_numPoints;
-        protected $_m_points;
-        public function numPoints() { return $this->_m_numPoints; }
-        public function points() { return $this->_m_points; }
+        protected $_m_red;
+        protected $_m_green;
+        protected $_m_blue;
+        protected $_m_reserved;
+        public function red() { return $this->_m_red; }
+        public function green() { return $this->_m_green; }
+        public function blue() { return $this->_m_blue; }
+        public function reserved() { return $this->_m_reserved; }
     }
 }
 
 namespace Wmf {
     class Header extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Wmf $_parent = null, \Wmf $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Wmf $_parent = null, ?\Wmf $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -194,74 +99,18 @@ namespace Wmf\Header {
     class MetafileType {
         const MEMORY_METAFILE = 1;
         const DISK_METAFILE = 2;
+
+        private const _VALUES = [1 => true, 2 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
 namespace Wmf {
-    class ColorRef extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Wmf\Record $_parent = null, \Wmf $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_red = $this->_io->readU1();
-            $this->_m_green = $this->_io->readU1();
-            $this->_m_blue = $this->_io->readU1();
-            $this->_m_reserved = $this->_io->readU1();
-        }
-        protected $_m_red;
-        protected $_m_green;
-        protected $_m_blue;
-        protected $_m_reserved;
-        public function red() { return $this->_m_red; }
-        public function green() { return $this->_m_green; }
-        public function blue() { return $this->_m_blue; }
-        public function reserved() { return $this->_m_reserved; }
-    }
-}
-
-namespace Wmf {
-    class ParamsSetrop2 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Wmf\Record $_parent = null, \Wmf $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_drawMode = $this->_io->readU2le();
-        }
-        protected $_m_drawMode;
-
-        /**
-         * Defines current foreground binary raster operation mixing mode.
-         */
-        public function drawMode() { return $this->_m_drawMode; }
-    }
-}
-
-namespace Wmf {
-    class ParamsSetpolyfillmode extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Wmf\Record $_parent = null, \Wmf $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_polyFillMode = $this->_io->readU2le();
-        }
-        protected $_m_polyFillMode;
-
-        /**
-         * Defines current polygon fill mode.
-         */
-        public function polyFillMode() { return $this->_m_polyFillMode; }
-    }
-}
-
-namespace Wmf {
-    class ParamsPolyline extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Wmf\Record $_parent = null, \Wmf $_root = null) {
+    class ParamsPolygon extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Wmf\Record $_parent = null, ?\Wmf $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -282,20 +131,244 @@ namespace Wmf {
 }
 
 namespace Wmf {
+    class ParamsPolyline extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Wmf\Record $_parent = null, ?\Wmf $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_numPoints = $this->_io->readS2le();
+            $this->_m_points = [];
+            $n = $this->numPoints();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_points[] = new \Wmf\PointS($this->_io, $this, $this->_root);
+            }
+        }
+        protected $_m_numPoints;
+        protected $_m_points;
+        public function numPoints() { return $this->_m_numPoints; }
+        public function points() { return $this->_m_points; }
+    }
+}
+
+namespace Wmf {
+    class ParamsSetbkmode extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Wmf\Record $_parent = null, ?\Wmf $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_bkMode = $this->_io->readU2le();
+        }
+        protected $_m_bkMode;
+
+        /**
+         * Defines current graphic context background mix mode.
+         */
+        public function bkMode() { return $this->_m_bkMode; }
+    }
+}
+
+namespace Wmf {
+    class ParamsSetpolyfillmode extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Wmf\Record $_parent = null, ?\Wmf $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_polyFillMode = $this->_io->readU2le();
+        }
+        protected $_m_polyFillMode;
+
+        /**
+         * Defines current polygon fill mode.
+         */
+        public function polyFillMode() { return $this->_m_polyFillMode; }
+    }
+}
+
+namespace Wmf {
+    class ParamsSetrop2 extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Wmf\Record $_parent = null, ?\Wmf $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_drawMode = $this->_io->readU2le();
+        }
+        protected $_m_drawMode;
+
+        /**
+         * Defines current foreground binary raster operation mixing mode.
+         */
+        public function drawMode() { return $this->_m_drawMode; }
+    }
+}
+
+namespace Wmf {
+    class ParamsSetwindowext extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Wmf\Record $_parent = null, ?\Wmf $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_y = $this->_io->readS2le();
+            $this->_m_x = $this->_io->readS2le();
+        }
+        protected $_m_y;
+        protected $_m_x;
+
+        /**
+         * Vertical extent of the window in logical units.
+         */
+        public function y() { return $this->_m_y; }
+
+        /**
+         * Horizontal extent of the window in logical units.
+         */
+        public function x() { return $this->_m_x; }
+    }
+}
+
+namespace Wmf {
+    class ParamsSetwindoworg extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Wmf\Record $_parent = null, ?\Wmf $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_y = $this->_io->readS2le();
+            $this->_m_x = $this->_io->readS2le();
+        }
+        protected $_m_y;
+        protected $_m_x;
+
+        /**
+         * Y coordinate of the window origin, in logical units.
+         */
+        public function y() { return $this->_m_y; }
+
+        /**
+         * X coordinate of the window origin, in logical units.
+         */
+        public function x() { return $this->_m_x; }
+    }
+}
+
+namespace Wmf {
+    class PointS extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Wmf $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_x = $this->_io->readS2le();
+            $this->_m_y = $this->_io->readS2le();
+        }
+        protected $_m_x;
+        protected $_m_y;
+
+        /**
+         * X coordinate of the point, in logical units.
+         */
+        public function x() { return $this->_m_x; }
+
+        /**
+         * Y coordinate of the point, in logical units.
+         */
+        public function y() { return $this->_m_y; }
+    }
+}
+
+namespace Wmf {
+    class Record extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Wmf $_parent = null, ?\Wmf $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_size = $this->_io->readU4le();
+            $this->_m_function = $this->_io->readU2le();
+            switch ($this->function()) {
+                case \Wmf\Func::POLYGON:
+                    $this->_m__raw_params = $this->_io->readBytes(($this->size() - 3) * 2);
+                    $_io__raw_params = new \Kaitai\Struct\Stream($this->_m__raw_params);
+                    $this->_m_params = new \Wmf\ParamsPolygon($_io__raw_params, $this, $this->_root);
+                    break;
+                case \Wmf\Func::POLYLINE:
+                    $this->_m__raw_params = $this->_io->readBytes(($this->size() - 3) * 2);
+                    $_io__raw_params = new \Kaitai\Struct\Stream($this->_m__raw_params);
+                    $this->_m_params = new \Wmf\ParamsPolyline($_io__raw_params, $this, $this->_root);
+                    break;
+                case \Wmf\Func::SETBKCOLOR:
+                    $this->_m__raw_params = $this->_io->readBytes(($this->size() - 3) * 2);
+                    $_io__raw_params = new \Kaitai\Struct\Stream($this->_m__raw_params);
+                    $this->_m_params = new \Wmf\ColorRef($_io__raw_params, $this, $this->_root);
+                    break;
+                case \Wmf\Func::SETBKMODE:
+                    $this->_m__raw_params = $this->_io->readBytes(($this->size() - 3) * 2);
+                    $_io__raw_params = new \Kaitai\Struct\Stream($this->_m__raw_params);
+                    $this->_m_params = new \Wmf\ParamsSetbkmode($_io__raw_params, $this, $this->_root);
+                    break;
+                case \Wmf\Func::SETPOLYFILLMODE:
+                    $this->_m__raw_params = $this->_io->readBytes(($this->size() - 3) * 2);
+                    $_io__raw_params = new \Kaitai\Struct\Stream($this->_m__raw_params);
+                    $this->_m_params = new \Wmf\ParamsSetpolyfillmode($_io__raw_params, $this, $this->_root);
+                    break;
+                case \Wmf\Func::SETROP2:
+                    $this->_m__raw_params = $this->_io->readBytes(($this->size() - 3) * 2);
+                    $_io__raw_params = new \Kaitai\Struct\Stream($this->_m__raw_params);
+                    $this->_m_params = new \Wmf\ParamsSetrop2($_io__raw_params, $this, $this->_root);
+                    break;
+                case \Wmf\Func::SETWINDOWEXT:
+                    $this->_m__raw_params = $this->_io->readBytes(($this->size() - 3) * 2);
+                    $_io__raw_params = new \Kaitai\Struct\Stream($this->_m__raw_params);
+                    $this->_m_params = new \Wmf\ParamsSetwindowext($_io__raw_params, $this, $this->_root);
+                    break;
+                case \Wmf\Func::SETWINDOWORG:
+                    $this->_m__raw_params = $this->_io->readBytes(($this->size() - 3) * 2);
+                    $_io__raw_params = new \Kaitai\Struct\Stream($this->_m__raw_params);
+                    $this->_m_params = new \Wmf\ParamsSetwindoworg($_io__raw_params, $this, $this->_root);
+                    break;
+                default:
+                    $this->_m_params = $this->_io->readBytes(($this->size() - 3) * 2);
+                    break;
+            }
+        }
+        protected $_m_size;
+        protected $_m_function;
+        protected $_m_params;
+        protected $_m__raw_params;
+        public function size() { return $this->_m_size; }
+        public function function() { return $this->_m_function; }
+        public function params() { return $this->_m_params; }
+        public function _raw_params() { return $this->_m__raw_params; }
+    }
+}
+
+namespace Wmf {
     class SpecialHeader extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Wmf $_parent = null, \Wmf $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Wmf $_parent = null, ?\Wmf $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic = $this->_io->readBytes(4);
-            if (!($this->magic() == "\xD7\xCD\xC6\x9A")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\xD7\xCD\xC6\x9A", $this->magic(), $this->_io(), "/types/special_header/seq/0");
+            if (!($this->_m_magic == "\xD7\xCD\xC6\x9A")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\xD7\xCD\xC6\x9A", $this->_m_magic, $this->_io, "/types/special_header/seq/0");
             }
             $this->_m_handle = $this->_io->readBytes(2);
-            if (!($this->handle() == "\x00\x00")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00\x00", $this->handle(), $this->_io(), "/types/special_header/seq/1");
+            if (!($this->_m_handle == "\x00\x00")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00\x00", $this->_m_handle, $this->_io, "/types/special_header/seq/1");
             }
             $this->_m_left = $this->_io->readS2le();
             $this->_m_top = $this->_io->readS2le();
@@ -303,8 +376,8 @@ namespace Wmf {
             $this->_m_bottom = $this->_io->readS2le();
             $this->_m_inch = $this->_io->readU2le();
             $this->_m_reserved = $this->_io->readBytes(4);
-            if (!($this->reserved() == "\x00\x00\x00\x00")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00\x00\x00\x00", $this->reserved(), $this->_io(), "/types/special_header/seq/7");
+            if (!($this->_m_reserved == "\x00\x00\x00\x00")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00\x00\x00\x00", $this->_m_reserved, $this->_io, "/types/special_header/seq/7");
             }
             $this->_m_checksum = $this->_io->readU2le();
         }
@@ -330,69 +403,29 @@ namespace Wmf {
 }
 
 namespace Wmf {
-    class Record extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Wmf $_parent = null, \Wmf $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
+    class BinRasterOp {
+        const BLACK = 1;
+        const NOTMERGEPEN = 2;
+        const MASKNOTPEN = 3;
+        const NOTCOPYPEN = 4;
+        const MASKPENNOT = 5;
+        const NOT = 6;
+        const XORPEN = 7;
+        const NOTMASKPEN = 8;
+        const MASKPEN = 9;
+        const NOTXORPEN = 10;
+        const NOP = 11;
+        const MERGENOTPEN = 12;
+        const COPYPEN = 13;
+        const MERGEPENNOT = 14;
+        const MERGEPEN = 15;
+        const WHITE = 16;
 
-        private function _read() {
-            $this->_m_size = $this->_io->readU4le();
-            $this->_m_function = $this->_io->readU2le();
-            switch ($this->function()) {
-                case \Wmf\Func::SETBKMODE:
-                    $this->_m__raw_params = $this->_io->readBytes((($this->size() - 3) * 2));
-                    $_io__raw_params = new \Kaitai\Struct\Stream($this->_m__raw_params);
-                    $this->_m_params = new \Wmf\ParamsSetbkmode($_io__raw_params, $this, $this->_root);
-                    break;
-                case \Wmf\Func::POLYGON:
-                    $this->_m__raw_params = $this->_io->readBytes((($this->size() - 3) * 2));
-                    $_io__raw_params = new \Kaitai\Struct\Stream($this->_m__raw_params);
-                    $this->_m_params = new \Wmf\ParamsPolygon($_io__raw_params, $this, $this->_root);
-                    break;
-                case \Wmf\Func::SETBKCOLOR:
-                    $this->_m__raw_params = $this->_io->readBytes((($this->size() - 3) * 2));
-                    $_io__raw_params = new \Kaitai\Struct\Stream($this->_m__raw_params);
-                    $this->_m_params = new \Wmf\ColorRef($_io__raw_params, $this, $this->_root);
-                    break;
-                case \Wmf\Func::SETPOLYFILLMODE:
-                    $this->_m__raw_params = $this->_io->readBytes((($this->size() - 3) * 2));
-                    $_io__raw_params = new \Kaitai\Struct\Stream($this->_m__raw_params);
-                    $this->_m_params = new \Wmf\ParamsSetpolyfillmode($_io__raw_params, $this, $this->_root);
-                    break;
-                case \Wmf\Func::SETWINDOWORG:
-                    $this->_m__raw_params = $this->_io->readBytes((($this->size() - 3) * 2));
-                    $_io__raw_params = new \Kaitai\Struct\Stream($this->_m__raw_params);
-                    $this->_m_params = new \Wmf\ParamsSetwindoworg($_io__raw_params, $this, $this->_root);
-                    break;
-                case \Wmf\Func::SETROP2:
-                    $this->_m__raw_params = $this->_io->readBytes((($this->size() - 3) * 2));
-                    $_io__raw_params = new \Kaitai\Struct\Stream($this->_m__raw_params);
-                    $this->_m_params = new \Wmf\ParamsSetrop2($_io__raw_params, $this, $this->_root);
-                    break;
-                case \Wmf\Func::SETWINDOWEXT:
-                    $this->_m__raw_params = $this->_io->readBytes((($this->size() - 3) * 2));
-                    $_io__raw_params = new \Kaitai\Struct\Stream($this->_m__raw_params);
-                    $this->_m_params = new \Wmf\ParamsSetwindowext($_io__raw_params, $this, $this->_root);
-                    break;
-                case \Wmf\Func::POLYLINE:
-                    $this->_m__raw_params = $this->_io->readBytes((($this->size() - 3) * 2));
-                    $_io__raw_params = new \Kaitai\Struct\Stream($this->_m__raw_params);
-                    $this->_m_params = new \Wmf\ParamsPolyline($_io__raw_params, $this, $this->_root);
-                    break;
-                default:
-                    $this->_m_params = $this->_io->readBytes((($this->size() - 3) * 2));
-                    break;
-            }
+        private const _VALUES = [1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 7 => true, 8 => true, 9 => true, 10 => true, 11 => true, 12 => true, 13 => true, 14 => true, 15 => true, 16 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
         }
-        protected $_m_size;
-        protected $_m_function;
-        protected $_m_params;
-        protected $_m__raw_params;
-        public function size() { return $this->_m_size; }
-        public function function() { return $this->_m_function; }
-        public function params() { return $this->_m_params; }
-        public function _raw_params() { return $this->_m__raw_params; }
     }
 }
 
@@ -468,27 +501,12 @@ namespace Wmf {
         const DIBSTRETCHBLT = 2881;
         const SETDIBTODEV = 3379;
         const STRETCHDIB = 3907;
-    }
-}
 
-namespace Wmf {
-    class BinRasterOp {
-        const BLACK = 1;
-        const NOTMERGEPEN = 2;
-        const MASKNOTPEN = 3;
-        const NOTCOPYPEN = 4;
-        const MASKPENNOT = 5;
-        const NOT = 6;
-        const XORPEN = 7;
-        const NOTMASKPEN = 8;
-        const MASKPEN = 9;
-        const NOTXORPEN = 10;
-        const NOP = 11;
-        const MERGENOTPEN = 12;
-        const COPYPEN = 13;
-        const MERGEPENNOT = 14;
-        const MERGEPEN = 15;
-        const WHITE = 16;
+        private const _VALUES = [0 => true, 30 => true, 53 => true, 55 => true, 247 => true, 258 => true, 259 => true, 260 => true, 261 => true, 262 => true, 263 => true, 264 => true, 295 => true, 298 => true, 299 => true, 300 => true, 301 => true, 302 => true, 313 => true, 322 => true, 329 => true, 496 => true, 505 => true, 513 => true, 521 => true, 522 => true, 523 => true, 524 => true, 525 => true, 526 => true, 527 => true, 529 => true, 531 => true, 532 => true, 544 => true, 552 => true, 561 => true, 564 => true, 762 => true, 763 => true, 764 => true, 804 => true, 805 => true, 1040 => true, 1042 => true, 1045 => true, 1046 => true, 1048 => true, 1049 => true, 1051 => true, 1055 => true, 1065 => true, 1078 => true, 1313 => true, 1336 => true, 1352 => true, 1564 => true, 1565 => true, 1574 => true, 1791 => true, 2071 => true, 2074 => true, 2096 => true, 2338 => true, 2368 => true, 2610 => true, 2851 => true, 2881 => true, 3379 => true, 3907 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
@@ -496,6 +514,12 @@ namespace Wmf {
     class MixMode {
         const TRANSPARENT = 1;
         const OPAQUE = 2;
+
+        private const _VALUES = [1 => true, 2 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
@@ -503,5 +527,11 @@ namespace Wmf {
     class PolyFillMode {
         const ALTERNATE = 1;
         const WINDING = 2;
+
+        private const _VALUES = [1 => true, 2 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

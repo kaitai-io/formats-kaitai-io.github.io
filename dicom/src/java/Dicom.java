@@ -8,7 +8,8 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.nio.charset.Charset;
+import java.util.List;
+import java.nio.charset.StandardCharsets;
 
 
 /**
@@ -4090,40 +4091,79 @@ public class Dicom extends KaitaiStruct {
             }
         }
     }
-    public static class TFileHeader extends KaitaiStruct {
-        public static TFileHeader fromFile(String fileName) throws IOException {
-            return new TFileHeader(new ByteBufferKaitaiStream(fileName));
+
+    public void _fetchInstances() {
+        this.fileHeader._fetchInstances();
+        for (int i = 0; i < this.elements.size(); i++) {
+            this.elements.get(((Number) (i)).intValue())._fetchInstances();
+        }
+    }
+    public static class SeqItem extends KaitaiStruct {
+        public static SeqItem fromFile(String fileName) throws IOException {
+            return new SeqItem(new ByteBufferKaitaiStream(fileName));
         }
 
-        public TFileHeader(KaitaiStream _io) {
+        public SeqItem(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public TFileHeader(KaitaiStream _io, Dicom _parent) {
+        public SeqItem(KaitaiStream _io, KaitaiStruct _parent) {
             this(_io, _parent, null);
         }
 
-        public TFileHeader(KaitaiStream _io, Dicom _parent, Dicom _root) {
+        public SeqItem(KaitaiStream _io, KaitaiStruct _parent, Dicom _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.preamble = this._io.readBytes(128);
-            this.magic = this._io.readBytes(4);
-            if (!(Arrays.equals(magic(), new byte[] { 68, 73, 67, 77 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 68, 73, 67, 77 }, magic(), _io(), "/types/t_file_header/seq/1");
+            this.tagGroup = this._io.readBytes(2);
+            if (!(Arrays.equals(this.tagGroup, new byte[] { -2, -1 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { -2, -1 }, this.tagGroup, this._io, "/types/seq_item/seq/0");
+            }
+            this.tagElem = this._io.readU2le();
+            this.valueLen = this._io.readU4le();
+            if (valueLen() != 4294967295L) {
+                this.value = this._io.readBytes(valueLen());
+            }
+            if (valueLen() == 4294967295L) {
+                this.items = new ArrayList<TDataElementExplicit>();
+                {
+                    TDataElementExplicit _it;
+                    int i = 0;
+                    do {
+                        _it = new TDataElementExplicit(this._io, this, _root);
+                        this.items.add(_it);
+                        i++;
+                    } while (!( ((_it.tagGroup() == 65534) && (_it.tagElem() == 57357)) ));
+                }
             }
         }
-        private byte[] preamble;
-        private byte[] magic;
+
+        public void _fetchInstances() {
+            if (valueLen() != 4294967295L) {
+            }
+            if (valueLen() == 4294967295L) {
+                for (int i = 0; i < this.items.size(); i++) {
+                    this.items.get(((Number) (i)).intValue())._fetchInstances();
+                }
+            }
+        }
+        private byte[] tagGroup;
+        private int tagElem;
+        private long valueLen;
+        private byte[] value;
+        private List<TDataElementExplicit> items;
         private Dicom _root;
-        private Dicom _parent;
-        public byte[] preamble() { return preamble; }
-        public byte[] magic() { return magic; }
+        private KaitaiStruct _parent;
+        public byte[] tagGroup() { return tagGroup; }
+        public int tagElem() { return tagElem; }
+        public long valueLen() { return valueLen; }
+        public byte[] value() { return value; }
+        public List<TDataElementExplicit> items() { return items; }
         public Dicom _root() { return _root; }
-        public Dicom _parent() { return _parent; }
+        public KaitaiStruct _parent() { return _parent; }
     }
 
     /**
@@ -4152,7 +4192,7 @@ public class Dicom extends KaitaiStruct {
             this.tagGroup = this._io.readU2le();
             this.tagElem = this._io.readU2le();
             if (!(isForcedImplicit())) {
-                this.vr = new String(this._io.readBytes(2), Charset.forName("ASCII"));
+                this.vr = new String(this._io.readBytes(2), StandardCharsets.US_ASCII);
             }
             if ( ((isLongLen()) && (!(isForcedImplicit()))) ) {
                 this.reserved = this._io.readU2le();
@@ -4160,7 +4200,7 @@ public class Dicom extends KaitaiStruct {
             {
                 boolean on = isLongLen();
                 if (on == false) {
-                    this.valueLen = (long) (this._io.readU2le());
+                    this.valueLen = ((Number) (this._io.readU2le())).longValue();
                 }
                 else if (on == true) {
                     this.valueLen = this._io.readU4le();
@@ -4192,35 +4232,58 @@ public class Dicom extends KaitaiStruct {
                 }
             }
         }
+
+        public void _fetchInstances() {
+            if (!(isForcedImplicit())) {
+            }
+            if ( ((isLongLen()) && (!(isForcedImplicit()))) ) {
+            }
+            {
+                boolean on = isLongLen();
+                if (on == false) {
+                }
+                else if (on == true) {
+                }
+            }
+            if (valueLen() != 4294967295L) {
+            }
+            if ( ((vr().equals("SQ")) && (valueLen() == 4294967295L)) ) {
+                for (int i = 0; i < this.items.size(); i++) {
+                    this.items.get(((Number) (i)).intValue())._fetchInstances();
+                }
+            }
+            if (isTransferSyntaxChangeImplicit()) {
+                for (int i = 0; i < this.elementsImplicit.size(); i++) {
+                    this.elementsImplicit.get(((Number) (i)).intValue())._fetchInstances();
+                }
+            }
+        }
         private Boolean isForcedImplicit;
         public Boolean isForcedImplicit() {
             if (this.isForcedImplicit != null)
                 return this.isForcedImplicit;
-            boolean _tmp = (boolean) (tagGroup() == 65534);
-            this.isForcedImplicit = _tmp;
+            this.isForcedImplicit = tagGroup() == 65534;
             return this.isForcedImplicit;
         }
         private Boolean isLongLen;
         public Boolean isLongLen() {
             if (this.isLongLen != null)
                 return this.isLongLen;
-            boolean _tmp = (boolean) ( ((isForcedImplicit()) || (vr().equals("OB")) || (vr().equals("OD")) || (vr().equals("OF")) || (vr().equals("OL")) || (vr().equals("OW")) || (vr().equals("SQ")) || (vr().equals("UC")) || (vr().equals("UR")) || (vr().equals("UT")) || (vr().equals("UN"))) );
-            this.isLongLen = _tmp;
+            this.isLongLen =  ((isForcedImplicit()) || (vr().equals("OB")) || (vr().equals("OD")) || (vr().equals("OF")) || (vr().equals("OL")) || (vr().equals("OW")) || (vr().equals("SQ")) || (vr().equals("UC")) || (vr().equals("UR")) || (vr().equals("UT")) || (vr().equals("UN"))) ;
             return this.isLongLen;
         }
         private Boolean isTransferSyntaxChangeImplicit;
         public Boolean isTransferSyntaxChangeImplicit() {
             if (this.isTransferSyntaxChangeImplicit != null)
                 return this.isTransferSyntaxChangeImplicit;
-            boolean _tmp = (boolean) (false);
-            this.isTransferSyntaxChangeImplicit = _tmp;
+            this.isTransferSyntaxChangeImplicit = false;
             return this.isTransferSyntaxChangeImplicit;
         }
         private Tags tag;
         public Tags tag() {
             if (this.tag != null)
                 return this.tag;
-            this.tag = Dicom.Tags.byId(((tagGroup() << 16) | tagElem()));
+            this.tag = Dicom.Tags.byId(tagGroup() << 16 | tagElem());
             return this.tag;
         }
         private int tagGroup;
@@ -4229,8 +4292,8 @@ public class Dicom extends KaitaiStruct {
         private Integer reserved;
         private Long valueLen;
         private byte[] value;
-        private ArrayList<SeqItem> items;
-        private ArrayList<TDataElementImplicit> elementsImplicit;
+        private List<SeqItem> items;
+        private List<TDataElementImplicit> elementsImplicit;
         private Dicom _root;
         private KaitaiStruct _parent;
         public int tagGroup() { return tagGroup; }
@@ -4239,8 +4302,8 @@ public class Dicom extends KaitaiStruct {
         public Integer reserved() { return reserved; }
         public Long valueLen() { return valueLen; }
         public byte[] value() { return value; }
-        public ArrayList<SeqItem> items() { return items; }
-        public ArrayList<TDataElementImplicit> elementsImplicit() { return elementsImplicit; }
+        public List<SeqItem> items() { return items; }
+        public List<TDataElementImplicit> elementsImplicit() { return elementsImplicit; }
         public Dicom _root() { return _root; }
         public KaitaiStruct _parent() { return _parent; }
     }
@@ -4271,7 +4334,7 @@ public class Dicom extends KaitaiStruct {
             this.tagGroup = this._io.readU2le();
             this.tagElem = this._io.readU2le();
             if (isForcedExplicit()) {
-                this.vr = new String(this._io.readBytes(2), Charset.forName("ASCII"));
+                this.vr = new String(this._io.readBytes(2), StandardCharsets.US_ASCII);
             }
             if ( ((isLongLen()) && (isForcedExplicit())) ) {
                 this.reserved = this._io.readU2le();
@@ -4279,7 +4342,7 @@ public class Dicom extends KaitaiStruct {
             {
                 boolean on = (isForcedExplicit() ? isLongLen() : true);
                 if (on == false) {
-                    this.valueLen = (long) (this._io.readU2le());
+                    this.valueLen = ((Number) (this._io.readU2le())).longValue();
                 }
                 else if (on == true) {
                     this.valueLen = this._io.readU4le();
@@ -4311,44 +4374,66 @@ public class Dicom extends KaitaiStruct {
                 }
             }
         }
-        private Tags tag;
-        public Tags tag() {
-            if (this.tag != null)
-                return this.tag;
-            this.tag = Dicom.Tags.byId(((tagGroup() << 16) | tagElem()));
-            return this.tag;
-        }
-        private Boolean isTransferSyntaxChangeExplicit;
-        public Boolean isTransferSyntaxChangeExplicit() {
-            if (this.isTransferSyntaxChangeExplicit != null)
-                return this.isTransferSyntaxChangeExplicit;
-            boolean _tmp = (boolean) (pIsTransferSyntaxChangeExplicit());
-            this.isTransferSyntaxChangeExplicit = _tmp;
-            return this.isTransferSyntaxChangeExplicit;
-        }
-        private Boolean isLongLen;
-        public Boolean isLongLen() {
-            if (this.isLongLen != null)
-                return this.isLongLen;
-            boolean _tmp = (boolean) ( ((isForcedExplicit()) && ( ((vr().equals("OB")) || (vr().equals("OD")) || (vr().equals("OF")) || (vr().equals("OL")) || (vr().equals("OW")) || (vr().equals("SQ")) || (vr().equals("UC")) || (vr().equals("UR")) || (vr().equals("UT")) || (vr().equals("UN"))) )) );
-            this.isLongLen = _tmp;
-            return this.isLongLen;
-        }
-        private Boolean pIsTransferSyntaxChangeExplicit;
-        public Boolean pIsTransferSyntaxChangeExplicit() {
-            if (this.pIsTransferSyntaxChangeExplicit != null)
-                return this.pIsTransferSyntaxChangeExplicit;
-            boolean _tmp = (boolean) (Arrays.equals(value(), new byte[] { 49, 46, 50, 46, 56, 52, 48, 46, 49, 48, 48, 48, 56, 46, 49, 46, 50, 46, 49, 0 }));
-            this.pIsTransferSyntaxChangeExplicit = _tmp;
-            return this.pIsTransferSyntaxChangeExplicit;
+
+        public void _fetchInstances() {
+            if (isForcedExplicit()) {
+            }
+            if ( ((isLongLen()) && (isForcedExplicit())) ) {
+            }
+            {
+                boolean on = (isForcedExplicit() ? isLongLen() : true);
+                if (on == false) {
+                }
+                else if (on == true) {
+                }
+            }
+            if (valueLen() != 4294967295L) {
+            }
+            if ( ((vr().equals("SQ")) && (valueLen() == 4294967295L)) ) {
+                for (int i = 0; i < this.items.size(); i++) {
+                    this.items.get(((Number) (i)).intValue())._fetchInstances();
+                }
+            }
+            if (isTransferSyntaxChangeExplicit()) {
+                for (int i = 0; i < this.elements.size(); i++) {
+                    this.elements.get(((Number) (i)).intValue())._fetchInstances();
+                }
+            }
         }
         private Boolean isForcedExplicit;
         public Boolean isForcedExplicit() {
             if (this.isForcedExplicit != null)
                 return this.isForcedExplicit;
-            boolean _tmp = (boolean) (tagGroup() == 2);
-            this.isForcedExplicit = _tmp;
+            this.isForcedExplicit = tagGroup() == 2;
             return this.isForcedExplicit;
+        }
+        private Boolean isLongLen;
+        public Boolean isLongLen() {
+            if (this.isLongLen != null)
+                return this.isLongLen;
+            this.isLongLen =  ((isForcedExplicit()) && ( ((vr().equals("OB")) || (vr().equals("OD")) || (vr().equals("OF")) || (vr().equals("OL")) || (vr().equals("OW")) || (vr().equals("SQ")) || (vr().equals("UC")) || (vr().equals("UR")) || (vr().equals("UT")) || (vr().equals("UN"))) )) ;
+            return this.isLongLen;
+        }
+        private Boolean isTransferSyntaxChangeExplicit;
+        public Boolean isTransferSyntaxChangeExplicit() {
+            if (this.isTransferSyntaxChangeExplicit != null)
+                return this.isTransferSyntaxChangeExplicit;
+            this.isTransferSyntaxChangeExplicit = pIsTransferSyntaxChangeExplicit();
+            return this.isTransferSyntaxChangeExplicit;
+        }
+        private Boolean pIsTransferSyntaxChangeExplicit;
+        public Boolean pIsTransferSyntaxChangeExplicit() {
+            if (this.pIsTransferSyntaxChangeExplicit != null)
+                return this.pIsTransferSyntaxChangeExplicit;
+            this.pIsTransferSyntaxChangeExplicit = Arrays.equals(value(), new byte[] { 49, 46, 50, 46, 56, 52, 48, 46, 49, 48, 48, 48, 56, 46, 49, 46, 50, 46, 49, 0 });
+            return this.pIsTransferSyntaxChangeExplicit;
+        }
+        private Tags tag;
+        public Tags tag() {
+            if (this.tag != null)
+                return this.tag;
+            this.tag = Dicom.Tags.byId(tagGroup() << 16 | tagElem());
+            return this.tag;
         }
         private int tagGroup;
         private int tagElem;
@@ -4356,8 +4441,8 @@ public class Dicom extends KaitaiStruct {
         private Integer reserved;
         private Long valueLen;
         private byte[] value;
-        private ArrayList<SeqItem> items;
-        private ArrayList<TDataElementExplicit> elements;
+        private List<SeqItem> items;
+        private List<TDataElementExplicit> elements;
         private Dicom _root;
         private KaitaiStruct _parent;
         public int tagGroup() { return tagGroup; }
@@ -4366,74 +4451,55 @@ public class Dicom extends KaitaiStruct {
         public Integer reserved() { return reserved; }
         public Long valueLen() { return valueLen; }
         public byte[] value() { return value; }
-        public ArrayList<SeqItem> items() { return items; }
-        public ArrayList<TDataElementExplicit> elements() { return elements; }
+        public List<SeqItem> items() { return items; }
+        public List<TDataElementExplicit> elements() { return elements; }
         public Dicom _root() { return _root; }
         public KaitaiStruct _parent() { return _parent; }
     }
-    public static class SeqItem extends KaitaiStruct {
-        public static SeqItem fromFile(String fileName) throws IOException {
-            return new SeqItem(new ByteBufferKaitaiStream(fileName));
+    public static class TFileHeader extends KaitaiStruct {
+        public static TFileHeader fromFile(String fileName) throws IOException {
+            return new TFileHeader(new ByteBufferKaitaiStream(fileName));
         }
 
-        public SeqItem(KaitaiStream _io) {
+        public TFileHeader(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public SeqItem(KaitaiStream _io, KaitaiStruct _parent) {
+        public TFileHeader(KaitaiStream _io, Dicom _parent) {
             this(_io, _parent, null);
         }
 
-        public SeqItem(KaitaiStream _io, KaitaiStruct _parent, Dicom _root) {
+        public TFileHeader(KaitaiStream _io, Dicom _parent, Dicom _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.tagGroup = this._io.readBytes(2);
-            if (!(Arrays.equals(tagGroup(), new byte[] { -2, -1 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { -2, -1 }, tagGroup(), _io(), "/types/seq_item/seq/0");
-            }
-            this.tagElem = this._io.readU2le();
-            this.valueLen = this._io.readU4le();
-            if (valueLen() != 4294967295L) {
-                this.value = this._io.readBytes(valueLen());
-            }
-            if (valueLen() == 4294967295L) {
-                this.items = new ArrayList<TDataElementExplicit>();
-                {
-                    TDataElementExplicit _it;
-                    int i = 0;
-                    do {
-                        _it = new TDataElementExplicit(this._io, this, _root);
-                        this.items.add(_it);
-                        i++;
-                    } while (!( ((_it.tagGroup() == 65534) && (_it.tagElem() == 57357)) ));
-                }
+            this.preamble = this._io.readBytes(128);
+            this.magic = this._io.readBytes(4);
+            if (!(Arrays.equals(this.magic, new byte[] { 68, 73, 67, 77 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 68, 73, 67, 77 }, this.magic, this._io, "/types/t_file_header/seq/1");
             }
         }
-        private byte[] tagGroup;
-        private int tagElem;
-        private long valueLen;
-        private byte[] value;
-        private ArrayList<TDataElementExplicit> items;
+
+        public void _fetchInstances() {
+        }
+        private byte[] preamble;
+        private byte[] magic;
         private Dicom _root;
-        private KaitaiStruct _parent;
-        public byte[] tagGroup() { return tagGroup; }
-        public int tagElem() { return tagElem; }
-        public long valueLen() { return valueLen; }
-        public byte[] value() { return value; }
-        public ArrayList<TDataElementExplicit> items() { return items; }
+        private Dicom _parent;
+        public byte[] preamble() { return preamble; }
+        public byte[] magic() { return magic; }
         public Dicom _root() { return _root; }
-        public KaitaiStruct _parent() { return _parent; }
+        public Dicom _parent() { return _parent; }
     }
     private TFileHeader fileHeader;
-    private ArrayList<TDataElementImplicit> elements;
+    private List<TDataElementImplicit> elements;
     private Dicom _root;
     private KaitaiStruct _parent;
     public TFileHeader fileHeader() { return fileHeader; }
-    public ArrayList<TDataElementImplicit> elements() { return elements; }
+    public List<TDataElementImplicit> elements() { return elements; }
     public Dicom _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

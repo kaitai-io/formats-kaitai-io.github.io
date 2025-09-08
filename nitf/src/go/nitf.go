@@ -29,14 +29,18 @@ type Nitf struct {
 	ReservedExtensionSegments []*Nitf_ReservedExtensionSegment
 	_io *kaitai.Stream
 	_root *Nitf
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewNitf() *Nitf {
 	return &Nitf{
 	}
 }
 
-func (this *Nitf) Read(io *kaitai.Stream, parent interface{}, root *Nitf) (err error) {
+func (this Nitf) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Nitf) Read(io *kaitai.Stream, parent kaitai.Struct, root *Nitf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -114,164 +118,6 @@ func (this *Nitf) Read(io *kaitai.Stream, parent interface{}, root *Nitf) (err e
 	}
 	return err
 }
-type Nitf_ReservedExtensionSegment struct {
-	ReservedSubHeader *Nitf_ReservedSubHeader
-	ReservedDataField []byte
-	Idx uint16
-	_io *kaitai.Stream
-	_root *Nitf
-	_parent *Nitf
-	_raw_ReservedSubHeader []byte
-}
-func NewNitf_ReservedExtensionSegment(idx uint16) *Nitf_ReservedExtensionSegment {
-	return &Nitf_ReservedExtensionSegment{
-		Idx: idx,
-	}
-}
-
-func (this *Nitf_ReservedExtensionSegment) Read(io *kaitai.Stream, parent *Nitf, root *Nitf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp12, err := strconv.ParseInt(this._parent.Header.Lrnfo[this.Idx].LengthReservedExtensionSubheader, 10, 0)
-	if err != nil {
-		return err
-	}
-	tmp13, err := this._io.ReadBytes(int(tmp12))
-	if err != nil {
-		return err
-	}
-	tmp13 = tmp13
-	this._raw_ReservedSubHeader = tmp13
-	_io__raw_ReservedSubHeader := kaitai.NewStream(bytes.NewReader(this._raw_ReservedSubHeader))
-	tmp14 := NewNitf_ReservedSubHeader()
-	err = tmp14.Read(_io__raw_ReservedSubHeader, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.ReservedSubHeader = tmp14
-	tmp15, err := strconv.ParseInt(this._parent.Header.Lrnfo[this.Idx].LengthReservedExtensionSegment, 10, 0)
-	if err != nil {
-		return err
-	}
-	tmp16, err := this._io.ReadBytes(int(tmp15))
-	if err != nil {
-		return err
-	}
-	tmp16 = tmp16
-	this.ReservedDataField = tmp16
-	return err
-}
-type Nitf_ImageComment struct {
-	_unnamed0 string
-	_io *kaitai.Stream
-	_root *Nitf
-	_parent *Nitf_ImageSubHeader
-}
-func NewNitf_ImageComment() *Nitf_ImageComment {
-	return &Nitf_ImageComment{
-	}
-}
-
-func (this *Nitf_ImageComment) Read(io *kaitai.Stream, parent *Nitf_ImageSubHeader, root *Nitf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp17, err := this._io.ReadBytes(int(80))
-	if err != nil {
-		return err
-	}
-	tmp17 = tmp17
-	this._unnamed0 = string(tmp17)
-	return err
-}
-type Nitf_LengthReservedInfo struct {
-	LengthReservedExtensionSubheader string
-	LengthReservedExtensionSegment string
-	_io *kaitai.Stream
-	_root *Nitf
-	_parent *Nitf_Header
-}
-func NewNitf_LengthReservedInfo() *Nitf_LengthReservedInfo {
-	return &Nitf_LengthReservedInfo{
-	}
-}
-
-func (this *Nitf_LengthReservedInfo) Read(io *kaitai.Stream, parent *Nitf_Header, root *Nitf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp18, err := this._io.ReadBytes(int(4))
-	if err != nil {
-		return err
-	}
-	tmp18 = tmp18
-	this.LengthReservedExtensionSubheader = string(tmp18)
-	tmp19, err := this._io.ReadBytes(int(7))
-	if err != nil {
-		return err
-	}
-	tmp19 = tmp19
-	this.LengthReservedExtensionSegment = string(tmp19)
-	return err
-}
-type Nitf_Tre struct {
-	ExtensionTypeId string
-	EdataLength string
-	Edata string
-	_io *kaitai.Stream
-	_root *Nitf
-	_parent interface{}
-}
-func NewNitf_Tre() *Nitf_Tre {
-	return &Nitf_Tre{
-	}
-}
-
-func (this *Nitf_Tre) Read(io *kaitai.Stream, parent interface{}, root *Nitf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp20, err := this._io.ReadBytes(int(6))
-	if err != nil {
-		return err
-	}
-	tmp20 = tmp20
-	this.ExtensionTypeId = string(tmp20)
-	tmp21, err := this._io.ReadBytes(int(5))
-	if err != nil {
-		return err
-	}
-	tmp21 = tmp21
-	this.EdataLength = string(tmp21)
-	tmp22, err := strconv.ParseInt(this.EdataLength, 10, 0)
-	if err != nil {
-		return err
-	}
-	tmp23, err := this._io.ReadBytes(int(tmp22))
-	if err != nil {
-		return err
-	}
-	tmp23 = tmp23
-	this.Edata = string(tmp23)
-	return err
-}
-
-/**
- * RETAG or CETAG
- */
-
-/**
- * REL or CEL
- */
-
-/**
- * REDATA or CEDATA
- */
 type Nitf_BandInfo struct {
 	Representation string
 	Subcategory string
@@ -289,72 +135,76 @@ func NewNitf_BandInfo() *Nitf_BandInfo {
 	}
 }
 
+func (this Nitf_BandInfo) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Nitf_BandInfo) Read(io *kaitai.Stream, parent *Nitf_ImageSubHeader, root *Nitf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp24, err := this._io.ReadBytes(int(2))
+	tmp12, err := this._io.ReadBytes(int(2))
 	if err != nil {
 		return err
 	}
-	tmp24 = tmp24
-	this.Representation = string(tmp24)
-	tmp25, err := this._io.ReadBytes(int(6))
+	tmp12 = tmp12
+	this.Representation = string(tmp12)
+	tmp13, err := this._io.ReadBytes(int(6))
 	if err != nil {
 		return err
 	}
-	tmp25 = tmp25
-	this.Subcategory = string(tmp25)
-	tmp26, err := this._io.ReadBytes(int(1))
+	tmp13 = tmp13
+	this.Subcategory = string(tmp13)
+	tmp14, err := this._io.ReadBytes(int(1))
 	if err != nil {
 		return err
 	}
-	tmp26 = tmp26
-	this.ImgFilterCondition = tmp26
+	tmp14 = tmp14
+	this.ImgFilterCondition = tmp14
 	if !(bytes.Equal(this.ImgFilterCondition, []uint8{78})) {
 		return kaitai.NewValidationNotEqualError([]uint8{78}, this.ImgFilterCondition, this._io, "/types/band_info/seq/2")
 	}
-	tmp27, err := this._io.ReadBytes(int(3))
+	tmp15, err := this._io.ReadBytes(int(3))
 	if err != nil {
 		return err
 	}
-	tmp27 = tmp27
-	this.ImgFilterCode = string(tmp27)
-	tmp28, err := this._io.ReadBytes(int(1))
+	tmp15 = tmp15
+	this.ImgFilterCode = string(tmp15)
+	tmp16, err := this._io.ReadBytes(int(1))
 	if err != nil {
 		return err
 	}
-	tmp28 = tmp28
-	this.NumLuts = string(tmp28)
-	tmp29, err := strconv.ParseInt(this.NumLuts, 10, 0)
+	tmp16 = tmp16
+	this.NumLuts = string(tmp16)
+	tmp17, err := strconv.ParseInt(this.NumLuts, 10, 0)
 	if err != nil {
 		return err
 	}
-	if (tmp29 != 0) {
-		tmp30, err := this._io.ReadBytes(int(5))
+	if (tmp17 != 0) {
+		tmp18, err := this._io.ReadBytes(int(5))
 		if err != nil {
 			return err
 		}
-		tmp30 = tmp30
-		this.NumLutEntries = string(tmp30)
+		tmp18 = tmp18
+		this.NumLutEntries = string(tmp18)
 	}
-	tmp31, err := strconv.ParseInt(this.NumLuts, 10, 0)
+	tmp19, err := strconv.ParseInt(this.NumLuts, 10, 0)
 	if err != nil {
 		return err
 	}
-	for i := 0; i < int(tmp31); i++ {
+	for i := 0; i < int(tmp19); i++ {
 		_ = i
-		tmp32, err := strconv.ParseInt(this.NumLutEntries, 10, 0)
+		tmp20, err := strconv.ParseInt(this.NumLutEntries, 10, 0)
 		if err != nil {
 			return err
 		}
-		tmp33, err := this._io.ReadBytes(int(tmp32))
+		tmp21, err := this._io.ReadBytes(int(tmp20))
 		if err != nil {
 			return err
 		}
-		tmp33 = tmp33
-		this.Luts = append(this.Luts, tmp33)
+		tmp21 = tmp21
+		this.Luts = append(this.Luts, tmp21)
 	}
 	return err
 }
@@ -370,111 +220,553 @@ func (this *Nitf_BandInfo) Read(io *kaitai.Stream, parent *Nitf_ImageSubHeader, 
 /**
  * Number of entries in each of the LUTs for the nth image band
  */
-type Nitf_ImageSegment struct {
-	ImageSubHeader *Nitf_ImageSubHeader
-	ImageDataMask *Nitf_ImageDataMask
-	ImageDataField []byte
-	Idx uint16
+type Nitf_Clasnfo struct {
+	SecurityClass string
+	SecuritySystem string
+	Codewords string
+	ControlAndHandling string
+	Releaseability string
+	DeclassType string
+	DeclassDate string
+	DeclassExemption string
+	Downgrade string
+	DowngradeDate string
+	ClassText string
+	ClassAuthorityType string
+	ClassAuthority string
+	ClassReason string
+	SourceDate string
+	ControlNumber string
 	_io *kaitai.Stream
 	_root *Nitf
-	_parent *Nitf
-	_f_hasMask bool
-	hasMask bool
+	_parent kaitai.Struct
 }
-func NewNitf_ImageSegment(idx uint16) *Nitf_ImageSegment {
-	return &Nitf_ImageSegment{
-		Idx: idx,
+func NewNitf_Clasnfo() *Nitf_Clasnfo {
+	return &Nitf_Clasnfo{
 	}
 }
 
-func (this *Nitf_ImageSegment) Read(io *kaitai.Stream, parent *Nitf, root *Nitf) (err error) {
+func (this Nitf_Clasnfo) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Nitf_Clasnfo) Read(io *kaitai.Stream, parent kaitai.Struct, root *Nitf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp34 := NewNitf_ImageSubHeader()
-	err = tmp34.Read(this._io, this, this._root)
+	tmp22, err := this._io.ReadBytes(int(1))
 	if err != nil {
 		return err
 	}
-	this.ImageSubHeader = tmp34
-	tmp35, err := this.HasMask()
+	tmp22 = tmp22
+	this.SecurityClass = string(tmp22)
+	tmp23, err := this._io.ReadBytes(int(2))
 	if err != nil {
 		return err
 	}
-	if (tmp35) {
-		tmp36 := NewNitf_ImageDataMask()
-		err = tmp36.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.ImageDataMask = tmp36
-	}
-	tmp37, err := this.HasMask()
+	tmp23 = tmp23
+	this.SecuritySystem = string(tmp23)
+	tmp24, err := this._io.ReadBytes(int(11))
 	if err != nil {
 		return err
 	}
-	if (tmp37) {
-		tmp38, err := strconv.ParseInt(this._parent.Header.Linfo[this.Idx].LengthImageSegment, 10, 0)
-		if err != nil {
-			return err
-		}
-		tmp39, err := this.ImageDataMask.TotalSize()
-		if err != nil {
-			return err
-		}
-		tmp40, err := this._io.ReadBytes(int((tmp38 - tmp39)))
-		if err != nil {
-			return err
-		}
-		tmp40 = tmp40
-		this.ImageDataField = tmp40
+	tmp24 = tmp24
+	this.Codewords = string(tmp24)
+	tmp25, err := this._io.ReadBytes(int(2))
+	if err != nil {
+		return err
 	}
+	tmp25 = tmp25
+	this.ControlAndHandling = string(tmp25)
+	tmp26, err := this._io.ReadBytes(int(20))
+	if err != nil {
+		return err
+	}
+	tmp26 = tmp26
+	this.Releaseability = string(tmp26)
+	tmp27, err := this._io.ReadBytes(int(2))
+	if err != nil {
+		return err
+	}
+	tmp27 = tmp27
+	this.DeclassType = string(tmp27)
+	tmp28, err := this._io.ReadBytes(int(8))
+	if err != nil {
+		return err
+	}
+	tmp28 = tmp28
+	this.DeclassDate = string(tmp28)
+	tmp29, err := this._io.ReadBytes(int(4))
+	if err != nil {
+		return err
+	}
+	tmp29 = tmp29
+	this.DeclassExemption = string(tmp29)
+	tmp30, err := this._io.ReadBytes(int(1))
+	if err != nil {
+		return err
+	}
+	tmp30 = tmp30
+	this.Downgrade = string(tmp30)
+	tmp31, err := this._io.ReadBytes(int(8))
+	if err != nil {
+		return err
+	}
+	tmp31 = tmp31
+	this.DowngradeDate = string(tmp31)
+	tmp32, err := this._io.ReadBytes(int(43))
+	if err != nil {
+		return err
+	}
+	tmp32 = tmp32
+	this.ClassText = string(tmp32)
+	tmp33, err := this._io.ReadBytes(int(1))
+	if err != nil {
+		return err
+	}
+	tmp33 = tmp33
+	this.ClassAuthorityType = string(tmp33)
+	tmp34, err := this._io.ReadBytes(int(40))
+	if err != nil {
+		return err
+	}
+	tmp34 = tmp34
+	this.ClassAuthority = string(tmp34)
+	tmp35, err := this._io.ReadBytes(int(1))
+	if err != nil {
+		return err
+	}
+	tmp35 = tmp35
+	this.ClassReason = string(tmp35)
+	tmp36, err := this._io.ReadBytes(int(8))
+	if err != nil {
+		return err
+	}
+	tmp36 = tmp36
+	this.SourceDate = string(tmp36)
+	tmp37, err := this._io.ReadBytes(int(15))
+	if err != nil {
+		return err
+	}
+	tmp37 = tmp37
+	this.ControlNumber = string(tmp37)
 	return err
 }
-func (this *Nitf_ImageSegment) HasMask() (v bool, err error) {
-	if (this._f_hasMask) {
-		return this.hasMask, nil
-	}
-	this.hasMask = bool(this.ImageSubHeader.ImgCompression[0:2] == "MM")
-	this._f_hasMask = true
-	return this.hasMask, nil
-}
-type Nitf_TextSegment struct {
-	TextSubHeader []byte
-	TextDataField []byte
+type Nitf_DataExtensionSegment struct {
+	DataSubHeader *Nitf_DataSubHeader
+	DataDataField []byte
 	Idx uint16
 	_io *kaitai.Stream
 	_root *Nitf
 	_parent *Nitf
+	_raw_DataSubHeader []byte
 }
-func NewNitf_TextSegment(idx uint16) *Nitf_TextSegment {
-	return &Nitf_TextSegment{
+func NewNitf_DataExtensionSegment(idx uint16) *Nitf_DataExtensionSegment {
+	return &Nitf_DataExtensionSegment{
 		Idx: idx,
 	}
 }
 
-func (this *Nitf_TextSegment) Read(io *kaitai.Stream, parent *Nitf, root *Nitf) (err error) {
+func (this Nitf_DataExtensionSegment) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Nitf_DataExtensionSegment) Read(io *kaitai.Stream, parent *Nitf, root *Nitf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp41, err := this._io.ReadBytes(int(1))
+	tmp38, err := strconv.ParseInt(this._parent.Header.Ldnfo[this.Idx].LengthDataExtensionSubheader, 10, 0)
 	if err != nil {
 		return err
 	}
-	tmp41 = tmp41
-	this.TextSubHeader = tmp41
-	tmp42, err := strconv.ParseInt(this._parent.Header.Ltnfo[this.Idx].LengthTextSegment, 10, 0)
+	tmp39, err := this._io.ReadBytes(int(tmp38))
 	if err != nil {
 		return err
 	}
-	tmp43, err := this._io.ReadBytes(int(tmp42))
+	tmp39 = tmp39
+	this._raw_DataSubHeader = tmp39
+	_io__raw_DataSubHeader := kaitai.NewStream(bytes.NewReader(this._raw_DataSubHeader))
+	tmp40 := NewNitf_DataSubHeader()
+	err = tmp40.Read(_io__raw_DataSubHeader, this, this._root)
 	if err != nil {
 		return err
 	}
-	tmp43 = tmp43
-	this.TextDataField = tmp43
+	this.DataSubHeader = tmp40
+	tmp41, err := strconv.ParseInt(this._parent.Header.Ldnfo[this.Idx].LengthDataExtensionSegment, 10, 0)
+	if err != nil {
+		return err
+	}
+	tmp42, err := this._io.ReadBytes(int(tmp41))
+	if err != nil {
+		return err
+	}
+	tmp42 = tmp42
+	this.DataDataField = tmp42
+	return err
+}
+type Nitf_DataSubHeader struct {
+	DesBase *Nitf_DataSubHeaderBase
+	OverflowedHeaderType string
+	DataItemOverflowed string
+	DesDefinedSubheaderFieldsLen string
+	Desshf string
+	DesDefinedDataField string
+	_io *kaitai.Stream
+	_root *Nitf
+	_parent *Nitf_DataExtensionSegment
+	_f_treOfl bool
+	treOfl bool
+}
+func NewNitf_DataSubHeader() *Nitf_DataSubHeader {
+	return &Nitf_DataSubHeader{
+	}
+}
+
+func (this Nitf_DataSubHeader) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Nitf_DataSubHeader) Read(io *kaitai.Stream, parent *Nitf_DataExtensionSegment, root *Nitf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp43 := NewNitf_DataSubHeaderBase()
+	err = tmp43.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.DesBase = tmp43
+	tmp44, err := this.TreOfl()
+	if err != nil {
+		return err
+	}
+	if (tmp44) {
+		tmp45, err := this._io.ReadBytes(int(6))
+		if err != nil {
+			return err
+		}
+		tmp45 = tmp45
+		this.OverflowedHeaderType = string(tmp45)
+	}
+	tmp46, err := this.TreOfl()
+	if err != nil {
+		return err
+	}
+	if (tmp46) {
+		tmp47, err := this._io.ReadBytes(int(3))
+		if err != nil {
+			return err
+		}
+		tmp47 = tmp47
+		this.DataItemOverflowed = string(tmp47)
+	}
+	tmp48, err := this._io.ReadBytes(int(4))
+	if err != nil {
+		return err
+	}
+	tmp48 = tmp48
+	this.DesDefinedSubheaderFieldsLen = string(tmp48)
+	tmp49, err := strconv.ParseInt(this.DesDefinedSubheaderFieldsLen, 10, 0)
+	if err != nil {
+		return err
+	}
+	tmp50, err := this._io.ReadBytes(int(tmp49))
+	if err != nil {
+		return err
+	}
+	tmp50 = tmp50
+	this.Desshf = string(tmp50)
+	tmp51, err := this._io.ReadBytesFull()
+	if err != nil {
+		return err
+	}
+	tmp51 = tmp51
+	this.DesDefinedDataField = string(tmp51)
+	return err
+}
+func (this *Nitf_DataSubHeader) TreOfl() (v bool, err error) {
+	if (this._f_treOfl) {
+		return this.treOfl, nil
+	}
+	this._f_treOfl = true
+	this.treOfl = bool(this.DesBase.Desid == "TRE_OVERFLOW")
+	return this.treOfl, nil
+}
+type Nitf_DataSubHeaderBase struct {
+	FilePartTypeDe []byte
+	Desid string
+	DataDefinitionVersion string
+	Declasnfo *Nitf_Clasnfo
+	_io *kaitai.Stream
+	_root *Nitf
+	_parent kaitai.Struct
+}
+func NewNitf_DataSubHeaderBase() *Nitf_DataSubHeaderBase {
+	return &Nitf_DataSubHeaderBase{
+	}
+}
+
+func (this Nitf_DataSubHeaderBase) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Nitf_DataSubHeaderBase) Read(io *kaitai.Stream, parent kaitai.Struct, root *Nitf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp52, err := this._io.ReadBytes(int(2))
+	if err != nil {
+		return err
+	}
+	tmp52 = tmp52
+	this.FilePartTypeDe = tmp52
+	if !(bytes.Equal(this.FilePartTypeDe, []uint8{68, 69})) {
+		return kaitai.NewValidationNotEqualError([]uint8{68, 69}, this.FilePartTypeDe, this._io, "/types/data_sub_header_base/seq/0")
+	}
+	tmp53, err := this._io.ReadBytes(int(25))
+	if err != nil {
+		return err
+	}
+	tmp53 = tmp53
+	this.Desid = string(tmp53)
+	tmp54, err := this._io.ReadBytes(int(2))
+	if err != nil {
+		return err
+	}
+	tmp54 = tmp54
+	this.DataDefinitionVersion = string(tmp54)
+	tmp55 := NewNitf_Clasnfo()
+	err = tmp55.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Declasnfo = tmp55
+	return err
+}
+
+/**
+ * File Part Type desigantor for Data Extension
+ */
+
+/**
+ * Streaming file Header Data Extension Segment Subheader
+ */
+type Nitf_DataSubHeaderStreaming struct {
+	DesBase *Nitf_DataSubHeaderBase
+	DesDefinedSubheaderFieldsLen string
+	SfhL1 string
+	SfhDelim1 uint32
+	SfhDr []uint8
+	SfhDelim2 uint32
+	SfhL2 string
+	_io *kaitai.Stream
+	_root *Nitf
+	_parent kaitai.Struct
+}
+func NewNitf_DataSubHeaderStreaming() *Nitf_DataSubHeaderStreaming {
+	return &Nitf_DataSubHeaderStreaming{
+	}
+}
+
+func (this Nitf_DataSubHeaderStreaming) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Nitf_DataSubHeaderStreaming) Read(io *kaitai.Stream, parent kaitai.Struct, root *Nitf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp56 := NewNitf_DataSubHeaderBase()
+	err = tmp56.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.DesBase = tmp56
+	tmp57, err := this._io.ReadBytes(int(4))
+	if err != nil {
+		return err
+	}
+	tmp57 = tmp57
+	this.DesDefinedSubheaderFieldsLen = string(tmp57)
+	tmp58, err := this._io.ReadBytes(int(7))
+	if err != nil {
+		return err
+	}
+	tmp58 = tmp58
+	this.SfhL1 = string(tmp58)
+	tmp59, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.SfhDelim1 = uint32(tmp59)
+	tmp60, err := strconv.ParseInt(this.SfhL1, 10, 0)
+	if err != nil {
+		return err
+	}
+	for i := 0; i < int(tmp60); i++ {
+		_ = i
+		tmp61, err := this._io.ReadU1()
+		if err != nil {
+			return err
+		}
+		this.SfhDr = append(this.SfhDr, tmp61)
+	}
+	tmp62, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.SfhDelim2 = uint32(tmp62)
+	tmp63, err := this._io.ReadBytes(int(7))
+	if err != nil {
+		return err
+	}
+	tmp63 = tmp63
+	this.SfhL2 = string(tmp63)
+	return err
+}
+
+/**
+ * SFH Length 1: number of bytes in sfh_dr field
+ */
+
+/**
+ * Shall contain the value 0x0A6E1D97.
+ */
+
+/**
+ * Shall contain the value 0x0ECA14BF.
+ */
+
+/**
+ * A repeat of sfh_l1.
+ */
+type Nitf_DataSubHeaderTre struct {
+	DesBase *Nitf_DataSubHeaderBase
+	OverflowedHeaderType string
+	DataItemOverflowed string
+	DesDefinedSubheaderFieldsLen string
+	DesDefinedDataField string
+	_io *kaitai.Stream
+	_root *Nitf
+	_parent kaitai.Struct
+}
+func NewNitf_DataSubHeaderTre() *Nitf_DataSubHeaderTre {
+	return &Nitf_DataSubHeaderTre{
+	}
+}
+
+func (this Nitf_DataSubHeaderTre) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Nitf_DataSubHeaderTre) Read(io *kaitai.Stream, parent kaitai.Struct, root *Nitf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp64 := NewNitf_DataSubHeaderBase()
+	err = tmp64.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.DesBase = tmp64
+	if (this.DesBase.Desid == "TRE_OVERFLOW") {
+		tmp65, err := this._io.ReadBytes(int(6))
+		if err != nil {
+			return err
+		}
+		tmp65 = tmp65
+		this.OverflowedHeaderType = string(tmp65)
+	}
+	if (this.DesBase.Desid == "TRE_OVERFLOW") {
+		tmp66, err := this._io.ReadBytes(int(3))
+		if err != nil {
+			return err
+		}
+		tmp66 = tmp66
+		this.DataItemOverflowed = string(tmp66)
+	}
+	tmp67, err := this._io.ReadBytes(int(4))
+	if err != nil {
+		return err
+	}
+	tmp67 = tmp67
+	this.DesDefinedSubheaderFieldsLen = string(tmp67)
+	tmp68, err := strconv.ParseInt(this.DesDefinedSubheaderFieldsLen, 10, 0)
+	if err != nil {
+		return err
+	}
+	tmp69, err := this._io.ReadBytes(int(tmp68))
+	if err != nil {
+		return err
+	}
+	tmp69 = tmp69
+	this.DesDefinedDataField = string(tmp69)
+	return err
+}
+type Nitf_DateTime struct {
+	_unnamed0 string
+	_io *kaitai.Stream
+	_root *Nitf
+	_parent kaitai.Struct
+}
+func NewNitf_DateTime() *Nitf_DateTime {
+	return &Nitf_DateTime{
+	}
+}
+
+func (this Nitf_DateTime) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Nitf_DateTime) Read(io *kaitai.Stream, parent kaitai.Struct, root *Nitf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp70, err := this._io.ReadBytes(int(14))
+	if err != nil {
+		return err
+	}
+	tmp70 = tmp70
+	this._unnamed0 = string(tmp70)
+	return err
+}
+
+/**
+ * UTC time of image acquisition in the format CCYYMMDDhhmmss: CC century, YY last two digits of the year, MM month, DD day, hh hour, mm minute, ss second
+ */
+type Nitf_Encrypt struct {
+	_unnamed0 string
+	_io *kaitai.Stream
+	_root *Nitf
+	_parent kaitai.Struct
+}
+func NewNitf_Encrypt() *Nitf_Encrypt {
+	return &Nitf_Encrypt{
+	}
+}
+
+func (this Nitf_Encrypt) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Nitf_Encrypt) Read(io *kaitai.Stream, parent kaitai.Struct, root *Nitf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp71, err := this._io.ReadBytes(int(1))
+	if err != nil {
+		return err
+	}
+	tmp71 = tmp71
+	this._unnamed0 = string(tmp71)
 	return err
 }
 type Nitf_GraphicSubHeader struct {
@@ -502,299 +794,460 @@ func NewNitf_GraphicSubHeader() *Nitf_GraphicSubHeader {
 	}
 }
 
+func (this Nitf_GraphicSubHeader) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Nitf_GraphicSubHeader) Read(io *kaitai.Stream, parent *Nitf_GraphicsSegment, root *Nitf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp44, err := this._io.ReadBytes(int(2))
-	if err != nil {
-		return err
-	}
-	tmp44 = tmp44
-	this.FilePartTypeSy = tmp44
-	if !(bytes.Equal(this.FilePartTypeSy, []uint8{83, 89})) {
-		return kaitai.NewValidationNotEqualError([]uint8{83, 89}, this.FilePartTypeSy, this._io, "/types/graphic_sub_header/seq/0")
-	}
-	tmp45, err := this._io.ReadBytes(int(10))
-	if err != nil {
-		return err
-	}
-	tmp45 = tmp45
-	this.GraphicId = string(tmp45)
-	tmp46, err := this._io.ReadBytes(int(20))
-	if err != nil {
-		return err
-	}
-	tmp46 = tmp46
-	this.GraphicName = string(tmp46)
-	tmp47 := NewNitf_Clasnfo()
-	err = tmp47.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.GraphicClassification = tmp47
-	tmp48 := NewNitf_Encrypt()
-	err = tmp48.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Encryption = tmp48
-	tmp49, err := this._io.ReadBytes(int(1))
-	if err != nil {
-		return err
-	}
-	tmp49 = tmp49
-	this.GraphicType = tmp49
-	if !(bytes.Equal(this.GraphicType, []uint8{67})) {
-		return kaitai.NewValidationNotEqualError([]uint8{67}, this.GraphicType, this._io, "/types/graphic_sub_header/seq/5")
-	}
-	tmp50, err := this._io.ReadBytes(int(13))
-	if err != nil {
-		return err
-	}
-	tmp50 = tmp50
-	this.Reserved1 = string(tmp50)
-	tmp51, err := this._io.ReadBytes(int(3))
-	if err != nil {
-		return err
-	}
-	tmp51 = tmp51
-	this.GraphicDisplayLevel = string(tmp51)
-	tmp52, err := this._io.ReadBytes(int(3))
-	if err != nil {
-		return err
-	}
-	tmp52 = tmp52
-	this.GraphicAttachmentLevel = string(tmp52)
-	tmp53, err := this._io.ReadBytes(int(10))
-	if err != nil {
-		return err
-	}
-	tmp53 = tmp53
-	this.GraphicLocation = string(tmp53)
-	tmp54, err := this._io.ReadBytes(int(10))
-	if err != nil {
-		return err
-	}
-	tmp54 = tmp54
-	this.FirstGraphicBoundLoc = string(tmp54)
-	tmp55, err := this._io.ReadBytes(int(1))
-	if err != nil {
-		return err
-	}
-	tmp55 = tmp55
-	this.GraphicColor = string(tmp55)
-	tmp56, err := this._io.ReadBytes(int(10))
-	if err != nil {
-		return err
-	}
-	tmp56 = tmp56
-	this.SecondGraphicBoundLoc = string(tmp56)
-	tmp57, err := this._io.ReadBytes(int(2))
-	if err != nil {
-		return err
-	}
-	tmp57 = tmp57
-	this.Reserved2 = string(tmp57)
-	tmp58 := NewNitf_TreHeader()
-	err = tmp58.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.GraphicsExtendedSubHeader = tmp58
-	return err
-}
-
-/**
- * Reserved
- */
-
-/**
- * Reserved
- */
-type Nitf_Clasnfo struct {
-	SecurityClass string
-	SecuritySystem string
-	Codewords string
-	ControlAndHandling string
-	Releaseability string
-	DeclassType string
-	DeclassDate string
-	DeclassExemption string
-	Downgrade string
-	DowngradeDate string
-	ClassText string
-	ClassAuthorityType string
-	ClassAuthority string
-	ClassReason string
-	SourceDate string
-	ControlNumber string
-	_io *kaitai.Stream
-	_root *Nitf
-	_parent interface{}
-}
-func NewNitf_Clasnfo() *Nitf_Clasnfo {
-	return &Nitf_Clasnfo{
-	}
-}
-
-func (this *Nitf_Clasnfo) Read(io *kaitai.Stream, parent interface{}, root *Nitf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp59, err := this._io.ReadBytes(int(1))
-	if err != nil {
-		return err
-	}
-	tmp59 = tmp59
-	this.SecurityClass = string(tmp59)
-	tmp60, err := this._io.ReadBytes(int(2))
-	if err != nil {
-		return err
-	}
-	tmp60 = tmp60
-	this.SecuritySystem = string(tmp60)
-	tmp61, err := this._io.ReadBytes(int(11))
-	if err != nil {
-		return err
-	}
-	tmp61 = tmp61
-	this.Codewords = string(tmp61)
-	tmp62, err := this._io.ReadBytes(int(2))
-	if err != nil {
-		return err
-	}
-	tmp62 = tmp62
-	this.ControlAndHandling = string(tmp62)
-	tmp63, err := this._io.ReadBytes(int(20))
-	if err != nil {
-		return err
-	}
-	tmp63 = tmp63
-	this.Releaseability = string(tmp63)
-	tmp64, err := this._io.ReadBytes(int(2))
-	if err != nil {
-		return err
-	}
-	tmp64 = tmp64
-	this.DeclassType = string(tmp64)
-	tmp65, err := this._io.ReadBytes(int(8))
-	if err != nil {
-		return err
-	}
-	tmp65 = tmp65
-	this.DeclassDate = string(tmp65)
-	tmp66, err := this._io.ReadBytes(int(4))
-	if err != nil {
-		return err
-	}
-	tmp66 = tmp66
-	this.DeclassExemption = string(tmp66)
-	tmp67, err := this._io.ReadBytes(int(1))
-	if err != nil {
-		return err
-	}
-	tmp67 = tmp67
-	this.Downgrade = string(tmp67)
-	tmp68, err := this._io.ReadBytes(int(8))
-	if err != nil {
-		return err
-	}
-	tmp68 = tmp68
-	this.DowngradeDate = string(tmp68)
-	tmp69, err := this._io.ReadBytes(int(43))
-	if err != nil {
-		return err
-	}
-	tmp69 = tmp69
-	this.ClassText = string(tmp69)
-	tmp70, err := this._io.ReadBytes(int(1))
-	if err != nil {
-		return err
-	}
-	tmp70 = tmp70
-	this.ClassAuthorityType = string(tmp70)
-	tmp71, err := this._io.ReadBytes(int(40))
-	if err != nil {
-		return err
-	}
-	tmp71 = tmp71
-	this.ClassAuthority = string(tmp71)
-	tmp72, err := this._io.ReadBytes(int(1))
+	tmp72, err := this._io.ReadBytes(int(2))
 	if err != nil {
 		return err
 	}
 	tmp72 = tmp72
-	this.ClassReason = string(tmp72)
-	tmp73, err := this._io.ReadBytes(int(8))
+	this.FilePartTypeSy = tmp72
+	if !(bytes.Equal(this.FilePartTypeSy, []uint8{83, 89})) {
+		return kaitai.NewValidationNotEqualError([]uint8{83, 89}, this.FilePartTypeSy, this._io, "/types/graphic_sub_header/seq/0")
+	}
+	tmp73, err := this._io.ReadBytes(int(10))
 	if err != nil {
 		return err
 	}
 	tmp73 = tmp73
-	this.SourceDate = string(tmp73)
-	tmp74, err := this._io.ReadBytes(int(15))
+	this.GraphicId = string(tmp73)
+	tmp74, err := this._io.ReadBytes(int(20))
 	if err != nil {
 		return err
 	}
 	tmp74 = tmp74
-	this.ControlNumber = string(tmp74)
-	return err
-}
-type Nitf_LengthGraphicInfo struct {
-	LengthGraphicSubheader string
-	LengthGraphicSegment string
-	_io *kaitai.Stream
-	_root *Nitf
-	_parent *Nitf_Header
-}
-func NewNitf_LengthGraphicInfo() *Nitf_LengthGraphicInfo {
-	return &Nitf_LengthGraphicInfo{
-	}
-}
-
-func (this *Nitf_LengthGraphicInfo) Read(io *kaitai.Stream, parent *Nitf_Header, root *Nitf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp75, err := this._io.ReadBytes(int(4))
+	this.GraphicName = string(tmp74)
+	tmp75 := NewNitf_Clasnfo()
+	err = tmp75.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	tmp75 = tmp75
-	this.LengthGraphicSubheader = string(tmp75)
-	tmp76, err := this._io.ReadBytes(int(6))
+	this.GraphicClassification = tmp75
+	tmp76 := NewNitf_Encrypt()
+	err = tmp76.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	tmp76 = tmp76
-	this.LengthGraphicSegment = string(tmp76)
-	return err
-}
-type Nitf_Encrypt struct {
-	_unnamed0 string
-	_io *kaitai.Stream
-	_root *Nitf
-	_parent interface{}
-}
-func NewNitf_Encrypt() *Nitf_Encrypt {
-	return &Nitf_Encrypt{
-	}
-}
-
-func (this *Nitf_Encrypt) Read(io *kaitai.Stream, parent interface{}, root *Nitf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
+	this.Encryption = tmp76
 	tmp77, err := this._io.ReadBytes(int(1))
 	if err != nil {
 		return err
 	}
 	tmp77 = tmp77
-	this._unnamed0 = string(tmp77)
+	this.GraphicType = tmp77
+	if !(bytes.Equal(this.GraphicType, []uint8{67})) {
+		return kaitai.NewValidationNotEqualError([]uint8{67}, this.GraphicType, this._io, "/types/graphic_sub_header/seq/5")
+	}
+	tmp78, err := this._io.ReadBytes(int(13))
+	if err != nil {
+		return err
+	}
+	tmp78 = tmp78
+	this.Reserved1 = string(tmp78)
+	tmp79, err := this._io.ReadBytes(int(3))
+	if err != nil {
+		return err
+	}
+	tmp79 = tmp79
+	this.GraphicDisplayLevel = string(tmp79)
+	tmp80, err := this._io.ReadBytes(int(3))
+	if err != nil {
+		return err
+	}
+	tmp80 = tmp80
+	this.GraphicAttachmentLevel = string(tmp80)
+	tmp81, err := this._io.ReadBytes(int(10))
+	if err != nil {
+		return err
+	}
+	tmp81 = tmp81
+	this.GraphicLocation = string(tmp81)
+	tmp82, err := this._io.ReadBytes(int(10))
+	if err != nil {
+		return err
+	}
+	tmp82 = tmp82
+	this.FirstGraphicBoundLoc = string(tmp82)
+	tmp83, err := this._io.ReadBytes(int(1))
+	if err != nil {
+		return err
+	}
+	tmp83 = tmp83
+	this.GraphicColor = string(tmp83)
+	tmp84, err := this._io.ReadBytes(int(10))
+	if err != nil {
+		return err
+	}
+	tmp84 = tmp84
+	this.SecondGraphicBoundLoc = string(tmp84)
+	tmp85, err := this._io.ReadBytes(int(2))
+	if err != nil {
+		return err
+	}
+	tmp85 = tmp85
+	this.Reserved2 = string(tmp85)
+	tmp86 := NewNitf_TreHeader()
+	err = tmp86.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.GraphicsExtendedSubHeader = tmp86
+	return err
+}
+
+/**
+ * Reserved
+ */
+
+/**
+ * Reserved
+ */
+type Nitf_GraphicsSegment struct {
+	GraphicSubHeader *Nitf_GraphicSubHeader
+	GraphicDataField []byte
+	Idx uint16
+	_io *kaitai.Stream
+	_root *Nitf
+	_parent *Nitf
+}
+func NewNitf_GraphicsSegment(idx uint16) *Nitf_GraphicsSegment {
+	return &Nitf_GraphicsSegment{
+		Idx: idx,
+	}
+}
+
+func (this Nitf_GraphicsSegment) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Nitf_GraphicsSegment) Read(io *kaitai.Stream, parent *Nitf, root *Nitf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp87 := NewNitf_GraphicSubHeader()
+	err = tmp87.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.GraphicSubHeader = tmp87
+	tmp88, err := strconv.ParseInt(this._parent.Header.Lnnfo[this.Idx].LengthGraphicSegment, 10, 0)
+	if err != nil {
+		return err
+	}
+	tmp89, err := this._io.ReadBytes(int(tmp88))
+	if err != nil {
+		return err
+	}
+	tmp89 = tmp89
+	this.GraphicDataField = tmp89
+	return err
+}
+type Nitf_Header struct {
+	FileProfileName []byte
+	FileVersion []byte
+	ComplexityLevel []byte
+	StandardType []byte
+	OriginatingStationId string
+	FileDateTime *Nitf_DateTime
+	FileTitle string
+	FileSecurity *Nitf_Clasnfo
+	FileCopyNumber string
+	FileNumOfCopys string
+	Encryption *Nitf_Encrypt
+	FileBgColor []byte
+	OriginatorName string
+	OriginatorPhone string
+	FileLength string
+	FileHeaderLength string
+	NumImageSegments string
+	Linfo []*Nitf_LengthImageInfo
+	NumGraphicsSegments string
+	Lnnfo []*Nitf_LengthGraphicInfo
+	ReservedNumx string
+	NumTextFiles string
+	Ltnfo []*Nitf_LengthTextInfo
+	NumDataExtension string
+	Ldnfo []*Nitf_LengthDataInfo
+	NumReservedExtension string
+	Lrnfo []*Nitf_LengthReservedInfo
+	UserDefinedHeader *Nitf_TreHeader
+	ExtendedHeader *Nitf_TreHeader
+	_io *kaitai.Stream
+	_root *Nitf
+	_parent *Nitf
+}
+func NewNitf_Header() *Nitf_Header {
+	return &Nitf_Header{
+	}
+}
+
+func (this Nitf_Header) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Nitf_Header) Read(io *kaitai.Stream, parent *Nitf, root *Nitf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp90, err := this._io.ReadBytes(int(4))
+	if err != nil {
+		return err
+	}
+	tmp90 = tmp90
+	this.FileProfileName = tmp90
+	if !(bytes.Equal(this.FileProfileName, []uint8{78, 73, 84, 70})) {
+		return kaitai.NewValidationNotEqualError([]uint8{78, 73, 84, 70}, this.FileProfileName, this._io, "/types/header/seq/0")
+	}
+	tmp91, err := this._io.ReadBytes(int(5))
+	if err != nil {
+		return err
+	}
+	tmp91 = tmp91
+	this.FileVersion = tmp91
+	if !(bytes.Equal(this.FileVersion, []uint8{48, 50, 46, 49, 48})) {
+		return kaitai.NewValidationNotEqualError([]uint8{48, 50, 46, 49, 48}, this.FileVersion, this._io, "/types/header/seq/1")
+	}
+	tmp92, err := this._io.ReadBytes(int(2))
+	if err != nil {
+		return err
+	}
+	tmp92 = tmp92
+	this.ComplexityLevel = tmp92
+	tmp93, err := this._io.ReadBytes(int(4))
+	if err != nil {
+		return err
+	}
+	tmp93 = tmp93
+	this.StandardType = tmp93
+	if !(bytes.Equal(this.StandardType, []uint8{66, 70, 48, 49})) {
+		return kaitai.NewValidationNotEqualError([]uint8{66, 70, 48, 49}, this.StandardType, this._io, "/types/header/seq/3")
+	}
+	tmp94, err := this._io.ReadBytes(int(10))
+	if err != nil {
+		return err
+	}
+	tmp94 = tmp94
+	this.OriginatingStationId = string(tmp94)
+	tmp95 := NewNitf_DateTime()
+	err = tmp95.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.FileDateTime = tmp95
+	tmp96, err := this._io.ReadBytes(int(80))
+	if err != nil {
+		return err
+	}
+	tmp96 = tmp96
+	this.FileTitle = string(tmp96)
+	tmp97 := NewNitf_Clasnfo()
+	err = tmp97.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.FileSecurity = tmp97
+	tmp98, err := this._io.ReadBytes(int(5))
+	if err != nil {
+		return err
+	}
+	tmp98 = tmp98
+	this.FileCopyNumber = string(tmp98)
+	tmp99, err := this._io.ReadBytes(int(5))
+	if err != nil {
+		return err
+	}
+	tmp99 = tmp99
+	this.FileNumOfCopys = string(tmp99)
+	tmp100 := NewNitf_Encrypt()
+	err = tmp100.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Encryption = tmp100
+	tmp101, err := this._io.ReadBytes(int(3))
+	if err != nil {
+		return err
+	}
+	tmp101 = tmp101
+	this.FileBgColor = tmp101
+	tmp102, err := this._io.ReadBytes(int(24))
+	if err != nil {
+		return err
+	}
+	tmp102 = tmp102
+	this.OriginatorName = string(tmp102)
+	tmp103, err := this._io.ReadBytes(int(18))
+	if err != nil {
+		return err
+	}
+	tmp103 = tmp103
+	this.OriginatorPhone = string(tmp103)
+	tmp104, err := this._io.ReadBytes(int(12))
+	if err != nil {
+		return err
+	}
+	tmp104 = tmp104
+	this.FileLength = string(tmp104)
+	tmp105, err := this._io.ReadBytes(int(6))
+	if err != nil {
+		return err
+	}
+	tmp105 = tmp105
+	this.FileHeaderLength = string(tmp105)
+	tmp106, err := this._io.ReadBytes(int(3))
+	if err != nil {
+		return err
+	}
+	tmp106 = tmp106
+	this.NumImageSegments = string(tmp106)
+	tmp107, err := strconv.ParseInt(this.NumImageSegments, 10, 0)
+	if err != nil {
+		return err
+	}
+	for i := 0; i < int(tmp107); i++ {
+		_ = i
+		tmp108 := NewNitf_LengthImageInfo()
+		err = tmp108.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Linfo = append(this.Linfo, tmp108)
+	}
+	tmp109, err := this._io.ReadBytes(int(3))
+	if err != nil {
+		return err
+	}
+	tmp109 = tmp109
+	this.NumGraphicsSegments = string(tmp109)
+	tmp110, err := strconv.ParseInt(this.NumGraphicsSegments, 10, 0)
+	if err != nil {
+		return err
+	}
+	for i := 0; i < int(tmp110); i++ {
+		_ = i
+		tmp111 := NewNitf_LengthGraphicInfo()
+		err = tmp111.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Lnnfo = append(this.Lnnfo, tmp111)
+	}
+	tmp112, err := this._io.ReadBytes(int(3))
+	if err != nil {
+		return err
+	}
+	tmp112 = tmp112
+	this.ReservedNumx = string(tmp112)
+	tmp113, err := this._io.ReadBytes(int(3))
+	if err != nil {
+		return err
+	}
+	tmp113 = tmp113
+	this.NumTextFiles = string(tmp113)
+	tmp114, err := strconv.ParseInt(this.NumTextFiles, 10, 0)
+	if err != nil {
+		return err
+	}
+	for i := 0; i < int(tmp114); i++ {
+		_ = i
+		tmp115 := NewNitf_LengthTextInfo()
+		err = tmp115.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Ltnfo = append(this.Ltnfo, tmp115)
+	}
+	tmp116, err := this._io.ReadBytes(int(3))
+	if err != nil {
+		return err
+	}
+	tmp116 = tmp116
+	this.NumDataExtension = string(tmp116)
+	tmp117, err := strconv.ParseInt(this.NumDataExtension, 10, 0)
+	if err != nil {
+		return err
+	}
+	for i := 0; i < int(tmp117); i++ {
+		_ = i
+		tmp118 := NewNitf_LengthDataInfo()
+		err = tmp118.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Ldnfo = append(this.Ldnfo, tmp118)
+	}
+	tmp119, err := this._io.ReadBytes(int(3))
+	if err != nil {
+		return err
+	}
+	tmp119 = tmp119
+	this.NumReservedExtension = string(tmp119)
+	tmp120, err := strconv.ParseInt(this.NumReservedExtension, 10, 0)
+	if err != nil {
+		return err
+	}
+	for i := 0; i < int(tmp120); i++ {
+		_ = i
+		tmp121 := NewNitf_LengthReservedInfo()
+		err = tmp121.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Lrnfo = append(this.Lrnfo, tmp121)
+	}
+	tmp122 := NewNitf_TreHeader()
+	err = tmp122.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.UserDefinedHeader = tmp122
+	tmp123 := NewNitf_TreHeader()
+	err = tmp123.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.ExtendedHeader = tmp123
+	return err
+}
+
+/**
+ * Value of BF01 indicates the file is formatted using ISO/IEC IS 12087-5.
+ */
+type Nitf_ImageComment struct {
+	_unnamed0 string
+	_io *kaitai.Stream
+	_root *Nitf
+	_parent *Nitf_ImageSubHeader
+}
+func NewNitf_ImageComment() *Nitf_ImageComment {
+	return &Nitf_ImageComment{
+	}
+}
+
+func (this Nitf_ImageComment) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Nitf_ImageComment) Read(io *kaitai.Stream, parent *Nitf_ImageSubHeader, root *Nitf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp124, err := this._io.ReadBytes(int(80))
+	if err != nil {
+		return err
+	}
+	tmp124 = tmp124
+	this._unnamed0 = string(tmp124)
 	return err
 }
 type Nitf_ImageDataMask struct {
@@ -808,24 +1261,28 @@ type Nitf_ImageDataMask struct {
 	_io *kaitai.Stream
 	_root *Nitf
 	_parent *Nitf_ImageSegment
+	_f_bmrbndSize bool
+	bmrbndSize int
+	_f_bmrtmrCount bool
+	bmrtmrCount int
 	_f_hasBmr bool
 	hasBmr bool
 	_f_hasTmr bool
 	hasTmr bool
 	_f_tmrbndSize bool
 	tmrbndSize int
-	_f_tpxcdSize bool
-	tpxcdSize int
 	_f_totalSize bool
 	totalSize int
-	_f_bmrbndSize bool
-	bmrbndSize int
-	_f_bmrtmrCount bool
-	bmrtmrCount int
+	_f_tpxcdSize bool
+	tpxcdSize int
 }
 func NewNitf_ImageDataMask() *Nitf_ImageDataMask {
 	return &Nitf_ImageDataMask{
 	}
+}
+
+func (this Nitf_ImageDataMask) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Nitf_ImageDataMask) Read(io *kaitai.Stream, parent *Nitf_ImageSegment, root *Nitf) (err error) {
@@ -833,215 +1290,215 @@ func (this *Nitf_ImageDataMask) Read(io *kaitai.Stream, parent *Nitf_ImageSegmen
 	this._parent = parent
 	this._root = root
 
-	tmp78, err := this._io.ReadU4be()
+	tmp125, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.BlockedImgDataOffset = uint32(tmp78)
-	tmp79, err := this._io.ReadU2be()
+	this.BlockedImgDataOffset = uint32(tmp125)
+	tmp126, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.Bmrlnth = uint16(tmp79)
-	tmp80, err := this._io.ReadU2be()
+	this.Bmrlnth = uint16(tmp126)
+	tmp127, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.Tmrlnth = uint16(tmp80)
-	tmp81, err := this._io.ReadU2be()
+	this.Tmrlnth = uint16(tmp127)
+	tmp128, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.Tpxcdlnth = uint16(tmp81)
-	tmp82, err := this.TpxcdSize()
+	this.Tpxcdlnth = uint16(tmp128)
+	tmp129, err := this.TpxcdSize()
 	if err != nil {
 		return err
 	}
-	tmp83, err := this._io.ReadBytes(int(tmp82))
+	tmp130, err := this._io.ReadBytes(int(tmp129))
 	if err != nil {
 		return err
 	}
-	tmp83 = tmp83
-	this.Tpxcd = tmp83
-	tmp84, err := this.HasBmr()
+	tmp130 = tmp130
+	this.Tpxcd = tmp130
+	tmp131, err := this.HasBmr()
 	if err != nil {
 		return err
 	}
-	if (tmp84) {
-		tmp85, err := this.BmrtmrCount()
+	if (tmp131) {
+		tmp132, err := this.BmrtmrCount()
 		if err != nil {
 			return err
 		}
-		for i := 0; i < int(tmp85); i++ {
+		for i := 0; i < int(tmp132); i++ {
 			_ = i
-			tmp86, err := this._io.ReadU4be()
+			tmp133, err := this._io.ReadU4be()
 			if err != nil {
 				return err
 			}
-			this.Bmrbnd = append(this.Bmrbnd, tmp86)
+			this.Bmrbnd = append(this.Bmrbnd, tmp133)
 		}
 	}
-	tmp87, err := this.HasTmr()
+	tmp134, err := this.HasTmr()
 	if err != nil {
 		return err
 	}
-	if (tmp87) {
-		tmp88, err := this.BmrtmrCount()
+	if (tmp134) {
+		tmp135, err := this.BmrtmrCount()
 		if err != nil {
 			return err
 		}
-		for i := 0; i < int(tmp88); i++ {
+		for i := 0; i < int(tmp135); i++ {
 			_ = i
-			tmp89, err := this._io.ReadU4be()
+			tmp136, err := this._io.ReadU4be()
 			if err != nil {
 				return err
 			}
-			this.Tmrbnd = append(this.Tmrbnd, tmp89)
+			this.Tmrbnd = append(this.Tmrbnd, tmp136)
 		}
 	}
 	return err
-}
-func (this *Nitf_ImageDataMask) HasBmr() (v bool, err error) {
-	if (this._f_hasBmr) {
-		return this.hasBmr, nil
-	}
-	this.hasBmr = bool(this.Bmrlnth != 0)
-	this._f_hasBmr = true
-	return this.hasBmr, nil
-}
-func (this *Nitf_ImageDataMask) HasTmr() (v bool, err error) {
-	if (this._f_hasTmr) {
-		return this.hasTmr, nil
-	}
-	this.hasTmr = bool(this.Tmrlnth != 0)
-	this._f_hasTmr = true
-	return this.hasTmr, nil
-}
-func (this *Nitf_ImageDataMask) TmrbndSize() (v int, err error) {
-	if (this._f_tmrbndSize) {
-		return this.tmrbndSize, nil
-	}
-	var tmp90 int;
-	tmp91, err := this.HasTmr()
-	if err != nil {
-		return 0, err
-	}
-	if (tmp91) {
-		tmp92, err := this.BmrtmrCount()
-		if err != nil {
-			return 0, err
-		}
-		tmp90 = (tmp92 * 4)
-	} else {
-		tmp90 = 0
-	}
-	this.tmrbndSize = int(tmp90)
-	this._f_tmrbndSize = true
-	return this.tmrbndSize, nil
-}
-func (this *Nitf_ImageDataMask) TpxcdSize() (v int, err error) {
-	if (this._f_tpxcdSize) {
-		return this.tpxcdSize, nil
-	}
-	var tmp93 uint16;
-	tmp94 := this.Tpxcdlnth % 8
-	if tmp94 < 0 {
-		tmp94 += 8
-	}
-	if (tmp94 == 0) {
-		tmp93 = this.Tpxcdlnth
-	} else {
-		tmp95 := this.Tpxcdlnth % 8
-		if tmp95 < 0 {
-			tmp95 += 8
-		}
-		tmp93 = (this.Tpxcdlnth + (8 - tmp95))
-	}
-	this.tpxcdSize = int((tmp93 / 8))
-	this._f_tpxcdSize = true
-	return this.tpxcdSize, nil
-}
-func (this *Nitf_ImageDataMask) TotalSize() (v int, err error) {
-	if (this._f_totalSize) {
-		return this.totalSize, nil
-	}
-	tmp96, err := this.TpxcdSize()
-	if err != nil {
-		return 0, err
-	}
-	tmp97, err := this.BmrbndSize()
-	if err != nil {
-		return 0, err
-	}
-	tmp98, err := this.TmrbndSize()
-	if err != nil {
-		return 0, err
-	}
-	this.totalSize = int(((((((4 + 2) + 2) + 2) + tmp96) + tmp97) + tmp98))
-	this._f_totalSize = true
-	return this.totalSize, nil
 }
 func (this *Nitf_ImageDataMask) BmrbndSize() (v int, err error) {
 	if (this._f_bmrbndSize) {
 		return this.bmrbndSize, nil
 	}
-	var tmp99 int;
-	tmp100, err := this.HasBmr()
+	this._f_bmrbndSize = true
+	var tmp137 int;
+	tmp138, err := this.HasBmr()
 	if err != nil {
 		return 0, err
 	}
-	if (tmp100) {
-		tmp101, err := this.BmrtmrCount()
+	if (tmp138) {
+		tmp139, err := this.BmrtmrCount()
 		if err != nil {
 			return 0, err
 		}
-		tmp99 = (tmp101 * 4)
+		tmp137 = tmp139 * 4
 	} else {
-		tmp99 = 0
+		tmp137 = 0
 	}
-	this.bmrbndSize = int(tmp99)
-	this._f_bmrbndSize = true
+	this.bmrbndSize = int(tmp137)
 	return this.bmrbndSize, nil
 }
 func (this *Nitf_ImageDataMask) BmrtmrCount() (v int, err error) {
 	if (this._f_bmrtmrCount) {
 		return this.bmrtmrCount, nil
 	}
-	tmp102, err := strconv.ParseInt(this._parent.ImageSubHeader.NumBlocksPerRow, 10, 0)
+	this._f_bmrtmrCount = true
+	tmp140, err := strconv.ParseInt(this._parent.ImageSubHeader.NumBlocksPerRow, 10, 0)
 	if err != nil {
 		return 0, err
 	}
-	tmp103, err := strconv.ParseInt(this._parent.ImageSubHeader.NumBlocksPerCol, 10, 0)
+	tmp141, err := strconv.ParseInt(this._parent.ImageSubHeader.NumBlocksPerCol, 10, 0)
 	if err != nil {
 		return 0, err
 	}
-	var tmp104 int8;
+	var tmp142 int8;
 	if (this._parent.ImageSubHeader.ImgMode != "S") {
-		tmp104 = 1
+		tmp142 = 1
 	} else {
-		var tmp105 int;
-		tmp106, err := strconv.ParseInt(this._parent.ImageSubHeader.NumBands, 10, 0)
+		var tmp143 int;
+		tmp144, err := strconv.ParseInt(this._parent.ImageSubHeader.NumBands, 10, 0)
 		if err != nil {
 			return 0, err
 		}
-		if (tmp106 != 0) {
-			tmp107, err := strconv.ParseInt(this._parent.ImageSubHeader.NumBands, 10, 0)
+		if (tmp144 != 0) {
+			tmp145, err := strconv.ParseInt(this._parent.ImageSubHeader.NumBands, 10, 0)
 			if err != nil {
 				return 0, err
 			}
-			tmp105 = tmp107
+			tmp143 = tmp145
 		} else {
-			tmp108, err := strconv.ParseInt(this._parent.ImageSubHeader.NumMultispectralBands, 10, 0)
+			tmp146, err := strconv.ParseInt(this._parent.ImageSubHeader.NumMultispectralBands, 10, 0)
 			if err != nil {
 				return 0, err
 			}
-			tmp105 = tmp108
+			tmp143 = tmp146
 		}
-		tmp104 = tmp105
+		tmp142 = tmp143
 	}
-	this.bmrtmrCount = int(((tmp102 * tmp103) * tmp104))
-	this._f_bmrtmrCount = true
+	this.bmrtmrCount = int((tmp140 * tmp141) * tmp142)
 	return this.bmrtmrCount, nil
+}
+func (this *Nitf_ImageDataMask) HasBmr() (v bool, err error) {
+	if (this._f_hasBmr) {
+		return this.hasBmr, nil
+	}
+	this._f_hasBmr = true
+	this.hasBmr = bool(this.Bmrlnth != 0)
+	return this.hasBmr, nil
+}
+func (this *Nitf_ImageDataMask) HasTmr() (v bool, err error) {
+	if (this._f_hasTmr) {
+		return this.hasTmr, nil
+	}
+	this._f_hasTmr = true
+	this.hasTmr = bool(this.Tmrlnth != 0)
+	return this.hasTmr, nil
+}
+func (this *Nitf_ImageDataMask) TmrbndSize() (v int, err error) {
+	if (this._f_tmrbndSize) {
+		return this.tmrbndSize, nil
+	}
+	this._f_tmrbndSize = true
+	var tmp147 int;
+	tmp148, err := this.HasTmr()
+	if err != nil {
+		return 0, err
+	}
+	if (tmp148) {
+		tmp149, err := this.BmrtmrCount()
+		if err != nil {
+			return 0, err
+		}
+		tmp147 = tmp149 * 4
+	} else {
+		tmp147 = 0
+	}
+	this.tmrbndSize = int(tmp147)
+	return this.tmrbndSize, nil
+}
+func (this *Nitf_ImageDataMask) TotalSize() (v int, err error) {
+	if (this._f_totalSize) {
+		return this.totalSize, nil
+	}
+	this._f_totalSize = true
+	tmp150, err := this.TpxcdSize()
+	if err != nil {
+		return 0, err
+	}
+	tmp151, err := this.BmrbndSize()
+	if err != nil {
+		return 0, err
+	}
+	tmp152, err := this.TmrbndSize()
+	if err != nil {
+		return 0, err
+	}
+	this.totalSize = int((((((4 + 2) + 2) + 2) + tmp150) + tmp151) + tmp152)
+	return this.totalSize, nil
+}
+func (this *Nitf_ImageDataMask) TpxcdSize() (v int, err error) {
+	if (this._f_tpxcdSize) {
+		return this.tpxcdSize, nil
+	}
+	this._f_tpxcdSize = true
+	var tmp153 uint16;
+	tmp154 := this.Tpxcdlnth % 8
+	if tmp154 < 0 {
+		tmp154 += 8
+	}
+	if (tmp154 == 0) {
+		tmp153 = this.Tpxcdlnth
+	} else {
+		tmp155 := this.Tpxcdlnth % 8
+		if tmp155 < 0 {
+			tmp155 += 8
+		}
+		tmp153 = this.Tpxcdlnth + (8 - tmp155)
+	}
+	this.tpxcdSize = int(tmp153 / 8)
+	return this.tpxcdSize, nil
 }
 
 /**
@@ -1067,236 +1524,79 @@ func (this *Nitf_ImageDataMask) BmrtmrCount() (v int, err error) {
 /**
  * Pad Pixel n, Band m
  */
-type Nitf_GraphicsSegment struct {
-	GraphicSubHeader *Nitf_GraphicSubHeader
-	GraphicDataField []byte
+type Nitf_ImageSegment struct {
+	ImageSubHeader *Nitf_ImageSubHeader
+	ImageDataMask *Nitf_ImageDataMask
+	ImageDataField []byte
 	Idx uint16
 	_io *kaitai.Stream
 	_root *Nitf
 	_parent *Nitf
+	_f_hasMask bool
+	hasMask bool
 }
-func NewNitf_GraphicsSegment(idx uint16) *Nitf_GraphicsSegment {
-	return &Nitf_GraphicsSegment{
+func NewNitf_ImageSegment(idx uint16) *Nitf_ImageSegment {
+	return &Nitf_ImageSegment{
 		Idx: idx,
 	}
 }
 
-func (this *Nitf_GraphicsSegment) Read(io *kaitai.Stream, parent *Nitf, root *Nitf) (err error) {
+func (this Nitf_ImageSegment) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Nitf_ImageSegment) Read(io *kaitai.Stream, parent *Nitf, root *Nitf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp109 := NewNitf_GraphicSubHeader()
-	err = tmp109.Read(this._io, this, this._root)
+	tmp156 := NewNitf_ImageSubHeader()
+	err = tmp156.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.GraphicSubHeader = tmp109
-	tmp110, err := strconv.ParseInt(this._parent.Header.Lnnfo[this.Idx].LengthGraphicSegment, 10, 0)
+	this.ImageSubHeader = tmp156
+	tmp157, err := this.HasMask()
 	if err != nil {
 		return err
 	}
-	tmp111, err := this._io.ReadBytes(int(tmp110))
-	if err != nil {
-		return err
-	}
-	tmp111 = tmp111
-	this.GraphicDataField = tmp111
-	return err
-}
-type Nitf_DataSubHeader struct {
-	DesBase *Nitf_DataSubHeaderBase
-	OverflowedHeaderType string
-	DataItemOverflowed string
-	DesDefinedSubheaderFieldsLen string
-	Desshf string
-	DesDefinedDataField string
-	_io *kaitai.Stream
-	_root *Nitf
-	_parent *Nitf_DataExtensionSegment
-	_f_treOfl bool
-	treOfl bool
-}
-func NewNitf_DataSubHeader() *Nitf_DataSubHeader {
-	return &Nitf_DataSubHeader{
-	}
-}
-
-func (this *Nitf_DataSubHeader) Read(io *kaitai.Stream, parent *Nitf_DataExtensionSegment, root *Nitf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp112 := NewNitf_DataSubHeaderBase()
-	err = tmp112.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.DesBase = tmp112
-	tmp113, err := this.TreOfl()
-	if err != nil {
-		return err
-	}
-	if (tmp113) {
-		tmp114, err := this._io.ReadBytes(int(6))
+	if (tmp157) {
+		tmp158 := NewNitf_ImageDataMask()
+		err = tmp158.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		tmp114 = tmp114
-		this.OverflowedHeaderType = string(tmp114)
+		this.ImageDataMask = tmp158
 	}
-	tmp115, err := this.TreOfl()
+	tmp159, err := this.HasMask()
 	if err != nil {
 		return err
 	}
-	if (tmp115) {
-		tmp116, err := this._io.ReadBytes(int(3))
+	if (tmp159) {
+		tmp160, err := strconv.ParseInt(this._parent.Header.Linfo[this.Idx].LengthImageSegment, 10, 0)
 		if err != nil {
 			return err
 		}
-		tmp116 = tmp116
-		this.DataItemOverflowed = string(tmp116)
-	}
-	tmp117, err := this._io.ReadBytes(int(4))
-	if err != nil {
-		return err
-	}
-	tmp117 = tmp117
-	this.DesDefinedSubheaderFieldsLen = string(tmp117)
-	tmp118, err := strconv.ParseInt(this.DesDefinedSubheaderFieldsLen, 10, 0)
-	if err != nil {
-		return err
-	}
-	tmp119, err := this._io.ReadBytes(int(tmp118))
-	if err != nil {
-		return err
-	}
-	tmp119 = tmp119
-	this.Desshf = string(tmp119)
-	tmp120, err := this._io.ReadBytesFull()
-	if err != nil {
-		return err
-	}
-	tmp120 = tmp120
-	this.DesDefinedDataField = string(tmp120)
-	return err
-}
-func (this *Nitf_DataSubHeader) TreOfl() (v bool, err error) {
-	if (this._f_treOfl) {
-		return this.treOfl, nil
-	}
-	this.treOfl = bool(this.DesBase.Desid == "TRE_OVERFLOW")
-	this._f_treOfl = true
-	return this.treOfl, nil
-}
-type Nitf_DataExtensionSegment struct {
-	DataSubHeader *Nitf_DataSubHeader
-	DataDataField []byte
-	Idx uint16
-	_io *kaitai.Stream
-	_root *Nitf
-	_parent *Nitf
-	_raw_DataSubHeader []byte
-}
-func NewNitf_DataExtensionSegment(idx uint16) *Nitf_DataExtensionSegment {
-	return &Nitf_DataExtensionSegment{
-		Idx: idx,
-	}
-}
-
-func (this *Nitf_DataExtensionSegment) Read(io *kaitai.Stream, parent *Nitf, root *Nitf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp121, err := strconv.ParseInt(this._parent.Header.Ldnfo[this.Idx].LengthDataExtensionSubheader, 10, 0)
-	if err != nil {
-		return err
-	}
-	tmp122, err := this._io.ReadBytes(int(tmp121))
-	if err != nil {
-		return err
-	}
-	tmp122 = tmp122
-	this._raw_DataSubHeader = tmp122
-	_io__raw_DataSubHeader := kaitai.NewStream(bytes.NewReader(this._raw_DataSubHeader))
-	tmp123 := NewNitf_DataSubHeader()
-	err = tmp123.Read(_io__raw_DataSubHeader, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.DataSubHeader = tmp123
-	tmp124, err := strconv.ParseInt(this._parent.Header.Ldnfo[this.Idx].LengthDataExtensionSegment, 10, 0)
-	if err != nil {
-		return err
-	}
-	tmp125, err := this._io.ReadBytes(int(tmp124))
-	if err != nil {
-		return err
-	}
-	tmp125 = tmp125
-	this.DataDataField = tmp125
-	return err
-}
-type Nitf_DataSubHeaderTre struct {
-	DesBase *Nitf_DataSubHeaderBase
-	OverflowedHeaderType string
-	DataItemOverflowed string
-	DesDefinedSubheaderFieldsLen string
-	DesDefinedDataField string
-	_io *kaitai.Stream
-	_root *Nitf
-	_parent interface{}
-}
-func NewNitf_DataSubHeaderTre() *Nitf_DataSubHeaderTre {
-	return &Nitf_DataSubHeaderTre{
-	}
-}
-
-func (this *Nitf_DataSubHeaderTre) Read(io *kaitai.Stream, parent interface{}, root *Nitf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp126 := NewNitf_DataSubHeaderBase()
-	err = tmp126.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.DesBase = tmp126
-	if (this.DesBase.Desid == "TRE_OVERFLOW") {
-		tmp127, err := this._io.ReadBytes(int(6))
+		tmp161, err := this.ImageDataMask.TotalSize()
 		if err != nil {
 			return err
 		}
-		tmp127 = tmp127
-		this.OverflowedHeaderType = string(tmp127)
-	}
-	if (this.DesBase.Desid == "TRE_OVERFLOW") {
-		tmp128, err := this._io.ReadBytes(int(3))
+		tmp162, err := this._io.ReadBytes(int(tmp160 - tmp161))
 		if err != nil {
 			return err
 		}
-		tmp128 = tmp128
-		this.DataItemOverflowed = string(tmp128)
+		tmp162 = tmp162
+		this.ImageDataField = tmp162
 	}
-	tmp129, err := this._io.ReadBytes(int(4))
-	if err != nil {
-		return err
-	}
-	tmp129 = tmp129
-	this.DesDefinedSubheaderFieldsLen = string(tmp129)
-	tmp130, err := strconv.ParseInt(this.DesDefinedSubheaderFieldsLen, 10, 0)
-	if err != nil {
-		return err
-	}
-	tmp131, err := this._io.ReadBytes(int(tmp130))
-	if err != nil {
-		return err
-	}
-	tmp131 = tmp131
-	this.DesDefinedDataField = string(tmp131)
 	return err
+}
+func (this *Nitf_ImageSegment) HasMask() (v bool, err error) {
+	if (this._f_hasMask) {
+		return this.hasMask, nil
+	}
+	this._f_hasMask = true
+	this.hasMask = bool(this.ImageSubHeader.ImgCompression[0:2] == "MM")
+	return this.hasMask, nil
 }
 type Nitf_ImageSubHeader struct {
 	FilePartType []byte
@@ -1347,300 +1647,304 @@ func NewNitf_ImageSubHeader() *Nitf_ImageSubHeader {
 	}
 }
 
+func (this Nitf_ImageSubHeader) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Nitf_ImageSubHeader) Read(io *kaitai.Stream, parent *Nitf_ImageSegment, root *Nitf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp132, err := this._io.ReadBytes(int(2))
-	if err != nil {
-		return err
-	}
-	tmp132 = tmp132
-	this.FilePartType = tmp132
-	if !(bytes.Equal(this.FilePartType, []uint8{73, 77})) {
-		return kaitai.NewValidationNotEqualError([]uint8{73, 77}, this.FilePartType, this._io, "/types/image_sub_header/seq/0")
-	}
-	tmp133, err := this._io.ReadBytes(int(10))
-	if err != nil {
-		return err
-	}
-	tmp133 = tmp133
-	this.ImageId1 = string(tmp133)
-	tmp134 := NewNitf_DateTime()
-	err = tmp134.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.ImageDateTime = tmp134
-	tmp135, err := this._io.ReadBytes(int(17))
-	if err != nil {
-		return err
-	}
-	tmp135 = tmp135
-	this.TargetId = string(tmp135)
-	tmp136, err := this._io.ReadBytes(int(80))
-	if err != nil {
-		return err
-	}
-	tmp136 = tmp136
-	this.ImageId2 = string(tmp136)
-	tmp137 := NewNitf_Clasnfo()
-	err = tmp137.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.ImageSecurityClassification = tmp137
-	tmp138 := NewNitf_Encrypt()
-	err = tmp138.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Encryption = tmp138
-	tmp139, err := this._io.ReadBytes(int(42))
-	if err != nil {
-		return err
-	}
-	tmp139 = tmp139
-	this.ImageSource = string(tmp139)
-	tmp140, err := this._io.ReadBytes(int(8))
-	if err != nil {
-		return err
-	}
-	tmp140 = tmp140
-	this.NumSigRows = string(tmp140)
-	tmp141, err := this._io.ReadBytes(int(8))
-	if err != nil {
-		return err
-	}
-	tmp141 = tmp141
-	this.NumSigCols = string(tmp141)
-	tmp142, err := this._io.ReadBytes(int(3))
-	if err != nil {
-		return err
-	}
-	tmp142 = tmp142
-	this.PixelValueType = string(tmp142)
-	tmp143, err := this._io.ReadBytes(int(8))
-	if err != nil {
-		return err
-	}
-	tmp143 = tmp143
-	this.ImageRepresentation = string(tmp143)
-	tmp144, err := this._io.ReadBytes(int(8))
-	if err != nil {
-		return err
-	}
-	tmp144 = tmp144
-	this.ImageCategory = string(tmp144)
-	tmp145, err := this._io.ReadBytes(int(2))
-	if err != nil {
-		return err
-	}
-	tmp145 = tmp145
-	this.ActualBitsPerPixelPerBand = string(tmp145)
-	tmp146, err := this._io.ReadBytes(int(1))
-	if err != nil {
-		return err
-	}
-	tmp146 = tmp146
-	this.PixelJustification = string(tmp146)
-	tmp147, err := this._io.ReadBytes(int(1))
-	if err != nil {
-		return err
-	}
-	tmp147 = tmp147
-	this.ImageCoordinateRep = string(tmp147)
-	tmp148, err := this._io.ReadBytes(int(60))
-	if err != nil {
-		return err
-	}
-	tmp148 = tmp148
-	this.ImageGeoLoc = string(tmp148)
-	tmp149, err := this._io.ReadBytes(int(1))
-	if err != nil {
-		return err
-	}
-	tmp149 = tmp149
-	this.NumImgComments = string(tmp149)
-	tmp150, err := strconv.ParseInt(this.NumImgComments, 10, 0)
-	if err != nil {
-		return err
-	}
-	for i := 0; i < int(tmp150); i++ {
-		_ = i
-		tmp151 := NewNitf_ImageComment()
-		err = tmp151.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.ImgComments = append(this.ImgComments, tmp151)
-	}
-	tmp152, err := this._io.ReadBytes(int(2))
-	if err != nil {
-		return err
-	}
-	tmp152 = tmp152
-	this.ImgCompression = string(tmp152)
-	tmp153, err := this._io.ReadBytes(int(4))
-	if err != nil {
-		return err
-	}
-	tmp153 = tmp153
-	this.CompressionRateCode = string(tmp153)
-	tmp154, err := this._io.ReadBytes(int(1))
-	if err != nil {
-		return err
-	}
-	tmp154 = tmp154
-	this.NumBands = string(tmp154)
-	tmp155, err := strconv.ParseInt(this.NumBands, 10, 0)
-	if err != nil {
-		return err
-	}
-	if (tmp155 == 0) {
-		tmp156, err := this._io.ReadBytes(int(5))
-		if err != nil {
-			return err
-		}
-		tmp156 = tmp156
-		this.NumMultispectralBands = string(tmp156)
-	}
-	var tmp157 int;
-	tmp158, err := strconv.ParseInt(this.NumBands, 10, 0)
-	if err != nil {
-		return err
-	}
-	if (tmp158 != 0) {
-		tmp159, err := strconv.ParseInt(this.NumBands, 10, 0)
-		if err != nil {
-			return err
-		}
-		tmp157 = tmp159
-	} else {
-		tmp160, err := strconv.ParseInt(this.NumMultispectralBands, 10, 0)
-		if err != nil {
-			return err
-		}
-		tmp157 = tmp160
-	}
-	for i := 0; i < int(tmp157); i++ {
-		_ = i
-		tmp161 := NewNitf_BandInfo()
-		err = tmp161.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Bands = append(this.Bands, tmp161)
-	}
-	tmp162, err := this._io.ReadBytes(int(1))
-	if err != nil {
-		return err
-	}
-	tmp162 = tmp162
-	this.ImgSyncCode = string(tmp162)
-	tmp163, err := this._io.ReadBytes(int(1))
+	tmp163, err := this._io.ReadBytes(int(2))
 	if err != nil {
 		return err
 	}
 	tmp163 = tmp163
-	this.ImgMode = string(tmp163)
-	tmp164, err := this._io.ReadBytes(int(4))
+	this.FilePartType = tmp163
+	if !(bytes.Equal(this.FilePartType, []uint8{73, 77})) {
+		return kaitai.NewValidationNotEqualError([]uint8{73, 77}, this.FilePartType, this._io, "/types/image_sub_header/seq/0")
+	}
+	tmp164, err := this._io.ReadBytes(int(10))
 	if err != nil {
 		return err
 	}
 	tmp164 = tmp164
-	this.NumBlocksPerRow = string(tmp164)
-	tmp165, err := this._io.ReadBytes(int(4))
+	this.ImageId1 = string(tmp164)
+	tmp165 := NewNitf_DateTime()
+	err = tmp165.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	tmp165 = tmp165
-	this.NumBlocksPerCol = string(tmp165)
-	tmp166, err := this._io.ReadBytes(int(4))
+	this.ImageDateTime = tmp165
+	tmp166, err := this._io.ReadBytes(int(17))
 	if err != nil {
 		return err
 	}
 	tmp166 = tmp166
-	this.NumPixelsPerBlockHorz = string(tmp166)
-	tmp167, err := this._io.ReadBytes(int(4))
+	this.TargetId = string(tmp166)
+	tmp167, err := this._io.ReadBytes(int(80))
 	if err != nil {
 		return err
 	}
 	tmp167 = tmp167
-	this.NumPixelsPerBlockVert = string(tmp167)
-	tmp168, err := this._io.ReadBytes(int(2))
+	this.ImageId2 = string(tmp167)
+	tmp168 := NewNitf_Clasnfo()
+	err = tmp168.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	tmp168 = tmp168
-	this.NumPixelsPerBand = string(tmp168)
-	tmp169, err := this._io.ReadBytes(int(3))
+	this.ImageSecurityClassification = tmp168
+	tmp169 := NewNitf_Encrypt()
+	err = tmp169.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	tmp169 = tmp169
-	this.ImgDisplayLevel = string(tmp169)
-	tmp170, err := this._io.ReadBytes(int(3))
+	this.Encryption = tmp169
+	tmp170, err := this._io.ReadBytes(int(42))
 	if err != nil {
 		return err
 	}
 	tmp170 = tmp170
-	this.AttachmentLevel = string(tmp170)
-	tmp171, err := this._io.ReadBytes(int(10))
+	this.ImageSource = string(tmp170)
+	tmp171, err := this._io.ReadBytes(int(8))
 	if err != nil {
 		return err
 	}
 	tmp171 = tmp171
-	this.ImgLocation = string(tmp171)
-	tmp172, err := this._io.ReadBytes(int(4))
+	this.NumSigRows = string(tmp171)
+	tmp172, err := this._io.ReadBytes(int(8))
 	if err != nil {
 		return err
 	}
 	tmp172 = tmp172
-	this.ImgMagnification = string(tmp172)
-	tmp173, err := this._io.ReadBytes(int(5))
+	this.NumSigCols = string(tmp172)
+	tmp173, err := this._io.ReadBytes(int(3))
 	if err != nil {
 		return err
 	}
 	tmp173 = tmp173
-	this.UserDefImgDataLen = string(tmp173)
-	tmp174, err := strconv.ParseInt(this.UserDefImgDataLen, 10, 0)
+	this.PixelValueType = string(tmp173)
+	tmp174, err := this._io.ReadBytes(int(8))
 	if err != nil {
 		return err
 	}
-	if (tmp174 != 0) {
-		tmp175, err := this._io.ReadBytes(int(3))
-		if err != nil {
-			return err
-		}
-		tmp175 = tmp175
-		this.UserDefOverflow = string(tmp175)
-	}
-	tmp176, err := strconv.ParseInt(this.UserDefImgDataLen, 10, 0)
+	tmp174 = tmp174
+	this.ImageRepresentation = string(tmp174)
+	tmp175, err := this._io.ReadBytes(int(8))
 	if err != nil {
 		return err
 	}
-	if (tmp176 > 2) {
-		tmp177, err := strconv.ParseInt(this.UserDefImgDataLen, 10, 0)
+	tmp175 = tmp175
+	this.ImageCategory = string(tmp175)
+	tmp176, err := this._io.ReadBytes(int(2))
+	if err != nil {
+		return err
+	}
+	tmp176 = tmp176
+	this.ActualBitsPerPixelPerBand = string(tmp176)
+	tmp177, err := this._io.ReadBytes(int(1))
+	if err != nil {
+		return err
+	}
+	tmp177 = tmp177
+	this.PixelJustification = string(tmp177)
+	tmp178, err := this._io.ReadBytes(int(1))
+	if err != nil {
+		return err
+	}
+	tmp178 = tmp178
+	this.ImageCoordinateRep = string(tmp178)
+	tmp179, err := this._io.ReadBytes(int(60))
+	if err != nil {
+		return err
+	}
+	tmp179 = tmp179
+	this.ImageGeoLoc = string(tmp179)
+	tmp180, err := this._io.ReadBytes(int(1))
+	if err != nil {
+		return err
+	}
+	tmp180 = tmp180
+	this.NumImgComments = string(tmp180)
+	tmp181, err := strconv.ParseInt(this.NumImgComments, 10, 0)
+	if err != nil {
+		return err
+	}
+	for i := 0; i < int(tmp181); i++ {
+		_ = i
+		tmp182 := NewNitf_ImageComment()
+		err = tmp182.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		for i := 0; i < int((tmp177 - 3)); i++ {
+		this.ImgComments = append(this.ImgComments, tmp182)
+	}
+	tmp183, err := this._io.ReadBytes(int(2))
+	if err != nil {
+		return err
+	}
+	tmp183 = tmp183
+	this.ImgCompression = string(tmp183)
+	tmp184, err := this._io.ReadBytes(int(4))
+	if err != nil {
+		return err
+	}
+	tmp184 = tmp184
+	this.CompressionRateCode = string(tmp184)
+	tmp185, err := this._io.ReadBytes(int(1))
+	if err != nil {
+		return err
+	}
+	tmp185 = tmp185
+	this.NumBands = string(tmp185)
+	tmp186, err := strconv.ParseInt(this.NumBands, 10, 0)
+	if err != nil {
+		return err
+	}
+	if (tmp186 == 0) {
+		tmp187, err := this._io.ReadBytes(int(5))
+		if err != nil {
+			return err
+		}
+		tmp187 = tmp187
+		this.NumMultispectralBands = string(tmp187)
+	}
+	var tmp188 int;
+	tmp189, err := strconv.ParseInt(this.NumBands, 10, 0)
+	if err != nil {
+		return err
+	}
+	if (tmp189 != 0) {
+		tmp190, err := strconv.ParseInt(this.NumBands, 10, 0)
+		if err != nil {
+			return err
+		}
+		tmp188 = tmp190
+	} else {
+		tmp191, err := strconv.ParseInt(this.NumMultispectralBands, 10, 0)
+		if err != nil {
+			return err
+		}
+		tmp188 = tmp191
+	}
+	for i := 0; i < int(tmp188); i++ {
+		_ = i
+		tmp192 := NewNitf_BandInfo()
+		err = tmp192.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Bands = append(this.Bands, tmp192)
+	}
+	tmp193, err := this._io.ReadBytes(int(1))
+	if err != nil {
+		return err
+	}
+	tmp193 = tmp193
+	this.ImgSyncCode = string(tmp193)
+	tmp194, err := this._io.ReadBytes(int(1))
+	if err != nil {
+		return err
+	}
+	tmp194 = tmp194
+	this.ImgMode = string(tmp194)
+	tmp195, err := this._io.ReadBytes(int(4))
+	if err != nil {
+		return err
+	}
+	tmp195 = tmp195
+	this.NumBlocksPerRow = string(tmp195)
+	tmp196, err := this._io.ReadBytes(int(4))
+	if err != nil {
+		return err
+	}
+	tmp196 = tmp196
+	this.NumBlocksPerCol = string(tmp196)
+	tmp197, err := this._io.ReadBytes(int(4))
+	if err != nil {
+		return err
+	}
+	tmp197 = tmp197
+	this.NumPixelsPerBlockHorz = string(tmp197)
+	tmp198, err := this._io.ReadBytes(int(4))
+	if err != nil {
+		return err
+	}
+	tmp198 = tmp198
+	this.NumPixelsPerBlockVert = string(tmp198)
+	tmp199, err := this._io.ReadBytes(int(2))
+	if err != nil {
+		return err
+	}
+	tmp199 = tmp199
+	this.NumPixelsPerBand = string(tmp199)
+	tmp200, err := this._io.ReadBytes(int(3))
+	if err != nil {
+		return err
+	}
+	tmp200 = tmp200
+	this.ImgDisplayLevel = string(tmp200)
+	tmp201, err := this._io.ReadBytes(int(3))
+	if err != nil {
+		return err
+	}
+	tmp201 = tmp201
+	this.AttachmentLevel = string(tmp201)
+	tmp202, err := this._io.ReadBytes(int(10))
+	if err != nil {
+		return err
+	}
+	tmp202 = tmp202
+	this.ImgLocation = string(tmp202)
+	tmp203, err := this._io.ReadBytes(int(4))
+	if err != nil {
+		return err
+	}
+	tmp203 = tmp203
+	this.ImgMagnification = string(tmp203)
+	tmp204, err := this._io.ReadBytes(int(5))
+	if err != nil {
+		return err
+	}
+	tmp204 = tmp204
+	this.UserDefImgDataLen = string(tmp204)
+	tmp205, err := strconv.ParseInt(this.UserDefImgDataLen, 10, 0)
+	if err != nil {
+		return err
+	}
+	if (tmp205 != 0) {
+		tmp206, err := this._io.ReadBytes(int(3))
+		if err != nil {
+			return err
+		}
+		tmp206 = tmp206
+		this.UserDefOverflow = string(tmp206)
+	}
+	tmp207, err := strconv.ParseInt(this.UserDefImgDataLen, 10, 0)
+	if err != nil {
+		return err
+	}
+	if (tmp207 > 2) {
+		tmp208, err := strconv.ParseInt(this.UserDefImgDataLen, 10, 0)
+		if err != nil {
+			return err
+		}
+		for i := 0; i < int(tmp208 - 3); i++ {
 			_ = i
-			tmp178, err := this._io.ReadU1()
+			tmp209, err := this._io.ReadU1()
 			if err != nil {
 				return err
 			}
-			this.UserDefImgData = append(this.UserDefImgData, tmp178)
+			this.UserDefImgData = append(this.UserDefImgData, tmp209)
 		}
 	}
-	tmp179 := NewNitf_TreHeader()
-	err = tmp179.Read(this._io, this, this._root)
+	tmp210 := NewNitf_TreHeader()
+	err = tmp210.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.ImageExtendedSubHeader = tmp179
+	this.ImageExtendedSubHeader = tmp210
 	return err
 }
 
@@ -1663,6 +1967,234 @@ func (this *Nitf_ImageSubHeader) Read(io *kaitai.Stream, parent *Nitf_ImageSegme
 /**
  * B = Band Interleaved by Block, P = Band Interleaved by Pixel, R = Band Interleaved by Row, S = Band Sequential
  */
+type Nitf_LengthDataInfo struct {
+	LengthDataExtensionSubheader string
+	LengthDataExtensionSegment string
+	_io *kaitai.Stream
+	_root *Nitf
+	_parent *Nitf_Header
+}
+func NewNitf_LengthDataInfo() *Nitf_LengthDataInfo {
+	return &Nitf_LengthDataInfo{
+	}
+}
+
+func (this Nitf_LengthDataInfo) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Nitf_LengthDataInfo) Read(io *kaitai.Stream, parent *Nitf_Header, root *Nitf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp211, err := this._io.ReadBytes(int(4))
+	if err != nil {
+		return err
+	}
+	tmp211 = tmp211
+	this.LengthDataExtensionSubheader = string(tmp211)
+	tmp212, err := this._io.ReadBytes(int(9))
+	if err != nil {
+		return err
+	}
+	tmp212 = tmp212
+	this.LengthDataExtensionSegment = string(tmp212)
+	return err
+}
+type Nitf_LengthGraphicInfo struct {
+	LengthGraphicSubheader string
+	LengthGraphicSegment string
+	_io *kaitai.Stream
+	_root *Nitf
+	_parent *Nitf_Header
+}
+func NewNitf_LengthGraphicInfo() *Nitf_LengthGraphicInfo {
+	return &Nitf_LengthGraphicInfo{
+	}
+}
+
+func (this Nitf_LengthGraphicInfo) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Nitf_LengthGraphicInfo) Read(io *kaitai.Stream, parent *Nitf_Header, root *Nitf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp213, err := this._io.ReadBytes(int(4))
+	if err != nil {
+		return err
+	}
+	tmp213 = tmp213
+	this.LengthGraphicSubheader = string(tmp213)
+	tmp214, err := this._io.ReadBytes(int(6))
+	if err != nil {
+		return err
+	}
+	tmp214 = tmp214
+	this.LengthGraphicSegment = string(tmp214)
+	return err
+}
+type Nitf_LengthImageInfo struct {
+	LengthImageSubheader string
+	LengthImageSegment string
+	_io *kaitai.Stream
+	_root *Nitf
+	_parent *Nitf_Header
+}
+func NewNitf_LengthImageInfo() *Nitf_LengthImageInfo {
+	return &Nitf_LengthImageInfo{
+	}
+}
+
+func (this Nitf_LengthImageInfo) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Nitf_LengthImageInfo) Read(io *kaitai.Stream, parent *Nitf_Header, root *Nitf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp215, err := this._io.ReadBytes(int(6))
+	if err != nil {
+		return err
+	}
+	tmp215 = tmp215
+	this.LengthImageSubheader = string(tmp215)
+	tmp216, err := this._io.ReadBytes(int(10))
+	if err != nil {
+		return err
+	}
+	tmp216 = tmp216
+	this.LengthImageSegment = string(tmp216)
+	return err
+}
+type Nitf_LengthReservedInfo struct {
+	LengthReservedExtensionSubheader string
+	LengthReservedExtensionSegment string
+	_io *kaitai.Stream
+	_root *Nitf
+	_parent *Nitf_Header
+}
+func NewNitf_LengthReservedInfo() *Nitf_LengthReservedInfo {
+	return &Nitf_LengthReservedInfo{
+	}
+}
+
+func (this Nitf_LengthReservedInfo) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Nitf_LengthReservedInfo) Read(io *kaitai.Stream, parent *Nitf_Header, root *Nitf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp217, err := this._io.ReadBytes(int(4))
+	if err != nil {
+		return err
+	}
+	tmp217 = tmp217
+	this.LengthReservedExtensionSubheader = string(tmp217)
+	tmp218, err := this._io.ReadBytes(int(7))
+	if err != nil {
+		return err
+	}
+	tmp218 = tmp218
+	this.LengthReservedExtensionSegment = string(tmp218)
+	return err
+}
+type Nitf_LengthTextInfo struct {
+	LengthTextSubheader string
+	LengthTextSegment string
+	_io *kaitai.Stream
+	_root *Nitf
+	_parent *Nitf_Header
+}
+func NewNitf_LengthTextInfo() *Nitf_LengthTextInfo {
+	return &Nitf_LengthTextInfo{
+	}
+}
+
+func (this Nitf_LengthTextInfo) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Nitf_LengthTextInfo) Read(io *kaitai.Stream, parent *Nitf_Header, root *Nitf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp219, err := this._io.ReadBytes(int(4))
+	if err != nil {
+		return err
+	}
+	tmp219 = tmp219
+	this.LengthTextSubheader = string(tmp219)
+	tmp220, err := this._io.ReadBytes(int(5))
+	if err != nil {
+		return err
+	}
+	tmp220 = tmp220
+	this.LengthTextSegment = string(tmp220)
+	return err
+}
+type Nitf_ReservedExtensionSegment struct {
+	ReservedSubHeader *Nitf_ReservedSubHeader
+	ReservedDataField []byte
+	Idx uint16
+	_io *kaitai.Stream
+	_root *Nitf
+	_parent *Nitf
+	_raw_ReservedSubHeader []byte
+}
+func NewNitf_ReservedExtensionSegment(idx uint16) *Nitf_ReservedExtensionSegment {
+	return &Nitf_ReservedExtensionSegment{
+		Idx: idx,
+	}
+}
+
+func (this Nitf_ReservedExtensionSegment) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Nitf_ReservedExtensionSegment) Read(io *kaitai.Stream, parent *Nitf, root *Nitf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp221, err := strconv.ParseInt(this._parent.Header.Lrnfo[this.Idx].LengthReservedExtensionSubheader, 10, 0)
+	if err != nil {
+		return err
+	}
+	tmp222, err := this._io.ReadBytes(int(tmp221))
+	if err != nil {
+		return err
+	}
+	tmp222 = tmp222
+	this._raw_ReservedSubHeader = tmp222
+	_io__raw_ReservedSubHeader := kaitai.NewStream(bytes.NewReader(this._raw_ReservedSubHeader))
+	tmp223 := NewNitf_ReservedSubHeader()
+	err = tmp223.Read(_io__raw_ReservedSubHeader, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.ReservedSubHeader = tmp223
+	tmp224, err := strconv.ParseInt(this._parent.Header.Lrnfo[this.Idx].LengthReservedExtensionSegment, 10, 0)
+	if err != nil {
+		return err
+	}
+	tmp225, err := this._io.ReadBytes(int(tmp224))
+	if err != nil {
+		return err
+	}
+	tmp225 = tmp225
+	this.ReservedDataField = tmp225
+	return err
+}
 type Nitf_ReservedSubHeader struct {
 	FilePartTypeRe []byte
 	ResTypeId string
@@ -1680,114 +2212,107 @@ func NewNitf_ReservedSubHeader() *Nitf_ReservedSubHeader {
 	}
 }
 
+func (this Nitf_ReservedSubHeader) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Nitf_ReservedSubHeader) Read(io *kaitai.Stream, parent *Nitf_ReservedExtensionSegment, root *Nitf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp180, err := this._io.ReadBytes(int(2))
+	tmp226, err := this._io.ReadBytes(int(2))
 	if err != nil {
 		return err
 	}
-	tmp180 = tmp180
-	this.FilePartTypeRe = tmp180
+	tmp226 = tmp226
+	this.FilePartTypeRe = tmp226
 	if !(bytes.Equal(this.FilePartTypeRe, []uint8{82, 69})) {
 		return kaitai.NewValidationNotEqualError([]uint8{82, 69}, this.FilePartTypeRe, this._io, "/types/reserved_sub_header/seq/0")
 	}
-	tmp181, err := this._io.ReadBytes(int(25))
+	tmp227, err := this._io.ReadBytes(int(25))
 	if err != nil {
 		return err
 	}
-	tmp181 = tmp181
-	this.ResTypeId = string(tmp181)
-	tmp182, err := this._io.ReadBytes(int(2))
+	tmp227 = tmp227
+	this.ResTypeId = string(tmp227)
+	tmp228, err := this._io.ReadBytes(int(2))
 	if err != nil {
 		return err
 	}
-	tmp182 = tmp182
-	this.ResVersion = string(tmp182)
-	tmp183 := NewNitf_Clasnfo()
-	err = tmp183.Read(this._io, this, this._root)
+	tmp228 = tmp228
+	this.ResVersion = string(tmp228)
+	tmp229 := NewNitf_Clasnfo()
+	err = tmp229.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Reclasnfo = tmp183
-	tmp184, err := this._io.ReadBytes(int(4))
+	this.Reclasnfo = tmp229
+	tmp230, err := this._io.ReadBytes(int(4))
 	if err != nil {
 		return err
 	}
-	tmp184 = tmp184
-	this.ResUserDefinedSubheaderLength = string(tmp184)
-	tmp185, err := strconv.ParseInt(this.ResUserDefinedSubheaderLength, 10, 0)
+	tmp230 = tmp230
+	this.ResUserDefinedSubheaderLength = string(tmp230)
+	tmp231, err := strconv.ParseInt(this.ResUserDefinedSubheaderLength, 10, 0)
 	if err != nil {
 		return err
 	}
-	tmp186, err := this._io.ReadBytes(int(tmp185))
+	tmp232, err := this._io.ReadBytes(int(tmp231))
 	if err != nil {
 		return err
 	}
-	tmp186 = tmp186
-	this.ResUserDefinedSubheaderFields = string(tmp186)
-	tmp187, err := this._io.ReadBytesFull()
+	tmp232 = tmp232
+	this.ResUserDefinedSubheaderFields = string(tmp232)
+	tmp233, err := this._io.ReadBytesFull()
 	if err != nil {
 		return err
 	}
-	tmp187 = tmp187
-	this.ResUserDefinedData = string(tmp187)
+	tmp233 = tmp233
+	this.ResUserDefinedData = string(tmp233)
 	return err
 }
-type Nitf_DataSubHeaderBase struct {
-	FilePartTypeDe []byte
-	Desid string
-	DataDefinitionVersion string
-	Declasnfo *Nitf_Clasnfo
+type Nitf_TextSegment struct {
+	TextSubHeader []byte
+	TextDataField []byte
+	Idx uint16
 	_io *kaitai.Stream
 	_root *Nitf
-	_parent *Nitf_DataSubHeader
+	_parent *Nitf
 }
-func NewNitf_DataSubHeaderBase() *Nitf_DataSubHeaderBase {
-	return &Nitf_DataSubHeaderBase{
+func NewNitf_TextSegment(idx uint16) *Nitf_TextSegment {
+	return &Nitf_TextSegment{
+		Idx: idx,
 	}
 }
 
-func (this *Nitf_DataSubHeaderBase) Read(io *kaitai.Stream, parent *Nitf_DataSubHeader, root *Nitf) (err error) {
+func (this Nitf_TextSegment) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Nitf_TextSegment) Read(io *kaitai.Stream, parent *Nitf, root *Nitf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp188, err := this._io.ReadBytes(int(2))
+	tmp234, err := this._io.ReadBytes(int(1))
 	if err != nil {
 		return err
 	}
-	tmp188 = tmp188
-	this.FilePartTypeDe = tmp188
-	if !(bytes.Equal(this.FilePartTypeDe, []uint8{68, 69})) {
-		return kaitai.NewValidationNotEqualError([]uint8{68, 69}, this.FilePartTypeDe, this._io, "/types/data_sub_header_base/seq/0")
-	}
-	tmp189, err := this._io.ReadBytes(int(25))
+	tmp234 = tmp234
+	this.TextSubHeader = tmp234
+	tmp235, err := strconv.ParseInt(this._parent.Header.Ltnfo[this.Idx].LengthTextSegment, 10, 0)
 	if err != nil {
 		return err
 	}
-	tmp189 = tmp189
-	this.Desid = string(tmp189)
-	tmp190, err := this._io.ReadBytes(int(2))
+	tmp236, err := this._io.ReadBytes(int(tmp235))
 	if err != nil {
 		return err
 	}
-	tmp190 = tmp190
-	this.DataDefinitionVersion = string(tmp190)
-	tmp191 := NewNitf_Clasnfo()
-	err = tmp191.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Declasnfo = tmp191
+	tmp236 = tmp236
+	this.TextDataField = tmp236
 	return err
 }
-
-/**
- * File Part Type desigantor for Data Extension
- */
 type Nitf_TextSubHeader struct {
 	TextDateTime string
 	TextTitle string
@@ -1797,445 +2322,121 @@ type Nitf_TextSubHeader struct {
 	TextExtendedSubHeader *Nitf_TreHeader
 	_io *kaitai.Stream
 	_root *Nitf
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewNitf_TextSubHeader() *Nitf_TextSubHeader {
 	return &Nitf_TextSubHeader{
 	}
 }
 
-func (this *Nitf_TextSubHeader) Read(io *kaitai.Stream, parent interface{}, root *Nitf) (err error) {
+func (this Nitf_TextSubHeader) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Nitf_TextSubHeader) Read(io *kaitai.Stream, parent kaitai.Struct, root *Nitf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp192, err := this._io.ReadBytes(int(14))
+	tmp237, err := this._io.ReadBytes(int(14))
 	if err != nil {
 		return err
 	}
-	tmp192 = tmp192
-	this.TextDateTime = string(tmp192)
-	tmp193, err := this._io.ReadBytes(int(80))
+	tmp237 = tmp237
+	this.TextDateTime = string(tmp237)
+	tmp238, err := this._io.ReadBytes(int(80))
 	if err != nil {
 		return err
 	}
-	tmp193 = tmp193
-	this.TextTitle = string(tmp193)
-	tmp194 := NewNitf_Clasnfo()
-	err = tmp194.Read(this._io, this, this._root)
+	tmp238 = tmp238
+	this.TextTitle = string(tmp238)
+	tmp239 := NewNitf_Clasnfo()
+	err = tmp239.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.TextSecurityClass = tmp194
-	tmp195 := NewNitf_Encrypt()
-	err = tmp195.Read(this._io, this, this._root)
+	this.TextSecurityClass = tmp239
+	tmp240 := NewNitf_Encrypt()
+	err = tmp240.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Encryp = tmp195
-	tmp196, err := this._io.ReadBytes(int(3))
+	this.Encryp = tmp240
+	tmp241, err := this._io.ReadBytes(int(3))
 	if err != nil {
 		return err
 	}
-	tmp196 = tmp196
-	this.TextFormat = string(tmp196)
-	tmp197 := NewNitf_TreHeader()
-	err = tmp197.Read(this._io, this, this._root)
+	tmp241 = tmp241
+	this.TextFormat = string(tmp241)
+	tmp242 := NewNitf_TreHeader()
+	err = tmp242.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.TextExtendedSubHeader = tmp197
+	this.TextExtendedSubHeader = tmp242
 	return err
 }
 
 /**
  * MTF (USMTF see MIL-STD-6040), STA (indicates BCS), UT1 (indicates ECS), U8S
  */
-type Nitf_DateTime struct {
-	_unnamed0 string
+type Nitf_Tre struct {
+	ExtensionTypeId string
+	EdataLength string
+	Edata string
 	_io *kaitai.Stream
 	_root *Nitf
-	_parent interface{}
+	_parent kaitai.Struct
 }
-func NewNitf_DateTime() *Nitf_DateTime {
-	return &Nitf_DateTime{
+func NewNitf_Tre() *Nitf_Tre {
+	return &Nitf_Tre{
 	}
 }
 
-func (this *Nitf_DateTime) Read(io *kaitai.Stream, parent interface{}, root *Nitf) (err error) {
+func (this Nitf_Tre) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Nitf_Tre) Read(io *kaitai.Stream, parent kaitai.Struct, root *Nitf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp198, err := this._io.ReadBytes(int(14))
+	tmp243, err := this._io.ReadBytes(int(6))
 	if err != nil {
 		return err
 	}
-	tmp198 = tmp198
-	this._unnamed0 = string(tmp198)
+	tmp243 = tmp243
+	this.ExtensionTypeId = string(tmp243)
+	tmp244, err := this._io.ReadBytes(int(5))
+	if err != nil {
+		return err
+	}
+	tmp244 = tmp244
+	this.EdataLength = string(tmp244)
+	tmp245, err := strconv.ParseInt(this.EdataLength, 10, 0)
+	if err != nil {
+		return err
+	}
+	tmp246, err := this._io.ReadBytes(int(tmp245))
+	if err != nil {
+		return err
+	}
+	tmp246 = tmp246
+	this.Edata = string(tmp246)
 	return err
 }
 
 /**
- * UTC time of image acquisition in the format CCYYMMDDhhmmss: CC century, YY last two digits of the year, MM month, DD day, hh hour, mm minute, ss second
- */
-type Nitf_Header struct {
-	FileProfileName []byte
-	FileVersion []byte
-	ComplexityLevel []byte
-	StandardType []byte
-	OriginatingStationId string
-	FileDateTime *Nitf_DateTime
-	FileTitle string
-	FileSecurity *Nitf_Clasnfo
-	FileCopyNumber string
-	FileNumOfCopys string
-	Encryption *Nitf_Encrypt
-	FileBgColor []byte
-	OriginatorName string
-	OriginatorPhone string
-	FileLength string
-	FileHeaderLength string
-	NumImageSegments string
-	Linfo []*Nitf_LengthImageInfo
-	NumGraphicsSegments string
-	Lnnfo []*Nitf_LengthGraphicInfo
-	ReservedNumx string
-	NumTextFiles string
-	Ltnfo []*Nitf_LengthTextInfo
-	NumDataExtension string
-	Ldnfo []*Nitf_LengthDataInfo
-	NumReservedExtension string
-	Lrnfo []*Nitf_LengthReservedInfo
-	UserDefinedHeader *Nitf_TreHeader
-	ExtendedHeader *Nitf_TreHeader
-	_io *kaitai.Stream
-	_root *Nitf
-	_parent *Nitf
-}
-func NewNitf_Header() *Nitf_Header {
-	return &Nitf_Header{
-	}
-}
-
-func (this *Nitf_Header) Read(io *kaitai.Stream, parent *Nitf, root *Nitf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp199, err := this._io.ReadBytes(int(4))
-	if err != nil {
-		return err
-	}
-	tmp199 = tmp199
-	this.FileProfileName = tmp199
-	if !(bytes.Equal(this.FileProfileName, []uint8{78, 73, 84, 70})) {
-		return kaitai.NewValidationNotEqualError([]uint8{78, 73, 84, 70}, this.FileProfileName, this._io, "/types/header/seq/0")
-	}
-	tmp200, err := this._io.ReadBytes(int(5))
-	if err != nil {
-		return err
-	}
-	tmp200 = tmp200
-	this.FileVersion = tmp200
-	if !(bytes.Equal(this.FileVersion, []uint8{48, 50, 46, 49, 48})) {
-		return kaitai.NewValidationNotEqualError([]uint8{48, 50, 46, 49, 48}, this.FileVersion, this._io, "/types/header/seq/1")
-	}
-	tmp201, err := this._io.ReadBytes(int(2))
-	if err != nil {
-		return err
-	}
-	tmp201 = tmp201
-	this.ComplexityLevel = tmp201
-	tmp202, err := this._io.ReadBytes(int(4))
-	if err != nil {
-		return err
-	}
-	tmp202 = tmp202
-	this.StandardType = tmp202
-	if !(bytes.Equal(this.StandardType, []uint8{66, 70, 48, 49})) {
-		return kaitai.NewValidationNotEqualError([]uint8{66, 70, 48, 49}, this.StandardType, this._io, "/types/header/seq/3")
-	}
-	tmp203, err := this._io.ReadBytes(int(10))
-	if err != nil {
-		return err
-	}
-	tmp203 = tmp203
-	this.OriginatingStationId = string(tmp203)
-	tmp204 := NewNitf_DateTime()
-	err = tmp204.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.FileDateTime = tmp204
-	tmp205, err := this._io.ReadBytes(int(80))
-	if err != nil {
-		return err
-	}
-	tmp205 = tmp205
-	this.FileTitle = string(tmp205)
-	tmp206 := NewNitf_Clasnfo()
-	err = tmp206.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.FileSecurity = tmp206
-	tmp207, err := this._io.ReadBytes(int(5))
-	if err != nil {
-		return err
-	}
-	tmp207 = tmp207
-	this.FileCopyNumber = string(tmp207)
-	tmp208, err := this._io.ReadBytes(int(5))
-	if err != nil {
-		return err
-	}
-	tmp208 = tmp208
-	this.FileNumOfCopys = string(tmp208)
-	tmp209 := NewNitf_Encrypt()
-	err = tmp209.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Encryption = tmp209
-	tmp210, err := this._io.ReadBytes(int(3))
-	if err != nil {
-		return err
-	}
-	tmp210 = tmp210
-	this.FileBgColor = tmp210
-	tmp211, err := this._io.ReadBytes(int(24))
-	if err != nil {
-		return err
-	}
-	tmp211 = tmp211
-	this.OriginatorName = string(tmp211)
-	tmp212, err := this._io.ReadBytes(int(18))
-	if err != nil {
-		return err
-	}
-	tmp212 = tmp212
-	this.OriginatorPhone = string(tmp212)
-	tmp213, err := this._io.ReadBytes(int(12))
-	if err != nil {
-		return err
-	}
-	tmp213 = tmp213
-	this.FileLength = string(tmp213)
-	tmp214, err := this._io.ReadBytes(int(6))
-	if err != nil {
-		return err
-	}
-	tmp214 = tmp214
-	this.FileHeaderLength = string(tmp214)
-	tmp215, err := this._io.ReadBytes(int(3))
-	if err != nil {
-		return err
-	}
-	tmp215 = tmp215
-	this.NumImageSegments = string(tmp215)
-	tmp216, err := strconv.ParseInt(this.NumImageSegments, 10, 0)
-	if err != nil {
-		return err
-	}
-	for i := 0; i < int(tmp216); i++ {
-		_ = i
-		tmp217 := NewNitf_LengthImageInfo()
-		err = tmp217.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Linfo = append(this.Linfo, tmp217)
-	}
-	tmp218, err := this._io.ReadBytes(int(3))
-	if err != nil {
-		return err
-	}
-	tmp218 = tmp218
-	this.NumGraphicsSegments = string(tmp218)
-	tmp219, err := strconv.ParseInt(this.NumGraphicsSegments, 10, 0)
-	if err != nil {
-		return err
-	}
-	for i := 0; i < int(tmp219); i++ {
-		_ = i
-		tmp220 := NewNitf_LengthGraphicInfo()
-		err = tmp220.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Lnnfo = append(this.Lnnfo, tmp220)
-	}
-	tmp221, err := this._io.ReadBytes(int(3))
-	if err != nil {
-		return err
-	}
-	tmp221 = tmp221
-	this.ReservedNumx = string(tmp221)
-	tmp222, err := this._io.ReadBytes(int(3))
-	if err != nil {
-		return err
-	}
-	tmp222 = tmp222
-	this.NumTextFiles = string(tmp222)
-	tmp223, err := strconv.ParseInt(this.NumTextFiles, 10, 0)
-	if err != nil {
-		return err
-	}
-	for i := 0; i < int(tmp223); i++ {
-		_ = i
-		tmp224 := NewNitf_LengthTextInfo()
-		err = tmp224.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Ltnfo = append(this.Ltnfo, tmp224)
-	}
-	tmp225, err := this._io.ReadBytes(int(3))
-	if err != nil {
-		return err
-	}
-	tmp225 = tmp225
-	this.NumDataExtension = string(tmp225)
-	tmp226, err := strconv.ParseInt(this.NumDataExtension, 10, 0)
-	if err != nil {
-		return err
-	}
-	for i := 0; i < int(tmp226); i++ {
-		_ = i
-		tmp227 := NewNitf_LengthDataInfo()
-		err = tmp227.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Ldnfo = append(this.Ldnfo, tmp227)
-	}
-	tmp228, err := this._io.ReadBytes(int(3))
-	if err != nil {
-		return err
-	}
-	tmp228 = tmp228
-	this.NumReservedExtension = string(tmp228)
-	tmp229, err := strconv.ParseInt(this.NumReservedExtension, 10, 0)
-	if err != nil {
-		return err
-	}
-	for i := 0; i < int(tmp229); i++ {
-		_ = i
-		tmp230 := NewNitf_LengthReservedInfo()
-		err = tmp230.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Lrnfo = append(this.Lrnfo, tmp230)
-	}
-	tmp231 := NewNitf_TreHeader()
-	err = tmp231.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.UserDefinedHeader = tmp231
-	tmp232 := NewNitf_TreHeader()
-	err = tmp232.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.ExtendedHeader = tmp232
-	return err
-}
-
-/**
- * Value of BF01 indicates the file is formatted using ISO/IEC IS 12087-5.
+ * RETAG or CETAG
  */
 
 /**
- * Streaming file Header Data Extension Segment Subheader
- */
-type Nitf_DataSubHeaderStreaming struct {
-	DesBase *Nitf_DataSubHeaderBase
-	DesDefinedSubheaderFieldsLen string
-	SfhL1 string
-	SfhDelim1 uint32
-	SfhDr []uint8
-	SfhDelim2 uint32
-	SfhL2 string
-	_io *kaitai.Stream
-	_root *Nitf
-	_parent interface{}
-}
-func NewNitf_DataSubHeaderStreaming() *Nitf_DataSubHeaderStreaming {
-	return &Nitf_DataSubHeaderStreaming{
-	}
-}
-
-func (this *Nitf_DataSubHeaderStreaming) Read(io *kaitai.Stream, parent interface{}, root *Nitf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp233 := NewNitf_DataSubHeaderBase()
-	err = tmp233.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.DesBase = tmp233
-	tmp234, err := this._io.ReadBytes(int(4))
-	if err != nil {
-		return err
-	}
-	tmp234 = tmp234
-	this.DesDefinedSubheaderFieldsLen = string(tmp234)
-	tmp235, err := this._io.ReadBytes(int(7))
-	if err != nil {
-		return err
-	}
-	tmp235 = tmp235
-	this.SfhL1 = string(tmp235)
-	tmp236, err := this._io.ReadU4be()
-	if err != nil {
-		return err
-	}
-	this.SfhDelim1 = uint32(tmp236)
-	tmp237, err := strconv.ParseInt(this.SfhL1, 10, 0)
-	if err != nil {
-		return err
-	}
-	for i := 0; i < int(tmp237); i++ {
-		_ = i
-		tmp238, err := this._io.ReadU1()
-		if err != nil {
-			return err
-		}
-		this.SfhDr = append(this.SfhDr, tmp238)
-	}
-	tmp239, err := this._io.ReadU4be()
-	if err != nil {
-		return err
-	}
-	this.SfhDelim2 = uint32(tmp239)
-	tmp240, err := this._io.ReadBytes(int(7))
-	if err != nil {
-		return err
-	}
-	tmp240 = tmp240
-	this.SfhL2 = string(tmp240)
-	return err
-}
-
-/**
- * SFH Length 1: number of bytes in sfh_dr field
+ * REL or CEL
  */
 
 /**
- * Shall contain the value 0x0A6E1D97.
- */
-
-/**
- * Shall contain the value 0x0ECA14BF.
- */
-
-/**
- * A repeat of sfh_l1.
+ * REDATA or CEDATA
  */
 type Nitf_TreHeader struct {
 	HeaderDataLength string
@@ -2243,146 +2444,57 @@ type Nitf_TreHeader struct {
 	HeaderData []uint8
 	_io *kaitai.Stream
 	_root *Nitf
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewNitf_TreHeader() *Nitf_TreHeader {
 	return &Nitf_TreHeader{
 	}
 }
 
-func (this *Nitf_TreHeader) Read(io *kaitai.Stream, parent interface{}, root *Nitf) (err error) {
+func (this Nitf_TreHeader) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Nitf_TreHeader) Read(io *kaitai.Stream, parent kaitai.Struct, root *Nitf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp241, err := this._io.ReadBytes(int(5))
-	if err != nil {
-		return err
-	}
-	tmp241 = tmp241
-	this.HeaderDataLength = string(tmp241)
-	tmp242, err := strconv.ParseInt(this.HeaderDataLength, 10, 0)
-	if err != nil {
-		return err
-	}
-	if (tmp242 != 0) {
-		tmp243, err := this._io.ReadBytes(int(3))
-		if err != nil {
-			return err
-		}
-		tmp243 = tmp243
-		this.HeaderOverflow = string(tmp243)
-	}
-	tmp244, err := strconv.ParseInt(this.HeaderDataLength, 10, 0)
-	if err != nil {
-		return err
-	}
-	if (tmp244 > 2) {
-		tmp245, err := strconv.ParseInt(this.HeaderDataLength, 10, 0)
-		if err != nil {
-			return err
-		}
-		for i := 0; i < int((tmp245 - 3)); i++ {
-			_ = i
-			tmp246, err := this._io.ReadU1()
-			if err != nil {
-				return err
-			}
-			this.HeaderData = append(this.HeaderData, tmp246)
-		}
-	}
-	return err
-}
-type Nitf_LengthImageInfo struct {
-	LengthImageSubheader string
-	LengthImageSegment string
-	_io *kaitai.Stream
-	_root *Nitf
-	_parent *Nitf_Header
-}
-func NewNitf_LengthImageInfo() *Nitf_LengthImageInfo {
-	return &Nitf_LengthImageInfo{
-	}
-}
-
-func (this *Nitf_LengthImageInfo) Read(io *kaitai.Stream, parent *Nitf_Header, root *Nitf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp247, err := this._io.ReadBytes(int(6))
+	tmp247, err := this._io.ReadBytes(int(5))
 	if err != nil {
 		return err
 	}
 	tmp247 = tmp247
-	this.LengthImageSubheader = string(tmp247)
-	tmp248, err := this._io.ReadBytes(int(10))
+	this.HeaderDataLength = string(tmp247)
+	tmp248, err := strconv.ParseInt(this.HeaderDataLength, 10, 0)
 	if err != nil {
 		return err
 	}
-	tmp248 = tmp248
-	this.LengthImageSegment = string(tmp248)
-	return err
-}
-type Nitf_LengthDataInfo struct {
-	LengthDataExtensionSubheader string
-	LengthDataExtensionSegment string
-	_io *kaitai.Stream
-	_root *Nitf
-	_parent *Nitf_Header
-}
-func NewNitf_LengthDataInfo() *Nitf_LengthDataInfo {
-	return &Nitf_LengthDataInfo{
+	if (tmp248 != 0) {
+		tmp249, err := this._io.ReadBytes(int(3))
+		if err != nil {
+			return err
+		}
+		tmp249 = tmp249
+		this.HeaderOverflow = string(tmp249)
 	}
-}
-
-func (this *Nitf_LengthDataInfo) Read(io *kaitai.Stream, parent *Nitf_Header, root *Nitf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp249, err := this._io.ReadBytes(int(4))
+	tmp250, err := strconv.ParseInt(this.HeaderDataLength, 10, 0)
 	if err != nil {
 		return err
 	}
-	tmp249 = tmp249
-	this.LengthDataExtensionSubheader = string(tmp249)
-	tmp250, err := this._io.ReadBytes(int(9))
-	if err != nil {
-		return err
+	if (tmp250 > 2) {
+		tmp251, err := strconv.ParseInt(this.HeaderDataLength, 10, 0)
+		if err != nil {
+			return err
+		}
+		for i := 0; i < int(tmp251 - 3); i++ {
+			_ = i
+			tmp252, err := this._io.ReadU1()
+			if err != nil {
+				return err
+			}
+			this.HeaderData = append(this.HeaderData, tmp252)
+		}
 	}
-	tmp250 = tmp250
-	this.LengthDataExtensionSegment = string(tmp250)
-	return err
-}
-type Nitf_LengthTextInfo struct {
-	LengthTextSubheader string
-	LengthTextSegment string
-	_io *kaitai.Stream
-	_root *Nitf
-	_parent *Nitf_Header
-}
-func NewNitf_LengthTextInfo() *Nitf_LengthTextInfo {
-	return &Nitf_LengthTextInfo{
-	}
-}
-
-func (this *Nitf_LengthTextInfo) Read(io *kaitai.Stream, parent *Nitf_Header, root *Nitf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp251, err := this._io.ReadBytes(int(4))
-	if err != nil {
-		return err
-	}
-	tmp251 = tmp251
-	this.LengthTextSubheader = string(tmp251)
-	tmp252, err := this._io.ReadBytes(int(5))
-	if err != nil {
-		return err
-	}
-	tmp252 = tmp252
-	this.LengthTextSegment = string(tmp252)
 	return err
 }

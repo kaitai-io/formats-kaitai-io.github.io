@@ -2,7 +2,6 @@ import kaitai_struct_nim_runtime
 import options
 import exif
 
-import "exif"
 type
   Jpeg* = ref object of KaitaiStruct
     `segments`*: seq[Jpeg_Segment]
@@ -13,6 +12,11 @@ type
     cr = 3
     i = 4
     q = 5
+  Jpeg_ExifInJpeg* = ref object of KaitaiStruct
+    `extraZero`*: seq[byte]
+    `data`*: Exif
+    `parent`*: Jpeg_SegmentApp1
+    `rawData`*: seq[byte]
   Jpeg_Segment* = ref object of KaitaiStruct
     `magic`*: seq[byte]
     `marker`*: Jpeg_Segment_MarkerEnum
@@ -55,17 +59,21 @@ type
     app14 = 238
     app15 = 239
     com = 254
-  Jpeg_SegmentSos* = ref object of KaitaiStruct
-    `numComponents`*: uint8
-    `components`*: seq[Jpeg_SegmentSos_Component]
-    `startSpectralSelection`*: uint8
-    `endSpectral`*: uint8
-    `apprBitPos`*: uint8
+  Jpeg_SegmentApp0* = ref object of KaitaiStruct
+    `magic`*: string
+    `versionMajor`*: uint8
+    `versionMinor`*: uint8
+    `densityUnits`*: Jpeg_SegmentApp0_DensityUnit
+    `densityX`*: uint16
+    `densityY`*: uint16
+    `thumbnailX`*: uint8
+    `thumbnailY`*: uint8
+    `thumbnail`*: seq[byte]
     `parent`*: Jpeg_Segment
-  Jpeg_SegmentSos_Component* = ref object of KaitaiStruct
-    `id`*: Jpeg_ComponentId
-    `huffmanTable`*: uint8
-    `parent`*: Jpeg_SegmentSos
+  Jpeg_SegmentApp0_DensityUnit* = enum
+    no_units = 0
+    pixels_per_inch = 1
+    pixels_per_cm = 2
   Jpeg_SegmentApp1* = ref object of KaitaiStruct
     `magic`*: string
     `body`*: Jpeg_ExifInJpeg
@@ -86,36 +94,27 @@ type
     `samplingXInstFlag`: bool
     `samplingYInst`: int
     `samplingYInstFlag`: bool
-  Jpeg_ExifInJpeg* = ref object of KaitaiStruct
-    `extraZero`*: seq[byte]
-    `data`*: Exif
-    `parent`*: Jpeg_SegmentApp1
-    `rawData`*: seq[byte]
-  Jpeg_SegmentApp0* = ref object of KaitaiStruct
-    `magic`*: string
-    `versionMajor`*: uint8
-    `versionMinor`*: uint8
-    `densityUnits`*: Jpeg_SegmentApp0_DensityUnit
-    `densityX`*: uint16
-    `densityY`*: uint16
-    `thumbnailX`*: uint8
-    `thumbnailY`*: uint8
-    `thumbnail`*: seq[byte]
+  Jpeg_SegmentSos* = ref object of KaitaiStruct
+    `numComponents`*: uint8
+    `components`*: seq[Jpeg_SegmentSos_Component]
+    `startSpectralSelection`*: uint8
+    `endSpectral`*: uint8
+    `apprBitPos`*: uint8
     `parent`*: Jpeg_Segment
-  Jpeg_SegmentApp0_DensityUnit* = enum
-    no_units = 0
-    pixels_per_inch = 1
-    pixels_per_cm = 2
+  Jpeg_SegmentSos_Component* = ref object of KaitaiStruct
+    `id`*: Jpeg_ComponentId
+    `huffmanTable`*: uint8
+    `parent`*: Jpeg_SegmentSos
 
 proc read*(_: typedesc[Jpeg], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Jpeg
+proc read*(_: typedesc[Jpeg_ExifInJpeg], io: KaitaiStream, root: KaitaiStruct, parent: Jpeg_SegmentApp1): Jpeg_ExifInJpeg
 proc read*(_: typedesc[Jpeg_Segment], io: KaitaiStream, root: KaitaiStruct, parent: Jpeg): Jpeg_Segment
-proc read*(_: typedesc[Jpeg_SegmentSos], io: KaitaiStream, root: KaitaiStruct, parent: Jpeg_Segment): Jpeg_SegmentSos
-proc read*(_: typedesc[Jpeg_SegmentSos_Component], io: KaitaiStream, root: KaitaiStruct, parent: Jpeg_SegmentSos): Jpeg_SegmentSos_Component
+proc read*(_: typedesc[Jpeg_SegmentApp0], io: KaitaiStream, root: KaitaiStruct, parent: Jpeg_Segment): Jpeg_SegmentApp0
 proc read*(_: typedesc[Jpeg_SegmentApp1], io: KaitaiStream, root: KaitaiStruct, parent: Jpeg_Segment): Jpeg_SegmentApp1
 proc read*(_: typedesc[Jpeg_SegmentSof0], io: KaitaiStream, root: KaitaiStruct, parent: Jpeg_Segment): Jpeg_SegmentSof0
 proc read*(_: typedesc[Jpeg_SegmentSof0_Component], io: KaitaiStream, root: KaitaiStruct, parent: Jpeg_SegmentSof0): Jpeg_SegmentSof0_Component
-proc read*(_: typedesc[Jpeg_ExifInJpeg], io: KaitaiStream, root: KaitaiStruct, parent: Jpeg_SegmentApp1): Jpeg_ExifInJpeg
-proc read*(_: typedesc[Jpeg_SegmentApp0], io: KaitaiStream, root: KaitaiStruct, parent: Jpeg_Segment): Jpeg_SegmentApp0
+proc read*(_: typedesc[Jpeg_SegmentSos], io: KaitaiStream, root: KaitaiStruct, parent: Jpeg_Segment): Jpeg_SegmentSos
+proc read*(_: typedesc[Jpeg_SegmentSos_Component], io: KaitaiStream, root: KaitaiStruct, parent: Jpeg_SegmentSos): Jpeg_SegmentSos_Component
 
 proc samplingX*(this: Jpeg_SegmentSof0_Component): int
 proc samplingY*(this: Jpeg_SegmentSof0_Component): int
@@ -158,6 +157,25 @@ proc read*(_: typedesc[Jpeg], io: KaitaiStream, root: KaitaiStruct, parent: Kait
 proc fromFile*(_: typedesc[Jpeg], filename: string): Jpeg =
   Jpeg.read(newKaitaiFileStream(filename), nil, nil)
 
+proc read*(_: typedesc[Jpeg_ExifInJpeg], io: KaitaiStream, root: KaitaiStruct, parent: Jpeg_SegmentApp1): Jpeg_ExifInJpeg =
+  template this: untyped = result
+  this = new(Jpeg_ExifInJpeg)
+  let root = if root == nil: cast[Jpeg](this) else: cast[Jpeg](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let extraZeroExpr = this.io.readBytes(int(1))
+  this.extraZero = extraZeroExpr
+  let rawDataExpr = this.io.readBytesFull()
+  this.rawData = rawDataExpr
+  let rawDataIo = newKaitaiStream(rawDataExpr)
+  let dataExpr = Exif.read(rawDataIo, nil, nil)
+  this.data = dataExpr
+
+proc fromFile*(_: typedesc[Jpeg_ExifInJpeg], filename: string): Jpeg_ExifInJpeg =
+  Jpeg_ExifInJpeg.read(newKaitaiFileStream(filename), nil, nil)
+
 proc read*(_: typedesc[Jpeg_Segment], io: KaitaiStream, root: KaitaiStruct, parent: Jpeg): Jpeg_Segment =
   template this: untyped = result
   this = new(Jpeg_Segment)
@@ -176,32 +194,32 @@ proc read*(_: typedesc[Jpeg_Segment], io: KaitaiStream, root: KaitaiStruct, pare
   if  ((this.marker != jpeg.soi) and (this.marker != jpeg.eoi)) :
     block:
       let on = this.marker
-      if on == jpeg.app1:
-        let rawDataExpr = this.io.readBytes(int((this.length - 2)))
-        this.rawData = rawDataExpr
-        let rawDataIo = newKaitaiStream(rawDataExpr)
-        let dataExpr = Jpeg_SegmentApp1.read(rawDataIo, this.root, this)
-        this.data = dataExpr
-      elif on == jpeg.app0:
-        let rawDataExpr = this.io.readBytes(int((this.length - 2)))
+      if on == jpeg.app0:
+        let rawDataExpr = this.io.readBytes(int(this.length - 2))
         this.rawData = rawDataExpr
         let rawDataIo = newKaitaiStream(rawDataExpr)
         let dataExpr = Jpeg_SegmentApp0.read(rawDataIo, this.root, this)
         this.data = dataExpr
+      elif on == jpeg.app1:
+        let rawDataExpr = this.io.readBytes(int(this.length - 2))
+        this.rawData = rawDataExpr
+        let rawDataIo = newKaitaiStream(rawDataExpr)
+        let dataExpr = Jpeg_SegmentApp1.read(rawDataIo, this.root, this)
+        this.data = dataExpr
       elif on == jpeg.sof0:
-        let rawDataExpr = this.io.readBytes(int((this.length - 2)))
+        let rawDataExpr = this.io.readBytes(int(this.length - 2))
         this.rawData = rawDataExpr
         let rawDataIo = newKaitaiStream(rawDataExpr)
         let dataExpr = Jpeg_SegmentSof0.read(rawDataIo, this.root, this)
         this.data = dataExpr
       elif on == jpeg.sos:
-        let rawDataExpr = this.io.readBytes(int((this.length - 2)))
+        let rawDataExpr = this.io.readBytes(int(this.length - 2))
         this.rawData = rawDataExpr
         let rawDataIo = newKaitaiStream(rawDataExpr)
         let dataExpr = Jpeg_SegmentSos.read(rawDataIo, this.root, this)
         this.data = dataExpr
       else:
-        let dataExpr = this.io.readBytes(int((this.length - 2)))
+        let dataExpr = this.io.readBytes(int(this.length - 2))
         this.data = dataExpr
   if this.marker == jpeg.sos:
     let imageDataExpr = this.io.readBytesFull()
@@ -210,68 +228,55 @@ proc read*(_: typedesc[Jpeg_Segment], io: KaitaiStream, root: KaitaiStruct, pare
 proc fromFile*(_: typedesc[Jpeg_Segment], filename: string): Jpeg_Segment =
   Jpeg_Segment.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[Jpeg_SegmentSos], io: KaitaiStream, root: KaitaiStruct, parent: Jpeg_Segment): Jpeg_SegmentSos =
+proc read*(_: typedesc[Jpeg_SegmentApp0], io: KaitaiStream, root: KaitaiStruct, parent: Jpeg_Segment): Jpeg_SegmentApp0 =
   template this: untyped = result
-  this = new(Jpeg_SegmentSos)
+  this = new(Jpeg_SegmentApp0)
   let root = if root == nil: cast[Jpeg](this) else: cast[Jpeg](root)
   this.io = io
   this.root = root
   this.parent = parent
 
+  let magicExpr = encode(this.io.readBytes(int(5)), "ASCII")
+  this.magic = magicExpr
+  let versionMajorExpr = this.io.readU1()
+  this.versionMajor = versionMajorExpr
+  let versionMinorExpr = this.io.readU1()
+  this.versionMinor = versionMinorExpr
+  let densityUnitsExpr = Jpeg_SegmentApp0_DensityUnit(this.io.readU1())
+  this.densityUnits = densityUnitsExpr
 
   ##[
-  Number of components in scan
+  Horizontal pixel density. Must not be zero.
   ]##
-  let numComponentsExpr = this.io.readU1()
-  this.numComponents = numComponentsExpr
+  let densityXExpr = this.io.readU2be()
+  this.densityX = densityXExpr
 
   ##[
-  Scan components specification
+  Vertical pixel density. Must not be zero.
   ]##
-  for i in 0 ..< int(this.numComponents):
-    let it = Jpeg_SegmentSos_Component.read(this.io, this.root, this)
-    this.components.add(it)
+  let densityYExpr = this.io.readU2be()
+  this.densityY = densityYExpr
 
   ##[
-  Start of spectral selection or predictor selection
+  Horizontal pixel count of the following embedded RGB thumbnail. May be zero.
   ]##
-  let startSpectralSelectionExpr = this.io.readU1()
-  this.startSpectralSelection = startSpectralSelectionExpr
+  let thumbnailXExpr = this.io.readU1()
+  this.thumbnailX = thumbnailXExpr
 
   ##[
-  End of spectral selection
+  Vertical pixel count of the following embedded RGB thumbnail. May be zero.
   ]##
-  let endSpectralExpr = this.io.readU1()
-  this.endSpectral = endSpectralExpr
+  let thumbnailYExpr = this.io.readU1()
+  this.thumbnailY = thumbnailYExpr
 
   ##[
-  Successive approximation bit position high + Successive approximation bit position low or point transform
+  Uncompressed 24 bit RGB (8 bits per color channel) raster thumbnail data in the order R0, G0, B0, ... Rn, Gn, Bn
   ]##
-  let apprBitPosExpr = this.io.readU1()
-  this.apprBitPos = apprBitPosExpr
+  let thumbnailExpr = this.io.readBytes(int((this.thumbnailX * this.thumbnailY) * 3))
+  this.thumbnail = thumbnailExpr
 
-proc fromFile*(_: typedesc[Jpeg_SegmentSos], filename: string): Jpeg_SegmentSos =
-  Jpeg_SegmentSos.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Jpeg_SegmentSos_Component], io: KaitaiStream, root: KaitaiStruct, parent: Jpeg_SegmentSos): Jpeg_SegmentSos_Component =
-  template this: untyped = result
-  this = new(Jpeg_SegmentSos_Component)
-  let root = if root == nil: cast[Jpeg](this) else: cast[Jpeg](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-
-  ##[
-  Scan component selector
-  ]##
-  let idExpr = Jpeg_ComponentId(this.io.readU1())
-  this.id = idExpr
-  let huffmanTableExpr = this.io.readU1()
-  this.huffmanTable = huffmanTableExpr
-
-proc fromFile*(_: typedesc[Jpeg_SegmentSos_Component], filename: string): Jpeg_SegmentSos_Component =
-  Jpeg_SegmentSos_Component.read(newKaitaiFileStream(filename), nil, nil)
+proc fromFile*(_: typedesc[Jpeg_SegmentApp0], filename: string): Jpeg_SegmentApp0 =
+  Jpeg_SegmentApp0.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[Jpeg_SegmentApp1], io: KaitaiStream, root: KaitaiStruct, parent: Jpeg_Segment): Jpeg_SegmentApp1 =
   template this: untyped = result
@@ -337,7 +342,7 @@ proc read*(_: typedesc[Jpeg_SegmentSof0_Component], io: KaitaiStream, root: Kait
 proc samplingX(this: Jpeg_SegmentSof0_Component): int = 
   if this.samplingXInstFlag:
     return this.samplingXInst
-  let samplingXInstExpr = int(((this.samplingFactors and 240) shr 4))
+  let samplingXInstExpr = int((this.samplingFactors and 240) shr 4)
   this.samplingXInst = samplingXInstExpr
   this.samplingXInstFlag = true
   return this.samplingXInst
@@ -345,7 +350,7 @@ proc samplingX(this: Jpeg_SegmentSof0_Component): int =
 proc samplingY(this: Jpeg_SegmentSof0_Component): int = 
   if this.samplingYInstFlag:
     return this.samplingYInst
-  let samplingYInstExpr = int((this.samplingFactors and 15))
+  let samplingYInstExpr = int(this.samplingFactors and 15)
   this.samplingYInst = samplingYInstExpr
   this.samplingYInstFlag = true
   return this.samplingYInst
@@ -353,72 +358,66 @@ proc samplingY(this: Jpeg_SegmentSof0_Component): int =
 proc fromFile*(_: typedesc[Jpeg_SegmentSof0_Component], filename: string): Jpeg_SegmentSof0_Component =
   Jpeg_SegmentSof0_Component.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[Jpeg_ExifInJpeg], io: KaitaiStream, root: KaitaiStruct, parent: Jpeg_SegmentApp1): Jpeg_ExifInJpeg =
+proc read*(_: typedesc[Jpeg_SegmentSos], io: KaitaiStream, root: KaitaiStruct, parent: Jpeg_Segment): Jpeg_SegmentSos =
   template this: untyped = result
-  this = new(Jpeg_ExifInJpeg)
+  this = new(Jpeg_SegmentSos)
   let root = if root == nil: cast[Jpeg](this) else: cast[Jpeg](root)
   this.io = io
   this.root = root
   this.parent = parent
 
-  let extraZeroExpr = this.io.readBytes(int(1))
-  this.extraZero = extraZeroExpr
-  let rawDataExpr = this.io.readBytesFull()
-  this.rawData = rawDataExpr
-  let rawDataIo = newKaitaiStream(rawDataExpr)
-  let dataExpr = Exif.read(rawDataIo, this.root, this)
-  this.data = dataExpr
 
-proc fromFile*(_: typedesc[Jpeg_ExifInJpeg], filename: string): Jpeg_ExifInJpeg =
-  Jpeg_ExifInJpeg.read(newKaitaiFileStream(filename), nil, nil)
+  ##[
+  Number of components in scan
+  ]##
+  let numComponentsExpr = this.io.readU1()
+  this.numComponents = numComponentsExpr
 
-proc read*(_: typedesc[Jpeg_SegmentApp0], io: KaitaiStream, root: KaitaiStruct, parent: Jpeg_Segment): Jpeg_SegmentApp0 =
+  ##[
+  Scan components specification
+  ]##
+  for i in 0 ..< int(this.numComponents):
+    let it = Jpeg_SegmentSos_Component.read(this.io, this.root, this)
+    this.components.add(it)
+
+  ##[
+  Start of spectral selection or predictor selection
+  ]##
+  let startSpectralSelectionExpr = this.io.readU1()
+  this.startSpectralSelection = startSpectralSelectionExpr
+
+  ##[
+  End of spectral selection
+  ]##
+  let endSpectralExpr = this.io.readU1()
+  this.endSpectral = endSpectralExpr
+
+  ##[
+  Successive approximation bit position high + Successive approximation bit position low or point transform
+  ]##
+  let apprBitPosExpr = this.io.readU1()
+  this.apprBitPos = apprBitPosExpr
+
+proc fromFile*(_: typedesc[Jpeg_SegmentSos], filename: string): Jpeg_SegmentSos =
+  Jpeg_SegmentSos.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Jpeg_SegmentSos_Component], io: KaitaiStream, root: KaitaiStruct, parent: Jpeg_SegmentSos): Jpeg_SegmentSos_Component =
   template this: untyped = result
-  this = new(Jpeg_SegmentApp0)
+  this = new(Jpeg_SegmentSos_Component)
   let root = if root == nil: cast[Jpeg](this) else: cast[Jpeg](root)
   this.io = io
   this.root = root
   this.parent = parent
 
-  let magicExpr = encode(this.io.readBytes(int(5)), "ASCII")
-  this.magic = magicExpr
-  let versionMajorExpr = this.io.readU1()
-  this.versionMajor = versionMajorExpr
-  let versionMinorExpr = this.io.readU1()
-  this.versionMinor = versionMinorExpr
-  let densityUnitsExpr = Jpeg_SegmentApp0_DensityUnit(this.io.readU1())
-  this.densityUnits = densityUnitsExpr
 
   ##[
-  Horizontal pixel density. Must not be zero.
+  Scan component selector
   ]##
-  let densityXExpr = this.io.readU2be()
-  this.densityX = densityXExpr
+  let idExpr = Jpeg_ComponentId(this.io.readU1())
+  this.id = idExpr
+  let huffmanTableExpr = this.io.readU1()
+  this.huffmanTable = huffmanTableExpr
 
-  ##[
-  Vertical pixel density. Must not be zero.
-  ]##
-  let densityYExpr = this.io.readU2be()
-  this.densityY = densityYExpr
-
-  ##[
-  Horizontal pixel count of the following embedded RGB thumbnail. May be zero.
-  ]##
-  let thumbnailXExpr = this.io.readU1()
-  this.thumbnailX = thumbnailXExpr
-
-  ##[
-  Vertical pixel count of the following embedded RGB thumbnail. May be zero.
-  ]##
-  let thumbnailYExpr = this.io.readU1()
-  this.thumbnailY = thumbnailYExpr
-
-  ##[
-  Uncompressed 24 bit RGB (8 bits per color channel) raster thumbnail data in the order R0, G0, B0, ... Rn, Gn, Bn
-  ]##
-  let thumbnailExpr = this.io.readBytes(int(((this.thumbnailX * this.thumbnailY) * 3)))
-  this.thumbnail = thumbnailExpr
-
-proc fromFile*(_: typedesc[Jpeg_SegmentApp0], filename: string): Jpeg_SegmentApp0 =
-  Jpeg_SegmentApp0.read(newKaitaiFileStream(filename), nil, nil)
+proc fromFile*(_: typedesc[Jpeg_SegmentSos_Component], filename: string): Jpeg_SegmentSos_Component =
+  Jpeg_SegmentSos_Component.read(newKaitaiFileStream(filename), nil, nil)
 

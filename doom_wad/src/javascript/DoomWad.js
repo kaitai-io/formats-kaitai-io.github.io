@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.DoomWad = factory(root.KaitaiStream);
+    factory(root.DoomWad || (root.DoomWad = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (DoomWad_, KaitaiStream) {
 var DoomWad = (function() {
   function DoomWad(_io, _parent, _root) {
     this._io = _io;
@@ -23,172 +23,171 @@ var DoomWad = (function() {
     this.indexOffset = this._io.readS4le();
   }
 
-  var Sectors = DoomWad.Sectors = (function() {
-    function Sectors(_io, _parent, _root) {
+  var Blockmap = DoomWad.Blockmap = (function() {
+    function Blockmap(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    Sectors.prototype._read = function() {
-      this.entries = [];
-      var i = 0;
-      while (!this._io.isEof()) {
-        this.entries.push(new Sector(this._io, this, this._root));
-        i++;
+    Blockmap.prototype._read = function() {
+      this.originX = this._io.readS2le();
+      this.originY = this._io.readS2le();
+      this.numCols = this._io.readS2le();
+      this.numRows = this._io.readS2le();
+      this.linedefsInBlock = [];
+      for (var i = 0; i < this.numCols * this.numRows; i++) {
+        this.linedefsInBlock.push(new Blocklist(this._io, this, this._root));
       }
     }
 
-    return Sectors;
-  })();
-
-  var Vertex = DoomWad.Vertex = (function() {
-    function Vertex(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Vertex.prototype._read = function() {
-      this.x = this._io.readS2le();
-      this.y = this._io.readS2le();
-    }
-
-    return Vertex;
-  })();
-
-  /**
-   * Used for TEXTURE1 and TEXTURE2 lumps, which designate how to
-   * combine wall patches to make wall textures. This essentially
-   * provides a very simple form of image compression, allowing
-   * certain elements ("patches") to be reused / recombined on
-   * different textures for more variety in the game.
-   * @see {@link https://doom.fandom.com/wiki/TEXTURE1_and_TEXTURE2|Source}
-   */
-
-  var Texture12 = DoomWad.Texture12 = (function() {
-    function Texture12(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Texture12.prototype._read = function() {
-      this.numTextures = this._io.readS4le();
-      this.textures = [];
-      for (var i = 0; i < this.numTextures; i++) {
-        this.textures.push(new TextureIndex(this._io, this, this._root));
-      }
-    }
-
-    var TextureIndex = Texture12.TextureIndex = (function() {
-      function TextureIndex(_io, _parent, _root) {
+    var Blocklist = Blockmap.Blocklist = (function() {
+      function Blocklist(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
-      TextureIndex.prototype._read = function() {
-        this.offset = this._io.readS4le();
+      Blocklist.prototype._read = function() {
+        this.offset = this._io.readU2le();
       }
-      Object.defineProperty(TextureIndex.prototype, 'body', {
+
+      /**
+       * List of linedefs found in this block
+       */
+      Object.defineProperty(Blocklist.prototype, 'linedefs', {
         get: function() {
-          if (this._m_body !== undefined)
-            return this._m_body;
+          if (this._m_linedefs !== undefined)
+            return this._m_linedefs;
           var _pos = this._io.pos;
-          this._io.seek(this.offset);
-          this._m_body = new TextureBody(this._io, this, this._root);
+          this._io.seek(this.offset * 2);
+          this._m_linedefs = [];
+          var i = 0;
+          do {
+            var _ = this._io.readS2le();
+            this._m_linedefs.push(_);
+            i++;
+          } while (!(_ == -1));
           this._io.seek(_pos);
-          return this._m_body;
+          return this._m_linedefs;
         }
       });
 
-      return TextureIndex;
-    })();
-
-    var TextureBody = Texture12.TextureBody = (function() {
-      function TextureBody(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      TextureBody.prototype._read = function() {
-        this.name = KaitaiStream.bytesToStr(KaitaiStream.bytesStripRight(this._io.readBytes(8), 0), "ASCII");
-        this.masked = this._io.readU4le();
-        this.width = this._io.readU2le();
-        this.height = this._io.readU2le();
-        this.columnDirectory = this._io.readU4le();
-        this.numPatches = this._io.readU2le();
-        this.patches = [];
-        for (var i = 0; i < this.numPatches; i++) {
-          this.patches.push(new Patch(this._io, this, this._root));
-        }
-      }
-
       /**
-       * Name of a texture, only `A-Z`, `0-9`, `[]_-` are valid
+       * Offset to the list of linedefs
        */
 
-      /**
-       * Obsolete, ignored by all DOOM versions
-       */
-
-      /**
-       * Number of patches that are used in a texture
-       */
-
-      return TextureBody;
-    })();
-
-    var Patch = Texture12.Patch = (function() {
-      function Patch(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      Patch.prototype._read = function() {
-        this.originX = this._io.readS2le();
-        this.originY = this._io.readS2le();
-        this.patchId = this._io.readU2le();
-        this.stepDir = this._io.readU2le();
-        this.colormap = this._io.readU2le();
-      }
-
-      /**
-       * X offset to draw a patch at (pixels from left boundary of a texture)
-       */
-
-      /**
-       * Y offset to draw a patch at (pixels from upper boundary of a texture)
-       */
-
-      /**
-       * Identifier of a patch (as listed in PNAMES lump) to draw
-       */
-
-      return Patch;
+      return Blocklist;
     })();
 
     /**
-     * Number of wall textures
+     * Grid origin, X coord
      */
 
-    return Texture12;
+    /**
+     * Grid origin, Y coord
+     */
+
+    /**
+     * Number of columns
+     */
+
+    /**
+     * Number of rows
+     */
+
+    /**
+     * Lists of linedefs for every block
+     */
+
+    return Blockmap;
+  })();
+
+  var IndexEntry = DoomWad.IndexEntry = (function() {
+    function IndexEntry(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    IndexEntry.prototype._read = function() {
+      this.offset = this._io.readS4le();
+      this.size = this._io.readS4le();
+      this.name = KaitaiStream.bytesToStr(KaitaiStream.bytesStripRight(this._io.readBytes(8), 0), "ASCII");
+    }
+    Object.defineProperty(IndexEntry.prototype, 'contents', {
+      get: function() {
+        if (this._m_contents !== undefined)
+          return this._m_contents;
+        var io = this._root._io;
+        var _pos = io.pos;
+        io.seek(this.offset);
+        switch (this.name) {
+        case "BLOCKMAP":
+          this._raw__m_contents = io.readBytes(this.size);
+          var _io__raw__m_contents = new KaitaiStream(this._raw__m_contents);
+          this._m_contents = new Blockmap(_io__raw__m_contents, this, this._root);
+          break;
+        case "LINEDEFS":
+          this._raw__m_contents = io.readBytes(this.size);
+          var _io__raw__m_contents = new KaitaiStream(this._raw__m_contents);
+          this._m_contents = new Linedefs(_io__raw__m_contents, this, this._root);
+          break;
+        case "PNAMES":
+          this._raw__m_contents = io.readBytes(this.size);
+          var _io__raw__m_contents = new KaitaiStream(this._raw__m_contents);
+          this._m_contents = new Pnames(_io__raw__m_contents, this, this._root);
+          break;
+        case "SECTORS":
+          this._raw__m_contents = io.readBytes(this.size);
+          var _io__raw__m_contents = new KaitaiStream(this._raw__m_contents);
+          this._m_contents = new Sectors(_io__raw__m_contents, this, this._root);
+          break;
+        case "SIDEDEFS":
+          this._raw__m_contents = io.readBytes(this.size);
+          var _io__raw__m_contents = new KaitaiStream(this._raw__m_contents);
+          this._m_contents = new Sidedefs(_io__raw__m_contents, this, this._root);
+          break;
+        case "TEXTURE1":
+          this._raw__m_contents = io.readBytes(this.size);
+          var _io__raw__m_contents = new KaitaiStream(this._raw__m_contents);
+          this._m_contents = new Texture12(_io__raw__m_contents, this, this._root);
+          break;
+        case "TEXTURE2":
+          this._raw__m_contents = io.readBytes(this.size);
+          var _io__raw__m_contents = new KaitaiStream(this._raw__m_contents);
+          this._m_contents = new Texture12(_io__raw__m_contents, this, this._root);
+          break;
+        case "THINGS":
+          this._raw__m_contents = io.readBytes(this.size);
+          var _io__raw__m_contents = new KaitaiStream(this._raw__m_contents);
+          this._m_contents = new Things(_io__raw__m_contents, this, this._root);
+          break;
+        case "VERTEXES":
+          this._raw__m_contents = io.readBytes(this.size);
+          var _io__raw__m_contents = new KaitaiStream(this._raw__m_contents);
+          this._m_contents = new Vertexes(_io__raw__m_contents, this, this._root);
+          break;
+        default:
+          this._m_contents = io.readBytes(this.size);
+          break;
+        }
+        io.seek(_pos);
+        return this._m_contents;
+      }
+    });
+
+    return IndexEntry;
   })();
 
   var Linedef = DoomWad.Linedef = (function() {
     function Linedef(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -205,6 +204,26 @@ var DoomWad = (function() {
     return Linedef;
   })();
 
+  var Linedefs = DoomWad.Linedefs = (function() {
+    function Linedefs(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Linedefs.prototype._read = function() {
+      this.entries = [];
+      var i = 0;
+      while (!this._io.isEof()) {
+        this.entries.push(new Linedef(this._io, this, this._root));
+        i++;
+      }
+    }
+
+    return Linedefs;
+  })();
+
   /**
    * @see {@link https://doom.fandom.com/wiki/PNAMES|Source}
    */
@@ -213,7 +232,7 @@ var DoomWad = (function() {
     function Pnames(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -230,25 +249,6 @@ var DoomWad = (function() {
      */
 
     return Pnames;
-  })();
-
-  var Thing = DoomWad.Thing = (function() {
-    function Thing(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Thing.prototype._read = function() {
-      this.x = this._io.readS2le();
-      this.y = this._io.readS2le();
-      this.angle = this._io.readU2le();
-      this.type = this._io.readU2le();
-      this.flags = this._io.readU2le();
-    }
-
-    return Thing;
   })();
 
   var Sector = DoomWad.Sector = (function() {
@@ -307,7 +307,7 @@ var DoomWad = (function() {
     function Sector(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -335,31 +335,31 @@ var DoomWad = (function() {
     return Sector;
   })();
 
-  var Vertexes = DoomWad.Vertexes = (function() {
-    function Vertexes(_io, _parent, _root) {
+  var Sectors = DoomWad.Sectors = (function() {
+    function Sectors(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    Vertexes.prototype._read = function() {
+    Sectors.prototype._read = function() {
       this.entries = [];
       var i = 0;
       while (!this._io.isEof()) {
-        this.entries.push(new Vertex(this._io, this, this._root));
+        this.entries.push(new Sector(this._io, this, this._root));
         i++;
       }
     }
 
-    return Vertexes;
+    return Sectors;
   })();
 
   var Sidedef = DoomWad.Sidedef = (function() {
     function Sidedef(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -375,129 +375,11 @@ var DoomWad = (function() {
     return Sidedef;
   })();
 
-  var Things = DoomWad.Things = (function() {
-    function Things(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Things.prototype._read = function() {
-      this.entries = [];
-      var i = 0;
-      while (!this._io.isEof()) {
-        this.entries.push(new Thing(this._io, this, this._root));
-        i++;
-      }
-    }
-
-    return Things;
-  })();
-
-  var Linedefs = DoomWad.Linedefs = (function() {
-    function Linedefs(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Linedefs.prototype._read = function() {
-      this.entries = [];
-      var i = 0;
-      while (!this._io.isEof()) {
-        this.entries.push(new Linedef(this._io, this, this._root));
-        i++;
-      }
-    }
-
-    return Linedefs;
-  })();
-
-  var IndexEntry = DoomWad.IndexEntry = (function() {
-    function IndexEntry(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    IndexEntry.prototype._read = function() {
-      this.offset = this._io.readS4le();
-      this.size = this._io.readS4le();
-      this.name = KaitaiStream.bytesToStr(KaitaiStream.bytesStripRight(this._io.readBytes(8), 0), "ASCII");
-    }
-    Object.defineProperty(IndexEntry.prototype, 'contents', {
-      get: function() {
-        if (this._m_contents !== undefined)
-          return this._m_contents;
-        var io = this._root._io;
-        var _pos = io.pos;
-        io.seek(this.offset);
-        switch (this.name) {
-        case "SECTORS":
-          this._raw__m_contents = io.readBytes(this.size);
-          var _io__raw__m_contents = new KaitaiStream(this._raw__m_contents);
-          this._m_contents = new Sectors(_io__raw__m_contents, this, this._root);
-          break;
-        case "TEXTURE1":
-          this._raw__m_contents = io.readBytes(this.size);
-          var _io__raw__m_contents = new KaitaiStream(this._raw__m_contents);
-          this._m_contents = new Texture12(_io__raw__m_contents, this, this._root);
-          break;
-        case "VERTEXES":
-          this._raw__m_contents = io.readBytes(this.size);
-          var _io__raw__m_contents = new KaitaiStream(this._raw__m_contents);
-          this._m_contents = new Vertexes(_io__raw__m_contents, this, this._root);
-          break;
-        case "BLOCKMAP":
-          this._raw__m_contents = io.readBytes(this.size);
-          var _io__raw__m_contents = new KaitaiStream(this._raw__m_contents);
-          this._m_contents = new Blockmap(_io__raw__m_contents, this, this._root);
-          break;
-        case "PNAMES":
-          this._raw__m_contents = io.readBytes(this.size);
-          var _io__raw__m_contents = new KaitaiStream(this._raw__m_contents);
-          this._m_contents = new Pnames(_io__raw__m_contents, this, this._root);
-          break;
-        case "TEXTURE2":
-          this._raw__m_contents = io.readBytes(this.size);
-          var _io__raw__m_contents = new KaitaiStream(this._raw__m_contents);
-          this._m_contents = new Texture12(_io__raw__m_contents, this, this._root);
-          break;
-        case "THINGS":
-          this._raw__m_contents = io.readBytes(this.size);
-          var _io__raw__m_contents = new KaitaiStream(this._raw__m_contents);
-          this._m_contents = new Things(_io__raw__m_contents, this, this._root);
-          break;
-        case "LINEDEFS":
-          this._raw__m_contents = io.readBytes(this.size);
-          var _io__raw__m_contents = new KaitaiStream(this._raw__m_contents);
-          this._m_contents = new Linedefs(_io__raw__m_contents, this, this._root);
-          break;
-        case "SIDEDEFS":
-          this._raw__m_contents = io.readBytes(this.size);
-          var _io__raw__m_contents = new KaitaiStream(this._raw__m_contents);
-          this._m_contents = new Sidedefs(_io__raw__m_contents, this, this._root);
-          break;
-        default:
-          this._m_contents = io.readBytes(this.size);
-          break;
-        }
-        io.seek(_pos);
-        return this._m_contents;
-      }
-    });
-
-    return IndexEntry;
-  })();
-
   var Sidedefs = DoomWad.Sidedefs = (function() {
     function Sidedefs(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -513,86 +395,204 @@ var DoomWad = (function() {
     return Sidedefs;
   })();
 
-  var Blockmap = DoomWad.Blockmap = (function() {
-    function Blockmap(_io, _parent, _root) {
+  /**
+   * Used for TEXTURE1 and TEXTURE2 lumps, which designate how to
+   * combine wall patches to make wall textures. This essentially
+   * provides a very simple form of image compression, allowing
+   * certain elements ("patches") to be reused / recombined on
+   * different textures for more variety in the game.
+   * @see {@link https://doom.fandom.com/wiki/TEXTURE1_and_TEXTURE2|Source}
+   */
+
+  var Texture12 = DoomWad.Texture12 = (function() {
+    function Texture12(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    Blockmap.prototype._read = function() {
-      this.originX = this._io.readS2le();
-      this.originY = this._io.readS2le();
-      this.numCols = this._io.readS2le();
-      this.numRows = this._io.readS2le();
-      this.linedefsInBlock = [];
-      for (var i = 0; i < (this.numCols * this.numRows); i++) {
-        this.linedefsInBlock.push(new Blocklist(this._io, this, this._root));
+    Texture12.prototype._read = function() {
+      this.numTextures = this._io.readS4le();
+      this.textures = [];
+      for (var i = 0; i < this.numTextures; i++) {
+        this.textures.push(new TextureIndex(this._io, this, this._root));
       }
     }
 
-    var Blocklist = Blockmap.Blocklist = (function() {
-      function Blocklist(_io, _parent, _root) {
+    var Patch = Texture12.Patch = (function() {
+      function Patch(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
-      Blocklist.prototype._read = function() {
-        this.offset = this._io.readU2le();
+      Patch.prototype._read = function() {
+        this.originX = this._io.readS2le();
+        this.originY = this._io.readS2le();
+        this.patchId = this._io.readU2le();
+        this.stepDir = this._io.readU2le();
+        this.colormap = this._io.readU2le();
       }
 
       /**
-       * List of linedefs found in this block
+       * X offset to draw a patch at (pixels from left boundary of a texture)
        */
-      Object.defineProperty(Blocklist.prototype, 'linedefs', {
+
+      /**
+       * Y offset to draw a patch at (pixels from upper boundary of a texture)
+       */
+
+      /**
+       * Identifier of a patch (as listed in PNAMES lump) to draw
+       */
+
+      return Patch;
+    })();
+
+    var TextureBody = Texture12.TextureBody = (function() {
+      function TextureBody(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+
+        this._read();
+      }
+      TextureBody.prototype._read = function() {
+        this.name = KaitaiStream.bytesToStr(KaitaiStream.bytesStripRight(this._io.readBytes(8), 0), "ASCII");
+        this.masked = this._io.readU4le();
+        this.width = this._io.readU2le();
+        this.height = this._io.readU2le();
+        this.columnDirectory = this._io.readU4le();
+        this.numPatches = this._io.readU2le();
+        this.patches = [];
+        for (var i = 0; i < this.numPatches; i++) {
+          this.patches.push(new Patch(this._io, this, this._root));
+        }
+      }
+
+      /**
+       * Name of a texture, only `A-Z`, `0-9`, `[]_-` are valid
+       */
+
+      /**
+       * Obsolete, ignored by all DOOM versions
+       */
+
+      /**
+       * Number of patches that are used in a texture
+       */
+
+      return TextureBody;
+    })();
+
+    var TextureIndex = Texture12.TextureIndex = (function() {
+      function TextureIndex(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+
+        this._read();
+      }
+      TextureIndex.prototype._read = function() {
+        this.offset = this._io.readS4le();
+      }
+      Object.defineProperty(TextureIndex.prototype, 'body', {
         get: function() {
-          if (this._m_linedefs !== undefined)
-            return this._m_linedefs;
+          if (this._m_body !== undefined)
+            return this._m_body;
           var _pos = this._io.pos;
-          this._io.seek((this.offset * 2));
-          this._m_linedefs = [];
-          var i = 0;
-          do {
-            var _ = this._io.readS2le();
-            this._m_linedefs.push(_);
-            i++;
-          } while (!(_ == -1));
+          this._io.seek(this.offset);
+          this._m_body = new TextureBody(this._io, this, this._root);
           this._io.seek(_pos);
-          return this._m_linedefs;
+          return this._m_body;
         }
       });
 
-      /**
-       * Offset to the list of linedefs
-       */
-
-      return Blocklist;
+      return TextureIndex;
     })();
 
     /**
-     * Grid origin, X coord
+     * Number of wall textures
      */
 
-    /**
-     * Grid origin, Y coord
-     */
+    return Texture12;
+  })();
 
-    /**
-     * Number of columns
-     */
+  var Thing = DoomWad.Thing = (function() {
+    function Thing(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
 
-    /**
-     * Number of rows
-     */
+      this._read();
+    }
+    Thing.prototype._read = function() {
+      this.x = this._io.readS2le();
+      this.y = this._io.readS2le();
+      this.angle = this._io.readU2le();
+      this.type = this._io.readU2le();
+      this.flags = this._io.readU2le();
+    }
 
-    /**
-     * Lists of linedefs for every block
-     */
+    return Thing;
+  })();
 
-    return Blockmap;
+  var Things = DoomWad.Things = (function() {
+    function Things(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Things.prototype._read = function() {
+      this.entries = [];
+      var i = 0;
+      while (!this._io.isEof()) {
+        this.entries.push(new Thing(this._io, this, this._root));
+        i++;
+      }
+    }
+
+    return Things;
+  })();
+
+  var Vertex = DoomWad.Vertex = (function() {
+    function Vertex(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Vertex.prototype._read = function() {
+      this.x = this._io.readS2le();
+      this.y = this._io.readS2le();
+    }
+
+    return Vertex;
+  })();
+
+  var Vertexes = DoomWad.Vertexes = (function() {
+    function Vertexes(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Vertexes.prototype._read = function() {
+      this.entries = [];
+      var i = 0;
+      while (!this._io.isEof()) {
+        this.entries.push(new Vertex(this._io, this, this._root));
+        i++;
+      }
+    }
+
+    return Vertexes;
   })();
   Object.defineProperty(DoomWad.prototype, 'index', {
     get: function() {
@@ -619,5 +619,5 @@ var DoomWad = (function() {
 
   return DoomWad;
 })();
-return DoomWad;
-}));
+DoomWad_.DoomWad = DoomWad;
+});

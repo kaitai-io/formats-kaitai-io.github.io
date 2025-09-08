@@ -15,16 +15,26 @@ import (
  * @see <a href="https://wiki.mozilla.org/Software_Update:MAR">Source</a>
  */
 
+type MozillaMar_BlockIdentifiers int
+const (
+	MozillaMar_BlockIdentifiers__ProductInformation MozillaMar_BlockIdentifiers = 1
+)
+var values_MozillaMar_BlockIdentifiers = map[MozillaMar_BlockIdentifiers]struct{}{1: {}}
+func (v MozillaMar_BlockIdentifiers) isDefined() bool {
+	_, ok := values_MozillaMar_BlockIdentifiers[v]
+	return ok
+}
+
 type MozillaMar_SignatureAlgorithms int
 const (
 	MozillaMar_SignatureAlgorithms__RsaPkcs1Sha1 MozillaMar_SignatureAlgorithms = 1
 	MozillaMar_SignatureAlgorithms__RsaPkcs1Sha384 MozillaMar_SignatureAlgorithms = 2
 )
-
-type MozillaMar_BlockIdentifiers int
-const (
-	MozillaMar_BlockIdentifiers__ProductInformation MozillaMar_BlockIdentifiers = 1
-)
+var values_MozillaMar_SignatureAlgorithms = map[MozillaMar_SignatureAlgorithms]struct{}{1: {}, 2: {}}
+func (v MozillaMar_SignatureAlgorithms) isDefined() bool {
+	_, ok := values_MozillaMar_SignatureAlgorithms[v]
+	return ok
+}
 type MozillaMar struct {
 	Magic []byte
 	OfsIndex uint32
@@ -35,7 +45,7 @@ type MozillaMar struct {
 	AdditionalSections []*MozillaMar_AdditionalSection
 	_io *kaitai.Stream
 	_root *MozillaMar
-	_parent interface{}
+	_parent kaitai.Struct
 	_f_index bool
 	index *MozillaMar_MarIndex
 }
@@ -44,7 +54,11 @@ func NewMozillaMar() *MozillaMar {
 	}
 }
 
-func (this *MozillaMar) Read(io *kaitai.Stream, parent interface{}, root *MozillaMar) (err error) {
+func (this MozillaMar) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *MozillaMar) Read(io *kaitai.Stream, parent kaitai.Struct, root *MozillaMar) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -102,6 +116,7 @@ func (this *MozillaMar) Index() (v *MozillaMar_MarIndex, err error) {
 	if (this._f_index) {
 		return this.index, nil
 	}
+	this._f_index = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
@@ -120,24 +135,27 @@ func (this *MozillaMar) Index() (v *MozillaMar_MarIndex, err error) {
 	if err != nil {
 		return nil, err
 	}
-	this._f_index = true
-	this._f_index = true
 	return this.index, nil
 }
-type MozillaMar_MarIndex struct {
-	LenIndex uint32
-	IndexEntries *MozillaMar_IndexEntries
+type MozillaMar_AdditionalSection struct {
+	LenBlock uint32
+	BlockIdentifier MozillaMar_BlockIdentifiers
+	Bytes interface{}
 	_io *kaitai.Stream
 	_root *MozillaMar
 	_parent *MozillaMar
-	_raw_IndexEntries []byte
+	_raw_Bytes []byte
 }
-func NewMozillaMar_MarIndex() *MozillaMar_MarIndex {
-	return &MozillaMar_MarIndex{
+func NewMozillaMar_AdditionalSection() *MozillaMar_AdditionalSection {
+	return &MozillaMar_AdditionalSection{
 	}
 }
 
-func (this *MozillaMar_MarIndex) Read(io *kaitai.Stream, parent *MozillaMar, root *MozillaMar) (err error) {
+func (this MozillaMar_AdditionalSection) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *MozillaMar_AdditionalSection) Read(io *kaitai.Stream, parent *MozillaMar, root *MozillaMar) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -146,20 +164,35 @@ func (this *MozillaMar_MarIndex) Read(io *kaitai.Stream, parent *MozillaMar, roo
 	if err != nil {
 		return err
 	}
-	this.LenIndex = uint32(tmp9)
-	tmp10, err := this._io.ReadBytes(int(this.LenIndex))
+	this.LenBlock = uint32(tmp9)
+	tmp10, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	tmp10 = tmp10
-	this._raw_IndexEntries = tmp10
-	_io__raw_IndexEntries := kaitai.NewStream(bytes.NewReader(this._raw_IndexEntries))
-	tmp11 := NewMozillaMar_IndexEntries()
-	err = tmp11.Read(_io__raw_IndexEntries, this, this._root)
-	if err != nil {
-		return err
+	this.BlockIdentifier = MozillaMar_BlockIdentifiers(tmp10)
+	switch (this.BlockIdentifier) {
+	case MozillaMar_BlockIdentifiers__ProductInformation:
+		tmp11, err := this._io.ReadBytes(int((this.LenBlock - 4) - 4))
+		if err != nil {
+			return err
+		}
+		tmp11 = tmp11
+		this._raw_Bytes = tmp11
+		_io__raw_Bytes := kaitai.NewStream(bytes.NewReader(this._raw_Bytes))
+		tmp12 := NewMozillaMar_ProductInformationBlock()
+		err = tmp12.Read(_io__raw_Bytes, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Bytes = tmp12
+	default:
+		tmp13, err := this._io.ReadBytes(int((this.LenBlock - 4) - 4))
+		if err != nil {
+			return err
+		}
+		tmp13 = tmp13
+		this._raw_Bytes = tmp13
 	}
-	this.IndexEntries = tmp11
 	return err
 }
 type MozillaMar_IndexEntries struct {
@@ -173,93 +206,30 @@ func NewMozillaMar_IndexEntries() *MozillaMar_IndexEntries {
 	}
 }
 
+func (this MozillaMar_IndexEntries) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *MozillaMar_IndexEntries) Read(io *kaitai.Stream, parent *MozillaMar_MarIndex, root *MozillaMar) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	for i := 1;; i++ {
-		tmp12, err := this._io.EOF()
+	for i := 0;; i++ {
+		tmp14, err := this._io.EOF()
 		if err != nil {
 			return err
 		}
-		if tmp12 {
+		if tmp14 {
 			break
 		}
-		tmp13 := NewMozillaMar_IndexEntry()
-		err = tmp13.Read(this._io, this, this._root)
+		tmp15 := NewMozillaMar_IndexEntry()
+		err = tmp15.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.IndexEntry = append(this.IndexEntry, tmp13)
+		this.IndexEntry = append(this.IndexEntry, tmp15)
 	}
-	return err
-}
-type MozillaMar_Signature struct {
-	Algorithm MozillaMar_SignatureAlgorithms
-	LenSignature uint32
-	Signature []byte
-	_io *kaitai.Stream
-	_root *MozillaMar
-	_parent *MozillaMar
-}
-func NewMozillaMar_Signature() *MozillaMar_Signature {
-	return &MozillaMar_Signature{
-	}
-}
-
-func (this *MozillaMar_Signature) Read(io *kaitai.Stream, parent *MozillaMar, root *MozillaMar) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp14, err := this._io.ReadU4be()
-	if err != nil {
-		return err
-	}
-	this.Algorithm = MozillaMar_SignatureAlgorithms(tmp14)
-	tmp15, err := this._io.ReadU4be()
-	if err != nil {
-		return err
-	}
-	this.LenSignature = uint32(tmp15)
-	tmp16, err := this._io.ReadBytes(int(this.LenSignature))
-	if err != nil {
-		return err
-	}
-	tmp16 = tmp16
-	this.Signature = tmp16
-	return err
-}
-type MozillaMar_ProductInformationBlock struct {
-	MarChannelName string
-	ProductVersion string
-	_io *kaitai.Stream
-	_root *MozillaMar
-	_parent *MozillaMar_AdditionalSection
-}
-func NewMozillaMar_ProductInformationBlock() *MozillaMar_ProductInformationBlock {
-	return &MozillaMar_ProductInformationBlock{
-	}
-}
-
-func (this *MozillaMar_ProductInformationBlock) Read(io *kaitai.Stream, parent *MozillaMar_AdditionalSection, root *MozillaMar) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp17, err := this._io.ReadBytes(int(64))
-	if err != nil {
-		return err
-	}
-	tmp17 = kaitai.BytesTerminate(tmp17, 0, false)
-	this.MarChannelName = string(tmp17)
-	tmp18, err := this._io.ReadBytes(int(32))
-	if err != nil {
-		return err
-	}
-	tmp18 = kaitai.BytesTerminate(tmp18, 0, false)
-	this.ProductVersion = string(tmp18)
 	return err
 }
 type MozillaMar_IndexEntry struct {
@@ -278,37 +248,42 @@ func NewMozillaMar_IndexEntry() *MozillaMar_IndexEntry {
 	}
 }
 
+func (this MozillaMar_IndexEntry) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *MozillaMar_IndexEntry) Read(io *kaitai.Stream, parent *MozillaMar_IndexEntries, root *MozillaMar) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp19, err := this._io.ReadU4be()
+	tmp16, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.OfsContent = uint32(tmp19)
-	tmp20, err := this._io.ReadU4be()
+	this.OfsContent = uint32(tmp16)
+	tmp17, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.LenContent = uint32(tmp20)
-	tmp21, err := this._io.ReadU4be()
+	this.LenContent = uint32(tmp17)
+	tmp18, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.Flags = uint32(tmp21)
-	tmp22, err := this._io.ReadBytesTerm(0, false, true, true)
+	this.Flags = uint32(tmp18)
+	tmp19, err := this._io.ReadBytesTerm(0, false, true, true)
 	if err != nil {
 		return err
 	}
-	this.FileName = string(tmp22)
+	this.FileName = string(tmp19)
 	return err
 }
 func (this *MozillaMar_IndexEntry) Body() (v []byte, err error) {
 	if (this._f_body) {
 		return this.body, nil
 	}
+	this._f_body = true
 	thisIo := this._root._io
 	_pos, err := thisIo.Pos()
 	if err != nil {
@@ -318,75 +293,136 @@ func (this *MozillaMar_IndexEntry) Body() (v []byte, err error) {
 	if err != nil {
 		return nil, err
 	}
-	tmp23, err := thisIo.ReadBytes(int(this.LenContent))
+	tmp20, err := thisIo.ReadBytes(int(this.LenContent))
 	if err != nil {
 		return nil, err
 	}
-	tmp23 = tmp23
-	this.body = tmp23
+	tmp20 = tmp20
+	this.body = tmp20
 	_, err = thisIo.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
-	this._f_body = true
-	this._f_body = true
 	return this.body, nil
 }
 
 /**
  * File permission bits (in standard unix-style format).
  */
-type MozillaMar_AdditionalSection struct {
-	LenBlock uint32
-	BlockIdentifier MozillaMar_BlockIdentifiers
-	Bytes interface{}
+type MozillaMar_MarIndex struct {
+	LenIndex uint32
+	IndexEntries *MozillaMar_IndexEntries
 	_io *kaitai.Stream
 	_root *MozillaMar
 	_parent *MozillaMar
-	_raw_Bytes []byte
+	_raw_IndexEntries []byte
 }
-func NewMozillaMar_AdditionalSection() *MozillaMar_AdditionalSection {
-	return &MozillaMar_AdditionalSection{
+func NewMozillaMar_MarIndex() *MozillaMar_MarIndex {
+	return &MozillaMar_MarIndex{
 	}
 }
 
-func (this *MozillaMar_AdditionalSection) Read(io *kaitai.Stream, parent *MozillaMar, root *MozillaMar) (err error) {
+func (this MozillaMar_MarIndex) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *MozillaMar_MarIndex) Read(io *kaitai.Stream, parent *MozillaMar, root *MozillaMar) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp24, err := this._io.ReadU4be()
+	tmp21, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.LenBlock = uint32(tmp24)
-	tmp25, err := this._io.ReadU4be()
+	this.LenIndex = uint32(tmp21)
+	tmp22, err := this._io.ReadBytes(int(this.LenIndex))
 	if err != nil {
 		return err
 	}
-	this.BlockIdentifier = MozillaMar_BlockIdentifiers(tmp25)
-	switch (this.BlockIdentifier) {
-	case MozillaMar_BlockIdentifiers__ProductInformation:
-		tmp26, err := this._io.ReadBytes(int(((this.LenBlock - 4) - 4)))
-		if err != nil {
-			return err
-		}
-		tmp26 = tmp26
-		this._raw_Bytes = tmp26
-		_io__raw_Bytes := kaitai.NewStream(bytes.NewReader(this._raw_Bytes))
-		tmp27 := NewMozillaMar_ProductInformationBlock()
-		err = tmp27.Read(_io__raw_Bytes, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Bytes = tmp27
-	default:
-		tmp28, err := this._io.ReadBytes(int(((this.LenBlock - 4) - 4)))
-		if err != nil {
-			return err
-		}
-		tmp28 = tmp28
-		this._raw_Bytes = tmp28
+	tmp22 = tmp22
+	this._raw_IndexEntries = tmp22
+	_io__raw_IndexEntries := kaitai.NewStream(bytes.NewReader(this._raw_IndexEntries))
+	tmp23 := NewMozillaMar_IndexEntries()
+	err = tmp23.Read(_io__raw_IndexEntries, this, this._root)
+	if err != nil {
+		return err
 	}
+	this.IndexEntries = tmp23
+	return err
+}
+type MozillaMar_ProductInformationBlock struct {
+	MarChannelName string
+	ProductVersion string
+	_io *kaitai.Stream
+	_root *MozillaMar
+	_parent *MozillaMar_AdditionalSection
+}
+func NewMozillaMar_ProductInformationBlock() *MozillaMar_ProductInformationBlock {
+	return &MozillaMar_ProductInformationBlock{
+	}
+}
+
+func (this MozillaMar_ProductInformationBlock) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *MozillaMar_ProductInformationBlock) Read(io *kaitai.Stream, parent *MozillaMar_AdditionalSection, root *MozillaMar) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp24, err := this._io.ReadBytes(int(64))
+	if err != nil {
+		return err
+	}
+	tmp24 = kaitai.BytesTerminate(tmp24, 0, false)
+	this.MarChannelName = string(tmp24)
+	tmp25, err := this._io.ReadBytes(int(32))
+	if err != nil {
+		return err
+	}
+	tmp25 = kaitai.BytesTerminate(tmp25, 0, false)
+	this.ProductVersion = string(tmp25)
+	return err
+}
+type MozillaMar_Signature struct {
+	Algorithm MozillaMar_SignatureAlgorithms
+	LenSignature uint32
+	Signature []byte
+	_io *kaitai.Stream
+	_root *MozillaMar
+	_parent *MozillaMar
+}
+func NewMozillaMar_Signature() *MozillaMar_Signature {
+	return &MozillaMar_Signature{
+	}
+}
+
+func (this MozillaMar_Signature) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *MozillaMar_Signature) Read(io *kaitai.Stream, parent *MozillaMar, root *MozillaMar) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp26, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.Algorithm = MozillaMar_SignatureAlgorithms(tmp26)
+	tmp27, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.LenSignature = uint32(tmp27)
+	tmp28, err := this._io.ReadBytes(int(this.LenSignature))
+	if err != nil {
+		return err
+	}
+	tmp28 = tmp28
+	this.Signature = tmp28
 	return err
 }

@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -56,8 +56,8 @@ class Asn1Der < Kaitai::Struct::Struct
     49 => :type_tag_set,
   }
   I__TYPE_TAG = TYPE_TAG.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -65,69 +65,34 @@ class Asn1Der < Kaitai::Struct::Struct
     @type_tag = Kaitai::Struct::Stream::resolve_enum(TYPE_TAG, @_io.read_u1)
     @len = LenEncoded.new(@_io, self, @_root)
     case type_tag
-    when :type_tag_printable_string
-      @_raw_body = @_io.read_bytes(len.result)
-      _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = BodyPrintableString.new(_io__raw_body, self, @_root)
-    when :type_tag_sequence_10
-      @_raw_body = @_io.read_bytes(len.result)
-      _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = BodySequence.new(_io__raw_body, self, @_root)
-    when :type_tag_set
-      @_raw_body = @_io.read_bytes(len.result)
-      _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = BodySequence.new(_io__raw_body, self, @_root)
-    when :type_tag_sequence_30
-      @_raw_body = @_io.read_bytes(len.result)
-      _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = BodySequence.new(_io__raw_body, self, @_root)
-    when :type_tag_utf8string
-      @_raw_body = @_io.read_bytes(len.result)
-      _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = BodyUtf8string.new(_io__raw_body, self, @_root)
     when :type_tag_object_id
-      @_raw_body = @_io.read_bytes(len.result)
-      _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = BodyObjectId.new(_io__raw_body, self, @_root)
+      _io_body = @_io.substream(len.result)
+      @body = BodyObjectId.new(_io_body, self, @_root)
+    when :type_tag_printable_string
+      _io_body = @_io.substream(len.result)
+      @body = BodyPrintableString.new(_io_body, self, @_root)
+    when :type_tag_sequence_10
+      _io_body = @_io.substream(len.result)
+      @body = BodySequence.new(_io_body, self, @_root)
+    when :type_tag_sequence_30
+      _io_body = @_io.substream(len.result)
+      @body = BodySequence.new(_io_body, self, @_root)
+    when :type_tag_set
+      _io_body = @_io.substream(len.result)
+      @body = BodySequence.new(_io_body, self, @_root)
+    when :type_tag_utf8string
+      _io_body = @_io.substream(len.result)
+      @body = BodyUtf8string.new(_io_body, self, @_root)
     else
       @body = @_io.read_bytes(len.result)
     end
     self
   end
-  class BodySequence < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @entries = []
-      i = 0
-      while not @_io.eof?
-        @entries << Asn1Der.new(@_io)
-        i += 1
-      end
-      self
-    end
-    attr_reader :entries
-  end
-  class BodyUtf8string < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @str = (@_io.read_bytes_full).force_encoding("UTF-8")
-      self
-    end
-    attr_reader :str
-  end
 
   ##
   # @see https://learn.microsoft.com/en-us/windows/win32/seccertenroll/about-object-identifier Source
   class BodyObjectId < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -139,19 +104,60 @@ class Asn1Der < Kaitai::Struct::Struct
     end
     def first
       return @first unless @first.nil?
-      @first = (first_and_second / 40)
+      @first = first_and_second / 40
       @first
     end
     def second
       return @second unless @second.nil?
-      @second = (first_and_second % 40)
+      @second = first_and_second % 40
       @second
     end
     attr_reader :first_and_second
     attr_reader :rest
   end
+  class BodyPrintableString < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @str = (@_io.read_bytes_full).force_encoding("ASCII").encode('UTF-8')
+      self
+    end
+    attr_reader :str
+  end
+  class BodySequence < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @entries = []
+      i = 0
+      while not @_io.eof?
+        @entries << Asn1Der.new(@_io, self, @_root)
+        i += 1
+      end
+      self
+    end
+    attr_reader :entries
+  end
+  class BodyUtf8string < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @str = (@_io.read_bytes_full).force_encoding("UTF-8")
+      self
+    end
+    attr_reader :str
+  end
   class LenEncoded < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -174,18 +180,6 @@ class Asn1Der < Kaitai::Struct::Struct
     attr_reader :b1
     attr_reader :int2
     attr_reader :int1
-  end
-  class BodyPrintableString < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @str = (@_io.read_bytes_full).force_encoding("ASCII")
-      self
-    end
-    attr_reader :str
   end
   attr_reader :type_tag
   attr_reader :len

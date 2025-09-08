@@ -58,7 +58,7 @@ proc read*(_: typedesc[VlqBase128Be], io: KaitaiStream, root: KaitaiStruct, pare
 proc last(this: VlqBase128Be): int = 
   if this.lastInstFlag:
     return this.lastInst
-  let lastInstExpr = int((len(this.groups) - 1))
+  let lastInstExpr = int(len(this.groups) - 1)
   this.lastInst = lastInstExpr
   this.lastInstFlag = true
   return this.lastInst
@@ -70,7 +70,7 @@ proc value(this: VlqBase128Be): uint64 =
   ]##
   if this.valueInstFlag:
     return this.valueInst
-  let valueInstExpr = uint64((uint64((((((((this.groups[this.last].value + (if this.last >= 1: (this.groups[(this.last - 1)].value shl 7) else: 0)) + (if this.last >= 2: (this.groups[(this.last - 2)].value shl 14) else: 0)) + (if this.last >= 3: (this.groups[(this.last - 3)].value shl 21) else: 0)) + (if this.last >= 4: (this.groups[(this.last - 4)].value shl 28) else: 0)) + (if this.last >= 5: (this.groups[(this.last - 5)].value shl 35) else: 0)) + (if this.last >= 6: (this.groups[(this.last - 6)].value shl 42) else: 0)) + (if this.last >= 7: (this.groups[(this.last - 7)].value shl 49) else: 0)))))
+  let valueInstExpr = uint64((uint64(((((((this.groups[this.last].value + (if this.last >= 1: this.groups[this.last - 1].value shl 7 else: 0)) + (if this.last >= 2: this.groups[this.last - 2].value shl 14 else: 0)) + (if this.last >= 3: this.groups[this.last - 3].value shl 21 else: 0)) + (if this.last >= 4: this.groups[this.last - 4].value shl 28 else: 0)) + (if this.last >= 5: this.groups[this.last - 5].value shl 35 else: 0)) + (if this.last >= 6: this.groups[this.last - 6].value shl 42 else: 0)) + (if this.last >= 7: this.groups[this.last - 7].value shl 49 else: 0))))
   this.valueInst = valueInstExpr
   this.valueInstFlag = true
   return this.valueInst

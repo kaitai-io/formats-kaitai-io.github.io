@@ -74,26 +74,8 @@ function RtpPacket:_read()
   if self.has_extension then
     self.header_extension = RtpPacket.HeaderExtention(self._io, self, self._root)
   end
-  self.data = self._io:read_bytes(((self._io:size() - self._io:pos()) - self.len_padding))
+  self.data = self._io:read_bytes((self._io:size() - self._io:pos()) - self.len_padding)
   self.padding = self._io:read_bytes(self.len_padding)
-end
-
--- 
--- If padding bit is enabled, last byte of data contains number of
--- bytes appended to the payload as padding.
-RtpPacket.property.len_padding_if_exists = {}
-function RtpPacket.property.len_padding_if_exists:get()
-  if self._m_len_padding_if_exists ~= nil then
-    return self._m_len_padding_if_exists
-  end
-
-  if self.has_padding then
-    local _pos = self._io:pos()
-    self._io:seek((self._io:size() - 1))
-    self._m_len_padding_if_exists = self._io:read_u1()
-    self._io:seek(_pos)
-  end
-  return self._m_len_padding_if_exists
 end
 
 -- 
@@ -109,6 +91,24 @@ function RtpPacket.property.len_padding:get()
 end
 
 -- 
+-- If padding bit is enabled, last byte of data contains number of
+-- bytes appended to the payload as padding.
+RtpPacket.property.len_padding_if_exists = {}
+function RtpPacket.property.len_padding_if_exists:get()
+  if self._m_len_padding_if_exists ~= nil then
+    return self._m_len_padding_if_exists
+  end
+
+  if self.has_padding then
+    local _pos = self._io:pos()
+    self._io:seek(self._io:size() - 1)
+    self._m_len_padding_if_exists = self._io:read_u1()
+    self._io:seek(_pos)
+  end
+  return self._m_len_padding_if_exists
+end
+
+-- 
 -- Payload without padding.
 
 RtpPacket.HeaderExtention = class.class(KaitaiStruct)
@@ -116,7 +116,7 @@ RtpPacket.HeaderExtention = class.class(KaitaiStruct)
 function RtpPacket.HeaderExtention:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 

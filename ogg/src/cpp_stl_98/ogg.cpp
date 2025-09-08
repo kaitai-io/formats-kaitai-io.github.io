@@ -5,7 +5,7 @@
 
 ogg_t::ogg_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, ogg_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     m_pages = 0;
 
     try {
@@ -56,12 +56,12 @@ ogg_t::page_t::page_t(kaitai::kstream* p__io, ogg_t* p__parent, ogg_t* p__root) 
 
 void ogg_t::page_t::_read() {
     m_sync_code = m__io->read_bytes(4);
-    if (!(sync_code() == std::string("\x4F\x67\x67\x53", 4))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\x4F\x67\x67\x53", 4), sync_code(), _io(), std::string("/types/page/seq/0"));
+    if (!(m_sync_code == std::string("\x4F\x67\x67\x53", 4))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\x4F\x67\x67\x53", 4), m_sync_code, m__io, std::string("/types/page/seq/0"));
     }
     m_version = m__io->read_bytes(1);
-    if (!(version() == std::string("\x00", 1))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\x00", 1), version(), _io(), std::string("/types/page/seq/1"));
+    if (!(m_version == std::string("\x00", 1))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\x00", 1), m_version, m__io, std::string("/types/page/seq/1"));
     }
     m_reserved1 = m__io->read_bits_int_be(5);
     m_is_end_of_stream = m__io->read_bits_int_be(1);

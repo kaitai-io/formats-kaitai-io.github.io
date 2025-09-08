@@ -26,15 +26,15 @@
 
 namespace {
     class RubyMarshal extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \RubyMarshal $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\RubyMarshal $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_version = $this->_io->readBytes(2);
-            if (!($this->version() == "\x04\x08")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x04\x08", $this->version(), $this->_io(), "/seq/0");
+            if (!($this->_m_version == "\x04\x08")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x04\x08", $this->_m_version, $this->_io, "/seq/0");
             }
             $this->_m_records = new \RubyMarshal\Record($this->_io, $this, $this->_root);
         }
@@ -46,30 +46,8 @@ namespace {
 }
 
 namespace RubyMarshal {
-    class RubyArray extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \RubyMarshal\Record $_parent = null, \RubyMarshal $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_numElements = new \RubyMarshal\PackedInt($this->_io, $this, $this->_root);
-            $this->_m_elements = [];
-            $n = $this->numElements()->value();
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_elements[] = new \RubyMarshal\Record($this->_io, $this, $this->_root);
-            }
-        }
-        protected $_m_numElements;
-        protected $_m_elements;
-        public function numElements() { return $this->_m_numElements; }
-        public function elements() { return $this->_m_elements; }
-    }
-}
-
-namespace RubyMarshal {
     class Bignum extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \RubyMarshal\Record $_parent = null, \RubyMarshal $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\RubyMarshal\Record $_parent = null, ?\RubyMarshal $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -77,7 +55,7 @@ namespace RubyMarshal {
         private function _read() {
             $this->_m_sign = $this->_io->readU1();
             $this->_m_lenDiv2 = new \RubyMarshal\PackedInt($this->_io, $this, $this->_root);
-            $this->_m_body = $this->_io->readBytes(($this->lenDiv2()->value() * 2));
+            $this->_m_body = $this->_io->readBytes($this->lenDiv2()->value() * 2);
         }
         protected $_m_sign;
         protected $_m_lenDiv2;
@@ -101,53 +79,27 @@ namespace RubyMarshal {
 }
 
 namespace RubyMarshal {
-    class RubyStruct extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \RubyMarshal\Record $_parent = null, \RubyMarshal $_root = null) {
+    class InstanceVar extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\RubyMarshal\Record $_parent = null, ?\RubyMarshal $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_name = new \RubyMarshal\Record($this->_io, $this, $this->_root);
-            $this->_m_numMembers = new \RubyMarshal\PackedInt($this->_io, $this, $this->_root);
-            $this->_m_members = [];
-            $n = $this->numMembers()->value();
+            $this->_m_obj = new \RubyMarshal\Record($this->_io, $this, $this->_root);
+            $this->_m_numVars = new \RubyMarshal\PackedInt($this->_io, $this, $this->_root);
+            $this->_m_vars = [];
+            $n = $this->numVars()->value();
             for ($i = 0; $i < $n; $i++) {
-                $this->_m_members[] = new \RubyMarshal\Pair($this->_io, $this, $this->_root);
+                $this->_m_vars[] = new \RubyMarshal\Pair($this->_io, $this, $this->_root);
             }
         }
-        protected $_m_name;
-        protected $_m_numMembers;
-        protected $_m_members;
-
-        /**
-         * Symbol containing the name of the struct.
-         */
-        public function name() { return $this->_m_name; }
-
-        /**
-         * Number of members in a struct
-         */
-        public function numMembers() { return $this->_m_numMembers; }
-        public function members() { return $this->_m_members; }
-    }
-}
-
-namespace RubyMarshal {
-    class RubySymbol extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \RubyMarshal\Record $_parent = null, \RubyMarshal $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_len = new \RubyMarshal\PackedInt($this->_io, $this, $this->_root);
-            $this->_m_name = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->len()->value()), "UTF-8");
-        }
-        protected $_m_len;
-        protected $_m_name;
-        public function len() { return $this->_m_len; }
-        public function name() { return $this->_m_name; }
+        protected $_m_obj;
+        protected $_m_numVars;
+        protected $_m_vars;
+        public function obj() { return $this->_m_obj; }
+        public function numVars() { return $this->_m_numVars; }
+        public function vars() { return $this->_m_vars; }
     }
 }
 
@@ -181,7 +133,7 @@ namespace RubyMarshal {
 
 namespace RubyMarshal {
     class PackedInt extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \RubyMarshal $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\RubyMarshal $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -189,11 +141,11 @@ namespace RubyMarshal {
         private function _read() {
             $this->_m_code = $this->_io->readU1();
             switch ($this->code()) {
-                case 4:
-                    $this->_m_encoded = $this->_io->readU4le();
-                    break;
                 case 1:
                     $this->_m_encoded = $this->_io->readU1();
+                    break;
+                case 2:
+                    $this->_m_encoded = $this->_io->readU2le();
                     break;
                 case 252:
                     $this->_m_encoded = $this->_io->readU4le();
@@ -201,24 +153,24 @@ namespace RubyMarshal {
                 case 253:
                     $this->_m_encoded = $this->_io->readU2le();
                     break;
-                case 3:
-                    $this->_m_encoded = $this->_io->readU2le();
-                    break;
-                case 2:
+                case 254:
                     $this->_m_encoded = $this->_io->readU2le();
                     break;
                 case 255:
                     $this->_m_encoded = $this->_io->readU1();
                     break;
-                case 254:
+                case 3:
                     $this->_m_encoded = $this->_io->readU2le();
+                    break;
+                case 4:
+                    $this->_m_encoded = $this->_io->readU4le();
                     break;
             }
             switch ($this->code()) {
-                case 3:
+                case 253:
                     $this->_m_encoded2 = $this->_io->readU1();
                     break;
-                case 253:
+                case 3:
                     $this->_m_encoded2 = $this->_io->readU1();
                     break;
             }
@@ -234,7 +186,7 @@ namespace RubyMarshal {
         public function value() {
             if ($this->_m_value !== null)
                 return $this->_m_value;
-            $this->_m_value = ($this->isImmediate() ? ($this->code() < 128 ? ($this->code() - 5) : (4 - (~($this->code()) & 127))) : ($this->code() == 0 ? 0 : ($this->code() == 255 ? ($this->encoded() - 256) : ($this->code() == 254 ? ($this->encoded() - 65536) : ($this->code() == 253 ? ((($this->encoded2() << 16) | $this->encoded()) - 16777216) : ($this->code() == 3 ? (($this->encoded2() << 16) | $this->encoded()) : $this->encoded()))))));
+            $this->_m_value = ($this->isImmediate() ? ($this->code() < 128 ? $this->code() - 5 : 4 - (~($this->code()) & 127)) : ($this->code() == 0 ? 0 : ($this->code() == 255 ? $this->encoded() - 256 : ($this->code() == 254 ? $this->encoded() - 65536 : ($this->code() == 253 ? ($this->encoded2() << 16 | $this->encoded()) - 16777216 : ($this->code() == 3 ? $this->encoded2() << 16 | $this->encoded() : $this->encoded()))))));
             return $this->_m_value;
         }
         protected $_m_code;
@@ -253,7 +205,7 @@ namespace RubyMarshal {
 
 namespace RubyMarshal {
     class Pair extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \RubyMarshal $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\RubyMarshal $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -269,31 +221,6 @@ namespace RubyMarshal {
     }
 }
 
-namespace RubyMarshal {
-    class InstanceVar extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \RubyMarshal\Record $_parent = null, \RubyMarshal $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_obj = new \RubyMarshal\Record($this->_io, $this, $this->_root);
-            $this->_m_numVars = new \RubyMarshal\PackedInt($this->_io, $this, $this->_root);
-            $this->_m_vars = [];
-            $n = $this->numVars()->value();
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_vars[] = new \RubyMarshal\Pair($this->_io, $this, $this->_root);
-            }
-        }
-        protected $_m_obj;
-        protected $_m_numVars;
-        protected $_m_vars;
-        public function obj() { return $this->_m_obj; }
-        public function numVars() { return $this->_m_numVars; }
-        public function vars() { return $this->_m_vars; }
-    }
-}
-
 /**
  * Each record starts with a single byte that determines its type
  * (`code`) and contents. If necessary, additional info as parsed
@@ -302,7 +229,7 @@ namespace RubyMarshal {
 
 namespace RubyMarshal {
     class Record extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \RubyMarshal $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\RubyMarshal $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -310,34 +237,34 @@ namespace RubyMarshal {
         private function _read() {
             $this->_m_code = $this->_io->readU1();
             switch ($this->code()) {
-                case \RubyMarshal\Codes::PACKED_INT:
-                    $this->_m_body = new \RubyMarshal\PackedInt($this->_io, $this, $this->_root);
-                    break;
                 case \RubyMarshal\Codes::BIGNUM:
                     $this->_m_body = new \RubyMarshal\Bignum($this->_io, $this, $this->_root);
-                    break;
-                case \RubyMarshal\Codes::RUBY_ARRAY:
-                    $this->_m_body = new \RubyMarshal\RubyArray($this->_io, $this, $this->_root);
-                    break;
-                case \RubyMarshal\Codes::RUBY_SYMBOL_LINK:
-                    $this->_m_body = new \RubyMarshal\PackedInt($this->_io, $this, $this->_root);
-                    break;
-                case \RubyMarshal\Codes::RUBY_STRUCT:
-                    $this->_m_body = new \RubyMarshal\RubyStruct($this->_io, $this, $this->_root);
-                    break;
-                case \RubyMarshal\Codes::RUBY_STRING:
-                    $this->_m_body = new \RubyMarshal\RubyString($this->_io, $this, $this->_root);
                     break;
                 case \RubyMarshal\Codes::INSTANCE_VAR:
                     $this->_m_body = new \RubyMarshal\InstanceVar($this->_io, $this, $this->_root);
                     break;
+                case \RubyMarshal\Codes::PACKED_INT:
+                    $this->_m_body = new \RubyMarshal\PackedInt($this->_io, $this, $this->_root);
+                    break;
+                case \RubyMarshal\Codes::RUBY_ARRAY:
+                    $this->_m_body = new \RubyMarshal\RubyArray($this->_io, $this, $this->_root);
+                    break;
                 case \RubyMarshal\Codes::RUBY_HASH:
                     $this->_m_body = new \RubyMarshal\RubyHash($this->_io, $this, $this->_root);
+                    break;
+                case \RubyMarshal\Codes::RUBY_OBJECT_LINK:
+                    $this->_m_body = new \RubyMarshal\PackedInt($this->_io, $this, $this->_root);
+                    break;
+                case \RubyMarshal\Codes::RUBY_STRING:
+                    $this->_m_body = new \RubyMarshal\RubyString($this->_io, $this, $this->_root);
+                    break;
+                case \RubyMarshal\Codes::RUBY_STRUCT:
+                    $this->_m_body = new \RubyMarshal\RubyStruct($this->_io, $this, $this->_root);
                     break;
                 case \RubyMarshal\Codes::RUBY_SYMBOL:
                     $this->_m_body = new \RubyMarshal\RubySymbol($this->_io, $this, $this->_root);
                     break;
-                case \RubyMarshal\Codes::RUBY_OBJECT_LINK:
+                case \RubyMarshal\Codes::RUBY_SYMBOL_LINK:
                     $this->_m_body = new \RubyMarshal\PackedInt($this->_io, $this, $this->_root);
                     break;
             }
@@ -350,8 +277,30 @@ namespace RubyMarshal {
 }
 
 namespace RubyMarshal {
+    class RubyArray extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\RubyMarshal\Record $_parent = null, ?\RubyMarshal $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_numElements = new \RubyMarshal\PackedInt($this->_io, $this, $this->_root);
+            $this->_m_elements = [];
+            $n = $this->numElements()->value();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_elements[] = new \RubyMarshal\Record($this->_io, $this, $this->_root);
+            }
+        }
+        protected $_m_numElements;
+        protected $_m_elements;
+        public function numElements() { return $this->_m_numElements; }
+        public function elements() { return $this->_m_elements; }
+    }
+}
+
+namespace RubyMarshal {
     class RubyHash extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \RubyMarshal\Record $_parent = null, \RubyMarshal $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\RubyMarshal\Record $_parent = null, ?\RubyMarshal $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -373,7 +322,7 @@ namespace RubyMarshal {
 
 namespace RubyMarshal {
     class RubyString extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \RubyMarshal\Record $_parent = null, \RubyMarshal $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\RubyMarshal\Record $_parent = null, ?\RubyMarshal $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -386,6 +335,57 @@ namespace RubyMarshal {
         protected $_m_body;
         public function len() { return $this->_m_len; }
         public function body() { return $this->_m_body; }
+    }
+}
+
+namespace RubyMarshal {
+    class RubyStruct extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\RubyMarshal\Record $_parent = null, ?\RubyMarshal $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_name = new \RubyMarshal\Record($this->_io, $this, $this->_root);
+            $this->_m_numMembers = new \RubyMarshal\PackedInt($this->_io, $this, $this->_root);
+            $this->_m_members = [];
+            $n = $this->numMembers()->value();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_members[] = new \RubyMarshal\Pair($this->_io, $this, $this->_root);
+            }
+        }
+        protected $_m_name;
+        protected $_m_numMembers;
+        protected $_m_members;
+
+        /**
+         * Symbol containing the name of the struct.
+         */
+        public function name() { return $this->_m_name; }
+
+        /**
+         * Number of members in a struct
+         */
+        public function numMembers() { return $this->_m_numMembers; }
+        public function members() { return $this->_m_members; }
+    }
+}
+
+namespace RubyMarshal {
+    class RubySymbol extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\RubyMarshal\Record $_parent = null, ?\RubyMarshal $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_len = new \RubyMarshal\PackedInt($this->_io, $this, $this->_root);
+            $this->_m_name = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->len()->value()), "UTF-8");
+        }
+        protected $_m_len;
+        protected $_m_name;
+        public function len() { return $this->_m_len; }
+        public function name() { return $this->_m_name; }
     }
 }
 
@@ -404,5 +404,11 @@ namespace RubyMarshal {
         const PACKED_INT = 105;
         const BIGNUM = 108;
         const RUBY_HASH = 123;
+
+        private const _VALUES = [34 => true, 48 => true, 58 => true, 59 => true, 64 => true, 70 => true, 73 => true, 83 => true, 84 => true, 91 => true, 105 => true, 108 => true, 123 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

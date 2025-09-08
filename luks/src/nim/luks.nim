@@ -63,7 +63,7 @@ proc payload(this: Luks): seq[byte] =
   if this.payloadInstFlag:
     return this.payloadInst
   let pos = this.io.pos()
-  this.io.seek(int((this.partitionHeader.payloadOffset * 512)))
+  this.io.seek(int(this.partitionHeader.payloadOffset * 512))
   let payloadInstExpr = this.io.readBytesFull()
   this.payloadInst = payloadInstExpr
   this.io.seek(pos)
@@ -133,8 +133,8 @@ proc keyMaterial(this: Luks_PartitionHeader_KeySlot): seq[byte] =
   if this.keyMaterialInstFlag:
     return this.keyMaterialInst
   let pos = this.io.pos()
-  this.io.seek(int((this.startSectorOfKeyMaterial * 512)))
-  let keyMaterialInstExpr = this.io.readBytes(int((this.parent.numberOfKeyBytes * this.numberOfAntiForensicStripes)))
+  this.io.seek(int(this.startSectorOfKeyMaterial * 512))
+  let keyMaterialInstExpr = this.io.readBytes(int(this.parent.numberOfKeyBytes * this.numberOfAntiForensicStripes))
   this.keyMaterialInst = keyMaterialInstExpr
   this.io.seek(pos)
   this.keyMaterialInstFlag = true

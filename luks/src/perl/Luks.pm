@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Encode;
 
 ########################################################################
@@ -25,7 +25,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -42,7 +42,7 @@ sub payload {
     my ($self) = @_;
     return $self->{payload} if ($self->{payload});
     my $_pos = $self->{_io}->pos();
-    $self->{_io}->seek(($self->partition_header()->payload_offset() * 512));
+    $self->{_io}->seek($self->partition_header()->payload_offset() * 512);
     $self->{payload} = $self->{_io}->read_bytes_full();
     $self->{_io}->seek($_pos);
     return $self->{payload};
@@ -73,7 +73,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -94,7 +94,7 @@ sub _read {
     $self->{master_key_salt_parameter} = $self->{_io}->read_bytes(32);
     $self->{master_key_iterations_parameter} = $self->{_io}->read_u4be();
     $self->{uuid} = Encode::decode("ASCII", $self->{_io}->read_bytes(40));
-    $self->{key_slots} = ();
+    $self->{key_slots} = [];
     my $n_key_slots = 8;
     for (my $i = 0; $i < $n_key_slots; $i++) {
         push @{$self->{key_slots}}, Luks::PartitionHeader::KeySlot->new($self->{_io}, $self, $self->{_root});
@@ -184,7 +184,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -205,8 +205,8 @@ sub key_material {
     my ($self) = @_;
     return $self->{key_material} if ($self->{key_material});
     my $_pos = $self->{_io}->pos();
-    $self->{_io}->seek(($self->start_sector_of_key_material() * 512));
-    $self->{key_material} = $self->{_io}->read_bytes(($self->_parent()->number_of_key_bytes() * $self->number_of_anti_forensic_stripes()));
+    $self->{_io}->seek($self->start_sector_of_key_material() * 512);
+    $self->{key_material} = $self->{_io}->read_bytes($self->_parent()->number_of_key_bytes() * $self->number_of_anti_forensic_stripes());
     $self->{_io}->seek($_pos);
     return $self->{key_material};
 }

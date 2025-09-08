@@ -36,7 +36,7 @@ end
 
 function Xar:_read()
   self.header_prefix = Xar.FileHeaderPrefix(self._io, self, self._root)
-  self._raw_header = self._io:read_bytes((self.header_prefix.len_header - 6))
+  self._raw_header = self._io:read_bytes(self.header_prefix.len_header - 6)
   local _io = KaitaiStream(stringstream(self._raw_header))
   self.header = Xar.FileHeader(_io, self, self._root)
   self._raw__raw_toc = self._io:read_bytes(self.header.len_toc_compressed)
@@ -62,39 +62,19 @@ end
 -- 
 -- zlib compressed XML further describing the content of the archive.
 
-Xar.FileHeaderPrefix = class.class(KaitaiStruct)
-
-function Xar.FileHeaderPrefix:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Xar.FileHeaderPrefix:_read()
-  self.magic = self._io:read_bytes(4)
-  if not(self.magic == "\120\097\114\033") then
-    error("not equal, expected " ..  "\120\097\114\033" .. ", but got " .. self.magic)
-  end
-  self.len_header = self._io:read_u2be()
-end
-
--- 
--- internal; access `_root.header.len_header` instead.
-
 Xar.FileHeader = class.class(KaitaiStruct)
 
 function Xar.FileHeader:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function Xar.FileHeader:_read()
   self.version = self._io:read_u2be()
   if not(self.version == 1) then
-    error("not equal, expected " ..  1 .. ", but got " .. self.version)
+    error("not equal, expected " .. 1 .. ", but got " .. self.version)
   end
   self.len_toc_compressed = self._io:read_u8be()
   self.toc_length_uncompressed = self._io:read_u8be()
@@ -145,7 +125,7 @@ function Xar.FileHeader.property.has_checksum_alg_name:get()
     return self._m_has_checksum_alg_name
   end
 
-  self._m_has_checksum_alg_name =  ((self.checksum_algorithm_int == self._root.checksum_algorithm_other) and (self.len_header >= 32) and ((self.len_header % 4) == 0)) 
+  self._m_has_checksum_alg_name =  ((self.checksum_algorithm_int == self._root.checksum_algorithm_other) and (self.len_header >= 32) and (self.len_header % 4 == 0)) 
   return self._m_has_checksum_alg_name
 end
 
@@ -164,12 +144,32 @@ end
 -- 
 -- internal; access `checksum_algorithm_name` instead.
 
+Xar.FileHeaderPrefix = class.class(KaitaiStruct)
+
+function Xar.FileHeaderPrefix:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Xar.FileHeaderPrefix:_read()
+  self.magic = self._io:read_bytes(4)
+  if not(self.magic == "\120\097\114\033") then
+    error("not equal, expected " .. "\120\097\114\033" .. ", but got " .. self.magic)
+  end
+  self.len_header = self._io:read_u2be()
+end
+
+-- 
+-- internal; access `_root.header.len_header` instead.
+
 Xar.TocType = class.class(KaitaiStruct)
 
 function Xar.TocType:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 

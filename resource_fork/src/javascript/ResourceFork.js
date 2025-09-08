@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream', './BytesWithIo'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./BytesWithIo'));
+    define(['exports', 'kaitai-struct/KaitaiStream', './BytesWithIo'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'), require('./BytesWithIo'));
   } else {
-    root.ResourceFork = factory(root.KaitaiStream, root.BytesWithIo);
+    factory(root.ResourceFork || (root.ResourceFork = {}), root.KaitaiStream, root.BytesWithIo || (root.BytesWithIo = {}));
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, BytesWithIo) {
+})(typeof self !== 'undefined' ? self : this, function (ResourceFork_, KaitaiStream, BytesWithIo_) {
 /**
  * The data format of Macintosh resource forks,
  * used on Classic Mac OS and Mac OS X/macOS to store additional structured data along with a file's main data (the data fork).
@@ -65,6 +65,38 @@ var ResourceFork = (function() {
   }
 
   /**
+   * A resource data block,
+   * as stored in the resource data area.
+   * 
+   * Each data block stores the data contained in a resource,
+   * along with its length.
+   */
+
+  var DataBlock = ResourceFork.DataBlock = (function() {
+    function DataBlock(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    DataBlock.prototype._read = function() {
+      this.lenData = this._io.readU4be();
+      this.data = this._io.readBytes(this.lenData);
+    }
+
+    /**
+     * The length of the resource data stored in this block.
+     */
+
+    /**
+     * The data stored in this block.
+     */
+
+    return DataBlock;
+  })();
+
+  /**
    * Resource file header,
    * containing the offsets and lengths of the resource data area and resource map.
    */
@@ -73,7 +105,7 @@ var ResourceFork = (function() {
     function FileHeader(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -118,38 +150,6 @@ var ResourceFork = (function() {
   })();
 
   /**
-   * A resource data block,
-   * as stored in the resource data area.
-   * 
-   * Each data block stores the data contained in a resource,
-   * along with its length.
-   */
-
-  var DataBlock = ResourceFork.DataBlock = (function() {
-    function DataBlock(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    DataBlock.prototype._read = function() {
-      this.lenData = this._io.readU4be();
-      this.data = this._io.readBytes(this.lenData);
-    }
-
-    /**
-     * The length of the resource data stored in this block.
-     */
-
-    /**
-     * The data stored in this block.
-     */
-
-    return DataBlock;
-  })();
-
-  /**
    * Resource map,
    * containing information about the resources in the file and where they are located in the data area.
    */
@@ -158,7 +158,7 @@ var ResourceFork = (function() {
     function ResourceMap(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -185,7 +185,7 @@ var ResourceFork = (function() {
       function FileAttributes(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -272,6 +272,63 @@ var ResourceFork = (function() {
     })();
 
     /**
+     * A resource name,
+     * as stored in the resource name storage area in the resource map.
+     * 
+     * The resource names are not required to appear in any particular order.
+     * There may be unused space between and around resource names,
+     * but in practice they are often contiguous.
+     */
+
+    var Name = ResourceMap.Name = (function() {
+      function Name(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+
+        this._read();
+      }
+      Name.prototype._read = function() {
+        this.lenValue = this._io.readU1();
+        this.value = this._io.readBytes(this.lenValue);
+      }
+
+      /**
+       * The length of the resource name, in bytes.
+       */
+
+      /**
+       * The resource name.
+       * 
+       * This field is exposed as a byte array,
+       * because there is no universal encoding for resource names.
+       * Most Classic Mac software does not deal with encodings explicitly and instead assumes that all strings,
+       * including resource names,
+       * use the system encoding,
+       * which varies depending on the system language.
+       * This means that resource names can use different encodings depending on what system language they were created with.
+       * 
+       * Many resource names are plain ASCII,
+       * meaning that the encoding often does not matter
+       * (because all Mac OS encodings are ASCII-compatible).
+       * For non-ASCII resource names,
+       * the most common encoding is perhaps MacRoman
+       * (used for English and other Western languages),
+       * but other encodings are also sometimes used,
+       * especially for software in non-Western languages.
+       * 
+       * There is no requirement that all names in a single resource file use the same encoding.
+       * For example,
+       * localized software may have some (but not all) of its resource names translated.
+       * For non-Western languages,
+       * this can lead to some resource names using MacRoman,
+       * and others using a different encoding.
+       */
+
+      return Name;
+    })();
+
+    /**
      * Resource type list and storage area for resource reference lists in the resource map.
      * 
      * The two parts are combined into a single type here for technical reasons:
@@ -284,7 +341,7 @@ var ResourceFork = (function() {
       function TypeListAndReferenceLists(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -292,127 +349,6 @@ var ResourceFork = (function() {
         this.typeList = new TypeList(this._io, this, this._root);
         this.referenceLists = this._io.readBytesFull();
       }
-
-      /**
-       * Resource type list in the resource map.
-       */
-
-      var TypeList = TypeListAndReferenceLists.TypeList = (function() {
-        function TypeList(_io, _parent, _root) {
-          this._io = _io;
-          this._parent = _parent;
-          this._root = _root || this;
-
-          this._read();
-        }
-        TypeList.prototype._read = function() {
-          this.numTypesM1 = this._io.readU2be();
-          this.entries = [];
-          for (var i = 0; i < this.numTypes; i++) {
-            this.entries.push(new TypeListEntry(this._io, this, this._root));
-          }
-        }
-
-        /**
-         * A single entry in the resource type list.
-         * 
-         * Each entry corresponds to exactly one resource reference list.
-         */
-
-        var TypeListEntry = TypeList.TypeListEntry = (function() {
-          function TypeListEntry(_io, _parent, _root) {
-            this._io = _io;
-            this._parent = _parent;
-            this._root = _root || this;
-
-            this._read();
-          }
-          TypeListEntry.prototype._read = function() {
-            this.type = this._io.readBytes(4);
-            this.numReferencesM1 = this._io.readU2be();
-            this.ofsReferenceList = this._io.readU2be();
-          }
-
-          /**
-           * The number of resources in the reference list for this type.
-           */
-          Object.defineProperty(TypeListEntry.prototype, 'numReferences', {
-            get: function() {
-              if (this._m_numReferences !== undefined)
-                return this._m_numReferences;
-              this._m_numReferences = KaitaiStream.mod((this.numReferencesM1 + 1), 65536);
-              return this._m_numReferences;
-            }
-          });
-
-          /**
-           * The resource reference list for this resource type.
-           */
-          Object.defineProperty(TypeListEntry.prototype, 'referenceList', {
-            get: function() {
-              if (this._m_referenceList !== undefined)
-                return this._m_referenceList;
-              var io = this._parent._parent._io;
-              var _pos = io.pos;
-              io.seek(this.ofsReferenceList);
-              this._m_referenceList = new ReferenceList(io, this, this._root, this.numReferences);
-              io.seek(_pos);
-              return this._m_referenceList;
-            }
-          });
-
-          /**
-           * The four-character type code of the resources in the reference list.
-           */
-
-          /**
-           * The number of resources in the reference list for this type,
-           * minus one.
-           * 
-           * Empty reference lists should never exist.
-           */
-
-          /**
-           * Offset of the resource reference list for this resource type,
-           * from the start of the resource type list.
-           * 
-           * Although the offset is relative to the start of the type list,
-           * it should never point into the type list itself,
-           * but into the reference list storage area that directly follows it.
-           * That is,
-           * it should always be at least `_parent._sizeof`.
-           */
-
-          return TypeListEntry;
-        })();
-
-        /**
-         * The number of resource types in this list.
-         */
-        Object.defineProperty(TypeList.prototype, 'numTypes', {
-          get: function() {
-            if (this._m_numTypes !== undefined)
-              return this._m_numTypes;
-            this._m_numTypes = KaitaiStream.mod((this.numTypesM1 + 1), 65536);
-            return this._m_numTypes;
-          }
-        });
-
-        /**
-         * The number of resource types in this list,
-         * minus one.
-         * 
-         * If the resource list is empty,
-         * the value of this field is `0xffff`,
-         * i. e. `-1` truncated to a 16-bit unsigned integer.
-         */
-
-        /**
-         * Entries in the resource type list.
-         */
-
-        return TypeList;
-      })();
 
       /**
        * A resource reference list,
@@ -426,7 +362,7 @@ var ResourceFork = (function() {
         function ReferenceList(_io, _parent, _root, numReferences) {
           this._io = _io;
           this._parent = _parent;
-          this._root = _root || this;
+          this._root = _root;
           this.numReferences = numReferences;
 
           this._read();
@@ -446,7 +382,7 @@ var ResourceFork = (function() {
           function Reference(_io, _parent, _root) {
             this._io = _io;
             this._parent = _parent;
-            this._root = _root || this;
+            this._root = _root;
 
             this._read();
           }
@@ -470,7 +406,7 @@ var ResourceFork = (function() {
             function Attributes(_io, _parent, _root) {
               this._io = _io;
               this._parent = _parent;
-              this._root = _root || this;
+              this._root = _root;
 
               this._read();
             }
@@ -603,6 +539,22 @@ var ResourceFork = (function() {
           })();
 
           /**
+           * The data block containing the data for the resource described by this reference.
+           */
+          Object.defineProperty(Reference.prototype, 'dataBlock', {
+            get: function() {
+              if (this._m_dataBlock !== undefined)
+                return this._m_dataBlock;
+              var io = this._root.dataBlocksWithIo._io;
+              var _pos = io.pos;
+              io.seek(this.ofsDataBlock);
+              this._m_dataBlock = new DataBlock(io, this, this._root);
+              io.seek(_pos);
+              return this._m_dataBlock;
+            }
+          });
+
+          /**
            * The name (if any) of the resource described by this reference.
            */
           Object.defineProperty(Reference.prototype, 'name', {
@@ -617,22 +569,6 @@ var ResourceFork = (function() {
                 io.seek(_pos);
               }
               return this._m_name;
-            }
-          });
-
-          /**
-           * The data block containing the data for the resource described by this reference.
-           */
-          Object.defineProperty(Reference.prototype, 'dataBlock', {
-            get: function() {
-              if (this._m_dataBlock !== undefined)
-                return this._m_dataBlock;
-              var io = this._root.dataBlocksWithIo._io;
-              var _pos = io.pos;
-              io.seek(this.ofsDataBlock);
-              this._m_dataBlock = new DataBlock(io, this, this._root);
-              io.seek(_pos);
-              return this._m_dataBlock;
             }
           });
 
@@ -681,6 +617,127 @@ var ResourceFork = (function() {
       })();
 
       /**
+       * Resource type list in the resource map.
+       */
+
+      var TypeList = TypeListAndReferenceLists.TypeList = (function() {
+        function TypeList(_io, _parent, _root) {
+          this._io = _io;
+          this._parent = _parent;
+          this._root = _root;
+
+          this._read();
+        }
+        TypeList.prototype._read = function() {
+          this.numTypesM1 = this._io.readU2be();
+          this.entries = [];
+          for (var i = 0; i < this.numTypes; i++) {
+            this.entries.push(new TypeListEntry(this._io, this, this._root));
+          }
+        }
+
+        /**
+         * A single entry in the resource type list.
+         * 
+         * Each entry corresponds to exactly one resource reference list.
+         */
+
+        var TypeListEntry = TypeList.TypeListEntry = (function() {
+          function TypeListEntry(_io, _parent, _root) {
+            this._io = _io;
+            this._parent = _parent;
+            this._root = _root;
+
+            this._read();
+          }
+          TypeListEntry.prototype._read = function() {
+            this.type = this._io.readBytes(4);
+            this.numReferencesM1 = this._io.readU2be();
+            this.ofsReferenceList = this._io.readU2be();
+          }
+
+          /**
+           * The number of resources in the reference list for this type.
+           */
+          Object.defineProperty(TypeListEntry.prototype, 'numReferences', {
+            get: function() {
+              if (this._m_numReferences !== undefined)
+                return this._m_numReferences;
+              this._m_numReferences = KaitaiStream.mod(this.numReferencesM1 + 1, 65536);
+              return this._m_numReferences;
+            }
+          });
+
+          /**
+           * The resource reference list for this resource type.
+           */
+          Object.defineProperty(TypeListEntry.prototype, 'referenceList', {
+            get: function() {
+              if (this._m_referenceList !== undefined)
+                return this._m_referenceList;
+              var io = this._parent._parent._io;
+              var _pos = io.pos;
+              io.seek(this.ofsReferenceList);
+              this._m_referenceList = new ReferenceList(io, this, this._root, this.numReferences);
+              io.seek(_pos);
+              return this._m_referenceList;
+            }
+          });
+
+          /**
+           * The four-character type code of the resources in the reference list.
+           */
+
+          /**
+           * The number of resources in the reference list for this type,
+           * minus one.
+           * 
+           * Empty reference lists should never exist.
+           */
+
+          /**
+           * Offset of the resource reference list for this resource type,
+           * from the start of the resource type list.
+           * 
+           * Although the offset is relative to the start of the type list,
+           * it should never point into the type list itself,
+           * but into the reference list storage area that directly follows it.
+           * That is,
+           * it should always be at least `_parent._sizeof`.
+           */
+
+          return TypeListEntry;
+        })();
+
+        /**
+         * The number of resource types in this list.
+         */
+        Object.defineProperty(TypeList.prototype, 'numTypes', {
+          get: function() {
+            if (this._m_numTypes !== undefined)
+              return this._m_numTypes;
+            this._m_numTypes = KaitaiStream.mod(this.numTypesM1 + 1, 65536);
+            return this._m_numTypes;
+          }
+        });
+
+        /**
+         * The number of resource types in this list,
+         * minus one.
+         * 
+         * If the resource list is empty,
+         * the value of this field is `0xffff`,
+         * i. e. `-1` truncated to a 16-bit unsigned integer.
+         */
+
+        /**
+         * Entries in the resource type list.
+         */
+
+        return TypeList;
+      })();
+
+      /**
        * The resource map's resource type list.
        */
 
@@ -696,76 +753,14 @@ var ResourceFork = (function() {
     })();
 
     /**
-     * A resource name,
-     * as stored in the resource name storage area in the resource map.
-     * 
-     * The resource names are not required to appear in any particular order.
-     * There may be unused space between and around resource names,
-     * but in practice they are often contiguous.
+     * Storage area for the names of all resources.
      */
-
-    var Name = ResourceMap.Name = (function() {
-      function Name(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      Name.prototype._read = function() {
-        this.lenValue = this._io.readU1();
-        this.value = this._io.readBytes(this.lenValue);
-      }
-
-      /**
-       * The length of the resource name, in bytes.
-       */
-
-      /**
-       * The resource name.
-       * 
-       * This field is exposed as a byte array,
-       * because there is no universal encoding for resource names.
-       * Most Classic Mac software does not deal with encodings explicitly and instead assumes that all strings,
-       * including resource names,
-       * use the system encoding,
-       * which varies depending on the system language.
-       * This means that resource names can use different encodings depending on what system language they were created with.
-       * 
-       * Many resource names are plain ASCII,
-       * meaning that the encoding often does not matter
-       * (because all Mac OS encodings are ASCII-compatible).
-       * For non-ASCII resource names,
-       * the most common encoding is perhaps MacRoman
-       * (used for English and other Western languages),
-       * but other encodings are also sometimes used,
-       * especially for software in non-Western languages.
-       * 
-       * There is no requirement that all names in a single resource file use the same encoding.
-       * For example,
-       * localized software may have some (but not all) of its resource names translated.
-       * For non-Western languages,
-       * this can lead to some resource names using MacRoman,
-       * and others using a different encoding.
-       */
-
-      return Name;
-    })();
-
-    /**
-     * The resource map's resource type list, followed by the resource reference list area.
-     */
-    Object.defineProperty(ResourceMap.prototype, 'typeListAndReferenceLists', {
+    Object.defineProperty(ResourceMap.prototype, 'names', {
       get: function() {
-        if (this._m_typeListAndReferenceLists !== undefined)
-          return this._m_typeListAndReferenceLists;
-        var _pos = this._io.pos;
-        this._io.seek(this.ofsTypeList);
-        this._raw__m_typeListAndReferenceLists = this._io.readBytes((this.ofsNames - this.ofsTypeList));
-        var _io__raw__m_typeListAndReferenceLists = new KaitaiStream(this._raw__m_typeListAndReferenceLists);
-        this._m_typeListAndReferenceLists = new TypeListAndReferenceLists(_io__raw__m_typeListAndReferenceLists, this, this._root);
-        this._io.seek(_pos);
-        return this._m_typeListAndReferenceLists;
+        if (this._m_names !== undefined)
+          return this._m_names;
+        this._m_names = this.namesWithIo.data;
+        return this._m_names;
       }
     });
 
@@ -781,21 +776,26 @@ var ResourceFork = (function() {
         this._io.seek(this.ofsNames);
         this._raw__m_namesWithIo = this._io.readBytesFull();
         var _io__raw__m_namesWithIo = new KaitaiStream(this._raw__m_namesWithIo);
-        this._m_namesWithIo = new BytesWithIo(_io__raw__m_namesWithIo, this, null);
+        this._m_namesWithIo = new BytesWithIo_.BytesWithIo(_io__raw__m_namesWithIo, null, null);
         this._io.seek(_pos);
         return this._m_namesWithIo;
       }
     });
 
     /**
-     * Storage area for the names of all resources.
+     * The resource map's resource type list, followed by the resource reference list area.
      */
-    Object.defineProperty(ResourceMap.prototype, 'names', {
+    Object.defineProperty(ResourceMap.prototype, 'typeListAndReferenceLists', {
       get: function() {
-        if (this._m_names !== undefined)
-          return this._m_names;
-        this._m_names = this.namesWithIo.data;
-        return this._m_names;
+        if (this._m_typeListAndReferenceLists !== undefined)
+          return this._m_typeListAndReferenceLists;
+        var _pos = this._io.pos;
+        this._io.seek(this.ofsTypeList);
+        this._raw__m_typeListAndReferenceLists = this._io.readBytes(this.ofsNames - this.ofsTypeList);
+        var _io__raw__m_typeListAndReferenceLists = new KaitaiStream(this._raw__m_typeListAndReferenceLists);
+        this._m_typeListAndReferenceLists = new TypeListAndReferenceLists(_io__raw__m_typeListAndReferenceLists, this, this._root);
+        this._io.seek(_pos);
+        return this._m_typeListAndReferenceLists;
       }
     });
 
@@ -833,24 +833,6 @@ var ResourceFork = (function() {
   })();
 
   /**
-   * Use `data_blocks` instead,
-   * unless you need access to this instance's `_io`.
-   */
-  Object.defineProperty(ResourceFork.prototype, 'dataBlocksWithIo', {
-    get: function() {
-      if (this._m_dataBlocksWithIo !== undefined)
-        return this._m_dataBlocksWithIo;
-      var _pos = this._io.pos;
-      this._io.seek(this.header.ofsDataBlocks);
-      this._raw__m_dataBlocksWithIo = this._io.readBytes(this.header.lenDataBlocks);
-      var _io__raw__m_dataBlocksWithIo = new KaitaiStream(this._raw__m_dataBlocksWithIo);
-      this._m_dataBlocksWithIo = new BytesWithIo(_io__raw__m_dataBlocksWithIo, this, null);
-      this._io.seek(_pos);
-      return this._m_dataBlocksWithIo;
-    }
-  });
-
-  /**
    * Storage area for the data blocks of all resources.
    * 
    * These data blocks are not required to appear in any particular order,
@@ -871,6 +853,24 @@ var ResourceFork = (function() {
         return this._m_dataBlocks;
       this._m_dataBlocks = this.dataBlocksWithIo.data;
       return this._m_dataBlocks;
+    }
+  });
+
+  /**
+   * Use `data_blocks` instead,
+   * unless you need access to this instance's `_io`.
+   */
+  Object.defineProperty(ResourceFork.prototype, 'dataBlocksWithIo', {
+    get: function() {
+      if (this._m_dataBlocksWithIo !== undefined)
+        return this._m_dataBlocksWithIo;
+      var _pos = this._io.pos;
+      this._io.seek(this.header.ofsDataBlocks);
+      this._raw__m_dataBlocksWithIo = this._io.readBytes(this.header.lenDataBlocks);
+      var _io__raw__m_dataBlocksWithIo = new KaitaiStream(this._raw__m_dataBlocksWithIo);
+      this._m_dataBlocksWithIo = new BytesWithIo_.BytesWithIo(_io__raw__m_dataBlocksWithIo, null, null);
+      this._io.seek(_pos);
+      return this._m_dataBlocksWithIo;
     }
   });
 
@@ -922,5 +922,5 @@ var ResourceFork = (function() {
 
   return ResourceFork;
 })();
-return ResourceFork;
-}));
+ResourceFork_.ResourceFork = ResourceFork;
+});

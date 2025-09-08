@@ -1,8 +1,7 @@
 import kaitai_struct_nim_runtime
 import options
-import /common/dos_datetime
+import dos_datetime
 
-import "dos_datetime"
 type
   Rar* = ref object of KaitaiStruct
     `magic`*: Rar_MagicSignature
@@ -19,13 +18,6 @@ type
     old_style_authenticity_info_79 = 121
     subblock = 122
     terminator = 123
-  Rar_Oses* = enum
-    ms_dos = 0
-    os_2 = 1
-    windows = 2
-    unix = 3
-    mac_os = 4
-    beos = 5
   Rar_Methods* = enum
     store = 48
     fastest = 49
@@ -33,11 +25,13 @@ type
     normal = 51
     good = 52
     best = 53
-  Rar_MagicSignature* = ref object of KaitaiStruct
-    `magic1`*: seq[byte]
-    `version`*: uint8
-    `magic3`*: seq[byte]
-    `parent`*: Rar
+  Rar_Oses* = enum
+    ms_dos = 0
+    os_2 = 1
+    windows = 2
+    unix = 3
+    mac_os = 4
+    beos = 5
   Rar_Block* = ref object of KaitaiStruct
     `crc16`*: uint16
     `blockType`*: Rar_BlockTypes
@@ -48,12 +42,12 @@ type
     `addBody`*: seq[byte]
     `parent`*: Rar
     `rawBody`*: seq[byte]
+    `bodySizeInst`: int
+    `bodySizeInstFlag`: bool
     `hasAddInst`: bool
     `hasAddInstFlag`: bool
     `headerSizeInst`: int8
     `headerSizeInstFlag`: bool
-    `bodySizeInst`: int
-    `bodySizeInstFlag`: bool
   Rar_BlockFileHeader* = ref object of KaitaiStruct
     `lowUnpSize`*: uint32
     `hostOs`*: Rar_Oses
@@ -70,16 +64,21 @@ type
     `rawFileTime`*: seq[byte]
   Rar_BlockV5* = ref object of KaitaiStruct
     `parent`*: Rar
+  Rar_MagicSignature* = ref object of KaitaiStruct
+    `magic1`*: seq[byte]
+    `version`*: uint8
+    `magic3`*: seq[byte]
+    `parent`*: Rar
 
 proc read*(_: typedesc[Rar], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Rar
-proc read*(_: typedesc[Rar_MagicSignature], io: KaitaiStream, root: KaitaiStruct, parent: Rar): Rar_MagicSignature
 proc read*(_: typedesc[Rar_Block], io: KaitaiStream, root: KaitaiStruct, parent: Rar): Rar_Block
 proc read*(_: typedesc[Rar_BlockFileHeader], io: KaitaiStream, root: KaitaiStruct, parent: Rar_Block): Rar_BlockFileHeader
 proc read*(_: typedesc[Rar_BlockV5], io: KaitaiStream, root: KaitaiStruct, parent: Rar): Rar_BlockV5
+proc read*(_: typedesc[Rar_MagicSignature], io: KaitaiStream, root: KaitaiStruct, parent: Rar): Rar_MagicSignature
 
+proc bodySize*(this: Rar_Block): int
 proc hasAdd*(this: Rar_Block): bool
 proc headerSize*(this: Rar_Block): int8
-proc bodySize*(this: Rar_Block): int
 
 
 ##[
@@ -127,50 +126,6 @@ proc read*(_: typedesc[Rar], io: KaitaiStream, root: KaitaiStruct, parent: Kaita
 
 proc fromFile*(_: typedesc[Rar], filename: string): Rar =
   Rar.read(newKaitaiFileStream(filename), nil, nil)
-
-
-##[
-RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and
-8-byte magic (and pretty different block format) for v5+. This
-type would parse and validate both versions of signature. Note
-that actually this signature is a valid RAR "block": in theory,
-one can omit signature reading at all, and read this normally,
-as a block, if exact RAR version is known (and thus it's
-possible to choose correct block format).
-
-]##
-proc read*(_: typedesc[Rar_MagicSignature], io: KaitaiStream, root: KaitaiStruct, parent: Rar): Rar_MagicSignature =
-  template this: untyped = result
-  this = new(Rar_MagicSignature)
-  let root = if root == nil: cast[Rar](this) else: cast[Rar](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-
-  ##[
-  Fixed part of file's magic signature that doesn't change with RAR version
-  ]##
-  let magic1Expr = this.io.readBytes(int(6))
-  this.magic1 = magic1Expr
-
-  ##[
-  Variable part of magic signature: 0 means old (RAR 1.5-4.0)
-format, 1 means new (RAR 5+) format
-
-  ]##
-  let versionExpr = this.io.readU1()
-  this.version = versionExpr
-
-  ##[
-  New format (RAR 5+) magic contains extra byte
-  ]##
-  if this.version == 1:
-    let magic3Expr = this.io.readBytes(int(1))
-    this.magic3 = magic3Expr
-
-proc fromFile*(_: typedesc[Rar_MagicSignature], filename: string): Rar_MagicSignature =
-  Rar_MagicSignature.read(newKaitaiFileStream(filename), nil, nil)
 
 
 ##[
@@ -229,6 +184,14 @@ proc read*(_: typedesc[Rar_Block], io: KaitaiStream, root: KaitaiStruct, parent:
     let addBodyExpr = this.io.readBytes(int(this.addSize))
     this.addBody = addBodyExpr
 
+proc bodySize(this: Rar_Block): int = 
+  if this.bodySizeInstFlag:
+    return this.bodySizeInst
+  let bodySizeInstExpr = int(this.blockSize - this.headerSize)
+  this.bodySizeInst = bodySizeInstExpr
+  this.bodySizeInstFlag = true
+  return this.bodySizeInst
+
 proc hasAdd(this: Rar_Block): bool = 
 
   ##[
@@ -248,14 +211,6 @@ proc headerSize(this: Rar_Block): int8 =
   this.headerSizeInst = headerSizeInstExpr
   this.headerSizeInstFlag = true
   return this.headerSizeInst
-
-proc bodySize(this: Rar_Block): int = 
-  if this.bodySizeInstFlag:
-    return this.bodySizeInst
-  let bodySizeInstExpr = int((this.blockSize - this.headerSize))
-  this.bodySizeInst = bodySizeInstExpr
-  this.bodySizeInstFlag = true
-  return this.bodySizeInst
 
 proc fromFile*(_: typedesc[Rar_Block], filename: string): Rar_Block =
   Rar_Block.read(newKaitaiFileStream(filename), nil, nil)
@@ -289,7 +244,7 @@ proc read*(_: typedesc[Rar_BlockFileHeader], io: KaitaiStream, root: KaitaiStruc
   let rawFileTimeExpr = this.io.readBytes(int(4))
   this.rawFileTime = rawFileTimeExpr
   let rawFileTimeIo = newKaitaiStream(rawFileTimeExpr)
-  let fileTimeExpr = DosDatetime.read(rawFileTimeIo, this.root, this)
+  let fileTimeExpr = DosDatetime.read(rawFileTimeIo, nil, nil)
   this.fileTime = fileTimeExpr
 
   ##[
@@ -342,4 +297,48 @@ proc read*(_: typedesc[Rar_BlockV5], io: KaitaiStream, root: KaitaiStruct, paren
 
 proc fromFile*(_: typedesc[Rar_BlockV5], filename: string): Rar_BlockV5 =
   Rar_BlockV5.read(newKaitaiFileStream(filename), nil, nil)
+
+
+##[
+RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and
+8-byte magic (and pretty different block format) for v5+. This
+type would parse and validate both versions of signature. Note
+that actually this signature is a valid RAR "block": in theory,
+one can omit signature reading at all, and read this normally,
+as a block, if exact RAR version is known (and thus it's
+possible to choose correct block format).
+
+]##
+proc read*(_: typedesc[Rar_MagicSignature], io: KaitaiStream, root: KaitaiStruct, parent: Rar): Rar_MagicSignature =
+  template this: untyped = result
+  this = new(Rar_MagicSignature)
+  let root = if root == nil: cast[Rar](this) else: cast[Rar](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+
+  ##[
+  Fixed part of file's magic signature that doesn't change with RAR version
+  ]##
+  let magic1Expr = this.io.readBytes(int(6))
+  this.magic1 = magic1Expr
+
+  ##[
+  Variable part of magic signature: 0 means old (RAR 1.5-4.0)
+format, 1 means new (RAR 5+) format
+
+  ]##
+  let versionExpr = this.io.readU1()
+  this.version = versionExpr
+
+  ##[
+  New format (RAR 5+) magic contains extra byte
+  ]##
+  if this.version == 1:
+    let magic3Expr = this.io.readBytes(int(1))
+    this.magic3 = magic3Expr
+
+proc fromFile*(_: typedesc[Rar_MagicSignature], filename: string): Rar_MagicSignature =
+  Rar_MagicSignature.read(newKaitaiFileStream(filename), nil, nil)
 

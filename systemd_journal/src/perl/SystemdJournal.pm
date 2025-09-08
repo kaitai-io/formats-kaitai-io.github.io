@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 
 ########################################################################
 package SystemdJournal;
@@ -28,7 +28,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -41,21 +41,11 @@ sub _read {
     $self->{_raw_header} = $self->{_io}->read_bytes($self->len_header());
     my $io__raw_header = IO::KaitaiStruct::Stream->new($self->{_raw_header});
     $self->{header} = SystemdJournal::Header->new($io__raw_header, $self, $self->{_root});
-    $self->{objects} = ();
+    $self->{objects} = [];
     my $n_objects = $self->header()->num_objects();
     for (my $i = 0; $i < $n_objects; $i++) {
         push @{$self->{objects}}, SystemdJournal::JournalObject->new($self->{_io}, $self, $self->{_root});
     }
-}
-
-sub len_header {
-    my ($self) = @_;
-    return $self->{len_header} if ($self->{len_header});
-    my $_pos = $self->{_io}->pos();
-    $self->{_io}->seek(88);
-    $self->{len_header} = $self->{_io}->read_u8le();
-    $self->{_io}->seek($_pos);
-    return $self->{len_header};
 }
 
 sub data_hash_table {
@@ -78,6 +68,16 @@ sub field_hash_table {
     return $self->{field_hash_table};
 }
 
+sub len_header {
+    my ($self) = @_;
+    return $self->{len_header} if ($self->{len_header});
+    my $_pos = $self->{_io}->pos();
+    $self->{_io}->seek(88);
+    $self->{len_header} = $self->{_io}->read_u8le();
+    $self->{_io}->seek($_pos);
+    return $self->{len_header};
+}
+
 sub header {
     my ($self) = @_;
     return $self->{header};
@@ -91,6 +91,132 @@ sub objects {
 sub _raw_header {
     my ($self) = @_;
     return $self->{_raw_header};
+}
+
+########################################################################
+package SystemdJournal::DataObject;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{hash} = $self->{_io}->read_u8le();
+    $self->{ofs_next_hash} = $self->{_io}->read_u8le();
+    $self->{ofs_head_field} = $self->{_io}->read_u8le();
+    $self->{ofs_entry} = $self->{_io}->read_u8le();
+    $self->{ofs_entry_array} = $self->{_io}->read_u8le();
+    $self->{num_entries} = $self->{_io}->read_u8le();
+    $self->{payload} = $self->{_io}->read_bytes_full();
+}
+
+sub entry {
+    my ($self) = @_;
+    return $self->{entry} if ($self->{entry});
+    if ($self->ofs_entry() != 0) {
+        my $io = $self->_root()->_io();
+        my $_pos = $io->pos();
+        $io->seek($self->ofs_entry());
+        $self->{entry} = SystemdJournal::JournalObject->new($io, $self, $self->{_root});
+        $io->seek($_pos);
+    }
+    return $self->{entry};
+}
+
+sub entry_array {
+    my ($self) = @_;
+    return $self->{entry_array} if ($self->{entry_array});
+    if ($self->ofs_entry_array() != 0) {
+        my $io = $self->_root()->_io();
+        my $_pos = $io->pos();
+        $io->seek($self->ofs_entry_array());
+        $self->{entry_array} = SystemdJournal::JournalObject->new($io, $self, $self->{_root});
+        $io->seek($_pos);
+    }
+    return $self->{entry_array};
+}
+
+sub head_field {
+    my ($self) = @_;
+    return $self->{head_field} if ($self->{head_field});
+    if ($self->ofs_head_field() != 0) {
+        my $io = $self->_root()->_io();
+        my $_pos = $io->pos();
+        $io->seek($self->ofs_head_field());
+        $self->{head_field} = SystemdJournal::JournalObject->new($io, $self, $self->{_root});
+        $io->seek($_pos);
+    }
+    return $self->{head_field};
+}
+
+sub next_hash {
+    my ($self) = @_;
+    return $self->{next_hash} if ($self->{next_hash});
+    if ($self->ofs_next_hash() != 0) {
+        my $io = $self->_root()->_io();
+        my $_pos = $io->pos();
+        $io->seek($self->ofs_next_hash());
+        $self->{next_hash} = SystemdJournal::JournalObject->new($io, $self, $self->{_root});
+        $io->seek($_pos);
+    }
+    return $self->{next_hash};
+}
+
+sub hash {
+    my ($self) = @_;
+    return $self->{hash};
+}
+
+sub ofs_next_hash {
+    my ($self) = @_;
+    return $self->{ofs_next_hash};
+}
+
+sub ofs_head_field {
+    my ($self) = @_;
+    return $self->{ofs_head_field};
+}
+
+sub ofs_entry {
+    my ($self) = @_;
+    return $self->{ofs_entry};
+}
+
+sub ofs_entry_array {
+    my ($self) = @_;
+    return $self->{ofs_entry_array};
+}
+
+sub num_entries {
+    my ($self) = @_;
+    return $self->{num_entries};
+}
+
+sub payload {
+    my ($self) = @_;
+    return $self->{payload};
 }
 
 ########################################################################
@@ -113,7 +239,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -330,7 +456,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -340,19 +466,19 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{padding} = $self->{_io}->read_bytes(((8 - $self->_io()->pos()) % 8));
+    $self->{padding} = $self->{_io}->read_bytes((8 - $self->_io()->pos()) % 8);
     $self->{object_type} = $self->{_io}->read_u1();
     $self->{flags} = $self->{_io}->read_u1();
     $self->{reserved} = $self->{_io}->read_bytes(6);
     $self->{len_object} = $self->{_io}->read_u8le();
     my $_on = $self->object_type();
     if ($_on == $SystemdJournal::JournalObject::OBJECT_TYPES_DATA) {
-        $self->{_raw_payload} = $self->{_io}->read_bytes(($self->len_object() - 16));
+        $self->{_raw_payload} = $self->{_io}->read_bytes($self->len_object() - 16);
         my $io__raw_payload = IO::KaitaiStruct::Stream->new($self->{_raw_payload});
         $self->{payload} = SystemdJournal::DataObject->new($io__raw_payload, $self, $self->{_root});
     }
     else {
-        $self->{payload} = $self->{_io}->read_bytes(($self->len_object() - 16));
+        $self->{payload} = $self->{_io}->read_bytes($self->len_object() - 16);
     }
 }
 
@@ -389,132 +515,6 @@ sub payload {
 sub _raw_payload {
     my ($self) = @_;
     return $self->{_raw_payload};
-}
-
-########################################################################
-package SystemdJournal::DataObject;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{hash} = $self->{_io}->read_u8le();
-    $self->{ofs_next_hash} = $self->{_io}->read_u8le();
-    $self->{ofs_head_field} = $self->{_io}->read_u8le();
-    $self->{ofs_entry} = $self->{_io}->read_u8le();
-    $self->{ofs_entry_array} = $self->{_io}->read_u8le();
-    $self->{num_entries} = $self->{_io}->read_u8le();
-    $self->{payload} = $self->{_io}->read_bytes_full();
-}
-
-sub next_hash {
-    my ($self) = @_;
-    return $self->{next_hash} if ($self->{next_hash});
-    if ($self->ofs_next_hash() != 0) {
-        my $io = $self->_root()->_io();
-        my $_pos = $io->pos();
-        $io->seek($self->ofs_next_hash());
-        $self->{next_hash} = SystemdJournal::JournalObject->new($io, $self, $self->{_root});
-        $io->seek($_pos);
-    }
-    return $self->{next_hash};
-}
-
-sub head_field {
-    my ($self) = @_;
-    return $self->{head_field} if ($self->{head_field});
-    if ($self->ofs_head_field() != 0) {
-        my $io = $self->_root()->_io();
-        my $_pos = $io->pos();
-        $io->seek($self->ofs_head_field());
-        $self->{head_field} = SystemdJournal::JournalObject->new($io, $self, $self->{_root});
-        $io->seek($_pos);
-    }
-    return $self->{head_field};
-}
-
-sub entry {
-    my ($self) = @_;
-    return $self->{entry} if ($self->{entry});
-    if ($self->ofs_entry() != 0) {
-        my $io = $self->_root()->_io();
-        my $_pos = $io->pos();
-        $io->seek($self->ofs_entry());
-        $self->{entry} = SystemdJournal::JournalObject->new($io, $self, $self->{_root});
-        $io->seek($_pos);
-    }
-    return $self->{entry};
-}
-
-sub entry_array {
-    my ($self) = @_;
-    return $self->{entry_array} if ($self->{entry_array});
-    if ($self->ofs_entry_array() != 0) {
-        my $io = $self->_root()->_io();
-        my $_pos = $io->pos();
-        $io->seek($self->ofs_entry_array());
-        $self->{entry_array} = SystemdJournal::JournalObject->new($io, $self, $self->{_root});
-        $io->seek($_pos);
-    }
-    return $self->{entry_array};
-}
-
-sub hash {
-    my ($self) = @_;
-    return $self->{hash};
-}
-
-sub ofs_next_hash {
-    my ($self) = @_;
-    return $self->{ofs_next_hash};
-}
-
-sub ofs_head_field {
-    my ($self) = @_;
-    return $self->{ofs_head_field};
-}
-
-sub ofs_entry {
-    my ($self) = @_;
-    return $self->{ofs_entry};
-}
-
-sub ofs_entry_array {
-    my ($self) = @_;
-    return $self->{ofs_entry_array};
-}
-
-sub num_entries {
-    my ($self) = @_;
-    return $self->{num_entries};
-}
-
-sub payload {
-    my ($self) = @_;
-    return $self->{payload};
 }
 
 1;

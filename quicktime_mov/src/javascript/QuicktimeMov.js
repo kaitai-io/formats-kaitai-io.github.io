@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.QuicktimeMov = factory(root.KaitaiStream);
+    factory(root.QuicktimeMov || (root.QuicktimeMov = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (QuicktimeMov_, KaitaiStream) {
 /**
  * @see {@link https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-BBCGDDDF|Source}
  */
@@ -603,6 +603,179 @@ var QuicktimeMov = (function() {
     this.atoms = new AtomList(this._io, this, this._root);
   }
 
+  var Atom = QuicktimeMov.Atom = (function() {
+    function Atom(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Atom.prototype._read = function() {
+      this.len32 = this._io.readU4be();
+      this.atomType = this._io.readU4be();
+      if (this.len32 == 1) {
+        this.len64 = this._io.readU8be();
+      }
+      switch (this.atomType) {
+      case QuicktimeMov.AtomType.DINF:
+        this._raw_body = this._io.readBytes(this.len);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new AtomList(_io__raw_body, this, this._root);
+        break;
+      case QuicktimeMov.AtomType.FTYP:
+        this._raw_body = this._io.readBytes(this.len);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new FtypBody(_io__raw_body, this, this._root);
+        break;
+      case QuicktimeMov.AtomType.MDIA:
+        this._raw_body = this._io.readBytes(this.len);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new AtomList(_io__raw_body, this, this._root);
+        break;
+      case QuicktimeMov.AtomType.MINF:
+        this._raw_body = this._io.readBytes(this.len);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new AtomList(_io__raw_body, this, this._root);
+        break;
+      case QuicktimeMov.AtomType.MOOF:
+        this._raw_body = this._io.readBytes(this.len);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new AtomList(_io__raw_body, this, this._root);
+        break;
+      case QuicktimeMov.AtomType.MOOV:
+        this._raw_body = this._io.readBytes(this.len);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new AtomList(_io__raw_body, this, this._root);
+        break;
+      case QuicktimeMov.AtomType.MVHD:
+        this._raw_body = this._io.readBytes(this.len);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new MvhdBody(_io__raw_body, this, this._root);
+        break;
+      case QuicktimeMov.AtomType.STBL:
+        this._raw_body = this._io.readBytes(this.len);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new AtomList(_io__raw_body, this, this._root);
+        break;
+      case QuicktimeMov.AtomType.TKHD:
+        this._raw_body = this._io.readBytes(this.len);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new TkhdBody(_io__raw_body, this, this._root);
+        break;
+      case QuicktimeMov.AtomType.TRAF:
+        this._raw_body = this._io.readBytes(this.len);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new AtomList(_io__raw_body, this, this._root);
+        break;
+      case QuicktimeMov.AtomType.TRAK:
+        this._raw_body = this._io.readBytes(this.len);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new AtomList(_io__raw_body, this, this._root);
+        break;
+      default:
+        this.body = this._io.readBytes(this.len);
+        break;
+      }
+    }
+    Object.defineProperty(Atom.prototype, 'len', {
+      get: function() {
+        if (this._m_len !== undefined)
+          return this._m_len;
+        this._m_len = (this.len32 == 0 ? this._io.size - 8 : (this.len32 == 1 ? this.len64 - 16 : this.len32 - 8));
+        return this._m_len;
+      }
+    });
+
+    return Atom;
+  })();
+
+  var AtomList = QuicktimeMov.AtomList = (function() {
+    function AtomList(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    AtomList.prototype._read = function() {
+      this.items = [];
+      var i = 0;
+      while (!this._io.isEof()) {
+        this.items.push(new Atom(this._io, this, this._root));
+        i++;
+      }
+    }
+
+    return AtomList;
+  })();
+
+  /**
+   * Fixed-point 16-bit number.
+   */
+
+  var Fixed16 = QuicktimeMov.Fixed16 = (function() {
+    function Fixed16(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Fixed16.prototype._read = function() {
+      this.intPart = this._io.readS1();
+      this.fracPart = this._io.readU1();
+    }
+
+    return Fixed16;
+  })();
+
+  /**
+   * Fixed-point 32-bit number.
+   */
+
+  var Fixed32 = QuicktimeMov.Fixed32 = (function() {
+    function Fixed32(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Fixed32.prototype._read = function() {
+      this.intPart = this._io.readS2be();
+      this.fracPart = this._io.readU2be();
+    }
+
+    return Fixed32;
+  })();
+
+  /**
+   * @see {@link https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-CJBCBIFF|Source}
+   */
+
+  var FtypBody = QuicktimeMov.FtypBody = (function() {
+    function FtypBody(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    FtypBody.prototype._read = function() {
+      this.majorBrand = this._io.readU4be();
+      this.minorVersion = this._io.readBytes(4);
+      this.compatibleBrands = [];
+      var i = 0;
+      while (!this._io.isEof()) {
+        this.compatibleBrands.push(this._io.readU4be());
+        i++;
+      }
+    }
+
+    return FtypBody;
+  })();
+
   /**
    * @see {@link https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-BBCGFGJG|Source}
    */
@@ -611,7 +784,7 @@ var QuicktimeMov = (function() {
     function MvhdBody(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -700,159 +873,6 @@ var QuicktimeMov = (function() {
   })();
 
   /**
-   * @see {@link https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-CJBCBIFF|Source}
-   */
-
-  var FtypBody = QuicktimeMov.FtypBody = (function() {
-    function FtypBody(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    FtypBody.prototype._read = function() {
-      this.majorBrand = this._io.readU4be();
-      this.minorVersion = this._io.readBytes(4);
-      this.compatibleBrands = [];
-      var i = 0;
-      while (!this._io.isEof()) {
-        this.compatibleBrands.push(this._io.readU4be());
-        i++;
-      }
-    }
-
-    return FtypBody;
-  })();
-
-  /**
-   * Fixed-point 32-bit number.
-   */
-
-  var Fixed32 = QuicktimeMov.Fixed32 = (function() {
-    function Fixed32(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Fixed32.prototype._read = function() {
-      this.intPart = this._io.readS2be();
-      this.fracPart = this._io.readU2be();
-    }
-
-    return Fixed32;
-  })();
-
-  /**
-   * Fixed-point 16-bit number.
-   */
-
-  var Fixed16 = QuicktimeMov.Fixed16 = (function() {
-    function Fixed16(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Fixed16.prototype._read = function() {
-      this.intPart = this._io.readS1();
-      this.fracPart = this._io.readU1();
-    }
-
-    return Fixed16;
-  })();
-
-  var Atom = QuicktimeMov.Atom = (function() {
-    function Atom(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Atom.prototype._read = function() {
-      this.len32 = this._io.readU4be();
-      this.atomType = this._io.readU4be();
-      if (this.len32 == 1) {
-        this.len64 = this._io.readU8be();
-      }
-      switch (this.atomType) {
-      case QuicktimeMov.AtomType.MOOF:
-        this._raw_body = this._io.readBytes(this.len);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new AtomList(_io__raw_body, this, this._root);
-        break;
-      case QuicktimeMov.AtomType.TKHD:
-        this._raw_body = this._io.readBytes(this.len);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new TkhdBody(_io__raw_body, this, this._root);
-        break;
-      case QuicktimeMov.AtomType.STBL:
-        this._raw_body = this._io.readBytes(this.len);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new AtomList(_io__raw_body, this, this._root);
-        break;
-      case QuicktimeMov.AtomType.TRAF:
-        this._raw_body = this._io.readBytes(this.len);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new AtomList(_io__raw_body, this, this._root);
-        break;
-      case QuicktimeMov.AtomType.MINF:
-        this._raw_body = this._io.readBytes(this.len);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new AtomList(_io__raw_body, this, this._root);
-        break;
-      case QuicktimeMov.AtomType.TRAK:
-        this._raw_body = this._io.readBytes(this.len);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new AtomList(_io__raw_body, this, this._root);
-        break;
-      case QuicktimeMov.AtomType.MOOV:
-        this._raw_body = this._io.readBytes(this.len);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new AtomList(_io__raw_body, this, this._root);
-        break;
-      case QuicktimeMov.AtomType.MDIA:
-        this._raw_body = this._io.readBytes(this.len);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new AtomList(_io__raw_body, this, this._root);
-        break;
-      case QuicktimeMov.AtomType.DINF:
-        this._raw_body = this._io.readBytes(this.len);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new AtomList(_io__raw_body, this, this._root);
-        break;
-      case QuicktimeMov.AtomType.MVHD:
-        this._raw_body = this._io.readBytes(this.len);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new MvhdBody(_io__raw_body, this, this._root);
-        break;
-      case QuicktimeMov.AtomType.FTYP:
-        this._raw_body = this._io.readBytes(this.len);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new FtypBody(_io__raw_body, this, this._root);
-        break;
-      default:
-        this.body = this._io.readBytes(this.len);
-        break;
-      }
-    }
-    Object.defineProperty(Atom.prototype, 'len', {
-      get: function() {
-        if (this._m_len !== undefined)
-          return this._m_len;
-        this._m_len = (this.len32 == 0 ? (this._io.size - 8) : (this.len32 == 1 ? (this.len64 - 16) : (this.len32 - 8)));
-        return this._m_len;
-      }
-    });
-
-    return Atom;
-  })();
-
-  /**
    * @see {@link https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-25550|Source}
    */
 
@@ -860,7 +880,7 @@ var QuicktimeMov = (function() {
     function TkhdBody(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -889,27 +909,7 @@ var QuicktimeMov = (function() {
     return TkhdBody;
   })();
 
-  var AtomList = QuicktimeMov.AtomList = (function() {
-    function AtomList(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    AtomList.prototype._read = function() {
-      this.items = [];
-      var i = 0;
-      while (!this._io.isEof()) {
-        this.items.push(new Atom(this._io, this, this._root));
-        i++;
-      }
-    }
-
-    return AtomList;
-  })();
-
   return QuicktimeMov;
 })();
-return QuicktimeMov;
-}));
+QuicktimeMov_.QuicktimeMov = QuicktimeMov;
+});

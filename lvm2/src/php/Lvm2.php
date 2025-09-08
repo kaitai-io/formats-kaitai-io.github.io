@@ -16,8 +16,8 @@
 
 namespace {
     class Lvm2 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Lvm2 $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Lvm2 $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -42,7 +42,7 @@ namespace {
 
 namespace Lvm2 {
     class PhysicalVolume extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Lvm2 $_parent = null, \Lvm2 $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Lvm2 $_parent = null, ?\Lvm2 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -60,7 +60,7 @@ namespace Lvm2 {
 
 namespace Lvm2\PhysicalVolume {
     class Label extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Lvm2\PhysicalVolume $_parent = null, \Lvm2 $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Lvm2\PhysicalVolume $_parent = null, ?\Lvm2 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -78,15 +78,15 @@ namespace Lvm2\PhysicalVolume {
 
 namespace Lvm2\PhysicalVolume\Label {
     class LabelHeader extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Lvm2\PhysicalVolume\Label $_parent = null, \Lvm2 $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Lvm2\PhysicalVolume\Label $_parent = null, ?\Lvm2 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_signature = $this->_io->readBytes(8);
-            if (!($this->signature() == "\x4C\x41\x42\x45\x4C\x4F\x4E\x45")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x4C\x41\x42\x45\x4C\x4F\x4E\x45", $this->signature(), $this->_io(), "/types/physical_volume/types/label/types/label_header/seq/0");
+            if (!($this->_m_signature == "\x4C\x41\x42\x45\x4C\x4F\x4E\x45")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x4C\x41\x42\x45\x4C\x4F\x4E\x45", $this->_m_signature, $this->_io, "/types/physical_volume/types/label/types/label_header/seq/0");
             }
             $this->_m_sectorNumber = $this->_io->readU8le();
             $this->_m_checksum = $this->_io->readU4le();
@@ -113,7 +113,7 @@ namespace Lvm2\PhysicalVolume\Label {
 
 namespace Lvm2\PhysicalVolume\Label\LabelHeader {
     class LabelHeader extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Lvm2\PhysicalVolume\Label\LabelHeader $_parent = null, \Lvm2 $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Lvm2\PhysicalVolume\Label\LabelHeader $_parent = null, ?\Lvm2 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -121,8 +121,8 @@ namespace Lvm2\PhysicalVolume\Label\LabelHeader {
         private function _read() {
             $this->_m_dataOffset = $this->_io->readU4le();
             $this->_m_typeIndicator = $this->_io->readBytes(8);
-            if (!($this->typeIndicator() == "\x4C\x56\x4D\x32\x20\x30\x30\x31")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x4C\x56\x4D\x32\x20\x30\x30\x31", $this->typeIndicator(), $this->_io(), "/types/physical_volume/types/label/types/label_header/types/label_header_/seq/1");
+            if (!($this->_m_typeIndicator == "\x4C\x56\x4D\x32\x20\x30\x30\x31")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x4C\x56\x4D\x32\x20\x30\x30\x31", $this->_m_typeIndicator, $this->_io, "/types/physical_volume/types/label/types/label_header/types/label_header_/seq/1");
             }
         }
         protected $_m_dataOffset;
@@ -138,13 +138,13 @@ namespace Lvm2\PhysicalVolume\Label\LabelHeader {
 
 namespace Lvm2\PhysicalVolume\Label {
     class VolumeHeader extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Lvm2\PhysicalVolume\Label $_parent = null, \Lvm2 $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Lvm2\PhysicalVolume\Label $_parent = null, ?\Lvm2 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_id = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(32), "ascii");
+            $this->_m_id = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(32), "ASCII");
             $this->_m_size = $this->_io->readU8le();
             $this->_m_dataAreaDescriptors = [];
             $i = 0;
@@ -186,7 +186,7 @@ namespace Lvm2\PhysicalVolume\Label {
 
 namespace Lvm2\PhysicalVolume\Label\VolumeHeader {
     class DataAreaDescriptor extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Lvm2\PhysicalVolume\Label\VolumeHeader $_parent = null, \Lvm2 $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Lvm2\PhysicalVolume\Label\VolumeHeader $_parent = null, ?\Lvm2 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -202,7 +202,7 @@ namespace Lvm2\PhysicalVolume\Label\VolumeHeader {
             if ($this->size() != 0) {
                 $_pos = $this->_io->pos();
                 $this->_io->seek($this->offset());
-                $this->_m_data = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->size()), "ascii");
+                $this->_m_data = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->size()), "ASCII");
                 $this->_io->seek($_pos);
             }
             return $this->_m_data;
@@ -222,55 +222,13 @@ namespace Lvm2\PhysicalVolume\Label\VolumeHeader {
     }
 }
 
-namespace Lvm2\PhysicalVolume\Label\VolumeHeader {
-    class MetadataAreaDescriptor extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Lvm2\PhysicalVolume\Label\VolumeHeader $_parent = null, \Lvm2 $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_offset = $this->_io->readU8le();
-            $this->_m_size = $this->_io->readU8le();
-        }
-        protected $_m_data;
-        public function data() {
-            if ($this->_m_data !== null)
-                return $this->_m_data;
-            if ($this->size() != 0) {
-                $_pos = $this->_io->pos();
-                $this->_io->seek($this->offset());
-                $this->_m__raw_data = $this->_io->readBytes($this->size());
-                $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                $this->_m_data = new \Lvm2\PhysicalVolume\Label\VolumeHeader\MetadataArea($_io__raw_data, $this, $this->_root);
-                $this->_io->seek($_pos);
-            }
-            return $this->_m_data;
-        }
-        protected $_m_offset;
-        protected $_m_size;
-        protected $_m__raw_data;
-
-        /**
-         * The offset, in bytes, relative from the start of the physical volume
-         */
-        public function offset() { return $this->_m_offset; }
-
-        /**
-         * Value in bytes
-         */
-        public function size() { return $this->_m_size; }
-        public function _raw_data() { return $this->_m__raw_data; }
-    }
-}
-
 /**
  * According to `[REDHAT]` the metadata area is a circular buffer. New metadata is appended to the old metadata and then the pointer to the start of it is updated. The metadata area, therefore, can contain copies of older versions of the metadata.
  */
 
 namespace Lvm2\PhysicalVolume\Label\VolumeHeader {
     class MetadataArea extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Lvm2\PhysicalVolume\Label\VolumeHeader\MetadataAreaDescriptor $_parent = null, \Lvm2 $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Lvm2\PhysicalVolume\Label\VolumeHeader\MetadataAreaDescriptor $_parent = null, ?\Lvm2 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -285,7 +243,7 @@ namespace Lvm2\PhysicalVolume\Label\VolumeHeader {
 
 namespace Lvm2\PhysicalVolume\Label\VolumeHeader\MetadataArea {
     class MetadataAreaHeader extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Lvm2 $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Lvm2 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -293,8 +251,8 @@ namespace Lvm2\PhysicalVolume\Label\VolumeHeader\MetadataArea {
         private function _read() {
             $this->_m_checksum = new \Lvm2\PhysicalVolume\Label\VolumeHeader\MetadataArea\MetadataAreaHeader($this->_io, $this, $this->_root);
             $this->_m_signature = $this->_io->readBytes(16);
-            if (!($this->signature() == "\x20\x4C\x56\x4D\x32\x20\x78\x5B\x35\x41\x25\x72\x30\x4E\x2A\x3E")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x20\x4C\x56\x4D\x32\x20\x78\x5B\x35\x41\x25\x72\x30\x4E\x2A\x3E", $this->signature(), $this->_io(), "/types/physical_volume/types/label/types/volume_header/types/metadata_area/types/metadata_area_header/seq/1");
+            if (!($this->_m_signature == "\x20\x4C\x56\x4D\x32\x20\x78\x5B\x35\x41\x25\x72\x30\x4E\x2A\x3E")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x20\x4C\x56\x4D\x32\x20\x78\x5B\x35\x41\x25\x72\x30\x4E\x2A\x3E", $this->_m_signature, $this->_io, "/types/physical_volume/types/label/types/volume_header/types/metadata_area/types/metadata_area_header/seq/1");
             }
             $this->_m_version = $this->_io->readU4le();
             $this->_m_metadataAreaOffset = $this->_io->readU8le();
@@ -350,7 +308,7 @@ namespace Lvm2\PhysicalVolume\Label\VolumeHeader\MetadataArea {
 
 namespace Lvm2\PhysicalVolume\Label\VolumeHeader\MetadataArea\MetadataAreaHeader {
     class RawLocationDescriptor extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Lvm2\PhysicalVolume\Label\VolumeHeader\MetadataArea\MetadataAreaHeader $_parent = null, \Lvm2 $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Lvm2\PhysicalVolume\Label\VolumeHeader\MetadataArea\MetadataAreaHeader $_parent = null, ?\Lvm2 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -387,5 +345,53 @@ namespace Lvm2\PhysicalVolume\Label\VolumeHeader\MetadataArea\MetadataAreaHeader
 namespace Lvm2\PhysicalVolume\Label\VolumeHeader\MetadataArea\MetadataAreaHeader\RawLocationDescriptor {
     class RawLocationDescriptorFlags {
         const RAW_LOCATION_IGNORED = 1;
+
+        private const _VALUES = [1 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
+    }
+}
+
+namespace Lvm2\PhysicalVolume\Label\VolumeHeader {
+    class MetadataAreaDescriptor extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Lvm2\PhysicalVolume\Label\VolumeHeader $_parent = null, ?\Lvm2 $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_offset = $this->_io->readU8le();
+            $this->_m_size = $this->_io->readU8le();
+        }
+        protected $_m_data;
+        public function data() {
+            if ($this->_m_data !== null)
+                return $this->_m_data;
+            if ($this->size() != 0) {
+                $_pos = $this->_io->pos();
+                $this->_io->seek($this->offset());
+                $this->_m__raw_data = $this->_io->readBytes($this->size());
+                $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                $this->_m_data = new \Lvm2\PhysicalVolume\Label\VolumeHeader\MetadataArea($_io__raw_data, $this, $this->_root);
+                $this->_io->seek($_pos);
+            }
+            return $this->_m_data;
+        }
+        protected $_m_offset;
+        protected $_m_size;
+        protected $_m__raw_data;
+
+        /**
+         * The offset, in bytes, relative from the start of the physical volume
+         */
+        public function offset() { return $this->_m_offset; }
+
+        /**
+         * Value in bytes
+         */
+        public function size() { return $this->_m_size; }
+        public function _raw_data() { return $this->_m__raw_data; }
     }
 }

@@ -3,8 +3,8 @@
 
 namespace {
     class GlibcUtmp extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \GlibcUtmp $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\GlibcUtmp $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -28,7 +28,7 @@ namespace {
 
 namespace GlibcUtmp {
     class Record extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \GlibcUtmp $_parent = null, \GlibcUtmp $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\GlibcUtmp $_parent = null, ?\GlibcUtmp $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -113,7 +113,7 @@ namespace GlibcUtmp {
 
 namespace GlibcUtmp {
     class Timeval extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \GlibcUtmp\Record $_parent = null, \GlibcUtmp $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\GlibcUtmp\Record $_parent = null, ?\GlibcUtmp $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -149,5 +149,11 @@ namespace GlibcUtmp {
         const USER_PROCESS = 7;
         const DEAD_PROCESS = 8;
         const ACCOUNTING = 9;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 7 => true, 8 => true, 9 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

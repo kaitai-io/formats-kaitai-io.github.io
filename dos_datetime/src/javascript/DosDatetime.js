@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.DosDatetime = factory(root.KaitaiStream);
+    factory(root.DosDatetime || (root.DosDatetime = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (DosDatetime_, KaitaiStream) {
 /**
  * MS-DOS date and time are packed 16-bit values that specify local date/time.
  * The time is always stored in the current UTC time offset set on the computer
@@ -57,69 +57,11 @@ var DosDatetime = (function() {
     this.date = new Date(this._io, this, this._root);
   }
 
-  var Time = DosDatetime.Time = (function() {
-    function Time(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Time.prototype._read = function() {
-      this.secondDiv2 = this._io.readBitsIntLe(5);
-      if (!(this.secondDiv2 <= 29)) {
-        throw new KaitaiStream.ValidationGreaterThanError(29, this.secondDiv2, this._io, "/types/time/seq/0");
-      }
-      this.minute = this._io.readBitsIntLe(6);
-      if (!(this.minute <= 59)) {
-        throw new KaitaiStream.ValidationGreaterThanError(59, this.minute, this._io, "/types/time/seq/1");
-      }
-      this.hour = this._io.readBitsIntLe(5);
-      if (!(this.hour <= 23)) {
-        throw new KaitaiStream.ValidationGreaterThanError(23, this.hour, this._io, "/types/time/seq/2");
-      }
-    }
-    Object.defineProperty(Time.prototype, 'second', {
-      get: function() {
-        if (this._m_second !== undefined)
-          return this._m_second;
-        this._m_second = (2 * this.secondDiv2);
-        return this._m_second;
-      }
-    });
-    Object.defineProperty(Time.prototype, 'paddedSecond', {
-      get: function() {
-        if (this._m_paddedSecond !== undefined)
-          return this._m_paddedSecond;
-        this._m_paddedSecond = (this.second <= 9 ? "0" : "") + (this.second).toString(10);
-        return this._m_paddedSecond;
-      }
-    });
-    Object.defineProperty(Time.prototype, 'paddedMinute', {
-      get: function() {
-        if (this._m_paddedMinute !== undefined)
-          return this._m_paddedMinute;
-        this._m_paddedMinute = (this.minute <= 9 ? "0" : "") + (this.minute).toString(10);
-        return this._m_paddedMinute;
-      }
-    });
-    Object.defineProperty(Time.prototype, 'paddedHour', {
-      get: function() {
-        if (this._m_paddedHour !== undefined)
-          return this._m_paddedHour;
-        this._m_paddedHour = (this.hour <= 9 ? "0" : "") + (this.hour).toString(10);
-        return this._m_paddedHour;
-      }
-    });
-
-    return Time;
-  })();
-
   var Date = DosDatetime.Date = (function() {
     function Date(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -137,6 +79,30 @@ var DosDatetime = (function() {
       }
       this.yearMinus1980 = this._io.readBitsIntLe(7);
     }
+    Object.defineProperty(Date.prototype, 'paddedDay', {
+      get: function() {
+        if (this._m_paddedDay !== undefined)
+          return this._m_paddedDay;
+        this._m_paddedDay = (this.day <= 9 ? "0" : "") + (this.day).toString();
+        return this._m_paddedDay;
+      }
+    });
+    Object.defineProperty(Date.prototype, 'paddedMonth', {
+      get: function() {
+        if (this._m_paddedMonth !== undefined)
+          return this._m_paddedMonth;
+        this._m_paddedMonth = (this.month <= 9 ? "0" : "") + (this.month).toString();
+        return this._m_paddedMonth;
+      }
+    });
+    Object.defineProperty(Date.prototype, 'paddedYear', {
+      get: function() {
+        if (this._m_paddedYear !== undefined)
+          return this._m_paddedYear;
+        this._m_paddedYear = (this.year <= 999 ? "0" + (this.year <= 99 ? "0" + (this.year <= 9 ? "0" : "") : "") : "") + (this.year).toString();
+        return this._m_paddedYear;
+      }
+    });
 
     /**
      * only years from 1980 to 2107 (1980 + 127) can be represented
@@ -145,39 +111,73 @@ var DosDatetime = (function() {
       get: function() {
         if (this._m_year !== undefined)
           return this._m_year;
-        this._m_year = (1980 + this.yearMinus1980);
+        this._m_year = 1980 + this.yearMinus1980;
         return this._m_year;
-      }
-    });
-    Object.defineProperty(Date.prototype, 'paddedDay', {
-      get: function() {
-        if (this._m_paddedDay !== undefined)
-          return this._m_paddedDay;
-        this._m_paddedDay = (this.day <= 9 ? "0" : "") + (this.day).toString(10);
-        return this._m_paddedDay;
-      }
-    });
-    Object.defineProperty(Date.prototype, 'paddedMonth', {
-      get: function() {
-        if (this._m_paddedMonth !== undefined)
-          return this._m_paddedMonth;
-        this._m_paddedMonth = (this.month <= 9 ? "0" : "") + (this.month).toString(10);
-        return this._m_paddedMonth;
-      }
-    });
-    Object.defineProperty(Date.prototype, 'paddedYear', {
-      get: function() {
-        if (this._m_paddedYear !== undefined)
-          return this._m_paddedYear;
-        this._m_paddedYear = (this.year <= 999 ? "0" + (this.year <= 99 ? "0" + (this.year <= 9 ? "0" : "") : "") : "") + (this.year).toString(10);
-        return this._m_paddedYear;
       }
     });
 
     return Date;
   })();
 
+  var Time = DosDatetime.Time = (function() {
+    function Time(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Time.prototype._read = function() {
+      this.secondDiv2 = this._io.readBitsIntLe(5);
+      if (!(this.secondDiv2 <= 29)) {
+        throw new KaitaiStream.ValidationGreaterThanError(29, this.secondDiv2, this._io, "/types/time/seq/0");
+      }
+      this.minute = this._io.readBitsIntLe(6);
+      if (!(this.minute <= 59)) {
+        throw new KaitaiStream.ValidationGreaterThanError(59, this.minute, this._io, "/types/time/seq/1");
+      }
+      this.hour = this._io.readBitsIntLe(5);
+      if (!(this.hour <= 23)) {
+        throw new KaitaiStream.ValidationGreaterThanError(23, this.hour, this._io, "/types/time/seq/2");
+      }
+    }
+    Object.defineProperty(Time.prototype, 'paddedHour', {
+      get: function() {
+        if (this._m_paddedHour !== undefined)
+          return this._m_paddedHour;
+        this._m_paddedHour = (this.hour <= 9 ? "0" : "") + (this.hour).toString();
+        return this._m_paddedHour;
+      }
+    });
+    Object.defineProperty(Time.prototype, 'paddedMinute', {
+      get: function() {
+        if (this._m_paddedMinute !== undefined)
+          return this._m_paddedMinute;
+        this._m_paddedMinute = (this.minute <= 9 ? "0" : "") + (this.minute).toString();
+        return this._m_paddedMinute;
+      }
+    });
+    Object.defineProperty(Time.prototype, 'paddedSecond', {
+      get: function() {
+        if (this._m_paddedSecond !== undefined)
+          return this._m_paddedSecond;
+        this._m_paddedSecond = (this.second <= 9 ? "0" : "") + (this.second).toString();
+        return this._m_paddedSecond;
+      }
+    });
+    Object.defineProperty(Time.prototype, 'second', {
+      get: function() {
+        if (this._m_second !== undefined)
+          return this._m_second;
+        this._m_second = 2 * this.secondDiv2;
+        return this._m_second;
+      }
+    });
+
+    return Time;
+  })();
+
   return DosDatetime;
 })();
-return DosDatetime;
-}));
+DosDatetime_.DosDatetime = DosDatetime;
+});

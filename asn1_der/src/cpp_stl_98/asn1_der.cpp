@@ -1,10 +1,37 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 #include "asn1_der.h"
+std::set<asn1_der_t::type_tag_t> asn1_der_t::_build_values_type_tag_t() {
+    std::set<asn1_der_t::type_tag_t> _t;
+    _t.insert(asn1_der_t::TYPE_TAG_END_OF_CONTENT);
+    _t.insert(asn1_der_t::TYPE_TAG_BOOLEAN);
+    _t.insert(asn1_der_t::TYPE_TAG_INTEGER);
+    _t.insert(asn1_der_t::TYPE_TAG_BIT_STRING);
+    _t.insert(asn1_der_t::TYPE_TAG_OCTET_STRING);
+    _t.insert(asn1_der_t::TYPE_TAG_NULL_VALUE);
+    _t.insert(asn1_der_t::TYPE_TAG_OBJECT_ID);
+    _t.insert(asn1_der_t::TYPE_TAG_OBJECT_DESCRIPTOR);
+    _t.insert(asn1_der_t::TYPE_TAG_EXTERNAL);
+    _t.insert(asn1_der_t::TYPE_TAG_REAL);
+    _t.insert(asn1_der_t::TYPE_TAG_ENUMERATED);
+    _t.insert(asn1_der_t::TYPE_TAG_EMBEDDED_PDV);
+    _t.insert(asn1_der_t::TYPE_TAG_UTF8STRING);
+    _t.insert(asn1_der_t::TYPE_TAG_RELATIVE_OID);
+    _t.insert(asn1_der_t::TYPE_TAG_SEQUENCE_10);
+    _t.insert(asn1_der_t::TYPE_TAG_PRINTABLE_STRING);
+    _t.insert(asn1_der_t::TYPE_TAG_IA5STRING);
+    _t.insert(asn1_der_t::TYPE_TAG_SEQUENCE_30);
+    _t.insert(asn1_der_t::TYPE_TAG_SET);
+    return _t;
+}
+const std::set<asn1_der_t::type_tag_t> asn1_der_t::_values_type_tag_t = asn1_der_t::_build_values_type_tag_t();
+bool asn1_der_t::_is_defined_type_tag_t(asn1_der_t::type_tag_t v) {
+    return asn1_der_t::_values_type_tag_t.find(v) != asn1_der_t::_values_type_tag_t.end();
+}
 
 asn1_der_t::asn1_der_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, asn1_der_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     m_len = 0;
     m__io__raw_body = 0;
 
@@ -21,6 +48,13 @@ void asn1_der_t::_read() {
     m_len = new len_encoded_t(m__io, this, m__root);
     n_body = true;
     switch (type_tag()) {
+    case asn1_der_t::TYPE_TAG_OBJECT_ID: {
+        n_body = false;
+        m__raw_body = m__io->read_bytes(len()->result());
+        m__io__raw_body = new kaitai::kstream(m__raw_body);
+        m_body = new body_object_id_t(m__io__raw_body, this, m__root);
+        break;
+    }
     case asn1_der_t::TYPE_TAG_PRINTABLE_STRING: {
         n_body = false;
         m__raw_body = m__io->read_bytes(len()->result());
@@ -35,14 +69,14 @@ void asn1_der_t::_read() {
         m_body = new body_sequence_t(m__io__raw_body, this, m__root);
         break;
     }
-    case asn1_der_t::TYPE_TAG_SET: {
+    case asn1_der_t::TYPE_TAG_SEQUENCE_30: {
         n_body = false;
         m__raw_body = m__io->read_bytes(len()->result());
         m__io__raw_body = new kaitai::kstream(m__raw_body);
         m_body = new body_sequence_t(m__io__raw_body, this, m__root);
         break;
     }
-    case asn1_der_t::TYPE_TAG_SEQUENCE_30: {
+    case asn1_der_t::TYPE_TAG_SET: {
         n_body = false;
         m__raw_body = m__io->read_bytes(len()->result());
         m__io__raw_body = new kaitai::kstream(m__raw_body);
@@ -54,13 +88,6 @@ void asn1_der_t::_read() {
         m__raw_body = m__io->read_bytes(len()->result());
         m__io__raw_body = new kaitai::kstream(m__raw_body);
         m_body = new body_utf8string_t(m__io__raw_body, this, m__root);
-        break;
-    }
-    case asn1_der_t::TYPE_TAG_OBJECT_ID: {
-        n_body = false;
-        m__raw_body = m__io->read_bytes(len()->result());
-        m__io__raw_body = new kaitai::kstream(m__raw_body);
-        m_body = new body_object_id_t(m__io__raw_body, this, m__root);
         break;
     }
     default: {
@@ -86,66 +113,6 @@ void asn1_der_t::_clean_up() {
             delete m_body; m_body = 0;
         }
     }
-}
-
-asn1_der_t::body_sequence_t::body_sequence_t(kaitai::kstream* p__io, asn1_der_t* p__parent, asn1_der_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    m_entries = 0;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void asn1_der_t::body_sequence_t::_read() {
-    m_entries = new std::vector<asn1_der_t*>();
-    {
-        int i = 0;
-        while (!m__io->is_eof()) {
-            m_entries->push_back(new asn1_der_t(m__io));
-            i++;
-        }
-    }
-}
-
-asn1_der_t::body_sequence_t::~body_sequence_t() {
-    _clean_up();
-}
-
-void asn1_der_t::body_sequence_t::_clean_up() {
-    if (m_entries) {
-        for (std::vector<asn1_der_t*>::iterator it = m_entries->begin(); it != m_entries->end(); ++it) {
-            delete *it;
-        }
-        delete m_entries; m_entries = 0;
-    }
-}
-
-asn1_der_t::body_utf8string_t::body_utf8string_t(kaitai::kstream* p__io, asn1_der_t* p__parent, asn1_der_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void asn1_der_t::body_utf8string_t::_read() {
-    m_str = kaitai::kstream::bytes_to_str(m__io->read_bytes_full(), std::string("UTF-8"));
-}
-
-asn1_der_t::body_utf8string_t::~body_utf8string_t() {
-    _clean_up();
-}
-
-void asn1_der_t::body_utf8string_t::_clean_up() {
 }
 
 asn1_der_t::body_object_id_t::body_object_id_t(kaitai::kstream* p__io, asn1_der_t* p__parent, asn1_der_t* p__root) : kaitai::kstruct(p__io) {
@@ -177,17 +144,100 @@ void asn1_der_t::body_object_id_t::_clean_up() {
 int32_t asn1_der_t::body_object_id_t::first() {
     if (f_first)
         return m_first;
-    m_first = (first_and_second() / 40);
     f_first = true;
+    m_first = first_and_second() / 40;
     return m_first;
 }
 
 int32_t asn1_der_t::body_object_id_t::second() {
     if (f_second)
         return m_second;
-    m_second = kaitai::kstream::mod(first_and_second(), 40);
     f_second = true;
+    m_second = kaitai::kstream::mod(first_and_second(), 40);
     return m_second;
+}
+
+asn1_der_t::body_printable_string_t::body_printable_string_t(kaitai::kstream* p__io, asn1_der_t* p__parent, asn1_der_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void asn1_der_t::body_printable_string_t::_read() {
+    m_str = kaitai::kstream::bytes_to_str(m__io->read_bytes_full(), "ASCII");
+}
+
+asn1_der_t::body_printable_string_t::~body_printable_string_t() {
+    _clean_up();
+}
+
+void asn1_der_t::body_printable_string_t::_clean_up() {
+}
+
+asn1_der_t::body_sequence_t::body_sequence_t(kaitai::kstream* p__io, asn1_der_t* p__parent, asn1_der_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_entries = 0;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void asn1_der_t::body_sequence_t::_read() {
+    m_entries = new std::vector<asn1_der_t*>();
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_entries->push_back(new asn1_der_t(m__io, this, m__root));
+            i++;
+        }
+    }
+}
+
+asn1_der_t::body_sequence_t::~body_sequence_t() {
+    _clean_up();
+}
+
+void asn1_der_t::body_sequence_t::_clean_up() {
+    if (m_entries) {
+        for (std::vector<asn1_der_t*>::iterator it = m_entries->begin(); it != m_entries->end(); ++it) {
+            delete *it;
+        }
+        delete m_entries; m_entries = 0;
+    }
+}
+
+asn1_der_t::body_utf8string_t::body_utf8string_t(kaitai::kstream* p__io, asn1_der_t* p__parent, asn1_der_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void asn1_der_t::body_utf8string_t::_read() {
+    m_str = kaitai::kstream::bytes_to_str(m__io->read_bytes_full(), "UTF-8");
+}
+
+asn1_der_t::body_utf8string_t::~body_utf8string_t() {
+    _clean_up();
+}
+
+void asn1_der_t::body_utf8string_t::_clean_up() {
 }
 
 asn1_der_t::len_encoded_t::len_encoded_t(kaitai::kstream* p__io, asn1_der_t* p__parent, asn1_der_t* p__root) : kaitai::kstruct(p__io) {
@@ -231,30 +281,7 @@ void asn1_der_t::len_encoded_t::_clean_up() {
 uint16_t asn1_der_t::len_encoded_t::result() {
     if (f_result)
         return m_result;
-    m_result = ((b1() == 129) ? (int1()) : (((b1() == 130) ? (int2()) : (b1()))));
     f_result = true;
+    m_result = ((b1() == 129) ? (int1()) : (((b1() == 130) ? (int2()) : (b1()))));
     return m_result;
-}
-
-asn1_der_t::body_printable_string_t::body_printable_string_t(kaitai::kstream* p__io, asn1_der_t* p__parent, asn1_der_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void asn1_der_t::body_printable_string_t::_read() {
-    m_str = kaitai::kstream::bytes_to_str(m__io->read_bytes_full(), std::string("ASCII"));
-}
-
-asn1_der_t::body_printable_string_t::~body_printable_string_t() {
-    _clean_up();
-}
-
-void asn1_der_t::body_printable_string_t::_clean_up() {
 }

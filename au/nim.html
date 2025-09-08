@@ -208,6 +208,11 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="java-write.html" title="AU audio format parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="AU audio format parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -238,7 +243,17 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="python-write.html" title="AU audio format parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="AU audio format parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="AU audio format parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -352,7 +367,7 @@ section#format-index .row {
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">magic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">magicExpr</span>
 <span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">ofsDataExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">ofsData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ofsDataExpr</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">rawHeaderExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">ofsData</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">4</span><span class="p">)))</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">rawHeaderExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">ofsData</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">4</span><span class="p">))</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">rawHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rawHeaderExpr</span>
 <span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">rawHeaderIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawHeaderExpr</span><span class="p">)</span>
 <span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">headerExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Au_Header</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawHeaderIo</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
@@ -361,7 +376,7 @@ section#format-index .row {
 <span class="k">proc</span><span class="w"> </span><span class="nf">lenData</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Au</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
 <span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">lenDataInstFlag</span><span class="p">:</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">lenDataInst</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lenDataInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">int</span><span class="p">((</span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">dataSize</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">4294967295</span><span class="il">&#39;i64</span><span class="p">:</span><span class="w"> </span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">size</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">ofsData</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">dataSize</span><span class="p">))</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lenDataInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">int</span><span class="p">((</span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">dataSize</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">4294967295</span><span class="il">&#39;i64</span><span class="p">:</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">size</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">ofsData</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">dataSize</span><span class="p">))</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lenDataInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lenDataInstExpr</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lenDataInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
 <span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">lenDataInst</span>

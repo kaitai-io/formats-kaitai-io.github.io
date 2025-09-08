@@ -14,15 +14,15 @@
 
 namespace {
     class Gzip extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Gzip $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Gzip $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic = $this->_io->readBytes(2);
-            if (!($this->magic() == "\x1F\x8B")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x1F\x8B", $this->magic(), $this->_io(), "/seq/0");
+            if (!($this->_m_magic == "\x1F\x8B")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x1F\x8B", $this->_m_magic, $this->_io, "/seq/0");
             }
             $this->_m_compressionMethod = $this->_io->readU1();
             $this->_m_flags = new \Gzip\Flags($this->_io, $this, $this->_root);
@@ -45,7 +45,7 @@ namespace {
             if ($this->flags()->hasHeaderCrc()) {
                 $this->_m_headerCrc16 = $this->_io->readU2le();
             }
-            $this->_m_body = $this->_io->readBytes((($this->_io()->size() - $this->_io()->pos()) - 8));
+            $this->_m_body = $this->_io->readBytes(($this->_io()->size() - $this->_io()->pos()) - 8);
             $this->_m_bodyCrc32 = $this->_io->readU4le();
             $this->_m_lenUncompressed = $this->_io->readU4le();
         }
@@ -110,8 +110,58 @@ namespace {
 }
 
 namespace Gzip {
+    class ExtraFlagsDeflate extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Gzip $_parent = null, ?\Gzip $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_compressionStrength = $this->_io->readU1();
+        }
+        protected $_m_compressionStrength;
+        public function compressionStrength() { return $this->_m_compressionStrength; }
+    }
+}
+
+namespace Gzip\ExtraFlagsDeflate {
+    class CompressionStrengths {
+        const BEST = 2;
+        const FAST = 4;
+
+        private const _VALUES = [2 => true, 4 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
+    }
+}
+
+namespace Gzip {
+    class Extras extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Gzip $_parent = null, ?\Gzip $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_lenSubfields = $this->_io->readU2le();
+            $this->_m__raw_subfields = $this->_io->readBytes($this->lenSubfields());
+            $_io__raw_subfields = new \Kaitai\Struct\Stream($this->_m__raw_subfields);
+            $this->_m_subfields = new \Gzip\Subfields($_io__raw_subfields, $this, $this->_root);
+        }
+        protected $_m_lenSubfields;
+        protected $_m_subfields;
+        protected $_m__raw_subfields;
+        public function lenSubfields() { return $this->_m_lenSubfields; }
+        public function subfields() { return $this->_m_subfields; }
+        public function _raw_subfields() { return $this->_m__raw_subfields; }
+    }
+}
+
+namespace Gzip {
     class Flags extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Gzip $_parent = null, \Gzip $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Gzip $_parent = null, ?\Gzip $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -152,52 +202,6 @@ namespace Gzip {
     }
 }
 
-namespace Gzip {
-    class ExtraFlagsDeflate extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Gzip $_parent = null, \Gzip $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_compressionStrength = $this->_io->readU1();
-        }
-        protected $_m_compressionStrength;
-        public function compressionStrength() { return $this->_m_compressionStrength; }
-    }
-}
-
-namespace Gzip\ExtraFlagsDeflate {
-    class CompressionStrengths {
-        const BEST = 2;
-        const FAST = 4;
-    }
-}
-
-/**
- * Container for many subfields, constrained by size of stream.
- */
-
-namespace Gzip {
-    class Subfields extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Gzip\Extras $_parent = null, \Gzip $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_entries = [];
-            $i = 0;
-            while (!$this->_io->isEof()) {
-                $this->_m_entries[] = new \Gzip\Subfield($this->_io, $this, $this->_root);
-                $i++;
-            }
-        }
-        protected $_m_entries;
-        public function entries() { return $this->_m_entries; }
-    }
-}
-
 /**
  * Every subfield follows typical [TLV scheme](https://en.wikipedia.org/wiki/Type-length-value):
  * 
@@ -211,7 +215,7 @@ namespace Gzip {
 
 namespace Gzip {
     class Subfield extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Gzip\Subfields $_parent = null, \Gzip $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Gzip\Subfields $_parent = null, ?\Gzip $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -234,31 +238,39 @@ namespace Gzip {
     }
 }
 
+/**
+ * Container for many subfields, constrained by size of stream.
+ */
+
 namespace Gzip {
-    class Extras extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Gzip $_parent = null, \Gzip $_root = null) {
+    class Subfields extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Gzip\Extras $_parent = null, ?\Gzip $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_lenSubfields = $this->_io->readU2le();
-            $this->_m__raw_subfields = $this->_io->readBytes($this->lenSubfields());
-            $_io__raw_subfields = new \Kaitai\Struct\Stream($this->_m__raw_subfields);
-            $this->_m_subfields = new \Gzip\Subfields($_io__raw_subfields, $this, $this->_root);
+            $this->_m_entries = [];
+            $i = 0;
+            while (!$this->_io->isEof()) {
+                $this->_m_entries[] = new \Gzip\Subfield($this->_io, $this, $this->_root);
+                $i++;
+            }
         }
-        protected $_m_lenSubfields;
-        protected $_m_subfields;
-        protected $_m__raw_subfields;
-        public function lenSubfields() { return $this->_m_lenSubfields; }
-        public function subfields() { return $this->_m_subfields; }
-        public function _raw_subfields() { return $this->_m__raw_subfields; }
+        protected $_m_entries;
+        public function entries() { return $this->_m_entries; }
     }
 }
 
 namespace Gzip {
     class CompressionMethods {
         const DEFLATE = 8;
+
+        private const _VALUES = [8 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
@@ -335,5 +347,11 @@ namespace Gzip {
          */
         const ACORN_RISCOS = 13;
         const UNKNOWN = 255;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 7 => true, 8 => true, 9 => true, 10 => true, 11 => true, 12 => true, 13 => true, 255 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

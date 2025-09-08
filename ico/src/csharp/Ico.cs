@@ -30,9 +30,9 @@ namespace Kaitai
         private void _read()
         {
             _magic = m_io.ReadBytes(4);
-            if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 0, 0, 1, 0 }) == 0)))
+            if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 0, 0, 1, 0 }) == 0)))
             {
-                throw new ValidationNotEqualError(new byte[] { 0, 0, 1, 0 }, Magic, M_Io, "/seq/0");
+                throw new ValidationNotEqualError(new byte[] { 0, 0, 1, 0 }, _magic, m_io, "/seq/0");
             }
             _numImages = m_io.ReadU2le();
             _images = new List<IconDirEntry>();
@@ -53,8 +53,8 @@ namespace Kaitai
                 m_parent = p__parent;
                 m_root = p__root;
                 f_img = false;
-                f_pngHeader = false;
                 f_isPng = false;
+                f_pngHeader = false;
                 _read();
             }
             private void _read()
@@ -63,9 +63,9 @@ namespace Kaitai
                 _height = m_io.ReadU1();
                 _numColors = m_io.ReadU1();
                 _reserved = m_io.ReadBytes(1);
-                if (!((KaitaiStream.ByteArrayCompare(Reserved, new byte[] { 0 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_reserved, new byte[] { 0 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 0 }, Reserved, M_Io, "/types/icon_dir_entry/seq/3");
+                    throw new ValidationNotEqualError(new byte[] { 0 }, _reserved, m_io, "/types/icon_dir_entry/seq/3");
                 }
                 _numPlanes = m_io.ReadU2le();
                 _bpp = m_io.ReadU2le();
@@ -86,12 +86,29 @@ namespace Kaitai
                 {
                     if (f_img)
                         return _img;
+                    f_img = true;
                     long _pos = m_io.Pos;
                     m_io.Seek(OfsImg);
                     _img = m_io.ReadBytes(LenImg);
                     m_io.Seek(_pos);
-                    f_img = true;
                     return _img;
+                }
+            }
+            private bool f_isPng;
+            private bool _isPng;
+
+            /// <summary>
+            /// True if this image is in PNG format.
+            /// </summary>
+            public bool IsPng
+            {
+                get
+                {
+                    if (f_isPng)
+                        return _isPng;
+                    f_isPng = true;
+                    _isPng = (bool) ((KaitaiStream.ByteArrayCompare(PngHeader, new byte[] { 137, 80, 78, 71, 13, 10, 26, 10 }) == 0));
+                    return _isPng;
                 }
             }
             private bool f_pngHeader;
@@ -107,29 +124,12 @@ namespace Kaitai
                 {
                     if (f_pngHeader)
                         return _pngHeader;
+                    f_pngHeader = true;
                     long _pos = m_io.Pos;
                     m_io.Seek(OfsImg);
                     _pngHeader = m_io.ReadBytes(8);
                     m_io.Seek(_pos);
-                    f_pngHeader = true;
                     return _pngHeader;
-                }
-            }
-            private bool f_isPng;
-            private bool _isPng;
-
-            /// <summary>
-            /// True if this image is in PNG format.
-            /// </summary>
-            public bool IsPng
-            {
-                get
-                {
-                    if (f_isPng)
-                        return _isPng;
-                    _isPng = (bool) ((KaitaiStream.ByteArrayCompare(PngHeader, new byte[] { 137, 80, 78, 71, 13, 10, 26, 10 }) == 0));
-                    f_isPng = true;
-                    return _isPng;
                 }
             }
             private byte _width;

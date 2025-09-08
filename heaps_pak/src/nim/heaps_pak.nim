@@ -14,6 +14,10 @@ type
     `magic2`*: seq[byte]
     `parent`*: HeapsPak
     `rawRootEntry`*: seq[byte]
+  HeapsPak_Header_Dir* = ref object of KaitaiStruct
+    `numEntries`*: uint32
+    `entries`*: seq[HeapsPak_Header_Entry]
+    `parent`*: HeapsPak_Header_Entry
   HeapsPak_Header_Entry* = ref object of KaitaiStruct
     `lenName`*: uint8
     `name`*: string
@@ -31,17 +35,13 @@ type
     `parent`*: HeapsPak_Header_Entry
     `dataInst`: seq[byte]
     `dataInstFlag`: bool
-  HeapsPak_Header_Dir* = ref object of KaitaiStruct
-    `numEntries`*: uint32
-    `entries`*: seq[HeapsPak_Header_Entry]
-    `parent`*: HeapsPak_Header_Entry
 
 proc read*(_: typedesc[HeapsPak], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): HeapsPak
 proc read*(_: typedesc[HeapsPak_Header], io: KaitaiStream, root: KaitaiStruct, parent: HeapsPak): HeapsPak_Header
+proc read*(_: typedesc[HeapsPak_Header_Dir], io: KaitaiStream, root: KaitaiStruct, parent: HeapsPak_Header_Entry): HeapsPak_Header_Dir
 proc read*(_: typedesc[HeapsPak_Header_Entry], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): HeapsPak_Header_Entry
 proc read*(_: typedesc[HeapsPak_Header_Entry_Flags], io: KaitaiStream, root: KaitaiStruct, parent: HeapsPak_Header_Entry): HeapsPak_Header_Entry_Flags
 proc read*(_: typedesc[HeapsPak_Header_File], io: KaitaiStream, root: KaitaiStruct, parent: HeapsPak_Header_Entry): HeapsPak_Header_File
-proc read*(_: typedesc[HeapsPak_Header_Dir], io: KaitaiStream, root: KaitaiStruct, parent: HeapsPak_Header_Entry): HeapsPak_Header_Dir
 
 proc data*(this: HeapsPak_Header_File): seq[byte]
 
@@ -79,7 +79,7 @@ proc read*(_: typedesc[HeapsPak_Header], io: KaitaiStream, root: KaitaiStruct, p
   this.lenHeader = lenHeaderExpr
   let lenDataExpr = this.io.readU4le()
   this.lenData = lenDataExpr
-  let rawRootEntryExpr = this.io.readBytes(int((this.lenHeader - 16)))
+  let rawRootEntryExpr = this.io.readBytes(int(this.lenHeader - 16))
   this.rawRootEntry = rawRootEntryExpr
   let rawRootEntryIo = newKaitaiStream(rawRootEntryExpr)
   let rootEntryExpr = HeapsPak_Header_Entry.read(rawRootEntryIo, this.root, this)
@@ -89,6 +89,23 @@ proc read*(_: typedesc[HeapsPak_Header], io: KaitaiStream, root: KaitaiStruct, p
 
 proc fromFile*(_: typedesc[HeapsPak_Header], filename: string): HeapsPak_Header =
   HeapsPak_Header.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[HeapsPak_Header_Dir], io: KaitaiStream, root: KaitaiStruct, parent: HeapsPak_Header_Entry): HeapsPak_Header_Dir =
+  template this: untyped = result
+  this = new(HeapsPak_Header_Dir)
+  let root = if root == nil: cast[HeapsPak](this) else: cast[HeapsPak](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let numEntriesExpr = this.io.readU4le()
+  this.numEntries = numEntriesExpr
+  for i in 0 ..< int(this.numEntries):
+    let it = HeapsPak_Header_Entry.read(this.io, this.root, this)
+    this.entries.add(it)
+
+proc fromFile*(_: typedesc[HeapsPak_Header_Dir], filename: string): HeapsPak_Header_Dir =
+  HeapsPak_Header_Dir.read(newKaitaiFileStream(filename), nil, nil)
 
 
 ##[
@@ -110,11 +127,11 @@ proc read*(_: typedesc[HeapsPak_Header_Entry], io: KaitaiStream, root: KaitaiStr
   this.flags = flagsExpr
   block:
     let on = this.flags.isDir
-    if on == true:
-      let bodyExpr = HeapsPak_Header_Dir.read(this.io, this.root, this)
-      this.body = bodyExpr
-    elif on == false:
+    if on == false:
       let bodyExpr = HeapsPak_Header_File.read(this.io, this.root, this)
+      this.body = bodyExpr
+    elif on == true:
+      let bodyExpr = HeapsPak_Header_Dir.read(this.io, this.root, this)
       this.body = bodyExpr
 
 proc fromFile*(_: typedesc[HeapsPak_Header_Entry], filename: string): HeapsPak_Header_Entry =
@@ -156,7 +173,7 @@ proc data(this: HeapsPak_Header_File): seq[byte] =
     return this.dataInst
   let io = HeapsPak(this.root).io
   let pos = io.pos()
-  io.seek(int((HeapsPak(this.root).header.lenHeader + this.ofsData)))
+  io.seek(int(HeapsPak(this.root).header.lenHeader + this.ofsData))
   let dataInstExpr = io.readBytes(int(this.lenData))
   this.dataInst = dataInstExpr
   io.seek(pos)
@@ -165,21 +182,4 @@ proc data(this: HeapsPak_Header_File): seq[byte] =
 
 proc fromFile*(_: typedesc[HeapsPak_Header_File], filename: string): HeapsPak_Header_File =
   HeapsPak_Header_File.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[HeapsPak_Header_Dir], io: KaitaiStream, root: KaitaiStruct, parent: HeapsPak_Header_Entry): HeapsPak_Header_Dir =
-  template this: untyped = result
-  this = new(HeapsPak_Header_Dir)
-  let root = if root == nil: cast[HeapsPak](this) else: cast[HeapsPak](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let numEntriesExpr = this.io.readU4le()
-  this.numEntries = numEntriesExpr
-  for i in 0 ..< int(this.numEntries):
-    let it = HeapsPak_Header_Entry.read(this.io, this.root, this)
-    this.entries.add(it)
-
-proc fromFile*(_: typedesc[HeapsPak_Header_Dir], filename: string): HeapsPak_Header_Dir =
-  HeapsPak_Header_Dir.read(newKaitaiFileStream(filename), nil, nil)
 

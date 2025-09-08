@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -61,57 +62,158 @@ public class AndroidSparse extends KaitaiStruct {
     }
     private void _read() {
         this.headerPrefix = new FileHeaderPrefix(this._io, this, _root);
-        this._raw_header = this._io.readBytes((headerPrefix().lenHeader() - 10));
-        KaitaiStream _io__raw_header = new ByteBufferKaitaiStream(_raw_header);
-        this.header = new FileHeader(_io__raw_header, this, _root);
+        KaitaiStream _io_header = this._io.substream(headerPrefix().lenHeader() - 10);
+        this.header = new FileHeader(_io_header, this, _root);
         this.chunks = new ArrayList<Chunk>();
         for (int i = 0; i < header().numChunks(); i++) {
             this.chunks.add(new Chunk(this._io, this, _root));
         }
     }
-    public static class FileHeaderPrefix extends KaitaiStruct {
-        public static FileHeaderPrefix fromFile(String fileName) throws IOException {
-            return new FileHeaderPrefix(new ByteBufferKaitaiStream(fileName));
+
+    public void _fetchInstances() {
+        this.headerPrefix._fetchInstances();
+        this.header._fetchInstances();
+        for (int i = 0; i < this.chunks.size(); i++) {
+            this.chunks.get(((Number) (i)).intValue())._fetchInstances();
+        }
+    }
+    public static class Chunk extends KaitaiStruct {
+        public static Chunk fromFile(String fileName) throws IOException {
+            return new Chunk(new ByteBufferKaitaiStream(fileName));
         }
 
-        public FileHeaderPrefix(KaitaiStream _io) {
+        public Chunk(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public FileHeaderPrefix(KaitaiStream _io, AndroidSparse _parent) {
+        public Chunk(KaitaiStream _io, AndroidSparse _parent) {
             this(_io, _parent, null);
         }
 
-        public FileHeaderPrefix(KaitaiStream _io, AndroidSparse _parent, AndroidSparse _root) {
+        public Chunk(KaitaiStream _io, AndroidSparse _parent, AndroidSparse _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.magic = this._io.readBytes(4);
-            if (!(Arrays.equals(magic(), new byte[] { 58, -1, 38, -19 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 58, -1, 38, -19 }, magic(), _io(), "/types/file_header_prefix/seq/0");
+            KaitaiStream _io_header = this._io.substream(_root().header().lenChunkHeader());
+            this.header = new ChunkHeader(_io_header, this, _root);
+            {
+                ChunkTypes on = header().chunkType();
+                if (on != null) {
+                    switch (header().chunkType()) {
+                    case CRC32: {
+                        this.body = ((Object) (this._io.readU4le()));
+                        break;
+                    }
+                    default: {
+                        this.body = this._io.readBytes(header().lenBody());
+                        break;
+                    }
+                    }
+                } else {
+                    this.body = this._io.readBytes(header().lenBody());
+                }
             }
-            this.version = new Version(this._io, this, _root);
-            this.lenHeader = this._io.readU2le();
         }
-        private byte[] magic;
-        private Version version;
-        private int lenHeader;
+
+        public void _fetchInstances() {
+            this.header._fetchInstances();
+            {
+                ChunkTypes on = header().chunkType();
+                if (on != null) {
+                    switch (header().chunkType()) {
+                    case CRC32: {
+                        break;
+                    }
+                    default: {
+                        break;
+                    }
+                    }
+                } else {
+                }
+            }
+        }
+        public static class ChunkHeader extends KaitaiStruct {
+            public static ChunkHeader fromFile(String fileName) throws IOException {
+                return new ChunkHeader(new ByteBufferKaitaiStream(fileName));
+            }
+
+            public ChunkHeader(KaitaiStream _io) {
+                this(_io, null, null);
+            }
+
+            public ChunkHeader(KaitaiStream _io, AndroidSparse.Chunk _parent) {
+                this(_io, _parent, null);
+            }
+
+            public ChunkHeader(KaitaiStream _io, AndroidSparse.Chunk _parent, AndroidSparse _root) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                _read();
+            }
+            private void _read() {
+                this.chunkType = AndroidSparse.ChunkTypes.byId(this._io.readU2le());
+                this.reserved1 = this._io.readU2le();
+                this.numBodyBlocks = this._io.readU4le();
+                this.lenChunk = this._io.readU4le();
+                if (!(this.lenChunk == (lenBodyExpected() != -1 ? _root().header().lenChunkHeader() + lenBodyExpected() : lenChunk()))) {
+                    throw new KaitaiStream.ValidationNotEqualError((lenBodyExpected() != -1 ? _root().header().lenChunkHeader() + lenBodyExpected() : lenChunk()), this.lenChunk, this._io, "/types/chunk/types/chunk_header/seq/3");
+                }
+            }
+
+            public void _fetchInstances() {
+            }
+            private Integer lenBody;
+            public Integer lenBody() {
+                if (this.lenBody != null)
+                    return this.lenBody;
+                this.lenBody = ((Number) (lenChunk() - _root().header().lenChunkHeader())).intValue();
+                return this.lenBody;
+            }
+            private Integer lenBodyExpected;
+
+            /**
+             * @see <a href="https://android.googlesource.com/platform/system/core/+/e8d02c50d7/libsparse/sparse_read.cpp#184">Source</a>
+             * @see <a href="https://android.googlesource.com/platform/system/core/+/e8d02c50d7/libsparse/sparse_read.cpp#215">Source</a>
+             * @see <a href="https://android.googlesource.com/platform/system/core/+/e8d02c50d7/libsparse/sparse_read.cpp#249">Source</a>
+             * @see <a href="https://android.googlesource.com/platform/system/core/+/e8d02c50d7/libsparse/sparse_read.cpp#270">Source</a>
+             */
+            public Integer lenBodyExpected() {
+                if (this.lenBodyExpected != null)
+                    return this.lenBodyExpected;
+                this.lenBodyExpected = ((Number) ((chunkType() == AndroidSparse.ChunkTypes.RAW ? _root().header().blockSize() * numBodyBlocks() : (chunkType() == AndroidSparse.ChunkTypes.FILL ? 4 : (chunkType() == AndroidSparse.ChunkTypes.DONT_CARE ? 0 : (chunkType() == AndroidSparse.ChunkTypes.CRC32 ? 4 : -1)))))).intValue();
+                return this.lenBodyExpected;
+            }
+            private ChunkTypes chunkType;
+            private int reserved1;
+            private long numBodyBlocks;
+            private long lenChunk;
+            private AndroidSparse _root;
+            private AndroidSparse.Chunk _parent;
+            public ChunkTypes chunkType() { return chunkType; }
+            public int reserved1() { return reserved1; }
+
+            /**
+             * size of the chunk body in blocks in output image
+             */
+            public long numBodyBlocks() { return numBodyBlocks; }
+
+            /**
+             * in bytes of chunk input file including chunk header and data
+             */
+            public long lenChunk() { return lenChunk; }
+            public AndroidSparse _root() { return _root; }
+            public AndroidSparse.Chunk _parent() { return _parent; }
+        }
+        private ChunkHeader header;
+        private Object body;
         private AndroidSparse _root;
         private AndroidSparse _parent;
-        public byte[] magic() { return magic; }
-
-        /**
-         * internal; access `_root.header.version` instead
-         */
-        public Version version() { return version; }
-
-        /**
-         * internal; access `_root.header.len_header` instead
-         */
-        public int lenHeader() { return lenHeader; }
+        public ChunkHeader header() { return header; }
+        public Object body() { return body; }
         public AndroidSparse _root() { return _root; }
         public AndroidSparse _parent() { return _parent; }
     }
@@ -138,21 +240,17 @@ public class AndroidSparse extends KaitaiStruct {
             this.lenChunkHeader = this._io.readU2le();
             this.blockSize = this._io.readU4le();
             {
-                long _it = blockSize();
+                long _it = this.blockSize;
                 if (!(KaitaiStream.mod(_it, 4) == 0)) {
-                    throw new KaitaiStream.ValidationExprError(blockSize(), _io(), "/types/file_header/seq/1");
+                    throw new KaitaiStream.ValidationExprError(this.blockSize, this._io, "/types/file_header/seq/1");
                 }
             }
             this.numBlocks = this._io.readU4le();
             this.numChunks = this._io.readU4le();
             this.checksum = this._io.readU4le();
         }
-        private Version version;
-        public Version version() {
-            if (this.version != null)
-                return this.version;
-            this.version = _root().headerPrefix().version();
-            return this.version;
+
+        public void _fetchInstances() {
         }
         private Integer lenHeader;
 
@@ -162,9 +260,15 @@ public class AndroidSparse extends KaitaiStruct {
         public Integer lenHeader() {
             if (this.lenHeader != null)
                 return this.lenHeader;
-            int _tmp = (int) (_root().headerPrefix().lenHeader());
-            this.lenHeader = _tmp;
+            this.lenHeader = ((Number) (_root().headerPrefix().lenHeader())).intValue();
             return this.lenHeader;
+        }
+        private Version version;
+        public Version version() {
+            if (this.version != null)
+                return this.version;
+            this.version = _root().headerPrefix().version();
+            return this.version;
         }
         private int lenChunkHeader;
         private long blockSize;
@@ -202,129 +306,55 @@ public class AndroidSparse extends KaitaiStruct {
         public AndroidSparse _root() { return _root; }
         public AndroidSparse _parent() { return _parent; }
     }
-    public static class Chunk extends KaitaiStruct {
-        public static Chunk fromFile(String fileName) throws IOException {
-            return new Chunk(new ByteBufferKaitaiStream(fileName));
+    public static class FileHeaderPrefix extends KaitaiStruct {
+        public static FileHeaderPrefix fromFile(String fileName) throws IOException {
+            return new FileHeaderPrefix(new ByteBufferKaitaiStream(fileName));
         }
 
-        public Chunk(KaitaiStream _io) {
+        public FileHeaderPrefix(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public Chunk(KaitaiStream _io, AndroidSparse _parent) {
+        public FileHeaderPrefix(KaitaiStream _io, AndroidSparse _parent) {
             this(_io, _parent, null);
         }
 
-        public Chunk(KaitaiStream _io, AndroidSparse _parent, AndroidSparse _root) {
+        public FileHeaderPrefix(KaitaiStream _io, AndroidSparse _parent, AndroidSparse _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this._raw_header = this._io.readBytes(_root().header().lenChunkHeader());
-            KaitaiStream _io__raw_header = new ByteBufferKaitaiStream(_raw_header);
-            this.header = new ChunkHeader(_io__raw_header, this, _root);
-            {
-                ChunkTypes on = header().chunkType();
-                if (on != null) {
-                    switch (header().chunkType()) {
-                    case CRC32: {
-                        this.body = (Object) (this._io.readU4le());
-                        break;
-                    }
-                    default: {
-                        this.body = this._io.readBytes(header().lenBody());
-                        break;
-                    }
-                    }
-                } else {
-                    this.body = this._io.readBytes(header().lenBody());
-                }
+            this.magic = this._io.readBytes(4);
+            if (!(Arrays.equals(this.magic, new byte[] { 58, -1, 38, -19 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 58, -1, 38, -19 }, this.magic, this._io, "/types/file_header_prefix/seq/0");
             }
+            this.version = new Version(this._io, this, _root);
+            this.lenHeader = this._io.readU2le();
         }
-        public static class ChunkHeader extends KaitaiStruct {
-            public static ChunkHeader fromFile(String fileName) throws IOException {
-                return new ChunkHeader(new ByteBufferKaitaiStream(fileName));
-            }
 
-            public ChunkHeader(KaitaiStream _io) {
-                this(_io, null, null);
-            }
-
-            public ChunkHeader(KaitaiStream _io, AndroidSparse.Chunk _parent) {
-                this(_io, _parent, null);
-            }
-
-            public ChunkHeader(KaitaiStream _io, AndroidSparse.Chunk _parent, AndroidSparse _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.chunkType = AndroidSparse.ChunkTypes.byId(this._io.readU2le());
-                this.reserved1 = this._io.readU2le();
-                this.numBodyBlocks = this._io.readU4le();
-                this.lenChunk = this._io.readU4le();
-                if (!(lenChunk() == (lenBodyExpected() != -1 ? (_root().header().lenChunkHeader() + lenBodyExpected()) : lenChunk()))) {
-                    throw new KaitaiStream.ValidationNotEqualError((lenBodyExpected() != -1 ? (_root().header().lenChunkHeader() + lenBodyExpected()) : lenChunk()), lenChunk(), _io(), "/types/chunk/types/chunk_header/seq/3");
-                }
-            }
-            private Integer lenBody;
-            public Integer lenBody() {
-                if (this.lenBody != null)
-                    return this.lenBody;
-                int _tmp = (int) ((lenChunk() - _root().header().lenChunkHeader()));
-                this.lenBody = _tmp;
-                return this.lenBody;
-            }
-            private Integer lenBodyExpected;
-
-            /**
-             * @see <a href="https://android.googlesource.com/platform/system/core/+/e8d02c50d7/libsparse/sparse_read.cpp#184">Source</a>
-             * @see <a href="https://android.googlesource.com/platform/system/core/+/e8d02c50d7/libsparse/sparse_read.cpp#215">Source</a>
-             * @see <a href="https://android.googlesource.com/platform/system/core/+/e8d02c50d7/libsparse/sparse_read.cpp#249">Source</a>
-             * @see <a href="https://android.googlesource.com/platform/system/core/+/e8d02c50d7/libsparse/sparse_read.cpp#270">Source</a>
-             */
-            public Integer lenBodyExpected() {
-                if (this.lenBodyExpected != null)
-                    return this.lenBodyExpected;
-                int _tmp = (int) ((chunkType() == AndroidSparse.ChunkTypes.RAW ? (_root().header().blockSize() * numBodyBlocks()) : (chunkType() == AndroidSparse.ChunkTypes.FILL ? 4 : (chunkType() == AndroidSparse.ChunkTypes.DONT_CARE ? 0 : (chunkType() == AndroidSparse.ChunkTypes.CRC32 ? 4 : -1)))));
-                this.lenBodyExpected = _tmp;
-                return this.lenBodyExpected;
-            }
-            private ChunkTypes chunkType;
-            private int reserved1;
-            private long numBodyBlocks;
-            private long lenChunk;
-            private AndroidSparse _root;
-            private AndroidSparse.Chunk _parent;
-            public ChunkTypes chunkType() { return chunkType; }
-            public int reserved1() { return reserved1; }
-
-            /**
-             * size of the chunk body in blocks in output image
-             */
-            public long numBodyBlocks() { return numBodyBlocks; }
-
-            /**
-             * in bytes of chunk input file including chunk header and data
-             */
-            public long lenChunk() { return lenChunk; }
-            public AndroidSparse _root() { return _root; }
-            public AndroidSparse.Chunk _parent() { return _parent; }
+        public void _fetchInstances() {
+            this.version._fetchInstances();
         }
-        private ChunkHeader header;
-        private Object body;
+        private byte[] magic;
+        private Version version;
+        private int lenHeader;
         private AndroidSparse _root;
         private AndroidSparse _parent;
-        private byte[] _raw_header;
-        public ChunkHeader header() { return header; }
-        public Object body() { return body; }
+        public byte[] magic() { return magic; }
+
+        /**
+         * internal; access `_root.header.version` instead
+         */
+        public Version version() { return version; }
+
+        /**
+         * internal; access `_root.header.len_header` instead
+         */
+        public int lenHeader() { return lenHeader; }
         public AndroidSparse _root() { return _root; }
         public AndroidSparse _parent() { return _parent; }
-        public byte[] _raw_header() { return _raw_header; }
     }
     public static class Version extends KaitaiStruct {
         public static Version fromFile(String fileName) throws IOException {
@@ -347,10 +377,13 @@ public class AndroidSparse extends KaitaiStruct {
         }
         private void _read() {
             this.major = this._io.readU2le();
-            if (!(major() == 1)) {
-                throw new KaitaiStream.ValidationNotEqualError(1, major(), _io(), "/types/version/seq/0");
+            if (!(this.major == 1)) {
+                throw new KaitaiStream.ValidationNotEqualError(1, this.major, this._io, "/types/version/seq/0");
             }
             this.minor = this._io.readU2le();
+        }
+
+        public void _fetchInstances() {
         }
         private int major;
         private int minor;
@@ -363,18 +396,16 @@ public class AndroidSparse extends KaitaiStruct {
     }
     private FileHeaderPrefix headerPrefix;
     private FileHeader header;
-    private ArrayList<Chunk> chunks;
+    private List<Chunk> chunks;
     private AndroidSparse _root;
     private KaitaiStruct _parent;
-    private byte[] _raw_header;
 
     /**
      * internal; access `_root.header` instead
      */
     public FileHeaderPrefix headerPrefix() { return headerPrefix; }
     public FileHeader header() { return header; }
-    public ArrayList<Chunk> chunks() { return chunks; }
+    public List<Chunk> chunks() { return chunks; }
     public AndroidSparse _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
-    public byte[] _raw_header() { return _raw_header; }
 }

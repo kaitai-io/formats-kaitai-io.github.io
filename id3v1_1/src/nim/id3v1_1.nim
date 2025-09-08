@@ -172,7 +172,7 @@ proc id3v1Tag(this: Id3v11): Id3v11_Id3V11Tag =
   if this.id3v1TagInstFlag:
     return this.id3v1TagInst
   let pos = this.io.pos()
-  this.io.seek(int((this.io.size - 128)))
+  this.io.seek(int(this.io.size - 128))
   let id3v1TagInstExpr = Id3v11_Id3V11Tag.read(this.io, this.root, this)
   this.id3v1TagInst = id3v1TagInstExpr
   this.io.seek(pos)

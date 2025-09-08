@@ -31,15 +31,6 @@ type
     rle_color_mapped = 9
     rle_true_color = 10
     rle_bw = 11
-  Tga_TgaFooter* = ref object of KaitaiStruct
-    `extAreaOfs`*: uint32
-    `devDirOfs`*: uint32
-    `versionMagic`*: seq[byte]
-    `parent`*: Tga
-    `isValidInst`: bool
-    `isValidInstFlag`: bool
-    `extAreaInst`: Tga_TgaExtArea
-    `extAreaInstFlag`: bool
   Tga_TgaExtArea* = ref object of KaitaiStruct
     `extAreaSize`*: uint16
     `authorName`*: string
@@ -57,14 +48,23 @@ type
     `scanLineOfs`*: uint32
     `attributes`*: uint8
     `parent`*: Tga_TgaFooter
+  Tga_TgaFooter* = ref object of KaitaiStruct
+    `extAreaOfs`*: uint32
+    `devDirOfs`*: uint32
+    `versionMagic`*: seq[byte]
+    `parent`*: Tga
+    `extAreaInst`: Tga_TgaExtArea
+    `extAreaInstFlag`: bool
+    `isValidInst`: bool
+    `isValidInstFlag`: bool
 
 proc read*(_: typedesc[Tga], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Tga
-proc read*(_: typedesc[Tga_TgaFooter], io: KaitaiStream, root: KaitaiStruct, parent: Tga): Tga_TgaFooter
 proc read*(_: typedesc[Tga_TgaExtArea], io: KaitaiStream, root: KaitaiStruct, parent: Tga_TgaFooter): Tga_TgaExtArea
+proc read*(_: typedesc[Tga_TgaFooter], io: KaitaiStream, root: KaitaiStruct, parent: Tga): Tga_TgaFooter
 
 proc footer*(this: Tga): Tga_TgaFooter
-proc isValid*(this: Tga_TgaFooter): bool
 proc extArea*(this: Tga_TgaFooter): Tga_TgaExtArea
+proc isValid*(this: Tga_TgaFooter): bool
 
 
 ##[
@@ -133,14 +133,14 @@ identify image. May contain text or some binary data.
   ]##
   if this.colorMapType == tga.has_color_map:
     for i in 0 ..< int(this.numColorMap):
-      let it = this.io.readBytes(int(((this.colorMapDepth + 7) div 8)))
+      let it = this.io.readBytes(int((this.colorMapDepth + 7) div 8))
       this.colorMap.add(it)
 
 proc footer(this: Tga): Tga_TgaFooter = 
   if this.footerInstFlag:
     return this.footerInst
   let pos = this.io.pos()
-  this.io.seek(int((this.io.size - 26)))
+  this.io.seek(int(this.io.size - 26))
   let footerInstExpr = Tga_TgaFooter.read(this.io, this.root, this)
   this.footerInst = footerInstExpr
   this.io.seek(pos)
@@ -149,52 +149,6 @@ proc footer(this: Tga): Tga_TgaFooter =
 
 proc fromFile*(_: typedesc[Tga], filename: string): Tga =
   Tga.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Tga_TgaFooter], io: KaitaiStream, root: KaitaiStruct, parent: Tga): Tga_TgaFooter =
-  template this: untyped = result
-  this = new(Tga_TgaFooter)
-  let root = if root == nil: cast[Tga](this) else: cast[Tga](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-
-  ##[
-  Offset to extension area
-  ]##
-  let extAreaOfsExpr = this.io.readU4le()
-  this.extAreaOfs = extAreaOfsExpr
-
-  ##[
-  Offset to developer directory
-  ]##
-  let devDirOfsExpr = this.io.readU4le()
-  this.devDirOfs = devDirOfsExpr
-  let versionMagicExpr = this.io.readBytes(int(18))
-  this.versionMagic = versionMagicExpr
-
-proc isValid(this: Tga_TgaFooter): bool = 
-  if this.isValidInstFlag:
-    return this.isValidInst
-  let isValidInstExpr = bool(this.versionMagic == @[84'u8, 82'u8, 85'u8, 69'u8, 86'u8, 73'u8, 83'u8, 73'u8, 79'u8, 78'u8, 45'u8, 88'u8, 70'u8, 73'u8, 76'u8, 69'u8, 46'u8, 0'u8])
-  this.isValidInst = isValidInstExpr
-  this.isValidInstFlag = true
-  return this.isValidInst
-
-proc extArea(this: Tga_TgaFooter): Tga_TgaExtArea = 
-  if this.extAreaInstFlag:
-    return this.extAreaInst
-  if this.isValid:
-    let pos = this.io.pos()
-    this.io.seek(int(this.extAreaOfs))
-    let extAreaInstExpr = Tga_TgaExtArea.read(this.io, this.root, this)
-    this.extAreaInst = extAreaInstExpr
-    this.io.seek(pos)
-  this.extAreaInstFlag = true
-  return this.extAreaInst
-
-proc fromFile*(_: typedesc[Tga_TgaFooter], filename: string): Tga_TgaFooter =
-  Tga_TgaFooter.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[Tga_TgaExtArea], io: KaitaiStream, root: KaitaiStruct, parent: Tga_TgaFooter): Tga_TgaExtArea =
   template this: untyped = result
@@ -278,4 +232,50 @@ proc read*(_: typedesc[Tga_TgaExtArea], io: KaitaiStream, root: KaitaiStruct, pa
 
 proc fromFile*(_: typedesc[Tga_TgaExtArea], filename: string): Tga_TgaExtArea =
   Tga_TgaExtArea.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Tga_TgaFooter], io: KaitaiStream, root: KaitaiStruct, parent: Tga): Tga_TgaFooter =
+  template this: untyped = result
+  this = new(Tga_TgaFooter)
+  let root = if root == nil: cast[Tga](this) else: cast[Tga](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+
+  ##[
+  Offset to extension area
+  ]##
+  let extAreaOfsExpr = this.io.readU4le()
+  this.extAreaOfs = extAreaOfsExpr
+
+  ##[
+  Offset to developer directory
+  ]##
+  let devDirOfsExpr = this.io.readU4le()
+  this.devDirOfs = devDirOfsExpr
+  let versionMagicExpr = this.io.readBytes(int(18))
+  this.versionMagic = versionMagicExpr
+
+proc extArea(this: Tga_TgaFooter): Tga_TgaExtArea = 
+  if this.extAreaInstFlag:
+    return this.extAreaInst
+  if this.isValid:
+    let pos = this.io.pos()
+    this.io.seek(int(this.extAreaOfs))
+    let extAreaInstExpr = Tga_TgaExtArea.read(this.io, this.root, this)
+    this.extAreaInst = extAreaInstExpr
+    this.io.seek(pos)
+  this.extAreaInstFlag = true
+  return this.extAreaInst
+
+proc isValid(this: Tga_TgaFooter): bool = 
+  if this.isValidInstFlag:
+    return this.isValidInst
+  let isValidInstExpr = bool(this.versionMagic == @[84'u8, 82'u8, 85'u8, 69'u8, 86'u8, 73'u8, 83'u8, 73'u8, 79'u8, 78'u8, 45'u8, 88'u8, 70'u8, 73'u8, 76'u8, 69'u8, 46'u8, 0'u8])
+  this.isValidInst = isValidInstExpr
+  this.isValidInstFlag = true
+  return this.isValidInst
+
+proc fromFile*(_: typedesc[Tga_TgaFooter], filename: string): Tga_TgaFooter =
+  Tga_TgaFooter.read(newKaitaiFileStream(filename), nil, nil)
 

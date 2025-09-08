@@ -1,0 +1,505 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__mcap {
+		label="Mcap";
+		graph[style=dotted];
+
+		mcap__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="header_magic_pos">0</TD><TD PORT="header_magic_size">8</TD><TD>Magic</TD><TD PORT="header_magic_type">header_magic</TD></TR>
+			<TR><TD PORT="records_pos">8</TD><TD PORT="records_size">...</TD><TD>Record</TD><TD PORT="records_type">records</TD></TR>
+			<TR><TD COLSPAN="4" PORT="records__repeat">repeat until _.op == :opcode_footer</TD></TR>
+			<TR><TD PORT="footer_magic_pos">...</TD><TD PORT="footer_magic_size">8</TD><TD>Magic</TD><TD PORT="footer_magic_type">footer_magic</TD></TR>
+		</TABLE>>];
+		mcap__inst__footer [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="footer_pos">ofs_footer</TD><TD PORT="footer_size">⇲</TD><TD>Record</TD><TD PORT="footer_type">footer</TD></TR>
+		</TABLE>>];
+		mcap__inst__ofs_footer [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>ofs_footer</TD><TD>(((_io.size - 1) - 8) - 20) - 8</TD></TR>
+		</TABLE>>];
+		subgraph cluster__attachment {
+			label="Mcap::Attachment";
+			graph[style=dotted];
+
+			attachment__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="log_time_pos">0</TD><TD PORT="log_time_size">8</TD><TD>u8le</TD><TD PORT="log_time_type">log_time</TD></TR>
+				<TR><TD PORT="create_time_pos">8</TD><TD PORT="create_time_size">8</TD><TD>u8le</TD><TD PORT="create_time_type">create_time</TD></TR>
+				<TR><TD PORT="name_pos">16</TD><TD PORT="name_size">...</TD><TD>PrefixedStr</TD><TD PORT="name_type">name</TD></TR>
+				<TR><TD PORT="content_type_pos">...</TD><TD PORT="content_type_size">...</TD><TD>PrefixedStr</TD><TD PORT="content_type_type">content_type</TD></TR>
+				<TR><TD PORT="len_data_pos">...</TD><TD PORT="len_data_size">8</TD><TD>u8le</TD><TD PORT="len_data_type">len_data</TD></TR>
+				<TR><TD PORT="data_pos">...</TD><TD PORT="data_size">len_data</TD><TD></TD><TD PORT="data_type">data</TD></TR>
+				<TR><TD PORT="invoke_crc32_input_end_pos">...</TD><TD PORT="invoke_crc32_input_end_size">0</TD><TD></TD><TD PORT="invoke_crc32_input_end_type">invoke_crc32_input_end</TD></TR>
+				<TR><TD COLSPAN="4" PORT="invoke_crc32_input_end__if">if crc32_input_end &gt;= 0</TD></TR>
+				<TR><TD PORT="crc32_pos">...</TD><TD PORT="crc32_size">4</TD><TD>u4le</TD><TD PORT="crc32_type">crc32</TD></TR>
+			</TABLE>>];
+			attachment__inst__crc32_input [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="crc32_input_pos">0</TD><TD PORT="crc32_input_size">crc32_input_end</TD><TD></TD><TD PORT="crc32_input_type">crc32_input</TD></TR>
+			</TABLE>>];
+			attachment__inst__crc32_input_end [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>crc32_input_end</TD><TD>_io.pos</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__attachment_index {
+			label="Mcap::AttachmentIndex";
+			graph[style=dotted];
+
+			attachment_index__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="ofs_attachment_pos">0</TD><TD PORT="ofs_attachment_size">8</TD><TD>u8le</TD><TD PORT="ofs_attachment_type">ofs_attachment</TD></TR>
+				<TR><TD PORT="len_attachment_pos">8</TD><TD PORT="len_attachment_size">8</TD><TD>u8le</TD><TD PORT="len_attachment_type">len_attachment</TD></TR>
+				<TR><TD PORT="log_time_pos">16</TD><TD PORT="log_time_size">8</TD><TD>u8le</TD><TD PORT="log_time_type">log_time</TD></TR>
+				<TR><TD PORT="create_time_pos">24</TD><TD PORT="create_time_size">8</TD><TD>u8le</TD><TD PORT="create_time_type">create_time</TD></TR>
+				<TR><TD PORT="data_size_pos">32</TD><TD PORT="data_size_size">8</TD><TD>u8le</TD><TD PORT="data_size_type">data_size</TD></TR>
+				<TR><TD PORT="name_pos">40</TD><TD PORT="name_size">...</TD><TD>PrefixedStr</TD><TD PORT="name_type">name</TD></TR>
+				<TR><TD PORT="content_type_pos">...</TD><TD PORT="content_type_size">...</TD><TD>PrefixedStr</TD><TD PORT="content_type_type">content_type</TD></TR>
+			</TABLE>>];
+			attachment_index__inst__attachment [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="attachment_pos">ofs_attachment</TD><TD PORT="attachment_size">len_attachment</TD><TD>Record</TD><TD PORT="attachment_type">attachment</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__channel {
+			label="Mcap::Channel";
+			graph[style=dotted];
+
+			channel__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="id_pos">0</TD><TD PORT="id_size">2</TD><TD>u2le</TD><TD PORT="id_type">id</TD></TR>
+				<TR><TD PORT="schema_id_pos">2</TD><TD PORT="schema_id_size">2</TD><TD>u2le</TD><TD PORT="schema_id_type">schema_id</TD></TR>
+				<TR><TD PORT="topic_pos">4</TD><TD PORT="topic_size">...</TD><TD>PrefixedStr</TD><TD PORT="topic_type">topic</TD></TR>
+				<TR><TD PORT="message_encoding_pos">...</TD><TD PORT="message_encoding_size">...</TD><TD>PrefixedStr</TD><TD PORT="message_encoding_type">message_encoding</TD></TR>
+				<TR><TD PORT="metadata_pos">...</TD><TD PORT="metadata_size">...</TD><TD>MapStrStr</TD><TD PORT="metadata_type">metadata</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__chunk {
+			label="Mcap::Chunk";
+			graph[style=dotted];
+
+			chunk__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="message_start_time_pos">0</TD><TD PORT="message_start_time_size">8</TD><TD>u8le</TD><TD PORT="message_start_time_type">message_start_time</TD></TR>
+				<TR><TD PORT="message_end_time_pos">8</TD><TD PORT="message_end_time_size">8</TD><TD>u8le</TD><TD PORT="message_end_time_type">message_end_time</TD></TR>
+				<TR><TD PORT="uncompressed_size_pos">16</TD><TD PORT="uncompressed_size_size">8</TD><TD>u8le</TD><TD PORT="uncompressed_size_type">uncompressed_size</TD></TR>
+				<TR><TD PORT="uncompressed_crc32_pos">24</TD><TD PORT="uncompressed_crc32_size">4</TD><TD>u4le</TD><TD PORT="uncompressed_crc32_type">uncompressed_crc32</TD></TR>
+				<TR><TD PORT="compression_pos">28</TD><TD PORT="compression_size">...</TD><TD>PrefixedStr</TD><TD PORT="compression_type">compression</TD></TR>
+				<TR><TD PORT="len_records_pos">...</TD><TD PORT="len_records_size">8</TD><TD>u8le</TD><TD PORT="len_records_type">len_records</TD></TR>
+				<TR><TD PORT="records_pos">...</TD><TD PORT="records_size">...</TD><TD>switch (compression.str)</TD><TD PORT="records_type">records</TD></TR>
+			</TABLE>>];
+chunk__seq_records_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>&quot;&quot;</TD><TD PORT="case0">Records</TD></TR>
+</TABLE>>];
+		}
+		subgraph cluster__chunk_index {
+			label="Mcap::ChunkIndex";
+			graph[style=dotted];
+
+			chunk_index__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="message_start_time_pos">0</TD><TD PORT="message_start_time_size">8</TD><TD>u8le</TD><TD PORT="message_start_time_type">message_start_time</TD></TR>
+				<TR><TD PORT="message_end_time_pos">8</TD><TD PORT="message_end_time_size">8</TD><TD>u8le</TD><TD PORT="message_end_time_type">message_end_time</TD></TR>
+				<TR><TD PORT="ofs_chunk_pos">16</TD><TD PORT="ofs_chunk_size">8</TD><TD>u8le</TD><TD PORT="ofs_chunk_type">ofs_chunk</TD></TR>
+				<TR><TD PORT="len_chunk_pos">24</TD><TD PORT="len_chunk_size">8</TD><TD>u8le</TD><TD PORT="len_chunk_type">len_chunk</TD></TR>
+				<TR><TD PORT="len_message_index_offsets_pos">32</TD><TD PORT="len_message_index_offsets_size">4</TD><TD>u4le</TD><TD PORT="len_message_index_offsets_type">len_message_index_offsets</TD></TR>
+				<TR><TD PORT="message_index_offsets_pos">36</TD><TD PORT="message_index_offsets_size">len_message_index_offsets</TD><TD>MessageIndexOffsets</TD><TD PORT="message_index_offsets_type">message_index_offsets</TD></TR>
+				<TR><TD PORT="message_index_length_pos">...</TD><TD PORT="message_index_length_size">8</TD><TD>u8le</TD><TD PORT="message_index_length_type">message_index_length</TD></TR>
+				<TR><TD PORT="compression_pos">...</TD><TD PORT="compression_size">...</TD><TD>PrefixedStr</TD><TD PORT="compression_type">compression</TD></TR>
+				<TR><TD PORT="compressed_size_pos">...</TD><TD PORT="compressed_size_size">8</TD><TD>u8le</TD><TD PORT="compressed_size_type">compressed_size</TD></TR>
+				<TR><TD PORT="uncompressed_size_pos">...</TD><TD PORT="uncompressed_size_size">8</TD><TD>u8le</TD><TD PORT="uncompressed_size_type">uncompressed_size</TD></TR>
+			</TABLE>>];
+			chunk_index__inst__chunk [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="chunk_pos">ofs_chunk</TD><TD PORT="chunk_size">len_chunk</TD><TD>Record</TD><TD PORT="chunk_type">chunk</TD></TR>
+			</TABLE>>];
+			subgraph cluster__message_index_offset {
+				label="Mcap::ChunkIndex::MessageIndexOffset";
+				graph[style=dotted];
+
+				message_index_offset__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="channel_id_pos">0</TD><TD PORT="channel_id_size">2</TD><TD>u2le</TD><TD PORT="channel_id_type">channel_id</TD></TR>
+					<TR><TD PORT="offset_pos">2</TD><TD PORT="offset_size">8</TD><TD>u8le</TD><TD PORT="offset_type">offset</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__message_index_offsets {
+				label="Mcap::ChunkIndex::MessageIndexOffsets";
+				graph[style=dotted];
+
+				message_index_offsets__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="entries_pos">0</TD><TD PORT="entries_size">10</TD><TD>MessageIndexOffset</TD><TD PORT="entries_type">entries</TD></TR>
+					<TR><TD COLSPAN="4" PORT="entries__repeat">repeat to end of stream</TD></TR>
+				</TABLE>>];
+			}
+		}
+		subgraph cluster__data_end {
+			label="Mcap::DataEnd";
+			graph[style=dotted];
+
+			data_end__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="data_section_crc32_pos">0</TD><TD PORT="data_section_crc32_size">4</TD><TD>u4le</TD><TD PORT="data_section_crc32_type">data_section_crc32</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__footer {
+			label="Mcap::Footer";
+			graph[style=dotted];
+
+			footer__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="ofs_summary_section_pos">0</TD><TD PORT="ofs_summary_section_size">8</TD><TD>u8le</TD><TD PORT="ofs_summary_section_type">ofs_summary_section</TD></TR>
+				<TR><TD PORT="ofs_summary_offset_section_pos">8</TD><TD PORT="ofs_summary_offset_section_size">8</TD><TD>u8le</TD><TD PORT="ofs_summary_offset_section_type">ofs_summary_offset_section</TD></TR>
+				<TR><TD PORT="summary_crc32_pos">16</TD><TD PORT="summary_crc32_size">4</TD><TD>u4le</TD><TD PORT="summary_crc32_type">summary_crc32</TD></TR>
+			</TABLE>>];
+			footer__inst__ofs_summary_crc32_input [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>ofs_summary_crc32_input</TD><TD>(ofs_summary_section != 0 ? ofs_summary_section : _root.ofs_footer)</TD></TR>
+			</TABLE>>];
+			footer__inst__summary_crc32_input [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="summary_crc32_input_pos">ofs_summary_crc32_input</TD><TD PORT="summary_crc32_input_size">((_root._io.size - ofs_summary_crc32_input) - 8) - 4</TD><TD></TD><TD PORT="summary_crc32_input_type">summary_crc32_input</TD></TR>
+			</TABLE>>];
+			footer__inst__summary_offset_section [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="summary_offset_section_pos">ofs_summary_offset_section</TD><TD PORT="summary_offset_section_size">_root.ofs_footer - ofs_summary_offset_section</TD><TD>Records</TD><TD PORT="summary_offset_section_type">summary_offset_section</TD></TR>
+				<TR><TD COLSPAN="4" PORT="summary_offset_section__if">if ofs_summary_offset_section != 0</TD></TR>
+			</TABLE>>];
+			footer__inst__summary_section [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="summary_section_pos">ofs_summary_section</TD><TD PORT="summary_section_size">(ofs_summary_offset_section != 0 ? ofs_summary_offset_section : _root.ofs_footer) - ofs_summary_section</TD><TD>Records</TD><TD PORT="summary_section_type">summary_section</TD></TR>
+				<TR><TD COLSPAN="4" PORT="summary_section__if">if ofs_summary_section != 0</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__header {
+			label="Mcap::Header";
+			graph[style=dotted];
+
+			header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="profile_pos">0</TD><TD PORT="profile_size">...</TD><TD>PrefixedStr</TD><TD PORT="profile_type">profile</TD></TR>
+				<TR><TD PORT="library_pos">...</TD><TD PORT="library_size">...</TD><TD>PrefixedStr</TD><TD PORT="library_type">library</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__magic {
+			label="Mcap::Magic";
+			graph[style=dotted];
+
+			magic__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">8</TD><TD>89 4D 43 41 50 30 0D 0A</TD><TD PORT="magic_type">magic</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__map_str_str {
+			label="Mcap::MapStrStr";
+			graph[style=dotted];
+
+			map_str_str__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="len_entries_pos">0</TD><TD PORT="len_entries_size">4</TD><TD>u4le</TD><TD PORT="len_entries_type">len_entries</TD></TR>
+				<TR><TD PORT="entries_pos">4</TD><TD PORT="entries_size">len_entries</TD><TD>Entries</TD><TD PORT="entries_type">entries</TD></TR>
+			</TABLE>>];
+			subgraph cluster__entries {
+				label="Mcap::MapStrStr::Entries";
+				graph[style=dotted];
+
+				entries__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="entries_pos">0</TD><TD PORT="entries_size">...</TD><TD>TupleStrStr</TD><TD PORT="entries_type">entries</TD></TR>
+					<TR><TD COLSPAN="4" PORT="entries__repeat">repeat to end of stream</TD></TR>
+				</TABLE>>];
+			}
+		}
+		subgraph cluster__message {
+			label="Mcap::Message";
+			graph[style=dotted];
+
+			message__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="channel_id_pos">0</TD><TD PORT="channel_id_size">2</TD><TD>u2le</TD><TD PORT="channel_id_type">channel_id</TD></TR>
+				<TR><TD PORT="sequence_pos">2</TD><TD PORT="sequence_size">4</TD><TD>u4le</TD><TD PORT="sequence_type">sequence</TD></TR>
+				<TR><TD PORT="log_time_pos">6</TD><TD PORT="log_time_size">8</TD><TD>u8le</TD><TD PORT="log_time_type">log_time</TD></TR>
+				<TR><TD PORT="publish_time_pos">14</TD><TD PORT="publish_time_size">8</TD><TD>u8le</TD><TD PORT="publish_time_type">publish_time</TD></TR>
+				<TR><TD PORT="data_pos">22</TD><TD PORT="data_size">⇲</TD><TD></TD><TD PORT="data_type">data</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__message_index {
+			label="Mcap::MessageIndex";
+			graph[style=dotted];
+
+			message_index__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="channel_id_pos">0</TD><TD PORT="channel_id_size">2</TD><TD>u2le</TD><TD PORT="channel_id_type">channel_id</TD></TR>
+				<TR><TD PORT="len_records_pos">2</TD><TD PORT="len_records_size">4</TD><TD>u4le</TD><TD PORT="len_records_type">len_records</TD></TR>
+				<TR><TD PORT="records_pos">6</TD><TD PORT="records_size">len_records</TD><TD>MessageIndexEntries</TD><TD PORT="records_type">records</TD></TR>
+			</TABLE>>];
+			subgraph cluster__message_index_entries {
+				label="Mcap::MessageIndex::MessageIndexEntries";
+				graph[style=dotted];
+
+				message_index_entries__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="entries_pos">0</TD><TD PORT="entries_size">16</TD><TD>MessageIndexEntry</TD><TD PORT="entries_type">entries</TD></TR>
+					<TR><TD COLSPAN="4" PORT="entries__repeat">repeat to end of stream</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__message_index_entry {
+				label="Mcap::MessageIndex::MessageIndexEntry";
+				graph[style=dotted];
+
+				message_index_entry__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="log_time_pos">0</TD><TD PORT="log_time_size">8</TD><TD>u8le</TD><TD PORT="log_time_type">log_time</TD></TR>
+					<TR><TD PORT="offset_pos">8</TD><TD PORT="offset_size">8</TD><TD>u8le</TD><TD PORT="offset_type">offset</TD></TR>
+				</TABLE>>];
+			}
+		}
+		subgraph cluster__metadata {
+			label="Mcap::Metadata";
+			graph[style=dotted];
+
+			metadata__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="name_pos">0</TD><TD PORT="name_size">...</TD><TD>PrefixedStr</TD><TD PORT="name_type">name</TD></TR>
+				<TR><TD PORT="metadata_pos">...</TD><TD PORT="metadata_size">...</TD><TD>MapStrStr</TD><TD PORT="metadata_type">metadata</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__metadata_index {
+			label="Mcap::MetadataIndex";
+			graph[style=dotted];
+
+			metadata_index__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="ofs_metadata_pos">0</TD><TD PORT="ofs_metadata_size">8</TD><TD>u8le</TD><TD PORT="ofs_metadata_type">ofs_metadata</TD></TR>
+				<TR><TD PORT="len_metadata_pos">8</TD><TD PORT="len_metadata_size">8</TD><TD>u8le</TD><TD PORT="len_metadata_type">len_metadata</TD></TR>
+				<TR><TD PORT="name_pos">16</TD><TD PORT="name_size">...</TD><TD>PrefixedStr</TD><TD PORT="name_type">name</TD></TR>
+			</TABLE>>];
+			metadata_index__inst__metadata [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="metadata_pos">ofs_metadata</TD><TD PORT="metadata_size">len_metadata</TD><TD>Record</TD><TD PORT="metadata_type">metadata</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__prefixed_str {
+			label="Mcap::PrefixedStr";
+			graph[style=dotted];
+
+			prefixed_str__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="len_str_pos">0</TD><TD PORT="len_str_size">4</TD><TD>u4le</TD><TD PORT="len_str_type">len_str</TD></TR>
+				<TR><TD PORT="str_pos">4</TD><TD PORT="str_size">len_str</TD><TD>str(UTF-8)</TD><TD PORT="str_type">str</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__record {
+			label="Mcap::Record";
+			graph[style=dotted];
+
+			record__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="op_pos">0</TD><TD PORT="op_size">1</TD><TD>u1→Opcode</TD><TD PORT="op_type">op</TD></TR>
+				<TR><TD PORT="len_body_pos">1</TD><TD PORT="len_body_size">8</TD><TD>u8le</TD><TD PORT="len_body_type">len_body</TD></TR>
+				<TR><TD PORT="body_pos">9</TD><TD PORT="body_size">...</TD><TD>switch (op)</TD><TD PORT="body_type">body</TD></TR>
+			</TABLE>>];
+record__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>:opcode_attachment</TD><TD PORT="case0">Attachment</TD></TR>
+	<TR><TD>:opcode_attachment_index</TD><TD PORT="case1">AttachmentIndex</TD></TR>
+	<TR><TD>:opcode_channel</TD><TD PORT="case2">Channel</TD></TR>
+	<TR><TD>:opcode_chunk</TD><TD PORT="case3">Chunk</TD></TR>
+	<TR><TD>:opcode_chunk_index</TD><TD PORT="case4">ChunkIndex</TD></TR>
+	<TR><TD>:opcode_data_end</TD><TD PORT="case5">DataEnd</TD></TR>
+	<TR><TD>:opcode_footer</TD><TD PORT="case6">Footer</TD></TR>
+	<TR><TD>:opcode_header</TD><TD PORT="case7">Header</TD></TR>
+	<TR><TD>:opcode_message</TD><TD PORT="case8">Message</TD></TR>
+	<TR><TD>:opcode_message_index</TD><TD PORT="case9">MessageIndex</TD></TR>
+	<TR><TD>:opcode_metadata</TD><TD PORT="case10">Metadata</TD></TR>
+	<TR><TD>:opcode_metadata_index</TD><TD PORT="case11">MetadataIndex</TD></TR>
+	<TR><TD>:opcode_schema</TD><TD PORT="case12">Schema</TD></TR>
+	<TR><TD>:opcode_statistics</TD><TD PORT="case13">Statistics</TD></TR>
+	<TR><TD>:opcode_summary_offset</TD><TD PORT="case14">SummaryOffset</TD></TR>
+</TABLE>>];
+		}
+		subgraph cluster__records {
+			label="Mcap::Records";
+			graph[style=dotted];
+
+			records__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="records_pos">0</TD><TD PORT="records_size">...</TD><TD>Record</TD><TD PORT="records_type">records</TD></TR>
+				<TR><TD COLSPAN="4" PORT="records__repeat">repeat to end of stream</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__schema {
+			label="Mcap::Schema";
+			graph[style=dotted];
+
+			schema__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="id_pos">0</TD><TD PORT="id_size">2</TD><TD>u2le</TD><TD PORT="id_type">id</TD></TR>
+				<TR><TD PORT="name_pos">2</TD><TD PORT="name_size">...</TD><TD>PrefixedStr</TD><TD PORT="name_type">name</TD></TR>
+				<TR><TD PORT="encoding_pos">...</TD><TD PORT="encoding_size">...</TD><TD>PrefixedStr</TD><TD PORT="encoding_type">encoding</TD></TR>
+				<TR><TD PORT="len_data_pos">...</TD><TD PORT="len_data_size">4</TD><TD>u4le</TD><TD PORT="len_data_type">len_data</TD></TR>
+				<TR><TD PORT="data_pos">...</TD><TD PORT="data_size">len_data</TD><TD></TD><TD PORT="data_type">data</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__statistics {
+			label="Mcap::Statistics";
+			graph[style=dotted];
+
+			statistics__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="message_count_pos">0</TD><TD PORT="message_count_size">8</TD><TD>u8le</TD><TD PORT="message_count_type">message_count</TD></TR>
+				<TR><TD PORT="schema_count_pos">8</TD><TD PORT="schema_count_size">2</TD><TD>u2le</TD><TD PORT="schema_count_type">schema_count</TD></TR>
+				<TR><TD PORT="channel_count_pos">10</TD><TD PORT="channel_count_size">4</TD><TD>u4le</TD><TD PORT="channel_count_type">channel_count</TD></TR>
+				<TR><TD PORT="attachment_count_pos">14</TD><TD PORT="attachment_count_size">4</TD><TD>u4le</TD><TD PORT="attachment_count_type">attachment_count</TD></TR>
+				<TR><TD PORT="metadata_count_pos">18</TD><TD PORT="metadata_count_size">4</TD><TD>u4le</TD><TD PORT="metadata_count_type">metadata_count</TD></TR>
+				<TR><TD PORT="chunk_count_pos">22</TD><TD PORT="chunk_count_size">4</TD><TD>u4le</TD><TD PORT="chunk_count_type">chunk_count</TD></TR>
+				<TR><TD PORT="message_start_time_pos">26</TD><TD PORT="message_start_time_size">8</TD><TD>u8le</TD><TD PORT="message_start_time_type">message_start_time</TD></TR>
+				<TR><TD PORT="message_end_time_pos">34</TD><TD PORT="message_end_time_size">8</TD><TD>u8le</TD><TD PORT="message_end_time_type">message_end_time</TD></TR>
+				<TR><TD PORT="len_channel_message_counts_pos">42</TD><TD PORT="len_channel_message_counts_size">4</TD><TD>u4le</TD><TD PORT="len_channel_message_counts_type">len_channel_message_counts</TD></TR>
+				<TR><TD PORT="channel_message_counts_pos">46</TD><TD PORT="channel_message_counts_size">len_channel_message_counts</TD><TD>ChannelMessageCounts</TD><TD PORT="channel_message_counts_type">channel_message_counts</TD></TR>
+			</TABLE>>];
+			subgraph cluster__channel_message_count {
+				label="Mcap::Statistics::ChannelMessageCount";
+				graph[style=dotted];
+
+				channel_message_count__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="channel_id_pos">0</TD><TD PORT="channel_id_size">2</TD><TD>u2le</TD><TD PORT="channel_id_type">channel_id</TD></TR>
+					<TR><TD PORT="message_count_pos">2</TD><TD PORT="message_count_size">8</TD><TD>u8le</TD><TD PORT="message_count_type">message_count</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__channel_message_counts {
+				label="Mcap::Statistics::ChannelMessageCounts";
+				graph[style=dotted];
+
+				channel_message_counts__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="entries_pos">0</TD><TD PORT="entries_size">10</TD><TD>ChannelMessageCount</TD><TD PORT="entries_type">entries</TD></TR>
+					<TR><TD COLSPAN="4" PORT="entries__repeat">repeat to end of stream</TD></TR>
+				</TABLE>>];
+			}
+		}
+		subgraph cluster__summary_offset {
+			label="Mcap::SummaryOffset";
+			graph[style=dotted];
+
+			summary_offset__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="group_opcode_pos">0</TD><TD PORT="group_opcode_size">1</TD><TD>u1→Opcode</TD><TD PORT="group_opcode_type">group_opcode</TD></TR>
+				<TR><TD PORT="ofs_group_pos">1</TD><TD PORT="ofs_group_size">8</TD><TD>u8le</TD><TD PORT="ofs_group_type">ofs_group</TD></TR>
+				<TR><TD PORT="len_group_pos">9</TD><TD PORT="len_group_size">8</TD><TD>u8le</TD><TD PORT="len_group_type">len_group</TD></TR>
+			</TABLE>>];
+			summary_offset__inst__group [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="group_pos">ofs_group</TD><TD PORT="group_size">len_group</TD><TD>Records</TD><TD PORT="group_type">group</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__tuple_str_str {
+			label="Mcap::TupleStrStr";
+			graph[style=dotted];
+
+			tuple_str_str__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="key_pos">0</TD><TD PORT="key_size">...</TD><TD>PrefixedStr</TD><TD PORT="key_type">key</TD></TR>
+				<TR><TD PORT="value_pos">...</TD><TD PORT="value_size">...</TD><TD>PrefixedStr</TD><TD PORT="value_type">value</TD></TR>
+			</TABLE>>];
+		}
+	}
+	mcap__seq:header_magic_type -> magic__seq [style=bold];
+	mcap__seq:records_type -> record__seq [style=bold];
+	record__seq:op_type -> mcap__seq:records__repeat [color="#404040"];
+	mcap__seq:footer_magic_type -> magic__seq [style=bold];
+	mcap__inst__ofs_footer:ofs_footer_type -> mcap__inst__footer:footer_pos [color="#404040"];
+	mcap__inst__footer:footer_type -> record__seq [style=bold];
+	record__seq:op_size -> mcap__inst__ofs_footer [color="#404040"];
+	record__seq:len_body_size -> mcap__inst__ofs_footer [color="#404040"];
+	attachment__seq:name_type -> prefixed_str__seq [style=bold];
+	attachment__seq:content_type_type -> prefixed_str__seq [style=bold];
+	attachment__seq:len_data_type -> attachment__seq:data_size [color="#404040"];
+	attachment__inst__crc32_input_end:crc32_input_end_type -> attachment__seq:invoke_crc32_input_end__if [color="#404040"];
+	attachment__inst__crc32_input_end:crc32_input_end_type -> attachment__inst__crc32_input:crc32_input_size [color="#404040"];
+	attachment_index__seq:name_type -> prefixed_str__seq [style=bold];
+	attachment_index__seq:content_type_type -> prefixed_str__seq [style=bold];
+	attachment_index__seq:ofs_attachment_type -> attachment_index__inst__attachment:attachment_pos [color="#404040"];
+	attachment_index__seq:len_attachment_type -> attachment_index__inst__attachment:attachment_size [color="#404040"];
+	attachment_index__inst__attachment:attachment_type -> record__seq [style=bold];
+	channel__seq:topic_type -> prefixed_str__seq [style=bold];
+	channel__seq:message_encoding_type -> prefixed_str__seq [style=bold];
+	channel__seq:metadata_type -> map_str_str__seq [style=bold];
+	chunk__seq:compression_type -> prefixed_str__seq [style=bold];
+	chunk__seq:records_type -> chunk__seq_records_switch [style=bold];
+	chunk__seq_records_switch:case0 -> records__seq [style=bold];
+	prefixed_str__seq:str_type -> chunk__seq:records_type [color="#404040"];
+	chunk_index__seq:len_message_index_offsets_type -> chunk_index__seq:message_index_offsets_size [color="#404040"];
+	chunk_index__seq:message_index_offsets_type -> message_index_offsets__seq [style=bold];
+	chunk_index__seq:compression_type -> prefixed_str__seq [style=bold];
+	chunk_index__seq:ofs_chunk_type -> chunk_index__inst__chunk:chunk_pos [color="#404040"];
+	chunk_index__seq:len_chunk_type -> chunk_index__inst__chunk:chunk_size [color="#404040"];
+	chunk_index__inst__chunk:chunk_type -> record__seq [style=bold];
+	message_index_offsets__seq:entries_type -> message_index_offset__seq [style=bold];
+	footer__seq:ofs_summary_section_type -> footer__inst__ofs_summary_crc32_input [color="#404040"];
+	mcap__inst__ofs_footer:ofs_footer_type -> footer__inst__ofs_summary_crc32_input [color="#404040"];
+	footer__inst__ofs_summary_crc32_input:ofs_summary_crc32_input_type -> footer__inst__summary_crc32_input:summary_crc32_input_pos [color="#404040"];
+	footer__inst__ofs_summary_crc32_input:ofs_summary_crc32_input_type -> footer__inst__summary_crc32_input:summary_crc32_input_size [color="#404040"];
+	footer__seq:summary_crc32_size -> footer__inst__summary_crc32_input:summary_crc32_input_size [color="#404040"];
+	footer__seq:ofs_summary_offset_section_type -> footer__inst__summary_offset_section:summary_offset_section_pos [color="#404040"];
+	mcap__inst__ofs_footer:ofs_footer_type -> footer__inst__summary_offset_section:summary_offset_section_size [color="#404040"];
+	footer__seq:ofs_summary_offset_section_type -> footer__inst__summary_offset_section:summary_offset_section_size [color="#404040"];
+	footer__inst__summary_offset_section:summary_offset_section_type -> records__seq [style=bold];
+	footer__seq:ofs_summary_offset_section_type -> footer__inst__summary_offset_section:summary_offset_section__if [color="#404040"];
+	footer__seq:ofs_summary_section_type -> footer__inst__summary_section:summary_section_pos [color="#404040"];
+	footer__seq:ofs_summary_offset_section_type -> footer__inst__summary_section:summary_section_size [color="#404040"];
+	mcap__inst__ofs_footer:ofs_footer_type -> footer__inst__summary_section:summary_section_size [color="#404040"];
+	footer__seq:ofs_summary_section_type -> footer__inst__summary_section:summary_section_size [color="#404040"];
+	footer__inst__summary_section:summary_section_type -> records__seq [style=bold];
+	footer__seq:ofs_summary_section_type -> footer__inst__summary_section:summary_section__if [color="#404040"];
+	header__seq:profile_type -> prefixed_str__seq [style=bold];
+	header__seq:library_type -> prefixed_str__seq [style=bold];
+	map_str_str__seq:len_entries_type -> map_str_str__seq:entries_size [color="#404040"];
+	map_str_str__seq:entries_type -> entries__seq [style=bold];
+	entries__seq:entries_type -> tuple_str_str__seq [style=bold];
+	message_index__seq:len_records_type -> message_index__seq:records_size [color="#404040"];
+	message_index__seq:records_type -> message_index_entries__seq [style=bold];
+	message_index_entries__seq:entries_type -> message_index_entry__seq [style=bold];
+	metadata__seq:name_type -> prefixed_str__seq [style=bold];
+	metadata__seq:metadata_type -> map_str_str__seq [style=bold];
+	metadata_index__seq:name_type -> prefixed_str__seq [style=bold];
+	metadata_index__seq:ofs_metadata_type -> metadata_index__inst__metadata:metadata_pos [color="#404040"];
+	metadata_index__seq:len_metadata_type -> metadata_index__inst__metadata:metadata_size [color="#404040"];
+	metadata_index__inst__metadata:metadata_type -> record__seq [style=bold];
+	prefixed_str__seq:len_str_type -> prefixed_str__seq:str_size [color="#404040"];
+	record__seq:body_type -> record__seq_body_switch [style=bold];
+	record__seq_body_switch:case0 -> attachment__seq [style=bold];
+	record__seq_body_switch:case1 -> attachment_index__seq [style=bold];
+	record__seq_body_switch:case2 -> channel__seq [style=bold];
+	record__seq_body_switch:case3 -> chunk__seq [style=bold];
+	record__seq_body_switch:case4 -> chunk_index__seq [style=bold];
+	record__seq_body_switch:case5 -> data_end__seq [style=bold];
+	record__seq_body_switch:case6 -> footer__seq [style=bold];
+	record__seq_body_switch:case7 -> header__seq [style=bold];
+	record__seq_body_switch:case8 -> message__seq [style=bold];
+	record__seq_body_switch:case9 -> message_index__seq [style=bold];
+	record__seq_body_switch:case10 -> metadata__seq [style=bold];
+	record__seq_body_switch:case11 -> metadata_index__seq [style=bold];
+	record__seq_body_switch:case12 -> schema__seq [style=bold];
+	record__seq_body_switch:case13 -> statistics__seq [style=bold];
+	record__seq_body_switch:case14 -> summary_offset__seq [style=bold];
+	record__seq:op_type -> record__seq:body_type [color="#404040"];
+	records__seq:records_type -> record__seq [style=bold];
+	schema__seq:name_type -> prefixed_str__seq [style=bold];
+	schema__seq:encoding_type -> prefixed_str__seq [style=bold];
+	schema__seq:len_data_type -> schema__seq:data_size [color="#404040"];
+	statistics__seq:len_channel_message_counts_type -> statistics__seq:channel_message_counts_size [color="#404040"];
+	statistics__seq:channel_message_counts_type -> channel_message_counts__seq [style=bold];
+	channel_message_counts__seq:entries_type -> channel_message_count__seq [style=bold];
+	summary_offset__seq:ofs_group_type -> summary_offset__inst__group:group_pos [color="#404040"];
+	summary_offset__seq:len_group_type -> summary_offset__inst__group:group_size [color="#404040"];
+	summary_offset__inst__group:group_type -> records__seq [style=bold];
+	tuple_str_str__seq:key_type -> prefixed_str__seq [style=bold];
+	tuple_str_str__seq:value_type -> prefixed_str__seq [style=bold];
+}

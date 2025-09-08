@@ -7,7 +7,7 @@ digraph {
 
 		android_opengl_shaders_cache__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-			<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD></TD><TD PORT="magic_type">magic</TD></TR>
+			<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD>45 47 4C 24</TD><TD PORT="magic_type">magic</TD></TR>
 			<TR><TD PORT="crc32_pos">4</TD><TD PORT="crc32_size">4</TD><TD>u4le</TD><TD PORT="crc32_type">crc32</TD></TR>
 			<TR><TD PORT="contents_pos">8</TD><TD PORT="contents_size">⇲</TD><TD>Cache</TD><TD PORT="contents_type">contents</TD></TR>
 		</TABLE>>];
@@ -17,18 +17,7 @@ digraph {
 
 			alignment__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="alignment_pos">0</TD><TD PORT="alignment_size">((_io.pos + 3) &amp; (~3 - _io.pos))</TD><TD></TD><TD PORT="alignment_type">alignment</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__prefixed_string {
-			label="AndroidOpenglShadersCache::PrefixedString";
-			graph[style=dotted];
-
-			prefixed_string__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="len_str_pos">0</TD><TD PORT="len_str_size">4</TD><TD>u4le</TD><TD PORT="len_str_type">len_str</TD></TR>
-				<TR><TD PORT="str_pos">4</TD><TD PORT="str_size">len_str</TD><TD>str(ascii)</TD><TD PORT="str_type">str</TD></TR>
-				<TR><TD PORT="alignment_pos">...</TD><TD PORT="alignment_size">...</TD><TD>Alignment</TD><TD PORT="alignment_type">alignment</TD></TR>
+				<TR><TD PORT="alignment_pos">0</TD><TD PORT="alignment_size">_io.pos + 3 &amp; ~3 - _io.pos</TD><TD></TD><TD PORT="alignment_type">alignment</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__cache {
@@ -37,11 +26,12 @@ digraph {
 
 			cache__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD></TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD>24 62 42 5F</TD><TD PORT="magic_type">magic</TD></TR>
 				<TR><TD PORT="version_pos">4</TD><TD PORT="version_size">4</TD><TD>u4le</TD><TD PORT="version_type">version</TD></TR>
 				<TR><TD PORT="device_version_pos">8</TD><TD PORT="device_version_size">4</TD><TD>u4le</TD><TD PORT="device_version_type">device_version</TD></TR>
 				<TR><TD PORT="num_entries_pos">12</TD><TD PORT="num_entries_size">4</TD><TD>u4le</TD><TD PORT="num_entries_type">num_entries</TD></TR>
 				<TR><TD PORT="build_id_pos">16</TD><TD PORT="build_id_size">...</TD><TD>PrefixedString</TD><TD PORT="build_id_type">build_id</TD></TR>
+				<TR><TD COLSPAN="4" PORT="build_id__if">if version &gt;= 3</TD></TR>
 				<TR><TD PORT="entries_pos">...</TD><TD PORT="entries_size">...</TD><TD>Entry</TD><TD PORT="entries_type">entries</TD></TR>
 				<TR><TD COLSPAN="4" PORT="entries__repeat">repeat num_entries times</TD></TR>
 			</TABLE>>];
@@ -59,14 +49,26 @@ digraph {
 				</TABLE>>];
 			}
 		}
+		subgraph cluster__prefixed_string {
+			label="AndroidOpenglShadersCache::PrefixedString";
+			graph[style=dotted];
+
+			prefixed_string__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="len_str_pos">0</TD><TD PORT="len_str_size">4</TD><TD>u4le</TD><TD PORT="len_str_type">len_str</TD></TR>
+				<TR><TD PORT="str_pos">4</TD><TD PORT="str_size">len_str</TD><TD>str(ASCII)</TD><TD PORT="str_type">str</TD></TR>
+				<TR><TD PORT="alignment_pos">...</TD><TD PORT="alignment_size">...</TD><TD>Alignment</TD><TD PORT="alignment_type">alignment</TD></TR>
+			</TABLE>>];
+		}
 	}
 	android_opengl_shaders_cache__seq:contents_type -> cache__seq [style=bold];
-	prefixed_string__seq:len_str_type -> prefixed_string__seq:str_size [color="#404040"];
-	prefixed_string__seq:alignment_type -> alignment__seq [style=bold];
 	cache__seq:build_id_type -> prefixed_string__seq [style=bold];
+	cache__seq:version_type -> cache__seq:build_id__if [color="#404040"];
 	cache__seq:entries_type -> entry__seq [style=bold];
 	cache__seq:num_entries_type -> cache__seq:entries__repeat [color="#404040"];
 	entry__seq:len_key_type -> entry__seq:key_size [color="#404040"];
 	entry__seq:len_value_type -> entry__seq:value_size [color="#404040"];
 	entry__seq:alignment_type -> alignment__seq [style=bold];
+	prefixed_string__seq:len_str_type -> prefixed_string__seq:str_size [color="#404040"];
+	prefixed_string__seq:alignment_type -> alignment__seq [style=bold];
 }

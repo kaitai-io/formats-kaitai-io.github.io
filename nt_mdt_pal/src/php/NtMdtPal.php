@@ -7,15 +7,15 @@
 
 namespace {
     class NtMdtPal extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \NtMdtPal $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\NtMdtPal $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_signature = $this->_io->readBytes(26);
-            if (!($this->signature() == "\x4E\x54\x2D\x4D\x44\x54\x20\x50\x61\x6C\x65\x74\x74\x65\x20\x46\x69\x6C\x65\x20\x20\x31\x2E\x30\x30\x21")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x4E\x54\x2D\x4D\x44\x54\x20\x50\x61\x6C\x65\x74\x74\x65\x20\x46\x69\x6C\x65\x20\x20\x31\x2E\x30\x30\x21", $this->signature(), $this->_io(), "/seq/0");
+            if (!($this->_m_signature == "\x4E\x54\x2D\x4D\x44\x54\x20\x50\x61\x6C\x65\x74\x74\x65\x20\x46\x69\x6C\x65\x20\x20\x31\x2E\x30\x30\x21")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x4E\x54\x2D\x4D\x44\x54\x20\x50\x61\x6C\x65\x74\x74\x65\x20\x46\x69\x6C\x65\x20\x20\x31\x2E\x30\x30\x21", $this->_m_signature, $this->_io, "/seq/0");
             }
             $this->_m_count = $this->_io->readU4be();
             $this->_m_meta = [];
@@ -44,8 +44,66 @@ namespace {
 }
 
 namespace NtMdtPal {
+    class ColTable extends \Kaitai\Struct\Struct {
+        public function __construct(int $index, \Kaitai\Struct\Stream $_io, ?\NtMdtPal $_parent = null, ?\NtMdtPal $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_m_index = $index;
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_size1 = $this->_io->readU1();
+            $this->_m_unkn = $this->_io->readU1();
+            $this->_m_title = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->_root()->meta()[$this->index()]->nameSize()), "UTF-16LE");
+            $this->_m_unkn1 = $this->_io->readU2be();
+            $this->_m_colors = [];
+            $n = $this->_root()->meta()[$this->index()]->colorsCount() - 1;
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_colors[] = new \NtMdtPal\Color($this->_io, $this, $this->_root);
+            }
+        }
+        protected $_m_size1;
+        protected $_m_unkn;
+        protected $_m_title;
+        protected $_m_unkn1;
+        protected $_m_colors;
+        protected $_m_index;
+        public function size1() { return $this->_m_size1; }
+        public function unkn() { return $this->_m_unkn; }
+        public function title() { return $this->_m_title; }
+        public function unkn1() { return $this->_m_unkn1; }
+        public function colors() { return $this->_m_colors; }
+        public function index() { return $this->_m_index; }
+    }
+}
+
+namespace NtMdtPal {
+    class Color extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\NtMdtPal\ColTable $_parent = null, ?\NtMdtPal $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_red = $this->_io->readU1();
+            $this->_m_unkn = $this->_io->readU1();
+            $this->_m_blue = $this->_io->readU1();
+            $this->_m_green = $this->_io->readU1();
+        }
+        protected $_m_red;
+        protected $_m_unkn;
+        protected $_m_blue;
+        protected $_m_green;
+        public function red() { return $this->_m_red; }
+        public function unkn() { return $this->_m_unkn; }
+        public function blue() { return $this->_m_blue; }
+        public function green() { return $this->_m_green; }
+    }
+}
+
+namespace NtMdtPal {
     class Meta extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \NtMdtPal $_parent = null, \NtMdtPal $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\NtMdtPal $_parent = null, ?\NtMdtPal $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -99,63 +157,5 @@ namespace NtMdtPal {
          */
         public function unkn12() { return $this->_m_unkn12; }
         public function nameSize() { return $this->_m_nameSize; }
-    }
-}
-
-namespace NtMdtPal {
-    class Color extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \NtMdtPal\ColTable $_parent = null, \NtMdtPal $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_red = $this->_io->readU1();
-            $this->_m_unkn = $this->_io->readU1();
-            $this->_m_blue = $this->_io->readU1();
-            $this->_m_green = $this->_io->readU1();
-        }
-        protected $_m_red;
-        protected $_m_unkn;
-        protected $_m_blue;
-        protected $_m_green;
-        public function red() { return $this->_m_red; }
-        public function unkn() { return $this->_m_unkn; }
-        public function blue() { return $this->_m_blue; }
-        public function green() { return $this->_m_green; }
-    }
-}
-
-namespace NtMdtPal {
-    class ColTable extends \Kaitai\Struct\Struct {
-        public function __construct(int $index, \Kaitai\Struct\Stream $_io, \NtMdtPal $_parent = null, \NtMdtPal $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_m_index = $index;
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_size1 = $this->_io->readU1();
-            $this->_m_unkn = $this->_io->readU1();
-            $this->_m_title = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->_root()->meta()[$this->index()]->nameSize()), "UTF-16LE");
-            $this->_m_unkn1 = $this->_io->readU2be();
-            $this->_m_colors = [];
-            $n = ($this->_root()->meta()[$this->index()]->colorsCount() - 1);
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_colors[] = new \NtMdtPal\Color($this->_io, $this, $this->_root);
-            }
-        }
-        protected $_m_size1;
-        protected $_m_unkn;
-        protected $_m_title;
-        protected $_m_unkn1;
-        protected $_m_colors;
-        protected $_m_index;
-        public function size1() { return $this->_m_size1; }
-        public function unkn() { return $this->_m_unkn; }
-        public function title() { return $this->_m_title; }
-        public function unkn1() { return $this->_m_unkn1; }
-        public function colors() { return $this->_m_colors; }
-        public function index() { return $this->_m_index; }
     }
 }

@@ -3,11 +3,14 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class xar_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
+#include <set>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -23,8 +26,8 @@
 class xar_t : public kaitai::kstruct {
 
 public:
-    class file_header_prefix_t;
     class file_header_t;
+    class file_header_prefix_t;
     class toc_type_t;
 
     enum checksum_algorithms_apple_t {
@@ -34,6 +37,13 @@ public:
         CHECKSUM_ALGORITHMS_APPLE_SHA256 = 3,
         CHECKSUM_ALGORITHMS_APPLE_SHA512 = 4
     };
+    static bool _is_defined_checksum_algorithms_apple_t(checksum_algorithms_apple_t v);
+
+private:
+    static const std::set<checksum_algorithms_apple_t> _values_checksum_algorithms_apple_t;
+    static std::set<checksum_algorithms_apple_t> _build_values_checksum_algorithms_apple_t();
+
+public:
 
     xar_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, xar_t* p__root = 0);
 
@@ -43,36 +53,6 @@ private:
 
 public:
     ~xar_t();
-
-    class file_header_prefix_t : public kaitai::kstruct {
-
-    public:
-
-        file_header_prefix_t(kaitai::kstream* p__io, xar_t* p__parent = 0, xar_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~file_header_prefix_t();
-
-    private:
-        std::string m_magic;
-        uint16_t m_len_header;
-        xar_t* m__root;
-        xar_t* m__parent;
-
-    public:
-        std::string magic() const { return m_magic; }
-
-        /**
-         * internal; access `_root.header.len_header` instead
-         */
-        uint16_t len_header() const { return m_len_header; }
-        xar_t* _root() const { return m__root; }
-        xar_t* _parent() const { return m__parent; }
-    };
 
     class file_header_t : public kaitai::kstruct {
 
@@ -160,6 +140,36 @@ public:
          * internal; access `checksum_algorithm_name` instead
          */
         std::string checksum_alg_name() const { return m_checksum_alg_name; }
+        xar_t* _root() const { return m__root; }
+        xar_t* _parent() const { return m__parent; }
+    };
+
+    class file_header_prefix_t : public kaitai::kstruct {
+
+    public:
+
+        file_header_prefix_t(kaitai::kstream* p__io, xar_t* p__parent = 0, xar_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~file_header_prefix_t();
+
+    private:
+        std::string m_magic;
+        uint16_t m_len_header;
+        xar_t* m__root;
+        xar_t* m__parent;
+
+    public:
+        std::string magic() const { return m_magic; }
+
+        /**
+         * internal; access `_root.header.len_header` instead
+         */
+        uint16_t len_header() const { return m_len_header; }
         xar_t* _root() const { return m__root; }
         xar_t* _parent() const { return m__parent; }
     };

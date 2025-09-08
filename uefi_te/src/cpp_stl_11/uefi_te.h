@@ -2,13 +2,16 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class uefi_te_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
 #include <vector>
+#include <set>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -36,10 +39,10 @@
 class uefi_te_t : public kaitai::kstruct {
 
 public:
-    class te_header_t;
-    class header_data_dirs_t;
     class data_dir_t;
+    class header_data_dirs_t;
     class section_t;
+    class te_header_t;
 
     uefi_te_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, uefi_te_t* p__root = nullptr);
 
@@ -50,91 +53,30 @@ private:
 public:
     ~uefi_te_t();
 
-    class te_header_t : public kaitai::kstruct {
+    class data_dir_t : public kaitai::kstruct {
 
     public:
 
-        enum machine_type_t {
-            MACHINE_TYPE_UNKNOWN = 0,
-            MACHINE_TYPE_I386 = 332,
-            MACHINE_TYPE_R4000 = 358,
-            MACHINE_TYPE_WCE_MIPS_V2 = 361,
-            MACHINE_TYPE_ALPHA = 388,
-            MACHINE_TYPE_SH3 = 418,
-            MACHINE_TYPE_SH3_DSP = 419,
-            MACHINE_TYPE_SH4 = 422,
-            MACHINE_TYPE_SH5 = 424,
-            MACHINE_TYPE_ARM = 448,
-            MACHINE_TYPE_THUMB = 450,
-            MACHINE_TYPE_ARM_NT = 452,
-            MACHINE_TYPE_AM33 = 467,
-            MACHINE_TYPE_POWERPC = 496,
-            MACHINE_TYPE_POWERPC_FP = 497,
-            MACHINE_TYPE_IA64 = 512,
-            MACHINE_TYPE_MIPS16 = 614,
-            MACHINE_TYPE_ALPHA64_OR_AXP64 = 644,
-            MACHINE_TYPE_MIPS_FPU = 870,
-            MACHINE_TYPE_MIPS16_FPU = 1126,
-            MACHINE_TYPE_EBC = 3772,
-            MACHINE_TYPE_RISCV32 = 20530,
-            MACHINE_TYPE_RISCV64 = 20580,
-            MACHINE_TYPE_RISCV128 = 20776,
-            MACHINE_TYPE_LOONGARCH32 = 25138,
-            MACHINE_TYPE_LOONGARCH64 = 25188,
-            MACHINE_TYPE_AMD64 = 34404,
-            MACHINE_TYPE_M32R = 36929,
-            MACHINE_TYPE_ARM64 = 43620
-        };
-
-        enum subsystem_enum_t {
-            SUBSYSTEM_ENUM_UNKNOWN = 0,
-            SUBSYSTEM_ENUM_NATIVE = 1,
-            SUBSYSTEM_ENUM_WINDOWS_GUI = 2,
-            SUBSYSTEM_ENUM_WINDOWS_CUI = 3,
-            SUBSYSTEM_ENUM_POSIX_CUI = 7,
-            SUBSYSTEM_ENUM_WINDOWS_CE_GUI = 9,
-            SUBSYSTEM_ENUM_EFI_APPLICATION = 10,
-            SUBSYSTEM_ENUM_EFI_BOOT_SERVICE_DRIVER = 11,
-            SUBSYSTEM_ENUM_EFI_RUNTIME_DRIVER = 12,
-            SUBSYSTEM_ENUM_EFI_ROM = 13,
-            SUBSYSTEM_ENUM_XBOX = 14,
-            SUBSYSTEM_ENUM_WINDOWS_BOOT_APPLICATION = 16
-        };
-
-        te_header_t(kaitai::kstream* p__io, uefi_te_t* p__parent = nullptr, uefi_te_t* p__root = nullptr);
+        data_dir_t(kaitai::kstream* p__io, uefi_te_t::header_data_dirs_t* p__parent = nullptr, uefi_te_t* p__root = nullptr);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~te_header_t();
+        ~data_dir_t();
 
     private:
-        std::string m_magic;
-        machine_type_t m_machine;
-        uint8_t m_num_sections;
-        subsystem_enum_t m_subsystem;
-        uint16_t m_stripped_size;
-        uint32_t m_entry_point_addr;
-        uint32_t m_base_of_code;
-        uint64_t m_image_base;
-        std::unique_ptr<header_data_dirs_t> m_data_dirs;
+        uint32_t m_virtual_address;
+        uint32_t m_size;
         uefi_te_t* m__root;
-        uefi_te_t* m__parent;
+        uefi_te_t::header_data_dirs_t* m__parent;
 
     public:
-        std::string magic() const { return m_magic; }
-        machine_type_t machine() const { return m_machine; }
-        uint8_t num_sections() const { return m_num_sections; }
-        subsystem_enum_t subsystem() const { return m_subsystem; }
-        uint16_t stripped_size() const { return m_stripped_size; }
-        uint32_t entry_point_addr() const { return m_entry_point_addr; }
-        uint32_t base_of_code() const { return m_base_of_code; }
-        uint64_t image_base() const { return m_image_base; }
-        header_data_dirs_t* data_dirs() const { return m_data_dirs.get(); }
+        uint32_t virtual_address() const { return m_virtual_address; }
+        uint32_t size() const { return m_size; }
         uefi_te_t* _root() const { return m__root; }
-        uefi_te_t* _parent() const { return m__parent; }
+        uefi_te_t::header_data_dirs_t* _parent() const { return m__parent; }
     };
 
     class header_data_dirs_t : public kaitai::kstruct {
@@ -161,32 +103,6 @@ public:
         data_dir_t* debug() const { return m_debug.get(); }
         uefi_te_t* _root() const { return m__root; }
         uefi_te_t::te_header_t* _parent() const { return m__parent; }
-    };
-
-    class data_dir_t : public kaitai::kstruct {
-
-    public:
-
-        data_dir_t(kaitai::kstream* p__io, uefi_te_t::header_data_dirs_t* p__parent = nullptr, uefi_te_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~data_dir_t();
-
-    private:
-        uint32_t m_virtual_address;
-        uint32_t m_size;
-        uefi_te_t* m__root;
-        uefi_te_t::header_data_dirs_t* m__parent;
-
-    public:
-        uint32_t virtual_address() const { return m_virtual_address; }
-        uint32_t size() const { return m_size; }
-        uefi_te_t* _root() const { return m__root; }
-        uefi_te_t::header_data_dirs_t* _parent() const { return m__parent; }
     };
 
     class section_t : public kaitai::kstruct {
@@ -234,6 +150,105 @@ public:
         uint16_t num_relocations() const { return m_num_relocations; }
         uint16_t num_linenumbers() const { return m_num_linenumbers; }
         uint32_t characteristics() const { return m_characteristics; }
+        uefi_te_t* _root() const { return m__root; }
+        uefi_te_t* _parent() const { return m__parent; }
+    };
+
+    class te_header_t : public kaitai::kstruct {
+
+    public:
+
+        enum machine_type_t {
+            MACHINE_TYPE_UNKNOWN = 0,
+            MACHINE_TYPE_I386 = 332,
+            MACHINE_TYPE_R4000 = 358,
+            MACHINE_TYPE_WCE_MIPS_V2 = 361,
+            MACHINE_TYPE_ALPHA = 388,
+            MACHINE_TYPE_SH3 = 418,
+            MACHINE_TYPE_SH3_DSP = 419,
+            MACHINE_TYPE_SH4 = 422,
+            MACHINE_TYPE_SH5 = 424,
+            MACHINE_TYPE_ARM = 448,
+            MACHINE_TYPE_THUMB = 450,
+            MACHINE_TYPE_ARM_NT = 452,
+            MACHINE_TYPE_AM33 = 467,
+            MACHINE_TYPE_POWERPC = 496,
+            MACHINE_TYPE_POWERPC_FP = 497,
+            MACHINE_TYPE_IA64 = 512,
+            MACHINE_TYPE_MIPS16 = 614,
+            MACHINE_TYPE_ALPHA64_OR_AXP64 = 644,
+            MACHINE_TYPE_MIPS_FPU = 870,
+            MACHINE_TYPE_MIPS16_FPU = 1126,
+            MACHINE_TYPE_EBC = 3772,
+            MACHINE_TYPE_RISCV32 = 20530,
+            MACHINE_TYPE_RISCV64 = 20580,
+            MACHINE_TYPE_RISCV128 = 20776,
+            MACHINE_TYPE_LOONGARCH32 = 25138,
+            MACHINE_TYPE_LOONGARCH64 = 25188,
+            MACHINE_TYPE_AMD64 = 34404,
+            MACHINE_TYPE_M32R = 36929,
+            MACHINE_TYPE_ARM64 = 43620
+        };
+        static bool _is_defined_machine_type_t(machine_type_t v);
+
+    private:
+        static const std::set<machine_type_t> _values_machine_type_t;
+
+    public:
+
+        enum subsystem_enum_t {
+            SUBSYSTEM_ENUM_UNKNOWN = 0,
+            SUBSYSTEM_ENUM_NATIVE = 1,
+            SUBSYSTEM_ENUM_WINDOWS_GUI = 2,
+            SUBSYSTEM_ENUM_WINDOWS_CUI = 3,
+            SUBSYSTEM_ENUM_POSIX_CUI = 7,
+            SUBSYSTEM_ENUM_WINDOWS_CE_GUI = 9,
+            SUBSYSTEM_ENUM_EFI_APPLICATION = 10,
+            SUBSYSTEM_ENUM_EFI_BOOT_SERVICE_DRIVER = 11,
+            SUBSYSTEM_ENUM_EFI_RUNTIME_DRIVER = 12,
+            SUBSYSTEM_ENUM_EFI_ROM = 13,
+            SUBSYSTEM_ENUM_XBOX = 14,
+            SUBSYSTEM_ENUM_WINDOWS_BOOT_APPLICATION = 16
+        };
+        static bool _is_defined_subsystem_enum_t(subsystem_enum_t v);
+
+    private:
+        static const std::set<subsystem_enum_t> _values_subsystem_enum_t;
+
+    public:
+
+        te_header_t(kaitai::kstream* p__io, uefi_te_t* p__parent = nullptr, uefi_te_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~te_header_t();
+
+    private:
+        std::string m_magic;
+        machine_type_t m_machine;
+        uint8_t m_num_sections;
+        subsystem_enum_t m_subsystem;
+        uint16_t m_stripped_size;
+        uint32_t m_entry_point_addr;
+        uint32_t m_base_of_code;
+        uint64_t m_image_base;
+        std::unique_ptr<header_data_dirs_t> m_data_dirs;
+        uefi_te_t* m__root;
+        uefi_te_t* m__parent;
+
+    public:
+        std::string magic() const { return m_magic; }
+        machine_type_t machine() const { return m_machine; }
+        uint8_t num_sections() const { return m_num_sections; }
+        subsystem_enum_t subsystem() const { return m_subsystem; }
+        uint16_t stripped_size() const { return m_stripped_size; }
+        uint32_t entry_point_addr() const { return m_entry_point_addr; }
+        uint32_t base_of_code() const { return m_base_of_code; }
+        uint64_t image_base() const { return m_image_base; }
+        header_data_dirs_t* data_dirs() const { return m_data_dirs.get(); }
         uefi_te_t* _root() const { return m__root; }
         uefi_te_t* _parent() const { return m__parent; }
     };

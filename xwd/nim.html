@@ -212,6 +212,11 @@ and thus is probably a poor choice for true cross-platform usage.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="xwd (X Window Dump) bitmap image parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="xwd (X Window Dump) bitmap image parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -242,7 +247,17 @@ and thus is probably a poor choice for true cross-platform usage.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="xwd (X Window Dump) bitmap image parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="xwd (X Window Dump) bitmap image parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="xwd (X Window Dump) bitmap image parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -283,13 +298,13 @@ and thus is probably a poor choice for true cross-platform usage.</p>
 <span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
 <span class="w">    </span><span class="p">`</span><span class="n">rawHdr</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
 <span class="w">    </span><span class="p">`</span><span class="n">rawColorMap</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]]</span>
+<span class="w">  </span><span class="n">Xwd_ByteOrder</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">enum</span>
+<span class="w">    </span><span class="n">le</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="n">be</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
 <span class="w">  </span><span class="n">Xwd_PixmapFormat</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">enum</span>
 <span class="w">    </span><span class="n">x_y_bitmap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
 <span class="w">    </span><span class="n">x_y_pixmap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
 <span class="w">    </span><span class="n">z_pixmap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
-<span class="w">  </span><span class="n">Xwd_ByteOrder</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">enum</span>
-<span class="w">    </span><span class="n">le</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
-<span class="w">    </span><span class="n">be</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
 <span class="w">  </span><span class="n">Xwd_VisualClass</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">enum</span>
 <span class="w">    </span><span class="n">static_gray</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
 <span class="w">    </span><span class="n">gray_scale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
@@ -297,6 +312,14 @@ and thus is probably a poor choice for true cross-platform usage.</p>
 <span class="w">    </span><span class="n">pseudo_color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
 <span class="w">    </span><span class="n">true_color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span>
 <span class="w">    </span><span class="n">direct_color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
+<span class="w">  </span><span class="n">Xwd_ColorMapEntry</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">entryNumber</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">red</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">green</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">blue</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">flags</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint8</span>
+<span class="w">    </span><span class="p">`</span><span class="n">padding</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint8</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Xwd</span>
 <span class="w">  </span><span class="n">Xwd_Header</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
 <span class="w">    </span><span class="p">`</span><span class="n">fileVersion</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
 <span class="w">    </span><span class="p">`</span><span class="n">pixmapFormat</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Xwd_PixmapFormat</span>
@@ -324,18 +347,10 @@ and thus is probably a poor choice for true cross-platform usage.</p>
 <span class="w">    </span><span class="p">`</span><span class="n">windowBorderWidth</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
 <span class="w">    </span><span class="p">`</span><span class="n">creator</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">string</span>
 <span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Xwd</span>
-<span class="w">  </span><span class="n">Xwd_ColorMapEntry</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
-<span class="w">    </span><span class="p">`</span><span class="n">entryNumber</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
-<span class="w">    </span><span class="p">`</span><span class="n">red</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
-<span class="w">    </span><span class="p">`</span><span class="n">green</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
-<span class="w">    </span><span class="p">`</span><span class="n">blue</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
-<span class="w">    </span><span class="p">`</span><span class="n">flags</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint8</span>
-<span class="w">    </span><span class="p">`</span><span class="n">padding</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint8</span>
-<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Xwd</span>
 
 <span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Xwd], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Xwd</span>
-<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Xwd_Header], io: KaitaiStream, root: KaitaiStruct, parent: Xwd): Xwd_Header</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Xwd_ColorMapEntry], io: KaitaiStream, root: KaitaiStruct, parent: Xwd): Xwd_ColorMapEntry</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Xwd_Header], io: KaitaiStream, root: KaitaiStruct, parent: Xwd): Xwd_Header</span>
 
 
 
@@ -365,7 +380,7 @@ and thus is probably a poor choice for true cross-platform usage.</p>
 <span class="sd">  ]##</span>
 <span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lenHeaderExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lenHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lenHeaderExpr</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">rawHdrExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">lenHeader</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">4</span><span class="p">)))</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">rawHdrExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenHeader</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">4</span><span class="p">))</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">rawHdr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rawHdrExpr</span>
 <span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">rawHdrIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawHdrExpr</span><span class="p">)</span>
 <span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">hdrExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Xwd_Header</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawHdrIo</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
@@ -379,6 +394,34 @@ and thus is probably a poor choice for true cross-platform usage.</p>
 
 <span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Xwd], filename: string): Xwd =</span>
 <span class="w">  </span><span class="n">Xwd</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Xwd_ColorMapEntry], io: KaitaiStream, root: KaitaiStruct, parent: Xwd): Xwd_ColorMapEntry =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">Xwd_ColorMapEntry</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Xwd</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Xwd</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
+
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Number of the color map entry</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">entryNumberExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">entryNumber</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">entryNumberExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">redExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">red</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">redExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">greenExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">green</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">greenExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">blueExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">blue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">blueExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">flagsExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">flagsExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">paddingExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">padding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">paddingExpr</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Xwd_ColorMapEntry], filename: string): Xwd_ColorMapEntry =</span>
+<span class="w">  </span><span class="n">Xwd_ColorMapEntry</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 
 <span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Xwd_Header], io: KaitaiStream, root: KaitaiStruct, parent: Xwd): Xwd_Header =</span>
 <span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
@@ -541,34 +584,6 @@ and thus is probably a poor choice for true cross-platform usage.</p>
 
 <span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Xwd_Header], filename: string): Xwd_Header =</span>
 <span class="w">  </span><span class="n">Xwd_Header</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
-
-<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Xwd_ColorMapEntry], io: KaitaiStream, root: KaitaiStruct, parent: Xwd): Xwd_ColorMapEntry =</span>
-<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
-<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">Xwd_ColorMapEntry</span><span class="p">)</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Xwd</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Xwd</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
-
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  Number of the color map entry</span>
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">entryNumberExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">entryNumber</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">entryNumberExpr</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">redExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">red</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">redExpr</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">greenExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">green</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">greenExpr</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">blueExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">blue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">blueExpr</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">flagsExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">flagsExpr</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">paddingExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">padding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">paddingExpr</span>
-
-<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Xwd_ColorMapEntry], filename: string): Xwd_ColorMapEntry =</span>
-<span class="w">  </span><span class="n">Xwd_ColorMapEntry</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 </pre></div>
 
         </div>

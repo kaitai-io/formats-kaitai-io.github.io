@@ -2,10 +2,32 @@
 
 #include "pcx.h"
 #include "kaitai/exceptions.h"
+std::set<pcx_t::encodings_t> pcx_t::_build_values_encodings_t() {
+    std::set<pcx_t::encodings_t> _t;
+    _t.insert(pcx_t::ENCODINGS_RLE);
+    return _t;
+}
+const std::set<pcx_t::encodings_t> pcx_t::_values_encodings_t = pcx_t::_build_values_encodings_t();
+bool pcx_t::_is_defined_encodings_t(pcx_t::encodings_t v) {
+    return pcx_t::_values_encodings_t.find(v) != pcx_t::_values_encodings_t.end();
+}
+std::set<pcx_t::versions_t> pcx_t::_build_values_versions_t() {
+    std::set<pcx_t::versions_t> _t;
+    _t.insert(pcx_t::VERSIONS_V2_5);
+    _t.insert(pcx_t::VERSIONS_V2_8_WITH_PALETTE);
+    _t.insert(pcx_t::VERSIONS_V2_8_WITHOUT_PALETTE);
+    _t.insert(pcx_t::VERSIONS_PAINTBRUSH_FOR_WINDOWS);
+    _t.insert(pcx_t::VERSIONS_V3_0);
+    return _t;
+}
+const std::set<pcx_t::versions_t> pcx_t::_values_versions_t = pcx_t::_build_values_versions_t();
+bool pcx_t::_is_defined_versions_t(pcx_t::versions_t v) {
+    return pcx_t::_values_versions_t.find(v) != pcx_t::_values_versions_t.end();
+}
 
 pcx_t::pcx_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, pcx_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     m_hdr = 0;
     m__io__raw_hdr = 0;
     m_palette_256 = 0;
@@ -57,8 +79,8 @@ pcx_t::header_t::header_t(kaitai::kstream* p__io, pcx_t* p__parent, pcx_t* p__ro
 
 void pcx_t::header_t::_read() {
     m_magic = m__io->read_bytes(1);
-    if (!(magic() == std::string("\x0A", 1))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\x0A", 1), magic(), _io(), std::string("/types/header/seq/0"));
+    if (!(m_magic == std::string("\x0A", 1))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\x0A", 1), m_magic, m__io, std::string("/types/header/seq/0"));
     }
     m_version = static_cast<pcx_t::versions_t>(m__io->read_u1());
     m_encoding = static_cast<pcx_t::encodings_t>(m__io->read_u1());
@@ -71,8 +93,8 @@ void pcx_t::header_t::_read() {
     m_vdpi = m__io->read_u2le();
     m_palette_16 = m__io->read_bytes(48);
     m_reserved = m__io->read_bytes(1);
-    if (!(reserved() == std::string("\x00", 1))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\x00", 1), reserved(), _io(), std::string("/types/header/seq/11"));
+    if (!(m_reserved == std::string("\x00", 1))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\x00", 1), m_reserved, m__io, std::string("/types/header/seq/11"));
     }
     m_num_planes = m__io->read_u1();
     m_bytes_per_line = m__io->read_u2le();
@@ -86,44 +108,6 @@ pcx_t::header_t::~header_t() {
 }
 
 void pcx_t::header_t::_clean_up() {
-}
-
-pcx_t::t_palette_256_t::t_palette_256_t(kaitai::kstream* p__io, pcx_t* p__parent, pcx_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    m_colors = 0;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void pcx_t::t_palette_256_t::_read() {
-    m_magic = m__io->read_bytes(1);
-    if (!(magic() == std::string("\x0C", 1))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\x0C", 1), magic(), _io(), std::string("/types/t_palette_256/seq/0"));
-    }
-    m_colors = new std::vector<rgb_t*>();
-    const int l_colors = 256;
-    for (int i = 0; i < l_colors; i++) {
-        m_colors->push_back(new rgb_t(m__io, this, m__root));
-    }
-}
-
-pcx_t::t_palette_256_t::~t_palette_256_t() {
-    _clean_up();
-}
-
-void pcx_t::t_palette_256_t::_clean_up() {
-    if (m_colors) {
-        for (std::vector<rgb_t*>::iterator it = m_colors->begin(); it != m_colors->end(); ++it) {
-            delete *it;
-        }
-        delete m_colors; m_colors = 0;
-    }
 }
 
 pcx_t::rgb_t::rgb_t(kaitai::kstream* p__io, pcx_t::t_palette_256_t* p__parent, pcx_t* p__root) : kaitai::kstruct(p__io) {
@@ -151,17 +135,55 @@ pcx_t::rgb_t::~rgb_t() {
 void pcx_t::rgb_t::_clean_up() {
 }
 
+pcx_t::t_palette_256_t::t_palette_256_t(kaitai::kstream* p__io, pcx_t* p__parent, pcx_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_colors = 0;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void pcx_t::t_palette_256_t::_read() {
+    m_magic = m__io->read_bytes(1);
+    if (!(m_magic == std::string("\x0C", 1))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\x0C", 1), m_magic, m__io, std::string("/types/t_palette_256/seq/0"));
+    }
+    m_colors = new std::vector<rgb_t*>();
+    const int l_colors = 256;
+    for (int i = 0; i < l_colors; i++) {
+        m_colors->push_back(new rgb_t(m__io, this, m__root));
+    }
+}
+
+pcx_t::t_palette_256_t::~t_palette_256_t() {
+    _clean_up();
+}
+
+void pcx_t::t_palette_256_t::_clean_up() {
+    if (m_colors) {
+        for (std::vector<rgb_t*>::iterator it = m_colors->begin(); it != m_colors->end(); ++it) {
+            delete *it;
+        }
+        delete m_colors; m_colors = 0;
+    }
+}
+
 pcx_t::t_palette_256_t* pcx_t::palette_256() {
     if (f_palette_256)
         return m_palette_256;
+    f_palette_256 = true;
     n_palette_256 = true;
     if ( ((hdr()->version() == pcx_t::VERSIONS_V3_0) && (hdr()->bits_per_pixel() == 8) && (hdr()->num_planes() == 1)) ) {
         n_palette_256 = false;
         std::streampos _pos = m__io->pos();
-        m__io->seek((_io()->size() - 769));
+        m__io->seek(_io()->size() - 769);
         m_palette_256 = new t_palette_256_t(m__io, this, m__root);
         m__io->seek(_pos);
-        f_palette_256 = true;
     }
     return m_palette_256;
 }

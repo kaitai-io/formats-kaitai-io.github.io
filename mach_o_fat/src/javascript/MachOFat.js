@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream', './MachO'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./MachO'));
+    define(['exports', 'kaitai-struct/KaitaiStream', './MachO'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'), require('./MachO'));
   } else {
-    root.MachOFat = factory(root.KaitaiStream, root.MachO);
+    factory(root.MachOFat || (root.MachOFat = {}), root.KaitaiStream, root.MachO || (root.MachO = {}));
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, MachO) {
+})(typeof self !== 'undefined' ? self : this, function (MachOFat_, KaitaiStream, MachO_) {
 /**
  * This is a simple container format that encapsulates multiple Mach-O files,
  * each generally for a different architecture. XNU can execute these files just
@@ -26,8 +26,8 @@ var MachOFat = (function() {
   }
   MachOFat.prototype._read = function() {
     this.magic = this._io.readBytes(4);
-    if (!((KaitaiStream.byteArrayCompare(this.magic, [202, 254, 186, 190]) == 0))) {
-      throw new KaitaiStream.ValidationNotEqualError([202, 254, 186, 190], this.magic, this._io, "/seq/0");
+    if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([202, 254, 186, 190])) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([202, 254, 186, 190]), this.magic, this._io, "/seq/0");
     }
     this.numFatArch = this._io.readU4be();
     this.fatArchs = [];
@@ -40,7 +40,7 @@ var MachOFat = (function() {
     function FatArch(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -59,7 +59,7 @@ var MachOFat = (function() {
         this._io.seek(this.ofsObject);
         this._raw__m_object = this._io.readBytes(this.lenObject);
         var _io__raw__m_object = new KaitaiStream(this._raw__m_object);
-        this._m_object = new MachO(_io__raw__m_object, this, null);
+        this._m_object = new MachO_.MachO(_io__raw__m_object, null, null);
         this._io.seek(_pos);
         return this._m_object;
       }
@@ -70,5 +70,5 @@ var MachOFat = (function() {
 
   return MachOFat;
 })();
-return MachOFat;
-}));
+MachOFat_.MachOFat = MachOFat;
+});

@@ -21,39 +21,6 @@ namespace Kaitai
         }
 
 
-        public enum UimageOs
-        {
-            Invalid = 0,
-            Openbsd = 1,
-            Netbsd = 2,
-            Freebsd = 3,
-            Bsd44 = 4,
-            Linux = 5,
-            Svr4 = 6,
-            Esix = 7,
-            Solaris = 8,
-            Irix = 9,
-            Sco = 10,
-            Dell = 11,
-            Ncr = 12,
-            Lynxos = 13,
-            Vxworks = 14,
-            Psos = 15,
-            Qnx = 16,
-            UBoot = 17,
-            Rtems = 18,
-            Artos = 19,
-            Unity = 20,
-            Integrity = 21,
-            Ose = 22,
-            Plan9 = 23,
-            Openrtos = 24,
-            ArmTrustedFirmware = 25,
-            Tee = 26,
-            Opensbi = 27,
-            Efi = 28,
-        }
-
         public enum UimageArch
         {
             Invalid = 0,
@@ -94,6 +61,39 @@ namespace Kaitai
             Lzo = 4,
             Lz4 = 5,
             Zstd = 6,
+        }
+
+        public enum UimageOs
+        {
+            Invalid = 0,
+            Openbsd = 1,
+            Netbsd = 2,
+            Freebsd = 3,
+            Bsd44 = 4,
+            Linux = 5,
+            Svr4 = 6,
+            Esix = 7,
+            Solaris = 8,
+            Irix = 9,
+            Sco = 10,
+            Dell = 11,
+            Ncr = 12,
+            Lynxos = 13,
+            Vxworks = 14,
+            Psos = 15,
+            Qnx = 16,
+            UBoot = 17,
+            Rtems = 18,
+            Artos = 19,
+            Unity = 20,
+            Integrity = 21,
+            Ose = 22,
+            Plan9 = 23,
+            Openrtos = 24,
+            ArmTrustedFirmware = 25,
+            Tee = 26,
+            Opensbi = 27,
+            Efi = 28,
         }
 
         public enum UimageType
@@ -167,9 +167,9 @@ namespace Kaitai
             private void _read()
             {
                 _magic = m_io.ReadBytes(4);
-                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 39, 5, 25, 86 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 39, 5, 25, 86 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 39, 5, 25, 86 }, Magic, M_Io, "/types/uheader/seq/0");
+                    throw new ValidationNotEqualError(new byte[] { 39, 5, 25, 86 }, _magic, m_io, "/types/uheader/seq/0");
                 }
                 _headerCrc = m_io.ReadU4be();
                 _timestamp = m_io.ReadU4be();

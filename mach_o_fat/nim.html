@@ -169,6 +169,11 @@ like single-arch Mach-Os and will pick the appropriate entry.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="macOS Mach-O multiarch ("fat") binary parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="macOS Mach-O multiarch ("fat") binary parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -199,7 +204,17 @@ like single-arch Mach-Os and will pick the appropriate entry.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="macOS Mach-O multiarch ("fat") binary parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="macOS Mach-O multiarch ("fat") binary parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="macOS Mach-O multiarch ("fat") binary parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -233,7 +248,6 @@ like single-arch Mach-Os and will pick the appropriate entry.</p>
 <span class="kn">import</span><span class="w"> </span><span class="n">options</span>
 <span class="kn">import</span><span class="w"> </span><span class="n">mach_o</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="s">&quot;mach_o&quot;</span>
 <span class="k">type</span>
 <span class="w">  </span><span class="n">MachOFat</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
 <span class="w">    </span><span class="p">`</span><span class="n">magic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
@@ -310,7 +324,7 @@ like single-arch Mach-Os and will pick the appropriate entry.</p>
 <span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">rawObjectInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenObject</span><span class="p">))</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">rawObjectInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rawObjectInstExpr</span>
 <span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">rawObjectInstIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawObjectInstExpr</span><span class="p">)</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">objectInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MachO</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawObjectInstIo</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">objectInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MachO</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawObjectInstIo</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">objectInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">objectInstExpr</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">objectInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>

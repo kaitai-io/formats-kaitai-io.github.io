@@ -3,8 +3,8 @@
 
 namespace {
     class Id3v23 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Id3v23 $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Id3v23 $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -17,110 +17,8 @@ namespace {
 }
 
 namespace Id3v23 {
-    class U1beSynchsafe extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Id3v23\U2beSynchsafe $_parent = null, \Id3v23 $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_padding = $this->_io->readBitsIntBe(1) != 0;
-            $this->_m_value = $this->_io->readBitsIntBe(7);
-        }
-        protected $_m_padding;
-        protected $_m_value;
-        public function padding() { return $this->_m_padding; }
-        public function value() { return $this->_m_value; }
-    }
-}
-
-namespace Id3v23 {
-    class U2beSynchsafe extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Id3v23\U4beSynchsafe $_parent = null, \Id3v23 $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_byte0 = new \Id3v23\U1beSynchsafe($this->_io, $this, $this->_root);
-            $this->_m_byte1 = new \Id3v23\U1beSynchsafe($this->_io, $this, $this->_root);
-        }
-        protected $_m_value;
-        public function value() {
-            if ($this->_m_value !== null)
-                return $this->_m_value;
-            $this->_m_value = (($this->byte0()->value() << 7) | $this->byte1()->value());
-            return $this->_m_value;
-        }
-        protected $_m_byte0;
-        protected $_m_byte1;
-        public function byte0() { return $this->_m_byte0; }
-        public function byte1() { return $this->_m_byte1; }
-    }
-}
-
-namespace Id3v23 {
-    class Tag extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Id3v23 $_parent = null, \Id3v23 $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_header = new \Id3v23\Header($this->_io, $this, $this->_root);
-            if ($this->header()->flags()->flagHeaderex()) {
-                $this->_m_headerEx = new \Id3v23\HeaderEx($this->_io, $this, $this->_root);
-            }
-            $this->_m_frames = [];
-            $i = 0;
-            do {
-                $_ = new \Id3v23\Frame($this->_io, $this, $this->_root);
-                $this->_m_frames[] = $_;
-                $i++;
-            } while (!( ((($this->_io()->pos() + $_->size()) > $this->header()->size()->value()) || ($_->isInvalid())) ));
-            if ($this->header()->flags()->flagHeaderex()) {
-                $this->_m_padding = $this->_io->readBytes(($this->headerEx()->paddingSize() - $this->_io()->pos()));
-            }
-        }
-        protected $_m_header;
-        protected $_m_headerEx;
-        protected $_m_frames;
-        protected $_m_padding;
-        public function header() { return $this->_m_header; }
-        public function headerEx() { return $this->_m_headerEx; }
-        public function frames() { return $this->_m_frames; }
-        public function padding() { return $this->_m_padding; }
-    }
-}
-
-namespace Id3v23 {
-    class U4beSynchsafe extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Id3v23\Header $_parent = null, \Id3v23 $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_short0 = new \Id3v23\U2beSynchsafe($this->_io, $this, $this->_root);
-            $this->_m_short1 = new \Id3v23\U2beSynchsafe($this->_io, $this, $this->_root);
-        }
-        protected $_m_value;
-        public function value() {
-            if ($this->_m_value !== null)
-                return $this->_m_value;
-            $this->_m_value = (($this->short0()->value() << 14) | $this->short1()->value());
-            return $this->_m_value;
-        }
-        protected $_m_short0;
-        protected $_m_short1;
-        public function short0() { return $this->_m_short0; }
-        public function short1() { return $this->_m_short1; }
-    }
-}
-
-namespace Id3v23 {
     class Frame extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Id3v23\Tag $_parent = null, \Id3v23 $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Id3v23\Tag $_parent = null, ?\Id3v23 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -151,7 +49,7 @@ namespace Id3v23 {
 
 namespace Id3v23\Frame {
     class Flags extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Id3v23\Frame $_parent = null, \Id3v23 $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Id3v23\Frame $_parent = null, ?\Id3v23 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -186,12 +84,70 @@ namespace Id3v23\Frame {
 }
 
 /**
+ * ID3v2 fixed header
+ */
+
+namespace Id3v23 {
+    class Header extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Id3v23\Tag $_parent = null, ?\Id3v23 $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_magic = $this->_io->readBytes(3);
+            if (!($this->_m_magic == "\x49\x44\x33")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x49\x44\x33", $this->_m_magic, $this->_io, "/types/header/seq/0");
+            }
+            $this->_m_versionMajor = $this->_io->readU1();
+            $this->_m_versionRevision = $this->_io->readU1();
+            $this->_m_flags = new \Id3v23\Header\Flags($this->_io, $this, $this->_root);
+            $this->_m_size = new \Id3v23\U4beSynchsafe($this->_io, $this, $this->_root);
+        }
+        protected $_m_magic;
+        protected $_m_versionMajor;
+        protected $_m_versionRevision;
+        protected $_m_flags;
+        protected $_m_size;
+        public function magic() { return $this->_m_magic; }
+        public function versionMajor() { return $this->_m_versionMajor; }
+        public function versionRevision() { return $this->_m_versionRevision; }
+        public function flags() { return $this->_m_flags; }
+        public function size() { return $this->_m_size; }
+    }
+}
+
+namespace Id3v23\Header {
+    class Flags extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Id3v23\Header $_parent = null, ?\Id3v23 $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_flagUnsynchronization = $this->_io->readBitsIntBe(1) != 0;
+            $this->_m_flagHeaderex = $this->_io->readBitsIntBe(1) != 0;
+            $this->_m_flagExperimental = $this->_io->readBitsIntBe(1) != 0;
+            $this->_m_reserved = $this->_io->readBitsIntBe(5);
+        }
+        protected $_m_flagUnsynchronization;
+        protected $_m_flagHeaderex;
+        protected $_m_flagExperimental;
+        protected $_m_reserved;
+        public function flagUnsynchronization() { return $this->_m_flagUnsynchronization; }
+        public function flagHeaderex() { return $this->_m_flagHeaderex; }
+        public function flagExperimental() { return $this->_m_flagExperimental; }
+        public function reserved() { return $this->_m_reserved; }
+    }
+}
+
+/**
  * ID3v2 extended header
  */
 
 namespace Id3v23 {
     class HeaderEx extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Id3v23\Tag $_parent = null, \Id3v23 $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Id3v23\Tag $_parent = null, ?\Id3v23 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -217,7 +173,7 @@ namespace Id3v23 {
 
 namespace Id3v23\HeaderEx {
     class FlagsEx extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Id3v23\HeaderEx $_parent = null, \Id3v23 $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Id3v23\HeaderEx $_parent = null, ?\Id3v23 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -233,60 +189,104 @@ namespace Id3v23\HeaderEx {
     }
 }
 
-/**
- * ID3v2 fixed header
- */
-
 namespace Id3v23 {
-    class Header extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Id3v23\Tag $_parent = null, \Id3v23 $_root = null) {
+    class Tag extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Id3v23 $_parent = null, ?\Id3v23 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_magic = $this->_io->readBytes(3);
-            if (!($this->magic() == "\x49\x44\x33")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x49\x44\x33", $this->magic(), $this->_io(), "/types/header/seq/0");
+            $this->_m_header = new \Id3v23\Header($this->_io, $this, $this->_root);
+            if ($this->header()->flags()->flagHeaderex()) {
+                $this->_m_headerEx = new \Id3v23\HeaderEx($this->_io, $this, $this->_root);
             }
-            $this->_m_versionMajor = $this->_io->readU1();
-            $this->_m_versionRevision = $this->_io->readU1();
-            $this->_m_flags = new \Id3v23\Header\Flags($this->_io, $this, $this->_root);
-            $this->_m_size = new \Id3v23\U4beSynchsafe($this->_io, $this, $this->_root);
+            $this->_m_frames = [];
+            $i = 0;
+            do {
+                $_ = new \Id3v23\Frame($this->_io, $this, $this->_root);
+                $this->_m_frames[] = $_;
+                $i++;
+            } while (!( (($this->_io()->pos() + $_->size() > $this->header()->size()->value()) || ($_->isInvalid())) ));
+            if ($this->header()->flags()->flagHeaderex()) {
+                $this->_m_padding = $this->_io->readBytes($this->headerEx()->paddingSize() - $this->_io()->pos());
+            }
         }
-        protected $_m_magic;
-        protected $_m_versionMajor;
-        protected $_m_versionRevision;
-        protected $_m_flags;
-        protected $_m_size;
-        public function magic() { return $this->_m_magic; }
-        public function versionMajor() { return $this->_m_versionMajor; }
-        public function versionRevision() { return $this->_m_versionRevision; }
-        public function flags() { return $this->_m_flags; }
-        public function size() { return $this->_m_size; }
+        protected $_m_header;
+        protected $_m_headerEx;
+        protected $_m_frames;
+        protected $_m_padding;
+        public function header() { return $this->_m_header; }
+        public function headerEx() { return $this->_m_headerEx; }
+        public function frames() { return $this->_m_frames; }
+        public function padding() { return $this->_m_padding; }
     }
 }
 
-namespace Id3v23\Header {
-    class Flags extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Id3v23\Header $_parent = null, \Id3v23 $_root = null) {
+namespace Id3v23 {
+    class U1beSynchsafe extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Id3v23\U2beSynchsafe $_parent = null, ?\Id3v23 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_flagUnsynchronization = $this->_io->readBitsIntBe(1) != 0;
-            $this->_m_flagHeaderex = $this->_io->readBitsIntBe(1) != 0;
-            $this->_m_flagExperimental = $this->_io->readBitsIntBe(1) != 0;
-            $this->_m_reserved = $this->_io->readBitsIntBe(5);
+            $this->_m_padding = $this->_io->readBitsIntBe(1) != 0;
+            $this->_m_value = $this->_io->readBitsIntBe(7);
         }
-        protected $_m_flagUnsynchronization;
-        protected $_m_flagHeaderex;
-        protected $_m_flagExperimental;
-        protected $_m_reserved;
-        public function flagUnsynchronization() { return $this->_m_flagUnsynchronization; }
-        public function flagHeaderex() { return $this->_m_flagHeaderex; }
-        public function flagExperimental() { return $this->_m_flagExperimental; }
-        public function reserved() { return $this->_m_reserved; }
+        protected $_m_padding;
+        protected $_m_value;
+        public function padding() { return $this->_m_padding; }
+        public function value() { return $this->_m_value; }
+    }
+}
+
+namespace Id3v23 {
+    class U2beSynchsafe extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Id3v23\U4beSynchsafe $_parent = null, ?\Id3v23 $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_byte0 = new \Id3v23\U1beSynchsafe($this->_io, $this, $this->_root);
+            $this->_m_byte1 = new \Id3v23\U1beSynchsafe($this->_io, $this, $this->_root);
+        }
+        protected $_m_value;
+        public function value() {
+            if ($this->_m_value !== null)
+                return $this->_m_value;
+            $this->_m_value = $this->byte0()->value() << 7 | $this->byte1()->value();
+            return $this->_m_value;
+        }
+        protected $_m_byte0;
+        protected $_m_byte1;
+        public function byte0() { return $this->_m_byte0; }
+        public function byte1() { return $this->_m_byte1; }
+    }
+}
+
+namespace Id3v23 {
+    class U4beSynchsafe extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Id3v23\Header $_parent = null, ?\Id3v23 $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_short0 = new \Id3v23\U2beSynchsafe($this->_io, $this, $this->_root);
+            $this->_m_short1 = new \Id3v23\U2beSynchsafe($this->_io, $this, $this->_root);
+        }
+        protected $_m_value;
+        public function value() {
+            if ($this->_m_value !== null)
+                return $this->_m_value;
+            $this->_m_value = $this->short0()->value() << 14 | $this->short1()->value();
+            return $this->_m_value;
+        }
+        protected $_m_short0;
+        protected $_m_short1;
+        public function short0() { return $this->_m_short0; }
+        public function short1() { return $this->_m_short1; }
     }
 }

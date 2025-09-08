@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -18,8 +18,8 @@ end
 # sync code to find the beginning of a new Ogg page and continue
 # decoding the stream contents from that one.
 class Ogg < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -37,16 +37,16 @@ class Ogg < Kaitai::Struct::Struct
   # Ogg page is a basic unit of data in an Ogg bitstream, usually
   # it's around 4-8 KB, with a maximum size of 65307 bytes.
   class Page < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
       @sync_code = @_io.read_bytes(4)
-      raise Kaitai::Struct::ValidationNotEqualError.new([79, 103, 103, 83].pack('C*'), sync_code, _io, "/types/page/seq/0") if not sync_code == [79, 103, 103, 83].pack('C*')
+      raise Kaitai::Struct::ValidationNotEqualError.new([79, 103, 103, 83].pack('C*'), @sync_code, @_io, "/types/page/seq/0") if not @sync_code == [79, 103, 103, 83].pack('C*')
       @version = @_io.read_bytes(1)
-      raise Kaitai::Struct::ValidationNotEqualError.new([0].pack('C*'), version, _io, "/types/page/seq/1") if not version == [0].pack('C*')
+      raise Kaitai::Struct::ValidationNotEqualError.new([0].pack('C*'), @version, @_io, "/types/page/seq/1") if not @version == [0].pack('C*')
       @reserved1 = @_io.read_bits_int_be(5)
       @is_end_of_stream = @_io.read_bits_int_be(1) != 0
       @is_beginning_of_stream = @_io.read_bits_int_be(1) != 0

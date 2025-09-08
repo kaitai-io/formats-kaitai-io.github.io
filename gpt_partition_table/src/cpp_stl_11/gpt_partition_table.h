@@ -2,13 +2,15 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class gpt_partition_table_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -126,11 +128,11 @@ public:
     };
 
 private:
-    bool f_sector_size;
-    int32_t m_sector_size;
+    bool f_backup;
+    std::unique_ptr<partition_header_t> m_backup;
 
 public:
-    int32_t sector_size();
+    partition_header_t* backup();
 
 private:
     bool f_primary;
@@ -140,11 +142,11 @@ public:
     partition_header_t* primary();
 
 private:
-    bool f_backup;
-    std::unique_ptr<partition_header_t> m_backup;
+    bool f_sector_size;
+    int32_t m_sector_size;
 
 public:
-    partition_header_t* backup();
+    int32_t sector_size();
 
 private:
     gpt_partition_table_t* m__root;

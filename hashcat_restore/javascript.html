@@ -171,6 +171,11 @@ section#format-index .row {
                 <a href="java.html" title="Hashcat Restore file parsing Java library">Java</a></li>
                 
                 
+                <li>
+                
+                <a href="java-write.html" title="Hashcat Restore file parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
                 <li class="active">
                 
                 <a href="javascript.html" title="Hashcat Restore file parsing JavaScript library">JavaScript</a></li>
@@ -203,7 +208,17 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="python-write.html" title="Hashcat Restore file parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="Hashcat Restore file parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="Hashcat Restore file parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -276,13 +291,13 @@ section#format-index .row {
 
 <span class="p">(</span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">root</span><span class="p">,</span><span class="w"> </span><span class="nx">factory</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="ow">typeof</span><span class="w"> </span><span class="nx">define</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;function&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">define</span><span class="p">.</span><span class="nx">amd</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">define</span><span class="p">([</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">],</span><span class="w"> </span><span class="nx">factory</span><span class="p">);</span>
-<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="ow">typeof</span><span class="w"> </span><span class="nx">module</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;object&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">factory</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">));</span>
+<span class="w">    </span><span class="nx">define</span><span class="p">([</span><span class="s1">&#39;exports&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">],</span><span class="w"> </span><span class="nx">factory</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="ow">typeof</span><span class="w"> </span><span class="nx">exports</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;object&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">exports</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="ow">typeof</span><span class="w"> </span><span class="nx">exports</span><span class="p">.</span><span class="nx">nodeType</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s1">&#39;number&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">factory</span><span class="p">(</span><span class="nx">exports</span><span class="p">,</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">));</span>
 <span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">root</span><span class="p">.</span><span class="nx">HashcatRestore</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">KaitaiStream</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">HashcatRestore</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">HashcatRestore</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}),</span><span class="w"> </span><span class="nx">root</span><span class="p">.</span><span class="nx">KaitaiStream</span><span class="p">);</span>
 <span class="w">  </span><span class="p">}</span>
-<span class="p">}(</span><span class="ow">typeof</span><span class="w"> </span><span class="nx">self</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s1">&#39;undefined&#39;</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nx">self</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="p">})(</span><span class="ow">typeof</span><span class="w"> </span><span class="nx">self</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s1">&#39;undefined&#39;</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nx">self</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">HashcatRestore_</span><span class="p">,</span><span class="w"> </span><span class="nx">KaitaiStream</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="cm">/**</span>
 <span class="cm"> * @see {@link https://hashcat.net/wiki/doku.php?id=restore|Source}</span>
 <span class="cm"> */</span>
@@ -312,8 +327,8 @@ section#format-index .row {
 
 <span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">HashcatRestore</span><span class="p">;</span>
 <span class="p">})();</span>
-<span class="k">return</span><span class="w"> </span><span class="nx">HashcatRestore</span><span class="p">;</span>
-<span class="p">}));</span>
+<span class="nx">HashcatRestore_</span><span class="p">.</span><span class="nx">HashcatRestore</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">HashcatRestore</span><span class="p">;</span>
+<span class="p">});</span>
 </pre></div>
 
         </div>

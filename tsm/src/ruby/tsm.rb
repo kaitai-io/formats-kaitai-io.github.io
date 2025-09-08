@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -17,8 +17,8 @@ end
 # stores offset to an index. Index is used to find a data block for a
 # requested time boundary.
 class Tsm < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -27,14 +27,14 @@ class Tsm < Kaitai::Struct::Struct
     self
   end
   class Header < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
       @magic = @_io.read_bytes(4)
-      raise Kaitai::Struct::ValidationNotEqualError.new([22, 209, 22, 209].pack('C*'), magic, _io, "/types/header/seq/0") if not magic == [22, 209, 22, 209].pack('C*')
+      raise Kaitai::Struct::ValidationNotEqualError.new([22, 209, 22, 209].pack('C*'), @magic, @_io, "/types/header/seq/0") if not @magic == [22, 209, 22, 209].pack('C*')
       @version = @_io.read_u1
       self
     end
@@ -42,7 +42,7 @@ class Tsm < Kaitai::Struct::Struct
     attr_reader :version
   end
   class Index < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -52,7 +52,7 @@ class Tsm < Kaitai::Struct::Struct
       self
     end
     class IndexHeader < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
@@ -69,7 +69,7 @@ class Tsm < Kaitai::Struct::Struct
         self
       end
       class IndexEntry < Kaitai::Struct::Struct
-        def initialize(_io, _parent = nil, _root = self)
+        def initialize(_io, _parent = nil, _root = nil)
           super(_io, _parent, _root)
           _read
         end
@@ -82,14 +82,14 @@ class Tsm < Kaitai::Struct::Struct
           self
         end
         class BlockEntry < Kaitai::Struct::Struct
-          def initialize(_io, _parent = nil, _root = self)
+          def initialize(_io, _parent = nil, _root = nil)
             super(_io, _parent, _root)
             _read
           end
 
           def _read
             @crc32 = @_io.read_u4be
-            @data = @_io.read_bytes((_parent.block_size - 4))
+            @data = @_io.read_bytes(_parent.block_size - 4)
             self
           end
           attr_reader :crc32
@@ -125,7 +125,7 @@ class Tsm < Kaitai::Struct::Struct
         _ = IndexHeader.new(@_io, self, @_root)
         @entries << _
         i += 1
-      end until _io.pos == (_io.size - 8)
+      end until _io.pos == _io.size - 8
       @_io.seek(_pos)
       @entries
     end
@@ -134,7 +134,7 @@ class Tsm < Kaitai::Struct::Struct
   def index
     return @index unless @index.nil?
     _pos = @_io.pos
-    @_io.seek((_io.size - 8))
+    @_io.seek(_io.size - 8)
     @index = Index.new(@_io, self, @_root)
     @_io.seek(_pos)
     @index

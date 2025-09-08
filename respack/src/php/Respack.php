@@ -8,8 +8,8 @@
 
 namespace {
     class Respack extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Respack $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Respack $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -26,15 +26,15 @@ namespace {
 
 namespace Respack {
     class Header extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Respack $_parent = null, \Respack $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Respack $_parent = null, ?\Respack $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic = $this->_io->readBytes(2);
-            if (!($this->magic() == "\x52\x53")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x52\x53", $this->magic(), $this->_io(), "/types/header/seq/0");
+            if (!($this->_m_magic == "\x52\x53")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x52\x53", $this->_m_magic, $this->_io, "/types/header/seq/0");
             }
             $this->_m_unknown = $this->_io->readBytes(8);
             $this->_m_lenJson = $this->_io->readU4le();

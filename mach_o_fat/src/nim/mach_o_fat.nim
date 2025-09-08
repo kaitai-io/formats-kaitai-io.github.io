@@ -2,7 +2,6 @@ import kaitai_struct_nim_runtime
 import options
 import mach_o
 
-import "mach_o"
 type
   MachOFat* = ref object of KaitaiStruct
     `magic`*: seq[byte]
@@ -79,7 +78,7 @@ proc object(this: MachOFat_FatArch): MachO =
   let rawObjectInstExpr = this.io.readBytes(int(this.lenObject))
   this.rawObjectInst = rawObjectInstExpr
   let rawObjectInstIo = newKaitaiStream(rawObjectInstExpr)
-  let objectInstExpr = MachO.read(rawObjectInstIo, this.root, this)
+  let objectInstExpr = MachO.read(rawObjectInstIo, nil, nil)
   this.objectInst = objectInstExpr
   this.io.seek(pos)
   this.objectInstFlag = true

@@ -31,12 +31,12 @@ public class AndroidNanoappHeader extends KaitaiStruct {
     }
     private void _read() {
         this.headerVersion = this._io.readU4le();
-        if (!(headerVersion() == 1)) {
-            throw new KaitaiStream.ValidationNotEqualError(1, headerVersion(), _io(), "/seq/0");
+        if (!(this.headerVersion == 1)) {
+            throw new KaitaiStream.ValidationNotEqualError(1, this.headerVersion, this._io, "/seq/0");
         }
         this.magic = this._io.readBytes(4);
-        if (!(Arrays.equals(magic(), new byte[] { 78, 65, 78, 79 }))) {
-            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 78, 65, 78, 79 }, magic(), _io(), "/seq/1");
+        if (!(Arrays.equals(this.magic, new byte[] { 78, 65, 78, 79 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 78, 65, 78, 79 }, this.magic, this._io, "/seq/1");
         }
         this.appId = this._io.readU8le();
         this.appVersion = this._io.readU4le();
@@ -45,32 +45,32 @@ public class AndroidNanoappHeader extends KaitaiStruct {
         this.chreApiMajorVersion = this._io.readU1();
         this.chreApiMinorVersion = this._io.readU1();
         this.reserved = this._io.readBytes(6);
-        if (!(Arrays.equals(reserved(), new byte[] { 0, 0, 0, 0, 0, 0 }))) {
-            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 0, 0, 0 }, reserved(), _io(), "/seq/8");
+        if (!(Arrays.equals(this.reserved, new byte[] { 0, 0, 0, 0, 0, 0 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 0, 0, 0 }, this.reserved, this._io, "/seq/8");
         }
     }
-    private Boolean isSigned;
-    public Boolean isSigned() {
-        if (this.isSigned != null)
-            return this.isSigned;
-        boolean _tmp = (boolean) ((flags() & 1) != 0);
-        this.isSigned = _tmp;
-        return this.isSigned;
+
+    public void _fetchInstances() {
     }
     private Boolean isEncrypted;
     public Boolean isEncrypted() {
         if (this.isEncrypted != null)
             return this.isEncrypted;
-        boolean _tmp = (boolean) ((flags() & 2) != 0);
-        this.isEncrypted = _tmp;
+        this.isEncrypted = (flags() & 2) != 0;
         return this.isEncrypted;
+    }
+    private Boolean isSigned;
+    public Boolean isSigned() {
+        if (this.isSigned != null)
+            return this.isSigned;
+        this.isSigned = (flags() & 1) != 0;
+        return this.isSigned;
     }
     private Boolean isTcmCapable;
     public Boolean isTcmCapable() {
         if (this.isTcmCapable != null)
             return this.isTcmCapable;
-        boolean _tmp = (boolean) ((flags() & 4) != 0);
-        this.isTcmCapable = _tmp;
+        this.isTcmCapable = (flags() & 4) != 0;
         return this.isTcmCapable;
     }
     private long headerVersion;

@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -181,8 +181,8 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
     39056127 => :sections_unused_16,
   }
   I__SECTIONS = SECTIONS.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -192,33 +192,26 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
     @library_id_stamp = @_io.read_u4le
     case code
     when :sections_atomic
-      @_raw_body = @_io.read_bytes(size)
-      _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = ListWithHeader.new(_io__raw_body, self, @_root)
-    when :sections_geometry
-      @_raw_body = @_io.read_bytes(size)
-      _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = ListWithHeader.new(_io__raw_body, self, @_root)
-    when :sections_texture_dictionary
-      @_raw_body = @_io.read_bytes(size)
-      _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = ListWithHeader.new(_io__raw_body, self, @_root)
-    when :sections_geometry_list
-      @_raw_body = @_io.read_bytes(size)
-      _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = ListWithHeader.new(_io__raw_body, self, @_root)
-    when :sections_texture_native
-      @_raw_body = @_io.read_bytes(size)
-      _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = ListWithHeader.new(_io__raw_body, self, @_root)
+      _io_body = @_io.substream(size)
+      @body = ListWithHeader.new(_io_body, self, @_root)
     when :sections_clump
-      @_raw_body = @_io.read_bytes(size)
-      _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = ListWithHeader.new(_io__raw_body, self, @_root)
+      _io_body = @_io.substream(size)
+      @body = ListWithHeader.new(_io_body, self, @_root)
     when :sections_frame_list
-      @_raw_body = @_io.read_bytes(size)
-      _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = ListWithHeader.new(_io__raw_body, self, @_root)
+      _io_body = @_io.substream(size)
+      @body = ListWithHeader.new(_io_body, self, @_root)
+    when :sections_geometry
+      _io_body = @_io.substream(size)
+      @body = ListWithHeader.new(_io_body, self, @_root)
+    when :sections_geometry_list
+      _io_body = @_io.substream(size)
+      @body = ListWithHeader.new(_io_body, self, @_root)
+    when :sections_texture_dictionary
+      _io_body = @_io.substream(size)
+      @body = ListWithHeader.new(_io_body, self, @_root)
+    when :sections_texture_native
+      _io_body = @_io.substream(size)
+      @body = ListWithHeader.new(_io_body, self, @_root)
     else
       @body = @_io.read_bytes(size)
     end
@@ -226,93 +219,27 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://gtamods.com/wiki/RpClump Source
-  class StructClump < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  # @see https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure Source
+  class Frame < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @num_atomics = @_io.read_u4le
-      if _parent.version >= 208896
-        @num_lights = @_io.read_u4le
-      end
-      if _parent.version >= 208896
-        @num_cameras = @_io.read_u4le
-      end
+      @rotation_matrix = Matrix.new(@_io, self, @_root)
+      @position = Vector3d.new(@_io, self, @_root)
+      @cur_frame_idx = @_io.read_s4le
+      @matrix_creation_flags = @_io.read_u4le
       self
     end
-    attr_reader :num_atomics
-    attr_reader :num_lights
-    attr_reader :num_cameras
-  end
-
-  ##
-  # @see https://gtamods.com/wiki/RpGeometry Source
-  class StructGeometry < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @format = @_io.read_u4le
-      @num_triangles = @_io.read_u4le
-      @num_vertices = @_io.read_u4le
-      @num_morph_targets = @_io.read_u4le
-      if _parent.version < 212992
-        @surf_prop = SurfaceProperties.new(@_io, self, @_root)
-      end
-      if !(is_native)
-        @geometry = GeometryNonNative.new(@_io, self, @_root)
-      end
-      @morph_targets = []
-      (num_morph_targets).times { |i|
-        @morph_targets << MorphTarget.new(@_io, self, @_root)
-      }
-      self
-    end
-    def num_uv_layers_raw
-      return @num_uv_layers_raw unless @num_uv_layers_raw.nil?
-      @num_uv_layers_raw = ((format & 16711680) >> 16)
-      @num_uv_layers_raw
-    end
-    def is_textured
-      return @is_textured unless @is_textured.nil?
-      @is_textured = (format & 4) != 0
-      @is_textured
-    end
-    def is_native
-      return @is_native unless @is_native.nil?
-      @is_native = (format & 16777216) != 0
-      @is_native
-    end
-    def num_uv_layers
-      return @num_uv_layers unless @num_uv_layers.nil?
-      @num_uv_layers = (num_uv_layers_raw == 0 ? (is_textured2 ? 2 : (is_textured ? 1 : 0)) : num_uv_layers_raw)
-      @num_uv_layers
-    end
-    def is_textured2
-      return @is_textured2 unless @is_textured2.nil?
-      @is_textured2 = (format & 128) != 0
-      @is_textured2
-    end
-    def is_prelit
-      return @is_prelit unless @is_prelit.nil?
-      @is_prelit = (format & 8) != 0
-      @is_prelit
-    end
-    attr_reader :format
-    attr_reader :num_triangles
-    attr_reader :num_vertices
-    attr_reader :num_morph_targets
-    attr_reader :surf_prop
-    attr_reader :geometry
-    attr_reader :morph_targets
+    attr_reader :rotation_matrix
+    attr_reader :position
+    attr_reader :cur_frame_idx
+    attr_reader :matrix_creation_flags
   end
   class GeometryNonNative < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -340,57 +267,85 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://gtamods.com/wiki/Geometry_List_(RW_Section)#Structure Source
-  class StructGeometryList < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  # Typical structure used by many data types in RenderWare binary
+  # stream. Substream contains a list of binary stream entries,
+  # first entry always has type "struct" and carries some specific
+  # binary data it in, determined by the type of parent. All other
+  # entries, beside the first one, are normal, self-describing
+  # records.
+  class ListWithHeader < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @num_geometries = @_io.read_u4le
+      @code = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([1, 0, 0, 0].pack('C*'), @code, @_io, "/types/list_with_header/seq/0") if not @code == [1, 0, 0, 0].pack('C*')
+      @header_size = @_io.read_u4le
+      @library_id_stamp = @_io.read_u4le
+      case _parent.code
+      when :sections_atomic
+        _io_header = @_io.substream(header_size)
+        @header = StructAtomic.new(_io_header, self, @_root)
+      when :sections_clump
+        _io_header = @_io.substream(header_size)
+        @header = StructClump.new(_io_header, self, @_root)
+      when :sections_frame_list
+        _io_header = @_io.substream(header_size)
+        @header = StructFrameList.new(_io_header, self, @_root)
+      when :sections_geometry
+        _io_header = @_io.substream(header_size)
+        @header = StructGeometry.new(_io_header, self, @_root)
+      when :sections_geometry_list
+        _io_header = @_io.substream(header_size)
+        @header = StructGeometryList.new(_io_header, self, @_root)
+      when :sections_texture_dictionary
+        _io_header = @_io.substream(header_size)
+        @header = StructTextureDictionary.new(_io_header, self, @_root)
+      else
+        @header = @_io.read_bytes(header_size)
+      end
+      @entries = []
+      i = 0
+      while not @_io.eof?
+        @entries << RenderwareBinaryStream.new(@_io, self, @_root)
+        i += 1
+      end
       self
     end
-    attr_reader :num_geometries
+    def version
+      return @version unless @version.nil?
+      @version = (library_id_stamp & 4294901760 != 0 ? (library_id_stamp >> 14 & 261888) + 196608 | library_id_stamp >> 16 & 63 : library_id_stamp << 8)
+      @version
+    end
+    attr_reader :code
+    attr_reader :header_size
+    attr_reader :library_id_stamp
+    attr_reader :header
+    attr_reader :entries
+    attr_reader :_raw_header
   end
-  class Rgba < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+
+  ##
+  # @see https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure Source
+  class Matrix < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @r = @_io.read_u1
-      @g = @_io.read_u1
-      @b = @_io.read_u1
-      @a = @_io.read_u1
+      @entries = []
+      (3).times { |i|
+        @entries << Vector3d.new(@_io, self, @_root)
+      }
       self
     end
-    attr_reader :r
-    attr_reader :g
-    attr_reader :b
-    attr_reader :a
-  end
-  class Sphere < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @x = @_io.read_f4le
-      @y = @_io.read_f4le
-      @z = @_io.read_f4le
-      @radius = @_io.read_f4le
-      self
-    end
-    attr_reader :x
-    attr_reader :y
-    attr_reader :z
-    attr_reader :radius
+    attr_reader :entries
   end
   class MorphTarget < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -419,11 +374,47 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
     attr_reader :vertices
     attr_reader :normals
   end
+  class Rgba < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @r = @_io.read_u1
+      @g = @_io.read_u1
+      @b = @_io.read_u1
+      @a = @_io.read_u1
+      self
+    end
+    attr_reader :r
+    attr_reader :g
+    attr_reader :b
+    attr_reader :a
+  end
+  class Sphere < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @x = @_io.read_f4le
+      @y = @_io.read_f4le
+      @z = @_io.read_f4le
+      @radius = @_io.read_f4le
+      self
+    end
+    attr_reader :x
+    attr_reader :y
+    attr_reader :z
+    attr_reader :radius
+  end
 
   ##
   # @see https://gtamods.com/wiki/Atomic_(RW_Section)#Structure Source
   class StructAtomic < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -449,28 +440,32 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://gtamods.com/wiki/RpGeometry Source
-  class SurfaceProperties < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  # @see https://gtamods.com/wiki/RpClump Source
+  class StructClump < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @ambient = @_io.read_f4le
-      @specular = @_io.read_f4le
-      @diffuse = @_io.read_f4le
+      @num_atomics = @_io.read_u4le
+      if _parent.version >= 208896
+        @num_lights = @_io.read_u4le
+      end
+      if _parent.version >= 208896
+        @num_cameras = @_io.read_u4le
+      end
       self
     end
-    attr_reader :ambient
-    attr_reader :specular
-    attr_reader :diffuse
+    attr_reader :num_atomics
+    attr_reader :num_lights
+    attr_reader :num_cameras
   end
 
   ##
   # @see https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure Source
   class StructFrameList < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -488,110 +483,130 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure Source
-  class Matrix < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  # @see https://gtamods.com/wiki/RpGeometry Source
+  class StructGeometry < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @entries = []
-      (3).times { |i|
-        @entries << Vector3d.new(@_io, self, @_root)
+      @format = @_io.read_u4le
+      @num_triangles = @_io.read_u4le
+      @num_vertices = @_io.read_u4le
+      @num_morph_targets = @_io.read_u4le
+      if _parent.version < 212992
+        @surf_prop = SurfaceProperties.new(@_io, self, @_root)
+      end
+      if !(is_native)
+        @geometry = GeometryNonNative.new(@_io, self, @_root)
+      end
+      @morph_targets = []
+      (num_morph_targets).times { |i|
+        @morph_targets << MorphTarget.new(@_io, self, @_root)
       }
       self
     end
-    attr_reader :entries
+    def is_native
+      return @is_native unless @is_native.nil?
+      @is_native = format & 16777216 != 0
+      @is_native
+    end
+    def is_prelit
+      return @is_prelit unless @is_prelit.nil?
+      @is_prelit = format & 8 != 0
+      @is_prelit
+    end
+    def is_textured
+      return @is_textured unless @is_textured.nil?
+      @is_textured = format & 4 != 0
+      @is_textured
+    end
+    def is_textured2
+      return @is_textured2 unless @is_textured2.nil?
+      @is_textured2 = format & 128 != 0
+      @is_textured2
+    end
+    def num_uv_layers
+      return @num_uv_layers unless @num_uv_layers.nil?
+      @num_uv_layers = (num_uv_layers_raw == 0 ? (is_textured2 ? 2 : (is_textured ? 1 : 0)) : num_uv_layers_raw)
+      @num_uv_layers
+    end
+    def num_uv_layers_raw
+      return @num_uv_layers_raw unless @num_uv_layers_raw.nil?
+      @num_uv_layers_raw = (format & 16711680) >> 16
+      @num_uv_layers_raw
+    end
+    attr_reader :format
+    attr_reader :num_triangles
+    attr_reader :num_vertices
+    attr_reader :num_morph_targets
+    attr_reader :surf_prop
+    attr_reader :geometry
+    attr_reader :morph_targets
   end
 
   ##
-  # @see https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure Source
-  class Vector3d < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  # @see https://gtamods.com/wiki/Geometry_List_(RW_Section)#Structure Source
+  class StructGeometryList < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @x = @_io.read_f4le
-      @y = @_io.read_f4le
-      @z = @_io.read_f4le
+      @num_geometries = @_io.read_u4le
       self
     end
-    attr_reader :x
-    attr_reader :y
-    attr_reader :z
+    attr_reader :num_geometries
   end
-
-  ##
-  # Typical structure used by many data types in RenderWare binary
-  # stream. Substream contains a list of binary stream entries,
-  # first entry always has type "struct" and carries some specific
-  # binary data it in, determined by the type of parent. All other
-  # entries, beside the first one, are normal, self-describing
-  # records.
-  class ListWithHeader < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  class StructTextureDictionary < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @code = @_io.read_bytes(4)
-      raise Kaitai::Struct::ValidationNotEqualError.new([1, 0, 0, 0].pack('C*'), code, _io, "/types/list_with_header/seq/0") if not code == [1, 0, 0, 0].pack('C*')
-      @header_size = @_io.read_u4le
-      @library_id_stamp = @_io.read_u4le
-      case _parent.code
-      when :sections_atomic
-        @_raw_header = @_io.read_bytes(header_size)
-        _io__raw_header = Kaitai::Struct::Stream.new(@_raw_header)
-        @header = StructAtomic.new(_io__raw_header, self, @_root)
-      when :sections_geometry
-        @_raw_header = @_io.read_bytes(header_size)
-        _io__raw_header = Kaitai::Struct::Stream.new(@_raw_header)
-        @header = StructGeometry.new(_io__raw_header, self, @_root)
-      when :sections_texture_dictionary
-        @_raw_header = @_io.read_bytes(header_size)
-        _io__raw_header = Kaitai::Struct::Stream.new(@_raw_header)
-        @header = StructTextureDictionary.new(_io__raw_header, self, @_root)
-      when :sections_geometry_list
-        @_raw_header = @_io.read_bytes(header_size)
-        _io__raw_header = Kaitai::Struct::Stream.new(@_raw_header)
-        @header = StructGeometryList.new(_io__raw_header, self, @_root)
-      when :sections_clump
-        @_raw_header = @_io.read_bytes(header_size)
-        _io__raw_header = Kaitai::Struct::Stream.new(@_raw_header)
-        @header = StructClump.new(_io__raw_header, self, @_root)
-      when :sections_frame_list
-        @_raw_header = @_io.read_bytes(header_size)
-        _io__raw_header = Kaitai::Struct::Stream.new(@_raw_header)
-        @header = StructFrameList.new(_io__raw_header, self, @_root)
-      else
-        @header = @_io.read_bytes(header_size)
-      end
-      @entries = []
-      i = 0
-      while not @_io.eof?
-        @entries << RenderwareBinaryStream.new(@_io)
-        i += 1
-      end
+      @num_textures = @_io.read_u4le
       self
     end
-    def version
-      return @version unless @version.nil?
-      @version = ((library_id_stamp & 4294901760) != 0 ? ((((library_id_stamp >> 14) & 261888) + 196608) | ((library_id_stamp >> 16) & 63)) : (library_id_stamp << 8))
-      @version
+    attr_reader :num_textures
+  end
+
+  ##
+  # @see https://gtamods.com/wiki/RpGeometry Source
+  class SurfaceProperties < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
     end
-    attr_reader :code
-    attr_reader :header_size
-    attr_reader :library_id_stamp
-    attr_reader :header
-    attr_reader :entries
-    attr_reader :_raw_header
+
+    def _read
+      @ambient = @_io.read_f4le
+      @specular = @_io.read_f4le
+      @diffuse = @_io.read_f4le
+      self
+    end
+    attr_reader :ambient
+    attr_reader :specular
+    attr_reader :diffuse
+  end
+  class TexCoord < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @u = @_io.read_f4le
+      @v = @_io.read_f4le
+      self
+    end
+    attr_reader :u
+    attr_reader :v
   end
   class Triangle < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -608,43 +623,8 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
     attr_reader :material_id
     attr_reader :vertex3
   end
-
-  ##
-  # @see https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure Source
-  class Frame < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @rotation_matrix = Matrix.new(@_io, self, @_root)
-      @position = Vector3d.new(@_io, self, @_root)
-      @cur_frame_idx = @_io.read_s4le
-      @matrix_creation_flags = @_io.read_u4le
-      self
-    end
-    attr_reader :rotation_matrix
-    attr_reader :position
-    attr_reader :cur_frame_idx
-    attr_reader :matrix_creation_flags
-  end
-  class TexCoord < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @u = @_io.read_f4le
-      @v = @_io.read_f4le
-      self
-    end
-    attr_reader :u
-    attr_reader :v
-  end
   class UvLayer < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self, num_vertices)
+    def initialize(_io, _parent = nil, _root = nil, num_vertices)
       super(_io, _parent, _root)
       @num_vertices = num_vertices
       _read
@@ -660,21 +640,28 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
     attr_reader :tex_coords
     attr_reader :num_vertices
   end
-  class StructTextureDictionary < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+
+  ##
+  # @see https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure Source
+  class Vector3d < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @num_textures = @_io.read_u4le
+      @x = @_io.read_f4le
+      @y = @_io.read_f4le
+      @z = @_io.read_f4le
       self
     end
-    attr_reader :num_textures
+    attr_reader :x
+    attr_reader :y
+    attr_reader :z
   end
   def version
     return @version unless @version.nil?
-    @version = ((library_id_stamp & 4294901760) != 0 ? ((((library_id_stamp >> 14) & 261888) + 196608) | ((library_id_stamp >> 16) & 63)) : (library_id_stamp << 8))
+    @version = (library_id_stamp & 4294901760 != 0 ? (library_id_stamp >> 14 & 261888) + 196608 | library_id_stamp >> 16 & 63 : library_id_stamp << 8)
     @version
   end
   attr_reader :code

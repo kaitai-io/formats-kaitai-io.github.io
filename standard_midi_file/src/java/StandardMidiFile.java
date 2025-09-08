@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
 
 
 /**
@@ -52,289 +53,94 @@ public class StandardMidiFile extends KaitaiStruct {
             this.tracks.add(new Track(this._io, this, _root));
         }
     }
-    public static class TrackEvents extends KaitaiStruct {
-        public static TrackEvents fromFile(String fileName) throws IOException {
-            return new TrackEvents(new ByteBufferKaitaiStream(fileName));
-        }
 
-        public TrackEvents(KaitaiStream _io) {
-            this(_io, null, null);
+    public void _fetchInstances() {
+        this.hdr._fetchInstances();
+        for (int i = 0; i < this.tracks.size(); i++) {
+            this.tracks.get(((Number) (i)).intValue())._fetchInstances();
         }
-
-        public TrackEvents(KaitaiStream _io, StandardMidiFile.Track _parent) {
-            this(_io, _parent, null);
-        }
-
-        public TrackEvents(KaitaiStream _io, StandardMidiFile.Track _parent, StandardMidiFile _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.event = new ArrayList<TrackEvent>();
-            {
-                int i = 0;
-                while (!this._io.isEof()) {
-                    this.event.add(new TrackEvent(this._io, this, _root));
-                    i++;
-                }
-            }
-        }
-        private ArrayList<TrackEvent> event;
-        private StandardMidiFile _root;
-        private StandardMidiFile.Track _parent;
-        public ArrayList<TrackEvent> event() { return event; }
-        public StandardMidiFile _root() { return _root; }
-        public StandardMidiFile.Track _parent() { return _parent; }
     }
-    public static class TrackEvent extends KaitaiStruct {
-        public static TrackEvent fromFile(String fileName) throws IOException {
-            return new TrackEvent(new ByteBufferKaitaiStream(fileName));
+    public static class ChannelPressureEvent extends KaitaiStruct {
+        public static ChannelPressureEvent fromFile(String fileName) throws IOException {
+            return new ChannelPressureEvent(new ByteBufferKaitaiStream(fileName));
         }
 
-        public TrackEvent(KaitaiStream _io) {
+        public ChannelPressureEvent(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public TrackEvent(KaitaiStream _io, StandardMidiFile.TrackEvents _parent) {
+        public ChannelPressureEvent(KaitaiStream _io, StandardMidiFile.TrackEvent _parent) {
             this(_io, _parent, null);
         }
 
-        public TrackEvent(KaitaiStream _io, StandardMidiFile.TrackEvents _parent, StandardMidiFile _root) {
+        public ChannelPressureEvent(KaitaiStream _io, StandardMidiFile.TrackEvent _parent, StandardMidiFile _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.vTime = new VlqBase128Be(this._io);
-            this.eventHeader = this._io.readU1();
-            if (eventHeader() == 255) {
-                this.metaEventBody = new MetaEventBody(this._io, this, _root);
-            }
-            if (eventHeader() == 240) {
-                this.sysexBody = new SysexEventBody(this._io, this, _root);
-            }
-            switch (eventType()) {
-            case 224: {
-                this.eventBody = new PitchBendEvent(this._io, this, _root);
-                break;
-            }
-            case 144: {
-                this.eventBody = new NoteOnEvent(this._io, this, _root);
-                break;
-            }
-            case 208: {
-                this.eventBody = new ChannelPressureEvent(this._io, this, _root);
-                break;
-            }
-            case 192: {
-                this.eventBody = new ProgramChangeEvent(this._io, this, _root);
-                break;
-            }
-            case 160: {
-                this.eventBody = new PolyphonicPressureEvent(this._io, this, _root);
-                break;
-            }
-            case 176: {
-                this.eventBody = new ControllerEvent(this._io, this, _root);
-                break;
-            }
-            case 128: {
-                this.eventBody = new NoteOffEvent(this._io, this, _root);
-                break;
-            }
-            }
-        }
-        private Integer eventType;
-        public Integer eventType() {
-            if (this.eventType != null)
-                return this.eventType;
-            int _tmp = (int) ((eventHeader() & 240));
-            this.eventType = _tmp;
-            return this.eventType;
-        }
-        private Integer channel;
-        public Integer channel() {
-            if (this.channel != null)
-                return this.channel;
-            if (eventType() != 240) {
-                int _tmp = (int) ((eventHeader() & 15));
-                this.channel = _tmp;
-            }
-            return this.channel;
-        }
-        private VlqBase128Be vTime;
-        private int eventHeader;
-        private MetaEventBody metaEventBody;
-        private SysexEventBody sysexBody;
-        private KaitaiStruct eventBody;
-        private StandardMidiFile _root;
-        private StandardMidiFile.TrackEvents _parent;
-        public VlqBase128Be vTime() { return vTime; }
-        public int eventHeader() { return eventHeader; }
-        public MetaEventBody metaEventBody() { return metaEventBody; }
-        public SysexEventBody sysexBody() { return sysexBody; }
-        public KaitaiStruct eventBody() { return eventBody; }
-        public StandardMidiFile _root() { return _root; }
-        public StandardMidiFile.TrackEvents _parent() { return _parent; }
-    }
-    public static class PitchBendEvent extends KaitaiStruct {
-        public static PitchBendEvent fromFile(String fileName) throws IOException {
-            return new PitchBendEvent(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public PitchBendEvent(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public PitchBendEvent(KaitaiStream _io, StandardMidiFile.TrackEvent _parent) {
-            this(_io, _parent, null);
-        }
-
-        public PitchBendEvent(KaitaiStream _io, StandardMidiFile.TrackEvent _parent, StandardMidiFile _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.b1 = this._io.readU1();
-            this.b2 = this._io.readU1();
-        }
-        private Integer bendValue;
-        public Integer bendValue() {
-            if (this.bendValue != null)
-                return this.bendValue;
-            int _tmp = (int) ((((b2() << 7) + b1()) - 16384));
-            this.bendValue = _tmp;
-            return this.bendValue;
-        }
-        private Integer adjBendValue;
-        public Integer adjBendValue() {
-            if (this.adjBendValue != null)
-                return this.adjBendValue;
-            int _tmp = (int) ((bendValue() - 16384));
-            this.adjBendValue = _tmp;
-            return this.adjBendValue;
-        }
-        private int b1;
-        private int b2;
-        private StandardMidiFile _root;
-        private StandardMidiFile.TrackEvent _parent;
-        public int b1() { return b1; }
-        public int b2() { return b2; }
-        public StandardMidiFile _root() { return _root; }
-        public StandardMidiFile.TrackEvent _parent() { return _parent; }
-    }
-    public static class ProgramChangeEvent extends KaitaiStruct {
-        public static ProgramChangeEvent fromFile(String fileName) throws IOException {
-            return new ProgramChangeEvent(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public ProgramChangeEvent(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public ProgramChangeEvent(KaitaiStream _io, StandardMidiFile.TrackEvent _parent) {
-            this(_io, _parent, null);
-        }
-
-        public ProgramChangeEvent(KaitaiStream _io, StandardMidiFile.TrackEvent _parent, StandardMidiFile _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.program = this._io.readU1();
-        }
-        private int program;
-        private StandardMidiFile _root;
-        private StandardMidiFile.TrackEvent _parent;
-        public int program() { return program; }
-        public StandardMidiFile _root() { return _root; }
-        public StandardMidiFile.TrackEvent _parent() { return _parent; }
-    }
-    public static class NoteOnEvent extends KaitaiStruct {
-        public static NoteOnEvent fromFile(String fileName) throws IOException {
-            return new NoteOnEvent(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public NoteOnEvent(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public NoteOnEvent(KaitaiStream _io, StandardMidiFile.TrackEvent _parent) {
-            this(_io, _parent, null);
-        }
-
-        public NoteOnEvent(KaitaiStream _io, StandardMidiFile.TrackEvent _parent, StandardMidiFile _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.note = this._io.readU1();
-            this.velocity = this._io.readU1();
-        }
-        private int note;
-        private int velocity;
-        private StandardMidiFile _root;
-        private StandardMidiFile.TrackEvent _parent;
-        public int note() { return note; }
-        public int velocity() { return velocity; }
-        public StandardMidiFile _root() { return _root; }
-        public StandardMidiFile.TrackEvent _parent() { return _parent; }
-    }
-    public static class PolyphonicPressureEvent extends KaitaiStruct {
-        public static PolyphonicPressureEvent fromFile(String fileName) throws IOException {
-            return new PolyphonicPressureEvent(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public PolyphonicPressureEvent(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public PolyphonicPressureEvent(KaitaiStream _io, StandardMidiFile.TrackEvent _parent) {
-            this(_io, _parent, null);
-        }
-
-        public PolyphonicPressureEvent(KaitaiStream _io, StandardMidiFile.TrackEvent _parent, StandardMidiFile _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.note = this._io.readU1();
             this.pressure = this._io.readU1();
         }
-        private int note;
+
+        public void _fetchInstances() {
+        }
         private int pressure;
         private StandardMidiFile _root;
         private StandardMidiFile.TrackEvent _parent;
-        public int note() { return note; }
         public int pressure() { return pressure; }
         public StandardMidiFile _root() { return _root; }
         public StandardMidiFile.TrackEvent _parent() { return _parent; }
     }
-    public static class Track extends KaitaiStruct {
-        public static Track fromFile(String fileName) throws IOException {
-            return new Track(new ByteBufferKaitaiStream(fileName));
+    public static class ControllerEvent extends KaitaiStruct {
+        public static ControllerEvent fromFile(String fileName) throws IOException {
+            return new ControllerEvent(new ByteBufferKaitaiStream(fileName));
         }
 
-        public Track(KaitaiStream _io) {
+        public ControllerEvent(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public Track(KaitaiStream _io, StandardMidiFile _parent) {
+        public ControllerEvent(KaitaiStream _io, StandardMidiFile.TrackEvent _parent) {
             this(_io, _parent, null);
         }
 
-        public Track(KaitaiStream _io, StandardMidiFile _parent, StandardMidiFile _root) {
+        public ControllerEvent(KaitaiStream _io, StandardMidiFile.TrackEvent _parent, StandardMidiFile _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.controller = this._io.readU1();
+            this.value = this._io.readU1();
+        }
+
+        public void _fetchInstances() {
+        }
+        private int controller;
+        private int value;
+        private StandardMidiFile _root;
+        private StandardMidiFile.TrackEvent _parent;
+        public int controller() { return controller; }
+        public int value() { return value; }
+        public StandardMidiFile _root() { return _root; }
+        public StandardMidiFile.TrackEvent _parent() { return _parent; }
+    }
+    public static class Header extends KaitaiStruct {
+        public static Header fromFile(String fileName) throws IOException {
+            return new Header(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Header(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Header(KaitaiStream _io, StandardMidiFile _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Header(KaitaiStream _io, StandardMidiFile _parent, StandardMidiFile _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
@@ -342,26 +148,31 @@ public class StandardMidiFile extends KaitaiStruct {
         }
         private void _read() {
             this.magic = this._io.readBytes(4);
-            if (!(Arrays.equals(magic(), new byte[] { 77, 84, 114, 107 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 77, 84, 114, 107 }, magic(), _io(), "/types/track/seq/0");
+            if (!(Arrays.equals(this.magic, new byte[] { 77, 84, 104, 100 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 77, 84, 104, 100 }, this.magic, this._io, "/types/header/seq/0");
             }
-            this.lenEvents = this._io.readU4be();
-            this._raw_events = this._io.readBytes(lenEvents());
-            KaitaiStream _io__raw_events = new ByteBufferKaitaiStream(_raw_events);
-            this.events = new TrackEvents(_io__raw_events, this, _root);
+            this.lenHeader = this._io.readU4be();
+            this.format = this._io.readU2be();
+            this.numTracks = this._io.readU2be();
+            this.division = this._io.readS2be();
+        }
+
+        public void _fetchInstances() {
         }
         private byte[] magic;
-        private long lenEvents;
-        private TrackEvents events;
+        private long lenHeader;
+        private int format;
+        private int numTracks;
+        private short division;
         private StandardMidiFile _root;
         private StandardMidiFile _parent;
-        private byte[] _raw_events;
         public byte[] magic() { return magic; }
-        public long lenEvents() { return lenEvents; }
-        public TrackEvents events() { return events; }
+        public long lenHeader() { return lenHeader; }
+        public int format() { return format; }
+        public int numTracks() { return numTracks; }
+        public short division() { return division; }
         public StandardMidiFile _root() { return _root; }
         public StandardMidiFile _parent() { return _parent; }
-        public byte[] _raw_events() { return _raw_events; }
     }
     public static class MetaEventBody extends KaitaiStruct {
         public static MetaEventBody fromFile(String fileName) throws IOException {
@@ -415,6 +226,10 @@ public class StandardMidiFile extends KaitaiStruct {
             this.len = new VlqBase128Be(this._io);
             this.body = this._io.readBytes(len().value());
         }
+
+        public void _fetchInstances() {
+            this.len._fetchInstances();
+        }
         private MetaTypeEnum metaType;
         private VlqBase128Be len;
         private byte[] body;
@@ -423,114 +238,6 @@ public class StandardMidiFile extends KaitaiStruct {
         public MetaTypeEnum metaType() { return metaType; }
         public VlqBase128Be len() { return len; }
         public byte[] body() { return body; }
-        public StandardMidiFile _root() { return _root; }
-        public StandardMidiFile.TrackEvent _parent() { return _parent; }
-    }
-    public static class ControllerEvent extends KaitaiStruct {
-        public static ControllerEvent fromFile(String fileName) throws IOException {
-            return new ControllerEvent(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public ControllerEvent(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public ControllerEvent(KaitaiStream _io, StandardMidiFile.TrackEvent _parent) {
-            this(_io, _parent, null);
-        }
-
-        public ControllerEvent(KaitaiStream _io, StandardMidiFile.TrackEvent _parent, StandardMidiFile _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.controller = this._io.readU1();
-            this.value = this._io.readU1();
-        }
-        private int controller;
-        private int value;
-        private StandardMidiFile _root;
-        private StandardMidiFile.TrackEvent _parent;
-        public int controller() { return controller; }
-        public int value() { return value; }
-        public StandardMidiFile _root() { return _root; }
-        public StandardMidiFile.TrackEvent _parent() { return _parent; }
-    }
-    public static class Header extends KaitaiStruct {
-        public static Header fromFile(String fileName) throws IOException {
-            return new Header(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Header(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Header(KaitaiStream _io, StandardMidiFile _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Header(KaitaiStream _io, StandardMidiFile _parent, StandardMidiFile _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.magic = this._io.readBytes(4);
-            if (!(Arrays.equals(magic(), new byte[] { 77, 84, 104, 100 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 77, 84, 104, 100 }, magic(), _io(), "/types/header/seq/0");
-            }
-            this.lenHeader = this._io.readU4be();
-            this.format = this._io.readU2be();
-            this.numTracks = this._io.readU2be();
-            this.division = this._io.readS2be();
-        }
-        private byte[] magic;
-        private long lenHeader;
-        private int format;
-        private int numTracks;
-        private short division;
-        private StandardMidiFile _root;
-        private StandardMidiFile _parent;
-        public byte[] magic() { return magic; }
-        public long lenHeader() { return lenHeader; }
-        public int format() { return format; }
-        public int numTracks() { return numTracks; }
-        public short division() { return division; }
-        public StandardMidiFile _root() { return _root; }
-        public StandardMidiFile _parent() { return _parent; }
-    }
-    public static class SysexEventBody extends KaitaiStruct {
-        public static SysexEventBody fromFile(String fileName) throws IOException {
-            return new SysexEventBody(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public SysexEventBody(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public SysexEventBody(KaitaiStream _io, StandardMidiFile.TrackEvent _parent) {
-            this(_io, _parent, null);
-        }
-
-        public SysexEventBody(KaitaiStream _io, StandardMidiFile.TrackEvent _parent, StandardMidiFile _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.len = new VlqBase128Be(this._io);
-            this.data = this._io.readBytes(len().value());
-        }
-        private VlqBase128Be len;
-        private byte[] data;
-        private StandardMidiFile _root;
-        private StandardMidiFile.TrackEvent _parent;
-        public VlqBase128Be len() { return len; }
-        public byte[] data() { return data; }
         public StandardMidiFile _root() { return _root; }
         public StandardMidiFile.TrackEvent _parent() { return _parent; }
     }
@@ -557,6 +264,9 @@ public class StandardMidiFile extends KaitaiStruct {
             this.note = this._io.readU1();
             this.velocity = this._io.readU1();
         }
+
+        public void _fetchInstances() {
+        }
         private int note;
         private int velocity;
         private StandardMidiFile _root;
@@ -566,41 +276,414 @@ public class StandardMidiFile extends KaitaiStruct {
         public StandardMidiFile _root() { return _root; }
         public StandardMidiFile.TrackEvent _parent() { return _parent; }
     }
-    public static class ChannelPressureEvent extends KaitaiStruct {
-        public static ChannelPressureEvent fromFile(String fileName) throws IOException {
-            return new ChannelPressureEvent(new ByteBufferKaitaiStream(fileName));
+    public static class NoteOnEvent extends KaitaiStruct {
+        public static NoteOnEvent fromFile(String fileName) throws IOException {
+            return new NoteOnEvent(new ByteBufferKaitaiStream(fileName));
         }
 
-        public ChannelPressureEvent(KaitaiStream _io) {
+        public NoteOnEvent(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public ChannelPressureEvent(KaitaiStream _io, StandardMidiFile.TrackEvent _parent) {
+        public NoteOnEvent(KaitaiStream _io, StandardMidiFile.TrackEvent _parent) {
             this(_io, _parent, null);
         }
 
-        public ChannelPressureEvent(KaitaiStream _io, StandardMidiFile.TrackEvent _parent, StandardMidiFile _root) {
+        public NoteOnEvent(KaitaiStream _io, StandardMidiFile.TrackEvent _parent, StandardMidiFile _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
+            this.note = this._io.readU1();
+            this.velocity = this._io.readU1();
+        }
+
+        public void _fetchInstances() {
+        }
+        private int note;
+        private int velocity;
+        private StandardMidiFile _root;
+        private StandardMidiFile.TrackEvent _parent;
+        public int note() { return note; }
+        public int velocity() { return velocity; }
+        public StandardMidiFile _root() { return _root; }
+        public StandardMidiFile.TrackEvent _parent() { return _parent; }
+    }
+    public static class PitchBendEvent extends KaitaiStruct {
+        public static PitchBendEvent fromFile(String fileName) throws IOException {
+            return new PitchBendEvent(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public PitchBendEvent(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public PitchBendEvent(KaitaiStream _io, StandardMidiFile.TrackEvent _parent) {
+            this(_io, _parent, null);
+        }
+
+        public PitchBendEvent(KaitaiStream _io, StandardMidiFile.TrackEvent _parent, StandardMidiFile _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.b1 = this._io.readU1();
+            this.b2 = this._io.readU1();
+        }
+
+        public void _fetchInstances() {
+        }
+        private Integer adjBendValue;
+        public Integer adjBendValue() {
+            if (this.adjBendValue != null)
+                return this.adjBendValue;
+            this.adjBendValue = ((Number) (bendValue() - 16384)).intValue();
+            return this.adjBendValue;
+        }
+        private Integer bendValue;
+        public Integer bendValue() {
+            if (this.bendValue != null)
+                return this.bendValue;
+            this.bendValue = ((Number) (((b2() << 7) + b1()) - 16384)).intValue();
+            return this.bendValue;
+        }
+        private int b1;
+        private int b2;
+        private StandardMidiFile _root;
+        private StandardMidiFile.TrackEvent _parent;
+        public int b1() { return b1; }
+        public int b2() { return b2; }
+        public StandardMidiFile _root() { return _root; }
+        public StandardMidiFile.TrackEvent _parent() { return _parent; }
+    }
+    public static class PolyphonicPressureEvent extends KaitaiStruct {
+        public static PolyphonicPressureEvent fromFile(String fileName) throws IOException {
+            return new PolyphonicPressureEvent(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public PolyphonicPressureEvent(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public PolyphonicPressureEvent(KaitaiStream _io, StandardMidiFile.TrackEvent _parent) {
+            this(_io, _parent, null);
+        }
+
+        public PolyphonicPressureEvent(KaitaiStream _io, StandardMidiFile.TrackEvent _parent, StandardMidiFile _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.note = this._io.readU1();
             this.pressure = this._io.readU1();
         }
+
+        public void _fetchInstances() {
+        }
+        private int note;
         private int pressure;
         private StandardMidiFile _root;
         private StandardMidiFile.TrackEvent _parent;
+        public int note() { return note; }
         public int pressure() { return pressure; }
         public StandardMidiFile _root() { return _root; }
         public StandardMidiFile.TrackEvent _parent() { return _parent; }
     }
+    public static class ProgramChangeEvent extends KaitaiStruct {
+        public static ProgramChangeEvent fromFile(String fileName) throws IOException {
+            return new ProgramChangeEvent(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public ProgramChangeEvent(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public ProgramChangeEvent(KaitaiStream _io, StandardMidiFile.TrackEvent _parent) {
+            this(_io, _parent, null);
+        }
+
+        public ProgramChangeEvent(KaitaiStream _io, StandardMidiFile.TrackEvent _parent, StandardMidiFile _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.program = this._io.readU1();
+        }
+
+        public void _fetchInstances() {
+        }
+        private int program;
+        private StandardMidiFile _root;
+        private StandardMidiFile.TrackEvent _parent;
+        public int program() { return program; }
+        public StandardMidiFile _root() { return _root; }
+        public StandardMidiFile.TrackEvent _parent() { return _parent; }
+    }
+    public static class SysexEventBody extends KaitaiStruct {
+        public static SysexEventBody fromFile(String fileName) throws IOException {
+            return new SysexEventBody(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public SysexEventBody(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public SysexEventBody(KaitaiStream _io, StandardMidiFile.TrackEvent _parent) {
+            this(_io, _parent, null);
+        }
+
+        public SysexEventBody(KaitaiStream _io, StandardMidiFile.TrackEvent _parent, StandardMidiFile _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.len = new VlqBase128Be(this._io);
+            this.data = this._io.readBytes(len().value());
+        }
+
+        public void _fetchInstances() {
+            this.len._fetchInstances();
+        }
+        private VlqBase128Be len;
+        private byte[] data;
+        private StandardMidiFile _root;
+        private StandardMidiFile.TrackEvent _parent;
+        public VlqBase128Be len() { return len; }
+        public byte[] data() { return data; }
+        public StandardMidiFile _root() { return _root; }
+        public StandardMidiFile.TrackEvent _parent() { return _parent; }
+    }
+    public static class Track extends KaitaiStruct {
+        public static Track fromFile(String fileName) throws IOException {
+            return new Track(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Track(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Track(KaitaiStream _io, StandardMidiFile _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Track(KaitaiStream _io, StandardMidiFile _parent, StandardMidiFile _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.magic = this._io.readBytes(4);
+            if (!(Arrays.equals(this.magic, new byte[] { 77, 84, 114, 107 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 77, 84, 114, 107 }, this.magic, this._io, "/types/track/seq/0");
+            }
+            this.lenEvents = this._io.readU4be();
+            KaitaiStream _io_events = this._io.substream(lenEvents());
+            this.events = new TrackEvents(_io_events, this, _root);
+        }
+
+        public void _fetchInstances() {
+            this.events._fetchInstances();
+        }
+        private byte[] magic;
+        private long lenEvents;
+        private TrackEvents events;
+        private StandardMidiFile _root;
+        private StandardMidiFile _parent;
+        public byte[] magic() { return magic; }
+        public long lenEvents() { return lenEvents; }
+        public TrackEvents events() { return events; }
+        public StandardMidiFile _root() { return _root; }
+        public StandardMidiFile _parent() { return _parent; }
+    }
+    public static class TrackEvent extends KaitaiStruct {
+        public static TrackEvent fromFile(String fileName) throws IOException {
+            return new TrackEvent(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public TrackEvent(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public TrackEvent(KaitaiStream _io, StandardMidiFile.TrackEvents _parent) {
+            this(_io, _parent, null);
+        }
+
+        public TrackEvent(KaitaiStream _io, StandardMidiFile.TrackEvents _parent, StandardMidiFile _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.vTime = new VlqBase128Be(this._io);
+            this.eventHeader = this._io.readU1();
+            if (eventHeader() == 255) {
+                this.metaEventBody = new MetaEventBody(this._io, this, _root);
+            }
+            if (eventHeader() == 240) {
+                this.sysexBody = new SysexEventBody(this._io, this, _root);
+            }
+            switch (eventType()) {
+            case 128: {
+                this.eventBody = new NoteOffEvent(this._io, this, _root);
+                break;
+            }
+            case 144: {
+                this.eventBody = new NoteOnEvent(this._io, this, _root);
+                break;
+            }
+            case 160: {
+                this.eventBody = new PolyphonicPressureEvent(this._io, this, _root);
+                break;
+            }
+            case 176: {
+                this.eventBody = new ControllerEvent(this._io, this, _root);
+                break;
+            }
+            case 192: {
+                this.eventBody = new ProgramChangeEvent(this._io, this, _root);
+                break;
+            }
+            case 208: {
+                this.eventBody = new ChannelPressureEvent(this._io, this, _root);
+                break;
+            }
+            case 224: {
+                this.eventBody = new PitchBendEvent(this._io, this, _root);
+                break;
+            }
+            }
+        }
+
+        public void _fetchInstances() {
+            this.vTime._fetchInstances();
+            if (eventHeader() == 255) {
+                this.metaEventBody._fetchInstances();
+            }
+            if (eventHeader() == 240) {
+                this.sysexBody._fetchInstances();
+            }
+            switch (eventType()) {
+            case 128: {
+                ((NoteOffEvent) (this.eventBody))._fetchInstances();
+                break;
+            }
+            case 144: {
+                ((NoteOnEvent) (this.eventBody))._fetchInstances();
+                break;
+            }
+            case 160: {
+                ((PolyphonicPressureEvent) (this.eventBody))._fetchInstances();
+                break;
+            }
+            case 176: {
+                ((ControllerEvent) (this.eventBody))._fetchInstances();
+                break;
+            }
+            case 192: {
+                ((ProgramChangeEvent) (this.eventBody))._fetchInstances();
+                break;
+            }
+            case 208: {
+                ((ChannelPressureEvent) (this.eventBody))._fetchInstances();
+                break;
+            }
+            case 224: {
+                ((PitchBendEvent) (this.eventBody))._fetchInstances();
+                break;
+            }
+            }
+        }
+        private Integer channel;
+        public Integer channel() {
+            if (this.channel != null)
+                return this.channel;
+            if (eventType() != 240) {
+                this.channel = ((Number) (eventHeader() & 15)).intValue();
+            }
+            return this.channel;
+        }
+        private Integer eventType;
+        public Integer eventType() {
+            if (this.eventType != null)
+                return this.eventType;
+            this.eventType = ((Number) (eventHeader() & 240)).intValue();
+            return this.eventType;
+        }
+        private VlqBase128Be vTime;
+        private int eventHeader;
+        private MetaEventBody metaEventBody;
+        private SysexEventBody sysexBody;
+        private KaitaiStruct eventBody;
+        private StandardMidiFile _root;
+        private StandardMidiFile.TrackEvents _parent;
+        public VlqBase128Be vTime() { return vTime; }
+        public int eventHeader() { return eventHeader; }
+        public MetaEventBody metaEventBody() { return metaEventBody; }
+        public SysexEventBody sysexBody() { return sysexBody; }
+        public KaitaiStruct eventBody() { return eventBody; }
+        public StandardMidiFile _root() { return _root; }
+        public StandardMidiFile.TrackEvents _parent() { return _parent; }
+    }
+    public static class TrackEvents extends KaitaiStruct {
+        public static TrackEvents fromFile(String fileName) throws IOException {
+            return new TrackEvents(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public TrackEvents(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public TrackEvents(KaitaiStream _io, StandardMidiFile.Track _parent) {
+            this(_io, _parent, null);
+        }
+
+        public TrackEvents(KaitaiStream _io, StandardMidiFile.Track _parent, StandardMidiFile _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.event = new ArrayList<TrackEvent>();
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.event.add(new TrackEvent(this._io, this, _root));
+                    i++;
+                }
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.event.size(); i++) {
+                this.event.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private List<TrackEvent> event;
+        private StandardMidiFile _root;
+        private StandardMidiFile.Track _parent;
+        public List<TrackEvent> event() { return event; }
+        public StandardMidiFile _root() { return _root; }
+        public StandardMidiFile.Track _parent() { return _parent; }
+    }
     private Header hdr;
-    private ArrayList<Track> tracks;
+    private List<Track> tracks;
     private StandardMidiFile _root;
     private KaitaiStruct _parent;
     public Header hdr() { return hdr; }
-    public ArrayList<Track> tracks() { return tracks; }
+    public List<Track> tracks() { return tracks; }
     public StandardMidiFile _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

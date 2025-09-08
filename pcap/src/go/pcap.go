@@ -226,19 +226,28 @@ const (
 	Pcap_Linktype__SilabsDebugChannel Pcap_Linktype = 298
 	Pcap_Linktype__FiraUci Pcap_Linktype = 299
 )
+var values_Pcap_Linktype = map[Pcap_Linktype]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}, 10: {}, 32: {}, 50: {}, 51: {}, 99: {}, 100: {}, 101: {}, 104: {}, 105: {}, 106: {}, 107: {}, 108: {}, 109: {}, 112: {}, 113: {}, 114: {}, 115: {}, 116: {}, 117: {}, 118: {}, 119: {}, 120: {}, 122: {}, 123: {}, 124: {}, 125: {}, 126: {}, 127: {}, 128: {}, 129: {}, 130: {}, 131: {}, 132: {}, 133: {}, 134: {}, 135: {}, 136: {}, 137: {}, 138: {}, 139: {}, 140: {}, 141: {}, 142: {}, 143: {}, 144: {}, 145: {}, 146: {}, 147: {}, 148: {}, 149: {}, 150: {}, 151: {}, 152: {}, 153: {}, 154: {}, 155: {}, 156: {}, 157: {}, 158: {}, 159: {}, 160: {}, 161: {}, 162: {}, 163: {}, 164: {}, 165: {}, 166: {}, 167: {}, 168: {}, 169: {}, 170: {}, 171: {}, 172: {}, 173: {}, 174: {}, 175: {}, 176: {}, 177: {}, 178: {}, 179: {}, 180: {}, 181: {}, 182: {}, 183: {}, 184: {}, 185: {}, 186: {}, 187: {}, 188: {}, 189: {}, 190: {}, 191: {}, 192: {}, 193: {}, 194: {}, 195: {}, 196: {}, 197: {}, 198: {}, 199: {}, 200: {}, 201: {}, 202: {}, 203: {}, 204: {}, 205: {}, 206: {}, 207: {}, 209: {}, 210: {}, 211: {}, 212: {}, 213: {}, 214: {}, 215: {}, 216: {}, 217: {}, 218: {}, 219: {}, 220: {}, 221: {}, 222: {}, 223: {}, 224: {}, 225: {}, 226: {}, 227: {}, 228: {}, 229: {}, 230: {}, 231: {}, 232: {}, 233: {}, 234: {}, 235: {}, 236: {}, 237: {}, 238: {}, 239: {}, 240: {}, 241: {}, 242: {}, 243: {}, 244: {}, 245: {}, 246: {}, 247: {}, 248: {}, 249: {}, 250: {}, 251: {}, 252: {}, 253: {}, 254: {}, 255: {}, 256: {}, 257: {}, 258: {}, 259: {}, 260: {}, 261: {}, 262: {}, 263: {}, 264: {}, 265: {}, 266: {}, 267: {}, 268: {}, 269: {}, 270: {}, 271: {}, 272: {}, 273: {}, 274: {}, 275: {}, 276: {}, 277: {}, 278: {}, 279: {}, 280: {}, 281: {}, 282: {}, 283: {}, 284: {}, 285: {}, 286: {}, 287: {}, 288: {}, 289: {}, 290: {}, 291: {}, 292: {}, 293: {}, 294: {}, 295: {}, 296: {}, 297: {}, 298: {}, 299: {}}
+func (v Pcap_Linktype) isDefined() bool {
+	_, ok := values_Pcap_Linktype[v]
+	return ok
+}
 type Pcap struct {
 	Hdr *Pcap_Header
 	Packets []*Pcap_Packet
 	_io *kaitai.Stream
 	_root *Pcap
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewPcap() *Pcap {
 	return &Pcap{
 	}
 }
 
-func (this *Pcap) Read(io *kaitai.Stream, parent interface{}, root *Pcap) (err error) {
+func (this Pcap) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Pcap) Read(io *kaitai.Stream, parent kaitai.Struct, root *Pcap) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -249,7 +258,7 @@ func (this *Pcap) Read(io *kaitai.Stream, parent interface{}, root *Pcap) (err e
 		return err
 	}
 	this.Hdr = tmp1
-	for i := 1;; i++ {
+	for i := 0;; i++ {
 		tmp2, err := this._io.EOF()
 		if err != nil {
 			return err
@@ -285,6 +294,10 @@ type Pcap_Header struct {
 func NewPcap_Header() *Pcap_Header {
 	return &Pcap_Header{
 	}
+}
+
+func (this Pcap_Header) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Pcap_Header) Read(io *kaitai.Stream, parent *Pcap, root *Pcap) (err error) {
@@ -377,6 +390,10 @@ func NewPcap_Packet() *Pcap_Packet {
 	}
 }
 
+func (this Pcap_Packet) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Pcap_Packet) Read(io *kaitai.Stream, parent *Pcap, root *Pcap) (err error) {
 	this._io = io
 	this._parent = parent
@@ -403,7 +420,7 @@ func (this *Pcap_Packet) Read(io *kaitai.Stream, parent *Pcap, root *Pcap) (err 
 	}
 	this.OrigLen = uint32(tmp14)
 	switch (this._root.Hdr.Network) {
-	case Pcap_Linktype__Ppi:
+	case Pcap_Linktype__Ethernet:
 		var tmp15 uint32;
 		if (this.InclLen < this._root.Hdr.Snaplen) {
 			tmp15 = this.InclLen
@@ -417,13 +434,13 @@ func (this *Pcap_Packet) Read(io *kaitai.Stream, parent *Pcap, root *Pcap) (err 
 		tmp16 = tmp16
 		this._raw_Body = tmp16
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp17 := NewPacketPpi()
-		err = tmp17.Read(_io__raw_Body, this, nil)
+		tmp17 := NewEthernetFrame()
+		err = tmp17.Read(_io__raw_Body, nil, nil)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp17
-	case Pcap_Linktype__Ethernet:
+	case Pcap_Linktype__Ppi:
 		var tmp18 uint32;
 		if (this.InclLen < this._root.Hdr.Snaplen) {
 			tmp18 = this.InclLen
@@ -437,8 +454,8 @@ func (this *Pcap_Packet) Read(io *kaitai.Stream, parent *Pcap, root *Pcap) (err 
 		tmp19 = tmp19
 		this._raw_Body = tmp19
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp20 := NewEthernetFrame()
-		err = tmp20.Read(_io__raw_Body, this, nil)
+		tmp20 := NewPacketPpi()
+		err = tmp20.Read(_io__raw_Body, nil, nil)
 		if err != nil {
 			return err
 		}

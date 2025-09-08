@@ -32,53 +32,32 @@ namespace Kaitai
         }
 
 
-        public enum OperatingSystems
+        public enum Architectures
         {
-            Linux = 1,
-            Irix = 2,
-            NoOs = 255,
-        }
-
-        public enum SignatureTags
-        {
-            Signatures = 62,
-            HeaderImmutable = 63,
-            I18nTable = 100,
-            BadSha11Obsolete = 264,
-            BadSha12Obsolete = 265,
-            Dsa = 267,
-            Rsa = 268,
-            Sha1 = 269,
-            LongSize = 270,
-            LongArchiveSize = 271,
-            Sha256 = 273,
-            FileSignatures = 274,
-            FileSignatureLength = 275,
-            VeritySignatures = 276,
-            VeritySignatureAlgo = 277,
-            Size = 1000,
-            LeMd51Obsolete = 1001,
-            Pgp = 1002,
-            LeMd52Obsolete = 1003,
-            Md5 = 1004,
-            Gpg = 1005,
-            Pgp5Obsolete = 1006,
-            PayloadSize = 1007,
-            ReservedSpace = 1008,
-        }
-
-        public enum RecordTypes
-        {
-            NotImplemented = 0,
-            Char = 1,
-            Uint8 = 2,
-            Uint16 = 3,
-            Uint32 = 4,
-            Uint64 = 5,
-            String = 6,
-            Bin = 7,
-            StringArray = 8,
-            I18nString = 9,
+            X86 = 1,
+            Alpha = 2,
+            Sparc = 3,
+            Mips = 4,
+            Ppc = 5,
+            M68k = 6,
+            Sgi = 7,
+            Rs6000 = 8,
+            Ia64 = 9,
+            Sparc64 = 10,
+            Mips64 = 11,
+            Arm = 12,
+            M68kMint = 13,
+            S390 = 14,
+            S390x = 15,
+            Ppc64 = 16,
+            Sh = 17,
+            Xtensa = 18,
+            Aarch64 = 19,
+            MipsR6 = 20,
+            Mips64R6 = 21,
+            Riscv = 22,
+            Loongarch64 = 23,
+            NoArch = 255,
         }
 
         public enum HeaderTags
@@ -385,50 +364,71 @@ namespace Kaitai
             SysUsers = 5109,
         }
 
+        public enum OperatingSystems
+        {
+            Linux = 1,
+            Irix = 2,
+            NoOs = 255,
+        }
+
+        public enum RecordTypes
+        {
+            NotImplemented = 0,
+            Char = 1,
+            Uint8 = 2,
+            Uint16 = 3,
+            Uint32 = 4,
+            Uint64 = 5,
+            String = 6,
+            Bin = 7,
+            StringArray = 8,
+            I18nString = 9,
+        }
+
         public enum RpmTypes
         {
             Binary = 0,
             Source = 1,
         }
 
-        public enum Architectures
+        public enum SignatureTags
         {
-            X86 = 1,
-            Alpha = 2,
-            Sparc = 3,
-            Mips = 4,
-            Ppc = 5,
-            M68k = 6,
-            Sgi = 7,
-            Rs6000 = 8,
-            Ia64 = 9,
-            Sparc64 = 10,
-            Mips64 = 11,
-            Arm = 12,
-            M68kMint = 13,
-            S390 = 14,
-            S390x = 15,
-            Ppc64 = 16,
-            Sh = 17,
-            Xtensa = 18,
-            Aarch64 = 19,
-            MipsR6 = 20,
-            Mips64R6 = 21,
-            Riscv = 22,
-            Loongarch64 = 23,
-            NoArch = 255,
+            Signatures = 62,
+            HeaderImmutable = 63,
+            I18nTable = 100,
+            BadSha11Obsolete = 264,
+            BadSha12Obsolete = 265,
+            Dsa = 267,
+            Rsa = 268,
+            Sha1 = 269,
+            LongSize = 270,
+            LongArchiveSize = 271,
+            Sha256 = 273,
+            FileSignatures = 274,
+            FileSignatureLength = 275,
+            VeritySignatures = 276,
+            VeritySignatureAlgo = 277,
+            Size = 1000,
+            LeMd51Obsolete = 1001,
+            Pgp = 1002,
+            LeMd52Obsolete = 1003,
+            Md5 = 1004,
+            Gpg = 1005,
+            Pgp5Obsolete = 1006,
+            PayloadSize = 1007,
+            ReservedSpace = 1008,
         }
         public Rpm(KaitaiStream p__io, KaitaiStruct p__parent = null, Rpm p__root = null) : base(p__io)
         {
             m_parent = p__parent;
             m_root = p__root ?? this;
             f_hasSignatureSizeTag = false;
-            f_signatureSizeTag = false;
-            f_lenPayload = false;
-            f_payload = false;
             f_lenHeader = false;
+            f_lenPayload = false;
             f_ofsHeader = false;
             f_ofsPayload = false;
+            f_payload = false;
+            f_signatureSizeTag = false;
             _read();
         }
         private void _read()
@@ -446,418 +446,8 @@ namespace Kaitai
             _signatureTagsSteps = new List<SignatureTagsStep>();
             for (var i = 0; i < Signature.HeaderRecord.NumIndexRecords; i++)
             {
-                _signatureTagsSteps.Add(new SignatureTagsStep(i, (i < 1 ? -1 : SignatureTagsSteps[(i - 1)].SizeTagIdx), m_io, this, m_root));
+                _signatureTagsSteps.Add(new SignatureTagsStep(i, (i < 1 ? -1 : SignatureTagsSteps[i - 1].SizeTagIdx), m_io, this, m_root));
             }
-        }
-        public partial class RecordTypeStringArray : KaitaiStruct
-        {
-            public RecordTypeStringArray(uint p_numValues, KaitaiStream p__io, Rpm.HeaderIndexRecord p__parent = null, Rpm p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _numValues = p_numValues;
-                _read();
-            }
-            private void _read()
-            {
-                _values = new List<string>();
-                for (var i = 0; i < NumValues; i++)
-                {
-                    _values.Add(System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytesTerm(0, false, true, true)));
-                }
-            }
-            private List<string> _values;
-            private uint _numValues;
-            private Rpm m_root;
-            private Rpm.HeaderIndexRecord m_parent;
-            public List<string> Values { get { return _values; } }
-            public uint NumValues { get { return _numValues; } }
-            public Rpm M_Root { get { return m_root; } }
-            public Rpm.HeaderIndexRecord M_Parent { get { return m_parent; } }
-        }
-
-        /// <summary>
-        /// In 2021, Panu Matilainen (a RPM developer) [described this
-        /// structure](https://github.com/kaitai-io/kaitai_struct_formats/pull/469#discussion_r718288192)
-        /// as follows:
-        /// 
-        /// &gt; The lead as a structure is 25 years obsolete, the data there is
-        /// &gt; meaningless. Seriously. Except to check for the magic to detect that
-        /// &gt; it's an rpm file in the first place, just ignore everything in it.
-        /// &gt; Literally everything.
-        /// 
-        /// The fields with `valid` constraints are important, because these are the
-        /// same validations that RPM does (which means that any valid `.rpm` file
-        /// must pass them), but otherwise you should not make decisions based on the
-        /// values given here.
-        /// </summary>
-        public partial class Lead : KaitaiStruct
-        {
-            public static Lead FromFile(string fileName)
-            {
-                return new Lead(new KaitaiStream(fileName));
-            }
-
-            public Lead(KaitaiStream p__io, Rpm p__parent = null, Rpm p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _magic = m_io.ReadBytes(4);
-                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 237, 171, 238, 219 }) == 0)))
-                {
-                    throw new ValidationNotEqualError(new byte[] { 237, 171, 238, 219 }, Magic, M_Io, "/types/lead/seq/0");
-                }
-                _version = new RpmVersion(m_io, this, m_root);
-                _type = ((Rpm.RpmTypes) m_io.ReadU2be());
-                _architecture = ((Rpm.Architectures) m_io.ReadU2be());
-                _packageName = System.Text.Encoding.GetEncoding("UTF-8").GetString(KaitaiStream.BytesTerminate(m_io.ReadBytes(66), 0, false));
-                _os = ((Rpm.OperatingSystems) m_io.ReadU2be());
-                _signatureType = m_io.ReadU2be();
-                if (!(SignatureType == 5))
-                {
-                    throw new ValidationNotEqualError(5, SignatureType, M_Io, "/types/lead/seq/6");
-                }
-                _reserved = m_io.ReadBytes(16);
-            }
-            private byte[] _magic;
-            private RpmVersion _version;
-            private RpmTypes _type;
-            private Architectures _architecture;
-            private string _packageName;
-            private OperatingSystems _os;
-            private ushort _signatureType;
-            private byte[] _reserved;
-            private Rpm m_root;
-            private Rpm m_parent;
-            public byte[] Magic { get { return _magic; } }
-            public RpmVersion Version { get { return _version; } }
-            public RpmTypes Type { get { return _type; } }
-            public Architectures Architecture { get { return _architecture; } }
-            public string PackageName { get { return _packageName; } }
-            public OperatingSystems Os { get { return _os; } }
-            public ushort SignatureType { get { return _signatureType; } }
-            public byte[] Reserved { get { return _reserved; } }
-            public Rpm M_Root { get { return m_root; } }
-            public Rpm M_Parent { get { return m_parent; } }
-        }
-        public partial class RecordTypeString : KaitaiStruct
-        {
-            public static RecordTypeString FromFile(string fileName)
-            {
-                return new RecordTypeString(new KaitaiStream(fileName));
-            }
-
-            public RecordTypeString(KaitaiStream p__io, Rpm.HeaderIndexRecord p__parent = null, Rpm p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _values = new List<string>();
-                for (var i = 0; i < 1; i++)
-                {
-                    _values.Add(System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytesTerm(0, false, true, true)));
-                }
-            }
-            private List<string> _values;
-            private Rpm m_root;
-            private Rpm.HeaderIndexRecord m_parent;
-            public List<string> Values { get { return _values; } }
-            public Rpm M_Root { get { return m_root; } }
-            public Rpm.HeaderIndexRecord M_Parent { get { return m_parent; } }
-        }
-        public partial class SignatureTagsStep : KaitaiStruct
-        {
-            public SignatureTagsStep(int p_idx, int p_prevSizeTagIdx, KaitaiStream p__io, Rpm p__parent = null, Rpm p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _idx = p_idx;
-                _prevSizeTagIdx = p_prevSizeTagIdx;
-                f_sizeTagIdx = false;
-                _read();
-            }
-            private void _read()
-            {
-            }
-            private bool f_sizeTagIdx;
-            private int _sizeTagIdx;
-            public int SizeTagIdx
-            {
-                get
-                {
-                    if (f_sizeTagIdx)
-                        return _sizeTagIdx;
-                    _sizeTagIdx = (int) ((PrevSizeTagIdx != -1 ? PrevSizeTagIdx : ( ((M_Parent.Signature.IndexRecords[Idx].SignatureTag == Rpm.SignatureTags.Size) && (M_Parent.Signature.IndexRecords[Idx].RecordType == Rpm.RecordTypes.Uint32) && (M_Parent.Signature.IndexRecords[Idx].NumValues >= 1))  ? Idx : -1)));
-                    f_sizeTagIdx = true;
-                    return _sizeTagIdx;
-                }
-            }
-            private int _idx;
-            private int _prevSizeTagIdx;
-            private Rpm m_root;
-            private Rpm m_parent;
-            public int Idx { get { return _idx; } }
-            public int PrevSizeTagIdx { get { return _prevSizeTagIdx; } }
-            public Rpm M_Root { get { return m_root; } }
-            public Rpm M_Parent { get { return m_parent; } }
-        }
-        public partial class RecordTypeUint32 : KaitaiStruct
-        {
-            public RecordTypeUint32(uint p_numValues, KaitaiStream p__io, Rpm.HeaderIndexRecord p__parent = null, Rpm p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _numValues = p_numValues;
-                _read();
-            }
-            private void _read()
-            {
-                _values = new List<uint>();
-                for (var i = 0; i < NumValues; i++)
-                {
-                    _values.Add(m_io.ReadU4be());
-                }
-            }
-            private List<uint> _values;
-            private uint _numValues;
-            private Rpm m_root;
-            private Rpm.HeaderIndexRecord m_parent;
-            public List<uint> Values { get { return _values; } }
-            public uint NumValues { get { return _numValues; } }
-            public Rpm M_Root { get { return m_root; } }
-            public Rpm.HeaderIndexRecord M_Parent { get { return m_parent; } }
-        }
-        public partial class RecordTypeUint16 : KaitaiStruct
-        {
-            public RecordTypeUint16(uint p_numValues, KaitaiStream p__io, Rpm.HeaderIndexRecord p__parent = null, Rpm p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _numValues = p_numValues;
-                _read();
-            }
-            private void _read()
-            {
-                _values = new List<ushort>();
-                for (var i = 0; i < NumValues; i++)
-                {
-                    _values.Add(m_io.ReadU2be());
-                }
-            }
-            private List<ushort> _values;
-            private uint _numValues;
-            private Rpm m_root;
-            private Rpm.HeaderIndexRecord m_parent;
-            public List<ushort> Values { get { return _values; } }
-            public uint NumValues { get { return _numValues; } }
-            public Rpm M_Root { get { return m_root; } }
-            public Rpm.HeaderIndexRecord M_Parent { get { return m_parent; } }
-        }
-        public partial class HeaderIndexRecord : KaitaiStruct
-        {
-            public static HeaderIndexRecord FromFile(string fileName)
-            {
-                return new HeaderIndexRecord(new KaitaiStream(fileName));
-            }
-
-            public HeaderIndexRecord(KaitaiStream p__io, Rpm.Header p__parent = null, Rpm p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_numValues = false;
-                f_body = false;
-                f_signatureTag = false;
-                f_lenValue = false;
-                f_headerTag = false;
-                _read();
-            }
-            private void _read()
-            {
-                _tagRaw = m_io.ReadU4be();
-                _recordType = ((Rpm.RecordTypes) m_io.ReadU4be());
-                _ofsBody = m_io.ReadU4be();
-                _count = m_io.ReadU4be();
-            }
-            private bool f_numValues;
-            private uint? _numValues;
-            public uint? NumValues
-            {
-                get
-                {
-                    if (f_numValues)
-                        return _numValues;
-                    if (RecordType != Rpm.RecordTypes.Bin) {
-                        _numValues = (uint) (Count);
-                    }
-                    f_numValues = true;
-                    return _numValues;
-                }
-            }
-            private bool f_body;
-            private KaitaiStruct _body;
-            public KaitaiStruct Body
-            {
-                get
-                {
-                    if (f_body)
-                        return _body;
-                    KaitaiStream io = M_Parent.StorageSection.M_Io;
-                    long _pos = io.Pos;
-                    io.Seek(OfsBody);
-                    switch (RecordType) {
-                    case Rpm.RecordTypes.Uint32: {
-                        _body = new RecordTypeUint32(NumValues, io, this, m_root);
-                        break;
-                    }
-                    case Rpm.RecordTypes.Uint64: {
-                        _body = new RecordTypeUint64(NumValues, io, this, m_root);
-                        break;
-                    }
-                    case Rpm.RecordTypes.Bin: {
-                        _body = new RecordTypeBin(LenValue, io, this, m_root);
-                        break;
-                    }
-                    case Rpm.RecordTypes.String: {
-                        _body = new RecordTypeString(io, this, m_root);
-                        break;
-                    }
-                    case Rpm.RecordTypes.Uint8: {
-                        _body = new RecordTypeUint8(NumValues, io, this, m_root);
-                        break;
-                    }
-                    case Rpm.RecordTypes.I18nString: {
-                        _body = new RecordTypeStringArray(NumValues, io, this, m_root);
-                        break;
-                    }
-                    case Rpm.RecordTypes.Uint16: {
-                        _body = new RecordTypeUint16(NumValues, io, this, m_root);
-                        break;
-                    }
-                    case Rpm.RecordTypes.Char: {
-                        _body = new RecordTypeUint8(NumValues, io, this, m_root);
-                        break;
-                    }
-                    case Rpm.RecordTypes.StringArray: {
-                        _body = new RecordTypeStringArray(NumValues, io, this, m_root);
-                        break;
-                    }
-                    }
-                    io.Seek(_pos);
-                    f_body = true;
-                    return _body;
-                }
-            }
-            private bool f_signatureTag;
-            private SignatureTags _signatureTag;
-            public SignatureTags SignatureTag
-            {
-                get
-                {
-                    if (f_signatureTag)
-                        return _signatureTag;
-                    if (M_Parent.IsSignature) {
-                        _signatureTag = (SignatureTags) (((Rpm.SignatureTags) TagRaw));
-                    }
-                    f_signatureTag = true;
-                    return _signatureTag;
-                }
-            }
-            private bool f_lenValue;
-            private uint? _lenValue;
-            public uint? LenValue
-            {
-                get
-                {
-                    if (f_lenValue)
-                        return _lenValue;
-                    if (RecordType == Rpm.RecordTypes.Bin) {
-                        _lenValue = (uint) (Count);
-                    }
-                    f_lenValue = true;
-                    return _lenValue;
-                }
-            }
-            private bool f_headerTag;
-            private HeaderTags _headerTag;
-            public HeaderTags HeaderTag
-            {
-                get
-                {
-                    if (f_headerTag)
-                        return _headerTag;
-                    if (M_Parent.IsHeader) {
-                        _headerTag = (HeaderTags) (((Rpm.HeaderTags) TagRaw));
-                    }
-                    f_headerTag = true;
-                    return _headerTag;
-                }
-            }
-            private uint _tagRaw;
-            private RecordTypes _recordType;
-            private uint _ofsBody;
-            private uint _count;
-            private Rpm m_root;
-            private Rpm.Header m_parent;
-
-            /// <summary>
-            /// prefer to access `signature_tag` and `header_tag` instead
-            /// </summary>
-            public uint TagRaw { get { return _tagRaw; } }
-            public RecordTypes RecordType { get { return _recordType; } }
-            public uint OfsBody { get { return _ofsBody; } }
-
-            /// <summary>
-            /// internal; access `num_values` and `len_value` instead
-            /// </summary>
-            public uint Count { get { return _count; } }
-            public Rpm M_Root { get { return m_root; } }
-            public Rpm.Header M_Parent { get { return m_parent; } }
-        }
-        public partial class RpmVersion : KaitaiStruct
-        {
-            public static RpmVersion FromFile(string fileName)
-            {
-                return new RpmVersion(new KaitaiStream(fileName));
-            }
-
-            public RpmVersion(KaitaiStream p__io, Rpm.Lead p__parent = null, Rpm p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _major = m_io.ReadU1();
-                if (!(Major >= 3))
-                {
-                    throw new ValidationLessThanError(3, Major, M_Io, "/types/rpm_version/seq/0");
-                }
-                if (!(Major <= 4))
-                {
-                    throw new ValidationGreaterThanError(4, Major, M_Io, "/types/rpm_version/seq/0");
-                }
-                _minor = m_io.ReadU1();
-            }
-            private byte _major;
-            private byte _minor;
-            private Rpm m_root;
-            private Rpm.Lead m_parent;
-
-            /// <remarks>
-            /// Reference: <a href="https://github.com/rpm-software-management/rpm/blob/afad3167/lib/rpmlead.c#L102">Source</a>
-            /// </remarks>
-            public byte Major { get { return _major; } }
-            public byte Minor { get { return _minor; } }
-            public Rpm M_Root { get { return m_root; } }
-            public Rpm.Lead M_Parent { get { return m_parent; } }
         }
         public partial class Dummy : KaitaiStruct
         {
@@ -877,134 +467,6 @@ namespace Kaitai
             }
             private Rpm m_root;
             private Rpm.Header m_parent;
-            public Rpm M_Root { get { return m_root; } }
-            public Rpm.Header M_Parent { get { return m_parent; } }
-        }
-        public partial class RecordTypeUint8 : KaitaiStruct
-        {
-            public RecordTypeUint8(uint p_numValues, KaitaiStream p__io, Rpm.HeaderIndexRecord p__parent = null, Rpm p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _numValues = p_numValues;
-                _read();
-            }
-            private void _read()
-            {
-                _values = new List<byte>();
-                for (var i = 0; i < NumValues; i++)
-                {
-                    _values.Add(m_io.ReadU1());
-                }
-            }
-            private List<byte> _values;
-            private uint _numValues;
-            private Rpm m_root;
-            private Rpm.HeaderIndexRecord m_parent;
-            public List<byte> Values { get { return _values; } }
-            public uint NumValues { get { return _numValues; } }
-            public Rpm M_Root { get { return m_root; } }
-            public Rpm.HeaderIndexRecord M_Parent { get { return m_parent; } }
-        }
-        public partial class RecordTypeUint64 : KaitaiStruct
-        {
-            public RecordTypeUint64(uint p_numValues, KaitaiStream p__io, Rpm.HeaderIndexRecord p__parent = null, Rpm p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _numValues = p_numValues;
-                _read();
-            }
-            private void _read()
-            {
-                _values = new List<ulong>();
-                for (var i = 0; i < NumValues; i++)
-                {
-                    _values.Add(m_io.ReadU8be());
-                }
-            }
-            private List<ulong> _values;
-            private uint _numValues;
-            private Rpm m_root;
-            private Rpm.HeaderIndexRecord m_parent;
-            public List<ulong> Values { get { return _values; } }
-            public uint NumValues { get { return _numValues; } }
-            public Rpm M_Root { get { return m_root; } }
-            public Rpm.HeaderIndexRecord M_Parent { get { return m_parent; } }
-        }
-        public partial class RecordTypeBin : KaitaiStruct
-        {
-            public RecordTypeBin(uint p_lenValue, KaitaiStream p__io, Rpm.HeaderIndexRecord p__parent = null, Rpm p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _lenValue = p_lenValue;
-                _read();
-            }
-            private void _read()
-            {
-                _values = new List<byte[]>();
-                for (var i = 0; i < 1; i++)
-                {
-                    _values.Add(m_io.ReadBytes(LenValue));
-                }
-            }
-            private List<byte[]> _values;
-            private uint _lenValue;
-            private Rpm m_root;
-            private Rpm.HeaderIndexRecord m_parent;
-            public List<byte[]> Values { get { return _values; } }
-            public uint LenValue { get { return _lenValue; } }
-            public Rpm M_Root { get { return m_root; } }
-            public Rpm.HeaderIndexRecord M_Parent { get { return m_parent; } }
-        }
-        public partial class HeaderRecord : KaitaiStruct
-        {
-            public static HeaderRecord FromFile(string fileName)
-            {
-                return new HeaderRecord(new KaitaiStream(fileName));
-            }
-
-            public HeaderRecord(KaitaiStream p__io, Rpm.Header p__parent = null, Rpm p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _magic = m_io.ReadBytes(4);
-                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 142, 173, 232, 1 }) == 0)))
-                {
-                    throw new ValidationNotEqualError(new byte[] { 142, 173, 232, 1 }, Magic, M_Io, "/types/header_record/seq/0");
-                }
-                _reserved = m_io.ReadBytes(4);
-                if (!((KaitaiStream.ByteArrayCompare(Reserved, new byte[] { 0, 0, 0, 0 }) == 0)))
-                {
-                    throw new ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, Reserved, M_Io, "/types/header_record/seq/1");
-                }
-                _numIndexRecords = m_io.ReadU4be();
-                if (!(NumIndexRecords >= 1))
-                {
-                    throw new ValidationLessThanError(1, NumIndexRecords, M_Io, "/types/header_record/seq/2");
-                }
-                _lenStorageSection = m_io.ReadU4be();
-            }
-            private byte[] _magic;
-            private byte[] _reserved;
-            private uint _numIndexRecords;
-            private uint _lenStorageSection;
-            private Rpm m_root;
-            private Rpm.Header m_parent;
-            public byte[] Magic { get { return _magic; } }
-            public byte[] Reserved { get { return _reserved; } }
-            public uint NumIndexRecords { get { return _numIndexRecords; } }
-
-            /// <summary>
-            /// Size of the storage area for the data
-            /// pointed to by the Index Records.
-            /// </summary>
-            public uint LenStorageSection { get { return _lenStorageSection; } }
             public Rpm M_Root { get { return m_root; } }
             public Rpm.Header M_Parent { get { return m_parent; } }
         }
@@ -1044,8 +506,8 @@ namespace Kaitai
                 {
                     if (f_isHeader)
                         return _isHeader;
-                    _isHeader = (bool) (!(IsSignature));
                     f_isHeader = true;
+                    _isHeader = (bool) (!(IsSignature));
                     return _isHeader;
                 }
             }
@@ -1064,6 +526,544 @@ namespace Kaitai
             public Rpm M_Parent { get { return m_parent; } }
             public byte[] M_RawStorageSection { get { return __raw_storageSection; } }
         }
+        public partial class HeaderIndexRecord : KaitaiStruct
+        {
+            public static HeaderIndexRecord FromFile(string fileName)
+            {
+                return new HeaderIndexRecord(new KaitaiStream(fileName));
+            }
+
+            public HeaderIndexRecord(KaitaiStream p__io, Rpm.Header p__parent = null, Rpm p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_body = false;
+                f_headerTag = false;
+                f_lenValue = false;
+                f_numValues = false;
+                f_signatureTag = false;
+                _read();
+            }
+            private void _read()
+            {
+                _tagRaw = m_io.ReadU4be();
+                _recordType = ((Rpm.RecordTypes) m_io.ReadU4be());
+                _ofsBody = m_io.ReadU4be();
+                _count = m_io.ReadU4be();
+            }
+            private bool f_body;
+            private KaitaiStruct _body;
+            public KaitaiStruct Body
+            {
+                get
+                {
+                    if (f_body)
+                        return _body;
+                    f_body = true;
+                    KaitaiStream io = M_Parent.StorageSection.M_Io;
+                    long _pos = io.Pos;
+                    io.Seek(OfsBody);
+                    switch (RecordType) {
+                    case Rpm.RecordTypes.Bin: {
+                        _body = new RecordTypeBin(LenValue, io, this, m_root);
+                        break;
+                    }
+                    case Rpm.RecordTypes.Char: {
+                        _body = new RecordTypeUint8(NumValues, io, this, m_root);
+                        break;
+                    }
+                    case Rpm.RecordTypes.I18nString: {
+                        _body = new RecordTypeStringArray(NumValues, io, this, m_root);
+                        break;
+                    }
+                    case Rpm.RecordTypes.String: {
+                        _body = new RecordTypeString(io, this, m_root);
+                        break;
+                    }
+                    case Rpm.RecordTypes.StringArray: {
+                        _body = new RecordTypeStringArray(NumValues, io, this, m_root);
+                        break;
+                    }
+                    case Rpm.RecordTypes.Uint16: {
+                        _body = new RecordTypeUint16(NumValues, io, this, m_root);
+                        break;
+                    }
+                    case Rpm.RecordTypes.Uint32: {
+                        _body = new RecordTypeUint32(NumValues, io, this, m_root);
+                        break;
+                    }
+                    case Rpm.RecordTypes.Uint64: {
+                        _body = new RecordTypeUint64(NumValues, io, this, m_root);
+                        break;
+                    }
+                    case Rpm.RecordTypes.Uint8: {
+                        _body = new RecordTypeUint8(NumValues, io, this, m_root);
+                        break;
+                    }
+                    }
+                    io.Seek(_pos);
+                    return _body;
+                }
+            }
+            private bool f_headerTag;
+            private HeaderTags _headerTag;
+            public HeaderTags HeaderTag
+            {
+                get
+                {
+                    if (f_headerTag)
+                        return _headerTag;
+                    f_headerTag = true;
+                    if (M_Parent.IsHeader) {
+                        _headerTag = (HeaderTags) (((Rpm.HeaderTags) TagRaw));
+                    }
+                    return _headerTag;
+                }
+            }
+            private bool f_lenValue;
+            private uint? _lenValue;
+            public uint? LenValue
+            {
+                get
+                {
+                    if (f_lenValue)
+                        return _lenValue;
+                    f_lenValue = true;
+                    if (RecordType == Rpm.RecordTypes.Bin) {
+                        _lenValue = (uint) (Count);
+                    }
+                    return _lenValue;
+                }
+            }
+            private bool f_numValues;
+            private uint? _numValues;
+            public uint? NumValues
+            {
+                get
+                {
+                    if (f_numValues)
+                        return _numValues;
+                    f_numValues = true;
+                    if (RecordType != Rpm.RecordTypes.Bin) {
+                        _numValues = (uint) (Count);
+                    }
+                    return _numValues;
+                }
+            }
+            private bool f_signatureTag;
+            private SignatureTags _signatureTag;
+            public SignatureTags SignatureTag
+            {
+                get
+                {
+                    if (f_signatureTag)
+                        return _signatureTag;
+                    f_signatureTag = true;
+                    if (M_Parent.IsSignature) {
+                        _signatureTag = (SignatureTags) (((Rpm.SignatureTags) TagRaw));
+                    }
+                    return _signatureTag;
+                }
+            }
+            private uint _tagRaw;
+            private RecordTypes _recordType;
+            private uint _ofsBody;
+            private uint _count;
+            private Rpm m_root;
+            private Rpm.Header m_parent;
+
+            /// <summary>
+            /// prefer to access `signature_tag` and `header_tag` instead
+            /// </summary>
+            public uint TagRaw { get { return _tagRaw; } }
+            public RecordTypes RecordType { get { return _recordType; } }
+            public uint OfsBody { get { return _ofsBody; } }
+
+            /// <summary>
+            /// internal; access `num_values` and `len_value` instead
+            /// </summary>
+            public uint Count { get { return _count; } }
+            public Rpm M_Root { get { return m_root; } }
+            public Rpm.Header M_Parent { get { return m_parent; } }
+        }
+        public partial class HeaderRecord : KaitaiStruct
+        {
+            public static HeaderRecord FromFile(string fileName)
+            {
+                return new HeaderRecord(new KaitaiStream(fileName));
+            }
+
+            public HeaderRecord(KaitaiStream p__io, Rpm.Header p__parent = null, Rpm p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _magic = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 142, 173, 232, 1 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 142, 173, 232, 1 }, _magic, m_io, "/types/header_record/seq/0");
+                }
+                _reserved = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(_reserved, new byte[] { 0, 0, 0, 0 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, _reserved, m_io, "/types/header_record/seq/1");
+                }
+                _numIndexRecords = m_io.ReadU4be();
+                if (!(_numIndexRecords >= 1))
+                {
+                    throw new ValidationLessThanError(1, _numIndexRecords, m_io, "/types/header_record/seq/2");
+                }
+                _lenStorageSection = m_io.ReadU4be();
+            }
+            private byte[] _magic;
+            private byte[] _reserved;
+            private uint _numIndexRecords;
+            private uint _lenStorageSection;
+            private Rpm m_root;
+            private Rpm.Header m_parent;
+            public byte[] Magic { get { return _magic; } }
+            public byte[] Reserved { get { return _reserved; } }
+            public uint NumIndexRecords { get { return _numIndexRecords; } }
+
+            /// <summary>
+            /// Size of the storage area for the data
+            /// pointed to by the Index Records.
+            /// </summary>
+            public uint LenStorageSection { get { return _lenStorageSection; } }
+            public Rpm M_Root { get { return m_root; } }
+            public Rpm.Header M_Parent { get { return m_parent; } }
+        }
+
+        /// <summary>
+        /// In 2021, Panu Matilainen (a RPM developer) [described this
+        /// structure](https://github.com/kaitai-io/kaitai_struct_formats/pull/469#discussion_r718288192)
+        /// as follows:
+        /// 
+        /// &gt; The lead as a structure is 25 years obsolete, the data there is
+        /// &gt; meaningless. Seriously. Except to check for the magic to detect that
+        /// &gt; it's an rpm file in the first place, just ignore everything in it.
+        /// &gt; Literally everything.
+        /// 
+        /// The fields with `valid` constraints are important, because these are the
+        /// same validations that RPM does (which means that any valid `.rpm` file
+        /// must pass them), but otherwise you should not make decisions based on the
+        /// values given here.
+        /// </summary>
+        public partial class Lead : KaitaiStruct
+        {
+            public static Lead FromFile(string fileName)
+            {
+                return new Lead(new KaitaiStream(fileName));
+            }
+
+            public Lead(KaitaiStream p__io, Rpm p__parent = null, Rpm p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _magic = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 237, 171, 238, 219 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 237, 171, 238, 219 }, _magic, m_io, "/types/lead/seq/0");
+                }
+                _version = new RpmVersion(m_io, this, m_root);
+                _type = ((Rpm.RpmTypes) m_io.ReadU2be());
+                _architecture = ((Rpm.Architectures) m_io.ReadU2be());
+                _packageName = System.Text.Encoding.GetEncoding("UTF-8").GetString(KaitaiStream.BytesTerminate(m_io.ReadBytes(66), 0, false));
+                _os = ((Rpm.OperatingSystems) m_io.ReadU2be());
+                _signatureType = m_io.ReadU2be();
+                if (!(_signatureType == 5))
+                {
+                    throw new ValidationNotEqualError(5, _signatureType, m_io, "/types/lead/seq/6");
+                }
+                _reserved = m_io.ReadBytes(16);
+            }
+            private byte[] _magic;
+            private RpmVersion _version;
+            private RpmTypes _type;
+            private Architectures _architecture;
+            private string _packageName;
+            private OperatingSystems _os;
+            private ushort _signatureType;
+            private byte[] _reserved;
+            private Rpm m_root;
+            private Rpm m_parent;
+            public byte[] Magic { get { return _magic; } }
+            public RpmVersion Version { get { return _version; } }
+            public RpmTypes Type { get { return _type; } }
+            public Architectures Architecture { get { return _architecture; } }
+            public string PackageName { get { return _packageName; } }
+            public OperatingSystems Os { get { return _os; } }
+            public ushort SignatureType { get { return _signatureType; } }
+            public byte[] Reserved { get { return _reserved; } }
+            public Rpm M_Root { get { return m_root; } }
+            public Rpm M_Parent { get { return m_parent; } }
+        }
+        public partial class RecordTypeBin : KaitaiStruct
+        {
+            public RecordTypeBin(uint p_lenValue, KaitaiStream p__io, Rpm.HeaderIndexRecord p__parent = null, Rpm p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _lenValue = p_lenValue;
+                _read();
+            }
+            private void _read()
+            {
+                _values = new List<byte[]>();
+                for (var i = 0; i < 1; i++)
+                {
+                    _values.Add(m_io.ReadBytes(LenValue));
+                }
+            }
+            private List<byte[]> _values;
+            private uint _lenValue;
+            private Rpm m_root;
+            private Rpm.HeaderIndexRecord m_parent;
+            public List<byte[]> Values { get { return _values; } }
+            public uint LenValue { get { return _lenValue; } }
+            public Rpm M_Root { get { return m_root; } }
+            public Rpm.HeaderIndexRecord M_Parent { get { return m_parent; } }
+        }
+        public partial class RecordTypeString : KaitaiStruct
+        {
+            public static RecordTypeString FromFile(string fileName)
+            {
+                return new RecordTypeString(new KaitaiStream(fileName));
+            }
+
+            public RecordTypeString(KaitaiStream p__io, Rpm.HeaderIndexRecord p__parent = null, Rpm p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _values = new List<string>();
+                for (var i = 0; i < 1; i++)
+                {
+                    _values.Add(System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytesTerm(0, false, true, true)));
+                }
+            }
+            private List<string> _values;
+            private Rpm m_root;
+            private Rpm.HeaderIndexRecord m_parent;
+            public List<string> Values { get { return _values; } }
+            public Rpm M_Root { get { return m_root; } }
+            public Rpm.HeaderIndexRecord M_Parent { get { return m_parent; } }
+        }
+        public partial class RecordTypeStringArray : KaitaiStruct
+        {
+            public RecordTypeStringArray(uint p_numValues, KaitaiStream p__io, Rpm.HeaderIndexRecord p__parent = null, Rpm p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _numValues = p_numValues;
+                _read();
+            }
+            private void _read()
+            {
+                _values = new List<string>();
+                for (var i = 0; i < NumValues; i++)
+                {
+                    _values.Add(System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytesTerm(0, false, true, true)));
+                }
+            }
+            private List<string> _values;
+            private uint _numValues;
+            private Rpm m_root;
+            private Rpm.HeaderIndexRecord m_parent;
+            public List<string> Values { get { return _values; } }
+            public uint NumValues { get { return _numValues; } }
+            public Rpm M_Root { get { return m_root; } }
+            public Rpm.HeaderIndexRecord M_Parent { get { return m_parent; } }
+        }
+        public partial class RecordTypeUint16 : KaitaiStruct
+        {
+            public RecordTypeUint16(uint p_numValues, KaitaiStream p__io, Rpm.HeaderIndexRecord p__parent = null, Rpm p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _numValues = p_numValues;
+                _read();
+            }
+            private void _read()
+            {
+                _values = new List<ushort>();
+                for (var i = 0; i < NumValues; i++)
+                {
+                    _values.Add(m_io.ReadU2be());
+                }
+            }
+            private List<ushort> _values;
+            private uint _numValues;
+            private Rpm m_root;
+            private Rpm.HeaderIndexRecord m_parent;
+            public List<ushort> Values { get { return _values; } }
+            public uint NumValues { get { return _numValues; } }
+            public Rpm M_Root { get { return m_root; } }
+            public Rpm.HeaderIndexRecord M_Parent { get { return m_parent; } }
+        }
+        public partial class RecordTypeUint32 : KaitaiStruct
+        {
+            public RecordTypeUint32(uint p_numValues, KaitaiStream p__io, Rpm.HeaderIndexRecord p__parent = null, Rpm p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _numValues = p_numValues;
+                _read();
+            }
+            private void _read()
+            {
+                _values = new List<uint>();
+                for (var i = 0; i < NumValues; i++)
+                {
+                    _values.Add(m_io.ReadU4be());
+                }
+            }
+            private List<uint> _values;
+            private uint _numValues;
+            private Rpm m_root;
+            private Rpm.HeaderIndexRecord m_parent;
+            public List<uint> Values { get { return _values; } }
+            public uint NumValues { get { return _numValues; } }
+            public Rpm M_Root { get { return m_root; } }
+            public Rpm.HeaderIndexRecord M_Parent { get { return m_parent; } }
+        }
+        public partial class RecordTypeUint64 : KaitaiStruct
+        {
+            public RecordTypeUint64(uint p_numValues, KaitaiStream p__io, Rpm.HeaderIndexRecord p__parent = null, Rpm p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _numValues = p_numValues;
+                _read();
+            }
+            private void _read()
+            {
+                _values = new List<ulong>();
+                for (var i = 0; i < NumValues; i++)
+                {
+                    _values.Add(m_io.ReadU8be());
+                }
+            }
+            private List<ulong> _values;
+            private uint _numValues;
+            private Rpm m_root;
+            private Rpm.HeaderIndexRecord m_parent;
+            public List<ulong> Values { get { return _values; } }
+            public uint NumValues { get { return _numValues; } }
+            public Rpm M_Root { get { return m_root; } }
+            public Rpm.HeaderIndexRecord M_Parent { get { return m_parent; } }
+        }
+        public partial class RecordTypeUint8 : KaitaiStruct
+        {
+            public RecordTypeUint8(uint p_numValues, KaitaiStream p__io, Rpm.HeaderIndexRecord p__parent = null, Rpm p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _numValues = p_numValues;
+                _read();
+            }
+            private void _read()
+            {
+                _values = new List<byte>();
+                for (var i = 0; i < NumValues; i++)
+                {
+                    _values.Add(m_io.ReadU1());
+                }
+            }
+            private List<byte> _values;
+            private uint _numValues;
+            private Rpm m_root;
+            private Rpm.HeaderIndexRecord m_parent;
+            public List<byte> Values { get { return _values; } }
+            public uint NumValues { get { return _numValues; } }
+            public Rpm M_Root { get { return m_root; } }
+            public Rpm.HeaderIndexRecord M_Parent { get { return m_parent; } }
+        }
+        public partial class RpmVersion : KaitaiStruct
+        {
+            public static RpmVersion FromFile(string fileName)
+            {
+                return new RpmVersion(new KaitaiStream(fileName));
+            }
+
+            public RpmVersion(KaitaiStream p__io, Rpm.Lead p__parent = null, Rpm p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _major = m_io.ReadU1();
+                if (!(_major >= 3))
+                {
+                    throw new ValidationLessThanError(3, _major, m_io, "/types/rpm_version/seq/0");
+                }
+                if (!(_major <= 4))
+                {
+                    throw new ValidationGreaterThanError(4, _major, m_io, "/types/rpm_version/seq/0");
+                }
+                _minor = m_io.ReadU1();
+            }
+            private byte _major;
+            private byte _minor;
+            private Rpm m_root;
+            private Rpm.Lead m_parent;
+
+            /// <remarks>
+            /// Reference: <a href="https://github.com/rpm-software-management/rpm/blob/afad3167/lib/rpmlead.c#L102">Source</a>
+            /// </remarks>
+            public byte Major { get { return _major; } }
+            public byte Minor { get { return _minor; } }
+            public Rpm M_Root { get { return m_root; } }
+            public Rpm.Lead M_Parent { get { return m_parent; } }
+        }
+        public partial class SignatureTagsStep : KaitaiStruct
+        {
+            public SignatureTagsStep(int p_idx, int p_prevSizeTagIdx, KaitaiStream p__io, Rpm p__parent = null, Rpm p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _idx = p_idx;
+                _prevSizeTagIdx = p_prevSizeTagIdx;
+                f_sizeTagIdx = false;
+                _read();
+            }
+            private void _read()
+            {
+            }
+            private bool f_sizeTagIdx;
+            private int _sizeTagIdx;
+            public int SizeTagIdx
+            {
+                get
+                {
+                    if (f_sizeTagIdx)
+                        return _sizeTagIdx;
+                    f_sizeTagIdx = true;
+                    _sizeTagIdx = (int) ((PrevSizeTagIdx != -1 ? PrevSizeTagIdx : ( ((M_Parent.Signature.IndexRecords[Idx].SignatureTag == Rpm.SignatureTags.Size) && (M_Parent.Signature.IndexRecords[Idx].RecordType == Rpm.RecordTypes.Uint32) && (M_Parent.Signature.IndexRecords[Idx].NumValues >= 1))  ? Idx : -1)));
+                    return _sizeTagIdx;
+                }
+            }
+            private int _idx;
+            private int _prevSizeTagIdx;
+            private Rpm m_root;
+            private Rpm m_parent;
+            public int Idx { get { return _idx; } }
+            public int PrevSizeTagIdx { get { return _prevSizeTagIdx; } }
+            public Rpm M_Root { get { return m_root; } }
+            public Rpm M_Parent { get { return m_parent; } }
+        }
         private bool f_hasSignatureSizeTag;
         private bool _hasSignatureSizeTag;
         public bool HasSignatureSizeTag
@@ -1072,57 +1072,9 @@ namespace Kaitai
             {
                 if (f_hasSignatureSizeTag)
                     return _hasSignatureSizeTag;
-                _hasSignatureSizeTag = (bool) (SignatureTagsSteps[SignatureTagsSteps.Count - 1].SizeTagIdx != -1);
                 f_hasSignatureSizeTag = true;
+                _hasSignatureSizeTag = (bool) (SignatureTagsSteps[SignatureTagsSteps.Count - 1].SizeTagIdx != -1);
                 return _hasSignatureSizeTag;
-            }
-        }
-        private bool f_signatureSizeTag;
-        private HeaderIndexRecord _signatureSizeTag;
-        public HeaderIndexRecord SignatureSizeTag
-        {
-            get
-            {
-                if (f_signatureSizeTag)
-                    return _signatureSizeTag;
-                if (HasSignatureSizeTag) {
-                    _signatureSizeTag = (HeaderIndexRecord) (Signature.IndexRecords[SignatureTagsSteps[SignatureTagsSteps.Count - 1].SizeTagIdx]);
-                }
-                f_signatureSizeTag = true;
-                return _signatureSizeTag;
-            }
-        }
-        private bool f_lenPayload;
-        private int? _lenPayload;
-        public int? LenPayload
-        {
-            get
-            {
-                if (f_lenPayload)
-                    return _lenPayload;
-                if (HasSignatureSizeTag) {
-                    _lenPayload = (int) ((((Rpm.RecordTypeUint32) (SignatureSizeTag.Body)).Values[0] - LenHeader));
-                }
-                f_lenPayload = true;
-                return _lenPayload;
-            }
-        }
-        private bool f_payload;
-        private byte[] _payload;
-        public byte[] Payload
-        {
-            get
-            {
-                if (f_payload)
-                    return _payload;
-                if (HasSignatureSizeTag) {
-                    long _pos = m_io.Pos;
-                    m_io.Seek(OfsPayload);
-                    _payload = m_io.ReadBytes(LenPayload);
-                    m_io.Seek(_pos);
-                    f_payload = true;
-                }
-                return _payload;
             }
         }
         private bool f_lenHeader;
@@ -1133,9 +1085,24 @@ namespace Kaitai
             {
                 if (f_lenHeader)
                     return _lenHeader;
-                _lenHeader = (int) ((OfsPayload - OfsHeader));
                 f_lenHeader = true;
+                _lenHeader = (int) (OfsPayload - OfsHeader);
                 return _lenHeader;
+            }
+        }
+        private bool f_lenPayload;
+        private int? _lenPayload;
+        public int? LenPayload
+        {
+            get
+            {
+                if (f_lenPayload)
+                    return _lenPayload;
+                f_lenPayload = true;
+                if (HasSignatureSizeTag) {
+                    _lenPayload = (int) (((Rpm.RecordTypeUint32) (SignatureSizeTag.Body)).Values[0] - LenHeader);
+                }
+                return _lenPayload;
             }
         }
         private bool f_ofsHeader;
@@ -1146,8 +1113,8 @@ namespace Kaitai
             {
                 if (f_ofsHeader)
                     return _ofsHeader;
-                _ofsHeader = (int) (M_Io.Pos);
                 f_ofsHeader = true;
+                _ofsHeader = (int) (M_Io.Pos);
                 return _ofsHeader;
             }
         }
@@ -1159,9 +1126,42 @@ namespace Kaitai
             {
                 if (f_ofsPayload)
                     return _ofsPayload;
-                _ofsPayload = (int) (M_Io.Pos);
                 f_ofsPayload = true;
+                _ofsPayload = (int) (M_Io.Pos);
                 return _ofsPayload;
+            }
+        }
+        private bool f_payload;
+        private byte[] _payload;
+        public byte[] Payload
+        {
+            get
+            {
+                if (f_payload)
+                    return _payload;
+                f_payload = true;
+                if (HasSignatureSizeTag) {
+                    long _pos = m_io.Pos;
+                    m_io.Seek(OfsPayload);
+                    _payload = m_io.ReadBytes(LenPayload);
+                    m_io.Seek(_pos);
+                }
+                return _payload;
+            }
+        }
+        private bool f_signatureSizeTag;
+        private HeaderIndexRecord _signatureSizeTag;
+        public HeaderIndexRecord SignatureSizeTag
+        {
+            get
+            {
+                if (f_signatureSizeTag)
+                    return _signatureSizeTag;
+                f_signatureSizeTag = true;
+                if (HasSignatureSizeTag) {
+                    _signatureSizeTag = (HeaderIndexRecord) (Signature.IndexRecords[SignatureTagsSteps[SignatureTagsSteps.Count - 1].SizeTagIdx]);
+                }
+                return _signatureSizeTag;
             }
         }
         private Lead _lead;

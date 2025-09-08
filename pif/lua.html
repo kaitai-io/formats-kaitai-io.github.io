@@ -195,7 +195,17 @@ applications.</p>
                 
                 <li>
                 
+                <a href="graphviz.html" title="Portable Image Format parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
                 <a href="java.html" title="Portable Image Format parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="java-write.html" title="Portable Image Format parsing Java (read-write) library">Java (read-write)</a></li>
                 
                 
                 <li>
@@ -210,6 +220,11 @@ applications.</p>
                 
                 <li>
                 
+                <a href="perl.html" title="Portable Image Format parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
                 <a href="php.html" title="Portable Image Format parsing PHP library">PHP</a></li>
                 
                 
@@ -220,7 +235,17 @@ applications.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="Portable Image Format parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="Portable Image Format parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="Portable Image Format parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -270,6 +295,11 @@ applications.</p>
 <span class="c1">-- See also: Source (https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/C%20Library/pifdec.c#L300)</span>
 <span class="nv">Pif</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
+<span class="nv">Pif</span><span class="p">.</span><span class="py">CompressionType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">enum</span><span class="p">.</span><span class="py">Enum</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nv">none</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">rle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">32222</span><span class="p">,</span>
+<span class="p">}</span>
+
 <span class="nv">Pif</span><span class="p">.</span><span class="py">ImageType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">enum</span><span class="p">.</span><span class="py">Enum</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nv">rgb332</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">7763</span><span class="p">,</span>
 <span class="w">  </span><span class="nv">rgb888</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">17212</span><span class="p">,</span>
@@ -279,11 +309,6 @@ applications.</p>
 <span class="w">  </span><span class="nv">black_white</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">32170</span><span class="p">,</span>
 <span class="w">  </span><span class="nv">rgb16c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">47253</span><span class="p">,</span>
 <span class="w">  </span><span class="nv">rgb565</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">58821</span><span class="p">,</span>
-<span class="p">}</span>
-
-<span class="nv">Pif</span><span class="p">.</span><span class="py">CompressionType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">enum</span><span class="p">.</span><span class="py">Enum</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="nv">none</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
-<span class="w">  </span><span class="nv">rle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">32222</span><span class="p">,</span>
 <span class="p">}</span>
 
 <span class="kr">function</span><span class="w"> </span><span class="nc">Pif</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
@@ -317,41 +342,29 @@ applications.</p>
 <span class="kr">end</span>
 
 
-<span class="nv">Pif</span><span class="p">.</span><span class="py">PifHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
+<span class="nv">Pif</span><span class="p">.</span><span class="py">ColorTableData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
-<span class="kr">function</span><span class="w"> </span><span class="nc">Pif</span><span class="p">.</span><span class="nc">PifHeader</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">Pif</span><span class="p">.</span><span class="nc">ColorTableData</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
-<span class="kr">function</span><span class="w"> </span><span class="nc">Pif</span><span class="p">.</span><span class="nc">PifHeader</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">magic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">magic</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\080\073\070\000</span><span class="s2">&quot;</span><span class="p">)</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span><span class="w"> </span><span class="o">..</span><span class="w">  </span><span class="s2">&quot;</span><span class="se">\080\073\070\000</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s2">&quot;, but got &quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">magic</span><span class="p">)</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">Pif</span><span class="p">.</span><span class="nc">ColorTableData</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">entries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="kr">while</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">is_eof</span><span class="p">()</span><span class="w"> </span><span class="kr">do</span>
+<span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">info_header</span><span class="p">.</span><span class="py">image_type</span>
+<span class="w">    </span><span class="kr">if</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">Pif</span><span class="p">.</span><span class="py">ImageType</span><span class="p">.</span><span class="py">indexed_rgb332</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">      </span><span class="nv">self</span><span class="p">.</span><span class="py">entries</span><span class="p">[</span><span class="nv">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bits_int_le</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+<span class="w">    </span><span class="kr">elseif</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">Pif</span><span class="p">.</span><span class="py">ImageType</span><span class="p">.</span><span class="py">indexed_rgb565</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">      </span><span class="nv">self</span><span class="p">.</span><span class="py">entries</span><span class="p">[</span><span class="nv">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bits_int_le</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+<span class="w">    </span><span class="kr">elseif</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">Pif</span><span class="p">.</span><span class="py">ImageType</span><span class="p">.</span><span class="py">indexed_rgb888</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">      </span><span class="nv">self</span><span class="p">.</span><span class="py">entries</span><span class="p">[</span><span class="nv">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bits_int_le</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span>
+<span class="w">    </span><span class="kr">end</span>
+<span class="w">    </span><span class="nv">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
 <span class="w">  </span><span class="kr">end</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">len_file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_file</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">ofs_image_data_min</span><span class="p">)</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;ValidationLessThanError&quot;</span><span class="p">)</span>
-<span class="w">  </span><span class="kr">end</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">ofs_image_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">ofs_image_data</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">ofs_image_data_min</span><span class="p">)</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;ValidationLessThanError&quot;</span><span class="p">)</span>
-<span class="w">  </span><span class="kr">end</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">ofs_image_data</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">len_file</span><span class="p">)</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;ValidationGreaterThanError&quot;</span><span class="p">)</span>
-<span class="w">  </span><span class="kr">end</span>
-<span class="kr">end</span>
-
-<span class="nv">Pif</span><span class="p">.</span><span class="py">PifHeader</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">ofs_image_data_min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">Pif</span><span class="p">.</span><span class="nc">PifHeader</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">ofs_image_data_min</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_ofs_image_data_min</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_ofs_image_data_min</span>
-<span class="w">  </span><span class="kr">end</span>
-
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_ofs_image_data_min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mi">12</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">16</span><span class="p">)</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_ofs_image_data_min</span>
 <span class="kr">end</span>
 
 
@@ -360,7 +373,7 @@ applications.</p>
 <span class="kr">function</span><span class="w"> </span><span class="nc">Pif</span><span class="p">.</span><span class="nc">InformationHeader</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
@@ -377,11 +390,11 @@ applications.</p>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2le</span><span class="p">()</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2le</span><span class="p">()</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">len_image_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_image_data</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">file_header</span><span class="p">.</span><span class="py">len_file</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">file_header</span><span class="p">.</span><span class="py">ofs_image_data</span><span class="p">))</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_image_data</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">file_header</span><span class="p">.</span><span class="py">len_file</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">file_header</span><span class="p">.</span><span class="py">ofs_image_data</span><span class="p">)</span><span class="w"> </span><span class="kr">then</span>
 <span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;ValidationGreaterThanError&quot;</span><span class="p">)</span>
 <span class="w">  </span><span class="kr">end</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">len_color_table</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2le</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_color_table</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_unwrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">uses_indexed_mode</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_wrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">len_color_table_entry</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="p">)))</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_color_table</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_unwrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">uses_indexed_mode</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_wrap</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_color_table_entry</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="p">)))</span><span class="w"> </span><span class="kr">then</span>
 <span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;ValidationLessThanError&quot;</span><span class="p">)</span>
 <span class="w">  </span><span class="kr">end</span>
 <span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_color_table</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_unwrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">uses_indexed_mode</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_wrap</span><span class="p">(</span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_unwrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">len_color_table_max</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">len_color_table_full</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_wrap</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_color_table_max</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_color_table_full</span><span class="p">)))</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="p">)))</span><span class="w"> </span><span class="kr">then</span>
@@ -409,7 +422,7 @@ applications.</p>
 <span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_color_table_full</span>
 <span class="w">  </span><span class="kr">end</span>
 
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_color_table_full</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_color_table_entry</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">bits_per_pixel</span><span class="p">))</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_color_table_full</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">len_color_table_entry</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">bits_per_pixel</span><span class="p">)</span>
 <span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_color_table_full</span>
 <span class="kr">end</span>
 
@@ -419,7 +432,7 @@ applications.</p>
 <span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_color_table_max</span>
 <span class="w">  </span><span class="kr">end</span>
 
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_color_table_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">file_header</span><span class="p">.</span><span class="py">ofs_image_data</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">file_header</span><span class="p">.</span><span class="py">ofs_image_data_min</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_color_table_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">file_header</span><span class="p">.</span><span class="py">ofs_image_data</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">file_header</span><span class="p">.</span><span class="py">ofs_image_data_min</span>
 <span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_color_table_max</span>
 <span class="kr">end</span>
 
@@ -451,29 +464,41 @@ applications.</p>
 <span class="c1">-- &gt; (...) The amount of Colors has to be same or less than [Bits per</span>
 <span class="c1">-- &gt; Pixel] allow, otherwise the image is invalid.</span>
 
-<span class="nv">Pif</span><span class="p">.</span><span class="py">ColorTableData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
+<span class="nv">Pif</span><span class="p">.</span><span class="py">PifHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
-<span class="kr">function</span><span class="w"> </span><span class="nc">Pif</span><span class="p">.</span><span class="nc">ColorTableData</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">Pif</span><span class="p">.</span><span class="nc">PifHeader</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
-<span class="kr">function</span><span class="w"> </span><span class="nc">Pif</span><span class="p">.</span><span class="nc">ColorTableData</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">entries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
-<span class="w">  </span><span class="kr">while</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">is_eof</span><span class="p">()</span><span class="w"> </span><span class="kr">do</span>
-<span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">info_header</span><span class="p">.</span><span class="py">image_type</span>
-<span class="w">    </span><span class="kr">if</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">Pif</span><span class="p">.</span><span class="py">ImageType</span><span class="p">.</span><span class="py">indexed_rgb888</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">      </span><span class="nv">self</span><span class="p">.</span><span class="py">entries</span><span class="p">[</span><span class="nv">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bits_int_le</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span>
-<span class="w">    </span><span class="kr">elseif</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">Pif</span><span class="p">.</span><span class="py">ImageType</span><span class="p">.</span><span class="py">indexed_rgb565</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">      </span><span class="nv">self</span><span class="p">.</span><span class="py">entries</span><span class="p">[</span><span class="nv">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bits_int_le</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
-<span class="w">    </span><span class="kr">elseif</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">Pif</span><span class="p">.</span><span class="py">ImageType</span><span class="p">.</span><span class="py">indexed_rgb332</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">      </span><span class="nv">self</span><span class="p">.</span><span class="py">entries</span><span class="p">[</span><span class="nv">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bits_int_le</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
-<span class="w">    </span><span class="kr">end</span>
-<span class="w">    </span><span class="nv">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">Pif</span><span class="p">.</span><span class="nc">PifHeader</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">magic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">magic</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\080\073\070\000</span><span class="s2">&quot;</span><span class="p">)</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\080\073\070\000</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s2">&quot;, but got &quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">magic</span><span class="p">)</span>
 <span class="w">  </span><span class="kr">end</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">len_file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_file</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">ofs_image_data_min</span><span class="p">)</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;ValidationLessThanError&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">ofs_image_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">ofs_image_data</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">ofs_image_data_min</span><span class="p">)</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;ValidationLessThanError&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">ofs_image_data</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">len_file</span><span class="p">)</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;ValidationGreaterThanError&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="nv">Pif</span><span class="p">.</span><span class="py">PifHeader</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">ofs_image_data_min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">Pif</span><span class="p">.</span><span class="nc">PifHeader</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">ofs_image_data_min</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_ofs_image_data_min</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_ofs_image_data_min</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_ofs_image_data_min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">12</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">16</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_ofs_image_data_min</span>
 <span class="kr">end</span>
 </pre></div>
 

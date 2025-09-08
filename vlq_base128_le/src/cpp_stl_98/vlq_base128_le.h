@@ -3,12 +3,14 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class vlq_base128_le_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -124,6 +126,13 @@ public:
     int32_t len();
 
 private:
+    bool f_sign_bit;
+    uint64_t m_sign_bit;
+
+public:
+    uint64_t sign_bit();
+
+private:
     bool f_value;
     uint64_t m_value;
 
@@ -133,13 +142,6 @@ public:
      * Resulting unsigned value as normal integer
      */
     uint64_t value();
-
-private:
-    bool f_sign_bit;
-    uint64_t m_sign_bit;
-
-public:
-    uint64_t sign_bit();
 
 private:
     bool f_value_signed;

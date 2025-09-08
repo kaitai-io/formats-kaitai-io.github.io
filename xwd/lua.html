@@ -212,6 +212,11 @@ and thus is probably a poor choice for true cross-platform usage.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="xwd (X Window Dump) bitmap image parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="xwd (X Window Dump) bitmap image parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -242,7 +247,17 @@ and thus is probably a poor choice for true cross-platform usage.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="xwd (X Window Dump) bitmap image parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="xwd (X Window Dump) bitmap image parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="xwd (X Window Dump) bitmap image parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -294,15 +309,15 @@ and thus is probably a poor choice for true cross-platform usage.</p>
 <span class="c1">-- and thus is probably a poor choice for true cross-platform usage.</span>
 <span class="nv">Xwd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
+<span class="nv">Xwd</span><span class="p">.</span><span class="py">ByteOrder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">enum</span><span class="p">.</span><span class="py">Enum</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nv">le</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">be</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="p">}</span>
+
 <span class="nv">Xwd</span><span class="p">.</span><span class="py">PixmapFormat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">enum</span><span class="p">.</span><span class="py">Enum</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nv">x_y_bitmap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
 <span class="w">  </span><span class="nv">x_y_pixmap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
 <span class="w">  </span><span class="nv">z_pixmap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
-<span class="p">}</span>
-
-<span class="nv">Xwd</span><span class="p">.</span><span class="py">ByteOrder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">enum</span><span class="p">.</span><span class="py">Enum</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="nv">le</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
-<span class="w">  </span><span class="nv">be</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
 <span class="p">}</span>
 
 <span class="nv">Xwd</span><span class="p">.</span><span class="py">VisualClass</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">enum</span><span class="p">.</span><span class="py">Enum</span><span class="w"> </span><span class="p">{</span>
@@ -323,7 +338,7 @@ and thus is probably a poor choice for true cross-platform usage.</p>
 
 <span class="kr">function</span><span class="w"> </span><span class="nc">Xwd</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">len_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_hdr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">len_header</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">4</span><span class="p">))</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_hdr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_header</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span>
 <span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">KaitaiStream</span><span class="p">(</span><span class="nf">stringstream</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_hdr</span><span class="p">))</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">hdr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">Xwd</span><span class="p">.</span><span class="nf">Header</span><span class="p">(</span><span class="nv">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_color_map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
@@ -338,12 +353,33 @@ and thus is probably a poor choice for true cross-platform usage.</p>
 <span class="c1">-- </span>
 <span class="c1">-- Size of the header in bytes.</span>
 
+<span class="nv">Xwd</span><span class="p">.</span><span class="py">ColorMapEntry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">Xwd</span><span class="p">.</span><span class="nc">ColorMapEntry</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">Xwd</span><span class="p">.</span><span class="nc">ColorMapEntry</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">entry_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">red</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">green</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">blue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">padding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Number of the color map entry.</span>
+
 <span class="nv">Xwd</span><span class="p">.</span><span class="py">Header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
 <span class="kr">function</span><span class="w"> </span><span class="nc">Xwd</span><span class="p">.</span><span class="nc">Header</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
@@ -425,27 +461,6 @@ and thus is probably a poor choice for true cross-platform usage.</p>
 <span class="c1">-- Window border width.</span>
 <span class="c1">-- </span>
 <span class="c1">-- Program that created this xwd file.</span>
-
-<span class="nv">Xwd</span><span class="p">.</span><span class="py">ColorMapEntry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">Xwd</span><span class="p">.</span><span class="nc">ColorMapEntry</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">Xwd</span><span class="p">.</span><span class="nc">ColorMapEntry</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">entry_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">red</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2be</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">green</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2be</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">blue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2be</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">padding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- Number of the color map entry.</span>
 </pre></div>
 
         </div>

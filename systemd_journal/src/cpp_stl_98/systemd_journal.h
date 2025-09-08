@@ -3,12 +3,15 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class systemd_journal_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -26,15 +29,22 @@
 class systemd_journal_t : public kaitai::kstruct {
 
 public:
+    class data_object_t;
     class header_t;
     class journal_object_t;
-    class data_object_t;
 
     enum state_t {
         STATE_OFFLINE = 0,
         STATE_ONLINE = 1,
         STATE_ARCHIVED = 2
     };
+    static bool _is_defined_state_t(state_t v);
+
+private:
+    static const std::set<state_t> _values_state_t;
+    static std::set<state_t> _build_values_state_t();
+
+public:
 
     systemd_journal_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, systemd_journal_t* p__root = 0);
 
@@ -44,6 +54,100 @@ private:
 
 public:
     ~systemd_journal_t();
+
+    /**
+     * Data objects are designed to carry log payload, typically in
+     * form of a "key=value" string in `payload` attribute.
+     * \sa https://www.freedesktop.org/wiki/Software/systemd/journal-files/#dataobjects Source
+     */
+
+    class data_object_t : public kaitai::kstruct {
+
+    public:
+
+        data_object_t(kaitai::kstream* p__io, systemd_journal_t::journal_object_t* p__parent = 0, systemd_journal_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~data_object_t();
+
+    private:
+        bool f_entry;
+        journal_object_t* m_entry;
+        bool n_entry;
+
+    public:
+        bool _is_null_entry() { entry(); return n_entry; };
+
+    private:
+
+    public:
+        journal_object_t* entry();
+
+    private:
+        bool f_entry_array;
+        journal_object_t* m_entry_array;
+        bool n_entry_array;
+
+    public:
+        bool _is_null_entry_array() { entry_array(); return n_entry_array; };
+
+    private:
+
+    public:
+        journal_object_t* entry_array();
+
+    private:
+        bool f_head_field;
+        journal_object_t* m_head_field;
+        bool n_head_field;
+
+    public:
+        bool _is_null_head_field() { head_field(); return n_head_field; };
+
+    private:
+
+    public:
+        journal_object_t* head_field();
+
+    private:
+        bool f_next_hash;
+        journal_object_t* m_next_hash;
+        bool n_next_hash;
+
+    public:
+        bool _is_null_next_hash() { next_hash(); return n_next_hash; };
+
+    private:
+
+    public:
+        journal_object_t* next_hash();
+
+    private:
+        uint64_t m_hash;
+        uint64_t m_ofs_next_hash;
+        uint64_t m_ofs_head_field;
+        uint64_t m_ofs_entry;
+        uint64_t m_ofs_entry_array;
+        uint64_t m_num_entries;
+        std::string m_payload;
+        systemd_journal_t* m__root;
+        systemd_journal_t::journal_object_t* m__parent;
+
+    public:
+        uint64_t hash() const { return m_hash; }
+        uint64_t ofs_next_hash() const { return m_ofs_next_hash; }
+        uint64_t ofs_head_field() const { return m_ofs_head_field; }
+        uint64_t ofs_entry() const { return m_ofs_entry; }
+        uint64_t ofs_entry_array() const { return m_ofs_entry_array; }
+        uint64_t num_entries() const { return m_num_entries; }
+        std::string payload() const { return m_payload; }
+        systemd_journal_t* _root() const { return m__root; }
+        systemd_journal_t::journal_object_t* _parent() const { return m__parent; }
+    };
 
     class header_t : public kaitai::kstruct {
 
@@ -165,6 +269,13 @@ public:
             OBJECT_TYPES_ENTRY_ARRAY = 6,
             OBJECT_TYPES_TAG = 7
         };
+        static bool _is_defined_object_types_t(object_types_t v);
+
+    private:
+        static const std::set<object_types_t> _values_object_types_t;
+        static std::set<object_types_t> _build_values_object_types_t();
+
+    public:
 
         journal_object_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, systemd_journal_t* p__root = 0);
 
@@ -206,112 +317,6 @@ public:
         kaitai::kstream* _io__raw_payload() const { return m__io__raw_payload; }
     };
 
-    /**
-     * Data objects are designed to carry log payload, typically in
-     * form of a "key=value" string in `payload` attribute.
-     * \sa https://www.freedesktop.org/wiki/Software/systemd/journal-files/#dataobjects Source
-     */
-
-    class data_object_t : public kaitai::kstruct {
-
-    public:
-
-        data_object_t(kaitai::kstream* p__io, systemd_journal_t::journal_object_t* p__parent = 0, systemd_journal_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~data_object_t();
-
-    private:
-        bool f_next_hash;
-        journal_object_t* m_next_hash;
-        bool n_next_hash;
-
-    public:
-        bool _is_null_next_hash() { next_hash(); return n_next_hash; };
-
-    private:
-
-    public:
-        journal_object_t* next_hash();
-
-    private:
-        bool f_head_field;
-        journal_object_t* m_head_field;
-        bool n_head_field;
-
-    public:
-        bool _is_null_head_field() { head_field(); return n_head_field; };
-
-    private:
-
-    public:
-        journal_object_t* head_field();
-
-    private:
-        bool f_entry;
-        journal_object_t* m_entry;
-        bool n_entry;
-
-    public:
-        bool _is_null_entry() { entry(); return n_entry; };
-
-    private:
-
-    public:
-        journal_object_t* entry();
-
-    private:
-        bool f_entry_array;
-        journal_object_t* m_entry_array;
-        bool n_entry_array;
-
-    public:
-        bool _is_null_entry_array() { entry_array(); return n_entry_array; };
-
-    private:
-
-    public:
-        journal_object_t* entry_array();
-
-    private:
-        uint64_t m_hash;
-        uint64_t m_ofs_next_hash;
-        uint64_t m_ofs_head_field;
-        uint64_t m_ofs_entry;
-        uint64_t m_ofs_entry_array;
-        uint64_t m_num_entries;
-        std::string m_payload;
-        systemd_journal_t* m__root;
-        systemd_journal_t::journal_object_t* m__parent;
-
-    public:
-        uint64_t hash() const { return m_hash; }
-        uint64_t ofs_next_hash() const { return m_ofs_next_hash; }
-        uint64_t ofs_head_field() const { return m_ofs_head_field; }
-        uint64_t ofs_entry() const { return m_ofs_entry; }
-        uint64_t ofs_entry_array() const { return m_ofs_entry_array; }
-        uint64_t num_entries() const { return m_num_entries; }
-        std::string payload() const { return m_payload; }
-        systemd_journal_t* _root() const { return m__root; }
-        systemd_journal_t::journal_object_t* _parent() const { return m__parent; }
-    };
-
-private:
-    bool f_len_header;
-    uint64_t m_len_header;
-
-public:
-
-    /**
-     * Header length is used to set substream size, as it thus required
-     * prior to declaration of header.
-     */
-    uint64_t len_header();
-
 private:
     bool f_data_hash_table;
     std::string m_data_hash_table;
@@ -325,6 +330,18 @@ private:
 
 public:
     std::string field_hash_table();
+
+private:
+    bool f_len_header;
+    uint64_t m_len_header;
+
+public:
+
+    /**
+     * Header length is used to set substream size, as it thus required
+     * prior to declaration of header.
+     */
+    uint64_t len_header();
 
 private:
     header_t* m_header;

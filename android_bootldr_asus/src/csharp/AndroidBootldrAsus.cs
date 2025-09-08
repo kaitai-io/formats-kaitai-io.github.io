@@ -32,14 +32,14 @@ namespace Kaitai
         private void _read()
         {
             _magic = m_io.ReadBytes(8);
-            if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 66, 79, 79, 84, 76, 68, 82, 33 }) == 0)))
+            if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 66, 79, 79, 84, 76, 68, 82, 33 }) == 0)))
             {
-                throw new ValidationNotEqualError(new byte[] { 66, 79, 79, 84, 76, 68, 82, 33 }, Magic, M_Io, "/seq/0");
+                throw new ValidationNotEqualError(new byte[] { 66, 79, 79, 84, 76, 68, 82, 33 }, _magic, m_io, "/seq/0");
             }
             _revision = m_io.ReadU2le();
-            if (!(Revision >= 2))
+            if (!(_revision >= 2))
             {
-                throw new ValidationLessThanError(2, Revision, M_Io, "/seq/1");
+                throw new ValidationLessThanError(2, _revision, m_io, "/seq/1");
             }
             _reserved1 = m_io.ReadU2le();
             _reserved2 = m_io.ReadU4le();
@@ -66,17 +66,17 @@ namespace Kaitai
             private void _read()
             {
                 _chunkId = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(8));
-                if (!( ((ChunkId == "IFWI!!!!") || (ChunkId == "DROIDBT!") || (ChunkId == "SPLASHS!")) ))
+                if (!( ((_chunkId == "IFWI!!!!") || (_chunkId == "DROIDBT!") || (_chunkId == "SPLASHS!")) ))
                 {
-                    throw new ValidationNotAnyOfError(ChunkId, M_Io, "/types/image/seq/0");
+                    throw new ValidationNotAnyOfError(_chunkId, m_io, "/types/image/seq/0");
                 }
                 _lenBody = m_io.ReadU4le();
                 _flags = m_io.ReadU1();
                 {
-                    byte M_ = Flags;
+                    byte M_ = _flags;
                     if (!((M_ & 1) != 0))
                     {
-                        throw new ValidationExprError(Flags, M_Io, "/types/image/seq/2");
+                        throw new ValidationExprError(_flags, m_io, "/types/image/seq/2");
                     }
                 }
                 _reserved1 = m_io.ReadU1();
@@ -92,8 +92,8 @@ namespace Kaitai
                 {
                     if (f_fileName)
                         return _fileName;
-                    _fileName = (string) ((ChunkId == "IFWI!!!!" ? "ifwi.bin" : (ChunkId == "DROIDBT!" ? "droidboot.img" : (ChunkId == "SPLASHS!" ? "splashscreen.img" : ""))));
                     f_fileName = true;
+                    _fileName = (string) ((ChunkId == "IFWI!!!!" ? "ifwi.bin" : (ChunkId == "DROIDBT!" ? "droidboot.img" : (ChunkId == "SPLASHS!" ? "splashscreen.img" : ""))));
                     return _fileName;
                 }
             }

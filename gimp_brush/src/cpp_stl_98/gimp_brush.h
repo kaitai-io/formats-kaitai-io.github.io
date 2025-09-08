@@ -3,12 +3,15 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class gimp_brush_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -28,14 +31,21 @@
 class gimp_brush_t : public kaitai::kstruct {
 
 public:
-    class header_t;
     class bitmap_t;
+    class header_t;
     class row_t;
 
     enum color_depth_t {
         COLOR_DEPTH_GRAYSCALE = 1,
         COLOR_DEPTH_RGBA = 4
     };
+    static bool _is_defined_color_depth_t(color_depth_t v);
+
+private:
+    static const std::set<color_depth_t> _values_color_depth_t;
+    static std::set<color_depth_t> _build_values_color_depth_t();
+
+public:
 
     gimp_brush_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, gimp_brush_t* p__root = 0);
 
@@ -45,6 +55,30 @@ private:
 
 public:
     ~gimp_brush_t();
+
+    class bitmap_t : public kaitai::kstruct {
+
+    public:
+
+        bitmap_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, gimp_brush_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~bitmap_t();
+
+    private:
+        std::vector<row_t*>* m_rows;
+        gimp_brush_t* m__root;
+        kaitai::kstruct* m__parent;
+
+    public:
+        std::vector<row_t*>* rows() const { return m_rows; }
+        gimp_brush_t* _root() const { return m__root; }
+        kaitai::kstruct* _parent() const { return m__parent; }
+    };
 
     class header_t : public kaitai::kstruct {
 
@@ -96,37 +130,13 @@ public:
         gimp_brush_t* _parent() const { return m__parent; }
     };
 
-    class bitmap_t : public kaitai::kstruct {
-
-    public:
-
-        bitmap_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, gimp_brush_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~bitmap_t();
-
-    private:
-        std::vector<row_t*>* m_rows;
-        gimp_brush_t* m__root;
-        kaitai::kstruct* m__parent;
-
-    public:
-        std::vector<row_t*>* rows() const { return m_rows; }
-        gimp_brush_t* _root() const { return m__root; }
-        kaitai::kstruct* _parent() const { return m__parent; }
-    };
-
     class row_t : public kaitai::kstruct {
 
     public:
         class pixel_gray_t;
         class pixel_rgba_t;
 
-        row_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, gimp_brush_t* p__root = 0);
+        row_t(kaitai::kstream* p__io, gimp_brush_t::bitmap_t* p__parent = 0, gimp_brush_t* p__root = 0);
 
     private:
         void _read();
@@ -139,7 +149,7 @@ public:
 
         public:
 
-            pixel_gray_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, gimp_brush_t* p__root = 0);
+            pixel_gray_t(kaitai::kstream* p__io, gimp_brush_t::row_t* p__parent = 0, gimp_brush_t* p__root = 0);
 
         private:
             void _read();
@@ -149,18 +159,11 @@ public:
             ~pixel_gray_t();
 
         private:
-            bool f_red;
-            int8_t m_red;
+            bool f_alpha;
+            uint8_t m_alpha;
 
         public:
-            int8_t red();
-
-        private:
-            bool f_green;
-            int8_t m_green;
-
-        public:
-            int8_t green();
+            uint8_t alpha();
 
         private:
             bool f_blue;
@@ -170,28 +173,35 @@ public:
             int8_t blue();
 
         private:
-            bool f_alpha;
-            uint8_t m_alpha;
+            bool f_green;
+            int8_t m_green;
 
         public:
-            uint8_t alpha();
+            int8_t green();
+
+        private:
+            bool f_red;
+            int8_t m_red;
+
+        public:
+            int8_t red();
 
         private:
             uint8_t m_gray;
             gimp_brush_t* m__root;
-            kaitai::kstruct* m__parent;
+            gimp_brush_t::row_t* m__parent;
 
         public:
             uint8_t gray() const { return m_gray; }
             gimp_brush_t* _root() const { return m__root; }
-            kaitai::kstruct* _parent() const { return m__parent; }
+            gimp_brush_t::row_t* _parent() const { return m__parent; }
         };
 
         class pixel_rgba_t : public kaitai::kstruct {
 
         public:
 
-            pixel_rgba_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, gimp_brush_t* p__root = 0);
+            pixel_rgba_t(kaitai::kstream* p__io, gimp_brush_t::row_t* p__parent = 0, gimp_brush_t* p__root = 0);
 
         private:
             void _read();
@@ -206,7 +216,7 @@ public:
             uint8_t m_blue;
             uint8_t m_alpha;
             gimp_brush_t* m__root;
-            kaitai::kstruct* m__parent;
+            gimp_brush_t::row_t* m__parent;
 
         public:
             uint8_t red() const { return m_red; }
@@ -214,26 +224,19 @@ public:
             uint8_t blue() const { return m_blue; }
             uint8_t alpha() const { return m_alpha; }
             gimp_brush_t* _root() const { return m__root; }
-            kaitai::kstruct* _parent() const { return m__parent; }
+            gimp_brush_t::row_t* _parent() const { return m__parent; }
         };
 
     private:
         std::vector<kaitai::kstruct*>* m_pixels;
         gimp_brush_t* m__root;
-        kaitai::kstruct* m__parent;
+        gimp_brush_t::bitmap_t* m__parent;
 
     public:
         std::vector<kaitai::kstruct*>* pixels() const { return m_pixels; }
         gimp_brush_t* _root() const { return m__root; }
-        kaitai::kstruct* _parent() const { return m__parent; }
+        gimp_brush_t::bitmap_t* _parent() const { return m__parent; }
     };
-
-private:
-    bool f_len_body;
-    int32_t m_len_body;
-
-public:
-    int32_t len_body();
 
 private:
     bool f_body;
@@ -241,6 +244,13 @@ private:
 
 public:
     std::string body();
+
+private:
+    bool f_len_body;
+    int32_t m_len_body;
+
+public:
+    int32_t len_body();
 
 private:
     uint32_t m_len_header;

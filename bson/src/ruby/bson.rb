@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -13,36 +13,18 @@ end
 #   * Traversable. BSON is designed to be traversed easily. This is a vital property in its role as the primary data representation for MongoDB.
 #   * Efficient. Encoding data to BSON and decoding from BSON can be performed very quickly in most languages due to the use of C data types.
 class Bson < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
     @len = @_io.read_s4le
-    @_raw_fields = @_io.read_bytes((len - 5))
-    _io__raw_fields = Kaitai::Struct::Stream.new(@_raw_fields)
-    @fields = ElementsList.new(_io__raw_fields, self, @_root)
+    _io_fields = @_io.substream(len - 5)
+    @fields = ElementsList.new(_io_fields, self, @_root)
     @terminator = @_io.read_bytes(1)
-    raise Kaitai::Struct::ValidationNotEqualError.new([0].pack('C*'), terminator, _io, "/seq/2") if not terminator == [0].pack('C*')
+    raise Kaitai::Struct::ValidationNotEqualError.new([0].pack('C*'), @terminator, @_io, "/seq/2") if not @terminator == [0].pack('C*')
     self
-  end
-
-  ##
-  # Special internal type used by MongoDB replication and sharding. First 4 bytes are an increment, second 4 are a timestamp.
-  class Timestamp < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @increment = @_io.read_u4le
-      @timestamp = @_io.read_u4le
-      self
-    end
-    attr_reader :increment
-    attr_reader :timestamp
   end
 
   ##
@@ -59,7 +41,7 @@ class Bson < Kaitai::Struct::Struct
       128 => :subtype_custom,
     }
     I__SUBTYPE = SUBTYPE.invert
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -69,9 +51,8 @@ class Bson < Kaitai::Struct::Struct
       @subtype = Kaitai::Struct::Stream::resolve_enum(SUBTYPE, @_io.read_u1)
       case subtype
       when :subtype_byte_array_deprecated
-        @_raw_content = @_io.read_bytes(len)
-        _io__raw_content = Kaitai::Struct::Stream.new(@_raw_content)
-        @content = ByteArrayDeprecated.new(_io__raw_content, self, @_root)
+        _io_content = @_io.substream(len)
+        @content = ByteArrayDeprecated.new(_io_content, self, @_root)
       else
         @content = @_io.read_bytes(len)
       end
@@ -81,7 +62,7 @@ class Bson < Kaitai::Struct::Struct
     ##
     # The BSON "binary" or "BinData" datatype is used to represent arrays of bytes. It is somewhat analogous to the Java notion of a ByteArray. BSON binary values have a subtype. This is used to indicate what kind of data is in the byte array. Subtypes from zero to 127 are predefined or reserved. Subtypes from 128-255 are user-defined.
     class ByteArrayDeprecated < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
@@ -99,25 +80,27 @@ class Bson < Kaitai::Struct::Struct
     attr_reader :content
     attr_reader :_raw_content
   end
-  class ElementsList < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  class CodeWithScope < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @elements = []
-      i = 0
-      while not @_io.eof?
-        @elements << Element.new(@_io, self, @_root)
-        i += 1
-      end
+      @id = @_io.read_s4le
+      @source = String.new(@_io, self, @_root)
+      @scope = Bson.new(@_io, self, @_root)
       self
     end
-    attr_reader :elements
+    attr_reader :id
+    attr_reader :source
+
+    ##
+    # mapping from identifiers to values, representing the scope in which the string should be evaluated.
+    attr_reader :scope
   end
   class Cstring < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -131,22 +114,19 @@ class Bson < Kaitai::Struct::Struct
     # MUST NOT contain '\x00', hence it is not full UTF-8.
     attr_reader :str
   end
-  class String < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  class DbPointer < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @len = @_io.read_s4le
-      @str = (@_io.read_bytes((len - 1))).force_encoding("UTF-8")
-      @terminator = @_io.read_bytes(1)
-      raise Kaitai::Struct::ValidationNotEqualError.new([0].pack('C*'), terminator, _io, "/types/string/seq/2") if not terminator == [0].pack('C*')
+      @namespace = String.new(@_io, self, @_root)
+      @id = ObjectId.new(@_io, self, @_root)
       self
     end
-    attr_reader :len
-    attr_reader :str
-    attr_reader :terminator
+    attr_reader :namespace
+    attr_reader :id
   end
   class Element < Kaitai::Struct::Struct
 
@@ -175,7 +155,7 @@ class Bson < Kaitai::Struct::Struct
       127 => :bson_type_max_key,
     }
     I__BSON_TYPE = BSON_TYPE.invert
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -184,40 +164,40 @@ class Bson < Kaitai::Struct::Struct
       @type_byte = Kaitai::Struct::Stream::resolve_enum(BSON_TYPE, @_io.read_u1)
       @name = Cstring.new(@_io, self, @_root)
       case type_byte
+      when :bson_type_array
+        @content = Bson.new(@_io, self, @_root)
+      when :bson_type_bin_data
+        @content = BinData.new(@_io, self, @_root)
+      when :bson_type_boolean
+        @content = @_io.read_u1
       when :bson_type_code_with_scope
         @content = CodeWithScope.new(@_io, self, @_root)
-      when :bson_type_reg_ex
-        @content = RegEx.new(@_io, self, @_root)
+      when :bson_type_db_pointer
+        @content = DbPointer.new(@_io, self, @_root)
+      when :bson_type_document
+        @content = Bson.new(@_io, self, @_root)
+      when :bson_type_javascript
+        @content = String.new(@_io, self, @_root)
+      when :bson_type_number_decimal
+        @content = F16.new(@_io, self, @_root)
       when :bson_type_number_double
         @content = @_io.read_f8le
+      when :bson_type_number_int
+        @content = @_io.read_s4le
+      when :bson_type_number_long
+        @content = @_io.read_s8le
+      when :bson_type_object_id
+        @content = ObjectId.new(@_io, self, @_root)
+      when :bson_type_reg_ex
+        @content = RegEx.new(@_io, self, @_root)
+      when :bson_type_string
+        @content = String.new(@_io, self, @_root)
       when :bson_type_symbol
         @content = String.new(@_io, self, @_root)
       when :bson_type_timestamp
         @content = Timestamp.new(@_io, self, @_root)
-      when :bson_type_number_int
-        @content = @_io.read_s4le
-      when :bson_type_document
-        @content = Bson.new(@_io)
-      when :bson_type_object_id
-        @content = ObjectId.new(@_io, self, @_root)
-      when :bson_type_javascript
-        @content = String.new(@_io, self, @_root)
       when :bson_type_utc_datetime
         @content = @_io.read_s8le
-      when :bson_type_boolean
-        @content = @_io.read_u1
-      when :bson_type_number_long
-        @content = @_io.read_s8le
-      when :bson_type_bin_data
-        @content = BinData.new(@_io, self, @_root)
-      when :bson_type_string
-        @content = String.new(@_io, self, @_root)
-      when :bson_type_db_pointer
-        @content = DbPointer.new(@_io, self, @_root)
-      when :bson_type_array
-        @content = Bson.new(@_io)
-      when :bson_type_number_decimal
-        @content = F16.new(@_io, self, @_root)
       end
       self
     end
@@ -225,68 +205,28 @@ class Bson < Kaitai::Struct::Struct
     attr_reader :name
     attr_reader :content
   end
-  class DbPointer < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  class ElementsList < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @namespace = String.new(@_io, self, @_root)
-      @id = ObjectId.new(@_io, self, @_root)
+      @elements = []
+      i = 0
+      while not @_io.eof?
+        @elements << Element.new(@_io, self, @_root)
+        i += 1
+      end
       self
     end
-    attr_reader :namespace
-    attr_reader :id
-  end
-
-  ##
-  # Implements unsigned 24-bit (3 byte) integer.
-  class U3 < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @b1 = @_io.read_u1
-      @b2 = @_io.read_u1
-      @b3 = @_io.read_u1
-      self
-    end
-    def value
-      return @value unless @value.nil?
-      @value = ((b1 | (b2 << 8)) | (b3 << 16))
-      @value
-    end
-    attr_reader :b1
-    attr_reader :b2
-    attr_reader :b3
-  end
-  class CodeWithScope < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @id = @_io.read_s4le
-      @source = String.new(@_io, self, @_root)
-      @scope = Bson.new(@_io)
-      self
-    end
-    attr_reader :id
-    attr_reader :source
-
-    ##
-    # mapping from identifiers to values, representing the scope in which the string should be evaluated.
-    attr_reader :scope
+    attr_reader :elements
   end
 
   ##
   # 128-bit IEEE 754-2008 decimal floating point
   class F16 < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -308,7 +248,7 @@ class Bson < Kaitai::Struct::Struct
   ##
   # @see https://www.mongodb.com/docs/manual/reference/method/ObjectId/ Source
   class ObjectId < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -332,7 +272,7 @@ class Bson < Kaitai::Struct::Struct
     attr_reader :counter
   end
   class RegEx < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -344,6 +284,64 @@ class Bson < Kaitai::Struct::Struct
     end
     attr_reader :pattern
     attr_reader :options
+  end
+  class String < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @len = @_io.read_s4le
+      @str = (@_io.read_bytes(len - 1)).force_encoding("UTF-8")
+      @terminator = @_io.read_bytes(1)
+      raise Kaitai::Struct::ValidationNotEqualError.new([0].pack('C*'), @terminator, @_io, "/types/string/seq/2") if not @terminator == [0].pack('C*')
+      self
+    end
+    attr_reader :len
+    attr_reader :str
+    attr_reader :terminator
+  end
+
+  ##
+  # Special internal type used by MongoDB replication and sharding. First 4 bytes are an increment, second 4 are a timestamp.
+  class Timestamp < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @increment = @_io.read_u4le
+      @timestamp = @_io.read_u4le
+      self
+    end
+    attr_reader :increment
+    attr_reader :timestamp
+  end
+
+  ##
+  # Implements unsigned 24-bit (3 byte) integer.
+  class U3 < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @b1 = @_io.read_u1
+      @b2 = @_io.read_u1
+      @b3 = @_io.read_u1
+      self
+    end
+    def value
+      return @value unless @value.nil?
+      @value = (b1 | b2 << 8) | b3 << 16
+      @value
+    end
+    attr_reader :b1
+    attr_reader :b2
+    attr_reader :b3
   end
 
   ##

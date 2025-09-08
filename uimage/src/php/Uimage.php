@@ -9,8 +9,8 @@
 
 namespace {
     class Uimage extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Uimage $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Uimage $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -27,15 +27,15 @@ namespace {
 
 namespace Uimage {
     class Uheader extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Uimage $_parent = null, \Uimage $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Uimage $_parent = null, ?\Uimage $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic = $this->_io->readBytes(4);
-            if (!($this->magic() == "\x27\x05\x19\x56")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x27\x05\x19\x56", $this->magic(), $this->_io(), "/types/uheader/seq/0");
+            if (!($this->_m_magic == "\x27\x05\x19\x56")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x27\x05\x19\x56", $this->_m_magic, $this->_io, "/types/uheader/seq/0");
             }
             $this->_m_headerCrc = $this->_io->readU4be();
             $this->_m_timestamp = $this->_io->readU4be();
@@ -73,6 +73,174 @@ namespace Uimage {
         public function imageType() { return $this->_m_imageType; }
         public function compressionType() { return $this->_m_compressionType; }
         public function name() { return $this->_m_name; }
+    }
+}
+
+namespace Uimage {
+    class UimageArch {
+
+        /**
+         * Invalid CPU
+         */
+        const INVALID = 0;
+
+        /**
+         * Alpha
+         */
+        const ALPHA = 1;
+
+        /**
+         * ARM
+         */
+        const ARM = 2;
+
+        /**
+         * Intel x86
+         */
+        const I386 = 3;
+
+        /**
+         * IA64
+         */
+        const IA64 = 4;
+
+        /**
+         * MIPS
+         */
+        const MIPS = 5;
+
+        /**
+         * MIPS 64 Bit
+         */
+        const MIPS64 = 6;
+
+        /**
+         * PowerPC
+         */
+        const PPC = 7;
+
+        /**
+         * IBM S390
+         */
+        const S390 = 8;
+
+        /**
+         * SuperH
+         */
+        const SH = 9;
+
+        /**
+         * Sparc
+         */
+        const SPARC = 10;
+
+        /**
+         * Sparc 64 Bit
+         */
+        const SPARC64 = 11;
+
+        /**
+         * M68K
+         */
+        const M68K = 12;
+
+        /**
+         * Nios-32
+         */
+        const NIOS = 13;
+
+        /**
+         * MicroBlaze
+         */
+        const MICROBLAZE = 14;
+
+        /**
+         * Nios-II
+         */
+        const NIOS2 = 15;
+
+        /**
+         * Blackfin
+         */
+        const BLACKFIN = 16;
+
+        /**
+         * AVR32
+         */
+        const AVR32 = 17;
+
+        /**
+         * STMicroelectronics ST200
+         */
+        const ST200 = 18;
+
+        /**
+         * Sandbox architecture (test only)
+         */
+        const SANDBOX = 19;
+
+        /**
+         * ANDES Technology - NDS32
+         */
+        const NDS32 = 20;
+
+        /**
+         * OpenRISC 1000
+         */
+        const OPENRISC = 21;
+
+        /**
+         * ARM64
+         */
+        const ARM64 = 22;
+
+        /**
+         * Synopsys DesignWare ARC
+         */
+        const ARC = 23;
+
+        /**
+         * AMD x86_64, Intel and Via
+         */
+        const X86_64 = 24;
+
+        /**
+         * Xtensa
+         */
+        const XTENSA = 25;
+
+        /**
+         * RISC-V
+         */
+        const RISCV = 26;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 7 => true, 8 => true, 9 => true, 10 => true, 11 => true, 12 => true, 13 => true, 14 => true, 15 => true, 16 => true, 17 => true, 18 => true, 19 => true, 20 => true, 21 => true, 22 => true, 23 => true, 24 => true, 25 => true, 26 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
+    }
+}
+
+namespace Uimage {
+    class UimageComp {
+
+        /**
+         * No Compression Used
+         */
+        const NONE = 0;
+        const GZIP = 1;
+        const BZIP2 = 2;
+        const LZMA = 3;
+        const LZO = 4;
+        const LZ4 = 5;
+        const ZSTD = 6;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
@@ -223,162 +391,12 @@ namespace Uimage {
          * EFI Firmware (e.g. GRUB2)
          */
         const EFI = 28;
-    }
-}
 
-namespace Uimage {
-    class UimageArch {
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 7 => true, 8 => true, 9 => true, 10 => true, 11 => true, 12 => true, 13 => true, 14 => true, 15 => true, 16 => true, 17 => true, 18 => true, 19 => true, 20 => true, 21 => true, 22 => true, 23 => true, 24 => true, 25 => true, 26 => true, 27 => true, 28 => true];
 
-        /**
-         * Invalid CPU
-         */
-        const INVALID = 0;
-
-        /**
-         * Alpha
-         */
-        const ALPHA = 1;
-
-        /**
-         * ARM
-         */
-        const ARM = 2;
-
-        /**
-         * Intel x86
-         */
-        const I386 = 3;
-
-        /**
-         * IA64
-         */
-        const IA64 = 4;
-
-        /**
-         * MIPS
-         */
-        const MIPS = 5;
-
-        /**
-         * MIPS 64 Bit
-         */
-        const MIPS64 = 6;
-
-        /**
-         * PowerPC
-         */
-        const PPC = 7;
-
-        /**
-         * IBM S390
-         */
-        const S390 = 8;
-
-        /**
-         * SuperH
-         */
-        const SH = 9;
-
-        /**
-         * Sparc
-         */
-        const SPARC = 10;
-
-        /**
-         * Sparc 64 Bit
-         */
-        const SPARC64 = 11;
-
-        /**
-         * M68K
-         */
-        const M68K = 12;
-
-        /**
-         * Nios-32
-         */
-        const NIOS = 13;
-
-        /**
-         * MicroBlaze
-         */
-        const MICROBLAZE = 14;
-
-        /**
-         * Nios-II
-         */
-        const NIOS2 = 15;
-
-        /**
-         * Blackfin
-         */
-        const BLACKFIN = 16;
-
-        /**
-         * AVR32
-         */
-        const AVR32 = 17;
-
-        /**
-         * STMicroelectronics ST200
-         */
-        const ST200 = 18;
-
-        /**
-         * Sandbox architecture (test only)
-         */
-        const SANDBOX = 19;
-
-        /**
-         * ANDES Technology - NDS32
-         */
-        const NDS32 = 20;
-
-        /**
-         * OpenRISC 1000
-         */
-        const OPENRISC = 21;
-
-        /**
-         * ARM64
-         */
-        const ARM64 = 22;
-
-        /**
-         * Synopsys DesignWare ARC
-         */
-        const ARC = 23;
-
-        /**
-         * AMD x86_64, Intel and Via
-         */
-        const X86_64 = 24;
-
-        /**
-         * Xtensa
-         */
-        const XTENSA = 25;
-
-        /**
-         * RISC-V
-         */
-        const RISCV = 26;
-    }
-}
-
-namespace Uimage {
-    class UimageComp {
-
-        /**
-         * No Compression Used
-         */
-        const NONE = 0;
-        const GZIP = 1;
-        const BZIP2 = 2;
-        const LZMA = 3;
-        const LZO = 4;
-        const LZ4 = 5;
-        const ZSTD = 6;
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
@@ -589,5 +607,11 @@ namespace Uimage {
          * Allwinner eGON Boot Image
          */
         const SUNXI_EGON = 40;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 7 => true, 8 => true, 9 => true, 10 => true, 11 => true, 12 => true, 13 => true, 14 => true, 15 => true, 16 => true, 17 => true, 18 => true, 19 => true, 20 => true, 21 => true, 22 => true, 23 => true, 24 => true, 25 => true, 26 => true, 27 => true, 28 => true, 29 => true, 30 => true, 31 => true, 32 => true, 33 => true, 34 => true, 35 => true, 36 => true, 37 => true, 38 => true, 39 => true, 40 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

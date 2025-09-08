@@ -24,14 +24,11 @@ const (
 	Avi_ChunkType__Hdrl Avi_ChunkType = 1819436136
 	Avi_ChunkType__Strl Avi_ChunkType = 1819440243
 )
-
-type Avi_StreamType int
-const (
-	Avi_StreamType__Mids Avi_StreamType = 1935960429
-	Avi_StreamType__Vids Avi_StreamType = 1935960438
-	Avi_StreamType__Auds Avi_StreamType = 1935963489
-	Avi_StreamType__Txts Avi_StreamType = 1937012852
-)
+var values_Avi_ChunkType = map[Avi_ChunkType]struct{}{829973609: {}, 1263424842: {}, 1330007625: {}, 1413894985: {}, 1414744396: {}, 1718776947: {}, 1751742049: {}, 1752331379: {}, 1769369453: {}, 1819436136: {}, 1819440243: {}}
+func (v Avi_ChunkType) isDefined() bool {
+	_, ok := values_Avi_ChunkType[v]
+	return ok
+}
 
 type Avi_HandlerType int
 const (
@@ -41,6 +38,24 @@ const (
 	Avi_HandlerType__Cvid Avi_HandlerType = 1684633187
 	Avi_HandlerType__Xvid Avi_HandlerType = 1684633208
 )
+var values_Avi_HandlerType = map[Avi_HandlerType]struct{}{85: {}, 8192: {}, 8193: {}, 1684633187: {}, 1684633208: {}}
+func (v Avi_HandlerType) isDefined() bool {
+	_, ok := values_Avi_HandlerType[v]
+	return ok
+}
+
+type Avi_StreamType int
+const (
+	Avi_StreamType__Mids Avi_StreamType = 1935960429
+	Avi_StreamType__Vids Avi_StreamType = 1935960438
+	Avi_StreamType__Auds Avi_StreamType = 1935963489
+	Avi_StreamType__Txts Avi_StreamType = 1937012852
+)
+var values_Avi_StreamType = map[Avi_StreamType]struct{}{1935960429: {}, 1935960438: {}, 1935963489: {}, 1937012852: {}}
+func (v Avi_StreamType) isDefined() bool {
+	_, ok := values_Avi_StreamType[v]
+	return ok
+}
 type Avi struct {
 	Magic1 []byte
 	FileSize uint32
@@ -48,7 +63,7 @@ type Avi struct {
 	Data *Avi_Blocks
 	_io *kaitai.Stream
 	_root *Avi
-	_parent interface{}
+	_parent kaitai.Struct
 	_raw_Data []byte
 }
 func NewAvi() *Avi {
@@ -56,7 +71,11 @@ func NewAvi() *Avi {
 	}
 }
 
-func (this *Avi) Read(io *kaitai.Stream, parent interface{}, root *Avi) (err error) {
+func (this Avi) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Avi) Read(io *kaitai.Stream, parent kaitai.Struct, root *Avi) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -84,7 +103,7 @@ func (this *Avi) Read(io *kaitai.Stream, parent interface{}, root *Avi) (err err
 	if !(bytes.Equal(this.Magic2, []uint8{65, 86, 73, 32})) {
 		return kaitai.NewValidationNotEqualError([]uint8{65, 86, 73, 32}, this.Magic2, this._io, "/seq/2")
 	}
-	tmp4, err := this._io.ReadBytes(int((this.FileSize - 4)))
+	tmp4, err := this._io.ReadBytes(int(this.FileSize - 4))
 	if err != nil {
 		return err
 	}
@@ -97,110 +116,6 @@ func (this *Avi) Read(io *kaitai.Stream, parent interface{}, root *Avi) (err err
 		return err
 	}
 	this.Data = tmp5
-	return err
-}
-type Avi_ListBody struct {
-	ListType Avi_ChunkType
-	Data *Avi_Blocks
-	_io *kaitai.Stream
-	_root *Avi
-	_parent *Avi_Block
-}
-func NewAvi_ListBody() *Avi_ListBody {
-	return &Avi_ListBody{
-	}
-}
-
-func (this *Avi_ListBody) Read(io *kaitai.Stream, parent *Avi_Block, root *Avi) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp6, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.ListType = Avi_ChunkType(tmp6)
-	tmp7 := NewAvi_Blocks()
-	err = tmp7.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Data = tmp7
-	return err
-}
-type Avi_Rect struct {
-	Left int16
-	Top int16
-	Right int16
-	Bottom int16
-	_io *kaitai.Stream
-	_root *Avi
-	_parent *Avi_StrhBody
-}
-func NewAvi_Rect() *Avi_Rect {
-	return &Avi_Rect{
-	}
-}
-
-func (this *Avi_Rect) Read(io *kaitai.Stream, parent *Avi_StrhBody, root *Avi) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp8, err := this._io.ReadS2le()
-	if err != nil {
-		return err
-	}
-	this.Left = int16(tmp8)
-	tmp9, err := this._io.ReadS2le()
-	if err != nil {
-		return err
-	}
-	this.Top = int16(tmp9)
-	tmp10, err := this._io.ReadS2le()
-	if err != nil {
-		return err
-	}
-	this.Right = int16(tmp10)
-	tmp11, err := this._io.ReadS2le()
-	if err != nil {
-		return err
-	}
-	this.Bottom = int16(tmp11)
-	return err
-}
-type Avi_Blocks struct {
-	Entries []*Avi_Block
-	_io *kaitai.Stream
-	_root *Avi
-	_parent interface{}
-}
-func NewAvi_Blocks() *Avi_Blocks {
-	return &Avi_Blocks{
-	}
-}
-
-func (this *Avi_Blocks) Read(io *kaitai.Stream, parent interface{}, root *Avi) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	for i := 1;; i++ {
-		tmp12, err := this._io.EOF()
-		if err != nil {
-			return err
-		}
-		if tmp12 {
-			break
-		}
-		tmp13 := NewAvi_Block()
-		err = tmp13.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Entries = append(this.Entries, tmp13)
-	}
 	return err
 }
 
@@ -229,67 +144,71 @@ func NewAvi_AvihBody() *Avi_AvihBody {
 	}
 }
 
+func (this Avi_AvihBody) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Avi_AvihBody) Read(io *kaitai.Stream, parent *Avi_Block, root *Avi) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
+	tmp6, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.MicroSecPerFrame = uint32(tmp6)
+	tmp7, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.MaxBytesPerSec = uint32(tmp7)
+	tmp8, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.PaddingGranularity = uint32(tmp8)
+	tmp9, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Flags = uint32(tmp9)
+	tmp10, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.TotalFrames = uint32(tmp10)
+	tmp11, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.InitialFrames = uint32(tmp11)
+	tmp12, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Streams = uint32(tmp12)
+	tmp13, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.SuggestedBufferSize = uint32(tmp13)
 	tmp14, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.MicroSecPerFrame = uint32(tmp14)
+	this.Width = uint32(tmp14)
 	tmp15, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.MaxBytesPerSec = uint32(tmp15)
-	tmp16, err := this._io.ReadU4le()
+	this.Height = uint32(tmp15)
+	tmp16, err := this._io.ReadBytes(int(16))
 	if err != nil {
 		return err
 	}
-	this.PaddingGranularity = uint32(tmp16)
-	tmp17, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Flags = uint32(tmp17)
-	tmp18, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.TotalFrames = uint32(tmp18)
-	tmp19, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.InitialFrames = uint32(tmp19)
-	tmp20, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Streams = uint32(tmp20)
-	tmp21, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.SuggestedBufferSize = uint32(tmp21)
-	tmp22, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Width = uint32(tmp22)
-	tmp23, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Height = uint32(tmp23)
-	tmp24, err := this._io.ReadBytes(int(16))
-	if err != nil {
-		return err
-	}
-	tmp24 = tmp24
-	this.Reserved = tmp24
+	tmp16 = tmp16
+	this.Reserved = tmp16
 	return err
 }
 type Avi_Block struct {
@@ -306,72 +225,217 @@ func NewAvi_Block() *Avi_Block {
 	}
 }
 
+func (this Avi_Block) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Avi_Block) Read(io *kaitai.Stream, parent *Avi_Blocks, root *Avi) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp25, err := this._io.ReadU4le()
+	tmp17, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.FourCc = Avi_ChunkType(tmp25)
-	tmp26, err := this._io.ReadU4le()
+	this.FourCc = Avi_ChunkType(tmp17)
+	tmp18, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.BlockSize = uint32(tmp26)
+	this.BlockSize = uint32(tmp18)
 	switch (this.FourCc) {
-	case Avi_ChunkType__List:
-		tmp27, err := this._io.ReadBytes(int(this.BlockSize))
-		if err != nil {
-			return err
-		}
-		tmp27 = tmp27
-		this._raw_Data = tmp27
-		_io__raw_Data := kaitai.NewStream(bytes.NewReader(this._raw_Data))
-		tmp28 := NewAvi_ListBody()
-		err = tmp28.Read(_io__raw_Data, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Data = tmp28
 	case Avi_ChunkType__Avih:
-		tmp29, err := this._io.ReadBytes(int(this.BlockSize))
+		tmp19, err := this._io.ReadBytes(int(this.BlockSize))
 		if err != nil {
 			return err
 		}
-		tmp29 = tmp29
-		this._raw_Data = tmp29
+		tmp19 = tmp19
+		this._raw_Data = tmp19
 		_io__raw_Data := kaitai.NewStream(bytes.NewReader(this._raw_Data))
-		tmp30 := NewAvi_AvihBody()
-		err = tmp30.Read(_io__raw_Data, this, this._root)
+		tmp20 := NewAvi_AvihBody()
+		err = tmp20.Read(_io__raw_Data, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Data = tmp30
+		this.Data = tmp20
+	case Avi_ChunkType__List:
+		tmp21, err := this._io.ReadBytes(int(this.BlockSize))
+		if err != nil {
+			return err
+		}
+		tmp21 = tmp21
+		this._raw_Data = tmp21
+		_io__raw_Data := kaitai.NewStream(bytes.NewReader(this._raw_Data))
+		tmp22 := NewAvi_ListBody()
+		err = tmp22.Read(_io__raw_Data, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Data = tmp22
 	case Avi_ChunkType__Strh:
-		tmp31, err := this._io.ReadBytes(int(this.BlockSize))
+		tmp23, err := this._io.ReadBytes(int(this.BlockSize))
 		if err != nil {
 			return err
 		}
-		tmp31 = tmp31
-		this._raw_Data = tmp31
+		tmp23 = tmp23
+		this._raw_Data = tmp23
 		_io__raw_Data := kaitai.NewStream(bytes.NewReader(this._raw_Data))
-		tmp32 := NewAvi_StrhBody()
-		err = tmp32.Read(_io__raw_Data, this, this._root)
+		tmp24 := NewAvi_StrhBody()
+		err = tmp24.Read(_io__raw_Data, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Data = tmp32
+		this.Data = tmp24
 	default:
-		tmp33, err := this._io.ReadBytes(int(this.BlockSize))
+		tmp25, err := this._io.ReadBytes(int(this.BlockSize))
 		if err != nil {
 			return err
 		}
-		tmp33 = tmp33
-		this._raw_Data = tmp33
+		tmp25 = tmp25
+		this._raw_Data = tmp25
 	}
+	return err
+}
+type Avi_Blocks struct {
+	Entries []*Avi_Block
+	_io *kaitai.Stream
+	_root *Avi
+	_parent kaitai.Struct
+}
+func NewAvi_Blocks() *Avi_Blocks {
+	return &Avi_Blocks{
+	}
+}
+
+func (this Avi_Blocks) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Avi_Blocks) Read(io *kaitai.Stream, parent kaitai.Struct, root *Avi) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	for i := 0;; i++ {
+		tmp26, err := this._io.EOF()
+		if err != nil {
+			return err
+		}
+		if tmp26 {
+			break
+		}
+		tmp27 := NewAvi_Block()
+		err = tmp27.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Entries = append(this.Entries, tmp27)
+	}
+	return err
+}
+type Avi_ListBody struct {
+	ListType Avi_ChunkType
+	Data *Avi_Blocks
+	_io *kaitai.Stream
+	_root *Avi
+	_parent *Avi_Block
+}
+func NewAvi_ListBody() *Avi_ListBody {
+	return &Avi_ListBody{
+	}
+}
+
+func (this Avi_ListBody) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Avi_ListBody) Read(io *kaitai.Stream, parent *Avi_Block, root *Avi) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp28, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.ListType = Avi_ChunkType(tmp28)
+	tmp29 := NewAvi_Blocks()
+	err = tmp29.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Data = tmp29
+	return err
+}
+type Avi_Rect struct {
+	Left int16
+	Top int16
+	Right int16
+	Bottom int16
+	_io *kaitai.Stream
+	_root *Avi
+	_parent *Avi_StrhBody
+}
+func NewAvi_Rect() *Avi_Rect {
+	return &Avi_Rect{
+	}
+}
+
+func (this Avi_Rect) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Avi_Rect) Read(io *kaitai.Stream, parent *Avi_StrhBody, root *Avi) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp30, err := this._io.ReadS2le()
+	if err != nil {
+		return err
+	}
+	this.Left = int16(tmp30)
+	tmp31, err := this._io.ReadS2le()
+	if err != nil {
+		return err
+	}
+	this.Top = int16(tmp31)
+	tmp32, err := this._io.ReadS2le()
+	if err != nil {
+		return err
+	}
+	this.Right = int16(tmp32)
+	tmp33, err := this._io.ReadS2le()
+	if err != nil {
+		return err
+	}
+	this.Bottom = int16(tmp33)
+	return err
+}
+
+/**
+ * Stream format description
+ */
+type Avi_StrfBody struct {
+	_io *kaitai.Stream
+	_root *Avi
+	_parent kaitai.Struct
+}
+func NewAvi_StrfBody() *Avi_StrfBody {
+	return &Avi_StrfBody{
+	}
+}
+
+func (this Avi_StrfBody) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Avi_StrfBody) Read(io *kaitai.Stream, parent kaitai.Struct, root *Avi) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
 	return err
 }
 
@@ -401,6 +465,10 @@ type Avi_StrhBody struct {
 func NewAvi_StrhBody() *Avi_StrhBody {
 	return &Avi_StrhBody{
 	}
+}
+
+func (this Avi_StrhBody) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Avi_StrhBody) Read(io *kaitai.Stream, parent *Avi_Block, root *Avi) (err error) {
@@ -489,24 +557,3 @@ func (this *Avi_StrhBody) Read(io *kaitai.Stream, parent *Avi_Block, root *Avi) 
 /**
  * Type of preferred data handler for the stream (specifies codec for audio / video streams)
  */
-
-/**
- * Stream format description
- */
-type Avi_StrfBody struct {
-	_io *kaitai.Stream
-	_root *Avi
-	_parent interface{}
-}
-func NewAvi_StrfBody() *Avi_StrfBody {
-	return &Avi_StrfBody{
-	}
-}
-
-func (this *Avi_StrfBody) Read(io *kaitai.Stream, parent interface{}, root *Avi) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	return err
-}

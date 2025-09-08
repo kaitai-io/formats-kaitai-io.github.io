@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -25,6 +25,11 @@ end
 # @see https://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt Source
 class Pcx < Kaitai::Struct::Struct
 
+  ENCODINGS = {
+    1 => :encodings_rle,
+  }
+  I__ENCODINGS = ENCODINGS.invert
+
   VERSIONS = {
     0 => :versions_v2_5,
     2 => :versions_v2_8_with_palette,
@@ -33,34 +38,28 @@ class Pcx < Kaitai::Struct::Struct
     5 => :versions_v3_0,
   }
   I__VERSIONS = VERSIONS.invert
-
-  ENCODINGS = {
-    1 => :encodings_rle,
-  }
-  I__ENCODINGS = ENCODINGS.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
-    @_raw_hdr = @_io.read_bytes(128)
-    _io__raw_hdr = Kaitai::Struct::Stream.new(@_raw_hdr)
-    @hdr = Header.new(_io__raw_hdr, self, @_root)
+    _io_hdr = @_io.substream(128)
+    @hdr = Header.new(_io_hdr, self, @_root)
     self
   end
 
   ##
   # @see https://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt - "ZSoft .PCX FILE HEADER FORMAT"
   class Header < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
       @magic = @_io.read_bytes(1)
-      raise Kaitai::Struct::ValidationNotEqualError.new([10].pack('C*'), magic, _io, "/types/header/seq/0") if not magic == [10].pack('C*')
+      raise Kaitai::Struct::ValidationNotEqualError.new([10].pack('C*'), @magic, @_io, "/types/header/seq/0") if not @magic == [10].pack('C*')
       @version = Kaitai::Struct::Stream::resolve_enum(Pcx::VERSIONS, @_io.read_u1)
       @encoding = Kaitai::Struct::Stream::resolve_enum(Pcx::ENCODINGS, @_io.read_u1)
       @bits_per_pixel = @_io.read_u1
@@ -72,7 +71,7 @@ class Pcx < Kaitai::Struct::Struct
       @vdpi = @_io.read_u2le
       @palette_16 = @_io.read_bytes(48)
       @reserved = @_io.read_bytes(1)
-      raise Kaitai::Struct::ValidationNotEqualError.new([0].pack('C*'), reserved, _io, "/types/header/seq/11") if not reserved == [0].pack('C*')
+      raise Kaitai::Struct::ValidationNotEqualError.new([0].pack('C*'), @reserved, @_io, "/types/header/seq/11") if not @reserved == [0].pack('C*')
       @num_planes = @_io.read_u1
       @bytes_per_line = @_io.read_u2le
       @palette_info = @_io.read_u2le
@@ -105,26 +104,8 @@ class Pcx < Kaitai::Struct::Struct
     attr_reader :h_screen_size
     attr_reader :v_screen_size
   end
-  class TPalette256 < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @magic = @_io.read_bytes(1)
-      raise Kaitai::Struct::ValidationNotEqualError.new([12].pack('C*'), magic, _io, "/types/t_palette_256/seq/0") if not magic == [12].pack('C*')
-      @colors = []
-      (256).times { |i|
-        @colors << Rgb.new(@_io, self, @_root)
-      }
-      self
-    end
-    attr_reader :magic
-    attr_reader :colors
-  end
   class Rgb < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -139,6 +120,24 @@ class Pcx < Kaitai::Struct::Struct
     attr_reader :g
     attr_reader :b
   end
+  class TPalette256 < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @magic = @_io.read_bytes(1)
+      raise Kaitai::Struct::ValidationNotEqualError.new([12].pack('C*'), @magic, @_io, "/types/t_palette_256/seq/0") if not @magic == [12].pack('C*')
+      @colors = []
+      (256).times { |i|
+        @colors << Rgb.new(@_io, self, @_root)
+      }
+      self
+    end
+    attr_reader :magic
+    attr_reader :colors
+  end
 
   ##
   # @see https://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt - "VGA 256 Color Palette Information"
@@ -146,7 +145,7 @@ class Pcx < Kaitai::Struct::Struct
     return @palette_256 unless @palette_256.nil?
     if  ((hdr.version == :versions_v3_0) && (hdr.bits_per_pixel == 8) && (hdr.num_planes == 1)) 
       _pos = @_io.pos
-      @_io.seek((_io.size - 769))
+      @_io.seek(_io.size - 769)
       @palette_256 = TPalette256.new(@_io, self, @_root)
       @_io.seek(_pos)
     end

@@ -2,13 +2,16 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class some_ip_sd_options_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
 #include <vector>
+#include <set>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -36,18 +39,18 @@ public:
     class sd_option_t : public kaitai::kstruct {
 
     public:
-        class sd_option_header_t;
+        class sd_config_kv_pair_t;
         class sd_config_string_t;
         class sd_config_strings_container_t;
         class sd_configuration_option_t;
+        class sd_ipv4_endpoint_option_t;
         class sd_ipv4_multicast_option_t;
         class sd_ipv4_sd_endpoint_option_t;
-        class sd_ipv6_multicast_option_t;
-        class sd_config_kv_pair_t;
-        class sd_ipv6_sd_endpoint_option_t;
-        class sd_ipv4_endpoint_option_t;
         class sd_ipv6_endpoint_option_t;
+        class sd_ipv6_multicast_option_t;
+        class sd_ipv6_sd_endpoint_option_t;
         class sd_load_balancing_option_t;
+        class sd_option_header_t;
 
         enum option_types_t {
             OPTION_TYPES_CONFIGURATION_OPTION = 1,
@@ -59,6 +62,12 @@ public:
             OPTION_TYPES_IPV4_SD_ENDPOINT_OPTION = 36,
             OPTION_TYPES_IPV6_SD_ENDPOINT_OPTION = 38
         };
+        static bool _is_defined_option_types_t(option_types_t v);
+
+    private:
+        static const std::set<option_types_t> _values_option_types_t;
+
+    public:
 
         sd_option_t(kaitai::kstream* p__io, some_ip_sd_options_t* p__parent = nullptr, some_ip_sd_options_t* p__root = nullptr);
 
@@ -69,30 +78,30 @@ public:
     public:
         ~sd_option_t();
 
-        class sd_option_header_t : public kaitai::kstruct {
+        class sd_config_kv_pair_t : public kaitai::kstruct {
 
         public:
 
-            sd_option_header_t(kaitai::kstream* p__io, some_ip_sd_options_t::sd_option_t* p__parent = nullptr, some_ip_sd_options_t* p__root = nullptr);
+            sd_config_kv_pair_t(kaitai::kstream* p__io, some_ip_sd_options_t::sd_option_t::sd_config_string_t* p__parent = nullptr, some_ip_sd_options_t* p__root = nullptr);
 
         private:
             void _read();
             void _clean_up();
 
         public:
-            ~sd_option_header_t();
+            ~sd_config_kv_pair_t();
 
         private:
-            uint16_t m_length;
-            option_types_t m_type;
+            std::string m_key;
+            std::string m_value;
             some_ip_sd_options_t* m__root;
-            some_ip_sd_options_t::sd_option_t* m__parent;
+            some_ip_sd_options_t::sd_option_t::sd_config_string_t* m__parent;
 
         public:
-            uint16_t length() const { return m_length; }
-            option_types_t type() const { return m_type; }
+            std::string key() const { return m_key; }
+            std::string value() const { return m_value; }
             some_ip_sd_options_t* _root() const { return m__root; }
-            some_ip_sd_options_t::sd_option_t* _parent() const { return m__parent; }
+            some_ip_sd_options_t::sd_option_t::sd_config_string_t* _parent() const { return m__parent; }
         };
 
         class sd_config_string_t : public kaitai::kstruct {
@@ -191,6 +200,38 @@ public:
             kaitai::kstream* _io__raw_configurations() const { return m__io__raw_configurations.get(); }
         };
 
+        class sd_ipv4_endpoint_option_t : public kaitai::kstruct {
+
+        public:
+
+            sd_ipv4_endpoint_option_t(kaitai::kstream* p__io, some_ip_sd_options_t::sd_option_t* p__parent = nullptr, some_ip_sd_options_t* p__root = nullptr);
+
+        private:
+            void _read();
+            void _clean_up();
+
+        public:
+            ~sd_ipv4_endpoint_option_t();
+
+        private:
+            uint8_t m_reserved;
+            std::string m_address;
+            uint8_t m_reserved2;
+            uint8_t m_l4_protocol;
+            uint16_t m_port;
+            some_ip_sd_options_t* m__root;
+            some_ip_sd_options_t::sd_option_t* m__parent;
+
+        public:
+            uint8_t reserved() const { return m_reserved; }
+            std::string address() const { return m_address; }
+            uint8_t reserved2() const { return m_reserved2; }
+            uint8_t l4_protocol() const { return m_l4_protocol; }
+            uint16_t port() const { return m_port; }
+            some_ip_sd_options_t* _root() const { return m__root; }
+            some_ip_sd_options_t::sd_option_t* _parent() const { return m__parent; }
+        };
+
         class sd_ipv4_multicast_option_t : public kaitai::kstruct {
 
         public:
@@ -255,6 +296,38 @@ public:
             some_ip_sd_options_t::sd_option_t* _parent() const { return m__parent; }
         };
 
+        class sd_ipv6_endpoint_option_t : public kaitai::kstruct {
+
+        public:
+
+            sd_ipv6_endpoint_option_t(kaitai::kstream* p__io, some_ip_sd_options_t::sd_option_t* p__parent = nullptr, some_ip_sd_options_t* p__root = nullptr);
+
+        private:
+            void _read();
+            void _clean_up();
+
+        public:
+            ~sd_ipv6_endpoint_option_t();
+
+        private:
+            uint8_t m_reserved;
+            std::string m_address;
+            uint8_t m_reserved2;
+            uint8_t m_l4_protocol;
+            uint16_t m_port;
+            some_ip_sd_options_t* m__root;
+            some_ip_sd_options_t::sd_option_t* m__parent;
+
+        public:
+            uint8_t reserved() const { return m_reserved; }
+            std::string address() const { return m_address; }
+            uint8_t reserved2() const { return m_reserved2; }
+            uint8_t l4_protocol() const { return m_l4_protocol; }
+            uint16_t port() const { return m_port; }
+            some_ip_sd_options_t* _root() const { return m__root; }
+            some_ip_sd_options_t::sd_option_t* _parent() const { return m__parent; }
+        };
+
         class sd_ipv6_multicast_option_t : public kaitai::kstruct {
 
         public:
@@ -287,32 +360,6 @@ public:
             some_ip_sd_options_t::sd_option_t* _parent() const { return m__parent; }
         };
 
-        class sd_config_kv_pair_t : public kaitai::kstruct {
-
-        public:
-
-            sd_config_kv_pair_t(kaitai::kstream* p__io, some_ip_sd_options_t::sd_option_t::sd_config_string_t* p__parent = nullptr, some_ip_sd_options_t* p__root = nullptr);
-
-        private:
-            void _read();
-            void _clean_up();
-
-        public:
-            ~sd_config_kv_pair_t();
-
-        private:
-            std::string m_key;
-            std::string m_value;
-            some_ip_sd_options_t* m__root;
-            some_ip_sd_options_t::sd_option_t::sd_config_string_t* m__parent;
-
-        public:
-            std::string key() const { return m_key; }
-            std::string value() const { return m_value; }
-            some_ip_sd_options_t* _root() const { return m__root; }
-            some_ip_sd_options_t::sd_option_t::sd_config_string_t* _parent() const { return m__parent; }
-        };
-
         class sd_ipv6_sd_endpoint_option_t : public kaitai::kstruct {
 
         public:
@@ -325,70 +372,6 @@ public:
 
         public:
             ~sd_ipv6_sd_endpoint_option_t();
-
-        private:
-            uint8_t m_reserved;
-            std::string m_address;
-            uint8_t m_reserved2;
-            uint8_t m_l4_protocol;
-            uint16_t m_port;
-            some_ip_sd_options_t* m__root;
-            some_ip_sd_options_t::sd_option_t* m__parent;
-
-        public:
-            uint8_t reserved() const { return m_reserved; }
-            std::string address() const { return m_address; }
-            uint8_t reserved2() const { return m_reserved2; }
-            uint8_t l4_protocol() const { return m_l4_protocol; }
-            uint16_t port() const { return m_port; }
-            some_ip_sd_options_t* _root() const { return m__root; }
-            some_ip_sd_options_t::sd_option_t* _parent() const { return m__parent; }
-        };
-
-        class sd_ipv4_endpoint_option_t : public kaitai::kstruct {
-
-        public:
-
-            sd_ipv4_endpoint_option_t(kaitai::kstream* p__io, some_ip_sd_options_t::sd_option_t* p__parent = nullptr, some_ip_sd_options_t* p__root = nullptr);
-
-        private:
-            void _read();
-            void _clean_up();
-
-        public:
-            ~sd_ipv4_endpoint_option_t();
-
-        private:
-            uint8_t m_reserved;
-            std::string m_address;
-            uint8_t m_reserved2;
-            uint8_t m_l4_protocol;
-            uint16_t m_port;
-            some_ip_sd_options_t* m__root;
-            some_ip_sd_options_t::sd_option_t* m__parent;
-
-        public:
-            uint8_t reserved() const { return m_reserved; }
-            std::string address() const { return m_address; }
-            uint8_t reserved2() const { return m_reserved2; }
-            uint8_t l4_protocol() const { return m_l4_protocol; }
-            uint16_t port() const { return m_port; }
-            some_ip_sd_options_t* _root() const { return m__root; }
-            some_ip_sd_options_t::sd_option_t* _parent() const { return m__parent; }
-        };
-
-        class sd_ipv6_endpoint_option_t : public kaitai::kstruct {
-
-        public:
-
-            sd_ipv6_endpoint_option_t(kaitai::kstream* p__io, some_ip_sd_options_t::sd_option_t* p__parent = nullptr, some_ip_sd_options_t* p__root = nullptr);
-
-        private:
-            void _read();
-            void _clean_up();
-
-        public:
-            ~sd_ipv6_endpoint_option_t();
 
         private:
             uint8_t m_reserved;
@@ -433,6 +416,32 @@ public:
             uint8_t reserved() const { return m_reserved; }
             uint16_t priority() const { return m_priority; }
             uint16_t weight() const { return m_weight; }
+            some_ip_sd_options_t* _root() const { return m__root; }
+            some_ip_sd_options_t::sd_option_t* _parent() const { return m__parent; }
+        };
+
+        class sd_option_header_t : public kaitai::kstruct {
+
+        public:
+
+            sd_option_header_t(kaitai::kstream* p__io, some_ip_sd_options_t::sd_option_t* p__parent = nullptr, some_ip_sd_options_t* p__root = nullptr);
+
+        private:
+            void _read();
+            void _clean_up();
+
+        public:
+            ~sd_option_header_t();
+
+        private:
+            uint16_t m_length;
+            option_types_t m_type;
+            some_ip_sd_options_t* m__root;
+            some_ip_sd_options_t::sd_option_t* m__parent;
+
+        public:
+            uint16_t length() const { return m_length; }
+            option_types_t type() const { return m_type; }
             some_ip_sd_options_t* _root() const { return m__root; }
             some_ip_sd_options_t::sd_option_t* _parent() const { return m__parent; }
         };

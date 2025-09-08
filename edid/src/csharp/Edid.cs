@@ -15,20 +15,20 @@ namespace Kaitai
         {
             m_parent = p__parent;
             m_root = p__root ?? this;
-            f_mfgYear = false;
-            f_mfgIdCh1 = false;
-            f_mfgIdCh3 = false;
             f_gamma = false;
-            f_mfgStr = false;
+            f_mfgIdCh1 = false;
             f_mfgIdCh2 = false;
+            f_mfgIdCh3 = false;
+            f_mfgStr = false;
+            f_mfgYear = false;
             _read();
         }
         private void _read()
         {
             _magic = m_io.ReadBytes(8);
-            if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 0, 255, 255, 255, 255, 255, 255, 0 }) == 0)))
+            if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 0, 255, 255, 255, 255, 255, 255, 0 }) == 0)))
             {
-                throw new ValidationNotEqualError(new byte[] { 0, 255, 255, 255, 255, 255, 255, 0 }, Magic, M_Io, "/seq/0");
+                throw new ValidationNotEqualError(new byte[] { 0, 255, 255, 255, 255, 255, 255, 0 }, _magic, m_io, "/seq/0");
             }
             _mfgBytes = m_io.ReadU2be();
             _productCode = m_io.ReadU2le();
@@ -70,22 +70,22 @@ namespace Kaitai
             {
                 m_parent = p__parent;
                 m_root = p__root;
-                f_greenXInt = false;
-                f_redY = false;
-                f_greenYInt = false;
-                f_whiteY = false;
-                f_redX = false;
-                f_whiteX = false;
                 f_blueX = false;
-                f_whiteXInt = false;
-                f_whiteYInt = false;
-                f_greenX = false;
-                f_redXInt = false;
-                f_redYInt = false;
                 f_blueXInt = false;
                 f_blueY = false;
-                f_greenY = false;
                 f_blueYInt = false;
+                f_greenX = false;
+                f_greenXInt = false;
+                f_greenY = false;
+                f_greenYInt = false;
+                f_redX = false;
+                f_redXInt = false;
+                f_redY = false;
+                f_redYInt = false;
+                f_whiteX = false;
+                f_whiteXInt = false;
+                f_whiteY = false;
+                f_whiteYInt = false;
                 _read();
             }
             private void _read()
@@ -108,100 +108,6 @@ namespace Kaitai
                 _whiteX92 = m_io.ReadU1();
                 _whiteY92 = m_io.ReadU1();
             }
-            private bool f_greenXInt;
-            private int _greenXInt;
-            public int GreenXInt
-            {
-                get
-                {
-                    if (f_greenXInt)
-                        return _greenXInt;
-                    _greenXInt = (int) (((GreenX92 << 2) | GreenX10));
-                    f_greenXInt = true;
-                    return _greenXInt;
-                }
-            }
-            private bool f_redY;
-            private double _redY;
-
-            /// <summary>
-            /// Red Y coordinate
-            /// </summary>
-            public double RedY
-            {
-                get
-                {
-                    if (f_redY)
-                        return _redY;
-                    _redY = (double) ((RedYInt / 1024.0));
-                    f_redY = true;
-                    return _redY;
-                }
-            }
-            private bool f_greenYInt;
-            private int _greenYInt;
-            public int GreenYInt
-            {
-                get
-                {
-                    if (f_greenYInt)
-                        return _greenYInt;
-                    _greenYInt = (int) (((GreenY92 << 2) | GreenY10));
-                    f_greenYInt = true;
-                    return _greenYInt;
-                }
-            }
-            private bool f_whiteY;
-            private double _whiteY;
-
-            /// <summary>
-            /// White Y coordinate
-            /// </summary>
-            public double WhiteY
-            {
-                get
-                {
-                    if (f_whiteY)
-                        return _whiteY;
-                    _whiteY = (double) ((WhiteYInt / 1024.0));
-                    f_whiteY = true;
-                    return _whiteY;
-                }
-            }
-            private bool f_redX;
-            private double _redX;
-
-            /// <summary>
-            /// Red X coordinate
-            /// </summary>
-            public double RedX
-            {
-                get
-                {
-                    if (f_redX)
-                        return _redX;
-                    _redX = (double) ((RedXInt / 1024.0));
-                    f_redX = true;
-                    return _redX;
-                }
-            }
-            private bool f_whiteX;
-            private double _whiteX;
-
-            /// <summary>
-            /// White X coordinate
-            /// </summary>
-            public double WhiteX
-            {
-                get
-                {
-                    if (f_whiteX)
-                        return _whiteX;
-                    _whiteX = (double) ((WhiteXInt / 1024.0));
-                    f_whiteX = true;
-                    return _whiteX;
-                }
-            }
             private bool f_blueX;
             private double _blueX;
 
@@ -214,78 +120,9 @@ namespace Kaitai
                 {
                     if (f_blueX)
                         return _blueX;
-                    _blueX = (double) ((BlueXInt / 1024.0));
                     f_blueX = true;
+                    _blueX = (double) (BlueXInt / 1024.0);
                     return _blueX;
-                }
-            }
-            private bool f_whiteXInt;
-            private int _whiteXInt;
-            public int WhiteXInt
-            {
-                get
-                {
-                    if (f_whiteXInt)
-                        return _whiteXInt;
-                    _whiteXInt = (int) (((WhiteX92 << 2) | WhiteX10));
-                    f_whiteXInt = true;
-                    return _whiteXInt;
-                }
-            }
-            private bool f_whiteYInt;
-            private int _whiteYInt;
-            public int WhiteYInt
-            {
-                get
-                {
-                    if (f_whiteYInt)
-                        return _whiteYInt;
-                    _whiteYInt = (int) (((WhiteY92 << 2) | WhiteY10));
-                    f_whiteYInt = true;
-                    return _whiteYInt;
-                }
-            }
-            private bool f_greenX;
-            private double _greenX;
-
-            /// <summary>
-            /// Green X coordinate
-            /// </summary>
-            public double GreenX
-            {
-                get
-                {
-                    if (f_greenX)
-                        return _greenX;
-                    _greenX = (double) ((GreenXInt / 1024.0));
-                    f_greenX = true;
-                    return _greenX;
-                }
-            }
-            private bool f_redXInt;
-            private int _redXInt;
-            public int RedXInt
-            {
-                get
-                {
-                    if (f_redXInt)
-                        return _redXInt;
-                    _redXInt = (int) (((RedX92 << 2) | RedX10));
-                    f_redXInt = true;
-                    return _redXInt;
-                }
-            }
-            private bool f_redYInt;
-            private int _redYInt;
-            public int RedYInt
-            {
-                get
-                {
-                    if (f_redYInt)
-                        return _redYInt;
-                    _redYInt = (int) (((RedY92 << 2) | RedY10));
-                    f_redYInt = true;
-                    return _redYInt;
                 }
             }
             private bool f_blueXInt;
@@ -296,8 +133,8 @@ namespace Kaitai
                 {
                     if (f_blueXInt)
                         return _blueXInt;
-                    _blueXInt = (int) (((BlueX92 << 2) | BlueX10));
                     f_blueXInt = true;
+                    _blueXInt = (int) (BlueX92 << 2 | BlueX10);
                     return _blueXInt;
                 }
             }
@@ -313,9 +150,52 @@ namespace Kaitai
                 {
                     if (f_blueY)
                         return _blueY;
-                    _blueY = (double) ((BlueYInt / 1024.0));
                     f_blueY = true;
+                    _blueY = (double) (BlueYInt / 1024.0);
                     return _blueY;
+                }
+            }
+            private bool f_blueYInt;
+            private int _blueYInt;
+            public int BlueYInt
+            {
+                get
+                {
+                    if (f_blueYInt)
+                        return _blueYInt;
+                    f_blueYInt = true;
+                    _blueYInt = (int) (BlueY92 << 2 | BlueY10);
+                    return _blueYInt;
+                }
+            }
+            private bool f_greenX;
+            private double _greenX;
+
+            /// <summary>
+            /// Green X coordinate
+            /// </summary>
+            public double GreenX
+            {
+                get
+                {
+                    if (f_greenX)
+                        return _greenX;
+                    f_greenX = true;
+                    _greenX = (double) (GreenXInt / 1024.0);
+                    return _greenX;
+                }
+            }
+            private bool f_greenXInt;
+            private int _greenXInt;
+            public int GreenXInt
+            {
+                get
+                {
+                    if (f_greenXInt)
+                        return _greenXInt;
+                    f_greenXInt = true;
+                    _greenXInt = (int) (GreenX92 << 2 | GreenX10);
+                    return _greenXInt;
                 }
             }
             private bool f_greenY;
@@ -330,22 +210,142 @@ namespace Kaitai
                 {
                     if (f_greenY)
                         return _greenY;
-                    _greenY = (double) ((GreenYInt / 1024.0));
                     f_greenY = true;
+                    _greenY = (double) (GreenYInt / 1024.0);
                     return _greenY;
                 }
             }
-            private bool f_blueYInt;
-            private int _blueYInt;
-            public int BlueYInt
+            private bool f_greenYInt;
+            private int _greenYInt;
+            public int GreenYInt
             {
                 get
                 {
-                    if (f_blueYInt)
-                        return _blueYInt;
-                    _blueYInt = (int) (((BlueY92 << 2) | BlueY10));
-                    f_blueYInt = true;
-                    return _blueYInt;
+                    if (f_greenYInt)
+                        return _greenYInt;
+                    f_greenYInt = true;
+                    _greenYInt = (int) (GreenY92 << 2 | GreenY10);
+                    return _greenYInt;
+                }
+            }
+            private bool f_redX;
+            private double _redX;
+
+            /// <summary>
+            /// Red X coordinate
+            /// </summary>
+            public double RedX
+            {
+                get
+                {
+                    if (f_redX)
+                        return _redX;
+                    f_redX = true;
+                    _redX = (double) (RedXInt / 1024.0);
+                    return _redX;
+                }
+            }
+            private bool f_redXInt;
+            private int _redXInt;
+            public int RedXInt
+            {
+                get
+                {
+                    if (f_redXInt)
+                        return _redXInt;
+                    f_redXInt = true;
+                    _redXInt = (int) (RedX92 << 2 | RedX10);
+                    return _redXInt;
+                }
+            }
+            private bool f_redY;
+            private double _redY;
+
+            /// <summary>
+            /// Red Y coordinate
+            /// </summary>
+            public double RedY
+            {
+                get
+                {
+                    if (f_redY)
+                        return _redY;
+                    f_redY = true;
+                    _redY = (double) (RedYInt / 1024.0);
+                    return _redY;
+                }
+            }
+            private bool f_redYInt;
+            private int _redYInt;
+            public int RedYInt
+            {
+                get
+                {
+                    if (f_redYInt)
+                        return _redYInt;
+                    f_redYInt = true;
+                    _redYInt = (int) (RedY92 << 2 | RedY10);
+                    return _redYInt;
+                }
+            }
+            private bool f_whiteX;
+            private double _whiteX;
+
+            /// <summary>
+            /// White X coordinate
+            /// </summary>
+            public double WhiteX
+            {
+                get
+                {
+                    if (f_whiteX)
+                        return _whiteX;
+                    f_whiteX = true;
+                    _whiteX = (double) (WhiteXInt / 1024.0);
+                    return _whiteX;
+                }
+            }
+            private bool f_whiteXInt;
+            private int _whiteXInt;
+            public int WhiteXInt
+            {
+                get
+                {
+                    if (f_whiteXInt)
+                        return _whiteXInt;
+                    f_whiteXInt = true;
+                    _whiteXInt = (int) (WhiteX92 << 2 | WhiteX10);
+                    return _whiteXInt;
+                }
+            }
+            private bool f_whiteY;
+            private double _whiteY;
+
+            /// <summary>
+            /// White Y coordinate
+            /// </summary>
+            public double WhiteY
+            {
+                get
+                {
+                    if (f_whiteY)
+                        return _whiteY;
+                    f_whiteY = true;
+                    _whiteY = (double) (WhiteYInt / 1024.0);
+                    return _whiteY;
+                }
+            }
+            private bool f_whiteYInt;
+            private int _whiteYInt;
+            public int WhiteYInt
+            {
+                get
+                {
+                    if (f_whiteYInt)
+                        return _whiteYInt;
+                    f_whiteYInt = true;
+                    _whiteYInt = (int) (WhiteY92 << 2 | WhiteY10);
+                    return _whiteYInt;
                 }
             }
             private ulong _redX10;
@@ -612,8 +612,8 @@ namespace Kaitai
                 m_parent = p__parent;
                 m_root = p__root;
                 f_bytesLookahead = false;
-                f_isUsed = false;
                 f_horizActivePixels = false;
+                f_isUsed = false;
                 f_refreshRate = false;
                 _read();
             }
@@ -631,25 +631,12 @@ namespace Kaitai
                 {
                     if (f_bytesLookahead)
                         return _bytesLookahead;
+                    f_bytesLookahead = true;
                     long _pos = m_io.Pos;
                     m_io.Seek(0);
                     _bytesLookahead = m_io.ReadBytes(2);
                     m_io.Seek(_pos);
-                    f_bytesLookahead = true;
                     return _bytesLookahead;
-                }
-            }
-            private bool f_isUsed;
-            private bool _isUsed;
-            public bool IsUsed
-            {
-                get
-                {
-                    if (f_isUsed)
-                        return _isUsed;
-                    _isUsed = (bool) ((KaitaiStream.ByteArrayCompare(BytesLookahead, new byte[] { 1, 1 }) != 0));
-                    f_isUsed = true;
-                    return _isUsed;
                 }
             }
             private bool f_horizActivePixels;
@@ -664,11 +651,24 @@ namespace Kaitai
                 {
                     if (f_horizActivePixels)
                         return _horizActivePixels;
-                    if (IsUsed) {
-                        _horizActivePixels = (int) (((HorizActivePixelsMod + 31) * 8));
-                    }
                     f_horizActivePixels = true;
+                    if (IsUsed) {
+                        _horizActivePixels = (int) ((HorizActivePixelsMod + 31) * 8);
+                    }
                     return _horizActivePixels;
+                }
+            }
+            private bool f_isUsed;
+            private bool _isUsed;
+            public bool IsUsed
+            {
+                get
+                {
+                    if (f_isUsed)
+                        return _isUsed;
+                    f_isUsed = true;
+                    _isUsed = (bool) ((KaitaiStream.ByteArrayCompare(BytesLookahead, new byte[] { 1, 1 }) != 0));
+                    return _isUsed;
                 }
             }
             private bool f_refreshRate;
@@ -683,10 +683,10 @@ namespace Kaitai
                 {
                     if (f_refreshRate)
                         return _refreshRate;
-                    if (IsUsed) {
-                        _refreshRate = (int) ((RefreshRateMod + 60));
-                    }
                     f_refreshRate = true;
+                    if (IsUsed) {
+                        _refreshRate = (int) (RefreshRateMod + 60);
+                    }
                     return _refreshRate;
                 }
             }
@@ -717,17 +717,19 @@ namespace Kaitai
             public Edid M_Root { get { return m_root; } }
             public Edid M_Parent { get { return m_parent; } }
         }
-        private bool f_mfgYear;
-        private int _mfgYear;
-        public int MfgYear
+        private bool f_gamma;
+        private double? _gamma;
+        public double? Gamma
         {
             get
             {
-                if (f_mfgYear)
-                    return _mfgYear;
-                _mfgYear = (int) ((MfgYearMod + 1990));
-                f_mfgYear = true;
-                return _mfgYear;
+                if (f_gamma)
+                    return _gamma;
+                f_gamma = true;
+                if (GammaMod != 255) {
+                    _gamma = (double) ((GammaMod + 100) / 100.0);
+                }
+                return _gamma;
             }
         }
         private bool f_mfgIdCh1;
@@ -738,50 +740,9 @@ namespace Kaitai
             {
                 if (f_mfgIdCh1)
                     return _mfgIdCh1;
-                _mfgIdCh1 = (int) (((MfgBytes & 31744) >> 10));
                 f_mfgIdCh1 = true;
+                _mfgIdCh1 = (int) ((MfgBytes & 31744) >> 10);
                 return _mfgIdCh1;
-            }
-        }
-        private bool f_mfgIdCh3;
-        private int _mfgIdCh3;
-        public int MfgIdCh3
-        {
-            get
-            {
-                if (f_mfgIdCh3)
-                    return _mfgIdCh3;
-                _mfgIdCh3 = (int) ((MfgBytes & 31));
-                f_mfgIdCh3 = true;
-                return _mfgIdCh3;
-            }
-        }
-        private bool f_gamma;
-        private double? _gamma;
-        public double? Gamma
-        {
-            get
-            {
-                if (f_gamma)
-                    return _gamma;
-                if (GammaMod != 255) {
-                    _gamma = (double) (((GammaMod + 100) / 100.0));
-                }
-                f_gamma = true;
-                return _gamma;
-            }
-        }
-        private bool f_mfgStr;
-        private string _mfgStr;
-        public string MfgStr
-        {
-            get
-            {
-                if (f_mfgStr)
-                    return _mfgStr;
-                _mfgStr = (string) (System.Text.Encoding.GetEncoding("ASCII").GetString(new byte[] { (MfgIdCh1 + 64), (MfgIdCh2 + 64), (MfgIdCh3 + 64) }));
-                f_mfgStr = true;
-                return _mfgStr;
             }
         }
         private bool f_mfgIdCh2;
@@ -792,9 +753,48 @@ namespace Kaitai
             {
                 if (f_mfgIdCh2)
                     return _mfgIdCh2;
-                _mfgIdCh2 = (int) (((MfgBytes & 992) >> 5));
                 f_mfgIdCh2 = true;
+                _mfgIdCh2 = (int) ((MfgBytes & 992) >> 5);
                 return _mfgIdCh2;
+            }
+        }
+        private bool f_mfgIdCh3;
+        private int _mfgIdCh3;
+        public int MfgIdCh3
+        {
+            get
+            {
+                if (f_mfgIdCh3)
+                    return _mfgIdCh3;
+                f_mfgIdCh3 = true;
+                _mfgIdCh3 = (int) (MfgBytes & 31);
+                return _mfgIdCh3;
+            }
+        }
+        private bool f_mfgStr;
+        private string _mfgStr;
+        public string MfgStr
+        {
+            get
+            {
+                if (f_mfgStr)
+                    return _mfgStr;
+                f_mfgStr = true;
+                _mfgStr = (string) (System.Text.Encoding.GetEncoding("ASCII").GetString(new byte[] { MfgIdCh1 + 64, MfgIdCh2 + 64, MfgIdCh3 + 64 }));
+                return _mfgStr;
+            }
+        }
+        private bool f_mfgYear;
+        private int _mfgYear;
+        public int MfgYear
+        {
+            get
+            {
+                if (f_mfgYear)
+                    return _mfgYear;
+                f_mfgYear = true;
+                _mfgYear = (int) (MfgYearMod + 1990);
+                return _mfgYear;
             }
         }
         private byte[] _magic;

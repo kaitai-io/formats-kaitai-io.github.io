@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.HeapsPak = factory(root.KaitaiStream);
+    factory(root.HeapsPak || (root.HeapsPak = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (HeapsPak_, KaitaiStream) {
 /**
  * @see {@link https://github.com/HeapsIO/heaps/blob/2bbc2b386952dfd8856c04a854bb706a52cb4b58/hxd/fmt/pak/Reader.hx|Source}
  */
@@ -29,26 +29,45 @@ var HeapsPak = (function() {
     function Header(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     Header.prototype._read = function() {
       this.magic1 = this._io.readBytes(3);
-      if (!((KaitaiStream.byteArrayCompare(this.magic1, [80, 65, 75]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([80, 65, 75], this.magic1, this._io, "/types/header/seq/0");
+      if (!((KaitaiStream.byteArrayCompare(this.magic1, new Uint8Array([80, 65, 75])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([80, 65, 75]), this.magic1, this._io, "/types/header/seq/0");
       }
       this.version = this._io.readU1();
       this.lenHeader = this._io.readU4le();
       this.lenData = this._io.readU4le();
-      this._raw_rootEntry = this._io.readBytes((this.lenHeader - 16));
+      this._raw_rootEntry = this._io.readBytes(this.lenHeader - 16);
       var _io__raw_rootEntry = new KaitaiStream(this._raw_rootEntry);
       this.rootEntry = new Entry(_io__raw_rootEntry, this, this._root);
       this.magic2 = this._io.readBytes(4);
-      if (!((KaitaiStream.byteArrayCompare(this.magic2, [68, 65, 84, 65]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([68, 65, 84, 65], this.magic2, this._io, "/types/header/seq/5");
+      if (!((KaitaiStream.byteArrayCompare(this.magic2, new Uint8Array([68, 65, 84, 65])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([68, 65, 84, 65]), this.magic2, this._io, "/types/header/seq/5");
       }
     }
+
+    var Dir = Header.Dir = (function() {
+      function Dir(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+
+        this._read();
+      }
+      Dir.prototype._read = function() {
+        this.numEntries = this._io.readU4le();
+        this.entries = [];
+        for (var i = 0; i < this.numEntries; i++) {
+          this.entries.push(new Entry(this._io, this, this._root));
+        }
+      }
+
+      return Dir;
+    })();
 
     /**
      * @see {@link https://github.com/HeapsIO/heaps/blob/2bbc2b386952dfd8856c04a854bb706a52cb4b58/hxd/fmt/pak/Data.hx|Source}
@@ -58,7 +77,7 @@ var HeapsPak = (function() {
       function Entry(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -67,11 +86,11 @@ var HeapsPak = (function() {
         this.name = KaitaiStream.bytesToStr(this._io.readBytes(this.lenName), "UTF-8");
         this.flags = new Flags(this._io, this, this._root);
         switch (this.flags.isDir) {
-        case true:
-          this.body = new Dir(this._io, this, this._root);
-          break;
         case false:
           this.body = new File(this._io, this, this._root);
+          break;
+        case true:
+          this.body = new Dir(this._io, this, this._root);
           break;
         }
       }
@@ -80,7 +99,7 @@ var HeapsPak = (function() {
         function Flags(_io, _parent, _root) {
           this._io = _io;
           this._parent = _parent;
-          this._root = _root || this;
+          this._root = _root;
 
           this._read();
         }
@@ -99,7 +118,7 @@ var HeapsPak = (function() {
       function File(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -114,7 +133,7 @@ var HeapsPak = (function() {
             return this._m_data;
           var io = this._root._io;
           var _pos = io.pos;
-          io.seek((this._root.header.lenHeader + this.ofsData));
+          io.seek(this._root.header.lenHeader + this.ofsData);
           this._m_data = io.readBytes(this.lenData);
           io.seek(_pos);
           return this._m_data;
@@ -124,29 +143,10 @@ var HeapsPak = (function() {
       return File;
     })();
 
-    var Dir = Header.Dir = (function() {
-      function Dir(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      Dir.prototype._read = function() {
-        this.numEntries = this._io.readU4le();
-        this.entries = [];
-        for (var i = 0; i < this.numEntries; i++) {
-          this.entries.push(new Entry(this._io, this, this._root));
-        }
-      }
-
-      return Dir;
-    })();
-
     return Header;
   })();
 
   return HeapsPak;
 })();
-return HeapsPak;
-}));
+HeapsPak_.HeapsPak = HeapsPak;
+});

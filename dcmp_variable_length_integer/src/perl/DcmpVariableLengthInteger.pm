@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 
 ########################################################################
 package DcmpVariableLengthInteger;
@@ -24,7 +24,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -49,7 +49,7 @@ sub _read {
 sub value {
     my ($self) = @_;
     return $self->{value} if ($self->{value});
-    $self->{value} = ($self->first() == 255 ? $self->more() : ($self->first() >= 128 ? ((($self->first() << 8) | $self->more()) - 49152) : $self->first()));
+    $self->{value} = ($self->first() == 255 ? $self->more() : ($self->first() >= 128 ? ($self->first() << 8 | $self->more()) - 49152 : $self->first()));
     return $self->{value};
 }
 

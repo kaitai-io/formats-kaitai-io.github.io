@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -81,14 +81,6 @@ end
 #     * BITMAPV4HEADER (WIN4XBITMAPHEADER)
 class Bmp < Kaitai::Struct::Struct
 
-  INTENT = {
-    1 => :intent_business,
-    2 => :intent_graphics,
-    4 => :intent_images,
-    8 => :intent_abs_colorimetric,
-  }
-  I__INTENT = INTENT.invert
-
   COLOR_SPACE = {
     0 => :color_space_calibrated_rgb,
     1279872587 => :color_space_profile_linked,
@@ -97,25 +89,6 @@ class Bmp < Kaitai::Struct::Struct
     1934772034 => :color_space_s_rgb,
   }
   I__COLOR_SPACE = COLOR_SPACE.invert
-
-  OS2_RENDERING = {
-    0 => :os2_rendering_no_halftoning,
-    1 => :os2_rendering_error_diffusion,
-    2 => :os2_rendering_panda,
-    3 => :os2_rendering_super_circle,
-  }
-  I__OS2_RENDERING = OS2_RENDERING.invert
-
-  HEADER_TYPE = {
-    12 => :header_type_bitmap_core_header,
-    40 => :header_type_bitmap_info_header,
-    52 => :header_type_bitmap_v2_info_header,
-    56 => :header_type_bitmap_v3_info_header,
-    64 => :header_type_os2_2x_bitmap_header,
-    108 => :header_type_bitmap_v4_header,
-    124 => :header_type_bitmap_v5_header,
-  }
-  I__HEADER_TYPE = HEADER_TYPE.invert
 
   COMPRESSIONS = {
     0 => :compressions_rgb,
@@ -128,6 +101,25 @@ class Bmp < Kaitai::Struct::Struct
   }
   I__COMPRESSIONS = COMPRESSIONS.invert
 
+  HEADER_TYPE = {
+    12 => :header_type_bitmap_core_header,
+    40 => :header_type_bitmap_info_header,
+    52 => :header_type_bitmap_v2_info_header,
+    56 => :header_type_bitmap_v3_info_header,
+    64 => :header_type_os2_2x_bitmap_header,
+    108 => :header_type_bitmap_v4_header,
+    124 => :header_type_bitmap_v5_header,
+  }
+  I__HEADER_TYPE = HEADER_TYPE.invert
+
+  INTENT = {
+    1 => :intent_business,
+    2 => :intent_graphics,
+    4 => :intent_images,
+    8 => :intent_abs_colorimetric,
+  }
+  I__INTENT = INTENT.invert
+
   OS2_COMPRESSIONS = {
     0 => :os2_compressions_rgb,
     1 => :os2_compressions_rle8,
@@ -136,16 +128,23 @@ class Bmp < Kaitai::Struct::Struct
     4 => :os2_compressions_rle24,
   }
   I__OS2_COMPRESSIONS = OS2_COMPRESSIONS.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+
+  OS2_RENDERING = {
+    0 => :os2_rendering_no_halftoning,
+    1 => :os2_rendering_error_diffusion,
+    2 => :os2_rendering_panda,
+    3 => :os2_rendering_super_circle,
+  }
+  I__OS2_RENDERING = OS2_RENDERING.invert
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
     @file_hdr = FileHeader.new(@_io, self, @_root)
-    @_raw_dib_info = @_io.read_bytes((file_hdr.ofs_bitmap - 14))
-    _io__raw_dib_info = Kaitai::Struct::Stream.new(@_raw_dib_info)
-    @dib_info = BitmapInfo.new(_io__raw_dib_info, self, @_root)
+    _io_dib_info = @_io.substream(file_hdr.ofs_bitmap - 14)
+    @dib_info = BitmapInfo.new(_io_dib_info, self, @_root)
     @_raw_bitmap = @_io.read_bytes_full
     _io__raw_bitmap = Kaitai::Struct::Stream.new(@_raw_bitmap)
     @bitmap = Bitmap.new(_io__raw_bitmap, self, @_root)
@@ -153,147 +152,208 @@ class Bmp < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-ciexyz Source
-  class CieXyz < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  # Replace with an opaque type if you care about the pixels. You can look at
+  # an example of a JavaScript implementation:
+  # <https://github.com/generalmimon/bmptool/blob/master/src/Bitmap.js>
+  # 
+  # There is a proposal for adding bitmap data type to Kaitai Struct:
+  # <https://github.com/kaitai-io/kaitai_struct/issues/188>
+  class Bitmap < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @x = FixedPoint2Dot30.new(@_io, self, @_root)
-      @y = FixedPoint2Dot30.new(@_io, self, @_root)
-      @z = FixedPoint2Dot30.new(@_io, self, @_root)
       self
     end
-    attr_reader :x
-    attr_reader :y
-    attr_reader :z
-  end
-  class RgbRecord < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self, has_reserved_field)
-      super(_io, _parent, _root)
-      @has_reserved_field = has_reserved_field
-      _read
-    end
-
-    def _read
-      @blue = @_io.read_u1
-      @green = @_io.read_u1
-      @red = @_io.read_u1
-      if has_reserved_field
-        @reserved = @_io.read_u1
-      end
-      self
-    end
-    attr_reader :blue
-    attr_reader :green
-    attr_reader :red
-    attr_reader :reserved
-    attr_reader :has_reserved_field
   end
 
   ##
-  # @see https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv5header Source
-  class BitmapV5Extension < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  # @see https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapcoreheader Source
+  # @see https://www.fileformat.info/format/os2bmp/egff.htm#OS2BMP-DMYID.3.1 Source
+  class BitmapHeader < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil, len_header)
       super(_io, _parent, _root)
+      @len_header = len_header
       _read
     end
 
     def _read
-      @intent = Kaitai::Struct::Stream::resolve_enum(Bmp::INTENT, @_io.read_u4le)
-      @ofs_profile = @_io.read_u4le
-      @len_profile = @_io.read_u4le
-      @reserved = @_io.read_u4le
-      self
-    end
-    def has_profile
-      return @has_profile unless @has_profile.nil?
-      @has_profile =  ((_parent.bitmap_v4_ext.color_space_type == :color_space_profile_linked) || (_parent.bitmap_v4_ext.color_space_type == :color_space_profile_embedded)) 
-      @has_profile
-    end
-
-    ##
-    # @see https://learn.microsoft.com/en-us/windows/win32/wcs/using-structures-in-wcs-1-0 "If the profile is embedded, profile data is the actual profile, and if it is linked, the profile data is the null-terminated file name of the profile. This cannot be a Unicode string. It must be composed exclusively of characters from the Windows character set (code page 1252)."
-    def profile_data
-      return @profile_data unless @profile_data.nil?
-      if has_profile
-        io = _root._io
-        _pos = io.pos
-        io.seek((14 + ofs_profile))
-        case _parent.bitmap_v4_ext.color_space_type == :color_space_profile_linked
-        when true
-          @profile_data = (Kaitai::Struct::Stream::bytes_terminate(io.read_bytes(len_profile), 0, false)).force_encoding("windows-1252")
-        else
-          @profile_data = io.read_bytes(len_profile)
-        end
-        io.seek(_pos)
+      case is_core_header
+      when false
+        @image_width = @_io.read_u4le
+      when true
+        @image_width = @_io.read_u2le
       end
-      @profile_data
-    end
-    attr_reader :intent
-
-    ##
-    # The offset, in bytes, from the beginning of the BITMAPV5HEADER structure to the start of the profile data.
-    attr_reader :ofs_profile
-    attr_reader :len_profile
-    attr_reader :reserved
-  end
-  class ColorMask < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self, has_alpha_mask)
-      super(_io, _parent, _root)
-      @has_alpha_mask = has_alpha_mask
-      _read
-    end
-
-    def _read
-      @red_mask = @_io.read_u4le
-      @green_mask = @_io.read_u4le
-      @blue_mask = @_io.read_u4le
-      if has_alpha_mask
-        @alpha_mask = @_io.read_u4le
+      case is_core_header
+      when false
+        @image_height_raw = @_io.read_s4le
+      when true
+        @image_height_raw = @_io.read_s2le
+      end
+      @num_planes = @_io.read_u2le
+      @bits_per_pixel = @_io.read_u2le
+      if extends_bitmap_info
+        @bitmap_info_ext = BitmapInfoExtension.new(@_io, self, @_root)
+      end
+      if is_color_mask_here
+        @color_mask = ColorMask.new(@_io, self, @_root, len_header != (Bmp::I__HEADER_TYPE[:header_type_bitmap_v2_info_header] || :header_type_bitmap_v2_info_header))
+      end
+      if extends_os2_2x_bitmap
+        @os2_2x_bitmap_ext = Os22xBitmapExtension.new(@_io, self, @_root)
+      end
+      if extends_bitmap_v4
+        @bitmap_v4_ext = BitmapV4Extension.new(@_io, self, @_root)
+      end
+      if extends_bitmap_v5
+        @bitmap_v5_ext = BitmapV5Extension.new(@_io, self, @_root)
       end
       self
     end
-    attr_reader :red_mask
-    attr_reader :green_mask
-    attr_reader :blue_mask
-    attr_reader :alpha_mask
-    attr_reader :has_alpha_mask
+    def bottom_up
+      return @bottom_up unless @bottom_up.nil?
+      @bottom_up = image_height_raw > 0
+      @bottom_up
+    end
+    def extends_bitmap_info
+      return @extends_bitmap_info unless @extends_bitmap_info.nil?
+      @extends_bitmap_info = len_header >= (Bmp::I__HEADER_TYPE[:header_type_bitmap_info_header] || :header_type_bitmap_info_header)
+      @extends_bitmap_info
+    end
+    def extends_bitmap_v4
+      return @extends_bitmap_v4 unless @extends_bitmap_v4.nil?
+      @extends_bitmap_v4 = len_header >= (Bmp::I__HEADER_TYPE[:header_type_bitmap_v4_header] || :header_type_bitmap_v4_header)
+      @extends_bitmap_v4
+    end
+    def extends_bitmap_v5
+      return @extends_bitmap_v5 unless @extends_bitmap_v5.nil?
+      @extends_bitmap_v5 = len_header >= (Bmp::I__HEADER_TYPE[:header_type_bitmap_v5_header] || :header_type_bitmap_v5_header)
+      @extends_bitmap_v5
+    end
+    def extends_os2_2x_bitmap
+      return @extends_os2_2x_bitmap unless @extends_os2_2x_bitmap.nil?
+      @extends_os2_2x_bitmap = len_header == (Bmp::I__HEADER_TYPE[:header_type_os2_2x_bitmap_header] || :header_type_os2_2x_bitmap_header)
+      @extends_os2_2x_bitmap
+    end
+    def image_height
+      return @image_height unless @image_height.nil?
+      @image_height = (image_height_raw < 0 ? -(image_height_raw) : image_height_raw)
+      @image_height
+    end
+    def is_color_mask_here
+      return @is_color_mask_here unless @is_color_mask_here.nil?
+      @is_color_mask_here =  ((len_header == (Bmp::I__HEADER_TYPE[:header_type_bitmap_v2_info_header] || :header_type_bitmap_v2_info_header)) || (len_header == (Bmp::I__HEADER_TYPE[:header_type_bitmap_v3_info_header] || :header_type_bitmap_v3_info_header)) || (extends_bitmap_v4)) 
+      @is_color_mask_here
+    end
+    def is_core_header
+      return @is_core_header unless @is_core_header.nil?
+      @is_core_header = len_header == (Bmp::I__HEADER_TYPE[:header_type_bitmap_core_header] || :header_type_bitmap_core_header)
+      @is_core_header
+    end
+    def uses_fixed_palette
+      return @uses_fixed_palette unless @uses_fixed_palette.nil?
+      @uses_fixed_palette =  ((!( ((bits_per_pixel == 16) || (bits_per_pixel == 24) || (bits_per_pixel == 32)) )) && (!( ((extends_bitmap_info) && (!(extends_os2_2x_bitmap)) && ( ((bitmap_info_ext.compression == :compressions_jpeg) || (bitmap_info_ext.compression == :compressions_png)) )) ))) 
+      @uses_fixed_palette
+    end
+
+    ##
+    # Image width, px
+    attr_reader :image_width
+
+    ##
+    # Image height, px (positive => bottom-up image, negative => top-down image)
+    attr_reader :image_height_raw
+
+    ##
+    # Number of planes for target device, must be 1
+    attr_reader :num_planes
+
+    ##
+    # Number of bits per pixel that image buffer uses (1, 4, 8, 16, 24 or 32)
+    attr_reader :bits_per_pixel
+    attr_reader :bitmap_info_ext
+    attr_reader :color_mask
+    attr_reader :os2_2x_bitmap_ext
+    attr_reader :bitmap_v4_ext
+    attr_reader :bitmap_v5_ext
+    attr_reader :len_header
   end
 
   ##
-  # @see https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv4header Source
-  class BitmapV4Extension < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  # @see https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfo Source
+  class BitmapInfo < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @color_space_type = Kaitai::Struct::Stream::resolve_enum(Bmp::COLOR_SPACE, @_io.read_u4le)
-      @endpoint_red = CieXyz.new(@_io, self, @_root)
-      @endpoint_green = CieXyz.new(@_io, self, @_root)
-      @endpoint_blue = CieXyz.new(@_io, self, @_root)
-      @gamma_red = FixedPoint16Dot16.new(@_io, self, @_root)
-      @gamma_blue = FixedPoint16Dot16.new(@_io, self, @_root)
-      @gamma_green = FixedPoint16Dot16.new(@_io, self, @_root)
+      @len_header = @_io.read_u4le
+      _io_header = @_io.substream(len_header - 4)
+      @header = BitmapHeader.new(_io_header, self, @_root, len_header)
+      if is_color_mask_here
+        @color_mask = ColorMask.new(@_io, self, @_root, header.bitmap_info_ext.compression == :compressions_alpha_bitfields)
+      end
+      if !(_io.eof?)
+        @_raw_color_table = @_io.read_bytes_full
+        _io__raw_color_table = Kaitai::Struct::Stream.new(@_raw_color_table)
+        @color_table = ColorTable.new(_io__raw_color_table, self, @_root, !(header.is_core_header), (header.extends_bitmap_info ? header.bitmap_info_ext.num_colors_used : 0))
+      end
       self
     end
-    attr_reader :color_space_type
-    attr_reader :endpoint_red
-    attr_reader :endpoint_green
-    attr_reader :endpoint_blue
-    attr_reader :gamma_red
-    attr_reader :gamma_blue
-    attr_reader :gamma_green
+    def color_mask_alpha
+      return @color_mask_alpha unless @color_mask_alpha.nil?
+      @color_mask_alpha = ( ((is_color_mask_given) && (color_mask_given.has_alpha_mask))  ? color_mask_given.alpha_mask : 0)
+      @color_mask_alpha
+    end
+    def color_mask_blue
+      return @color_mask_blue unless @color_mask_blue.nil?
+      @color_mask_blue = (is_color_mask_given ? color_mask_given.blue_mask : (header.bits_per_pixel == 16 ? 31 : ( ((header.bits_per_pixel == 24) || (header.bits_per_pixel == 32))  ? 255 : 0)))
+      @color_mask_blue
+    end
+    def color_mask_given
+      return @color_mask_given unless @color_mask_given.nil?
+      if is_color_mask_given
+        @color_mask_given = (is_color_mask_here ? color_mask : header.color_mask)
+      end
+      @color_mask_given
+    end
+    def color_mask_green
+      return @color_mask_green unless @color_mask_green.nil?
+      @color_mask_green = (is_color_mask_given ? color_mask_given.green_mask : (header.bits_per_pixel == 16 ? 992 : ( ((header.bits_per_pixel == 24) || (header.bits_per_pixel == 32))  ? 65280 : 0)))
+      @color_mask_green
+    end
+    def color_mask_red
+      return @color_mask_red unless @color_mask_red.nil?
+      @color_mask_red = (is_color_mask_given ? color_mask_given.red_mask : (header.bits_per_pixel == 16 ? 31744 : ( ((header.bits_per_pixel == 24) || (header.bits_per_pixel == 32))  ? 16711680 : 0)))
+      @color_mask_red
+    end
+    def is_color_mask_given
+      return @is_color_mask_given unless @is_color_mask_given.nil?
+      @is_color_mask_given =  ((header.extends_bitmap_info) && ( ((header.bitmap_info_ext.compression == :compressions_bitfields) || (header.bitmap_info_ext.compression == :compressions_alpha_bitfields)) ) && ( ((is_color_mask_here) || (header.is_color_mask_here)) )) 
+      @is_color_mask_given
+    end
+    def is_color_mask_here
+      return @is_color_mask_here unless @is_color_mask_here.nil?
+      @is_color_mask_here =  ((!(_io.eof?)) && (header.len_header == (Bmp::I__HEADER_TYPE[:header_type_bitmap_info_header] || :header_type_bitmap_info_header)) && ( ((header.bitmap_info_ext.compression == :compressions_bitfields) || (header.bitmap_info_ext.compression == :compressions_alpha_bitfields)) )) 
+      @is_color_mask_here
+    end
+    attr_reader :len_header
+    attr_reader :header
+
+    ##
+    # Valid only for BITMAPINFOHEADER, in all headers extending it the masks are contained in the header itself.
+    attr_reader :color_mask
+    attr_reader :color_table
+    attr_reader :_raw_header
+    attr_reader :_raw_color_table
   end
 
   ##
   # @see https://learn.microsoft.com/en-us/previous-versions/dd183376(v=vs.85) Source
   class BitmapInfoExtension < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -324,8 +384,184 @@ class Bmp < Kaitai::Struct::Struct
     attr_reader :num_colors_used
     attr_reader :num_colors_important
   end
-  class FixedPoint2Dot30 < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+
+  ##
+  # @see https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv4header Source
+  class BitmapV4Extension < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @color_space_type = Kaitai::Struct::Stream::resolve_enum(Bmp::COLOR_SPACE, @_io.read_u4le)
+      @endpoint_red = CieXyz.new(@_io, self, @_root)
+      @endpoint_green = CieXyz.new(@_io, self, @_root)
+      @endpoint_blue = CieXyz.new(@_io, self, @_root)
+      @gamma_red = FixedPoint16Dot16.new(@_io, self, @_root)
+      @gamma_blue = FixedPoint16Dot16.new(@_io, self, @_root)
+      @gamma_green = FixedPoint16Dot16.new(@_io, self, @_root)
+      self
+    end
+    attr_reader :color_space_type
+    attr_reader :endpoint_red
+    attr_reader :endpoint_green
+    attr_reader :endpoint_blue
+    attr_reader :gamma_red
+    attr_reader :gamma_blue
+    attr_reader :gamma_green
+  end
+
+  ##
+  # @see https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv5header Source
+  class BitmapV5Extension < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @intent = Kaitai::Struct::Stream::resolve_enum(Bmp::INTENT, @_io.read_u4le)
+      @ofs_profile = @_io.read_u4le
+      @len_profile = @_io.read_u4le
+      @reserved = @_io.read_u4le
+      self
+    end
+    def has_profile
+      return @has_profile unless @has_profile.nil?
+      @has_profile =  ((_parent.bitmap_v4_ext.color_space_type == :color_space_profile_linked) || (_parent.bitmap_v4_ext.color_space_type == :color_space_profile_embedded)) 
+      @has_profile
+    end
+
+    ##
+    # @see https://learn.microsoft.com/en-us/windows/win32/wcs/using-structures-in-wcs-1-0 "If the profile is embedded, profile data is the actual profile, and if it is linked, the profile data is the null-terminated file name of the profile. This cannot be a Unicode string. It must be composed exclusively of characters from the Windows character set (code page 1252)."
+    def profile_data
+      return @profile_data unless @profile_data.nil?
+      if has_profile
+        io = _root._io
+        _pos = io.pos
+        io.seek(14 + ofs_profile)
+        case _parent.bitmap_v4_ext.color_space_type == :color_space_profile_linked
+        when true
+          @profile_data = (Kaitai::Struct::Stream::bytes_terminate(io.read_bytes(len_profile), 0, false)).force_encoding("windows-1252").encode('UTF-8')
+        else
+          @profile_data = io.read_bytes(len_profile)
+        end
+        io.seek(_pos)
+      end
+      @profile_data
+    end
+    attr_reader :intent
+
+    ##
+    # The offset, in bytes, from the beginning of the BITMAPV5HEADER structure to the start of the profile data.
+    attr_reader :ofs_profile
+    attr_reader :len_profile
+    attr_reader :reserved
+  end
+
+  ##
+  # @see https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-ciexyz Source
+  class CieXyz < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @x = FixedPoint2Dot30.new(@_io, self, @_root)
+      @y = FixedPoint2Dot30.new(@_io, self, @_root)
+      @z = FixedPoint2Dot30.new(@_io, self, @_root)
+      self
+    end
+    attr_reader :x
+    attr_reader :y
+    attr_reader :z
+  end
+  class ColorMask < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil, has_alpha_mask)
+      super(_io, _parent, _root)
+      @has_alpha_mask = has_alpha_mask
+      _read
+    end
+
+    def _read
+      @red_mask = @_io.read_u4le
+      @green_mask = @_io.read_u4le
+      @blue_mask = @_io.read_u4le
+      if has_alpha_mask
+        @alpha_mask = @_io.read_u4le
+      end
+      self
+    end
+    attr_reader :red_mask
+    attr_reader :green_mask
+    attr_reader :blue_mask
+    attr_reader :alpha_mask
+    attr_reader :has_alpha_mask
+  end
+  class ColorTable < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil, has_reserved_field, num_colors)
+      super(_io, _parent, _root)
+      @has_reserved_field = has_reserved_field
+      @num_colors = num_colors
+      _read
+    end
+
+    def _read
+      @colors = []
+      (( ((num_colors > 0) && (num_colors < num_colors_present))  ? num_colors : num_colors_present)).times { |i|
+        @colors << RgbRecord.new(@_io, self, @_root, has_reserved_field)
+      }
+      self
+    end
+    def num_colors_present
+      return @num_colors_present unless @num_colors_present.nil?
+      @num_colors_present = _io.size / (has_reserved_field ? 4 : 3)
+      @num_colors_present
+    end
+    attr_reader :colors
+    attr_reader :has_reserved_field
+
+    ##
+    # If equal to 0, the pallete should contain as many colors as can fit into the pixel value
+    # according to the `bits_per_pixel` field (if `bits_per_pixel` = 8, then the pixel can
+    # represent 2 ** 8 = 256 values, so exactly 256 colors should be present). For more flexibility,
+    # it reads as many colors as it can until EOS is reached (and the image data begin).
+    attr_reader :num_colors
+  end
+
+  ##
+  # @see https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapfileheader Source
+  class FileHeader < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @file_type = @_io.read_bytes(2)
+      raise Kaitai::Struct::ValidationNotEqualError.new([66, 77].pack('C*'), @file_type, @_io, "/types/file_header/seq/0") if not @file_type == [66, 77].pack('C*')
+      @len_file = @_io.read_u4le
+      @reserved1 = @_io.read_u2le
+      @reserved2 = @_io.read_u2le
+      @ofs_bitmap = @_io.read_s4le
+      self
+    end
+    attr_reader :file_type
+
+    ##
+    # not reliable, mostly ignored by BMP decoders
+    attr_reader :len_file
+    attr_reader :reserved1
+    attr_reader :reserved2
+
+    ##
+    # Offset to actual raw pixel data of the image
+    attr_reader :ofs_bitmap
+  end
+  class FixedPoint16Dot16 < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -336,145 +572,33 @@ class Bmp < Kaitai::Struct::Struct
     end
     def value
       return @value unless @value.nil?
-      @value = ((raw + 0.0) / (1 << 30))
+      @value = (raw + 0.0) / (1 << 16)
+      @value
+    end
+    attr_reader :raw
+  end
+  class FixedPoint2Dot30 < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @raw = @_io.read_u4le
+      self
+    end
+    def value
+      return @value unless @value.nil?
+      @value = (raw + 0.0) / (1 << 30)
       @value
     end
     attr_reader :raw
   end
 
   ##
-  # Replace with an opaque type if you care about the pixels. You can look at
-  # an example of a JavaScript implementation:
-  # <https://github.com/generalmimon/bmptool/blob/master/src/Bitmap.js>
-  # 
-  # There is a proposal for adding bitmap data type to Kaitai Struct:
-  # <https://github.com/kaitai-io/kaitai_struct/issues/188>
-  class Bitmap < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      self
-    end
-  end
-
-  ##
-  # @see https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapcoreheader Source
-  # @see https://www.fileformat.info/format/os2bmp/egff.htm#OS2BMP-DMYID.3.1 Source
-  class BitmapHeader < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self, len_header)
-      super(_io, _parent, _root)
-      @len_header = len_header
-      _read
-    end
-
-    def _read
-      case is_core_header
-      when true
-        @image_width = @_io.read_u2le
-      when false
-        @image_width = @_io.read_u4le
-      end
-      case is_core_header
-      when true
-        @image_height_raw = @_io.read_s2le
-      when false
-        @image_height_raw = @_io.read_s4le
-      end
-      @num_planes = @_io.read_u2le
-      @bits_per_pixel = @_io.read_u2le
-      if extends_bitmap_info
-        @bitmap_info_ext = BitmapInfoExtension.new(@_io, self, @_root)
-      end
-      if is_color_mask_here
-        @color_mask = ColorMask.new(@_io, self, @_root, len_header != Bmp::I__HEADER_TYPE[:header_type_bitmap_v2_info_header])
-      end
-      if extends_os2_2x_bitmap
-        @os2_2x_bitmap_ext = Os22xBitmapExtension.new(@_io, self, @_root)
-      end
-      if extends_bitmap_v4
-        @bitmap_v4_ext = BitmapV4Extension.new(@_io, self, @_root)
-      end
-      if extends_bitmap_v5
-        @bitmap_v5_ext = BitmapV5Extension.new(@_io, self, @_root)
-      end
-      self
-    end
-    def extends_bitmap_v4
-      return @extends_bitmap_v4 unless @extends_bitmap_v4.nil?
-      @extends_bitmap_v4 = len_header >= Bmp::I__HEADER_TYPE[:header_type_bitmap_v4_header]
-      @extends_bitmap_v4
-    end
-    def extends_os2_2x_bitmap
-      return @extends_os2_2x_bitmap unless @extends_os2_2x_bitmap.nil?
-      @extends_os2_2x_bitmap = len_header == Bmp::I__HEADER_TYPE[:header_type_os2_2x_bitmap_header]
-      @extends_os2_2x_bitmap
-    end
-    def uses_fixed_palette
-      return @uses_fixed_palette unless @uses_fixed_palette.nil?
-      @uses_fixed_palette =  ((!( ((bits_per_pixel == 16) || (bits_per_pixel == 24) || (bits_per_pixel == 32)) )) && (!( ((extends_bitmap_info) && (!(extends_os2_2x_bitmap)) && ( ((bitmap_info_ext.compression == :compressions_jpeg) || (bitmap_info_ext.compression == :compressions_png)) )) ))) 
-      @uses_fixed_palette
-    end
-    def extends_bitmap_info
-      return @extends_bitmap_info unless @extends_bitmap_info.nil?
-      @extends_bitmap_info = len_header >= Bmp::I__HEADER_TYPE[:header_type_bitmap_info_header]
-      @extends_bitmap_info
-    end
-    def image_height
-      return @image_height unless @image_height.nil?
-      @image_height = (image_height_raw < 0 ? -(image_height_raw) : image_height_raw)
-      @image_height
-    end
-    def is_core_header
-      return @is_core_header unless @is_core_header.nil?
-      @is_core_header = len_header == Bmp::I__HEADER_TYPE[:header_type_bitmap_core_header]
-      @is_core_header
-    end
-    def extends_bitmap_v5
-      return @extends_bitmap_v5 unless @extends_bitmap_v5.nil?
-      @extends_bitmap_v5 = len_header >= Bmp::I__HEADER_TYPE[:header_type_bitmap_v5_header]
-      @extends_bitmap_v5
-    end
-    def is_color_mask_here
-      return @is_color_mask_here unless @is_color_mask_here.nil?
-      @is_color_mask_here =  ((len_header == Bmp::I__HEADER_TYPE[:header_type_bitmap_v2_info_header]) || (len_header == Bmp::I__HEADER_TYPE[:header_type_bitmap_v3_info_header]) || (extends_bitmap_v4)) 
-      @is_color_mask_here
-    end
-    def bottom_up
-      return @bottom_up unless @bottom_up.nil?
-      @bottom_up = image_height_raw > 0
-      @bottom_up
-    end
-
-    ##
-    # Image width, px
-    attr_reader :image_width
-
-    ##
-    # Image height, px (positive => bottom-up image, negative => top-down image)
-    attr_reader :image_height_raw
-
-    ##
-    # Number of planes for target device, must be 1
-    attr_reader :num_planes
-
-    ##
-    # Number of bits per pixel that image buffer uses (1, 4, 8, 16, 24 or 32)
-    attr_reader :bits_per_pixel
-    attr_reader :bitmap_info_ext
-    attr_reader :color_mask
-    attr_reader :os2_2x_bitmap_ext
-    attr_reader :bitmap_v4_ext
-    attr_reader :bitmap_v5_ext
-    attr_reader :len_header
-  end
-
-  ##
   # @see https://www.fileformat.info/format/os2bmp/egff.htm#OS2BMP-DMYID.3.2 Source
   class Os22xBitmapExtension < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -526,153 +650,27 @@ class Bmp < Kaitai::Struct::Struct
     # Application-specific value
     attr_reader :identifier
   end
-  class FixedPoint16Dot16 < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @raw = @_io.read_u4le
-      self
-    end
-    def value
-      return @value unless @value.nil?
-      @value = ((raw + 0.0) / (1 << 16))
-      @value
-    end
-    attr_reader :raw
-  end
-  class ColorTable < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self, has_reserved_field, num_colors)
+  class RgbRecord < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil, has_reserved_field)
       super(_io, _parent, _root)
       @has_reserved_field = has_reserved_field
-      @num_colors = num_colors
       _read
     end
 
     def _read
-      @colors = []
-      (( ((num_colors > 0) && (num_colors < num_colors_present))  ? num_colors : num_colors_present)).times { |i|
-        @colors << RgbRecord.new(@_io, self, @_root, has_reserved_field)
-      }
+      @blue = @_io.read_u1
+      @green = @_io.read_u1
+      @red = @_io.read_u1
+      if has_reserved_field
+        @reserved = @_io.read_u1
+      end
       self
     end
-    def num_colors_present
-      return @num_colors_present unless @num_colors_present.nil?
-      @num_colors_present = (_io.size / (has_reserved_field ? 4 : 3))
-      @num_colors_present
-    end
-    attr_reader :colors
+    attr_reader :blue
+    attr_reader :green
+    attr_reader :red
+    attr_reader :reserved
     attr_reader :has_reserved_field
-
-    ##
-    # If equal to 0, the pallete should contain as many colors as can fit into the pixel value
-    # according to the `bits_per_pixel` field (if `bits_per_pixel` = 8, then the pixel can
-    # represent 2 ** 8 = 256 values, so exactly 256 colors should be present). For more flexibility,
-    # it reads as many colors as it can until EOS is reached (and the image data begin).
-    attr_reader :num_colors
-  end
-
-  ##
-  # @see https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapfileheader Source
-  class FileHeader < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @file_type = @_io.read_bytes(2)
-      raise Kaitai::Struct::ValidationNotEqualError.new([66, 77].pack('C*'), file_type, _io, "/types/file_header/seq/0") if not file_type == [66, 77].pack('C*')
-      @len_file = @_io.read_u4le
-      @reserved1 = @_io.read_u2le
-      @reserved2 = @_io.read_u2le
-      @ofs_bitmap = @_io.read_s4le
-      self
-    end
-    attr_reader :file_type
-
-    ##
-    # not reliable, mostly ignored by BMP decoders
-    attr_reader :len_file
-    attr_reader :reserved1
-    attr_reader :reserved2
-
-    ##
-    # Offset to actual raw pixel data of the image
-    attr_reader :ofs_bitmap
-  end
-
-  ##
-  # @see https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfo Source
-  class BitmapInfo < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @len_header = @_io.read_u4le
-      @_raw_header = @_io.read_bytes((len_header - 4))
-      _io__raw_header = Kaitai::Struct::Stream.new(@_raw_header)
-      @header = BitmapHeader.new(_io__raw_header, self, @_root, len_header)
-      if is_color_mask_here
-        @color_mask = ColorMask.new(@_io, self, @_root, header.bitmap_info_ext.compression == :compressions_alpha_bitfields)
-      end
-      if !(_io.eof?)
-        @_raw_color_table = @_io.read_bytes_full
-        _io__raw_color_table = Kaitai::Struct::Stream.new(@_raw_color_table)
-        @color_table = ColorTable.new(_io__raw_color_table, self, @_root, !(header.is_core_header), (header.extends_bitmap_info ? header.bitmap_info_ext.num_colors_used : 0))
-      end
-      self
-    end
-    def is_color_mask_given
-      return @is_color_mask_given unless @is_color_mask_given.nil?
-      @is_color_mask_given =  ((header.extends_bitmap_info) && ( ((header.bitmap_info_ext.compression == :compressions_bitfields) || (header.bitmap_info_ext.compression == :compressions_alpha_bitfields)) ) && ( ((is_color_mask_here) || (header.is_color_mask_here)) )) 
-      @is_color_mask_given
-    end
-    def color_mask_given
-      return @color_mask_given unless @color_mask_given.nil?
-      if is_color_mask_given
-        @color_mask_given = (is_color_mask_here ? color_mask : header.color_mask)
-      end
-      @color_mask_given
-    end
-    def color_mask_blue
-      return @color_mask_blue unless @color_mask_blue.nil?
-      @color_mask_blue = (is_color_mask_given ? color_mask_given.blue_mask : (header.bits_per_pixel == 16 ? 31 : ( ((header.bits_per_pixel == 24) || (header.bits_per_pixel == 32))  ? 255 : 0)))
-      @color_mask_blue
-    end
-    def color_mask_alpha
-      return @color_mask_alpha unless @color_mask_alpha.nil?
-      @color_mask_alpha = ( ((is_color_mask_given) && (color_mask_given.has_alpha_mask))  ? color_mask_given.alpha_mask : 0)
-      @color_mask_alpha
-    end
-    def color_mask_green
-      return @color_mask_green unless @color_mask_green.nil?
-      @color_mask_green = (is_color_mask_given ? color_mask_given.green_mask : (header.bits_per_pixel == 16 ? 992 : ( ((header.bits_per_pixel == 24) || (header.bits_per_pixel == 32))  ? 65280 : 0)))
-      @color_mask_green
-    end
-    def is_color_mask_here
-      return @is_color_mask_here unless @is_color_mask_here.nil?
-      @is_color_mask_here =  ((!(_io.eof?)) && (header.len_header == Bmp::I__HEADER_TYPE[:header_type_bitmap_info_header]) && ( ((header.bitmap_info_ext.compression == :compressions_bitfields) || (header.bitmap_info_ext.compression == :compressions_alpha_bitfields)) )) 
-      @is_color_mask_here
-    end
-    def color_mask_red
-      return @color_mask_red unless @color_mask_red.nil?
-      @color_mask_red = (is_color_mask_given ? color_mask_given.red_mask : (header.bits_per_pixel == 16 ? 31744 : ( ((header.bits_per_pixel == 24) || (header.bits_per_pixel == 32))  ? 16711680 : 0)))
-      @color_mask_red
-    end
-    attr_reader :len_header
-    attr_reader :header
-
-    ##
-    # Valid only for BITMAPINFOHEADER, in all headers extending it the masks are contained in the header itself.
-    attr_reader :color_mask
-    attr_reader :color_table
-    attr_reader :_raw_header
-    attr_reader :_raw_color_table
   end
   attr_reader :file_hdr
   attr_reader :dib_info

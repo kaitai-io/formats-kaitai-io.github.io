@@ -10,77 +10,74 @@ digraph {
 			<TR><TD PORT="time_pos">0</TD><TD PORT="time_size">2</TD><TD>Time</TD><TD PORT="time_type">time</TD></TR>
 			<TR><TD PORT="date_pos">2</TD><TD PORT="date_size">2</TD><TD>Date</TD><TD PORT="date_type">date</TD></TR>
 		</TABLE>>];
-		subgraph cluster__time {
-			label="DosDatetime::Time";
-			graph[style=dotted];
-
-			time__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="second_div_2_pos">0</TD><TD PORT="second_div_2_size">5b</TD><TD>b5</TD><TD PORT="second_div_2_type">second_div_2</TD></TR>
-				<TR><TD PORT="minute_pos">0:5</TD><TD PORT="minute_size">6b</TD><TD>b6</TD><TD PORT="minute_type">minute</TD></TR>
-				<TR><TD PORT="hour_pos">1:3</TD><TD PORT="hour_size">5b</TD><TD>b5</TD><TD PORT="hour_type">hour</TD></TR>
-			</TABLE>>];
-			time__inst__second [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>second</TD><TD>(2 * second_div_2)</TD></TR>
-			</TABLE>>];
-			time__inst__padded_second [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>padded_second</TD><TD>(second &lt;= 9 ? &quot;0&quot; : &quot;&quot;) + second.to_s(10)</TD></TR>
-			</TABLE>>];
-			time__inst__padded_minute [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>padded_minute</TD><TD>(minute &lt;= 9 ? &quot;0&quot; : &quot;&quot;) + minute.to_s(10)</TD></TR>
-			</TABLE>>];
-			time__inst__padded_hour [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>padded_hour</TD><TD>(hour &lt;= 9 ? &quot;0&quot; : &quot;&quot;) + hour.to_s(10)</TD></TR>
-			</TABLE>>];
-		}
 		subgraph cluster__date {
 			label="DosDatetime::Date";
 			graph[style=dotted];
 
 			date__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="day_pos">0</TD><TD PORT="day_size">5b</TD><TD>b5</TD><TD PORT="day_type">day</TD></TR>
-				<TR><TD PORT="month_pos">0:5</TD><TD PORT="month_size">4b</TD><TD>b4</TD><TD PORT="month_type">month</TD></TR>
-				<TR><TD PORT="year_minus_1980_pos">1:1</TD><TD PORT="year_minus_1980_size">7b</TD><TD>b7</TD><TD PORT="year_minus_1980_type">year_minus_1980</TD></TR>
-			</TABLE>>];
-			date__inst__year [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>year</TD><TD>(1980 + year_minus_1980)</TD></TR>
+				<TR><TD PORT="day_pos">0</TD><TD PORT="day_size">5b</TD><TD>b5le</TD><TD PORT="day_type">day</TD></TR>
+				<TR><TD COLSPAN="4" PORT="day__valid">must be at least 1</TD></TR>
+				<TR><TD PORT="month_pos">0:5</TD><TD PORT="month_size">4b</TD><TD>b4le</TD><TD PORT="month_type">month</TD></TR>
+				<TR><TD COLSPAN="4" PORT="month__valid">must be between 1 and 12</TD></TR>
+				<TR><TD PORT="year_minus_1980_pos">1:1</TD><TD PORT="year_minus_1980_size">7b</TD><TD>b7le</TD><TD PORT="year_minus_1980_type">year_minus_1980</TD></TR>
 			</TABLE>>];
 			date__inst__padded_day [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>padded_day</TD><TD>(day &lt;= 9 ? &quot;0&quot; : &quot;&quot;) + day.to_s(10)</TD></TR>
+				<TR><TD>padded_day</TD><TD>(day &lt;= 9 ? &quot;0&quot; : &quot;&quot;) + day.to_s</TD></TR>
 			</TABLE>>];
 			date__inst__padded_month [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>padded_month</TD><TD>(month &lt;= 9 ? &quot;0&quot; : &quot;&quot;) + month.to_s(10)</TD></TR>
+				<TR><TD>padded_month</TD><TD>(month &lt;= 9 ? &quot;0&quot; : &quot;&quot;) + month.to_s</TD></TR>
 			</TABLE>>];
 			date__inst__padded_year [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>padded_year</TD><TD>(year &lt;= 999 ? &quot;0&quot; + (year &lt;= 99 ? &quot;0&quot; + (year &lt;= 9 ? &quot;0&quot; : &quot;&quot;) : &quot;&quot;) : &quot;&quot;) + year.to_s(10)</TD></TR>
+				<TR><TD>padded_year</TD><TD>(year &lt;= 999 ? &quot;0&quot; + (year &lt;= 99 ? &quot;0&quot; + (year &lt;= 9 ? &quot;0&quot; : &quot;&quot;) : &quot;&quot;) : &quot;&quot;) + year.to_s</TD></TR>
+			</TABLE>>];
+			date__inst__year [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>year</TD><TD>1980 + year_minus_1980</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__time {
+			label="DosDatetime::Time";
+			graph[style=dotted];
+
+			time__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="second_div_2_pos">0</TD><TD PORT="second_div_2_size">5b</TD><TD>b5le</TD><TD PORT="second_div_2_type">second_div_2</TD></TR>
+				<TR><TD COLSPAN="4" PORT="second_div_2__valid">must be at most 29</TD></TR>
+				<TR><TD PORT="minute_pos">0:5</TD><TD PORT="minute_size">6b</TD><TD>b6le</TD><TD PORT="minute_type">minute</TD></TR>
+				<TR><TD COLSPAN="4" PORT="minute__valid">must be at most 59</TD></TR>
+				<TR><TD PORT="hour_pos">1:3</TD><TD PORT="hour_size">5b</TD><TD>b5le</TD><TD PORT="hour_type">hour</TD></TR>
+				<TR><TD COLSPAN="4" PORT="hour__valid">must be at most 23</TD></TR>
+			</TABLE>>];
+			time__inst__padded_hour [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>padded_hour</TD><TD>(hour &lt;= 9 ? &quot;0&quot; : &quot;&quot;) + hour.to_s</TD></TR>
+			</TABLE>>];
+			time__inst__padded_minute [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>padded_minute</TD><TD>(minute &lt;= 9 ? &quot;0&quot; : &quot;&quot;) + minute.to_s</TD></TR>
+			</TABLE>>];
+			time__inst__padded_second [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>padded_second</TD><TD>(second &lt;= 9 ? &quot;0&quot; : &quot;&quot;) + second.to_s</TD></TR>
+			</TABLE>>];
+			time__inst__second [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>second</TD><TD>2 * second_div_2</TD></TR>
 			</TABLE>>];
 		}
 	}
 	dos_datetime__seq:time_type -> time__seq [style=bold];
 	dos_datetime__seq:date_type -> date__seq [style=bold];
-	time__seq:second_div_2_type -> time__inst__second [color="#404040"];
-	time__inst__second:second_type -> time__inst__padded_second [color="#404040"];
-	time__inst__second:second_type -> time__inst__padded_second [color="#404040"];
-	time__seq:minute_type -> time__inst__padded_minute [color="#404040"];
-	time__seq:minute_type -> time__inst__padded_minute [color="#404040"];
-	time__seq:hour_type -> time__inst__padded_hour [color="#404040"];
-	time__seq:hour_type -> time__inst__padded_hour [color="#404040"];
+	date__seq:day_type -> date__inst__padded_day [color="#404040"];
+	date__seq:month_type -> date__inst__padded_month [color="#404040"];
+	date__inst__year:year_type -> date__inst__padded_year [color="#404040"];
 	date__seq:year_minus_1980_type -> date__inst__year [color="#404040"];
-	date__seq:day_type -> date__inst__padded_day [color="#404040"];
-	date__seq:day_type -> date__inst__padded_day [color="#404040"];
-	date__seq:month_type -> date__inst__padded_month [color="#404040"];
-	date__seq:month_type -> date__inst__padded_month [color="#404040"];
-	date__inst__year:year_type -> date__inst__padded_year [color="#404040"];
-	date__inst__year:year_type -> date__inst__padded_year [color="#404040"];
-	date__inst__year:year_type -> date__inst__padded_year [color="#404040"];
-	date__inst__year:year_type -> date__inst__padded_year [color="#404040"];
+	time__seq:hour_type -> time__inst__padded_hour [color="#404040"];
+	time__seq:minute_type -> time__inst__padded_minute [color="#404040"];
+	time__inst__second:second_type -> time__inst__padded_second [color="#404040"];
+	time__seq:second_div_2_type -> time__inst__second [color="#404040"];
 }

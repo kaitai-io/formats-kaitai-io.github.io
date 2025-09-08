@@ -5,10 +5,11 @@ import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Arrays;
-import java.nio.charset.Charset;
+import java.util.List;
 
 
 /**
@@ -52,13 +53,163 @@ public class UefiTe extends KaitaiStruct {
         _read();
     }
     private void _read() {
-        this._raw_teHdr = this._io.readBytes(40);
-        KaitaiStream _io__raw_teHdr = new ByteBufferKaitaiStream(_raw_teHdr);
-        this.teHdr = new TeHeader(_io__raw_teHdr, this, _root);
+        KaitaiStream _io_teHdr = this._io.substream(40);
+        this.teHdr = new TeHeader(_io_teHdr, this, _root);
         this.sections = new ArrayList<Section>();
         for (int i = 0; i < teHdr().numSections(); i++) {
             this.sections.add(new Section(this._io, this, _root));
         }
+    }
+
+    public void _fetchInstances() {
+        this.teHdr._fetchInstances();
+        for (int i = 0; i < this.sections.size(); i++) {
+            this.sections.get(((Number) (i)).intValue())._fetchInstances();
+        }
+    }
+    public static class DataDir extends KaitaiStruct {
+        public static DataDir fromFile(String fileName) throws IOException {
+            return new DataDir(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public DataDir(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public DataDir(KaitaiStream _io, UefiTe.HeaderDataDirs _parent) {
+            this(_io, _parent, null);
+        }
+
+        public DataDir(KaitaiStream _io, UefiTe.HeaderDataDirs _parent, UefiTe _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.virtualAddress = this._io.readU4le();
+            this.size = this._io.readU4le();
+        }
+
+        public void _fetchInstances() {
+        }
+        private long virtualAddress;
+        private long size;
+        private UefiTe _root;
+        private UefiTe.HeaderDataDirs _parent;
+        public long virtualAddress() { return virtualAddress; }
+        public long size() { return size; }
+        public UefiTe _root() { return _root; }
+        public UefiTe.HeaderDataDirs _parent() { return _parent; }
+    }
+    public static class HeaderDataDirs extends KaitaiStruct {
+        public static HeaderDataDirs fromFile(String fileName) throws IOException {
+            return new HeaderDataDirs(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public HeaderDataDirs(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public HeaderDataDirs(KaitaiStream _io, UefiTe.TeHeader _parent) {
+            this(_io, _parent, null);
+        }
+
+        public HeaderDataDirs(KaitaiStream _io, UefiTe.TeHeader _parent, UefiTe _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.baseRelocationTable = new DataDir(this._io, this, _root);
+            this.debug = new DataDir(this._io, this, _root);
+        }
+
+        public void _fetchInstances() {
+            this.baseRelocationTable._fetchInstances();
+            this.debug._fetchInstances();
+        }
+        private DataDir baseRelocationTable;
+        private DataDir debug;
+        private UefiTe _root;
+        private UefiTe.TeHeader _parent;
+        public DataDir baseRelocationTable() { return baseRelocationTable; }
+        public DataDir debug() { return debug; }
+        public UefiTe _root() { return _root; }
+        public UefiTe.TeHeader _parent() { return _parent; }
+    }
+    public static class Section extends KaitaiStruct {
+        public static Section fromFile(String fileName) throws IOException {
+            return new Section(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Section(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Section(KaitaiStream _io, UefiTe _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Section(KaitaiStream _io, UefiTe _parent, UefiTe _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.name = new String(KaitaiStream.bytesStripRight(this._io.readBytes(8), (byte) 0), StandardCharsets.UTF_8);
+            this.virtualSize = this._io.readU4le();
+            this.virtualAddress = this._io.readU4le();
+            this.sizeOfRawData = this._io.readU4le();
+            this.pointerToRawData = this._io.readU4le();
+            this.pointerToRelocations = this._io.readU4le();
+            this.pointerToLinenumbers = this._io.readU4le();
+            this.numRelocations = this._io.readU2le();
+            this.numLinenumbers = this._io.readU2le();
+            this.characteristics = this._io.readU4le();
+        }
+
+        public void _fetchInstances() {
+            body();
+            if (this.body != null) {
+            }
+        }
+        private byte[] body;
+        public byte[] body() {
+            if (this.body != null)
+                return this.body;
+            long _pos = this._io.pos();
+            this._io.seek((pointerToRawData() - _root().teHdr().strippedSize()) + _root().teHdr()._io().size());
+            this.body = this._io.readBytes(sizeOfRawData());
+            this._io.seek(_pos);
+            return this.body;
+        }
+        private String name;
+        private long virtualSize;
+        private long virtualAddress;
+        private long sizeOfRawData;
+        private long pointerToRawData;
+        private long pointerToRelocations;
+        private long pointerToLinenumbers;
+        private int numRelocations;
+        private int numLinenumbers;
+        private long characteristics;
+        private UefiTe _root;
+        private UefiTe _parent;
+        public String name() { return name; }
+        public long virtualSize() { return virtualSize; }
+        public long virtualAddress() { return virtualAddress; }
+        public long sizeOfRawData() { return sizeOfRawData; }
+        public long pointerToRawData() { return pointerToRawData; }
+        public long pointerToRelocations() { return pointerToRelocations; }
+        public long pointerToLinenumbers() { return pointerToLinenumbers; }
+        public int numRelocations() { return numRelocations; }
+        public int numLinenumbers() { return numLinenumbers; }
+        public long characteristics() { return characteristics; }
+        public UefiTe _root() { return _root; }
+        public UefiTe _parent() { return _parent; }
     }
     public static class TeHeader extends KaitaiStruct {
         public static TeHeader fromFile(String fileName) throws IOException {
@@ -148,8 +299,8 @@ public class UefiTe extends KaitaiStruct {
         }
         private void _read() {
             this.magic = this._io.readBytes(2);
-            if (!(Arrays.equals(magic(), new byte[] { 86, 90 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 86, 90 }, magic(), _io(), "/types/te_header/seq/0");
+            if (!(Arrays.equals(this.magic, new byte[] { 86, 90 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 86, 90 }, this.magic, this._io, "/types/te_header/seq/0");
             }
             this.machine = MachineType.byId(this._io.readU2le());
             this.numSections = this._io.readU1();
@@ -159,6 +310,10 @@ public class UefiTe extends KaitaiStruct {
             this.baseOfCode = this._io.readU4le();
             this.imageBase = this._io.readU8le();
             this.dataDirs = new HeaderDataDirs(this._io, this, _root);
+        }
+
+        public void _fetchInstances() {
+            this.dataDirs._fetchInstances();
         }
         private byte[] magic;
         private MachineType machine;
@@ -183,144 +338,12 @@ public class UefiTe extends KaitaiStruct {
         public UefiTe _root() { return _root; }
         public UefiTe _parent() { return _parent; }
     }
-    public static class HeaderDataDirs extends KaitaiStruct {
-        public static HeaderDataDirs fromFile(String fileName) throws IOException {
-            return new HeaderDataDirs(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public HeaderDataDirs(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public HeaderDataDirs(KaitaiStream _io, UefiTe.TeHeader _parent) {
-            this(_io, _parent, null);
-        }
-
-        public HeaderDataDirs(KaitaiStream _io, UefiTe.TeHeader _parent, UefiTe _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.baseRelocationTable = new DataDir(this._io, this, _root);
-            this.debug = new DataDir(this._io, this, _root);
-        }
-        private DataDir baseRelocationTable;
-        private DataDir debug;
-        private UefiTe _root;
-        private UefiTe.TeHeader _parent;
-        public DataDir baseRelocationTable() { return baseRelocationTable; }
-        public DataDir debug() { return debug; }
-        public UefiTe _root() { return _root; }
-        public UefiTe.TeHeader _parent() { return _parent; }
-    }
-    public static class DataDir extends KaitaiStruct {
-        public static DataDir fromFile(String fileName) throws IOException {
-            return new DataDir(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public DataDir(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public DataDir(KaitaiStream _io, UefiTe.HeaderDataDirs _parent) {
-            this(_io, _parent, null);
-        }
-
-        public DataDir(KaitaiStream _io, UefiTe.HeaderDataDirs _parent, UefiTe _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.virtualAddress = this._io.readU4le();
-            this.size = this._io.readU4le();
-        }
-        private long virtualAddress;
-        private long size;
-        private UefiTe _root;
-        private UefiTe.HeaderDataDirs _parent;
-        public long virtualAddress() { return virtualAddress; }
-        public long size() { return size; }
-        public UefiTe _root() { return _root; }
-        public UefiTe.HeaderDataDirs _parent() { return _parent; }
-    }
-    public static class Section extends KaitaiStruct {
-        public static Section fromFile(String fileName) throws IOException {
-            return new Section(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Section(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Section(KaitaiStream _io, UefiTe _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Section(KaitaiStream _io, UefiTe _parent, UefiTe _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.name = new String(KaitaiStream.bytesStripRight(this._io.readBytes(8), (byte) 0), Charset.forName("UTF-8"));
-            this.virtualSize = this._io.readU4le();
-            this.virtualAddress = this._io.readU4le();
-            this.sizeOfRawData = this._io.readU4le();
-            this.pointerToRawData = this._io.readU4le();
-            this.pointerToRelocations = this._io.readU4le();
-            this.pointerToLinenumbers = this._io.readU4le();
-            this.numRelocations = this._io.readU2le();
-            this.numLinenumbers = this._io.readU2le();
-            this.characteristics = this._io.readU4le();
-        }
-        private byte[] body;
-        public byte[] body() {
-            if (this.body != null)
-                return this.body;
-            long _pos = this._io.pos();
-            this._io.seek(((pointerToRawData() - _root().teHdr().strippedSize()) + _root().teHdr()._io().size()));
-            this.body = this._io.readBytes(sizeOfRawData());
-            this._io.seek(_pos);
-            return this.body;
-        }
-        private String name;
-        private long virtualSize;
-        private long virtualAddress;
-        private long sizeOfRawData;
-        private long pointerToRawData;
-        private long pointerToRelocations;
-        private long pointerToLinenumbers;
-        private int numRelocations;
-        private int numLinenumbers;
-        private long characteristics;
-        private UefiTe _root;
-        private UefiTe _parent;
-        public String name() { return name; }
-        public long virtualSize() { return virtualSize; }
-        public long virtualAddress() { return virtualAddress; }
-        public long sizeOfRawData() { return sizeOfRawData; }
-        public long pointerToRawData() { return pointerToRawData; }
-        public long pointerToRelocations() { return pointerToRelocations; }
-        public long pointerToLinenumbers() { return pointerToLinenumbers; }
-        public int numRelocations() { return numRelocations; }
-        public int numLinenumbers() { return numLinenumbers; }
-        public long characteristics() { return characteristics; }
-        public UefiTe _root() { return _root; }
-        public UefiTe _parent() { return _parent; }
-    }
     private TeHeader teHdr;
-    private ArrayList<Section> sections;
+    private List<Section> sections;
     private UefiTe _root;
     private KaitaiStruct _parent;
-    private byte[] _raw_teHdr;
     public TeHeader teHdr() { return teHdr; }
-    public ArrayList<Section> sections() { return sections; }
+    public List<Section> sections() { return sections; }
     public UefiTe _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
-    public byte[] _raw_teHdr() { return _raw_teHdr; }
 }

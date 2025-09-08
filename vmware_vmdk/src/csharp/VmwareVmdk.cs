@@ -25,18 +25,18 @@ namespace Kaitai
         {
             m_parent = p__parent;
             m_root = p__root ?? this;
-            f_lenSector = false;
             f_descriptor = false;
             f_grainPrimary = false;
             f_grainSecondary = false;
+            f_lenSector = false;
             _read();
         }
         private void _read()
         {
             _magic = m_io.ReadBytes(4);
-            if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 75, 68, 77, 86 }) == 0)))
+            if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 75, 68, 77, 86 }) == 0)))
             {
-                throw new ValidationNotEqualError(new byte[] { 75, 68, 77, 86 }, Magic, M_Io, "/seq/0");
+                throw new ValidationNotEqualError(new byte[] { 75, 68, 77, 86 }, _magic, m_io, "/seq/0");
             }
             _version = m_io.ReadS4le();
             _flags = new HeaderFlags(m_io, this, m_root);
@@ -106,19 +106,6 @@ namespace Kaitai
             public VmwareVmdk M_Root { get { return m_root; } }
             public VmwareVmdk M_Parent { get { return m_parent; } }
         }
-        private bool f_lenSector;
-        private int _lenSector;
-        public int LenSector
-        {
-            get
-            {
-                if (f_lenSector)
-                    return _lenSector;
-                _lenSector = (int) (512);
-                f_lenSector = true;
-                return _lenSector;
-            }
-        }
         private bool f_descriptor;
         private byte[] _descriptor;
         public byte[] Descriptor
@@ -127,11 +114,11 @@ namespace Kaitai
             {
                 if (f_descriptor)
                     return _descriptor;
-                long _pos = m_io.Pos;
-                m_io.Seek((StartDescriptor * M_Root.LenSector));
-                _descriptor = m_io.ReadBytes((SizeDescriptor * M_Root.LenSector));
-                m_io.Seek(_pos);
                 f_descriptor = true;
+                long _pos = m_io.Pos;
+                m_io.Seek(StartDescriptor * M_Root.LenSector);
+                _descriptor = m_io.ReadBytes(SizeDescriptor * M_Root.LenSector);
+                m_io.Seek(_pos);
                 return _descriptor;
             }
         }
@@ -143,11 +130,11 @@ namespace Kaitai
             {
                 if (f_grainPrimary)
                     return _grainPrimary;
-                long _pos = m_io.Pos;
-                m_io.Seek((StartPrimaryGrain * M_Root.LenSector));
-                _grainPrimary = m_io.ReadBytes((SizeGrain * M_Root.LenSector));
-                m_io.Seek(_pos);
                 f_grainPrimary = true;
+                long _pos = m_io.Pos;
+                m_io.Seek(StartPrimaryGrain * M_Root.LenSector);
+                _grainPrimary = m_io.ReadBytes(SizeGrain * M_Root.LenSector);
+                m_io.Seek(_pos);
                 return _grainPrimary;
             }
         }
@@ -159,12 +146,25 @@ namespace Kaitai
             {
                 if (f_grainSecondary)
                     return _grainSecondary;
-                long _pos = m_io.Pos;
-                m_io.Seek((StartSecondaryGrain * M_Root.LenSector));
-                _grainSecondary = m_io.ReadBytes((SizeGrain * M_Root.LenSector));
-                m_io.Seek(_pos);
                 f_grainSecondary = true;
+                long _pos = m_io.Pos;
+                m_io.Seek(StartSecondaryGrain * M_Root.LenSector);
+                _grainSecondary = m_io.ReadBytes(SizeGrain * M_Root.LenSector);
+                m_io.Seek(_pos);
                 return _grainSecondary;
+            }
+        }
+        private bool f_lenSector;
+        private int _lenSector;
+        public int LenSector
+        {
+            get
+            {
+                if (f_lenSector)
+                    return _lenSector;
+                f_lenSector = true;
+                _lenSector = (int) (512);
+                return _lenSector;
             }
         }
         private byte[] _magic;

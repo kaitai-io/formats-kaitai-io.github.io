@@ -4,14 +4,14 @@ import options
 type
   ApmPartitionTable* = ref object of KaitaiStruct
     `parent`*: KaitaiStruct
-    `rawPartitionLookupInst`*: seq[byte]
     `rawPartitionEntriesInst`*: seq[seq[byte]]
-    `sectorSizeInst`: int
-    `sectorSizeInstFlag`: bool
-    `partitionLookupInst`: ApmPartitionTable_PartitionEntry
-    `partitionLookupInstFlag`: bool
+    `rawPartitionLookupInst`*: seq[byte]
     `partitionEntriesInst`: seq[ApmPartitionTable_PartitionEntry]
     `partitionEntriesInstFlag`: bool
+    `partitionLookupInst`: ApmPartitionTable_PartitionEntry
+    `partitionLookupInstFlag`: bool
+    `sectorSizeInst`: int
+    `sectorSizeInstFlag`: bool
   ApmPartitionTable_PartitionEntry* = ref object of KaitaiStruct
     `magic`*: seq[byte]
     `reserved1`*: seq[byte]
@@ -32,22 +32,22 @@ type
     `bootCodeCksum`*: uint32
     `processorType`*: string
     `parent`*: ApmPartitionTable
-    `partitionInst`: seq[byte]
-    `partitionInstFlag`: bool
-    `dataInst`: seq[byte]
-    `dataInstFlag`: bool
     `bootCodeInst`: seq[byte]
     `bootCodeInstFlag`: bool
+    `dataInst`: seq[byte]
+    `dataInstFlag`: bool
+    `partitionInst`: seq[byte]
+    `partitionInstFlag`: bool
 
 proc read*(_: typedesc[ApmPartitionTable], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): ApmPartitionTable
 proc read*(_: typedesc[ApmPartitionTable_PartitionEntry], io: KaitaiStream, root: KaitaiStruct, parent: ApmPartitionTable): ApmPartitionTable_PartitionEntry
 
-proc sectorSize*(this: ApmPartitionTable): int
-proc partitionLookup*(this: ApmPartitionTable): ApmPartitionTable_PartitionEntry
 proc partitionEntries*(this: ApmPartitionTable): seq[ApmPartitionTable_PartitionEntry]
-proc partition*(this: ApmPartitionTable_PartitionEntry): seq[byte]
-proc data*(this: ApmPartitionTable_PartitionEntry): seq[byte]
+proc partitionLookup*(this: ApmPartitionTable): ApmPartitionTable_PartitionEntry
+proc sectorSize*(this: ApmPartitionTable): int
 proc bootCode*(this: ApmPartitionTable_PartitionEntry): seq[byte]
+proc data*(this: ApmPartitionTable_PartitionEntry): seq[byte]
+proc partition*(this: ApmPartitionTable_PartitionEntry): seq[byte]
 
 
 ##[
@@ -62,19 +62,21 @@ proc read*(_: typedesc[ApmPartitionTable], io: KaitaiStream, root: KaitaiStruct,
   this.parent = parent
 
 
-proc sectorSize(this: ApmPartitionTable): int = 
-
-  ##[
-  0x200 (512) bytes for disks, 0x1000 (4096) bytes is not supported by APM
-0x800 (2048) bytes for CDROM
-
-  ]##
-  if this.sectorSizeInstFlag:
-    return this.sectorSizeInst
-  let sectorSizeInstExpr = int(512)
-  this.sectorSizeInst = sectorSizeInstExpr
-  this.sectorSizeInstFlag = true
-  return this.sectorSizeInst
+proc partitionEntries(this: ApmPartitionTable): seq[ApmPartitionTable_PartitionEntry] = 
+  if this.partitionEntriesInstFlag:
+    return this.partitionEntriesInst
+  let io = ApmPartitionTable(this.root).io
+  let pos = io.pos()
+  io.seek(int(ApmPartitionTable(this.root).sectorSize))
+  for i in 0 ..< int(ApmPartitionTable(this.root).partitionLookup.numberOfPartitions):
+    let buf = io.readBytes(int(this.sectorSize))
+    this.rawPartitionEntriesInst.add(buf)
+    let rawPartitionEntriesInstIo = newKaitaiStream(buf)
+    let it = ApmPartitionTable_PartitionEntry.read(rawPartitionEntriesInstIo, this.root, this)
+    this.partitionEntriesInst.add(it)
+  io.seek(pos)
+  this.partitionEntriesInstFlag = true
+  return this.partitionEntriesInst
 
 proc partitionLookup(this: ApmPartitionTable): ApmPartitionTable_PartitionEntry = 
 
@@ -98,21 +100,19 @@ No logic is given what to do if other entries have a different number.
   this.partitionLookupInstFlag = true
   return this.partitionLookupInst
 
-proc partitionEntries(this: ApmPartitionTable): seq[ApmPartitionTable_PartitionEntry] = 
-  if this.partitionEntriesInstFlag:
-    return this.partitionEntriesInst
-  let io = ApmPartitionTable(this.root).io
-  let pos = io.pos()
-  io.seek(int(ApmPartitionTable(this.root).sectorSize))
-  for i in 0 ..< int(ApmPartitionTable(this.root).partitionLookup.numberOfPartitions):
-    let buf = io.readBytes(int(this.sectorSize))
-    this.rawPartitionEntriesInst.add(buf)
-    let rawPartitionEntriesInstIo = newKaitaiStream(buf)
-    let it = ApmPartitionTable_PartitionEntry.read(rawPartitionEntriesInstIo, this.root, this)
-    this.partitionEntriesInst.add(it)
-  io.seek(pos)
-  this.partitionEntriesInstFlag = true
-  return this.partitionEntriesInst
+proc sectorSize(this: ApmPartitionTable): int = 
+
+  ##[
+  0x200 (512) bytes for disks, 0x1000 (4096) bytes is not supported by APM
+0x800 (2048) bytes for CDROM
+
+  ]##
+  if this.sectorSizeInstFlag:
+    return this.sectorSizeInst
+  let sectorSizeInstExpr = int(512)
+  this.sectorSizeInst = sectorSizeInstExpr
+  this.sectorSizeInstFlag = true
+  return this.sectorSizeInst
 
 proc fromFile*(_: typedesc[ApmPartitionTable], filename: string): ApmPartitionTable =
   ApmPartitionTable.read(newKaitaiFileStream(filename), nil, nil)
@@ -143,9 +143,9 @@ proc read*(_: typedesc[ApmPartitionTable_PartitionEntry], io: KaitaiStream, root
   ]##
   let partitionSizeExpr = this.io.readU4be()
   this.partitionSize = partitionSizeExpr
-  let partitionNameExpr = encode(this.io.readBytes(int(32)).bytesTerminate(0, false), "ascii")
+  let partitionNameExpr = encode(this.io.readBytes(int(32)).bytesTerminate(0, false), "ASCII")
   this.partitionName = partitionNameExpr
-  let partitionTypeExpr = encode(this.io.readBytes(int(32)).bytesTerminate(0, false), "ascii")
+  let partitionTypeExpr = encode(this.io.readBytes(int(32)).bytesTerminate(0, false), "ASCII")
   this.partitionType = partitionTypeExpr
 
   ##[
@@ -195,8 +195,32 @@ proc read*(_: typedesc[ApmPartitionTable_PartitionEntry], io: KaitaiStream, root
   ]##
   let bootCodeCksumExpr = this.io.readU4be()
   this.bootCodeCksum = bootCodeCksumExpr
-  let processorTypeExpr = encode(this.io.readBytes(int(16)).bytesTerminate(0, false), "ascii")
+  let processorTypeExpr = encode(this.io.readBytes(int(16)).bytesTerminate(0, false), "ASCII")
   this.processorType = processorTypeExpr
+
+proc bootCode(this: ApmPartitionTable_PartitionEntry): seq[byte] = 
+  if this.bootCodeInstFlag:
+    return this.bootCodeInst
+  let io = ApmPartitionTable(this.root).io
+  let pos = io.pos()
+  io.seek(int(this.bootCodeStart * ApmPartitionTable(this.root).sectorSize))
+  let bootCodeInstExpr = io.readBytes(int(this.bootCodeSize))
+  this.bootCodeInst = bootCodeInstExpr
+  io.seek(pos)
+  this.bootCodeInstFlag = true
+  return this.bootCodeInst
+
+proc data(this: ApmPartitionTable_PartitionEntry): seq[byte] = 
+  if this.dataInstFlag:
+    return this.dataInst
+  let io = ApmPartitionTable(this.root).io
+  let pos = io.pos()
+  io.seek(int(this.dataStart * ApmPartitionTable(this.root).sectorSize))
+  let dataInstExpr = io.readBytes(int(this.dataSize * ApmPartitionTable(this.root).sectorSize))
+  this.dataInst = dataInstExpr
+  io.seek(pos)
+  this.dataInstFlag = true
+  return this.dataInst
 
 proc partition(this: ApmPartitionTable_PartitionEntry): seq[byte] = 
   if this.partitionInstFlag:
@@ -204,36 +228,12 @@ proc partition(this: ApmPartitionTable_PartitionEntry): seq[byte] =
   if (this.partitionStatus and 1) != 0:
     let io = ApmPartitionTable(this.root).io
     let pos = io.pos()
-    io.seek(int((this.partitionStart * ApmPartitionTable(this.root).sectorSize)))
-    let partitionInstExpr = io.readBytes(int((this.partitionSize * ApmPartitionTable(this.root).sectorSize)))
+    io.seek(int(this.partitionStart * ApmPartitionTable(this.root).sectorSize))
+    let partitionInstExpr = io.readBytes(int(this.partitionSize * ApmPartitionTable(this.root).sectorSize))
     this.partitionInst = partitionInstExpr
     io.seek(pos)
   this.partitionInstFlag = true
   return this.partitionInst
-
-proc data(this: ApmPartitionTable_PartitionEntry): seq[byte] = 
-  if this.dataInstFlag:
-    return this.dataInst
-  let io = ApmPartitionTable(this.root).io
-  let pos = io.pos()
-  io.seek(int((this.dataStart * ApmPartitionTable(this.root).sectorSize)))
-  let dataInstExpr = io.readBytes(int((this.dataSize * ApmPartitionTable(this.root).sectorSize)))
-  this.dataInst = dataInstExpr
-  io.seek(pos)
-  this.dataInstFlag = true
-  return this.dataInst
-
-proc bootCode(this: ApmPartitionTable_PartitionEntry): seq[byte] = 
-  if this.bootCodeInstFlag:
-    return this.bootCodeInst
-  let io = ApmPartitionTable(this.root).io
-  let pos = io.pos()
-  io.seek(int((this.bootCodeStart * ApmPartitionTable(this.root).sectorSize)))
-  let bootCodeInstExpr = io.readBytes(int(this.bootCodeSize))
-  this.bootCodeInst = bootCodeInstExpr
-  io.seek(pos)
-  this.bootCodeInstFlag = true
-  return this.bootCodeInst
 
 proc fromFile*(_: typedesc[ApmPartitionTable_PartitionEntry], filename: string): ApmPartitionTable_PartitionEntry =
   ApmPartitionTable_PartitionEntry.read(newKaitaiFileStream(filename), nil, nil)

@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
-from enum import Enum
+from enum import IntEnum
 
 
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Xwd(KaitaiStruct):
     """xwd is a file format written by eponymous X11 screen capture
@@ -20,16 +21,16 @@ class Xwd(KaitaiStruct):
     and thus is probably a poor choice for true cross-platform usage.
     """
 
-    class PixmapFormat(Enum):
+    class ByteOrder(IntEnum):
+        le = 0
+        be = 1
+
+    class PixmapFormat(IntEnum):
         x_y_bitmap = 0
         x_y_pixmap = 1
         z_pixmap = 2
 
-    class ByteOrder(Enum):
-        le = 0
-        be = 1
-
-    class VisualClass(Enum):
+    class VisualClass(IntEnum):
         static_gray = 0
         gray_scale = 1
         static_color = 2
@@ -37,14 +38,14 @@ class Xwd(KaitaiStruct):
         true_color = 4
         direct_color = 5
     def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
+        super(Xwd, self).__init__(_io)
         self._parent = _parent
-        self._root = _root if _root else self
+        self._root = _root or self
         self._read()
 
     def _read(self):
         self.len_header = self._io.read_u4be()
-        self._raw_hdr = self._io.read_bytes((self.len_header - 4))
+        self._raw_hdr = self._io.read_bytes(self.len_header - 4)
         _io__raw_hdr = KaitaiStream(BytesIO(self._raw_hdr))
         self.hdr = Xwd.Header(_io__raw_hdr, self, self._root)
         self._raw_color_map = []
@@ -55,11 +56,40 @@ class Xwd(KaitaiStruct):
             self.color_map.append(Xwd.ColorMapEntry(_io__raw_color_map, self, self._root))
 
 
+
+    def _fetch_instances(self):
+        pass
+        self.hdr._fetch_instances()
+        for i in range(len(self.color_map)):
+            pass
+            self.color_map[i]._fetch_instances()
+
+
+    class ColorMapEntry(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(Xwd.ColorMapEntry, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.entry_number = self._io.read_u4be()
+            self.red = self._io.read_u2be()
+            self.green = self._io.read_u2be()
+            self.blue = self._io.read_u2be()
+            self.flags = self._io.read_u1()
+            self.padding = self._io.read_u1()
+
+
+        def _fetch_instances(self):
+            pass
+
+
     class Header(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(Xwd.Header, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -90,20 +120,8 @@ class Xwd(KaitaiStruct):
             self.creator = (self._io.read_bytes_term(0, False, True, True)).decode(u"UTF-8")
 
 
-    class ColorMapEntry(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.entry_number = self._io.read_u4be()
-            self.red = self._io.read_u2be()
-            self.green = self._io.read_u2be()
-            self.blue = self._io.read_u2be()
-            self.flags = self._io.read_u1()
-            self.padding = self._io.read_u1()
+        def _fetch_instances(self):
+            pass
 
 
 

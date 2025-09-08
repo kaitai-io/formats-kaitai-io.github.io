@@ -217,6 +217,11 @@ how to process a certain block type.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="RAR (Roshall ARchiver) archive files parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="RAR (Roshall ARchiver) archive files parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -247,7 +252,17 @@ how to process a certain block type.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="RAR (Roshall ARchiver) archive files parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="RAR (Roshall ARchiver) archive files parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="RAR (Roshall ARchiver) archive files parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -279,9 +294,8 @@ how to process a certain block type.</p>
         <div class="row">
             <div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="n">kaitai_struct_nim_runtime</span>
 <span class="kn">import</span><span class="w"> </span><span class="n">options</span>
-<span class="kn">import</span><span class="w"> </span><span class="o">/</span><span class="n">common</span><span class="o">/</span><span class="n">dos_datetime</span>
+<span class="kn">import</span><span class="w"> </span><span class="n">dos_datetime</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="s">&quot;dos_datetime&quot;</span>
 <span class="k">type</span>
 <span class="w">  </span><span class="n">Rar</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
 <span class="w">    </span><span class="p">`</span><span class="n">magic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Rar_MagicSignature</span>
@@ -298,13 +312,6 @@ how to process a certain block type.</p>
 <span class="w">    </span><span class="n">old_style_authenticity_info_79</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">121</span>
 <span class="w">    </span><span class="n">subblock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">122</span>
 <span class="w">    </span><span class="n">terminator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">123</span>
-<span class="w">  </span><span class="n">Rar_Oses</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">enum</span>
-<span class="w">    </span><span class="n">ms_dos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
-<span class="w">    </span><span class="n">os_2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
-<span class="w">    </span><span class="n">windows</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
-<span class="w">    </span><span class="n">unix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
-<span class="w">    </span><span class="n">mac_os</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span>
-<span class="w">    </span><span class="n">beos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
 <span class="w">  </span><span class="n">Rar_Methods</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">enum</span>
 <span class="w">    </span><span class="n">store</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">48</span>
 <span class="w">    </span><span class="n">fastest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">49</span>
@@ -312,11 +319,13 @@ how to process a certain block type.</p>
 <span class="w">    </span><span class="n">normal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">51</span>
 <span class="w">    </span><span class="n">good</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">52</span>
 <span class="w">    </span><span class="n">best</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">53</span>
-<span class="w">  </span><span class="n">Rar_MagicSignature</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
-<span class="w">    </span><span class="p">`</span><span class="n">magic1</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-<span class="w">    </span><span class="p">`</span><span class="n">version</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint8</span>
-<span class="w">    </span><span class="p">`</span><span class="n">magic3</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Rar</span>
+<span class="w">  </span><span class="n">Rar_Oses</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">enum</span>
+<span class="w">    </span><span class="n">ms_dos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="n">os_2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">    </span><span class="n">windows</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">    </span><span class="n">unix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
+<span class="w">    </span><span class="n">mac_os</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span>
+<span class="w">    </span><span class="n">beos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
 <span class="w">  </span><span class="n">Rar_Block</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
 <span class="w">    </span><span class="p">`</span><span class="n">crc16</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
 <span class="w">    </span><span class="p">`</span><span class="n">blockType</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Rar_BlockTypes</span>
@@ -327,12 +336,12 @@ how to process a certain block type.</p>
 <span class="w">    </span><span class="p">`</span><span class="n">addBody</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
 <span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Rar</span>
 <span class="w">    </span><span class="p">`</span><span class="n">rawBody</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">bodySizeInst</span><span class="p">`:</span><span class="w"> </span><span class="nb">int</span>
+<span class="w">    </span><span class="p">`</span><span class="n">bodySizeInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
 <span class="w">    </span><span class="p">`</span><span class="n">hasAddInst</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
 <span class="w">    </span><span class="p">`</span><span class="n">hasAddInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
 <span class="w">    </span><span class="p">`</span><span class="n">headerSizeInst</span><span class="p">`:</span><span class="w"> </span><span class="nb">int8</span>
 <span class="w">    </span><span class="p">`</span><span class="n">headerSizeInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
-<span class="w">    </span><span class="p">`</span><span class="n">bodySizeInst</span><span class="p">`:</span><span class="w"> </span><span class="nb">int</span>
-<span class="w">    </span><span class="p">`</span><span class="n">bodySizeInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
 <span class="w">  </span><span class="n">Rar_BlockFileHeader</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
 <span class="w">    </span><span class="p">`</span><span class="n">lowUnpSize</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
 <span class="w">    </span><span class="p">`</span><span class="n">hostOs</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Rar_Oses</span>
@@ -349,16 +358,21 @@ how to process a certain block type.</p>
 <span class="w">    </span><span class="p">`</span><span class="n">rawFileTime</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
 <span class="w">  </span><span class="n">Rar_BlockV5</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
 <span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Rar</span>
+<span class="w">  </span><span class="n">Rar_MagicSignature</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">magic1</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">version</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint8</span>
+<span class="w">    </span><span class="p">`</span><span class="n">magic3</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Rar</span>
 
 <span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Rar], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Rar</span>
-<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Rar_MagicSignature], io: KaitaiStream, root: KaitaiStruct, parent: Rar): Rar_MagicSignature</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Rar_Block], io: KaitaiStream, root: KaitaiStruct, parent: Rar): Rar_Block</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Rar_BlockFileHeader], io: KaitaiStream, root: KaitaiStruct, parent: Rar_Block): Rar_BlockFileHeader</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Rar_BlockV5], io: KaitaiStream, root: KaitaiStruct, parent: Rar): Rar_BlockV5</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Rar_MagicSignature], io: KaitaiStream, root: KaitaiStruct, parent: Rar): Rar_MagicSignature</span>
 
+<span class="k">proc</span><span class="w"> </span><span class="nf">bodySize</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Rar_Block</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">hasAdd</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Rar_Block</span><span class="p">):</span><span class="w"> </span><span class="nb">bool</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">headerSize</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Rar_Block</span><span class="p">):</span><span class="w"> </span><span class="nb">int8</span>
-<span class="k">proc</span><span class="w"> </span><span class="nf">bodySize</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Rar_Block</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span>
 
 
 <span class="sd">##[</span>
@@ -406,50 +420,6 @@ how to process a certain block type.</p>
 
 <span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Rar], filename: string): Rar =</span>
 <span class="w">  </span><span class="n">Rar</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
-
-
-<span class="sd">##[</span>
-<span class="sd">RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and</span>
-<span class="sd">8-byte magic (and pretty different block format) for v5+. This</span>
-<span class="sd">type would parse and validate both versions of signature. Note</span>
-<span class="sd">that actually this signature is a valid RAR &quot;block&quot;: in theory,</span>
-<span class="sd">one can omit signature reading at all, and read this normally,</span>
-<span class="sd">as a block, if exact RAR version is known (and thus it&#39;s</span>
-<span class="sd">possible to choose correct block format).</span>
-
-<span class="sd">]##</span>
-<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Rar_MagicSignature], io: KaitaiStream, root: KaitaiStruct, parent: Rar): Rar_MagicSignature =</span>
-<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
-<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">Rar_MagicSignature</span><span class="p">)</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Rar</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Rar</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
-
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  Fixed part of file&#39;s magic signature that doesn&#39;t change with RAR version</span>
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">magic1Expr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">6</span><span class="p">))</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">magic1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">magic1Expr</span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  Variable part of magic signature: 0 means old (RAR 1.5-4.0)</span>
-<span class="sd">format, 1 means new (RAR 5+) format</span>
-
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">versionExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">versionExpr</span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  New format (RAR 5+) magic contains extra byte</span>
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">version</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">:</span>
-<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">magic3Expr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
-<span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">magic3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">magic3Expr</span>
-
-<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Rar_MagicSignature], filename: string): Rar_MagicSignature =</span>
-<span class="w">  </span><span class="n">Rar_MagicSignature</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 
 
 <span class="sd">##[</span>
@@ -508,6 +478,14 @@ how to process a certain block type.</p>
 <span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">addBodyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">addSize</span><span class="p">))</span>
 <span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">addBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">addBodyExpr</span>
 
+<span class="k">proc</span><span class="w"> </span><span class="nf">bodySize</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Rar_Block</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">bodySizeInstFlag</span><span class="p">:</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">bodySizeInst</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">bodySizeInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">blockSize</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">headerSize</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">bodySizeInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bodySizeInstExpr</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">bodySizeInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">bodySizeInst</span>
+
 <span class="k">proc</span><span class="w"> </span><span class="nf">hasAdd</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Rar_Block</span><span class="p">):</span><span class="w"> </span><span class="nb">bool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
 
 <span class="w">  </span><span class="sd">##[</span>
@@ -527,14 +505,6 @@ how to process a certain block type.</p>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">headerSizeInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">headerSizeInstExpr</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">headerSizeInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
 <span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">headerSizeInst</span>
-
-<span class="k">proc</span><span class="w"> </span><span class="nf">bodySize</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Rar_Block</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">bodySizeInstFlag</span><span class="p">:</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">bodySizeInst</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">bodySizeInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">blockSize</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">headerSize</span><span class="p">))</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">bodySizeInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bodySizeInstExpr</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">bodySizeInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">bodySizeInst</span>
 
 <span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Rar_Block], filename: string): Rar_Block =</span>
 <span class="w">  </span><span class="n">Rar_Block</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
@@ -568,7 +538,7 @@ how to process a certain block type.</p>
 <span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">rawFileTimeExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">rawFileTime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rawFileTimeExpr</span>
 <span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">rawFileTimeIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawFileTimeExpr</span><span class="p">)</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">fileTimeExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DosDatetime</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawFileTimeIo</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">fileTimeExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DosDatetime</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawFileTimeIo</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">fileTime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fileTimeExpr</span>
 
 <span class="w">  </span><span class="sd">##[</span>
@@ -621,6 +591,50 @@ how to process a certain block type.</p>
 
 <span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Rar_BlockV5], filename: string): Rar_BlockV5 =</span>
 <span class="w">  </span><span class="n">Rar_BlockV5</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="sd">RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and</span>
+<span class="sd">8-byte magic (and pretty different block format) for v5+. This</span>
+<span class="sd">type would parse and validate both versions of signature. Note</span>
+<span class="sd">that actually this signature is a valid RAR &quot;block&quot;: in theory,</span>
+<span class="sd">one can omit signature reading at all, and read this normally,</span>
+<span class="sd">as a block, if exact RAR version is known (and thus it&#39;s</span>
+<span class="sd">possible to choose correct block format).</span>
+
+<span class="sd">]##</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Rar_MagicSignature], io: KaitaiStream, root: KaitaiStruct, parent: Rar): Rar_MagicSignature =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">Rar_MagicSignature</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Rar</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Rar</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
+
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Fixed part of file&#39;s magic signature that doesn&#39;t change with RAR version</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">magic1Expr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">6</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">magic1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">magic1Expr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Variable part of magic signature: 0 means old (RAR 1.5-4.0)</span>
+<span class="sd">format, 1 means new (RAR 5+) format</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">versionExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">versionExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  New format (RAR 5+) magic contains extra byte</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">version</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">:</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">magic3Expr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+<span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">magic3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">magic3Expr</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Rar_MagicSignature], filename: string): Rar_MagicSignature =</span>
+<span class="w">  </span><span class="n">Rar_MagicSignature</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 </pre></div>
 
         </div>

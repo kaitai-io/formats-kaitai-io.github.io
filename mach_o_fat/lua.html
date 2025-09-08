@@ -169,6 +169,11 @@ like single-arch Mach-Os and will pick the appropriate entry.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="macOS Mach-O multiarch ("fat") binary parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="macOS Mach-O multiarch ("fat") binary parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -199,7 +204,17 @@ like single-arch Mach-Os and will pick the appropriate entry.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="macOS Mach-O multiarch ("fat") binary parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="macOS Mach-O multiarch ("fat") binary parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="macOS Mach-O multiarch ("fat") binary parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -235,9 +250,9 @@ like single-arch Mach-Os and will pick the appropriate entry.</p>
 
 <span class="kd">local</span><span class="w"> </span><span class="nv">class</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
 <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;kaitaistruct&quot;</span><span class="p">)</span>
+<span class="nb">require</span><span class="p">(</span><span class="s2">&quot;mach_o&quot;</span><span class="p">)</span>
 <span class="kd">local</span><span class="w"> </span><span class="nv">stringstream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_stream&quot;</span><span class="p">)</span>
 
-<span class="nb">require</span><span class="p">(</span><span class="s2">&quot;mach_o&quot;</span><span class="p">)</span>
 <span class="c1">-- </span>
 <span class="c1">-- This is a simple container format that encapsulates multiple Mach-O files,</span>
 <span class="c1">-- each generally for a different architecture. XNU can execute these files just</span>
@@ -255,7 +270,7 @@ like single-arch Mach-Os and will pick the appropriate entry.</p>
 <span class="kr">function</span><span class="w"> </span><span class="nc">MachOFat</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">magic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
 <span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">magic</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\202\254\186\190</span><span class="s2">&quot;</span><span class="p">)</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span><span class="w"> </span><span class="o">..</span><span class="w">  </span><span class="s2">&quot;</span><span class="se">\202\254\186\190</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s2">&quot;, but got &quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">magic</span><span class="p">)</span>
+<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\202\254\186\190</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s2">&quot;, but got &quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">magic</span><span class="p">)</span>
 <span class="w">  </span><span class="kr">end</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">num_fat_arch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">fat_archs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
@@ -270,7 +285,7 @@ like single-arch Mach-Os and will pick the appropriate entry.</p>
 <span class="kr">function</span><span class="w"> </span><span class="nc">MachOFat</span><span class="p">.</span><span class="nc">FatArch</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 

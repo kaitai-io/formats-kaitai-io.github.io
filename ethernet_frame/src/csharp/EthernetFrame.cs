@@ -136,8 +136,8 @@ namespace Kaitai
             {
                 if (f_etherType)
                     return _etherType;
-                _etherType = (EtherTypeEnum) ((EtherType1 == EtherTypeEnum.Ieee8021qTpid ? EtherType2 : EtherType1));
                 f_etherType = true;
+                _etherType = (EtherTypeEnum) ((EtherType1 == EtherTypeEnum.Ieee8021qTpid ? EtherType2 : EtherType1));
                 return _etherType;
             }
         }

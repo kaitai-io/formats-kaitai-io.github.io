@@ -10,8 +10,8 @@
 
 namespace {
     class RtpPacket extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \RtpPacket $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\RtpPacket $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -29,8 +29,19 @@ namespace {
             if ($this->hasExtension()) {
                 $this->_m_headerExtension = new \RtpPacket\HeaderExtention($this->_io, $this, $this->_root);
             }
-            $this->_m_data = $this->_io->readBytes((($this->_io()->size() - $this->_io()->pos()) - $this->lenPadding()));
+            $this->_m_data = $this->_io->readBytes(($this->_io()->size() - $this->_io()->pos()) - $this->lenPadding());
             $this->_m_padding = $this->_io->readBytes($this->lenPadding());
+        }
+        protected $_m_lenPadding;
+
+        /**
+         * Always returns number of padding bytes to in the payload.
+         */
+        public function lenPadding() {
+            if ($this->_m_lenPadding !== null)
+                return $this->_m_lenPadding;
+            $this->_m_lenPadding = ($this->hasPadding() ? $this->lenPaddingIfExists() : 0);
+            return $this->_m_lenPadding;
         }
         protected $_m_lenPaddingIfExists;
 
@@ -43,22 +54,11 @@ namespace {
                 return $this->_m_lenPaddingIfExists;
             if ($this->hasPadding()) {
                 $_pos = $this->_io->pos();
-                $this->_io->seek(($this->_io()->size() - 1));
+                $this->_io->seek($this->_io()->size() - 1);
                 $this->_m_lenPaddingIfExists = $this->_io->readU1();
                 $this->_io->seek($_pos);
             }
             return $this->_m_lenPaddingIfExists;
-        }
-        protected $_m_lenPadding;
-
-        /**
-         * Always returns number of padding bytes to in the payload.
-         */
-        public function lenPadding() {
-            if ($this->_m_lenPadding !== null)
-                return $this->_m_lenPadding;
-            $this->_m_lenPadding = ($this->hasPadding() ? $this->lenPaddingIfExists() : 0);
-            return $this->_m_lenPadding;
         }
         protected $_m_version;
         protected $_m_hasPadding;
@@ -93,7 +93,7 @@ namespace {
 
 namespace RtpPacket {
     class HeaderExtention extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \RtpPacket $_parent = null, \RtpPacket $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\RtpPacket $_parent = null, ?\RtpPacket $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -147,5 +147,11 @@ namespace RtpPacket {
         const MP2T = 33;
         const H263 = 34;
         const MPEG_PS = 96;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 7 => true, 8 => true, 9 => true, 10 => true, 11 => true, 12 => true, 13 => true, 14 => true, 15 => true, 16 => true, 17 => true, 18 => true, 19 => true, 20 => true, 21 => true, 22 => true, 23 => true, 24 => true, 25 => true, 26 => true, 27 => true, 28 => true, 29 => true, 30 => true, 31 => true, 32 => true, 33 => true, 34 => true, 96 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

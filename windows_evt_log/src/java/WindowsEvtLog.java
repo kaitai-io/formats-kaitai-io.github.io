@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
 
 
 /**
@@ -65,6 +66,64 @@ public class WindowsEvtLog extends KaitaiStruct {
         }
     }
 
+    public void _fetchInstances() {
+        this.header._fetchInstances();
+        for (int i = 0; i < this.records.size(); i++) {
+            this.records.get(((Number) (i)).intValue())._fetchInstances();
+        }
+    }
+
+    /**
+     * @see <a href="https://forensics.wiki/windows_event_log_(evt)/#cursor-record">Source</a>
+     */
+    public static class CursorRecordBody extends KaitaiStruct {
+        public static CursorRecordBody fromFile(String fileName) throws IOException {
+            return new CursorRecordBody(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public CursorRecordBody(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public CursorRecordBody(KaitaiStream _io, WindowsEvtLog.Record _parent) {
+            this(_io, _parent, null);
+        }
+
+        public CursorRecordBody(KaitaiStream _io, WindowsEvtLog.Record _parent, WindowsEvtLog _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.magic = this._io.readBytes(12);
+            if (!(Arrays.equals(this.magic, new byte[] { 34, 34, 34, 34, 51, 51, 51, 51, 68, 68, 68, 68 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 34, 34, 34, 34, 51, 51, 51, 51, 68, 68, 68, 68 }, this.magic, this._io, "/types/cursor_record_body/seq/0");
+            }
+            this.ofsFirstRecord = this._io.readU4le();
+            this.ofsNextRecord = this._io.readU4le();
+            this.idxNextRecord = this._io.readU4le();
+            this.idxFirstRecord = this._io.readU4le();
+        }
+
+        public void _fetchInstances() {
+        }
+        private byte[] magic;
+        private long ofsFirstRecord;
+        private long ofsNextRecord;
+        private long idxNextRecord;
+        private long idxFirstRecord;
+        private WindowsEvtLog _root;
+        private WindowsEvtLog.Record _parent;
+        public byte[] magic() { return magic; }
+        public long ofsFirstRecord() { return ofsFirstRecord; }
+        public long ofsNextRecord() { return ofsNextRecord; }
+        public long idxNextRecord() { return idxNextRecord; }
+        public long idxFirstRecord() { return idxFirstRecord; }
+        public WindowsEvtLog _root() { return _root; }
+        public WindowsEvtLog.Record _parent() { return _parent; }
+    }
+
     /**
      * @see <a href="https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb309024(v=vs.85)">Source</a>
      */
@@ -90,8 +149,8 @@ public class WindowsEvtLog extends KaitaiStruct {
         private void _read() {
             this.lenHeader = this._io.readU4le();
             this.magic = this._io.readBytes(4);
-            if (!(Arrays.equals(magic(), new byte[] { 76, 102, 76, 101 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 76, 102, 76, 101 }, magic(), _io(), "/types/header/seq/1");
+            if (!(Arrays.equals(this.magic, new byte[] { 76, 102, 76, 101 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 76, 102, 76, 101 }, this.magic, this._io, "/types/header/seq/1");
             }
             this.versionMajor = this._io.readU4le();
             this.versionMinor = this._io.readU4le();
@@ -103,6 +162,10 @@ public class WindowsEvtLog extends KaitaiStruct {
             this.flags = new Flags(this._io, this, _root);
             this.retention = this._io.readU4le();
             this.lenHeader2 = this._io.readU4le();
+        }
+
+        public void _fetchInstances() {
+            this.flags._fetchInstances();
         }
         public static class Flags extends KaitaiStruct {
             public static Flags fromFile(String fileName) throws IOException {
@@ -129,6 +192,9 @@ public class WindowsEvtLog extends KaitaiStruct {
                 this.logFull = this._io.readBitsIntBe(1) != 0;
                 this.wrap = this._io.readBitsIntBe(1) != 0;
                 this.dirty = this._io.readBitsIntBe(1) != 0;
+            }
+
+            public void _fetchInstances() {
             }
             private long reserved;
             private boolean archive;
@@ -248,23 +314,37 @@ public class WindowsEvtLog extends KaitaiStruct {
             this.type = this._io.readU4le();
             switch (type()) {
             case 1699505740: {
-                this._raw_body = this._io.readBytes((lenRecord() - 12));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new RecordBody(_io__raw_body, this, _root);
+                KaitaiStream _io_body = this._io.substream(lenRecord() - 12);
+                this.body = new RecordBody(_io_body, this, _root);
                 break;
             }
             case 286331153: {
-                this._raw_body = this._io.readBytes((lenRecord() - 12));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new CursorRecordBody(_io__raw_body, this, _root);
+                KaitaiStream _io_body = this._io.substream(lenRecord() - 12);
+                this.body = new CursorRecordBody(_io_body, this, _root);
                 break;
             }
             default: {
-                this.body = this._io.readBytes((lenRecord() - 12));
+                this.body = this._io.readBytes(lenRecord() - 12);
                 break;
             }
             }
             this.lenRecord2 = this._io.readU4le();
+        }
+
+        public void _fetchInstances() {
+            switch (type()) {
+            case 1699505740: {
+                ((RecordBody) (this.body))._fetchInstances();
+                break;
+            }
+            case 286331153: {
+                ((CursorRecordBody) (this.body))._fetchInstances();
+                break;
+            }
+            default: {
+                break;
+            }
+            }
         }
         private long lenRecord;
         private long type;
@@ -272,7 +352,6 @@ public class WindowsEvtLog extends KaitaiStruct {
         private long lenRecord2;
         private WindowsEvtLog _root;
         private WindowsEvtLog _parent;
-        private byte[] _raw_body;
 
         /**
          * Size of whole record, including all headers, footers and data
@@ -299,7 +378,6 @@ public class WindowsEvtLog extends KaitaiStruct {
         public long lenRecord2() { return lenRecord2; }
         public WindowsEvtLog _root() { return _root; }
         public WindowsEvtLog _parent() { return _parent; }
-        public byte[] _raw_body() { return _raw_body; }
     }
 
     /**
@@ -357,25 +435,34 @@ public class WindowsEvtLog extends KaitaiStruct {
             this.lenData = this._io.readU4le();
             this.ofsData = this._io.readU4le();
         }
-        private byte[] userSid;
-        public byte[] userSid() {
-            if (this.userSid != null)
-                return this.userSid;
-            long _pos = this._io.pos();
-            this._io.seek((ofsUserSid() - 8));
-            this.userSid = this._io.readBytes(lenUserSid());
-            this._io.seek(_pos);
-            return this.userSid;
+
+        public void _fetchInstances() {
+            data();
+            if (this.data != null) {
+            }
+            userSid();
+            if (this.userSid != null) {
+            }
         }
         private byte[] data;
         public byte[] data() {
             if (this.data != null)
                 return this.data;
             long _pos = this._io.pos();
-            this._io.seek((ofsData() - 8));
+            this._io.seek(ofsData() - 8);
             this.data = this._io.readBytes(lenData());
             this._io.seek(_pos);
             return this.data;
+        }
+        private byte[] userSid;
+        public byte[] userSid() {
+            if (this.userSid != null)
+                return this.userSid;
+            long _pos = this._io.pos();
+            this._io.seek(ofsUserSid() - 8);
+            this.userSid = this._io.readBytes(lenUserSid());
+            this._io.seek(_pos);
+            return this.userSid;
         }
         private long idx;
         private long timeGenerated;
@@ -442,60 +529,12 @@ public class WindowsEvtLog extends KaitaiStruct {
         public WindowsEvtLog _root() { return _root; }
         public WindowsEvtLog.Record _parent() { return _parent; }
     }
-
-    /**
-     * @see <a href="https://forensics.wiki/windows_event_log_(evt)/#cursor-record">Source</a>
-     */
-    public static class CursorRecordBody extends KaitaiStruct {
-        public static CursorRecordBody fromFile(String fileName) throws IOException {
-            return new CursorRecordBody(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public CursorRecordBody(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public CursorRecordBody(KaitaiStream _io, WindowsEvtLog.Record _parent) {
-            this(_io, _parent, null);
-        }
-
-        public CursorRecordBody(KaitaiStream _io, WindowsEvtLog.Record _parent, WindowsEvtLog _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.magic = this._io.readBytes(12);
-            if (!(Arrays.equals(magic(), new byte[] { 34, 34, 34, 34, 51, 51, 51, 51, 68, 68, 68, 68 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 34, 34, 34, 34, 51, 51, 51, 51, 68, 68, 68, 68 }, magic(), _io(), "/types/cursor_record_body/seq/0");
-            }
-            this.ofsFirstRecord = this._io.readU4le();
-            this.ofsNextRecord = this._io.readU4le();
-            this.idxNextRecord = this._io.readU4le();
-            this.idxFirstRecord = this._io.readU4le();
-        }
-        private byte[] magic;
-        private long ofsFirstRecord;
-        private long ofsNextRecord;
-        private long idxNextRecord;
-        private long idxFirstRecord;
-        private WindowsEvtLog _root;
-        private WindowsEvtLog.Record _parent;
-        public byte[] magic() { return magic; }
-        public long ofsFirstRecord() { return ofsFirstRecord; }
-        public long ofsNextRecord() { return ofsNextRecord; }
-        public long idxNextRecord() { return idxNextRecord; }
-        public long idxFirstRecord() { return idxFirstRecord; }
-        public WindowsEvtLog _root() { return _root; }
-        public WindowsEvtLog.Record _parent() { return _parent; }
-    }
     private Header header;
-    private ArrayList<Record> records;
+    private List<Record> records;
     private WindowsEvtLog _root;
     private KaitaiStruct _parent;
     public Header header() { return header; }
-    public ArrayList<Record> records() { return records; }
+    public List<Record> records() { return records; }
     public WindowsEvtLog _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

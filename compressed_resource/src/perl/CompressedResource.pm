@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use BytesWithIo;
 
 ########################################################################
@@ -25,7 +25,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -69,7 +69,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -80,16 +80,9 @@ sub _read {
     my ($self) = @_;
 
     $self->{common_part} = CompressedResource::Header::CommonPart->new($self->{_io}, $self, $self->{_root});
-    $self->{_raw_type_specific_part_raw_with_io} = $self->{_io}->read_bytes(($self->common_part()->len_header() - 12));
+    $self->{_raw_type_specific_part_raw_with_io} = $self->{_io}->read_bytes($self->common_part()->len_header() - 12);
     my $io__raw_type_specific_part_raw_with_io = IO::KaitaiStruct::Stream->new($self->{_raw_type_specific_part_raw_with_io});
     $self->{type_specific_part_raw_with_io} = BytesWithIo->new($io__raw_type_specific_part_raw_with_io);
-}
-
-sub type_specific_part_raw {
-    my ($self) = @_;
-    return $self->{type_specific_part_raw} if ($self->{type_specific_part_raw});
-    $self->{type_specific_part_raw} = $self->type_specific_part_raw_with_io()->data();
-    return $self->{type_specific_part_raw};
 }
 
 sub type_specific_part {
@@ -107,6 +100,13 @@ sub type_specific_part {
     }
     $io->seek($_pos);
     return $self->{type_specific_part};
+}
+
+sub type_specific_part_raw {
+    my ($self) = @_;
+    return $self->{type_specific_part_raw} if ($self->{type_specific_part_raw});
+    $self->{type_specific_part_raw} = $self->type_specific_part_raw_with_io()->data();
+    return $self->{type_specific_part_raw};
 }
 
 sub common_part {
@@ -144,7 +144,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -206,7 +206,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -262,7 +262,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 

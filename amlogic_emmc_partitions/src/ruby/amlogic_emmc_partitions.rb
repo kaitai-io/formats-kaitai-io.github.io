@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -21,18 +21,18 @@ end
 # @see http://aml-code.amlogic.com/kernel/common.git/tree/include/linux/mmc/emmc_partitions.h?id=18a4a87072ababf76ea08c8539e939b5b8a440ef Source
 # @see http://aml-code.amlogic.com/kernel/common.git/tree/drivers/amlogic/mmc/emmc_partitions.c?id=18a4a87072ababf76ea08c8539e939b5b8a440ef Source
 class AmlogicEmmcPartitions < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
     @magic = @_io.read_bytes(4)
-    raise Kaitai::Struct::ValidationNotEqualError.new([77, 80, 84, 0].pack('C*'), magic, _io, "/seq/0") if not magic == [77, 80, 84, 0].pack('C*')
+    raise Kaitai::Struct::ValidationNotEqualError.new([77, 80, 84, 0].pack('C*'), @magic, @_io, "/seq/0") if not @magic == [77, 80, 84, 0].pack('C*')
     @version = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(12), 0, false)).force_encoding("UTF-8")
     @num_partitions = @_io.read_s4le
-    raise Kaitai::Struct::ValidationLessThanError.new(1, num_partitions, _io, "/seq/2") if not num_partitions >= 1
-    raise Kaitai::Struct::ValidationGreaterThanError.new(32, num_partitions, _io, "/seq/2") if not num_partitions <= 32
+    raise Kaitai::Struct::ValidationLessThanError.new(1, @num_partitions, @_io, "/seq/2") if not @num_partitions >= 1
+    raise Kaitai::Struct::ValidationGreaterThanError.new(32, @num_partitions, @_io, "/seq/2") if not @num_partitions <= 32
     @checksum = @_io.read_u4le
     @partitions = []
     (num_partitions).times { |i|
@@ -41,7 +41,7 @@ class AmlogicEmmcPartitions < Kaitai::Struct::Struct
     self
   end
   class Partition < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -50,14 +50,13 @@ class AmlogicEmmcPartitions < Kaitai::Struct::Struct
       @name = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(16), 0, false)).force_encoding("UTF-8")
       @size = @_io.read_u8le
       @offset = @_io.read_u8le
-      @_raw_flags = @_io.read_bytes(4)
-      _io__raw_flags = Kaitai::Struct::Stream.new(@_raw_flags)
-      @flags = PartFlags.new(_io__raw_flags, self, @_root)
+      _io_flags = @_io.substream(4)
+      @flags = PartFlags.new(_io_flags, self, @_root)
       @padding = @_io.read_bytes(4)
       self
     end
     class PartFlags < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end

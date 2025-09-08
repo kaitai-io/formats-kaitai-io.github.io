@@ -5,6 +5,7 @@ import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -56,6 +57,12 @@ public class Utf8String extends KaitaiStruct {
             }
         }
     }
+
+    public void _fetchInstances() {
+        for (int i = 0; i < this.codepoints.size(); i++) {
+            this.codepoints.get(((Number) (i)).intValue())._fetchInstances();
+        }
+    }
     public static class Utf8Codepoint extends KaitaiStruct {
 
         public Utf8Codepoint(KaitaiStream _io, long ofs) {
@@ -76,49 +83,11 @@ public class Utf8String extends KaitaiStruct {
         private void _read() {
             this.bytes = this._io.readBytes(lenBytes());
         }
-        private Integer raw1;
-        public Integer raw1() {
-            if (this.raw1 != null)
-                return this.raw1;
-            if (lenBytes() >= 2) {
-                int _tmp = (int) ((bytes()[1] & 63));
-                this.raw1 = _tmp;
+
+        public void _fetchInstances() {
+            byte0();
+            if (this.byte0 != null) {
             }
-            return this.raw1;
-        }
-        private Integer lenBytes;
-        public Integer lenBytes() {
-            if (this.lenBytes != null)
-                return this.lenBytes;
-            int _tmp = (int) (((byte0() & 128) == 0 ? 1 : ((byte0() & 224) == 192 ? 2 : ((byte0() & 240) == 224 ? 3 : ((byte0() & 248) == 240 ? 4 : -1)))));
-            this.lenBytes = _tmp;
-            return this.lenBytes;
-        }
-        private Integer raw3;
-        public Integer raw3() {
-            if (this.raw3 != null)
-                return this.raw3;
-            if (lenBytes() >= 4) {
-                int _tmp = (int) ((bytes()[3] & 63));
-                this.raw3 = _tmp;
-            }
-            return this.raw3;
-        }
-        private Integer valueAsInt;
-        public Integer valueAsInt() {
-            if (this.valueAsInt != null)
-                return this.valueAsInt;
-            int _tmp = (int) ((lenBytes() == 1 ? raw0() : (lenBytes() == 2 ? ((raw0() << 6) | raw1()) : (lenBytes() == 3 ? (((raw0() << 12) | (raw1() << 6)) | raw2()) : (lenBytes() == 4 ? ((((raw0() << 18) | (raw1() << 12)) | (raw2() << 6)) | raw3()) : -1)))));
-            this.valueAsInt = _tmp;
-            return this.valueAsInt;
-        }
-        private Integer raw0;
-        public Integer raw0() {
-            if (this.raw0 != null)
-                return this.raw0;
-            int _tmp = (int) ((bytes()[0] & (lenBytes() == 1 ? 127 : (lenBytes() == 2 ? 31 : (lenBytes() == 3 ? 15 : (lenBytes() == 4 ? 7 : 0))))));
-            this.raw0 = _tmp;
-            return this.raw0;
         }
         private Integer byte0;
         public Integer byte0() {
@@ -130,15 +99,53 @@ public class Utf8String extends KaitaiStruct {
             this._io.seek(_pos);
             return this.byte0;
         }
+        private Integer lenBytes;
+        public Integer lenBytes() {
+            if (this.lenBytes != null)
+                return this.lenBytes;
+            this.lenBytes = ((Number) (((byte0() & 128) == 0 ? 1 : ((byte0() & 224) == 192 ? 2 : ((byte0() & 240) == 224 ? 3 : ((byte0() & 248) == 240 ? 4 : -1)))))).intValue();
+            return this.lenBytes;
+        }
+        private Integer raw0;
+        public Integer raw0() {
+            if (this.raw0 != null)
+                return this.raw0;
+            this.raw0 = ((Number) ((bytes()[((int) 0)] & 0xff) & (lenBytes() == 1 ? 127 : (lenBytes() == 2 ? 31 : (lenBytes() == 3 ? 15 : (lenBytes() == 4 ? 7 : 0)))))).intValue();
+            return this.raw0;
+        }
+        private Integer raw1;
+        public Integer raw1() {
+            if (this.raw1 != null)
+                return this.raw1;
+            if (lenBytes() >= 2) {
+                this.raw1 = ((Number) ((bytes()[((int) 1)] & 0xff) & 63)).intValue();
+            }
+            return this.raw1;
+        }
         private Integer raw2;
         public Integer raw2() {
             if (this.raw2 != null)
                 return this.raw2;
             if (lenBytes() >= 3) {
-                int _tmp = (int) ((bytes()[2] & 63));
-                this.raw2 = _tmp;
+                this.raw2 = ((Number) ((bytes()[((int) 2)] & 0xff) & 63)).intValue();
             }
             return this.raw2;
+        }
+        private Integer raw3;
+        public Integer raw3() {
+            if (this.raw3 != null)
+                return this.raw3;
+            if (lenBytes() >= 4) {
+                this.raw3 = ((Number) ((bytes()[((int) 3)] & 0xff) & 63)).intValue();
+            }
+            return this.raw3;
+        }
+        private Integer valueAsInt;
+        public Integer valueAsInt() {
+            if (this.valueAsInt != null)
+                return this.valueAsInt;
+            this.valueAsInt = ((Number) ((lenBytes() == 1 ? raw0() : (lenBytes() == 2 ? raw0() << 6 | raw1() : (lenBytes() == 3 ? (raw0() << 12 | raw1() << 6) | raw2() : (lenBytes() == 4 ? ((raw0() << 18 | raw1() << 12) | raw2() << 6) | raw3() : -1)))))).intValue();
+            return this.valueAsInt;
         }
         private byte[] bytes;
         private long ofs;
@@ -149,10 +156,10 @@ public class Utf8String extends KaitaiStruct {
         public Utf8String _root() { return _root; }
         public Utf8String _parent() { return _parent; }
     }
-    private ArrayList<Utf8Codepoint> codepoints;
+    private List<Utf8Codepoint> codepoints;
     private Utf8String _root;
     private KaitaiStruct _parent;
-    public ArrayList<Utf8Codepoint> codepoints() { return codepoints; }
+    public List<Utf8Codepoint> codepoints() { return codepoints; }
     public Utf8String _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Encode;
 
 ########################################################################
@@ -45,7 +45,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -58,7 +58,12 @@ sub _read {
     $self->{type_tag} = $self->{_io}->read_u1();
     $self->{len} = Asn1Der::LenEncoded->new($self->{_io}, $self, $self->{_root});
     my $_on = $self->type_tag();
-    if ($_on == $Asn1Der::TYPE_TAG_PRINTABLE_STRING) {
+    if ($_on == $Asn1Der::TYPE_TAG_OBJECT_ID) {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len()->result());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = Asn1Der::BodyObjectId->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $Asn1Der::TYPE_TAG_PRINTABLE_STRING) {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->len()->result());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = Asn1Der::BodyPrintableString->new($io__raw_body, $self, $self->{_root});
@@ -68,12 +73,12 @@ sub _read {
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = Asn1Der::BodySequence->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on == $Asn1Der::TYPE_TAG_SET) {
+    elsif ($_on == $Asn1Der::TYPE_TAG_SEQUENCE_30) {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->len()->result());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = Asn1Der::BodySequence->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on == $Asn1Der::TYPE_TAG_SEQUENCE_30) {
+    elsif ($_on == $Asn1Der::TYPE_TAG_SET) {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->len()->result());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = Asn1Der::BodySequence->new($io__raw_body, $self, $self->{_root});
@@ -82,11 +87,6 @@ sub _read {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->len()->result());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = Asn1Der::BodyUtf8string->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $Asn1Der::TYPE_TAG_OBJECT_ID) {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->len()->result());
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = Asn1Der::BodyObjectId->new($io__raw_body, $self, $self->{_root});
     }
     else {
         $self->{body} = $self->{_io}->read_bytes($self->len()->result());
@@ -114,6 +114,102 @@ sub _raw_body {
 }
 
 ########################################################################
+package Asn1Der::BodyObjectId;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{first_and_second} = $self->{_io}->read_u1();
+    $self->{rest} = $self->{_io}->read_bytes_full();
+}
+
+sub first {
+    my ($self) = @_;
+    return $self->{first} if ($self->{first});
+    $self->{first} = int($self->first_and_second() / 40);
+    return $self->{first};
+}
+
+sub second {
+    my ($self) = @_;
+    return $self->{second} if ($self->{second});
+    $self->{second} = $self->first_and_second() % 40;
+    return $self->{second};
+}
+
+sub first_and_second {
+    my ($self) = @_;
+    return $self->{first_and_second};
+}
+
+sub rest {
+    my ($self) = @_;
+    return $self->{rest};
+}
+
+########################################################################
+package Asn1Der::BodyPrintableString;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{str} = Encode::decode("ASCII", $self->{_io}->read_bytes_full());
+}
+
+sub str {
+    my ($self) = @_;
+    return $self->{str};
+}
+
+########################################################################
 package Asn1Der::BodySequence;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -133,7 +229,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -143,9 +239,9 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{entries} = ();
+    $self->{entries} = [];
     while (!$self->{_io}->is_eof()) {
-        push @{$self->{entries}}, Asn1Der->new($self->{_io});
+        push @{$self->{entries}}, Asn1Der->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -174,7 +270,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -190,64 +286,6 @@ sub _read {
 sub str {
     my ($self) = @_;
     return $self->{str};
-}
-
-########################################################################
-package Asn1Der::BodyObjectId;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{first_and_second} = $self->{_io}->read_u1();
-    $self->{rest} = $self->{_io}->read_bytes_full();
-}
-
-sub first {
-    my ($self) = @_;
-    return $self->{first} if ($self->{first});
-    $self->{first} = int($self->first_and_second() / 40);
-    return $self->{first};
-}
-
-sub second {
-    my ($self) = @_;
-    return $self->{second} if ($self->{second});
-    $self->{second} = ($self->first_and_second() % 40);
-    return $self->{second};
-}
-
-sub first_and_second {
-    my ($self) = @_;
-    return $self->{first_and_second};
-}
-
-sub rest {
-    my ($self) = @_;
-    return $self->{rest};
 }
 
 ########################################################################
@@ -270,7 +308,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -309,44 +347,6 @@ sub int2 {
 sub int1 {
     my ($self) = @_;
     return $self->{int1};
-}
-
-########################################################################
-package Asn1Der::BodyPrintableString;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{str} = Encode::decode("ASCII", $self->{_io}->read_bytes_full());
-}
-
-sub str {
-    my ($self) = @_;
-    return $self->{str};
 }
 
 1;

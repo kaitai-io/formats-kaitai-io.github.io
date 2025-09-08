@@ -33,6 +33,11 @@ const (
 	CreativeVoiceFile_BlockTypes__ExtraInfo CreativeVoiceFile_BlockTypes = 8
 	CreativeVoiceFile_BlockTypes__SoundDataNew CreativeVoiceFile_BlockTypes = 9
 )
+var values_CreativeVoiceFile_BlockTypes = map[CreativeVoiceFile_BlockTypes]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}}
+func (v CreativeVoiceFile_BlockTypes) isDefined() bool {
+	_, ok := values_CreativeVoiceFile_BlockTypes[v]
+	return ok
+}
 
 type CreativeVoiceFile_Codecs int
 const (
@@ -45,6 +50,11 @@ const (
 	CreativeVoiceFile_Codecs__Ulaw CreativeVoiceFile_Codecs = 7
 	CreativeVoiceFile_Codecs__Adpcm4To16bit CreativeVoiceFile_Codecs = 512
 )
+var values_CreativeVoiceFile_Codecs = map[CreativeVoiceFile_Codecs]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 6: {}, 7: {}, 512: {}}
+func (v CreativeVoiceFile_Codecs) isDefined() bool {
+	_, ok := values_CreativeVoiceFile_Codecs[v]
+	return ok
+}
 type CreativeVoiceFile struct {
 	Magic []byte
 	HeaderSize uint16
@@ -53,14 +63,18 @@ type CreativeVoiceFile struct {
 	Blocks []*CreativeVoiceFile_Block
 	_io *kaitai.Stream
 	_root *CreativeVoiceFile
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewCreativeVoiceFile() *CreativeVoiceFile {
 	return &CreativeVoiceFile{
 	}
 }
 
-func (this *CreativeVoiceFile) Read(io *kaitai.Stream, parent interface{}, root *CreativeVoiceFile) (err error) {
+func (this CreativeVoiceFile) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *CreativeVoiceFile) Read(io *kaitai.Stream, parent kaitai.Struct, root *CreativeVoiceFile) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -89,7 +103,7 @@ func (this *CreativeVoiceFile) Read(io *kaitai.Stream, parent interface{}, root 
 		return err
 	}
 	this.Checksum = uint16(tmp4)
-	for i := 1;; i++ {
+	for i := 0;; i++ {
 		tmp5, err := this._io.EOF()
 		if err != nil {
 			return err
@@ -118,6 +132,279 @@ func (this *CreativeVoiceFile) Read(io *kaitai.Stream, parent interface{}, root 
 /**
  * Series of blocks that contain the actual audio data
  */
+type CreativeVoiceFile_Block struct {
+	BlockType CreativeVoiceFile_BlockTypes
+	BodySize1 uint16
+	BodySize2 uint8
+	Body interface{}
+	_io *kaitai.Stream
+	_root *CreativeVoiceFile
+	_parent *CreativeVoiceFile
+	_raw_Body []byte
+	_f_bodySize bool
+	bodySize int
+}
+func NewCreativeVoiceFile_Block() *CreativeVoiceFile_Block {
+	return &CreativeVoiceFile_Block{
+	}
+}
+
+func (this CreativeVoiceFile_Block) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *CreativeVoiceFile_Block) Read(io *kaitai.Stream, parent *CreativeVoiceFile, root *CreativeVoiceFile) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp7, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.BlockType = CreativeVoiceFile_BlockTypes(tmp7)
+	if (this.BlockType != CreativeVoiceFile_BlockTypes__Terminator) {
+		tmp8, err := this._io.ReadU2le()
+		if err != nil {
+			return err
+		}
+		this.BodySize1 = uint16(tmp8)
+	}
+	if (this.BlockType != CreativeVoiceFile_BlockTypes__Terminator) {
+		tmp9, err := this._io.ReadU1()
+		if err != nil {
+			return err
+		}
+		this.BodySize2 = tmp9
+	}
+	if (this.BlockType != CreativeVoiceFile_BlockTypes__Terminator) {
+		switch (this.BlockType) {
+		case CreativeVoiceFile_BlockTypes__ExtraInfo:
+			tmp10, err := this.BodySize()
+			if err != nil {
+				return err
+			}
+			tmp11, err := this._io.ReadBytes(int(tmp10))
+			if err != nil {
+				return err
+			}
+			tmp11 = tmp11
+			this._raw_Body = tmp11
+			_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+			tmp12 := NewCreativeVoiceFile_BlockExtraInfo()
+			err = tmp12.Read(_io__raw_Body, this, this._root)
+			if err != nil {
+				return err
+			}
+			this.Body = tmp12
+		case CreativeVoiceFile_BlockTypes__Marker:
+			tmp13, err := this.BodySize()
+			if err != nil {
+				return err
+			}
+			tmp14, err := this._io.ReadBytes(int(tmp13))
+			if err != nil {
+				return err
+			}
+			tmp14 = tmp14
+			this._raw_Body = tmp14
+			_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+			tmp15 := NewCreativeVoiceFile_BlockMarker()
+			err = tmp15.Read(_io__raw_Body, this, this._root)
+			if err != nil {
+				return err
+			}
+			this.Body = tmp15
+		case CreativeVoiceFile_BlockTypes__RepeatStart:
+			tmp16, err := this.BodySize()
+			if err != nil {
+				return err
+			}
+			tmp17, err := this._io.ReadBytes(int(tmp16))
+			if err != nil {
+				return err
+			}
+			tmp17 = tmp17
+			this._raw_Body = tmp17
+			_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+			tmp18 := NewCreativeVoiceFile_BlockRepeatStart()
+			err = tmp18.Read(_io__raw_Body, this, this._root)
+			if err != nil {
+				return err
+			}
+			this.Body = tmp18
+		case CreativeVoiceFile_BlockTypes__Silence:
+			tmp19, err := this.BodySize()
+			if err != nil {
+				return err
+			}
+			tmp20, err := this._io.ReadBytes(int(tmp19))
+			if err != nil {
+				return err
+			}
+			tmp20 = tmp20
+			this._raw_Body = tmp20
+			_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+			tmp21 := NewCreativeVoiceFile_BlockSilence()
+			err = tmp21.Read(_io__raw_Body, this, this._root)
+			if err != nil {
+				return err
+			}
+			this.Body = tmp21
+		case CreativeVoiceFile_BlockTypes__SoundData:
+			tmp22, err := this.BodySize()
+			if err != nil {
+				return err
+			}
+			tmp23, err := this._io.ReadBytes(int(tmp22))
+			if err != nil {
+				return err
+			}
+			tmp23 = tmp23
+			this._raw_Body = tmp23
+			_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+			tmp24 := NewCreativeVoiceFile_BlockSoundData()
+			err = tmp24.Read(_io__raw_Body, this, this._root)
+			if err != nil {
+				return err
+			}
+			this.Body = tmp24
+		case CreativeVoiceFile_BlockTypes__SoundDataNew:
+			tmp25, err := this.BodySize()
+			if err != nil {
+				return err
+			}
+			tmp26, err := this._io.ReadBytes(int(tmp25))
+			if err != nil {
+				return err
+			}
+			tmp26 = tmp26
+			this._raw_Body = tmp26
+			_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+			tmp27 := NewCreativeVoiceFile_BlockSoundDataNew()
+			err = tmp27.Read(_io__raw_Body, this, this._root)
+			if err != nil {
+				return err
+			}
+			this.Body = tmp27
+		default:
+			tmp28, err := this.BodySize()
+			if err != nil {
+				return err
+			}
+			tmp29, err := this._io.ReadBytes(int(tmp28))
+			if err != nil {
+				return err
+			}
+			tmp29 = tmp29
+			this._raw_Body = tmp29
+		}
+	}
+	return err
+}
+
+/**
+ * body_size is a 24-bit little-endian integer, so we're
+ * emulating that by adding two standard-sized integers
+ * (body_size1 and body_size2).
+ */
+func (this *CreativeVoiceFile_Block) BodySize() (v int, err error) {
+	if (this._f_bodySize) {
+		return this.bodySize, nil
+	}
+	this._f_bodySize = true
+	if (this.BlockType != CreativeVoiceFile_BlockTypes__Terminator) {
+		this.bodySize = int(this.BodySize1 + this.BodySize2 << 16)
+	}
+	return this.bodySize, nil
+}
+
+/**
+ * Byte that determines type of block content
+ */
+
+/**
+ * Block body, type depends on block type byte
+ */
+
+/**
+ * @see <a href="https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x08:_Extra_info">Source</a>
+ */
+type CreativeVoiceFile_BlockExtraInfo struct {
+	FreqDiv uint16
+	Codec CreativeVoiceFile_Codecs
+	NumChannels1 uint8
+	_io *kaitai.Stream
+	_root *CreativeVoiceFile
+	_parent *CreativeVoiceFile_Block
+	_f_numChannels bool
+	numChannels int
+	_f_sampleRate bool
+	sampleRate float64
+}
+func NewCreativeVoiceFile_BlockExtraInfo() *CreativeVoiceFile_BlockExtraInfo {
+	return &CreativeVoiceFile_BlockExtraInfo{
+	}
+}
+
+func (this CreativeVoiceFile_BlockExtraInfo) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *CreativeVoiceFile_BlockExtraInfo) Read(io *kaitai.Stream, parent *CreativeVoiceFile_Block, root *CreativeVoiceFile) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp30, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.FreqDiv = uint16(tmp30)
+	tmp31, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Codec = CreativeVoiceFile_Codecs(tmp31)
+	tmp32, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.NumChannels1 = tmp32
+	return err
+}
+
+/**
+ * Number of channels (1 = mono, 2 = stereo)
+ */
+func (this *CreativeVoiceFile_BlockExtraInfo) NumChannels() (v int, err error) {
+	if (this._f_numChannels) {
+		return this.numChannels, nil
+	}
+	this._f_numChannels = true
+	this.numChannels = int(this.NumChannels1 + 1)
+	return this.numChannels, nil
+}
+func (this *CreativeVoiceFile_BlockExtraInfo) SampleRate() (v float64, err error) {
+	if (this._f_sampleRate) {
+		return this.sampleRate, nil
+	}
+	this._f_sampleRate = true
+	tmp33, err := this.NumChannels()
+	if err != nil {
+		return 0, err
+	}
+	this.sampleRate = float64(256000000.0 / (tmp33 * (65536 - this.FreqDiv)))
+	return this.sampleRate, nil
+}
+
+/**
+ * Frequency divisor
+ */
+
+/**
+ * Number of channels minus 1 (0 = mono, 1 = stereo)
+ */
 
 /**
  * @see <a href="https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x04:_Marker">Source</a>
@@ -133,21 +420,60 @@ func NewCreativeVoiceFile_BlockMarker() *CreativeVoiceFile_BlockMarker {
 	}
 }
 
+func (this CreativeVoiceFile_BlockMarker) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *CreativeVoiceFile_BlockMarker) Read(io *kaitai.Stream, parent *CreativeVoiceFile_Block, root *CreativeVoiceFile) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp7, err := this._io.ReadU2le()
+	tmp34, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.MarkerId = uint16(tmp7)
+	this.MarkerId = uint16(tmp34)
 	return err
 }
 
 /**
  * Marker ID
+ */
+
+/**
+ * @see <a href="https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x06:_Repeat_start">Source</a>
+ */
+type CreativeVoiceFile_BlockRepeatStart struct {
+	RepeatCount1 uint16
+	_io *kaitai.Stream
+	_root *CreativeVoiceFile
+	_parent *CreativeVoiceFile_Block
+}
+func NewCreativeVoiceFile_BlockRepeatStart() *CreativeVoiceFile_BlockRepeatStart {
+	return &CreativeVoiceFile_BlockRepeatStart{
+	}
+}
+
+func (this CreativeVoiceFile_BlockRepeatStart) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *CreativeVoiceFile_BlockRepeatStart) Read(io *kaitai.Stream, parent *CreativeVoiceFile_Block, root *CreativeVoiceFile) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp35, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.RepeatCount1 = uint16(tmp35)
+	return err
+}
+
+/**
+ * Number of repetitions minus 1; 0xffff means infinite repetitions
  */
 
 /**
@@ -159,14 +485,18 @@ type CreativeVoiceFile_BlockSilence struct {
 	_io *kaitai.Stream
 	_root *CreativeVoiceFile
 	_parent *CreativeVoiceFile_Block
-	_f_sampleRate bool
-	sampleRate float64
 	_f_durationSec bool
 	durationSec float64
+	_f_sampleRate bool
+	sampleRate float64
 }
 func NewCreativeVoiceFile_BlockSilence() *CreativeVoiceFile_BlockSilence {
 	return &CreativeVoiceFile_BlockSilence{
 	}
+}
+
+func (this CreativeVoiceFile_BlockSilence) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *CreativeVoiceFile_BlockSilence) Read(io *kaitai.Stream, parent *CreativeVoiceFile_Block, root *CreativeVoiceFile) (err error) {
@@ -174,25 +504,17 @@ func (this *CreativeVoiceFile_BlockSilence) Read(io *kaitai.Stream, parent *Crea
 	this._parent = parent
 	this._root = root
 
-	tmp8, err := this._io.ReadU2le()
+	tmp36, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.DurationSamples = uint16(tmp8)
-	tmp9, err := this._io.ReadU1()
+	this.DurationSamples = uint16(tmp36)
+	tmp37, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.FreqDiv = tmp9
+	this.FreqDiv = tmp37
 	return err
-}
-func (this *CreativeVoiceFile_BlockSilence) SampleRate() (v float64, err error) {
-	if (this._f_sampleRate) {
-		return this.sampleRate, nil
-	}
-	this.sampleRate = float64((1000000.0 / (256 - this.FreqDiv)))
-	this._f_sampleRate = true
-	return this.sampleRate, nil
 }
 
 /**
@@ -202,18 +524,84 @@ func (this *CreativeVoiceFile_BlockSilence) DurationSec() (v float64, err error)
 	if (this._f_durationSec) {
 		return this.durationSec, nil
 	}
-	tmp10, err := this.SampleRate()
+	this._f_durationSec = true
+	tmp38, err := this.SampleRate()
 	if err != nil {
 		return 0, err
 	}
-	this.durationSec = float64((this.DurationSamples / tmp10))
-	this._f_durationSec = true
+	this.durationSec = float64(this.DurationSamples / tmp38)
 	return this.durationSec, nil
+}
+func (this *CreativeVoiceFile_BlockSilence) SampleRate() (v float64, err error) {
+	if (this._f_sampleRate) {
+		return this.sampleRate, nil
+	}
+	this._f_sampleRate = true
+	this.sampleRate = float64(1000000.0 / (256 - this.FreqDiv))
+	return this.sampleRate, nil
 }
 
 /**
  * Duration of silence, in samples
  */
+
+/**
+ * Frequency divisor, used to determine sample rate
+ */
+
+/**
+ * @see <a href="https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x01:_Sound_data">Source</a>
+ */
+type CreativeVoiceFile_BlockSoundData struct {
+	FreqDiv uint8
+	Codec CreativeVoiceFile_Codecs
+	Wave []byte
+	_io *kaitai.Stream
+	_root *CreativeVoiceFile
+	_parent *CreativeVoiceFile_Block
+	_f_sampleRate bool
+	sampleRate float64
+}
+func NewCreativeVoiceFile_BlockSoundData() *CreativeVoiceFile_BlockSoundData {
+	return &CreativeVoiceFile_BlockSoundData{
+	}
+}
+
+func (this CreativeVoiceFile_BlockSoundData) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *CreativeVoiceFile_BlockSoundData) Read(io *kaitai.Stream, parent *CreativeVoiceFile_Block, root *CreativeVoiceFile) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp39, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.FreqDiv = tmp39
+	tmp40, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Codec = CreativeVoiceFile_Codecs(tmp40)
+	tmp41, err := this._io.ReadBytesFull()
+	if err != nil {
+		return err
+	}
+	tmp41 = tmp41
+	this.Wave = tmp41
+	return err
+}
+func (this *CreativeVoiceFile_BlockSoundData) SampleRate() (v float64, err error) {
+	if (this._f_sampleRate) {
+		return this.sampleRate, nil
+	}
+	this._f_sampleRate = true
+	this.sampleRate = float64(1000000.0 / (256 - this.FreqDiv))
+	return this.sampleRate, nil
+}
 
 /**
  * Frequency divisor, used to determine sample rate
@@ -238,392 +626,46 @@ func NewCreativeVoiceFile_BlockSoundDataNew() *CreativeVoiceFile_BlockSoundDataN
 	}
 }
 
+func (this CreativeVoiceFile_BlockSoundDataNew) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *CreativeVoiceFile_BlockSoundDataNew) Read(io *kaitai.Stream, parent *CreativeVoiceFile_Block, root *CreativeVoiceFile) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp11, err := this._io.ReadU4le()
+	tmp42, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.SampleRate = uint32(tmp11)
-	tmp12, err := this._io.ReadU1()
+	this.SampleRate = uint32(tmp42)
+	tmp43, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.BitsPerSample = tmp12
-	tmp13, err := this._io.ReadU1()
+	this.BitsPerSample = tmp43
+	tmp44, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.NumChannels = tmp13
-	tmp14, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.Codec = CreativeVoiceFile_Codecs(tmp14)
-	tmp15, err := this._io.ReadBytes(int(4))
-	if err != nil {
-		return err
-	}
-	tmp15 = tmp15
-	this.Reserved = tmp15
-	tmp16, err := this._io.ReadBytesFull()
-	if err != nil {
-		return err
-	}
-	tmp16 = tmp16
-	this.Wave = tmp16
-	return err
-}
-type CreativeVoiceFile_Block struct {
-	BlockType CreativeVoiceFile_BlockTypes
-	BodySize1 uint16
-	BodySize2 uint8
-	Body interface{}
-	_io *kaitai.Stream
-	_root *CreativeVoiceFile
-	_parent *CreativeVoiceFile
-	_raw_Body []byte
-	_f_bodySize bool
-	bodySize int
-}
-func NewCreativeVoiceFile_Block() *CreativeVoiceFile_Block {
-	return &CreativeVoiceFile_Block{
-	}
-}
-
-func (this *CreativeVoiceFile_Block) Read(io *kaitai.Stream, parent *CreativeVoiceFile, root *CreativeVoiceFile) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp17, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.BlockType = CreativeVoiceFile_BlockTypes(tmp17)
-	if (this.BlockType != CreativeVoiceFile_BlockTypes__Terminator) {
-		tmp18, err := this._io.ReadU2le()
-		if err != nil {
-			return err
-		}
-		this.BodySize1 = uint16(tmp18)
-	}
-	if (this.BlockType != CreativeVoiceFile_BlockTypes__Terminator) {
-		tmp19, err := this._io.ReadU1()
-		if err != nil {
-			return err
-		}
-		this.BodySize2 = tmp19
-	}
-	if (this.BlockType != CreativeVoiceFile_BlockTypes__Terminator) {
-		switch (this.BlockType) {
-		case CreativeVoiceFile_BlockTypes__SoundDataNew:
-			tmp20, err := this.BodySize()
-			if err != nil {
-				return err
-			}
-			tmp21, err := this._io.ReadBytes(int(tmp20))
-			if err != nil {
-				return err
-			}
-			tmp21 = tmp21
-			this._raw_Body = tmp21
-			_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-			tmp22 := NewCreativeVoiceFile_BlockSoundDataNew()
-			err = tmp22.Read(_io__raw_Body, this, this._root)
-			if err != nil {
-				return err
-			}
-			this.Body = tmp22
-		case CreativeVoiceFile_BlockTypes__RepeatStart:
-			tmp23, err := this.BodySize()
-			if err != nil {
-				return err
-			}
-			tmp24, err := this._io.ReadBytes(int(tmp23))
-			if err != nil {
-				return err
-			}
-			tmp24 = tmp24
-			this._raw_Body = tmp24
-			_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-			tmp25 := NewCreativeVoiceFile_BlockRepeatStart()
-			err = tmp25.Read(_io__raw_Body, this, this._root)
-			if err != nil {
-				return err
-			}
-			this.Body = tmp25
-		case CreativeVoiceFile_BlockTypes__Marker:
-			tmp26, err := this.BodySize()
-			if err != nil {
-				return err
-			}
-			tmp27, err := this._io.ReadBytes(int(tmp26))
-			if err != nil {
-				return err
-			}
-			tmp27 = tmp27
-			this._raw_Body = tmp27
-			_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-			tmp28 := NewCreativeVoiceFile_BlockMarker()
-			err = tmp28.Read(_io__raw_Body, this, this._root)
-			if err != nil {
-				return err
-			}
-			this.Body = tmp28
-		case CreativeVoiceFile_BlockTypes__SoundData:
-			tmp29, err := this.BodySize()
-			if err != nil {
-				return err
-			}
-			tmp30, err := this._io.ReadBytes(int(tmp29))
-			if err != nil {
-				return err
-			}
-			tmp30 = tmp30
-			this._raw_Body = tmp30
-			_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-			tmp31 := NewCreativeVoiceFile_BlockSoundData()
-			err = tmp31.Read(_io__raw_Body, this, this._root)
-			if err != nil {
-				return err
-			}
-			this.Body = tmp31
-		case CreativeVoiceFile_BlockTypes__ExtraInfo:
-			tmp32, err := this.BodySize()
-			if err != nil {
-				return err
-			}
-			tmp33, err := this._io.ReadBytes(int(tmp32))
-			if err != nil {
-				return err
-			}
-			tmp33 = tmp33
-			this._raw_Body = tmp33
-			_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-			tmp34 := NewCreativeVoiceFile_BlockExtraInfo()
-			err = tmp34.Read(_io__raw_Body, this, this._root)
-			if err != nil {
-				return err
-			}
-			this.Body = tmp34
-		case CreativeVoiceFile_BlockTypes__Silence:
-			tmp35, err := this.BodySize()
-			if err != nil {
-				return err
-			}
-			tmp36, err := this._io.ReadBytes(int(tmp35))
-			if err != nil {
-				return err
-			}
-			tmp36 = tmp36
-			this._raw_Body = tmp36
-			_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-			tmp37 := NewCreativeVoiceFile_BlockSilence()
-			err = tmp37.Read(_io__raw_Body, this, this._root)
-			if err != nil {
-				return err
-			}
-			this.Body = tmp37
-		default:
-			tmp38, err := this.BodySize()
-			if err != nil {
-				return err
-			}
-			tmp39, err := this._io.ReadBytes(int(tmp38))
-			if err != nil {
-				return err
-			}
-			tmp39 = tmp39
-			this._raw_Body = tmp39
-		}
-	}
-	return err
-}
-
-/**
- * body_size is a 24-bit little-endian integer, so we're
- * emulating that by adding two standard-sized integers
- * (body_size1 and body_size2).
- */
-func (this *CreativeVoiceFile_Block) BodySize() (v int, err error) {
-	if (this._f_bodySize) {
-		return this.bodySize, nil
-	}
-	if (this.BlockType != CreativeVoiceFile_BlockTypes__Terminator) {
-		this.bodySize = int((this.BodySize1 + (this.BodySize2 << 16)))
-	}
-	this._f_bodySize = true
-	return this.bodySize, nil
-}
-
-/**
- * Byte that determines type of block content
- */
-
-/**
- * Block body, type depends on block type byte
- */
-
-/**
- * @see <a href="https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x06:_Repeat_start">Source</a>
- */
-type CreativeVoiceFile_BlockRepeatStart struct {
-	RepeatCount1 uint16
-	_io *kaitai.Stream
-	_root *CreativeVoiceFile
-	_parent *CreativeVoiceFile_Block
-}
-func NewCreativeVoiceFile_BlockRepeatStart() *CreativeVoiceFile_BlockRepeatStart {
-	return &CreativeVoiceFile_BlockRepeatStart{
-	}
-}
-
-func (this *CreativeVoiceFile_BlockRepeatStart) Read(io *kaitai.Stream, parent *CreativeVoiceFile_Block, root *CreativeVoiceFile) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp40, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.RepeatCount1 = uint16(tmp40)
-	return err
-}
-
-/**
- * Number of repetitions minus 1; 0xffff means infinite repetitions
- */
-
-/**
- * @see <a href="https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x01:_Sound_data">Source</a>
- */
-type CreativeVoiceFile_BlockSoundData struct {
-	FreqDiv uint8
-	Codec CreativeVoiceFile_Codecs
-	Wave []byte
-	_io *kaitai.Stream
-	_root *CreativeVoiceFile
-	_parent *CreativeVoiceFile_Block
-	_f_sampleRate bool
-	sampleRate float64
-}
-func NewCreativeVoiceFile_BlockSoundData() *CreativeVoiceFile_BlockSoundData {
-	return &CreativeVoiceFile_BlockSoundData{
-	}
-}
-
-func (this *CreativeVoiceFile_BlockSoundData) Read(io *kaitai.Stream, parent *CreativeVoiceFile_Block, root *CreativeVoiceFile) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp41, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.FreqDiv = tmp41
-	tmp42, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Codec = CreativeVoiceFile_Codecs(tmp42)
-	tmp43, err := this._io.ReadBytesFull()
-	if err != nil {
-		return err
-	}
-	tmp43 = tmp43
-	this.Wave = tmp43
-	return err
-}
-func (this *CreativeVoiceFile_BlockSoundData) SampleRate() (v float64, err error) {
-	if (this._f_sampleRate) {
-		return this.sampleRate, nil
-	}
-	this.sampleRate = float64((1000000.0 / (256 - this.FreqDiv)))
-	this._f_sampleRate = true
-	return this.sampleRate, nil
-}
-
-/**
- * Frequency divisor, used to determine sample rate
- */
-
-/**
- * @see <a href="https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x08:_Extra_info">Source</a>
- */
-type CreativeVoiceFile_BlockExtraInfo struct {
-	FreqDiv uint16
-	Codec CreativeVoiceFile_Codecs
-	NumChannels1 uint8
-	_io *kaitai.Stream
-	_root *CreativeVoiceFile
-	_parent *CreativeVoiceFile_Block
-	_f_numChannels bool
-	numChannels int
-	_f_sampleRate bool
-	sampleRate float64
-}
-func NewCreativeVoiceFile_BlockExtraInfo() *CreativeVoiceFile_BlockExtraInfo {
-	return &CreativeVoiceFile_BlockExtraInfo{
-	}
-}
-
-func (this *CreativeVoiceFile_BlockExtraInfo) Read(io *kaitai.Stream, parent *CreativeVoiceFile_Block, root *CreativeVoiceFile) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp44, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.FreqDiv = uint16(tmp44)
-	tmp45, err := this._io.ReadU1()
+	this.NumChannels = tmp44
+	tmp45, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
 	this.Codec = CreativeVoiceFile_Codecs(tmp45)
-	tmp46, err := this._io.ReadU1()
+	tmp46, err := this._io.ReadBytes(int(4))
 	if err != nil {
 		return err
 	}
-	this.NumChannels1 = tmp46
+	tmp46 = tmp46
+	this.Reserved = tmp46
+	tmp47, err := this._io.ReadBytesFull()
+	if err != nil {
+		return err
+	}
+	tmp47 = tmp47
+	this.Wave = tmp47
 	return err
 }
-
-/**
- * Number of channels (1 = mono, 2 = stereo)
- */
-func (this *CreativeVoiceFile_BlockExtraInfo) NumChannels() (v int, err error) {
-	if (this._f_numChannels) {
-		return this.numChannels, nil
-	}
-	this.numChannels = int((this.NumChannels1 + 1))
-	this._f_numChannels = true
-	return this.numChannels, nil
-}
-func (this *CreativeVoiceFile_BlockExtraInfo) SampleRate() (v float64, err error) {
-	if (this._f_sampleRate) {
-		return this.sampleRate, nil
-	}
-	tmp47, err := this.NumChannels()
-	if err != nil {
-		return 0, err
-	}
-	this.sampleRate = float64((256000000.0 / (tmp47 * (65536 - this.FreqDiv))))
-	this._f_sampleRate = true
-	return this.sampleRate, nil
-}
-
-/**
- * Frequency divisor
- */
-
-/**
- * Number of channels minus 1 (0 = mono, 1 = stereo)
- */

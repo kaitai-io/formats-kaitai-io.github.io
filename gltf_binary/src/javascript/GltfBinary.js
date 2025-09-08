@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.GltfBinary = factory(root.KaitaiStream);
+    factory(root.GltfBinary || (root.GltfBinary = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (GltfBinary_, KaitaiStream) {
 /**
  * glTF is a format for distribution of 3D models optimized for being used in software
  * @see {@link https://github.com/KhronosGroup/glTF/tree/2354846/specification/2.0#binary-gltf-layout|Source}
@@ -40,18 +40,64 @@ var GltfBinary = (function() {
     }
   }
 
+  var Bin = GltfBinary.Bin = (function() {
+    function Bin(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Bin.prototype._read = function() {
+      this.data = this._io.readBytesFull();
+    }
+
+    return Bin;
+  })();
+
+  var Chunk = GltfBinary.Chunk = (function() {
+    function Chunk(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Chunk.prototype._read = function() {
+      this.lenData = this._io.readU4le();
+      this.type = this._io.readU4le();
+      switch (this.type) {
+      case GltfBinary.ChunkType.BIN:
+        this._raw_data = this._io.readBytes(this.lenData);
+        var _io__raw_data = new KaitaiStream(this._raw_data);
+        this.data = new Bin(_io__raw_data, this, this._root);
+        break;
+      case GltfBinary.ChunkType.JSON:
+        this._raw_data = this._io.readBytes(this.lenData);
+        var _io__raw_data = new KaitaiStream(this._raw_data);
+        this.data = new Json(_io__raw_data, this, this._root);
+        break;
+      default:
+        this.data = this._io.readBytes(this.lenData);
+        break;
+      }
+    }
+
+    return Chunk;
+  })();
+
   var Header = GltfBinary.Header = (function() {
     function Header(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     Header.prototype._read = function() {
       this.magic = this._io.readBytes(4);
-      if (!((KaitaiStream.byteArrayCompare(this.magic, [103, 108, 84, 70]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([103, 108, 84, 70], this.magic, this._io, "/types/header/seq/0");
+      if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([103, 108, 84, 70])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([103, 108, 84, 70]), this.magic, this._io, "/types/header/seq/0");
       }
       this.version = this._io.readU4le();
       this.length = this._io.readU4le();
@@ -69,42 +115,11 @@ var GltfBinary = (function() {
     return Header;
   })();
 
-  var Chunk = GltfBinary.Chunk = (function() {
-    function Chunk(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Chunk.prototype._read = function() {
-      this.lenData = this._io.readU4le();
-      this.type = this._io.readU4le();
-      switch (this.type) {
-      case GltfBinary.ChunkType.JSON:
-        this._raw_data = this._io.readBytes(this.lenData);
-        var _io__raw_data = new KaitaiStream(this._raw_data);
-        this.data = new Json(_io__raw_data, this, this._root);
-        break;
-      case GltfBinary.ChunkType.BIN:
-        this._raw_data = this._io.readBytes(this.lenData);
-        var _io__raw_data = new KaitaiStream(this._raw_data);
-        this.data = new Bin(_io__raw_data, this, this._root);
-        break;
-      default:
-        this.data = this._io.readBytes(this.lenData);
-        break;
-      }
-    }
-
-    return Chunk;
-  })();
-
   var Json = GltfBinary.Json = (function() {
     function Json(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -120,22 +135,7 @@ var GltfBinary = (function() {
     return Json;
   })();
 
-  var Bin = GltfBinary.Bin = (function() {
-    function Bin(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Bin.prototype._read = function() {
-      this.data = this._io.readBytesFull();
-    }
-
-    return Bin;
-  })();
-
   return GltfBinary;
 })();
-return GltfBinary;
-}));
+GltfBinary_.GltfBinary = GltfBinary;
+});

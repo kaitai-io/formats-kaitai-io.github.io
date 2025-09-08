@@ -17,8 +17,8 @@
 
 namespace {
     class Warcraft2Pud extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Warcraft2Pud $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Warcraft2Pud $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -36,8 +36,146 @@ namespace {
 }
 
 namespace Warcraft2Pud {
+    class Section extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Warcraft2Pud $_parent = null, ?\Warcraft2Pud $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_name = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(4), "ASCII");
+            $this->_m_size = $this->_io->readU4le();
+            switch ($this->name()) {
+                case "DIM ":
+                    $this->_m__raw_body = $this->_io->readBytes($this->size());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \Warcraft2Pud\SectionDim($_io__raw_body, $this, $this->_root);
+                    break;
+                case "ERA ":
+                    $this->_m__raw_body = $this->_io->readBytes($this->size());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \Warcraft2Pud\SectionEra($_io__raw_body, $this, $this->_root);
+                    break;
+                case "ERAX":
+                    $this->_m__raw_body = $this->_io->readBytes($this->size());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \Warcraft2Pud\SectionEra($_io__raw_body, $this, $this->_root);
+                    break;
+                case "OWNR":
+                    $this->_m__raw_body = $this->_io->readBytes($this->size());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \Warcraft2Pud\SectionOwnr($_io__raw_body, $this, $this->_root);
+                    break;
+                case "SGLD":
+                    $this->_m__raw_body = $this->_io->readBytes($this->size());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \Warcraft2Pud\SectionStartingResource($_io__raw_body, $this, $this->_root);
+                    break;
+                case "SLBR":
+                    $this->_m__raw_body = $this->_io->readBytes($this->size());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \Warcraft2Pud\SectionStartingResource($_io__raw_body, $this, $this->_root);
+                    break;
+                case "SOIL":
+                    $this->_m__raw_body = $this->_io->readBytes($this->size());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \Warcraft2Pud\SectionStartingResource($_io__raw_body, $this, $this->_root);
+                    break;
+                case "TYPE":
+                    $this->_m__raw_body = $this->_io->readBytes($this->size());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \Warcraft2Pud\SectionType($_io__raw_body, $this, $this->_root);
+                    break;
+                case "UNIT":
+                    $this->_m__raw_body = $this->_io->readBytes($this->size());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \Warcraft2Pud\SectionUnit($_io__raw_body, $this, $this->_root);
+                    break;
+                case "VER ":
+                    $this->_m__raw_body = $this->_io->readBytes($this->size());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \Warcraft2Pud\SectionVer($_io__raw_body, $this, $this->_root);
+                    break;
+                default:
+                    $this->_m_body = $this->_io->readBytes($this->size());
+                    break;
+            }
+        }
+        protected $_m_name;
+        protected $_m_size;
+        protected $_m_body;
+        protected $_m__raw_body;
+        public function name() { return $this->_m_name; }
+        public function size() { return $this->_m_size; }
+        public function body() { return $this->_m_body; }
+        public function _raw_body() { return $this->_m__raw_body; }
+    }
+}
+
+namespace Warcraft2Pud {
+    class SectionDim extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Warcraft2Pud\Section $_parent = null, ?\Warcraft2Pud $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_x = $this->_io->readU2le();
+            $this->_m_y = $this->_io->readU2le();
+        }
+        protected $_m_x;
+        protected $_m_y;
+        public function x() { return $this->_m_x; }
+        public function y() { return $this->_m_y; }
+    }
+}
+
+/**
+ * Section that specifies terrain type for this map.
+ */
+
+namespace Warcraft2Pud {
+    class SectionEra extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Warcraft2Pud\Section $_parent = null, ?\Warcraft2Pud $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_terrain = $this->_io->readU2le();
+        }
+        protected $_m_terrain;
+        public function terrain() { return $this->_m_terrain; }
+    }
+}
+
+/**
+ * Section that specifies who controls each player.
+ */
+
+namespace Warcraft2Pud {
+    class SectionOwnr extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Warcraft2Pud\Section $_parent = null, ?\Warcraft2Pud $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_controllerByPlayer = [];
+            $i = 0;
+            while (!$this->_io->isEof()) {
+                $this->_m_controllerByPlayer[] = $this->_io->readU1();
+                $i++;
+            }
+        }
+        protected $_m_controllerByPlayer;
+        public function controllerByPlayer() { return $this->_m_controllerByPlayer; }
+    }
+}
+
+namespace Warcraft2Pud {
     class SectionStartingResource extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Warcraft2Pud\Section $_parent = null, \Warcraft2Pud $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Warcraft2Pud\Section $_parent = null, ?\Warcraft2Pud $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -56,62 +194,6 @@ namespace Warcraft2Pud {
 }
 
 /**
- * Section that specifies terrain type for this map.
- */
-
-namespace Warcraft2Pud {
-    class SectionEra extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Warcraft2Pud\Section $_parent = null, \Warcraft2Pud $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_terrain = $this->_io->readU2le();
-        }
-        protected $_m_terrain;
-        public function terrain() { return $this->_m_terrain; }
-    }
-}
-
-/**
- * Section that specifies format version.
- */
-
-namespace Warcraft2Pud {
-    class SectionVer extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Warcraft2Pud\Section $_parent = null, \Warcraft2Pud $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_version = $this->_io->readU2le();
-        }
-        protected $_m_version;
-        public function version() { return $this->_m_version; }
-    }
-}
-
-namespace Warcraft2Pud {
-    class SectionDim extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Warcraft2Pud\Section $_parent = null, \Warcraft2Pud $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_x = $this->_io->readU2le();
-            $this->_m_y = $this->_io->readU2le();
-        }
-        protected $_m_x;
-        protected $_m_y;
-        public function x() { return $this->_m_x; }
-        public function y() { return $this->_m_y; }
-    }
-}
-
-/**
  * Section that confirms that this file is a "map file" by certain
  * magic string and supplies a tag that could be used in
  * multiplayer to check that all player use the same version of the
@@ -120,15 +202,15 @@ namespace Warcraft2Pud {
 
 namespace Warcraft2Pud {
     class SectionType extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Warcraft2Pud\Section $_parent = null, \Warcraft2Pud $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Warcraft2Pud\Section $_parent = null, ?\Warcraft2Pud $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic = $this->_io->readBytes(10);
-            if (!($this->magic() == "\x57\x41\x52\x32\x20\x4D\x41\x50\x00\x00")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x57\x41\x52\x32\x20\x4D\x41\x50\x00\x00", $this->magic(), $this->_io(), "/types/section_type/seq/0");
+            if (!($this->_m_magic == "\x57\x41\x52\x32\x20\x4D\x41\x50\x00\x00")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x57\x41\x52\x32\x20\x4D\x41\x50\x00\x00", $this->_m_magic, $this->_io, "/types/section_type/seq/0");
             }
             $this->_m_unused = $this->_io->readBytes(2);
             $this->_m_idTag = $this->_io->readU4le();
@@ -152,7 +234,7 @@ namespace Warcraft2Pud {
 
 namespace Warcraft2Pud {
     class SectionUnit extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Warcraft2Pud\Section $_parent = null, \Warcraft2Pud $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Warcraft2Pud\Section $_parent = null, ?\Warcraft2Pud $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -170,110 +252,28 @@ namespace Warcraft2Pud {
     }
 }
 
-namespace Warcraft2Pud {
-    class Section extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Warcraft2Pud $_parent = null, \Warcraft2Pud $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_name = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(4), "ASCII");
-            $this->_m_size = $this->_io->readU4le();
-            switch ($this->name()) {
-                case "SLBR":
-                    $this->_m__raw_body = $this->_io->readBytes($this->size());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \Warcraft2Pud\SectionStartingResource($_io__raw_body, $this, $this->_root);
-                    break;
-                case "ERAX":
-                    $this->_m__raw_body = $this->_io->readBytes($this->size());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \Warcraft2Pud\SectionEra($_io__raw_body, $this, $this->_root);
-                    break;
-                case "OWNR":
-                    $this->_m__raw_body = $this->_io->readBytes($this->size());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \Warcraft2Pud\SectionOwnr($_io__raw_body, $this, $this->_root);
-                    break;
-                case "ERA ":
-                    $this->_m__raw_body = $this->_io->readBytes($this->size());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \Warcraft2Pud\SectionEra($_io__raw_body, $this, $this->_root);
-                    break;
-                case "SGLD":
-                    $this->_m__raw_body = $this->_io->readBytes($this->size());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \Warcraft2Pud\SectionStartingResource($_io__raw_body, $this, $this->_root);
-                    break;
-                case "VER ":
-                    $this->_m__raw_body = $this->_io->readBytes($this->size());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \Warcraft2Pud\SectionVer($_io__raw_body, $this, $this->_root);
-                    break;
-                case "SOIL":
-                    $this->_m__raw_body = $this->_io->readBytes($this->size());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \Warcraft2Pud\SectionStartingResource($_io__raw_body, $this, $this->_root);
-                    break;
-                case "UNIT":
-                    $this->_m__raw_body = $this->_io->readBytes($this->size());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \Warcraft2Pud\SectionUnit($_io__raw_body, $this, $this->_root);
-                    break;
-                case "DIM ":
-                    $this->_m__raw_body = $this->_io->readBytes($this->size());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \Warcraft2Pud\SectionDim($_io__raw_body, $this, $this->_root);
-                    break;
-                case "TYPE":
-                    $this->_m__raw_body = $this->_io->readBytes($this->size());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \Warcraft2Pud\SectionType($_io__raw_body, $this, $this->_root);
-                    break;
-                default:
-                    $this->_m_body = $this->_io->readBytes($this->size());
-                    break;
-            }
-        }
-        protected $_m_name;
-        protected $_m_size;
-        protected $_m_body;
-        protected $_m__raw_body;
-        public function name() { return $this->_m_name; }
-        public function size() { return $this->_m_size; }
-        public function body() { return $this->_m_body; }
-        public function _raw_body() { return $this->_m__raw_body; }
-    }
-}
-
 /**
- * Section that specifies who controls each player.
+ * Section that specifies format version.
  */
 
 namespace Warcraft2Pud {
-    class SectionOwnr extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Warcraft2Pud\Section $_parent = null, \Warcraft2Pud $_root = null) {
+    class SectionVer extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Warcraft2Pud\Section $_parent = null, ?\Warcraft2Pud $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_controllerByPlayer = [];
-            $i = 0;
-            while (!$this->_io->isEof()) {
-                $this->_m_controllerByPlayer[] = $this->_io->readU1();
-                $i++;
-            }
+            $this->_m_version = $this->_io->readU2le();
         }
-        protected $_m_controllerByPlayer;
-        public function controllerByPlayer() { return $this->_m_controllerByPlayer; }
+        protected $_m_version;
+        public function version() { return $this->_m_version; }
     }
 }
 
 namespace Warcraft2Pud {
     class Unit extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Warcraft2Pud\SectionUnit $_parent = null, \Warcraft2Pud $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Warcraft2Pud\SectionUnit $_parent = null, ?\Warcraft2Pud $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -290,7 +290,7 @@ namespace Warcraft2Pud {
             if ($this->_m_resource !== null)
                 return $this->_m_resource;
             if ( (($this->uType() == \Warcraft2Pud\UnitType::GOLD_MINE) || ($this->uType() == \Warcraft2Pud\UnitType::HUMAN_OIL_WELL) || ($this->uType() == \Warcraft2Pud\UnitType::ORC_OIL_WELL) || ($this->uType() == \Warcraft2Pud\UnitType::OIL_PATCH)) ) {
-                $this->_m_resource = ($this->options() * 2500);
+                $this->_m_resource = $this->options() * 2500;
             }
             return $this->_m_resource;
         }
@@ -320,6 +320,12 @@ namespace Warcraft2Pud {
         const HUMAN = 5;
         const RESCUE_PASSIVE = 6;
         const RESCUE_ACTIVE = 7;
+
+        private const _VALUES = [1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 7 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
@@ -329,6 +335,12 @@ namespace Warcraft2Pud {
         const WINTER = 1;
         const WASTELAND = 2;
         const SWAMP = 3;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
@@ -434,5 +446,11 @@ namespace Warcraft2Pud {
         const RUNESTONE = 102;
         const HUMAN_WALL = 103;
         const ORC_WALL = 104;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 7 => true, 8 => true, 9 => true, 10 => true, 11 => true, 12 => true, 13 => true, 14 => true, 15 => true, 16 => true, 17 => true, 18 => true, 19 => true, 20 => true, 21 => true, 22 => true, 23 => true, 24 => true, 25 => true, 26 => true, 27 => true, 28 => true, 29 => true, 30 => true, 31 => true, 32 => true, 33 => true, 35 => true, 38 => true, 39 => true, 40 => true, 41 => true, 42 => true, 43 => true, 44 => true, 45 => true, 46 => true, 47 => true, 49 => true, 50 => true, 51 => true, 52 => true, 53 => true, 55 => true, 56 => true, 57 => true, 58 => true, 59 => true, 60 => true, 61 => true, 62 => true, 63 => true, 64 => true, 65 => true, 66 => true, 67 => true, 68 => true, 69 => true, 70 => true, 71 => true, 72 => true, 73 => true, 74 => true, 75 => true, 76 => true, 77 => true, 78 => true, 79 => true, 80 => true, 81 => true, 82 => true, 83 => true, 84 => true, 85 => true, 86 => true, 87 => true, 88 => true, 89 => true, 90 => true, 91 => true, 92 => true, 93 => true, 94 => true, 95 => true, 96 => true, 97 => true, 98 => true, 99 => true, 100 => true, 101 => true, 102 => true, 103 => true, 104 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

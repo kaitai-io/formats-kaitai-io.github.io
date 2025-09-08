@@ -19,14 +19,18 @@ type WindowsSystemtime struct {
 	Msec uint16
 	_io *kaitai.Stream
 	_root *WindowsSystemtime
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewWindowsSystemtime() *WindowsSystemtime {
 	return &WindowsSystemtime{
 	}
 }
 
-func (this *WindowsSystemtime) Read(io *kaitai.Stream, parent interface{}, root *WindowsSystemtime) (err error) {
+func (this WindowsSystemtime) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *WindowsSystemtime) Read(io *kaitai.Stream, parent kaitai.Struct, root *WindowsSystemtime) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root

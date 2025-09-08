@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Encode;
 
 ########################################################################
@@ -25,7 +25,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -36,7 +36,7 @@ sub _read {
     my ($self) = @_;
 
     $self->{len} = $self->{_io}->read_s4le();
-    $self->{_raw_fields} = $self->{_io}->read_bytes(($self->len() - 5));
+    $self->{_raw_fields} = $self->{_io}->read_bytes($self->len() - 5);
     my $io__raw_fields = IO::KaitaiStruct::Stream->new($self->{_raw_fields});
     $self->{fields} = Bson::ElementsList->new($io__raw_fields, $self, $self->{_root});
     $self->{terminator} = $self->{_io}->read_bytes(1);
@@ -60,50 +60,6 @@ sub terminator {
 sub _raw_fields {
     my ($self) = @_;
     return $self->{_raw_fields};
-}
-
-########################################################################
-package Bson::Timestamp;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{increment} = $self->{_io}->read_u4le();
-    $self->{timestamp} = $self->{_io}->read_u4le();
-}
-
-sub increment {
-    my ($self) = @_;
-    return $self->{increment};
-}
-
-sub timestamp {
-    my ($self) = @_;
-    return $self->{timestamp};
 }
 
 ########################################################################
@@ -134,7 +90,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -197,7 +153,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -222,7 +178,7 @@ sub content {
 }
 
 ########################################################################
-package Bson::ElementsList;
+package Bson::CodeWithScope;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -241,7 +197,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -251,15 +207,24 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{elements} = ();
-    while (!$self->{_io}->is_eof()) {
-        push @{$self->{elements}}, Bson::Element->new($self->{_io}, $self, $self->{_root});
-    }
+    $self->{id} = $self->{_io}->read_s4le();
+    $self->{source} = Bson::String->new($self->{_io}, $self, $self->{_root});
+    $self->{scope} = Bson->new($self->{_io}, $self, $self->{_root});
 }
 
-sub elements {
+sub id {
     my ($self) = @_;
-    return $self->{elements};
+    return $self->{id};
+}
+
+sub source {
+    my ($self) = @_;
+    return $self->{source};
+}
+
+sub scope {
+    my ($self) = @_;
+    return $self->{scope};
 }
 
 ########################################################################
@@ -282,7 +247,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -301,7 +266,7 @@ sub str {
 }
 
 ########################################################################
-package Bson::String;
+package Bson::DbPointer;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -320,7 +285,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -330,24 +295,18 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{len} = $self->{_io}->read_s4le();
-    $self->{str} = Encode::decode("UTF-8", $self->{_io}->read_bytes(($self->len() - 1)));
-    $self->{terminator} = $self->{_io}->read_bytes(1);
+    $self->{namespace} = Bson::String->new($self->{_io}, $self, $self->{_root});
+    $self->{id} = Bson::ObjectId->new($self->{_io}, $self, $self->{_root});
 }
 
-sub len {
+sub namespace {
     my ($self) = @_;
-    return $self->{len};
+    return $self->{namespace};
 }
 
-sub str {
+sub id {
     my ($self) = @_;
-    return $self->{str};
-}
-
-sub terminator {
-    my ($self) = @_;
-    return $self->{terminator};
+    return $self->{id};
 }
 
 ########################################################################
@@ -393,7 +352,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -406,14 +365,47 @@ sub _read {
     $self->{type_byte} = $self->{_io}->read_u1();
     $self->{name} = Bson::Cstring->new($self->{_io}, $self, $self->{_root});
     my $_on = $self->type_byte();
-    if ($_on == $Bson::Element::BSON_TYPE_CODE_WITH_SCOPE) {
+    if ($_on == $Bson::Element::BSON_TYPE_ARRAY) {
+        $self->{content} = Bson->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Bson::Element::BSON_TYPE_BIN_DATA) {
+        $self->{content} = Bson::BinData->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Bson::Element::BSON_TYPE_BOOLEAN) {
+        $self->{content} = $self->{_io}->read_u1();
+    }
+    elsif ($_on == $Bson::Element::BSON_TYPE_CODE_WITH_SCOPE) {
         $self->{content} = Bson::CodeWithScope->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Bson::Element::BSON_TYPE_DB_POINTER) {
+        $self->{content} = Bson::DbPointer->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Bson::Element::BSON_TYPE_DOCUMENT) {
+        $self->{content} = Bson->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Bson::Element::BSON_TYPE_JAVASCRIPT) {
+        $self->{content} = Bson::String->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Bson::Element::BSON_TYPE_NUMBER_DECIMAL) {
+        $self->{content} = Bson::F16->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Bson::Element::BSON_TYPE_NUMBER_DOUBLE) {
+        $self->{content} = $self->{_io}->read_f8le();
+    }
+    elsif ($_on == $Bson::Element::BSON_TYPE_NUMBER_INT) {
+        $self->{content} = $self->{_io}->read_s4le();
+    }
+    elsif ($_on == $Bson::Element::BSON_TYPE_NUMBER_LONG) {
+        $self->{content} = $self->{_io}->read_s8le();
+    }
+    elsif ($_on == $Bson::Element::BSON_TYPE_OBJECT_ID) {
+        $self->{content} = Bson::ObjectId->new($self->{_io}, $self, $self->{_root});
     }
     elsif ($_on == $Bson::Element::BSON_TYPE_REG_EX) {
         $self->{content} = Bson::RegEx->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $Bson::Element::BSON_TYPE_NUMBER_DOUBLE) {
-        $self->{content} = $self->{_io}->read_f8le();
+    elsif ($_on == $Bson::Element::BSON_TYPE_STRING) {
+        $self->{content} = Bson::String->new($self->{_io}, $self, $self->{_root});
     }
     elsif ($_on == $Bson::Element::BSON_TYPE_SYMBOL) {
         $self->{content} = Bson::String->new($self->{_io}, $self, $self->{_root});
@@ -421,41 +413,8 @@ sub _read {
     elsif ($_on == $Bson::Element::BSON_TYPE_TIMESTAMP) {
         $self->{content} = Bson::Timestamp->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == $Bson::Element::BSON_TYPE_NUMBER_INT) {
-        $self->{content} = $self->{_io}->read_s4le();
-    }
-    elsif ($_on == $Bson::Element::BSON_TYPE_DOCUMENT) {
-        $self->{content} = Bson->new($self->{_io});
-    }
-    elsif ($_on == $Bson::Element::BSON_TYPE_OBJECT_ID) {
-        $self->{content} = Bson::ObjectId->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $Bson::Element::BSON_TYPE_JAVASCRIPT) {
-        $self->{content} = Bson::String->new($self->{_io}, $self, $self->{_root});
-    }
     elsif ($_on == $Bson::Element::BSON_TYPE_UTC_DATETIME) {
         $self->{content} = $self->{_io}->read_s8le();
-    }
-    elsif ($_on == $Bson::Element::BSON_TYPE_BOOLEAN) {
-        $self->{content} = $self->{_io}->read_u1();
-    }
-    elsif ($_on == $Bson::Element::BSON_TYPE_NUMBER_LONG) {
-        $self->{content} = $self->{_io}->read_s8le();
-    }
-    elsif ($_on == $Bson::Element::BSON_TYPE_BIN_DATA) {
-        $self->{content} = Bson::BinData->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $Bson::Element::BSON_TYPE_STRING) {
-        $self->{content} = Bson::String->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $Bson::Element::BSON_TYPE_DB_POINTER) {
-        $self->{content} = Bson::DbPointer->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $Bson::Element::BSON_TYPE_ARRAY) {
-        $self->{content} = Bson->new($self->{_io});
-    }
-    elsif ($_on == $Bson::Element::BSON_TYPE_NUMBER_DECIMAL) {
-        $self->{content} = Bson::F16->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -475,7 +434,7 @@ sub content {
 }
 
 ########################################################################
-package Bson::DbPointer;
+package Bson::ElementsList;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -494,7 +453,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -504,125 +463,15 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{namespace} = Bson::String->new($self->{_io}, $self, $self->{_root});
-    $self->{id} = Bson::ObjectId->new($self->{_io}, $self, $self->{_root});
+    $self->{elements} = [];
+    while (!$self->{_io}->is_eof()) {
+        push @{$self->{elements}}, Bson::Element->new($self->{_io}, $self, $self->{_root});
+    }
 }
 
-sub namespace {
+sub elements {
     my ($self) = @_;
-    return $self->{namespace};
-}
-
-sub id {
-    my ($self) = @_;
-    return $self->{id};
-}
-
-########################################################################
-package Bson::U3;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{b1} = $self->{_io}->read_u1();
-    $self->{b2} = $self->{_io}->read_u1();
-    $self->{b3} = $self->{_io}->read_u1();
-}
-
-sub value {
-    my ($self) = @_;
-    return $self->{value} if ($self->{value});
-    $self->{value} = (($self->b1() | ($self->b2() << 8)) | ($self->b3() << 16));
-    return $self->{value};
-}
-
-sub b1 {
-    my ($self) = @_;
-    return $self->{b1};
-}
-
-sub b2 {
-    my ($self) = @_;
-    return $self->{b2};
-}
-
-sub b3 {
-    my ($self) = @_;
-    return $self->{b3};
-}
-
-########################################################################
-package Bson::CodeWithScope;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{id} = $self->{_io}->read_s4le();
-    $self->{source} = Bson::String->new($self->{_io}, $self, $self->{_root});
-    $self->{scope} = Bson->new($self->{_io});
-}
-
-sub id {
-    my ($self) = @_;
-    return $self->{id};
-}
-
-sub source {
-    my ($self) = @_;
-    return $self->{source};
-}
-
-sub scope {
-    my ($self) = @_;
-    return $self->{scope};
+    return $self->{elements};
 }
 
 ########################################################################
@@ -645,7 +494,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -702,7 +551,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -758,7 +607,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -780,6 +629,157 @@ sub pattern {
 sub options {
     my ($self) = @_;
     return $self->{options};
+}
+
+########################################################################
+package Bson::String;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{len} = $self->{_io}->read_s4le();
+    $self->{str} = Encode::decode("UTF-8", $self->{_io}->read_bytes($self->len() - 1));
+    $self->{terminator} = $self->{_io}->read_bytes(1);
+}
+
+sub len {
+    my ($self) = @_;
+    return $self->{len};
+}
+
+sub str {
+    my ($self) = @_;
+    return $self->{str};
+}
+
+sub terminator {
+    my ($self) = @_;
+    return $self->{terminator};
+}
+
+########################################################################
+package Bson::Timestamp;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{increment} = $self->{_io}->read_u4le();
+    $self->{timestamp} = $self->{_io}->read_u4le();
+}
+
+sub increment {
+    my ($self) = @_;
+    return $self->{increment};
+}
+
+sub timestamp {
+    my ($self) = @_;
+    return $self->{timestamp};
+}
+
+########################################################################
+package Bson::U3;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{b1} = $self->{_io}->read_u1();
+    $self->{b2} = $self->{_io}->read_u1();
+    $self->{b3} = $self->{_io}->read_u1();
+}
+
+sub value {
+    my ($self) = @_;
+    return $self->{value} if ($self->{value});
+    $self->{value} = ($self->b1() | $self->b2() << 8) | $self->b3() << 16;
+    return $self->{value};
+}
+
+sub b1 {
+    my ($self) = @_;
+    return $self->{b1};
+}
+
+sub b2 {
+    my ($self) = @_;
+    return $self->{b2};
+}
+
+sub b3 {
+    my ($self) = @_;
+    return $self->{b3};
 }
 
 1;

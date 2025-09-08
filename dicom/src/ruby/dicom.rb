@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -4047,8 +4047,8 @@ class Dicom < Kaitai::Struct::Struct
     4294893789 => :tags_sequence_delimitation_item,
   }
   I__TAGS = TAGS.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -4062,26 +4062,42 @@ class Dicom < Kaitai::Struct::Struct
     end
     self
   end
-  class TFileHeader < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  class SeqItem < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @preamble = @_io.read_bytes(128)
-      @magic = @_io.read_bytes(4)
-      raise Kaitai::Struct::ValidationNotEqualError.new([68, 73, 67, 77].pack('C*'), magic, _io, "/types/t_file_header/seq/1") if not magic == [68, 73, 67, 77].pack('C*')
+      @tag_group = @_io.read_bytes(2)
+      raise Kaitai::Struct::ValidationNotEqualError.new([254, 255].pack('C*'), @tag_group, @_io, "/types/seq_item/seq/0") if not @tag_group == [254, 255].pack('C*')
+      @tag_elem = @_io.read_u2le
+      @value_len = @_io.read_u4le
+      if value_len != 4294967295
+        @value = @_io.read_bytes(value_len)
+      end
+      if value_len == 4294967295
+        @items = []
+        i = 0
+        begin
+          _ = TDataElementExplicit.new(@_io, self, @_root)
+          @items << _
+          i += 1
+        end until  ((_.tag_group == 65534) && (_.tag_elem == 57357)) 
+      end
       self
     end
-    attr_reader :preamble
-    attr_reader :magic
+    attr_reader :tag_group
+    attr_reader :tag_elem
+    attr_reader :value_len
+    attr_reader :value
+    attr_reader :items
   end
 
   ##
   # @see https://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2 Source
   class TDataElementExplicit < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -4090,7 +4106,7 @@ class Dicom < Kaitai::Struct::Struct
       @tag_group = @_io.read_u2le
       @tag_elem = @_io.read_u2le
       if !(is_forced_implicit)
-        @vr = (@_io.read_bytes(2)).force_encoding("ASCII")
+        @vr = (@_io.read_bytes(2)).force_encoding("ASCII").encode('UTF-8')
       end
       if  ((is_long_len) && (!(is_forced_implicit))) 
         @reserved = @_io.read_u2le
@@ -4140,7 +4156,7 @@ class Dicom < Kaitai::Struct::Struct
     end
     def tag
       return @tag unless @tag.nil?
-      @tag = Kaitai::Struct::Stream::resolve_enum(Dicom::TAGS, ((tag_group << 16) | tag_elem))
+      @tag = Kaitai::Struct::Stream::resolve_enum(Dicom::TAGS, tag_group << 16 | tag_elem)
       @tag
     end
     attr_reader :tag_group
@@ -4156,7 +4172,7 @@ class Dicom < Kaitai::Struct::Struct
   ##
   # @see https://dicom.nema.org/medical/dicom/current/output/html/part05.html#sect_7.1.2 Source
   class TDataElementImplicit < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -4165,7 +4181,7 @@ class Dicom < Kaitai::Struct::Struct
       @tag_group = @_io.read_u2le
       @tag_elem = @_io.read_u2le
       if is_forced_explicit
-        @vr = (@_io.read_bytes(2)).force_encoding("ASCII")
+        @vr = (@_io.read_bytes(2)).force_encoding("ASCII").encode('UTF-8')
       end
       if  ((is_long_len) && (is_forced_explicit)) 
         @reserved = @_io.read_u2le
@@ -4198,30 +4214,30 @@ class Dicom < Kaitai::Struct::Struct
       end
       self
     end
-    def tag
-      return @tag unless @tag.nil?
-      @tag = Kaitai::Struct::Stream::resolve_enum(Dicom::TAGS, ((tag_group << 16) | tag_elem))
-      @tag
-    end
-    def is_transfer_syntax_change_explicit
-      return @is_transfer_syntax_change_explicit unless @is_transfer_syntax_change_explicit.nil?
-      @is_transfer_syntax_change_explicit = p_is_transfer_syntax_change_explicit
-      @is_transfer_syntax_change_explicit
+    def is_forced_explicit
+      return @is_forced_explicit unless @is_forced_explicit.nil?
+      @is_forced_explicit = tag_group == 2
+      @is_forced_explicit
     end
     def is_long_len
       return @is_long_len unless @is_long_len.nil?
       @is_long_len =  ((is_forced_explicit) && ( ((vr == "OB") || (vr == "OD") || (vr == "OF") || (vr == "OL") || (vr == "OW") || (vr == "SQ") || (vr == "UC") || (vr == "UR") || (vr == "UT") || (vr == "UN")) )) 
       @is_long_len
     end
+    def is_transfer_syntax_change_explicit
+      return @is_transfer_syntax_change_explicit unless @is_transfer_syntax_change_explicit.nil?
+      @is_transfer_syntax_change_explicit = p_is_transfer_syntax_change_explicit
+      @is_transfer_syntax_change_explicit
+    end
     def p_is_transfer_syntax_change_explicit
       return @p_is_transfer_syntax_change_explicit unless @p_is_transfer_syntax_change_explicit.nil?
       @p_is_transfer_syntax_change_explicit = value == [49, 46, 50, 46, 56, 52, 48, 46, 49, 48, 48, 48, 56, 46, 49, 46, 50, 46, 49, 0].pack('C*')
       @p_is_transfer_syntax_change_explicit
     end
-    def is_forced_explicit
-      return @is_forced_explicit unless @is_forced_explicit.nil?
-      @is_forced_explicit = tag_group == 2
-      @is_forced_explicit
+    def tag
+      return @tag unless @tag.nil?
+      @tag = Kaitai::Struct::Stream::resolve_enum(Dicom::TAGS, tag_group << 16 | tag_elem)
+      @tag
     end
     attr_reader :tag_group
     attr_reader :tag_elem
@@ -4232,36 +4248,20 @@ class Dicom < Kaitai::Struct::Struct
     attr_reader :items
     attr_reader :elements
   end
-  class SeqItem < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  class TFileHeader < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @tag_group = @_io.read_bytes(2)
-      raise Kaitai::Struct::ValidationNotEqualError.new([254, 255].pack('C*'), tag_group, _io, "/types/seq_item/seq/0") if not tag_group == [254, 255].pack('C*')
-      @tag_elem = @_io.read_u2le
-      @value_len = @_io.read_u4le
-      if value_len != 4294967295
-        @value = @_io.read_bytes(value_len)
-      end
-      if value_len == 4294967295
-        @items = []
-        i = 0
-        begin
-          _ = TDataElementExplicit.new(@_io, self, @_root)
-          @items << _
-          i += 1
-        end until  ((_.tag_group == 65534) && (_.tag_elem == 57357)) 
-      end
+      @preamble = @_io.read_bytes(128)
+      @magic = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([68, 73, 67, 77].pack('C*'), @magic, @_io, "/types/t_file_header/seq/1") if not @magic == [68, 73, 67, 77].pack('C*')
       self
     end
-    attr_reader :tag_group
-    attr_reader :tag_elem
-    attr_reader :value_len
-    attr_reader :value
-    attr_reader :items
+    attr_reader :preamble
+    attr_reader :magic
   end
   attr_reader :file_header
   attr_reader :elements

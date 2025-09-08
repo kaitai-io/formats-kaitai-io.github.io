@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 
 ########################################################################
 package RenderwareBinaryStream;
@@ -192,7 +192,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -211,12 +211,17 @@ sub _read {
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = RenderwareBinaryStream::ListWithHeader->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on == $RenderwareBinaryStream::SECTIONS_GEOMETRY) {
+    elsif ($_on == $RenderwareBinaryStream::SECTIONS_CLUMP) {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->size());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = RenderwareBinaryStream::ListWithHeader->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on == $RenderwareBinaryStream::SECTIONS_TEXTURE_DICTIONARY) {
+    elsif ($_on == $RenderwareBinaryStream::SECTIONS_FRAME_LIST) {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->size());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = RenderwareBinaryStream::ListWithHeader->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $RenderwareBinaryStream::SECTIONS_GEOMETRY) {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->size());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = RenderwareBinaryStream::ListWithHeader->new($io__raw_body, $self, $self->{_root});
@@ -226,17 +231,12 @@ sub _read {
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = RenderwareBinaryStream::ListWithHeader->new($io__raw_body, $self, $self->{_root});
     }
+    elsif ($_on == $RenderwareBinaryStream::SECTIONS_TEXTURE_DICTIONARY) {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->size());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = RenderwareBinaryStream::ListWithHeader->new($io__raw_body, $self, $self->{_root});
+    }
     elsif ($_on == $RenderwareBinaryStream::SECTIONS_TEXTURE_NATIVE) {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->size());
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = RenderwareBinaryStream::ListWithHeader->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $RenderwareBinaryStream::SECTIONS_CLUMP) {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->size());
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = RenderwareBinaryStream::ListWithHeader->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on == $RenderwareBinaryStream::SECTIONS_FRAME_LIST) {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->size());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = RenderwareBinaryStream::ListWithHeader->new($io__raw_body, $self, $self->{_root});
@@ -249,7 +249,7 @@ sub _read {
 sub version {
     my ($self) = @_;
     return $self->{version} if ($self->{version});
-    $self->{version} = (($self->library_id_stamp() & 4294901760) != 0 ? (((($self->library_id_stamp() >> 14) & 261888) + 196608) | (($self->library_id_stamp() >> 16) & 63)) : ($self->library_id_stamp() << 8));
+    $self->{version} = (($self->library_id_stamp() & 4294901760) != 0 ? ($self->library_id_stamp() >> 14 & 261888) + 196608 | $self->library_id_stamp() >> 16 & 63 : $self->library_id_stamp() << 8);
     return $self->{version};
 }
 
@@ -279,7 +279,7 @@ sub _raw_body {
 }
 
 ########################################################################
-package RenderwareBinaryStream::StructClump;
+package RenderwareBinaryStream::Frame;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -298,7 +298,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -308,152 +308,30 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{num_atomics} = $self->{_io}->read_u4le();
-    if ($self->_parent()->version() >= 208896) {
-        $self->{num_lights} = $self->{_io}->read_u4le();
-    }
-    if ($self->_parent()->version() >= 208896) {
-        $self->{num_cameras} = $self->{_io}->read_u4le();
-    }
+    $self->{rotation_matrix} = RenderwareBinaryStream::Matrix->new($self->{_io}, $self, $self->{_root});
+    $self->{position} = RenderwareBinaryStream::Vector3d->new($self->{_io}, $self, $self->{_root});
+    $self->{cur_frame_idx} = $self->{_io}->read_s4le();
+    $self->{matrix_creation_flags} = $self->{_io}->read_u4le();
 }
 
-sub num_atomics {
+sub rotation_matrix {
     my ($self) = @_;
-    return $self->{num_atomics};
+    return $self->{rotation_matrix};
 }
 
-sub num_lights {
+sub position {
     my ($self) = @_;
-    return $self->{num_lights};
+    return $self->{position};
 }
 
-sub num_cameras {
+sub cur_frame_idx {
     my ($self) = @_;
-    return $self->{num_cameras};
+    return $self->{cur_frame_idx};
 }
 
-########################################################################
-package RenderwareBinaryStream::StructGeometry;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
+sub matrix_creation_flags {
     my ($self) = @_;
-
-    $self->{format} = $self->{_io}->read_u4le();
-    $self->{num_triangles} = $self->{_io}->read_u4le();
-    $self->{num_vertices} = $self->{_io}->read_u4le();
-    $self->{num_morph_targets} = $self->{_io}->read_u4le();
-    if ($self->_parent()->version() < 212992) {
-        $self->{surf_prop} = RenderwareBinaryStream::SurfaceProperties->new($self->{_io}, $self, $self->{_root});
-    }
-    if (!($self->is_native())) {
-        $self->{geometry} = RenderwareBinaryStream::GeometryNonNative->new($self->{_io}, $self, $self->{_root});
-    }
-    $self->{morph_targets} = ();
-    my $n_morph_targets = $self->num_morph_targets();
-    for (my $i = 0; $i < $n_morph_targets; $i++) {
-        push @{$self->{morph_targets}}, RenderwareBinaryStream::MorphTarget->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub num_uv_layers_raw {
-    my ($self) = @_;
-    return $self->{num_uv_layers_raw} if ($self->{num_uv_layers_raw});
-    $self->{num_uv_layers_raw} = (($self->format() & 16711680) >> 16);
-    return $self->{num_uv_layers_raw};
-}
-
-sub is_textured {
-    my ($self) = @_;
-    return $self->{is_textured} if ($self->{is_textured});
-    $self->{is_textured} = ($self->format() & 4) != 0;
-    return $self->{is_textured};
-}
-
-sub is_native {
-    my ($self) = @_;
-    return $self->{is_native} if ($self->{is_native});
-    $self->{is_native} = ($self->format() & 16777216) != 0;
-    return $self->{is_native};
-}
-
-sub num_uv_layers {
-    my ($self) = @_;
-    return $self->{num_uv_layers} if ($self->{num_uv_layers});
-    $self->{num_uv_layers} = ($self->num_uv_layers_raw() == 0 ? ($self->is_textured2() ? 2 : ($self->is_textured() ? 1 : 0)) : $self->num_uv_layers_raw());
-    return $self->{num_uv_layers};
-}
-
-sub is_textured2 {
-    my ($self) = @_;
-    return $self->{is_textured2} if ($self->{is_textured2});
-    $self->{is_textured2} = ($self->format() & 128) != 0;
-    return $self->{is_textured2};
-}
-
-sub is_prelit {
-    my ($self) = @_;
-    return $self->{is_prelit} if ($self->{is_prelit});
-    $self->{is_prelit} = ($self->format() & 8) != 0;
-    return $self->{is_prelit};
-}
-
-sub format {
-    my ($self) = @_;
-    return $self->{format};
-}
-
-sub num_triangles {
-    my ($self) = @_;
-    return $self->{num_triangles};
-}
-
-sub num_vertices {
-    my ($self) = @_;
-    return $self->{num_vertices};
-}
-
-sub num_morph_targets {
-    my ($self) = @_;
-    return $self->{num_morph_targets};
-}
-
-sub surf_prop {
-    my ($self) = @_;
-    return $self->{surf_prop};
-}
-
-sub geometry {
-    my ($self) = @_;
-    return $self->{geometry};
-}
-
-sub morph_targets {
-    my ($self) = @_;
-    return $self->{morph_targets};
+    return $self->{matrix_creation_flags};
 }
 
 ########################################################################
@@ -476,7 +354,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -487,18 +365,18 @@ sub _read {
     my ($self) = @_;
 
     if ($self->_parent()->is_prelit()) {
-        $self->{prelit_colors} = ();
+        $self->{prelit_colors} = [];
         my $n_prelit_colors = $self->_parent()->num_vertices();
         for (my $i = 0; $i < $n_prelit_colors; $i++) {
             push @{$self->{prelit_colors}}, RenderwareBinaryStream::Rgba->new($self->{_io}, $self, $self->{_root});
         }
     }
-    $self->{uv_layers} = ();
+    $self->{uv_layers} = [];
     my $n_uv_layers = $self->_parent()->num_uv_layers();
     for (my $i = 0; $i < $n_uv_layers; $i++) {
         push @{$self->{uv_layers}}, RenderwareBinaryStream::UvLayer->new($self->{_io}, $self, $self->{_root});
     }
-    $self->{triangles} = ();
+    $self->{triangles} = [];
     my $n_triangles = $self->_parent()->num_triangles();
     for (my $i = 0; $i < $n_triangles; $i++) {
         push @{$self->{triangles}}, RenderwareBinaryStream::Triangle->new($self->{_io}, $self, $self->{_root});
@@ -521,7 +399,7 @@ sub triangles {
 }
 
 ########################################################################
-package RenderwareBinaryStream::StructGeometryList;
+package RenderwareBinaryStream::ListWithHeader;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -540,7 +418,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -550,12 +428,200 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{num_geometries} = $self->{_io}->read_u4le();
+    $self->{code} = $self->{_io}->read_bytes(4);
+    $self->{header_size} = $self->{_io}->read_u4le();
+    $self->{library_id_stamp} = $self->{_io}->read_u4le();
+    my $_on = $self->_parent()->code();
+    if ($_on == $RenderwareBinaryStream::SECTIONS_ATOMIC) {
+        $self->{_raw_header} = $self->{_io}->read_bytes($self->header_size());
+        my $io__raw_header = IO::KaitaiStruct::Stream->new($self->{_raw_header});
+        $self->{header} = RenderwareBinaryStream::StructAtomic->new($io__raw_header, $self, $self->{_root});
+    }
+    elsif ($_on == $RenderwareBinaryStream::SECTIONS_CLUMP) {
+        $self->{_raw_header} = $self->{_io}->read_bytes($self->header_size());
+        my $io__raw_header = IO::KaitaiStruct::Stream->new($self->{_raw_header});
+        $self->{header} = RenderwareBinaryStream::StructClump->new($io__raw_header, $self, $self->{_root});
+    }
+    elsif ($_on == $RenderwareBinaryStream::SECTIONS_FRAME_LIST) {
+        $self->{_raw_header} = $self->{_io}->read_bytes($self->header_size());
+        my $io__raw_header = IO::KaitaiStruct::Stream->new($self->{_raw_header});
+        $self->{header} = RenderwareBinaryStream::StructFrameList->new($io__raw_header, $self, $self->{_root});
+    }
+    elsif ($_on == $RenderwareBinaryStream::SECTIONS_GEOMETRY) {
+        $self->{_raw_header} = $self->{_io}->read_bytes($self->header_size());
+        my $io__raw_header = IO::KaitaiStruct::Stream->new($self->{_raw_header});
+        $self->{header} = RenderwareBinaryStream::StructGeometry->new($io__raw_header, $self, $self->{_root});
+    }
+    elsif ($_on == $RenderwareBinaryStream::SECTIONS_GEOMETRY_LIST) {
+        $self->{_raw_header} = $self->{_io}->read_bytes($self->header_size());
+        my $io__raw_header = IO::KaitaiStruct::Stream->new($self->{_raw_header});
+        $self->{header} = RenderwareBinaryStream::StructGeometryList->new($io__raw_header, $self, $self->{_root});
+    }
+    elsif ($_on == $RenderwareBinaryStream::SECTIONS_TEXTURE_DICTIONARY) {
+        $self->{_raw_header} = $self->{_io}->read_bytes($self->header_size());
+        my $io__raw_header = IO::KaitaiStruct::Stream->new($self->{_raw_header});
+        $self->{header} = RenderwareBinaryStream::StructTextureDictionary->new($io__raw_header, $self, $self->{_root});
+    }
+    else {
+        $self->{header} = $self->{_io}->read_bytes($self->header_size());
+    }
+    $self->{entries} = [];
+    while (!$self->{_io}->is_eof()) {
+        push @{$self->{entries}}, RenderwareBinaryStream->new($self->{_io}, $self, $self->{_root});
+    }
 }
 
-sub num_geometries {
+sub version {
     my ($self) = @_;
-    return $self->{num_geometries};
+    return $self->{version} if ($self->{version});
+    $self->{version} = (($self->library_id_stamp() & 4294901760) != 0 ? ($self->library_id_stamp() >> 14 & 261888) + 196608 | $self->library_id_stamp() >> 16 & 63 : $self->library_id_stamp() << 8);
+    return $self->{version};
+}
+
+sub code {
+    my ($self) = @_;
+    return $self->{code};
+}
+
+sub header_size {
+    my ($self) = @_;
+    return $self->{header_size};
+}
+
+sub library_id_stamp {
+    my ($self) = @_;
+    return $self->{library_id_stamp};
+}
+
+sub header {
+    my ($self) = @_;
+    return $self->{header};
+}
+
+sub entries {
+    my ($self) = @_;
+    return $self->{entries};
+}
+
+sub _raw_header {
+    my ($self) = @_;
+    return $self->{_raw_header};
+}
+
+########################################################################
+package RenderwareBinaryStream::Matrix;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{entries} = [];
+    my $n_entries = 3;
+    for (my $i = 0; $i < $n_entries; $i++) {
+        push @{$self->{entries}}, RenderwareBinaryStream::Vector3d->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub entries {
+    my ($self) = @_;
+    return $self->{entries};
+}
+
+########################################################################
+package RenderwareBinaryStream::MorphTarget;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{bounding_sphere} = RenderwareBinaryStream::Sphere->new($self->{_io}, $self, $self->{_root});
+    $self->{has_vertices} = $self->{_io}->read_u4le();
+    $self->{has_normals} = $self->{_io}->read_u4le();
+    if ($self->has_vertices() != 0) {
+        $self->{vertices} = [];
+        my $n_vertices = $self->_parent()->num_vertices();
+        for (my $i = 0; $i < $n_vertices; $i++) {
+            push @{$self->{vertices}}, RenderwareBinaryStream::Vector3d->new($self->{_io}, $self, $self->{_root});
+        }
+    }
+    if ($self->has_normals() != 0) {
+        $self->{normals} = [];
+        my $n_normals = $self->_parent()->num_vertices();
+        for (my $i = 0; $i < $n_normals; $i++) {
+            push @{$self->{normals}}, RenderwareBinaryStream::Vector3d->new($self->{_io}, $self, $self->{_root});
+        }
+    }
+}
+
+sub bounding_sphere {
+    my ($self) = @_;
+    return $self->{bounding_sphere};
+}
+
+sub has_vertices {
+    my ($self) = @_;
+    return $self->{has_vertices};
+}
+
+sub has_normals {
+    my ($self) = @_;
+    return $self->{has_normals};
+}
+
+sub vertices {
+    my ($self) = @_;
+    return $self->{vertices};
+}
+
+sub normals {
+    my ($self) = @_;
+    return $self->{normals};
 }
 
 ########################################################################
@@ -578,7 +644,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -634,7 +700,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -671,80 +737,6 @@ sub radius {
 }
 
 ########################################################################
-package RenderwareBinaryStream::MorphTarget;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{bounding_sphere} = RenderwareBinaryStream::Sphere->new($self->{_io}, $self, $self->{_root});
-    $self->{has_vertices} = $self->{_io}->read_u4le();
-    $self->{has_normals} = $self->{_io}->read_u4le();
-    if ($self->has_vertices() != 0) {
-        $self->{vertices} = ();
-        my $n_vertices = $self->_parent()->num_vertices();
-        for (my $i = 0; $i < $n_vertices; $i++) {
-            push @{$self->{vertices}}, RenderwareBinaryStream::Vector3d->new($self->{_io}, $self, $self->{_root});
-        }
-    }
-    if ($self->has_normals() != 0) {
-        $self->{normals} = ();
-        my $n_normals = $self->_parent()->num_vertices();
-        for (my $i = 0; $i < $n_normals; $i++) {
-            push @{$self->{normals}}, RenderwareBinaryStream::Vector3d->new($self->{_io}, $self, $self->{_root});
-        }
-    }
-}
-
-sub bounding_sphere {
-    my ($self) = @_;
-    return $self->{bounding_sphere};
-}
-
-sub has_vertices {
-    my ($self) = @_;
-    return $self->{has_vertices};
-}
-
-sub has_normals {
-    my ($self) = @_;
-    return $self->{has_normals};
-}
-
-sub vertices {
-    my ($self) = @_;
-    return $self->{vertices};
-}
-
-sub normals {
-    my ($self) = @_;
-    return $self->{normals};
-}
-
-########################################################################
 package RenderwareBinaryStream::StructAtomic;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -764,7 +756,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -820,6 +812,308 @@ sub unused {
 }
 
 ########################################################################
+package RenderwareBinaryStream::StructClump;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{num_atomics} = $self->{_io}->read_u4le();
+    if ($self->_parent()->version() >= 208896) {
+        $self->{num_lights} = $self->{_io}->read_u4le();
+    }
+    if ($self->_parent()->version() >= 208896) {
+        $self->{num_cameras} = $self->{_io}->read_u4le();
+    }
+}
+
+sub num_atomics {
+    my ($self) = @_;
+    return $self->{num_atomics};
+}
+
+sub num_lights {
+    my ($self) = @_;
+    return $self->{num_lights};
+}
+
+sub num_cameras {
+    my ($self) = @_;
+    return $self->{num_cameras};
+}
+
+########################################################################
+package RenderwareBinaryStream::StructFrameList;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{num_frames} = $self->{_io}->read_u4le();
+    $self->{frames} = [];
+    my $n_frames = $self->num_frames();
+    for (my $i = 0; $i < $n_frames; $i++) {
+        push @{$self->{frames}}, RenderwareBinaryStream::Frame->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub num_frames {
+    my ($self) = @_;
+    return $self->{num_frames};
+}
+
+sub frames {
+    my ($self) = @_;
+    return $self->{frames};
+}
+
+########################################################################
+package RenderwareBinaryStream::StructGeometry;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{format} = $self->{_io}->read_u4le();
+    $self->{num_triangles} = $self->{_io}->read_u4le();
+    $self->{num_vertices} = $self->{_io}->read_u4le();
+    $self->{num_morph_targets} = $self->{_io}->read_u4le();
+    if ($self->_parent()->version() < 212992) {
+        $self->{surf_prop} = RenderwareBinaryStream::SurfaceProperties->new($self->{_io}, $self, $self->{_root});
+    }
+    if (!($self->is_native())) {
+        $self->{geometry} = RenderwareBinaryStream::GeometryNonNative->new($self->{_io}, $self, $self->{_root});
+    }
+    $self->{morph_targets} = [];
+    my $n_morph_targets = $self->num_morph_targets();
+    for (my $i = 0; $i < $n_morph_targets; $i++) {
+        push @{$self->{morph_targets}}, RenderwareBinaryStream::MorphTarget->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub is_native {
+    my ($self) = @_;
+    return $self->{is_native} if ($self->{is_native});
+    $self->{is_native} = ($self->format() & 16777216) != 0;
+    return $self->{is_native};
+}
+
+sub is_prelit {
+    my ($self) = @_;
+    return $self->{is_prelit} if ($self->{is_prelit});
+    $self->{is_prelit} = ($self->format() & 8) != 0;
+    return $self->{is_prelit};
+}
+
+sub is_textured {
+    my ($self) = @_;
+    return $self->{is_textured} if ($self->{is_textured});
+    $self->{is_textured} = ($self->format() & 4) != 0;
+    return $self->{is_textured};
+}
+
+sub is_textured2 {
+    my ($self) = @_;
+    return $self->{is_textured2} if ($self->{is_textured2});
+    $self->{is_textured2} = ($self->format() & 128) != 0;
+    return $self->{is_textured2};
+}
+
+sub num_uv_layers {
+    my ($self) = @_;
+    return $self->{num_uv_layers} if ($self->{num_uv_layers});
+    $self->{num_uv_layers} = ($self->num_uv_layers_raw() == 0 ? ($self->is_textured2() ? 2 : ($self->is_textured() ? 1 : 0)) : $self->num_uv_layers_raw());
+    return $self->{num_uv_layers};
+}
+
+sub num_uv_layers_raw {
+    my ($self) = @_;
+    return $self->{num_uv_layers_raw} if ($self->{num_uv_layers_raw});
+    $self->{num_uv_layers_raw} = ($self->format() & 16711680) >> 16;
+    return $self->{num_uv_layers_raw};
+}
+
+sub format {
+    my ($self) = @_;
+    return $self->{format};
+}
+
+sub num_triangles {
+    my ($self) = @_;
+    return $self->{num_triangles};
+}
+
+sub num_vertices {
+    my ($self) = @_;
+    return $self->{num_vertices};
+}
+
+sub num_morph_targets {
+    my ($self) = @_;
+    return $self->{num_morph_targets};
+}
+
+sub surf_prop {
+    my ($self) = @_;
+    return $self->{surf_prop};
+}
+
+sub geometry {
+    my ($self) = @_;
+    return $self->{geometry};
+}
+
+sub morph_targets {
+    my ($self) = @_;
+    return $self->{morph_targets};
+}
+
+########################################################################
+package RenderwareBinaryStream::StructGeometryList;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{num_geometries} = $self->{_io}->read_u4le();
+}
+
+sub num_geometries {
+    my ($self) = @_;
+    return $self->{num_geometries};
+}
+
+########################################################################
+package RenderwareBinaryStream::StructTextureDictionary;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{num_textures} = $self->{_io}->read_u4le();
+}
+
+sub num_textures {
+    my ($self) = @_;
+    return $self->{num_textures};
+}
+
+########################################################################
 package RenderwareBinaryStream::SurfaceProperties;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -839,7 +1133,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -870,7 +1164,7 @@ sub diffuse {
 }
 
 ########################################################################
-package RenderwareBinaryStream::StructFrameList;
+package RenderwareBinaryStream::TexCoord;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -889,7 +1183,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -899,224 +1193,18 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{num_frames} = $self->{_io}->read_u4le();
-    $self->{frames} = ();
-    my $n_frames = $self->num_frames();
-    for (my $i = 0; $i < $n_frames; $i++) {
-        push @{$self->{frames}}, RenderwareBinaryStream::Frame->new($self->{_io}, $self, $self->{_root});
-    }
+    $self->{u} = $self->{_io}->read_f4le();
+    $self->{v} = $self->{_io}->read_f4le();
 }
 
-sub num_frames {
+sub u {
     my ($self) = @_;
-    return $self->{num_frames};
+    return $self->{u};
 }
 
-sub frames {
+sub v {
     my ($self) = @_;
-    return $self->{frames};
-}
-
-########################################################################
-package RenderwareBinaryStream::Matrix;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{entries} = ();
-    my $n_entries = 3;
-    for (my $i = 0; $i < $n_entries; $i++) {
-        push @{$self->{entries}}, RenderwareBinaryStream::Vector3d->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub entries {
-    my ($self) = @_;
-    return $self->{entries};
-}
-
-########################################################################
-package RenderwareBinaryStream::Vector3d;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{x} = $self->{_io}->read_f4le();
-    $self->{y} = $self->{_io}->read_f4le();
-    $self->{z} = $self->{_io}->read_f4le();
-}
-
-sub x {
-    my ($self) = @_;
-    return $self->{x};
-}
-
-sub y {
-    my ($self) = @_;
-    return $self->{y};
-}
-
-sub z {
-    my ($self) = @_;
-    return $self->{z};
-}
-
-########################################################################
-package RenderwareBinaryStream::ListWithHeader;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{code} = $self->{_io}->read_bytes(4);
-    $self->{header_size} = $self->{_io}->read_u4le();
-    $self->{library_id_stamp} = $self->{_io}->read_u4le();
-    my $_on = $self->_parent()->code();
-    if ($_on == $RenderwareBinaryStream::SECTIONS_ATOMIC) {
-        $self->{_raw_header} = $self->{_io}->read_bytes($self->header_size());
-        my $io__raw_header = IO::KaitaiStruct::Stream->new($self->{_raw_header});
-        $self->{header} = RenderwareBinaryStream::StructAtomic->new($io__raw_header, $self, $self->{_root});
-    }
-    elsif ($_on == $RenderwareBinaryStream::SECTIONS_GEOMETRY) {
-        $self->{_raw_header} = $self->{_io}->read_bytes($self->header_size());
-        my $io__raw_header = IO::KaitaiStruct::Stream->new($self->{_raw_header});
-        $self->{header} = RenderwareBinaryStream::StructGeometry->new($io__raw_header, $self, $self->{_root});
-    }
-    elsif ($_on == $RenderwareBinaryStream::SECTIONS_TEXTURE_DICTIONARY) {
-        $self->{_raw_header} = $self->{_io}->read_bytes($self->header_size());
-        my $io__raw_header = IO::KaitaiStruct::Stream->new($self->{_raw_header});
-        $self->{header} = RenderwareBinaryStream::StructTextureDictionary->new($io__raw_header, $self, $self->{_root});
-    }
-    elsif ($_on == $RenderwareBinaryStream::SECTIONS_GEOMETRY_LIST) {
-        $self->{_raw_header} = $self->{_io}->read_bytes($self->header_size());
-        my $io__raw_header = IO::KaitaiStruct::Stream->new($self->{_raw_header});
-        $self->{header} = RenderwareBinaryStream::StructGeometryList->new($io__raw_header, $self, $self->{_root});
-    }
-    elsif ($_on == $RenderwareBinaryStream::SECTIONS_CLUMP) {
-        $self->{_raw_header} = $self->{_io}->read_bytes($self->header_size());
-        my $io__raw_header = IO::KaitaiStruct::Stream->new($self->{_raw_header});
-        $self->{header} = RenderwareBinaryStream::StructClump->new($io__raw_header, $self, $self->{_root});
-    }
-    elsif ($_on == $RenderwareBinaryStream::SECTIONS_FRAME_LIST) {
-        $self->{_raw_header} = $self->{_io}->read_bytes($self->header_size());
-        my $io__raw_header = IO::KaitaiStruct::Stream->new($self->{_raw_header});
-        $self->{header} = RenderwareBinaryStream::StructFrameList->new($io__raw_header, $self, $self->{_root});
-    }
-    else {
-        $self->{header} = $self->{_io}->read_bytes($self->header_size());
-    }
-    $self->{entries} = ();
-    while (!$self->{_io}->is_eof()) {
-        push @{$self->{entries}}, RenderwareBinaryStream->new($self->{_io});
-    }
-}
-
-sub version {
-    my ($self) = @_;
-    return $self->{version} if ($self->{version});
-    $self->{version} = (($self->library_id_stamp() & 4294901760) != 0 ? (((($self->library_id_stamp() >> 14) & 261888) + 196608) | (($self->library_id_stamp() >> 16) & 63)) : ($self->library_id_stamp() << 8));
-    return $self->{version};
-}
-
-sub code {
-    my ($self) = @_;
-    return $self->{code};
-}
-
-sub header_size {
-    my ($self) = @_;
-    return $self->{header_size};
-}
-
-sub library_id_stamp {
-    my ($self) = @_;
-    return $self->{library_id_stamp};
-}
-
-sub header {
-    my ($self) = @_;
-    return $self->{header};
-}
-
-sub entries {
-    my ($self) = @_;
-    return $self->{entries};
-}
-
-sub _raw_header {
-    my ($self) = @_;
-    return $self->{_raw_header};
+    return $self->{v};
 }
 
 ########################################################################
@@ -1139,7 +1227,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -1176,106 +1264,6 @@ sub vertex3 {
 }
 
 ########################################################################
-package RenderwareBinaryStream::Frame;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{rotation_matrix} = RenderwareBinaryStream::Matrix->new($self->{_io}, $self, $self->{_root});
-    $self->{position} = RenderwareBinaryStream::Vector3d->new($self->{_io}, $self, $self->{_root});
-    $self->{cur_frame_idx} = $self->{_io}->read_s4le();
-    $self->{matrix_creation_flags} = $self->{_io}->read_u4le();
-}
-
-sub rotation_matrix {
-    my ($self) = @_;
-    return $self->{rotation_matrix};
-}
-
-sub position {
-    my ($self) = @_;
-    return $self->{position};
-}
-
-sub cur_frame_idx {
-    my ($self) = @_;
-    return $self->{cur_frame_idx};
-}
-
-sub matrix_creation_flags {
-    my ($self) = @_;
-    return $self->{matrix_creation_flags};
-}
-
-########################################################################
-package RenderwareBinaryStream::TexCoord;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{u} = $self->{_io}->read_f4le();
-    $self->{v} = $self->{_io}->read_f4le();
-}
-
-sub u {
-    my ($self) = @_;
-    return $self->{u};
-}
-
-sub v {
-    my ($self) = @_;
-    return $self->{v};
-}
-
-########################################################################
 package RenderwareBinaryStream::UvLayer;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -1295,7 +1283,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -1305,7 +1293,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{tex_coords} = ();
+    $self->{tex_coords} = [];
     my $n_tex_coords = $self->num_vertices();
     for (my $i = 0; $i < $n_tex_coords; $i++) {
         push @{$self->{tex_coords}}, RenderwareBinaryStream::TexCoord->new($self->{_io}, $self, $self->{_root});
@@ -1323,7 +1311,7 @@ sub num_vertices {
 }
 
 ########################################################################
-package RenderwareBinaryStream::StructTextureDictionary;
+package RenderwareBinaryStream::Vector3d;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -1342,7 +1330,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -1352,12 +1340,24 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{num_textures} = $self->{_io}->read_u4le();
+    $self->{x} = $self->{_io}->read_f4le();
+    $self->{y} = $self->{_io}->read_f4le();
+    $self->{z} = $self->{_io}->read_f4le();
 }
 
-sub num_textures {
+sub x {
     my ($self) = @_;
-    return $self->{num_textures};
+    return $self->{x};
+}
+
+sub y {
+    my ($self) = @_;
+    return $self->{y};
+}
+
+sub z {
+    my ($self) = @_;
+    return $self->{z};
 }
 
 1;

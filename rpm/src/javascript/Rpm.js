@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.Rpm = factory(root.KaitaiStream);
+    factory(root.Rpm || (root.Rpm = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Rpm_, KaitaiStream) {
 /**
  * This parser is for the RPM version 3 file format which is the current version
  * of the file format used by RPM 2.1 and later (including RPM version 4.x, which
@@ -22,90 +22,56 @@
  */
 
 var Rpm = (function() {
-  Rpm.OperatingSystems = Object.freeze({
-    LINUX: 1,
-    IRIX: 2,
-    NO_OS: 255,
+  Rpm.Architectures = Object.freeze({
+    X86: 1,
+    ALPHA: 2,
+    SPARC: 3,
+    MIPS: 4,
+    PPC: 5,
+    M68K: 6,
+    SGI: 7,
+    RS6000: 8,
+    IA64: 9,
+    SPARC64: 10,
+    MIPS64: 11,
+    ARM: 12,
+    M68K_MINT: 13,
+    S390: 14,
+    S390X: 15,
+    PPC64: 16,
+    SH: 17,
+    XTENSA: 18,
+    AARCH64: 19,
+    MIPS_R6: 20,
+    MIPS64_R6: 21,
+    RISCV: 22,
+    LOONGARCH64: 23,
+    NO_ARCH: 255,
 
-    1: "LINUX",
-    2: "IRIX",
-    255: "NO_OS",
-  });
-
-  Rpm.SignatureTags = Object.freeze({
-    SIGNATURES: 62,
-    HEADER_IMMUTABLE: 63,
-    I18N_TABLE: 100,
-    BAD_SHA1_1_OBSOLETE: 264,
-    BAD_SHA1_2_OBSOLETE: 265,
-    DSA: 267,
-    RSA: 268,
-    SHA1: 269,
-    LONG_SIZE: 270,
-    LONG_ARCHIVE_SIZE: 271,
-    SHA256: 273,
-    FILE_SIGNATURES: 274,
-    FILE_SIGNATURE_LENGTH: 275,
-    VERITY_SIGNATURES: 276,
-    VERITY_SIGNATURE_ALGO: 277,
-    SIZE: 1000,
-    LE_MD5_1_OBSOLETE: 1001,
-    PGP: 1002,
-    LE_MD5_2_OBSOLETE: 1003,
-    MD5: 1004,
-    GPG: 1005,
-    PGP5_OBSOLETE: 1006,
-    PAYLOAD_SIZE: 1007,
-    RESERVED_SPACE: 1008,
-
-    62: "SIGNATURES",
-    63: "HEADER_IMMUTABLE",
-    100: "I18N_TABLE",
-    264: "BAD_SHA1_1_OBSOLETE",
-    265: "BAD_SHA1_2_OBSOLETE",
-    267: "DSA",
-    268: "RSA",
-    269: "SHA1",
-    270: "LONG_SIZE",
-    271: "LONG_ARCHIVE_SIZE",
-    273: "SHA256",
-    274: "FILE_SIGNATURES",
-    275: "FILE_SIGNATURE_LENGTH",
-    276: "VERITY_SIGNATURES",
-    277: "VERITY_SIGNATURE_ALGO",
-    1000: "SIZE",
-    1001: "LE_MD5_1_OBSOLETE",
-    1002: "PGP",
-    1003: "LE_MD5_2_OBSOLETE",
-    1004: "MD5",
-    1005: "GPG",
-    1006: "PGP5_OBSOLETE",
-    1007: "PAYLOAD_SIZE",
-    1008: "RESERVED_SPACE",
-  });
-
-  Rpm.RecordTypes = Object.freeze({
-    NOT_IMPLEMENTED: 0,
-    CHAR: 1,
-    UINT8: 2,
-    UINT16: 3,
-    UINT32: 4,
-    UINT64: 5,
-    STRING: 6,
-    BIN: 7,
-    STRING_ARRAY: 8,
-    I18N_STRING: 9,
-
-    0: "NOT_IMPLEMENTED",
-    1: "CHAR",
-    2: "UINT8",
-    3: "UINT16",
-    4: "UINT32",
-    5: "UINT64",
-    6: "STRING",
-    7: "BIN",
-    8: "STRING_ARRAY",
-    9: "I18N_STRING",
+    1: "X86",
+    2: "ALPHA",
+    3: "SPARC",
+    4: "MIPS",
+    5: "PPC",
+    6: "M68K",
+    7: "SGI",
+    8: "RS6000",
+    9: "IA64",
+    10: "SPARC64",
+    11: "MIPS64",
+    12: "ARM",
+    13: "M68K_MINT",
+    14: "S390",
+    15: "S390X",
+    16: "PPC64",
+    17: "SH",
+    18: "XTENSA",
+    19: "AARCH64",
+    20: "MIPS_R6",
+    21: "MIPS64_R6",
+    22: "RISCV",
+    23: "LOONGARCH64",
+    255: "NO_ARCH",
   });
 
   Rpm.HeaderTags = Object.freeze({
@@ -712,6 +678,40 @@ var Rpm = (function() {
     5109: "SYS_USERS",
   });
 
+  Rpm.OperatingSystems = Object.freeze({
+    LINUX: 1,
+    IRIX: 2,
+    NO_OS: 255,
+
+    1: "LINUX",
+    2: "IRIX",
+    255: "NO_OS",
+  });
+
+  Rpm.RecordTypes = Object.freeze({
+    NOT_IMPLEMENTED: 0,
+    CHAR: 1,
+    UINT8: 2,
+    UINT16: 3,
+    UINT32: 4,
+    UINT64: 5,
+    STRING: 6,
+    BIN: 7,
+    STRING_ARRAY: 8,
+    I18N_STRING: 9,
+
+    0: "NOT_IMPLEMENTED",
+    1: "CHAR",
+    2: "UINT8",
+    3: "UINT16",
+    4: "UINT32",
+    5: "UINT64",
+    6: "STRING",
+    7: "BIN",
+    8: "STRING_ARRAY",
+    9: "I18N_STRING",
+  });
+
   Rpm.RpmTypes = Object.freeze({
     BINARY: 0,
     SOURCE: 1,
@@ -720,56 +720,56 @@ var Rpm = (function() {
     1: "SOURCE",
   });
 
-  Rpm.Architectures = Object.freeze({
-    X86: 1,
-    ALPHA: 2,
-    SPARC: 3,
-    MIPS: 4,
-    PPC: 5,
-    M68K: 6,
-    SGI: 7,
-    RS6000: 8,
-    IA64: 9,
-    SPARC64: 10,
-    MIPS64: 11,
-    ARM: 12,
-    M68K_MINT: 13,
-    S390: 14,
-    S390X: 15,
-    PPC64: 16,
-    SH: 17,
-    XTENSA: 18,
-    AARCH64: 19,
-    MIPS_R6: 20,
-    MIPS64_R6: 21,
-    RISCV: 22,
-    LOONGARCH64: 23,
-    NO_ARCH: 255,
+  Rpm.SignatureTags = Object.freeze({
+    SIGNATURES: 62,
+    HEADER_IMMUTABLE: 63,
+    I18N_TABLE: 100,
+    BAD_SHA1_1_OBSOLETE: 264,
+    BAD_SHA1_2_OBSOLETE: 265,
+    DSA: 267,
+    RSA: 268,
+    SHA1: 269,
+    LONG_SIZE: 270,
+    LONG_ARCHIVE_SIZE: 271,
+    SHA256: 273,
+    FILE_SIGNATURES: 274,
+    FILE_SIGNATURE_LENGTH: 275,
+    VERITY_SIGNATURES: 276,
+    VERITY_SIGNATURE_ALGO: 277,
+    SIZE: 1000,
+    LE_MD5_1_OBSOLETE: 1001,
+    PGP: 1002,
+    LE_MD5_2_OBSOLETE: 1003,
+    MD5: 1004,
+    GPG: 1005,
+    PGP5_OBSOLETE: 1006,
+    PAYLOAD_SIZE: 1007,
+    RESERVED_SPACE: 1008,
 
-    1: "X86",
-    2: "ALPHA",
-    3: "SPARC",
-    4: "MIPS",
-    5: "PPC",
-    6: "M68K",
-    7: "SGI",
-    8: "RS6000",
-    9: "IA64",
-    10: "SPARC64",
-    11: "MIPS64",
-    12: "ARM",
-    13: "M68K_MINT",
-    14: "S390",
-    15: "S390X",
-    16: "PPC64",
-    17: "SH",
-    18: "XTENSA",
-    19: "AARCH64",
-    20: "MIPS_R6",
-    21: "MIPS64_R6",
-    22: "RISCV",
-    23: "LOONGARCH64",
-    255: "NO_ARCH",
+    62: "SIGNATURES",
+    63: "HEADER_IMMUTABLE",
+    100: "I18N_TABLE",
+    264: "BAD_SHA1_1_OBSOLETE",
+    265: "BAD_SHA1_2_OBSOLETE",
+    267: "DSA",
+    268: "RSA",
+    269: "SHA1",
+    270: "LONG_SIZE",
+    271: "LONG_ARCHIVE_SIZE",
+    273: "SHA256",
+    274: "FILE_SIGNATURES",
+    275: "FILE_SIGNATURE_LENGTH",
+    276: "VERITY_SIGNATURES",
+    277: "VERITY_SIGNATURE_ALGO",
+    1000: "SIZE",
+    1001: "LE_MD5_1_OBSOLETE",
+    1002: "PGP",
+    1003: "LE_MD5_2_OBSOLETE",
+    1004: "MD5",
+    1005: "GPG",
+    1006: "PGP5_OBSOLETE",
+    1007: "PAYLOAD_SIZE",
+    1008: "RESERVED_SPACE",
   });
 
   function Rpm(_io, _parent, _root) {
@@ -792,290 +792,15 @@ var Rpm = (function() {
     }
     this.signatureTagsSteps = [];
     for (var i = 0; i < this.signature.headerRecord.numIndexRecords; i++) {
-      this.signatureTagsSteps.push(new SignatureTagsStep(this._io, this, this._root, i, (i < 1 ? -1 : this.signatureTagsSteps[(i - 1)].sizeTagIdx)));
+      this.signatureTagsSteps.push(new SignatureTagsStep(this._io, this, this._root, i, (i < 1 ? -1 : this.signatureTagsSteps[i - 1].sizeTagIdx)));
     }
   }
-
-  var RecordTypeStringArray = Rpm.RecordTypeStringArray = (function() {
-    function RecordTypeStringArray(_io, _parent, _root, numValues) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-      this.numValues = numValues;
-
-      this._read();
-    }
-    RecordTypeStringArray.prototype._read = function() {
-      this.values = [];
-      for (var i = 0; i < this.numValues; i++) {
-        this.values.push(KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "UTF-8"));
-      }
-    }
-
-    return RecordTypeStringArray;
-  })();
-
-  /**
-   * In 2021, Panu Matilainen (a RPM developer) [described this
-   * structure](https://github.com/kaitai-io/kaitai_struct_formats/pull/469#discussion_r718288192)
-   * as follows:
-   * 
-   * > The lead as a structure is 25 years obsolete, the data there is
-   * > meaningless. Seriously. Except to check for the magic to detect that
-   * > it's an rpm file in the first place, just ignore everything in it.
-   * > Literally everything.
-   * 
-   * The fields with `valid` constraints are important, because these are the
-   * same validations that RPM does (which means that any valid `.rpm` file
-   * must pass them), but otherwise you should not make decisions based on the
-   * values given here.
-   */
-
-  var Lead = Rpm.Lead = (function() {
-    function Lead(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Lead.prototype._read = function() {
-      this.magic = this._io.readBytes(4);
-      if (!((KaitaiStream.byteArrayCompare(this.magic, [237, 171, 238, 219]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([237, 171, 238, 219], this.magic, this._io, "/types/lead/seq/0");
-      }
-      this.version = new RpmVersion(this._io, this, this._root);
-      this.type = this._io.readU2be();
-      this.architecture = this._io.readU2be();
-      this.packageName = KaitaiStream.bytesToStr(KaitaiStream.bytesTerminate(this._io.readBytes(66), 0, false), "UTF-8");
-      this.os = this._io.readU2be();
-      this.signatureType = this._io.readU2be();
-      if (!(this.signatureType == 5)) {
-        throw new KaitaiStream.ValidationNotEqualError(5, this.signatureType, this._io, "/types/lead/seq/6");
-      }
-      this.reserved = this._io.readBytes(16);
-    }
-
-    return Lead;
-  })();
-
-  var RecordTypeString = Rpm.RecordTypeString = (function() {
-    function RecordTypeString(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    RecordTypeString.prototype._read = function() {
-      this.values = [];
-      for (var i = 0; i < 1; i++) {
-        this.values.push(KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "UTF-8"));
-      }
-    }
-
-    return RecordTypeString;
-  })();
-
-  var SignatureTagsStep = Rpm.SignatureTagsStep = (function() {
-    function SignatureTagsStep(_io, _parent, _root, idx, prevSizeTagIdx) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-      this.idx = idx;
-      this.prevSizeTagIdx = prevSizeTagIdx;
-
-      this._read();
-    }
-    SignatureTagsStep.prototype._read = function() {
-    }
-    Object.defineProperty(SignatureTagsStep.prototype, 'sizeTagIdx', {
-      get: function() {
-        if (this._m_sizeTagIdx !== undefined)
-          return this._m_sizeTagIdx;
-        this._m_sizeTagIdx = (this.prevSizeTagIdx != -1 ? this.prevSizeTagIdx : ( ((this._parent.signature.indexRecords[this.idx].signatureTag == Rpm.SignatureTags.SIZE) && (this._parent.signature.indexRecords[this.idx].recordType == Rpm.RecordTypes.UINT32) && (this._parent.signature.indexRecords[this.idx].numValues >= 1))  ? this.idx : -1));
-        return this._m_sizeTagIdx;
-      }
-    });
-
-    return SignatureTagsStep;
-  })();
-
-  var RecordTypeUint32 = Rpm.RecordTypeUint32 = (function() {
-    function RecordTypeUint32(_io, _parent, _root, numValues) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-      this.numValues = numValues;
-
-      this._read();
-    }
-    RecordTypeUint32.prototype._read = function() {
-      this.values = [];
-      for (var i = 0; i < this.numValues; i++) {
-        this.values.push(this._io.readU4be());
-      }
-    }
-
-    return RecordTypeUint32;
-  })();
-
-  var RecordTypeUint16 = Rpm.RecordTypeUint16 = (function() {
-    function RecordTypeUint16(_io, _parent, _root, numValues) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-      this.numValues = numValues;
-
-      this._read();
-    }
-    RecordTypeUint16.prototype._read = function() {
-      this.values = [];
-      for (var i = 0; i < this.numValues; i++) {
-        this.values.push(this._io.readU2be());
-      }
-    }
-
-    return RecordTypeUint16;
-  })();
-
-  var HeaderIndexRecord = Rpm.HeaderIndexRecord = (function() {
-    function HeaderIndexRecord(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    HeaderIndexRecord.prototype._read = function() {
-      this.tagRaw = this._io.readU4be();
-      this.recordType = this._io.readU4be();
-      this.ofsBody = this._io.readU4be();
-      this.count = this._io.readU4be();
-    }
-    Object.defineProperty(HeaderIndexRecord.prototype, 'numValues', {
-      get: function() {
-        if (this._m_numValues !== undefined)
-          return this._m_numValues;
-        if (this.recordType != Rpm.RecordTypes.BIN) {
-          this._m_numValues = this.count;
-        }
-        return this._m_numValues;
-      }
-    });
-    Object.defineProperty(HeaderIndexRecord.prototype, 'body', {
-      get: function() {
-        if (this._m_body !== undefined)
-          return this._m_body;
-        var io = this._parent.storageSection._io;
-        var _pos = io.pos;
-        io.seek(this.ofsBody);
-        switch (this.recordType) {
-        case Rpm.RecordTypes.UINT32:
-          this._m_body = new RecordTypeUint32(io, this, this._root, this.numValues);
-          break;
-        case Rpm.RecordTypes.UINT64:
-          this._m_body = new RecordTypeUint64(io, this, this._root, this.numValues);
-          break;
-        case Rpm.RecordTypes.BIN:
-          this._m_body = new RecordTypeBin(io, this, this._root, this.lenValue);
-          break;
-        case Rpm.RecordTypes.STRING:
-          this._m_body = new RecordTypeString(io, this, this._root);
-          break;
-        case Rpm.RecordTypes.UINT8:
-          this._m_body = new RecordTypeUint8(io, this, this._root, this.numValues);
-          break;
-        case Rpm.RecordTypes.I18N_STRING:
-          this._m_body = new RecordTypeStringArray(io, this, this._root, this.numValues);
-          break;
-        case Rpm.RecordTypes.UINT16:
-          this._m_body = new RecordTypeUint16(io, this, this._root, this.numValues);
-          break;
-        case Rpm.RecordTypes.CHAR:
-          this._m_body = new RecordTypeUint8(io, this, this._root, this.numValues);
-          break;
-        case Rpm.RecordTypes.STRING_ARRAY:
-          this._m_body = new RecordTypeStringArray(io, this, this._root, this.numValues);
-          break;
-        }
-        io.seek(_pos);
-        return this._m_body;
-      }
-    });
-    Object.defineProperty(HeaderIndexRecord.prototype, 'signatureTag', {
-      get: function() {
-        if (this._m_signatureTag !== undefined)
-          return this._m_signatureTag;
-        if (this._parent.isSignature) {
-          this._m_signatureTag = this.tagRaw;
-        }
-        return this._m_signatureTag;
-      }
-    });
-    Object.defineProperty(HeaderIndexRecord.prototype, 'lenValue', {
-      get: function() {
-        if (this._m_lenValue !== undefined)
-          return this._m_lenValue;
-        if (this.recordType == Rpm.RecordTypes.BIN) {
-          this._m_lenValue = this.count;
-        }
-        return this._m_lenValue;
-      }
-    });
-    Object.defineProperty(HeaderIndexRecord.prototype, 'headerTag', {
-      get: function() {
-        if (this._m_headerTag !== undefined)
-          return this._m_headerTag;
-        if (this._parent.isHeader) {
-          this._m_headerTag = this.tagRaw;
-        }
-        return this._m_headerTag;
-      }
-    });
-
-    /**
-     * prefer to access `signature_tag` and `header_tag` instead
-     */
-
-    /**
-     * internal; access `num_values` and `len_value` instead
-     */
-
-    return HeaderIndexRecord;
-  })();
-
-  var RpmVersion = Rpm.RpmVersion = (function() {
-    function RpmVersion(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    RpmVersion.prototype._read = function() {
-      this.major = this._io.readU1();
-      if (!(this.major >= 3)) {
-        throw new KaitaiStream.ValidationLessThanError(3, this.major, this._io, "/types/rpm_version/seq/0");
-      }
-      if (!(this.major <= 4)) {
-        throw new KaitaiStream.ValidationGreaterThanError(4, this.major, this._io, "/types/rpm_version/seq/0");
-      }
-      this.minor = this._io.readU1();
-    }
-
-    /**
-     * @see {@link https://github.com/rpm-software-management/rpm/blob/afad3167/lib/rpmlead.c#L102|Source}
-     */
-
-    return RpmVersion;
-  })();
 
   var Dummy = Rpm.Dummy = (function() {
     function Dummy(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -1083,95 +808,6 @@ var Rpm = (function() {
     }
 
     return Dummy;
-  })();
-
-  var RecordTypeUint8 = Rpm.RecordTypeUint8 = (function() {
-    function RecordTypeUint8(_io, _parent, _root, numValues) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-      this.numValues = numValues;
-
-      this._read();
-    }
-    RecordTypeUint8.prototype._read = function() {
-      this.values = [];
-      for (var i = 0; i < this.numValues; i++) {
-        this.values.push(this._io.readU1());
-      }
-    }
-
-    return RecordTypeUint8;
-  })();
-
-  var RecordTypeUint64 = Rpm.RecordTypeUint64 = (function() {
-    function RecordTypeUint64(_io, _parent, _root, numValues) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-      this.numValues = numValues;
-
-      this._read();
-    }
-    RecordTypeUint64.prototype._read = function() {
-      this.values = [];
-      for (var i = 0; i < this.numValues; i++) {
-        this.values.push(this._io.readU8be());
-      }
-    }
-
-    return RecordTypeUint64;
-  })();
-
-  var RecordTypeBin = Rpm.RecordTypeBin = (function() {
-    function RecordTypeBin(_io, _parent, _root, lenValue) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-      this.lenValue = lenValue;
-
-      this._read();
-    }
-    RecordTypeBin.prototype._read = function() {
-      this.values = [];
-      for (var i = 0; i < 1; i++) {
-        this.values.push(this._io.readBytes(this.lenValue));
-      }
-    }
-
-    return RecordTypeBin;
-  })();
-
-  var HeaderRecord = Rpm.HeaderRecord = (function() {
-    function HeaderRecord(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    HeaderRecord.prototype._read = function() {
-      this.magic = this._io.readBytes(4);
-      if (!((KaitaiStream.byteArrayCompare(this.magic, [142, 173, 232, 1]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([142, 173, 232, 1], this.magic, this._io, "/types/header_record/seq/0");
-      }
-      this.reserved = this._io.readBytes(4);
-      if (!((KaitaiStream.byteArrayCompare(this.reserved, [0, 0, 0, 0]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([0, 0, 0, 0], this.reserved, this._io, "/types/header_record/seq/1");
-      }
-      this.numIndexRecords = this._io.readU4be();
-      if (!(this.numIndexRecords >= 1)) {
-        throw new KaitaiStream.ValidationLessThanError(1, this.numIndexRecords, this._io, "/types/header_record/seq/2");
-      }
-      this.lenStorageSection = this._io.readU4be();
-    }
-
-    /**
-     * Size of the storage area for the data
-     * pointed to by the Index Records.
-     */
-
-    return HeaderRecord;
   })();
 
   /**
@@ -1184,7 +820,7 @@ var Rpm = (function() {
     function Header(_io, _parent, _root, isSignature) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
       this.isSignature = isSignature;
 
       this._read();
@@ -1210,6 +846,370 @@ var Rpm = (function() {
 
     return Header;
   })();
+
+  var HeaderIndexRecord = Rpm.HeaderIndexRecord = (function() {
+    function HeaderIndexRecord(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    HeaderIndexRecord.prototype._read = function() {
+      this.tagRaw = this._io.readU4be();
+      this.recordType = this._io.readU4be();
+      this.ofsBody = this._io.readU4be();
+      this.count = this._io.readU4be();
+    }
+    Object.defineProperty(HeaderIndexRecord.prototype, 'body', {
+      get: function() {
+        if (this._m_body !== undefined)
+          return this._m_body;
+        var io = this._parent.storageSection._io;
+        var _pos = io.pos;
+        io.seek(this.ofsBody);
+        switch (this.recordType) {
+        case Rpm.RecordTypes.BIN:
+          this._m_body = new RecordTypeBin(io, this, this._root, this.lenValue);
+          break;
+        case Rpm.RecordTypes.CHAR:
+          this._m_body = new RecordTypeUint8(io, this, this._root, this.numValues);
+          break;
+        case Rpm.RecordTypes.I18N_STRING:
+          this._m_body = new RecordTypeStringArray(io, this, this._root, this.numValues);
+          break;
+        case Rpm.RecordTypes.STRING:
+          this._m_body = new RecordTypeString(io, this, this._root);
+          break;
+        case Rpm.RecordTypes.STRING_ARRAY:
+          this._m_body = new RecordTypeStringArray(io, this, this._root, this.numValues);
+          break;
+        case Rpm.RecordTypes.UINT16:
+          this._m_body = new RecordTypeUint16(io, this, this._root, this.numValues);
+          break;
+        case Rpm.RecordTypes.UINT32:
+          this._m_body = new RecordTypeUint32(io, this, this._root, this.numValues);
+          break;
+        case Rpm.RecordTypes.UINT64:
+          this._m_body = new RecordTypeUint64(io, this, this._root, this.numValues);
+          break;
+        case Rpm.RecordTypes.UINT8:
+          this._m_body = new RecordTypeUint8(io, this, this._root, this.numValues);
+          break;
+        }
+        io.seek(_pos);
+        return this._m_body;
+      }
+    });
+    Object.defineProperty(HeaderIndexRecord.prototype, 'headerTag', {
+      get: function() {
+        if (this._m_headerTag !== undefined)
+          return this._m_headerTag;
+        if (this._parent.isHeader) {
+          this._m_headerTag = this.tagRaw;
+        }
+        return this._m_headerTag;
+      }
+    });
+    Object.defineProperty(HeaderIndexRecord.prototype, 'lenValue', {
+      get: function() {
+        if (this._m_lenValue !== undefined)
+          return this._m_lenValue;
+        if (this.recordType == Rpm.RecordTypes.BIN) {
+          this._m_lenValue = this.count;
+        }
+        return this._m_lenValue;
+      }
+    });
+    Object.defineProperty(HeaderIndexRecord.prototype, 'numValues', {
+      get: function() {
+        if (this._m_numValues !== undefined)
+          return this._m_numValues;
+        if (this.recordType != Rpm.RecordTypes.BIN) {
+          this._m_numValues = this.count;
+        }
+        return this._m_numValues;
+      }
+    });
+    Object.defineProperty(HeaderIndexRecord.prototype, 'signatureTag', {
+      get: function() {
+        if (this._m_signatureTag !== undefined)
+          return this._m_signatureTag;
+        if (this._parent.isSignature) {
+          this._m_signatureTag = this.tagRaw;
+        }
+        return this._m_signatureTag;
+      }
+    });
+
+    /**
+     * prefer to access `signature_tag` and `header_tag` instead
+     */
+
+    /**
+     * internal; access `num_values` and `len_value` instead
+     */
+
+    return HeaderIndexRecord;
+  })();
+
+  var HeaderRecord = Rpm.HeaderRecord = (function() {
+    function HeaderRecord(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    HeaderRecord.prototype._read = function() {
+      this.magic = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([142, 173, 232, 1])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([142, 173, 232, 1]), this.magic, this._io, "/types/header_record/seq/0");
+      }
+      this.reserved = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.reserved, new Uint8Array([0, 0, 0, 0])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([0, 0, 0, 0]), this.reserved, this._io, "/types/header_record/seq/1");
+      }
+      this.numIndexRecords = this._io.readU4be();
+      if (!(this.numIndexRecords >= 1)) {
+        throw new KaitaiStream.ValidationLessThanError(1, this.numIndexRecords, this._io, "/types/header_record/seq/2");
+      }
+      this.lenStorageSection = this._io.readU4be();
+    }
+
+    /**
+     * Size of the storage area for the data
+     * pointed to by the Index Records.
+     */
+
+    return HeaderRecord;
+  })();
+
+  /**
+   * In 2021, Panu Matilainen (a RPM developer) [described this
+   * structure](https://github.com/kaitai-io/kaitai_struct_formats/pull/469#discussion_r718288192)
+   * as follows:
+   * 
+   * > The lead as a structure is 25 years obsolete, the data there is
+   * > meaningless. Seriously. Except to check for the magic to detect that
+   * > it's an rpm file in the first place, just ignore everything in it.
+   * > Literally everything.
+   * 
+   * The fields with `valid` constraints are important, because these are the
+   * same validations that RPM does (which means that any valid `.rpm` file
+   * must pass them), but otherwise you should not make decisions based on the
+   * values given here.
+   */
+
+  var Lead = Rpm.Lead = (function() {
+    function Lead(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Lead.prototype._read = function() {
+      this.magic = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([237, 171, 238, 219])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([237, 171, 238, 219]), this.magic, this._io, "/types/lead/seq/0");
+      }
+      this.version = new RpmVersion(this._io, this, this._root);
+      this.type = this._io.readU2be();
+      this.architecture = this._io.readU2be();
+      this.packageName = KaitaiStream.bytesToStr(KaitaiStream.bytesTerminate(this._io.readBytes(66), 0, false), "UTF-8");
+      this.os = this._io.readU2be();
+      this.signatureType = this._io.readU2be();
+      if (!(this.signatureType == 5)) {
+        throw new KaitaiStream.ValidationNotEqualError(5, this.signatureType, this._io, "/types/lead/seq/6");
+      }
+      this.reserved = this._io.readBytes(16);
+    }
+
+    return Lead;
+  })();
+
+  var RecordTypeBin = Rpm.RecordTypeBin = (function() {
+    function RecordTypeBin(_io, _parent, _root, lenValue) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+      this.lenValue = lenValue;
+
+      this._read();
+    }
+    RecordTypeBin.prototype._read = function() {
+      this.values = [];
+      for (var i = 0; i < 1; i++) {
+        this.values.push(this._io.readBytes(this.lenValue));
+      }
+    }
+
+    return RecordTypeBin;
+  })();
+
+  var RecordTypeString = Rpm.RecordTypeString = (function() {
+    function RecordTypeString(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    RecordTypeString.prototype._read = function() {
+      this.values = [];
+      for (var i = 0; i < 1; i++) {
+        this.values.push(KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "UTF-8"));
+      }
+    }
+
+    return RecordTypeString;
+  })();
+
+  var RecordTypeStringArray = Rpm.RecordTypeStringArray = (function() {
+    function RecordTypeStringArray(_io, _parent, _root, numValues) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+      this.numValues = numValues;
+
+      this._read();
+    }
+    RecordTypeStringArray.prototype._read = function() {
+      this.values = [];
+      for (var i = 0; i < this.numValues; i++) {
+        this.values.push(KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "UTF-8"));
+      }
+    }
+
+    return RecordTypeStringArray;
+  })();
+
+  var RecordTypeUint16 = Rpm.RecordTypeUint16 = (function() {
+    function RecordTypeUint16(_io, _parent, _root, numValues) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+      this.numValues = numValues;
+
+      this._read();
+    }
+    RecordTypeUint16.prototype._read = function() {
+      this.values = [];
+      for (var i = 0; i < this.numValues; i++) {
+        this.values.push(this._io.readU2be());
+      }
+    }
+
+    return RecordTypeUint16;
+  })();
+
+  var RecordTypeUint32 = Rpm.RecordTypeUint32 = (function() {
+    function RecordTypeUint32(_io, _parent, _root, numValues) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+      this.numValues = numValues;
+
+      this._read();
+    }
+    RecordTypeUint32.prototype._read = function() {
+      this.values = [];
+      for (var i = 0; i < this.numValues; i++) {
+        this.values.push(this._io.readU4be());
+      }
+    }
+
+    return RecordTypeUint32;
+  })();
+
+  var RecordTypeUint64 = Rpm.RecordTypeUint64 = (function() {
+    function RecordTypeUint64(_io, _parent, _root, numValues) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+      this.numValues = numValues;
+
+      this._read();
+    }
+    RecordTypeUint64.prototype._read = function() {
+      this.values = [];
+      for (var i = 0; i < this.numValues; i++) {
+        this.values.push(this._io.readU8be());
+      }
+    }
+
+    return RecordTypeUint64;
+  })();
+
+  var RecordTypeUint8 = Rpm.RecordTypeUint8 = (function() {
+    function RecordTypeUint8(_io, _parent, _root, numValues) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+      this.numValues = numValues;
+
+      this._read();
+    }
+    RecordTypeUint8.prototype._read = function() {
+      this.values = [];
+      for (var i = 0; i < this.numValues; i++) {
+        this.values.push(this._io.readU1());
+      }
+    }
+
+    return RecordTypeUint8;
+  })();
+
+  var RpmVersion = Rpm.RpmVersion = (function() {
+    function RpmVersion(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    RpmVersion.prototype._read = function() {
+      this.major = this._io.readU1();
+      if (!(this.major >= 3)) {
+        throw new KaitaiStream.ValidationLessThanError(3, this.major, this._io, "/types/rpm_version/seq/0");
+      }
+      if (!(this.major <= 4)) {
+        throw new KaitaiStream.ValidationGreaterThanError(4, this.major, this._io, "/types/rpm_version/seq/0");
+      }
+      this.minor = this._io.readU1();
+    }
+
+    /**
+     * @see {@link https://github.com/rpm-software-management/rpm/blob/afad3167/lib/rpmlead.c#L102|Source}
+     */
+
+    return RpmVersion;
+  })();
+
+  var SignatureTagsStep = Rpm.SignatureTagsStep = (function() {
+    function SignatureTagsStep(_io, _parent, _root, idx, prevSizeTagIdx) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+      this.idx = idx;
+      this.prevSizeTagIdx = prevSizeTagIdx;
+
+      this._read();
+    }
+    SignatureTagsStep.prototype._read = function() {
+    }
+    Object.defineProperty(SignatureTagsStep.prototype, 'sizeTagIdx', {
+      get: function() {
+        if (this._m_sizeTagIdx !== undefined)
+          return this._m_sizeTagIdx;
+        this._m_sizeTagIdx = (this.prevSizeTagIdx != -1 ? this.prevSizeTagIdx : ( ((this._parent.signature.indexRecords[this.idx].signatureTag == Rpm.SignatureTags.SIZE) && (this._parent.signature.indexRecords[this.idx].recordType == Rpm.RecordTypes.UINT32) && (this._parent.signature.indexRecords[this.idx].numValues >= 1))  ? this.idx : -1));
+        return this._m_sizeTagIdx;
+      }
+    });
+
+    return SignatureTagsStep;
+  })();
   Object.defineProperty(Rpm.prototype, 'hasSignatureSizeTag', {
     get: function() {
       if (this._m_hasSignatureSizeTag !== undefined)
@@ -1218,14 +1218,12 @@ var Rpm = (function() {
       return this._m_hasSignatureSizeTag;
     }
   });
-  Object.defineProperty(Rpm.prototype, 'signatureSizeTag', {
+  Object.defineProperty(Rpm.prototype, 'lenHeader', {
     get: function() {
-      if (this._m_signatureSizeTag !== undefined)
-        return this._m_signatureSizeTag;
-      if (this.hasSignatureSizeTag) {
-        this._m_signatureSizeTag = this.signature.indexRecords[this.signatureTagsSteps[this.signatureTagsSteps.length - 1].sizeTagIdx];
-      }
-      return this._m_signatureSizeTag;
+      if (this._m_lenHeader !== undefined)
+        return this._m_lenHeader;
+      this._m_lenHeader = this.ofsPayload - this.ofsHeader;
+      return this._m_lenHeader;
     }
   });
   Object.defineProperty(Rpm.prototype, 'lenPayload', {
@@ -1233,30 +1231,9 @@ var Rpm = (function() {
       if (this._m_lenPayload !== undefined)
         return this._m_lenPayload;
       if (this.hasSignatureSizeTag) {
-        this._m_lenPayload = (this.signatureSizeTag.body.values[0] - this.lenHeader);
+        this._m_lenPayload = this.signatureSizeTag.body.values[0] - this.lenHeader;
       }
       return this._m_lenPayload;
-    }
-  });
-  Object.defineProperty(Rpm.prototype, 'payload', {
-    get: function() {
-      if (this._m_payload !== undefined)
-        return this._m_payload;
-      if (this.hasSignatureSizeTag) {
-        var _pos = this._io.pos;
-        this._io.seek(this.ofsPayload);
-        this._m_payload = this._io.readBytes(this.lenPayload);
-        this._io.seek(_pos);
-      }
-      return this._m_payload;
-    }
-  });
-  Object.defineProperty(Rpm.prototype, 'lenHeader', {
-    get: function() {
-      if (this._m_lenHeader !== undefined)
-        return this._m_lenHeader;
-      this._m_lenHeader = (this.ofsPayload - this.ofsHeader);
-      return this._m_lenHeader;
     }
   });
   Object.defineProperty(Rpm.prototype, 'ofsHeader', {
@@ -1275,8 +1252,31 @@ var Rpm = (function() {
       return this._m_ofsPayload;
     }
   });
+  Object.defineProperty(Rpm.prototype, 'payload', {
+    get: function() {
+      if (this._m_payload !== undefined)
+        return this._m_payload;
+      if (this.hasSignatureSizeTag) {
+        var _pos = this._io.pos;
+        this._io.seek(this.ofsPayload);
+        this._m_payload = this._io.readBytes(this.lenPayload);
+        this._io.seek(_pos);
+      }
+      return this._m_payload;
+    }
+  });
+  Object.defineProperty(Rpm.prototype, 'signatureSizeTag', {
+    get: function() {
+      if (this._m_signatureSizeTag !== undefined)
+        return this._m_signatureSizeTag;
+      if (this.hasSignatureSizeTag) {
+        this._m_signatureSizeTag = this.signature.indexRecords[this.signatureTagsSteps[this.signatureTagsSteps.length - 1].sizeTagIdx];
+      }
+      return this._m_signatureSizeTag;
+    }
+  });
 
   return Rpm;
 })();
-return Rpm;
-}));
+Rpm_.Rpm = Rpm;
+});

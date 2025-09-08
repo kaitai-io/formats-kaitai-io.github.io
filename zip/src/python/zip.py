@@ -1,14 +1,15 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
-from enum import Enum
-
-
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
-
 import dos_datetime
+from enum import IntEnum
+
+
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
+
 class Zip(KaitaiStruct):
     """ZIP is a popular archive file format, introduced in 1989 by Phil Katz
     and originally implemented in PKZIP utility by PKWARE.
@@ -29,7 +30,7 @@ class Zip(KaitaiStruct):
        Source - https://users.cs.jmu.edu/buchhofp/forensics/formats/pkzip.html
     """
 
-    class Compression(Enum):
+    class Compression(IntEnum):
         none = 0
         shrunk = 1
         reduced_1 = 2
@@ -52,7 +53,7 @@ class Zip(KaitaiStruct):
         ppmd = 98
         aex_encryption_marker = 99
 
-    class ExtraCodes(Enum):
+    class ExtraCodes(IntEnum):
         zip64 = 1
         av_info = 7
         os2 = 9
@@ -80,9 +81,9 @@ class Zip(KaitaiStruct):
         microsoft_open_packaging_growth_hint = 41504
         sms_qdos = 64842
     def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
+        super(Zip, self).__init__(_io)
         self._parent = _parent
-        self._root = _root if _root else self
+        self._root = _root or self
         self._read()
 
     def _read(self):
@@ -93,168 +94,12 @@ class Zip(KaitaiStruct):
             i += 1
 
 
-    class LocalFile(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
 
-        def _read(self):
-            self.header = Zip.LocalFileHeader(self._io, self, self._root)
-            self.body = self._io.read_bytes(self.header.len_body_compressed)
-
-
-    class DataDescriptor(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.crc32 = self._io.read_u4le()
-            self.len_body_compressed = self._io.read_u4le()
-            self.len_body_uncompressed = self._io.read_u4le()
-
-
-    class ExtraField(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.code = KaitaiStream.resolve_enum(Zip.ExtraCodes, self._io.read_u2le())
-            self.len_body = self._io.read_u2le()
-            _on = self.code
-            if _on == Zip.ExtraCodes.ntfs:
-                self._raw_body = self._io.read_bytes(self.len_body)
-                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
-                self.body = Zip.ExtraField.Ntfs(_io__raw_body, self, self._root)
-            elif _on == Zip.ExtraCodes.extended_timestamp:
-                self._raw_body = self._io.read_bytes(self.len_body)
-                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
-                self.body = Zip.ExtraField.ExtendedTimestamp(_io__raw_body, self, self._root)
-            elif _on == Zip.ExtraCodes.infozip_unix_var_size:
-                self._raw_body = self._io.read_bytes(self.len_body)
-                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
-                self.body = Zip.ExtraField.InfozipUnixVarSize(_io__raw_body, self, self._root)
-            else:
-                self.body = self._io.read_bytes(self.len_body)
-
-        class Ntfs(KaitaiStruct):
-            """
-            .. seealso::
-               Source - https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L191
-            """
-            def __init__(self, _io, _parent=None, _root=None):
-                self._io = _io
-                self._parent = _parent
-                self._root = _root if _root else self
-                self._read()
-
-            def _read(self):
-                self.reserved = self._io.read_u4le()
-                self.attributes = []
-                i = 0
-                while not self._io.is_eof():
-                    self.attributes.append(Zip.ExtraField.Ntfs.Attribute(self._io, self, self._root))
-                    i += 1
-
-
-            class Attribute(KaitaiStruct):
-                def __init__(self, _io, _parent=None, _root=None):
-                    self._io = _io
-                    self._parent = _parent
-                    self._root = _root if _root else self
-                    self._read()
-
-                def _read(self):
-                    self.tag = self._io.read_u2le()
-                    self.len_body = self._io.read_u2le()
-                    _on = self.tag
-                    if _on == 1:
-                        self._raw_body = self._io.read_bytes(self.len_body)
-                        _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
-                        self.body = Zip.ExtraField.Ntfs.Attribute1(_io__raw_body, self, self._root)
-                    else:
-                        self.body = self._io.read_bytes(self.len_body)
-
-
-            class Attribute1(KaitaiStruct):
-                def __init__(self, _io, _parent=None, _root=None):
-                    self._io = _io
-                    self._parent = _parent
-                    self._root = _root if _root else self
-                    self._read()
-
-                def _read(self):
-                    self.last_mod_time = self._io.read_u8le()
-                    self.last_access_time = self._io.read_u8le()
-                    self.creation_time = self._io.read_u8le()
-
-
-
-        class ExtendedTimestamp(KaitaiStruct):
-            """
-            .. seealso::
-               Source - https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L817
-            """
-            def __init__(self, _io, _parent=None, _root=None):
-                self._io = _io
-                self._parent = _parent
-                self._root = _root if _root else self
-                self._read()
-
-            def _read(self):
-                self._raw_flags = self._io.read_bytes(1)
-                _io__raw_flags = KaitaiStream(BytesIO(self._raw_flags))
-                self.flags = Zip.ExtraField.ExtendedTimestamp.InfoFlags(_io__raw_flags, self, self._root)
-                if self.flags.has_mod_time:
-                    self.mod_time = self._io.read_u4le()
-
-                if self.flags.has_access_time:
-                    self.access_time = self._io.read_u4le()
-
-                if self.flags.has_create_time:
-                    self.create_time = self._io.read_u4le()
-
-
-            class InfoFlags(KaitaiStruct):
-                def __init__(self, _io, _parent=None, _root=None):
-                    self._io = _io
-                    self._parent = _parent
-                    self._root = _root if _root else self
-                    self._read()
-
-                def _read(self):
-                    self.has_mod_time = self._io.read_bits_int_le(1) != 0
-                    self.has_access_time = self._io.read_bits_int_le(1) != 0
-                    self.has_create_time = self._io.read_bits_int_le(1) != 0
-                    self.reserved = self._io.read_bits_int_le(5)
-
-
-
-        class InfozipUnixVarSize(KaitaiStruct):
-            """
-            .. seealso::
-               Source - https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L1339
-            """
-            def __init__(self, _io, _parent=None, _root=None):
-                self._io = _io
-                self._parent = _parent
-                self._root = _root if _root else self
-                self._read()
-
-            def _read(self):
-                self.version = self._io.read_u1()
-                self.len_uid = self._io.read_u1()
-                self.uid = self._io.read_bytes(self.len_uid)
-                self.len_gid = self._io.read_u1()
-                self.gid = self._io.read_bytes(self.len_gid)
-
+    def _fetch_instances(self):
+        pass
+        for i in range(len(self.sections)):
+            pass
+            self.sections[i]._fetch_instances()
 
 
     class CentralDirEntry(KaitaiStruct):
@@ -263,9 +108,9 @@ class Zip(KaitaiStruct):
            - 4.3.12 - https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT
         """
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(Zip.CentralDirEntry, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -292,6 +137,17 @@ class Zip(KaitaiStruct):
             self.extra = Zip.Extras(_io__raw_extra, self, self._root)
             self.comment = (self._io.read_bytes(self.len_comment)).decode(u"UTF-8")
 
+
+        def _fetch_instances(self):
+            pass
+            self.file_mod_time._fetch_instances()
+            self.extra._fetch_instances()
+            _ = self.local_header
+            if hasattr(self, '_m_local_header'):
+                pass
+                self._m_local_header._fetch_instances()
+
+
         @property
         def local_header(self):
             if hasattr(self, '_m_local_header'):
@@ -304,34 +160,258 @@ class Zip(KaitaiStruct):
             return getattr(self, '_m_local_header', None)
 
 
-    class PkSection(KaitaiStruct):
+    class DataDescriptor(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(Zip.DataDescriptor, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
-            self.magic = self._io.read_bytes(2)
-            if not self.magic == b"\x50\x4B":
-                raise kaitaistruct.ValidationNotEqualError(b"\x50\x4B", self.magic, self._io, u"/types/pk_section/seq/0")
-            self.section_type = self._io.read_u2le()
-            _on = self.section_type
-            if _on == 513:
-                self.body = Zip.CentralDirEntry(self._io, self, self._root)
-            elif _on == 1027:
-                self.body = Zip.LocalFile(self._io, self, self._root)
-            elif _on == 1541:
-                self.body = Zip.EndOfCentralDir(self._io, self, self._root)
-            elif _on == 2055:
-                self.body = Zip.DataDescriptor(self._io, self, self._root)
+            self.crc32 = self._io.read_u4le()
+            self.len_body_compressed = self._io.read_u4le()
+            self.len_body_uncompressed = self._io.read_u4le()
+
+
+        def _fetch_instances(self):
+            pass
+
+
+    class EndOfCentralDir(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(Zip.EndOfCentralDir, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.disk_of_end_of_central_dir = self._io.read_u2le()
+            self.disk_of_central_dir = self._io.read_u2le()
+            self.num_central_dir_entries_on_disk = self._io.read_u2le()
+            self.num_central_dir_entries_total = self._io.read_u2le()
+            self.len_central_dir = self._io.read_u4le()
+            self.ofs_central_dir = self._io.read_u4le()
+            self.len_comment = self._io.read_u2le()
+            self.comment = (self._io.read_bytes(self.len_comment)).decode(u"UTF-8")
+
+
+        def _fetch_instances(self):
+            pass
+
+
+    class ExtraField(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(Zip.ExtraField, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.code = KaitaiStream.resolve_enum(Zip.ExtraCodes, self._io.read_u2le())
+            self.len_body = self._io.read_u2le()
+            _on = self.code
+            if _on == Zip.ExtraCodes.extended_timestamp:
+                pass
+                self._raw_body = self._io.read_bytes(self.len_body)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = Zip.ExtraField.ExtendedTimestamp(_io__raw_body, self, self._root)
+            elif _on == Zip.ExtraCodes.infozip_unix_var_size:
+                pass
+                self._raw_body = self._io.read_bytes(self.len_body)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = Zip.ExtraField.InfozipUnixVarSize(_io__raw_body, self, self._root)
+            elif _on == Zip.ExtraCodes.ntfs:
+                pass
+                self._raw_body = self._io.read_bytes(self.len_body)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = Zip.ExtraField.Ntfs(_io__raw_body, self, self._root)
+            else:
+                pass
+                self.body = self._io.read_bytes(self.len_body)
+
+
+        def _fetch_instances(self):
+            pass
+            _on = self.code
+            if _on == Zip.ExtraCodes.extended_timestamp:
+                pass
+                self.body._fetch_instances()
+            elif _on == Zip.ExtraCodes.infozip_unix_var_size:
+                pass
+                self.body._fetch_instances()
+            elif _on == Zip.ExtraCodes.ntfs:
+                pass
+                self.body._fetch_instances()
+            else:
+                pass
+
+        class ExtendedTimestamp(KaitaiStruct):
+            """
+            .. seealso::
+               Source - https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L817
+            """
+            def __init__(self, _io, _parent=None, _root=None):
+                super(Zip.ExtraField.ExtendedTimestamp, self).__init__(_io)
+                self._parent = _parent
+                self._root = _root
+                self._read()
+
+            def _read(self):
+                self._raw_flags = self._io.read_bytes(1)
+                _io__raw_flags = KaitaiStream(BytesIO(self._raw_flags))
+                self.flags = Zip.ExtraField.ExtendedTimestamp.InfoFlags(_io__raw_flags, self, self._root)
+                if self.flags.has_mod_time:
+                    pass
+                    self.mod_time = self._io.read_u4le()
+
+                if self.flags.has_access_time:
+                    pass
+                    self.access_time = self._io.read_u4le()
+
+                if self.flags.has_create_time:
+                    pass
+                    self.create_time = self._io.read_u4le()
+
+
+
+            def _fetch_instances(self):
+                pass
+                self.flags._fetch_instances()
+                if self.flags.has_mod_time:
+                    pass
+
+                if self.flags.has_access_time:
+                    pass
+
+                if self.flags.has_create_time:
+                    pass
+
+
+            class InfoFlags(KaitaiStruct):
+                def __init__(self, _io, _parent=None, _root=None):
+                    super(Zip.ExtraField.ExtendedTimestamp.InfoFlags, self).__init__(_io)
+                    self._parent = _parent
+                    self._root = _root
+                    self._read()
+
+                def _read(self):
+                    self.has_mod_time = self._io.read_bits_int_le(1) != 0
+                    self.has_access_time = self._io.read_bits_int_le(1) != 0
+                    self.has_create_time = self._io.read_bits_int_le(1) != 0
+                    self.reserved = self._io.read_bits_int_le(5)
+
+
+                def _fetch_instances(self):
+                    pass
+
+
+
+        class InfozipUnixVarSize(KaitaiStruct):
+            """
+            .. seealso::
+               Source - https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L1339
+            """
+            def __init__(self, _io, _parent=None, _root=None):
+                super(Zip.ExtraField.InfozipUnixVarSize, self).__init__(_io)
+                self._parent = _parent
+                self._root = _root
+                self._read()
+
+            def _read(self):
+                self.version = self._io.read_u1()
+                self.len_uid = self._io.read_u1()
+                self.uid = self._io.read_bytes(self.len_uid)
+                self.len_gid = self._io.read_u1()
+                self.gid = self._io.read_bytes(self.len_gid)
+
+
+            def _fetch_instances(self):
+                pass
+
+
+        class Ntfs(KaitaiStruct):
+            """
+            .. seealso::
+               Source - https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L191
+            """
+            def __init__(self, _io, _parent=None, _root=None):
+                super(Zip.ExtraField.Ntfs, self).__init__(_io)
+                self._parent = _parent
+                self._root = _root
+                self._read()
+
+            def _read(self):
+                self.reserved = self._io.read_u4le()
+                self.attributes = []
+                i = 0
+                while not self._io.is_eof():
+                    self.attributes.append(Zip.ExtraField.Ntfs.Attribute(self._io, self, self._root))
+                    i += 1
+
+
+
+            def _fetch_instances(self):
+                pass
+                for i in range(len(self.attributes)):
+                    pass
+                    self.attributes[i]._fetch_instances()
+
+
+            class Attribute(KaitaiStruct):
+                def __init__(self, _io, _parent=None, _root=None):
+                    super(Zip.ExtraField.Ntfs.Attribute, self).__init__(_io)
+                    self._parent = _parent
+                    self._root = _root
+                    self._read()
+
+                def _read(self):
+                    self.tag = self._io.read_u2le()
+                    self.len_body = self._io.read_u2le()
+                    _on = self.tag
+                    if _on == 1:
+                        pass
+                        self._raw_body = self._io.read_bytes(self.len_body)
+                        _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                        self.body = Zip.ExtraField.Ntfs.Attribute1(_io__raw_body, self, self._root)
+                    else:
+                        pass
+                        self.body = self._io.read_bytes(self.len_body)
+
+
+                def _fetch_instances(self):
+                    pass
+                    _on = self.tag
+                    if _on == 1:
+                        pass
+                        self.body._fetch_instances()
+                    else:
+                        pass
+
+
+            class Attribute1(KaitaiStruct):
+                def __init__(self, _io, _parent=None, _root=None):
+                    super(Zip.ExtraField.Ntfs.Attribute1, self).__init__(_io)
+                    self._parent = _parent
+                    self._root = _root
+                    self._read()
+
+                def _read(self):
+                    self.last_mod_time = self._io.read_u8le()
+                    self.last_access_time = self._io.read_u8le()
+                    self.creation_time = self._io.read_u8le()
+
+
+                def _fetch_instances(self):
+                    pass
+
+
 
 
     class Extras(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(Zip.Extras, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -343,11 +423,36 @@ class Zip(KaitaiStruct):
 
 
 
+        def _fetch_instances(self):
+            pass
+            for i in range(len(self.entries)):
+                pass
+                self.entries[i]._fetch_instances()
+
+
+
+    class LocalFile(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(Zip.LocalFile, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.header = Zip.LocalFileHeader(self._io, self, self._root)
+            self.body = self._io.read_bytes(self.header.len_body_compressed)
+
+
+        def _fetch_instances(self):
+            pass
+            self.header._fetch_instances()
+
+
     class LocalFileHeader(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(Zip.LocalFileHeader, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -369,6 +474,13 @@ class Zip(KaitaiStruct):
             _io__raw_extra = KaitaiStream(BytesIO(self._raw_extra))
             self.extra = Zip.Extras(_io__raw_extra, self, self._root)
 
+
+        def _fetch_instances(self):
+            pass
+            self.flags._fetch_instances()
+            self.file_mod_time._fetch_instances()
+            self.extra._fetch_instances()
+
         class GpFlags(KaitaiStruct):
             """
             .. seealso::
@@ -379,15 +491,15 @@ class Zip(KaitaiStruct):
                Local file headers - https://users.cs.jmu.edu/buchhofp/forensics/formats/pkzip.html
             """
 
-            class DeflateMode(Enum):
+            class DeflateMode(IntEnum):
                 normal = 0
                 maximum = 1
                 fast = 2
                 super_fast = 3
             def __init__(self, _io, _parent=None, _root=None):
-                self._io = _io
+                super(Zip.LocalFileHeader.GpFlags, self).__init__(_io)
                 self._parent = _parent
-                self._root = _root if _root else self
+                self._root = _root
                 self._read()
 
             def _read(self):
@@ -403,12 +515,17 @@ class Zip(KaitaiStruct):
                 self.mask_header_values = self._io.read_bits_int_le(1) != 0
                 self.reserved_4 = self._io.read_bits_int_le(2)
 
+
+            def _fetch_instances(self):
+                pass
+
             @property
             def deflated_mode(self):
                 if hasattr(self, '_m_deflated_mode'):
                     return self._m_deflated_mode
 
                 if  ((self._parent.compression_method == Zip.Compression.deflated) or (self._parent.compression_method == Zip.Compression.enhanced_deflated)) :
+                    pass
                     self._m_deflated_mode = KaitaiStream.resolve_enum(Zip.LocalFileHeader.GpFlags.DeflateMode, self.comp_options_raw)
 
                 return getattr(self, '_m_deflated_mode', None)
@@ -420,7 +537,8 @@ class Zip(KaitaiStruct):
                     return self._m_imploded_dict_byte_size
 
                 if self._parent.compression_method == Zip.Compression.imploded:
-                    self._m_imploded_dict_byte_size = ((8 if (self.comp_options_raw & 1) != 0 else 4) * 1024)
+                    pass
+                    self._m_imploded_dict_byte_size = (8 if self.comp_options_raw & 1 != 0 else 4) * 1024
 
                 return getattr(self, '_m_imploded_dict_byte_size', None)
 
@@ -430,7 +548,8 @@ class Zip(KaitaiStruct):
                     return self._m_imploded_num_sf_trees
 
                 if self._parent.compression_method == Zip.Compression.imploded:
-                    self._m_imploded_num_sf_trees = (3 if (self.comp_options_raw & 2) != 0 else 2)
+                    pass
+                    self._m_imploded_num_sf_trees = (3 if self.comp_options_raw & 2 != 0 else 2)
 
                 return getattr(self, '_m_imploded_num_sf_trees', None)
 
@@ -440,28 +559,55 @@ class Zip(KaitaiStruct):
                     return self._m_lzma_has_eos_marker
 
                 if self._parent.compression_method == Zip.Compression.lzma:
-                    self._m_lzma_has_eos_marker = (self.comp_options_raw & 1) != 0
+                    pass
+                    self._m_lzma_has_eos_marker = self.comp_options_raw & 1 != 0
 
                 return getattr(self, '_m_lzma_has_eos_marker', None)
 
 
 
-    class EndOfCentralDir(KaitaiStruct):
+    class PkSection(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(Zip.PkSection, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
-            self.disk_of_end_of_central_dir = self._io.read_u2le()
-            self.disk_of_central_dir = self._io.read_u2le()
-            self.num_central_dir_entries_on_disk = self._io.read_u2le()
-            self.num_central_dir_entries_total = self._io.read_u2le()
-            self.len_central_dir = self._io.read_u4le()
-            self.ofs_central_dir = self._io.read_u4le()
-            self.len_comment = self._io.read_u2le()
-            self.comment = (self._io.read_bytes(self.len_comment)).decode(u"UTF-8")
+            self.magic = self._io.read_bytes(2)
+            if not self.magic == b"\x50\x4B":
+                raise kaitaistruct.ValidationNotEqualError(b"\x50\x4B", self.magic, self._io, u"/types/pk_section/seq/0")
+            self.section_type = self._io.read_u2le()
+            _on = self.section_type
+            if _on == 1027:
+                pass
+                self.body = Zip.LocalFile(self._io, self, self._root)
+            elif _on == 1541:
+                pass
+                self.body = Zip.EndOfCentralDir(self._io, self, self._root)
+            elif _on == 2055:
+                pass
+                self.body = Zip.DataDescriptor(self._io, self, self._root)
+            elif _on == 513:
+                pass
+                self.body = Zip.CentralDirEntry(self._io, self, self._root)
+
+
+        def _fetch_instances(self):
+            pass
+            _on = self.section_type
+            if _on == 1027:
+                pass
+                self.body._fetch_instances()
+            elif _on == 1541:
+                pass
+                self.body._fetch_instances()
+            elif _on == 2055:
+                pass
+                self.body._fetch_instances()
+            elif _on == 513:
+                pass
+                self.body._fetch_instances()
 
 
 

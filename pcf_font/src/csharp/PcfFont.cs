@@ -51,9 +51,9 @@ namespace Kaitai
         private void _read()
         {
             _magic = m_io.ReadBytes(4);
-            if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 1, 102, 99, 112 }) == 0)))
+            if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 1, 102, 99, 112 }) == 0)))
             {
-                throw new ValidationNotEqualError(new byte[] { 1, 102, 99, 112 }, Magic, M_Io, "/seq/0");
+                throw new ValidationNotEqualError(new byte[] { 1, 102, 99, 112 }, _magic, m_io, "/seq/0");
             }
             _numTables = m_io.ReadU4le();
             _tables = new List<Table>();
@@ -61,6 +61,66 @@ namespace Kaitai
             {
                 _tables.Add(new Table(m_io, this, m_root));
             }
+        }
+
+        /// <summary>
+        /// Table format specifier, always 4 bytes. Original implementation treats
+        /// it as always little-endian and makes liberal use of bitmasking to parse
+        /// various parts of it.
+        /// 
+        /// TODO: this format specification recognizes endianness and bit
+        /// order format bits, but it does not really takes any parsing
+        /// decisions based on them.
+        /// </summary>
+        /// <remarks>
+        /// Reference: <a href="https://fontforge.org/docs/techref/pcf-format.html#file-header">Source</a>
+        /// </remarks>
+        public partial class Format : KaitaiStruct
+        {
+            public static Format FromFile(string fileName)
+            {
+                return new Format(new KaitaiStream(fileName));
+            }
+
+            public Format(KaitaiStream p__io, KaitaiStruct p__parent = null, PcfFont p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _padding1 = m_io.ReadBitsIntBe(2);
+                _scanUnitMask = m_io.ReadBitsIntBe(2);
+                _isMostSignificantBitFirst = m_io.ReadBitsIntBe(1) != 0;
+                _isBigEndian = m_io.ReadBitsIntBe(1) != 0;
+                _glyphPadMask = m_io.ReadBitsIntBe(2);
+                m_io.AlignToByte();
+                _format = m_io.ReadU1();
+                _padding = m_io.ReadU2le();
+            }
+            private ulong _padding1;
+            private ulong _scanUnitMask;
+            private bool _isMostSignificantBitFirst;
+            private bool _isBigEndian;
+            private ulong _glyphPadMask;
+            private byte _format;
+            private ushort _padding;
+            private PcfFont m_root;
+            private KaitaiStruct m_parent;
+            public ulong Padding1 { get { return _padding1; } }
+            public ulong ScanUnitMask { get { return _scanUnitMask; } }
+            public bool IsMostSignificantBitFirst { get { return _isMostSignificantBitFirst; } }
+
+            /// <summary>
+            /// If set, then all integers in the table are treated as big-endian
+            /// </summary>
+            public bool IsBigEndian { get { return _isBigEndian; } }
+            public ulong GlyphPadMask { get { return _glyphPadMask; } }
+            public byte Format { get { return _format; } }
+            public ushort Padding { get { return _padding; } }
+            public PcfFont M_Root { get { return m_root; } }
+            public KaitaiStruct M_Parent { get { return m_parent; } }
         }
 
         /// <summary>
@@ -88,234 +148,6 @@ namespace Kaitai
                 _format = new Format(m_io, this, m_root);
                 _lenBody = m_io.ReadU4le();
                 _ofsBody = m_io.ReadU4le();
-            }
-
-            /// <summary>
-            /// Table containing scalable widths of characters.
-            /// </summary>
-            /// <remarks>
-            /// Reference: <a href="https://fontforge.org/docs/techref/pcf-format.html#the-scalable-widths-table">Source</a>
-            /// </remarks>
-            public partial class Swidths : KaitaiStruct
-            {
-                public static Swidths FromFile(string fileName)
-                {
-                    return new Swidths(new KaitaiStream(fileName));
-                }
-
-                public Swidths(KaitaiStream p__io, PcfFont.Table p__parent = null, PcfFont p__root = null) : base(p__io)
-                {
-                    m_parent = p__parent;
-                    m_root = p__root;
-                    _read();
-                }
-                private void _read()
-                {
-                    _format = new Format(m_io, this, m_root);
-                    _numGlyphs = m_io.ReadU4le();
-                    _swidths = new List<uint>();
-                    for (var i = 0; i < NumGlyphs; i++)
-                    {
-                        _swidths.Add(m_io.ReadU4le());
-                    }
-                }
-                private Format _format;
-                private uint _numGlyphs;
-                private List<uint> _swidths;
-                private PcfFont m_root;
-                private PcfFont.Table m_parent;
-                public Format Format { get { return _format; } }
-                public uint NumGlyphs { get { return _numGlyphs; } }
-
-                /// <summary>
-                /// The scalable width of a character is the width of the corresponding
-                /// PostScript character in em-units (1/1000ths of an em).
-                /// </summary>
-                public List<uint> Swidths { get { return _swidths; } }
-                public PcfFont M_Root { get { return m_root; } }
-                public PcfFont.Table M_Parent { get { return m_parent; } }
-            }
-
-            /// <summary>
-            /// Array of properties (key-value pairs), used to convey different X11
-            /// settings of a font. Key is always an X font atom.
-            /// </summary>
-            /// <remarks>
-            /// Reference: <a href="https://fontforge.org/docs/techref/pcf-format.html#properties-table">Source</a>
-            /// </remarks>
-            public partial class Properties : KaitaiStruct
-            {
-                public static Properties FromFile(string fileName)
-                {
-                    return new Properties(new KaitaiStream(fileName));
-                }
-
-                public Properties(KaitaiStream p__io, PcfFont.Table p__parent = null, PcfFont p__root = null) : base(p__io)
-                {
-                    m_parent = p__parent;
-                    m_root = p__root;
-                    _read();
-                }
-                private void _read()
-                {
-                    _format = new Format(m_io, this, m_root);
-                    _numProps = m_io.ReadU4le();
-                    _props = new List<Prop>();
-                    for (var i = 0; i < NumProps; i++)
-                    {
-                        _props.Add(new Prop(m_io, this, m_root));
-                    }
-                    _padding = m_io.ReadBytes(((NumProps & 3) == 0 ? 0 : (4 - (NumProps & 3))));
-                    _lenStrings = m_io.ReadU4le();
-                    __raw_strings = m_io.ReadBytes(LenStrings);
-                    var io___raw_strings = new KaitaiStream(__raw_strings);
-                    _strings = new BytesWithIo(io___raw_strings);
-                }
-
-                /// <summary>
-                /// Property is a key-value pair, &quot;key&quot; being always a
-                /// string and &quot;value&quot; being either a string or a 32-bit
-                /// integer based on an additinal flag (`is_string`).
-                /// 
-                /// Simple offset-based mechanism is employed to keep this
-                /// type's sequence fixed-sized and thus have simple access
-                /// to property key/value by index.
-                /// </summary>
-                public partial class Prop : KaitaiStruct
-                {
-                    public static Prop FromFile(string fileName)
-                    {
-                        return new Prop(new KaitaiStream(fileName));
-                    }
-
-                    public Prop(KaitaiStream p__io, PcfFont.Table.Properties p__parent = null, PcfFont p__root = null) : base(p__io)
-                    {
-                        m_parent = p__parent;
-                        m_root = p__root;
-                        f_name = false;
-                        f_strValue = false;
-                        f_intValue = false;
-                        _read();
-                    }
-                    private void _read()
-                    {
-                        _ofsName = m_io.ReadU4le();
-                        _isString = m_io.ReadU1();
-                        _valueOrOfsValue = m_io.ReadU4le();
-                    }
-                    private bool f_name;
-                    private string _name;
-
-                    /// <summary>
-                    /// Name of the property addressed in the strings buffer.
-                    /// </summary>
-                    public string Name
-                    {
-                        get
-                        {
-                            if (f_name)
-                                return _name;
-                            KaitaiStream io = M_Parent.Strings.M_Io;
-                            long _pos = io.Pos;
-                            io.Seek(OfsName);
-                            _name = System.Text.Encoding.GetEncoding("UTF-8").GetString(io.ReadBytesTerm(0, false, true, true));
-                            io.Seek(_pos);
-                            f_name = true;
-                            return _name;
-                        }
-                    }
-                    private bool f_strValue;
-                    private string _strValue;
-
-                    /// <summary>
-                    /// Value of the property addressed in the strings
-                    /// buffer, if this is a string value.
-                    /// </summary>
-                    public string StrValue
-                    {
-                        get
-                        {
-                            if (f_strValue)
-                                return _strValue;
-                            if (IsString != 0) {
-                                KaitaiStream io = M_Parent.Strings.M_Io;
-                                long _pos = io.Pos;
-                                io.Seek(ValueOrOfsValue);
-                                _strValue = System.Text.Encoding.GetEncoding("UTF-8").GetString(io.ReadBytesTerm(0, false, true, true));
-                                io.Seek(_pos);
-                                f_strValue = true;
-                            }
-                            return _strValue;
-                        }
-                    }
-                    private bool f_intValue;
-                    private uint? _intValue;
-
-                    /// <summary>
-                    /// Value of the property, if this is an integer value.
-                    /// </summary>
-                    public uint? IntValue
-                    {
-                        get
-                        {
-                            if (f_intValue)
-                                return _intValue;
-                            if (IsString == 0) {
-                                _intValue = (uint) (ValueOrOfsValue);
-                            }
-                            f_intValue = true;
-                            return _intValue;
-                        }
-                    }
-                    private uint _ofsName;
-                    private byte _isString;
-                    private uint _valueOrOfsValue;
-                    private PcfFont m_root;
-                    private PcfFont.Table.Properties m_parent;
-
-                    /// <summary>
-                    /// Offset to name in the strings buffer.
-                    /// </summary>
-                    public uint OfsName { get { return _ofsName; } }
-
-                    /// <summary>
-                    /// Designates if value is an integer (zero) or a string (non-zero).
-                    /// </summary>
-                    public byte IsString { get { return _isString; } }
-
-                    /// <summary>
-                    /// If the value is an integer (`is_string` is false),
-                    /// then it's stored here. If the value is a string
-                    /// (`is_string` is true), then it stores offset to the
-                    /// value in the strings buffer.
-                    /// </summary>
-                    public uint ValueOrOfsValue { get { return _valueOrOfsValue; } }
-                    public PcfFont M_Root { get { return m_root; } }
-                    public PcfFont.Table.Properties M_Parent { get { return m_parent; } }
-                }
-                private Format _format;
-                private uint _numProps;
-                private List<Prop> _props;
-                private byte[] _padding;
-                private uint _lenStrings;
-                private BytesWithIo _strings;
-                private PcfFont m_root;
-                private PcfFont.Table m_parent;
-                private byte[] __raw_strings;
-                public Format Format { get { return _format; } }
-                public uint NumProps { get { return _numProps; } }
-                public List<Prop> Props { get { return _props; } }
-                public byte[] Padding { get { return _padding; } }
-                public uint LenStrings { get { return _lenStrings; } }
-
-                /// <summary>
-                /// Strings buffer. Never used directly, but instead is
-                /// addressed by offsets from the properties.
-                /// </summary>
-                public BytesWithIo Strings { get { return _strings; } }
-                public PcfFont M_Root { get { return m_root; } }
-                public PcfFont.Table M_Parent { get { return m_parent; } }
-                public byte[] M_RawStrings { get { return __raw_strings; } }
             }
 
             /// <summary>
@@ -353,7 +185,7 @@ namespace Kaitai
                     _maxByte1 = m_io.ReadU2le();
                     _defaultChar = m_io.ReadU2le();
                     _glyphIndexes = new List<ushort>();
-                    for (var i = 0; i < (((MaxCharOrByte2 - MinCharOrByte2) + 1) * ((MaxByte1 - MinByte1) + 1)); i++)
+                    for (var i = 0; i < ((MaxCharOrByte2 - MinCharOrByte2) + 1) * ((MaxByte1 - MinByte1) + 1); i++)
                     {
                         _glyphIndexes.Add(m_io.ReadU2le());
                     }
@@ -374,6 +206,54 @@ namespace Kaitai
                 public ushort MaxByte1 { get { return _maxByte1; } }
                 public ushort DefaultChar { get { return _defaultChar; } }
                 public List<ushort> GlyphIndexes { get { return _glyphIndexes; } }
+                public PcfFont M_Root { get { return m_root; } }
+                public PcfFont.Table M_Parent { get { return m_parent; } }
+            }
+
+            /// <summary>
+            /// Table containing uncompressed glyph bitmaps.
+            /// </summary>
+            /// <remarks>
+            /// Reference: <a href="https://fontforge.org/docs/techref/pcf-format.html#the-bitmap-table">Source</a>
+            /// </remarks>
+            public partial class Bitmaps : KaitaiStruct
+            {
+                public static Bitmaps FromFile(string fileName)
+                {
+                    return new Bitmaps(new KaitaiStream(fileName));
+                }
+
+                public Bitmaps(KaitaiStream p__io, PcfFont.Table p__parent = null, PcfFont p__root = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    _read();
+                }
+                private void _read()
+                {
+                    _format = new Format(m_io, this, m_root);
+                    _numGlyphs = m_io.ReadU4le();
+                    _offsets = new List<uint>();
+                    for (var i = 0; i < NumGlyphs; i++)
+                    {
+                        _offsets.Add(m_io.ReadU4le());
+                    }
+                    _bitmapSizes = new List<uint>();
+                    for (var i = 0; i < 4; i++)
+                    {
+                        _bitmapSizes.Add(m_io.ReadU4le());
+                    }
+                }
+                private Format _format;
+                private uint _numGlyphs;
+                private List<uint> _offsets;
+                private List<uint> _bitmapSizes;
+                private PcfFont m_root;
+                private PcfFont.Table m_parent;
+                public Format Format { get { return _format; } }
+                public uint NumGlyphs { get { return _numGlyphs; } }
+                public List<uint> Offsets { get { return _offsets; } }
+                public List<uint> BitmapSizes { get { return _bitmapSizes; } }
                 public PcfFont M_Root { get { return m_root; } }
                 public PcfFont.Table M_Parent { get { return m_parent; } }
             }
@@ -437,12 +317,12 @@ namespace Kaitai
                         {
                             if (f_value)
                                 return _value;
+                            f_value = true;
                             KaitaiStream io = M_Parent.Strings.M_Io;
                             long _pos = io.Pos;
                             io.Seek(OfsString);
                             _value = System.Text.Encoding.GetEncoding("UTF-8").GetString(io.ReadBytesTerm(0, false, true, true));
                             io.Seek(_pos);
-                            f_value = true;
                             return _value;
                         }
                     }
@@ -480,19 +360,201 @@ namespace Kaitai
             }
 
             /// <summary>
-            /// Table containing uncompressed glyph bitmaps.
+            /// Array of properties (key-value pairs), used to convey different X11
+            /// settings of a font. Key is always an X font atom.
             /// </summary>
             /// <remarks>
-            /// Reference: <a href="https://fontforge.org/docs/techref/pcf-format.html#the-bitmap-table">Source</a>
+            /// Reference: <a href="https://fontforge.org/docs/techref/pcf-format.html#properties-table">Source</a>
             /// </remarks>
-            public partial class Bitmaps : KaitaiStruct
+            public partial class Properties : KaitaiStruct
             {
-                public static Bitmaps FromFile(string fileName)
+                public static Properties FromFile(string fileName)
                 {
-                    return new Bitmaps(new KaitaiStream(fileName));
+                    return new Properties(new KaitaiStream(fileName));
                 }
 
-                public Bitmaps(KaitaiStream p__io, PcfFont.Table p__parent = null, PcfFont p__root = null) : base(p__io)
+                public Properties(KaitaiStream p__io, PcfFont.Table p__parent = null, PcfFont p__root = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    _read();
+                }
+                private void _read()
+                {
+                    _format = new Format(m_io, this, m_root);
+                    _numProps = m_io.ReadU4le();
+                    _props = new List<Prop>();
+                    for (var i = 0; i < NumProps; i++)
+                    {
+                        _props.Add(new Prop(m_io, this, m_root));
+                    }
+                    _padding = m_io.ReadBytes(((NumProps & 3) == 0 ? 0 : 4 - (NumProps & 3)));
+                    _lenStrings = m_io.ReadU4le();
+                    __raw_strings = m_io.ReadBytes(LenStrings);
+                    var io___raw_strings = new KaitaiStream(__raw_strings);
+                    _strings = new BytesWithIo(io___raw_strings);
+                }
+
+                /// <summary>
+                /// Property is a key-value pair, &quot;key&quot; being always a
+                /// string and &quot;value&quot; being either a string or a 32-bit
+                /// integer based on an additinal flag (`is_string`).
+                /// 
+                /// Simple offset-based mechanism is employed to keep this
+                /// type's sequence fixed-sized and thus have simple access
+                /// to property key/value by index.
+                /// </summary>
+                public partial class Prop : KaitaiStruct
+                {
+                    public static Prop FromFile(string fileName)
+                    {
+                        return new Prop(new KaitaiStream(fileName));
+                    }
+
+                    public Prop(KaitaiStream p__io, PcfFont.Table.Properties p__parent = null, PcfFont p__root = null) : base(p__io)
+                    {
+                        m_parent = p__parent;
+                        m_root = p__root;
+                        f_intValue = false;
+                        f_name = false;
+                        f_strValue = false;
+                        _read();
+                    }
+                    private void _read()
+                    {
+                        _ofsName = m_io.ReadU4le();
+                        _isString = m_io.ReadU1();
+                        _valueOrOfsValue = m_io.ReadU4le();
+                    }
+                    private bool f_intValue;
+                    private uint? _intValue;
+
+                    /// <summary>
+                    /// Value of the property, if this is an integer value.
+                    /// </summary>
+                    public uint? IntValue
+                    {
+                        get
+                        {
+                            if (f_intValue)
+                                return _intValue;
+                            f_intValue = true;
+                            if (IsString == 0) {
+                                _intValue = (uint) (ValueOrOfsValue);
+                            }
+                            return _intValue;
+                        }
+                    }
+                    private bool f_name;
+                    private string _name;
+
+                    /// <summary>
+                    /// Name of the property addressed in the strings buffer.
+                    /// </summary>
+                    public string Name
+                    {
+                        get
+                        {
+                            if (f_name)
+                                return _name;
+                            f_name = true;
+                            KaitaiStream io = M_Parent.Strings.M_Io;
+                            long _pos = io.Pos;
+                            io.Seek(OfsName);
+                            _name = System.Text.Encoding.GetEncoding("UTF-8").GetString(io.ReadBytesTerm(0, false, true, true));
+                            io.Seek(_pos);
+                            return _name;
+                        }
+                    }
+                    private bool f_strValue;
+                    private string _strValue;
+
+                    /// <summary>
+                    /// Value of the property addressed in the strings
+                    /// buffer, if this is a string value.
+                    /// </summary>
+                    public string StrValue
+                    {
+                        get
+                        {
+                            if (f_strValue)
+                                return _strValue;
+                            f_strValue = true;
+                            if (IsString != 0) {
+                                KaitaiStream io = M_Parent.Strings.M_Io;
+                                long _pos = io.Pos;
+                                io.Seek(ValueOrOfsValue);
+                                _strValue = System.Text.Encoding.GetEncoding("UTF-8").GetString(io.ReadBytesTerm(0, false, true, true));
+                                io.Seek(_pos);
+                            }
+                            return _strValue;
+                        }
+                    }
+                    private uint _ofsName;
+                    private byte _isString;
+                    private uint _valueOrOfsValue;
+                    private PcfFont m_root;
+                    private PcfFont.Table.Properties m_parent;
+
+                    /// <summary>
+                    /// Offset to name in the strings buffer.
+                    /// </summary>
+                    public uint OfsName { get { return _ofsName; } }
+
+                    /// <summary>
+                    /// Designates if value is an integer (zero) or a string (non-zero).
+                    /// </summary>
+                    public byte IsString { get { return _isString; } }
+
+                    /// <summary>
+                    /// If the value is an integer (`is_string` is false),
+                    /// then it's stored here. If the value is a string
+                    /// (`is_string` is true), then it stores offset to the
+                    /// value in the strings buffer.
+                    /// </summary>
+                    public uint ValueOrOfsValue { get { return _valueOrOfsValue; } }
+                    public PcfFont M_Root { get { return m_root; } }
+                    public PcfFont.Table.Properties M_Parent { get { return m_parent; } }
+                }
+                private Format _format;
+                private uint _numProps;
+                private List<Prop> _props;
+                private byte[] _padding;
+                private uint _lenStrings;
+                private BytesWithIo _strings;
+                private PcfFont m_root;
+                private PcfFont.Table m_parent;
+                private byte[] __raw_strings;
+                public Format Format { get { return _format; } }
+                public uint NumProps { get { return _numProps; } }
+                public List<Prop> Props { get { return _props; } }
+                public byte[] Padding { get { return _padding; } }
+                public uint LenStrings { get { return _lenStrings; } }
+
+                /// <summary>
+                /// Strings buffer. Never used directly, but instead is
+                /// addressed by offsets from the properties.
+                /// </summary>
+                public BytesWithIo Strings { get { return _strings; } }
+                public PcfFont M_Root { get { return m_root; } }
+                public PcfFont.Table M_Parent { get { return m_parent; } }
+                public byte[] M_RawStrings { get { return __raw_strings; } }
+            }
+
+            /// <summary>
+            /// Table containing scalable widths of characters.
+            /// </summary>
+            /// <remarks>
+            /// Reference: <a href="https://fontforge.org/docs/techref/pcf-format.html#the-scalable-widths-table">Source</a>
+            /// </remarks>
+            public partial class Swidths : KaitaiStruct
+            {
+                public static Swidths FromFile(string fileName)
+                {
+                    return new Swidths(new KaitaiStream(fileName));
+                }
+
+                public Swidths(KaitaiStream p__io, PcfFont.Table p__parent = null, PcfFont p__root = null) : base(p__io)
                 {
                     m_parent = p__parent;
                     m_root = p__root;
@@ -502,27 +564,25 @@ namespace Kaitai
                 {
                     _format = new Format(m_io, this, m_root);
                     _numGlyphs = m_io.ReadU4le();
-                    _offsets = new List<uint>();
+                    _swidths = new List<uint>();
                     for (var i = 0; i < NumGlyphs; i++)
                     {
-                        _offsets.Add(m_io.ReadU4le());
-                    }
-                    _bitmapSizes = new List<uint>();
-                    for (var i = 0; i < 4; i++)
-                    {
-                        _bitmapSizes.Add(m_io.ReadU4le());
+                        _swidths.Add(m_io.ReadU4le());
                     }
                 }
                 private Format _format;
                 private uint _numGlyphs;
-                private List<uint> _offsets;
-                private List<uint> _bitmapSizes;
+                private List<uint> _swidths;
                 private PcfFont m_root;
                 private PcfFont.Table m_parent;
                 public Format Format { get { return _format; } }
                 public uint NumGlyphs { get { return _numGlyphs; } }
-                public List<uint> Offsets { get { return _offsets; } }
-                public List<uint> BitmapSizes { get { return _bitmapSizes; } }
+
+                /// <summary>
+                /// The scalable width of a character is the width of the corresponding
+                /// PostScript character in em-units (1/1000ths of an em).
+                /// </summary>
+                public List<uint> Swidths { get { return _swidths; } }
                 public PcfFont M_Root { get { return m_root; } }
                 public PcfFont.Table M_Parent { get { return m_parent; } }
             }
@@ -534,31 +594,14 @@ namespace Kaitai
                 {
                     if (f_body)
                         return _body;
+                    f_body = true;
                     long _pos = m_io.Pos;
                     m_io.Seek(OfsBody);
                     switch (Type) {
-                    case PcfFont.Types.Properties: {
-                        __raw_body = m_io.ReadBytes(LenBody);
-                        var io___raw_body = new KaitaiStream(__raw_body);
-                        _body = new Properties(io___raw_body, this, m_root);
-                        break;
-                    }
                     case PcfFont.Types.BdfEncodings: {
                         __raw_body = m_io.ReadBytes(LenBody);
                         var io___raw_body = new KaitaiStream(__raw_body);
                         _body = new BdfEncodings(io___raw_body, this, m_root);
-                        break;
-                    }
-                    case PcfFont.Types.Swidths: {
-                        __raw_body = m_io.ReadBytes(LenBody);
-                        var io___raw_body = new KaitaiStream(__raw_body);
-                        _body = new Swidths(io___raw_body, this, m_root);
-                        break;
-                    }
-                    case PcfFont.Types.GlyphNames: {
-                        __raw_body = m_io.ReadBytes(LenBody);
-                        var io___raw_body = new KaitaiStream(__raw_body);
-                        _body = new GlyphNames(io___raw_body, this, m_root);
                         break;
                     }
                     case PcfFont.Types.Bitmaps: {
@@ -567,13 +610,30 @@ namespace Kaitai
                         _body = new Bitmaps(io___raw_body, this, m_root);
                         break;
                     }
+                    case PcfFont.Types.GlyphNames: {
+                        __raw_body = m_io.ReadBytes(LenBody);
+                        var io___raw_body = new KaitaiStream(__raw_body);
+                        _body = new GlyphNames(io___raw_body, this, m_root);
+                        break;
+                    }
+                    case PcfFont.Types.Properties: {
+                        __raw_body = m_io.ReadBytes(LenBody);
+                        var io___raw_body = new KaitaiStream(__raw_body);
+                        _body = new Properties(io___raw_body, this, m_root);
+                        break;
+                    }
+                    case PcfFont.Types.Swidths: {
+                        __raw_body = m_io.ReadBytes(LenBody);
+                        var io___raw_body = new KaitaiStream(__raw_body);
+                        _body = new Swidths(io___raw_body, this, m_root);
+                        break;
+                    }
                     default: {
                         _body = m_io.ReadBytes(LenBody);
                         break;
                     }
                     }
                     m_io.Seek(_pos);
-                    f_body = true;
                     return _body;
                 }
             }
@@ -591,66 +651,6 @@ namespace Kaitai
             public PcfFont M_Root { get { return m_root; } }
             public PcfFont M_Parent { get { return m_parent; } }
             public byte[] M_RawBody { get { return __raw_body; } }
-        }
-
-        /// <summary>
-        /// Table format specifier, always 4 bytes. Original implementation treats
-        /// it as always little-endian and makes liberal use of bitmasking to parse
-        /// various parts of it.
-        /// 
-        /// TODO: this format specification recognizes endianness and bit
-        /// order format bits, but it does not really takes any parsing
-        /// decisions based on them.
-        /// </summary>
-        /// <remarks>
-        /// Reference: <a href="https://fontforge.org/docs/techref/pcf-format.html#file-header">Source</a>
-        /// </remarks>
-        public partial class Format : KaitaiStruct
-        {
-            public static Format FromFile(string fileName)
-            {
-                return new Format(new KaitaiStream(fileName));
-            }
-
-            public Format(KaitaiStream p__io, KaitaiStruct p__parent = null, PcfFont p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _padding1 = m_io.ReadBitsIntBe(2);
-                _scanUnitMask = m_io.ReadBitsIntBe(2);
-                _isMostSignificantBitFirst = m_io.ReadBitsIntBe(1) != 0;
-                _isBigEndian = m_io.ReadBitsIntBe(1) != 0;
-                _glyphPadMask = m_io.ReadBitsIntBe(2);
-                m_io.AlignToByte();
-                _format = m_io.ReadU1();
-                _padding = m_io.ReadU2le();
-            }
-            private ulong _padding1;
-            private ulong _scanUnitMask;
-            private bool _isMostSignificantBitFirst;
-            private bool _isBigEndian;
-            private ulong _glyphPadMask;
-            private byte _format;
-            private ushort _padding;
-            private PcfFont m_root;
-            private KaitaiStruct m_parent;
-            public ulong Padding1 { get { return _padding1; } }
-            public ulong ScanUnitMask { get { return _scanUnitMask; } }
-            public bool IsMostSignificantBitFirst { get { return _isMostSignificantBitFirst; } }
-
-            /// <summary>
-            /// If set, then all integers in the table are treated as big-endian
-            /// </summary>
-            public bool IsBigEndian { get { return _isBigEndian; } }
-            public ulong GlyphPadMask { get { return _glyphPadMask; } }
-            public byte Format { get { return _format; } }
-            public ushort Padding { get { return _padding; } }
-            public PcfFont M_Root { get { return m_root; } }
-            public KaitaiStruct M_Parent { get { return m_parent; } }
         }
         private byte[] _magic;
         private uint _numTables;

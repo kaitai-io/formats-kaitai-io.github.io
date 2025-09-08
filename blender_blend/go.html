@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>.blend file format of Blender: Go parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="/pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li><a href="//kaitai.io/news/">News</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../">Format Gallery</a></li>
+        <li>Multimedia Files</li>
+        <li class="active">.blend file format of Blender</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>.blend file format of Blender:
+            
+            Go parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>Blender is an open source suite for 3D modelling, sculpting,
+animation, compositing, rendering, preparation of assets for its own
+game engine and exporting to others, etc. <code>.blend</code> is its own binary
+format that saves whole state of suite: current scene, animations,
+all software settings, extensions, etc.</p>
+<p>Internally, .blend format is a hybrid semi-self-descriptive
+format. On top level, it contains a simple header and a sequence of
+file blocks, which more or less follow typical <a href="https://en.wikipedia.org/wiki/Type-length-value">TLV
+pattern</a>. Pre-last
+block would be a structure with code <code>DNA1</code>, which is a essentially
+a machine-readable schema of all other structures used in this file.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        Blender
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        blend
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/902">PRONOM fmt/902</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/903">PRONOM fmt/903</a></li>
+                            
+                            <li><a href="https://www.wikidata.org/wiki/Q15671948">Wikidata Q15671948</a></li>
+                            
+                            
+                            
+                            <li><a href="http://fileformats.archiveteam.org/wiki/BLEND">BLEND in Just Solve the File Format Problem</a></li>
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of .blend file format of Blender
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title=".blend file format of Blender parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_11.html" title=".blend file format of Blender parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title=".blend file format of Blender parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title=".blend file format of Blender parsing C# library">C#</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="go.html" title=".blend file format of Blender parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title=".blend file format of Blender parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title=".blend file format of Blender parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="java-write.html" title=".blend file format of Blender parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title=".blend file format of Blender parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title=".blend file format of Blender parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title=".blend file format of Blender parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title=".blend file format of Blender parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title=".blend file format of Blender parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title=".blend file format of Blender parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="python-write.html" title=".blend file format of Blender parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title=".blend file format of Blender parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title=".blend file format of Blender parsing Rust library">Rust</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Go source code to parse .blend file format of Blender
+            
+        </h2>
+
+        
+
+        <h3>blender_blend.go</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/go/blender_blend.go" download="blender_blend.go" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">// Code generated by kaitai-struct-compiler from a .ksy source file. DO NOT EDIT.</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="p">(</span>
+<span class="w">	</span><span class="s">&quot;github.com/kaitai-io/kaitai_struct_go_runtime/kaitai&quot;</span>
+<span class="w">	</span><span class="s">&quot;bytes&quot;</span>
+<span class="p">)</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * Blender is an open source suite for 3D modelling, sculpting,</span>
+<span class="cm"> * animation, compositing, rendering, preparation of assets for its own</span>
+<span class="cm"> * game engine and exporting to others, etc. `.blend` is its own binary</span>
+<span class="cm"> * format that saves whole state of suite: current scene, animations,</span>
+<span class="cm"> * all software settings, extensions, etc.</span>
+<span class="cm"> * </span>
+<span class="cm"> * Internally, .blend format is a hybrid semi-self-descriptive</span>
+<span class="cm"> * format. On top level, it contains a simple header and a sequence of</span>
+<span class="cm"> * file blocks, which more or less follow typical [TLV</span>
+<span class="cm"> * pattern](https://en.wikipedia.org/wiki/Type-length-value). Pre-last</span>
+<span class="cm"> * block would be a structure with code `DNA1`, which is a essentially</span>
+<span class="cm"> * a machine-readable schema of all other structures used in this file.</span>
+<span class="cm"> */</span>
+
+<span class="kd">type</span><span class="w"> </span><span class="nx">BlenderBlend_Endian</span><span class="w"> </span><span class="kt">int</span>
+<span class="kd">const</span><span class="w"> </span><span class="p">(</span>
+<span class="w">	</span><span class="nx">BlenderBlend_Endian__Be</span><span class="w"> </span><span class="nx">BlenderBlend_Endian</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">86</span>
+<span class="w">	</span><span class="nx">BlenderBlend_Endian__Le</span><span class="w"> </span><span class="nx">BlenderBlend_Endian</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">118</span>
+<span class="p">)</span>
+<span class="kd">var</span><span class="w"> </span><span class="nx">values_BlenderBlend_Endian</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kd">map</span><span class="p">[</span><span class="nx">BlenderBlend_Endian</span><span class="p">]</span><span class="kd">struct</span><span class="p">{}{</span><span class="mi">86</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">118</span><span class="p">:</span><span class="w"> </span><span class="p">{}}</span>
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="w"> </span><span class="nx">BlenderBlend_Endian</span><span class="p">)</span><span class="w"> </span><span class="nx">isDefined</span><span class="p">()</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">ok</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">values_BlenderBlend_Endian</span><span class="p">[</span><span class="nx">v</span><span class="p">]</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">ok</span>
+<span class="p">}</span>
+
+<span class="kd">type</span><span class="w"> </span><span class="nx">BlenderBlend_PtrSize</span><span class="w"> </span><span class="kt">int</span>
+<span class="kd">const</span><span class="w"> </span><span class="p">(</span>
+<span class="w">	</span><span class="nx">BlenderBlend_PtrSize__Bits64</span><span class="w"> </span><span class="nx">BlenderBlend_PtrSize</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">45</span>
+<span class="w">	</span><span class="nx">BlenderBlend_PtrSize__Bits32</span><span class="w"> </span><span class="nx">BlenderBlend_PtrSize</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">95</span>
+<span class="p">)</span>
+<span class="kd">var</span><span class="w"> </span><span class="nx">values_BlenderBlend_PtrSize</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kd">map</span><span class="p">[</span><span class="nx">BlenderBlend_PtrSize</span><span class="p">]</span><span class="kd">struct</span><span class="p">{}{</span><span class="mi">45</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">95</span><span class="p">:</span><span class="w"> </span><span class="p">{}}</span>
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="w"> </span><span class="nx">BlenderBlend_PtrSize</span><span class="p">)</span><span class="w"> </span><span class="nx">isDefined</span><span class="p">()</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">ok</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">values_BlenderBlend_PtrSize</span><span class="p">[</span><span class="nx">v</span><span class="p">]</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">ok</span>
+<span class="p">}</span>
+<span class="kd">type</span><span class="w"> </span><span class="nx">BlenderBlend</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">Hdr</span><span class="w"> </span><span class="o">*</span><span class="nx">BlenderBlend_Header</span>
+<span class="w">	</span><span class="nx">Blocks</span><span class="w"> </span><span class="p">[]</span><span class="o">*</span><span class="nx">BlenderBlend_FileBlock</span>
+<span class="w">	</span><span class="nx">_io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+<span class="w">	</span><span class="nx">_root</span><span class="w"> </span><span class="o">*</span><span class="nx">BlenderBlend</span>
+<span class="w">	</span><span class="nx">_parent</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Struct</span>
+<span class="w">	</span><span class="nx">_f_sdnaStructs</span><span class="w"> </span><span class="kt">bool</span>
+<span class="w">	</span><span class="nx">sdnaStructs</span><span class="w"> </span><span class="p">[]</span><span class="o">*</span><span class="nx">BlenderBlend_DnaStruct</span>
+<span class="p">}</span>
+<span class="kd">func</span><span class="w"> </span><span class="nx">NewBlenderBlend</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">BlenderBlend</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">BlenderBlend</span><span class="p">{</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="nx">BlenderBlend</span><span class="p">)</span><span class="w"> </span><span class="nx">IO_</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">BlenderBlend</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Struct</span><span class="p">,</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">BlenderBlend</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">io</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">parent</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">root</span>
+
+<span class="w">	</span><span class="nx">tmp1</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewBlenderBlend_Header</span><span class="p">()</span>
+<span class="w">	</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp1</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Hdr</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp1</span>
+<span class="w">	</span><span class="k">for</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="mi">0</span><span class="p">;;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp2</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">EOF</span><span class="p">()</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">tmp2</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">break</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">tmp3</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewBlenderBlend_FileBlock</span><span class="p">()</span>
+<span class="w">		</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp3</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">Blocks</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">append</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Blocks</span><span class="p">,</span><span class="w"> </span><span class="nx">tmp3</span><span class="p">)</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">BlenderBlend</span><span class="p">)</span><span class="w"> </span><span class="nx">SdnaStructs</span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="w"> </span><span class="p">[]</span><span class="o">*</span><span class="nx">BlenderBlend_DnaStruct</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_sdnaStructs</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">sdnaStructs</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_sdnaStructs</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">sdnaStructs</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[]</span><span class="o">*</span><span class="nx">BlenderBlend_DnaStruct</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Blocks</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Blocks</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">2</span><span class="p">].</span><span class="nx">Body</span><span class="p">.(</span><span class="o">*</span><span class="nx">BlenderBlend_Dna1Body</span><span class="p">).</span><span class="nx">Structs</span><span class="p">)</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">sdnaStructs</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * DNA1, also known as &quot;Structure DNA&quot;, is a special block in</span>
+<span class="cm"> * .blend file, which contains machine-readable specifications of</span>
+<span class="cm"> * all other structures used in this .blend file.</span>
+<span class="cm"> * </span>
+<span class="cm"> * Effectively, this block contains:</span>
+<span class="cm"> * </span>
+<span class="cm"> * * a sequence of &quot;names&quot; (strings which represent field names)</span>
+<span class="cm"> * * a sequence of &quot;types&quot; (strings which represent type name)</span>
+<span class="cm"> * * a sequence of &quot;type lengths&quot;</span>
+<span class="cm"> * * a sequence of &quot;structs&quot; (which describe contents of every</span>
+<span class="cm"> *   structure, referring to types and names by index)</span>
+<span class="cm"> * @see &lt;a href=&quot;https://archive.blender.org/wiki/index.php/Dev:Source/Architecture/File_Format/#Structure_DNA&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
+<span class="kd">type</span><span class="w"> </span><span class="nx">BlenderBlend_Dna1Body</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">Id</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span>
+<span class="w">	</span><span class="nx">NameMagic</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span>
+<span class="w">	</span><span class="nx">NumNames</span><span class="w"> </span><span class="kt">uint32</span>
+<span class="w">	</span><span class="nx">Names</span><span class="w"> </span><span class="p">[]</span><span class="kt">string</span>
+<span class="w">	</span><span class="nx">Padding1</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span>
+<span class="w">	</span><span class="nx">TypeMagic</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span>
+<span class="w">	</span><span class="nx">NumTypes</span><span class="w"> </span><span class="kt">uint32</span>
+<span class="w">	</span><span class="nx">Types</span><span class="w"> </span><span class="p">[]</span><span class="kt">string</span>
+<span class="w">	</span><span class="nx">Padding2</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span>
+<span class="w">	</span><span class="nx">TlenMagic</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span>
+<span class="w">	</span><span class="nx">Lengths</span><span class="w"> </span><span class="p">[]</span><span class="kt">uint16</span>
+<span class="w">	</span><span class="nx">Padding3</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span>
+<span class="w">	</span><span class="nx">StrcMagic</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span>
+<span class="w">	</span><span class="nx">NumStructs</span><span class="w"> </span><span class="kt">uint32</span>
+<span class="w">	</span><span class="nx">Structs</span><span class="w"> </span><span class="p">[]</span><span class="o">*</span><span class="nx">BlenderBlend_DnaStruct</span>
+<span class="w">	</span><span class="nx">_io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+<span class="w">	</span><span class="nx">_root</span><span class="w"> </span><span class="o">*</span><span class="nx">BlenderBlend</span>
+<span class="w">	</span><span class="nx">_parent</span><span class="w"> </span><span class="o">*</span><span class="nx">BlenderBlend_FileBlock</span>
+<span class="p">}</span>
+<span class="kd">func</span><span class="w"> </span><span class="nx">NewBlenderBlend_Dna1Body</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">BlenderBlend_Dna1Body</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">BlenderBlend_Dna1Body</span><span class="p">{</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="nx">BlenderBlend_Dna1Body</span><span class="p">)</span><span class="w"> </span><span class="nx">IO_</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">BlenderBlend_Dna1Body</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="o">*</span><span class="nx">BlenderBlend_FileBlock</span><span class="p">,</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">BlenderBlend</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">io</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">parent</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">root</span>
+
+<span class="w">	</span><span class="nx">tmp4</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp4</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp4</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Id</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp4</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">!(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Id</span><span class="p">,</span><span class="w"> </span><span class="p">[]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">83</span><span class="p">,</span><span class="w"> </span><span class="mi">68</span><span class="p">,</span><span class="w"> </span><span class="mi">78</span><span class="p">,</span><span class="w"> </span><span class="mi">65</span><span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">([]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">83</span><span class="p">,</span><span class="w"> </span><span class="mi">68</span><span class="p">,</span><span class="w"> </span><span class="mi">78</span><span class="p">,</span><span class="w"> </span><span class="mi">65</span><span class="p">},</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">Id</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/types/dna1_body/seq/0&quot;</span><span class="p">)</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp5</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp5</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp5</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">NameMagic</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp5</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">!(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">NameMagic</span><span class="p">,</span><span class="w"> </span><span class="p">[]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">78</span><span class="p">,</span><span class="w"> </span><span class="mi">65</span><span class="p">,</span><span class="w"> </span><span class="mi">77</span><span class="p">,</span><span class="w"> </span><span class="mi">69</span><span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">([]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">78</span><span class="p">,</span><span class="w"> </span><span class="mi">65</span><span class="p">,</span><span class="w"> </span><span class="mi">77</span><span class="p">,</span><span class="w"> </span><span class="mi">69</span><span class="p">},</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">NameMagic</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/types/dna1_body/seq/1&quot;</span><span class="p">)</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp6</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">NumNames</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp6</span><span class="p">)</span>
+<span class="w">	</span><span class="k">for</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="p">&lt;</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">NumNames</span><span class="p">);</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">_</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">i</span>
+<span class="w">		</span><span class="nx">tmp7</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">Names</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">append</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Names</span><span class="p">,</span><span class="w"> </span><span class="nb">string</span><span class="p">(</span><span class="nx">tmp7</span><span class="p">))</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp9</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Pos</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp8</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="p">(</span><span class="mi">4</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">tmp9</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">4</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">tmp8</span><span class="w"> </span><span class="p">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp8</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">4</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp10</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">tmp8</span><span class="p">))</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp10</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp10</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Padding1</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp10</span>
+<span class="w">	</span><span class="nx">tmp11</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp11</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp11</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">TypeMagic</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp11</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">!(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">TypeMagic</span><span class="p">,</span><span class="w"> </span><span class="p">[]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">84</span><span class="p">,</span><span class="w"> </span><span class="mi">89</span><span class="p">,</span><span class="w"> </span><span class="mi">80</span><span class="p">,</span><span class="w"> </span><span class="mi">69</span><span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">([]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">84</span><span class="p">,</span><span class="w"> </span><span class="mi">89</span><span class="p">,</span><span class="w"> </span><span class="mi">80</span><span class="p">,</span><span class="w"> </span><span class="mi">69</span><span class="p">},</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">TypeMagic</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/types/dna1_body/seq/5&quot;</span><span class="p">)</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp12</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">NumTypes</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp12</span><span class="p">)</span>
+<span class="w">	</span><span class="k">for</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="p">&lt;</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">NumTypes</span><span class="p">);</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">_</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">i</span>
+<span class="w">		</span><span class="nx">tmp13</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">Types</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">append</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Types</span><span class="p">,</span><span class="w"> </span><span class="nb">string</span><span class="p">(</span><span class="nx">tmp13</span><span class="p">))</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp15</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Pos</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp14</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="p">(</span><span class="mi">4</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">tmp15</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">4</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">tmp14</span><span class="w"> </span><span class="p">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp14</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">4</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp16</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">tmp14</span><span class="p">))</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp16</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp16</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Padding2</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp16</span>
+<span class="w">	</span><span class="nx">tmp17</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp17</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp17</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">TlenMagic</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp17</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">!(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">TlenMagic</span><span class="p">,</span><span class="w"> </span><span class="p">[]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">84</span><span class="p">,</span><span class="w"> </span><span class="mi">76</span><span class="p">,</span><span class="w"> </span><span class="mi">69</span><span class="p">,</span><span class="w"> </span><span class="mi">78</span><span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">([]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">84</span><span class="p">,</span><span class="w"> </span><span class="mi">76</span><span class="p">,</span><span class="w"> </span><span class="mi">69</span><span class="p">,</span><span class="w"> </span><span class="mi">78</span><span class="p">},</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">TlenMagic</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/types/dna1_body/seq/9&quot;</span><span class="p">)</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="k">for</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="p">&lt;</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">NumTypes</span><span class="p">);</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">_</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">i</span>
+<span class="w">		</span><span class="nx">tmp18</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">Lengths</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">append</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Lengths</span><span class="p">,</span><span class="w"> </span><span class="nx">tmp18</span><span class="p">)</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp20</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Pos</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp19</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="p">(</span><span class="mi">4</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">tmp20</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">4</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">tmp19</span><span class="w"> </span><span class="p">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp19</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">4</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp21</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">tmp19</span><span class="p">))</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp21</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp21</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Padding3</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp21</span>
+<span class="w">	</span><span class="nx">tmp22</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp22</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp22</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">StrcMagic</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp22</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">!(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">StrcMagic</span><span class="p">,</span><span class="w"> </span><span class="p">[]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">83</span><span class="p">,</span><span class="w"> </span><span class="mi">84</span><span class="p">,</span><span class="w"> </span><span class="mi">82</span><span class="p">,</span><span class="w"> </span><span class="mi">67</span><span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">([]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">83</span><span class="p">,</span><span class="w"> </span><span class="mi">84</span><span class="p">,</span><span class="w"> </span><span class="mi">82</span><span class="p">,</span><span class="w"> </span><span class="mi">67</span><span class="p">},</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">StrcMagic</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/types/dna1_body/seq/12&quot;</span><span class="p">)</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp23</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">NumStructs</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp23</span><span class="p">)</span>
+<span class="w">	</span><span class="k">for</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="p">&lt;</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">NumStructs</span><span class="p">);</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">_</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">i</span>
+<span class="w">		</span><span class="nx">tmp24</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewBlenderBlend_DnaStruct</span><span class="p">()</span>
+<span class="w">		</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp24</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">Structs</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">append</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Structs</span><span class="p">,</span><span class="w"> </span><span class="nx">tmp24</span><span class="p">)</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">type</span><span class="w"> </span><span class="nx">BlenderBlend_DnaField</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">IdxType</span><span class="w"> </span><span class="kt">uint16</span>
+<span class="w">	</span><span class="nx">IdxName</span><span class="w"> </span><span class="kt">uint16</span>
+<span class="w">	</span><span class="nx">_io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+<span class="w">	</span><span class="nx">_root</span><span class="w"> </span><span class="o">*</span><span class="nx">BlenderBlend</span>
+<span class="w">	</span><span class="nx">_parent</span><span class="w"> </span><span class="o">*</span><span class="nx">BlenderBlend_DnaStruct</span>
+<span class="w">	</span><span class="nx">_f_name</span><span class="w"> </span><span class="kt">bool</span>
+<span class="w">	</span><span class="nx">name</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">	</span><span class="nx">_f_type</span><span class="w"> </span><span class="kt">bool</span>
+<span class="w">	</span><span class="kd">type</span><span class="w"> </span><span class="kt">string</span>
+<span class="p">}</span>
+<span class="kd">func</span><span class="w"> </span><span class="nx">NewBlenderBlend_DnaField</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">BlenderBlend_DnaField</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">BlenderBlend_DnaField</span><span class="p">{</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="nx">BlenderBlend_DnaField</span><span class="p">)</span><span class="w"> </span><span class="nx">IO_</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">BlenderBlend_DnaField</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="o">*</span><span class="nx">BlenderBlend_DnaStruct</span><span class="p">,</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">BlenderBlend</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">io</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">parent</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">root</span>
+
+<span class="w">	</span><span class="nx">tmp25</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">IdxType</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp25</span><span class="p">)</span>
+<span class="w">	</span><span class="nx">tmp26</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">IdxName</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp26</span><span class="p">)</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">BlenderBlend_DnaField</span><span class="p">)</span><span class="w"> </span><span class="nx">Name</span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_name</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_name</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">name</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">string</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">Names</span><span class="p">[</span><span class="nx">this</span><span class="p">.</span><span class="nx">IdxName</span><span class="p">])</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="p">}</span>
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">BlenderBlend_DnaField</span><span class="p">)</span><span class="w"> </span><span class="nx">Type</span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_type</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="kd">type</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_type</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="kd">type</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">string</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">Types</span><span class="p">[</span><span class="nx">this</span><span class="p">.</span><span class="nx">IdxType</span><span class="p">])</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="kd">type</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * DNA struct contains a `type` (type name), which is specified as</span>
+<span class="cm"> * an index in types table, and sequence of fields.</span>
+<span class="cm"> */</span>
+<span class="kd">type</span><span class="w"> </span><span class="nx">BlenderBlend_DnaStruct</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">IdxType</span><span class="w"> </span><span class="kt">uint16</span>
+<span class="w">	</span><span class="nx">NumFields</span><span class="w"> </span><span class="kt">uint16</span>
+<span class="w">	</span><span class="nx">Fields</span><span class="w"> </span><span class="p">[]</span><span class="o">*</span><span class="nx">BlenderBlend_DnaField</span>
+<span class="w">	</span><span class="nx">_io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+<span class="w">	</span><span class="nx">_root</span><span class="w"> </span><span class="o">*</span><span class="nx">BlenderBlend</span>
+<span class="w">	</span><span class="nx">_parent</span><span class="w"> </span><span class="o">*</span><span class="nx">BlenderBlend_Dna1Body</span>
+<span class="w">	</span><span class="nx">_f_type</span><span class="w"> </span><span class="kt">bool</span>
+<span class="w">	</span><span class="kd">type</span><span class="w"> </span><span class="kt">string</span>
+<span class="p">}</span>
+<span class="kd">func</span><span class="w"> </span><span class="nx">NewBlenderBlend_DnaStruct</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">BlenderBlend_DnaStruct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">BlenderBlend_DnaStruct</span><span class="p">{</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="nx">BlenderBlend_DnaStruct</span><span class="p">)</span><span class="w"> </span><span class="nx">IO_</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">BlenderBlend_DnaStruct</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="o">*</span><span class="nx">BlenderBlend_Dna1Body</span><span class="p">,</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">BlenderBlend</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">io</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">parent</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">root</span>
+
+<span class="w">	</span><span class="nx">tmp27</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">IdxType</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp27</span><span class="p">)</span>
+<span class="w">	</span><span class="nx">tmp28</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">NumFields</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp28</span><span class="p">)</span>
+<span class="w">	</span><span class="k">for</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="p">&lt;</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">NumFields</span><span class="p">);</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">_</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">i</span>
+<span class="w">		</span><span class="nx">tmp29</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewBlenderBlend_DnaField</span><span class="p">()</span>
+<span class="w">		</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp29</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">Fields</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">append</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Fields</span><span class="p">,</span><span class="w"> </span><span class="nx">tmp29</span><span class="p">)</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">BlenderBlend_DnaStruct</span><span class="p">)</span><span class="w"> </span><span class="nx">Type</span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_type</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="kd">type</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_type</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="kd">type</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">string</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">Types</span><span class="p">[</span><span class="nx">this</span><span class="p">.</span><span class="nx">IdxType</span><span class="p">])</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="kd">type</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="p">}</span>
+<span class="kd">type</span><span class="w"> </span><span class="nx">BlenderBlend_FileBlock</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">Code</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">	</span><span class="nx">LenBody</span><span class="w"> </span><span class="kt">uint32</span>
+<span class="w">	</span><span class="nx">MemAddr</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span>
+<span class="w">	</span><span class="nx">SdnaIndex</span><span class="w"> </span><span class="kt">uint32</span>
+<span class="w">	</span><span class="nx">Count</span><span class="w"> </span><span class="kt">uint32</span>
+<span class="w">	</span><span class="nx">Body</span><span class="w"> </span><span class="kd">interface</span><span class="p">{}</span>
+<span class="w">	</span><span class="nx">_io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+<span class="w">	</span><span class="nx">_root</span><span class="w"> </span><span class="o">*</span><span class="nx">BlenderBlend</span>
+<span class="w">	</span><span class="nx">_parent</span><span class="w"> </span><span class="o">*</span><span class="nx">BlenderBlend</span>
+<span class="w">	</span><span class="nx">_raw_Body</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span>
+<span class="w">	</span><span class="nx">_f_sdnaStruct</span><span class="w"> </span><span class="kt">bool</span>
+<span class="w">	</span><span class="nx">sdnaStruct</span><span class="w"> </span><span class="o">*</span><span class="nx">BlenderBlend_DnaStruct</span>
+<span class="p">}</span>
+<span class="kd">func</span><span class="w"> </span><span class="nx">NewBlenderBlend_FileBlock</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">BlenderBlend_FileBlock</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">BlenderBlend_FileBlock</span><span class="p">{</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="nx">BlenderBlend_FileBlock</span><span class="p">)</span><span class="w"> </span><span class="nx">IO_</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">BlenderBlend_FileBlock</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="o">*</span><span class="nx">BlenderBlend</span><span class="p">,</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">BlenderBlend</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">io</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">parent</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">root</span>
+
+<span class="w">	</span><span class="nx">tmp30</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp30</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp30</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Code</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">string</span><span class="p">(</span><span class="nx">tmp30</span><span class="p">)</span>
+<span class="w">	</span><span class="nx">tmp31</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenBody</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp31</span><span class="p">)</span>
+<span class="w">	</span><span class="nx">tmp32</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">Hdr</span><span class="p">.</span><span class="nx">Psize</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp33</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">tmp32</span><span class="p">))</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp33</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp33</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">MemAddr</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp33</span>
+<span class="w">	</span><span class="nx">tmp34</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">SdnaIndex</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp34</span><span class="p">)</span>
+<span class="w">	</span><span class="nx">tmp35</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Count</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp35</span><span class="p">)</span>
+<span class="w">	</span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Code</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="s">&quot;DNA1&quot;</span><span class="p">:</span>
+<span class="w">		</span><span class="nx">tmp36</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenBody</span><span class="p">))</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">tmp36</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp36</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Body</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp36</span>
+<span class="w">		</span><span class="nx">_io__raw_Body</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Body</span><span class="p">))</span>
+<span class="w">		</span><span class="nx">tmp37</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewBlenderBlend_Dna1Body</span><span class="p">()</span>
+<span class="w">		</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp37</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_Body</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">Body</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp37</span>
+<span class="w">	</span><span class="k">default</span><span class="p">:</span>
+<span class="w">		</span><span class="nx">tmp38</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenBody</span><span class="p">))</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">tmp38</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp38</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Body</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp38</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">BlenderBlend_FileBlock</span><span class="p">)</span><span class="w"> </span><span class="nx">SdnaStruct</span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="w"> </span><span class="o">*</span><span class="nx">BlenderBlend_DnaStruct</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_sdnaStruct</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">sdnaStruct</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_sdnaStruct</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">SdnaIndex</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp39</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">SdnaStructs</span><span class="p">()</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">sdnaStruct</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp39</span><span class="p">[</span><span class="nx">this</span><span class="p">.</span><span class="nx">SdnaIndex</span><span class="p">]</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">sdnaStruct</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Identifier of the file block</span>
+<span class="cm"> */</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Total length of the data after the header of file block</span>
+<span class="cm"> */</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Memory address the structure was located when written to disk</span>
+<span class="cm"> */</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Index of the SDNA structure</span>
+<span class="cm"> */</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Number of structure located in this file-block</span>
+<span class="cm"> */</span>
+<span class="kd">type</span><span class="w"> </span><span class="nx">BlenderBlend_Header</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">Magic</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span>
+<span class="w">	</span><span class="nx">PtrSizeId</span><span class="w"> </span><span class="nx">BlenderBlend_PtrSize</span>
+<span class="w">	</span><span class="nx">Endian</span><span class="w"> </span><span class="nx">BlenderBlend_Endian</span>
+<span class="w">	</span><span class="nx">Version</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">	</span><span class="nx">_io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+<span class="w">	</span><span class="nx">_root</span><span class="w"> </span><span class="o">*</span><span class="nx">BlenderBlend</span>
+<span class="w">	</span><span class="nx">_parent</span><span class="w"> </span><span class="o">*</span><span class="nx">BlenderBlend</span>
+<span class="w">	</span><span class="nx">_f_psize</span><span class="w"> </span><span class="kt">bool</span>
+<span class="w">	</span><span class="nx">psize</span><span class="w"> </span><span class="kt">int8</span>
+<span class="p">}</span>
+<span class="kd">func</span><span class="w"> </span><span class="nx">NewBlenderBlend_Header</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">BlenderBlend_Header</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">BlenderBlend_Header</span><span class="p">{</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="nx">BlenderBlend_Header</span><span class="p">)</span><span class="w"> </span><span class="nx">IO_</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">BlenderBlend_Header</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="o">*</span><span class="nx">BlenderBlend</span><span class="p">,</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">BlenderBlend</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">io</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">parent</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">root</span>
+
+<span class="w">	</span><span class="nx">tmp40</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">7</span><span class="p">))</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp40</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp40</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Magic</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp40</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">!(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Magic</span><span class="p">,</span><span class="w"> </span><span class="p">[]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">66</span><span class="p">,</span><span class="w"> </span><span class="mi">76</span><span class="p">,</span><span class="w"> </span><span class="mi">69</span><span class="p">,</span><span class="w"> </span><span class="mi">78</span><span class="p">,</span><span class="w"> </span><span class="mi">68</span><span class="p">,</span><span class="w"> </span><span class="mi">69</span><span class="p">,</span><span class="w"> </span><span class="mi">82</span><span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">([]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">66</span><span class="p">,</span><span class="w"> </span><span class="mi">76</span><span class="p">,</span><span class="w"> </span><span class="mi">69</span><span class="p">,</span><span class="w"> </span><span class="mi">78</span><span class="p">,</span><span class="w"> </span><span class="mi">68</span><span class="p">,</span><span class="w"> </span><span class="mi">69</span><span class="p">,</span><span class="w"> </span><span class="mi">82</span><span class="p">},</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">Magic</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/types/header/seq/0&quot;</span><span class="p">)</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp41</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">PtrSizeId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">BlenderBlend_PtrSize</span><span class="p">(</span><span class="nx">tmp41</span><span class="p">)</span>
+<span class="w">	</span><span class="nx">tmp42</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Endian</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">BlenderBlend_Endian</span><span class="p">(</span><span class="nx">tmp42</span><span class="p">)</span>
+<span class="w">	</span><span class="nx">tmp43</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp43</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp43</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Version</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">string</span><span class="p">(</span><span class="nx">tmp43</span><span class="p">)</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Number of bytes that a pointer occupies</span>
+<span class="cm"> */</span>
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">BlenderBlend_Header</span><span class="p">)</span><span class="w"> </span><span class="nx">Psize</span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="w"> </span><span class="kt">int8</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_psize</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">psize</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_psize</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">	</span><span class="kd">var</span><span class="w"> </span><span class="nx">tmp44</span><span class="w"> </span><span class="kt">int8</span><span class="p">;</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">PtrSizeId</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nx">BlenderBlend_PtrSize__Bits64</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp44</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">8</span>
+<span class="w">	</span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp44</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">4</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">psize</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">int8</span><span class="p">(</span><span class="nx">tmp44</span><span class="p">)</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">psize</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Size of a pointer; all pointers in the file are stored in this format</span>
+<span class="cm"> */</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Type of byte ordering used</span>
+<span class="cm"> */</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Blender version used to save this file</span>
+<span class="cm"> */</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015&ndash;2025 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">format repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -241,6 +241,11 @@ such as custom file icons.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="Macintosh resource fork data parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="Macintosh resource fork data parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -271,7 +276,17 @@ such as custom file icons.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="Macintosh resource fork data parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="Macintosh resource fork data parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="Macintosh resource fork data parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -343,8 +358,8 @@ such as custom file icons.</p>
 
 <span class="k">namespace</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">ResourceFork</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\ResourceFork</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\ResourceFork</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span> <span class="o">===</span> <span class="k">null</span> <span class="o">?</span> <span class="nv">$this</span> <span class="o">:</span> <span class="nv">$_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
         <span class="p">}</span>
 
@@ -352,23 +367,6 @@ such as custom file icons.</p>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_header</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ResourceFork\FileHeader</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_systemData</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">112</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_applicationData</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">128</span><span class="p">);</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_dataBlocksWithIo</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * Use `data_blocks` instead,</span>
-<span class="sd">         * unless you need access to this instance&#39;s `_io`.</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">dataBlocksWithIo</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dataBlocksWithIo</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dataBlocksWithIo</span><span class="p">;</span>
-            <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">ofsDataBlocks</span><span class="p">());</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_dataBlocksWithIo</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">lenDataBlocks</span><span class="p">());</span>
-            <span class="nv">$_io__raw_dataBlocksWithIo</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_dataBlocksWithIo</span><span class="p">);</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dataBlocksWithIo</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\BytesWithIo</span><span class="p">(</span><span class="nv">$_io__raw_dataBlocksWithIo</span><span class="p">);</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dataBlocksWithIo</span><span class="p">;</span>
         <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_dataBlocks</span><span class="p">;</span>
 
@@ -392,6 +390,23 @@ such as custom file icons.</p>
                 <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dataBlocks</span><span class="p">;</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dataBlocks</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">dataBlocksWithIo</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">data</span><span class="p">();</span>
             <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dataBlocks</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_dataBlocksWithIo</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Use `data_blocks` instead,</span>
+<span class="sd">         * unless you need access to this instance&#39;s `_io`.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">dataBlocksWithIo</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dataBlocksWithIo</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dataBlocksWithIo</span><span class="p">;</span>
+            <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">ofsDataBlocks</span><span class="p">());</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_dataBlocksWithIo</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">lenDataBlocks</span><span class="p">());</span>
+            <span class="nv">$_io__raw_dataBlocksWithIo</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_dataBlocksWithIo</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dataBlocksWithIo</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\BytesWithIo</span><span class="p">(</span><span class="nv">$_io__raw_dataBlocksWithIo</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dataBlocksWithIo</span><span class="p">;</span>
         <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_resourceMap</span><span class="p">;</span>
 
@@ -452,13 +467,47 @@ such as custom file icons.</p>
 <span class="p">}</span>
 
 <span class="sd">/**</span>
+<span class="sd"> * A resource data block,</span>
+<span class="sd"> * as stored in the resource data area.</span>
+<span class="sd"> * </span>
+<span class="sd"> * Each data block stores the data contained in a resource,</span>
+<span class="sd"> * along with its length.</span>
+<span class="sd"> */</span>
+
+<span class="k">namespace</span> <span class="nx">ResourceFork</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">DataBlock</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\ResourceFork\ResourceMap\TypeListAndReferenceLists\ReferenceList\Reference</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\ResourceFork</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenData</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenData</span><span class="p">());</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_lenData</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_data</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * The length of the resource data stored in this block.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">lenData</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenData</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * The data stored in this block.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">data</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
 <span class="sd"> * Resource file header,</span>
 <span class="sd"> * containing the offsets and lengths of the resource data area and resource map.</span>
 <span class="sd"> */</span>
 
 <span class="k">namespace</span> <span class="nx">ResourceFork</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">FileHeader</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\ResourceFork</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\ResourceFork</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
         <span class="p">}</span>
@@ -511,47 +560,13 @@ such as custom file icons.</p>
 <span class="p">}</span>
 
 <span class="sd">/**</span>
-<span class="sd"> * A resource data block,</span>
-<span class="sd"> * as stored in the resource data area.</span>
-<span class="sd"> * </span>
-<span class="sd"> * Each data block stores the data contained in a resource,</span>
-<span class="sd"> * along with its length.</span>
-<span class="sd"> */</span>
-
-<span class="k">namespace</span> <span class="nx">ResourceFork</span> <span class="p">{</span>
-    <span class="k">class</span> <span class="nc">DataBlock</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\ResourceFork\ResourceMap\TypeListAndReferenceLists\ReferenceList\Reference</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\ResourceFork</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
-        <span class="p">}</span>
-
-        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenData</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenData</span><span class="p">());</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_lenData</span><span class="p">;</span>
-        <span class="k">protected</span> <span class="nv">$_m_data</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * The length of the resource data stored in this block.</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">lenData</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenData</span><span class="p">;</span> <span class="p">}</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * The data stored in this block.</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">data</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data</span><span class="p">;</span> <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="sd">/**</span>
 <span class="sd"> * Resource map,</span>
 <span class="sd"> * containing information about the resources in the file and where they are located in the data area.</span>
 <span class="sd"> */</span>
 
 <span class="k">namespace</span> <span class="nx">ResourceFork</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">ResourceMap</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\ResourceFork</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\ResourceFork</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\ResourceFork</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\ResourceFork</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
         <span class="p">}</span>
@@ -566,21 +581,16 @@ such as custom file icons.</p>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ofsTypeList</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2be</span><span class="p">();</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ofsNames</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2be</span><span class="p">();</span>
         <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_typeListAndReferenceLists</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_names</span><span class="p">;</span>
 
         <span class="sd">/**</span>
-<span class="sd">         * The resource map&#39;s resource type list, followed by the resource reference list area.</span>
+<span class="sd">         * Storage area for the names of all resources.</span>
 <span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">typeListAndReferenceLists</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_typeListAndReferenceLists</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_typeListAndReferenceLists</span><span class="p">;</span>
-            <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ofsTypeList</span><span class="p">());</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_typeListAndReferenceLists</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ofsNames</span><span class="p">()</span> <span class="o">-</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ofsTypeList</span><span class="p">()));</span>
-            <span class="nv">$_io__raw_typeListAndReferenceLists</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_typeListAndReferenceLists</span><span class="p">);</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_typeListAndReferenceLists</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ResourceFork\ResourceMap\TypeListAndReferenceLists</span><span class="p">(</span><span class="nv">$_io__raw_typeListAndReferenceLists</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_typeListAndReferenceLists</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">names</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_names</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_names</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_names</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">namesWithIo</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">data</span><span class="p">();</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_names</span><span class="p">;</span>
         <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_namesWithIo</span><span class="p">;</span>
 
@@ -599,16 +609,21 @@ such as custom file icons.</p>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
             <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_namesWithIo</span><span class="p">;</span>
         <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_names</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_typeListAndReferenceLists</span><span class="p">;</span>
 
         <span class="sd">/**</span>
-<span class="sd">         * Storage area for the names of all resources.</span>
+<span class="sd">         * The resource map&#39;s resource type list, followed by the resource reference list area.</span>
 <span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">names</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_names</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_names</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_names</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">namesWithIo</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">data</span><span class="p">();</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_names</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">typeListAndReferenceLists</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_typeListAndReferenceLists</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_typeListAndReferenceLists</span><span class="p">;</span>
+            <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ofsTypeList</span><span class="p">());</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_typeListAndReferenceLists</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ofsNames</span><span class="p">()</span> <span class="o">-</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ofsTypeList</span><span class="p">());</span>
+            <span class="nv">$_io__raw_typeListAndReferenceLists</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_typeListAndReferenceLists</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_typeListAndReferenceLists</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ResourceFork\ResourceMap\TypeListAndReferenceLists</span><span class="p">(</span><span class="nv">$_io__raw_typeListAndReferenceLists</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_typeListAndReferenceLists</span><span class="p">;</span>
         <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_reservedFileHeaderCopy</span><span class="p">;</span>
         <span class="k">protected</span> <span class="nv">$_m_reservedNextResourceMapHandle</span><span class="p">;</span>
@@ -617,8 +632,8 @@ such as custom file icons.</p>
         <span class="k">protected</span> <span class="nv">$_m_ofsTypeList</span><span class="p">;</span>
         <span class="k">protected</span> <span class="nv">$_m_ofsNames</span><span class="p">;</span>
         <span class="k">protected</span> <span class="nv">$_m__raw_fileAttributes</span><span class="p">;</span>
-        <span class="k">protected</span> <span class="nv">$_m__raw_typeListAndReferenceLists</span><span class="p">;</span>
         <span class="k">protected</span> <span class="nv">$_m__raw_namesWithIo</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m__raw_typeListAndReferenceLists</span><span class="p">;</span>
 
         <span class="sd">/**</span>
 <span class="sd">         * Reserved space for a copy of the resource file header.</span>
@@ -656,8 +671,8 @@ such as custom file icons.</p>
 <span class="sd">         */</span>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">ofsNames</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ofsNames</span><span class="p">;</span> <span class="p">}</span>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw_fileAttributes</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_fileAttributes</span><span class="p">;</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw_typeListAndReferenceLists</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_typeListAndReferenceLists</span><span class="p">;</span> <span class="p">}</span>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw_namesWithIo</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_namesWithIo</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw_typeListAndReferenceLists</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_typeListAndReferenceLists</span><span class="p">;</span> <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
@@ -671,7 +686,7 @@ such as custom file icons.</p>
 
 <span class="k">namespace</span> <span class="nx">ResourceFork\ResourceMap</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">FileAttributes</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\ResourceFork\ResourceMap</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\ResourceFork</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\ResourceFork\ResourceMap</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\ResourceFork</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
         <span class="p">}</span>
@@ -770,6 +785,65 @@ such as custom file icons.</p>
 <span class="p">}</span>
 
 <span class="sd">/**</span>
+<span class="sd"> * A resource name,</span>
+<span class="sd"> * as stored in the resource name storage area in the resource map.</span>
+<span class="sd"> * </span>
+<span class="sd"> * The resource names are not required to appear in any particular order.</span>
+<span class="sd"> * There may be unused space between and around resource names,</span>
+<span class="sd"> * but in practice they are often contiguous.</span>
+<span class="sd"> */</span>
+
+<span class="k">namespace</span> <span class="nx">ResourceFork\ResourceMap</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">Name</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\ResourceFork\ResourceMap\TypeListAndReferenceLists\ReferenceList\Reference</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\ResourceFork</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenValue</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenValue</span><span class="p">());</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_lenValue</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_value</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * The length of the resource name, in bytes.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">lenValue</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenValue</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * The resource name.</span>
+<span class="sd">         * </span>
+<span class="sd">         * This field is exposed as a byte array,</span>
+<span class="sd">         * because there is no universal encoding for resource names.</span>
+<span class="sd">         * Most Classic Mac software does not deal with encodings explicitly and instead assumes that all strings,</span>
+<span class="sd">         * including resource names,</span>
+<span class="sd">         * use the system encoding,</span>
+<span class="sd">         * which varies depending on the system language.</span>
+<span class="sd">         * This means that resource names can use different encodings depending on what system language they were created with.</span>
+<span class="sd">         * </span>
+<span class="sd">         * Many resource names are plain ASCII,</span>
+<span class="sd">         * meaning that the encoding often does not matter</span>
+<span class="sd">         * (because all Mac OS encodings are ASCII-compatible).</span>
+<span class="sd">         * For non-ASCII resource names,</span>
+<span class="sd">         * the most common encoding is perhaps MacRoman</span>
+<span class="sd">         * (used for English and other Western languages),</span>
+<span class="sd">         * but other encodings are also sometimes used,</span>
+<span class="sd">         * especially for software in non-Western languages.</span>
+<span class="sd">         * </span>
+<span class="sd">         * There is no requirement that all names in a single resource file use the same encoding.</span>
+<span class="sd">         * For example,</span>
+<span class="sd">         * localized software may have some (but not all) of its resource names translated.</span>
+<span class="sd">         * For non-Western languages,</span>
+<span class="sd">         * this can lead to some resource names using MacRoman,</span>
+<span class="sd">         * and others using a different encoding.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">value</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
 <span class="sd"> * Resource type list and storage area for resource reference lists in the resource map.</span>
 <span class="sd"> * </span>
 <span class="sd"> * The two parts are combined into a single type here for technical reasons:</span>
@@ -780,7 +854,7 @@ such as custom file icons.</p>
 
 <span class="k">namespace</span> <span class="nx">ResourceFork\ResourceMap</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">TypeListAndReferenceLists</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\ResourceFork\ResourceMap</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\ResourceFork</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\ResourceFork\ResourceMap</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\ResourceFork</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
         <span class="p">}</span>
@@ -809,131 +883,6 @@ such as custom file icons.</p>
 <span class="p">}</span>
 
 <span class="sd">/**</span>
-<span class="sd"> * Resource type list in the resource map.</span>
-<span class="sd"> */</span>
-
-<span class="k">namespace</span> <span class="nx">ResourceFork\ResourceMap\TypeListAndReferenceLists</span> <span class="p">{</span>
-    <span class="k">class</span> <span class="nc">TypeList</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\ResourceFork\ResourceMap\TypeListAndReferenceLists</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\ResourceFork</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
-        <span class="p">}</span>
-
-        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numTypesM1</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2be</span><span class="p">();</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entries</span> <span class="o">=</span> <span class="p">[];</span>
-            <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numTypes</span><span class="p">();</span>
-            <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entries</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ResourceFork\ResourceMap\TypeListAndReferenceLists\TypeList\TypeListEntry</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_numTypes</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * The number of resource types in this list.</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">numTypes</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numTypes</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numTypes</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numTypes</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">mod</span><span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numTypesM1</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">65536</span><span class="p">);</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numTypes</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_numTypesM1</span><span class="p">;</span>
-        <span class="k">protected</span> <span class="nv">$_m_entries</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * The number of resource types in this list,</span>
-<span class="sd">         * minus one.</span>
-<span class="sd">         * </span>
-<span class="sd">         * If the resource list is empty,</span>
-<span class="sd">         * the value of this field is `0xffff`,</span>
-<span class="sd">         * i. e. `-1` truncated to a 16-bit unsigned integer.</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">numTypesM1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numTypesM1</span><span class="p">;</span> <span class="p">}</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * Entries in the resource type list.</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">entries</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entries</span><span class="p">;</span> <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="sd">/**</span>
-<span class="sd"> * A single entry in the resource type list.</span>
-<span class="sd"> * </span>
-<span class="sd"> * Each entry corresponds to exactly one resource reference list.</span>
-<span class="sd"> */</span>
-
-<span class="k">namespace</span> <span class="nx">ResourceFork\ResourceMap\TypeListAndReferenceLists\TypeList</span> <span class="p">{</span>
-    <span class="k">class</span> <span class="nc">TypeListEntry</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\ResourceFork\ResourceMap\TypeListAndReferenceLists\TypeList</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\ResourceFork</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
-        <span class="p">}</span>
-
-        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_type</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numReferencesM1</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2be</span><span class="p">();</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ofsReferenceList</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2be</span><span class="p">();</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_numReferences</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * The number of resources in the reference list for this type.</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">numReferences</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numReferences</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numReferences</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numReferences</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">mod</span><span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numReferencesM1</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">65536</span><span class="p">);</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numReferences</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_referenceList</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * The resource reference list for this resource type.</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">referenceList</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_referenceList</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_referenceList</span><span class="p">;</span>
-            <span class="nv">$io</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">();</span>
-            <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
-            <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ofsReferenceList</span><span class="p">());</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_referenceList</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ResourceFork\ResourceMap\TypeListAndReferenceLists\ReferenceList</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numReferences</span><span class="p">(),</span> <span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-            <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_referenceList</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_type</span><span class="p">;</span>
-        <span class="k">protected</span> <span class="nv">$_m_numReferencesM1</span><span class="p">;</span>
-        <span class="k">protected</span> <span class="nv">$_m_ofsReferenceList</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * The four-character type code of the resources in the reference list.</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">type</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_type</span><span class="p">;</span> <span class="p">}</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * The number of resources in the reference list for this type,</span>
-<span class="sd">         * minus one.</span>
-<span class="sd">         * </span>
-<span class="sd">         * Empty reference lists should never exist.</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">numReferencesM1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numReferencesM1</span><span class="p">;</span> <span class="p">}</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * Offset of the resource reference list for this resource type,</span>
-<span class="sd">         * from the start of the resource type list.</span>
-<span class="sd">         * </span>
-<span class="sd">         * Although the offset is relative to the start of the type list,</span>
-<span class="sd">         * it should never point into the type list itself,</span>
-<span class="sd">         * but into the reference list storage area that directly follows it.</span>
-<span class="sd">         * That is,</span>
-<span class="sd">         * it should always be at least `_parent._sizeof`.</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">ofsReferenceList</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ofsReferenceList</span><span class="p">;</span> <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="sd">/**</span>
 <span class="sd"> * A resource reference list,</span>
 <span class="sd"> * as stored in the reference list area.</span>
 <span class="sd"> * </span>
@@ -943,7 +892,7 @@ such as custom file icons.</p>
 
 <span class="k">namespace</span> <span class="nx">ResourceFork\ResourceMap\TypeListAndReferenceLists</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">ReferenceList</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">int</span> <span class="nv">$numReferences</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\ResourceFork\ResourceMap\TypeListAndReferenceLists\TypeList\TypeListEntry</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\ResourceFork</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">int</span> <span class="nv">$numReferences</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\ResourceFork\ResourceMap\TypeListAndReferenceLists\TypeList\TypeListEntry</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\ResourceFork</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numReferences</span> <span class="o">=</span> <span class="nv">$numReferences</span><span class="p">;</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
@@ -981,7 +930,7 @@ such as custom file icons.</p>
 
 <span class="k">namespace</span> <span class="nx">ResourceFork\ResourceMap\TypeListAndReferenceLists\ReferenceList</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">Reference</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\ResourceFork\ResourceMap\TypeListAndReferenceLists\ReferenceList</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\ResourceFork</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\ResourceFork\ResourceMap\TypeListAndReferenceLists\ReferenceList</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\ResourceFork</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
         <span class="p">}</span>
@@ -995,6 +944,21 @@ such as custom file icons.</p>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ofsDataBlock</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsIntBe</span><span class="p">(</span><span class="mi">24</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">alignToByte</span><span class="p">();</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_reservedHandle</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_dataBlock</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * The data block containing the data for the resource described by this reference.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">dataBlock</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dataBlock</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dataBlock</span><span class="p">;</span>
+            <span class="nv">$io</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">dataBlocksWithIo</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">();</span>
+            <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
+            <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ofsDataBlock</span><span class="p">());</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dataBlock</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ResourceFork\DataBlock</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dataBlock</span><span class="p">;</span>
         <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_name</span><span class="p">;</span>
 
@@ -1012,21 +976,6 @@ such as custom file icons.</p>
                 <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
             <span class="p">}</span>
             <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_name</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_dataBlock</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * The data block containing the data for the resource described by this reference.</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">dataBlock</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dataBlock</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dataBlock</span><span class="p">;</span>
-            <span class="nv">$io</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">dataBlocksWithIo</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">();</span>
-            <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
-            <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ofsDataBlock</span><span class="p">());</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dataBlock</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ResourceFork\DataBlock</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-            <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dataBlock</span><span class="p">;</span>
         <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_id</span><span class="p">;</span>
         <span class="k">protected</span> <span class="nv">$_m_ofsName</span><span class="p">;</span>
@@ -1076,7 +1025,7 @@ such as custom file icons.</p>
 
 <span class="k">namespace</span> <span class="nx">ResourceFork\ResourceMap\TypeListAndReferenceLists\ReferenceList\Reference</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">Attributes</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\ResourceFork\ResourceMap\TypeListAndReferenceLists\ReferenceList\Reference</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\ResourceFork</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\ResourceFork\ResourceMap\TypeListAndReferenceLists\ReferenceList\Reference</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\ResourceFork</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
         <span class="p">}</span>
@@ -1224,61 +1173,127 @@ such as custom file icons.</p>
 <span class="p">}</span>
 
 <span class="sd">/**</span>
-<span class="sd"> * A resource name,</span>
-<span class="sd"> * as stored in the resource name storage area in the resource map.</span>
-<span class="sd"> * </span>
-<span class="sd"> * The resource names are not required to appear in any particular order.</span>
-<span class="sd"> * There may be unused space between and around resource names,</span>
-<span class="sd"> * but in practice they are often contiguous.</span>
+<span class="sd"> * Resource type list in the resource map.</span>
 <span class="sd"> */</span>
 
-<span class="k">namespace</span> <span class="nx">ResourceFork\ResourceMap</span> <span class="p">{</span>
-    <span class="k">class</span> <span class="nc">Name</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\ResourceFork\ResourceMap\TypeListAndReferenceLists\ReferenceList\Reference</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\ResourceFork</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+<span class="k">namespace</span> <span class="nx">ResourceFork\ResourceMap\TypeListAndReferenceLists</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">TypeList</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\ResourceFork\ResourceMap\TypeListAndReferenceLists</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\ResourceFork</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
         <span class="p">}</span>
 
         <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenValue</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenValue</span><span class="p">());</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numTypesM1</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2be</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entries</span> <span class="o">=</span> <span class="p">[];</span>
+            <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numTypes</span><span class="p">();</span>
+            <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entries</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ResourceFork\ResourceMap\TypeListAndReferenceLists\TypeList\TypeListEntry</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="p">}</span>
         <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_lenValue</span><span class="p">;</span>
-        <span class="k">protected</span> <span class="nv">$_m_value</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_numTypes</span><span class="p">;</span>
 
         <span class="sd">/**</span>
-<span class="sd">         * The length of the resource name, in bytes.</span>
+<span class="sd">         * The number of resource types in this list.</span>
 <span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">lenValue</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenValue</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">numTypes</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numTypes</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numTypes</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numTypes</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">mod</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numTypesM1</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">65536</span><span class="p">);</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numTypes</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_numTypesM1</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_entries</span><span class="p">;</span>
 
         <span class="sd">/**</span>
-<span class="sd">         * The resource name.</span>
+<span class="sd">         * The number of resource types in this list,</span>
+<span class="sd">         * minus one.</span>
 <span class="sd">         * </span>
-<span class="sd">         * This field is exposed as a byte array,</span>
-<span class="sd">         * because there is no universal encoding for resource names.</span>
-<span class="sd">         * Most Classic Mac software does not deal with encodings explicitly and instead assumes that all strings,</span>
-<span class="sd">         * including resource names,</span>
-<span class="sd">         * use the system encoding,</span>
-<span class="sd">         * which varies depending on the system language.</span>
-<span class="sd">         * This means that resource names can use different encodings depending on what system language they were created with.</span>
-<span class="sd">         * </span>
-<span class="sd">         * Many resource names are plain ASCII,</span>
-<span class="sd">         * meaning that the encoding often does not matter</span>
-<span class="sd">         * (because all Mac OS encodings are ASCII-compatible).</span>
-<span class="sd">         * For non-ASCII resource names,</span>
-<span class="sd">         * the most common encoding is perhaps MacRoman</span>
-<span class="sd">         * (used for English and other Western languages),</span>
-<span class="sd">         * but other encodings are also sometimes used,</span>
-<span class="sd">         * especially for software in non-Western languages.</span>
-<span class="sd">         * </span>
-<span class="sd">         * There is no requirement that all names in a single resource file use the same encoding.</span>
-<span class="sd">         * For example,</span>
-<span class="sd">         * localized software may have some (but not all) of its resource names translated.</span>
-<span class="sd">         * For non-Western languages,</span>
-<span class="sd">         * this can lead to some resource names using MacRoman,</span>
-<span class="sd">         * and others using a different encoding.</span>
+<span class="sd">         * If the resource list is empty,</span>
+<span class="sd">         * the value of this field is `0xffff`,</span>
+<span class="sd">         * i. e. `-1` truncated to a 16-bit unsigned integer.</span>
 <span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">value</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">numTypesM1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numTypesM1</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Entries in the resource type list.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">entries</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entries</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * A single entry in the resource type list.</span>
+<span class="sd"> * </span>
+<span class="sd"> * Each entry corresponds to exactly one resource reference list.</span>
+<span class="sd"> */</span>
+
+<span class="k">namespace</span> <span class="nx">ResourceFork\ResourceMap\TypeListAndReferenceLists\TypeList</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">TypeListEntry</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\ResourceFork\ResourceMap\TypeListAndReferenceLists\TypeList</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\ResourceFork</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_type</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numReferencesM1</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2be</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ofsReferenceList</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2be</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_numReferences</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * The number of resources in the reference list for this type.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">numReferences</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numReferences</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numReferences</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numReferences</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">mod</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numReferencesM1</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">65536</span><span class="p">);</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numReferences</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_referenceList</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * The resource reference list for this resource type.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">referenceList</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_referenceList</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_referenceList</span><span class="p">;</span>
+            <span class="nv">$io</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">();</span>
+            <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
+            <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ofsReferenceList</span><span class="p">());</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_referenceList</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ResourceFork\ResourceMap\TypeListAndReferenceLists\ReferenceList</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numReferences</span><span class="p">(),</span> <span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_referenceList</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_type</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_numReferencesM1</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_ofsReferenceList</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * The four-character type code of the resources in the reference list.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">type</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_type</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * The number of resources in the reference list for this type,</span>
+<span class="sd">         * minus one.</span>
+<span class="sd">         * </span>
+<span class="sd">         * Empty reference lists should never exist.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">numReferencesM1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numReferencesM1</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Offset of the resource reference list for this resource type,</span>
+<span class="sd">         * from the start of the resource type list.</span>
+<span class="sd">         * </span>
+<span class="sd">         * Although the offset is relative to the start of the type list,</span>
+<span class="sd">         * it should never point into the type list itself,</span>
+<span class="sd">         * but into the reference list storage area that directly follows it.</span>
+<span class="sd">         * That is,</span>
+<span class="sd">         * it should always be at least `_parent._sizeof`.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">ofsReferenceList</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ofsReferenceList</span><span class="p">;</span> <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>

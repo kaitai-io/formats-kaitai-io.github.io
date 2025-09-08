@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.Gif = factory(root.KaitaiStream);
+    factory(root.Gif || (root.Gif = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Gif_, KaitaiStream) {
 /**
  * GIF (Graphics Interchange Format) is an image file format, developed
  * in 1987. It became popular in 1990s as one of the main image formats
@@ -61,7 +61,7 @@ var Gif = (function() {
     this.hdr = new Header(this._io, this, this._root);
     this.logicalScreenDescriptor = new LogicalScreenDescriptorStruct(this._io, this, this._root);
     if (this.logicalScreenDescriptor.hasColorTable) {
-      this._raw_globalColorTable = this._io.readBytes((this.logicalScreenDescriptor.colorTableSize * 3));
+      this._raw_globalColorTable = this._io.readBytes(this.logicalScreenDescriptor.colorTableSize * 3);
       var _io__raw_globalColorTable = new KaitaiStream(this._raw_globalColorTable);
       this.globalColorTable = new ColorTable(_io__raw_globalColorTable, this, this._root);
     }
@@ -74,144 +74,31 @@ var Gif = (function() {
     } while (!( ((this._io.isEof()) || (_.blockType == Gif.BlockType.END_OF_FILE)) ));
   }
 
-  /**
-   * @see {@link https://www.w3.org/Graphics/GIF/spec-gif89a.txt|- section 22}
-   */
-
-  var ImageData = Gif.ImageData = (function() {
-    function ImageData(_io, _parent, _root) {
+  var ApplicationId = Gif.ApplicationId = (function() {
+    function ApplicationId(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    ImageData.prototype._read = function() {
-      this.lzwMinCodeSize = this._io.readU1();
-      this.subblocks = new Subblocks(this._io, this, this._root);
+    ApplicationId.prototype._read = function() {
+      this.lenBytes = this._io.readU1();
+      if (!(this.lenBytes == 11)) {
+        throw new KaitaiStream.ValidationNotEqualError(11, this.lenBytes, this._io, "/types/application_id/seq/0");
+      }
+      this.applicationIdentifier = KaitaiStream.bytesToStr(this._io.readBytes(8), "ASCII");
+      this.applicationAuthCode = this._io.readBytes(3);
     }
 
-    return ImageData;
-  })();
-
-  var ColorTableEntry = Gif.ColorTableEntry = (function() {
-    function ColorTableEntry(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    ColorTableEntry.prototype._read = function() {
-      this.red = this._io.readU1();
-      this.green = this._io.readU1();
-      this.blue = this._io.readU1();
-    }
-
-    return ColorTableEntry;
-  })();
-
-  /**
-   * @see {@link https://www.w3.org/Graphics/GIF/spec-gif89a.txt|- section 18}
-   */
-
-  var LogicalScreenDescriptorStruct = Gif.LogicalScreenDescriptorStruct = (function() {
-    function LogicalScreenDescriptorStruct(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    LogicalScreenDescriptorStruct.prototype._read = function() {
-      this.screenWidth = this._io.readU2le();
-      this.screenHeight = this._io.readU2le();
-      this.flags = this._io.readU1();
-      this.bgColorIndex = this._io.readU1();
-      this.pixelAspectRatio = this._io.readU1();
-    }
-    Object.defineProperty(LogicalScreenDescriptorStruct.prototype, 'hasColorTable', {
-      get: function() {
-        if (this._m_hasColorTable !== undefined)
-          return this._m_hasColorTable;
-        this._m_hasColorTable = (this.flags & 128) != 0;
-        return this._m_hasColorTable;
-      }
-    });
-    Object.defineProperty(LogicalScreenDescriptorStruct.prototype, 'colorTableSize', {
-      get: function() {
-        if (this._m_colorTableSize !== undefined)
-          return this._m_colorTableSize;
-        this._m_colorTableSize = (2 << (this.flags & 7));
-        return this._m_colorTableSize;
-      }
-    });
-
-    return LogicalScreenDescriptorStruct;
-  })();
-
-  var LocalImageDescriptor = Gif.LocalImageDescriptor = (function() {
-    function LocalImageDescriptor(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    LocalImageDescriptor.prototype._read = function() {
-      this.left = this._io.readU2le();
-      this.top = this._io.readU2le();
-      this.width = this._io.readU2le();
-      this.height = this._io.readU2le();
-      this.flags = this._io.readU1();
-      if (this.hasColorTable) {
-        this._raw_localColorTable = this._io.readBytes((this.colorTableSize * 3));
-        var _io__raw_localColorTable = new KaitaiStream(this._raw_localColorTable);
-        this.localColorTable = new ColorTable(_io__raw_localColorTable, this, this._root);
-      }
-      this.imageData = new ImageData(this._io, this, this._root);
-    }
-    Object.defineProperty(LocalImageDescriptor.prototype, 'hasColorTable', {
-      get: function() {
-        if (this._m_hasColorTable !== undefined)
-          return this._m_hasColorTable;
-        this._m_hasColorTable = (this.flags & 128) != 0;
-        return this._m_hasColorTable;
-      }
-    });
-    Object.defineProperty(LocalImageDescriptor.prototype, 'hasInterlace', {
-      get: function() {
-        if (this._m_hasInterlace !== undefined)
-          return this._m_hasInterlace;
-        this._m_hasInterlace = (this.flags & 64) != 0;
-        return this._m_hasInterlace;
-      }
-    });
-    Object.defineProperty(LocalImageDescriptor.prototype, 'hasSortedColorTable', {
-      get: function() {
-        if (this._m_hasSortedColorTable !== undefined)
-          return this._m_hasSortedColorTable;
-        this._m_hasSortedColorTable = (this.flags & 32) != 0;
-        return this._m_hasSortedColorTable;
-      }
-    });
-    Object.defineProperty(LocalImageDescriptor.prototype, 'colorTableSize', {
-      get: function() {
-        if (this._m_colorTableSize !== undefined)
-          return this._m_colorTableSize;
-        this._m_colorTableSize = (2 << (this.flags & 7));
-        return this._m_colorTableSize;
-      }
-    });
-
-    return LocalImageDescriptor;
+    return ApplicationId;
   })();
 
   var Block = Gif.Block = (function() {
     function Block(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -238,7 +125,7 @@ var Gif = (function() {
     function ColorTable(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -254,27 +141,43 @@ var Gif = (function() {
     return ColorTable;
   })();
 
-  /**
-   * @see {@link https://www.w3.org/Graphics/GIF/spec-gif89a.txt|- section 17}
-   */
-
-  var Header = Gif.Header = (function() {
-    function Header(_io, _parent, _root) {
+  var ColorTableEntry = Gif.ColorTableEntry = (function() {
+    function ColorTableEntry(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    Header.prototype._read = function() {
-      this.magic = this._io.readBytes(3);
-      if (!((KaitaiStream.byteArrayCompare(this.magic, [71, 73, 70]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([71, 73, 70], this.magic, this._io, "/types/header/seq/0");
-      }
-      this.version = KaitaiStream.bytesToStr(this._io.readBytes(3), "ASCII");
+    ColorTableEntry.prototype._read = function() {
+      this.red = this._io.readU1();
+      this.green = this._io.readU1();
+      this.blue = this._io.readU1();
     }
 
-    return Header;
+    return ColorTableEntry;
+  })();
+
+  var ExtApplication = Gif.ExtApplication = (function() {
+    function ExtApplication(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    ExtApplication.prototype._read = function() {
+      this.applicationId = new ApplicationId(this._io, this, this._root);
+      this.subblocks = [];
+      var i = 0;
+      do {
+        var _ = new Subblock(this._io, this, this._root);
+        this.subblocks.push(_);
+        i++;
+      } while (!(_.lenBytes == 0));
+    }
+
+    return ExtApplication;
   })();
 
   /**
@@ -285,21 +188,21 @@ var Gif = (function() {
     function ExtGraphicControl(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     ExtGraphicControl.prototype._read = function() {
       this.blockSize = this._io.readBytes(1);
-      if (!((KaitaiStream.byteArrayCompare(this.blockSize, [4]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([4], this.blockSize, this._io, "/types/ext_graphic_control/seq/0");
+      if (!((KaitaiStream.byteArrayCompare(this.blockSize, new Uint8Array([4])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([4]), this.blockSize, this._io, "/types/ext_graphic_control/seq/0");
       }
       this.flags = this._io.readU1();
       this.delayTime = this._io.readU2le();
       this.transparentIdx = this._io.readU1();
       this.terminator = this._io.readBytes(1);
-      if (!((KaitaiStream.byteArrayCompare(this.terminator, [0]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([0], this.terminator, this._io, "/types/ext_graphic_control/seq/4");
+      if (!((KaitaiStream.byteArrayCompare(this.terminator, new Uint8Array([0])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([0]), this.terminator, this._io, "/types/ext_graphic_control/seq/4");
       }
     }
     Object.defineProperty(ExtGraphicControl.prototype, 'transparentColorFlag', {
@@ -322,90 +225,11 @@ var Gif = (function() {
     return ExtGraphicControl;
   })();
 
-  var Subblock = Gif.Subblock = (function() {
-    function Subblock(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Subblock.prototype._read = function() {
-      this.lenBytes = this._io.readU1();
-      this.bytes = this._io.readBytes(this.lenBytes);
-    }
-
-    return Subblock;
-  })();
-
-  var ApplicationId = Gif.ApplicationId = (function() {
-    function ApplicationId(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    ApplicationId.prototype._read = function() {
-      this.lenBytes = this._io.readU1();
-      if (!(this.lenBytes == 11)) {
-        throw new KaitaiStream.ValidationNotEqualError(11, this.lenBytes, this._io, "/types/application_id/seq/0");
-      }
-      this.applicationIdentifier = KaitaiStream.bytesToStr(this._io.readBytes(8), "ASCII");
-      this.applicationAuthCode = this._io.readBytes(3);
-    }
-
-    return ApplicationId;
-  })();
-
-  var ExtApplication = Gif.ExtApplication = (function() {
-    function ExtApplication(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    ExtApplication.prototype._read = function() {
-      this.applicationId = new ApplicationId(this._io, this, this._root);
-      this.subblocks = [];
-      var i = 0;
-      do {
-        var _ = new Subblock(this._io, this, this._root);
-        this.subblocks.push(_);
-        i++;
-      } while (!(_.lenBytes == 0));
-    }
-
-    return ExtApplication;
-  })();
-
-  var Subblocks = Gif.Subblocks = (function() {
-    function Subblocks(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Subblocks.prototype._read = function() {
-      this.entries = [];
-      var i = 0;
-      do {
-        var _ = new Subblock(this._io, this, this._root);
-        this.entries.push(_);
-        i++;
-      } while (!(_.lenBytes == 0));
-    }
-
-    return Subblocks;
-  })();
-
   var Extension = Gif.Extension = (function() {
     function Extension(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -431,10 +255,186 @@ var Gif = (function() {
   })();
 
   /**
+   * @see {@link https://www.w3.org/Graphics/GIF/spec-gif89a.txt|- section 17}
+   */
+
+  var Header = Gif.Header = (function() {
+    function Header(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Header.prototype._read = function() {
+      this.magic = this._io.readBytes(3);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([71, 73, 70])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([71, 73, 70]), this.magic, this._io, "/types/header/seq/0");
+      }
+      this.version = KaitaiStream.bytesToStr(this._io.readBytes(3), "ASCII");
+    }
+
+    return Header;
+  })();
+
+  /**
+   * @see {@link https://www.w3.org/Graphics/GIF/spec-gif89a.txt|- section 22}
+   */
+
+  var ImageData = Gif.ImageData = (function() {
+    function ImageData(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    ImageData.prototype._read = function() {
+      this.lzwMinCodeSize = this._io.readU1();
+      this.subblocks = new Subblocks(this._io, this, this._root);
+    }
+
+    return ImageData;
+  })();
+
+  var LocalImageDescriptor = Gif.LocalImageDescriptor = (function() {
+    function LocalImageDescriptor(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    LocalImageDescriptor.prototype._read = function() {
+      this.left = this._io.readU2le();
+      this.top = this._io.readU2le();
+      this.width = this._io.readU2le();
+      this.height = this._io.readU2le();
+      this.flags = this._io.readU1();
+      if (this.hasColorTable) {
+        this._raw_localColorTable = this._io.readBytes(this.colorTableSize * 3);
+        var _io__raw_localColorTable = new KaitaiStream(this._raw_localColorTable);
+        this.localColorTable = new ColorTable(_io__raw_localColorTable, this, this._root);
+      }
+      this.imageData = new ImageData(this._io, this, this._root);
+    }
+    Object.defineProperty(LocalImageDescriptor.prototype, 'colorTableSize', {
+      get: function() {
+        if (this._m_colorTableSize !== undefined)
+          return this._m_colorTableSize;
+        this._m_colorTableSize = 2 << (this.flags & 7);
+        return this._m_colorTableSize;
+      }
+    });
+    Object.defineProperty(LocalImageDescriptor.prototype, 'hasColorTable', {
+      get: function() {
+        if (this._m_hasColorTable !== undefined)
+          return this._m_hasColorTable;
+        this._m_hasColorTable = (this.flags & 128) != 0;
+        return this._m_hasColorTable;
+      }
+    });
+    Object.defineProperty(LocalImageDescriptor.prototype, 'hasInterlace', {
+      get: function() {
+        if (this._m_hasInterlace !== undefined)
+          return this._m_hasInterlace;
+        this._m_hasInterlace = (this.flags & 64) != 0;
+        return this._m_hasInterlace;
+      }
+    });
+    Object.defineProperty(LocalImageDescriptor.prototype, 'hasSortedColorTable', {
+      get: function() {
+        if (this._m_hasSortedColorTable !== undefined)
+          return this._m_hasSortedColorTable;
+        this._m_hasSortedColorTable = (this.flags & 32) != 0;
+        return this._m_hasSortedColorTable;
+      }
+    });
+
+    return LocalImageDescriptor;
+  })();
+
+  /**
+   * @see {@link https://www.w3.org/Graphics/GIF/spec-gif89a.txt|- section 18}
+   */
+
+  var LogicalScreenDescriptorStruct = Gif.LogicalScreenDescriptorStruct = (function() {
+    function LogicalScreenDescriptorStruct(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    LogicalScreenDescriptorStruct.prototype._read = function() {
+      this.screenWidth = this._io.readU2le();
+      this.screenHeight = this._io.readU2le();
+      this.flags = this._io.readU1();
+      this.bgColorIndex = this._io.readU1();
+      this.pixelAspectRatio = this._io.readU1();
+    }
+    Object.defineProperty(LogicalScreenDescriptorStruct.prototype, 'colorTableSize', {
+      get: function() {
+        if (this._m_colorTableSize !== undefined)
+          return this._m_colorTableSize;
+        this._m_colorTableSize = 2 << (this.flags & 7);
+        return this._m_colorTableSize;
+      }
+    });
+    Object.defineProperty(LogicalScreenDescriptorStruct.prototype, 'hasColorTable', {
+      get: function() {
+        if (this._m_hasColorTable !== undefined)
+          return this._m_hasColorTable;
+        this._m_hasColorTable = (this.flags & 128) != 0;
+        return this._m_hasColorTable;
+      }
+    });
+
+    return LogicalScreenDescriptorStruct;
+  })();
+
+  var Subblock = Gif.Subblock = (function() {
+    function Subblock(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Subblock.prototype._read = function() {
+      this.lenBytes = this._io.readU1();
+      this.bytes = this._io.readBytes(this.lenBytes);
+    }
+
+    return Subblock;
+  })();
+
+  var Subblocks = Gif.Subblocks = (function() {
+    function Subblocks(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Subblocks.prototype._read = function() {
+      this.entries = [];
+      var i = 0;
+      do {
+        var _ = new Subblock(this._io, this, this._root);
+        this.entries.push(_);
+        i++;
+      } while (!(_.lenBytes == 0));
+    }
+
+    return Subblocks;
+  })();
+
+  /**
    * @see {@link https://www.w3.org/Graphics/GIF/spec-gif89a.txt|- section 18}
    */
 
   return Gif;
 })();
-return Gif;
-}));
+Gif_.Gif = Gif;
+});

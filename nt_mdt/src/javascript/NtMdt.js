@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.NtMdt = factory(root.KaitaiStream);
+    factory(root.NtMdt || (root.NtMdt = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (NtMdt_, KaitaiStream) {
 /**
  * A native file format of NT-MDT scientific software. Usually contains
  * any of:
@@ -69,24 +69,20 @@ var NtMdt = (function() {
     255: "FALSE",
   });
 
-  NtMdt.XmlScanLocation = Object.freeze({
-    HLT: 0,
-    HLB: 1,
-    HRT: 2,
-    HRB: 3,
-    VLT: 4,
-    VLB: 5,
-    VRT: 6,
-    VRB: 7,
+  NtMdt.Consts = Object.freeze({
+    FRAME_MODE_SIZE: 8,
+    FRAME_HEADER_SIZE: 22,
+    AXIS_SCALES_SIZE: 30,
+    FILE_HEADER_SIZE: 32,
+    SPECTRO_VARS_MIN_SIZE: 38,
+    SCAN_VARS_MIN_SIZE: 77,
 
-    0: "HLT",
-    1: "HLB",
-    2: "HRT",
-    3: "HRB",
-    4: "VLT",
-    5: "VLB",
-    6: "VRT",
-    7: "VRB",
+    8: "FRAME_MODE_SIZE",
+    22: "FRAME_HEADER_SIZE",
+    30: "AXIS_SCALES_SIZE",
+    32: "FILE_HEADER_SIZE",
+    38: "SPECTRO_VARS_MIN_SIZE",
+    77: "SCAN_VARS_MIN_SIZE",
   });
 
   NtMdt.DataType = Object.freeze({
@@ -119,18 +115,6 @@ var NtMdt = (function() {
     2: "UINT16",
     4: "UINT32",
     8: "UINT64",
-  });
-
-  NtMdt.XmlParamType = Object.freeze({
-    NONE: 0,
-    LASER_WAVELENGTH: 1,
-    UNITS: 2,
-    DATA_ARRAY: 255,
-
-    0: "NONE",
-    1: "LASER_WAVELENGTH",
-    2: "UNITS",
-    255: "DATA_ARRAY",
   });
 
   NtMdt.SpmMode = Object.freeze({
@@ -187,6 +171,18 @@ var NtMdt = (function() {
     23: "SNOM_REFLECTION",
     24: "SNOM_ALL",
     25: "SNOM",
+  });
+
+  NtMdt.SpmTechnique = Object.freeze({
+    CONTACT_MODE: 0,
+    SEMICONTACT_MODE: 1,
+    TUNNEL_CURRENT: 2,
+    SNOM: 3,
+
+    0: "CONTACT_MODE",
+    1: "SEMICONTACT_MODE",
+    2: "TUNNEL_CURRENT",
+    3: "SNOM",
   });
 
   NtMdt.Unit = Object.freeze({
@@ -293,32 +289,36 @@ var NtMdt = (function() {
     39: "RESERVED_DOS4",
   });
 
-  NtMdt.SpmTechnique = Object.freeze({
-    CONTACT_MODE: 0,
-    SEMICONTACT_MODE: 1,
-    TUNNEL_CURRENT: 2,
-    SNOM: 3,
+  NtMdt.XmlParamType = Object.freeze({
+    NONE: 0,
+    LASER_WAVELENGTH: 1,
+    UNITS: 2,
+    DATA_ARRAY: 255,
 
-    0: "CONTACT_MODE",
-    1: "SEMICONTACT_MODE",
-    2: "TUNNEL_CURRENT",
-    3: "SNOM",
+    0: "NONE",
+    1: "LASER_WAVELENGTH",
+    2: "UNITS",
+    255: "DATA_ARRAY",
   });
 
-  NtMdt.Consts = Object.freeze({
-    FRAME_MODE_SIZE: 8,
-    FRAME_HEADER_SIZE: 22,
-    AXIS_SCALES_SIZE: 30,
-    FILE_HEADER_SIZE: 32,
-    SPECTRO_VARS_MIN_SIZE: 38,
-    SCAN_VARS_MIN_SIZE: 77,
+  NtMdt.XmlScanLocation = Object.freeze({
+    HLT: 0,
+    HLB: 1,
+    HRT: 2,
+    HRB: 3,
+    VLT: 4,
+    VLB: 5,
+    VRT: 6,
+    VRB: 7,
 
-    8: "FRAME_MODE_SIZE",
-    22: "FRAME_HEADER_SIZE",
-    30: "AXIS_SCALES_SIZE",
-    32: "FILE_HEADER_SIZE",
-    38: "SPECTRO_VARS_MIN_SIZE",
-    77: "SCAN_VARS_MIN_SIZE",
+    0: "HLT",
+    1: "HLB",
+    2: "HRT",
+    3: "HRB",
+    4: "VLT",
+    5: "VLB",
+    6: "VRT",
+    7: "VRB",
   });
 
   function NtMdt(_io, _parent, _root) {
@@ -330,8 +330,8 @@ var NtMdt = (function() {
   }
   NtMdt.prototype._read = function() {
     this.signature = this._io.readBytes(4);
-    if (!((KaitaiStream.byteArrayCompare(this.signature, [1, 176, 147, 255]) == 0))) {
-      throw new KaitaiStream.ValidationNotEqualError([1, 176, 147, 255], this.signature, this._io, "/seq/0");
+    if (!((KaitaiStream.byteArrayCompare(this.signature, new Uint8Array([1, 176, 147, 255])) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([1, 176, 147, 255]), this.signature, this._io, "/seq/0");
     }
     this.size = this._io.readU4le();
     this.reserved0 = this._io.readBytes(4);
@@ -342,42 +342,6 @@ var NtMdt = (function() {
     var _io__raw_frames = new KaitaiStream(this._raw_frames);
     this.frames = new Framez(_io__raw_frames, this, this._root);
   }
-
-  var Uuid = NtMdt.Uuid = (function() {
-    function Uuid(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Uuid.prototype._read = function() {
-      this.data = [];
-      for (var i = 0; i < 16; i++) {
-        this.data.push(this._io.readU1());
-      }
-    }
-
-    return Uuid;
-  })();
-
-  var Framez = NtMdt.Framez = (function() {
-    function Framez(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Framez.prototype._read = function() {
-      this.frames = [];
-      for (var i = 0; i < (this._root.lastFrame + 1); i++) {
-        this.frames.push(new Frame(this._io, this, this._root));
-      }
-    }
-
-    return Framez;
-  })();
 
   var Frame = NtMdt.Frame = (function() {
     Frame.FrameType = Object.freeze({
@@ -403,22 +367,128 @@ var NtMdt = (function() {
     function Frame(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     Frame.prototype._read = function() {
       this.size = this._io.readU4le();
-      this._raw_main = this._io.readBytes((this.size - 4));
+      this._raw_main = this._io.readBytes(this.size - 4);
       var _io__raw_main = new KaitaiStream(this._raw_main);
       this.main = new FrameMain(_io__raw_main, this, this._root);
     }
+
+    var AxisScale = Frame.AxisScale = (function() {
+      function AxisScale(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+
+        this._read();
+      }
+      AxisScale.prototype._read = function() {
+        this.offset = this._io.readF4le();
+        this.step = this._io.readF4le();
+        this.unit = this._io.readS2le();
+      }
+
+      /**
+       * x_scale->offset = gwy_get_gfloat_le(&p);# r0 (physical units)
+       */
+
+      /**
+       * x_scale->step = gwy_get_gfloat_le(&p); r (physical units) x_scale->step = fabs(x_scale->step); if (!x_scale->step) {
+       *   g_warning("x_scale.step == 0, changing to 1");
+       *   x_scale->step = 1.0;
+       * }
+       */
+
+      /**
+       * U
+       */
+
+      return AxisScale;
+    })();
+
+    var DateTime = Frame.DateTime = (function() {
+      function DateTime(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+
+        this._read();
+      }
+      DateTime.prototype._read = function() {
+        this.date = new Date(this._io, this, this._root);
+        this.time = new Time(this._io, this, this._root);
+      }
+
+      var Date = DateTime.Date = (function() {
+        function Date(_io, _parent, _root) {
+          this._io = _io;
+          this._parent = _parent;
+          this._root = _root;
+
+          this._read();
+        }
+        Date.prototype._read = function() {
+          this.year = this._io.readU2le();
+          this.month = this._io.readU2le();
+          this.day = this._io.readU2le();
+        }
+
+        /**
+         * h_yea
+         */
+
+        /**
+         * h_mon
+         */
+
+        /**
+         * h_day
+         */
+
+        return Date;
+      })();
+
+      var Time = DateTime.Time = (function() {
+        function Time(_io, _parent, _root) {
+          this._io = _io;
+          this._parent = _parent;
+          this._root = _root;
+
+          this._read();
+        }
+        Time.prototype._read = function() {
+          this.hour = this._io.readU2le();
+          this.min = this._io.readU2le();
+          this.sec = this._io.readU2le();
+        }
+
+        /**
+         * h_h
+         */
+
+        /**
+         * h_m
+         */
+
+        /**
+         * h_s
+         */
+
+        return Time;
+      })();
+
+      return DateTime;
+    })();
 
     var Dots = Frame.Dots = (function() {
       function Dots(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -437,64 +507,11 @@ var NtMdt = (function() {
         }
       }
 
-      var DotsHeader = Dots.DotsHeader = (function() {
-        function DotsHeader(_io, _parent, _root) {
-          this._io = _io;
-          this._parent = _parent;
-          this._root = _root || this;
-
-          this._read();
-        }
-        DotsHeader.prototype._read = function() {
-          this.headerSize = this._io.readS4le();
-          this._raw_header = this._io.readBytes(this.headerSize);
-          var _io__raw_header = new KaitaiStream(this._raw_header);
-          this.header = new Header(_io__raw_header, this, this._root);
-        }
-
-        var Header = DotsHeader.Header = (function() {
-          function Header(_io, _parent, _root) {
-            this._io = _io;
-            this._parent = _parent;
-            this._root = _root || this;
-
-            this._read();
-          }
-          Header.prototype._read = function() {
-            this.coordSize = this._io.readS4le();
-            this.version = this._io.readS4le();
-            this.xyunits = this._io.readS2le();
-          }
-
-          return Header;
-        })();
-
-        return DotsHeader;
-      })();
-
-      var DotsData = Dots.DotsData = (function() {
-        function DotsData(_io, _parent, _root) {
-          this._io = _io;
-          this._parent = _parent;
-          this._root = _root || this;
-
-          this._read();
-        }
-        DotsData.prototype._read = function() {
-          this.coordX = this._io.readF4le();
-          this.coordY = this._io.readF4le();
-          this.forwardSize = this._io.readS4le();
-          this.backwardSize = this._io.readS4le();
-        }
-
-        return DotsData;
-      })();
-
       var DataLinez = Dots.DataLinez = (function() {
         function DataLinez(_io, _parent, _root, index) {
           this._io = _io;
           this._parent = _parent;
-          this._root = _root || this;
+          this._root = _root;
           this.index = index;
 
           this._read();
@@ -513,74 +530,67 @@ var NtMdt = (function() {
         return DataLinez;
       })();
 
-      return Dots;
-    })();
+      var DotsData = Dots.DotsData = (function() {
+        function DotsData(_io, _parent, _root) {
+          this._io = _io;
+          this._parent = _parent;
+          this._root = _root;
 
-    var FrameMain = Frame.FrameMain = (function() {
-      function FrameMain(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      FrameMain.prototype._read = function() {
-        this.type = this._io.readU2le();
-        this.version = new Version(this._io, this, this._root);
-        this.dateTime = new DateTime(this._io, this, this._root);
-        this.varSize = this._io.readU2le();
-        switch (this.type) {
-        case NtMdt.Frame.FrameType.MDA:
-          this._raw_frameData = this._io.readBytesFull();
-          var _io__raw_frameData = new KaitaiStream(this._raw_frameData);
-          this.frameData = new FdMetaData(_io__raw_frameData, this, this._root);
-          break;
-        case NtMdt.Frame.FrameType.CURVES_NEW:
-          this._raw_frameData = this._io.readBytesFull();
-          var _io__raw_frameData = new KaitaiStream(this._raw_frameData);
-          this.frameData = new FdCurvesNew(_io__raw_frameData, this, this._root);
-          break;
-        case NtMdt.Frame.FrameType.CURVES:
-          this._raw_frameData = this._io.readBytesFull();
-          var _io__raw_frameData = new KaitaiStream(this._raw_frameData);
-          this.frameData = new FdSpectroscopy(_io__raw_frameData, this, this._root);
-          break;
-        case NtMdt.Frame.FrameType.SPECTROSCOPY:
-          this._raw_frameData = this._io.readBytesFull();
-          var _io__raw_frameData = new KaitaiStream(this._raw_frameData);
-          this.frameData = new FdSpectroscopy(_io__raw_frameData, this, this._root);
-          break;
-        case NtMdt.Frame.FrameType.SCANNED:
-          this._raw_frameData = this._io.readBytesFull();
-          var _io__raw_frameData = new KaitaiStream(this._raw_frameData);
-          this.frameData = new FdScanned(_io__raw_frameData, this, this._root);
-          break;
-        default:
-          this.frameData = this._io.readBytesFull();
-          break;
+          this._read();
         }
-      }
+        DotsData.prototype._read = function() {
+          this.coordX = this._io.readF4le();
+          this.coordY = this._io.readF4le();
+          this.forwardSize = this._io.readS4le();
+          this.backwardSize = this._io.readS4le();
+        }
 
-      /**
-       * h_what
-       */
+        return DotsData;
+      })();
 
-      /**
-       * h_am, v6 and older only
-       */
+      var DotsHeader = Dots.DotsHeader = (function() {
+        function DotsHeader(_io, _parent, _root) {
+          this._io = _io;
+          this._parent = _parent;
+          this._root = _root;
 
-      /**
-       * 
-       */
+          this._read();
+        }
+        DotsHeader.prototype._read = function() {
+          this.headerSize = this._io.readS4le();
+          this._raw_header = this._io.readBytes(this.headerSize);
+          var _io__raw_header = new KaitaiStream(this._raw_header);
+          this.header = new Header(_io__raw_header, this, this._root);
+        }
 
-      return FrameMain;
+        var Header = DotsHeader.Header = (function() {
+          function Header(_io, _parent, _root) {
+            this._io = _io;
+            this._parent = _parent;
+            this._root = _root;
+
+            this._read();
+          }
+          Header.prototype._read = function() {
+            this.coordSize = this._io.readS4le();
+            this.version = this._io.readS4le();
+            this.xyunits = this._io.readS2le();
+          }
+
+          return Header;
+        })();
+
+        return DotsHeader;
+      })();
+
+      return Dots;
     })();
 
     var FdCurvesNew = Frame.FdCurvesNew = (function() {
       function FdCurvesNew(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -604,7 +614,7 @@ var NtMdt = (function() {
         function BlockDescr(_io, _parent, _root) {
           this._io = _io;
           this._parent = _parent;
-          this._root = _root || this;
+          this._root = _root;
 
           this._read();
         }
@@ -623,7 +633,7 @@ var NtMdt = (function() {
       function FdMetaData(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -660,80 +670,11 @@ var NtMdt = (function() {
         }
       }
 
-      var Image = FdMetaData.Image = (function() {
-        function Image(_io, _parent, _root) {
-          this._io = _io;
-          this._parent = _parent;
-          this._root = _root || this;
-
-          this._read();
-        }
-        Image.prototype._read = function() {
-          this.image = [];
-          var i = 0;
-          while (!this._io.isEof()) {
-            this.image.push(new Vec(this._io, this, this._root));
-            i++;
-          }
-        }
-
-        var Vec = Image.Vec = (function() {
-          function Vec(_io, _parent, _root) {
-            this._io = _io;
-            this._parent = _parent;
-            this._root = _root || this;
-
-            this._read();
-          }
-          Vec.prototype._read = function() {
-            this.items = [];
-            for (var i = 0; i < this._parent._parent.nMesurands; i++) {
-              switch (this._parent._parent.mesurands[i].dataType) {
-              case NtMdt.DataType.UINT64:
-                this.items.push(this._io.readU8le());
-                break;
-              case NtMdt.DataType.UINT8:
-                this.items.push(this._io.readU1());
-                break;
-              case NtMdt.DataType.FLOAT32:
-                this.items.push(this._io.readF4le());
-                break;
-              case NtMdt.DataType.INT8:
-                this.items.push(this._io.readS1());
-                break;
-              case NtMdt.DataType.UINT16:
-                this.items.push(this._io.readU2le());
-                break;
-              case NtMdt.DataType.INT64:
-                this.items.push(this._io.readS8le());
-                break;
-              case NtMdt.DataType.UINT32:
-                this.items.push(this._io.readU4le());
-                break;
-              case NtMdt.DataType.FLOAT64:
-                this.items.push(this._io.readF8le());
-                break;
-              case NtMdt.DataType.INT16:
-                this.items.push(this._io.readS2le());
-                break;
-              case NtMdt.DataType.INT32:
-                this.items.push(this._io.readS4le());
-                break;
-              }
-            }
-          }
-
-          return Vec;
-        })();
-
-        return Image;
-      })();
-
       var Calibration = FdMetaData.Calibration = (function() {
         function Calibration(_io, _parent, _root) {
           this._io = _io;
           this._parent = _parent;
-          this._root = _root || this;
+          this._root = _root;
 
           this._read();
         }
@@ -752,21 +693,90 @@ var NtMdt = (function() {
           this.maxIndex = this._io.readU8le();
           this.dataType = this._io.readS4le();
           this.lenAuthor = this._io.readU4le();
-          this.name = KaitaiStream.bytesToStr(this._io.readBytes(this.lenName), "utf-8");
-          this.comment = KaitaiStream.bytesToStr(this._io.readBytes(this.lenComment), "utf-8");
-          this.unit = KaitaiStream.bytesToStr(this._io.readBytes(this.lenUnit), "utf-8");
-          this.author = KaitaiStream.bytesToStr(this._io.readBytes(this.lenAuthor), "utf-8");
+          this.name = KaitaiStream.bytesToStr(this._io.readBytes(this.lenName), "UTF-8");
+          this.comment = KaitaiStream.bytesToStr(this._io.readBytes(this.lenComment), "UTF-8");
+          this.unit = KaitaiStream.bytesToStr(this._io.readBytes(this.lenUnit), "UTF-8");
+          this.author = KaitaiStream.bytesToStr(this._io.readBytes(this.lenAuthor), "UTF-8");
         }
         Object.defineProperty(Calibration.prototype, 'count', {
           get: function() {
             if (this._m_count !== undefined)
               return this._m_count;
-            this._m_count = ((this.maxIndex - this.minIndex) + 1);
+            this._m_count = (this.maxIndex - this.minIndex) + 1;
             return this._m_count;
           }
         });
 
         return Calibration;
+      })();
+
+      var Image = FdMetaData.Image = (function() {
+        function Image(_io, _parent, _root) {
+          this._io = _io;
+          this._parent = _parent;
+          this._root = _root;
+
+          this._read();
+        }
+        Image.prototype._read = function() {
+          this.image = [];
+          var i = 0;
+          while (!this._io.isEof()) {
+            this.image.push(new Vec(this._io, this, this._root));
+            i++;
+          }
+        }
+
+        var Vec = Image.Vec = (function() {
+          function Vec(_io, _parent, _root) {
+            this._io = _io;
+            this._parent = _parent;
+            this._root = _root;
+
+            this._read();
+          }
+          Vec.prototype._read = function() {
+            this.items = [];
+            for (var i = 0; i < this._parent._parent.nMesurands; i++) {
+              switch (this._parent._parent.mesurands[i].dataType) {
+              case NtMdt.DataType.FLOAT32:
+                this.items.push(this._io.readF4le());
+                break;
+              case NtMdt.DataType.FLOAT64:
+                this.items.push(this._io.readF8le());
+                break;
+              case NtMdt.DataType.INT16:
+                this.items.push(this._io.readS2le());
+                break;
+              case NtMdt.DataType.INT32:
+                this.items.push(this._io.readS4le());
+                break;
+              case NtMdt.DataType.INT64:
+                this.items.push(this._io.readS8le());
+                break;
+              case NtMdt.DataType.INT8:
+                this.items.push(this._io.readS1());
+                break;
+              case NtMdt.DataType.UINT16:
+                this.items.push(this._io.readU2le());
+                break;
+              case NtMdt.DataType.UINT32:
+                this.items.push(this._io.readU4le());
+                break;
+              case NtMdt.DataType.UINT64:
+                this.items.push(this._io.readU8le());
+                break;
+              case NtMdt.DataType.UINT8:
+                this.items.push(this._io.readU1());
+                break;
+              }
+            }
+          }
+
+          return Vec;
+        })();
+
+        return Image;
       })();
       Object.defineProperty(FdMetaData.prototype, 'image', {
         get: function() {
@@ -785,188 +795,7 @@ var NtMdt = (function() {
       return FdMetaData;
     })();
 
-    var FdSpectroscopy = Frame.FdSpectroscopy = (function() {
-      function FdSpectroscopy(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      FdSpectroscopy.prototype._read = function() {
-        this._raw_vars = this._io.readBytes(this._parent.varSize);
-        var _io__raw_vars = new KaitaiStream(this._raw_vars);
-        this.vars = new Vars(_io__raw_vars, this, this._root);
-        this.fmMode = this._io.readU2le();
-        this.fmXres = this._io.readU2le();
-        this.fmYres = this._io.readU2le();
-        this.dots = new Dots(this._io, this, this._root);
-        this.data = [];
-        for (var i = 0; i < (this.fmXres * this.fmYres); i++) {
-          this.data.push(this._io.readS2le());
-        }
-        this.title = new Title(this._io, this, this._root);
-        this.xml = new Xml(this._io, this, this._root);
-      }
-
-      var Vars = FdSpectroscopy.Vars = (function() {
-        function Vars(_io, _parent, _root) {
-          this._io = _io;
-          this._parent = _parent;
-          this._root = _root || this;
-
-          this._read();
-        }
-        Vars.prototype._read = function() {
-          this.xScale = new AxisScale(this._io, this, this._root);
-          this.yScale = new AxisScale(this._io, this, this._root);
-          this.zScale = new AxisScale(this._io, this, this._root);
-          this.spMode = this._io.readU2le();
-          this.spFilter = this._io.readU2le();
-          this.uBegin = this._io.readF4le();
-          this.uEnd = this._io.readF4le();
-          this.zUp = this._io.readS2le();
-          this.zDown = this._io.readS2le();
-          this.spAveraging = this._io.readU2le();
-          this.spRepeat = this._io.readU1();
-          this.spBack = this._io.readU1();
-          this.sp4nx = this._io.readS2le();
-          this.spOsc = this._io.readU1();
-          this.spN4 = this._io.readU1();
-          this.sp4x0 = this._io.readF4le();
-          this.sp4xr = this._io.readF4le();
-          this.sp4u = this._io.readS2le();
-          this.sp4i = this._io.readS2le();
-          this.spNx = this._io.readS2le();
-        }
-
-        return Vars;
-      })();
-
-      return FdSpectroscopy;
-    })();
-
-    var DateTime = Frame.DateTime = (function() {
-      function DateTime(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      DateTime.prototype._read = function() {
-        this.date = new Date(this._io, this, this._root);
-        this.time = new Time(this._io, this, this._root);
-      }
-
-      var Date = DateTime.Date = (function() {
-        function Date(_io, _parent, _root) {
-          this._io = _io;
-          this._parent = _parent;
-          this._root = _root || this;
-
-          this._read();
-        }
-        Date.prototype._read = function() {
-          this.year = this._io.readU2le();
-          this.month = this._io.readU2le();
-          this.day = this._io.readU2le();
-        }
-
-        /**
-         * h_yea
-         */
-
-        /**
-         * h_mon
-         */
-
-        /**
-         * h_day
-         */
-
-        return Date;
-      })();
-
-      var Time = DateTime.Time = (function() {
-        function Time(_io, _parent, _root) {
-          this._io = _io;
-          this._parent = _parent;
-          this._root = _root || this;
-
-          this._read();
-        }
-        Time.prototype._read = function() {
-          this.hour = this._io.readU2le();
-          this.min = this._io.readU2le();
-          this.sec = this._io.readU2le();
-        }
-
-        /**
-         * h_h
-         */
-
-        /**
-         * h_m
-         */
-
-        /**
-         * h_s
-         */
-
-        return Time;
-      })();
-
-      return DateTime;
-    })();
-
-    var AxisScale = Frame.AxisScale = (function() {
-      function AxisScale(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      AxisScale.prototype._read = function() {
-        this.offset = this._io.readF4le();
-        this.step = this._io.readF4le();
-        this.unit = this._io.readS2le();
-      }
-
-      /**
-       * x_scale->offset = gwy_get_gfloat_le(&p);# r0 (physical units)
-       */
-
-      /**
-       * x_scale->step = gwy_get_gfloat_le(&p); r (physical units) x_scale->step = fabs(x_scale->step); if (!x_scale->step) {
-       *   g_warning("x_scale.step == 0, changing to 1");
-       *   x_scale->step = 1.0;
-       * }
-       */
-
-      /**
-       * U
-       */
-
-      return AxisScale;
-    })();
-
     var FdScanned = Frame.FdScanned = (function() {
-      FdScanned.Mode = Object.freeze({
-        STM: 0,
-        AFM: 1,
-        UNKNOWN2: 2,
-        UNKNOWN3: 3,
-        UNKNOWN4: 4,
-
-        0: "STM",
-        1: "AFM",
-        2: "UNKNOWN2",
-        3: "UNKNOWN3",
-        4: "UNKNOWN4",
-      });
-
       FdScanned.InputSignal = Object.freeze({
         EXTENSION_SLOT: 0,
         BIAS_V: 1,
@@ -987,10 +816,24 @@ var NtMdt = (function() {
         2: "SLOPE",
       });
 
+      FdScanned.Mode = Object.freeze({
+        STM: 0,
+        AFM: 1,
+        UNKNOWN2: 2,
+        UNKNOWN3: 3,
+        UNKNOWN4: 4,
+
+        0: "STM",
+        1: "AFM",
+        2: "UNKNOWN2",
+        3: "UNKNOWN3",
+        4: "UNKNOWN4",
+      });
+
       function FdScanned(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -1018,18 +861,65 @@ var NtMdt = (function() {
         this.fmYres = this._io.readU2le();
         this.dots = new Dots(this._io, this, this._root);
         this.image = [];
-        for (var i = 0; i < (this.fmXres * this.fmYres); i++) {
+        for (var i = 0; i < this.fmXres * this.fmYres; i++) {
           this.image.push(this._io.readS2le());
         }
         this.title = new Title(this._io, this, this._root);
         this.xml = new Xml(this._io, this, this._root);
       }
 
+      var Dot = FdScanned.Dot = (function() {
+        function Dot(_io, _parent, _root) {
+          this._io = _io;
+          this._parent = _parent;
+          this._root = _root;
+
+          this._read();
+        }
+        Dot.prototype._read = function() {
+          this.x = this._io.readS2le();
+          this.y = this._io.readS2le();
+        }
+
+        return Dot;
+      })();
+
+      var ScanDir = FdScanned.ScanDir = (function() {
+        function ScanDir(_io, _parent, _root) {
+          this._io = _io;
+          this._parent = _parent;
+          this._root = _root;
+
+          this._read();
+        }
+        ScanDir.prototype._read = function() {
+          this.unkn = this._io.readBitsIntBe(4);
+          this.doublePass = this._io.readBitsIntBe(1) != 0;
+          this.bottom = this._io.readBitsIntBe(1) != 0;
+          this.left = this._io.readBitsIntBe(1) != 0;
+          this.horizontal = this._io.readBitsIntBe(1) != 0;
+        }
+
+        /**
+         * Bottom - 1 Top - 0
+         */
+
+        /**
+         * Left - 1 Right - 0
+         */
+
+        /**
+         * Horizontal - 1 Vertical - 0
+         */
+
+        return ScanDir;
+      })();
+
       var Vars = FdScanned.Vars = (function() {
         function Vars(_io, _parent, _root) {
           this._io = _io;
           this._parent = _parent;
-          this._root = _root || this;
+          this._root = _root;
 
           this._read();
         }
@@ -1143,53 +1033,6 @@ var NtMdt = (function() {
         return Vars;
       })();
 
-      var Dot = FdScanned.Dot = (function() {
-        function Dot(_io, _parent, _root) {
-          this._io = _io;
-          this._parent = _parent;
-          this._root = _root || this;
-
-          this._read();
-        }
-        Dot.prototype._read = function() {
-          this.x = this._io.readS2le();
-          this.y = this._io.readS2le();
-        }
-
-        return Dot;
-      })();
-
-      var ScanDir = FdScanned.ScanDir = (function() {
-        function ScanDir(_io, _parent, _root) {
-          this._io = _io;
-          this._parent = _parent;
-          this._root = _root || this;
-
-          this._read();
-        }
-        ScanDir.prototype._read = function() {
-          this.unkn = this._io.readBitsIntBe(4);
-          this.doublePass = this._io.readBitsIntBe(1) != 0;
-          this.bottom = this._io.readBitsIntBe(1) != 0;
-          this.left = this._io.readBitsIntBe(1) != 0;
-          this.horizontal = this._io.readBitsIntBe(1) != 0;
-        }
-
-        /**
-         * Bottom - 1 Top - 0
-         */
-
-        /**
-         * Left - 1 Right - 0
-         */
-
-        /**
-         * Horizontal - 1 Vertical - 0
-         */
-
-        return ScanDir;
-      })();
-
       /**
        * s_oem
        */
@@ -1225,6 +1068,127 @@ var NtMdt = (function() {
       return FdScanned;
     })();
 
+    var FdSpectroscopy = Frame.FdSpectroscopy = (function() {
+      function FdSpectroscopy(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+
+        this._read();
+      }
+      FdSpectroscopy.prototype._read = function() {
+        this._raw_vars = this._io.readBytes(this._parent.varSize);
+        var _io__raw_vars = new KaitaiStream(this._raw_vars);
+        this.vars = new Vars(_io__raw_vars, this, this._root);
+        this.fmMode = this._io.readU2le();
+        this.fmXres = this._io.readU2le();
+        this.fmYres = this._io.readU2le();
+        this.dots = new Dots(this._io, this, this._root);
+        this.data = [];
+        for (var i = 0; i < this.fmXres * this.fmYres; i++) {
+          this.data.push(this._io.readS2le());
+        }
+        this.title = new Title(this._io, this, this._root);
+        this.xml = new Xml(this._io, this, this._root);
+      }
+
+      var Vars = FdSpectroscopy.Vars = (function() {
+        function Vars(_io, _parent, _root) {
+          this._io = _io;
+          this._parent = _parent;
+          this._root = _root;
+
+          this._read();
+        }
+        Vars.prototype._read = function() {
+          this.xScale = new AxisScale(this._io, this, this._root);
+          this.yScale = new AxisScale(this._io, this, this._root);
+          this.zScale = new AxisScale(this._io, this, this._root);
+          this.spMode = this._io.readU2le();
+          this.spFilter = this._io.readU2le();
+          this.uBegin = this._io.readF4le();
+          this.uEnd = this._io.readF4le();
+          this.zUp = this._io.readS2le();
+          this.zDown = this._io.readS2le();
+          this.spAveraging = this._io.readU2le();
+          this.spRepeat = this._io.readU1();
+          this.spBack = this._io.readU1();
+          this.sp4nx = this._io.readS2le();
+          this.spOsc = this._io.readU1();
+          this.spN4 = this._io.readU1();
+          this.sp4x0 = this._io.readF4le();
+          this.sp4xr = this._io.readF4le();
+          this.sp4u = this._io.readS2le();
+          this.sp4i = this._io.readS2le();
+          this.spNx = this._io.readS2le();
+        }
+
+        return Vars;
+      })();
+
+      return FdSpectroscopy;
+    })();
+
+    var FrameMain = Frame.FrameMain = (function() {
+      function FrameMain(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+
+        this._read();
+      }
+      FrameMain.prototype._read = function() {
+        this.type = this._io.readU2le();
+        this.version = new Version(this._io, this, this._root);
+        this.dateTime = new DateTime(this._io, this, this._root);
+        this.varSize = this._io.readU2le();
+        switch (this.type) {
+        case NtMdt.Frame.FrameType.CURVES:
+          this._raw_frameData = this._io.readBytesFull();
+          var _io__raw_frameData = new KaitaiStream(this._raw_frameData);
+          this.frameData = new FdSpectroscopy(_io__raw_frameData, this, this._root);
+          break;
+        case NtMdt.Frame.FrameType.CURVES_NEW:
+          this._raw_frameData = this._io.readBytesFull();
+          var _io__raw_frameData = new KaitaiStream(this._raw_frameData);
+          this.frameData = new FdCurvesNew(_io__raw_frameData, this, this._root);
+          break;
+        case NtMdt.Frame.FrameType.MDA:
+          this._raw_frameData = this._io.readBytesFull();
+          var _io__raw_frameData = new KaitaiStream(this._raw_frameData);
+          this.frameData = new FdMetaData(_io__raw_frameData, this, this._root);
+          break;
+        case NtMdt.Frame.FrameType.SCANNED:
+          this._raw_frameData = this._io.readBytesFull();
+          var _io__raw_frameData = new KaitaiStream(this._raw_frameData);
+          this.frameData = new FdScanned(_io__raw_frameData, this, this._root);
+          break;
+        case NtMdt.Frame.FrameType.SPECTROSCOPY:
+          this._raw_frameData = this._io.readBytesFull();
+          var _io__raw_frameData = new KaitaiStream(this._raw_frameData);
+          this.frameData = new FdSpectroscopy(_io__raw_frameData, this, this._root);
+          break;
+        default:
+          this.frameData = this._io.readBytesFull();
+          break;
+        }
+      }
+
+      /**
+       * h_what
+       */
+
+      /**
+       * h_am, v6 and older only
+       */
+
+      /**
+       * 
+       */
+
+      return FrameMain;
+    })();
+
     /**
      * h_sz
      */
@@ -1232,11 +1196,63 @@ var NtMdt = (function() {
     return Frame;
   })();
 
+  var Framez = NtMdt.Framez = (function() {
+    function Framez(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Framez.prototype._read = function() {
+      this.frames = [];
+      for (var i = 0; i < this._root.lastFrame + 1; i++) {
+        this.frames.push(new Frame(this._io, this, this._root));
+      }
+    }
+
+    return Framez;
+  })();
+
+  var Title = NtMdt.Title = (function() {
+    function Title(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Title.prototype._read = function() {
+      this.titleLen = this._io.readU4le();
+      this.title = KaitaiStream.bytesToStr(this._io.readBytes(this.titleLen), "windows-1251");
+    }
+
+    return Title;
+  })();
+
+  var Uuid = NtMdt.Uuid = (function() {
+    function Uuid(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Uuid.prototype._read = function() {
+      this.data = [];
+      for (var i = 0; i < 16; i++) {
+        this.data.push(this._io.readU1());
+      }
+    }
+
+    return Uuid;
+  })();
+
   var Version = NtMdt.Version = (function() {
     function Version(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -1252,7 +1268,7 @@ var NtMdt = (function() {
     function Xml(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -1262,22 +1278,6 @@ var NtMdt = (function() {
     }
 
     return Xml;
-  })();
-
-  var Title = NtMdt.Title = (function() {
-    function Title(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Title.prototype._read = function() {
-      this.titleLen = this._io.readU4le();
-      this.title = KaitaiStream.bytesToStr(this._io.readBytes(this.titleLen), "cp1251");
-    }
-
-    return Title;
   })();
 
   /**
@@ -1290,5 +1290,5 @@ var NtMdt = (function() {
 
   return NtMdt;
 })();
-return NtMdt;
-}));
+NtMdt_.NtMdt = NtMdt;
+});

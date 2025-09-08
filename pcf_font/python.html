@@ -212,6 +212,11 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="Portable Compiled Format (PCF) font parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="Portable Compiled Format (PCF) font parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -242,7 +247,17 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="Portable Compiled Format (PCF) font parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="Portable Compiled Format (PCF) font parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="Portable Compiled Format (PCF) font parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -317,16 +332,17 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
 
         <div class="row">
             <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+<span class="c1"># type: ignore</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">kaitaistruct</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">kaitaistruct</span><span class="w"> </span><span class="kn">import</span> <span class="n">KaitaiStruct</span><span class="p">,</span> <span class="n">KaitaiStream</span><span class="p">,</span> <span class="n">BytesIO</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
-
-
-<span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">kaitaistruct</span><span class="p">,</span> <span class="s1">&#39;API_VERSION&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">):</span>
-    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">kaitaistruct</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span>
-
 <span class="kn">import</span><span class="w"> </span><span class="nn">bytes_with_io</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">IntEnum</span>
+
+
+<span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">kaitaistruct</span><span class="p">,</span> <span class="s1">&#39;API_VERSION&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">kaitaistruct</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span>
+
 <span class="k">class</span><span class="w"> </span><span class="nc">PcfFont</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Portable Compiled Format (PCF) font is a bitmap font format</span>
 <span class="sd">    originating from X11 Window System. It matches BDF format (which is</span>
@@ -345,7 +361,7 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
 <span class="sd">       Source - https://fontforge.org/docs/techref/pcf-format.html</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">class</span><span class="w"> </span><span class="nc">Types</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="k">class</span><span class="w"> </span><span class="nc">Types</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
         <span class="n">properties</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="n">accelerators</span> <span class="o">=</span> <span class="mi">2</span>
         <span class="n">metrics</span> <span class="o">=</span> <span class="mi">4</span>
@@ -356,9 +372,9 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
         <span class="n">glyph_names</span> <span class="o">=</span> <span class="mi">128</span>
         <span class="n">bdf_accelerators</span> <span class="o">=</span> <span class="mi">256</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PcfFont</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="ow">or</span> <span class="bp">self</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -371,15 +387,55 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
             <span class="bp">self</span><span class="o">.</span><span class="n">tables</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">PcfFont</span><span class="o">.</span><span class="n">Table</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">))</span>
 
 
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tables</span><span class="p">)):</span>
+            <span class="k">pass</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tables</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">Format</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Table format specifier, always 4 bytes. Original implementation treats</span>
+<span class="sd">        it as always little-endian and makes liberal use of bitmasking to parse</span>
+<span class="sd">        various parts of it.</span>
+<span class="sd">        </span>
+<span class="sd">        TODO: this format specification recognizes endianness and bit</span>
+<span class="sd">        order format bits, but it does not really takes any parsing</span>
+<span class="sd">        decisions based on them.</span>
+<span class="sd">        </span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Source - https://fontforge.org/docs/techref/pcf-format.html#file-header</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">PcfFont</span><span class="o">.</span><span class="n">Format</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">padding1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">scan_unit_mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">is_most_significant_bit_first</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">is_big_endian</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">glyph_pad_mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">padding</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+
+
     <span class="k">class</span><span class="w"> </span><span class="nc">Table</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Table offers a offset + length pointer to a particular</span>
 <span class="sd">        table. &quot;Type&quot; of table references certain enum. Applications can</span>
 <span class="sd">        ignore enum values which they don&#39;t support.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">PcfFont</span><span class="o">.</span><span class="n">Table</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -388,24 +444,172 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
             <span class="bp">self</span><span class="o">.</span><span class="n">len_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ofs_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
 
-        <span class="k">class</span><span class="w"> </span><span class="nc">Swidths</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-<span class="w">            </span><span class="sd">&quot;&quot;&quot;Table containing scalable widths of characters.</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+            <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">body</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_body&#39;</span><span class="p">):</span>
+                <span class="k">pass</span>
+                <span class="n">_on</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span>
+                <span class="k">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">PcfFont</span><span class="o">.</span><span class="n">Types</span><span class="o">.</span><span class="n">bdf_encodings</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_m_body</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">PcfFont</span><span class="o">.</span><span class="n">Types</span><span class="o">.</span><span class="n">bitmaps</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_m_body</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">PcfFont</span><span class="o">.</span><span class="n">Types</span><span class="o">.</span><span class="n">glyph_names</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_m_body</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">PcfFont</span><span class="o">.</span><span class="n">Types</span><span class="o">.</span><span class="n">properties</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_m_body</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+                <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">PcfFont</span><span class="o">.</span><span class="n">Types</span><span class="o">.</span><span class="n">swidths</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_m_body</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">pass</span>
+
+
+        <span class="k">class</span><span class="w"> </span><span class="nc">BdfEncodings</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Table that allows mapping of character codes to glyphs present in the</span>
+<span class="sd">            font. Supports 1-byte and 2-byte character codes.</span>
+<span class="sd">            </span>
+<span class="sd">            Note that this mapping is agnostic to character encoding itself - it</span>
+<span class="sd">            can represent ASCII, Unicode (ISO/IEC 10646), various single-byte</span>
+<span class="sd">            national encodings, etc. If application cares about it, normally</span>
+<span class="sd">            encoding will be specified in `properties` table, in the properties named</span>
+<span class="sd">            `CHARSET_REGISTRY` / `CHARSET_ENCODING`.</span>
 <span class="sd">            </span>
 <span class="sd">            .. seealso::</span>
-<span class="sd">               Source - https://fontforge.org/docs/techref/pcf-format.html#the-scalable-widths-table</span>
+<span class="sd">               Source - https://fontforge.org/docs/techref/pcf-format.html#the-encoding-table</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+                <span class="nb">super</span><span class="p">(</span><span class="n">PcfFont</span><span class="o">.</span><span class="n">Table</span><span class="o">.</span><span class="n">BdfEncodings</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+            <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">PcfFont</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">min_char_or_byte2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">max_char_or_byte2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">min_byte1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">max_byte1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">default_char</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">glyph_indexes</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(((</span><span class="bp">self</span><span class="o">.</span><span class="n">max_char_or_byte2</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_char_or_byte2</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">max_byte1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_byte1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">glyph_indexes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">())</span>
+
+
+
+            <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">glyph_indexes</span><span class="p">)):</span>
+                    <span class="k">pass</span>
+
+
+
+        <span class="k">class</span><span class="w"> </span><span class="nc">Bitmaps</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Table containing uncompressed glyph bitmaps.</span>
+<span class="sd">            </span>
+<span class="sd">            .. seealso::</span>
+<span class="sd">               Source - https://fontforge.org/docs/techref/pcf-format.html#the-bitmap-table</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                <span class="nb">super</span><span class="p">(</span><span class="n">PcfFont</span><span class="o">.</span><span class="n">Table</span><span class="o">.</span><span class="n">Bitmaps</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
             <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">PcfFont</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">num_glyphs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">swidths</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">offsets</span> <span class="o">=</span> <span class="p">[]</span>
                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_glyphs</span><span class="p">):</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">swidths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">())</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">offsets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">())</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">bitmap_sizes</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">bitmap_sizes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">())</span>
+
+
+
+            <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">offsets</span><span class="p">)):</span>
+                    <span class="k">pass</span>
+
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bitmap_sizes</span><span class="p">)):</span>
+                    <span class="k">pass</span>
+
+
+
+        <span class="k">class</span><span class="w"> </span><span class="nc">GlyphNames</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Table containing character names for every glyph.</span>
+<span class="sd">            </span>
+<span class="sd">            .. seealso::</span>
+<span class="sd">               Source - https://fontforge.org/docs/techref/pcf-format.html#the-glyph-names-table</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                <span class="nb">super</span><span class="p">(</span><span class="n">PcfFont</span><span class="o">.</span><span class="n">Table</span><span class="o">.</span><span class="n">GlyphNames</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+            <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">PcfFont</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">num_glyphs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">names</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_glyphs</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">PcfFont</span><span class="o">.</span><span class="n">Table</span><span class="o">.</span><span class="n">GlyphNames</span><span class="o">.</span><span class="n">StringRef</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">))</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">len_strings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw_strings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_strings</span><span class="p">)</span>
+                <span class="n">_io__raw_strings</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_strings</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">strings</span> <span class="o">=</span> <span class="n">bytes_with_io</span><span class="o">.</span><span class="n">BytesWithIo</span><span class="p">(</span><span class="n">_io__raw_strings</span><span class="p">)</span>
+
+
+            <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="p">)):</span>
+                    <span class="k">pass</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">strings</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+
+            <span class="k">class</span><span class="w"> </span><span class="nc">StringRef</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+                <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                    <span class="nb">super</span><span class="p">(</span><span class="n">PcfFont</span><span class="o">.</span><span class="n">Table</span><span class="o">.</span><span class="n">GlyphNames</span><span class="o">.</span><span class="n">StringRef</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+                <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">ofs_string</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+
+
+                <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                    <span class="k">pass</span>
+                    <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
+                    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_value&#39;</span><span class="p">):</span>
+                        <span class="k">pass</span>
+
+
+                <span class="nd">@property</span>
+                <span class="k">def</span><span class="w"> </span><span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_value&#39;</span><span class="p">):</span>
+                        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_value</span>
+
+                    <span class="n">io</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">strings</span><span class="o">.</span><span class="n">_io</span>
+                    <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span>
+                    <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ofs_string</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_m_value</span> <span class="o">=</span> <span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+                    <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_value&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
 
 
@@ -417,9 +621,9 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
 <span class="sd">               Source - https://fontforge.org/docs/techref/pcf-format.html#properties-table</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+                <span class="nb">super</span><span class="p">(</span><span class="n">PcfFont</span><span class="o">.</span><span class="n">Table</span><span class="o">.</span><span class="n">Properties</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
             <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -429,11 +633,21 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_props</span><span class="p">):</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">props</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">PcfFont</span><span class="o">.</span><span class="n">Table</span><span class="o">.</span><span class="n">Properties</span><span class="o">.</span><span class="n">Prop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">))</span>
 
-                <span class="bp">self</span><span class="o">.</span><span class="n">padding</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="mi">0</span> <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_props</span> <span class="o">&amp;</span> <span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="p">(</span><span class="mi">4</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_props</span> <span class="o">&amp;</span> <span class="mi">3</span><span class="p">))))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">padding</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="mi">0</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_props</span> <span class="o">&amp;</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">4</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_props</span> <span class="o">&amp;</span> <span class="mi">3</span><span class="p">)))</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">len_strings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_raw_strings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_strings</span><span class="p">)</span>
                 <span class="n">_io__raw_strings</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_strings</span><span class="p">))</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">strings</span> <span class="o">=</span> <span class="n">bytes_with_io</span><span class="o">.</span><span class="n">BytesWithIo</span><span class="p">(</span><span class="n">_io__raw_strings</span><span class="p">)</span>
+
+
+            <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">props</span><span class="p">)):</span>
+                    <span class="k">pass</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">props</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">strings</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
 
             <span class="k">class</span><span class="w"> </span><span class="nc">Prop</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
 <span class="w">                </span><span class="sd">&quot;&quot;&quot;Property is a key-value pair, &quot;key&quot; being always a</span>
@@ -445,15 +659,40 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
 <span class="sd">                to property key/value by index.</span>
 <span class="sd">                &quot;&quot;&quot;</span>
                 <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+                    <span class="nb">super</span><span class="p">(</span><span class="n">PcfFont</span><span class="o">.</span><span class="n">Table</span><span class="o">.</span><span class="n">Properties</span><span class="o">.</span><span class="n">Prop</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
                 <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">ofs_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">is_string</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">value_or_ofs_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+
+
+                <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                    <span class="k">pass</span>
+                    <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+                    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_name&#39;</span><span class="p">):</span>
+                        <span class="k">pass</span>
+
+                    <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">str_value</span>
+                    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_str_value&#39;</span><span class="p">):</span>
+                        <span class="k">pass</span>
+
+
+                <span class="nd">@property</span>
+                <span class="k">def</span><span class="w"> </span><span class="nf">int_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">                    </span><span class="sd">&quot;&quot;&quot;Value of the property, if this is an integer value.</span>
+<span class="sd">                    &quot;&quot;&quot;</span>
+                    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_int_value&#39;</span><span class="p">):</span>
+                        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_int_value</span>
+
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_string</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="k">pass</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_m_int_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_or_ofs_value</span>
+
+                    <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_int_value&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
                 <span class="nd">@property</span>
                 <span class="k">def</span><span class="w"> </span><span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -478,6 +717,7 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
                         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_str_value</span>
 
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_string</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="k">pass</span>
                         <span class="n">io</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">strings</span><span class="o">.</span><span class="n">_io</span>
                         <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span>
                         <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value_or_ofs_value</span><span class="p">)</span>
@@ -486,122 +726,34 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
 
                     <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_str_value&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
-                <span class="nd">@property</span>
-                <span class="k">def</span><span class="w"> </span><span class="nf">int_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">                    </span><span class="sd">&quot;&quot;&quot;Value of the property, if this is an integer value.</span>
-<span class="sd">                    &quot;&quot;&quot;</span>
-                    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_int_value&#39;</span><span class="p">):</span>
-                        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_int_value</span>
-
-                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_string</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">_m_int_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_or_ofs_value</span>
-
-                    <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_int_value&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
 
-
-        <span class="k">class</span><span class="w"> </span><span class="nc">BdfEncodings</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-<span class="w">            </span><span class="sd">&quot;&quot;&quot;Table that allows mapping of character codes to glyphs present in the</span>
-<span class="sd">            font. Supports 1-byte and 2-byte character codes.</span>
-<span class="sd">            </span>
-<span class="sd">            Note that this mapping is agnostic to character encoding itself - it</span>
-<span class="sd">            can represent ASCII, Unicode (ISO/IEC 10646), various single-byte</span>
-<span class="sd">            national encodings, etc. If application cares about it, normally</span>
-<span class="sd">            encoding will be specified in `properties` table, in the properties named</span>
-<span class="sd">            `CHARSET_REGISTRY` / `CHARSET_ENCODING`.</span>
+        <span class="k">class</span><span class="w"> </span><span class="nc">Swidths</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Table containing scalable widths of characters.</span>
 <span class="sd">            </span>
 <span class="sd">            .. seealso::</span>
-<span class="sd">               Source - https://fontforge.org/docs/techref/pcf-format.html#the-encoding-table</span>
+<span class="sd">               Source - https://fontforge.org/docs/techref/pcf-format.html#the-scalable-widths-table</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+                <span class="nb">super</span><span class="p">(</span><span class="n">PcfFont</span><span class="o">.</span><span class="n">Table</span><span class="o">.</span><span class="n">Swidths</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
-
-            <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">PcfFont</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">min_char_or_byte2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">max_char_or_byte2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">min_byte1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">max_byte1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">default_char</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">glyph_indexes</span> <span class="o">=</span> <span class="p">[]</span>
-                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">((((</span><span class="bp">self</span><span class="o">.</span><span class="n">max_char_or_byte2</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_char_or_byte2</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">max_byte1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_byte1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))):</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">glyph_indexes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">())</span>
-
-
-
-        <span class="k">class</span><span class="w"> </span><span class="nc">GlyphNames</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-<span class="w">            </span><span class="sd">&quot;&quot;&quot;Table containing character names for every glyph.</span>
-<span class="sd">            </span>
-<span class="sd">            .. seealso::</span>
-<span class="sd">               Source - https://fontforge.org/docs/techref/pcf-format.html#the-glyph-names-table</span>
-<span class="sd">            &quot;&quot;&quot;</span>
-            <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
             <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">PcfFont</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">num_glyphs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">names</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">swidths</span> <span class="o">=</span> <span class="p">[]</span>
                 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_glyphs</span><span class="p">):</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">PcfFont</span><span class="o">.</span><span class="n">Table</span><span class="o">.</span><span class="n">GlyphNames</span><span class="o">.</span><span class="n">StringRef</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">))</span>
-
-                <span class="bp">self</span><span class="o">.</span><span class="n">len_strings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_raw_strings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_strings</span><span class="p">)</span>
-                <span class="n">_io__raw_strings</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_strings</span><span class="p">))</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">strings</span> <span class="o">=</span> <span class="n">bytes_with_io</span><span class="o">.</span><span class="n">BytesWithIo</span><span class="p">(</span><span class="n">_io__raw_strings</span><span class="p">)</span>
-
-            <span class="k">class</span><span class="w"> </span><span class="nc">StringRef</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-                <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
-
-                <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">ofs_string</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
-
-                <span class="nd">@property</span>
-                <span class="k">def</span><span class="w"> </span><span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-                    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_value&#39;</span><span class="p">):</span>
-                        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_value</span>
-
-                    <span class="n">io</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">strings</span><span class="o">.</span><span class="n">_io</span>
-                    <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span>
-                    <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ofs_string</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_m_value</span> <span class="o">=</span> <span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
-                    <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
-                    <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_value&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">swidths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">())</span>
 
 
 
-        <span class="k">class</span><span class="w"> </span><span class="nc">Bitmaps</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-<span class="w">            </span><span class="sd">&quot;&quot;&quot;Table containing uncompressed glyph bitmaps.</span>
-<span class="sd">            </span>
-<span class="sd">            .. seealso::</span>
-<span class="sd">               Source - https://fontforge.org/docs/techref/pcf-format.html#the-bitmap-table</span>
-<span class="sd">            &quot;&quot;&quot;</span>
-            <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
-
-            <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">PcfFont</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">num_glyphs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">offsets</span> <span class="o">=</span> <span class="p">[]</span>
-                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_glyphs</span><span class="p">):</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">offsets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">())</span>
-
-                <span class="bp">self</span><span class="o">.</span><span class="n">bitmap_sizes</span> <span class="o">=</span> <span class="p">[]</span>
-                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">bitmap_sizes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">())</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">swidths</span><span class="p">)):</span>
+                    <span class="k">pass</span>
 
 
 
@@ -613,59 +765,36 @@ metrics, bitmaps, mapping of glyphs to characters, etc).</p>
             <span class="n">_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ofs_body</span><span class="p">)</span>
             <span class="n">_on</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span>
-            <span class="k">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">PcfFont</span><span class="o">.</span><span class="n">Types</span><span class="o">.</span><span class="n">properties</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_raw__m_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_body</span><span class="p">)</span>
-                <span class="n">_io__raw__m_body</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw__m_body</span><span class="p">))</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_m_body</span> <span class="o">=</span> <span class="n">PcfFont</span><span class="o">.</span><span class="n">Table</span><span class="o">.</span><span class="n">Properties</span><span class="p">(</span><span class="n">_io__raw__m_body</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">PcfFont</span><span class="o">.</span><span class="n">Types</span><span class="o">.</span><span class="n">bdf_encodings</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">PcfFont</span><span class="o">.</span><span class="n">Types</span><span class="o">.</span><span class="n">bdf_encodings</span><span class="p">:</span>
+                <span class="k">pass</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_raw__m_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_body</span><span class="p">)</span>
                 <span class="n">_io__raw__m_body</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw__m_body</span><span class="p">))</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_m_body</span> <span class="o">=</span> <span class="n">PcfFont</span><span class="o">.</span><span class="n">Table</span><span class="o">.</span><span class="n">BdfEncodings</span><span class="p">(</span><span class="n">_io__raw__m_body</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">PcfFont</span><span class="o">.</span><span class="n">Types</span><span class="o">.</span><span class="n">swidths</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_raw__m_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_body</span><span class="p">)</span>
-                <span class="n">_io__raw__m_body</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw__m_body</span><span class="p">))</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_m_body</span> <span class="o">=</span> <span class="n">PcfFont</span><span class="o">.</span><span class="n">Table</span><span class="o">.</span><span class="n">Swidths</span><span class="p">(</span><span class="n">_io__raw__m_body</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">PcfFont</span><span class="o">.</span><span class="n">Types</span><span class="o">.</span><span class="n">glyph_names</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_raw__m_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_body</span><span class="p">)</span>
-                <span class="n">_io__raw__m_body</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw__m_body</span><span class="p">))</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_m_body</span> <span class="o">=</span> <span class="n">PcfFont</span><span class="o">.</span><span class="n">Table</span><span class="o">.</span><span class="n">GlyphNames</span><span class="p">(</span><span class="n">_io__raw__m_body</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">PcfFont</span><span class="o">.</span><span class="n">Types</span><span class="o">.</span><span class="n">bitmaps</span><span class="p">:</span>
+                <span class="k">pass</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_raw__m_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_body</span><span class="p">)</span>
                 <span class="n">_io__raw__m_body</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw__m_body</span><span class="p">))</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_m_body</span> <span class="o">=</span> <span class="n">PcfFont</span><span class="o">.</span><span class="n">Table</span><span class="o">.</span><span class="n">Bitmaps</span><span class="p">(</span><span class="n">_io__raw__m_body</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">PcfFont</span><span class="o">.</span><span class="n">Types</span><span class="o">.</span><span class="n">glyph_names</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw__m_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_body</span><span class="p">)</span>
+                <span class="n">_io__raw__m_body</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw__m_body</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_m_body</span> <span class="o">=</span> <span class="n">PcfFont</span><span class="o">.</span><span class="n">Table</span><span class="o">.</span><span class="n">GlyphNames</span><span class="p">(</span><span class="n">_io__raw__m_body</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">PcfFont</span><span class="o">.</span><span class="n">Types</span><span class="o">.</span><span class="n">properties</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw__m_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_body</span><span class="p">)</span>
+                <span class="n">_io__raw__m_body</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw__m_body</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_m_body</span> <span class="o">=</span> <span class="n">PcfFont</span><span class="o">.</span><span class="n">Table</span><span class="o">.</span><span class="n">Properties</span><span class="p">(</span><span class="n">_io__raw__m_body</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">PcfFont</span><span class="o">.</span><span class="n">Types</span><span class="o">.</span><span class="n">swidths</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw__m_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_body</span><span class="p">)</span>
+                <span class="n">_io__raw__m_body</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw__m_body</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_m_body</span> <span class="o">=</span> <span class="n">PcfFont</span><span class="o">.</span><span class="n">Table</span><span class="o">.</span><span class="n">Swidths</span><span class="p">(</span><span class="n">_io__raw__m_body</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
+                <span class="k">pass</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_m_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_body</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
             <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_body&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-
-
-    <span class="k">class</span><span class="w"> </span><span class="nc">Format</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Table format specifier, always 4 bytes. Original implementation treats</span>
-<span class="sd">        it as always little-endian and makes liberal use of bitmasking to parse</span>
-<span class="sd">        various parts of it.</span>
-<span class="sd">        </span>
-<span class="sd">        TODO: this format specification recognizes endianness and bit</span>
-<span class="sd">        order format bits, but it does not really takes any parsing</span>
-<span class="sd">        decisions based on them.</span>
-<span class="sd">        </span>
-<span class="sd">        .. seealso::</span>
-<span class="sd">           Source - https://fontforge.org/docs/techref/pcf-format.html#file-header</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
-
-        <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">padding1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">scan_unit_mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">is_most_significant_bit_first</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">is_big_endian</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">glyph_pad_mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">align_to_byte</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">padding</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
 </pre></div>
 
         </div>

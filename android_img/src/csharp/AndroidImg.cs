@@ -19,25 +19,25 @@ namespace Kaitai
         {
             m_parent = p__parent;
             m_root = p__root ?? this;
-            f_kernelImg = false;
-            f_tagsOffset = false;
-            f_ramdiskOffset = false;
-            f_secondOffset = false;
-            f_kernelOffset = false;
-            f_dtbOffset = false;
+            f_base = false;
             f_dtbImg = false;
+            f_dtbOffset = false;
+            f_kernelImg = false;
+            f_kernelOffset = false;
             f_ramdiskImg = false;
+            f_ramdiskOffset = false;
             f_recoveryDtboImg = false;
             f_secondImg = false;
-            f_base = false;
+            f_secondOffset = false;
+            f_tagsOffset = false;
             _read();
         }
         private void _read()
         {
             _magic = m_io.ReadBytes(8);
-            if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 65, 78, 68, 82, 79, 73, 68, 33 }) == 0)))
+            if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 65, 78, 68, 82, 79, 73, 68, 33 }) == 0)))
             {
-                throw new ValidationNotEqualError(new byte[] { 65, 78, 68, 82, 79, 73, 68, 33 }, Magic, M_Io, "/seq/0");
+                throw new ValidationNotEqualError(new byte[] { 65, 78, 68, 82, 79, 73, 68, 33 }, _magic, m_io, "/seq/0");
             }
             _kernel = new Load(m_io, this, m_root);
             _ramdisk = new Load(m_io, this, m_root);
@@ -114,6 +114,100 @@ namespace Kaitai
             public AndroidImg M_Root { get { return m_root; } }
             public AndroidImg M_Parent { get { return m_parent; } }
         }
+        public partial class OsVersion : KaitaiStruct
+        {
+            public static OsVersion FromFile(string fileName)
+            {
+                return new OsVersion(new KaitaiStream(fileName));
+            }
+
+            public OsVersion(KaitaiStream p__io, AndroidImg p__parent = null, AndroidImg p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_major = false;
+                f_minor = false;
+                f_month = false;
+                f_patch = false;
+                f_year = false;
+                _read();
+            }
+            private void _read()
+            {
+                _version = m_io.ReadU4le();
+            }
+            private bool f_major;
+            private int _major;
+            public int Major
+            {
+                get
+                {
+                    if (f_major)
+                        return _major;
+                    f_major = true;
+                    _major = (int) (Version >> 25 & 127);
+                    return _major;
+                }
+            }
+            private bool f_minor;
+            private int _minor;
+            public int Minor
+            {
+                get
+                {
+                    if (f_minor)
+                        return _minor;
+                    f_minor = true;
+                    _minor = (int) (Version >> 18 & 127);
+                    return _minor;
+                }
+            }
+            private bool f_month;
+            private int _month;
+            public int Month
+            {
+                get
+                {
+                    if (f_month)
+                        return _month;
+                    f_month = true;
+                    _month = (int) (Version & 15);
+                    return _month;
+                }
+            }
+            private bool f_patch;
+            private int _patch;
+            public int Patch
+            {
+                get
+                {
+                    if (f_patch)
+                        return _patch;
+                    f_patch = true;
+                    _patch = (int) (Version >> 11 & 127);
+                    return _patch;
+                }
+            }
+            private bool f_year;
+            private int _year;
+            public int Year
+            {
+                get
+                {
+                    if (f_year)
+                        return _year;
+                    f_year = true;
+                    _year = (int) ((Version >> 4 & 127) + 2000);
+                    return _year;
+                }
+            }
+            private uint _version;
+            private AndroidImg m_root;
+            private AndroidImg m_parent;
+            public uint Version { get { return _version; } }
+            public AndroidImg M_Root { get { return m_root; } }
+            public AndroidImg M_Parent { get { return m_parent; } }
+        }
         public partial class SizeOffset : KaitaiStruct
         {
             public static SizeOffset FromFile(string fileName)
@@ -141,182 +235,39 @@ namespace Kaitai
             public AndroidImg M_Root { get { return m_root; } }
             public AndroidImg M_Parent { get { return m_parent; } }
         }
-        public partial class OsVersion : KaitaiStruct
-        {
-            public static OsVersion FromFile(string fileName)
-            {
-                return new OsVersion(new KaitaiStream(fileName));
-            }
-
-            public OsVersion(KaitaiStream p__io, AndroidImg p__parent = null, AndroidImg p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_month = false;
-                f_patch = false;
-                f_year = false;
-                f_major = false;
-                f_minor = false;
-                _read();
-            }
-            private void _read()
-            {
-                _version = m_io.ReadU4le();
-            }
-            private bool f_month;
-            private int _month;
-            public int Month
-            {
-                get
-                {
-                    if (f_month)
-                        return _month;
-                    _month = (int) ((Version & 15));
-                    f_month = true;
-                    return _month;
-                }
-            }
-            private bool f_patch;
-            private int _patch;
-            public int Patch
-            {
-                get
-                {
-                    if (f_patch)
-                        return _patch;
-                    _patch = (int) (((Version >> 11) & 127));
-                    f_patch = true;
-                    return _patch;
-                }
-            }
-            private bool f_year;
-            private int _year;
-            public int Year
-            {
-                get
-                {
-                    if (f_year)
-                        return _year;
-                    _year = (int) ((((Version >> 4) & 127) + 2000));
-                    f_year = true;
-                    return _year;
-                }
-            }
-            private bool f_major;
-            private int _major;
-            public int Major
-            {
-                get
-                {
-                    if (f_major)
-                        return _major;
-                    _major = (int) (((Version >> 25) & 127));
-                    f_major = true;
-                    return _major;
-                }
-            }
-            private bool f_minor;
-            private int _minor;
-            public int Minor
-            {
-                get
-                {
-                    if (f_minor)
-                        return _minor;
-                    _minor = (int) (((Version >> 18) & 127));
-                    f_minor = true;
-                    return _minor;
-                }
-            }
-            private uint _version;
-            private AndroidImg m_root;
-            private AndroidImg m_parent;
-            public uint Version { get { return _version; } }
-            public AndroidImg M_Root { get { return m_root; } }
-            public AndroidImg M_Parent { get { return m_parent; } }
-        }
-        private bool f_kernelImg;
-        private byte[] _kernelImg;
-        public byte[] KernelImg
-        {
-            get
-            {
-                if (f_kernelImg)
-                    return _kernelImg;
-                long _pos = m_io.Pos;
-                m_io.Seek(PageSize);
-                _kernelImg = m_io.ReadBytes(Kernel.Size);
-                m_io.Seek(_pos);
-                f_kernelImg = true;
-                return _kernelImg;
-            }
-        }
-        private bool f_tagsOffset;
-        private int _tagsOffset;
+        private bool f_base;
+        private int _base;
 
         /// <summary>
-        /// tags offset from base
+        /// base loading address
         /// </summary>
-        public int TagsOffset
+        public int Base
         {
             get
             {
-                if (f_tagsOffset)
-                    return _tagsOffset;
-                _tagsOffset = (int) ((TagsLoad - Base));
-                f_tagsOffset = true;
-                return _tagsOffset;
+                if (f_base)
+                    return _base;
+                f_base = true;
+                _base = (int) (Kernel.Addr - 32768);
+                return _base;
             }
         }
-        private bool f_ramdiskOffset;
-        private int _ramdiskOffset;
-
-        /// <summary>
-        /// ramdisk offset from base
-        /// </summary>
-        public int RamdiskOffset
+        private bool f_dtbImg;
+        private byte[] _dtbImg;
+        public byte[] DtbImg
         {
             get
             {
-                if (f_ramdiskOffset)
-                    return _ramdiskOffset;
-                _ramdiskOffset = (int) ((Ramdisk.Addr > 0 ? (Ramdisk.Addr - Base) : 0));
-                f_ramdiskOffset = true;
-                return _ramdiskOffset;
-            }
-        }
-        private bool f_secondOffset;
-        private int _secondOffset;
-
-        /// <summary>
-        /// 2nd bootloader offset from base
-        /// </summary>
-        public int SecondOffset
-        {
-            get
-            {
-                if (f_secondOffset)
-                    return _secondOffset;
-                _secondOffset = (int) ((Second.Addr > 0 ? (Second.Addr - Base) : 0));
-                f_secondOffset = true;
-                return _secondOffset;
-            }
-        }
-        private bool f_kernelOffset;
-        private int _kernelOffset;
-
-        /// <summary>
-        /// kernel offset from base
-        /// </summary>
-        public int KernelOffset
-        {
-            get
-            {
-                if (f_kernelOffset)
-                    return _kernelOffset;
-                _kernelOffset = (int) ((Kernel.Addr - Base));
-                f_kernelOffset = true;
-                return _kernelOffset;
+                if (f_dtbImg)
+                    return _dtbImg;
+                f_dtbImg = true;
+                if ( ((HeaderVersion > 1) && (Dtb.Size > 0)) ) {
+                    long _pos = m_io.Pos;
+                    m_io.Seek((((((((PageSize + Kernel.Size) + Ramdisk.Size) + Second.Size) + RecoveryDtbo.Size) + PageSize) - 1) / PageSize) * PageSize);
+                    _dtbImg = m_io.ReadBytes(Dtb.Size);
+                    m_io.Seek(_pos);
+                }
+                return _dtbImg;
             }
         }
         private bool f_dtbOffset;
@@ -331,29 +282,44 @@ namespace Kaitai
             {
                 if (f_dtbOffset)
                     return _dtbOffset;
-                if (HeaderVersion > 1) {
-                    _dtbOffset = (int) ((Dtb.Addr > 0 ? (Dtb.Addr - Base) : 0));
-                }
                 f_dtbOffset = true;
+                if (HeaderVersion > 1) {
+                    _dtbOffset = (int) ((Dtb.Addr > 0 ? Dtb.Addr - Base : 0));
+                }
                 return _dtbOffset;
             }
         }
-        private bool f_dtbImg;
-        private byte[] _dtbImg;
-        public byte[] DtbImg
+        private bool f_kernelImg;
+        private byte[] _kernelImg;
+        public byte[] KernelImg
         {
             get
             {
-                if (f_dtbImg)
-                    return _dtbImg;
-                if ( ((HeaderVersion > 1) && (Dtb.Size > 0)) ) {
-                    long _pos = m_io.Pos;
-                    m_io.Seek(((((((((PageSize + Kernel.Size) + Ramdisk.Size) + Second.Size) + RecoveryDtbo.Size) + PageSize) - 1) / PageSize) * PageSize));
-                    _dtbImg = m_io.ReadBytes(Dtb.Size);
-                    m_io.Seek(_pos);
-                    f_dtbImg = true;
-                }
-                return _dtbImg;
+                if (f_kernelImg)
+                    return _kernelImg;
+                f_kernelImg = true;
+                long _pos = m_io.Pos;
+                m_io.Seek(PageSize);
+                _kernelImg = m_io.ReadBytes(Kernel.Size);
+                m_io.Seek(_pos);
+                return _kernelImg;
+            }
+        }
+        private bool f_kernelOffset;
+        private int _kernelOffset;
+
+        /// <summary>
+        /// kernel offset from base
+        /// </summary>
+        public int KernelOffset
+        {
+            get
+            {
+                if (f_kernelOffset)
+                    return _kernelOffset;
+                f_kernelOffset = true;
+                _kernelOffset = (int) (Kernel.Addr - Base);
+                return _kernelOffset;
             }
         }
         private bool f_ramdiskImg;
@@ -364,14 +330,31 @@ namespace Kaitai
             {
                 if (f_ramdiskImg)
                     return _ramdiskImg;
+                f_ramdiskImg = true;
                 if (Ramdisk.Size > 0) {
                     long _pos = m_io.Pos;
-                    m_io.Seek((((((PageSize + Kernel.Size) + PageSize) - 1) / PageSize) * PageSize));
+                    m_io.Seek(((((PageSize + Kernel.Size) + PageSize) - 1) / PageSize) * PageSize);
                     _ramdiskImg = m_io.ReadBytes(Ramdisk.Size);
                     m_io.Seek(_pos);
-                    f_ramdiskImg = true;
                 }
                 return _ramdiskImg;
+            }
+        }
+        private bool f_ramdiskOffset;
+        private int _ramdiskOffset;
+
+        /// <summary>
+        /// ramdisk offset from base
+        /// </summary>
+        public int RamdiskOffset
+        {
+            get
+            {
+                if (f_ramdiskOffset)
+                    return _ramdiskOffset;
+                f_ramdiskOffset = true;
+                _ramdiskOffset = (int) ((Ramdisk.Addr > 0 ? Ramdisk.Addr - Base : 0));
+                return _ramdiskOffset;
             }
         }
         private bool f_recoveryDtboImg;
@@ -382,12 +365,12 @@ namespace Kaitai
             {
                 if (f_recoveryDtboImg)
                     return _recoveryDtboImg;
+                f_recoveryDtboImg = true;
                 if ( ((HeaderVersion > 0) && (RecoveryDtbo.Size > 0)) ) {
                     long _pos = m_io.Pos;
                     m_io.Seek(RecoveryDtbo.Offset);
                     _recoveryDtboImg = m_io.ReadBytes(RecoveryDtbo.Size);
                     m_io.Seek(_pos);
-                    f_recoveryDtboImg = true;
                 }
                 return _recoveryDtboImg;
             }
@@ -400,31 +383,48 @@ namespace Kaitai
             {
                 if (f_secondImg)
                     return _secondImg;
+                f_secondImg = true;
                 if (Second.Size > 0) {
                     long _pos = m_io.Pos;
-                    m_io.Seek(((((((PageSize + Kernel.Size) + Ramdisk.Size) + PageSize) - 1) / PageSize) * PageSize));
+                    m_io.Seek((((((PageSize + Kernel.Size) + Ramdisk.Size) + PageSize) - 1) / PageSize) * PageSize);
                     _secondImg = m_io.ReadBytes(Second.Size);
                     m_io.Seek(_pos);
-                    f_secondImg = true;
                 }
                 return _secondImg;
             }
         }
-        private bool f_base;
-        private int _base;
+        private bool f_secondOffset;
+        private int _secondOffset;
 
         /// <summary>
-        /// base loading address
+        /// 2nd bootloader offset from base
         /// </summary>
-        public int Base
+        public int SecondOffset
         {
             get
             {
-                if (f_base)
-                    return _base;
-                _base = (int) ((Kernel.Addr - 32768));
-                f_base = true;
-                return _base;
+                if (f_secondOffset)
+                    return _secondOffset;
+                f_secondOffset = true;
+                _secondOffset = (int) ((Second.Addr > 0 ? Second.Addr - Base : 0));
+                return _secondOffset;
+            }
+        }
+        private bool f_tagsOffset;
+        private int _tagsOffset;
+
+        /// <summary>
+        /// tags offset from base
+        /// </summary>
+        public int TagsOffset
+        {
+            get
+            {
+                if (f_tagsOffset)
+                    return _tagsOffset;
+                f_tagsOffset = true;
+                _tagsOffset = (int) (TagsLoad - Base);
+                return _tagsOffset;
             }
         }
         private byte[] _magic;

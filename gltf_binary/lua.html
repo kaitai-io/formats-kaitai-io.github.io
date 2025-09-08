@@ -198,6 +198,11 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="java-write.html" title="GL Transmission Format, binary container parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="GL Transmission Format, binary container parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -228,7 +233,17 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="python-write.html" title="GL Transmission Format, binary container parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="GL Transmission Format, binary container parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="GL Transmission Format, binary container parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -296,19 +311,60 @@ section#format-index .row {
 <span class="kr">end</span>
 
 
+<span class="nv">GltfBinary</span><span class="p">.</span><span class="py">Bin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">GltfBinary</span><span class="p">.</span><span class="nc">Bin</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">GltfBinary</span><span class="p">.</span><span class="nc">Bin</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes_full</span><span class="p">()</span>
+<span class="kr">end</span>
+
+
+<span class="nv">GltfBinary</span><span class="p">.</span><span class="py">Chunk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">GltfBinary</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">GltfBinary</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">len_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">GltfBinary</span><span class="p">.</span><span class="nf">ChunkType</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">())</span>
+<span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">type</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">GltfBinary</span><span class="p">.</span><span class="py">ChunkType</span><span class="p">.</span><span class="py">bin</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_data</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">KaitaiStream</span><span class="p">(</span><span class="nf">stringstream</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_data</span><span class="p">))</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">GltfBinary</span><span class="p">.</span><span class="nf">Bin</span><span class="p">(</span><span class="nv">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">elseif</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">GltfBinary</span><span class="p">.</span><span class="py">ChunkType</span><span class="p">.</span><span class="py">json</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_data</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">KaitaiStream</span><span class="p">(</span><span class="nf">stringstream</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_data</span><span class="p">))</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">GltfBinary</span><span class="p">.</span><span class="nf">Json</span><span class="p">(</span><span class="nv">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">else</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_data</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="kr">end</span>
+
+
 <span class="nv">GltfBinary</span><span class="p">.</span><span class="py">Header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
 <span class="kr">function</span><span class="w"> </span><span class="nc">GltfBinary</span><span class="p">.</span><span class="nc">Header</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
 <span class="kr">function</span><span class="w"> </span><span class="nc">GltfBinary</span><span class="p">.</span><span class="nc">Header</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">magic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
 <span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">magic</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\103\108\084\070</span><span class="s2">&quot;</span><span class="p">)</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span><span class="w"> </span><span class="o">..</span><span class="w">  </span><span class="s2">&quot;</span><span class="se">\103\108\084\070</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s2">&quot;, but got &quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">magic</span><span class="p">)</span>
+<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\103\108\084\070</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s2">&quot;, but got &quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">magic</span><span class="p">)</span>
 <span class="w">  </span><span class="kr">end</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
@@ -320,39 +376,12 @@ section#format-index .row {
 <span class="c1">-- </span>
 <span class="c1">-- Total length of the Binary glTF, including Header and all Chunks, in bytes.</span>
 
-<span class="nv">GltfBinary</span><span class="p">.</span><span class="py">Chunk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">GltfBinary</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">GltfBinary</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">len_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">GltfBinary</span><span class="p">.</span><span class="nf">ChunkType</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">())</span>
-<span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">type</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">GltfBinary</span><span class="p">.</span><span class="py">ChunkType</span><span class="p">.</span><span class="py">json</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_data</span><span class="p">)</span>
-<span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">KaitaiStream</span><span class="p">(</span><span class="nf">stringstream</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_data</span><span class="p">))</span>
-<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">GltfBinary</span><span class="p">.</span><span class="nf">Json</span><span class="p">(</span><span class="nv">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
-<span class="w">  </span><span class="kr">elseif</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">GltfBinary</span><span class="p">.</span><span class="py">ChunkType</span><span class="p">.</span><span class="py">bin</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_data</span><span class="p">)</span>
-<span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">KaitaiStream</span><span class="p">(</span><span class="nf">stringstream</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_data</span><span class="p">))</span>
-<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">GltfBinary</span><span class="p">.</span><span class="nf">Bin</span><span class="p">(</span><span class="nv">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
-<span class="w">  </span><span class="kr">else</span>
-<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_data</span><span class="p">)</span>
-<span class="w">  </span><span class="kr">end</span>
-<span class="kr">end</span>
-
-
 <span class="nv">GltfBinary</span><span class="p">.</span><span class="py">Json</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
 <span class="kr">function</span><span class="w"> </span><span class="nc">GltfBinary</span><span class="p">.</span><span class="nc">Json</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
@@ -363,19 +392,6 @@ section#format-index .row {
 <span class="c1">-- </span>
 <span class="c1">-- This is where GLB deviates from being an elegant format.</span>
 <span class="c1">-- To parse the rest of the file, you have to parse the JSON first.</span>
-
-<span class="nv">GltfBinary</span><span class="p">.</span><span class="py">Bin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">GltfBinary</span><span class="p">.</span><span class="nc">Bin</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">GltfBinary</span><span class="p">.</span><span class="nc">Bin</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes_full</span><span class="p">()</span>
-<span class="kr">end</span>
 </pre></div>
 
         </div>

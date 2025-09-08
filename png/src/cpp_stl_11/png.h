@@ -2,13 +2,16 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class png_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -21,46 +24,37 @@
 class png_t : public kaitai::kstruct {
 
 public:
-    class rgb_t;
-    class chunk_t;
-    class bkgd_indexed_t;
-    class point_t;
-    class bkgd_greyscale_t;
-    class chrm_chunk_t;
-    class ihdr_chunk_t;
-    class plte_chunk_t;
-    class srgb_chunk_t;
-    class compressed_text_chunk_t;
-    class frame_data_chunk_t;
-    class bkgd_truecolor_t;
-    class gama_chunk_t;
-    class bkgd_chunk_t;
-    class phys_chunk_t;
-    class frame_control_chunk_t;
-    class international_text_chunk_t;
-    class text_chunk_t;
     class animation_control_chunk_t;
+    class bkgd_chunk_t;
+    class bkgd_greyscale_t;
+    class bkgd_indexed_t;
+    class bkgd_truecolor_t;
+    class chrm_chunk_t;
+    class chunk_t;
+    class compressed_text_chunk_t;
+    class frame_control_chunk_t;
+    class frame_data_chunk_t;
+    class gama_chunk_t;
+    class ihdr_chunk_t;
+    class international_text_chunk_t;
+    class phys_chunk_t;
+    class plte_chunk_t;
+    class point_t;
+    class rgb_t;
+    class srgb_chunk_t;
+    class text_chunk_t;
     class time_chunk_t;
-
-    enum phys_unit_t {
-        PHYS_UNIT_UNKNOWN = 0,
-        PHYS_UNIT_METER = 1
-    };
 
     enum blend_op_values_t {
         BLEND_OP_VALUES_SOURCE = 0,
         BLEND_OP_VALUES_OVER = 1
     };
+    static bool _is_defined_blend_op_values_t(blend_op_values_t v);
 
-    enum compression_methods_t {
-        COMPRESSION_METHODS_ZLIB = 0
-    };
+private:
+    static const std::set<blend_op_values_t> _values_blend_op_values_t;
 
-    enum dispose_op_values_t {
-        DISPOSE_OP_VALUES_NONE = 0,
-        DISPOSE_OP_VALUES_BACKGROUND = 1,
-        DISPOSE_OP_VALUES_PREVIOUS = 2
-    };
+public:
 
     enum color_type_t {
         COLOR_TYPE_GREYSCALE = 0,
@@ -69,6 +63,45 @@ public:
         COLOR_TYPE_GREYSCALE_ALPHA = 4,
         COLOR_TYPE_TRUECOLOR_ALPHA = 6
     };
+    static bool _is_defined_color_type_t(color_type_t v);
+
+private:
+    static const std::set<color_type_t> _values_color_type_t;
+
+public:
+
+    enum compression_methods_t {
+        COMPRESSION_METHODS_ZLIB = 0
+    };
+    static bool _is_defined_compression_methods_t(compression_methods_t v);
+
+private:
+    static const std::set<compression_methods_t> _values_compression_methods_t;
+
+public:
+
+    enum dispose_op_values_t {
+        DISPOSE_OP_VALUES_NONE = 0,
+        DISPOSE_OP_VALUES_BACKGROUND = 1,
+        DISPOSE_OP_VALUES_PREVIOUS = 2
+    };
+    static bool _is_defined_dispose_op_values_t(dispose_op_values_t v);
+
+private:
+    static const std::set<dispose_op_values_t> _values_dispose_op_values_t;
+
+public:
+
+    enum phys_unit_t {
+        PHYS_UNIT_UNKNOWN = 0,
+        PHYS_UNIT_METER = 1
+    };
+    static bool _is_defined_phys_unit_t(phys_unit_t v);
+
+private:
+    static const std::set<phys_unit_t> _values_phys_unit_t;
+
+public:
 
     png_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, png_t* p__root = nullptr);
 
@@ -79,32 +112,200 @@ private:
 public:
     ~png_t();
 
-    class rgb_t : public kaitai::kstruct {
+    /**
+     * \sa https://wiki.mozilla.org/APNG_Specification#.60acTL.60:_The_Animation_Control_Chunk Source
+     */
+
+    class animation_control_chunk_t : public kaitai::kstruct {
 
     public:
 
-        rgb_t(kaitai::kstream* p__io, png_t::plte_chunk_t* p__parent = nullptr, png_t* p__root = nullptr);
+        animation_control_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent = nullptr, png_t* p__root = nullptr);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~rgb_t();
+        ~animation_control_chunk_t();
 
     private:
-        uint8_t m_r;
-        uint8_t m_g;
-        uint8_t m_b;
+        uint32_t m_num_frames;
+        uint32_t m_num_plays;
         png_t* m__root;
-        png_t::plte_chunk_t* m__parent;
+        png_t::chunk_t* m__parent;
 
     public:
-        uint8_t r() const { return m_r; }
-        uint8_t g() const { return m_g; }
-        uint8_t b() const { return m_b; }
+
+        /**
+         * Number of frames, must be equal to the number of `frame_control_chunk`s
+         */
+        uint32_t num_frames() const { return m_num_frames; }
+
+        /**
+         * Number of times to loop, 0 indicates infinite looping.
+         */
+        uint32_t num_plays() const { return m_num_plays; }
         png_t* _root() const { return m__root; }
-        png_t::plte_chunk_t* _parent() const { return m__parent; }
+        png_t::chunk_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * Background chunk stores default background color to display this
+     * image against. Contents depend on `color_type` of the image.
+     * \sa https://www.w3.org/TR/png/#11bKGD Source
+     */
+
+    class bkgd_chunk_t : public kaitai::kstruct {
+
+    public:
+
+        bkgd_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent = nullptr, png_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~bkgd_chunk_t();
+
+    private:
+        std::unique_ptr<kaitai::kstruct> m_bkgd;
+        bool n_bkgd;
+
+    public:
+        bool _is_null_bkgd() { bkgd(); return n_bkgd; };
+
+    private:
+        png_t* m__root;
+        png_t::chunk_t* m__parent;
+
+    public:
+        kaitai::kstruct* bkgd() const { return m_bkgd.get(); }
+        png_t* _root() const { return m__root; }
+        png_t::chunk_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * Background chunk for greyscale images.
+     */
+
+    class bkgd_greyscale_t : public kaitai::kstruct {
+
+    public:
+
+        bkgd_greyscale_t(kaitai::kstream* p__io, png_t::bkgd_chunk_t* p__parent = nullptr, png_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~bkgd_greyscale_t();
+
+    private:
+        uint16_t m_value;
+        png_t* m__root;
+        png_t::bkgd_chunk_t* m__parent;
+
+    public:
+        uint16_t value() const { return m_value; }
+        png_t* _root() const { return m__root; }
+        png_t::bkgd_chunk_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * Background chunk for images with indexed palette.
+     */
+
+    class bkgd_indexed_t : public kaitai::kstruct {
+
+    public:
+
+        bkgd_indexed_t(kaitai::kstream* p__io, png_t::bkgd_chunk_t* p__parent = nullptr, png_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~bkgd_indexed_t();
+
+    private:
+        uint8_t m_palette_index;
+        png_t* m__root;
+        png_t::bkgd_chunk_t* m__parent;
+
+    public:
+        uint8_t palette_index() const { return m_palette_index; }
+        png_t* _root() const { return m__root; }
+        png_t::bkgd_chunk_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * Background chunk for truecolor images.
+     */
+
+    class bkgd_truecolor_t : public kaitai::kstruct {
+
+    public:
+
+        bkgd_truecolor_t(kaitai::kstream* p__io, png_t::bkgd_chunk_t* p__parent = nullptr, png_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~bkgd_truecolor_t();
+
+    private:
+        uint16_t m_red;
+        uint16_t m_green;
+        uint16_t m_blue;
+        png_t* m__root;
+        png_t::bkgd_chunk_t* m__parent;
+
+    public:
+        uint16_t red() const { return m_red; }
+        uint16_t green() const { return m_green; }
+        uint16_t blue() const { return m_blue; }
+        png_t* _root() const { return m__root; }
+        png_t::bkgd_chunk_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * \sa https://www.w3.org/TR/png/#11cHRM Source
+     */
+
+    class chrm_chunk_t : public kaitai::kstruct {
+
+    public:
+
+        chrm_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent = nullptr, png_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~chrm_chunk_t();
+
+    private:
+        std::unique_ptr<point_t> m_white_point;
+        std::unique_ptr<point_t> m_red;
+        std::unique_ptr<point_t> m_green;
+        std::unique_ptr<point_t> m_blue;
+        png_t* m__root;
+        png_t::chunk_t* m__parent;
+
+    public:
+        point_t* white_point() const { return m_white_point.get(); }
+        point_t* red() const { return m_red.get(); }
+        point_t* green() const { return m_green.get(); }
+        point_t* blue() const { return m_blue.get(); }
+        png_t* _root() const { return m__root; }
+        png_t::chunk_t* _parent() const { return m__parent; }
     };
 
     class chunk_t : public kaitai::kstruct {
@@ -148,239 +349,6 @@ public:
     };
 
     /**
-     * Background chunk for images with indexed palette.
-     */
-
-    class bkgd_indexed_t : public kaitai::kstruct {
-
-    public:
-
-        bkgd_indexed_t(kaitai::kstream* p__io, png_t::bkgd_chunk_t* p__parent = nullptr, png_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~bkgd_indexed_t();
-
-    private:
-        uint8_t m_palette_index;
-        png_t* m__root;
-        png_t::bkgd_chunk_t* m__parent;
-
-    public:
-        uint8_t palette_index() const { return m_palette_index; }
-        png_t* _root() const { return m__root; }
-        png_t::bkgd_chunk_t* _parent() const { return m__parent; }
-    };
-
-    class point_t : public kaitai::kstruct {
-
-    public:
-
-        point_t(kaitai::kstream* p__io, png_t::chrm_chunk_t* p__parent = nullptr, png_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~point_t();
-
-    private:
-        bool f_x;
-        double m_x;
-
-    public:
-        double x();
-
-    private:
-        bool f_y;
-        double m_y;
-
-    public:
-        double y();
-
-    private:
-        uint32_t m_x_int;
-        uint32_t m_y_int;
-        png_t* m__root;
-        png_t::chrm_chunk_t* m__parent;
-
-    public:
-        uint32_t x_int() const { return m_x_int; }
-        uint32_t y_int() const { return m_y_int; }
-        png_t* _root() const { return m__root; }
-        png_t::chrm_chunk_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * Background chunk for greyscale images.
-     */
-
-    class bkgd_greyscale_t : public kaitai::kstruct {
-
-    public:
-
-        bkgd_greyscale_t(kaitai::kstream* p__io, png_t::bkgd_chunk_t* p__parent = nullptr, png_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~bkgd_greyscale_t();
-
-    private:
-        uint16_t m_value;
-        png_t* m__root;
-        png_t::bkgd_chunk_t* m__parent;
-
-    public:
-        uint16_t value() const { return m_value; }
-        png_t* _root() const { return m__root; }
-        png_t::bkgd_chunk_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * \sa https://www.w3.org/TR/png/#11cHRM Source
-     */
-
-    class chrm_chunk_t : public kaitai::kstruct {
-
-    public:
-
-        chrm_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent = nullptr, png_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~chrm_chunk_t();
-
-    private:
-        std::unique_ptr<point_t> m_white_point;
-        std::unique_ptr<point_t> m_red;
-        std::unique_ptr<point_t> m_green;
-        std::unique_ptr<point_t> m_blue;
-        png_t* m__root;
-        png_t::chunk_t* m__parent;
-
-    public:
-        point_t* white_point() const { return m_white_point.get(); }
-        point_t* red() const { return m_red.get(); }
-        point_t* green() const { return m_green.get(); }
-        point_t* blue() const { return m_blue.get(); }
-        png_t* _root() const { return m__root; }
-        png_t::chunk_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * \sa https://www.w3.org/TR/png/#11IHDR Source
-     */
-
-    class ihdr_chunk_t : public kaitai::kstruct {
-
-    public:
-
-        ihdr_chunk_t(kaitai::kstream* p__io, png_t* p__parent = nullptr, png_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~ihdr_chunk_t();
-
-    private:
-        uint32_t m_width;
-        uint32_t m_height;
-        uint8_t m_bit_depth;
-        color_type_t m_color_type;
-        uint8_t m_compression_method;
-        uint8_t m_filter_method;
-        uint8_t m_interlace_method;
-        png_t* m__root;
-        png_t* m__parent;
-
-    public:
-        uint32_t width() const { return m_width; }
-        uint32_t height() const { return m_height; }
-        uint8_t bit_depth() const { return m_bit_depth; }
-        color_type_t color_type() const { return m_color_type; }
-        uint8_t compression_method() const { return m_compression_method; }
-        uint8_t filter_method() const { return m_filter_method; }
-        uint8_t interlace_method() const { return m_interlace_method; }
-        png_t* _root() const { return m__root; }
-        png_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * \sa https://www.w3.org/TR/png/#11PLTE Source
-     */
-
-    class plte_chunk_t : public kaitai::kstruct {
-
-    public:
-
-        plte_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent = nullptr, png_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~plte_chunk_t();
-
-    private:
-        std::unique_ptr<std::vector<std::unique_ptr<rgb_t>>> m_entries;
-        png_t* m__root;
-        png_t::chunk_t* m__parent;
-
-    public:
-        std::vector<std::unique_ptr<rgb_t>>* entries() const { return m_entries.get(); }
-        png_t* _root() const { return m__root; }
-        png_t::chunk_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * \sa https://www.w3.org/TR/png/#11sRGB Source
-     */
-
-    class srgb_chunk_t : public kaitai::kstruct {
-
-    public:
-
-        enum intent_t {
-            INTENT_PERCEPTUAL = 0,
-            INTENT_RELATIVE_COLORIMETRIC = 1,
-            INTENT_SATURATION = 2,
-            INTENT_ABSOLUTE_COLORIMETRIC = 3
-        };
-
-        srgb_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent = nullptr, png_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~srgb_chunk_t();
-
-    private:
-        intent_t m_render_intent;
-        png_t* m__root;
-        png_t::chunk_t* m__parent;
-
-    public:
-        intent_t render_intent() const { return m_render_intent; }
-        png_t* _root() const { return m__root; }
-        png_t::chunk_t* _parent() const { return m__parent; }
-    };
-
-    /**
      * Compressed text chunk effectively allows to store key-value
      * string pairs in PNG container, compressing "value" part (which
      * can be quite lengthy) with zlib compression.
@@ -407,7 +375,6 @@ public:
         png_t* m__root;
         png_t::chunk_t* m__parent;
         std::string m__raw_text_datastream;
-        std::unique_ptr<kaitai::kstream> m__io_text_datastream;
 
     public:
 
@@ -420,198 +387,6 @@ public:
         png_t* _root() const { return m__root; }
         png_t::chunk_t* _parent() const { return m__parent; }
         std::string _raw_text_datastream() const { return m__raw_text_datastream; }
-        kaitai::kstream* _io_text_datastream() const { return m__io_text_datastream.get(); }
-    };
-
-    /**
-     * \sa https://wiki.mozilla.org/APNG_Specification#.60fdAT.60:_The_Frame_Data_Chunk Source
-     */
-
-    class frame_data_chunk_t : public kaitai::kstruct {
-
-    public:
-
-        frame_data_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent = nullptr, png_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~frame_data_chunk_t();
-
-    private:
-        uint32_t m_sequence_number;
-        std::string m_frame_data;
-        png_t* m__root;
-        png_t::chunk_t* m__parent;
-
-    public:
-
-        /**
-         * Sequence number of the animation chunk. The fcTL and fdAT chunks
-         * have a 4 byte sequence number. Both chunk types share the sequence.
-         * The first fcTL chunk must contain sequence number 0, and the sequence
-         * numbers in the remaining fcTL and fdAT chunks must be in order, with
-         * no gaps or duplicates.
-         */
-        uint32_t sequence_number() const { return m_sequence_number; }
-
-        /**
-         * Frame data for the frame. At least one fdAT chunk is required for
-         * each frame. The compressed datastream is the concatenation of the
-         * contents of the data fields of all the fdAT chunks within a frame.
-         */
-        std::string frame_data() const { return m_frame_data; }
-        png_t* _root() const { return m__root; }
-        png_t::chunk_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * Background chunk for truecolor images.
-     */
-
-    class bkgd_truecolor_t : public kaitai::kstruct {
-
-    public:
-
-        bkgd_truecolor_t(kaitai::kstream* p__io, png_t::bkgd_chunk_t* p__parent = nullptr, png_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~bkgd_truecolor_t();
-
-    private:
-        uint16_t m_red;
-        uint16_t m_green;
-        uint16_t m_blue;
-        png_t* m__root;
-        png_t::bkgd_chunk_t* m__parent;
-
-    public:
-        uint16_t red() const { return m_red; }
-        uint16_t green() const { return m_green; }
-        uint16_t blue() const { return m_blue; }
-        png_t* _root() const { return m__root; }
-        png_t::bkgd_chunk_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * \sa https://www.w3.org/TR/png/#11gAMA Source
-     */
-
-    class gama_chunk_t : public kaitai::kstruct {
-
-    public:
-
-        gama_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent = nullptr, png_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~gama_chunk_t();
-
-    private:
-        bool f_gamma_ratio;
-        double m_gamma_ratio;
-
-    public:
-        double gamma_ratio();
-
-    private:
-        uint32_t m_gamma_int;
-        png_t* m__root;
-        png_t::chunk_t* m__parent;
-
-    public:
-        uint32_t gamma_int() const { return m_gamma_int; }
-        png_t* _root() const { return m__root; }
-        png_t::chunk_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * Background chunk stores default background color to display this
-     * image against. Contents depend on `color_type` of the image.
-     * \sa https://www.w3.org/TR/png/#11bKGD Source
-     */
-
-    class bkgd_chunk_t : public kaitai::kstruct {
-
-    public:
-
-        bkgd_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent = nullptr, png_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~bkgd_chunk_t();
-
-    private:
-        std::unique_ptr<kaitai::kstruct> m_bkgd;
-        bool n_bkgd;
-
-    public:
-        bool _is_null_bkgd() { bkgd(); return n_bkgd; };
-
-    private:
-        png_t* m__root;
-        png_t::chunk_t* m__parent;
-
-    public:
-        kaitai::kstruct* bkgd() const { return m_bkgd.get(); }
-        png_t* _root() const { return m__root; }
-        png_t::chunk_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * "Physical size" chunk stores data that allows to translate
-     * logical pixels into physical units (meters, etc) and vice-versa.
-     * \sa https://www.w3.org/TR/png/#11pHYs Source
-     */
-
-    class phys_chunk_t : public kaitai::kstruct {
-
-    public:
-
-        phys_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent = nullptr, png_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~phys_chunk_t();
-
-    private:
-        uint32_t m_pixels_per_unit_x;
-        uint32_t m_pixels_per_unit_y;
-        phys_unit_t m_unit;
-        png_t* m__root;
-        png_t::chunk_t* m__parent;
-
-    public:
-
-        /**
-         * Number of pixels per physical unit (typically, 1 meter) by X
-         * axis.
-         */
-        uint32_t pixels_per_unit_x() const { return m_pixels_per_unit_x; }
-
-        /**
-         * Number of pixels per physical unit (typically, 1 meter) by Y
-         * axis.
-         */
-        uint32_t pixels_per_unit_y() const { return m_pixels_per_unit_y; }
-        phys_unit_t unit() const { return m_unit; }
-        png_t* _root() const { return m__root; }
-        png_t::chunk_t* _parent() const { return m__parent; }
     };
 
     /**
@@ -706,6 +481,125 @@ public:
     };
 
     /**
+     * \sa https://wiki.mozilla.org/APNG_Specification#.60fdAT.60:_The_Frame_Data_Chunk Source
+     */
+
+    class frame_data_chunk_t : public kaitai::kstruct {
+
+    public:
+
+        frame_data_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent = nullptr, png_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~frame_data_chunk_t();
+
+    private:
+        uint32_t m_sequence_number;
+        std::string m_frame_data;
+        png_t* m__root;
+        png_t::chunk_t* m__parent;
+
+    public:
+
+        /**
+         * Sequence number of the animation chunk. The fcTL and fdAT chunks
+         * have a 4 byte sequence number. Both chunk types share the sequence.
+         * The first fcTL chunk must contain sequence number 0, and the sequence
+         * numbers in the remaining fcTL and fdAT chunks must be in order, with
+         * no gaps or duplicates.
+         */
+        uint32_t sequence_number() const { return m_sequence_number; }
+
+        /**
+         * Frame data for the frame. At least one fdAT chunk is required for
+         * each frame. The compressed datastream is the concatenation of the
+         * contents of the data fields of all the fdAT chunks within a frame.
+         */
+        std::string frame_data() const { return m_frame_data; }
+        png_t* _root() const { return m__root; }
+        png_t::chunk_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * \sa https://www.w3.org/TR/png/#11gAMA Source
+     */
+
+    class gama_chunk_t : public kaitai::kstruct {
+
+    public:
+
+        gama_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent = nullptr, png_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~gama_chunk_t();
+
+    private:
+        bool f_gamma_ratio;
+        double m_gamma_ratio;
+
+    public:
+        double gamma_ratio();
+
+    private:
+        uint32_t m_gamma_int;
+        png_t* m__root;
+        png_t::chunk_t* m__parent;
+
+    public:
+        uint32_t gamma_int() const { return m_gamma_int; }
+        png_t* _root() const { return m__root; }
+        png_t::chunk_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * \sa https://www.w3.org/TR/png/#11IHDR Source
+     */
+
+    class ihdr_chunk_t : public kaitai::kstruct {
+
+    public:
+
+        ihdr_chunk_t(kaitai::kstream* p__io, png_t* p__parent = nullptr, png_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~ihdr_chunk_t();
+
+    private:
+        uint32_t m_width;
+        uint32_t m_height;
+        uint8_t m_bit_depth;
+        color_type_t m_color_type;
+        uint8_t m_compression_method;
+        uint8_t m_filter_method;
+        uint8_t m_interlace_method;
+        png_t* m__root;
+        png_t* m__parent;
+
+    public:
+        uint32_t width() const { return m_width; }
+        uint32_t height() const { return m_height; }
+        uint8_t bit_depth() const { return m_bit_depth; }
+        color_type_t color_type() const { return m_color_type; }
+        uint8_t compression_method() const { return m_compression_method; }
+        uint8_t filter_method() const { return m_filter_method; }
+        uint8_t interlace_method() const { return m_interlace_method; }
+        png_t* _root() const { return m__root; }
+        png_t* _parent() const { return m__parent; }
+    };
+
+    /**
      * International text chunk effectively allows to store key-value string pairs in
      * PNG container. Both "key" (keyword) and "value" (text) parts are
      * given in pre-defined subset of iso8859-1 without control
@@ -774,6 +668,187 @@ public:
     };
 
     /**
+     * "Physical size" chunk stores data that allows to translate
+     * logical pixels into physical units (meters, etc) and vice-versa.
+     * \sa https://www.w3.org/TR/png/#11pHYs Source
+     */
+
+    class phys_chunk_t : public kaitai::kstruct {
+
+    public:
+
+        phys_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent = nullptr, png_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~phys_chunk_t();
+
+    private:
+        uint32_t m_pixels_per_unit_x;
+        uint32_t m_pixels_per_unit_y;
+        phys_unit_t m_unit;
+        png_t* m__root;
+        png_t::chunk_t* m__parent;
+
+    public:
+
+        /**
+         * Number of pixels per physical unit (typically, 1 meter) by X
+         * axis.
+         */
+        uint32_t pixels_per_unit_x() const { return m_pixels_per_unit_x; }
+
+        /**
+         * Number of pixels per physical unit (typically, 1 meter) by Y
+         * axis.
+         */
+        uint32_t pixels_per_unit_y() const { return m_pixels_per_unit_y; }
+        phys_unit_t unit() const { return m_unit; }
+        png_t* _root() const { return m__root; }
+        png_t::chunk_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * \sa https://www.w3.org/TR/png/#11PLTE Source
+     */
+
+    class plte_chunk_t : public kaitai::kstruct {
+
+    public:
+
+        plte_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent = nullptr, png_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~plte_chunk_t();
+
+    private:
+        std::unique_ptr<std::vector<std::unique_ptr<rgb_t>>> m_entries;
+        png_t* m__root;
+        png_t::chunk_t* m__parent;
+
+    public:
+        std::vector<std::unique_ptr<rgb_t>>* entries() const { return m_entries.get(); }
+        png_t* _root() const { return m__root; }
+        png_t::chunk_t* _parent() const { return m__parent; }
+    };
+
+    class point_t : public kaitai::kstruct {
+
+    public:
+
+        point_t(kaitai::kstream* p__io, png_t::chrm_chunk_t* p__parent = nullptr, png_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~point_t();
+
+    private:
+        bool f_x;
+        double m_x;
+
+    public:
+        double x();
+
+    private:
+        bool f_y;
+        double m_y;
+
+    public:
+        double y();
+
+    private:
+        uint32_t m_x_int;
+        uint32_t m_y_int;
+        png_t* m__root;
+        png_t::chrm_chunk_t* m__parent;
+
+    public:
+        uint32_t x_int() const { return m_x_int; }
+        uint32_t y_int() const { return m_y_int; }
+        png_t* _root() const { return m__root; }
+        png_t::chrm_chunk_t* _parent() const { return m__parent; }
+    };
+
+    class rgb_t : public kaitai::kstruct {
+
+    public:
+
+        rgb_t(kaitai::kstream* p__io, png_t::plte_chunk_t* p__parent = nullptr, png_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~rgb_t();
+
+    private:
+        uint8_t m_r;
+        uint8_t m_g;
+        uint8_t m_b;
+        png_t* m__root;
+        png_t::plte_chunk_t* m__parent;
+
+    public:
+        uint8_t r() const { return m_r; }
+        uint8_t g() const { return m_g; }
+        uint8_t b() const { return m_b; }
+        png_t* _root() const { return m__root; }
+        png_t::plte_chunk_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * \sa https://www.w3.org/TR/png/#11sRGB Source
+     */
+
+    class srgb_chunk_t : public kaitai::kstruct {
+
+    public:
+
+        enum intent_t {
+            INTENT_PERCEPTUAL = 0,
+            INTENT_RELATIVE_COLORIMETRIC = 1,
+            INTENT_SATURATION = 2,
+            INTENT_ABSOLUTE_COLORIMETRIC = 3
+        };
+        static bool _is_defined_intent_t(intent_t v);
+
+    private:
+        static const std::set<intent_t> _values_intent_t;
+
+    public:
+
+        srgb_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent = nullptr, png_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~srgb_chunk_t();
+
+    private:
+        intent_t m_render_intent;
+        png_t* m__root;
+        png_t::chunk_t* m__parent;
+
+    public:
+        intent_t render_intent() const { return m_render_intent; }
+        png_t* _root() const { return m__root; }
+        png_t::chunk_t* _parent() const { return m__parent; }
+    };
+
+    /**
      * Text chunk effectively allows to store key-value string pairs in
      * PNG container. Both "key" (keyword) and "value" (text) parts are
      * given in pre-defined subset of iso8859-1 without control
@@ -807,44 +882,6 @@ public:
          */
         std::string keyword() const { return m_keyword; }
         std::string text() const { return m_text; }
-        png_t* _root() const { return m__root; }
-        png_t::chunk_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * \sa https://wiki.mozilla.org/APNG_Specification#.60acTL.60:_The_Animation_Control_Chunk Source
-     */
-
-    class animation_control_chunk_t : public kaitai::kstruct {
-
-    public:
-
-        animation_control_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent = nullptr, png_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~animation_control_chunk_t();
-
-    private:
-        uint32_t m_num_frames;
-        uint32_t m_num_plays;
-        png_t* m__root;
-        png_t::chunk_t* m__parent;
-
-    public:
-
-        /**
-         * Number of frames, must be equal to the number of `frame_control_chunk`s
-         */
-        uint32_t num_frames() const { return m_num_frames; }
-
-        /**
-         * Number of times to loop, 0 indicates infinite looping.
-         */
-        uint32_t num_plays() const { return m_num_plays; }
         png_t* _root() const { return m__root; }
         png_t::chunk_t* _parent() const { return m__parent; }
     };

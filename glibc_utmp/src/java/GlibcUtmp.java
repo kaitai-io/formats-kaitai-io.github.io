@@ -7,7 +7,8 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 public class GlibcUtmp extends KaitaiStruct {
     public static GlibcUtmp fromFile(String fileName) throws IOException {
@@ -52,16 +53,20 @@ public class GlibcUtmp extends KaitaiStruct {
         _read();
     }
     private void _read() {
-        this._raw_records = new ArrayList<byte[]>();
         this.records = new ArrayList<Record>();
         {
             int i = 0;
             while (!this._io.isEof()) {
-                this._raw_records.add(this._io.readBytes(384));
-                KaitaiStream _io__raw_records = new ByteBufferKaitaiStream(_raw_records.get(_raw_records.size() - 1));
-                this.records.add(new Record(_io__raw_records, this, _root));
+                KaitaiStream _io_records = this._io.substream(384);
+                this.records.add(new Record(_io_records, this, _root));
                 i++;
             }
+        }
+    }
+
+    public void _fetchInstances() {
+        for (int i = 0; i < this.records.size(); i++) {
+            this.records.get(((Number) (i)).intValue())._fetchInstances();
         }
     }
     public static class Record extends KaitaiStruct {
@@ -86,15 +91,19 @@ public class GlibcUtmp extends KaitaiStruct {
         private void _read() {
             this.utType = GlibcUtmp.EntryType.byId(this._io.readS4le());
             this.pid = this._io.readS4le();
-            this.line = new String(this._io.readBytes(32), Charset.forName("UTF-8"));
-            this.id = new String(this._io.readBytes(4), Charset.forName("UTF-8"));
-            this.user = new String(this._io.readBytes(32), Charset.forName("UTF-8"));
-            this.host = new String(this._io.readBytes(256), Charset.forName("UTF-8"));
+            this.line = new String(this._io.readBytes(32), StandardCharsets.UTF_8);
+            this.id = new String(this._io.readBytes(4), StandardCharsets.UTF_8);
+            this.user = new String(this._io.readBytes(32), StandardCharsets.UTF_8);
+            this.host = new String(this._io.readBytes(256), StandardCharsets.UTF_8);
             this.exit = this._io.readU4le();
             this.session = this._io.readS4le();
             this.tv = new Timeval(this._io, this, _root);
             this.addrV6 = this._io.readBytes(16);
             this.reserved = this._io.readBytes(20);
+        }
+
+        public void _fetchInstances() {
+            this.tv._fetchInstances();
         }
         private EntryType utType;
         private int pid;
@@ -186,6 +195,9 @@ public class GlibcUtmp extends KaitaiStruct {
             this.sec = this._io.readU4le();
             this.usec = this._io.readS4le();
         }
+
+        public void _fetchInstances() {
+        }
         private long sec;
         private int usec;
         private GlibcUtmp _root;
@@ -203,12 +215,10 @@ public class GlibcUtmp extends KaitaiStruct {
         public GlibcUtmp _root() { return _root; }
         public GlibcUtmp.Record _parent() { return _parent; }
     }
-    private ArrayList<Record> records;
+    private List<Record> records;
     private GlibcUtmp _root;
     private KaitaiStruct _parent;
-    private ArrayList<byte[]> _raw_records;
-    public ArrayList<Record> records() { return records; }
+    public List<Record> records() { return records; }
     public GlibcUtmp _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
-    public ArrayList<byte[]> _raw_records() { return _raw_records; }
 }

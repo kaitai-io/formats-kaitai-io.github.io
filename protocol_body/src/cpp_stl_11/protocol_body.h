@@ -2,23 +2,21 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class protocol_body_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
-#include "udp_datagram.h"
-#include "ipv4_packet.h"
-#include "icmp_packet.h"
 #include "ipv6_packet.h"
+#include "udp_datagram.h"
+#include "icmp_packet.h"
 #include "tcp_segment.h"
+#include "ipv4_packet.h"
+#include <set>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
-class udp_datagram_t;
-class ipv4_packet_t;
-class icmp_packet_t;
-class ipv6_packet_t;
-class tcp_segment_t;
 
 /**
  * Protocol body represents particular payload on transport level (OSI
@@ -188,6 +186,12 @@ public:
         PROTOCOL_ENUM_ROHC = 142,
         PROTOCOL_ENUM_RESERVED_255 = 255
     };
+    static bool _is_defined_protocol_enum_t(protocol_enum_t v);
+
+private:
+    static const std::set<protocol_enum_t> _values_protocol_enum_t;
+
+public:
 
     protocol_body_t(uint8_t p_protocol_num, kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, protocol_body_t* p__root = nullptr);
 

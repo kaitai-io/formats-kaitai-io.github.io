@@ -166,12 +166,17 @@ const (
 	ProtocolBody_ProtocolEnum__Rohc ProtocolBody_ProtocolEnum = 142
 	ProtocolBody_ProtocolEnum__Reserved255 ProtocolBody_ProtocolEnum = 255
 )
+var values_ProtocolBody_ProtocolEnum = map[ProtocolBody_ProtocolEnum]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}, 10: {}, 11: {}, 12: {}, 13: {}, 14: {}, 15: {}, 16: {}, 17: {}, 18: {}, 19: {}, 20: {}, 21: {}, 22: {}, 23: {}, 24: {}, 25: {}, 26: {}, 27: {}, 28: {}, 29: {}, 30: {}, 31: {}, 32: {}, 33: {}, 34: {}, 35: {}, 36: {}, 37: {}, 38: {}, 39: {}, 40: {}, 41: {}, 42: {}, 43: {}, 44: {}, 45: {}, 46: {}, 47: {}, 48: {}, 49: {}, 50: {}, 51: {}, 52: {}, 53: {}, 54: {}, 55: {}, 56: {}, 57: {}, 58: {}, 59: {}, 60: {}, 61: {}, 62: {}, 63: {}, 64: {}, 65: {}, 66: {}, 67: {}, 68: {}, 69: {}, 70: {}, 71: {}, 72: {}, 73: {}, 74: {}, 75: {}, 76: {}, 77: {}, 78: {}, 79: {}, 80: {}, 81: {}, 82: {}, 83: {}, 84: {}, 85: {}, 86: {}, 87: {}, 88: {}, 89: {}, 90: {}, 91: {}, 92: {}, 93: {}, 94: {}, 95: {}, 96: {}, 97: {}, 98: {}, 99: {}, 100: {}, 101: {}, 102: {}, 103: {}, 104: {}, 105: {}, 106: {}, 107: {}, 108: {}, 109: {}, 110: {}, 111: {}, 112: {}, 113: {}, 114: {}, 115: {}, 116: {}, 117: {}, 118: {}, 119: {}, 120: {}, 121: {}, 122: {}, 123: {}, 124: {}, 125: {}, 126: {}, 127: {}, 128: {}, 129: {}, 130: {}, 131: {}, 132: {}, 133: {}, 134: {}, 135: {}, 136: {}, 137: {}, 138: {}, 139: {}, 140: {}, 141: {}, 142: {}, 255: {}}
+func (v ProtocolBody_ProtocolEnum) isDefined() bool {
+	_, ok := values_ProtocolBody_ProtocolEnum[v]
+	return ok
+}
 type ProtocolBody struct {
-	Body interface{}
+	Body kaitai.Struct
 	ProtocolNum uint8
 	_io *kaitai.Stream
 	_root *ProtocolBody
-	_parent interface{}
+	_parent kaitai.Struct
 	_f_protocol bool
 	protocol ProtocolBody_ProtocolEnum
 }
@@ -181,7 +186,11 @@ func NewProtocolBody(protocolNum uint8) *ProtocolBody {
 	}
 }
 
-func (this *ProtocolBody) Read(io *kaitai.Stream, parent interface{}, root *ProtocolBody) (err error) {
+func (this ProtocolBody) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *ProtocolBody) Read(io *kaitai.Stream, parent kaitai.Struct, root *ProtocolBody) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -191,51 +200,51 @@ func (this *ProtocolBody) Read(io *kaitai.Stream, parent interface{}, root *Prot
 		return err
 	}
 	switch (tmp1) {
-	case ProtocolBody_ProtocolEnum__Ipv6Nonxt:
-		tmp2 := NewProtocolBody_NoNextHeader()
+	case ProtocolBody_ProtocolEnum__Hopopt:
+		tmp2 := NewProtocolBody_OptionHopByHop()
 		err = tmp2.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp2
-	case ProtocolBody_ProtocolEnum__Ipv4:
-		tmp3 := NewIpv4Packet()
-		err = tmp3.Read(this._io, this, nil)
+	case ProtocolBody_ProtocolEnum__Icmp:
+		tmp3 := NewIcmpPacket()
+		err = tmp3.Read(this._io, nil, nil)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp3
-	case ProtocolBody_ProtocolEnum__Udp:
-		tmp4 := NewUdpDatagram()
-		err = tmp4.Read(this._io, this, nil)
+	case ProtocolBody_ProtocolEnum__Ipv4:
+		tmp4 := NewIpv4Packet()
+		err = tmp4.Read(this._io, nil, nil)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp4
-	case ProtocolBody_ProtocolEnum__Icmp:
-		tmp5 := NewIcmpPacket()
-		err = tmp5.Read(this._io, this, nil)
+	case ProtocolBody_ProtocolEnum__Ipv6:
+		tmp5 := NewIpv6Packet()
+		err = tmp5.Read(this._io, nil, nil)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp5
-	case ProtocolBody_ProtocolEnum__Hopopt:
-		tmp6 := NewProtocolBody_OptionHopByHop()
+	case ProtocolBody_ProtocolEnum__Ipv6Nonxt:
+		tmp6 := NewProtocolBody_NoNextHeader()
 		err = tmp6.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp6
-	case ProtocolBody_ProtocolEnum__Ipv6:
-		tmp7 := NewIpv6Packet()
-		err = tmp7.Read(this._io, this, nil)
+	case ProtocolBody_ProtocolEnum__Tcp:
+		tmp7 := NewTcpSegment()
+		err = tmp7.Read(this._io, nil, nil)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp7
-	case ProtocolBody_ProtocolEnum__Tcp:
-		tmp8 := NewTcpSegment()
-		err = tmp8.Read(this._io, this, nil)
+	case ProtocolBody_ProtocolEnum__Udp:
+		tmp8 := NewUdpDatagram()
+		err = tmp8.Read(this._io, nil, nil)
 		if err != nil {
 			return err
 		}
@@ -247,8 +256,8 @@ func (this *ProtocolBody) Protocol() (v ProtocolBody_ProtocolEnum, err error) {
 	if (this._f_protocol) {
 		return this.protocol, nil
 	}
-	this.protocol = ProtocolBody_ProtocolEnum(ProtocolBody_ProtocolEnum(this.ProtocolNum))
 	this._f_protocol = true
+	this.protocol = ProtocolBody_ProtocolEnum(ProtocolBody_ProtocolEnum(this.ProtocolNum))
 	return this.protocol, nil
 }
 
@@ -263,6 +272,10 @@ type ProtocolBody_NoNextHeader struct {
 func NewProtocolBody_NoNextHeader() *ProtocolBody_NoNextHeader {
 	return &ProtocolBody_NoNextHeader{
 	}
+}
+
+func (this ProtocolBody_NoNextHeader) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *ProtocolBody_NoNextHeader) Read(io *kaitai.Stream, parent *ProtocolBody, root *ProtocolBody) (err error) {
@@ -286,6 +299,10 @@ func NewProtocolBody_OptionHopByHop() *ProtocolBody_OptionHopByHop {
 	}
 }
 
+func (this ProtocolBody_OptionHopByHop) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *ProtocolBody_OptionHopByHop) Read(io *kaitai.Stream, parent *ProtocolBody, root *ProtocolBody) (err error) {
 	this._io = io
 	this._parent = parent
@@ -303,7 +320,7 @@ func (this *ProtocolBody_OptionHopByHop) Read(io *kaitai.Stream, parent *Protoco
 	this.HdrExtLen = tmp10
 	var tmp11 int;
 	if (this.HdrExtLen > 0) {
-		tmp11 = (this.HdrExtLen - 1)
+		tmp11 = this.HdrExtLen - 1
 	} else {
 		tmp11 = 1
 	}
@@ -314,7 +331,7 @@ func (this *ProtocolBody_OptionHopByHop) Read(io *kaitai.Stream, parent *Protoco
 	tmp12 = tmp12
 	this.Body = tmp12
 	tmp13 := NewProtocolBody(this.NextHeaderType)
-	err = tmp13.Read(this._io, this, nil)
+	err = tmp13.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}

@@ -195,6 +195,11 @@ Transmission Control Protocol (TCP) or User Datagram Protocol (UDP).</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="RTP (Real-time Transport Protocol) parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="RTP (Real-time Transport Protocol) parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -225,7 +230,17 @@ Transmission Control Protocol (TCP) or User Datagram Protocol (UDP).</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="RTP (Real-time Transport Protocol) parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="RTP (Real-time Transport Protocol) parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="RTP (Real-time Transport Protocol) parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -331,26 +346,8 @@ Transmission Control Protocol (TCP) or User Datagram Protocol (UDP).</p>
 <span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">has_extension</span><span class="w"> </span><span class="kr">then</span>
 <span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">header_extension</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">RtpPacket</span><span class="p">.</span><span class="nf">HeaderExtention</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
 <span class="w">  </span><span class="kr">end</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(((</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">pos</span><span class="p">())</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">len_padding</span><span class="p">))</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">pos</span><span class="p">())</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">len_padding</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">padding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_padding</span><span class="p">)</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- If padding bit is enabled, last byte of data contains number of</span>
-<span class="c1">-- bytes appended to the payload as padding.</span>
-<span class="nv">RtpPacket</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">len_padding_if_exists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">RtpPacket</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">len_padding_if_exists</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_padding_if_exists</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_padding_if_exists</span>
-<span class="w">  </span><span class="kr">end</span>
-
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">has_padding</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">pos</span><span class="p">()</span>
-<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
-<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_padding_if_exists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">()</span>
-<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">(</span><span class="nv">_pos</span><span class="p">)</span>
-<span class="w">  </span><span class="kr">end</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_padding_if_exists</span>
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
@@ -366,6 +363,24 @@ Transmission Control Protocol (TCP) or User Datagram Protocol (UDP).</p>
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
+<span class="c1">-- If padding bit is enabled, last byte of data contains number of</span>
+<span class="c1">-- bytes appended to the payload as padding.</span>
+<span class="nv">RtpPacket</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">len_padding_if_exists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">RtpPacket</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">len_padding_if_exists</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_padding_if_exists</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_padding_if_exists</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">has_padding</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">pos</span><span class="p">()</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_padding_if_exists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">()</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">(</span><span class="nv">_pos</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_padding_if_exists</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
 <span class="c1">-- Payload without padding.</span>
 
 <span class="nv">RtpPacket</span><span class="p">.</span><span class="py">HeaderExtention</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
@@ -373,7 +388,7 @@ Transmission Control Protocol (TCP) or User Datagram Protocol (UDP).</p>
 <span class="kr">function</span><span class="w"> </span><span class="nc">RtpPacket</span><span class="p">.</span><span class="nc">HeaderExtention</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 

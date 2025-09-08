@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream', './DcmpVariableLengthInteger'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./DcmpVariableLengthInteger'));
+    define(['exports', 'kaitai-struct/KaitaiStream', './DcmpVariableLengthInteger'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'), require('./DcmpVariableLengthInteger'));
   } else {
-    root.Dcmp1 = factory(root.KaitaiStream, root.DcmpVariableLengthInteger);
+    factory(root.Dcmp1 || (root.Dcmp1 = {}), root.KaitaiStream, root.DcmpVariableLengthInteger || (root.DcmpVariableLengthInteger = {}));
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, DcmpVariableLengthInteger) {
+})(typeof self !== 'undefined' ? self : this, function (Dcmp1_, KaitaiStream, DcmpVariableLengthInteger_) {
 /**
  * Compressed resource data in `'dcmp' (1)` format,
  * as stored in compressed resources with header type `8` and decompressor ID `1`.
@@ -87,137 +87,30 @@ var Dcmp1 = (function() {
     function Chunk(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     Chunk.prototype._read = function() {
       this.tag = this._io.readU1();
       switch (( ((this.tag >= 0) && (this.tag <= 31))  ? Dcmp1.Chunk.TagKind.LITERAL : ( ((this.tag >= 32) && (this.tag <= 207))  ? Dcmp1.Chunk.TagKind.BACKREFERENCE : ( ((this.tag >= 208) && (this.tag <= 209))  ? Dcmp1.Chunk.TagKind.LITERAL : (this.tag == 210 ? Dcmp1.Chunk.TagKind.BACKREFERENCE : ( ((this.tag >= 213) && (this.tag <= 253))  ? Dcmp1.Chunk.TagKind.TABLE_LOOKUP : (this.tag == 254 ? Dcmp1.Chunk.TagKind.EXTENDED : (this.tag == 255 ? Dcmp1.Chunk.TagKind.END : Dcmp1.Chunk.TagKind.INVALID)))))))) {
+      case Dcmp1.Chunk.TagKind.BACKREFERENCE:
+        this.body = new BackreferenceBody(this._io, this, this._root, this.tag);
+        break;
+      case Dcmp1.Chunk.TagKind.END:
+        this.body = new EndBody(this._io, this, this._root);
+        break;
       case Dcmp1.Chunk.TagKind.EXTENDED:
         this.body = new ExtendedBody(this._io, this, this._root);
         break;
       case Dcmp1.Chunk.TagKind.LITERAL:
         this.body = new LiteralBody(this._io, this, this._root, this.tag);
         break;
-      case Dcmp1.Chunk.TagKind.END:
-        this.body = new EndBody(this._io, this, this._root);
-        break;
       case Dcmp1.Chunk.TagKind.TABLE_LOOKUP:
         this.body = new TableLookupBody(this._io, this, this._root, this.tag);
         break;
-      case Dcmp1.Chunk.TagKind.BACKREFERENCE:
-        this.body = new BackreferenceBody(this._io, this, this._root, this.tag);
-        break;
       }
     }
-
-    /**
-     * The body of a literal data chunk.
-     * 
-     * The data that this chunk expands to is stored literally in the body (`literal`).
-     * Optionally,
-     * the literal data may also be stored for use by future backreference chunks (`do_store`).
-     */
-
-    var LiteralBody = Chunk.LiteralBody = (function() {
-      function LiteralBody(_io, _parent, _root, tag) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-        this.tag = tag;
-
-        this._read();
-      }
-      LiteralBody.prototype._read = function() {
-        if (this.isLenLiteralSeparate) {
-          this.lenLiteralSeparate = this._io.readU1();
-        }
-        this.literal = this._io.readBytes(this.lenLiteral);
-      }
-
-      /**
-       * Whether this literal should be stored for use by future backreference chunks.
-       * 
-       * See the documentation of the `backreference_body` type for details about backreference chunks.
-       */
-      Object.defineProperty(LiteralBody.prototype, 'doStore', {
-        get: function() {
-          if (this._m_doStore !== undefined)
-            return this._m_doStore;
-          this._m_doStore = (this.isLenLiteralSeparate ? this.tag == 209 : (this.tag & 16) != 0);
-          return this._m_doStore;
-        }
-      });
-
-      /**
-       * The part of the tag byte that indicates the length of the literal data,
-       * in bytes,
-       * minus one.
-       * 
-       * If the tag byte is 0xd0 or 0xd1,
-       * the length is stored in a separate byte after the tag byte and before the literal data.
-       */
-      Object.defineProperty(LiteralBody.prototype, 'lenLiteralM1InTag', {
-        get: function() {
-          if (this._m_lenLiteralM1InTag !== undefined)
-            return this._m_lenLiteralM1InTag;
-          if (!(this.isLenLiteralSeparate)) {
-            this._m_lenLiteralM1InTag = (this.tag & 15);
-          }
-          return this._m_lenLiteralM1InTag;
-        }
-      });
-
-      /**
-       * Whether the length of the literal is stored separately from the tag.
-       */
-      Object.defineProperty(LiteralBody.prototype, 'isLenLiteralSeparate', {
-        get: function() {
-          if (this._m_isLenLiteralSeparate !== undefined)
-            return this._m_isLenLiteralSeparate;
-          this._m_isLenLiteralSeparate = this.tag >= 208;
-          return this._m_isLenLiteralSeparate;
-        }
-      });
-
-      /**
-       * The length of the literal data,
-       * in bytes.
-       * 
-       * In practice,
-       * this value is always greater than zero,
-       * as there is no use in storing a zero-length literal.
-       */
-      Object.defineProperty(LiteralBody.prototype, 'lenLiteral', {
-        get: function() {
-          if (this._m_lenLiteral !== undefined)
-            return this._m_lenLiteral;
-          this._m_lenLiteral = (this.isLenLiteralSeparate ? this.lenLiteralSeparate : (this.lenLiteralM1InTag + 1));
-          return this._m_lenLiteral;
-        }
-      });
-
-      /**
-       * The length of the literal data,
-       * in bytes.
-       * 
-       * This field is only present if the tag byte is 0xd0 or 0xd1.
-       * In practice,
-       * this only happens if the length is 0x11 or greater,
-       * because smaller lengths can be encoded into the tag byte.
-       */
-
-      /**
-       * The literal data.
-       */
-
-      /**
-       * The tag byte preceding this chunk body.
-       */
-
-      return LiteralBody;
-    })();
 
     /**
      * The body of a backreference chunk.
@@ -230,7 +123,7 @@ var Dcmp1 = (function() {
       function BackreferenceBody(_io, _parent, _root, tag) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
         this.tag = tag;
 
         this._read();
@@ -240,47 +133,6 @@ var Dcmp1 = (function() {
           this.indexSeparateMinus = this._io.readU1();
         }
       }
-
-      /**
-       * Whether the index is stored separately from the tag.
-       */
-      Object.defineProperty(BackreferenceBody.prototype, 'isIndexSeparate', {
-        get: function() {
-          if (this._m_isIndexSeparate !== undefined)
-            return this._m_isIndexSeparate;
-          this._m_isIndexSeparate = this.tag == 210;
-          return this._m_isIndexSeparate;
-        }
-      });
-
-      /**
-       * The index of the referenced literal chunk,
-       * as stored in the tag byte.
-       */
-      Object.defineProperty(BackreferenceBody.prototype, 'indexInTag', {
-        get: function() {
-          if (this._m_indexInTag !== undefined)
-            return this._m_indexInTag;
-          this._m_indexInTag = (this.tag - 32);
-          return this._m_indexInTag;
-        }
-      });
-
-      /**
-       * The index of the referenced literal chunk,
-       * as stored separately from the tag byte,
-       * with the implicit offset corrected for.
-       */
-      Object.defineProperty(BackreferenceBody.prototype, 'indexSeparate', {
-        get: function() {
-          if (this._m_indexSeparate !== undefined)
-            return this._m_indexSeparate;
-          if (this.isIndexSeparate) {
-            this._m_indexSeparate = (this.indexSeparateMinus + 176);
-          }
-          return this._m_indexSeparate;
-        }
-      });
 
       /**
        * The index of the referenced literal chunk.
@@ -306,6 +158,47 @@ var Dcmp1 = (function() {
 
       /**
        * The index of the referenced literal chunk,
+       * as stored in the tag byte.
+       */
+      Object.defineProperty(BackreferenceBody.prototype, 'indexInTag', {
+        get: function() {
+          if (this._m_indexInTag !== undefined)
+            return this._m_indexInTag;
+          this._m_indexInTag = this.tag - 32;
+          return this._m_indexInTag;
+        }
+      });
+
+      /**
+       * The index of the referenced literal chunk,
+       * as stored separately from the tag byte,
+       * with the implicit offset corrected for.
+       */
+      Object.defineProperty(BackreferenceBody.prototype, 'indexSeparate', {
+        get: function() {
+          if (this._m_indexSeparate !== undefined)
+            return this._m_indexSeparate;
+          if (this.isIndexSeparate) {
+            this._m_indexSeparate = this.indexSeparateMinus + 176;
+          }
+          return this._m_indexSeparate;
+        }
+      });
+
+      /**
+       * Whether the index is stored separately from the tag.
+       */
+      Object.defineProperty(BackreferenceBody.prototype, 'isIndexSeparate', {
+        get: function() {
+          if (this._m_isIndexSeparate !== undefined)
+            return this._m_isIndexSeparate;
+          this._m_isIndexSeparate = this.tag == 210;
+          return this._m_isIndexSeparate;
+        }
+      });
+
+      /**
+       * The index of the referenced literal chunk,
        * stored separately from the tag.
        * The value in this field is stored minus 0xb0.
        * 
@@ -324,62 +217,6 @@ var Dcmp1 = (function() {
     })();
 
     /**
-     * The body of a table lookup chunk.
-     * This body is always empty.
-     * 
-     * This chunk always expands to two bytes (`value`),
-     * determined from the tag byte using a fixed lookup table (`lookup_table`).
-     * This lookup table is hardcoded in the decompressor and always the same for all compressed data.
-     */
-
-    var TableLookupBody = Chunk.TableLookupBody = (function() {
-      function TableLookupBody(_io, _parent, _root, tag) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-        this.tag = tag;
-
-        this._read();
-      }
-      TableLookupBody.prototype._read = function() {
-      }
-
-      /**
-       * Fixed lookup table that maps tag byte numbers to two bytes each.
-       * 
-       * The entries in the lookup table are offset -
-       * index 0 stands for tag 0xd5, 1 for 0xd6, etc.
-       */
-      Object.defineProperty(TableLookupBody.prototype, 'lookupTable', {
-        get: function() {
-          if (this._m_lookupTable !== undefined)
-            return this._m_lookupTable;
-          this._m_lookupTable = [[0, 0], [0, 1], [0, 2], [0, 3], [46, 1], [62, 1], [1, 1], [30, 1], [255, 255], [14, 1], [49, 0], [17, 18], [1, 7], [51, 50], [18, 57], [237, 16], [1, 39], [35, 34], [1, 55], [7, 6], [1, 23], [1, 35], [0, 255], [0, 47], [7, 14], [253, 60], [1, 53], [1, 21], [1, 2], [0, 7], [0, 62], [5, 213], [2, 1], [6, 7], [7, 8], [48, 1], [1, 51], [0, 16], [23, 22], [55, 62], [54, 55]];
-          return this._m_lookupTable;
-        }
-      });
-
-      /**
-       * The two bytes that the tag byte expands to,
-       * based on the fixed lookup table.
-       */
-      Object.defineProperty(TableLookupBody.prototype, 'value', {
-        get: function() {
-          if (this._m_value !== undefined)
-            return this._m_value;
-          this._m_value = this.lookupTable[(this.tag - 213)];
-          return this._m_value;
-        }
-      });
-
-      /**
-       * The tag byte preceding this chunk body.
-       */
-
-      return TableLookupBody;
-    })();
-
-    /**
      * The body of an end chunk.
      * This body is always empty.
      * 
@@ -391,7 +228,7 @@ var Dcmp1 = (function() {
       function EndBody(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -410,7 +247,7 @@ var Dcmp1 = (function() {
       function ExtendedBody(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -434,27 +271,26 @@ var Dcmp1 = (function() {
         function RepeatBody(_io, _parent, _root) {
           this._io = _io;
           this._parent = _parent;
-          this._root = _root || this;
+          this._root = _root;
 
           this._read();
         }
         RepeatBody.prototype._read = function() {
-          this.toRepeatRaw = new DcmpVariableLengthInteger(this._io, this, null);
-          this.repeatCountM1Raw = new DcmpVariableLengthInteger(this._io, this, null);
+          this.toRepeatRaw = new DcmpVariableLengthInteger_.DcmpVariableLengthInteger(this._io, null, null);
+          this.repeatCountM1Raw = new DcmpVariableLengthInteger_.DcmpVariableLengthInteger(this._io, null, null);
         }
 
         /**
-         * The value to repeat.
+         * The number of times to repeat the value.
          * 
-         * Although it is stored as a variable-length integer,
-         * this value must fit into an unsigned 8-bit integer.
+         * This value must be positive.
          */
-        Object.defineProperty(RepeatBody.prototype, 'toRepeat', {
+        Object.defineProperty(RepeatBody.prototype, 'repeatCount', {
           get: function() {
-            if (this._m_toRepeat !== undefined)
-              return this._m_toRepeat;
-            this._m_toRepeat = this.toRepeatRaw.value;
-            return this._m_toRepeat;
+            if (this._m_repeatCount !== undefined)
+              return this._m_repeatCount;
+            this._m_repeatCount = this.repeatCountM1 + 1;
+            return this._m_repeatCount;
           }
         });
 
@@ -474,16 +310,17 @@ var Dcmp1 = (function() {
         });
 
         /**
-         * The number of times to repeat the value.
+         * The value to repeat.
          * 
-         * This value must be positive.
+         * Although it is stored as a variable-length integer,
+         * this value must fit into an unsigned 8-bit integer.
          */
-        Object.defineProperty(RepeatBody.prototype, 'repeatCount', {
+        Object.defineProperty(RepeatBody.prototype, 'toRepeat', {
           get: function() {
-            if (this._m_repeatCount !== undefined)
-              return this._m_repeatCount;
-            this._m_repeatCount = (this.repeatCountM1 + 1);
-            return this._m_repeatCount;
+            if (this._m_toRepeat !== undefined)
+              return this._m_toRepeat;
+            this._m_toRepeat = this.toRepeatRaw.value;
+            return this._m_toRepeat;
           }
         });
 
@@ -511,6 +348,169 @@ var Dcmp1 = (function() {
     })();
 
     /**
+     * The body of a literal data chunk.
+     * 
+     * The data that this chunk expands to is stored literally in the body (`literal`).
+     * Optionally,
+     * the literal data may also be stored for use by future backreference chunks (`do_store`).
+     */
+
+    var LiteralBody = Chunk.LiteralBody = (function() {
+      function LiteralBody(_io, _parent, _root, tag) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+        this.tag = tag;
+
+        this._read();
+      }
+      LiteralBody.prototype._read = function() {
+        if (this.isLenLiteralSeparate) {
+          this.lenLiteralSeparate = this._io.readU1();
+        }
+        this.literal = this._io.readBytes(this.lenLiteral);
+      }
+
+      /**
+       * Whether this literal should be stored for use by future backreference chunks.
+       * 
+       * See the documentation of the `backreference_body` type for details about backreference chunks.
+       */
+      Object.defineProperty(LiteralBody.prototype, 'doStore', {
+        get: function() {
+          if (this._m_doStore !== undefined)
+            return this._m_doStore;
+          this._m_doStore = (this.isLenLiteralSeparate ? this.tag == 209 : (this.tag & 16) != 0);
+          return this._m_doStore;
+        }
+      });
+
+      /**
+       * Whether the length of the literal is stored separately from the tag.
+       */
+      Object.defineProperty(LiteralBody.prototype, 'isLenLiteralSeparate', {
+        get: function() {
+          if (this._m_isLenLiteralSeparate !== undefined)
+            return this._m_isLenLiteralSeparate;
+          this._m_isLenLiteralSeparate = this.tag >= 208;
+          return this._m_isLenLiteralSeparate;
+        }
+      });
+
+      /**
+       * The length of the literal data,
+       * in bytes.
+       * 
+       * In practice,
+       * this value is always greater than zero,
+       * as there is no use in storing a zero-length literal.
+       */
+      Object.defineProperty(LiteralBody.prototype, 'lenLiteral', {
+        get: function() {
+          if (this._m_lenLiteral !== undefined)
+            return this._m_lenLiteral;
+          this._m_lenLiteral = (this.isLenLiteralSeparate ? this.lenLiteralSeparate : this.lenLiteralM1InTag + 1);
+          return this._m_lenLiteral;
+        }
+      });
+
+      /**
+       * The part of the tag byte that indicates the length of the literal data,
+       * in bytes,
+       * minus one.
+       * 
+       * If the tag byte is 0xd0 or 0xd1,
+       * the length is stored in a separate byte after the tag byte and before the literal data.
+       */
+      Object.defineProperty(LiteralBody.prototype, 'lenLiteralM1InTag', {
+        get: function() {
+          if (this._m_lenLiteralM1InTag !== undefined)
+            return this._m_lenLiteralM1InTag;
+          if (!(this.isLenLiteralSeparate)) {
+            this._m_lenLiteralM1InTag = this.tag & 15;
+          }
+          return this._m_lenLiteralM1InTag;
+        }
+      });
+
+      /**
+       * The length of the literal data,
+       * in bytes.
+       * 
+       * This field is only present if the tag byte is 0xd0 or 0xd1.
+       * In practice,
+       * this only happens if the length is 0x11 or greater,
+       * because smaller lengths can be encoded into the tag byte.
+       */
+
+      /**
+       * The literal data.
+       */
+
+      /**
+       * The tag byte preceding this chunk body.
+       */
+
+      return LiteralBody;
+    })();
+
+    /**
+     * The body of a table lookup chunk.
+     * This body is always empty.
+     * 
+     * This chunk always expands to two bytes (`value`),
+     * determined from the tag byte using a fixed lookup table (`lookup_table`).
+     * This lookup table is hardcoded in the decompressor and always the same for all compressed data.
+     */
+
+    var TableLookupBody = Chunk.TableLookupBody = (function() {
+      function TableLookupBody(_io, _parent, _root, tag) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+        this.tag = tag;
+
+        this._read();
+      }
+      TableLookupBody.prototype._read = function() {
+      }
+
+      /**
+       * Fixed lookup table that maps tag byte numbers to two bytes each.
+       * 
+       * The entries in the lookup table are offset -
+       * index 0 stands for tag 0xd5, 1 for 0xd6, etc.
+       */
+      Object.defineProperty(TableLookupBody.prototype, 'lookupTable', {
+        get: function() {
+          if (this._m_lookupTable !== undefined)
+            return this._m_lookupTable;
+          this._m_lookupTable = [new Uint8Array([0, 0]), new Uint8Array([0, 1]), new Uint8Array([0, 2]), new Uint8Array([0, 3]), new Uint8Array([46, 1]), new Uint8Array([62, 1]), new Uint8Array([1, 1]), new Uint8Array([30, 1]), new Uint8Array([255, 255]), new Uint8Array([14, 1]), new Uint8Array([49, 0]), new Uint8Array([17, 18]), new Uint8Array([1, 7]), new Uint8Array([51, 50]), new Uint8Array([18, 57]), new Uint8Array([237, 16]), new Uint8Array([1, 39]), new Uint8Array([35, 34]), new Uint8Array([1, 55]), new Uint8Array([7, 6]), new Uint8Array([1, 23]), new Uint8Array([1, 35]), new Uint8Array([0, 255]), new Uint8Array([0, 47]), new Uint8Array([7, 14]), new Uint8Array([253, 60]), new Uint8Array([1, 53]), new Uint8Array([1, 21]), new Uint8Array([1, 2]), new Uint8Array([0, 7]), new Uint8Array([0, 62]), new Uint8Array([5, 213]), new Uint8Array([2, 1]), new Uint8Array([6, 7]), new Uint8Array([7, 8]), new Uint8Array([48, 1]), new Uint8Array([1, 51]), new Uint8Array([0, 16]), new Uint8Array([23, 22]), new Uint8Array([55, 62]), new Uint8Array([54, 55])];
+          return this._m_lookupTable;
+        }
+      });
+
+      /**
+       * The two bytes that the tag byte expands to,
+       * based on the fixed lookup table.
+       */
+      Object.defineProperty(TableLookupBody.prototype, 'value', {
+        get: function() {
+          if (this._m_value !== undefined)
+            return this._m_value;
+          this._m_value = this.lookupTable[this.tag - 213];
+          return this._m_value;
+        }
+      });
+
+      /**
+       * The tag byte preceding this chunk body.
+       */
+
+      return TableLookupBody;
+    })();
+
+    /**
      * The chunk's tag byte.
      * This controls the structure of the body and the meaning of the chunk.
      */
@@ -532,5 +532,5 @@ var Dcmp1 = (function() {
 
   return Dcmp1;
 })();
-return Dcmp1;
-}));
+Dcmp1_.Dcmp1 = Dcmp1;
+});

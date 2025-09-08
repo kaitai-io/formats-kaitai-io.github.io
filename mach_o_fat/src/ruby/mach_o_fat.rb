@@ -1,9 +1,10 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 require 'kaitai/struct/struct'
+require_relative 'mach_o'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -13,14 +14,14 @@ end
 # like single-arch Mach-Os and will pick the appropriate entry.
 # @see https://opensource.apple.com/source/xnu/xnu-7195.121.3/EXTERNAL_HEADERS/mach-o/fat.h.auto.html Source
 class MachOFat < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
     @magic = @_io.read_bytes(4)
-    raise Kaitai::Struct::ValidationNotEqualError.new([202, 254, 186, 190].pack('C*'), magic, _io, "/seq/0") if not magic == [202, 254, 186, 190].pack('C*')
+    raise Kaitai::Struct::ValidationNotEqualError.new([202, 254, 186, 190].pack('C*'), @magic, @_io, "/seq/0") if not @magic == [202, 254, 186, 190].pack('C*')
     @num_fat_arch = @_io.read_u4be
     @fat_archs = []
     (num_fat_arch).times { |i|
@@ -29,7 +30,7 @@ class MachOFat < Kaitai::Struct::Struct
     self
   end
   class FatArch < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -46,9 +47,8 @@ class MachOFat < Kaitai::Struct::Struct
       return @object unless @object.nil?
       _pos = @_io.pos
       @_io.seek(ofs_object)
-      @_raw_object = @_io.read_bytes(len_object)
-      _io__raw_object = Kaitai::Struct::Stream.new(@_raw_object)
-      @object = MachO.new(_io__raw_object)
+      _io_object = @_io.substream(len_object)
+      @object = MachO.new(_io_object)
       @_io.seek(_pos)
       @object
     end

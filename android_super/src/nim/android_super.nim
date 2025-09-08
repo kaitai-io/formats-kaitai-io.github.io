@@ -6,16 +6,6 @@ type
     `parent`*: KaitaiStruct
     `rootInst`: AndroidSuper_Root
     `rootInstFlag`: bool
-  AndroidSuper_Root* = ref object of KaitaiStruct
-    `primaryGeometry`*: AndroidSuper_Geometry
-    `backupGeometry`*: AndroidSuper_Geometry
-    `primaryMetadata`*: seq[AndroidSuper_Metadata]
-    `backupMetadata`*: seq[AndroidSuper_Metadata]
-    `parent`*: AndroidSuper
-    `rawPrimaryGeometry`*: seq[byte]
-    `rawBackupGeometry`*: seq[byte]
-    `rawPrimaryMetadata`*: seq[seq[byte]]
-    `rawBackupMetadata`*: seq[seq[byte]]
   AndroidSuper_Geometry* = ref object of KaitaiStruct
     `magic`*: seq[byte]
     `structSize`*: uint32
@@ -60,15 +50,12 @@ type
   AndroidSuper_Metadata_Extent_TargetType* = enum
     linear = 0
     zero = 1
-  AndroidSuper_Metadata_TableDescriptor* = ref object of KaitaiStruct
-    `offset`*: uint32
-    `numEntries`*: uint32
-    `entrySize`*: uint32
-    `kind`*: AndroidSuper_Metadata_TableKind
-    `parent`*: AndroidSuper_Metadata
-    `rawTableInst`*: seq[seq[byte]]
-    `tableInst`: seq[KaitaiStruct]
-    `tableInstFlag`: bool
+  AndroidSuper_Metadata_Group* = ref object of KaitaiStruct
+    `name`*: string
+    `flagSlotSuffixed`*: bool
+    `flagsReserved`*: uint64
+    `maximumSize`*: uint64
+    `parent`*: AndroidSuper_Metadata_TableDescriptor
   AndroidSuper_Metadata_Partition* = ref object of KaitaiStruct
     `name`*: string
     `attrReadonly`*: bool
@@ -80,22 +67,35 @@ type
     `numExtents`*: uint32
     `groupIndex`*: uint32
     `parent`*: AndroidSuper_Metadata_TableDescriptor
-  AndroidSuper_Metadata_Group* = ref object of KaitaiStruct
-    `name`*: string
-    `flagSlotSuffixed`*: bool
-    `flagsReserved`*: uint64
-    `maximumSize`*: uint64
-    `parent`*: AndroidSuper_Metadata_TableDescriptor
+  AndroidSuper_Metadata_TableDescriptor* = ref object of KaitaiStruct
+    `offset`*: uint32
+    `numEntries`*: uint32
+    `entrySize`*: uint32
+    `kind`*: AndroidSuper_Metadata_TableKind
+    `parent`*: AndroidSuper_Metadata
+    `rawTableInst`*: seq[seq[byte]]
+    `tableInst`: seq[KaitaiStruct]
+    `tableInstFlag`: bool
+  AndroidSuper_Root* = ref object of KaitaiStruct
+    `primaryGeometry`*: AndroidSuper_Geometry
+    `backupGeometry`*: AndroidSuper_Geometry
+    `primaryMetadata`*: seq[AndroidSuper_Metadata]
+    `backupMetadata`*: seq[AndroidSuper_Metadata]
+    `parent`*: AndroidSuper
+    `rawPrimaryGeometry`*: seq[byte]
+    `rawBackupGeometry`*: seq[byte]
+    `rawPrimaryMetadata`*: seq[seq[byte]]
+    `rawBackupMetadata`*: seq[seq[byte]]
 
 proc read*(_: typedesc[AndroidSuper], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): AndroidSuper
-proc read*(_: typedesc[AndroidSuper_Root], io: KaitaiStream, root: KaitaiStruct, parent: AndroidSuper): AndroidSuper_Root
 proc read*(_: typedesc[AndroidSuper_Geometry], io: KaitaiStream, root: KaitaiStruct, parent: AndroidSuper_Root): AndroidSuper_Geometry
 proc read*(_: typedesc[AndroidSuper_Metadata], io: KaitaiStream, root: KaitaiStruct, parent: AndroidSuper_Root): AndroidSuper_Metadata
 proc read*(_: typedesc[AndroidSuper_Metadata_BlockDevice], io: KaitaiStream, root: KaitaiStruct, parent: AndroidSuper_Metadata_TableDescriptor): AndroidSuper_Metadata_BlockDevice
 proc read*(_: typedesc[AndroidSuper_Metadata_Extent], io: KaitaiStream, root: KaitaiStruct, parent: AndroidSuper_Metadata_TableDescriptor): AndroidSuper_Metadata_Extent
-proc read*(_: typedesc[AndroidSuper_Metadata_TableDescriptor], io: KaitaiStream, root: KaitaiStruct, parent: AndroidSuper_Metadata, kind: any): AndroidSuper_Metadata_TableDescriptor
-proc read*(_: typedesc[AndroidSuper_Metadata_Partition], io: KaitaiStream, root: KaitaiStruct, parent: AndroidSuper_Metadata_TableDescriptor): AndroidSuper_Metadata_Partition
 proc read*(_: typedesc[AndroidSuper_Metadata_Group], io: KaitaiStream, root: KaitaiStruct, parent: AndroidSuper_Metadata_TableDescriptor): AndroidSuper_Metadata_Group
+proc read*(_: typedesc[AndroidSuper_Metadata_Partition], io: KaitaiStream, root: KaitaiStruct, parent: AndroidSuper_Metadata_TableDescriptor): AndroidSuper_Metadata_Partition
+proc read*(_: typedesc[AndroidSuper_Metadata_TableDescriptor], io: KaitaiStream, root: KaitaiStruct, parent: AndroidSuper_Metadata, kind: any): AndroidSuper_Metadata_TableDescriptor
+proc read*(_: typedesc[AndroidSuper_Root], io: KaitaiStream, root: KaitaiStruct, parent: AndroidSuper): AndroidSuper_Root
 
 proc root*(this: AndroidSuper): AndroidSuper_Root
 proc table*(this: AndroidSuper_Metadata_TableDescriptor): seq[KaitaiStruct]
@@ -133,40 +133,6 @@ proc root(this: AndroidSuper): AndroidSuper_Root =
 
 proc fromFile*(_: typedesc[AndroidSuper], filename: string): AndroidSuper =
   AndroidSuper.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[AndroidSuper_Root], io: KaitaiStream, root: KaitaiStruct, parent: AndroidSuper): AndroidSuper_Root =
-  template this: untyped = result
-  this = new(AndroidSuper_Root)
-  let root = if root == nil: cast[AndroidSuper](this) else: cast[AndroidSuper](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let rawPrimaryGeometryExpr = this.io.readBytes(int(4096))
-  this.rawPrimaryGeometry = rawPrimaryGeometryExpr
-  let rawPrimaryGeometryIo = newKaitaiStream(rawPrimaryGeometryExpr)
-  let primaryGeometryExpr = AndroidSuper_Geometry.read(rawPrimaryGeometryIo, this.root, this)
-  this.primaryGeometry = primaryGeometryExpr
-  let rawBackupGeometryExpr = this.io.readBytes(int(4096))
-  this.rawBackupGeometry = rawBackupGeometryExpr
-  let rawBackupGeometryIo = newKaitaiStream(rawBackupGeometryExpr)
-  let backupGeometryExpr = AndroidSuper_Geometry.read(rawBackupGeometryIo, this.root, this)
-  this.backupGeometry = backupGeometryExpr
-  for i in 0 ..< int(this.primaryGeometry.metadataSlotCount):
-    let buf = this.io.readBytes(int(this.primaryGeometry.metadataMaxSize))
-    this.rawPrimaryMetadata.add(buf)
-    let rawPrimaryMetadataIo = newKaitaiStream(buf)
-    let it = AndroidSuper_Metadata.read(rawPrimaryMetadataIo, this.root, this)
-    this.primaryMetadata.add(it)
-  for i in 0 ..< int(this.primaryGeometry.metadataSlotCount):
-    let buf = this.io.readBytes(int(this.primaryGeometry.metadataMaxSize))
-    this.rawBackupMetadata.add(buf)
-    let rawBackupMetadataIo = newKaitaiStream(buf)
-    let it = AndroidSuper_Metadata.read(rawBackupMetadataIo, this.root, this)
-    this.backupMetadata.add(it)
-
-proc fromFile*(_: typedesc[AndroidSuper_Root], filename: string): AndroidSuper_Root =
-  AndroidSuper_Root.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[AndroidSuper_Geometry], io: KaitaiStream, root: KaitaiStruct, parent: AndroidSuper_Root): AndroidSuper_Geometry =
   template this: untyped = result
@@ -288,64 +254,26 @@ proc read*(_: typedesc[AndroidSuper_Metadata_Extent], io: KaitaiStream, root: Ka
 proc fromFile*(_: typedesc[AndroidSuper_Metadata_Extent], filename: string): AndroidSuper_Metadata_Extent =
   AndroidSuper_Metadata_Extent.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[AndroidSuper_Metadata_TableDescriptor], io: KaitaiStream, root: KaitaiStruct, parent: AndroidSuper_Metadata, kind: any): AndroidSuper_Metadata_TableDescriptor =
+proc read*(_: typedesc[AndroidSuper_Metadata_Group], io: KaitaiStream, root: KaitaiStruct, parent: AndroidSuper_Metadata_TableDescriptor): AndroidSuper_Metadata_Group =
   template this: untyped = result
-  this = new(AndroidSuper_Metadata_TableDescriptor)
+  this = new(AndroidSuper_Metadata_Group)
   let root = if root == nil: cast[AndroidSuper](this) else: cast[AndroidSuper](root)
   this.io = io
   this.root = root
   this.parent = parent
-  let kindExpr = AndroidSuper_Metadata_TableKind(kind)
-  this.kind = kindExpr
 
-  let offsetExpr = this.io.readU4le()
-  this.offset = offsetExpr
-  let numEntriesExpr = this.io.readU4le()
-  this.numEntries = numEntriesExpr
-  let entrySizeExpr = this.io.readU4le()
-  this.entrySize = entrySizeExpr
+  let nameExpr = encode(this.io.readBytes(int(36)).bytesTerminate(0, false), "UTF-8")
+  this.name = nameExpr
+  let flagSlotSuffixedExpr = this.io.readBitsIntLe(1) != 0
+  this.flagSlotSuffixed = flagSlotSuffixedExpr
+  let flagsReservedExpr = this.io.readBitsIntLe(31)
+  this.flagsReserved = flagsReservedExpr
+  alignToByte(this.io)
+  let maximumSizeExpr = this.io.readU8le()
+  this.maximumSize = maximumSizeExpr
 
-proc table(this: AndroidSuper_Metadata_TableDescriptor): seq[KaitaiStruct] = 
-  if this.tableInstFlag:
-    return this.tableInst
-  let pos = this.io.pos()
-  this.io.seek(int((this.parent.headerSize + this.offset)))
-  for i in 0 ..< int(this.numEntries):
-    block:
-      let on = this.kind
-      if on == android_super.partitions:
-        let buf = this.io.readBytes(int(this.entrySize))
-        this.rawTableInst.add(buf)
-        let rawTableInstIo = newKaitaiStream(buf)
-        let it = AndroidSuper_Metadata_Partition.read(rawTableInstIo, this.root, this)
-        this.tableInst.add(it)
-      elif on == android_super.extents:
-        let buf = this.io.readBytes(int(this.entrySize))
-        this.rawTableInst.add(buf)
-        let rawTableInstIo = newKaitaiStream(buf)
-        let it = AndroidSuper_Metadata_Extent.read(rawTableInstIo, this.root, this)
-        this.tableInst.add(it)
-      elif on == android_super.groups:
-        let buf = this.io.readBytes(int(this.entrySize))
-        this.rawTableInst.add(buf)
-        let rawTableInstIo = newKaitaiStream(buf)
-        let it = AndroidSuper_Metadata_Group.read(rawTableInstIo, this.root, this)
-        this.tableInst.add(it)
-      elif on == android_super.block_devices:
-        let buf = this.io.readBytes(int(this.entrySize))
-        this.rawTableInst.add(buf)
-        let rawTableInstIo = newKaitaiStream(buf)
-        let it = AndroidSuper_Metadata_BlockDevice.read(rawTableInstIo, this.root, this)
-        this.tableInst.add(it)
-      else:
-        let it = this.io.readBytes(int(this.entrySize))
-        this.tableInst.add(it)
-  this.io.seek(pos)
-  this.tableInstFlag = true
-  return this.tableInst
-
-proc fromFile*(_: typedesc[AndroidSuper_Metadata_TableDescriptor], filename: string): AndroidSuper_Metadata_TableDescriptor =
-  AndroidSuper_Metadata_TableDescriptor.read(newKaitaiFileStream(filename), nil, nil)
+proc fromFile*(_: typedesc[AndroidSuper_Metadata_Group], filename: string): AndroidSuper_Metadata_Group =
+  AndroidSuper_Metadata_Group.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[AndroidSuper_Metadata_Partition], io: KaitaiStream, root: KaitaiStruct, parent: AndroidSuper_Metadata_TableDescriptor): AndroidSuper_Metadata_Partition =
   template this: untyped = result
@@ -378,24 +306,96 @@ proc read*(_: typedesc[AndroidSuper_Metadata_Partition], io: KaitaiStream, root:
 proc fromFile*(_: typedesc[AndroidSuper_Metadata_Partition], filename: string): AndroidSuper_Metadata_Partition =
   AndroidSuper_Metadata_Partition.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[AndroidSuper_Metadata_Group], io: KaitaiStream, root: KaitaiStruct, parent: AndroidSuper_Metadata_TableDescriptor): AndroidSuper_Metadata_Group =
+proc read*(_: typedesc[AndroidSuper_Metadata_TableDescriptor], io: KaitaiStream, root: KaitaiStruct, parent: AndroidSuper_Metadata, kind: any): AndroidSuper_Metadata_TableDescriptor =
   template this: untyped = result
-  this = new(AndroidSuper_Metadata_Group)
+  this = new(AndroidSuper_Metadata_TableDescriptor)
+  let root = if root == nil: cast[AndroidSuper](this) else: cast[AndroidSuper](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+  let kindExpr = AndroidSuper_Metadata_TableKind(kind)
+  this.kind = kindExpr
+
+  let offsetExpr = this.io.readU4le()
+  this.offset = offsetExpr
+  let numEntriesExpr = this.io.readU4le()
+  this.numEntries = numEntriesExpr
+  let entrySizeExpr = this.io.readU4le()
+  this.entrySize = entrySizeExpr
+
+proc table(this: AndroidSuper_Metadata_TableDescriptor): seq[KaitaiStruct] = 
+  if this.tableInstFlag:
+    return this.tableInst
+  let pos = this.io.pos()
+  this.io.seek(int(this.parent.headerSize + this.offset))
+  for i in 0 ..< int(this.numEntries):
+    block:
+      let on = this.kind
+      if on == android_super.block_devices:
+        let buf = this.io.readBytes(int(this.entrySize))
+        this.rawTableInst.add(buf)
+        let rawTableInstIo = newKaitaiStream(buf)
+        let it = AndroidSuper_Metadata_BlockDevice.read(rawTableInstIo, this.root, this)
+        this.tableInst.add(it)
+      elif on == android_super.extents:
+        let buf = this.io.readBytes(int(this.entrySize))
+        this.rawTableInst.add(buf)
+        let rawTableInstIo = newKaitaiStream(buf)
+        let it = AndroidSuper_Metadata_Extent.read(rawTableInstIo, this.root, this)
+        this.tableInst.add(it)
+      elif on == android_super.groups:
+        let buf = this.io.readBytes(int(this.entrySize))
+        this.rawTableInst.add(buf)
+        let rawTableInstIo = newKaitaiStream(buf)
+        let it = AndroidSuper_Metadata_Group.read(rawTableInstIo, this.root, this)
+        this.tableInst.add(it)
+      elif on == android_super.partitions:
+        let buf = this.io.readBytes(int(this.entrySize))
+        this.rawTableInst.add(buf)
+        let rawTableInstIo = newKaitaiStream(buf)
+        let it = AndroidSuper_Metadata_Partition.read(rawTableInstIo, this.root, this)
+        this.tableInst.add(it)
+      else:
+        let it = this.io.readBytes(int(this.entrySize))
+        this.tableInst.add(it)
+  this.io.seek(pos)
+  this.tableInstFlag = true
+  return this.tableInst
+
+proc fromFile*(_: typedesc[AndroidSuper_Metadata_TableDescriptor], filename: string): AndroidSuper_Metadata_TableDescriptor =
+  AndroidSuper_Metadata_TableDescriptor.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[AndroidSuper_Root], io: KaitaiStream, root: KaitaiStruct, parent: AndroidSuper): AndroidSuper_Root =
+  template this: untyped = result
+  this = new(AndroidSuper_Root)
   let root = if root == nil: cast[AndroidSuper](this) else: cast[AndroidSuper](root)
   this.io = io
   this.root = root
   this.parent = parent
 
-  let nameExpr = encode(this.io.readBytes(int(36)).bytesTerminate(0, false), "UTF-8")
-  this.name = nameExpr
-  let flagSlotSuffixedExpr = this.io.readBitsIntLe(1) != 0
-  this.flagSlotSuffixed = flagSlotSuffixedExpr
-  let flagsReservedExpr = this.io.readBitsIntLe(31)
-  this.flagsReserved = flagsReservedExpr
-  alignToByte(this.io)
-  let maximumSizeExpr = this.io.readU8le()
-  this.maximumSize = maximumSizeExpr
+  let rawPrimaryGeometryExpr = this.io.readBytes(int(4096))
+  this.rawPrimaryGeometry = rawPrimaryGeometryExpr
+  let rawPrimaryGeometryIo = newKaitaiStream(rawPrimaryGeometryExpr)
+  let primaryGeometryExpr = AndroidSuper_Geometry.read(rawPrimaryGeometryIo, this.root, this)
+  this.primaryGeometry = primaryGeometryExpr
+  let rawBackupGeometryExpr = this.io.readBytes(int(4096))
+  this.rawBackupGeometry = rawBackupGeometryExpr
+  let rawBackupGeometryIo = newKaitaiStream(rawBackupGeometryExpr)
+  let backupGeometryExpr = AndroidSuper_Geometry.read(rawBackupGeometryIo, this.root, this)
+  this.backupGeometry = backupGeometryExpr
+  for i in 0 ..< int(this.primaryGeometry.metadataSlotCount):
+    let buf = this.io.readBytes(int(this.primaryGeometry.metadataMaxSize))
+    this.rawPrimaryMetadata.add(buf)
+    let rawPrimaryMetadataIo = newKaitaiStream(buf)
+    let it = AndroidSuper_Metadata.read(rawPrimaryMetadataIo, this.root, this)
+    this.primaryMetadata.add(it)
+  for i in 0 ..< int(this.primaryGeometry.metadataSlotCount):
+    let buf = this.io.readBytes(int(this.primaryGeometry.metadataMaxSize))
+    this.rawBackupMetadata.add(buf)
+    let rawBackupMetadataIo = newKaitaiStream(buf)
+    let it = AndroidSuper_Metadata.read(rawBackupMetadataIo, this.root, this)
+    this.backupMetadata.add(it)
 
-proc fromFile*(_: typedesc[AndroidSuper_Metadata_Group], filename: string): AndroidSuper_Metadata_Group =
-  AndroidSuper_Metadata_Group.read(newKaitaiFileStream(filename), nil, nil)
+proc fromFile*(_: typedesc[AndroidSuper_Root], filename: string): AndroidSuper_Root =
+  AndroidSuper_Root.read(newKaitaiFileStream(filename), nil, nil)
 

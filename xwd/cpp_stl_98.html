@@ -212,6 +212,11 @@ and thus is probably a poor choice for true cross-platform usage.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="xwd (X Window Dump) bitmap image parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="xwd (X Window Dump) bitmap image parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -242,7 +247,17 @@ and thus is probably a poor choice for true cross-platform usage.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="xwd (X Window Dump) bitmap image parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="xwd (X Window Dump) bitmap image parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="xwd (X Window Dump) bitmap image parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -356,12 +371,15 @@ and build them along with your project.</p>
 
 <span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
+<span class="k">class</span><span class="w"> </span><span class="nc">xwd_t</span><span class="p">;</span>
+
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;kaitai/kaitaistruct.h&quot;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdint.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;set&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;vector&gt;</span>
 
-<span class="cp">#if KAITAI_STRUCT_VERSION &lt; 9000L</span>
-<span class="cp">#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required&quot;</span>
+<span class="cp">#if KAITAI_STRUCT_VERSION &lt; 11000L</span>
+<span class="cp">#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required&quot;</span>
 <span class="cp">#endif</span>
 
 <span class="cm">/**</span>
@@ -379,19 +397,33 @@ and build them along with your project.</p>
 <span class="k">class</span><span class="w"> </span><span class="nc">xwd_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
 
 <span class="k">public</span><span class="o">:</span>
-<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">header_t</span><span class="p">;</span>
 <span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">color_map_entry_t</span><span class="p">;</span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">header_t</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">enum</span><span class="w"> </span><span class="nc">byte_order_t</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">BYTE_ORDER_LE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">        </span><span class="n">BYTE_ORDER_BE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">_is_defined_byte_order_t</span><span class="p">(</span><span class="n">byte_order_t</span><span class="w"> </span><span class="n">v</span><span class="p">);</span>
+
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">byte_order_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_values_byte_order_t</span><span class="p">;</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">byte_order_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_build_values_byte_order_t</span><span class="p">();</span>
+
+<span class="k">public</span><span class="o">:</span>
 
 <span class="w">    </span><span class="k">enum</span><span class="w"> </span><span class="nc">pixmap_format_t</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="n">PIXMAP_FORMAT_X_Y_BITMAP</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
 <span class="w">        </span><span class="n">PIXMAP_FORMAT_X_Y_PIXMAP</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
 <span class="w">        </span><span class="n">PIXMAP_FORMAT_Z_PIXMAP</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
 <span class="w">    </span><span class="p">};</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">_is_defined_pixmap_format_t</span><span class="p">(</span><span class="n">pixmap_format_t</span><span class="w"> </span><span class="n">v</span><span class="p">);</span>
 
-<span class="w">    </span><span class="k">enum</span><span class="w"> </span><span class="nc">byte_order_t</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">BYTE_ORDER_LE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
-<span class="w">        </span><span class="n">BYTE_ORDER_BE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
-<span class="w">    </span><span class="p">};</span>
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">pixmap_format_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_values_pixmap_format_t</span><span class="p">;</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">pixmap_format_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_build_values_pixmap_format_t</span><span class="p">();</span>
+
+<span class="k">public</span><span class="o">:</span>
 
 <span class="w">    </span><span class="k">enum</span><span class="w"> </span><span class="nc">visual_class_t</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="n">VISUAL_CLASS_STATIC_GRAY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
@@ -401,6 +433,13 @@ and build them along with your project.</p>
 <span class="w">        </span><span class="n">VISUAL_CLASS_TRUE_COLOR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span>
 <span class="w">        </span><span class="n">VISUAL_CLASS_DIRECT_COLOR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
 <span class="w">    </span><span class="p">};</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">_is_defined_visual_class_t</span><span class="p">(</span><span class="n">visual_class_t</span><span class="w"> </span><span class="n">v</span><span class="p">);</span>
+
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">visual_class_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_values_visual_class_t</span><span class="p">;</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">visual_class_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_build_values_visual_class_t</span><span class="p">();</span>
+
+<span class="k">public</span><span class="o">:</span>
 
 <span class="w">    </span><span class="n">xwd_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">xwd_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
 
@@ -410,6 +449,44 @@ and build them along with your project.</p>
 
 <span class="k">public</span><span class="o">:</span>
 <span class="w">    </span><span class="o">~</span><span class="n">xwd_t</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">color_map_entry_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="n">color_map_entry_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">xwd_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">xwd_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="o">~</span><span class="n">color_map_entry_t</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_entry_number</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_red</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_green</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_blue</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">m_flags</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">m_padding</span><span class="p">;</span>
+<span class="w">        </span><span class="n">xwd_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
+<span class="w">        </span><span class="n">xwd_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * Number of the color map entry</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">entry_number</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_entry_number</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">red</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_red</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">green</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_green</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">blue</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_blue</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">flags</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_flags</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">padding</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_padding</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">xwd_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">xwd_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">};</span>
 
 <span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">header_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
 
@@ -583,44 +660,6 @@ and build them along with your project.</p>
 <span class="w">        </span><span class="n">xwd_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">    </span><span class="p">};</span>
 
-<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">color_map_entry_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
-
-<span class="w">    </span><span class="k">public</span><span class="o">:</span>
-
-<span class="w">        </span><span class="n">color_map_entry_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">xwd_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">xwd_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
-
-<span class="w">    </span><span class="k">private</span><span class="o">:</span>
-<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span>
-<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span>
-
-<span class="w">    </span><span class="k">public</span><span class="o">:</span>
-<span class="w">        </span><span class="o">~</span><span class="n">color_map_entry_t</span><span class="p">();</span>
-
-<span class="w">    </span><span class="k">private</span><span class="o">:</span>
-<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_entry_number</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_red</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_green</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_blue</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">m_flags</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">m_padding</span><span class="p">;</span>
-<span class="w">        </span><span class="n">xwd_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
-<span class="w">        </span><span class="n">xwd_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
-
-<span class="w">    </span><span class="k">public</span><span class="o">:</span>
-
-<span class="w">        </span><span class="cm">/**</span>
-<span class="cm">         * Number of the color map entry</span>
-<span class="cm">         */</span>
-<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">entry_number</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_entry_number</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">red</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_red</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">green</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_green</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">blue</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_blue</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">flags</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_flags</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">padding</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_padding</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="n">xwd_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="n">xwd_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">    </span><span class="p">};</span>
-
 <span class="k">private</span><span class="o">:</span>
 <span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_len_header</span><span class="p">;</span>
 <span class="w">    </span><span class="n">header_t</span><span class="o">*</span><span class="w"> </span><span class="n">m_hdr</span><span class="p">;</span>
@@ -668,10 +707,45 @@ and build them along with your project.</p>
             <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;xwd.h&quot;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">xwd_t</span><span class="o">::</span><span class="n">byte_order_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">xwd_t</span><span class="o">::</span><span class="n">_build_values_byte_order_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">xwd_t</span><span class="o">::</span><span class="n">byte_order_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_t</span><span class="p">;</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">xwd_t</span><span class="o">::</span><span class="n">BYTE_ORDER_LE</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">xwd_t</span><span class="o">::</span><span class="n">BYTE_ORDER_BE</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">_t</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">xwd_t</span><span class="o">::</span><span class="n">byte_order_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">xwd_t</span><span class="o">::</span><span class="n">_values_byte_order_t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xwd_t</span><span class="o">::</span><span class="n">_build_values_byte_order_t</span><span class="p">();</span>
+<span class="kt">bool</span><span class="w"> </span><span class="nf">xwd_t::_is_defined_byte_order_t</span><span class="p">(</span><span class="n">xwd_t</span><span class="o">::</span><span class="n">byte_order_t</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">xwd_t</span><span class="o">::</span><span class="n">_values_byte_order_t</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">xwd_t</span><span class="o">::</span><span class="n">_values_byte_order_t</span><span class="p">.</span><span class="n">end</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">xwd_t</span><span class="o">::</span><span class="n">pixmap_format_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">xwd_t</span><span class="o">::</span><span class="n">_build_values_pixmap_format_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">xwd_t</span><span class="o">::</span><span class="n">pixmap_format_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_t</span><span class="p">;</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">xwd_t</span><span class="o">::</span><span class="n">PIXMAP_FORMAT_X_Y_BITMAP</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">xwd_t</span><span class="o">::</span><span class="n">PIXMAP_FORMAT_X_Y_PIXMAP</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">xwd_t</span><span class="o">::</span><span class="n">PIXMAP_FORMAT_Z_PIXMAP</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">_t</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">xwd_t</span><span class="o">::</span><span class="n">pixmap_format_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">xwd_t</span><span class="o">::</span><span class="n">_values_pixmap_format_t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xwd_t</span><span class="o">::</span><span class="n">_build_values_pixmap_format_t</span><span class="p">();</span>
+<span class="kt">bool</span><span class="w"> </span><span class="nf">xwd_t::_is_defined_pixmap_format_t</span><span class="p">(</span><span class="n">xwd_t</span><span class="o">::</span><span class="n">pixmap_format_t</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">xwd_t</span><span class="o">::</span><span class="n">_values_pixmap_format_t</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">xwd_t</span><span class="o">::</span><span class="n">_values_pixmap_format_t</span><span class="p">.</span><span class="n">end</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">xwd_t</span><span class="o">::</span><span class="n">visual_class_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">xwd_t</span><span class="o">::</span><span class="n">_build_values_visual_class_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">xwd_t</span><span class="o">::</span><span class="n">visual_class_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_t</span><span class="p">;</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">xwd_t</span><span class="o">::</span><span class="n">VISUAL_CLASS_STATIC_GRAY</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">xwd_t</span><span class="o">::</span><span class="n">VISUAL_CLASS_GRAY_SCALE</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">xwd_t</span><span class="o">::</span><span class="n">VISUAL_CLASS_STATIC_COLOR</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">xwd_t</span><span class="o">::</span><span class="n">VISUAL_CLASS_PSEUDO_COLOR</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">xwd_t</span><span class="o">::</span><span class="n">VISUAL_CLASS_TRUE_COLOR</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">xwd_t</span><span class="o">::</span><span class="n">VISUAL_CLASS_DIRECT_COLOR</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">_t</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">xwd_t</span><span class="o">::</span><span class="n">visual_class_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">xwd_t</span><span class="o">::</span><span class="n">_values_visual_class_t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xwd_t</span><span class="o">::</span><span class="n">_build_values_visual_class_t</span><span class="p">();</span>
+<span class="kt">bool</span><span class="w"> </span><span class="nf">xwd_t::_is_defined_visual_class_t</span><span class="p">(</span><span class="n">xwd_t</span><span class="o">::</span><span class="n">visual_class_t</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">xwd_t</span><span class="o">::</span><span class="n">_values_visual_class_t</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">xwd_t</span><span class="o">::</span><span class="n">_values_visual_class_t</span><span class="p">.</span><span class="n">end</span><span class="p">();</span>
+<span class="p">}</span>
 
 <span class="n">xwd_t</span><span class="o">::</span><span class="n">xwd_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">xwd_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
-<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
 <span class="w">    </span><span class="n">m_hdr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
 <span class="w">    </span><span class="n">m__io__raw_hdr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
 <span class="w">    </span><span class="n">m_color_map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
@@ -688,7 +762,7 @@ and build them along with your project.</p>
 
 <span class="kt">void</span><span class="w"> </span><span class="n">xwd_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">m_len_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
-<span class="w">    </span><span class="n">m__raw_hdr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">len_header</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">4</span><span class="p">));</span>
+<span class="w">    </span><span class="n">m__raw_hdr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_header</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">4</span><span class="p">);</span>
 <span class="w">    </span><span class="n">m__io__raw_hdr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_hdr</span><span class="p">);</span>
 <span class="w">    </span><span class="n">m_hdr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">header_t</span><span class="p">(</span><span class="n">m__io__raw_hdr</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">);</span>
 <span class="w">    </span><span class="n">m__raw_color_map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">();</span>
@@ -731,6 +805,34 @@ and build them along with your project.</p>
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 
+<span class="n">xwd_t</span><span class="o">::</span><span class="n">color_map_entry_t</span><span class="o">::</span><span class="n">color_map_entry_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">xwd_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">xwd_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="p">(...)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="w">        </span><span class="k">throw</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">xwd_t</span><span class="o">::</span><span class="n">color_map_entry_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m_entry_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_red</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_green</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_blue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_padding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="n">xwd_t</span><span class="o">::</span><span class="n">color_map_entry_t</span><span class="o">::~</span><span class="n">color_map_entry_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">xwd_t</span><span class="o">::</span><span class="n">color_map_entry_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="p">}</span>
+
 <span class="n">xwd_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">header_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">xwd_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">xwd_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
 <span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
@@ -768,7 +870,7 @@ and build them along with your project.</p>
 <span class="w">    </span><span class="n">m_window_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_s4be</span><span class="p">();</span>
 <span class="w">    </span><span class="n">m_window_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_s4be</span><span class="p">();</span>
 <span class="w">    </span><span class="n">m_window_border_width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
-<span class="w">    </span><span class="n">m_creator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nb">false</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">),</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="n">m_creator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nb">false</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;UTF-8&quot;</span><span class="p">);</span>
 <span class="p">}</span>
 
 <span class="n">xwd_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::~</span><span class="n">header_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
@@ -776,34 +878,6 @@ and build them along with your project.</p>
 <span class="p">}</span>
 
 <span class="kt">void</span><span class="w"> </span><span class="n">xwd_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="p">}</span>
-
-<span class="n">xwd_t</span><span class="o">::</span><span class="n">color_map_entry_t</span><span class="o">::</span><span class="n">color_map_entry_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">xwd_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">xwd_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
-<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
-
-<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">_read</span><span class="p">();</span>
-<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="p">(...)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">_clean_up</span><span class="p">();</span>
-<span class="w">        </span><span class="k">throw</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-
-<span class="kt">void</span><span class="w"> </span><span class="n">xwd_t</span><span class="o">::</span><span class="n">color_map_entry_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">m_entry_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
-<span class="w">    </span><span class="n">m_red</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
-<span class="w">    </span><span class="n">m_green</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
-<span class="w">    </span><span class="n">m_blue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
-<span class="w">    </span><span class="n">m_flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
-<span class="w">    </span><span class="n">m_padding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
-<span class="p">}</span>
-
-<span class="n">xwd_t</span><span class="o">::</span><span class="n">color_map_entry_t</span><span class="o">::~</span><span class="n">color_map_entry_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
-<span class="p">}</span>
-
-<span class="kt">void</span><span class="w"> </span><span class="n">xwd_t</span><span class="o">::</span><span class="n">color_map_entry_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="p">}</span>
 </pre></div>
 

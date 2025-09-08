@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -55,22 +55,21 @@ class Au < Kaitai::Struct::Struct
     29 => :encodings_delta_mulaw_8,
   }
   I__ENCODINGS = ENCODINGS.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
     @magic = @_io.read_bytes(4)
-    raise Kaitai::Struct::ValidationNotEqualError.new([46, 115, 110, 100].pack('C*'), magic, _io, "/seq/0") if not magic == [46, 115, 110, 100].pack('C*')
+    raise Kaitai::Struct::ValidationNotEqualError.new([46, 115, 110, 100].pack('C*'), @magic, @_io, "/seq/0") if not @magic == [46, 115, 110, 100].pack('C*')
     @ofs_data = @_io.read_u4be
-    @_raw_header = @_io.read_bytes(((ofs_data - 4) - 4))
-    _io__raw_header = Kaitai::Struct::Stream.new(@_raw_header)
-    @header = Header.new(_io__raw_header, self, @_root)
+    _io_header = @_io.substream((ofs_data - 4) - 4)
+    @header = Header.new(_io_header, self, @_root)
     self
   end
   class Header < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -80,8 +79,8 @@ class Au < Kaitai::Struct::Struct
       @encoding = Kaitai::Struct::Stream::resolve_enum(Au::ENCODINGS, @_io.read_u4be)
       @sample_rate = @_io.read_u4be
       @num_channels = @_io.read_u4be
-      raise Kaitai::Struct::ValidationLessThanError.new(1, num_channels, _io, "/types/header/seq/3") if not num_channels >= 1
-      @comment = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes_full, 0, false)).force_encoding("ASCII")
+      raise Kaitai::Struct::ValidationLessThanError.new(1, @num_channels, @_io, "/types/header/seq/3") if not @num_channels >= 1
+      @comment = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes_full, 0, false)).force_encoding("ASCII").encode('UTF-8')
       self
     end
 
@@ -117,7 +116,7 @@ class Au < Kaitai::Struct::Struct
   end
   def len_data
     return @len_data unless @len_data.nil?
-    @len_data = (header.data_size == 4294967295 ? (_io.size - ofs_data) : header.data_size)
+    @len_data = (header.data_size == 4294967295 ? _io.size - ofs_data : header.data_size)
     @len_data
   end
   attr_reader :magic

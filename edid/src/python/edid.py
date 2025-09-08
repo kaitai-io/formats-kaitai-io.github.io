@@ -1,19 +1,20 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
-from enum import Enum
+from enum import IntEnum
 import struct
 
 
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Edid(KaitaiStruct):
     def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
+        super(Edid, self).__init__(_io)
         self._parent = _parent
-        self._root = _root if _root else self
+        self._root = _root or self
         self._read()
 
     def _read(self):
@@ -42,15 +43,25 @@ class Edid(KaitaiStruct):
             self.std_timings.append(Edid.StdTiming(_io__raw_std_timings, self, self._root))
 
 
+
+    def _fetch_instances(self):
+        pass
+        self.chromacity._fetch_instances()
+        self.est_timings._fetch_instances()
+        for i in range(len(self.std_timings)):
+            pass
+            self.std_timings[i]._fetch_instances()
+
+
     class ChromacityInfo(KaitaiStruct):
         """Chromaticity information: colorimetry and white point
         coordinates. All coordinates are stored as fixed precision
         10-bit numbers, bits are shuffled for compactness.
         """
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(Edid.ChromacityInfo, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -62,7 +73,6 @@ class Edid(KaitaiStruct):
             self.blue_y_1_0 = self._io.read_bits_int_be(2)
             self.white_x_1_0 = self._io.read_bits_int_be(2)
             self.white_y_1_0 = self._io.read_bits_int_be(2)
-            self._io.align_to_byte()
             self.red_x_9_2 = self._io.read_u1()
             self.red_y_9_2 = self._io.read_u1()
             self.green_x_9_2 = self._io.read_u1()
@@ -72,57 +82,9 @@ class Edid(KaitaiStruct):
             self.white_x_9_2 = self._io.read_u1()
             self.white_y_9_2 = self._io.read_u1()
 
-        @property
-        def green_x_int(self):
-            if hasattr(self, '_m_green_x_int'):
-                return self._m_green_x_int
 
-            self._m_green_x_int = ((self.green_x_9_2 << 2) | self.green_x_1_0)
-            return getattr(self, '_m_green_x_int', None)
-
-        @property
-        def red_y(self):
-            """Red Y coordinate."""
-            if hasattr(self, '_m_red_y'):
-                return self._m_red_y
-
-            self._m_red_y = (self.red_y_int / 1024.0)
-            return getattr(self, '_m_red_y', None)
-
-        @property
-        def green_y_int(self):
-            if hasattr(self, '_m_green_y_int'):
-                return self._m_green_y_int
-
-            self._m_green_y_int = ((self.green_y_9_2 << 2) | self.green_y_1_0)
-            return getattr(self, '_m_green_y_int', None)
-
-        @property
-        def white_y(self):
-            """White Y coordinate."""
-            if hasattr(self, '_m_white_y'):
-                return self._m_white_y
-
-            self._m_white_y = (self.white_y_int / 1024.0)
-            return getattr(self, '_m_white_y', None)
-
-        @property
-        def red_x(self):
-            """Red X coordinate."""
-            if hasattr(self, '_m_red_x'):
-                return self._m_red_x
-
-            self._m_red_x = (self.red_x_int / 1024.0)
-            return getattr(self, '_m_red_x', None)
-
-        @property
-        def white_x(self):
-            """White X coordinate."""
-            if hasattr(self, '_m_white_x'):
-                return self._m_white_x
-
-            self._m_white_x = (self.white_x_int / 1024.0)
-            return getattr(self, '_m_white_x', None)
+        def _fetch_instances(self):
+            pass
 
         @property
         def blue_x(self):
@@ -130,56 +92,15 @@ class Edid(KaitaiStruct):
             if hasattr(self, '_m_blue_x'):
                 return self._m_blue_x
 
-            self._m_blue_x = (self.blue_x_int / 1024.0)
+            self._m_blue_x = self.blue_x_int / 1024.0
             return getattr(self, '_m_blue_x', None)
-
-        @property
-        def white_x_int(self):
-            if hasattr(self, '_m_white_x_int'):
-                return self._m_white_x_int
-
-            self._m_white_x_int = ((self.white_x_9_2 << 2) | self.white_x_1_0)
-            return getattr(self, '_m_white_x_int', None)
-
-        @property
-        def white_y_int(self):
-            if hasattr(self, '_m_white_y_int'):
-                return self._m_white_y_int
-
-            self._m_white_y_int = ((self.white_y_9_2 << 2) | self.white_y_1_0)
-            return getattr(self, '_m_white_y_int', None)
-
-        @property
-        def green_x(self):
-            """Green X coordinate."""
-            if hasattr(self, '_m_green_x'):
-                return self._m_green_x
-
-            self._m_green_x = (self.green_x_int / 1024.0)
-            return getattr(self, '_m_green_x', None)
-
-        @property
-        def red_x_int(self):
-            if hasattr(self, '_m_red_x_int'):
-                return self._m_red_x_int
-
-            self._m_red_x_int = ((self.red_x_9_2 << 2) | self.red_x_1_0)
-            return getattr(self, '_m_red_x_int', None)
-
-        @property
-        def red_y_int(self):
-            if hasattr(self, '_m_red_y_int'):
-                return self._m_red_y_int
-
-            self._m_red_y_int = ((self.red_y_9_2 << 2) | self.red_y_1_0)
-            return getattr(self, '_m_red_y_int', None)
 
         @property
         def blue_x_int(self):
             if hasattr(self, '_m_blue_x_int'):
                 return self._m_blue_x_int
 
-            self._m_blue_x_int = ((self.blue_x_9_2 << 2) | self.blue_x_1_0)
+            self._m_blue_x_int = self.blue_x_9_2 << 2 | self.blue_x_1_0
             return getattr(self, '_m_blue_x_int', None)
 
         @property
@@ -188,8 +109,33 @@ class Edid(KaitaiStruct):
             if hasattr(self, '_m_blue_y'):
                 return self._m_blue_y
 
-            self._m_blue_y = (self.blue_y_int / 1024.0)
+            self._m_blue_y = self.blue_y_int / 1024.0
             return getattr(self, '_m_blue_y', None)
+
+        @property
+        def blue_y_int(self):
+            if hasattr(self, '_m_blue_y_int'):
+                return self._m_blue_y_int
+
+            self._m_blue_y_int = self.blue_y_9_2 << 2 | self.blue_y_1_0
+            return getattr(self, '_m_blue_y_int', None)
+
+        @property
+        def green_x(self):
+            """Green X coordinate."""
+            if hasattr(self, '_m_green_x'):
+                return self._m_green_x
+
+            self._m_green_x = self.green_x_int / 1024.0
+            return getattr(self, '_m_green_x', None)
+
+        @property
+        def green_x_int(self):
+            if hasattr(self, '_m_green_x_int'):
+                return self._m_green_x_int
+
+            self._m_green_x_int = self.green_x_9_2 << 2 | self.green_x_1_0
+            return getattr(self, '_m_green_x_int', None)
 
         @property
         def green_y(self):
@@ -197,23 +143,91 @@ class Edid(KaitaiStruct):
             if hasattr(self, '_m_green_y'):
                 return self._m_green_y
 
-            self._m_green_y = (self.green_y_int / 1024.0)
+            self._m_green_y = self.green_y_int / 1024.0
             return getattr(self, '_m_green_y', None)
 
         @property
-        def blue_y_int(self):
-            if hasattr(self, '_m_blue_y_int'):
-                return self._m_blue_y_int
+        def green_y_int(self):
+            if hasattr(self, '_m_green_y_int'):
+                return self._m_green_y_int
 
-            self._m_blue_y_int = ((self.blue_y_9_2 << 2) | self.blue_y_1_0)
-            return getattr(self, '_m_blue_y_int', None)
+            self._m_green_y_int = self.green_y_9_2 << 2 | self.green_y_1_0
+            return getattr(self, '_m_green_y_int', None)
+
+        @property
+        def red_x(self):
+            """Red X coordinate."""
+            if hasattr(self, '_m_red_x'):
+                return self._m_red_x
+
+            self._m_red_x = self.red_x_int / 1024.0
+            return getattr(self, '_m_red_x', None)
+
+        @property
+        def red_x_int(self):
+            if hasattr(self, '_m_red_x_int'):
+                return self._m_red_x_int
+
+            self._m_red_x_int = self.red_x_9_2 << 2 | self.red_x_1_0
+            return getattr(self, '_m_red_x_int', None)
+
+        @property
+        def red_y(self):
+            """Red Y coordinate."""
+            if hasattr(self, '_m_red_y'):
+                return self._m_red_y
+
+            self._m_red_y = self.red_y_int / 1024.0
+            return getattr(self, '_m_red_y', None)
+
+        @property
+        def red_y_int(self):
+            if hasattr(self, '_m_red_y_int'):
+                return self._m_red_y_int
+
+            self._m_red_y_int = self.red_y_9_2 << 2 | self.red_y_1_0
+            return getattr(self, '_m_red_y_int', None)
+
+        @property
+        def white_x(self):
+            """White X coordinate."""
+            if hasattr(self, '_m_white_x'):
+                return self._m_white_x
+
+            self._m_white_x = self.white_x_int / 1024.0
+            return getattr(self, '_m_white_x', None)
+
+        @property
+        def white_x_int(self):
+            if hasattr(self, '_m_white_x_int'):
+                return self._m_white_x_int
+
+            self._m_white_x_int = self.white_x_9_2 << 2 | self.white_x_1_0
+            return getattr(self, '_m_white_x_int', None)
+
+        @property
+        def white_y(self):
+            """White Y coordinate."""
+            if hasattr(self, '_m_white_y'):
+                return self._m_white_y
+
+            self._m_white_y = self.white_y_int / 1024.0
+            return getattr(self, '_m_white_y', None)
+
+        @property
+        def white_y_int(self):
+            if hasattr(self, '_m_white_y_int'):
+                return self._m_white_y_int
+
+            self._m_white_y_int = self.white_y_9_2 << 2 | self.white_y_1_0
+            return getattr(self, '_m_white_y_int', None)
 
 
     class EstTimingsInfo(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(Edid.EstTimingsInfo, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -237,23 +251,35 @@ class Edid(KaitaiStruct):
             self.reserved = self._io.read_bits_int_be(7)
 
 
+        def _fetch_instances(self):
+            pass
+
+
     class StdTiming(KaitaiStruct):
 
-        class AspectRatios(Enum):
+        class AspectRatios(IntEnum):
             ratio_16_10 = 0
             ratio_4_3 = 1
             ratio_5_4 = 2
             ratio_16_9 = 3
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(Edid.StdTiming, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
             self.horiz_active_pixels_mod = self._io.read_u1()
             self.aspect_ratio = KaitaiStream.resolve_enum(Edid.StdTiming.AspectRatios, self._io.read_bits_int_be(2))
             self.refresh_rate_mod = self._io.read_bits_int_be(6)
+
+
+        def _fetch_instances(self):
+            pass
+            _ = self.bytes_lookahead
+            if hasattr(self, '_m_bytes_lookahead'):
+                pass
+
 
         @property
         def bytes_lookahead(self):
@@ -267,6 +293,18 @@ class Edid(KaitaiStruct):
             return getattr(self, '_m_bytes_lookahead', None)
 
         @property
+        def horiz_active_pixels(self):
+            """Range of horizontal active pixels."""
+            if hasattr(self, '_m_horiz_active_pixels'):
+                return self._m_horiz_active_pixels
+
+            if self.is_used:
+                pass
+                self._m_horiz_active_pixels = (self.horiz_active_pixels_mod + 31) * 8
+
+            return getattr(self, '_m_horiz_active_pixels', None)
+
+        @property
         def is_used(self):
             if hasattr(self, '_m_is_used'):
                 return self._m_is_used
@@ -275,51 +313,17 @@ class Edid(KaitaiStruct):
             return getattr(self, '_m_is_used', None)
 
         @property
-        def horiz_active_pixels(self):
-            """Range of horizontal active pixels."""
-            if hasattr(self, '_m_horiz_active_pixels'):
-                return self._m_horiz_active_pixels
-
-            if self.is_used:
-                self._m_horiz_active_pixels = ((self.horiz_active_pixels_mod + 31) * 8)
-
-            return getattr(self, '_m_horiz_active_pixels', None)
-
-        @property
         def refresh_rate(self):
             """Vertical refresh rate, Hz."""
             if hasattr(self, '_m_refresh_rate'):
                 return self._m_refresh_rate
 
             if self.is_used:
-                self._m_refresh_rate = (self.refresh_rate_mod + 60)
+                pass
+                self._m_refresh_rate = self.refresh_rate_mod + 60
 
             return getattr(self, '_m_refresh_rate', None)
 
-
-    @property
-    def mfg_year(self):
-        if hasattr(self, '_m_mfg_year'):
-            return self._m_mfg_year
-
-        self._m_mfg_year = (self.mfg_year_mod + 1990)
-        return getattr(self, '_m_mfg_year', None)
-
-    @property
-    def mfg_id_ch1(self):
-        if hasattr(self, '_m_mfg_id_ch1'):
-            return self._m_mfg_id_ch1
-
-        self._m_mfg_id_ch1 = ((self.mfg_bytes & 31744) >> 10)
-        return getattr(self, '_m_mfg_id_ch1', None)
-
-    @property
-    def mfg_id_ch3(self):
-        if hasattr(self, '_m_mfg_id_ch3'):
-            return self._m_mfg_id_ch3
-
-        self._m_mfg_id_ch3 = (self.mfg_bytes & 31)
-        return getattr(self, '_m_mfg_id_ch3', None)
 
     @property
     def gamma(self):
@@ -327,24 +331,49 @@ class Edid(KaitaiStruct):
             return self._m_gamma
 
         if self.gamma_mod != 255:
-            self._m_gamma = ((self.gamma_mod + 100) / 100.0)
+            pass
+            self._m_gamma = (self.gamma_mod + 100) / 100.0
 
         return getattr(self, '_m_gamma', None)
 
     @property
-    def mfg_str(self):
-        if hasattr(self, '_m_mfg_str'):
-            return self._m_mfg_str
+    def mfg_id_ch1(self):
+        if hasattr(self, '_m_mfg_id_ch1'):
+            return self._m_mfg_id_ch1
 
-        self._m_mfg_str = (struct.pack('3b', (self.mfg_id_ch1 + 64), (self.mfg_id_ch2 + 64), (self.mfg_id_ch3 + 64))).decode(u"ASCII")
-        return getattr(self, '_m_mfg_str', None)
+        self._m_mfg_id_ch1 = (self.mfg_bytes & 31744) >> 10
+        return getattr(self, '_m_mfg_id_ch1', None)
 
     @property
     def mfg_id_ch2(self):
         if hasattr(self, '_m_mfg_id_ch2'):
             return self._m_mfg_id_ch2
 
-        self._m_mfg_id_ch2 = ((self.mfg_bytes & 992) >> 5)
+        self._m_mfg_id_ch2 = (self.mfg_bytes & 992) >> 5
         return getattr(self, '_m_mfg_id_ch2', None)
+
+    @property
+    def mfg_id_ch3(self):
+        if hasattr(self, '_m_mfg_id_ch3'):
+            return self._m_mfg_id_ch3
+
+        self._m_mfg_id_ch3 = self.mfg_bytes & 31
+        return getattr(self, '_m_mfg_id_ch3', None)
+
+    @property
+    def mfg_str(self):
+        if hasattr(self, '_m_mfg_str'):
+            return self._m_mfg_str
+
+        self._m_mfg_str = (struct.pack('3B', self.mfg_id_ch1 + 64, self.mfg_id_ch2 + 64, self.mfg_id_ch3 + 64)).decode(u"ASCII")
+        return getattr(self, '_m_mfg_str', None)
+
+    @property
+    def mfg_year(self):
+        if hasattr(self, '_m_mfg_year'):
+            return self._m_mfg_year
+
+        self._m_mfg_year = self.mfg_year_mod + 1990
+        return getattr(self, '_m_mfg_year', None)
 
 

@@ -7,9 +7,10 @@ digraph {
 
 		amlogic_emmc_partitions__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-			<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD></TD><TD PORT="magic_type">magic</TD></TR>
+			<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD>4D 50 54 00</TD><TD PORT="magic_type">magic</TD></TR>
 			<TR><TD PORT="version_pos">4</TD><TD PORT="version_size">12</TD><TD>str(UTF-8)</TD><TD PORT="version_type">version</TD></TR>
 			<TR><TD PORT="num_partitions_pos">16</TD><TD PORT="num_partitions_size">4</TD><TD>s4le</TD><TD PORT="num_partitions_type">num_partitions</TD></TR>
+			<TR><TD COLSPAN="4" PORT="num_partitions__valid">must be between 1 and 32</TD></TR>
 			<TR><TD PORT="checksum_pos">20</TD><TD PORT="checksum_size">4</TD><TD>u4le</TD><TD PORT="checksum_type">checksum</TD></TR>
 			<TR><TD PORT="partitions_pos">24</TD><TD PORT="partitions_size">40</TD><TD>Partition</TD><TD PORT="partitions_type">partitions</TD></TR>
 			<TR><TD COLSPAN="4" PORT="partitions__repeat">repeat num_partitions times</TD></TR>
@@ -32,9 +33,9 @@ digraph {
 
 				part_flags__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="is_code_pos">0</TD><TD PORT="is_code_size">1b</TD><TD>BitsType1(LittleBitEndian)</TD><TD PORT="is_code_type">is_code</TD></TR>
-					<TR><TD PORT="is_cache_pos">0:1</TD><TD PORT="is_cache_size">1b</TD><TD>BitsType1(LittleBitEndian)</TD><TD PORT="is_cache_type">is_cache</TD></TR>
-					<TR><TD PORT="is_data_pos">0:2</TD><TD PORT="is_data_size">1b</TD><TD>BitsType1(LittleBitEndian)</TD><TD PORT="is_data_type">is_data</TD></TR>
+					<TR><TD PORT="is_code_pos">0</TD><TD PORT="is_code_size">1b</TD><TD>b1le→bool</TD><TD PORT="is_code_type">is_code</TD></TR>
+					<TR><TD PORT="is_cache_pos">0:1</TD><TD PORT="is_cache_size">1b</TD><TD>b1le→bool</TD><TD PORT="is_cache_type">is_cache</TD></TR>
+					<TR><TD PORT="is_data_pos">0:2</TD><TD PORT="is_data_size">1b</TD><TD>b1le→bool</TD><TD PORT="is_data_type">is_data</TD></TR>
 				</TABLE>>];
 			}
 		}

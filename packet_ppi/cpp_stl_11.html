@@ -172,6 +172,11 @@ radio information, but can be used for other purposes as well.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="packet_ppi parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="packet_ppi parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -202,7 +207,17 @@ radio information, but can be used for other purposes as well.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="packet_ppi parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="packet_ppi parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="packet_ppi parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -315,16 +330,18 @@ and build them along with your project.</p>
 
 <span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
+<span class="k">class</span><span class="w"> </span><span class="nc">packet_ppi_t</span><span class="p">;</span>
+
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;kaitai/kaitaistruct.h&quot;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdint.h&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;memory&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;ethernet_frame.h&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;set&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;vector&gt;</span>
 
-<span class="cp">#if KAITAI_STRUCT_VERSION &lt; 9000L</span>
-<span class="cp">#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required&quot;</span>
+<span class="cp">#if KAITAI_STRUCT_VERSION &lt; 11000L</span>
+<span class="cp">#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required&quot;</span>
 <span class="cp">#endif</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">ethernet_frame_t</span><span class="p">;</span>
 
 <span class="cm">/**</span>
 <span class="cm"> * PPI is a standard for link layer packet encapsulation, proposed as</span>
@@ -340,22 +357,13 @@ and build them along with your project.</p>
 <span class="k">class</span><span class="w"> </span><span class="nc">packet_ppi_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
 
 <span class="k">public</span><span class="o">:</span>
-<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">packet_ppi_fields_t</span><span class="p">;</span>
-<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">radio_802_11n_mac_ext_body_t</span><span class="p">;</span>
 <span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">mac_flags_t</span><span class="p">;</span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">packet_ppi_field_t</span><span class="p">;</span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">packet_ppi_fields_t</span><span class="p">;</span>
 <span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">packet_ppi_header_t</span><span class="p">;</span>
 <span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">radio_802_11_common_body_t</span><span class="p">;</span>
-<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">packet_ppi_field_t</span><span class="p">;</span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">radio_802_11n_mac_ext_body_t</span><span class="p">;</span>
 <span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">radio_802_11n_mac_phy_ext_body_t</span><span class="p">;</span>
-
-<span class="w">    </span><span class="k">enum</span><span class="w"> </span><span class="nc">pfh_type_t</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">PFH_TYPE_RADIO_802_11_COMMON</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
-<span class="w">        </span><span class="n">PFH_TYPE_RADIO_802_11N_MAC_EXT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
-<span class="w">        </span><span class="n">PFH_TYPE_RADIO_802_11N_MAC_PHY_EXT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span>
-<span class="w">        </span><span class="n">PFH_TYPE_SPECTRUM_MAP</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
-<span class="w">        </span><span class="n">PFH_TYPE_PROCESS_INFO</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span>
-<span class="w">        </span><span class="n">PFH_TYPE_CAPTURE_INFO</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">7</span>
-<span class="w">    </span><span class="p">};</span>
 
 <span class="w">    </span><span class="k">enum</span><span class="w"> </span><span class="nc">linktype_t</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="n">LINKTYPE_NULL_LINKTYPE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
@@ -463,6 +471,27 @@ and build them along with your project.</p>
 <span class="w">        </span><span class="n">LINKTYPE_WATTSTOPPER_DLM</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">263</span><span class="p">,</span>
 <span class="w">        </span><span class="n">LINKTYPE_ISO_14443</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">264</span>
 <span class="w">    </span><span class="p">};</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">_is_defined_linktype_t</span><span class="p">(</span><span class="n">linktype_t</span><span class="w"> </span><span class="n">v</span><span class="p">);</span>
+
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">linktype_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_values_linktype_t</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+
+<span class="w">    </span><span class="k">enum</span><span class="w"> </span><span class="nc">pfh_type_t</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">PFH_TYPE_RADIO_802_11_COMMON</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">        </span><span class="n">PFH_TYPE_RADIO_802_11N_MAC_EXT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="w">        </span><span class="n">PFH_TYPE_RADIO_802_11N_MAC_PHY_EXT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span>
+<span class="w">        </span><span class="n">PFH_TYPE_SPECTRUM_MAP</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<span class="w">        </span><span class="n">PFH_TYPE_PROCESS_INFO</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span>
+<span class="w">        </span><span class="n">PFH_TYPE_CAPTURE_INFO</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">7</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">_is_defined_pfh_type_t</span><span class="p">(</span><span class="n">pfh_type_t</span><span class="w"> </span><span class="n">v</span><span class="p">);</span>
+
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">pfh_type_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_values_pfh_type_t</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
 
 <span class="w">    </span><span class="n">packet_ppi_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span>
 
@@ -472,64 +501,6 @@ and build them along with your project.</p>
 
 <span class="k">public</span><span class="o">:</span>
 <span class="w">    </span><span class="o">~</span><span class="n">packet_ppi_t</span><span class="p">();</span>
-
-<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">packet_ppi_fields_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
-
-<span class="w">    </span><span class="k">public</span><span class="o">:</span>
-
-<span class="w">        </span><span class="n">packet_ppi_fields_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span>
-
-<span class="w">    </span><span class="k">private</span><span class="o">:</span>
-<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span>
-<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span>
-
-<span class="w">    </span><span class="k">public</span><span class="o">:</span>
-<span class="w">        </span><span class="o">~</span><span class="n">packet_ppi_fields_t</span><span class="p">();</span>
-
-<span class="w">    </span><span class="k">private</span><span class="o">:</span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">packet_ppi_field_t</span><span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="n">m_entries</span><span class="p">;</span>
-<span class="w">        </span><span class="n">packet_ppi_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
-<span class="w">        </span><span class="n">packet_ppi_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
-
-<span class="w">    </span><span class="k">public</span><span class="o">:</span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">packet_ppi_field_t</span><span class="o">&gt;&gt;*</span><span class="w"> </span><span class="n">entries</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_entries</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="n">packet_ppi_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="n">packet_ppi_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">    </span><span class="p">};</span>
-
-<span class="w">    </span><span class="cm">/**</span>
-<span class="cm">     * \sa https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 4.1.3</span>
-<span class="cm">     */</span>
-
-<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">radio_802_11n_mac_ext_body_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
-
-<span class="w">    </span><span class="k">public</span><span class="o">:</span>
-
-<span class="w">        </span><span class="n">radio_802_11n_mac_ext_body_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">packet_ppi_field_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span>
-
-<span class="w">    </span><span class="k">private</span><span class="o">:</span>
-<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span>
-<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span>
-
-<span class="w">    </span><span class="k">public</span><span class="o">:</span>
-<span class="w">        </span><span class="o">~</span><span class="n">radio_802_11n_mac_ext_body_t</span><span class="p">();</span>
-
-<span class="w">    </span><span class="k">private</span><span class="o">:</span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">mac_flags_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m_flags</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_a_mpdu_id</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">m_num_delimiters</span><span class="p">;</span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_reserved</span><span class="p">;</span>
-<span class="w">        </span><span class="n">packet_ppi_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
-<span class="w">        </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">packet_ppi_field_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
-
-<span class="w">    </span><span class="k">public</span><span class="o">:</span>
-<span class="w">        </span><span class="n">mac_flags_t</span><span class="o">*</span><span class="w"> </span><span class="n">flags</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_flags</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">a_mpdu_id</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_a_mpdu_id</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">num_delimiters</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_num_delimiters</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">reserved</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_reserved</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="n">packet_ppi_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">packet_ppi_field_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">    </span><span class="p">};</span>
 
 <span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">mac_flags_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
 
@@ -597,6 +568,72 @@ and build them along with your project.</p>
 <span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">unused2</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_unused2</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">        </span><span class="n">packet_ppi_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">        </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">};</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * \sa https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 3.1</span>
+<span class="cm">     */</span>
+
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">packet_ppi_field_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="n">packet_ppi_field_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">packet_ppi_fields_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="o">~</span><span class="n">packet_ppi_field_t</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="n">pfh_type_t</span><span class="w"> </span><span class="n">m_pfh_type</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_pfh_datalen</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m_body</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">n_body</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">_is_null_body</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">body</span><span class="p">();</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">n_body</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="n">packet_ppi_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
+<span class="w">        </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">packet_ppi_fields_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m__raw_body</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m__io__raw_body</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="n">pfh_type_t</span><span class="w"> </span><span class="n">pfh_type</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_pfh_type</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">pfh_datalen</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_pfh_datalen</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">body</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_body</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">packet_ppi_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">packet_ppi_fields_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">_raw_body</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__raw_body</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">_io__raw_body</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__io__raw_body</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">};</span>
+
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">packet_ppi_fields_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="n">packet_ppi_fields_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="o">~</span><span class="n">packet_ppi_fields_t</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">packet_ppi_field_t</span><span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="n">m_entries</span><span class="p">;</span>
+<span class="w">        </span><span class="n">packet_ppi_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
+<span class="w">        </span><span class="n">packet_ppi_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">packet_ppi_field_t</span><span class="o">&gt;&gt;*</span><span class="w"> </span><span class="n">entries</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_entries</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">packet_ppi_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">packet_ppi_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">    </span><span class="p">};</span>
 
 <span class="w">    </span><span class="cm">/**</span>
@@ -678,45 +715,37 @@ and build them along with your project.</p>
 <span class="w">    </span><span class="p">};</span>
 
 <span class="w">    </span><span class="cm">/**</span>
-<span class="cm">     * \sa https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 3.1</span>
+<span class="cm">     * \sa https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 4.1.3</span>
 <span class="cm">     */</span>
 
-<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">packet_ppi_field_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">radio_802_11n_mac_ext_body_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
 
 <span class="w">    </span><span class="k">public</span><span class="o">:</span>
 
-<span class="w">        </span><span class="n">packet_ppi_field_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">packet_ppi_fields_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span>
+<span class="w">        </span><span class="n">radio_802_11n_mac_ext_body_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">packet_ppi_field_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span>
 
 <span class="w">    </span><span class="k">private</span><span class="o">:</span>
 <span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span>
 <span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span>
 
 <span class="w">    </span><span class="k">public</span><span class="o">:</span>
-<span class="w">        </span><span class="o">~</span><span class="n">packet_ppi_field_t</span><span class="p">();</span>
+<span class="w">        </span><span class="o">~</span><span class="n">radio_802_11n_mac_ext_body_t</span><span class="p">();</span>
 
 <span class="w">    </span><span class="k">private</span><span class="o">:</span>
-<span class="w">        </span><span class="n">pfh_type_t</span><span class="w"> </span><span class="n">m_pfh_type</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_pfh_datalen</span><span class="p">;</span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m_body</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">n_body</span><span class="p">;</span>
-
-<span class="w">    </span><span class="k">public</span><span class="o">:</span>
-<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">_is_null_body</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">body</span><span class="p">();</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">n_body</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
-
-<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">mac_flags_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m_flags</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">m_a_mpdu_id</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">m_num_delimiters</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_reserved</span><span class="p">;</span>
 <span class="w">        </span><span class="n">packet_ppi_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
-<span class="w">        </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">packet_ppi_fields_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m__raw_body</span><span class="p">;</span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m__io__raw_body</span><span class="p">;</span>
+<span class="w">        </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">packet_ppi_field_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
 
 <span class="w">    </span><span class="k">public</span><span class="o">:</span>
-<span class="w">        </span><span class="n">pfh_type_t</span><span class="w"> </span><span class="n">pfh_type</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_pfh_type</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">pfh_datalen</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_pfh_datalen</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">body</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_body</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">mac_flags_t</span><span class="o">*</span><span class="w"> </span><span class="n">flags</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_flags</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">a_mpdu_id</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_a_mpdu_id</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">num_delimiters</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_num_delimiters</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">reserved</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_reserved</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">        </span><span class="n">packet_ppi_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">packet_ppi_fields_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">_raw_body</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__raw_body</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">_io__raw_body</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__io__raw_body</span><span class="p">.</span><span class="n">get</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">packet_ppi_field_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">    </span><span class="p">};</span>
 
 <span class="w">    </span><span class="cm">/**</span>
@@ -960,10 +989,130 @@ and build them along with your project.</p>
             <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;packet_ppi.h&quot;</span>
+<span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">linktype_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">_values_linktype_t</span><span class="p">{</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_NULL_LINKTYPE</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_ETHERNET</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_AX25</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_IEEE802_5</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_ARCNET_BSD</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_SLIP</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_PPP</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_FDDI</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_PPP_HDLC</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_PPP_ETHER</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_ATM_RFC1483</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_RAW</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_C_HDLC</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_IEEE802_11</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_FRELAY</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_LOOP</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_LINUX_SLL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_LTALK</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_PFLOG</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_IEEE802_11_PRISM</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_IP_OVER_FC</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_SUNATM</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_IEEE802_11_RADIOTAP</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_ARCNET_LINUX</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_APPLE_IP_OVER_IEEE1394</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_MTP2_WITH_PHDR</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_MTP2</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_MTP3</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_SCCP</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_DOCSIS</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_LINUX_IRDA</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_USER0</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_USER1</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_USER2</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_USER3</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_USER4</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_USER5</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_USER6</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_USER7</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_USER8</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_USER9</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_USER10</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_USER11</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_USER12</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_USER13</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_USER14</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_USER15</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_IEEE802_11_AVS</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_BACNET_MS_TP</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_PPP_PPPD</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_GPRS_LLC</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_GPF_T</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_GPF_F</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_LINUX_LAPD</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_BLUETOOTH_HCI_H4</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_USB_LINUX</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_PPI</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_IEEE802_15_4</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_SITA</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_ERF</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_BLUETOOTH_HCI_H4_WITH_PHDR</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_AX25_KISS</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_LAPD</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_PPP_WITH_DIR</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_C_HDLC_WITH_DIR</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_FRELAY_WITH_DIR</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_IPMB_LINUX</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_IEEE802_15_4_NONASK_PHY</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_USB_LINUX_MMAPPED</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_FC_2</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_FC_2_WITH_FRAME_DELIMS</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_IPNET</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_CAN_SOCKETCAN</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_IPV4</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_IPV6</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_IEEE802_15_4_NOFCS</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_DBUS</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_DVB_CI</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_MUX27010</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_STANAG_5066_D_PDU</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_NFLOG</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_NETANALYZER</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_NETANALYZER_TRANSPARENT</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_IPOIB</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_MPEG_2_TS</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_NG40</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_NFC_LLCP</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_INFINIBAND</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_SCTP</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_USBPCAP</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_RTAC_SERIAL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_BLUETOOTH_LE_LL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_NETLINK</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_BLUETOOTH_LINUX_MONITOR</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_BLUETOOTH_BREDR_BB</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_BLUETOOTH_LE_LL_WITH_PHDR</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_PROFIBUS_DL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_PKTAP</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_EPON</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_IPMI_HPM_2</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_ZWAVE_R1_R2</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_ZWAVE_R3</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_WATTSTOPPER_DLM</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">LINKTYPE_ISO_14443</span><span class="p">,</span>
+<span class="p">};</span>
+<span class="kt">bool</span><span class="w"> </span><span class="nf">packet_ppi_t::_is_defined_linktype_t</span><span class="p">(</span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">linktype_t</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">_values_linktype_t</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">_values_linktype_t</span><span class="p">.</span><span class="n">end</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">pfh_type_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">_values_pfh_type_t</span><span class="p">{</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">PFH_TYPE_RADIO_802_11_COMMON</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">PFH_TYPE_RADIO_802_11N_MAC_EXT</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">PFH_TYPE_RADIO_802_11N_MAC_PHY_EXT</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">PFH_TYPE_SPECTRUM_MAP</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">PFH_TYPE_PROCESS_INFO</span><span class="p">,</span>
+<span class="w">    </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">PFH_TYPE_CAPTURE_INFO</span><span class="p">,</span>
+<span class="p">};</span>
+<span class="kt">bool</span><span class="w"> </span><span class="nf">packet_ppi_t::_is_defined_pfh_type_t</span><span class="p">(</span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">pfh_type_t</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">_values_pfh_type_t</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">_values_pfh_type_t</span><span class="p">.</span><span class="n">end</span><span class="p">();</span>
+<span class="p">}</span>
 
 <span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">packet_ppi_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
-<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
 <span class="w">    </span><span class="n">m_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
 <span class="w">    </span><span class="n">m_fields</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
 <span class="w">    </span><span class="n">m__io__raw_fields</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
@@ -973,23 +1122,23 @@ and build them along with your project.</p>
 
 <span class="kt">void</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">m_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">packet_ppi_header_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">packet_ppi_header_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">));</span>
-<span class="w">    </span><span class="n">m__raw_fields</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">pph_len</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">8</span><span class="p">));</span>
+<span class="w">    </span><span class="n">m__raw_fields</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">pph_len</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">8</span><span class="p">);</span>
 <span class="w">    </span><span class="n">m__io__raw_fields</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_fields</span><span class="p">));</span>
 <span class="w">    </span><span class="n">m_fields</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">packet_ppi_fields_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">packet_ppi_fields_t</span><span class="p">(</span><span class="n">m__io__raw_fields</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">));</span>
 <span class="w">    </span><span class="n">n_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
 <span class="w">    </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">pph_dlt</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">packet_ppi_t</span><span class="o">::</span><span class="no">LINKTYPE_PPI</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">n_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
-<span class="w">        </span><span class="n">m__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes_full</span><span class="p">();</span>
-<span class="w">        </span><span class="n">m__io__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_body</span><span class="p">));</span>
-<span class="w">        </span><span class="n">m_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">packet_ppi_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="p">(</span><span class="n">m__io__raw_body</span><span class="p">.</span><span class="n">get</span><span class="p">()));</span>
-<span class="w">        </span><span class="k">break</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">packet_ppi_t</span><span class="o">::</span><span class="no">LINKTYPE_ETHERNET</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="n">n_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
 <span class="w">        </span><span class="n">m__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes_full</span><span class="p">();</span>
 <span class="w">        </span><span class="n">m__io__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_body</span><span class="p">));</span>
 <span class="w">        </span><span class="n">m_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">ethernet_frame_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">ethernet_frame_t</span><span class="p">(</span><span class="n">m__io__raw_body</span><span class="p">.</span><span class="n">get</span><span class="p">()));</span>
+<span class="w">        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">packet_ppi_t</span><span class="o">::</span><span class="no">LINKTYPE_PPI</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">n_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="n">m__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes_full</span><span class="p">();</span>
+<span class="w">        </span><span class="n">m__io__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_body</span><span class="p">));</span>
+<span class="w">        </span><span class="n">m_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">packet_ppi_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="p">(</span><span class="n">m__io__raw_body</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">));</span>
 <span class="w">        </span><span class="k">break</span><span class="p">;</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="k">default</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
@@ -1006,52 +1155,6 @@ and build them along with your project.</p>
 <span class="kt">void</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">n_body</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-
-<span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">packet_ppi_fields_t</span><span class="o">::</span><span class="n">packet_ppi_fields_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
-<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
-<span class="w">    </span><span class="n">m_entries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
-<span class="w">    </span><span class="n">_read</span><span class="p">();</span>
-<span class="p">}</span>
-
-<span class="kt">void</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">packet_ppi_fields_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">m_entries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">packet_ppi_field_t</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">packet_ppi_field_t</span><span class="o">&gt;&gt;</span><span class="p">());</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">is_eof</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="n">m_entries</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">packet_ppi_field_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">packet_ppi_field_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">))));</span>
-<span class="w">            </span><span class="n">i</span><span class="o">++</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-
-<span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">packet_ppi_fields_t</span><span class="o">::~</span><span class="n">packet_ppi_fields_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
-<span class="p">}</span>
-
-<span class="kt">void</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">packet_ppi_fields_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="p">}</span>
-
-<span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">radio_802_11n_mac_ext_body_t</span><span class="o">::</span><span class="n">radio_802_11n_mac_ext_body_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">packet_ppi_field_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
-<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
-<span class="w">    </span><span class="n">m_flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
-<span class="w">    </span><span class="n">_read</span><span class="p">();</span>
-<span class="p">}</span>
-
-<span class="kt">void</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">radio_802_11n_mac_ext_body_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">m_flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">mac_flags_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">mac_flags_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">));</span>
-<span class="w">    </span><span class="n">m_a_mpdu_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
-<span class="w">    </span><span class="n">m_num_delimiters</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
-<span class="w">    </span><span class="n">m_reserved</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
-<span class="p">}</span>
-
-<span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">radio_802_11n_mac_ext_body_t</span><span class="o">::~</span><span class="n">radio_802_11n_mac_ext_body_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
-<span class="p">}</span>
-
-<span class="kt">void</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">radio_802_11n_mac_ext_body_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="p">}</span>
 
 <span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">mac_flags_t</span><span class="o">::</span><span class="n">mac_flags_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
@@ -1078,51 +1181,6 @@ and build them along with your project.</p>
 <span class="p">}</span>
 
 <span class="kt">void</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">mac_flags_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="p">}</span>
-
-<span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">packet_ppi_header_t</span><span class="o">::</span><span class="n">packet_ppi_header_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
-<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
-<span class="w">    </span><span class="n">_read</span><span class="p">();</span>
-<span class="p">}</span>
-
-<span class="kt">void</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">packet_ppi_header_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">m_pph_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
-<span class="w">    </span><span class="n">m_pph_flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
-<span class="w">    </span><span class="n">m_pph_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
-<span class="w">    </span><span class="n">m_pph_dlt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">linktype_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">());</span>
-<span class="p">}</span>
-
-<span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">packet_ppi_header_t</span><span class="o">::~</span><span class="n">packet_ppi_header_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
-<span class="p">}</span>
-
-<span class="kt">void</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">packet_ppi_header_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="p">}</span>
-
-<span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">radio_802_11_common_body_t</span><span class="o">::</span><span class="n">radio_802_11_common_body_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">packet_ppi_field_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
-<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
-<span class="w">    </span><span class="n">_read</span><span class="p">();</span>
-<span class="p">}</span>
-
-<span class="kt">void</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">radio_802_11_common_body_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">m_tsf_timer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u8le</span><span class="p">();</span>
-<span class="w">    </span><span class="n">m_flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
-<span class="w">    </span><span class="n">m_rate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
-<span class="w">    </span><span class="n">m_channel_freq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
-<span class="w">    </span><span class="n">m_channel_flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
-<span class="w">    </span><span class="n">m_fhss_hopset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
-<span class="w">    </span><span class="n">m_fhss_pattern</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
-<span class="w">    </span><span class="n">m_dbm_antsignal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_s1</span><span class="p">();</span>
-<span class="w">    </span><span class="n">m_dbm_antnoise</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_s1</span><span class="p">();</span>
-<span class="p">}</span>
-
-<span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">radio_802_11_common_body_t</span><span class="o">::~</span><span class="n">radio_802_11_common_body_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
-<span class="p">}</span>
-
-<span class="kt">void</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">radio_802_11_common_body_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="p">}</span>
 
 <span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">packet_ppi_field_t</span><span class="o">::</span><span class="n">packet_ppi_field_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">packet_ppi_fields_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
@@ -1172,6 +1230,97 @@ and build them along with your project.</p>
 <span class="kt">void</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">packet_ppi_field_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">n_body</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">packet_ppi_fields_t</span><span class="o">::</span><span class="n">packet_ppi_fields_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_entries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
+<span class="w">    </span><span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">packet_ppi_fields_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m_entries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">packet_ppi_field_t</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">packet_ppi_field_t</span><span class="o">&gt;&gt;</span><span class="p">());</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">is_eof</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">m_entries</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">packet_ppi_field_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">packet_ppi_field_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">))));</span>
+<span class="w">            </span><span class="n">i</span><span class="o">++</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">packet_ppi_fields_t</span><span class="o">::~</span><span class="n">packet_ppi_fields_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">packet_ppi_fields_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="p">}</span>
+
+<span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">packet_ppi_header_t</span><span class="o">::</span><span class="n">packet_ppi_header_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">    </span><span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">packet_ppi_header_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m_pph_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_pph_flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_pph_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_pph_dlt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">linktype_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">());</span>
+<span class="p">}</span>
+
+<span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">packet_ppi_header_t</span><span class="o">::~</span><span class="n">packet_ppi_header_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">packet_ppi_header_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="p">}</span>
+
+<span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">radio_802_11_common_body_t</span><span class="o">::</span><span class="n">radio_802_11_common_body_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">packet_ppi_field_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">    </span><span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">radio_802_11_common_body_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m_tsf_timer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u8le</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_rate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_channel_freq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_channel_flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_fhss_hopset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_fhss_pattern</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_dbm_antsignal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_s1</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_dbm_antnoise</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_s1</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">radio_802_11_common_body_t</span><span class="o">::~</span><span class="n">radio_802_11_common_body_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">radio_802_11_common_body_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="p">}</span>
+
+<span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">radio_802_11n_mac_ext_body_t</span><span class="o">::</span><span class="n">radio_802_11n_mac_ext_body_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">packet_ppi_field_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
+<span class="w">    </span><span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">radio_802_11n_mac_ext_body_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m_flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">mac_flags_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">mac_flags_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">));</span>
+<span class="w">    </span><span class="n">m_a_mpdu_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_num_delimiters</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="n">m_reserved</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">radio_802_11n_mac_ext_body_t</span><span class="o">::~</span><span class="n">radio_802_11n_mac_ext_body_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">radio_802_11n_mac_ext_body_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="p">}</span>
 
 <span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">radio_802_11n_mac_phy_ext_body_t</span><span class="o">::</span><span class="n">radio_802_11n_mac_phy_ext_body_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">::</span><span class="n">packet_ppi_field_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">packet_ppi_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>

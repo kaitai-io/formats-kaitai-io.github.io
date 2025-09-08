@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
-from enum import Enum
+from enum import IntEnum
 
 
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class UefiTe(KaitaiStruct):
     """This type of executables could be found inside the UEFI firmware. The UEFI
@@ -32,9 +33,9 @@ class UefiTe(KaitaiStruct):
        Source - https://uefi.org/sites/default/files/resources/PI_Spec_1_6.pdf
     """
     def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
+        super(UefiTe, self).__init__(_io)
         self._parent = _parent
-        self._root = _root if _root else self
+        self._root = _root or self
         self._read()
 
     def _read(self):
@@ -46,9 +47,91 @@ class UefiTe(KaitaiStruct):
             self.sections.append(UefiTe.Section(self._io, self, self._root))
 
 
+
+    def _fetch_instances(self):
+        pass
+        self.te_hdr._fetch_instances()
+        for i in range(len(self.sections)):
+            pass
+            self.sections[i]._fetch_instances()
+
+
+    class DataDir(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(UefiTe.DataDir, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.virtual_address = self._io.read_u4le()
+            self.size = self._io.read_u4le()
+
+
+        def _fetch_instances(self):
+            pass
+
+
+    class HeaderDataDirs(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(UefiTe.HeaderDataDirs, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.base_relocation_table = UefiTe.DataDir(self._io, self, self._root)
+            self.debug = UefiTe.DataDir(self._io, self, self._root)
+
+
+        def _fetch_instances(self):
+            pass
+            self.base_relocation_table._fetch_instances()
+            self.debug._fetch_instances()
+
+
+    class Section(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(UefiTe.Section, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.name = (KaitaiStream.bytes_strip_right(self._io.read_bytes(8), 0)).decode(u"UTF-8")
+            self.virtual_size = self._io.read_u4le()
+            self.virtual_address = self._io.read_u4le()
+            self.size_of_raw_data = self._io.read_u4le()
+            self.pointer_to_raw_data = self._io.read_u4le()
+            self.pointer_to_relocations = self._io.read_u4le()
+            self.pointer_to_linenumbers = self._io.read_u4le()
+            self.num_relocations = self._io.read_u2le()
+            self.num_linenumbers = self._io.read_u2le()
+            self.characteristics = self._io.read_u4le()
+
+
+        def _fetch_instances(self):
+            pass
+            _ = self.body
+            if hasattr(self, '_m_body'):
+                pass
+
+
+        @property
+        def body(self):
+            if hasattr(self, '_m_body'):
+                return self._m_body
+
+            _pos = self._io.pos()
+            self._io.seek((self.pointer_to_raw_data - self._root.te_hdr.stripped_size) + self._root.te_hdr._io.size())
+            self._m_body = self._io.read_bytes(self.size_of_raw_data)
+            self._io.seek(_pos)
+            return getattr(self, '_m_body', None)
+
+
     class TeHeader(KaitaiStruct):
 
-        class MachineType(Enum):
+        class MachineType(IntEnum):
             unknown = 0
             i386 = 332
             r4000 = 358
@@ -79,7 +162,7 @@ class UefiTe(KaitaiStruct):
             m32r = 36929
             arm64 = 43620
 
-        class SubsystemEnum(Enum):
+        class SubsystemEnum(IntEnum):
             unknown = 0
             native = 1
             windows_gui = 2
@@ -93,9 +176,9 @@ class UefiTe(KaitaiStruct):
             xbox = 14
             windows_boot_application = 16
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(UefiTe.TeHeader, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -112,59 +195,9 @@ class UefiTe(KaitaiStruct):
             self.data_dirs = UefiTe.HeaderDataDirs(self._io, self, self._root)
 
 
-    class HeaderDataDirs(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.base_relocation_table = UefiTe.DataDir(self._io, self, self._root)
-            self.debug = UefiTe.DataDir(self._io, self, self._root)
-
-
-    class DataDir(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.virtual_address = self._io.read_u4le()
-            self.size = self._io.read_u4le()
-
-
-    class Section(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.name = (KaitaiStream.bytes_strip_right(self._io.read_bytes(8), 0)).decode(u"UTF-8")
-            self.virtual_size = self._io.read_u4le()
-            self.virtual_address = self._io.read_u4le()
-            self.size_of_raw_data = self._io.read_u4le()
-            self.pointer_to_raw_data = self._io.read_u4le()
-            self.pointer_to_relocations = self._io.read_u4le()
-            self.pointer_to_linenumbers = self._io.read_u4le()
-            self.num_relocations = self._io.read_u2le()
-            self.num_linenumbers = self._io.read_u2le()
-            self.characteristics = self._io.read_u4le()
-
-        @property
-        def body(self):
-            if hasattr(self, '_m_body'):
-                return self._m_body
-
-            _pos = self._io.pos()
-            self._io.seek(((self.pointer_to_raw_data - self._root.te_hdr.stripped_size) + self._root.te_hdr._io.size()))
-            self._m_body = self._io.read_bytes(self.size_of_raw_data)
-            self._io.seek(_pos)
-            return getattr(self, '_m_body', None)
+        def _fetch_instances(self):
+            pass
+            self.data_dirs._fetch_instances()
 
 
 

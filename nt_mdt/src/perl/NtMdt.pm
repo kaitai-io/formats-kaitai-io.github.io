@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Encode;
 
 ########################################################################
@@ -40,14 +40,12 @@ our $ADC_MODE_HV_Y = 17;
 our $ADC_MODE_SNAP_BACK = 18;
 our $ADC_MODE_FALSE = 255;
 
-our $XML_SCAN_LOCATION_HLT = 0;
-our $XML_SCAN_LOCATION_HLB = 1;
-our $XML_SCAN_LOCATION_HRT = 2;
-our $XML_SCAN_LOCATION_HRB = 3;
-our $XML_SCAN_LOCATION_VLT = 4;
-our $XML_SCAN_LOCATION_VLB = 5;
-our $XML_SCAN_LOCATION_VRT = 6;
-our $XML_SCAN_LOCATION_VRB = 7;
+our $CONSTS_FRAME_MODE_SIZE = 8;
+our $CONSTS_FRAME_HEADER_SIZE = 22;
+our $CONSTS_AXIS_SCALES_SIZE = 30;
+our $CONSTS_FILE_HEADER_SIZE = 32;
+our $CONSTS_SPECTRO_VARS_MIN_SIZE = 38;
+our $CONSTS_SCAN_VARS_MIN_SIZE = 77;
 
 our $DATA_TYPE_FLOATFIX = -65544;
 our $DATA_TYPE_FLOAT80 = -16138;
@@ -63,11 +61,6 @@ our $DATA_TYPE_UINT8 = 1;
 our $DATA_TYPE_UINT16 = 2;
 our $DATA_TYPE_UINT32 = 4;
 our $DATA_TYPE_UINT64 = 8;
-
-our $XML_PARAM_TYPE_NONE = 0;
-our $XML_PARAM_TYPE_LASER_WAVELENGTH = 1;
-our $XML_PARAM_TYPE_UNITS = 2;
-our $XML_PARAM_TYPE_DATA_ARRAY = 255;
 
 our $SPM_MODE_CONSTANT_FORCE = 0;
 our $SPM_MODE_CONTACT_CONSTANT_HEIGHT = 1;
@@ -95,6 +88,11 @@ our $SPM_MODE_SNOM_TRANSMISSION = 22;
 our $SPM_MODE_SNOM_REFLECTION = 23;
 our $SPM_MODE_SNOM_ALL = 24;
 our $SPM_MODE_SNOM = 25;
+
+our $SPM_TECHNIQUE_CONTACT_MODE = 0;
+our $SPM_TECHNIQUE_SEMICONTACT_MODE = 1;
+our $SPM_TECHNIQUE_TUNNEL_CURRENT = 2;
+our $SPM_TECHNIQUE_SNOM = 3;
 
 our $UNIT_RAMAN_SHIFT = -10;
 our $UNIT_RESERVED0 = -9;
@@ -147,17 +145,19 @@ our $UNIT_RESERVED_DOS2 = 37;
 our $UNIT_RESERVED_DOS3 = 38;
 our $UNIT_RESERVED_DOS4 = 39;
 
-our $SPM_TECHNIQUE_CONTACT_MODE = 0;
-our $SPM_TECHNIQUE_SEMICONTACT_MODE = 1;
-our $SPM_TECHNIQUE_TUNNEL_CURRENT = 2;
-our $SPM_TECHNIQUE_SNOM = 3;
+our $XML_PARAM_TYPE_NONE = 0;
+our $XML_PARAM_TYPE_LASER_WAVELENGTH = 1;
+our $XML_PARAM_TYPE_UNITS = 2;
+our $XML_PARAM_TYPE_DATA_ARRAY = 255;
 
-our $CONSTS_FRAME_MODE_SIZE = 8;
-our $CONSTS_FRAME_HEADER_SIZE = 22;
-our $CONSTS_AXIS_SCALES_SIZE = 30;
-our $CONSTS_FILE_HEADER_SIZE = 32;
-our $CONSTS_SPECTRO_VARS_MIN_SIZE = 38;
-our $CONSTS_SCAN_VARS_MIN_SIZE = 77;
+our $XML_SCAN_LOCATION_HLT = 0;
+our $XML_SCAN_LOCATION_HLB = 1;
+our $XML_SCAN_LOCATION_HRT = 2;
+our $XML_SCAN_LOCATION_HRB = 3;
+our $XML_SCAN_LOCATION_VLT = 4;
+our $XML_SCAN_LOCATION_VLB = 5;
+our $XML_SCAN_LOCATION_VRT = 6;
+our $XML_SCAN_LOCATION_VRB = 7;
 
 sub new {
     my ($class, $_io, $_parent, $_root) = @_;
@@ -165,7 +165,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -227,90 +227,6 @@ sub _raw_frames {
 }
 
 ########################################################################
-package NtMdt::Uuid;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{data} = ();
-    my $n_data = 16;
-    for (my $i = 0; $i < $n_data; $i++) {
-        push @{$self->{data}}, $self->{_io}->read_u1();
-    }
-}
-
-sub data {
-    my ($self) = @_;
-    return $self->{data};
-}
-
-########################################################################
-package NtMdt::Framez;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{frames} = ();
-    my $n_frames = ($self->_root()->last_frame() + 1);
-    for (my $i = 0; $i < $n_frames; $i++) {
-        push @{$self->{frames}}, NtMdt::Frame->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub frames {
-    my ($self) = @_;
-    return $self->{frames};
-}
-
-########################################################################
 package NtMdt::Frame;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -339,7 +255,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -350,7 +266,7 @@ sub _read {
     my ($self) = @_;
 
     $self->{size} = $self->{_io}->read_u4le();
-    $self->{_raw_main} = $self->{_io}->read_bytes(($self->size() - 4));
+    $self->{_raw_main} = $self->{_io}->read_bytes($self->size() - 4);
     my $io__raw_main = IO::KaitaiStruct::Stream->new($self->{_raw_main});
     $self->{main} = NtMdt::Frame::FrameMain->new($io__raw_main, $self, $self->{_root});
 }
@@ -368,6 +284,200 @@ sub main {
 sub _raw_main {
     my ($self) = @_;
     return $self->{_raw_main};
+}
+
+########################################################################
+package NtMdt::Frame::AxisScale;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{offset} = $self->{_io}->read_f4le();
+    $self->{step} = $self->{_io}->read_f4le();
+    $self->{unit} = $self->{_io}->read_s2le();
+}
+
+sub offset {
+    my ($self) = @_;
+    return $self->{offset};
+}
+
+sub step {
+    my ($self) = @_;
+    return $self->{step};
+}
+
+sub unit {
+    my ($self) = @_;
+    return $self->{unit};
+}
+
+########################################################################
+package NtMdt::Frame::DateTime;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{date} = NtMdt::Frame::DateTime::Date->new($self->{_io}, $self, $self->{_root});
+    $self->{time} = NtMdt::Frame::DateTime::Time->new($self->{_io}, $self, $self->{_root});
+}
+
+sub date {
+    my ($self) = @_;
+    return $self->{date};
+}
+
+sub time {
+    my ($self) = @_;
+    return $self->{time};
+}
+
+########################################################################
+package NtMdt::Frame::DateTime::Date;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{year} = $self->{_io}->read_u2le();
+    $self->{month} = $self->{_io}->read_u2le();
+    $self->{day} = $self->{_io}->read_u2le();
+}
+
+sub year {
+    my ($self) = @_;
+    return $self->{year};
+}
+
+sub month {
+    my ($self) = @_;
+    return $self->{month};
+}
+
+sub day {
+    my ($self) = @_;
+    return $self->{day};
+}
+
+########################################################################
+package NtMdt::Frame::DateTime::Time;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{hour} = $self->{_io}->read_u2le();
+    $self->{min} = $self->{_io}->read_u2le();
+    $self->{sec} = $self->{_io}->read_u2le();
+}
+
+sub hour {
+    my ($self) = @_;
+    return $self->{hour};
+}
+
+sub min {
+    my ($self) = @_;
+    return $self->{min};
+}
+
+sub sec {
+    my ($self) = @_;
+    return $self->{sec};
 }
 
 ########################################################################
@@ -390,7 +500,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -404,12 +514,12 @@ sub _read {
     if ($self->fm_ndots() > 0) {
         $self->{coord_header} = NtMdt::Frame::Dots::DotsHeader->new($self->{_io}, $self, $self->{_root});
     }
-    $self->{coordinates} = ();
+    $self->{coordinates} = [];
     my $n_coordinates = $self->fm_ndots();
     for (my $i = 0; $i < $n_coordinates; $i++) {
         push @{$self->{coordinates}}, NtMdt::Frame::Dots::DotsData->new($self->{_io}, $self, $self->{_root});
     }
-    $self->{data} = ();
+    $self->{data} = [];
     my $n_data = $self->fm_ndots();
     for (my $i = 0; $i < $n_data; $i++) {
         push @{$self->{data}}, NtMdt::Frame::Dots::DataLinez->new($self->{_io}, $self, $self->{_root});
@@ -437,6 +547,119 @@ sub data {
 }
 
 ########################################################################
+package NtMdt::Frame::Dots::DataLinez;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{forward} = [];
+    my $n_forward = @{$self->_parent()->coordinates()}[$self->index()]->forward_size();
+    for (my $i = 0; $i < $n_forward; $i++) {
+        push @{$self->{forward}}, $self->{_io}->read_s2le();
+    }
+    $self->{backward} = [];
+    my $n_backward = @{$self->_parent()->coordinates()}[$self->index()]->backward_size();
+    for (my $i = 0; $i < $n_backward; $i++) {
+        push @{$self->{backward}}, $self->{_io}->read_s2le();
+    }
+}
+
+sub forward {
+    my ($self) = @_;
+    return $self->{forward};
+}
+
+sub backward {
+    my ($self) = @_;
+    return $self->{backward};
+}
+
+sub index {
+    my ($self) = @_;
+    return $self->{index};
+}
+
+########################################################################
+package NtMdt::Frame::Dots::DotsData;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{coord_x} = $self->{_io}->read_f4le();
+    $self->{coord_y} = $self->{_io}->read_f4le();
+    $self->{forward_size} = $self->{_io}->read_s4le();
+    $self->{backward_size} = $self->{_io}->read_s4le();
+}
+
+sub coord_x {
+    my ($self) = @_;
+    return $self->{coord_x};
+}
+
+sub coord_y {
+    my ($self) = @_;
+    return $self->{coord_y};
+}
+
+sub forward_size {
+    my ($self) = @_;
+    return $self->{forward_size};
+}
+
+sub backward_size {
+    my ($self) = @_;
+    return $self->{backward_size};
+}
+
+########################################################################
 package NtMdt::Frame::Dots::DotsHeader;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -456,7 +679,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -507,7 +730,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -538,214 +761,6 @@ sub xyunits {
 }
 
 ########################################################################
-package NtMdt::Frame::Dots::DotsData;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{coord_x} = $self->{_io}->read_f4le();
-    $self->{coord_y} = $self->{_io}->read_f4le();
-    $self->{forward_size} = $self->{_io}->read_s4le();
-    $self->{backward_size} = $self->{_io}->read_s4le();
-}
-
-sub coord_x {
-    my ($self) = @_;
-    return $self->{coord_x};
-}
-
-sub coord_y {
-    my ($self) = @_;
-    return $self->{coord_y};
-}
-
-sub forward_size {
-    my ($self) = @_;
-    return $self->{forward_size};
-}
-
-sub backward_size {
-    my ($self) = @_;
-    return $self->{backward_size};
-}
-
-########################################################################
-package NtMdt::Frame::Dots::DataLinez;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{forward} = ();
-    my $n_forward = @{$self->_parent()->coordinates()}[$self->index()]->forward_size();
-    for (my $i = 0; $i < $n_forward; $i++) {
-        push @{$self->{forward}}, $self->{_io}->read_s2le();
-    }
-    $self->{backward} = ();
-    my $n_backward = @{$self->_parent()->coordinates()}[$self->index()]->backward_size();
-    for (my $i = 0; $i < $n_backward; $i++) {
-        push @{$self->{backward}}, $self->{_io}->read_s2le();
-    }
-}
-
-sub forward {
-    my ($self) = @_;
-    return $self->{forward};
-}
-
-sub backward {
-    my ($self) = @_;
-    return $self->{backward};
-}
-
-sub index {
-    my ($self) = @_;
-    return $self->{index};
-}
-
-########################################################################
-package NtMdt::Frame::FrameMain;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{type} = $self->{_io}->read_u2le();
-    $self->{version} = NtMdt::Version->new($self->{_io}, $self, $self->{_root});
-    $self->{date_time} = NtMdt::Frame::DateTime->new($self->{_io}, $self, $self->{_root});
-    $self->{var_size} = $self->{_io}->read_u2le();
-    my $_on = $self->type();
-    if ($_on == $NtMdt::Frame::FRAME_TYPE_MDA) {
-        $self->{_raw_frame_data} = $self->{_io}->read_bytes_full();
-        my $io__raw_frame_data = IO::KaitaiStruct::Stream->new($self->{_raw_frame_data});
-        $self->{frame_data} = NtMdt::Frame::FdMetaData->new($io__raw_frame_data, $self, $self->{_root});
-    }
-    elsif ($_on == $NtMdt::Frame::FRAME_TYPE_CURVES_NEW) {
-        $self->{_raw_frame_data} = $self->{_io}->read_bytes_full();
-        my $io__raw_frame_data = IO::KaitaiStruct::Stream->new($self->{_raw_frame_data});
-        $self->{frame_data} = NtMdt::Frame::FdCurvesNew->new($io__raw_frame_data, $self, $self->{_root});
-    }
-    elsif ($_on == $NtMdt::Frame::FRAME_TYPE_CURVES) {
-        $self->{_raw_frame_data} = $self->{_io}->read_bytes_full();
-        my $io__raw_frame_data = IO::KaitaiStruct::Stream->new($self->{_raw_frame_data});
-        $self->{frame_data} = NtMdt::Frame::FdSpectroscopy->new($io__raw_frame_data, $self, $self->{_root});
-    }
-    elsif ($_on == $NtMdt::Frame::FRAME_TYPE_SPECTROSCOPY) {
-        $self->{_raw_frame_data} = $self->{_io}->read_bytes_full();
-        my $io__raw_frame_data = IO::KaitaiStruct::Stream->new($self->{_raw_frame_data});
-        $self->{frame_data} = NtMdt::Frame::FdSpectroscopy->new($io__raw_frame_data, $self, $self->{_root});
-    }
-    elsif ($_on == $NtMdt::Frame::FRAME_TYPE_SCANNED) {
-        $self->{_raw_frame_data} = $self->{_io}->read_bytes_full();
-        my $io__raw_frame_data = IO::KaitaiStruct::Stream->new($self->{_raw_frame_data});
-        $self->{frame_data} = NtMdt::Frame::FdScanned->new($io__raw_frame_data, $self, $self->{_root});
-    }
-    else {
-        $self->{frame_data} = $self->{_io}->read_bytes_full();
-    }
-}
-
-sub type {
-    my ($self) = @_;
-    return $self->{type};
-}
-
-sub version {
-    my ($self) = @_;
-    return $self->{version};
-}
-
-sub date_time {
-    my ($self) = @_;
-    return $self->{date_time};
-}
-
-sub var_size {
-    my ($self) = @_;
-    return $self->{var_size};
-}
-
-sub frame_data {
-    my ($self) = @_;
-    return $self->{frame_data};
-}
-
-sub _raw_frame_data {
-    my ($self) = @_;
-    return $self->{_raw_frame_data};
-}
-
-########################################################################
 package NtMdt::Frame::FdCurvesNew;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -765,7 +780,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -776,17 +791,17 @@ sub _read {
     my ($self) = @_;
 
     $self->{block_count} = $self->{_io}->read_u4le();
-    $self->{blocks_headers} = ();
+    $self->{blocks_headers} = [];
     my $n_blocks_headers = $self->block_count();
     for (my $i = 0; $i < $n_blocks_headers; $i++) {
         push @{$self->{blocks_headers}}, NtMdt::Frame::FdCurvesNew::BlockDescr->new($self->{_io}, $self, $self->{_root});
     }
-    $self->{blocks_names} = ();
+    $self->{blocks_names} = [];
     my $n_blocks_names = $self->block_count();
     for (my $i = 0; $i < $n_blocks_names; $i++) {
         push @{$self->{blocks_names}}, Encode::decode("UTF-8", $self->{_io}->read_bytes(@{$self->blocks_headers()}[$i]->name_len()));
     }
-    $self->{blocks_data} = ();
+    $self->{blocks_data} = [];
     my $n_blocks_data = $self->block_count();
     for (my $i = 0; $i < $n_blocks_data; $i++) {
         push @{$self->{blocks_data}}, $self->{_io}->read_bytes(@{$self->blocks_headers()}[$i]->len());
@@ -833,7 +848,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -877,7 +892,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -889,7 +904,7 @@ sub _read {
 
     $self->{head_size} = $self->{_io}->read_u4le();
     $self->{tot_len} = $self->{_io}->read_u4le();
-    $self->{guids} = ();
+    $self->{guids} = [];
     my $n_guids = 2;
     for (my $i = 0; $i < $n_guids; $i++) {
         push @{$self->{guids}}, NtMdt::Uuid->new($self->{_io}, $self, $self->{_root});
@@ -910,12 +925,12 @@ sub _read {
     $self->{cell_size} = $self->{_io}->read_u4le();
     $self->{n_dimensions} = $self->{_io}->read_u4le();
     $self->{n_mesurands} = $self->{_io}->read_u4le();
-    $self->{dimensions} = ();
+    $self->{dimensions} = [];
     my $n_dimensions = $self->n_dimensions();
     for (my $i = 0; $i < $n_dimensions; $i++) {
         push @{$self->{dimensions}}, NtMdt::Frame::FdMetaData::Calibration->new($self->{_io}, $self, $self->{_root});
     }
-    $self->{mesurands} = ();
+    $self->{mesurands} = [];
     my $n_mesurands = $self->n_mesurands();
     for (my $i = 0; $i < $n_mesurands; $i++) {
         push @{$self->{mesurands}}, NtMdt::Frame::FdMetaData::Calibration->new($self->{_io}, $self, $self->{_root});
@@ -1045,119 +1060,6 @@ sub _raw_image {
 }
 
 ########################################################################
-package NtMdt::Frame::FdMetaData::Image;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{image} = ();
-    while (!$self->{_io}->is_eof()) {
-        push @{$self->{image}}, NtMdt::Frame::FdMetaData::Image::Vec->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub image {
-    my ($self) = @_;
-    return $self->{image};
-}
-
-########################################################################
-package NtMdt::Frame::FdMetaData::Image::Vec;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{items} = ();
-    my $n_items = $self->_parent()->_parent()->n_mesurands();
-    for (my $i = 0; $i < $n_items; $i++) {
-        my $_on = @{$self->_parent()->_parent()->mesurands()}[$i]->data_type();
-        if ($_on == $NtMdt::DATA_TYPE_UINT64) {
-            push @{$self->{items}}, $self->{_io}->read_u8le();
-        }
-        elsif ($_on == $NtMdt::DATA_TYPE_UINT8) {
-            push @{$self->{items}}, $self->{_io}->read_u1();
-        }
-        elsif ($_on == $NtMdt::DATA_TYPE_FLOAT32) {
-            push @{$self->{items}}, $self->{_io}->read_f4le();
-        }
-        elsif ($_on == $NtMdt::DATA_TYPE_INT8) {
-            push @{$self->{items}}, $self->{_io}->read_s1();
-        }
-        elsif ($_on == $NtMdt::DATA_TYPE_UINT16) {
-            push @{$self->{items}}, $self->{_io}->read_u2le();
-        }
-        elsif ($_on == $NtMdt::DATA_TYPE_INT64) {
-            push @{$self->{items}}, $self->{_io}->read_s8le();
-        }
-        elsif ($_on == $NtMdt::DATA_TYPE_UINT32) {
-            push @{$self->{items}}, $self->{_io}->read_u4le();
-        }
-        elsif ($_on == $NtMdt::DATA_TYPE_FLOAT64) {
-            push @{$self->{items}}, $self->{_io}->read_f8le();
-        }
-        elsif ($_on == $NtMdt::DATA_TYPE_INT16) {
-            push @{$self->{items}}, $self->{_io}->read_s2le();
-        }
-        elsif ($_on == $NtMdt::DATA_TYPE_INT32) {
-            push @{$self->{items}}, $self->{_io}->read_s4le();
-        }
-    }
-}
-
-sub items {
-    my ($self) = @_;
-    return $self->{items};
-}
-
-########################################################################
 package NtMdt::Frame::FdMetaData::Calibration;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -1177,7 +1079,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -1201,16 +1103,16 @@ sub _read {
     $self->{max_index} = $self->{_io}->read_u8le();
     $self->{data_type} = $self->{_io}->read_s4le();
     $self->{len_author} = $self->{_io}->read_u4le();
-    $self->{name} = Encode::decode("utf-8", $self->{_io}->read_bytes($self->len_name()));
-    $self->{comment} = Encode::decode("utf-8", $self->{_io}->read_bytes($self->len_comment()));
-    $self->{unit} = Encode::decode("utf-8", $self->{_io}->read_bytes($self->len_unit()));
-    $self->{author} = Encode::decode("utf-8", $self->{_io}->read_bytes($self->len_author()));
+    $self->{name} = Encode::decode("UTF-8", $self->{_io}->read_bytes($self->len_name()));
+    $self->{comment} = Encode::decode("UTF-8", $self->{_io}->read_bytes($self->len_comment()));
+    $self->{unit} = Encode::decode("UTF-8", $self->{_io}->read_bytes($self->len_unit()));
+    $self->{author} = Encode::decode("UTF-8", $self->{_io}->read_bytes($self->len_author()));
 }
 
 sub count {
     my ($self) = @_;
     return $self->{count} if ($self->{count});
-    $self->{count} = (($self->max_index() - $self->min_index()) + 1);
+    $self->{count} = ($self->max_index() - $self->min_index()) + 1;
     return $self->{count};
 }
 
@@ -1305,7 +1207,7 @@ sub author {
 }
 
 ########################################################################
-package NtMdt::Frame::FdSpectroscopy;
+package NtMdt::Frame::FdMetaData::Image;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -1324,7 +1226,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -1334,69 +1236,19 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{_raw_vars} = $self->{_io}->read_bytes($self->_parent()->var_size());
-    my $io__raw_vars = IO::KaitaiStruct::Stream->new($self->{_raw_vars});
-    $self->{vars} = NtMdt::Frame::FdSpectroscopy::Vars->new($io__raw_vars, $self, $self->{_root});
-    $self->{fm_mode} = $self->{_io}->read_u2le();
-    $self->{fm_xres} = $self->{_io}->read_u2le();
-    $self->{fm_yres} = $self->{_io}->read_u2le();
-    $self->{dots} = NtMdt::Frame::Dots->new($self->{_io}, $self, $self->{_root});
-    $self->{data} = ();
-    my $n_data = ($self->fm_xres() * $self->fm_yres());
-    for (my $i = 0; $i < $n_data; $i++) {
-        push @{$self->{data}}, $self->{_io}->read_s2le();
+    $self->{image} = [];
+    while (!$self->{_io}->is_eof()) {
+        push @{$self->{image}}, NtMdt::Frame::FdMetaData::Image::Vec->new($self->{_io}, $self, $self->{_root});
     }
-    $self->{title} = NtMdt::Title->new($self->{_io}, $self, $self->{_root});
-    $self->{xml} = NtMdt::Xml->new($self->{_io}, $self, $self->{_root});
 }
 
-sub vars {
+sub image {
     my ($self) = @_;
-    return $self->{vars};
-}
-
-sub fm_mode {
-    my ($self) = @_;
-    return $self->{fm_mode};
-}
-
-sub fm_xres {
-    my ($self) = @_;
-    return $self->{fm_xres};
-}
-
-sub fm_yres {
-    my ($self) = @_;
-    return $self->{fm_yres};
-}
-
-sub dots {
-    my ($self) = @_;
-    return $self->{dots};
-}
-
-sub data {
-    my ($self) = @_;
-    return $self->{data};
-}
-
-sub title {
-    my ($self) = @_;
-    return $self->{title};
-}
-
-sub xml {
-    my ($self) = @_;
-    return $self->{xml};
-}
-
-sub _raw_vars {
-    my ($self) = @_;
-    return $self->{_raw_vars};
+    return $self->{image};
 }
 
 ########################################################################
-package NtMdt::Frame::FdSpectroscopy::Vars;
+package NtMdt::Frame::FdMetaData::Image::Vec;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -1415,7 +1267,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -1425,320 +1277,46 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{x_scale} = NtMdt::Frame::AxisScale->new($self->{_io}, $self, $self->{_root});
-    $self->{y_scale} = NtMdt::Frame::AxisScale->new($self->{_io}, $self, $self->{_root});
-    $self->{z_scale} = NtMdt::Frame::AxisScale->new($self->{_io}, $self, $self->{_root});
-    $self->{sp_mode} = $self->{_io}->read_u2le();
-    $self->{sp_filter} = $self->{_io}->read_u2le();
-    $self->{u_begin} = $self->{_io}->read_f4le();
-    $self->{u_end} = $self->{_io}->read_f4le();
-    $self->{z_up} = $self->{_io}->read_s2le();
-    $self->{z_down} = $self->{_io}->read_s2le();
-    $self->{sp_averaging} = $self->{_io}->read_u2le();
-    $self->{sp_repeat} = $self->{_io}->read_u1();
-    $self->{sp_back} = $self->{_io}->read_u1();
-    $self->{sp_4nx} = $self->{_io}->read_s2le();
-    $self->{sp_osc} = $self->{_io}->read_u1();
-    $self->{sp_n4} = $self->{_io}->read_u1();
-    $self->{sp_4x0} = $self->{_io}->read_f4le();
-    $self->{sp_4xr} = $self->{_io}->read_f4le();
-    $self->{sp_4u} = $self->{_io}->read_s2le();
-    $self->{sp_4i} = $self->{_io}->read_s2le();
-    $self->{sp_nx} = $self->{_io}->read_s2le();
+    $self->{items} = [];
+    my $n_items = $self->_parent()->_parent()->n_mesurands();
+    for (my $i = 0; $i < $n_items; $i++) {
+        my $_on = @{$self->_parent()->_parent()->mesurands()}[$i]->data_type();
+        if ($_on == $NtMdt::DATA_TYPE_FLOAT32) {
+            push @{$self->{items}}, $self->{_io}->read_f4le();
+        }
+        elsif ($_on == $NtMdt::DATA_TYPE_FLOAT64) {
+            push @{$self->{items}}, $self->{_io}->read_f8le();
+        }
+        elsif ($_on == $NtMdt::DATA_TYPE_INT16) {
+            push @{$self->{items}}, $self->{_io}->read_s2le();
+        }
+        elsif ($_on == $NtMdt::DATA_TYPE_INT32) {
+            push @{$self->{items}}, $self->{_io}->read_s4le();
+        }
+        elsif ($_on == $NtMdt::DATA_TYPE_INT64) {
+            push @{$self->{items}}, $self->{_io}->read_s8le();
+        }
+        elsif ($_on == $NtMdt::DATA_TYPE_INT8) {
+            push @{$self->{items}}, $self->{_io}->read_s1();
+        }
+        elsif ($_on == $NtMdt::DATA_TYPE_UINT16) {
+            push @{$self->{items}}, $self->{_io}->read_u2le();
+        }
+        elsif ($_on == $NtMdt::DATA_TYPE_UINT32) {
+            push @{$self->{items}}, $self->{_io}->read_u4le();
+        }
+        elsif ($_on == $NtMdt::DATA_TYPE_UINT64) {
+            push @{$self->{items}}, $self->{_io}->read_u8le();
+        }
+        elsif ($_on == $NtMdt::DATA_TYPE_UINT8) {
+            push @{$self->{items}}, $self->{_io}->read_u1();
+        }
+    }
 }
 
-sub x_scale {
+sub items {
     my ($self) = @_;
-    return $self->{x_scale};
-}
-
-sub y_scale {
-    my ($self) = @_;
-    return $self->{y_scale};
-}
-
-sub z_scale {
-    my ($self) = @_;
-    return $self->{z_scale};
-}
-
-sub sp_mode {
-    my ($self) = @_;
-    return $self->{sp_mode};
-}
-
-sub sp_filter {
-    my ($self) = @_;
-    return $self->{sp_filter};
-}
-
-sub u_begin {
-    my ($self) = @_;
-    return $self->{u_begin};
-}
-
-sub u_end {
-    my ($self) = @_;
-    return $self->{u_end};
-}
-
-sub z_up {
-    my ($self) = @_;
-    return $self->{z_up};
-}
-
-sub z_down {
-    my ($self) = @_;
-    return $self->{z_down};
-}
-
-sub sp_averaging {
-    my ($self) = @_;
-    return $self->{sp_averaging};
-}
-
-sub sp_repeat {
-    my ($self) = @_;
-    return $self->{sp_repeat};
-}
-
-sub sp_back {
-    my ($self) = @_;
-    return $self->{sp_back};
-}
-
-sub sp_4nx {
-    my ($self) = @_;
-    return $self->{sp_4nx};
-}
-
-sub sp_osc {
-    my ($self) = @_;
-    return $self->{sp_osc};
-}
-
-sub sp_n4 {
-    my ($self) = @_;
-    return $self->{sp_n4};
-}
-
-sub sp_4x0 {
-    my ($self) = @_;
-    return $self->{sp_4x0};
-}
-
-sub sp_4xr {
-    my ($self) = @_;
-    return $self->{sp_4xr};
-}
-
-sub sp_4u {
-    my ($self) = @_;
-    return $self->{sp_4u};
-}
-
-sub sp_4i {
-    my ($self) = @_;
-    return $self->{sp_4i};
-}
-
-sub sp_nx {
-    my ($self) = @_;
-    return $self->{sp_nx};
-}
-
-########################################################################
-package NtMdt::Frame::DateTime;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{date} = NtMdt::Frame::DateTime::Date->new($self->{_io}, $self, $self->{_root});
-    $self->{time} = NtMdt::Frame::DateTime::Time->new($self->{_io}, $self, $self->{_root});
-}
-
-sub date {
-    my ($self) = @_;
-    return $self->{date};
-}
-
-sub time {
-    my ($self) = @_;
-    return $self->{time};
-}
-
-########################################################################
-package NtMdt::Frame::DateTime::Date;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{year} = $self->{_io}->read_u2le();
-    $self->{month} = $self->{_io}->read_u2le();
-    $self->{day} = $self->{_io}->read_u2le();
-}
-
-sub year {
-    my ($self) = @_;
-    return $self->{year};
-}
-
-sub month {
-    my ($self) = @_;
-    return $self->{month};
-}
-
-sub day {
-    my ($self) = @_;
-    return $self->{day};
-}
-
-########################################################################
-package NtMdt::Frame::DateTime::Time;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{hour} = $self->{_io}->read_u2le();
-    $self->{min} = $self->{_io}->read_u2le();
-    $self->{sec} = $self->{_io}->read_u2le();
-}
-
-sub hour {
-    my ($self) = @_;
-    return $self->{hour};
-}
-
-sub min {
-    my ($self) = @_;
-    return $self->{min};
-}
-
-sub sec {
-    my ($self) = @_;
-    return $self->{sec};
-}
-
-########################################################################
-package NtMdt::Frame::AxisScale;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{offset} = $self->{_io}->read_f4le();
-    $self->{step} = $self->{_io}->read_f4le();
-    $self->{unit} = $self->{_io}->read_s2le();
-}
-
-sub offset {
-    my ($self) = @_;
-    return $self->{offset};
-}
-
-sub step {
-    my ($self) = @_;
-    return $self->{step};
-}
-
-sub unit {
-    my ($self) = @_;
-    return $self->{unit};
+    return $self->{items};
 }
 
 ########################################################################
@@ -1755,12 +1333,6 @@ sub from_file {
     return new($class, IO::KaitaiStruct::Stream->new($fd));
 }
 
-our $MODE_STM = 0;
-our $MODE_AFM = 1;
-our $MODE_UNKNOWN2 = 2;
-our $MODE_UNKNOWN3 = 3;
-our $MODE_UNKNOWN4 = 4;
-
 our $INPUT_SIGNAL_EXTENSION_SLOT = 0;
 our $INPUT_SIGNAL_BIAS_V = 1;
 our $INPUT_SIGNAL_GROUND = 2;
@@ -1769,13 +1341,19 @@ our $LIFT_MODE_STEP = 0;
 our $LIFT_MODE_FINE = 1;
 our $LIFT_MODE_SLOPE = 2;
 
+our $MODE_STM = 0;
+our $MODE_AFM = 1;
+our $MODE_UNKNOWN2 = 2;
+our $MODE_UNKNOWN3 = 3;
+our $MODE_UNKNOWN4 = 4;
+
 sub new {
     my ($class, $_io, $_parent, $_root) = @_;
     my $self = IO::KaitaiStruct::Struct->new($_io);
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -1807,8 +1385,8 @@ sub _read {
     $self->{fm_xres} = $self->{_io}->read_u2le();
     $self->{fm_yres} = $self->{_io}->read_u2le();
     $self->{dots} = NtMdt::Frame::Dots->new($self->{_io}, $self, $self->{_root});
-    $self->{image} = ();
-    my $n_image = ($self->fm_xres() * $self->fm_yres());
+    $self->{image} = [];
+    my $n_image = $self->fm_xres() * $self->fm_yres();
     for (my $i = 0; $i < $n_image; $i++) {
         push @{$self->{image}}, $self->{_io}->read_s2le();
     }
@@ -1887,6 +1465,112 @@ sub _raw_vars {
 }
 
 ########################################################################
+package NtMdt::Frame::FdScanned::Dot;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{x} = $self->{_io}->read_s2le();
+    $self->{y} = $self->{_io}->read_s2le();
+}
+
+sub x {
+    my ($self) = @_;
+    return $self->{x};
+}
+
+sub y {
+    my ($self) = @_;
+    return $self->{y};
+}
+
+########################################################################
+package NtMdt::Frame::FdScanned::ScanDir;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{unkn} = $self->{_io}->read_bits_int_be(4);
+    $self->{double_pass} = $self->{_io}->read_bits_int_be(1);
+    $self->{bottom} = $self->{_io}->read_bits_int_be(1);
+    $self->{left} = $self->{_io}->read_bits_int_be(1);
+    $self->{horizontal} = $self->{_io}->read_bits_int_be(1);
+}
+
+sub unkn {
+    my ($self) = @_;
+    return $self->{unkn};
+}
+
+sub double_pass {
+    my ($self) = @_;
+    return $self->{double_pass};
+}
+
+sub bottom {
+    my ($self) = @_;
+    return $self->{bottom};
+}
+
+sub left {
+    my ($self) = @_;
+    return $self->{left};
+}
+
+sub horizontal {
+    my ($self) = @_;
+    return $self->{horizontal};
+}
+
+########################################################################
 package NtMdt::Frame::FdScanned::Vars;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -1906,7 +1590,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -2063,7 +1747,7 @@ sub nl_corr {
 }
 
 ########################################################################
-package NtMdt::Frame::FdScanned::Dot;
+package NtMdt::Frame::FdSpectroscopy;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -2082,7 +1766,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -2092,22 +1776,69 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{x} = $self->{_io}->read_s2le();
-    $self->{y} = $self->{_io}->read_s2le();
+    $self->{_raw_vars} = $self->{_io}->read_bytes($self->_parent()->var_size());
+    my $io__raw_vars = IO::KaitaiStruct::Stream->new($self->{_raw_vars});
+    $self->{vars} = NtMdt::Frame::FdSpectroscopy::Vars->new($io__raw_vars, $self, $self->{_root});
+    $self->{fm_mode} = $self->{_io}->read_u2le();
+    $self->{fm_xres} = $self->{_io}->read_u2le();
+    $self->{fm_yres} = $self->{_io}->read_u2le();
+    $self->{dots} = NtMdt::Frame::Dots->new($self->{_io}, $self, $self->{_root});
+    $self->{data} = [];
+    my $n_data = $self->fm_xres() * $self->fm_yres();
+    for (my $i = 0; $i < $n_data; $i++) {
+        push @{$self->{data}}, $self->{_io}->read_s2le();
+    }
+    $self->{title} = NtMdt::Title->new($self->{_io}, $self, $self->{_root});
+    $self->{xml} = NtMdt::Xml->new($self->{_io}, $self, $self->{_root});
 }
 
-sub x {
+sub vars {
     my ($self) = @_;
-    return $self->{x};
+    return $self->{vars};
 }
 
-sub y {
+sub fm_mode {
     my ($self) = @_;
-    return $self->{y};
+    return $self->{fm_mode};
+}
+
+sub fm_xres {
+    my ($self) = @_;
+    return $self->{fm_xres};
+}
+
+sub fm_yres {
+    my ($self) = @_;
+    return $self->{fm_yres};
+}
+
+sub dots {
+    my ($self) = @_;
+    return $self->{dots};
+}
+
+sub data {
+    my ($self) = @_;
+    return $self->{data};
+}
+
+sub title {
+    my ($self) = @_;
+    return $self->{title};
+}
+
+sub xml {
+    my ($self) = @_;
+    return $self->{xml};
+}
+
+sub _raw_vars {
+    my ($self) = @_;
+    return $self->{_raw_vars};
 }
 
 ########################################################################
-package NtMdt::Frame::FdScanned::ScanDir;
+package NtMdt::Frame::FdSpectroscopy::Vars;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -2126,7 +1857,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -2136,36 +1867,349 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{unkn} = $self->{_io}->read_bits_int_be(4);
-    $self->{double_pass} = $self->{_io}->read_bits_int_be(1);
-    $self->{bottom} = $self->{_io}->read_bits_int_be(1);
-    $self->{left} = $self->{_io}->read_bits_int_be(1);
-    $self->{horizontal} = $self->{_io}->read_bits_int_be(1);
+    $self->{x_scale} = NtMdt::Frame::AxisScale->new($self->{_io}, $self, $self->{_root});
+    $self->{y_scale} = NtMdt::Frame::AxisScale->new($self->{_io}, $self, $self->{_root});
+    $self->{z_scale} = NtMdt::Frame::AxisScale->new($self->{_io}, $self, $self->{_root});
+    $self->{sp_mode} = $self->{_io}->read_u2le();
+    $self->{sp_filter} = $self->{_io}->read_u2le();
+    $self->{u_begin} = $self->{_io}->read_f4le();
+    $self->{u_end} = $self->{_io}->read_f4le();
+    $self->{z_up} = $self->{_io}->read_s2le();
+    $self->{z_down} = $self->{_io}->read_s2le();
+    $self->{sp_averaging} = $self->{_io}->read_u2le();
+    $self->{sp_repeat} = $self->{_io}->read_u1();
+    $self->{sp_back} = $self->{_io}->read_u1();
+    $self->{sp_4nx} = $self->{_io}->read_s2le();
+    $self->{sp_osc} = $self->{_io}->read_u1();
+    $self->{sp_n4} = $self->{_io}->read_u1();
+    $self->{sp_4x0} = $self->{_io}->read_f4le();
+    $self->{sp_4xr} = $self->{_io}->read_f4le();
+    $self->{sp_4u} = $self->{_io}->read_s2le();
+    $self->{sp_4i} = $self->{_io}->read_s2le();
+    $self->{sp_nx} = $self->{_io}->read_s2le();
 }
 
-sub unkn {
+sub x_scale {
     my ($self) = @_;
-    return $self->{unkn};
+    return $self->{x_scale};
 }
 
-sub double_pass {
+sub y_scale {
     my ($self) = @_;
-    return $self->{double_pass};
+    return $self->{y_scale};
 }
 
-sub bottom {
+sub z_scale {
     my ($self) = @_;
-    return $self->{bottom};
+    return $self->{z_scale};
 }
 
-sub left {
+sub sp_mode {
     my ($self) = @_;
-    return $self->{left};
+    return $self->{sp_mode};
 }
 
-sub horizontal {
+sub sp_filter {
     my ($self) = @_;
-    return $self->{horizontal};
+    return $self->{sp_filter};
+}
+
+sub u_begin {
+    my ($self) = @_;
+    return $self->{u_begin};
+}
+
+sub u_end {
+    my ($self) = @_;
+    return $self->{u_end};
+}
+
+sub z_up {
+    my ($self) = @_;
+    return $self->{z_up};
+}
+
+sub z_down {
+    my ($self) = @_;
+    return $self->{z_down};
+}
+
+sub sp_averaging {
+    my ($self) = @_;
+    return $self->{sp_averaging};
+}
+
+sub sp_repeat {
+    my ($self) = @_;
+    return $self->{sp_repeat};
+}
+
+sub sp_back {
+    my ($self) = @_;
+    return $self->{sp_back};
+}
+
+sub sp_4nx {
+    my ($self) = @_;
+    return $self->{sp_4nx};
+}
+
+sub sp_osc {
+    my ($self) = @_;
+    return $self->{sp_osc};
+}
+
+sub sp_n4 {
+    my ($self) = @_;
+    return $self->{sp_n4};
+}
+
+sub sp_4x0 {
+    my ($self) = @_;
+    return $self->{sp_4x0};
+}
+
+sub sp_4xr {
+    my ($self) = @_;
+    return $self->{sp_4xr};
+}
+
+sub sp_4u {
+    my ($self) = @_;
+    return $self->{sp_4u};
+}
+
+sub sp_4i {
+    my ($self) = @_;
+    return $self->{sp_4i};
+}
+
+sub sp_nx {
+    my ($self) = @_;
+    return $self->{sp_nx};
+}
+
+########################################################################
+package NtMdt::Frame::FrameMain;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{type} = $self->{_io}->read_u2le();
+    $self->{version} = NtMdt::Version->new($self->{_io}, $self, $self->{_root});
+    $self->{date_time} = NtMdt::Frame::DateTime->new($self->{_io}, $self, $self->{_root});
+    $self->{var_size} = $self->{_io}->read_u2le();
+    my $_on = $self->type();
+    if ($_on == $NtMdt::Frame::FRAME_TYPE_CURVES) {
+        $self->{_raw_frame_data} = $self->{_io}->read_bytes_full();
+        my $io__raw_frame_data = IO::KaitaiStruct::Stream->new($self->{_raw_frame_data});
+        $self->{frame_data} = NtMdt::Frame::FdSpectroscopy->new($io__raw_frame_data, $self, $self->{_root});
+    }
+    elsif ($_on == $NtMdt::Frame::FRAME_TYPE_CURVES_NEW) {
+        $self->{_raw_frame_data} = $self->{_io}->read_bytes_full();
+        my $io__raw_frame_data = IO::KaitaiStruct::Stream->new($self->{_raw_frame_data});
+        $self->{frame_data} = NtMdt::Frame::FdCurvesNew->new($io__raw_frame_data, $self, $self->{_root});
+    }
+    elsif ($_on == $NtMdt::Frame::FRAME_TYPE_MDA) {
+        $self->{_raw_frame_data} = $self->{_io}->read_bytes_full();
+        my $io__raw_frame_data = IO::KaitaiStruct::Stream->new($self->{_raw_frame_data});
+        $self->{frame_data} = NtMdt::Frame::FdMetaData->new($io__raw_frame_data, $self, $self->{_root});
+    }
+    elsif ($_on == $NtMdt::Frame::FRAME_TYPE_SCANNED) {
+        $self->{_raw_frame_data} = $self->{_io}->read_bytes_full();
+        my $io__raw_frame_data = IO::KaitaiStruct::Stream->new($self->{_raw_frame_data});
+        $self->{frame_data} = NtMdt::Frame::FdScanned->new($io__raw_frame_data, $self, $self->{_root});
+    }
+    elsif ($_on == $NtMdt::Frame::FRAME_TYPE_SPECTROSCOPY) {
+        $self->{_raw_frame_data} = $self->{_io}->read_bytes_full();
+        my $io__raw_frame_data = IO::KaitaiStruct::Stream->new($self->{_raw_frame_data});
+        $self->{frame_data} = NtMdt::Frame::FdSpectroscopy->new($io__raw_frame_data, $self, $self->{_root});
+    }
+    else {
+        $self->{frame_data} = $self->{_io}->read_bytes_full();
+    }
+}
+
+sub type {
+    my ($self) = @_;
+    return $self->{type};
+}
+
+sub version {
+    my ($self) = @_;
+    return $self->{version};
+}
+
+sub date_time {
+    my ($self) = @_;
+    return $self->{date_time};
+}
+
+sub var_size {
+    my ($self) = @_;
+    return $self->{var_size};
+}
+
+sub frame_data {
+    my ($self) = @_;
+    return $self->{frame_data};
+}
+
+sub _raw_frame_data {
+    my ($self) = @_;
+    return $self->{_raw_frame_data};
+}
+
+########################################################################
+package NtMdt::Framez;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{frames} = [];
+    my $n_frames = $self->_root()->last_frame() + 1;
+    for (my $i = 0; $i < $n_frames; $i++) {
+        push @{$self->{frames}}, NtMdt::Frame->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub frames {
+    my ($self) = @_;
+    return $self->{frames};
+}
+
+########################################################################
+package NtMdt::Title;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{title_len} = $self->{_io}->read_u4le();
+    $self->{title} = Encode::decode("windows-1251", $self->{_io}->read_bytes($self->title_len()));
+}
+
+sub title_len {
+    my ($self) = @_;
+    return $self->{title_len};
+}
+
+sub title {
+    my ($self) = @_;
+    return $self->{title};
+}
+
+########################################################################
+package NtMdt::Uuid;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{data} = [];
+    my $n_data = 16;
+    for (my $i = 0; $i < $n_data; $i++) {
+        push @{$self->{data}}, $self->{_io}->read_u1();
+    }
+}
+
+sub data {
+    my ($self) = @_;
+    return $self->{data};
 }
 
 ########################################################################
@@ -2188,7 +2232,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -2232,7 +2276,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -2254,50 +2298,6 @@ sub xml_len {
 sub xml {
     my ($self) = @_;
     return $self->{xml};
-}
-
-########################################################################
-package NtMdt::Title;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{title_len} = $self->{_io}->read_u4le();
-    $self->{title} = Encode::decode("cp1251", $self->{_io}->read_bytes($self->title_len()));
-}
-
-sub title_len {
-    my ($self) = @_;
-    return $self->{title_len};
-}
-
-sub title {
-    my ($self) = @_;
-    return $self->{title};
 }
 
 1;

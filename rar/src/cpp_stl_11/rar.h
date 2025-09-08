@@ -2,16 +2,18 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class rar_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
 #include "dos_datetime.h"
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
-class dos_datetime_t;
 
 /**
  * RAR is a archive format used by popular proprietary RAR archiver,
@@ -28,10 +30,10 @@ class dos_datetime_t;
 class rar_t : public kaitai::kstruct {
 
 public:
-    class magic_signature_t;
     class block_t;
     class block_file_header_t;
     class block_v5_t;
+    class magic_signature_t;
 
     enum block_types_t {
         BLOCK_TYPES_MARKER = 114,
@@ -45,15 +47,12 @@ public:
         BLOCK_TYPES_SUBBLOCK = 122,
         BLOCK_TYPES_TERMINATOR = 123
     };
+    static bool _is_defined_block_types_t(block_types_t v);
 
-    enum oses_t {
-        OSES_MS_DOS = 0,
-        OSES_OS_2 = 1,
-        OSES_WINDOWS = 2,
-        OSES_UNIX = 3,
-        OSES_MAC_OS = 4,
-        OSES_BEOS = 5
-    };
+private:
+    static const std::set<block_types_t> _values_block_types_t;
+
+public:
 
     enum methods_t {
         METHODS_STORE = 48,
@@ -63,6 +62,27 @@ public:
         METHODS_GOOD = 52,
         METHODS_BEST = 53
     };
+    static bool _is_defined_methods_t(methods_t v);
+
+private:
+    static const std::set<methods_t> _values_methods_t;
+
+public:
+
+    enum oses_t {
+        OSES_MS_DOS = 0,
+        OSES_OS_2 = 1,
+        OSES_WINDOWS = 2,
+        OSES_UNIX = 3,
+        OSES_MAC_OS = 4,
+        OSES_BEOS = 5
+    };
+    static bool _is_defined_oses_t(oses_t v);
+
+private:
+    static const std::set<oses_t> _values_oses_t;
+
+public:
 
     rar_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, rar_t* p__root = nullptr);
 
@@ -72,63 +92,6 @@ private:
 
 public:
     ~rar_t();
-
-    /**
-     * RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and
-     * 8-byte magic (and pretty different block format) for v5+. This
-     * type would parse and validate both versions of signature. Note
-     * that actually this signature is a valid RAR "block": in theory,
-     * one can omit signature reading at all, and read this normally,
-     * as a block, if exact RAR version is known (and thus it's
-     * possible to choose correct block format).
-     */
-
-    class magic_signature_t : public kaitai::kstruct {
-
-    public:
-
-        magic_signature_t(kaitai::kstream* p__io, rar_t* p__parent = nullptr, rar_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~magic_signature_t();
-
-    private:
-        std::string m_magic1;
-        uint8_t m_version;
-        std::string m_magic3;
-        bool n_magic3;
-
-    public:
-        bool _is_null_magic3() { magic3(); return n_magic3; };
-
-    private:
-        rar_t* m__root;
-        rar_t* m__parent;
-
-    public:
-
-        /**
-         * Fixed part of file's magic signature that doesn't change with RAR version
-         */
-        std::string magic1() const { return m_magic1; }
-
-        /**
-         * Variable part of magic signature: 0 means old (RAR 1.5-4.0)
-         * format, 1 means new (RAR 5+) format
-         */
-        uint8_t version() const { return m_version; }
-
-        /**
-         * New format (RAR 5+) magic contains extra byte
-         */
-        std::string magic3() const { return m_magic3; }
-        rar_t* _root() const { return m__root; }
-        rar_t* _parent() const { return m__parent; }
-    };
 
     /**
      * Basic block that RAR files consist of. There are several block
@@ -150,6 +113,13 @@ public:
         ~block_t();
 
     private:
+        bool f_body_size;
+        int32_t m_body_size;
+
+    public:
+        int32_t body_size();
+
+    private:
         bool f_has_add;
         bool m_has_add;
 
@@ -166,13 +136,6 @@ public:
 
     public:
         int8_t header_size();
-
-    private:
-        bool f_body_size;
-        int32_t m_body_size;
-
-    public:
-        int32_t body_size();
 
     private:
         uint16_t m_crc16;
@@ -345,6 +308,63 @@ public:
         rar_t* m__parent;
 
     public:
+        rar_t* _root() const { return m__root; }
+        rar_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and
+     * 8-byte magic (and pretty different block format) for v5+. This
+     * type would parse and validate both versions of signature. Note
+     * that actually this signature is a valid RAR "block": in theory,
+     * one can omit signature reading at all, and read this normally,
+     * as a block, if exact RAR version is known (and thus it's
+     * possible to choose correct block format).
+     */
+
+    class magic_signature_t : public kaitai::kstruct {
+
+    public:
+
+        magic_signature_t(kaitai::kstream* p__io, rar_t* p__parent = nullptr, rar_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~magic_signature_t();
+
+    private:
+        std::string m_magic1;
+        uint8_t m_version;
+        std::string m_magic3;
+        bool n_magic3;
+
+    public:
+        bool _is_null_magic3() { magic3(); return n_magic3; };
+
+    private:
+        rar_t* m__root;
+        rar_t* m__parent;
+
+    public:
+
+        /**
+         * Fixed part of file's magic signature that doesn't change with RAR version
+         */
+        std::string magic1() const { return m_magic1; }
+
+        /**
+         * Variable part of magic signature: 0 means old (RAR 1.5-4.0)
+         * format, 1 means new (RAR 5+) format
+         */
+        uint8_t version() const { return m_version; }
+
+        /**
+         * New format (RAR 5+) magic contains extra byte
+         */
+        std::string magic3() const { return m_magic3; }
         rar_t* _root() const { return m__root; }
         rar_t* _parent() const { return m__parent; }
     };

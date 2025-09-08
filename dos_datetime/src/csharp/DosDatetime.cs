@@ -1,6 +1,6 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
-using System;
+
 
 namespace Kaitai
 {
@@ -65,104 +65,6 @@ namespace Kaitai
             _time = new Time(m_io, this, m_root);
             _date = new Date(m_io, this, m_root);
         }
-        public partial class Time : KaitaiStruct
-        {
-            public static Time FromFile(string fileName)
-            {
-                return new Time(new KaitaiStream(fileName));
-            }
-
-            public Time(KaitaiStream p__io, DosDatetime p__parent = null, DosDatetime p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_second = false;
-                f_paddedSecond = false;
-                f_paddedMinute = false;
-                f_paddedHour = false;
-                _read();
-            }
-            private void _read()
-            {
-                _secondDiv2 = m_io.ReadBitsIntLe(5);
-                if (!(SecondDiv2 <= 29))
-                {
-                    throw new ValidationGreaterThanError(29, SecondDiv2, M_Io, "/types/time/seq/0");
-                }
-                _minute = m_io.ReadBitsIntLe(6);
-                if (!(Minute <= 59))
-                {
-                    throw new ValidationGreaterThanError(59, Minute, M_Io, "/types/time/seq/1");
-                }
-                _hour = m_io.ReadBitsIntLe(5);
-                if (!(Hour <= 23))
-                {
-                    throw new ValidationGreaterThanError(23, Hour, M_Io, "/types/time/seq/2");
-                }
-            }
-            private bool f_second;
-            private int _second;
-            public int Second
-            {
-                get
-                {
-                    if (f_second)
-                        return _second;
-                    _second = (int) ((2 * SecondDiv2));
-                    f_second = true;
-                    return _second;
-                }
-            }
-            private bool f_paddedSecond;
-            private string _paddedSecond;
-            public string PaddedSecond
-            {
-                get
-                {
-                    if (f_paddedSecond)
-                        return _paddedSecond;
-                    _paddedSecond = (string) ((Second <= 9 ? "0" : "") + Convert.ToString((long) (Second), 10));
-                    f_paddedSecond = true;
-                    return _paddedSecond;
-                }
-            }
-            private bool f_paddedMinute;
-            private string _paddedMinute;
-            public string PaddedMinute
-            {
-                get
-                {
-                    if (f_paddedMinute)
-                        return _paddedMinute;
-                    _paddedMinute = (string) ((Minute <= 9 ? "0" : "") + Convert.ToString((long) (Minute), 10));
-                    f_paddedMinute = true;
-                    return _paddedMinute;
-                }
-            }
-            private bool f_paddedHour;
-            private string _paddedHour;
-            public string PaddedHour
-            {
-                get
-                {
-                    if (f_paddedHour)
-                        return _paddedHour;
-                    _paddedHour = (string) ((Hour <= 9 ? "0" : "") + Convert.ToString((long) (Hour), 10));
-                    f_paddedHour = true;
-                    return _paddedHour;
-                }
-            }
-            private ulong _secondDiv2;
-            private ulong _minute;
-            private ulong _hour;
-            private DosDatetime m_root;
-            private DosDatetime m_parent;
-            public ulong SecondDiv2 { get { return _secondDiv2; } }
-            public ulong Minute { get { return _minute; } }
-            public ulong Hour { get { return _hour; } }
-            public DosDatetime M_Root { get { return m_root; } }
-            public DosDatetime M_Parent { get { return m_parent; } }
-        }
         public partial class Date : KaitaiStruct
         {
             public static Date FromFile(string fileName)
@@ -174,29 +76,68 @@ namespace Kaitai
             {
                 m_parent = p__parent;
                 m_root = p__root;
-                f_year = false;
                 f_paddedDay = false;
                 f_paddedMonth = false;
                 f_paddedYear = false;
+                f_year = false;
                 _read();
             }
             private void _read()
             {
                 _day = m_io.ReadBitsIntLe(5);
-                if (!(Day >= 1))
+                if (!(_day >= 1))
                 {
-                    throw new ValidationLessThanError(1, Day, M_Io, "/types/date/seq/0");
+                    throw new ValidationLessThanError(1, _day, m_io, "/types/date/seq/0");
                 }
                 _month = m_io.ReadBitsIntLe(4);
-                if (!(Month >= 1))
+                if (!(_month >= 1))
                 {
-                    throw new ValidationLessThanError(1, Month, M_Io, "/types/date/seq/1");
+                    throw new ValidationLessThanError(1, _month, m_io, "/types/date/seq/1");
                 }
-                if (!(Month <= 12))
+                if (!(_month <= 12))
                 {
-                    throw new ValidationGreaterThanError(12, Month, M_Io, "/types/date/seq/1");
+                    throw new ValidationGreaterThanError(12, _month, m_io, "/types/date/seq/1");
                 }
                 _yearMinus1980 = m_io.ReadBitsIntLe(7);
+            }
+            private bool f_paddedDay;
+            private string _paddedDay;
+            public string PaddedDay
+            {
+                get
+                {
+                    if (f_paddedDay)
+                        return _paddedDay;
+                    f_paddedDay = true;
+                    _paddedDay = (string) ((Day <= 9 ? "0" : "") + Day.ToString());
+                    return _paddedDay;
+                }
+            }
+            private bool f_paddedMonth;
+            private string _paddedMonth;
+            public string PaddedMonth
+            {
+                get
+                {
+                    if (f_paddedMonth)
+                        return _paddedMonth;
+                    f_paddedMonth = true;
+                    _paddedMonth = (string) ((Month <= 9 ? "0" : "") + Month.ToString());
+                    return _paddedMonth;
+                }
+            }
+            private bool f_paddedYear;
+            private string _paddedYear;
+            public string PaddedYear
+            {
+                get
+                {
+                    if (f_paddedYear)
+                        return _paddedYear;
+                    f_paddedYear = true;
+                    _paddedYear = (string) ((Year <= 999 ? "0" + (Year <= 99 ? "0" + (Year <= 9 ? "0" : "") : "") : "") + Year.ToString());
+                    return _paddedYear;
+                }
             }
             private bool f_year;
             private int _year;
@@ -210,48 +151,9 @@ namespace Kaitai
                 {
                     if (f_year)
                         return _year;
-                    _year = (int) ((1980 + YearMinus1980));
                     f_year = true;
+                    _year = (int) (1980 + YearMinus1980);
                     return _year;
-                }
-            }
-            private bool f_paddedDay;
-            private string _paddedDay;
-            public string PaddedDay
-            {
-                get
-                {
-                    if (f_paddedDay)
-                        return _paddedDay;
-                    _paddedDay = (string) ((Day <= 9 ? "0" : "") + Convert.ToString((long) (Day), 10));
-                    f_paddedDay = true;
-                    return _paddedDay;
-                }
-            }
-            private bool f_paddedMonth;
-            private string _paddedMonth;
-            public string PaddedMonth
-            {
-                get
-                {
-                    if (f_paddedMonth)
-                        return _paddedMonth;
-                    _paddedMonth = (string) ((Month <= 9 ? "0" : "") + Convert.ToString((long) (Month), 10));
-                    f_paddedMonth = true;
-                    return _paddedMonth;
-                }
-            }
-            private bool f_paddedYear;
-            private string _paddedYear;
-            public string PaddedYear
-            {
-                get
-                {
-                    if (f_paddedYear)
-                        return _paddedYear;
-                    _paddedYear = (string) ((Year <= 999 ? "0" + (Year <= 99 ? "0" + (Year <= 9 ? "0" : "") : "") : "") + Convert.ToString((long) (Year), 10));
-                    f_paddedYear = true;
-                    return _paddedYear;
                 }
             }
             private ulong _day;
@@ -262,6 +164,104 @@ namespace Kaitai
             public ulong Day { get { return _day; } }
             public ulong Month { get { return _month; } }
             public ulong YearMinus1980 { get { return _yearMinus1980; } }
+            public DosDatetime M_Root { get { return m_root; } }
+            public DosDatetime M_Parent { get { return m_parent; } }
+        }
+        public partial class Time : KaitaiStruct
+        {
+            public static Time FromFile(string fileName)
+            {
+                return new Time(new KaitaiStream(fileName));
+            }
+
+            public Time(KaitaiStream p__io, DosDatetime p__parent = null, DosDatetime p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_paddedHour = false;
+                f_paddedMinute = false;
+                f_paddedSecond = false;
+                f_second = false;
+                _read();
+            }
+            private void _read()
+            {
+                _secondDiv2 = m_io.ReadBitsIntLe(5);
+                if (!(_secondDiv2 <= 29))
+                {
+                    throw new ValidationGreaterThanError(29, _secondDiv2, m_io, "/types/time/seq/0");
+                }
+                _minute = m_io.ReadBitsIntLe(6);
+                if (!(_minute <= 59))
+                {
+                    throw new ValidationGreaterThanError(59, _minute, m_io, "/types/time/seq/1");
+                }
+                _hour = m_io.ReadBitsIntLe(5);
+                if (!(_hour <= 23))
+                {
+                    throw new ValidationGreaterThanError(23, _hour, m_io, "/types/time/seq/2");
+                }
+            }
+            private bool f_paddedHour;
+            private string _paddedHour;
+            public string PaddedHour
+            {
+                get
+                {
+                    if (f_paddedHour)
+                        return _paddedHour;
+                    f_paddedHour = true;
+                    _paddedHour = (string) ((Hour <= 9 ? "0" : "") + Hour.ToString());
+                    return _paddedHour;
+                }
+            }
+            private bool f_paddedMinute;
+            private string _paddedMinute;
+            public string PaddedMinute
+            {
+                get
+                {
+                    if (f_paddedMinute)
+                        return _paddedMinute;
+                    f_paddedMinute = true;
+                    _paddedMinute = (string) ((Minute <= 9 ? "0" : "") + Minute.ToString());
+                    return _paddedMinute;
+                }
+            }
+            private bool f_paddedSecond;
+            private string _paddedSecond;
+            public string PaddedSecond
+            {
+                get
+                {
+                    if (f_paddedSecond)
+                        return _paddedSecond;
+                    f_paddedSecond = true;
+                    _paddedSecond = (string) ((Second <= 9 ? "0" : "") + Second.ToString());
+                    return _paddedSecond;
+                }
+            }
+            private bool f_second;
+            private int _second;
+            public int Second
+            {
+                get
+                {
+                    if (f_second)
+                        return _second;
+                    f_second = true;
+                    _second = (int) (2 * SecondDiv2);
+                    return _second;
+                }
+            }
+            private ulong _secondDiv2;
+            private ulong _minute;
+            private ulong _hour;
+            private DosDatetime m_root;
+            private DosDatetime m_parent;
+            public ulong SecondDiv2 { get { return _secondDiv2; } }
+            public ulong Minute { get { return _minute; } }
+            public ulong Hour { get { return _hour; } }
             public DosDatetime M_Root { get { return m_root; } }
             public DosDatetime M_Parent { get { return m_parent; } }
         }

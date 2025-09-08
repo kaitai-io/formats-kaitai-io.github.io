@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 
 ########################################################################
 package Wmf;
@@ -17,6 +17,23 @@ sub from_file {
     binmode($fd);
     return new($class, IO::KaitaiStruct::Stream->new($fd));
 }
+
+our $BIN_RASTER_OP_BLACK = 1;
+our $BIN_RASTER_OP_NOTMERGEPEN = 2;
+our $BIN_RASTER_OP_MASKNOTPEN = 3;
+our $BIN_RASTER_OP_NOTCOPYPEN = 4;
+our $BIN_RASTER_OP_MASKPENNOT = 5;
+our $BIN_RASTER_OP_NOT = 6;
+our $BIN_RASTER_OP_XORPEN = 7;
+our $BIN_RASTER_OP_NOTMASKPEN = 8;
+our $BIN_RASTER_OP_MASKPEN = 9;
+our $BIN_RASTER_OP_NOTXORPEN = 10;
+our $BIN_RASTER_OP_NOP = 11;
+our $BIN_RASTER_OP_MERGENOTPEN = 12;
+our $BIN_RASTER_OP_COPYPEN = 13;
+our $BIN_RASTER_OP_MERGEPENNOT = 14;
+our $BIN_RASTER_OP_MERGEPEN = 15;
+our $BIN_RASTER_OP_WHITE = 16;
 
 our $FUNC_EOF = 0;
 our $FUNC_SAVEDC = 30;
@@ -89,23 +106,6 @@ our $FUNC_DIBSTRETCHBLT = 2881;
 our $FUNC_SETDIBTODEV = 3379;
 our $FUNC_STRETCHDIB = 3907;
 
-our $BIN_RASTER_OP_BLACK = 1;
-our $BIN_RASTER_OP_NOTMERGEPEN = 2;
-our $BIN_RASTER_OP_MASKNOTPEN = 3;
-our $BIN_RASTER_OP_NOTCOPYPEN = 4;
-our $BIN_RASTER_OP_MASKPENNOT = 5;
-our $BIN_RASTER_OP_NOT = 6;
-our $BIN_RASTER_OP_XORPEN = 7;
-our $BIN_RASTER_OP_NOTMASKPEN = 8;
-our $BIN_RASTER_OP_MASKPEN = 9;
-our $BIN_RASTER_OP_NOTXORPEN = 10;
-our $BIN_RASTER_OP_NOP = 11;
-our $BIN_RASTER_OP_MERGENOTPEN = 12;
-our $BIN_RASTER_OP_COPYPEN = 13;
-our $BIN_RASTER_OP_MERGEPENNOT = 14;
-our $BIN_RASTER_OP_MERGEPEN = 15;
-our $BIN_RASTER_OP_WHITE = 16;
-
 our $MIX_MODE_TRANSPARENT = 1;
 our $MIX_MODE_OPAQUE = 2;
 
@@ -118,7 +118,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -130,11 +130,14 @@ sub _read {
 
     $self->{special_header} = Wmf::SpecialHeader->new($self->{_io}, $self, $self->{_root});
     $self->{header} = Wmf::Header->new($self->{_io}, $self, $self->{_root});
-    $self->{records} = ();
-    do {
-        $_ = Wmf::Record->new($self->{_io}, $self, $self->{_root});
-        push @{$self->{records}}, $_;
-    } until ($_->function() == $Wmf::FUNC_EOF);
+    $self->{records} = [];
+    {
+        my $_it;
+        do {
+            $_it = Wmf::Record->new($self->{_io}, $self, $self->{_root});
+            push @{$self->{records}}, $_it;
+        } until ($_it->function() == $Wmf::FUNC_EOF);
+    }
 }
 
 sub special_header {
@@ -153,7 +156,7 @@ sub records {
 }
 
 ########################################################################
-package Wmf::ParamsSetwindoworg;
+package Wmf::ColorRef;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -172,7 +175,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -182,192 +185,30 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{y} = $self->{_io}->read_s2le();
-    $self->{x} = $self->{_io}->read_s2le();
+    $self->{red} = $self->{_io}->read_u1();
+    $self->{green} = $self->{_io}->read_u1();
+    $self->{blue} = $self->{_io}->read_u1();
+    $self->{reserved} = $self->{_io}->read_u1();
 }
 
-sub y {
+sub red {
     my ($self) = @_;
-    return $self->{y};
+    return $self->{red};
 }
 
-sub x {
+sub green {
     my ($self) = @_;
-    return $self->{x};
+    return $self->{green};
 }
 
-########################################################################
-package Wmf::ParamsSetbkmode;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
+sub blue {
     my ($self) = @_;
-
-    $self->{bk_mode} = $self->{_io}->read_u2le();
+    return $self->{blue};
 }
 
-sub bk_mode {
+sub reserved {
     my ($self) = @_;
-    return $self->{bk_mode};
-}
-
-########################################################################
-package Wmf::PointS;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{x} = $self->{_io}->read_s2le();
-    $self->{y} = $self->{_io}->read_s2le();
-}
-
-sub x {
-    my ($self) = @_;
-    return $self->{x};
-}
-
-sub y {
-    my ($self) = @_;
-    return $self->{y};
-}
-
-########################################################################
-package Wmf::ParamsSetwindowext;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{y} = $self->{_io}->read_s2le();
-    $self->{x} = $self->{_io}->read_s2le();
-}
-
-sub y {
-    my ($self) = @_;
-    return $self->{y};
-}
-
-sub x {
-    my ($self) = @_;
-    return $self->{x};
-}
-
-########################################################################
-package Wmf::ParamsPolygon;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{num_points} = $self->{_io}->read_s2le();
-    $self->{points} = ();
-    my $n_points = $self->num_points();
-    for (my $i = 0; $i < $n_points; $i++) {
-        push @{$self->{points}}, Wmf::PointS->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub num_points {
-    my ($self) = @_;
-    return $self->{num_points};
-}
-
-sub points {
-    my ($self) = @_;
-    return $self->{points};
+    return $self->{reserved};
 }
 
 ########################################################################
@@ -393,7 +234,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -448,7 +289,7 @@ sub number_of_members {
 }
 
 ########################################################################
-package Wmf::ColorRef;
+package Wmf::ParamsPolygon;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -467,7 +308,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -477,106 +318,22 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{red} = $self->{_io}->read_u1();
-    $self->{green} = $self->{_io}->read_u1();
-    $self->{blue} = $self->{_io}->read_u1();
-    $self->{reserved} = $self->{_io}->read_u1();
+    $self->{num_points} = $self->{_io}->read_s2le();
+    $self->{points} = [];
+    my $n_points = $self->num_points();
+    for (my $i = 0; $i < $n_points; $i++) {
+        push @{$self->{points}}, Wmf::PointS->new($self->{_io}, $self, $self->{_root});
+    }
 }
 
-sub red {
+sub num_points {
     my ($self) = @_;
-    return $self->{red};
+    return $self->{num_points};
 }
 
-sub green {
+sub points {
     my ($self) = @_;
-    return $self->{green};
-}
-
-sub blue {
-    my ($self) = @_;
-    return $self->{blue};
-}
-
-sub reserved {
-    my ($self) = @_;
-    return $self->{reserved};
-}
-
-########################################################################
-package Wmf::ParamsSetrop2;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{draw_mode} = $self->{_io}->read_u2le();
-}
-
-sub draw_mode {
-    my ($self) = @_;
-    return $self->{draw_mode};
-}
-
-########################################################################
-package Wmf::ParamsSetpolyfillmode;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{poly_fill_mode} = $self->{_io}->read_u2le();
-}
-
-sub poly_fill_mode {
-    my ($self) = @_;
-    return $self->{poly_fill_mode};
+    return $self->{points};
 }
 
 ########################################################################
@@ -599,7 +356,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -610,7 +367,7 @@ sub _read {
     my ($self) = @_;
 
     $self->{num_points} = $self->{_io}->read_s2le();
-    $self->{points} = ();
+    $self->{points} = [];
     my $n_points = $self->num_points();
     for (my $i = 0; $i < $n_points; $i++) {
         push @{$self->{points}}, Wmf::PointS->new($self->{_io}, $self, $self->{_root});
@@ -625,6 +382,350 @@ sub num_points {
 sub points {
     my ($self) = @_;
     return $self->{points};
+}
+
+########################################################################
+package Wmf::ParamsSetbkmode;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{bk_mode} = $self->{_io}->read_u2le();
+}
+
+sub bk_mode {
+    my ($self) = @_;
+    return $self->{bk_mode};
+}
+
+########################################################################
+package Wmf::ParamsSetpolyfillmode;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{poly_fill_mode} = $self->{_io}->read_u2le();
+}
+
+sub poly_fill_mode {
+    my ($self) = @_;
+    return $self->{poly_fill_mode};
+}
+
+########################################################################
+package Wmf::ParamsSetrop2;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{draw_mode} = $self->{_io}->read_u2le();
+}
+
+sub draw_mode {
+    my ($self) = @_;
+    return $self->{draw_mode};
+}
+
+########################################################################
+package Wmf::ParamsSetwindowext;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{y} = $self->{_io}->read_s2le();
+    $self->{x} = $self->{_io}->read_s2le();
+}
+
+sub y {
+    my ($self) = @_;
+    return $self->{y};
+}
+
+sub x {
+    my ($self) = @_;
+    return $self->{x};
+}
+
+########################################################################
+package Wmf::ParamsSetwindoworg;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{y} = $self->{_io}->read_s2le();
+    $self->{x} = $self->{_io}->read_s2le();
+}
+
+sub y {
+    my ($self) = @_;
+    return $self->{y};
+}
+
+sub x {
+    my ($self) = @_;
+    return $self->{x};
+}
+
+########################################################################
+package Wmf::PointS;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{x} = $self->{_io}->read_s2le();
+    $self->{y} = $self->{_io}->read_s2le();
+}
+
+sub x {
+    my ($self) = @_;
+    return $self->{x};
+}
+
+sub y {
+    my ($self) = @_;
+    return $self->{y};
+}
+
+########################################################################
+package Wmf::Record;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{size} = $self->{_io}->read_u4le();
+    $self->{function} = $self->{_io}->read_u2le();
+    my $_on = $self->function();
+    if ($_on == $Wmf::FUNC_POLYGON) {
+        $self->{_raw_params} = $self->{_io}->read_bytes(($self->size() - 3) * 2);
+        my $io__raw_params = IO::KaitaiStruct::Stream->new($self->{_raw_params});
+        $self->{params} = Wmf::ParamsPolygon->new($io__raw_params, $self, $self->{_root});
+    }
+    elsif ($_on == $Wmf::FUNC_POLYLINE) {
+        $self->{_raw_params} = $self->{_io}->read_bytes(($self->size() - 3) * 2);
+        my $io__raw_params = IO::KaitaiStruct::Stream->new($self->{_raw_params});
+        $self->{params} = Wmf::ParamsPolyline->new($io__raw_params, $self, $self->{_root});
+    }
+    elsif ($_on == $Wmf::FUNC_SETBKCOLOR) {
+        $self->{_raw_params} = $self->{_io}->read_bytes(($self->size() - 3) * 2);
+        my $io__raw_params = IO::KaitaiStruct::Stream->new($self->{_raw_params});
+        $self->{params} = Wmf::ColorRef->new($io__raw_params, $self, $self->{_root});
+    }
+    elsif ($_on == $Wmf::FUNC_SETBKMODE) {
+        $self->{_raw_params} = $self->{_io}->read_bytes(($self->size() - 3) * 2);
+        my $io__raw_params = IO::KaitaiStruct::Stream->new($self->{_raw_params});
+        $self->{params} = Wmf::ParamsSetbkmode->new($io__raw_params, $self, $self->{_root});
+    }
+    elsif ($_on == $Wmf::FUNC_SETPOLYFILLMODE) {
+        $self->{_raw_params} = $self->{_io}->read_bytes(($self->size() - 3) * 2);
+        my $io__raw_params = IO::KaitaiStruct::Stream->new($self->{_raw_params});
+        $self->{params} = Wmf::ParamsSetpolyfillmode->new($io__raw_params, $self, $self->{_root});
+    }
+    elsif ($_on == $Wmf::FUNC_SETROP2) {
+        $self->{_raw_params} = $self->{_io}->read_bytes(($self->size() - 3) * 2);
+        my $io__raw_params = IO::KaitaiStruct::Stream->new($self->{_raw_params});
+        $self->{params} = Wmf::ParamsSetrop2->new($io__raw_params, $self, $self->{_root});
+    }
+    elsif ($_on == $Wmf::FUNC_SETWINDOWEXT) {
+        $self->{_raw_params} = $self->{_io}->read_bytes(($self->size() - 3) * 2);
+        my $io__raw_params = IO::KaitaiStruct::Stream->new($self->{_raw_params});
+        $self->{params} = Wmf::ParamsSetwindowext->new($io__raw_params, $self, $self->{_root});
+    }
+    elsif ($_on == $Wmf::FUNC_SETWINDOWORG) {
+        $self->{_raw_params} = $self->{_io}->read_bytes(($self->size() - 3) * 2);
+        my $io__raw_params = IO::KaitaiStruct::Stream->new($self->{_raw_params});
+        $self->{params} = Wmf::ParamsSetwindoworg->new($io__raw_params, $self, $self->{_root});
+    }
+    else {
+        $self->{params} = $self->{_io}->read_bytes(($self->size() - 3) * 2);
+    }
+}
+
+sub size {
+    my ($self) = @_;
+    return $self->{size};
+}
+
+sub function {
+    my ($self) = @_;
+    return $self->{function};
+}
+
+sub params {
+    my ($self) = @_;
+    return $self->{params};
+}
+
+sub _raw_params {
+    my ($self) = @_;
+    return $self->{_raw_params};
 }
 
 ########################################################################
@@ -647,7 +748,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -711,104 +812,6 @@ sub reserved {
 sub checksum {
     my ($self) = @_;
     return $self->{checksum};
-}
-
-########################################################################
-package Wmf::Record;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{size} = $self->{_io}->read_u4le();
-    $self->{function} = $self->{_io}->read_u2le();
-    my $_on = $self->function();
-    if ($_on == $Wmf::FUNC_SETBKMODE) {
-        $self->{_raw_params} = $self->{_io}->read_bytes((($self->size() - 3) * 2));
-        my $io__raw_params = IO::KaitaiStruct::Stream->new($self->{_raw_params});
-        $self->{params} = Wmf::ParamsSetbkmode->new($io__raw_params, $self, $self->{_root});
-    }
-    elsif ($_on == $Wmf::FUNC_POLYGON) {
-        $self->{_raw_params} = $self->{_io}->read_bytes((($self->size() - 3) * 2));
-        my $io__raw_params = IO::KaitaiStruct::Stream->new($self->{_raw_params});
-        $self->{params} = Wmf::ParamsPolygon->new($io__raw_params, $self, $self->{_root});
-    }
-    elsif ($_on == $Wmf::FUNC_SETBKCOLOR) {
-        $self->{_raw_params} = $self->{_io}->read_bytes((($self->size() - 3) * 2));
-        my $io__raw_params = IO::KaitaiStruct::Stream->new($self->{_raw_params});
-        $self->{params} = Wmf::ColorRef->new($io__raw_params, $self, $self->{_root});
-    }
-    elsif ($_on == $Wmf::FUNC_SETPOLYFILLMODE) {
-        $self->{_raw_params} = $self->{_io}->read_bytes((($self->size() - 3) * 2));
-        my $io__raw_params = IO::KaitaiStruct::Stream->new($self->{_raw_params});
-        $self->{params} = Wmf::ParamsSetpolyfillmode->new($io__raw_params, $self, $self->{_root});
-    }
-    elsif ($_on == $Wmf::FUNC_SETWINDOWORG) {
-        $self->{_raw_params} = $self->{_io}->read_bytes((($self->size() - 3) * 2));
-        my $io__raw_params = IO::KaitaiStruct::Stream->new($self->{_raw_params});
-        $self->{params} = Wmf::ParamsSetwindoworg->new($io__raw_params, $self, $self->{_root});
-    }
-    elsif ($_on == $Wmf::FUNC_SETROP2) {
-        $self->{_raw_params} = $self->{_io}->read_bytes((($self->size() - 3) * 2));
-        my $io__raw_params = IO::KaitaiStruct::Stream->new($self->{_raw_params});
-        $self->{params} = Wmf::ParamsSetrop2->new($io__raw_params, $self, $self->{_root});
-    }
-    elsif ($_on == $Wmf::FUNC_SETWINDOWEXT) {
-        $self->{_raw_params} = $self->{_io}->read_bytes((($self->size() - 3) * 2));
-        my $io__raw_params = IO::KaitaiStruct::Stream->new($self->{_raw_params});
-        $self->{params} = Wmf::ParamsSetwindowext->new($io__raw_params, $self, $self->{_root});
-    }
-    elsif ($_on == $Wmf::FUNC_POLYLINE) {
-        $self->{_raw_params} = $self->{_io}->read_bytes((($self->size() - 3) * 2));
-        my $io__raw_params = IO::KaitaiStruct::Stream->new($self->{_raw_params});
-        $self->{params} = Wmf::ParamsPolyline->new($io__raw_params, $self, $self->{_root});
-    }
-    else {
-        $self->{params} = $self->{_io}->read_bytes((($self->size() - 3) * 2));
-    }
-}
-
-sub size {
-    my ($self) = @_;
-    return $self->{size};
-}
-
-sub function {
-    my ($self) = @_;
-    return $self->{function};
-}
-
-sub params {
-    my ($self) = @_;
-    return $self->{params};
-}
-
-sub _raw_params {
-    my ($self) = @_;
-    return $self->{_raw_params};
 }
 
 1;

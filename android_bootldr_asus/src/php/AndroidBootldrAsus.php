@@ -12,19 +12,19 @@
 
 namespace {
     class AndroidBootldrAsus extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \AndroidBootldrAsus $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\AndroidBootldrAsus $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic = $this->_io->readBytes(8);
-            if (!($this->magic() == "\x42\x4F\x4F\x54\x4C\x44\x52\x21")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x42\x4F\x4F\x54\x4C\x44\x52\x21", $this->magic(), $this->_io(), "/seq/0");
+            if (!($this->_m_magic == "\x42\x4F\x4F\x54\x4C\x44\x52\x21")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x42\x4F\x4F\x54\x4C\x44\x52\x21", $this->_m_magic, $this->_io, "/seq/0");
             }
             $this->_m_revision = $this->_io->readU2le();
-            if (!($this->revision() >= 2)) {
-                throw new \Kaitai\Struct\Error\ValidationLessThanError(2, $this->revision(), $this->_io(), "/seq/1");
+            if (!($this->_m_revision >= 2)) {
+                throw new \Kaitai\Struct\Error\ValidationLessThanError(2, $this->_m_revision, $this->_io, "/seq/1");
             }
             $this->_m_reserved1 = $this->_io->readU2le();
             $this->_m_reserved2 = $this->_io->readU4le();
@@ -54,21 +54,21 @@ namespace {
 
 namespace AndroidBootldrAsus {
     class Image extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \AndroidBootldrAsus $_parent = null, \AndroidBootldrAsus $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\AndroidBootldrAsus $_parent = null, ?\AndroidBootldrAsus $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_chunkId = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(8), "ASCII");
-            if (!( (($this->chunkId() == "IFWI!!!!") || ($this->chunkId() == "DROIDBT!") || ($this->chunkId() == "SPLASHS!")) )) {
-                throw new \Kaitai\Struct\Error\ValidationNotAnyOfError($this->chunkId(), $this->_io(), "/types/image/seq/0");
+            if (!( (($this->_m_chunkId == "IFWI!!!!") || ($this->_m_chunkId == "DROIDBT!") || ($this->_m_chunkId == "SPLASHS!")) )) {
+                throw new \Kaitai\Struct\Error\ValidationNotAnyOfError($this->_m_chunkId, $this->_io, "/types/image/seq/0");
             }
             $this->_m_lenBody = $this->_io->readU4le();
             $this->_m_flags = $this->_io->readU1();
-            $_ = $this->flags();
+            $_ = $this->_m_flags;
             if (!(($_ & 1) != 0)) {
-                throw new \Kaitai\Struct\Error\ValidationExprError($this->flags(), $this->_io(), "/types/image/seq/2");
+                throw new \Kaitai\Struct\Error\ValidationExprError($this->_m_flags, $this->_io, "/types/image/seq/2");
             }
             $this->_m_reserved1 = $this->_io->readU1();
             $this->_m_reserved2 = $this->_io->readU1();

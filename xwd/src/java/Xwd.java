@@ -7,7 +7,8 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 
 /**
@@ -26,6 +27,21 @@ public class Xwd extends KaitaiStruct {
         return new Xwd(new ByteBufferKaitaiStream(fileName));
     }
 
+    public enum ByteOrder {
+        LE(0),
+        BE(1);
+
+        private final long id;
+        ByteOrder(long id) { this.id = id; }
+        public long id() { return id; }
+        private static final Map<Long, ByteOrder> byId = new HashMap<Long, ByteOrder>(2);
+        static {
+            for (ByteOrder e : ByteOrder.values())
+                byId.put(e.id(), e);
+        }
+        public static ByteOrder byId(long id) { return byId.get(id); }
+    }
+
     public enum PixmapFormat {
         X_Y_BITMAP(0),
         X_Y_PIXMAP(1),
@@ -40,21 +56,6 @@ public class Xwd extends KaitaiStruct {
                 byId.put(e.id(), e);
         }
         public static PixmapFormat byId(long id) { return byId.get(id); }
-    }
-
-    public enum ByteOrder {
-        LE(0),
-        BE(1);
-
-        private final long id;
-        ByteOrder(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map<Long, ByteOrder> byId = new HashMap<Long, ByteOrder>(2);
-        static {
-            for (ByteOrder e : ByteOrder.values())
-                byId.put(e.id(), e);
-        }
-        public static ByteOrder byId(long id) { return byId.get(id); }
     }
 
     public enum VisualClass {
@@ -92,16 +93,71 @@ public class Xwd extends KaitaiStruct {
     }
     private void _read() {
         this.lenHeader = this._io.readU4be();
-        this._raw_hdr = this._io.readBytes((lenHeader() - 4));
-        KaitaiStream _io__raw_hdr = new ByteBufferKaitaiStream(_raw_hdr);
-        this.hdr = new Header(_io__raw_hdr, this, _root);
-        this._raw_colorMap = new ArrayList<byte[]>();
+        KaitaiStream _io_hdr = this._io.substream(lenHeader() - 4);
+        this.hdr = new Header(_io_hdr, this, _root);
         this.colorMap = new ArrayList<ColorMapEntry>();
         for (int i = 0; i < hdr().colorMapEntries(); i++) {
-            this._raw_colorMap.add(this._io.readBytes(12));
-            KaitaiStream _io__raw_colorMap = new ByteBufferKaitaiStream(_raw_colorMap.get(_raw_colorMap.size() - 1));
-            this.colorMap.add(new ColorMapEntry(_io__raw_colorMap, this, _root));
+            KaitaiStream _io_colorMap = this._io.substream(12);
+            this.colorMap.add(new ColorMapEntry(_io_colorMap, this, _root));
         }
+    }
+
+    public void _fetchInstances() {
+        this.hdr._fetchInstances();
+        for (int i = 0; i < this.colorMap.size(); i++) {
+            this.colorMap.get(((Number) (i)).intValue())._fetchInstances();
+        }
+    }
+    public static class ColorMapEntry extends KaitaiStruct {
+        public static ColorMapEntry fromFile(String fileName) throws IOException {
+            return new ColorMapEntry(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public ColorMapEntry(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public ColorMapEntry(KaitaiStream _io, Xwd _parent) {
+            this(_io, _parent, null);
+        }
+
+        public ColorMapEntry(KaitaiStream _io, Xwd _parent, Xwd _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.entryNumber = this._io.readU4be();
+            this.red = this._io.readU2be();
+            this.green = this._io.readU2be();
+            this.blue = this._io.readU2be();
+            this.flags = this._io.readU1();
+            this.padding = this._io.readU1();
+        }
+
+        public void _fetchInstances() {
+        }
+        private long entryNumber;
+        private int red;
+        private int green;
+        private int blue;
+        private int flags;
+        private int padding;
+        private Xwd _root;
+        private Xwd _parent;
+
+        /**
+         * Number of the color map entry
+         */
+        public long entryNumber() { return entryNumber; }
+        public int red() { return red; }
+        public int green() { return green; }
+        public int blue() { return blue; }
+        public int flags() { return flags; }
+        public int padding() { return padding; }
+        public Xwd _root() { return _root; }
+        public Xwd _parent() { return _parent; }
     }
     public static class Header extends KaitaiStruct {
         public static Header fromFile(String fileName) throws IOException {
@@ -147,7 +203,10 @@ public class Xwd extends KaitaiStruct {
             this.windowX = this._io.readS4be();
             this.windowY = this._io.readS4be();
             this.windowBorderWidth = this._io.readU4be();
-            this.creator = new String(this._io.readBytesTerm((byte) 0, false, true, true), Charset.forName("UTF-8"));
+            this.creator = new String(this._io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.UTF_8);
+        }
+
+        public void _fetchInstances() {
         }
         private long fileVersion;
         private PixmapFormat pixmapFormat;
@@ -304,70 +363,18 @@ public class Xwd extends KaitaiStruct {
         public Xwd _root() { return _root; }
         public Xwd _parent() { return _parent; }
     }
-    public static class ColorMapEntry extends KaitaiStruct {
-        public static ColorMapEntry fromFile(String fileName) throws IOException {
-            return new ColorMapEntry(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public ColorMapEntry(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public ColorMapEntry(KaitaiStream _io, Xwd _parent) {
-            this(_io, _parent, null);
-        }
-
-        public ColorMapEntry(KaitaiStream _io, Xwd _parent, Xwd _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.entryNumber = this._io.readU4be();
-            this.red = this._io.readU2be();
-            this.green = this._io.readU2be();
-            this.blue = this._io.readU2be();
-            this.flags = this._io.readU1();
-            this.padding = this._io.readU1();
-        }
-        private long entryNumber;
-        private int red;
-        private int green;
-        private int blue;
-        private int flags;
-        private int padding;
-        private Xwd _root;
-        private Xwd _parent;
-
-        /**
-         * Number of the color map entry
-         */
-        public long entryNumber() { return entryNumber; }
-        public int red() { return red; }
-        public int green() { return green; }
-        public int blue() { return blue; }
-        public int flags() { return flags; }
-        public int padding() { return padding; }
-        public Xwd _root() { return _root; }
-        public Xwd _parent() { return _parent; }
-    }
     private long lenHeader;
     private Header hdr;
-    private ArrayList<ColorMapEntry> colorMap;
+    private List<ColorMapEntry> colorMap;
     private Xwd _root;
     private KaitaiStruct _parent;
-    private byte[] _raw_hdr;
-    private ArrayList<byte[]> _raw_colorMap;
 
     /**
      * Size of the header in bytes
      */
     public long lenHeader() { return lenHeader; }
     public Header hdr() { return hdr; }
-    public ArrayList<ColorMapEntry> colorMap() { return colorMap; }
+    public List<ColorMapEntry> colorMap() { return colorMap; }
     public Xwd _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
-    public byte[] _raw_hdr() { return _raw_hdr; }
-    public ArrayList<byte[]> _raw_colorMap() { return _raw_colorMap; }
 }

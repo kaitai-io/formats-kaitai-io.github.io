@@ -35,6 +35,17 @@ type
     qdos = 12
     acorn_riscos = 13
     unknown = 255
+  Gzip_ExtraFlagsDeflate* = ref object of KaitaiStruct
+    `compressionStrength`*: Gzip_ExtraFlagsDeflate_CompressionStrengths
+    `parent`*: Gzip
+  Gzip_ExtraFlagsDeflate_CompressionStrengths* = enum
+    best = 2
+    fast = 4
+  Gzip_Extras* = ref object of KaitaiStruct
+    `lenSubfields`*: uint16
+    `subfields`*: Gzip_Subfields
+    `parent`*: Gzip
+    `rawSubfields`*: seq[byte]
   Gzip_Flags* = ref object of KaitaiStruct
     `reserved1`*: uint64
     `hasComment`*: bool
@@ -43,32 +54,21 @@ type
     `hasHeaderCrc`*: bool
     `isText`*: bool
     `parent`*: Gzip
-  Gzip_ExtraFlagsDeflate* = ref object of KaitaiStruct
-    `compressionStrength`*: Gzip_ExtraFlagsDeflate_CompressionStrengths
-    `parent`*: Gzip
-  Gzip_ExtraFlagsDeflate_CompressionStrengths* = enum
-    best = 2
-    fast = 4
-  Gzip_Subfields* = ref object of KaitaiStruct
-    `entries`*: seq[Gzip_Subfield]
-    `parent`*: Gzip_Extras
   Gzip_Subfield* = ref object of KaitaiStruct
     `id`*: uint16
     `lenData`*: uint16
     `data`*: seq[byte]
     `parent`*: Gzip_Subfields
-  Gzip_Extras* = ref object of KaitaiStruct
-    `lenSubfields`*: uint16
-    `subfields`*: Gzip_Subfields
-    `parent`*: Gzip
-    `rawSubfields`*: seq[byte]
+  Gzip_Subfields* = ref object of KaitaiStruct
+    `entries`*: seq[Gzip_Subfield]
+    `parent`*: Gzip_Extras
 
 proc read*(_: typedesc[Gzip], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Gzip
-proc read*(_: typedesc[Gzip_Flags], io: KaitaiStream, root: KaitaiStruct, parent: Gzip): Gzip_Flags
 proc read*(_: typedesc[Gzip_ExtraFlagsDeflate], io: KaitaiStream, root: KaitaiStruct, parent: Gzip): Gzip_ExtraFlagsDeflate
-proc read*(_: typedesc[Gzip_Subfields], io: KaitaiStream, root: KaitaiStruct, parent: Gzip_Extras): Gzip_Subfields
-proc read*(_: typedesc[Gzip_Subfield], io: KaitaiStream, root: KaitaiStruct, parent: Gzip_Subfields): Gzip_Subfield
 proc read*(_: typedesc[Gzip_Extras], io: KaitaiStream, root: KaitaiStruct, parent: Gzip): Gzip_Extras
+proc read*(_: typedesc[Gzip_Flags], io: KaitaiStream, root: KaitaiStruct, parent: Gzip): Gzip_Flags
+proc read*(_: typedesc[Gzip_Subfield], io: KaitaiStream, root: KaitaiStruct, parent: Gzip_Subfields): Gzip_Subfield
+proc read*(_: typedesc[Gzip_Subfields], io: KaitaiStream, root: KaitaiStruct, parent: Gzip_Extras): Gzip_Subfields
 
 
 
@@ -143,7 +143,7 @@ one method is widely used: 8 = deflate.
 attempt to decompress it here.
 
   ]##
-  let bodyExpr = this.io.readBytes(int(((this.io.size - this.io.pos) - 8)))
+  let bodyExpr = this.io.readBytes(int((this.io.size - this.io.pos) - 8))
   this.body = bodyExpr
 
   ##[
@@ -163,6 +163,39 @@ bits).
 
 proc fromFile*(_: typedesc[Gzip], filename: string): Gzip =
   Gzip.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Gzip_ExtraFlagsDeflate], io: KaitaiStream, root: KaitaiStruct, parent: Gzip): Gzip_ExtraFlagsDeflate =
+  template this: untyped = result
+  this = new(Gzip_ExtraFlagsDeflate)
+  let root = if root == nil: cast[Gzip](this) else: cast[Gzip](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let compressionStrengthExpr = Gzip_ExtraFlagsDeflate_CompressionStrengths(this.io.readU1())
+  this.compressionStrength = compressionStrengthExpr
+
+proc fromFile*(_: typedesc[Gzip_ExtraFlagsDeflate], filename: string): Gzip_ExtraFlagsDeflate =
+  Gzip_ExtraFlagsDeflate.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Gzip_Extras], io: KaitaiStream, root: KaitaiStruct, parent: Gzip): Gzip_Extras =
+  template this: untyped = result
+  this = new(Gzip_Extras)
+  let root = if root == nil: cast[Gzip](this) else: cast[Gzip](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let lenSubfieldsExpr = this.io.readU2le()
+  this.lenSubfields = lenSubfieldsExpr
+  let rawSubfieldsExpr = this.io.readBytes(int(this.lenSubfields))
+  this.rawSubfields = rawSubfieldsExpr
+  let rawSubfieldsIo = newKaitaiStream(rawSubfieldsExpr)
+  let subfieldsExpr = Gzip_Subfields.read(rawSubfieldsIo, this.root, this)
+  this.subfields = subfieldsExpr
+
+proc fromFile*(_: typedesc[Gzip_Extras], filename: string): Gzip_Extras =
+  Gzip_Extras.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[Gzip_Flags], io: KaitaiStream, root: KaitaiStruct, parent: Gzip): Gzip_Flags =
   template this: untyped = result
@@ -203,43 +236,6 @@ compressor's point of view.
 proc fromFile*(_: typedesc[Gzip_Flags], filename: string): Gzip_Flags =
   Gzip_Flags.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[Gzip_ExtraFlagsDeflate], io: KaitaiStream, root: KaitaiStruct, parent: Gzip): Gzip_ExtraFlagsDeflate =
-  template this: untyped = result
-  this = new(Gzip_ExtraFlagsDeflate)
-  let root = if root == nil: cast[Gzip](this) else: cast[Gzip](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let compressionStrengthExpr = Gzip_ExtraFlagsDeflate_CompressionStrengths(this.io.readU1())
-  this.compressionStrength = compressionStrengthExpr
-
-proc fromFile*(_: typedesc[Gzip_ExtraFlagsDeflate], filename: string): Gzip_ExtraFlagsDeflate =
-  Gzip_ExtraFlagsDeflate.read(newKaitaiFileStream(filename), nil, nil)
-
-
-##[
-Container for many subfields, constrained by size of stream.
-
-]##
-proc read*(_: typedesc[Gzip_Subfields], io: KaitaiStream, root: KaitaiStruct, parent: Gzip_Extras): Gzip_Subfields =
-  template this: untyped = result
-  this = new(Gzip_Subfields)
-  let root = if root == nil: cast[Gzip](this) else: cast[Gzip](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  block:
-    var i: int
-    while not this.io.isEof:
-      let it = Gzip_Subfield.read(this.io, this.root, this)
-      this.entries.add(it)
-      inc i
-
-proc fromFile*(_: typedesc[Gzip_Subfields], filename: string): Gzip_Subfields =
-  Gzip_Subfields.read(newKaitaiFileStream(filename), nil, nil)
-
 
 ##[
 Every subfield follows typical [TLV scheme](https://en.wikipedia.org/wiki/Type-length-value):
@@ -274,22 +270,26 @@ proc read*(_: typedesc[Gzip_Subfield], io: KaitaiStream, root: KaitaiStruct, par
 proc fromFile*(_: typedesc[Gzip_Subfield], filename: string): Gzip_Subfield =
   Gzip_Subfield.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[Gzip_Extras], io: KaitaiStream, root: KaitaiStruct, parent: Gzip): Gzip_Extras =
+
+##[
+Container for many subfields, constrained by size of stream.
+
+]##
+proc read*(_: typedesc[Gzip_Subfields], io: KaitaiStream, root: KaitaiStruct, parent: Gzip_Extras): Gzip_Subfields =
   template this: untyped = result
-  this = new(Gzip_Extras)
+  this = new(Gzip_Subfields)
   let root = if root == nil: cast[Gzip](this) else: cast[Gzip](root)
   this.io = io
   this.root = root
   this.parent = parent
 
-  let lenSubfieldsExpr = this.io.readU2le()
-  this.lenSubfields = lenSubfieldsExpr
-  let rawSubfieldsExpr = this.io.readBytes(int(this.lenSubfields))
-  this.rawSubfields = rawSubfieldsExpr
-  let rawSubfieldsIo = newKaitaiStream(rawSubfieldsExpr)
-  let subfieldsExpr = Gzip_Subfields.read(rawSubfieldsIo, this.root, this)
-  this.subfields = subfieldsExpr
+  block:
+    var i: int
+    while not this.io.isEof:
+      let it = Gzip_Subfield.read(this.io, this.root, this)
+      this.entries.add(it)
+      inc i
 
-proc fromFile*(_: typedesc[Gzip_Extras], filename: string): Gzip_Extras =
-  Gzip_Extras.read(newKaitaiFileStream(filename), nil, nil)
+proc fromFile*(_: typedesc[Gzip_Subfields], filename: string): Gzip_Subfields =
+  Gzip_Subfields.read(newKaitaiFileStream(filename), nil, nil)
 

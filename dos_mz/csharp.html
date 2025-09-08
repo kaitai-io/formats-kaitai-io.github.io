@@ -198,7 +198,17 @@ added support for relocations.</p>
                 
                 <li>
                 
+                <a href="graphviz.html" title="DOS MZ executable parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
                 <a href="java.html" title="DOS MZ executable parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="java-write.html" title="DOS MZ executable parsing Java (read-write) library">Java (read-write)</a></li>
                 
                 
                 <li>
@@ -233,7 +243,17 @@ added support for relocations.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="DOS MZ executable parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="DOS MZ executable parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="DOS MZ executable parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -361,7 +381,7 @@ can also be found there.</p>
 <span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
 <span class="w">            </span><span class="p">{</span>
 <span class="w">                </span><span class="n">_mz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">MzHeader</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
-<span class="w">                </span><span class="n">_restOfHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Mz</span><span class="p">.</span><span class="n">LenHeader</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">28</span><span class="p">));</span>
+<span class="w">                </span><span class="n">_restOfHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Mz</span><span class="p">.</span><span class="n">LenHeader</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">28</span><span class="p">);</span>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_lenBody</span><span class="p">;</span>
 <span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">_lenBody</span><span class="p">;</span>
@@ -371,8 +391,8 @@ can also be found there.</p>
 <span class="w">                </span><span class="p">{</span>
 <span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_lenBody</span><span class="p">)</span>
 <span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_lenBody</span><span class="p">;</span>
-<span class="w">                    </span><span class="n">_lenBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="p">(((</span><span class="n">Mz</span><span class="p">.</span><span class="n">LastPageExtraBytes</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="p">(</span><span class="n">Mz</span><span class="p">.</span><span class="n">NumPages</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">512</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">(((</span><span class="n">Mz</span><span class="p">.</span><span class="n">NumPages</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">512</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Mz</span><span class="p">.</span><span class="n">LastPageExtraBytes</span><span class="p">))</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Mz</span><span class="p">.</span><span class="n">LenHeader</span><span class="p">));</span>
 <span class="w">                    </span><span class="n">f_lenBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">_lenBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">Mz</span><span class="p">.</span><span class="n">LastPageExtraBytes</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">Mz</span><span class="p">.</span><span class="n">NumPages</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">512</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">(</span><span class="n">Mz</span><span class="p">.</span><span class="n">NumPages</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">512</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Mz</span><span class="p">.</span><span class="n">LastPageExtraBytes</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Mz</span><span class="p">.</span><span class="n">LenHeader</span><span class="p">);</span>
 <span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_lenBody</span><span class="p">;</span>
 <span class="w">                </span><span class="p">}</span>
 <span class="w">            </span><span class="p">}</span>
@@ -402,9 +422,9 @@ can also be found there.</p>
 <span class="w">            </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
 <span class="w">            </span><span class="p">{</span>
 <span class="w">                </span><span class="n">_magic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="mi">2</span><span class="p">));</span>
-<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="n">Magic</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;MZ&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="n">Magic</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;ZM&quot;</span><span class="p">))</span><span class="w"> </span><span class="p">))</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="w"> </span><span class="p">((</span><span class="n">_magic</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;MZ&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="n">_magic</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;ZM&quot;</span><span class="p">))</span><span class="w"> </span><span class="p">))</span>
 <span class="w">                </span><span class="p">{</span>
-<span class="w">                    </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">ValidationNotAnyOfError</span><span class="p">(</span><span class="n">Magic</span><span class="p">,</span><span class="w"> </span><span class="n">M_Io</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/types/mz_header/seq/0&quot;</span><span class="p">);</span>
+<span class="w">                    </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">ValidationNotAnyOfError</span><span class="p">(</span><span class="n">_magic</span><span class="p">,</span><span class="w"> </span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/types/mz_header/seq/0&quot;</span><span class="p">);</span>
 <span class="w">                </span><span class="p">}</span>
 <span class="w">                </span><span class="n">_lastPageExtraBytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
 <span class="w">                </span><span class="n">_numPages</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
@@ -428,8 +448,8 @@ can also be found there.</p>
 <span class="w">                </span><span class="p">{</span>
 <span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_lenHeader</span><span class="p">)</span>
 <span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">_lenHeader</span><span class="p">;</span>
-<span class="w">                    </span><span class="n">_lenHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">HeaderSize</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">16</span><span class="p">));</span>
 <span class="w">                    </span><span class="n">f_lenHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">_lenHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">HeaderSize</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">16</span><span class="p">);</span>
 <span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_lenHeader</span><span class="p">;</span>
 <span class="w">                </span><span class="p">}</span>
 <span class="w">            </span><span class="p">}</span>
@@ -501,6 +521,7 @@ can also be found there.</p>
 <span class="w">            </span><span class="p">{</span>
 <span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_relocations</span><span class="p">)</span>
 <span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_relocations</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_relocations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
 <span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">Header</span><span class="p">.</span><span class="n">Mz</span><span class="p">.</span><span class="n">OfsRelocations</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">                    </span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Header</span><span class="p">.</span><span class="n">M_Io</span><span class="p">;</span>
 <span class="w">                    </span><span class="kt">long</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
@@ -511,7 +532,6 @@ can also be found there.</p>
 <span class="w">                        </span><span class="n">_relocations</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">Relocation</span><span class="p">(</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">));</span>
 <span class="w">                    </span><span class="p">}</span>
 <span class="w">                    </span><span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
-<span class="w">                    </span><span class="n">f_relocations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
 <span class="w">                </span><span class="p">}</span>
 <span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">_relocations</span><span class="p">;</span>
 <span class="w">            </span><span class="p">}</span>

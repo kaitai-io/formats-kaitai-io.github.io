@@ -29,15 +29,151 @@ end
 function SshPublicKey:_read()
   self.key_name = SshPublicKey.Cstring(self._io, self, self._root)
   local _on = self.key_name.value
-  if _on == "ssh-rsa" then
-    self.body = SshPublicKey.KeyRsa(self._io, self, self._root)
-  elseif _on == "ecdsa-sha2-nistp256" then
+  if _on == "ecdsa-sha2-nistp256" then
     self.body = SshPublicKey.KeyEcdsa(self._io, self, self._root)
-  elseif _on == "ssh-ed25519" then
-    self.body = SshPublicKey.KeyEd25519(self._io, self, self._root)
   elseif _on == "ssh-dss" then
     self.body = SshPublicKey.KeyDsa(self._io, self, self._root)
+  elseif _on == "ssh-ed25519" then
+    self.body = SshPublicKey.KeyEd25519(self._io, self, self._root)
+  elseif _on == "ssh-rsa" then
+    self.body = SshPublicKey.KeyRsa(self._io, self, self._root)
   end
+end
+
+
+-- 
+-- Big integers serialization format used by ssh, v2. In the code, the following
+-- routines are used to read/write it:
+-- 
+-- * sshbuf_get_bignum2
+-- * sshbuf_get_bignum2_bytes_direct
+-- * sshbuf_put_bignum2
+-- * sshbuf_get_bignum2_bytes_direct
+-- See also: Source (https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-crypto.c#L35
+-- https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-basic.c#L431
+-- )
+SshPublicKey.Bignum2 = class.class(KaitaiStruct)
+
+function SshPublicKey.Bignum2:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function SshPublicKey.Bignum2:_read()
+  self.len = self._io:read_u4be()
+  self.body = self._io:read_bytes(self.len)
+end
+
+-- 
+-- Length of big integer in bits. In OpenSSH sources, this corresponds to
+-- `BN_num_bits` function.
+SshPublicKey.Bignum2.property.length_in_bits = {}
+function SshPublicKey.Bignum2.property.length_in_bits:get()
+  if self._m_length_in_bits ~= nil then
+    return self._m_length_in_bits
+  end
+
+  self._m_length_in_bits = (self.len - 1) * 8
+  return self._m_length_in_bits
+end
+
+
+-- 
+-- A integer-prefixed string designed to be read using `sshbuf_get_cstring`
+-- and written by `sshbuf_put_cstring` routines in ssh sources. Name is an
+-- obscure misnomer, as typically "C string" means a null-terminated string.
+-- See also: Source (https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-basic.c#L181)
+SshPublicKey.Cstring = class.class(KaitaiStruct)
+
+function SshPublicKey.Cstring:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function SshPublicKey.Cstring:_read()
+  self.len = self._io:read_u4be()
+  self.value = str_decode.decode(self._io:read_bytes(self.len), "ASCII")
+end
+
+
+-- 
+-- Elliptic curve dump format used by ssh. In OpenSSH code, the following
+-- routines are used to read/write it:
+-- 
+-- * sshbuf_get_ec
+-- * get_ec
+-- See also: Source (https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-crypto.c#L90
+-- https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-crypto.c#L76
+-- )
+SshPublicKey.EllipticCurve = class.class(KaitaiStruct)
+
+function SshPublicKey.EllipticCurve:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function SshPublicKey.EllipticCurve:_read()
+  self.len = self._io:read_u4be()
+  self.body = self._io:read_bytes(self.len)
+end
+
+
+-- 
+-- See also: Source (https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2036-L2051)
+SshPublicKey.KeyDsa = class.class(KaitaiStruct)
+
+function SshPublicKey.KeyDsa:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function SshPublicKey.KeyDsa:_read()
+  self.dsa_p = SshPublicKey.Bignum2(self._io, self, self._root)
+  self.dsa_q = SshPublicKey.Bignum2(self._io, self, self._root)
+  self.dsa_g = SshPublicKey.Bignum2(self._io, self, self._root)
+  self.dsa_pub_key = SshPublicKey.Bignum2(self._io, self, self._root)
+end
+
+
+-- 
+-- See also: Source (https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2060-L2103)
+SshPublicKey.KeyEcdsa = class.class(KaitaiStruct)
+
+function SshPublicKey.KeyEcdsa:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function SshPublicKey.KeyEcdsa:_read()
+  self.curve_name = SshPublicKey.Cstring(self._io, self, self._root)
+  self.ec = SshPublicKey.EllipticCurve(self._io, self, self._root)
+end
+
+
+-- 
+-- See also: Source (https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2111-L2124)
+SshPublicKey.KeyEd25519 = class.class(KaitaiStruct)
+
+function SshPublicKey.KeyEd25519:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function SshPublicKey.KeyEd25519:_read()
+  self.len_pk = self._io:read_u4be()
+  self.pk = self._io:read_bytes(self.len_pk)
 end
 
 
@@ -48,7 +184,7 @@ SshPublicKey.KeyRsa = class.class(KaitaiStruct)
 function SshPublicKey.KeyRsa:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -74,140 +210,4 @@ end
 -- 
 -- Modulus of both public and private keys, designated `n` in RSA
 -- documentation. Its length in bits is designated as "key length".
-
--- 
--- See also: Source (https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2111-L2124)
-SshPublicKey.KeyEd25519 = class.class(KaitaiStruct)
-
-function SshPublicKey.KeyEd25519:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function SshPublicKey.KeyEd25519:_read()
-  self.len_pk = self._io:read_u4be()
-  self.pk = self._io:read_bytes(self.len_pk)
-end
-
-
--- 
--- See also: Source (https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2060-L2103)
-SshPublicKey.KeyEcdsa = class.class(KaitaiStruct)
-
-function SshPublicKey.KeyEcdsa:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function SshPublicKey.KeyEcdsa:_read()
-  self.curve_name = SshPublicKey.Cstring(self._io, self, self._root)
-  self.ec = SshPublicKey.EllipticCurve(self._io, self, self._root)
-end
-
-
--- 
--- A integer-prefixed string designed to be read using `sshbuf_get_cstring`
--- and written by `sshbuf_put_cstring` routines in ssh sources. Name is an
--- obscure misnomer, as typically "C string" means a null-terminated string.
--- See also: Source (https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-basic.c#L181)
-SshPublicKey.Cstring = class.class(KaitaiStruct)
-
-function SshPublicKey.Cstring:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function SshPublicKey.Cstring:_read()
-  self.len = self._io:read_u4be()
-  self.value = str_decode.decode(self._io:read_bytes(self.len), "ASCII")
-end
-
-
--- 
--- See also: Source (https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshkey.c#L2036-L2051)
-SshPublicKey.KeyDsa = class.class(KaitaiStruct)
-
-function SshPublicKey.KeyDsa:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function SshPublicKey.KeyDsa:_read()
-  self.dsa_p = SshPublicKey.Bignum2(self._io, self, self._root)
-  self.dsa_q = SshPublicKey.Bignum2(self._io, self, self._root)
-  self.dsa_g = SshPublicKey.Bignum2(self._io, self, self._root)
-  self.dsa_pub_key = SshPublicKey.Bignum2(self._io, self, self._root)
-end
-
-
--- 
--- Elliptic curve dump format used by ssh. In OpenSSH code, the following
--- routines are used to read/write it:
--- 
--- * sshbuf_get_ec
--- * get_ec
--- See also: Source (https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-crypto.c#L90
--- https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-crypto.c#L76
--- )
-SshPublicKey.EllipticCurve = class.class(KaitaiStruct)
-
-function SshPublicKey.EllipticCurve:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function SshPublicKey.EllipticCurve:_read()
-  self.len = self._io:read_u4be()
-  self.body = self._io:read_bytes(self.len)
-end
-
-
--- 
--- Big integers serialization format used by ssh, v2. In the code, the following
--- routines are used to read/write it:
--- 
--- * sshbuf_get_bignum2
--- * sshbuf_get_bignum2_bytes_direct
--- * sshbuf_put_bignum2
--- * sshbuf_get_bignum2_bytes_direct
--- See also: Source (https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-crypto.c#L35
--- https://github.com/openssh/openssh-portable/blob/b4d4eda6/sshbuf-getput-basic.c#L431
--- )
-SshPublicKey.Bignum2 = class.class(KaitaiStruct)
-
-function SshPublicKey.Bignum2:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function SshPublicKey.Bignum2:_read()
-  self.len = self._io:read_u4be()
-  self.body = self._io:read_bytes(self.len)
-end
-
--- 
--- Length of big integer in bits. In OpenSSH sources, this corresponds to
--- `BN_num_bits` function.
-SshPublicKey.Bignum2.property.length_in_bits = {}
-function SshPublicKey.Bignum2.property.length_in_bits:get()
-  if self._m_length_in_bits ~= nil then
-    return self._m_length_in_bits
-  end
-
-  self._m_length_in_bits = ((self.len - 1) * 8)
-  return self._m_length_in_bits
-end
-
 

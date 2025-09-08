@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Arrays;
 
 
@@ -89,23 +90,6 @@ public class Bmp extends KaitaiStruct {
         return new Bmp(new ByteBufferKaitaiStream(fileName));
     }
 
-    public enum Intent {
-        BUSINESS(1),
-        GRAPHICS(2),
-        IMAGES(4),
-        ABS_COLORIMETRIC(8);
-
-        private final long id;
-        Intent(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map<Long, Intent> byId = new HashMap<Long, Intent>(4);
-        static {
-            for (Intent e : Intent.values())
-                byId.put(e.id(), e);
-        }
-        public static Intent byId(long id) { return byId.get(id); }
-    }
-
     public enum ColorSpace {
         CALIBRATED_RGB(0),
         PROFILE_LINKED(1279872587),
@@ -122,43 +106,6 @@ public class Bmp extends KaitaiStruct {
                 byId.put(e.id(), e);
         }
         public static ColorSpace byId(long id) { return byId.get(id); }
-    }
-
-    public enum Os2Rendering {
-        NO_HALFTONING(0),
-        ERROR_DIFFUSION(1),
-        PANDA(2),
-        SUPER_CIRCLE(3);
-
-        private final long id;
-        Os2Rendering(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map<Long, Os2Rendering> byId = new HashMap<Long, Os2Rendering>(4);
-        static {
-            for (Os2Rendering e : Os2Rendering.values())
-                byId.put(e.id(), e);
-        }
-        public static Os2Rendering byId(long id) { return byId.get(id); }
-    }
-
-    public enum HeaderType {
-        BITMAP_CORE_HEADER(12),
-        BITMAP_INFO_HEADER(40),
-        BITMAP_V2_INFO_HEADER(52),
-        BITMAP_V3_INFO_HEADER(56),
-        OS2_2X_BITMAP_HEADER(64),
-        BITMAP_V4_HEADER(108),
-        BITMAP_V5_HEADER(124);
-
-        private final long id;
-        HeaderType(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map<Long, HeaderType> byId = new HashMap<Long, HeaderType>(7);
-        static {
-            for (HeaderType e : HeaderType.values())
-                byId.put(e.id(), e);
-        }
-        public static HeaderType byId(long id) { return byId.get(id); }
     }
 
     public enum Compressions {
@@ -181,6 +128,43 @@ public class Bmp extends KaitaiStruct {
         public static Compressions byId(long id) { return byId.get(id); }
     }
 
+    public enum HeaderType {
+        BITMAP_CORE_HEADER(12),
+        BITMAP_INFO_HEADER(40),
+        BITMAP_V2_INFO_HEADER(52),
+        BITMAP_V3_INFO_HEADER(56),
+        OS2_2X_BITMAP_HEADER(64),
+        BITMAP_V4_HEADER(108),
+        BITMAP_V5_HEADER(124);
+
+        private final long id;
+        HeaderType(long id) { this.id = id; }
+        public long id() { return id; }
+        private static final Map<Long, HeaderType> byId = new HashMap<Long, HeaderType>(7);
+        static {
+            for (HeaderType e : HeaderType.values())
+                byId.put(e.id(), e);
+        }
+        public static HeaderType byId(long id) { return byId.get(id); }
+    }
+
+    public enum Intent {
+        BUSINESS(1),
+        GRAPHICS(2),
+        IMAGES(4),
+        ABS_COLORIMETRIC(8);
+
+        private final long id;
+        Intent(long id) { this.id = id; }
+        public long id() { return id; }
+        private static final Map<Long, Intent> byId = new HashMap<Long, Intent>(4);
+        static {
+            for (Intent e : Intent.values())
+                byId.put(e.id(), e);
+        }
+        public static Intent byId(long id) { return byId.get(id); }
+    }
+
     public enum Os2Compressions {
         RGB(0),
         RLE8(1),
@@ -199,6 +183,23 @@ public class Bmp extends KaitaiStruct {
         public static Os2Compressions byId(long id) { return byId.get(id); }
     }
 
+    public enum Os2Rendering {
+        NO_HALFTONING(0),
+        ERROR_DIFFUSION(1),
+        PANDA(2),
+        SUPER_CIRCLE(3);
+
+        private final long id;
+        Os2Rendering(long id) { this.id = id; }
+        public long id() { return id; }
+        private static final Map<Long, Os2Rendering> byId = new HashMap<Long, Os2Rendering>(4);
+        static {
+            for (Os2Rendering e : Os2Rendering.values())
+                byId.put(e.id(), e);
+        }
+        public static Os2Rendering byId(long id) { return byId.get(id); }
+    }
+
     public Bmp(KaitaiStream _io) {
         this(_io, null, null);
     }
@@ -215,358 +216,17 @@ public class Bmp extends KaitaiStruct {
     }
     private void _read() {
         this.fileHdr = new FileHeader(this._io, this, _root);
-        this._raw_dibInfo = this._io.readBytes((fileHdr().ofsBitmap() - 14));
-        KaitaiStream _io__raw_dibInfo = new ByteBufferKaitaiStream(_raw_dibInfo);
-        this.dibInfo = new BitmapInfo(_io__raw_dibInfo, this, _root);
+        KaitaiStream _io_dibInfo = this._io.substream(fileHdr().ofsBitmap() - 14);
+        this.dibInfo = new BitmapInfo(_io_dibInfo, this, _root);
         this._raw_bitmap = this._io.readBytesFull();
-        KaitaiStream _io__raw_bitmap = new ByteBufferKaitaiStream(_raw_bitmap);
+        KaitaiStream _io__raw_bitmap = new ByteBufferKaitaiStream(this._raw_bitmap);
         this.bitmap = new Bitmap(_io__raw_bitmap, this, _root);
     }
 
-    /**
-     * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-ciexyz">Source</a>
-     */
-    public static class CieXyz extends KaitaiStruct {
-        public static CieXyz fromFile(String fileName) throws IOException {
-            return new CieXyz(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public CieXyz(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public CieXyz(KaitaiStream _io, Bmp.BitmapV4Extension _parent) {
-            this(_io, _parent, null);
-        }
-
-        public CieXyz(KaitaiStream _io, Bmp.BitmapV4Extension _parent, Bmp _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.x = new FixedPoint2Dot30(this._io, this, _root);
-            this.y = new FixedPoint2Dot30(this._io, this, _root);
-            this.z = new FixedPoint2Dot30(this._io, this, _root);
-        }
-        private FixedPoint2Dot30 x;
-        private FixedPoint2Dot30 y;
-        private FixedPoint2Dot30 z;
-        private Bmp _root;
-        private Bmp.BitmapV4Extension _parent;
-        public FixedPoint2Dot30 x() { return x; }
-        public FixedPoint2Dot30 y() { return y; }
-        public FixedPoint2Dot30 z() { return z; }
-        public Bmp _root() { return _root; }
-        public Bmp.BitmapV4Extension _parent() { return _parent; }
-    }
-    public static class RgbRecord extends KaitaiStruct {
-
-        public RgbRecord(KaitaiStream _io, boolean hasReservedField) {
-            this(_io, null, null, hasReservedField);
-        }
-
-        public RgbRecord(KaitaiStream _io, Bmp.ColorTable _parent, boolean hasReservedField) {
-            this(_io, _parent, null, hasReservedField);
-        }
-
-        public RgbRecord(KaitaiStream _io, Bmp.ColorTable _parent, Bmp _root, boolean hasReservedField) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            this.hasReservedField = hasReservedField;
-            _read();
-        }
-        private void _read() {
-            this.blue = this._io.readU1();
-            this.green = this._io.readU1();
-            this.red = this._io.readU1();
-            if (hasReservedField()) {
-                this.reserved = this._io.readU1();
-            }
-        }
-        private int blue;
-        private int green;
-        private int red;
-        private Integer reserved;
-        private boolean hasReservedField;
-        private Bmp _root;
-        private Bmp.ColorTable _parent;
-        public int blue() { return blue; }
-        public int green() { return green; }
-        public int red() { return red; }
-        public Integer reserved() { return reserved; }
-        public boolean hasReservedField() { return hasReservedField; }
-        public Bmp _root() { return _root; }
-        public Bmp.ColorTable _parent() { return _parent; }
-    }
-
-    /**
-     * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv5header">Source</a>
-     */
-    public static class BitmapV5Extension extends KaitaiStruct {
-        public static BitmapV5Extension fromFile(String fileName) throws IOException {
-            return new BitmapV5Extension(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public BitmapV5Extension(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public BitmapV5Extension(KaitaiStream _io, Bmp.BitmapHeader _parent) {
-            this(_io, _parent, null);
-        }
-
-        public BitmapV5Extension(KaitaiStream _io, Bmp.BitmapHeader _parent, Bmp _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.intent = Bmp.Intent.byId(this._io.readU4le());
-            this.ofsProfile = this._io.readU4le();
-            this.lenProfile = this._io.readU4le();
-            this.reserved = this._io.readU4le();
-        }
-        private Boolean hasProfile;
-        public Boolean hasProfile() {
-            if (this.hasProfile != null)
-                return this.hasProfile;
-            boolean _tmp = (boolean) ( ((_parent().bitmapV4Ext().colorSpaceType() == Bmp.ColorSpace.PROFILE_LINKED) || (_parent().bitmapV4Ext().colorSpaceType() == Bmp.ColorSpace.PROFILE_EMBEDDED)) );
-            this.hasProfile = _tmp;
-            return this.hasProfile;
-        }
-        private Object profileData;
-
-        /**
-         * @see <a href="https://learn.microsoft.com/en-us/windows/win32/wcs/using-structures-in-wcs-1-0">"If the profile is embedded, profile data is the actual profile, and if it is linked, the profile data is the null-terminated file name of the profile. This cannot be a Unicode string. It must be composed exclusively of characters from the Windows character set (code page 1252)."</a>
-         */
-        public Object profileData() {
-            if (this.profileData != null)
-                return this.profileData;
-            if (hasProfile()) {
-                KaitaiStream io = _root()._io();
-                long _pos = io.pos();
-                io.seek((14 + ofsProfile()));
-                {
-                    boolean on = _parent().bitmapV4Ext().colorSpaceType() == Bmp.ColorSpace.PROFILE_LINKED;
-                    if (on == true) {
-                        this.profileData = new String(KaitaiStream.bytesTerminate(io.readBytes(lenProfile()), (byte) 0, false), Charset.forName("windows-1252"));
-                    }
-                    else {
-                        this.profileData = io.readBytes(lenProfile());
-                    }
-                }
-                io.seek(_pos);
-            }
-            return this.profileData;
-        }
-        private Intent intent;
-        private long ofsProfile;
-        private long lenProfile;
-        private long reserved;
-        private Bmp _root;
-        private Bmp.BitmapHeader _parent;
-        public Intent intent() { return intent; }
-
-        /**
-         * The offset, in bytes, from the beginning of the BITMAPV5HEADER structure to the start of the profile data.
-         */
-        public long ofsProfile() { return ofsProfile; }
-        public long lenProfile() { return lenProfile; }
-        public long reserved() { return reserved; }
-        public Bmp _root() { return _root; }
-        public Bmp.BitmapHeader _parent() { return _parent; }
-    }
-    public static class ColorMask extends KaitaiStruct {
-
-        public ColorMask(KaitaiStream _io, boolean hasAlphaMask) {
-            this(_io, null, null, hasAlphaMask);
-        }
-
-        public ColorMask(KaitaiStream _io, KaitaiStruct _parent, boolean hasAlphaMask) {
-            this(_io, _parent, null, hasAlphaMask);
-        }
-
-        public ColorMask(KaitaiStream _io, KaitaiStruct _parent, Bmp _root, boolean hasAlphaMask) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            this.hasAlphaMask = hasAlphaMask;
-            _read();
-        }
-        private void _read() {
-            this.redMask = this._io.readU4le();
-            this.greenMask = this._io.readU4le();
-            this.blueMask = this._io.readU4le();
-            if (hasAlphaMask()) {
-                this.alphaMask = this._io.readU4le();
-            }
-        }
-        private long redMask;
-        private long greenMask;
-        private long blueMask;
-        private Long alphaMask;
-        private boolean hasAlphaMask;
-        private Bmp _root;
-        private KaitaiStruct _parent;
-        public long redMask() { return redMask; }
-        public long greenMask() { return greenMask; }
-        public long blueMask() { return blueMask; }
-        public Long alphaMask() { return alphaMask; }
-        public boolean hasAlphaMask() { return hasAlphaMask; }
-        public Bmp _root() { return _root; }
-        public KaitaiStruct _parent() { return _parent; }
-    }
-
-    /**
-     * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv4header">Source</a>
-     */
-    public static class BitmapV4Extension extends KaitaiStruct {
-        public static BitmapV4Extension fromFile(String fileName) throws IOException {
-            return new BitmapV4Extension(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public BitmapV4Extension(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public BitmapV4Extension(KaitaiStream _io, Bmp.BitmapHeader _parent) {
-            this(_io, _parent, null);
-        }
-
-        public BitmapV4Extension(KaitaiStream _io, Bmp.BitmapHeader _parent, Bmp _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.colorSpaceType = Bmp.ColorSpace.byId(this._io.readU4le());
-            this.endpointRed = new CieXyz(this._io, this, _root);
-            this.endpointGreen = new CieXyz(this._io, this, _root);
-            this.endpointBlue = new CieXyz(this._io, this, _root);
-            this.gammaRed = new FixedPoint16Dot16(this._io, this, _root);
-            this.gammaBlue = new FixedPoint16Dot16(this._io, this, _root);
-            this.gammaGreen = new FixedPoint16Dot16(this._io, this, _root);
-        }
-        private ColorSpace colorSpaceType;
-        private CieXyz endpointRed;
-        private CieXyz endpointGreen;
-        private CieXyz endpointBlue;
-        private FixedPoint16Dot16 gammaRed;
-        private FixedPoint16Dot16 gammaBlue;
-        private FixedPoint16Dot16 gammaGreen;
-        private Bmp _root;
-        private Bmp.BitmapHeader _parent;
-        public ColorSpace colorSpaceType() { return colorSpaceType; }
-        public CieXyz endpointRed() { return endpointRed; }
-        public CieXyz endpointGreen() { return endpointGreen; }
-        public CieXyz endpointBlue() { return endpointBlue; }
-        public FixedPoint16Dot16 gammaRed() { return gammaRed; }
-        public FixedPoint16Dot16 gammaBlue() { return gammaBlue; }
-        public FixedPoint16Dot16 gammaGreen() { return gammaGreen; }
-        public Bmp _root() { return _root; }
-        public Bmp.BitmapHeader _parent() { return _parent; }
-    }
-
-    /**
-     * @see <a href="https://learn.microsoft.com/en-us/previous-versions/dd183376(v=vs.85)">Source</a>
-     */
-    public static class BitmapInfoExtension extends KaitaiStruct {
-        public static BitmapInfoExtension fromFile(String fileName) throws IOException {
-            return new BitmapInfoExtension(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public BitmapInfoExtension(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public BitmapInfoExtension(KaitaiStream _io, Bmp.BitmapHeader _parent) {
-            this(_io, _parent, null);
-        }
-
-        public BitmapInfoExtension(KaitaiStream _io, Bmp.BitmapHeader _parent, Bmp _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            if (!(_parent().extendsOs22xBitmap())) {
-                this.compression = Bmp.Compressions.byId(this._io.readU4le());
-            }
-            if (_parent().extendsOs22xBitmap()) {
-                this.os2Compression = Bmp.Os2Compressions.byId(this._io.readU4le());
-            }
-            this.lenImage = this._io.readU4le();
-            this.xResolution = this._io.readU4le();
-            this.yResolution = this._io.readU4le();
-            this.numColorsUsed = this._io.readU4le();
-            this.numColorsImportant = this._io.readU4le();
-        }
-        private Compressions compression;
-        private Os2Compressions os2Compression;
-        private long lenImage;
-        private long xResolution;
-        private long yResolution;
-        private long numColorsUsed;
-        private long numColorsImportant;
-        private Bmp _root;
-        private Bmp.BitmapHeader _parent;
-        public Compressions compression() { return compression; }
-        public Os2Compressions os2Compression() { return os2Compression; }
-
-        /**
-         * If biCompression is BI_JPEG or BI_PNG, indicates the size of the JPEG or PNG image buffer.
-         * This may be set to zero for BI_RGB bitmaps.
-         */
-        public long lenImage() { return lenImage; }
-        public long xResolution() { return xResolution; }
-        public long yResolution() { return yResolution; }
-        public long numColorsUsed() { return numColorsUsed; }
-        public long numColorsImportant() { return numColorsImportant; }
-        public Bmp _root() { return _root; }
-        public Bmp.BitmapHeader _parent() { return _parent; }
-    }
-    public static class FixedPoint2Dot30 extends KaitaiStruct {
-        public static FixedPoint2Dot30 fromFile(String fileName) throws IOException {
-            return new FixedPoint2Dot30(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public FixedPoint2Dot30(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public FixedPoint2Dot30(KaitaiStream _io, Bmp.CieXyz _parent) {
-            this(_io, _parent, null);
-        }
-
-        public FixedPoint2Dot30(KaitaiStream _io, Bmp.CieXyz _parent, Bmp _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.raw = this._io.readU4le();
-        }
-        private Double value;
-        public Double value() {
-            if (this.value != null)
-                return this.value;
-            double _tmp = (double) (((raw() + 0.0) / (1 << 30)));
-            this.value = _tmp;
-            return this.value;
-        }
-        private long raw;
-        private Bmp _root;
-        private Bmp.CieXyz _parent;
-        public long raw() { return raw; }
-        public Bmp _root() { return _root; }
-        public Bmp.CieXyz _parent() { return _parent; }
+    public void _fetchInstances() {
+        this.fileHdr._fetchInstances();
+        this.dibInfo._fetchInstances();
+        this.bitmap._fetchInstances();
     }
 
     /**
@@ -598,6 +258,9 @@ public class Bmp extends KaitaiStruct {
         }
         private void _read() {
         }
+
+        public void _fetchInstances() {
+        }
         private Bmp _root;
         private Bmp _parent;
         public Bmp _root() { return _root; }
@@ -628,20 +291,20 @@ public class Bmp extends KaitaiStruct {
         private void _read() {
             {
                 boolean on = isCoreHeader();
-                if (on == true) {
-                    this.imageWidth = (long) (this._io.readU2le());
-                }
-                else if (on == false) {
+                if (on == false) {
                     this.imageWidth = this._io.readU4le();
+                }
+                else if (on == true) {
+                    this.imageWidth = ((Number) (this._io.readU2le())).longValue();
                 }
             }
             {
                 boolean on = isCoreHeader();
-                if (on == true) {
-                    this.imageHeightRaw = (int) (this._io.readS2le());
-                }
-                else if (on == false) {
+                if (on == false) {
                     this.imageHeightRaw = this._io.readS4le();
+                }
+                else if (on == true) {
+                    this.imageHeightRaw = ((Number) (this._io.readS2le())).intValue();
                 }
             }
             this.numPlanes = this._io.readU2le();
@@ -662,77 +325,100 @@ public class Bmp extends KaitaiStruct {
                 this.bitmapV5Ext = new BitmapV5Extension(this._io, this, _root);
             }
         }
-        private Boolean extendsBitmapV4;
-        public Boolean extendsBitmapV4() {
-            if (this.extendsBitmapV4 != null)
-                return this.extendsBitmapV4;
-            boolean _tmp = (boolean) (lenHeader() >= Bmp.HeaderType.BITMAP_V4_HEADER.id());
-            this.extendsBitmapV4 = _tmp;
-            return this.extendsBitmapV4;
-        }
-        private Boolean extendsOs22xBitmap;
-        public Boolean extendsOs22xBitmap() {
-            if (this.extendsOs22xBitmap != null)
-                return this.extendsOs22xBitmap;
-            boolean _tmp = (boolean) (lenHeader() == Bmp.HeaderType.OS2_2X_BITMAP_HEADER.id());
-            this.extendsOs22xBitmap = _tmp;
-            return this.extendsOs22xBitmap;
-        }
-        private Boolean usesFixedPalette;
-        public Boolean usesFixedPalette() {
-            if (this.usesFixedPalette != null)
-                return this.usesFixedPalette;
-            boolean _tmp = (boolean) ( ((!( ((bitsPerPixel() == 16) || (bitsPerPixel() == 24) || (bitsPerPixel() == 32)) )) && (!( ((extendsBitmapInfo()) && (!(extendsOs22xBitmap())) && ( ((bitmapInfoExt().compression() == Bmp.Compressions.JPEG) || (bitmapInfoExt().compression() == Bmp.Compressions.PNG)) )) ))) );
-            this.usesFixedPalette = _tmp;
-            return this.usesFixedPalette;
-        }
-        private Boolean extendsBitmapInfo;
-        public Boolean extendsBitmapInfo() {
-            if (this.extendsBitmapInfo != null)
-                return this.extendsBitmapInfo;
-            boolean _tmp = (boolean) (lenHeader() >= Bmp.HeaderType.BITMAP_INFO_HEADER.id());
-            this.extendsBitmapInfo = _tmp;
-            return this.extendsBitmapInfo;
-        }
-        private Integer imageHeight;
-        public Integer imageHeight() {
-            if (this.imageHeight != null)
-                return this.imageHeight;
-            int _tmp = (int) ((imageHeightRaw() < 0 ? -(imageHeightRaw()) : imageHeightRaw()));
-            this.imageHeight = _tmp;
-            return this.imageHeight;
-        }
-        private Boolean isCoreHeader;
-        public Boolean isCoreHeader() {
-            if (this.isCoreHeader != null)
-                return this.isCoreHeader;
-            boolean _tmp = (boolean) (lenHeader() == Bmp.HeaderType.BITMAP_CORE_HEADER.id());
-            this.isCoreHeader = _tmp;
-            return this.isCoreHeader;
-        }
-        private Boolean extendsBitmapV5;
-        public Boolean extendsBitmapV5() {
-            if (this.extendsBitmapV5 != null)
-                return this.extendsBitmapV5;
-            boolean _tmp = (boolean) (lenHeader() >= Bmp.HeaderType.BITMAP_V5_HEADER.id());
-            this.extendsBitmapV5 = _tmp;
-            return this.extendsBitmapV5;
-        }
-        private Boolean isColorMaskHere;
-        public Boolean isColorMaskHere() {
-            if (this.isColorMaskHere != null)
-                return this.isColorMaskHere;
-            boolean _tmp = (boolean) ( ((lenHeader() == Bmp.HeaderType.BITMAP_V2_INFO_HEADER.id()) || (lenHeader() == Bmp.HeaderType.BITMAP_V3_INFO_HEADER.id()) || (extendsBitmapV4())) );
-            this.isColorMaskHere = _tmp;
-            return this.isColorMaskHere;
+
+        public void _fetchInstances() {
+            {
+                boolean on = isCoreHeader();
+                if (on == false) {
+                }
+                else if (on == true) {
+                }
+            }
+            {
+                boolean on = isCoreHeader();
+                if (on == false) {
+                }
+                else if (on == true) {
+                }
+            }
+            if (extendsBitmapInfo()) {
+                this.bitmapInfoExt._fetchInstances();
+            }
+            if (isColorMaskHere()) {
+                this.colorMask._fetchInstances();
+            }
+            if (extendsOs22xBitmap()) {
+                this.os22xBitmapExt._fetchInstances();
+            }
+            if (extendsBitmapV4()) {
+                this.bitmapV4Ext._fetchInstances();
+            }
+            if (extendsBitmapV5()) {
+                this.bitmapV5Ext._fetchInstances();
+            }
         }
         private Boolean bottomUp;
         public Boolean bottomUp() {
             if (this.bottomUp != null)
                 return this.bottomUp;
-            boolean _tmp = (boolean) (imageHeightRaw() > 0);
-            this.bottomUp = _tmp;
+            this.bottomUp = imageHeightRaw() > 0;
             return this.bottomUp;
+        }
+        private Boolean extendsBitmapInfo;
+        public Boolean extendsBitmapInfo() {
+            if (this.extendsBitmapInfo != null)
+                return this.extendsBitmapInfo;
+            this.extendsBitmapInfo = lenHeader() >= Bmp.HeaderType.BITMAP_INFO_HEADER.id();
+            return this.extendsBitmapInfo;
+        }
+        private Boolean extendsBitmapV4;
+        public Boolean extendsBitmapV4() {
+            if (this.extendsBitmapV4 != null)
+                return this.extendsBitmapV4;
+            this.extendsBitmapV4 = lenHeader() >= Bmp.HeaderType.BITMAP_V4_HEADER.id();
+            return this.extendsBitmapV4;
+        }
+        private Boolean extendsBitmapV5;
+        public Boolean extendsBitmapV5() {
+            if (this.extendsBitmapV5 != null)
+                return this.extendsBitmapV5;
+            this.extendsBitmapV5 = lenHeader() >= Bmp.HeaderType.BITMAP_V5_HEADER.id();
+            return this.extendsBitmapV5;
+        }
+        private Boolean extendsOs22xBitmap;
+        public Boolean extendsOs22xBitmap() {
+            if (this.extendsOs22xBitmap != null)
+                return this.extendsOs22xBitmap;
+            this.extendsOs22xBitmap = lenHeader() == Bmp.HeaderType.OS2_2X_BITMAP_HEADER.id();
+            return this.extendsOs22xBitmap;
+        }
+        private Integer imageHeight;
+        public Integer imageHeight() {
+            if (this.imageHeight != null)
+                return this.imageHeight;
+            this.imageHeight = ((Number) ((imageHeightRaw() < 0 ? -(imageHeightRaw()) : imageHeightRaw()))).intValue();
+            return this.imageHeight;
+        }
+        private Boolean isColorMaskHere;
+        public Boolean isColorMaskHere() {
+            if (this.isColorMaskHere != null)
+                return this.isColorMaskHere;
+            this.isColorMaskHere =  ((lenHeader() == Bmp.HeaderType.BITMAP_V2_INFO_HEADER.id()) || (lenHeader() == Bmp.HeaderType.BITMAP_V3_INFO_HEADER.id()) || (extendsBitmapV4())) ;
+            return this.isColorMaskHere;
+        }
+        private Boolean isCoreHeader;
+        public Boolean isCoreHeader() {
+            if (this.isCoreHeader != null)
+                return this.isCoreHeader;
+            this.isCoreHeader = lenHeader() == Bmp.HeaderType.BITMAP_CORE_HEADER.id();
+            return this.isCoreHeader;
+        }
+        private Boolean usesFixedPalette;
+        public Boolean usesFixedPalette() {
+            if (this.usesFixedPalette != null)
+                return this.usesFixedPalette;
+            this.usesFixedPalette =  ((!( ((bitsPerPixel() == 16) || (bitsPerPixel() == 24) || (bitsPerPixel() == 32)) )) && (!( ((extendsBitmapInfo()) && (!(extendsOs22xBitmap())) && ( ((bitmapInfoExt().compression() == Bmp.Compressions.JPEG) || (bitmapInfoExt().compression() == Bmp.Compressions.PNG)) )) ))) ;
+            return this.usesFixedPalette;
         }
         private Long imageWidth;
         private Integer imageHeightRaw;
@@ -777,6 +463,622 @@ public class Bmp extends KaitaiStruct {
     }
 
     /**
+     * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfo">Source</a>
+     */
+    public static class BitmapInfo extends KaitaiStruct {
+        public static BitmapInfo fromFile(String fileName) throws IOException {
+            return new BitmapInfo(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public BitmapInfo(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public BitmapInfo(KaitaiStream _io, Bmp _parent) {
+            this(_io, _parent, null);
+        }
+
+        public BitmapInfo(KaitaiStream _io, Bmp _parent, Bmp _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.lenHeader = this._io.readU4le();
+            KaitaiStream _io_header = this._io.substream(lenHeader() - 4);
+            this.header = new BitmapHeader(_io_header, this, _root, lenHeader());
+            if (isColorMaskHere()) {
+                this.colorMask = new ColorMask(this._io, this, _root, header().bitmapInfoExt().compression() == Bmp.Compressions.ALPHA_BITFIELDS);
+            }
+            if (!(_io().isEof())) {
+                this._raw_colorTable = this._io.readBytesFull();
+                KaitaiStream _io__raw_colorTable = new ByteBufferKaitaiStream(this._raw_colorTable);
+                this.colorTable = new ColorTable(_io__raw_colorTable, this, _root, !(header().isCoreHeader()), (header().extendsBitmapInfo() ? header().bitmapInfoExt().numColorsUsed() : 0));
+            }
+        }
+
+        public void _fetchInstances() {
+            this.header._fetchInstances();
+            if (isColorMaskHere()) {
+                this.colorMask._fetchInstances();
+            }
+            if (!(_io().isEof())) {
+                this.colorTable._fetchInstances();
+            }
+        }
+        private Long colorMaskAlpha;
+        public Long colorMaskAlpha() {
+            if (this.colorMaskAlpha != null)
+                return this.colorMaskAlpha;
+            this.colorMaskAlpha = ((Number) (( ((isColorMaskGiven()) && (colorMaskGiven().hasAlphaMask()))  ? colorMaskGiven().alphaMask() : 0))).longValue();
+            return this.colorMaskAlpha;
+        }
+        private Long colorMaskBlue;
+        public Long colorMaskBlue() {
+            if (this.colorMaskBlue != null)
+                return this.colorMaskBlue;
+            this.colorMaskBlue = ((Number) ((isColorMaskGiven() ? colorMaskGiven().blueMask() : (header().bitsPerPixel() == 16 ? 31 : ( ((header().bitsPerPixel() == 24) || (header().bitsPerPixel() == 32))  ? 255 : 0))))).longValue();
+            return this.colorMaskBlue;
+        }
+        private ColorMask colorMaskGiven;
+        public ColorMask colorMaskGiven() {
+            if (this.colorMaskGiven != null)
+                return this.colorMaskGiven;
+            if (isColorMaskGiven()) {
+                this.colorMaskGiven = (isColorMaskHere() ? colorMask() : header().colorMask());
+            }
+            return this.colorMaskGiven;
+        }
+        private Integer colorMaskGreen;
+        public Integer colorMaskGreen() {
+            if (this.colorMaskGreen != null)
+                return this.colorMaskGreen;
+            this.colorMaskGreen = ((Number) ((isColorMaskGiven() ? colorMaskGiven().greenMask() : (header().bitsPerPixel() == 16 ? 992 : ( ((header().bitsPerPixel() == 24) || (header().bitsPerPixel() == 32))  ? 65280 : 0))))).intValue();
+            return this.colorMaskGreen;
+        }
+        private Integer colorMaskRed;
+        public Integer colorMaskRed() {
+            if (this.colorMaskRed != null)
+                return this.colorMaskRed;
+            this.colorMaskRed = ((Number) ((isColorMaskGiven() ? colorMaskGiven().redMask() : (header().bitsPerPixel() == 16 ? 31744 : ( ((header().bitsPerPixel() == 24) || (header().bitsPerPixel() == 32))  ? 16711680 : 0))))).intValue();
+            return this.colorMaskRed;
+        }
+        private Boolean isColorMaskGiven;
+        public Boolean isColorMaskGiven() {
+            if (this.isColorMaskGiven != null)
+                return this.isColorMaskGiven;
+            this.isColorMaskGiven =  ((header().extendsBitmapInfo()) && ( ((header().bitmapInfoExt().compression() == Bmp.Compressions.BITFIELDS) || (header().bitmapInfoExt().compression() == Bmp.Compressions.ALPHA_BITFIELDS)) ) && ( ((isColorMaskHere()) || (header().isColorMaskHere())) )) ;
+            return this.isColorMaskGiven;
+        }
+        private Boolean isColorMaskHere;
+        public Boolean isColorMaskHere() {
+            if (this.isColorMaskHere != null)
+                return this.isColorMaskHere;
+            this.isColorMaskHere =  ((!(_io().isEof())) && (header().lenHeader() == Bmp.HeaderType.BITMAP_INFO_HEADER.id()) && ( ((header().bitmapInfoExt().compression() == Bmp.Compressions.BITFIELDS) || (header().bitmapInfoExt().compression() == Bmp.Compressions.ALPHA_BITFIELDS)) )) ;
+            return this.isColorMaskHere;
+        }
+        private long lenHeader;
+        private BitmapHeader header;
+        private ColorMask colorMask;
+        private ColorTable colorTable;
+        private Bmp _root;
+        private Bmp _parent;
+        private byte[] _raw_colorTable;
+        public long lenHeader() { return lenHeader; }
+        public BitmapHeader header() { return header; }
+
+        /**
+         * Valid only for BITMAPINFOHEADER, in all headers extending it the masks are contained in the header itself.
+         */
+        public ColorMask colorMask() { return colorMask; }
+        public ColorTable colorTable() { return colorTable; }
+        public Bmp _root() { return _root; }
+        public Bmp _parent() { return _parent; }
+        public byte[] _raw_colorTable() { return _raw_colorTable; }
+    }
+
+    /**
+     * @see <a href="https://learn.microsoft.com/en-us/previous-versions/dd183376(v=vs.85)">Source</a>
+     */
+    public static class BitmapInfoExtension extends KaitaiStruct {
+        public static BitmapInfoExtension fromFile(String fileName) throws IOException {
+            return new BitmapInfoExtension(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public BitmapInfoExtension(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public BitmapInfoExtension(KaitaiStream _io, Bmp.BitmapHeader _parent) {
+            this(_io, _parent, null);
+        }
+
+        public BitmapInfoExtension(KaitaiStream _io, Bmp.BitmapHeader _parent, Bmp _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            if (!(_parent().extendsOs22xBitmap())) {
+                this.compression = Bmp.Compressions.byId(this._io.readU4le());
+            }
+            if (_parent().extendsOs22xBitmap()) {
+                this.os2Compression = Bmp.Os2Compressions.byId(this._io.readU4le());
+            }
+            this.lenImage = this._io.readU4le();
+            this.xResolution = this._io.readU4le();
+            this.yResolution = this._io.readU4le();
+            this.numColorsUsed = this._io.readU4le();
+            this.numColorsImportant = this._io.readU4le();
+        }
+
+        public void _fetchInstances() {
+            if (!(_parent().extendsOs22xBitmap())) {
+            }
+            if (_parent().extendsOs22xBitmap()) {
+            }
+        }
+        private Compressions compression;
+        private Os2Compressions os2Compression;
+        private long lenImage;
+        private long xResolution;
+        private long yResolution;
+        private long numColorsUsed;
+        private long numColorsImportant;
+        private Bmp _root;
+        private Bmp.BitmapHeader _parent;
+        public Compressions compression() { return compression; }
+        public Os2Compressions os2Compression() { return os2Compression; }
+
+        /**
+         * If biCompression is BI_JPEG or BI_PNG, indicates the size of the JPEG or PNG image buffer.
+         * This may be set to zero for BI_RGB bitmaps.
+         */
+        public long lenImage() { return lenImage; }
+        public long xResolution() { return xResolution; }
+        public long yResolution() { return yResolution; }
+        public long numColorsUsed() { return numColorsUsed; }
+        public long numColorsImportant() { return numColorsImportant; }
+        public Bmp _root() { return _root; }
+        public Bmp.BitmapHeader _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv4header">Source</a>
+     */
+    public static class BitmapV4Extension extends KaitaiStruct {
+        public static BitmapV4Extension fromFile(String fileName) throws IOException {
+            return new BitmapV4Extension(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public BitmapV4Extension(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public BitmapV4Extension(KaitaiStream _io, Bmp.BitmapHeader _parent) {
+            this(_io, _parent, null);
+        }
+
+        public BitmapV4Extension(KaitaiStream _io, Bmp.BitmapHeader _parent, Bmp _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.colorSpaceType = Bmp.ColorSpace.byId(this._io.readU4le());
+            this.endpointRed = new CieXyz(this._io, this, _root);
+            this.endpointGreen = new CieXyz(this._io, this, _root);
+            this.endpointBlue = new CieXyz(this._io, this, _root);
+            this.gammaRed = new FixedPoint16Dot16(this._io, this, _root);
+            this.gammaBlue = new FixedPoint16Dot16(this._io, this, _root);
+            this.gammaGreen = new FixedPoint16Dot16(this._io, this, _root);
+        }
+
+        public void _fetchInstances() {
+            this.endpointRed._fetchInstances();
+            this.endpointGreen._fetchInstances();
+            this.endpointBlue._fetchInstances();
+            this.gammaRed._fetchInstances();
+            this.gammaBlue._fetchInstances();
+            this.gammaGreen._fetchInstances();
+        }
+        private ColorSpace colorSpaceType;
+        private CieXyz endpointRed;
+        private CieXyz endpointGreen;
+        private CieXyz endpointBlue;
+        private FixedPoint16Dot16 gammaRed;
+        private FixedPoint16Dot16 gammaBlue;
+        private FixedPoint16Dot16 gammaGreen;
+        private Bmp _root;
+        private Bmp.BitmapHeader _parent;
+        public ColorSpace colorSpaceType() { return colorSpaceType; }
+        public CieXyz endpointRed() { return endpointRed; }
+        public CieXyz endpointGreen() { return endpointGreen; }
+        public CieXyz endpointBlue() { return endpointBlue; }
+        public FixedPoint16Dot16 gammaRed() { return gammaRed; }
+        public FixedPoint16Dot16 gammaBlue() { return gammaBlue; }
+        public FixedPoint16Dot16 gammaGreen() { return gammaGreen; }
+        public Bmp _root() { return _root; }
+        public Bmp.BitmapHeader _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv5header">Source</a>
+     */
+    public static class BitmapV5Extension extends KaitaiStruct {
+        public static BitmapV5Extension fromFile(String fileName) throws IOException {
+            return new BitmapV5Extension(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public BitmapV5Extension(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public BitmapV5Extension(KaitaiStream _io, Bmp.BitmapHeader _parent) {
+            this(_io, _parent, null);
+        }
+
+        public BitmapV5Extension(KaitaiStream _io, Bmp.BitmapHeader _parent, Bmp _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.intent = Bmp.Intent.byId(this._io.readU4le());
+            this.ofsProfile = this._io.readU4le();
+            this.lenProfile = this._io.readU4le();
+            this.reserved = this._io.readU4le();
+        }
+
+        public void _fetchInstances() {
+            profileData();
+            if (this.profileData != null) {
+                {
+                    boolean on = _parent().bitmapV4Ext().colorSpaceType() == Bmp.ColorSpace.PROFILE_LINKED;
+                    if (on == true) {
+                    }
+                    else {
+                    }
+                }
+            }
+        }
+        private Boolean hasProfile;
+        public Boolean hasProfile() {
+            if (this.hasProfile != null)
+                return this.hasProfile;
+            this.hasProfile =  ((_parent().bitmapV4Ext().colorSpaceType() == Bmp.ColorSpace.PROFILE_LINKED) || (_parent().bitmapV4Ext().colorSpaceType() == Bmp.ColorSpace.PROFILE_EMBEDDED)) ;
+            return this.hasProfile;
+        }
+        private Object profileData;
+
+        /**
+         * @see <a href="https://learn.microsoft.com/en-us/windows/win32/wcs/using-structures-in-wcs-1-0">"If the profile is embedded, profile data is the actual profile, and if it is linked, the profile data is the null-terminated file name of the profile. This cannot be a Unicode string. It must be composed exclusively of characters from the Windows character set (code page 1252)."</a>
+         */
+        public Object profileData() {
+            if (this.profileData != null)
+                return this.profileData;
+            if (hasProfile()) {
+                KaitaiStream io = _root()._io();
+                long _pos = io.pos();
+                io.seek(14 + ofsProfile());
+                {
+                    boolean on = _parent().bitmapV4Ext().colorSpaceType() == Bmp.ColorSpace.PROFILE_LINKED;
+                    if (on == true) {
+                        this.profileData = new String(KaitaiStream.bytesTerminate(io.readBytes(lenProfile()), (byte) 0, false), Charset.forName("windows-1252"));
+                    }
+                    else {
+                        this.profileData = io.readBytes(lenProfile());
+                    }
+                }
+                io.seek(_pos);
+            }
+            return this.profileData;
+        }
+        private Intent intent;
+        private long ofsProfile;
+        private long lenProfile;
+        private long reserved;
+        private Bmp _root;
+        private Bmp.BitmapHeader _parent;
+        public Intent intent() { return intent; }
+
+        /**
+         * The offset, in bytes, from the beginning of the BITMAPV5HEADER structure to the start of the profile data.
+         */
+        public long ofsProfile() { return ofsProfile; }
+        public long lenProfile() { return lenProfile; }
+        public long reserved() { return reserved; }
+        public Bmp _root() { return _root; }
+        public Bmp.BitmapHeader _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-ciexyz">Source</a>
+     */
+    public static class CieXyz extends KaitaiStruct {
+        public static CieXyz fromFile(String fileName) throws IOException {
+            return new CieXyz(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public CieXyz(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public CieXyz(KaitaiStream _io, Bmp.BitmapV4Extension _parent) {
+            this(_io, _parent, null);
+        }
+
+        public CieXyz(KaitaiStream _io, Bmp.BitmapV4Extension _parent, Bmp _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.x = new FixedPoint2Dot30(this._io, this, _root);
+            this.y = new FixedPoint2Dot30(this._io, this, _root);
+            this.z = new FixedPoint2Dot30(this._io, this, _root);
+        }
+
+        public void _fetchInstances() {
+            this.x._fetchInstances();
+            this.y._fetchInstances();
+            this.z._fetchInstances();
+        }
+        private FixedPoint2Dot30 x;
+        private FixedPoint2Dot30 y;
+        private FixedPoint2Dot30 z;
+        private Bmp _root;
+        private Bmp.BitmapV4Extension _parent;
+        public FixedPoint2Dot30 x() { return x; }
+        public FixedPoint2Dot30 y() { return y; }
+        public FixedPoint2Dot30 z() { return z; }
+        public Bmp _root() { return _root; }
+        public Bmp.BitmapV4Extension _parent() { return _parent; }
+    }
+    public static class ColorMask extends KaitaiStruct {
+
+        public ColorMask(KaitaiStream _io, boolean hasAlphaMask) {
+            this(_io, null, null, hasAlphaMask);
+        }
+
+        public ColorMask(KaitaiStream _io, KaitaiStruct _parent, boolean hasAlphaMask) {
+            this(_io, _parent, null, hasAlphaMask);
+        }
+
+        public ColorMask(KaitaiStream _io, KaitaiStruct _parent, Bmp _root, boolean hasAlphaMask) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            this.hasAlphaMask = hasAlphaMask;
+            _read();
+        }
+        private void _read() {
+            this.redMask = this._io.readU4le();
+            this.greenMask = this._io.readU4le();
+            this.blueMask = this._io.readU4le();
+            if (hasAlphaMask()) {
+                this.alphaMask = this._io.readU4le();
+            }
+        }
+
+        public void _fetchInstances() {
+            if (hasAlphaMask()) {
+            }
+        }
+        private long redMask;
+        private long greenMask;
+        private long blueMask;
+        private Long alphaMask;
+        private boolean hasAlphaMask;
+        private Bmp _root;
+        private KaitaiStruct _parent;
+        public long redMask() { return redMask; }
+        public long greenMask() { return greenMask; }
+        public long blueMask() { return blueMask; }
+        public Long alphaMask() { return alphaMask; }
+        public boolean hasAlphaMask() { return hasAlphaMask; }
+        public Bmp _root() { return _root; }
+        public KaitaiStruct _parent() { return _parent; }
+    }
+    public static class ColorTable extends KaitaiStruct {
+
+        public ColorTable(KaitaiStream _io, boolean hasReservedField, long numColors) {
+            this(_io, null, null, hasReservedField, numColors);
+        }
+
+        public ColorTable(KaitaiStream _io, Bmp.BitmapInfo _parent, boolean hasReservedField, long numColors) {
+            this(_io, _parent, null, hasReservedField, numColors);
+        }
+
+        public ColorTable(KaitaiStream _io, Bmp.BitmapInfo _parent, Bmp _root, boolean hasReservedField, long numColors) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            this.hasReservedField = hasReservedField;
+            this.numColors = numColors;
+            _read();
+        }
+        private void _read() {
+            this.colors = new ArrayList<RgbRecord>();
+            for (int i = 0; i < ( ((numColors() > 0) && (numColors() < numColorsPresent()))  ? numColors() : numColorsPresent()); i++) {
+                this.colors.add(new RgbRecord(this._io, this, _root, hasReservedField()));
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.colors.size(); i++) {
+                this.colors.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private Integer numColorsPresent;
+        public Integer numColorsPresent() {
+            if (this.numColorsPresent != null)
+                return this.numColorsPresent;
+            this.numColorsPresent = ((Number) (_io().size() / (hasReservedField() ? 4 : 3))).intValue();
+            return this.numColorsPresent;
+        }
+        private List<RgbRecord> colors;
+        private boolean hasReservedField;
+        private long numColors;
+        private Bmp _root;
+        private Bmp.BitmapInfo _parent;
+        public List<RgbRecord> colors() { return colors; }
+        public boolean hasReservedField() { return hasReservedField; }
+
+        /**
+         * If equal to 0, the pallete should contain as many colors as can fit into the pixel value
+         * according to the `bits_per_pixel` field (if `bits_per_pixel` = 8, then the pixel can
+         * represent 2 ** 8 = 256 values, so exactly 256 colors should be present). For more flexibility,
+         * it reads as many colors as it can until EOS is reached (and the image data begin).
+         */
+        public long numColors() { return numColors; }
+        public Bmp _root() { return _root; }
+        public Bmp.BitmapInfo _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapfileheader">Source</a>
+     */
+    public static class FileHeader extends KaitaiStruct {
+        public static FileHeader fromFile(String fileName) throws IOException {
+            return new FileHeader(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public FileHeader(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public FileHeader(KaitaiStream _io, Bmp _parent) {
+            this(_io, _parent, null);
+        }
+
+        public FileHeader(KaitaiStream _io, Bmp _parent, Bmp _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.fileType = this._io.readBytes(2);
+            if (!(Arrays.equals(this.fileType, new byte[] { 66, 77 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 66, 77 }, this.fileType, this._io, "/types/file_header/seq/0");
+            }
+            this.lenFile = this._io.readU4le();
+            this.reserved1 = this._io.readU2le();
+            this.reserved2 = this._io.readU2le();
+            this.ofsBitmap = this._io.readS4le();
+        }
+
+        public void _fetchInstances() {
+        }
+        private byte[] fileType;
+        private long lenFile;
+        private int reserved1;
+        private int reserved2;
+        private int ofsBitmap;
+        private Bmp _root;
+        private Bmp _parent;
+        public byte[] fileType() { return fileType; }
+
+        /**
+         * not reliable, mostly ignored by BMP decoders
+         */
+        public long lenFile() { return lenFile; }
+        public int reserved1() { return reserved1; }
+        public int reserved2() { return reserved2; }
+
+        /**
+         * Offset to actual raw pixel data of the image
+         */
+        public int ofsBitmap() { return ofsBitmap; }
+        public Bmp _root() { return _root; }
+        public Bmp _parent() { return _parent; }
+    }
+    public static class FixedPoint16Dot16 extends KaitaiStruct {
+        public static FixedPoint16Dot16 fromFile(String fileName) throws IOException {
+            return new FixedPoint16Dot16(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public FixedPoint16Dot16(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public FixedPoint16Dot16(KaitaiStream _io, Bmp.BitmapV4Extension _parent) {
+            this(_io, _parent, null);
+        }
+
+        public FixedPoint16Dot16(KaitaiStream _io, Bmp.BitmapV4Extension _parent, Bmp _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.raw = this._io.readU4le();
+        }
+
+        public void _fetchInstances() {
+        }
+        private Double value;
+        public Double value() {
+            if (this.value != null)
+                return this.value;
+            this.value = ((Number) ((raw() + 0.0) / (1 << 16))).doubleValue();
+            return this.value;
+        }
+        private long raw;
+        private Bmp _root;
+        private Bmp.BitmapV4Extension _parent;
+        public long raw() { return raw; }
+        public Bmp _root() { return _root; }
+        public Bmp.BitmapV4Extension _parent() { return _parent; }
+    }
+    public static class FixedPoint2Dot30 extends KaitaiStruct {
+        public static FixedPoint2Dot30 fromFile(String fileName) throws IOException {
+            return new FixedPoint2Dot30(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public FixedPoint2Dot30(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public FixedPoint2Dot30(KaitaiStream _io, Bmp.CieXyz _parent) {
+            this(_io, _parent, null);
+        }
+
+        public FixedPoint2Dot30(KaitaiStream _io, Bmp.CieXyz _parent, Bmp _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.raw = this._io.readU4le();
+        }
+
+        public void _fetchInstances() {
+        }
+        private Double value;
+        public Double value() {
+            if (this.value != null)
+                return this.value;
+            this.value = ((Number) ((raw() + 0.0) / (1 << 30))).doubleValue();
+            return this.value;
+        }
+        private long raw;
+        private Bmp _root;
+        private Bmp.CieXyz _parent;
+        public long raw() { return raw; }
+        public Bmp _root() { return _root; }
+        public Bmp.CieXyz _parent() { return _parent; }
+    }
+
+    /**
      * @see <a href="https://www.fileformat.info/format/os2bmp/egff.htm#OS2BMP-DMYID.3.2">Source</a>
      */
     public static class Os22xBitmapExtension extends KaitaiStruct {
@@ -807,6 +1109,9 @@ public class Bmp extends KaitaiStruct {
             this.size2 = this._io.readU4le();
             this.colorEncoding = this._io.readU4le();
             this.identifier = this._io.readU4le();
+        }
+
+        public void _fetchInstances() {
         }
         private int units;
         private int reserved;
@@ -862,276 +1167,61 @@ public class Bmp extends KaitaiStruct {
         public Bmp _root() { return _root; }
         public Bmp.BitmapHeader _parent() { return _parent; }
     }
-    public static class FixedPoint16Dot16 extends KaitaiStruct {
-        public static FixedPoint16Dot16 fromFile(String fileName) throws IOException {
-            return new FixedPoint16Dot16(new ByteBufferKaitaiStream(fileName));
+    public static class RgbRecord extends KaitaiStruct {
+
+        public RgbRecord(KaitaiStream _io, boolean hasReservedField) {
+            this(_io, null, null, hasReservedField);
         }
 
-        public FixedPoint16Dot16(KaitaiStream _io) {
-            this(_io, null, null);
+        public RgbRecord(KaitaiStream _io, Bmp.ColorTable _parent, boolean hasReservedField) {
+            this(_io, _parent, null, hasReservedField);
         }
 
-        public FixedPoint16Dot16(KaitaiStream _io, Bmp.BitmapV4Extension _parent) {
-            this(_io, _parent, null);
-        }
-
-        public FixedPoint16Dot16(KaitaiStream _io, Bmp.BitmapV4Extension _parent, Bmp _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.raw = this._io.readU4le();
-        }
-        private Double value;
-        public Double value() {
-            if (this.value != null)
-                return this.value;
-            double _tmp = (double) (((raw() + 0.0) / (1 << 16)));
-            this.value = _tmp;
-            return this.value;
-        }
-        private long raw;
-        private Bmp _root;
-        private Bmp.BitmapV4Extension _parent;
-        public long raw() { return raw; }
-        public Bmp _root() { return _root; }
-        public Bmp.BitmapV4Extension _parent() { return _parent; }
-    }
-    public static class ColorTable extends KaitaiStruct {
-
-        public ColorTable(KaitaiStream _io, boolean hasReservedField, long numColors) {
-            this(_io, null, null, hasReservedField, numColors);
-        }
-
-        public ColorTable(KaitaiStream _io, Bmp.BitmapInfo _parent, boolean hasReservedField, long numColors) {
-            this(_io, _parent, null, hasReservedField, numColors);
-        }
-
-        public ColorTable(KaitaiStream _io, Bmp.BitmapInfo _parent, Bmp _root, boolean hasReservedField, long numColors) {
+        public RgbRecord(KaitaiStream _io, Bmp.ColorTable _parent, Bmp _root, boolean hasReservedField) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             this.hasReservedField = hasReservedField;
-            this.numColors = numColors;
             _read();
         }
         private void _read() {
-            this.colors = new ArrayList<RgbRecord>();
-            for (int i = 0; i < ( ((numColors() > 0) && (numColors() < numColorsPresent()))  ? numColors() : numColorsPresent()); i++) {
-                this.colors.add(new RgbRecord(this._io, this, _root, hasReservedField()));
+            this.blue = this._io.readU1();
+            this.green = this._io.readU1();
+            this.red = this._io.readU1();
+            if (hasReservedField()) {
+                this.reserved = this._io.readU1();
             }
         }
-        private Integer numColorsPresent;
-        public Integer numColorsPresent() {
-            if (this.numColorsPresent != null)
-                return this.numColorsPresent;
-            int _tmp = (int) ((_io().size() / (hasReservedField() ? 4 : 3)));
-            this.numColorsPresent = _tmp;
-            return this.numColorsPresent;
+
+        public void _fetchInstances() {
+            if (hasReservedField()) {
+            }
         }
-        private ArrayList<RgbRecord> colors;
+        private int blue;
+        private int green;
+        private int red;
+        private Integer reserved;
         private boolean hasReservedField;
-        private long numColors;
         private Bmp _root;
-        private Bmp.BitmapInfo _parent;
-        public ArrayList<RgbRecord> colors() { return colors; }
+        private Bmp.ColorTable _parent;
+        public int blue() { return blue; }
+        public int green() { return green; }
+        public int red() { return red; }
+        public Integer reserved() { return reserved; }
         public boolean hasReservedField() { return hasReservedField; }
-
-        /**
-         * If equal to 0, the pallete should contain as many colors as can fit into the pixel value
-         * according to the `bits_per_pixel` field (if `bits_per_pixel` = 8, then the pixel can
-         * represent 2 ** 8 = 256 values, so exactly 256 colors should be present). For more flexibility,
-         * it reads as many colors as it can until EOS is reached (and the image data begin).
-         */
-        public long numColors() { return numColors; }
         public Bmp _root() { return _root; }
-        public Bmp.BitmapInfo _parent() { return _parent; }
-    }
-
-    /**
-     * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapfileheader">Source</a>
-     */
-    public static class FileHeader extends KaitaiStruct {
-        public static FileHeader fromFile(String fileName) throws IOException {
-            return new FileHeader(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public FileHeader(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public FileHeader(KaitaiStream _io, Bmp _parent) {
-            this(_io, _parent, null);
-        }
-
-        public FileHeader(KaitaiStream _io, Bmp _parent, Bmp _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.fileType = this._io.readBytes(2);
-            if (!(Arrays.equals(fileType(), new byte[] { 66, 77 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 66, 77 }, fileType(), _io(), "/types/file_header/seq/0");
-            }
-            this.lenFile = this._io.readU4le();
-            this.reserved1 = this._io.readU2le();
-            this.reserved2 = this._io.readU2le();
-            this.ofsBitmap = this._io.readS4le();
-        }
-        private byte[] fileType;
-        private long lenFile;
-        private int reserved1;
-        private int reserved2;
-        private int ofsBitmap;
-        private Bmp _root;
-        private Bmp _parent;
-        public byte[] fileType() { return fileType; }
-
-        /**
-         * not reliable, mostly ignored by BMP decoders
-         */
-        public long lenFile() { return lenFile; }
-        public int reserved1() { return reserved1; }
-        public int reserved2() { return reserved2; }
-
-        /**
-         * Offset to actual raw pixel data of the image
-         */
-        public int ofsBitmap() { return ofsBitmap; }
-        public Bmp _root() { return _root; }
-        public Bmp _parent() { return _parent; }
-    }
-
-    /**
-     * @see <a href="https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfo">Source</a>
-     */
-    public static class BitmapInfo extends KaitaiStruct {
-        public static BitmapInfo fromFile(String fileName) throws IOException {
-            return new BitmapInfo(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public BitmapInfo(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public BitmapInfo(KaitaiStream _io, Bmp _parent) {
-            this(_io, _parent, null);
-        }
-
-        public BitmapInfo(KaitaiStream _io, Bmp _parent, Bmp _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.lenHeader = this._io.readU4le();
-            this._raw_header = this._io.readBytes((lenHeader() - 4));
-            KaitaiStream _io__raw_header = new ByteBufferKaitaiStream(_raw_header);
-            this.header = new BitmapHeader(_io__raw_header, this, _root, lenHeader());
-            if (isColorMaskHere()) {
-                this.colorMask = new ColorMask(this._io, this, _root, header().bitmapInfoExt().compression() == Bmp.Compressions.ALPHA_BITFIELDS);
-            }
-            if (!(_io().isEof())) {
-                this._raw_colorTable = this._io.readBytesFull();
-                KaitaiStream _io__raw_colorTable = new ByteBufferKaitaiStream(_raw_colorTable);
-                this.colorTable = new ColorTable(_io__raw_colorTable, this, _root, !(header().isCoreHeader()), (header().extendsBitmapInfo() ? header().bitmapInfoExt().numColorsUsed() : 0));
-            }
-        }
-        private Boolean isColorMaskGiven;
-        public Boolean isColorMaskGiven() {
-            if (this.isColorMaskGiven != null)
-                return this.isColorMaskGiven;
-            boolean _tmp = (boolean) ( ((header().extendsBitmapInfo()) && ( ((header().bitmapInfoExt().compression() == Bmp.Compressions.BITFIELDS) || (header().bitmapInfoExt().compression() == Bmp.Compressions.ALPHA_BITFIELDS)) ) && ( ((isColorMaskHere()) || (header().isColorMaskHere())) )) );
-            this.isColorMaskGiven = _tmp;
-            return this.isColorMaskGiven;
-        }
-        private ColorMask colorMaskGiven;
-        public ColorMask colorMaskGiven() {
-            if (this.colorMaskGiven != null)
-                return this.colorMaskGiven;
-            if (isColorMaskGiven()) {
-                this.colorMaskGiven = (isColorMaskHere() ? colorMask() : header().colorMask());
-            }
-            return this.colorMaskGiven;
-        }
-        private Long colorMaskBlue;
-        public Long colorMaskBlue() {
-            if (this.colorMaskBlue != null)
-                return this.colorMaskBlue;
-            long _tmp = (long) ((isColorMaskGiven() ? colorMaskGiven().blueMask() : (header().bitsPerPixel() == 16 ? 31 : ( ((header().bitsPerPixel() == 24) || (header().bitsPerPixel() == 32))  ? 255 : 0))));
-            this.colorMaskBlue = _tmp;
-            return this.colorMaskBlue;
-        }
-        private Long colorMaskAlpha;
-        public Long colorMaskAlpha() {
-            if (this.colorMaskAlpha != null)
-                return this.colorMaskAlpha;
-            long _tmp = (long) (( ((isColorMaskGiven()) && (colorMaskGiven().hasAlphaMask()))  ? colorMaskGiven().alphaMask() : 0));
-            this.colorMaskAlpha = _tmp;
-            return this.colorMaskAlpha;
-        }
-        private Integer colorMaskGreen;
-        public Integer colorMaskGreen() {
-            if (this.colorMaskGreen != null)
-                return this.colorMaskGreen;
-            int _tmp = (int) ((isColorMaskGiven() ? colorMaskGiven().greenMask() : (header().bitsPerPixel() == 16 ? 992 : ( ((header().bitsPerPixel() == 24) || (header().bitsPerPixel() == 32))  ? 65280 : 0))));
-            this.colorMaskGreen = _tmp;
-            return this.colorMaskGreen;
-        }
-        private Boolean isColorMaskHere;
-        public Boolean isColorMaskHere() {
-            if (this.isColorMaskHere != null)
-                return this.isColorMaskHere;
-            boolean _tmp = (boolean) ( ((!(_io().isEof())) && (header().lenHeader() == Bmp.HeaderType.BITMAP_INFO_HEADER.id()) && ( ((header().bitmapInfoExt().compression() == Bmp.Compressions.BITFIELDS) || (header().bitmapInfoExt().compression() == Bmp.Compressions.ALPHA_BITFIELDS)) )) );
-            this.isColorMaskHere = _tmp;
-            return this.isColorMaskHere;
-        }
-        private Integer colorMaskRed;
-        public Integer colorMaskRed() {
-            if (this.colorMaskRed != null)
-                return this.colorMaskRed;
-            int _tmp = (int) ((isColorMaskGiven() ? colorMaskGiven().redMask() : (header().bitsPerPixel() == 16 ? 31744 : ( ((header().bitsPerPixel() == 24) || (header().bitsPerPixel() == 32))  ? 16711680 : 0))));
-            this.colorMaskRed = _tmp;
-            return this.colorMaskRed;
-        }
-        private long lenHeader;
-        private BitmapHeader header;
-        private ColorMask colorMask;
-        private ColorTable colorTable;
-        private Bmp _root;
-        private Bmp _parent;
-        private byte[] _raw_header;
-        private byte[] _raw_colorTable;
-        public long lenHeader() { return lenHeader; }
-        public BitmapHeader header() { return header; }
-
-        /**
-         * Valid only for BITMAPINFOHEADER, in all headers extending it the masks are contained in the header itself.
-         */
-        public ColorMask colorMask() { return colorMask; }
-        public ColorTable colorTable() { return colorTable; }
-        public Bmp _root() { return _root; }
-        public Bmp _parent() { return _parent; }
-        public byte[] _raw_header() { return _raw_header; }
-        public byte[] _raw_colorTable() { return _raw_colorTable; }
+        public Bmp.ColorTable _parent() { return _parent; }
     }
     private FileHeader fileHdr;
     private BitmapInfo dibInfo;
     private Bitmap bitmap;
     private Bmp _root;
     private KaitaiStruct _parent;
-    private byte[] _raw_dibInfo;
     private byte[] _raw_bitmap;
     public FileHeader fileHdr() { return fileHdr; }
     public BitmapInfo dibInfo() { return dibInfo; }
     public Bitmap bitmap() { return bitmap; }
     public Bmp _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
-    public byte[] _raw_dibInfo() { return _raw_dibInfo; }
     public byte[] _raw_bitmap() { return _raw_bitmap; }
 }

@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream', './VlqBase128Be'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./VlqBase128Be'));
+    define(['exports', 'kaitai-struct/KaitaiStream', './VlqBase128Be'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'), require('./VlqBase128Be'));
   } else {
-    root.Sqlite3 = factory(root.KaitaiStream, root.VlqBase128Be);
+    factory(root.Sqlite3 || (root.Sqlite3 = {}), root.KaitaiStream, root.VlqBase128Be || (root.VlqBase128Be = {}));
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, VlqBase128Be) {
+})(typeof self !== 'undefined' ? self : this, function (Sqlite3_, KaitaiStream, VlqBase128Be_) {
 /**
  * SQLite3 is a popular serverless SQL engine, implemented as a library
  * to be used within other applications. It keeps its databases as
@@ -27,14 +27,6 @@
  */
 
 var Sqlite3 = (function() {
-  Sqlite3.Versions = Object.freeze({
-    LEGACY: 1,
-    WAL: 2,
-
-    1: "LEGACY",
-    2: "WAL",
-  });
-
   Sqlite3.Encodings = Object.freeze({
     UTF_8: 1,
     UTF_16LE: 2,
@@ -43,6 +35,14 @@ var Sqlite3 = (function() {
     1: "UTF_8",
     2: "UTF_16LE",
     3: "UTF_16BE",
+  });
+
+  Sqlite3.Versions = Object.freeze({
+    LEGACY: 1,
+    WAL: 2,
+
+    1: "LEGACY",
+    2: "WAL",
   });
 
   function Sqlite3(_io, _parent, _root) {
@@ -54,8 +54,8 @@ var Sqlite3 = (function() {
   }
   Sqlite3.prototype._read = function() {
     this.magic = this._io.readBytes(16);
-    if (!((KaitaiStream.byteArrayCompare(this.magic, [83, 81, 76, 105, 116, 101, 32, 102, 111, 114, 109, 97, 116, 32, 51, 0]) == 0))) {
-      throw new KaitaiStream.ValidationNotEqualError([83, 81, 76, 105, 116, 101, 32, 102, 111, 114, 109, 97, 116, 32, 51, 0], this.magic, this._io, "/seq/0");
+    if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([83, 81, 76, 105, 116, 101, 32, 102, 111, 114, 109, 97, 116, 32, 51, 0])) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([83, 81, 76, 105, 116, 101, 32, 102, 111, 114, 109, 97, 116, 32, 51, 0]), this.magic, this._io, "/seq/0");
     }
     this.lenPageMod = this._io.readU2be();
     this.writeVersion = this._io.readU1();
@@ -82,16 +82,239 @@ var Sqlite3 = (function() {
     this.rootPage = new BtreePage(this._io, this, this._root);
   }
 
+  var BtreePage = Sqlite3.BtreePage = (function() {
+    function BtreePage(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    BtreePage.prototype._read = function() {
+      this.pageType = this._io.readU1();
+      this.firstFreeblock = this._io.readU2be();
+      this.numCells = this._io.readU2be();
+      this.ofsCells = this._io.readU2be();
+      this.numFragFreeBytes = this._io.readU1();
+      if ( ((this.pageType == 2) || (this.pageType == 5)) ) {
+        this.rightPtr = this._io.readU4be();
+      }
+      this.cells = [];
+      for (var i = 0; i < this.numCells; i++) {
+        this.cells.push(new RefCell(this._io, this, this._root));
+      }
+    }
+
+    return BtreePage;
+  })();
+
+  /**
+   * @see {@link https://www.sqlite.org/fileformat.html#b_tree_pages|Source}
+   */
+
+  var CellIndexInterior = Sqlite3.CellIndexInterior = (function() {
+    function CellIndexInterior(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    CellIndexInterior.prototype._read = function() {
+      this.leftChildPage = this._io.readU4be();
+      this.lenPayload = new VlqBase128Be_.VlqBase128Be(this._io, null, null);
+      this._raw_payload = this._io.readBytes(this.lenPayload.value);
+      var _io__raw_payload = new KaitaiStream(this._raw_payload);
+      this.payload = new CellPayload(_io__raw_payload, this, this._root);
+    }
+
+    return CellIndexInterior;
+  })();
+
+  /**
+   * @see {@link https://www.sqlite.org/fileformat.html#b_tree_pages|Source}
+   */
+
+  var CellIndexLeaf = Sqlite3.CellIndexLeaf = (function() {
+    function CellIndexLeaf(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    CellIndexLeaf.prototype._read = function() {
+      this.lenPayload = new VlqBase128Be_.VlqBase128Be(this._io, null, null);
+      this._raw_payload = this._io.readBytes(this.lenPayload.value);
+      var _io__raw_payload = new KaitaiStream(this._raw_payload);
+      this.payload = new CellPayload(_io__raw_payload, this, this._root);
+    }
+
+    return CellIndexLeaf;
+  })();
+
+  /**
+   * @see {@link https://sqlite.org/fileformat2.html#record_format|Source}
+   */
+
+  var CellPayload = Sqlite3.CellPayload = (function() {
+    function CellPayload(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    CellPayload.prototype._read = function() {
+      this.lenHeaderAndLen = new VlqBase128Be_.VlqBase128Be(this._io, null, null);
+      this._raw_columnSerials = this._io.readBytes(this.lenHeaderAndLen.value - 1);
+      var _io__raw_columnSerials = new KaitaiStream(this._raw_columnSerials);
+      this.columnSerials = new Serials(_io__raw_columnSerials, this, this._root);
+      this.columnContents = [];
+      for (var i = 0; i < this.columnSerials.entries.length; i++) {
+        this.columnContents.push(new ColumnContent(this._io, this, this._root, this.columnSerials.entries[i]));
+      }
+    }
+
+    return CellPayload;
+  })();
+
+  /**
+   * @see {@link https://www.sqlite.org/fileformat.html#b_tree_pages|Source}
+   */
+
+  var CellTableInterior = Sqlite3.CellTableInterior = (function() {
+    function CellTableInterior(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    CellTableInterior.prototype._read = function() {
+      this.leftChildPage = this._io.readU4be();
+      this.rowId = new VlqBase128Be_.VlqBase128Be(this._io, null, null);
+    }
+
+    return CellTableInterior;
+  })();
+
+  /**
+   * @see {@link https://www.sqlite.org/fileformat.html#b_tree_pages|Source}
+   */
+
+  var CellTableLeaf = Sqlite3.CellTableLeaf = (function() {
+    function CellTableLeaf(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    CellTableLeaf.prototype._read = function() {
+      this.lenPayload = new VlqBase128Be_.VlqBase128Be(this._io, null, null);
+      this.rowId = new VlqBase128Be_.VlqBase128Be(this._io, null, null);
+      this._raw_payload = this._io.readBytes(this.lenPayload.value);
+      var _io__raw_payload = new KaitaiStream(this._raw_payload);
+      this.payload = new CellPayload(_io__raw_payload, this, this._root);
+    }
+
+    return CellTableLeaf;
+  })();
+
+  var ColumnContent = Sqlite3.ColumnContent = (function() {
+    function ColumnContent(_io, _parent, _root, serialType) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+      this.serialType = serialType;
+
+      this._read();
+    }
+    ColumnContent.prototype._read = function() {
+      if ( ((this.serialType.code.value >= 1) && (this.serialType.code.value <= 6)) ) {
+        switch (this.serialType.code.value) {
+        case 1:
+          this.asInt = this._io.readU1();
+          break;
+        case 2:
+          this.asInt = this._io.readU2be();
+          break;
+        case 3:
+          this.asInt = this._io.readBitsIntBe(24);
+          break;
+        case 4:
+          this.asInt = this._io.readU4be();
+          break;
+        case 5:
+          this.asInt = this._io.readBitsIntBe(48);
+          break;
+        case 6:
+          this.asInt = this._io.readU8be();
+          break;
+        }
+      }
+      if (this.serialType.code.value == 7) {
+        this.asFloat = this._io.readF8be();
+      }
+      if (this.serialType.isBlob) {
+        this.asBlob = this._io.readBytes(this.serialType.lenContent);
+      }
+      this.asStr = KaitaiStream.bytesToStr(this._io.readBytes(this.serialType.lenContent), "UTF-8");
+    }
+
+    return ColumnContent;
+  })();
+
+  var RefCell = Sqlite3.RefCell = (function() {
+    function RefCell(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    RefCell.prototype._read = function() {
+      this.ofsBody = this._io.readU2be();
+    }
+    Object.defineProperty(RefCell.prototype, 'body', {
+      get: function() {
+        if (this._m_body !== undefined)
+          return this._m_body;
+        var _pos = this._io.pos;
+        this._io.seek(this.ofsBody);
+        switch (this._parent.pageType) {
+        case 10:
+          this._m_body = new CellIndexLeaf(this._io, this, this._root);
+          break;
+        case 13:
+          this._m_body = new CellTableLeaf(this._io, this, this._root);
+          break;
+        case 2:
+          this._m_body = new CellIndexInterior(this._io, this, this._root);
+          break;
+        case 5:
+          this._m_body = new CellTableInterior(this._io, this, this._root);
+          break;
+        }
+        this._io.seek(_pos);
+        return this._m_body;
+      }
+    });
+
+    return RefCell;
+  })();
+
   var Serial = Sqlite3.Serial = (function() {
     function Serial(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     Serial.prototype._read = function() {
-      this.code = new VlqBase128Be(this._io, this, null);
+      this.code = new VlqBase128Be_.VlqBase128Be(this._io, null, null);
     }
     Object.defineProperty(Serial.prototype, 'isBlob', {
       get: function() {
@@ -123,59 +346,11 @@ var Sqlite3 = (function() {
     return Serial;
   })();
 
-  var BtreePage = Sqlite3.BtreePage = (function() {
-    function BtreePage(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    BtreePage.prototype._read = function() {
-      this.pageType = this._io.readU1();
-      this.firstFreeblock = this._io.readU2be();
-      this.numCells = this._io.readU2be();
-      this.ofsCells = this._io.readU2be();
-      this.numFragFreeBytes = this._io.readU1();
-      if ( ((this.pageType == 2) || (this.pageType == 5)) ) {
-        this.rightPtr = this._io.readU4be();
-      }
-      this.cells = [];
-      for (var i = 0; i < this.numCells; i++) {
-        this.cells.push(new RefCell(this._io, this, this._root));
-      }
-    }
-
-    return BtreePage;
-  })();
-
-  /**
-   * @see {@link https://www.sqlite.org/fileformat.html#b_tree_pages|Source}
-   */
-
-  var CellIndexLeaf = Sqlite3.CellIndexLeaf = (function() {
-    function CellIndexLeaf(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    CellIndexLeaf.prototype._read = function() {
-      this.lenPayload = new VlqBase128Be(this._io, this, null);
-      this._raw_payload = this._io.readBytes(this.lenPayload.value);
-      var _io__raw_payload = new KaitaiStream(this._raw_payload);
-      this.payload = new CellPayload(_io__raw_payload, this, this._root);
-    }
-
-    return CellIndexLeaf;
-  })();
-
   var Serials = Sqlite3.Serials = (function() {
     function Serials(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -189,181 +364,6 @@ var Sqlite3 = (function() {
     }
 
     return Serials;
-  })();
-
-  /**
-   * @see {@link https://www.sqlite.org/fileformat.html#b_tree_pages|Source}
-   */
-
-  var CellTableLeaf = Sqlite3.CellTableLeaf = (function() {
-    function CellTableLeaf(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    CellTableLeaf.prototype._read = function() {
-      this.lenPayload = new VlqBase128Be(this._io, this, null);
-      this.rowId = new VlqBase128Be(this._io, this, null);
-      this._raw_payload = this._io.readBytes(this.lenPayload.value);
-      var _io__raw_payload = new KaitaiStream(this._raw_payload);
-      this.payload = new CellPayload(_io__raw_payload, this, this._root);
-    }
-
-    return CellTableLeaf;
-  })();
-
-  /**
-   * @see {@link https://sqlite.org/fileformat2.html#record_format|Source}
-   */
-
-  var CellPayload = Sqlite3.CellPayload = (function() {
-    function CellPayload(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    CellPayload.prototype._read = function() {
-      this.lenHeaderAndLen = new VlqBase128Be(this._io, this, null);
-      this._raw_columnSerials = this._io.readBytes((this.lenHeaderAndLen.value - 1));
-      var _io__raw_columnSerials = new KaitaiStream(this._raw_columnSerials);
-      this.columnSerials = new Serials(_io__raw_columnSerials, this, this._root);
-      this.columnContents = [];
-      for (var i = 0; i < this.columnSerials.entries.length; i++) {
-        this.columnContents.push(new ColumnContent(this._io, this, this._root, this.columnSerials.entries[i]));
-      }
-    }
-
-    return CellPayload;
-  })();
-
-  /**
-   * @see {@link https://www.sqlite.org/fileformat.html#b_tree_pages|Source}
-   */
-
-  var CellTableInterior = Sqlite3.CellTableInterior = (function() {
-    function CellTableInterior(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    CellTableInterior.prototype._read = function() {
-      this.leftChildPage = this._io.readU4be();
-      this.rowId = new VlqBase128Be(this._io, this, null);
-    }
-
-    return CellTableInterior;
-  })();
-
-  /**
-   * @see {@link https://www.sqlite.org/fileformat.html#b_tree_pages|Source}
-   */
-
-  var CellIndexInterior = Sqlite3.CellIndexInterior = (function() {
-    function CellIndexInterior(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    CellIndexInterior.prototype._read = function() {
-      this.leftChildPage = this._io.readU4be();
-      this.lenPayload = new VlqBase128Be(this._io, this, null);
-      this._raw_payload = this._io.readBytes(this.lenPayload.value);
-      var _io__raw_payload = new KaitaiStream(this._raw_payload);
-      this.payload = new CellPayload(_io__raw_payload, this, this._root);
-    }
-
-    return CellIndexInterior;
-  })();
-
-  var ColumnContent = Sqlite3.ColumnContent = (function() {
-    function ColumnContent(_io, _parent, _root, serialType) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-      this.serialType = serialType;
-
-      this._read();
-    }
-    ColumnContent.prototype._read = function() {
-      if ( ((this.serialType.code.value >= 1) && (this.serialType.code.value <= 6)) ) {
-        switch (this.serialType.code.value) {
-        case 4:
-          this.asInt = this._io.readU4be();
-          break;
-        case 6:
-          this.asInt = this._io.readU8be();
-          break;
-        case 1:
-          this.asInt = this._io.readU1();
-          break;
-        case 3:
-          this.asInt = this._io.readBitsIntBe(24);
-          break;
-        case 5:
-          this.asInt = this._io.readBitsIntBe(48);
-          break;
-        case 2:
-          this.asInt = this._io.readU2be();
-          break;
-        }
-      }
-      if (this.serialType.code.value == 7) {
-        this.asFloat = this._io.readF8be();
-      }
-      if (this.serialType.isBlob) {
-        this.asBlob = this._io.readBytes(this.serialType.lenContent);
-      }
-      this.asStr = KaitaiStream.bytesToStr(this._io.readBytes(this.serialType.lenContent), "UTF-8");
-    }
-
-    return ColumnContent;
-  })();
-
-  var RefCell = Sqlite3.RefCell = (function() {
-    function RefCell(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    RefCell.prototype._read = function() {
-      this.ofsBody = this._io.readU2be();
-    }
-    Object.defineProperty(RefCell.prototype, 'body', {
-      get: function() {
-        if (this._m_body !== undefined)
-          return this._m_body;
-        var _pos = this._io.pos;
-        this._io.seek(this.ofsBody);
-        switch (this._parent.pageType) {
-        case 13:
-          this._m_body = new CellTableLeaf(this._io, this, this._root);
-          break;
-        case 5:
-          this._m_body = new CellTableInterior(this._io, this, this._root);
-          break;
-        case 10:
-          this._m_body = new CellIndexLeaf(this._io, this, this._root);
-          break;
-        case 2:
-          this._m_body = new CellIndexInterior(this._io, this, this._root);
-          break;
-        }
-        this._io.seek(_pos);
-        return this._m_body;
-      }
-    });
-
-    return RefCell;
   })();
   Object.defineProperty(Sqlite3.prototype, 'lenPage', {
     get: function() {
@@ -438,5 +438,5 @@ var Sqlite3 = (function() {
 
   return Sqlite3;
 })();
-return Sqlite3;
-}));
+Sqlite3_.Sqlite3 = Sqlite3;
+});

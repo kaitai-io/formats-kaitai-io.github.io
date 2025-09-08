@@ -205,13 +205,19 @@ namespace Kaitai
                 _body = new ListWithHeader(io___raw_body, this, m_root);
                 break;
             }
-            case Sections.Geometry: {
+            case Sections.Clump: {
                 __raw_body = m_io.ReadBytes(Size);
                 var io___raw_body = new KaitaiStream(__raw_body);
                 _body = new ListWithHeader(io___raw_body, this, m_root);
                 break;
             }
-            case Sections.TextureDictionary: {
+            case Sections.FrameList: {
+                __raw_body = m_io.ReadBytes(Size);
+                var io___raw_body = new KaitaiStream(__raw_body);
+                _body = new ListWithHeader(io___raw_body, this, m_root);
+                break;
+            }
+            case Sections.Geometry: {
                 __raw_body = m_io.ReadBytes(Size);
                 var io___raw_body = new KaitaiStream(__raw_body);
                 _body = new ListWithHeader(io___raw_body, this, m_root);
@@ -223,19 +229,13 @@ namespace Kaitai
                 _body = new ListWithHeader(io___raw_body, this, m_root);
                 break;
             }
+            case Sections.TextureDictionary: {
+                __raw_body = m_io.ReadBytes(Size);
+                var io___raw_body = new KaitaiStream(__raw_body);
+                _body = new ListWithHeader(io___raw_body, this, m_root);
+                break;
+            }
             case Sections.TextureNative: {
-                __raw_body = m_io.ReadBytes(Size);
-                var io___raw_body = new KaitaiStream(__raw_body);
-                _body = new ListWithHeader(io___raw_body, this, m_root);
-                break;
-            }
-            case Sections.Clump: {
-                __raw_body = m_io.ReadBytes(Size);
-                var io___raw_body = new KaitaiStream(__raw_body);
-                _body = new ListWithHeader(io___raw_body, this, m_root);
-                break;
-            }
-            case Sections.FrameList: {
                 __raw_body = m_io.ReadBytes(Size);
                 var io___raw_body = new KaitaiStream(__raw_body);
                 _body = new ListWithHeader(io___raw_body, this, m_root);
@@ -249,16 +249,16 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://gtamods.com/wiki/RpClump">Source</a>
+        /// Reference: <a href="https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
         /// </remarks>
-        public partial class StructClump : KaitaiStruct
+        public partial class Frame : KaitaiStruct
         {
-            public static StructClump FromFile(string fileName)
+            public static Frame FromFile(string fileName)
             {
-                return new StructClump(new KaitaiStream(fileName));
+                return new Frame(new KaitaiStream(fileName));
             }
 
-            public StructClump(KaitaiStream p__io, RenderwareBinaryStream.ListWithHeader p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
+            public Frame(KaitaiStream p__io, RenderwareBinaryStream.StructFrameList p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -266,162 +266,23 @@ namespace Kaitai
             }
             private void _read()
             {
-                _numAtomics = m_io.ReadU4le();
-                if (M_Parent.Version >= 208896) {
-                    _numLights = m_io.ReadU4le();
-                }
-                if (M_Parent.Version >= 208896) {
-                    _numCameras = m_io.ReadU4le();
-                }
+                _rotationMatrix = new Matrix(m_io, this, m_root);
+                _position = new Vector3d(m_io, this, m_root);
+                _curFrameIdx = m_io.ReadS4le();
+                _matrixCreationFlags = m_io.ReadU4le();
             }
-            private uint _numAtomics;
-            private uint? _numLights;
-            private uint? _numCameras;
+            private Matrix _rotationMatrix;
+            private Vector3d _position;
+            private int _curFrameIdx;
+            private uint _matrixCreationFlags;
             private RenderwareBinaryStream m_root;
-            private RenderwareBinaryStream.ListWithHeader m_parent;
-            public uint NumAtomics { get { return _numAtomics; } }
-            public uint? NumLights { get { return _numLights; } }
-            public uint? NumCameras { get { return _numCameras; } }
+            private RenderwareBinaryStream.StructFrameList m_parent;
+            public Matrix RotationMatrix { get { return _rotationMatrix; } }
+            public Vector3d Position { get { return _position; } }
+            public int CurFrameIdx { get { return _curFrameIdx; } }
+            public uint MatrixCreationFlags { get { return _matrixCreationFlags; } }
             public RenderwareBinaryStream M_Root { get { return m_root; } }
-            public RenderwareBinaryStream.ListWithHeader M_Parent { get { return m_parent; } }
-        }
-
-        /// <remarks>
-        /// Reference: <a href="https://gtamods.com/wiki/RpGeometry">Source</a>
-        /// </remarks>
-        public partial class StructGeometry : KaitaiStruct
-        {
-            public static StructGeometry FromFile(string fileName)
-            {
-                return new StructGeometry(new KaitaiStream(fileName));
-            }
-
-            public StructGeometry(KaitaiStream p__io, RenderwareBinaryStream.ListWithHeader p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_numUvLayersRaw = false;
-                f_isTextured = false;
-                f_isNative = false;
-                f_numUvLayers = false;
-                f_isTextured2 = false;
-                f_isPrelit = false;
-                _read();
-            }
-            private void _read()
-            {
-                _format = m_io.ReadU4le();
-                _numTriangles = m_io.ReadU4le();
-                _numVertices = m_io.ReadU4le();
-                _numMorphTargets = m_io.ReadU4le();
-                if (M_Parent.Version < 212992) {
-                    _surfProp = new SurfaceProperties(m_io, this, m_root);
-                }
-                if (!(IsNative)) {
-                    _geometry = new GeometryNonNative(m_io, this, m_root);
-                }
-                _morphTargets = new List<MorphTarget>();
-                for (var i = 0; i < NumMorphTargets; i++)
-                {
-                    _morphTargets.Add(new MorphTarget(m_io, this, m_root));
-                }
-            }
-            private bool f_numUvLayersRaw;
-            private int _numUvLayersRaw;
-            public int NumUvLayersRaw
-            {
-                get
-                {
-                    if (f_numUvLayersRaw)
-                        return _numUvLayersRaw;
-                    _numUvLayersRaw = (int) (((Format & 16711680) >> 16));
-                    f_numUvLayersRaw = true;
-                    return _numUvLayersRaw;
-                }
-            }
-            private bool f_isTextured;
-            private bool _isTextured;
-            public bool IsTextured
-            {
-                get
-                {
-                    if (f_isTextured)
-                        return _isTextured;
-                    _isTextured = (bool) ((Format & 4) != 0);
-                    f_isTextured = true;
-                    return _isTextured;
-                }
-            }
-            private bool f_isNative;
-            private bool _isNative;
-            public bool IsNative
-            {
-                get
-                {
-                    if (f_isNative)
-                        return _isNative;
-                    _isNative = (bool) ((Format & 16777216) != 0);
-                    f_isNative = true;
-                    return _isNative;
-                }
-            }
-            private bool f_numUvLayers;
-            private int _numUvLayers;
-            public int NumUvLayers
-            {
-                get
-                {
-                    if (f_numUvLayers)
-                        return _numUvLayers;
-                    _numUvLayers = (int) ((NumUvLayersRaw == 0 ? (IsTextured2 ? 2 : (IsTextured ? 1 : 0)) : NumUvLayersRaw));
-                    f_numUvLayers = true;
-                    return _numUvLayers;
-                }
-            }
-            private bool f_isTextured2;
-            private bool _isTextured2;
-            public bool IsTextured2
-            {
-                get
-                {
-                    if (f_isTextured2)
-                        return _isTextured2;
-                    _isTextured2 = (bool) ((Format & 128) != 0);
-                    f_isTextured2 = true;
-                    return _isTextured2;
-                }
-            }
-            private bool f_isPrelit;
-            private bool _isPrelit;
-            public bool IsPrelit
-            {
-                get
-                {
-                    if (f_isPrelit)
-                        return _isPrelit;
-                    _isPrelit = (bool) ((Format & 8) != 0);
-                    f_isPrelit = true;
-                    return _isPrelit;
-                }
-            }
-            private uint _format;
-            private uint _numTriangles;
-            private uint _numVertices;
-            private uint _numMorphTargets;
-            private SurfaceProperties _surfProp;
-            private GeometryNonNative _geometry;
-            private List<MorphTarget> _morphTargets;
-            private RenderwareBinaryStream m_root;
-            private RenderwareBinaryStream.ListWithHeader m_parent;
-            public uint Format { get { return _format; } }
-            public uint NumTriangles { get { return _numTriangles; } }
-            public uint NumVertices { get { return _numVertices; } }
-            public uint NumMorphTargets { get { return _numMorphTargets; } }
-            public SurfaceProperties SurfProp { get { return _surfProp; } }
-            public GeometryNonNative Geometry { get { return _geometry; } }
-            public List<MorphTarget> MorphTargets { get { return _morphTargets; } }
-            public RenderwareBinaryStream M_Root { get { return m_root; } }
-            public RenderwareBinaryStream.ListWithHeader M_Parent { get { return m_parent; } }
+            public RenderwareBinaryStream.StructFrameList M_Parent { get { return m_parent; } }
         }
         public partial class GeometryNonNative : KaitaiStruct
         {
@@ -468,17 +329,130 @@ namespace Kaitai
             public RenderwareBinaryStream.StructGeometry M_Parent { get { return m_parent; } }
         }
 
-        /// <remarks>
-        /// Reference: <a href="https://gtamods.com/wiki/Geometry_List_(RW_Section)#Structure">Source</a>
-        /// </remarks>
-        public partial class StructGeometryList : KaitaiStruct
+        /// <summary>
+        /// Typical structure used by many data types in RenderWare binary
+        /// stream. Substream contains a list of binary stream entries,
+        /// first entry always has type &quot;struct&quot; and carries some specific
+        /// binary data it in, determined by the type of parent. All other
+        /// entries, beside the first one, are normal, self-describing
+        /// records.
+        /// </summary>
+        public partial class ListWithHeader : KaitaiStruct
         {
-            public static StructGeometryList FromFile(string fileName)
+            public static ListWithHeader FromFile(string fileName)
             {
-                return new StructGeometryList(new KaitaiStream(fileName));
+                return new ListWithHeader(new KaitaiStream(fileName));
             }
 
-            public StructGeometryList(KaitaiStream p__io, RenderwareBinaryStream.ListWithHeader p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
+            public ListWithHeader(KaitaiStream p__io, RenderwareBinaryStream p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_version = false;
+                _read();
+            }
+            private void _read()
+            {
+                _code = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(_code, new byte[] { 1, 0, 0, 0 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 1, 0, 0, 0 }, _code, m_io, "/types/list_with_header/seq/0");
+                }
+                _headerSize = m_io.ReadU4le();
+                _libraryIdStamp = m_io.ReadU4le();
+                switch (M_Parent.Code) {
+                case RenderwareBinaryStream.Sections.Atomic: {
+                    __raw_header = m_io.ReadBytes(HeaderSize);
+                    var io___raw_header = new KaitaiStream(__raw_header);
+                    _header = new StructAtomic(io___raw_header, this, m_root);
+                    break;
+                }
+                case RenderwareBinaryStream.Sections.Clump: {
+                    __raw_header = m_io.ReadBytes(HeaderSize);
+                    var io___raw_header = new KaitaiStream(__raw_header);
+                    _header = new StructClump(io___raw_header, this, m_root);
+                    break;
+                }
+                case RenderwareBinaryStream.Sections.FrameList: {
+                    __raw_header = m_io.ReadBytes(HeaderSize);
+                    var io___raw_header = new KaitaiStream(__raw_header);
+                    _header = new StructFrameList(io___raw_header, this, m_root);
+                    break;
+                }
+                case RenderwareBinaryStream.Sections.Geometry: {
+                    __raw_header = m_io.ReadBytes(HeaderSize);
+                    var io___raw_header = new KaitaiStream(__raw_header);
+                    _header = new StructGeometry(io___raw_header, this, m_root);
+                    break;
+                }
+                case RenderwareBinaryStream.Sections.GeometryList: {
+                    __raw_header = m_io.ReadBytes(HeaderSize);
+                    var io___raw_header = new KaitaiStream(__raw_header);
+                    _header = new StructGeometryList(io___raw_header, this, m_root);
+                    break;
+                }
+                case RenderwareBinaryStream.Sections.TextureDictionary: {
+                    __raw_header = m_io.ReadBytes(HeaderSize);
+                    var io___raw_header = new KaitaiStream(__raw_header);
+                    _header = new StructTextureDictionary(io___raw_header, this, m_root);
+                    break;
+                }
+                default: {
+                    _header = m_io.ReadBytes(HeaderSize);
+                    break;
+                }
+                }
+                _entries = new List<RenderwareBinaryStream>();
+                {
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _entries.Add(new RenderwareBinaryStream(m_io, this, m_root));
+                        i++;
+                    }
+                }
+            }
+            private bool f_version;
+            private int _version;
+            public int Version
+            {
+                get
+                {
+                    if (f_version)
+                        return _version;
+                    f_version = true;
+                    _version = (int) (((LibraryIdStamp & 4294901760) != 0 ? (LibraryIdStamp >> 14 & 261888) + 196608 | LibraryIdStamp >> 16 & 63 : LibraryIdStamp << 8));
+                    return _version;
+                }
+            }
+            private byte[] _code;
+            private uint _headerSize;
+            private uint _libraryIdStamp;
+            private object _header;
+            private List<RenderwareBinaryStream> _entries;
+            private RenderwareBinaryStream m_root;
+            private RenderwareBinaryStream m_parent;
+            private byte[] __raw_header;
+            public byte[] Code { get { return _code; } }
+            public uint HeaderSize { get { return _headerSize; } }
+            public uint LibraryIdStamp { get { return _libraryIdStamp; } }
+            public object Header { get { return _header; } }
+            public List<RenderwareBinaryStream> Entries { get { return _entries; } }
+            public RenderwareBinaryStream M_Root { get { return m_root; } }
+            public RenderwareBinaryStream M_Parent { get { return m_parent; } }
+            public byte[] M_RawHeader { get { return __raw_header; } }
+        }
+
+        /// <remarks>
+        /// Reference: <a href="https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
+        /// </remarks>
+        public partial class Matrix : KaitaiStruct
+        {
+            public static Matrix FromFile(string fileName)
+            {
+                return new Matrix(new KaitaiStream(fileName));
+            }
+
+            public Matrix(KaitaiStream p__io, RenderwareBinaryStream.Frame p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -486,14 +460,66 @@ namespace Kaitai
             }
             private void _read()
             {
-                _numGeometries = m_io.ReadU4le();
+                _entries = new List<Vector3d>();
+                for (var i = 0; i < 3; i++)
+                {
+                    _entries.Add(new Vector3d(m_io, this, m_root));
+                }
             }
-            private uint _numGeometries;
+            private List<Vector3d> _entries;
             private RenderwareBinaryStream m_root;
-            private RenderwareBinaryStream.ListWithHeader m_parent;
-            public uint NumGeometries { get { return _numGeometries; } }
+            private RenderwareBinaryStream.Frame m_parent;
+            public List<Vector3d> Entries { get { return _entries; } }
             public RenderwareBinaryStream M_Root { get { return m_root; } }
-            public RenderwareBinaryStream.ListWithHeader M_Parent { get { return m_parent; } }
+            public RenderwareBinaryStream.Frame M_Parent { get { return m_parent; } }
+        }
+        public partial class MorphTarget : KaitaiStruct
+        {
+            public static MorphTarget FromFile(string fileName)
+            {
+                return new MorphTarget(new KaitaiStream(fileName));
+            }
+
+            public MorphTarget(KaitaiStream p__io, RenderwareBinaryStream.StructGeometry p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _boundingSphere = new Sphere(m_io, this, m_root);
+                _hasVertices = m_io.ReadU4le();
+                _hasNormals = m_io.ReadU4le();
+                if (HasVertices != 0) {
+                    _vertices = new List<Vector3d>();
+                    for (var i = 0; i < M_Parent.NumVertices; i++)
+                    {
+                        _vertices.Add(new Vector3d(m_io, this, m_root));
+                    }
+                }
+                if (HasNormals != 0) {
+                    _normals = new List<Vector3d>();
+                    for (var i = 0; i < M_Parent.NumVertices; i++)
+                    {
+                        _normals.Add(new Vector3d(m_io, this, m_root));
+                    }
+                }
+            }
+            private Sphere _boundingSphere;
+            private uint _hasVertices;
+            private uint _hasNormals;
+            private List<Vector3d> _vertices;
+            private List<Vector3d> _normals;
+            private RenderwareBinaryStream m_root;
+            private RenderwareBinaryStream.StructGeometry m_parent;
+            public Sphere BoundingSphere { get { return _boundingSphere; } }
+            public uint HasVertices { get { return _hasVertices; } }
+            public uint HasNormals { get { return _hasNormals; } }
+            public List<Vector3d> Vertices { get { return _vertices; } }
+            public List<Vector3d> Normals { get { return _normals; } }
+            public RenderwareBinaryStream M_Root { get { return m_root; } }
+            public RenderwareBinaryStream.StructGeometry M_Parent { get { return m_parent; } }
         }
         public partial class Rgba : KaitaiStruct
         {
@@ -561,54 +587,6 @@ namespace Kaitai
             public RenderwareBinaryStream M_Root { get { return m_root; } }
             public RenderwareBinaryStream.MorphTarget M_Parent { get { return m_parent; } }
         }
-        public partial class MorphTarget : KaitaiStruct
-        {
-            public static MorphTarget FromFile(string fileName)
-            {
-                return new MorphTarget(new KaitaiStream(fileName));
-            }
-
-            public MorphTarget(KaitaiStream p__io, RenderwareBinaryStream.StructGeometry p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _boundingSphere = new Sphere(m_io, this, m_root);
-                _hasVertices = m_io.ReadU4le();
-                _hasNormals = m_io.ReadU4le();
-                if (HasVertices != 0) {
-                    _vertices = new List<Vector3d>();
-                    for (var i = 0; i < M_Parent.NumVertices; i++)
-                    {
-                        _vertices.Add(new Vector3d(m_io, this, m_root));
-                    }
-                }
-                if (HasNormals != 0) {
-                    _normals = new List<Vector3d>();
-                    for (var i = 0; i < M_Parent.NumVertices; i++)
-                    {
-                        _normals.Add(new Vector3d(m_io, this, m_root));
-                    }
-                }
-            }
-            private Sphere _boundingSphere;
-            private uint _hasVertices;
-            private uint _hasNormals;
-            private List<Vector3d> _vertices;
-            private List<Vector3d> _normals;
-            private RenderwareBinaryStream m_root;
-            private RenderwareBinaryStream.StructGeometry m_parent;
-            public Sphere BoundingSphere { get { return _boundingSphere; } }
-            public uint HasVertices { get { return _hasVertices; } }
-            public uint HasNormals { get { return _hasNormals; } }
-            public List<Vector3d> Vertices { get { return _vertices; } }
-            public List<Vector3d> Normals { get { return _normals; } }
-            public RenderwareBinaryStream M_Root { get { return m_root; } }
-            public RenderwareBinaryStream.StructGeometry M_Parent { get { return m_parent; } }
-        }
 
         /// <remarks>
         /// Reference: <a href="https://gtamods.com/wiki/Atomic_(RW_Section)#Structure">Source</a>
@@ -658,16 +636,16 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://gtamods.com/wiki/RpGeometry">Source</a>
+        /// Reference: <a href="https://gtamods.com/wiki/RpClump">Source</a>
         /// </remarks>
-        public partial class SurfaceProperties : KaitaiStruct
+        public partial class StructClump : KaitaiStruct
         {
-            public static SurfaceProperties FromFile(string fileName)
+            public static StructClump FromFile(string fileName)
             {
-                return new SurfaceProperties(new KaitaiStream(fileName));
+                return new StructClump(new KaitaiStream(fileName));
             }
 
-            public SurfaceProperties(KaitaiStream p__io, RenderwareBinaryStream.StructGeometry p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
+            public StructClump(KaitaiStream p__io, RenderwareBinaryStream.ListWithHeader p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -675,20 +653,24 @@ namespace Kaitai
             }
             private void _read()
             {
-                _ambient = m_io.ReadF4le();
-                _specular = m_io.ReadF4le();
-                _diffuse = m_io.ReadF4le();
+                _numAtomics = m_io.ReadU4le();
+                if (M_Parent.Version >= 208896) {
+                    _numLights = m_io.ReadU4le();
+                }
+                if (M_Parent.Version >= 208896) {
+                    _numCameras = m_io.ReadU4le();
+                }
             }
-            private float _ambient;
-            private float _specular;
-            private float _diffuse;
+            private uint _numAtomics;
+            private uint? _numLights;
+            private uint? _numCameras;
             private RenderwareBinaryStream m_root;
-            private RenderwareBinaryStream.StructGeometry m_parent;
-            public float Ambient { get { return _ambient; } }
-            public float Specular { get { return _specular; } }
-            public float Diffuse { get { return _diffuse; } }
+            private RenderwareBinaryStream.ListWithHeader m_parent;
+            public uint NumAtomics { get { return _numAtomics; } }
+            public uint? NumLights { get { return _numLights; } }
+            public uint? NumCameras { get { return _numCameras; } }
             public RenderwareBinaryStream M_Root { get { return m_root; } }
-            public RenderwareBinaryStream.StructGeometry M_Parent { get { return m_parent; } }
+            public RenderwareBinaryStream.ListWithHeader M_Parent { get { return m_parent; } }
         }
 
         /// <remarks>
@@ -727,16 +709,154 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
+        /// Reference: <a href="https://gtamods.com/wiki/RpGeometry">Source</a>
         /// </remarks>
-        public partial class Matrix : KaitaiStruct
+        public partial class StructGeometry : KaitaiStruct
         {
-            public static Matrix FromFile(string fileName)
+            public static StructGeometry FromFile(string fileName)
             {
-                return new Matrix(new KaitaiStream(fileName));
+                return new StructGeometry(new KaitaiStream(fileName));
             }
 
-            public Matrix(KaitaiStream p__io, RenderwareBinaryStream.Frame p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
+            public StructGeometry(KaitaiStream p__io, RenderwareBinaryStream.ListWithHeader p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_isNative = false;
+                f_isPrelit = false;
+                f_isTextured = false;
+                f_isTextured2 = false;
+                f_numUvLayers = false;
+                f_numUvLayersRaw = false;
+                _read();
+            }
+            private void _read()
+            {
+                _format = m_io.ReadU4le();
+                _numTriangles = m_io.ReadU4le();
+                _numVertices = m_io.ReadU4le();
+                _numMorphTargets = m_io.ReadU4le();
+                if (M_Parent.Version < 212992) {
+                    _surfProp = new SurfaceProperties(m_io, this, m_root);
+                }
+                if (!(IsNative)) {
+                    _geometry = new GeometryNonNative(m_io, this, m_root);
+                }
+                _morphTargets = new List<MorphTarget>();
+                for (var i = 0; i < NumMorphTargets; i++)
+                {
+                    _morphTargets.Add(new MorphTarget(m_io, this, m_root));
+                }
+            }
+            private bool f_isNative;
+            private bool _isNative;
+            public bool IsNative
+            {
+                get
+                {
+                    if (f_isNative)
+                        return _isNative;
+                    f_isNative = true;
+                    _isNative = (bool) ((Format & 16777216) != 0);
+                    return _isNative;
+                }
+            }
+            private bool f_isPrelit;
+            private bool _isPrelit;
+            public bool IsPrelit
+            {
+                get
+                {
+                    if (f_isPrelit)
+                        return _isPrelit;
+                    f_isPrelit = true;
+                    _isPrelit = (bool) ((Format & 8) != 0);
+                    return _isPrelit;
+                }
+            }
+            private bool f_isTextured;
+            private bool _isTextured;
+            public bool IsTextured
+            {
+                get
+                {
+                    if (f_isTextured)
+                        return _isTextured;
+                    f_isTextured = true;
+                    _isTextured = (bool) ((Format & 4) != 0);
+                    return _isTextured;
+                }
+            }
+            private bool f_isTextured2;
+            private bool _isTextured2;
+            public bool IsTextured2
+            {
+                get
+                {
+                    if (f_isTextured2)
+                        return _isTextured2;
+                    f_isTextured2 = true;
+                    _isTextured2 = (bool) ((Format & 128) != 0);
+                    return _isTextured2;
+                }
+            }
+            private bool f_numUvLayers;
+            private int _numUvLayers;
+            public int NumUvLayers
+            {
+                get
+                {
+                    if (f_numUvLayers)
+                        return _numUvLayers;
+                    f_numUvLayers = true;
+                    _numUvLayers = (int) ((NumUvLayersRaw == 0 ? (IsTextured2 ? 2 : (IsTextured ? 1 : 0)) : NumUvLayersRaw));
+                    return _numUvLayers;
+                }
+            }
+            private bool f_numUvLayersRaw;
+            private int _numUvLayersRaw;
+            public int NumUvLayersRaw
+            {
+                get
+                {
+                    if (f_numUvLayersRaw)
+                        return _numUvLayersRaw;
+                    f_numUvLayersRaw = true;
+                    _numUvLayersRaw = (int) ((Format & 16711680) >> 16);
+                    return _numUvLayersRaw;
+                }
+            }
+            private uint _format;
+            private uint _numTriangles;
+            private uint _numVertices;
+            private uint _numMorphTargets;
+            private SurfaceProperties _surfProp;
+            private GeometryNonNative _geometry;
+            private List<MorphTarget> _morphTargets;
+            private RenderwareBinaryStream m_root;
+            private RenderwareBinaryStream.ListWithHeader m_parent;
+            public uint Format { get { return _format; } }
+            public uint NumTriangles { get { return _numTriangles; } }
+            public uint NumVertices { get { return _numVertices; } }
+            public uint NumMorphTargets { get { return _numMorphTargets; } }
+            public SurfaceProperties SurfProp { get { return _surfProp; } }
+            public GeometryNonNative Geometry { get { return _geometry; } }
+            public List<MorphTarget> MorphTargets { get { return _morphTargets; } }
+            public RenderwareBinaryStream M_Root { get { return m_root; } }
+            public RenderwareBinaryStream.ListWithHeader M_Parent { get { return m_parent; } }
+        }
+
+        /// <remarks>
+        /// Reference: <a href="https://gtamods.com/wiki/Geometry_List_(RW_Section)#Structure">Source</a>
+        /// </remarks>
+        public partial class StructGeometryList : KaitaiStruct
+        {
+            public static StructGeometryList FromFile(string fileName)
+            {
+                return new StructGeometryList(new KaitaiStream(fileName));
+            }
+
+            public StructGeometryList(KaitaiStream p__io, RenderwareBinaryStream.ListWithHeader p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -744,18 +864,158 @@ namespace Kaitai
             }
             private void _read()
             {
-                _entries = new List<Vector3d>();
-                for (var i = 0; i < 3; i++)
+                _numGeometries = m_io.ReadU4le();
+            }
+            private uint _numGeometries;
+            private RenderwareBinaryStream m_root;
+            private RenderwareBinaryStream.ListWithHeader m_parent;
+            public uint NumGeometries { get { return _numGeometries; } }
+            public RenderwareBinaryStream M_Root { get { return m_root; } }
+            public RenderwareBinaryStream.ListWithHeader M_Parent { get { return m_parent; } }
+        }
+        public partial class StructTextureDictionary : KaitaiStruct
+        {
+            public static StructTextureDictionary FromFile(string fileName)
+            {
+                return new StructTextureDictionary(new KaitaiStream(fileName));
+            }
+
+            public StructTextureDictionary(KaitaiStream p__io, RenderwareBinaryStream.ListWithHeader p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _numTextures = m_io.ReadU4le();
+            }
+            private uint _numTextures;
+            private RenderwareBinaryStream m_root;
+            private RenderwareBinaryStream.ListWithHeader m_parent;
+            public uint NumTextures { get { return _numTextures; } }
+            public RenderwareBinaryStream M_Root { get { return m_root; } }
+            public RenderwareBinaryStream.ListWithHeader M_Parent { get { return m_parent; } }
+        }
+
+        /// <remarks>
+        /// Reference: <a href="https://gtamods.com/wiki/RpGeometry">Source</a>
+        /// </remarks>
+        public partial class SurfaceProperties : KaitaiStruct
+        {
+            public static SurfaceProperties FromFile(string fileName)
+            {
+                return new SurfaceProperties(new KaitaiStream(fileName));
+            }
+
+            public SurfaceProperties(KaitaiStream p__io, RenderwareBinaryStream.StructGeometry p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _ambient = m_io.ReadF4le();
+                _specular = m_io.ReadF4le();
+                _diffuse = m_io.ReadF4le();
+            }
+            private float _ambient;
+            private float _specular;
+            private float _diffuse;
+            private RenderwareBinaryStream m_root;
+            private RenderwareBinaryStream.StructGeometry m_parent;
+            public float Ambient { get { return _ambient; } }
+            public float Specular { get { return _specular; } }
+            public float Diffuse { get { return _diffuse; } }
+            public RenderwareBinaryStream M_Root { get { return m_root; } }
+            public RenderwareBinaryStream.StructGeometry M_Parent { get { return m_parent; } }
+        }
+        public partial class TexCoord : KaitaiStruct
+        {
+            public static TexCoord FromFile(string fileName)
+            {
+                return new TexCoord(new KaitaiStream(fileName));
+            }
+
+            public TexCoord(KaitaiStream p__io, RenderwareBinaryStream.UvLayer p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _u = m_io.ReadF4le();
+                _v = m_io.ReadF4le();
+            }
+            private float _u;
+            private float _v;
+            private RenderwareBinaryStream m_root;
+            private RenderwareBinaryStream.UvLayer m_parent;
+            public float U { get { return _u; } }
+            public float V { get { return _v; } }
+            public RenderwareBinaryStream M_Root { get { return m_root; } }
+            public RenderwareBinaryStream.UvLayer M_Parent { get { return m_parent; } }
+        }
+        public partial class Triangle : KaitaiStruct
+        {
+            public static Triangle FromFile(string fileName)
+            {
+                return new Triangle(new KaitaiStream(fileName));
+            }
+
+            public Triangle(KaitaiStream p__io, RenderwareBinaryStream.GeometryNonNative p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _vertex2 = m_io.ReadU2le();
+                _vertex1 = m_io.ReadU2le();
+                _materialId = m_io.ReadU2le();
+                _vertex3 = m_io.ReadU2le();
+            }
+            private ushort _vertex2;
+            private ushort _vertex1;
+            private ushort _materialId;
+            private ushort _vertex3;
+            private RenderwareBinaryStream m_root;
+            private RenderwareBinaryStream.GeometryNonNative m_parent;
+            public ushort Vertex2 { get { return _vertex2; } }
+            public ushort Vertex1 { get { return _vertex1; } }
+            public ushort MaterialId { get { return _materialId; } }
+            public ushort Vertex3 { get { return _vertex3; } }
+            public RenderwareBinaryStream M_Root { get { return m_root; } }
+            public RenderwareBinaryStream.GeometryNonNative M_Parent { get { return m_parent; } }
+        }
+        public partial class UvLayer : KaitaiStruct
+        {
+            public UvLayer(uint p_numVertices, KaitaiStream p__io, RenderwareBinaryStream.GeometryNonNative p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _numVertices = p_numVertices;
+                _read();
+            }
+            private void _read()
+            {
+                _texCoords = new List<TexCoord>();
+                for (var i = 0; i < NumVertices; i++)
                 {
-                    _entries.Add(new Vector3d(m_io, this, m_root));
+                    _texCoords.Add(new TexCoord(m_io, this, m_root));
                 }
             }
-            private List<Vector3d> _entries;
+            private List<TexCoord> _texCoords;
+            private uint _numVertices;
             private RenderwareBinaryStream m_root;
-            private RenderwareBinaryStream.Frame m_parent;
-            public List<Vector3d> Entries { get { return _entries; } }
+            private RenderwareBinaryStream.GeometryNonNative m_parent;
+            public List<TexCoord> TexCoords { get { return _texCoords; } }
+            public uint NumVertices { get { return _numVertices; } }
             public RenderwareBinaryStream M_Root { get { return m_root; } }
-            public RenderwareBinaryStream.Frame M_Parent { get { return m_parent; } }
+            public RenderwareBinaryStream.GeometryNonNative M_Parent { get { return m_parent; } }
         }
 
         /// <remarks>
@@ -791,266 +1051,6 @@ namespace Kaitai
             public RenderwareBinaryStream M_Root { get { return m_root; } }
             public KaitaiStruct M_Parent { get { return m_parent; } }
         }
-
-        /// <summary>
-        /// Typical structure used by many data types in RenderWare binary
-        /// stream. Substream contains a list of binary stream entries,
-        /// first entry always has type &quot;struct&quot; and carries some specific
-        /// binary data it in, determined by the type of parent. All other
-        /// entries, beside the first one, are normal, self-describing
-        /// records.
-        /// </summary>
-        public partial class ListWithHeader : KaitaiStruct
-        {
-            public static ListWithHeader FromFile(string fileName)
-            {
-                return new ListWithHeader(new KaitaiStream(fileName));
-            }
-
-            public ListWithHeader(KaitaiStream p__io, RenderwareBinaryStream p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_version = false;
-                _read();
-            }
-            private void _read()
-            {
-                _code = m_io.ReadBytes(4);
-                if (!((KaitaiStream.ByteArrayCompare(Code, new byte[] { 1, 0, 0, 0 }) == 0)))
-                {
-                    throw new ValidationNotEqualError(new byte[] { 1, 0, 0, 0 }, Code, M_Io, "/types/list_with_header/seq/0");
-                }
-                _headerSize = m_io.ReadU4le();
-                _libraryIdStamp = m_io.ReadU4le();
-                switch (M_Parent.Code) {
-                case RenderwareBinaryStream.Sections.Atomic: {
-                    __raw_header = m_io.ReadBytes(HeaderSize);
-                    var io___raw_header = new KaitaiStream(__raw_header);
-                    _header = new StructAtomic(io___raw_header, this, m_root);
-                    break;
-                }
-                case RenderwareBinaryStream.Sections.Geometry: {
-                    __raw_header = m_io.ReadBytes(HeaderSize);
-                    var io___raw_header = new KaitaiStream(__raw_header);
-                    _header = new StructGeometry(io___raw_header, this, m_root);
-                    break;
-                }
-                case RenderwareBinaryStream.Sections.TextureDictionary: {
-                    __raw_header = m_io.ReadBytes(HeaderSize);
-                    var io___raw_header = new KaitaiStream(__raw_header);
-                    _header = new StructTextureDictionary(io___raw_header, this, m_root);
-                    break;
-                }
-                case RenderwareBinaryStream.Sections.GeometryList: {
-                    __raw_header = m_io.ReadBytes(HeaderSize);
-                    var io___raw_header = new KaitaiStream(__raw_header);
-                    _header = new StructGeometryList(io___raw_header, this, m_root);
-                    break;
-                }
-                case RenderwareBinaryStream.Sections.Clump: {
-                    __raw_header = m_io.ReadBytes(HeaderSize);
-                    var io___raw_header = new KaitaiStream(__raw_header);
-                    _header = new StructClump(io___raw_header, this, m_root);
-                    break;
-                }
-                case RenderwareBinaryStream.Sections.FrameList: {
-                    __raw_header = m_io.ReadBytes(HeaderSize);
-                    var io___raw_header = new KaitaiStream(__raw_header);
-                    _header = new StructFrameList(io___raw_header, this, m_root);
-                    break;
-                }
-                default: {
-                    _header = m_io.ReadBytes(HeaderSize);
-                    break;
-                }
-                }
-                _entries = new List<RenderwareBinaryStream>();
-                {
-                    var i = 0;
-                    while (!m_io.IsEof) {
-                        _entries.Add(new RenderwareBinaryStream(m_io));
-                        i++;
-                    }
-                }
-            }
-            private bool f_version;
-            private int _version;
-            public int Version
-            {
-                get
-                {
-                    if (f_version)
-                        return _version;
-                    _version = (int) (((LibraryIdStamp & 4294901760) != 0 ? ((((LibraryIdStamp >> 14) & 261888) + 196608) | ((LibraryIdStamp >> 16) & 63)) : (LibraryIdStamp << 8)));
-                    f_version = true;
-                    return _version;
-                }
-            }
-            private byte[] _code;
-            private uint _headerSize;
-            private uint _libraryIdStamp;
-            private object _header;
-            private List<RenderwareBinaryStream> _entries;
-            private RenderwareBinaryStream m_root;
-            private RenderwareBinaryStream m_parent;
-            private byte[] __raw_header;
-            public byte[] Code { get { return _code; } }
-            public uint HeaderSize { get { return _headerSize; } }
-            public uint LibraryIdStamp { get { return _libraryIdStamp; } }
-            public object Header { get { return _header; } }
-            public List<RenderwareBinaryStream> Entries { get { return _entries; } }
-            public RenderwareBinaryStream M_Root { get { return m_root; } }
-            public RenderwareBinaryStream M_Parent { get { return m_parent; } }
-            public byte[] M_RawHeader { get { return __raw_header; } }
-        }
-        public partial class Triangle : KaitaiStruct
-        {
-            public static Triangle FromFile(string fileName)
-            {
-                return new Triangle(new KaitaiStream(fileName));
-            }
-
-            public Triangle(KaitaiStream p__io, RenderwareBinaryStream.GeometryNonNative p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _vertex2 = m_io.ReadU2le();
-                _vertex1 = m_io.ReadU2le();
-                _materialId = m_io.ReadU2le();
-                _vertex3 = m_io.ReadU2le();
-            }
-            private ushort _vertex2;
-            private ushort _vertex1;
-            private ushort _materialId;
-            private ushort _vertex3;
-            private RenderwareBinaryStream m_root;
-            private RenderwareBinaryStream.GeometryNonNative m_parent;
-            public ushort Vertex2 { get { return _vertex2; } }
-            public ushort Vertex1 { get { return _vertex1; } }
-            public ushort MaterialId { get { return _materialId; } }
-            public ushort Vertex3 { get { return _vertex3; } }
-            public RenderwareBinaryStream M_Root { get { return m_root; } }
-            public RenderwareBinaryStream.GeometryNonNative M_Parent { get { return m_parent; } }
-        }
-
-        /// <remarks>
-        /// Reference: <a href="https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
-        /// </remarks>
-        public partial class Frame : KaitaiStruct
-        {
-            public static Frame FromFile(string fileName)
-            {
-                return new Frame(new KaitaiStream(fileName));
-            }
-
-            public Frame(KaitaiStream p__io, RenderwareBinaryStream.StructFrameList p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _rotationMatrix = new Matrix(m_io, this, m_root);
-                _position = new Vector3d(m_io, this, m_root);
-                _curFrameIdx = m_io.ReadS4le();
-                _matrixCreationFlags = m_io.ReadU4le();
-            }
-            private Matrix _rotationMatrix;
-            private Vector3d _position;
-            private int _curFrameIdx;
-            private uint _matrixCreationFlags;
-            private RenderwareBinaryStream m_root;
-            private RenderwareBinaryStream.StructFrameList m_parent;
-            public Matrix RotationMatrix { get { return _rotationMatrix; } }
-            public Vector3d Position { get { return _position; } }
-            public int CurFrameIdx { get { return _curFrameIdx; } }
-            public uint MatrixCreationFlags { get { return _matrixCreationFlags; } }
-            public RenderwareBinaryStream M_Root { get { return m_root; } }
-            public RenderwareBinaryStream.StructFrameList M_Parent { get { return m_parent; } }
-        }
-        public partial class TexCoord : KaitaiStruct
-        {
-            public static TexCoord FromFile(string fileName)
-            {
-                return new TexCoord(new KaitaiStream(fileName));
-            }
-
-            public TexCoord(KaitaiStream p__io, RenderwareBinaryStream.UvLayer p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _u = m_io.ReadF4le();
-                _v = m_io.ReadF4le();
-            }
-            private float _u;
-            private float _v;
-            private RenderwareBinaryStream m_root;
-            private RenderwareBinaryStream.UvLayer m_parent;
-            public float U { get { return _u; } }
-            public float V { get { return _v; } }
-            public RenderwareBinaryStream M_Root { get { return m_root; } }
-            public RenderwareBinaryStream.UvLayer M_Parent { get { return m_parent; } }
-        }
-        public partial class UvLayer : KaitaiStruct
-        {
-            public UvLayer(uint p_numVertices, KaitaiStream p__io, RenderwareBinaryStream.GeometryNonNative p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _numVertices = p_numVertices;
-                _read();
-            }
-            private void _read()
-            {
-                _texCoords = new List<TexCoord>();
-                for (var i = 0; i < NumVertices; i++)
-                {
-                    _texCoords.Add(new TexCoord(m_io, this, m_root));
-                }
-            }
-            private List<TexCoord> _texCoords;
-            private uint _numVertices;
-            private RenderwareBinaryStream m_root;
-            private RenderwareBinaryStream.GeometryNonNative m_parent;
-            public List<TexCoord> TexCoords { get { return _texCoords; } }
-            public uint NumVertices { get { return _numVertices; } }
-            public RenderwareBinaryStream M_Root { get { return m_root; } }
-            public RenderwareBinaryStream.GeometryNonNative M_Parent { get { return m_parent; } }
-        }
-        public partial class StructTextureDictionary : KaitaiStruct
-        {
-            public static StructTextureDictionary FromFile(string fileName)
-            {
-                return new StructTextureDictionary(new KaitaiStream(fileName));
-            }
-
-            public StructTextureDictionary(KaitaiStream p__io, RenderwareBinaryStream.ListWithHeader p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _numTextures = m_io.ReadU4le();
-            }
-            private uint _numTextures;
-            private RenderwareBinaryStream m_root;
-            private RenderwareBinaryStream.ListWithHeader m_parent;
-            public uint NumTextures { get { return _numTextures; } }
-            public RenderwareBinaryStream M_Root { get { return m_root; } }
-            public RenderwareBinaryStream.ListWithHeader M_Parent { get { return m_parent; } }
-        }
         private bool f_version;
         private int _version;
         public int Version
@@ -1059,8 +1059,8 @@ namespace Kaitai
             {
                 if (f_version)
                     return _version;
-                _version = (int) (((LibraryIdStamp & 4294901760) != 0 ? ((((LibraryIdStamp >> 14) & 261888) + 196608) | ((LibraryIdStamp >> 16) & 63)) : (LibraryIdStamp << 8)));
                 f_version = true;
+                _version = (int) (((LibraryIdStamp & 4294901760) != 0 ? (LibraryIdStamp >> 14 & 261888) + 196608 | LibraryIdStamp >> 16 & 63 : LibraryIdStamp << 8));
                 return _version;
             }
         }

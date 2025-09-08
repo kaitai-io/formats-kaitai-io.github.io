@@ -40,32 +40,59 @@ namespace Kaitai
                 _folders.Add(new Folder(m_io, this, m_root));
             }
         }
-        public partial class Pstr : KaitaiStruct
+        public partial class File : KaitaiStruct
         {
-            public static Pstr FromFile(string fileName)
+            public static File FromFile(string fileName)
             {
-                return new Pstr(new KaitaiStream(fileName));
+                return new File(new KaitaiStream(fileName));
             }
 
-            public Pstr(KaitaiStream p__io, KaitaiStruct p__parent = null, FalloutDat p__root = null) : base(p__io)
+            public File(KaitaiStream p__io, FalloutDat.Folder p__parent = null, FalloutDat p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
+                f_contents = false;
                 _read();
             }
             private void _read()
             {
-                _size = m_io.ReadU1();
-                _str = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(Size));
+                _name = new Pstr(m_io, this, m_root);
+                _flags = ((FalloutDat.Compression) m_io.ReadU4be());
+                _offset = m_io.ReadU4be();
+                _sizeUnpacked = m_io.ReadU4be();
+                _sizePacked = m_io.ReadU4be();
             }
-            private byte _size;
-            private string _str;
+            private bool f_contents;
+            private byte[] _contents;
+            public byte[] Contents
+            {
+                get
+                {
+                    if (f_contents)
+                        return _contents;
+                    f_contents = true;
+                    KaitaiStream io = M_Root.M_Io;
+                    long _pos = io.Pos;
+                    io.Seek(Offset);
+                    _contents = io.ReadBytes((Flags == FalloutDat.Compression.None ? SizeUnpacked : SizePacked));
+                    io.Seek(_pos);
+                    return _contents;
+                }
+            }
+            private Pstr _name;
+            private Compression _flags;
+            private uint _offset;
+            private uint _sizeUnpacked;
+            private uint _sizePacked;
             private FalloutDat m_root;
-            private KaitaiStruct m_parent;
-            public byte Size { get { return _size; } }
-            public string Str { get { return _str; } }
+            private FalloutDat.Folder m_parent;
+            public Pstr Name { get { return _name; } }
+            public Compression Flags { get { return _flags; } }
+            public uint Offset { get { return _offset; } }
+            public uint SizeUnpacked { get { return _sizeUnpacked; } }
+            public uint SizePacked { get { return _sizePacked; } }
             public FalloutDat M_Root { get { return m_root; } }
-            public KaitaiStruct M_Parent { get { return m_parent; } }
+            public FalloutDat.Folder M_Parent { get { return m_parent; } }
         }
         public partial class Folder : KaitaiStruct
         {
@@ -107,59 +134,32 @@ namespace Kaitai
             public FalloutDat M_Root { get { return m_root; } }
             public FalloutDat M_Parent { get { return m_parent; } }
         }
-        public partial class File : KaitaiStruct
+        public partial class Pstr : KaitaiStruct
         {
-            public static File FromFile(string fileName)
+            public static Pstr FromFile(string fileName)
             {
-                return new File(new KaitaiStream(fileName));
+                return new Pstr(new KaitaiStream(fileName));
             }
 
-            public File(KaitaiStream p__io, FalloutDat.Folder p__parent = null, FalloutDat p__root = null) : base(p__io)
+            public Pstr(KaitaiStream p__io, KaitaiStruct p__parent = null, FalloutDat p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
-                f_contents = false;
                 _read();
             }
             private void _read()
             {
-                _name = new Pstr(m_io, this, m_root);
-                _flags = ((FalloutDat.Compression) m_io.ReadU4be());
-                _offset = m_io.ReadU4be();
-                _sizeUnpacked = m_io.ReadU4be();
-                _sizePacked = m_io.ReadU4be();
+                _size = m_io.ReadU1();
+                _str = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(Size));
             }
-            private bool f_contents;
-            private byte[] _contents;
-            public byte[] Contents
-            {
-                get
-                {
-                    if (f_contents)
-                        return _contents;
-                    KaitaiStream io = M_Root.M_Io;
-                    long _pos = io.Pos;
-                    io.Seek(Offset);
-                    _contents = io.ReadBytes((Flags == FalloutDat.Compression.None ? SizeUnpacked : SizePacked));
-                    io.Seek(_pos);
-                    f_contents = true;
-                    return _contents;
-                }
-            }
-            private Pstr _name;
-            private Compression _flags;
-            private uint _offset;
-            private uint _sizeUnpacked;
-            private uint _sizePacked;
+            private byte _size;
+            private string _str;
             private FalloutDat m_root;
-            private FalloutDat.Folder m_parent;
-            public Pstr Name { get { return _name; } }
-            public Compression Flags { get { return _flags; } }
-            public uint Offset { get { return _offset; } }
-            public uint SizeUnpacked { get { return _sizeUnpacked; } }
-            public uint SizePacked { get { return _sizePacked; } }
+            private KaitaiStruct m_parent;
+            public byte Size { get { return _size; } }
+            public string Str { get { return _str; } }
             public FalloutDat M_Root { get { return m_root; } }
-            public FalloutDat.Folder M_Parent { get { return m_parent; } }
+            public KaitaiStruct M_Parent { get { return m_parent; } }
         }
         private uint _folderCount;
         private uint _unknown1;

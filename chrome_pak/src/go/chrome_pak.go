@@ -20,6 +20,11 @@ const (
 	ChromePak_Encodings__Utf8 ChromePak_Encodings = 1
 	ChromePak_Encodings__Utf16 ChromePak_Encodings = 2
 )
+var values_ChromePak_Encodings = map[ChromePak_Encodings]struct{}{0: {}, 1: {}, 2: {}}
+func (v ChromePak_Encodings) isDefined() bool {
+	_, ok := values_ChromePak_Encodings[v]
+	return ok
+}
 type ChromePak struct {
 	Version uint32
 	NumResourcesV4 uint32
@@ -29,18 +34,22 @@ type ChromePak struct {
 	Aliases []*ChromePak_Alias
 	_io *kaitai.Stream
 	_root *ChromePak
-	_parent interface{}
-	_f_numResources bool
-	numResources uint32
+	_parent kaitai.Struct
 	_f_numAliases bool
 	numAliases uint16
+	_f_numResources bool
+	numResources uint32
 }
 func NewChromePak() *ChromePak {
 	return &ChromePak{
 	}
 }
 
-func (this *ChromePak) Read(io *kaitai.Stream, parent interface{}, root *ChromePak) (err error) {
+func (this ChromePak) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *ChromePak) Read(io *kaitai.Stream, parent kaitai.Struct, root *ChromePak) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -77,18 +86,18 @@ func (this *ChromePak) Read(io *kaitai.Stream, parent interface{}, root *ChromeP
 	if err != nil {
 		return err
 	}
-	for i := 0; i < int((tmp5 + 1)); i++ {
+	for i := 0; i < int(tmp5 + 1); i++ {
 		_ = i
-		tmp7, err := this.NumResources()
+		tmp6, err := this.NumResources()
 		if err != nil {
 			return err
 		}
-		tmp6 := NewChromePak_Resource(i, i < tmp7)
-		err = tmp6.Read(this._io, this, this._root)
+		tmp7 := NewChromePak_Resource(i, i < tmp6)
+		err = tmp7.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Resources = append(this.Resources, tmp6)
+		this.Resources = append(this.Resources, tmp7)
 	}
 	tmp8, err := this.NumAliases()
 	if err != nil {
@@ -105,33 +114,33 @@ func (this *ChromePak) Read(io *kaitai.Stream, parent interface{}, root *ChromeP
 	}
 	return err
 }
-func (this *ChromePak) NumResources() (v uint32, err error) {
-	if (this._f_numResources) {
-		return this.numResources, nil
-	}
-	var tmp10 uint16;
-	if (this.Version == 5) {
-		tmp10 = this.V5Part.NumResources
-	} else {
-		tmp10 = this.NumResourcesV4
-	}
-	this.numResources = uint32(tmp10)
-	this._f_numResources = true
-	return this.numResources, nil
-}
 func (this *ChromePak) NumAliases() (v uint16, err error) {
 	if (this._f_numAliases) {
 		return this.numAliases, nil
 	}
+	this._f_numAliases = true
+	var tmp10 uint16;
+	if (this.Version == 5) {
+		tmp10 = this.V5Part.NumAliases
+	} else {
+		tmp10 = 0
+	}
+	this.numAliases = uint16(tmp10)
+	return this.numAliases, nil
+}
+func (this *ChromePak) NumResources() (v uint32, err error) {
+	if (this._f_numResources) {
+		return this.numResources, nil
+	}
+	this._f_numResources = true
 	var tmp11 uint16;
 	if (this.Version == 5) {
-		tmp11 = this.V5Part.NumAliases
+		tmp11 = this.V5Part.NumResources
 	} else {
-		tmp11 = 0
+		tmp11 = this.NumResourcesV4
 	}
-	this.numAliases = uint16(tmp11)
-	this._f_numAliases = true
-	return this.numAliases, nil
+	this.numResources = uint32(tmp11)
+	return this.numResources, nil
 }
 
 /**
@@ -155,129 +164,6 @@ func (this *ChromePak) NumAliases() (v uint16, err error) {
  * the next item, so an extra entry is stored with id 0
  * and offset pointing to the end of the resources.
  */
-type ChromePak_HeaderV5Part struct {
-	EncodingPadding []byte
-	NumResources uint16
-	NumAliases uint16
-	_io *kaitai.Stream
-	_root *ChromePak
-	_parent *ChromePak
-}
-func NewChromePak_HeaderV5Part() *ChromePak_HeaderV5Part {
-	return &ChromePak_HeaderV5Part{
-	}
-}
-
-func (this *ChromePak_HeaderV5Part) Read(io *kaitai.Stream, parent *ChromePak, root *ChromePak) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp12, err := this._io.ReadBytes(int(3))
-	if err != nil {
-		return err
-	}
-	tmp12 = tmp12
-	this.EncodingPadding = tmp12
-	tmp13, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.NumResources = uint16(tmp13)
-	tmp14, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.NumAliases = uint16(tmp14)
-	return err
-}
-type ChromePak_Resource struct {
-	Id uint16
-	OfsBody uint32
-	Idx int32
-	HasBody bool
-	_io *kaitai.Stream
-	_root *ChromePak
-	_parent *ChromePak
-	_f_lenBody bool
-	lenBody int
-	_f_body bool
-	body []byte
-}
-func NewChromePak_Resource(idx int32, hasBody bool) *ChromePak_Resource {
-	return &ChromePak_Resource{
-		Idx: idx,
-		HasBody: hasBody,
-	}
-}
-
-func (this *ChromePak_Resource) Read(io *kaitai.Stream, parent *ChromePak, root *ChromePak) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp15, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.Id = uint16(tmp15)
-	tmp16, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.OfsBody = uint32(tmp16)
-	return err
-}
-
-/**
- * MUST NOT be accessed until the next `resource` is parsed
- */
-func (this *ChromePak_Resource) LenBody() (v int, err error) {
-	if (this._f_lenBody) {
-		return this.lenBody, nil
-	}
-	if (this.HasBody) {
-		this.lenBody = int((this._parent.Resources[(this.Idx + 1)].OfsBody - this.OfsBody))
-	}
-	this._f_lenBody = true
-	return this.lenBody, nil
-}
-
-/**
- * MUST NOT be accessed until the next `resource` is parsed
- */
-func (this *ChromePak_Resource) Body() (v []byte, err error) {
-	if (this._f_body) {
-		return this.body, nil
-	}
-	if (this.HasBody) {
-		_pos, err := this._io.Pos()
-		if err != nil {
-			return nil, err
-		}
-		_, err = this._io.Seek(int64(this.OfsBody), io.SeekStart)
-		if err != nil {
-			return nil, err
-		}
-		tmp17, err := this.LenBody()
-		if err != nil {
-			return nil, err
-		}
-		tmp18, err := this._io.ReadBytes(int(tmp17))
-		if err != nil {
-			return nil, err
-		}
-		tmp18 = tmp18
-		this.body = tmp18
-		_, err = this._io.Seek(_pos, io.SeekStart)
-		if err != nil {
-			return nil, err
-		}
-		this._f_body = true
-	}
-	this._f_body = true
-	return this.body, nil
-}
 type ChromePak_Alias struct {
 	Id uint16
 	ResourceIdx uint16
@@ -292,7 +178,111 @@ func NewChromePak_Alias() *ChromePak_Alias {
 	}
 }
 
+func (this ChromePak_Alias) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *ChromePak_Alias) Read(io *kaitai.Stream, parent *ChromePak, root *ChromePak) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp12, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.Id = uint16(tmp12)
+	tmp13, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.ResourceIdx = uint16(tmp13)
+	tmp14, err := this._parent.NumResources()
+	if err != nil {
+		return err
+	}
+	tmp15, err := this._parent.NumResources()
+	if err != nil {
+		return err
+	}
+	if !(this.ResourceIdx <= tmp14 - 1) {
+		return kaitai.NewValidationGreaterThanError(tmp15 - 1, this.ResourceIdx, this._io, "/types/alias/seq/1")
+	}
+	return err
+}
+func (this *ChromePak_Alias) Resource() (v *ChromePak_Resource, err error) {
+	if (this._f_resource) {
+		return this.resource, nil
+	}
+	this._f_resource = true
+	this.resource = this._parent.Resources[this.ResourceIdx]
+	return this.resource, nil
+}
+type ChromePak_HeaderV5Part struct {
+	EncodingPadding []byte
+	NumResources uint16
+	NumAliases uint16
+	_io *kaitai.Stream
+	_root *ChromePak
+	_parent *ChromePak
+}
+func NewChromePak_HeaderV5Part() *ChromePak_HeaderV5Part {
+	return &ChromePak_HeaderV5Part{
+	}
+}
+
+func (this ChromePak_HeaderV5Part) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *ChromePak_HeaderV5Part) Read(io *kaitai.Stream, parent *ChromePak, root *ChromePak) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp16, err := this._io.ReadBytes(int(3))
+	if err != nil {
+		return err
+	}
+	tmp16 = tmp16
+	this.EncodingPadding = tmp16
+	tmp17, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.NumResources = uint16(tmp17)
+	tmp18, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.NumAliases = uint16(tmp18)
+	return err
+}
+type ChromePak_Resource struct {
+	Id uint16
+	OfsBody uint32
+	Idx int32
+	HasBody bool
+	_io *kaitai.Stream
+	_root *ChromePak
+	_parent *ChromePak
+	_f_body bool
+	body []byte
+	_f_lenBody bool
+	lenBody int
+}
+func NewChromePak_Resource(idx int32, hasBody bool) *ChromePak_Resource {
+	return &ChromePak_Resource{
+		Idx: idx,
+		HasBody: hasBody,
+	}
+}
+
+func (this ChromePak_Resource) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *ChromePak_Resource) Read(io *kaitai.Stream, parent *ChromePak, root *ChromePak) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -302,29 +292,59 @@ func (this *ChromePak_Alias) Read(io *kaitai.Stream, parent *ChromePak, root *Ch
 		return err
 	}
 	this.Id = uint16(tmp19)
-	tmp20, err := this._io.ReadU2le()
+	tmp20, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.ResourceIdx = uint16(tmp20)
-	tmp21, err := this._parent.NumResources()
-	if err != nil {
-		return err
-	}
-	tmp22, err := this._parent.NumResources()
-	if err != nil {
-		return err
-	}
-	if !(this.ResourceIdx <= (tmp22 - 1)) {
-		return kaitai.NewValidationGreaterThanError((tmp21 - 1), this.ResourceIdx, this._io, "/types/alias/seq/1")
-	}
+	this.OfsBody = uint32(tmp20)
 	return err
 }
-func (this *ChromePak_Alias) Resource() (v *ChromePak_Resource, err error) {
-	if (this._f_resource) {
-		return this.resource, nil
+
+/**
+ * MUST NOT be accessed until the next `resource` is parsed
+ */
+func (this *ChromePak_Resource) Body() (v []byte, err error) {
+	if (this._f_body) {
+		return this.body, nil
 	}
-	this.resource = this._parent.Resources[this.ResourceIdx]
-	this._f_resource = true
-	return this.resource, nil
+	this._f_body = true
+	if (this.HasBody) {
+		_pos, err := this._io.Pos()
+		if err != nil {
+			return nil, err
+		}
+		_, err = this._io.Seek(int64(this.OfsBody), io.SeekStart)
+		if err != nil {
+			return nil, err
+		}
+		tmp21, err := this.LenBody()
+		if err != nil {
+			return nil, err
+		}
+		tmp22, err := this._io.ReadBytes(int(tmp21))
+		if err != nil {
+			return nil, err
+		}
+		tmp22 = tmp22
+		this.body = tmp22
+		_, err = this._io.Seek(_pos, io.SeekStart)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return this.body, nil
+}
+
+/**
+ * MUST NOT be accessed until the next `resource` is parsed
+ */
+func (this *ChromePak_Resource) LenBody() (v int, err error) {
+	if (this._f_lenBody) {
+		return this.lenBody, nil
+	}
+	this._f_lenBody = true
+	if (this.HasBody) {
+		this.lenBody = int(this._parent.Resources[this.Idx + 1].OfsBody - this.OfsBody)
+	}
+	return this.lenBody, nil
 }

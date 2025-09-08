@@ -37,9 +37,9 @@ namespace Kaitai
             m_root = p__root ?? this;
             _lenDecompressed = p_lenDecompressed;
             _headerParametersWithIo = p_headerParametersWithIo;
+            f_defaultLookupTable = false;
             f_headerParameters = false;
             f_isLenDecompressedOdd = false;
-            f_defaultLookupTable = false;
             f_lookupTable = false;
             _read();
         }
@@ -56,13 +56,13 @@ namespace Kaitai
                 bool on = HeaderParameters.Flags.Tagged;
                 if (on == true)
                 {
-                    __raw_data = m_io.ReadBytes(((M_Io.Size - M_Io.Pos) - (IsLenDecompressedOdd ? 1 : 0)));
+                    __raw_data = m_io.ReadBytes((M_Io.Size - M_Io.Pos) - (IsLenDecompressedOdd ? 1 : 0));
                     var io___raw_data = new KaitaiStream(__raw_data);
                     _data = new TaggedData(io___raw_data, this, m_root);
                 }
                 else
                 {
-                    __raw_data = m_io.ReadBytes(((M_Io.Size - M_Io.Pos) - (IsLenDecompressedOdd ? 1 : 0)));
+                    __raw_data = m_io.ReadBytes((M_Io.Size - M_Io.Pos) - (IsLenDecompressedOdd ? 1 : 0));
                     var io___raw_data = new KaitaiStream(__raw_data);
                     _data = new UntaggedData(io___raw_data, this, m_root);
                 }
@@ -134,11 +134,11 @@ namespace Kaitai
                     {
                         if (f_asInt)
                             return _asInt;
+                        f_asInt = true;
                         long _pos = m_io.Pos;
                         m_io.Seek(0);
                         _asInt = m_io.ReadU1();
                         m_io.Seek(_pos);
-                        f_asInt = true;
                         return _asInt;
                     }
                 }
@@ -180,10 +180,10 @@ namespace Kaitai
                 {
                     if (f_numCustomLookupTableEntries)
                         return _numCustomLookupTableEntries;
-                    if (Flags.HasCustomLookupTable) {
-                        _numCustomLookupTableEntries = (int) ((NumCustomLookupTableEntriesM1 + 1));
-                    }
                     f_numCustomLookupTableEntries = true;
+                    if (Flags.HasCustomLookupTable) {
+                        _numCustomLookupTableEntries = (int) (NumCustomLookupTableEntriesM1 + 1);
+                    }
                     return _numCustomLookupTableEntries;
                 }
             }
@@ -217,46 +217,6 @@ namespace Kaitai
             /// Various flags that affect the format of the compressed data and the decompression process.
             /// </summary>
             public Flags Flags { get { return _flags; } }
-            public Dcmp2 M_Root { get { return m_root; } }
-            public Dcmp2 M_Parent { get { return m_parent; } }
-        }
-
-        /// <summary>
-        /// Compressed data in the &quot;untagged&quot; variant of the format.
-        /// </summary>
-        public partial class UntaggedData : KaitaiStruct
-        {
-            public static UntaggedData FromFile(string fileName)
-            {
-                return new UntaggedData(new KaitaiStream(fileName));
-            }
-
-            public UntaggedData(KaitaiStream p__io, Dcmp2 p__parent = null, Dcmp2 p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _tableReferences = new List<byte>();
-                {
-                    var i = 0;
-                    while (!m_io.IsEof) {
-                        _tableReferences.Add(m_io.ReadU1());
-                        i++;
-                    }
-                }
-            }
-            private List<byte> _tableReferences;
-            private Dcmp2 m_root;
-            private Dcmp2 m_parent;
-
-            /// <summary>
-            /// References into the lookup table.
-            /// Each reference is an integer that is expanded to two bytes by looking it up in the table.
-            /// </summary>
-            public List<byte> TableReferences { get { return _tableReferences; } }
             public Dcmp2 M_Root { get { return m_root; } }
             public Dcmp2 M_Parent { get { return m_parent; } }
         }
@@ -319,7 +279,6 @@ namespace Kaitai
                         _tag.Add(m_io.ReadBitsIntBe(1) != 0);
                     }
                     m_io.AlignToByte();
-                    __raw_units = new List<byte[]>();
                     _units = new List<object>();
                     {
                         var i = 0;
@@ -378,6 +337,64 @@ namespace Kaitai
             public Dcmp2 M_Root { get { return m_root; } }
             public Dcmp2 M_Parent { get { return m_parent; } }
         }
+
+        /// <summary>
+        /// Compressed data in the &quot;untagged&quot; variant of the format.
+        /// </summary>
+        public partial class UntaggedData : KaitaiStruct
+        {
+            public static UntaggedData FromFile(string fileName)
+            {
+                return new UntaggedData(new KaitaiStream(fileName));
+            }
+
+            public UntaggedData(KaitaiStream p__io, Dcmp2 p__parent = null, Dcmp2 p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _tableReferences = new List<byte>();
+                {
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _tableReferences.Add(m_io.ReadU1());
+                        i++;
+                    }
+                }
+            }
+            private List<byte> _tableReferences;
+            private Dcmp2 m_root;
+            private Dcmp2 m_parent;
+
+            /// <summary>
+            /// References into the lookup table.
+            /// Each reference is an integer that is expanded to two bytes by looking it up in the table.
+            /// </summary>
+            public List<byte> TableReferences { get { return _tableReferences; } }
+            public Dcmp2 M_Root { get { return m_root; } }
+            public Dcmp2 M_Parent { get { return m_parent; } }
+        }
+        private bool f_defaultLookupTable;
+        private List<byte[]> _defaultLookupTable;
+
+        /// <summary>
+        /// The default lookup table,
+        /// which is used if no custom lookup table is included with the compressed data.
+        /// </summary>
+        public List<byte[]> DefaultLookupTable
+        {
+            get
+            {
+                if (f_defaultLookupTable)
+                    return _defaultLookupTable;
+                f_defaultLookupTable = true;
+                _defaultLookupTable = (List<byte[]>) (new List<byte[]> { new byte[] { 0, 0 }, new byte[] { 0, 8 }, new byte[] { 78, 186 }, new byte[] { 32, 110 }, new byte[] { 78, 117 }, new byte[] { 0, 12 }, new byte[] { 0, 4 }, new byte[] { 112, 0 }, new byte[] { 0, 16 }, new byte[] { 0, 2 }, new byte[] { 72, 110 }, new byte[] { 255, 252 }, new byte[] { 96, 0 }, new byte[] { 0, 1 }, new byte[] { 72, 231 }, new byte[] { 47, 46 }, new byte[] { 78, 86 }, new byte[] { 0, 6 }, new byte[] { 78, 94 }, new byte[] { 47, 0 }, new byte[] { 97, 0 }, new byte[] { 255, 248 }, new byte[] { 47, 11 }, new byte[] { 255, 255 }, new byte[] { 0, 20 }, new byte[] { 0, 10 }, new byte[] { 0, 24 }, new byte[] { 32, 95 }, new byte[] { 0, 14 }, new byte[] { 32, 80 }, new byte[] { 63, 60 }, new byte[] { 255, 244 }, new byte[] { 76, 238 }, new byte[] { 48, 46 }, new byte[] { 103, 0 }, new byte[] { 76, 223 }, new byte[] { 38, 110 }, new byte[] { 0, 18 }, new byte[] { 0, 28 }, new byte[] { 66, 103 }, new byte[] { 255, 240 }, new byte[] { 48, 60 }, new byte[] { 47, 12 }, new byte[] { 0, 3 }, new byte[] { 78, 208 }, new byte[] { 0, 32 }, new byte[] { 112, 1 }, new byte[] { 0, 22 }, new byte[] { 45, 64 }, new byte[] { 72, 192 }, new byte[] { 32, 120 }, new byte[] { 114, 0 }, new byte[] { 88, 143 }, new byte[] { 102, 0 }, new byte[] { 79, 239 }, new byte[] { 66, 167 }, new byte[] { 103, 6 }, new byte[] { 255, 250 }, new byte[] { 85, 143 }, new byte[] { 40, 110 }, new byte[] { 63, 0 }, new byte[] { 255, 254 }, new byte[] { 47, 60 }, new byte[] { 103, 4 }, new byte[] { 89, 143 }, new byte[] { 32, 107 }, new byte[] { 0, 36 }, new byte[] { 32, 31 }, new byte[] { 65, 250 }, new byte[] { 129, 225 }, new byte[] { 102, 4 }, new byte[] { 103, 8 }, new byte[] { 0, 26 }, new byte[] { 78, 185 }, new byte[] { 80, 143 }, new byte[] { 32, 46 }, new byte[] { 0, 7 }, new byte[] { 78, 176 }, new byte[] { 255, 242 }, new byte[] { 61, 64 }, new byte[] { 0, 30 }, new byte[] { 32, 104 }, new byte[] { 102, 6 }, new byte[] { 255, 246 }, new byte[] { 78, 249 }, new byte[] { 8, 0 }, new byte[] { 12, 64 }, new byte[] { 61, 124 }, new byte[] { 255, 236 }, new byte[] { 0, 5 }, new byte[] { 32, 60 }, new byte[] { 255, 232 }, new byte[] { 222, 252 }, new byte[] { 74, 46 }, new byte[] { 0, 48 }, new byte[] { 0, 40 }, new byte[] { 47, 8 }, new byte[] { 32, 11 }, new byte[] { 96, 2 }, new byte[] { 66, 110 }, new byte[] { 45, 72 }, new byte[] { 32, 83 }, new byte[] { 32, 64 }, new byte[] { 24, 0 }, new byte[] { 96, 4 }, new byte[] { 65, 238 }, new byte[] { 47, 40 }, new byte[] { 47, 1 }, new byte[] { 103, 10 }, new byte[] { 72, 64 }, new byte[] { 32, 7 }, new byte[] { 102, 8 }, new byte[] { 1, 24 }, new byte[] { 47, 7 }, new byte[] { 48, 40 }, new byte[] { 63, 46 }, new byte[] { 48, 43 }, new byte[] { 34, 110 }, new byte[] { 47, 43 }, new byte[] { 0, 44 }, new byte[] { 103, 12 }, new byte[] { 34, 95 }, new byte[] { 96, 6 }, new byte[] { 0, 255 }, new byte[] { 48, 7 }, new byte[] { 255, 238 }, new byte[] { 83, 64 }, new byte[] { 0, 64 }, new byte[] { 255, 228 }, new byte[] { 74, 64 }, new byte[] { 102, 10 }, new byte[] { 0, 15 }, new byte[] { 78, 173 }, new byte[] { 112, 255 }, new byte[] { 34, 216 }, new byte[] { 72, 107 }, new byte[] { 0, 34 }, new byte[] { 32, 75 }, new byte[] { 103, 14 }, new byte[] { 74, 174 }, new byte[] { 78, 144 }, new byte[] { 255, 224 }, new byte[] { 255, 192 }, new byte[] { 0, 42 }, new byte[] { 39, 64 }, new byte[] { 103, 2 }, new byte[] { 81, 200 }, new byte[] { 2, 182 }, new byte[] { 72, 122 }, new byte[] { 34, 120 }, new byte[] { 176, 110 }, new byte[] { 255, 230 }, new byte[] { 0, 9 }, new byte[] { 50, 46 }, new byte[] { 62, 0 }, new byte[] { 72, 65 }, new byte[] { 255, 234 }, new byte[] { 67, 238 }, new byte[] { 78, 113 }, new byte[] { 116, 0 }, new byte[] { 47, 44 }, new byte[] { 32, 108 }, new byte[] { 0, 60 }, new byte[] { 0, 38 }, new byte[] { 0, 80 }, new byte[] { 24, 128 }, new byte[] { 48, 31 }, new byte[] { 34, 0 }, new byte[] { 102, 12 }, new byte[] { 255, 218 }, new byte[] { 0, 56 }, new byte[] { 102, 2 }, new byte[] { 48, 44 }, new byte[] { 32, 12 }, new byte[] { 45, 110 }, new byte[] { 66, 64 }, new byte[] { 255, 226 }, new byte[] { 169, 240 }, new byte[] { 255, 0 }, new byte[] { 55, 124 }, new byte[] { 229, 128 }, new byte[] { 255, 220 }, new byte[] { 72, 104 }, new byte[] { 89, 79 }, new byte[] { 0, 52 }, new byte[] { 62, 31 }, new byte[] { 96, 8 }, new byte[] { 47, 6 }, new byte[] { 255, 222 }, new byte[] { 96, 10 }, new byte[] { 112, 2 }, new byte[] { 0, 50 }, new byte[] { 255, 204 }, new byte[] { 0, 128 }, new byte[] { 34, 81 }, new byte[] { 16, 31 }, new byte[] { 49, 124 }, new byte[] { 160, 41 }, new byte[] { 255, 216 }, new byte[] { 82, 64 }, new byte[] { 1, 0 }, new byte[] { 103, 16 }, new byte[] { 160, 35 }, new byte[] { 255, 206 }, new byte[] { 255, 212 }, new byte[] { 32, 6 }, new byte[] { 72, 120 }, new byte[] { 0, 46 }, new byte[] { 80, 79 }, new byte[] { 67, 250 }, new byte[] { 103, 18 }, new byte[] { 118, 0 }, new byte[] { 65, 232 }, new byte[] { 74, 110 }, new byte[] { 32, 217 }, new byte[] { 0, 90 }, new byte[] { 127, 255 }, new byte[] { 81, 202 }, new byte[] { 0, 92 }, new byte[] { 46, 0 }, new byte[] { 2, 64 }, new byte[] { 72, 199 }, new byte[] { 103, 20 }, new byte[] { 12, 128 }, new byte[] { 46, 159 }, new byte[] { 255, 214 }, new byte[] { 128, 0 }, new byte[] { 16, 0 }, new byte[] { 72, 66 }, new byte[] { 74, 107 }, new byte[] { 255, 210 }, new byte[] { 0, 72 }, new byte[] { 74, 71 }, new byte[] { 78, 209 }, new byte[] { 32, 111 }, new byte[] { 0, 65 }, new byte[] { 96, 12 }, new byte[] { 42, 120 }, new byte[] { 66, 46 }, new byte[] { 50, 0 }, new byte[] { 101, 116 }, new byte[] { 103, 22 }, new byte[] { 0, 68 }, new byte[] { 72, 109 }, new byte[] { 32, 8 }, new byte[] { 72, 108 }, new byte[] { 11, 124 }, new byte[] { 38, 64 }, new byte[] { 4, 0 }, new byte[] { 0, 104 }, new byte[] { 32, 109 }, new byte[] { 0, 13 }, new byte[] { 42, 64 }, new byte[] { 0, 11 }, new byte[] { 0, 62 }, new byte[] { 2, 32 } });
+                return _defaultLookupTable;
+            }
+        }
         private bool f_headerParameters;
         private HeaderParameters _headerParameters;
 
@@ -390,12 +407,12 @@ namespace Kaitai
             {
                 if (f_headerParameters)
                     return _headerParameters;
+                f_headerParameters = true;
                 KaitaiStream io = HeaderParametersWithIo.M_Io;
                 long _pos = io.Pos;
                 io.Seek(0);
                 _headerParameters = new HeaderParameters(io, this, m_root);
                 io.Seek(_pos);
-                f_headerParameters = true;
                 return _headerParameters;
             }
         }
@@ -412,27 +429,9 @@ namespace Kaitai
             {
                 if (f_isLenDecompressedOdd)
                     return _isLenDecompressedOdd;
-                _isLenDecompressedOdd = (bool) (KaitaiStream.Mod(LenDecompressed, 2) != 0);
                 f_isLenDecompressedOdd = true;
+                _isLenDecompressedOdd = (bool) (KaitaiStream.Mod(LenDecompressed, 2) != 0);
                 return _isLenDecompressedOdd;
-            }
-        }
-        private bool f_defaultLookupTable;
-        private List<byte[]> _defaultLookupTable;
-
-        /// <summary>
-        /// The default lookup table,
-        /// which is used if no custom lookup table is included with the compressed data.
-        /// </summary>
-        public List<byte[]> DefaultLookupTable
-        {
-            get
-            {
-                if (f_defaultLookupTable)
-                    return _defaultLookupTable;
-                _defaultLookupTable = (List<byte[]>) (new List<byte[]> { new byte[] { 0, 0 }, new byte[] { 0, 8 }, new byte[] { 78, 186 }, new byte[] { 32, 110 }, new byte[] { 78, 117 }, new byte[] { 0, 12 }, new byte[] { 0, 4 }, new byte[] { 112, 0 }, new byte[] { 0, 16 }, new byte[] { 0, 2 }, new byte[] { 72, 110 }, new byte[] { 255, 252 }, new byte[] { 96, 0 }, new byte[] { 0, 1 }, new byte[] { 72, 231 }, new byte[] { 47, 46 }, new byte[] { 78, 86 }, new byte[] { 0, 6 }, new byte[] { 78, 94 }, new byte[] { 47, 0 }, new byte[] { 97, 0 }, new byte[] { 255, 248 }, new byte[] { 47, 11 }, new byte[] { 255, 255 }, new byte[] { 0, 20 }, new byte[] { 0, 10 }, new byte[] { 0, 24 }, new byte[] { 32, 95 }, new byte[] { 0, 14 }, new byte[] { 32, 80 }, new byte[] { 63, 60 }, new byte[] { 255, 244 }, new byte[] { 76, 238 }, new byte[] { 48, 46 }, new byte[] { 103, 0 }, new byte[] { 76, 223 }, new byte[] { 38, 110 }, new byte[] { 0, 18 }, new byte[] { 0, 28 }, new byte[] { 66, 103 }, new byte[] { 255, 240 }, new byte[] { 48, 60 }, new byte[] { 47, 12 }, new byte[] { 0, 3 }, new byte[] { 78, 208 }, new byte[] { 0, 32 }, new byte[] { 112, 1 }, new byte[] { 0, 22 }, new byte[] { 45, 64 }, new byte[] { 72, 192 }, new byte[] { 32, 120 }, new byte[] { 114, 0 }, new byte[] { 88, 143 }, new byte[] { 102, 0 }, new byte[] { 79, 239 }, new byte[] { 66, 167 }, new byte[] { 103, 6 }, new byte[] { 255, 250 }, new byte[] { 85, 143 }, new byte[] { 40, 110 }, new byte[] { 63, 0 }, new byte[] { 255, 254 }, new byte[] { 47, 60 }, new byte[] { 103, 4 }, new byte[] { 89, 143 }, new byte[] { 32, 107 }, new byte[] { 0, 36 }, new byte[] { 32, 31 }, new byte[] { 65, 250 }, new byte[] { 129, 225 }, new byte[] { 102, 4 }, new byte[] { 103, 8 }, new byte[] { 0, 26 }, new byte[] { 78, 185 }, new byte[] { 80, 143 }, new byte[] { 32, 46 }, new byte[] { 0, 7 }, new byte[] { 78, 176 }, new byte[] { 255, 242 }, new byte[] { 61, 64 }, new byte[] { 0, 30 }, new byte[] { 32, 104 }, new byte[] { 102, 6 }, new byte[] { 255, 246 }, new byte[] { 78, 249 }, new byte[] { 8, 0 }, new byte[] { 12, 64 }, new byte[] { 61, 124 }, new byte[] { 255, 236 }, new byte[] { 0, 5 }, new byte[] { 32, 60 }, new byte[] { 255, 232 }, new byte[] { 222, 252 }, new byte[] { 74, 46 }, new byte[] { 0, 48 }, new byte[] { 0, 40 }, new byte[] { 47, 8 }, new byte[] { 32, 11 }, new byte[] { 96, 2 }, new byte[] { 66, 110 }, new byte[] { 45, 72 }, new byte[] { 32, 83 }, new byte[] { 32, 64 }, new byte[] { 24, 0 }, new byte[] { 96, 4 }, new byte[] { 65, 238 }, new byte[] { 47, 40 }, new byte[] { 47, 1 }, new byte[] { 103, 10 }, new byte[] { 72, 64 }, new byte[] { 32, 7 }, new byte[] { 102, 8 }, new byte[] { 1, 24 }, new byte[] { 47, 7 }, new byte[] { 48, 40 }, new byte[] { 63, 46 }, new byte[] { 48, 43 }, new byte[] { 34, 110 }, new byte[] { 47, 43 }, new byte[] { 0, 44 }, new byte[] { 103, 12 }, new byte[] { 34, 95 }, new byte[] { 96, 6 }, new byte[] { 0, 255 }, new byte[] { 48, 7 }, new byte[] { 255, 238 }, new byte[] { 83, 64 }, new byte[] { 0, 64 }, new byte[] { 255, 228 }, new byte[] { 74, 64 }, new byte[] { 102, 10 }, new byte[] { 0, 15 }, new byte[] { 78, 173 }, new byte[] { 112, 255 }, new byte[] { 34, 216 }, new byte[] { 72, 107 }, new byte[] { 0, 34 }, new byte[] { 32, 75 }, new byte[] { 103, 14 }, new byte[] { 74, 174 }, new byte[] { 78, 144 }, new byte[] { 255, 224 }, new byte[] { 255, 192 }, new byte[] { 0, 42 }, new byte[] { 39, 64 }, new byte[] { 103, 2 }, new byte[] { 81, 200 }, new byte[] { 2, 182 }, new byte[] { 72, 122 }, new byte[] { 34, 120 }, new byte[] { 176, 110 }, new byte[] { 255, 230 }, new byte[] { 0, 9 }, new byte[] { 50, 46 }, new byte[] { 62, 0 }, new byte[] { 72, 65 }, new byte[] { 255, 234 }, new byte[] { 67, 238 }, new byte[] { 78, 113 }, new byte[] { 116, 0 }, new byte[] { 47, 44 }, new byte[] { 32, 108 }, new byte[] { 0, 60 }, new byte[] { 0, 38 }, new byte[] { 0, 80 }, new byte[] { 24, 128 }, new byte[] { 48, 31 }, new byte[] { 34, 0 }, new byte[] { 102, 12 }, new byte[] { 255, 218 }, new byte[] { 0, 56 }, new byte[] { 102, 2 }, new byte[] { 48, 44 }, new byte[] { 32, 12 }, new byte[] { 45, 110 }, new byte[] { 66, 64 }, new byte[] { 255, 226 }, new byte[] { 169, 240 }, new byte[] { 255, 0 }, new byte[] { 55, 124 }, new byte[] { 229, 128 }, new byte[] { 255, 220 }, new byte[] { 72, 104 }, new byte[] { 89, 79 }, new byte[] { 0, 52 }, new byte[] { 62, 31 }, new byte[] { 96, 8 }, new byte[] { 47, 6 }, new byte[] { 255, 222 }, new byte[] { 96, 10 }, new byte[] { 112, 2 }, new byte[] { 0, 50 }, new byte[] { 255, 204 }, new byte[] { 0, 128 }, new byte[] { 34, 81 }, new byte[] { 16, 31 }, new byte[] { 49, 124 }, new byte[] { 160, 41 }, new byte[] { 255, 216 }, new byte[] { 82, 64 }, new byte[] { 1, 0 }, new byte[] { 103, 16 }, new byte[] { 160, 35 }, new byte[] { 255, 206 }, new byte[] { 255, 212 }, new byte[] { 32, 6 }, new byte[] { 72, 120 }, new byte[] { 0, 46 }, new byte[] { 80, 79 }, new byte[] { 67, 250 }, new byte[] { 103, 18 }, new byte[] { 118, 0 }, new byte[] { 65, 232 }, new byte[] { 74, 110 }, new byte[] { 32, 217 }, new byte[] { 0, 90 }, new byte[] { 127, 255 }, new byte[] { 81, 202 }, new byte[] { 0, 92 }, new byte[] { 46, 0 }, new byte[] { 2, 64 }, new byte[] { 72, 199 }, new byte[] { 103, 20 }, new byte[] { 12, 128 }, new byte[] { 46, 159 }, new byte[] { 255, 214 }, new byte[] { 128, 0 }, new byte[] { 16, 0 }, new byte[] { 72, 66 }, new byte[] { 74, 107 }, new byte[] { 255, 210 }, new byte[] { 0, 72 }, new byte[] { 74, 71 }, new byte[] { 78, 209 }, new byte[] { 32, 111 }, new byte[] { 0, 65 }, new byte[] { 96, 12 }, new byte[] { 42, 120 }, new byte[] { 66, 46 }, new byte[] { 50, 0 }, new byte[] { 101, 116 }, new byte[] { 103, 22 }, new byte[] { 0, 68 }, new byte[] { 72, 109 }, new byte[] { 32, 8 }, new byte[] { 72, 108 }, new byte[] { 11, 124 }, new byte[] { 38, 64 }, new byte[] { 4, 0 }, new byte[] { 0, 104 }, new byte[] { 32, 109 }, new byte[] { 0, 13 }, new byte[] { 42, 64 }, new byte[] { 0, 11 }, new byte[] { 0, 62 }, new byte[] { 2, 32 } });
-                f_defaultLookupTable = true;
-                return _defaultLookupTable;
             }
         }
         private bool f_lookupTable;
@@ -447,8 +446,8 @@ namespace Kaitai
             {
                 if (f_lookupTable)
                     return _lookupTable;
-                _lookupTable = (List<byte[]>) ((HeaderParameters.Flags.HasCustomLookupTable ? CustomLookupTable : DefaultLookupTable));
                 f_lookupTable = true;
+                _lookupTable = (List<byte[]>) ((HeaderParameters.Flags.HasCustomLookupTable ? CustomLookupTable : DefaultLookupTable));
                 return _lookupTable;
             }
         }

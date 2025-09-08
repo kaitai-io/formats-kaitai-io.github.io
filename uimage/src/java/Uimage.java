@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Arrays;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 
 /**
@@ -19,48 +19,6 @@ import java.nio.charset.Charset;
 public class Uimage extends KaitaiStruct {
     public static Uimage fromFile(String fileName) throws IOException {
         return new Uimage(new ByteBufferKaitaiStream(fileName));
-    }
-
-    public enum UimageOs {
-        INVALID(0),
-        OPENBSD(1),
-        NETBSD(2),
-        FREEBSD(3),
-        BSD4_4(4),
-        LINUX(5),
-        SVR4(6),
-        ESIX(7),
-        SOLARIS(8),
-        IRIX(9),
-        SCO(10),
-        DELL(11),
-        NCR(12),
-        LYNXOS(13),
-        VXWORKS(14),
-        PSOS(15),
-        QNX(16),
-        U_BOOT(17),
-        RTEMS(18),
-        ARTOS(19),
-        UNITY(20),
-        INTEGRITY(21),
-        OSE(22),
-        PLAN9(23),
-        OPENRTOS(24),
-        ARM_TRUSTED_FIRMWARE(25),
-        TEE(26),
-        OPENSBI(27),
-        EFI(28);
-
-        private final long id;
-        UimageOs(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map<Long, UimageOs> byId = new HashMap<Long, UimageOs>(29);
-        static {
-            for (UimageOs e : UimageOs.values())
-                byId.put(e.id(), e);
-        }
-        public static UimageOs byId(long id) { return byId.get(id); }
     }
 
     public enum UimageArch {
@@ -121,6 +79,48 @@ public class Uimage extends KaitaiStruct {
                 byId.put(e.id(), e);
         }
         public static UimageComp byId(long id) { return byId.get(id); }
+    }
+
+    public enum UimageOs {
+        INVALID(0),
+        OPENBSD(1),
+        NETBSD(2),
+        FREEBSD(3),
+        BSD4_4(4),
+        LINUX(5),
+        SVR4(6),
+        ESIX(7),
+        SOLARIS(8),
+        IRIX(9),
+        SCO(10),
+        DELL(11),
+        NCR(12),
+        LYNXOS(13),
+        VXWORKS(14),
+        PSOS(15),
+        QNX(16),
+        U_BOOT(17),
+        RTEMS(18),
+        ARTOS(19),
+        UNITY(20),
+        INTEGRITY(21),
+        OSE(22),
+        PLAN9(23),
+        OPENRTOS(24),
+        ARM_TRUSTED_FIRMWARE(25),
+        TEE(26),
+        OPENSBI(27),
+        EFI(28);
+
+        private final long id;
+        UimageOs(long id) { this.id = id; }
+        public long id() { return id; }
+        private static final Map<Long, UimageOs> byId = new HashMap<Long, UimageOs>(29);
+        static {
+            for (UimageOs e : UimageOs.values())
+                byId.put(e.id(), e);
+        }
+        public static UimageOs byId(long id) { return byId.get(id); }
     }
 
     public enum UimageType {
@@ -195,6 +195,10 @@ public class Uimage extends KaitaiStruct {
         this.header = new Uheader(this._io, this, _root);
         this.data = this._io.readBytes(header().lenImage());
     }
+
+    public void _fetchInstances() {
+        this.header._fetchInstances();
+    }
     public static class Uheader extends KaitaiStruct {
         public static Uheader fromFile(String fileName) throws IOException {
             return new Uheader(new ByteBufferKaitaiStream(fileName));
@@ -216,8 +220,8 @@ public class Uimage extends KaitaiStruct {
         }
         private void _read() {
             this.magic = this._io.readBytes(4);
-            if (!(Arrays.equals(magic(), new byte[] { 39, 5, 25, 86 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 39, 5, 25, 86 }, magic(), _io(), "/types/uheader/seq/0");
+            if (!(Arrays.equals(this.magic, new byte[] { 39, 5, 25, 86 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 39, 5, 25, 86 }, this.magic, this._io, "/types/uheader/seq/0");
             }
             this.headerCrc = this._io.readU4be();
             this.timestamp = this._io.readU4be();
@@ -229,7 +233,10 @@ public class Uimage extends KaitaiStruct {
             this.architecture = Uimage.UimageArch.byId(this._io.readU1());
             this.imageType = Uimage.UimageType.byId(this._io.readU1());
             this.compressionType = Uimage.UimageComp.byId(this._io.readU1());
-            this.name = new String(KaitaiStream.bytesTerminate(this._io.readBytes(32), (byte) 0, false), Charset.forName("UTF-8"));
+            this.name = new String(KaitaiStream.bytesTerminate(this._io.readBytes(32), (byte) 0, false), StandardCharsets.UTF_8);
+        }
+
+        public void _fetchInstances() {
         }
         private byte[] magic;
         private long headerCrc;

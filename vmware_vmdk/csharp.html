@@ -197,6 +197,11 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="java-write.html" title="VMWare Virtual Disk parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="VMWare Virtual Disk parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -227,7 +232,17 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="python-write.html" title="VMWare Virtual Disk parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="VMWare Virtual Disk parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="VMWare Virtual Disk parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -326,18 +341,18 @@ can also be found there.</p>
 <span class="w">        </span><span class="p">{</span>
 <span class="w">            </span><span class="n">m_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
 <span class="w">            </span><span class="n">m_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
-<span class="w">            </span><span class="n">f_lenSector</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
 <span class="w">            </span><span class="n">f_descriptor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
 <span class="w">            </span><span class="n">f_grainPrimary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
 <span class="w">            </span><span class="n">f_grainSecondary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+<span class="w">            </span><span class="n">f_lenSector</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
 <span class="w">            </span><span class="n">_read</span><span class="p">();</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span>
 <span class="w">        </span><span class="p">{</span>
 <span class="w">            </span><span class="n">_magic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">Magic</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="mi">75</span><span class="p">,</span><span class="w"> </span><span class="mi">68</span><span class="p">,</span><span class="w"> </span><span class="mi">77</span><span class="p">,</span><span class="w"> </span><span class="mi">86</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)))</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">_magic</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="mi">75</span><span class="p">,</span><span class="w"> </span><span class="mi">68</span><span class="p">,</span><span class="w"> </span><span class="mi">77</span><span class="p">,</span><span class="w"> </span><span class="mi">86</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)))</span>
 <span class="w">            </span><span class="p">{</span>
-<span class="w">                </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="mi">75</span><span class="p">,</span><span class="w"> </span><span class="mi">68</span><span class="p">,</span><span class="w"> </span><span class="mi">77</span><span class="p">,</span><span class="w"> </span><span class="mi">86</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="n">Magic</span><span class="p">,</span><span class="w"> </span><span class="n">M_Io</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/seq/0&quot;</span><span class="p">);</span>
+<span class="w">                </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="mi">75</span><span class="p">,</span><span class="w"> </span><span class="mi">68</span><span class="p">,</span><span class="w"> </span><span class="mi">77</span><span class="p">,</span><span class="w"> </span><span class="mi">86</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="n">_magic</span><span class="p">,</span><span class="w"> </span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/seq/0&quot;</span><span class="p">);</span>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">            </span><span class="n">_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4le</span><span class="p">();</span>
 <span class="w">            </span><span class="n">_flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HeaderFlags</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m_root</span><span class="p">);</span>
@@ -407,19 +422,6 @@ can also be found there.</p>
 <span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">VmwareVmdk</span><span class="w"> </span><span class="n">M_Root</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 <span class="w">            </span><span class="k">public</span><span class="w"> </span><span class="n">VmwareVmdk</span><span class="w"> </span><span class="n">M_Parent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
 <span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_lenSector</span><span class="p">;</span>
-<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">_lenSector</span><span class="p">;</span>
-<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">LenSector</span>
-<span class="w">        </span><span class="p">{</span>
-<span class="w">            </span><span class="k">get</span>
-<span class="w">            </span><span class="p">{</span>
-<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_lenSector</span><span class="p">)</span>
-<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_lenSector</span><span class="p">;</span>
-<span class="w">                </span><span class="n">_lenSector</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="mi">512</span><span class="p">);</span>
-<span class="w">                </span><span class="n">f_lenSector</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
-<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">_lenSector</span><span class="p">;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
 <span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_descriptor</span><span class="p">;</span>
 <span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_descriptor</span><span class="p">;</span>
 <span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">Descriptor</span>
@@ -428,11 +430,11 @@ can also be found there.</p>
 <span class="w">            </span><span class="p">{</span>
 <span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_descriptor</span><span class="p">)</span>
 <span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_descriptor</span><span class="p">;</span>
-<span class="w">                </span><span class="kt">long</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
-<span class="w">                </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">((</span><span class="n">StartDescriptor</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">M_Root</span><span class="p">.</span><span class="n">LenSector</span><span class="p">));</span>
-<span class="w">                </span><span class="n">_descriptor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">SizeDescriptor</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">M_Root</span><span class="p">.</span><span class="n">LenSector</span><span class="p">));</span>
-<span class="w">                </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
 <span class="w">                </span><span class="n">f_descriptor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                </span><span class="kt">long</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">StartDescriptor</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">M_Root</span><span class="p">.</span><span class="n">LenSector</span><span class="p">);</span>
+<span class="w">                </span><span class="n">_descriptor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">SizeDescriptor</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">M_Root</span><span class="p">.</span><span class="n">LenSector</span><span class="p">);</span>
+<span class="w">                </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
 <span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">_descriptor</span><span class="p">;</span>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">        </span><span class="p">}</span>
@@ -444,11 +446,11 @@ can also be found there.</p>
 <span class="w">            </span><span class="p">{</span>
 <span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_grainPrimary</span><span class="p">)</span>
 <span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_grainPrimary</span><span class="p">;</span>
-<span class="w">                </span><span class="kt">long</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
-<span class="w">                </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">((</span><span class="n">StartPrimaryGrain</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">M_Root</span><span class="p">.</span><span class="n">LenSector</span><span class="p">));</span>
-<span class="w">                </span><span class="n">_grainPrimary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">SizeGrain</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">M_Root</span><span class="p">.</span><span class="n">LenSector</span><span class="p">));</span>
-<span class="w">                </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
 <span class="w">                </span><span class="n">f_grainPrimary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                </span><span class="kt">long</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">StartPrimaryGrain</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">M_Root</span><span class="p">.</span><span class="n">LenSector</span><span class="p">);</span>
+<span class="w">                </span><span class="n">_grainPrimary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">SizeGrain</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">M_Root</span><span class="p">.</span><span class="n">LenSector</span><span class="p">);</span>
+<span class="w">                </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
 <span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">_grainPrimary</span><span class="p">;</span>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">        </span><span class="p">}</span>
@@ -460,12 +462,25 @@ can also be found there.</p>
 <span class="w">            </span><span class="p">{</span>
 <span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_grainSecondary</span><span class="p">)</span>
 <span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_grainSecondary</span><span class="p">;</span>
-<span class="w">                </span><span class="kt">long</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
-<span class="w">                </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">((</span><span class="n">StartSecondaryGrain</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">M_Root</span><span class="p">.</span><span class="n">LenSector</span><span class="p">));</span>
-<span class="w">                </span><span class="n">_grainSecondary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">SizeGrain</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">M_Root</span><span class="p">.</span><span class="n">LenSector</span><span class="p">));</span>
-<span class="w">                </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
 <span class="w">                </span><span class="n">f_grainSecondary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                </span><span class="kt">long</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">StartSecondaryGrain</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">M_Root</span><span class="p">.</span><span class="n">LenSector</span><span class="p">);</span>
+<span class="w">                </span><span class="n">_grainSecondary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">SizeGrain</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">M_Root</span><span class="p">.</span><span class="n">LenSector</span><span class="p">);</span>
+<span class="w">                </span><span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
 <span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">_grainSecondary</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_lenSector</span><span class="p">;</span>
+<span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">_lenSector</span><span class="p">;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">LenSector</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">get</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_lenSector</span><span class="p">)</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">_lenSector</span><span class="p">;</span>
+<span class="w">                </span><span class="n">f_lenSector</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<span class="w">                </span><span class="n">_lenSector</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="mi">512</span><span class="p">);</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">_lenSector</span><span class="p">;</span>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">_magic</span><span class="p">;</span>

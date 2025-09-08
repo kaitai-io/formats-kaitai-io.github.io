@@ -10,13 +10,15 @@ digraph {
 			<TR><TD PORT="records_pos">0</TD><TD PORT="records_size">...</TD><TD>Record</TD><TD PORT="records_type">records</TD></TR>
 			<TR><TD COLSPAN="4" PORT="records__repeat">repeat to end of stream</TD></TR>
 		</TABLE>>];
-		subgraph cluster__padding {
-			label="DimeMessage::Padding";
+		subgraph cluster__option_element {
+			label="DimeMessage::OptionElement";
 			graph[style=dotted];
 
-			padding__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			option_element__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="boundary_padding_pos">0</TD><TD PORT="boundary_padding_size">(-(_io.pos) % 4)</TD><TD></TD><TD PORT="boundary_padding_type">boundary_padding</TD></TR>
+				<TR><TD PORT="element_format_pos">0</TD><TD PORT="element_format_size">2</TD><TD>u2be</TD><TD PORT="element_format_type">element_format</TD></TR>
+				<TR><TD PORT="len_element_pos">2</TD><TD PORT="len_element_size">2</TD><TD>u2be</TD><TD PORT="len_element_type">len_element</TD></TR>
+				<TR><TD PORT="element_data_pos">4</TD><TD PORT="element_data_size">len_element</TD><TD></TD><TD PORT="element_data_type">element_data</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__option_field {
@@ -29,15 +31,13 @@ digraph {
 				<TR><TD COLSPAN="4" PORT="option_elements__repeat">repeat to end of stream</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__option_element {
-			label="DimeMessage::OptionElement";
+		subgraph cluster__padding {
+			label="DimeMessage::Padding";
 			graph[style=dotted];
 
-			option_element__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			padding__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="element_format_pos">0</TD><TD PORT="element_format_size">2</TD><TD>u2be</TD><TD PORT="element_format_type">element_format</TD></TR>
-				<TR><TD PORT="len_element_pos">2</TD><TD PORT="len_element_size">2</TD><TD>u2be</TD><TD PORT="len_element_type">len_element</TD></TR>
-				<TR><TD PORT="element_data_pos">4</TD><TD PORT="element_data_size">len_element</TD><TD></TD><TD PORT="element_data_type">element_data</TD></TR>
+				<TR><TD PORT="boundary_padding_pos">0</TD><TD PORT="boundary_padding_size">-(_io.pos) % 4</TD><TD></TD><TD PORT="boundary_padding_type">boundary_padding</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__record {
@@ -46,12 +46,12 @@ digraph {
 
 			record__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="version_pos">0</TD><TD PORT="version_size">5b</TD><TD>b5</TD><TD PORT="version_type">version</TD></TR>
-				<TR><TD PORT="is_first_record_pos">0:5</TD><TD PORT="is_first_record_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="is_first_record_type">is_first_record</TD></TR>
-				<TR><TD PORT="is_last_record_pos">0:6</TD><TD PORT="is_last_record_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="is_last_record_type">is_last_record</TD></TR>
-				<TR><TD PORT="is_chunk_record_pos">0:7</TD><TD PORT="is_chunk_record_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="is_chunk_record_type">is_chunk_record</TD></TR>
-				<TR><TD PORT="type_format_pos">1</TD><TD PORT="type_format_size">4b</TD><TD>b4→TypeFormats</TD><TD PORT="type_format_type">type_format</TD></TR>
-				<TR><TD PORT="reserved_pos">1:4</TD><TD PORT="reserved_size">4b</TD><TD>b4</TD><TD PORT="reserved_type">reserved</TD></TR>
+				<TR><TD PORT="version_pos">0</TD><TD PORT="version_size">5b</TD><TD>b5be</TD><TD PORT="version_type">version</TD></TR>
+				<TR><TD PORT="is_first_record_pos">0:5</TD><TD PORT="is_first_record_size">1b</TD><TD>b1be→bool</TD><TD PORT="is_first_record_type">is_first_record</TD></TR>
+				<TR><TD PORT="is_last_record_pos">0:6</TD><TD PORT="is_last_record_size">1b</TD><TD>b1be→bool</TD><TD PORT="is_last_record_type">is_last_record</TD></TR>
+				<TR><TD PORT="is_chunk_record_pos">0:7</TD><TD PORT="is_chunk_record_size">1b</TD><TD>b1be→bool</TD><TD PORT="is_chunk_record_type">is_chunk_record</TD></TR>
+				<TR><TD PORT="type_format_pos">1</TD><TD PORT="type_format_size">4b</TD><TD>b4be→TypeFormats</TD><TD PORT="type_format_type">type_format</TD></TR>
+				<TR><TD PORT="reserved_pos">1:4</TD><TD PORT="reserved_size">4b</TD><TD>b4be</TD><TD PORT="reserved_type">reserved</TD></TR>
 				<TR><TD PORT="len_options_pos">2</TD><TD PORT="len_options_size">2</TD><TD>u2be</TD><TD PORT="len_options_type">len_options</TD></TR>
 				<TR><TD PORT="len_id_pos">4</TD><TD PORT="len_id_size">2</TD><TD>u2be</TD><TD PORT="len_id_type">len_id</TD></TR>
 				<TR><TD PORT="len_type_pos">6</TD><TD PORT="len_type_size">2</TD><TD>u2be</TD><TD PORT="len_type_type">len_type</TD></TR>
@@ -68,8 +68,8 @@ digraph {
 		}
 	}
 	dime_message__seq:records_type -> record__seq [style=bold];
-	option_field__seq:option_elements_type -> option_element__seq [style=bold];
 	option_element__seq:len_element_type -> option_element__seq:element_data_size [color="#404040"];
+	option_field__seq:option_elements_type -> option_element__seq [style=bold];
 	record__seq:len_options_type -> record__seq:options_size [color="#404040"];
 	record__seq:options_type -> option_field__seq [style=bold];
 	record__seq:options_padding_type -> padding__seq [style=bold];

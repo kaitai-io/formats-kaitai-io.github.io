@@ -5,7 +5,7 @@
 
 mbr_partition_table_t::mbr_partition_table_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, mbr_partition_table_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     m_partitions = 0;
 
     try {
@@ -24,8 +24,8 @@ void mbr_partition_table_t::_read() {
         m_partitions->push_back(new partition_entry_t(m__io, this, m__root));
     }
     m_boot_signature = m__io->read_bytes(2);
-    if (!(boot_signature() == std::string("\x55\xAA", 2))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\x55\xAA", 2), boot_signature(), _io(), std::string("/seq/2"));
+    if (!(m_boot_signature == std::string("\x55\xAA", 2))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\x55\xAA", 2), m_boot_signature, m__io, std::string("/seq/2"));
     }
 }
 
@@ -40,6 +40,49 @@ void mbr_partition_table_t::_clean_up() {
         }
         delete m_partitions; m_partitions = 0;
     }
+}
+
+mbr_partition_table_t::chs_t::chs_t(kaitai::kstream* p__io, mbr_partition_table_t::partition_entry_t* p__parent, mbr_partition_table_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    f_cylinder = false;
+    f_sector = false;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void mbr_partition_table_t::chs_t::_read() {
+    m_head = m__io->read_u1();
+    m_b2 = m__io->read_u1();
+    m_b3 = m__io->read_u1();
+}
+
+mbr_partition_table_t::chs_t::~chs_t() {
+    _clean_up();
+}
+
+void mbr_partition_table_t::chs_t::_clean_up() {
+}
+
+int32_t mbr_partition_table_t::chs_t::cylinder() {
+    if (f_cylinder)
+        return m_cylinder;
+    f_cylinder = true;
+    m_cylinder = b3() + ((b2() & 192) << 2);
+    return m_cylinder;
+}
+
+int32_t mbr_partition_table_t::chs_t::sector() {
+    if (f_sector)
+        return m_sector;
+    f_sector = true;
+    m_sector = b2() & 63;
+    return m_sector;
 }
 
 mbr_partition_table_t::partition_entry_t::partition_entry_t(kaitai::kstream* p__io, mbr_partition_table_t* p__parent, mbr_partition_table_t* p__root) : kaitai::kstruct(p__io) {
@@ -76,47 +119,4 @@ void mbr_partition_table_t::partition_entry_t::_clean_up() {
     if (m_chs_end) {
         delete m_chs_end; m_chs_end = 0;
     }
-}
-
-mbr_partition_table_t::chs_t::chs_t(kaitai::kstream* p__io, mbr_partition_table_t::partition_entry_t* p__parent, mbr_partition_table_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    f_sector = false;
-    f_cylinder = false;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void mbr_partition_table_t::chs_t::_read() {
-    m_head = m__io->read_u1();
-    m_b2 = m__io->read_u1();
-    m_b3 = m__io->read_u1();
-}
-
-mbr_partition_table_t::chs_t::~chs_t() {
-    _clean_up();
-}
-
-void mbr_partition_table_t::chs_t::_clean_up() {
-}
-
-int32_t mbr_partition_table_t::chs_t::sector() {
-    if (f_sector)
-        return m_sector;
-    m_sector = (b2() & 63);
-    f_sector = true;
-    return m_sector;
-}
-
-int32_t mbr_partition_table_t::chs_t::cylinder() {
-    if (f_cylinder)
-        return m_cylinder;
-    m_cylinder = (b3() + ((b2() & 192) << 2));
-    f_cylinder = true;
-    return m_cylinder;
 }

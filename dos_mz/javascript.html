@@ -198,7 +198,17 @@ added support for relocations.</p>
                 
                 <li>
                 
+                <a href="graphviz.html" title="DOS MZ executable parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
                 <a href="java.html" title="DOS MZ executable parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="java-write.html" title="DOS MZ executable parsing Java (read-write) library">Java (read-write)</a></li>
                 
                 
                 <li class="active">
@@ -233,7 +243,17 @@ added support for relocations.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="DOS MZ executable parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="DOS MZ executable parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="DOS MZ executable parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -306,13 +326,13 @@ added support for relocations.</p>
 
 <span class="p">(</span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">root</span><span class="p">,</span><span class="w"> </span><span class="nx">factory</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="ow">typeof</span><span class="w"> </span><span class="nx">define</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;function&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">define</span><span class="p">.</span><span class="nx">amd</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">define</span><span class="p">([</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">],</span><span class="w"> </span><span class="nx">factory</span><span class="p">);</span>
-<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="ow">typeof</span><span class="w"> </span><span class="nx">module</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;object&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">factory</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">));</span>
+<span class="w">    </span><span class="nx">define</span><span class="p">([</span><span class="s1">&#39;exports&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">],</span><span class="w"> </span><span class="nx">factory</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="ow">typeof</span><span class="w"> </span><span class="nx">exports</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;object&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">exports</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="ow">typeof</span><span class="w"> </span><span class="nx">exports</span><span class="p">.</span><span class="nx">nodeType</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s1">&#39;number&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">factory</span><span class="p">(</span><span class="nx">exports</span><span class="p">,</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">));</span>
 <span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">root</span><span class="p">.</span><span class="nx">DosMz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">KaitaiStream</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">DosMz</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">DosMz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}),</span><span class="w"> </span><span class="nx">root</span><span class="p">.</span><span class="nx">KaitaiStream</span><span class="p">);</span>
 <span class="w">  </span><span class="p">}</span>
-<span class="p">}(</span><span class="ow">typeof</span><span class="w"> </span><span class="nx">self</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s1">&#39;undefined&#39;</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nx">self</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="p">})(</span><span class="ow">typeof</span><span class="w"> </span><span class="nx">self</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s1">&#39;undefined&#39;</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nx">self</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">DosMz_</span><span class="p">,</span><span class="w"> </span><span class="nx">KaitaiStream</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="cm">/**</span>
 <span class="cm"> * DOS MZ file format is a traditional format for executables in MS-DOS</span>
 <span class="cm"> * environment. Many modern formats (i.e. Windows PE) still maintain</span>
@@ -342,19 +362,19 @@ added support for relocations.</p>
 <span class="w">    </span><span class="kd">function</span><span class="w"> </span><span class="nx">ExeHeader</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">_parent</span><span class="p">,</span><span class="w"> </span><span class="nx">_root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_io</span><span class="p">;</span>
 <span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_parent</span><span class="p">;</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="p">;</span>
 
 <span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="nx">ExeHeader</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">mz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">MzHeader</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">restOfHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">mz</span><span class="p">.</span><span class="nx">lenHeader</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">28</span><span class="p">));</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">restOfHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">mz</span><span class="p">.</span><span class="nx">lenHeader</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">28</span><span class="p">);</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">ExeHeader</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;lenBody&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="nx">get</span><span class="o">:</span><span class="w"> </span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_lenBody</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="kc">undefined</span><span class="p">)</span>
 <span class="w">          </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_m_lenBody</span><span class="p">;</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_m_lenBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">mz</span><span class="p">.</span><span class="nx">lastPageExtraBytes</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mf">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">mz</span><span class="p">.</span><span class="nx">numPages</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">512</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">(((</span><span class="k">this</span><span class="p">.</span><span class="nx">mz</span><span class="p">.</span><span class="nx">numPages</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">512</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">mz</span><span class="p">.</span><span class="nx">lastPageExtraBytes</span><span class="p">))</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">mz</span><span class="p">.</span><span class="nx">lenHeader</span><span class="p">);</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_m_lenBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">mz</span><span class="p">.</span><span class="nx">lastPageExtraBytes</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mf">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">mz</span><span class="p">.</span><span class="nx">numPages</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">512</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">mz</span><span class="p">.</span><span class="nx">numPages</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">512</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">mz</span><span class="p">.</span><span class="nx">lastPageExtraBytes</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">mz</span><span class="p">.</span><span class="nx">lenHeader</span><span class="p">;</span>
 <span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_m_lenBody</span><span class="p">;</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">    </span><span class="p">});</span>
@@ -366,7 +386,7 @@ added support for relocations.</p>
 <span class="w">    </span><span class="kd">function</span><span class="w"> </span><span class="nx">MzHeader</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">_parent</span><span class="p">,</span><span class="w"> </span><span class="nx">_root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_io</span><span class="p">;</span>
 <span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_parent</span><span class="p">;</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="p">;</span>
 
 <span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
 <span class="w">    </span><span class="p">}</span>
@@ -393,7 +413,7 @@ added support for relocations.</p>
 <span class="w">      </span><span class="nx">get</span><span class="o">:</span><span class="w"> </span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_lenHeader</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="kc">undefined</span><span class="p">)</span>
 <span class="w">          </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_m_lenHeader</span><span class="p">;</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_m_lenHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">headerSize</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">16</span><span class="p">);</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_m_lenHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">headerSize</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">16</span><span class="p">;</span>
 <span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_m_lenHeader</span><span class="p">;</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">    </span><span class="p">});</span>
@@ -405,7 +425,7 @@ added support for relocations.</p>
 <span class="w">    </span><span class="kd">function</span><span class="w"> </span><span class="nx">Relocation</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">_parent</span><span class="p">,</span><span class="w"> </span><span class="nx">_root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_io</span><span class="p">;</span>
 <span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_parent</span><span class="p">;</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="p">;</span>
 
 <span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
 <span class="w">    </span><span class="p">}</span>
@@ -436,8 +456,8 @@ added support for relocations.</p>
 
 <span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">DosMz</span><span class="p">;</span>
 <span class="p">})();</span>
-<span class="k">return</span><span class="w"> </span><span class="nx">DosMz</span><span class="p">;</span>
-<span class="p">}));</span>
+<span class="nx">DosMz_</span><span class="p">.</span><span class="nx">DosMz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">DosMz</span><span class="p">;</span>
+<span class="p">});</span>
 </pre></div>
 
         </div>

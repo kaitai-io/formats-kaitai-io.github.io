@@ -22,15 +22,15 @@ namespace Kaitai
         }
 
 
+        public enum BlockIdentifiers
+        {
+            ProductInformation = 1,
+        }
+
         public enum SignatureAlgorithms
         {
             RsaPkcs1Sha1 = 1,
             RsaPkcs1Sha384 = 2,
-        }
-
-        public enum BlockIdentifiers
-        {
-            ProductInformation = 1,
         }
         public MozillaMar(KaitaiStream p__io, KaitaiStruct p__parent = null, MozillaMar p__root = null) : base(p__io)
         {
@@ -42,9 +42,9 @@ namespace Kaitai
         private void _read()
         {
             _magic = m_io.ReadBytes(4);
-            if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 77, 65, 82, 49 }) == 0)))
+            if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 77, 65, 82, 49 }) == 0)))
             {
-                throw new ValidationNotEqualError(new byte[] { 77, 65, 82, 49 }, Magic, M_Io, "/seq/0");
+                throw new ValidationNotEqualError(new byte[] { 77, 65, 82, 49 }, _magic, m_io, "/seq/0");
             }
             _ofsIndex = m_io.ReadU4be();
             _fileSize = m_io.ReadU8be();
@@ -61,14 +61,14 @@ namespace Kaitai
                 _additionalSections.Add(new AdditionalSection(m_io, this, m_root));
             }
         }
-        public partial class MarIndex : KaitaiStruct
+        public partial class AdditionalSection : KaitaiStruct
         {
-            public static MarIndex FromFile(string fileName)
+            public static AdditionalSection FromFile(string fileName)
             {
-                return new MarIndex(new KaitaiStream(fileName));
+                return new AdditionalSection(new KaitaiStream(fileName));
             }
 
-            public MarIndex(KaitaiStream p__io, MozillaMar p__parent = null, MozillaMar p__root = null) : base(p__io)
+            public AdditionalSection(KaitaiStream p__io, MozillaMar p__parent = null, MozillaMar p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -76,21 +76,33 @@ namespace Kaitai
             }
             private void _read()
             {
-                _lenIndex = m_io.ReadU4be();
-                __raw_indexEntries = m_io.ReadBytes(LenIndex);
-                var io___raw_indexEntries = new KaitaiStream(__raw_indexEntries);
-                _indexEntries = new IndexEntries(io___raw_indexEntries, this, m_root);
+                _lenBlock = m_io.ReadU4be();
+                _blockIdentifier = ((MozillaMar.BlockIdentifiers) m_io.ReadU4be());
+                switch (BlockIdentifier) {
+                case MozillaMar.BlockIdentifiers.ProductInformation: {
+                    __raw_bytes = m_io.ReadBytes((LenBlock - 4) - 4);
+                    var io___raw_bytes = new KaitaiStream(__raw_bytes);
+                    _bytes = new ProductInformationBlock(io___raw_bytes, this, m_root);
+                    break;
+                }
+                default: {
+                    _bytes = m_io.ReadBytes((LenBlock - 4) - 4);
+                    break;
+                }
+                }
             }
-            private uint _lenIndex;
-            private IndexEntries _indexEntries;
+            private uint _lenBlock;
+            private BlockIdentifiers _blockIdentifier;
+            private object _bytes;
             private MozillaMar m_root;
             private MozillaMar m_parent;
-            private byte[] __raw_indexEntries;
-            public uint LenIndex { get { return _lenIndex; } }
-            public IndexEntries IndexEntries { get { return _indexEntries; } }
+            private byte[] __raw_bytes;
+            public uint LenBlock { get { return _lenBlock; } }
+            public BlockIdentifiers BlockIdentifier { get { return _blockIdentifier; } }
+            public object Bytes { get { return _bytes; } }
             public MozillaMar M_Root { get { return m_root; } }
             public MozillaMar M_Parent { get { return m_parent; } }
-            public byte[] M_RawIndexEntries { get { return __raw_indexEntries; } }
+            public byte[] M_RawBytes { get { return __raw_bytes; } }
         }
         public partial class IndexEntries : KaitaiStruct
         {
@@ -123,6 +135,119 @@ namespace Kaitai
             public MozillaMar M_Root { get { return m_root; } }
             public MozillaMar.MarIndex M_Parent { get { return m_parent; } }
         }
+        public partial class IndexEntry : KaitaiStruct
+        {
+            public static IndexEntry FromFile(string fileName)
+            {
+                return new IndexEntry(new KaitaiStream(fileName));
+            }
+
+            public IndexEntry(KaitaiStream p__io, MozillaMar.IndexEntries p__parent = null, MozillaMar p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_body = false;
+                _read();
+            }
+            private void _read()
+            {
+                _ofsContent = m_io.ReadU4be();
+                _lenContent = m_io.ReadU4be();
+                _flags = m_io.ReadU4be();
+                _fileName = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytesTerm(0, false, true, true));
+            }
+            private bool f_body;
+            private byte[] _body;
+            public byte[] Body
+            {
+                get
+                {
+                    if (f_body)
+                        return _body;
+                    f_body = true;
+                    KaitaiStream io = M_Root.M_Io;
+                    long _pos = io.Pos;
+                    io.Seek(OfsContent);
+                    _body = io.ReadBytes(LenContent);
+                    io.Seek(_pos);
+                    return _body;
+                }
+            }
+            private uint _ofsContent;
+            private uint _lenContent;
+            private uint _flags;
+            private string _fileName;
+            private MozillaMar m_root;
+            private MozillaMar.IndexEntries m_parent;
+            public uint OfsContent { get { return _ofsContent; } }
+            public uint LenContent { get { return _lenContent; } }
+
+            /// <summary>
+            /// File permission bits (in standard unix-style format).
+            /// </summary>
+            public uint Flags { get { return _flags; } }
+            public string FileName { get { return _fileName; } }
+            public MozillaMar M_Root { get { return m_root; } }
+            public MozillaMar.IndexEntries M_Parent { get { return m_parent; } }
+        }
+        public partial class MarIndex : KaitaiStruct
+        {
+            public static MarIndex FromFile(string fileName)
+            {
+                return new MarIndex(new KaitaiStream(fileName));
+            }
+
+            public MarIndex(KaitaiStream p__io, MozillaMar p__parent = null, MozillaMar p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _lenIndex = m_io.ReadU4be();
+                __raw_indexEntries = m_io.ReadBytes(LenIndex);
+                var io___raw_indexEntries = new KaitaiStream(__raw_indexEntries);
+                _indexEntries = new IndexEntries(io___raw_indexEntries, this, m_root);
+            }
+            private uint _lenIndex;
+            private IndexEntries _indexEntries;
+            private MozillaMar m_root;
+            private MozillaMar m_parent;
+            private byte[] __raw_indexEntries;
+            public uint LenIndex { get { return _lenIndex; } }
+            public IndexEntries IndexEntries { get { return _indexEntries; } }
+            public MozillaMar M_Root { get { return m_root; } }
+            public MozillaMar M_Parent { get { return m_parent; } }
+            public byte[] M_RawIndexEntries { get { return __raw_indexEntries; } }
+        }
+        public partial class ProductInformationBlock : KaitaiStruct
+        {
+            public static ProductInformationBlock FromFile(string fileName)
+            {
+                return new ProductInformationBlock(new KaitaiStream(fileName));
+            }
+
+            public ProductInformationBlock(KaitaiStream p__io, MozillaMar.AdditionalSection p__parent = null, MozillaMar p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _marChannelName = System.Text.Encoding.GetEncoding("UTF-8").GetString(KaitaiStream.BytesTerminate(m_io.ReadBytes(64), 0, false));
+                _productVersion = System.Text.Encoding.GetEncoding("UTF-8").GetString(KaitaiStream.BytesTerminate(m_io.ReadBytes(32), 0, false));
+            }
+            private string _marChannelName;
+            private string _productVersion;
+            private MozillaMar m_root;
+            private MozillaMar.AdditionalSection m_parent;
+            public string MarChannelName { get { return _marChannelName; } }
+            public string ProductVersion { get { return _productVersion; } }
+            public MozillaMar M_Root { get { return m_root; } }
+            public MozillaMar.AdditionalSection M_Parent { get { return m_parent; } }
+        }
         public partial class Signature : KaitaiStruct
         {
             public static Signature FromFile(string fileName)
@@ -153,131 +278,6 @@ namespace Kaitai
             public MozillaMar M_Root { get { return m_root; } }
             public MozillaMar M_Parent { get { return m_parent; } }
         }
-        public partial class ProductInformationBlock : KaitaiStruct
-        {
-            public static ProductInformationBlock FromFile(string fileName)
-            {
-                return new ProductInformationBlock(new KaitaiStream(fileName));
-            }
-
-            public ProductInformationBlock(KaitaiStream p__io, MozillaMar.AdditionalSection p__parent = null, MozillaMar p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _marChannelName = System.Text.Encoding.GetEncoding("UTF-8").GetString(KaitaiStream.BytesTerminate(m_io.ReadBytes(64), 0, false));
-                _productVersion = System.Text.Encoding.GetEncoding("UTF-8").GetString(KaitaiStream.BytesTerminate(m_io.ReadBytes(32), 0, false));
-            }
-            private string _marChannelName;
-            private string _productVersion;
-            private MozillaMar m_root;
-            private MozillaMar.AdditionalSection m_parent;
-            public string MarChannelName { get { return _marChannelName; } }
-            public string ProductVersion { get { return _productVersion; } }
-            public MozillaMar M_Root { get { return m_root; } }
-            public MozillaMar.AdditionalSection M_Parent { get { return m_parent; } }
-        }
-        public partial class IndexEntry : KaitaiStruct
-        {
-            public static IndexEntry FromFile(string fileName)
-            {
-                return new IndexEntry(new KaitaiStream(fileName));
-            }
-
-            public IndexEntry(KaitaiStream p__io, MozillaMar.IndexEntries p__parent = null, MozillaMar p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_body = false;
-                _read();
-            }
-            private void _read()
-            {
-                _ofsContent = m_io.ReadU4be();
-                _lenContent = m_io.ReadU4be();
-                _flags = m_io.ReadU4be();
-                _fileName = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytesTerm(0, false, true, true));
-            }
-            private bool f_body;
-            private byte[] _body;
-            public byte[] Body
-            {
-                get
-                {
-                    if (f_body)
-                        return _body;
-                    KaitaiStream io = M_Root.M_Io;
-                    long _pos = io.Pos;
-                    io.Seek(OfsContent);
-                    _body = io.ReadBytes(LenContent);
-                    io.Seek(_pos);
-                    f_body = true;
-                    return _body;
-                }
-            }
-            private uint _ofsContent;
-            private uint _lenContent;
-            private uint _flags;
-            private string _fileName;
-            private MozillaMar m_root;
-            private MozillaMar.IndexEntries m_parent;
-            public uint OfsContent { get { return _ofsContent; } }
-            public uint LenContent { get { return _lenContent; } }
-
-            /// <summary>
-            /// File permission bits (in standard unix-style format).
-            /// </summary>
-            public uint Flags { get { return _flags; } }
-            public string FileName { get { return _fileName; } }
-            public MozillaMar M_Root { get { return m_root; } }
-            public MozillaMar.IndexEntries M_Parent { get { return m_parent; } }
-        }
-        public partial class AdditionalSection : KaitaiStruct
-        {
-            public static AdditionalSection FromFile(string fileName)
-            {
-                return new AdditionalSection(new KaitaiStream(fileName));
-            }
-
-            public AdditionalSection(KaitaiStream p__io, MozillaMar p__parent = null, MozillaMar p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _lenBlock = m_io.ReadU4be();
-                _blockIdentifier = ((MozillaMar.BlockIdentifiers) m_io.ReadU4be());
-                switch (BlockIdentifier) {
-                case MozillaMar.BlockIdentifiers.ProductInformation: {
-                    __raw_bytes = m_io.ReadBytes(((LenBlock - 4) - 4));
-                    var io___raw_bytes = new KaitaiStream(__raw_bytes);
-                    _bytes = new ProductInformationBlock(io___raw_bytes, this, m_root);
-                    break;
-                }
-                default: {
-                    _bytes = m_io.ReadBytes(((LenBlock - 4) - 4));
-                    break;
-                }
-                }
-            }
-            private uint _lenBlock;
-            private BlockIdentifiers _blockIdentifier;
-            private object _bytes;
-            private MozillaMar m_root;
-            private MozillaMar m_parent;
-            private byte[] __raw_bytes;
-            public uint LenBlock { get { return _lenBlock; } }
-            public BlockIdentifiers BlockIdentifier { get { return _blockIdentifier; } }
-            public object Bytes { get { return _bytes; } }
-            public MozillaMar M_Root { get { return m_root; } }
-            public MozillaMar M_Parent { get { return m_parent; } }
-            public byte[] M_RawBytes { get { return __raw_bytes; } }
-        }
         private bool f_index;
         private MarIndex _index;
         public MarIndex Index
@@ -286,11 +286,11 @@ namespace Kaitai
             {
                 if (f_index)
                     return _index;
+                f_index = true;
                 long _pos = m_io.Pos;
                 m_io.Seek(OfsIndex);
                 _index = new MarIndex(m_io, this, m_root);
                 m_io.Seek(_pos);
-                f_index = true;
                 return _index;
             }
         }

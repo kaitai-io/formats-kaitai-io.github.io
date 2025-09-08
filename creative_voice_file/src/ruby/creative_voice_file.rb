@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -46,14 +46,14 @@ class CreativeVoiceFile < Kaitai::Struct::Struct
     512 => :codecs_adpcm_4_to_16bit,
   }
   I__CODECS = CODECS.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
     @magic = @_io.read_bytes(20)
-    raise Kaitai::Struct::ValidationNotEqualError.new([67, 114, 101, 97, 116, 105, 118, 101, 32, 86, 111, 105, 99, 101, 32, 70, 105, 108, 101, 26].pack('C*'), magic, _io, "/seq/0") if not magic == [67, 114, 101, 97, 116, 105, 118, 101, 32, 86, 111, 105, 99, 101, 32, 70, 105, 108, 101, 26].pack('C*')
+    raise Kaitai::Struct::ValidationNotEqualError.new([67, 114, 101, 97, 116, 105, 118, 101, 32, 86, 111, 105, 99, 101, 32, 70, 105, 108, 101, 26].pack('C*'), @magic, @_io, "/seq/0") if not @magic == [67, 114, 101, 97, 116, 105, 118, 101, 32, 86, 111, 105, 99, 101, 32, 70, 105, 108, 101, 26].pack('C*')
     @header_size = @_io.read_u2le
     @version = @_io.read_u2le
     @checksum = @_io.read_u2le
@@ -65,11 +65,113 @@ class CreativeVoiceFile < Kaitai::Struct::Struct
     end
     self
   end
+  class Block < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @block_type = Kaitai::Struct::Stream::resolve_enum(CreativeVoiceFile::BLOCK_TYPES, @_io.read_u1)
+      if block_type != :block_types_terminator
+        @body_size1 = @_io.read_u2le
+      end
+      if block_type != :block_types_terminator
+        @body_size2 = @_io.read_u1
+      end
+      if block_type != :block_types_terminator
+        case block_type
+        when :block_types_extra_info
+          _io_body = @_io.substream(body_size)
+          @body = BlockExtraInfo.new(_io_body, self, @_root)
+        when :block_types_marker
+          _io_body = @_io.substream(body_size)
+          @body = BlockMarker.new(_io_body, self, @_root)
+        when :block_types_repeat_start
+          _io_body = @_io.substream(body_size)
+          @body = BlockRepeatStart.new(_io_body, self, @_root)
+        when :block_types_silence
+          _io_body = @_io.substream(body_size)
+          @body = BlockSilence.new(_io_body, self, @_root)
+        when :block_types_sound_data
+          _io_body = @_io.substream(body_size)
+          @body = BlockSoundData.new(_io_body, self, @_root)
+        when :block_types_sound_data_new
+          _io_body = @_io.substream(body_size)
+          @body = BlockSoundDataNew.new(_io_body, self, @_root)
+        else
+          @body = @_io.read_bytes(body_size)
+        end
+      end
+      self
+    end
+
+    ##
+    # body_size is a 24-bit little-endian integer, so we're
+    # emulating that by adding two standard-sized integers
+    # (body_size1 and body_size2).
+    def body_size
+      return @body_size unless @body_size.nil?
+      if block_type != :block_types_terminator
+        @body_size = body_size1 + (body_size2 << 16)
+      end
+      @body_size
+    end
+
+    ##
+    # Byte that determines type of block content
+    attr_reader :block_type
+    attr_reader :body_size1
+    attr_reader :body_size2
+
+    ##
+    # Block body, type depends on block type byte
+    attr_reader :body
+    attr_reader :_raw_body
+  end
+
+  ##
+  # @see https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x08:_Extra_info Source
+  class BlockExtraInfo < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @freq_div = @_io.read_u2le
+      @codec = Kaitai::Struct::Stream::resolve_enum(CreativeVoiceFile::CODECS, @_io.read_u1)
+      @num_channels_1 = @_io.read_u1
+      self
+    end
+
+    ##
+    # Number of channels (1 = mono, 2 = stereo)
+    def num_channels
+      return @num_channels unless @num_channels.nil?
+      @num_channels = num_channels_1 + 1
+      @num_channels
+    end
+    def sample_rate
+      return @sample_rate unless @sample_rate.nil?
+      @sample_rate = 256000000.0 / (num_channels * (65536 - freq_div))
+      @sample_rate
+    end
+
+    ##
+    # Frequency divisor
+    attr_reader :freq_div
+    attr_reader :codec
+
+    ##
+    # Number of channels minus 1 (0 = mono, 1 = stereo)
+    attr_reader :num_channels_1
+  end
 
   ##
   # @see https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x04:_Marker Source
   class BlockMarker < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -85,9 +187,27 @@ class CreativeVoiceFile < Kaitai::Struct::Struct
   end
 
   ##
+  # @see https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x06:_Repeat_start Source
+  class BlockRepeatStart < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @repeat_count_1 = @_io.read_u2le
+      self
+    end
+
+    ##
+    # Number of repetitions minus 1; 0xffff means infinite repetitions
+    attr_reader :repeat_count_1
+  end
+
+  ##
   # @see https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x03:_Silence Source
   class BlockSilence < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -97,18 +217,18 @@ class CreativeVoiceFile < Kaitai::Struct::Struct
       @freq_div = @_io.read_u1
       self
     end
-    def sample_rate
-      return @sample_rate unless @sample_rate.nil?
-      @sample_rate = (1000000.0 / (256 - freq_div))
-      @sample_rate
-    end
 
     ##
     # Duration of silence, in seconds
     def duration_sec
       return @duration_sec unless @duration_sec.nil?
-      @duration_sec = (duration_samples / sample_rate)
+      @duration_sec = duration_samples / sample_rate
       @duration_sec
+    end
+    def sample_rate
+      return @sample_rate unless @sample_rate.nil?
+      @sample_rate = 1000000.0 / (256 - freq_div)
+      @sample_rate
     end
 
     ##
@@ -121,9 +241,36 @@ class CreativeVoiceFile < Kaitai::Struct::Struct
   end
 
   ##
+  # @see https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x01:_Sound_data Source
+  class BlockSoundData < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @freq_div = @_io.read_u1
+      @codec = Kaitai::Struct::Stream::resolve_enum(CreativeVoiceFile::CODECS, @_io.read_u1)
+      @wave = @_io.read_bytes_full
+      self
+    end
+    def sample_rate
+      return @sample_rate unless @sample_rate.nil?
+      @sample_rate = 1000000.0 / (256 - freq_div)
+      @sample_rate
+    end
+
+    ##
+    # Frequency divisor, used to determine sample rate
+    attr_reader :freq_div
+    attr_reader :codec
+    attr_reader :wave
+  end
+
+  ##
   # @see https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x09:_Sound_data_.28New_format.29 Source
   class BlockSoundDataNew < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -143,159 +290,6 @@ class CreativeVoiceFile < Kaitai::Struct::Struct
     attr_reader :codec
     attr_reader :reserved
     attr_reader :wave
-  end
-  class Block < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @block_type = Kaitai::Struct::Stream::resolve_enum(CreativeVoiceFile::BLOCK_TYPES, @_io.read_u1)
-      if block_type != :block_types_terminator
-        @body_size1 = @_io.read_u2le
-      end
-      if block_type != :block_types_terminator
-        @body_size2 = @_io.read_u1
-      end
-      if block_type != :block_types_terminator
-        case block_type
-        when :block_types_sound_data_new
-          @_raw_body = @_io.read_bytes(body_size)
-          _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-          @body = BlockSoundDataNew.new(_io__raw_body, self, @_root)
-        when :block_types_repeat_start
-          @_raw_body = @_io.read_bytes(body_size)
-          _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-          @body = BlockRepeatStart.new(_io__raw_body, self, @_root)
-        when :block_types_marker
-          @_raw_body = @_io.read_bytes(body_size)
-          _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-          @body = BlockMarker.new(_io__raw_body, self, @_root)
-        when :block_types_sound_data
-          @_raw_body = @_io.read_bytes(body_size)
-          _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-          @body = BlockSoundData.new(_io__raw_body, self, @_root)
-        when :block_types_extra_info
-          @_raw_body = @_io.read_bytes(body_size)
-          _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-          @body = BlockExtraInfo.new(_io__raw_body, self, @_root)
-        when :block_types_silence
-          @_raw_body = @_io.read_bytes(body_size)
-          _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-          @body = BlockSilence.new(_io__raw_body, self, @_root)
-        else
-          @body = @_io.read_bytes(body_size)
-        end
-      end
-      self
-    end
-
-    ##
-    # body_size is a 24-bit little-endian integer, so we're
-    # emulating that by adding two standard-sized integers
-    # (body_size1 and body_size2).
-    def body_size
-      return @body_size unless @body_size.nil?
-      if block_type != :block_types_terminator
-        @body_size = (body_size1 + (body_size2 << 16))
-      end
-      @body_size
-    end
-
-    ##
-    # Byte that determines type of block content
-    attr_reader :block_type
-    attr_reader :body_size1
-    attr_reader :body_size2
-
-    ##
-    # Block body, type depends on block type byte
-    attr_reader :body
-    attr_reader :_raw_body
-  end
-
-  ##
-  # @see https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x06:_Repeat_start Source
-  class BlockRepeatStart < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @repeat_count_1 = @_io.read_u2le
-      self
-    end
-
-    ##
-    # Number of repetitions minus 1; 0xffff means infinite repetitions
-    attr_reader :repeat_count_1
-  end
-
-  ##
-  # @see https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x01:_Sound_data Source
-  class BlockSoundData < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @freq_div = @_io.read_u1
-      @codec = Kaitai::Struct::Stream::resolve_enum(CreativeVoiceFile::CODECS, @_io.read_u1)
-      @wave = @_io.read_bytes_full
-      self
-    end
-    def sample_rate
-      return @sample_rate unless @sample_rate.nil?
-      @sample_rate = (1000000.0 / (256 - freq_div))
-      @sample_rate
-    end
-
-    ##
-    # Frequency divisor, used to determine sample rate
-    attr_reader :freq_div
-    attr_reader :codec
-    attr_reader :wave
-  end
-
-  ##
-  # @see https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x08:_Extra_info Source
-  class BlockExtraInfo < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @freq_div = @_io.read_u2le
-      @codec = Kaitai::Struct::Stream::resolve_enum(CreativeVoiceFile::CODECS, @_io.read_u1)
-      @num_channels_1 = @_io.read_u1
-      self
-    end
-
-    ##
-    # Number of channels (1 = mono, 2 = stereo)
-    def num_channels
-      return @num_channels unless @num_channels.nil?
-      @num_channels = (num_channels_1 + 1)
-      @num_channels
-    end
-    def sample_rate
-      return @sample_rate unless @sample_rate.nil?
-      @sample_rate = (256000000.0 / (num_channels * (65536 - freq_div)))
-      @sample_rate
-    end
-
-    ##
-    # Frequency divisor
-    attr_reader :freq_div
-    attr_reader :codec
-
-    ##
-    # Number of channels minus 1 (0 = mono, 1 = stereo)
-    attr_reader :num_channels_1
   end
   attr_reader :magic
 

@@ -10,15 +10,15 @@
 
 namespace {
     class Ico extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Ico $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Ico $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic = $this->_io->readBytes(4);
-            if (!($this->magic() == "\x00\x00\x01\x00")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00\x00\x01\x00", $this->magic(), $this->_io(), "/seq/0");
+            if (!($this->_m_magic == "\x00\x00\x01\x00")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00\x00\x01\x00", $this->_m_magic, $this->_io, "/seq/0");
             }
             $this->_m_numImages = $this->_io->readU2le();
             $this->_m_images = [];
@@ -42,7 +42,7 @@ namespace {
 
 namespace Ico {
     class IconDirEntry extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Ico $_parent = null, \Ico $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Ico $_parent = null, ?\Ico $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -52,8 +52,8 @@ namespace Ico {
             $this->_m_height = $this->_io->readU1();
             $this->_m_numColors = $this->_io->readU1();
             $this->_m_reserved = $this->_io->readBytes(1);
-            if (!($this->reserved() == "\x00")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00", $this->reserved(), $this->_io(), "/types/icon_dir_entry/seq/3");
+            if (!($this->_m_reserved == "\x00")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00", $this->_m_reserved, $this->_io, "/types/icon_dir_entry/seq/3");
             }
             $this->_m_numPlanes = $this->_io->readU2le();
             $this->_m_bpp = $this->_io->readU2le();
@@ -76,6 +76,17 @@ namespace Ico {
             $this->_io->seek($_pos);
             return $this->_m_img;
         }
+        protected $_m_isPng;
+
+        /**
+         * True if this image is in PNG format.
+         */
+        public function isPng() {
+            if ($this->_m_isPng !== null)
+                return $this->_m_isPng;
+            $this->_m_isPng = $this->pngHeader() == "\x89\x50\x4E\x47\x0D\x0A\x1A\x0A";
+            return $this->_m_isPng;
+        }
         protected $_m_pngHeader;
 
         /**
@@ -90,17 +101,6 @@ namespace Ico {
             $this->_m_pngHeader = $this->_io->readBytes(8);
             $this->_io->seek($_pos);
             return $this->_m_pngHeader;
-        }
-        protected $_m_isPng;
-
-        /**
-         * True if this image is in PNG format.
-         */
-        public function isPng() {
-            if ($this->_m_isPng !== null)
-                return $this->_m_isPng;
-            $this->_m_isPng = $this->pngHeader() == "\x89\x50\x4E\x47\x0D\x0A\x1A\x0A";
-            return $this->_m_isPng;
         }
         protected $_m_width;
         protected $_m_height;

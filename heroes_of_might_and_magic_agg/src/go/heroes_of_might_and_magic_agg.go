@@ -15,7 +15,7 @@ type HeroesOfMightAndMagicAgg struct {
 	Entries []*HeroesOfMightAndMagicAgg_Entry
 	_io *kaitai.Stream
 	_root *HeroesOfMightAndMagicAgg
-	_parent interface{}
+	_parent kaitai.Struct
 	_raw_filenames [][]byte
 	_f_filenames bool
 	filenames []*HeroesOfMightAndMagicAgg_Filename
@@ -25,7 +25,11 @@ func NewHeroesOfMightAndMagicAgg() *HeroesOfMightAndMagicAgg {
 	}
 }
 
-func (this *HeroesOfMightAndMagicAgg) Read(io *kaitai.Stream, parent interface{}, root *HeroesOfMightAndMagicAgg) (err error) {
+func (this HeroesOfMightAndMagicAgg) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *HeroesOfMightAndMagicAgg) Read(io *kaitai.Stream, parent kaitai.Struct, root *HeroesOfMightAndMagicAgg) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -50,13 +54,14 @@ func (this *HeroesOfMightAndMagicAgg) Filenames() (v []*HeroesOfMightAndMagicAgg
 	if (this._f_filenames) {
 		return this.filenames, nil
 	}
+	this._f_filenames = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
 	}
 	tmp3 := this.Entries
 	tmp4 := this.Entries
-	_, err = this._io.Seek(int64((tmp3[len(tmp3) - 1].Offset + tmp4[len(tmp4) - 1].Size)), io.SeekStart)
+	_, err = this._io.Seek(int64(tmp3[len(tmp3) - 1].Offset + tmp4[len(tmp4) - 1].Size), io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
@@ -80,8 +85,6 @@ func (this *HeroesOfMightAndMagicAgg) Filenames() (v []*HeroesOfMightAndMagicAgg
 	if err != nil {
 		return nil, err
 	}
-	this._f_filenames = true
-	this._f_filenames = true
 	return this.filenames, nil
 }
 type HeroesOfMightAndMagicAgg_Entry struct {
@@ -98,6 +101,10 @@ type HeroesOfMightAndMagicAgg_Entry struct {
 func NewHeroesOfMightAndMagicAgg_Entry() *HeroesOfMightAndMagicAgg_Entry {
 	return &HeroesOfMightAndMagicAgg_Entry{
 	}
+}
+
+func (this HeroesOfMightAndMagicAgg_Entry) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *HeroesOfMightAndMagicAgg_Entry) Read(io *kaitai.Stream, parent *HeroesOfMightAndMagicAgg, root *HeroesOfMightAndMagicAgg) (err error) {
@@ -131,6 +138,7 @@ func (this *HeroesOfMightAndMagicAgg_Entry) Body() (v []byte, err error) {
 	if (this._f_body) {
 		return this.body, nil
 	}
+	this._f_body = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
@@ -149,8 +157,6 @@ func (this *HeroesOfMightAndMagicAgg_Entry) Body() (v []byte, err error) {
 	if err != nil {
 		return nil, err
 	}
-	this._f_body = true
-	this._f_body = true
 	return this.body, nil
 }
 type HeroesOfMightAndMagicAgg_Filename struct {
@@ -162,6 +168,10 @@ type HeroesOfMightAndMagicAgg_Filename struct {
 func NewHeroesOfMightAndMagicAgg_Filename() *HeroesOfMightAndMagicAgg_Filename {
 	return &HeroesOfMightAndMagicAgg_Filename{
 	}
+}
+
+func (this HeroesOfMightAndMagicAgg_Filename) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *HeroesOfMightAndMagicAgg_Filename) Read(io *kaitai.Stream, parent *HeroesOfMightAndMagicAgg, root *HeroesOfMightAndMagicAgg) (err error) {

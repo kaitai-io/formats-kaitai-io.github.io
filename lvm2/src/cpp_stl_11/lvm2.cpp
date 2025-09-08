@@ -5,7 +5,7 @@
 
 lvm2_t::lvm2_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, lvm2_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     m_pv = nullptr;
     f_sector_size = false;
     _read();
@@ -70,8 +70,8 @@ lvm2_t::physical_volume_t::label_t::label_header_t::label_header_t(kaitai::kstre
 
 void lvm2_t::physical_volume_t::label_t::label_header_t::_read() {
     m_signature = m__io->read_bytes(8);
-    if (!(signature() == std::string("\x4C\x41\x42\x45\x4C\x4F\x4E\x45", 8))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\x4C\x41\x42\x45\x4C\x4F\x4E\x45", 8), signature(), _io(), std::string("/types/physical_volume/types/label/types/label_header/seq/0"));
+    if (!(m_signature == std::string("\x4C\x41\x42\x45\x4C\x4F\x4E\x45", 8))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\x4C\x41\x42\x45\x4C\x4F\x4E\x45", 8), m_signature, m__io, std::string("/types/physical_volume/types/label/types/label_header/seq/0"));
     }
     m_sector_number = m__io->read_u8le();
     m_checksum = m__io->read_u4le();
@@ -94,8 +94,8 @@ lvm2_t::physical_volume_t::label_t::label_header_t::label_header__t::label_heade
 void lvm2_t::physical_volume_t::label_t::label_header_t::label_header__t::_read() {
     m_data_offset = m__io->read_u4le();
     m_type_indicator = m__io->read_bytes(8);
-    if (!(type_indicator() == std::string("\x4C\x56\x4D\x32\x20\x30\x30\x31", 8))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\x4C\x56\x4D\x32\x20\x30\x30\x31", 8), type_indicator(), _io(), std::string("/types/physical_volume/types/label/types/label_header/types/label_header_/seq/1"));
+    if (!(m_type_indicator == std::string("\x4C\x56\x4D\x32\x20\x30\x30\x31", 8))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\x4C\x56\x4D\x32\x20\x30\x30\x31", 8), m_type_indicator, m__io, std::string("/types/physical_volume/types/label/types/label_header/types/label_header_/seq/1"));
     }
 }
 
@@ -115,7 +115,7 @@ lvm2_t::physical_volume_t::label_t::volume_header_t::volume_header_t(kaitai::kst
 }
 
 void lvm2_t::physical_volume_t::label_t::volume_header_t::_read() {
-    m_id = kaitai::kstream::bytes_to_str(m__io->read_bytes(32), std::string("ascii"));
+    m_id = kaitai::kstream::bytes_to_str(m__io->read_bytes(32), "ASCII");
     m_size = m__io->read_u8le();
     m_data_area_descriptors = std::unique_ptr<std::vector<std::unique_ptr<data_area_descriptor_t>>>(new std::vector<std::unique_ptr<data_area_descriptor_t>>());
     {
@@ -170,56 +170,16 @@ void lvm2_t::physical_volume_t::label_t::volume_header_t::data_area_descriptor_t
 std::string lvm2_t::physical_volume_t::label_t::volume_header_t::data_area_descriptor_t::data() {
     if (f_data)
         return m_data;
+    f_data = true;
     n_data = true;
     if (size() != 0) {
         n_data = false;
         std::streampos _pos = m__io->pos();
         m__io->seek(offset());
-        m_data = kaitai::kstream::bytes_to_str(m__io->read_bytes(size()), std::string("ascii"));
+        m_data = kaitai::kstream::bytes_to_str(m__io->read_bytes(size()), "ASCII");
         m__io->seek(_pos);
-        f_data = true;
     }
     return m_data;
-}
-
-lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_descriptor_t::metadata_area_descriptor_t(kaitai::kstream* p__io, lvm2_t::physical_volume_t::label_t::volume_header_t* p__parent, lvm2_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    m_data = nullptr;
-    m__io__raw_data = nullptr;
-    f_data = false;
-    _read();
-}
-
-void lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_descriptor_t::_read() {
-    m_offset = m__io->read_u8le();
-    m_size = m__io->read_u8le();
-}
-
-lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_descriptor_t::~metadata_area_descriptor_t() {
-    _clean_up();
-}
-
-void lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_descriptor_t::_clean_up() {
-    if (f_data && !n_data) {
-    }
-}
-
-lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_t* lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_descriptor_t::data() {
-    if (f_data)
-        return m_data.get();
-    n_data = true;
-    if (size() != 0) {
-        n_data = false;
-        std::streampos _pos = m__io->pos();
-        m__io->seek(offset());
-        m__raw_data = m__io->read_bytes(size());
-        m__io__raw_data = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_data));
-        m_data = std::unique_ptr<metadata_area_t>(new metadata_area_t(m__io__raw_data.get(), this, m__root));
-        m__io->seek(_pos);
-        f_data = true;
-    }
-    return m_data.get();
 }
 
 lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_t::metadata_area_t(kaitai::kstream* p__io, lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_descriptor_t* p__parent, lvm2_t* p__root) : kaitai::kstruct(p__io) {
@@ -252,8 +212,8 @@ lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_t::metadata_a
 void lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_t::metadata_area_header_t::_read() {
     m_checksum = std::unique_ptr<metadata_area_header_t>(new metadata_area_header_t(m__io, this, m__root));
     m_signature = m__io->read_bytes(16);
-    if (!(signature() == std::string("\x20\x4C\x56\x4D\x32\x20\x78\x5B\x35\x41\x25\x72\x30\x4E\x2A\x3E", 16))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\x20\x4C\x56\x4D\x32\x20\x78\x5B\x35\x41\x25\x72\x30\x4E\x2A\x3E", 16), signature(), _io(), std::string("/types/physical_volume/types/label/types/volume_header/types/metadata_area/types/metadata_area_header/seq/1"));
+    if (!(m_signature == std::string("\x20\x4C\x56\x4D\x32\x20\x78\x5B\x35\x41\x25\x72\x30\x4E\x2A\x3E", 16))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\x20\x4C\x56\x4D\x32\x20\x78\x5B\x35\x41\x25\x72\x30\x4E\x2A\x3E", 16), m_signature, m__io, std::string("/types/physical_volume/types/label/types/volume_header/types/metadata_area/types/metadata_area_header/seq/1"));
     }
     m_version = m__io->read_u4le();
     m_metadata_area_offset = m__io->read_u8le();
@@ -277,6 +237,12 @@ lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_t::metadata_a
 void lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_t::metadata_area_header_t::_clean_up() {
     if (f_metadata) {
     }
+}
+const std::set<lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_t::metadata_area_header_t::raw_location_descriptor_t::raw_location_descriptor_flags_t> lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_t::metadata_area_header_t::raw_location_descriptor_t::_values_raw_location_descriptor_flags_t{
+    lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_t::metadata_area_header_t::raw_location_descriptor_t::RAW_LOCATION_DESCRIPTOR_FLAGS_RAW_LOCATION_IGNORED,
+};
+bool lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_t::metadata_area_header_t::raw_location_descriptor_t::_is_defined_raw_location_descriptor_flags_t(lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_t::metadata_area_header_t::raw_location_descriptor_t::raw_location_descriptor_flags_t v) {
+    return lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_t::metadata_area_header_t::raw_location_descriptor_t::_values_raw_location_descriptor_flags_t.find(v) != lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_t::metadata_area_header_t::raw_location_descriptor_t::_values_raw_location_descriptor_flags_t.end();
 }
 
 lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_t::metadata_area_header_t::raw_location_descriptor_t::raw_location_descriptor_t(kaitai::kstream* p__io, lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_t::metadata_area_header_t* p__parent, lvm2_t* p__root) : kaitai::kstruct(p__io) {
@@ -302,18 +268,58 @@ void lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_t::metad
 std::string lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_t::metadata_area_header_t::metadata() {
     if (f_metadata)
         return m_metadata;
+    f_metadata = true;
     std::streampos _pos = m__io->pos();
     m__io->seek(metadata_area_offset());
     m_metadata = m__io->read_bytes(metadata_area_size());
     m__io->seek(_pos);
-    f_metadata = true;
     return m_metadata;
+}
+
+lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_descriptor_t::metadata_area_descriptor_t(kaitai::kstream* p__io, lvm2_t::physical_volume_t::label_t::volume_header_t* p__parent, lvm2_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_data = nullptr;
+    m__io__raw_data = nullptr;
+    f_data = false;
+    _read();
+}
+
+void lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_descriptor_t::_read() {
+    m_offset = m__io->read_u8le();
+    m_size = m__io->read_u8le();
+}
+
+lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_descriptor_t::~metadata_area_descriptor_t() {
+    _clean_up();
+}
+
+void lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_descriptor_t::_clean_up() {
+    if (f_data && !n_data) {
+    }
+}
+
+lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_t* lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_descriptor_t::data() {
+    if (f_data)
+        return m_data.get();
+    f_data = true;
+    n_data = true;
+    if (size() != 0) {
+        n_data = false;
+        std::streampos _pos = m__io->pos();
+        m__io->seek(offset());
+        m__raw_data = m__io->read_bytes(size());
+        m__io__raw_data = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_data));
+        m_data = std::unique_ptr<metadata_area_t>(new metadata_area_t(m__io__raw_data.get(), this, m__root));
+        m__io->seek(_pos);
+    }
+    return m_data.get();
 }
 
 int32_t lvm2_t::sector_size() {
     if (f_sector_size)
         return m_sector_size;
-    m_sector_size = 512;
     f_sector_size = true;
+    m_sector_size = 512;
     return m_sector_size;
 }

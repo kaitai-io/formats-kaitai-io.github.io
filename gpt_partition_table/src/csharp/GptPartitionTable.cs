@@ -19,9 +19,9 @@ namespace Kaitai
         {
             m_parent = p__parent;
             m_root = p__root ?? this;
-            f_sectorSize = false;
-            f_primary = false;
             f_backup = false;
+            f_primary = false;
+            f_sectorSize = false;
             _read();
         }
         private void _read()
@@ -83,9 +83,9 @@ namespace Kaitai
             private void _read()
             {
                 _signature = m_io.ReadBytes(8);
-                if (!((KaitaiStream.ByteArrayCompare(Signature, new byte[] { 69, 70, 73, 32, 80, 65, 82, 84 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_signature, new byte[] { 69, 70, 73, 32, 80, 65, 82, 84 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 69, 70, 73, 32, 80, 65, 82, 84 }, Signature, M_Io, "/types/partition_header/seq/0");
+                    throw new ValidationNotEqualError(new byte[] { 69, 70, 73, 32, 80, 65, 82, 84 }, _signature, m_io, "/types/partition_header/seq/0");
                 }
                 _revision = m_io.ReadU4le();
                 _headerSize = m_io.ReadU4le();
@@ -109,9 +109,10 @@ namespace Kaitai
                 {
                     if (f_entries)
                         return _entries;
+                    f_entries = true;
                     KaitaiStream io = M_Root.M_Io;
                     long _pos = io.Pos;
-                    io.Seek((EntriesStart * M_Root.SectorSize));
+                    io.Seek(EntriesStart * M_Root.SectorSize);
                     __raw_entries = new List<byte[]>();
                     _entries = new List<PartitionEntry>();
                     for (var i = 0; i < EntriesCount; i++)
@@ -121,7 +122,6 @@ namespace Kaitai
                         _entries.Add(new PartitionEntry(io___raw_entries, this, m_root));
                     }
                     io.Seek(_pos);
-                    f_entries = true;
                     return _entries;
                 }
             }
@@ -160,17 +160,21 @@ namespace Kaitai
             public GptPartitionTable M_Parent { get { return m_parent; } }
             public List<byte[]> M_RawEntries { get { return __raw_entries; } }
         }
-        private bool f_sectorSize;
-        private int _sectorSize;
-        public int SectorSize
+        private bool f_backup;
+        private PartitionHeader _backup;
+        public PartitionHeader Backup
         {
             get
             {
-                if (f_sectorSize)
-                    return _sectorSize;
-                _sectorSize = (int) (512);
-                f_sectorSize = true;
-                return _sectorSize;
+                if (f_backup)
+                    return _backup;
+                f_backup = true;
+                KaitaiStream io = M_Root.M_Io;
+                long _pos = io.Pos;
+                io.Seek(M_Io.Size - M_Root.SectorSize);
+                _backup = new PartitionHeader(io, this, m_root);
+                io.Seek(_pos);
+                return _backup;
             }
         }
         private bool f_primary;
@@ -181,30 +185,26 @@ namespace Kaitai
             {
                 if (f_primary)
                     return _primary;
+                f_primary = true;
                 KaitaiStream io = M_Root.M_Io;
                 long _pos = io.Pos;
                 io.Seek(M_Root.SectorSize);
                 _primary = new PartitionHeader(io, this, m_root);
                 io.Seek(_pos);
-                f_primary = true;
                 return _primary;
             }
         }
-        private bool f_backup;
-        private PartitionHeader _backup;
-        public PartitionHeader Backup
+        private bool f_sectorSize;
+        private int _sectorSize;
+        public int SectorSize
         {
             get
             {
-                if (f_backup)
-                    return _backup;
-                KaitaiStream io = M_Root.M_Io;
-                long _pos = io.Pos;
-                io.Seek((M_Io.Size - M_Root.SectorSize));
-                _backup = new PartitionHeader(io, this, m_root);
-                io.Seek(_pos);
-                f_backup = true;
-                return _backup;
+                if (f_sectorSize)
+                    return _sectorSize;
+                f_sectorSize = true;
+                _sectorSize = (int) (512);
+                return _sectorSize;
             }
         }
         private GptPartitionTable m_root;

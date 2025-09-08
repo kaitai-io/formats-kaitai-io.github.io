@@ -25,8 +25,8 @@
 
 namespace {
     class AppleSingleDouble extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \AppleSingleDouble $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\AppleSingleDouble $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -60,7 +60,7 @@ namespace {
 
 namespace AppleSingleDouble {
     class Entry extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \AppleSingleDouble $_parent = null, \AppleSingleDouble $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\AppleSingleDouble $_parent = null, ?\AppleSingleDouble $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -124,6 +124,12 @@ namespace AppleSingleDouble\Entry {
         const AFP_SHORT_NAME = 13;
         const AFP_FILE_INFO = 14;
         const AFP_DIRECTORY_ID = 15;
+
+        private const _VALUES = [1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 8 => true, 9 => true, 10 => true, 11 => true, 12 => true, 13 => true, 14 => true, 15 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
@@ -133,7 +139,7 @@ namespace AppleSingleDouble\Entry {
 
 namespace AppleSingleDouble {
     class FinderInfo extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \AppleSingleDouble\Entry $_parent = null, \AppleSingleDouble $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\AppleSingleDouble\Entry $_parent = null, ?\AppleSingleDouble $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -172,7 +178,7 @@ namespace AppleSingleDouble {
 
 namespace AppleSingleDouble {
     class Point extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \AppleSingleDouble\FinderInfo $_parent = null, \AppleSingleDouble $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\AppleSingleDouble\FinderInfo $_parent = null, ?\AppleSingleDouble $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -192,5 +198,11 @@ namespace AppleSingleDouble {
     class FileType {
         const APPLE_SINGLE = 333312;
         const APPLE_DOUBLE = 333319;
+
+        private const _VALUES = [333312 => true, 333319 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

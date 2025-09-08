@@ -129,30 +129,6 @@ namespace Kaitai
                 public SomeIpSdEntries M_Root { get { return m_root; } }
                 public SomeIpSdEntries.SdEntry M_Parent { get { return m_parent; } }
             }
-            public partial class SdServiceEntry : KaitaiStruct
-            {
-                public static SdServiceEntry FromFile(string fileName)
-                {
-                    return new SdServiceEntry(new KaitaiStream(fileName));
-                }
-
-                public SdServiceEntry(KaitaiStream p__io, SomeIpSdEntries.SdEntry p__parent = null, SomeIpSdEntries p__root = null) : base(p__io)
-                {
-                    m_parent = p__parent;
-                    m_root = p__root;
-                    _read();
-                }
-                private void _read()
-                {
-                    _minorVersion = m_io.ReadU4be();
-                }
-                private uint _minorVersion;
-                private SomeIpSdEntries m_root;
-                private SomeIpSdEntries.SdEntry m_parent;
-                public uint MinorVersion { get { return _minorVersion; } }
-                public SomeIpSdEntries M_Root { get { return m_root; } }
-                public SomeIpSdEntries.SdEntry M_Parent { get { return m_parent; } }
-            }
             public partial class SdEventgroupEntry : KaitaiStruct
             {
                 public static SdEventgroupEntry FromFile(string fileName)
@@ -187,6 +163,30 @@ namespace Kaitai
                 public ulong Reserved2 { get { return _reserved2; } }
                 public ulong Counter { get { return _counter; } }
                 public ushort EventGroupId { get { return _eventGroupId; } }
+                public SomeIpSdEntries M_Root { get { return m_root; } }
+                public SomeIpSdEntries.SdEntry M_Parent { get { return m_parent; } }
+            }
+            public partial class SdServiceEntry : KaitaiStruct
+            {
+                public static SdServiceEntry FromFile(string fileName)
+                {
+                    return new SdServiceEntry(new KaitaiStream(fileName));
+                }
+
+                public SdServiceEntry(KaitaiStream p__io, SomeIpSdEntries.SdEntry p__parent = null, SomeIpSdEntries p__root = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    _read();
+                }
+                private void _read()
+                {
+                    _minorVersion = m_io.ReadU4be();
+                }
+                private uint _minorVersion;
+                private SomeIpSdEntries m_root;
+                private SomeIpSdEntries.SdEntry m_parent;
+                public uint MinorVersion { get { return _minorVersion; } }
                 public SomeIpSdEntries M_Root { get { return m_root; } }
                 public SomeIpSdEntries.SdEntry M_Parent { get { return m_parent; } }
             }

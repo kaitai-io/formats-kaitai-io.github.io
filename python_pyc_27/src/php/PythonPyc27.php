@@ -13,8 +13,8 @@
 
 namespace {
     class PythonPyc27 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \PythonPyc27 $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\PythonPyc27 $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -36,8 +36,36 @@ namespace {
 }
 
 namespace PythonPyc27 {
+    class Assembly extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PythonPyc27\CodeObject $_parent = null, ?\PythonPyc27 $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_stringMagic = $this->_io->readBytes(1);
+            if (!($this->_m_stringMagic == "\x73")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x73", $this->_m_stringMagic, $this->_io, "/types/assembly/seq/0");
+            }
+            $this->_m_length = $this->_io->readU4le();
+            $this->_m__raw_items = $this->_io->readBytes($this->length());
+            $_io__raw_items = new \Kaitai\Struct\Stream($this->_m__raw_items);
+            $this->_m_items = new \PythonPyc27\OpArgs($_io__raw_items, $this, $this->_root);
+        }
+        protected $_m_stringMagic;
+        protected $_m_length;
+        protected $_m_items;
+        protected $_m__raw_items;
+        public function stringMagic() { return $this->_m_stringMagic; }
+        public function length() { return $this->_m_length; }
+        public function items() { return $this->_m_items; }
+        public function _raw_items() { return $this->_m__raw_items; }
+    }
+}
+
+namespace PythonPyc27 {
     class CodeObject extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PythonPyc27\PyObject $_parent = null, \PythonPyc27 $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PythonPyc27\PyObject $_parent = null, ?\PythonPyc27 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -94,40 +122,18 @@ namespace PythonPyc27\CodeObject {
         const HAS_ARGS = 4;
         const HAS_KWARGS = 8;
         const GENERATOR = 32;
-    }
-}
 
-namespace PythonPyc27 {
-    class Assembly extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PythonPyc27\CodeObject $_parent = null, \PythonPyc27 $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
+        private const _VALUES = [4 => true, 8 => true, 32 => true];
 
-        private function _read() {
-            $this->_m_stringMagic = $this->_io->readBytes(1);
-            if (!($this->stringMagic() == "\x73")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x73", $this->stringMagic(), $this->_io(), "/types/assembly/seq/0");
-            }
-            $this->_m_length = $this->_io->readU4le();
-            $this->_m__raw_items = $this->_io->readBytes($this->length());
-            $_io__raw_items = new \Kaitai\Struct\Stream($this->_m__raw_items);
-            $this->_m_items = new \PythonPyc27\OpArgs($_io__raw_items, $this, $this->_root);
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
         }
-        protected $_m_stringMagic;
-        protected $_m_length;
-        protected $_m_items;
-        protected $_m__raw_items;
-        public function stringMagic() { return $this->_m_stringMagic; }
-        public function length() { return $this->_m_length; }
-        public function items() { return $this->_m_items; }
-        public function _raw_items() { return $this->_m__raw_items; }
     }
 }
 
 namespace PythonPyc27 {
     class OpArg extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PythonPyc27\OpArgs $_parent = null, \PythonPyc27 $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PythonPyc27\OpArgs $_parent = null, ?\PythonPyc27 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -266,12 +272,38 @@ namespace PythonPyc27\OpArg {
         const EXTENDED_ARG = 145;
         const SET_ADD = 146;
         const MAP_ADD = 147;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 9 => true, 10 => true, 11 => true, 12 => true, 13 => true, 15 => true, 19 => true, 20 => true, 21 => true, 22 => true, 23 => true, 24 => true, 25 => true, 26 => true, 27 => true, 28 => true, 29 => true, 30 => true, 31 => true, 32 => true, 33 => true, 40 => true, 41 => true, 42 => true, 43 => true, 50 => true, 51 => true, 52 => true, 53 => true, 54 => true, 55 => true, 56 => true, 57 => true, 58 => true, 59 => true, 60 => true, 61 => true, 62 => true, 63 => true, 64 => true, 65 => true, 66 => true, 67 => true, 68 => true, 70 => true, 71 => true, 72 => true, 73 => true, 74 => true, 75 => true, 76 => true, 77 => true, 78 => true, 79 => true, 80 => true, 81 => true, 82 => true, 83 => true, 84 => true, 85 => true, 86 => true, 87 => true, 88 => true, 89 => true, 90 => true, 91 => true, 92 => true, 93 => true, 94 => true, 95 => true, 96 => true, 97 => true, 98 => true, 99 => true, 100 => true, 101 => true, 102 => true, 103 => true, 104 => true, 105 => true, 106 => true, 107 => true, 108 => true, 109 => true, 110 => true, 111 => true, 112 => true, 113 => true, 114 => true, 115 => true, 116 => true, 119 => true, 120 => true, 121 => true, 122 => true, 124 => true, 125 => true, 126 => true, 130 => true, 131 => true, 132 => true, 133 => true, 134 => true, 135 => true, 136 => true, 137 => true, 140 => true, 141 => true, 142 => true, 143 => true, 145 => true, 146 => true, 147 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
+    }
+}
+
+namespace PythonPyc27 {
+    class OpArgs extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PythonPyc27\Assembly $_parent = null, ?\PythonPyc27 $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_items = [];
+            $i = 0;
+            while (!$this->_io->isEof()) {
+                $this->_m_items[] = new \PythonPyc27\OpArg($this->_io, $this, $this->_root);
+                $i++;
+            }
+        }
+        protected $_m_items;
+        public function items() { return $this->_m_items; }
     }
 }
 
 namespace PythonPyc27 {
     class PyObject extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \PythonPyc27 $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\PythonPyc27 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -279,32 +311,32 @@ namespace PythonPyc27 {
         private function _read() {
             $this->_m_type = $this->_io->readU1();
             switch ($this->type()) {
-                case \PythonPyc27\PyObject\ObjectType::STRING:
-                    $this->_m_value = new \PythonPyc27\PyObject\PyString($this->_io, $this, $this->_root);
-                    break;
-                case \PythonPyc27\PyObject\ObjectType::TUPLE:
-                    $this->_m_value = new \PythonPyc27\PyObject\Tuple($this->_io, $this, $this->_root);
+                case \PythonPyc27\PyObject\ObjectType::CODE_OBJECT:
+                    $this->_m_value = new \PythonPyc27\CodeObject($this->_io, $this, $this->_root);
                     break;
                 case \PythonPyc27\PyObject\ObjectType::INT:
                     $this->_m_value = $this->_io->readU4le();
                     break;
-                case \PythonPyc27\PyObject\ObjectType::PY_TRUE:
-                    $this->_m_value = new \PythonPyc27\PyObject\PyTrue($this->_io, $this, $this->_root);
-                    break;
-                case \PythonPyc27\PyObject\ObjectType::PY_FALSE:
-                    $this->_m_value = new \PythonPyc27\PyObject\PyFalse($this->_io, $this, $this->_root);
+                case \PythonPyc27\PyObject\ObjectType::INTERNED:
+                    $this->_m_value = new \PythonPyc27\PyObject\InternedString($this->_io, $this, $this->_root);
                     break;
                 case \PythonPyc27\PyObject\ObjectType::NONE:
                     $this->_m_value = new \PythonPyc27\PyObject\PyNone($this->_io, $this, $this->_root);
                     break;
+                case \PythonPyc27\PyObject\ObjectType::PY_FALSE:
+                    $this->_m_value = new \PythonPyc27\PyObject\PyFalse($this->_io, $this, $this->_root);
+                    break;
+                case \PythonPyc27\PyObject\ObjectType::PY_TRUE:
+                    $this->_m_value = new \PythonPyc27\PyObject\PyTrue($this->_io, $this, $this->_root);
+                    break;
+                case \PythonPyc27\PyObject\ObjectType::STRING:
+                    $this->_m_value = new \PythonPyc27\PyObject\PyString($this->_io, $this, $this->_root);
+                    break;
                 case \PythonPyc27\PyObject\ObjectType::STRING_REF:
                     $this->_m_value = new \PythonPyc27\PyObject\StringRef($this->_io, $this, $this->_root);
                     break;
-                case \PythonPyc27\PyObject\ObjectType::CODE_OBJECT:
-                    $this->_m_value = new \PythonPyc27\CodeObject($this->_io, $this, $this->_root);
-                    break;
-                case \PythonPyc27\PyObject\ObjectType::INTERNED:
-                    $this->_m_value = new \PythonPyc27\PyObject\InternedString($this->_io, $this, $this->_root);
+                case \PythonPyc27\PyObject\ObjectType::TUPLE:
+                    $this->_m_value = new \PythonPyc27\PyObject\Tuple($this->_io, $this, $this->_root);
                     break;
             }
         }
@@ -316,8 +348,26 @@ namespace PythonPyc27 {
 }
 
 namespace PythonPyc27\PyObject {
-    class PyNone extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PythonPyc27\PyObject $_parent = null, \PythonPyc27 $_root = null) {
+    class InternedString extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PythonPyc27\PyObject $_parent = null, ?\PythonPyc27 $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_length = $this->_io->readU4le();
+            $this->_m_data = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->length()), "UTF-8");
+        }
+        protected $_m_length;
+        protected $_m_data;
+        public function length() { return $this->_m_length; }
+        public function data() { return $this->_m_data; }
+    }
+}
+
+namespace PythonPyc27\PyObject {
+    class PyFalse extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PythonPyc27\PyObject $_parent = null, ?\PythonPyc27 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -328,8 +378,38 @@ namespace PythonPyc27\PyObject {
 }
 
 namespace PythonPyc27\PyObject {
-    class PyFalse extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PythonPyc27\PyObject $_parent = null, \PythonPyc27 $_root = null) {
+    class PyNone extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PythonPyc27\PyObject $_parent = null, ?\PythonPyc27 $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+        }
+    }
+}
+
+namespace PythonPyc27\PyObject {
+    class PyString extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PythonPyc27\PyObject $_parent = null, ?\PythonPyc27 $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_length = $this->_io->readU4le();
+            $this->_m_data = $this->_io->readBytes($this->length());
+        }
+        protected $_m_length;
+        protected $_m_data;
+        public function length() { return $this->_m_length; }
+        public function data() { return $this->_m_data; }
+    }
+}
+
+namespace PythonPyc27\PyObject {
+    class PyTrue extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PythonPyc27\PyObject $_parent = null, ?\PythonPyc27 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -341,7 +421,7 @@ namespace PythonPyc27\PyObject {
 
 namespace PythonPyc27\PyObject {
     class StringRef extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PythonPyc27\PyObject $_parent = null, \PythonPyc27 $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PythonPyc27\PyObject $_parent = null, ?\PythonPyc27 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -355,20 +435,8 @@ namespace PythonPyc27\PyObject {
 }
 
 namespace PythonPyc27\PyObject {
-    class PyTrue extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PythonPyc27\PyObject $_parent = null, \PythonPyc27 $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-        }
-    }
-}
-
-namespace PythonPyc27\PyObject {
     class Tuple extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PythonPyc27\PyObject $_parent = null, \PythonPyc27 $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PythonPyc27\PyObject $_parent = null, ?\PythonPyc27 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -390,50 +458,14 @@ namespace PythonPyc27\PyObject {
 
 namespace PythonPyc27\PyObject {
     class UnicodeString extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \PythonPyc27 $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\PythonPyc27 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_length = $this->_io->readU4le();
-            $this->_m_data = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->length()), "utf-8");
-        }
-        protected $_m_length;
-        protected $_m_data;
-        public function length() { return $this->_m_length; }
-        public function data() { return $this->_m_data; }
-    }
-}
-
-namespace PythonPyc27\PyObject {
-    class InternedString extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PythonPyc27\PyObject $_parent = null, \PythonPyc27 $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_length = $this->_io->readU4le();
-            $this->_m_data = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->length()), "utf-8");
-        }
-        protected $_m_length;
-        protected $_m_data;
-        public function length() { return $this->_m_length; }
-        public function data() { return $this->_m_data; }
-    }
-}
-
-namespace PythonPyc27\PyObject {
-    class PyString extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PythonPyc27\PyObject $_parent = null, \PythonPyc27 $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_length = $this->_io->readU4le();
-            $this->_m_data = $this->_io->readBytes($this->length());
+            $this->_m_data = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->length()), "UTF-8");
         }
         protected $_m_length;
         protected $_m_data;
@@ -454,26 +486,12 @@ namespace PythonPyc27\PyObject {
         const STRING = 115;
         const INTERNED = 116;
         const UNICODE_STRING = 117;
-    }
-}
 
-namespace PythonPyc27 {
-    class OpArgs extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PythonPyc27\Assembly $_parent = null, \PythonPyc27 $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
+        private const _VALUES = [40 => true, 70 => true, 78 => true, 82 => true, 84 => true, 99 => true, 105 => true, 115 => true, 116 => true, 117 => true];
 
-        private function _read() {
-            $this->_m_items = [];
-            $i = 0;
-            while (!$this->_io->isEof()) {
-                $this->_m_items[] = new \PythonPyc27\OpArg($this->_io, $this, $this->_root);
-                $i++;
-            }
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
         }
-        protected $_m_items;
-        public function items() { return $this->_m_items; }
     }
 }
 
@@ -504,5 +522,11 @@ namespace PythonPyc27 {
         const V27_A0C = 62191;
         const V27_A0D = 62201;
         const V27_A0E = 62211;
+
+        private const _VALUES = [20121 => true, 50428 => true, 50823 => true, 60202 => true, 60717 => true, 62011 => true, 62021 => true, 62041 => true, 62051 => true, 62061 => true, 62071 => true, 62081 => true, 62091 => true, 62092 => true, 62101 => true, 62111 => true, 62121 => true, 62131 => true, 62151 => true, 62161 => true, 62171 => true, 62181 => true, 62191 => true, 62201 => true, 62211 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

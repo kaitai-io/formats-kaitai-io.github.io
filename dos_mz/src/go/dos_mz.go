@@ -22,7 +22,7 @@ type DosMz struct {
 	Body []byte
 	_io *kaitai.Stream
 	_root *DosMz
-	_parent interface{}
+	_parent kaitai.Struct
 	_f_relocations bool
 	relocations []*DosMz_Relocation
 }
@@ -31,7 +31,11 @@ func NewDosMz() *DosMz {
 	}
 }
 
-func (this *DosMz) Read(io *kaitai.Stream, parent interface{}, root *DosMz) (err error) {
+func (this DosMz) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *DosMz) Read(io *kaitai.Stream, parent kaitai.Struct, root *DosMz) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -58,6 +62,7 @@ func (this *DosMz) Relocations() (v []*DosMz_Relocation, err error) {
 	if (this._f_relocations) {
 		return this.relocations, nil
 	}
+	this._f_relocations = true
 	if (this.Header.Mz.OfsRelocations != 0) {
 		thisIo := this.Header._io
 		_pos, err := thisIo.Pos()
@@ -81,9 +86,7 @@ func (this *DosMz) Relocations() (v []*DosMz_Relocation, err error) {
 		if err != nil {
 			return nil, err
 		}
-		this._f_relocations = true
 	}
-	this._f_relocations = true
 	return this.relocations, nil
 }
 type DosMz_ExeHeader struct {
@@ -98,6 +101,10 @@ type DosMz_ExeHeader struct {
 func NewDosMz_ExeHeader() *DosMz_ExeHeader {
 	return &DosMz_ExeHeader{
 	}
+}
+
+func (this DosMz_ExeHeader) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *DosMz_ExeHeader) Read(io *kaitai.Stream, parent *DosMz, root *DosMz) (err error) {
@@ -115,7 +122,7 @@ func (this *DosMz_ExeHeader) Read(io *kaitai.Stream, parent *DosMz, root *DosMz)
 	if err != nil {
 		return err
 	}
-	tmp7, err := this._io.ReadBytes(int((tmp6 - 28)))
+	tmp7, err := this._io.ReadBytes(int(tmp6 - 28))
 	if err != nil {
 		return err
 	}
@@ -127,18 +134,18 @@ func (this *DosMz_ExeHeader) LenBody() (v int, err error) {
 	if (this._f_lenBody) {
 		return this.lenBody, nil
 	}
+	this._f_lenBody = true
 	var tmp8 int;
 	if (this.Mz.LastPageExtraBytes == 0) {
-		tmp8 = (this.Mz.NumPages * 512)
+		tmp8 = this.Mz.NumPages * 512
 	} else {
-		tmp8 = (((this.Mz.NumPages - 1) * 512) + this.Mz.LastPageExtraBytes)
+		tmp8 = (this.Mz.NumPages - 1) * 512 + this.Mz.LastPageExtraBytes
 	}
 	tmp9, err := this.Mz.LenHeader()
 	if err != nil {
 		return 0, err
 	}
-	this.lenBody = int((tmp8 - tmp9))
-	this._f_lenBody = true
+	this.lenBody = int(tmp8 - tmp9)
 	return this.lenBody, nil
 }
 type DosMz_MzHeader struct {
@@ -165,6 +172,10 @@ type DosMz_MzHeader struct {
 func NewDosMz_MzHeader() *DosMz_MzHeader {
 	return &DosMz_MzHeader{
 	}
+}
+
+func (this DosMz_MzHeader) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *DosMz_MzHeader) Read(io *kaitai.Stream, parent *DosMz_ExeHeader, root *DosMz) (err error) {
@@ -252,8 +263,8 @@ func (this *DosMz_MzHeader) LenHeader() (v int, err error) {
 	if (this._f_lenHeader) {
 		return this.lenHeader, nil
 	}
-	this.lenHeader = int((this.HeaderSize * 16))
 	this._f_lenHeader = true
+	this.lenHeader = int(this.HeaderSize * 16)
 	return this.lenHeader, nil
 }
 type DosMz_Relocation struct {
@@ -266,6 +277,10 @@ type DosMz_Relocation struct {
 func NewDosMz_Relocation() *DosMz_Relocation {
 	return &DosMz_Relocation{
 	}
+}
+
+func (this DosMz_Relocation) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *DosMz_Relocation) Read(io *kaitai.Stream, parent *DosMz, root *DosMz) (err error) {

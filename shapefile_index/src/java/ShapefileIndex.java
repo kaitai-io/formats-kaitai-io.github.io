@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class ShapefileIndex extends KaitaiStruct {
     public static ShapefileIndex fromFile(String fileName) throws IOException {
@@ -66,6 +67,93 @@ public class ShapefileIndex extends KaitaiStruct {
             }
         }
     }
+
+    public void _fetchInstances() {
+        this.header._fetchInstances();
+        for (int i = 0; i < this.records.size(); i++) {
+            this.records.get(((Number) (i)).intValue())._fetchInstances();
+        }
+    }
+    public static class BoundingBoxXYZM extends KaitaiStruct {
+        public static BoundingBoxXYZM fromFile(String fileName) throws IOException {
+            return new BoundingBoxXYZM(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public BoundingBoxXYZM(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public BoundingBoxXYZM(KaitaiStream _io, ShapefileIndex.FileHeader _parent) {
+            this(_io, _parent, null);
+        }
+
+        public BoundingBoxXYZM(KaitaiStream _io, ShapefileIndex.FileHeader _parent, ShapefileIndex _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.x = new BoundsMinMax(this._io, this, _root);
+            this.y = new BoundsMinMax(this._io, this, _root);
+            this.z = new BoundsMinMax(this._io, this, _root);
+            this.m = new BoundsMinMax(this._io, this, _root);
+        }
+
+        public void _fetchInstances() {
+            this.x._fetchInstances();
+            this.y._fetchInstances();
+            this.z._fetchInstances();
+            this.m._fetchInstances();
+        }
+        private BoundsMinMax x;
+        private BoundsMinMax y;
+        private BoundsMinMax z;
+        private BoundsMinMax m;
+        private ShapefileIndex _root;
+        private ShapefileIndex.FileHeader _parent;
+        public BoundsMinMax x() { return x; }
+        public BoundsMinMax y() { return y; }
+        public BoundsMinMax z() { return z; }
+        public BoundsMinMax m() { return m; }
+        public ShapefileIndex _root() { return _root; }
+        public ShapefileIndex.FileHeader _parent() { return _parent; }
+    }
+    public static class BoundsMinMax extends KaitaiStruct {
+        public static BoundsMinMax fromFile(String fileName) throws IOException {
+            return new BoundsMinMax(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public BoundsMinMax(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public BoundsMinMax(KaitaiStream _io, ShapefileIndex.BoundingBoxXYZM _parent) {
+            this(_io, _parent, null);
+        }
+
+        public BoundsMinMax(KaitaiStream _io, ShapefileIndex.BoundingBoxXYZM _parent, ShapefileIndex _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.min = this._io.readF8be();
+            this.max = this._io.readF8be();
+        }
+
+        public void _fetchInstances() {
+        }
+        private double min;
+        private double max;
+        private ShapefileIndex _root;
+        private ShapefileIndex.BoundingBoxXYZM _parent;
+        public double min() { return min; }
+        public double max() { return max; }
+        public ShapefileIndex _root() { return _root; }
+        public ShapefileIndex.BoundingBoxXYZM _parent() { return _parent; }
+    }
     public static class FileHeader extends KaitaiStruct {
         public static FileHeader fromFile(String fileName) throws IOException {
             return new FileHeader(new ByteBufferKaitaiStream(fileName));
@@ -87,36 +175,40 @@ public class ShapefileIndex extends KaitaiStruct {
         }
         private void _read() {
             this.fileCode = this._io.readBytes(4);
-            if (!(Arrays.equals(fileCode(), new byte[] { 0, 0, 39, 10 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 39, 10 }, fileCode(), _io(), "/types/file_header/seq/0");
+            if (!(Arrays.equals(this.fileCode, new byte[] { 0, 0, 39, 10 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 39, 10 }, this.fileCode, this._io, "/types/file_header/seq/0");
             }
             this.unusedField1 = this._io.readBytes(4);
-            if (!(Arrays.equals(unusedField1(), new byte[] { 0, 0, 0, 0 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, unusedField1(), _io(), "/types/file_header/seq/1");
+            if (!(Arrays.equals(this.unusedField1, new byte[] { 0, 0, 0, 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, this.unusedField1, this._io, "/types/file_header/seq/1");
             }
             this.unusedField2 = this._io.readBytes(4);
-            if (!(Arrays.equals(unusedField2(), new byte[] { 0, 0, 0, 0 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, unusedField2(), _io(), "/types/file_header/seq/2");
+            if (!(Arrays.equals(this.unusedField2, new byte[] { 0, 0, 0, 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, this.unusedField2, this._io, "/types/file_header/seq/2");
             }
             this.unusedField3 = this._io.readBytes(4);
-            if (!(Arrays.equals(unusedField3(), new byte[] { 0, 0, 0, 0 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, unusedField3(), _io(), "/types/file_header/seq/3");
+            if (!(Arrays.equals(this.unusedField3, new byte[] { 0, 0, 0, 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, this.unusedField3, this._io, "/types/file_header/seq/3");
             }
             this.unusedField4 = this._io.readBytes(4);
-            if (!(Arrays.equals(unusedField4(), new byte[] { 0, 0, 0, 0 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, unusedField4(), _io(), "/types/file_header/seq/4");
+            if (!(Arrays.equals(this.unusedField4, new byte[] { 0, 0, 0, 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, this.unusedField4, this._io, "/types/file_header/seq/4");
             }
             this.unusedField5 = this._io.readBytes(4);
-            if (!(Arrays.equals(unusedField5(), new byte[] { 0, 0, 0, 0 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, unusedField5(), _io(), "/types/file_header/seq/5");
+            if (!(Arrays.equals(this.unusedField5, new byte[] { 0, 0, 0, 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 0 }, this.unusedField5, this._io, "/types/file_header/seq/5");
             }
             this.fileLength = this._io.readS4be();
             this.version = this._io.readBytes(4);
-            if (!(Arrays.equals(version(), new byte[] { -24, 3, 0, 0 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { -24, 3, 0, 0 }, version(), _io(), "/types/file_header/seq/7");
+            if (!(Arrays.equals(this.version, new byte[] { -24, 3, 0, 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { -24, 3, 0, 0 }, this.version, this._io, "/types/file_header/seq/7");
             }
             this.shapeType = ShapefileIndex.ShapeType.byId(this._io.readS4le());
             this.boundingBox = new BoundingBoxXYZM(this._io, this, _root);
+        }
+
+        public void _fetchInstances() {
+            this.boundingBox._fetchInstances();
         }
         private byte[] fileCode;
         private byte[] unusedField1;
@@ -174,6 +266,9 @@ public class ShapefileIndex extends KaitaiStruct {
             this.offset = this._io.readS4be();
             this.contentLength = this._io.readS4be();
         }
+
+        public void _fetchInstances() {
+        }
         private int offset;
         private int contentLength;
         private ShapefileIndex _root;
@@ -183,78 +278,8 @@ public class ShapefileIndex extends KaitaiStruct {
         public ShapefileIndex _root() { return _root; }
         public ShapefileIndex _parent() { return _parent; }
     }
-    public static class BoundingBoxXYZM extends KaitaiStruct {
-        public static BoundingBoxXYZM fromFile(String fileName) throws IOException {
-            return new BoundingBoxXYZM(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public BoundingBoxXYZM(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public BoundingBoxXYZM(KaitaiStream _io, ShapefileIndex.FileHeader _parent) {
-            this(_io, _parent, null);
-        }
-
-        public BoundingBoxXYZM(KaitaiStream _io, ShapefileIndex.FileHeader _parent, ShapefileIndex _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.x = new BoundsMinMax(this._io, this, _root);
-            this.y = new BoundsMinMax(this._io, this, _root);
-            this.z = new BoundsMinMax(this._io, this, _root);
-            this.m = new BoundsMinMax(this._io, this, _root);
-        }
-        private BoundsMinMax x;
-        private BoundsMinMax y;
-        private BoundsMinMax z;
-        private BoundsMinMax m;
-        private ShapefileIndex _root;
-        private ShapefileIndex.FileHeader _parent;
-        public BoundsMinMax x() { return x; }
-        public BoundsMinMax y() { return y; }
-        public BoundsMinMax z() { return z; }
-        public BoundsMinMax m() { return m; }
-        public ShapefileIndex _root() { return _root; }
-        public ShapefileIndex.FileHeader _parent() { return _parent; }
-    }
-    public static class BoundsMinMax extends KaitaiStruct {
-        public static BoundsMinMax fromFile(String fileName) throws IOException {
-            return new BoundsMinMax(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public BoundsMinMax(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public BoundsMinMax(KaitaiStream _io, ShapefileIndex.BoundingBoxXYZM _parent) {
-            this(_io, _parent, null);
-        }
-
-        public BoundsMinMax(KaitaiStream _io, ShapefileIndex.BoundingBoxXYZM _parent, ShapefileIndex _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.min = this._io.readF8be();
-            this.max = this._io.readF8be();
-        }
-        private double min;
-        private double max;
-        private ShapefileIndex _root;
-        private ShapefileIndex.BoundingBoxXYZM _parent;
-        public double min() { return min; }
-        public double max() { return max; }
-        public ShapefileIndex _root() { return _root; }
-        public ShapefileIndex.BoundingBoxXYZM _parent() { return _parent; }
-    }
     private FileHeader header;
-    private ArrayList<Record> records;
+    private List<Record> records;
     private ShapefileIndex _root;
     private KaitaiStruct _parent;
     public FileHeader header() { return header; }
@@ -262,7 +287,7 @@ public class ShapefileIndex extends KaitaiStruct {
     /**
      * the size of this section of the file in bytes must equal (header.file_length * 2) - 100
      */
-    public ArrayList<Record> records() { return records; }
+    public List<Record> records() { return records; }
     public ShapefileIndex _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

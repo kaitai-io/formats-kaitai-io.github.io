@@ -197,6 +197,11 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="java-write.html" title="VMWare Virtual Disk parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="VMWare Virtual Disk parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -227,7 +232,17 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="python-write.html" title="VMWare Virtual Disk parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="VMWare Virtual Disk parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="VMWare Virtual Disk parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -284,7 +299,7 @@ section#format-index .row {
 <span class="kr">function</span><span class="w"> </span><span class="nc">VmwareVmdk</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">magic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
 <span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">magic</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\075\068\077\086</span><span class="s2">&quot;</span><span class="p">)</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span><span class="w"> </span><span class="o">..</span><span class="w">  </span><span class="s2">&quot;</span><span class="se">\075\068\077\086</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s2">&quot;, but got &quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">magic</span><span class="p">)</span>
+<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\075\068\077\086</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s2">&quot;, but got &quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">magic</span><span class="p">)</span>
 <span class="w">  </span><span class="kr">end</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_s4le</span><span class="p">()</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">VmwareVmdk</span><span class="p">.</span><span class="nf">HeaderFlags</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
@@ -301,16 +316,6 @@ section#format-index .row {
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">compression_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">VmwareVmdk</span><span class="p">.</span><span class="nf">CompressionMethods</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2le</span><span class="p">())</span>
 <span class="kr">end</span>
 
-<span class="nv">VmwareVmdk</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">len_sector</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">VmwareVmdk</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">len_sector</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_sector</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_sector</span>
-<span class="w">  </span><span class="kr">end</span>
-
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_sector</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">512</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_sector</span>
-<span class="kr">end</span>
-
 <span class="nv">VmwareVmdk</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">descriptor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
 <span class="kr">function</span><span class="w"> </span><span class="nc">VmwareVmdk</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">descriptor</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
 <span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_descriptor</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
@@ -318,8 +323,8 @@ section#format-index .row {
 <span class="w">  </span><span class="kr">end</span>
 
 <span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">pos</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">start_descriptor</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">len_sector</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_descriptor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">size_descriptor</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">len_sector</span><span class="p">))</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">start_descriptor</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">len_sector</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_descriptor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">size_descriptor</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">len_sector</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">(</span><span class="nv">_pos</span><span class="p">)</span>
 <span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_descriptor</span>
 <span class="kr">end</span>
@@ -331,8 +336,8 @@ section#format-index .row {
 <span class="w">  </span><span class="kr">end</span>
 
 <span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">pos</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">start_primary_grain</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">len_sector</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_grain_primary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">size_grain</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">len_sector</span><span class="p">))</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">start_primary_grain</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">len_sector</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_grain_primary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">size_grain</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">len_sector</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">(</span><span class="nv">_pos</span><span class="p">)</span>
 <span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_grain_primary</span>
 <span class="kr">end</span>
@@ -344,10 +349,20 @@ section#format-index .row {
 <span class="w">  </span><span class="kr">end</span>
 
 <span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">pos</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">start_secondary_grain</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">len_sector</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_grain_secondary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">size_grain</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">len_sector</span><span class="p">))</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">start_secondary_grain</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">len_sector</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_grain_secondary</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">size_grain</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">len_sector</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">(</span><span class="nv">_pos</span><span class="p">)</span>
 <span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_grain_secondary</span>
+<span class="kr">end</span>
+
+<span class="nv">VmwareVmdk</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">len_sector</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">VmwareVmdk</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">len_sector</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_sector</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_sector</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_sector</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">512</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_sector</span>
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
@@ -370,7 +385,7 @@ section#format-index .row {
 <span class="kr">function</span><span class="w"> </span><span class="nc">VmwareVmdk</span><span class="p">.</span><span class="nc">HeaderFlags</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 

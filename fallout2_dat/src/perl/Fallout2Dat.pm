@@ -2,9 +2,9 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
-use Encode;
+use IO::KaitaiStruct 0.011_000;
 use Compress::Zlib;
+use Encode;
 
 ########################################################################
 package Fallout2Dat;
@@ -29,7 +29,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -45,7 +45,7 @@ sub footer {
     my ($self) = @_;
     return $self->{footer} if ($self->{footer});
     my $_pos = $self->{_io}->pos();
-    $self->{_io}->seek(($self->_io()->size() - 8));
+    $self->{_io}->seek($self->_io()->size() - 8);
     $self->{footer} = Fallout2Dat::Footer->new($self->{_io}, $self, $self->{_root});
     $self->{_io}->seek($_pos);
     return $self->{footer};
@@ -55,14 +55,14 @@ sub index {
     my ($self) = @_;
     return $self->{index} if ($self->{index});
     my $_pos = $self->{_io}->pos();
-    $self->{_io}->seek((($self->_io()->size() - 8) - $self->footer()->index_size()));
+    $self->{_io}->seek(($self->_io()->size() - 8) - $self->footer()->index_size());
     $self->{index} = Fallout2Dat::Index->new($self->{_io}, $self, $self->{_root});
     $self->{_io}->seek($_pos);
     return $self->{index};
 }
 
 ########################################################################
-package Fallout2Dat::Pstr;
+package Fallout2Dat::File;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -81,7 +81,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -91,18 +91,77 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{size} = $self->{_io}->read_u4le();
-    $self->{str} = Encode::decode("ASCII", $self->{_io}->read_bytes($self->size()));
+    $self->{name} = Fallout2Dat::Pstr->new($self->{_io}, $self, $self->{_root});
+    $self->{flags} = $self->{_io}->read_u1();
+    $self->{size_unpacked} = $self->{_io}->read_u4le();
+    $self->{size_packed} = $self->{_io}->read_u4le();
+    $self->{offset} = $self->{_io}->read_u4le();
 }
 
-sub size {
+sub contents {
     my ($self) = @_;
-    return $self->{size};
+    return $self->{contents} if ($self->{contents});
+    if ( (($self->flags() == $Fallout2Dat::COMPRESSION_ZLIB) || ($self->flags() == $Fallout2Dat::COMPRESSION_NONE)) ) {
+        $self->{contents} = ($self->flags() == $Fallout2Dat::COMPRESSION_ZLIB ? $self->contents_zlib() : $self->contents_raw());
+    }
+    return $self->{contents};
 }
 
-sub str {
+sub contents_raw {
     my ($self) = @_;
-    return $self->{str};
+    return $self->{contents_raw} if ($self->{contents_raw});
+    if ($self->flags() == $Fallout2Dat::COMPRESSION_NONE) {
+        my $io = $self->_root()->_io();
+        my $_pos = $io->pos();
+        $io->seek($self->offset());
+        $self->{contents_raw} = $io->read_bytes($self->size_unpacked());
+        $io->seek($_pos);
+    }
+    return $self->{contents_raw};
+}
+
+sub contents_zlib {
+    my ($self) = @_;
+    return $self->{contents_zlib} if ($self->{contents_zlib});
+    if ($self->flags() == $Fallout2Dat::COMPRESSION_ZLIB) {
+        my $io = $self->_root()->_io();
+        my $_pos = $io->pos();
+        $io->seek($self->offset());
+        $self->{_raw_contents_zlib} = $io->read_bytes($self->size_packed());
+        $self->{contents_zlib} = Compress::Zlib::uncompress($self->{_raw_contents_zlib});
+        $io->seek($_pos);
+    }
+    return $self->{contents_zlib};
+}
+
+sub name {
+    my ($self) = @_;
+    return $self->{name};
+}
+
+sub flags {
+    my ($self) = @_;
+    return $self->{flags};
+}
+
+sub size_unpacked {
+    my ($self) = @_;
+    return $self->{size_unpacked};
+}
+
+sub size_packed {
+    my ($self) = @_;
+    return $self->{size_packed};
+}
+
+sub offset {
+    my ($self) = @_;
+    return $self->{offset};
+}
+
+sub _raw_contents_zlib {
+    my ($self) = @_;
+    return $self->{_raw_contents_zlib};
 }
 
 ########################################################################
@@ -125,7 +184,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -169,7 +228,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -180,7 +239,7 @@ sub _read {
     my ($self) = @_;
 
     $self->{file_count} = $self->{_io}->read_u4le();
-    $self->{files} = ();
+    $self->{files} = [];
     my $n_files = $self->file_count();
     for (my $i = 0; $i < $n_files; $i++) {
         push @{$self->{files}}, Fallout2Dat::File->new($self->{_io}, $self, $self->{_root});
@@ -198,7 +257,7 @@ sub files {
 }
 
 ########################################################################
-package Fallout2Dat::File;
+package Fallout2Dat::Pstr;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -217,7 +276,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -227,77 +286,18 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{name} = Fallout2Dat::Pstr->new($self->{_io}, $self, $self->{_root});
-    $self->{flags} = $self->{_io}->read_u1();
-    $self->{size_unpacked} = $self->{_io}->read_u4le();
-    $self->{size_packed} = $self->{_io}->read_u4le();
-    $self->{offset} = $self->{_io}->read_u4le();
+    $self->{size} = $self->{_io}->read_u4le();
+    $self->{str} = Encode::decode("ASCII", $self->{_io}->read_bytes($self->size()));
 }
 
-sub contents_raw {
+sub size {
     my ($self) = @_;
-    return $self->{contents_raw} if ($self->{contents_raw});
-    if ($self->flags() == $Fallout2Dat::COMPRESSION_NONE) {
-        my $io = $self->_root()->_io();
-        my $_pos = $io->pos();
-        $io->seek($self->offset());
-        $self->{contents_raw} = $io->read_bytes($self->size_unpacked());
-        $io->seek($_pos);
-    }
-    return $self->{contents_raw};
+    return $self->{size};
 }
 
-sub contents_zlib {
+sub str {
     my ($self) = @_;
-    return $self->{contents_zlib} if ($self->{contents_zlib});
-    if ($self->flags() == $Fallout2Dat::COMPRESSION_ZLIB) {
-        my $io = $self->_root()->_io();
-        my $_pos = $io->pos();
-        $io->seek($self->offset());
-        $self->{_raw_contents_zlib} = $io->read_bytes($self->size_packed());
-        $self->{contents_zlib} = Compress::Zlib::uncompress($self->{_raw_contents_zlib});
-        $io->seek($_pos);
-    }
-    return $self->{contents_zlib};
-}
-
-sub contents {
-    my ($self) = @_;
-    return $self->{contents} if ($self->{contents});
-    if ( (($self->flags() == $Fallout2Dat::COMPRESSION_ZLIB) || ($self->flags() == $Fallout2Dat::COMPRESSION_NONE)) ) {
-        $self->{contents} = ($self->flags() == $Fallout2Dat::COMPRESSION_ZLIB ? $self->contents_zlib() : $self->contents_raw());
-    }
-    return $self->{contents};
-}
-
-sub name {
-    my ($self) = @_;
-    return $self->{name};
-}
-
-sub flags {
-    my ($self) = @_;
-    return $self->{flags};
-}
-
-sub size_unpacked {
-    my ($self) = @_;
-    return $self->{size_unpacked};
-}
-
-sub size_packed {
-    my ($self) = @_;
-    return $self->{size_packed};
-}
-
-sub offset {
-    my ($self) = @_;
-    return $self->{offset};
-}
-
-sub _raw_contents_zlib {
-    my ($self) = @_;
-    return $self->{_raw_contents_zlib};
+    return $self->{str};
 }
 
 1;

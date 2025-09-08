@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 
 ########################################################################
 package Pcx;
@@ -18,13 +18,13 @@ sub from_file {
     return new($class, IO::KaitaiStruct::Stream->new($fd));
 }
 
+our $ENCODINGS_RLE = 1;
+
 our $VERSIONS_V2_5 = 0;
 our $VERSIONS_V2_8_WITH_PALETTE = 2;
 our $VERSIONS_V2_8_WITHOUT_PALETTE = 3;
 our $VERSIONS_PAINTBRUSH_FOR_WINDOWS = 4;
 our $VERSIONS_V3_0 = 5;
-
-our $ENCODINGS_RLE = 1;
 
 sub new {
     my ($class, $_io, $_parent, $_root) = @_;
@@ -32,7 +32,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -52,7 +52,7 @@ sub palette_256 {
     return $self->{palette_256} if ($self->{palette_256});
     if ( (($self->hdr()->version() == $Pcx::VERSIONS_V3_0) && ($self->hdr()->bits_per_pixel() == 8) && ($self->hdr()->num_planes() == 1)) ) {
         my $_pos = $self->{_io}->pos();
-        $self->{_io}->seek(($self->_io()->size() - 769));
+        $self->{_io}->seek($self->_io()->size() - 769);
         $self->{palette_256} = Pcx::TPalette256->new($self->{_io}, $self, $self->{_root});
         $self->{_io}->seek($_pos);
     }
@@ -89,7 +89,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -204,54 +204,6 @@ sub v_screen_size {
 }
 
 ########################################################################
-package Pcx::TPalette256;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{magic} = $self->{_io}->read_bytes(1);
-    $self->{colors} = ();
-    my $n_colors = 256;
-    for (my $i = 0; $i < $n_colors; $i++) {
-        push @{$self->{colors}}, Pcx::Rgb->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub magic {
-    my ($self) = @_;
-    return $self->{magic};
-}
-
-sub colors {
-    my ($self) = @_;
-    return $self->{colors};
-}
-
-########################################################################
 package Pcx::Rgb;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -271,7 +223,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -299,6 +251,54 @@ sub g {
 sub b {
     my ($self) = @_;
     return $self->{b};
+}
+
+########################################################################
+package Pcx::TPalette256;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{magic} = $self->{_io}->read_bytes(1);
+    $self->{colors} = [];
+    my $n_colors = 256;
+    for (my $i = 0; $i < $n_colors; $i++) {
+        push @{$self->{colors}}, Pcx::Rgb->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub magic {
+    my ($self) = @_;
+    return $self->{magic};
+}
+
+sub colors {
+    my ($self) = @_;
+    return $self->{colors};
 }
 
 1;

@@ -5,7 +5,7 @@
 
 pcx_dcx_t::pcx_dcx_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, pcx_dcx_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     m_files = 0;
 
     try {
@@ -18,8 +18,8 @@ pcx_dcx_t::pcx_dcx_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, pcx_dcx
 
 void pcx_dcx_t::_read() {
     m_magic = m__io->read_bytes(4);
-    if (!(magic() == std::string("\xB1\x68\xDE\x3A", 4))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\xB1\x68\xDE\x3A", 4), magic(), _io(), std::string("/seq/0"));
+    if (!(m_magic == std::string("\xB1\x68\xDE\x3A", 4))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\xB1\x68\xDE\x3A", 4), m_magic, m__io, std::string("/seq/0"));
     }
     m_files = new std::vector<pcx_offset_t*>();
     {
@@ -79,6 +79,7 @@ void pcx_dcx_t::pcx_offset_t::_clean_up() {
 pcx_t* pcx_dcx_t::pcx_offset_t::body() {
     if (f_body)
         return m_body;
+    f_body = true;
     n_body = true;
     if (ofs_body() != 0) {
         n_body = false;
@@ -86,7 +87,6 @@ pcx_t* pcx_dcx_t::pcx_offset_t::body() {
         m__io->seek(ofs_body());
         m_body = new pcx_t(m__io);
         m__io->seek(_pos);
-        f_body = true;
     }
     return m_body;
 }

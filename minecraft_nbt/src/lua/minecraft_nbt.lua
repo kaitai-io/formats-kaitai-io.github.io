@@ -5,8 +5,8 @@
 local class = require("class")
 require("kaitaistruct")
 local enum = require("enum")
-local str_decode = require("string_decode")
 local utils = require("utils")
+local str_decode = require("string_decode")
 
 -- 
 -- A structured binary format native to Minecraft for saving game data and transferring
@@ -121,39 +121,66 @@ function MinecraftNbt.property.root_type:get()
   local _pos = self._io:pos()
   self._io:seek(0)
   self._m_root_type = MinecraftNbt.Tag(self._io:read_u1())
-  self._io:seek(_pos)
-  if not(self.root_type == MinecraftNbt.Tag.compound) then
-    error("not equal, expected " ..  MinecraftNbt.Tag.compound .. ", but got " .. self.root_type)
+  if not(self._m_root_type == MinecraftNbt.Tag.compound) then
+    error("not equal, expected " .. MinecraftNbt.Tag.compound .. ", but got " .. self._m_root_type)
   end
+  self._io:seek(_pos)
   return self._m_root_type
 end
 
 
-MinecraftNbt.TagLongArray = class.class(KaitaiStruct)
+MinecraftNbt.NamedTag = class.class(KaitaiStruct)
 
-function MinecraftNbt.TagLongArray:_init(io, parent, root)
+function MinecraftNbt.NamedTag:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function MinecraftNbt.TagLongArray:_read()
-  self.num_tags = self._io:read_s4be()
-  self.tags = {}
-  for i = 0, self.num_tags - 1 do
-    self.tags[i + 1] = self._io:read_s8be()
+function MinecraftNbt.NamedTag:_read()
+  self.type = MinecraftNbt.Tag(self._io:read_u1())
+  if not(self.is_tag_end) then
+    self.name = MinecraftNbt.TagString(self._io, self, self._root)
+  end
+  if not(self.is_tag_end) then
+    local _on = self.type
+    if _on == MinecraftNbt.Tag.byte then
+      self.payload = self._io:read_s1()
+    elseif _on == MinecraftNbt.Tag.byte_array then
+      self.payload = MinecraftNbt.TagByteArray(self._io, self, self._root)
+    elseif _on == MinecraftNbt.Tag.compound then
+      self.payload = MinecraftNbt.TagCompound(self._io, self, self._root)
+    elseif _on == MinecraftNbt.Tag.double then
+      self.payload = self._io:read_f8be()
+    elseif _on == MinecraftNbt.Tag.float then
+      self.payload = self._io:read_f4be()
+    elseif _on == MinecraftNbt.Tag.int then
+      self.payload = self._io:read_s4be()
+    elseif _on == MinecraftNbt.Tag.int_array then
+      self.payload = MinecraftNbt.TagIntArray(self._io, self, self._root)
+    elseif _on == MinecraftNbt.Tag.list then
+      self.payload = MinecraftNbt.TagList(self._io, self, self._root)
+    elseif _on == MinecraftNbt.Tag.long then
+      self.payload = self._io:read_s8be()
+    elseif _on == MinecraftNbt.Tag.long_array then
+      self.payload = MinecraftNbt.TagLongArray(self._io, self, self._root)
+    elseif _on == MinecraftNbt.Tag.short then
+      self.payload = self._io:read_s2be()
+    elseif _on == MinecraftNbt.Tag.string then
+      self.payload = MinecraftNbt.TagString(self._io, self, self._root)
+    end
   end
 end
 
-MinecraftNbt.TagLongArray.property.tags_type = {}
-function MinecraftNbt.TagLongArray.property.tags_type:get()
-  if self._m_tags_type ~= nil then
-    return self._m_tags_type
+MinecraftNbt.NamedTag.property.is_tag_end = {}
+function MinecraftNbt.NamedTag.property.is_tag_end:get()
+  if self._m_is_tag_end ~= nil then
+    return self._m_is_tag_end
   end
 
-  self._m_tags_type = MinecraftNbt.Tag.long
-  return self._m_tags_type
+  self._m_is_tag_end = self.type == MinecraftNbt.Tag.end
+  return self._m_is_tag_end
 end
 
 
@@ -162,7 +189,7 @@ MinecraftNbt.TagByteArray = class.class(KaitaiStruct)
 function MinecraftNbt.TagByteArray:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -172,12 +199,45 @@ function MinecraftNbt.TagByteArray:_read()
 end
 
 
+MinecraftNbt.TagCompound = class.class(KaitaiStruct)
+
+function MinecraftNbt.TagCompound:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function MinecraftNbt.TagCompound:_read()
+  self.tags = {}
+  local i = 0
+  while true do
+    local _ = MinecraftNbt.NamedTag(self._io, self, self._root)
+    self.tags[i + 1] = _
+    if _.is_tag_end then
+      break
+    end
+    i = i + 1
+  end
+end
+
+MinecraftNbt.TagCompound.property.dump_num_tags = {}
+function MinecraftNbt.TagCompound.property.dump_num_tags:get()
+  if self._m_dump_num_tags ~= nil then
+    return self._m_dump_num_tags
+  end
+
+  self._m_dump_num_tags = #self.tags - utils.box_unwrap(( ((#self.tags >= 1) and (self.tags[#self.tags].is_tag_end)) ) and utils.box_wrap(1) or (0))
+  return self._m_dump_num_tags
+end
+
+
 MinecraftNbt.TagIntArray = class.class(KaitaiStruct)
 
 function MinecraftNbt.TagIntArray:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -205,7 +265,7 @@ MinecraftNbt.TagList = class.class(KaitaiStruct)
 function MinecraftNbt.TagList:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -215,32 +275,60 @@ function MinecraftNbt.TagList:_read()
   self.tags = {}
   for i = 0, self.num_tags - 1 do
     local _on = self.tags_type
-    if _on == MinecraftNbt.Tag.long_array then
-      self.tags[i + 1] = MinecraftNbt.TagLongArray(self._io, self, self._root)
+    if _on == MinecraftNbt.Tag.byte then
+      self.tags[i + 1] = self._io:read_s1()
+    elseif _on == MinecraftNbt.Tag.byte_array then
+      self.tags[i + 1] = MinecraftNbt.TagByteArray(self._io, self, self._root)
     elseif _on == MinecraftNbt.Tag.compound then
       self.tags[i + 1] = MinecraftNbt.TagCompound(self._io, self, self._root)
     elseif _on == MinecraftNbt.Tag.double then
       self.tags[i + 1] = self._io:read_f8be()
-    elseif _on == MinecraftNbt.Tag.list then
-      self.tags[i + 1] = MinecraftNbt.TagList(self._io, self, self._root)
     elseif _on == MinecraftNbt.Tag.float then
       self.tags[i + 1] = self._io:read_f4be()
-    elseif _on == MinecraftNbt.Tag.short then
-      self.tags[i + 1] = self._io:read_s2be()
     elseif _on == MinecraftNbt.Tag.int then
       self.tags[i + 1] = self._io:read_s4be()
-    elseif _on == MinecraftNbt.Tag.byte_array then
-      self.tags[i + 1] = MinecraftNbt.TagByteArray(self._io, self, self._root)
-    elseif _on == MinecraftNbt.Tag.byte then
-      self.tags[i + 1] = self._io:read_s1()
     elseif _on == MinecraftNbt.Tag.int_array then
       self.tags[i + 1] = MinecraftNbt.TagIntArray(self._io, self, self._root)
-    elseif _on == MinecraftNbt.Tag.string then
-      self.tags[i + 1] = MinecraftNbt.TagString(self._io, self, self._root)
+    elseif _on == MinecraftNbt.Tag.list then
+      self.tags[i + 1] = MinecraftNbt.TagList(self._io, self, self._root)
     elseif _on == MinecraftNbt.Tag.long then
       self.tags[i + 1] = self._io:read_s8be()
+    elseif _on == MinecraftNbt.Tag.long_array then
+      self.tags[i + 1] = MinecraftNbt.TagLongArray(self._io, self, self._root)
+    elseif _on == MinecraftNbt.Tag.short then
+      self.tags[i + 1] = self._io:read_s2be()
+    elseif _on == MinecraftNbt.Tag.string then
+      self.tags[i + 1] = MinecraftNbt.TagString(self._io, self, self._root)
     end
   end
+end
+
+
+MinecraftNbt.TagLongArray = class.class(KaitaiStruct)
+
+function MinecraftNbt.TagLongArray:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function MinecraftNbt.TagLongArray:_read()
+  self.num_tags = self._io:read_s4be()
+  self.tags = {}
+  for i = 0, self.num_tags - 1 do
+    self.tags[i + 1] = self._io:read_s8be()
+  end
+end
+
+MinecraftNbt.TagLongArray.property.tags_type = {}
+function MinecraftNbt.TagLongArray.property.tags_type:get()
+  if self._m_tags_type ~= nil then
+    return self._m_tags_type
+  end
+
+  self._m_tags_type = MinecraftNbt.Tag.long
+  return self._m_tags_type
 end
 
 
@@ -249,103 +337,15 @@ MinecraftNbt.TagString = class.class(KaitaiStruct)
 function MinecraftNbt.TagString:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function MinecraftNbt.TagString:_read()
   self.len_data = self._io:read_u2be()
-  self.data = str_decode.decode(self._io:read_bytes(self.len_data), "utf-8")
+  self.data = str_decode.decode(self._io:read_bytes(self.len_data), "UTF-8")
 end
 
 -- 
 -- unsigned according to <https://wiki.vg/NBT#Specification>.
-
-MinecraftNbt.TagCompound = class.class(KaitaiStruct)
-
-function MinecraftNbt.TagCompound:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function MinecraftNbt.TagCompound:_read()
-  self.tags = {}
-  local i = 0
-  while true do
-    local _ = MinecraftNbt.NamedTag(self._io, self, self._root)
-    self.tags[i + 1] = _
-    if _.is_tag_end then
-      break
-    end
-    i = i + 1
-  end
-end
-
-MinecraftNbt.TagCompound.property.dump_num_tags = {}
-function MinecraftNbt.TagCompound.property.dump_num_tags:get()
-  if self._m_dump_num_tags ~= nil then
-    return self._m_dump_num_tags
-  end
-
-  self._m_dump_num_tags = (#self.tags - utils.box_unwrap(( ((#self.tags >= 1) and (self.tags[#self.tags].is_tag_end)) ) and utils.box_wrap(1) or (0)))
-  return self._m_dump_num_tags
-end
-
-
-MinecraftNbt.NamedTag = class.class(KaitaiStruct)
-
-function MinecraftNbt.NamedTag:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function MinecraftNbt.NamedTag:_read()
-  self.type = MinecraftNbt.Tag(self._io:read_u1())
-  if not(self.is_tag_end) then
-    self.name = MinecraftNbt.TagString(self._io, self, self._root)
-  end
-  if not(self.is_tag_end) then
-    local _on = self.type
-    if _on == MinecraftNbt.Tag.long_array then
-      self.payload = MinecraftNbt.TagLongArray(self._io, self, self._root)
-    elseif _on == MinecraftNbt.Tag.compound then
-      self.payload = MinecraftNbt.TagCompound(self._io, self, self._root)
-    elseif _on == MinecraftNbt.Tag.double then
-      self.payload = self._io:read_f8be()
-    elseif _on == MinecraftNbt.Tag.list then
-      self.payload = MinecraftNbt.TagList(self._io, self, self._root)
-    elseif _on == MinecraftNbt.Tag.float then
-      self.payload = self._io:read_f4be()
-    elseif _on == MinecraftNbt.Tag.short then
-      self.payload = self._io:read_s2be()
-    elseif _on == MinecraftNbt.Tag.int then
-      self.payload = self._io:read_s4be()
-    elseif _on == MinecraftNbt.Tag.byte_array then
-      self.payload = MinecraftNbt.TagByteArray(self._io, self, self._root)
-    elseif _on == MinecraftNbt.Tag.byte then
-      self.payload = self._io:read_s1()
-    elseif _on == MinecraftNbt.Tag.int_array then
-      self.payload = MinecraftNbt.TagIntArray(self._io, self, self._root)
-    elseif _on == MinecraftNbt.Tag.string then
-      self.payload = MinecraftNbt.TagString(self._io, self, self._root)
-    elseif _on == MinecraftNbt.Tag.long then
-      self.payload = self._io:read_s8be()
-    end
-  end
-end
-
-MinecraftNbt.NamedTag.property.is_tag_end = {}
-function MinecraftNbt.NamedTag.property.is_tag_end:get()
-  if self._m_is_tag_end ~= nil then
-    return self._m_is_tag_end
-  end
-
-  self._m_is_tag_end = self.type == MinecraftNbt.Tag.end
-  return self._m_is_tag_end
-end
-
 

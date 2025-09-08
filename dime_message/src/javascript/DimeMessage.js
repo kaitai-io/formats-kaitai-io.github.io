@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.DimeMessage = factory(root.KaitaiStream);
+    factory(root.DimeMessage || (root.DimeMessage = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (DimeMessage_, KaitaiStream) {
 /**
  * Direct Internet Message Encapsulation (DIME)
  * is an old Microsoft specification for sending and receiving
@@ -56,22 +56,24 @@ var DimeMessage = (function() {
   }
 
   /**
-   * padding to the next 4-byte boundary
+   * one element of the option field
    */
 
-  var Padding = DimeMessage.Padding = (function() {
-    function Padding(_io, _parent, _root) {
+  var OptionElement = DimeMessage.OptionElement = (function() {
+    function OptionElement(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    Padding.prototype._read = function() {
-      this.boundaryPadding = this._io.readBytes(KaitaiStream.mod(-(this._io.pos), 4));
+    OptionElement.prototype._read = function() {
+      this.elementFormat = this._io.readU2be();
+      this.lenElement = this._io.readU2be();
+      this.elementData = this._io.readBytes(this.lenElement);
     }
 
-    return Padding;
+    return OptionElement;
   })();
 
   /**
@@ -82,7 +84,7 @@ var DimeMessage = (function() {
     function OptionField(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -99,24 +101,22 @@ var DimeMessage = (function() {
   })();
 
   /**
-   * one element of the option field
+   * padding to the next 4-byte boundary
    */
 
-  var OptionElement = DimeMessage.OptionElement = (function() {
-    function OptionElement(_io, _parent, _root) {
+  var Padding = DimeMessage.Padding = (function() {
+    function Padding(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    OptionElement.prototype._read = function() {
-      this.elementFormat = this._io.readU2be();
-      this.lenElement = this._io.readU2be();
-      this.elementData = this._io.readBytes(this.lenElement);
+    Padding.prototype._read = function() {
+      this.boundaryPadding = this._io.readBytes(KaitaiStream.mod(-(this._io.pos), 4));
     }
 
-    return OptionElement;
+    return Padding;
   })();
 
   /**
@@ -127,7 +127,7 @@ var DimeMessage = (function() {
     function Record(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -212,5 +212,5 @@ var DimeMessage = (function() {
 
   return DimeMessage;
 })();
-return DimeMessage;
-}));
+DimeMessage_.DimeMessage = DimeMessage;
+});

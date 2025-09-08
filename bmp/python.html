@@ -251,7 +251,22 @@ Due to the fact that it isn't documented anywhere else, most applications don't 
                 
                 <li>
                 
+                <a href="go.html" title=".bmp file format parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title=".bmp file format parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
                 <a href="java.html" title=".bmp file format parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="java-write.html" title=".bmp file format parsing Java (read-write) library">Java (read-write)</a></li>
                 
                 
                 <li>
@@ -286,7 +301,17 @@ Due to the fact that it isn't documented anywhere else, most applications don't 
                 
                 <li>
                 
+                <a href="python-write.html" title=".bmp file format parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title=".bmp file format parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title=".bmp file format parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -361,14 +386,15 @@ Due to the fact that it isn't documented anywhere else, most applications don't 
 
         <div class="row">
             <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+<span class="c1"># type: ignore</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">kaitaistruct</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">kaitaistruct</span><span class="w"> </span><span class="kn">import</span> <span class="n">KaitaiStruct</span><span class="p">,</span> <span class="n">KaitaiStream</span><span class="p">,</span> <span class="n">BytesIO</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">IntEnum</span>
 
 
-<span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">kaitaistruct</span><span class="p">,</span> <span class="s1">&#39;API_VERSION&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">):</span>
-    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">kaitaistruct</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span>
+<span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">kaitaistruct</span><span class="p">,</span> <span class="s1">&#39;API_VERSION&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">kaitaistruct</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Bmp</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The **BMP file format**, also known as **bitmap image file** or **device independent</span>
@@ -444,35 +470,14 @@ Due to the fact that it isn't documented anywhere else, most applications don't 
 <span class="sd">        * BITMAPV4HEADER (WIN4XBITMAPHEADER)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">class</span><span class="w"> </span><span class="nc">Intent</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-        <span class="n">business</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="n">graphics</span> <span class="o">=</span> <span class="mi">2</span>
-        <span class="n">images</span> <span class="o">=</span> <span class="mi">4</span>
-        <span class="n">abs_colorimetric</span> <span class="o">=</span> <span class="mi">8</span>
-
-    <span class="k">class</span><span class="w"> </span><span class="nc">ColorSpace</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="k">class</span><span class="w"> </span><span class="nc">ColorSpace</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
         <span class="n">calibrated_rgb</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">profile_linked</span> <span class="o">=</span> <span class="mi">1279872587</span>
         <span class="n">profile_embedded</span> <span class="o">=</span> <span class="mi">1296188740</span>
         <span class="n">windows</span> <span class="o">=</span> <span class="mi">1466527264</span>
         <span class="n">s_rgb</span> <span class="o">=</span> <span class="mi">1934772034</span>
 
-    <span class="k">class</span><span class="w"> </span><span class="nc">Os2Rendering</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-        <span class="n">no_halftoning</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">error_diffusion</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="n">panda</span> <span class="o">=</span> <span class="mi">2</span>
-        <span class="n">super_circle</span> <span class="o">=</span> <span class="mi">3</span>
-
-    <span class="k">class</span><span class="w"> </span><span class="nc">HeaderType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-        <span class="n">bitmap_core_header</span> <span class="o">=</span> <span class="mi">12</span>
-        <span class="n">bitmap_info_header</span> <span class="o">=</span> <span class="mi">40</span>
-        <span class="n">bitmap_v2_info_header</span> <span class="o">=</span> <span class="mi">52</span>
-        <span class="n">bitmap_v3_info_header</span> <span class="o">=</span> <span class="mi">56</span>
-        <span class="n">os2_2x_bitmap_header</span> <span class="o">=</span> <span class="mi">64</span>
-        <span class="n">bitmap_v4_header</span> <span class="o">=</span> <span class="mi">108</span>
-        <span class="n">bitmap_v5_header</span> <span class="o">=</span> <span class="mi">124</span>
-
-    <span class="k">class</span><span class="w"> </span><span class="nc">Compressions</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="k">class</span><span class="w"> </span><span class="nc">Compressions</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
         <span class="n">rgb</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">rle8</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="n">rle4</span> <span class="o">=</span> <span class="mi">2</span>
@@ -481,59 +486,404 @@ Due to the fact that it isn't documented anywhere else, most applications don't 
         <span class="n">png</span> <span class="o">=</span> <span class="mi">5</span>
         <span class="n">alpha_bitfields</span> <span class="o">=</span> <span class="mi">6</span>
 
-    <span class="k">class</span><span class="w"> </span><span class="nc">Os2Compressions</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="k">class</span><span class="w"> </span><span class="nc">HeaderType</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+        <span class="n">bitmap_core_header</span> <span class="o">=</span> <span class="mi">12</span>
+        <span class="n">bitmap_info_header</span> <span class="o">=</span> <span class="mi">40</span>
+        <span class="n">bitmap_v2_info_header</span> <span class="o">=</span> <span class="mi">52</span>
+        <span class="n">bitmap_v3_info_header</span> <span class="o">=</span> <span class="mi">56</span>
+        <span class="n">os2_2x_bitmap_header</span> <span class="o">=</span> <span class="mi">64</span>
+        <span class="n">bitmap_v4_header</span> <span class="o">=</span> <span class="mi">108</span>
+        <span class="n">bitmap_v5_header</span> <span class="o">=</span> <span class="mi">124</span>
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">Intent</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+        <span class="n">business</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">graphics</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">images</span> <span class="o">=</span> <span class="mi">4</span>
+        <span class="n">abs_colorimetric</span> <span class="o">=</span> <span class="mi">8</span>
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">Os2Compressions</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
         <span class="n">rgb</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">rle8</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="n">rle4</span> <span class="o">=</span> <span class="mi">2</span>
         <span class="n">huffman_1d</span> <span class="o">=</span> <span class="mi">3</span>
         <span class="n">rle24</span> <span class="o">=</span> <span class="mi">4</span>
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">Os2Rendering</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+        <span class="n">no_halftoning</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">error_diffusion</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">panda</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">super_circle</span> <span class="o">=</span> <span class="mi">3</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Bmp</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="ow">or</span> <span class="bp">self</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">file_hdr</span> <span class="o">=</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">FileHeader</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_raw_dib_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">file_hdr</span><span class="o">.</span><span class="n">ofs_bitmap</span> <span class="o">-</span> <span class="mi">14</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_raw_dib_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_hdr</span><span class="o">.</span><span class="n">ofs_bitmap</span> <span class="o">-</span> <span class="mi">14</span><span class="p">)</span>
         <span class="n">_io__raw_dib_info</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_dib_info</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dib_info</span> <span class="o">=</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">BitmapInfo</span><span class="p">(</span><span class="n">_io__raw_dib_info</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_raw_bitmap</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes_full</span><span class="p">()</span>
         <span class="n">_io__raw_bitmap</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_bitmap</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bitmap</span> <span class="o">=</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">Bitmap</span><span class="p">(</span><span class="n">_io__raw_bitmap</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
 
-    <span class="k">class</span><span class="w"> </span><span class="nc">CieXyz</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        .. seealso::</span>
-<span class="sd">           Source - https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-ciexyz</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">file_hdr</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dib_info</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bitmap</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">Bitmap</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Replace with an opaque type if you care about the pixels. You can look at</span>
+<span class="sd">        an example of a JavaScript implementation:</span>
+<span class="sd">        &lt;https://github.com/generalmimon/bmptool/blob/master/src/Bitmap.js&gt;</span>
+<span class="sd">        </span>
+<span class="sd">        There is a proposal for adding bitmap data type to Kaitai Struct:</span>
+<span class="sd">        &lt;https://github.com/kaitai-io/kaitai_struct/issues/188&gt;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">Bmp</span><span class="o">.</span><span class="n">Bitmap</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">FixedPoint2Dot30</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">FixedPoint2Dot30</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">FixedPoint2Dot30</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">pass</span>
 
 
-    <span class="k">class</span><span class="w"> </span><span class="nc">RgbRecord</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">has_reserved_field</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">BitmapHeader</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Source - https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapcoreheader</span>
+<span class="sd">        </span>
+<span class="sd">        </span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Source - https://www.fileformat.info/format/os2bmp/egff.htm#OS2BMP-DMYID.3.1</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">len_header</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">Bmp</span><span class="o">.</span><span class="n">BitmapHeader</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">has_reserved_field</span> <span class="o">=</span> <span class="n">has_reserved_field</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">len_header</span> <span class="o">=</span> <span class="n">len_header</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">blue</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">green</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">red</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_reserved_field</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">reserved</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="n">_on</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_core_header</span>
+            <span class="k">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">image_width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">image_width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="n">_on</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_core_header</span>
+            <span class="k">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">image_height_raw</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s4le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">image_height_raw</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s2le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_planes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bits_per_pixel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">extends_bitmap_info</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bitmap_info_ext</span> <span class="o">=</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">BitmapInfoExtension</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
 
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_color_mask_here</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">color_mask</span> <span class="o">=</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">ColorMask</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_header</span> <span class="o">!=</span> <span class="nb">int</span><span class="p">(</span><span class="n">Bmp</span><span class="o">.</span><span class="n">HeaderType</span><span class="o">.</span><span class="n">bitmap_v2_info_header</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">extends_os2_2x_bitmap</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">os2_2x_bitmap_ext</span> <span class="o">=</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">Os22xBitmapExtension</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">extends_bitmap_v4</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bitmap_v4_ext</span> <span class="o">=</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">BitmapV4Extension</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">extends_bitmap_v5</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bitmap_v5_ext</span> <span class="o">=</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">BitmapV5Extension</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+            <span class="n">_on</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_core_header</span>
+            <span class="k">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="n">_on</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_core_header</span>
+            <span class="k">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">extends_bitmap_info</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bitmap_info_ext</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_color_mask_here</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">color_mask</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">extends_os2_2x_bitmap</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">os2_2x_bitmap_ext</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">extends_bitmap_v4</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bitmap_v4_ext</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">extends_bitmap_v5</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bitmap_v5_ext</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+
+
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">bottom_up</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_bottom_up&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_bottom_up</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_bottom_up</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_height_raw</span> <span class="o">&gt;</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_bottom_up&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">extends_bitmap_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_extends_bitmap_info&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_extends_bitmap_info</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_extends_bitmap_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_header</span> <span class="o">&gt;=</span> <span class="nb">int</span><span class="p">(</span><span class="n">Bmp</span><span class="o">.</span><span class="n">HeaderType</span><span class="o">.</span><span class="n">bitmap_info_header</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_extends_bitmap_info&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">extends_bitmap_v4</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_extends_bitmap_v4&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_extends_bitmap_v4</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_extends_bitmap_v4</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_header</span> <span class="o">&gt;=</span> <span class="nb">int</span><span class="p">(</span><span class="n">Bmp</span><span class="o">.</span><span class="n">HeaderType</span><span class="o">.</span><span class="n">bitmap_v4_header</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_extends_bitmap_v4&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">extends_bitmap_v5</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_extends_bitmap_v5&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_extends_bitmap_v5</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_extends_bitmap_v5</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_header</span> <span class="o">&gt;=</span> <span class="nb">int</span><span class="p">(</span><span class="n">Bmp</span><span class="o">.</span><span class="n">HeaderType</span><span class="o">.</span><span class="n">bitmap_v5_header</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_extends_bitmap_v5&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">extends_os2_2x_bitmap</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_extends_os2_2x_bitmap&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_extends_os2_2x_bitmap</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_extends_os2_2x_bitmap</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_header</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">Bmp</span><span class="o">.</span><span class="n">HeaderType</span><span class="o">.</span><span class="n">os2_2x_bitmap_header</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_extends_os2_2x_bitmap&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">image_height</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_image_height&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_image_height</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_image_height</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image_height_raw</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_height_raw</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_height_raw</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_image_height&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">is_color_mask_here</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_color_mask_here&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_color_mask_here</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_color_mask_here</span> <span class="o">=</span>  <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">len_header</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">Bmp</span><span class="o">.</span><span class="n">HeaderType</span><span class="o">.</span><span class="n">bitmap_v2_info_header</span><span class="p">))</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_header</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">Bmp</span><span class="o">.</span><span class="n">HeaderType</span><span class="o">.</span><span class="n">bitmap_v3_info_header</span><span class="p">))</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extends_bitmap_v4</span><span class="p">))</span> 
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_color_mask_here&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">is_core_header</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_core_header&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_core_header</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_core_header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_header</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">Bmp</span><span class="o">.</span><span class="n">HeaderType</span><span class="o">.</span><span class="n">bitmap_core_header</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_core_header&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">uses_fixed_palette</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_uses_fixed_palette&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_uses_fixed_palette</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_uses_fixed_palette</span> <span class="o">=</span>  <span class="p">(((</span><span class="ow">not</span> <span class="p">(</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">bits_per_pixel</span> <span class="o">==</span> <span class="mi">16</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bits_per_pixel</span> <span class="o">==</span> <span class="mi">24</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bits_per_pixel</span> <span class="o">==</span> <span class="mi">32</span><span class="p">))</span> <span class="p">)))</span> <span class="ow">and</span> <span class="p">((</span><span class="ow">not</span> <span class="p">(</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">extends_bitmap_info</span><span class="p">)</span> <span class="ow">and</span> <span class="p">((</span><span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extends_os2_2x_bitmap</span><span class="p">)))</span> <span class="ow">and</span> <span class="p">(</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">bitmap_info_ext</span><span class="o">.</span><span class="n">compression</span> <span class="o">==</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">Compressions</span><span class="o">.</span><span class="n">jpeg</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bitmap_info_ext</span><span class="o">.</span><span class="n">compression</span> <span class="o">==</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">Compressions</span><span class="o">.</span><span class="n">png</span><span class="p">))</span> <span class="p">))</span> <span class="p">))))</span> 
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_uses_fixed_palette&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">BitmapInfo</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Source - https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfo</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">Bmp</span><span class="o">.</span><span class="n">BitmapInfo</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">len_header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_raw_header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_header</span> <span class="o">-</span> <span class="mi">4</span><span class="p">)</span>
+            <span class="n">_io__raw_header</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_header</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">BitmapHeader</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_header</span><span class="p">,</span> <span class="n">_io__raw_header</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_color_mask_here</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">color_mask</span> <span class="o">=</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">ColorMask</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">bitmap_info_ext</span><span class="o">.</span><span class="n">compression</span> <span class="o">==</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">Compressions</span><span class="o">.</span><span class="n">alpha_bitfields</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">is_eof</span><span class="p">())):</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw_color_table</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes_full</span><span class="p">()</span>
+                <span class="n">_io__raw_color_table</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_color_table</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">color_table</span> <span class="o">=</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">ColorTable</span><span class="p">((</span><span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">is_core_header</span><span class="p">)),</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">bitmap_info_ext</span><span class="o">.</span><span class="n">num_colors_used</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">extends_bitmap_info</span> <span class="k">else</span> <span class="mi">0</span><span class="p">),</span> <span class="n">_io__raw_color_table</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_color_mask_here</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">color_mask</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">is_eof</span><span class="p">())):</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">color_table</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+
+
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">color_mask_alpha</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_color_mask_alpha&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_color_mask_alpha</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_color_mask_alpha</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">color_mask_given</span><span class="o">.</span><span class="n">alpha_mask</span> <span class="k">if</span>  <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">is_color_mask_given</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">color_mask_given</span><span class="o">.</span><span class="n">has_alpha_mask</span><span class="p">))</span>  <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_color_mask_alpha&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">color_mask_blue</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_color_mask_blue&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_color_mask_blue</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_color_mask_blue</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">color_mask_given</span><span class="o">.</span><span class="n">blue_mask</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_color_mask_given</span> <span class="k">else</span> <span class="p">(</span><span class="mi">31</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">bits_per_pixel</span> <span class="o">==</span> <span class="mi">16</span> <span class="k">else</span> <span class="p">(</span><span class="mi">255</span> <span class="k">if</span>  <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">bits_per_pixel</span> <span class="o">==</span> <span class="mi">24</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">bits_per_pixel</span> <span class="o">==</span> <span class="mi">32</span><span class="p">))</span>  <span class="k">else</span> <span class="mi">0</span><span class="p">)))</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_color_mask_blue&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">color_mask_given</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_color_mask_given&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_color_mask_given</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_color_mask_given</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_m_color_mask_given</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">color_mask</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_color_mask_here</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">color_mask</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_color_mask_given&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">color_mask_green</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_color_mask_green&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_color_mask_green</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_color_mask_green</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">color_mask_given</span><span class="o">.</span><span class="n">green_mask</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_color_mask_given</span> <span class="k">else</span> <span class="p">(</span><span class="mi">992</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">bits_per_pixel</span> <span class="o">==</span> <span class="mi">16</span> <span class="k">else</span> <span class="p">(</span><span class="mi">65280</span> <span class="k">if</span>  <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">bits_per_pixel</span> <span class="o">==</span> <span class="mi">24</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">bits_per_pixel</span> <span class="o">==</span> <span class="mi">32</span><span class="p">))</span>  <span class="k">else</span> <span class="mi">0</span><span class="p">)))</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_color_mask_green&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">color_mask_red</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_color_mask_red&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_color_mask_red</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_color_mask_red</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">color_mask_given</span><span class="o">.</span><span class="n">red_mask</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_color_mask_given</span> <span class="k">else</span> <span class="p">(</span><span class="mi">31744</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">bits_per_pixel</span> <span class="o">==</span> <span class="mi">16</span> <span class="k">else</span> <span class="p">(</span><span class="mi">16711680</span> <span class="k">if</span>  <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">bits_per_pixel</span> <span class="o">==</span> <span class="mi">24</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">bits_per_pixel</span> <span class="o">==</span> <span class="mi">32</span><span class="p">))</span>  <span class="k">else</span> <span class="mi">0</span><span class="p">)))</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_color_mask_red&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">is_color_mask_given</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_color_mask_given&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_color_mask_given</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_color_mask_given</span> <span class="o">=</span>  <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">extends_bitmap_info</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">bitmap_info_ext</span><span class="o">.</span><span class="n">compression</span> <span class="o">==</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">Compressions</span><span class="o">.</span><span class="n">bitfields</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">bitmap_info_ext</span><span class="o">.</span><span class="n">compression</span> <span class="o">==</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">Compressions</span><span class="o">.</span><span class="n">alpha_bitfields</span><span class="p">))</span> <span class="p">)</span> <span class="ow">and</span> <span class="p">(</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">is_color_mask_here</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">is_color_mask_here</span><span class="p">))</span> <span class="p">))</span> 
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_color_mask_given&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">is_color_mask_here</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_color_mask_here&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_color_mask_here</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_color_mask_here</span> <span class="o">=</span>  <span class="p">(((</span><span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">is_eof</span><span class="p">())))</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">len_header</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">Bmp</span><span class="o">.</span><span class="n">HeaderType</span><span class="o">.</span><span class="n">bitmap_info_header</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">bitmap_info_ext</span><span class="o">.</span><span class="n">compression</span> <span class="o">==</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">Compressions</span><span class="o">.</span><span class="n">bitfields</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">bitmap_info_ext</span><span class="o">.</span><span class="n">compression</span> <span class="o">==</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">Compressions</span><span class="o">.</span><span class="n">alpha_bitfields</span><span class="p">))</span> <span class="p">))</span> 
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_color_mask_here&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">BitmapInfoExtension</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Source - https://learn.microsoft.com/en-us/previous-versions/dd183376(v=vs.85)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">Bmp</span><span class="o">.</span><span class="n">BitmapInfoExtension</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">extends_os2_2x_bitmap</span><span class="p">)):</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">compression</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="o">.</span><span class="n">resolve_enum</span><span class="p">(</span><span class="n">Bmp</span><span class="o">.</span><span class="n">Compressions</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">())</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">extends_os2_2x_bitmap</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">os2_compression</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="o">.</span><span class="n">resolve_enum</span><span class="p">(</span><span class="n">Bmp</span><span class="o">.</span><span class="n">Os2Compressions</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">())</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">len_image</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x_resolution</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y_resolution</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_colors_used</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_colors_important</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+            <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">extends_os2_2x_bitmap</span><span class="p">)):</span>
+                <span class="k">pass</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">extends_os2_2x_bitmap</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">BitmapV4Extension</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Source - https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv4header</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">Bmp</span><span class="o">.</span><span class="n">BitmapV4Extension</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">color_space_type</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="o">.</span><span class="n">resolve_enum</span><span class="p">(</span><span class="n">Bmp</span><span class="o">.</span><span class="n">ColorSpace</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">endpoint_red</span> <span class="o">=</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">CieXyz</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">endpoint_green</span> <span class="o">=</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">CieXyz</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">endpoint_blue</span> <span class="o">=</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">CieXyz</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gamma_red</span> <span class="o">=</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">FixedPoint16Dot16</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gamma_blue</span> <span class="o">=</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">FixedPoint16Dot16</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gamma_green</span> <span class="o">=</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">FixedPoint16Dot16</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">endpoint_red</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">endpoint_green</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">endpoint_blue</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gamma_red</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gamma_blue</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gamma_green</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
 
 
     <span class="k">class</span><span class="w"> </span><span class="nc">BitmapV5Extension</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
@@ -542,9 +892,9 @@ Due to the fact that it isn't documented anywhere else, most applications don't 
 <span class="sd">           Source - https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv5header</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">Bmp</span><span class="o">.</span><span class="n">BitmapV5Extension</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -552,6 +902,19 @@ Due to the fact that it isn't documented anywhere else, most applications don't 
             <span class="bp">self</span><span class="o">.</span><span class="n">ofs_profile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">len_profile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">reserved</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+            <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile_data</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_profile_data&#39;</span><span class="p">):</span>
+                <span class="k">pass</span>
+                <span class="n">_on</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">bitmap_v4_ext</span><span class="o">.</span><span class="n">color_space_type</span> <span class="o">==</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">ColorSpace</span><span class="o">.</span><span class="n">profile_linked</span>
+                <span class="k">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">pass</span>
+
 
         <span class="nd">@property</span>
         <span class="k">def</span><span class="w"> </span><span class="nf">has_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -571,24 +934,51 @@ Due to the fact that it isn't documented anywhere else, most applications don't 
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_profile_data</span>
 
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_profile</span><span class="p">:</span>
+                <span class="k">pass</span>
                 <span class="n">io</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">_io</span>
                 <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span>
-                <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">((</span><span class="mi">14</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">ofs_profile</span><span class="p">))</span>
+                <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">14</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">ofs_profile</span><span class="p">)</span>
                 <span class="n">_on</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">bitmap_v4_ext</span><span class="o">.</span><span class="n">color_space_type</span> <span class="o">==</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">ColorSpace</span><span class="o">.</span><span class="n">profile_linked</span>
                 <span class="k">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                    <span class="k">pass</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_m_profile_data</span> <span class="o">=</span> <span class="p">(</span><span class="n">KaitaiStream</span><span class="o">.</span><span class="n">bytes_terminate</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_profile</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">False</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;windows-1252&quot;</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
+                    <span class="k">pass</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_m_profile_data</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_profile</span><span class="p">)</span>
                 <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
 
             <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_profile_data&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
 
+    <span class="k">class</span><span class="w"> </span><span class="nc">CieXyz</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Source - https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-ciexyz</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">Bmp</span><span class="o">.</span><span class="n">CieXyz</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">FixedPoint2Dot30</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">FixedPoint2Dot30</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">FixedPoint2Dot30</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">z</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+
+
     <span class="k">class</span><span class="w"> </span><span class="nc">ColorMask</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
         <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">has_alpha_mask</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">Bmp</span><span class="o">.</span><span class="n">ColorMask</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">has_alpha_mask</span> <span class="o">=</span> <span class="n">has_alpha_mask</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
@@ -597,257 +987,23 @@ Due to the fact that it isn't documented anywhere else, most applications don't 
             <span class="bp">self</span><span class="o">.</span><span class="n">green_mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">blue_mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_alpha_mask</span><span class="p">:</span>
+                <span class="k">pass</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">alpha_mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
 
 
 
-    <span class="k">class</span><span class="w"> </span><span class="nc">BitmapV4Extension</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        .. seealso::</span>
-<span class="sd">           Source - https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv4header</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
-
-        <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">color_space_type</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="o">.</span><span class="n">resolve_enum</span><span class="p">(</span><span class="n">Bmp</span><span class="o">.</span><span class="n">ColorSpace</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">())</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">endpoint_red</span> <span class="o">=</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">CieXyz</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">endpoint_green</span> <span class="o">=</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">CieXyz</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">endpoint_blue</span> <span class="o">=</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">CieXyz</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">gamma_red</span> <span class="o">=</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">FixedPoint16Dot16</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">gamma_blue</span> <span class="o">=</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">FixedPoint16Dot16</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">gamma_green</span> <span class="o">=</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">FixedPoint16Dot16</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
-
-
-    <span class="k">class</span><span class="w"> </span><span class="nc">BitmapInfoExtension</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        .. seealso::</span>
-<span class="sd">           Source - https://learn.microsoft.com/en-us/previous-versions/dd183376(v=vs.85)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
-
-        <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">extends_os2_2x_bitmap</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">compression</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="o">.</span><span class="n">resolve_enum</span><span class="p">(</span><span class="n">Bmp</span><span class="o">.</span><span class="n">Compressions</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">())</span>
-
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">extends_os2_2x_bitmap</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">os2_compression</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="o">.</span><span class="n">resolve_enum</span><span class="p">(</span><span class="n">Bmp</span><span class="o">.</span><span class="n">Os2Compressions</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">())</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">len_image</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">x_resolution</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">y_resolution</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">num_colors_used</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">num_colors_important</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
-
-
-    <span class="k">class</span><span class="w"> </span><span class="nc">FixedPoint2Dot30</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
-
-        <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">raw</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_value&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_value</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_value</span> <span class="o">=</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">raw</span> <span class="o">+</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">30</span><span class="p">))</span>
-            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_value&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-
-
-    <span class="k">class</span><span class="w"> </span><span class="nc">Bitmap</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Replace with an opaque type if you care about the pixels. You can look at</span>
-<span class="sd">        an example of a JavaScript implementation:</span>
-<span class="sd">        &lt;https://github.com/generalmimon/bmptool/blob/master/src/Bitmap.js&gt;</span>
-<span class="sd">        </span>
-<span class="sd">        There is a proposal for adding bitmap data type to Kaitai Struct:</span>
-<span class="sd">        &lt;https://github.com/kaitai-io/kaitai_struct/issues/188&gt;</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
-
-        <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="k">pass</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_alpha_mask</span><span class="p">:</span>
+                <span class="k">pass</span>
 
-
-    <span class="k">class</span><span class="w"> </span><span class="nc">BitmapHeader</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        .. seealso::</span>
-<span class="sd">           Source - https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapcoreheader</span>
-<span class="sd">        </span>
-<span class="sd">        </span>
-<span class="sd">        .. seealso::</span>
-<span class="sd">           Source - https://www.fileformat.info/format/os2bmp/egff.htm#OS2BMP-DMYID.3.1</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">len_header</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">len_header</span> <span class="o">=</span> <span class="n">len_header</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
-
-        <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="n">_on</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_core_header</span>
-            <span class="k">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">image_width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">image_width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
-            <span class="n">_on</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_core_header</span>
-            <span class="k">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">image_height_raw</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s2le</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">image_height_raw</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s4le</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">num_planes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">bits_per_pixel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">extends_bitmap_info</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">bitmap_info_ext</span> <span class="o">=</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">BitmapInfoExtension</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_color_mask_here</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">color_mask</span> <span class="o">=</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">ColorMask</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_header</span> <span class="o">!=</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">HeaderType</span><span class="o">.</span><span class="n">bitmap_v2_info_header</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">extends_os2_2x_bitmap</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">os2_2x_bitmap_ext</span> <span class="o">=</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">Os22xBitmapExtension</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">extends_bitmap_v4</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">bitmap_v4_ext</span> <span class="o">=</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">BitmapV4Extension</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">extends_bitmap_v5</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">bitmap_v5_ext</span> <span class="o">=</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">BitmapV5Extension</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
-
-
-        <span class="nd">@property</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">extends_bitmap_v4</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_extends_bitmap_v4&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_extends_bitmap_v4</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_extends_bitmap_v4</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_header</span> <span class="o">&gt;=</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">HeaderType</span><span class="o">.</span><span class="n">bitmap_v4_header</span><span class="o">.</span><span class="n">value</span>
-            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_extends_bitmap_v4&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">extends_os2_2x_bitmap</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_extends_os2_2x_bitmap&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_extends_os2_2x_bitmap</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_extends_os2_2x_bitmap</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_header</span> <span class="o">==</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">HeaderType</span><span class="o">.</span><span class="n">os2_2x_bitmap_header</span><span class="o">.</span><span class="n">value</span>
-            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_extends_os2_2x_bitmap&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">uses_fixed_palette</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_uses_fixed_palette&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_uses_fixed_palette</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_uses_fixed_palette</span> <span class="o">=</span>  <span class="p">((</span><span class="ow">not</span> <span class="p">(</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">bits_per_pixel</span> <span class="o">==</span> <span class="mi">16</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bits_per_pixel</span> <span class="o">==</span> <span class="mi">24</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bits_per_pixel</span> <span class="o">==</span> <span class="mi">32</span><span class="p">))</span> <span class="p">))</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="p">(</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">extends_bitmap_info</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extends_os2_2x_bitmap</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">bitmap_info_ext</span><span class="o">.</span><span class="n">compression</span> <span class="o">==</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">Compressions</span><span class="o">.</span><span class="n">jpeg</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bitmap_info_ext</span><span class="o">.</span><span class="n">compression</span> <span class="o">==</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">Compressions</span><span class="o">.</span><span class="n">png</span><span class="p">))</span> <span class="p">))</span> <span class="p">)))</span> 
-            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_uses_fixed_palette&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">extends_bitmap_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_extends_bitmap_info&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_extends_bitmap_info</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_extends_bitmap_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_header</span> <span class="o">&gt;=</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">HeaderType</span><span class="o">.</span><span class="n">bitmap_info_header</span><span class="o">.</span><span class="n">value</span>
-            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_extends_bitmap_info&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">image_height</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_image_height&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_image_height</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_image_height</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image_height_raw</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_height_raw</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_height_raw</span><span class="p">)</span>
-            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_image_height&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">is_core_header</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_core_header&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_core_header</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_core_header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_header</span> <span class="o">==</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">HeaderType</span><span class="o">.</span><span class="n">bitmap_core_header</span><span class="o">.</span><span class="n">value</span>
-            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_core_header&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">extends_bitmap_v5</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_extends_bitmap_v5&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_extends_bitmap_v5</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_extends_bitmap_v5</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_header</span> <span class="o">&gt;=</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">HeaderType</span><span class="o">.</span><span class="n">bitmap_v5_header</span><span class="o">.</span><span class="n">value</span>
-            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_extends_bitmap_v5&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">is_color_mask_here</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_color_mask_here&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_color_mask_here</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_color_mask_here</span> <span class="o">=</span>  <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">len_header</span> <span class="o">==</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">HeaderType</span><span class="o">.</span><span class="n">bitmap_v2_info_header</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_header</span> <span class="o">==</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">HeaderType</span><span class="o">.</span><span class="n">bitmap_v3_info_header</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extends_bitmap_v4</span><span class="p">))</span> 
-            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_color_mask_here&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">bottom_up</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_bottom_up&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_bottom_up</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_bottom_up</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_height_raw</span> <span class="o">&gt;</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_bottom_up&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-
-
-    <span class="k">class</span><span class="w"> </span><span class="nc">Os22xBitmapExtension</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        .. seealso::</span>
-<span class="sd">           Source - https://www.fileformat.info/format/os2bmp/egff.htm#OS2BMP-DMYID.3.2</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
-
-        <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">reserved</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">recording</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">rendering</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="o">.</span><span class="n">resolve_enum</span><span class="p">(</span><span class="n">Bmp</span><span class="o">.</span><span class="n">Os2Rendering</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">())</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">size1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">size2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">color_encoding</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">identifier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
-
-
-    <span class="k">class</span><span class="w"> </span><span class="nc">FixedPoint16Dot16</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
-
-        <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">raw</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_value&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_value</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_value</span> <span class="o">=</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">raw</span> <span class="o">+</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">))</span>
-            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_value&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
 
     <span class="k">class</span><span class="w"> </span><span class="nc">ColorTable</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
         <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">has_reserved_field</span><span class="p">,</span> <span class="n">num_colors</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">Bmp</span><span class="o">.</span><span class="n">ColorTable</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">has_reserved_field</span> <span class="o">=</span> <span class="n">has_reserved_field</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">num_colors</span> <span class="o">=</span> <span class="n">num_colors</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
@@ -856,6 +1012,14 @@ Due to the fact that it isn't documented anywhere else, most applications don't 
             <span class="bp">self</span><span class="o">.</span><span class="n">colors</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">num_colors</span> <span class="k">if</span>  <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">num_colors</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_colors</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_colors_present</span><span class="p">))</span>  <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_colors_present</span><span class="p">)):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Bmp</span><span class="o">.</span><span class="n">RgbRecord</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">has_reserved_field</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">))</span>
+
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">colors</span><span class="p">)):</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
 
 
         <span class="nd">@property</span>
@@ -873,9 +1037,9 @@ Due to the fact that it isn't documented anywhere else, most applications don't 
 <span class="sd">           Source - https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapfileheader</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">Bmp</span><span class="o">.</span><span class="n">FileHeader</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -888,88 +1052,104 @@ Due to the fact that it isn't documented anywhere else, most applications don't 
             <span class="bp">self</span><span class="o">.</span><span class="n">ofs_bitmap</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s4le</span><span class="p">()</span>
 
 
-    <span class="k">class</span><span class="w"> </span><span class="nc">BitmapInfo</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        .. seealso::</span>
-<span class="sd">           Source - https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfo</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">FixedPoint16Dot16</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
         <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">Bmp</span><span class="o">.</span><span class="n">FixedPoint16Dot16</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">len_header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_raw_header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">len_header</span> <span class="o">-</span> <span class="mi">4</span><span class="p">))</span>
-            <span class="n">_io__raw_header</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_header</span><span class="p">))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">BitmapHeader</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_header</span><span class="p">,</span> <span class="n">_io__raw_header</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_color_mask_here</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">color_mask</span> <span class="o">=</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">ColorMask</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">bitmap_info_ext</span><span class="o">.</span><span class="n">compression</span> <span class="o">==</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">Compressions</span><span class="o">.</span><span class="n">alpha_bitfields</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">raw</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
 
-            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">is_eof</span><span class="p">()):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_raw_color_table</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes_full</span><span class="p">()</span>
-                <span class="n">_io__raw_color_table</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_color_table</span><span class="p">))</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">color_table</span> <span class="o">=</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">ColorTable</span><span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">is_core_header</span><span class="p">),</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">bitmap_info_ext</span><span class="o">.</span><span class="n">num_colors_used</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">extends_bitmap_info</span> <span class="k">else</span> <span class="mi">0</span><span class="p">),</span> <span class="n">_io__raw_color_table</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
 
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
 
         <span class="nd">@property</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">is_color_mask_given</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_color_mask_given&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_color_mask_given</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_value&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_value</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_color_mask_given</span> <span class="o">=</span>  <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">extends_bitmap_info</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">bitmap_info_ext</span><span class="o">.</span><span class="n">compression</span> <span class="o">==</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">Compressions</span><span class="o">.</span><span class="n">bitfields</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">bitmap_info_ext</span><span class="o">.</span><span class="n">compression</span> <span class="o">==</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">Compressions</span><span class="o">.</span><span class="n">alpha_bitfields</span><span class="p">))</span> <span class="p">)</span> <span class="ow">and</span> <span class="p">(</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">is_color_mask_here</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">is_color_mask_here</span><span class="p">))</span> <span class="p">))</span> 
-            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_color_mask_given&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_value</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">raw</span> <span class="o">+</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_value&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
-        <span class="nd">@property</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">color_mask_given</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_color_mask_given&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_color_mask_given</span>
 
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_color_mask_given</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_m_color_mask_given</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">color_mask</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_color_mask_here</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">color_mask</span><span class="p">)</span>
+    <span class="k">class</span><span class="w"> </span><span class="nc">FixedPoint2Dot30</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">Bmp</span><span class="o">.</span><span class="n">FixedPoint2Dot30</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
-            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_color_mask_given&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">raw</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
 
-        <span class="nd">@property</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">color_mask_blue</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_color_mask_blue&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_color_mask_blue</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_color_mask_blue</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">color_mask_given</span><span class="o">.</span><span class="n">blue_mask</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_color_mask_given</span> <span class="k">else</span> <span class="p">(</span><span class="mi">31</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">bits_per_pixel</span> <span class="o">==</span> <span class="mi">16</span> <span class="k">else</span> <span class="p">(</span><span class="mi">255</span> <span class="k">if</span>  <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">bits_per_pixel</span> <span class="o">==</span> <span class="mi">24</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">bits_per_pixel</span> <span class="o">==</span> <span class="mi">32</span><span class="p">))</span>  <span class="k">else</span> <span class="mi">0</span><span class="p">)))</span>
-            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_color_mask_blue&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
 
         <span class="nd">@property</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">color_mask_alpha</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_color_mask_alpha&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_color_mask_alpha</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_value&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_value</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_color_mask_alpha</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">color_mask_given</span><span class="o">.</span><span class="n">alpha_mask</span> <span class="k">if</span>  <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">is_color_mask_given</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">color_mask_given</span><span class="o">.</span><span class="n">has_alpha_mask</span><span class="p">))</span>  <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
-            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_color_mask_alpha&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_value</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">raw</span> <span class="o">+</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">30</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_value&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
-        <span class="nd">@property</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">color_mask_green</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_color_mask_green&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_color_mask_green</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_color_mask_green</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">color_mask_given</span><span class="o">.</span><span class="n">green_mask</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_color_mask_given</span> <span class="k">else</span> <span class="p">(</span><span class="mi">992</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">bits_per_pixel</span> <span class="o">==</span> <span class="mi">16</span> <span class="k">else</span> <span class="p">(</span><span class="mi">65280</span> <span class="k">if</span>  <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">bits_per_pixel</span> <span class="o">==</span> <span class="mi">24</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">bits_per_pixel</span> <span class="o">==</span> <span class="mi">32</span><span class="p">))</span>  <span class="k">else</span> <span class="mi">0</span><span class="p">)))</span>
-            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_color_mask_green&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">class</span><span class="w"> </span><span class="nc">Os22xBitmapExtension</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Source - https://www.fileformat.info/format/os2bmp/egff.htm#OS2BMP-DMYID.3.2</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">Bmp</span><span class="o">.</span><span class="n">Os22xBitmapExtension</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
-        <span class="nd">@property</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">is_color_mask_here</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_color_mask_here&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_color_mask_here</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reserved</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">recording</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rendering</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="o">.</span><span class="n">resolve_enum</span><span class="p">(</span><span class="n">Bmp</span><span class="o">.</span><span class="n">Os2Rendering</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">size1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">size2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">color_encoding</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">identifier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_color_mask_here</span> <span class="o">=</span>  <span class="p">((</span><span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">is_eof</span><span class="p">()))</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">len_header</span> <span class="o">==</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">HeaderType</span><span class="o">.</span><span class="n">bitmap_info_header</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">bitmap_info_ext</span><span class="o">.</span><span class="n">compression</span> <span class="o">==</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">Compressions</span><span class="o">.</span><span class="n">bitfields</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">bitmap_info_ext</span><span class="o">.</span><span class="n">compression</span> <span class="o">==</span> <span class="n">Bmp</span><span class="o">.</span><span class="n">Compressions</span><span class="o">.</span><span class="n">alpha_bitfields</span><span class="p">))</span> <span class="p">))</span> 
-            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_color_mask_here&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
-        <span class="nd">@property</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">color_mask_red</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_color_mask_red&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_color_mask_red</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_color_mask_red</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">color_mask_given</span><span class="o">.</span><span class="n">red_mask</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_color_mask_given</span> <span class="k">else</span> <span class="p">(</span><span class="mi">31744</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">bits_per_pixel</span> <span class="o">==</span> <span class="mi">16</span> <span class="k">else</span> <span class="p">(</span><span class="mi">16711680</span> <span class="k">if</span>  <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">bits_per_pixel</span> <span class="o">==</span> <span class="mi">24</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">bits_per_pixel</span> <span class="o">==</span> <span class="mi">32</span><span class="p">))</span>  <span class="k">else</span> <span class="mi">0</span><span class="p">)))</span>
-            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_color_mask_red&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">RgbRecord</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">has_reserved_field</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">Bmp</span><span class="o">.</span><span class="n">RgbRecord</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">has_reserved_field</span> <span class="o">=</span> <span class="n">has_reserved_field</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">blue</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">green</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">red</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_reserved_field</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">reserved</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_reserved_field</span><span class="p">:</span>
+                <span class="k">pass</span>
 </pre></div>
 
         </div>

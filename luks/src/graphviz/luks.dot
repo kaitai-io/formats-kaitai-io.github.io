@@ -11,7 +11,7 @@ digraph {
 		</TABLE>>];
 		luks__inst__payload [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-			<TR><TD PORT="payload_pos">(partition_header.payload_offset * 512)</TD><TD PORT="payload_size">⇲</TD><TD></TD><TD PORT="payload_type">payload</TD></TR>
+			<TR><TD PORT="payload_pos">partition_header.payload_offset * 512</TD><TD PORT="payload_size">⇲</TD><TD></TD><TD PORT="payload_type">payload</TD></TR>
 		</TABLE>>];
 		subgraph cluster__partition_header {
 			label="Luks::PartitionHeader";
@@ -19,8 +19,8 @@ digraph {
 
 			partition_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">6</TD><TD></TD><TD PORT="magic_type">magic</TD></TR>
-				<TR><TD PORT="version_pos">6</TD><TD PORT="version_size">2</TD><TD></TD><TD PORT="version_type">version</TD></TR>
+				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">6</TD><TD>4C 55 4B 53 BA BE</TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD PORT="version_pos">6</TD><TD PORT="version_size">2</TD><TD>00 01</TD><TD PORT="version_type">version</TD></TR>
 				<TR><TD PORT="cipher_name_specification_pos">8</TD><TD PORT="cipher_name_specification_size">32</TD><TD>str(ASCII)</TD><TD PORT="cipher_name_specification_type">cipher_name_specification</TD></TR>
 				<TR><TD PORT="cipher_mode_specification_pos">40</TD><TD PORT="cipher_mode_specification_size">32</TD><TD>str(ASCII)</TD><TD PORT="cipher_mode_specification_type">cipher_mode_specification</TD></TR>
 				<TR><TD PORT="hash_specification_pos">72</TD><TD PORT="hash_specification_size">32</TD><TD>str(ASCII)</TD><TD PORT="hash_specification_type">hash_specification</TD></TR>
@@ -47,7 +47,7 @@ digraph {
 				</TABLE>>];
 				key_slot__inst__key_material [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="key_material_pos">(start_sector_of_key_material * 512)</TD><TD PORT="key_material_size">(_parent.number_of_key_bytes * number_of_anti_forensic_stripes)</TD><TD></TD><TD PORT="key_material_type">key_material</TD></TR>
+					<TR><TD PORT="key_material_pos">start_sector_of_key_material * 512</TD><TD PORT="key_material_size">_parent.number_of_key_bytes * number_of_anti_forensic_stripes</TD><TD></TD><TD PORT="key_material_type">key_material</TD></TR>
 				</TABLE>>];
 			}
 		}

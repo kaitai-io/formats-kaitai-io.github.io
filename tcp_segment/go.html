@@ -200,6 +200,11 @@ delivery.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="TCP (Transmission Control Protocol) segment parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="TCP (Transmission Control Protocol) segment parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -230,7 +235,17 @@ delivery.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="TCP (Transmission Control Protocol) segment parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="TCP (Transmission Control Protocol) segment parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="TCP (Transmission Control Protocol) segment parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -286,14 +301,18 @@ delivery.</p>
 <span class="w">	</span><span class="nx">Body</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span>
 <span class="w">	</span><span class="nx">_io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
 <span class="w">	</span><span class="nx">_root</span><span class="w"> </span><span class="o">*</span><span class="nx">TcpSegment</span>
-<span class="w">	</span><span class="nx">_parent</span><span class="w"> </span><span class="kd">interface</span><span class="p">{}</span>
+<span class="w">	</span><span class="nx">_parent</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Struct</span>
 <span class="p">}</span>
 <span class="kd">func</span><span class="w"> </span><span class="nx">NewTcpSegment</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">TcpSegment</span><span class="w"> </span><span class="p">{</span>
 <span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">TcpSegment</span><span class="p">{</span>
 <span class="w">	</span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">TcpSegment</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="kd">interface</span><span class="p">{},</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">TcpSegment</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="nx">TcpSegment</span><span class="p">)</span><span class="w"> </span><span class="nx">IO_</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">TcpSegment</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Struct</span><span class="p">,</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">TcpSegment</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">io</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">parent</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">root</span>
@@ -350,8 +369,8 @@ delivery.</p>
 <span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">	</span><span class="p">}</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">UrgentPointer</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp10</span><span class="p">)</span>
-<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(((</span><span class="nx">this</span><span class="p">.</span><span class="nx">DataOffset</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">20</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">		</span><span class="nx">tmp11</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(((</span><span class="nx">this</span><span class="p">.</span><span class="nx">DataOffset</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">20</span><span class="p">)))</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">DataOffset</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">20</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp11</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">DataOffset</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">20</span><span class="p">))</span>
 <span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">		</span><span class="p">}</span>
@@ -408,6 +427,10 @@ delivery.</p>
 <span class="w">	</span><span class="p">}</span>
 <span class="p">}</span>
 
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="nx">TcpSegment_Flags</span><span class="p">)</span><span class="w"> </span><span class="nx">IO_</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span>
+<span class="p">}</span>
+
 <span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">TcpSegment_Flags</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="o">*</span><span class="nx">TcpSegment</span><span class="p">,</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">TcpSegment</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">io</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">parent</span>
@@ -454,6 +477,58 @@ delivery.</p>
 <span class="w">	</span><span class="p">}</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Fin</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp20</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span>
 <span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="nx">TcpSegment_Flags</span><span class="p">)</span><span class="w"> </span><span class="nx">String</span><span class="p">()</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="kd">var</span><span class="w"> </span><span class="nx">tmp21</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Cwr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp21</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;|CWR&quot;</span>
+<span class="w">	</span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp21</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="kd">var</span><span class="w"> </span><span class="nx">tmp22</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Ece</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp22</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;|ECE&quot;</span>
+<span class="w">	</span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp22</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="kd">var</span><span class="w"> </span><span class="nx">tmp23</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Urg</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp23</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;|URG&quot;</span>
+<span class="w">	</span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp23</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="kd">var</span><span class="w"> </span><span class="nx">tmp24</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Ack</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp24</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;|ACK&quot;</span>
+<span class="w">	</span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp24</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="kd">var</span><span class="w"> </span><span class="nx">tmp25</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Psh</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp25</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;|PSH&quot;</span>
+<span class="w">	</span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp25</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="kd">var</span><span class="w"> </span><span class="nx">tmp26</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Rst</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp26</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;|RST&quot;</span>
+<span class="w">	</span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp26</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="kd">var</span><span class="w"> </span><span class="nx">tmp27</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Syn</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp27</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;|SYN&quot;</span>
+<span class="w">	</span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp27</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="kd">var</span><span class="w"> </span><span class="nx">tmp28</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Fin</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp28</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;|FIN&quot;</span>
+<span class="w">	</span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp28</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="p">((((((</span><span class="nx">tmp21</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">tmp22</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">tmp23</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">tmp24</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">tmp25</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">tmp26</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">tmp27</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">tmp28</span>
 <span class="p">}</span>
 
 <span class="cm">/**</span>

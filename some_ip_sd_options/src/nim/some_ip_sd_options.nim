@@ -18,10 +18,10 @@ type
     ipv6_multicast_option = 22
     ipv4_sd_endpoint_option = 36
     ipv6_sd_endpoint_option = 38
-  SomeIpSdOptions_SdOption_SdOptionHeader* = ref object of KaitaiStruct
-    `length`*: uint16
-    `type`*: SomeIpSdOptions_SdOption_OptionTypes
-    `parent`*: SomeIpSdOptions_SdOption
+  SomeIpSdOptions_SdOption_SdConfigKvPair* = ref object of KaitaiStruct
+    `key`*: string
+    `value`*: string
+    `parent`*: SomeIpSdOptions_SdOption_SdConfigString
   SomeIpSdOptions_SdOption_SdConfigString* = ref object of KaitaiStruct
     `length`*: uint8
     `config`*: SomeIpSdOptions_SdOption_SdConfigKvPair
@@ -35,6 +35,13 @@ type
     `configurations`*: SomeIpSdOptions_SdOption_SdConfigStringsContainer
     `parent`*: SomeIpSdOptions_SdOption
     `rawConfigurations`*: seq[byte]
+  SomeIpSdOptions_SdOption_SdIpv4EndpointOption* = ref object of KaitaiStruct
+    `reserved`*: uint8
+    `address`*: seq[byte]
+    `reserved2`*: uint8
+    `l4Protocol`*: uint8
+    `port`*: uint16
+    `parent`*: SomeIpSdOptions_SdOption
   SomeIpSdOptions_SdOption_SdIpv4MulticastOption* = ref object of KaitaiStruct
     `reserved`*: uint8
     `address`*: seq[byte]
@@ -49,6 +56,13 @@ type
     `l4Protocol`*: uint8
     `port`*: uint16
     `parent`*: SomeIpSdOptions_SdOption
+  SomeIpSdOptions_SdOption_SdIpv6EndpointOption* = ref object of KaitaiStruct
+    `reserved`*: uint8
+    `address`*: seq[byte]
+    `reserved2`*: uint8
+    `l4Protocol`*: uint8
+    `port`*: uint16
+    `parent`*: SomeIpSdOptions_SdOption
   SomeIpSdOptions_SdOption_SdIpv6MulticastOption* = ref object of KaitaiStruct
     `reserved`*: uint8
     `address`*: seq[byte]
@@ -56,25 +70,7 @@ type
     `l4Protocol`*: uint8
     `port`*: uint16
     `parent`*: SomeIpSdOptions_SdOption
-  SomeIpSdOptions_SdOption_SdConfigKvPair* = ref object of KaitaiStruct
-    `key`*: string
-    `value`*: string
-    `parent`*: SomeIpSdOptions_SdOption_SdConfigString
   SomeIpSdOptions_SdOption_SdIpv6SdEndpointOption* = ref object of KaitaiStruct
-    `reserved`*: uint8
-    `address`*: seq[byte]
-    `reserved2`*: uint8
-    `l4Protocol`*: uint8
-    `port`*: uint16
-    `parent`*: SomeIpSdOptions_SdOption
-  SomeIpSdOptions_SdOption_SdIpv4EndpointOption* = ref object of KaitaiStruct
-    `reserved`*: uint8
-    `address`*: seq[byte]
-    `reserved2`*: uint8
-    `l4Protocol`*: uint8
-    `port`*: uint16
-    `parent`*: SomeIpSdOptions_SdOption
-  SomeIpSdOptions_SdOption_SdIpv6EndpointOption* = ref object of KaitaiStruct
     `reserved`*: uint8
     `address`*: seq[byte]
     `reserved2`*: uint8
@@ -86,21 +82,25 @@ type
     `priority`*: uint16
     `weight`*: uint16
     `parent`*: SomeIpSdOptions_SdOption
+  SomeIpSdOptions_SdOption_SdOptionHeader* = ref object of KaitaiStruct
+    `length`*: uint16
+    `type`*: SomeIpSdOptions_SdOption_OptionTypes
+    `parent`*: SomeIpSdOptions_SdOption
 
 proc read*(_: typedesc[SomeIpSdOptions], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): SomeIpSdOptions
 proc read*(_: typedesc[SomeIpSdOptions_SdOption], io: KaitaiStream, root: KaitaiStruct, parent: SomeIpSdOptions): SomeIpSdOptions_SdOption
-proc read*(_: typedesc[SomeIpSdOptions_SdOption_SdOptionHeader], io: KaitaiStream, root: KaitaiStruct, parent: SomeIpSdOptions_SdOption): SomeIpSdOptions_SdOption_SdOptionHeader
+proc read*(_: typedesc[SomeIpSdOptions_SdOption_SdConfigKvPair], io: KaitaiStream, root: KaitaiStruct, parent: SomeIpSdOptions_SdOption_SdConfigString): SomeIpSdOptions_SdOption_SdConfigKvPair
 proc read*(_: typedesc[SomeIpSdOptions_SdOption_SdConfigString], io: KaitaiStream, root: KaitaiStruct, parent: SomeIpSdOptions_SdOption_SdConfigStringsContainer): SomeIpSdOptions_SdOption_SdConfigString
 proc read*(_: typedesc[SomeIpSdOptions_SdOption_SdConfigStringsContainer], io: KaitaiStream, root: KaitaiStruct, parent: SomeIpSdOptions_SdOption_SdConfigurationOption): SomeIpSdOptions_SdOption_SdConfigStringsContainer
 proc read*(_: typedesc[SomeIpSdOptions_SdOption_SdConfigurationOption], io: KaitaiStream, root: KaitaiStruct, parent: SomeIpSdOptions_SdOption): SomeIpSdOptions_SdOption_SdConfigurationOption
+proc read*(_: typedesc[SomeIpSdOptions_SdOption_SdIpv4EndpointOption], io: KaitaiStream, root: KaitaiStruct, parent: SomeIpSdOptions_SdOption): SomeIpSdOptions_SdOption_SdIpv4EndpointOption
 proc read*(_: typedesc[SomeIpSdOptions_SdOption_SdIpv4MulticastOption], io: KaitaiStream, root: KaitaiStruct, parent: SomeIpSdOptions_SdOption): SomeIpSdOptions_SdOption_SdIpv4MulticastOption
 proc read*(_: typedesc[SomeIpSdOptions_SdOption_SdIpv4SdEndpointOption], io: KaitaiStream, root: KaitaiStruct, parent: SomeIpSdOptions_SdOption): SomeIpSdOptions_SdOption_SdIpv4SdEndpointOption
-proc read*(_: typedesc[SomeIpSdOptions_SdOption_SdIpv6MulticastOption], io: KaitaiStream, root: KaitaiStruct, parent: SomeIpSdOptions_SdOption): SomeIpSdOptions_SdOption_SdIpv6MulticastOption
-proc read*(_: typedesc[SomeIpSdOptions_SdOption_SdConfigKvPair], io: KaitaiStream, root: KaitaiStruct, parent: SomeIpSdOptions_SdOption_SdConfigString): SomeIpSdOptions_SdOption_SdConfigKvPair
-proc read*(_: typedesc[SomeIpSdOptions_SdOption_SdIpv6SdEndpointOption], io: KaitaiStream, root: KaitaiStruct, parent: SomeIpSdOptions_SdOption): SomeIpSdOptions_SdOption_SdIpv6SdEndpointOption
-proc read*(_: typedesc[SomeIpSdOptions_SdOption_SdIpv4EndpointOption], io: KaitaiStream, root: KaitaiStruct, parent: SomeIpSdOptions_SdOption): SomeIpSdOptions_SdOption_SdIpv4EndpointOption
 proc read*(_: typedesc[SomeIpSdOptions_SdOption_SdIpv6EndpointOption], io: KaitaiStream, root: KaitaiStruct, parent: SomeIpSdOptions_SdOption): SomeIpSdOptions_SdOption_SdIpv6EndpointOption
+proc read*(_: typedesc[SomeIpSdOptions_SdOption_SdIpv6MulticastOption], io: KaitaiStream, root: KaitaiStruct, parent: SomeIpSdOptions_SdOption): SomeIpSdOptions_SdOption_SdIpv6MulticastOption
+proc read*(_: typedesc[SomeIpSdOptions_SdOption_SdIpv6SdEndpointOption], io: KaitaiStream, root: KaitaiStruct, parent: SomeIpSdOptions_SdOption): SomeIpSdOptions_SdOption_SdIpv6SdEndpointOption
 proc read*(_: typedesc[SomeIpSdOptions_SdOption_SdLoadBalancingOption], io: KaitaiStream, root: KaitaiStruct, parent: SomeIpSdOptions_SdOption): SomeIpSdOptions_SdOption_SdLoadBalancingOption
+proc read*(_: typedesc[SomeIpSdOptions_SdOption_SdOptionHeader], io: KaitaiStream, root: KaitaiStruct, parent: SomeIpSdOptions_SdOption): SomeIpSdOptions_SdOption_SdOptionHeader
 
 
 
@@ -142,23 +142,17 @@ proc read*(_: typedesc[SomeIpSdOptions_SdOption], io: KaitaiStream, root: Kaitai
   this.header = headerExpr
   block:
     let on = this.header.type
-    if on == some_ip_sd_options.load_balancing_option:
-      let contentExpr = SomeIpSdOptions_SdOption_SdLoadBalancingOption.read(this.io, this.root, this)
-      this.content = contentExpr
-    elif on == some_ip_sd_options.configuration_option:
+    if on == some_ip_sd_options.configuration_option:
       let contentExpr = SomeIpSdOptions_SdOption_SdConfigurationOption.read(this.io, this.root, this)
-      this.content = contentExpr
-    elif on == some_ip_sd_options.ipv4_sd_endpoint_option:
-      let contentExpr = SomeIpSdOptions_SdOption_SdIpv4SdEndpointOption.read(this.io, this.root, this)
       this.content = contentExpr
     elif on == some_ip_sd_options.ipv4_endpoint_option:
       let contentExpr = SomeIpSdOptions_SdOption_SdIpv4EndpointOption.read(this.io, this.root, this)
       this.content = contentExpr
-    elif on == some_ip_sd_options.ipv6_sd_endpoint_option:
-      let contentExpr = SomeIpSdOptions_SdOption_SdIpv6SdEndpointOption.read(this.io, this.root, this)
-      this.content = contentExpr
     elif on == some_ip_sd_options.ipv4_multicast_option:
       let contentExpr = SomeIpSdOptions_SdOption_SdIpv4MulticastOption.read(this.io, this.root, this)
+      this.content = contentExpr
+    elif on == some_ip_sd_options.ipv4_sd_endpoint_option:
+      let contentExpr = SomeIpSdOptions_SdOption_SdIpv4SdEndpointOption.read(this.io, this.root, this)
       this.content = contentExpr
     elif on == some_ip_sd_options.ipv6_endpoint_option:
       let contentExpr = SomeIpSdOptions_SdOption_SdIpv6EndpointOption.read(this.io, this.root, this)
@@ -166,25 +160,31 @@ proc read*(_: typedesc[SomeIpSdOptions_SdOption], io: KaitaiStream, root: Kaitai
     elif on == some_ip_sd_options.ipv6_multicast_option:
       let contentExpr = SomeIpSdOptions_SdOption_SdIpv6MulticastOption.read(this.io, this.root, this)
       this.content = contentExpr
+    elif on == some_ip_sd_options.ipv6_sd_endpoint_option:
+      let contentExpr = SomeIpSdOptions_SdOption_SdIpv6SdEndpointOption.read(this.io, this.root, this)
+      this.content = contentExpr
+    elif on == some_ip_sd_options.load_balancing_option:
+      let contentExpr = SomeIpSdOptions_SdOption_SdLoadBalancingOption.read(this.io, this.root, this)
+      this.content = contentExpr
 
 proc fromFile*(_: typedesc[SomeIpSdOptions_SdOption], filename: string): SomeIpSdOptions_SdOption =
   SomeIpSdOptions_SdOption.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[SomeIpSdOptions_SdOption_SdOptionHeader], io: KaitaiStream, root: KaitaiStruct, parent: SomeIpSdOptions_SdOption): SomeIpSdOptions_SdOption_SdOptionHeader =
+proc read*(_: typedesc[SomeIpSdOptions_SdOption_SdConfigKvPair], io: KaitaiStream, root: KaitaiStruct, parent: SomeIpSdOptions_SdOption_SdConfigString): SomeIpSdOptions_SdOption_SdConfigKvPair =
   template this: untyped = result
-  this = new(SomeIpSdOptions_SdOption_SdOptionHeader)
+  this = new(SomeIpSdOptions_SdOption_SdConfigKvPair)
   let root = if root == nil: cast[SomeIpSdOptions](this) else: cast[SomeIpSdOptions](root)
   this.io = io
   this.root = root
   this.parent = parent
 
-  let lengthExpr = this.io.readU2be()
-  this.length = lengthExpr
-  let typeExpr = SomeIpSdOptions_SdOption_OptionTypes(this.io.readU1())
-  this.type = typeExpr
+  let keyExpr = encode(this.io.readBytesTerm(61, false, true, true), "ASCII")
+  this.key = keyExpr
+  let valueExpr = encode(this.io.readBytesFull(), "ASCII")
+  this.value = valueExpr
 
-proc fromFile*(_: typedesc[SomeIpSdOptions_SdOption_SdOptionHeader], filename: string): SomeIpSdOptions_SdOption_SdOptionHeader =
-  SomeIpSdOptions_SdOption_SdOptionHeader.read(newKaitaiFileStream(filename), nil, nil)
+proc fromFile*(_: typedesc[SomeIpSdOptions_SdOption_SdConfigKvPair], filename: string): SomeIpSdOptions_SdOption_SdConfigKvPair =
+  SomeIpSdOptions_SdOption_SdConfigKvPair.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[SomeIpSdOptions_SdOption_SdConfigString], io: KaitaiStream, root: KaitaiStruct, parent: SomeIpSdOptions_SdOption_SdConfigStringsContainer): SomeIpSdOptions_SdOption_SdConfigString =
   template this: untyped = result
@@ -234,7 +234,7 @@ proc read*(_: typedesc[SomeIpSdOptions_SdOption_SdConfigurationOption], io: Kait
 
   let reservedExpr = this.io.readU1()
   this.reserved = reservedExpr
-  let rawConfigurationsExpr = this.io.readBytes(int((this.parent.header.length - 1)))
+  let rawConfigurationsExpr = this.io.readBytes(int(this.parent.header.length - 1))
   this.rawConfigurations = rawConfigurationsExpr
   let rawConfigurationsIo = newKaitaiStream(rawConfigurationsExpr)
   let configurationsExpr = SomeIpSdOptions_SdOption_SdConfigStringsContainer.read(rawConfigurationsIo, this.root, this)
@@ -242,6 +242,28 @@ proc read*(_: typedesc[SomeIpSdOptions_SdOption_SdConfigurationOption], io: Kait
 
 proc fromFile*(_: typedesc[SomeIpSdOptions_SdOption_SdConfigurationOption], filename: string): SomeIpSdOptions_SdOption_SdConfigurationOption =
   SomeIpSdOptions_SdOption_SdConfigurationOption.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[SomeIpSdOptions_SdOption_SdIpv4EndpointOption], io: KaitaiStream, root: KaitaiStruct, parent: SomeIpSdOptions_SdOption): SomeIpSdOptions_SdOption_SdIpv4EndpointOption =
+  template this: untyped = result
+  this = new(SomeIpSdOptions_SdOption_SdIpv4EndpointOption)
+  let root = if root == nil: cast[SomeIpSdOptions](this) else: cast[SomeIpSdOptions](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let reservedExpr = this.io.readU1()
+  this.reserved = reservedExpr
+  let addressExpr = this.io.readBytes(int(4))
+  this.address = addressExpr
+  let reserved2Expr = this.io.readU1()
+  this.reserved2 = reserved2Expr
+  let l4ProtocolExpr = this.io.readU1()
+  this.l4Protocol = l4ProtocolExpr
+  let portExpr = this.io.readU2be()
+  this.port = portExpr
+
+proc fromFile*(_: typedesc[SomeIpSdOptions_SdOption_SdIpv4EndpointOption], filename: string): SomeIpSdOptions_SdOption_SdIpv4EndpointOption =
+  SomeIpSdOptions_SdOption_SdIpv4EndpointOption.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[SomeIpSdOptions_SdOption_SdIpv4MulticastOption], io: KaitaiStream, root: KaitaiStruct, parent: SomeIpSdOptions_SdOption): SomeIpSdOptions_SdOption_SdIpv4MulticastOption =
   template this: untyped = result
@@ -287,6 +309,28 @@ proc read*(_: typedesc[SomeIpSdOptions_SdOption_SdIpv4SdEndpointOption], io: Kai
 proc fromFile*(_: typedesc[SomeIpSdOptions_SdOption_SdIpv4SdEndpointOption], filename: string): SomeIpSdOptions_SdOption_SdIpv4SdEndpointOption =
   SomeIpSdOptions_SdOption_SdIpv4SdEndpointOption.read(newKaitaiFileStream(filename), nil, nil)
 
+proc read*(_: typedesc[SomeIpSdOptions_SdOption_SdIpv6EndpointOption], io: KaitaiStream, root: KaitaiStruct, parent: SomeIpSdOptions_SdOption): SomeIpSdOptions_SdOption_SdIpv6EndpointOption =
+  template this: untyped = result
+  this = new(SomeIpSdOptions_SdOption_SdIpv6EndpointOption)
+  let root = if root == nil: cast[SomeIpSdOptions](this) else: cast[SomeIpSdOptions](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let reservedExpr = this.io.readU1()
+  this.reserved = reservedExpr
+  let addressExpr = this.io.readBytes(int(16))
+  this.address = addressExpr
+  let reserved2Expr = this.io.readU1()
+  this.reserved2 = reserved2Expr
+  let l4ProtocolExpr = this.io.readU1()
+  this.l4Protocol = l4ProtocolExpr
+  let portExpr = this.io.readU2be()
+  this.port = portExpr
+
+proc fromFile*(_: typedesc[SomeIpSdOptions_SdOption_SdIpv6EndpointOption], filename: string): SomeIpSdOptions_SdOption_SdIpv6EndpointOption =
+  SomeIpSdOptions_SdOption_SdIpv6EndpointOption.read(newKaitaiFileStream(filename), nil, nil)
+
 proc read*(_: typedesc[SomeIpSdOptions_SdOption_SdIpv6MulticastOption], io: KaitaiStream, root: KaitaiStruct, parent: SomeIpSdOptions_SdOption): SomeIpSdOptions_SdOption_SdIpv6MulticastOption =
   template this: untyped = result
   this = new(SomeIpSdOptions_SdOption_SdIpv6MulticastOption)
@@ -308,22 +352,6 @@ proc read*(_: typedesc[SomeIpSdOptions_SdOption_SdIpv6MulticastOption], io: Kait
 
 proc fromFile*(_: typedesc[SomeIpSdOptions_SdOption_SdIpv6MulticastOption], filename: string): SomeIpSdOptions_SdOption_SdIpv6MulticastOption =
   SomeIpSdOptions_SdOption_SdIpv6MulticastOption.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[SomeIpSdOptions_SdOption_SdConfigKvPair], io: KaitaiStream, root: KaitaiStruct, parent: SomeIpSdOptions_SdOption_SdConfigString): SomeIpSdOptions_SdOption_SdConfigKvPair =
-  template this: untyped = result
-  this = new(SomeIpSdOptions_SdOption_SdConfigKvPair)
-  let root = if root == nil: cast[SomeIpSdOptions](this) else: cast[SomeIpSdOptions](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let keyExpr = encode(this.io.readBytesTerm(61, false, true, true), "ASCII")
-  this.key = keyExpr
-  let valueExpr = encode(this.io.readBytesFull(), "ASCII")
-  this.value = valueExpr
-
-proc fromFile*(_: typedesc[SomeIpSdOptions_SdOption_SdConfigKvPair], filename: string): SomeIpSdOptions_SdOption_SdConfigKvPair =
-  SomeIpSdOptions_SdOption_SdConfigKvPair.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[SomeIpSdOptions_SdOption_SdIpv6SdEndpointOption], io: KaitaiStream, root: KaitaiStruct, parent: SomeIpSdOptions_SdOption): SomeIpSdOptions_SdOption_SdIpv6SdEndpointOption =
   template this: untyped = result
@@ -347,50 +375,6 @@ proc read*(_: typedesc[SomeIpSdOptions_SdOption_SdIpv6SdEndpointOption], io: Kai
 proc fromFile*(_: typedesc[SomeIpSdOptions_SdOption_SdIpv6SdEndpointOption], filename: string): SomeIpSdOptions_SdOption_SdIpv6SdEndpointOption =
   SomeIpSdOptions_SdOption_SdIpv6SdEndpointOption.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[SomeIpSdOptions_SdOption_SdIpv4EndpointOption], io: KaitaiStream, root: KaitaiStruct, parent: SomeIpSdOptions_SdOption): SomeIpSdOptions_SdOption_SdIpv4EndpointOption =
-  template this: untyped = result
-  this = new(SomeIpSdOptions_SdOption_SdIpv4EndpointOption)
-  let root = if root == nil: cast[SomeIpSdOptions](this) else: cast[SomeIpSdOptions](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let reservedExpr = this.io.readU1()
-  this.reserved = reservedExpr
-  let addressExpr = this.io.readBytes(int(4))
-  this.address = addressExpr
-  let reserved2Expr = this.io.readU1()
-  this.reserved2 = reserved2Expr
-  let l4ProtocolExpr = this.io.readU1()
-  this.l4Protocol = l4ProtocolExpr
-  let portExpr = this.io.readU2be()
-  this.port = portExpr
-
-proc fromFile*(_: typedesc[SomeIpSdOptions_SdOption_SdIpv4EndpointOption], filename: string): SomeIpSdOptions_SdOption_SdIpv4EndpointOption =
-  SomeIpSdOptions_SdOption_SdIpv4EndpointOption.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[SomeIpSdOptions_SdOption_SdIpv6EndpointOption], io: KaitaiStream, root: KaitaiStruct, parent: SomeIpSdOptions_SdOption): SomeIpSdOptions_SdOption_SdIpv6EndpointOption =
-  template this: untyped = result
-  this = new(SomeIpSdOptions_SdOption_SdIpv6EndpointOption)
-  let root = if root == nil: cast[SomeIpSdOptions](this) else: cast[SomeIpSdOptions](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let reservedExpr = this.io.readU1()
-  this.reserved = reservedExpr
-  let addressExpr = this.io.readBytes(int(16))
-  this.address = addressExpr
-  let reserved2Expr = this.io.readU1()
-  this.reserved2 = reserved2Expr
-  let l4ProtocolExpr = this.io.readU1()
-  this.l4Protocol = l4ProtocolExpr
-  let portExpr = this.io.readU2be()
-  this.port = portExpr
-
-proc fromFile*(_: typedesc[SomeIpSdOptions_SdOption_SdIpv6EndpointOption], filename: string): SomeIpSdOptions_SdOption_SdIpv6EndpointOption =
-  SomeIpSdOptions_SdOption_SdIpv6EndpointOption.read(newKaitaiFileStream(filename), nil, nil)
-
 proc read*(_: typedesc[SomeIpSdOptions_SdOption_SdLoadBalancingOption], io: KaitaiStream, root: KaitaiStruct, parent: SomeIpSdOptions_SdOption): SomeIpSdOptions_SdOption_SdLoadBalancingOption =
   template this: untyped = result
   this = new(SomeIpSdOptions_SdOption_SdLoadBalancingOption)
@@ -408,4 +392,20 @@ proc read*(_: typedesc[SomeIpSdOptions_SdOption_SdLoadBalancingOption], io: Kait
 
 proc fromFile*(_: typedesc[SomeIpSdOptions_SdOption_SdLoadBalancingOption], filename: string): SomeIpSdOptions_SdOption_SdLoadBalancingOption =
   SomeIpSdOptions_SdOption_SdLoadBalancingOption.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[SomeIpSdOptions_SdOption_SdOptionHeader], io: KaitaiStream, root: KaitaiStruct, parent: SomeIpSdOptions_SdOption): SomeIpSdOptions_SdOption_SdOptionHeader =
+  template this: untyped = result
+  this = new(SomeIpSdOptions_SdOption_SdOptionHeader)
+  let root = if root == nil: cast[SomeIpSdOptions](this) else: cast[SomeIpSdOptions](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let lengthExpr = this.io.readU2be()
+  this.length = lengthExpr
+  let typeExpr = SomeIpSdOptions_SdOption_OptionTypes(this.io.readU1())
+  this.type = typeExpr
+
+proc fromFile*(_: typedesc[SomeIpSdOptions_SdOption_SdOptionHeader], filename: string): SomeIpSdOptions_SdOption_SdOptionHeader =
+  SomeIpSdOptions_SdOption_SdOptionHeader.read(newKaitaiFileStream(filename), nil, nil)
 

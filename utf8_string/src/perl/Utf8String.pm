@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 
 ########################################################################
 package Utf8String;
@@ -24,7 +24,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -34,7 +34,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{codepoints} = ();
+    $self->{codepoints} = [];
     while (!$self->{_io}->is_eof()) {
         push @{$self->{codepoints}}, Utf8String::Utf8Codepoint->new($self->{_io}, $self, $self->{_root});
     }
@@ -65,7 +65,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -78,45 +78,6 @@ sub _read {
     $self->{bytes} = $self->{_io}->read_bytes($self->len_bytes());
 }
 
-sub raw1 {
-    my ($self) = @_;
-    return $self->{raw1} if ($self->{raw1});
-    if ($self->len_bytes() >= 2) {
-        $self->{raw1} = (unpack('C', substr($self->bytes(), 1, 1)) & 63);
-    }
-    return $self->{raw1};
-}
-
-sub len_bytes {
-    my ($self) = @_;
-    return $self->{len_bytes} if ($self->{len_bytes});
-    $self->{len_bytes} = (($self->byte0() & 128) == 0 ? 1 : (($self->byte0() & 224) == 192 ? 2 : (($self->byte0() & 240) == 224 ? 3 : (($self->byte0() & 248) == 240 ? 4 : -1))));
-    return $self->{len_bytes};
-}
-
-sub raw3 {
-    my ($self) = @_;
-    return $self->{raw3} if ($self->{raw3});
-    if ($self->len_bytes() >= 4) {
-        $self->{raw3} = (unpack('C', substr($self->bytes(), 3, 1)) & 63);
-    }
-    return $self->{raw3};
-}
-
-sub value_as_int {
-    my ($self) = @_;
-    return $self->{value_as_int} if ($self->{value_as_int});
-    $self->{value_as_int} = ($self->len_bytes() == 1 ? $self->raw0() : ($self->len_bytes() == 2 ? (($self->raw0() << 6) | $self->raw1()) : ($self->len_bytes() == 3 ? ((($self->raw0() << 12) | ($self->raw1() << 6)) | $self->raw2()) : ($self->len_bytes() == 4 ? (((($self->raw0() << 18) | ($self->raw1() << 12)) | ($self->raw2() << 6)) | $self->raw3()) : -1))));
-    return $self->{value_as_int};
-}
-
-sub raw0 {
-    my ($self) = @_;
-    return $self->{raw0} if ($self->{raw0});
-    $self->{raw0} = (unpack('C', substr($self->bytes(), 0, 1)) & ($self->len_bytes() == 1 ? 127 : ($self->len_bytes() == 2 ? 31 : ($self->len_bytes() == 3 ? 15 : ($self->len_bytes() == 4 ? 7 : 0)))));
-    return $self->{raw0};
-}
-
 sub byte0 {
     my ($self) = @_;
     return $self->{byte0} if ($self->{byte0});
@@ -127,13 +88,52 @@ sub byte0 {
     return $self->{byte0};
 }
 
+sub len_bytes {
+    my ($self) = @_;
+    return $self->{len_bytes} if ($self->{len_bytes});
+    $self->{len_bytes} = (($self->byte0() & 128) == 0 ? 1 : (($self->byte0() & 224) == 192 ? 2 : (($self->byte0() & 240) == 224 ? 3 : (($self->byte0() & 248) == 240 ? 4 : -1))));
+    return $self->{len_bytes};
+}
+
+sub raw0 {
+    my ($self) = @_;
+    return $self->{raw0} if ($self->{raw0});
+    $self->{raw0} = unpack('C', substr($self->bytes(), 0, 1)) & ($self->len_bytes() == 1 ? 127 : ($self->len_bytes() == 2 ? 31 : ($self->len_bytes() == 3 ? 15 : ($self->len_bytes() == 4 ? 7 : 0))));
+    return $self->{raw0};
+}
+
+sub raw1 {
+    my ($self) = @_;
+    return $self->{raw1} if ($self->{raw1});
+    if ($self->len_bytes() >= 2) {
+        $self->{raw1} = unpack('C', substr($self->bytes(), 1, 1)) & 63;
+    }
+    return $self->{raw1};
+}
+
 sub raw2 {
     my ($self) = @_;
     return $self->{raw2} if ($self->{raw2});
     if ($self->len_bytes() >= 3) {
-        $self->{raw2} = (unpack('C', substr($self->bytes(), 2, 1)) & 63);
+        $self->{raw2} = unpack('C', substr($self->bytes(), 2, 1)) & 63;
     }
     return $self->{raw2};
+}
+
+sub raw3 {
+    my ($self) = @_;
+    return $self->{raw3} if ($self->{raw3});
+    if ($self->len_bytes() >= 4) {
+        $self->{raw3} = unpack('C', substr($self->bytes(), 3, 1)) & 63;
+    }
+    return $self->{raw3};
+}
+
+sub value_as_int {
+    my ($self) = @_;
+    return $self->{value_as_int} if ($self->{value_as_int});
+    $self->{value_as_int} = ($self->len_bytes() == 1 ? $self->raw0() : ($self->len_bytes() == 2 ? $self->raw0() << 6 | $self->raw1() : ($self->len_bytes() == 3 ? ($self->raw0() << 12 | $self->raw1() << 6) | $self->raw2() : ($self->len_bytes() == 4 ? (($self->raw0() << 18 | $self->raw1() << 12) | $self->raw2() << 6) | $self->raw3() : -1))));
+    return $self->{value_as_int};
 }
 
 sub bytes {

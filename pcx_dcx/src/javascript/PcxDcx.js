@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream', './Pcx'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./Pcx'));
+    define(['exports', 'kaitai-struct/KaitaiStream', './Pcx'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'), require('./Pcx'));
   } else {
-    root.PcxDcx = factory(root.KaitaiStream, root.Pcx);
+    factory(root.PcxDcx || (root.PcxDcx = {}), root.KaitaiStream, root.Pcx || (root.Pcx = {}));
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, Pcx) {
+})(typeof self !== 'undefined' ? self : this, function (PcxDcx_, KaitaiStream, Pcx_) {
 /**
  * DCX is a simple extension of PCX image format allowing to bundle
  * many PCX images (typically, pages of a document) in one file. It saw
@@ -26,8 +26,8 @@ var PcxDcx = (function() {
   }
   PcxDcx.prototype._read = function() {
     this.magic = this._io.readBytes(4);
-    if (!((KaitaiStream.byteArrayCompare(this.magic, [177, 104, 222, 58]) == 0))) {
-      throw new KaitaiStream.ValidationNotEqualError([177, 104, 222, 58], this.magic, this._io, "/seq/0");
+    if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([177, 104, 222, 58])) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([177, 104, 222, 58]), this.magic, this._io, "/seq/0");
     }
     this.files = [];
     var i = 0;
@@ -42,7 +42,7 @@ var PcxDcx = (function() {
     function PcxOffset(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -56,7 +56,7 @@ var PcxDcx = (function() {
         if (this.ofsBody != 0) {
           var _pos = this._io.pos;
           this._io.seek(this.ofsBody);
-          this._m_body = new Pcx(this._io, this, null);
+          this._m_body = new Pcx_.Pcx(this._io, null, null);
           this._io.seek(_pos);
         }
         return this._m_body;
@@ -68,5 +68,5 @@ var PcxDcx = (function() {
 
   return PcxDcx;
 })();
-return PcxDcx;
-}));
+PcxDcx_.PcxDcx = PcxDcx;
+});

@@ -2,13 +2,15 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class mifare_classic_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -23,8 +25,8 @@ class mifare_classic_t : public kaitai::kstruct {
 
 public:
     class key_t;
-    class sector_t;
     class manufacturer_t;
+    class sector_t;
     class trailer_t;
 
     mifare_classic_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, mifare_classic_t* p__root = nullptr);
@@ -60,11 +62,51 @@ public:
         mifare_classic_t::trailer_t* _parent() const { return m__parent; }
     };
 
+    class manufacturer_t : public kaitai::kstruct {
+
+    public:
+
+        manufacturer_t(kaitai::kstream* p__io, mifare_classic_t::sector_t* p__parent = nullptr, mifare_classic_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~manufacturer_t();
+
+    private:
+        uint32_t m_nuid;
+        uint8_t m_bcc;
+        uint8_t m_sak;
+        uint16_t m_atqa;
+        std::string m_manufacturer;
+        mifare_classic_t* m__root;
+        mifare_classic_t::sector_t* m__parent;
+
+    public:
+
+        /**
+         * beware for 7bytes UID it goes over next fields
+         */
+        uint32_t nuid() const { return m_nuid; }
+        uint8_t bcc() const { return m_bcc; }
+        uint8_t sak() const { return m_sak; }
+        uint16_t atqa() const { return m_atqa; }
+
+        /**
+         * may contain manufacture date as BCD
+         */
+        std::string manufacturer() const { return m_manufacturer; }
+        mifare_classic_t* _root() const { return m__root; }
+        mifare_classic_t::sector_t* _parent() const { return m__parent; }
+    };
+
     class sector_t : public kaitai::kstruct {
 
     public:
-        class values_t;
         class filler_t;
+        class values_t;
 
         sector_t(bool p_has_manufacturer, kaitai::kstream* p__io, mifare_classic_t* p__parent = nullptr, mifare_classic_t* p__root = nullptr);
 
@@ -74,6 +116,34 @@ public:
 
     public:
         ~sector_t();
+
+        /**
+         * only to create _io
+         */
+
+        class filler_t : public kaitai::kstruct {
+
+        public:
+
+            filler_t(kaitai::kstream* p__io, mifare_classic_t::sector_t* p__parent = nullptr, mifare_classic_t* p__root = nullptr);
+
+        private:
+            void _read();
+            void _clean_up();
+
+        public:
+            ~filler_t();
+
+        private:
+            std::string m_data;
+            mifare_classic_t* m__root;
+            mifare_classic_t::sector_t* m__parent;
+
+        public:
+            std::string data() const { return m_data; }
+            mifare_classic_t* _root() const { return m__root; }
+            mifare_classic_t::sector_t* _parent() const { return m__parent; }
+        };
 
         class values_t : public kaitai::kstruct {
 
@@ -130,13 +200,6 @@ public:
                 bool valid();
 
             private:
-                bool f_value_valid;
-                bool m_value_valid;
-
-            public:
-                bool value_valid();
-
-            private:
                 bool f_value;
                 uint32_t m_value;
                 bool n_value;
@@ -148,6 +211,13 @@ public:
 
             public:
                 uint32_t value();
+
+            private:
+                bool f_value_valid;
+                bool m_value_valid;
+
+            public:
+                bool value_valid();
 
             private:
                 std::unique_ptr<std::vector<uint32_t>> m_valuez;
@@ -173,34 +243,6 @@ public:
             mifare_classic_t::sector_t* _parent() const { return m__parent; }
         };
 
-        /**
-         * only to create _io
-         */
-
-        class filler_t : public kaitai::kstruct {
-
-        public:
-
-            filler_t(kaitai::kstream* p__io, mifare_classic_t::sector_t* p__parent = nullptr, mifare_classic_t* p__root = nullptr);
-
-        private:
-            void _read();
-            void _clean_up();
-
-        public:
-            ~filler_t();
-
-        private:
-            std::string m_data;
-            mifare_classic_t* m__root;
-            mifare_classic_t::sector_t* m__parent;
-
-        public:
-            std::string data() const { return m_data; }
-            mifare_classic_t* _root() const { return m__root; }
-            mifare_classic_t::sector_t* _parent() const { return m__parent; }
-        };
-
     private:
         bool f_block_size;
         int8_t m_block_size;
@@ -209,18 +251,18 @@ public:
         int8_t block_size();
 
     private:
-        bool f_data;
-        std::string m_data;
-
-    public:
-        std::string data();
-
-    private:
         bool f_blocks;
         std::unique_ptr<std::vector<std::string>> m_blocks;
 
     public:
         std::vector<std::string>* blocks();
+
+    private:
+        bool f_data;
+        std::string m_data;
+
+    public:
+        std::string data();
 
     private:
         bool f_values;
@@ -256,46 +298,6 @@ public:
         kaitai::kstream* _io__raw_data_filler() const { return m__io__raw_data_filler.get(); }
     };
 
-    class manufacturer_t : public kaitai::kstruct {
-
-    public:
-
-        manufacturer_t(kaitai::kstream* p__io, mifare_classic_t::sector_t* p__parent = nullptr, mifare_classic_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~manufacturer_t();
-
-    private:
-        uint32_t m_nuid;
-        uint8_t m_bcc;
-        uint8_t m_sak;
-        uint16_t m_atqa;
-        std::string m_manufacturer;
-        mifare_classic_t* m__root;
-        mifare_classic_t::sector_t* m__parent;
-
-    public:
-
-        /**
-         * beware for 7bytes UID it goes over next fields
-         */
-        uint32_t nuid() const { return m_nuid; }
-        uint8_t bcc() const { return m_bcc; }
-        uint8_t sak() const { return m_sak; }
-        uint16_t atqa() const { return m_atqa; }
-
-        /**
-         * may contain manufacture date as BCD
-         */
-        std::string manufacturer() const { return m_manufacturer; }
-        mifare_classic_t* _root() const { return m__root; }
-        mifare_classic_t::sector_t* _parent() const { return m__parent; }
-    };
-
     class trailer_t : public kaitai::kstruct {
 
     public:
@@ -313,10 +315,10 @@ public:
         class access_conditions_t : public kaitai::kstruct {
 
         public:
-            class trailer_ac_t;
+            class ac_t;
             class chunk_bit_remap_t;
             class data_ac_t;
-            class ac_t;
+            class trailer_ac_t;
             class valid_chunk_t;
 
             access_conditions_t(kaitai::kstream* p__io, mifare_classic_t::trailer_t* p__parent = nullptr, mifare_classic_t* p__root = nullptr);
@@ -327,173 +329,6 @@ public:
 
         public:
             ~access_conditions_t();
-
-            class trailer_ac_t : public kaitai::kstruct {
-
-            public:
-
-                trailer_ac_t(ac_t* p_ac, kaitai::kstream* p__io, mifare_classic_t::trailer_t::access_conditions_t* p__parent = nullptr, mifare_classic_t* p__root = nullptr);
-
-            private:
-                void _read();
-                void _clean_up();
-
-            public:
-                ~trailer_ac_t();
-
-            private:
-                bool f_can_read_key_b;
-                bool m_can_read_key_b;
-
-            public:
-
-                /**
-                 * key A is required
-                 */
-                bool can_read_key_b();
-
-            private:
-                bool f_can_write_keys;
-                bool m_can_write_keys;
-
-            public:
-                bool can_write_keys();
-
-            private:
-                bool f_can_write_access_bits;
-                bool m_can_write_access_bits;
-
-            public:
-                bool can_write_access_bits();
-
-            private:
-                bool f_key_b_controls_write;
-                bool m_key_b_controls_write;
-
-            public:
-                bool key_b_controls_write();
-
-            private:
-                ac_t* m_ac;
-                mifare_classic_t* m__root;
-                mifare_classic_t::trailer_t::access_conditions_t* m__parent;
-
-            public:
-                ac_t* ac() const { return m_ac; }
-                mifare_classic_t* _root() const { return m__root; }
-                mifare_classic_t::trailer_t::access_conditions_t* _parent() const { return m__parent; }
-            };
-
-            class chunk_bit_remap_t : public kaitai::kstruct {
-
-            public:
-
-                chunk_bit_remap_t(uint8_t p_bit_no, kaitai::kstream* p__io, mifare_classic_t::trailer_t::access_conditions_t* p__parent = nullptr, mifare_classic_t* p__root = nullptr);
-
-            private:
-                void _read();
-                void _clean_up();
-
-            public:
-                ~chunk_bit_remap_t();
-
-            private:
-                bool f_shift_value;
-                int32_t m_shift_value;
-
-            public:
-                int32_t shift_value();
-
-            private:
-                bool f_chunk_no;
-                int32_t m_chunk_no;
-
-            public:
-                int32_t chunk_no();
-
-            private:
-                bool f_inv_chunk_no;
-                int32_t m_inv_chunk_no;
-
-            public:
-                int32_t inv_chunk_no();
-
-            private:
-                uint8_t m_bit_no;
-                mifare_classic_t* m__root;
-                mifare_classic_t::trailer_t::access_conditions_t* m__parent;
-
-            public:
-                uint8_t bit_no() const { return m_bit_no; }
-                mifare_classic_t* _root() const { return m__root; }
-                mifare_classic_t::trailer_t::access_conditions_t* _parent() const { return m__parent; }
-            };
-
-            class data_ac_t : public kaitai::kstruct {
-
-            public:
-
-                data_ac_t(ac_t* p_ac, kaitai::kstream* p__io, mifare_classic_t::trailer_t::access_conditions_t* p__parent = nullptr, mifare_classic_t* p__root = nullptr);
-
-            private:
-                void _read();
-                void _clean_up();
-
-            public:
-                ~data_ac_t();
-
-            private:
-                bool f_read_key_a_required;
-                bool m_read_key_a_required;
-
-            public:
-                bool read_key_a_required();
-
-            private:
-                bool f_write_key_b_required;
-                bool m_write_key_b_required;
-
-            public:
-                bool write_key_b_required();
-
-            private:
-                bool f_write_key_a_required;
-                bool m_write_key_a_required;
-
-            public:
-                bool write_key_a_required();
-
-            private:
-                bool f_read_key_b_required;
-                bool m_read_key_b_required;
-
-            public:
-                bool read_key_b_required();
-
-            private:
-                bool f_decrement_available;
-                bool m_decrement_available;
-
-            public:
-                bool decrement_available();
-
-            private:
-                bool f_increment_available;
-                bool m_increment_available;
-
-            public:
-                bool increment_available();
-
-            private:
-                ac_t* m_ac;
-                mifare_classic_t* m__root;
-                mifare_classic_t::trailer_t::access_conditions_t* m__parent;
-
-            public:
-                ac_t* ac() const { return m_ac; }
-                mifare_classic_t* _root() const { return m__root; }
-                mifare_classic_t::trailer_t::access_conditions_t* _parent() const { return m__parent; }
-            };
 
             class ac_t : public kaitai::kstruct {
 
@@ -523,18 +358,18 @@ public:
                     ~ac_bit_t();
 
                 private:
-                    bool f_n;
-                    int32_t m_n;
-
-                public:
-                    int32_t n();
-
-                private:
                     bool f_b;
                     bool m_b;
 
                 public:
                     bool b();
+
+                private:
+                    bool f_n;
+                    int32_t m_n;
+
+                public:
+                    int32_t n();
 
                 private:
                     uint8_t m_i;
@@ -557,6 +392,13 @@ public:
                 std::vector<std::unique_ptr<ac_bit_t>>* bits();
 
             private:
+                bool f_inv_shift_val;
+                int32_t m_inv_shift_val;
+
+            public:
+                int32_t inv_shift_val();
+
+            private:
                 bool f_val;
                 int32_t m_val;
 
@@ -568,19 +410,179 @@ public:
                 int32_t val();
 
             private:
-                bool f_inv_shift_val;
-                int32_t m_inv_shift_val;
-
-            public:
-                int32_t inv_shift_val();
-
-            private:
                 uint8_t m_index;
                 mifare_classic_t* m__root;
                 mifare_classic_t::trailer_t::access_conditions_t* m__parent;
 
             public:
                 uint8_t index() const { return m_index; }
+                mifare_classic_t* _root() const { return m__root; }
+                mifare_classic_t::trailer_t::access_conditions_t* _parent() const { return m__parent; }
+            };
+
+            class chunk_bit_remap_t : public kaitai::kstruct {
+
+            public:
+
+                chunk_bit_remap_t(uint8_t p_bit_no, kaitai::kstream* p__io, mifare_classic_t::trailer_t::access_conditions_t* p__parent = nullptr, mifare_classic_t* p__root = nullptr);
+
+            private:
+                void _read();
+                void _clean_up();
+
+            public:
+                ~chunk_bit_remap_t();
+
+            private:
+                bool f_chunk_no;
+                int32_t m_chunk_no;
+
+            public:
+                int32_t chunk_no();
+
+            private:
+                bool f_inv_chunk_no;
+                int32_t m_inv_chunk_no;
+
+            public:
+                int32_t inv_chunk_no();
+
+            private:
+                bool f_shift_value;
+                int32_t m_shift_value;
+
+            public:
+                int32_t shift_value();
+
+            private:
+                uint8_t m_bit_no;
+                mifare_classic_t* m__root;
+                mifare_classic_t::trailer_t::access_conditions_t* m__parent;
+
+            public:
+                uint8_t bit_no() const { return m_bit_no; }
+                mifare_classic_t* _root() const { return m__root; }
+                mifare_classic_t::trailer_t::access_conditions_t* _parent() const { return m__parent; }
+            };
+
+            class data_ac_t : public kaitai::kstruct {
+
+            public:
+
+                data_ac_t(ac_t* p_ac, kaitai::kstream* p__io, mifare_classic_t::trailer_t::access_conditions_t* p__parent = nullptr, mifare_classic_t* p__root = nullptr);
+
+            private:
+                void _read();
+                void _clean_up();
+
+            public:
+                ~data_ac_t();
+
+            private:
+                bool f_decrement_available;
+                bool m_decrement_available;
+
+            public:
+                bool decrement_available();
+
+            private:
+                bool f_increment_available;
+                bool m_increment_available;
+
+            public:
+                bool increment_available();
+
+            private:
+                bool f_read_key_a_required;
+                bool m_read_key_a_required;
+
+            public:
+                bool read_key_a_required();
+
+            private:
+                bool f_read_key_b_required;
+                bool m_read_key_b_required;
+
+            public:
+                bool read_key_b_required();
+
+            private:
+                bool f_write_key_a_required;
+                bool m_write_key_a_required;
+
+            public:
+                bool write_key_a_required();
+
+            private:
+                bool f_write_key_b_required;
+                bool m_write_key_b_required;
+
+            public:
+                bool write_key_b_required();
+
+            private:
+                ac_t* m_ac;
+                mifare_classic_t* m__root;
+                mifare_classic_t::trailer_t::access_conditions_t* m__parent;
+
+            public:
+                ac_t* ac() const { return m_ac; }
+                mifare_classic_t* _root() const { return m__root; }
+                mifare_classic_t::trailer_t::access_conditions_t* _parent() const { return m__parent; }
+            };
+
+            class trailer_ac_t : public kaitai::kstruct {
+
+            public:
+
+                trailer_ac_t(ac_t* p_ac, kaitai::kstream* p__io, mifare_classic_t::trailer_t::access_conditions_t* p__parent = nullptr, mifare_classic_t* p__root = nullptr);
+
+            private:
+                void _read();
+                void _clean_up();
+
+            public:
+                ~trailer_ac_t();
+
+            private:
+                bool f_can_read_key_b;
+                bool m_can_read_key_b;
+
+            public:
+
+                /**
+                 * key A is required
+                 */
+                bool can_read_key_b();
+
+            private:
+                bool f_can_write_access_bits;
+                bool m_can_write_access_bits;
+
+            public:
+                bool can_write_access_bits();
+
+            private:
+                bool f_can_write_keys;
+                bool m_can_write_keys;
+
+            public:
+                bool can_write_keys();
+
+            private:
+                bool f_key_b_controls_write;
+                bool m_key_b_controls_write;
+
+            public:
+                bool key_b_controls_write();
+
+            private:
+                ac_t* m_ac;
+                mifare_classic_t* m__root;
+                mifare_classic_t::trailer_t::access_conditions_t* m__parent;
+
+            public:
+                ac_t* ac() const { return m_ac; }
                 mifare_classic_t* _root() const { return m__root; }
                 mifare_classic_t::trailer_t::access_conditions_t* _parent() const { return m__parent; }
             };
@@ -623,6 +625,20 @@ public:
             };
 
         private:
+            bool f_acs_raw;
+            std::unique_ptr<std::vector<std::unique_ptr<ac_t>>> m_acs_raw;
+
+        public:
+            std::vector<std::unique_ptr<ac_t>>* acs_raw();
+
+        private:
+            bool f_chunks;
+            std::unique_ptr<std::vector<std::unique_ptr<valid_chunk_t>>> m_chunks;
+
+        public:
+            std::vector<std::unique_ptr<valid_chunk_t>>* chunks();
+
+        private:
             bool f_data_acs;
             std::unique_ptr<std::vector<std::unique_ptr<data_ac_t>>> m_data_acs;
 
@@ -637,25 +653,11 @@ public:
             std::vector<std::unique_ptr<chunk_bit_remap_t>>* remaps();
 
         private:
-            bool f_acs_raw;
-            std::unique_ptr<std::vector<std::unique_ptr<ac_t>>> m_acs_raw;
-
-        public:
-            std::vector<std::unique_ptr<ac_t>>* acs_raw();
-
-        private:
             bool f_trailer_ac;
             std::unique_ptr<trailer_ac_t> m_trailer_ac;
 
         public:
             trailer_ac_t* trailer_ac();
-
-        private:
-            bool f_chunks;
-            std::unique_ptr<std::vector<std::unique_ptr<valid_chunk_t>>> m_chunks;
-
-        public:
-            std::vector<std::unique_ptr<valid_chunk_t>>* chunks();
 
         private:
             std::unique_ptr<std::vector<uint64_t>> m_raw_chunks;
@@ -676,18 +678,18 @@ public:
         int8_t ac_bits();
 
     private:
-        bool f_acs_in_sector;
-        int8_t m_acs_in_sector;
-
-    public:
-        int8_t acs_in_sector();
-
-    private:
         bool f_ac_count_of_chunks;
         int32_t m_ac_count_of_chunks;
 
     public:
         int32_t ac_count_of_chunks();
+
+    private:
+        bool f_acs_in_sector;
+        int8_t m_acs_in_sector;
+
+    public:
+        int8_t acs_in_sector();
 
     private:
         std::unique_ptr<key_t> m_key_a;

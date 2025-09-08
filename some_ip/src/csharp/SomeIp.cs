@@ -31,13 +31,13 @@ namespace Kaitai
             _header = new Header(m_io, this, m_root);
             switch (Header.MessageId.Value) {
             case 4294934784: {
-                __raw_payload = m_io.ReadBytes((Header.Length - 8));
+                __raw_payload = m_io.ReadBytes(Header.Length - 8);
                 var io___raw_payload = new KaitaiStream(__raw_payload);
                 _payload = new SomeIpSd(io___raw_payload);
                 break;
             }
             default: {
-                _payload = m_io.ReadBytes((Header.Length - 8));
+                _payload = m_io.ReadBytes(Header.Length - 8);
                 break;
             }
             }
@@ -148,11 +148,11 @@ namespace Kaitai
                     {
                         if (f_value)
                             return _value;
+                        f_value = true;
                         long _pos = m_io.Pos;
                         m_io.Seek(0);
                         _value = m_io.ReadU4be();
                         m_io.Seek(_pos);
-                        f_value = true;
                         return _value;
                     }
                 }
@@ -230,11 +230,11 @@ namespace Kaitai
                     {
                         if (f_value)
                             return _value;
+                        f_value = true;
                         long _pos = m_io.Pos;
                         m_io.Seek(0);
                         _value = m_io.ReadU4be();
                         m_io.Seek(_pos);
-                        f_value = true;
                         return _value;
                     }
                 }
@@ -262,8 +262,8 @@ namespace Kaitai
                 {
                     if (f_isValidServiceDiscovery)
                         return _isValidServiceDiscovery;
-                    _isValidServiceDiscovery = (bool) ( ((MessageId.Value == 4294934784) && (ProtocolVersion == 1) && (InterfaceVersion == 1) && (MessageType == MessageTypeEnum.Notification) && (ReturnCode == ReturnCodeEnum.Ok)) );
                     f_isValidServiceDiscovery = true;
+                    _isValidServiceDiscovery = (bool) ( ((MessageId.Value == 4294934784) && (ProtocolVersion == 1) && (InterfaceVersion == 1) && (MessageType == MessageTypeEnum.Notification) && (ReturnCode == ReturnCodeEnum.Ok)) );
                     return _isValidServiceDiscovery;
                 }
             }

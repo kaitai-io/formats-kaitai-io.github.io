@@ -2,13 +2,16 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class gzip_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -26,15 +29,21 @@
 class gzip_t : public kaitai::kstruct {
 
 public:
-    class flags_t;
     class extra_flags_deflate_t;
-    class subfields_t;
-    class subfield_t;
     class extras_t;
+    class flags_t;
+    class subfield_t;
+    class subfields_t;
 
     enum compression_methods_t {
         COMPRESSION_METHODS_DEFLATE = 8
     };
+    static bool _is_defined_compression_methods_t(compression_methods_t v);
+
+private:
+    static const std::set<compression_methods_t> _values_compression_methods_t;
+
+public:
 
     enum oses_t {
         OSES_FAT = 0,
@@ -53,6 +62,12 @@ public:
         OSES_ACORN_RISCOS = 13,
         OSES_UNKNOWN = 255
     };
+    static bool _is_defined_oses_t(oses_t v);
+
+private:
+    static const std::set<oses_t> _values_oses_t;
+
+public:
 
     gzip_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, gzip_t* p__root = nullptr);
 
@@ -62,6 +77,71 @@ private:
 
 public:
     ~gzip_t();
+
+    class extra_flags_deflate_t : public kaitai::kstruct {
+
+    public:
+
+        enum compression_strengths_t {
+            COMPRESSION_STRENGTHS_BEST = 2,
+            COMPRESSION_STRENGTHS_FAST = 4
+        };
+        static bool _is_defined_compression_strengths_t(compression_strengths_t v);
+
+    private:
+        static const std::set<compression_strengths_t> _values_compression_strengths_t;
+
+    public:
+
+        extra_flags_deflate_t(kaitai::kstream* p__io, gzip_t* p__parent = nullptr, gzip_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~extra_flags_deflate_t();
+
+    private:
+        compression_strengths_t m_compression_strength;
+        gzip_t* m__root;
+        gzip_t* m__parent;
+
+    public:
+        compression_strengths_t compression_strength() const { return m_compression_strength; }
+        gzip_t* _root() const { return m__root; }
+        gzip_t* _parent() const { return m__parent; }
+    };
+
+    class extras_t : public kaitai::kstruct {
+
+    public:
+
+        extras_t(kaitai::kstream* p__io, gzip_t* p__parent = nullptr, gzip_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~extras_t();
+
+    private:
+        uint16_t m_len_subfields;
+        std::unique_ptr<subfields_t> m_subfields;
+        gzip_t* m__root;
+        gzip_t* m__parent;
+        std::string m__raw_subfields;
+        std::unique_ptr<kaitai::kstream> m__io__raw_subfields;
+
+    public:
+        uint16_t len_subfields() const { return m_len_subfields; }
+        subfields_t* subfields() const { return m_subfields.get(); }
+        gzip_t* _root() const { return m__root; }
+        gzip_t* _parent() const { return m__parent; }
+        std::string _raw_subfields() const { return m__raw_subfields; }
+        kaitai::kstream* _io__raw_subfields() const { return m__io__raw_subfields.get(); }
+    };
 
     class flags_t : public kaitai::kstruct {
 
@@ -110,63 +190,6 @@ public:
         gzip_t* _parent() const { return m__parent; }
     };
 
-    class extra_flags_deflate_t : public kaitai::kstruct {
-
-    public:
-
-        enum compression_strengths_t {
-            COMPRESSION_STRENGTHS_BEST = 2,
-            COMPRESSION_STRENGTHS_FAST = 4
-        };
-
-        extra_flags_deflate_t(kaitai::kstream* p__io, gzip_t* p__parent = nullptr, gzip_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~extra_flags_deflate_t();
-
-    private:
-        compression_strengths_t m_compression_strength;
-        gzip_t* m__root;
-        gzip_t* m__parent;
-
-    public:
-        compression_strengths_t compression_strength() const { return m_compression_strength; }
-        gzip_t* _root() const { return m__root; }
-        gzip_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * Container for many subfields, constrained by size of stream.
-     */
-
-    class subfields_t : public kaitai::kstruct {
-
-    public:
-
-        subfields_t(kaitai::kstream* p__io, gzip_t::extras_t* p__parent = nullptr, gzip_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~subfields_t();
-
-    private:
-        std::unique_ptr<std::vector<std::unique_ptr<subfield_t>>> m_entries;
-        gzip_t* m__root;
-        gzip_t::extras_t* m__parent;
-
-    public:
-        std::vector<std::unique_ptr<subfield_t>>* entries() const { return m_entries.get(); }
-        gzip_t* _root() const { return m__root; }
-        gzip_t::extras_t* _parent() const { return m__parent; }
-    };
-
     /**
      * Every subfield follows typical [TLV scheme](https://en.wikipedia.org/wiki/Type-length-value):
      * 
@@ -210,34 +233,32 @@ public:
         gzip_t::subfields_t* _parent() const { return m__parent; }
     };
 
-    class extras_t : public kaitai::kstruct {
+    /**
+     * Container for many subfields, constrained by size of stream.
+     */
+
+    class subfields_t : public kaitai::kstruct {
 
     public:
 
-        extras_t(kaitai::kstream* p__io, gzip_t* p__parent = nullptr, gzip_t* p__root = nullptr);
+        subfields_t(kaitai::kstream* p__io, gzip_t::extras_t* p__parent = nullptr, gzip_t* p__root = nullptr);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~extras_t();
+        ~subfields_t();
 
     private:
-        uint16_t m_len_subfields;
-        std::unique_ptr<subfields_t> m_subfields;
+        std::unique_ptr<std::vector<std::unique_ptr<subfield_t>>> m_entries;
         gzip_t* m__root;
-        gzip_t* m__parent;
-        std::string m__raw_subfields;
-        std::unique_ptr<kaitai::kstream> m__io__raw_subfields;
+        gzip_t::extras_t* m__parent;
 
     public:
-        uint16_t len_subfields() const { return m_len_subfields; }
-        subfields_t* subfields() const { return m_subfields.get(); }
+        std::vector<std::unique_ptr<subfield_t>>* entries() const { return m_entries.get(); }
         gzip_t* _root() const { return m__root; }
-        gzip_t* _parent() const { return m__parent; }
-        std::string _raw_subfields() const { return m__raw_subfields; }
-        kaitai::kstream* _io__raw_subfields() const { return m__io__raw_subfields.get(); }
+        gzip_t::extras_t* _parent() const { return m__parent; }
     };
 
 private:

@@ -2,13 +2,16 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class exif_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
 #include <vector>
+#include <set>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 class exif_t : public kaitai::kstruct {
@@ -109,6 +112,12 @@ public:
                 FIELD_TYPE_ENUM_SLONG = 9,
                 FIELD_TYPE_ENUM_SRATIONAL = 10
             };
+            static bool _is_defined_field_type_enum_t(field_type_enum_t v);
+
+        private:
+            static const std::set<field_type_enum_t> _values_field_type_enum_t;
+
+        public:
 
             enum tag_enum_t {
                 TAG_ENUM_IMAGE_WIDTH = 256,
@@ -570,6 +579,12 @@ public:
                 TAG_ENUM_SMOOTHNESS = 65111,
                 TAG_ENUM_MOIRE_FILTER = 65112
             };
+            static bool _is_defined_tag_enum_t(tag_enum_t v);
+
+        private:
+            static const std::set<tag_enum_t> _values_tag_enum_t;
+
+        public:
 
             ifd_field_t(kaitai::kstream* p__io, exif_t::exif_body_t::ifd_t* p__parent = nullptr, exif_t* p__root = nullptr, int p_is_le = -1);
 
@@ -588,25 +603,11 @@ public:
             ~ifd_field_t();
 
         private:
-            bool f_type_byte_length;
-            int8_t m_type_byte_length;
-
-        public:
-            int8_t type_byte_length();
-
-        private:
             bool f_byte_length;
             int32_t m_byte_length;
 
         public:
             int32_t byte_length();
-
-        private:
-            bool f_is_immediate_data;
-            bool m_is_immediate_data;
-
-        public:
-            bool is_immediate_data();
 
         private:
             bool f_data;
@@ -620,6 +621,20 @@ public:
 
         public:
             std::string data();
+
+        private:
+            bool f_is_immediate_data;
+            bool m_is_immediate_data;
+
+        public:
+            bool is_immediate_data();
+
+        private:
+            bool f_type_byte_length;
+            int8_t m_type_byte_length;
+
+        public:
+            int8_t type_byte_length();
 
         private:
             tag_enum_t m_tag;

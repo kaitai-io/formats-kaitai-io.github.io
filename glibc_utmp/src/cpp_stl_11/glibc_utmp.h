@@ -2,13 +2,16 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class glibc_utmp_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 class glibc_utmp_t : public kaitai::kstruct {
@@ -29,6 +32,12 @@ public:
         ENTRY_TYPE_DEAD_PROCESS = 8,
         ENTRY_TYPE_ACCOUNTING = 9
     };
+    static bool _is_defined_entry_type_t(entry_type_t v);
+
+private:
+    static const std::set<entry_type_t> _values_entry_type_t;
+
+public:
 
     glibc_utmp_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, glibc_utmp_t* p__root = nullptr);
 

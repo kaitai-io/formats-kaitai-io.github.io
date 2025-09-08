@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.AndroidBootldrHuawei = factory(root.KaitaiStream);
+    factory(root.AndroidBootldrHuawei || (root.AndroidBootldrHuawei = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (AndroidBootldrHuawei_, KaitaiStream) {
 /**
  * Format of `bootloader-*.img` files found in factory images of certain Android devices from Huawei:
  * 
@@ -40,55 +40,17 @@ var AndroidBootldrHuawei = (function() {
   }
   AndroidBootldrHuawei.prototype._read = function() {
     this.metaHeader = new MetaHdr(this._io, this, this._root);
-    this.headerExt = this._io.readBytes((this.metaHeader.lenMetaHeader - 76));
+    this.headerExt = this._io.readBytes(this.metaHeader.lenMetaHeader - 76);
     this._raw_imageHeader = this._io.readBytes(this.metaHeader.lenImageHeader);
     var _io__raw_imageHeader = new KaitaiStream(this._raw_imageHeader);
     this.imageHeader = new ImageHdr(_io__raw_imageHeader, this, this._root);
   }
 
-  var MetaHdr = AndroidBootldrHuawei.MetaHdr = (function() {
-    function MetaHdr(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    MetaHdr.prototype._read = function() {
-      this.magic = this._io.readBytes(4);
-      if (!((KaitaiStream.byteArrayCompare(this.magic, [60, 214, 26, 206]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([60, 214, 26, 206], this.magic, this._io, "/types/meta_hdr/seq/0");
-      }
-      this.version = new Version(this._io, this, this._root);
-      this.imageVersion = KaitaiStream.bytesToStr(KaitaiStream.bytesTerminate(this._io.readBytes(64), 0, false), "ASCII");
-      this.lenMetaHeader = this._io.readU2le();
-      this.lenImageHeader = this._io.readU2le();
-    }
-
-    return MetaHdr;
-  })();
-
-  var Version = AndroidBootldrHuawei.Version = (function() {
-    function Version(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Version.prototype._read = function() {
-      this.major = this._io.readU2le();
-      this.minor = this._io.readU2le();
-    }
-
-    return Version;
-  })();
-
   var ImageHdr = AndroidBootldrHuawei.ImageHdr = (function() {
     function ImageHdr(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -121,7 +83,7 @@ var AndroidBootldrHuawei = (function() {
     function ImageHdrEntry(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -130,18 +92,6 @@ var AndroidBootldrHuawei = (function() {
       this.ofsBody = this._io.readU4le();
       this.lenBody = this._io.readU4le();
     }
-
-    /**
-     * @see {@link https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&id=a68d284aee85#n119|Source}
-     */
-    Object.defineProperty(ImageHdrEntry.prototype, 'isUsed', {
-      get: function() {
-        if (this._m_isUsed !== undefined)
-          return this._m_isUsed;
-        this._m_isUsed =  ((this.ofsBody != 0) && (this.lenBody != 0)) ;
-        return this._m_isUsed;
-      }
-    });
     Object.defineProperty(ImageHdrEntry.prototype, 'body', {
       get: function() {
         if (this._m_body !== undefined)
@@ -158,13 +108,63 @@ var AndroidBootldrHuawei = (function() {
     });
 
     /**
+     * @see {@link https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&id=a68d284aee85#n119|Source}
+     */
+    Object.defineProperty(ImageHdrEntry.prototype, 'isUsed', {
+      get: function() {
+        if (this._m_isUsed !== undefined)
+          return this._m_isUsed;
+        this._m_isUsed =  ((this.ofsBody != 0) && (this.lenBody != 0)) ;
+        return this._m_isUsed;
+      }
+    });
+
+    /**
      * partition name
      */
 
     return ImageHdrEntry;
   })();
 
+  var MetaHdr = AndroidBootldrHuawei.MetaHdr = (function() {
+    function MetaHdr(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    MetaHdr.prototype._read = function() {
+      this.magic = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([60, 214, 26, 206])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([60, 214, 26, 206]), this.magic, this._io, "/types/meta_hdr/seq/0");
+      }
+      this.version = new Version(this._io, this, this._root);
+      this.imageVersion = KaitaiStream.bytesToStr(KaitaiStream.bytesTerminate(this._io.readBytes(64), 0, false), "ASCII");
+      this.lenMetaHeader = this._io.readU2le();
+      this.lenImageHeader = this._io.readU2le();
+    }
+
+    return MetaHdr;
+  })();
+
+  var Version = AndroidBootldrHuawei.Version = (function() {
+    function Version(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Version.prototype._read = function() {
+      this.major = this._io.readU2le();
+      this.minor = this._io.readU2le();
+    }
+
+    return Version;
+  })();
+
   return AndroidBootldrHuawei;
 })();
-return AndroidBootldrHuawei;
-}));
+AndroidBootldrHuawei_.AndroidBootldrHuawei = AndroidBootldrHuawei;
+});

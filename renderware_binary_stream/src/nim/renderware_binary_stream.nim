@@ -179,40 +179,37 @@ type
     breakable = 39056125
     frame = 39056126
     unused_16 = 39056127
-  RenderwareBinaryStream_StructClump* = ref object of KaitaiStruct
-    `numAtomics`*: uint32
-    `numLights`*: uint32
-    `numCameras`*: uint32
-    `parent`*: RenderwareBinaryStream_ListWithHeader
-  RenderwareBinaryStream_StructGeometry* = ref object of KaitaiStruct
-    `format`*: uint32
-    `numTriangles`*: uint32
-    `numVertices`*: uint32
-    `numMorphTargets`*: uint32
-    `surfProp`*: RenderwareBinaryStream_SurfaceProperties
-    `geometry`*: RenderwareBinaryStream_GeometryNonNative
-    `morphTargets`*: seq[RenderwareBinaryStream_MorphTarget]
-    `parent`*: RenderwareBinaryStream_ListWithHeader
-    `numUvLayersRawInst`: int
-    `numUvLayersRawInstFlag`: bool
-    `isTexturedInst`: bool
-    `isTexturedInstFlag`: bool
-    `isNativeInst`: bool
-    `isNativeInstFlag`: bool
-    `numUvLayersInst`: int
-    `numUvLayersInstFlag`: bool
-    `isTextured2Inst`: bool
-    `isTextured2InstFlag`: bool
-    `isPrelitInst`: bool
-    `isPrelitInstFlag`: bool
+  RenderwareBinaryStream_Frame* = ref object of KaitaiStruct
+    `rotationMatrix`*: RenderwareBinaryStream_Matrix
+    `position`*: RenderwareBinaryStream_Vector3d
+    `curFrameIdx`*: int32
+    `matrixCreationFlags`*: uint32
+    `parent`*: RenderwareBinaryStream_StructFrameList
   RenderwareBinaryStream_GeometryNonNative* = ref object of KaitaiStruct
     `prelitColors`*: seq[RenderwareBinaryStream_Rgba]
     `uvLayers`*: seq[RenderwareBinaryStream_UvLayer]
     `triangles`*: seq[RenderwareBinaryStream_Triangle]
     `parent`*: RenderwareBinaryStream_StructGeometry
-  RenderwareBinaryStream_StructGeometryList* = ref object of KaitaiStruct
-    `numGeometries`*: uint32
-    `parent`*: RenderwareBinaryStream_ListWithHeader
+  RenderwareBinaryStream_ListWithHeader* = ref object of KaitaiStruct
+    `code`*: seq[byte]
+    `headerSize`*: uint32
+    `libraryIdStamp`*: uint32
+    `header`*: KaitaiStruct
+    `entries`*: seq[RenderwareBinaryStream]
+    `parent`*: RenderwareBinaryStream
+    `rawHeader`*: seq[byte]
+    `versionInst`: int
+    `versionInstFlag`: bool
+  RenderwareBinaryStream_Matrix* = ref object of KaitaiStruct
+    `entries`*: seq[RenderwareBinaryStream_Vector3d]
+    `parent`*: RenderwareBinaryStream_Frame
+  RenderwareBinaryStream_MorphTarget* = ref object of KaitaiStruct
+    `boundingSphere`*: RenderwareBinaryStream_Sphere
+    `hasVertices`*: uint32
+    `hasNormals`*: uint32
+    `vertices`*: seq[RenderwareBinaryStream_Vector3d]
+    `normals`*: seq[RenderwareBinaryStream_Vector3d]
+    `parent`*: RenderwareBinaryStream_StructGeometry
   RenderwareBinaryStream_Rgba* = ref object of KaitaiStruct
     `r`*: uint8
     `g`*: uint8
@@ -225,13 +222,6 @@ type
     `z`*: float32
     `radius`*: float32
     `parent`*: RenderwareBinaryStream_MorphTarget
-  RenderwareBinaryStream_MorphTarget* = ref object of KaitaiStruct
-    `boundingSphere`*: RenderwareBinaryStream_Sphere
-    `hasVertices`*: uint32
-    `hasNormals`*: uint32
-    `vertices`*: seq[RenderwareBinaryStream_Vector3d]
-    `normals`*: seq[RenderwareBinaryStream_Vector3d]
-    `parent`*: RenderwareBinaryStream_StructGeometry
   RenderwareBinaryStream_StructAtomic* = ref object of KaitaiStruct
     `frameIndex`*: uint32
     `geometryIndex`*: uint32
@@ -241,85 +231,95 @@ type
     `unnamed5`*: uint64
     `unused`*: uint32
     `parent`*: RenderwareBinaryStream_ListWithHeader
+  RenderwareBinaryStream_StructClump* = ref object of KaitaiStruct
+    `numAtomics`*: uint32
+    `numLights`*: uint32
+    `numCameras`*: uint32
+    `parent`*: RenderwareBinaryStream_ListWithHeader
+  RenderwareBinaryStream_StructFrameList* = ref object of KaitaiStruct
+    `numFrames`*: uint32
+    `frames`*: seq[RenderwareBinaryStream_Frame]
+    `parent`*: RenderwareBinaryStream_ListWithHeader
+  RenderwareBinaryStream_StructGeometry* = ref object of KaitaiStruct
+    `format`*: uint32
+    `numTriangles`*: uint32
+    `numVertices`*: uint32
+    `numMorphTargets`*: uint32
+    `surfProp`*: RenderwareBinaryStream_SurfaceProperties
+    `geometry`*: RenderwareBinaryStream_GeometryNonNative
+    `morphTargets`*: seq[RenderwareBinaryStream_MorphTarget]
+    `parent`*: RenderwareBinaryStream_ListWithHeader
+    `isNativeInst`: bool
+    `isNativeInstFlag`: bool
+    `isPrelitInst`: bool
+    `isPrelitInstFlag`: bool
+    `isTexturedInst`: bool
+    `isTexturedInstFlag`: bool
+    `isTextured2Inst`: bool
+    `isTextured2InstFlag`: bool
+    `numUvLayersInst`: int
+    `numUvLayersInstFlag`: bool
+    `numUvLayersRawInst`: int
+    `numUvLayersRawInstFlag`: bool
+  RenderwareBinaryStream_StructGeometryList* = ref object of KaitaiStruct
+    `numGeometries`*: uint32
+    `parent`*: RenderwareBinaryStream_ListWithHeader
+  RenderwareBinaryStream_StructTextureDictionary* = ref object of KaitaiStruct
+    `numTextures`*: uint32
+    `parent`*: RenderwareBinaryStream_ListWithHeader
   RenderwareBinaryStream_SurfaceProperties* = ref object of KaitaiStruct
     `ambient`*: float32
     `specular`*: float32
     `diffuse`*: float32
     `parent`*: RenderwareBinaryStream_StructGeometry
-  RenderwareBinaryStream_StructFrameList* = ref object of KaitaiStruct
-    `numFrames`*: uint32
-    `frames`*: seq[RenderwareBinaryStream_Frame]
-    `parent`*: RenderwareBinaryStream_ListWithHeader
-  RenderwareBinaryStream_Matrix* = ref object of KaitaiStruct
-    `entries`*: seq[RenderwareBinaryStream_Vector3d]
-    `parent`*: RenderwareBinaryStream_Frame
-  RenderwareBinaryStream_Vector3d* = ref object of KaitaiStruct
-    `x`*: float32
-    `y`*: float32
-    `z`*: float32
-    `parent`*: KaitaiStruct
-  RenderwareBinaryStream_ListWithHeader* = ref object of KaitaiStruct
-    `code`*: seq[byte]
-    `headerSize`*: uint32
-    `libraryIdStamp`*: uint32
-    `header`*: KaitaiStruct
-    `entries`*: seq[RenderwareBinaryStream]
-    `parent`*: RenderwareBinaryStream
-    `rawHeader`*: seq[byte]
-    `versionInst`: int
-    `versionInstFlag`: bool
+  RenderwareBinaryStream_TexCoord* = ref object of KaitaiStruct
+    `u`*: float32
+    `v`*: float32
+    `parent`*: RenderwareBinaryStream_UvLayer
   RenderwareBinaryStream_Triangle* = ref object of KaitaiStruct
     `vertex2`*: uint16
     `vertex1`*: uint16
     `materialId`*: uint16
     `vertex3`*: uint16
     `parent`*: RenderwareBinaryStream_GeometryNonNative
-  RenderwareBinaryStream_Frame* = ref object of KaitaiStruct
-    `rotationMatrix`*: RenderwareBinaryStream_Matrix
-    `position`*: RenderwareBinaryStream_Vector3d
-    `curFrameIdx`*: int32
-    `matrixCreationFlags`*: uint32
-    `parent`*: RenderwareBinaryStream_StructFrameList
-  RenderwareBinaryStream_TexCoord* = ref object of KaitaiStruct
-    `u`*: float32
-    `v`*: float32
-    `parent`*: RenderwareBinaryStream_UvLayer
   RenderwareBinaryStream_UvLayer* = ref object of KaitaiStruct
     `texCoords`*: seq[RenderwareBinaryStream_TexCoord]
     `numVertices`*: uint32
     `parent`*: RenderwareBinaryStream_GeometryNonNative
-  RenderwareBinaryStream_StructTextureDictionary* = ref object of KaitaiStruct
-    `numTextures`*: uint32
-    `parent`*: RenderwareBinaryStream_ListWithHeader
+  RenderwareBinaryStream_Vector3d* = ref object of KaitaiStruct
+    `x`*: float32
+    `y`*: float32
+    `z`*: float32
+    `parent`*: KaitaiStruct
 
 proc read*(_: typedesc[RenderwareBinaryStream], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): RenderwareBinaryStream
-proc read*(_: typedesc[RenderwareBinaryStream_StructClump], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_ListWithHeader): RenderwareBinaryStream_StructClump
-proc read*(_: typedesc[RenderwareBinaryStream_StructGeometry], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_ListWithHeader): RenderwareBinaryStream_StructGeometry
+proc read*(_: typedesc[RenderwareBinaryStream_Frame], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_StructFrameList): RenderwareBinaryStream_Frame
 proc read*(_: typedesc[RenderwareBinaryStream_GeometryNonNative], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_StructGeometry): RenderwareBinaryStream_GeometryNonNative
-proc read*(_: typedesc[RenderwareBinaryStream_StructGeometryList], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_ListWithHeader): RenderwareBinaryStream_StructGeometryList
+proc read*(_: typedesc[RenderwareBinaryStream_ListWithHeader], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream): RenderwareBinaryStream_ListWithHeader
+proc read*(_: typedesc[RenderwareBinaryStream_Matrix], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_Frame): RenderwareBinaryStream_Matrix
+proc read*(_: typedesc[RenderwareBinaryStream_MorphTarget], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_StructGeometry): RenderwareBinaryStream_MorphTarget
 proc read*(_: typedesc[RenderwareBinaryStream_Rgba], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_GeometryNonNative): RenderwareBinaryStream_Rgba
 proc read*(_: typedesc[RenderwareBinaryStream_Sphere], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_MorphTarget): RenderwareBinaryStream_Sphere
-proc read*(_: typedesc[RenderwareBinaryStream_MorphTarget], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_StructGeometry): RenderwareBinaryStream_MorphTarget
 proc read*(_: typedesc[RenderwareBinaryStream_StructAtomic], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_ListWithHeader): RenderwareBinaryStream_StructAtomic
-proc read*(_: typedesc[RenderwareBinaryStream_SurfaceProperties], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_StructGeometry): RenderwareBinaryStream_SurfaceProperties
+proc read*(_: typedesc[RenderwareBinaryStream_StructClump], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_ListWithHeader): RenderwareBinaryStream_StructClump
 proc read*(_: typedesc[RenderwareBinaryStream_StructFrameList], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_ListWithHeader): RenderwareBinaryStream_StructFrameList
-proc read*(_: typedesc[RenderwareBinaryStream_Matrix], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_Frame): RenderwareBinaryStream_Matrix
-proc read*(_: typedesc[RenderwareBinaryStream_Vector3d], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): RenderwareBinaryStream_Vector3d
-proc read*(_: typedesc[RenderwareBinaryStream_ListWithHeader], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream): RenderwareBinaryStream_ListWithHeader
-proc read*(_: typedesc[RenderwareBinaryStream_Triangle], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_GeometryNonNative): RenderwareBinaryStream_Triangle
-proc read*(_: typedesc[RenderwareBinaryStream_Frame], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_StructFrameList): RenderwareBinaryStream_Frame
-proc read*(_: typedesc[RenderwareBinaryStream_TexCoord], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_UvLayer): RenderwareBinaryStream_TexCoord
-proc read*(_: typedesc[RenderwareBinaryStream_UvLayer], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_GeometryNonNative, numVertices: any): RenderwareBinaryStream_UvLayer
+proc read*(_: typedesc[RenderwareBinaryStream_StructGeometry], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_ListWithHeader): RenderwareBinaryStream_StructGeometry
+proc read*(_: typedesc[RenderwareBinaryStream_StructGeometryList], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_ListWithHeader): RenderwareBinaryStream_StructGeometryList
 proc read*(_: typedesc[RenderwareBinaryStream_StructTextureDictionary], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_ListWithHeader): RenderwareBinaryStream_StructTextureDictionary
+proc read*(_: typedesc[RenderwareBinaryStream_SurfaceProperties], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_StructGeometry): RenderwareBinaryStream_SurfaceProperties
+proc read*(_: typedesc[RenderwareBinaryStream_TexCoord], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_UvLayer): RenderwareBinaryStream_TexCoord
+proc read*(_: typedesc[RenderwareBinaryStream_Triangle], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_GeometryNonNative): RenderwareBinaryStream_Triangle
+proc read*(_: typedesc[RenderwareBinaryStream_UvLayer], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_GeometryNonNative, numVertices: any): RenderwareBinaryStream_UvLayer
+proc read*(_: typedesc[RenderwareBinaryStream_Vector3d], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): RenderwareBinaryStream_Vector3d
 
 proc version*(this: RenderwareBinaryStream): int
-proc numUvLayersRaw*(this: RenderwareBinaryStream_StructGeometry): int
-proc isTextured*(this: RenderwareBinaryStream_StructGeometry): bool
-proc isNative*(this: RenderwareBinaryStream_StructGeometry): bool
-proc numUvLayers*(this: RenderwareBinaryStream_StructGeometry): int
-proc isTextured2*(this: RenderwareBinaryStream_StructGeometry): bool
-proc isPrelit*(this: RenderwareBinaryStream_StructGeometry): bool
 proc version*(this: RenderwareBinaryStream_ListWithHeader): int
+proc isNative*(this: RenderwareBinaryStream_StructGeometry): bool
+proc isPrelit*(this: RenderwareBinaryStream_StructGeometry): bool
+proc isTextured*(this: RenderwareBinaryStream_StructGeometry): bool
+proc isTextured2*(this: RenderwareBinaryStream_StructGeometry): bool
+proc numUvLayers*(this: RenderwareBinaryStream_StructGeometry): int
+proc numUvLayersRaw*(this: RenderwareBinaryStream_StructGeometry): int
 
 
 ##[
@@ -347,30 +347,6 @@ proc read*(_: typedesc[RenderwareBinaryStream], io: KaitaiStream, root: KaitaiSt
       let rawBodyIo = newKaitaiStream(rawBodyExpr)
       let bodyExpr = RenderwareBinaryStream_ListWithHeader.read(rawBodyIo, this.root, this)
       this.body = bodyExpr
-    elif on == renderware_binary_stream.geometry:
-      let rawBodyExpr = this.io.readBytes(int(this.size))
-      this.rawBody = rawBodyExpr
-      let rawBodyIo = newKaitaiStream(rawBodyExpr)
-      let bodyExpr = RenderwareBinaryStream_ListWithHeader.read(rawBodyIo, this.root, this)
-      this.body = bodyExpr
-    elif on == renderware_binary_stream.texture_dictionary:
-      let rawBodyExpr = this.io.readBytes(int(this.size))
-      this.rawBody = rawBodyExpr
-      let rawBodyIo = newKaitaiStream(rawBodyExpr)
-      let bodyExpr = RenderwareBinaryStream_ListWithHeader.read(rawBodyIo, this.root, this)
-      this.body = bodyExpr
-    elif on == renderware_binary_stream.geometry_list:
-      let rawBodyExpr = this.io.readBytes(int(this.size))
-      this.rawBody = rawBodyExpr
-      let rawBodyIo = newKaitaiStream(rawBodyExpr)
-      let bodyExpr = RenderwareBinaryStream_ListWithHeader.read(rawBodyIo, this.root, this)
-      this.body = bodyExpr
-    elif on == renderware_binary_stream.texture_native:
-      let rawBodyExpr = this.io.readBytes(int(this.size))
-      this.rawBody = rawBodyExpr
-      let rawBodyIo = newKaitaiStream(rawBodyExpr)
-      let bodyExpr = RenderwareBinaryStream_ListWithHeader.read(rawBodyIo, this.root, this)
-      this.body = bodyExpr
     elif on == renderware_binary_stream.clump:
       let rawBodyExpr = this.io.readBytes(int(this.size))
       this.rawBody = rawBodyExpr
@@ -383,6 +359,30 @@ proc read*(_: typedesc[RenderwareBinaryStream], io: KaitaiStream, root: KaitaiSt
       let rawBodyIo = newKaitaiStream(rawBodyExpr)
       let bodyExpr = RenderwareBinaryStream_ListWithHeader.read(rawBodyIo, this.root, this)
       this.body = bodyExpr
+    elif on == renderware_binary_stream.geometry:
+      let rawBodyExpr = this.io.readBytes(int(this.size))
+      this.rawBody = rawBodyExpr
+      let rawBodyIo = newKaitaiStream(rawBodyExpr)
+      let bodyExpr = RenderwareBinaryStream_ListWithHeader.read(rawBodyIo, this.root, this)
+      this.body = bodyExpr
+    elif on == renderware_binary_stream.geometry_list:
+      let rawBodyExpr = this.io.readBytes(int(this.size))
+      this.rawBody = rawBodyExpr
+      let rawBodyIo = newKaitaiStream(rawBodyExpr)
+      let bodyExpr = RenderwareBinaryStream_ListWithHeader.read(rawBodyIo, this.root, this)
+      this.body = bodyExpr
+    elif on == renderware_binary_stream.texture_dictionary:
+      let rawBodyExpr = this.io.readBytes(int(this.size))
+      this.rawBody = rawBodyExpr
+      let rawBodyIo = newKaitaiStream(rawBodyExpr)
+      let bodyExpr = RenderwareBinaryStream_ListWithHeader.read(rawBodyIo, this.root, this)
+      this.body = bodyExpr
+    elif on == renderware_binary_stream.texture_native:
+      let rawBodyExpr = this.io.readBytes(int(this.size))
+      this.rawBody = rawBodyExpr
+      let rawBodyIo = newKaitaiStream(rawBodyExpr)
+      let bodyExpr = RenderwareBinaryStream_ListWithHeader.read(rawBodyIo, this.root, this)
+      this.body = bodyExpr
     else:
       let bodyExpr = this.io.readBytes(int(this.size))
       this.body = bodyExpr
@@ -390,7 +390,7 @@ proc read*(_: typedesc[RenderwareBinaryStream], io: KaitaiStream, root: KaitaiSt
 proc version(this: RenderwareBinaryStream): int = 
   if this.versionInstFlag:
     return this.versionInst
-  let versionInstExpr = int((if (this.libraryIdStamp and 4294901760'i64) != 0: ((((this.libraryIdStamp shr 14) and 261888) + 196608) or ((this.libraryIdStamp shr 16) and 63)) else: (this.libraryIdStamp shl 8)))
+  let versionInstExpr = int((if (this.libraryIdStamp and 4294901760'i64) != 0: (this.libraryIdStamp shr 14 and 261888) + 196608 or this.libraryIdStamp shr 16 and 63 else: this.libraryIdStamp shl 8))
   this.versionInst = versionInstExpr
   this.versionInstFlag = true
   return this.versionInst
@@ -400,108 +400,27 @@ proc fromFile*(_: typedesc[RenderwareBinaryStream], filename: string): Renderwar
 
 
 ##[
-@see <a href="https://gtamods.com/wiki/RpClump">Source</a>
+@see <a href="https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
 ]##
-proc read*(_: typedesc[RenderwareBinaryStream_StructClump], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_ListWithHeader): RenderwareBinaryStream_StructClump =
+proc read*(_: typedesc[RenderwareBinaryStream_Frame], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_StructFrameList): RenderwareBinaryStream_Frame =
   template this: untyped = result
-  this = new(RenderwareBinaryStream_StructClump)
+  this = new(RenderwareBinaryStream_Frame)
   let root = if root == nil: cast[RenderwareBinaryStream](this) else: cast[RenderwareBinaryStream](root)
   this.io = io
   this.root = root
   this.parent = parent
 
-  let numAtomicsExpr = this.io.readU4le()
-  this.numAtomics = numAtomicsExpr
-  if this.parent.version >= 208896:
-    let numLightsExpr = this.io.readU4le()
-    this.numLights = numLightsExpr
-  if this.parent.version >= 208896:
-    let numCamerasExpr = this.io.readU4le()
-    this.numCameras = numCamerasExpr
+  let rotationMatrixExpr = RenderwareBinaryStream_Matrix.read(this.io, this.root, this)
+  this.rotationMatrix = rotationMatrixExpr
+  let positionExpr = RenderwareBinaryStream_Vector3d.read(this.io, this.root, this)
+  this.position = positionExpr
+  let curFrameIdxExpr = this.io.readS4le()
+  this.curFrameIdx = curFrameIdxExpr
+  let matrixCreationFlagsExpr = this.io.readU4le()
+  this.matrixCreationFlags = matrixCreationFlagsExpr
 
-proc fromFile*(_: typedesc[RenderwareBinaryStream_StructClump], filename: string): RenderwareBinaryStream_StructClump =
-  RenderwareBinaryStream_StructClump.read(newKaitaiFileStream(filename), nil, nil)
-
-
-##[
-@see <a href="https://gtamods.com/wiki/RpGeometry">Source</a>
-]##
-proc read*(_: typedesc[RenderwareBinaryStream_StructGeometry], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_ListWithHeader): RenderwareBinaryStream_StructGeometry =
-  template this: untyped = result
-  this = new(RenderwareBinaryStream_StructGeometry)
-  let root = if root == nil: cast[RenderwareBinaryStream](this) else: cast[RenderwareBinaryStream](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let formatExpr = this.io.readU4le()
-  this.format = formatExpr
-  let numTrianglesExpr = this.io.readU4le()
-  this.numTriangles = numTrianglesExpr
-  let numVerticesExpr = this.io.readU4le()
-  this.numVertices = numVerticesExpr
-  let numMorphTargetsExpr = this.io.readU4le()
-  this.numMorphTargets = numMorphTargetsExpr
-  if this.parent.version < 212992:
-    let surfPropExpr = RenderwareBinaryStream_SurfaceProperties.read(this.io, this.root, this)
-    this.surfProp = surfPropExpr
-  if not(this.isNative):
-    let geometryExpr = RenderwareBinaryStream_GeometryNonNative.read(this.io, this.root, this)
-    this.geometry = geometryExpr
-  for i in 0 ..< int(this.numMorphTargets):
-    let it = RenderwareBinaryStream_MorphTarget.read(this.io, this.root, this)
-    this.morphTargets.add(it)
-
-proc numUvLayersRaw(this: RenderwareBinaryStream_StructGeometry): int = 
-  if this.numUvLayersRawInstFlag:
-    return this.numUvLayersRawInst
-  let numUvLayersRawInstExpr = int(((this.format and 16711680) shr 16))
-  this.numUvLayersRawInst = numUvLayersRawInstExpr
-  this.numUvLayersRawInstFlag = true
-  return this.numUvLayersRawInst
-
-proc isTextured(this: RenderwareBinaryStream_StructGeometry): bool = 
-  if this.isTexturedInstFlag:
-    return this.isTexturedInst
-  let isTexturedInstExpr = bool((this.format and 4) != 0)
-  this.isTexturedInst = isTexturedInstExpr
-  this.isTexturedInstFlag = true
-  return this.isTexturedInst
-
-proc isNative(this: RenderwareBinaryStream_StructGeometry): bool = 
-  if this.isNativeInstFlag:
-    return this.isNativeInst
-  let isNativeInstExpr = bool((this.format and 16777216) != 0)
-  this.isNativeInst = isNativeInstExpr
-  this.isNativeInstFlag = true
-  return this.isNativeInst
-
-proc numUvLayers(this: RenderwareBinaryStream_StructGeometry): int = 
-  if this.numUvLayersInstFlag:
-    return this.numUvLayersInst
-  let numUvLayersInstExpr = int((if this.numUvLayersRaw == 0: (if this.isTextured2: 2 else: (if this.isTextured: 1 else: 0)) else: this.numUvLayersRaw))
-  this.numUvLayersInst = numUvLayersInstExpr
-  this.numUvLayersInstFlag = true
-  return this.numUvLayersInst
-
-proc isTextured2(this: RenderwareBinaryStream_StructGeometry): bool = 
-  if this.isTextured2InstFlag:
-    return this.isTextured2Inst
-  let isTextured2InstExpr = bool((this.format and 128) != 0)
-  this.isTextured2Inst = isTextured2InstExpr
-  this.isTextured2InstFlag = true
-  return this.isTextured2Inst
-
-proc isPrelit(this: RenderwareBinaryStream_StructGeometry): bool = 
-  if this.isPrelitInstFlag:
-    return this.isPrelitInst
-  let isPrelitInstExpr = bool((this.format and 8) != 0)
-  this.isPrelitInst = isPrelitInstExpr
-  this.isPrelitInstFlag = true
-  return this.isPrelitInst
-
-proc fromFile*(_: typedesc[RenderwareBinaryStream_StructGeometry], filename: string): RenderwareBinaryStream_StructGeometry =
-  RenderwareBinaryStream_StructGeometry.read(newKaitaiFileStream(filename), nil, nil)
+proc fromFile*(_: typedesc[RenderwareBinaryStream_Frame], filename: string): RenderwareBinaryStream_Frame =
+  RenderwareBinaryStream_Frame.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[RenderwareBinaryStream_GeometryNonNative], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_StructGeometry): RenderwareBinaryStream_GeometryNonNative =
   template this: untyped = result
@@ -527,21 +446,131 @@ proc fromFile*(_: typedesc[RenderwareBinaryStream_GeometryNonNative], filename: 
 
 
 ##[
-@see <a href="https://gtamods.com/wiki/Geometry_List_(RW_Section)#Structure">Source</a>
+Typical structure used by many data types in RenderWare binary
+stream. Substream contains a list of binary stream entries,
+first entry always has type "struct" and carries some specific
+binary data it in, determined by the type of parent. All other
+entries, beside the first one, are normal, self-describing
+records.
+
 ]##
-proc read*(_: typedesc[RenderwareBinaryStream_StructGeometryList], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_ListWithHeader): RenderwareBinaryStream_StructGeometryList =
+proc read*(_: typedesc[RenderwareBinaryStream_ListWithHeader], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream): RenderwareBinaryStream_ListWithHeader =
   template this: untyped = result
-  this = new(RenderwareBinaryStream_StructGeometryList)
+  this = new(RenderwareBinaryStream_ListWithHeader)
   let root = if root == nil: cast[RenderwareBinaryStream](this) else: cast[RenderwareBinaryStream](root)
   this.io = io
   this.root = root
   this.parent = parent
 
-  let numGeometriesExpr = this.io.readU4le()
-  this.numGeometries = numGeometriesExpr
+  let codeExpr = this.io.readBytes(int(4))
+  this.code = codeExpr
+  let headerSizeExpr = this.io.readU4le()
+  this.headerSize = headerSizeExpr
+  let libraryIdStampExpr = this.io.readU4le()
+  this.libraryIdStamp = libraryIdStampExpr
+  block:
+    let on = this.parent.code
+    if on == renderware_binary_stream.atomic:
+      let rawHeaderExpr = this.io.readBytes(int(this.headerSize))
+      this.rawHeader = rawHeaderExpr
+      let rawHeaderIo = newKaitaiStream(rawHeaderExpr)
+      let headerExpr = RenderwareBinaryStream_StructAtomic.read(rawHeaderIo, this.root, this)
+      this.header = headerExpr
+    elif on == renderware_binary_stream.clump:
+      let rawHeaderExpr = this.io.readBytes(int(this.headerSize))
+      this.rawHeader = rawHeaderExpr
+      let rawHeaderIo = newKaitaiStream(rawHeaderExpr)
+      let headerExpr = RenderwareBinaryStream_StructClump.read(rawHeaderIo, this.root, this)
+      this.header = headerExpr
+    elif on == renderware_binary_stream.frame_list:
+      let rawHeaderExpr = this.io.readBytes(int(this.headerSize))
+      this.rawHeader = rawHeaderExpr
+      let rawHeaderIo = newKaitaiStream(rawHeaderExpr)
+      let headerExpr = RenderwareBinaryStream_StructFrameList.read(rawHeaderIo, this.root, this)
+      this.header = headerExpr
+    elif on == renderware_binary_stream.geometry:
+      let rawHeaderExpr = this.io.readBytes(int(this.headerSize))
+      this.rawHeader = rawHeaderExpr
+      let rawHeaderIo = newKaitaiStream(rawHeaderExpr)
+      let headerExpr = RenderwareBinaryStream_StructGeometry.read(rawHeaderIo, this.root, this)
+      this.header = headerExpr
+    elif on == renderware_binary_stream.geometry_list:
+      let rawHeaderExpr = this.io.readBytes(int(this.headerSize))
+      this.rawHeader = rawHeaderExpr
+      let rawHeaderIo = newKaitaiStream(rawHeaderExpr)
+      let headerExpr = RenderwareBinaryStream_StructGeometryList.read(rawHeaderIo, this.root, this)
+      this.header = headerExpr
+    elif on == renderware_binary_stream.texture_dictionary:
+      let rawHeaderExpr = this.io.readBytes(int(this.headerSize))
+      this.rawHeader = rawHeaderExpr
+      let rawHeaderIo = newKaitaiStream(rawHeaderExpr)
+      let headerExpr = RenderwareBinaryStream_StructTextureDictionary.read(rawHeaderIo, this.root, this)
+      this.header = headerExpr
+    else:
+      let headerExpr = this.io.readBytes(int(this.headerSize))
+      this.header = headerExpr
+  block:
+    var i: int
+    while not this.io.isEof:
+      let it = RenderwareBinaryStream.read(this.io, this.root, this)
+      this.entries.add(it)
+      inc i
 
-proc fromFile*(_: typedesc[RenderwareBinaryStream_StructGeometryList], filename: string): RenderwareBinaryStream_StructGeometryList =
-  RenderwareBinaryStream_StructGeometryList.read(newKaitaiFileStream(filename), nil, nil)
+proc version(this: RenderwareBinaryStream_ListWithHeader): int = 
+  if this.versionInstFlag:
+    return this.versionInst
+  let versionInstExpr = int((if (this.libraryIdStamp and 4294901760'i64) != 0: (this.libraryIdStamp shr 14 and 261888) + 196608 or this.libraryIdStamp shr 16 and 63 else: this.libraryIdStamp shl 8))
+  this.versionInst = versionInstExpr
+  this.versionInstFlag = true
+  return this.versionInst
+
+proc fromFile*(_: typedesc[RenderwareBinaryStream_ListWithHeader], filename: string): RenderwareBinaryStream_ListWithHeader =
+  RenderwareBinaryStream_ListWithHeader.read(newKaitaiFileStream(filename), nil, nil)
+
+
+##[
+@see <a href="https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
+]##
+proc read*(_: typedesc[RenderwareBinaryStream_Matrix], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_Frame): RenderwareBinaryStream_Matrix =
+  template this: untyped = result
+  this = new(RenderwareBinaryStream_Matrix)
+  let root = if root == nil: cast[RenderwareBinaryStream](this) else: cast[RenderwareBinaryStream](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  for i in 0 ..< int(3):
+    let it = RenderwareBinaryStream_Vector3d.read(this.io, this.root, this)
+    this.entries.add(it)
+
+proc fromFile*(_: typedesc[RenderwareBinaryStream_Matrix], filename: string): RenderwareBinaryStream_Matrix =
+  RenderwareBinaryStream_Matrix.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[RenderwareBinaryStream_MorphTarget], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_StructGeometry): RenderwareBinaryStream_MorphTarget =
+  template this: untyped = result
+  this = new(RenderwareBinaryStream_MorphTarget)
+  let root = if root == nil: cast[RenderwareBinaryStream](this) else: cast[RenderwareBinaryStream](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let boundingSphereExpr = RenderwareBinaryStream_Sphere.read(this.io, this.root, this)
+  this.boundingSphere = boundingSphereExpr
+  let hasVerticesExpr = this.io.readU4le()
+  this.hasVertices = hasVerticesExpr
+  let hasNormalsExpr = this.io.readU4le()
+  this.hasNormals = hasNormalsExpr
+  if this.hasVertices != 0:
+    for i in 0 ..< int(this.parent.numVertices):
+      let it = RenderwareBinaryStream_Vector3d.read(this.io, this.root, this)
+      this.vertices.add(it)
+  if this.hasNormals != 0:
+    for i in 0 ..< int(this.parent.numVertices):
+      let it = RenderwareBinaryStream_Vector3d.read(this.io, this.root, this)
+      this.normals.add(it)
+
+proc fromFile*(_: typedesc[RenderwareBinaryStream_MorphTarget], filename: string): RenderwareBinaryStream_MorphTarget =
+  RenderwareBinaryStream_MorphTarget.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[RenderwareBinaryStream_Rgba], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_GeometryNonNative): RenderwareBinaryStream_Rgba =
   template this: untyped = result
@@ -583,32 +612,6 @@ proc read*(_: typedesc[RenderwareBinaryStream_Sphere], io: KaitaiStream, root: K
 proc fromFile*(_: typedesc[RenderwareBinaryStream_Sphere], filename: string): RenderwareBinaryStream_Sphere =
   RenderwareBinaryStream_Sphere.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[RenderwareBinaryStream_MorphTarget], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_StructGeometry): RenderwareBinaryStream_MorphTarget =
-  template this: untyped = result
-  this = new(RenderwareBinaryStream_MorphTarget)
-  let root = if root == nil: cast[RenderwareBinaryStream](this) else: cast[RenderwareBinaryStream](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let boundingSphereExpr = RenderwareBinaryStream_Sphere.read(this.io, this.root, this)
-  this.boundingSphere = boundingSphereExpr
-  let hasVerticesExpr = this.io.readU4le()
-  this.hasVertices = hasVerticesExpr
-  let hasNormalsExpr = this.io.readU4le()
-  this.hasNormals = hasNormalsExpr
-  if this.hasVertices != 0:
-    for i in 0 ..< int(this.parent.numVertices):
-      let it = RenderwareBinaryStream_Vector3d.read(this.io, this.root, this)
-      this.vertices.add(it)
-  if this.hasNormals != 0:
-    for i in 0 ..< int(this.parent.numVertices):
-      let it = RenderwareBinaryStream_Vector3d.read(this.io, this.root, this)
-      this.normals.add(it)
-
-proc fromFile*(_: typedesc[RenderwareBinaryStream_MorphTarget], filename: string): RenderwareBinaryStream_MorphTarget =
-  RenderwareBinaryStream_MorphTarget.read(newKaitaiFileStream(filename), nil, nil)
-
 
 ##[
 @see <a href="https://gtamods.com/wiki/Atomic_(RW_Section)#Structure">Source</a>
@@ -642,25 +645,27 @@ proc fromFile*(_: typedesc[RenderwareBinaryStream_StructAtomic], filename: strin
 
 
 ##[
-@see <a href="https://gtamods.com/wiki/RpGeometry">Source</a>
+@see <a href="https://gtamods.com/wiki/RpClump">Source</a>
 ]##
-proc read*(_: typedesc[RenderwareBinaryStream_SurfaceProperties], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_StructGeometry): RenderwareBinaryStream_SurfaceProperties =
+proc read*(_: typedesc[RenderwareBinaryStream_StructClump], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_ListWithHeader): RenderwareBinaryStream_StructClump =
   template this: untyped = result
-  this = new(RenderwareBinaryStream_SurfaceProperties)
+  this = new(RenderwareBinaryStream_StructClump)
   let root = if root == nil: cast[RenderwareBinaryStream](this) else: cast[RenderwareBinaryStream](root)
   this.io = io
   this.root = root
   this.parent = parent
 
-  let ambientExpr = this.io.readF4le()
-  this.ambient = ambientExpr
-  let specularExpr = this.io.readF4le()
-  this.specular = specularExpr
-  let diffuseExpr = this.io.readF4le()
-  this.diffuse = diffuseExpr
+  let numAtomicsExpr = this.io.readU4le()
+  this.numAtomics = numAtomicsExpr
+  if this.parent.version >= 208896:
+    let numLightsExpr = this.io.readU4le()
+    this.numLights = numLightsExpr
+  if this.parent.version >= 208896:
+    let numCamerasExpr = this.io.readU4le()
+    this.numCameras = numCamerasExpr
 
-proc fromFile*(_: typedesc[RenderwareBinaryStream_SurfaceProperties], filename: string): RenderwareBinaryStream_SurfaceProperties =
-  RenderwareBinaryStream_SurfaceProperties.read(newKaitaiFileStream(filename), nil, nil)
+proc fromFile*(_: typedesc[RenderwareBinaryStream_StructClump], filename: string): RenderwareBinaryStream_StructClump =
+  RenderwareBinaryStream_StructClump.read(newKaitaiFileStream(filename), nil, nil)
 
 
 ##[
@@ -685,22 +690,191 @@ proc fromFile*(_: typedesc[RenderwareBinaryStream_StructFrameList], filename: st
 
 
 ##[
-@see <a href="https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
+@see <a href="https://gtamods.com/wiki/RpGeometry">Source</a>
 ]##
-proc read*(_: typedesc[RenderwareBinaryStream_Matrix], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_Frame): RenderwareBinaryStream_Matrix =
+proc read*(_: typedesc[RenderwareBinaryStream_StructGeometry], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_ListWithHeader): RenderwareBinaryStream_StructGeometry =
   template this: untyped = result
-  this = new(RenderwareBinaryStream_Matrix)
+  this = new(RenderwareBinaryStream_StructGeometry)
   let root = if root == nil: cast[RenderwareBinaryStream](this) else: cast[RenderwareBinaryStream](root)
   this.io = io
   this.root = root
   this.parent = parent
 
-  for i in 0 ..< int(3):
-    let it = RenderwareBinaryStream_Vector3d.read(this.io, this.root, this)
-    this.entries.add(it)
+  let formatExpr = this.io.readU4le()
+  this.format = formatExpr
+  let numTrianglesExpr = this.io.readU4le()
+  this.numTriangles = numTrianglesExpr
+  let numVerticesExpr = this.io.readU4le()
+  this.numVertices = numVerticesExpr
+  let numMorphTargetsExpr = this.io.readU4le()
+  this.numMorphTargets = numMorphTargetsExpr
+  if this.parent.version < 212992:
+    let surfPropExpr = RenderwareBinaryStream_SurfaceProperties.read(this.io, this.root, this)
+    this.surfProp = surfPropExpr
+  if not(this.isNative):
+    let geometryExpr = RenderwareBinaryStream_GeometryNonNative.read(this.io, this.root, this)
+    this.geometry = geometryExpr
+  for i in 0 ..< int(this.numMorphTargets):
+    let it = RenderwareBinaryStream_MorphTarget.read(this.io, this.root, this)
+    this.morphTargets.add(it)
 
-proc fromFile*(_: typedesc[RenderwareBinaryStream_Matrix], filename: string): RenderwareBinaryStream_Matrix =
-  RenderwareBinaryStream_Matrix.read(newKaitaiFileStream(filename), nil, nil)
+proc isNative(this: RenderwareBinaryStream_StructGeometry): bool = 
+  if this.isNativeInstFlag:
+    return this.isNativeInst
+  let isNativeInstExpr = bool((this.format and 16777216) != 0)
+  this.isNativeInst = isNativeInstExpr
+  this.isNativeInstFlag = true
+  return this.isNativeInst
+
+proc isPrelit(this: RenderwareBinaryStream_StructGeometry): bool = 
+  if this.isPrelitInstFlag:
+    return this.isPrelitInst
+  let isPrelitInstExpr = bool((this.format and 8) != 0)
+  this.isPrelitInst = isPrelitInstExpr
+  this.isPrelitInstFlag = true
+  return this.isPrelitInst
+
+proc isTextured(this: RenderwareBinaryStream_StructGeometry): bool = 
+  if this.isTexturedInstFlag:
+    return this.isTexturedInst
+  let isTexturedInstExpr = bool((this.format and 4) != 0)
+  this.isTexturedInst = isTexturedInstExpr
+  this.isTexturedInstFlag = true
+  return this.isTexturedInst
+
+proc isTextured2(this: RenderwareBinaryStream_StructGeometry): bool = 
+  if this.isTextured2InstFlag:
+    return this.isTextured2Inst
+  let isTextured2InstExpr = bool((this.format and 128) != 0)
+  this.isTextured2Inst = isTextured2InstExpr
+  this.isTextured2InstFlag = true
+  return this.isTextured2Inst
+
+proc numUvLayers(this: RenderwareBinaryStream_StructGeometry): int = 
+  if this.numUvLayersInstFlag:
+    return this.numUvLayersInst
+  let numUvLayersInstExpr = int((if this.numUvLayersRaw == 0: (if this.isTextured2: 2 else: (if this.isTextured: 1 else: 0)) else: this.numUvLayersRaw))
+  this.numUvLayersInst = numUvLayersInstExpr
+  this.numUvLayersInstFlag = true
+  return this.numUvLayersInst
+
+proc numUvLayersRaw(this: RenderwareBinaryStream_StructGeometry): int = 
+  if this.numUvLayersRawInstFlag:
+    return this.numUvLayersRawInst
+  let numUvLayersRawInstExpr = int((this.format and 16711680) shr 16)
+  this.numUvLayersRawInst = numUvLayersRawInstExpr
+  this.numUvLayersRawInstFlag = true
+  return this.numUvLayersRawInst
+
+proc fromFile*(_: typedesc[RenderwareBinaryStream_StructGeometry], filename: string): RenderwareBinaryStream_StructGeometry =
+  RenderwareBinaryStream_StructGeometry.read(newKaitaiFileStream(filename), nil, nil)
+
+
+##[
+@see <a href="https://gtamods.com/wiki/Geometry_List_(RW_Section)#Structure">Source</a>
+]##
+proc read*(_: typedesc[RenderwareBinaryStream_StructGeometryList], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_ListWithHeader): RenderwareBinaryStream_StructGeometryList =
+  template this: untyped = result
+  this = new(RenderwareBinaryStream_StructGeometryList)
+  let root = if root == nil: cast[RenderwareBinaryStream](this) else: cast[RenderwareBinaryStream](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let numGeometriesExpr = this.io.readU4le()
+  this.numGeometries = numGeometriesExpr
+
+proc fromFile*(_: typedesc[RenderwareBinaryStream_StructGeometryList], filename: string): RenderwareBinaryStream_StructGeometryList =
+  RenderwareBinaryStream_StructGeometryList.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[RenderwareBinaryStream_StructTextureDictionary], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_ListWithHeader): RenderwareBinaryStream_StructTextureDictionary =
+  template this: untyped = result
+  this = new(RenderwareBinaryStream_StructTextureDictionary)
+  let root = if root == nil: cast[RenderwareBinaryStream](this) else: cast[RenderwareBinaryStream](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let numTexturesExpr = this.io.readU4le()
+  this.numTextures = numTexturesExpr
+
+proc fromFile*(_: typedesc[RenderwareBinaryStream_StructTextureDictionary], filename: string): RenderwareBinaryStream_StructTextureDictionary =
+  RenderwareBinaryStream_StructTextureDictionary.read(newKaitaiFileStream(filename), nil, nil)
+
+
+##[
+@see <a href="https://gtamods.com/wiki/RpGeometry">Source</a>
+]##
+proc read*(_: typedesc[RenderwareBinaryStream_SurfaceProperties], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_StructGeometry): RenderwareBinaryStream_SurfaceProperties =
+  template this: untyped = result
+  this = new(RenderwareBinaryStream_SurfaceProperties)
+  let root = if root == nil: cast[RenderwareBinaryStream](this) else: cast[RenderwareBinaryStream](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let ambientExpr = this.io.readF4le()
+  this.ambient = ambientExpr
+  let specularExpr = this.io.readF4le()
+  this.specular = specularExpr
+  let diffuseExpr = this.io.readF4le()
+  this.diffuse = diffuseExpr
+
+proc fromFile*(_: typedesc[RenderwareBinaryStream_SurfaceProperties], filename: string): RenderwareBinaryStream_SurfaceProperties =
+  RenderwareBinaryStream_SurfaceProperties.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[RenderwareBinaryStream_TexCoord], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_UvLayer): RenderwareBinaryStream_TexCoord =
+  template this: untyped = result
+  this = new(RenderwareBinaryStream_TexCoord)
+  let root = if root == nil: cast[RenderwareBinaryStream](this) else: cast[RenderwareBinaryStream](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let uExpr = this.io.readF4le()
+  this.u = uExpr
+  let vExpr = this.io.readF4le()
+  this.v = vExpr
+
+proc fromFile*(_: typedesc[RenderwareBinaryStream_TexCoord], filename: string): RenderwareBinaryStream_TexCoord =
+  RenderwareBinaryStream_TexCoord.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[RenderwareBinaryStream_Triangle], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_GeometryNonNative): RenderwareBinaryStream_Triangle =
+  template this: untyped = result
+  this = new(RenderwareBinaryStream_Triangle)
+  let root = if root == nil: cast[RenderwareBinaryStream](this) else: cast[RenderwareBinaryStream](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let vertex2Expr = this.io.readU2le()
+  this.vertex2 = vertex2Expr
+  let vertex1Expr = this.io.readU2le()
+  this.vertex1 = vertex1Expr
+  let materialIdExpr = this.io.readU2le()
+  this.materialId = materialIdExpr
+  let vertex3Expr = this.io.readU2le()
+  this.vertex3 = vertex3Expr
+
+proc fromFile*(_: typedesc[RenderwareBinaryStream_Triangle], filename: string): RenderwareBinaryStream_Triangle =
+  RenderwareBinaryStream_Triangle.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[RenderwareBinaryStream_UvLayer], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_GeometryNonNative, numVertices: any): RenderwareBinaryStream_UvLayer =
+  template this: untyped = result
+  this = new(RenderwareBinaryStream_UvLayer)
+  let root = if root == nil: cast[RenderwareBinaryStream](this) else: cast[RenderwareBinaryStream](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+  let numVerticesExpr = uint32(numVertices)
+  this.numVertices = numVerticesExpr
+
+  for i in 0 ..< int(this.numVertices):
+    let it = RenderwareBinaryStream_TexCoord.read(this.io, this.root, this)
+    this.texCoords.add(it)
+
+proc fromFile*(_: typedesc[RenderwareBinaryStream_UvLayer], filename: string): RenderwareBinaryStream_UvLayer =
+  RenderwareBinaryStream_UvLayer.read(newKaitaiFileStream(filename), nil, nil)
 
 
 ##[
@@ -723,178 +897,4 @@ proc read*(_: typedesc[RenderwareBinaryStream_Vector3d], io: KaitaiStream, root:
 
 proc fromFile*(_: typedesc[RenderwareBinaryStream_Vector3d], filename: string): RenderwareBinaryStream_Vector3d =
   RenderwareBinaryStream_Vector3d.read(newKaitaiFileStream(filename), nil, nil)
-
-
-##[
-Typical structure used by many data types in RenderWare binary
-stream. Substream contains a list of binary stream entries,
-first entry always has type "struct" and carries some specific
-binary data it in, determined by the type of parent. All other
-entries, beside the first one, are normal, self-describing
-records.
-
-]##
-proc read*(_: typedesc[RenderwareBinaryStream_ListWithHeader], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream): RenderwareBinaryStream_ListWithHeader =
-  template this: untyped = result
-  this = new(RenderwareBinaryStream_ListWithHeader)
-  let root = if root == nil: cast[RenderwareBinaryStream](this) else: cast[RenderwareBinaryStream](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let codeExpr = this.io.readBytes(int(4))
-  this.code = codeExpr
-  let headerSizeExpr = this.io.readU4le()
-  this.headerSize = headerSizeExpr
-  let libraryIdStampExpr = this.io.readU4le()
-  this.libraryIdStamp = libraryIdStampExpr
-  block:
-    let on = this.parent.code
-    if on == renderware_binary_stream.atomic:
-      let rawHeaderExpr = this.io.readBytes(int(this.headerSize))
-      this.rawHeader = rawHeaderExpr
-      let rawHeaderIo = newKaitaiStream(rawHeaderExpr)
-      let headerExpr = RenderwareBinaryStream_StructAtomic.read(rawHeaderIo, this.root, this)
-      this.header = headerExpr
-    elif on == renderware_binary_stream.geometry:
-      let rawHeaderExpr = this.io.readBytes(int(this.headerSize))
-      this.rawHeader = rawHeaderExpr
-      let rawHeaderIo = newKaitaiStream(rawHeaderExpr)
-      let headerExpr = RenderwareBinaryStream_StructGeometry.read(rawHeaderIo, this.root, this)
-      this.header = headerExpr
-    elif on == renderware_binary_stream.texture_dictionary:
-      let rawHeaderExpr = this.io.readBytes(int(this.headerSize))
-      this.rawHeader = rawHeaderExpr
-      let rawHeaderIo = newKaitaiStream(rawHeaderExpr)
-      let headerExpr = RenderwareBinaryStream_StructTextureDictionary.read(rawHeaderIo, this.root, this)
-      this.header = headerExpr
-    elif on == renderware_binary_stream.geometry_list:
-      let rawHeaderExpr = this.io.readBytes(int(this.headerSize))
-      this.rawHeader = rawHeaderExpr
-      let rawHeaderIo = newKaitaiStream(rawHeaderExpr)
-      let headerExpr = RenderwareBinaryStream_StructGeometryList.read(rawHeaderIo, this.root, this)
-      this.header = headerExpr
-    elif on == renderware_binary_stream.clump:
-      let rawHeaderExpr = this.io.readBytes(int(this.headerSize))
-      this.rawHeader = rawHeaderExpr
-      let rawHeaderIo = newKaitaiStream(rawHeaderExpr)
-      let headerExpr = RenderwareBinaryStream_StructClump.read(rawHeaderIo, this.root, this)
-      this.header = headerExpr
-    elif on == renderware_binary_stream.frame_list:
-      let rawHeaderExpr = this.io.readBytes(int(this.headerSize))
-      this.rawHeader = rawHeaderExpr
-      let rawHeaderIo = newKaitaiStream(rawHeaderExpr)
-      let headerExpr = RenderwareBinaryStream_StructFrameList.read(rawHeaderIo, this.root, this)
-      this.header = headerExpr
-    else:
-      let headerExpr = this.io.readBytes(int(this.headerSize))
-      this.header = headerExpr
-  block:
-    var i: int
-    while not this.io.isEof:
-      let it = RenderwareBinaryStream.read(this.io, this.root, this)
-      this.entries.add(it)
-      inc i
-
-proc version(this: RenderwareBinaryStream_ListWithHeader): int = 
-  if this.versionInstFlag:
-    return this.versionInst
-  let versionInstExpr = int((if (this.libraryIdStamp and 4294901760'i64) != 0: ((((this.libraryIdStamp shr 14) and 261888) + 196608) or ((this.libraryIdStamp shr 16) and 63)) else: (this.libraryIdStamp shl 8)))
-  this.versionInst = versionInstExpr
-  this.versionInstFlag = true
-  return this.versionInst
-
-proc fromFile*(_: typedesc[RenderwareBinaryStream_ListWithHeader], filename: string): RenderwareBinaryStream_ListWithHeader =
-  RenderwareBinaryStream_ListWithHeader.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[RenderwareBinaryStream_Triangle], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_GeometryNonNative): RenderwareBinaryStream_Triangle =
-  template this: untyped = result
-  this = new(RenderwareBinaryStream_Triangle)
-  let root = if root == nil: cast[RenderwareBinaryStream](this) else: cast[RenderwareBinaryStream](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let vertex2Expr = this.io.readU2le()
-  this.vertex2 = vertex2Expr
-  let vertex1Expr = this.io.readU2le()
-  this.vertex1 = vertex1Expr
-  let materialIdExpr = this.io.readU2le()
-  this.materialId = materialIdExpr
-  let vertex3Expr = this.io.readU2le()
-  this.vertex3 = vertex3Expr
-
-proc fromFile*(_: typedesc[RenderwareBinaryStream_Triangle], filename: string): RenderwareBinaryStream_Triangle =
-  RenderwareBinaryStream_Triangle.read(newKaitaiFileStream(filename), nil, nil)
-
-
-##[
-@see <a href="https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
-]##
-proc read*(_: typedesc[RenderwareBinaryStream_Frame], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_StructFrameList): RenderwareBinaryStream_Frame =
-  template this: untyped = result
-  this = new(RenderwareBinaryStream_Frame)
-  let root = if root == nil: cast[RenderwareBinaryStream](this) else: cast[RenderwareBinaryStream](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let rotationMatrixExpr = RenderwareBinaryStream_Matrix.read(this.io, this.root, this)
-  this.rotationMatrix = rotationMatrixExpr
-  let positionExpr = RenderwareBinaryStream_Vector3d.read(this.io, this.root, this)
-  this.position = positionExpr
-  let curFrameIdxExpr = this.io.readS4le()
-  this.curFrameIdx = curFrameIdxExpr
-  let matrixCreationFlagsExpr = this.io.readU4le()
-  this.matrixCreationFlags = matrixCreationFlagsExpr
-
-proc fromFile*(_: typedesc[RenderwareBinaryStream_Frame], filename: string): RenderwareBinaryStream_Frame =
-  RenderwareBinaryStream_Frame.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[RenderwareBinaryStream_TexCoord], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_UvLayer): RenderwareBinaryStream_TexCoord =
-  template this: untyped = result
-  this = new(RenderwareBinaryStream_TexCoord)
-  let root = if root == nil: cast[RenderwareBinaryStream](this) else: cast[RenderwareBinaryStream](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let uExpr = this.io.readF4le()
-  this.u = uExpr
-  let vExpr = this.io.readF4le()
-  this.v = vExpr
-
-proc fromFile*(_: typedesc[RenderwareBinaryStream_TexCoord], filename: string): RenderwareBinaryStream_TexCoord =
-  RenderwareBinaryStream_TexCoord.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[RenderwareBinaryStream_UvLayer], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_GeometryNonNative, numVertices: any): RenderwareBinaryStream_UvLayer =
-  template this: untyped = result
-  this = new(RenderwareBinaryStream_UvLayer)
-  let root = if root == nil: cast[RenderwareBinaryStream](this) else: cast[RenderwareBinaryStream](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-  let numVerticesExpr = uint32(numVertices)
-  this.numVertices = numVerticesExpr
-
-  for i in 0 ..< int(this.numVertices):
-    let it = RenderwareBinaryStream_TexCoord.read(this.io, this.root, this)
-    this.texCoords.add(it)
-
-proc fromFile*(_: typedesc[RenderwareBinaryStream_UvLayer], filename: string): RenderwareBinaryStream_UvLayer =
-  RenderwareBinaryStream_UvLayer.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[RenderwareBinaryStream_StructTextureDictionary], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_ListWithHeader): RenderwareBinaryStream_StructTextureDictionary =
-  template this: untyped = result
-  this = new(RenderwareBinaryStream_StructTextureDictionary)
-  let root = if root == nil: cast[RenderwareBinaryStream](this) else: cast[RenderwareBinaryStream](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let numTexturesExpr = this.io.readU4le()
-  this.numTextures = numTexturesExpr
-
-proc fromFile*(_: typedesc[RenderwareBinaryStream_StructTextureDictionary], filename: string): RenderwareBinaryStream_StructTextureDictionary =
-  RenderwareBinaryStream_StructTextureDictionary.read(newKaitaiFileStream(filename), nil, nil)
 

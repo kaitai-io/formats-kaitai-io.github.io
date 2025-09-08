@@ -42,24 +42,43 @@ function AixUtmp:_read()
 end
 
 
+AixUtmp.ExitStatus = class.class(KaitaiStruct)
+
+function AixUtmp.ExitStatus:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function AixUtmp.ExitStatus:_read()
+  self.termination_code = self._io:read_s2be()
+  self.exit_code = self._io:read_s2be()
+end
+
+-- 
+-- process termination status.
+-- 
+-- process exit status.
+
 AixUtmp.Record = class.class(KaitaiStruct)
 
 function AixUtmp.Record:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function AixUtmp.Record:_read()
-  self.user = str_decode.decode(self._io:read_bytes(256), "ascii")
-  self.inittab_id = str_decode.decode(self._io:read_bytes(14), "ascii")
-  self.device = str_decode.decode(self._io:read_bytes(64), "ascii")
+  self.user = str_decode.decode(self._io:read_bytes(256), "ASCII")
+  self.inittab_id = str_decode.decode(self._io:read_bytes(14), "ASCII")
+  self.device = str_decode.decode(self._io:read_bytes(64), "ASCII")
   self.pid = self._io:read_u8be()
   self.type = AixUtmp.EntryType(self._io:read_s2be())
   self.timestamp = self._io:read_s8be()
   self.exit_status = AixUtmp.ExitStatus(self._io, self, self._root)
-  self.hostname = str_decode.decode(self._io:read_bytes(256), "ascii")
+  self.hostname = str_decode.decode(self._io:read_bytes(256), "ASCII")
   self.dbl_word_pad = self._io:read_s4be()
   self.reserved_a = self._io:read_bytes(8)
   self.reserved_v = self._io:read_bytes(24)
@@ -81,23 +100,4 @@ end
 -- the exit status of a process marked as DEAD PROCESS.
 -- 
 -- host name.
-
-AixUtmp.ExitStatus = class.class(KaitaiStruct)
-
-function AixUtmp.ExitStatus:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function AixUtmp.ExitStatus:_read()
-  self.termination_code = self._io:read_s2be()
-  self.exit_code = self._io:read_s2be()
-end
-
--- 
--- process termination status.
--- 
--- process exit status.
 

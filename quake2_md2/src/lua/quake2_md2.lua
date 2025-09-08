@@ -93,11 +93,11 @@ end
 function Quake2Md2:_read()
   self.magic = self._io:read_bytes(4)
   if not(self.magic == "\073\068\080\050") then
-    error("not equal, expected " ..  "\073\068\080\050" .. ", but got " .. self.magic)
+    error("not equal, expected " .. "\073\068\080\050" .. ", but got " .. self.magic)
   end
   self.version = self._io:read_u4le()
   if not(self.version == 8) then
-    error("not equal, expected " ..  8 .. ", but got " .. self.version)
+    error("not equal, expected " .. 8 .. ", but got " .. self.version)
   end
   self.skin_width_px = self._io:read_u4le()
   self.skin_height_px = self._io:read_u4le()
@@ -116,6 +116,16 @@ function Quake2Md2:_read()
   self.ofs_eof = self._io:read_u4le()
 end
 
+Quake2Md2.property.anim_names = {}
+function Quake2Md2.property.anim_names:get()
+  if self._m_anim_names ~= nil then
+    return self._m_anim_names
+  end
+
+  self._m_anim_names = {"stand", "run", "attack", "pain1", "pain2", "pain3", "jump", "flip", "salute", "taunt", "wave", "point", "crstnd", "crwalk", "crattak", "crpain", "crdeath", "death1", "death2", "death3"}
+  return self._m_anim_names
+end
+
 Quake2Md2.property.anim_num_frames = {}
 function Quake2Md2.property.anim_num_frames:get()
   if self._m_anim_num_frames ~= nil then
@@ -124,6 +134,16 @@ function Quake2Md2.property.anim_num_frames:get()
 
   self._m_anim_num_frames = "\040\006\008\004\004\004\006\012\011\017\011\012\019\006\009\004\005\006\006\008"
   return self._m_anim_num_frames
+end
+
+Quake2Md2.property.anim_start_indices = {}
+function Quake2Md2.property.anim_start_indices:get()
+  if self._m_anim_start_indices ~= nil then
+    return self._m_anim_start_indices
+  end
+
+  self._m_anim_start_indices = "\000\040\046\054\058\062\066\072\084\095\112\123\135\154\160\169\173\178\184\190"
+  return self._m_anim_start_indices
 end
 
 -- 
@@ -137,6 +157,56 @@ function Quake2Md2.property.anorms_table:get()
 
   self._m_anorms_table = {{-0.525731, 0.000000, 0.850651}, {-0.442863, 0.238856, 0.864188}, {-0.295242, 0.000000, 0.955423}, {-0.309017, 0.500000, 0.809017}, {-0.162460, 0.262866, 0.951056}, {0.000000, 0.000000, 1.000000}, {0.000000, 0.850651, 0.525731}, {-0.147621, 0.716567, 0.681718}, {0.147621, 0.716567, 0.681718}, {0.000000, 0.525731, 0.850651}, {0.309017, 0.500000, 0.809017}, {0.525731, 0.000000, 0.850651}, {0.295242, 0.000000, 0.955423}, {0.442863, 0.238856, 0.864188}, {0.162460, 0.262866, 0.951056}, {-0.681718, 0.147621, 0.716567}, {-0.809017, 0.309017, 0.500000}, {-0.587785, 0.425325, 0.688191}, {-0.850651, 0.525731, 0.000000}, {-0.864188, 0.442863, 0.238856}, {-0.716567, 0.681718, 0.147621}, {-0.688191, 0.587785, 0.425325}, {-0.500000, 0.809017, 0.309017}, {-0.238856, 0.864188, 0.442863}, {-0.425325, 0.688191, 0.587785}, {-0.716567, 0.681718, -0.147621}, {-0.500000, 0.809017, -0.309017}, {-0.525731, 0.850651, 0.000000}, {0.000000, 0.850651, -0.525731}, {-0.238856, 0.864188, -0.442863}, {0.000000, 0.955423, -0.295242}, {-0.262866, 0.951056, -0.162460}, {0.000000, 1.000000, 0.000000}, {0.000000, 0.955423, 0.295242}, {-0.262866, 0.951056, 0.162460}, {0.238856, 0.864188, 0.442863}, {0.262866, 0.951056, 0.162460}, {0.500000, 0.809017, 0.309017}, {0.238856, 0.864188, -0.442863}, {0.262866, 0.951056, -0.162460}, {0.500000, 0.809017, -0.309017}, {0.850651, 0.525731, 0.000000}, {0.716567, 0.681718, 0.147621}, {0.716567, 0.681718, -0.147621}, {0.525731, 0.850651, 0.000000}, {0.425325, 0.688191, 0.587785}, {0.864188, 0.442863, 0.238856}, {0.688191, 0.587785, 0.425325}, {0.809017, 0.309017, 0.500000}, {0.681718, 0.147621, 0.716567}, {0.587785, 0.425325, 0.688191}, {0.955423, 0.295242, 0.000000}, {1.000000, 0.000000, 0.000000}, {0.951056, 0.162460, 0.262866}, {0.850651, -0.525731, 0.000000}, {0.955423, -0.295242, 0.000000}, {0.864188, -0.442863, 0.238856}, {0.951056, -0.162460, 0.262866}, {0.809017, -0.309017, 0.500000}, {0.681718, -0.147621, 0.716567}, {0.850651, 0.000000, 0.525731}, {0.864188, 0.442863, -0.238856}, {0.809017, 0.309017, -0.500000}, {0.951056, 0.162460, -0.262866}, {0.525731, 0.000000, -0.850651}, {0.681718, 0.147621, -0.716567}, {0.681718, -0.147621, -0.716567}, {0.850651, 0.000000, -0.525731}, {0.809017, -0.309017, -0.500000}, {0.864188, -0.442863, -0.238856}, {0.951056, -0.162460, -0.262866}, {0.147621, 0.716567, -0.681718}, {0.309017, 0.500000, -0.809017}, {0.425325, 0.688191, -0.587785}, {0.442863, 0.238856, -0.864188}, {0.587785, 0.425325, -0.688191}, {0.688191, 0.587785, -0.425325}, {-0.147621, 0.716567, -0.681718}, {-0.309017, 0.500000, -0.809017}, {0.000000, 0.525731, -0.850651}, {-0.525731, 0.000000, -0.850651}, {-0.442863, 0.238856, -0.864188}, {-0.295242, 0.000000, -0.955423}, {-0.162460, 0.262866, -0.951056}, {0.000000, 0.000000, -1.000000}, {0.295242, 0.000000, -0.955423}, {0.162460, 0.262866, -0.951056}, {-0.442863, -0.238856, -0.864188}, {-0.309017, -0.500000, -0.809017}, {-0.162460, -0.262866, -0.951056}, {0.000000, -0.850651, -0.525731}, {-0.147621, -0.716567, -0.681718}, {0.147621, -0.716567, -0.681718}, {0.000000, -0.525731, -0.850651}, {0.309017, -0.500000, -0.809017}, {0.442863, -0.238856, -0.864188}, {0.162460, -0.262866, -0.951056}, {0.238856, -0.864188, -0.442863}, {0.500000, -0.809017, -0.309017}, {0.425325, -0.688191, -0.587785}, {0.716567, -0.681718, -0.147621}, {0.688191, -0.587785, -0.425325}, {0.587785, -0.425325, -0.688191}, {0.000000, -0.955423, -0.295242}, {0.000000, -1.000000, 0.000000}, {0.262866, -0.951056, -0.162460}, {0.000000, -0.850651, 0.525731}, {0.000000, -0.955423, 0.295242}, {0.238856, -0.864188, 0.442863}, {0.262866, -0.951056, 0.162460}, {0.500000, -0.809017, 0.309017}, {0.716567, -0.681718, 0.147621}, {0.525731, -0.850651, 0.000000}, {-0.238856, -0.864188, -0.442863}, {-0.500000, -0.809017, -0.309017}, {-0.262866, -0.951056, -0.162460}, {-0.850651, -0.525731, 0.000000}, {-0.716567, -0.681718, -0.147621}, {-0.716567, -0.681718, 0.147621}, {-0.525731, -0.850651, 0.000000}, {-0.500000, -0.809017, 0.309017}, {-0.238856, -0.864188, 0.442863}, {-0.262866, -0.951056, 0.162460}, {-0.864188, -0.442863, 0.238856}, {-0.809017, -0.309017, 0.500000}, {-0.688191, -0.587785, 0.425325}, {-0.681718, -0.147621, 0.716567}, {-0.442863, -0.238856, 0.864188}, {-0.587785, -0.425325, 0.688191}, {-0.309017, -0.500000, 0.809017}, {-0.147621, -0.716567, 0.681718}, {-0.425325, -0.688191, 0.587785}, {-0.162460, -0.262866, 0.951056}, {0.442863, -0.238856, 0.864188}, {0.162460, -0.262866, 0.951056}, {0.309017, -0.500000, 0.809017}, {0.147621, -0.716567, 0.681718}, {0.000000, -0.525731, 0.850651}, {0.425325, -0.688191, 0.587785}, {0.587785, -0.425325, 0.688191}, {0.688191, -0.587785, 0.425325}, {-0.955423, 0.295242, 0.000000}, {-0.951056, 0.162460, 0.262866}, {-1.000000, 0.000000, 0.000000}, {-0.850651, 0.000000, 0.525731}, {-0.955423, -0.295242, 0.000000}, {-0.951056, -0.162460, 0.262866}, {-0.864188, 0.442863, -0.238856}, {-0.951056, 0.162460, -0.262866}, {-0.809017, 0.309017, -0.500000}, {-0.864188, -0.442863, -0.238856}, {-0.951056, -0.162460, -0.262866}, {-0.809017, -0.309017, -0.500000}, {-0.681718, 0.147621, -0.716567}, {-0.681718, -0.147621, -0.716567}, {-0.850651, 0.000000, -0.525731}, {-0.688191, 0.587785, -0.425325}, {-0.587785, 0.425325, -0.688191}, {-0.425325, 0.688191, -0.587785}, {-0.425325, -0.688191, -0.587785}, {-0.587785, -0.425325, -0.688191}, {-0.688191, -0.587785, -0.425325}}
   return self._m_anorms_table
+end
+
+Quake2Md2.property.frames = {}
+function Quake2Md2.property.frames:get()
+  if self._m_frames ~= nil then
+    return self._m_frames
+  end
+
+  local _pos = self._io:pos()
+  self._io:seek(self.ofs_frames)
+  self._raw__m_frames = {}
+  self._m_frames = {}
+  for i = 0, self.num_frames - 1 do
+    self._raw__m_frames[i + 1] = self._io:read_bytes(self.bytes_per_frame)
+    local _io = KaitaiStream(stringstream(self._raw__m_frames[i + 1]))
+    self._m_frames[i + 1] = Quake2Md2.Frame(_io, self, self._root)
+  end
+  self._io:seek(_pos)
+  return self._m_frames
+end
+
+Quake2Md2.property.gl_cmds = {}
+function Quake2Md2.property.gl_cmds:get()
+  if self._m_gl_cmds ~= nil then
+    return self._m_gl_cmds
+  end
+
+  local _pos = self._io:pos()
+  self._io:seek(self.ofs_gl_cmds)
+  self._raw__m_gl_cmds = self._io:read_bytes(4 * self.num_gl_cmds)
+  local _io = KaitaiStream(stringstream(self._raw__m_gl_cmds))
+  self._m_gl_cmds = Quake2Md2.GlCmdsList(_io, self, self._root)
+  self._io:seek(_pos)
+  return self._m_gl_cmds
+end
+
+Quake2Md2.property.skins = {}
+function Quake2Md2.property.skins:get()
+  if self._m_skins ~= nil then
+    return self._m_skins
+  end
+
+  local _pos = self._io:pos()
+  self._io:seek(self.ofs_skins)
+  self._m_skins = {}
+  for i = 0, self.num_skins - 1 do
+    self._m_skins[i + 1] = str_decode.decode(KaitaiStream.bytes_terminate(self._io:read_bytes(64), 0, false), "ASCII")
+  end
+  self._io:seek(_pos)
+  return self._m_skins
 end
 
 Quake2Md2.property.tex_coords = {}
@@ -171,108 +241,13 @@ function Quake2Md2.property.triangles:get()
   return self._m_triangles
 end
 
-Quake2Md2.property.frames = {}
-function Quake2Md2.property.frames:get()
-  if self._m_frames ~= nil then
-    return self._m_frames
-  end
-
-  local _pos = self._io:pos()
-  self._io:seek(self.ofs_frames)
-  self._raw__m_frames = {}
-  self._m_frames = {}
-  for i = 0, self.num_frames - 1 do
-    self._raw__m_frames[i + 1] = self._io:read_bytes(self.bytes_per_frame)
-    local _io = KaitaiStream(stringstream(self._raw__m_frames[i + 1]))
-    self._m_frames[i + 1] = Quake2Md2.Frame(_io, self, self._root)
-  end
-  self._io:seek(_pos)
-  return self._m_frames
-end
-
-Quake2Md2.property.anim_names = {}
-function Quake2Md2.property.anim_names:get()
-  if self._m_anim_names ~= nil then
-    return self._m_anim_names
-  end
-
-  self._m_anim_names = {"stand", "run", "attack", "pain1", "pain2", "pain3", "jump", "flip", "salute", "taunt", "wave", "point", "crstnd", "crwalk", "crattak", "crpain", "crdeath", "death1", "death2", "death3"}
-  return self._m_anim_names
-end
-
-Quake2Md2.property.gl_cmds = {}
-function Quake2Md2.property.gl_cmds:get()
-  if self._m_gl_cmds ~= nil then
-    return self._m_gl_cmds
-  end
-
-  local _pos = self._io:pos()
-  self._io:seek(self.ofs_gl_cmds)
-  self._raw__m_gl_cmds = self._io:read_bytes((4 * self.num_gl_cmds))
-  local _io = KaitaiStream(stringstream(self._raw__m_gl_cmds))
-  self._m_gl_cmds = Quake2Md2.GlCmdsList(_io, self, self._root)
-  self._io:seek(_pos)
-  return self._m_gl_cmds
-end
-
-Quake2Md2.property.skins = {}
-function Quake2Md2.property.skins:get()
-  if self._m_skins ~= nil then
-    return self._m_skins
-  end
-
-  local _pos = self._io:pos()
-  self._io:seek(self.ofs_skins)
-  self._m_skins = {}
-  for i = 0, self.num_skins - 1 do
-    self._m_skins[i + 1] = str_decode.decode(KaitaiStream.bytes_terminate(self._io:read_bytes(64), 0, false), "ascii")
-  end
-  self._io:seek(_pos)
-  return self._m_skins
-end
-
-Quake2Md2.property.anim_start_indices = {}
-function Quake2Md2.property.anim_start_indices:get()
-  if self._m_anim_start_indices ~= nil then
-    return self._m_anim_start_indices
-  end
-
-  self._m_anim_start_indices = "\000\040\046\054\058\062\066\072\084\095\112\123\135\154\160\169\173\178\184\190"
-  return self._m_anim_start_indices
-end
-
-
-Quake2Md2.Vertex = class.class(KaitaiStruct)
-
-function Quake2Md2.Vertex:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Quake2Md2.Vertex:_read()
-  self.position = Quake2Md2.CompressedVec(self._io, self, self._root)
-  self.normal_index = self._io:read_u1()
-end
-
-Quake2Md2.Vertex.property.normal = {}
-function Quake2Md2.Vertex.property.normal:get()
-  if self._m_normal ~= nil then
-    return self._m_normal
-  end
-
-  self._m_normal = self._root.anorms_table[self.normal_index + 1]
-  return self._m_normal
-end
-
 
 Quake2Md2.CompressedVec = class.class(KaitaiStruct)
 
 function Quake2Md2.CompressedVec:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -288,7 +263,7 @@ function Quake2Md2.CompressedVec.property.x:get()
     return self._m_x
   end
 
-  self._m_x = ((self.x_compressed * self._parent._parent.scale.x) + self._parent._parent.translate.x)
+  self._m_x = self.x_compressed * self._parent._parent.scale.x + self._parent._parent.translate.x
   return self._m_x
 end
 
@@ -298,7 +273,7 @@ function Quake2Md2.CompressedVec.property.y:get()
     return self._m_y
   end
 
-  self._m_y = ((self.y_compressed * self._parent._parent.scale.y) + self._parent._parent.translate.y)
+  self._m_y = self.y_compressed * self._parent._parent.scale.y + self._parent._parent.translate.y
   return self._m_y
 end
 
@@ -308,49 +283,24 @@ function Quake2Md2.CompressedVec.property.z:get()
     return self._m_z
   end
 
-  self._m_z = ((self.z_compressed * self._parent._parent.scale.z) + self._parent._parent.translate.z)
+  self._m_z = self.z_compressed * self._parent._parent.scale.z + self._parent._parent.translate.z
   return self._m_z
 end
 
-
-Quake2Md2.Triangle = class.class(KaitaiStruct)
-
-function Quake2Md2.Triangle:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Quake2Md2.Triangle:_read()
-  self.vertex_indices = {}
-  for i = 0, 3 - 1 do
-    self.vertex_indices[i + 1] = self._io:read_u2le()
-  end
-  self.tex_point_indices = {}
-  for i = 0, 3 - 1 do
-    self.tex_point_indices[i + 1] = self._io:read_u2le()
-  end
-end
-
--- 
--- indices to `_root.frames[i].vertices` (for each frame with index `i`).
--- 
--- indices to `_root.tex_coords`.
 
 Quake2Md2.Frame = class.class(KaitaiStruct)
 
 function Quake2Md2.Frame:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function Quake2Md2.Frame:_read()
   self.scale = Quake2Md2.Vec3f(self._io, self, self._root)
   self.translate = Quake2Md2.Vec3f(self._io, self, self._root)
-  self.name = str_decode.decode(KaitaiStream.bytes_terminate(self._io:read_bytes(16), 0, false), "ascii")
+  self.name = str_decode.decode(KaitaiStream.bytes_terminate(self._io:read_bytes(16), 0, false), "ASCII")
   self.vertices = {}
   for i = 0, self._root.vertices_per_frame - 1 do
     self.vertices[i + 1] = Quake2Md2.Vertex(self._io, self, self._root)
@@ -358,108 +308,12 @@ function Quake2Md2.Frame:_read()
 end
 
 
-Quake2Md2.GlCmdsList = class.class(KaitaiStruct)
-
-function Quake2Md2.GlCmdsList:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Quake2Md2.GlCmdsList:_read()
-  if not(self._io:is_eof()) then
-    self.items = {}
-    local i = 0
-    while true do
-      local _ = Quake2Md2.GlCmd(self._io, self, self._root)
-      self.items[i + 1] = _
-      if _.cmd_num_vertices == 0 then
-        break
-      end
-      i = i + 1
-    end
-  end
-end
-
-
-Quake2Md2.TexPoint = class.class(KaitaiStruct)
-
-function Quake2Md2.TexPoint:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Quake2Md2.TexPoint:_read()
-  self.s_px = self._io:read_u2le()
-  self.t_px = self._io:read_u2le()
-end
-
-Quake2Md2.TexPoint.property.s_normalized = {}
-function Quake2Md2.TexPoint.property.s_normalized:get()
-  if self._m_s_normalized ~= nil then
-    return self._m_s_normalized
-  end
-
-  self._m_s_normalized = ((self.s_px + 0.0) / self._root.skin_width_px)
-  return self._m_s_normalized
-end
-
-Quake2Md2.TexPoint.property.t_normalized = {}
-function Quake2Md2.TexPoint.property.t_normalized:get()
-  if self._m_t_normalized ~= nil then
-    return self._m_t_normalized
-  end
-
-  self._m_t_normalized = ((self.t_px + 0.0) / self._root.skin_height_px)
-  return self._m_t_normalized
-end
-
-
-Quake2Md2.Vec3f = class.class(KaitaiStruct)
-
-function Quake2Md2.Vec3f:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Quake2Md2.Vec3f:_read()
-  self.x = self._io:read_f4le()
-  self.y = self._io:read_f4le()
-  self.z = self._io:read_f4le()
-end
-
-
-Quake2Md2.GlVertex = class.class(KaitaiStruct)
-
-function Quake2Md2.GlVertex:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Quake2Md2.GlVertex:_read()
-  self.tex_coords_normalized = {}
-  for i = 0, 2 - 1 do
-    self.tex_coords_normalized[i + 1] = self._io:read_f4le()
-  end
-  self.vertex_index = self._io:read_u4le()
-end
-
--- 
--- index to `_root.frames[i].vertices` (for each frame with index `i`).
-
 Quake2Md2.GlCmd = class.class(KaitaiStruct)
 
 function Quake2Md2.GlCmd:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -489,6 +343,152 @@ function Quake2Md2.GlCmd.property.primitive:get()
 
   self._m_primitive = utils.box_unwrap((self.cmd_num_vertices < 0) and utils.box_wrap(Quake2Md2.GlPrimitive.triangle_fan) or (Quake2Md2.GlPrimitive.triangle_strip))
   return self._m_primitive
+end
+
+
+Quake2Md2.GlCmdsList = class.class(KaitaiStruct)
+
+function Quake2Md2.GlCmdsList:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Quake2Md2.GlCmdsList:_read()
+  if not(self._io:is_eof()) then
+    self.items = {}
+    local i = 0
+    while true do
+      local _ = Quake2Md2.GlCmd(self._io, self, self._root)
+      self.items[i + 1] = _
+      if _.cmd_num_vertices == 0 then
+        break
+      end
+      i = i + 1
+    end
+  end
+end
+
+
+Quake2Md2.GlVertex = class.class(KaitaiStruct)
+
+function Quake2Md2.GlVertex:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Quake2Md2.GlVertex:_read()
+  self.tex_coords_normalized = {}
+  for i = 0, 2 - 1 do
+    self.tex_coords_normalized[i + 1] = self._io:read_f4le()
+  end
+  self.vertex_index = self._io:read_u4le()
+end
+
+-- 
+-- index to `_root.frames[i].vertices` (for each frame with index `i`).
+
+Quake2Md2.TexPoint = class.class(KaitaiStruct)
+
+function Quake2Md2.TexPoint:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Quake2Md2.TexPoint:_read()
+  self.s_px = self._io:read_u2le()
+  self.t_px = self._io:read_u2le()
+end
+
+Quake2Md2.TexPoint.property.s_normalized = {}
+function Quake2Md2.TexPoint.property.s_normalized:get()
+  if self._m_s_normalized ~= nil then
+    return self._m_s_normalized
+  end
+
+  self._m_s_normalized = (self.s_px + 0.0) / self._root.skin_width_px
+  return self._m_s_normalized
+end
+
+Quake2Md2.TexPoint.property.t_normalized = {}
+function Quake2Md2.TexPoint.property.t_normalized:get()
+  if self._m_t_normalized ~= nil then
+    return self._m_t_normalized
+  end
+
+  self._m_t_normalized = (self.t_px + 0.0) / self._root.skin_height_px
+  return self._m_t_normalized
+end
+
+
+Quake2Md2.Triangle = class.class(KaitaiStruct)
+
+function Quake2Md2.Triangle:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Quake2Md2.Triangle:_read()
+  self.vertex_indices = {}
+  for i = 0, 3 - 1 do
+    self.vertex_indices[i + 1] = self._io:read_u2le()
+  end
+  self.tex_point_indices = {}
+  for i = 0, 3 - 1 do
+    self.tex_point_indices[i + 1] = self._io:read_u2le()
+  end
+end
+
+-- 
+-- indices to `_root.frames[i].vertices` (for each frame with index `i`).
+-- 
+-- indices to `_root.tex_coords`.
+
+Quake2Md2.Vec3f = class.class(KaitaiStruct)
+
+function Quake2Md2.Vec3f:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Quake2Md2.Vec3f:_read()
+  self.x = self._io:read_f4le()
+  self.y = self._io:read_f4le()
+  self.z = self._io:read_f4le()
+end
+
+
+Quake2Md2.Vertex = class.class(KaitaiStruct)
+
+function Quake2Md2.Vertex:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Quake2Md2.Vertex:_read()
+  self.position = Quake2Md2.CompressedVec(self._io, self, self._root)
+  self.normal_index = self._io:read_u1()
+end
+
+Quake2Md2.Vertex.property.normal = {}
+function Quake2Md2.Vertex.property.normal:get()
+  if self._m_normal ~= nil then
+    return self._m_normal
+  end
+
+  self._m_normal = self._root.anorms_table[self.normal_index + 1]
+  return self._m_normal
 end
 
 

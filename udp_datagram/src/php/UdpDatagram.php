@@ -10,8 +10,8 @@
 
 namespace {
     class UdpDatagram extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \UdpDatagram $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\UdpDatagram $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -20,7 +20,7 @@ namespace {
             $this->_m_dstPort = $this->_io->readU2be();
             $this->_m_length = $this->_io->readU2be();
             $this->_m_checksum = $this->_io->readU2be();
-            $this->_m_body = $this->_io->readBytes(($this->length() - 8));
+            $this->_m_body = $this->_io->readBytes($this->length() - 8);
         }
         protected $_m_srcPort;
         protected $_m_dstPort;

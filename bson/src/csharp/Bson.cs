@@ -27,45 +27,14 @@ namespace Kaitai
         private void _read()
         {
             _len = m_io.ReadS4le();
-            __raw_fields = m_io.ReadBytes((Len - 5));
+            __raw_fields = m_io.ReadBytes(Len - 5);
             var io___raw_fields = new KaitaiStream(__raw_fields);
             _fields = new ElementsList(io___raw_fields, this, m_root);
             _terminator = m_io.ReadBytes(1);
-            if (!((KaitaiStream.ByteArrayCompare(Terminator, new byte[] { 0 }) == 0)))
+            if (!((KaitaiStream.ByteArrayCompare(_terminator, new byte[] { 0 }) == 0)))
             {
-                throw new ValidationNotEqualError(new byte[] { 0 }, Terminator, M_Io, "/seq/2");
+                throw new ValidationNotEqualError(new byte[] { 0 }, _terminator, m_io, "/seq/2");
             }
-        }
-
-        /// <summary>
-        /// Special internal type used by MongoDB replication and sharding. First 4 bytes are an increment, second 4 are a timestamp.
-        /// </summary>
-        public partial class Timestamp : KaitaiStruct
-        {
-            public static Timestamp FromFile(string fileName)
-            {
-                return new Timestamp(new KaitaiStream(fileName));
-            }
-
-            public Timestamp(KaitaiStream p__io, Bson.Element p__parent = null, Bson p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _increment = m_io.ReadU4le();
-                _timestamp = m_io.ReadU4le();
-            }
-            private uint _increment;
-            private uint _timestamp;
-            private Bson m_root;
-            private Bson.Element m_parent;
-            public uint Increment { get { return _increment; } }
-            public uint Timestamp { get { return _timestamp; } }
-            public Bson M_Root { get { return m_root; } }
-            public Bson.Element M_Parent { get { return m_parent; } }
         }
 
         /// <summary>
@@ -156,14 +125,14 @@ namespace Kaitai
             public Bson.Element M_Parent { get { return m_parent; } }
             public byte[] M_RawContent { get { return __raw_content; } }
         }
-        public partial class ElementsList : KaitaiStruct
+        public partial class CodeWithScope : KaitaiStruct
         {
-            public static ElementsList FromFile(string fileName)
+            public static CodeWithScope FromFile(string fileName)
             {
-                return new ElementsList(new KaitaiStream(fileName));
+                return new CodeWithScope(new KaitaiStream(fileName));
             }
 
-            public ElementsList(KaitaiStream p__io, Bson p__parent = null, Bson p__root = null) : base(p__io)
+            public CodeWithScope(KaitaiStream p__io, Bson.Element p__parent = null, Bson p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -171,21 +140,24 @@ namespace Kaitai
             }
             private void _read()
             {
-                _elements = new List<Element>();
-                {
-                    var i = 0;
-                    while (!m_io.IsEof) {
-                        _elements.Add(new Element(m_io, this, m_root));
-                        i++;
-                    }
-                }
+                _id = m_io.ReadS4le();
+                _source = new String(m_io, this, m_root);
+                _scope = new Bson(m_io, this, m_root);
             }
-            private List<Element> _elements;
+            private int _id;
+            private String _source;
+            private Bson _scope;
             private Bson m_root;
-            private Bson m_parent;
-            public List<Element> Elements { get { return _elements; } }
+            private Bson.Element m_parent;
+            public int Id { get { return _id; } }
+            public String Source { get { return _source; } }
+
+            /// <summary>
+            /// mapping from identifiers to values, representing the scope in which the string should be evaluated.
+            /// </summary>
+            public Bson Scope { get { return _scope; } }
             public Bson M_Root { get { return m_root; } }
-            public Bson M_Parent { get { return m_parent; } }
+            public Bson.Element M_Parent { get { return m_parent; } }
         }
         public partial class Cstring : KaitaiStruct
         {
@@ -215,14 +187,14 @@ namespace Kaitai
             public Bson M_Root { get { return m_root; } }
             public KaitaiStruct M_Parent { get { return m_parent; } }
         }
-        public partial class String : KaitaiStruct
+        public partial class DbPointer : KaitaiStruct
         {
-            public static String FromFile(string fileName)
+            public static DbPointer FromFile(string fileName)
             {
-                return new String(new KaitaiStream(fileName));
+                return new DbPointer(new KaitaiStream(fileName));
             }
 
-            public String(KaitaiStream p__io, KaitaiStruct p__parent = null, Bson p__root = null) : base(p__io)
+            public DbPointer(KaitaiStream p__io, Bson.Element p__parent = null, Bson p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -230,24 +202,17 @@ namespace Kaitai
             }
             private void _read()
             {
-                _len = m_io.ReadS4le();
-                _str = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes((Len - 1)));
-                _terminator = m_io.ReadBytes(1);
-                if (!((KaitaiStream.ByteArrayCompare(Terminator, new byte[] { 0 }) == 0)))
-                {
-                    throw new ValidationNotEqualError(new byte[] { 0 }, Terminator, M_Io, "/types/string/seq/2");
-                }
+                _namespace = new String(m_io, this, m_root);
+                _id = new ObjectId(m_io, this, m_root);
             }
-            private int _len;
-            private string _str;
-            private byte[] _terminator;
+            private String _namespace;
+            private ObjectId _id;
             private Bson m_root;
-            private KaitaiStruct m_parent;
-            public int Len { get { return _len; } }
-            public string Str { get { return _str; } }
-            public byte[] Terminator { get { return _terminator; } }
+            private Bson.Element m_parent;
+            public String Namespace { get { return _namespace; } }
+            public ObjectId Id { get { return _id; } }
             public Bson M_Root { get { return m_root; } }
-            public KaitaiStruct M_Parent { get { return m_parent; } }
+            public Bson.Element M_Parent { get { return m_parent; } }
         }
         public partial class Element : KaitaiStruct
         {
@@ -293,16 +258,60 @@ namespace Kaitai
                 _typeByte = ((BsonType) m_io.ReadU1());
                 _name = new Cstring(m_io, this, m_root);
                 switch (TypeByte) {
+                case BsonType.Array: {
+                    _content = new Bson(m_io, this, m_root);
+                    break;
+                }
+                case BsonType.BinData: {
+                    _content = new BinData(m_io, this, m_root);
+                    break;
+                }
+                case BsonType.Boolean: {
+                    _content = m_io.ReadU1();
+                    break;
+                }
                 case BsonType.CodeWithScope: {
                     _content = new CodeWithScope(m_io, this, m_root);
+                    break;
+                }
+                case BsonType.DbPointer: {
+                    _content = new DbPointer(m_io, this, m_root);
+                    break;
+                }
+                case BsonType.Document: {
+                    _content = new Bson(m_io, this, m_root);
+                    break;
+                }
+                case BsonType.Javascript: {
+                    _content = new String(m_io, this, m_root);
+                    break;
+                }
+                case BsonType.NumberDecimal: {
+                    _content = new F16(m_io, this, m_root);
+                    break;
+                }
+                case BsonType.NumberDouble: {
+                    _content = m_io.ReadF8le();
+                    break;
+                }
+                case BsonType.NumberInt: {
+                    _content = m_io.ReadS4le();
+                    break;
+                }
+                case BsonType.NumberLong: {
+                    _content = m_io.ReadS8le();
+                    break;
+                }
+                case BsonType.ObjectId: {
+                    _content = new ObjectId(m_io, this, m_root);
                     break;
                 }
                 case BsonType.RegEx: {
                     _content = new RegEx(m_io, this, m_root);
                     break;
                 }
-                case BsonType.NumberDouble: {
-                    _content = m_io.ReadF8le();
+                case BsonType.String: {
+                    _content = new String(m_io, this, m_root);
                     break;
                 }
                 case BsonType.Symbol: {
@@ -313,52 +322,8 @@ namespace Kaitai
                     _content = new Timestamp(m_io, this, m_root);
                     break;
                 }
-                case BsonType.NumberInt: {
-                    _content = m_io.ReadS4le();
-                    break;
-                }
-                case BsonType.Document: {
-                    _content = new Bson(m_io);
-                    break;
-                }
-                case BsonType.ObjectId: {
-                    _content = new ObjectId(m_io, this, m_root);
-                    break;
-                }
-                case BsonType.Javascript: {
-                    _content = new String(m_io, this, m_root);
-                    break;
-                }
                 case BsonType.UtcDatetime: {
                     _content = m_io.ReadS8le();
-                    break;
-                }
-                case BsonType.Boolean: {
-                    _content = m_io.ReadU1();
-                    break;
-                }
-                case BsonType.NumberLong: {
-                    _content = m_io.ReadS8le();
-                    break;
-                }
-                case BsonType.BinData: {
-                    _content = new BinData(m_io, this, m_root);
-                    break;
-                }
-                case BsonType.String: {
-                    _content = new String(m_io, this, m_root);
-                    break;
-                }
-                case BsonType.DbPointer: {
-                    _content = new DbPointer(m_io, this, m_root);
-                    break;
-                }
-                case BsonType.Array: {
-                    _content = new Bson(m_io);
-                    break;
-                }
-                case BsonType.NumberDecimal: {
-                    _content = new F16(m_io, this, m_root);
                     break;
                 }
                 }
@@ -374,14 +339,14 @@ namespace Kaitai
             public Bson M_Root { get { return m_root; } }
             public Bson.ElementsList M_Parent { get { return m_parent; } }
         }
-        public partial class DbPointer : KaitaiStruct
+        public partial class ElementsList : KaitaiStruct
         {
-            public static DbPointer FromFile(string fileName)
+            public static ElementsList FromFile(string fileName)
             {
-                return new DbPointer(new KaitaiStream(fileName));
+                return new ElementsList(new KaitaiStream(fileName));
             }
 
-            public DbPointer(KaitaiStream p__io, Bson.Element p__parent = null, Bson p__root = null) : base(p__io)
+            public ElementsList(KaitaiStream p__io, Bson p__parent = null, Bson p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -389,99 +354,21 @@ namespace Kaitai
             }
             private void _read()
             {
-                _namespace = new String(m_io, this, m_root);
-                _id = new ObjectId(m_io, this, m_root);
-            }
-            private String _namespace;
-            private ObjectId _id;
-            private Bson m_root;
-            private Bson.Element m_parent;
-            public String Namespace { get { return _namespace; } }
-            public ObjectId Id { get { return _id; } }
-            public Bson M_Root { get { return m_root; } }
-            public Bson.Element M_Parent { get { return m_parent; } }
-        }
-
-        /// <summary>
-        /// Implements unsigned 24-bit (3 byte) integer.
-        /// </summary>
-        public partial class U3 : KaitaiStruct
-        {
-            public static U3 FromFile(string fileName)
-            {
-                return new U3(new KaitaiStream(fileName));
-            }
-
-            public U3(KaitaiStream p__io, Bson.ObjectId p__parent = null, Bson p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_value = false;
-                _read();
-            }
-            private void _read()
-            {
-                _b1 = m_io.ReadU1();
-                _b2 = m_io.ReadU1();
-                _b3 = m_io.ReadU1();
-            }
-            private bool f_value;
-            private int _value;
-            public int Value
-            {
-                get
+                _elements = new List<Element>();
                 {
-                    if (f_value)
-                        return _value;
-                    _value = (int) (((B1 | (B2 << 8)) | (B3 << 16)));
-                    f_value = true;
-                    return _value;
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _elements.Add(new Element(m_io, this, m_root));
+                        i++;
+                    }
                 }
             }
-            private byte _b1;
-            private byte _b2;
-            private byte _b3;
+            private List<Element> _elements;
             private Bson m_root;
-            private Bson.ObjectId m_parent;
-            public byte B1 { get { return _b1; } }
-            public byte B2 { get { return _b2; } }
-            public byte B3 { get { return _b3; } }
+            private Bson m_parent;
+            public List<Element> Elements { get { return _elements; } }
             public Bson M_Root { get { return m_root; } }
-            public Bson.ObjectId M_Parent { get { return m_parent; } }
-        }
-        public partial class CodeWithScope : KaitaiStruct
-        {
-            public static CodeWithScope FromFile(string fileName)
-            {
-                return new CodeWithScope(new KaitaiStream(fileName));
-            }
-
-            public CodeWithScope(KaitaiStream p__io, Bson.Element p__parent = null, Bson p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _id = m_io.ReadS4le();
-                _source = new String(m_io, this, m_root);
-                _scope = new Bson(m_io);
-            }
-            private int _id;
-            private String _source;
-            private Bson _scope;
-            private Bson m_root;
-            private Bson.Element m_parent;
-            public int Id { get { return _id; } }
-            public String Source { get { return _source; } }
-
-            /// <summary>
-            /// mapping from identifiers to values, representing the scope in which the string should be evaluated.
-            /// </summary>
-            public Bson Scope { get { return _scope; } }
-            public Bson M_Root { get { return m_root; } }
-            public Bson.Element M_Parent { get { return m_parent; } }
+            public Bson M_Parent { get { return m_parent; } }
         }
 
         /// <summary>
@@ -592,6 +479,119 @@ namespace Kaitai
             public Cstring Options { get { return _options; } }
             public Bson M_Root { get { return m_root; } }
             public Bson.Element M_Parent { get { return m_parent; } }
+        }
+        public partial class String : KaitaiStruct
+        {
+            public static String FromFile(string fileName)
+            {
+                return new String(new KaitaiStream(fileName));
+            }
+
+            public String(KaitaiStream p__io, KaitaiStruct p__parent = null, Bson p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _len = m_io.ReadS4le();
+                _str = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(Len - 1));
+                _terminator = m_io.ReadBytes(1);
+                if (!((KaitaiStream.ByteArrayCompare(_terminator, new byte[] { 0 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 0 }, _terminator, m_io, "/types/string/seq/2");
+                }
+            }
+            private int _len;
+            private string _str;
+            private byte[] _terminator;
+            private Bson m_root;
+            private KaitaiStruct m_parent;
+            public int Len { get { return _len; } }
+            public string Str { get { return _str; } }
+            public byte[] Terminator { get { return _terminator; } }
+            public Bson M_Root { get { return m_root; } }
+            public KaitaiStruct M_Parent { get { return m_parent; } }
+        }
+
+        /// <summary>
+        /// Special internal type used by MongoDB replication and sharding. First 4 bytes are an increment, second 4 are a timestamp.
+        /// </summary>
+        public partial class Timestamp : KaitaiStruct
+        {
+            public static Timestamp FromFile(string fileName)
+            {
+                return new Timestamp(new KaitaiStream(fileName));
+            }
+
+            public Timestamp(KaitaiStream p__io, Bson.Element p__parent = null, Bson p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _increment = m_io.ReadU4le();
+                _timestamp = m_io.ReadU4le();
+            }
+            private uint _increment;
+            private uint _timestamp;
+            private Bson m_root;
+            private Bson.Element m_parent;
+            public uint Increment { get { return _increment; } }
+            public uint Timestamp { get { return _timestamp; } }
+            public Bson M_Root { get { return m_root; } }
+            public Bson.Element M_Parent { get { return m_parent; } }
+        }
+
+        /// <summary>
+        /// Implements unsigned 24-bit (3 byte) integer.
+        /// </summary>
+        public partial class U3 : KaitaiStruct
+        {
+            public static U3 FromFile(string fileName)
+            {
+                return new U3(new KaitaiStream(fileName));
+            }
+
+            public U3(KaitaiStream p__io, Bson.ObjectId p__parent = null, Bson p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_value = false;
+                _read();
+            }
+            private void _read()
+            {
+                _b1 = m_io.ReadU1();
+                _b2 = m_io.ReadU1();
+                _b3 = m_io.ReadU1();
+            }
+            private bool f_value;
+            private int _value;
+            public int Value
+            {
+                get
+                {
+                    if (f_value)
+                        return _value;
+                    f_value = true;
+                    _value = (int) ((B1 | B2 << 8) | B3 << 16);
+                    return _value;
+                }
+            }
+            private byte _b1;
+            private byte _b2;
+            private byte _b3;
+            private Bson m_root;
+            private Bson.ObjectId m_parent;
+            public byte B1 { get { return _b1; } }
+            public byte B2 { get { return _b2; } }
+            public byte B3 { get { return _b3; } }
+            public Bson M_Root { get { return m_root; } }
+            public Bson.ObjectId M_Parent { get { return m_parent; } }
         }
         private int _len;
         private ElementsList _fields;

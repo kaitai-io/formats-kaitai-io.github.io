@@ -28,6 +28,18 @@ type
     `rawF10`*: seq[byte]
     `mapperInst`: int
     `mapperInstFlag`: bool
+  Ines_Header_F10* = ref object of KaitaiStruct
+    `reserved1`*: uint64
+    `busConflict`*: bool
+    `prgRam`*: bool
+    `reserved2`*: uint64
+    `tvSystem`*: Ines_Header_F10_TvSystem
+    `parent`*: Ines_Header
+  Ines_Header_F10_TvSystem* = enum
+    ntsc = 0
+    dual1 = 1
+    pal = 2
+    dual2 = 3
   Ines_Header_F6* = ref object of KaitaiStruct
     `lowerMapper`*: uint64
     `fourScreen`*: bool
@@ -51,18 +63,6 @@ type
   Ines_Header_F9_TvSystem* = enum
     ntsc = 0
     pal = 1
-  Ines_Header_F10* = ref object of KaitaiStruct
-    `reserved1`*: uint64
-    `busConflict`*: bool
-    `prgRam`*: bool
-    `reserved2`*: uint64
-    `tvSystem`*: Ines_Header_F10_TvSystem
-    `parent`*: Ines_Header
-  Ines_Header_F10_TvSystem* = enum
-    ntsc = 0
-    dual1 = 1
-    pal = 2
-    dual2 = 3
   Ines_Playchoice10* = ref object of KaitaiStruct
     `instRom`*: seq[byte]
     `prom`*: Ines_Playchoice10_Prom
@@ -74,10 +74,10 @@ type
 
 proc read*(_: typedesc[Ines], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Ines
 proc read*(_: typedesc[Ines_Header], io: KaitaiStream, root: KaitaiStruct, parent: Ines): Ines_Header
+proc read*(_: typedesc[Ines_Header_F10], io: KaitaiStream, root: KaitaiStruct, parent: Ines_Header): Ines_Header_F10
 proc read*(_: typedesc[Ines_Header_F6], io: KaitaiStream, root: KaitaiStruct, parent: Ines_Header): Ines_Header_F6
 proc read*(_: typedesc[Ines_Header_F7], io: KaitaiStream, root: KaitaiStruct, parent: Ines_Header): Ines_Header_F7
 proc read*(_: typedesc[Ines_Header_F9], io: KaitaiStream, root: KaitaiStruct, parent: Ines_Header): Ines_Header_F9
-proc read*(_: typedesc[Ines_Header_F10], io: KaitaiStream, root: KaitaiStruct, parent: Ines_Header): Ines_Header_F10
 proc read*(_: typedesc[Ines_Playchoice10], io: KaitaiStream, root: KaitaiStruct, parent: Ines): Ines_Playchoice10
 proc read*(_: typedesc[Ines_Playchoice10_Prom], io: KaitaiStream, root: KaitaiStruct, parent: Ines_Playchoice10): Ines_Playchoice10_Prom
 
@@ -103,9 +103,9 @@ proc read*(_: typedesc[Ines], io: KaitaiStream, root: KaitaiStruct, parent: Kait
   if this.header.f6.trainer:
     let trainerExpr = this.io.readBytes(int(512))
     this.trainer = trainerExpr
-  let prgRomExpr = this.io.readBytes(int((this.header.lenPrgRom * 16384)))
+  let prgRomExpr = this.io.readBytes(int(this.header.lenPrgRom * 16384))
   this.prgRom = prgRomExpr
-  let chrRomExpr = this.io.readBytes(int((this.header.lenChrRom * 8192)))
+  let chrRomExpr = this.io.readBytes(int(this.header.lenChrRom * 8192))
   this.chrRom = chrRomExpr
   if this.header.f7.playchoice10:
     let playchoice10Expr = Ines_Playchoice10.read(this.io, this.root, this)
@@ -179,13 +179,51 @@ proc mapper(this: Ines_Header): int =
   ]##
   if this.mapperInstFlag:
     return this.mapperInst
-  let mapperInstExpr = int((this.f6.lowerMapper or (this.f7.upperMapper shl 4)))
+  let mapperInstExpr = int(this.f6.lowerMapper or this.f7.upperMapper shl 4)
   this.mapperInst = mapperInstExpr
   this.mapperInstFlag = true
   return this.mapperInst
 
 proc fromFile*(_: typedesc[Ines_Header], filename: string): Ines_Header =
   Ines_Header.read(newKaitaiFileStream(filename), nil, nil)
+
+
+##[
+@see <a href="https://www.nesdev.org/wiki/INES#Flags_10">Source</a>
+]##
+proc read*(_: typedesc[Ines_Header_F10], io: KaitaiStream, root: KaitaiStruct, parent: Ines_Header): Ines_Header_F10 =
+  template this: untyped = result
+  this = new(Ines_Header_F10)
+  let root = if root == nil: cast[Ines](this) else: cast[Ines](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let reserved1Expr = this.io.readBitsIntBe(2)
+  this.reserved1 = reserved1Expr
+
+  ##[
+  If 0, no bus conflicts. If 1, bus conflicts.
+  ]##
+  let busConflictExpr = this.io.readBitsIntBe(1) != 0
+  this.busConflict = busConflictExpr
+
+  ##[
+  If 0, PRG ram is present. If 1, not present.
+  ]##
+  let prgRamExpr = this.io.readBitsIntBe(1) != 0
+  this.prgRam = prgRamExpr
+  let reserved2Expr = this.io.readBitsIntBe(2)
+  this.reserved2 = reserved2Expr
+
+  ##[
+  if 0, NTSC. If 2, PAL. If 1 or 3, dual compatible.
+  ]##
+  let tvSystemExpr = Ines_Header_F10_TvSystem(this.io.readBitsIntBe(2))
+  this.tvSystem = tvSystemExpr
+
+proc fromFile*(_: typedesc[Ines_Header_F10], filename: string): Ines_Header_F10 =
+  Ines_Header_F10.read(newKaitaiFileStream(filename), nil, nil)
 
 
 ##[
@@ -296,44 +334,6 @@ proc read*(_: typedesc[Ines_Header_F9], io: KaitaiStream, root: KaitaiStruct, pa
 
 proc fromFile*(_: typedesc[Ines_Header_F9], filename: string): Ines_Header_F9 =
   Ines_Header_F9.read(newKaitaiFileStream(filename), nil, nil)
-
-
-##[
-@see <a href="https://www.nesdev.org/wiki/INES#Flags_10">Source</a>
-]##
-proc read*(_: typedesc[Ines_Header_F10], io: KaitaiStream, root: KaitaiStruct, parent: Ines_Header): Ines_Header_F10 =
-  template this: untyped = result
-  this = new(Ines_Header_F10)
-  let root = if root == nil: cast[Ines](this) else: cast[Ines](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let reserved1Expr = this.io.readBitsIntBe(2)
-  this.reserved1 = reserved1Expr
-
-  ##[
-  If 0, no bus conflicts. If 1, bus conflicts.
-  ]##
-  let busConflictExpr = this.io.readBitsIntBe(1) != 0
-  this.busConflict = busConflictExpr
-
-  ##[
-  If 0, PRG ram is present. If 1, not present.
-  ]##
-  let prgRamExpr = this.io.readBitsIntBe(1) != 0
-  this.prgRam = prgRamExpr
-  let reserved2Expr = this.io.readBitsIntBe(2)
-  this.reserved2 = reserved2Expr
-
-  ##[
-  if 0, NTSC. If 2, PAL. If 1 or 3, dual compatible.
-  ]##
-  let tvSystemExpr = Ines_Header_F10_TvSystem(this.io.readBitsIntBe(2))
-  this.tvSystem = tvSystemExpr
-
-proc fromFile*(_: typedesc[Ines_Header_F10], filename: string): Ines_Header_F10 =
-  Ines_Header_F10.read(newKaitaiFileStream(filename), nil, nil)
 
 
 ##[

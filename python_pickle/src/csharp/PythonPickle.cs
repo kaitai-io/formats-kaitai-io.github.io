@@ -137,87 +137,16 @@ namespace Kaitai
         /// <summary>
         /// Length prefixed string, between 0 and 2**64-1 bytes long.
         /// 
-        /// Only a 64-bit build of Python would produce a pickle containing strings
-        /// large enough to need this type. Such a pickle could not be unpickled on
-        /// a 32-bit build of Python, because the string would be larger than
-        /// `sys.maxsize`.
+        /// The contents are deserilised into a `bytearray` object.
         /// </summary>
-        public partial class Unicodestring8 : KaitaiStruct
+        public partial class Bytearray8 : KaitaiStruct
         {
-            public static Unicodestring8 FromFile(string fileName)
+            public static Bytearray8 FromFile(string fileName)
             {
-                return new Unicodestring8(new KaitaiStream(fileName));
+                return new Bytearray8(new KaitaiStream(fileName));
             }
 
-            public Unicodestring8(KaitaiStream p__io, PythonPickle.Op p__parent = null, PythonPickle p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _len = m_io.ReadU8le();
-                _val = System.Text.Encoding.GetEncoding("utf8").GetString(m_io.ReadBytes(Len));
-            }
-            private ulong _len;
-            private string _val;
-            private PythonPickle m_root;
-            private PythonPickle.Op m_parent;
-            public ulong Len { get { return _len; } }
-            public string Val { get { return _val; } }
-            public PythonPickle M_Root { get { return m_root; } }
-            public PythonPickle.Op M_Parent { get { return m_parent; } }
-        }
-
-        /// <summary>
-        /// Large signed integer, in the range -2**(8*255-1) to 2**(8*255-1)-1,
-        /// encoded as two's complement.
-        /// </summary>
-        public partial class Long1 : KaitaiStruct
-        {
-            public static Long1 FromFile(string fileName)
-            {
-                return new Long1(new KaitaiStream(fileName));
-            }
-
-            public Long1(KaitaiStream p__io, PythonPickle.Op p__parent = null, PythonPickle p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _len = m_io.ReadU1();
-                _val = m_io.ReadBytes(Len);
-            }
-            private byte _len;
-            private byte[] _val;
-            private PythonPickle m_root;
-            private PythonPickle.Op m_parent;
-            public byte Len { get { return _len; } }
-            public byte[] Val { get { return _val; } }
-            public PythonPickle M_Root { get { return m_root; } }
-            public PythonPickle.Op M_Parent { get { return m_parent; } }
-        }
-
-        /// <summary>
-        /// Length prefixed string, between 0 and 2**64-1 bytes long.
-        /// 
-        /// Only a 64-bit build of Python would produce a pickle containing strings
-        /// large enough to need this type. Such a pickle could not be unpickled on
-        /// a 32-bit build of Python, because the string would be larger than
-        /// `sys.maxsize`.
-        /// </summary>
-        public partial class Bytes8 : KaitaiStruct
-        {
-            public static Bytes8 FromFile(string fileName)
-            {
-                return new Bytes8(new KaitaiStream(fileName));
-            }
-
-            public Bytes8(KaitaiStream p__io, PythonPickle.Op p__parent = null, PythonPickle p__root = null) : base(p__io)
+            public Bytearray8(KaitaiStream p__io, PythonPickle.Op p__parent = null, PythonPickle p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -301,16 +230,21 @@ namespace Kaitai
         }
 
         /// <summary>
-        /// Some opcodes take no argument, this empty type is used for them.
+        /// Length prefixed string, between 0 and 2**64-1 bytes long.
+        /// 
+        /// Only a 64-bit build of Python would produce a pickle containing strings
+        /// large enough to need this type. Such a pickle could not be unpickled on
+        /// a 32-bit build of Python, because the string would be larger than
+        /// `sys.maxsize`.
         /// </summary>
-        public partial class NoArg : KaitaiStruct
+        public partial class Bytes8 : KaitaiStruct
         {
-            public static NoArg FromFile(string fileName)
+            public static Bytes8 FromFile(string fileName)
             {
-                return new NoArg(new KaitaiStream(fileName));
+                return new Bytes8(new KaitaiStream(fileName));
             }
 
-            public NoArg(KaitaiStream p__io, PythonPickle.Op p__parent = null, PythonPickle p__root = null) : base(p__io)
+            public Bytes8(KaitaiStream p__io, PythonPickle.Op p__parent = null, PythonPickle p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -318,39 +252,17 @@ namespace Kaitai
             }
             private void _read()
             {
+                _len = m_io.ReadU8le();
+                _val = m_io.ReadBytes(Len);
             }
+            private ulong _len;
+            private byte[] _val;
             private PythonPickle m_root;
             private PythonPickle.Op m_parent;
+            public ulong Len { get { return _len; } }
+            public byte[] Val { get { return _val; } }
             public PythonPickle M_Root { get { return m_root; } }
             public PythonPickle.Op M_Parent { get { return m_parent; } }
-        }
-
-        /// <summary>
-        /// Unquoted string, does not contain string escapes.
-        /// </summary>
-        public partial class StringnlNoescape : KaitaiStruct
-        {
-            public static StringnlNoescape FromFile(string fileName)
-            {
-                return new StringnlNoescape(new KaitaiStream(fileName));
-            }
-
-            public StringnlNoescape(KaitaiStream p__io, KaitaiStruct p__parent = null, PythonPickle p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _val = System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytesTerm(10, false, true, true));
-            }
-            private string _val;
-            private PythonPickle m_root;
-            private KaitaiStruct m_parent;
-            public string Val { get { return _val; } }
-            public PythonPickle M_Root { get { return m_root; } }
-            public KaitaiStruct M_Parent { get { return m_parent; } }
         }
 
         /// <summary>
@@ -371,7 +283,7 @@ namespace Kaitai
             }
             private void _read()
             {
-                _val = System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytesTerm(10, false, true, true));
+                _val = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytesTerm(10, false, true, true));
             }
             private string _val;
             private PythonPickle m_root;
@@ -382,16 +294,19 @@ namespace Kaitai
         }
 
         /// <summary>
-        /// Length prefixed string, between 0 and 2**32-1 bytes long
+        /// Integer or boolean, encoded with the ASCII characters [0-9-].
+        /// 
+        /// The values '00' and '01' encode the Python values `False` and `True`.
+        /// Normally a value would not contain leading '0' characters.
         /// </summary>
-        public partial class Unicodestring4 : KaitaiStruct
+        public partial class DecimalnlShort : KaitaiStruct
         {
-            public static Unicodestring4 FromFile(string fileName)
+            public static DecimalnlShort FromFile(string fileName)
             {
-                return new Unicodestring4(new KaitaiStream(fileName));
+                return new DecimalnlShort(new KaitaiStream(fileName));
             }
 
-            public Unicodestring4(KaitaiStream p__io, PythonPickle.Op p__parent = null, PythonPickle p__root = null) : base(p__io)
+            public DecimalnlShort(KaitaiStream p__io, PythonPickle.Op p__parent = null, PythonPickle p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -399,30 +314,28 @@ namespace Kaitai
             }
             private void _read()
             {
-                _len = m_io.ReadU4le();
-                _val = System.Text.Encoding.GetEncoding("utf8").GetString(m_io.ReadBytes(Len));
+                _val = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytesTerm(10, false, true, true));
             }
-            private uint _len;
             private string _val;
             private PythonPickle m_root;
             private PythonPickle.Op m_parent;
-            public uint Len { get { return _len; } }
             public string Val { get { return _val; } }
             public PythonPickle M_Root { get { return m_root; } }
             public PythonPickle.Op M_Parent { get { return m_parent; } }
         }
 
         /// <summary>
-        /// Unquoted string, containing Python Unicode escapes.
+        /// Double float, encoded with the ASCII characters [0-9.e+-], '-inf', 'inf',
+        /// or 'nan'.
         /// </summary>
-        public partial class Unicodestringnl : KaitaiStruct
+        public partial class Floatnl : KaitaiStruct
         {
-            public static Unicodestringnl FromFile(string fileName)
+            public static Floatnl FromFile(string fileName)
             {
-                return new Unicodestringnl(new KaitaiStream(fileName));
+                return new Floatnl(new KaitaiStream(fileName));
             }
 
-            public Unicodestringnl(KaitaiStream p__io, PythonPickle.Op p__parent = null, PythonPickle p__root = null) : base(p__io)
+            public Floatnl(KaitaiStream p__io, PythonPickle.Op p__parent = null, PythonPickle p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -430,12 +343,44 @@ namespace Kaitai
             }
             private void _read()
             {
-                _val = System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytesTerm(10, false, true, true));
+                _val = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytesTerm(10, false, true, true));
             }
             private string _val;
             private PythonPickle m_root;
             private PythonPickle.Op m_parent;
             public string Val { get { return _val; } }
+            public PythonPickle M_Root { get { return m_root; } }
+            public PythonPickle.Op M_Parent { get { return m_parent; } }
+        }
+
+        /// <summary>
+        /// Large signed integer, in the range -2**(8*255-1) to 2**(8*255-1)-1,
+        /// encoded as two's complement.
+        /// </summary>
+        public partial class Long1 : KaitaiStruct
+        {
+            public static Long1 FromFile(string fileName)
+            {
+                return new Long1(new KaitaiStream(fileName));
+            }
+
+            public Long1(KaitaiStream p__io, PythonPickle.Op p__parent = null, PythonPickle p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _len = m_io.ReadU1();
+                _val = m_io.ReadBytes(Len);
+            }
+            private byte _len;
+            private byte[] _val;
+            private PythonPickle m_root;
+            private PythonPickle.Op m_parent;
+            public byte Len { get { return _len; } }
+            public byte[] Val { get { return _val; } }
             public PythonPickle M_Root { get { return m_root; } }
             public PythonPickle.Op M_Parent { get { return m_parent; } }
         }
@@ -470,6 +415,342 @@ namespace Kaitai
             public byte[] Val { get { return _val; } }
             public PythonPickle M_Root { get { return m_root; } }
             public PythonPickle.Op M_Parent { get { return m_parent; } }
+        }
+
+        /// <summary>
+        /// Some opcodes take no argument, this empty type is used for them.
+        /// </summary>
+        public partial class NoArg : KaitaiStruct
+        {
+            public static NoArg FromFile(string fileName)
+            {
+                return new NoArg(new KaitaiStream(fileName));
+            }
+
+            public NoArg(KaitaiStream p__io, PythonPickle.Op p__parent = null, PythonPickle p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+            }
+            private PythonPickle m_root;
+            private PythonPickle.Op m_parent;
+            public PythonPickle M_Root { get { return m_root; } }
+            public PythonPickle.Op M_Parent { get { return m_parent; } }
+        }
+        public partial class Op : KaitaiStruct
+        {
+            public static Op FromFile(string fileName)
+            {
+                return new Op(new KaitaiStream(fileName));
+            }
+
+            public Op(KaitaiStream p__io, PythonPickle p__parent = null, PythonPickle p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _code = ((PythonPickle.Opcode) m_io.ReadU1());
+                switch (Code) {
+                case PythonPickle.Opcode.Additems: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Append: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Appends: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Binbytes: {
+                    _arg = new Bytes4(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Binbytes8: {
+                    _arg = new Bytes8(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Binfloat: {
+                    _arg = m_io.ReadF8be();
+                    break;
+                }
+                case PythonPickle.Opcode.Binget: {
+                    _arg = m_io.ReadU1();
+                    break;
+                }
+                case PythonPickle.Opcode.Binint: {
+                    _arg = m_io.ReadS4le();
+                    break;
+                }
+                case PythonPickle.Opcode.Binint1: {
+                    _arg = m_io.ReadU1();
+                    break;
+                }
+                case PythonPickle.Opcode.Binint2: {
+                    _arg = m_io.ReadU2le();
+                    break;
+                }
+                case PythonPickle.Opcode.Binpersid: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Binput: {
+                    _arg = m_io.ReadU1();
+                    break;
+                }
+                case PythonPickle.Opcode.Binstring: {
+                    _arg = new String4(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Binunicode: {
+                    _arg = new Unicodestring4(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Binunicode8: {
+                    _arg = new Unicodestring8(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Build: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Bytearray8: {
+                    _arg = new Bytearray8(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Dict: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Dup: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.EmptyDict: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.EmptyList: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.EmptySet: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.EmptyTuple: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Ext1: {
+                    _arg = m_io.ReadU1();
+                    break;
+                }
+                case PythonPickle.Opcode.Ext2: {
+                    _arg = m_io.ReadU2le();
+                    break;
+                }
+                case PythonPickle.Opcode.Ext4: {
+                    _arg = m_io.ReadU4le();
+                    break;
+                }
+                case PythonPickle.Opcode.Float: {
+                    _arg = new Floatnl(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Frame: {
+                    _arg = m_io.ReadU8le();
+                    break;
+                }
+                case PythonPickle.Opcode.Frozenset: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Get: {
+                    _arg = new DecimalnlShort(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.GlobalOpcode: {
+                    _arg = new StringnlNoescapePair(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Inst: {
+                    _arg = new StringnlNoescapePair(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Int: {
+                    _arg = new DecimalnlShort(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.List: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Long: {
+                    _arg = new DecimalnlLong(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Long1: {
+                    _arg = new Long1(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Long4: {
+                    _arg = new Long4(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.LongBinget: {
+                    _arg = m_io.ReadU4le();
+                    break;
+                }
+                case PythonPickle.Opcode.LongBinput: {
+                    _arg = m_io.ReadU4le();
+                    break;
+                }
+                case PythonPickle.Opcode.Mark: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Memoize: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Newfalse: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Newobj: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.NewobjEx: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Newtrue: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.NextBuffer: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.None: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Obj: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Persid: {
+                    _arg = new StringnlNoescape(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Pop: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.PopMark: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Proto: {
+                    _arg = m_io.ReadU1();
+                    break;
+                }
+                case PythonPickle.Opcode.Put: {
+                    _arg = new DecimalnlShort(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.ReadonlyBuffer: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Reduce: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Setitem: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Setitems: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.ShortBinbytes: {
+                    _arg = new Bytes1(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.ShortBinstring: {
+                    _arg = new String1(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.ShortBinunicode: {
+                    _arg = new Unicodestring1(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.StackGlobal: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Stop: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.String: {
+                    _arg = new Stringnl(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Tuple: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Tuple1: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Tuple2: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Tuple3: {
+                    _arg = new NoArg(m_io, this, m_root);
+                    break;
+                }
+                case PythonPickle.Opcode.Unicode: {
+                    _arg = new Unicodestringnl(m_io, this, m_root);
+                    break;
+                }
+                }
+            }
+            private Opcode _code;
+            private object _arg;
+            private PythonPickle m_root;
+            private PythonPickle m_parent;
+
+            /// <summary>
+            /// Operation code that determines which action should be
+            /// performed next by the Pickle Virtual Machine. Some opcodes
+            /// are only available in later versions of the Pickle protocol.
+            /// </summary>
+            public Opcode Code { get { return _code; } }
+
+            /// <summary>
+            /// Optional argument for the operation. Data type and length
+            /// are determined by the value of the opcode.
+            /// </summary>
+            public object Arg { get { return _arg; } }
+            public PythonPickle M_Root { get { return m_root; } }
+            public PythonPickle M_Parent { get { return m_parent; } }
         }
 
         /// <summary>
@@ -519,160 +800,6 @@ namespace Kaitai
         }
 
         /// <summary>
-        /// Length prefixed string, between 0 and 2**64-1 bytes long.
-        /// 
-        /// The contents are deserilised into a `bytearray` object.
-        /// </summary>
-        public partial class Bytearray8 : KaitaiStruct
-        {
-            public static Bytearray8 FromFile(string fileName)
-            {
-                return new Bytearray8(new KaitaiStream(fileName));
-            }
-
-            public Bytearray8(KaitaiStream p__io, PythonPickle.Op p__parent = null, PythonPickle p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _len = m_io.ReadU8le();
-                _val = m_io.ReadBytes(Len);
-            }
-            private ulong _len;
-            private byte[] _val;
-            private PythonPickle m_root;
-            private PythonPickle.Op m_parent;
-            public ulong Len { get { return _len; } }
-            public byte[] Val { get { return _val; } }
-            public PythonPickle M_Root { get { return m_root; } }
-            public PythonPickle.Op M_Parent { get { return m_parent; } }
-        }
-
-        /// <summary>
-        /// Integer or boolean, encoded with the ASCII characters [0-9-].
-        /// 
-        /// The values '00' and '01' encode the Python values `False` and `True`.
-        /// Normally a value would not contain leading '0' characters.
-        /// </summary>
-        public partial class DecimalnlShort : KaitaiStruct
-        {
-            public static DecimalnlShort FromFile(string fileName)
-            {
-                return new DecimalnlShort(new KaitaiStream(fileName));
-            }
-
-            public DecimalnlShort(KaitaiStream p__io, PythonPickle.Op p__parent = null, PythonPickle p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _val = System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytesTerm(10, false, true, true));
-            }
-            private string _val;
-            private PythonPickle m_root;
-            private PythonPickle.Op m_parent;
-            public string Val { get { return _val; } }
-            public PythonPickle M_Root { get { return m_root; } }
-            public PythonPickle.Op M_Parent { get { return m_parent; } }
-        }
-
-        /// <summary>
-        /// Length prefixed string, between 0 and 255 bytes long
-        /// </summary>
-        public partial class Unicodestring1 : KaitaiStruct
-        {
-            public static Unicodestring1 FromFile(string fileName)
-            {
-                return new Unicodestring1(new KaitaiStream(fileName));
-            }
-
-            public Unicodestring1(KaitaiStream p__io, PythonPickle.Op p__parent = null, PythonPickle p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _len = m_io.ReadU1();
-                _val = System.Text.Encoding.GetEncoding("utf8").GetString(m_io.ReadBytes(Len));
-            }
-            private byte _len;
-            private string _val;
-            private PythonPickle m_root;
-            private PythonPickle.Op m_parent;
-            public byte Len { get { return _len; } }
-            public string Val { get { return _val; } }
-            public PythonPickle M_Root { get { return m_root; } }
-            public PythonPickle.Op M_Parent { get { return m_parent; } }
-        }
-
-        /// <summary>
-        /// Quoted string, possibly containing Python string escapes.
-        /// </summary>
-        public partial class Stringnl : KaitaiStruct
-        {
-            public static Stringnl FromFile(string fileName)
-            {
-                return new Stringnl(new KaitaiStream(fileName));
-            }
-
-            public Stringnl(KaitaiStream p__io, PythonPickle.Op p__parent = null, PythonPickle p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _val = System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytesTerm(10, false, true, true));
-            }
-            private string _val;
-            private PythonPickle m_root;
-            private PythonPickle.Op m_parent;
-            public string Val { get { return _val; } }
-            public PythonPickle M_Root { get { return m_root; } }
-            public PythonPickle.Op M_Parent { get { return m_parent; } }
-        }
-
-        /// <summary>
-        /// Pair of unquoted, unescaped strings.
-        /// </summary>
-        public partial class StringnlNoescapePair : KaitaiStruct
-        {
-            public static StringnlNoescapePair FromFile(string fileName)
-            {
-                return new StringnlNoescapePair(new KaitaiStream(fileName));
-            }
-
-            public StringnlNoescapePair(KaitaiStream p__io, PythonPickle.Op p__parent = null, PythonPickle p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _val1 = new StringnlNoescape(m_io, this, m_root);
-                _val2 = new StringnlNoescape(m_io, this, m_root);
-            }
-            private StringnlNoescape _val1;
-            private StringnlNoescape _val2;
-            private PythonPickle m_root;
-            private PythonPickle.Op m_parent;
-            public StringnlNoescape Val1 { get { return _val1; } }
-            public StringnlNoescape Val2 { get { return _val2; } }
-            public PythonPickle M_Root { get { return m_root; } }
-            public PythonPickle.Op M_Parent { get { return m_parent; } }
-        }
-
-        /// <summary>
         /// Length prefixed string, between 0 and 2**31-1 bytes long. Encoding is
         /// unspecified.
         /// 
@@ -711,14 +838,18 @@ namespace Kaitai
             public PythonPickle M_Root { get { return m_root; } }
             public PythonPickle.Op M_Parent { get { return m_parent; } }
         }
-        public partial class Op : KaitaiStruct
+
+        /// <summary>
+        /// Quoted string, possibly containing Python string escapes.
+        /// </summary>
+        public partial class Stringnl : KaitaiStruct
         {
-            public static Op FromFile(string fileName)
+            public static Stringnl FromFile(string fileName)
             {
-                return new Op(new KaitaiStream(fileName));
+                return new Stringnl(new KaitaiStream(fileName));
             }
 
-            public Op(KaitaiStream p__io, PythonPickle p__parent = null, PythonPickle p__root = null) : base(p__io)
+            public Stringnl(KaitaiStream p__io, PythonPickle.Op p__parent = null, PythonPickle p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -726,315 +857,27 @@ namespace Kaitai
             }
             private void _read()
             {
-                _code = ((PythonPickle.Opcode) m_io.ReadU1());
-                switch (Code) {
-                case PythonPickle.Opcode.Ext4: {
-                    _arg = m_io.ReadU4le();
-                    break;
-                }
-                case PythonPickle.Opcode.Tuple1: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Setitem: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.ReadonlyBuffer: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Stop: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Ext2: {
-                    _arg = m_io.ReadU2le();
-                    break;
-                }
-                case PythonPickle.Opcode.EmptyTuple: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Newtrue: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Long: {
-                    _arg = new DecimalnlLong(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Newobj: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Bytearray8: {
-                    _arg = new Bytearray8(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Put: {
-                    _arg = new DecimalnlShort(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.StackGlobal: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.PopMark: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Append: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Newfalse: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Binpersid: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Build: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.EmptyDict: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Tuple2: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Long4: {
-                    _arg = new Long4(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.NextBuffer: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Appends: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Binbytes: {
-                    _arg = new Bytes4(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Dup: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.List: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Proto: {
-                    _arg = m_io.ReadU1();
-                    break;
-                }
-                case PythonPickle.Opcode.Pop: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Frame: {
-                    _arg = m_io.ReadU8le();
-                    break;
-                }
-                case PythonPickle.Opcode.String: {
-                    _arg = new Stringnl(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Binunicode: {
-                    _arg = new Unicodestring4(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Float: {
-                    _arg = new Floatnl(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Reduce: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.GlobalOpcode: {
-                    _arg = new StringnlNoescapePair(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Binput: {
-                    _arg = m_io.ReadU1();
-                    break;
-                }
-                case PythonPickle.Opcode.Memoize: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Persid: {
-                    _arg = new StringnlNoescape(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Ext1: {
-                    _arg = m_io.ReadU1();
-                    break;
-                }
-                case PythonPickle.Opcode.None: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.ShortBinunicode: {
-                    _arg = new Unicodestring1(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Obj: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Binfloat: {
-                    _arg = m_io.ReadF8be();
-                    break;
-                }
-                case PythonPickle.Opcode.NewobjEx: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.EmptyList: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Tuple: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Binunicode8: {
-                    _arg = new Unicodestring8(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Binget: {
-                    _arg = m_io.ReadU1();
-                    break;
-                }
-                case PythonPickle.Opcode.Dict: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Binstring: {
-                    _arg = new String4(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Setitems: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Binint2: {
-                    _arg = m_io.ReadU2le();
-                    break;
-                }
-                case PythonPickle.Opcode.Binbytes8: {
-                    _arg = new Bytes8(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Binint1: {
-                    _arg = m_io.ReadU1();
-                    break;
-                }
-                case PythonPickle.Opcode.Inst: {
-                    _arg = new StringnlNoescapePair(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.LongBinget: {
-                    _arg = m_io.ReadU4le();
-                    break;
-                }
-                case PythonPickle.Opcode.LongBinput: {
-                    _arg = m_io.ReadU4le();
-                    break;
-                }
-                case PythonPickle.Opcode.Int: {
-                    _arg = new DecimalnlShort(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Binint: {
-                    _arg = m_io.ReadS4le();
-                    break;
-                }
-                case PythonPickle.Opcode.Unicode: {
-                    _arg = new Unicodestringnl(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Long1: {
-                    _arg = new Long1(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.ShortBinstring: {
-                    _arg = new String1(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Mark: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Frozenset: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Tuple3: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Additems: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.Get: {
-                    _arg = new DecimalnlShort(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.EmptySet: {
-                    _arg = new NoArg(m_io, this, m_root);
-                    break;
-                }
-                case PythonPickle.Opcode.ShortBinbytes: {
-                    _arg = new Bytes1(m_io, this, m_root);
-                    break;
-                }
-                }
+                _val = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytesTerm(10, false, true, true));
             }
-            private Opcode _code;
-            private object _arg;
+            private string _val;
             private PythonPickle m_root;
-            private PythonPickle m_parent;
-
-            /// <summary>
-            /// Operation code that determines which action should be
-            /// performed next by the Pickle Virtual Machine. Some opcodes
-            /// are only available in later versions of the Pickle protocol.
-            /// </summary>
-            public Opcode Code { get { return _code; } }
-
-            /// <summary>
-            /// Optional argument for the operation. Data type and length
-            /// are determined by the value of the opcode.
-            /// </summary>
-            public object Arg { get { return _arg; } }
+            private PythonPickle.Op m_parent;
+            public string Val { get { return _val; } }
             public PythonPickle M_Root { get { return m_root; } }
-            public PythonPickle M_Parent { get { return m_parent; } }
+            public PythonPickle.Op M_Parent { get { return m_parent; } }
         }
 
         /// <summary>
-        /// Double float, encoded with the ASCII characters [0-9.e+-], '-inf', 'inf',
-        /// or 'nan'.
+        /// Unquoted string, does not contain string escapes.
         /// </summary>
-        public partial class Floatnl : KaitaiStruct
+        public partial class StringnlNoescape : KaitaiStruct
         {
-            public static Floatnl FromFile(string fileName)
+            public static StringnlNoescape FromFile(string fileName)
             {
-                return new Floatnl(new KaitaiStream(fileName));
+                return new StringnlNoescape(new KaitaiStream(fileName));
             }
 
-            public Floatnl(KaitaiStream p__io, PythonPickle.Op p__parent = null, PythonPickle p__root = null) : base(p__io)
+            public StringnlNoescape(KaitaiStream p__io, KaitaiStruct p__parent = null, PythonPickle p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -1042,7 +885,164 @@ namespace Kaitai
             }
             private void _read()
             {
-                _val = System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytesTerm(10, false, true, true));
+                _val = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytesTerm(10, false, true, true));
+            }
+            private string _val;
+            private PythonPickle m_root;
+            private KaitaiStruct m_parent;
+            public string Val { get { return _val; } }
+            public PythonPickle M_Root { get { return m_root; } }
+            public KaitaiStruct M_Parent { get { return m_parent; } }
+        }
+
+        /// <summary>
+        /// Pair of unquoted, unescaped strings.
+        /// </summary>
+        public partial class StringnlNoescapePair : KaitaiStruct
+        {
+            public static StringnlNoescapePair FromFile(string fileName)
+            {
+                return new StringnlNoescapePair(new KaitaiStream(fileName));
+            }
+
+            public StringnlNoescapePair(KaitaiStream p__io, PythonPickle.Op p__parent = null, PythonPickle p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _val1 = new StringnlNoescape(m_io, this, m_root);
+                _val2 = new StringnlNoescape(m_io, this, m_root);
+            }
+            private StringnlNoescape _val1;
+            private StringnlNoescape _val2;
+            private PythonPickle m_root;
+            private PythonPickle.Op m_parent;
+            public StringnlNoescape Val1 { get { return _val1; } }
+            public StringnlNoescape Val2 { get { return _val2; } }
+            public PythonPickle M_Root { get { return m_root; } }
+            public PythonPickle.Op M_Parent { get { return m_parent; } }
+        }
+
+        /// <summary>
+        /// Length prefixed string, between 0 and 255 bytes long
+        /// </summary>
+        public partial class Unicodestring1 : KaitaiStruct
+        {
+            public static Unicodestring1 FromFile(string fileName)
+            {
+                return new Unicodestring1(new KaitaiStream(fileName));
+            }
+
+            public Unicodestring1(KaitaiStream p__io, PythonPickle.Op p__parent = null, PythonPickle p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _len = m_io.ReadU1();
+                _val = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(Len));
+            }
+            private byte _len;
+            private string _val;
+            private PythonPickle m_root;
+            private PythonPickle.Op m_parent;
+            public byte Len { get { return _len; } }
+            public string Val { get { return _val; } }
+            public PythonPickle M_Root { get { return m_root; } }
+            public PythonPickle.Op M_Parent { get { return m_parent; } }
+        }
+
+        /// <summary>
+        /// Length prefixed string, between 0 and 2**32-1 bytes long
+        /// </summary>
+        public partial class Unicodestring4 : KaitaiStruct
+        {
+            public static Unicodestring4 FromFile(string fileName)
+            {
+                return new Unicodestring4(new KaitaiStream(fileName));
+            }
+
+            public Unicodestring4(KaitaiStream p__io, PythonPickle.Op p__parent = null, PythonPickle p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _len = m_io.ReadU4le();
+                _val = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(Len));
+            }
+            private uint _len;
+            private string _val;
+            private PythonPickle m_root;
+            private PythonPickle.Op m_parent;
+            public uint Len { get { return _len; } }
+            public string Val { get { return _val; } }
+            public PythonPickle M_Root { get { return m_root; } }
+            public PythonPickle.Op M_Parent { get { return m_parent; } }
+        }
+
+        /// <summary>
+        /// Length prefixed string, between 0 and 2**64-1 bytes long.
+        /// 
+        /// Only a 64-bit build of Python would produce a pickle containing strings
+        /// large enough to need this type. Such a pickle could not be unpickled on
+        /// a 32-bit build of Python, because the string would be larger than
+        /// `sys.maxsize`.
+        /// </summary>
+        public partial class Unicodestring8 : KaitaiStruct
+        {
+            public static Unicodestring8 FromFile(string fileName)
+            {
+                return new Unicodestring8(new KaitaiStream(fileName));
+            }
+
+            public Unicodestring8(KaitaiStream p__io, PythonPickle.Op p__parent = null, PythonPickle p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _len = m_io.ReadU8le();
+                _val = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(Len));
+            }
+            private ulong _len;
+            private string _val;
+            private PythonPickle m_root;
+            private PythonPickle.Op m_parent;
+            public ulong Len { get { return _len; } }
+            public string Val { get { return _val; } }
+            public PythonPickle M_Root { get { return m_root; } }
+            public PythonPickle.Op M_Parent { get { return m_parent; } }
+        }
+
+        /// <summary>
+        /// Unquoted string, containing Python Unicode escapes.
+        /// </summary>
+        public partial class Unicodestringnl : KaitaiStruct
+        {
+            public static Unicodestringnl FromFile(string fileName)
+            {
+                return new Unicodestringnl(new KaitaiStream(fileName));
+            }
+
+            public Unicodestringnl(KaitaiStream p__io, PythonPickle.Op p__parent = null, PythonPickle p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _val = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytesTerm(10, false, true, true));
             }
             private string _val;
             private PythonPickle m_root;

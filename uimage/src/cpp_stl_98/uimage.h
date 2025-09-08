@@ -3,11 +3,14 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class uimage_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
+#include <set>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -21,6 +24,60 @@ class uimage_t : public kaitai::kstruct {
 
 public:
     class uheader_t;
+
+    enum uimage_arch_t {
+        UIMAGE_ARCH_INVALID = 0,
+        UIMAGE_ARCH_ALPHA = 1,
+        UIMAGE_ARCH_ARM = 2,
+        UIMAGE_ARCH_I386 = 3,
+        UIMAGE_ARCH_IA64 = 4,
+        UIMAGE_ARCH_MIPS = 5,
+        UIMAGE_ARCH_MIPS64 = 6,
+        UIMAGE_ARCH_PPC = 7,
+        UIMAGE_ARCH_S390 = 8,
+        UIMAGE_ARCH_SH = 9,
+        UIMAGE_ARCH_SPARC = 10,
+        UIMAGE_ARCH_SPARC64 = 11,
+        UIMAGE_ARCH_M68K = 12,
+        UIMAGE_ARCH_NIOS = 13,
+        UIMAGE_ARCH_MICROBLAZE = 14,
+        UIMAGE_ARCH_NIOS2 = 15,
+        UIMAGE_ARCH_BLACKFIN = 16,
+        UIMAGE_ARCH_AVR32 = 17,
+        UIMAGE_ARCH_ST200 = 18,
+        UIMAGE_ARCH_SANDBOX = 19,
+        UIMAGE_ARCH_NDS32 = 20,
+        UIMAGE_ARCH_OPENRISC = 21,
+        UIMAGE_ARCH_ARM64 = 22,
+        UIMAGE_ARCH_ARC = 23,
+        UIMAGE_ARCH_X86_64 = 24,
+        UIMAGE_ARCH_XTENSA = 25,
+        UIMAGE_ARCH_RISCV = 26
+    };
+    static bool _is_defined_uimage_arch_t(uimage_arch_t v);
+
+private:
+    static const std::set<uimage_arch_t> _values_uimage_arch_t;
+    static std::set<uimage_arch_t> _build_values_uimage_arch_t();
+
+public:
+
+    enum uimage_comp_t {
+        UIMAGE_COMP_NONE = 0,
+        UIMAGE_COMP_GZIP = 1,
+        UIMAGE_COMP_BZIP2 = 2,
+        UIMAGE_COMP_LZMA = 3,
+        UIMAGE_COMP_LZO = 4,
+        UIMAGE_COMP_LZ4 = 5,
+        UIMAGE_COMP_ZSTD = 6
+    };
+    static bool _is_defined_uimage_comp_t(uimage_comp_t v);
+
+private:
+    static const std::set<uimage_comp_t> _values_uimage_comp_t;
+    static std::set<uimage_comp_t> _build_values_uimage_comp_t();
+
+public:
 
     enum uimage_os_t {
         UIMAGE_OS_INVALID = 0,
@@ -53,46 +110,13 @@ public:
         UIMAGE_OS_OPENSBI = 27,
         UIMAGE_OS_EFI = 28
     };
+    static bool _is_defined_uimage_os_t(uimage_os_t v);
 
-    enum uimage_arch_t {
-        UIMAGE_ARCH_INVALID = 0,
-        UIMAGE_ARCH_ALPHA = 1,
-        UIMAGE_ARCH_ARM = 2,
-        UIMAGE_ARCH_I386 = 3,
-        UIMAGE_ARCH_IA64 = 4,
-        UIMAGE_ARCH_MIPS = 5,
-        UIMAGE_ARCH_MIPS64 = 6,
-        UIMAGE_ARCH_PPC = 7,
-        UIMAGE_ARCH_S390 = 8,
-        UIMAGE_ARCH_SH = 9,
-        UIMAGE_ARCH_SPARC = 10,
-        UIMAGE_ARCH_SPARC64 = 11,
-        UIMAGE_ARCH_M68K = 12,
-        UIMAGE_ARCH_NIOS = 13,
-        UIMAGE_ARCH_MICROBLAZE = 14,
-        UIMAGE_ARCH_NIOS2 = 15,
-        UIMAGE_ARCH_BLACKFIN = 16,
-        UIMAGE_ARCH_AVR32 = 17,
-        UIMAGE_ARCH_ST200 = 18,
-        UIMAGE_ARCH_SANDBOX = 19,
-        UIMAGE_ARCH_NDS32 = 20,
-        UIMAGE_ARCH_OPENRISC = 21,
-        UIMAGE_ARCH_ARM64 = 22,
-        UIMAGE_ARCH_ARC = 23,
-        UIMAGE_ARCH_X86_64 = 24,
-        UIMAGE_ARCH_XTENSA = 25,
-        UIMAGE_ARCH_RISCV = 26
-    };
+private:
+    static const std::set<uimage_os_t> _values_uimage_os_t;
+    static std::set<uimage_os_t> _build_values_uimage_os_t();
 
-    enum uimage_comp_t {
-        UIMAGE_COMP_NONE = 0,
-        UIMAGE_COMP_GZIP = 1,
-        UIMAGE_COMP_BZIP2 = 2,
-        UIMAGE_COMP_LZMA = 3,
-        UIMAGE_COMP_LZO = 4,
-        UIMAGE_COMP_LZ4 = 5,
-        UIMAGE_COMP_ZSTD = 6
-    };
+public:
 
     enum uimage_type_t {
         UIMAGE_TYPE_INVALID = 0,
@@ -137,6 +161,13 @@ public:
         UIMAGE_TYPE_COPRO = 39,
         UIMAGE_TYPE_SUNXI_EGON = 40
     };
+    static bool _is_defined_uimage_type_t(uimage_type_t v);
+
+private:
+    static const std::set<uimage_type_t> _values_uimage_type_t;
+    static std::set<uimage_type_t> _build_values_uimage_type_t();
+
+public:
 
     uimage_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, uimage_t* p__root = 0);
 

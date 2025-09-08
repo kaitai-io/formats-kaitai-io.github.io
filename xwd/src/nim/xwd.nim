@@ -9,13 +9,13 @@ type
     `parent`*: KaitaiStruct
     `rawHdr`*: seq[byte]
     `rawColorMap`*: seq[seq[byte]]
+  Xwd_ByteOrder* = enum
+    le = 0
+    be = 1
   Xwd_PixmapFormat* = enum
     x_y_bitmap = 0
     x_y_pixmap = 1
     z_pixmap = 2
-  Xwd_ByteOrder* = enum
-    le = 0
-    be = 1
   Xwd_VisualClass* = enum
     static_gray = 0
     gray_scale = 1
@@ -23,6 +23,14 @@ type
     pseudo_color = 3
     true_color = 4
     direct_color = 5
+  Xwd_ColorMapEntry* = ref object of KaitaiStruct
+    `entryNumber`*: uint32
+    `red`*: uint16
+    `green`*: uint16
+    `blue`*: uint16
+    `flags`*: uint8
+    `padding`*: uint8
+    `parent`*: Xwd
   Xwd_Header* = ref object of KaitaiStruct
     `fileVersion`*: uint32
     `pixmapFormat`*: Xwd_PixmapFormat
@@ -50,18 +58,10 @@ type
     `windowBorderWidth`*: uint32
     `creator`*: string
     `parent`*: Xwd
-  Xwd_ColorMapEntry* = ref object of KaitaiStruct
-    `entryNumber`*: uint32
-    `red`*: uint16
-    `green`*: uint16
-    `blue`*: uint16
-    `flags`*: uint8
-    `padding`*: uint8
-    `parent`*: Xwd
 
 proc read*(_: typedesc[Xwd], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Xwd
-proc read*(_: typedesc[Xwd_Header], io: KaitaiStream, root: KaitaiStruct, parent: Xwd): Xwd_Header
 proc read*(_: typedesc[Xwd_ColorMapEntry], io: KaitaiStream, root: KaitaiStruct, parent: Xwd): Xwd_ColorMapEntry
+proc read*(_: typedesc[Xwd_Header], io: KaitaiStream, root: KaitaiStruct, parent: Xwd): Xwd_Header
 
 
 
@@ -91,7 +91,7 @@ proc read*(_: typedesc[Xwd], io: KaitaiStream, root: KaitaiStruct, parent: Kaita
   ]##
   let lenHeaderExpr = this.io.readU4be()
   this.lenHeader = lenHeaderExpr
-  let rawHdrExpr = this.io.readBytes(int((this.lenHeader - 4)))
+  let rawHdrExpr = this.io.readBytes(int(this.lenHeader - 4))
   this.rawHdr = rawHdrExpr
   let rawHdrIo = newKaitaiStream(rawHdrExpr)
   let hdrExpr = Xwd_Header.read(rawHdrIo, this.root, this)
@@ -105,6 +105,34 @@ proc read*(_: typedesc[Xwd], io: KaitaiStream, root: KaitaiStruct, parent: Kaita
 
 proc fromFile*(_: typedesc[Xwd], filename: string): Xwd =
   Xwd.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Xwd_ColorMapEntry], io: KaitaiStream, root: KaitaiStruct, parent: Xwd): Xwd_ColorMapEntry =
+  template this: untyped = result
+  this = new(Xwd_ColorMapEntry)
+  let root = if root == nil: cast[Xwd](this) else: cast[Xwd](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+
+  ##[
+  Number of the color map entry
+  ]##
+  let entryNumberExpr = this.io.readU4be()
+  this.entryNumber = entryNumberExpr
+  let redExpr = this.io.readU2be()
+  this.red = redExpr
+  let greenExpr = this.io.readU2be()
+  this.green = greenExpr
+  let blueExpr = this.io.readU2be()
+  this.blue = blueExpr
+  let flagsExpr = this.io.readU1()
+  this.flags = flagsExpr
+  let paddingExpr = this.io.readU1()
+  this.padding = paddingExpr
+
+proc fromFile*(_: typedesc[Xwd_ColorMapEntry], filename: string): Xwd_ColorMapEntry =
+  Xwd_ColorMapEntry.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[Xwd_Header], io: KaitaiStream, root: KaitaiStruct, parent: Xwd): Xwd_Header =
   template this: untyped = result
@@ -267,32 +295,4 @@ proc read*(_: typedesc[Xwd_Header], io: KaitaiStream, root: KaitaiStruct, parent
 
 proc fromFile*(_: typedesc[Xwd_Header], filename: string): Xwd_Header =
   Xwd_Header.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Xwd_ColorMapEntry], io: KaitaiStream, root: KaitaiStruct, parent: Xwd): Xwd_ColorMapEntry =
-  template this: untyped = result
-  this = new(Xwd_ColorMapEntry)
-  let root = if root == nil: cast[Xwd](this) else: cast[Xwd](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-
-  ##[
-  Number of the color map entry
-  ]##
-  let entryNumberExpr = this.io.readU4be()
-  this.entryNumber = entryNumberExpr
-  let redExpr = this.io.readU2be()
-  this.red = redExpr
-  let greenExpr = this.io.readU2be()
-  this.green = greenExpr
-  let blueExpr = this.io.readU2be()
-  this.blue = blueExpr
-  let flagsExpr = this.io.readU1()
-  this.flags = flagsExpr
-  let paddingExpr = this.io.readU1()
-  this.padding = paddingExpr
-
-proc fromFile*(_: typedesc[Xwd_ColorMapEntry], filename: string): Xwd_ColorMapEntry =
-  Xwd_ColorMapEntry.read(newKaitaiFileStream(filename), nil, nil)
 

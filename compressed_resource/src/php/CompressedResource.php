@@ -24,8 +24,8 @@
 
 namespace {
     class CompressedResource extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \CompressedResource $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\CompressedResource $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -60,28 +60,16 @@ namespace {
 
 namespace CompressedResource {
     class Header extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \CompressedResource $_parent = null, \CompressedResource $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\CompressedResource $_parent = null, ?\CompressedResource $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_commonPart = new \CompressedResource\Header\CommonPart($this->_io, $this, $this->_root);
-            $this->_m__raw_typeSpecificPartRawWithIo = $this->_io->readBytes(($this->commonPart()->lenHeader() - 12));
+            $this->_m__raw_typeSpecificPartRawWithIo = $this->_io->readBytes($this->commonPart()->lenHeader() - 12);
             $_io__raw_typeSpecificPartRawWithIo = new \Kaitai\Struct\Stream($this->_m__raw_typeSpecificPartRawWithIo);
             $this->_m_typeSpecificPartRawWithIo = new \BytesWithIo($_io__raw_typeSpecificPartRawWithIo);
-        }
-        protected $_m_typeSpecificPartRaw;
-
-        /**
-         * The type-specific part of the header,
-         * as a raw byte array.
-         */
-        public function typeSpecificPartRaw() {
-            if ($this->_m_typeSpecificPartRaw !== null)
-                return $this->_m_typeSpecificPartRaw;
-            $this->_m_typeSpecificPartRaw = $this->typeSpecificPartRawWithIo()->data();
-            return $this->_m_typeSpecificPartRaw;
         }
         protected $_m_typeSpecificPart;
 
@@ -105,6 +93,18 @@ namespace CompressedResource {
             }
             $io->seek($_pos);
             return $this->_m_typeSpecificPart;
+        }
+        protected $_m_typeSpecificPartRaw;
+
+        /**
+         * The type-specific part of the header,
+         * as a raw byte array.
+         */
+        public function typeSpecificPartRaw() {
+            if ($this->_m_typeSpecificPartRaw !== null)
+                return $this->_m_typeSpecificPartRaw;
+            $this->_m_typeSpecificPartRaw = $this->typeSpecificPartRawWithIo()->data();
+            return $this->_m_typeSpecificPartRaw;
         }
         protected $_m_commonPart;
         protected $_m_typeSpecificPartRawWithIo;
@@ -134,24 +134,24 @@ namespace CompressedResource {
 
 namespace CompressedResource\Header {
     class CommonPart extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \CompressedResource\Header $_parent = null, \CompressedResource $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\CompressedResource\Header $_parent = null, ?\CompressedResource $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic = $this->_io->readBytes(4);
-            if (!($this->magic() == "\xA8\x9F\x65\x72")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\xA8\x9F\x65\x72", $this->magic(), $this->_io(), "/types/header/types/common_part/seq/0");
+            if (!($this->_m_magic == "\xA8\x9F\x65\x72")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\xA8\x9F\x65\x72", $this->_m_magic, $this->_io, "/types/header/types/common_part/seq/0");
             }
             $this->_m_lenHeader = $this->_io->readU2be();
-            if (!($this->lenHeader() == 18)) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError(18, $this->lenHeader(), $this->_io(), "/types/header/types/common_part/seq/1");
+            if (!($this->_m_lenHeader == 18)) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError(18, $this->_m_lenHeader, $this->_io, "/types/header/types/common_part/seq/1");
             }
             $this->_m_headerType = $this->_io->readU1();
             $this->_m_unknown = $this->_io->readU1();
-            if (!($this->unknown() == 1)) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError(1, $this->unknown(), $this->_io(), "/types/header/types/common_part/seq/3");
+            if (!($this->_m_unknown == 1)) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError(1, $this->_m_unknown, $this->_io, "/types/header/types/common_part/seq/3");
             }
             $this->_m_lenDecompressed = $this->_io->readU4be();
         }
@@ -208,7 +208,7 @@ namespace CompressedResource\Header {
 
 namespace CompressedResource\Header {
     class TypeSpecificPartType8 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \CompressedResource\Header $_parent = null, \CompressedResource $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\CompressedResource\Header $_parent = null, ?\CompressedResource $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -218,8 +218,8 @@ namespace CompressedResource\Header {
             $this->_m_expansionBufferSize = $this->_io->readU1();
             $this->_m_decompressorId = $this->_io->readS2be();
             $this->_m_reserved = $this->_io->readU2be();
-            if (!($this->reserved() == 0)) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError(0, $this->reserved(), $this->_io(), "/types/header/types/type_specific_part_type_8/seq/3");
+            if (!($this->_m_reserved == 0)) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError(0, $this->_m_reserved, $this->_io, "/types/header/types/type_specific_part_type_8/seq/3");
             }
         }
         protected $_m_workingBufferFractionalSize;
@@ -268,7 +268,7 @@ namespace CompressedResource\Header {
 
 namespace CompressedResource\Header {
     class TypeSpecificPartType9 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \CompressedResource\Header $_parent = null, \CompressedResource $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\CompressedResource\Header $_parent = null, ?\CompressedResource $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }

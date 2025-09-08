@@ -1,9 +1,10 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 require 'kaitai/struct/struct'
+require_relative 'vlq_base128_be'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -24,26 +25,26 @@ end
 # @see https://www.sqlite.org/fileformat.html Source
 class Sqlite3 < Kaitai::Struct::Struct
 
-  VERSIONS = {
-    1 => :versions_legacy,
-    2 => :versions_wal,
-  }
-  I__VERSIONS = VERSIONS.invert
-
   ENCODINGS = {
     1 => :encodings_utf_8,
     2 => :encodings_utf_16le,
     3 => :encodings_utf_16be,
   }
   I__ENCODINGS = ENCODINGS.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+
+  VERSIONS = {
+    1 => :versions_legacy,
+    2 => :versions_wal,
+  }
+  I__VERSIONS = VERSIONS.invert
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
     @magic = @_io.read_bytes(16)
-    raise Kaitai::Struct::ValidationNotEqualError.new([83, 81, 76, 105, 116, 101, 32, 102, 111, 114, 109, 97, 116, 32, 51, 0].pack('C*'), magic, _io, "/seq/0") if not magic == [83, 81, 76, 105, 116, 101, 32, 102, 111, 114, 109, 97, 116, 32, 51, 0].pack('C*')
+    raise Kaitai::Struct::ValidationNotEqualError.new([83, 81, 76, 105, 116, 101, 32, 102, 111, 114, 109, 97, 116, 32, 51, 0].pack('C*'), @magic, @_io, "/seq/0") if not @magic == [83, 81, 76, 105, 116, 101, 32, 102, 111, 114, 109, 97, 116, 32, 51, 0].pack('C*')
     @len_page_mod = @_io.read_u2be
     @write_version = Kaitai::Struct::Stream::resolve_enum(VERSIONS, @_io.read_u1)
     @read_version = Kaitai::Struct::Stream::resolve_enum(VERSIONS, @_io.read_u1)
@@ -69,37 +70,8 @@ class Sqlite3 < Kaitai::Struct::Struct
     @root_page = BtreePage.new(@_io, self, @_root)
     self
   end
-  class Serial < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @code = VlqBase128Be.new(@_io)
-      self
-    end
-    def is_blob
-      return @is_blob unless @is_blob.nil?
-      @is_blob =  ((code.value >= 12) && ((code.value % 2) == 0)) 
-      @is_blob
-    end
-    def is_string
-      return @is_string unless @is_string.nil?
-      @is_string =  ((code.value >= 13) && ((code.value % 2) == 1)) 
-      @is_string
-    end
-    def len_content
-      return @len_content unless @len_content.nil?
-      if code.value >= 12
-        @len_content = ((code.value - 12) / 2)
-      end
-      @len_content
-    end
-    attr_reader :code
-  end
   class BtreePage < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -130,59 +102,40 @@ class Sqlite3 < Kaitai::Struct::Struct
 
   ##
   # @see https://www.sqlite.org/fileformat.html#b_tree_pages Source
-  class CellIndexLeaf < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  class CellIndexInterior < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
+      @left_child_page = @_io.read_u4be
       @len_payload = VlqBase128Be.new(@_io)
-      @_raw_payload = @_io.read_bytes(len_payload.value)
-      _io__raw_payload = Kaitai::Struct::Stream.new(@_raw_payload)
-      @payload = CellPayload.new(_io__raw_payload, self, @_root)
+      _io_payload = @_io.substream(len_payload.value)
+      @payload = CellPayload.new(_io_payload, self, @_root)
       self
     end
+    attr_reader :left_child_page
     attr_reader :len_payload
     attr_reader :payload
     attr_reader :_raw_payload
   end
-  class Serials < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @entries = []
-      i = 0
-      while not @_io.eof?
-        @entries << Serial.new(@_io, self, @_root)
-        i += 1
-      end
-      self
-    end
-    attr_reader :entries
-  end
 
   ##
   # @see https://www.sqlite.org/fileformat.html#b_tree_pages Source
-  class CellTableLeaf < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  class CellIndexLeaf < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
       @len_payload = VlqBase128Be.new(@_io)
-      @row_id = VlqBase128Be.new(@_io)
-      @_raw_payload = @_io.read_bytes(len_payload.value)
-      _io__raw_payload = Kaitai::Struct::Stream.new(@_raw_payload)
-      @payload = CellPayload.new(_io__raw_payload, self, @_root)
+      _io_payload = @_io.substream(len_payload.value)
+      @payload = CellPayload.new(_io_payload, self, @_root)
       self
     end
     attr_reader :len_payload
-    attr_reader :row_id
     attr_reader :payload
     attr_reader :_raw_payload
   end
@@ -190,16 +143,15 @@ class Sqlite3 < Kaitai::Struct::Struct
   ##
   # @see https://sqlite.org/fileformat2.html#record_format Source
   class CellPayload < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
       @len_header_and_len = VlqBase128Be.new(@_io)
-      @_raw_column_serials = @_io.read_bytes((len_header_and_len.value - 1))
-      _io__raw_column_serials = Kaitai::Struct::Stream.new(@_raw_column_serials)
-      @column_serials = Serials.new(_io__raw_column_serials, self, @_root)
+      _io_column_serials = @_io.substream(len_header_and_len.value - 1)
+      @column_serials = Serials.new(_io_column_serials, self, @_root)
       @column_contents = []
       (column_serials.entries.length).times { |i|
         @column_contents << ColumnContent.new(@_io, self, @_root, column_serials.entries[i])
@@ -215,7 +167,7 @@ class Sqlite3 < Kaitai::Struct::Struct
   ##
   # @see https://www.sqlite.org/fileformat.html#b_tree_pages Source
   class CellTableInterior < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -231,27 +183,26 @@ class Sqlite3 < Kaitai::Struct::Struct
 
   ##
   # @see https://www.sqlite.org/fileformat.html#b_tree_pages Source
-  class CellIndexInterior < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  class CellTableLeaf < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @left_child_page = @_io.read_u4be
       @len_payload = VlqBase128Be.new(@_io)
-      @_raw_payload = @_io.read_bytes(len_payload.value)
-      _io__raw_payload = Kaitai::Struct::Stream.new(@_raw_payload)
-      @payload = CellPayload.new(_io__raw_payload, self, @_root)
+      @row_id = VlqBase128Be.new(@_io)
+      _io_payload = @_io.substream(len_payload.value)
+      @payload = CellPayload.new(_io_payload, self, @_root)
       self
     end
-    attr_reader :left_child_page
     attr_reader :len_payload
+    attr_reader :row_id
     attr_reader :payload
     attr_reader :_raw_payload
   end
   class ColumnContent < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self, serial_type)
+    def initialize(_io, _parent = nil, _root = nil, serial_type)
       super(_io, _parent, _root)
       @serial_type = serial_type
       _read
@@ -260,18 +211,18 @@ class Sqlite3 < Kaitai::Struct::Struct
     def _read
       if  ((serial_type.code.value >= 1) && (serial_type.code.value <= 6)) 
         case serial_type.code.value
-        when 4
-          @as_int = @_io.read_u4be
-        when 6
-          @as_int = @_io.read_u8be
         when 1
           @as_int = @_io.read_u1
-        when 3
-          @as_int = @_io.read_bits_int_be(24)
-        when 5
-          @as_int = @_io.read_bits_int_be(48)
         when 2
           @as_int = @_io.read_u2be
+        when 3
+          @as_int = @_io.read_bits_int_be(24)
+        when 4
+          @as_int = @_io.read_u4be
+        when 5
+          @as_int = @_io.read_bits_int_be(48)
+        when 6
+          @as_int = @_io.read_u8be
         end
       end
       if serial_type.code.value == 7
@@ -290,7 +241,7 @@ class Sqlite3 < Kaitai::Struct::Struct
     attr_reader :serial_type
   end
   class RefCell < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -304,19 +255,65 @@ class Sqlite3 < Kaitai::Struct::Struct
       _pos = @_io.pos
       @_io.seek(ofs_body)
       case _parent.page_type
-      when 13
-        @body = CellTableLeaf.new(@_io, self, @_root)
-      when 5
-        @body = CellTableInterior.new(@_io, self, @_root)
       when 10
         @body = CellIndexLeaf.new(@_io, self, @_root)
+      when 13
+        @body = CellTableLeaf.new(@_io, self, @_root)
       when 2
         @body = CellIndexInterior.new(@_io, self, @_root)
+      when 5
+        @body = CellTableInterior.new(@_io, self, @_root)
       end
       @_io.seek(_pos)
       @body
     end
     attr_reader :ofs_body
+  end
+  class Serial < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @code = VlqBase128Be.new(@_io)
+      self
+    end
+    def is_blob
+      return @is_blob unless @is_blob.nil?
+      @is_blob =  ((code.value >= 12) && (code.value % 2 == 0)) 
+      @is_blob
+    end
+    def is_string
+      return @is_string unless @is_string.nil?
+      @is_string =  ((code.value >= 13) && (code.value % 2 == 1)) 
+      @is_string
+    end
+    def len_content
+      return @len_content unless @len_content.nil?
+      if code.value >= 12
+        @len_content = (code.value - 12) / 2
+      end
+      @len_content
+    end
+    attr_reader :code
+  end
+  class Serials < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @entries = []
+      i = 0
+      while not @_io.eof?
+        @entries << Serial.new(@_io, self, @_root)
+        i += 1
+      end
+      self
+    end
+    attr_reader :entries
   end
   def len_page
     return @len_page unless @len_page.nil?

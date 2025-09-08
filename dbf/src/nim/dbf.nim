@@ -13,11 +13,6 @@ type
   Dbf_DeleteState* = enum
     false = 32
     true = 42
-  Dbf_Header2* = ref object of KaitaiStruct
-    `headerDbase3`*: Dbf_HeaderDbase3
-    `headerDbase7`*: Dbf_HeaderDbase7
-    `fields`*: seq[Dbf_Field]
-    `parent`*: Dbf
   Dbf_Field* = ref object of KaitaiStruct
     `name`*: string
     `datatype`*: uint8
@@ -41,6 +36,11 @@ type
     `parent`*: Dbf
     `dbaseLevelInst`: int
     `dbaseLevelInstFlag`: bool
+  Dbf_Header2* = ref object of KaitaiStruct
+    `headerDbase3`*: Dbf_HeaderDbase3
+    `headerDbase7`*: Dbf_HeaderDbase7
+    `fields`*: seq[Dbf_Field]
+    `parent`*: Dbf
   Dbf_HeaderDbase3* = ref object of KaitaiStruct
     `reserved1`*: seq[byte]
     `reserved2`*: seq[byte]
@@ -63,9 +63,9 @@ type
     `parent`*: Dbf
 
 proc read*(_: typedesc[Dbf], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Dbf
-proc read*(_: typedesc[Dbf_Header2], io: KaitaiStream, root: KaitaiStruct, parent: Dbf): Dbf_Header2
 proc read*(_: typedesc[Dbf_Field], io: KaitaiStream, root: KaitaiStruct, parent: Dbf_Header2): Dbf_Field
 proc read*(_: typedesc[Dbf_Header1], io: KaitaiStream, root: KaitaiStruct, parent: Dbf): Dbf_Header1
+proc read*(_: typedesc[Dbf_Header2], io: KaitaiStream, root: KaitaiStruct, parent: Dbf): Dbf_Header2
 proc read*(_: typedesc[Dbf_HeaderDbase3], io: KaitaiStream, root: KaitaiStruct, parent: Dbf_Header2): Dbf_HeaderDbase3
 proc read*(_: typedesc[Dbf_HeaderDbase7], io: KaitaiStream, root: KaitaiStruct, parent: Dbf_Header2): Dbf_HeaderDbase7
 proc read*(_: typedesc[Dbf_Record], io: KaitaiStream, root: KaitaiStruct, parent: Dbf): Dbf_Record
@@ -92,7 +92,7 @@ proc read*(_: typedesc[Dbf], io: KaitaiStream, root: KaitaiStruct, parent: Kaita
 
   let header1Expr = Dbf_Header1.read(this.io, this.root, this)
   this.header1 = header1Expr
-  let rawHeader2Expr = this.io.readBytes(int(((this.header1.lenHeader - 12) - 1)))
+  let rawHeader2Expr = this.io.readBytes(int((this.header1.lenHeader - 12) - 1))
   this.rawHeader2 = rawHeader2Expr
   let rawHeader2Io = newKaitaiStream(rawHeader2Expr)
   let header2Expr = Dbf_Header2.read(rawHeader2Io, this.root, this)
@@ -108,30 +108,6 @@ proc read*(_: typedesc[Dbf], io: KaitaiStream, root: KaitaiStruct, parent: Kaita
 
 proc fromFile*(_: typedesc[Dbf], filename: string): Dbf =
   Dbf.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Dbf_Header2], io: KaitaiStream, root: KaitaiStruct, parent: Dbf): Dbf_Header2 =
-  template this: untyped = result
-  this = new(Dbf_Header2)
-  let root = if root == nil: cast[Dbf](this) else: cast[Dbf](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  if Dbf(this.root).header1.dbaseLevel == 3:
-    let headerDbase3Expr = Dbf_HeaderDbase3.read(this.io, this.root, this)
-    this.headerDbase3 = headerDbase3Expr
-  if Dbf(this.root).header1.dbaseLevel == 7:
-    let headerDbase7Expr = Dbf_HeaderDbase7.read(this.io, this.root, this)
-    this.headerDbase7 = headerDbase7Expr
-  block:
-    var i: int
-    while not this.io.isEof:
-      let it = Dbf_Field.read(this.io, this.root, this)
-      this.fields.add(it)
-      inc i
-
-proc fromFile*(_: typedesc[Dbf_Header2], filename: string): Dbf_Header2 =
-  Dbf_Header2.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[Dbf_Field], io: KaitaiStream, root: KaitaiStruct, parent: Dbf_Header2): Dbf_Field =
   template this: untyped = result
@@ -195,13 +171,37 @@ proc read*(_: typedesc[Dbf_Header1], io: KaitaiStream, root: KaitaiStruct, paren
 proc dbaseLevel(this: Dbf_Header1): int = 
   if this.dbaseLevelInstFlag:
     return this.dbaseLevelInst
-  let dbaseLevelInstExpr = int((this.version and 7))
+  let dbaseLevelInstExpr = int(this.version and 7)
   this.dbaseLevelInst = dbaseLevelInstExpr
   this.dbaseLevelInstFlag = true
   return this.dbaseLevelInst
 
 proc fromFile*(_: typedesc[Dbf_Header1], filename: string): Dbf_Header1 =
   Dbf_Header1.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Dbf_Header2], io: KaitaiStream, root: KaitaiStruct, parent: Dbf): Dbf_Header2 =
+  template this: untyped = result
+  this = new(Dbf_Header2)
+  let root = if root == nil: cast[Dbf](this) else: cast[Dbf](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  if Dbf(this.root).header1.dbaseLevel == 3:
+    let headerDbase3Expr = Dbf_HeaderDbase3.read(this.io, this.root, this)
+    this.headerDbase3 = headerDbase3Expr
+  if Dbf(this.root).header1.dbaseLevel == 7:
+    let headerDbase7Expr = Dbf_HeaderDbase7.read(this.io, this.root, this)
+    this.headerDbase7 = headerDbase7Expr
+  block:
+    var i: int
+    while not this.io.isEof:
+      let it = Dbf_Field.read(this.io, this.root, this)
+      this.fields.add(it)
+      inc i
+
+proc fromFile*(_: typedesc[Dbf_Header2], filename: string): Dbf_Header2 =
+  Dbf_Header2.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[Dbf_HeaderDbase3], io: KaitaiStream, root: KaitaiStruct, parent: Dbf_Header2): Dbf_HeaderDbase3 =
   template this: untyped = result

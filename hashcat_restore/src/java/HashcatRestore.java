@@ -4,8 +4,9 @@ import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -32,7 +33,7 @@ public class HashcatRestore extends KaitaiStruct {
     }
     private void _read() {
         this.version = this._io.readU4le();
-        this.cwd = new String(KaitaiStream.bytesTerminate(this._io.readBytes(256), (byte) 0, false), Charset.forName("UTF-8"));
+        this.cwd = new String(KaitaiStream.bytesTerminate(this._io.readBytes(256), (byte) 0, false), StandardCharsets.UTF_8);
         this.dictsPos = this._io.readU4le();
         this.masksPos = this._io.readU4le();
         this.padding = this._io.readBytes(4);
@@ -41,7 +42,12 @@ public class HashcatRestore extends KaitaiStruct {
         this.padding2 = this._io.readBytes(12);
         this.argv = new ArrayList<String>();
         for (int i = 0; i < argc(); i++) {
-            this.argv.add(new String(this._io.readBytesTerm((byte) 10, false, true, true), Charset.forName("UTF-8")));
+            this.argv.add(new String(this._io.readBytesTerm((byte) 10, false, true, true), StandardCharsets.UTF_8));
+        }
+    }
+
+    public void _fetchInstances() {
+        for (int i = 0; i < this.argv.size(); i++) {
         }
     }
     private long version;
@@ -52,7 +58,7 @@ public class HashcatRestore extends KaitaiStruct {
     private long currentRestorePoint;
     private long argc;
     private byte[] padding2;
-    private ArrayList<String> argv;
+    private List<String> argv;
     private HashcatRestore _root;
     private KaitaiStruct _parent;
     public long version() { return version; }
@@ -63,7 +69,7 @@ public class HashcatRestore extends KaitaiStruct {
     public long currentRestorePoint() { return currentRestorePoint; }
     public long argc() { return argc; }
     public byte[] padding2() { return padding2; }
-    public ArrayList<String> argv() { return argv; }
+    public List<String> argv() { return argv; }
     public HashcatRestore _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

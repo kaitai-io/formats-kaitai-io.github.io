@@ -45,8 +45,8 @@
 
 namespace {
     class PharWithoutStub extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \PharWithoutStub $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\PharWithoutStub $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -95,124 +95,6 @@ namespace {
     }
 }
 
-namespace PharWithoutStub {
-    class SerializedValue extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \PharWithoutStub $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_raw = $this->_io->readBytesFull();
-        }
-        protected $_m_parsed;
-
-        /**
-         * The serialized value, parsed as a structure.
-         */
-        public function parsed() {
-            if ($this->_m_parsed !== null)
-                return $this->_m_parsed;
-            $_pos = $this->_io->pos();
-            $this->_io->seek(0);
-            $this->_m_parsed = new \PhpSerializedValue($this->_io);
-            $this->_io->seek($_pos);
-            return $this->_m_parsed;
-        }
-        protected $_m_raw;
-
-        /**
-         * The serialized value, as a raw byte array.
-         */
-        public function raw() { return $this->_m_raw; }
-    }
-}
-
-namespace PharWithoutStub {
-    class Signature extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PharWithoutStub $_parent = null, \PharWithoutStub $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_data = $this->_io->readBytes((($this->_io()->size() - $this->_io()->pos()) - 8));
-            $this->_m_type = $this->_io->readU4le();
-            $this->_m_magic = $this->_io->readBytes(4);
-            if (!($this->magic() == "\x47\x42\x4D\x42")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x47\x42\x4D\x42", $this->magic(), $this->_io(), "/types/signature/seq/2");
-            }
-        }
-        protected $_m_data;
-        protected $_m_type;
-        protected $_m_magic;
-
-        /**
-         * The signature data. The size and contents depend on the
-         * signature type.
-         */
-        public function data() { return $this->_m_data; }
-
-        /**
-         * The signature type.
-         */
-        public function type() { return $this->_m_type; }
-        public function magic() { return $this->_m_magic; }
-    }
-}
-
-namespace PharWithoutStub {
-    class FileFlags extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PharWithoutStub\FileEntry $_parent = null, \PharWithoutStub $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_value = $this->_io->readU4le();
-        }
-        protected $_m_permissions;
-
-        /**
-         * The file's permission bits.
-         */
-        public function permissions() {
-            if ($this->_m_permissions !== null)
-                return $this->_m_permissions;
-            $this->_m_permissions = ($this->value() & 511);
-            return $this->_m_permissions;
-        }
-        protected $_m_zlibCompressed;
-
-        /**
-         * Whether this file's data is stored using zlib compression.
-         */
-        public function zlibCompressed() {
-            if ($this->_m_zlibCompressed !== null)
-                return $this->_m_zlibCompressed;
-            $this->_m_zlibCompressed = ($this->value() & 4096) != 0;
-            return $this->_m_zlibCompressed;
-        }
-        protected $_m_bzip2Compressed;
-
-        /**
-         * Whether this file's data is stored using bzip2 compression.
-         */
-        public function bzip2Compressed() {
-            if ($this->_m_bzip2Compressed !== null)
-                return $this->_m_bzip2Compressed;
-            $this->_m_bzip2Compressed = ($this->value() & 8192) != 0;
-            return $this->_m_bzip2Compressed;
-        }
-        protected $_m_value;
-
-        /**
-         * The unparsed flag bits.
-         */
-        public function value() { return $this->_m_value; }
-    }
-}
-
 /**
  * A phar API version number. This version number is meant to indicate
  * which features are used in a specific phar, so that tools reading
@@ -250,7 +132,7 @@ namespace PharWithoutStub {
 
 namespace PharWithoutStub {
     class ApiVersion extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PharWithoutStub\Manifest $_parent = null, \PharWithoutStub $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PharWithoutStub\Manifest $_parent = null, ?\PharWithoutStub $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -273,8 +155,97 @@ namespace PharWithoutStub {
 }
 
 namespace PharWithoutStub {
-    class GlobalFlags extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PharWithoutStub\Manifest $_parent = null, \PharWithoutStub $_root = null) {
+    class FileEntry extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PharWithoutStub\Manifest $_parent = null, ?\PharWithoutStub $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_lenFilename = $this->_io->readU4le();
+            $this->_m_filename = $this->_io->readBytes($this->lenFilename());
+            $this->_m_lenDataUncompressed = $this->_io->readU4le();
+            $this->_m_timestamp = $this->_io->readU4le();
+            $this->_m_lenDataCompressed = $this->_io->readU4le();
+            $this->_m_crc32 = $this->_io->readU4le();
+            $this->_m_flags = new \PharWithoutStub\FileFlags($this->_io, $this, $this->_root);
+            $this->_m_lenMetadata = $this->_io->readU4le();
+            if ($this->lenMetadata() != 0) {
+                $this->_m__raw_metadata = $this->_io->readBytes($this->lenMetadata());
+                $_io__raw_metadata = new \Kaitai\Struct\Stream($this->_m__raw_metadata);
+                $this->_m_metadata = new \PharWithoutStub\SerializedValue($_io__raw_metadata, $this, $this->_root);
+            }
+        }
+        protected $_m_lenFilename;
+        protected $_m_filename;
+        protected $_m_lenDataUncompressed;
+        protected $_m_timestamp;
+        protected $_m_lenDataCompressed;
+        protected $_m_crc32;
+        protected $_m_flags;
+        protected $_m_lenMetadata;
+        protected $_m_metadata;
+        protected $_m__raw_metadata;
+
+        /**
+         * The length of the file name, in bytes.
+         */
+        public function lenFilename() { return $this->_m_lenFilename; }
+
+        /**
+         * The name of this file. If the name ends with a slash, this entry
+         * represents a directory, otherwise a regular file. Directory entries
+         * are supported since phar API version 1.1.1.
+         * (Explicit directory entries are only needed for empty directories.
+         * Non-empty directories are implied by the files located inside them.)
+         */
+        public function filename() { return $this->_m_filename; }
+
+        /**
+         * The length of the file's data when uncompressed, in bytes.
+         */
+        public function lenDataUncompressed() { return $this->_m_lenDataUncompressed; }
+
+        /**
+         * The time at which the file was added or last updated, as a
+         * Unix timestamp.
+         */
+        public function timestamp() { return $this->_m_timestamp; }
+
+        /**
+         * The length of the file's data when compressed, in bytes.
+         */
+        public function lenDataCompressed() { return $this->_m_lenDataCompressed; }
+
+        /**
+         * The CRC32 checksum of the file's uncompressed data.
+         */
+        public function crc32() { return $this->_m_crc32; }
+
+        /**
+         * Flags for this file.
+         */
+        public function flags() { return $this->_m_flags; }
+
+        /**
+         * The length of the metadata, in bytes, or 0 if there is none.
+         */
+        public function lenMetadata() { return $this->_m_lenMetadata; }
+
+        /**
+         * Metadata for this file, in the format used by PHP's
+         * `serialize` function. The meaning of the serialized data is not
+         * specified further, it may be used to store arbitrary custom data
+         * about the file.
+         */
+        public function metadata() { return $this->_m_metadata; }
+        public function _raw_metadata() { return $this->_m__raw_metadata; }
+    }
+}
+
+namespace PharWithoutStub {
+    class FileFlags extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PharWithoutStub\FileEntry $_parent = null, ?\PharWithoutStub $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -282,17 +253,57 @@ namespace PharWithoutStub {
         private function _read() {
             $this->_m_value = $this->_io->readU4le();
         }
-        protected $_m_anyZlibCompressed;
+        protected $_m_bzip2Compressed;
 
         /**
-         * Whether any of the files in this phar are stored using
-         * zlib compression.
+         * Whether this file's data is stored using bzip2 compression.
          */
-        public function anyZlibCompressed() {
-            if ($this->_m_anyZlibCompressed !== null)
-                return $this->_m_anyZlibCompressed;
-            $this->_m_anyZlibCompressed = ($this->value() & 4096) != 0;
-            return $this->_m_anyZlibCompressed;
+        public function bzip2Compressed() {
+            if ($this->_m_bzip2Compressed !== null)
+                return $this->_m_bzip2Compressed;
+            $this->_m_bzip2Compressed = ($this->value() & 8192) != 0;
+            return $this->_m_bzip2Compressed;
+        }
+        protected $_m_permissions;
+
+        /**
+         * The file's permission bits.
+         */
+        public function permissions() {
+            if ($this->_m_permissions !== null)
+                return $this->_m_permissions;
+            $this->_m_permissions = $this->value() & 511;
+            return $this->_m_permissions;
+        }
+        protected $_m_zlibCompressed;
+
+        /**
+         * Whether this file's data is stored using zlib compression.
+         */
+        public function zlibCompressed() {
+            if ($this->_m_zlibCompressed !== null)
+                return $this->_m_zlibCompressed;
+            $this->_m_zlibCompressed = ($this->value() & 4096) != 0;
+            return $this->_m_zlibCompressed;
+        }
+        protected $_m_value;
+
+        /**
+         * The unparsed flag bits.
+         */
+        public function value() { return $this->_m_value; }
+    }
+}
+
+namespace PharWithoutStub {
+    class GlobalFlags extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PharWithoutStub\Manifest $_parent = null, ?\PharWithoutStub $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_value = $this->_io->readU4le();
         }
         protected $_m_anyBzip2Compressed;
 
@@ -305,6 +316,18 @@ namespace PharWithoutStub {
                 return $this->_m_anyBzip2Compressed;
             $this->_m_anyBzip2Compressed = ($this->value() & 8192) != 0;
             return $this->_m_anyBzip2Compressed;
+        }
+        protected $_m_anyZlibCompressed;
+
+        /**
+         * Whether any of the files in this phar are stored using
+         * zlib compression.
+         */
+        public function anyZlibCompressed() {
+            if ($this->_m_anyZlibCompressed !== null)
+                return $this->_m_anyZlibCompressed;
+            $this->_m_anyZlibCompressed = ($this->value() & 4096) != 0;
+            return $this->_m_anyZlibCompressed;
         }
         protected $_m_hasSignature;
 
@@ -328,7 +351,7 @@ namespace PharWithoutStub {
 
 namespace PharWithoutStub {
     class Manifest extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PharWithoutStub $_parent = null, \PharWithoutStub $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PharWithoutStub $_parent = null, ?\PharWithoutStub $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -418,91 +441,68 @@ namespace PharWithoutStub {
 }
 
 namespace PharWithoutStub {
-    class FileEntry extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PharWithoutStub\Manifest $_parent = null, \PharWithoutStub $_root = null) {
+    class SerializedValue extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\PharWithoutStub $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_lenFilename = $this->_io->readU4le();
-            $this->_m_filename = $this->_io->readBytes($this->lenFilename());
-            $this->_m_lenDataUncompressed = $this->_io->readU4le();
-            $this->_m_timestamp = $this->_io->readU4le();
-            $this->_m_lenDataCompressed = $this->_io->readU4le();
-            $this->_m_crc32 = $this->_io->readU4le();
-            $this->_m_flags = new \PharWithoutStub\FileFlags($this->_io, $this, $this->_root);
-            $this->_m_lenMetadata = $this->_io->readU4le();
-            if ($this->lenMetadata() != 0) {
-                $this->_m__raw_metadata = $this->_io->readBytes($this->lenMetadata());
-                $_io__raw_metadata = new \Kaitai\Struct\Stream($this->_m__raw_metadata);
-                $this->_m_metadata = new \PharWithoutStub\SerializedValue($_io__raw_metadata, $this, $this->_root);
+            $this->_m_raw = $this->_io->readBytesFull();
+        }
+        protected $_m_parsed;
+
+        /**
+         * The serialized value, parsed as a structure.
+         */
+        public function parsed() {
+            if ($this->_m_parsed !== null)
+                return $this->_m_parsed;
+            $_pos = $this->_io->pos();
+            $this->_io->seek(0);
+            $this->_m_parsed = new \PhpSerializedValue($this->_io);
+            $this->_io->seek($_pos);
+            return $this->_m_parsed;
+        }
+        protected $_m_raw;
+
+        /**
+         * The serialized value, as a raw byte array.
+         */
+        public function raw() { return $this->_m_raw; }
+    }
+}
+
+namespace PharWithoutStub {
+    class Signature extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PharWithoutStub $_parent = null, ?\PharWithoutStub $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_data = $this->_io->readBytes(($this->_io()->size() - $this->_io()->pos()) - 8);
+            $this->_m_type = $this->_io->readU4le();
+            $this->_m_magic = $this->_io->readBytes(4);
+            if (!($this->_m_magic == "\x47\x42\x4D\x42")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x47\x42\x4D\x42", $this->_m_magic, $this->_io, "/types/signature/seq/2");
             }
         }
-        protected $_m_lenFilename;
-        protected $_m_filename;
-        protected $_m_lenDataUncompressed;
-        protected $_m_timestamp;
-        protected $_m_lenDataCompressed;
-        protected $_m_crc32;
-        protected $_m_flags;
-        protected $_m_lenMetadata;
-        protected $_m_metadata;
-        protected $_m__raw_metadata;
+        protected $_m_data;
+        protected $_m_type;
+        protected $_m_magic;
 
         /**
-         * The length of the file name, in bytes.
+         * The signature data. The size and contents depend on the
+         * signature type.
          */
-        public function lenFilename() { return $this->_m_lenFilename; }
+        public function data() { return $this->_m_data; }
 
         /**
-         * The name of this file. If the name ends with a slash, this entry
-         * represents a directory, otherwise a regular file. Directory entries
-         * are supported since phar API version 1.1.1.
-         * (Explicit directory entries are only needed for empty directories.
-         * Non-empty directories are implied by the files located inside them.)
+         * The signature type.
          */
-        public function filename() { return $this->_m_filename; }
-
-        /**
-         * The length of the file's data when uncompressed, in bytes.
-         */
-        public function lenDataUncompressed() { return $this->_m_lenDataUncompressed; }
-
-        /**
-         * The time at which the file was added or last updated, as a
-         * Unix timestamp.
-         */
-        public function timestamp() { return $this->_m_timestamp; }
-
-        /**
-         * The length of the file's data when compressed, in bytes.
-         */
-        public function lenDataCompressed() { return $this->_m_lenDataCompressed; }
-
-        /**
-         * The CRC32 checksum of the file's uncompressed data.
-         */
-        public function crc32() { return $this->_m_crc32; }
-
-        /**
-         * Flags for this file.
-         */
-        public function flags() { return $this->_m_flags; }
-
-        /**
-         * The length of the metadata, in bytes, or 0 if there is none.
-         */
-        public function lenMetadata() { return $this->_m_lenMetadata; }
-
-        /**
-         * Metadata for this file, in the format used by PHP's
-         * `serialize` function. The meaning of the serialized data is not
-         * specified further, it may be used to store arbitrary custom data
-         * about the file.
-         */
-        public function metadata() { return $this->_m_metadata; }
-        public function _raw_metadata() { return $this->_m__raw_metadata; }
+        public function type() { return $this->_m_type; }
+        public function magic() { return $this->_m_magic; }
     }
 }
 
@@ -542,5 +542,11 @@ namespace PharWithoutStub {
          * (`PHAR_SIG_PGP`).
          */
         const OPENSSL = 16;
+
+        private const _VALUES = [1 => true, 2 => true, 4 => true, 8 => true, 16 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

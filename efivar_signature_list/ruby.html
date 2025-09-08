@@ -204,6 +204,11 @@ hashes. On a Linux system using UEFI, these variables are readable from:</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="UEFI Variable with Signature List parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="UEFI Variable with Signature List parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -232,9 +237,19 @@ hashes. On a Linux system using UEFI, these variables are readable from:</p>
                 <a href="python.html" title="UEFI Variable with Signature List parsing Python library">Python</a></li>
                 
                 
+                <li>
+                
+                <a href="python-write.html" title="UEFI Variable with Signature List parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
                 <li class="active">
                 
                 <a href="ruby.html" title="UEFI Variable with Signature List parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="UEFI Variable with Signature List parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -310,8 +325,8 @@ hashes. On a Linux system using UEFI, these variables are readable from:</p>
 
 <span class="nb">require</span><span class="w"> </span><span class="s1">&#39;kaitai/struct/struct&#39;</span>
 
-<span class="k">unless</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.9&#39;</span><span class="p">)</span>
-<span class="w">  </span><span class="k">raise</span><span class="w"> </span><span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">unless</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.11&#39;</span><span class="p">)</span>
+<span class="w">  </span><span class="k">raise</span><span class="w"> </span><span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
 <span class="k">end</span>
 
 
@@ -335,8 +350,8 @@ hashes. On a Linux system using UEFI, these variables are readable from:</p>
 <span class="c1"># `EFI_SIGNATURE_LIST` structures.</span>
 <span class="c1"># @see https://uefi.org/sites/default/files/resources/UEFI_Spec_2_8_final.pdf Source</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">EfivarSignatureList</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
-<span class="w">    </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">    </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
 <span class="w">    </span><span class="n">_read</span>
 <span class="w">  </span><span class="k">end</span>
 
@@ -352,201 +367,9 @@ hashes. On a Linux system using UEFI, these variables are readable from:</p>
 <span class="w">  </span><span class="k">end</span>
 
 <span class="w">  </span><span class="c1">##</span>
-<span class="w">  </span><span class="c1"># @see &#39;&#39; EFI_SIGNATURE_LIST</span>
-<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">SignatureList</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
-<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
-<span class="w">      </span><span class="n">_read</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">      </span><span class="vi">@signature_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@len_signature_list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-<span class="w">      </span><span class="vi">@len_signature_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-<span class="w">      </span><span class="vi">@len_signature</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
-<span class="w">      </span><span class="vi">@header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_signature_header</span><span class="p">)</span>
-<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="n">len_signature</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span>
-<span class="w">        </span><span class="vi">@_raw_signatures</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span>
-<span class="w">        </span><span class="vi">@signatures</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span>
-<span class="w">        </span><span class="p">((((</span><span class="n">len_signature_list</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">len_signature_header</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">28</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">len_signature</span><span class="p">))</span><span class="o">.</span><span class="n">times</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">|</span><span class="n">i</span><span class="o">|</span>
-<span class="w">          </span><span class="vi">@_raw_signatures</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_signature</span><span class="p">)</span>
-<span class="w">          </span><span class="n">_io__raw_signatures</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_signatures</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">)</span>
-<span class="w">          </span><span class="vi">@signatures</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="no">SignatureData</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_signatures</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">      </span><span class="k">end</span>
-<span class="w">      </span><span class="nb">self</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># SHA512 hash of an X.509 certificate&#39;s To-Be-Signed contents, and a time of revocation</span>
-<span class="w">    </span><span class="c1"># @see &#39;&#39; EFI_CERT_X509_SHA512_GUID</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">is_cert_sha512_x509</span>
-<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@is_cert_sha512_x509</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@is_cert_sha512_x509</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">      </span><span class="vi">@is_cert_sha512_x509</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">99</span><span class="p">,</span><span class="w"> </span><span class="mi">191</span><span class="p">,</span><span class="w"> </span><span class="mi">109</span><span class="p">,</span><span class="w"> </span><span class="mi">68</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">37</span><span class="p">,</span><span class="w"> </span><span class="mi">218</span><span class="p">,</span><span class="w"> </span><span class="mi">76</span><span class="p">,</span><span class="w"> </span><span class="mi">188</span><span class="p">,</span><span class="w"> </span><span class="mi">250</span><span class="p">,</span><span class="w"> </span><span class="mi">36</span><span class="p">,</span><span class="w"> </span><span class="mi">101</span><span class="p">,</span><span class="w"> </span><span class="mi">210</span><span class="p">,</span><span class="w"> </span><span class="mi">176</span><span class="p">,</span><span class="w"> </span><span class="mi">254</span><span class="p">,</span><span class="w"> </span><span class="mi">157</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@is_cert_sha512_x509</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># SHA-224 hash</span>
-<span class="w">    </span><span class="c1"># @see &#39;&#39; EFI_CERT_SHA224_GUID</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">is_cert_sha224</span>
-<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@is_cert_sha224</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@is_cert_sha224</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">      </span><span class="vi">@is_cert_sha224</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">51</span><span class="p">,</span><span class="w"> </span><span class="mi">82</span><span class="p">,</span><span class="w"> </span><span class="mi">110</span><span class="p">,</span><span class="w"> </span><span class="mi">11</span><span class="p">,</span><span class="w"> </span><span class="mi">92</span><span class="p">,</span><span class="w"> </span><span class="mi">166</span><span class="p">,</span><span class="w"> </span><span class="mi">201</span><span class="p">,</span><span class="w"> </span><span class="mi">68</span><span class="p">,</span><span class="w"> </span><span class="mi">148</span><span class="p">,</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span><span class="w"> </span><span class="mi">217</span><span class="p">,</span><span class="w"> </span><span class="mi">171</span><span class="p">,</span><span class="w"> </span><span class="mi">131</span><span class="p">,</span><span class="w"> </span><span class="mi">191</span><span class="p">,</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w"> </span><span class="mi">189</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@is_cert_sha224</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># X.509 certificate</span>
-<span class="w">    </span><span class="c1"># @see &#39;&#39; EFI_CERT_X509_GUID</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">is_cert_x509</span>
-<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@is_cert_x509</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@is_cert_x509</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">      </span><span class="vi">@is_cert_x509</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">161</span><span class="p">,</span><span class="w"> </span><span class="mi">89</span><span class="p">,</span><span class="w"> </span><span class="mi">192</span><span class="p">,</span><span class="w"> </span><span class="mi">165</span><span class="p">,</span><span class="w"> </span><span class="mi">228</span><span class="p">,</span><span class="w"> </span><span class="mi">148</span><span class="p">,</span><span class="w"> </span><span class="mi">167</span><span class="p">,</span><span class="w"> </span><span class="mi">74</span><span class="p">,</span><span class="w"> </span><span class="mi">135</span><span class="p">,</span><span class="w"> </span><span class="mi">181</span><span class="p">,</span><span class="w"> </span><span class="mi">171</span><span class="p">,</span><span class="w"> </span><span class="mi">21</span><span class="p">,</span><span class="w"> </span><span class="mi">92</span><span class="p">,</span><span class="w"> </span><span class="mi">43</span><span class="p">,</span><span class="w"> </span><span class="mi">240</span><span class="p">,</span><span class="w"> </span><span class="mi">114</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@is_cert_x509</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># SHA256 hash of an X.509 certificate&#39;s To-Be-Signed contents, and a time of revocation</span>
-<span class="w">    </span><span class="c1"># @see &#39;&#39; EFI_CERT_X509_SHA256_GUID</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">is_cert_sha256_x509</span>
-<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@is_cert_sha256_x509</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@is_cert_sha256_x509</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">      </span><span class="vi">@is_cert_sha256_x509</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">146</span><span class="p">,</span><span class="w"> </span><span class="mi">164</span><span class="p">,</span><span class="w"> </span><span class="mi">210</span><span class="p">,</span><span class="w"> </span><span class="mi">59</span><span class="p">,</span><span class="w"> </span><span class="mi">192</span><span class="p">,</span><span class="w"> </span><span class="mi">150</span><span class="p">,</span><span class="w"> </span><span class="mi">121</span><span class="p">,</span><span class="w"> </span><span class="mi">64</span><span class="p">,</span><span class="w"> </span><span class="mi">180</span><span class="p">,</span><span class="w"> </span><span class="mi">32</span><span class="p">,</span><span class="w"> </span><span class="mi">252</span><span class="p">,</span><span class="w"> </span><span class="mi">249</span><span class="p">,</span><span class="w"> </span><span class="mi">142</span><span class="p">,</span><span class="w"> </span><span class="mi">241</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">237</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@is_cert_sha256_x509</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># RSA-2048 key (only the modulus since the public key exponent is known to be 0x10001)</span>
-<span class="w">    </span><span class="c1"># @see &#39;&#39; EFI_CERT_RSA2048_GUID</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">is_cert_rsa2048_key</span>
-<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@is_cert_rsa2048_key</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@is_cert_rsa2048_key</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">      </span><span class="vi">@is_cert_rsa2048_key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">232</span><span class="p">,</span><span class="w"> </span><span class="mi">102</span><span class="p">,</span><span class="w"> </span><span class="mi">87</span><span class="p">,</span><span class="w"> </span><span class="mi">60</span><span class="p">,</span><span class="w"> </span><span class="mi">156</span><span class="p">,</span><span class="w"> </span><span class="mi">38</span><span class="p">,</span><span class="w"> </span><span class="mi">52</span><span class="p">,</span><span class="w"> </span><span class="mi">78</span><span class="p">,</span><span class="w"> </span><span class="mi">170</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w"> </span><span class="mi">237</span><span class="p">,</span><span class="w"> </span><span class="mi">119</span><span class="p">,</span><span class="w"> </span><span class="mi">110</span><span class="p">,</span><span class="w"> </span><span class="mi">133</span><span class="p">,</span><span class="w"> </span><span class="mi">179</span><span class="p">,</span><span class="w"> </span><span class="mi">182</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@is_cert_rsa2048_key</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># SHA-512 hash</span>
-<span class="w">    </span><span class="c1"># @see &#39;&#39; EFI_CERT_SHA512_GUID</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">is_cert_sha512</span>
-<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@is_cert_sha512</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@is_cert_sha512</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">      </span><span class="vi">@is_cert_sha512</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">174</span><span class="p">,</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span><span class="w"> </span><span class="mi">62</span><span class="p">,</span><span class="w"> </span><span class="mi">9</span><span class="p">,</span><span class="w"> </span><span class="mi">196</span><span class="p">,</span><span class="w"> </span><span class="mi">166</span><span class="p">,</span><span class="w"> </span><span class="mi">80</span><span class="p">,</span><span class="w"> </span><span class="mi">79</span><span class="p">,</span><span class="w"> </span><span class="mi">159</span><span class="p">,</span><span class="w"> </span><span class="mi">27</span><span class="p">,</span><span class="w"> </span><span class="mi">212</span><span class="p">,</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span><span class="w"> </span><span class="mi">43</span><span class="p">,</span><span class="w"> </span><span class="mi">137</span><span class="p">,</span><span class="w"> </span><span class="mi">193</span><span class="p">,</span><span class="w"> </span><span class="mi">154</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@is_cert_sha512</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># SHA-384 hash</span>
-<span class="w">    </span><span class="c1"># @see &#39;&#39; EFI_CERT_SHA384_GUID</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">is_cert_sha384</span>
-<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@is_cert_sha384</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@is_cert_sha384</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">      </span><span class="vi">@is_cert_sha384</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">7</span><span class="p">,</span><span class="w"> </span><span class="mi">83</span><span class="p">,</span><span class="w"> </span><span class="mi">62</span><span class="p">,</span><span class="w"> </span><span class="mi">255</span><span class="p">,</span><span class="w"> </span><span class="mi">208</span><span class="p">,</span><span class="w"> </span><span class="mi">159</span><span class="p">,</span><span class="w"> </span><span class="mi">201</span><span class="p">,</span><span class="w"> </span><span class="mi">72</span><span class="p">,</span><span class="w"> </span><span class="mi">133</span><span class="p">,</span><span class="w"> </span><span class="mi">241</span><span class="p">,</span><span class="w"> </span><span class="mi">138</span><span class="p">,</span><span class="w"> </span><span class="mi">213</span><span class="p">,</span><span class="w"> </span><span class="mi">108</span><span class="p">,</span><span class="w"> </span><span class="mi">112</span><span class="p">,</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@is_cert_sha384</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># SHA-1 hash</span>
-<span class="w">    </span><span class="c1"># @see &#39;&#39; EFI_CERT_SHA1_GUID</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">is_cert_sha1</span>
-<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@is_cert_sha1</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@is_cert_sha1</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">      </span><span class="vi">@is_cert_sha1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">18</span><span class="p">,</span><span class="w"> </span><span class="mi">165</span><span class="p">,</span><span class="w"> </span><span class="mi">108</span><span class="p">,</span><span class="w"> </span><span class="mi">130</span><span class="p">,</span><span class="w"> </span><span class="mi">16</span><span class="p">,</span><span class="w"> </span><span class="mi">207</span><span class="p">,</span><span class="w"> </span><span class="mi">201</span><span class="p">,</span><span class="w"> </span><span class="mi">74</span><span class="p">,</span><span class="w"> </span><span class="mi">177</span><span class="p">,</span><span class="w"> </span><span class="mi">135</span><span class="p">,</span><span class="w"> </span><span class="mi">190</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">73</span><span class="p">,</span><span class="w"> </span><span class="mi">102</span><span class="p">,</span><span class="w"> </span><span class="mi">49</span><span class="p">,</span><span class="w"> </span><span class="mi">189</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@is_cert_sha1</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># RSA-2048 signature of a SHA-1 hash</span>
-<span class="w">    </span><span class="c1"># @see &#39;&#39; EFI_CERT_RSA2048_SHA1_GUID</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">is_cert_rsa2048_sha1</span>
-<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@is_cert_rsa2048_sha1</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@is_cert_rsa2048_sha1</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">      </span><span class="vi">@is_cert_rsa2048_sha1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">79</span><span class="p">,</span><span class="w"> </span><span class="mi">68</span><span class="p">,</span><span class="w"> </span><span class="mi">248</span><span class="p">,</span><span class="w"> </span><span class="mi">103</span><span class="p">,</span><span class="w"> </span><span class="mi">67</span><span class="p">,</span><span class="w"> </span><span class="mi">135</span><span class="p">,</span><span class="w"> </span><span class="mi">241</span><span class="p">,</span><span class="w"> </span><span class="mi">72</span><span class="p">,</span><span class="w"> </span><span class="mi">163</span><span class="p">,</span><span class="w"> </span><span class="mi">40</span><span class="p">,</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span><span class="w"> </span><span class="mi">170</span><span class="p">,</span><span class="w"> </span><span class="mi">184</span><span class="p">,</span><span class="w"> </span><span class="mi">115</span><span class="p">,</span><span class="w"> </span><span class="mi">96</span><span class="p">,</span><span class="w"> </span><span class="mi">128</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@is_cert_rsa2048_sha1</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># SHA-256 hash</span>
-<span class="w">    </span><span class="c1"># @see &#39;&#39; EFI_CERT_SHA256_GUID</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">is_cert_sha256</span>
-<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@is_cert_sha256</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@is_cert_sha256</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">      </span><span class="vi">@is_cert_sha256</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">38</span><span class="p">,</span><span class="w"> </span><span class="mi">22</span><span class="p">,</span><span class="w"> </span><span class="mi">196</span><span class="p">,</span><span class="w"> </span><span class="mi">193</span><span class="p">,</span><span class="w"> </span><span class="mi">76</span><span class="p">,</span><span class="w"> </span><span class="mi">80</span><span class="p">,</span><span class="w"> </span><span class="mi">146</span><span class="p">,</span><span class="w"> </span><span class="mi">64</span><span class="p">,</span><span class="w"> </span><span class="mi">172</span><span class="p">,</span><span class="w"> </span><span class="mi">169</span><span class="p">,</span><span class="w"> </span><span class="mi">65</span><span class="p">,</span><span class="w"> </span><span class="mi">249</span><span class="p">,</span><span class="w"> </span><span class="mi">54</span><span class="p">,</span><span class="w"> </span><span class="mi">147</span><span class="p">,</span><span class="w"> </span><span class="mi">67</span><span class="p">,</span><span class="w"> </span><span class="mi">40</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@is_cert_sha256</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># SHA384 hash of an X.509 certificate&#39;s To-Be-Signed contents, and a time of revocation</span>
-<span class="w">    </span><span class="c1"># @see &#39;&#39; EFI_CERT_X509_SHA384_GUID</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">is_cert_sha384_x509</span>
-<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@is_cert_sha384_x509</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@is_cert_sha384_x509</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">      </span><span class="vi">@is_cert_sha384_x509</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">110</span><span class="p">,</span><span class="w"> </span><span class="mi">135</span><span class="p">,</span><span class="w"> </span><span class="mi">118</span><span class="p">,</span><span class="w"> </span><span class="mi">112</span><span class="p">,</span><span class="w"> </span><span class="mi">194</span><span class="p">,</span><span class="w"> </span><span class="mi">128</span><span class="p">,</span><span class="w"> </span><span class="mi">230</span><span class="p">,</span><span class="w"> </span><span class="mi">78</span><span class="p">,</span><span class="w"> </span><span class="mi">170</span><span class="p">,</span><span class="w"> </span><span class="mi">210</span><span class="p">,</span><span class="w"> </span><span class="mi">40</span><span class="p">,</span><span class="w"> </span><span class="mi">179</span><span class="p">,</span><span class="w"> </span><span class="mi">73</span><span class="p">,</span><span class="w"> </span><span class="mi">166</span><span class="p">,</span><span class="w"> </span><span class="mi">134</span><span class="p">,</span><span class="w"> </span><span class="mi">91</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@is_cert_sha384_x509</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># RSA-2048 signature of a SHA-256 hash</span>
-<span class="w">    </span><span class="c1"># @see &#39;&#39; EFI_CERT_RSA2048_SHA256_GUID</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">is_cert_rsa2048_sha256</span>
-<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@is_cert_rsa2048_sha256</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@is_cert_rsa2048_sha256</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">      </span><span class="vi">@is_cert_rsa2048_sha256</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">144</span><span class="p">,</span><span class="w"> </span><span class="mi">97</span><span class="p">,</span><span class="w"> </span><span class="mi">179</span><span class="p">,</span><span class="w"> </span><span class="mi">226</span><span class="p">,</span><span class="w"> </span><span class="mi">155</span><span class="p">,</span><span class="w"> </span><span class="mi">135</span><span class="p">,</span><span class="w"> </span><span class="mi">61</span><span class="p">,</span><span class="w"> </span><span class="mi">74</span><span class="p">,</span><span class="w"> </span><span class="mi">173</span><span class="p">,</span><span class="w"> </span><span class="mi">141</span><span class="p">,</span><span class="w"> </span><span class="mi">242</span><span class="p">,</span><span class="w"> </span><span class="mi">231</span><span class="p">,</span><span class="w"> </span><span class="mi">187</span><span class="p">,</span><span class="w"> </span><span class="mi">163</span><span class="p">,</span><span class="w"> </span><span class="mi">39</span><span class="p">,</span><span class="w"> </span><span class="mi">132</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@is_cert_rsa2048_sha256</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># DER-encoded PKCS #7 version 1.5 [RFC2315]</span>
-<span class="w">    </span><span class="c1"># @see &#39;&#39; EFI_CERT_TYPE_PKCS7_GUID</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">is_cert_der_pkcs7</span>
-<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@is_cert_der_pkcs7</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@is_cert_der_pkcs7</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">      </span><span class="vi">@is_cert_der_pkcs7</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">157</span><span class="p">,</span><span class="w"> </span><span class="mi">210</span><span class="p">,</span><span class="w"> </span><span class="mi">175</span><span class="p">,</span><span class="w"> </span><span class="mi">74</span><span class="p">,</span><span class="w"> </span><span class="mi">223</span><span class="p">,</span><span class="w"> </span><span class="mi">104</span><span class="p">,</span><span class="w"> </span><span class="mi">238</span><span class="p">,</span><span class="w"> </span><span class="mi">73</span><span class="p">,</span><span class="w"> </span><span class="mi">138</span><span class="p">,</span><span class="w"> </span><span class="mi">169</span><span class="p">,</span><span class="w"> </span><span class="mi">52</span><span class="p">,</span><span class="w"> </span><span class="mi">125</span><span class="p">,</span><span class="w"> </span><span class="mi">55</span><span class="p">,</span><span class="w"> </span><span class="mi">86</span><span class="p">,</span><span class="w"> </span><span class="mi">101</span><span class="p">,</span><span class="w"> </span><span class="mi">167</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@is_cert_der_pkcs7</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># Type of the signature as a GUID</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:signature_type</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># Total size of the signature list, including this header</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:len_signature_list</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># Size of the signature header which precedes the array of signatures</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:len_signature_header</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># Size of each signature</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:len_signature</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># Header before the array of signatures</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:header</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># An array of signatures</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:signatures</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:_raw_signatures</span>
-<span class="w">  </span><span class="k">end</span>
-
-<span class="w">  </span><span class="c1">##</span>
-<span class="w">  </span><span class="c1"># @see &#39;&#39; EFI_SIGNATURE_DATA</span>
-<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">SignatureData</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
-<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
-<span class="w">      </span><span class="n">_read</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">      </span><span class="vi">@owner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_full</span>
-<span class="w">      </span><span class="nb">self</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># An identifier which identifies the agent which added the signature to the list</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:owner</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># The format of the signature is defined by the SignatureType.</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:data</span>
-<span class="w">  </span><span class="k">end</span>
-
-<span class="w">  </span><span class="c1">##</span>
 <span class="w">  </span><span class="c1"># Attributes of a UEFI variable</span>
 <span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">EfiVarAttr</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 <span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
 <span class="w">      </span><span class="n">_read</span>
 <span class="w">    </span><span class="k">end</span>
@@ -575,6 +398,197 @@ hashes. On a Linux system using UEFI, these variables are readable from:</p>
 <span class="w">    </span><span class="c1">##</span>
 <span class="w">    </span><span class="c1"># Reserved (unused) bits</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:reserved1</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="c1">##</span>
+<span class="w">  </span><span class="c1"># @see &#39;&#39; EFI_SIGNATURE_DATA</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">SignatureData</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@owner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_full</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># An identifier which identifies the agent which added the signature to the list</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:owner</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># The format of the signature is defined by the SignatureType.</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:data</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="c1">##</span>
+<span class="w">  </span><span class="c1"># @see &#39;&#39; EFI_SIGNATURE_LIST</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">SignatureList</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@signature_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@len_signature_list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+<span class="w">      </span><span class="vi">@len_signature_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+<span class="w">      </span><span class="vi">@len_signature</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+<span class="w">      </span><span class="vi">@header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_signature_header</span><span class="p">)</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="n">len_signature</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">        </span><span class="vi">@_raw_signatures</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span>
+<span class="w">        </span><span class="vi">@signatures</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span>
+<span class="w">        </span><span class="p">(((</span><span class="n">len_signature_list</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">len_signature_header</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">28</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">len_signature</span><span class="p">)</span><span class="o">.</span><span class="n">times</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">|</span><span class="n">i</span><span class="o">|</span>
+<span class="w">          </span><span class="n">_io_signatures</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">(</span><span class="n">len_signature</span><span class="p">)</span>
+<span class="w">          </span><span class="vi">@signatures</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="no">SignatureData</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_signatures</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># DER-encoded PKCS #7 version 1.5 [RFC2315]</span>
+<span class="w">    </span><span class="c1"># @see &#39;&#39; EFI_CERT_TYPE_PKCS7_GUID</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">is_cert_der_pkcs7</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@is_cert_der_pkcs7</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@is_cert_der_pkcs7</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@is_cert_der_pkcs7</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">157</span><span class="p">,</span><span class="w"> </span><span class="mi">210</span><span class="p">,</span><span class="w"> </span><span class="mi">175</span><span class="p">,</span><span class="w"> </span><span class="mi">74</span><span class="p">,</span><span class="w"> </span><span class="mi">223</span><span class="p">,</span><span class="w"> </span><span class="mi">104</span><span class="p">,</span><span class="w"> </span><span class="mi">238</span><span class="p">,</span><span class="w"> </span><span class="mi">73</span><span class="p">,</span><span class="w"> </span><span class="mi">138</span><span class="p">,</span><span class="w"> </span><span class="mi">169</span><span class="p">,</span><span class="w"> </span><span class="mi">52</span><span class="p">,</span><span class="w"> </span><span class="mi">125</span><span class="p">,</span><span class="w"> </span><span class="mi">55</span><span class="p">,</span><span class="w"> </span><span class="mi">86</span><span class="p">,</span><span class="w"> </span><span class="mi">101</span><span class="p">,</span><span class="w"> </span><span class="mi">167</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@is_cert_der_pkcs7</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># RSA-2048 key (only the modulus since the public key exponent is known to be 0x10001)</span>
+<span class="w">    </span><span class="c1"># @see &#39;&#39; EFI_CERT_RSA2048_GUID</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">is_cert_rsa2048_key</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@is_cert_rsa2048_key</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@is_cert_rsa2048_key</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@is_cert_rsa2048_key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">232</span><span class="p">,</span><span class="w"> </span><span class="mi">102</span><span class="p">,</span><span class="w"> </span><span class="mi">87</span><span class="p">,</span><span class="w"> </span><span class="mi">60</span><span class="p">,</span><span class="w"> </span><span class="mi">156</span><span class="p">,</span><span class="w"> </span><span class="mi">38</span><span class="p">,</span><span class="w"> </span><span class="mi">52</span><span class="p">,</span><span class="w"> </span><span class="mi">78</span><span class="p">,</span><span class="w"> </span><span class="mi">170</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w"> </span><span class="mi">237</span><span class="p">,</span><span class="w"> </span><span class="mi">119</span><span class="p">,</span><span class="w"> </span><span class="mi">110</span><span class="p">,</span><span class="w"> </span><span class="mi">133</span><span class="p">,</span><span class="w"> </span><span class="mi">179</span><span class="p">,</span><span class="w"> </span><span class="mi">182</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@is_cert_rsa2048_key</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># RSA-2048 signature of a SHA-1 hash</span>
+<span class="w">    </span><span class="c1"># @see &#39;&#39; EFI_CERT_RSA2048_SHA1_GUID</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">is_cert_rsa2048_sha1</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@is_cert_rsa2048_sha1</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@is_cert_rsa2048_sha1</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@is_cert_rsa2048_sha1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">79</span><span class="p">,</span><span class="w"> </span><span class="mi">68</span><span class="p">,</span><span class="w"> </span><span class="mi">248</span><span class="p">,</span><span class="w"> </span><span class="mi">103</span><span class="p">,</span><span class="w"> </span><span class="mi">67</span><span class="p">,</span><span class="w"> </span><span class="mi">135</span><span class="p">,</span><span class="w"> </span><span class="mi">241</span><span class="p">,</span><span class="w"> </span><span class="mi">72</span><span class="p">,</span><span class="w"> </span><span class="mi">163</span><span class="p">,</span><span class="w"> </span><span class="mi">40</span><span class="p">,</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span><span class="w"> </span><span class="mi">170</span><span class="p">,</span><span class="w"> </span><span class="mi">184</span><span class="p">,</span><span class="w"> </span><span class="mi">115</span><span class="p">,</span><span class="w"> </span><span class="mi">96</span><span class="p">,</span><span class="w"> </span><span class="mi">128</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@is_cert_rsa2048_sha1</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># RSA-2048 signature of a SHA-256 hash</span>
+<span class="w">    </span><span class="c1"># @see &#39;&#39; EFI_CERT_RSA2048_SHA256_GUID</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">is_cert_rsa2048_sha256</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@is_cert_rsa2048_sha256</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@is_cert_rsa2048_sha256</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@is_cert_rsa2048_sha256</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">144</span><span class="p">,</span><span class="w"> </span><span class="mi">97</span><span class="p">,</span><span class="w"> </span><span class="mi">179</span><span class="p">,</span><span class="w"> </span><span class="mi">226</span><span class="p">,</span><span class="w"> </span><span class="mi">155</span><span class="p">,</span><span class="w"> </span><span class="mi">135</span><span class="p">,</span><span class="w"> </span><span class="mi">61</span><span class="p">,</span><span class="w"> </span><span class="mi">74</span><span class="p">,</span><span class="w"> </span><span class="mi">173</span><span class="p">,</span><span class="w"> </span><span class="mi">141</span><span class="p">,</span><span class="w"> </span><span class="mi">242</span><span class="p">,</span><span class="w"> </span><span class="mi">231</span><span class="p">,</span><span class="w"> </span><span class="mi">187</span><span class="p">,</span><span class="w"> </span><span class="mi">163</span><span class="p">,</span><span class="w"> </span><span class="mi">39</span><span class="p">,</span><span class="w"> </span><span class="mi">132</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@is_cert_rsa2048_sha256</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># SHA-1 hash</span>
+<span class="w">    </span><span class="c1"># @see &#39;&#39; EFI_CERT_SHA1_GUID</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">is_cert_sha1</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@is_cert_sha1</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@is_cert_sha1</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@is_cert_sha1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">18</span><span class="p">,</span><span class="w"> </span><span class="mi">165</span><span class="p">,</span><span class="w"> </span><span class="mi">108</span><span class="p">,</span><span class="w"> </span><span class="mi">130</span><span class="p">,</span><span class="w"> </span><span class="mi">16</span><span class="p">,</span><span class="w"> </span><span class="mi">207</span><span class="p">,</span><span class="w"> </span><span class="mi">201</span><span class="p">,</span><span class="w"> </span><span class="mi">74</span><span class="p">,</span><span class="w"> </span><span class="mi">177</span><span class="p">,</span><span class="w"> </span><span class="mi">135</span><span class="p">,</span><span class="w"> </span><span class="mi">190</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">73</span><span class="p">,</span><span class="w"> </span><span class="mi">102</span><span class="p">,</span><span class="w"> </span><span class="mi">49</span><span class="p">,</span><span class="w"> </span><span class="mi">189</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@is_cert_sha1</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># SHA-224 hash</span>
+<span class="w">    </span><span class="c1"># @see &#39;&#39; EFI_CERT_SHA224_GUID</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">is_cert_sha224</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@is_cert_sha224</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@is_cert_sha224</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@is_cert_sha224</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">51</span><span class="p">,</span><span class="w"> </span><span class="mi">82</span><span class="p">,</span><span class="w"> </span><span class="mi">110</span><span class="p">,</span><span class="w"> </span><span class="mi">11</span><span class="p">,</span><span class="w"> </span><span class="mi">92</span><span class="p">,</span><span class="w"> </span><span class="mi">166</span><span class="p">,</span><span class="w"> </span><span class="mi">201</span><span class="p">,</span><span class="w"> </span><span class="mi">68</span><span class="p">,</span><span class="w"> </span><span class="mi">148</span><span class="p">,</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span><span class="w"> </span><span class="mi">217</span><span class="p">,</span><span class="w"> </span><span class="mi">171</span><span class="p">,</span><span class="w"> </span><span class="mi">131</span><span class="p">,</span><span class="w"> </span><span class="mi">191</span><span class="p">,</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w"> </span><span class="mi">189</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@is_cert_sha224</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># SHA-256 hash</span>
+<span class="w">    </span><span class="c1"># @see &#39;&#39; EFI_CERT_SHA256_GUID</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">is_cert_sha256</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@is_cert_sha256</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@is_cert_sha256</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@is_cert_sha256</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">38</span><span class="p">,</span><span class="w"> </span><span class="mi">22</span><span class="p">,</span><span class="w"> </span><span class="mi">196</span><span class="p">,</span><span class="w"> </span><span class="mi">193</span><span class="p">,</span><span class="w"> </span><span class="mi">76</span><span class="p">,</span><span class="w"> </span><span class="mi">80</span><span class="p">,</span><span class="w"> </span><span class="mi">146</span><span class="p">,</span><span class="w"> </span><span class="mi">64</span><span class="p">,</span><span class="w"> </span><span class="mi">172</span><span class="p">,</span><span class="w"> </span><span class="mi">169</span><span class="p">,</span><span class="w"> </span><span class="mi">65</span><span class="p">,</span><span class="w"> </span><span class="mi">249</span><span class="p">,</span><span class="w"> </span><span class="mi">54</span><span class="p">,</span><span class="w"> </span><span class="mi">147</span><span class="p">,</span><span class="w"> </span><span class="mi">67</span><span class="p">,</span><span class="w"> </span><span class="mi">40</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@is_cert_sha256</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># SHA256 hash of an X.509 certificate&#39;s To-Be-Signed contents, and a time of revocation</span>
+<span class="w">    </span><span class="c1"># @see &#39;&#39; EFI_CERT_X509_SHA256_GUID</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">is_cert_sha256_x509</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@is_cert_sha256_x509</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@is_cert_sha256_x509</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@is_cert_sha256_x509</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">146</span><span class="p">,</span><span class="w"> </span><span class="mi">164</span><span class="p">,</span><span class="w"> </span><span class="mi">210</span><span class="p">,</span><span class="w"> </span><span class="mi">59</span><span class="p">,</span><span class="w"> </span><span class="mi">192</span><span class="p">,</span><span class="w"> </span><span class="mi">150</span><span class="p">,</span><span class="w"> </span><span class="mi">121</span><span class="p">,</span><span class="w"> </span><span class="mi">64</span><span class="p">,</span><span class="w"> </span><span class="mi">180</span><span class="p">,</span><span class="w"> </span><span class="mi">32</span><span class="p">,</span><span class="w"> </span><span class="mi">252</span><span class="p">,</span><span class="w"> </span><span class="mi">249</span><span class="p">,</span><span class="w"> </span><span class="mi">142</span><span class="p">,</span><span class="w"> </span><span class="mi">241</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">237</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@is_cert_sha256_x509</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># SHA-384 hash</span>
+<span class="w">    </span><span class="c1"># @see &#39;&#39; EFI_CERT_SHA384_GUID</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">is_cert_sha384</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@is_cert_sha384</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@is_cert_sha384</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@is_cert_sha384</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">7</span><span class="p">,</span><span class="w"> </span><span class="mi">83</span><span class="p">,</span><span class="w"> </span><span class="mi">62</span><span class="p">,</span><span class="w"> </span><span class="mi">255</span><span class="p">,</span><span class="w"> </span><span class="mi">208</span><span class="p">,</span><span class="w"> </span><span class="mi">159</span><span class="p">,</span><span class="w"> </span><span class="mi">201</span><span class="p">,</span><span class="w"> </span><span class="mi">72</span><span class="p">,</span><span class="w"> </span><span class="mi">133</span><span class="p">,</span><span class="w"> </span><span class="mi">241</span><span class="p">,</span><span class="w"> </span><span class="mi">138</span><span class="p">,</span><span class="w"> </span><span class="mi">213</span><span class="p">,</span><span class="w"> </span><span class="mi">108</span><span class="p">,</span><span class="w"> </span><span class="mi">112</span><span class="p">,</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@is_cert_sha384</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># SHA384 hash of an X.509 certificate&#39;s To-Be-Signed contents, and a time of revocation</span>
+<span class="w">    </span><span class="c1"># @see &#39;&#39; EFI_CERT_X509_SHA384_GUID</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">is_cert_sha384_x509</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@is_cert_sha384_x509</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@is_cert_sha384_x509</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@is_cert_sha384_x509</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">110</span><span class="p">,</span><span class="w"> </span><span class="mi">135</span><span class="p">,</span><span class="w"> </span><span class="mi">118</span><span class="p">,</span><span class="w"> </span><span class="mi">112</span><span class="p">,</span><span class="w"> </span><span class="mi">194</span><span class="p">,</span><span class="w"> </span><span class="mi">128</span><span class="p">,</span><span class="w"> </span><span class="mi">230</span><span class="p">,</span><span class="w"> </span><span class="mi">78</span><span class="p">,</span><span class="w"> </span><span class="mi">170</span><span class="p">,</span><span class="w"> </span><span class="mi">210</span><span class="p">,</span><span class="w"> </span><span class="mi">40</span><span class="p">,</span><span class="w"> </span><span class="mi">179</span><span class="p">,</span><span class="w"> </span><span class="mi">73</span><span class="p">,</span><span class="w"> </span><span class="mi">166</span><span class="p">,</span><span class="w"> </span><span class="mi">134</span><span class="p">,</span><span class="w"> </span><span class="mi">91</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@is_cert_sha384_x509</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># SHA-512 hash</span>
+<span class="w">    </span><span class="c1"># @see &#39;&#39; EFI_CERT_SHA512_GUID</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">is_cert_sha512</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@is_cert_sha512</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@is_cert_sha512</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@is_cert_sha512</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">174</span><span class="p">,</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span><span class="w"> </span><span class="mi">62</span><span class="p">,</span><span class="w"> </span><span class="mi">9</span><span class="p">,</span><span class="w"> </span><span class="mi">196</span><span class="p">,</span><span class="w"> </span><span class="mi">166</span><span class="p">,</span><span class="w"> </span><span class="mi">80</span><span class="p">,</span><span class="w"> </span><span class="mi">79</span><span class="p">,</span><span class="w"> </span><span class="mi">159</span><span class="p">,</span><span class="w"> </span><span class="mi">27</span><span class="p">,</span><span class="w"> </span><span class="mi">212</span><span class="p">,</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span><span class="w"> </span><span class="mi">43</span><span class="p">,</span><span class="w"> </span><span class="mi">137</span><span class="p">,</span><span class="w"> </span><span class="mi">193</span><span class="p">,</span><span class="w"> </span><span class="mi">154</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@is_cert_sha512</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># SHA512 hash of an X.509 certificate&#39;s To-Be-Signed contents, and a time of revocation</span>
+<span class="w">    </span><span class="c1"># @see &#39;&#39; EFI_CERT_X509_SHA512_GUID</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">is_cert_sha512_x509</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@is_cert_sha512_x509</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@is_cert_sha512_x509</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@is_cert_sha512_x509</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">99</span><span class="p">,</span><span class="w"> </span><span class="mi">191</span><span class="p">,</span><span class="w"> </span><span class="mi">109</span><span class="p">,</span><span class="w"> </span><span class="mi">68</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">37</span><span class="p">,</span><span class="w"> </span><span class="mi">218</span><span class="p">,</span><span class="w"> </span><span class="mi">76</span><span class="p">,</span><span class="w"> </span><span class="mi">188</span><span class="p">,</span><span class="w"> </span><span class="mi">250</span><span class="p">,</span><span class="w"> </span><span class="mi">36</span><span class="p">,</span><span class="w"> </span><span class="mi">101</span><span class="p">,</span><span class="w"> </span><span class="mi">210</span><span class="p">,</span><span class="w"> </span><span class="mi">176</span><span class="p">,</span><span class="w"> </span><span class="mi">254</span><span class="p">,</span><span class="w"> </span><span class="mi">157</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@is_cert_sha512_x509</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># X.509 certificate</span>
+<span class="w">    </span><span class="c1"># @see &#39;&#39; EFI_CERT_X509_GUID</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">is_cert_x509</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@is_cert_x509</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@is_cert_x509</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@is_cert_x509</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">161</span><span class="p">,</span><span class="w"> </span><span class="mi">89</span><span class="p">,</span><span class="w"> </span><span class="mi">192</span><span class="p">,</span><span class="w"> </span><span class="mi">165</span><span class="p">,</span><span class="w"> </span><span class="mi">228</span><span class="p">,</span><span class="w"> </span><span class="mi">148</span><span class="p">,</span><span class="w"> </span><span class="mi">167</span><span class="p">,</span><span class="w"> </span><span class="mi">74</span><span class="p">,</span><span class="w"> </span><span class="mi">135</span><span class="p">,</span><span class="w"> </span><span class="mi">181</span><span class="p">,</span><span class="w"> </span><span class="mi">171</span><span class="p">,</span><span class="w"> </span><span class="mi">21</span><span class="p">,</span><span class="w"> </span><span class="mi">92</span><span class="p">,</span><span class="w"> </span><span class="mi">43</span><span class="p">,</span><span class="w"> </span><span class="mi">240</span><span class="p">,</span><span class="w"> </span><span class="mi">114</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@is_cert_x509</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Type of the signature as a GUID</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:signature_type</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Total size of the signature list, including this header</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:len_signature_list</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Size of the signature header which precedes the array of signatures</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:len_signature_header</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Size of each signature</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:len_signature</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># Header before the array of signatures</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:header</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># An array of signatures</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:signatures</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:_raw_signatures</span>
 <span class="w">  </span><span class="k">end</span>
 
 <span class="w">  </span><span class="c1">##</span>

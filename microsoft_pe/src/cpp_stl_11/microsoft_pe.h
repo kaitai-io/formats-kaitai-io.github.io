@@ -2,13 +2,16 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class microsoft_pe_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -18,25 +21,31 @@
 class microsoft_pe_t : public kaitai::kstruct {
 
 public:
-    class certificate_entry_t;
-    class optional_header_windows_t;
-    class optional_header_data_dirs_t;
-    class data_dir_t;
-    class coff_symbol_t;
-    class pe_header_t;
-    class optional_header_t;
-    class section_t;
-    class certificate_table_t;
-    class mz_placeholder_t;
-    class optional_header_std_t;
-    class coff_header_t;
     class annoyingstring_t;
+    class certificate_entry_t;
+    class certificate_table_t;
+    class coff_header_t;
+    class coff_symbol_t;
+    class data_dir_t;
+    class mz_placeholder_t;
+    class optional_header_t;
+    class optional_header_data_dirs_t;
+    class optional_header_std_t;
+    class optional_header_windows_t;
+    class pe_header_t;
+    class section_t;
 
     enum pe_format_t {
         PE_FORMAT_ROM_IMAGE = 263,
         PE_FORMAT_PE32 = 267,
         PE_FORMAT_PE32_PLUS = 523
     };
+    static bool _is_defined_pe_format_t(pe_format_t v);
+
+private:
+    static const std::set<pe_format_t> _values_pe_format_t;
+
+public:
 
     microsoft_pe_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, microsoft_pe_t* p__root = nullptr);
 
@@ -46,6 +55,75 @@ private:
 
 public:
     ~microsoft_pe_t();
+
+    class annoyingstring_t : public kaitai::kstruct {
+
+    public:
+
+        annoyingstring_t(kaitai::kstream* p__io, microsoft_pe_t::coff_symbol_t* p__parent = nullptr, microsoft_pe_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~annoyingstring_t();
+
+    private:
+        bool f_name;
+        std::string m_name;
+
+    public:
+        std::string name();
+
+    private:
+        bool f_name_from_offset;
+        std::string m_name_from_offset;
+        bool n_name_from_offset;
+
+    public:
+        bool _is_null_name_from_offset() { name_from_offset(); return n_name_from_offset; };
+
+    private:
+
+    public:
+        std::string name_from_offset();
+
+    private:
+        bool f_name_from_short;
+        std::string m_name_from_short;
+        bool n_name_from_short;
+
+    public:
+        bool _is_null_name_from_short() { name_from_short(); return n_name_from_short; };
+
+    private:
+
+    public:
+        std::string name_from_short();
+
+    private:
+        bool f_name_offset;
+        uint32_t m_name_offset;
+
+    public:
+        uint32_t name_offset();
+
+    private:
+        bool f_name_zeroes;
+        uint32_t m_name_zeroes;
+
+    public:
+        uint32_t name_zeroes();
+
+    private:
+        microsoft_pe_t* m__root;
+        microsoft_pe_t::coff_symbol_t* m__parent;
+
+    public:
+        microsoft_pe_t* _root() const { return m__root; }
+        microsoft_pe_t::coff_symbol_t* _parent() const { return m__parent; }
+    };
 
     /**
      * \sa https://learn.microsoft.com/en-us/windows/win32/debug/pe-format#the-attribute-certificate-table-image-only Source
@@ -59,6 +137,12 @@ public:
             CERTIFICATE_REVISION_REVISION_1_0 = 256,
             CERTIFICATE_REVISION_REVISION_2_0 = 512
         };
+        static bool _is_defined_certificate_revision_t(certificate_revision_t v);
+
+    private:
+        static const std::set<certificate_revision_t> _values_certificate_revision_t;
+
+    public:
 
         enum certificate_type_enum_t {
             CERTIFICATE_TYPE_ENUM_X509 = 1,
@@ -66,6 +150,12 @@ public:
             CERTIFICATE_TYPE_ENUM_RESERVED_1 = 3,
             CERTIFICATE_TYPE_ENUM_TS_STACK_SIGNED = 4
         };
+        static bool _is_defined_certificate_type_enum_t(certificate_type_enum_t v);
+
+    private:
+        static const std::set<certificate_type_enum_t> _values_certificate_type_enum_t;
+
+    public:
 
         certificate_entry_t(kaitai::kstream* p__io, microsoft_pe_t::certificate_table_t* p__parent = nullptr, microsoft_pe_t* p__root = nullptr);
 
@@ -109,6 +199,372 @@ public:
         microsoft_pe_t::certificate_table_t* _parent() const { return m__parent; }
     };
 
+    class certificate_table_t : public kaitai::kstruct {
+
+    public:
+
+        certificate_table_t(kaitai::kstream* p__io, microsoft_pe_t::pe_header_t* p__parent = nullptr, microsoft_pe_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~certificate_table_t();
+
+    private:
+        std::unique_ptr<std::vector<std::unique_ptr<certificate_entry_t>>> m_items;
+        microsoft_pe_t* m__root;
+        microsoft_pe_t::pe_header_t* m__parent;
+
+    public:
+        std::vector<std::unique_ptr<certificate_entry_t>>* items() const { return m_items.get(); }
+        microsoft_pe_t* _root() const { return m__root; }
+        microsoft_pe_t::pe_header_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * \sa 3.3. COFF File Header (Object and Image)
+     */
+
+    class coff_header_t : public kaitai::kstruct {
+
+    public:
+
+        enum machine_type_t {
+            MACHINE_TYPE_UNKNOWN = 0,
+            MACHINE_TYPE_I386 = 332,
+            MACHINE_TYPE_R4000 = 358,
+            MACHINE_TYPE_WCE_MIPS_V2 = 361,
+            MACHINE_TYPE_ALPHA = 388,
+            MACHINE_TYPE_SH3 = 418,
+            MACHINE_TYPE_SH3_DSP = 419,
+            MACHINE_TYPE_SH4 = 422,
+            MACHINE_TYPE_SH5 = 424,
+            MACHINE_TYPE_ARM = 448,
+            MACHINE_TYPE_THUMB = 450,
+            MACHINE_TYPE_ARM_NT = 452,
+            MACHINE_TYPE_AM33 = 467,
+            MACHINE_TYPE_POWERPC = 496,
+            MACHINE_TYPE_POWERPC_FP = 497,
+            MACHINE_TYPE_IA64 = 512,
+            MACHINE_TYPE_MIPS16 = 614,
+            MACHINE_TYPE_ALPHA64_OR_AXP64 = 644,
+            MACHINE_TYPE_MIPS_FPU = 870,
+            MACHINE_TYPE_MIPS16_FPU = 1126,
+            MACHINE_TYPE_EBC = 3772,
+            MACHINE_TYPE_RISCV32 = 20530,
+            MACHINE_TYPE_RISCV64 = 20580,
+            MACHINE_TYPE_RISCV128 = 20776,
+            MACHINE_TYPE_LOONGARCH32 = 25138,
+            MACHINE_TYPE_LOONGARCH64 = 25188,
+            MACHINE_TYPE_AMD64 = 34404,
+            MACHINE_TYPE_M32R = 36929,
+            MACHINE_TYPE_ARM64 = 43620
+        };
+        static bool _is_defined_machine_type_t(machine_type_t v);
+
+    private:
+        static const std::set<machine_type_t> _values_machine_type_t;
+
+    public:
+
+        coff_header_t(kaitai::kstream* p__io, microsoft_pe_t::pe_header_t* p__parent = nullptr, microsoft_pe_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~coff_header_t();
+
+    private:
+        bool f_symbol_name_table_offset;
+        int32_t m_symbol_name_table_offset;
+
+    public:
+        int32_t symbol_name_table_offset();
+
+    private:
+        bool f_symbol_name_table_size;
+        uint32_t m_symbol_name_table_size;
+
+    public:
+        uint32_t symbol_name_table_size();
+
+    private:
+        bool f_symbol_table;
+        std::unique_ptr<std::vector<std::unique_ptr<coff_symbol_t>>> m_symbol_table;
+
+    public:
+        std::vector<std::unique_ptr<coff_symbol_t>>* symbol_table();
+
+    private:
+        bool f_symbol_table_size;
+        int32_t m_symbol_table_size;
+
+    public:
+        int32_t symbol_table_size();
+
+    private:
+        machine_type_t m_machine;
+        uint16_t m_number_of_sections;
+        uint32_t m_time_date_stamp;
+        uint32_t m_pointer_to_symbol_table;
+        uint32_t m_number_of_symbols;
+        uint16_t m_size_of_optional_header;
+        uint16_t m_characteristics;
+        microsoft_pe_t* m__root;
+        microsoft_pe_t::pe_header_t* m__parent;
+
+    public:
+        machine_type_t machine() const { return m_machine; }
+        uint16_t number_of_sections() const { return m_number_of_sections; }
+        uint32_t time_date_stamp() const { return m_time_date_stamp; }
+        uint32_t pointer_to_symbol_table() const { return m_pointer_to_symbol_table; }
+        uint32_t number_of_symbols() const { return m_number_of_symbols; }
+        uint16_t size_of_optional_header() const { return m_size_of_optional_header; }
+        uint16_t characteristics() const { return m_characteristics; }
+        microsoft_pe_t* _root() const { return m__root; }
+        microsoft_pe_t::pe_header_t* _parent() const { return m__parent; }
+    };
+
+    class coff_symbol_t : public kaitai::kstruct {
+
+    public:
+
+        coff_symbol_t(kaitai::kstream* p__io, microsoft_pe_t::coff_header_t* p__parent = nullptr, microsoft_pe_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~coff_symbol_t();
+
+    private:
+        bool f_data;
+        std::string m_data;
+
+    public:
+        std::string data();
+
+    private:
+        bool f_section;
+        section_t* m_section;
+
+    public:
+        section_t* section();
+
+    private:
+        std::unique_ptr<annoyingstring_t> m_name_annoying;
+        uint32_t m_value;
+        uint16_t m_section_number;
+        uint16_t m_type;
+        uint8_t m_storage_class;
+        uint8_t m_number_of_aux_symbols;
+        microsoft_pe_t* m__root;
+        microsoft_pe_t::coff_header_t* m__parent;
+        std::string m__raw_name_annoying;
+        std::unique_ptr<kaitai::kstream> m__io__raw_name_annoying;
+
+    public:
+        annoyingstring_t* name_annoying() const { return m_name_annoying.get(); }
+        uint32_t value() const { return m_value; }
+        uint16_t section_number() const { return m_section_number; }
+        uint16_t type() const { return m_type; }
+        uint8_t storage_class() const { return m_storage_class; }
+        uint8_t number_of_aux_symbols() const { return m_number_of_aux_symbols; }
+        microsoft_pe_t* _root() const { return m__root; }
+        microsoft_pe_t::coff_header_t* _parent() const { return m__parent; }
+        std::string _raw_name_annoying() const { return m__raw_name_annoying; }
+        kaitai::kstream* _io__raw_name_annoying() const { return m__io__raw_name_annoying.get(); }
+    };
+
+    class data_dir_t : public kaitai::kstruct {
+
+    public:
+
+        data_dir_t(kaitai::kstream* p__io, microsoft_pe_t::optional_header_data_dirs_t* p__parent = nullptr, microsoft_pe_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~data_dir_t();
+
+    private:
+        uint32_t m_virtual_address;
+        uint32_t m_size;
+        microsoft_pe_t* m__root;
+        microsoft_pe_t::optional_header_data_dirs_t* m__parent;
+
+    public:
+        uint32_t virtual_address() const { return m_virtual_address; }
+        uint32_t size() const { return m_size; }
+        microsoft_pe_t* _root() const { return m__root; }
+        microsoft_pe_t::optional_header_data_dirs_t* _parent() const { return m__parent; }
+    };
+
+    class mz_placeholder_t : public kaitai::kstruct {
+
+    public:
+
+        mz_placeholder_t(kaitai::kstream* p__io, microsoft_pe_t* p__parent = nullptr, microsoft_pe_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~mz_placeholder_t();
+
+    private:
+        std::string m_magic;
+        std::string m_data1;
+        uint32_t m_ofs_pe;
+        microsoft_pe_t* m__root;
+        microsoft_pe_t* m__parent;
+
+    public:
+        std::string magic() const { return m_magic; }
+        std::string data1() const { return m_data1; }
+
+        /**
+         * In PE file, an offset to PE header
+         */
+        uint32_t ofs_pe() const { return m_ofs_pe; }
+        microsoft_pe_t* _root() const { return m__root; }
+        microsoft_pe_t* _parent() const { return m__parent; }
+    };
+
+    class optional_header_t : public kaitai::kstruct {
+
+    public:
+
+        optional_header_t(kaitai::kstream* p__io, microsoft_pe_t::pe_header_t* p__parent = nullptr, microsoft_pe_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~optional_header_t();
+
+    private:
+        std::unique_ptr<optional_header_std_t> m_std;
+        std::unique_ptr<optional_header_windows_t> m_windows;
+        std::unique_ptr<optional_header_data_dirs_t> m_data_dirs;
+        microsoft_pe_t* m__root;
+        microsoft_pe_t::pe_header_t* m__parent;
+
+    public:
+        optional_header_std_t* std() const { return m_std.get(); }
+        optional_header_windows_t* windows() const { return m_windows.get(); }
+        optional_header_data_dirs_t* data_dirs() const { return m_data_dirs.get(); }
+        microsoft_pe_t* _root() const { return m__root; }
+        microsoft_pe_t::pe_header_t* _parent() const { return m__parent; }
+    };
+
+    class optional_header_data_dirs_t : public kaitai::kstruct {
+
+    public:
+
+        optional_header_data_dirs_t(kaitai::kstream* p__io, microsoft_pe_t::optional_header_t* p__parent = nullptr, microsoft_pe_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~optional_header_data_dirs_t();
+
+    private:
+        std::unique_ptr<data_dir_t> m_export_table;
+        std::unique_ptr<data_dir_t> m_import_table;
+        std::unique_ptr<data_dir_t> m_resource_table;
+        std::unique_ptr<data_dir_t> m_exception_table;
+        std::unique_ptr<data_dir_t> m_certificate_table;
+        std::unique_ptr<data_dir_t> m_base_relocation_table;
+        std::unique_ptr<data_dir_t> m_debug;
+        std::unique_ptr<data_dir_t> m_architecture;
+        std::unique_ptr<data_dir_t> m_global_ptr;
+        std::unique_ptr<data_dir_t> m_tls_table;
+        std::unique_ptr<data_dir_t> m_load_config_table;
+        std::unique_ptr<data_dir_t> m_bound_import;
+        std::unique_ptr<data_dir_t> m_iat;
+        std::unique_ptr<data_dir_t> m_delay_import_descriptor;
+        std::unique_ptr<data_dir_t> m_clr_runtime_header;
+        microsoft_pe_t* m__root;
+        microsoft_pe_t::optional_header_t* m__parent;
+
+    public:
+        data_dir_t* export_table() const { return m_export_table.get(); }
+        data_dir_t* import_table() const { return m_import_table.get(); }
+        data_dir_t* resource_table() const { return m_resource_table.get(); }
+        data_dir_t* exception_table() const { return m_exception_table.get(); }
+        data_dir_t* certificate_table() const { return m_certificate_table.get(); }
+        data_dir_t* base_relocation_table() const { return m_base_relocation_table.get(); }
+        data_dir_t* debug() const { return m_debug.get(); }
+        data_dir_t* architecture() const { return m_architecture.get(); }
+        data_dir_t* global_ptr() const { return m_global_ptr.get(); }
+        data_dir_t* tls_table() const { return m_tls_table.get(); }
+        data_dir_t* load_config_table() const { return m_load_config_table.get(); }
+        data_dir_t* bound_import() const { return m_bound_import.get(); }
+        data_dir_t* iat() const { return m_iat.get(); }
+        data_dir_t* delay_import_descriptor() const { return m_delay_import_descriptor.get(); }
+        data_dir_t* clr_runtime_header() const { return m_clr_runtime_header.get(); }
+        microsoft_pe_t* _root() const { return m__root; }
+        microsoft_pe_t::optional_header_t* _parent() const { return m__parent; }
+    };
+
+    class optional_header_std_t : public kaitai::kstruct {
+
+    public:
+
+        optional_header_std_t(kaitai::kstream* p__io, microsoft_pe_t::optional_header_t* p__parent = nullptr, microsoft_pe_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~optional_header_std_t();
+
+    private:
+        pe_format_t m_format;
+        uint8_t m_major_linker_version;
+        uint8_t m_minor_linker_version;
+        uint32_t m_size_of_code;
+        uint32_t m_size_of_initialized_data;
+        uint32_t m_size_of_uninitialized_data;
+        uint32_t m_address_of_entry_point;
+        uint32_t m_base_of_code;
+        uint32_t m_base_of_data;
+        bool n_base_of_data;
+
+    public:
+        bool _is_null_base_of_data() { base_of_data(); return n_base_of_data; };
+
+    private:
+        microsoft_pe_t* m__root;
+        microsoft_pe_t::optional_header_t* m__parent;
+
+    public:
+        pe_format_t format() const { return m_format; }
+        uint8_t major_linker_version() const { return m_major_linker_version; }
+        uint8_t minor_linker_version() const { return m_minor_linker_version; }
+        uint32_t size_of_code() const { return m_size_of_code; }
+        uint32_t size_of_initialized_data() const { return m_size_of_initialized_data; }
+        uint32_t size_of_uninitialized_data() const { return m_size_of_uninitialized_data; }
+        uint32_t address_of_entry_point() const { return m_address_of_entry_point; }
+        uint32_t base_of_code() const { return m_base_of_code; }
+        uint32_t base_of_data() const { return m_base_of_data; }
+        microsoft_pe_t* _root() const { return m__root; }
+        microsoft_pe_t::optional_header_t* _parent() const { return m__parent; }
+    };
+
     class optional_header_windows_t : public kaitai::kstruct {
 
     public:
@@ -127,6 +583,12 @@ public:
             SUBSYSTEM_ENUM_XBOX = 14,
             SUBSYSTEM_ENUM_WINDOWS_BOOT_APPLICATION = 16
         };
+        static bool _is_defined_subsystem_enum_t(subsystem_enum_t v);
+
+    private:
+        static const std::set<subsystem_enum_t> _values_subsystem_enum_t;
+
+    public:
 
         optional_header_windows_t(kaitai::kstream* p__io, microsoft_pe_t::optional_header_t* p__parent = nullptr, microsoft_pe_t* p__root = nullptr);
 
@@ -258,136 +720,6 @@ public:
         microsoft_pe_t::optional_header_t* _parent() const { return m__parent; }
     };
 
-    class optional_header_data_dirs_t : public kaitai::kstruct {
-
-    public:
-
-        optional_header_data_dirs_t(kaitai::kstream* p__io, microsoft_pe_t::optional_header_t* p__parent = nullptr, microsoft_pe_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~optional_header_data_dirs_t();
-
-    private:
-        std::unique_ptr<data_dir_t> m_export_table;
-        std::unique_ptr<data_dir_t> m_import_table;
-        std::unique_ptr<data_dir_t> m_resource_table;
-        std::unique_ptr<data_dir_t> m_exception_table;
-        std::unique_ptr<data_dir_t> m_certificate_table;
-        std::unique_ptr<data_dir_t> m_base_relocation_table;
-        std::unique_ptr<data_dir_t> m_debug;
-        std::unique_ptr<data_dir_t> m_architecture;
-        std::unique_ptr<data_dir_t> m_global_ptr;
-        std::unique_ptr<data_dir_t> m_tls_table;
-        std::unique_ptr<data_dir_t> m_load_config_table;
-        std::unique_ptr<data_dir_t> m_bound_import;
-        std::unique_ptr<data_dir_t> m_iat;
-        std::unique_ptr<data_dir_t> m_delay_import_descriptor;
-        std::unique_ptr<data_dir_t> m_clr_runtime_header;
-        microsoft_pe_t* m__root;
-        microsoft_pe_t::optional_header_t* m__parent;
-
-    public:
-        data_dir_t* export_table() const { return m_export_table.get(); }
-        data_dir_t* import_table() const { return m_import_table.get(); }
-        data_dir_t* resource_table() const { return m_resource_table.get(); }
-        data_dir_t* exception_table() const { return m_exception_table.get(); }
-        data_dir_t* certificate_table() const { return m_certificate_table.get(); }
-        data_dir_t* base_relocation_table() const { return m_base_relocation_table.get(); }
-        data_dir_t* debug() const { return m_debug.get(); }
-        data_dir_t* architecture() const { return m_architecture.get(); }
-        data_dir_t* global_ptr() const { return m_global_ptr.get(); }
-        data_dir_t* tls_table() const { return m_tls_table.get(); }
-        data_dir_t* load_config_table() const { return m_load_config_table.get(); }
-        data_dir_t* bound_import() const { return m_bound_import.get(); }
-        data_dir_t* iat() const { return m_iat.get(); }
-        data_dir_t* delay_import_descriptor() const { return m_delay_import_descriptor.get(); }
-        data_dir_t* clr_runtime_header() const { return m_clr_runtime_header.get(); }
-        microsoft_pe_t* _root() const { return m__root; }
-        microsoft_pe_t::optional_header_t* _parent() const { return m__parent; }
-    };
-
-    class data_dir_t : public kaitai::kstruct {
-
-    public:
-
-        data_dir_t(kaitai::kstream* p__io, microsoft_pe_t::optional_header_data_dirs_t* p__parent = nullptr, microsoft_pe_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~data_dir_t();
-
-    private:
-        uint32_t m_virtual_address;
-        uint32_t m_size;
-        microsoft_pe_t* m__root;
-        microsoft_pe_t::optional_header_data_dirs_t* m__parent;
-
-    public:
-        uint32_t virtual_address() const { return m_virtual_address; }
-        uint32_t size() const { return m_size; }
-        microsoft_pe_t* _root() const { return m__root; }
-        microsoft_pe_t::optional_header_data_dirs_t* _parent() const { return m__parent; }
-    };
-
-    class coff_symbol_t : public kaitai::kstruct {
-
-    public:
-
-        coff_symbol_t(kaitai::kstream* p__io, microsoft_pe_t::coff_header_t* p__parent = nullptr, microsoft_pe_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~coff_symbol_t();
-
-    private:
-        bool f_section;
-        section_t* m_section;
-
-    public:
-        section_t* section();
-
-    private:
-        bool f_data;
-        std::string m_data;
-
-    public:
-        std::string data();
-
-    private:
-        std::unique_ptr<annoyingstring_t> m_name_annoying;
-        uint32_t m_value;
-        uint16_t m_section_number;
-        uint16_t m_type;
-        uint8_t m_storage_class;
-        uint8_t m_number_of_aux_symbols;
-        microsoft_pe_t* m__root;
-        microsoft_pe_t::coff_header_t* m__parent;
-        std::string m__raw_name_annoying;
-        std::unique_ptr<kaitai::kstream> m__io__raw_name_annoying;
-
-    public:
-        annoyingstring_t* name_annoying() const { return m_name_annoying.get(); }
-        uint32_t value() const { return m_value; }
-        uint16_t section_number() const { return m_section_number; }
-        uint16_t type() const { return m_type; }
-        uint8_t storage_class() const { return m_storage_class; }
-        uint8_t number_of_aux_symbols() const { return m_number_of_aux_symbols; }
-        microsoft_pe_t* _root() const { return m__root; }
-        microsoft_pe_t::coff_header_t* _parent() const { return m__parent; }
-        std::string _raw_name_annoying() const { return m__raw_name_annoying; }
-        kaitai::kstream* _io__raw_name_annoying() const { return m__io__raw_name_annoying.get(); }
-    };
-
     class pe_header_t : public kaitai::kstruct {
 
     public:
@@ -445,34 +777,6 @@ public:
         kaitai::kstream* _io__raw_certificate_table() const { return m__io__raw_certificate_table.get(); }
     };
 
-    class optional_header_t : public kaitai::kstruct {
-
-    public:
-
-        optional_header_t(kaitai::kstream* p__io, microsoft_pe_t::pe_header_t* p__parent = nullptr, microsoft_pe_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~optional_header_t();
-
-    private:
-        std::unique_ptr<optional_header_std_t> m_std;
-        std::unique_ptr<optional_header_windows_t> m_windows;
-        std::unique_ptr<optional_header_data_dirs_t> m_data_dirs;
-        microsoft_pe_t* m__root;
-        microsoft_pe_t::pe_header_t* m__parent;
-
-    public:
-        optional_header_std_t* std() const { return m_std.get(); }
-        optional_header_windows_t* windows() const { return m_windows.get(); }
-        optional_header_data_dirs_t* data_dirs() const { return m_data_dirs.get(); }
-        microsoft_pe_t* _root() const { return m__root; }
-        microsoft_pe_t::pe_header_t* _parent() const { return m__parent; }
-    };
-
     class section_t : public kaitai::kstruct {
 
     public:
@@ -520,277 +824,6 @@ public:
         uint32_t characteristics() const { return m_characteristics; }
         microsoft_pe_t* _root() const { return m__root; }
         microsoft_pe_t::pe_header_t* _parent() const { return m__parent; }
-    };
-
-    class certificate_table_t : public kaitai::kstruct {
-
-    public:
-
-        certificate_table_t(kaitai::kstream* p__io, microsoft_pe_t::pe_header_t* p__parent = nullptr, microsoft_pe_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~certificate_table_t();
-
-    private:
-        std::unique_ptr<std::vector<std::unique_ptr<certificate_entry_t>>> m_items;
-        microsoft_pe_t* m__root;
-        microsoft_pe_t::pe_header_t* m__parent;
-
-    public:
-        std::vector<std::unique_ptr<certificate_entry_t>>* items() const { return m_items.get(); }
-        microsoft_pe_t* _root() const { return m__root; }
-        microsoft_pe_t::pe_header_t* _parent() const { return m__parent; }
-    };
-
-    class mz_placeholder_t : public kaitai::kstruct {
-
-    public:
-
-        mz_placeholder_t(kaitai::kstream* p__io, microsoft_pe_t* p__parent = nullptr, microsoft_pe_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~mz_placeholder_t();
-
-    private:
-        std::string m_magic;
-        std::string m_data1;
-        uint32_t m_ofs_pe;
-        microsoft_pe_t* m__root;
-        microsoft_pe_t* m__parent;
-
-    public:
-        std::string magic() const { return m_magic; }
-        std::string data1() const { return m_data1; }
-
-        /**
-         * In PE file, an offset to PE header
-         */
-        uint32_t ofs_pe() const { return m_ofs_pe; }
-        microsoft_pe_t* _root() const { return m__root; }
-        microsoft_pe_t* _parent() const { return m__parent; }
-    };
-
-    class optional_header_std_t : public kaitai::kstruct {
-
-    public:
-
-        optional_header_std_t(kaitai::kstream* p__io, microsoft_pe_t::optional_header_t* p__parent = nullptr, microsoft_pe_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~optional_header_std_t();
-
-    private:
-        pe_format_t m_format;
-        uint8_t m_major_linker_version;
-        uint8_t m_minor_linker_version;
-        uint32_t m_size_of_code;
-        uint32_t m_size_of_initialized_data;
-        uint32_t m_size_of_uninitialized_data;
-        uint32_t m_address_of_entry_point;
-        uint32_t m_base_of_code;
-        uint32_t m_base_of_data;
-        bool n_base_of_data;
-
-    public:
-        bool _is_null_base_of_data() { base_of_data(); return n_base_of_data; };
-
-    private:
-        microsoft_pe_t* m__root;
-        microsoft_pe_t::optional_header_t* m__parent;
-
-    public:
-        pe_format_t format() const { return m_format; }
-        uint8_t major_linker_version() const { return m_major_linker_version; }
-        uint8_t minor_linker_version() const { return m_minor_linker_version; }
-        uint32_t size_of_code() const { return m_size_of_code; }
-        uint32_t size_of_initialized_data() const { return m_size_of_initialized_data; }
-        uint32_t size_of_uninitialized_data() const { return m_size_of_uninitialized_data; }
-        uint32_t address_of_entry_point() const { return m_address_of_entry_point; }
-        uint32_t base_of_code() const { return m_base_of_code; }
-        uint32_t base_of_data() const { return m_base_of_data; }
-        microsoft_pe_t* _root() const { return m__root; }
-        microsoft_pe_t::optional_header_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * \sa 3.3. COFF File Header (Object and Image)
-     */
-
-    class coff_header_t : public kaitai::kstruct {
-
-    public:
-
-        enum machine_type_t {
-            MACHINE_TYPE_UNKNOWN = 0,
-            MACHINE_TYPE_I386 = 332,
-            MACHINE_TYPE_R4000 = 358,
-            MACHINE_TYPE_WCE_MIPS_V2 = 361,
-            MACHINE_TYPE_ALPHA = 388,
-            MACHINE_TYPE_SH3 = 418,
-            MACHINE_TYPE_SH3_DSP = 419,
-            MACHINE_TYPE_SH4 = 422,
-            MACHINE_TYPE_SH5 = 424,
-            MACHINE_TYPE_ARM = 448,
-            MACHINE_TYPE_THUMB = 450,
-            MACHINE_TYPE_ARM_NT = 452,
-            MACHINE_TYPE_AM33 = 467,
-            MACHINE_TYPE_POWERPC = 496,
-            MACHINE_TYPE_POWERPC_FP = 497,
-            MACHINE_TYPE_IA64 = 512,
-            MACHINE_TYPE_MIPS16 = 614,
-            MACHINE_TYPE_ALPHA64_OR_AXP64 = 644,
-            MACHINE_TYPE_MIPS_FPU = 870,
-            MACHINE_TYPE_MIPS16_FPU = 1126,
-            MACHINE_TYPE_EBC = 3772,
-            MACHINE_TYPE_RISCV32 = 20530,
-            MACHINE_TYPE_RISCV64 = 20580,
-            MACHINE_TYPE_RISCV128 = 20776,
-            MACHINE_TYPE_LOONGARCH32 = 25138,
-            MACHINE_TYPE_LOONGARCH64 = 25188,
-            MACHINE_TYPE_AMD64 = 34404,
-            MACHINE_TYPE_M32R = 36929,
-            MACHINE_TYPE_ARM64 = 43620
-        };
-
-        coff_header_t(kaitai::kstream* p__io, microsoft_pe_t::pe_header_t* p__parent = nullptr, microsoft_pe_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~coff_header_t();
-
-    private:
-        bool f_symbol_table_size;
-        int32_t m_symbol_table_size;
-
-    public:
-        int32_t symbol_table_size();
-
-    private:
-        bool f_symbol_name_table_offset;
-        int32_t m_symbol_name_table_offset;
-
-    public:
-        int32_t symbol_name_table_offset();
-
-    private:
-        bool f_symbol_name_table_size;
-        uint32_t m_symbol_name_table_size;
-
-    public:
-        uint32_t symbol_name_table_size();
-
-    private:
-        bool f_symbol_table;
-        std::unique_ptr<std::vector<std::unique_ptr<coff_symbol_t>>> m_symbol_table;
-
-    public:
-        std::vector<std::unique_ptr<coff_symbol_t>>* symbol_table();
-
-    private:
-        machine_type_t m_machine;
-        uint16_t m_number_of_sections;
-        uint32_t m_time_date_stamp;
-        uint32_t m_pointer_to_symbol_table;
-        uint32_t m_number_of_symbols;
-        uint16_t m_size_of_optional_header;
-        uint16_t m_characteristics;
-        microsoft_pe_t* m__root;
-        microsoft_pe_t::pe_header_t* m__parent;
-
-    public:
-        machine_type_t machine() const { return m_machine; }
-        uint16_t number_of_sections() const { return m_number_of_sections; }
-        uint32_t time_date_stamp() const { return m_time_date_stamp; }
-        uint32_t pointer_to_symbol_table() const { return m_pointer_to_symbol_table; }
-        uint32_t number_of_symbols() const { return m_number_of_symbols; }
-        uint16_t size_of_optional_header() const { return m_size_of_optional_header; }
-        uint16_t characteristics() const { return m_characteristics; }
-        microsoft_pe_t* _root() const { return m__root; }
-        microsoft_pe_t::pe_header_t* _parent() const { return m__parent; }
-    };
-
-    class annoyingstring_t : public kaitai::kstruct {
-
-    public:
-
-        annoyingstring_t(kaitai::kstream* p__io, microsoft_pe_t::coff_symbol_t* p__parent = nullptr, microsoft_pe_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~annoyingstring_t();
-
-    private:
-        bool f_name_from_offset;
-        std::string m_name_from_offset;
-        bool n_name_from_offset;
-
-    public:
-        bool _is_null_name_from_offset() { name_from_offset(); return n_name_from_offset; };
-
-    private:
-
-    public:
-        std::string name_from_offset();
-
-    private:
-        bool f_name_offset;
-        uint32_t m_name_offset;
-
-    public:
-        uint32_t name_offset();
-
-    private:
-        bool f_name;
-        std::string m_name;
-
-    public:
-        std::string name();
-
-    private:
-        bool f_name_zeroes;
-        uint32_t m_name_zeroes;
-
-    public:
-        uint32_t name_zeroes();
-
-    private:
-        bool f_name_from_short;
-        std::string m_name_from_short;
-        bool n_name_from_short;
-
-    public:
-        bool _is_null_name_from_short() { name_from_short(); return n_name_from_short; };
-
-    private:
-
-    public:
-        std::string name_from_short();
-
-    private:
-        microsoft_pe_t* m__root;
-        microsoft_pe_t::coff_symbol_t* m__parent;
-
-    public:
-        microsoft_pe_t* _root() const { return m__root; }
-        microsoft_pe_t::coff_symbol_t* _parent() const { return m__parent; }
     };
 
 private:

@@ -3,12 +3,14 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class hccap_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -22,8 +24,8 @@
 class hccap_t : public kaitai::kstruct {
 
 public:
-    class hccap_record_t;
     class eapol_dummy_t;
+    class hccap_record_t;
 
     hccap_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, hccap_t* p__root = 0);
 
@@ -33,6 +35,28 @@ private:
 
 public:
     ~hccap_t();
+
+    class eapol_dummy_t : public kaitai::kstruct {
+
+    public:
+
+        eapol_dummy_t(kaitai::kstream* p__io, hccap_t::hccap_record_t* p__parent = 0, hccap_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~eapol_dummy_t();
+
+    private:
+        hccap_t* m__root;
+        hccap_t::hccap_record_t* m__parent;
+
+    public:
+        hccap_t* _root() const { return m__root; }
+        hccap_t::hccap_record_t* _parent() const { return m__parent; }
+    };
 
     class hccap_record_t : public kaitai::kstruct {
 
@@ -117,28 +141,6 @@ public:
         hccap_t* _parent() const { return m__parent; }
         std::string _raw_eapol_buffer() const { return m__raw_eapol_buffer; }
         kaitai::kstream* _io__raw_eapol_buffer() const { return m__io__raw_eapol_buffer; }
-    };
-
-    class eapol_dummy_t : public kaitai::kstruct {
-
-    public:
-
-        eapol_dummy_t(kaitai::kstream* p__io, hccap_t::hccap_record_t* p__parent = 0, hccap_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~eapol_dummy_t();
-
-    private:
-        hccap_t* m__root;
-        hccap_t::hccap_record_t* m__parent;
-
-    public:
-        hccap_t* _root() const { return m__root; }
-        hccap_t::hccap_record_t* _parent() const { return m__parent; }
     };
 
 private:

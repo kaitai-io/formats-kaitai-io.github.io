@@ -7,15 +7,15 @@
 
 namespace {
     class Grub2Font extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Grub2Font $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Grub2Font $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic = $this->_io->readBytes(12);
-            if (!($this->magic() == "\x46\x49\x4C\x45\x00\x00\x00\x04\x50\x46\x46\x32")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x46\x49\x4C\x45\x00\x00\x00\x04\x50\x46\x46\x32", $this->magic(), $this->_io(), "/seq/0");
+            if (!($this->_m_magic == "\x46\x49\x4C\x45\x00\x00\x00\x04\x50\x46\x46\x32")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x46\x49\x4C\x45\x00\x00\x00\x04\x50\x46\x46\x32", $this->_m_magic, $this->_io, "/seq/0");
             }
             $this->_m_sections = [];
             $i = 0;
@@ -40,166 +40,8 @@ namespace {
 }
 
 namespace Grub2Font {
-    class PtszSection extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Grub2Font\Section $_parent = null, \Grub2Font $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_fontPointSize = $this->_io->readU2be();
-        }
-        protected $_m_fontPointSize;
-        public function fontPointSize() { return $this->_m_fontPointSize; }
-    }
-}
-
-namespace Grub2Font {
-    class FamiSection extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Grub2Font\Section $_parent = null, \Grub2Font $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_fontFamilyName = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, true), "ASCII");
-        }
-        protected $_m_fontFamilyName;
-        public function fontFamilyName() { return $this->_m_fontFamilyName; }
-    }
-}
-
-namespace Grub2Font {
-    class WeigSection extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Grub2Font\Section $_parent = null, \Grub2Font $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_fontWeight = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, true), "ASCII");
-        }
-        protected $_m_fontWeight;
-        public function fontWeight() { return $this->_m_fontWeight; }
-    }
-}
-
-namespace Grub2Font {
-    class MaxwSection extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Grub2Font\Section $_parent = null, \Grub2Font $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_maximumCharacterWidth = $this->_io->readU2be();
-        }
-        protected $_m_maximumCharacterWidth;
-        public function maximumCharacterWidth() { return $this->_m_maximumCharacterWidth; }
-    }
-}
-
-namespace Grub2Font {
-    class DescSection extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Grub2Font\Section $_parent = null, \Grub2Font $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_descentInPixels = $this->_io->readU2be();
-        }
-        protected $_m_descentInPixels;
-        public function descentInPixels() { return $this->_m_descentInPixels; }
-    }
-}
-
-namespace Grub2Font {
-    class Section extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Grub2Font $_parent = null, \Grub2Font $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_sectionType = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(4), "ASCII");
-            $this->_m_lenBody = $this->_io->readU4be();
-            if ($this->sectionType() != "DATA") {
-                switch ($this->sectionType()) {
-                    case "MAXH":
-                        $this->_m__raw_body = $this->_io->readBytes($this->lenBody());
-                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                        $this->_m_body = new \Grub2Font\MaxhSection($_io__raw_body, $this, $this->_root);
-                        break;
-                    case "FAMI":
-                        $this->_m__raw_body = $this->_io->readBytes($this->lenBody());
-                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                        $this->_m_body = new \Grub2Font\FamiSection($_io__raw_body, $this, $this->_root);
-                        break;
-                    case "PTSZ":
-                        $this->_m__raw_body = $this->_io->readBytes($this->lenBody());
-                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                        $this->_m_body = new \Grub2Font\PtszSection($_io__raw_body, $this, $this->_root);
-                        break;
-                    case "MAXW":
-                        $this->_m__raw_body = $this->_io->readBytes($this->lenBody());
-                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                        $this->_m_body = new \Grub2Font\MaxwSection($_io__raw_body, $this, $this->_root);
-                        break;
-                    case "SLAN":
-                        $this->_m__raw_body = $this->_io->readBytes($this->lenBody());
-                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                        $this->_m_body = new \Grub2Font\SlanSection($_io__raw_body, $this, $this->_root);
-                        break;
-                    case "WEIG":
-                        $this->_m__raw_body = $this->_io->readBytes($this->lenBody());
-                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                        $this->_m_body = new \Grub2Font\WeigSection($_io__raw_body, $this, $this->_root);
-                        break;
-                    case "CHIX":
-                        $this->_m__raw_body = $this->_io->readBytes($this->lenBody());
-                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                        $this->_m_body = new \Grub2Font\ChixSection($_io__raw_body, $this, $this->_root);
-                        break;
-                    case "DESC":
-                        $this->_m__raw_body = $this->_io->readBytes($this->lenBody());
-                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                        $this->_m_body = new \Grub2Font\DescSection($_io__raw_body, $this, $this->_root);
-                        break;
-                    case "NAME":
-                        $this->_m__raw_body = $this->_io->readBytes($this->lenBody());
-                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                        $this->_m_body = new \Grub2Font\NameSection($_io__raw_body, $this, $this->_root);
-                        break;
-                    case "ASCE":
-                        $this->_m__raw_body = $this->_io->readBytes($this->lenBody());
-                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                        $this->_m_body = new \Grub2Font\AsceSection($_io__raw_body, $this, $this->_root);
-                        break;
-                    default:
-                        $this->_m_body = $this->_io->readBytes($this->lenBody());
-                        break;
-                }
-            }
-        }
-        protected $_m_sectionType;
-        protected $_m_lenBody;
-        protected $_m_body;
-        protected $_m__raw_body;
-        public function sectionType() { return $this->_m_sectionType; }
-
-        /**
-         * Should be set to `0xFFFF_FFFF` for `section_type != "DATA"`
-         */
-        public function lenBody() { return $this->_m_lenBody; }
-        public function body() { return $this->_m_body; }
-        public function _raw_body() { return $this->_m__raw_body; }
-    }
-}
-
-namespace Grub2Font {
     class AsceSection extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Grub2Font\Section $_parent = null, \Grub2Font $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Grub2Font\Section $_parent = null, ?\Grub2Font $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -214,7 +56,7 @@ namespace Grub2Font {
 
 namespace Grub2Font {
     class ChixSection extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Grub2Font\Section $_parent = null, \Grub2Font $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Grub2Font\Section $_parent = null, ?\Grub2Font $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -234,7 +76,7 @@ namespace Grub2Font {
 
 namespace Grub2Font\ChixSection {
     class Character extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Grub2Font\ChixSection $_parent = null, \Grub2Font $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Grub2Font\ChixSection $_parent = null, ?\Grub2Font $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -270,7 +112,7 @@ namespace Grub2Font\ChixSection {
 
 namespace Grub2Font\ChixSection {
     class CharacterDefinition extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Grub2Font\ChixSection\Character $_parent = null, \Grub2Font $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Grub2Font\ChixSection\Character $_parent = null, ?\Grub2Font $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -281,7 +123,7 @@ namespace Grub2Font\ChixSection {
             $this->_m_xOffset = $this->_io->readS2be();
             $this->_m_yOffset = $this->_io->readS2be();
             $this->_m_deviceWidth = $this->_io->readS2be();
-            $this->_m_bitmapData = $this->_io->readBytes(intval((($this->width() * $this->height()) + 7) / 8));
+            $this->_m_bitmapData = $this->_io->readBytes(intval(($this->width() * $this->height() + 7) / 8));
         }
         protected $_m_width;
         protected $_m_height;
@@ -314,8 +156,38 @@ namespace Grub2Font\ChixSection {
 }
 
 namespace Grub2Font {
+    class DescSection extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Grub2Font\Section $_parent = null, ?\Grub2Font $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_descentInPixels = $this->_io->readU2be();
+        }
+        protected $_m_descentInPixels;
+        public function descentInPixels() { return $this->_m_descentInPixels; }
+    }
+}
+
+namespace Grub2Font {
+    class FamiSection extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Grub2Font\Section $_parent = null, ?\Grub2Font $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_fontFamilyName = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, true), "ASCII");
+        }
+        protected $_m_fontFamilyName;
+        public function fontFamilyName() { return $this->_m_fontFamilyName; }
+    }
+}
+
+namespace Grub2Font {
     class MaxhSection extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Grub2Font\Section $_parent = null, \Grub2Font $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Grub2Font\Section $_parent = null, ?\Grub2Font $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -329,8 +201,23 @@ namespace Grub2Font {
 }
 
 namespace Grub2Font {
+    class MaxwSection extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Grub2Font\Section $_parent = null, ?\Grub2Font $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_maximumCharacterWidth = $this->_io->readU2be();
+        }
+        protected $_m_maximumCharacterWidth;
+        public function maximumCharacterWidth() { return $this->_m_maximumCharacterWidth; }
+    }
+}
+
+namespace Grub2Font {
     class NameSection extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Grub2Font\Section $_parent = null, \Grub2Font $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Grub2Font\Section $_parent = null, ?\Grub2Font $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -344,8 +231,106 @@ namespace Grub2Font {
 }
 
 namespace Grub2Font {
+    class PtszSection extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Grub2Font\Section $_parent = null, ?\Grub2Font $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_fontPointSize = $this->_io->readU2be();
+        }
+        protected $_m_fontPointSize;
+        public function fontPointSize() { return $this->_m_fontPointSize; }
+    }
+}
+
+namespace Grub2Font {
+    class Section extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Grub2Font $_parent = null, ?\Grub2Font $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_sectionType = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(4), "ASCII");
+            $this->_m_lenBody = $this->_io->readU4be();
+            if ($this->sectionType() != "DATA") {
+                switch ($this->sectionType()) {
+                    case "ASCE":
+                        $this->_m__raw_body = $this->_io->readBytes($this->lenBody());
+                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                        $this->_m_body = new \Grub2Font\AsceSection($_io__raw_body, $this, $this->_root);
+                        break;
+                    case "CHIX":
+                        $this->_m__raw_body = $this->_io->readBytes($this->lenBody());
+                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                        $this->_m_body = new \Grub2Font\ChixSection($_io__raw_body, $this, $this->_root);
+                        break;
+                    case "DESC":
+                        $this->_m__raw_body = $this->_io->readBytes($this->lenBody());
+                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                        $this->_m_body = new \Grub2Font\DescSection($_io__raw_body, $this, $this->_root);
+                        break;
+                    case "FAMI":
+                        $this->_m__raw_body = $this->_io->readBytes($this->lenBody());
+                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                        $this->_m_body = new \Grub2Font\FamiSection($_io__raw_body, $this, $this->_root);
+                        break;
+                    case "MAXH":
+                        $this->_m__raw_body = $this->_io->readBytes($this->lenBody());
+                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                        $this->_m_body = new \Grub2Font\MaxhSection($_io__raw_body, $this, $this->_root);
+                        break;
+                    case "MAXW":
+                        $this->_m__raw_body = $this->_io->readBytes($this->lenBody());
+                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                        $this->_m_body = new \Grub2Font\MaxwSection($_io__raw_body, $this, $this->_root);
+                        break;
+                    case "NAME":
+                        $this->_m__raw_body = $this->_io->readBytes($this->lenBody());
+                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                        $this->_m_body = new \Grub2Font\NameSection($_io__raw_body, $this, $this->_root);
+                        break;
+                    case "PTSZ":
+                        $this->_m__raw_body = $this->_io->readBytes($this->lenBody());
+                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                        $this->_m_body = new \Grub2Font\PtszSection($_io__raw_body, $this, $this->_root);
+                        break;
+                    case "SLAN":
+                        $this->_m__raw_body = $this->_io->readBytes($this->lenBody());
+                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                        $this->_m_body = new \Grub2Font\SlanSection($_io__raw_body, $this, $this->_root);
+                        break;
+                    case "WEIG":
+                        $this->_m__raw_body = $this->_io->readBytes($this->lenBody());
+                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                        $this->_m_body = new \Grub2Font\WeigSection($_io__raw_body, $this, $this->_root);
+                        break;
+                    default:
+                        $this->_m_body = $this->_io->readBytes($this->lenBody());
+                        break;
+                }
+            }
+        }
+        protected $_m_sectionType;
+        protected $_m_lenBody;
+        protected $_m_body;
+        protected $_m__raw_body;
+        public function sectionType() { return $this->_m_sectionType; }
+
+        /**
+         * Should be set to `0xFFFF_FFFF` for `section_type != "DATA"`
+         */
+        public function lenBody() { return $this->_m_lenBody; }
+        public function body() { return $this->_m_body; }
+        public function _raw_body() { return $this->_m__raw_body; }
+    }
+}
+
+namespace Grub2Font {
     class SlanSection extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Grub2Font\Section $_parent = null, \Grub2Font $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Grub2Font\Section $_parent = null, ?\Grub2Font $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -355,5 +340,20 @@ namespace Grub2Font {
         }
         protected $_m_fontSlant;
         public function fontSlant() { return $this->_m_fontSlant; }
+    }
+}
+
+namespace Grub2Font {
+    class WeigSection extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Grub2Font\Section $_parent = null, ?\Grub2Font $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_fontWeight = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, true), "ASCII");
+        }
+        protected $_m_fontWeight;
+        public function fontWeight() { return $this->_m_fontWeight; }
     }
 }

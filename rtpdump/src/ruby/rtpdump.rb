@@ -1,9 +1,10 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 require 'kaitai/struct/struct'
+require_relative 'rtp_packet'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -12,8 +13,8 @@ end
 # rtp data from network capture.
 # @see https://chromium.googlesource.com/external/webrtc/stable/talk/+/master/media/base/rtpdump.h Source
 class Rtpdump < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -28,18 +29,18 @@ class Rtpdump < Kaitai::Struct::Struct
     self
   end
   class HeaderT < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
       @shebang = @_io.read_bytes(12)
-      raise Kaitai::Struct::ValidationNotEqualError.new([35, 33, 114, 116, 112, 112, 108, 97, 121, 49, 46, 48].pack('C*'), shebang, _io, "/types/header_t/seq/0") if not shebang == [35, 33, 114, 116, 112, 112, 108, 97, 121, 49, 46, 48].pack('C*')
+      raise Kaitai::Struct::ValidationNotEqualError.new([35, 33, 114, 116, 112, 112, 108, 97, 121, 49, 46, 48].pack('C*'), @shebang, @_io, "/types/header_t/seq/0") if not @shebang == [35, 33, 114, 116, 112, 112, 108, 97, 121, 49, 46, 48].pack('C*')
       @space = @_io.read_bytes(1)
-      raise Kaitai::Struct::ValidationNotEqualError.new([32].pack('C*'), space, _io, "/types/header_t/seq/1") if not space == [32].pack('C*')
-      @ip = (@_io.read_bytes_term(47, false, true, true)).force_encoding("ascii")
-      @port = (@_io.read_bytes_term(10, false, true, true)).force_encoding("ascii")
+      raise Kaitai::Struct::ValidationNotEqualError.new([32].pack('C*'), @space, @_io, "/types/header_t/seq/1") if not @space == [32].pack('C*')
+      @ip = (@_io.read_bytes_term(47, false, true, true)).force_encoding("ASCII").encode('UTF-8')
+      @port = (@_io.read_bytes_term(10, false, true, true)).force_encoding("ASCII").encode('UTF-8')
       @start_sec = @_io.read_u4be
       @start_usec = @_io.read_u4be
       @ip2 = @_io.read_u4be
@@ -73,7 +74,7 @@ class Rtpdump < Kaitai::Struct::Struct
     attr_reader :padding
   end
   class PacketT < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -82,9 +83,8 @@ class Rtpdump < Kaitai::Struct::Struct
       @length = @_io.read_u2be
       @len_body = @_io.read_u2be
       @packet_usec = @_io.read_u4be
-      @_raw_body = @_io.read_bytes(len_body)
-      _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = RtpPacket.new(_io__raw_body)
+      _io_body = @_io.substream(len_body)
+      @body = RtpPacket.new(_io_body)
       self
     end
 

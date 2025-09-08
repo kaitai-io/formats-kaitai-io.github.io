@@ -17,6 +17,11 @@ const (
 	Tga_ColorMapEnum__NoColorMap Tga_ColorMapEnum = 0
 	Tga_ColorMapEnum__HasColorMap Tga_ColorMapEnum = 1
 )
+var values_Tga_ColorMapEnum = map[Tga_ColorMapEnum]struct{}{0: {}, 1: {}}
+func (v Tga_ColorMapEnum) isDefined() bool {
+	_, ok := values_Tga_ColorMapEnum[v]
+	return ok
+}
 
 type Tga_ImageTypeEnum int
 const (
@@ -28,6 +33,11 @@ const (
 	Tga_ImageTypeEnum__RleTrueColor Tga_ImageTypeEnum = 10
 	Tga_ImageTypeEnum__RleBw Tga_ImageTypeEnum = 11
 )
+var values_Tga_ImageTypeEnum = map[Tga_ImageTypeEnum]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 9: {}, 10: {}, 11: {}}
+func (v Tga_ImageTypeEnum) isDefined() bool {
+	_, ok := values_Tga_ImageTypeEnum[v]
+	return ok
+}
 type Tga struct {
 	ImageIdLen uint8
 	ColorMapType Tga_ColorMapEnum
@@ -45,7 +55,7 @@ type Tga struct {
 	ColorMap [][]byte
 	_io *kaitai.Stream
 	_root *Tga
-	_parent interface{}
+	_parent kaitai.Struct
 	_f_footer bool
 	footer *Tga_TgaFooter
 }
@@ -54,7 +64,11 @@ func NewTga() *Tga {
 	}
 }
 
-func (this *Tga) Read(io *kaitai.Stream, parent interface{}, root *Tga) (err error) {
+func (this Tga) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Tga) Read(io *kaitai.Stream, parent kaitai.Struct, root *Tga) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -128,7 +142,7 @@ func (this *Tga) Read(io *kaitai.Stream, parent interface{}, root *Tga) (err err
 	if (this.ColorMapType == Tga_ColorMapEnum__HasColorMap) {
 		for i := 0; i < int(this.NumColorMap); i++ {
 			_ = i
-			tmp14, err := this._io.ReadBytes(int(((this.ColorMapDepth + 7) / 8)))
+			tmp14, err := this._io.ReadBytes(int((this.ColorMapDepth + 7) / 8))
 			if err != nil {
 				return err
 			}
@@ -142,6 +156,7 @@ func (this *Tga) Footer() (v *Tga_TgaFooter, err error) {
 	if (this._f_footer) {
 		return this.footer, nil
 	}
+	this._f_footer = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
@@ -150,7 +165,7 @@ func (this *Tga) Footer() (v *Tga_TgaFooter, err error) {
 	if err != nil {
 		return nil, err
 	}
-	_, err = this._io.Seek(int64((tmp15 - 26)), io.SeekStart)
+	_, err = this._io.Seek(int64(tmp15 - 26), io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
@@ -164,8 +179,6 @@ func (this *Tga) Footer() (v *Tga_TgaFooter, err error) {
 	if err != nil {
 		return nil, err
 	}
-	this._f_footer = true
-	this._f_footer = true
 	return this.footer, nil
 }
 
@@ -193,94 +206,6 @@ func (this *Tga) Footer() (v *Tga_TgaFooter, err error) {
 /**
  * Color map
  */
-type Tga_TgaFooter struct {
-	ExtAreaOfs uint32
-	DevDirOfs uint32
-	VersionMagic []byte
-	_io *kaitai.Stream
-	_root *Tga
-	_parent *Tga
-	_f_isValid bool
-	isValid bool
-	_f_extArea bool
-	extArea *Tga_TgaExtArea
-}
-func NewTga_TgaFooter() *Tga_TgaFooter {
-	return &Tga_TgaFooter{
-	}
-}
-
-func (this *Tga_TgaFooter) Read(io *kaitai.Stream, parent *Tga, root *Tga) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp17, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.ExtAreaOfs = uint32(tmp17)
-	tmp18, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.DevDirOfs = uint32(tmp18)
-	tmp19, err := this._io.ReadBytes(int(18))
-	if err != nil {
-		return err
-	}
-	tmp19 = tmp19
-	this.VersionMagic = tmp19
-	return err
-}
-func (this *Tga_TgaFooter) IsValid() (v bool, err error) {
-	if (this._f_isValid) {
-		return this.isValid, nil
-	}
-	this.isValid = bool(bytes.Equal(this.VersionMagic, []uint8{84, 82, 85, 69, 86, 73, 83, 73, 79, 78, 45, 88, 70, 73, 76, 69, 46, 0}))
-	this._f_isValid = true
-	return this.isValid, nil
-}
-func (this *Tga_TgaFooter) ExtArea() (v *Tga_TgaExtArea, err error) {
-	if (this._f_extArea) {
-		return this.extArea, nil
-	}
-	tmp20, err := this.IsValid()
-	if err != nil {
-		return nil, err
-	}
-	if (tmp20) {
-		_pos, err := this._io.Pos()
-		if err != nil {
-			return nil, err
-		}
-		_, err = this._io.Seek(int64(this.ExtAreaOfs), io.SeekStart)
-		if err != nil {
-			return nil, err
-		}
-		tmp21 := NewTga_TgaExtArea()
-		err = tmp21.Read(this._io, this, this._root)
-		if err != nil {
-			return nil, err
-		}
-		this.extArea = tmp21
-		_, err = this._io.Seek(_pos, io.SeekStart)
-		if err != nil {
-			return nil, err
-		}
-		this._f_extArea = true
-	}
-	this._f_extArea = true
-	return this.extArea, nil
-}
-
-/**
- * Offset to extension area
- */
-
-/**
- * Offset to developer directory
- */
 type Tga_TgaExtArea struct {
 	ExtAreaSize uint16
 	AuthorName string
@@ -306,96 +231,100 @@ func NewTga_TgaExtArea() *Tga_TgaExtArea {
 	}
 }
 
+func (this Tga_TgaExtArea) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Tga_TgaExtArea) Read(io *kaitai.Stream, parent *Tga_TgaFooter, root *Tga) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp22, err := this._io.ReadU2le()
+	tmp17, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.ExtAreaSize = uint16(tmp22)
+	this.ExtAreaSize = uint16(tmp17)
+	tmp18, err := this._io.ReadBytes(int(41))
+	if err != nil {
+		return err
+	}
+	tmp18 = tmp18
+	this.AuthorName = string(tmp18)
+	for i := 0; i < int(4); i++ {
+		_ = i
+		tmp19, err := this._io.ReadBytes(int(81))
+		if err != nil {
+			return err
+		}
+		tmp19 = tmp19
+		this.Comments = append(this.Comments, string(tmp19))
+	}
+	tmp20, err := this._io.ReadBytes(int(12))
+	if err != nil {
+		return err
+	}
+	tmp20 = tmp20
+	this.Timestamp = tmp20
+	tmp21, err := this._io.ReadBytes(int(41))
+	if err != nil {
+		return err
+	}
+	tmp21 = tmp21
+	this.JobId = string(tmp21)
+	tmp22, err := this._io.ReadBytes(int(6))
+	if err != nil {
+		return err
+	}
+	tmp22 = tmp22
+	this.JobTime = string(tmp22)
 	tmp23, err := this._io.ReadBytes(int(41))
 	if err != nil {
 		return err
 	}
 	tmp23 = tmp23
-	this.AuthorName = string(tmp23)
-	for i := 0; i < int(4); i++ {
-		_ = i
-		tmp24, err := this._io.ReadBytes(int(81))
-		if err != nil {
-			return err
-		}
-		tmp24 = tmp24
-		this.Comments = append(this.Comments, string(tmp24))
-	}
-	tmp25, err := this._io.ReadBytes(int(12))
+	this.SoftwareId = string(tmp23)
+	tmp24, err := this._io.ReadBytes(int(3))
 	if err != nil {
 		return err
 	}
-	tmp25 = tmp25
-	this.Timestamp = tmp25
-	tmp26, err := this._io.ReadBytes(int(41))
+	tmp24 = tmp24
+	this.SoftwareVersion = tmp24
+	tmp25, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	tmp26 = tmp26
-	this.JobId = string(tmp26)
-	tmp27, err := this._io.ReadBytes(int(6))
+	this.KeyColor = uint32(tmp25)
+	tmp26, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	tmp27 = tmp27
-	this.JobTime = string(tmp27)
-	tmp28, err := this._io.ReadBytes(int(41))
+	this.PixelAspectRatio = uint32(tmp26)
+	tmp27, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	tmp28 = tmp28
-	this.SoftwareId = string(tmp28)
-	tmp29, err := this._io.ReadBytes(int(3))
+	this.GammaValue = uint32(tmp27)
+	tmp28, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	tmp29 = tmp29
-	this.SoftwareVersion = tmp29
+	this.ColorCorrOfs = uint32(tmp28)
+	tmp29, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.PostageStampOfs = uint32(tmp29)
 	tmp30, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.KeyColor = uint32(tmp30)
-	tmp31, err := this._io.ReadU4le()
+	this.ScanLineOfs = uint32(tmp30)
+	tmp31, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.PixelAspectRatio = uint32(tmp31)
-	tmp32, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.GammaValue = uint32(tmp32)
-	tmp33, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.ColorCorrOfs = uint32(tmp33)
-	tmp34, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.PostageStampOfs = uint32(tmp34)
-	tmp35, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.ScanLineOfs = uint32(tmp35)
-	tmp36, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Attributes = tmp36
+	this.Attributes = tmp31
 	return err
 }
 
@@ -437,4 +366,95 @@ func (this *Tga_TgaExtArea) Read(io *kaitai.Stream, parent *Tga_TgaFooter, root 
 
 /**
  * Specifies the alpha channel
+ */
+type Tga_TgaFooter struct {
+	ExtAreaOfs uint32
+	DevDirOfs uint32
+	VersionMagic []byte
+	_io *kaitai.Stream
+	_root *Tga
+	_parent *Tga
+	_f_extArea bool
+	extArea *Tga_TgaExtArea
+	_f_isValid bool
+	isValid bool
+}
+func NewTga_TgaFooter() *Tga_TgaFooter {
+	return &Tga_TgaFooter{
+	}
+}
+
+func (this Tga_TgaFooter) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Tga_TgaFooter) Read(io *kaitai.Stream, parent *Tga, root *Tga) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp32, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.ExtAreaOfs = uint32(tmp32)
+	tmp33, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.DevDirOfs = uint32(tmp33)
+	tmp34, err := this._io.ReadBytes(int(18))
+	if err != nil {
+		return err
+	}
+	tmp34 = tmp34
+	this.VersionMagic = tmp34
+	return err
+}
+func (this *Tga_TgaFooter) ExtArea() (v *Tga_TgaExtArea, err error) {
+	if (this._f_extArea) {
+		return this.extArea, nil
+	}
+	this._f_extArea = true
+	tmp35, err := this.IsValid()
+	if err != nil {
+		return nil, err
+	}
+	if (tmp35) {
+		_pos, err := this._io.Pos()
+		if err != nil {
+			return nil, err
+		}
+		_, err = this._io.Seek(int64(this.ExtAreaOfs), io.SeekStart)
+		if err != nil {
+			return nil, err
+		}
+		tmp36 := NewTga_TgaExtArea()
+		err = tmp36.Read(this._io, this, this._root)
+		if err != nil {
+			return nil, err
+		}
+		this.extArea = tmp36
+		_, err = this._io.Seek(_pos, io.SeekStart)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return this.extArea, nil
+}
+func (this *Tga_TgaFooter) IsValid() (v bool, err error) {
+	if (this._f_isValid) {
+		return this.isValid, nil
+	}
+	this._f_isValid = true
+	this.isValid = bool(bytes.Equal(this.VersionMagic, []uint8{84, 82, 85, 69, 86, 73, 83, 73, 79, 78, 45, 88, 70, 73, 76, 69, 46, 0}))
+	return this.isValid, nil
+}
+
+/**
+ * Offset to extension area
+ */
+
+/**
+ * Offset to developer directory
  */

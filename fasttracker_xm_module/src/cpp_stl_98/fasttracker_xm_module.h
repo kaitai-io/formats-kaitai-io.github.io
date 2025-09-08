@@ -3,12 +3,15 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class fasttracker_xm_module_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <vector>
+#include <set>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -27,11 +30,11 @@
 class fasttracker_xm_module_t : public kaitai::kstruct {
 
 public:
-    class preheader_t;
-    class pattern_t;
     class flags_t;
     class header_t;
     class instrument_t;
+    class pattern_t;
+    class preheader_t;
 
     fasttracker_xm_module_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, fasttracker_xm_module_t* p__root = 0);
 
@@ -41,207 +44,6 @@ private:
 
 public:
     ~fasttracker_xm_module_t();
-
-    class preheader_t : public kaitai::kstruct {
-
-    public:
-        class version_t;
-
-        preheader_t(kaitai::kstream* p__io, fasttracker_xm_module_t* p__parent = 0, fasttracker_xm_module_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~preheader_t();
-
-        class version_t : public kaitai::kstruct {
-
-        public:
-
-            version_t(kaitai::kstream* p__io, fasttracker_xm_module_t::preheader_t* p__parent = 0, fasttracker_xm_module_t* p__root = 0);
-
-        private:
-            void _read();
-            void _clean_up();
-
-        public:
-            ~version_t();
-
-        private:
-            bool f_value;
-            int32_t m_value;
-
-        public:
-            int32_t value();
-
-        private:
-            uint8_t m_minor;
-            uint8_t m_major;
-            fasttracker_xm_module_t* m__root;
-            fasttracker_xm_module_t::preheader_t* m__parent;
-
-        public:
-
-            /**
-             * currently 0x04
-             */
-            uint8_t minor() const { return m_minor; }
-
-            /**
-             * currently 0x01
-             */
-            uint8_t major() const { return m_major; }
-            fasttracker_xm_module_t* _root() const { return m__root; }
-            fasttracker_xm_module_t::preheader_t* _parent() const { return m__parent; }
-        };
-
-    private:
-        std::string m_signature0;
-        std::string m_module_name;
-        std::string m_signature1;
-        std::string m_tracker_name;
-        version_t* m_version_number;
-        uint32_t m_header_size;
-        fasttracker_xm_module_t* m__root;
-        fasttracker_xm_module_t* m__parent;
-
-    public:
-        std::string signature0() const { return m_signature0; }
-
-        /**
-         * Module name, padded with zeroes
-         */
-        std::string module_name() const { return m_module_name; }
-        std::string signature1() const { return m_signature1; }
-
-        /**
-         * Tracker name
-         */
-        std::string tracker_name() const { return m_tracker_name; }
-
-        /**
-         * Format versions below [0x01, 0x04] have a LOT of differences. Check this field!
-         */
-        version_t* version_number() const { return m_version_number; }
-
-        /**
-         * Header size << Calculated FROM THIS OFFSET, not from the beginning of the file! >>
-         */
-        uint32_t header_size() const { return m_header_size; }
-        fasttracker_xm_module_t* _root() const { return m__root; }
-        fasttracker_xm_module_t* _parent() const { return m__parent; }
-    };
-
-    class pattern_t : public kaitai::kstruct {
-
-    public:
-        class header_t;
-
-        pattern_t(kaitai::kstream* p__io, fasttracker_xm_module_t* p__parent = 0, fasttracker_xm_module_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~pattern_t();
-
-        class header_t : public kaitai::kstruct {
-
-        public:
-            class header_main_t;
-
-            header_t(kaitai::kstream* p__io, fasttracker_xm_module_t::pattern_t* p__parent = 0, fasttracker_xm_module_t* p__root = 0);
-
-        private:
-            void _read();
-            void _clean_up();
-
-        public:
-            ~header_t();
-
-            class header_main_t : public kaitai::kstruct {
-
-            public:
-
-                header_main_t(kaitai::kstream* p__io, fasttracker_xm_module_t::pattern_t::header_t* p__parent = 0, fasttracker_xm_module_t* p__root = 0);
-
-            private:
-                void _read();
-                void _clean_up();
-
-            public:
-                ~header_main_t();
-
-            private:
-                bool f_num_rows;
-                int32_t m_num_rows;
-
-            public:
-                int32_t num_rows();
-
-            private:
-                uint8_t m_packing_type;
-                uint16_t m_num_rows_raw;
-                uint16_t m_len_packed_pattern;
-                fasttracker_xm_module_t* m__root;
-                fasttracker_xm_module_t::pattern_t::header_t* m__parent;
-
-            public:
-
-                /**
-                 * Packing type (always 0)
-                 */
-                uint8_t packing_type() const { return m_packing_type; }
-
-                /**
-                 * Number of rows in pattern (1..256)
-                 */
-                uint16_t num_rows_raw() const { return m_num_rows_raw; }
-
-                /**
-                 * Packed pattern data size
-                 */
-                uint16_t len_packed_pattern() const { return m_len_packed_pattern; }
-                fasttracker_xm_module_t* _root() const { return m__root; }
-                fasttracker_xm_module_t::pattern_t::header_t* _parent() const { return m__parent; }
-            };
-
-        private:
-            uint32_t m_header_length;
-            header_main_t* m_main;
-            fasttracker_xm_module_t* m__root;
-            fasttracker_xm_module_t::pattern_t* m__parent;
-            std::string m__raw_main;
-            kaitai::kstream* m__io__raw_main;
-
-        public:
-
-            /**
-             * Pattern header length
-             */
-            uint32_t header_length() const { return m_header_length; }
-            header_main_t* main() const { return m_main; }
-            fasttracker_xm_module_t* _root() const { return m__root; }
-            fasttracker_xm_module_t::pattern_t* _parent() const { return m__parent; }
-            std::string _raw_main() const { return m__raw_main; }
-            kaitai::kstream* _io__raw_main() const { return m__io__raw_main; }
-        };
-
-    private:
-        header_t* m_header;
-        std::string m_packed_data;
-        fasttracker_xm_module_t* m__root;
-        fasttracker_xm_module_t* m__parent;
-
-    public:
-        header_t* header() const { return m_header; }
-        std::string packed_data() const { return m_packed_data; }
-        fasttracker_xm_module_t* _root() const { return m__root; }
-        fasttracker_xm_module_t* _parent() const { return m__parent; }
-    };
 
     class flags_t : public kaitai::kstruct {
 
@@ -347,10 +149,10 @@ public:
     class instrument_t : public kaitai::kstruct {
 
     public:
-        class header_t;
         class extra_header_t;
-        class samples_data_t;
+        class header_t;
         class sample_header_t;
+        class samples_data_t;
 
         instrument_t(kaitai::kstream* p__io, fasttracker_xm_module_t* p__parent = 0, fasttracker_xm_module_t* p__root = 0);
 
@@ -360,46 +162,6 @@ public:
 
     public:
         ~instrument_t();
-
-        class header_t : public kaitai::kstruct {
-
-        public:
-
-            header_t(kaitai::kstream* p__io, fasttracker_xm_module_t::instrument_t* p__parent = 0, fasttracker_xm_module_t* p__root = 0);
-
-        private:
-            void _read();
-            void _clean_up();
-
-        public:
-            ~header_t();
-
-        private:
-            std::string m_name;
-            uint8_t m_type;
-            uint16_t m_num_samples;
-            extra_header_t* m_extra_header;
-            bool n_extra_header;
-
-        public:
-            bool _is_null_extra_header() { extra_header(); return n_extra_header; };
-
-        private:
-            fasttracker_xm_module_t* m__root;
-            fasttracker_xm_module_t::instrument_t* m__parent;
-
-        public:
-            std::string name() const { return m_name; }
-
-            /**
-             * Usually zero, but this seems pretty random, don't assume it's zero
-             */
-            uint8_t type() const { return m_type; }
-            uint16_t num_samples() const { return m_num_samples; }
-            extra_header_t* extra_header() const { return m_extra_header; }
-            fasttracker_xm_module_t* _root() const { return m__root; }
-            fasttracker_xm_module_t::instrument_t* _parent() const { return m__parent; }
-        };
 
         class extra_header_t : public kaitai::kstruct {
 
@@ -411,6 +173,13 @@ public:
                 TYPE_SUSTAIN = 1,
                 TYPE_LOOP = 2
             };
+            static bool _is_defined_type_t(type_t v);
+
+        private:
+            static const std::set<type_t> _values_type_t;
+            static std::set<type_t> _build_values_type_t();
+
+        public:
 
             extra_header_t(kaitai::kstream* p__io, fasttracker_xm_module_t::instrument_t::header_t* p__parent = 0, fasttracker_xm_module_t* p__root = 0);
 
@@ -527,38 +296,42 @@ public:
             fasttracker_xm_module_t::instrument_t::header_t* _parent() const { return m__parent; }
         };
 
-        /**
-         * The saved data uses simple delta-encoding to achieve better compression ratios (when compressed with pkzip, etc.)
-         * Pseudocode for converting the delta-coded data to normal data,
-         * old = 0;
-         * for i in range(data_len):
-         *   new = sample[i] + old;
-         *   sample[i] = new;
-         *   old = new;
-         */
-
-        class samples_data_t : public kaitai::kstruct {
+        class header_t : public kaitai::kstruct {
 
         public:
 
-            samples_data_t(sample_header_t* p_header, kaitai::kstream* p__io, fasttracker_xm_module_t::instrument_t* p__parent = 0, fasttracker_xm_module_t* p__root = 0);
+            header_t(kaitai::kstream* p__io, fasttracker_xm_module_t::instrument_t* p__parent = 0, fasttracker_xm_module_t* p__root = 0);
 
         private:
             void _read();
             void _clean_up();
 
         public:
-            ~samples_data_t();
+            ~header_t();
 
         private:
-            std::string m_data;
-            sample_header_t* m_header;
+            std::string m_name;
+            uint8_t m_type;
+            uint16_t m_num_samples;
+            extra_header_t* m_extra_header;
+            bool n_extra_header;
+
+        public:
+            bool _is_null_extra_header() { extra_header(); return n_extra_header; };
+
+        private:
             fasttracker_xm_module_t* m__root;
             fasttracker_xm_module_t::instrument_t* m__parent;
 
         public:
-            std::string data() const { return m_data; }
-            sample_header_t* header() const { return m_header; }
+            std::string name() const { return m_name; }
+
+            /**
+             * Usually zero, but this seems pretty random, don't assume it's zero
+             */
+            uint8_t type() const { return m_type; }
+            uint16_t num_samples() const { return m_num_samples; }
+            extra_header_t* extra_header() const { return m_extra_header; }
             fasttracker_xm_module_t* _root() const { return m__root; }
             fasttracker_xm_module_t::instrument_t* _parent() const { return m__parent; }
         };
@@ -586,6 +359,13 @@ public:
                     LOOP_TYPE_FORWARD = 1,
                     LOOP_TYPE_PING_PONG = 2
                 };
+                static bool _is_defined_loop_type_t(loop_type_t v);
+
+            private:
+                static const std::set<loop_type_t> _values_loop_type_t;
+                static std::set<loop_type_t> _build_values_loop_type_t();
+
+            public:
 
                 loop_type_t(kaitai::kstream* p__io, fasttracker_xm_module_t::instrument_t::sample_header_t* p__parent = 0, fasttracker_xm_module_t* p__root = 0);
 
@@ -650,6 +430,42 @@ public:
             fasttracker_xm_module_t::instrument_t* _parent() const { return m__parent; }
         };
 
+        /**
+         * The saved data uses simple delta-encoding to achieve better compression ratios (when compressed with pkzip, etc.)
+         * Pseudocode for converting the delta-coded data to normal data,
+         * old = 0;
+         * for i in range(data_len):
+         *   new = sample[i] + old;
+         *   sample[i] = new;
+         *   old = new;
+         */
+
+        class samples_data_t : public kaitai::kstruct {
+
+        public:
+
+            samples_data_t(sample_header_t* p_header, kaitai::kstream* p__io, fasttracker_xm_module_t::instrument_t* p__parent = 0, fasttracker_xm_module_t* p__root = 0);
+
+        private:
+            void _read();
+            void _clean_up();
+
+        public:
+            ~samples_data_t();
+
+        private:
+            std::string m_data;
+            sample_header_t* m_header;
+            fasttracker_xm_module_t* m__root;
+            fasttracker_xm_module_t::instrument_t* m__parent;
+
+        public:
+            std::string data() const { return m_data; }
+            sample_header_t* header() const { return m_header; }
+            fasttracker_xm_module_t* _root() const { return m__root; }
+            fasttracker_xm_module_t::instrument_t* _parent() const { return m__parent; }
+        };
+
     private:
         uint32_t m_header_size;
         header_t* m_header;
@@ -674,6 +490,207 @@ public:
         fasttracker_xm_module_t* _parent() const { return m__parent; }
         std::string _raw_header() const { return m__raw_header; }
         kaitai::kstream* _io__raw_header() const { return m__io__raw_header; }
+    };
+
+    class pattern_t : public kaitai::kstruct {
+
+    public:
+        class header_t;
+
+        pattern_t(kaitai::kstream* p__io, fasttracker_xm_module_t* p__parent = 0, fasttracker_xm_module_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~pattern_t();
+
+        class header_t : public kaitai::kstruct {
+
+        public:
+            class header_main_t;
+
+            header_t(kaitai::kstream* p__io, fasttracker_xm_module_t::pattern_t* p__parent = 0, fasttracker_xm_module_t* p__root = 0);
+
+        private:
+            void _read();
+            void _clean_up();
+
+        public:
+            ~header_t();
+
+            class header_main_t : public kaitai::kstruct {
+
+            public:
+
+                header_main_t(kaitai::kstream* p__io, fasttracker_xm_module_t::pattern_t::header_t* p__parent = 0, fasttracker_xm_module_t* p__root = 0);
+
+            private:
+                void _read();
+                void _clean_up();
+
+            public:
+                ~header_main_t();
+
+            private:
+                bool f_num_rows;
+                int32_t m_num_rows;
+
+            public:
+                int32_t num_rows();
+
+            private:
+                uint8_t m_packing_type;
+                uint16_t m_num_rows_raw;
+                uint16_t m_len_packed_pattern;
+                fasttracker_xm_module_t* m__root;
+                fasttracker_xm_module_t::pattern_t::header_t* m__parent;
+
+            public:
+
+                /**
+                 * Packing type (always 0)
+                 */
+                uint8_t packing_type() const { return m_packing_type; }
+
+                /**
+                 * Number of rows in pattern (1..256)
+                 */
+                uint16_t num_rows_raw() const { return m_num_rows_raw; }
+
+                /**
+                 * Packed pattern data size
+                 */
+                uint16_t len_packed_pattern() const { return m_len_packed_pattern; }
+                fasttracker_xm_module_t* _root() const { return m__root; }
+                fasttracker_xm_module_t::pattern_t::header_t* _parent() const { return m__parent; }
+            };
+
+        private:
+            uint32_t m_header_length;
+            header_main_t* m_main;
+            fasttracker_xm_module_t* m__root;
+            fasttracker_xm_module_t::pattern_t* m__parent;
+            std::string m__raw_main;
+            kaitai::kstream* m__io__raw_main;
+
+        public:
+
+            /**
+             * Pattern header length
+             */
+            uint32_t header_length() const { return m_header_length; }
+            header_main_t* main() const { return m_main; }
+            fasttracker_xm_module_t* _root() const { return m__root; }
+            fasttracker_xm_module_t::pattern_t* _parent() const { return m__parent; }
+            std::string _raw_main() const { return m__raw_main; }
+            kaitai::kstream* _io__raw_main() const { return m__io__raw_main; }
+        };
+
+    private:
+        header_t* m_header;
+        std::string m_packed_data;
+        fasttracker_xm_module_t* m__root;
+        fasttracker_xm_module_t* m__parent;
+
+    public:
+        header_t* header() const { return m_header; }
+        std::string packed_data() const { return m_packed_data; }
+        fasttracker_xm_module_t* _root() const { return m__root; }
+        fasttracker_xm_module_t* _parent() const { return m__parent; }
+    };
+
+    class preheader_t : public kaitai::kstruct {
+
+    public:
+        class version_t;
+
+        preheader_t(kaitai::kstream* p__io, fasttracker_xm_module_t* p__parent = 0, fasttracker_xm_module_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~preheader_t();
+
+        class version_t : public kaitai::kstruct {
+
+        public:
+
+            version_t(kaitai::kstream* p__io, fasttracker_xm_module_t::preheader_t* p__parent = 0, fasttracker_xm_module_t* p__root = 0);
+
+        private:
+            void _read();
+            void _clean_up();
+
+        public:
+            ~version_t();
+
+        private:
+            bool f_value;
+            int32_t m_value;
+
+        public:
+            int32_t value();
+
+        private:
+            uint8_t m_minor;
+            uint8_t m_major;
+            fasttracker_xm_module_t* m__root;
+            fasttracker_xm_module_t::preheader_t* m__parent;
+
+        public:
+
+            /**
+             * currently 0x04
+             */
+            uint8_t minor() const { return m_minor; }
+
+            /**
+             * currently 0x01
+             */
+            uint8_t major() const { return m_major; }
+            fasttracker_xm_module_t* _root() const { return m__root; }
+            fasttracker_xm_module_t::preheader_t* _parent() const { return m__parent; }
+        };
+
+    private:
+        std::string m_signature0;
+        std::string m_module_name;
+        std::string m_signature1;
+        std::string m_tracker_name;
+        version_t* m_version_number;
+        uint32_t m_header_size;
+        fasttracker_xm_module_t* m__root;
+        fasttracker_xm_module_t* m__parent;
+
+    public:
+        std::string signature0() const { return m_signature0; }
+
+        /**
+         * Module name, padded with zeroes
+         */
+        std::string module_name() const { return m_module_name; }
+        std::string signature1() const { return m_signature1; }
+
+        /**
+         * Tracker name
+         */
+        std::string tracker_name() const { return m_tracker_name; }
+
+        /**
+         * Format versions below [0x01, 0x04] have a LOT of differences. Check this field!
+         */
+        version_t* version_number() const { return m_version_number; }
+
+        /**
+         * Header size << Calculated FROM THIS OFFSET, not from the beginning of the file! >>
+         */
+        uint32_t header_size() const { return m_header_size; }
+        fasttracker_xm_module_t* _root() const { return m__root; }
+        fasttracker_xm_module_t* _parent() const { return m__parent; }
     };
 
 private:

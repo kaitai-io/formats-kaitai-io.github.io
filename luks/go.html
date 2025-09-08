@@ -192,6 +192,11 @@ encryption parameters and up to 8 user keys (which can unlock the master key).</
                 
                 <li>
                 
+                <a href="java-write.html" title="Linux Unified Key Setup parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="Linux Unified Key Setup parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -222,7 +227,17 @@ encryption parameters and up to 8 user keys (which can unlock the master key).</
                 
                 <li>
                 
+                <a href="python-write.html" title="Linux Unified Key Setup parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="Linux Unified Key Setup parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="Linux Unified Key Setup parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -270,7 +285,7 @@ encryption parameters and up to 8 user keys (which can unlock the master key).</
 <span class="w">	</span><span class="nx">PartitionHeader</span><span class="w"> </span><span class="o">*</span><span class="nx">Luks_PartitionHeader</span>
 <span class="w">	</span><span class="nx">_io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
 <span class="w">	</span><span class="nx">_root</span><span class="w"> </span><span class="o">*</span><span class="nx">Luks</span>
-<span class="w">	</span><span class="nx">_parent</span><span class="w"> </span><span class="kd">interface</span><span class="p">{}</span>
+<span class="w">	</span><span class="nx">_parent</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Struct</span>
 <span class="w">	</span><span class="nx">_f_payload</span><span class="w"> </span><span class="kt">bool</span>
 <span class="w">	</span><span class="nx">payload</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span>
 <span class="p">}</span>
@@ -279,7 +294,11 @@ encryption parameters and up to 8 user keys (which can unlock the master key).</
 <span class="w">	</span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Luks</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="kd">interface</span><span class="p">{},</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">Luks</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="nx">Luks</span><span class="p">)</span><span class="w"> </span><span class="nx">IO_</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Luks</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Struct</span><span class="p">,</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">Luks</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">io</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">parent</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">root</span>
@@ -296,11 +315,12 @@ encryption parameters and up to 8 user keys (which can unlock the master key).</
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_payload</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">payload</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
 <span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_payload</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span>
 <span class="w">	</span><span class="nx">_pos</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Pos</span><span class="p">()</span>
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Seek</span><span class="p">(</span><span class="nb">int64</span><span class="p">((</span><span class="nx">this</span><span class="p">.</span><span class="nx">PartitionHeader</span><span class="p">.</span><span class="nx">PayloadOffset</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">512</span><span class="p">)),</span><span class="w"> </span><span class="nx">io</span><span class="p">.</span><span class="nx">SeekStart</span><span class="p">)</span>
+<span class="w">	</span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Seek</span><span class="p">(</span><span class="nb">int64</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">PartitionHeader</span><span class="p">.</span><span class="nx">PayloadOffset</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">512</span><span class="p">),</span><span class="w"> </span><span class="nx">io</span><span class="p">.</span><span class="nx">SeekStart</span><span class="p">)</span>
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">	</span><span class="p">}</span>
@@ -314,8 +334,6 @@ encryption parameters and up to 8 user keys (which can unlock the master key).</
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_payload</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_payload</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span>
 <span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">payload</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
 <span class="p">}</span>
 <span class="kd">type</span><span class="w"> </span><span class="nx">Luks_PartitionHeader</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
@@ -338,6 +356,10 @@ encryption parameters and up to 8 user keys (which can unlock the master key).</
 <span class="kd">func</span><span class="w"> </span><span class="nx">NewLuks_PartitionHeader</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">Luks_PartitionHeader</span><span class="w"> </span><span class="p">{</span>
 <span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">Luks_PartitionHeader</span><span class="p">{</span>
 <span class="w">	</span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="nx">Luks_PartitionHeader</span><span class="p">)</span><span class="w"> </span><span class="nx">IO_</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span>
 <span class="p">}</span>
 
 <span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Luks_PartitionHeader</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="o">*</span><span class="nx">Luks</span><span class="p">,</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">Luks</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
@@ -431,6 +453,11 @@ encryption parameters and up to 8 user keys (which can unlock the master key).</
 <span class="w">	</span><span class="nx">Luks_PartitionHeader_KeySlot_KeySlotStates__DisabledKeySlot</span><span class="w"> </span><span class="nx">Luks_PartitionHeader_KeySlot_KeySlotStates</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">57005</span>
 <span class="w">	</span><span class="nx">Luks_PartitionHeader_KeySlot_KeySlotStates__EnabledKeySlot</span><span class="w"> </span><span class="nx">Luks_PartitionHeader_KeySlot_KeySlotStates</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">11301363</span>
 <span class="p">)</span>
+<span class="kd">var</span><span class="w"> </span><span class="nx">values_Luks_PartitionHeader_KeySlot_KeySlotStates</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kd">map</span><span class="p">[</span><span class="nx">Luks_PartitionHeader_KeySlot_KeySlotStates</span><span class="p">]</span><span class="kd">struct</span><span class="p">{}{</span><span class="mi">57005</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">11301363</span><span class="p">:</span><span class="w"> </span><span class="p">{}}</span>
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="w"> </span><span class="nx">Luks_PartitionHeader_KeySlot_KeySlotStates</span><span class="p">)</span><span class="w"> </span><span class="nx">isDefined</span><span class="p">()</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">ok</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">values_Luks_PartitionHeader_KeySlot_KeySlotStates</span><span class="p">[</span><span class="nx">v</span><span class="p">]</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">ok</span>
+<span class="p">}</span>
 <span class="kd">type</span><span class="w"> </span><span class="nx">Luks_PartitionHeader_KeySlot</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
 <span class="w">	</span><span class="nx">StateOfKeySlot</span><span class="w"> </span><span class="nx">Luks_PartitionHeader_KeySlot_KeySlotStates</span>
 <span class="w">	</span><span class="nx">IterationParameter</span><span class="w"> </span><span class="kt">uint32</span>
@@ -446,6 +473,10 @@ encryption parameters and up to 8 user keys (which can unlock the master key).</
 <span class="kd">func</span><span class="w"> </span><span class="nx">NewLuks_PartitionHeader_KeySlot</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">Luks_PartitionHeader_KeySlot</span><span class="w"> </span><span class="p">{</span>
 <span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">Luks_PartitionHeader_KeySlot</span><span class="p">{</span>
 <span class="w">	</span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="nx">Luks_PartitionHeader_KeySlot</span><span class="p">)</span><span class="w"> </span><span class="nx">IO_</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span>
 <span class="p">}</span>
 
 <span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Luks_PartitionHeader_KeySlot</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="o">*</span><span class="nx">Luks_PartitionHeader</span><span class="p">,</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">Luks</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
@@ -485,15 +516,16 @@ encryption parameters and up to 8 user keys (which can unlock the master key).</
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_keyMaterial</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">keyMaterial</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
 <span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_keyMaterial</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span>
 <span class="w">	</span><span class="nx">_pos</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Pos</span><span class="p">()</span>
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Seek</span><span class="p">(</span><span class="nb">int64</span><span class="p">((</span><span class="nx">this</span><span class="p">.</span><span class="nx">StartSectorOfKeyMaterial</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">512</span><span class="p">)),</span><span class="w"> </span><span class="nx">io</span><span class="p">.</span><span class="nx">SeekStart</span><span class="p">)</span>
+<span class="w">	</span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Seek</span><span class="p">(</span><span class="nb">int64</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">StartSectorOfKeyMaterial</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">512</span><span class="p">),</span><span class="w"> </span><span class="nx">io</span><span class="p">.</span><span class="nx">SeekStart</span><span class="p">)</span>
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">tmp20</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">((</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">NumberOfKeyBytes</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">NumberOfAntiForensicStripes</span><span class="p">)))</span>
+<span class="w">	</span><span class="nx">tmp20</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">NumberOfKeyBytes</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">NumberOfAntiForensicStripes</span><span class="p">))</span>
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">	</span><span class="p">}</span>
@@ -503,8 +535,6 @@ encryption parameters and up to 8 user keys (which can unlock the master key).</
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_keyMaterial</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_keyMaterial</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span>
 <span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">keyMaterial</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
 <span class="p">}</span>
 </pre></div>

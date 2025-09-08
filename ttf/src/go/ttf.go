@@ -2,9 +2,9 @@
 
 import (
 	"github.com/kaitai-io/kaitai_struct_go_runtime/kaitai"
+	"bytes"
 	"io"
 	"golang.org/x/text/encoding/unicode"
-	"bytes"
 )
 
 
@@ -18,14 +18,18 @@ type Ttf struct {
 	DirectoryTable []*Ttf_DirTableEntry
 	_io *kaitai.Stream
 	_root *Ttf
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewTtf() *Ttf {
 	return &Ttf{
 	}
 }
 
-func (this *Ttf) Read(io *kaitai.Stream, parent interface{}, root *Ttf) (err error) {
+func (this Ttf) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Ttf) Read(io *kaitai.Stream, parent kaitai.Struct, root *Ttf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -47,370 +51,1018 @@ func (this *Ttf) Read(io *kaitai.Stream, parent interface{}, root *Ttf) (err err
 	}
 	return err
 }
-type Ttf_Post struct {
-	Format *Ttf_Fixed
-	ItalicAngle *Ttf_Fixed
-	UnderlinePosition int16
-	UnderlineThichness int16
-	IsFixedPitch uint32
-	MinMemType42 uint32
-	MaxMemType42 uint32
-	MinMemType1 uint32
-	MaxMemType1 uint32
-	Format20 *Ttf_Post_Format20
-	_io *kaitai.Stream
-	_root *Ttf
-	_parent *Ttf_DirTableEntry
-}
-func NewTtf_Post() *Ttf_Post {
-	return &Ttf_Post{
-	}
-}
-
-func (this *Ttf_Post) Read(io *kaitai.Stream, parent *Ttf_DirTableEntry, root *Ttf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp3 := NewTtf_Fixed()
-	err = tmp3.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Format = tmp3
-	tmp4 := NewTtf_Fixed()
-	err = tmp4.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.ItalicAngle = tmp4
-	tmp5, err := this._io.ReadS2be()
-	if err != nil {
-		return err
-	}
-	this.UnderlinePosition = int16(tmp5)
-	tmp6, err := this._io.ReadS2be()
-	if err != nil {
-		return err
-	}
-	this.UnderlineThichness = int16(tmp6)
-	tmp7, err := this._io.ReadU4be()
-	if err != nil {
-		return err
-	}
-	this.IsFixedPitch = uint32(tmp7)
-	tmp8, err := this._io.ReadU4be()
-	if err != nil {
-		return err
-	}
-	this.MinMemType42 = uint32(tmp8)
-	tmp9, err := this._io.ReadU4be()
-	if err != nil {
-		return err
-	}
-	this.MaxMemType42 = uint32(tmp9)
-	tmp10, err := this._io.ReadU4be()
-	if err != nil {
-		return err
-	}
-	this.MinMemType1 = uint32(tmp10)
-	tmp11, err := this._io.ReadU4be()
-	if err != nil {
-		return err
-	}
-	this.MaxMemType1 = uint32(tmp11)
-	if ( ((this.Format.Major == 2) && (this.Format.Minor == 0)) ) {
-		tmp12 := NewTtf_Post_Format20()
-		err = tmp12.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Format20 = tmp12
-	}
-	return err
-}
-type Ttf_Post_Format20 struct {
-	NumberOfGlyphs uint16
-	GlyphNameIndex []uint16
-	GlyphNames []*Ttf_Post_Format20_PascalString
-	_io *kaitai.Stream
-	_root *Ttf
-	_parent *Ttf_Post
-}
-func NewTtf_Post_Format20() *Ttf_Post_Format20 {
-	return &Ttf_Post_Format20{
-	}
-}
-
-func (this *Ttf_Post_Format20) Read(io *kaitai.Stream, parent *Ttf_Post, root *Ttf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp13, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.NumberOfGlyphs = uint16(tmp13)
-	for i := 0; i < int(this.NumberOfGlyphs); i++ {
-		_ = i
-		tmp14, err := this._io.ReadU2be()
-		if err != nil {
-			return err
-		}
-		this.GlyphNameIndex = append(this.GlyphNameIndex, tmp14)
-	}
-	for i := 1;; i++ {
-		tmp15 := NewTtf_Post_Format20_PascalString()
-		err = tmp15.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		_it := tmp15
-		this.GlyphNames = append(this.GlyphNames, _it)
-		tmp16, err := this._io.EOF()
-		if err != nil {
-			return err
-		}
-		if  ((_it.Length == 0) || (tmp16))  {
-			break
-		}
-	}
-	return err
-}
-type Ttf_Post_Format20_PascalString struct {
-	Length uint8
-	Value string
-	_io *kaitai.Stream
-	_root *Ttf
-	_parent *Ttf_Post_Format20
-}
-func NewTtf_Post_Format20_PascalString() *Ttf_Post_Format20_PascalString {
-	return &Ttf_Post_Format20_PascalString{
-	}
-}
-
-func (this *Ttf_Post_Format20_PascalString) Read(io *kaitai.Stream, parent *Ttf_Post_Format20, root *Ttf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp17, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Length = tmp17
-	if (this.Length != 0) {
-		tmp18, err := this._io.ReadBytes(int(this.Length))
-		if err != nil {
-			return err
-		}
-		tmp18 = tmp18
-		this.Value = string(tmp18)
-	}
-	return err
-}
 
 /**
- * Name table is meant to include human-readable string metadata
- * that describes font: name of the font, its styles, copyright &
- * trademark notices, vendor and designer info, etc.
- * 
- * The table includes a list of "name records", each of which
- * corresponds to a single metadata entry.
- * @see <a href="https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6name.html">Source</a>
+ * cmap - Character To Glyph Index Mapping Table This table defines the mapping of character codes to the glyph index values used in the font.
  */
-
-type Ttf_Name_Platforms int
-const (
-	Ttf_Name_Platforms__Unicode Ttf_Name_Platforms = 0
-	Ttf_Name_Platforms__Macintosh Ttf_Name_Platforms = 1
-	Ttf_Name_Platforms__Reserved2 Ttf_Name_Platforms = 2
-	Ttf_Name_Platforms__Microsoft Ttf_Name_Platforms = 3
-)
-
-type Ttf_Name_Names int
-const (
-	Ttf_Name_Names__Copyright Ttf_Name_Names = 0
-	Ttf_Name_Names__FontFamily Ttf_Name_Names = 1
-	Ttf_Name_Names__FontSubfamily Ttf_Name_Names = 2
-	Ttf_Name_Names__UniqueSubfamilyId Ttf_Name_Names = 3
-	Ttf_Name_Names__FullFontName Ttf_Name_Names = 4
-	Ttf_Name_Names__NameTableVersion Ttf_Name_Names = 5
-	Ttf_Name_Names__PostscriptFontName Ttf_Name_Names = 6
-	Ttf_Name_Names__Trademark Ttf_Name_Names = 7
-	Ttf_Name_Names__Manufacturer Ttf_Name_Names = 8
-	Ttf_Name_Names__Designer Ttf_Name_Names = 9
-	Ttf_Name_Names__Description Ttf_Name_Names = 10
-	Ttf_Name_Names__UrlVendor Ttf_Name_Names = 11
-	Ttf_Name_Names__UrlDesigner Ttf_Name_Names = 12
-	Ttf_Name_Names__License Ttf_Name_Names = 13
-	Ttf_Name_Names__UrlLicense Ttf_Name_Names = 14
-	Ttf_Name_Names__Reserved15 Ttf_Name_Names = 15
-	Ttf_Name_Names__PreferredFamily Ttf_Name_Names = 16
-	Ttf_Name_Names__PreferredSubfamily Ttf_Name_Names = 17
-	Ttf_Name_Names__CompatibleFullName Ttf_Name_Names = 18
-	Ttf_Name_Names__SampleText Ttf_Name_Names = 19
-)
-type Ttf_Name struct {
-	FormatSelector uint16
-	NumNameRecords uint16
-	OfsStrings uint16
-	NameRecords []*Ttf_Name_NameRecord
+type Ttf_Cmap struct {
+	VersionNumber uint16
+	NumberOfEncodingTables uint16
+	Tables []*Ttf_Cmap_SubtableHeader
 	_io *kaitai.Stream
 	_root *Ttf
 	_parent *Ttf_DirTableEntry
 }
-func NewTtf_Name() *Ttf_Name {
-	return &Ttf_Name{
+func NewTtf_Cmap() *Ttf_Cmap {
+	return &Ttf_Cmap{
 	}
 }
 
-func (this *Ttf_Name) Read(io *kaitai.Stream, parent *Ttf_DirTableEntry, root *Ttf) (err error) {
+func (this Ttf_Cmap) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Ttf_Cmap) Read(io *kaitai.Stream, parent *Ttf_DirTableEntry, root *Ttf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp19, err := this._io.ReadU2be()
+	tmp3, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.FormatSelector = uint16(tmp19)
+	this.VersionNumber = uint16(tmp3)
+	tmp4, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.NumberOfEncodingTables = uint16(tmp4)
+	for i := 0; i < int(this.NumberOfEncodingTables); i++ {
+		_ = i
+		tmp5 := NewTtf_Cmap_SubtableHeader()
+		err = tmp5.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Tables = append(this.Tables, tmp5)
+	}
+	return err
+}
+
+type Ttf_Cmap_Subtable_SubtableFormat int
+const (
+	Ttf_Cmap_Subtable_SubtableFormat__ByteEncodingTable Ttf_Cmap_Subtable_SubtableFormat = 0
+	Ttf_Cmap_Subtable_SubtableFormat__HighByteMappingThroughTable Ttf_Cmap_Subtable_SubtableFormat = 2
+	Ttf_Cmap_Subtable_SubtableFormat__SegmentMappingToDeltaValues Ttf_Cmap_Subtable_SubtableFormat = 4
+	Ttf_Cmap_Subtable_SubtableFormat__TrimmedTableMapping Ttf_Cmap_Subtable_SubtableFormat = 6
+)
+var values_Ttf_Cmap_Subtable_SubtableFormat = map[Ttf_Cmap_Subtable_SubtableFormat]struct{}{0: {}, 2: {}, 4: {}, 6: {}}
+func (v Ttf_Cmap_Subtable_SubtableFormat) isDefined() bool {
+	_, ok := values_Ttf_Cmap_Subtable_SubtableFormat[v]
+	return ok
+}
+type Ttf_Cmap_Subtable struct {
+	Format Ttf_Cmap_Subtable_SubtableFormat
+	Length uint16
+	Version uint16
+	Value interface{}
+	_io *kaitai.Stream
+	_root *Ttf
+	_parent *Ttf_Cmap_SubtableHeader
+	_raw_Value []byte
+}
+func NewTtf_Cmap_Subtable() *Ttf_Cmap_Subtable {
+	return &Ttf_Cmap_Subtable{
+	}
+}
+
+func (this Ttf_Cmap_Subtable) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Ttf_Cmap_Subtable) Read(io *kaitai.Stream, parent *Ttf_Cmap_SubtableHeader, root *Ttf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp6, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.Format = Ttf_Cmap_Subtable_SubtableFormat(tmp6)
+	tmp7, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.Length = uint16(tmp7)
+	tmp8, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.Version = uint16(tmp8)
+	switch (this.Format) {
+	case Ttf_Cmap_Subtable_SubtableFormat__ByteEncodingTable:
+		tmp9, err := this._io.ReadBytes(int(this.Length - 6))
+		if err != nil {
+			return err
+		}
+		tmp9 = tmp9
+		this._raw_Value = tmp9
+		_io__raw_Value := kaitai.NewStream(bytes.NewReader(this._raw_Value))
+		tmp10 := NewTtf_Cmap_Subtable_ByteEncodingTable()
+		err = tmp10.Read(_io__raw_Value, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Value = tmp10
+	case Ttf_Cmap_Subtable_SubtableFormat__HighByteMappingThroughTable:
+		tmp11, err := this._io.ReadBytes(int(this.Length - 6))
+		if err != nil {
+			return err
+		}
+		tmp11 = tmp11
+		this._raw_Value = tmp11
+		_io__raw_Value := kaitai.NewStream(bytes.NewReader(this._raw_Value))
+		tmp12 := NewTtf_Cmap_Subtable_HighByteMappingThroughTable()
+		err = tmp12.Read(_io__raw_Value, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Value = tmp12
+	case Ttf_Cmap_Subtable_SubtableFormat__SegmentMappingToDeltaValues:
+		tmp13, err := this._io.ReadBytes(int(this.Length - 6))
+		if err != nil {
+			return err
+		}
+		tmp13 = tmp13
+		this._raw_Value = tmp13
+		_io__raw_Value := kaitai.NewStream(bytes.NewReader(this._raw_Value))
+		tmp14 := NewTtf_Cmap_Subtable_SegmentMappingToDeltaValues()
+		err = tmp14.Read(_io__raw_Value, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Value = tmp14
+	case Ttf_Cmap_Subtable_SubtableFormat__TrimmedTableMapping:
+		tmp15, err := this._io.ReadBytes(int(this.Length - 6))
+		if err != nil {
+			return err
+		}
+		tmp15 = tmp15
+		this._raw_Value = tmp15
+		_io__raw_Value := kaitai.NewStream(bytes.NewReader(this._raw_Value))
+		tmp16 := NewTtf_Cmap_Subtable_TrimmedTableMapping()
+		err = tmp16.Read(_io__raw_Value, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Value = tmp16
+	default:
+		tmp17, err := this._io.ReadBytes(int(this.Length - 6))
+		if err != nil {
+			return err
+		}
+		tmp17 = tmp17
+		this._raw_Value = tmp17
+	}
+	return err
+}
+type Ttf_Cmap_Subtable_ByteEncodingTable struct {
+	GlyphIdArray []byte
+	_io *kaitai.Stream
+	_root *Ttf
+	_parent *Ttf_Cmap_Subtable
+}
+func NewTtf_Cmap_Subtable_ByteEncodingTable() *Ttf_Cmap_Subtable_ByteEncodingTable {
+	return &Ttf_Cmap_Subtable_ByteEncodingTable{
+	}
+}
+
+func (this Ttf_Cmap_Subtable_ByteEncodingTable) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Ttf_Cmap_Subtable_ByteEncodingTable) Read(io *kaitai.Stream, parent *Ttf_Cmap_Subtable, root *Ttf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp18, err := this._io.ReadBytes(int(256))
+	if err != nil {
+		return err
+	}
+	tmp18 = tmp18
+	this.GlyphIdArray = tmp18
+	return err
+}
+type Ttf_Cmap_Subtable_HighByteMappingThroughTable struct {
+	SubHeaderKeys []uint16
+	_io *kaitai.Stream
+	_root *Ttf
+	_parent *Ttf_Cmap_Subtable
+}
+func NewTtf_Cmap_Subtable_HighByteMappingThroughTable() *Ttf_Cmap_Subtable_HighByteMappingThroughTable {
+	return &Ttf_Cmap_Subtable_HighByteMappingThroughTable{
+	}
+}
+
+func (this Ttf_Cmap_Subtable_HighByteMappingThroughTable) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Ttf_Cmap_Subtable_HighByteMappingThroughTable) Read(io *kaitai.Stream, parent *Ttf_Cmap_Subtable, root *Ttf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	for i := 0; i < int(256); i++ {
+		_ = i
+		tmp19, err := this._io.ReadU2be()
+		if err != nil {
+			return err
+		}
+		this.SubHeaderKeys = append(this.SubHeaderKeys, tmp19)
+	}
+	return err
+}
+type Ttf_Cmap_Subtable_SegmentMappingToDeltaValues struct {
+	SegCountX2 uint16
+	SearchRange uint16
+	EntrySelector uint16
+	RangeShift uint16
+	EndCount []uint16
+	ReservedPad uint16
+	StartCount []uint16
+	IdDelta []uint16
+	IdRangeOffset []uint16
+	GlyphIdArray []uint16
+	_io *kaitai.Stream
+	_root *Ttf
+	_parent *Ttf_Cmap_Subtable
+	_f_segCount bool
+	segCount int
+}
+func NewTtf_Cmap_Subtable_SegmentMappingToDeltaValues() *Ttf_Cmap_Subtable_SegmentMappingToDeltaValues {
+	return &Ttf_Cmap_Subtable_SegmentMappingToDeltaValues{
+	}
+}
+
+func (this Ttf_Cmap_Subtable_SegmentMappingToDeltaValues) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Ttf_Cmap_Subtable_SegmentMappingToDeltaValues) Read(io *kaitai.Stream, parent *Ttf_Cmap_Subtable, root *Ttf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
 	tmp20, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.NumNameRecords = uint16(tmp20)
+	this.SegCountX2 = uint16(tmp20)
 	tmp21, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.OfsStrings = uint16(tmp21)
-	for i := 0; i < int(this.NumNameRecords); i++ {
-		_ = i
-		tmp22 := NewTtf_Name_NameRecord()
-		err = tmp22.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.NameRecords = append(this.NameRecords, tmp22)
+	this.SearchRange = uint16(tmp21)
+	tmp22, err := this._io.ReadU2be()
+	if err != nil {
+		return err
 	}
-	return err
-}
-type Ttf_Name_NameRecord struct {
-	PlatformId Ttf_Name_Platforms
-	EncodingId uint16
-	LanguageId uint16
-	NameId Ttf_Name_Names
-	LenStr uint16
-	OfsStr uint16
-	_io *kaitai.Stream
-	_root *Ttf
-	_parent *Ttf_Name
-	_f_asciiValue bool
-	asciiValue string
-	_f_unicodeValue bool
-	unicodeValue string
-}
-func NewTtf_Name_NameRecord() *Ttf_Name_NameRecord {
-	return &Ttf_Name_NameRecord{
-	}
-}
-
-func (this *Ttf_Name_NameRecord) Read(io *kaitai.Stream, parent *Ttf_Name, root *Ttf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
+	this.EntrySelector = uint16(tmp22)
 	tmp23, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.PlatformId = Ttf_Name_Platforms(tmp23)
-	tmp24, err := this._io.ReadU2be()
+	this.RangeShift = uint16(tmp23)
+	tmp24, err := this.SegCount()
 	if err != nil {
 		return err
 	}
-	this.EncodingId = uint16(tmp24)
-	tmp25, err := this._io.ReadU2be()
-	if err != nil {
-		return err
+	for i := 0; i < int(tmp24); i++ {
+		_ = i
+		tmp25, err := this._io.ReadU2be()
+		if err != nil {
+			return err
+		}
+		this.EndCount = append(this.EndCount, tmp25)
 	}
-	this.LanguageId = uint16(tmp25)
 	tmp26, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.NameId = Ttf_Name_Names(tmp26)
-	tmp27, err := this._io.ReadU2be()
+	this.ReservedPad = uint16(tmp26)
+	tmp27, err := this.SegCount()
 	if err != nil {
 		return err
 	}
-	this.LenStr = uint16(tmp27)
-	tmp28, err := this._io.ReadU2be()
+	for i := 0; i < int(tmp27); i++ {
+		_ = i
+		tmp28, err := this._io.ReadU2be()
+		if err != nil {
+			return err
+		}
+		this.StartCount = append(this.StartCount, tmp28)
+	}
+	tmp29, err := this.SegCount()
 	if err != nil {
 		return err
 	}
-	this.OfsStr = uint16(tmp28)
+	for i := 0; i < int(tmp29); i++ {
+		_ = i
+		tmp30, err := this._io.ReadU2be()
+		if err != nil {
+			return err
+		}
+		this.IdDelta = append(this.IdDelta, tmp30)
+	}
+	tmp31, err := this.SegCount()
+	if err != nil {
+		return err
+	}
+	for i := 0; i < int(tmp31); i++ {
+		_ = i
+		tmp32, err := this._io.ReadU2be()
+		if err != nil {
+			return err
+		}
+		this.IdRangeOffset = append(this.IdRangeOffset, tmp32)
+	}
+	for i := 0;; i++ {
+		tmp33, err := this._io.EOF()
+		if err != nil {
+			return err
+		}
+		if tmp33 {
+			break
+		}
+		tmp34, err := this._io.ReadU2be()
+		if err != nil {
+			return err
+		}
+		this.GlyphIdArray = append(this.GlyphIdArray, tmp34)
+	}
 	return err
 }
-func (this *Ttf_Name_NameRecord) AsciiValue() (v string, err error) {
-	if (this._f_asciiValue) {
-		return this.asciiValue, nil
+func (this *Ttf_Cmap_Subtable_SegmentMappingToDeltaValues) SegCount() (v int, err error) {
+	if (this._f_segCount) {
+		return this.segCount, nil
 	}
-	thisIo := this._parent._io
-	_pos, err := thisIo.Pos()
-	if err != nil {
-		return "", err
-	}
-	_, err = thisIo.Seek(int64((this._parent.OfsStrings + this.OfsStr)), io.SeekStart)
-	if err != nil {
-		return "", err
-	}
-	tmp29, err := thisIo.ReadBytes(int(this.LenStr))
-	if err != nil {
-		return "", err
-	}
-	tmp29 = tmp29
-	this.asciiValue = string(tmp29)
-	_, err = thisIo.Seek(_pos, io.SeekStart)
-	if err != nil {
-		return "", err
-	}
-	this._f_asciiValue = true
-	this._f_asciiValue = true
-	return this.asciiValue, nil
+	this._f_segCount = true
+	this.segCount = int(this.SegCountX2 / 2)
+	return this.segCount, nil
 }
-func (this *Ttf_Name_NameRecord) UnicodeValue() (v string, err error) {
-	if (this._f_unicodeValue) {
-		return this.unicodeValue, nil
+type Ttf_Cmap_Subtable_TrimmedTableMapping struct {
+	FirstCode uint16
+	EntryCount uint16
+	GlyphIdArray []uint16
+	_io *kaitai.Stream
+	_root *Ttf
+	_parent *Ttf_Cmap_Subtable
+}
+func NewTtf_Cmap_Subtable_TrimmedTableMapping() *Ttf_Cmap_Subtable_TrimmedTableMapping {
+	return &Ttf_Cmap_Subtable_TrimmedTableMapping{
 	}
+}
+
+func (this Ttf_Cmap_Subtable_TrimmedTableMapping) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Ttf_Cmap_Subtable_TrimmedTableMapping) Read(io *kaitai.Stream, parent *Ttf_Cmap_Subtable, root *Ttf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp35, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.FirstCode = uint16(tmp35)
+	tmp36, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.EntryCount = uint16(tmp36)
+	for i := 0; i < int(this.EntryCount); i++ {
+		_ = i
+		tmp37, err := this._io.ReadU2be()
+		if err != nil {
+			return err
+		}
+		this.GlyphIdArray = append(this.GlyphIdArray, tmp37)
+	}
+	return err
+}
+type Ttf_Cmap_SubtableHeader struct {
+	PlatformId uint16
+	EncodingId uint16
+	SubtableOffset uint32
+	_io *kaitai.Stream
+	_root *Ttf
+	_parent *Ttf_Cmap
+	_f_table bool
+	table *Ttf_Cmap_Subtable
+}
+func NewTtf_Cmap_SubtableHeader() *Ttf_Cmap_SubtableHeader {
+	return &Ttf_Cmap_SubtableHeader{
+	}
+}
+
+func (this Ttf_Cmap_SubtableHeader) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Ttf_Cmap_SubtableHeader) Read(io *kaitai.Stream, parent *Ttf_Cmap, root *Ttf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp38, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.PlatformId = uint16(tmp38)
+	tmp39, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.EncodingId = uint16(tmp39)
+	tmp40, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.SubtableOffset = uint32(tmp40)
+	return err
+}
+func (this *Ttf_Cmap_SubtableHeader) Table() (v *Ttf_Cmap_Subtable, err error) {
+	if (this._f_table) {
+		return this.table, nil
+	}
+	this._f_table = true
 	thisIo := this._parent._io
 	_pos, err := thisIo.Pos()
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	_, err = thisIo.Seek(int64((this._parent.OfsStrings + this.OfsStr)), io.SeekStart)
+	_, err = thisIo.Seek(int64(this.SubtableOffset), io.SeekStart)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	tmp30, err := thisIo.ReadBytes(int(this.LenStr))
+	tmp41 := NewTtf_Cmap_Subtable()
+	err = tmp41.Read(thisIo, this, this._root)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	tmp30 = tmp30
-	tmp31, err := kaitai.BytesToStr(tmp30, unicode.UTF16(unicode.BigEndian, unicode.IgnoreBOM).NewDecoder())
-	if err != nil {
-		return "", err
-	}
-	this.unicodeValue = tmp31
+	this.table = tmp41
 	_, err = thisIo.Seek(_pos, io.SeekStart)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	this._f_unicodeValue = true
-	this._f_unicodeValue = true
-	return this.unicodeValue, nil
+	return this.table, nil
+}
+
+/**
+ * cvt  - Control Value Table This table contains a list of values that can be referenced by instructions. They can be used, among other things, to control characteristics for different glyphs.
+ */
+type Ttf_Cvt struct {
+	Fwords []int16
+	_io *kaitai.Stream
+	_root *Ttf
+	_parent *Ttf_DirTableEntry
+}
+func NewTtf_Cvt() *Ttf_Cvt {
+	return &Ttf_Cvt{
+	}
+}
+
+func (this Ttf_Cvt) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Ttf_Cvt) Read(io *kaitai.Stream, parent *Ttf_DirTableEntry, root *Ttf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	for i := 0;; i++ {
+		tmp42, err := this._io.EOF()
+		if err != nil {
+			return err
+		}
+		if tmp42 {
+			break
+		}
+		tmp43, err := this._io.ReadS2be()
+		if err != nil {
+			return err
+		}
+		this.Fwords = append(this.Fwords, tmp43)
+	}
+	return err
+}
+type Ttf_DirTableEntry struct {
+	Tag string
+	Checksum uint32
+	Offset uint32
+	Length uint32
+	_io *kaitai.Stream
+	_root *Ttf
+	_parent *Ttf
+	_raw_value []byte
+	_f_value bool
+	value interface{}
+}
+func NewTtf_DirTableEntry() *Ttf_DirTableEntry {
+	return &Ttf_DirTableEntry{
+	}
+}
+
+func (this Ttf_DirTableEntry) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Ttf_DirTableEntry) Read(io *kaitai.Stream, parent *Ttf, root *Ttf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp44, err := this._io.ReadBytes(int(4))
+	if err != nil {
+		return err
+	}
+	tmp44 = tmp44
+	this.Tag = string(tmp44)
+	tmp45, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.Checksum = uint32(tmp45)
+	tmp46, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.Offset = uint32(tmp46)
+	tmp47, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.Length = uint32(tmp47)
+	return err
+}
+func (this *Ttf_DirTableEntry) Value() (v interface{}, err error) {
+	if (this._f_value) {
+		return this.value, nil
+	}
+	this._f_value = true
+	thisIo := this._root._io
+	_pos, err := thisIo.Pos()
+	if err != nil {
+		return nil, err
+	}
+	_, err = thisIo.Seek(int64(this.Offset), io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	switch (this.Tag) {
+	case "OS/2":
+		tmp48, err := thisIo.ReadBytes(int(this.Length))
+		if err != nil {
+			return nil, err
+		}
+		tmp48 = tmp48
+		this._raw_value = tmp48
+		_io__raw_value := kaitai.NewStream(bytes.NewReader(this._raw_value))
+		tmp49 := NewTtf_Os2()
+		err = tmp49.Read(_io__raw_value, this, this._root)
+		if err != nil {
+			return nil, err
+		}
+		this.value = tmp49
+	case "cmap":
+		tmp50, err := thisIo.ReadBytes(int(this.Length))
+		if err != nil {
+			return nil, err
+		}
+		tmp50 = tmp50
+		this._raw_value = tmp50
+		_io__raw_value := kaitai.NewStream(bytes.NewReader(this._raw_value))
+		tmp51 := NewTtf_Cmap()
+		err = tmp51.Read(_io__raw_value, this, this._root)
+		if err != nil {
+			return nil, err
+		}
+		this.value = tmp51
+	case "cvt ":
+		tmp52, err := thisIo.ReadBytes(int(this.Length))
+		if err != nil {
+			return nil, err
+		}
+		tmp52 = tmp52
+		this._raw_value = tmp52
+		_io__raw_value := kaitai.NewStream(bytes.NewReader(this._raw_value))
+		tmp53 := NewTtf_Cvt()
+		err = tmp53.Read(_io__raw_value, this, this._root)
+		if err != nil {
+			return nil, err
+		}
+		this.value = tmp53
+	case "fpgm":
+		tmp54, err := thisIo.ReadBytes(int(this.Length))
+		if err != nil {
+			return nil, err
+		}
+		tmp54 = tmp54
+		this._raw_value = tmp54
+		_io__raw_value := kaitai.NewStream(bytes.NewReader(this._raw_value))
+		tmp55 := NewTtf_Fpgm()
+		err = tmp55.Read(_io__raw_value, this, this._root)
+		if err != nil {
+			return nil, err
+		}
+		this.value = tmp55
+	case "glyf":
+		tmp56, err := thisIo.ReadBytes(int(this.Length))
+		if err != nil {
+			return nil, err
+		}
+		tmp56 = tmp56
+		this._raw_value = tmp56
+		_io__raw_value := kaitai.NewStream(bytes.NewReader(this._raw_value))
+		tmp57 := NewTtf_Glyf()
+		err = tmp57.Read(_io__raw_value, this, this._root)
+		if err != nil {
+			return nil, err
+		}
+		this.value = tmp57
+	case "head":
+		tmp58, err := thisIo.ReadBytes(int(this.Length))
+		if err != nil {
+			return nil, err
+		}
+		tmp58 = tmp58
+		this._raw_value = tmp58
+		_io__raw_value := kaitai.NewStream(bytes.NewReader(this._raw_value))
+		tmp59 := NewTtf_Head()
+		err = tmp59.Read(_io__raw_value, this, this._root)
+		if err != nil {
+			return nil, err
+		}
+		this.value = tmp59
+	case "hhea":
+		tmp60, err := thisIo.ReadBytes(int(this.Length))
+		if err != nil {
+			return nil, err
+		}
+		tmp60 = tmp60
+		this._raw_value = tmp60
+		_io__raw_value := kaitai.NewStream(bytes.NewReader(this._raw_value))
+		tmp61 := NewTtf_Hhea()
+		err = tmp61.Read(_io__raw_value, this, this._root)
+		if err != nil {
+			return nil, err
+		}
+		this.value = tmp61
+	case "kern":
+		tmp62, err := thisIo.ReadBytes(int(this.Length))
+		if err != nil {
+			return nil, err
+		}
+		tmp62 = tmp62
+		this._raw_value = tmp62
+		_io__raw_value := kaitai.NewStream(bytes.NewReader(this._raw_value))
+		tmp63 := NewTtf_Kern()
+		err = tmp63.Read(_io__raw_value, this, this._root)
+		if err != nil {
+			return nil, err
+		}
+		this.value = tmp63
+	case "maxp":
+		tmp64, err := thisIo.ReadBytes(int(this.Length))
+		if err != nil {
+			return nil, err
+		}
+		tmp64 = tmp64
+		this._raw_value = tmp64
+		_io__raw_value := kaitai.NewStream(bytes.NewReader(this._raw_value))
+		tmp65 := NewTtf_Maxp()
+		err = tmp65.Read(_io__raw_value, this, this._root)
+		if err != nil {
+			return nil, err
+		}
+		this.value = tmp65
+	case "name":
+		tmp66, err := thisIo.ReadBytes(int(this.Length))
+		if err != nil {
+			return nil, err
+		}
+		tmp66 = tmp66
+		this._raw_value = tmp66
+		_io__raw_value := kaitai.NewStream(bytes.NewReader(this._raw_value))
+		tmp67 := NewTtf_Name()
+		err = tmp67.Read(_io__raw_value, this, this._root)
+		if err != nil {
+			return nil, err
+		}
+		this.value = tmp67
+	case "post":
+		tmp68, err := thisIo.ReadBytes(int(this.Length))
+		if err != nil {
+			return nil, err
+		}
+		tmp68 = tmp68
+		this._raw_value = tmp68
+		_io__raw_value := kaitai.NewStream(bytes.NewReader(this._raw_value))
+		tmp69 := NewTtf_Post()
+		err = tmp69.Read(_io__raw_value, this, this._root)
+		if err != nil {
+			return nil, err
+		}
+		this.value = tmp69
+	case "prep":
+		tmp70, err := thisIo.ReadBytes(int(this.Length))
+		if err != nil {
+			return nil, err
+		}
+		tmp70 = tmp70
+		this._raw_value = tmp70
+		_io__raw_value := kaitai.NewStream(bytes.NewReader(this._raw_value))
+		tmp71 := NewTtf_Prep()
+		err = tmp71.Read(_io__raw_value, this, this._root)
+		if err != nil {
+			return nil, err
+		}
+		this.value = tmp71
+	default:
+		tmp72, err := thisIo.ReadBytes(int(this.Length))
+		if err != nil {
+			return nil, err
+		}
+		tmp72 = tmp72
+		this._raw_value = tmp72
+	}
+	_, err = thisIo.Seek(_pos, io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	return this.value, nil
+}
+type Ttf_Fixed struct {
+	Major uint16
+	Minor uint16
+	_io *kaitai.Stream
+	_root *Ttf
+	_parent kaitai.Struct
+}
+func NewTtf_Fixed() *Ttf_Fixed {
+	return &Ttf_Fixed{
+	}
+}
+
+func (this Ttf_Fixed) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Ttf_Fixed) Read(io *kaitai.Stream, parent kaitai.Struct, root *Ttf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp73, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.Major = uint16(tmp73)
+	tmp74, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.Minor = uint16(tmp74)
+	return err
+}
+type Ttf_Fpgm struct {
+	Instructions []byte
+	_io *kaitai.Stream
+	_root *Ttf
+	_parent *Ttf_DirTableEntry
+}
+func NewTtf_Fpgm() *Ttf_Fpgm {
+	return &Ttf_Fpgm{
+	}
+}
+
+func (this Ttf_Fpgm) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Ttf_Fpgm) Read(io *kaitai.Stream, parent *Ttf_DirTableEntry, root *Ttf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp75, err := this._io.ReadBytesFull()
+	if err != nil {
+		return err
+	}
+	tmp75 = tmp75
+	this.Instructions = tmp75
+	return err
+}
+type Ttf_Glyf struct {
+	NumberOfContours int16
+	XMin int16
+	YMin int16
+	XMax int16
+	YMax int16
+	Value *Ttf_Glyf_SimpleGlyph
+	_io *kaitai.Stream
+	_root *Ttf
+	_parent *Ttf_DirTableEntry
+}
+func NewTtf_Glyf() *Ttf_Glyf {
+	return &Ttf_Glyf{
+	}
+}
+
+func (this Ttf_Glyf) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Ttf_Glyf) Read(io *kaitai.Stream, parent *Ttf_DirTableEntry, root *Ttf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp76, err := this._io.ReadS2be()
+	if err != nil {
+		return err
+	}
+	this.NumberOfContours = int16(tmp76)
+	tmp77, err := this._io.ReadS2be()
+	if err != nil {
+		return err
+	}
+	this.XMin = int16(tmp77)
+	tmp78, err := this._io.ReadS2be()
+	if err != nil {
+		return err
+	}
+	this.YMin = int16(tmp78)
+	tmp79, err := this._io.ReadS2be()
+	if err != nil {
+		return err
+	}
+	this.XMax = int16(tmp79)
+	tmp80, err := this._io.ReadS2be()
+	if err != nil {
+		return err
+	}
+	this.YMax = int16(tmp80)
+	if (this.NumberOfContours > 0) {
+		tmp81 := NewTtf_Glyf_SimpleGlyph()
+		err = tmp81.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Value = tmp81
+	}
+	return err
+}
+type Ttf_Glyf_SimpleGlyph struct {
+	EndPtsOfContours []uint16
+	InstructionLength uint16
+	Instructions []byte
+	Flags []*Ttf_Glyf_SimpleGlyph_Flag
+	_io *kaitai.Stream
+	_root *Ttf
+	_parent *Ttf_Glyf
+	_f_pointCount bool
+	pointCount int
+}
+func NewTtf_Glyf_SimpleGlyph() *Ttf_Glyf_SimpleGlyph {
+	return &Ttf_Glyf_SimpleGlyph{
+	}
+}
+
+func (this Ttf_Glyf_SimpleGlyph) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Ttf_Glyf_SimpleGlyph) Read(io *kaitai.Stream, parent *Ttf_Glyf, root *Ttf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	for i := 0; i < int(this._parent.NumberOfContours); i++ {
+		_ = i
+		tmp82, err := this._io.ReadU2be()
+		if err != nil {
+			return err
+		}
+		this.EndPtsOfContours = append(this.EndPtsOfContours, tmp82)
+	}
+	tmp83, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.InstructionLength = uint16(tmp83)
+	tmp84, err := this._io.ReadBytes(int(this.InstructionLength))
+	if err != nil {
+		return err
+	}
+	tmp84 = tmp84
+	this.Instructions = tmp84
+	tmp85, err := this.PointCount()
+	if err != nil {
+		return err
+	}
+	for i := 0; i < int(tmp85); i++ {
+		_ = i
+		tmp86 := NewTtf_Glyf_SimpleGlyph_Flag()
+		err = tmp86.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Flags = append(this.Flags, tmp86)
+	}
+	return err
+}
+func (this *Ttf_Glyf_SimpleGlyph) PointCount() (v int, err error) {
+	if (this._f_pointCount) {
+		return this.pointCount, nil
+	}
+	this._f_pointCount = true
+	tmp87 := this.EndPtsOfContours[0]
+	for _, tmp88 := range this.EndPtsOfContours {
+		if tmp87 < tmp88 {
+			tmp87 = tmp88
+		}
+	}
+	this.pointCount = int(tmp87 + 1)
+	return this.pointCount, nil
+}
+type Ttf_Glyf_SimpleGlyph_Flag struct {
+	Reserved uint64
+	YIsSame bool
+	XIsSame bool
+	Repeat bool
+	YShortVector bool
+	XShortVector bool
+	OnCurve bool
+	RepeatValue uint8
+	_io *kaitai.Stream
+	_root *Ttf
+	_parent *Ttf_Glyf_SimpleGlyph
+}
+func NewTtf_Glyf_SimpleGlyph_Flag() *Ttf_Glyf_SimpleGlyph_Flag {
+	return &Ttf_Glyf_SimpleGlyph_Flag{
+	}
+}
+
+func (this Ttf_Glyf_SimpleGlyph_Flag) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Ttf_Glyf_SimpleGlyph_Flag) Read(io *kaitai.Stream, parent *Ttf_Glyf_SimpleGlyph, root *Ttf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp89, err := this._io.ReadBitsIntBe(2)
+	if err != nil {
+		return err
+	}
+	this.Reserved = tmp89
+	tmp90, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.YIsSame = tmp90 != 0
+	tmp91, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.XIsSame = tmp91 != 0
+	tmp92, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Repeat = tmp92 != 0
+	tmp93, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.YShortVector = tmp93 != 0
+	tmp94, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.XShortVector = tmp94 != 0
+	tmp95, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.OnCurve = tmp95 != 0
+	this._io.AlignToByte()
+	if (this.Repeat) {
+		tmp96, err := this._io.ReadU1()
+		if err != nil {
+			return err
+		}
+		this.RepeatValue = tmp96
+	}
+	return err
 }
 
 type Ttf_Head_Flags int
@@ -421,6 +1073,11 @@ const (
 	Ttf_Head_Flags__FlagForcePpem Ttf_Head_Flags = 8
 	Ttf_Head_Flags__FlagMayAdvanceWidth Ttf_Head_Flags = 16
 )
+var values_Ttf_Head_Flags = map[Ttf_Head_Flags]struct{}{1: {}, 2: {}, 4: {}, 8: {}, 16: {}}
+func (v Ttf_Head_Flags) isDefined() bool {
+	_, ok := values_Ttf_Head_Flags[v]
+	return ok
+}
 
 type Ttf_Head_FontDirectionHint int
 const (
@@ -428,6 +1085,11 @@ const (
 	Ttf_Head_FontDirectionHint__OnlyStronglyLeftToRight Ttf_Head_FontDirectionHint = 1
 	Ttf_Head_FontDirectionHint__StronglyLeftToRightAndNeutrals Ttf_Head_FontDirectionHint = 2
 )
+var values_Ttf_Head_FontDirectionHint = map[Ttf_Head_FontDirectionHint]struct{}{0: {}, 1: {}, 2: {}}
+func (v Ttf_Head_FontDirectionHint) isDefined() bool {
+	_, ok := values_Ttf_Head_FontDirectionHint[v]
+	return ok
+}
 type Ttf_Head struct {
 	Version *Ttf_Fixed
 	FontRevision *Ttf_Fixed
@@ -455,126 +1117,106 @@ func NewTtf_Head() *Ttf_Head {
 	}
 }
 
+func (this Ttf_Head) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Ttf_Head) Read(io *kaitai.Stream, parent *Ttf_DirTableEntry, root *Ttf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp32 := NewTtf_Fixed()
-	err = tmp32.Read(this._io, this, this._root)
+	tmp97 := NewTtf_Fixed()
+	err = tmp97.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Version = tmp32
-	tmp33 := NewTtf_Fixed()
-	err = tmp33.Read(this._io, this, this._root)
+	this.Version = tmp97
+	tmp98 := NewTtf_Fixed()
+	err = tmp98.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.FontRevision = tmp33
-	tmp34, err := this._io.ReadU4be()
+	this.FontRevision = tmp98
+	tmp99, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.ChecksumAdjustment = uint32(tmp34)
-	tmp35, err := this._io.ReadBytes(int(4))
+	this.ChecksumAdjustment = uint32(tmp99)
+	tmp100, err := this._io.ReadBytes(int(4))
 	if err != nil {
 		return err
 	}
-	tmp35 = tmp35
-	this.MagicNumber = tmp35
+	tmp100 = tmp100
+	this.MagicNumber = tmp100
 	if !(bytes.Equal(this.MagicNumber, []uint8{95, 15, 60, 245})) {
 		return kaitai.NewValidationNotEqualError([]uint8{95, 15, 60, 245}, this.MagicNumber, this._io, "/types/head/seq/3")
 	}
-	tmp36, err := this._io.ReadU2be()
+	tmp101, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.Flags = Ttf_Head_Flags(tmp36)
-	tmp37, err := this._io.ReadU2be()
+	this.Flags = Ttf_Head_Flags(tmp101)
+	tmp102, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.UnitsPerEm = uint16(tmp37)
-	tmp38, err := this._io.ReadU8be()
+	this.UnitsPerEm = uint16(tmp102)
+	tmp103, err := this._io.ReadU8be()
 	if err != nil {
 		return err
 	}
-	this.Created = uint64(tmp38)
-	tmp39, err := this._io.ReadU8be()
+	this.Created = uint64(tmp103)
+	tmp104, err := this._io.ReadU8be()
 	if err != nil {
 		return err
 	}
-	this.Modified = uint64(tmp39)
-	tmp40, err := this._io.ReadS2be()
+	this.Modified = uint64(tmp104)
+	tmp105, err := this._io.ReadS2be()
 	if err != nil {
 		return err
 	}
-	this.XMin = int16(tmp40)
-	tmp41, err := this._io.ReadS2be()
+	this.XMin = int16(tmp105)
+	tmp106, err := this._io.ReadS2be()
 	if err != nil {
 		return err
 	}
-	this.YMin = int16(tmp41)
-	tmp42, err := this._io.ReadS2be()
+	this.YMin = int16(tmp106)
+	tmp107, err := this._io.ReadS2be()
 	if err != nil {
 		return err
 	}
-	this.XMax = int16(tmp42)
-	tmp43, err := this._io.ReadS2be()
+	this.XMax = int16(tmp107)
+	tmp108, err := this._io.ReadS2be()
 	if err != nil {
 		return err
 	}
-	this.YMax = int16(tmp43)
-	tmp44, err := this._io.ReadU2be()
+	this.YMax = int16(tmp108)
+	tmp109, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.MacStyle = uint16(tmp44)
-	tmp45, err := this._io.ReadU2be()
+	this.MacStyle = uint16(tmp109)
+	tmp110, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.LowestRecPpem = uint16(tmp45)
-	tmp46, err := this._io.ReadS2be()
+	this.LowestRecPpem = uint16(tmp110)
+	tmp111, err := this._io.ReadS2be()
 	if err != nil {
 		return err
 	}
-	this.FontDirectionHint = Ttf_Head_FontDirectionHint(tmp46)
-	tmp47, err := this._io.ReadS2be()
+	this.FontDirectionHint = Ttf_Head_FontDirectionHint(tmp111)
+	tmp112, err := this._io.ReadS2be()
 	if err != nil {
 		return err
 	}
-	this.IndexToLocFormat = int16(tmp47)
-	tmp48, err := this._io.ReadS2be()
+	this.IndexToLocFormat = int16(tmp112)
+	tmp113, err := this._io.ReadS2be()
 	if err != nil {
 		return err
 	}
-	this.GlyphDataFormat = int16(tmp48)
-	return err
-}
-type Ttf_Prep struct {
-	Instructions []byte
-	_io *kaitai.Stream
-	_root *Ttf
-	_parent *Ttf_DirTableEntry
-}
-func NewTtf_Prep() *Ttf_Prep {
-	return &Ttf_Prep{
-	}
-}
-
-func (this *Ttf_Prep) Read(io *kaitai.Stream, parent *Ttf_DirTableEntry, root *Ttf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp49, err := this._io.ReadBytesFull()
-	if err != nil {
-		return err
-	}
-	tmp49 = tmp49
-	this.Instructions = tmp49
+	this.GlyphDataFormat = int16(tmp113)
 	return err
 }
 type Ttf_Hhea struct {
@@ -600,81 +1242,85 @@ func NewTtf_Hhea() *Ttf_Hhea {
 	}
 }
 
+func (this Ttf_Hhea) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Ttf_Hhea) Read(io *kaitai.Stream, parent *Ttf_DirTableEntry, root *Ttf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp50 := NewTtf_Fixed()
-	err = tmp50.Read(this._io, this, this._root)
+	tmp114 := NewTtf_Fixed()
+	err = tmp114.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Version = tmp50
-	tmp51, err := this._io.ReadS2be()
+	this.Version = tmp114
+	tmp115, err := this._io.ReadS2be()
 	if err != nil {
 		return err
 	}
-	this.Ascender = int16(tmp51)
-	tmp52, err := this._io.ReadS2be()
+	this.Ascender = int16(tmp115)
+	tmp116, err := this._io.ReadS2be()
 	if err != nil {
 		return err
 	}
-	this.Descender = int16(tmp52)
-	tmp53, err := this._io.ReadS2be()
+	this.Descender = int16(tmp116)
+	tmp117, err := this._io.ReadS2be()
 	if err != nil {
 		return err
 	}
-	this.LineGap = int16(tmp53)
-	tmp54, err := this._io.ReadU2be()
+	this.LineGap = int16(tmp117)
+	tmp118, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.AdvanceWidthMax = uint16(tmp54)
-	tmp55, err := this._io.ReadS2be()
+	this.AdvanceWidthMax = uint16(tmp118)
+	tmp119, err := this._io.ReadS2be()
 	if err != nil {
 		return err
 	}
-	this.MinLeftSideBearing = int16(tmp55)
-	tmp56, err := this._io.ReadS2be()
+	this.MinLeftSideBearing = int16(tmp119)
+	tmp120, err := this._io.ReadS2be()
 	if err != nil {
 		return err
 	}
-	this.MinRightSideBearing = int16(tmp56)
-	tmp57, err := this._io.ReadS2be()
+	this.MinRightSideBearing = int16(tmp120)
+	tmp121, err := this._io.ReadS2be()
 	if err != nil {
 		return err
 	}
-	this.XMaxExtend = int16(tmp57)
-	tmp58, err := this._io.ReadS2be()
+	this.XMaxExtend = int16(tmp121)
+	tmp122, err := this._io.ReadS2be()
 	if err != nil {
 		return err
 	}
-	this.CaretSlopeRise = int16(tmp58)
-	tmp59, err := this._io.ReadS2be()
+	this.CaretSlopeRise = int16(tmp122)
+	tmp123, err := this._io.ReadS2be()
 	if err != nil {
 		return err
 	}
-	this.CaretSlopeRun = int16(tmp59)
-	tmp60, err := this._io.ReadBytes(int(10))
+	this.CaretSlopeRun = int16(tmp123)
+	tmp124, err := this._io.ReadBytes(int(10))
 	if err != nil {
 		return err
 	}
-	tmp60 = tmp60
-	this.Reserved = tmp60
+	tmp124 = tmp124
+	this.Reserved = tmp124
 	if !(bytes.Equal(this.Reserved, []uint8{0, 0, 0, 0, 0, 0, 0, 0, 0, 0})) {
 		return kaitai.NewValidationNotEqualError([]uint8{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, this.Reserved, this._io, "/types/hhea/seq/10")
 	}
-	tmp61, err := this._io.ReadS2be()
+	tmp125, err := this._io.ReadS2be()
 	if err != nil {
 		return err
 	}
-	this.MetricDataFormat = int16(tmp61)
-	tmp62, err := this._io.ReadU2be()
+	this.MetricDataFormat = int16(tmp125)
+	tmp126, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.NumberOfHmetrics = uint16(tmp62)
+	this.NumberOfHmetrics = uint16(tmp126)
 	return err
 }
 
@@ -705,30 +1351,6 @@ func (this *Ttf_Hhea) Read(io *kaitai.Stream, parent *Ttf_DirTableEntry, root *T
 /**
  * Max(lsb + (xMax - xMin)).
  */
-type Ttf_Fpgm struct {
-	Instructions []byte
-	_io *kaitai.Stream
-	_root *Ttf
-	_parent *Ttf_DirTableEntry
-}
-func NewTtf_Fpgm() *Ttf_Fpgm {
-	return &Ttf_Fpgm{
-	}
-}
-
-func (this *Ttf_Fpgm) Read(io *kaitai.Stream, parent *Ttf_DirTableEntry, root *Ttf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp63, err := this._io.ReadBytesFull()
-	if err != nil {
-		return err
-	}
-	tmp63 = tmp63
-	this.Instructions = tmp63
-	return err
-}
 type Ttf_Kern struct {
 	Version uint16
 	SubtableCount uint16
@@ -742,29 +1364,33 @@ func NewTtf_Kern() *Ttf_Kern {
 	}
 }
 
+func (this Ttf_Kern) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Ttf_Kern) Read(io *kaitai.Stream, parent *Ttf_DirTableEntry, root *Ttf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp64, err := this._io.ReadU2be()
+	tmp127, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.Version = uint16(tmp64)
-	tmp65, err := this._io.ReadU2be()
+	this.Version = uint16(tmp127)
+	tmp128, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.SubtableCount = uint16(tmp65)
+	this.SubtableCount = uint16(tmp128)
 	for i := 0; i < int(this.SubtableCount); i++ {
 		_ = i
-		tmp66 := NewTtf_Kern_Subtable()
-		err = tmp66.Read(this._io, this, this._root)
+		tmp129 := NewTtf_Kern_Subtable()
+		err = tmp129.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Subtables = append(this.Subtables, tmp66)
+		this.Subtables = append(this.Subtables, tmp129)
 	}
 	return err
 }
@@ -787,59 +1413,63 @@ func NewTtf_Kern_Subtable() *Ttf_Kern_Subtable {
 	}
 }
 
+func (this Ttf_Kern_Subtable) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Ttf_Kern_Subtable) Read(io *kaitai.Stream, parent *Ttf_Kern, root *Ttf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp67, err := this._io.ReadU2be()
+	tmp130, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.Version = uint16(tmp67)
-	tmp68, err := this._io.ReadU2be()
+	this.Version = uint16(tmp130)
+	tmp131, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.Length = uint16(tmp68)
-	tmp69, err := this._io.ReadU1()
+	this.Length = uint16(tmp131)
+	tmp132, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Format = tmp69
-	tmp70, err := this._io.ReadBitsIntBe(4)
+	this.Format = tmp132
+	tmp133, err := this._io.ReadBitsIntBe(4)
 	if err != nil {
 		return err
 	}
-	this.Reserved = tmp70
-	tmp71, err := this._io.ReadBitsIntBe(1)
+	this.Reserved = tmp133
+	tmp134, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.IsOverride = tmp71 != 0
-	tmp72, err := this._io.ReadBitsIntBe(1)
+	this.IsOverride = tmp134 != 0
+	tmp135, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.IsCrossStream = tmp72 != 0
-	tmp73, err := this._io.ReadBitsIntBe(1)
+	this.IsCrossStream = tmp135 != 0
+	tmp136, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.IsMinimum = tmp73 != 0
-	tmp74, err := this._io.ReadBitsIntBe(1)
+	this.IsMinimum = tmp136 != 0
+	tmp137, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.IsHorizontal = tmp74 != 0
+	this.IsHorizontal = tmp137 != 0
 	this._io.AlignToByte()
 	if (this.Format == 0) {
-		tmp75 := NewTtf_Kern_Subtable_Format0()
-		err = tmp75.Read(this._io, this, this._root)
+		tmp138 := NewTtf_Kern_Subtable_Format0()
+		err = tmp138.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Format0 = tmp75
+		this.Format0 = tmp138
 	}
 	return err
 }
@@ -858,39 +1488,43 @@ func NewTtf_Kern_Subtable_Format0() *Ttf_Kern_Subtable_Format0 {
 	}
 }
 
+func (this Ttf_Kern_Subtable_Format0) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Ttf_Kern_Subtable_Format0) Read(io *kaitai.Stream, parent *Ttf_Kern_Subtable, root *Ttf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp76, err := this._io.ReadU2be()
+	tmp139, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.PairCount = uint16(tmp76)
-	tmp77, err := this._io.ReadU2be()
+	this.PairCount = uint16(tmp139)
+	tmp140, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.SearchRange = uint16(tmp77)
-	tmp78, err := this._io.ReadU2be()
+	this.SearchRange = uint16(tmp140)
+	tmp141, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.EntrySelector = uint16(tmp78)
-	tmp79, err := this._io.ReadU2be()
+	this.EntrySelector = uint16(tmp141)
+	tmp142, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.RangeShift = uint16(tmp79)
+	this.RangeShift = uint16(tmp142)
 	for i := 0; i < int(this.PairCount); i++ {
 		_ = i
-		tmp80 := NewTtf_Kern_Subtable_Format0_KerningPair()
-		err = tmp80.Read(this._io, this, this._root)
+		tmp143 := NewTtf_Kern_Subtable_Format0_KerningPair()
+		err = tmp143.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.KerningPairs = append(this.KerningPairs, tmp80)
+		this.KerningPairs = append(this.KerningPairs, tmp143)
 	}
 	return err
 }
@@ -907,275 +1541,550 @@ func NewTtf_Kern_Subtable_Format0_KerningPair() *Ttf_Kern_Subtable_Format0_Kerni
 	}
 }
 
+func (this Ttf_Kern_Subtable_Format0_KerningPair) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Ttf_Kern_Subtable_Format0_KerningPair) Read(io *kaitai.Stream, parent *Ttf_Kern_Subtable_Format0, root *Ttf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp81, err := this._io.ReadU2be()
+	tmp144, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.Left = uint16(tmp81)
-	tmp82, err := this._io.ReadU2be()
+	this.Left = uint16(tmp144)
+	tmp145, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.Right = uint16(tmp82)
-	tmp83, err := this._io.ReadS2be()
+	this.Right = uint16(tmp145)
+	tmp146, err := this._io.ReadS2be()
 	if err != nil {
 		return err
 	}
-	this.Value = int16(tmp83)
+	this.Value = int16(tmp146)
 	return err
 }
-type Ttf_DirTableEntry struct {
-	Tag string
-	Checksum uint32
-	Offset uint32
-	Length uint32
+type Ttf_Maxp struct {
+	TableVersionNumber *Ttf_Fixed
+	NumGlyphs uint16
+	Version10Body *Ttf_MaxpVersion10Body
 	_io *kaitai.Stream
 	_root *Ttf
-	_parent *Ttf
-	_raw_value []byte
-	_f_value bool
-	value interface{}
+	_parent *Ttf_DirTableEntry
+	_f_isVersion10 bool
+	isVersion10 bool
 }
-func NewTtf_DirTableEntry() *Ttf_DirTableEntry {
-	return &Ttf_DirTableEntry{
+func NewTtf_Maxp() *Ttf_Maxp {
+	return &Ttf_Maxp{
 	}
 }
 
-func (this *Ttf_DirTableEntry) Read(io *kaitai.Stream, parent *Ttf, root *Ttf) (err error) {
+func (this Ttf_Maxp) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Ttf_Maxp) Read(io *kaitai.Stream, parent *Ttf_DirTableEntry, root *Ttf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp84, err := this._io.ReadBytes(int(4))
+	tmp147 := NewTtf_Fixed()
+	err = tmp147.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	tmp84 = tmp84
-	this.Tag = string(tmp84)
-	tmp85, err := this._io.ReadU4be()
+	this.TableVersionNumber = tmp147
+	tmp148, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.Checksum = uint32(tmp85)
-	tmp86, err := this._io.ReadU4be()
+	this.NumGlyphs = uint16(tmp148)
+	tmp149, err := this.IsVersion10()
 	if err != nil {
 		return err
 	}
-	this.Offset = uint32(tmp86)
-	tmp87, err := this._io.ReadU4be()
-	if err != nil {
-		return err
+	if (tmp149) {
+		tmp150 := NewTtf_MaxpVersion10Body()
+		err = tmp150.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Version10Body = tmp150
 	}
-	this.Length = uint32(tmp87)
 	return err
 }
-func (this *Ttf_DirTableEntry) Value() (v interface{}, err error) {
-	if (this._f_value) {
-		return this.value, nil
+func (this *Ttf_Maxp) IsVersion10() (v bool, err error) {
+	if (this._f_isVersion10) {
+		return this.isVersion10, nil
 	}
-	thisIo := this._root._io
+	this._f_isVersion10 = true
+	this.isVersion10 = bool( ((this.TableVersionNumber.Major == 1) && (this.TableVersionNumber.Minor == 0)) )
+	return this.isVersion10, nil
+}
+
+/**
+ * 0x00010000 for version 1.0.
+ */
+
+/**
+ * The number of glyphs in the font.
+ */
+type Ttf_MaxpVersion10Body struct {
+	MaxPoints uint16
+	MaxContours uint16
+	MaxCompositePoints uint16
+	MaxCompositeContours uint16
+	MaxZones uint16
+	MaxTwilightPoints uint16
+	MaxStorage uint16
+	MaxFunctionDefs uint16
+	MaxInstructionDefs uint16
+	MaxStackElements uint16
+	MaxSizeOfInstructions uint16
+	MaxComponentElements uint16
+	MaxComponentDepth uint16
+	_io *kaitai.Stream
+	_root *Ttf
+	_parent *Ttf_Maxp
+}
+func NewTtf_MaxpVersion10Body() *Ttf_MaxpVersion10Body {
+	return &Ttf_MaxpVersion10Body{
+	}
+}
+
+func (this Ttf_MaxpVersion10Body) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Ttf_MaxpVersion10Body) Read(io *kaitai.Stream, parent *Ttf_Maxp, root *Ttf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp151, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.MaxPoints = uint16(tmp151)
+	tmp152, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.MaxContours = uint16(tmp152)
+	tmp153, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.MaxCompositePoints = uint16(tmp153)
+	tmp154, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.MaxCompositeContours = uint16(tmp154)
+	tmp155, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.MaxZones = uint16(tmp155)
+	tmp156, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.MaxTwilightPoints = uint16(tmp156)
+	tmp157, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.MaxStorage = uint16(tmp157)
+	tmp158, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.MaxFunctionDefs = uint16(tmp158)
+	tmp159, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.MaxInstructionDefs = uint16(tmp159)
+	tmp160, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.MaxStackElements = uint16(tmp160)
+	tmp161, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.MaxSizeOfInstructions = uint16(tmp161)
+	tmp162, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.MaxComponentElements = uint16(tmp162)
+	tmp163, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.MaxComponentDepth = uint16(tmp163)
+	return err
+}
+
+/**
+ * Maximum points in a non-composite glyph.
+ */
+
+/**
+ * Maximum contours in a non-composite glyph.
+ */
+
+/**
+ * Maximum points in a composite glyph.
+ */
+
+/**
+ * Maximum contours in a composite glyph.
+ */
+
+/**
+ * 1 if instructions do not use the twilight zone (Z0), or 2 if instructions do use Z0; should be set to 2 in most cases.
+ */
+
+/**
+ * Maximum points used in Z0.
+ */
+
+/**
+ * Number of Storage Area locations.
+ */
+
+/**
+ * Number of FDEFs.
+ */
+
+/**
+ * Number of IDEFs.
+ */
+
+/**
+ * Maximum stack depth.
+ */
+
+/**
+ * Maximum byte count for glyph instructions.
+ */
+
+/**
+ * Maximum number of components referenced at "top level" for any composite glyph.
+ */
+
+/**
+ * Maximum levels of recursion; 1 for simple components.
+ */
+
+/**
+ * Name table is meant to include human-readable string metadata
+ * that describes font: name of the font, its styles, copyright &
+ * trademark notices, vendor and designer info, etc.
+ * 
+ * The table includes a list of "name records", each of which
+ * corresponds to a single metadata entry.
+ * @see <a href="https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6name.html">Source</a>
+ */
+
+type Ttf_Name_Names int
+const (
+	Ttf_Name_Names__Copyright Ttf_Name_Names = 0
+	Ttf_Name_Names__FontFamily Ttf_Name_Names = 1
+	Ttf_Name_Names__FontSubfamily Ttf_Name_Names = 2
+	Ttf_Name_Names__UniqueSubfamilyId Ttf_Name_Names = 3
+	Ttf_Name_Names__FullFontName Ttf_Name_Names = 4
+	Ttf_Name_Names__NameTableVersion Ttf_Name_Names = 5
+	Ttf_Name_Names__PostscriptFontName Ttf_Name_Names = 6
+	Ttf_Name_Names__Trademark Ttf_Name_Names = 7
+	Ttf_Name_Names__Manufacturer Ttf_Name_Names = 8
+	Ttf_Name_Names__Designer Ttf_Name_Names = 9
+	Ttf_Name_Names__Description Ttf_Name_Names = 10
+	Ttf_Name_Names__UrlVendor Ttf_Name_Names = 11
+	Ttf_Name_Names__UrlDesigner Ttf_Name_Names = 12
+	Ttf_Name_Names__License Ttf_Name_Names = 13
+	Ttf_Name_Names__UrlLicense Ttf_Name_Names = 14
+	Ttf_Name_Names__Reserved15 Ttf_Name_Names = 15
+	Ttf_Name_Names__PreferredFamily Ttf_Name_Names = 16
+	Ttf_Name_Names__PreferredSubfamily Ttf_Name_Names = 17
+	Ttf_Name_Names__CompatibleFullName Ttf_Name_Names = 18
+	Ttf_Name_Names__SampleText Ttf_Name_Names = 19
+)
+var values_Ttf_Name_Names = map[Ttf_Name_Names]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}, 10: {}, 11: {}, 12: {}, 13: {}, 14: {}, 15: {}, 16: {}, 17: {}, 18: {}, 19: {}}
+func (v Ttf_Name_Names) isDefined() bool {
+	_, ok := values_Ttf_Name_Names[v]
+	return ok
+}
+
+type Ttf_Name_Platforms int
+const (
+	Ttf_Name_Platforms__Unicode Ttf_Name_Platforms = 0
+	Ttf_Name_Platforms__Macintosh Ttf_Name_Platforms = 1
+	Ttf_Name_Platforms__Reserved2 Ttf_Name_Platforms = 2
+	Ttf_Name_Platforms__Microsoft Ttf_Name_Platforms = 3
+)
+var values_Ttf_Name_Platforms = map[Ttf_Name_Platforms]struct{}{0: {}, 1: {}, 2: {}, 3: {}}
+func (v Ttf_Name_Platforms) isDefined() bool {
+	_, ok := values_Ttf_Name_Platforms[v]
+	return ok
+}
+type Ttf_Name struct {
+	FormatSelector uint16
+	NumNameRecords uint16
+	OfsStrings uint16
+	NameRecords []*Ttf_Name_NameRecord
+	_io *kaitai.Stream
+	_root *Ttf
+	_parent *Ttf_DirTableEntry
+}
+func NewTtf_Name() *Ttf_Name {
+	return &Ttf_Name{
+	}
+}
+
+func (this Ttf_Name) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Ttf_Name) Read(io *kaitai.Stream, parent *Ttf_DirTableEntry, root *Ttf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp164, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.FormatSelector = uint16(tmp164)
+	tmp165, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.NumNameRecords = uint16(tmp165)
+	tmp166, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.OfsStrings = uint16(tmp166)
+	for i := 0; i < int(this.NumNameRecords); i++ {
+		_ = i
+		tmp167 := NewTtf_Name_NameRecord()
+		err = tmp167.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.NameRecords = append(this.NameRecords, tmp167)
+	}
+	return err
+}
+type Ttf_Name_NameRecord struct {
+	PlatformId Ttf_Name_Platforms
+	EncodingId uint16
+	LanguageId uint16
+	NameId Ttf_Name_Names
+	LenStr uint16
+	OfsStr uint16
+	_io *kaitai.Stream
+	_root *Ttf
+	_parent *Ttf_Name
+	_f_asciiValue bool
+	asciiValue string
+	_f_unicodeValue bool
+	unicodeValue string
+}
+func NewTtf_Name_NameRecord() *Ttf_Name_NameRecord {
+	return &Ttf_Name_NameRecord{
+	}
+}
+
+func (this Ttf_Name_NameRecord) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Ttf_Name_NameRecord) Read(io *kaitai.Stream, parent *Ttf_Name, root *Ttf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp168, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.PlatformId = Ttf_Name_Platforms(tmp168)
+	tmp169, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.EncodingId = uint16(tmp169)
+	tmp170, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.LanguageId = uint16(tmp170)
+	tmp171, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.NameId = Ttf_Name_Names(tmp171)
+	tmp172, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.LenStr = uint16(tmp172)
+	tmp173, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.OfsStr = uint16(tmp173)
+	return err
+}
+func (this *Ttf_Name_NameRecord) AsciiValue() (v string, err error) {
+	if (this._f_asciiValue) {
+		return this.asciiValue, nil
+	}
+	this._f_asciiValue = true
+	thisIo := this._parent._io
 	_pos, err := thisIo.Pos()
 	if err != nil {
-		return nil, err
+		return "", err
 	}
-	_, err = thisIo.Seek(int64(this.Offset), io.SeekStart)
+	_, err = thisIo.Seek(int64(this._parent.OfsStrings + this.OfsStr), io.SeekStart)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
-	switch (this.Tag) {
-	case "head":
-		tmp88, err := thisIo.ReadBytes(int(this.Length))
-		if err != nil {
-			return nil, err
-		}
-		tmp88 = tmp88
-		this._raw_value = tmp88
-		_io__raw_value := kaitai.NewStream(bytes.NewReader(this._raw_value))
-		tmp89 := NewTtf_Head()
-		err = tmp89.Read(_io__raw_value, this, this._root)
-		if err != nil {
-			return nil, err
-		}
-		this.value = tmp89
-	case "cvt ":
-		tmp90, err := thisIo.ReadBytes(int(this.Length))
-		if err != nil {
-			return nil, err
-		}
-		tmp90 = tmp90
-		this._raw_value = tmp90
-		_io__raw_value := kaitai.NewStream(bytes.NewReader(this._raw_value))
-		tmp91 := NewTtf_Cvt()
-		err = tmp91.Read(_io__raw_value, this, this._root)
-		if err != nil {
-			return nil, err
-		}
-		this.value = tmp91
-	case "prep":
-		tmp92, err := thisIo.ReadBytes(int(this.Length))
-		if err != nil {
-			return nil, err
-		}
-		tmp92 = tmp92
-		this._raw_value = tmp92
-		_io__raw_value := kaitai.NewStream(bytes.NewReader(this._raw_value))
-		tmp93 := NewTtf_Prep()
-		err = tmp93.Read(_io__raw_value, this, this._root)
-		if err != nil {
-			return nil, err
-		}
-		this.value = tmp93
-	case "kern":
-		tmp94, err := thisIo.ReadBytes(int(this.Length))
-		if err != nil {
-			return nil, err
-		}
-		tmp94 = tmp94
-		this._raw_value = tmp94
-		_io__raw_value := kaitai.NewStream(bytes.NewReader(this._raw_value))
-		tmp95 := NewTtf_Kern()
-		err = tmp95.Read(_io__raw_value, this, this._root)
-		if err != nil {
-			return nil, err
-		}
-		this.value = tmp95
-	case "hhea":
-		tmp96, err := thisIo.ReadBytes(int(this.Length))
-		if err != nil {
-			return nil, err
-		}
-		tmp96 = tmp96
-		this._raw_value = tmp96
-		_io__raw_value := kaitai.NewStream(bytes.NewReader(this._raw_value))
-		tmp97 := NewTtf_Hhea()
-		err = tmp97.Read(_io__raw_value, this, this._root)
-		if err != nil {
-			return nil, err
-		}
-		this.value = tmp97
-	case "post":
-		tmp98, err := thisIo.ReadBytes(int(this.Length))
-		if err != nil {
-			return nil, err
-		}
-		tmp98 = tmp98
-		this._raw_value = tmp98
-		_io__raw_value := kaitai.NewStream(bytes.NewReader(this._raw_value))
-		tmp99 := NewTtf_Post()
-		err = tmp99.Read(_io__raw_value, this, this._root)
-		if err != nil {
-			return nil, err
-		}
-		this.value = tmp99
-	case "OS/2":
-		tmp100, err := thisIo.ReadBytes(int(this.Length))
-		if err != nil {
-			return nil, err
-		}
-		tmp100 = tmp100
-		this._raw_value = tmp100
-		_io__raw_value := kaitai.NewStream(bytes.NewReader(this._raw_value))
-		tmp101 := NewTtf_Os2()
-		err = tmp101.Read(_io__raw_value, this, this._root)
-		if err != nil {
-			return nil, err
-		}
-		this.value = tmp101
-	case "name":
-		tmp102, err := thisIo.ReadBytes(int(this.Length))
-		if err != nil {
-			return nil, err
-		}
-		tmp102 = tmp102
-		this._raw_value = tmp102
-		_io__raw_value := kaitai.NewStream(bytes.NewReader(this._raw_value))
-		tmp103 := NewTtf_Name()
-		err = tmp103.Read(_io__raw_value, this, this._root)
-		if err != nil {
-			return nil, err
-		}
-		this.value = tmp103
-	case "maxp":
-		tmp104, err := thisIo.ReadBytes(int(this.Length))
-		if err != nil {
-			return nil, err
-		}
-		tmp104 = tmp104
-		this._raw_value = tmp104
-		_io__raw_value := kaitai.NewStream(bytes.NewReader(this._raw_value))
-		tmp105 := NewTtf_Maxp()
-		err = tmp105.Read(_io__raw_value, this, this._root)
-		if err != nil {
-			return nil, err
-		}
-		this.value = tmp105
-	case "glyf":
-		tmp106, err := thisIo.ReadBytes(int(this.Length))
-		if err != nil {
-			return nil, err
-		}
-		tmp106 = tmp106
-		this._raw_value = tmp106
-		_io__raw_value := kaitai.NewStream(bytes.NewReader(this._raw_value))
-		tmp107 := NewTtf_Glyf()
-		err = tmp107.Read(_io__raw_value, this, this._root)
-		if err != nil {
-			return nil, err
-		}
-		this.value = tmp107
-	case "fpgm":
-		tmp108, err := thisIo.ReadBytes(int(this.Length))
-		if err != nil {
-			return nil, err
-		}
-		tmp108 = tmp108
-		this._raw_value = tmp108
-		_io__raw_value := kaitai.NewStream(bytes.NewReader(this._raw_value))
-		tmp109 := NewTtf_Fpgm()
-		err = tmp109.Read(_io__raw_value, this, this._root)
-		if err != nil {
-			return nil, err
-		}
-		this.value = tmp109
-	case "cmap":
-		tmp110, err := thisIo.ReadBytes(int(this.Length))
-		if err != nil {
-			return nil, err
-		}
-		tmp110 = tmp110
-		this._raw_value = tmp110
-		_io__raw_value := kaitai.NewStream(bytes.NewReader(this._raw_value))
-		tmp111 := NewTtf_Cmap()
-		err = tmp111.Read(_io__raw_value, this, this._root)
-		if err != nil {
-			return nil, err
-		}
-		this.value = tmp111
-	default:
-		tmp112, err := thisIo.ReadBytes(int(this.Length))
-		if err != nil {
-			return nil, err
-		}
-		tmp112 = tmp112
-		this._raw_value = tmp112
+	tmp174, err := thisIo.ReadBytes(int(this.LenStr))
+	if err != nil {
+		return "", err
 	}
+	tmp174 = tmp174
+	this.asciiValue = string(tmp174)
 	_, err = thisIo.Seek(_pos, io.SeekStart)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
-	this._f_value = true
-	this._f_value = true
-	return this.value, nil
+	return this.asciiValue, nil
+}
+func (this *Ttf_Name_NameRecord) UnicodeValue() (v string, err error) {
+	if (this._f_unicodeValue) {
+		return this.unicodeValue, nil
+	}
+	this._f_unicodeValue = true
+	thisIo := this._parent._io
+	_pos, err := thisIo.Pos()
+	if err != nil {
+		return "", err
+	}
+	_, err = thisIo.Seek(int64(this._parent.OfsStrings + this.OfsStr), io.SeekStart)
+	if err != nil {
+		return "", err
+	}
+	tmp175, err := thisIo.ReadBytes(int(this.LenStr))
+	if err != nil {
+		return "", err
+	}
+	tmp175 = tmp175
+	tmp176, err := kaitai.BytesToStr(tmp175, unicode.UTF16(unicode.BigEndian, unicode.IgnoreBOM).NewDecoder())
+	if err != nil {
+		return "", err
+	}
+	this.unicodeValue = tmp176
+	_, err = thisIo.Seek(_pos, io.SeekStart)
+	if err != nil {
+		return "", err
+	}
+	return this.unicodeValue, nil
+}
+type Ttf_OffsetTable struct {
+	SfntVersion *Ttf_Fixed
+	NumTables uint16
+	SearchRange uint16
+	EntrySelector uint16
+	RangeShift uint16
+	_io *kaitai.Stream
+	_root *Ttf
+	_parent *Ttf
+}
+func NewTtf_OffsetTable() *Ttf_OffsetTable {
+	return &Ttf_OffsetTable{
+	}
+}
+
+func (this Ttf_OffsetTable) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Ttf_OffsetTable) Read(io *kaitai.Stream, parent *Ttf, root *Ttf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp177 := NewTtf_Fixed()
+	err = tmp177.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.SfntVersion = tmp177
+	tmp178, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.NumTables = uint16(tmp178)
+	tmp179, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.SearchRange = uint16(tmp179)
+	tmp180, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.EntrySelector = uint16(tmp180)
+	tmp181, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.RangeShift = uint16(tmp181)
+	return err
 }
 
 /**
  * The OS/2 table consists of a set of metrics that are required by Windows and OS/2.
  */
+
+type Ttf_Os2_FsSelection int
+const (
+	Ttf_Os2_FsSelection__Italic Ttf_Os2_FsSelection = 1
+	Ttf_Os2_FsSelection__Underscore Ttf_Os2_FsSelection = 2
+	Ttf_Os2_FsSelection__Negative Ttf_Os2_FsSelection = 4
+	Ttf_Os2_FsSelection__Outlined Ttf_Os2_FsSelection = 8
+	Ttf_Os2_FsSelection__Strikeout Ttf_Os2_FsSelection = 16
+	Ttf_Os2_FsSelection__Bold Ttf_Os2_FsSelection = 32
+	Ttf_Os2_FsSelection__Regular Ttf_Os2_FsSelection = 64
+)
+var values_Ttf_Os2_FsSelection = map[Ttf_Os2_FsSelection]struct{}{1: {}, 2: {}, 4: {}, 8: {}, 16: {}, 32: {}, 64: {}}
+func (v Ttf_Os2_FsSelection) isDefined() bool {
+	_, ok := values_Ttf_Os2_FsSelection[v]
+	return ok
+}
+
+type Ttf_Os2_FsType int
+const (
+	Ttf_Os2_FsType__RestrictedLicenseEmbedding Ttf_Os2_FsType = 2
+	Ttf_Os2_FsType__PreviewAndPrintEmbedding Ttf_Os2_FsType = 4
+	Ttf_Os2_FsType__EditableEmbedding Ttf_Os2_FsType = 8
+)
+var values_Ttf_Os2_FsType = map[Ttf_Os2_FsType]struct{}{2: {}, 4: {}, 8: {}}
+func (v Ttf_Os2_FsType) isDefined() bool {
+	_, ok := values_Ttf_Os2_FsType[v]
+	return ok
+}
 
 type Ttf_Os2_WeightClass int
 const (
@@ -1189,6 +2098,11 @@ const (
 	Ttf_Os2_WeightClass__ExtraBold Ttf_Os2_WeightClass = 800
 	Ttf_Os2_WeightClass__Black Ttf_Os2_WeightClass = 900
 )
+var values_Ttf_Os2_WeightClass = map[Ttf_Os2_WeightClass]struct{}{100: {}, 200: {}, 300: {}, 400: {}, 500: {}, 600: {}, 700: {}, 800: {}, 900: {}}
+func (v Ttf_Os2_WeightClass) isDefined() bool {
+	_, ok := values_Ttf_Os2_WeightClass[v]
+	return ok
+}
 
 type Ttf_Os2_WidthClass int
 const (
@@ -1202,24 +2116,11 @@ const (
 	Ttf_Os2_WidthClass__ExtraExpanded Ttf_Os2_WidthClass = 8
 	Ttf_Os2_WidthClass__UltraExpanded Ttf_Os2_WidthClass = 9
 )
-
-type Ttf_Os2_FsType int
-const (
-	Ttf_Os2_FsType__RestrictedLicenseEmbedding Ttf_Os2_FsType = 2
-	Ttf_Os2_FsType__PreviewAndPrintEmbedding Ttf_Os2_FsType = 4
-	Ttf_Os2_FsType__EditableEmbedding Ttf_Os2_FsType = 8
-)
-
-type Ttf_Os2_FsSelection int
-const (
-	Ttf_Os2_FsSelection__Italic Ttf_Os2_FsSelection = 1
-	Ttf_Os2_FsSelection__Underscore Ttf_Os2_FsSelection = 2
-	Ttf_Os2_FsSelection__Negative Ttf_Os2_FsSelection = 4
-	Ttf_Os2_FsSelection__Outlined Ttf_Os2_FsSelection = 8
-	Ttf_Os2_FsSelection__Strikeout Ttf_Os2_FsSelection = 16
-	Ttf_Os2_FsSelection__Bold Ttf_Os2_FsSelection = 32
-	Ttf_Os2_FsSelection__Regular Ttf_Os2_FsSelection = 64
-)
+var values_Ttf_Os2_WidthClass = map[Ttf_Os2_WidthClass]struct{}{1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}}
+func (v Ttf_Os2_WidthClass) isDefined() bool {
+	_, ok := values_Ttf_Os2_WidthClass[v]
+	return ok
+}
 type Ttf_Os2 struct {
 	Version uint16
 	XAvgCharWidth int16
@@ -1258,155 +2159,159 @@ func NewTtf_Os2() *Ttf_Os2 {
 	}
 }
 
+func (this Ttf_Os2) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Ttf_Os2) Read(io *kaitai.Stream, parent *Ttf_DirTableEntry, root *Ttf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp113, err := this._io.ReadU2be()
+	tmp182, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.Version = uint16(tmp113)
-	tmp114, err := this._io.ReadS2be()
+	this.Version = uint16(tmp182)
+	tmp183, err := this._io.ReadS2be()
 	if err != nil {
 		return err
 	}
-	this.XAvgCharWidth = int16(tmp114)
-	tmp115, err := this._io.ReadU2be()
+	this.XAvgCharWidth = int16(tmp183)
+	tmp184, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.WeightClass = Ttf_Os2_WeightClass(tmp115)
-	tmp116, err := this._io.ReadU2be()
+	this.WeightClass = Ttf_Os2_WeightClass(tmp184)
+	tmp185, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.WidthClass = Ttf_Os2_WidthClass(tmp116)
-	tmp117, err := this._io.ReadS2be()
+	this.WidthClass = Ttf_Os2_WidthClass(tmp185)
+	tmp186, err := this._io.ReadS2be()
 	if err != nil {
 		return err
 	}
-	this.FsType = Ttf_Os2_FsType(tmp117)
-	tmp118, err := this._io.ReadS2be()
+	this.FsType = Ttf_Os2_FsType(tmp186)
+	tmp187, err := this._io.ReadS2be()
 	if err != nil {
 		return err
 	}
-	this.YSubscriptXSize = int16(tmp118)
-	tmp119, err := this._io.ReadS2be()
+	this.YSubscriptXSize = int16(tmp187)
+	tmp188, err := this._io.ReadS2be()
 	if err != nil {
 		return err
 	}
-	this.YSubscriptYSize = int16(tmp119)
-	tmp120, err := this._io.ReadS2be()
+	this.YSubscriptYSize = int16(tmp188)
+	tmp189, err := this._io.ReadS2be()
 	if err != nil {
 		return err
 	}
-	this.YSubscriptXOffset = int16(tmp120)
-	tmp121, err := this._io.ReadS2be()
+	this.YSubscriptXOffset = int16(tmp189)
+	tmp190, err := this._io.ReadS2be()
 	if err != nil {
 		return err
 	}
-	this.YSubscriptYOffset = int16(tmp121)
-	tmp122, err := this._io.ReadS2be()
+	this.YSubscriptYOffset = int16(tmp190)
+	tmp191, err := this._io.ReadS2be()
 	if err != nil {
 		return err
 	}
-	this.YSuperscriptXSize = int16(tmp122)
-	tmp123, err := this._io.ReadS2be()
+	this.YSuperscriptXSize = int16(tmp191)
+	tmp192, err := this._io.ReadS2be()
 	if err != nil {
 		return err
 	}
-	this.YSuperscriptYSize = int16(tmp123)
-	tmp124, err := this._io.ReadS2be()
+	this.YSuperscriptYSize = int16(tmp192)
+	tmp193, err := this._io.ReadS2be()
 	if err != nil {
 		return err
 	}
-	this.YSuperscriptXOffset = int16(tmp124)
-	tmp125, err := this._io.ReadS2be()
+	this.YSuperscriptXOffset = int16(tmp193)
+	tmp194, err := this._io.ReadS2be()
 	if err != nil {
 		return err
 	}
-	this.YSuperscriptYOffset = int16(tmp125)
-	tmp126, err := this._io.ReadS2be()
+	this.YSuperscriptYOffset = int16(tmp194)
+	tmp195, err := this._io.ReadS2be()
 	if err != nil {
 		return err
 	}
-	this.YStrikeoutSize = int16(tmp126)
-	tmp127, err := this._io.ReadS2be()
+	this.YStrikeoutSize = int16(tmp195)
+	tmp196, err := this._io.ReadS2be()
 	if err != nil {
 		return err
 	}
-	this.YStrikeoutPosition = int16(tmp127)
-	tmp128, err := this._io.ReadS2be()
+	this.YStrikeoutPosition = int16(tmp196)
+	tmp197, err := this._io.ReadS2be()
 	if err != nil {
 		return err
 	}
-	this.SFamilyClass = int16(tmp128)
-	tmp129 := NewTtf_Os2_Panose()
-	err = tmp129.Read(this._io, this, this._root)
+	this.SFamilyClass = int16(tmp197)
+	tmp198 := NewTtf_Os2_Panose()
+	err = tmp198.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Panose = tmp129
-	tmp130 := NewTtf_Os2_UnicodeRange()
-	err = tmp130.Read(this._io, this, this._root)
+	this.Panose = tmp198
+	tmp199 := NewTtf_Os2_UnicodeRange()
+	err = tmp199.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.UnicodeRange = tmp130
-	tmp131, err := this._io.ReadBytes(int(4))
+	this.UnicodeRange = tmp199
+	tmp200, err := this._io.ReadBytes(int(4))
 	if err != nil {
 		return err
 	}
-	tmp131 = tmp131
-	this.AchVendId = string(tmp131)
-	tmp132, err := this._io.ReadU2be()
+	tmp200 = tmp200
+	this.AchVendId = string(tmp200)
+	tmp201, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.Selection = Ttf_Os2_FsSelection(tmp132)
-	tmp133, err := this._io.ReadU2be()
+	this.Selection = Ttf_Os2_FsSelection(tmp201)
+	tmp202, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.FirstCharIndex = uint16(tmp133)
-	tmp134, err := this._io.ReadU2be()
+	this.FirstCharIndex = uint16(tmp202)
+	tmp203, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.LastCharIndex = uint16(tmp134)
-	tmp135, err := this._io.ReadS2be()
+	this.LastCharIndex = uint16(tmp203)
+	tmp204, err := this._io.ReadS2be()
 	if err != nil {
 		return err
 	}
-	this.TypoAscender = int16(tmp135)
-	tmp136, err := this._io.ReadS2be()
+	this.TypoAscender = int16(tmp204)
+	tmp205, err := this._io.ReadS2be()
 	if err != nil {
 		return err
 	}
-	this.TypoDescender = int16(tmp136)
-	tmp137, err := this._io.ReadS2be()
+	this.TypoDescender = int16(tmp205)
+	tmp206, err := this._io.ReadS2be()
 	if err != nil {
 		return err
 	}
-	this.TypoLineGap = int16(tmp137)
-	tmp138, err := this._io.ReadU2be()
+	this.TypoLineGap = int16(tmp206)
+	tmp207, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.WinAscent = uint16(tmp138)
-	tmp139, err := this._io.ReadU2be()
+	this.WinAscent = uint16(tmp207)
+	tmp208, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.WinDescent = uint16(tmp139)
-	tmp140 := NewTtf_Os2_CodePageRange()
-	err = tmp140.Read(this._io, this, this._root)
+	this.WinDescent = uint16(tmp208)
+	tmp209 := NewTtf_Os2_CodePageRange()
+	err = tmp209.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.CodePageRange = tmp140
+	this.CodePageRange = tmp209
 	return err
 }
 
@@ -1513,36 +2418,283 @@ func (this *Ttf_Os2) Read(io *kaitai.Stream, parent *Ttf_DirTableEntry, root *Tt
 /**
  * This field is used to specify the code pages encompassed by the font file in the `cmap` subtable for platform 3, encoding ID 1 (Microsoft platform).
  */
+type Ttf_Os2_CodePageRange struct {
+	SymbolCharacterSet bool
+	OemCharacterSet bool
+	MacintoshCharacterSet bool
+	ReservedForAlternateAnsiOem uint64
+	Cp1361KoreanJohab bool
+	Cp950ChineseTraditionalCharsTaiwanAndHongKong bool
+	Cp949KoreanWansung bool
+	Cp936ChineseSimplifiedCharsPrcAndSingapore bool
+	Cp932JisJapan bool
+	Cp874Thai bool
+	ReservedForAlternateAnsi uint64
+	Cp1257WindowsBaltic bool
+	Cp1256Arabic bool
+	Cp1255Hebrew bool
+	Cp1254Turkish bool
+	Cp1253Greek bool
+	Cp1251Cyrillic bool
+	Cp1250Latin2EasternEurope bool
+	Cp1252Latin1 bool
+	Cp437Us bool
+	Cp850WeLatin1 bool
+	Cp708ArabicAsmo708 bool
+	Cp737GreekFormer437G bool
+	Cp775MsDosBaltic bool
+	Cp852Latin2 bool
+	Cp855IbmCyrillicPrimarilyRussian bool
+	Cp857IbmTurkish bool
+	Cp860MsDosPortuguese bool
+	Cp861MsDosIcelandic bool
+	Cp862Hebrew bool
+	Cp863MsDosCanadianFrench bool
+	Cp864Arabic bool
+	Cp865MsDosNordic bool
+	Cp866MsDosRussian bool
+	Cp869IbmGreek bool
+	ReservedForOem uint64
+	_io *kaitai.Stream
+	_root *Ttf
+	_parent *Ttf_Os2
+}
+func NewTtf_Os2_CodePageRange() *Ttf_Os2_CodePageRange {
+	return &Ttf_Os2_CodePageRange{
+	}
+}
 
-type Ttf_Os2_Panose_Weight int
-const (
-	Ttf_Os2_Panose_Weight__Any Ttf_Os2_Panose_Weight = 0
-	Ttf_Os2_Panose_Weight__NoFit Ttf_Os2_Panose_Weight = 1
-	Ttf_Os2_Panose_Weight__VeryLight Ttf_Os2_Panose_Weight = 2
-	Ttf_Os2_Panose_Weight__Light Ttf_Os2_Panose_Weight = 3
-	Ttf_Os2_Panose_Weight__Thin Ttf_Os2_Panose_Weight = 4
-	Ttf_Os2_Panose_Weight__Book Ttf_Os2_Panose_Weight = 5
-	Ttf_Os2_Panose_Weight__Medium Ttf_Os2_Panose_Weight = 6
-	Ttf_Os2_Panose_Weight__Demi Ttf_Os2_Panose_Weight = 7
-	Ttf_Os2_Panose_Weight__Bold Ttf_Os2_Panose_Weight = 8
-	Ttf_Os2_Panose_Weight__Heavy Ttf_Os2_Panose_Weight = 9
-	Ttf_Os2_Panose_Weight__Black Ttf_Os2_Panose_Weight = 10
-	Ttf_Os2_Panose_Weight__Nord Ttf_Os2_Panose_Weight = 11
-)
+func (this Ttf_Os2_CodePageRange) IO_() *kaitai.Stream {
+	return this._io
+}
 
-type Ttf_Os2_Panose_Proportion int
+func (this *Ttf_Os2_CodePageRange) Read(io *kaitai.Stream, parent *Ttf_Os2, root *Ttf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp210, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.SymbolCharacterSet = tmp210 != 0
+	tmp211, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.OemCharacterSet = tmp211 != 0
+	tmp212, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.MacintoshCharacterSet = tmp212 != 0
+	tmp213, err := this._io.ReadBitsIntBe(7)
+	if err != nil {
+		return err
+	}
+	this.ReservedForAlternateAnsiOem = tmp213
+	tmp214, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Cp1361KoreanJohab = tmp214 != 0
+	tmp215, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Cp950ChineseTraditionalCharsTaiwanAndHongKong = tmp215 != 0
+	tmp216, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Cp949KoreanWansung = tmp216 != 0
+	tmp217, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Cp936ChineseSimplifiedCharsPrcAndSingapore = tmp217 != 0
+	tmp218, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Cp932JisJapan = tmp218 != 0
+	tmp219, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Cp874Thai = tmp219 != 0
+	tmp220, err := this._io.ReadBitsIntBe(8)
+	if err != nil {
+		return err
+	}
+	this.ReservedForAlternateAnsi = tmp220
+	tmp221, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Cp1257WindowsBaltic = tmp221 != 0
+	tmp222, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Cp1256Arabic = tmp222 != 0
+	tmp223, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Cp1255Hebrew = tmp223 != 0
+	tmp224, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Cp1254Turkish = tmp224 != 0
+	tmp225, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Cp1253Greek = tmp225 != 0
+	tmp226, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Cp1251Cyrillic = tmp226 != 0
+	tmp227, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Cp1250Latin2EasternEurope = tmp227 != 0
+	tmp228, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Cp1252Latin1 = tmp228 != 0
+	tmp229, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Cp437Us = tmp229 != 0
+	tmp230, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Cp850WeLatin1 = tmp230 != 0
+	tmp231, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Cp708ArabicAsmo708 = tmp231 != 0
+	tmp232, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Cp737GreekFormer437G = tmp232 != 0
+	tmp233, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Cp775MsDosBaltic = tmp233 != 0
+	tmp234, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Cp852Latin2 = tmp234 != 0
+	tmp235, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Cp855IbmCyrillicPrimarilyRussian = tmp235 != 0
+	tmp236, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Cp857IbmTurkish = tmp236 != 0
+	tmp237, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Cp860MsDosPortuguese = tmp237 != 0
+	tmp238, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Cp861MsDosIcelandic = tmp238 != 0
+	tmp239, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Cp862Hebrew = tmp239 != 0
+	tmp240, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Cp863MsDosCanadianFrench = tmp240 != 0
+	tmp241, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Cp864Arabic = tmp241 != 0
+	tmp242, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Cp865MsDosNordic = tmp242 != 0
+	tmp243, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Cp866MsDosRussian = tmp243 != 0
+	tmp244, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Cp869IbmGreek = tmp244 != 0
+	tmp245, err := this._io.ReadBitsIntBe(16)
+	if err != nil {
+		return err
+	}
+	this.ReservedForOem = tmp245
+	return err
+}
+
+type Ttf_Os2_Panose_ArmStyle int
 const (
-	Ttf_Os2_Panose_Proportion__Any Ttf_Os2_Panose_Proportion = 0
-	Ttf_Os2_Panose_Proportion__NoFit Ttf_Os2_Panose_Proportion = 1
-	Ttf_Os2_Panose_Proportion__OldStyle Ttf_Os2_Panose_Proportion = 2
-	Ttf_Os2_Panose_Proportion__Modern Ttf_Os2_Panose_Proportion = 3
-	Ttf_Os2_Panose_Proportion__EvenWidth Ttf_Os2_Panose_Proportion = 4
-	Ttf_Os2_Panose_Proportion__Expanded Ttf_Os2_Panose_Proportion = 5
-	Ttf_Os2_Panose_Proportion__Condensed Ttf_Os2_Panose_Proportion = 6
-	Ttf_Os2_Panose_Proportion__VeryExpanded Ttf_Os2_Panose_Proportion = 7
-	Ttf_Os2_Panose_Proportion__VeryCondensed Ttf_Os2_Panose_Proportion = 8
-	Ttf_Os2_Panose_Proportion__Monospaced Ttf_Os2_Panose_Proportion = 9
+	Ttf_Os2_Panose_ArmStyle__Any Ttf_Os2_Panose_ArmStyle = 0
+	Ttf_Os2_Panose_ArmStyle__NoFit Ttf_Os2_Panose_ArmStyle = 1
+	Ttf_Os2_Panose_ArmStyle__StraightArmsHorizontal Ttf_Os2_Panose_ArmStyle = 2
+	Ttf_Os2_Panose_ArmStyle__StraightArmsWedge Ttf_Os2_Panose_ArmStyle = 3
+	Ttf_Os2_Panose_ArmStyle__StraightArmsVertical Ttf_Os2_Panose_ArmStyle = 4
+	Ttf_Os2_Panose_ArmStyle__StraightArmsSingleSerif Ttf_Os2_Panose_ArmStyle = 5
+	Ttf_Os2_Panose_ArmStyle__StraightArmsDoubleSerif Ttf_Os2_Panose_ArmStyle = 6
+	Ttf_Os2_Panose_ArmStyle__NonStraightArmsHorizontal Ttf_Os2_Panose_ArmStyle = 7
+	Ttf_Os2_Panose_ArmStyle__NonStraightArmsWedge Ttf_Os2_Panose_ArmStyle = 8
+	Ttf_Os2_Panose_ArmStyle__NonStraightArmsVertical Ttf_Os2_Panose_ArmStyle = 9
+	Ttf_Os2_Panose_ArmStyle__NonStraightArmsSingleSerif Ttf_Os2_Panose_ArmStyle = 10
+	Ttf_Os2_Panose_ArmStyle__NonStraightArmsDoubleSerif Ttf_Os2_Panose_ArmStyle = 11
 )
+var values_Ttf_Os2_Panose_ArmStyle = map[Ttf_Os2_Panose_ArmStyle]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}, 10: {}, 11: {}}
+func (v Ttf_Os2_Panose_ArmStyle) isDefined() bool {
+	_, ok := values_Ttf_Os2_Panose_ArmStyle[v]
+	return ok
+}
+
+type Ttf_Os2_Panose_Contrast int
+const (
+	Ttf_Os2_Panose_Contrast__Any Ttf_Os2_Panose_Contrast = 0
+	Ttf_Os2_Panose_Contrast__NoFit Ttf_Os2_Panose_Contrast = 1
+	Ttf_Os2_Panose_Contrast__None Ttf_Os2_Panose_Contrast = 2
+	Ttf_Os2_Panose_Contrast__VeryLow Ttf_Os2_Panose_Contrast = 3
+	Ttf_Os2_Panose_Contrast__Low Ttf_Os2_Panose_Contrast = 4
+	Ttf_Os2_Panose_Contrast__MediumLow Ttf_Os2_Panose_Contrast = 5
+	Ttf_Os2_Panose_Contrast__Medium Ttf_Os2_Panose_Contrast = 6
+	Ttf_Os2_Panose_Contrast__MediumHigh Ttf_Os2_Panose_Contrast = 7
+	Ttf_Os2_Panose_Contrast__High Ttf_Os2_Panose_Contrast = 8
+	Ttf_Os2_Panose_Contrast__VeryHigh Ttf_Os2_Panose_Contrast = 9
+)
+var values_Ttf_Os2_Panose_Contrast = map[Ttf_Os2_Panose_Contrast]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}}
+func (v Ttf_Os2_Panose_Contrast) isDefined() bool {
+	_, ok := values_Ttf_Os2_Panose_Contrast[v]
+	return ok
+}
 
 type Ttf_Os2_Panose_FamilyKind int
 const (
@@ -1553,6 +2705,11 @@ const (
 	Ttf_Os2_Panose_FamilyKind__Decorative Ttf_Os2_Panose_FamilyKind = 4
 	Ttf_Os2_Panose_FamilyKind__Pictorial Ttf_Os2_Panose_FamilyKind = 5
 )
+var values_Ttf_Os2_Panose_FamilyKind = map[Ttf_Os2_Panose_FamilyKind]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}}
+func (v Ttf_Os2_Panose_FamilyKind) isDefined() bool {
+	_, ok := values_Ttf_Os2_Panose_FamilyKind[v]
+	return ok
+}
 
 type Ttf_Os2_Panose_LetterForm int
 const (
@@ -1573,6 +2730,53 @@ const (
 	Ttf_Os2_Panose_LetterForm__ObliqueOffCenter Ttf_Os2_Panose_LetterForm = 14
 	Ttf_Os2_Panose_LetterForm__ObliqueSquare Ttf_Os2_Panose_LetterForm = 15
 )
+var values_Ttf_Os2_Panose_LetterForm = map[Ttf_Os2_Panose_LetterForm]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}, 10: {}, 11: {}, 12: {}, 13: {}, 14: {}, 15: {}}
+func (v Ttf_Os2_Panose_LetterForm) isDefined() bool {
+	_, ok := values_Ttf_Os2_Panose_LetterForm[v]
+	return ok
+}
+
+type Ttf_Os2_Panose_Midline int
+const (
+	Ttf_Os2_Panose_Midline__Any Ttf_Os2_Panose_Midline = 0
+	Ttf_Os2_Panose_Midline__NoFit Ttf_Os2_Panose_Midline = 1
+	Ttf_Os2_Panose_Midline__StandardTrimmed Ttf_Os2_Panose_Midline = 2
+	Ttf_Os2_Panose_Midline__StandardPointed Ttf_Os2_Panose_Midline = 3
+	Ttf_Os2_Panose_Midline__StandardSerifed Ttf_Os2_Panose_Midline = 4
+	Ttf_Os2_Panose_Midline__HighTrimmed Ttf_Os2_Panose_Midline = 5
+	Ttf_Os2_Panose_Midline__HighPointed Ttf_Os2_Panose_Midline = 6
+	Ttf_Os2_Panose_Midline__HighSerifed Ttf_Os2_Panose_Midline = 7
+	Ttf_Os2_Panose_Midline__ConstantTrimmed Ttf_Os2_Panose_Midline = 8
+	Ttf_Os2_Panose_Midline__ConstantPointed Ttf_Os2_Panose_Midline = 9
+	Ttf_Os2_Panose_Midline__ConstantSerifed Ttf_Os2_Panose_Midline = 10
+	Ttf_Os2_Panose_Midline__LowTrimmed Ttf_Os2_Panose_Midline = 11
+	Ttf_Os2_Panose_Midline__LowPointed Ttf_Os2_Panose_Midline = 12
+	Ttf_Os2_Panose_Midline__LowSerifed Ttf_Os2_Panose_Midline = 13
+)
+var values_Ttf_Os2_Panose_Midline = map[Ttf_Os2_Panose_Midline]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}, 10: {}, 11: {}, 12: {}, 13: {}}
+func (v Ttf_Os2_Panose_Midline) isDefined() bool {
+	_, ok := values_Ttf_Os2_Panose_Midline[v]
+	return ok
+}
+
+type Ttf_Os2_Panose_Proportion int
+const (
+	Ttf_Os2_Panose_Proportion__Any Ttf_Os2_Panose_Proportion = 0
+	Ttf_Os2_Panose_Proportion__NoFit Ttf_Os2_Panose_Proportion = 1
+	Ttf_Os2_Panose_Proportion__OldStyle Ttf_Os2_Panose_Proportion = 2
+	Ttf_Os2_Panose_Proportion__Modern Ttf_Os2_Panose_Proportion = 3
+	Ttf_Os2_Panose_Proportion__EvenWidth Ttf_Os2_Panose_Proportion = 4
+	Ttf_Os2_Panose_Proportion__Expanded Ttf_Os2_Panose_Proportion = 5
+	Ttf_Os2_Panose_Proportion__Condensed Ttf_Os2_Panose_Proportion = 6
+	Ttf_Os2_Panose_Proportion__VeryExpanded Ttf_Os2_Panose_Proportion = 7
+	Ttf_Os2_Panose_Proportion__VeryCondensed Ttf_Os2_Panose_Proportion = 8
+	Ttf_Os2_Panose_Proportion__Monospaced Ttf_Os2_Panose_Proportion = 9
+)
+var values_Ttf_Os2_Panose_Proportion = map[Ttf_Os2_Panose_Proportion]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}}
+func (v Ttf_Os2_Panose_Proportion) isDefined() bool {
+	_, ok := values_Ttf_Os2_Panose_Proportion[v]
+	return ok
+}
 
 type Ttf_Os2_Panose_SerifStyle int
 const (
@@ -1593,34 +2797,11 @@ const (
 	Ttf_Os2_Panose_SerifStyle__Flared Ttf_Os2_Panose_SerifStyle = 14
 	Ttf_Os2_Panose_SerifStyle__Rounded Ttf_Os2_Panose_SerifStyle = 15
 )
-
-type Ttf_Os2_Panose_XHeight int
-const (
-	Ttf_Os2_Panose_XHeight__Any Ttf_Os2_Panose_XHeight = 0
-	Ttf_Os2_Panose_XHeight__NoFit Ttf_Os2_Panose_XHeight = 1
-	Ttf_Os2_Panose_XHeight__ConstantSmall Ttf_Os2_Panose_XHeight = 2
-	Ttf_Os2_Panose_XHeight__ConstantStandard Ttf_Os2_Panose_XHeight = 3
-	Ttf_Os2_Panose_XHeight__ConstantLarge Ttf_Os2_Panose_XHeight = 4
-	Ttf_Os2_Panose_XHeight__DuckingSmall Ttf_Os2_Panose_XHeight = 5
-	Ttf_Os2_Panose_XHeight__DuckingStandard Ttf_Os2_Panose_XHeight = 6
-	Ttf_Os2_Panose_XHeight__DuckingLarge Ttf_Os2_Panose_XHeight = 7
-)
-
-type Ttf_Os2_Panose_ArmStyle int
-const (
-	Ttf_Os2_Panose_ArmStyle__Any Ttf_Os2_Panose_ArmStyle = 0
-	Ttf_Os2_Panose_ArmStyle__NoFit Ttf_Os2_Panose_ArmStyle = 1
-	Ttf_Os2_Panose_ArmStyle__StraightArmsHorizontal Ttf_Os2_Panose_ArmStyle = 2
-	Ttf_Os2_Panose_ArmStyle__StraightArmsWedge Ttf_Os2_Panose_ArmStyle = 3
-	Ttf_Os2_Panose_ArmStyle__StraightArmsVertical Ttf_Os2_Panose_ArmStyle = 4
-	Ttf_Os2_Panose_ArmStyle__StraightArmsSingleSerif Ttf_Os2_Panose_ArmStyle = 5
-	Ttf_Os2_Panose_ArmStyle__StraightArmsDoubleSerif Ttf_Os2_Panose_ArmStyle = 6
-	Ttf_Os2_Panose_ArmStyle__NonStraightArmsHorizontal Ttf_Os2_Panose_ArmStyle = 7
-	Ttf_Os2_Panose_ArmStyle__NonStraightArmsWedge Ttf_Os2_Panose_ArmStyle = 8
-	Ttf_Os2_Panose_ArmStyle__NonStraightArmsVertical Ttf_Os2_Panose_ArmStyle = 9
-	Ttf_Os2_Panose_ArmStyle__NonStraightArmsSingleSerif Ttf_Os2_Panose_ArmStyle = 10
-	Ttf_Os2_Panose_ArmStyle__NonStraightArmsDoubleSerif Ttf_Os2_Panose_ArmStyle = 11
-)
+var values_Ttf_Os2_Panose_SerifStyle = map[Ttf_Os2_Panose_SerifStyle]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}, 10: {}, 11: {}, 12: {}, 13: {}, 14: {}, 15: {}}
+func (v Ttf_Os2_Panose_SerifStyle) isDefined() bool {
+	_, ok := values_Ttf_Os2_Panose_SerifStyle[v]
+	return ok
+}
 
 type Ttf_Os2_Panose_StrokeVariation int
 const (
@@ -1634,38 +2815,49 @@ const (
 	Ttf_Os2_Panose_StrokeVariation__RapidHorizontal Ttf_Os2_Panose_StrokeVariation = 7
 	Ttf_Os2_Panose_StrokeVariation__InstantVertical Ttf_Os2_Panose_StrokeVariation = 8
 )
+var values_Ttf_Os2_Panose_StrokeVariation = map[Ttf_Os2_Panose_StrokeVariation]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}}
+func (v Ttf_Os2_Panose_StrokeVariation) isDefined() bool {
+	_, ok := values_Ttf_Os2_Panose_StrokeVariation[v]
+	return ok
+}
 
-type Ttf_Os2_Panose_Contrast int
+type Ttf_Os2_Panose_Weight int
 const (
-	Ttf_Os2_Panose_Contrast__Any Ttf_Os2_Panose_Contrast = 0
-	Ttf_Os2_Panose_Contrast__NoFit Ttf_Os2_Panose_Contrast = 1
-	Ttf_Os2_Panose_Contrast__None Ttf_Os2_Panose_Contrast = 2
-	Ttf_Os2_Panose_Contrast__VeryLow Ttf_Os2_Panose_Contrast = 3
-	Ttf_Os2_Panose_Contrast__Low Ttf_Os2_Panose_Contrast = 4
-	Ttf_Os2_Panose_Contrast__MediumLow Ttf_Os2_Panose_Contrast = 5
-	Ttf_Os2_Panose_Contrast__Medium Ttf_Os2_Panose_Contrast = 6
-	Ttf_Os2_Panose_Contrast__MediumHigh Ttf_Os2_Panose_Contrast = 7
-	Ttf_Os2_Panose_Contrast__High Ttf_Os2_Panose_Contrast = 8
-	Ttf_Os2_Panose_Contrast__VeryHigh Ttf_Os2_Panose_Contrast = 9
+	Ttf_Os2_Panose_Weight__Any Ttf_Os2_Panose_Weight = 0
+	Ttf_Os2_Panose_Weight__NoFit Ttf_Os2_Panose_Weight = 1
+	Ttf_Os2_Panose_Weight__VeryLight Ttf_Os2_Panose_Weight = 2
+	Ttf_Os2_Panose_Weight__Light Ttf_Os2_Panose_Weight = 3
+	Ttf_Os2_Panose_Weight__Thin Ttf_Os2_Panose_Weight = 4
+	Ttf_Os2_Panose_Weight__Book Ttf_Os2_Panose_Weight = 5
+	Ttf_Os2_Panose_Weight__Medium Ttf_Os2_Panose_Weight = 6
+	Ttf_Os2_Panose_Weight__Demi Ttf_Os2_Panose_Weight = 7
+	Ttf_Os2_Panose_Weight__Bold Ttf_Os2_Panose_Weight = 8
+	Ttf_Os2_Panose_Weight__Heavy Ttf_Os2_Panose_Weight = 9
+	Ttf_Os2_Panose_Weight__Black Ttf_Os2_Panose_Weight = 10
+	Ttf_Os2_Panose_Weight__Nord Ttf_Os2_Panose_Weight = 11
 )
+var values_Ttf_Os2_Panose_Weight = map[Ttf_Os2_Panose_Weight]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}, 10: {}, 11: {}}
+func (v Ttf_Os2_Panose_Weight) isDefined() bool {
+	_, ok := values_Ttf_Os2_Panose_Weight[v]
+	return ok
+}
 
-type Ttf_Os2_Panose_Midline int
+type Ttf_Os2_Panose_XHeight int
 const (
-	Ttf_Os2_Panose_Midline__Any Ttf_Os2_Panose_Midline = 0
-	Ttf_Os2_Panose_Midline__NoFit Ttf_Os2_Panose_Midline = 1
-	Ttf_Os2_Panose_Midline__StandardTrimmed Ttf_Os2_Panose_Midline = 2
-	Ttf_Os2_Panose_Midline__StandardPointed Ttf_Os2_Panose_Midline = 3
-	Ttf_Os2_Panose_Midline__StandardSerifed Ttf_Os2_Panose_Midline = 4
-	Ttf_Os2_Panose_Midline__HighTrimmed Ttf_Os2_Panose_Midline = 5
-	Ttf_Os2_Panose_Midline__HighPointed Ttf_Os2_Panose_Midline = 6
-	Ttf_Os2_Panose_Midline__HighSerifed Ttf_Os2_Panose_Midline = 7
-	Ttf_Os2_Panose_Midline__ConstantTrimmed Ttf_Os2_Panose_Midline = 8
-	Ttf_Os2_Panose_Midline__ConstantPointed Ttf_Os2_Panose_Midline = 9
-	Ttf_Os2_Panose_Midline__ConstantSerifed Ttf_Os2_Panose_Midline = 10
-	Ttf_Os2_Panose_Midline__LowTrimmed Ttf_Os2_Panose_Midline = 11
-	Ttf_Os2_Panose_Midline__LowPointed Ttf_Os2_Panose_Midline = 12
-	Ttf_Os2_Panose_Midline__LowSerifed Ttf_Os2_Panose_Midline = 13
+	Ttf_Os2_Panose_XHeight__Any Ttf_Os2_Panose_XHeight = 0
+	Ttf_Os2_Panose_XHeight__NoFit Ttf_Os2_Panose_XHeight = 1
+	Ttf_Os2_Panose_XHeight__ConstantSmall Ttf_Os2_Panose_XHeight = 2
+	Ttf_Os2_Panose_XHeight__ConstantStandard Ttf_Os2_Panose_XHeight = 3
+	Ttf_Os2_Panose_XHeight__ConstantLarge Ttf_Os2_Panose_XHeight = 4
+	Ttf_Os2_Panose_XHeight__DuckingSmall Ttf_Os2_Panose_XHeight = 5
+	Ttf_Os2_Panose_XHeight__DuckingStandard Ttf_Os2_Panose_XHeight = 6
+	Ttf_Os2_Panose_XHeight__DuckingLarge Ttf_Os2_Panose_XHeight = 7
 )
+var values_Ttf_Os2_Panose_XHeight = map[Ttf_Os2_Panose_XHeight]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}}
+func (v Ttf_Os2_Panose_XHeight) isDefined() bool {
+	_, ok := values_Ttf_Os2_Panose_XHeight[v]
+	return ok
+}
 type Ttf_Os2_Panose struct {
 	FamilyType Ttf_Os2_Panose_FamilyKind
 	SerifStyle Ttf_Os2_Panose_SerifStyle
@@ -1686,61 +2878,65 @@ func NewTtf_Os2_Panose() *Ttf_Os2_Panose {
 	}
 }
 
+func (this Ttf_Os2_Panose) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Ttf_Os2_Panose) Read(io *kaitai.Stream, parent *Ttf_Os2, root *Ttf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp141, err := this._io.ReadU1()
+	tmp246, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.FamilyType = Ttf_Os2_Panose_FamilyKind(tmp141)
-	tmp142, err := this._io.ReadU1()
+	this.FamilyType = Ttf_Os2_Panose_FamilyKind(tmp246)
+	tmp247, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.SerifStyle = Ttf_Os2_Panose_SerifStyle(tmp142)
-	tmp143, err := this._io.ReadU1()
+	this.SerifStyle = Ttf_Os2_Panose_SerifStyle(tmp247)
+	tmp248, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Weight = Ttf_Os2_Panose_Weight(tmp143)
-	tmp144, err := this._io.ReadU1()
+	this.Weight = Ttf_Os2_Panose_Weight(tmp248)
+	tmp249, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Proportion = Ttf_Os2_Panose_Proportion(tmp144)
-	tmp145, err := this._io.ReadU1()
+	this.Proportion = Ttf_Os2_Panose_Proportion(tmp249)
+	tmp250, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Contrast = Ttf_Os2_Panose_Contrast(tmp145)
-	tmp146, err := this._io.ReadU1()
+	this.Contrast = Ttf_Os2_Panose_Contrast(tmp250)
+	tmp251, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.StrokeVariation = Ttf_Os2_Panose_StrokeVariation(tmp146)
-	tmp147, err := this._io.ReadU1()
+	this.StrokeVariation = Ttf_Os2_Panose_StrokeVariation(tmp251)
+	tmp252, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.ArmStyle = Ttf_Os2_Panose_ArmStyle(tmp147)
-	tmp148, err := this._io.ReadU1()
+	this.ArmStyle = Ttf_Os2_Panose_ArmStyle(tmp252)
+	tmp253, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.LetterForm = Ttf_Os2_Panose_LetterForm(tmp148)
-	tmp149, err := this._io.ReadU1()
+	this.LetterForm = Ttf_Os2_Panose_LetterForm(tmp253)
+	tmp254, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Midline = Ttf_Os2_Panose_Midline(tmp149)
-	tmp150, err := this._io.ReadU1()
+	this.Midline = Ttf_Os2_Panose_Midline(tmp254)
+	tmp255, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.XHeight = Ttf_Os2_Panose_XHeight(tmp150)
+	this.XHeight = Ttf_Os2_Panose_XHeight(tmp255)
 	return err
 }
 type Ttf_Os2_UnicodeRange struct {
@@ -1824,1543 +3020,574 @@ func NewTtf_Os2_UnicodeRange() *Ttf_Os2_UnicodeRange {
 	}
 }
 
+func (this Ttf_Os2_UnicodeRange) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Ttf_Os2_UnicodeRange) Read(io *kaitai.Stream, parent *Ttf_Os2, root *Ttf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp151, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.BasicLatin = tmp151 != 0
-	tmp152, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Latin1Supplement = tmp152 != 0
-	tmp153, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.LatinExtendedA = tmp153 != 0
-	tmp154, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.LatinExtendedB = tmp154 != 0
-	tmp155, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.IpaExtensions = tmp155 != 0
-	tmp156, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.SpacingModifierLetters = tmp156 != 0
-	tmp157, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.CombiningDiacriticalMarks = tmp157 != 0
-	tmp158, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.BasicGreek = tmp158 != 0
-	tmp159, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.GreekSymbolsAndCoptic = tmp159 != 0
-	tmp160, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Cyrillic = tmp160 != 0
-	tmp161, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Armenian = tmp161 != 0
-	tmp162, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.BasicHebrew = tmp162 != 0
-	tmp163, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.HebrewExtended = tmp163 != 0
-	tmp164, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.BasicArabic = tmp164 != 0
-	tmp165, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.ArabicExtended = tmp165 != 0
-	tmp166, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Devanagari = tmp166 != 0
-	tmp167, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Bengali = tmp167 != 0
-	tmp168, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Gurmukhi = tmp168 != 0
-	tmp169, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Gujarati = tmp169 != 0
-	tmp170, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Oriya = tmp170 != 0
-	tmp171, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Tamil = tmp171 != 0
-	tmp172, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Telugu = tmp172 != 0
-	tmp173, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Kannada = tmp173 != 0
-	tmp174, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Malayalam = tmp174 != 0
-	tmp175, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Thai = tmp175 != 0
-	tmp176, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Lao = tmp176 != 0
-	tmp177, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.BasicGeorgian = tmp177 != 0
-	tmp178, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.GeorgianExtended = tmp178 != 0
-	tmp179, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.HangulJamo = tmp179 != 0
-	tmp180, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.LatinExtendedAdditional = tmp180 != 0
-	tmp181, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.GreekExtended = tmp181 != 0
-	tmp182, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.GeneralPunctuation = tmp182 != 0
-	tmp183, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.SuperscriptsAndSubscripts = tmp183 != 0
-	tmp184, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.CurrencySymbols = tmp184 != 0
-	tmp185, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.CombiningDiacriticalMarksForSymbols = tmp185 != 0
-	tmp186, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.LetterlikeSymbols = tmp186 != 0
-	tmp187, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.NumberForms = tmp187 != 0
-	tmp188, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Arrows = tmp188 != 0
-	tmp189, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.MathematicalOperators = tmp189 != 0
-	tmp190, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.MiscellaneousTechnical = tmp190 != 0
-	tmp191, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.ControlPictures = tmp191 != 0
-	tmp192, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.OpticalCharacterRecognition = tmp192 != 0
-	tmp193, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.EnclosedAlphanumerics = tmp193 != 0
-	tmp194, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.BoxDrawing = tmp194 != 0
-	tmp195, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.BlockElements = tmp195 != 0
-	tmp196, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.GeometricShapes = tmp196 != 0
-	tmp197, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.MiscellaneousSymbols = tmp197 != 0
-	tmp198, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Dingbats = tmp198 != 0
-	tmp199, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.CjkSymbolsAndPunctuation = tmp199 != 0
-	tmp200, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Hiragana = tmp200 != 0
-	tmp201, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Katakana = tmp201 != 0
-	tmp202, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Bopomofo = tmp202 != 0
-	tmp203, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.HangulCompatibilityJamo = tmp203 != 0
-	tmp204, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.CjkMiscellaneous = tmp204 != 0
-	tmp205, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.EnclosedCjkLettersAndMonths = tmp205 != 0
-	tmp206, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.CjkCompatibility = tmp206 != 0
-	tmp207, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Hangul = tmp207 != 0
-	tmp208, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.ReservedForUnicodeSubranges1 = tmp208 != 0
-	tmp209, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.ReservedForUnicodeSubranges2 = tmp209 != 0
-	tmp210, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.CjkUnifiedIdeographs = tmp210 != 0
-	tmp211, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.PrivateUseArea = tmp211 != 0
-	tmp212, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.CjkCompatibilityIdeographs = tmp212 != 0
-	tmp213, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.AlphabeticPresentationForms = tmp213 != 0
-	tmp214, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.ArabicPresentationFormsA = tmp214 != 0
-	tmp215, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.CombiningHalfMarks = tmp215 != 0
-	tmp216, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.CjkCompatibilityForms = tmp216 != 0
-	tmp217, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.SmallFormVariants = tmp217 != 0
-	tmp218, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.ArabicPresentationFormsB = tmp218 != 0
-	tmp219, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.HalfwidthAndFullwidthForms = tmp219 != 0
-	tmp220, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Specials = tmp220 != 0
-	this._io.AlignToByte()
-	tmp221, err := this._io.ReadBytes(int(7))
-	if err != nil {
-		return err
-	}
-	tmp221 = tmp221
-	this.Reserved = tmp221
-	return err
-}
-type Ttf_Os2_CodePageRange struct {
-	SymbolCharacterSet bool
-	OemCharacterSet bool
-	MacintoshCharacterSet bool
-	ReservedForAlternateAnsiOem uint64
-	Cp1361KoreanJohab bool
-	Cp950ChineseTraditionalCharsTaiwanAndHongKong bool
-	Cp949KoreanWansung bool
-	Cp936ChineseSimplifiedCharsPrcAndSingapore bool
-	Cp932JisJapan bool
-	Cp874Thai bool
-	ReservedForAlternateAnsi uint64
-	Cp1257WindowsBaltic bool
-	Cp1256Arabic bool
-	Cp1255Hebrew bool
-	Cp1254Turkish bool
-	Cp1253Greek bool
-	Cp1251Cyrillic bool
-	Cp1250Latin2EasternEurope bool
-	Cp1252Latin1 bool
-	Cp437Us bool
-	Cp850WeLatin1 bool
-	Cp708ArabicAsmo708 bool
-	Cp737GreekFormer437G bool
-	Cp775MsDosBaltic bool
-	Cp852Latin2 bool
-	Cp855IbmCyrillicPrimarilyRussian bool
-	Cp857IbmTurkish bool
-	Cp860MsDosPortuguese bool
-	Cp861MsDosIcelandic bool
-	Cp862Hebrew bool
-	Cp863MsDosCanadianFrench bool
-	Cp864Arabic bool
-	Cp865MsDosNordic bool
-	Cp866MsDosRussian bool
-	Cp869IbmGreek bool
-	ReservedForOem uint64
-	_io *kaitai.Stream
-	_root *Ttf
-	_parent *Ttf_Os2
-}
-func NewTtf_Os2_CodePageRange() *Ttf_Os2_CodePageRange {
-	return &Ttf_Os2_CodePageRange{
-	}
-}
-
-func (this *Ttf_Os2_CodePageRange) Read(io *kaitai.Stream, parent *Ttf_Os2, root *Ttf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp222, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.SymbolCharacterSet = tmp222 != 0
-	tmp223, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.OemCharacterSet = tmp223 != 0
-	tmp224, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.MacintoshCharacterSet = tmp224 != 0
-	tmp225, err := this._io.ReadBitsIntBe(7)
-	if err != nil {
-		return err
-	}
-	this.ReservedForAlternateAnsiOem = tmp225
-	tmp226, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Cp1361KoreanJohab = tmp226 != 0
-	tmp227, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Cp950ChineseTraditionalCharsTaiwanAndHongKong = tmp227 != 0
-	tmp228, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Cp949KoreanWansung = tmp228 != 0
-	tmp229, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Cp936ChineseSimplifiedCharsPrcAndSingapore = tmp229 != 0
-	tmp230, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Cp932JisJapan = tmp230 != 0
-	tmp231, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Cp874Thai = tmp231 != 0
-	tmp232, err := this._io.ReadBitsIntBe(8)
-	if err != nil {
-		return err
-	}
-	this.ReservedForAlternateAnsi = tmp232
-	tmp233, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Cp1257WindowsBaltic = tmp233 != 0
-	tmp234, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Cp1256Arabic = tmp234 != 0
-	tmp235, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Cp1255Hebrew = tmp235 != 0
-	tmp236, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Cp1254Turkish = tmp236 != 0
-	tmp237, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Cp1253Greek = tmp237 != 0
-	tmp238, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Cp1251Cyrillic = tmp238 != 0
-	tmp239, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Cp1250Latin2EasternEurope = tmp239 != 0
-	tmp240, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Cp1252Latin1 = tmp240 != 0
-	tmp241, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Cp437Us = tmp241 != 0
-	tmp242, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Cp850WeLatin1 = tmp242 != 0
-	tmp243, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Cp708ArabicAsmo708 = tmp243 != 0
-	tmp244, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Cp737GreekFormer437G = tmp244 != 0
-	tmp245, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Cp775MsDosBaltic = tmp245 != 0
-	tmp246, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Cp852Latin2 = tmp246 != 0
-	tmp247, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Cp855IbmCyrillicPrimarilyRussian = tmp247 != 0
-	tmp248, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Cp857IbmTurkish = tmp248 != 0
-	tmp249, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Cp860MsDosPortuguese = tmp249 != 0
-	tmp250, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Cp861MsDosIcelandic = tmp250 != 0
-	tmp251, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Cp862Hebrew = tmp251 != 0
-	tmp252, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Cp863MsDosCanadianFrench = tmp252 != 0
-	tmp253, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Cp864Arabic = tmp253 != 0
-	tmp254, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Cp865MsDosNordic = tmp254 != 0
-	tmp255, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Cp866MsDosRussian = tmp255 != 0
 	tmp256, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Cp869IbmGreek = tmp256 != 0
-	tmp257, err := this._io.ReadBitsIntBe(16)
+	this.BasicLatin = tmp256 != 0
+	tmp257, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.ReservedForOem = tmp257
-	return err
-}
-type Ttf_Fixed struct {
-	Major uint16
-	Minor uint16
-	_io *kaitai.Stream
-	_root *Ttf
-	_parent interface{}
-}
-func NewTtf_Fixed() *Ttf_Fixed {
-	return &Ttf_Fixed{
-	}
-}
-
-func (this *Ttf_Fixed) Read(io *kaitai.Stream, parent interface{}, root *Ttf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp258, err := this._io.ReadU2be()
+	this.Latin1Supplement = tmp257 != 0
+	tmp258, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Major = uint16(tmp258)
-	tmp259, err := this._io.ReadU2be()
+	this.LatinExtendedA = tmp258 != 0
+	tmp259, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Minor = uint16(tmp259)
-	return err
-}
-type Ttf_Glyf struct {
-	NumberOfContours int16
-	XMin int16
-	YMin int16
-	XMax int16
-	YMax int16
-	Value *Ttf_Glyf_SimpleGlyph
-	_io *kaitai.Stream
-	_root *Ttf
-	_parent *Ttf_DirTableEntry
-}
-func NewTtf_Glyf() *Ttf_Glyf {
-	return &Ttf_Glyf{
-	}
-}
-
-func (this *Ttf_Glyf) Read(io *kaitai.Stream, parent *Ttf_DirTableEntry, root *Ttf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp260, err := this._io.ReadS2be()
+	this.LatinExtendedB = tmp259 != 0
+	tmp260, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.NumberOfContours = int16(tmp260)
-	tmp261, err := this._io.ReadS2be()
+	this.IpaExtensions = tmp260 != 0
+	tmp261, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.XMin = int16(tmp261)
-	tmp262, err := this._io.ReadS2be()
+	this.SpacingModifierLetters = tmp261 != 0
+	tmp262, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.YMin = int16(tmp262)
-	tmp263, err := this._io.ReadS2be()
+	this.CombiningDiacriticalMarks = tmp262 != 0
+	tmp263, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.XMax = int16(tmp263)
-	tmp264, err := this._io.ReadS2be()
+	this.BasicGreek = tmp263 != 0
+	tmp264, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.YMax = int16(tmp264)
-	if (this.NumberOfContours > 0) {
-		tmp265 := NewTtf_Glyf_SimpleGlyph()
-		err = tmp265.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Value = tmp265
-	}
-	return err
-}
-type Ttf_Glyf_SimpleGlyph struct {
-	EndPtsOfContours []uint16
-	InstructionLength uint16
-	Instructions []byte
-	Flags []*Ttf_Glyf_SimpleGlyph_Flag
-	_io *kaitai.Stream
-	_root *Ttf
-	_parent *Ttf_Glyf
-	_f_pointCount bool
-	pointCount int
-}
-func NewTtf_Glyf_SimpleGlyph() *Ttf_Glyf_SimpleGlyph {
-	return &Ttf_Glyf_SimpleGlyph{
-	}
-}
-
-func (this *Ttf_Glyf_SimpleGlyph) Read(io *kaitai.Stream, parent *Ttf_Glyf, root *Ttf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	for i := 0; i < int(this._parent.NumberOfContours); i++ {
-		_ = i
-		tmp266, err := this._io.ReadU2be()
-		if err != nil {
-			return err
-		}
-		this.EndPtsOfContours = append(this.EndPtsOfContours, tmp266)
-	}
-	tmp267, err := this._io.ReadU2be()
+	this.GreekSymbolsAndCoptic = tmp264 != 0
+	tmp265, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.InstructionLength = uint16(tmp267)
-	tmp268, err := this._io.ReadBytes(int(this.InstructionLength))
+	this.Cyrillic = tmp265 != 0
+	tmp266, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	tmp268 = tmp268
-	this.Instructions = tmp268
-	tmp269, err := this.PointCount()
+	this.Armenian = tmp266 != 0
+	tmp267, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	for i := 0; i < int(tmp269); i++ {
-		_ = i
-		tmp270 := NewTtf_Glyf_SimpleGlyph_Flag()
-		err = tmp270.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Flags = append(this.Flags, tmp270)
-	}
-	return err
-}
-func (this *Ttf_Glyf_SimpleGlyph) PointCount() (v int, err error) {
-	if (this._f_pointCount) {
-		return this.pointCount, nil
-	}
-	tmp271 := this.EndPtsOfContours[0]
-	for _, tmp272 := range this.EndPtsOfContours {
-		if tmp271 < tmp272 {
-			tmp271 = tmp272
-		}
-	}
-	this.pointCount = int((tmp271 + 1))
-	this._f_pointCount = true
-	return this.pointCount, nil
-}
-type Ttf_Glyf_SimpleGlyph_Flag struct {
-	Reserved uint64
-	YIsSame bool
-	XIsSame bool
-	Repeat bool
-	YShortVector bool
-	XShortVector bool
-	OnCurve bool
-	RepeatValue uint8
-	_io *kaitai.Stream
-	_root *Ttf
-	_parent *Ttf_Glyf_SimpleGlyph
-}
-func NewTtf_Glyf_SimpleGlyph_Flag() *Ttf_Glyf_SimpleGlyph_Flag {
-	return &Ttf_Glyf_SimpleGlyph_Flag{
-	}
-}
-
-func (this *Ttf_Glyf_SimpleGlyph_Flag) Read(io *kaitai.Stream, parent *Ttf_Glyf_SimpleGlyph, root *Ttf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp273, err := this._io.ReadBitsIntBe(2)
+	this.BasicHebrew = tmp267 != 0
+	tmp268, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Reserved = tmp273
+	this.HebrewExtended = tmp268 != 0
+	tmp269, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.BasicArabic = tmp269 != 0
+	tmp270, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.ArabicExtended = tmp270 != 0
+	tmp271, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Devanagari = tmp271 != 0
+	tmp272, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Bengali = tmp272 != 0
+	tmp273, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Gurmukhi = tmp273 != 0
 	tmp274, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.YIsSame = tmp274 != 0
+	this.Gujarati = tmp274 != 0
 	tmp275, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.XIsSame = tmp275 != 0
+	this.Oriya = tmp275 != 0
 	tmp276, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Repeat = tmp276 != 0
+	this.Tamil = tmp276 != 0
 	tmp277, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.YShortVector = tmp277 != 0
+	this.Telugu = tmp277 != 0
 	tmp278, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.XShortVector = tmp278 != 0
+	this.Kannada = tmp278 != 0
 	tmp279, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.OnCurve = tmp279 != 0
+	this.Malayalam = tmp279 != 0
+	tmp280, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Thai = tmp280 != 0
+	tmp281, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Lao = tmp281 != 0
+	tmp282, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.BasicGeorgian = tmp282 != 0
+	tmp283, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.GeorgianExtended = tmp283 != 0
+	tmp284, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.HangulJamo = tmp284 != 0
+	tmp285, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.LatinExtendedAdditional = tmp285 != 0
+	tmp286, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.GreekExtended = tmp286 != 0
+	tmp287, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.GeneralPunctuation = tmp287 != 0
+	tmp288, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.SuperscriptsAndSubscripts = tmp288 != 0
+	tmp289, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.CurrencySymbols = tmp289 != 0
+	tmp290, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.CombiningDiacriticalMarksForSymbols = tmp290 != 0
+	tmp291, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.LetterlikeSymbols = tmp291 != 0
+	tmp292, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.NumberForms = tmp292 != 0
+	tmp293, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Arrows = tmp293 != 0
+	tmp294, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.MathematicalOperators = tmp294 != 0
+	tmp295, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.MiscellaneousTechnical = tmp295 != 0
+	tmp296, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.ControlPictures = tmp296 != 0
+	tmp297, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.OpticalCharacterRecognition = tmp297 != 0
+	tmp298, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.EnclosedAlphanumerics = tmp298 != 0
+	tmp299, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.BoxDrawing = tmp299 != 0
+	tmp300, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.BlockElements = tmp300 != 0
+	tmp301, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.GeometricShapes = tmp301 != 0
+	tmp302, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.MiscellaneousSymbols = tmp302 != 0
+	tmp303, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Dingbats = tmp303 != 0
+	tmp304, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.CjkSymbolsAndPunctuation = tmp304 != 0
+	tmp305, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Hiragana = tmp305 != 0
+	tmp306, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Katakana = tmp306 != 0
+	tmp307, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Bopomofo = tmp307 != 0
+	tmp308, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.HangulCompatibilityJamo = tmp308 != 0
+	tmp309, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.CjkMiscellaneous = tmp309 != 0
+	tmp310, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.EnclosedCjkLettersAndMonths = tmp310 != 0
+	tmp311, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.CjkCompatibility = tmp311 != 0
+	tmp312, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Hangul = tmp312 != 0
+	tmp313, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.ReservedForUnicodeSubranges1 = tmp313 != 0
+	tmp314, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.ReservedForUnicodeSubranges2 = tmp314 != 0
+	tmp315, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.CjkUnifiedIdeographs = tmp315 != 0
+	tmp316, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.PrivateUseArea = tmp316 != 0
+	tmp317, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.CjkCompatibilityIdeographs = tmp317 != 0
+	tmp318, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.AlphabeticPresentationForms = tmp318 != 0
+	tmp319, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.ArabicPresentationFormsA = tmp319 != 0
+	tmp320, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.CombiningHalfMarks = tmp320 != 0
+	tmp321, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.CjkCompatibilityForms = tmp321 != 0
+	tmp322, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.SmallFormVariants = tmp322 != 0
+	tmp323, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.ArabicPresentationFormsB = tmp323 != 0
+	tmp324, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.HalfwidthAndFullwidthForms = tmp324 != 0
+	tmp325, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Specials = tmp325 != 0
 	this._io.AlignToByte()
-	if (this.Repeat) {
-		tmp280, err := this._io.ReadU1()
-		if err != nil {
-			return err
-		}
-		this.RepeatValue = tmp280
+	tmp326, err := this._io.ReadBytes(int(7))
+	if err != nil {
+		return err
 	}
+	tmp326 = tmp326
+	this.Reserved = tmp326
 	return err
 }
-
-/**
- * cvt  - Control Value Table This table contains a list of values that can be referenced by instructions. They can be used, among other things, to control characteristics for different glyphs.
- */
-type Ttf_Cvt struct {
-	Fwords []int16
+type Ttf_Post struct {
+	Format *Ttf_Fixed
+	ItalicAngle *Ttf_Fixed
+	UnderlinePosition int16
+	UnderlineThichness int16
+	IsFixedPitch uint32
+	MinMemType42 uint32
+	MaxMemType42 uint32
+	MinMemType1 uint32
+	MaxMemType1 uint32
+	Format20 *Ttf_Post_Format20
 	_io *kaitai.Stream
 	_root *Ttf
 	_parent *Ttf_DirTableEntry
 }
-func NewTtf_Cvt() *Ttf_Cvt {
-	return &Ttf_Cvt{
+func NewTtf_Post() *Ttf_Post {
+	return &Ttf_Post{
 	}
 }
 
-func (this *Ttf_Cvt) Read(io *kaitai.Stream, parent *Ttf_DirTableEntry, root *Ttf) (err error) {
+func (this Ttf_Post) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Ttf_Post) Read(io *kaitai.Stream, parent *Ttf_DirTableEntry, root *Ttf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	for i := 1;; i++ {
-		tmp281, err := this._io.EOF()
+	tmp327 := NewTtf_Fixed()
+	err = tmp327.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Format = tmp327
+	tmp328 := NewTtf_Fixed()
+	err = tmp328.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.ItalicAngle = tmp328
+	tmp329, err := this._io.ReadS2be()
+	if err != nil {
+		return err
+	}
+	this.UnderlinePosition = int16(tmp329)
+	tmp330, err := this._io.ReadS2be()
+	if err != nil {
+		return err
+	}
+	this.UnderlineThichness = int16(tmp330)
+	tmp331, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.IsFixedPitch = uint32(tmp331)
+	tmp332, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.MinMemType42 = uint32(tmp332)
+	tmp333, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.MaxMemType42 = uint32(tmp333)
+	tmp334, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.MinMemType1 = uint32(tmp334)
+	tmp335, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.MaxMemType1 = uint32(tmp335)
+	if ( ((this.Format.Major == 2) && (this.Format.Minor == 0)) ) {
+		tmp336 := NewTtf_Post_Format20()
+		err = tmp336.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		if tmp281 {
-			break
-		}
-		tmp282, err := this._io.ReadS2be()
-		if err != nil {
-			return err
-		}
-		this.Fwords = append(this.Fwords, tmp282)
+		this.Format20 = tmp336
 	}
 	return err
 }
-type Ttf_Maxp struct {
-	TableVersionNumber *Ttf_Fixed
-	NumGlyphs uint16
-	Version10Body *Ttf_MaxpVersion10Body
+type Ttf_Post_Format20 struct {
+	NumberOfGlyphs uint16
+	GlyphNameIndex []uint16
+	GlyphNames []*Ttf_Post_Format20_PascalString
 	_io *kaitai.Stream
 	_root *Ttf
-	_parent *Ttf_DirTableEntry
-	_f_isVersion10 bool
-	isVersion10 bool
+	_parent *Ttf_Post
 }
-func NewTtf_Maxp() *Ttf_Maxp {
-	return &Ttf_Maxp{
+func NewTtf_Post_Format20() *Ttf_Post_Format20 {
+	return &Ttf_Post_Format20{
 	}
 }
 
-func (this *Ttf_Maxp) Read(io *kaitai.Stream, parent *Ttf_DirTableEntry, root *Ttf) (err error) {
+func (this Ttf_Post_Format20) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Ttf_Post_Format20) Read(io *kaitai.Stream, parent *Ttf_Post, root *Ttf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp283 := NewTtf_Fixed()
-	err = tmp283.Read(this._io, this, this._root)
+	tmp337, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.TableVersionNumber = tmp283
-	tmp284, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.NumGlyphs = uint16(tmp284)
-	tmp285, err := this.IsVersion10()
-	if err != nil {
-		return err
-	}
-	if (tmp285) {
-		tmp286 := NewTtf_MaxpVersion10Body()
-		err = tmp286.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Version10Body = tmp286
-	}
-	return err
-}
-func (this *Ttf_Maxp) IsVersion10() (v bool, err error) {
-	if (this._f_isVersion10) {
-		return this.isVersion10, nil
-	}
-	this.isVersion10 = bool( ((this.TableVersionNumber.Major == 1) && (this.TableVersionNumber.Minor == 0)) )
-	this._f_isVersion10 = true
-	return this.isVersion10, nil
-}
-
-/**
- * 0x00010000 for version 1.0.
- */
-
-/**
- * The number of glyphs in the font.
- */
-type Ttf_MaxpVersion10Body struct {
-	MaxPoints uint16
-	MaxContours uint16
-	MaxCompositePoints uint16
-	MaxCompositeContours uint16
-	MaxZones uint16
-	MaxTwilightPoints uint16
-	MaxStorage uint16
-	MaxFunctionDefs uint16
-	MaxInstructionDefs uint16
-	MaxStackElements uint16
-	MaxSizeOfInstructions uint16
-	MaxComponentElements uint16
-	MaxComponentDepth uint16
-	_io *kaitai.Stream
-	_root *Ttf
-	_parent *Ttf_Maxp
-}
-func NewTtf_MaxpVersion10Body() *Ttf_MaxpVersion10Body {
-	return &Ttf_MaxpVersion10Body{
-	}
-}
-
-func (this *Ttf_MaxpVersion10Body) Read(io *kaitai.Stream, parent *Ttf_Maxp, root *Ttf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp287, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.MaxPoints = uint16(tmp287)
-	tmp288, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.MaxContours = uint16(tmp288)
-	tmp289, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.MaxCompositePoints = uint16(tmp289)
-	tmp290, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.MaxCompositeContours = uint16(tmp290)
-	tmp291, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.MaxZones = uint16(tmp291)
-	tmp292, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.MaxTwilightPoints = uint16(tmp292)
-	tmp293, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.MaxStorage = uint16(tmp293)
-	tmp294, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.MaxFunctionDefs = uint16(tmp294)
-	tmp295, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.MaxInstructionDefs = uint16(tmp295)
-	tmp296, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.MaxStackElements = uint16(tmp296)
-	tmp297, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.MaxSizeOfInstructions = uint16(tmp297)
-	tmp298, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.MaxComponentElements = uint16(tmp298)
-	tmp299, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.MaxComponentDepth = uint16(tmp299)
-	return err
-}
-
-/**
- * Maximum points in a non-composite glyph.
- */
-
-/**
- * Maximum contours in a non-composite glyph.
- */
-
-/**
- * Maximum points in a composite glyph.
- */
-
-/**
- * Maximum contours in a composite glyph.
- */
-
-/**
- * 1 if instructions do not use the twilight zone (Z0), or 2 if instructions do use Z0; should be set to 2 in most cases.
- */
-
-/**
- * Maximum points used in Z0.
- */
-
-/**
- * Number of Storage Area locations.
- */
-
-/**
- * Number of FDEFs.
- */
-
-/**
- * Number of IDEFs.
- */
-
-/**
- * Maximum stack depth.
- */
-
-/**
- * Maximum byte count for glyph instructions.
- */
-
-/**
- * Maximum number of components referenced at "top level" for any composite glyph.
- */
-
-/**
- * Maximum levels of recursion; 1 for simple components.
- */
-type Ttf_OffsetTable struct {
-	SfntVersion *Ttf_Fixed
-	NumTables uint16
-	SearchRange uint16
-	EntrySelector uint16
-	RangeShift uint16
-	_io *kaitai.Stream
-	_root *Ttf
-	_parent *Ttf
-}
-func NewTtf_OffsetTable() *Ttf_OffsetTable {
-	return &Ttf_OffsetTable{
-	}
-}
-
-func (this *Ttf_OffsetTable) Read(io *kaitai.Stream, parent *Ttf, root *Ttf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp300 := NewTtf_Fixed()
-	err = tmp300.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.SfntVersion = tmp300
-	tmp301, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.NumTables = uint16(tmp301)
-	tmp302, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.SearchRange = uint16(tmp302)
-	tmp303, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.EntrySelector = uint16(tmp303)
-	tmp304, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.RangeShift = uint16(tmp304)
-	return err
-}
-
-/**
- * cmap - Character To Glyph Index Mapping Table This table defines the mapping of character codes to the glyph index values used in the font.
- */
-type Ttf_Cmap struct {
-	VersionNumber uint16
-	NumberOfEncodingTables uint16
-	Tables []*Ttf_Cmap_SubtableHeader
-	_io *kaitai.Stream
-	_root *Ttf
-	_parent *Ttf_DirTableEntry
-}
-func NewTtf_Cmap() *Ttf_Cmap {
-	return &Ttf_Cmap{
-	}
-}
-
-func (this *Ttf_Cmap) Read(io *kaitai.Stream, parent *Ttf_DirTableEntry, root *Ttf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp305, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.VersionNumber = uint16(tmp305)
-	tmp306, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.NumberOfEncodingTables = uint16(tmp306)
-	for i := 0; i < int(this.NumberOfEncodingTables); i++ {
-		_ = i
-		tmp307 := NewTtf_Cmap_SubtableHeader()
-		err = tmp307.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Tables = append(this.Tables, tmp307)
-	}
-	return err
-}
-type Ttf_Cmap_SubtableHeader struct {
-	PlatformId uint16
-	EncodingId uint16
-	SubtableOffset uint32
-	_io *kaitai.Stream
-	_root *Ttf
-	_parent *Ttf_Cmap
-	_f_table bool
-	table *Ttf_Cmap_Subtable
-}
-func NewTtf_Cmap_SubtableHeader() *Ttf_Cmap_SubtableHeader {
-	return &Ttf_Cmap_SubtableHeader{
-	}
-}
-
-func (this *Ttf_Cmap_SubtableHeader) Read(io *kaitai.Stream, parent *Ttf_Cmap, root *Ttf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp308, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.PlatformId = uint16(tmp308)
-	tmp309, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.EncodingId = uint16(tmp309)
-	tmp310, err := this._io.ReadU4be()
-	if err != nil {
-		return err
-	}
-	this.SubtableOffset = uint32(tmp310)
-	return err
-}
-func (this *Ttf_Cmap_SubtableHeader) Table() (v *Ttf_Cmap_Subtable, err error) {
-	if (this._f_table) {
-		return this.table, nil
-	}
-	thisIo := this._parent._io
-	_pos, err := thisIo.Pos()
-	if err != nil {
-		return nil, err
-	}
-	_, err = thisIo.Seek(int64(this.SubtableOffset), io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	tmp311 := NewTtf_Cmap_Subtable()
-	err = tmp311.Read(thisIo, this, this._root)
-	if err != nil {
-		return nil, err
-	}
-	this.table = tmp311
-	_, err = thisIo.Seek(_pos, io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	this._f_table = true
-	this._f_table = true
-	return this.table, nil
-}
-
-type Ttf_Cmap_Subtable_SubtableFormat int
-const (
-	Ttf_Cmap_Subtable_SubtableFormat__ByteEncodingTable Ttf_Cmap_Subtable_SubtableFormat = 0
-	Ttf_Cmap_Subtable_SubtableFormat__HighByteMappingThroughTable Ttf_Cmap_Subtable_SubtableFormat = 2
-	Ttf_Cmap_Subtable_SubtableFormat__SegmentMappingToDeltaValues Ttf_Cmap_Subtable_SubtableFormat = 4
-	Ttf_Cmap_Subtable_SubtableFormat__TrimmedTableMapping Ttf_Cmap_Subtable_SubtableFormat = 6
-)
-type Ttf_Cmap_Subtable struct {
-	Format Ttf_Cmap_Subtable_SubtableFormat
-	Length uint16
-	Version uint16
-	Value interface{}
-	_io *kaitai.Stream
-	_root *Ttf
-	_parent *Ttf_Cmap_SubtableHeader
-	_raw_Value []byte
-}
-func NewTtf_Cmap_Subtable() *Ttf_Cmap_Subtable {
-	return &Ttf_Cmap_Subtable{
-	}
-}
-
-func (this *Ttf_Cmap_Subtable) Read(io *kaitai.Stream, parent *Ttf_Cmap_SubtableHeader, root *Ttf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp312, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.Format = Ttf_Cmap_Subtable_SubtableFormat(tmp312)
-	tmp313, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.Length = uint16(tmp313)
-	tmp314, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.Version = uint16(tmp314)
-	switch (this.Format) {
-	case Ttf_Cmap_Subtable_SubtableFormat__ByteEncodingTable:
-		tmp315, err := this._io.ReadBytes(int((this.Length - 6)))
-		if err != nil {
-			return err
-		}
-		tmp315 = tmp315
-		this._raw_Value = tmp315
-		_io__raw_Value := kaitai.NewStream(bytes.NewReader(this._raw_Value))
-		tmp316 := NewTtf_Cmap_Subtable_ByteEncodingTable()
-		err = tmp316.Read(_io__raw_Value, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Value = tmp316
-	case Ttf_Cmap_Subtable_SubtableFormat__SegmentMappingToDeltaValues:
-		tmp317, err := this._io.ReadBytes(int((this.Length - 6)))
-		if err != nil {
-			return err
-		}
-		tmp317 = tmp317
-		this._raw_Value = tmp317
-		_io__raw_Value := kaitai.NewStream(bytes.NewReader(this._raw_Value))
-		tmp318 := NewTtf_Cmap_Subtable_SegmentMappingToDeltaValues()
-		err = tmp318.Read(_io__raw_Value, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Value = tmp318
-	case Ttf_Cmap_Subtable_SubtableFormat__HighByteMappingThroughTable:
-		tmp319, err := this._io.ReadBytes(int((this.Length - 6)))
-		if err != nil {
-			return err
-		}
-		tmp319 = tmp319
-		this._raw_Value = tmp319
-		_io__raw_Value := kaitai.NewStream(bytes.NewReader(this._raw_Value))
-		tmp320 := NewTtf_Cmap_Subtable_HighByteMappingThroughTable()
-		err = tmp320.Read(_io__raw_Value, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Value = tmp320
-	case Ttf_Cmap_Subtable_SubtableFormat__TrimmedTableMapping:
-		tmp321, err := this._io.ReadBytes(int((this.Length - 6)))
-		if err != nil {
-			return err
-		}
-		tmp321 = tmp321
-		this._raw_Value = tmp321
-		_io__raw_Value := kaitai.NewStream(bytes.NewReader(this._raw_Value))
-		tmp322 := NewTtf_Cmap_Subtable_TrimmedTableMapping()
-		err = tmp322.Read(_io__raw_Value, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Value = tmp322
-	default:
-		tmp323, err := this._io.ReadBytes(int((this.Length - 6)))
-		if err != nil {
-			return err
-		}
-		tmp323 = tmp323
-		this._raw_Value = tmp323
-	}
-	return err
-}
-type Ttf_Cmap_Subtable_ByteEncodingTable struct {
-	GlyphIdArray []byte
-	_io *kaitai.Stream
-	_root *Ttf
-	_parent *Ttf_Cmap_Subtable
-}
-func NewTtf_Cmap_Subtable_ByteEncodingTable() *Ttf_Cmap_Subtable_ByteEncodingTable {
-	return &Ttf_Cmap_Subtable_ByteEncodingTable{
-	}
-}
-
-func (this *Ttf_Cmap_Subtable_ByteEncodingTable) Read(io *kaitai.Stream, parent *Ttf_Cmap_Subtable, root *Ttf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp324, err := this._io.ReadBytes(int(256))
-	if err != nil {
-		return err
-	}
-	tmp324 = tmp324
-	this.GlyphIdArray = tmp324
-	return err
-}
-type Ttf_Cmap_Subtable_HighByteMappingThroughTable struct {
-	SubHeaderKeys []uint16
-	_io *kaitai.Stream
-	_root *Ttf
-	_parent *Ttf_Cmap_Subtable
-}
-func NewTtf_Cmap_Subtable_HighByteMappingThroughTable() *Ttf_Cmap_Subtable_HighByteMappingThroughTable {
-	return &Ttf_Cmap_Subtable_HighByteMappingThroughTable{
-	}
-}
-
-func (this *Ttf_Cmap_Subtable_HighByteMappingThroughTable) Read(io *kaitai.Stream, parent *Ttf_Cmap_Subtable, root *Ttf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	for i := 0; i < int(256); i++ {
-		_ = i
-		tmp325, err := this._io.ReadU2be()
-		if err != nil {
-			return err
-		}
-		this.SubHeaderKeys = append(this.SubHeaderKeys, tmp325)
-	}
-	return err
-}
-type Ttf_Cmap_Subtable_SegmentMappingToDeltaValues struct {
-	SegCountX2 uint16
-	SearchRange uint16
-	EntrySelector uint16
-	RangeShift uint16
-	EndCount []uint16
-	ReservedPad uint16
-	StartCount []uint16
-	IdDelta []uint16
-	IdRangeOffset []uint16
-	GlyphIdArray []uint16
-	_io *kaitai.Stream
-	_root *Ttf
-	_parent *Ttf_Cmap_Subtable
-	_f_segCount bool
-	segCount int
-}
-func NewTtf_Cmap_Subtable_SegmentMappingToDeltaValues() *Ttf_Cmap_Subtable_SegmentMappingToDeltaValues {
-	return &Ttf_Cmap_Subtable_SegmentMappingToDeltaValues{
-	}
-}
-
-func (this *Ttf_Cmap_Subtable_SegmentMappingToDeltaValues) Read(io *kaitai.Stream, parent *Ttf_Cmap_Subtable, root *Ttf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp326, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.SegCountX2 = uint16(tmp326)
-	tmp327, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.SearchRange = uint16(tmp327)
-	tmp328, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.EntrySelector = uint16(tmp328)
-	tmp329, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.RangeShift = uint16(tmp329)
-	tmp330, err := this.SegCount()
-	if err != nil {
-		return err
-	}
-	for i := 0; i < int(tmp330); i++ {
-		_ = i
-		tmp331, err := this._io.ReadU2be()
-		if err != nil {
-			return err
-		}
-		this.EndCount = append(this.EndCount, tmp331)
-	}
-	tmp332, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.ReservedPad = uint16(tmp332)
-	tmp333, err := this.SegCount()
-	if err != nil {
-		return err
-	}
-	for i := 0; i < int(tmp333); i++ {
-		_ = i
-		tmp334, err := this._io.ReadU2be()
-		if err != nil {
-			return err
-		}
-		this.StartCount = append(this.StartCount, tmp334)
-	}
-	tmp335, err := this.SegCount()
-	if err != nil {
-		return err
-	}
-	for i := 0; i < int(tmp335); i++ {
-		_ = i
-		tmp336, err := this._io.ReadU2be()
-		if err != nil {
-			return err
-		}
-		this.IdDelta = append(this.IdDelta, tmp336)
-	}
-	tmp337, err := this.SegCount()
-	if err != nil {
-		return err
-	}
-	for i := 0; i < int(tmp337); i++ {
+	this.NumberOfGlyphs = uint16(tmp337)
+	for i := 0; i < int(this.NumberOfGlyphs); i++ {
 		_ = i
 		tmp338, err := this._io.ReadU2be()
 		if err != nil {
 			return err
 		}
-		this.IdRangeOffset = append(this.IdRangeOffset, tmp338)
+		this.GlyphNameIndex = append(this.GlyphNameIndex, tmp338)
 	}
 	for i := 1;; i++ {
-		tmp339, err := this._io.EOF()
+		tmp339 := NewTtf_Post_Format20_PascalString()
+		err = tmp339.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		if tmp339 {
+		_it := tmp339
+		this.GlyphNames = append(this.GlyphNames, _it)
+		tmp340, err := this._io.EOF()
+		if err != nil {
+			return err
+		}
+		if  ((_it.Length == 0) || (tmp340))  {
 			break
 		}
-		tmp340, err := this._io.ReadU2be()
-		if err != nil {
-			return err
-		}
-		this.GlyphIdArray = append(this.GlyphIdArray, tmp340)
 	}
 	return err
 }
-func (this *Ttf_Cmap_Subtable_SegmentMappingToDeltaValues) SegCount() (v int, err error) {
-	if (this._f_segCount) {
-		return this.segCount, nil
-	}
-	this.segCount = int((this.SegCountX2 / 2))
-	this._f_segCount = true
-	return this.segCount, nil
-}
-type Ttf_Cmap_Subtable_TrimmedTableMapping struct {
-	FirstCode uint16
-	EntryCount uint16
-	GlyphIdArray []uint16
+type Ttf_Post_Format20_PascalString struct {
+	Length uint8
+	Value string
 	_io *kaitai.Stream
 	_root *Ttf
-	_parent *Ttf_Cmap_Subtable
+	_parent *Ttf_Post_Format20
 }
-func NewTtf_Cmap_Subtable_TrimmedTableMapping() *Ttf_Cmap_Subtable_TrimmedTableMapping {
-	return &Ttf_Cmap_Subtable_TrimmedTableMapping{
+func NewTtf_Post_Format20_PascalString() *Ttf_Post_Format20_PascalString {
+	return &Ttf_Post_Format20_PascalString{
 	}
 }
 
-func (this *Ttf_Cmap_Subtable_TrimmedTableMapping) Read(io *kaitai.Stream, parent *Ttf_Cmap_Subtable, root *Ttf) (err error) {
+func (this Ttf_Post_Format20_PascalString) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Ttf_Post_Format20_PascalString) Read(io *kaitai.Stream, parent *Ttf_Post_Format20, root *Ttf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp341, err := this._io.ReadU2be()
+	tmp341, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.FirstCode = uint16(tmp341)
-	tmp342, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.EntryCount = uint16(tmp342)
-	for i := 0; i < int(this.EntryCount); i++ {
-		_ = i
-		tmp343, err := this._io.ReadU2be()
+	this.Length = tmp341
+	if (this.Length != 0) {
+		tmp342, err := this._io.ReadBytes(int(this.Length))
 		if err != nil {
 			return err
 		}
-		this.GlyphIdArray = append(this.GlyphIdArray, tmp343)
+		tmp342 = tmp342
+		this.Value = string(tmp342)
 	}
+	return err
+}
+type Ttf_Prep struct {
+	Instructions []byte
+	_io *kaitai.Stream
+	_root *Ttf
+	_parent *Ttf_DirTableEntry
+}
+func NewTtf_Prep() *Ttf_Prep {
+	return &Ttf_Prep{
+	}
+}
+
+func (this Ttf_Prep) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Ttf_Prep) Read(io *kaitai.Stream, parent *Ttf_DirTableEntry, root *Ttf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp343, err := this._io.ReadBytesFull()
+	if err != nil {
+		return err
+	}
+	tmp343 = tmp343
+	this.Instructions = tmp343
 	return err
 }

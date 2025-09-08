@@ -4,8 +4,9 @@ import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -29,279 +30,295 @@ public class DoomWad extends KaitaiStruct {
         _read();
     }
     private void _read() {
-        this.magic = new String(this._io.readBytes(4), Charset.forName("ASCII"));
+        this.magic = new String(this._io.readBytes(4), StandardCharsets.US_ASCII);
         this.numIndexEntries = this._io.readS4le();
         this.indexOffset = this._io.readS4le();
     }
-    public static class Sectors extends KaitaiStruct {
-        public static Sectors fromFile(String fileName) throws IOException {
-            return new Sectors(new ByteBufferKaitaiStream(fileName));
-        }
 
-        public Sectors(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Sectors(KaitaiStream _io, DoomWad.IndexEntry _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Sectors(KaitaiStream _io, DoomWad.IndexEntry _parent, DoomWad _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.entries = new ArrayList<Sector>();
-            {
-                int i = 0;
-                while (!this._io.isEof()) {
-                    this.entries.add(new Sector(this._io, this, _root));
-                    i++;
-                }
+    public void _fetchInstances() {
+        index();
+        if (this.index != null) {
+            for (int i = 0; i < this.index.size(); i++) {
+                this.index.get(((Number) (i)).intValue())._fetchInstances();
             }
         }
-        private ArrayList<Sector> entries;
-        private DoomWad _root;
-        private DoomWad.IndexEntry _parent;
-        public ArrayList<Sector> entries() { return entries; }
-        public DoomWad _root() { return _root; }
-        public DoomWad.IndexEntry _parent() { return _parent; }
     }
-    public static class Vertex extends KaitaiStruct {
-        public static Vertex fromFile(String fileName) throws IOException {
-            return new Vertex(new ByteBufferKaitaiStream(fileName));
+    public static class Blockmap extends KaitaiStruct {
+        public static Blockmap fromFile(String fileName) throws IOException {
+            return new Blockmap(new ByteBufferKaitaiStream(fileName));
         }
 
-        public Vertex(KaitaiStream _io) {
+        public Blockmap(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public Vertex(KaitaiStream _io, DoomWad.Vertexes _parent) {
+        public Blockmap(KaitaiStream _io, DoomWad.IndexEntry _parent) {
             this(_io, _parent, null);
         }
 
-        public Vertex(KaitaiStream _io, DoomWad.Vertexes _parent, DoomWad _root) {
+        public Blockmap(KaitaiStream _io, DoomWad.IndexEntry _parent, DoomWad _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.x = this._io.readS2le();
-            this.y = this._io.readS2le();
-        }
-        private short x;
-        private short y;
-        private DoomWad _root;
-        private DoomWad.Vertexes _parent;
-        public short x() { return x; }
-        public short y() { return y; }
-        public DoomWad _root() { return _root; }
-        public DoomWad.Vertexes _parent() { return _parent; }
-    }
-
-    /**
-     * Used for TEXTURE1 and TEXTURE2 lumps, which designate how to
-     * combine wall patches to make wall textures. This essentially
-     * provides a very simple form of image compression, allowing
-     * certain elements ("patches") to be reused / recombined on
-     * different textures for more variety in the game.
-     * @see <a href="https://doom.fandom.com/wiki/TEXTURE1_and_TEXTURE2">Source</a>
-     */
-    public static class Texture12 extends KaitaiStruct {
-        public static Texture12 fromFile(String fileName) throws IOException {
-            return new Texture12(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Texture12(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Texture12(KaitaiStream _io, DoomWad.IndexEntry _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Texture12(KaitaiStream _io, DoomWad.IndexEntry _parent, DoomWad _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.numTextures = this._io.readS4le();
-            this.textures = new ArrayList<TextureIndex>();
-            for (int i = 0; i < numTextures(); i++) {
-                this.textures.add(new TextureIndex(this._io, this, _root));
+            this.originX = this._io.readS2le();
+            this.originY = this._io.readS2le();
+            this.numCols = this._io.readS2le();
+            this.numRows = this._io.readS2le();
+            this.linedefsInBlock = new ArrayList<Blocklist>();
+            for (int i = 0; i < numCols() * numRows(); i++) {
+                this.linedefsInBlock.add(new Blocklist(this._io, this, _root));
             }
         }
-        public static class TextureIndex extends KaitaiStruct {
-            public static TextureIndex fromFile(String fileName) throws IOException {
-                return new TextureIndex(new ByteBufferKaitaiStream(fileName));
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.linedefsInBlock.size(); i++) {
+                this.linedefsInBlock.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        public static class Blocklist extends KaitaiStruct {
+            public static Blocklist fromFile(String fileName) throws IOException {
+                return new Blocklist(new ByteBufferKaitaiStream(fileName));
             }
 
-            public TextureIndex(KaitaiStream _io) {
+            public Blocklist(KaitaiStream _io) {
                 this(_io, null, null);
             }
 
-            public TextureIndex(KaitaiStream _io, DoomWad.Texture12 _parent) {
+            public Blocklist(KaitaiStream _io, DoomWad.Blockmap _parent) {
                 this(_io, _parent, null);
             }
 
-            public TextureIndex(KaitaiStream _io, DoomWad.Texture12 _parent, DoomWad _root) {
+            public Blocklist(KaitaiStream _io, DoomWad.Blockmap _parent, DoomWad _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
                 _read();
             }
             private void _read() {
-                this.offset = this._io.readS4le();
+                this.offset = this._io.readU2le();
             }
-            private TextureBody body;
-            public TextureBody body() {
-                if (this.body != null)
-                    return this.body;
+
+            public void _fetchInstances() {
+                linedefs();
+                if (this.linedefs != null) {
+                    for (int i = 0; i < this.linedefs.size(); i++) {
+                    }
+                }
+            }
+            private List<Short> linedefs;
+
+            /**
+             * List of linedefs found in this block
+             */
+            public List<Short> linedefs() {
+                if (this.linedefs != null)
+                    return this.linedefs;
                 long _pos = this._io.pos();
-                this._io.seek(offset());
-                this.body = new TextureBody(this._io, this, _root);
+                this._io.seek(offset() * 2);
+                this.linedefs = new ArrayList<Short>();
+                {
+                    short _it;
+                    int i = 0;
+                    do {
+                        _it = this._io.readS2le();
+                        this.linedefs.add(_it);
+                        i++;
+                    } while (!(_it == -1));
+                }
                 this._io.seek(_pos);
-                return this.body;
+                return this.linedefs;
             }
             private int offset;
             private DoomWad _root;
-            private DoomWad.Texture12 _parent;
+            private DoomWad.Blockmap _parent;
+
+            /**
+             * Offset to the list of linedefs
+             */
             public int offset() { return offset; }
             public DoomWad _root() { return _root; }
-            public DoomWad.Texture12 _parent() { return _parent; }
+            public DoomWad.Blockmap _parent() { return _parent; }
         }
-        public static class TextureBody extends KaitaiStruct {
-            public static TextureBody fromFile(String fileName) throws IOException {
-                return new TextureBody(new ByteBufferKaitaiStream(fileName));
-            }
-
-            public TextureBody(KaitaiStream _io) {
-                this(_io, null, null);
-            }
-
-            public TextureBody(KaitaiStream _io, DoomWad.Texture12.TextureIndex _parent) {
-                this(_io, _parent, null);
-            }
-
-            public TextureBody(KaitaiStream _io, DoomWad.Texture12.TextureIndex _parent, DoomWad _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.name = new String(KaitaiStream.bytesStripRight(this._io.readBytes(8), (byte) 0), Charset.forName("ASCII"));
-                this.masked = this._io.readU4le();
-                this.width = this._io.readU2le();
-                this.height = this._io.readU2le();
-                this.columnDirectory = this._io.readU4le();
-                this.numPatches = this._io.readU2le();
-                this.patches = new ArrayList<Patch>();
-                for (int i = 0; i < numPatches(); i++) {
-                    this.patches.add(new Patch(this._io, this, _root));
-                }
-            }
-            private String name;
-            private long masked;
-            private int width;
-            private int height;
-            private long columnDirectory;
-            private int numPatches;
-            private ArrayList<Patch> patches;
-            private DoomWad _root;
-            private DoomWad.Texture12.TextureIndex _parent;
-
-            /**
-             * Name of a texture, only `A-Z`, `0-9`, `[]_-` are valid
-             */
-            public String name() { return name; }
-            public long masked() { return masked; }
-            public int width() { return width; }
-            public int height() { return height; }
-
-            /**
-             * Obsolete, ignored by all DOOM versions
-             */
-            public long columnDirectory() { return columnDirectory; }
-
-            /**
-             * Number of patches that are used in a texture
-             */
-            public int numPatches() { return numPatches; }
-            public ArrayList<Patch> patches() { return patches; }
-            public DoomWad _root() { return _root; }
-            public DoomWad.Texture12.TextureIndex _parent() { return _parent; }
-        }
-        public static class Patch extends KaitaiStruct {
-            public static Patch fromFile(String fileName) throws IOException {
-                return new Patch(new ByteBufferKaitaiStream(fileName));
-            }
-
-            public Patch(KaitaiStream _io) {
-                this(_io, null, null);
-            }
-
-            public Patch(KaitaiStream _io, DoomWad.Texture12.TextureBody _parent) {
-                this(_io, _parent, null);
-            }
-
-            public Patch(KaitaiStream _io, DoomWad.Texture12.TextureBody _parent, DoomWad _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.originX = this._io.readS2le();
-                this.originY = this._io.readS2le();
-                this.patchId = this._io.readU2le();
-                this.stepDir = this._io.readU2le();
-                this.colormap = this._io.readU2le();
-            }
-            private short originX;
-            private short originY;
-            private int patchId;
-            private int stepDir;
-            private int colormap;
-            private DoomWad _root;
-            private DoomWad.Texture12.TextureBody _parent;
-
-            /**
-             * X offset to draw a patch at (pixels from left boundary of a texture)
-             */
-            public short originX() { return originX; }
-
-            /**
-             * Y offset to draw a patch at (pixels from upper boundary of a texture)
-             */
-            public short originY() { return originY; }
-
-            /**
-             * Identifier of a patch (as listed in PNAMES lump) to draw
-             */
-            public int patchId() { return patchId; }
-            public int stepDir() { return stepDir; }
-            public int colormap() { return colormap; }
-            public DoomWad _root() { return _root; }
-            public DoomWad.Texture12.TextureBody _parent() { return _parent; }
-        }
-        private int numTextures;
-        private ArrayList<TextureIndex> textures;
+        private short originX;
+        private short originY;
+        private short numCols;
+        private short numRows;
+        private List<Blocklist> linedefsInBlock;
         private DoomWad _root;
         private DoomWad.IndexEntry _parent;
 
         /**
-         * Number of wall textures
+         * Grid origin, X coord
          */
-        public int numTextures() { return numTextures; }
-        public ArrayList<TextureIndex> textures() { return textures; }
+        public short originX() { return originX; }
+
+        /**
+         * Grid origin, Y coord
+         */
+        public short originY() { return originY; }
+
+        /**
+         * Number of columns
+         */
+        public short numCols() { return numCols; }
+
+        /**
+         * Number of rows
+         */
+        public short numRows() { return numRows; }
+
+        /**
+         * Lists of linedefs for every block
+         */
+        public List<Blocklist> linedefsInBlock() { return linedefsInBlock; }
         public DoomWad _root() { return _root; }
         public DoomWad.IndexEntry _parent() { return _parent; }
+    }
+    public static class IndexEntry extends KaitaiStruct {
+        public static IndexEntry fromFile(String fileName) throws IOException {
+            return new IndexEntry(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public IndexEntry(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public IndexEntry(KaitaiStream _io, DoomWad _parent) {
+            this(_io, _parent, null);
+        }
+
+        public IndexEntry(KaitaiStream _io, DoomWad _parent, DoomWad _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.offset = this._io.readS4le();
+            this.size = this._io.readS4le();
+            this.name = new String(KaitaiStream.bytesStripRight(this._io.readBytes(8), (byte) 0), StandardCharsets.US_ASCII);
+        }
+
+        public void _fetchInstances() {
+            contents();
+            if (this.contents != null) {
+                switch (name()) {
+                case "BLOCKMAP": {
+                    ((Blockmap) (this.contents))._fetchInstances();
+                    break;
+                }
+                case "LINEDEFS": {
+                    ((Linedefs) (this.contents))._fetchInstances();
+                    break;
+                }
+                case "PNAMES": {
+                    ((Pnames) (this.contents))._fetchInstances();
+                    break;
+                }
+                case "SECTORS": {
+                    ((Sectors) (this.contents))._fetchInstances();
+                    break;
+                }
+                case "SIDEDEFS": {
+                    ((Sidedefs) (this.contents))._fetchInstances();
+                    break;
+                }
+                case "TEXTURE1": {
+                    ((Texture12) (this.contents))._fetchInstances();
+                    break;
+                }
+                case "TEXTURE2": {
+                    ((Texture12) (this.contents))._fetchInstances();
+                    break;
+                }
+                case "THINGS": {
+                    ((Things) (this.contents))._fetchInstances();
+                    break;
+                }
+                case "VERTEXES": {
+                    ((Vertexes) (this.contents))._fetchInstances();
+                    break;
+                }
+                default: {
+                    break;
+                }
+                }
+            }
+        }
+        private Object contents;
+        public Object contents() {
+            if (this.contents != null)
+                return this.contents;
+            KaitaiStream io = _root()._io();
+            long _pos = io.pos();
+            io.seek(offset());
+            switch (name()) {
+            case "BLOCKMAP": {
+                KaitaiStream _io_contents = io.substream(size());
+                this.contents = new Blockmap(_io_contents, this, _root);
+                break;
+            }
+            case "LINEDEFS": {
+                KaitaiStream _io_contents = io.substream(size());
+                this.contents = new Linedefs(_io_contents, this, _root);
+                break;
+            }
+            case "PNAMES": {
+                KaitaiStream _io_contents = io.substream(size());
+                this.contents = new Pnames(_io_contents, this, _root);
+                break;
+            }
+            case "SECTORS": {
+                KaitaiStream _io_contents = io.substream(size());
+                this.contents = new Sectors(_io_contents, this, _root);
+                break;
+            }
+            case "SIDEDEFS": {
+                KaitaiStream _io_contents = io.substream(size());
+                this.contents = new Sidedefs(_io_contents, this, _root);
+                break;
+            }
+            case "TEXTURE1": {
+                KaitaiStream _io_contents = io.substream(size());
+                this.contents = new Texture12(_io_contents, this, _root);
+                break;
+            }
+            case "TEXTURE2": {
+                KaitaiStream _io_contents = io.substream(size());
+                this.contents = new Texture12(_io_contents, this, _root);
+                break;
+            }
+            case "THINGS": {
+                KaitaiStream _io_contents = io.substream(size());
+                this.contents = new Things(_io_contents, this, _root);
+                break;
+            }
+            case "VERTEXES": {
+                KaitaiStream _io_contents = io.substream(size());
+                this.contents = new Vertexes(_io_contents, this, _root);
+                break;
+            }
+            default: {
+                this.contents = io.readBytes(size());
+                break;
+            }
+            }
+            io.seek(_pos);
+            return this.contents;
+        }
+        private int offset;
+        private int size;
+        private String name;
+        private DoomWad _root;
+        private DoomWad _parent;
+        public int offset() { return offset; }
+        public int size() { return size; }
+        public String name() { return name; }
+        public DoomWad _root() { return _root; }
+        public DoomWad _parent() { return _parent; }
     }
     public static class Linedef extends KaitaiStruct {
         public static Linedef fromFile(String fileName) throws IOException {
@@ -331,6 +348,9 @@ public class DoomWad extends KaitaiStruct {
             this.sidedefRightIdx = this._io.readU2le();
             this.sidedefLeftIdx = this._io.readU2le();
         }
+
+        public void _fetchInstances() {
+        }
         private int vertexStartIdx;
         private int vertexEndIdx;
         private int flags;
@@ -349,6 +369,48 @@ public class DoomWad extends KaitaiStruct {
         public int sidedefLeftIdx() { return sidedefLeftIdx; }
         public DoomWad _root() { return _root; }
         public DoomWad.Linedefs _parent() { return _parent; }
+    }
+    public static class Linedefs extends KaitaiStruct {
+        public static Linedefs fromFile(String fileName) throws IOException {
+            return new Linedefs(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Linedefs(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Linedefs(KaitaiStream _io, DoomWad.IndexEntry _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Linedefs(KaitaiStream _io, DoomWad.IndexEntry _parent, DoomWad _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.entries = new ArrayList<Linedef>();
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.entries.add(new Linedef(this._io, this, _root));
+                    i++;
+                }
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.entries.size(); i++) {
+                this.entries.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private List<Linedef> entries;
+        private DoomWad _root;
+        private DoomWad.IndexEntry _parent;
+        public List<Linedef> entries() { return entries; }
+        public DoomWad _root() { return _root; }
+        public DoomWad.IndexEntry _parent() { return _parent; }
     }
 
     /**
@@ -377,11 +439,16 @@ public class DoomWad extends KaitaiStruct {
             this.numPatches = this._io.readU4le();
             this.names = new ArrayList<String>();
             for (int i = 0; i < numPatches(); i++) {
-                this.names.add(new String(KaitaiStream.bytesStripRight(this._io.readBytes(8), (byte) 0), Charset.forName("ASCII")));
+                this.names.add(new String(KaitaiStream.bytesStripRight(this._io.readBytes(8), (byte) 0), StandardCharsets.US_ASCII));
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.names.size(); i++) {
             }
         }
         private long numPatches;
-        private ArrayList<String> names;
+        private List<String> names;
         private DoomWad _root;
         private DoomWad.IndexEntry _parent;
 
@@ -389,50 +456,9 @@ public class DoomWad extends KaitaiStruct {
          * Number of patches registered in this global game directory
          */
         public long numPatches() { return numPatches; }
-        public ArrayList<String> names() { return names; }
+        public List<String> names() { return names; }
         public DoomWad _root() { return _root; }
         public DoomWad.IndexEntry _parent() { return _parent; }
-    }
-    public static class Thing extends KaitaiStruct {
-        public static Thing fromFile(String fileName) throws IOException {
-            return new Thing(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Thing(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Thing(KaitaiStream _io, DoomWad.Things _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Thing(KaitaiStream _io, DoomWad.Things _parent, DoomWad _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.x = this._io.readS2le();
-            this.y = this._io.readS2le();
-            this.angle = this._io.readU2le();
-            this.type = this._io.readU2le();
-            this.flags = this._io.readU2le();
-        }
-        private short x;
-        private short y;
-        private int angle;
-        private int type;
-        private int flags;
-        private DoomWad _root;
-        private DoomWad.Things _parent;
-        public short x() { return x; }
-        public short y() { return y; }
-        public int angle() { return angle; }
-        public int type() { return type; }
-        public int flags() { return flags; }
-        public DoomWad _root() { return _root; }
-        public DoomWad.Things _parent() { return _parent; }
     }
     public static class Sector extends KaitaiStruct {
         public static Sector fromFile(String fileName) throws IOException {
@@ -493,11 +519,14 @@ public class DoomWad extends KaitaiStruct {
         private void _read() {
             this.floorZ = this._io.readS2le();
             this.ceilZ = this._io.readS2le();
-            this.floorFlat = new String(this._io.readBytes(8), Charset.forName("ASCII"));
-            this.ceilFlat = new String(this._io.readBytes(8), Charset.forName("ASCII"));
+            this.floorFlat = new String(this._io.readBytes(8), StandardCharsets.US_ASCII);
+            this.ceilFlat = new String(this._io.readBytes(8), StandardCharsets.US_ASCII);
             this.light = this._io.readS2le();
             this.specialType = SpecialSector.byId(this._io.readU2le());
             this.tag = this._io.readU2le();
+        }
+
+        public void _fetchInstances() {
         }
         private short floorZ;
         private short ceilZ;
@@ -529,39 +558,45 @@ public class DoomWad extends KaitaiStruct {
         public DoomWad _root() { return _root; }
         public DoomWad.Sectors _parent() { return _parent; }
     }
-    public static class Vertexes extends KaitaiStruct {
-        public static Vertexes fromFile(String fileName) throws IOException {
-            return new Vertexes(new ByteBufferKaitaiStream(fileName));
+    public static class Sectors extends KaitaiStruct {
+        public static Sectors fromFile(String fileName) throws IOException {
+            return new Sectors(new ByteBufferKaitaiStream(fileName));
         }
 
-        public Vertexes(KaitaiStream _io) {
+        public Sectors(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public Vertexes(KaitaiStream _io, DoomWad.IndexEntry _parent) {
+        public Sectors(KaitaiStream _io, DoomWad.IndexEntry _parent) {
             this(_io, _parent, null);
         }
 
-        public Vertexes(KaitaiStream _io, DoomWad.IndexEntry _parent, DoomWad _root) {
+        public Sectors(KaitaiStream _io, DoomWad.IndexEntry _parent, DoomWad _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.entries = new ArrayList<Vertex>();
+            this.entries = new ArrayList<Sector>();
             {
                 int i = 0;
                 while (!this._io.isEof()) {
-                    this.entries.add(new Vertex(this._io, this, _root));
+                    this.entries.add(new Sector(this._io, this, _root));
                     i++;
                 }
             }
         }
-        private ArrayList<Vertex> entries;
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.entries.size(); i++) {
+                this.entries.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private List<Sector> entries;
         private DoomWad _root;
         private DoomWad.IndexEntry _parent;
-        public ArrayList<Vertex> entries() { return entries; }
+        public List<Sector> entries() { return entries; }
         public DoomWad _root() { return _root; }
         public DoomWad.IndexEntry _parent() { return _parent; }
     }
@@ -587,10 +622,13 @@ public class DoomWad extends KaitaiStruct {
         private void _read() {
             this.offsetX = this._io.readS2le();
             this.offsetY = this._io.readS2le();
-            this.upperTextureName = new String(this._io.readBytes(8), Charset.forName("ASCII"));
-            this.lowerTextureName = new String(this._io.readBytes(8), Charset.forName("ASCII"));
-            this.normalTextureName = new String(this._io.readBytes(8), Charset.forName("ASCII"));
+            this.upperTextureName = new String(this._io.readBytes(8), StandardCharsets.US_ASCII);
+            this.lowerTextureName = new String(this._io.readBytes(8), StandardCharsets.US_ASCII);
+            this.normalTextureName = new String(this._io.readBytes(8), StandardCharsets.US_ASCII);
             this.sectorId = this._io.readS2le();
+        }
+
+        public void _fetchInstances() {
         }
         private short offsetX;
         private short offsetY;
@@ -608,185 +646,6 @@ public class DoomWad extends KaitaiStruct {
         public short sectorId() { return sectorId; }
         public DoomWad _root() { return _root; }
         public DoomWad.Sidedefs _parent() { return _parent; }
-    }
-    public static class Things extends KaitaiStruct {
-        public static Things fromFile(String fileName) throws IOException {
-            return new Things(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Things(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Things(KaitaiStream _io, DoomWad.IndexEntry _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Things(KaitaiStream _io, DoomWad.IndexEntry _parent, DoomWad _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.entries = new ArrayList<Thing>();
-            {
-                int i = 0;
-                while (!this._io.isEof()) {
-                    this.entries.add(new Thing(this._io, this, _root));
-                    i++;
-                }
-            }
-        }
-        private ArrayList<Thing> entries;
-        private DoomWad _root;
-        private DoomWad.IndexEntry _parent;
-        public ArrayList<Thing> entries() { return entries; }
-        public DoomWad _root() { return _root; }
-        public DoomWad.IndexEntry _parent() { return _parent; }
-    }
-    public static class Linedefs extends KaitaiStruct {
-        public static Linedefs fromFile(String fileName) throws IOException {
-            return new Linedefs(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Linedefs(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Linedefs(KaitaiStream _io, DoomWad.IndexEntry _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Linedefs(KaitaiStream _io, DoomWad.IndexEntry _parent, DoomWad _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.entries = new ArrayList<Linedef>();
-            {
-                int i = 0;
-                while (!this._io.isEof()) {
-                    this.entries.add(new Linedef(this._io, this, _root));
-                    i++;
-                }
-            }
-        }
-        private ArrayList<Linedef> entries;
-        private DoomWad _root;
-        private DoomWad.IndexEntry _parent;
-        public ArrayList<Linedef> entries() { return entries; }
-        public DoomWad _root() { return _root; }
-        public DoomWad.IndexEntry _parent() { return _parent; }
-    }
-    public static class IndexEntry extends KaitaiStruct {
-        public static IndexEntry fromFile(String fileName) throws IOException {
-            return new IndexEntry(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public IndexEntry(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public IndexEntry(KaitaiStream _io, DoomWad _parent) {
-            this(_io, _parent, null);
-        }
-
-        public IndexEntry(KaitaiStream _io, DoomWad _parent, DoomWad _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.offset = this._io.readS4le();
-            this.size = this._io.readS4le();
-            this.name = new String(KaitaiStream.bytesStripRight(this._io.readBytes(8), (byte) 0), Charset.forName("ASCII"));
-        }
-        private Object contents;
-        public Object contents() {
-            if (this.contents != null)
-                return this.contents;
-            KaitaiStream io = _root()._io();
-            long _pos = io.pos();
-            io.seek(offset());
-            switch (name()) {
-            case "SECTORS": {
-                this._raw_contents = io.readBytes(size());
-                KaitaiStream _io__raw_contents = new ByteBufferKaitaiStream(_raw_contents);
-                this.contents = new Sectors(_io__raw_contents, this, _root);
-                break;
-            }
-            case "TEXTURE1": {
-                this._raw_contents = io.readBytes(size());
-                KaitaiStream _io__raw_contents = new ByteBufferKaitaiStream(_raw_contents);
-                this.contents = new Texture12(_io__raw_contents, this, _root);
-                break;
-            }
-            case "VERTEXES": {
-                this._raw_contents = io.readBytes(size());
-                KaitaiStream _io__raw_contents = new ByteBufferKaitaiStream(_raw_contents);
-                this.contents = new Vertexes(_io__raw_contents, this, _root);
-                break;
-            }
-            case "BLOCKMAP": {
-                this._raw_contents = io.readBytes(size());
-                KaitaiStream _io__raw_contents = new ByteBufferKaitaiStream(_raw_contents);
-                this.contents = new Blockmap(_io__raw_contents, this, _root);
-                break;
-            }
-            case "PNAMES": {
-                this._raw_contents = io.readBytes(size());
-                KaitaiStream _io__raw_contents = new ByteBufferKaitaiStream(_raw_contents);
-                this.contents = new Pnames(_io__raw_contents, this, _root);
-                break;
-            }
-            case "TEXTURE2": {
-                this._raw_contents = io.readBytes(size());
-                KaitaiStream _io__raw_contents = new ByteBufferKaitaiStream(_raw_contents);
-                this.contents = new Texture12(_io__raw_contents, this, _root);
-                break;
-            }
-            case "THINGS": {
-                this._raw_contents = io.readBytes(size());
-                KaitaiStream _io__raw_contents = new ByteBufferKaitaiStream(_raw_contents);
-                this.contents = new Things(_io__raw_contents, this, _root);
-                break;
-            }
-            case "LINEDEFS": {
-                this._raw_contents = io.readBytes(size());
-                KaitaiStream _io__raw_contents = new ByteBufferKaitaiStream(_raw_contents);
-                this.contents = new Linedefs(_io__raw_contents, this, _root);
-                break;
-            }
-            case "SIDEDEFS": {
-                this._raw_contents = io.readBytes(size());
-                KaitaiStream _io__raw_contents = new ByteBufferKaitaiStream(_raw_contents);
-                this.contents = new Sidedefs(_io__raw_contents, this, _root);
-                break;
-            }
-            default: {
-                this.contents = io.readBytes(size());
-                break;
-            }
-            }
-            io.seek(_pos);
-            return this.contents;
-        }
-        private int offset;
-        private int size;
-        private String name;
-        private DoomWad _root;
-        private DoomWad _parent;
-        private byte[] _raw_contents;
-        public int offset() { return offset; }
-        public int size() { return size; }
-        public String name() { return name; }
-        public DoomWad _root() { return _root; }
-        public DoomWad _parent() { return _parent; }
-        public byte[] _raw_contents() { return _raw_contents; }
     }
     public static class Sidedefs extends KaitaiStruct {
         public static Sidedefs fromFile(String fileName) throws IOException {
@@ -817,135 +676,408 @@ public class DoomWad extends KaitaiStruct {
                 }
             }
         }
-        private ArrayList<Sidedef> entries;
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.entries.size(); i++) {
+                this.entries.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private List<Sidedef> entries;
         private DoomWad _root;
         private DoomWad.IndexEntry _parent;
-        public ArrayList<Sidedef> entries() { return entries; }
+        public List<Sidedef> entries() { return entries; }
         public DoomWad _root() { return _root; }
         public DoomWad.IndexEntry _parent() { return _parent; }
     }
-    public static class Blockmap extends KaitaiStruct {
-        public static Blockmap fromFile(String fileName) throws IOException {
-            return new Blockmap(new ByteBufferKaitaiStream(fileName));
+
+    /**
+     * Used for TEXTURE1 and TEXTURE2 lumps, which designate how to
+     * combine wall patches to make wall textures. This essentially
+     * provides a very simple form of image compression, allowing
+     * certain elements ("patches") to be reused / recombined on
+     * different textures for more variety in the game.
+     * @see <a href="https://doom.fandom.com/wiki/TEXTURE1_and_TEXTURE2">Source</a>
+     */
+    public static class Texture12 extends KaitaiStruct {
+        public static Texture12 fromFile(String fileName) throws IOException {
+            return new Texture12(new ByteBufferKaitaiStream(fileName));
         }
 
-        public Blockmap(KaitaiStream _io) {
+        public Texture12(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public Blockmap(KaitaiStream _io, DoomWad.IndexEntry _parent) {
+        public Texture12(KaitaiStream _io, DoomWad.IndexEntry _parent) {
             this(_io, _parent, null);
         }
 
-        public Blockmap(KaitaiStream _io, DoomWad.IndexEntry _parent, DoomWad _root) {
+        public Texture12(KaitaiStream _io, DoomWad.IndexEntry _parent, DoomWad _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.originX = this._io.readS2le();
-            this.originY = this._io.readS2le();
-            this.numCols = this._io.readS2le();
-            this.numRows = this._io.readS2le();
-            this.linedefsInBlock = new ArrayList<Blocklist>();
-            for (int i = 0; i < (numCols() * numRows()); i++) {
-                this.linedefsInBlock.add(new Blocklist(this._io, this, _root));
+            this.numTextures = this._io.readS4le();
+            this.textures = new ArrayList<TextureIndex>();
+            for (int i = 0; i < numTextures(); i++) {
+                this.textures.add(new TextureIndex(this._io, this, _root));
             }
         }
-        public static class Blocklist extends KaitaiStruct {
-            public static Blocklist fromFile(String fileName) throws IOException {
-                return new Blocklist(new ByteBufferKaitaiStream(fileName));
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.textures.size(); i++) {
+                this.textures.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        public static class Patch extends KaitaiStruct {
+            public static Patch fromFile(String fileName) throws IOException {
+                return new Patch(new ByteBufferKaitaiStream(fileName));
             }
 
-            public Blocklist(KaitaiStream _io) {
+            public Patch(KaitaiStream _io) {
                 this(_io, null, null);
             }
 
-            public Blocklist(KaitaiStream _io, DoomWad.Blockmap _parent) {
+            public Patch(KaitaiStream _io, DoomWad.Texture12.TextureBody _parent) {
                 this(_io, _parent, null);
             }
 
-            public Blocklist(KaitaiStream _io, DoomWad.Blockmap _parent, DoomWad _root) {
+            public Patch(KaitaiStream _io, DoomWad.Texture12.TextureBody _parent, DoomWad _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
                 _read();
             }
             private void _read() {
-                this.offset = this._io.readU2le();
+                this.originX = this._io.readS2le();
+                this.originY = this._io.readS2le();
+                this.patchId = this._io.readU2le();
+                this.stepDir = this._io.readU2le();
+                this.colormap = this._io.readU2le();
             }
-            private ArrayList<Short> linedefs;
+
+            public void _fetchInstances() {
+            }
+            private short originX;
+            private short originY;
+            private int patchId;
+            private int stepDir;
+            private int colormap;
+            private DoomWad _root;
+            private DoomWad.Texture12.TextureBody _parent;
 
             /**
-             * List of linedefs found in this block
+             * X offset to draw a patch at (pixels from left boundary of a texture)
              */
-            public ArrayList<Short> linedefs() {
-                if (this.linedefs != null)
-                    return this.linedefs;
-                long _pos = this._io.pos();
-                this._io.seek((offset() * 2));
-                this.linedefs = new ArrayList<Short>();
-                {
-                    short _it;
-                    int i = 0;
-                    do {
-                        _it = this._io.readS2le();
-                        this.linedefs.add(_it);
-                        i++;
-                    } while (!(_it == -1));
+            public short originX() { return originX; }
+
+            /**
+             * Y offset to draw a patch at (pixels from upper boundary of a texture)
+             */
+            public short originY() { return originY; }
+
+            /**
+             * Identifier of a patch (as listed in PNAMES lump) to draw
+             */
+            public int patchId() { return patchId; }
+            public int stepDir() { return stepDir; }
+            public int colormap() { return colormap; }
+            public DoomWad _root() { return _root; }
+            public DoomWad.Texture12.TextureBody _parent() { return _parent; }
+        }
+        public static class TextureBody extends KaitaiStruct {
+            public static TextureBody fromFile(String fileName) throws IOException {
+                return new TextureBody(new ByteBufferKaitaiStream(fileName));
+            }
+
+            public TextureBody(KaitaiStream _io) {
+                this(_io, null, null);
+            }
+
+            public TextureBody(KaitaiStream _io, DoomWad.Texture12.TextureIndex _parent) {
+                this(_io, _parent, null);
+            }
+
+            public TextureBody(KaitaiStream _io, DoomWad.Texture12.TextureIndex _parent, DoomWad _root) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                _read();
+            }
+            private void _read() {
+                this.name = new String(KaitaiStream.bytesStripRight(this._io.readBytes(8), (byte) 0), StandardCharsets.US_ASCII);
+                this.masked = this._io.readU4le();
+                this.width = this._io.readU2le();
+                this.height = this._io.readU2le();
+                this.columnDirectory = this._io.readU4le();
+                this.numPatches = this._io.readU2le();
+                this.patches = new ArrayList<Patch>();
+                for (int i = 0; i < numPatches(); i++) {
+                    this.patches.add(new Patch(this._io, this, _root));
                 }
+            }
+
+            public void _fetchInstances() {
+                for (int i = 0; i < this.patches.size(); i++) {
+                    this.patches.get(((Number) (i)).intValue())._fetchInstances();
+                }
+            }
+            private String name;
+            private long masked;
+            private int width;
+            private int height;
+            private long columnDirectory;
+            private int numPatches;
+            private List<Patch> patches;
+            private DoomWad _root;
+            private DoomWad.Texture12.TextureIndex _parent;
+
+            /**
+             * Name of a texture, only `A-Z`, `0-9`, `[]_-` are valid
+             */
+            public String name() { return name; }
+            public long masked() { return masked; }
+            public int width() { return width; }
+            public int height() { return height; }
+
+            /**
+             * Obsolete, ignored by all DOOM versions
+             */
+            public long columnDirectory() { return columnDirectory; }
+
+            /**
+             * Number of patches that are used in a texture
+             */
+            public int numPatches() { return numPatches; }
+            public List<Patch> patches() { return patches; }
+            public DoomWad _root() { return _root; }
+            public DoomWad.Texture12.TextureIndex _parent() { return _parent; }
+        }
+        public static class TextureIndex extends KaitaiStruct {
+            public static TextureIndex fromFile(String fileName) throws IOException {
+                return new TextureIndex(new ByteBufferKaitaiStream(fileName));
+            }
+
+            public TextureIndex(KaitaiStream _io) {
+                this(_io, null, null);
+            }
+
+            public TextureIndex(KaitaiStream _io, DoomWad.Texture12 _parent) {
+                this(_io, _parent, null);
+            }
+
+            public TextureIndex(KaitaiStream _io, DoomWad.Texture12 _parent, DoomWad _root) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                _read();
+            }
+            private void _read() {
+                this.offset = this._io.readS4le();
+            }
+
+            public void _fetchInstances() {
+                body();
+                if (this.body != null) {
+                    this.body._fetchInstances();
+                }
+            }
+            private TextureBody body;
+            public TextureBody body() {
+                if (this.body != null)
+                    return this.body;
+                long _pos = this._io.pos();
+                this._io.seek(offset());
+                this.body = new TextureBody(this._io, this, _root);
                 this._io.seek(_pos);
-                return this.linedefs;
+                return this.body;
             }
             private int offset;
             private DoomWad _root;
-            private DoomWad.Blockmap _parent;
-
-            /**
-             * Offset to the list of linedefs
-             */
+            private DoomWad.Texture12 _parent;
             public int offset() { return offset; }
             public DoomWad _root() { return _root; }
-            public DoomWad.Blockmap _parent() { return _parent; }
+            public DoomWad.Texture12 _parent() { return _parent; }
         }
-        private short originX;
-        private short originY;
-        private short numCols;
-        private short numRows;
-        private ArrayList<Blocklist> linedefsInBlock;
+        private int numTextures;
+        private List<TextureIndex> textures;
         private DoomWad _root;
         private DoomWad.IndexEntry _parent;
 
         /**
-         * Grid origin, X coord
+         * Number of wall textures
          */
-        public short originX() { return originX; }
-
-        /**
-         * Grid origin, Y coord
-         */
-        public short originY() { return originY; }
-
-        /**
-         * Number of columns
-         */
-        public short numCols() { return numCols; }
-
-        /**
-         * Number of rows
-         */
-        public short numRows() { return numRows; }
-
-        /**
-         * Lists of linedefs for every block
-         */
-        public ArrayList<Blocklist> linedefsInBlock() { return linedefsInBlock; }
+        public int numTextures() { return numTextures; }
+        public List<TextureIndex> textures() { return textures; }
         public DoomWad _root() { return _root; }
         public DoomWad.IndexEntry _parent() { return _parent; }
     }
-    private ArrayList<IndexEntry> index;
-    public ArrayList<IndexEntry> index() {
+    public static class Thing extends KaitaiStruct {
+        public static Thing fromFile(String fileName) throws IOException {
+            return new Thing(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Thing(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Thing(KaitaiStream _io, DoomWad.Things _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Thing(KaitaiStream _io, DoomWad.Things _parent, DoomWad _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.x = this._io.readS2le();
+            this.y = this._io.readS2le();
+            this.angle = this._io.readU2le();
+            this.type = this._io.readU2le();
+            this.flags = this._io.readU2le();
+        }
+
+        public void _fetchInstances() {
+        }
+        private short x;
+        private short y;
+        private int angle;
+        private int type;
+        private int flags;
+        private DoomWad _root;
+        private DoomWad.Things _parent;
+        public short x() { return x; }
+        public short y() { return y; }
+        public int angle() { return angle; }
+        public int type() { return type; }
+        public int flags() { return flags; }
+        public DoomWad _root() { return _root; }
+        public DoomWad.Things _parent() { return _parent; }
+    }
+    public static class Things extends KaitaiStruct {
+        public static Things fromFile(String fileName) throws IOException {
+            return new Things(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Things(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Things(KaitaiStream _io, DoomWad.IndexEntry _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Things(KaitaiStream _io, DoomWad.IndexEntry _parent, DoomWad _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.entries = new ArrayList<Thing>();
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.entries.add(new Thing(this._io, this, _root));
+                    i++;
+                }
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.entries.size(); i++) {
+                this.entries.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private List<Thing> entries;
+        private DoomWad _root;
+        private DoomWad.IndexEntry _parent;
+        public List<Thing> entries() { return entries; }
+        public DoomWad _root() { return _root; }
+        public DoomWad.IndexEntry _parent() { return _parent; }
+    }
+    public static class Vertex extends KaitaiStruct {
+        public static Vertex fromFile(String fileName) throws IOException {
+            return new Vertex(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Vertex(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Vertex(KaitaiStream _io, DoomWad.Vertexes _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Vertex(KaitaiStream _io, DoomWad.Vertexes _parent, DoomWad _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.x = this._io.readS2le();
+            this.y = this._io.readS2le();
+        }
+
+        public void _fetchInstances() {
+        }
+        private short x;
+        private short y;
+        private DoomWad _root;
+        private DoomWad.Vertexes _parent;
+        public short x() { return x; }
+        public short y() { return y; }
+        public DoomWad _root() { return _root; }
+        public DoomWad.Vertexes _parent() { return _parent; }
+    }
+    public static class Vertexes extends KaitaiStruct {
+        public static Vertexes fromFile(String fileName) throws IOException {
+            return new Vertexes(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Vertexes(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Vertexes(KaitaiStream _io, DoomWad.IndexEntry _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Vertexes(KaitaiStream _io, DoomWad.IndexEntry _parent, DoomWad _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.entries = new ArrayList<Vertex>();
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.entries.add(new Vertex(this._io, this, _root));
+                    i++;
+                }
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.entries.size(); i++) {
+                this.entries.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private List<Vertex> entries;
+        private DoomWad _root;
+        private DoomWad.IndexEntry _parent;
+        public List<Vertex> entries() { return entries; }
+        public DoomWad _root() { return _root; }
+        public DoomWad.IndexEntry _parent() { return _parent; }
+    }
+    private List<IndexEntry> index;
+    public List<IndexEntry> index() {
         if (this.index != null)
             return this.index;
         long _pos = this._io.pos();

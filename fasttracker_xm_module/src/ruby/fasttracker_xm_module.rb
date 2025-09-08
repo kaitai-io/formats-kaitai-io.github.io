@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -19,16 +19,15 @@ end
 #   ftp://ftp.modland.com/pub/documents/format_documentation/FastTracker%202%20v2.04%20(.xm).html
 #    Source
 class FasttrackerXmModule < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
     @preheader = Preheader.new(@_io, self, @_root)
-    @_raw_header = @_io.read_bytes((preheader.header_size - 4))
-    _io__raw_header = Kaitai::Struct::Stream.new(@_raw_header)
-    @header = Header.new(_io__raw_header, self, @_root)
+    _io_header = @_io.substream(preheader.header_size - 4)
+    @header = Header.new(_io_header, self, @_root)
     @patterns = []
     (header.num_patterns).times { |i|
       @patterns << Pattern.new(@_io, self, @_root)
@@ -39,138 +38,8 @@ class FasttrackerXmModule < Kaitai::Struct::Struct
     }
     self
   end
-  class Preheader < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @signature0 = @_io.read_bytes(17)
-      raise Kaitai::Struct::ValidationNotEqualError.new([69, 120, 116, 101, 110, 100, 101, 100, 32, 77, 111, 100, 117, 108, 101, 58, 32].pack('C*'), signature0, _io, "/types/preheader/seq/0") if not signature0 == [69, 120, 116, 101, 110, 100, 101, 100, 32, 77, 111, 100, 117, 108, 101, 58, 32].pack('C*')
-      @module_name = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(20), 0, false)).force_encoding("utf-8")
-      @signature1 = @_io.read_bytes(1)
-      raise Kaitai::Struct::ValidationNotEqualError.new([26].pack('C*'), signature1, _io, "/types/preheader/seq/2") if not signature1 == [26].pack('C*')
-      @tracker_name = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(20), 0, false)).force_encoding("utf-8")
-      @version_number = Version.new(@_io, self, @_root)
-      @header_size = @_io.read_u4le
-      self
-    end
-    class Version < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
-
-      def _read
-        @minor = @_io.read_u1
-        @major = @_io.read_u1
-        self
-      end
-      def value
-        return @value unless @value.nil?
-        @value = ((major << 8) | minor)
-        @value
-      end
-
-      ##
-      # currently 0x04
-      attr_reader :minor
-
-      ##
-      # currently 0x01
-      attr_reader :major
-    end
-    attr_reader :signature0
-
-    ##
-    # Module name, padded with zeroes
-    attr_reader :module_name
-    attr_reader :signature1
-
-    ##
-    # Tracker name
-    attr_reader :tracker_name
-
-    ##
-    # Format versions below [0x01, 0x04] have a LOT of differences. Check this field!
-    attr_reader :version_number
-
-    ##
-    # Header size << Calculated FROM THIS OFFSET, not from the beginning of the file! >>
-    attr_reader :header_size
-  end
-  class Pattern < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @header = Header.new(@_io, self, @_root)
-      @packed_data = @_io.read_bytes(header.main.len_packed_pattern)
-      self
-    end
-    class Header < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
-
-      def _read
-        @header_length = @_io.read_u4le
-        @_raw_main = @_io.read_bytes((header_length - 4))
-        _io__raw_main = Kaitai::Struct::Stream.new(@_raw_main)
-        @main = HeaderMain.new(_io__raw_main, self, @_root)
-        self
-      end
-      class HeaderMain < Kaitai::Struct::Struct
-        def initialize(_io, _parent = nil, _root = self)
-          super(_io, _parent, _root)
-          _read
-        end
-
-        def _read
-          @packing_type = @_io.read_u1
-          case _root.preheader.version_number.value
-          when 258
-            @num_rows_raw = @_io.read_u1
-          else
-            @num_rows_raw = @_io.read_u2le
-          end
-          @len_packed_pattern = @_io.read_u2le
-          self
-        end
-        def num_rows
-          return @num_rows unless @num_rows.nil?
-          @num_rows = (num_rows_raw + (_root.preheader.version_number.value == 258 ? 1 : 0))
-          @num_rows
-        end
-
-        ##
-        # Packing type (always 0)
-        attr_reader :packing_type
-
-        ##
-        # Number of rows in pattern (1..256)
-        attr_reader :num_rows_raw
-
-        ##
-        # Packed pattern data size
-        attr_reader :len_packed_pattern
-      end
-
-      ##
-      # Pattern header length
-      attr_reader :header_length
-      attr_reader :main
-      attr_reader :_raw_main
-    end
-    attr_reader :header
-    attr_reader :packed_data
-  end
   class Flags < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -187,7 +56,7 @@ class FasttrackerXmModule < Kaitai::Struct::Struct
     attr_reader :freq_table_type
   end
   class Header < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -243,16 +112,15 @@ class FasttrackerXmModule < Kaitai::Struct::Struct
   # * volume and panning envelopes and looping instructions
   # * vibrato settings
   class Instrument < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
       @header_size = @_io.read_u4le
-      @_raw_header = @_io.read_bytes((header_size - 4))
-      _io__raw_header = Kaitai::Struct::Stream.new(@_raw_header)
-      @header = Header.new(_io__raw_header, self, @_root)
+      _io_header = @_io.substream(header_size - 4)
+      @header = Header.new(_io_header, self, @_root)
       @samples_headers = []
       (header.num_samples).times { |i|
         @samples_headers << SampleHeader.new(@_io, self, @_root)
@@ -263,29 +131,6 @@ class FasttrackerXmModule < Kaitai::Struct::Struct
       }
       self
     end
-    class Header < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
-
-      def _read
-        @name = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(22), 0, false)).force_encoding("utf-8")
-        @type = @_io.read_u1
-        @num_samples = @_io.read_u2le
-        if num_samples > 0
-          @extra_header = ExtraHeader.new(@_io, self, @_root)
-        end
-        self
-      end
-      attr_reader :name
-
-      ##
-      # Usually zero, but this seems pretty random, don't assume it's zero
-      attr_reader :type
-      attr_reader :num_samples
-      attr_reader :extra_header
-    end
     class ExtraHeader < Kaitai::Struct::Struct
 
       TYPE = {
@@ -294,7 +139,7 @@ class FasttrackerXmModule < Kaitai::Struct::Struct
         2 => :type_loop,
       }
       I__TYPE = TYPE.invert
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
@@ -340,7 +185,7 @@ class FasttrackerXmModule < Kaitai::Struct::Struct
       # Of course it does not help if all instruments have the values inside FT2 supported range.
       # The value-field of the envelope point is ranged between 00..3Fh (0..64 dec).
       class EnvelopePoint < Kaitai::Struct::Struct
-        def initialize(_io, _parent = nil, _root = self)
+        def initialize(_io, _parent = nil, _root = nil)
           super(_io, _parent, _root)
           _read
         end
@@ -391,31 +236,31 @@ class FasttrackerXmModule < Kaitai::Struct::Struct
       attr_reader :volume_fadeout
       attr_reader :reserved
     end
-
-    ##
-    # The saved data uses simple delta-encoding to achieve better compression ratios (when compressed with pkzip, etc.)
-    # Pseudocode for converting the delta-coded data to normal data,
-    # old = 0;
-    # for i in range(data_len):
-    #   new = sample[i] + old;
-    #   sample[i] = new;
-    #   old = new;
-    class SamplesData < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self, header)
+    class Header < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
-        @header = header
         _read
       end
 
       def _read
-        @data = @_io.read_bytes((header.sample_length * (header.type.is_sample_data_16_bit ? 2 : 1)))
+        @name = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(22), 0, false)).force_encoding("UTF-8")
+        @type = @_io.read_u1
+        @num_samples = @_io.read_u2le
+        if num_samples > 0
+          @extra_header = ExtraHeader.new(@_io, self, @_root)
+        end
         self
       end
-      attr_reader :data
-      attr_reader :header
+      attr_reader :name
+
+      ##
+      # Usually zero, but this seems pretty random, don't assume it's zero
+      attr_reader :type
+      attr_reader :num_samples
+      attr_reader :extra_header
     end
     class SampleHeader < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
@@ -430,7 +275,7 @@ class FasttrackerXmModule < Kaitai::Struct::Struct
         @panning = @_io.read_u1
         @relative_note_number = @_io.read_s1
         @reserved = @_io.read_u1
-        @name = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(22), 0, false)).force_encoding("utf-8")
+        @name = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(22), 0, false)).force_encoding("UTF-8")
         self
       end
       class LoopType < Kaitai::Struct::Struct
@@ -441,7 +286,7 @@ class FasttrackerXmModule < Kaitai::Struct::Struct
           2 => :loop_type_ping_pong,
         }
         I__LOOP_TYPE = LOOP_TYPE.invert
-        def initialize(_io, _parent = nil, _root = self)
+        def initialize(_io, _parent = nil, _root = nil)
           super(_io, _parent, _root)
           _read
         end
@@ -477,6 +322,29 @@ class FasttrackerXmModule < Kaitai::Struct::Struct
     end
 
     ##
+    # The saved data uses simple delta-encoding to achieve better compression ratios (when compressed with pkzip, etc.)
+    # Pseudocode for converting the delta-coded data to normal data,
+    # old = 0;
+    # for i in range(data_len):
+    #   new = sample[i] + old;
+    #   sample[i] = new;
+    #   old = new;
+    class SamplesData < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = nil, header)
+        super(_io, _parent, _root)
+        @header = header
+        _read
+      end
+
+      def _read
+        @data = @_io.read_bytes(header.sample_length * (header.type.is_sample_data_16_bit ? 2 : 1))
+        self
+      end
+      attr_reader :data
+      attr_reader :header
+    end
+
+    ##
     # Instrument size << header that is >>
     # << "Instrument Size" field tends to be more than the actual size of the structure documented here (it includes also the extended instrument sample header above). So remember to check it and skip the additional bytes before the first sample header >>
     attr_reader :header_size
@@ -484,6 +352,135 @@ class FasttrackerXmModule < Kaitai::Struct::Struct
     attr_reader :samples_headers
     attr_reader :samples
     attr_reader :_raw_header
+  end
+  class Pattern < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @header = Header.new(@_io, self, @_root)
+      @packed_data = @_io.read_bytes(header.main.len_packed_pattern)
+      self
+    end
+    class Header < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = nil)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        @header_length = @_io.read_u4le
+        _io_main = @_io.substream(header_length - 4)
+        @main = HeaderMain.new(_io_main, self, @_root)
+        self
+      end
+      class HeaderMain < Kaitai::Struct::Struct
+        def initialize(_io, _parent = nil, _root = nil)
+          super(_io, _parent, _root)
+          _read
+        end
+
+        def _read
+          @packing_type = @_io.read_u1
+          case _root.preheader.version_number.value
+          when 258
+            @num_rows_raw = @_io.read_u1
+          else
+            @num_rows_raw = @_io.read_u2le
+          end
+          @len_packed_pattern = @_io.read_u2le
+          self
+        end
+        def num_rows
+          return @num_rows unless @num_rows.nil?
+          @num_rows = num_rows_raw + (_root.preheader.version_number.value == 258 ? 1 : 0)
+          @num_rows
+        end
+
+        ##
+        # Packing type (always 0)
+        attr_reader :packing_type
+
+        ##
+        # Number of rows in pattern (1..256)
+        attr_reader :num_rows_raw
+
+        ##
+        # Packed pattern data size
+        attr_reader :len_packed_pattern
+      end
+
+      ##
+      # Pattern header length
+      attr_reader :header_length
+      attr_reader :main
+      attr_reader :_raw_main
+    end
+    attr_reader :header
+    attr_reader :packed_data
+  end
+  class Preheader < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @signature0 = @_io.read_bytes(17)
+      raise Kaitai::Struct::ValidationNotEqualError.new([69, 120, 116, 101, 110, 100, 101, 100, 32, 77, 111, 100, 117, 108, 101, 58, 32].pack('C*'), @signature0, @_io, "/types/preheader/seq/0") if not @signature0 == [69, 120, 116, 101, 110, 100, 101, 100, 32, 77, 111, 100, 117, 108, 101, 58, 32].pack('C*')
+      @module_name = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(20), 0, false)).force_encoding("UTF-8")
+      @signature1 = @_io.read_bytes(1)
+      raise Kaitai::Struct::ValidationNotEqualError.new([26].pack('C*'), @signature1, @_io, "/types/preheader/seq/2") if not @signature1 == [26].pack('C*')
+      @tracker_name = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(20), 0, false)).force_encoding("UTF-8")
+      @version_number = Version.new(@_io, self, @_root)
+      @header_size = @_io.read_u4le
+      self
+    end
+    class Version < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = nil)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        @minor = @_io.read_u1
+        @major = @_io.read_u1
+        self
+      end
+      def value
+        return @value unless @value.nil?
+        @value = major << 8 | minor
+        @value
+      end
+
+      ##
+      # currently 0x04
+      attr_reader :minor
+
+      ##
+      # currently 0x01
+      attr_reader :major
+    end
+    attr_reader :signature0
+
+    ##
+    # Module name, padded with zeroes
+    attr_reader :module_name
+    attr_reader :signature1
+
+    ##
+    # Tracker name
+    attr_reader :tracker_name
+
+    ##
+    # Format versions below [0x01, 0x04] have a LOT of differences. Check this field!
+    attr_reader :version_number
+
+    ##
+    # Header size << Calculated FROM THIS OFFSET, not from the beginning of the file! >>
+    attr_reader :header_size
   end
   attr_reader :preheader
   attr_reader :header

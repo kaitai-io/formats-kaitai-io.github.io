@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream', './BytesWithIo'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./BytesWithIo'));
+    define(['exports', 'kaitai-struct/KaitaiStream', './BytesWithIo'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'), require('./BytesWithIo'));
   } else {
-    root.CompressedResource = factory(root.KaitaiStream, root.BytesWithIo);
+    factory(root.CompressedResource || (root.CompressedResource = {}), root.KaitaiStream, root.BytesWithIo || (root.BytesWithIo = {}));
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, BytesWithIo) {
+})(typeof self !== 'undefined' ? self : this, function (CompressedResource_, KaitaiStream, BytesWithIo_) {
 /**
  * Compressed Macintosh resource data,
  * as stored in resources with the "compressed" attribute.
@@ -55,15 +55,15 @@ var CompressedResource = (function() {
     function Header(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     Header.prototype._read = function() {
       this.commonPart = new CommonPart(this._io, this, this._root);
-      this._raw_typeSpecificPartRawWithIo = this._io.readBytes((this.commonPart.lenHeader - 12));
+      this._raw_typeSpecificPartRawWithIo = this._io.readBytes(this.commonPart.lenHeader - 12);
       var _io__raw_typeSpecificPartRawWithIo = new KaitaiStream(this._raw_typeSpecificPartRawWithIo);
-      this.typeSpecificPartRawWithIo = new BytesWithIo(_io__raw_typeSpecificPartRawWithIo, this, null);
+      this.typeSpecificPartRawWithIo = new BytesWithIo_.BytesWithIo(_io__raw_typeSpecificPartRawWithIo, null, null);
     }
 
     /**
@@ -75,14 +75,14 @@ var CompressedResource = (function() {
       function CommonPart(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
       CommonPart.prototype._read = function() {
         this.magic = this._io.readBytes(4);
-        if (!((KaitaiStream.byteArrayCompare(this.magic, [168, 159, 101, 114]) == 0))) {
-          throw new KaitaiStream.ValidationNotEqualError([168, 159, 101, 114], this.magic, this._io, "/types/header/types/common_part/seq/0");
+        if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([168, 159, 101, 114])) == 0))) {
+          throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([168, 159, 101, 114]), this.magic, this._io, "/types/header/types/common_part/seq/0");
         }
         this.lenHeader = this._io.readU2be();
         if (!(this.lenHeader == 18)) {
@@ -141,7 +141,7 @@ var CompressedResource = (function() {
       function TypeSpecificPartType8(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -195,7 +195,7 @@ var CompressedResource = (function() {
       function TypeSpecificPartType9(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -203,7 +203,7 @@ var CompressedResource = (function() {
         this.decompressorId = this._io.readS2be();
         this._raw_decompressorSpecificParametersWithIo = this._io.readBytes(4);
         var _io__raw_decompressorSpecificParametersWithIo = new KaitaiStream(this._raw_decompressorSpecificParametersWithIo);
-        this.decompressorSpecificParametersWithIo = new BytesWithIo(_io__raw_decompressorSpecificParametersWithIo, this, null);
+        this.decompressorSpecificParametersWithIo = new BytesWithIo_.BytesWithIo(_io__raw_decompressorSpecificParametersWithIo, null, null);
       }
 
       /**
@@ -237,19 +237,6 @@ var CompressedResource = (function() {
 
     /**
      * The type-specific part of the header,
-     * as a raw byte array.
-     */
-    Object.defineProperty(Header.prototype, 'typeSpecificPartRaw', {
-      get: function() {
-        if (this._m_typeSpecificPartRaw !== undefined)
-          return this._m_typeSpecificPartRaw;
-        this._m_typeSpecificPartRaw = this.typeSpecificPartRawWithIo.data;
-        return this._m_typeSpecificPartRaw;
-      }
-    });
-
-    /**
-     * The type-specific part of the header,
      * parsed according to the type from the common part.
      */
     Object.defineProperty(Header.prototype, 'typeSpecificPart', {
@@ -269,6 +256,19 @@ var CompressedResource = (function() {
         }
         io.seek(_pos);
         return this._m_typeSpecificPart;
+      }
+    });
+
+    /**
+     * The type-specific part of the header,
+     * as a raw byte array.
+     */
+    Object.defineProperty(Header.prototype, 'typeSpecificPartRaw', {
+      get: function() {
+        if (this._m_typeSpecificPartRaw !== undefined)
+          return this._m_typeSpecificPartRaw;
+        this._m_typeSpecificPartRaw = this.typeSpecificPartRawWithIo.data;
+        return this._m_typeSpecificPartRaw;
       }
     });
 
@@ -302,5 +302,5 @@ var CompressedResource = (function() {
 
   return CompressedResource;
 })();
-return CompressedResource;
-}));
+CompressedResource_.CompressedResource = CompressedResource;
+});

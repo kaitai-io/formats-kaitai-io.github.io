@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.VlqBase128Be = factory(root.KaitaiStream);
+    factory(root.VlqBase128Be || (root.VlqBase128Be = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (VlqBase128Be_, KaitaiStream) {
 /**
  * A variable-length unsigned integer using base128 encoding. 1-byte groups
  * consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered
@@ -52,7 +52,7 @@ var VlqBase128Be = (function() {
     function Group(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -75,7 +75,7 @@ var VlqBase128Be = (function() {
     get: function() {
       if (this._m_last !== undefined)
         return this._m_last;
-      this._m_last = (this.groups.length - 1);
+      this._m_last = this.groups.length - 1;
       return this._m_last;
     }
   });
@@ -87,12 +87,12 @@ var VlqBase128Be = (function() {
     get: function() {
       if (this._m_value !== undefined)
         return this._m_value;
-      this._m_value = (((((((this.groups[this.last].value + (this.last >= 1 ? (this.groups[(this.last - 1)].value << 7) : 0)) + (this.last >= 2 ? (this.groups[(this.last - 2)].value << 14) : 0)) + (this.last >= 3 ? (this.groups[(this.last - 3)].value << 21) : 0)) + (this.last >= 4 ? (this.groups[(this.last - 4)].value << 28) : 0)) + (this.last >= 5 ? (this.groups[(this.last - 5)].value << 35) : 0)) + (this.last >= 6 ? (this.groups[(this.last - 6)].value << 42) : 0)) + (this.last >= 7 ? (this.groups[(this.last - 7)].value << 49) : 0));
+      this._m_value = (((((((this.groups[this.last].value + (this.last >= 1 ? this.groups[this.last - 1].value << 7 : 0)) + (this.last >= 2 ? this.groups[this.last - 2].value << 14 : 0)) + (this.last >= 3 ? this.groups[this.last - 3].value << 21 : 0)) + (this.last >= 4 ? this.groups[this.last - 4].value << 28 : 0)) + (this.last >= 5 ? this.groups[this.last - 5].value << 35 : 0)) + (this.last >= 6 ? this.groups[this.last - 6].value << 42 : 0)) + (this.last >= 7 ? this.groups[this.last - 7].value << 49 : 0));
       return this._m_value;
     }
   });
 
   return VlqBase128Be;
 })();
-return VlqBase128Be;
-}));
+VlqBase128Be_.VlqBase128Be = VlqBase128Be;
+});

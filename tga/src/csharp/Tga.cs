@@ -61,80 +61,9 @@ namespace Kaitai
                 _colorMap = new List<byte[]>();
                 for (var i = 0; i < NumColorMap; i++)
                 {
-                    _colorMap.Add(m_io.ReadBytes(((ColorMapDepth + 7) / 8)));
+                    _colorMap.Add(m_io.ReadBytes((ColorMapDepth + 7) / 8));
                 }
             }
-        }
-        public partial class TgaFooter : KaitaiStruct
-        {
-            public static TgaFooter FromFile(string fileName)
-            {
-                return new TgaFooter(new KaitaiStream(fileName));
-            }
-
-            public TgaFooter(KaitaiStream p__io, Tga p__parent = null, Tga p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_isValid = false;
-                f_extArea = false;
-                _read();
-            }
-            private void _read()
-            {
-                _extAreaOfs = m_io.ReadU4le();
-                _devDirOfs = m_io.ReadU4le();
-                _versionMagic = m_io.ReadBytes(18);
-            }
-            private bool f_isValid;
-            private bool _isValid;
-            public bool IsValid
-            {
-                get
-                {
-                    if (f_isValid)
-                        return _isValid;
-                    _isValid = (bool) ((KaitaiStream.ByteArrayCompare(VersionMagic, new byte[] { 84, 82, 85, 69, 86, 73, 83, 73, 79, 78, 45, 88, 70, 73, 76, 69, 46, 0 }) == 0));
-                    f_isValid = true;
-                    return _isValid;
-                }
-            }
-            private bool f_extArea;
-            private TgaExtArea _extArea;
-            public TgaExtArea ExtArea
-            {
-                get
-                {
-                    if (f_extArea)
-                        return _extArea;
-                    if (IsValid) {
-                        long _pos = m_io.Pos;
-                        m_io.Seek(ExtAreaOfs);
-                        _extArea = new TgaExtArea(m_io, this, m_root);
-                        m_io.Seek(_pos);
-                        f_extArea = true;
-                    }
-                    return _extArea;
-                }
-            }
-            private uint _extAreaOfs;
-            private uint _devDirOfs;
-            private byte[] _versionMagic;
-            private Tga m_root;
-            private Tga m_parent;
-
-            /// <summary>
-            /// Offset to extension area
-            /// </summary>
-            public uint ExtAreaOfs { get { return _extAreaOfs; } }
-
-            /// <summary>
-            /// Offset to developer directory
-            /// </summary>
-            public uint DevDirOfs { get { return _devDirOfs; } }
-            public byte[] VersionMagic { get { return _versionMagic; } }
-            public Tga M_Root { get { return m_root; } }
-            public Tga M_Parent { get { return m_parent; } }
         }
         public partial class TgaExtArea : KaitaiStruct
         {
@@ -246,6 +175,77 @@ namespace Kaitai
             public Tga M_Root { get { return m_root; } }
             public Tga.TgaFooter M_Parent { get { return m_parent; } }
         }
+        public partial class TgaFooter : KaitaiStruct
+        {
+            public static TgaFooter FromFile(string fileName)
+            {
+                return new TgaFooter(new KaitaiStream(fileName));
+            }
+
+            public TgaFooter(KaitaiStream p__io, Tga p__parent = null, Tga p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_extArea = false;
+                f_isValid = false;
+                _read();
+            }
+            private void _read()
+            {
+                _extAreaOfs = m_io.ReadU4le();
+                _devDirOfs = m_io.ReadU4le();
+                _versionMagic = m_io.ReadBytes(18);
+            }
+            private bool f_extArea;
+            private TgaExtArea _extArea;
+            public TgaExtArea ExtArea
+            {
+                get
+                {
+                    if (f_extArea)
+                        return _extArea;
+                    f_extArea = true;
+                    if (IsValid) {
+                        long _pos = m_io.Pos;
+                        m_io.Seek(ExtAreaOfs);
+                        _extArea = new TgaExtArea(m_io, this, m_root);
+                        m_io.Seek(_pos);
+                    }
+                    return _extArea;
+                }
+            }
+            private bool f_isValid;
+            private bool _isValid;
+            public bool IsValid
+            {
+                get
+                {
+                    if (f_isValid)
+                        return _isValid;
+                    f_isValid = true;
+                    _isValid = (bool) ((KaitaiStream.ByteArrayCompare(VersionMagic, new byte[] { 84, 82, 85, 69, 86, 73, 83, 73, 79, 78, 45, 88, 70, 73, 76, 69, 46, 0 }) == 0));
+                    return _isValid;
+                }
+            }
+            private uint _extAreaOfs;
+            private uint _devDirOfs;
+            private byte[] _versionMagic;
+            private Tga m_root;
+            private Tga m_parent;
+
+            /// <summary>
+            /// Offset to extension area
+            /// </summary>
+            public uint ExtAreaOfs { get { return _extAreaOfs; } }
+
+            /// <summary>
+            /// Offset to developer directory
+            /// </summary>
+            public uint DevDirOfs { get { return _devDirOfs; } }
+            public byte[] VersionMagic { get { return _versionMagic; } }
+            public Tga M_Root { get { return m_root; } }
+            public Tga M_Parent { get { return m_parent; } }
+        }
         private bool f_footer;
         private TgaFooter _footer;
         public TgaFooter Footer
@@ -254,11 +254,11 @@ namespace Kaitai
             {
                 if (f_footer)
                     return _footer;
+                f_footer = true;
                 long _pos = m_io.Pos;
-                m_io.Seek((M_Io.Size - 26));
+                m_io.Seek(M_Io.Size - 26);
                 _footer = new TgaFooter(m_io, this, m_root);
                 m_io.Seek(_pos);
-                f_footer = true;
                 return _footer;
             }
         }

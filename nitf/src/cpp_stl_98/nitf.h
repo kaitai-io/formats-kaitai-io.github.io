@@ -3,12 +3,14 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class nitf_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -28,33 +30,33 @@
 class nitf_t : public kaitai::kstruct {
 
 public:
-    class reserved_extension_segment_t;
-    class image_comment_t;
-    class length_reserved_info_t;
-    class tre_t;
     class band_info_t;
-    class image_segment_t;
-    class text_segment_t;
-    class graphic_sub_header_t;
     class clasnfo_t;
-    class length_graphic_info_t;
-    class encrypt_t;
-    class image_data_mask_t;
-    class graphics_segment_t;
-    class data_sub_header_t;
     class data_extension_segment_t;
-    class data_sub_header_tre_t;
-    class image_sub_header_t;
-    class reserved_sub_header_t;
+    class data_sub_header_t;
     class data_sub_header_base_t;
-    class text_sub_header_t;
-    class date_time_t;
-    class header_t;
     class data_sub_header_streaming_t;
-    class tre_header_t;
-    class length_image_info_t;
+    class data_sub_header_tre_t;
+    class date_time_t;
+    class encrypt_t;
+    class graphic_sub_header_t;
+    class graphics_segment_t;
+    class header_t;
+    class image_comment_t;
+    class image_data_mask_t;
+    class image_segment_t;
+    class image_sub_header_t;
     class length_data_info_t;
+    class length_graphic_info_t;
+    class length_image_info_t;
+    class length_reserved_info_t;
     class length_text_info_t;
+    class reserved_extension_segment_t;
+    class reserved_sub_header_t;
+    class text_segment_t;
+    class text_sub_header_t;
+    class tre_t;
+    class tre_header_t;
 
     nitf_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, nitf_t* p__root = 0);
 
@@ -64,128 +66,6 @@ private:
 
 public:
     ~nitf_t();
-
-    class reserved_extension_segment_t : public kaitai::kstruct {
-
-    public:
-
-        reserved_extension_segment_t(uint16_t p_idx, kaitai::kstream* p__io, nitf_t* p__parent = 0, nitf_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~reserved_extension_segment_t();
-
-    private:
-        reserved_sub_header_t* m_reserved_sub_header;
-        std::string m_reserved_data_field;
-        uint16_t m_idx;
-        nitf_t* m__root;
-        nitf_t* m__parent;
-        std::string m__raw_reserved_sub_header;
-        kaitai::kstream* m__io__raw_reserved_sub_header;
-
-    public:
-        reserved_sub_header_t* reserved_sub_header() const { return m_reserved_sub_header; }
-        std::string reserved_data_field() const { return m_reserved_data_field; }
-        uint16_t idx() const { return m_idx; }
-        nitf_t* _root() const { return m__root; }
-        nitf_t* _parent() const { return m__parent; }
-        std::string _raw_reserved_sub_header() const { return m__raw_reserved_sub_header; }
-        kaitai::kstream* _io__raw_reserved_sub_header() const { return m__io__raw_reserved_sub_header; }
-    };
-
-    class image_comment_t : public kaitai::kstruct {
-
-    public:
-
-        image_comment_t(kaitai::kstream* p__io, nitf_t::image_sub_header_t* p__parent = 0, nitf_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~image_comment_t();
-
-    private:
-        std::string m__unnamed0;
-        nitf_t* m__root;
-        nitf_t::image_sub_header_t* m__parent;
-
-    public:
-        std::string _unnamed0() const { return m__unnamed0; }
-        nitf_t* _root() const { return m__root; }
-        nitf_t::image_sub_header_t* _parent() const { return m__parent; }
-    };
-
-    class length_reserved_info_t : public kaitai::kstruct {
-
-    public:
-
-        length_reserved_info_t(kaitai::kstream* p__io, nitf_t::header_t* p__parent = 0, nitf_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~length_reserved_info_t();
-
-    private:
-        std::string m_length_reserved_extension_subheader;
-        std::string m_length_reserved_extension_segment;
-        nitf_t* m__root;
-        nitf_t::header_t* m__parent;
-
-    public:
-        std::string length_reserved_extension_subheader() const { return m_length_reserved_extension_subheader; }
-        std::string length_reserved_extension_segment() const { return m_length_reserved_extension_segment; }
-        nitf_t* _root() const { return m__root; }
-        nitf_t::header_t* _parent() const { return m__parent; }
-    };
-
-    class tre_t : public kaitai::kstruct {
-
-    public:
-
-        tre_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, nitf_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~tre_t();
-
-    private:
-        std::string m_extension_type_id;
-        std::string m_edata_length;
-        std::string m_edata;
-        nitf_t* m__root;
-        kaitai::kstruct* m__parent;
-
-    public:
-
-        /**
-         * RETAG or CETAG
-         */
-        std::string extension_type_id() const { return m_extension_type_id; }
-
-        /**
-         * REL or CEL
-         */
-        std::string edata_length() const { return m_edata_length; }
-
-        /**
-         * REDATA or CEDATA
-         */
-        std::string edata() const { return m_edata; }
-        nitf_t* _root() const { return m__root; }
-        kaitai::kstruct* _parent() const { return m__parent; }
-    };
 
     class band_info_t : public kaitai::kstruct {
 
@@ -241,81 +121,329 @@ public:
         nitf_t::image_sub_header_t* _parent() const { return m__parent; }
     };
 
-    class image_segment_t : public kaitai::kstruct {
+    class clasnfo_t : public kaitai::kstruct {
 
     public:
 
-        image_segment_t(uint16_t p_idx, kaitai::kstream* p__io, nitf_t* p__parent = 0, nitf_t* p__root = 0);
+        clasnfo_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, nitf_t* p__root = 0);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~image_segment_t();
+        ~clasnfo_t();
 
     private:
-        bool f_has_mask;
-        bool m_has_mask;
-
-    public:
-        bool has_mask();
-
-    private:
-        image_sub_header_t* m_image_sub_header;
-        image_data_mask_t* m_image_data_mask;
-        bool n_image_data_mask;
-
-    public:
-        bool _is_null_image_data_mask() { image_data_mask(); return n_image_data_mask; };
-
-    private:
-        std::string m_image_data_field;
-        bool n_image_data_field;
-
-    public:
-        bool _is_null_image_data_field() { image_data_field(); return n_image_data_field; };
-
-    private:
-        uint16_t m_idx;
+        std::string m_security_class;
+        std::string m_security_system;
+        std::string m_codewords;
+        std::string m_control_and_handling;
+        std::string m_releaseability;
+        std::string m_declass_type;
+        std::string m_declass_date;
+        std::string m_declass_exemption;
+        std::string m_downgrade;
+        std::string m_downgrade_date;
+        std::string m_class_text;
+        std::string m_class_authority_type;
+        std::string m_class_authority;
+        std::string m_class_reason;
+        std::string m_source_date;
+        std::string m_control_number;
         nitf_t* m__root;
-        nitf_t* m__parent;
+        kaitai::kstruct* m__parent;
 
     public:
-        image_sub_header_t* image_sub_header() const { return m_image_sub_header; }
-        image_data_mask_t* image_data_mask() const { return m_image_data_mask; }
-        std::string image_data_field() const { return m_image_data_field; }
-        uint16_t idx() const { return m_idx; }
+        std::string security_class() const { return m_security_class; }
+        std::string security_system() const { return m_security_system; }
+        std::string codewords() const { return m_codewords; }
+        std::string control_and_handling() const { return m_control_and_handling; }
+        std::string releaseability() const { return m_releaseability; }
+        std::string declass_type() const { return m_declass_type; }
+        std::string declass_date() const { return m_declass_date; }
+        std::string declass_exemption() const { return m_declass_exemption; }
+        std::string downgrade() const { return m_downgrade; }
+        std::string downgrade_date() const { return m_downgrade_date; }
+        std::string class_text() const { return m_class_text; }
+        std::string class_authority_type() const { return m_class_authority_type; }
+        std::string class_authority() const { return m_class_authority; }
+        std::string class_reason() const { return m_class_reason; }
+        std::string source_date() const { return m_source_date; }
+        std::string control_number() const { return m_control_number; }
         nitf_t* _root() const { return m__root; }
-        nitf_t* _parent() const { return m__parent; }
+        kaitai::kstruct* _parent() const { return m__parent; }
     };
 
-    class text_segment_t : public kaitai::kstruct {
+    class data_extension_segment_t : public kaitai::kstruct {
 
     public:
 
-        text_segment_t(uint16_t p_idx, kaitai::kstream* p__io, nitf_t* p__parent = 0, nitf_t* p__root = 0);
+        data_extension_segment_t(uint16_t p_idx, kaitai::kstream* p__io, nitf_t* p__parent = 0, nitf_t* p__root = 0);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~text_segment_t();
+        ~data_extension_segment_t();
 
     private:
-        std::string m_text_sub_header;
-        std::string m_text_data_field;
+        data_sub_header_t* m_data_sub_header;
+        std::string m_data_data_field;
         uint16_t m_idx;
         nitf_t* m__root;
         nitf_t* m__parent;
+        std::string m__raw_data_sub_header;
+        kaitai::kstream* m__io__raw_data_sub_header;
 
     public:
-        std::string text_sub_header() const { return m_text_sub_header; }
-        std::string text_data_field() const { return m_text_data_field; }
+        data_sub_header_t* data_sub_header() const { return m_data_sub_header; }
+        std::string data_data_field() const { return m_data_data_field; }
         uint16_t idx() const { return m_idx; }
         nitf_t* _root() const { return m__root; }
         nitf_t* _parent() const { return m__parent; }
+        std::string _raw_data_sub_header() const { return m__raw_data_sub_header; }
+        kaitai::kstream* _io__raw_data_sub_header() const { return m__io__raw_data_sub_header; }
+    };
+
+    class data_sub_header_t : public kaitai::kstruct {
+
+    public:
+
+        data_sub_header_t(kaitai::kstream* p__io, nitf_t::data_extension_segment_t* p__parent = 0, nitf_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~data_sub_header_t();
+
+    private:
+        bool f_tre_ofl;
+        bool m_tre_ofl;
+
+    public:
+        bool tre_ofl();
+
+    private:
+        data_sub_header_base_t* m_des_base;
+        std::string m_overflowed_header_type;
+        bool n_overflowed_header_type;
+
+    public:
+        bool _is_null_overflowed_header_type() { overflowed_header_type(); return n_overflowed_header_type; };
+
+    private:
+        std::string m_data_item_overflowed;
+        bool n_data_item_overflowed;
+
+    public:
+        bool _is_null_data_item_overflowed() { data_item_overflowed(); return n_data_item_overflowed; };
+
+    private:
+        std::string m_des_defined_subheader_fields_len;
+        std::string m_desshf;
+        std::string m_des_defined_data_field;
+        nitf_t* m__root;
+        nitf_t::data_extension_segment_t* m__parent;
+
+    public:
+        data_sub_header_base_t* des_base() const { return m_des_base; }
+        std::string overflowed_header_type() const { return m_overflowed_header_type; }
+        std::string data_item_overflowed() const { return m_data_item_overflowed; }
+        std::string des_defined_subheader_fields_len() const { return m_des_defined_subheader_fields_len; }
+        std::string desshf() const { return m_desshf; }
+        std::string des_defined_data_field() const { return m_des_defined_data_field; }
+        nitf_t* _root() const { return m__root; }
+        nitf_t::data_extension_segment_t* _parent() const { return m__parent; }
+    };
+
+    class data_sub_header_base_t : public kaitai::kstruct {
+
+    public:
+
+        data_sub_header_base_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, nitf_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~data_sub_header_base_t();
+
+    private:
+        std::string m_file_part_type_de;
+        std::string m_desid;
+        std::string m_data_definition_version;
+        clasnfo_t* m_declasnfo;
+        nitf_t* m__root;
+        kaitai::kstruct* m__parent;
+
+    public:
+
+        /**
+         * File Part Type desigantor for Data Extension
+         */
+        std::string file_part_type_de() const { return m_file_part_type_de; }
+        std::string desid() const { return m_desid; }
+        std::string data_definition_version() const { return m_data_definition_version; }
+        clasnfo_t* declasnfo() const { return m_declasnfo; }
+        nitf_t* _root() const { return m__root; }
+        kaitai::kstruct* _parent() const { return m__parent; }
+    };
+
+    /**
+     * Streaming file Header Data Extension Segment Subheader
+     */
+
+    class data_sub_header_streaming_t : public kaitai::kstruct {
+
+    public:
+
+        data_sub_header_streaming_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, nitf_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~data_sub_header_streaming_t();
+
+    private:
+        data_sub_header_base_t* m_des_base;
+        std::string m_des_defined_subheader_fields_len;
+        std::string m_sfh_l1;
+        uint32_t m_sfh_delim1;
+        std::vector<uint8_t>* m_sfh_dr;
+        uint32_t m_sfh_delim2;
+        std::string m_sfh_l2;
+        nitf_t* m__root;
+        kaitai::kstruct* m__parent;
+
+    public:
+        data_sub_header_base_t* des_base() const { return m_des_base; }
+        std::string des_defined_subheader_fields_len() const { return m_des_defined_subheader_fields_len; }
+
+        /**
+         * SFH Length 1: number of bytes in sfh_dr field
+         */
+        std::string sfh_l1() const { return m_sfh_l1; }
+
+        /**
+         * Shall contain the value 0x0A6E1D97.
+         */
+        uint32_t sfh_delim1() const { return m_sfh_delim1; }
+        std::vector<uint8_t>* sfh_dr() const { return m_sfh_dr; }
+
+        /**
+         * Shall contain the value 0x0ECA14BF.
+         */
+        uint32_t sfh_delim2() const { return m_sfh_delim2; }
+
+        /**
+         * A repeat of sfh_l1.
+         */
+        std::string sfh_l2() const { return m_sfh_l2; }
+        nitf_t* _root() const { return m__root; }
+        kaitai::kstruct* _parent() const { return m__parent; }
+    };
+
+    class data_sub_header_tre_t : public kaitai::kstruct {
+
+    public:
+
+        data_sub_header_tre_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, nitf_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~data_sub_header_tre_t();
+
+    private:
+        data_sub_header_base_t* m_des_base;
+        std::string m_overflowed_header_type;
+        bool n_overflowed_header_type;
+
+    public:
+        bool _is_null_overflowed_header_type() { overflowed_header_type(); return n_overflowed_header_type; };
+
+    private:
+        std::string m_data_item_overflowed;
+        bool n_data_item_overflowed;
+
+    public:
+        bool _is_null_data_item_overflowed() { data_item_overflowed(); return n_data_item_overflowed; };
+
+    private:
+        std::string m_des_defined_subheader_fields_len;
+        std::string m_des_defined_data_field;
+        nitf_t* m__root;
+        kaitai::kstruct* m__parent;
+
+    public:
+        data_sub_header_base_t* des_base() const { return m_des_base; }
+        std::string overflowed_header_type() const { return m_overflowed_header_type; }
+        std::string data_item_overflowed() const { return m_data_item_overflowed; }
+        std::string des_defined_subheader_fields_len() const { return m_des_defined_subheader_fields_len; }
+        std::string des_defined_data_field() const { return m_des_defined_data_field; }
+        nitf_t* _root() const { return m__root; }
+        kaitai::kstruct* _parent() const { return m__parent; }
+    };
+
+    class date_time_t : public kaitai::kstruct {
+
+    public:
+
+        date_time_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, nitf_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~date_time_t();
+
+    private:
+        std::string m__unnamed0;
+        nitf_t* m__root;
+        kaitai::kstruct* m__parent;
+
+    public:
+
+        /**
+         * UTC time of image acquisition in the format CCYYMMDDhhmmss: CC century, YY last two digits of the year, MM month, DD day, hh hour, mm minute, ss second
+         */
+        std::string _unnamed0() const { return m__unnamed0; }
+        nitf_t* _root() const { return m__root; }
+        kaitai::kstruct* _parent() const { return m__parent; }
+    };
+
+    class encrypt_t : public kaitai::kstruct {
+
+    public:
+
+        encrypt_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, nitf_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~encrypt_t();
+
+    private:
+        std::string m__unnamed0;
+        nitf_t* m__root;
+        kaitai::kstruct* m__parent;
+
+    public:
+        std::string _unnamed0() const { return m__unnamed0; }
+        nitf_t* _root() const { return m__root; }
+        kaitai::kstruct* _parent() const { return m__parent; }
     };
 
     class graphic_sub_header_t : public kaitai::kstruct {
@@ -378,108 +506,140 @@ public:
         nitf_t::graphics_segment_t* _parent() const { return m__parent; }
     };
 
-    class clasnfo_t : public kaitai::kstruct {
+    class graphics_segment_t : public kaitai::kstruct {
 
     public:
 
-        clasnfo_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, nitf_t* p__root = 0);
+        graphics_segment_t(uint16_t p_idx, kaitai::kstream* p__io, nitf_t* p__parent = 0, nitf_t* p__root = 0);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~clasnfo_t();
+        ~graphics_segment_t();
 
     private:
-        std::string m_security_class;
-        std::string m_security_system;
-        std::string m_codewords;
-        std::string m_control_and_handling;
-        std::string m_releaseability;
-        std::string m_declass_type;
-        std::string m_declass_date;
-        std::string m_declass_exemption;
-        std::string m_downgrade;
-        std::string m_downgrade_date;
-        std::string m_class_text;
-        std::string m_class_authority_type;
-        std::string m_class_authority;
-        std::string m_class_reason;
-        std::string m_source_date;
-        std::string m_control_number;
+        graphic_sub_header_t* m_graphic_sub_header;
+        std::string m_graphic_data_field;
+        uint16_t m_idx;
         nitf_t* m__root;
-        kaitai::kstruct* m__parent;
+        nitf_t* m__parent;
 
     public:
-        std::string security_class() const { return m_security_class; }
-        std::string security_system() const { return m_security_system; }
-        std::string codewords() const { return m_codewords; }
-        std::string control_and_handling() const { return m_control_and_handling; }
-        std::string releaseability() const { return m_releaseability; }
-        std::string declass_type() const { return m_declass_type; }
-        std::string declass_date() const { return m_declass_date; }
-        std::string declass_exemption() const { return m_declass_exemption; }
-        std::string downgrade() const { return m_downgrade; }
-        std::string downgrade_date() const { return m_downgrade_date; }
-        std::string class_text() const { return m_class_text; }
-        std::string class_authority_type() const { return m_class_authority_type; }
-        std::string class_authority() const { return m_class_authority; }
-        std::string class_reason() const { return m_class_reason; }
-        std::string source_date() const { return m_source_date; }
-        std::string control_number() const { return m_control_number; }
+        graphic_sub_header_t* graphic_sub_header() const { return m_graphic_sub_header; }
+        std::string graphic_data_field() const { return m_graphic_data_field; }
+        uint16_t idx() const { return m_idx; }
         nitf_t* _root() const { return m__root; }
-        kaitai::kstruct* _parent() const { return m__parent; }
+        nitf_t* _parent() const { return m__parent; }
     };
 
-    class length_graphic_info_t : public kaitai::kstruct {
+    class header_t : public kaitai::kstruct {
 
     public:
 
-        length_graphic_info_t(kaitai::kstream* p__io, nitf_t::header_t* p__parent = 0, nitf_t* p__root = 0);
+        header_t(kaitai::kstream* p__io, nitf_t* p__parent = 0, nitf_t* p__root = 0);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~length_graphic_info_t();
+        ~header_t();
 
     private:
-        std::string m_length_graphic_subheader;
-        std::string m_length_graphic_segment;
+        std::string m_file_profile_name;
+        std::string m_file_version;
+        std::string m_complexity_level;
+        std::string m_standard_type;
+        std::string m_originating_station_id;
+        date_time_t* m_file_date_time;
+        std::string m_file_title;
+        clasnfo_t* m_file_security;
+        std::string m_file_copy_number;
+        std::string m_file_num_of_copys;
+        encrypt_t* m_encryption;
+        std::string m_file_bg_color;
+        std::string m_originator_name;
+        std::string m_originator_phone;
+        std::string m_file_length;
+        std::string m_file_header_length;
+        std::string m_num_image_segments;
+        std::vector<length_image_info_t*>* m_linfo;
+        std::string m_num_graphics_segments;
+        std::vector<length_graphic_info_t*>* m_lnnfo;
+        std::string m_reserved_numx;
+        std::string m_num_text_files;
+        std::vector<length_text_info_t*>* m_ltnfo;
+        std::string m_num_data_extension;
+        std::vector<length_data_info_t*>* m_ldnfo;
+        std::string m_num_reserved_extension;
+        std::vector<length_reserved_info_t*>* m_lrnfo;
+        tre_header_t* m_user_defined_header;
+        tre_header_t* m_extended_header;
         nitf_t* m__root;
-        nitf_t::header_t* m__parent;
+        nitf_t* m__parent;
 
     public:
-        std::string length_graphic_subheader() const { return m_length_graphic_subheader; }
-        std::string length_graphic_segment() const { return m_length_graphic_segment; }
+        std::string file_profile_name() const { return m_file_profile_name; }
+        std::string file_version() const { return m_file_version; }
+        std::string complexity_level() const { return m_complexity_level; }
+
+        /**
+         * Value of BF01 indicates the file is formatted using ISO/IEC IS 12087-5.
+         */
+        std::string standard_type() const { return m_standard_type; }
+        std::string originating_station_id() const { return m_originating_station_id; }
+        date_time_t* file_date_time() const { return m_file_date_time; }
+        std::string file_title() const { return m_file_title; }
+        clasnfo_t* file_security() const { return m_file_security; }
+        std::string file_copy_number() const { return m_file_copy_number; }
+        std::string file_num_of_copys() const { return m_file_num_of_copys; }
+        encrypt_t* encryption() const { return m_encryption; }
+        std::string file_bg_color() const { return m_file_bg_color; }
+        std::string originator_name() const { return m_originator_name; }
+        std::string originator_phone() const { return m_originator_phone; }
+        std::string file_length() const { return m_file_length; }
+        std::string file_header_length() const { return m_file_header_length; }
+        std::string num_image_segments() const { return m_num_image_segments; }
+        std::vector<length_image_info_t*>* linfo() const { return m_linfo; }
+        std::string num_graphics_segments() const { return m_num_graphics_segments; }
+        std::vector<length_graphic_info_t*>* lnnfo() const { return m_lnnfo; }
+        std::string reserved_numx() const { return m_reserved_numx; }
+        std::string num_text_files() const { return m_num_text_files; }
+        std::vector<length_text_info_t*>* ltnfo() const { return m_ltnfo; }
+        std::string num_data_extension() const { return m_num_data_extension; }
+        std::vector<length_data_info_t*>* ldnfo() const { return m_ldnfo; }
+        std::string num_reserved_extension() const { return m_num_reserved_extension; }
+        std::vector<length_reserved_info_t*>* lrnfo() const { return m_lrnfo; }
+        tre_header_t* user_defined_header() const { return m_user_defined_header; }
+        tre_header_t* extended_header() const { return m_extended_header; }
         nitf_t* _root() const { return m__root; }
-        nitf_t::header_t* _parent() const { return m__parent; }
+        nitf_t* _parent() const { return m__parent; }
     };
 
-    class encrypt_t : public kaitai::kstruct {
+    class image_comment_t : public kaitai::kstruct {
 
     public:
 
-        encrypt_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, nitf_t* p__root = 0);
+        image_comment_t(kaitai::kstream* p__io, nitf_t::image_sub_header_t* p__parent = 0, nitf_t* p__root = 0);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~encrypt_t();
+        ~image_comment_t();
 
     private:
         std::string m__unnamed0;
         nitf_t* m__root;
-        kaitai::kstruct* m__parent;
+        nitf_t::image_sub_header_t* m__parent;
 
     public:
         std::string _unnamed0() const { return m__unnamed0; }
         nitf_t* _root() const { return m__root; }
-        kaitai::kstruct* _parent() const { return m__parent; }
+        nitf_t::image_sub_header_t* _parent() const { return m__parent; }
     };
 
     class image_data_mask_t : public kaitai::kstruct {
@@ -494,6 +654,20 @@ public:
 
     public:
         ~image_data_mask_t();
+
+    private:
+        bool f_bmrbnd_size;
+        int32_t m_bmrbnd_size;
+
+    public:
+        int32_t bmrbnd_size();
+
+    private:
+        bool f_bmrtmr_count;
+        int32_t m_bmrtmr_count;
+
+    public:
+        int32_t bmrtmr_count();
 
     private:
         bool f_has_bmr;
@@ -517,13 +691,6 @@ public:
         int32_t tmrbnd_size();
 
     private:
-        bool f_tpxcd_size;
-        int32_t m_tpxcd_size;
-
-    public:
-        int32_t tpxcd_size();
-
-    private:
         bool f_total_size;
         int32_t m_total_size;
 
@@ -531,18 +698,11 @@ public:
         int32_t total_size();
 
     private:
-        bool f_bmrbnd_size;
-        int32_t m_bmrbnd_size;
+        bool f_tpxcd_size;
+        int32_t m_tpxcd_size;
 
     public:
-        int32_t bmrbnd_size();
-
-    private:
-        bool f_bmrtmr_count;
-        int32_t m_bmrtmr_count;
-
-    public:
-        int32_t bmrtmr_count();
+        int32_t tpxcd_size();
 
     private:
         uint32_t m_blocked_img_data_offset;
@@ -603,161 +763,53 @@ public:
         nitf_t::image_segment_t* _parent() const { return m__parent; }
     };
 
-    class graphics_segment_t : public kaitai::kstruct {
+    class image_segment_t : public kaitai::kstruct {
 
     public:
 
-        graphics_segment_t(uint16_t p_idx, kaitai::kstream* p__io, nitf_t* p__parent = 0, nitf_t* p__root = 0);
+        image_segment_t(uint16_t p_idx, kaitai::kstream* p__io, nitf_t* p__parent = 0, nitf_t* p__root = 0);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~graphics_segment_t();
+        ~image_segment_t();
 
     private:
-        graphic_sub_header_t* m_graphic_sub_header;
-        std::string m_graphic_data_field;
+        bool f_has_mask;
+        bool m_has_mask;
+
+    public:
+        bool has_mask();
+
+    private:
+        image_sub_header_t* m_image_sub_header;
+        image_data_mask_t* m_image_data_mask;
+        bool n_image_data_mask;
+
+    public:
+        bool _is_null_image_data_mask() { image_data_mask(); return n_image_data_mask; };
+
+    private:
+        std::string m_image_data_field;
+        bool n_image_data_field;
+
+    public:
+        bool _is_null_image_data_field() { image_data_field(); return n_image_data_field; };
+
+    private:
         uint16_t m_idx;
         nitf_t* m__root;
         nitf_t* m__parent;
 
     public:
-        graphic_sub_header_t* graphic_sub_header() const { return m_graphic_sub_header; }
-        std::string graphic_data_field() const { return m_graphic_data_field; }
+        image_sub_header_t* image_sub_header() const { return m_image_sub_header; }
+        image_data_mask_t* image_data_mask() const { return m_image_data_mask; }
+        std::string image_data_field() const { return m_image_data_field; }
         uint16_t idx() const { return m_idx; }
         nitf_t* _root() const { return m__root; }
         nitf_t* _parent() const { return m__parent; }
-    };
-
-    class data_sub_header_t : public kaitai::kstruct {
-
-    public:
-
-        data_sub_header_t(kaitai::kstream* p__io, nitf_t::data_extension_segment_t* p__parent = 0, nitf_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~data_sub_header_t();
-
-    private:
-        bool f_tre_ofl;
-        bool m_tre_ofl;
-
-    public:
-        bool tre_ofl();
-
-    private:
-        data_sub_header_base_t* m_des_base;
-        std::string m_overflowed_header_type;
-        bool n_overflowed_header_type;
-
-    public:
-        bool _is_null_overflowed_header_type() { overflowed_header_type(); return n_overflowed_header_type; };
-
-    private:
-        std::string m_data_item_overflowed;
-        bool n_data_item_overflowed;
-
-    public:
-        bool _is_null_data_item_overflowed() { data_item_overflowed(); return n_data_item_overflowed; };
-
-    private:
-        std::string m_des_defined_subheader_fields_len;
-        std::string m_desshf;
-        std::string m_des_defined_data_field;
-        nitf_t* m__root;
-        nitf_t::data_extension_segment_t* m__parent;
-
-    public:
-        data_sub_header_base_t* des_base() const { return m_des_base; }
-        std::string overflowed_header_type() const { return m_overflowed_header_type; }
-        std::string data_item_overflowed() const { return m_data_item_overflowed; }
-        std::string des_defined_subheader_fields_len() const { return m_des_defined_subheader_fields_len; }
-        std::string desshf() const { return m_desshf; }
-        std::string des_defined_data_field() const { return m_des_defined_data_field; }
-        nitf_t* _root() const { return m__root; }
-        nitf_t::data_extension_segment_t* _parent() const { return m__parent; }
-    };
-
-    class data_extension_segment_t : public kaitai::kstruct {
-
-    public:
-
-        data_extension_segment_t(uint16_t p_idx, kaitai::kstream* p__io, nitf_t* p__parent = 0, nitf_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~data_extension_segment_t();
-
-    private:
-        data_sub_header_t* m_data_sub_header;
-        std::string m_data_data_field;
-        uint16_t m_idx;
-        nitf_t* m__root;
-        nitf_t* m__parent;
-        std::string m__raw_data_sub_header;
-        kaitai::kstream* m__io__raw_data_sub_header;
-
-    public:
-        data_sub_header_t* data_sub_header() const { return m_data_sub_header; }
-        std::string data_data_field() const { return m_data_data_field; }
-        uint16_t idx() const { return m_idx; }
-        nitf_t* _root() const { return m__root; }
-        nitf_t* _parent() const { return m__parent; }
-        std::string _raw_data_sub_header() const { return m__raw_data_sub_header; }
-        kaitai::kstream* _io__raw_data_sub_header() const { return m__io__raw_data_sub_header; }
-    };
-
-    class data_sub_header_tre_t : public kaitai::kstruct {
-
-    public:
-
-        data_sub_header_tre_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, nitf_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~data_sub_header_tre_t();
-
-    private:
-        data_sub_header_base_t* m_des_base;
-        std::string m_overflowed_header_type;
-        bool n_overflowed_header_type;
-
-    public:
-        bool _is_null_overflowed_header_type() { overflowed_header_type(); return n_overflowed_header_type; };
-
-    private:
-        std::string m_data_item_overflowed;
-        bool n_data_item_overflowed;
-
-    public:
-        bool _is_null_data_item_overflowed() { data_item_overflowed(); return n_data_item_overflowed; };
-
-    private:
-        std::string m_des_defined_subheader_fields_len;
-        std::string m_des_defined_data_field;
-        nitf_t* m__root;
-        kaitai::kstruct* m__parent;
-
-    public:
-        data_sub_header_base_t* des_base() const { return m_des_base; }
-        std::string overflowed_header_type() const { return m_overflowed_header_type; }
-        std::string data_item_overflowed() const { return m_data_item_overflowed; }
-        std::string des_defined_subheader_fields_len() const { return m_des_defined_subheader_fields_len; }
-        std::string des_defined_data_field() const { return m_des_defined_data_field; }
-        nitf_t* _root() const { return m__root; }
-        kaitai::kstruct* _parent() const { return m__parent; }
     };
 
     class image_sub_header_t : public kaitai::kstruct {
@@ -898,6 +950,168 @@ public:
         nitf_t::image_segment_t* _parent() const { return m__parent; }
     };
 
+    class length_data_info_t : public kaitai::kstruct {
+
+    public:
+
+        length_data_info_t(kaitai::kstream* p__io, nitf_t::header_t* p__parent = 0, nitf_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~length_data_info_t();
+
+    private:
+        std::string m_length_data_extension_subheader;
+        std::string m_length_data_extension_segment;
+        nitf_t* m__root;
+        nitf_t::header_t* m__parent;
+
+    public:
+        std::string length_data_extension_subheader() const { return m_length_data_extension_subheader; }
+        std::string length_data_extension_segment() const { return m_length_data_extension_segment; }
+        nitf_t* _root() const { return m__root; }
+        nitf_t::header_t* _parent() const { return m__parent; }
+    };
+
+    class length_graphic_info_t : public kaitai::kstruct {
+
+    public:
+
+        length_graphic_info_t(kaitai::kstream* p__io, nitf_t::header_t* p__parent = 0, nitf_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~length_graphic_info_t();
+
+    private:
+        std::string m_length_graphic_subheader;
+        std::string m_length_graphic_segment;
+        nitf_t* m__root;
+        nitf_t::header_t* m__parent;
+
+    public:
+        std::string length_graphic_subheader() const { return m_length_graphic_subheader; }
+        std::string length_graphic_segment() const { return m_length_graphic_segment; }
+        nitf_t* _root() const { return m__root; }
+        nitf_t::header_t* _parent() const { return m__parent; }
+    };
+
+    class length_image_info_t : public kaitai::kstruct {
+
+    public:
+
+        length_image_info_t(kaitai::kstream* p__io, nitf_t::header_t* p__parent = 0, nitf_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~length_image_info_t();
+
+    private:
+        std::string m_length_image_subheader;
+        std::string m_length_image_segment;
+        nitf_t* m__root;
+        nitf_t::header_t* m__parent;
+
+    public:
+        std::string length_image_subheader() const { return m_length_image_subheader; }
+        std::string length_image_segment() const { return m_length_image_segment; }
+        nitf_t* _root() const { return m__root; }
+        nitf_t::header_t* _parent() const { return m__parent; }
+    };
+
+    class length_reserved_info_t : public kaitai::kstruct {
+
+    public:
+
+        length_reserved_info_t(kaitai::kstream* p__io, nitf_t::header_t* p__parent = 0, nitf_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~length_reserved_info_t();
+
+    private:
+        std::string m_length_reserved_extension_subheader;
+        std::string m_length_reserved_extension_segment;
+        nitf_t* m__root;
+        nitf_t::header_t* m__parent;
+
+    public:
+        std::string length_reserved_extension_subheader() const { return m_length_reserved_extension_subheader; }
+        std::string length_reserved_extension_segment() const { return m_length_reserved_extension_segment; }
+        nitf_t* _root() const { return m__root; }
+        nitf_t::header_t* _parent() const { return m__parent; }
+    };
+
+    class length_text_info_t : public kaitai::kstruct {
+
+    public:
+
+        length_text_info_t(kaitai::kstream* p__io, nitf_t::header_t* p__parent = 0, nitf_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~length_text_info_t();
+
+    private:
+        std::string m_length_text_subheader;
+        std::string m_length_text_segment;
+        nitf_t* m__root;
+        nitf_t::header_t* m__parent;
+
+    public:
+        std::string length_text_subheader() const { return m_length_text_subheader; }
+        std::string length_text_segment() const { return m_length_text_segment; }
+        nitf_t* _root() const { return m__root; }
+        nitf_t::header_t* _parent() const { return m__parent; }
+    };
+
+    class reserved_extension_segment_t : public kaitai::kstruct {
+
+    public:
+
+        reserved_extension_segment_t(uint16_t p_idx, kaitai::kstream* p__io, nitf_t* p__parent = 0, nitf_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~reserved_extension_segment_t();
+
+    private:
+        reserved_sub_header_t* m_reserved_sub_header;
+        std::string m_reserved_data_field;
+        uint16_t m_idx;
+        nitf_t* m__root;
+        nitf_t* m__parent;
+        std::string m__raw_reserved_sub_header;
+        kaitai::kstream* m__io__raw_reserved_sub_header;
+
+    public:
+        reserved_sub_header_t* reserved_sub_header() const { return m_reserved_sub_header; }
+        std::string reserved_data_field() const { return m_reserved_data_field; }
+        uint16_t idx() const { return m_idx; }
+        nitf_t* _root() const { return m__root; }
+        nitf_t* _parent() const { return m__parent; }
+        std::string _raw_reserved_sub_header() const { return m__raw_reserved_sub_header; }
+        kaitai::kstream* _io__raw_reserved_sub_header() const { return m__io__raw_reserved_sub_header; }
+    };
+
     class reserved_sub_header_t : public kaitai::kstruct {
 
     public:
@@ -934,38 +1148,32 @@ public:
         nitf_t::reserved_extension_segment_t* _parent() const { return m__parent; }
     };
 
-    class data_sub_header_base_t : public kaitai::kstruct {
+    class text_segment_t : public kaitai::kstruct {
 
     public:
 
-        data_sub_header_base_t(kaitai::kstream* p__io, nitf_t::data_sub_header_t* p__parent = 0, nitf_t* p__root = 0);
+        text_segment_t(uint16_t p_idx, kaitai::kstream* p__io, nitf_t* p__parent = 0, nitf_t* p__root = 0);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~data_sub_header_base_t();
+        ~text_segment_t();
 
     private:
-        std::string m_file_part_type_de;
-        std::string m_desid;
-        std::string m_data_definition_version;
-        clasnfo_t* m_declasnfo;
+        std::string m_text_sub_header;
+        std::string m_text_data_field;
+        uint16_t m_idx;
         nitf_t* m__root;
-        nitf_t::data_sub_header_t* m__parent;
+        nitf_t* m__parent;
 
     public:
-
-        /**
-         * File Part Type desigantor for Data Extension
-         */
-        std::string file_part_type_de() const { return m_file_part_type_de; }
-        std::string desid() const { return m_desid; }
-        std::string data_definition_version() const { return m_data_definition_version; }
-        clasnfo_t* declasnfo() const { return m_declasnfo; }
+        std::string text_sub_header() const { return m_text_sub_header; }
+        std::string text_data_field() const { return m_text_data_field; }
+        uint16_t idx() const { return m_idx; }
         nitf_t* _root() const { return m__root; }
-        nitf_t::data_sub_header_t* _parent() const { return m__parent; }
+        nitf_t* _parent() const { return m__parent; }
     };
 
     class text_sub_header_t : public kaitai::kstruct {
@@ -1006,170 +1214,42 @@ public:
         kaitai::kstruct* _parent() const { return m__parent; }
     };
 
-    class date_time_t : public kaitai::kstruct {
+    class tre_t : public kaitai::kstruct {
 
     public:
 
-        date_time_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, nitf_t* p__root = 0);
+        tre_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, nitf_t* p__root = 0);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~date_time_t();
+        ~tre_t();
 
     private:
-        std::string m__unnamed0;
+        std::string m_extension_type_id;
+        std::string m_edata_length;
+        std::string m_edata;
         nitf_t* m__root;
         kaitai::kstruct* m__parent;
 
     public:
 
         /**
-         * UTC time of image acquisition in the format CCYYMMDDhhmmss: CC century, YY last two digits of the year, MM month, DD day, hh hour, mm minute, ss second
+         * RETAG or CETAG
          */
-        std::string _unnamed0() const { return m__unnamed0; }
-        nitf_t* _root() const { return m__root; }
-        kaitai::kstruct* _parent() const { return m__parent; }
-    };
-
-    class header_t : public kaitai::kstruct {
-
-    public:
-
-        header_t(kaitai::kstream* p__io, nitf_t* p__parent = 0, nitf_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~header_t();
-
-    private:
-        std::string m_file_profile_name;
-        std::string m_file_version;
-        std::string m_complexity_level;
-        std::string m_standard_type;
-        std::string m_originating_station_id;
-        date_time_t* m_file_date_time;
-        std::string m_file_title;
-        clasnfo_t* m_file_security;
-        std::string m_file_copy_number;
-        std::string m_file_num_of_copys;
-        encrypt_t* m_encryption;
-        std::string m_file_bg_color;
-        std::string m_originator_name;
-        std::string m_originator_phone;
-        std::string m_file_length;
-        std::string m_file_header_length;
-        std::string m_num_image_segments;
-        std::vector<length_image_info_t*>* m_linfo;
-        std::string m_num_graphics_segments;
-        std::vector<length_graphic_info_t*>* m_lnnfo;
-        std::string m_reserved_numx;
-        std::string m_num_text_files;
-        std::vector<length_text_info_t*>* m_ltnfo;
-        std::string m_num_data_extension;
-        std::vector<length_data_info_t*>* m_ldnfo;
-        std::string m_num_reserved_extension;
-        std::vector<length_reserved_info_t*>* m_lrnfo;
-        tre_header_t* m_user_defined_header;
-        tre_header_t* m_extended_header;
-        nitf_t* m__root;
-        nitf_t* m__parent;
-
-    public:
-        std::string file_profile_name() const { return m_file_profile_name; }
-        std::string file_version() const { return m_file_version; }
-        std::string complexity_level() const { return m_complexity_level; }
+        std::string extension_type_id() const { return m_extension_type_id; }
 
         /**
-         * Value of BF01 indicates the file is formatted using ISO/IEC IS 12087-5.
+         * REL or CEL
          */
-        std::string standard_type() const { return m_standard_type; }
-        std::string originating_station_id() const { return m_originating_station_id; }
-        date_time_t* file_date_time() const { return m_file_date_time; }
-        std::string file_title() const { return m_file_title; }
-        clasnfo_t* file_security() const { return m_file_security; }
-        std::string file_copy_number() const { return m_file_copy_number; }
-        std::string file_num_of_copys() const { return m_file_num_of_copys; }
-        encrypt_t* encryption() const { return m_encryption; }
-        std::string file_bg_color() const { return m_file_bg_color; }
-        std::string originator_name() const { return m_originator_name; }
-        std::string originator_phone() const { return m_originator_phone; }
-        std::string file_length() const { return m_file_length; }
-        std::string file_header_length() const { return m_file_header_length; }
-        std::string num_image_segments() const { return m_num_image_segments; }
-        std::vector<length_image_info_t*>* linfo() const { return m_linfo; }
-        std::string num_graphics_segments() const { return m_num_graphics_segments; }
-        std::vector<length_graphic_info_t*>* lnnfo() const { return m_lnnfo; }
-        std::string reserved_numx() const { return m_reserved_numx; }
-        std::string num_text_files() const { return m_num_text_files; }
-        std::vector<length_text_info_t*>* ltnfo() const { return m_ltnfo; }
-        std::string num_data_extension() const { return m_num_data_extension; }
-        std::vector<length_data_info_t*>* ldnfo() const { return m_ldnfo; }
-        std::string num_reserved_extension() const { return m_num_reserved_extension; }
-        std::vector<length_reserved_info_t*>* lrnfo() const { return m_lrnfo; }
-        tre_header_t* user_defined_header() const { return m_user_defined_header; }
-        tre_header_t* extended_header() const { return m_extended_header; }
-        nitf_t* _root() const { return m__root; }
-        nitf_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * Streaming file Header Data Extension Segment Subheader
-     */
-
-    class data_sub_header_streaming_t : public kaitai::kstruct {
-
-    public:
-
-        data_sub_header_streaming_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, nitf_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~data_sub_header_streaming_t();
-
-    private:
-        data_sub_header_base_t* m_des_base;
-        std::string m_des_defined_subheader_fields_len;
-        std::string m_sfh_l1;
-        uint32_t m_sfh_delim1;
-        std::vector<uint8_t>* m_sfh_dr;
-        uint32_t m_sfh_delim2;
-        std::string m_sfh_l2;
-        nitf_t* m__root;
-        kaitai::kstruct* m__parent;
-
-    public:
-        data_sub_header_base_t* des_base() const { return m_des_base; }
-        std::string des_defined_subheader_fields_len() const { return m_des_defined_subheader_fields_len; }
+        std::string edata_length() const { return m_edata_length; }
 
         /**
-         * SFH Length 1: number of bytes in sfh_dr field
+         * REDATA or CEDATA
          */
-        std::string sfh_l1() const { return m_sfh_l1; }
-
-        /**
-         * Shall contain the value 0x0A6E1D97.
-         */
-        uint32_t sfh_delim1() const { return m_sfh_delim1; }
-        std::vector<uint8_t>* sfh_dr() const { return m_sfh_dr; }
-
-        /**
-         * Shall contain the value 0x0ECA14BF.
-         */
-        uint32_t sfh_delim2() const { return m_sfh_delim2; }
-
-        /**
-         * A repeat of sfh_l1.
-         */
-        std::string sfh_l2() const { return m_sfh_l2; }
+        std::string edata() const { return m_edata; }
         nitf_t* _root() const { return m__root; }
         kaitai::kstruct* _parent() const { return m__parent; }
     };
@@ -1212,84 +1292,6 @@ public:
         std::vector<uint8_t>* header_data() const { return m_header_data; }
         nitf_t* _root() const { return m__root; }
         kaitai::kstruct* _parent() const { return m__parent; }
-    };
-
-    class length_image_info_t : public kaitai::kstruct {
-
-    public:
-
-        length_image_info_t(kaitai::kstream* p__io, nitf_t::header_t* p__parent = 0, nitf_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~length_image_info_t();
-
-    private:
-        std::string m_length_image_subheader;
-        std::string m_length_image_segment;
-        nitf_t* m__root;
-        nitf_t::header_t* m__parent;
-
-    public:
-        std::string length_image_subheader() const { return m_length_image_subheader; }
-        std::string length_image_segment() const { return m_length_image_segment; }
-        nitf_t* _root() const { return m__root; }
-        nitf_t::header_t* _parent() const { return m__parent; }
-    };
-
-    class length_data_info_t : public kaitai::kstruct {
-
-    public:
-
-        length_data_info_t(kaitai::kstream* p__io, nitf_t::header_t* p__parent = 0, nitf_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~length_data_info_t();
-
-    private:
-        std::string m_length_data_extension_subheader;
-        std::string m_length_data_extension_segment;
-        nitf_t* m__root;
-        nitf_t::header_t* m__parent;
-
-    public:
-        std::string length_data_extension_subheader() const { return m_length_data_extension_subheader; }
-        std::string length_data_extension_segment() const { return m_length_data_extension_segment; }
-        nitf_t* _root() const { return m__root; }
-        nitf_t::header_t* _parent() const { return m__parent; }
-    };
-
-    class length_text_info_t : public kaitai::kstruct {
-
-    public:
-
-        length_text_info_t(kaitai::kstream* p__io, nitf_t::header_t* p__parent = 0, nitf_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~length_text_info_t();
-
-    private:
-        std::string m_length_text_subheader;
-        std::string m_length_text_segment;
-        nitf_t* m__root;
-        nitf_t::header_t* m__parent;
-
-    public:
-        std::string length_text_subheader() const { return m_length_text_subheader; }
-        std::string length_text_segment() const { return m_length_text_segment; }
-        nitf_t* _root() const { return m__root; }
-        nitf_t::header_t* _parent() const { return m__parent; }
     };
 
 private:

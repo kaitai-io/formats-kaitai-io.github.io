@@ -1,11 +1,12 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class ApmPartitionTable(KaitaiStruct):
     """
@@ -13,19 +14,36 @@ class ApmPartitionTable(KaitaiStruct):
        Source - https://en.wikipedia.org/wiki/Apple_Partition_Map
     """
     def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
+        super(ApmPartitionTable, self).__init__(_io)
         self._parent = _parent
-        self._root = _root if _root else self
+        self._root = _root or self
         self._read()
 
     def _read(self):
         pass
 
+
+    def _fetch_instances(self):
+        pass
+        _ = self.partition_entries
+        if hasattr(self, '_m_partition_entries'):
+            pass
+            for i in range(len(self._m_partition_entries)):
+                pass
+                self._m_partition_entries[i]._fetch_instances()
+
+
+        _ = self.partition_lookup
+        if hasattr(self, '_m_partition_lookup'):
+            pass
+            self._m_partition_lookup._fetch_instances()
+
+
     class PartitionEntry(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(ApmPartitionTable.PartitionEntry, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -36,8 +54,8 @@ class ApmPartitionTable(KaitaiStruct):
             self.number_of_partitions = self._io.read_u4be()
             self.partition_start = self._io.read_u4be()
             self.partition_size = self._io.read_u4be()
-            self.partition_name = (KaitaiStream.bytes_terminate(self._io.read_bytes(32), 0, False)).decode(u"ascii")
-            self.partition_type = (KaitaiStream.bytes_terminate(self._io.read_bytes(32), 0, False)).decode(u"ascii")
+            self.partition_name = (KaitaiStream.bytes_terminate(self._io.read_bytes(32), 0, False)).decode(u"ASCII")
+            self.partition_type = (KaitaiStream.bytes_terminate(self._io.read_bytes(32), 0, False)).decode(u"ASCII")
             self.data_start = self._io.read_u4be()
             self.data_size = self._io.read_u4be()
             self.partition_status = self._io.read_u4be()
@@ -48,33 +66,23 @@ class ApmPartitionTable(KaitaiStruct):
             self.boot_code_entry = self._io.read_u4be()
             self.reserved_3 = self._io.read_bytes(4)
             self.boot_code_cksum = self._io.read_u4be()
-            self.processor_type = (KaitaiStream.bytes_terminate(self._io.read_bytes(16), 0, False)).decode(u"ascii")
+            self.processor_type = (KaitaiStream.bytes_terminate(self._io.read_bytes(16), 0, False)).decode(u"ASCII")
 
-        @property
-        def partition(self):
-            if hasattr(self, '_m_partition'):
-                return self._m_partition
 
-            if (self.partition_status & 1) != 0:
-                io = self._root._io
-                _pos = io.pos()
-                io.seek((self.partition_start * self._root.sector_size))
-                self._m_partition = io.read_bytes((self.partition_size * self._root.sector_size))
-                io.seek(_pos)
+        def _fetch_instances(self):
+            pass
+            _ = self.boot_code
+            if hasattr(self, '_m_boot_code'):
+                pass
 
-            return getattr(self, '_m_partition', None)
-
-        @property
-        def data(self):
+            _ = self.data
             if hasattr(self, '_m_data'):
-                return self._m_data
+                pass
 
-            io = self._root._io
-            _pos = io.pos()
-            io.seek((self.data_start * self._root.sector_size))
-            self._m_data = io.read_bytes((self.data_size * self._root.sector_size))
-            io.seek(_pos)
-            return getattr(self, '_m_data', None)
+            _ = self.partition
+            if hasattr(self, '_m_partition'):
+                pass
+
 
         @property
         def boot_code(self):
@@ -83,22 +91,56 @@ class ApmPartitionTable(KaitaiStruct):
 
             io = self._root._io
             _pos = io.pos()
-            io.seek((self.boot_code_start * self._root.sector_size))
+            io.seek(self.boot_code_start * self._root.sector_size)
             self._m_boot_code = io.read_bytes(self.boot_code_size)
             io.seek(_pos)
             return getattr(self, '_m_boot_code', None)
 
+        @property
+        def data(self):
+            if hasattr(self, '_m_data'):
+                return self._m_data
+
+            io = self._root._io
+            _pos = io.pos()
+            io.seek(self.data_start * self._root.sector_size)
+            self._m_data = io.read_bytes(self.data_size * self._root.sector_size)
+            io.seek(_pos)
+            return getattr(self, '_m_data', None)
+
+        @property
+        def partition(self):
+            if hasattr(self, '_m_partition'):
+                return self._m_partition
+
+            if self.partition_status & 1 != 0:
+                pass
+                io = self._root._io
+                _pos = io.pos()
+                io.seek(self.partition_start * self._root.sector_size)
+                self._m_partition = io.read_bytes(self.partition_size * self._root.sector_size)
+                io.seek(_pos)
+
+            return getattr(self, '_m_partition', None)
+
 
     @property
-    def sector_size(self):
-        """0x200 (512) bytes for disks, 0x1000 (4096) bytes is not supported by APM
-        0x800 (2048) bytes for CDROM
-        """
-        if hasattr(self, '_m_sector_size'):
-            return self._m_sector_size
+    def partition_entries(self):
+        if hasattr(self, '_m_partition_entries'):
+            return self._m_partition_entries
 
-        self._m_sector_size = 512
-        return getattr(self, '_m_sector_size', None)
+        io = self._root._io
+        _pos = io.pos()
+        io.seek(self._root.sector_size)
+        self._raw__m_partition_entries = []
+        self._m_partition_entries = []
+        for i in range(self._root.partition_lookup.number_of_partitions):
+            self._raw__m_partition_entries.append(io.read_bytes(self.sector_size))
+            _io__raw__m_partition_entries = KaitaiStream(BytesIO(self._raw__m_partition_entries[i]))
+            self._m_partition_entries.append(ApmPartitionTable.PartitionEntry(_io__raw__m_partition_entries, self, self._root))
+
+        io.seek(_pos)
+        return getattr(self, '_m_partition_entries', None)
 
     @property
     def partition_lookup(self):
@@ -119,21 +161,14 @@ class ApmPartitionTable(KaitaiStruct):
         return getattr(self, '_m_partition_lookup', None)
 
     @property
-    def partition_entries(self):
-        if hasattr(self, '_m_partition_entries'):
-            return self._m_partition_entries
+    def sector_size(self):
+        """0x200 (512) bytes for disks, 0x1000 (4096) bytes is not supported by APM
+        0x800 (2048) bytes for CDROM
+        """
+        if hasattr(self, '_m_sector_size'):
+            return self._m_sector_size
 
-        io = self._root._io
-        _pos = io.pos()
-        io.seek(self._root.sector_size)
-        self._raw__m_partition_entries = []
-        self._m_partition_entries = []
-        for i in range(self._root.partition_lookup.number_of_partitions):
-            self._raw__m_partition_entries.append(io.read_bytes(self.sector_size))
-            _io__raw__m_partition_entries = KaitaiStream(BytesIO(self._raw__m_partition_entries[i]))
-            self._m_partition_entries.append(ApmPartitionTable.PartitionEntry(_io__raw__m_partition_entries, self, self._root))
-
-        io.seek(_pos)
-        return getattr(self, '_m_partition_entries', None)
+        self._m_sector_size = 512
+        return getattr(self, '_m_sector_size', None)
 
 

@@ -44,9 +44,9 @@ namespace Kaitai
             _bitsPerDigit = p_bitsPerDigit;
             _isLe = p_isLe;
             f_asInt = false;
+            f_asIntBe = false;
             f_asIntLe = false;
             f_lastIdx = false;
-            f_asIntBe = false;
             _read();
         }
         private void _read()
@@ -78,9 +78,26 @@ namespace Kaitai
             {
                 if (f_asInt)
                     return _asInt;
-                _asInt = (int) ((IsLe ? AsIntLe : AsIntBe));
                 f_asInt = true;
+                _asInt = (int) ((IsLe ? AsIntLe : AsIntBe));
                 return _asInt;
+            }
+        }
+        private bool f_asIntBe;
+        private int _asIntBe;
+
+        /// <summary>
+        /// Value of this BCD number as integer (treating digit order as big-endian).
+        /// </summary>
+        public int AsIntBe
+        {
+            get
+            {
+                if (f_asIntBe)
+                    return _asIntBe;
+                f_asIntBe = true;
+                _asIntBe = (int) (Digits[LastIdx] + (NumDigits < 2 ? 0 : Digits[LastIdx - 1] * 10 + (NumDigits < 3 ? 0 : Digits[LastIdx - 2] * 100 + (NumDigits < 4 ? 0 : Digits[LastIdx - 3] * 1000 + (NumDigits < 5 ? 0 : Digits[LastIdx - 4] * 10000 + (NumDigits < 6 ? 0 : Digits[LastIdx - 5] * 100000 + (NumDigits < 7 ? 0 : Digits[LastIdx - 6] * 1000000 + (NumDigits < 8 ? 0 : Digits[LastIdx - 7] * 10000000))))))));
+                return _asIntBe;
             }
         }
         private bool f_asIntLe;
@@ -95,8 +112,8 @@ namespace Kaitai
             {
                 if (f_asIntLe)
                     return _asIntLe;
-                _asIntLe = (int) ((Digits[0] + (NumDigits < 2 ? 0 : ((Digits[1] * 10) + (NumDigits < 3 ? 0 : ((Digits[2] * 100) + (NumDigits < 4 ? 0 : ((Digits[3] * 1000) + (NumDigits < 5 ? 0 : ((Digits[4] * 10000) + (NumDigits < 6 ? 0 : ((Digits[5] * 100000) + (NumDigits < 7 ? 0 : ((Digits[6] * 1000000) + (NumDigits < 8 ? 0 : (Digits[7] * 10000000))))))))))))))));
                 f_asIntLe = true;
+                _asIntLe = (int) (Digits[0] + (NumDigits < 2 ? 0 : Digits[1] * 10 + (NumDigits < 3 ? 0 : Digits[2] * 100 + (NumDigits < 4 ? 0 : Digits[3] * 1000 + (NumDigits < 5 ? 0 : Digits[4] * 10000 + (NumDigits < 6 ? 0 : Digits[5] * 100000 + (NumDigits < 7 ? 0 : Digits[6] * 1000000 + (NumDigits < 8 ? 0 : Digits[7] * 10000000))))))));
                 return _asIntLe;
             }
         }
@@ -112,26 +129,9 @@ namespace Kaitai
             {
                 if (f_lastIdx)
                     return _lastIdx;
-                _lastIdx = (int) ((NumDigits - 1));
                 f_lastIdx = true;
+                _lastIdx = (int) (NumDigits - 1);
                 return _lastIdx;
-            }
-        }
-        private bool f_asIntBe;
-        private int _asIntBe;
-
-        /// <summary>
-        /// Value of this BCD number as integer (treating digit order as big-endian).
-        /// </summary>
-        public int AsIntBe
-        {
-            get
-            {
-                if (f_asIntBe)
-                    return _asIntBe;
-                _asIntBe = (int) ((Digits[LastIdx] + (NumDigits < 2 ? 0 : ((Digits[(LastIdx - 1)] * 10) + (NumDigits < 3 ? 0 : ((Digits[(LastIdx - 2)] * 100) + (NumDigits < 4 ? 0 : ((Digits[(LastIdx - 3)] * 1000) + (NumDigits < 5 ? 0 : ((Digits[(LastIdx - 4)] * 10000) + (NumDigits < 6 ? 0 : ((Digits[(LastIdx - 5)] * 100000) + (NumDigits < 7 ? 0 : ((Digits[(LastIdx - 6)] * 1000000) + (NumDigits < 8 ? 0 : (Digits[(LastIdx - 7)] * 10000000))))))))))))))));
-                f_asIntBe = true;
-                return _asIntBe;
             }
         }
         private List<int> _digits;

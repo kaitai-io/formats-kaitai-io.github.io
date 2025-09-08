@@ -52,7 +52,7 @@ BitcoinTransaction.Vin = class.class(KaitaiStruct)
 function BitcoinTransaction.Vin:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -65,7 +65,7 @@ function BitcoinTransaction.Vin:_read()
   self.script_sig = BitcoinTransaction.Vin.ScriptSignature(_io, self, self._root)
   self.end_of_vin = self._io:read_bytes(4)
   if not(self.end_of_vin == "\255\255\255\255") then
-    error("not equal, expected " ..  "\255\255\255\255" .. ", but got " .. self.end_of_vin)
+    error("not equal, expected " .. "\255\255\255\255" .. ", but got " .. self.end_of_vin)
   end
 end
 
@@ -96,7 +96,7 @@ BitcoinTransaction.Vin.ScriptSignature.SighashType = enum.Enum {
 function BitcoinTransaction.Vin.ScriptSignature:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -123,25 +123,25 @@ BitcoinTransaction.Vin.ScriptSignature.DerSignature = class.class(KaitaiStruct)
 function BitcoinTransaction.Vin.ScriptSignature.DerSignature:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function BitcoinTransaction.Vin.ScriptSignature.DerSignature:_read()
   self.sequence = self._io:read_bytes(1)
   if not(self.sequence == "\048") then
-    error("not equal, expected " ..  "\048" .. ", but got " .. self.sequence)
+    error("not equal, expected " .. "\048" .. ", but got " .. self.sequence)
   end
   self.len_sig = self._io:read_u1()
   self.sep_1 = self._io:read_bytes(1)
   if not(self.sep_1 == "\002") then
-    error("not equal, expected " ..  "\002" .. ", but got " .. self.sep_1)
+    error("not equal, expected " .. "\002" .. ", but got " .. self.sep_1)
   end
   self.len_sig_r = self._io:read_u1()
   self.sig_r = self._io:read_bytes(self.len_sig_r)
   self.sep_2 = self._io:read_bytes(1)
   if not(self.sep_2 == "\002") then
-    error("not equal, expected " ..  "\002" .. ", but got " .. self.sep_2)
+    error("not equal, expected " .. "\002" .. ", but got " .. self.sep_2)
   end
   self.len_sig_s = self._io:read_u1()
   self.sig_s = self._io:read_bytes(self.len_sig_s)
@@ -163,7 +163,7 @@ BitcoinTransaction.Vin.ScriptSignature.PublicKey = class.class(KaitaiStruct)
 function BitcoinTransaction.Vin.ScriptSignature.PublicKey:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -183,7 +183,7 @@ BitcoinTransaction.Vout = class.class(KaitaiStruct)
 function BitcoinTransaction.Vout:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 

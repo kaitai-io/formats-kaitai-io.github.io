@@ -4,14 +4,14 @@
 
 local class = require("class")
 require("kaitaistruct")
+require("ipv6_packet")
+require("udp_datagram")
+require("icmp_packet")
+require("tcp_segment")
+require("ipv4_packet")
 local enum = require("enum")
 local utils = require("utils")
 
-require("udp_datagram")
-require("ipv4_packet")
-require("icmp_packet")
-require("ipv6_packet")
-require("tcp_segment")
 -- 
 -- Protocol body represents particular payload on transport level (OSI
 -- layer 4).
@@ -185,20 +185,20 @@ end
 
 function ProtocolBody:_read()
   local _on = self.protocol
-  if _on == ProtocolBody.ProtocolEnum.ipv6_nonxt then
-    self.body = ProtocolBody.NoNextHeader(self._io, self, self._root)
-  elseif _on == ProtocolBody.ProtocolEnum.ipv4 then
-    self.body = Ipv4Packet(self._io)
-  elseif _on == ProtocolBody.ProtocolEnum.udp then
-    self.body = UdpDatagram(self._io)
+  if _on == ProtocolBody.ProtocolEnum.hopopt then
+    self.body = ProtocolBody.OptionHopByHop(self._io, self, self._root)
   elseif _on == ProtocolBody.ProtocolEnum.icmp then
     self.body = IcmpPacket(self._io)
-  elseif _on == ProtocolBody.ProtocolEnum.hopopt then
-    self.body = ProtocolBody.OptionHopByHop(self._io, self, self._root)
+  elseif _on == ProtocolBody.ProtocolEnum.ipv4 then
+    self.body = Ipv4Packet(self._io)
   elseif _on == ProtocolBody.ProtocolEnum.ipv6 then
     self.body = Ipv6Packet(self._io)
+  elseif _on == ProtocolBody.ProtocolEnum.ipv6_nonxt then
+    self.body = ProtocolBody.NoNextHeader(self._io, self, self._root)
   elseif _on == ProtocolBody.ProtocolEnum.tcp then
     self.body = TcpSegment(self._io)
+  elseif _on == ProtocolBody.ProtocolEnum.udp then
+    self.body = UdpDatagram(self._io)
   end
 end
 
@@ -222,7 +222,7 @@ ProtocolBody.NoNextHeader = class.class(KaitaiStruct)
 function ProtocolBody.NoNextHeader:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -235,15 +235,15 @@ ProtocolBody.OptionHopByHop = class.class(KaitaiStruct)
 function ProtocolBody.OptionHopByHop:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function ProtocolBody.OptionHopByHop:_read()
   self.next_header_type = self._io:read_u1()
   self.hdr_ext_len = self._io:read_u1()
-  self.body = self._io:read_bytes(utils.box_unwrap((self.hdr_ext_len > 0) and utils.box_wrap((self.hdr_ext_len - 1)) or (1)))
-  self.next_header = ProtocolBody(self.next_header_type, self._io)
+  self.body = self._io:read_bytes(utils.box_unwrap((self.hdr_ext_len > 0) and utils.box_wrap(self.hdr_ext_len - 1) or (1)))
+  self.next_header = ProtocolBody(self.next_header_type, self._io, self, self._root)
 end
 
 

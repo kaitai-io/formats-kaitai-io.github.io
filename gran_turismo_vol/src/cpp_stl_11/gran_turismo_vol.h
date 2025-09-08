@@ -2,13 +2,15 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class gran_turismo_vol_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 class gran_turismo_vol_t : public kaitai::kstruct {
@@ -39,13 +41,6 @@ public:
         ~file_info_t();
 
     private:
-        bool f_size;
-        int32_t m_size;
-
-    public:
-        int32_t size();
-
-    private:
         bool f_body;
         std::string m_body;
         bool n_body;
@@ -73,6 +68,13 @@ public:
         bool is_last_entry();
 
     private:
+        bool f_size;
+        int32_t m_size;
+
+    public:
+        int32_t size();
+
+    private:
         uint32_t m_timestamp;
         uint16_t m_offset_idx;
         uint8_t m_flags;
@@ -90,18 +92,18 @@ public:
     };
 
 private:
-    bool f_ofs_dir;
-    uint32_t m_ofs_dir;
-
-public:
-    uint32_t ofs_dir();
-
-private:
     bool f_files;
     std::unique_ptr<std::vector<std::unique_ptr<file_info_t>>> m_files;
 
 public:
     std::vector<std::unique_ptr<file_info_t>>* files();
+
+private:
+    bool f_ofs_dir;
+    uint32_t m_ofs_dir;
+
+public:
+    uint32_t ofs_dir();
 
 private:
     std::string m_magic;

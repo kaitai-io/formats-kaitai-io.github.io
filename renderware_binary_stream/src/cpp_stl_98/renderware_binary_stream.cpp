@@ -2,10 +2,185 @@
 
 #include "renderware_binary_stream.h"
 #include "kaitai/exceptions.h"
+std::set<renderware_binary_stream_t::sections_t> renderware_binary_stream_t::_build_values_sections_t() {
+    std::set<renderware_binary_stream_t::sections_t> _t;
+    _t.insert(renderware_binary_stream_t::SECTIONS_STRUCT);
+    _t.insert(renderware_binary_stream_t::SECTIONS_STRING);
+    _t.insert(renderware_binary_stream_t::SECTIONS_EXTENSION);
+    _t.insert(renderware_binary_stream_t::SECTIONS_CAMERA);
+    _t.insert(renderware_binary_stream_t::SECTIONS_TEXTURE);
+    _t.insert(renderware_binary_stream_t::SECTIONS_MATERIAL);
+    _t.insert(renderware_binary_stream_t::SECTIONS_MATERIAL_LIST);
+    _t.insert(renderware_binary_stream_t::SECTIONS_ATOMIC_SECTION);
+    _t.insert(renderware_binary_stream_t::SECTIONS_PLANE_SECTION);
+    _t.insert(renderware_binary_stream_t::SECTIONS_WORLD);
+    _t.insert(renderware_binary_stream_t::SECTIONS_SPLINE);
+    _t.insert(renderware_binary_stream_t::SECTIONS_MATRIX);
+    _t.insert(renderware_binary_stream_t::SECTIONS_FRAME_LIST);
+    _t.insert(renderware_binary_stream_t::SECTIONS_GEOMETRY);
+    _t.insert(renderware_binary_stream_t::SECTIONS_CLUMP);
+    _t.insert(renderware_binary_stream_t::SECTIONS_LIGHT);
+    _t.insert(renderware_binary_stream_t::SECTIONS_UNICODE_STRING);
+    _t.insert(renderware_binary_stream_t::SECTIONS_ATOMIC);
+    _t.insert(renderware_binary_stream_t::SECTIONS_TEXTURE_NATIVE);
+    _t.insert(renderware_binary_stream_t::SECTIONS_TEXTURE_DICTIONARY);
+    _t.insert(renderware_binary_stream_t::SECTIONS_ANIMATION_DATABASE);
+    _t.insert(renderware_binary_stream_t::SECTIONS_IMAGE);
+    _t.insert(renderware_binary_stream_t::SECTIONS_SKIN_ANIMATION);
+    _t.insert(renderware_binary_stream_t::SECTIONS_GEOMETRY_LIST);
+    _t.insert(renderware_binary_stream_t::SECTIONS_ANIM_ANIMATION);
+    _t.insert(renderware_binary_stream_t::SECTIONS_TEAM);
+    _t.insert(renderware_binary_stream_t::SECTIONS_CROWD);
+    _t.insert(renderware_binary_stream_t::SECTIONS_DELTA_MORPH_ANIMATION);
+    _t.insert(renderware_binary_stream_t::SECTIONS_RIGHT_TO_RENDER);
+    _t.insert(renderware_binary_stream_t::SECTIONS_MULTITEXTURE_EFFECT_NATIVE);
+    _t.insert(renderware_binary_stream_t::SECTIONS_MULTITEXTURE_EFFECT_DICTIONARY);
+    _t.insert(renderware_binary_stream_t::SECTIONS_TEAM_DICTIONARY);
+    _t.insert(renderware_binary_stream_t::SECTIONS_PLATFORM_INDEPENDENT_TEXTURE_DICTIONARY);
+    _t.insert(renderware_binary_stream_t::SECTIONS_TABLE_OF_CONTENTS);
+    _t.insert(renderware_binary_stream_t::SECTIONS_PARTICLE_STANDARD_GLOBAL_DATA);
+    _t.insert(renderware_binary_stream_t::SECTIONS_ALTPIPE);
+    _t.insert(renderware_binary_stream_t::SECTIONS_PLATFORM_INDEPENDENT_PEDS);
+    _t.insert(renderware_binary_stream_t::SECTIONS_PATCH_MESH);
+    _t.insert(renderware_binary_stream_t::SECTIONS_CHUNK_GROUP_START);
+    _t.insert(renderware_binary_stream_t::SECTIONS_CHUNK_GROUP_END);
+    _t.insert(renderware_binary_stream_t::SECTIONS_UV_ANIMATION_DICTIONARY);
+    _t.insert(renderware_binary_stream_t::SECTIONS_COLL_TREE);
+    _t.insert(renderware_binary_stream_t::SECTIONS_METRICS_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_SPLINE_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_STEREO_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_VRML_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_MORPH_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_PVS_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_MEMORY_LEAK_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_ANIMATION_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_GLOSS_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_LOGO_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_MEMORY_INFO_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_RANDOM_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_PNG_IMAGE_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_BONE_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_VRML_ANIM_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_SKY_MIPMAP_VAL);
+    _t.insert(renderware_binary_stream_t::SECTIONS_MRM_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_LOD_ATOMIC_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_ME_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_LIGHTMAP_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_REFINE_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_SKIN_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_LABEL_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_PARTICLES_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_GEOMTX_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_SYNTH_CORE_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_STQPP_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_PART_PP_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_COLLISION_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_HANIM_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_USER_DATA_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_MATERIAL_EFFECTS_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_PARTICLE_SYSTEM_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_DELTA_MORPH_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_PATCH_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_TEAM_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_CROWD_PP_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_MIP_SPLIT_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_ANISOTROPY_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_GCN_MATERIAL_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_GEOMETRIC_PVS_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_XBOX_MATERIAL_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_MULTI_TEXTURE_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_CHAIN_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_TOON_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_PTANK_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_PARTICLE_STANDARD_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_PDS_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_PRTADV_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_NORMAL_MAP_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_ADC_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_UV_ANIMATION_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_CHARACTER_SET_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_NOHS_WORLD_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_IMPORT_UTIL_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_SLERP_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_OPTIM_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_TL_WORLD_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_DATABASE_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_RAYTRACE_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_RAY_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_LIBRARY_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_PLG_2D);
+    _t.insert(renderware_binary_stream_t::SECTIONS_TILE_RENDER_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_JPEG_IMAGE_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_TGA_IMAGE_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_GIF_IMAGE_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_QUAT_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_SPLINE_PVS_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_MIPMAP_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_MIPMAPK_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_FONT_2D);
+    _t.insert(renderware_binary_stream_t::SECTIONS_INTERSECTION_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_TIFF_IMAGE_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_PICK_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_BMP_IMAGE_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_RAS_IMAGE_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_SKIN_FX_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_VCAT_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_PATH_2D);
+    _t.insert(renderware_binary_stream_t::SECTIONS_BRUSH_2D);
+    _t.insert(renderware_binary_stream_t::SECTIONS_OBJECT_2D);
+    _t.insert(renderware_binary_stream_t::SECTIONS_SHAPE_2D);
+    _t.insert(renderware_binary_stream_t::SECTIONS_SCENE_2D);
+    _t.insert(renderware_binary_stream_t::SECTIONS_PICK_REGION_2D);
+    _t.insert(renderware_binary_stream_t::SECTIONS_OBJECT_STRING_2D);
+    _t.insert(renderware_binary_stream_t::SECTIONS_ANIMATION_PLG_2D);
+    _t.insert(renderware_binary_stream_t::SECTIONS_ANIMATION_2D);
+    _t.insert(renderware_binary_stream_t::SECTIONS_KEYFRAME_2D);
+    _t.insert(renderware_binary_stream_t::SECTIONS_MAESTRO_2D);
+    _t.insert(renderware_binary_stream_t::SECTIONS_BARYCENTRIC);
+    _t.insert(renderware_binary_stream_t::SECTIONS_PLATFORM_INDEPENDENT_TEXTURE_DICTIONARY_TK);
+    _t.insert(renderware_binary_stream_t::SECTIONS_TOC_TK);
+    _t.insert(renderware_binary_stream_t::SECTIONS_TPL_TK);
+    _t.insert(renderware_binary_stream_t::SECTIONS_ALTPIPE_TK);
+    _t.insert(renderware_binary_stream_t::SECTIONS_ANIMATION_TK);
+    _t.insert(renderware_binary_stream_t::SECTIONS_SKIN_SPLIT_TOOKIT);
+    _t.insert(renderware_binary_stream_t::SECTIONS_COMPRESSED_KEY_TK);
+    _t.insert(renderware_binary_stream_t::SECTIONS_GEOMETRY_CONDITIONING_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_WING_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_GENERIC_PIPELINE_TK);
+    _t.insert(renderware_binary_stream_t::SECTIONS_LIGHTMAP_CONVERSION_TK);
+    _t.insert(renderware_binary_stream_t::SECTIONS_FILESYSTEM_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_DICTIONARY_TK);
+    _t.insert(renderware_binary_stream_t::SECTIONS_UV_ANIMATION_LINEAR);
+    _t.insert(renderware_binary_stream_t::SECTIONS_UV_ANIMATION_PARAMETER);
+    _t.insert(renderware_binary_stream_t::SECTIONS_BIN_MESH_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_NATIVE_DATA_PLG);
+    _t.insert(renderware_binary_stream_t::SECTIONS_ZMODELER_LOCK);
+    _t.insert(renderware_binary_stream_t::SECTIONS_ATOMIC_VISIBILITY_DISTANCE);
+    _t.insert(renderware_binary_stream_t::SECTIONS_CLUMP_VISIBILITY_DISTANCE);
+    _t.insert(renderware_binary_stream_t::SECTIONS_FRAME_VISIBILITY_DISTANCE);
+    _t.insert(renderware_binary_stream_t::SECTIONS_PIPELINE_SET);
+    _t.insert(renderware_binary_stream_t::SECTIONS_UNUSED_5);
+    _t.insert(renderware_binary_stream_t::SECTIONS_TEXDICTIONARY_LINK);
+    _t.insert(renderware_binary_stream_t::SECTIONS_SPECULAR_MATERIAL);
+    _t.insert(renderware_binary_stream_t::SECTIONS_UNUSED_8);
+    _t.insert(renderware_binary_stream_t::SECTIONS_EFFECT_2D);
+    _t.insert(renderware_binary_stream_t::SECTIONS_EXTRA_VERT_COLOUR);
+    _t.insert(renderware_binary_stream_t::SECTIONS_COLLISION_MODEL);
+    _t.insert(renderware_binary_stream_t::SECTIONS_GTA_HANIM);
+    _t.insert(renderware_binary_stream_t::SECTIONS_REFLECTION_MATERIAL);
+    _t.insert(renderware_binary_stream_t::SECTIONS_BREAKABLE);
+    _t.insert(renderware_binary_stream_t::SECTIONS_FRAME);
+    _t.insert(renderware_binary_stream_t::SECTIONS_UNUSED_16);
+    return _t;
+}
+const std::set<renderware_binary_stream_t::sections_t> renderware_binary_stream_t::_values_sections_t = renderware_binary_stream_t::_build_values_sections_t();
+bool renderware_binary_stream_t::_is_defined_sections_t(renderware_binary_stream_t::sections_t v) {
+    return renderware_binary_stream_t::_values_sections_t.find(v) != renderware_binary_stream_t::_values_sections_t.end();
+}
 
 renderware_binary_stream_t::renderware_binary_stream_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, renderware_binary_stream_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     m__io__raw_body = 0;
     f_version = false;
 
@@ -30,14 +205,21 @@ void renderware_binary_stream_t::_read() {
         m_body = new list_with_header_t(m__io__raw_body, this, m__root);
         break;
     }
-    case renderware_binary_stream_t::SECTIONS_GEOMETRY: {
+    case renderware_binary_stream_t::SECTIONS_CLUMP: {
         n_body = false;
         m__raw_body = m__io->read_bytes(size());
         m__io__raw_body = new kaitai::kstream(m__raw_body);
         m_body = new list_with_header_t(m__io__raw_body, this, m__root);
         break;
     }
-    case renderware_binary_stream_t::SECTIONS_TEXTURE_DICTIONARY: {
+    case renderware_binary_stream_t::SECTIONS_FRAME_LIST: {
+        n_body = false;
+        m__raw_body = m__io->read_bytes(size());
+        m__io__raw_body = new kaitai::kstream(m__raw_body);
+        m_body = new list_with_header_t(m__io__raw_body, this, m__root);
+        break;
+    }
+    case renderware_binary_stream_t::SECTIONS_GEOMETRY: {
         n_body = false;
         m__raw_body = m__io->read_bytes(size());
         m__io__raw_body = new kaitai::kstream(m__raw_body);
@@ -51,21 +233,14 @@ void renderware_binary_stream_t::_read() {
         m_body = new list_with_header_t(m__io__raw_body, this, m__root);
         break;
     }
+    case renderware_binary_stream_t::SECTIONS_TEXTURE_DICTIONARY: {
+        n_body = false;
+        m__raw_body = m__io->read_bytes(size());
+        m__io__raw_body = new kaitai::kstream(m__raw_body);
+        m_body = new list_with_header_t(m__io__raw_body, this, m__root);
+        break;
+    }
     case renderware_binary_stream_t::SECTIONS_TEXTURE_NATIVE: {
-        n_body = false;
-        m__raw_body = m__io->read_bytes(size());
-        m__io__raw_body = new kaitai::kstream(m__raw_body);
-        m_body = new list_with_header_t(m__io__raw_body, this, m__root);
-        break;
-    }
-    case renderware_binary_stream_t::SECTIONS_CLUMP: {
-        n_body = false;
-        m__raw_body = m__io->read_bytes(size());
-        m__io__raw_body = new kaitai::kstream(m__raw_body);
-        m_body = new list_with_header_t(m__io__raw_body, this, m__root);
-        break;
-    }
-    case renderware_binary_stream_t::SECTIONS_FRAME_LIST: {
         n_body = false;
         m__raw_body = m__io->read_bytes(size());
         m__io__raw_body = new kaitai::kstream(m__raw_body);
@@ -94,9 +269,11 @@ void renderware_binary_stream_t::_clean_up() {
     }
 }
 
-renderware_binary_stream_t::struct_clump_t::struct_clump_t(kaitai::kstream* p__io, renderware_binary_stream_t::list_with_header_t* p__parent, renderware_binary_stream_t* p__root) : kaitai::kstruct(p__io) {
+renderware_binary_stream_t::frame_t::frame_t(kaitai::kstream* p__io, renderware_binary_stream_t::struct_frame_list_t* p__parent, renderware_binary_stream_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
+    m_rotation_matrix = 0;
+    m_position = 0;
 
     try {
         _read();
@@ -106,143 +283,24 @@ renderware_binary_stream_t::struct_clump_t::struct_clump_t(kaitai::kstream* p__i
     }
 }
 
-void renderware_binary_stream_t::struct_clump_t::_read() {
-    m_num_atomics = m__io->read_u4le();
-    n_num_lights = true;
-    if (_parent()->version() >= 208896) {
-        n_num_lights = false;
-        m_num_lights = m__io->read_u4le();
-    }
-    n_num_cameras = true;
-    if (_parent()->version() >= 208896) {
-        n_num_cameras = false;
-        m_num_cameras = m__io->read_u4le();
-    }
+void renderware_binary_stream_t::frame_t::_read() {
+    m_rotation_matrix = new matrix_t(m__io, this, m__root);
+    m_position = new vector_3d_t(m__io, this, m__root);
+    m_cur_frame_idx = m__io->read_s4le();
+    m_matrix_creation_flags = m__io->read_u4le();
 }
 
-renderware_binary_stream_t::struct_clump_t::~struct_clump_t() {
+renderware_binary_stream_t::frame_t::~frame_t() {
     _clean_up();
 }
 
-void renderware_binary_stream_t::struct_clump_t::_clean_up() {
-    if (!n_num_lights) {
+void renderware_binary_stream_t::frame_t::_clean_up() {
+    if (m_rotation_matrix) {
+        delete m_rotation_matrix; m_rotation_matrix = 0;
     }
-    if (!n_num_cameras) {
+    if (m_position) {
+        delete m_position; m_position = 0;
     }
-}
-
-renderware_binary_stream_t::struct_geometry_t::struct_geometry_t(kaitai::kstream* p__io, renderware_binary_stream_t::list_with_header_t* p__parent, renderware_binary_stream_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    m_surf_prop = 0;
-    m_geometry = 0;
-    m_morph_targets = 0;
-    f_num_uv_layers_raw = false;
-    f_is_textured = false;
-    f_is_native = false;
-    f_num_uv_layers = false;
-    f_is_textured2 = false;
-    f_is_prelit = false;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void renderware_binary_stream_t::struct_geometry_t::_read() {
-    m_format = m__io->read_u4le();
-    m_num_triangles = m__io->read_u4le();
-    m_num_vertices = m__io->read_u4le();
-    m_num_morph_targets = m__io->read_u4le();
-    n_surf_prop = true;
-    if (_parent()->version() < 212992) {
-        n_surf_prop = false;
-        m_surf_prop = new surface_properties_t(m__io, this, m__root);
-    }
-    n_geometry = true;
-    if (!(is_native())) {
-        n_geometry = false;
-        m_geometry = new geometry_non_native_t(m__io, this, m__root);
-    }
-    m_morph_targets = new std::vector<morph_target_t*>();
-    const int l_morph_targets = num_morph_targets();
-    for (int i = 0; i < l_morph_targets; i++) {
-        m_morph_targets->push_back(new morph_target_t(m__io, this, m__root));
-    }
-}
-
-renderware_binary_stream_t::struct_geometry_t::~struct_geometry_t() {
-    _clean_up();
-}
-
-void renderware_binary_stream_t::struct_geometry_t::_clean_up() {
-    if (!n_surf_prop) {
-        if (m_surf_prop) {
-            delete m_surf_prop; m_surf_prop = 0;
-        }
-    }
-    if (!n_geometry) {
-        if (m_geometry) {
-            delete m_geometry; m_geometry = 0;
-        }
-    }
-    if (m_morph_targets) {
-        for (std::vector<morph_target_t*>::iterator it = m_morph_targets->begin(); it != m_morph_targets->end(); ++it) {
-            delete *it;
-        }
-        delete m_morph_targets; m_morph_targets = 0;
-    }
-}
-
-int32_t renderware_binary_stream_t::struct_geometry_t::num_uv_layers_raw() {
-    if (f_num_uv_layers_raw)
-        return m_num_uv_layers_raw;
-    m_num_uv_layers_raw = ((format() & 16711680) >> 16);
-    f_num_uv_layers_raw = true;
-    return m_num_uv_layers_raw;
-}
-
-bool renderware_binary_stream_t::struct_geometry_t::is_textured() {
-    if (f_is_textured)
-        return m_is_textured;
-    m_is_textured = (format() & 4) != 0;
-    f_is_textured = true;
-    return m_is_textured;
-}
-
-bool renderware_binary_stream_t::struct_geometry_t::is_native() {
-    if (f_is_native)
-        return m_is_native;
-    m_is_native = (format() & 16777216) != 0;
-    f_is_native = true;
-    return m_is_native;
-}
-
-int32_t renderware_binary_stream_t::struct_geometry_t::num_uv_layers() {
-    if (f_num_uv_layers)
-        return m_num_uv_layers;
-    m_num_uv_layers = ((num_uv_layers_raw() == 0) ? (((is_textured2()) ? (2) : (((is_textured()) ? (1) : (0))))) : (num_uv_layers_raw()));
-    f_num_uv_layers = true;
-    return m_num_uv_layers;
-}
-
-bool renderware_binary_stream_t::struct_geometry_t::is_textured2() {
-    if (f_is_textured2)
-        return m_is_textured2;
-    m_is_textured2 = (format() & 128) != 0;
-    f_is_textured2 = true;
-    return m_is_textured2;
-}
-
-bool renderware_binary_stream_t::struct_geometry_t::is_prelit() {
-    if (f_is_prelit)
-        return m_is_prelit;
-    m_is_prelit = (format() & 8) != 0;
-    f_is_prelit = true;
-    return m_is_prelit;
 }
 
 renderware_binary_stream_t::geometry_non_native_t::geometry_non_native_t(kaitai::kstream* p__io, renderware_binary_stream_t::struct_geometry_t* p__parent, renderware_binary_stream_t* p__root) : kaitai::kstruct(p__io) {
@@ -309,9 +367,12 @@ void renderware_binary_stream_t::geometry_non_native_t::_clean_up() {
     }
 }
 
-renderware_binary_stream_t::struct_geometry_list_t::struct_geometry_list_t(kaitai::kstream* p__io, renderware_binary_stream_t::list_with_header_t* p__parent, renderware_binary_stream_t* p__root) : kaitai::kstruct(p__io) {
+renderware_binary_stream_t::list_with_header_t::list_with_header_t(kaitai::kstream* p__io, renderware_binary_stream_t* p__parent, renderware_binary_stream_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
+    m__io__raw_header = 0;
+    m_entries = 0;
+    f_version = false;
 
     try {
         _read();
@@ -321,20 +382,105 @@ renderware_binary_stream_t::struct_geometry_list_t::struct_geometry_list_t(kaita
     }
 }
 
-void renderware_binary_stream_t::struct_geometry_list_t::_read() {
-    m_num_geometries = m__io->read_u4le();
+void renderware_binary_stream_t::list_with_header_t::_read() {
+    m_code = m__io->read_bytes(4);
+    if (!(m_code == std::string("\x01\x00\x00\x00", 4))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\x01\x00\x00\x00", 4), m_code, m__io, std::string("/types/list_with_header/seq/0"));
+    }
+    m_header_size = m__io->read_u4le();
+    m_library_id_stamp = m__io->read_u4le();
+    n_header = true;
+    switch (_parent()->code()) {
+    case renderware_binary_stream_t::SECTIONS_ATOMIC: {
+        n_header = false;
+        m__raw_header = m__io->read_bytes(header_size());
+        m__io__raw_header = new kaitai::kstream(m__raw_header);
+        m_header = new struct_atomic_t(m__io__raw_header, this, m__root);
+        break;
+    }
+    case renderware_binary_stream_t::SECTIONS_CLUMP: {
+        n_header = false;
+        m__raw_header = m__io->read_bytes(header_size());
+        m__io__raw_header = new kaitai::kstream(m__raw_header);
+        m_header = new struct_clump_t(m__io__raw_header, this, m__root);
+        break;
+    }
+    case renderware_binary_stream_t::SECTIONS_FRAME_LIST: {
+        n_header = false;
+        m__raw_header = m__io->read_bytes(header_size());
+        m__io__raw_header = new kaitai::kstream(m__raw_header);
+        m_header = new struct_frame_list_t(m__io__raw_header, this, m__root);
+        break;
+    }
+    case renderware_binary_stream_t::SECTIONS_GEOMETRY: {
+        n_header = false;
+        m__raw_header = m__io->read_bytes(header_size());
+        m__io__raw_header = new kaitai::kstream(m__raw_header);
+        m_header = new struct_geometry_t(m__io__raw_header, this, m__root);
+        break;
+    }
+    case renderware_binary_stream_t::SECTIONS_GEOMETRY_LIST: {
+        n_header = false;
+        m__raw_header = m__io->read_bytes(header_size());
+        m__io__raw_header = new kaitai::kstream(m__raw_header);
+        m_header = new struct_geometry_list_t(m__io__raw_header, this, m__root);
+        break;
+    }
+    case renderware_binary_stream_t::SECTIONS_TEXTURE_DICTIONARY: {
+        n_header = false;
+        m__raw_header = m__io->read_bytes(header_size());
+        m__io__raw_header = new kaitai::kstream(m__raw_header);
+        m_header = new struct_texture_dictionary_t(m__io__raw_header, this, m__root);
+        break;
+    }
+    default: {
+        m__raw_header = m__io->read_bytes(header_size());
+        break;
+    }
+    }
+    m_entries = new std::vector<renderware_binary_stream_t*>();
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_entries->push_back(new renderware_binary_stream_t(m__io, this, m__root));
+            i++;
+        }
+    }
 }
 
-renderware_binary_stream_t::struct_geometry_list_t::~struct_geometry_list_t() {
+renderware_binary_stream_t::list_with_header_t::~list_with_header_t() {
     _clean_up();
 }
 
-void renderware_binary_stream_t::struct_geometry_list_t::_clean_up() {
+void renderware_binary_stream_t::list_with_header_t::_clean_up() {
+    if (!n_header) {
+        if (m__io__raw_header) {
+            delete m__io__raw_header; m__io__raw_header = 0;
+        }
+        if (m_header) {
+            delete m_header; m_header = 0;
+        }
+    }
+    if (m_entries) {
+        for (std::vector<renderware_binary_stream_t*>::iterator it = m_entries->begin(); it != m_entries->end(); ++it) {
+            delete *it;
+        }
+        delete m_entries; m_entries = 0;
+    }
 }
 
-renderware_binary_stream_t::rgba_t::rgba_t(kaitai::kstream* p__io, renderware_binary_stream_t::geometry_non_native_t* p__parent, renderware_binary_stream_t* p__root) : kaitai::kstruct(p__io) {
+int32_t renderware_binary_stream_t::list_with_header_t::version() {
+    if (f_version)
+        return m_version;
+    f_version = true;
+    m_version = (((library_id_stamp() & 4294901760UL) != 0) ? ((library_id_stamp() >> 14 & 261888) + 196608 | library_id_stamp() >> 16 & 63) : (library_id_stamp() << 8));
+    return m_version;
+}
+
+renderware_binary_stream_t::matrix_t::matrix_t(kaitai::kstream* p__io, renderware_binary_stream_t::frame_t* p__parent, renderware_binary_stream_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
+    m_entries = 0;
 
     try {
         _read();
@@ -344,44 +490,25 @@ renderware_binary_stream_t::rgba_t::rgba_t(kaitai::kstream* p__io, renderware_bi
     }
 }
 
-void renderware_binary_stream_t::rgba_t::_read() {
-    m_r = m__io->read_u1();
-    m_g = m__io->read_u1();
-    m_b = m__io->read_u1();
-    m_a = m__io->read_u1();
-}
-
-renderware_binary_stream_t::rgba_t::~rgba_t() {
-    _clean_up();
-}
-
-void renderware_binary_stream_t::rgba_t::_clean_up() {
-}
-
-renderware_binary_stream_t::sphere_t::sphere_t(kaitai::kstream* p__io, renderware_binary_stream_t::morph_target_t* p__parent, renderware_binary_stream_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
+void renderware_binary_stream_t::matrix_t::_read() {
+    m_entries = new std::vector<vector_3d_t*>();
+    const int l_entries = 3;
+    for (int i = 0; i < l_entries; i++) {
+        m_entries->push_back(new vector_3d_t(m__io, this, m__root));
     }
 }
 
-void renderware_binary_stream_t::sphere_t::_read() {
-    m_x = m__io->read_f4le();
-    m_y = m__io->read_f4le();
-    m_z = m__io->read_f4le();
-    m_radius = m__io->read_f4le();
-}
-
-renderware_binary_stream_t::sphere_t::~sphere_t() {
+renderware_binary_stream_t::matrix_t::~matrix_t() {
     _clean_up();
 }
 
-void renderware_binary_stream_t::sphere_t::_clean_up() {
+void renderware_binary_stream_t::matrix_t::_clean_up() {
+    if (m_entries) {
+        for (std::vector<vector_3d_t*>::iterator it = m_entries->begin(); it != m_entries->end(); ++it) {
+            delete *it;
+        }
+        delete m_entries; m_entries = 0;
+    }
 }
 
 renderware_binary_stream_t::morph_target_t::morph_target_t(kaitai::kstream* p__io, renderware_binary_stream_t::struct_geometry_t* p__parent, renderware_binary_stream_t* p__root) : kaitai::kstruct(p__io) {
@@ -449,6 +576,58 @@ void renderware_binary_stream_t::morph_target_t::_clean_up() {
     }
 }
 
+renderware_binary_stream_t::rgba_t::rgba_t(kaitai::kstream* p__io, renderware_binary_stream_t::geometry_non_native_t* p__parent, renderware_binary_stream_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void renderware_binary_stream_t::rgba_t::_read() {
+    m_r = m__io->read_u1();
+    m_g = m__io->read_u1();
+    m_b = m__io->read_u1();
+    m_a = m__io->read_u1();
+}
+
+renderware_binary_stream_t::rgba_t::~rgba_t() {
+    _clean_up();
+}
+
+void renderware_binary_stream_t::rgba_t::_clean_up() {
+}
+
+renderware_binary_stream_t::sphere_t::sphere_t(kaitai::kstream* p__io, renderware_binary_stream_t::morph_target_t* p__parent, renderware_binary_stream_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void renderware_binary_stream_t::sphere_t::_read() {
+    m_x = m__io->read_f4le();
+    m_y = m__io->read_f4le();
+    m_z = m__io->read_f4le();
+    m_radius = m__io->read_f4le();
+}
+
+renderware_binary_stream_t::sphere_t::~sphere_t() {
+    _clean_up();
+}
+
+void renderware_binary_stream_t::sphere_t::_clean_up() {
+}
+
 renderware_binary_stream_t::struct_atomic_t::struct_atomic_t(kaitai::kstream* p__io, renderware_binary_stream_t::list_with_header_t* p__parent, renderware_binary_stream_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
@@ -479,7 +658,7 @@ renderware_binary_stream_t::struct_atomic_t::~struct_atomic_t() {
 void renderware_binary_stream_t::struct_atomic_t::_clean_up() {
 }
 
-renderware_binary_stream_t::surface_properties_t::surface_properties_t(kaitai::kstream* p__io, renderware_binary_stream_t::struct_geometry_t* p__parent, renderware_binary_stream_t* p__root) : kaitai::kstruct(p__io) {
+renderware_binary_stream_t::struct_clump_t::struct_clump_t(kaitai::kstream* p__io, renderware_binary_stream_t::list_with_header_t* p__parent, renderware_binary_stream_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
 
@@ -491,17 +670,29 @@ renderware_binary_stream_t::surface_properties_t::surface_properties_t(kaitai::k
     }
 }
 
-void renderware_binary_stream_t::surface_properties_t::_read() {
-    m_ambient = m__io->read_f4le();
-    m_specular = m__io->read_f4le();
-    m_diffuse = m__io->read_f4le();
+void renderware_binary_stream_t::struct_clump_t::_read() {
+    m_num_atomics = m__io->read_u4le();
+    n_num_lights = true;
+    if (_parent()->version() >= 208896) {
+        n_num_lights = false;
+        m_num_lights = m__io->read_u4le();
+    }
+    n_num_cameras = true;
+    if (_parent()->version() >= 208896) {
+        n_num_cameras = false;
+        m_num_cameras = m__io->read_u4le();
+    }
 }
 
-renderware_binary_stream_t::surface_properties_t::~surface_properties_t() {
+renderware_binary_stream_t::struct_clump_t::~struct_clump_t() {
     _clean_up();
 }
 
-void renderware_binary_stream_t::surface_properties_t::_clean_up() {
+void renderware_binary_stream_t::struct_clump_t::_clean_up() {
+    if (!n_num_lights) {
+    }
+    if (!n_num_cameras) {
+    }
 }
 
 renderware_binary_stream_t::struct_frame_list_t::struct_frame_list_t(kaitai::kstream* p__io, renderware_binary_stream_t::list_with_header_t* p__parent, renderware_binary_stream_t* p__root) : kaitai::kstruct(p__io) {
@@ -539,10 +730,18 @@ void renderware_binary_stream_t::struct_frame_list_t::_clean_up() {
     }
 }
 
-renderware_binary_stream_t::matrix_t::matrix_t(kaitai::kstream* p__io, renderware_binary_stream_t::frame_t* p__parent, renderware_binary_stream_t* p__root) : kaitai::kstruct(p__io) {
+renderware_binary_stream_t::struct_geometry_t::struct_geometry_t(kaitai::kstream* p__io, renderware_binary_stream_t::list_with_header_t* p__parent, renderware_binary_stream_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
-    m_entries = 0;
+    m_surf_prop = 0;
+    m_geometry = 0;
+    m_morph_targets = 0;
+    f_is_native = false;
+    f_is_prelit = false;
+    f_is_textured = false;
+    f_is_textured2 = false;
+    f_num_uv_layers = false;
+    f_num_uv_layers_raw = false;
 
     try {
         _read();
@@ -552,28 +751,100 @@ renderware_binary_stream_t::matrix_t::matrix_t(kaitai::kstream* p__io, renderwar
     }
 }
 
-void renderware_binary_stream_t::matrix_t::_read() {
-    m_entries = new std::vector<vector_3d_t*>();
-    const int l_entries = 3;
-    for (int i = 0; i < l_entries; i++) {
-        m_entries->push_back(new vector_3d_t(m__io, this, m__root));
+void renderware_binary_stream_t::struct_geometry_t::_read() {
+    m_format = m__io->read_u4le();
+    m_num_triangles = m__io->read_u4le();
+    m_num_vertices = m__io->read_u4le();
+    m_num_morph_targets = m__io->read_u4le();
+    n_surf_prop = true;
+    if (_parent()->version() < 212992) {
+        n_surf_prop = false;
+        m_surf_prop = new surface_properties_t(m__io, this, m__root);
+    }
+    n_geometry = true;
+    if (!(is_native())) {
+        n_geometry = false;
+        m_geometry = new geometry_non_native_t(m__io, this, m__root);
+    }
+    m_morph_targets = new std::vector<morph_target_t*>();
+    const int l_morph_targets = num_morph_targets();
+    for (int i = 0; i < l_morph_targets; i++) {
+        m_morph_targets->push_back(new morph_target_t(m__io, this, m__root));
     }
 }
 
-renderware_binary_stream_t::matrix_t::~matrix_t() {
+renderware_binary_stream_t::struct_geometry_t::~struct_geometry_t() {
     _clean_up();
 }
 
-void renderware_binary_stream_t::matrix_t::_clean_up() {
-    if (m_entries) {
-        for (std::vector<vector_3d_t*>::iterator it = m_entries->begin(); it != m_entries->end(); ++it) {
+void renderware_binary_stream_t::struct_geometry_t::_clean_up() {
+    if (!n_surf_prop) {
+        if (m_surf_prop) {
+            delete m_surf_prop; m_surf_prop = 0;
+        }
+    }
+    if (!n_geometry) {
+        if (m_geometry) {
+            delete m_geometry; m_geometry = 0;
+        }
+    }
+    if (m_morph_targets) {
+        for (std::vector<morph_target_t*>::iterator it = m_morph_targets->begin(); it != m_morph_targets->end(); ++it) {
             delete *it;
         }
-        delete m_entries; m_entries = 0;
+        delete m_morph_targets; m_morph_targets = 0;
     }
 }
 
-renderware_binary_stream_t::vector_3d_t::vector_3d_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, renderware_binary_stream_t* p__root) : kaitai::kstruct(p__io) {
+bool renderware_binary_stream_t::struct_geometry_t::is_native() {
+    if (f_is_native)
+        return m_is_native;
+    f_is_native = true;
+    m_is_native = (format() & 16777216) != 0;
+    return m_is_native;
+}
+
+bool renderware_binary_stream_t::struct_geometry_t::is_prelit() {
+    if (f_is_prelit)
+        return m_is_prelit;
+    f_is_prelit = true;
+    m_is_prelit = (format() & 8) != 0;
+    return m_is_prelit;
+}
+
+bool renderware_binary_stream_t::struct_geometry_t::is_textured() {
+    if (f_is_textured)
+        return m_is_textured;
+    f_is_textured = true;
+    m_is_textured = (format() & 4) != 0;
+    return m_is_textured;
+}
+
+bool renderware_binary_stream_t::struct_geometry_t::is_textured2() {
+    if (f_is_textured2)
+        return m_is_textured2;
+    f_is_textured2 = true;
+    m_is_textured2 = (format() & 128) != 0;
+    return m_is_textured2;
+}
+
+int32_t renderware_binary_stream_t::struct_geometry_t::num_uv_layers() {
+    if (f_num_uv_layers)
+        return m_num_uv_layers;
+    f_num_uv_layers = true;
+    m_num_uv_layers = ((num_uv_layers_raw() == 0) ? (((is_textured2()) ? (2) : (((is_textured()) ? (1) : (0))))) : (num_uv_layers_raw()));
+    return m_num_uv_layers;
+}
+
+int32_t renderware_binary_stream_t::struct_geometry_t::num_uv_layers_raw() {
+    if (f_num_uv_layers_raw)
+        return m_num_uv_layers_raw;
+    f_num_uv_layers_raw = true;
+    m_num_uv_layers_raw = (format() & 16711680) >> 16;
+    return m_num_uv_layers_raw;
+}
+
+renderware_binary_stream_t::struct_geometry_list_t::struct_geometry_list_t(kaitai::kstream* p__io, renderware_binary_stream_t::list_with_header_t* p__parent, renderware_binary_stream_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
 
@@ -585,25 +856,20 @@ renderware_binary_stream_t::vector_3d_t::vector_3d_t(kaitai::kstream* p__io, kai
     }
 }
 
-void renderware_binary_stream_t::vector_3d_t::_read() {
-    m_x = m__io->read_f4le();
-    m_y = m__io->read_f4le();
-    m_z = m__io->read_f4le();
+void renderware_binary_stream_t::struct_geometry_list_t::_read() {
+    m_num_geometries = m__io->read_u4le();
 }
 
-renderware_binary_stream_t::vector_3d_t::~vector_3d_t() {
+renderware_binary_stream_t::struct_geometry_list_t::~struct_geometry_list_t() {
     _clean_up();
 }
 
-void renderware_binary_stream_t::vector_3d_t::_clean_up() {
+void renderware_binary_stream_t::struct_geometry_list_t::_clean_up() {
 }
 
-renderware_binary_stream_t::list_with_header_t::list_with_header_t(kaitai::kstream* p__io, renderware_binary_stream_t* p__parent, renderware_binary_stream_t* p__root) : kaitai::kstruct(p__io) {
+renderware_binary_stream_t::struct_texture_dictionary_t::struct_texture_dictionary_t(kaitai::kstream* p__io, renderware_binary_stream_t::list_with_header_t* p__parent, renderware_binary_stream_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
-    m__io__raw_header = 0;
-    m_entries = 0;
-    f_version = false;
 
     try {
         _read();
@@ -613,99 +879,64 @@ renderware_binary_stream_t::list_with_header_t::list_with_header_t(kaitai::kstre
     }
 }
 
-void renderware_binary_stream_t::list_with_header_t::_read() {
-    m_code = m__io->read_bytes(4);
-    if (!(code() == std::string("\x01\x00\x00\x00", 4))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\x01\x00\x00\x00", 4), code(), _io(), std::string("/types/list_with_header/seq/0"));
-    }
-    m_header_size = m__io->read_u4le();
-    m_library_id_stamp = m__io->read_u4le();
-    n_header = true;
-    switch (_parent()->code()) {
-    case renderware_binary_stream_t::SECTIONS_ATOMIC: {
-        n_header = false;
-        m__raw_header = m__io->read_bytes(header_size());
-        m__io__raw_header = new kaitai::kstream(m__raw_header);
-        m_header = new struct_atomic_t(m__io__raw_header, this, m__root);
-        break;
-    }
-    case renderware_binary_stream_t::SECTIONS_GEOMETRY: {
-        n_header = false;
-        m__raw_header = m__io->read_bytes(header_size());
-        m__io__raw_header = new kaitai::kstream(m__raw_header);
-        m_header = new struct_geometry_t(m__io__raw_header, this, m__root);
-        break;
-    }
-    case renderware_binary_stream_t::SECTIONS_TEXTURE_DICTIONARY: {
-        n_header = false;
-        m__raw_header = m__io->read_bytes(header_size());
-        m__io__raw_header = new kaitai::kstream(m__raw_header);
-        m_header = new struct_texture_dictionary_t(m__io__raw_header, this, m__root);
-        break;
-    }
-    case renderware_binary_stream_t::SECTIONS_GEOMETRY_LIST: {
-        n_header = false;
-        m__raw_header = m__io->read_bytes(header_size());
-        m__io__raw_header = new kaitai::kstream(m__raw_header);
-        m_header = new struct_geometry_list_t(m__io__raw_header, this, m__root);
-        break;
-    }
-    case renderware_binary_stream_t::SECTIONS_CLUMP: {
-        n_header = false;
-        m__raw_header = m__io->read_bytes(header_size());
-        m__io__raw_header = new kaitai::kstream(m__raw_header);
-        m_header = new struct_clump_t(m__io__raw_header, this, m__root);
-        break;
-    }
-    case renderware_binary_stream_t::SECTIONS_FRAME_LIST: {
-        n_header = false;
-        m__raw_header = m__io->read_bytes(header_size());
-        m__io__raw_header = new kaitai::kstream(m__raw_header);
-        m_header = new struct_frame_list_t(m__io__raw_header, this, m__root);
-        break;
-    }
-    default: {
-        m__raw_header = m__io->read_bytes(header_size());
-        break;
-    }
-    }
-    m_entries = new std::vector<renderware_binary_stream_t*>();
-    {
-        int i = 0;
-        while (!m__io->is_eof()) {
-            m_entries->push_back(new renderware_binary_stream_t(m__io));
-            i++;
-        }
-    }
+void renderware_binary_stream_t::struct_texture_dictionary_t::_read() {
+    m_num_textures = m__io->read_u4le();
 }
 
-renderware_binary_stream_t::list_with_header_t::~list_with_header_t() {
+renderware_binary_stream_t::struct_texture_dictionary_t::~struct_texture_dictionary_t() {
     _clean_up();
 }
 
-void renderware_binary_stream_t::list_with_header_t::_clean_up() {
-    if (!n_header) {
-        if (m__io__raw_header) {
-            delete m__io__raw_header; m__io__raw_header = 0;
-        }
-        if (m_header) {
-            delete m_header; m_header = 0;
-        }
-    }
-    if (m_entries) {
-        for (std::vector<renderware_binary_stream_t*>::iterator it = m_entries->begin(); it != m_entries->end(); ++it) {
-            delete *it;
-        }
-        delete m_entries; m_entries = 0;
+void renderware_binary_stream_t::struct_texture_dictionary_t::_clean_up() {
+}
+
+renderware_binary_stream_t::surface_properties_t::surface_properties_t(kaitai::kstream* p__io, renderware_binary_stream_t::struct_geometry_t* p__parent, renderware_binary_stream_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
     }
 }
 
-int32_t renderware_binary_stream_t::list_with_header_t::version() {
-    if (f_version)
-        return m_version;
-    m_version = (((library_id_stamp() & 4294901760UL) != 0) ? (((((library_id_stamp() >> 14) & 261888) + 196608) | ((library_id_stamp() >> 16) & 63))) : ((library_id_stamp() << 8)));
-    f_version = true;
-    return m_version;
+void renderware_binary_stream_t::surface_properties_t::_read() {
+    m_ambient = m__io->read_f4le();
+    m_specular = m__io->read_f4le();
+    m_diffuse = m__io->read_f4le();
+}
+
+renderware_binary_stream_t::surface_properties_t::~surface_properties_t() {
+    _clean_up();
+}
+
+void renderware_binary_stream_t::surface_properties_t::_clean_up() {
+}
+
+renderware_binary_stream_t::tex_coord_t::tex_coord_t(kaitai::kstream* p__io, renderware_binary_stream_t::uv_layer_t* p__parent, renderware_binary_stream_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void renderware_binary_stream_t::tex_coord_t::_read() {
+    m_u = m__io->read_f4le();
+    m_v = m__io->read_f4le();
+}
+
+renderware_binary_stream_t::tex_coord_t::~tex_coord_t() {
+    _clean_up();
+}
+
+void renderware_binary_stream_t::tex_coord_t::_clean_up() {
 }
 
 renderware_binary_stream_t::triangle_t::triangle_t(kaitai::kstream* p__io, renderware_binary_stream_t::geometry_non_native_t* p__parent, renderware_binary_stream_t* p__root) : kaitai::kstruct(p__io) {
@@ -732,64 +963,6 @@ renderware_binary_stream_t::triangle_t::~triangle_t() {
 }
 
 void renderware_binary_stream_t::triangle_t::_clean_up() {
-}
-
-renderware_binary_stream_t::frame_t::frame_t(kaitai::kstream* p__io, renderware_binary_stream_t::struct_frame_list_t* p__parent, renderware_binary_stream_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    m_rotation_matrix = 0;
-    m_position = 0;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void renderware_binary_stream_t::frame_t::_read() {
-    m_rotation_matrix = new matrix_t(m__io, this, m__root);
-    m_position = new vector_3d_t(m__io, this, m__root);
-    m_cur_frame_idx = m__io->read_s4le();
-    m_matrix_creation_flags = m__io->read_u4le();
-}
-
-renderware_binary_stream_t::frame_t::~frame_t() {
-    _clean_up();
-}
-
-void renderware_binary_stream_t::frame_t::_clean_up() {
-    if (m_rotation_matrix) {
-        delete m_rotation_matrix; m_rotation_matrix = 0;
-    }
-    if (m_position) {
-        delete m_position; m_position = 0;
-    }
-}
-
-renderware_binary_stream_t::tex_coord_t::tex_coord_t(kaitai::kstream* p__io, renderware_binary_stream_t::uv_layer_t* p__parent, renderware_binary_stream_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void renderware_binary_stream_t::tex_coord_t::_read() {
-    m_u = m__io->read_f4le();
-    m_v = m__io->read_f4le();
-}
-
-renderware_binary_stream_t::tex_coord_t::~tex_coord_t() {
-    _clean_up();
-}
-
-void renderware_binary_stream_t::tex_coord_t::_clean_up() {
 }
 
 renderware_binary_stream_t::uv_layer_t::uv_layer_t(uint32_t p_num_vertices, kaitai::kstream* p__io, renderware_binary_stream_t::geometry_non_native_t* p__parent, renderware_binary_stream_t* p__root) : kaitai::kstruct(p__io) {
@@ -827,7 +1000,7 @@ void renderware_binary_stream_t::uv_layer_t::_clean_up() {
     }
 }
 
-renderware_binary_stream_t::struct_texture_dictionary_t::struct_texture_dictionary_t(kaitai::kstream* p__io, renderware_binary_stream_t::list_with_header_t* p__parent, renderware_binary_stream_t* p__root) : kaitai::kstruct(p__io) {
+renderware_binary_stream_t::vector_3d_t::vector_3d_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, renderware_binary_stream_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
 
@@ -839,21 +1012,23 @@ renderware_binary_stream_t::struct_texture_dictionary_t::struct_texture_dictiona
     }
 }
 
-void renderware_binary_stream_t::struct_texture_dictionary_t::_read() {
-    m_num_textures = m__io->read_u4le();
+void renderware_binary_stream_t::vector_3d_t::_read() {
+    m_x = m__io->read_f4le();
+    m_y = m__io->read_f4le();
+    m_z = m__io->read_f4le();
 }
 
-renderware_binary_stream_t::struct_texture_dictionary_t::~struct_texture_dictionary_t() {
+renderware_binary_stream_t::vector_3d_t::~vector_3d_t() {
     _clean_up();
 }
 
-void renderware_binary_stream_t::struct_texture_dictionary_t::_clean_up() {
+void renderware_binary_stream_t::vector_3d_t::_clean_up() {
 }
 
 int32_t renderware_binary_stream_t::version() {
     if (f_version)
         return m_version;
-    m_version = (((library_id_stamp() & 4294901760UL) != 0) ? (((((library_id_stamp() >> 14) & 261888) + 196608) | ((library_id_stamp() >> 16) & 63))) : ((library_id_stamp() << 8)));
     f_version = true;
+    m_version = (((library_id_stamp() & 4294901760UL) != 0) ? ((library_id_stamp() >> 14 & 261888) + 196608 | library_id_stamp() >> 16 & 63) : (library_id_stamp() << 8));
     return m_version;
 }

@@ -9,19 +9,23 @@ type CpioOldLe struct {
 	Files []*CpioOldLe_File
 	_io *kaitai.Stream
 	_root *CpioOldLe
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewCpioOldLe() *CpioOldLe {
 	return &CpioOldLe{
 	}
 }
 
-func (this *CpioOldLe) Read(io *kaitai.Stream, parent interface{}, root *CpioOldLe) (err error) {
+func (this CpioOldLe) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *CpioOldLe) Read(io *kaitai.Stream, parent kaitai.Struct, root *CpioOldLe) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	for i := 1;; i++ {
+	for i := 0;; i++ {
 		tmp1, err := this._io.EOF()
 		if err != nil {
 			return err
@@ -55,6 +59,10 @@ func NewCpioOldLe_File() *CpioOldLe_File {
 	}
 }
 
+func (this CpioOldLe_File) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *CpioOldLe_File) Read(io *kaitai.Stream, parent *CpioOldLe, root *CpioOldLe) (err error) {
 	this._io = io
 	this._parent = parent
@@ -66,7 +74,7 @@ func (this *CpioOldLe_File) Read(io *kaitai.Stream, parent *CpioOldLe, root *Cpi
 		return err
 	}
 	this.Header = tmp3
-	tmp4, err := this._io.ReadBytes(int((this.Header.PathNameSize - 1)))
+	tmp4, err := this._io.ReadBytes(int(this.Header.PathNameSize - 1))
 	if err != nil {
 		return err
 	}
@@ -160,6 +168,10 @@ func NewCpioOldLe_FileHeader() *CpioOldLe_FileHeader {
 	}
 }
 
+func (this CpioOldLe_FileHeader) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *CpioOldLe_FileHeader) Read(io *kaitai.Stream, parent *CpioOldLe_File, root *CpioOldLe) (err error) {
 	this._io = io
 	this._parent = parent
@@ -242,6 +254,10 @@ func NewCpioOldLe_FourByteUnsignedInteger() *CpioOldLe_FourByteUnsignedInteger {
 	}
 }
 
+func (this CpioOldLe_FourByteUnsignedInteger) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *CpioOldLe_FourByteUnsignedInteger) Read(io *kaitai.Stream, parent *CpioOldLe_FileHeader, root *CpioOldLe) (err error) {
 	this._io = io
 	this._parent = parent
@@ -263,7 +279,7 @@ func (this *CpioOldLe_FourByteUnsignedInteger) Value() (v int, err error) {
 	if (this._f_value) {
 		return this.value, nil
 	}
-	this.value = int((this.LeastSignificantBits + (this.MostSignificantBits << 16)))
 	this._f_value = true
+	this.value = int(this.LeastSignificantBits + this.MostSignificantBits << 16)
 	return this.value, nil
 }

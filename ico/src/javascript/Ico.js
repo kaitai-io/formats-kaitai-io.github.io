@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.Ico = factory(root.KaitaiStream);
+    factory(root.Ico || (root.Ico = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Ico_, KaitaiStream) {
 /**
  * Microsoft Windows uses specific file format to store applications
  * icons - ICO. This is a container that contains one or more image
@@ -27,8 +27,8 @@ var Ico = (function() {
   }
   Ico.prototype._read = function() {
     this.magic = this._io.readBytes(4);
-    if (!((KaitaiStream.byteArrayCompare(this.magic, [0, 0, 1, 0]) == 0))) {
-      throw new KaitaiStream.ValidationNotEqualError([0, 0, 1, 0], this.magic, this._io, "/seq/0");
+    if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([0, 0, 1, 0])) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([0, 0, 1, 0]), this.magic, this._io, "/seq/0");
     }
     this.numImages = this._io.readU2le();
     this.images = [];
@@ -41,7 +41,7 @@ var Ico = (function() {
     function IconDirEntry(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -50,8 +50,8 @@ var Ico = (function() {
       this.height = this._io.readU1();
       this.numColors = this._io.readU1();
       this.reserved = this._io.readBytes(1);
-      if (!((KaitaiStream.byteArrayCompare(this.reserved, [0]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([0], this.reserved, this._io, "/types/icon_dir_entry/seq/3");
+      if (!((KaitaiStream.byteArrayCompare(this.reserved, new Uint8Array([0])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([0]), this.reserved, this._io, "/types/icon_dir_entry/seq/3");
       }
       this.numPlanes = this._io.readU2le();
       this.bpp = this._io.readU2le();
@@ -77,6 +77,18 @@ var Ico = (function() {
     });
 
     /**
+     * True if this image is in PNG format.
+     */
+    Object.defineProperty(IconDirEntry.prototype, 'isPng', {
+      get: function() {
+        if (this._m_isPng !== undefined)
+          return this._m_isPng;
+        this._m_isPng = (KaitaiStream.byteArrayCompare(this.pngHeader, new Uint8Array([137, 80, 78, 71, 13, 10, 26, 10])) == 0);
+        return this._m_isPng;
+      }
+    });
+
+    /**
      * Pre-reads first 8 bytes of the image to determine if it's an
      * embedded PNG file.
      */
@@ -89,18 +101,6 @@ var Ico = (function() {
         this._m_pngHeader = this._io.readBytes(8);
         this._io.seek(_pos);
         return this._m_pngHeader;
-      }
-    });
-
-    /**
-     * True if this image is in PNG format.
-     */
-    Object.defineProperty(IconDirEntry.prototype, 'isPng', {
-      get: function() {
-        if (this._m_isPng !== undefined)
-          return this._m_isPng;
-        this._m_isPng = (KaitaiStream.byteArrayCompare(this.pngHeader, [137, 80, 78, 71, 13, 10, 26, 10]) == 0);
-        return this._m_isPng;
       }
     });
 
@@ -142,5 +142,5 @@ var Ico = (function() {
 
   return Ico;
 })();
-return Ico;
-}));
+Ico_.Ico = Ico;
+});

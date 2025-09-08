@@ -20,6 +20,11 @@ const (
 	MagicavoxelVox_ChunkType__Size MagicavoxelVox_ChunkType = 1397316165
 	MagicavoxelVox_ChunkType__Xyzi MagicavoxelVox_ChunkType = 1482250825
 )
+var values_MagicavoxelVox_ChunkType = map[MagicavoxelVox_ChunkType]struct{}{1296124238: {}, 1296127060: {}, 1346454347: {}, 1380401729: {}, 1397316165: {}, 1482250825: {}}
+func (v MagicavoxelVox_ChunkType) isDefined() bool {
+	_, ok := values_MagicavoxelVox_ChunkType[v]
+	return ok
+}
 
 type MagicavoxelVox_MaterialType int
 const (
@@ -28,6 +33,11 @@ const (
 	MagicavoxelVox_MaterialType__Glass MagicavoxelVox_MaterialType = 2
 	MagicavoxelVox_MaterialType__Emissive MagicavoxelVox_MaterialType = 3
 )
+var values_MagicavoxelVox_MaterialType = map[MagicavoxelVox_MaterialType]struct{}{0: {}, 1: {}, 2: {}, 3: {}}
+func (v MagicavoxelVox_MaterialType) isDefined() bool {
+	_, ok := values_MagicavoxelVox_MaterialType[v]
+	return ok
+}
 
 type MagicavoxelVox_PropertyBitsType int
 const (
@@ -40,20 +50,29 @@ const (
 	MagicavoxelVox_PropertyBitsType__Glow MagicavoxelVox_PropertyBitsType = 64
 	MagicavoxelVox_PropertyBitsType__IsTotalPower MagicavoxelVox_PropertyBitsType = 128
 )
+var values_MagicavoxelVox_PropertyBitsType = map[MagicavoxelVox_PropertyBitsType]struct{}{1: {}, 2: {}, 4: {}, 8: {}, 16: {}, 32: {}, 64: {}, 128: {}}
+func (v MagicavoxelVox_PropertyBitsType) isDefined() bool {
+	_, ok := values_MagicavoxelVox_PropertyBitsType[v]
+	return ok
+}
 type MagicavoxelVox struct {
 	Magic []byte
 	Version uint32
 	Main *MagicavoxelVox_Chunk
 	_io *kaitai.Stream
 	_root *MagicavoxelVox
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewMagicavoxelVox() *MagicavoxelVox {
 	return &MagicavoxelVox{
 	}
 }
 
-func (this *MagicavoxelVox) Read(io *kaitai.Stream, parent interface{}, root *MagicavoxelVox) (err error) {
+func (this MagicavoxelVox) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *MagicavoxelVox) Read(io *kaitai.Stream, parent kaitai.Struct, root *MagicavoxelVox) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -92,7 +111,7 @@ type MagicavoxelVox_Chunk struct {
 	ChildrenChunks []*MagicavoxelVox_Chunk
 	_io *kaitai.Stream
 	_root *MagicavoxelVox
-	_parent interface{}
+	_parent kaitai.Struct
 	_raw_ChunkContent []byte
 }
 func NewMagicavoxelVox_Chunk() *MagicavoxelVox_Chunk {
@@ -100,7 +119,11 @@ func NewMagicavoxelVox_Chunk() *MagicavoxelVox_Chunk {
 	}
 }
 
-func (this *MagicavoxelVox_Chunk) Read(io *kaitai.Stream, parent interface{}, root *MagicavoxelVox) (err error) {
+func (this MagicavoxelVox_Chunk) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *MagicavoxelVox_Chunk) Read(io *kaitai.Stream, parent kaitai.Struct, root *MagicavoxelVox) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -122,7 +145,7 @@ func (this *MagicavoxelVox_Chunk) Read(io *kaitai.Stream, parent interface{}, ro
 	this.NumBytesOfChildrenChunks = uint32(tmp6)
 	if (this.NumBytesOfChunkContent != 0) {
 		switch (this.ChunkId) {
-		case MagicavoxelVox_ChunkType__Size:
+		case MagicavoxelVox_ChunkType__Matt:
 			tmp7, err := this._io.ReadBytes(int(this.NumBytesOfChunkContent))
 			if err != nil {
 				return err
@@ -130,13 +153,13 @@ func (this *MagicavoxelVox_Chunk) Read(io *kaitai.Stream, parent interface{}, ro
 			tmp7 = tmp7
 			this._raw_ChunkContent = tmp7
 			_io__raw_ChunkContent := kaitai.NewStream(bytes.NewReader(this._raw_ChunkContent))
-			tmp8 := NewMagicavoxelVox_Size()
+			tmp8 := NewMagicavoxelVox_Matt()
 			err = tmp8.Read(_io__raw_ChunkContent, this, this._root)
 			if err != nil {
 				return err
 			}
 			this.ChunkContent = tmp8
-		case MagicavoxelVox_ChunkType__Matt:
+		case MagicavoxelVox_ChunkType__Pack:
 			tmp9, err := this._io.ReadBytes(int(this.NumBytesOfChunkContent))
 			if err != nil {
 				return err
@@ -144,7 +167,7 @@ func (this *MagicavoxelVox_Chunk) Read(io *kaitai.Stream, parent interface{}, ro
 			tmp9 = tmp9
 			this._raw_ChunkContent = tmp9
 			_io__raw_ChunkContent := kaitai.NewStream(bytes.NewReader(this._raw_ChunkContent))
-			tmp10 := NewMagicavoxelVox_Matt()
+			tmp10 := NewMagicavoxelVox_Pack()
 			err = tmp10.Read(_io__raw_ChunkContent, this, this._root)
 			if err != nil {
 				return err
@@ -164,7 +187,7 @@ func (this *MagicavoxelVox_Chunk) Read(io *kaitai.Stream, parent interface{}, ro
 				return err
 			}
 			this.ChunkContent = tmp12
-		case MagicavoxelVox_ChunkType__Xyzi:
+		case MagicavoxelVox_ChunkType__Size:
 			tmp13, err := this._io.ReadBytes(int(this.NumBytesOfChunkContent))
 			if err != nil {
 				return err
@@ -172,13 +195,13 @@ func (this *MagicavoxelVox_Chunk) Read(io *kaitai.Stream, parent interface{}, ro
 			tmp13 = tmp13
 			this._raw_ChunkContent = tmp13
 			_io__raw_ChunkContent := kaitai.NewStream(bytes.NewReader(this._raw_ChunkContent))
-			tmp14 := NewMagicavoxelVox_Xyzi()
+			tmp14 := NewMagicavoxelVox_Size()
 			err = tmp14.Read(_io__raw_ChunkContent, this, this._root)
 			if err != nil {
 				return err
 			}
 			this.ChunkContent = tmp14
-		case MagicavoxelVox_ChunkType__Pack:
+		case MagicavoxelVox_ChunkType__Xyzi:
 			tmp15, err := this._io.ReadBytes(int(this.NumBytesOfChunkContent))
 			if err != nil {
 				return err
@@ -186,7 +209,7 @@ func (this *MagicavoxelVox_Chunk) Read(io *kaitai.Stream, parent interface{}, ro
 			tmp15 = tmp15
 			this._raw_ChunkContent = tmp15
 			_io__raw_ChunkContent := kaitai.NewStream(bytes.NewReader(this._raw_ChunkContent))
-			tmp16 := NewMagicavoxelVox_Pack()
+			tmp16 := NewMagicavoxelVox_Xyzi()
 			err = tmp16.Read(_io__raw_ChunkContent, this, this._root)
 			if err != nil {
 				return err
@@ -202,7 +225,7 @@ func (this *MagicavoxelVox_Chunk) Read(io *kaitai.Stream, parent interface{}, ro
 		}
 	}
 	if (this.NumBytesOfChildrenChunks != 0) {
-		for i := 1;; i++ {
+		for i := 0;; i++ {
 			tmp18, err := this._io.EOF()
 			if err != nil {
 				return err
@@ -220,89 +243,49 @@ func (this *MagicavoxelVox_Chunk) Read(io *kaitai.Stream, parent interface{}, ro
 	}
 	return err
 }
-type MagicavoxelVox_Size struct {
-	SizeX uint32
-	SizeY uint32
-	SizeZ uint32
+type MagicavoxelVox_Color struct {
+	R uint8
+	G uint8
+	B uint8
+	A uint8
 	_io *kaitai.Stream
 	_root *MagicavoxelVox
-	_parent *MagicavoxelVox_Chunk
+	_parent *MagicavoxelVox_Rgba
 }
-func NewMagicavoxelVox_Size() *MagicavoxelVox_Size {
-	return &MagicavoxelVox_Size{
+func NewMagicavoxelVox_Color() *MagicavoxelVox_Color {
+	return &MagicavoxelVox_Color{
 	}
 }
 
-func (this *MagicavoxelVox_Size) Read(io *kaitai.Stream, parent *MagicavoxelVox_Chunk, root *MagicavoxelVox) (err error) {
+func (this MagicavoxelVox_Color) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *MagicavoxelVox_Color) Read(io *kaitai.Stream, parent *MagicavoxelVox_Rgba, root *MagicavoxelVox) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp20, err := this._io.ReadU4le()
+	tmp20, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.SizeX = uint32(tmp20)
-	tmp21, err := this._io.ReadU4le()
+	this.R = tmp20
+	tmp21, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.SizeY = uint32(tmp21)
-	tmp22, err := this._io.ReadU4le()
+	this.G = tmp21
+	tmp22, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.SizeZ = uint32(tmp22)
-	return err
-}
-type MagicavoxelVox_Rgba struct {
-	Colors []*MagicavoxelVox_Color
-	_io *kaitai.Stream
-	_root *MagicavoxelVox
-	_parent *MagicavoxelVox_Chunk
-}
-func NewMagicavoxelVox_Rgba() *MagicavoxelVox_Rgba {
-	return &MagicavoxelVox_Rgba{
-	}
-}
-
-func (this *MagicavoxelVox_Rgba) Read(io *kaitai.Stream, parent *MagicavoxelVox_Chunk, root *MagicavoxelVox) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	for i := 0; i < int(256); i++ {
-		_ = i
-		tmp23 := NewMagicavoxelVox_Color()
-		err = tmp23.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Colors = append(this.Colors, tmp23)
-	}
-	return err
-}
-type MagicavoxelVox_Pack struct {
-	NumModels uint32
-	_io *kaitai.Stream
-	_root *MagicavoxelVox
-	_parent *MagicavoxelVox_Chunk
-}
-func NewMagicavoxelVox_Pack() *MagicavoxelVox_Pack {
-	return &MagicavoxelVox_Pack{
-	}
-}
-
-func (this *MagicavoxelVox_Pack) Read(io *kaitai.Stream, parent *MagicavoxelVox_Chunk, root *MagicavoxelVox) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp24, err := this._io.ReadU4le()
+	this.B = tmp22
+	tmp23, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.NumModels = uint32(tmp24)
+	this.A = tmp23
 	return err
 }
 type MagicavoxelVox_Matt struct {
@@ -321,26 +304,30 @@ type MagicavoxelVox_Matt struct {
 	_io *kaitai.Stream
 	_root *MagicavoxelVox
 	_parent *MagicavoxelVox_Chunk
+	_f_hasAttenuation bool
+	hasAttenuation bool
+	_f_hasGlow bool
+	hasGlow bool
+	_f_hasIor bool
+	hasIor bool
 	_f_hasIsTotalPower bool
 	hasIsTotalPower bool
 	_f_hasPlastic bool
 	hasPlastic bool
-	_f_hasAttenuation bool
-	hasAttenuation bool
 	_f_hasPower bool
 	hasPower bool
 	_f_hasRoughness bool
 	hasRoughness bool
 	_f_hasSpecular bool
 	hasSpecular bool
-	_f_hasIor bool
-	hasIor bool
-	_f_hasGlow bool
-	hasGlow bool
 }
 func NewMagicavoxelVox_Matt() *MagicavoxelVox_Matt {
 	return &MagicavoxelVox_Matt{
 	}
+}
+
+func (this MagicavoxelVox_Matt) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *MagicavoxelVox_Matt) Read(io *kaitai.Stream, parent *MagicavoxelVox_Chunk, root *MagicavoxelVox) (err error) {
@@ -348,252 +335,275 @@ func (this *MagicavoxelVox_Matt) Read(io *kaitai.Stream, parent *MagicavoxelVox_
 	this._parent = parent
 	this._root = root
 
+	tmp24, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Id = uint32(tmp24)
 	tmp25, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Id = uint32(tmp25)
-	tmp26, err := this._io.ReadU4le()
+	this.MaterialType = MagicavoxelVox_MaterialType(tmp25)
+	tmp26, err := this._io.ReadF4le()
 	if err != nil {
 		return err
 	}
-	this.MaterialType = MagicavoxelVox_MaterialType(tmp26)
-	tmp27, err := this._io.ReadF4le()
+	this.MaterialWeight = float32(tmp26)
+	tmp27, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.MaterialWeight = float32(tmp27)
-	tmp28, err := this._io.ReadU4le()
+	this.PropertyBits = uint32(tmp27)
+	tmp28, err := this.HasPlastic()
 	if err != nil {
 		return err
 	}
-	this.PropertyBits = uint32(tmp28)
-	tmp29, err := this.HasPlastic()
-	if err != nil {
-		return err
-	}
-	if (tmp29) {
-		tmp30, err := this._io.ReadF4le()
+	if (tmp28) {
+		tmp29, err := this._io.ReadF4le()
 		if err != nil {
 			return err
 		}
-		this.Plastic = float32(tmp30)
+		this.Plastic = float32(tmp29)
 	}
-	tmp31, err := this.HasRoughness()
+	tmp30, err := this.HasRoughness()
 	if err != nil {
 		return err
 	}
-	if (tmp31) {
-		tmp32, err := this._io.ReadF4le()
+	if (tmp30) {
+		tmp31, err := this._io.ReadF4le()
 		if err != nil {
 			return err
 		}
-		this.Roughness = float32(tmp32)
+		this.Roughness = float32(tmp31)
 	}
-	tmp33, err := this.HasSpecular()
+	tmp32, err := this.HasSpecular()
 	if err != nil {
 		return err
 	}
-	if (tmp33) {
-		tmp34, err := this._io.ReadF4le()
+	if (tmp32) {
+		tmp33, err := this._io.ReadF4le()
 		if err != nil {
 			return err
 		}
-		this.Specular = float32(tmp34)
+		this.Specular = float32(tmp33)
 	}
-	tmp35, err := this.HasIor()
+	tmp34, err := this.HasIor()
 	if err != nil {
 		return err
 	}
-	if (tmp35) {
-		tmp36, err := this._io.ReadF4le()
+	if (tmp34) {
+		tmp35, err := this._io.ReadF4le()
 		if err != nil {
 			return err
 		}
-		this.Ior = float32(tmp36)
+		this.Ior = float32(tmp35)
 	}
-	tmp37, err := this.HasAttenuation()
+	tmp36, err := this.HasAttenuation()
 	if err != nil {
 		return err
 	}
-	if (tmp37) {
-		tmp38, err := this._io.ReadF4le()
+	if (tmp36) {
+		tmp37, err := this._io.ReadF4le()
 		if err != nil {
 			return err
 		}
-		this.Attenuation = float32(tmp38)
+		this.Attenuation = float32(tmp37)
 	}
-	tmp39, err := this.HasPower()
+	tmp38, err := this.HasPower()
 	if err != nil {
 		return err
 	}
-	if (tmp39) {
-		tmp40, err := this._io.ReadF4le()
+	if (tmp38) {
+		tmp39, err := this._io.ReadF4le()
 		if err != nil {
 			return err
 		}
-		this.Power = float32(tmp40)
+		this.Power = float32(tmp39)
 	}
-	tmp41, err := this.HasGlow()
+	tmp40, err := this.HasGlow()
 	if err != nil {
 		return err
 	}
-	if (tmp41) {
-		tmp42, err := this._io.ReadF4le()
+	if (tmp40) {
+		tmp41, err := this._io.ReadF4le()
 		if err != nil {
 			return err
 		}
-		this.Glow = float32(tmp42)
+		this.Glow = float32(tmp41)
 	}
-	tmp43, err := this.HasIsTotalPower()
+	tmp42, err := this.HasIsTotalPower()
 	if err != nil {
 		return err
 	}
-	if (tmp43) {
-		tmp44, err := this._io.ReadF4le()
+	if (tmp42) {
+		tmp43, err := this._io.ReadF4le()
 		if err != nil {
 			return err
 		}
-		this.IsTotalPower = float32(tmp44)
+		this.IsTotalPower = float32(tmp43)
 	}
 	return err
+}
+func (this *MagicavoxelVox_Matt) HasAttenuation() (v bool, err error) {
+	if (this._f_hasAttenuation) {
+		return this.hasAttenuation, nil
+	}
+	this._f_hasAttenuation = true
+	this.hasAttenuation = bool(this.PropertyBits & 16 != 0)
+	return this.hasAttenuation, nil
+}
+func (this *MagicavoxelVox_Matt) HasGlow() (v bool, err error) {
+	if (this._f_hasGlow) {
+		return this.hasGlow, nil
+	}
+	this._f_hasGlow = true
+	this.hasGlow = bool(this.PropertyBits & 64 != 0)
+	return this.hasGlow, nil
+}
+func (this *MagicavoxelVox_Matt) HasIor() (v bool, err error) {
+	if (this._f_hasIor) {
+		return this.hasIor, nil
+	}
+	this._f_hasIor = true
+	this.hasIor = bool(this.PropertyBits & 8 != 0)
+	return this.hasIor, nil
 }
 func (this *MagicavoxelVox_Matt) HasIsTotalPower() (v bool, err error) {
 	if (this._f_hasIsTotalPower) {
 		return this.hasIsTotalPower, nil
 	}
-	this.hasIsTotalPower = bool((this.PropertyBits & 128) != 0)
 	this._f_hasIsTotalPower = true
+	this.hasIsTotalPower = bool(this.PropertyBits & 128 != 0)
 	return this.hasIsTotalPower, nil
 }
 func (this *MagicavoxelVox_Matt) HasPlastic() (v bool, err error) {
 	if (this._f_hasPlastic) {
 		return this.hasPlastic, nil
 	}
-	this.hasPlastic = bool((this.PropertyBits & 1) != 0)
 	this._f_hasPlastic = true
+	this.hasPlastic = bool(this.PropertyBits & 1 != 0)
 	return this.hasPlastic, nil
-}
-func (this *MagicavoxelVox_Matt) HasAttenuation() (v bool, err error) {
-	if (this._f_hasAttenuation) {
-		return this.hasAttenuation, nil
-	}
-	this.hasAttenuation = bool((this.PropertyBits & 16) != 0)
-	this._f_hasAttenuation = true
-	return this.hasAttenuation, nil
 }
 func (this *MagicavoxelVox_Matt) HasPower() (v bool, err error) {
 	if (this._f_hasPower) {
 		return this.hasPower, nil
 	}
-	this.hasPower = bool((this.PropertyBits & 32) != 0)
 	this._f_hasPower = true
+	this.hasPower = bool(this.PropertyBits & 32 != 0)
 	return this.hasPower, nil
 }
 func (this *MagicavoxelVox_Matt) HasRoughness() (v bool, err error) {
 	if (this._f_hasRoughness) {
 		return this.hasRoughness, nil
 	}
-	this.hasRoughness = bool((this.PropertyBits & 2) != 0)
 	this._f_hasRoughness = true
+	this.hasRoughness = bool(this.PropertyBits & 2 != 0)
 	return this.hasRoughness, nil
 }
 func (this *MagicavoxelVox_Matt) HasSpecular() (v bool, err error) {
 	if (this._f_hasSpecular) {
 		return this.hasSpecular, nil
 	}
-	this.hasSpecular = bool((this.PropertyBits & 4) != 0)
 	this._f_hasSpecular = true
+	this.hasSpecular = bool(this.PropertyBits & 4 != 0)
 	return this.hasSpecular, nil
 }
-func (this *MagicavoxelVox_Matt) HasIor() (v bool, err error) {
-	if (this._f_hasIor) {
-		return this.hasIor, nil
-	}
-	this.hasIor = bool((this.PropertyBits & 8) != 0)
-	this._f_hasIor = true
-	return this.hasIor, nil
-}
-func (this *MagicavoxelVox_Matt) HasGlow() (v bool, err error) {
-	if (this._f_hasGlow) {
-		return this.hasGlow, nil
-	}
-	this.hasGlow = bool((this.PropertyBits & 64) != 0)
-	this._f_hasGlow = true
-	return this.hasGlow, nil
-}
-type MagicavoxelVox_Xyzi struct {
-	NumVoxels uint32
-	Voxels []*MagicavoxelVox_Voxel
+type MagicavoxelVox_Pack struct {
+	NumModels uint32
 	_io *kaitai.Stream
 	_root *MagicavoxelVox
 	_parent *MagicavoxelVox_Chunk
 }
-func NewMagicavoxelVox_Xyzi() *MagicavoxelVox_Xyzi {
-	return &MagicavoxelVox_Xyzi{
+func NewMagicavoxelVox_Pack() *MagicavoxelVox_Pack {
+	return &MagicavoxelVox_Pack{
 	}
 }
 
-func (this *MagicavoxelVox_Xyzi) Read(io *kaitai.Stream, parent *MagicavoxelVox_Chunk, root *MagicavoxelVox) (err error) {
+func (this MagicavoxelVox_Pack) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *MagicavoxelVox_Pack) Read(io *kaitai.Stream, parent *MagicavoxelVox_Chunk, root *MagicavoxelVox) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp45, err := this._io.ReadU4le()
+	tmp44, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.NumVoxels = uint32(tmp45)
-	for i := 0; i < int(this.NumVoxels); i++ {
+	this.NumModels = uint32(tmp44)
+	return err
+}
+type MagicavoxelVox_Rgba struct {
+	Colors []*MagicavoxelVox_Color
+	_io *kaitai.Stream
+	_root *MagicavoxelVox
+	_parent *MagicavoxelVox_Chunk
+}
+func NewMagicavoxelVox_Rgba() *MagicavoxelVox_Rgba {
+	return &MagicavoxelVox_Rgba{
+	}
+}
+
+func (this MagicavoxelVox_Rgba) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *MagicavoxelVox_Rgba) Read(io *kaitai.Stream, parent *MagicavoxelVox_Chunk, root *MagicavoxelVox) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	for i := 0; i < int(256); i++ {
 		_ = i
-		tmp46 := NewMagicavoxelVox_Voxel()
-		err = tmp46.Read(this._io, this, this._root)
+		tmp45 := NewMagicavoxelVox_Color()
+		err = tmp45.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Voxels = append(this.Voxels, tmp46)
+		this.Colors = append(this.Colors, tmp45)
 	}
 	return err
 }
-type MagicavoxelVox_Color struct {
-	R uint8
-	G uint8
-	B uint8
-	A uint8
+type MagicavoxelVox_Size struct {
+	SizeX uint32
+	SizeY uint32
+	SizeZ uint32
 	_io *kaitai.Stream
 	_root *MagicavoxelVox
-	_parent *MagicavoxelVox_Rgba
+	_parent *MagicavoxelVox_Chunk
 }
-func NewMagicavoxelVox_Color() *MagicavoxelVox_Color {
-	return &MagicavoxelVox_Color{
+func NewMagicavoxelVox_Size() *MagicavoxelVox_Size {
+	return &MagicavoxelVox_Size{
 	}
 }
 
-func (this *MagicavoxelVox_Color) Read(io *kaitai.Stream, parent *MagicavoxelVox_Rgba, root *MagicavoxelVox) (err error) {
+func (this MagicavoxelVox_Size) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *MagicavoxelVox_Size) Read(io *kaitai.Stream, parent *MagicavoxelVox_Chunk, root *MagicavoxelVox) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp47, err := this._io.ReadU1()
+	tmp46, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.R = tmp47
-	tmp48, err := this._io.ReadU1()
+	this.SizeX = uint32(tmp46)
+	tmp47, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.G = tmp48
-	tmp49, err := this._io.ReadU1()
+	this.SizeY = uint32(tmp47)
+	tmp48, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.B = tmp49
-	tmp50, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.A = tmp50
+	this.SizeZ = uint32(tmp48)
 	return err
 }
 type MagicavoxelVox_Voxel struct {
@@ -610,30 +620,71 @@ func NewMagicavoxelVox_Voxel() *MagicavoxelVox_Voxel {
 	}
 }
 
+func (this MagicavoxelVox_Voxel) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *MagicavoxelVox_Voxel) Read(io *kaitai.Stream, parent *MagicavoxelVox_Xyzi, root *MagicavoxelVox) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
+	tmp49, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.X = tmp49
+	tmp50, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Y = tmp50
 	tmp51, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.X = tmp51
+	this.Z = tmp51
 	tmp52, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Y = tmp52
-	tmp53, err := this._io.ReadU1()
+	this.ColorIndex = tmp52
+	return err
+}
+type MagicavoxelVox_Xyzi struct {
+	NumVoxels uint32
+	Voxels []*MagicavoxelVox_Voxel
+	_io *kaitai.Stream
+	_root *MagicavoxelVox
+	_parent *MagicavoxelVox_Chunk
+}
+func NewMagicavoxelVox_Xyzi() *MagicavoxelVox_Xyzi {
+	return &MagicavoxelVox_Xyzi{
+	}
+}
+
+func (this MagicavoxelVox_Xyzi) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *MagicavoxelVox_Xyzi) Read(io *kaitai.Stream, parent *MagicavoxelVox_Chunk, root *MagicavoxelVox) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp53, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Z = tmp53
-	tmp54, err := this._io.ReadU1()
-	if err != nil {
-		return err
+	this.NumVoxels = uint32(tmp53)
+	for i := 0; i < int(this.NumVoxels); i++ {
+		_ = i
+		tmp54 := NewMagicavoxelVox_Voxel()
+		err = tmp54.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Voxels = append(this.Voxels, tmp54)
 	}
-	this.ColorIndex = tmp54
 	return err
 }

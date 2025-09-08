@@ -27,7 +27,7 @@ Exif.ExifBody = class.class(KaitaiStruct)
 function Exif.ExifBody:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -81,7 +81,7 @@ Exif.ExifBody.Ifd = class.class(KaitaiStruct)
 function Exif.ExifBody.Ifd:_init(io, parent, root, is_le)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self._is_le = is_le
   self:_read()
 end
@@ -612,7 +612,7 @@ Exif.ExifBody.IfdField.TagEnum = enum.Enum {
 function Exif.ExifBody.IfdField:_init(io, parent, root, is_le)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self._is_le = is_le
   self:_read()
 end
@@ -642,34 +642,14 @@ function Exif.ExifBody.IfdField:_read_be()
   self.ofs_or_data = self._io:read_u4be()
 end
 
-Exif.ExifBody.IfdField.property.type_byte_length = {}
-function Exif.ExifBody.IfdField.property.type_byte_length:get()
-  if self._m_type_byte_length ~= nil then
-    return self._m_type_byte_length
-  end
-
-  self._m_type_byte_length = utils.box_unwrap((self.field_type == Exif.ExifBody.IfdField.FieldTypeEnum.word) and utils.box_wrap(2) or (utils.box_unwrap((self.field_type == Exif.ExifBody.IfdField.FieldTypeEnum.dword) and utils.box_wrap(4) or (1))))
-  return self._m_type_byte_length
-end
-
 Exif.ExifBody.IfdField.property.byte_length = {}
 function Exif.ExifBody.IfdField.property.byte_length:get()
   if self._m_byte_length ~= nil then
     return self._m_byte_length
   end
 
-  self._m_byte_length = (self.length * self.type_byte_length)
+  self._m_byte_length = self.length * self.type_byte_length
   return self._m_byte_length
-end
-
-Exif.ExifBody.IfdField.property.is_immediate_data = {}
-function Exif.ExifBody.IfdField.property.is_immediate_data:get()
-  if self._m_is_immediate_data ~= nil then
-    return self._m_is_immediate_data
-  end
-
-  self._m_is_immediate_data = self.byte_length <= 4
-  return self._m_is_immediate_data
 end
 
 Exif.ExifBody.IfdField.property.data = {}
@@ -690,6 +670,26 @@ function Exif.ExifBody.IfdField.property.data:get()
     _io:seek(_pos)
   end
   return self._m_data
+end
+
+Exif.ExifBody.IfdField.property.is_immediate_data = {}
+function Exif.ExifBody.IfdField.property.is_immediate_data:get()
+  if self._m_is_immediate_data ~= nil then
+    return self._m_is_immediate_data
+  end
+
+  self._m_is_immediate_data = self.byte_length <= 4
+  return self._m_is_immediate_data
+end
+
+Exif.ExifBody.IfdField.property.type_byte_length = {}
+function Exif.ExifBody.IfdField.property.type_byte_length:get()
+  if self._m_type_byte_length ~= nil then
+    return self._m_type_byte_length
+  end
+
+  self._m_type_byte_length = utils.box_unwrap((self.field_type == Exif.ExifBody.IfdField.FieldTypeEnum.word) and utils.box_wrap(2) or (utils.box_unwrap((self.field_type == Exif.ExifBody.IfdField.FieldTypeEnum.dword) and utils.box_wrap(4) or (1))))
+  return self._m_type_byte_length
 end
 
 

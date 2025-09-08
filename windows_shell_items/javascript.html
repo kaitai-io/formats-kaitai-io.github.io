@@ -199,6 +199,11 @@ various Windows versions.</p>
                 <a href="java.html" title="Windows Shell Items parsing Java library">Java</a></li>
                 
                 
+                <li>
+                
+                <a href="java-write.html" title="Windows Shell Items parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
                 <li class="active">
                 
                 <a href="javascript.html" title="Windows Shell Items parsing JavaScript library">JavaScript</a></li>
@@ -231,7 +236,17 @@ various Windows versions.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="Windows Shell Items parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="Windows Shell Items parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="Windows Shell Items parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -304,13 +319,13 @@ various Windows versions.</p>
 
 <span class="p">(</span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">root</span><span class="p">,</span><span class="w"> </span><span class="nx">factory</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="ow">typeof</span><span class="w"> </span><span class="nx">define</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;function&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">define</span><span class="p">.</span><span class="nx">amd</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">define</span><span class="p">([</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">],</span><span class="w"> </span><span class="nx">factory</span><span class="p">);</span>
-<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="ow">typeof</span><span class="w"> </span><span class="nx">module</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;object&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">factory</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">));</span>
+<span class="w">    </span><span class="nx">define</span><span class="p">([</span><span class="s1">&#39;exports&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">],</span><span class="w"> </span><span class="nx">factory</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="ow">typeof</span><span class="w"> </span><span class="nx">exports</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;object&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">exports</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="ow">typeof</span><span class="w"> </span><span class="nx">exports</span><span class="p">.</span><span class="nx">nodeType</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s1">&#39;number&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">factory</span><span class="p">(</span><span class="nx">exports</span><span class="p">,</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">));</span>
 <span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">root</span><span class="p">.</span><span class="nx">WindowsShellItems</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">KaitaiStream</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">WindowsShellItems</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">WindowsShellItems</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}),</span><span class="w"> </span><span class="nx">root</span><span class="p">.</span><span class="nx">KaitaiStream</span><span class="p">);</span>
 <span class="w">  </span><span class="p">}</span>
-<span class="p">}(</span><span class="ow">typeof</span><span class="w"> </span><span class="nx">self</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s1">&#39;undefined&#39;</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nx">self</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="p">})(</span><span class="ow">typeof</span><span class="w"> </span><span class="nx">self</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s1">&#39;undefined&#39;</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nx">self</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">WindowsShellItems_</span><span class="p">,</span><span class="w"> </span><span class="nx">KaitaiStream</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="cm">/**</span>
 <span class="cm"> * Windows Shell Items (AKA &quot;shellbags&quot;) is an undocumented set of</span>
 <span class="cm"> * structures used internally within Windows to identify paths in</span>
@@ -344,97 +359,6 @@ various Windows versions.</p>
 <span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">lenData</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mf">0</span><span class="p">));</span>
 <span class="w">  </span><span class="p">}</span>
 
-<span class="w">  </span><span class="kd">var</span><span class="w"> </span><span class="nx">ShellItemData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">WindowsShellItems</span><span class="p">.</span><span class="nx">ShellItemData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">function</span><span class="w"> </span><span class="nx">ShellItemData</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">_parent</span><span class="p">,</span><span class="w"> </span><span class="nx">_root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_io</span><span class="p">;</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_parent</span><span class="p">;</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
-
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="nx">ShellItemData</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">code</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
-<span class="w">      </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">code</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="mf">31</span><span class="o">:</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">body1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">RootFolderBody</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
-<span class="w">        </span><span class="k">break</span><span class="p">;</span>
-<span class="w">      </span><span class="p">}</span>
-<span class="w">      </span><span class="k">switch</span><span class="w"> </span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">code</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mf">112</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="mf">32</span><span class="o">:</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">body2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">VolumeBody</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
-<span class="w">        </span><span class="k">break</span><span class="p">;</span>
-<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="mf">48</span><span class="o">:</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">body2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">FileEntryBody</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
-<span class="w">        </span><span class="k">break</span><span class="p">;</span>
-<span class="w">      </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">ShellItemData</span><span class="p">;</span>
-<span class="w">  </span><span class="p">})();</span>
-
-<span class="w">  </span><span class="cm">/**</span>
-<span class="cm">   * @see {@link https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf|Section 2.2.2}</span>
-<span class="cm">   */</span>
-
-<span class="w">  </span><span class="kd">var</span><span class="w"> </span><span class="nx">ShellItem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">WindowsShellItems</span><span class="p">.</span><span class="nx">ShellItem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">function</span><span class="w"> </span><span class="nx">ShellItem</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">_parent</span><span class="p">,</span><span class="w"> </span><span class="nx">_root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_io</span><span class="p">;</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_parent</span><span class="p">;</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
-
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="nx">ShellItem</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">lenData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
-<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">lenData</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mf">2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">lenData</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">2</span><span class="p">));</span>
-<span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="nx">_io__raw_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_data</span><span class="p">);</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">ShellItemData</span><span class="p">(</span><span class="nx">_io__raw_data</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
-<span class="w">      </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">ShellItem</span><span class="p">;</span>
-<span class="w">  </span><span class="p">})();</span>
-
-<span class="w">  </span><span class="cm">/**</span>
-<span class="cm">   * @see {@link https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#32-root-folder-shell-item|Source}</span>
-<span class="cm">   */</span>
-
-<span class="w">  </span><span class="kd">var</span><span class="w"> </span><span class="nx">RootFolderBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">WindowsShellItems</span><span class="p">.</span><span class="nx">RootFolderBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">function</span><span class="w"> </span><span class="nx">RootFolderBody</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">_parent</span><span class="p">,</span><span class="w"> </span><span class="nx">_root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_io</span><span class="p">;</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_parent</span><span class="p">;</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
-
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="nx">RootFolderBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">sortIndex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">shellFolderId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mf">16</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">RootFolderBody</span><span class="p">;</span>
-<span class="w">  </span><span class="p">})();</span>
-
-<span class="w">  </span><span class="cm">/**</span>
-<span class="cm">   * @see {@link https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#33-volume-shell-item|Source}</span>
-<span class="cm">   */</span>
-
-<span class="w">  </span><span class="kd">var</span><span class="w"> </span><span class="nx">VolumeBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">WindowsShellItems</span><span class="p">.</span><span class="nx">VolumeBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">function</span><span class="w"> </span><span class="nx">VolumeBody</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">_parent</span><span class="p">,</span><span class="w"> </span><span class="nx">_root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_io</span><span class="p">;</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_parent</span><span class="p">;</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
-
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="nx">VolumeBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">VolumeBody</span><span class="p">;</span>
-<span class="w">  </span><span class="p">})();</span>
-
 <span class="w">  </span><span class="cm">/**</span>
 <span class="cm">   * @see {@link https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#34-file-entry-shell-item|Source}</span>
 <span class="cm">   */</span>
@@ -443,7 +367,7 @@ various Windows versions.</p>
 <span class="w">    </span><span class="kd">function</span><span class="w"> </span><span class="nx">FileEntryBody</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">_parent</span><span class="p">,</span><span class="w"> </span><span class="nx">_root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_io</span><span class="p">;</span>
 <span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_parent</span><span class="p">;</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="p">;</span>
 
 <span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
 <span class="w">    </span><span class="p">}</span>
@@ -474,13 +398,104 @@ various Windows versions.</p>
 <span class="w">  </span><span class="p">})();</span>
 
 <span class="w">  </span><span class="cm">/**</span>
+<span class="cm">   * @see {@link https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#32-root-folder-shell-item|Source}</span>
+<span class="cm">   */</span>
+
+<span class="w">  </span><span class="kd">var</span><span class="w"> </span><span class="nx">RootFolderBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">WindowsShellItems</span><span class="p">.</span><span class="nx">RootFolderBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">function</span><span class="w"> </span><span class="nx">RootFolderBody</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">_parent</span><span class="p">,</span><span class="w"> </span><span class="nx">_root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_io</span><span class="p">;</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_parent</span><span class="p">;</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="p">;</span>
+
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="nx">RootFolderBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">sortIndex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">shellFolderId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mf">16</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">RootFolderBody</span><span class="p">;</span>
+<span class="w">  </span><span class="p">})();</span>
+
+<span class="w">  </span><span class="cm">/**</span>
+<span class="cm">   * @see {@link https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf|Section 2.2.2}</span>
+<span class="cm">   */</span>
+
+<span class="w">  </span><span class="kd">var</span><span class="w"> </span><span class="nx">ShellItem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">WindowsShellItems</span><span class="p">.</span><span class="nx">ShellItem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">function</span><span class="w"> </span><span class="nx">ShellItem</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">_parent</span><span class="p">,</span><span class="w"> </span><span class="nx">_root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_io</span><span class="p">;</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_parent</span><span class="p">;</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="p">;</span>
+
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="nx">ShellItem</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">lenData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">lenData</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mf">2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">lenData</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">2</span><span class="p">);</span>
+<span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="nx">_io__raw_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_data</span><span class="p">);</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">ShellItemData</span><span class="p">(</span><span class="nx">_io__raw_data</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">ShellItem</span><span class="p">;</span>
+<span class="w">  </span><span class="p">})();</span>
+
+<span class="w">  </span><span class="kd">var</span><span class="w"> </span><span class="nx">ShellItemData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">WindowsShellItems</span><span class="p">.</span><span class="nx">ShellItemData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">function</span><span class="w"> </span><span class="nx">ShellItemData</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">_parent</span><span class="p">,</span><span class="w"> </span><span class="nx">_root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_io</span><span class="p">;</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_parent</span><span class="p">;</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="p">;</span>
+
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="nx">ShellItemData</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">code</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+<span class="w">      </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">code</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="mf">31</span><span class="o">:</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">body1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">RootFolderBody</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+<span class="w">        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">      </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">code</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mf">112</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="mf">32</span><span class="o">:</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">body2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">VolumeBody</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+<span class="w">        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="mf">48</span><span class="o">:</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">body2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">FileEntryBody</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+<span class="w">        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">ShellItemData</span><span class="p">;</span>
+<span class="w">  </span><span class="p">})();</span>
+
+<span class="w">  </span><span class="cm">/**</span>
+<span class="cm">   * @see {@link https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#33-volume-shell-item|Source}</span>
+<span class="cm">   */</span>
+
+<span class="w">  </span><span class="kd">var</span><span class="w"> </span><span class="nx">VolumeBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">WindowsShellItems</span><span class="p">.</span><span class="nx">VolumeBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">function</span><span class="w"> </span><span class="nx">VolumeBody</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">_parent</span><span class="p">,</span><span class="w"> </span><span class="nx">_root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_io</span><span class="p">;</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_parent</span><span class="p">;</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="p">;</span>
+
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="nx">VolumeBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">VolumeBody</span><span class="p">;</span>
+<span class="w">  </span><span class="p">})();</span>
+
+<span class="w">  </span><span class="cm">/**</span>
 <span class="cm">   * @see {@link https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf|Section 2.2.1}</span>
 <span class="cm">   */</span>
 
 <span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">WindowsShellItems</span><span class="p">;</span>
 <span class="p">})();</span>
-<span class="k">return</span><span class="w"> </span><span class="nx">WindowsShellItems</span><span class="p">;</span>
-<span class="p">}));</span>
+<span class="nx">WindowsShellItems_</span><span class="p">.</span><span class="nx">WindowsShellItems</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">WindowsShellItems</span><span class="p">;</span>
+<span class="p">});</span>
 </pre></div>
 
         </div>

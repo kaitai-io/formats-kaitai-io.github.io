@@ -31,16 +31,11 @@ const (
 	Rar_BlockTypes__Subblock Rar_BlockTypes = 122
 	Rar_BlockTypes__Terminator Rar_BlockTypes = 123
 )
-
-type Rar_Oses int
-const (
-	Rar_Oses__MsDos Rar_Oses = 0
-	Rar_Oses__Os2 Rar_Oses = 1
-	Rar_Oses__Windows Rar_Oses = 2
-	Rar_Oses__Unix Rar_Oses = 3
-	Rar_Oses__MacOs Rar_Oses = 4
-	Rar_Oses__Beos Rar_Oses = 5
-)
+var values_Rar_BlockTypes = map[Rar_BlockTypes]struct{}{114: {}, 115: {}, 116: {}, 117: {}, 118: {}, 119: {}, 120: {}, 121: {}, 122: {}, 123: {}}
+func (v Rar_BlockTypes) isDefined() bool {
+	_, ok := values_Rar_BlockTypes[v]
+	return ok
+}
 
 type Rar_Methods int
 const (
@@ -51,19 +46,43 @@ const (
 	Rar_Methods__Good Rar_Methods = 52
 	Rar_Methods__Best Rar_Methods = 53
 )
+var values_Rar_Methods = map[Rar_Methods]struct{}{48: {}, 49: {}, 50: {}, 51: {}, 52: {}, 53: {}}
+func (v Rar_Methods) isDefined() bool {
+	_, ok := values_Rar_Methods[v]
+	return ok
+}
+
+type Rar_Oses int
+const (
+	Rar_Oses__MsDos Rar_Oses = 0
+	Rar_Oses__Os2 Rar_Oses = 1
+	Rar_Oses__Windows Rar_Oses = 2
+	Rar_Oses__Unix Rar_Oses = 3
+	Rar_Oses__MacOs Rar_Oses = 4
+	Rar_Oses__Beos Rar_Oses = 5
+)
+var values_Rar_Oses = map[Rar_Oses]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}}
+func (v Rar_Oses) isDefined() bool {
+	_, ok := values_Rar_Oses[v]
+	return ok
+}
 type Rar struct {
 	Magic *Rar_MagicSignature
-	Blocks []interface{}
+	Blocks []kaitai.Struct
 	_io *kaitai.Stream
 	_root *Rar
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewRar() *Rar {
 	return &Rar{
 	}
 }
 
-func (this *Rar) Read(io *kaitai.Stream, parent interface{}, root *Rar) (err error) {
+func (this Rar) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Rar) Read(io *kaitai.Stream, parent kaitai.Struct, root *Rar) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -74,7 +93,7 @@ func (this *Rar) Read(io *kaitai.Stream, parent interface{}, root *Rar) (err err
 		return err
 	}
 	this.Magic = tmp1
-	for i := 1;; i++ {
+	for i := 0;; i++ {
 		tmp2, err := this._io.EOF()
 		if err != nil {
 			return err
@@ -111,74 +130,6 @@ func (this *Rar) Read(io *kaitai.Stream, parent interface{}, root *Rar) (err err
  */
 
 /**
- * RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and
- * 8-byte magic (and pretty different block format) for v5+. This
- * type would parse and validate both versions of signature. Note
- * that actually this signature is a valid RAR "block": in theory,
- * one can omit signature reading at all, and read this normally,
- * as a block, if exact RAR version is known (and thus it's
- * possible to choose correct block format).
- */
-type Rar_MagicSignature struct {
-	Magic1 []byte
-	Version uint8
-	Magic3 []byte
-	_io *kaitai.Stream
-	_root *Rar
-	_parent *Rar
-}
-func NewRar_MagicSignature() *Rar_MagicSignature {
-	return &Rar_MagicSignature{
-	}
-}
-
-func (this *Rar_MagicSignature) Read(io *kaitai.Stream, parent *Rar, root *Rar) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp5, err := this._io.ReadBytes(int(6))
-	if err != nil {
-		return err
-	}
-	tmp5 = tmp5
-	this.Magic1 = tmp5
-	if !(bytes.Equal(this.Magic1, []uint8{82, 97, 114, 33, 26, 7})) {
-		return kaitai.NewValidationNotEqualError([]uint8{82, 97, 114, 33, 26, 7}, this.Magic1, this._io, "/types/magic_signature/seq/0")
-	}
-	tmp6, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Version = tmp6
-	if (this.Version == 1) {
-		tmp7, err := this._io.ReadBytes(int(1))
-		if err != nil {
-			return err
-		}
-		tmp7 = tmp7
-		this.Magic3 = tmp7
-		if !(bytes.Equal(this.Magic3, []uint8{0})) {
-			return kaitai.NewValidationNotEqualError([]uint8{0}, this.Magic3, this._io, "/types/magic_signature/seq/2")
-		}
-	}
-	return err
-}
-
-/**
- * Fixed part of file's magic signature that doesn't change with RAR version
- */
-
-/**
- * Variable part of magic signature: 0 means old (RAR 1.5-4.0)
- * format, 1 means new (RAR 5+) format
- */
-
-/**
- * New format (RAR 5+) magic contains extra byte
- */
-
-/**
  * Basic block that RAR files consist of. There are several block
  * types (see `block_type`), which have different `body` and
  * `add_body`.
@@ -195,16 +146,20 @@ type Rar_Block struct {
 	_root *Rar
 	_parent *Rar
 	_raw_Body []byte
+	_f_bodySize bool
+	bodySize int
 	_f_hasAdd bool
 	hasAdd bool
 	_f_headerSize bool
 	headerSize int8
-	_f_bodySize bool
-	bodySize int
 }
 func NewRar_Block() *Rar_Block {
 	return &Rar_Block{
 	}
+}
+
+func (this Rar_Block) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Rar_Block) Read(io *kaitai.Stream, parent *Rar, root *Rar) (err error) {
@@ -212,39 +167,57 @@ func (this *Rar_Block) Read(io *kaitai.Stream, parent *Rar, root *Rar) (err erro
 	this._parent = parent
 	this._root = root
 
+	tmp5, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.Crc16 = uint16(tmp5)
+	tmp6, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.BlockType = Rar_BlockTypes(tmp6)
+	tmp7, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.Flags = uint16(tmp7)
 	tmp8, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.Crc16 = uint16(tmp8)
-	tmp9, err := this._io.ReadU1()
+	this.BlockSize = uint16(tmp8)
+	tmp9, err := this.HasAdd()
 	if err != nil {
 		return err
 	}
-	this.BlockType = Rar_BlockTypes(tmp9)
-	tmp10, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.Flags = uint16(tmp10)
-	tmp11, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.BlockSize = uint16(tmp11)
-	tmp12, err := this.HasAdd()
-	if err != nil {
-		return err
-	}
-	if (tmp12) {
-		tmp13, err := this._io.ReadU4le()
+	if (tmp9) {
+		tmp10, err := this._io.ReadU4le()
 		if err != nil {
 			return err
 		}
-		this.AddSize = uint32(tmp13)
+		this.AddSize = uint32(tmp10)
 	}
 	switch (this.BlockType) {
 	case Rar_BlockTypes__FileHeader:
+		tmp11, err := this.BodySize()
+		if err != nil {
+			return err
+		}
+		tmp12, err := this._io.ReadBytes(int(tmp11))
+		if err != nil {
+			return err
+		}
+		tmp12 = tmp12
+		this._raw_Body = tmp12
+		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+		tmp13 := NewRar_BlockFileHeader()
+		err = tmp13.Read(_io__raw_Body, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp13
+	default:
 		tmp14, err := this.BodySize()
 		if err != nil {
 			return err
@@ -255,38 +228,32 @@ func (this *Rar_Block) Read(io *kaitai.Stream, parent *Rar, root *Rar) (err erro
 		}
 		tmp15 = tmp15
 		this._raw_Body = tmp15
-		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp16 := NewRar_BlockFileHeader()
-		err = tmp16.Read(_io__raw_Body, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp16
-	default:
-		tmp17, err := this.BodySize()
-		if err != nil {
-			return err
-		}
-		tmp18, err := this._io.ReadBytes(int(tmp17))
-		if err != nil {
-			return err
-		}
-		tmp18 = tmp18
-		this._raw_Body = tmp18
 	}
-	tmp19, err := this.HasAdd()
+	tmp16, err := this.HasAdd()
 	if err != nil {
 		return err
 	}
-	if (tmp19) {
-		tmp20, err := this._io.ReadBytes(int(this.AddSize))
+	if (tmp16) {
+		tmp17, err := this._io.ReadBytes(int(this.AddSize))
 		if err != nil {
 			return err
 		}
-		tmp20 = tmp20
-		this.AddBody = tmp20
+		tmp17 = tmp17
+		this.AddBody = tmp17
 	}
 	return err
+}
+func (this *Rar_Block) BodySize() (v int, err error) {
+	if (this._f_bodySize) {
+		return this.bodySize, nil
+	}
+	this._f_bodySize = true
+	tmp18, err := this.HeaderSize()
+	if err != nil {
+		return 0, err
+	}
+	this.bodySize = int(this.BlockSize - tmp18)
+	return this.bodySize, nil
 }
 
 /**
@@ -296,39 +263,27 @@ func (this *Rar_Block) HasAdd() (v bool, err error) {
 	if (this._f_hasAdd) {
 		return this.hasAdd, nil
 	}
-	this.hasAdd = bool((this.Flags & 32768) != 0)
 	this._f_hasAdd = true
+	this.hasAdd = bool(this.Flags & 32768 != 0)
 	return this.hasAdd, nil
 }
 func (this *Rar_Block) HeaderSize() (v int8, err error) {
 	if (this._f_headerSize) {
 		return this.headerSize, nil
 	}
-	var tmp21 int8;
-	tmp22, err := this.HasAdd()
-	if err != nil {
-		return 0, err
-	}
-	if (tmp22) {
-		tmp21 = 11
-	} else {
-		tmp21 = 7
-	}
-	this.headerSize = int8(tmp21)
 	this._f_headerSize = true
-	return this.headerSize, nil
-}
-func (this *Rar_Block) BodySize() (v int, err error) {
-	if (this._f_bodySize) {
-		return this.bodySize, nil
-	}
-	tmp23, err := this.HeaderSize()
+	var tmp19 int8;
+	tmp20, err := this.HasAdd()
 	if err != nil {
 		return 0, err
 	}
-	this.bodySize = int((this.BlockSize - tmp23))
-	this._f_bodySize = true
-	return this.bodySize, nil
+	if (tmp20) {
+		tmp19 = 11
+	} else {
+		tmp19 = 7
+	}
+	this.headerSize = int8(tmp19)
+	return this.headerSize, nil
 }
 
 /**
@@ -368,78 +323,82 @@ func NewRar_BlockFileHeader() *Rar_BlockFileHeader {
 	}
 }
 
+func (this Rar_BlockFileHeader) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Rar_BlockFileHeader) Read(io *kaitai.Stream, parent *Rar_Block, root *Rar) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp24, err := this._io.ReadU4le()
+	tmp21, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.LowUnpSize = uint32(tmp24)
-	tmp25, err := this._io.ReadU1()
+	this.LowUnpSize = uint32(tmp21)
+	tmp22, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.HostOs = Rar_Oses(tmp25)
-	tmp26, err := this._io.ReadU4le()
+	this.HostOs = Rar_Oses(tmp22)
+	tmp23, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.FileCrc32 = uint32(tmp26)
-	tmp27, err := this._io.ReadBytes(int(4))
+	this.FileCrc32 = uint32(tmp23)
+	tmp24, err := this._io.ReadBytes(int(4))
 	if err != nil {
 		return err
 	}
-	tmp27 = tmp27
-	this._raw_FileTime = tmp27
+	tmp24 = tmp24
+	this._raw_FileTime = tmp24
 	_io__raw_FileTime := kaitai.NewStream(bytes.NewReader(this._raw_FileTime))
-	tmp28 := NewDosDatetime()
-	err = tmp28.Read(_io__raw_FileTime, this, nil)
+	tmp25 := NewDosDatetime()
+	err = tmp25.Read(_io__raw_FileTime, nil, nil)
 	if err != nil {
 		return err
 	}
-	this.FileTime = tmp28
-	tmp29, err := this._io.ReadU1()
+	this.FileTime = tmp25
+	tmp26, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.RarVersion = tmp29
-	tmp30, err := this._io.ReadU1()
+	this.RarVersion = tmp26
+	tmp27, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Method = Rar_Methods(tmp30)
-	tmp31, err := this._io.ReadU2le()
+	this.Method = Rar_Methods(tmp27)
+	tmp28, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.NameSize = uint16(tmp31)
-	tmp32, err := this._io.ReadU4le()
+	this.NameSize = uint16(tmp28)
+	tmp29, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Attr = uint32(tmp32)
-	if ((this._parent.Flags & 256) != 0) {
-		tmp33, err := this._io.ReadU4le()
+	this.Attr = uint32(tmp29)
+	if (this._parent.Flags & 256 != 0) {
+		tmp30, err := this._io.ReadU4le()
 		if err != nil {
 			return err
 		}
-		this.HighPackSize = uint32(tmp33)
+		this.HighPackSize = uint32(tmp30)
 	}
-	tmp34, err := this._io.ReadBytes(int(this.NameSize))
+	tmp31, err := this._io.ReadBytes(int(this.NameSize))
 	if err != nil {
 		return err
 	}
-	tmp34 = tmp34
-	this.FileName = tmp34
-	if ((this._parent.Flags & 1024) != 0) {
-		tmp35, err := this._io.ReadU8le()
+	tmp31 = tmp31
+	this.FileName = tmp31
+	if (this._parent.Flags & 1024 != 0) {
+		tmp32, err := this._io.ReadU8le()
 		if err != nil {
 			return err
 		}
-		this.Salt = uint64(tmp35)
+		this.Salt = uint64(tmp32)
 	}
 	return err
 }
@@ -485,6 +444,10 @@ func NewRar_BlockV5() *Rar_BlockV5 {
 	}
 }
 
+func (this Rar_BlockV5) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Rar_BlockV5) Read(io *kaitai.Stream, parent *Rar, root *Rar) (err error) {
 	this._io = io
 	this._parent = parent
@@ -492,3 +455,75 @@ func (this *Rar_BlockV5) Read(io *kaitai.Stream, parent *Rar, root *Rar) (err er
 
 	return err
 }
+
+/**
+ * RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and
+ * 8-byte magic (and pretty different block format) for v5+. This
+ * type would parse and validate both versions of signature. Note
+ * that actually this signature is a valid RAR "block": in theory,
+ * one can omit signature reading at all, and read this normally,
+ * as a block, if exact RAR version is known (and thus it's
+ * possible to choose correct block format).
+ */
+type Rar_MagicSignature struct {
+	Magic1 []byte
+	Version uint8
+	Magic3 []byte
+	_io *kaitai.Stream
+	_root *Rar
+	_parent *Rar
+}
+func NewRar_MagicSignature() *Rar_MagicSignature {
+	return &Rar_MagicSignature{
+	}
+}
+
+func (this Rar_MagicSignature) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Rar_MagicSignature) Read(io *kaitai.Stream, parent *Rar, root *Rar) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp33, err := this._io.ReadBytes(int(6))
+	if err != nil {
+		return err
+	}
+	tmp33 = tmp33
+	this.Magic1 = tmp33
+	if !(bytes.Equal(this.Magic1, []uint8{82, 97, 114, 33, 26, 7})) {
+		return kaitai.NewValidationNotEqualError([]uint8{82, 97, 114, 33, 26, 7}, this.Magic1, this._io, "/types/magic_signature/seq/0")
+	}
+	tmp34, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Version = tmp34
+	if (this.Version == 1) {
+		tmp35, err := this._io.ReadBytes(int(1))
+		if err != nil {
+			return err
+		}
+		tmp35 = tmp35
+		this.Magic3 = tmp35
+		if !(bytes.Equal(this.Magic3, []uint8{0})) {
+			return kaitai.NewValidationNotEqualError([]uint8{0}, this.Magic3, this._io, "/types/magic_signature/seq/2")
+		}
+	}
+	return err
+}
+
+/**
+ * Fixed part of file's magic signature that doesn't change with RAR version
+ */
+
+/**
+ * Variable part of magic signature: 0 means old (RAR 1.5-4.0)
+ * format, 1 means new (RAR 5+) format
+ */
+
+/**
+ * New format (RAR 5+) magic contains extra byte
+ */

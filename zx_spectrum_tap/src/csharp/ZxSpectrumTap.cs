@@ -54,6 +54,44 @@ namespace Kaitai
                 }
             }
         }
+        public partial class ArrayParams : KaitaiStruct
+        {
+            public static ArrayParams FromFile(string fileName)
+            {
+                return new ArrayParams(new KaitaiStream(fileName));
+            }
+
+            public ArrayParams(KaitaiStream p__io, ZxSpectrumTap.Header p__parent = null, ZxSpectrumTap p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _reserved = m_io.ReadU1();
+                _varName = m_io.ReadU1();
+                _reserved1 = m_io.ReadBytes(2);
+                if (!((KaitaiStream.ByteArrayCompare(_reserved1, new byte[] { 0, 128 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 0, 128 }, _reserved1, m_io, "/types/array_params/seq/2");
+                }
+            }
+            private byte _reserved;
+            private byte _varName;
+            private byte[] _reserved1;
+            private ZxSpectrumTap m_root;
+            private ZxSpectrumTap.Header m_parent;
+            public byte Reserved { get { return _reserved; } }
+
+            /// <summary>
+            /// Variable name (1..26 meaning A$..Z$ +192)
+            /// </summary>
+            public byte VarName { get { return _varName; } }
+            public byte[] Reserved1 { get { return _reserved1; } }
+            public ZxSpectrumTap M_Root { get { return m_root; } }
+            public ZxSpectrumTap.Header M_Parent { get { return m_parent; } }
+        }
         public partial class Block : KaitaiStruct
         {
             public static Block FromFile(string fileName)
@@ -75,10 +113,10 @@ namespace Kaitai
                     _header = new Header(m_io, this, m_root);
                 }
                 if (LenBlock == 19) {
-                    _data = m_io.ReadBytes((Header.LenData + 4));
+                    _data = m_io.ReadBytes(Header.LenData + 4);
                 }
                 if (Flag == ZxSpectrumTap.FlagEnum.Data) {
-                    _headerlessData = m_io.ReadBytes((LenBlock - 1));
+                    _headerlessData = m_io.ReadBytes(LenBlock - 1);
                 }
             }
             private ushort _lenBlock;
@@ -95,33 +133,6 @@ namespace Kaitai
             public byte[] HeaderlessData { get { return _headerlessData; } }
             public ZxSpectrumTap M_Root { get { return m_root; } }
             public ZxSpectrumTap M_Parent { get { return m_parent; } }
-        }
-        public partial class ProgramParams : KaitaiStruct
-        {
-            public static ProgramParams FromFile(string fileName)
-            {
-                return new ProgramParams(new KaitaiStream(fileName));
-            }
-
-            public ProgramParams(KaitaiStream p__io, ZxSpectrumTap.Header p__parent = null, ZxSpectrumTap p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _autostartLine = m_io.ReadU2le();
-                _lenProgram = m_io.ReadU2le();
-            }
-            private ushort _autostartLine;
-            private ushort _lenProgram;
-            private ZxSpectrumTap m_root;
-            private ZxSpectrumTap.Header m_parent;
-            public ushort AutostartLine { get { return _autostartLine; } }
-            public ushort LenProgram { get { return _lenProgram; } }
-            public ZxSpectrumTap M_Root { get { return m_root; } }
-            public ZxSpectrumTap.Header M_Parent { get { return m_parent; } }
         }
         public partial class BytesParams : KaitaiStruct
         {
@@ -169,20 +180,20 @@ namespace Kaitai
                 _filename = KaitaiStream.BytesStripRight(m_io.ReadBytes(10), 32);
                 _lenData = m_io.ReadU2le();
                 switch (HeaderType) {
-                case ZxSpectrumTap.HeaderTypeEnum.Program: {
-                    _params = new ProgramParams(m_io, this, m_root);
-                    break;
-                }
-                case ZxSpectrumTap.HeaderTypeEnum.NumArray: {
-                    _params = new ArrayParams(m_io, this, m_root);
+                case ZxSpectrumTap.HeaderTypeEnum.Bytes: {
+                    _params = new BytesParams(m_io, this, m_root);
                     break;
                 }
                 case ZxSpectrumTap.HeaderTypeEnum.CharArray: {
                     _params = new ArrayParams(m_io, this, m_root);
                     break;
                 }
-                case ZxSpectrumTap.HeaderTypeEnum.Bytes: {
-                    _params = new BytesParams(m_io, this, m_root);
+                case ZxSpectrumTap.HeaderTypeEnum.NumArray: {
+                    _params = new ArrayParams(m_io, this, m_root);
+                    break;
+                }
+                case ZxSpectrumTap.HeaderTypeEnum.Program: {
+                    _params = new ProgramParams(m_io, this, m_root);
                     break;
                 }
                 }
@@ -207,14 +218,14 @@ namespace Kaitai
             public ZxSpectrumTap M_Root { get { return m_root; } }
             public ZxSpectrumTap.Block M_Parent { get { return m_parent; } }
         }
-        public partial class ArrayParams : KaitaiStruct
+        public partial class ProgramParams : KaitaiStruct
         {
-            public static ArrayParams FromFile(string fileName)
+            public static ProgramParams FromFile(string fileName)
             {
-                return new ArrayParams(new KaitaiStream(fileName));
+                return new ProgramParams(new KaitaiStream(fileName));
             }
 
-            public ArrayParams(KaitaiStream p__io, ZxSpectrumTap.Header p__parent = null, ZxSpectrumTap p__root = null) : base(p__io)
+            public ProgramParams(KaitaiStream p__io, ZxSpectrumTap.Header p__parent = null, ZxSpectrumTap p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -222,26 +233,15 @@ namespace Kaitai
             }
             private void _read()
             {
-                _reserved = m_io.ReadU1();
-                _varName = m_io.ReadU1();
-                _reserved1 = m_io.ReadBytes(2);
-                if (!((KaitaiStream.ByteArrayCompare(Reserved1, new byte[] { 0, 128 }) == 0)))
-                {
-                    throw new ValidationNotEqualError(new byte[] { 0, 128 }, Reserved1, M_Io, "/types/array_params/seq/2");
-                }
+                _autostartLine = m_io.ReadU2le();
+                _lenProgram = m_io.ReadU2le();
             }
-            private byte _reserved;
-            private byte _varName;
-            private byte[] _reserved1;
+            private ushort _autostartLine;
+            private ushort _lenProgram;
             private ZxSpectrumTap m_root;
             private ZxSpectrumTap.Header m_parent;
-            public byte Reserved { get { return _reserved; } }
-
-            /// <summary>
-            /// Variable name (1..26 meaning A$..Z$ +192)
-            /// </summary>
-            public byte VarName { get { return _varName; } }
-            public byte[] Reserved1 { get { return _reserved1; } }
+            public ushort AutostartLine { get { return _autostartLine; } }
+            public ushort LenProgram { get { return _lenProgram; } }
             public ZxSpectrumTap M_Root { get { return m_root; } }
             public ZxSpectrumTap.Header M_Parent { get { return m_parent; } }
         }

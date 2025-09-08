@@ -23,14 +23,18 @@ type AndroidBootldrAsus struct {
 	Images []*AndroidBootldrAsus_Image
 	_io *kaitai.Stream
 	_root *AndroidBootldrAsus
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewAndroidBootldrAsus() *AndroidBootldrAsus {
 	return &AndroidBootldrAsus{
 	}
 }
 
-func (this *AndroidBootldrAsus) Read(io *kaitai.Stream, parent interface{}, root *AndroidBootldrAsus) (err error) {
+func (this AndroidBootldrAsus) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *AndroidBootldrAsus) Read(io *kaitai.Stream, parent kaitai.Struct, root *AndroidBootldrAsus) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -97,6 +101,10 @@ func NewAndroidBootldrAsus_Image() *AndroidBootldrAsus_Image {
 	}
 }
 
+func (this AndroidBootldrAsus_Image) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *AndroidBootldrAsus_Image) Read(io *kaitai.Stream, parent *AndroidBootldrAsus, root *AndroidBootldrAsus) (err error) {
 	this._io = io
 	this._parent = parent
@@ -123,7 +131,7 @@ func (this *AndroidBootldrAsus_Image) Read(io *kaitai.Stream, parent *AndroidBoo
 	this.Flags = tmp8
 	{
 		_it := this.Flags
-		if !((_it & 1) != 0) {
+		if !(_it & 1 != 0) {
 			return kaitai.NewValidationExprError(this.Flags, this._io, "/types/image/seq/2")
 		}
 	}
@@ -154,6 +162,7 @@ func (this *AndroidBootldrAsus_Image) FileName() (v string, err error) {
 	if (this._f_fileName) {
 		return this.fileName, nil
 	}
+	this._f_fileName = true
 	var tmp13 string;
 	if (this.ChunkId == "IFWI!!!!") {
 		tmp13 = "ifwi.bin"
@@ -173,6 +182,5 @@ func (this *AndroidBootldrAsus_Image) FileName() (v string, err error) {
 		tmp13 = tmp14
 	}
 	this.fileName = string(tmp13)
-	this._f_fileName = true
 	return this.fileName, nil
 }

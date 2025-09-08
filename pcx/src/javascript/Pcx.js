@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.Pcx = factory(root.KaitaiStream);
+    factory(root.Pcx || (root.Pcx = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Pcx_, KaitaiStream) {
 /**
  * PCX is a bitmap image format originally used by PC Paintbrush from
  * ZSoft Corporation. Originally, it was a relatively simple 128-byte
@@ -28,6 +28,12 @@
  */
 
 var Pcx = (function() {
+  Pcx.Encodings = Object.freeze({
+    RLE: 1,
+
+    1: "RLE",
+  });
+
   Pcx.Versions = Object.freeze({
     V2_5: 0,
     V2_8_WITH_PALETTE: 2,
@@ -40,12 +46,6 @@ var Pcx = (function() {
     3: "V2_8_WITHOUT_PALETTE",
     4: "PAINTBRUSH_FOR_WINDOWS",
     5: "V3_0",
-  });
-
-  Pcx.Encodings = Object.freeze({
-    RLE: 1,
-
-    1: "RLE",
   });
 
   function Pcx(_io, _parent, _root) {
@@ -69,14 +69,14 @@ var Pcx = (function() {
     function Header(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     Header.prototype._read = function() {
       this.magic = this._io.readBytes(1);
-      if (!((KaitaiStream.byteArrayCompare(this.magic, [10]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([10], this.magic, this._io, "/types/header/seq/0");
+      if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([10])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([10]), this.magic, this._io, "/types/header/seq/0");
       }
       this.version = this._io.readU1();
       this.encoding = this._io.readU1();
@@ -89,8 +89,8 @@ var Pcx = (function() {
       this.vdpi = this._io.readU2le();
       this.palette16 = this._io.readBytes(48);
       this.reserved = this._io.readBytes(1);
-      if (!((KaitaiStream.byteArrayCompare(this.reserved, [0]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([0], this.reserved, this._io, "/types/header/seq/11");
+      if (!((KaitaiStream.byteArrayCompare(this.reserved, new Uint8Array([0])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([0]), this.reserved, this._io, "/types/header/seq/11");
       }
       this.numPlanes = this._io.readU1();
       this.bytesPerLine = this._io.readU2le();
@@ -110,33 +110,11 @@ var Pcx = (function() {
     return Header;
   })();
 
-  var TPalette256 = Pcx.TPalette256 = (function() {
-    function TPalette256(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    TPalette256.prototype._read = function() {
-      this.magic = this._io.readBytes(1);
-      if (!((KaitaiStream.byteArrayCompare(this.magic, [12]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([12], this.magic, this._io, "/types/t_palette_256/seq/0");
-      }
-      this.colors = [];
-      for (var i = 0; i < 256; i++) {
-        this.colors.push(new Rgb(this._io, this, this._root));
-      }
-    }
-
-    return TPalette256;
-  })();
-
   var Rgb = Pcx.Rgb = (function() {
     function Rgb(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -149,6 +127,28 @@ var Pcx = (function() {
     return Rgb;
   })();
 
+  var TPalette256 = Pcx.TPalette256 = (function() {
+    function TPalette256(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    TPalette256.prototype._read = function() {
+      this.magic = this._io.readBytes(1);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([12])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([12]), this.magic, this._io, "/types/t_palette_256/seq/0");
+      }
+      this.colors = [];
+      for (var i = 0; i < 256; i++) {
+        this.colors.push(new Rgb(this._io, this, this._root));
+      }
+    }
+
+    return TPalette256;
+  })();
+
   /**
    * @see {@link https://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt|- "VGA 256 Color Palette Information"}
    */
@@ -158,7 +158,7 @@ var Pcx = (function() {
         return this._m_palette256;
       if ( ((this.hdr.version == Pcx.Versions.V3_0) && (this.hdr.bitsPerPixel == 8) && (this.hdr.numPlanes == 1)) ) {
         var _pos = this._io.pos;
-        this._io.seek((this._io.size - 769));
+        this._io.seek(this._io.size - 769);
         this._m_palette256 = new TPalette256(this._io, this, this._root);
         this._io.seek(_pos);
       }
@@ -168,5 +168,5 @@ var Pcx = (function() {
 
   return Pcx;
 })();
-return Pcx;
-}));
+Pcx_.Pcx = Pcx;
+});

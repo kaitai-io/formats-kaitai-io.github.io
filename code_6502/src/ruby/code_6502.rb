@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -168,8 +168,8 @@ class Code6502 < Kaitai::Struct::Struct
     254 => :opcode_inc_abs_x,
   }
   I__OPCODE = OPCODE.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -183,7 +183,7 @@ class Code6502 < Kaitai::Struct::Struct
     self
   end
   class Operation < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -191,249 +191,249 @@ class Code6502 < Kaitai::Struct::Struct
     def _read
       @code = Kaitai::Struct::Stream::resolve_enum(Code6502::OPCODE, @_io.read_u1)
       case code
-      when :opcode_bcc_rel
-        @args = @_io.read_s1
-      when :opcode_ora_ind_y
-        @args = @_io.read_u1
-      when :opcode_lda_ind_y
-        @args = @_io.read_u1
-      when :opcode_cpx_zpg
-        @args = @_io.read_u1
-      when :opcode_sta_zpg_x
-        @args = @_io.read_u1
-      when :opcode_sta_zpg
-        @args = @_io.read_u1
-      when :opcode_bcs_rel
-        @args = @_io.read_s1
-      when :opcode_ldy_zpg_x
-        @args = @_io.read_u1
-      when :opcode_lsr_abs_x
-        @args = @_io.read_u2le
-      when :opcode_and_abs_x
-        @args = @_io.read_u2le
       when :opcode_adc_abs
-        @args = @_io.read_u2le
-      when :opcode_sta_abs
-        @args = @_io.read_u2le
-      when :opcode_bne_rel
-        @args = @_io.read_s1
-      when :opcode_lda_imm
-        @args = @_io.read_u1
-      when :opcode_adc_imm
-        @args = @_io.read_u1
-      when :opcode_lsr_abs
         @args = @_io.read_u2le
       when :opcode_adc_abs_x
         @args = @_io.read_u2le
-      when :opcode_sta_abs_x
+      when :opcode_adc_abs_y
         @args = @_io.read_u2le
-      when :opcode_cpx_imm
+      when :opcode_adc_imm
         @args = @_io.read_u1
-      when :opcode_jmp_ind
-        @args = @_io.read_u2le
-      when :opcode_adc_zpg
-        @args = @_io.read_u1
-      when :opcode_eor_imm
-        @args = @_io.read_u1
-      when :opcode_eor_abs_x
-        @args = @_io.read_u2le
-      when :opcode_sta_x_ind
-        @args = @_io.read_u1
-      when :opcode_sbc_imm
-        @args = @_io.read_u1
-      when :opcode_cpy_abs
-        @args = @_io.read_u2le
-      when :opcode_ldx_abs_y
-        @args = @_io.read_u2le
-      when :opcode_adc_zpg_x
-        @args = @_io.read_u1
-      when :opcode_bpl_rel
-        @args = @_io.read_s1
-      when :opcode_ora_imm
-        @args = @_io.read_u1
-      when :opcode_ror_abs_x
-        @args = @_io.read_u2le
       when :opcode_adc_ind_y
-        @args = @_io.read_u1
-      when :opcode_eor_ind_y
-        @args = @_io.read_u1
-      when :opcode_lda_abs
-        @args = @_io.read_u2le
-      when :opcode_bit_zpg
-        @args = @_io.read_u1
-      when :opcode_rol_zpg
-        @args = @_io.read_u1
-      when :opcode_sty_zpg
-        @args = @_io.read_u1
-      when :opcode_jsr_abs
-        @args = @_io.read_u2le
-      when :opcode_eor_zpg
-        @args = @_io.read_u1
-      when :opcode_eor_abs
-        @args = @_io.read_u2le
-      when :opcode_lda_abs_y
-        @args = @_io.read_u2le
-      when :opcode_lda_zpg_x
-        @args = @_io.read_u1
-      when :opcode_bmi_rel
-        @args = @_io.read_s1
-      when :opcode_sty_zpg_x
         @args = @_io.read_u1
       when :opcode_adc_x_ind
         @args = @_io.read_u1
-      when :opcode_rol_abs_x
+      when :opcode_adc_zpg
+        @args = @_io.read_u1
+      when :opcode_adc_zpg_x
+        @args = @_io.read_u1
+      when :opcode_and_abs
         @args = @_io.read_u2le
-      when :opcode_stx_zpg
-        @args = @_io.read_u1
-      when :opcode_asl_abs_x
+      when :opcode_and_abs_x
         @args = @_io.read_u2le
-      when :opcode_lsr_zpg_x
-        @args = @_io.read_u1
-      when :opcode_ora_zpg_x
-        @args = @_io.read_u1
-      when :opcode_adc_abs_y
-        @args = @_io.read_u2le
-      when :opcode_ldy_abs
-        @args = @_io.read_u2le
-      when :opcode_cmp_abs_x
-        @args = @_io.read_u2le
-      when :opcode_lda_abs_x
-        @args = @_io.read_u2le
-      when :opcode_bvs_rel
-        @args = @_io.read_s1
-      when :opcode_lda_x_ind
-        @args = @_io.read_u1
-      when :opcode_cmp_imm
-        @args = @_io.read_u1
-      when :opcode_inc_zpg_x
-        @args = @_io.read_u1
-      when :opcode_asl_zpg
-        @args = @_io.read_u1
       when :opcode_and_abs_y
         @args = @_io.read_u2le
-      when :opcode_ldx_imm
+      when :opcode_and_imm
+        @args = @_io.read_u1
+      when :opcode_and_ind_y
+        @args = @_io.read_u1
+      when :opcode_and_x_ind
         @args = @_io.read_u1
       when :opcode_and_zpg
         @args = @_io.read_u1
-      when :opcode_cpx_abs
-        @args = @_io.read_u2le
-      when :opcode_dec_zpg
+      when :opcode_and_zpg_x
         @args = @_io.read_u1
-      when :opcode_ror_zpg_x
-        @args = @_io.read_u1
-      when :opcode_ldx_zpg
-        @args = @_io.read_u1
-      when :opcode_dec_zpg_x
-        @args = @_io.read_u1
-      when :opcode_sbc_zpg
-        @args = @_io.read_u1
-      when :opcode_cmp_abs
-        @args = @_io.read_u2le
-      when :opcode_ror_zpg
-        @args = @_io.read_u1
-      when :opcode_inc_abs
-        @args = @_io.read_u2le
-      when :opcode_and_x_ind
-        @args = @_io.read_u1
-      when :opcode_sbc_abs_x
-        @args = @_io.read_u2le
       when :opcode_asl_abs
         @args = @_io.read_u2le
-      when :opcode_eor_x_ind
-        @args = @_io.read_u1
-      when :opcode_ora_abs_x
+      when :opcode_asl_abs_x
         @args = @_io.read_u2le
-      when :opcode_ldy_abs_x
-        @args = @_io.read_u2le
-      when :opcode_sbc_x_ind
+      when :opcode_asl_zpg
         @args = @_io.read_u1
       when :opcode_asl_zpg_x
         @args = @_io.read_u1
-      when :opcode_sbc_abs_y
-        @args = @_io.read_u2le
-      when :opcode_rol_abs
-        @args = @_io.read_u2le
-      when :opcode_lsr_zpg
-        @args = @_io.read_u1
-      when :opcode_stx_zpg_y
-        @args = @_io.read_u1
-      when :opcode_ora_abs_y
-        @args = @_io.read_u2le
-      when :opcode_eor_abs_y
-        @args = @_io.read_u2le
-      when :opcode_bit_abs
-        @args = @_io.read_u2le
-      when :opcode_ldx_abs
-        @args = @_io.read_u2le
-      when :opcode_ldy_imm
-        @args = @_io.read_u1
-      when :opcode_jmp_abs
-        @args = @_io.read_u2le
+      when :opcode_bcc_rel
+        @args = @_io.read_s1
+      when :opcode_bcs_rel
+        @args = @_io.read_s1
       when :opcode_beq_rel
         @args = @_io.read_s1
-      when :opcode_dec_abs_x
+      when :opcode_bit_abs
         @args = @_io.read_u2le
-      when :opcode_and_ind_y
+      when :opcode_bit_zpg
         @args = @_io.read_u1
-      when :opcode_and_zpg_x
-        @args = @_io.read_u1
-      when :opcode_cmp_zpg_x
-        @args = @_io.read_u1
-      when :opcode_eor_zpg_x
-        @args = @_io.read_u1
-      when :opcode_sbc_abs
+      when :opcode_bmi_rel
+        @args = @_io.read_s1
+      when :opcode_bne_rel
+        @args = @_io.read_s1
+      when :opcode_bpl_rel
+        @args = @_io.read_s1
+      when :opcode_bvc_rel
+        @args = @_io.read_s1
+      when :opcode_bvs_rel
+        @args = @_io.read_s1
+      when :opcode_cmp_abs
+        @args = @_io.read_u2le
+      when :opcode_cmp_abs_x
         @args = @_io.read_u2le
       when :opcode_cmp_abs_y
         @args = @_io.read_u2le
-      when :opcode_sbc_ind_y
+      when :opcode_cmp_imm
+        @args = @_io.read_u1
+      when :opcode_cmp_ind_y
+        @args = @_io.read_u1
+      when :opcode_cmp_x_ind
         @args = @_io.read_u1
       when :opcode_cmp_zpg
         @args = @_io.read_u1
-      when :opcode_stx_abs
+      when :opcode_cmp_zpg_x
+        @args = @_io.read_u1
+      when :opcode_cpx_abs
         @args = @_io.read_u2le
-      when :opcode_sty_abs
+      when :opcode_cpx_imm
+        @args = @_io.read_u1
+      when :opcode_cpx_zpg
+        @args = @_io.read_u1
+      when :opcode_cpy_abs
         @args = @_io.read_u2le
+      when :opcode_cpy_imm
+        @args = @_io.read_u1
       when :opcode_cpy_zpg
         @args = @_io.read_u1
       when :opcode_dec_abs
         @args = @_io.read_u2le
-      when :opcode_ror_abs
+      when :opcode_dec_abs_x
         @args = @_io.read_u2le
-      when :opcode_sta_abs_y
+      when :opcode_dec_zpg
+        @args = @_io.read_u1
+      when :opcode_dec_zpg_x
+        @args = @_io.read_u1
+      when :opcode_eor_abs
+        @args = @_io.read_u2le
+      when :opcode_eor_abs_x
+        @args = @_io.read_u2le
+      when :opcode_eor_abs_y
+        @args = @_io.read_u2le
+      when :opcode_eor_imm
+        @args = @_io.read_u1
+      when :opcode_eor_ind_y
+        @args = @_io.read_u1
+      when :opcode_eor_x_ind
+        @args = @_io.read_u1
+      when :opcode_eor_zpg
+        @args = @_io.read_u1
+      when :opcode_eor_zpg_x
+        @args = @_io.read_u1
+      when :opcode_inc_abs
         @args = @_io.read_u2le
       when :opcode_inc_abs_x
         @args = @_io.read_u2le
+      when :opcode_inc_zpg
+        @args = @_io.read_u1
+      when :opcode_inc_zpg_x
+        @args = @_io.read_u1
+      when :opcode_jmp_abs
+        @args = @_io.read_u2le
+      when :opcode_jmp_ind
+        @args = @_io.read_u2le
+      when :opcode_jsr_abs
+        @args = @_io.read_u2le
+      when :opcode_lda_abs
+        @args = @_io.read_u2le
+      when :opcode_lda_abs_x
+        @args = @_io.read_u2le
+      when :opcode_lda_abs_y
+        @args = @_io.read_u2le
+      when :opcode_lda_imm
+        @args = @_io.read_u1
+      when :opcode_lda_ind_y
+        @args = @_io.read_u1
+      when :opcode_lda_x_ind
+        @args = @_io.read_u1
       when :opcode_lda_zpg
         @args = @_io.read_u1
-      when :opcode_cmp_ind_y
+      when :opcode_lda_zpg_x
         @args = @_io.read_u1
-      when :opcode_cpy_imm
+      when :opcode_ldx_abs
+        @args = @_io.read_u2le
+      when :opcode_ldx_abs_y
+        @args = @_io.read_u2le
+      when :opcode_ldx_imm
+        @args = @_io.read_u1
+      when :opcode_ldx_zpg
         @args = @_io.read_u1
       when :opcode_ldx_zpg_y
         @args = @_io.read_u1
-      when :opcode_sbc_zpg_x
-        @args = @_io.read_u1
-      when :opcode_ora_x_ind
-        @args = @_io.read_u1
-      when :opcode_rol_zpg_x
-        @args = @_io.read_u1
-      when :opcode_ora_abs
+      when :opcode_ldy_abs
         @args = @_io.read_u2le
-      when :opcode_sta_ind_y
-        @args = @_io.read_u1
-      when :opcode_and_abs
+      when :opcode_ldy_abs_x
         @args = @_io.read_u2le
-      when :opcode_and_imm
-        @args = @_io.read_u1
-      when :opcode_cmp_x_ind
+      when :opcode_ldy_imm
         @args = @_io.read_u1
       when :opcode_ldy_zpg
         @args = @_io.read_u1
-      when :opcode_inc_zpg
+      when :opcode_ldy_zpg_x
         @args = @_io.read_u1
-      when :opcode_bvc_rel
-        @args = @_io.read_s1
+      when :opcode_lsr_abs
+        @args = @_io.read_u2le
+      when :opcode_lsr_abs_x
+        @args = @_io.read_u2le
+      when :opcode_lsr_zpg
+        @args = @_io.read_u1
+      when :opcode_lsr_zpg_x
+        @args = @_io.read_u1
+      when :opcode_ora_abs
+        @args = @_io.read_u2le
+      when :opcode_ora_abs_x
+        @args = @_io.read_u2le
+      when :opcode_ora_abs_y
+        @args = @_io.read_u2le
+      when :opcode_ora_imm
+        @args = @_io.read_u1
+      when :opcode_ora_ind_y
+        @args = @_io.read_u1
+      when :opcode_ora_x_ind
+        @args = @_io.read_u1
       when :opcode_ora_zpg
+        @args = @_io.read_u1
+      when :opcode_ora_zpg_x
+        @args = @_io.read_u1
+      when :opcode_rol_abs
+        @args = @_io.read_u2le
+      when :opcode_rol_abs_x
+        @args = @_io.read_u2le
+      when :opcode_rol_zpg
+        @args = @_io.read_u1
+      when :opcode_rol_zpg_x
+        @args = @_io.read_u1
+      when :opcode_ror_abs
+        @args = @_io.read_u2le
+      when :opcode_ror_abs_x
+        @args = @_io.read_u2le
+      when :opcode_ror_zpg
+        @args = @_io.read_u1
+      when :opcode_ror_zpg_x
+        @args = @_io.read_u1
+      when :opcode_sbc_abs
+        @args = @_io.read_u2le
+      when :opcode_sbc_abs_x
+        @args = @_io.read_u2le
+      when :opcode_sbc_abs_y
+        @args = @_io.read_u2le
+      when :opcode_sbc_imm
+        @args = @_io.read_u1
+      when :opcode_sbc_ind_y
+        @args = @_io.read_u1
+      when :opcode_sbc_x_ind
+        @args = @_io.read_u1
+      when :opcode_sbc_zpg
+        @args = @_io.read_u1
+      when :opcode_sbc_zpg_x
+        @args = @_io.read_u1
+      when :opcode_sta_abs
+        @args = @_io.read_u2le
+      when :opcode_sta_abs_x
+        @args = @_io.read_u2le
+      when :opcode_sta_abs_y
+        @args = @_io.read_u2le
+      when :opcode_sta_ind_y
+        @args = @_io.read_u1
+      when :opcode_sta_x_ind
+        @args = @_io.read_u1
+      when :opcode_sta_zpg
+        @args = @_io.read_u1
+      when :opcode_sta_zpg_x
+        @args = @_io.read_u1
+      when :opcode_stx_abs
+        @args = @_io.read_u2le
+      when :opcode_stx_zpg
+        @args = @_io.read_u1
+      when :opcode_stx_zpg_y
+        @args = @_io.read_u1
+      when :opcode_sty_abs
+        @args = @_io.read_u2le
+      when :opcode_sty_zpg
+        @args = @_io.read_u1
+      when :opcode_sty_zpg_x
         @args = @_io.read_u1
       end
       self

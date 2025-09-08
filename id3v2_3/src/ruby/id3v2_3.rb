@@ -2,16 +2,16 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
 ##
 # @see https://id3.org/id3v2.3.0 Source
 class Id3v23 < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -19,107 +19,24 @@ class Id3v23 < Kaitai::Struct::Struct
     @tag = Tag.new(@_io, self, @_root)
     self
   end
-  class U1beSynchsafe < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @padding = @_io.read_bits_int_be(1) != 0
-      @value = @_io.read_bits_int_be(7)
-      self
-    end
-    attr_reader :padding
-    attr_reader :value
-  end
-  class U2beSynchsafe < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @byte0 = U1beSynchsafe.new(@_io, self, @_root)
-      @byte1 = U1beSynchsafe.new(@_io, self, @_root)
-      self
-    end
-    def value
-      return @value unless @value.nil?
-      @value = ((byte0.value << 7) | byte1.value)
-      @value
-    end
-    attr_reader :byte0
-    attr_reader :byte1
-  end
-
-  ##
-  # @see '' Section 3. ID3v2 overview
-  class Tag < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @header = Header.new(@_io, self, @_root)
-      if header.flags.flag_headerex
-        @header_ex = HeaderEx.new(@_io, self, @_root)
-      end
-      @frames = []
-      i = 0
-      begin
-        _ = Frame.new(@_io, self, @_root)
-        @frames << _
-        i += 1
-      end until  (((_io.pos + _.size) > header.size.value) || (_.is_invalid)) 
-      if header.flags.flag_headerex
-        @padding = @_io.read_bytes((header_ex.padding_size - _io.pos))
-      end
-      self
-    end
-    attr_reader :header
-    attr_reader :header_ex
-    attr_reader :frames
-    attr_reader :padding
-  end
-  class U4beSynchsafe < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @short0 = U2beSynchsafe.new(@_io, self, @_root)
-      @short1 = U2beSynchsafe.new(@_io, self, @_root)
-      self
-    end
-    def value
-      return @value unless @value.nil?
-      @value = ((short0.value << 14) | short1.value)
-      @value
-    end
-    attr_reader :short0
-    attr_reader :short1
-  end
 
   ##
   # @see '' Section 3.3. ID3v2 frame overview
   class Frame < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @id = (@_io.read_bytes(4)).force_encoding("ASCII")
+      @id = (@_io.read_bytes(4)).force_encoding("ASCII").encode('UTF-8')
       @size = @_io.read_u4be
       @flags = Flags.new(@_io, self, @_root)
       @data = @_io.read_bytes(size)
       self
     end
     class Flags < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
@@ -156,55 +73,17 @@ class Id3v23 < Kaitai::Struct::Struct
   end
 
   ##
-  # ID3v2 extended header
-  # @see '' Section 3.2. ID3v2 extended header
-  class HeaderEx < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @size = @_io.read_u4be
-      @flags_ex = FlagsEx.new(@_io, self, @_root)
-      @padding_size = @_io.read_u4be
-      if flags_ex.flag_crc
-        @crc = @_io.read_u4be
-      end
-      self
-    end
-    class FlagsEx < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
-
-      def _read
-        @flag_crc = @_io.read_bits_int_be(1) != 0
-        @reserved = @_io.read_bits_int_be(15)
-        self
-      end
-      attr_reader :flag_crc
-      attr_reader :reserved
-    end
-    attr_reader :size
-    attr_reader :flags_ex
-    attr_reader :padding_size
-    attr_reader :crc
-  end
-
-  ##
   # ID3v2 fixed header
   # @see '' Section 3.1. ID3v2 header
   class Header < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
       @magic = @_io.read_bytes(3)
-      raise Kaitai::Struct::ValidationNotEqualError.new([73, 68, 51].pack('C*'), magic, _io, "/types/header/seq/0") if not magic == [73, 68, 51].pack('C*')
+      raise Kaitai::Struct::ValidationNotEqualError.new([73, 68, 51].pack('C*'), @magic, @_io, "/types/header/seq/0") if not @magic == [73, 68, 51].pack('C*')
       @version_major = @_io.read_u1
       @version_revision = @_io.read_u1
       @flags = Flags.new(@_io, self, @_root)
@@ -212,7 +91,7 @@ class Id3v23 < Kaitai::Struct::Struct
       self
     end
     class Flags < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
@@ -234,6 +113,127 @@ class Id3v23 < Kaitai::Struct::Struct
     attr_reader :version_revision
     attr_reader :flags
     attr_reader :size
+  end
+
+  ##
+  # ID3v2 extended header
+  # @see '' Section 3.2. ID3v2 extended header
+  class HeaderEx < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @size = @_io.read_u4be
+      @flags_ex = FlagsEx.new(@_io, self, @_root)
+      @padding_size = @_io.read_u4be
+      if flags_ex.flag_crc
+        @crc = @_io.read_u4be
+      end
+      self
+    end
+    class FlagsEx < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = nil)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        @flag_crc = @_io.read_bits_int_be(1) != 0
+        @reserved = @_io.read_bits_int_be(15)
+        self
+      end
+      attr_reader :flag_crc
+      attr_reader :reserved
+    end
+    attr_reader :size
+    attr_reader :flags_ex
+    attr_reader :padding_size
+    attr_reader :crc
+  end
+
+  ##
+  # @see '' Section 3. ID3v2 overview
+  class Tag < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @header = Header.new(@_io, self, @_root)
+      if header.flags.flag_headerex
+        @header_ex = HeaderEx.new(@_io, self, @_root)
+      end
+      @frames = []
+      i = 0
+      begin
+        _ = Frame.new(@_io, self, @_root)
+        @frames << _
+        i += 1
+      end until  ((_io.pos + _.size > header.size.value) || (_.is_invalid)) 
+      if header.flags.flag_headerex
+        @padding = @_io.read_bytes(header_ex.padding_size - _io.pos)
+      end
+      self
+    end
+    attr_reader :header
+    attr_reader :header_ex
+    attr_reader :frames
+    attr_reader :padding
+  end
+  class U1beSynchsafe < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @padding = @_io.read_bits_int_be(1) != 0
+      @value = @_io.read_bits_int_be(7)
+      self
+    end
+    attr_reader :padding
+    attr_reader :value
+  end
+  class U2beSynchsafe < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @byte0 = U1beSynchsafe.new(@_io, self, @_root)
+      @byte1 = U1beSynchsafe.new(@_io, self, @_root)
+      self
+    end
+    def value
+      return @value unless @value.nil?
+      @value = byte0.value << 7 | byte1.value
+      @value
+    end
+    attr_reader :byte0
+    attr_reader :byte1
+  end
+  class U4beSynchsafe < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @short0 = U2beSynchsafe.new(@_io, self, @_root)
+      @short1 = U2beSynchsafe.new(@_io, self, @_root)
+      self
+    end
+    def value
+      return @value unless @value.nil?
+      @value = short0.value << 14 | short1.value
+      @value
+    end
+    attr_reader :short0
+    attr_reader :short1
   end
   attr_reader :tag
 end

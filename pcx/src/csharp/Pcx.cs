@@ -32,6 +32,11 @@ namespace Kaitai
         }
 
 
+        public enum Encodings
+        {
+            Rle = 1,
+        }
+
         public enum Versions
         {
             V25 = 0,
@@ -39,11 +44,6 @@ namespace Kaitai
             V28WithoutPalette = 3,
             PaintbrushForWindows = 4,
             V30 = 5,
-        }
-
-        public enum Encodings
-        {
-            Rle = 1,
         }
         public Pcx(KaitaiStream p__io, KaitaiStruct p__parent = null, Pcx p__root = null) : base(p__io)
         {
@@ -78,9 +78,9 @@ namespace Kaitai
             private void _read()
             {
                 _magic = m_io.ReadBytes(1);
-                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 10 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 10 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 10 }, Magic, M_Io, "/types/header/seq/0");
+                    throw new ValidationNotEqualError(new byte[] { 10 }, _magic, m_io, "/types/header/seq/0");
                 }
                 _version = ((Pcx.Versions) m_io.ReadU1());
                 _encoding = ((Pcx.Encodings) m_io.ReadU1());
@@ -93,9 +93,9 @@ namespace Kaitai
                 _vdpi = m_io.ReadU2le();
                 _palette16 = m_io.ReadBytes(48);
                 _reserved = m_io.ReadBytes(1);
-                if (!((KaitaiStream.ByteArrayCompare(Reserved, new byte[] { 0 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_reserved, new byte[] { 0 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 0 }, Reserved, M_Io, "/types/header/seq/11");
+                    throw new ValidationNotEqualError(new byte[] { 0 }, _reserved, m_io, "/types/header/seq/11");
                 }
                 _numPlanes = m_io.ReadU1();
                 _bytesPerLine = m_io.ReadU2le();
@@ -150,41 +150,6 @@ namespace Kaitai
             public Pcx M_Root { get { return m_root; } }
             public Pcx M_Parent { get { return m_parent; } }
         }
-        public partial class TPalette256 : KaitaiStruct
-        {
-            public static TPalette256 FromFile(string fileName)
-            {
-                return new TPalette256(new KaitaiStream(fileName));
-            }
-
-            public TPalette256(KaitaiStream p__io, Pcx p__parent = null, Pcx p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _magic = m_io.ReadBytes(1);
-                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 12 }) == 0)))
-                {
-                    throw new ValidationNotEqualError(new byte[] { 12 }, Magic, M_Io, "/types/t_palette_256/seq/0");
-                }
-                _colors = new List<Rgb>();
-                for (var i = 0; i < 256; i++)
-                {
-                    _colors.Add(new Rgb(m_io, this, m_root));
-                }
-            }
-            private byte[] _magic;
-            private List<Rgb> _colors;
-            private Pcx m_root;
-            private Pcx m_parent;
-            public byte[] Magic { get { return _magic; } }
-            public List<Rgb> Colors { get { return _colors; } }
-            public Pcx M_Root { get { return m_root; } }
-            public Pcx M_Parent { get { return m_parent; } }
-        }
         public partial class Rgb : KaitaiStruct
         {
             public static Rgb FromFile(string fileName)
@@ -215,6 +180,41 @@ namespace Kaitai
             public Pcx M_Root { get { return m_root; } }
             public Pcx.TPalette256 M_Parent { get { return m_parent; } }
         }
+        public partial class TPalette256 : KaitaiStruct
+        {
+            public static TPalette256 FromFile(string fileName)
+            {
+                return new TPalette256(new KaitaiStream(fileName));
+            }
+
+            public TPalette256(KaitaiStream p__io, Pcx p__parent = null, Pcx p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _magic = m_io.ReadBytes(1);
+                if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 12 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 12 }, _magic, m_io, "/types/t_palette_256/seq/0");
+                }
+                _colors = new List<Rgb>();
+                for (var i = 0; i < 256; i++)
+                {
+                    _colors.Add(new Rgb(m_io, this, m_root));
+                }
+            }
+            private byte[] _magic;
+            private List<Rgb> _colors;
+            private Pcx m_root;
+            private Pcx m_parent;
+            public byte[] Magic { get { return _magic; } }
+            public List<Rgb> Colors { get { return _colors; } }
+            public Pcx M_Root { get { return m_root; } }
+            public Pcx M_Parent { get { return m_parent; } }
+        }
         private bool f_palette256;
         private TPalette256 _palette256;
 
@@ -227,12 +227,12 @@ namespace Kaitai
             {
                 if (f_palette256)
                     return _palette256;
+                f_palette256 = true;
                 if ( ((Hdr.Version == Versions.V30) && (Hdr.BitsPerPixel == 8) && (Hdr.NumPlanes == 1)) ) {
                     long _pos = m_io.Pos;
-                    m_io.Seek((M_Io.Size - 769));
+                    m_io.Seek(M_Io.Size - 769);
                     _palette256 = new TPalette256(m_io, this, m_root);
                     m_io.Seek(_pos);
-                    f_palette256 = true;
                 }
                 return _palette256;
             }

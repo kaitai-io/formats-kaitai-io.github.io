@@ -6,6 +6,7 @@ import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -49,6 +50,12 @@ public class Ogg extends KaitaiStruct {
         }
     }
 
+    public void _fetchInstances() {
+        for (int i = 0; i < this.pages.size(); i++) {
+            this.pages.get(((Number) (i)).intValue())._fetchInstances();
+        }
+    }
+
     /**
      * Ogg page is a basic unit of data in an Ogg bitstream, usually
      * it's around 4-8 KB, with a maximum size of 65307 bytes.
@@ -74,18 +81,17 @@ public class Ogg extends KaitaiStruct {
         }
         private void _read() {
             this.syncCode = this._io.readBytes(4);
-            if (!(Arrays.equals(syncCode(), new byte[] { 79, 103, 103, 83 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 79, 103, 103, 83 }, syncCode(), _io(), "/types/page/seq/0");
+            if (!(Arrays.equals(this.syncCode, new byte[] { 79, 103, 103, 83 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 79, 103, 103, 83 }, this.syncCode, this._io, "/types/page/seq/0");
             }
             this.version = this._io.readBytes(1);
-            if (!(Arrays.equals(version(), new byte[] { 0 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0 }, version(), _io(), "/types/page/seq/1");
+            if (!(Arrays.equals(this.version, new byte[] { 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0 }, this.version, this._io, "/types/page/seq/1");
             }
             this.reserved1 = this._io.readBitsIntBe(5);
             this.isEndOfStream = this._io.readBitsIntBe(1) != 0;
             this.isBeginningOfStream = this._io.readBitsIntBe(1) != 0;
             this.isContinuation = this._io.readBitsIntBe(1) != 0;
-            this._io.alignToByte();
             this.granulePos = this._io.readU8le();
             this.bitstreamSerial = this._io.readU4le();
             this.pageSeqNum = this._io.readU4le();
@@ -97,7 +103,14 @@ public class Ogg extends KaitaiStruct {
             }
             this.segments = new ArrayList<byte[]>();
             for (int i = 0; i < numSegments(); i++) {
-                this.segments.add(this._io.readBytes(lenSegments().get((int) i)));
+                this.segments.add(this._io.readBytes(lenSegments().get(((Number) (i)).intValue())));
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.lenSegments.size(); i++) {
+            }
+            for (int i = 0; i < this.segments.size(); i++) {
             }
         }
         private byte[] syncCode;
@@ -111,8 +124,8 @@ public class Ogg extends KaitaiStruct {
         private long pageSeqNum;
         private long crc32;
         private int numSegments;
-        private ArrayList<Integer> lenSegments;
-        private ArrayList<byte[]> segments;
+        private List<Integer> lenSegments;
+        private List<byte[]> segments;
         private Ogg _root;
         private Ogg _parent;
         public byte[] syncCode() { return syncCode; }
@@ -189,19 +202,19 @@ public class Ogg extends KaitaiStruct {
         /**
          * Table of lengths of segments.
          */
-        public ArrayList<Integer> lenSegments() { return lenSegments; }
+        public List<Integer> lenSegments() { return lenSegments; }
 
         /**
          * Segment content bytes make up the rest of the Ogg page.
          */
-        public ArrayList<byte[]> segments() { return segments; }
+        public List<byte[]> segments() { return segments; }
         public Ogg _root() { return _root; }
         public Ogg _parent() { return _parent; }
     }
-    private ArrayList<Page> pages;
+    private List<Page> pages;
     private Ogg _root;
     private KaitaiStruct _parent;
-    public ArrayList<Page> pages() { return pages; }
+    public List<Page> pages() { return pages; }
     public Ogg _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

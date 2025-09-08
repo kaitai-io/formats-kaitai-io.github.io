@@ -1,0 +1,60 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__vlq_base128_le {
+		label="VlqBase128Le";
+		graph[style=dotted];
+
+		vlq_base128_le__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="groups_pos">0</TD><TD PORT="groups_size">1</TD><TD>Group</TD><TD PORT="groups_type">groups</TD></TR>
+			<TR><TD COLSPAN="4" PORT="groups__repeat">repeat until !(_.has_next)</TD></TR>
+		</TABLE>>];
+		vlq_base128_le__inst__len [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>len</TD><TD>groups.length</TD></TR>
+		</TABLE>>];
+		vlq_base128_le__inst__sign_bit [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>sign_bit</TD><TD>(len == 10 ? 9223372036854775808 : groups.last.multiplier * 64)</TD></TR>
+		</TABLE>>];
+		vlq_base128_le__inst__value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>value</TD><TD>groups.last.interm_value</TD></TR>
+		</TABLE>>];
+		vlq_base128_le__inst__value_signed [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>value_signed</TD><TD>( ((sign_bit &gt; 0) &amp;&amp; (value &gt;= sign_bit))  ? -((sign_bit - (value - sign_bit))) : value)</TD></TR>
+		</TABLE>>];
+		subgraph cluster__group {
+			label="VlqBase128Le::Group";
+			graph[style=dotted];
+
+			group__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="has_next_pos">0</TD><TD PORT="has_next_size">1b</TD><TD>b1be→bool</TD><TD PORT="has_next_type">has_next</TD></TR>
+				<TR><TD COLSPAN="4" PORT="has_next__valid">must be equal to (idx == 9 ? false : has_next)</TD></TR>
+				<TR><TD PORT="value_pos">0:1</TD><TD PORT="value_size">7b</TD><TD>b7be</TD><TD PORT="value_type">value</TD></TR>
+				<TR><TD COLSPAN="4" PORT="value__valid">must be at most (idx == 9 ? 1 : 127)</TD></TR>
+			</TABLE>>];
+			group__inst__interm_value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>interm_value</TD><TD>(prev_interm_value + value * multiplier)</TD></TR>
+			</TABLE>>];
+		}
+	}
+	vlq_base128_le__seq:groups_type -> group__seq [style=bold];
+	group__seq:has_next_type -> vlq_base128_le__seq:groups__repeat [color="#404040"];
+	vlq_base128_le__seq:groups_type -> vlq_base128_le__inst__len [color="#404040"];
+	vlq_base128_le__inst__len:len_type -> vlq_base128_le__inst__sign_bit [color="#404040"];
+	group__params:multiplier_type -> vlq_base128_le__inst__sign_bit [color="#404040"];
+	group__inst__interm_value:interm_value_type -> vlq_base128_le__inst__value [color="#404040"];
+	vlq_base128_le__inst__sign_bit:sign_bit_type -> vlq_base128_le__inst__value_signed [color="#404040"];
+	vlq_base128_le__inst__value:value_type -> vlq_base128_le__inst__value_signed [color="#404040"];
+	group__params:idx_type -> group__seq:has_next__valid [color="#404040"];
+	group__seq:has_next_type -> group__seq:has_next__valid [color="#404040"];
+	group__params:idx_type -> group__seq:value__valid [color="#404040"];
+	group__params:prev_interm_value_type -> group__inst__interm_value [color="#404040"];
+	group__seq:value_type -> group__inst__interm_value [color="#404040"];
+	group__params:multiplier_type -> group__inst__interm_value [color="#404040"];
+}

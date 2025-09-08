@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -16,8 +16,8 @@ end
 # the tag itself, please use `id3v1_1::id3_v1_1_tag` subtype.
 # @see https://id3.org/ID3v1 Source
 class Id3v11 < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -166,18 +166,18 @@ class Id3v11 < Kaitai::Struct::Struct
       125 => :genre_enum_dance_hall,
     }
     I__GENRE_ENUM = GENRE_ENUM.invert
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
       @magic = @_io.read_bytes(3)
-      raise Kaitai::Struct::ValidationNotEqualError.new([84, 65, 71].pack('C*'), magic, _io, "/types/id3_v1_1_tag/seq/0") if not magic == [84, 65, 71].pack('C*')
+      raise Kaitai::Struct::ValidationNotEqualError.new([84, 65, 71].pack('C*'), @magic, @_io, "/types/id3_v1_1_tag/seq/0") if not @magic == [84, 65, 71].pack('C*')
       @title = @_io.read_bytes(30)
       @artist = @_io.read_bytes(30)
       @album = @_io.read_bytes(30)
-      @year = (@_io.read_bytes(4)).force_encoding("ASCII")
+      @year = (@_io.read_bytes(4)).force_encoding("ASCII").encode('UTF-8')
       @comment = @_io.read_bytes(30)
       @genre = Kaitai::Struct::Stream::resolve_enum(GENRE_ENUM, @_io.read_u1)
       self
@@ -208,7 +208,7 @@ class Id3v11 < Kaitai::Struct::Struct
   def id3v1_tag
     return @id3v1_tag unless @id3v1_tag.nil?
     _pos = @_io.pos
-    @_io.seek((_io.size - 128))
+    @_io.seek(_io.size - 128)
     @id3v1_tag = Id3V11Tag.new(@_io, self, @_root)
     @_io.seek(_pos)
     @id3v1_tag

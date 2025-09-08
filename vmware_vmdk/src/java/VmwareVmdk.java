@@ -48,8 +48,8 @@ public class VmwareVmdk extends KaitaiStruct {
     }
     private void _read() {
         this.magic = this._io.readBytes(4);
-        if (!(Arrays.equals(magic(), new byte[] { 75, 68, 77, 86 }))) {
-            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 75, 68, 77, 86 }, magic(), _io(), "/seq/0");
+        if (!(Arrays.equals(this.magic, new byte[] { 75, 68, 77, 86 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 75, 68, 77, 86 }, this.magic, this._io, "/seq/0");
         }
         this.version = this._io.readS4le();
         this.flags = new HeaderFlags(this._io, this, _root);
@@ -64,6 +64,19 @@ public class VmwareVmdk extends KaitaiStruct {
         this.isDirty = this._io.readU1();
         this.stuff = this._io.readBytes(4);
         this.compressionMethod = CompressionMethods.byId(this._io.readU2le());
+    }
+
+    public void _fetchInstances() {
+        this.flags._fetchInstances();
+        descriptor();
+        if (this.descriptor != null) {
+        }
+        grainPrimary();
+        if (this.grainPrimary != null) {
+        }
+        grainSecondary();
+        if (this.grainSecondary != null) {
+        }
     }
 
     /**
@@ -93,13 +106,14 @@ public class VmwareVmdk extends KaitaiStruct {
             this.zeroedGrainTableEntry = this._io.readBitsIntBe(1) != 0;
             this.useSecondaryGrainDir = this._io.readBitsIntBe(1) != 0;
             this.validNewLineDetectionTest = this._io.readBitsIntBe(1) != 0;
-            this._io.alignToByte();
             this.reserved2 = this._io.readU1();
             this.reserved3 = this._io.readBitsIntBe(6);
             this.hasMetadata = this._io.readBitsIntBe(1) != 0;
             this.hasCompressedGrain = this._io.readBitsIntBe(1) != 0;
-            this._io.alignToByte();
             this.reserved4 = this._io.readU1();
+        }
+
+        public void _fetchInstances() {
         }
         private long reserved1;
         private boolean zeroedGrainTableEntry;
@@ -124,21 +138,13 @@ public class VmwareVmdk extends KaitaiStruct {
         public VmwareVmdk _root() { return _root; }
         public VmwareVmdk _parent() { return _parent; }
     }
-    private Integer lenSector;
-    public Integer lenSector() {
-        if (this.lenSector != null)
-            return this.lenSector;
-        int _tmp = (int) (512);
-        this.lenSector = _tmp;
-        return this.lenSector;
-    }
     private byte[] descriptor;
     public byte[] descriptor() {
         if (this.descriptor != null)
             return this.descriptor;
         long _pos = this._io.pos();
-        this._io.seek((startDescriptor() * _root().lenSector()));
-        this.descriptor = this._io.readBytes((sizeDescriptor() * _root().lenSector()));
+        this._io.seek(startDescriptor() * _root().lenSector());
+        this.descriptor = this._io.readBytes(sizeDescriptor() * _root().lenSector());
         this._io.seek(_pos);
         return this.descriptor;
     }
@@ -147,8 +153,8 @@ public class VmwareVmdk extends KaitaiStruct {
         if (this.grainPrimary != null)
             return this.grainPrimary;
         long _pos = this._io.pos();
-        this._io.seek((startPrimaryGrain() * _root().lenSector()));
-        this.grainPrimary = this._io.readBytes((sizeGrain() * _root().lenSector()));
+        this._io.seek(startPrimaryGrain() * _root().lenSector());
+        this.grainPrimary = this._io.readBytes(sizeGrain() * _root().lenSector());
         this._io.seek(_pos);
         return this.grainPrimary;
     }
@@ -157,10 +163,17 @@ public class VmwareVmdk extends KaitaiStruct {
         if (this.grainSecondary != null)
             return this.grainSecondary;
         long _pos = this._io.pos();
-        this._io.seek((startSecondaryGrain() * _root().lenSector()));
-        this.grainSecondary = this._io.readBytes((sizeGrain() * _root().lenSector()));
+        this._io.seek(startSecondaryGrain() * _root().lenSector());
+        this.grainSecondary = this._io.readBytes(sizeGrain() * _root().lenSector());
         this._io.seek(_pos);
         return this.grainSecondary;
+    }
+    private Integer lenSector;
+    public Integer lenSector() {
+        if (this.lenSector != null)
+            return this.lenSector;
+        this.lenSector = ((int) 512);
+        return this.lenSector;
     }
     private byte[] magic;
     private int version;

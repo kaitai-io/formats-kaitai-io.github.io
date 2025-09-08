@@ -3,8 +3,8 @@
 
 namespace {
     class Ext2 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Ext2 $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Ext2 $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -31,8 +31,302 @@ namespace {
 }
 
 namespace Ext2 {
+    class Bgd extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Ext2\BlockGroup $_parent = null, ?\Ext2 $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_blockBitmapBlock = $this->_io->readU4le();
+            $this->_m_inodeBitmapBlock = $this->_io->readU4le();
+            $this->_m_inodeTableBlock = $this->_io->readU4le();
+            $this->_m_freeBlocksCount = $this->_io->readU2le();
+            $this->_m_freeInodesCount = $this->_io->readU2le();
+            $this->_m_usedDirsCount = $this->_io->readU2le();
+            $this->_m_padReserved = $this->_io->readBytes(2 + 12);
+        }
+        protected $_m_blockBitmap;
+        public function blockBitmap() {
+            if ($this->_m_blockBitmap !== null)
+                return $this->_m_blockBitmap;
+            $_pos = $this->_io->pos();
+            $this->_io->seek($this->blockBitmapBlock() * $this->_root()->bg1()->superBlock()->blockSize());
+            $this->_m_blockBitmap = $this->_io->readBytes(1024);
+            $this->_io->seek($_pos);
+            return $this->_m_blockBitmap;
+        }
+        protected $_m_inodeBitmap;
+        public function inodeBitmap() {
+            if ($this->_m_inodeBitmap !== null)
+                return $this->_m_inodeBitmap;
+            $_pos = $this->_io->pos();
+            $this->_io->seek($this->inodeBitmapBlock() * $this->_root()->bg1()->superBlock()->blockSize());
+            $this->_m_inodeBitmap = $this->_io->readBytes(1024);
+            $this->_io->seek($_pos);
+            return $this->_m_inodeBitmap;
+        }
+        protected $_m_inodes;
+        public function inodes() {
+            if ($this->_m_inodes !== null)
+                return $this->_m_inodes;
+            $_pos = $this->_io->pos();
+            $this->_io->seek($this->inodeTableBlock() * $this->_root()->bg1()->superBlock()->blockSize());
+            $this->_m_inodes = [];
+            $n = $this->_root()->bg1()->superBlock()->inodesPerGroup();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_inodes[] = new \Ext2\Inode($this->_io, $this, $this->_root);
+            }
+            $this->_io->seek($_pos);
+            return $this->_m_inodes;
+        }
+        protected $_m_blockBitmapBlock;
+        protected $_m_inodeBitmapBlock;
+        protected $_m_inodeTableBlock;
+        protected $_m_freeBlocksCount;
+        protected $_m_freeInodesCount;
+        protected $_m_usedDirsCount;
+        protected $_m_padReserved;
+        public function blockBitmapBlock() { return $this->_m_blockBitmapBlock; }
+        public function inodeBitmapBlock() { return $this->_m_inodeBitmapBlock; }
+        public function inodeTableBlock() { return $this->_m_inodeTableBlock; }
+        public function freeBlocksCount() { return $this->_m_freeBlocksCount; }
+        public function freeInodesCount() { return $this->_m_freeInodesCount; }
+        public function usedDirsCount() { return $this->_m_usedDirsCount; }
+        public function padReserved() { return $this->_m_padReserved; }
+    }
+}
+
+namespace Ext2 {
+    class BlockGroup extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Ext2 $_parent = null, ?\Ext2 $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m__raw_superBlock = $this->_io->readBytes(1024);
+            $_io__raw_superBlock = new \Kaitai\Struct\Stream($this->_m__raw_superBlock);
+            $this->_m_superBlock = new \Ext2\SuperBlockStruct($_io__raw_superBlock, $this, $this->_root);
+            $this->_m_blockGroups = [];
+            $n = $this->superBlock()->blockGroupCount();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_blockGroups[] = new \Ext2\Bgd($this->_io, $this, $this->_root);
+            }
+        }
+        protected $_m_superBlock;
+        protected $_m_blockGroups;
+        protected $_m__raw_superBlock;
+        public function superBlock() { return $this->_m_superBlock; }
+        public function blockGroups() { return $this->_m_blockGroups; }
+        public function _raw_superBlock() { return $this->_m__raw_superBlock; }
+    }
+}
+
+namespace Ext2 {
+    class BlockPtr extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Ext2\Inode $_parent = null, ?\Ext2 $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_ptr = $this->_io->readU4le();
+        }
+        protected $_m_body;
+        public function body() {
+            if ($this->_m_body !== null)
+                return $this->_m_body;
+            $_pos = $this->_io->pos();
+            $this->_io->seek($this->ptr() * $this->_root()->bg1()->superBlock()->blockSize());
+            $this->_m__raw_body = $this->_io->readBytes($this->_root()->bg1()->superBlock()->blockSize());
+            $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+            $this->_m_body = new \Ext2\RawBlock($_io__raw_body, $this, $this->_root);
+            $this->_io->seek($_pos);
+            return $this->_m_body;
+        }
+        protected $_m_ptr;
+        protected $_m__raw_body;
+        public function ptr() { return $this->_m_ptr; }
+        public function _raw_body() { return $this->_m__raw_body; }
+    }
+}
+
+namespace Ext2 {
+    class Dir extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Ext2\Inode $_parent = null, ?\Ext2 $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_entries = [];
+            $i = 0;
+            while (!$this->_io->isEof()) {
+                $this->_m_entries[] = new \Ext2\DirEntry($this->_io, $this, $this->_root);
+                $i++;
+            }
+        }
+        protected $_m_entries;
+        public function entries() { return $this->_m_entries; }
+    }
+}
+
+namespace Ext2 {
+    class DirEntry extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Ext2\Dir $_parent = null, ?\Ext2 $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_inodePtr = $this->_io->readU4le();
+            $this->_m_recLen = $this->_io->readU2le();
+            $this->_m_nameLen = $this->_io->readU1();
+            $this->_m_fileType = $this->_io->readU1();
+            $this->_m_name = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->nameLen()), "UTF-8");
+            $this->_m_padding = $this->_io->readBytes(($this->recLen() - $this->nameLen()) - 8);
+        }
+        protected $_m_inode;
+        public function inode() {
+            if ($this->_m_inode !== null)
+                return $this->_m_inode;
+            $this->_m_inode = $this->_root()->bg1()->blockGroups()[intval(($this->inodePtr() - 1) / $this->_root()->bg1()->superBlock()->inodesPerGroup())]->inodes()[\Kaitai\Struct\Stream::mod($this->inodePtr() - 1, $this->_root()->bg1()->superBlock()->inodesPerGroup())];
+            return $this->_m_inode;
+        }
+        protected $_m_inodePtr;
+        protected $_m_recLen;
+        protected $_m_nameLen;
+        protected $_m_fileType;
+        protected $_m_name;
+        protected $_m_padding;
+        public function inodePtr() { return $this->_m_inodePtr; }
+        public function recLen() { return $this->_m_recLen; }
+        public function nameLen() { return $this->_m_nameLen; }
+        public function fileType() { return $this->_m_fileType; }
+        public function name() { return $this->_m_name; }
+        public function padding() { return $this->_m_padding; }
+    }
+}
+
+namespace Ext2\DirEntry {
+    class FileTypeEnum {
+        const UNKNOWN = 0;
+        const REG_FILE = 1;
+        const DIR = 2;
+        const CHRDEV = 3;
+        const BLKDEV = 4;
+        const FIFO = 5;
+        const SOCK = 6;
+        const SYMLINK = 7;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 7 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
+    }
+}
+
+namespace Ext2 {
+    class Inode extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Ext2\Bgd $_parent = null, ?\Ext2 $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_mode = $this->_io->readU2le();
+            $this->_m_uid = $this->_io->readU2le();
+            $this->_m_size = $this->_io->readU4le();
+            $this->_m_atime = $this->_io->readU4le();
+            $this->_m_ctime = $this->_io->readU4le();
+            $this->_m_mtime = $this->_io->readU4le();
+            $this->_m_dtime = $this->_io->readU4le();
+            $this->_m_gid = $this->_io->readU2le();
+            $this->_m_linksCount = $this->_io->readU2le();
+            $this->_m_blocks = $this->_io->readU4le();
+            $this->_m_flags = $this->_io->readU4le();
+            $this->_m_osd1 = $this->_io->readU4le();
+            $this->_m_block = [];
+            $n = 15;
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_block[] = new \Ext2\BlockPtr($this->_io, $this, $this->_root);
+            }
+            $this->_m_generation = $this->_io->readU4le();
+            $this->_m_fileAcl = $this->_io->readU4le();
+            $this->_m_dirAcl = $this->_io->readU4le();
+            $this->_m_faddr = $this->_io->readU4le();
+            $this->_m_osd2 = $this->_io->readBytes(12);
+        }
+        protected $_m_asDir;
+        public function asDir() {
+            if ($this->_m_asDir !== null)
+                return $this->_m_asDir;
+            $io = $this->block()[0]->body()->_io();
+            $_pos = $io->pos();
+            $io->seek(0);
+            $this->_m_asDir = new \Ext2\Dir($io, $this, $this->_root);
+            $io->seek($_pos);
+            return $this->_m_asDir;
+        }
+        protected $_m_mode;
+        protected $_m_uid;
+        protected $_m_size;
+        protected $_m_atime;
+        protected $_m_ctime;
+        protected $_m_mtime;
+        protected $_m_dtime;
+        protected $_m_gid;
+        protected $_m_linksCount;
+        protected $_m_blocks;
+        protected $_m_flags;
+        protected $_m_osd1;
+        protected $_m_block;
+        protected $_m_generation;
+        protected $_m_fileAcl;
+        protected $_m_dirAcl;
+        protected $_m_faddr;
+        protected $_m_osd2;
+        public function mode() { return $this->_m_mode; }
+        public function uid() { return $this->_m_uid; }
+        public function size() { return $this->_m_size; }
+        public function atime() { return $this->_m_atime; }
+        public function ctime() { return $this->_m_ctime; }
+        public function mtime() { return $this->_m_mtime; }
+        public function dtime() { return $this->_m_dtime; }
+        public function gid() { return $this->_m_gid; }
+        public function linksCount() { return $this->_m_linksCount; }
+        public function blocks() { return $this->_m_blocks; }
+        public function flags() { return $this->_m_flags; }
+        public function osd1() { return $this->_m_osd1; }
+        public function block() { return $this->_m_block; }
+        public function generation() { return $this->_m_generation; }
+        public function fileAcl() { return $this->_m_fileAcl; }
+        public function dirAcl() { return $this->_m_dirAcl; }
+        public function faddr() { return $this->_m_faddr; }
+        public function osd2() { return $this->_m_osd2; }
+    }
+}
+
+namespace Ext2 {
+    class RawBlock extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Ext2\BlockPtr $_parent = null, ?\Ext2 $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_body = $this->_io->readBytes($this->_root()->bg1()->superBlock()->blockSize());
+        }
+        protected $_m_body;
+        public function body() { return $this->_m_body; }
+    }
+}
+
+namespace Ext2 {
     class SuperBlockStruct extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Ext2\BlockGroup $_parent = null, \Ext2 $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Ext2\BlockGroup $_parent = null, ?\Ext2 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -54,8 +348,8 @@ namespace Ext2 {
             $this->_m_mntCount = $this->_io->readU2le();
             $this->_m_maxMntCount = $this->_io->readU2le();
             $this->_m_magic = $this->_io->readBytes(2);
-            if (!($this->magic() == "\x53\xEF")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x53\xEF", $this->magic(), $this->_io(), "/types/super_block_struct/seq/15");
+            if (!($this->_m_magic == "\x53\xEF")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x53\xEF", $this->_m_magic, $this->_io, "/types/super_block_struct/seq/15");
             }
             $this->_m_state = $this->_io->readU2le();
             $this->_m_errors = $this->_io->readU2le();
@@ -90,19 +384,19 @@ namespace Ext2 {
             }
             $this->_m_defHashVersion = $this->_io->readU1();
         }
-        protected $_m_blockSize;
-        public function blockSize() {
-            if ($this->_m_blockSize !== null)
-                return $this->_m_blockSize;
-            $this->_m_blockSize = (1024 << $this->logBlockSize());
-            return $this->_m_blockSize;
-        }
         protected $_m_blockGroupCount;
         public function blockGroupCount() {
             if ($this->_m_blockGroupCount !== null)
                 return $this->_m_blockGroupCount;
             $this->_m_blockGroupCount = intval($this->blocksCount() / $this->blocksPerGroup());
             return $this->_m_blockGroupCount;
+        }
+        protected $_m_blockSize;
+        public function blockSize() {
+            if ($this->_m_blockSize !== null)
+                return $this->_m_blockSize;
+            $this->_m_blockSize = 1024 << $this->logBlockSize();
+            return $this->_m_blockSize;
         }
         protected $_m_inodesCount;
         protected $_m_blocksCount;
@@ -196,304 +490,28 @@ namespace Ext2 {
 }
 
 namespace Ext2\SuperBlockStruct {
-    class StateEnum {
-        const VALID_FS = 1;
-        const ERROR_FS = 2;
-    }
-}
-
-namespace Ext2\SuperBlockStruct {
     class ErrorsEnum {
         const ACT_CONTINUE = 1;
         const ACT_RO = 2;
         const ACT_PANIC = 3;
+
+        private const _VALUES = [1 => true, 2 => true, 3 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
-namespace Ext2 {
-    class DirEntry extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Ext2\Dir $_parent = null, \Ext2 $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
+namespace Ext2\SuperBlockStruct {
+    class StateEnum {
+        const VALID_FS = 1;
+        const ERROR_FS = 2;
 
-        private function _read() {
-            $this->_m_inodePtr = $this->_io->readU4le();
-            $this->_m_recLen = $this->_io->readU2le();
-            $this->_m_nameLen = $this->_io->readU1();
-            $this->_m_fileType = $this->_io->readU1();
-            $this->_m_name = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->nameLen()), "UTF-8");
-            $this->_m_padding = $this->_io->readBytes((($this->recLen() - $this->nameLen()) - 8));
-        }
-        protected $_m_inode;
-        public function inode() {
-            if ($this->_m_inode !== null)
-                return $this->_m_inode;
-            $this->_m_inode = $this->_root()->bg1()->blockGroups()[intval(($this->inodePtr() - 1) / $this->_root()->bg1()->superBlock()->inodesPerGroup())]->inodes()[\Kaitai\Struct\Stream::mod(($this->inodePtr() - 1), $this->_root()->bg1()->superBlock()->inodesPerGroup())];
-            return $this->_m_inode;
-        }
-        protected $_m_inodePtr;
-        protected $_m_recLen;
-        protected $_m_nameLen;
-        protected $_m_fileType;
-        protected $_m_name;
-        protected $_m_padding;
-        public function inodePtr() { return $this->_m_inodePtr; }
-        public function recLen() { return $this->_m_recLen; }
-        public function nameLen() { return $this->_m_nameLen; }
-        public function fileType() { return $this->_m_fileType; }
-        public function name() { return $this->_m_name; }
-        public function padding() { return $this->_m_padding; }
-    }
-}
+        private const _VALUES = [1 => true, 2 => true];
 
-namespace Ext2\DirEntry {
-    class FileTypeEnum {
-        const UNKNOWN = 0;
-        const REG_FILE = 1;
-        const DIR = 2;
-        const CHRDEV = 3;
-        const BLKDEV = 4;
-        const FIFO = 5;
-        const SOCK = 6;
-        const SYMLINK = 7;
-    }
-}
-
-namespace Ext2 {
-    class Inode extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Ext2\Bgd $_parent = null, \Ext2 $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
         }
-
-        private function _read() {
-            $this->_m_mode = $this->_io->readU2le();
-            $this->_m_uid = $this->_io->readU2le();
-            $this->_m_size = $this->_io->readU4le();
-            $this->_m_atime = $this->_io->readU4le();
-            $this->_m_ctime = $this->_io->readU4le();
-            $this->_m_mtime = $this->_io->readU4le();
-            $this->_m_dtime = $this->_io->readU4le();
-            $this->_m_gid = $this->_io->readU2le();
-            $this->_m_linksCount = $this->_io->readU2le();
-            $this->_m_blocks = $this->_io->readU4le();
-            $this->_m_flags = $this->_io->readU4le();
-            $this->_m_osd1 = $this->_io->readU4le();
-            $this->_m_block = [];
-            $n = 15;
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_block[] = new \Ext2\BlockPtr($this->_io, $this, $this->_root);
-            }
-            $this->_m_generation = $this->_io->readU4le();
-            $this->_m_fileAcl = $this->_io->readU4le();
-            $this->_m_dirAcl = $this->_io->readU4le();
-            $this->_m_faddr = $this->_io->readU4le();
-            $this->_m_osd2 = $this->_io->readBytes(12);
-        }
-        protected $_m_asDir;
-        public function asDir() {
-            if ($this->_m_asDir !== null)
-                return $this->_m_asDir;
-            $io = $this->block()[0]->body()->_io();
-            $_pos = $io->pos();
-            $io->seek(0);
-            $this->_m_asDir = new \Ext2\Dir($io, $this, $this->_root);
-            $io->seek($_pos);
-            return $this->_m_asDir;
-        }
-        protected $_m_mode;
-        protected $_m_uid;
-        protected $_m_size;
-        protected $_m_atime;
-        protected $_m_ctime;
-        protected $_m_mtime;
-        protected $_m_dtime;
-        protected $_m_gid;
-        protected $_m_linksCount;
-        protected $_m_blocks;
-        protected $_m_flags;
-        protected $_m_osd1;
-        protected $_m_block;
-        protected $_m_generation;
-        protected $_m_fileAcl;
-        protected $_m_dirAcl;
-        protected $_m_faddr;
-        protected $_m_osd2;
-        public function mode() { return $this->_m_mode; }
-        public function uid() { return $this->_m_uid; }
-        public function size() { return $this->_m_size; }
-        public function atime() { return $this->_m_atime; }
-        public function ctime() { return $this->_m_ctime; }
-        public function mtime() { return $this->_m_mtime; }
-        public function dtime() { return $this->_m_dtime; }
-        public function gid() { return $this->_m_gid; }
-        public function linksCount() { return $this->_m_linksCount; }
-        public function blocks() { return $this->_m_blocks; }
-        public function flags() { return $this->_m_flags; }
-        public function osd1() { return $this->_m_osd1; }
-        public function block() { return $this->_m_block; }
-        public function generation() { return $this->_m_generation; }
-        public function fileAcl() { return $this->_m_fileAcl; }
-        public function dirAcl() { return $this->_m_dirAcl; }
-        public function faddr() { return $this->_m_faddr; }
-        public function osd2() { return $this->_m_osd2; }
-    }
-}
-
-namespace Ext2 {
-    class BlockPtr extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Ext2\Inode $_parent = null, \Ext2 $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_ptr = $this->_io->readU4le();
-        }
-        protected $_m_body;
-        public function body() {
-            if ($this->_m_body !== null)
-                return $this->_m_body;
-            $_pos = $this->_io->pos();
-            $this->_io->seek(($this->ptr() * $this->_root()->bg1()->superBlock()->blockSize()));
-            $this->_m__raw_body = $this->_io->readBytes($this->_root()->bg1()->superBlock()->blockSize());
-            $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-            $this->_m_body = new \Ext2\RawBlock($_io__raw_body, $this, $this->_root);
-            $this->_io->seek($_pos);
-            return $this->_m_body;
-        }
-        protected $_m_ptr;
-        protected $_m__raw_body;
-        public function ptr() { return $this->_m_ptr; }
-        public function _raw_body() { return $this->_m__raw_body; }
-    }
-}
-
-namespace Ext2 {
-    class Dir extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Ext2\Inode $_parent = null, \Ext2 $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_entries = [];
-            $i = 0;
-            while (!$this->_io->isEof()) {
-                $this->_m_entries[] = new \Ext2\DirEntry($this->_io, $this, $this->_root);
-                $i++;
-            }
-        }
-        protected $_m_entries;
-        public function entries() { return $this->_m_entries; }
-    }
-}
-
-namespace Ext2 {
-    class BlockGroup extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Ext2 $_parent = null, \Ext2 $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m__raw_superBlock = $this->_io->readBytes(1024);
-            $_io__raw_superBlock = new \Kaitai\Struct\Stream($this->_m__raw_superBlock);
-            $this->_m_superBlock = new \Ext2\SuperBlockStruct($_io__raw_superBlock, $this, $this->_root);
-            $this->_m_blockGroups = [];
-            $n = $this->superBlock()->blockGroupCount();
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_blockGroups[] = new \Ext2\Bgd($this->_io, $this, $this->_root);
-            }
-        }
-        protected $_m_superBlock;
-        protected $_m_blockGroups;
-        protected $_m__raw_superBlock;
-        public function superBlock() { return $this->_m_superBlock; }
-        public function blockGroups() { return $this->_m_blockGroups; }
-        public function _raw_superBlock() { return $this->_m__raw_superBlock; }
-    }
-}
-
-namespace Ext2 {
-    class Bgd extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Ext2\BlockGroup $_parent = null, \Ext2 $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_blockBitmapBlock = $this->_io->readU4le();
-            $this->_m_inodeBitmapBlock = $this->_io->readU4le();
-            $this->_m_inodeTableBlock = $this->_io->readU4le();
-            $this->_m_freeBlocksCount = $this->_io->readU2le();
-            $this->_m_freeInodesCount = $this->_io->readU2le();
-            $this->_m_usedDirsCount = $this->_io->readU2le();
-            $this->_m_padReserved = $this->_io->readBytes((2 + 12));
-        }
-        protected $_m_blockBitmap;
-        public function blockBitmap() {
-            if ($this->_m_blockBitmap !== null)
-                return $this->_m_blockBitmap;
-            $_pos = $this->_io->pos();
-            $this->_io->seek(($this->blockBitmapBlock() * $this->_root()->bg1()->superBlock()->blockSize()));
-            $this->_m_blockBitmap = $this->_io->readBytes(1024);
-            $this->_io->seek($_pos);
-            return $this->_m_blockBitmap;
-        }
-        protected $_m_inodeBitmap;
-        public function inodeBitmap() {
-            if ($this->_m_inodeBitmap !== null)
-                return $this->_m_inodeBitmap;
-            $_pos = $this->_io->pos();
-            $this->_io->seek(($this->inodeBitmapBlock() * $this->_root()->bg1()->superBlock()->blockSize()));
-            $this->_m_inodeBitmap = $this->_io->readBytes(1024);
-            $this->_io->seek($_pos);
-            return $this->_m_inodeBitmap;
-        }
-        protected $_m_inodes;
-        public function inodes() {
-            if ($this->_m_inodes !== null)
-                return $this->_m_inodes;
-            $_pos = $this->_io->pos();
-            $this->_io->seek(($this->inodeTableBlock() * $this->_root()->bg1()->superBlock()->blockSize()));
-            $this->_m_inodes = [];
-            $n = $this->_root()->bg1()->superBlock()->inodesPerGroup();
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_inodes[] = new \Ext2\Inode($this->_io, $this, $this->_root);
-            }
-            $this->_io->seek($_pos);
-            return $this->_m_inodes;
-        }
-        protected $_m_blockBitmapBlock;
-        protected $_m_inodeBitmapBlock;
-        protected $_m_inodeTableBlock;
-        protected $_m_freeBlocksCount;
-        protected $_m_freeInodesCount;
-        protected $_m_usedDirsCount;
-        protected $_m_padReserved;
-        public function blockBitmapBlock() { return $this->_m_blockBitmapBlock; }
-        public function inodeBitmapBlock() { return $this->_m_inodeBitmapBlock; }
-        public function inodeTableBlock() { return $this->_m_inodeTableBlock; }
-        public function freeBlocksCount() { return $this->_m_freeBlocksCount; }
-        public function freeInodesCount() { return $this->_m_freeInodesCount; }
-        public function usedDirsCount() { return $this->_m_usedDirsCount; }
-        public function padReserved() { return $this->_m_padReserved; }
-    }
-}
-
-namespace Ext2 {
-    class RawBlock extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Ext2\BlockPtr $_parent = null, \Ext2 $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_body = $this->_io->readBytes($this->_root()->bg1()->superBlock()->blockSize());
-        }
-        protected $_m_body;
-        public function body() { return $this->_m_body; }
     }
 }

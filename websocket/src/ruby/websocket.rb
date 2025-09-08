@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -32,8 +32,8 @@ class Websocket < Kaitai::Struct::Struct
     15 => :opcode_reserved_control_f,
   }
   I__OPCODE = OPCODE.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -50,8 +50,28 @@ class Websocket < Kaitai::Struct::Struct
     end
     self
   end
+  class Dataframe < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @header = FrameHeader.new(@_io, self, @_root)
+      if _root.initial_frame.header.opcode != :opcode_text
+        @payload_bytes = @_io.read_bytes(header.len_payload)
+      end
+      if _root.initial_frame.header.opcode == :opcode_text
+        @payload_text = (@_io.read_bytes(header.len_payload)).force_encoding("UTF-8")
+      end
+      self
+    end
+    attr_reader :header
+    attr_reader :payload_bytes
+    attr_reader :payload_text
+  end
   class FrameHeader < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -89,7 +109,7 @@ class Websocket < Kaitai::Struct::Struct
     attr_reader :mask_key
   end
   class InitialFrame < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -100,26 +120,6 @@ class Websocket < Kaitai::Struct::Struct
         @payload_bytes = @_io.read_bytes(header.len_payload)
       end
       if header.opcode == :opcode_text
-        @payload_text = (@_io.read_bytes(header.len_payload)).force_encoding("UTF-8")
-      end
-      self
-    end
-    attr_reader :header
-    attr_reader :payload_bytes
-    attr_reader :payload_text
-  end
-  class Dataframe < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @header = FrameHeader.new(@_io, self, @_root)
-      if _root.initial_frame.header.opcode != :opcode_text
-        @payload_bytes = @_io.read_bytes(header.len_payload)
-      end
-      if _root.initial_frame.header.opcode == :opcode_text
         @payload_text = (@_io.read_bytes(header.len_payload)).force_encoding("UTF-8")
       end
       self

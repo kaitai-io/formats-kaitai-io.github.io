@@ -63,78 +63,10 @@ public class DosDatetime extends KaitaiStruct {
         this.time = new Time(this._io, this, _root);
         this.date = new Date(this._io, this, _root);
     }
-    public static class Time extends KaitaiStruct {
-        public static Time fromFile(String fileName) throws IOException {
-            return new Time(new ByteBufferKaitaiStream(fileName));
-        }
 
-        public Time(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Time(KaitaiStream _io, DosDatetime _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Time(KaitaiStream _io, DosDatetime _parent, DosDatetime _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.secondDiv2 = this._io.readBitsIntLe(5);
-            if (!(secondDiv2() <= 29)) {
-                throw new KaitaiStream.ValidationGreaterThanError(29, secondDiv2(), _io(), "/types/time/seq/0");
-            }
-            this.minute = this._io.readBitsIntLe(6);
-            if (!(minute() <= 59)) {
-                throw new KaitaiStream.ValidationGreaterThanError(59, minute(), _io(), "/types/time/seq/1");
-            }
-            this.hour = this._io.readBitsIntLe(5);
-            if (!(hour() <= 23)) {
-                throw new KaitaiStream.ValidationGreaterThanError(23, hour(), _io(), "/types/time/seq/2");
-            }
-        }
-        private Integer second;
-        public Integer second() {
-            if (this.second != null)
-                return this.second;
-            int _tmp = (int) ((2 * secondDiv2()));
-            this.second = _tmp;
-            return this.second;
-        }
-        private String paddedSecond;
-        public String paddedSecond() {
-            if (this.paddedSecond != null)
-                return this.paddedSecond;
-            this.paddedSecond = (second() <= 9 ? "0" : "") + Long.toString(second(), 10);
-            return this.paddedSecond;
-        }
-        private String paddedMinute;
-        public String paddedMinute() {
-            if (this.paddedMinute != null)
-                return this.paddedMinute;
-            this.paddedMinute = (minute() <= 9 ? "0" : "") + Long.toString(minute(), 10);
-            return this.paddedMinute;
-        }
-        private String paddedHour;
-        public String paddedHour() {
-            if (this.paddedHour != null)
-                return this.paddedHour;
-            this.paddedHour = (hour() <= 9 ? "0" : "") + Long.toString(hour(), 10);
-            return this.paddedHour;
-        }
-        private long secondDiv2;
-        private long minute;
-        private long hour;
-        private DosDatetime _root;
-        private DosDatetime _parent;
-        public long secondDiv2() { return secondDiv2; }
-        public long minute() { return minute; }
-        public long hour() { return hour; }
-        public DosDatetime _root() { return _root; }
-        public DosDatetime _parent() { return _parent; }
+    public void _fetchInstances() {
+        this.time._fetchInstances();
+        this.date._fetchInstances();
     }
     public static class Date extends KaitaiStruct {
         public static Date fromFile(String fileName) throws IOException {
@@ -157,17 +89,41 @@ public class DosDatetime extends KaitaiStruct {
         }
         private void _read() {
             this.day = this._io.readBitsIntLe(5);
-            if (!(day() >= 1)) {
-                throw new KaitaiStream.ValidationLessThanError(1, day(), _io(), "/types/date/seq/0");
+            if (!(this.day >= 1)) {
+                throw new KaitaiStream.ValidationLessThanError(1, this.day, this._io, "/types/date/seq/0");
             }
             this.month = this._io.readBitsIntLe(4);
-            if (!(month() >= 1)) {
-                throw new KaitaiStream.ValidationLessThanError(1, month(), _io(), "/types/date/seq/1");
+            if (!(this.month >= 1)) {
+                throw new KaitaiStream.ValidationLessThanError(1, this.month, this._io, "/types/date/seq/1");
             }
-            if (!(month() <= 12)) {
-                throw new KaitaiStream.ValidationGreaterThanError(12, month(), _io(), "/types/date/seq/1");
+            if (!(this.month <= 12)) {
+                throw new KaitaiStream.ValidationGreaterThanError(12, this.month, this._io, "/types/date/seq/1");
             }
             this.yearMinus1980 = this._io.readBitsIntLe(7);
+        }
+
+        public void _fetchInstances() {
+        }
+        private String paddedDay;
+        public String paddedDay() {
+            if (this.paddedDay != null)
+                return this.paddedDay;
+            this.paddedDay = (day() <= 9 ? "0" : "") + Long.toString(day());
+            return this.paddedDay;
+        }
+        private String paddedMonth;
+        public String paddedMonth() {
+            if (this.paddedMonth != null)
+                return this.paddedMonth;
+            this.paddedMonth = (month() <= 9 ? "0" : "") + Long.toString(month());
+            return this.paddedMonth;
+        }
+        private String paddedYear;
+        public String paddedYear() {
+            if (this.paddedYear != null)
+                return this.paddedYear;
+            this.paddedYear = (year() <= 999 ? "0" + (year() <= 99 ? "0" + (year() <= 9 ? "0" : "") : "") : "") + Long.toString(year());
+            return this.paddedYear;
         }
         private Integer year;
 
@@ -177,30 +133,8 @@ public class DosDatetime extends KaitaiStruct {
         public Integer year() {
             if (this.year != null)
                 return this.year;
-            int _tmp = (int) ((1980 + yearMinus1980()));
-            this.year = _tmp;
+            this.year = ((Number) (1980 + yearMinus1980())).intValue();
             return this.year;
-        }
-        private String paddedDay;
-        public String paddedDay() {
-            if (this.paddedDay != null)
-                return this.paddedDay;
-            this.paddedDay = (day() <= 9 ? "0" : "") + Long.toString(day(), 10);
-            return this.paddedDay;
-        }
-        private String paddedMonth;
-        public String paddedMonth() {
-            if (this.paddedMonth != null)
-                return this.paddedMonth;
-            this.paddedMonth = (month() <= 9 ? "0" : "") + Long.toString(month(), 10);
-            return this.paddedMonth;
-        }
-        private String paddedYear;
-        public String paddedYear() {
-            if (this.paddedYear != null)
-                return this.paddedYear;
-            this.paddedYear = (year() <= 999 ? "0" + (year() <= 99 ? "0" + (year() <= 9 ? "0" : "") : "") : "") + Long.toString(year(), 10);
-            return this.paddedYear;
         }
         private long day;
         private long month;
@@ -210,6 +144,81 @@ public class DosDatetime extends KaitaiStruct {
         public long day() { return day; }
         public long month() { return month; }
         public long yearMinus1980() { return yearMinus1980; }
+        public DosDatetime _root() { return _root; }
+        public DosDatetime _parent() { return _parent; }
+    }
+    public static class Time extends KaitaiStruct {
+        public static Time fromFile(String fileName) throws IOException {
+            return new Time(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Time(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Time(KaitaiStream _io, DosDatetime _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Time(KaitaiStream _io, DosDatetime _parent, DosDatetime _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.secondDiv2 = this._io.readBitsIntLe(5);
+            if (!(this.secondDiv2 <= 29)) {
+                throw new KaitaiStream.ValidationGreaterThanError(29, this.secondDiv2, this._io, "/types/time/seq/0");
+            }
+            this.minute = this._io.readBitsIntLe(6);
+            if (!(this.minute <= 59)) {
+                throw new KaitaiStream.ValidationGreaterThanError(59, this.minute, this._io, "/types/time/seq/1");
+            }
+            this.hour = this._io.readBitsIntLe(5);
+            if (!(this.hour <= 23)) {
+                throw new KaitaiStream.ValidationGreaterThanError(23, this.hour, this._io, "/types/time/seq/2");
+            }
+        }
+
+        public void _fetchInstances() {
+        }
+        private String paddedHour;
+        public String paddedHour() {
+            if (this.paddedHour != null)
+                return this.paddedHour;
+            this.paddedHour = (hour() <= 9 ? "0" : "") + Long.toString(hour());
+            return this.paddedHour;
+        }
+        private String paddedMinute;
+        public String paddedMinute() {
+            if (this.paddedMinute != null)
+                return this.paddedMinute;
+            this.paddedMinute = (minute() <= 9 ? "0" : "") + Long.toString(minute());
+            return this.paddedMinute;
+        }
+        private String paddedSecond;
+        public String paddedSecond() {
+            if (this.paddedSecond != null)
+                return this.paddedSecond;
+            this.paddedSecond = (second() <= 9 ? "0" : "") + Long.toString(second());
+            return this.paddedSecond;
+        }
+        private Integer second;
+        public Integer second() {
+            if (this.second != null)
+                return this.second;
+            this.second = ((Number) (2 * secondDiv2())).intValue();
+            return this.second;
+        }
+        private long secondDiv2;
+        private long minute;
+        private long hour;
+        private DosDatetime _root;
+        private DosDatetime _parent;
+        public long secondDiv2() { return secondDiv2; }
+        public long minute() { return minute; }
+        public long hour() { return hour; }
         public DosDatetime _root() { return _root; }
         public DosDatetime _parent() { return _parent; }
     }

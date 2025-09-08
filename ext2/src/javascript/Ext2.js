@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.Ext2 = factory(root.KaitaiStream);
+    factory(root.Ext2 || (root.Ext2 = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Ext2_, KaitaiStream) {
 var Ext2 = (function() {
   function Ext2(_io, _parent, _root) {
     this._io = _io;
@@ -20,102 +20,130 @@ var Ext2 = (function() {
   Ext2.prototype._read = function() {
   }
 
-  var SuperBlockStruct = Ext2.SuperBlockStruct = (function() {
-    SuperBlockStruct.StateEnum = Object.freeze({
-      VALID_FS: 1,
-      ERROR_FS: 2,
-
-      1: "VALID_FS",
-      2: "ERROR_FS",
-    });
-
-    SuperBlockStruct.ErrorsEnum = Object.freeze({
-      ACT_CONTINUE: 1,
-      ACT_RO: 2,
-      ACT_PANIC: 3,
-
-      1: "ACT_CONTINUE",
-      2: "ACT_RO",
-      3: "ACT_PANIC",
-    });
-
-    function SuperBlockStruct(_io, _parent, _root) {
+  var Bgd = Ext2.Bgd = (function() {
+    function Bgd(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    SuperBlockStruct.prototype._read = function() {
-      this.inodesCount = this._io.readU4le();
-      this.blocksCount = this._io.readU4le();
-      this.rBlocksCount = this._io.readU4le();
-      this.freeBlocksCount = this._io.readU4le();
-      this.freeInodesCount = this._io.readU4le();
-      this.firstDataBlock = this._io.readU4le();
-      this.logBlockSize = this._io.readU4le();
-      this.logFragSize = this._io.readU4le();
-      this.blocksPerGroup = this._io.readU4le();
-      this.fragsPerGroup = this._io.readU4le();
-      this.inodesPerGroup = this._io.readU4le();
-      this.mtime = this._io.readU4le();
-      this.wtime = this._io.readU4le();
-      this.mntCount = this._io.readU2le();
-      this.maxMntCount = this._io.readU2le();
-      this.magic = this._io.readBytes(2);
-      if (!((KaitaiStream.byteArrayCompare(this.magic, [83, 239]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([83, 239], this.magic, this._io, "/types/super_block_struct/seq/15");
-      }
-      this.state = this._io.readU2le();
-      this.errors = this._io.readU2le();
-      this.minorRevLevel = this._io.readU2le();
-      this.lastcheck = this._io.readU4le();
-      this.checkinterval = this._io.readU4le();
-      this.creatorOs = this._io.readU4le();
-      this.revLevel = this._io.readU4le();
-      this.defResuid = this._io.readU2le();
-      this.defResgid = this._io.readU2le();
-      this.firstIno = this._io.readU4le();
-      this.inodeSize = this._io.readU2le();
-      this.blockGroupNr = this._io.readU2le();
-      this.featureCompat = this._io.readU4le();
-      this.featureIncompat = this._io.readU4le();
-      this.featureRoCompat = this._io.readU4le();
-      this.uuid = this._io.readBytes(16);
-      this.volumeName = this._io.readBytes(16);
-      this.lastMounted = this._io.readBytes(64);
-      this.algoBitmap = this._io.readU4le();
-      this.preallocBlocks = this._io.readU1();
-      this.preallocDirBlocks = this._io.readU1();
-      this.padding1 = this._io.readBytes(2);
-      this.journalUuid = this._io.readBytes(16);
-      this.journalInum = this._io.readU4le();
-      this.journalDev = this._io.readU4le();
-      this.lastOrphan = this._io.readU4le();
-      this.hashSeed = [];
-      for (var i = 0; i < 4; i++) {
-        this.hashSeed.push(this._io.readU4le());
-      }
-      this.defHashVersion = this._io.readU1();
+    Bgd.prototype._read = function() {
+      this.blockBitmapBlock = this._io.readU4le();
+      this.inodeBitmapBlock = this._io.readU4le();
+      this.inodeTableBlock = this._io.readU4le();
+      this.freeBlocksCount = this._io.readU2le();
+      this.freeInodesCount = this._io.readU2le();
+      this.usedDirsCount = this._io.readU2le();
+      this.padReserved = this._io.readBytes(2 + 12);
     }
-    Object.defineProperty(SuperBlockStruct.prototype, 'blockSize', {
+    Object.defineProperty(Bgd.prototype, 'blockBitmap', {
       get: function() {
-        if (this._m_blockSize !== undefined)
-          return this._m_blockSize;
-        this._m_blockSize = (1024 << this.logBlockSize);
-        return this._m_blockSize;
+        if (this._m_blockBitmap !== undefined)
+          return this._m_blockBitmap;
+        var _pos = this._io.pos;
+        this._io.seek(this.blockBitmapBlock * this._root.bg1.superBlock.blockSize);
+        this._m_blockBitmap = this._io.readBytes(1024);
+        this._io.seek(_pos);
+        return this._m_blockBitmap;
       }
     });
-    Object.defineProperty(SuperBlockStruct.prototype, 'blockGroupCount', {
+    Object.defineProperty(Bgd.prototype, 'inodeBitmap', {
       get: function() {
-        if (this._m_blockGroupCount !== undefined)
-          return this._m_blockGroupCount;
-        this._m_blockGroupCount = Math.floor(this.blocksCount / this.blocksPerGroup);
-        return this._m_blockGroupCount;
+        if (this._m_inodeBitmap !== undefined)
+          return this._m_inodeBitmap;
+        var _pos = this._io.pos;
+        this._io.seek(this.inodeBitmapBlock * this._root.bg1.superBlock.blockSize);
+        this._m_inodeBitmap = this._io.readBytes(1024);
+        this._io.seek(_pos);
+        return this._m_inodeBitmap;
+      }
+    });
+    Object.defineProperty(Bgd.prototype, 'inodes', {
+      get: function() {
+        if (this._m_inodes !== undefined)
+          return this._m_inodes;
+        var _pos = this._io.pos;
+        this._io.seek(this.inodeTableBlock * this._root.bg1.superBlock.blockSize);
+        this._m_inodes = [];
+        for (var i = 0; i < this._root.bg1.superBlock.inodesPerGroup; i++) {
+          this._m_inodes.push(new Inode(this._io, this, this._root));
+        }
+        this._io.seek(_pos);
+        return this._m_inodes;
       }
     });
 
-    return SuperBlockStruct;
+    return Bgd;
+  })();
+
+  var BlockGroup = Ext2.BlockGroup = (function() {
+    function BlockGroup(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    BlockGroup.prototype._read = function() {
+      this._raw_superBlock = this._io.readBytes(1024);
+      var _io__raw_superBlock = new KaitaiStream(this._raw_superBlock);
+      this.superBlock = new SuperBlockStruct(_io__raw_superBlock, this, this._root);
+      this.blockGroups = [];
+      for (var i = 0; i < this.superBlock.blockGroupCount; i++) {
+        this.blockGroups.push(new Bgd(this._io, this, this._root));
+      }
+    }
+
+    return BlockGroup;
+  })();
+
+  var BlockPtr = Ext2.BlockPtr = (function() {
+    function BlockPtr(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    BlockPtr.prototype._read = function() {
+      this.ptr = this._io.readU4le();
+    }
+    Object.defineProperty(BlockPtr.prototype, 'body', {
+      get: function() {
+        if (this._m_body !== undefined)
+          return this._m_body;
+        var _pos = this._io.pos;
+        this._io.seek(this.ptr * this._root.bg1.superBlock.blockSize);
+        this._raw__m_body = this._io.readBytes(this._root.bg1.superBlock.blockSize);
+        var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+        this._m_body = new RawBlock(_io__raw__m_body, this, this._root);
+        this._io.seek(_pos);
+        return this._m_body;
+      }
+    });
+
+    return BlockPtr;
+  })();
+
+  var Dir = Ext2.Dir = (function() {
+    function Dir(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Dir.prototype._read = function() {
+      this.entries = [];
+      var i = 0;
+      while (!this._io.isEof()) {
+        this.entries.push(new DirEntry(this._io, this, this._root));
+        i++;
+      }
+    }
+
+    return Dir;
   })();
 
   var DirEntry = Ext2.DirEntry = (function() {
@@ -142,7 +170,7 @@ var Ext2 = (function() {
     function DirEntry(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -152,13 +180,13 @@ var Ext2 = (function() {
       this.nameLen = this._io.readU1();
       this.fileType = this._io.readU1();
       this.name = KaitaiStream.bytesToStr(this._io.readBytes(this.nameLen), "UTF-8");
-      this.padding = this._io.readBytes(((this.recLen - this.nameLen) - 8));
+      this.padding = this._io.readBytes((this.recLen - this.nameLen) - 8);
     }
     Object.defineProperty(DirEntry.prototype, 'inode', {
       get: function() {
         if (this._m_inode !== undefined)
           return this._m_inode;
-        this._m_inode = this._root.bg1.blockGroups[Math.floor((this.inodePtr - 1) / this._root.bg1.superBlock.inodesPerGroup)].inodes[KaitaiStream.mod((this.inodePtr - 1), this._root.bg1.superBlock.inodesPerGroup)];
+        this._m_inode = this._root.bg1.blockGroups[Math.floor((this.inodePtr - 1) / this._root.bg1.superBlock.inodesPerGroup)].inodes[KaitaiStream.mod(this.inodePtr - 1, this._root.bg1.superBlock.inodesPerGroup)];
         return this._m_inode;
       }
     });
@@ -170,7 +198,7 @@ var Ext2 = (function() {
     function Inode(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -213,137 +241,11 @@ var Ext2 = (function() {
     return Inode;
   })();
 
-  var BlockPtr = Ext2.BlockPtr = (function() {
-    function BlockPtr(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    BlockPtr.prototype._read = function() {
-      this.ptr = this._io.readU4le();
-    }
-    Object.defineProperty(BlockPtr.prototype, 'body', {
-      get: function() {
-        if (this._m_body !== undefined)
-          return this._m_body;
-        var _pos = this._io.pos;
-        this._io.seek((this.ptr * this._root.bg1.superBlock.blockSize));
-        this._raw__m_body = this._io.readBytes(this._root.bg1.superBlock.blockSize);
-        var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
-        this._m_body = new RawBlock(_io__raw__m_body, this, this._root);
-        this._io.seek(_pos);
-        return this._m_body;
-      }
-    });
-
-    return BlockPtr;
-  })();
-
-  var Dir = Ext2.Dir = (function() {
-    function Dir(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Dir.prototype._read = function() {
-      this.entries = [];
-      var i = 0;
-      while (!this._io.isEof()) {
-        this.entries.push(new DirEntry(this._io, this, this._root));
-        i++;
-      }
-    }
-
-    return Dir;
-  })();
-
-  var BlockGroup = Ext2.BlockGroup = (function() {
-    function BlockGroup(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    BlockGroup.prototype._read = function() {
-      this._raw_superBlock = this._io.readBytes(1024);
-      var _io__raw_superBlock = new KaitaiStream(this._raw_superBlock);
-      this.superBlock = new SuperBlockStruct(_io__raw_superBlock, this, this._root);
-      this.blockGroups = [];
-      for (var i = 0; i < this.superBlock.blockGroupCount; i++) {
-        this.blockGroups.push(new Bgd(this._io, this, this._root));
-      }
-    }
-
-    return BlockGroup;
-  })();
-
-  var Bgd = Ext2.Bgd = (function() {
-    function Bgd(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Bgd.prototype._read = function() {
-      this.blockBitmapBlock = this._io.readU4le();
-      this.inodeBitmapBlock = this._io.readU4le();
-      this.inodeTableBlock = this._io.readU4le();
-      this.freeBlocksCount = this._io.readU2le();
-      this.freeInodesCount = this._io.readU2le();
-      this.usedDirsCount = this._io.readU2le();
-      this.padReserved = this._io.readBytes((2 + 12));
-    }
-    Object.defineProperty(Bgd.prototype, 'blockBitmap', {
-      get: function() {
-        if (this._m_blockBitmap !== undefined)
-          return this._m_blockBitmap;
-        var _pos = this._io.pos;
-        this._io.seek((this.blockBitmapBlock * this._root.bg1.superBlock.blockSize));
-        this._m_blockBitmap = this._io.readBytes(1024);
-        this._io.seek(_pos);
-        return this._m_blockBitmap;
-      }
-    });
-    Object.defineProperty(Bgd.prototype, 'inodeBitmap', {
-      get: function() {
-        if (this._m_inodeBitmap !== undefined)
-          return this._m_inodeBitmap;
-        var _pos = this._io.pos;
-        this._io.seek((this.inodeBitmapBlock * this._root.bg1.superBlock.blockSize));
-        this._m_inodeBitmap = this._io.readBytes(1024);
-        this._io.seek(_pos);
-        return this._m_inodeBitmap;
-      }
-    });
-    Object.defineProperty(Bgd.prototype, 'inodes', {
-      get: function() {
-        if (this._m_inodes !== undefined)
-          return this._m_inodes;
-        var _pos = this._io.pos;
-        this._io.seek((this.inodeTableBlock * this._root.bg1.superBlock.blockSize));
-        this._m_inodes = [];
-        for (var i = 0; i < this._root.bg1.superBlock.inodesPerGroup; i++) {
-          this._m_inodes.push(new Inode(this._io, this, this._root));
-        }
-        this._io.seek(_pos);
-        return this._m_inodes;
-      }
-    });
-
-    return Bgd;
-  })();
-
   var RawBlock = Ext2.RawBlock = (function() {
     function RawBlock(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -352,6 +254,104 @@ var Ext2 = (function() {
     }
 
     return RawBlock;
+  })();
+
+  var SuperBlockStruct = Ext2.SuperBlockStruct = (function() {
+    SuperBlockStruct.ErrorsEnum = Object.freeze({
+      ACT_CONTINUE: 1,
+      ACT_RO: 2,
+      ACT_PANIC: 3,
+
+      1: "ACT_CONTINUE",
+      2: "ACT_RO",
+      3: "ACT_PANIC",
+    });
+
+    SuperBlockStruct.StateEnum = Object.freeze({
+      VALID_FS: 1,
+      ERROR_FS: 2,
+
+      1: "VALID_FS",
+      2: "ERROR_FS",
+    });
+
+    function SuperBlockStruct(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    SuperBlockStruct.prototype._read = function() {
+      this.inodesCount = this._io.readU4le();
+      this.blocksCount = this._io.readU4le();
+      this.rBlocksCount = this._io.readU4le();
+      this.freeBlocksCount = this._io.readU4le();
+      this.freeInodesCount = this._io.readU4le();
+      this.firstDataBlock = this._io.readU4le();
+      this.logBlockSize = this._io.readU4le();
+      this.logFragSize = this._io.readU4le();
+      this.blocksPerGroup = this._io.readU4le();
+      this.fragsPerGroup = this._io.readU4le();
+      this.inodesPerGroup = this._io.readU4le();
+      this.mtime = this._io.readU4le();
+      this.wtime = this._io.readU4le();
+      this.mntCount = this._io.readU2le();
+      this.maxMntCount = this._io.readU2le();
+      this.magic = this._io.readBytes(2);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([83, 239])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([83, 239]), this.magic, this._io, "/types/super_block_struct/seq/15");
+      }
+      this.state = this._io.readU2le();
+      this.errors = this._io.readU2le();
+      this.minorRevLevel = this._io.readU2le();
+      this.lastcheck = this._io.readU4le();
+      this.checkinterval = this._io.readU4le();
+      this.creatorOs = this._io.readU4le();
+      this.revLevel = this._io.readU4le();
+      this.defResuid = this._io.readU2le();
+      this.defResgid = this._io.readU2le();
+      this.firstIno = this._io.readU4le();
+      this.inodeSize = this._io.readU2le();
+      this.blockGroupNr = this._io.readU2le();
+      this.featureCompat = this._io.readU4le();
+      this.featureIncompat = this._io.readU4le();
+      this.featureRoCompat = this._io.readU4le();
+      this.uuid = this._io.readBytes(16);
+      this.volumeName = this._io.readBytes(16);
+      this.lastMounted = this._io.readBytes(64);
+      this.algoBitmap = this._io.readU4le();
+      this.preallocBlocks = this._io.readU1();
+      this.preallocDirBlocks = this._io.readU1();
+      this.padding1 = this._io.readBytes(2);
+      this.journalUuid = this._io.readBytes(16);
+      this.journalInum = this._io.readU4le();
+      this.journalDev = this._io.readU4le();
+      this.lastOrphan = this._io.readU4le();
+      this.hashSeed = [];
+      for (var i = 0; i < 4; i++) {
+        this.hashSeed.push(this._io.readU4le());
+      }
+      this.defHashVersion = this._io.readU1();
+    }
+    Object.defineProperty(SuperBlockStruct.prototype, 'blockGroupCount', {
+      get: function() {
+        if (this._m_blockGroupCount !== undefined)
+          return this._m_blockGroupCount;
+        this._m_blockGroupCount = Math.floor(this.blocksCount / this.blocksPerGroup);
+        return this._m_blockGroupCount;
+      }
+    });
+    Object.defineProperty(SuperBlockStruct.prototype, 'blockSize', {
+      get: function() {
+        if (this._m_blockSize !== undefined)
+          return this._m_blockSize;
+        this._m_blockSize = 1024 << this.logBlockSize;
+        return this._m_blockSize;
+      }
+    });
+
+    return SuperBlockStruct;
   })();
   Object.defineProperty(Ext2.prototype, 'bg1', {
     get: function() {
@@ -375,5 +375,5 @@ var Ext2 = (function() {
 
   return Ext2;
 })();
-return Ext2;
-}));
+Ext2_.Ext2 = Ext2;
+});

@@ -195,6 +195,11 @@ They are mostly found in resource forks, but can occasionally appear standalone 
                 
                 <li>
                 
+                <a href="java-write.html" title="Classic MacOS Sound Resource parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="Classic MacOS Sound Resource parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -225,7 +230,17 @@ They are mostly found in resource forks, but can occasionally appear standalone 
                 
                 <li>
                 
+                <a href="python-write.html" title="Classic MacOS Sound Resource parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="Classic MacOS Sound Resource parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="Classic MacOS Sound Resource parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -262,8 +277,8 @@ They are mostly found in resource forks, but can occasionally appear standalone 
 <span class="kd">local</span><span class="w"> </span><span class="nv">class</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
 <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;kaitaistruct&quot;</span><span class="p">)</span>
 <span class="kd">local</span><span class="w"> </span><span class="nv">enum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">&quot;enum&quot;</span><span class="p">)</span>
-<span class="kd">local</span><span class="w"> </span><span class="nv">utils</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">&quot;utils&quot;</span><span class="p">)</span>
 <span class="kd">local</span><span class="w"> </span><span class="nv">str_decode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_decode&quot;</span><span class="p">)</span>
+<span class="kd">local</span><span class="w"> </span><span class="nv">utils</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">&quot;utils&quot;</span><span class="p">)</span>
 
 <span class="c1">-- </span>
 <span class="c1">-- Sound resources were introduced in Classic MacOS with the Sound Manager program.</span>
@@ -303,23 +318,20 @@ They are mostly found in resource forks, but can occasionally appear standalone 
 <span class="w">  </span><span class="nv">get_rate_cmd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">85</span><span class="p">,</span>
 <span class="p">}</span>
 
-<span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">SoundHeaderType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">enum</span><span class="p">.</span><span class="py">Enum</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="nv">standard</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
-<span class="w">  </span><span class="nv">compressed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">254</span><span class="p">,</span>
-<span class="w">  </span><span class="nv">extended</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">255</span><span class="p">,</span>
+<span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">CompressionTypeEnum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">enum</span><span class="p">.</span><span class="py">Enum</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nv">variable_compression</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="mi">2</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">fixed_compression</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">not_compressed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">two_to_one</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">eight_to_three</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">three_to_one</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">six_to_one</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span>
 <span class="p">}</span>
 
 <span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">DataType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">enum</span><span class="p">.</span><span class="py">Enum</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nv">square_wave_synth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
 <span class="w">  </span><span class="nv">wave_table_synth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
 <span class="w">  </span><span class="nv">sampled_synth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
-<span class="p">}</span>
-
-<span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">WaveInitOption</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">enum</span><span class="p">.</span><span class="py">Enum</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="nv">channel0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span>
-<span class="w">  </span><span class="nv">channel1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
-<span class="w">  </span><span class="nv">channel2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span>
-<span class="w">  </span><span class="nv">channel3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span>
 <span class="p">}</span>
 
 <span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">InitOption</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">enum</span><span class="p">.</span><span class="py">Enum</span><span class="w"> </span><span class="p">{</span>
@@ -333,14 +345,17 @@ They are mostly found in resource forks, but can occasionally appear standalone 
 <span class="w">  </span><span class="nv">mace6</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1024</span><span class="p">,</span>
 <span class="p">}</span>
 
-<span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">CompressionTypeEnum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">enum</span><span class="p">.</span><span class="py">Enum</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="nv">variable_compression</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="mi">2</span><span class="p">,</span>
-<span class="w">  </span><span class="nv">fixed_compression</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>
-<span class="w">  </span><span class="nv">not_compressed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
-<span class="w">  </span><span class="nv">two_to_one</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
-<span class="w">  </span><span class="nv">eight_to_three</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
-<span class="w">  </span><span class="nv">three_to_one</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
-<span class="w">  </span><span class="nv">six_to_one</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span>
+<span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">SoundHeaderType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">enum</span><span class="p">.</span><span class="py">Enum</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nv">standard</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">compressed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">254</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">extended</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">255</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">WaveInitOption</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">enum</span><span class="p">.</span><span class="py">Enum</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nv">channel0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">channel1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">channel2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span>
+<span class="w">  </span><span class="nv">channel3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span>
 <span class="p">}</span>
 
 <span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
@@ -386,180 +401,12 @@ They are mostly found in resource forks, but can occasionally appear standalone 
 <span class="kr">end</span>
 
 
-<span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">Extended</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">Extended</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">Extended</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">instrument_chunk_ptr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">aes_recording_ptr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- pointer to instrument info.</span>
-<span class="c1">-- </span>
-<span class="c1">-- pointer to audio info.</span>
-
-<span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">SoundHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">SoundHeader</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">SoundHeader</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">start_ofs</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_unnamed0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="w">  </span><span class="kr">end</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">sample_ptr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">sound_header_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">SoundHeaderType</span><span class="p">.</span><span class="py">standard</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">num_samples</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">end</span>
-<span class="w">  </span><span class="kr">if</span><span class="w">  </span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">sound_header_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">SoundHeaderType</span><span class="p">.</span><span class="py">extended</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">sound_header_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">SoundHeaderType</span><span class="p">.</span><span class="py">compressed</span><span class="p">))</span><span class="w">  </span><span class="kr">then</span>
-<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">num_channels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">end</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">sample_rate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="nf">UnsignedFixedPoint</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">loop_start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">loop_end</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">encode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="nf">SoundHeaderType</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">())</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">midi_note</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w">  </span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">sound_header_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">SoundHeaderType</span><span class="p">.</span><span class="py">extended</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">sound_header_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">SoundHeaderType</span><span class="p">.</span><span class="py">compressed</span><span class="p">))</span><span class="w">  </span><span class="kr">then</span>
-<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">extended_or_compressed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="nf">ExtendedOrCompressed</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
-<span class="w">  </span><span class="kr">end</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">sample_ptr</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">sample_area</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_unwrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">sound_header_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">SoundHeaderType</span><span class="p">.</span><span class="py">standard</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_wrap</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">num_samples</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_unwrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">sound_header_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">SoundHeaderType</span><span class="p">.</span><span class="py">extended</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_wrap</span><span class="p">(</span><span class="nb">math.floor</span><span class="p">(((</span><span class="nv">self</span><span class="p">.</span><span class="py">extended_or_compressed</span><span class="p">.</span><span class="py">num_frames</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">num_channels</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">extended_or_compressed</span><span class="p">.</span><span class="py">bits_per_sample</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">8</span><span class="p">))</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">pos</span><span class="p">()))))))</span>
-<span class="w">  </span><span class="kr">end</span>
-<span class="kr">end</span>
-
-<span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">SoundHeader</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">start_ofs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">SoundHeader</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">start_ofs</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_start_ofs</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_start_ofs</span>
-<span class="w">  </span><span class="kr">end</span>
-
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_start_ofs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">pos</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_start_ofs</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- base frequency of sample in Hz</span>
-<span class="c1">-- Calculated with the formula (2 ** ((midi_note - 69) / 12)) * 440</span>
-<span class="c1">-- See also: Source (https://en.wikipedia.org/wiki/MIDI_tuning_standard)</span>
-<span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">SoundHeader</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">base_freqeuncy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">SoundHeader</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">base_freqeuncy</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_base_freqeuncy</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_base_freqeuncy</span>
-<span class="w">  </span><span class="kr">end</span>
-
-<span class="w">  </span><span class="kr">if</span><span class="w">  </span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">midi_note</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">midi_note</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">128</span><span class="p">))</span><span class="w">  </span><span class="kr">then</span>
-<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_base_freqeuncy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">midi_note_to_frequency</span><span class="p">[</span><span class="nv">self</span><span class="p">.</span><span class="py">midi_note</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span>
-<span class="w">  </span><span class="kr">end</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_base_freqeuncy</span>
-<span class="kr">end</span>
-
-<span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">SoundHeader</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">sound_header_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">SoundHeader</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">sound_header_type</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_sound_header_type</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_sound_header_type</span>
-<span class="w">  </span><span class="kr">end</span>
-
-<span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">pos</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">start_ofs</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">20</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_sound_header_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="nf">SoundHeaderType</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">())</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">(</span><span class="nv">_pos</span><span class="p">)</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_sound_header_type</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- pointer to samples (or 0 if samples follow data structure).</span>
-<span class="c1">-- </span>
-<span class="c1">-- number of samples.</span>
-<span class="c1">-- </span>
-<span class="c1">-- number of channels in sample.</span>
-<span class="c1">-- </span>
-<span class="c1">-- The rate at which the sample was originally recorded.</span>
-<span class="c1">-- </span>
-<span class="c1">-- loop point beginning.</span>
-<span class="c1">-- </span>
-<span class="c1">-- loop point ending.</span>
-<span class="c1">-- </span>
-<span class="c1">-- sample&#39;s encoding option.</span>
-<span class="c1">-- </span>
-<span class="c1">-- base frequency of sample, expressed as MIDI note values, 60 is middle C.</span>
-<span class="c1">-- </span>
-<span class="c1">-- sampled-sound data.</span>
-
-<span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">UnsignedFixedPoint</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">UnsignedFixedPoint</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">UnsignedFixedPoint</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">integer_part</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2be</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">fraction_part</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2be</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">UnsignedFixedPoint</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">UnsignedFixedPoint</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">value</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_value</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_value</span>
-<span class="w">  </span><span class="kr">end</span>
-
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">integer_part</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">fraction_part</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">65535.0</span><span class="p">))</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_value</span>
-<span class="kr">end</span>
-
-
-<span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">SoundCommand</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">SoundCommand</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">SoundCommand</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">is_data_offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">cmd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="nf">CmdType</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bits_int_be</span><span class="p">(</span><span class="mi">15</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">align_to_byte</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">param1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2be</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">param2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">SoundCommand</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">sound_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">SoundCommand</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">sound_header</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_sound_header</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_sound_header</span>
-<span class="w">  </span><span class="kr">end</span>
-
-<span class="w">  </span><span class="kr">if</span><span class="w">  </span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">is_data_offset</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">cmd</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">CmdType</span><span class="p">.</span><span class="py">buffer_cmd</span><span class="p">))</span><span class="w">  </span><span class="kr">then</span>
-<span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">pos</span><span class="p">()</span>
-<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">param2</span><span class="p">)</span>
-<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_sound_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="nf">SoundHeader</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
-<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">(</span><span class="nv">_pos</span><span class="p">)</span>
-<span class="w">  </span><span class="kr">end</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_sound_header</span>
-<span class="kr">end</span>
-
-
 <span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">Compressed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
 <span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">Compressed</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
@@ -600,12 +447,138 @@ They are mostly found in resource forks, but can occasionally appear standalone 
 <span class="c1">-- Indicates the resource ID number of the &#39;snth&#39; resource that was used to compress the packets contained in the compressed sound header.</span>
 <span class="c1">-- See also: Page 22-49, absolute page number 1169 in the PDF (https://vintageapple.org/inside_o/pdf/Inside_Macintosh_Volume_VI_1991.pdf)</span>
 
+<span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">DataFormat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">DataFormat</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">DataFormat</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="nf">DataType</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2be</span><span class="p">())</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">DataFormat</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">comp_init</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">DataFormat</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">comp_init</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_comp_init</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_comp_init</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_comp_init</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="nf">InitOption</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">options</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">init_comp_mask</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_comp_init</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- mask for compression IDs.</span>
+<span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">DataFormat</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">init_comp_mask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">DataFormat</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">init_comp_mask</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_init_comp_mask</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_init_comp_mask</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_init_comp_mask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">65280</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_init_comp_mask</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- mask for right/left pan values.</span>
+<span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">DataFormat</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">init_pan_mask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">DataFormat</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">init_pan_mask</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_init_pan_mask</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_init_pan_mask</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_init_pan_mask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_init_pan_mask</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- mask for mono/stereo values.</span>
+<span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">DataFormat</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">init_stereo_mask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">DataFormat</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">init_stereo_mask</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_init_stereo_mask</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_init_stereo_mask</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_init_stereo_mask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">192</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_init_stereo_mask</span>
+<span class="kr">end</span>
+
+<span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">DataFormat</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">pan_init</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">DataFormat</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">pan_init</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_pan_init</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_pan_init</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_pan_init</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="nf">InitOption</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">options</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">init_pan_mask</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_pan_init</span>
+<span class="kr">end</span>
+
+<span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">DataFormat</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">stereo_init</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">DataFormat</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">stereo_init</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_stereo_init</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_stereo_init</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_stereo_init</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="nf">InitOption</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">options</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">init_stereo_mask</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_stereo_init</span>
+<span class="kr">end</span>
+
+<span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">DataFormat</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">wave_init</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">DataFormat</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">wave_init</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_wave_init</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_wave_init</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">id</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">DataType</span><span class="p">.</span><span class="py">wave_table_synth</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_wave_init</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="nf">WaveInitOption</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">options</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">wave_init_channel_mask</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_wave_init</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- wave table only, Sound Manager 2.0 and earlier.</span>
+<span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">DataFormat</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">wave_init_channel_mask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">DataFormat</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">wave_init_channel_mask</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_wave_init_channel_mask</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_wave_init_channel_mask</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_wave_init_channel_mask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">7</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_wave_init_channel_mask</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- contains initialisation options for the SndNewChannel function.</span>
+
+<span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">Extended</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">Extended</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">Extended</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">instrument_chunk_ptr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">aes_recording_ptr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- pointer to instrument info.</span>
+<span class="c1">-- </span>
+<span class="c1">-- pointer to audio info.</span>
+
 <span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">ExtendedOrCompressed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
 <span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">ExtendedOrCompressed</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
@@ -634,112 +607,153 @@ They are mostly found in resource forks, but can occasionally appear standalone 
 <span class="c1">-- </span>
 <span class="c1">-- reserved.</span>
 
-<span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">DataFormat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
+<span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">SoundCommand</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
-<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">DataFormat</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">SoundCommand</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
-<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">DataFormat</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="nf">DataType</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2be</span><span class="p">())</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">SoundCommand</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">is_data_offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">cmd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="nf">CmdType</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bits_int_be</span><span class="p">(</span><span class="mi">15</span><span class="p">))</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">align_to_byte</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">param1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">param2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">SoundCommand</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">sound_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">SoundCommand</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">sound_header</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_sound_header</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_sound_header</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="kr">if</span><span class="w">  </span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">is_data_offset</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">cmd</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">CmdType</span><span class="p">.</span><span class="py">buffer_cmd</span><span class="p">))</span><span class="w">  </span><span class="kr">then</span>
+<span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">pos</span><span class="p">()</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">param2</span><span class="p">)</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_sound_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="nf">SoundHeader</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">(</span><span class="nv">_pos</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_sound_header</span>
+<span class="kr">end</span>
+
+
+<span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">SoundHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">SoundHeader</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">SoundHeader</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">start_ofs</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_unnamed0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">sample_ptr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">sound_header_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">SoundHeaderType</span><span class="p">.</span><span class="py">standard</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">num_samples</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="w">  </span><span class="kr">if</span><span class="w">  </span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">sound_header_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">SoundHeaderType</span><span class="p">.</span><span class="py">extended</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">sound_header_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">SoundHeaderType</span><span class="p">.</span><span class="py">compressed</span><span class="p">))</span><span class="w">  </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">num_channels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">sample_rate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="nf">UnsignedFixedPoint</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">loop_start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">loop_end</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">encode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="nf">SoundHeaderType</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">())</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">midi_note</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w">  </span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">sound_header_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">SoundHeaderType</span><span class="p">.</span><span class="py">extended</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">sound_header_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">SoundHeaderType</span><span class="p">.</span><span class="py">compressed</span><span class="p">))</span><span class="w">  </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">extended_or_compressed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="nf">ExtendedOrCompressed</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">sample_ptr</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">sample_area</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_unwrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">sound_header_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">SoundHeaderType</span><span class="p">.</span><span class="py">standard</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_wrap</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">num_samples</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_unwrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">sound_header_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">SoundHeaderType</span><span class="p">.</span><span class="py">extended</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_wrap</span><span class="p">(</span><span class="nb">math.floor</span><span class="p">(((</span><span class="nv">self</span><span class="p">.</span><span class="py">extended_or_compressed</span><span class="p">.</span><span class="py">num_frames</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">num_channels</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">extended_or_compressed</span><span class="p">.</span><span class="py">bits_per_sample</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">8</span><span class="p">))</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">pos</span><span class="p">())))))</span>
+<span class="w">  </span><span class="kr">end</span>
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
-<span class="c1">-- mask for right/left pan values.</span>
-<span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">DataFormat</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">init_pan_mask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">DataFormat</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">init_pan_mask</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_init_pan_mask</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_init_pan_mask</span>
+<span class="c1">-- base frequency of sample in Hz</span>
+<span class="c1">-- Calculated with the formula (2 ** ((midi_note - 69) / 12)) * 440</span>
+<span class="c1">-- See also: Source (https://en.wikipedia.org/wiki/MIDI_tuning_standard)</span>
+<span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">SoundHeader</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">base_freqeuncy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">SoundHeader</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">base_freqeuncy</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_base_freqeuncy</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_base_freqeuncy</span>
 <span class="w">  </span><span class="kr">end</span>
 
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_init_pan_mask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_init_pan_mask</span>
+<span class="w">  </span><span class="kr">if</span><span class="w">  </span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">midi_note</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">midi_note</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">128</span><span class="p">))</span><span class="w">  </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_base_freqeuncy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">midi_note_to_frequency</span><span class="p">[</span><span class="nv">self</span><span class="p">.</span><span class="py">midi_note</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_base_freqeuncy</span>
+<span class="kr">end</span>
+
+<span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">SoundHeader</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">sound_header_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">SoundHeader</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">sound_header_type</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_sound_header_type</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_sound_header_type</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">pos</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">start_ofs</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">20</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_sound_header_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="nf">SoundHeaderType</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">())</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">(</span><span class="nv">_pos</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_sound_header_type</span>
+<span class="kr">end</span>
+
+<span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">SoundHeader</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">start_ofs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">SoundHeader</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">start_ofs</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_start_ofs</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_start_ofs</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_start_ofs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">pos</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_start_ofs</span>
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
-<span class="c1">-- wave table only, Sound Manager 2.0 and earlier.</span>
-<span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">DataFormat</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">wave_init_channel_mask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">DataFormat</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">wave_init_channel_mask</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_wave_init_channel_mask</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_wave_init_channel_mask</span>
-<span class="w">  </span><span class="kr">end</span>
-
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_wave_init_channel_mask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">7</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_wave_init_channel_mask</span>
-<span class="kr">end</span>
-
+<span class="c1">-- pointer to samples (or 0 if samples follow data structure).</span>
 <span class="c1">-- </span>
-<span class="c1">-- mask for mono/stereo values.</span>
-<span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">DataFormat</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">init_stereo_mask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">DataFormat</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">init_stereo_mask</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_init_stereo_mask</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_init_stereo_mask</span>
-<span class="w">  </span><span class="kr">end</span>
-
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_init_stereo_mask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">192</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_init_stereo_mask</span>
-<span class="kr">end</span>
-
-<span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">DataFormat</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">wave_init</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">DataFormat</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">wave_init</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_wave_init</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_wave_init</span>
-<span class="w">  </span><span class="kr">end</span>
-
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">id</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">DataType</span><span class="p">.</span><span class="py">wave_table_synth</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_wave_init</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="nf">WaveInitOption</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">options</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">wave_init_channel_mask</span><span class="p">))</span>
-<span class="w">  </span><span class="kr">end</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_wave_init</span>
-<span class="kr">end</span>
-
-<span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">DataFormat</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">pan_init</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">DataFormat</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">pan_init</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_pan_init</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_pan_init</span>
-<span class="w">  </span><span class="kr">end</span>
-
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_pan_init</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="nf">InitOption</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">options</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">init_pan_mask</span><span class="p">))</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_pan_init</span>
-<span class="kr">end</span>
-
+<span class="c1">-- number of samples.</span>
 <span class="c1">-- </span>
-<span class="c1">-- mask for compression IDs.</span>
-<span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">DataFormat</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">init_comp_mask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">DataFormat</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">init_comp_mask</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_init_comp_mask</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_init_comp_mask</span>
-<span class="w">  </span><span class="kr">end</span>
-
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_init_comp_mask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">65280</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_init_comp_mask</span>
-<span class="kr">end</span>
-
-<span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">DataFormat</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">stereo_init</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">DataFormat</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">stereo_init</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_stereo_init</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_stereo_init</span>
-<span class="w">  </span><span class="kr">end</span>
-
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_stereo_init</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="nf">InitOption</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">options</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">init_stereo_mask</span><span class="p">))</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_stereo_init</span>
-<span class="kr">end</span>
-
-<span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">DataFormat</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">comp_init</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">DataFormat</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">comp_init</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_comp_init</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_comp_init</span>
-<span class="w">  </span><span class="kr">end</span>
-
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_comp_init</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="nf">InitOption</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">options</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">init_comp_mask</span><span class="p">))</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_comp_init</span>
-<span class="kr">end</span>
-
+<span class="c1">-- number of channels in sample.</span>
 <span class="c1">-- </span>
-<span class="c1">-- contains initialisation options for the SndNewChannel function.</span>
+<span class="c1">-- The rate at which the sample was originally recorded.</span>
+<span class="c1">-- </span>
+<span class="c1">-- loop point beginning.</span>
+<span class="c1">-- </span>
+<span class="c1">-- loop point ending.</span>
+<span class="c1">-- </span>
+<span class="c1">-- sample&#39;s encoding option.</span>
+<span class="c1">-- </span>
+<span class="c1">-- base frequency of sample, expressed as MIDI note values, 60 is middle C.</span>
+<span class="c1">-- </span>
+<span class="c1">-- sampled-sound data.</span>
+
+<span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">UnsignedFixedPoint</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">UnsignedFixedPoint</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">UnsignedFixedPoint</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">integer_part</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2be</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">fraction_part</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2be</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="nv">MacOsResourceSnd</span><span class="p">.</span><span class="py">UnsignedFixedPoint</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">MacOsResourceSnd</span><span class="p">.</span><span class="nc">UnsignedFixedPoint</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">value</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_value</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_value</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">integer_part</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">fraction_part</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mf">65535.0</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_value</span>
+<span class="kr">end</span>
 </pre></div>
 
         </div>

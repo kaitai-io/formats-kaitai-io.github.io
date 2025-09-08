@@ -197,6 +197,11 @@ in-file dumps adopted the same format for encapsulation purposes.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="Ethernet frame (layer 2, IEEE 802.3) parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="Ethernet frame (layer 2, IEEE 802.3) parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -227,7 +232,17 @@ in-file dumps adopted the same format for encapsulation purposes.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="Ethernet frame (layer 2, IEEE 802.3) parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="Ethernet frame (layer 2, IEEE 802.3) parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="Ethernet frame (layer 2, IEEE 802.3) parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -378,13 +393,13 @@ for instructions how to add it into your project with the build tool that you us
 <span class="w">                </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">etherType</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
 <span class="w">                </span><span class="k">case</span><span class="w"> </span><span class="n">IPV4</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">                    </span><span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytesFull</span><span class="p">();</span>
-<span class="w">                    </span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">_io__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
+<span class="w">                    </span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">_io__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span><span class="p">);</span>
 <span class="w">                    </span><span class="k">this</span><span class="p">.</span><span class="na">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Ipv4Packet</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">);</span>
 <span class="w">                    </span><span class="k">break</span><span class="p">;</span>
 <span class="w">                </span><span class="p">}</span>
 <span class="w">                </span><span class="k">case</span><span class="w"> </span><span class="n">IPV6</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">                    </span><span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytesFull</span><span class="p">();</span>
-<span class="w">                    </span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">_io__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
+<span class="w">                    </span><span class="n">KaitaiStream</span><span class="w"> </span><span class="n">_io__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span><span class="p">);</span>
 <span class="w">                    </span><span class="k">this</span><span class="p">.</span><span class="na">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Ipv6Packet</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">);</span>
 <span class="w">                    </span><span class="k">break</span><span class="p">;</span>
 <span class="w">                </span><span class="p">}</span>
@@ -395,6 +410,33 @@ for instructions how to add it into your project with the build tool that you us
 <span class="w">                </span><span class="p">}</span>
 <span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
 <span class="w">                </span><span class="k">this</span><span class="p">.</span><span class="na">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytesFull</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">_fetchInstances</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">etherType1</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">EtherTypeEnum</span><span class="p">.</span><span class="na">IEEE_802_1Q_TPID</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">this</span><span class="p">.</span><span class="na">tci</span><span class="p">.</span><span class="na">_fetchInstances</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">etherType1</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">EtherTypeEnum</span><span class="p">.</span><span class="na">IEEE_802_1Q_TPID</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">EtherTypeEnum</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">etherType</span><span class="p">();</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">on</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">etherType</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">case</span><span class="w"> </span><span class="n">IPV4</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="p">((</span><span class="n">Ipv4Packet</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">body</span><span class="p">)).</span><span class="na">_fetchInstances</span><span class="p">();</span>
+<span class="w">                    </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="k">case</span><span class="w"> </span><span class="n">IPV6</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="p">((</span><span class="n">Ipv6Packet</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">body</span><span class="p">)).</span><span class="na">_fetchInstances</span><span class="p">();</span>
+<span class="w">                    </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="k">default</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
@@ -426,6 +468,9 @@ for instructions how to add it into your project with the build tool that you us
 <span class="w">            </span><span class="k">this</span><span class="p">.</span><span class="na">priority</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntBe</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
 <span class="w">            </span><span class="k">this</span><span class="p">.</span><span class="na">dropEligible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
 <span class="w">            </span><span class="k">this</span><span class="p">.</span><span class="na">vlanId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsIntBe</span><span class="p">(</span><span class="mi">12</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">_fetchInstances</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">        </span><span class="kd">private</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">priority</span><span class="p">;</span>
 <span class="w">        </span><span class="kd">private</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="n">dropEligible</span><span class="p">;</span>

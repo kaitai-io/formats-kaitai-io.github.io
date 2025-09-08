@@ -4,11 +4,12 @@ import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.ArrayList;
-import java.nio.charset.Charset;
 
 public class Ext2 extends KaitaiStruct {
     public static Ext2 fromFile(String fileName) throws IOException {
@@ -31,216 +32,239 @@ public class Ext2 extends KaitaiStruct {
     }
     private void _read() {
     }
-    public static class SuperBlockStruct extends KaitaiStruct {
-        public static SuperBlockStruct fromFile(String fileName) throws IOException {
-            return new SuperBlockStruct(new ByteBufferKaitaiStream(fileName));
+
+    public void _fetchInstances() {
+        bg1();
+        if (this.bg1 != null) {
+            this.bg1._fetchInstances();
+        }
+    }
+    public static class Bgd extends KaitaiStruct {
+        public static Bgd fromFile(String fileName) throws IOException {
+            return new Bgd(new ByteBufferKaitaiStream(fileName));
         }
 
-        public enum StateEnum {
-            VALID_FS(1),
-            ERROR_FS(2);
-
-            private final long id;
-            StateEnum(long id) { this.id = id; }
-            public long id() { return id; }
-            private static final Map<Long, StateEnum> byId = new HashMap<Long, StateEnum>(2);
-            static {
-                for (StateEnum e : StateEnum.values())
-                    byId.put(e.id(), e);
-            }
-            public static StateEnum byId(long id) { return byId.get(id); }
-        }
-
-        public enum ErrorsEnum {
-            ACT_CONTINUE(1),
-            ACT_RO(2),
-            ACT_PANIC(3);
-
-            private final long id;
-            ErrorsEnum(long id) { this.id = id; }
-            public long id() { return id; }
-            private static final Map<Long, ErrorsEnum> byId = new HashMap<Long, ErrorsEnum>(3);
-            static {
-                for (ErrorsEnum e : ErrorsEnum.values())
-                    byId.put(e.id(), e);
-            }
-            public static ErrorsEnum byId(long id) { return byId.get(id); }
-        }
-
-        public SuperBlockStruct(KaitaiStream _io) {
+        public Bgd(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public SuperBlockStruct(KaitaiStream _io, Ext2.BlockGroup _parent) {
+        public Bgd(KaitaiStream _io, Ext2.BlockGroup _parent) {
             this(_io, _parent, null);
         }
 
-        public SuperBlockStruct(KaitaiStream _io, Ext2.BlockGroup _parent, Ext2 _root) {
+        public Bgd(KaitaiStream _io, Ext2.BlockGroup _parent, Ext2 _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.inodesCount = this._io.readU4le();
-            this.blocksCount = this._io.readU4le();
-            this.rBlocksCount = this._io.readU4le();
-            this.freeBlocksCount = this._io.readU4le();
-            this.freeInodesCount = this._io.readU4le();
-            this.firstDataBlock = this._io.readU4le();
-            this.logBlockSize = this._io.readU4le();
-            this.logFragSize = this._io.readU4le();
-            this.blocksPerGroup = this._io.readU4le();
-            this.fragsPerGroup = this._io.readU4le();
-            this.inodesPerGroup = this._io.readU4le();
-            this.mtime = this._io.readU4le();
-            this.wtime = this._io.readU4le();
-            this.mntCount = this._io.readU2le();
-            this.maxMntCount = this._io.readU2le();
-            this.magic = this._io.readBytes(2);
-            if (!(Arrays.equals(magic(), new byte[] { 83, -17 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 83, -17 }, magic(), _io(), "/types/super_block_struct/seq/15");
+            this.blockBitmapBlock = this._io.readU4le();
+            this.inodeBitmapBlock = this._io.readU4le();
+            this.inodeTableBlock = this._io.readU4le();
+            this.freeBlocksCount = this._io.readU2le();
+            this.freeInodesCount = this._io.readU2le();
+            this.usedDirsCount = this._io.readU2le();
+            this.padReserved = this._io.readBytes(2 + 12);
+        }
+
+        public void _fetchInstances() {
+            blockBitmap();
+            if (this.blockBitmap != null) {
             }
-            this.state = StateEnum.byId(this._io.readU2le());
-            this.errors = ErrorsEnum.byId(this._io.readU2le());
-            this.minorRevLevel = this._io.readU2le();
-            this.lastcheck = this._io.readU4le();
-            this.checkinterval = this._io.readU4le();
-            this.creatorOs = this._io.readU4le();
-            this.revLevel = this._io.readU4le();
-            this.defResuid = this._io.readU2le();
-            this.defResgid = this._io.readU2le();
-            this.firstIno = this._io.readU4le();
-            this.inodeSize = this._io.readU2le();
-            this.blockGroupNr = this._io.readU2le();
-            this.featureCompat = this._io.readU4le();
-            this.featureIncompat = this._io.readU4le();
-            this.featureRoCompat = this._io.readU4le();
-            this.uuid = this._io.readBytes(16);
-            this.volumeName = this._io.readBytes(16);
-            this.lastMounted = this._io.readBytes(64);
-            this.algoBitmap = this._io.readU4le();
-            this.preallocBlocks = this._io.readU1();
-            this.preallocDirBlocks = this._io.readU1();
-            this.padding1 = this._io.readBytes(2);
-            this.journalUuid = this._io.readBytes(16);
-            this.journalInum = this._io.readU4le();
-            this.journalDev = this._io.readU4le();
-            this.lastOrphan = this._io.readU4le();
-            this.hashSeed = new ArrayList<Long>();
-            for (int i = 0; i < 4; i++) {
-                this.hashSeed.add(this._io.readU4le());
+            inodeBitmap();
+            if (this.inodeBitmap != null) {
             }
-            this.defHashVersion = this._io.readU1();
+            inodes();
+            if (this.inodes != null) {
+                for (int i = 0; i < this.inodes.size(); i++) {
+                    this.inodes.get(((Number) (i)).intValue())._fetchInstances();
+                }
+            }
         }
-        private Integer blockSize;
-        public Integer blockSize() {
-            if (this.blockSize != null)
-                return this.blockSize;
-            int _tmp = (int) ((1024 << logBlockSize()));
-            this.blockSize = _tmp;
-            return this.blockSize;
+        private byte[] blockBitmap;
+        public byte[] blockBitmap() {
+            if (this.blockBitmap != null)
+                return this.blockBitmap;
+            long _pos = this._io.pos();
+            this._io.seek(blockBitmapBlock() * _root().bg1().superBlock().blockSize());
+            this.blockBitmap = this._io.readBytes(1024);
+            this._io.seek(_pos);
+            return this.blockBitmap;
         }
-        private Integer blockGroupCount;
-        public Integer blockGroupCount() {
-            if (this.blockGroupCount != null)
-                return this.blockGroupCount;
-            int _tmp = (int) ((blocksCount() / blocksPerGroup()));
-            this.blockGroupCount = _tmp;
-            return this.blockGroupCount;
+        private byte[] inodeBitmap;
+        public byte[] inodeBitmap() {
+            if (this.inodeBitmap != null)
+                return this.inodeBitmap;
+            long _pos = this._io.pos();
+            this._io.seek(inodeBitmapBlock() * _root().bg1().superBlock().blockSize());
+            this.inodeBitmap = this._io.readBytes(1024);
+            this._io.seek(_pos);
+            return this.inodeBitmap;
         }
-        private long inodesCount;
-        private long blocksCount;
-        private long rBlocksCount;
-        private long freeBlocksCount;
-        private long freeInodesCount;
-        private long firstDataBlock;
-        private long logBlockSize;
-        private long logFragSize;
-        private long blocksPerGroup;
-        private long fragsPerGroup;
-        private long inodesPerGroup;
-        private long mtime;
-        private long wtime;
-        private int mntCount;
-        private int maxMntCount;
-        private byte[] magic;
-        private StateEnum state;
-        private ErrorsEnum errors;
-        private int minorRevLevel;
-        private long lastcheck;
-        private long checkinterval;
-        private long creatorOs;
-        private long revLevel;
-        private int defResuid;
-        private int defResgid;
-        private long firstIno;
-        private int inodeSize;
-        private int blockGroupNr;
-        private long featureCompat;
-        private long featureIncompat;
-        private long featureRoCompat;
-        private byte[] uuid;
-        private byte[] volumeName;
-        private byte[] lastMounted;
-        private long algoBitmap;
-        private int preallocBlocks;
-        private int preallocDirBlocks;
-        private byte[] padding1;
-        private byte[] journalUuid;
-        private long journalInum;
-        private long journalDev;
-        private long lastOrphan;
-        private ArrayList<Long> hashSeed;
-        private int defHashVersion;
+        private List<Inode> inodes;
+        public List<Inode> inodes() {
+            if (this.inodes != null)
+                return this.inodes;
+            long _pos = this._io.pos();
+            this._io.seek(inodeTableBlock() * _root().bg1().superBlock().blockSize());
+            this.inodes = new ArrayList<Inode>();
+            for (int i = 0; i < _root().bg1().superBlock().inodesPerGroup(); i++) {
+                this.inodes.add(new Inode(this._io, this, _root));
+            }
+            this._io.seek(_pos);
+            return this.inodes;
+        }
+        private long blockBitmapBlock;
+        private long inodeBitmapBlock;
+        private long inodeTableBlock;
+        private int freeBlocksCount;
+        private int freeInodesCount;
+        private int usedDirsCount;
+        private byte[] padReserved;
         private Ext2 _root;
         private Ext2.BlockGroup _parent;
-        public long inodesCount() { return inodesCount; }
-        public long blocksCount() { return blocksCount; }
-        public long rBlocksCount() { return rBlocksCount; }
-        public long freeBlocksCount() { return freeBlocksCount; }
-        public long freeInodesCount() { return freeInodesCount; }
-        public long firstDataBlock() { return firstDataBlock; }
-        public long logBlockSize() { return logBlockSize; }
-        public long logFragSize() { return logFragSize; }
-        public long blocksPerGroup() { return blocksPerGroup; }
-        public long fragsPerGroup() { return fragsPerGroup; }
-        public long inodesPerGroup() { return inodesPerGroup; }
-        public long mtime() { return mtime; }
-        public long wtime() { return wtime; }
-        public int mntCount() { return mntCount; }
-        public int maxMntCount() { return maxMntCount; }
-        public byte[] magic() { return magic; }
-        public StateEnum state() { return state; }
-        public ErrorsEnum errors() { return errors; }
-        public int minorRevLevel() { return minorRevLevel; }
-        public long lastcheck() { return lastcheck; }
-        public long checkinterval() { return checkinterval; }
-        public long creatorOs() { return creatorOs; }
-        public long revLevel() { return revLevel; }
-        public int defResuid() { return defResuid; }
-        public int defResgid() { return defResgid; }
-        public long firstIno() { return firstIno; }
-        public int inodeSize() { return inodeSize; }
-        public int blockGroupNr() { return blockGroupNr; }
-        public long featureCompat() { return featureCompat; }
-        public long featureIncompat() { return featureIncompat; }
-        public long featureRoCompat() { return featureRoCompat; }
-        public byte[] uuid() { return uuid; }
-        public byte[] volumeName() { return volumeName; }
-        public byte[] lastMounted() { return lastMounted; }
-        public long algoBitmap() { return algoBitmap; }
-        public int preallocBlocks() { return preallocBlocks; }
-        public int preallocDirBlocks() { return preallocDirBlocks; }
-        public byte[] padding1() { return padding1; }
-        public byte[] journalUuid() { return journalUuid; }
-        public long journalInum() { return journalInum; }
-        public long journalDev() { return journalDev; }
-        public long lastOrphan() { return lastOrphan; }
-        public ArrayList<Long> hashSeed() { return hashSeed; }
-        public int defHashVersion() { return defHashVersion; }
+        public long blockBitmapBlock() { return blockBitmapBlock; }
+        public long inodeBitmapBlock() { return inodeBitmapBlock; }
+        public long inodeTableBlock() { return inodeTableBlock; }
+        public int freeBlocksCount() { return freeBlocksCount; }
+        public int freeInodesCount() { return freeInodesCount; }
+        public int usedDirsCount() { return usedDirsCount; }
+        public byte[] padReserved() { return padReserved; }
         public Ext2 _root() { return _root; }
         public Ext2.BlockGroup _parent() { return _parent; }
+    }
+    public static class BlockGroup extends KaitaiStruct {
+        public static BlockGroup fromFile(String fileName) throws IOException {
+            return new BlockGroup(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public BlockGroup(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public BlockGroup(KaitaiStream _io, Ext2 _parent) {
+            this(_io, _parent, null);
+        }
+
+        public BlockGroup(KaitaiStream _io, Ext2 _parent, Ext2 _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            KaitaiStream _io_superBlock = this._io.substream(1024);
+            this.superBlock = new SuperBlockStruct(_io_superBlock, this, _root);
+            this.blockGroups = new ArrayList<Bgd>();
+            for (int i = 0; i < superBlock().blockGroupCount(); i++) {
+                this.blockGroups.add(new Bgd(this._io, this, _root));
+            }
+        }
+
+        public void _fetchInstances() {
+            this.superBlock._fetchInstances();
+            for (int i = 0; i < this.blockGroups.size(); i++) {
+                this.blockGroups.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private SuperBlockStruct superBlock;
+        private List<Bgd> blockGroups;
+        private Ext2 _root;
+        private Ext2 _parent;
+        public SuperBlockStruct superBlock() { return superBlock; }
+        public List<Bgd> blockGroups() { return blockGroups; }
+        public Ext2 _root() { return _root; }
+        public Ext2 _parent() { return _parent; }
+    }
+    public static class BlockPtr extends KaitaiStruct {
+        public static BlockPtr fromFile(String fileName) throws IOException {
+            return new BlockPtr(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public BlockPtr(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public BlockPtr(KaitaiStream _io, Ext2.Inode _parent) {
+            this(_io, _parent, null);
+        }
+
+        public BlockPtr(KaitaiStream _io, Ext2.Inode _parent, Ext2 _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.ptr = this._io.readU4le();
+        }
+
+        public void _fetchInstances() {
+            body();
+            if (this.body != null) {
+                this.body._fetchInstances();
+            }
+        }
+        private RawBlock body;
+        public RawBlock body() {
+            if (this.body != null)
+                return this.body;
+            long _pos = this._io.pos();
+            this._io.seek(ptr() * _root().bg1().superBlock().blockSize());
+            KaitaiStream _io_body = this._io.substream(_root().bg1().superBlock().blockSize());
+            this.body = new RawBlock(_io_body, this, _root);
+            this._io.seek(_pos);
+            return this.body;
+        }
+        private long ptr;
+        private Ext2 _root;
+        private Ext2.Inode _parent;
+        public long ptr() { return ptr; }
+        public Ext2 _root() { return _root; }
+        public Ext2.Inode _parent() { return _parent; }
+    }
+    public static class Dir extends KaitaiStruct {
+        public static Dir fromFile(String fileName) throws IOException {
+            return new Dir(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Dir(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Dir(KaitaiStream _io, Ext2.Inode _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Dir(KaitaiStream _io, Ext2.Inode _parent, Ext2 _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.entries = new ArrayList<DirEntry>();
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.entries.add(new DirEntry(this._io, this, _root));
+                    i++;
+                }
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.entries.size(); i++) {
+                this.entries.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private List<DirEntry> entries;
+        private Ext2 _root;
+        private Ext2.Inode _parent;
+        public List<DirEntry> entries() { return entries; }
+        public Ext2 _root() { return _root; }
+        public Ext2.Inode _parent() { return _parent; }
     }
     public static class DirEntry extends KaitaiStruct {
         public static DirEntry fromFile(String fileName) throws IOException {
@@ -287,14 +311,17 @@ public class Ext2 extends KaitaiStruct {
             this.recLen = this._io.readU2le();
             this.nameLen = this._io.readU1();
             this.fileType = FileTypeEnum.byId(this._io.readU1());
-            this.name = new String(this._io.readBytes(nameLen()), Charset.forName("UTF-8"));
-            this.padding = this._io.readBytes(((recLen() - nameLen()) - 8));
+            this.name = new String(this._io.readBytes(nameLen()), StandardCharsets.UTF_8);
+            this.padding = this._io.readBytes((recLen() - nameLen()) - 8);
+        }
+
+        public void _fetchInstances() {
         }
         private Inode inode;
         public Inode inode() {
             if (this.inode != null)
                 return this.inode;
-            this.inode = _root().bg1().blockGroups().get((int) ((inodePtr() - 1) / _root().bg1().superBlock().inodesPerGroup())).inodes().get((int) KaitaiStream.mod((inodePtr() - 1), _root().bg1().superBlock().inodesPerGroup()));
+            this.inode = _root().bg1().blockGroups().get(((Number) ((inodePtr() - 1) / _root().bg1().superBlock().inodesPerGroup())).intValue()).inodes().get(((Number) (KaitaiStream.mod(inodePtr() - 1, _root().bg1().superBlock().inodesPerGroup()))).intValue());
             return this.inode;
         }
         private long inodePtr;
@@ -356,11 +383,21 @@ public class Ext2 extends KaitaiStruct {
             this.faddr = this._io.readU4le();
             this.osd2 = this._io.readBytes(12);
         }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.block.size(); i++) {
+                this.block.get(((Number) (i)).intValue())._fetchInstances();
+            }
+            asDir();
+            if (this.asDir != null) {
+                this.asDir._fetchInstances();
+            }
+        }
         private Dir asDir;
         public Dir asDir() {
             if (this.asDir != null)
                 return this.asDir;
-            KaitaiStream io = block().get((int) 0).body()._io();
+            KaitaiStream io = block().get(((int) 0)).body()._io();
             long _pos = io.pos();
             io.seek(0);
             this.asDir = new Dir(io, this, _root);
@@ -379,7 +416,7 @@ public class Ext2 extends KaitaiStruct {
         private long blocks;
         private long flags;
         private long osd1;
-        private ArrayList<BlockPtr> block;
+        private List<BlockPtr> block;
         private long generation;
         private long fileAcl;
         private long dirAcl;
@@ -399,7 +436,7 @@ public class Ext2 extends KaitaiStruct {
         public long blocks() { return blocks; }
         public long flags() { return flags; }
         public long osd1() { return osd1; }
-        public ArrayList<BlockPtr> block() { return block; }
+        public List<BlockPtr> block() { return block; }
         public long generation() { return generation; }
         public long fileAcl() { return fileAcl; }
         public long dirAcl() { return dirAcl; }
@@ -407,204 +444,6 @@ public class Ext2 extends KaitaiStruct {
         public byte[] osd2() { return osd2; }
         public Ext2 _root() { return _root; }
         public Ext2.Bgd _parent() { return _parent; }
-    }
-    public static class BlockPtr extends KaitaiStruct {
-        public static BlockPtr fromFile(String fileName) throws IOException {
-            return new BlockPtr(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public BlockPtr(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public BlockPtr(KaitaiStream _io, Ext2.Inode _parent) {
-            this(_io, _parent, null);
-        }
-
-        public BlockPtr(KaitaiStream _io, Ext2.Inode _parent, Ext2 _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.ptr = this._io.readU4le();
-        }
-        private RawBlock body;
-        public RawBlock body() {
-            if (this.body != null)
-                return this.body;
-            long _pos = this._io.pos();
-            this._io.seek((ptr() * _root().bg1().superBlock().blockSize()));
-            this._raw_body = this._io.readBytes(_root().bg1().superBlock().blockSize());
-            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-            this.body = new RawBlock(_io__raw_body, this, _root);
-            this._io.seek(_pos);
-            return this.body;
-        }
-        private long ptr;
-        private Ext2 _root;
-        private Ext2.Inode _parent;
-        private byte[] _raw_body;
-        public long ptr() { return ptr; }
-        public Ext2 _root() { return _root; }
-        public Ext2.Inode _parent() { return _parent; }
-        public byte[] _raw_body() { return _raw_body; }
-    }
-    public static class Dir extends KaitaiStruct {
-        public static Dir fromFile(String fileName) throws IOException {
-            return new Dir(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Dir(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Dir(KaitaiStream _io, Ext2.Inode _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Dir(KaitaiStream _io, Ext2.Inode _parent, Ext2 _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.entries = new ArrayList<DirEntry>();
-            {
-                int i = 0;
-                while (!this._io.isEof()) {
-                    this.entries.add(new DirEntry(this._io, this, _root));
-                    i++;
-                }
-            }
-        }
-        private ArrayList<DirEntry> entries;
-        private Ext2 _root;
-        private Ext2.Inode _parent;
-        public ArrayList<DirEntry> entries() { return entries; }
-        public Ext2 _root() { return _root; }
-        public Ext2.Inode _parent() { return _parent; }
-    }
-    public static class BlockGroup extends KaitaiStruct {
-        public static BlockGroup fromFile(String fileName) throws IOException {
-            return new BlockGroup(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public BlockGroup(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public BlockGroup(KaitaiStream _io, Ext2 _parent) {
-            this(_io, _parent, null);
-        }
-
-        public BlockGroup(KaitaiStream _io, Ext2 _parent, Ext2 _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this._raw_superBlock = this._io.readBytes(1024);
-            KaitaiStream _io__raw_superBlock = new ByteBufferKaitaiStream(_raw_superBlock);
-            this.superBlock = new SuperBlockStruct(_io__raw_superBlock, this, _root);
-            this.blockGroups = new ArrayList<Bgd>();
-            for (int i = 0; i < superBlock().blockGroupCount(); i++) {
-                this.blockGroups.add(new Bgd(this._io, this, _root));
-            }
-        }
-        private SuperBlockStruct superBlock;
-        private ArrayList<Bgd> blockGroups;
-        private Ext2 _root;
-        private Ext2 _parent;
-        private byte[] _raw_superBlock;
-        public SuperBlockStruct superBlock() { return superBlock; }
-        public ArrayList<Bgd> blockGroups() { return blockGroups; }
-        public Ext2 _root() { return _root; }
-        public Ext2 _parent() { return _parent; }
-        public byte[] _raw_superBlock() { return _raw_superBlock; }
-    }
-    public static class Bgd extends KaitaiStruct {
-        public static Bgd fromFile(String fileName) throws IOException {
-            return new Bgd(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Bgd(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Bgd(KaitaiStream _io, Ext2.BlockGroup _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Bgd(KaitaiStream _io, Ext2.BlockGroup _parent, Ext2 _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.blockBitmapBlock = this._io.readU4le();
-            this.inodeBitmapBlock = this._io.readU4le();
-            this.inodeTableBlock = this._io.readU4le();
-            this.freeBlocksCount = this._io.readU2le();
-            this.freeInodesCount = this._io.readU2le();
-            this.usedDirsCount = this._io.readU2le();
-            this.padReserved = this._io.readBytes((2 + 12));
-        }
-        private byte[] blockBitmap;
-        public byte[] blockBitmap() {
-            if (this.blockBitmap != null)
-                return this.blockBitmap;
-            long _pos = this._io.pos();
-            this._io.seek((blockBitmapBlock() * _root().bg1().superBlock().blockSize()));
-            this.blockBitmap = this._io.readBytes(1024);
-            this._io.seek(_pos);
-            return this.blockBitmap;
-        }
-        private byte[] inodeBitmap;
-        public byte[] inodeBitmap() {
-            if (this.inodeBitmap != null)
-                return this.inodeBitmap;
-            long _pos = this._io.pos();
-            this._io.seek((inodeBitmapBlock() * _root().bg1().superBlock().blockSize()));
-            this.inodeBitmap = this._io.readBytes(1024);
-            this._io.seek(_pos);
-            return this.inodeBitmap;
-        }
-        private ArrayList<Inode> inodes;
-        public ArrayList<Inode> inodes() {
-            if (this.inodes != null)
-                return this.inodes;
-            long _pos = this._io.pos();
-            this._io.seek((inodeTableBlock() * _root().bg1().superBlock().blockSize()));
-            this.inodes = new ArrayList<Inode>();
-            for (int i = 0; i < _root().bg1().superBlock().inodesPerGroup(); i++) {
-                this.inodes.add(new Inode(this._io, this, _root));
-            }
-            this._io.seek(_pos);
-            return this.inodes;
-        }
-        private long blockBitmapBlock;
-        private long inodeBitmapBlock;
-        private long inodeTableBlock;
-        private int freeBlocksCount;
-        private int freeInodesCount;
-        private int usedDirsCount;
-        private byte[] padReserved;
-        private Ext2 _root;
-        private Ext2.BlockGroup _parent;
-        public long blockBitmapBlock() { return blockBitmapBlock; }
-        public long inodeBitmapBlock() { return inodeBitmapBlock; }
-        public long inodeTableBlock() { return inodeTableBlock; }
-        public int freeBlocksCount() { return freeBlocksCount; }
-        public int freeInodesCount() { return freeInodesCount; }
-        public int usedDirsCount() { return usedDirsCount; }
-        public byte[] padReserved() { return padReserved; }
-        public Ext2 _root() { return _root; }
-        public Ext2.BlockGroup _parent() { return _parent; }
     }
     public static class RawBlock extends KaitaiStruct {
         public static RawBlock fromFile(String fileName) throws IOException {
@@ -628,12 +467,229 @@ public class Ext2 extends KaitaiStruct {
         private void _read() {
             this.body = this._io.readBytes(_root().bg1().superBlock().blockSize());
         }
+
+        public void _fetchInstances() {
+        }
         private byte[] body;
         private Ext2 _root;
         private Ext2.BlockPtr _parent;
         public byte[] body() { return body; }
         public Ext2 _root() { return _root; }
         public Ext2.BlockPtr _parent() { return _parent; }
+    }
+    public static class SuperBlockStruct extends KaitaiStruct {
+        public static SuperBlockStruct fromFile(String fileName) throws IOException {
+            return new SuperBlockStruct(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public enum ErrorsEnum {
+            ACT_CONTINUE(1),
+            ACT_RO(2),
+            ACT_PANIC(3);
+
+            private final long id;
+            ErrorsEnum(long id) { this.id = id; }
+            public long id() { return id; }
+            private static final Map<Long, ErrorsEnum> byId = new HashMap<Long, ErrorsEnum>(3);
+            static {
+                for (ErrorsEnum e : ErrorsEnum.values())
+                    byId.put(e.id(), e);
+            }
+            public static ErrorsEnum byId(long id) { return byId.get(id); }
+        }
+
+        public enum StateEnum {
+            VALID_FS(1),
+            ERROR_FS(2);
+
+            private final long id;
+            StateEnum(long id) { this.id = id; }
+            public long id() { return id; }
+            private static final Map<Long, StateEnum> byId = new HashMap<Long, StateEnum>(2);
+            static {
+                for (StateEnum e : StateEnum.values())
+                    byId.put(e.id(), e);
+            }
+            public static StateEnum byId(long id) { return byId.get(id); }
+        }
+
+        public SuperBlockStruct(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public SuperBlockStruct(KaitaiStream _io, Ext2.BlockGroup _parent) {
+            this(_io, _parent, null);
+        }
+
+        public SuperBlockStruct(KaitaiStream _io, Ext2.BlockGroup _parent, Ext2 _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.inodesCount = this._io.readU4le();
+            this.blocksCount = this._io.readU4le();
+            this.rBlocksCount = this._io.readU4le();
+            this.freeBlocksCount = this._io.readU4le();
+            this.freeInodesCount = this._io.readU4le();
+            this.firstDataBlock = this._io.readU4le();
+            this.logBlockSize = this._io.readU4le();
+            this.logFragSize = this._io.readU4le();
+            this.blocksPerGroup = this._io.readU4le();
+            this.fragsPerGroup = this._io.readU4le();
+            this.inodesPerGroup = this._io.readU4le();
+            this.mtime = this._io.readU4le();
+            this.wtime = this._io.readU4le();
+            this.mntCount = this._io.readU2le();
+            this.maxMntCount = this._io.readU2le();
+            this.magic = this._io.readBytes(2);
+            if (!(Arrays.equals(this.magic, new byte[] { 83, -17 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 83, -17 }, this.magic, this._io, "/types/super_block_struct/seq/15");
+            }
+            this.state = StateEnum.byId(this._io.readU2le());
+            this.errors = ErrorsEnum.byId(this._io.readU2le());
+            this.minorRevLevel = this._io.readU2le();
+            this.lastcheck = this._io.readU4le();
+            this.checkinterval = this._io.readU4le();
+            this.creatorOs = this._io.readU4le();
+            this.revLevel = this._io.readU4le();
+            this.defResuid = this._io.readU2le();
+            this.defResgid = this._io.readU2le();
+            this.firstIno = this._io.readU4le();
+            this.inodeSize = this._io.readU2le();
+            this.blockGroupNr = this._io.readU2le();
+            this.featureCompat = this._io.readU4le();
+            this.featureIncompat = this._io.readU4le();
+            this.featureRoCompat = this._io.readU4le();
+            this.uuid = this._io.readBytes(16);
+            this.volumeName = this._io.readBytes(16);
+            this.lastMounted = this._io.readBytes(64);
+            this.algoBitmap = this._io.readU4le();
+            this.preallocBlocks = this._io.readU1();
+            this.preallocDirBlocks = this._io.readU1();
+            this.padding1 = this._io.readBytes(2);
+            this.journalUuid = this._io.readBytes(16);
+            this.journalInum = this._io.readU4le();
+            this.journalDev = this._io.readU4le();
+            this.lastOrphan = this._io.readU4le();
+            this.hashSeed = new ArrayList<Long>();
+            for (int i = 0; i < 4; i++) {
+                this.hashSeed.add(this._io.readU4le());
+            }
+            this.defHashVersion = this._io.readU1();
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.hashSeed.size(); i++) {
+            }
+        }
+        private Integer blockGroupCount;
+        public Integer blockGroupCount() {
+            if (this.blockGroupCount != null)
+                return this.blockGroupCount;
+            this.blockGroupCount = ((Number) (blocksCount() / blocksPerGroup())).intValue();
+            return this.blockGroupCount;
+        }
+        private Integer blockSize;
+        public Integer blockSize() {
+            if (this.blockSize != null)
+                return this.blockSize;
+            this.blockSize = ((Number) (1024 << logBlockSize())).intValue();
+            return this.blockSize;
+        }
+        private long inodesCount;
+        private long blocksCount;
+        private long rBlocksCount;
+        private long freeBlocksCount;
+        private long freeInodesCount;
+        private long firstDataBlock;
+        private long logBlockSize;
+        private long logFragSize;
+        private long blocksPerGroup;
+        private long fragsPerGroup;
+        private long inodesPerGroup;
+        private long mtime;
+        private long wtime;
+        private int mntCount;
+        private int maxMntCount;
+        private byte[] magic;
+        private StateEnum state;
+        private ErrorsEnum errors;
+        private int minorRevLevel;
+        private long lastcheck;
+        private long checkinterval;
+        private long creatorOs;
+        private long revLevel;
+        private int defResuid;
+        private int defResgid;
+        private long firstIno;
+        private int inodeSize;
+        private int blockGroupNr;
+        private long featureCompat;
+        private long featureIncompat;
+        private long featureRoCompat;
+        private byte[] uuid;
+        private byte[] volumeName;
+        private byte[] lastMounted;
+        private long algoBitmap;
+        private int preallocBlocks;
+        private int preallocDirBlocks;
+        private byte[] padding1;
+        private byte[] journalUuid;
+        private long journalInum;
+        private long journalDev;
+        private long lastOrphan;
+        private List<Long> hashSeed;
+        private int defHashVersion;
+        private Ext2 _root;
+        private Ext2.BlockGroup _parent;
+        public long inodesCount() { return inodesCount; }
+        public long blocksCount() { return blocksCount; }
+        public long rBlocksCount() { return rBlocksCount; }
+        public long freeBlocksCount() { return freeBlocksCount; }
+        public long freeInodesCount() { return freeInodesCount; }
+        public long firstDataBlock() { return firstDataBlock; }
+        public long logBlockSize() { return logBlockSize; }
+        public long logFragSize() { return logFragSize; }
+        public long blocksPerGroup() { return blocksPerGroup; }
+        public long fragsPerGroup() { return fragsPerGroup; }
+        public long inodesPerGroup() { return inodesPerGroup; }
+        public long mtime() { return mtime; }
+        public long wtime() { return wtime; }
+        public int mntCount() { return mntCount; }
+        public int maxMntCount() { return maxMntCount; }
+        public byte[] magic() { return magic; }
+        public StateEnum state() { return state; }
+        public ErrorsEnum errors() { return errors; }
+        public int minorRevLevel() { return minorRevLevel; }
+        public long lastcheck() { return lastcheck; }
+        public long checkinterval() { return checkinterval; }
+        public long creatorOs() { return creatorOs; }
+        public long revLevel() { return revLevel; }
+        public int defResuid() { return defResuid; }
+        public int defResgid() { return defResgid; }
+        public long firstIno() { return firstIno; }
+        public int inodeSize() { return inodeSize; }
+        public int blockGroupNr() { return blockGroupNr; }
+        public long featureCompat() { return featureCompat; }
+        public long featureIncompat() { return featureIncompat; }
+        public long featureRoCompat() { return featureRoCompat; }
+        public byte[] uuid() { return uuid; }
+        public byte[] volumeName() { return volumeName; }
+        public byte[] lastMounted() { return lastMounted; }
+        public long algoBitmap() { return algoBitmap; }
+        public int preallocBlocks() { return preallocBlocks; }
+        public int preallocDirBlocks() { return preallocDirBlocks; }
+        public byte[] padding1() { return padding1; }
+        public byte[] journalUuid() { return journalUuid; }
+        public long journalInum() { return journalInum; }
+        public long journalDev() { return journalDev; }
+        public long lastOrphan() { return lastOrphan; }
+        public List<Long> hashSeed() { return hashSeed; }
+        public int defHashVersion() { return defHashVersion; }
+        public Ext2 _root() { return _root; }
+        public Ext2.BlockGroup _parent() { return _parent; }
     }
     private BlockGroup bg1;
     public BlockGroup bg1() {
@@ -649,7 +705,7 @@ public class Ext2 extends KaitaiStruct {
     public Dir rootDir() {
         if (this.rootDir != null)
             return this.rootDir;
-        this.rootDir = bg1().blockGroups().get((int) 0).inodes().get((int) 1).asDir();
+        this.rootDir = bg1().blockGroups().get(((int) 0)).inodes().get(((int) 1)).asDir();
         return this.rootDir;
     }
     private Ext2 _root;

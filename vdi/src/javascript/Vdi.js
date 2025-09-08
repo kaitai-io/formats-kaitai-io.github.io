@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.Vdi = factory(root.KaitaiStream);
+    factory(root.Vdi || (root.Vdi = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Vdi_, KaitaiStream) {
 /**
  * A native VirtualBox file format
  * 
@@ -45,19 +45,127 @@ var Vdi = (function() {
     this.header = new Header(this._io, this, this._root);
   }
 
+  var BlocksMap = Vdi.BlocksMap = (function() {
+    function BlocksMap(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    BlocksMap.prototype._read = function() {
+      this.index = [];
+      for (var i = 0; i < this._root.header.headerMain.blocksInImage; i++) {
+        this.index.push(new BlockIndex(this._io, this, this._root));
+      }
+    }
+
+    var BlockIndex = BlocksMap.BlockIndex = (function() {
+      function BlockIndex(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+
+        this._read();
+      }
+      BlockIndex.prototype._read = function() {
+        this.index = this._io.readU4le();
+      }
+      Object.defineProperty(BlockIndex.prototype, 'block', {
+        get: function() {
+          if (this._m_block !== undefined)
+            return this._m_block;
+          if (this.isAllocated) {
+            this._m_block = this._root.disk.blocks[this.index];
+          }
+          return this._m_block;
+        }
+      });
+      Object.defineProperty(BlockIndex.prototype, 'isAllocated', {
+        get: function() {
+          if (this._m_isAllocated !== undefined)
+            return this._m_isAllocated;
+          this._m_isAllocated = this.index < this._root.blockDiscarded;
+          return this._m_isAllocated;
+        }
+      });
+
+      return BlockIndex;
+    })();
+
+    return BlocksMap;
+  })();
+
+  var Disk = Vdi.Disk = (function() {
+    function Disk(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Disk.prototype._read = function() {
+      this.blocks = [];
+      for (var i = 0; i < this._root.header.headerMain.blocksInImage; i++) {
+        this.blocks.push(new Block(this._io, this, this._root));
+      }
+    }
+
+    var Block = Disk.Block = (function() {
+      function Block(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+
+        this._read();
+      }
+      Block.prototype._read = function() {
+        this.metadata = this._io.readBytes(this._root.header.headerMain.blockMetadataSize);
+        this._raw_data = [];
+        this.data = [];
+        var i = 0;
+        while (!this._io.isEof()) {
+          this._raw_data.push(this._io.readBytes(this._root.header.headerMain.blockDataSize));
+          var _io__raw_data = new KaitaiStream(this._raw_data[this._raw_data.length - 1]);
+          this.data.push(new Sector(_io__raw_data, this, this._root));
+          i++;
+        }
+      }
+
+      var Sector = Block.Sector = (function() {
+        function Sector(_io, _parent, _root) {
+          this._io = _io;
+          this._parent = _parent;
+          this._root = _root;
+
+          this._read();
+        }
+        Sector.prototype._read = function() {
+          this.data = this._io.readBytes(this._root.header.headerMain.geometry.sectorSize);
+        }
+
+        return Sector;
+      })();
+
+      return Block;
+    })();
+
+    return Disk;
+  })();
+
   var Header = Vdi.Header = (function() {
     function Header(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     Header.prototype._read = function() {
-      this.text = KaitaiStream.bytesToStr(this._io.readBytes(64), "utf-8");
+      this.text = KaitaiStream.bytesToStr(this._io.readBytes(64), "UTF-8");
       this.signature = this._io.readBytes(4);
-      if (!((KaitaiStream.byteArrayCompare(this.signature, [127, 16, 218, 190]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([127, 16, 218, 190], this.signature, this._io, "/types/header/seq/1");
+      if (!((KaitaiStream.byteArrayCompare(this.signature, new Uint8Array([127, 16, 218, 190])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([127, 16, 218, 190]), this.signature, this._io, "/types/header/seq/1");
       }
       this.version = new Version(this._io, this, this._root);
       if (this.subheaderSizeIsDynamic) {
@@ -68,49 +176,18 @@ var Vdi = (function() {
       this.headerMain = new HeaderMain(_io__raw_headerMain, this, this._root);
     }
 
-    var Uuid = Header.Uuid = (function() {
-      function Uuid(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      Uuid.prototype._read = function() {
-        this.uuid = this._io.readBytes(16);
-      }
-
-      return Uuid;
-    })();
-
-    var Version = Header.Version = (function() {
-      function Version(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      Version.prototype._read = function() {
-        this.major = this._io.readU2le();
-        this.minor = this._io.readU2le();
-      }
-
-      return Version;
-    })();
-
     var HeaderMain = Header.HeaderMain = (function() {
       function HeaderMain(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
       HeaderMain.prototype._read = function() {
         this.imageType = this._io.readU4le();
         this.imageFlags = new Flags(this._io, this, this._root);
-        this.description = KaitaiStream.bytesToStr(this._io.readBytes(256), "utf-8");
+        this.description = KaitaiStream.bytesToStr(this._io.readBytes(256), "UTF-8");
         if (this._parent.version.major >= 1) {
           this.blocksMapOffset = this._io.readU4le();
         }
@@ -134,34 +211,16 @@ var Vdi = (function() {
         if (this._parent.version.major >= 1) {
           this.uuidParent = new Uuid(this._io, this, this._root);
         }
-        if ( ((this._parent.version.major >= 1) && ((this._io.pos + 16) <= this._io.size)) ) {
+        if ( ((this._parent.version.major >= 1) && (this._io.pos + 16 <= this._io.size)) ) {
           this.lchcGeometry = new Geometry(this._io, this, this._root);
         }
       }
-
-      var Geometry = HeaderMain.Geometry = (function() {
-        function Geometry(_io, _parent, _root) {
-          this._io = _io;
-          this._parent = _parent;
-          this._root = _root || this;
-
-          this._read();
-        }
-        Geometry.prototype._read = function() {
-          this.cylinders = this._io.readU4le();
-          this.heads = this._io.readU4le();
-          this.sectors = this._io.readU4le();
-          this.sectorSize = this._io.readU4le();
-        }
-
-        return Geometry;
-      })();
 
       var Flags = HeaderMain.Flags = (function() {
         function Flags(_io, _parent, _root) {
           this._io = _io;
           this._parent = _parent;
-          this._root = _root || this;
+          this._root = _root;
 
           this._read();
         }
@@ -177,18 +236,67 @@ var Vdi = (function() {
         return Flags;
       })();
 
+      var Geometry = HeaderMain.Geometry = (function() {
+        function Geometry(_io, _parent, _root) {
+          this._io = _io;
+          this._parent = _parent;
+          this._root = _root;
+
+          this._read();
+        }
+        Geometry.prototype._read = function() {
+          this.cylinders = this._io.readU4le();
+          this.heads = this._io.readU4le();
+          this.sectors = this._io.readU4le();
+          this.sectorSize = this._io.readU4le();
+        }
+
+        return Geometry;
+      })();
+
       /**
        * Size of block (bytes).
        */
 
       return HeaderMain;
     })();
-    Object.defineProperty(Header.prototype, 'headerSize', {
+
+    var Uuid = Header.Uuid = (function() {
+      function Uuid(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+
+        this._read();
+      }
+      Uuid.prototype._read = function() {
+        this.uuid = this._io.readBytes(16);
+      }
+
+      return Uuid;
+    })();
+
+    var Version = Header.Version = (function() {
+      function Version(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+
+        this._read();
+      }
+      Version.prototype._read = function() {
+        this.major = this._io.readU2le();
+        this.minor = this._io.readU2le();
+      }
+
+      return Version;
+    })();
+    Object.defineProperty(Header.prototype, 'blockSize', {
       get: function() {
-        if (this._m_headerSize !== undefined)
-          return this._m_headerSize;
-        this._m_headerSize = (this.subheaderSizeIsDynamic ? this.headerSizeOptional : 336);
-        return this._m_headerSize;
+        if (this._m_blockSize !== undefined)
+          return this._m_blockSize;
+        this._m_blockSize = this.headerMain.blockMetadataSize + this.headerMain.blockDataSize;
+        return this._m_blockSize;
       }
     });
     Object.defineProperty(Header.prototype, 'blocksMapOffset', {
@@ -199,12 +307,12 @@ var Vdi = (function() {
         return this._m_blocksMapOffset;
       }
     });
-    Object.defineProperty(Header.prototype, 'subheaderSizeIsDynamic', {
+    Object.defineProperty(Header.prototype, 'blocksMapSize', {
       get: function() {
-        if (this._m_subheaderSizeIsDynamic !== undefined)
-          return this._m_subheaderSizeIsDynamic;
-        this._m_subheaderSizeIsDynamic = this.version.major >= 1;
-        return this._m_subheaderSizeIsDynamic;
+        if (this._m_blocksMapSize !== undefined)
+          return this._m_blocksMapSize;
+        this._m_blocksMapSize = Math.floor(((this.headerMain.blocksInImage * 4 + this.headerMain.geometry.sectorSize) - 1) / this.headerMain.geometry.sectorSize) * this.headerMain.geometry.sectorSize;
+        return this._m_blocksMapSize;
       }
     });
     Object.defineProperty(Header.prototype, 'blocksOffset', {
@@ -215,132 +323,24 @@ var Vdi = (function() {
         return this._m_blocksOffset;
       }
     });
-    Object.defineProperty(Header.prototype, 'blockSize', {
+    Object.defineProperty(Header.prototype, 'headerSize', {
       get: function() {
-        if (this._m_blockSize !== undefined)
-          return this._m_blockSize;
-        this._m_blockSize = (this.headerMain.blockMetadataSize + this.headerMain.blockDataSize);
-        return this._m_blockSize;
+        if (this._m_headerSize !== undefined)
+          return this._m_headerSize;
+        this._m_headerSize = (this.subheaderSizeIsDynamic ? this.headerSizeOptional : 336);
+        return this._m_headerSize;
       }
     });
-    Object.defineProperty(Header.prototype, 'blocksMapSize', {
+    Object.defineProperty(Header.prototype, 'subheaderSizeIsDynamic', {
       get: function() {
-        if (this._m_blocksMapSize !== undefined)
-          return this._m_blocksMapSize;
-        this._m_blocksMapSize = (Math.floor((((this.headerMain.blocksInImage * 4) + this.headerMain.geometry.sectorSize) - 1) / this.headerMain.geometry.sectorSize) * this.headerMain.geometry.sectorSize);
-        return this._m_blocksMapSize;
+        if (this._m_subheaderSizeIsDynamic !== undefined)
+          return this._m_subheaderSizeIsDynamic;
+        this._m_subheaderSizeIsDynamic = this.version.major >= 1;
+        return this._m_subheaderSizeIsDynamic;
       }
     });
 
     return Header;
-  })();
-
-  var BlocksMap = Vdi.BlocksMap = (function() {
-    function BlocksMap(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    BlocksMap.prototype._read = function() {
-      this.index = [];
-      for (var i = 0; i < this._root.header.headerMain.blocksInImage; i++) {
-        this.index.push(new BlockIndex(this._io, this, this._root));
-      }
-    }
-
-    var BlockIndex = BlocksMap.BlockIndex = (function() {
-      function BlockIndex(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      BlockIndex.prototype._read = function() {
-        this.index = this._io.readU4le();
-      }
-      Object.defineProperty(BlockIndex.prototype, 'isAllocated', {
-        get: function() {
-          if (this._m_isAllocated !== undefined)
-            return this._m_isAllocated;
-          this._m_isAllocated = this.index < this._root.blockDiscarded;
-          return this._m_isAllocated;
-        }
-      });
-      Object.defineProperty(BlockIndex.prototype, 'block', {
-        get: function() {
-          if (this._m_block !== undefined)
-            return this._m_block;
-          if (this.isAllocated) {
-            this._m_block = this._root.disk.blocks[this.index];
-          }
-          return this._m_block;
-        }
-      });
-
-      return BlockIndex;
-    })();
-
-    return BlocksMap;
-  })();
-
-  var Disk = Vdi.Disk = (function() {
-    function Disk(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Disk.prototype._read = function() {
-      this.blocks = [];
-      for (var i = 0; i < this._root.header.headerMain.blocksInImage; i++) {
-        this.blocks.push(new Block(this._io, this, this._root));
-      }
-    }
-
-    var Block = Disk.Block = (function() {
-      function Block(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      Block.prototype._read = function() {
-        this.metadata = this._io.readBytes(this._root.header.headerMain.blockMetadataSize);
-        this._raw_data = [];
-        this.data = [];
-        var i = 0;
-        while (!this._io.isEof()) {
-          this._raw_data.push(this._io.readBytes(this._root.header.headerMain.blockDataSize));
-          var _io__raw_data = new KaitaiStream(this._raw_data[this._raw_data.length - 1]);
-          this.data.push(new Sector(_io__raw_data, this, this._root));
-          i++;
-        }
-      }
-
-      var Sector = Block.Sector = (function() {
-        function Sector(_io, _parent, _root) {
-          this._io = _io;
-          this._parent = _parent;
-          this._root = _root || this;
-
-          this._read();
-        }
-        Sector.prototype._read = function() {
-          this.data = this._io.readBytes(this._root.header.headerMain.geometry.sectorSize);
-        }
-
-        return Sector;
-      })();
-
-      return Block;
-    })();
-
-    return Disk;
   })();
   Object.defineProperty(Vdi.prototype, 'blockDiscarded', {
     get: function() {
@@ -390,5 +390,5 @@ var Vdi = (function() {
 
   return Vdi;
 })();
-return Vdi;
-}));
+Vdi_.Vdi = Vdi;
+});

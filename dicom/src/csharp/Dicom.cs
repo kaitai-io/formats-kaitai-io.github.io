@@ -4072,14 +4072,14 @@ namespace Kaitai
                 }
             }
         }
-        public partial class TFileHeader : KaitaiStruct
+        public partial class SeqItem : KaitaiStruct
         {
-            public static TFileHeader FromFile(string fileName)
+            public static SeqItem FromFile(string fileName)
             {
-                return new TFileHeader(new KaitaiStream(fileName));
+                return new SeqItem(new KaitaiStream(fileName));
             }
 
-            public TFileHeader(KaitaiStream p__io, Dicom p__parent = null, Dicom p__root = null) : base(p__io)
+            public SeqItem(KaitaiStream p__io, KaitaiStruct p__parent = null, Dicom p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -4087,21 +4087,43 @@ namespace Kaitai
             }
             private void _read()
             {
-                _preamble = m_io.ReadBytes(128);
-                _magic = m_io.ReadBytes(4);
-                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 68, 73, 67, 77 }) == 0)))
+                _tagGroup = m_io.ReadBytes(2);
+                if (!((KaitaiStream.ByteArrayCompare(_tagGroup, new byte[] { 254, 255 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 68, 73, 67, 77 }, Magic, M_Io, "/types/t_file_header/seq/1");
+                    throw new ValidationNotEqualError(new byte[] { 254, 255 }, _tagGroup, m_io, "/types/seq_item/seq/0");
+                }
+                _tagElem = m_io.ReadU2le();
+                _valueLen = m_io.ReadU4le();
+                if (ValueLen != 4294967295) {
+                    _value = m_io.ReadBytes(ValueLen);
+                }
+                if (ValueLen == 4294967295) {
+                    _items = new List<TDataElementExplicit>();
+                    {
+                        var i = 0;
+                        TDataElementExplicit M_;
+                        do {
+                            M_ = new TDataElementExplicit(m_io, this, m_root);
+                            _items.Add(M_);
+                            i++;
+                        } while (!( ((M_.TagGroup == 65534) && (M_.TagElem == 57357)) ));
+                    }
                 }
             }
-            private byte[] _preamble;
-            private byte[] _magic;
+            private byte[] _tagGroup;
+            private ushort _tagElem;
+            private uint _valueLen;
+            private byte[] _value;
+            private List<TDataElementExplicit> _items;
             private Dicom m_root;
-            private Dicom m_parent;
-            public byte[] Preamble { get { return _preamble; } }
-            public byte[] Magic { get { return _magic; } }
+            private KaitaiStruct m_parent;
+            public byte[] TagGroup { get { return _tagGroup; } }
+            public ushort TagElem { get { return _tagElem; } }
+            public uint ValueLen { get { return _valueLen; } }
+            public byte[] Value { get { return _value; } }
+            public List<TDataElementExplicit> Items { get { return _items; } }
             public Dicom M_Root { get { return m_root; } }
-            public Dicom M_Parent { get { return m_parent; } }
+            public KaitaiStruct M_Parent { get { return m_parent; } }
         }
 
         /// <remarks>
@@ -4179,8 +4201,8 @@ namespace Kaitai
                 {
                     if (f_isForcedImplicit)
                         return _isForcedImplicit;
-                    _isForcedImplicit = (bool) (TagGroup == 65534);
                     f_isForcedImplicit = true;
+                    _isForcedImplicit = (bool) (TagGroup == 65534);
                     return _isForcedImplicit;
                 }
             }
@@ -4192,8 +4214,8 @@ namespace Kaitai
                 {
                     if (f_isLongLen)
                         return _isLongLen;
-                    _isLongLen = (bool) ( ((IsForcedImplicit) || (Vr == "OB") || (Vr == "OD") || (Vr == "OF") || (Vr == "OL") || (Vr == "OW") || (Vr == "SQ") || (Vr == "UC") || (Vr == "UR") || (Vr == "UT") || (Vr == "UN")) );
                     f_isLongLen = true;
+                    _isLongLen = (bool) ( ((IsForcedImplicit) || (Vr == "OB") || (Vr == "OD") || (Vr == "OF") || (Vr == "OL") || (Vr == "OW") || (Vr == "SQ") || (Vr == "UC") || (Vr == "UR") || (Vr == "UT") || (Vr == "UN")) );
                     return _isLongLen;
                 }
             }
@@ -4205,8 +4227,8 @@ namespace Kaitai
                 {
                     if (f_isTransferSyntaxChangeImplicit)
                         return _isTransferSyntaxChangeImplicit;
-                    _isTransferSyntaxChangeImplicit = (bool) (false);
                     f_isTransferSyntaxChangeImplicit = true;
+                    _isTransferSyntaxChangeImplicit = (bool) (false);
                     return _isTransferSyntaxChangeImplicit;
                 }
             }
@@ -4218,8 +4240,8 @@ namespace Kaitai
                 {
                     if (f_tag)
                         return _tag;
-                    _tag = (Tags) (((Dicom.Tags) ((TagGroup << 16) | TagElem)));
                     f_tag = true;
+                    _tag = (Tags) (((Dicom.Tags) TagGroup << 16 | TagElem));
                     return _tag;
                 }
             }
@@ -4259,11 +4281,11 @@ namespace Kaitai
             {
                 m_parent = p__parent;
                 m_root = p__root;
-                f_tag = false;
-                f_isTransferSyntaxChangeExplicit = false;
-                f_isLongLen = false;
-                f_pIsTransferSyntaxChangeExplicit = false;
                 f_isForcedExplicit = false;
+                f_isLongLen = false;
+                f_isTransferSyntaxChangeExplicit = false;
+                f_pIsTransferSyntaxChangeExplicit = false;
+                f_tag = false;
                 _read();
             }
             private void _read()
@@ -4313,30 +4335,17 @@ namespace Kaitai
                     }
                 }
             }
-            private bool f_tag;
-            private Tags _tag;
-            public Tags Tag
+            private bool f_isForcedExplicit;
+            private bool _isForcedExplicit;
+            public bool IsForcedExplicit
             {
                 get
                 {
-                    if (f_tag)
-                        return _tag;
-                    _tag = (Tags) (((Dicom.Tags) ((TagGroup << 16) | TagElem)));
-                    f_tag = true;
-                    return _tag;
-                }
-            }
-            private bool f_isTransferSyntaxChangeExplicit;
-            private bool _isTransferSyntaxChangeExplicit;
-            public bool IsTransferSyntaxChangeExplicit
-            {
-                get
-                {
-                    if (f_isTransferSyntaxChangeExplicit)
-                        return _isTransferSyntaxChangeExplicit;
-                    _isTransferSyntaxChangeExplicit = (bool) (PIsTransferSyntaxChangeExplicit);
-                    f_isTransferSyntaxChangeExplicit = true;
-                    return _isTransferSyntaxChangeExplicit;
+                    if (f_isForcedExplicit)
+                        return _isForcedExplicit;
+                    f_isForcedExplicit = true;
+                    _isForcedExplicit = (bool) (TagGroup == 2);
+                    return _isForcedExplicit;
                 }
             }
             private bool f_isLongLen;
@@ -4347,9 +4356,22 @@ namespace Kaitai
                 {
                     if (f_isLongLen)
                         return _isLongLen;
-                    _isLongLen = (bool) ( ((IsForcedExplicit) && ( ((Vr == "OB") || (Vr == "OD") || (Vr == "OF") || (Vr == "OL") || (Vr == "OW") || (Vr == "SQ") || (Vr == "UC") || (Vr == "UR") || (Vr == "UT") || (Vr == "UN")) )) );
                     f_isLongLen = true;
+                    _isLongLen = (bool) ( ((IsForcedExplicit) && ( ((Vr == "OB") || (Vr == "OD") || (Vr == "OF") || (Vr == "OL") || (Vr == "OW") || (Vr == "SQ") || (Vr == "UC") || (Vr == "UR") || (Vr == "UT") || (Vr == "UN")) )) );
                     return _isLongLen;
+                }
+            }
+            private bool f_isTransferSyntaxChangeExplicit;
+            private bool _isTransferSyntaxChangeExplicit;
+            public bool IsTransferSyntaxChangeExplicit
+            {
+                get
+                {
+                    if (f_isTransferSyntaxChangeExplicit)
+                        return _isTransferSyntaxChangeExplicit;
+                    f_isTransferSyntaxChangeExplicit = true;
+                    _isTransferSyntaxChangeExplicit = (bool) (PIsTransferSyntaxChangeExplicit);
+                    return _isTransferSyntaxChangeExplicit;
                 }
             }
             private bool f_pIsTransferSyntaxChangeExplicit;
@@ -4360,22 +4382,22 @@ namespace Kaitai
                 {
                     if (f_pIsTransferSyntaxChangeExplicit)
                         return _pIsTransferSyntaxChangeExplicit;
-                    _pIsTransferSyntaxChangeExplicit = (bool) ((KaitaiStream.ByteArrayCompare(Value, new byte[] { 49, 46, 50, 46, 56, 52, 48, 46, 49, 48, 48, 48, 56, 46, 49, 46, 50, 46, 49, 0 }) == 0));
                     f_pIsTransferSyntaxChangeExplicit = true;
+                    _pIsTransferSyntaxChangeExplicit = (bool) ((KaitaiStream.ByteArrayCompare(Value, new byte[] { 49, 46, 50, 46, 56, 52, 48, 46, 49, 48, 48, 48, 56, 46, 49, 46, 50, 46, 49, 0 }) == 0));
                     return _pIsTransferSyntaxChangeExplicit;
                 }
             }
-            private bool f_isForcedExplicit;
-            private bool _isForcedExplicit;
-            public bool IsForcedExplicit
+            private bool f_tag;
+            private Tags _tag;
+            public Tags Tag
             {
                 get
                 {
-                    if (f_isForcedExplicit)
-                        return _isForcedExplicit;
-                    _isForcedExplicit = (bool) (TagGroup == 2);
-                    f_isForcedExplicit = true;
-                    return _isForcedExplicit;
+                    if (f_tag)
+                        return _tag;
+                    f_tag = true;
+                    _tag = (Tags) (((Dicom.Tags) TagGroup << 16 | TagElem));
+                    return _tag;
                 }
             }
             private ushort _tagGroup;
@@ -4399,14 +4421,14 @@ namespace Kaitai
             public Dicom M_Root { get { return m_root; } }
             public KaitaiStruct M_Parent { get { return m_parent; } }
         }
-        public partial class SeqItem : KaitaiStruct
+        public partial class TFileHeader : KaitaiStruct
         {
-            public static SeqItem FromFile(string fileName)
+            public static TFileHeader FromFile(string fileName)
             {
-                return new SeqItem(new KaitaiStream(fileName));
+                return new TFileHeader(new KaitaiStream(fileName));
             }
 
-            public SeqItem(KaitaiStream p__io, KaitaiStruct p__parent = null, Dicom p__root = null) : base(p__io)
+            public TFileHeader(KaitaiStream p__io, Dicom p__parent = null, Dicom p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -4414,43 +4436,21 @@ namespace Kaitai
             }
             private void _read()
             {
-                _tagGroup = m_io.ReadBytes(2);
-                if (!((KaitaiStream.ByteArrayCompare(TagGroup, new byte[] { 254, 255 }) == 0)))
+                _preamble = m_io.ReadBytes(128);
+                _magic = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 68, 73, 67, 77 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 254, 255 }, TagGroup, M_Io, "/types/seq_item/seq/0");
-                }
-                _tagElem = m_io.ReadU2le();
-                _valueLen = m_io.ReadU4le();
-                if (ValueLen != 4294967295) {
-                    _value = m_io.ReadBytes(ValueLen);
-                }
-                if (ValueLen == 4294967295) {
-                    _items = new List<TDataElementExplicit>();
-                    {
-                        var i = 0;
-                        TDataElementExplicit M_;
-                        do {
-                            M_ = new TDataElementExplicit(m_io, this, m_root);
-                            _items.Add(M_);
-                            i++;
-                        } while (!( ((M_.TagGroup == 65534) && (M_.TagElem == 57357)) ));
-                    }
+                    throw new ValidationNotEqualError(new byte[] { 68, 73, 67, 77 }, _magic, m_io, "/types/t_file_header/seq/1");
                 }
             }
-            private byte[] _tagGroup;
-            private ushort _tagElem;
-            private uint _valueLen;
-            private byte[] _value;
-            private List<TDataElementExplicit> _items;
+            private byte[] _preamble;
+            private byte[] _magic;
             private Dicom m_root;
-            private KaitaiStruct m_parent;
-            public byte[] TagGroup { get { return _tagGroup; } }
-            public ushort TagElem { get { return _tagElem; } }
-            public uint ValueLen { get { return _valueLen; } }
-            public byte[] Value { get { return _value; } }
-            public List<TDataElementExplicit> Items { get { return _items; } }
+            private Dicom m_parent;
+            public byte[] Preamble { get { return _preamble; } }
+            public byte[] Magic { get { return _magic; } }
             public Dicom M_Root { get { return m_root; } }
-            public KaitaiStruct M_Parent { get { return m_parent; } }
+            public Dicom M_Parent { get { return m_parent; } }
         }
         private TFileHeader _fileHeader;
         private List<TDataElementImplicit> _elements;

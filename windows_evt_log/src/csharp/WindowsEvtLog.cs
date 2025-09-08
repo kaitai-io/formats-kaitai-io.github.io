@@ -58,6 +58,50 @@ namespace Kaitai
         }
 
         /// <remarks>
+        /// Reference: <a href="https://forensics.wiki/windows_event_log_(evt)/#cursor-record">Source</a>
+        /// </remarks>
+        public partial class CursorRecordBody : KaitaiStruct
+        {
+            public static CursorRecordBody FromFile(string fileName)
+            {
+                return new CursorRecordBody(new KaitaiStream(fileName));
+            }
+
+            public CursorRecordBody(KaitaiStream p__io, WindowsEvtLog.Record p__parent = null, WindowsEvtLog p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _magic = m_io.ReadBytes(12);
+                if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 34, 34, 34, 34, 51, 51, 51, 51, 68, 68, 68, 68 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 34, 34, 34, 34, 51, 51, 51, 51, 68, 68, 68, 68 }, _magic, m_io, "/types/cursor_record_body/seq/0");
+                }
+                _ofsFirstRecord = m_io.ReadU4le();
+                _ofsNextRecord = m_io.ReadU4le();
+                _idxNextRecord = m_io.ReadU4le();
+                _idxFirstRecord = m_io.ReadU4le();
+            }
+            private byte[] _magic;
+            private uint _ofsFirstRecord;
+            private uint _ofsNextRecord;
+            private uint _idxNextRecord;
+            private uint _idxFirstRecord;
+            private WindowsEvtLog m_root;
+            private WindowsEvtLog.Record m_parent;
+            public byte[] Magic { get { return _magic; } }
+            public uint OfsFirstRecord { get { return _ofsFirstRecord; } }
+            public uint OfsNextRecord { get { return _ofsNextRecord; } }
+            public uint IdxNextRecord { get { return _idxNextRecord; } }
+            public uint IdxFirstRecord { get { return _idxFirstRecord; } }
+            public WindowsEvtLog M_Root { get { return m_root; } }
+            public WindowsEvtLog.Record M_Parent { get { return m_parent; } }
+        }
+
+        /// <remarks>
         /// Reference: <a href="https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb309024(v=vs.85)">Source</a>
         /// </remarks>
         public partial class Header : KaitaiStruct
@@ -77,9 +121,9 @@ namespace Kaitai
             {
                 _lenHeader = m_io.ReadU4le();
                 _magic = m_io.ReadBytes(4);
-                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 76, 102, 76, 101 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 76, 102, 76, 101 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 76, 102, 76, 101 }, Magic, M_Io, "/types/header/seq/1");
+                    throw new ValidationNotEqualError(new byte[] { 76, 102, 76, 101 }, _magic, m_io, "/types/header/seq/1");
                 }
                 _versionMajor = m_io.ReadU4le();
                 _versionMinor = m_io.ReadU4le();
@@ -226,19 +270,19 @@ namespace Kaitai
                 _type = m_io.ReadU4le();
                 switch (Type) {
                 case 1699505740: {
-                    __raw_body = m_io.ReadBytes((LenRecord - 12));
+                    __raw_body = m_io.ReadBytes(LenRecord - 12);
                     var io___raw_body = new KaitaiStream(__raw_body);
                     _body = new RecordBody(io___raw_body, this, m_root);
                     break;
                 }
                 case 286331153: {
-                    __raw_body = m_io.ReadBytes((LenRecord - 12));
+                    __raw_body = m_io.ReadBytes(LenRecord - 12);
                     var io___raw_body = new KaitaiStream(__raw_body);
                     _body = new CursorRecordBody(io___raw_body, this, m_root);
                     break;
                 }
                 default: {
-                    _body = m_io.ReadBytes((LenRecord - 12));
+                    _body = m_io.ReadBytes(LenRecord - 12);
                     break;
                 }
                 }
@@ -303,8 +347,8 @@ namespace Kaitai
             {
                 m_parent = p__parent;
                 m_root = p__root;
-                f_userSid = false;
                 f_data = false;
+                f_userSid = false;
                 _read();
             }
             private void _read()
@@ -323,22 +367,6 @@ namespace Kaitai
                 _lenData = m_io.ReadU4le();
                 _ofsData = m_io.ReadU4le();
             }
-            private bool f_userSid;
-            private byte[] _userSid;
-            public byte[] UserSid
-            {
-                get
-                {
-                    if (f_userSid)
-                        return _userSid;
-                    long _pos = m_io.Pos;
-                    m_io.Seek((OfsUserSid - 8));
-                    _userSid = m_io.ReadBytes(LenUserSid);
-                    m_io.Seek(_pos);
-                    f_userSid = true;
-                    return _userSid;
-                }
-            }
             private bool f_data;
             private byte[] _data;
             public byte[] Data
@@ -347,12 +375,28 @@ namespace Kaitai
                 {
                     if (f_data)
                         return _data;
+                    f_data = true;
                     long _pos = m_io.Pos;
-                    m_io.Seek((OfsData - 8));
+                    m_io.Seek(OfsData - 8);
                     _data = m_io.ReadBytes(LenData);
                     m_io.Seek(_pos);
-                    f_data = true;
                     return _data;
+                }
+            }
+            private bool f_userSid;
+            private byte[] _userSid;
+            public byte[] UserSid
+            {
+                get
+                {
+                    if (f_userSid)
+                        return _userSid;
+                    f_userSid = true;
+                    long _pos = m_io.Pos;
+                    m_io.Seek(OfsUserSid - 8);
+                    _userSid = m_io.ReadBytes(LenUserSid);
+                    m_io.Seek(_pos);
+                    return _userSid;
                 }
             }
             private uint _idx;
@@ -419,50 +463,6 @@ namespace Kaitai
             public uint OfsUserSid { get { return _ofsUserSid; } }
             public uint LenData { get { return _lenData; } }
             public uint OfsData { get { return _ofsData; } }
-            public WindowsEvtLog M_Root { get { return m_root; } }
-            public WindowsEvtLog.Record M_Parent { get { return m_parent; } }
-        }
-
-        /// <remarks>
-        /// Reference: <a href="https://forensics.wiki/windows_event_log_(evt)/#cursor-record">Source</a>
-        /// </remarks>
-        public partial class CursorRecordBody : KaitaiStruct
-        {
-            public static CursorRecordBody FromFile(string fileName)
-            {
-                return new CursorRecordBody(new KaitaiStream(fileName));
-            }
-
-            public CursorRecordBody(KaitaiStream p__io, WindowsEvtLog.Record p__parent = null, WindowsEvtLog p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _magic = m_io.ReadBytes(12);
-                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 34, 34, 34, 34, 51, 51, 51, 51, 68, 68, 68, 68 }) == 0)))
-                {
-                    throw new ValidationNotEqualError(new byte[] { 34, 34, 34, 34, 51, 51, 51, 51, 68, 68, 68, 68 }, Magic, M_Io, "/types/cursor_record_body/seq/0");
-                }
-                _ofsFirstRecord = m_io.ReadU4le();
-                _ofsNextRecord = m_io.ReadU4le();
-                _idxNextRecord = m_io.ReadU4le();
-                _idxFirstRecord = m_io.ReadU4le();
-            }
-            private byte[] _magic;
-            private uint _ofsFirstRecord;
-            private uint _ofsNextRecord;
-            private uint _idxNextRecord;
-            private uint _idxFirstRecord;
-            private WindowsEvtLog m_root;
-            private WindowsEvtLog.Record m_parent;
-            public byte[] Magic { get { return _magic; } }
-            public uint OfsFirstRecord { get { return _ofsFirstRecord; } }
-            public uint OfsNextRecord { get { return _ofsNextRecord; } }
-            public uint IdxNextRecord { get { return _idxNextRecord; } }
-            public uint IdxFirstRecord { get { return _idxFirstRecord; } }
             public WindowsEvtLog M_Root { get { return m_root; } }
             public WindowsEvtLog.Record M_Parent { get { return m_parent; } }
         }

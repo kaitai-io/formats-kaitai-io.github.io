@@ -6,9 +6,10 @@ import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 public class MicrosoftCfb extends KaitaiStruct {
     public static MicrosoftCfb fromFile(String fileName) throws IOException {
@@ -32,6 +33,18 @@ public class MicrosoftCfb extends KaitaiStruct {
     private void _read() {
         this.header = new CfbHeader(this._io, this, _root);
     }
+
+    public void _fetchInstances() {
+        this.header._fetchInstances();
+        dir();
+        if (this.dir != null) {
+            this.dir._fetchInstances();
+        }
+        fat();
+        if (this.fat != null) {
+            this.fat._fetchInstances();
+        }
+    }
     public static class CfbHeader extends KaitaiStruct {
         public static CfbHeader fromFile(String fileName) throws IOException {
             return new CfbHeader(new ByteBufferKaitaiStream(fileName));
@@ -53,18 +66,18 @@ public class MicrosoftCfb extends KaitaiStruct {
         }
         private void _read() {
             this.signature = this._io.readBytes(8);
-            if (!(Arrays.equals(signature(), new byte[] { -48, -49, 17, -32, -95, -79, 26, -31 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { -48, -49, 17, -32, -95, -79, 26, -31 }, signature(), _io(), "/types/cfb_header/seq/0");
+            if (!(Arrays.equals(this.signature, new byte[] { -48, -49, 17, -32, -95, -79, 26, -31 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { -48, -49, 17, -32, -95, -79, 26, -31 }, this.signature, this._io, "/types/cfb_header/seq/0");
             }
             this.clsid = this._io.readBytes(16);
-            if (!(Arrays.equals(clsid(), new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, clsid(), _io(), "/types/cfb_header/seq/1");
+            if (!(Arrays.equals(this.clsid, new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, this.clsid, this._io, "/types/cfb_header/seq/1");
             }
             this.versionMinor = this._io.readU2le();
             this.versionMajor = this._io.readU2le();
             this.byteOrder = this._io.readBytes(2);
-            if (!(Arrays.equals(byteOrder(), new byte[] { -2, -1 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { -2, -1 }, byteOrder(), _io(), "/types/cfb_header/seq/4");
+            if (!(Arrays.equals(this.byteOrder, new byte[] { -2, -1 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { -2, -1 }, this.byteOrder, this._io, "/types/cfb_header/seq/4");
             }
             this.sectorShift = this._io.readU2le();
             this.miniSectorShift = this._io.readU2le();
@@ -81,6 +94,11 @@ public class MicrosoftCfb extends KaitaiStruct {
             this.difat = new ArrayList<Integer>();
             for (int i = 0; i < 109; i++) {
                 this.difat.add(this._io.readS4le());
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.difat.size(); i++) {
             }
         }
         private byte[] signature;
@@ -100,7 +118,7 @@ public class MicrosoftCfb extends KaitaiStruct {
         private int sizeMiniFat;
         private int ofsDifat;
         private int sizeDifat;
-        private ArrayList<Integer> difat;
+        private List<Integer> difat;
         private MicrosoftCfb _root;
         private MicrosoftCfb _parent;
 
@@ -168,43 +186,7 @@ public class MicrosoftCfb extends KaitaiStruct {
          * Number of DIFAT sectors in this file.
          */
         public int sizeDifat() { return sizeDifat; }
-        public ArrayList<Integer> difat() { return difat; }
-        public MicrosoftCfb _root() { return _root; }
-        public MicrosoftCfb _parent() { return _parent; }
-    }
-    public static class FatEntries extends KaitaiStruct {
-        public static FatEntries fromFile(String fileName) throws IOException {
-            return new FatEntries(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public FatEntries(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public FatEntries(KaitaiStream _io, MicrosoftCfb _parent) {
-            this(_io, _parent, null);
-        }
-
-        public FatEntries(KaitaiStream _io, MicrosoftCfb _parent, MicrosoftCfb _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.entries = new ArrayList<Integer>();
-            {
-                int i = 0;
-                while (!this._io.isEof()) {
-                    this.entries.add(this._io.readS4le());
-                    i++;
-                }
-            }
-        }
-        private ArrayList<Integer> entries;
-        private MicrosoftCfb _root;
-        private MicrosoftCfb _parent;
-        public ArrayList<Integer> entries() { return entries; }
+        public List<Integer> difat() { return difat; }
         public MicrosoftCfb _root() { return _root; }
         public MicrosoftCfb _parent() { return _parent; }
     }
@@ -260,7 +242,7 @@ public class MicrosoftCfb extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.name = new String(this._io.readBytes(64), Charset.forName("UTF-16LE"));
+            this.name = new String(this._io.readBytes(64), StandardCharsets.UTF_16LE);
             this.nameLen = this._io.readU2le();
             this.objectType = ObjType.byId(this._io.readU1());
             this.colorFlag = RbColor.byId(this._io.readU1());
@@ -274,18 +256,23 @@ public class MicrosoftCfb extends KaitaiStruct {
             this.ofs = this._io.readS4le();
             this.size = this._io.readU8le();
         }
-        private byte[] miniStream;
-        public byte[] miniStream() {
-            if (this.miniStream != null)
-                return this.miniStream;
-            if (objectType() == ObjType.ROOT_STORAGE) {
-                KaitaiStream io = _root()._io();
-                long _pos = io.pos();
-                io.seek(((ofs() + 1) * _root().sectorSize()));
-                this.miniStream = io.readBytes(size());
-                io.seek(_pos);
+
+        public void _fetchInstances() {
+            child();
+            if (this.child != null) {
+                this.child._fetchInstances();
             }
-            return this.miniStream;
+            leftSibling();
+            if (this.leftSibling != null) {
+                this.leftSibling._fetchInstances();
+            }
+            miniStream();
+            if (this.miniStream != null) {
+            }
+            rightSibling();
+            if (this.rightSibling != null) {
+                this.rightSibling._fetchInstances();
+            }
         }
         private DirEntry child;
         public DirEntry child() {
@@ -294,7 +281,7 @@ public class MicrosoftCfb extends KaitaiStruct {
             if (childId() != -1) {
                 KaitaiStream io = _root()._io();
                 long _pos = io.pos();
-                io.seek((((_root().header().ofsDir() + 1) * _root().sectorSize()) + (childId() * 128)));
+                io.seek((_root().header().ofsDir() + 1) * _root().sectorSize() + childId() * 128);
                 this.child = new DirEntry(io, this, _root);
                 io.seek(_pos);
             }
@@ -307,11 +294,24 @@ public class MicrosoftCfb extends KaitaiStruct {
             if (leftSiblingId() != -1) {
                 KaitaiStream io = _root()._io();
                 long _pos = io.pos();
-                io.seek((((_root().header().ofsDir() + 1) * _root().sectorSize()) + (leftSiblingId() * 128)));
+                io.seek((_root().header().ofsDir() + 1) * _root().sectorSize() + leftSiblingId() * 128);
                 this.leftSibling = new DirEntry(io, this, _root);
                 io.seek(_pos);
             }
             return this.leftSibling;
+        }
+        private byte[] miniStream;
+        public byte[] miniStream() {
+            if (this.miniStream != null)
+                return this.miniStream;
+            if (objectType() == ObjType.ROOT_STORAGE) {
+                KaitaiStream io = _root()._io();
+                long _pos = io.pos();
+                io.seek((ofs() + 1) * _root().sectorSize());
+                this.miniStream = io.readBytes(size());
+                io.seek(_pos);
+            }
+            return this.miniStream;
         }
         private DirEntry rightSibling;
         public DirEntry rightSibling() {
@@ -320,7 +320,7 @@ public class MicrosoftCfb extends KaitaiStruct {
             if (rightSiblingId() != -1) {
                 KaitaiStream io = _root()._io();
                 long _pos = io.pos();
-                io.seek((((_root().header().ofsDir() + 1) * _root().sectorSize()) + (rightSiblingId() * 128)));
+                io.seek((_root().header().ofsDir() + 1) * _root().sectorSize() + rightSiblingId() * 128);
                 this.rightSibling = new DirEntry(io, this, _root);
                 io.seek(_pos);
             }
@@ -377,13 +377,56 @@ public class MicrosoftCfb extends KaitaiStruct {
         public MicrosoftCfb _root() { return _root; }
         public KaitaiStruct _parent() { return _parent; }
     }
-    private Integer sectorSize;
-    public Integer sectorSize() {
-        if (this.sectorSize != null)
-            return this.sectorSize;
-        int _tmp = (int) ((1 << header().sectorShift()));
-        this.sectorSize = _tmp;
-        return this.sectorSize;
+    public static class FatEntries extends KaitaiStruct {
+        public static FatEntries fromFile(String fileName) throws IOException {
+            return new FatEntries(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public FatEntries(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public FatEntries(KaitaiStream _io, MicrosoftCfb _parent) {
+            this(_io, _parent, null);
+        }
+
+        public FatEntries(KaitaiStream _io, MicrosoftCfb _parent, MicrosoftCfb _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.entries = new ArrayList<Integer>();
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.entries.add(this._io.readS4le());
+                    i++;
+                }
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.entries.size(); i++) {
+            }
+        }
+        private List<Integer> entries;
+        private MicrosoftCfb _root;
+        private MicrosoftCfb _parent;
+        public List<Integer> entries() { return entries; }
+        public MicrosoftCfb _root() { return _root; }
+        public MicrosoftCfb _parent() { return _parent; }
+    }
+    private DirEntry dir;
+    public DirEntry dir() {
+        if (this.dir != null)
+            return this.dir;
+        long _pos = this._io.pos();
+        this._io.seek((header().ofsDir() + 1) * sectorSize());
+        this.dir = new DirEntry(this._io, this, _root);
+        this._io.seek(_pos);
+        return this.dir;
     }
     private FatEntries fat;
     public FatEntries fat() {
@@ -391,28 +434,22 @@ public class MicrosoftCfb extends KaitaiStruct {
             return this.fat;
         long _pos = this._io.pos();
         this._io.seek(sectorSize());
-        this._raw_fat = this._io.readBytes((header().sizeFat() * sectorSize()));
-        KaitaiStream _io__raw_fat = new ByteBufferKaitaiStream(_raw_fat);
-        this.fat = new FatEntries(_io__raw_fat, this, _root);
+        KaitaiStream _io_fat = this._io.substream(header().sizeFat() * sectorSize());
+        this.fat = new FatEntries(_io_fat, this, _root);
         this._io.seek(_pos);
         return this.fat;
     }
-    private DirEntry dir;
-    public DirEntry dir() {
-        if (this.dir != null)
-            return this.dir;
-        long _pos = this._io.pos();
-        this._io.seek(((header().ofsDir() + 1) * sectorSize()));
-        this.dir = new DirEntry(this._io, this, _root);
-        this._io.seek(_pos);
-        return this.dir;
+    private Integer sectorSize;
+    public Integer sectorSize() {
+        if (this.sectorSize != null)
+            return this.sectorSize;
+        this.sectorSize = ((Number) (1 << header().sectorShift())).intValue();
+        return this.sectorSize;
     }
     private CfbHeader header;
     private MicrosoftCfb _root;
     private KaitaiStruct _parent;
-    private byte[] _raw_fat;
     public CfbHeader header() { return header; }
     public MicrosoftCfb _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
-    public byte[] _raw_fat() { return _raw_fat; }
 }

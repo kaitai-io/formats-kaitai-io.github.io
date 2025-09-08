@@ -27,8 +27,8 @@
 
 namespace {
     class WindowsEvtLog extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \WindowsEvtLog $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\WindowsEvtLog $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -49,8 +49,38 @@ namespace {
 }
 
 namespace WindowsEvtLog {
+    class CursorRecordBody extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\WindowsEvtLog\Record $_parent = null, ?\WindowsEvtLog $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_magic = $this->_io->readBytes(12);
+            if (!($this->_m_magic == "\x22\x22\x22\x22\x33\x33\x33\x33\x44\x44\x44\x44")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x22\x22\x22\x22\x33\x33\x33\x33\x44\x44\x44\x44", $this->_m_magic, $this->_io, "/types/cursor_record_body/seq/0");
+            }
+            $this->_m_ofsFirstRecord = $this->_io->readU4le();
+            $this->_m_ofsNextRecord = $this->_io->readU4le();
+            $this->_m_idxNextRecord = $this->_io->readU4le();
+            $this->_m_idxFirstRecord = $this->_io->readU4le();
+        }
+        protected $_m_magic;
+        protected $_m_ofsFirstRecord;
+        protected $_m_ofsNextRecord;
+        protected $_m_idxNextRecord;
+        protected $_m_idxFirstRecord;
+        public function magic() { return $this->_m_magic; }
+        public function ofsFirstRecord() { return $this->_m_ofsFirstRecord; }
+        public function ofsNextRecord() { return $this->_m_ofsNextRecord; }
+        public function idxNextRecord() { return $this->_m_idxNextRecord; }
+        public function idxFirstRecord() { return $this->_m_idxFirstRecord; }
+    }
+}
+
+namespace WindowsEvtLog {
     class Header extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \WindowsEvtLog $_parent = null, \WindowsEvtLog $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\WindowsEvtLog $_parent = null, ?\WindowsEvtLog $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -58,8 +88,8 @@ namespace WindowsEvtLog {
         private function _read() {
             $this->_m_lenHeader = $this->_io->readU4le();
             $this->_m_magic = $this->_io->readBytes(4);
-            if (!($this->magic() == "\x4C\x66\x4C\x65")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x4C\x66\x4C\x65", $this->magic(), $this->_io(), "/types/header/seq/1");
+            if (!($this->_m_magic == "\x4C\x66\x4C\x65")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x4C\x66\x4C\x65", $this->_m_magic, $this->_io, "/types/header/seq/1");
             }
             $this->_m_versionMajor = $this->_io->readU4le();
             $this->_m_versionMinor = $this->_io->readU4le();
@@ -130,7 +160,7 @@ namespace WindowsEvtLog {
 
 namespace WindowsEvtLog\Header {
     class Flags extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \WindowsEvtLog\Header $_parent = null, \WindowsEvtLog $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\WindowsEvtLog\Header $_parent = null, ?\WindowsEvtLog $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -174,7 +204,7 @@ namespace WindowsEvtLog\Header {
 
 namespace WindowsEvtLog {
     class Record extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \WindowsEvtLog $_parent = null, \WindowsEvtLog $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\WindowsEvtLog $_parent = null, ?\WindowsEvtLog $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -184,17 +214,17 @@ namespace WindowsEvtLog {
             $this->_m_type = $this->_io->readU4le();
             switch ($this->type()) {
                 case 1699505740:
-                    $this->_m__raw_body = $this->_io->readBytes(($this->lenRecord() - 12));
+                    $this->_m__raw_body = $this->_io->readBytes($this->lenRecord() - 12);
                     $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
                     $this->_m_body = new \WindowsEvtLog\RecordBody($_io__raw_body, $this, $this->_root);
                     break;
                 case 286331153:
-                    $this->_m__raw_body = $this->_io->readBytes(($this->lenRecord() - 12));
+                    $this->_m__raw_body = $this->_io->readBytes($this->lenRecord() - 12);
                     $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
                     $this->_m_body = new \WindowsEvtLog\CursorRecordBody($_io__raw_body, $this, $this->_root);
                     break;
                 default:
-                    $this->_m_body = $this->_io->readBytes(($this->lenRecord() - 12));
+                    $this->_m_body = $this->_io->readBytes($this->lenRecord() - 12);
                     break;
             }
             $this->_m_lenRecord2 = $this->_io->readU4le();
@@ -234,7 +264,7 @@ namespace WindowsEvtLog {
 
 namespace WindowsEvtLog {
     class RecordBody extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \WindowsEvtLog\Record $_parent = null, \WindowsEvtLog $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\WindowsEvtLog\Record $_parent = null, ?\WindowsEvtLog $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -254,25 +284,25 @@ namespace WindowsEvtLog {
             $this->_m_lenData = $this->_io->readU4le();
             $this->_m_ofsData = $this->_io->readU4le();
         }
-        protected $_m_userSid;
-        public function userSid() {
-            if ($this->_m_userSid !== null)
-                return $this->_m_userSid;
-            $_pos = $this->_io->pos();
-            $this->_io->seek(($this->ofsUserSid() - 8));
-            $this->_m_userSid = $this->_io->readBytes($this->lenUserSid());
-            $this->_io->seek($_pos);
-            return $this->_m_userSid;
-        }
         protected $_m_data;
         public function data() {
             if ($this->_m_data !== null)
                 return $this->_m_data;
             $_pos = $this->_io->pos();
-            $this->_io->seek(($this->ofsData() - 8));
+            $this->_io->seek($this->ofsData() - 8);
             $this->_m_data = $this->_io->readBytes($this->lenData());
             $this->_io->seek($_pos);
             return $this->_m_data;
+        }
+        protected $_m_userSid;
+        public function userSid() {
+            if ($this->_m_userSid !== null)
+                return $this->_m_userSid;
+            $_pos = $this->_io->pos();
+            $this->_io->seek($this->ofsUserSid() - 8);
+            $this->_m_userSid = $this->_io->readBytes($this->lenUserSid());
+            $this->_io->seek($_pos);
+            return $this->_m_userSid;
         }
         protected $_m_idx;
         protected $_m_timeGenerated;
@@ -339,35 +369,11 @@ namespace WindowsEvtLog\RecordBody {
         const AUDIT_SUCCESS = 3;
         const INFO = 4;
         const WARNING = 5;
-    }
-}
 
-namespace WindowsEvtLog {
-    class CursorRecordBody extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \WindowsEvtLog\Record $_parent = null, \WindowsEvtLog $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
+        private const _VALUES = [1 => true, 2 => true, 3 => true, 4 => true, 5 => true];
 
-        private function _read() {
-            $this->_m_magic = $this->_io->readBytes(12);
-            if (!($this->magic() == "\x22\x22\x22\x22\x33\x33\x33\x33\x44\x44\x44\x44")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x22\x22\x22\x22\x33\x33\x33\x33\x44\x44\x44\x44", $this->magic(), $this->_io(), "/types/cursor_record_body/seq/0");
-            }
-            $this->_m_ofsFirstRecord = $this->_io->readU4le();
-            $this->_m_ofsNextRecord = $this->_io->readU4le();
-            $this->_m_idxNextRecord = $this->_io->readU4le();
-            $this->_m_idxFirstRecord = $this->_io->readU4le();
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
         }
-        protected $_m_magic;
-        protected $_m_ofsFirstRecord;
-        protected $_m_ofsNextRecord;
-        protected $_m_idxNextRecord;
-        protected $_m_idxFirstRecord;
-        public function magic() { return $this->_m_magic; }
-        public function ofsFirstRecord() { return $this->_m_ofsFirstRecord; }
-        public function ofsNextRecord() { return $this->_m_ofsNextRecord; }
-        public function idxNextRecord() { return $this->_m_idxNextRecord; }
-        public function idxFirstRecord() { return $this->_m_idxFirstRecord; }
     }
 }

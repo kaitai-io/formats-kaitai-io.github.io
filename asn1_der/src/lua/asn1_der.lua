@@ -69,7 +69,11 @@ function Asn1Der:_read()
   self.type_tag = Asn1Der.TypeTag(self._io:read_u1())
   self.len = Asn1Der.LenEncoded(self._io, self, self._root)
   local _on = self.type_tag
-  if _on == Asn1Der.TypeTag.printable_string then
+  if _on == Asn1Der.TypeTag.object_id then
+    self._raw_body = self._io:read_bytes(self.len.result)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = Asn1Der.BodyObjectId(_io, self, self._root)
+  elseif _on == Asn1Der.TypeTag.printable_string then
     self._raw_body = self._io:read_bytes(self.len.result)
     local _io = KaitaiStream(stringstream(self._raw_body))
     self.body = Asn1Der.BodyPrintableString(_io, self, self._root)
@@ -77,11 +81,11 @@ function Asn1Der:_read()
     self._raw_body = self._io:read_bytes(self.len.result)
     local _io = KaitaiStream(stringstream(self._raw_body))
     self.body = Asn1Der.BodySequence(_io, self, self._root)
-  elseif _on == Asn1Der.TypeTag.set then
+  elseif _on == Asn1Der.TypeTag.sequence_30 then
     self._raw_body = self._io:read_bytes(self.len.result)
     local _io = KaitaiStream(stringstream(self._raw_body))
     self.body = Asn1Der.BodySequence(_io, self, self._root)
-  elseif _on == Asn1Der.TypeTag.sequence_30 then
+  elseif _on == Asn1Der.TypeTag.set then
     self._raw_body = self._io:read_bytes(self.len.result)
     local _io = KaitaiStream(stringstream(self._raw_body))
     self.body = Asn1Der.BodySequence(_io, self, self._root)
@@ -89,46 +93,9 @@ function Asn1Der:_read()
     self._raw_body = self._io:read_bytes(self.len.result)
     local _io = KaitaiStream(stringstream(self._raw_body))
     self.body = Asn1Der.BodyUtf8string(_io, self, self._root)
-  elseif _on == Asn1Der.TypeTag.object_id then
-    self._raw_body = self._io:read_bytes(self.len.result)
-    local _io = KaitaiStream(stringstream(self._raw_body))
-    self.body = Asn1Der.BodyObjectId(_io, self, self._root)
   else
     self.body = self._io:read_bytes(self.len.result)
   end
-end
-
-
-Asn1Der.BodySequence = class.class(KaitaiStruct)
-
-function Asn1Der.BodySequence:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Asn1Der.BodySequence:_read()
-  self.entries = {}
-  local i = 0
-  while not self._io:is_eof() do
-    self.entries[i + 1] = Asn1Der(self._io)
-    i = i + 1
-  end
-end
-
-
-Asn1Der.BodyUtf8string = class.class(KaitaiStruct)
-
-function Asn1Der.BodyUtf8string:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Asn1Der.BodyUtf8string:_read()
-  self.str = str_decode.decode(self._io:read_bytes_full(), "UTF-8")
 end
 
 
@@ -139,7 +106,7 @@ Asn1Der.BodyObjectId = class.class(KaitaiStruct)
 function Asn1Der.BodyObjectId:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -164,8 +131,55 @@ function Asn1Der.BodyObjectId.property.second:get()
     return self._m_second
   end
 
-  self._m_second = (self.first_and_second % 40)
+  self._m_second = self.first_and_second % 40
   return self._m_second
+end
+
+
+Asn1Der.BodyPrintableString = class.class(KaitaiStruct)
+
+function Asn1Der.BodyPrintableString:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Asn1Der.BodyPrintableString:_read()
+  self.str = str_decode.decode(self._io:read_bytes_full(), "ASCII")
+end
+
+
+Asn1Der.BodySequence = class.class(KaitaiStruct)
+
+function Asn1Der.BodySequence:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Asn1Der.BodySequence:_read()
+  self.entries = {}
+  local i = 0
+  while not self._io:is_eof() do
+    self.entries[i + 1] = Asn1Der(self._io, self, self._root)
+    i = i + 1
+  end
+end
+
+
+Asn1Der.BodyUtf8string = class.class(KaitaiStruct)
+
+function Asn1Der.BodyUtf8string:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Asn1Der.BodyUtf8string:_read()
+  self.str = str_decode.decode(self._io:read_bytes_full(), "UTF-8")
 end
 
 
@@ -174,7 +188,7 @@ Asn1Der.LenEncoded = class.class(KaitaiStruct)
 function Asn1Der.LenEncoded:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -196,20 +210,6 @@ function Asn1Der.LenEncoded.property.result:get()
 
   self._m_result = utils.box_unwrap((self.b1 == 129) and utils.box_wrap(self.int1) or (utils.box_unwrap((self.b1 == 130) and utils.box_wrap(self.int2) or (self.b1))))
   return self._m_result
-end
-
-
-Asn1Der.BodyPrintableString = class.class(KaitaiStruct)
-
-function Asn1Der.BodyPrintableString:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Asn1Der.BodyPrintableString:_read()
-  self.str = str_decode.decode(self._io:read_bytes_full(), "ASCII")
 end
 
 

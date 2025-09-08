@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.MbrPartitionTable = factory(root.KaitaiStream);
+    factory(root.MbrPartitionTable || (root.MbrPartitionTable = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (MbrPartitionTable_, KaitaiStream) {
 /**
  * MBR (Master Boot Record) partition table is a traditional way of
  * MS-DOS to partition larger hard disc drives into distinct
@@ -36,16 +36,49 @@ var MbrPartitionTable = (function() {
       this.partitions.push(new PartitionEntry(this._io, this, this._root));
     }
     this.bootSignature = this._io.readBytes(2);
-    if (!((KaitaiStream.byteArrayCompare(this.bootSignature, [85, 170]) == 0))) {
-      throw new KaitaiStream.ValidationNotEqualError([85, 170], this.bootSignature, this._io, "/seq/2");
+    if (!((KaitaiStream.byteArrayCompare(this.bootSignature, new Uint8Array([85, 170])) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([85, 170]), this.bootSignature, this._io, "/seq/2");
     }
   }
+
+  var Chs = MbrPartitionTable.Chs = (function() {
+    function Chs(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Chs.prototype._read = function() {
+      this.head = this._io.readU1();
+      this.b2 = this._io.readU1();
+      this.b3 = this._io.readU1();
+    }
+    Object.defineProperty(Chs.prototype, 'cylinder', {
+      get: function() {
+        if (this._m_cylinder !== undefined)
+          return this._m_cylinder;
+        this._m_cylinder = this.b3 + ((this.b2 & 192) << 2);
+        return this._m_cylinder;
+      }
+    });
+    Object.defineProperty(Chs.prototype, 'sector', {
+      get: function() {
+        if (this._m_sector !== undefined)
+          return this._m_sector;
+        this._m_sector = this.b2 & 63;
+        return this._m_sector;
+      }
+    });
+
+    return Chs;
+  })();
 
   var PartitionEntry = MbrPartitionTable.PartitionEntry = (function() {
     function PartitionEntry(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -61,40 +94,7 @@ var MbrPartitionTable = (function() {
     return PartitionEntry;
   })();
 
-  var Chs = MbrPartitionTable.Chs = (function() {
-    function Chs(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Chs.prototype._read = function() {
-      this.head = this._io.readU1();
-      this.b2 = this._io.readU1();
-      this.b3 = this._io.readU1();
-    }
-    Object.defineProperty(Chs.prototype, 'sector', {
-      get: function() {
-        if (this._m_sector !== undefined)
-          return this._m_sector;
-        this._m_sector = (this.b2 & 63);
-        return this._m_sector;
-      }
-    });
-    Object.defineProperty(Chs.prototype, 'cylinder', {
-      get: function() {
-        if (this._m_cylinder !== undefined)
-          return this._m_cylinder;
-        this._m_cylinder = (this.b3 + ((this.b2 & 192) << 2));
-        return this._m_cylinder;
-      }
-    });
-
-    return Chs;
-  })();
-
   return MbrPartitionTable;
 })();
-return MbrPartitionTable;
-}));
+MbrPartitionTable_.MbrPartitionTable = MbrPartitionTable;
+});

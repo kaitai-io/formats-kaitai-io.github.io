@@ -29,8 +29,8 @@
 
 namespace {
     class Asn1Der extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Asn1Der $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Asn1Der $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -38,6 +38,11 @@ namespace {
             $this->_m_typeTag = $this->_io->readU1();
             $this->_m_len = new \Asn1Der\LenEncoded($this->_io, $this, $this->_root);
             switch ($this->typeTag()) {
+                case \Asn1Der\TypeTag::OBJECT_ID:
+                    $this->_m__raw_body = $this->_io->readBytes($this->len()->result());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \Asn1Der\BodyObjectId($_io__raw_body, $this, $this->_root);
+                    break;
                 case \Asn1Der\TypeTag::PRINTABLE_STRING:
                     $this->_m__raw_body = $this->_io->readBytes($this->len()->result());
                     $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
@@ -48,12 +53,12 @@ namespace {
                     $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
                     $this->_m_body = new \Asn1Der\BodySequence($_io__raw_body, $this, $this->_root);
                     break;
-                case \Asn1Der\TypeTag::SET:
+                case \Asn1Der\TypeTag::SEQUENCE_30:
                     $this->_m__raw_body = $this->_io->readBytes($this->len()->result());
                     $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
                     $this->_m_body = new \Asn1Der\BodySequence($_io__raw_body, $this, $this->_root);
                     break;
-                case \Asn1Der\TypeTag::SEQUENCE_30:
+                case \Asn1Der\TypeTag::SET:
                     $this->_m__raw_body = $this->_io->readBytes($this->len()->result());
                     $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
                     $this->_m_body = new \Asn1Der\BodySequence($_io__raw_body, $this, $this->_root);
@@ -62,11 +67,6 @@ namespace {
                     $this->_m__raw_body = $this->_io->readBytes($this->len()->result());
                     $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
                     $this->_m_body = new \Asn1Der\BodyUtf8string($_io__raw_body, $this, $this->_root);
-                    break;
-                case \Asn1Der\TypeTag::OBJECT_ID:
-                    $this->_m__raw_body = $this->_io->readBytes($this->len()->result());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \Asn1Der\BodyObjectId($_io__raw_body, $this, $this->_root);
                     break;
                 default:
                     $this->_m_body = $this->_io->readBytes($this->len()->result());
@@ -85,43 +85,8 @@ namespace {
 }
 
 namespace Asn1Der {
-    class BodySequence extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Asn1Der $_parent = null, \Asn1Der $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_entries = [];
-            $i = 0;
-            while (!$this->_io->isEof()) {
-                $this->_m_entries[] = new \Asn1Der($this->_io);
-                $i++;
-            }
-        }
-        protected $_m_entries;
-        public function entries() { return $this->_m_entries; }
-    }
-}
-
-namespace Asn1Der {
-    class BodyUtf8string extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Asn1Der $_parent = null, \Asn1Der $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_str = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesFull(), "UTF-8");
-        }
-        protected $_m_str;
-        public function str() { return $this->_m_str; }
-    }
-}
-
-namespace Asn1Der {
     class BodyObjectId extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Asn1Der $_parent = null, \Asn1Der $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Asn1Der $_parent = null, ?\Asn1Der $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -152,8 +117,58 @@ namespace Asn1Der {
 }
 
 namespace Asn1Der {
+    class BodyPrintableString extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Asn1Der $_parent = null, ?\Asn1Der $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_str = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesFull(), "ASCII");
+        }
+        protected $_m_str;
+        public function str() { return $this->_m_str; }
+    }
+}
+
+namespace Asn1Der {
+    class BodySequence extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Asn1Der $_parent = null, ?\Asn1Der $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_entries = [];
+            $i = 0;
+            while (!$this->_io->isEof()) {
+                $this->_m_entries[] = new \Asn1Der($this->_io, $this, $this->_root);
+                $i++;
+            }
+        }
+        protected $_m_entries;
+        public function entries() { return $this->_m_entries; }
+    }
+}
+
+namespace Asn1Der {
+    class BodyUtf8string extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Asn1Der $_parent = null, ?\Asn1Der $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_str = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesFull(), "UTF-8");
+        }
+        protected $_m_str;
+        public function str() { return $this->_m_str; }
+    }
+}
+
+namespace Asn1Der {
     class LenEncoded extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Asn1Der $_parent = null, \Asn1Der $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Asn1Der $_parent = null, ?\Asn1Der $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -184,21 +199,6 @@ namespace Asn1Der {
 }
 
 namespace Asn1Der {
-    class BodyPrintableString extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Asn1Der $_parent = null, \Asn1Der $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_str = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesFull(), "ASCII");
-        }
-        protected $_m_str;
-        public function str() { return $this->_m_str; }
-    }
-}
-
-namespace Asn1Der {
     class TypeTag {
         const END_OF_CONTENT = 0;
         const BOOLEAN = 1;
@@ -219,5 +219,11 @@ namespace Asn1Der {
         const IA5STRING = 22;
         const SEQUENCE_30 = 48;
         const SET = 49;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 7 => true, 8 => true, 9 => true, 10 => true, 11 => true, 12 => true, 13 => true, 16 => true, 19 => true, 22 => true, 48 => true, 49 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

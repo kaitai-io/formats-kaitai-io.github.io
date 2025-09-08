@@ -8,7 +8,8 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Arrays;
 import java.util.ArrayList;
-import java.nio.charset.Charset;
+import java.util.List;
+import java.nio.charset.StandardCharsets;
 
 
 /**
@@ -81,45 +82,14 @@ public class RubyMarshal extends KaitaiStruct {
     }
     private void _read() {
         this.version = this._io.readBytes(2);
-        if (!(Arrays.equals(version(), new byte[] { 4, 8 }))) {
-            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 4, 8 }, version(), _io(), "/seq/0");
+        if (!(Arrays.equals(this.version, new byte[] { 4, 8 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 4, 8 }, this.version, this._io, "/seq/0");
         }
         this.records = new Record(this._io, this, _root);
     }
-    public static class RubyArray extends KaitaiStruct {
-        public static RubyArray fromFile(String fileName) throws IOException {
-            return new RubyArray(new ByteBufferKaitaiStream(fileName));
-        }
 
-        public RubyArray(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public RubyArray(KaitaiStream _io, RubyMarshal.Record _parent) {
-            this(_io, _parent, null);
-        }
-
-        public RubyArray(KaitaiStream _io, RubyMarshal.Record _parent, RubyMarshal _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.numElements = new PackedInt(this._io, this, _root);
-            this.elements = new ArrayList<Record>();
-            for (int i = 0; i < numElements().value(); i++) {
-                this.elements.add(new Record(this._io, this, _root));
-            }
-        }
-        private PackedInt numElements;
-        private ArrayList<Record> elements;
-        private RubyMarshal _root;
-        private RubyMarshal.Record _parent;
-        public PackedInt numElements() { return numElements; }
-        public ArrayList<Record> elements() { return elements; }
-        public RubyMarshal _root() { return _root; }
-        public RubyMarshal.Record _parent() { return _parent; }
+    public void _fetchInstances() {
+        this.records._fetchInstances();
     }
 
     /**
@@ -147,7 +117,11 @@ public class RubyMarshal extends KaitaiStruct {
         private void _read() {
             this.sign = this._io.readU1();
             this.lenDiv2 = new PackedInt(this._io, this, _root);
-            this.body = this._io.readBytes((lenDiv2().value() * 2));
+            this.body = this._io.readBytes(lenDiv2().value() * 2);
+        }
+
+        public void _fetchInstances() {
+            this.lenDiv2._fetchInstances();
         }
         private int sign;
         private PackedInt lenDiv2;
@@ -174,87 +148,51 @@ public class RubyMarshal extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Struct">Source</a>
+     * @see <a href="https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Instance+Variables">Source</a>
      */
-    public static class RubyStruct extends KaitaiStruct {
-        public static RubyStruct fromFile(String fileName) throws IOException {
-            return new RubyStruct(new ByteBufferKaitaiStream(fileName));
+    public static class InstanceVar extends KaitaiStruct {
+        public static InstanceVar fromFile(String fileName) throws IOException {
+            return new InstanceVar(new ByteBufferKaitaiStream(fileName));
         }
 
-        public RubyStruct(KaitaiStream _io) {
+        public InstanceVar(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public RubyStruct(KaitaiStream _io, RubyMarshal.Record _parent) {
+        public InstanceVar(KaitaiStream _io, RubyMarshal.Record _parent) {
             this(_io, _parent, null);
         }
 
-        public RubyStruct(KaitaiStream _io, RubyMarshal.Record _parent, RubyMarshal _root) {
+        public InstanceVar(KaitaiStream _io, RubyMarshal.Record _parent, RubyMarshal _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.name = new Record(this._io, this, _root);
-            this.numMembers = new PackedInt(this._io, this, _root);
-            this.members = new ArrayList<Pair>();
-            for (int i = 0; i < numMembers().value(); i++) {
-                this.members.add(new Pair(this._io, this, _root));
+            this.obj = new Record(this._io, this, _root);
+            this.numVars = new PackedInt(this._io, this, _root);
+            this.vars = new ArrayList<Pair>();
+            for (int i = 0; i < numVars().value(); i++) {
+                this.vars.add(new Pair(this._io, this, _root));
             }
         }
-        private Record name;
-        private PackedInt numMembers;
-        private ArrayList<Pair> members;
+
+        public void _fetchInstances() {
+            this.obj._fetchInstances();
+            this.numVars._fetchInstances();
+            for (int i = 0; i < this.vars.size(); i++) {
+                this.vars.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private Record obj;
+        private PackedInt numVars;
+        private List<Pair> vars;
         private RubyMarshal _root;
         private RubyMarshal.Record _parent;
-
-        /**
-         * Symbol containing the name of the struct.
-         */
-        public Record name() { return name; }
-
-        /**
-         * Number of members in a struct
-         */
-        public PackedInt numMembers() { return numMembers; }
-        public ArrayList<Pair> members() { return members; }
-        public RubyMarshal _root() { return _root; }
-        public RubyMarshal.Record _parent() { return _parent; }
-    }
-
-    /**
-     * @see <a href="https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Symbols+and+Byte+Sequence">Source</a>
-     */
-    public static class RubySymbol extends KaitaiStruct {
-        public static RubySymbol fromFile(String fileName) throws IOException {
-            return new RubySymbol(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public RubySymbol(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public RubySymbol(KaitaiStream _io, RubyMarshal.Record _parent) {
-            this(_io, _parent, null);
-        }
-
-        public RubySymbol(KaitaiStream _io, RubyMarshal.Record _parent, RubyMarshal _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.len = new PackedInt(this._io, this, _root);
-            this.name = new String(this._io.readBytes(len().value()), Charset.forName("UTF-8"));
-        }
-        private PackedInt len;
-        private String name;
-        private RubyMarshal _root;
-        private RubyMarshal.Record _parent;
-        public PackedInt len() { return len; }
-        public String name() { return name; }
+        public Record obj() { return obj; }
+        public PackedInt numVars() { return numVars; }
+        public List<Pair> vars() { return vars; }
         public RubyMarshal _root() { return _root; }
         public RubyMarshal.Record _parent() { return _parent; }
     }
@@ -309,12 +247,12 @@ public class RubyMarshal extends KaitaiStruct {
         private void _read() {
             this.code = this._io.readU1();
             switch (code()) {
-            case 4: {
-                this.encoded = this._io.readU4le();
+            case 1: {
+                this.encoded = ((Number) (this._io.readU1())).longValue();
                 break;
             }
-            case 1: {
-                this.encoded = (long) (this._io.readU1());
+            case 2: {
+                this.encoded = ((Number) (this._io.readU2le())).longValue();
                 break;
             }
             case 252: {
@@ -322,33 +260,70 @@ public class RubyMarshal extends KaitaiStruct {
                 break;
             }
             case 253: {
-                this.encoded = (long) (this._io.readU2le());
-                break;
-            }
-            case 3: {
-                this.encoded = (long) (this._io.readU2le());
-                break;
-            }
-            case 2: {
-                this.encoded = (long) (this._io.readU2le());
-                break;
-            }
-            case 255: {
-                this.encoded = (long) (this._io.readU1());
+                this.encoded = ((Number) (this._io.readU2le())).longValue();
                 break;
             }
             case 254: {
-                this.encoded = (long) (this._io.readU2le());
+                this.encoded = ((Number) (this._io.readU2le())).longValue();
+                break;
+            }
+            case 255: {
+                this.encoded = ((Number) (this._io.readU1())).longValue();
+                break;
+            }
+            case 3: {
+                this.encoded = ((Number) (this._io.readU2le())).longValue();
+                break;
+            }
+            case 4: {
+                this.encoded = this._io.readU4le();
                 break;
             }
             }
             switch (code()) {
+            case 253: {
+                this.encoded2 = this._io.readU1();
+                break;
+            }
             case 3: {
                 this.encoded2 = this._io.readU1();
                 break;
             }
+            }
+        }
+
+        public void _fetchInstances() {
+            switch (code()) {
+            case 1: {
+                break;
+            }
+            case 2: {
+                break;
+            }
+            case 252: {
+                break;
+            }
             case 253: {
-                this.encoded2 = this._io.readU1();
+                break;
+            }
+            case 254: {
+                break;
+            }
+            case 255: {
+                break;
+            }
+            case 3: {
+                break;
+            }
+            case 4: {
+                break;
+            }
+            }
+            switch (code()) {
+            case 253: {
+                break;
+            }
+            case 3: {
                 break;
             }
             }
@@ -357,16 +332,14 @@ public class RubyMarshal extends KaitaiStruct {
         public Boolean isImmediate() {
             if (this.isImmediate != null)
                 return this.isImmediate;
-            boolean _tmp = (boolean) ( ((code() > 4) && (code() < 252)) );
-            this.isImmediate = _tmp;
+            this.isImmediate =  ((code() > 4) && (code() < 252)) ;
             return this.isImmediate;
         }
         private Integer value;
         public Integer value() {
             if (this.value != null)
                 return this.value;
-            int _tmp = (int) ((isImmediate() ? (code() < 128 ? (code() - 5) : (4 - (~(code()) & 127))) : (code() == 0 ? 0 : (code() == 255 ? (encoded() - 256) : (code() == 254 ? (encoded() - 65536) : (code() == 253 ? (((encoded2() << 16) | encoded()) - 16777216) : (code() == 3 ? ((encoded2() << 16) | encoded()) : encoded())))))));
-            this.value = _tmp;
+            this.value = ((Number) ((isImmediate() ? (code() < 128 ? code() - 5 : 4 - (~(code()) & 127)) : (code() == 0 ? 0 : (code() == 255 ? encoded() - 256 : (code() == 254 ? encoded() - 65536 : (code() == 253 ? (encoded2() << 16 | encoded()) - 16777216 : (code() == 3 ? encoded2() << 16 | encoded() : encoded())))))))).intValue();
             return this.value;
         }
         private int code;
@@ -408,6 +381,11 @@ public class RubyMarshal extends KaitaiStruct {
             this.key = new Record(this._io, this, _root);
             this.value = new Record(this._io, this, _root);
         }
+
+        public void _fetchInstances() {
+            this.key._fetchInstances();
+            this.value._fetchInstances();
+        }
         private Record key;
         private Record value;
         private RubyMarshal _root;
@@ -416,48 +394,6 @@ public class RubyMarshal extends KaitaiStruct {
         public Record value() { return value; }
         public RubyMarshal _root() { return _root; }
         public KaitaiStruct _parent() { return _parent; }
-    }
-
-    /**
-     * @see <a href="https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Instance+Variables">Source</a>
-     */
-    public static class InstanceVar extends KaitaiStruct {
-        public static InstanceVar fromFile(String fileName) throws IOException {
-            return new InstanceVar(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public InstanceVar(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public InstanceVar(KaitaiStream _io, RubyMarshal.Record _parent) {
-            this(_io, _parent, null);
-        }
-
-        public InstanceVar(KaitaiStream _io, RubyMarshal.Record _parent, RubyMarshal _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.obj = new Record(this._io, this, _root);
-            this.numVars = new PackedInt(this._io, this, _root);
-            this.vars = new ArrayList<Pair>();
-            for (int i = 0; i < numVars().value(); i++) {
-                this.vars.add(new Pair(this._io, this, _root));
-            }
-        }
-        private Record obj;
-        private PackedInt numVars;
-        private ArrayList<Pair> vars;
-        private RubyMarshal _root;
-        private RubyMarshal.Record _parent;
-        public Record obj() { return obj; }
-        public PackedInt numVars() { return numVars; }
-        public ArrayList<Pair> vars() { return vars; }
-        public RubyMarshal _root() { return _root; }
-        public RubyMarshal.Record _parent() { return _parent; }
     }
 
     /**
@@ -490,44 +426,94 @@ public class RubyMarshal extends KaitaiStruct {
                 Codes on = code();
                 if (on != null) {
                     switch (code()) {
-                    case PACKED_INT: {
-                        this.body = new PackedInt(this._io, this, _root);
-                        break;
-                    }
                     case BIGNUM: {
                         this.body = new Bignum(this._io, this, _root);
-                        break;
-                    }
-                    case RUBY_ARRAY: {
-                        this.body = new RubyArray(this._io, this, _root);
-                        break;
-                    }
-                    case RUBY_SYMBOL_LINK: {
-                        this.body = new PackedInt(this._io, this, _root);
-                        break;
-                    }
-                    case RUBY_STRUCT: {
-                        this.body = new RubyStruct(this._io, this, _root);
-                        break;
-                    }
-                    case RUBY_STRING: {
-                        this.body = new RubyString(this._io, this, _root);
                         break;
                     }
                     case INSTANCE_VAR: {
                         this.body = new InstanceVar(this._io, this, _root);
                         break;
                     }
+                    case PACKED_INT: {
+                        this.body = new PackedInt(this._io, this, _root);
+                        break;
+                    }
+                    case RUBY_ARRAY: {
+                        this.body = new RubyArray(this._io, this, _root);
+                        break;
+                    }
                     case RUBY_HASH: {
                         this.body = new RubyHash(this._io, this, _root);
+                        break;
+                    }
+                    case RUBY_OBJECT_LINK: {
+                        this.body = new PackedInt(this._io, this, _root);
+                        break;
+                    }
+                    case RUBY_STRING: {
+                        this.body = new RubyString(this._io, this, _root);
+                        break;
+                    }
+                    case RUBY_STRUCT: {
+                        this.body = new RubyStruct(this._io, this, _root);
                         break;
                     }
                     case RUBY_SYMBOL: {
                         this.body = new RubySymbol(this._io, this, _root);
                         break;
                     }
-                    case RUBY_OBJECT_LINK: {
+                    case RUBY_SYMBOL_LINK: {
                         this.body = new PackedInt(this._io, this, _root);
+                        break;
+                    }
+                    }
+                }
+            }
+        }
+
+        public void _fetchInstances() {
+            {
+                Codes on = code();
+                if (on != null) {
+                    switch (code()) {
+                    case BIGNUM: {
+                        ((Bignum) (this.body))._fetchInstances();
+                        break;
+                    }
+                    case INSTANCE_VAR: {
+                        ((InstanceVar) (this.body))._fetchInstances();
+                        break;
+                    }
+                    case PACKED_INT: {
+                        ((PackedInt) (this.body))._fetchInstances();
+                        break;
+                    }
+                    case RUBY_ARRAY: {
+                        ((RubyArray) (this.body))._fetchInstances();
+                        break;
+                    }
+                    case RUBY_HASH: {
+                        ((RubyHash) (this.body))._fetchInstances();
+                        break;
+                    }
+                    case RUBY_OBJECT_LINK: {
+                        ((PackedInt) (this.body))._fetchInstances();
+                        break;
+                    }
+                    case RUBY_STRING: {
+                        ((RubyString) (this.body))._fetchInstances();
+                        break;
+                    }
+                    case RUBY_STRUCT: {
+                        ((RubyStruct) (this.body))._fetchInstances();
+                        break;
+                    }
+                    case RUBY_SYMBOL: {
+                        ((RubySymbol) (this.body))._fetchInstances();
+                        break;
+                    }
+                    case RUBY_SYMBOL_LINK: {
+                        ((PackedInt) (this.body))._fetchInstances();
                         break;
                     }
                     }
@@ -542,6 +528,48 @@ public class RubyMarshal extends KaitaiStruct {
         public KaitaiStruct body() { return body; }
         public RubyMarshal _root() { return _root; }
         public KaitaiStruct _parent() { return _parent; }
+    }
+    public static class RubyArray extends KaitaiStruct {
+        public static RubyArray fromFile(String fileName) throws IOException {
+            return new RubyArray(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public RubyArray(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public RubyArray(KaitaiStream _io, RubyMarshal.Record _parent) {
+            this(_io, _parent, null);
+        }
+
+        public RubyArray(KaitaiStream _io, RubyMarshal.Record _parent, RubyMarshal _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.numElements = new PackedInt(this._io, this, _root);
+            this.elements = new ArrayList<Record>();
+            for (int i = 0; i < numElements().value(); i++) {
+                this.elements.add(new Record(this._io, this, _root));
+            }
+        }
+
+        public void _fetchInstances() {
+            this.numElements._fetchInstances();
+            for (int i = 0; i < this.elements.size(); i++) {
+                this.elements.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private PackedInt numElements;
+        private List<Record> elements;
+        private RubyMarshal _root;
+        private RubyMarshal.Record _parent;
+        public PackedInt numElements() { return numElements; }
+        public List<Record> elements() { return elements; }
+        public RubyMarshal _root() { return _root; }
+        public RubyMarshal.Record _parent() { return _parent; }
     }
 
     /**
@@ -573,12 +601,19 @@ public class RubyMarshal extends KaitaiStruct {
                 this.pairs.add(new Pair(this._io, this, _root));
             }
         }
+
+        public void _fetchInstances() {
+            this.numPairs._fetchInstances();
+            for (int i = 0; i < this.pairs.size(); i++) {
+                this.pairs.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
         private PackedInt numPairs;
-        private ArrayList<Pair> pairs;
+        private List<Pair> pairs;
         private RubyMarshal _root;
         private RubyMarshal.Record _parent;
         public PackedInt numPairs() { return numPairs; }
-        public ArrayList<Pair> pairs() { return pairs; }
+        public List<Pair> pairs() { return pairs; }
         public RubyMarshal _root() { return _root; }
         public RubyMarshal.Record _parent() { return _parent; }
     }
@@ -609,12 +644,114 @@ public class RubyMarshal extends KaitaiStruct {
             this.len = new PackedInt(this._io, this, _root);
             this.body = this._io.readBytes(len().value());
         }
+
+        public void _fetchInstances() {
+            this.len._fetchInstances();
+        }
         private PackedInt len;
         private byte[] body;
         private RubyMarshal _root;
         private RubyMarshal.Record _parent;
         public PackedInt len() { return len; }
         public byte[] body() { return body; }
+        public RubyMarshal _root() { return _root; }
+        public RubyMarshal.Record _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Struct">Source</a>
+     */
+    public static class RubyStruct extends KaitaiStruct {
+        public static RubyStruct fromFile(String fileName) throws IOException {
+            return new RubyStruct(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public RubyStruct(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public RubyStruct(KaitaiStream _io, RubyMarshal.Record _parent) {
+            this(_io, _parent, null);
+        }
+
+        public RubyStruct(KaitaiStream _io, RubyMarshal.Record _parent, RubyMarshal _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.name = new Record(this._io, this, _root);
+            this.numMembers = new PackedInt(this._io, this, _root);
+            this.members = new ArrayList<Pair>();
+            for (int i = 0; i < numMembers().value(); i++) {
+                this.members.add(new Pair(this._io, this, _root));
+            }
+        }
+
+        public void _fetchInstances() {
+            this.name._fetchInstances();
+            this.numMembers._fetchInstances();
+            for (int i = 0; i < this.members.size(); i++) {
+                this.members.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private Record name;
+        private PackedInt numMembers;
+        private List<Pair> members;
+        private RubyMarshal _root;
+        private RubyMarshal.Record _parent;
+
+        /**
+         * Symbol containing the name of the struct.
+         */
+        public Record name() { return name; }
+
+        /**
+         * Number of members in a struct
+         */
+        public PackedInt numMembers() { return numMembers; }
+        public List<Pair> members() { return members; }
+        public RubyMarshal _root() { return _root; }
+        public RubyMarshal.Record _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Symbols+and+Byte+Sequence">Source</a>
+     */
+    public static class RubySymbol extends KaitaiStruct {
+        public static RubySymbol fromFile(String fileName) throws IOException {
+            return new RubySymbol(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public RubySymbol(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public RubySymbol(KaitaiStream _io, RubyMarshal.Record _parent) {
+            this(_io, _parent, null);
+        }
+
+        public RubySymbol(KaitaiStream _io, RubyMarshal.Record _parent, RubyMarshal _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.len = new PackedInt(this._io, this, _root);
+            this.name = new String(this._io.readBytes(len().value()), StandardCharsets.UTF_8);
+        }
+
+        public void _fetchInstances() {
+            this.len._fetchInstances();
+        }
+        private PackedInt len;
+        private String name;
+        private RubyMarshal _root;
+        private RubyMarshal.Record _parent;
+        public PackedInt len() { return len; }
+        public String name() { return name; }
         public RubyMarshal _root() { return _root; }
         public RubyMarshal.Record _parent() { return _parent; }
     }

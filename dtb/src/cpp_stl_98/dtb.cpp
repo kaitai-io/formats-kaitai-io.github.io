@@ -2,19 +2,32 @@
 
 #include "dtb.h"
 #include "kaitai/exceptions.h"
+std::set<dtb_t::fdt_t> dtb_t::_build_values_fdt_t() {
+    std::set<dtb_t::fdt_t> _t;
+    _t.insert(dtb_t::FDT_BEGIN_NODE);
+    _t.insert(dtb_t::FDT_END_NODE);
+    _t.insert(dtb_t::FDT_PROP);
+    _t.insert(dtb_t::FDT_NOP);
+    _t.insert(dtb_t::FDT_END);
+    return _t;
+}
+const std::set<dtb_t::fdt_t> dtb_t::_values_fdt_t = dtb_t::_build_values_fdt_t();
+bool dtb_t::_is_defined_fdt_t(dtb_t::fdt_t v) {
+    return dtb_t::_values_fdt_t.find(v) != dtb_t::_values_fdt_t.end();
+}
 
 dtb_t::dtb_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, dtb_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     m_memory_reservation_block = 0;
     m__io__raw_memory_reservation_block = 0;
-    m_structure_block = 0;
-    m__io__raw_structure_block = 0;
     m_strings_block = 0;
     m__io__raw_strings_block = 0;
+    m_structure_block = 0;
+    m__io__raw_structure_block = 0;
     f_memory_reservation_block = false;
-    f_structure_block = false;
     f_strings_block = false;
+    f_structure_block = false;
 
     try {
         _read();
@@ -26,8 +39,8 @@ dtb_t::dtb_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, dtb_t* p__root)
 
 void dtb_t::_read() {
     m_magic = m__io->read_bytes(4);
-    if (!(magic() == std::string("\xD0\x0D\xFE\xED", 4))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\xD0\x0D\xFE\xED", 4), magic(), _io(), std::string("/seq/0"));
+    if (!(m_magic == std::string("\xD0\x0D\xFE\xED", 4))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\xD0\x0D\xFE\xED", 4), m_magic, m__io, std::string("/seq/0"));
     }
     m_total_size = m__io->read_u4be();
     m_ofs_structure_block = m__io->read_u4be();
@@ -35,8 +48,8 @@ void dtb_t::_read() {
     m_ofs_memory_reservation_block = m__io->read_u4be();
     m_version = m__io->read_u4be();
     m_min_compatible_version = m__io->read_u4be();
-    if (!(min_compatible_version() <= version())) {
-        throw kaitai::validation_greater_than_error<uint32_t>(version(), min_compatible_version(), _io(), std::string("/seq/6"));
+    if (!(m_min_compatible_version <= version())) {
+        throw kaitai::validation_greater_than_error<uint32_t>(version(), m_min_compatible_version, m__io, std::string("/seq/6"));
     }
     m_boot_cpuid_phys = m__io->read_u4be();
     m_len_strings_block = m__io->read_u4be();
@@ -56,14 +69,6 @@ void dtb_t::_clean_up() {
             delete m_memory_reservation_block; m_memory_reservation_block = 0;
         }
     }
-    if (f_structure_block) {
-        if (m__io__raw_structure_block) {
-            delete m__io__raw_structure_block; m__io__raw_structure_block = 0;
-        }
-        if (m_structure_block) {
-            delete m_structure_block; m_structure_block = 0;
-        }
-    }
     if (f_strings_block) {
         if (m__io__raw_strings_block) {
             delete m__io__raw_strings_block; m__io__raw_strings_block = 0;
@@ -72,12 +77,19 @@ void dtb_t::_clean_up() {
             delete m_strings_block; m_strings_block = 0;
         }
     }
+    if (f_structure_block) {
+        if (m__io__raw_structure_block) {
+            delete m__io__raw_structure_block; m__io__raw_structure_block = 0;
+        }
+        if (m_structure_block) {
+            delete m_structure_block; m_structure_block = 0;
+        }
+    }
 }
 
-dtb_t::memory_block_t::memory_block_t(kaitai::kstream* p__io, dtb_t* p__parent, dtb_t* p__root) : kaitai::kstruct(p__io) {
+dtb_t::fdt_begin_node_t::fdt_begin_node_t(kaitai::kstream* p__io, dtb_t::fdt_node_t* p__parent, dtb_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
-    m_entries = 0;
 
     try {
         _read();
@@ -87,28 +99,16 @@ dtb_t::memory_block_t::memory_block_t(kaitai::kstream* p__io, dtb_t* p__parent, 
     }
 }
 
-void dtb_t::memory_block_t::_read() {
-    m_entries = new std::vector<memory_block_entry_t*>();
-    {
-        int i = 0;
-        while (!m__io->is_eof()) {
-            m_entries->push_back(new memory_block_entry_t(m__io, this, m__root));
-            i++;
-        }
-    }
+void dtb_t::fdt_begin_node_t::_read() {
+    m_name = kaitai::kstream::bytes_to_str(m__io->read_bytes_term(0, false, true, true), "ASCII");
+    m_padding = m__io->read_bytes(kaitai::kstream::mod(-(_io()->pos()), 4));
 }
 
-dtb_t::memory_block_t::~memory_block_t() {
+dtb_t::fdt_begin_node_t::~fdt_begin_node_t() {
     _clean_up();
 }
 
-void dtb_t::memory_block_t::_clean_up() {
-    if (m_entries) {
-        for (std::vector<memory_block_entry_t*>::iterator it = m_entries->begin(); it != m_entries->end(); ++it) {
-            delete *it;
-        }
-        delete m_entries; m_entries = 0;
-    }
+void dtb_t::fdt_begin_node_t::_clean_up() {
 }
 
 dtb_t::fdt_block_t::fdt_block_t(kaitai::kstream* p__io, dtb_t* p__parent, dtb_t* p__root) : kaitai::kstruct(p__io) {
@@ -147,6 +147,125 @@ void dtb_t::fdt_block_t::_clean_up() {
             delete *it;
         }
         delete m_nodes; m_nodes = 0;
+    }
+}
+
+dtb_t::fdt_node_t::fdt_node_t(kaitai::kstream* p__io, dtb_t::fdt_block_t* p__parent, dtb_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void dtb_t::fdt_node_t::_read() {
+    m_type = static_cast<dtb_t::fdt_t>(m__io->read_u4be());
+    n_body = true;
+    switch (type()) {
+    case dtb_t::FDT_BEGIN_NODE: {
+        n_body = false;
+        m_body = new fdt_begin_node_t(m__io, this, m__root);
+        break;
+    }
+    case dtb_t::FDT_PROP: {
+        n_body = false;
+        m_body = new fdt_prop_t(m__io, this, m__root);
+        break;
+    }
+    }
+}
+
+dtb_t::fdt_node_t::~fdt_node_t() {
+    _clean_up();
+}
+
+void dtb_t::fdt_node_t::_clean_up() {
+    if (!n_body) {
+        if (m_body) {
+            delete m_body; m_body = 0;
+        }
+    }
+}
+
+dtb_t::fdt_prop_t::fdt_prop_t(kaitai::kstream* p__io, dtb_t::fdt_node_t* p__parent, dtb_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    f_name = false;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void dtb_t::fdt_prop_t::_read() {
+    m_len_property = m__io->read_u4be();
+    m_ofs_name = m__io->read_u4be();
+    m_property = m__io->read_bytes(len_property());
+    m_padding = m__io->read_bytes(kaitai::kstream::mod(-(_io()->pos()), 4));
+}
+
+dtb_t::fdt_prop_t::~fdt_prop_t() {
+    _clean_up();
+}
+
+void dtb_t::fdt_prop_t::_clean_up() {
+    if (f_name) {
+    }
+}
+
+std::string dtb_t::fdt_prop_t::name() {
+    if (f_name)
+        return m_name;
+    f_name = true;
+    kaitai::kstream *io = _root()->strings_block()->_io();
+    std::streampos _pos = io->pos();
+    io->seek(ofs_name());
+    m_name = kaitai::kstream::bytes_to_str(io->read_bytes_term(0, false, true, true), "ASCII");
+    io->seek(_pos);
+    return m_name;
+}
+
+dtb_t::memory_block_t::memory_block_t(kaitai::kstream* p__io, dtb_t* p__parent, dtb_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_entries = 0;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void dtb_t::memory_block_t::_read() {
+    m_entries = new std::vector<memory_block_entry_t*>();
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_entries->push_back(new memory_block_entry_t(m__io, this, m__root));
+            i++;
+        }
+    }
+}
+
+dtb_t::memory_block_t::~memory_block_t() {
+    _clean_up();
+}
+
+void dtb_t::memory_block_t::_clean_up() {
+    if (m_entries) {
+        for (std::vector<memory_block_entry_t*>::iterator it = m_entries->begin(); it != m_entries->end(); ++it) {
+            delete *it;
+        }
+        delete m_entries; m_entries = 0;
     }
 }
 
@@ -192,7 +311,7 @@ void dtb_t::strings_t::_read() {
     {
         int i = 0;
         while (!m__io->is_eof()) {
-            m_strings->push_back(kaitai::kstream::bytes_to_str(m__io->read_bytes_term(0, false, true, true), std::string("ASCII")));
+            m_strings->push_back(kaitai::kstream::bytes_to_str(m__io->read_bytes_term(0, false, true, true), "ASCII"));
             i++;
         }
     }
@@ -208,147 +327,41 @@ void dtb_t::strings_t::_clean_up() {
     }
 }
 
-dtb_t::fdt_prop_t::fdt_prop_t(kaitai::kstream* p__io, dtb_t::fdt_node_t* p__parent, dtb_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    f_name = false;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void dtb_t::fdt_prop_t::_read() {
-    m_len_property = m__io->read_u4be();
-    m_ofs_name = m__io->read_u4be();
-    m_property = m__io->read_bytes(len_property());
-    m_padding = m__io->read_bytes(kaitai::kstream::mod(-(_io()->pos()), 4));
-}
-
-dtb_t::fdt_prop_t::~fdt_prop_t() {
-    _clean_up();
-}
-
-void dtb_t::fdt_prop_t::_clean_up() {
-    if (f_name) {
-    }
-}
-
-std::string dtb_t::fdt_prop_t::name() {
-    if (f_name)
-        return m_name;
-    kaitai::kstream *io = _root()->strings_block()->_io();
-    std::streampos _pos = io->pos();
-    io->seek(ofs_name());
-    m_name = kaitai::kstream::bytes_to_str(io->read_bytes_term(0, false, true, true), std::string("ASCII"));
-    io->seek(_pos);
-    f_name = true;
-    return m_name;
-}
-
-dtb_t::fdt_node_t::fdt_node_t(kaitai::kstream* p__io, dtb_t::fdt_block_t* p__parent, dtb_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void dtb_t::fdt_node_t::_read() {
-    m_type = static_cast<dtb_t::fdt_t>(m__io->read_u4be());
-    n_body = true;
-    switch (type()) {
-    case dtb_t::FDT_BEGIN_NODE: {
-        n_body = false;
-        m_body = new fdt_begin_node_t(m__io, this, m__root);
-        break;
-    }
-    case dtb_t::FDT_PROP: {
-        n_body = false;
-        m_body = new fdt_prop_t(m__io, this, m__root);
-        break;
-    }
-    }
-}
-
-dtb_t::fdt_node_t::~fdt_node_t() {
-    _clean_up();
-}
-
-void dtb_t::fdt_node_t::_clean_up() {
-    if (!n_body) {
-        if (m_body) {
-            delete m_body; m_body = 0;
-        }
-    }
-}
-
-dtb_t::fdt_begin_node_t::fdt_begin_node_t(kaitai::kstream* p__io, dtb_t::fdt_node_t* p__parent, dtb_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void dtb_t::fdt_begin_node_t::_read() {
-    m_name = kaitai::kstream::bytes_to_str(m__io->read_bytes_term(0, false, true, true), std::string("ASCII"));
-    m_padding = m__io->read_bytes(kaitai::kstream::mod(-(_io()->pos()), 4));
-}
-
-dtb_t::fdt_begin_node_t::~fdt_begin_node_t() {
-    _clean_up();
-}
-
-void dtb_t::fdt_begin_node_t::_clean_up() {
-}
-
 dtb_t::memory_block_t* dtb_t::memory_reservation_block() {
     if (f_memory_reservation_block)
         return m_memory_reservation_block;
+    f_memory_reservation_block = true;
     std::streampos _pos = m__io->pos();
     m__io->seek(ofs_memory_reservation_block());
-    m__raw_memory_reservation_block = m__io->read_bytes((ofs_structure_block() - ofs_memory_reservation_block()));
+    m__raw_memory_reservation_block = m__io->read_bytes(ofs_structure_block() - ofs_memory_reservation_block());
     m__io__raw_memory_reservation_block = new kaitai::kstream(m__raw_memory_reservation_block);
     m_memory_reservation_block = new memory_block_t(m__io__raw_memory_reservation_block, this, m__root);
     m__io->seek(_pos);
-    f_memory_reservation_block = true;
     return m_memory_reservation_block;
-}
-
-dtb_t::fdt_block_t* dtb_t::structure_block() {
-    if (f_structure_block)
-        return m_structure_block;
-    std::streampos _pos = m__io->pos();
-    m__io->seek(ofs_structure_block());
-    m__raw_structure_block = m__io->read_bytes(len_structure_block());
-    m__io__raw_structure_block = new kaitai::kstream(m__raw_structure_block);
-    m_structure_block = new fdt_block_t(m__io__raw_structure_block, this, m__root);
-    m__io->seek(_pos);
-    f_structure_block = true;
-    return m_structure_block;
 }
 
 dtb_t::strings_t* dtb_t::strings_block() {
     if (f_strings_block)
         return m_strings_block;
+    f_strings_block = true;
     std::streampos _pos = m__io->pos();
     m__io->seek(ofs_strings_block());
     m__raw_strings_block = m__io->read_bytes(len_strings_block());
     m__io__raw_strings_block = new kaitai::kstream(m__raw_strings_block);
     m_strings_block = new strings_t(m__io__raw_strings_block, this, m__root);
     m__io->seek(_pos);
-    f_strings_block = true;
     return m_strings_block;
+}
+
+dtb_t::fdt_block_t* dtb_t::structure_block() {
+    if (f_structure_block)
+        return m_structure_block;
+    f_structure_block = true;
+    std::streampos _pos = m__io->pos();
+    m__io->seek(ofs_structure_block());
+    m__raw_structure_block = m__io->read_bytes(len_structure_block());
+    m__io__raw_structure_block = new kaitai::kstream(m__raw_structure_block);
+    m_structure_block = new fdt_block_t(m__io__raw_structure_block, this, m__root);
+    m__io->seek(_pos);
+    return m_structure_block;
 }

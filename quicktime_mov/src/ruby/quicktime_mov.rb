@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -303,8 +303,8 @@ class QuicktimeMov < Kaitai::Struct::Struct
     2037658656 => :brand_yt4,
   }
   I__BRAND = BRAND.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -312,11 +312,148 @@ class QuicktimeMov < Kaitai::Struct::Struct
     @atoms = AtomList.new(@_io, self, @_root)
     self
   end
+  class Atom < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @len32 = @_io.read_u4be
+      @atom_type = Kaitai::Struct::Stream::resolve_enum(QuicktimeMov::ATOM_TYPE, @_io.read_u4be)
+      if len32 == 1
+        @len64 = @_io.read_u8be
+      end
+      case atom_type
+      when :atom_type_dinf
+        _io_body = @_io.substream(len)
+        @body = AtomList.new(_io_body, self, @_root)
+      when :atom_type_ftyp
+        _io_body = @_io.substream(len)
+        @body = FtypBody.new(_io_body, self, @_root)
+      when :atom_type_mdia
+        _io_body = @_io.substream(len)
+        @body = AtomList.new(_io_body, self, @_root)
+      when :atom_type_minf
+        _io_body = @_io.substream(len)
+        @body = AtomList.new(_io_body, self, @_root)
+      when :atom_type_moof
+        _io_body = @_io.substream(len)
+        @body = AtomList.new(_io_body, self, @_root)
+      when :atom_type_moov
+        _io_body = @_io.substream(len)
+        @body = AtomList.new(_io_body, self, @_root)
+      when :atom_type_mvhd
+        _io_body = @_io.substream(len)
+        @body = MvhdBody.new(_io_body, self, @_root)
+      when :atom_type_stbl
+        _io_body = @_io.substream(len)
+        @body = AtomList.new(_io_body, self, @_root)
+      when :atom_type_tkhd
+        _io_body = @_io.substream(len)
+        @body = TkhdBody.new(_io_body, self, @_root)
+      when :atom_type_traf
+        _io_body = @_io.substream(len)
+        @body = AtomList.new(_io_body, self, @_root)
+      when :atom_type_trak
+        _io_body = @_io.substream(len)
+        @body = AtomList.new(_io_body, self, @_root)
+      else
+        @body = @_io.read_bytes(len)
+      end
+      self
+    end
+    def len
+      return @len unless @len.nil?
+      @len = (len32 == 0 ? _io.size - 8 : (len32 == 1 ? len64 - 16 : len32 - 8))
+      @len
+    end
+    attr_reader :len32
+    attr_reader :atom_type
+    attr_reader :len64
+    attr_reader :body
+    attr_reader :_raw_body
+  end
+  class AtomList < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @items = []
+      i = 0
+      while not @_io.eof?
+        @items << Atom.new(@_io, self, @_root)
+        i += 1
+      end
+      self
+    end
+    attr_reader :items
+  end
+
+  ##
+  # Fixed-point 16-bit number.
+  class Fixed16 < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @int_part = @_io.read_s1
+      @frac_part = @_io.read_u1
+      self
+    end
+    attr_reader :int_part
+    attr_reader :frac_part
+  end
+
+  ##
+  # Fixed-point 32-bit number.
+  class Fixed32 < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @int_part = @_io.read_s2be
+      @frac_part = @_io.read_u2be
+      self
+    end
+    attr_reader :int_part
+    attr_reader :frac_part
+  end
+
+  ##
+  # @see https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-CJBCBIFF Source
+  class FtypBody < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @major_brand = Kaitai::Struct::Stream::resolve_enum(QuicktimeMov::BRAND, @_io.read_u4be)
+      @minor_version = @_io.read_bytes(4)
+      @compatible_brands = []
+      i = 0
+      while not @_io.eof?
+        @compatible_brands << Kaitai::Struct::Stream::resolve_enum(QuicktimeMov::BRAND, @_io.read_u4be)
+        i += 1
+      end
+      self
+    end
+    attr_reader :major_brand
+    attr_reader :minor_version
+    attr_reader :compatible_brands
+  end
 
   ##
   # @see https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-BBCGFGJG Source
   class MvhdBody < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -409,140 +546,9 @@ class QuicktimeMov < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-CJBCBIFF Source
-  class FtypBody < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @major_brand = Kaitai::Struct::Stream::resolve_enum(QuicktimeMov::BRAND, @_io.read_u4be)
-      @minor_version = @_io.read_bytes(4)
-      @compatible_brands = []
-      i = 0
-      while not @_io.eof?
-        @compatible_brands << Kaitai::Struct::Stream::resolve_enum(QuicktimeMov::BRAND, @_io.read_u4be)
-        i += 1
-      end
-      self
-    end
-    attr_reader :major_brand
-    attr_reader :minor_version
-    attr_reader :compatible_brands
-  end
-
-  ##
-  # Fixed-point 32-bit number.
-  class Fixed32 < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @int_part = @_io.read_s2be
-      @frac_part = @_io.read_u2be
-      self
-    end
-    attr_reader :int_part
-    attr_reader :frac_part
-  end
-
-  ##
-  # Fixed-point 16-bit number.
-  class Fixed16 < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @int_part = @_io.read_s1
-      @frac_part = @_io.read_u1
-      self
-    end
-    attr_reader :int_part
-    attr_reader :frac_part
-  end
-  class Atom < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @len32 = @_io.read_u4be
-      @atom_type = Kaitai::Struct::Stream::resolve_enum(QuicktimeMov::ATOM_TYPE, @_io.read_u4be)
-      if len32 == 1
-        @len64 = @_io.read_u8be
-      end
-      case atom_type
-      when :atom_type_moof
-        @_raw_body = @_io.read_bytes(len)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = AtomList.new(_io__raw_body, self, @_root)
-      when :atom_type_tkhd
-        @_raw_body = @_io.read_bytes(len)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = TkhdBody.new(_io__raw_body, self, @_root)
-      when :atom_type_stbl
-        @_raw_body = @_io.read_bytes(len)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = AtomList.new(_io__raw_body, self, @_root)
-      when :atom_type_traf
-        @_raw_body = @_io.read_bytes(len)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = AtomList.new(_io__raw_body, self, @_root)
-      when :atom_type_minf
-        @_raw_body = @_io.read_bytes(len)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = AtomList.new(_io__raw_body, self, @_root)
-      when :atom_type_trak
-        @_raw_body = @_io.read_bytes(len)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = AtomList.new(_io__raw_body, self, @_root)
-      when :atom_type_moov
-        @_raw_body = @_io.read_bytes(len)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = AtomList.new(_io__raw_body, self, @_root)
-      when :atom_type_mdia
-        @_raw_body = @_io.read_bytes(len)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = AtomList.new(_io__raw_body, self, @_root)
-      when :atom_type_dinf
-        @_raw_body = @_io.read_bytes(len)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = AtomList.new(_io__raw_body, self, @_root)
-      when :atom_type_mvhd
-        @_raw_body = @_io.read_bytes(len)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = MvhdBody.new(_io__raw_body, self, @_root)
-      when :atom_type_ftyp
-        @_raw_body = @_io.read_bytes(len)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = FtypBody.new(_io__raw_body, self, @_root)
-      else
-        @body = @_io.read_bytes(len)
-      end
-      self
-    end
-    def len
-      return @len unless @len.nil?
-      @len = (len32 == 0 ? (_io.size - 8) : (len32 == 1 ? (len64 - 16) : (len32 - 8)))
-      @len
-    end
-    attr_reader :len32
-    attr_reader :atom_type
-    attr_reader :len64
-    attr_reader :body
-    attr_reader :_raw_body
-  end
-
-  ##
   # @see https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-25550 Source
   class TkhdBody < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -583,23 +589,6 @@ class QuicktimeMov < Kaitai::Struct::Struct
     attr_reader :matrix
     attr_reader :width
     attr_reader :height
-  end
-  class AtomList < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @items = []
-      i = 0
-      while not @_io.eof?
-        @items << Atom.new(@_io, self, @_root)
-        i += 1
-      end
-      self
-    end
-    attr_reader :items
   end
   attr_reader :atoms
 end

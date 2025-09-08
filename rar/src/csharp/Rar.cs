@@ -40,16 +40,6 @@ namespace Kaitai
             Terminator = 123,
         }
 
-        public enum Oses
-        {
-            MsDos = 0,
-            Os2 = 1,
-            Windows = 2,
-            Unix = 3,
-            MacOs = 4,
-            Beos = 5,
-        }
-
         public enum Methods
         {
             Store = 48,
@@ -58,6 +48,16 @@ namespace Kaitai
             Normal = 51,
             Good = 52,
             Best = 53,
+        }
+
+        public enum Oses
+        {
+            MsDos = 0,
+            Os2 = 1,
+            Windows = 2,
+            Unix = 3,
+            MacOs = 4,
+            Beos = 5,
         }
         public Rar(KaitaiStream p__io, KaitaiStruct p__parent = null, Rar p__root = null) : base(p__io)
         {
@@ -88,69 +88,6 @@ namespace Kaitai
         }
 
         /// <summary>
-        /// RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and
-        /// 8-byte magic (and pretty different block format) for v5+. This
-        /// type would parse and validate both versions of signature. Note
-        /// that actually this signature is a valid RAR &quot;block&quot;: in theory,
-        /// one can omit signature reading at all, and read this normally,
-        /// as a block, if exact RAR version is known (and thus it's
-        /// possible to choose correct block format).
-        /// </summary>
-        public partial class MagicSignature : KaitaiStruct
-        {
-            public static MagicSignature FromFile(string fileName)
-            {
-                return new MagicSignature(new KaitaiStream(fileName));
-            }
-
-            public MagicSignature(KaitaiStream p__io, Rar p__parent = null, Rar p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _magic1 = m_io.ReadBytes(6);
-                if (!((KaitaiStream.ByteArrayCompare(Magic1, new byte[] { 82, 97, 114, 33, 26, 7 }) == 0)))
-                {
-                    throw new ValidationNotEqualError(new byte[] { 82, 97, 114, 33, 26, 7 }, Magic1, M_Io, "/types/magic_signature/seq/0");
-                }
-                _version = m_io.ReadU1();
-                if (Version == 1) {
-                    _magic3 = m_io.ReadBytes(1);
-                    if (!((KaitaiStream.ByteArrayCompare(Magic3, new byte[] { 0 }) == 0)))
-                    {
-                        throw new ValidationNotEqualError(new byte[] { 0 }, Magic3, M_Io, "/types/magic_signature/seq/2");
-                    }
-                }
-            }
-            private byte[] _magic1;
-            private byte _version;
-            private byte[] _magic3;
-            private Rar m_root;
-            private Rar m_parent;
-
-            /// <summary>
-            /// Fixed part of file's magic signature that doesn't change with RAR version
-            /// </summary>
-            public byte[] Magic1 { get { return _magic1; } }
-
-            /// <summary>
-            /// Variable part of magic signature: 0 means old (RAR 1.5-4.0)
-            /// format, 1 means new (RAR 5+) format
-            /// </summary>
-            public byte Version { get { return _version; } }
-
-            /// <summary>
-            /// New format (RAR 5+) magic contains extra byte
-            /// </summary>
-            public byte[] Magic3 { get { return _magic3; } }
-            public Rar M_Root { get { return m_root; } }
-            public Rar M_Parent { get { return m_parent; } }
-        }
-
-        /// <summary>
         /// Basic block that RAR files consist of. There are several block
         /// types (see `block_type`), which have different `body` and
         /// `add_body`.
@@ -166,9 +103,9 @@ namespace Kaitai
             {
                 m_parent = p__parent;
                 m_root = p__root;
+                f_bodySize = false;
                 f_hasAdd = false;
                 f_headerSize = false;
-                f_bodySize = false;
                 _read();
             }
             private void _read()
@@ -196,6 +133,19 @@ namespace Kaitai
                     _addBody = m_io.ReadBytes(AddSize);
                 }
             }
+            private bool f_bodySize;
+            private int _bodySize;
+            public int BodySize
+            {
+                get
+                {
+                    if (f_bodySize)
+                        return _bodySize;
+                    f_bodySize = true;
+                    _bodySize = (int) (BlockSize - HeaderSize);
+                    return _bodySize;
+                }
+            }
             private bool f_hasAdd;
             private bool _hasAdd;
 
@@ -208,8 +158,8 @@ namespace Kaitai
                 {
                     if (f_hasAdd)
                         return _hasAdd;
-                    _hasAdd = (bool) ((Flags & 32768) != 0);
                     f_hasAdd = true;
+                    _hasAdd = (bool) ((Flags & 32768) != 0);
                     return _hasAdd;
                 }
             }
@@ -221,22 +171,9 @@ namespace Kaitai
                 {
                     if (f_headerSize)
                         return _headerSize;
-                    _headerSize = (sbyte) ((HasAdd ? 11 : 7));
                     f_headerSize = true;
+                    _headerSize = (sbyte) ((HasAdd ? 11 : 7));
                     return _headerSize;
-                }
-            }
-            private bool f_bodySize;
-            private int _bodySize;
-            public int BodySize
-            {
-                get
-                {
-                    if (f_bodySize)
-                        return _bodySize;
-                    _bodySize = (int) ((BlockSize - HeaderSize));
-                    f_bodySize = true;
-                    return _bodySize;
                 }
             }
             private ushort _crc16;
@@ -388,6 +325,69 @@ namespace Kaitai
             }
             private Rar m_root;
             private Rar m_parent;
+            public Rar M_Root { get { return m_root; } }
+            public Rar M_Parent { get { return m_parent; } }
+        }
+
+        /// <summary>
+        /// RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and
+        /// 8-byte magic (and pretty different block format) for v5+. This
+        /// type would parse and validate both versions of signature. Note
+        /// that actually this signature is a valid RAR &quot;block&quot;: in theory,
+        /// one can omit signature reading at all, and read this normally,
+        /// as a block, if exact RAR version is known (and thus it's
+        /// possible to choose correct block format).
+        /// </summary>
+        public partial class MagicSignature : KaitaiStruct
+        {
+            public static MagicSignature FromFile(string fileName)
+            {
+                return new MagicSignature(new KaitaiStream(fileName));
+            }
+
+            public MagicSignature(KaitaiStream p__io, Rar p__parent = null, Rar p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _magic1 = m_io.ReadBytes(6);
+                if (!((KaitaiStream.ByteArrayCompare(_magic1, new byte[] { 82, 97, 114, 33, 26, 7 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 82, 97, 114, 33, 26, 7 }, _magic1, m_io, "/types/magic_signature/seq/0");
+                }
+                _version = m_io.ReadU1();
+                if (Version == 1) {
+                    _magic3 = m_io.ReadBytes(1);
+                    if (!((KaitaiStream.ByteArrayCompare(_magic3, new byte[] { 0 }) == 0)))
+                    {
+                        throw new ValidationNotEqualError(new byte[] { 0 }, _magic3, m_io, "/types/magic_signature/seq/2");
+                    }
+                }
+            }
+            private byte[] _magic1;
+            private byte _version;
+            private byte[] _magic3;
+            private Rar m_root;
+            private Rar m_parent;
+
+            /// <summary>
+            /// Fixed part of file's magic signature that doesn't change with RAR version
+            /// </summary>
+            public byte[] Magic1 { get { return _magic1; } }
+
+            /// <summary>
+            /// Variable part of magic signature: 0 means old (RAR 1.5-4.0)
+            /// format, 1 means new (RAR 5+) format
+            /// </summary>
+            public byte Version { get { return _version; } }
+
+            /// <summary>
+            /// New format (RAR 5+) magic contains extra byte
+            /// </summary>
+            public byte[] Magic3 { get { return _magic3; } }
             public Rar M_Root { get { return m_root; } }
             public Rar M_Parent { get { return m_parent; } }
         }

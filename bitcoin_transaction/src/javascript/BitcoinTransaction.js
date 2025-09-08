@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.BitcoinTransaction = factory(root.KaitaiStream);
+    factory(root.BitcoinTransaction || (root.BitcoinTransaction = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (BitcoinTransaction_, KaitaiStream) {
 /**
  * @see {@link https://bitcoin.org/en/developer-guide#transactions
  * https://en.bitcoin.it/wiki/Transaction
@@ -42,7 +42,7 @@ var BitcoinTransaction = (function() {
     function Vin(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -54,8 +54,8 @@ var BitcoinTransaction = (function() {
       var _io__raw_scriptSig = new KaitaiStream(this._raw_scriptSig);
       this.scriptSig = new ScriptSignature(_io__raw_scriptSig, this, this._root);
       this.endOfVin = this._io.readBytes(4);
-      if (!((KaitaiStream.byteArrayCompare(this.endOfVin, [255, 255, 255, 255]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([255, 255, 255, 255], this.endOfVin, this._io, "/types/vin/seq/4");
+      if (!((KaitaiStream.byteArrayCompare(this.endOfVin, new Uint8Array([255, 255, 255, 255])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([255, 255, 255, 255]), this.endOfVin, this._io, "/types/vin/seq/4");
       }
     }
 
@@ -75,7 +75,7 @@ var BitcoinTransaction = (function() {
       function ScriptSignature(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -91,25 +91,25 @@ var BitcoinTransaction = (function() {
         function DerSignature(_io, _parent, _root) {
           this._io = _io;
           this._parent = _parent;
-          this._root = _root || this;
+          this._root = _root;
 
           this._read();
         }
         DerSignature.prototype._read = function() {
           this.sequence = this._io.readBytes(1);
-          if (!((KaitaiStream.byteArrayCompare(this.sequence, [48]) == 0))) {
-            throw new KaitaiStream.ValidationNotEqualError([48], this.sequence, this._io, "/types/vin/types/script_signature/types/der_signature/seq/0");
+          if (!((KaitaiStream.byteArrayCompare(this.sequence, new Uint8Array([48])) == 0))) {
+            throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([48]), this.sequence, this._io, "/types/vin/types/script_signature/types/der_signature/seq/0");
           }
           this.lenSig = this._io.readU1();
           this.sep1 = this._io.readBytes(1);
-          if (!((KaitaiStream.byteArrayCompare(this.sep1, [2]) == 0))) {
-            throw new KaitaiStream.ValidationNotEqualError([2], this.sep1, this._io, "/types/vin/types/script_signature/types/der_signature/seq/2");
+          if (!((KaitaiStream.byteArrayCompare(this.sep1, new Uint8Array([2])) == 0))) {
+            throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([2]), this.sep1, this._io, "/types/vin/types/script_signature/types/der_signature/seq/2");
           }
           this.lenSigR = this._io.readU1();
           this.sigR = this._io.readBytes(this.lenSigR);
           this.sep2 = this._io.readBytes(1);
-          if (!((KaitaiStream.byteArrayCompare(this.sep2, [2]) == 0))) {
-            throw new KaitaiStream.ValidationNotEqualError([2], this.sep2, this._io, "/types/vin/types/script_signature/types/der_signature/seq/5");
+          if (!((KaitaiStream.byteArrayCompare(this.sep2, new Uint8Array([2])) == 0))) {
+            throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([2]), this.sep2, this._io, "/types/vin/types/script_signature/types/der_signature/seq/5");
           }
           this.lenSigS = this._io.readU1();
           this.sigS = this._io.readBytes(this.lenSigS);
@@ -140,7 +140,7 @@ var BitcoinTransaction = (function() {
         function PublicKey(_io, _parent, _root) {
           this._io = _io;
           this._parent = _parent;
-          this._root = _root || this;
+          this._root = _root;
 
           this._read();
         }
@@ -210,7 +210,7 @@ var BitcoinTransaction = (function() {
     function Vout(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -261,5 +261,5 @@ var BitcoinTransaction = (function() {
 
   return BitcoinTransaction;
 })();
-return BitcoinTransaction;
-}));
+BitcoinTransaction_.BitcoinTransaction = BitcoinTransaction;
+});

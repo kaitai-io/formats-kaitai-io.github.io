@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Encode;
 
 ########################################################################
@@ -27,7 +27,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -40,7 +40,7 @@ sub _read {
     $self->{pack_magic} = $self->{_io}->read_u4be();
     $self->{dat_magic} = $self->{_io}->read_bytes(4);
     $self->{num_objects} = $self->{_io}->read_u4be();
-    $self->{objects} = ();
+    $self->{objects} = [];
     my $n_objects = $self->num_objects();
     for (my $i = 0; $i < $n_objects; $i++) {
         push @{$self->{objects}}, AllegroDat::DatObject->new($self->{_io}, $self, $self->{_root});
@@ -68,48 +68,6 @@ sub objects {
 }
 
 ########################################################################
-package AllegroDat::DatFont16;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{chars} = ();
-    my $n_chars = 95;
-    for (my $i = 0; $i < $n_chars; $i++) {
-        push @{$self->{chars}}, $self->{_io}->read_bytes(16);
-    }
-}
-
-sub chars {
-    my ($self) = @_;
-    return $self->{chars};
-}
-
-########################################################################
 package AllegroDat::DatBitmap;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -129,7 +87,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -185,7 +143,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -197,14 +155,14 @@ sub _read {
 
     $self->{font_size} = $self->{_io}->read_s2be();
     my $_on = $self->font_size();
-    if ($_on == 8) {
-        $self->{body} = AllegroDat::DatFont8->new($self->{_io}, $self, $self->{_root});
+    if ($_on == 0) {
+        $self->{body} = AllegroDat::DatFont39->new($self->{_io}, $self, $self->{_root});
     }
     elsif ($_on == 16) {
         $self->{body} = AllegroDat::DatFont16->new($self->{_io}, $self, $self->{_root});
     }
-    elsif ($_on == 0) {
-        $self->{body} = AllegroDat::DatFont39->new($self->{_io}, $self, $self->{_root});
+    elsif ($_on == 8) {
+        $self->{body} = AllegroDat::DatFont8->new($self->{_io}, $self, $self->{_root});
     }
 }
 
@@ -216,6 +174,206 @@ sub font_size {
 sub body {
     my ($self) = @_;
     return $self->{body};
+}
+
+########################################################################
+package AllegroDat::DatFont16;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{chars} = [];
+    my $n_chars = 95;
+    for (my $i = 0; $i < $n_chars; $i++) {
+        push @{$self->{chars}}, $self->{_io}->read_bytes(16);
+    }
+}
+
+sub chars {
+    my ($self) = @_;
+    return $self->{chars};
+}
+
+########################################################################
+package AllegroDat::DatFont39;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{num_ranges} = $self->{_io}->read_s2be();
+    $self->{ranges} = [];
+    my $n_ranges = $self->num_ranges();
+    for (my $i = 0; $i < $n_ranges; $i++) {
+        push @{$self->{ranges}}, AllegroDat::DatFont39::Range->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub num_ranges {
+    my ($self) = @_;
+    return $self->{num_ranges};
+}
+
+sub ranges {
+    my ($self) = @_;
+    return $self->{ranges};
+}
+
+########################################################################
+package AllegroDat::DatFont39::FontChar;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{width} = $self->{_io}->read_u2be();
+    $self->{height} = $self->{_io}->read_u2be();
+    $self->{body} = $self->{_io}->read_bytes($self->width() * $self->height());
+}
+
+sub width {
+    my ($self) = @_;
+    return $self->{width};
+}
+
+sub height {
+    my ($self) = @_;
+    return $self->{height};
+}
+
+sub body {
+    my ($self) = @_;
+    return $self->{body};
+}
+
+########################################################################
+package AllegroDat::DatFont39::Range;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{mono} = $self->{_io}->read_u1();
+    $self->{start_char} = $self->{_io}->read_u4be();
+    $self->{end_char} = $self->{_io}->read_u4be();
+    $self->{chars} = [];
+    my $n_chars = ($self->end_char() - $self->start_char()) + 1;
+    for (my $i = 0; $i < $n_chars; $i++) {
+        push @{$self->{chars}}, AllegroDat::DatFont39::FontChar->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub mono {
+    my ($self) = @_;
+    return $self->{mono};
+}
+
+sub start_char {
+    my ($self) = @_;
+    return $self->{start_char};
+}
+
+sub end_char {
+    my ($self) = @_;
+    return $self->{end_char};
+}
+
+sub chars {
+    my ($self) = @_;
+    return $self->{chars};
 }
 
 ########################################################################
@@ -238,7 +396,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -248,7 +406,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{chars} = ();
+    $self->{chars} = [];
     my $n_chars = 95;
     for (my $i = 0; $i < $n_chars; $i++) {
         push @{$self->{chars}}, $self->{_io}->read_bytes(8);
@@ -280,7 +438,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -290,11 +448,14 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{properties} = ();
-    do {
-        $_ = AllegroDat::Property->new($self->{_io}, $self, $self->{_root});
-        push @{$self->{properties}}, $_;
-    } until (!($_->is_valid()));
+    $self->{properties} = [];
+    {
+        my $_it;
+        do {
+            $_it = AllegroDat::Property->new($self->{_io}, $self, $self->{_root});
+            push @{$self->{properties}}, $_it;
+        } until (!($_it->is_valid()));
+    }
     $self->{len_compressed} = $self->{_io}->read_s4be();
     $self->{len_uncompressed} = $self->{_io}->read_s4be();
     my $_on = $self->type();
@@ -303,15 +464,15 @@ sub _read {
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = AllegroDat::DatBitmap->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on eq "RLE ") {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->len_compressed());
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = AllegroDat::DatRleSprite->new($io__raw_body, $self, $self->{_root});
-    }
     elsif ($_on eq "FONT") {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->len_compressed());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = AllegroDat::DatFont->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on eq "RLE ") {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len_compressed());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = AllegroDat::DatRleSprite->new($io__raw_body, $self, $self->{_root});
     }
     else {
         $self->{body} = $self->{_io}->read_bytes($self->len_compressed());
@@ -351,7 +512,7 @@ sub _raw_body {
 }
 
 ########################################################################
-package AllegroDat::DatFont39;
+package AllegroDat::DatRleSprite;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -370,7 +531,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -380,117 +541,16 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{num_ranges} = $self->{_io}->read_s2be();
-    $self->{ranges} = ();
-    my $n_ranges = $self->num_ranges();
-    for (my $i = 0; $i < $n_ranges; $i++) {
-        push @{$self->{ranges}}, AllegroDat::DatFont39::Range->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub num_ranges {
-    my ($self) = @_;
-    return $self->{num_ranges};
-}
-
-sub ranges {
-    my ($self) = @_;
-    return $self->{ranges};
-}
-
-########################################################################
-package AllegroDat::DatFont39::Range;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{mono} = $self->{_io}->read_u1();
-    $self->{start_char} = $self->{_io}->read_u4be();
-    $self->{end_char} = $self->{_io}->read_u4be();
-    $self->{chars} = ();
-    my $n_chars = (($self->end_char() - $self->start_char()) + 1);
-    for (my $i = 0; $i < $n_chars; $i++) {
-        push @{$self->{chars}}, AllegroDat::DatFont39::FontChar->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub mono {
-    my ($self) = @_;
-    return $self->{mono};
-}
-
-sub start_char {
-    my ($self) = @_;
-    return $self->{start_char};
-}
-
-sub end_char {
-    my ($self) = @_;
-    return $self->{end_char};
-}
-
-sub chars {
-    my ($self) = @_;
-    return $self->{chars};
-}
-
-########################################################################
-package AllegroDat::DatFont39::FontChar;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
+    $self->{bits_per_pixel} = $self->{_io}->read_s2be();
     $self->{width} = $self->{_io}->read_u2be();
     $self->{height} = $self->{_io}->read_u2be();
-    $self->{body} = $self->{_io}->read_bytes(($self->width() * $self->height()));
+    $self->{len_image} = $self->{_io}->read_u4be();
+    $self->{image} = $self->{_io}->read_bytes_full();
+}
+
+sub bits_per_pixel {
+    my ($self) = @_;
+    return $self->{bits_per_pixel};
 }
 
 sub width {
@@ -503,9 +563,14 @@ sub height {
     return $self->{height};
 }
 
-sub body {
+sub len_image {
     my ($self) = @_;
-    return $self->{body};
+    return $self->{len_image};
+}
+
+sub image {
+    my ($self) = @_;
+    return $self->{image};
 }
 
 ########################################################################
@@ -528,7 +593,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -575,68 +640,6 @@ sub len_body {
 sub body {
     my ($self) = @_;
     return $self->{body};
-}
-
-########################################################################
-package AllegroDat::DatRleSprite;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{bits_per_pixel} = $self->{_io}->read_s2be();
-    $self->{width} = $self->{_io}->read_u2be();
-    $self->{height} = $self->{_io}->read_u2be();
-    $self->{len_image} = $self->{_io}->read_u4be();
-    $self->{image} = $self->{_io}->read_bytes_full();
-}
-
-sub bits_per_pixel {
-    my ($self) = @_;
-    return $self->{bits_per_pixel};
-}
-
-sub width {
-    my ($self) = @_;
-    return $self->{width};
-}
-
-sub height {
-    my ($self) = @_;
-    return $self->{height};
-}
-
-sub len_image {
-    my ($self) = @_;
-    return $self->{len_image};
-}
-
-sub image {
-    my ($self) = @_;
-    return $self->{image};
 }
 
 1;

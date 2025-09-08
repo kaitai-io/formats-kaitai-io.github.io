@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.Warcraft2Pud = factory(root.KaitaiStream);
+    factory(root.Warcraft2Pud || (root.Warcraft2Pud = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Warcraft2Pud_, KaitaiStream) {
 /**
  * Warcraft II game engine uses this format for map files. External
  * maps can be edited by official Warcraft II map editor and saved in
@@ -275,11 +275,141 @@ var Warcraft2Pud = (function() {
     }
   }
 
+  var Section = Warcraft2Pud.Section = (function() {
+    function Section(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Section.prototype._read = function() {
+      this.name = KaitaiStream.bytesToStr(this._io.readBytes(4), "ASCII");
+      this.size = this._io.readU4le();
+      switch (this.name) {
+      case "DIM ":
+        this._raw_body = this._io.readBytes(this.size);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new SectionDim(_io__raw_body, this, this._root);
+        break;
+      case "ERA ":
+        this._raw_body = this._io.readBytes(this.size);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new SectionEra(_io__raw_body, this, this._root);
+        break;
+      case "ERAX":
+        this._raw_body = this._io.readBytes(this.size);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new SectionEra(_io__raw_body, this, this._root);
+        break;
+      case "OWNR":
+        this._raw_body = this._io.readBytes(this.size);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new SectionOwnr(_io__raw_body, this, this._root);
+        break;
+      case "SGLD":
+        this._raw_body = this._io.readBytes(this.size);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new SectionStartingResource(_io__raw_body, this, this._root);
+        break;
+      case "SLBR":
+        this._raw_body = this._io.readBytes(this.size);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new SectionStartingResource(_io__raw_body, this, this._root);
+        break;
+      case "SOIL":
+        this._raw_body = this._io.readBytes(this.size);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new SectionStartingResource(_io__raw_body, this, this._root);
+        break;
+      case "TYPE":
+        this._raw_body = this._io.readBytes(this.size);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new SectionType(_io__raw_body, this, this._root);
+        break;
+      case "UNIT":
+        this._raw_body = this._io.readBytes(this.size);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new SectionUnit(_io__raw_body, this, this._root);
+        break;
+      case "VER ":
+        this._raw_body = this._io.readBytes(this.size);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new SectionVer(_io__raw_body, this, this._root);
+        break;
+      default:
+        this.body = this._io.readBytes(this.size);
+        break;
+      }
+    }
+
+    return Section;
+  })();
+
+  var SectionDim = Warcraft2Pud.SectionDim = (function() {
+    function SectionDim(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    SectionDim.prototype._read = function() {
+      this.x = this._io.readU2le();
+      this.y = this._io.readU2le();
+    }
+
+    return SectionDim;
+  })();
+
+  /**
+   * Section that specifies terrain type for this map.
+   */
+
+  var SectionEra = Warcraft2Pud.SectionEra = (function() {
+    function SectionEra(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    SectionEra.prototype._read = function() {
+      this.terrain = this._io.readU2le();
+    }
+
+    return SectionEra;
+  })();
+
+  /**
+   * Section that specifies who controls each player.
+   */
+
+  var SectionOwnr = Warcraft2Pud.SectionOwnr = (function() {
+    function SectionOwnr(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    SectionOwnr.prototype._read = function() {
+      this.controllerByPlayer = [];
+      var i = 0;
+      while (!this._io.isEof()) {
+        this.controllerByPlayer.push(this._io.readU1());
+        i++;
+      }
+    }
+
+    return SectionOwnr;
+  })();
+
   var SectionStartingResource = Warcraft2Pud.SectionStartingResource = (function() {
     function SectionStartingResource(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -296,60 +426,6 @@ var Warcraft2Pud = (function() {
   })();
 
   /**
-   * Section that specifies terrain type for this map.
-   */
-
-  var SectionEra = Warcraft2Pud.SectionEra = (function() {
-    function SectionEra(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    SectionEra.prototype._read = function() {
-      this.terrain = this._io.readU2le();
-    }
-
-    return SectionEra;
-  })();
-
-  /**
-   * Section that specifies format version.
-   */
-
-  var SectionVer = Warcraft2Pud.SectionVer = (function() {
-    function SectionVer(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    SectionVer.prototype._read = function() {
-      this.version = this._io.readU2le();
-    }
-
-    return SectionVer;
-  })();
-
-  var SectionDim = Warcraft2Pud.SectionDim = (function() {
-    function SectionDim(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    SectionDim.prototype._read = function() {
-      this.x = this._io.readU2le();
-      this.y = this._io.readU2le();
-    }
-
-    return SectionDim;
-  })();
-
-  /**
    * Section that confirms that this file is a "map file" by certain
    * magic string and supplies a tag that could be used in
    * multiplayer to check that all player use the same version of the
@@ -360,14 +436,14 @@ var Warcraft2Pud = (function() {
     function SectionType(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     SectionType.prototype._read = function() {
       this.magic = this._io.readBytes(10);
-      if (!((KaitaiStream.byteArrayCompare(this.magic, [87, 65, 82, 50, 32, 77, 65, 80, 0, 0]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([87, 65, 82, 50, 32, 77, 65, 80, 0, 0], this.magic, this._io, "/types/section_type/seq/0");
+      if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([87, 65, 82, 50, 32, 77, 65, 80, 0, 0])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([87, 65, 82, 50, 32, 77, 65, 80, 0, 0]), this.magic, this._io, "/types/section_type/seq/0");
       }
       this.unused = this._io.readBytes(2);
       this.idTag = this._io.readU4le();
@@ -388,7 +464,7 @@ var Warcraft2Pud = (function() {
     function SectionUnit(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -404,106 +480,30 @@ var Warcraft2Pud = (function() {
     return SectionUnit;
   })();
 
-  var Section = Warcraft2Pud.Section = (function() {
-    function Section(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Section.prototype._read = function() {
-      this.name = KaitaiStream.bytesToStr(this._io.readBytes(4), "ASCII");
-      this.size = this._io.readU4le();
-      switch (this.name) {
-      case "SLBR":
-        this._raw_body = this._io.readBytes(this.size);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new SectionStartingResource(_io__raw_body, this, this._root);
-        break;
-      case "ERAX":
-        this._raw_body = this._io.readBytes(this.size);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new SectionEra(_io__raw_body, this, this._root);
-        break;
-      case "OWNR":
-        this._raw_body = this._io.readBytes(this.size);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new SectionOwnr(_io__raw_body, this, this._root);
-        break;
-      case "ERA ":
-        this._raw_body = this._io.readBytes(this.size);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new SectionEra(_io__raw_body, this, this._root);
-        break;
-      case "SGLD":
-        this._raw_body = this._io.readBytes(this.size);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new SectionStartingResource(_io__raw_body, this, this._root);
-        break;
-      case "VER ":
-        this._raw_body = this._io.readBytes(this.size);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new SectionVer(_io__raw_body, this, this._root);
-        break;
-      case "SOIL":
-        this._raw_body = this._io.readBytes(this.size);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new SectionStartingResource(_io__raw_body, this, this._root);
-        break;
-      case "UNIT":
-        this._raw_body = this._io.readBytes(this.size);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new SectionUnit(_io__raw_body, this, this._root);
-        break;
-      case "DIM ":
-        this._raw_body = this._io.readBytes(this.size);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new SectionDim(_io__raw_body, this, this._root);
-        break;
-      case "TYPE":
-        this._raw_body = this._io.readBytes(this.size);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new SectionType(_io__raw_body, this, this._root);
-        break;
-      default:
-        this.body = this._io.readBytes(this.size);
-        break;
-      }
-    }
-
-    return Section;
-  })();
-
   /**
-   * Section that specifies who controls each player.
+   * Section that specifies format version.
    */
 
-  var SectionOwnr = Warcraft2Pud.SectionOwnr = (function() {
-    function SectionOwnr(_io, _parent, _root) {
+  var SectionVer = Warcraft2Pud.SectionVer = (function() {
+    function SectionVer(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    SectionOwnr.prototype._read = function() {
-      this.controllerByPlayer = [];
-      var i = 0;
-      while (!this._io.isEof()) {
-        this.controllerByPlayer.push(this._io.readU1());
-        i++;
-      }
+    SectionVer.prototype._read = function() {
+      this.version = this._io.readU2le();
     }
 
-    return SectionOwnr;
+    return SectionVer;
   })();
 
   var Unit = Warcraft2Pud.Unit = (function() {
     function Unit(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -519,7 +519,7 @@ var Warcraft2Pud = (function() {
         if (this._m_resource !== undefined)
           return this._m_resource;
         if ( ((this.uType == Warcraft2Pud.UnitType.GOLD_MINE) || (this.uType == Warcraft2Pud.UnitType.HUMAN_OIL_WELL) || (this.uType == Warcraft2Pud.UnitType.ORC_OIL_WELL) || (this.uType == Warcraft2Pud.UnitType.OIL_PATCH)) ) {
-          this._m_resource = (this.options * 2500);
+          this._m_resource = this.options * 2500;
         }
         return this._m_resource;
       }
@@ -534,5 +534,5 @@ var Warcraft2Pud = (function() {
 
   return Warcraft2Pud;
 })();
-return Warcraft2Pud;
-}));
+Warcraft2Pud_.Warcraft2Pud = Warcraft2Pud;
+});

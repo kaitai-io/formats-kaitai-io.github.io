@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.Tsm = factory(root.KaitaiStream);
+    factory(root.Tsm || (root.Tsm = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Tsm_, KaitaiStream) {
 /**
  * InfluxDB is a scalable database optimized for storage of time
  * series, real-time application metrics, operations monitoring events,
@@ -36,14 +36,14 @@ var Tsm = (function() {
     function Header(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     Header.prototype._read = function() {
       this.magic = this._io.readBytes(4);
-      if (!((KaitaiStream.byteArrayCompare(this.magic, [22, 209, 22, 209]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([22, 209, 22, 209], this.magic, this._io, "/types/header/seq/0");
+      if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([22, 209, 22, 209])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([22, 209, 22, 209]), this.magic, this._io, "/types/header/seq/0");
       }
       this.version = this._io.readU1();
     }
@@ -55,7 +55,7 @@ var Tsm = (function() {
     function Index(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -67,7 +67,7 @@ var Tsm = (function() {
       function IndexHeader(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -86,7 +86,7 @@ var Tsm = (function() {
         function IndexEntry(_io, _parent, _root) {
           this._io = _io;
           this._parent = _parent;
-          this._root = _root || this;
+          this._root = _root;
 
           this._read();
         }
@@ -101,13 +101,13 @@ var Tsm = (function() {
           function BlockEntry(_io, _parent, _root) {
             this._io = _io;
             this._parent = _parent;
-            this._root = _root || this;
+            this._root = _root;
 
             this._read();
           }
           BlockEntry.prototype._read = function() {
             this.crc32 = this._io.readU4be();
-            this.data = this._io.readBytes((this._parent.blockSize - 4));
+            this.data = this._io.readBytes(this._parent.blockSize - 4);
           }
 
           return BlockEntry;
@@ -142,7 +142,7 @@ var Tsm = (function() {
           var _ = new IndexHeader(this._io, this, this._root);
           this._m_entries.push(_);
           i++;
-        } while (!(this._io.pos == (this._io.size - 8)));
+        } while (!(this._io.pos == this._io.size - 8));
         this._io.seek(_pos);
         return this._m_entries;
       }
@@ -155,7 +155,7 @@ var Tsm = (function() {
       if (this._m_index !== undefined)
         return this._m_index;
       var _pos = this._io.pos;
-      this._io.seek((this._io.size - 8));
+      this._io.seek(this._io.size - 8);
       this._m_index = new Index(this._io, this, this._root);
       this._io.seek(_pos);
       return this._m_index;
@@ -164,5 +164,5 @@ var Tsm = (function() {
 
   return Tsm;
 })();
-return Tsm;
-}));
+Tsm_.Tsm = Tsm;
+});

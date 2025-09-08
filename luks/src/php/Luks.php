@@ -8,8 +8,8 @@
 
 namespace {
     class Luks extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Luks $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Luks $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -21,7 +21,7 @@ namespace {
             if ($this->_m_payload !== null)
                 return $this->_m_payload;
             $_pos = $this->_io->pos();
-            $this->_io->seek(($this->partitionHeader()->payloadOffset() * 512));
+            $this->_io->seek($this->partitionHeader()->payloadOffset() * 512);
             $this->_m_payload = $this->_io->readBytesFull();
             $this->_io->seek($_pos);
             return $this->_m_payload;
@@ -33,19 +33,19 @@ namespace {
 
 namespace Luks {
     class PartitionHeader extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Luks $_parent = null, \Luks $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Luks $_parent = null, ?\Luks $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic = $this->_io->readBytes(6);
-            if (!($this->magic() == "\x4C\x55\x4B\x53\xBA\xBE")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x4C\x55\x4B\x53\xBA\xBE", $this->magic(), $this->_io(), "/types/partition_header/seq/0");
+            if (!($this->_m_magic == "\x4C\x55\x4B\x53\xBA\xBE")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x4C\x55\x4B\x53\xBA\xBE", $this->_m_magic, $this->_io, "/types/partition_header/seq/0");
             }
             $this->_m_version = $this->_io->readBytes(2);
-            if (!($this->version() == "\x00\x01")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00\x01", $this->version(), $this->_io(), "/types/partition_header/seq/1");
+            if (!($this->_m_version == "\x00\x01")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00\x01", $this->_m_version, $this->_io, "/types/partition_header/seq/1");
             }
             $this->_m_cipherNameSpecification = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(32), "ASCII");
             $this->_m_cipherModeSpecification = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(32), "ASCII");
@@ -91,7 +91,7 @@ namespace Luks {
 
 namespace Luks\PartitionHeader {
     class KeySlot extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Luks\PartitionHeader $_parent = null, \Luks $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Luks\PartitionHeader $_parent = null, ?\Luks $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -108,8 +108,8 @@ namespace Luks\PartitionHeader {
             if ($this->_m_keyMaterial !== null)
                 return $this->_m_keyMaterial;
             $_pos = $this->_io->pos();
-            $this->_io->seek(($this->startSectorOfKeyMaterial() * 512));
-            $this->_m_keyMaterial = $this->_io->readBytes(($this->_parent()->numberOfKeyBytes() * $this->numberOfAntiForensicStripes()));
+            $this->_io->seek($this->startSectorOfKeyMaterial() * 512);
+            $this->_m_keyMaterial = $this->_io->readBytes($this->_parent()->numberOfKeyBytes() * $this->numberOfAntiForensicStripes());
             $this->_io->seek($_pos);
             return $this->_m_keyMaterial;
         }
@@ -130,5 +130,11 @@ namespace Luks\PartitionHeader\KeySlot {
     class KeySlotStates {
         const DISABLED_KEY_SLOT = 57005;
         const ENABLED_KEY_SLOT = 11301363;
+
+        private const _VALUES = [57005 => true, 11301363 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

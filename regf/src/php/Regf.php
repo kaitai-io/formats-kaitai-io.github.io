@@ -21,8 +21,8 @@
 
 namespace {
     class Regf extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Regf $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Regf $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -48,8 +48,99 @@ namespace {
 }
 
 namespace Regf {
+    class FileHeader extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Regf $_parent = null, ?\Regf $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_signature = $this->_io->readBytes(4);
+            if (!($this->_m_signature == "\x72\x65\x67\x66")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x72\x65\x67\x66", $this->_m_signature, $this->_io, "/types/file_header/seq/0");
+            }
+            $this->_m_primarySequenceNumber = $this->_io->readU4le();
+            $this->_m_secondarySequenceNumber = $this->_io->readU4le();
+            $this->_m_lastModificationDateAndTime = new \Regf\Filetime($this->_io, $this, $this->_root);
+            $this->_m_majorVersion = $this->_io->readU4le();
+            $this->_m_minorVersion = $this->_io->readU4le();
+            $this->_m_type = $this->_io->readU4le();
+            $this->_m_format = $this->_io->readU4le();
+            $this->_m_rootKeyOffset = $this->_io->readU4le();
+            $this->_m_hiveBinsDataSize = $this->_io->readU4le();
+            $this->_m_clusteringFactor = $this->_io->readU4le();
+            $this->_m_unknown1 = $this->_io->readBytes(64);
+            $this->_m_unknown2 = $this->_io->readBytes(396);
+            $this->_m_checksum = $this->_io->readU4le();
+            $this->_m_reserved = $this->_io->readBytes(3576);
+            $this->_m_bootType = $this->_io->readU4le();
+            $this->_m_bootRecover = $this->_io->readU4le();
+        }
+        protected $_m_signature;
+        protected $_m_primarySequenceNumber;
+        protected $_m_secondarySequenceNumber;
+        protected $_m_lastModificationDateAndTime;
+        protected $_m_majorVersion;
+        protected $_m_minorVersion;
+        protected $_m_type;
+        protected $_m_format;
+        protected $_m_rootKeyOffset;
+        protected $_m_hiveBinsDataSize;
+        protected $_m_clusteringFactor;
+        protected $_m_unknown1;
+        protected $_m_unknown2;
+        protected $_m_checksum;
+        protected $_m_reserved;
+        protected $_m_bootType;
+        protected $_m_bootRecover;
+        public function signature() { return $this->_m_signature; }
+        public function primarySequenceNumber() { return $this->_m_primarySequenceNumber; }
+        public function secondarySequenceNumber() { return $this->_m_secondarySequenceNumber; }
+        public function lastModificationDateAndTime() { return $this->_m_lastModificationDateAndTime; }
+        public function majorVersion() { return $this->_m_majorVersion; }
+        public function minorVersion() { return $this->_m_minorVersion; }
+        public function type() { return $this->_m_type; }
+        public function format() { return $this->_m_format; }
+        public function rootKeyOffset() { return $this->_m_rootKeyOffset; }
+        public function hiveBinsDataSize() { return $this->_m_hiveBinsDataSize; }
+        public function clusteringFactor() { return $this->_m_clusteringFactor; }
+        public function unknown1() { return $this->_m_unknown1; }
+        public function unknown2() { return $this->_m_unknown2; }
+        public function checksum() { return $this->_m_checksum; }
+        public function reserved() { return $this->_m_reserved; }
+        public function bootType() { return $this->_m_bootType; }
+        public function bootRecover() { return $this->_m_bootRecover; }
+    }
+}
+
+namespace Regf\FileHeader {
+    class FileFormat {
+        const DIRECT_MEMORY_LOAD = 1;
+
+        private const _VALUES = [1 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
+    }
+}
+
+namespace Regf\FileHeader {
+    class FileType {
+        const NORMAL = 0;
+        const TRANSACTION_LOG = 1;
+
+        private const _VALUES = [0 => true, 1 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
+    }
+}
+
+namespace Regf {
     class Filetime extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Regf $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Regf $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -64,7 +155,7 @@ namespace Regf {
 
 namespace Regf {
     class HiveBin extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Regf $_parent = null, \Regf $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Regf $_parent = null, ?\Regf $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -86,114 +177,53 @@ namespace Regf {
 }
 
 namespace Regf {
-    class HiveBinHeader extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Regf\HiveBin $_parent = null, \Regf $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_signature = $this->_io->readBytes(4);
-            if (!($this->signature() == "\x68\x62\x69\x6E")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x68\x62\x69\x6E", $this->signature(), $this->_io(), "/types/hive_bin_header/seq/0");
-            }
-            $this->_m_offset = $this->_io->readU4le();
-            $this->_m_size = $this->_io->readU4le();
-            $this->_m_unknown1 = $this->_io->readU4le();
-            $this->_m_unknown2 = $this->_io->readU4le();
-            $this->_m_timestamp = new \Regf\Filetime($this->_io, $this, $this->_root);
-            $this->_m_unknown4 = $this->_io->readU4le();
-        }
-        protected $_m_signature;
-        protected $_m_offset;
-        protected $_m_size;
-        protected $_m_unknown1;
-        protected $_m_unknown2;
-        protected $_m_timestamp;
-        protected $_m_unknown4;
-        public function signature() { return $this->_m_signature; }
-
-        /**
-         * The offset of the hive bin, Value in bytes and relative from
-         * the start of the hive bin data
-         */
-        public function offset() { return $this->_m_offset; }
-
-        /**
-         * Size of the hive bin
-         */
-        public function size() { return $this->_m_size; }
-
-        /**
-         * 0 most of the time, can contain remnant data
-         */
-        public function unknown1() { return $this->_m_unknown1; }
-
-        /**
-         * 0 most of the time, can contain remnant data
-         */
-        public function unknown2() { return $this->_m_unknown2; }
-
-        /**
-         * Only the root (first) hive bin seems to contain a valid FILETIME
-         */
-        public function timestamp() { return $this->_m_timestamp; }
-
-        /**
-         * Contains number of bytes
-         */
-        public function unknown4() { return $this->_m_unknown4; }
-    }
-}
-
-namespace Regf {
     class HiveBinCell extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Regf\HiveBin $_parent = null, \Regf $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Regf\HiveBin $_parent = null, ?\Regf $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_cellSizeRaw = $this->_io->readS4le();
-            $this->_m_identifier = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(2), "ascii");
+            $this->_m_identifier = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(2), "ASCII");
             switch ($this->identifier()) {
+                case "lf":
+                    $this->_m__raw_data = $this->_io->readBytes(($this->cellSize() - 2) - 4);
+                    $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                    $this->_m_data = new \Regf\HiveBinCell\SubKeyListLhLf($_io__raw_data, $this, $this->_root);
+                    break;
+                case "lh":
+                    $this->_m__raw_data = $this->_io->readBytes(($this->cellSize() - 2) - 4);
+                    $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                    $this->_m_data = new \Regf\HiveBinCell\SubKeyListLhLf($_io__raw_data, $this, $this->_root);
+                    break;
                 case "li":
-                    $this->_m__raw_data = $this->_io->readBytes((($this->cellSize() - 2) - 4));
+                    $this->_m__raw_data = $this->_io->readBytes(($this->cellSize() - 2) - 4);
                     $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
                     $this->_m_data = new \Regf\HiveBinCell\SubKeyListLi($_io__raw_data, $this, $this->_root);
                     break;
-                case "vk":
-                    $this->_m__raw_data = $this->_io->readBytes((($this->cellSize() - 2) - 4));
-                    $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                    $this->_m_data = new \Regf\HiveBinCell\SubKeyListVk($_io__raw_data, $this, $this->_root);
-                    break;
-                case "lf":
-                    $this->_m__raw_data = $this->_io->readBytes((($this->cellSize() - 2) - 4));
-                    $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                    $this->_m_data = new \Regf\HiveBinCell\SubKeyListLhLf($_io__raw_data, $this, $this->_root);
-                    break;
-                case "ri":
-                    $this->_m__raw_data = $this->_io->readBytes((($this->cellSize() - 2) - 4));
-                    $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                    $this->_m_data = new \Regf\HiveBinCell\SubKeyListRi($_io__raw_data, $this, $this->_root);
-                    break;
-                case "lh":
-                    $this->_m__raw_data = $this->_io->readBytes((($this->cellSize() - 2) - 4));
-                    $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                    $this->_m_data = new \Regf\HiveBinCell\SubKeyListLhLf($_io__raw_data, $this, $this->_root);
-                    break;
                 case "nk":
-                    $this->_m__raw_data = $this->_io->readBytes((($this->cellSize() - 2) - 4));
+                    $this->_m__raw_data = $this->_io->readBytes(($this->cellSize() - 2) - 4);
                     $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
                     $this->_m_data = new \Regf\HiveBinCell\NamedKey($_io__raw_data, $this, $this->_root);
                     break;
+                case "ri":
+                    $this->_m__raw_data = $this->_io->readBytes(($this->cellSize() - 2) - 4);
+                    $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                    $this->_m_data = new \Regf\HiveBinCell\SubKeyListRi($_io__raw_data, $this, $this->_root);
+                    break;
                 case "sk":
-                    $this->_m__raw_data = $this->_io->readBytes((($this->cellSize() - 2) - 4));
+                    $this->_m__raw_data = $this->_io->readBytes(($this->cellSize() - 2) - 4);
                     $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
                     $this->_m_data = new \Regf\HiveBinCell\SubKeyListSk($_io__raw_data, $this, $this->_root);
                     break;
+                case "vk":
+                    $this->_m__raw_data = $this->_io->readBytes(($this->cellSize() - 2) - 4);
+                    $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                    $this->_m_data = new \Regf\HiveBinCell\SubKeyListVk($_io__raw_data, $this, $this->_root);
+                    break;
                 default:
-                    $this->_m_data = $this->_io->readBytes((($this->cellSize() - 2) - 4));
+                    $this->_m_data = $this->_io->readBytes(($this->cellSize() - 2) - 4);
                     break;
             }
         }
@@ -201,7 +231,7 @@ namespace Regf {
         public function cellSize() {
             if ($this->_m_cellSize !== null)
                 return $this->_m_cellSize;
-            $this->_m_cellSize = (($this->cellSizeRaw() < 0 ? -1 : 1) * $this->cellSizeRaw());
+            $this->_m_cellSize = ($this->cellSizeRaw() < 0 ? -1 : 1) * $this->cellSizeRaw();
             return $this->_m_cellSize;
         }
         protected $_m_isAllocated;
@@ -223,167 +253,8 @@ namespace Regf {
 }
 
 namespace Regf\HiveBinCell {
-    class SubKeyListVk extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Regf\HiveBinCell $_parent = null, \Regf $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_valueNameSize = $this->_io->readU2le();
-            $this->_m_dataSize = $this->_io->readU4le();
-            $this->_m_dataOffset = $this->_io->readU4le();
-            $this->_m_dataType = $this->_io->readU4le();
-            $this->_m_flags = $this->_io->readU2le();
-            $this->_m_padding = $this->_io->readU2le();
-            if ($this->flags() == \Regf\HiveBinCell\SubKeyListVk\VkFlags::VALUE_COMP_NAME) {
-                $this->_m_valueName = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->valueNameSize()), "ascii");
-            }
-        }
-        protected $_m_valueNameSize;
-        protected $_m_dataSize;
-        protected $_m_dataOffset;
-        protected $_m_dataType;
-        protected $_m_flags;
-        protected $_m_padding;
-        protected $_m_valueName;
-        public function valueNameSize() { return $this->_m_valueNameSize; }
-        public function dataSize() { return $this->_m_dataSize; }
-        public function dataOffset() { return $this->_m_dataOffset; }
-        public function dataType() { return $this->_m_dataType; }
-        public function flags() { return $this->_m_flags; }
-        public function padding() { return $this->_m_padding; }
-        public function valueName() { return $this->_m_valueName; }
-    }
-}
-
-namespace Regf\HiveBinCell\SubKeyListVk {
-    class DataTypeEnum {
-        const REG_NONE = 0;
-        const REG_SZ = 1;
-        const REG_EXPAND_SZ = 2;
-        const REG_BINARY = 3;
-        const REG_DWORD = 4;
-        const REG_DWORD_BIG_ENDIAN = 5;
-        const REG_LINK = 6;
-        const REG_MULTI_SZ = 7;
-        const REG_RESOURCE_LIST = 8;
-        const REG_FULL_RESOURCE_DESCRIPTOR = 9;
-        const REG_RESOURCE_REQUIREMENTS_LIST = 10;
-        const REG_QWORD = 11;
-    }
-}
-
-namespace Regf\HiveBinCell\SubKeyListVk {
-    class VkFlags {
-        const VALUE_COMP_NAME = 1;
-    }
-}
-
-namespace Regf\HiveBinCell {
-    class SubKeyListLhLf extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Regf\HiveBinCell $_parent = null, \Regf $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_count = $this->_io->readU2le();
-            $this->_m_items = [];
-            $n = $this->count();
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_items[] = new \Regf\HiveBinCell\SubKeyListLhLf\Item($this->_io, $this, $this->_root);
-            }
-        }
-        protected $_m_count;
-        protected $_m_items;
-        public function count() { return $this->_m_count; }
-        public function items() { return $this->_m_items; }
-    }
-}
-
-namespace Regf\HiveBinCell\SubKeyListLhLf {
-    class Item extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Regf\HiveBinCell\SubKeyListLhLf $_parent = null, \Regf $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_namedKeyOffset = $this->_io->readU4le();
-            $this->_m_hashValue = $this->_io->readU4le();
-        }
-        protected $_m_namedKeyOffset;
-        protected $_m_hashValue;
-        public function namedKeyOffset() { return $this->_m_namedKeyOffset; }
-        public function hashValue() { return $this->_m_hashValue; }
-    }
-}
-
-namespace Regf\HiveBinCell {
-    class SubKeyListSk extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Regf\HiveBinCell $_parent = null, \Regf $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_unknown1 = $this->_io->readU2le();
-            $this->_m_previousSecurityKeyOffset = $this->_io->readU4le();
-            $this->_m_nextSecurityKeyOffset = $this->_io->readU4le();
-            $this->_m_referenceCount = $this->_io->readU4le();
-        }
-        protected $_m_unknown1;
-        protected $_m_previousSecurityKeyOffset;
-        protected $_m_nextSecurityKeyOffset;
-        protected $_m_referenceCount;
-        public function unknown1() { return $this->_m_unknown1; }
-        public function previousSecurityKeyOffset() { return $this->_m_previousSecurityKeyOffset; }
-        public function nextSecurityKeyOffset() { return $this->_m_nextSecurityKeyOffset; }
-        public function referenceCount() { return $this->_m_referenceCount; }
-    }
-}
-
-namespace Regf\HiveBinCell {
-    class SubKeyListLi extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Regf\HiveBinCell $_parent = null, \Regf $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_count = $this->_io->readU2le();
-            $this->_m_items = [];
-            $n = $this->count();
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_items[] = new \Regf\HiveBinCell\SubKeyListLi\Item($this->_io, $this, $this->_root);
-            }
-        }
-        protected $_m_count;
-        protected $_m_items;
-        public function count() { return $this->_m_count; }
-        public function items() { return $this->_m_items; }
-    }
-}
-
-namespace Regf\HiveBinCell\SubKeyListLi {
-    class Item extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Regf\HiveBinCell\SubKeyListLi $_parent = null, \Regf $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_namedKeyOffset = $this->_io->readU4le();
-        }
-        protected $_m_namedKeyOffset;
-        public function namedKeyOffset() { return $this->_m_namedKeyOffset; }
-    }
-}
-
-namespace Regf\HiveBinCell {
     class NamedKey extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Regf\HiveBinCell $_parent = null, \Regf $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Regf\HiveBinCell $_parent = null, ?\Regf $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -408,7 +279,7 @@ namespace Regf\HiveBinCell {
             $this->_m_keyNameSize = $this->_io->readU2le();
             $this->_m_classNameSize = $this->_io->readU2le();
             $this->_m_unknownStringSize = $this->_io->readU4le();
-            $this->_m_unknownString = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->unknownStringSize()), "ascii");
+            $this->_m_unknownString = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->unknownStringSize()), "ASCII");
         }
         protected $_m_flags;
         protected $_m_lastKeyWrittenDateAndTime;
@@ -467,12 +338,95 @@ namespace Regf\HiveBinCell\NamedKey {
         const KEY_VIRTUAL_STORE = 512;
         const UNKNOWN1 = 4096;
         const UNKNOWN2 = 16384;
+
+        private const _VALUES = [1 => true, 2 => true, 4 => true, 8 => true, 16 => true, 32 => true, 64 => true, 128 => true, 256 => true, 512 => true, 4096 => true, 16384 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
+    }
+}
+
+namespace Regf\HiveBinCell {
+    class SubKeyListLhLf extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Regf\HiveBinCell $_parent = null, ?\Regf $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_count = $this->_io->readU2le();
+            $this->_m_items = [];
+            $n = $this->count();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_items[] = new \Regf\HiveBinCell\SubKeyListLhLf\Item($this->_io, $this, $this->_root);
+            }
+        }
+        protected $_m_count;
+        protected $_m_items;
+        public function count() { return $this->_m_count; }
+        public function items() { return $this->_m_items; }
+    }
+}
+
+namespace Regf\HiveBinCell\SubKeyListLhLf {
+    class Item extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Regf\HiveBinCell\SubKeyListLhLf $_parent = null, ?\Regf $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_namedKeyOffset = $this->_io->readU4le();
+            $this->_m_hashValue = $this->_io->readU4le();
+        }
+        protected $_m_namedKeyOffset;
+        protected $_m_hashValue;
+        public function namedKeyOffset() { return $this->_m_namedKeyOffset; }
+        public function hashValue() { return $this->_m_hashValue; }
+    }
+}
+
+namespace Regf\HiveBinCell {
+    class SubKeyListLi extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Regf\HiveBinCell $_parent = null, ?\Regf $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_count = $this->_io->readU2le();
+            $this->_m_items = [];
+            $n = $this->count();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_items[] = new \Regf\HiveBinCell\SubKeyListLi\Item($this->_io, $this, $this->_root);
+            }
+        }
+        protected $_m_count;
+        protected $_m_items;
+        public function count() { return $this->_m_count; }
+        public function items() { return $this->_m_items; }
+    }
+}
+
+namespace Regf\HiveBinCell\SubKeyListLi {
+    class Item extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Regf\HiveBinCell\SubKeyListLi $_parent = null, ?\Regf $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_namedKeyOffset = $this->_io->readU4le();
+        }
+        protected $_m_namedKeyOffset;
+        public function namedKeyOffset() { return $this->_m_namedKeyOffset; }
     }
 }
 
 namespace Regf\HiveBinCell {
     class SubKeyListRi extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Regf\HiveBinCell $_parent = null, \Regf $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Regf\HiveBinCell $_parent = null, ?\Regf $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -494,7 +448,7 @@ namespace Regf\HiveBinCell {
 
 namespace Regf\HiveBinCell\SubKeyListRi {
     class Item extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Regf\HiveBinCell\SubKeyListRi $_parent = null, \Regf $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Regf\HiveBinCell\SubKeyListRi $_parent = null, ?\Regf $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -507,81 +461,157 @@ namespace Regf\HiveBinCell\SubKeyListRi {
     }
 }
 
+namespace Regf\HiveBinCell {
+    class SubKeyListSk extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Regf\HiveBinCell $_parent = null, ?\Regf $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_unknown1 = $this->_io->readU2le();
+            $this->_m_previousSecurityKeyOffset = $this->_io->readU4le();
+            $this->_m_nextSecurityKeyOffset = $this->_io->readU4le();
+            $this->_m_referenceCount = $this->_io->readU4le();
+        }
+        protected $_m_unknown1;
+        protected $_m_previousSecurityKeyOffset;
+        protected $_m_nextSecurityKeyOffset;
+        protected $_m_referenceCount;
+        public function unknown1() { return $this->_m_unknown1; }
+        public function previousSecurityKeyOffset() { return $this->_m_previousSecurityKeyOffset; }
+        public function nextSecurityKeyOffset() { return $this->_m_nextSecurityKeyOffset; }
+        public function referenceCount() { return $this->_m_referenceCount; }
+    }
+}
+
+namespace Regf\HiveBinCell {
+    class SubKeyListVk extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Regf\HiveBinCell $_parent = null, ?\Regf $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_valueNameSize = $this->_io->readU2le();
+            $this->_m_dataSize = $this->_io->readU4le();
+            $this->_m_dataOffset = $this->_io->readU4le();
+            $this->_m_dataType = $this->_io->readU4le();
+            $this->_m_flags = $this->_io->readU2le();
+            $this->_m_padding = $this->_io->readU2le();
+            if ($this->flags() == \Regf\HiveBinCell\SubKeyListVk\VkFlags::VALUE_COMP_NAME) {
+                $this->_m_valueName = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->valueNameSize()), "ASCII");
+            }
+        }
+        protected $_m_valueNameSize;
+        protected $_m_dataSize;
+        protected $_m_dataOffset;
+        protected $_m_dataType;
+        protected $_m_flags;
+        protected $_m_padding;
+        protected $_m_valueName;
+        public function valueNameSize() { return $this->_m_valueNameSize; }
+        public function dataSize() { return $this->_m_dataSize; }
+        public function dataOffset() { return $this->_m_dataOffset; }
+        public function dataType() { return $this->_m_dataType; }
+        public function flags() { return $this->_m_flags; }
+        public function padding() { return $this->_m_padding; }
+        public function valueName() { return $this->_m_valueName; }
+    }
+}
+
+namespace Regf\HiveBinCell\SubKeyListVk {
+    class DataTypeEnum {
+        const REG_NONE = 0;
+        const REG_SZ = 1;
+        const REG_EXPAND_SZ = 2;
+        const REG_BINARY = 3;
+        const REG_DWORD = 4;
+        const REG_DWORD_BIG_ENDIAN = 5;
+        const REG_LINK = 6;
+        const REG_MULTI_SZ = 7;
+        const REG_RESOURCE_LIST = 8;
+        const REG_FULL_RESOURCE_DESCRIPTOR = 9;
+        const REG_RESOURCE_REQUIREMENTS_LIST = 10;
+        const REG_QWORD = 11;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 7 => true, 8 => true, 9 => true, 10 => true, 11 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
+    }
+}
+
+namespace Regf\HiveBinCell\SubKeyListVk {
+    class VkFlags {
+        const VALUE_COMP_NAME = 1;
+
+        private const _VALUES = [1 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
+    }
+}
+
 namespace Regf {
-    class FileHeader extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Regf $_parent = null, \Regf $_root = null) {
+    class HiveBinHeader extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Regf\HiveBin $_parent = null, ?\Regf $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_signature = $this->_io->readBytes(4);
-            if (!($this->signature() == "\x72\x65\x67\x66")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x72\x65\x67\x66", $this->signature(), $this->_io(), "/types/file_header/seq/0");
+            if (!($this->_m_signature == "\x68\x62\x69\x6E")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x68\x62\x69\x6E", $this->_m_signature, $this->_io, "/types/hive_bin_header/seq/0");
             }
-            $this->_m_primarySequenceNumber = $this->_io->readU4le();
-            $this->_m_secondarySequenceNumber = $this->_io->readU4le();
-            $this->_m_lastModificationDateAndTime = new \Regf\Filetime($this->_io, $this, $this->_root);
-            $this->_m_majorVersion = $this->_io->readU4le();
-            $this->_m_minorVersion = $this->_io->readU4le();
-            $this->_m_type = $this->_io->readU4le();
-            $this->_m_format = $this->_io->readU4le();
-            $this->_m_rootKeyOffset = $this->_io->readU4le();
-            $this->_m_hiveBinsDataSize = $this->_io->readU4le();
-            $this->_m_clusteringFactor = $this->_io->readU4le();
-            $this->_m_unknown1 = $this->_io->readBytes(64);
-            $this->_m_unknown2 = $this->_io->readBytes(396);
-            $this->_m_checksum = $this->_io->readU4le();
-            $this->_m_reserved = $this->_io->readBytes(3576);
-            $this->_m_bootType = $this->_io->readU4le();
-            $this->_m_bootRecover = $this->_io->readU4le();
+            $this->_m_offset = $this->_io->readU4le();
+            $this->_m_size = $this->_io->readU4le();
+            $this->_m_unknown1 = $this->_io->readU4le();
+            $this->_m_unknown2 = $this->_io->readU4le();
+            $this->_m_timestamp = new \Regf\Filetime($this->_io, $this, $this->_root);
+            $this->_m_unknown4 = $this->_io->readU4le();
         }
         protected $_m_signature;
-        protected $_m_primarySequenceNumber;
-        protected $_m_secondarySequenceNumber;
-        protected $_m_lastModificationDateAndTime;
-        protected $_m_majorVersion;
-        protected $_m_minorVersion;
-        protected $_m_type;
-        protected $_m_format;
-        protected $_m_rootKeyOffset;
-        protected $_m_hiveBinsDataSize;
-        protected $_m_clusteringFactor;
+        protected $_m_offset;
+        protected $_m_size;
         protected $_m_unknown1;
         protected $_m_unknown2;
-        protected $_m_checksum;
-        protected $_m_reserved;
-        protected $_m_bootType;
-        protected $_m_bootRecover;
+        protected $_m_timestamp;
+        protected $_m_unknown4;
         public function signature() { return $this->_m_signature; }
-        public function primarySequenceNumber() { return $this->_m_primarySequenceNumber; }
-        public function secondarySequenceNumber() { return $this->_m_secondarySequenceNumber; }
-        public function lastModificationDateAndTime() { return $this->_m_lastModificationDateAndTime; }
-        public function majorVersion() { return $this->_m_majorVersion; }
-        public function minorVersion() { return $this->_m_minorVersion; }
-        public function type() { return $this->_m_type; }
-        public function format() { return $this->_m_format; }
-        public function rootKeyOffset() { return $this->_m_rootKeyOffset; }
-        public function hiveBinsDataSize() { return $this->_m_hiveBinsDataSize; }
-        public function clusteringFactor() { return $this->_m_clusteringFactor; }
+
+        /**
+         * The offset of the hive bin, Value in bytes and relative from
+         * the start of the hive bin data
+         */
+        public function offset() { return $this->_m_offset; }
+
+        /**
+         * Size of the hive bin
+         */
+        public function size() { return $this->_m_size; }
+
+        /**
+         * 0 most of the time, can contain remnant data
+         */
         public function unknown1() { return $this->_m_unknown1; }
+
+        /**
+         * 0 most of the time, can contain remnant data
+         */
         public function unknown2() { return $this->_m_unknown2; }
-        public function checksum() { return $this->_m_checksum; }
-        public function reserved() { return $this->_m_reserved; }
-        public function bootType() { return $this->_m_bootType; }
-        public function bootRecover() { return $this->_m_bootRecover; }
-    }
-}
 
-namespace Regf\FileHeader {
-    class FileType {
-        const NORMAL = 0;
-        const TRANSACTION_LOG = 1;
-    }
-}
+        /**
+         * Only the root (first) hive bin seems to contain a valid FILETIME
+         */
+        public function timestamp() { return $this->_m_timestamp; }
 
-namespace Regf\FileHeader {
-    class FileFormat {
-        const DIRECT_MEMORY_LOAD = 1;
+        /**
+         * Contains number of bytes
+         */
+        public function unknown4() { return $this->_m_unknown4; }
     }
 }

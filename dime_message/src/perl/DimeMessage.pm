@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Encode;
 
 ########################################################################
@@ -31,7 +31,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -41,7 +41,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{records} = ();
+    $self->{records} = [];
     while (!$self->{_io}->is_eof()) {
         push @{$self->{records}}, DimeMessage::Record->new($self->{_io}, $self, $self->{_root});
     }
@@ -50,85 +50,6 @@ sub _read {
 sub records {
     my ($self) = @_;
     return $self->{records};
-}
-
-########################################################################
-package DimeMessage::Padding;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{boundary_padding} = $self->{_io}->read_bytes((-($self->_io()->pos()) % 4));
-}
-
-sub boundary_padding {
-    my ($self) = @_;
-    return $self->{boundary_padding};
-}
-
-########################################################################
-package DimeMessage::OptionField;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{option_elements} = ();
-    while (!$self->{_io}->is_eof()) {
-        push @{$self->{option_elements}}, DimeMessage::OptionElement->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub option_elements {
-    my ($self) = @_;
-    return $self->{option_elements};
 }
 
 ########################################################################
@@ -151,7 +72,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -182,6 +103,85 @@ sub element_data {
 }
 
 ########################################################################
+package DimeMessage::OptionField;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{option_elements} = [];
+    while (!$self->{_io}->is_eof()) {
+        push @{$self->{option_elements}}, DimeMessage::OptionElement->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub option_elements {
+    my ($self) = @_;
+    return $self->{option_elements};
+}
+
+########################################################################
+package DimeMessage::Padding;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{boundary_padding} = $self->{_io}->read_bytes(-($self->_io()->pos()) % 4);
+}
+
+sub boundary_padding {
+    my ($self) = @_;
+    return $self->{boundary_padding};
+}
+
+########################################################################
 package DimeMessage::Record;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -201,7 +201,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 

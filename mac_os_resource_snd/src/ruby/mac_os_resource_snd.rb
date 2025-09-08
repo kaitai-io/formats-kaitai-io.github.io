@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -46,12 +46,16 @@ class MacOsResourceSnd < Kaitai::Struct::Struct
   }
   I__CMD_TYPE = CMD_TYPE.invert
 
-  SOUND_HEADER_TYPE = {
-    0 => :sound_header_type_standard,
-    254 => :sound_header_type_compressed,
-    255 => :sound_header_type_extended,
+  COMPRESSION_TYPE_ENUM = {
+    -2 => :compression_type_enum_variable_compression,
+    -1 => :compression_type_enum_fixed_compression,
+    0 => :compression_type_enum_not_compressed,
+    1 => :compression_type_enum_two_to_one,
+    2 => :compression_type_enum_eight_to_three,
+    3 => :compression_type_enum_three_to_one,
+    4 => :compression_type_enum_six_to_one,
   }
-  I__SOUND_HEADER_TYPE = SOUND_HEADER_TYPE.invert
+  I__COMPRESSION_TYPE_ENUM = COMPRESSION_TYPE_ENUM.invert
 
   DATA_TYPE = {
     1 => :data_type_square_wave_synth,
@@ -59,14 +63,6 @@ class MacOsResourceSnd < Kaitai::Struct::Struct
     5 => :data_type_sampled_synth,
   }
   I__DATA_TYPE = DATA_TYPE.invert
-
-  WAVE_INIT_OPTION = {
-    4 => :wave_init_option_channel0,
-    5 => :wave_init_option_channel1,
-    6 => :wave_init_option_channel2,
-    7 => :wave_init_option_channel3,
-  }
-  I__WAVE_INIT_OPTION = WAVE_INIT_OPTION.invert
 
   INIT_OPTION = {
     2 => :init_option_chan_left,
@@ -80,18 +76,22 @@ class MacOsResourceSnd < Kaitai::Struct::Struct
   }
   I__INIT_OPTION = INIT_OPTION.invert
 
-  COMPRESSION_TYPE_ENUM = {
-    -2 => :compression_type_enum_variable_compression,
-    -1 => :compression_type_enum_fixed_compression,
-    0 => :compression_type_enum_not_compressed,
-    1 => :compression_type_enum_two_to_one,
-    2 => :compression_type_enum_eight_to_three,
-    3 => :compression_type_enum_three_to_one,
-    4 => :compression_type_enum_six_to_one,
+  SOUND_HEADER_TYPE = {
+    0 => :sound_header_type_standard,
+    254 => :sound_header_type_compressed,
+    255 => :sound_header_type_extended,
   }
-  I__COMPRESSION_TYPE_ENUM = COMPRESSION_TYPE_ENUM.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  I__SOUND_HEADER_TYPE = SOUND_HEADER_TYPE.invert
+
+  WAVE_INIT_OPTION = {
+    4 => :wave_init_option_channel0,
+    5 => :wave_init_option_channel1,
+    6 => :wave_init_option_channel2,
+    7 => :wave_init_option_channel3,
+  }
+  I__WAVE_INIT_OPTION = WAVE_INIT_OPTION.invert
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -116,176 +116,14 @@ class MacOsResourceSnd < Kaitai::Struct::Struct
     }
     self
   end
-  class Extended < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @instrument_chunk_ptr = @_io.read_u4be
-      @aes_recording_ptr = @_io.read_u4be
-      self
-    end
-
-    ##
-    # pointer to instrument info
-    attr_reader :instrument_chunk_ptr
-
-    ##
-    # pointer to audio info
-    attr_reader :aes_recording_ptr
-  end
-  class SoundHeader < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      if start_ofs < 0
-        @_unnamed0 = @_io.read_bytes(0)
-      end
-      @sample_ptr = @_io.read_u4be
-      if sound_header_type == :sound_header_type_standard
-        @num_samples = @_io.read_u4be
-      end
-      if  ((sound_header_type == :sound_header_type_extended) || (sound_header_type == :sound_header_type_compressed)) 
-        @num_channels = @_io.read_u4be
-      end
-      @sample_rate = UnsignedFixedPoint.new(@_io, self, @_root)
-      @loop_start = @_io.read_u4be
-      @loop_end = @_io.read_u4be
-      @encode = Kaitai::Struct::Stream::resolve_enum(MacOsResourceSnd::SOUND_HEADER_TYPE, @_io.read_u1)
-      @midi_note = @_io.read_u1
-      if  ((sound_header_type == :sound_header_type_extended) || (sound_header_type == :sound_header_type_compressed)) 
-        @extended_or_compressed = ExtendedOrCompressed.new(@_io, self, @_root)
-      end
-      if sample_ptr == 0
-        @sample_area = @_io.read_bytes((sound_header_type == :sound_header_type_standard ? num_samples : (sound_header_type == :sound_header_type_extended ? (((extended_or_compressed.num_frames * num_channels) * extended_or_compressed.bits_per_sample) / 8) : (_io.size - _io.pos))))
-      end
-      self
-    end
-    def start_ofs
-      return @start_ofs unless @start_ofs.nil?
-      @start_ofs = _io.pos
-      @start_ofs
-    end
-
-    ##
-    # base frequency of sample in Hz
-    # Calculated with the formula (2 ** ((midi_note - 69) / 12)) * 440
-    # @see https://en.wikipedia.org/wiki/MIDI_tuning_standard Source
-    def base_freqeuncy
-      return @base_freqeuncy unless @base_freqeuncy.nil?
-      if  ((midi_note >= 0) && (midi_note < 128)) 
-        @base_freqeuncy = _root.midi_note_to_frequency[midi_note]
-      end
-      @base_freqeuncy
-    end
-    def sound_header_type
-      return @sound_header_type unless @sound_header_type.nil?
-      _pos = @_io.pos
-      @_io.seek((start_ofs + 20))
-      @sound_header_type = Kaitai::Struct::Stream::resolve_enum(MacOsResourceSnd::SOUND_HEADER_TYPE, @_io.read_u1)
-      @_io.seek(_pos)
-      @sound_header_type
-    end
-    attr_reader :_unnamed0
-
-    ##
-    # pointer to samples (or 0 if samples follow data structure)
-    attr_reader :sample_ptr
-
-    ##
-    # number of samples
-    attr_reader :num_samples
-
-    ##
-    # number of channels in sample
-    attr_reader :num_channels
-
-    ##
-    # The rate at which the sample was originally recorded.
-    attr_reader :sample_rate
-
-    ##
-    # loop point beginning
-    attr_reader :loop_start
-
-    ##
-    # loop point ending
-    attr_reader :loop_end
-
-    ##
-    # sample's encoding option
-    attr_reader :encode
-
-    ##
-    # base frequency of sample, expressed as MIDI note values, 60 is middle C
-    attr_reader :midi_note
-    attr_reader :extended_or_compressed
-
-    ##
-    # sampled-sound data
-    attr_reader :sample_area
-  end
-  class UnsignedFixedPoint < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @integer_part = @_io.read_u2be
-      @fraction_part = @_io.read_u2be
-      self
-    end
-    def value
-      return @value unless @value.nil?
-      @value = (integer_part + (fraction_part / 65535.0))
-      @value
-    end
-    attr_reader :integer_part
-    attr_reader :fraction_part
-  end
-  class SoundCommand < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @is_data_offset = @_io.read_bits_int_be(1) != 0
-      @cmd = Kaitai::Struct::Stream::resolve_enum(MacOsResourceSnd::CMD_TYPE, @_io.read_bits_int_be(15))
-      @_io.align_to_byte
-      @param1 = @_io.read_u2be
-      @param2 = @_io.read_u4be
-      self
-    end
-    def sound_header
-      return @sound_header unless @sound_header.nil?
-      if  ((is_data_offset) && (cmd == :cmd_type_buffer_cmd)) 
-        _pos = @_io.pos
-        @_io.seek(param2)
-        @sound_header = SoundHeader.new(@_io, self, @_root)
-        @_io.seek(_pos)
-      end
-      @sound_header
-    end
-    attr_reader :is_data_offset
-    attr_reader :cmd
-    attr_reader :param1
-    attr_reader :param2
-  end
   class Compressed < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @format = (@_io.read_bytes(4)).force_encoding("ASCII")
+      @format = (@_io.read_bytes(4)).force_encoding("ASCII").encode('UTF-8')
       @reserved = @_io.read_bytes(4)
       @state_vars_ptr = @_io.read_u4be
       @left_over_samples_ptr = @_io.read_u4be
@@ -329,8 +167,99 @@ class MacOsResourceSnd < Kaitai::Struct::Struct
     # @see https://vintageapple.org/inside_o/pdf/Inside_Macintosh_Volume_VI_1991.pdf Page 22-49, absolute page number 1169 in the PDF
     attr_reader :synthesizer_id
   end
+  class DataFormat < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @id = Kaitai::Struct::Stream::resolve_enum(MacOsResourceSnd::DATA_TYPE, @_io.read_u2be)
+      @options = @_io.read_u4be
+      self
+    end
+    def comp_init
+      return @comp_init unless @comp_init.nil?
+      @comp_init = Kaitai::Struct::Stream::resolve_enum(MacOsResourceSnd::INIT_OPTION, options & init_comp_mask)
+      @comp_init
+    end
+
+    ##
+    # mask for compression IDs
+    def init_comp_mask
+      return @init_comp_mask unless @init_comp_mask.nil?
+      @init_comp_mask = 65280
+      @init_comp_mask
+    end
+
+    ##
+    # mask for right/left pan values
+    def init_pan_mask
+      return @init_pan_mask unless @init_pan_mask.nil?
+      @init_pan_mask = 3
+      @init_pan_mask
+    end
+
+    ##
+    # mask for mono/stereo values
+    def init_stereo_mask
+      return @init_stereo_mask unless @init_stereo_mask.nil?
+      @init_stereo_mask = 192
+      @init_stereo_mask
+    end
+    def pan_init
+      return @pan_init unless @pan_init.nil?
+      @pan_init = Kaitai::Struct::Stream::resolve_enum(MacOsResourceSnd::INIT_OPTION, options & init_pan_mask)
+      @pan_init
+    end
+    def stereo_init
+      return @stereo_init unless @stereo_init.nil?
+      @stereo_init = Kaitai::Struct::Stream::resolve_enum(MacOsResourceSnd::INIT_OPTION, options & init_stereo_mask)
+      @stereo_init
+    end
+    def wave_init
+      return @wave_init unless @wave_init.nil?
+      if id == :data_type_wave_table_synth
+        @wave_init = Kaitai::Struct::Stream::resolve_enum(MacOsResourceSnd::WAVE_INIT_OPTION, options & wave_init_channel_mask)
+      end
+      @wave_init
+    end
+
+    ##
+    # wave table only, Sound Manager 2.0 and earlier
+    def wave_init_channel_mask
+      return @wave_init_channel_mask unless @wave_init_channel_mask.nil?
+      @wave_init_channel_mask = 7
+      @wave_init_channel_mask
+    end
+    attr_reader :id
+
+    ##
+    # contains initialisation options for the SndNewChannel function
+    attr_reader :options
+  end
+  class Extended < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @instrument_chunk_ptr = @_io.read_u4be
+      @aes_recording_ptr = @_io.read_u4be
+      self
+    end
+
+    ##
+    # pointer to instrument info
+    attr_reader :instrument_chunk_ptr
+
+    ##
+    # pointer to audio info
+    attr_reader :aes_recording_ptr
+  end
   class ExtendedOrCompressed < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -371,76 +300,147 @@ class MacOsResourceSnd < Kaitai::Struct::Struct
     # reserved
     attr_reader :reserved
   end
-  class DataFormat < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  class SoundCommand < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @id = Kaitai::Struct::Stream::resolve_enum(MacOsResourceSnd::DATA_TYPE, @_io.read_u2be)
-      @options = @_io.read_u4be
+      @is_data_offset = @_io.read_bits_int_be(1) != 0
+      @cmd = Kaitai::Struct::Stream::resolve_enum(MacOsResourceSnd::CMD_TYPE, @_io.read_bits_int_be(15))
+      @_io.align_to_byte
+      @param1 = @_io.read_u2be
+      @param2 = @_io.read_u4be
+      self
+    end
+    def sound_header
+      return @sound_header unless @sound_header.nil?
+      if  ((is_data_offset) && (cmd == :cmd_type_buffer_cmd)) 
+        _pos = @_io.pos
+        @_io.seek(param2)
+        @sound_header = SoundHeader.new(@_io, self, @_root)
+        @_io.seek(_pos)
+      end
+      @sound_header
+    end
+    attr_reader :is_data_offset
+    attr_reader :cmd
+    attr_reader :param1
+    attr_reader :param2
+  end
+  class SoundHeader < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      if start_ofs < 0
+        @_unnamed0 = @_io.read_bytes(0)
+      end
+      @sample_ptr = @_io.read_u4be
+      if sound_header_type == :sound_header_type_standard
+        @num_samples = @_io.read_u4be
+      end
+      if  ((sound_header_type == :sound_header_type_extended) || (sound_header_type == :sound_header_type_compressed)) 
+        @num_channels = @_io.read_u4be
+      end
+      @sample_rate = UnsignedFixedPoint.new(@_io, self, @_root)
+      @loop_start = @_io.read_u4be
+      @loop_end = @_io.read_u4be
+      @encode = Kaitai::Struct::Stream::resolve_enum(MacOsResourceSnd::SOUND_HEADER_TYPE, @_io.read_u1)
+      @midi_note = @_io.read_u1
+      if  ((sound_header_type == :sound_header_type_extended) || (sound_header_type == :sound_header_type_compressed)) 
+        @extended_or_compressed = ExtendedOrCompressed.new(@_io, self, @_root)
+      end
+      if sample_ptr == 0
+        @sample_area = @_io.read_bytes((sound_header_type == :sound_header_type_standard ? num_samples : (sound_header_type == :sound_header_type_extended ? ((extended_or_compressed.num_frames * num_channels) * extended_or_compressed.bits_per_sample) / 8 : _io.size - _io.pos)))
+      end
       self
     end
 
     ##
-    # mask for right/left pan values
-    def init_pan_mask
-      return @init_pan_mask unless @init_pan_mask.nil?
-      @init_pan_mask = 3
-      @init_pan_mask
-    end
-
-    ##
-    # wave table only, Sound Manager 2.0 and earlier
-    def wave_init_channel_mask
-      return @wave_init_channel_mask unless @wave_init_channel_mask.nil?
-      @wave_init_channel_mask = 7
-      @wave_init_channel_mask
-    end
-
-    ##
-    # mask for mono/stereo values
-    def init_stereo_mask
-      return @init_stereo_mask unless @init_stereo_mask.nil?
-      @init_stereo_mask = 192
-      @init_stereo_mask
-    end
-    def wave_init
-      return @wave_init unless @wave_init.nil?
-      if id == :data_type_wave_table_synth
-        @wave_init = Kaitai::Struct::Stream::resolve_enum(MacOsResourceSnd::WAVE_INIT_OPTION, (options & wave_init_channel_mask))
+    # base frequency of sample in Hz
+    # Calculated with the formula (2 ** ((midi_note - 69) / 12)) * 440
+    # @see https://en.wikipedia.org/wiki/MIDI_tuning_standard Source
+    def base_freqeuncy
+      return @base_freqeuncy unless @base_freqeuncy.nil?
+      if  ((midi_note >= 0) && (midi_note < 128)) 
+        @base_freqeuncy = _root.midi_note_to_frequency[midi_note]
       end
-      @wave_init
+      @base_freqeuncy
     end
-    def pan_init
-      return @pan_init unless @pan_init.nil?
-      @pan_init = Kaitai::Struct::Stream::resolve_enum(MacOsResourceSnd::INIT_OPTION, (options & init_pan_mask))
-      @pan_init
+    def sound_header_type
+      return @sound_header_type unless @sound_header_type.nil?
+      _pos = @_io.pos
+      @_io.seek(start_ofs + 20)
+      @sound_header_type = Kaitai::Struct::Stream::resolve_enum(MacOsResourceSnd::SOUND_HEADER_TYPE, @_io.read_u1)
+      @_io.seek(_pos)
+      @sound_header_type
     end
+    def start_ofs
+      return @start_ofs unless @start_ofs.nil?
+      @start_ofs = _io.pos
+      @start_ofs
+    end
+    attr_reader :_unnamed0
 
     ##
-    # mask for compression IDs
-    def init_comp_mask
-      return @init_comp_mask unless @init_comp_mask.nil?
-      @init_comp_mask = 65280
-      @init_comp_mask
-    end
-    def stereo_init
-      return @stereo_init unless @stereo_init.nil?
-      @stereo_init = Kaitai::Struct::Stream::resolve_enum(MacOsResourceSnd::INIT_OPTION, (options & init_stereo_mask))
-      @stereo_init
-    end
-    def comp_init
-      return @comp_init unless @comp_init.nil?
-      @comp_init = Kaitai::Struct::Stream::resolve_enum(MacOsResourceSnd::INIT_OPTION, (options & init_comp_mask))
-      @comp_init
-    end
-    attr_reader :id
+    # pointer to samples (or 0 if samples follow data structure)
+    attr_reader :sample_ptr
 
     ##
-    # contains initialisation options for the SndNewChannel function
-    attr_reader :options
+    # number of samples
+    attr_reader :num_samples
+
+    ##
+    # number of channels in sample
+    attr_reader :num_channels
+
+    ##
+    # The rate at which the sample was originally recorded.
+    attr_reader :sample_rate
+
+    ##
+    # loop point beginning
+    attr_reader :loop_start
+
+    ##
+    # loop point ending
+    attr_reader :loop_end
+
+    ##
+    # sample's encoding option
+    attr_reader :encode
+
+    ##
+    # base frequency of sample, expressed as MIDI note values, 60 is middle C
+    attr_reader :midi_note
+    attr_reader :extended_or_compressed
+
+    ##
+    # sampled-sound data
+    attr_reader :sample_area
+  end
+  class UnsignedFixedPoint < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @integer_part = @_io.read_u2be
+      @fraction_part = @_io.read_u2be
+      self
+    end
+    def value
+      return @value unless @value.nil?
+      @value = integer_part + fraction_part / 65535.0
+      @value
+    end
+    attr_reader :integer_part
+    attr_reader :fraction_part
   end
 
   ##

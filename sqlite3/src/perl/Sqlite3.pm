@@ -2,9 +2,9 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
-use Encode;
+use IO::KaitaiStruct 0.011_000;
 use VlqBase128Be;
+use Encode;
 
 ########################################################################
 package Sqlite3;
@@ -20,12 +20,12 @@ sub from_file {
     return new($class, IO::KaitaiStruct::Stream->new($fd));
 }
 
-our $VERSIONS_LEGACY = 1;
-our $VERSIONS_WAL = 2;
-
 our $ENCODINGS_UTF_8 = 1;
 our $ENCODINGS_UTF_16LE = 2;
 our $ENCODINGS_UTF_16BE = 3;
+
+our $VERSIONS_LEGACY = 1;
+our $VERSIONS_WAL = 2;
 
 sub new {
     my ($class, $_io, $_parent, $_root) = @_;
@@ -33,7 +33,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -197,67 +197,6 @@ sub root_page {
 }
 
 ########################################################################
-package Sqlite3::Serial;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{code} = VlqBase128Be->new($self->{_io});
-}
-
-sub is_blob {
-    my ($self) = @_;
-    return $self->{is_blob} if ($self->{is_blob});
-    $self->{is_blob} =  (($self->code()->value() >= 12) && (($self->code()->value() % 2) == 0)) ;
-    return $self->{is_blob};
-}
-
-sub is_string {
-    my ($self) = @_;
-    return $self->{is_string} if ($self->{is_string});
-    $self->{is_string} =  (($self->code()->value() >= 13) && (($self->code()->value() % 2) == 1)) ;
-    return $self->{is_string};
-}
-
-sub len_content {
-    my ($self) = @_;
-    return $self->{len_content} if ($self->{len_content});
-    if ($self->code()->value() >= 12) {
-        $self->{len_content} = int(($self->code()->value() - 12) / 2);
-    }
-    return $self->{len_content};
-}
-
-sub code {
-    my ($self) = @_;
-    return $self->{code};
-}
-
-########################################################################
 package Sqlite3::BtreePage;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -277,7 +216,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -295,7 +234,7 @@ sub _read {
     if ( (($self->page_type() == 2) || ($self->page_type() == 5)) ) {
         $self->{right_ptr} = $self->{_io}->read_u4be();
     }
-    $self->{cells} = ();
+    $self->{cells} = [];
     my $n_cells = $self->num_cells();
     for (my $i = 0; $i < $n_cells; $i++) {
         push @{$self->{cells}}, Sqlite3::RefCell->new($self->{_io}, $self, $self->{_root});
@@ -338,6 +277,63 @@ sub cells {
 }
 
 ########################################################################
+package Sqlite3::CellIndexInterior;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{left_child_page} = $self->{_io}->read_u4be();
+    $self->{len_payload} = VlqBase128Be->new($self->{_io});
+    $self->{_raw_payload} = $self->{_io}->read_bytes($self->len_payload()->value());
+    my $io__raw_payload = IO::KaitaiStruct::Stream->new($self->{_raw_payload});
+    $self->{payload} = Sqlite3::CellPayload->new($io__raw_payload, $self, $self->{_root});
+}
+
+sub left_child_page {
+    my ($self) = @_;
+    return $self->{left_child_page};
+}
+
+sub len_payload {
+    my ($self) = @_;
+    return $self->{len_payload};
+}
+
+sub payload {
+    my ($self) = @_;
+    return $self->{payload};
+}
+
+sub _raw_payload {
+    my ($self) = @_;
+    return $self->{_raw_payload};
+}
+
+########################################################################
 package Sqlite3::CellIndexLeaf;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -357,7 +353,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -376,104 +372,6 @@ sub _read {
 sub len_payload {
     my ($self) = @_;
     return $self->{len_payload};
-}
-
-sub payload {
-    my ($self) = @_;
-    return $self->{payload};
-}
-
-sub _raw_payload {
-    my ($self) = @_;
-    return $self->{_raw_payload};
-}
-
-########################################################################
-package Sqlite3::Serials;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{entries} = ();
-    while (!$self->{_io}->is_eof()) {
-        push @{$self->{entries}}, Sqlite3::Serial->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub entries {
-    my ($self) = @_;
-    return $self->{entries};
-}
-
-########################################################################
-package Sqlite3::CellTableLeaf;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{len_payload} = VlqBase128Be->new($self->{_io});
-    $self->{row_id} = VlqBase128Be->new($self->{_io});
-    $self->{_raw_payload} = $self->{_io}->read_bytes($self->len_payload()->value());
-    my $io__raw_payload = IO::KaitaiStruct::Stream->new($self->{_raw_payload});
-    $self->{payload} = Sqlite3::CellPayload->new($io__raw_payload, $self, $self->{_root});
-}
-
-sub len_payload {
-    my ($self) = @_;
-    return $self->{len_payload};
-}
-
-sub row_id {
-    my ($self) = @_;
-    return $self->{row_id};
 }
 
 sub payload {
@@ -506,7 +404,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -517,10 +415,10 @@ sub _read {
     my ($self) = @_;
 
     $self->{len_header_and_len} = VlqBase128Be->new($self->{_io});
-    $self->{_raw_column_serials} = $self->{_io}->read_bytes(($self->len_header_and_len()->value() - 1));
+    $self->{_raw_column_serials} = $self->{_io}->read_bytes($self->len_header_and_len()->value() - 1);
     my $io__raw_column_serials = IO::KaitaiStruct::Stream->new($self->{_raw_column_serials});
     $self->{column_serials} = Sqlite3::Serials->new($io__raw_column_serials, $self, $self->{_root});
-    $self->{column_contents} = ();
+    $self->{column_contents} = [];
     my $n_column_contents = scalar(@{$self->column_serials()->entries()});
     for (my $i = 0; $i < $n_column_contents; $i++) {
         push @{$self->{column_contents}}, Sqlite3::ColumnContent->new($self->{_io}, $self, $self->{_root});
@@ -567,7 +465,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -592,7 +490,7 @@ sub row_id {
 }
 
 ########################################################################
-package Sqlite3::CellIndexInterior;
+package Sqlite3::CellTableLeaf;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -611,7 +509,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -621,21 +519,21 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{left_child_page} = $self->{_io}->read_u4be();
     $self->{len_payload} = VlqBase128Be->new($self->{_io});
+    $self->{row_id} = VlqBase128Be->new($self->{_io});
     $self->{_raw_payload} = $self->{_io}->read_bytes($self->len_payload()->value());
     my $io__raw_payload = IO::KaitaiStruct::Stream->new($self->{_raw_payload});
     $self->{payload} = Sqlite3::CellPayload->new($io__raw_payload, $self, $self->{_root});
 }
 
-sub left_child_page {
-    my ($self) = @_;
-    return $self->{left_child_page};
-}
-
 sub len_payload {
     my ($self) = @_;
     return $self->{len_payload};
+}
+
+sub row_id {
+    my ($self) = @_;
+    return $self->{row_id};
 }
 
 sub payload {
@@ -668,7 +566,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -680,23 +578,23 @@ sub _read {
 
     if ( (($self->serial_type()->code()->value() >= 1) && ($self->serial_type()->code()->value() <= 6)) ) {
         my $_on = $self->serial_type()->code()->value();
-        if ($_on == 4) {
-            $self->{as_int} = $self->{_io}->read_u4be();
-        }
-        elsif ($_on == 6) {
-            $self->{as_int} = $self->{_io}->read_u8be();
-        }
-        elsif ($_on == 1) {
+        if ($_on == 1) {
             $self->{as_int} = $self->{_io}->read_u1();
+        }
+        elsif ($_on == 2) {
+            $self->{as_int} = $self->{_io}->read_u2be();
         }
         elsif ($_on == 3) {
             $self->{as_int} = $self->{_io}->read_bits_int_be(24);
         }
+        elsif ($_on == 4) {
+            $self->{as_int} = $self->{_io}->read_u4be();
+        }
         elsif ($_on == 5) {
             $self->{as_int} = $self->{_io}->read_bits_int_be(48);
         }
-        elsif ($_on == 2) {
-            $self->{as_int} = $self->{_io}->read_u2be();
+        elsif ($_on == 6) {
+            $self->{as_int} = $self->{_io}->read_u8be();
         }
     }
     if ($self->serial_type()->code()->value() == 7) {
@@ -753,7 +651,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -772,17 +670,17 @@ sub body {
     my $_pos = $self->{_io}->pos();
     $self->{_io}->seek($self->ofs_body());
     my $_on = $self->_parent()->page_type();
-    if ($_on == 13) {
-        $self->{body} = Sqlite3::CellTableLeaf->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == 5) {
-        $self->{body} = Sqlite3::CellTableInterior->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == 10) {
+    if ($_on == 10) {
         $self->{body} = Sqlite3::CellIndexLeaf->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == 13) {
+        $self->{body} = Sqlite3::CellTableLeaf->new($self->{_io}, $self, $self->{_root});
     }
     elsif ($_on == 2) {
         $self->{body} = Sqlite3::CellIndexInterior->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == 5) {
+        $self->{body} = Sqlite3::CellTableInterior->new($self->{_io}, $self, $self->{_root});
     }
     $self->{_io}->seek($_pos);
     return $self->{body};
@@ -791,6 +689,108 @@ sub body {
 sub ofs_body {
     my ($self) = @_;
     return $self->{ofs_body};
+}
+
+########################################################################
+package Sqlite3::Serial;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{code} = VlqBase128Be->new($self->{_io});
+}
+
+sub is_blob {
+    my ($self) = @_;
+    return $self->{is_blob} if ($self->{is_blob});
+    $self->{is_blob} =  (($self->code()->value() >= 12) && ($self->code()->value() % 2 == 0)) ;
+    return $self->{is_blob};
+}
+
+sub is_string {
+    my ($self) = @_;
+    return $self->{is_string} if ($self->{is_string});
+    $self->{is_string} =  (($self->code()->value() >= 13) && ($self->code()->value() % 2 == 1)) ;
+    return $self->{is_string};
+}
+
+sub len_content {
+    my ($self) = @_;
+    return $self->{len_content} if ($self->{len_content});
+    if ($self->code()->value() >= 12) {
+        $self->{len_content} = int(($self->code()->value() - 12) / 2);
+    }
+    return $self->{len_content};
+}
+
+sub code {
+    my ($self) = @_;
+    return $self->{code};
+}
+
+########################################################################
+package Sqlite3::Serials;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{entries} = [];
+    while (!$self->{_io}->is_eof()) {
+        push @{$self->{entries}}, Sqlite3::Serial->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub entries {
+    my ($self) = @_;
+    return $self->{entries};
 }
 
 1;

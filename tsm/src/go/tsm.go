@@ -21,7 +21,7 @@ type Tsm struct {
 	Header *Tsm_Header
 	_io *kaitai.Stream
 	_root *Tsm
-	_parent interface{}
+	_parent kaitai.Struct
 	_f_index bool
 	index *Tsm_Index
 }
@@ -30,7 +30,11 @@ func NewTsm() *Tsm {
 	}
 }
 
-func (this *Tsm) Read(io *kaitai.Stream, parent interface{}, root *Tsm) (err error) {
+func (this Tsm) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Tsm) Read(io *kaitai.Stream, parent kaitai.Struct, root *Tsm) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -47,6 +51,7 @@ func (this *Tsm) Index() (v *Tsm_Index, err error) {
 	if (this._f_index) {
 		return this.index, nil
 	}
+	this._f_index = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
@@ -55,7 +60,7 @@ func (this *Tsm) Index() (v *Tsm_Index, err error) {
 	if err != nil {
 		return nil, err
 	}
-	_, err = this._io.Seek(int64((tmp2 - 8)), io.SeekStart)
+	_, err = this._io.Seek(int64(tmp2 - 8), io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
@@ -69,8 +74,6 @@ func (this *Tsm) Index() (v *Tsm_Index, err error) {
 	if err != nil {
 		return nil, err
 	}
-	this._f_index = true
-	this._f_index = true
 	return this.index, nil
 }
 type Tsm_Header struct {
@@ -83,6 +86,10 @@ type Tsm_Header struct {
 func NewTsm_Header() *Tsm_Header {
 	return &Tsm_Header{
 	}
+}
+
+func (this Tsm_Header) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Tsm_Header) Read(io *kaitai.Stream, parent *Tsm, root *Tsm) (err error) {
@@ -119,6 +126,10 @@ func NewTsm_Index() *Tsm_Index {
 	}
 }
 
+func (this Tsm_Index) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Tsm_Index) Read(io *kaitai.Stream, parent *Tsm, root *Tsm) (err error) {
 	this._io = io
 	this._parent = parent
@@ -135,6 +146,7 @@ func (this *Tsm_Index) Entries() (v []*Tsm_Index_IndexHeader, err error) {
 	if (this._f_entries) {
 		return this.entries, nil
 	}
+	this._f_entries = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
@@ -159,7 +171,7 @@ func (this *Tsm_Index) Entries() (v []*Tsm_Index_IndexHeader, err error) {
 		if err != nil {
 			return nil, err
 		}
-		if tmp8 == (tmp9 - 8) {
+		if tmp8 == tmp9 - 8 {
 			break
 		}
 	}
@@ -167,8 +179,6 @@ func (this *Tsm_Index) Entries() (v []*Tsm_Index_IndexHeader, err error) {
 	if err != nil {
 		return nil, err
 	}
-	this._f_entries = true
-	this._f_entries = true
 	return this.entries, nil
 }
 type Tsm_Index_IndexHeader struct {
@@ -184,6 +194,10 @@ type Tsm_Index_IndexHeader struct {
 func NewTsm_Index_IndexHeader() *Tsm_Index_IndexHeader {
 	return &Tsm_Index_IndexHeader{
 	}
+}
+
+func (this Tsm_Index_IndexHeader) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Tsm_Index_IndexHeader) Read(io *kaitai.Stream, parent *Tsm_Index, root *Tsm) (err error) {
@@ -239,6 +253,10 @@ func NewTsm_Index_IndexHeader_IndexEntry() *Tsm_Index_IndexHeader_IndexEntry {
 	}
 }
 
+func (this Tsm_Index_IndexHeader_IndexEntry) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Tsm_Index_IndexHeader_IndexEntry) Read(io *kaitai.Stream, parent *Tsm_Index_IndexHeader, root *Tsm) (err error) {
 	this._io = io
 	this._parent = parent
@@ -270,6 +288,7 @@ func (this *Tsm_Index_IndexHeader_IndexEntry) Block() (v *Tsm_Index_IndexHeader_
 	if (this._f_block) {
 		return this.block, nil
 	}
+	this._f_block = true
 	thisIo := this._root._io
 	_pos, err := thisIo.Pos()
 	if err != nil {
@@ -289,8 +308,6 @@ func (this *Tsm_Index_IndexHeader_IndexEntry) Block() (v *Tsm_Index_IndexHeader_
 	if err != nil {
 		return nil, err
 	}
-	this._f_block = true
-	this._f_block = true
 	return this.block, nil
 }
 type Tsm_Index_IndexHeader_IndexEntry_BlockEntry struct {
@@ -305,6 +322,10 @@ func NewTsm_Index_IndexHeader_IndexEntry_BlockEntry() *Tsm_Index_IndexHeader_Ind
 	}
 }
 
+func (this Tsm_Index_IndexHeader_IndexEntry_BlockEntry) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Tsm_Index_IndexHeader_IndexEntry_BlockEntry) Read(io *kaitai.Stream, parent *Tsm_Index_IndexHeader_IndexEntry, root *Tsm) (err error) {
 	this._io = io
 	this._parent = parent
@@ -315,7 +336,7 @@ func (this *Tsm_Index_IndexHeader_IndexEntry_BlockEntry) Read(io *kaitai.Stream,
 		return err
 	}
 	this.Crc32 = uint32(tmp20)
-	tmp21, err := this._io.ReadBytes(int((this._parent.BlockSize - 4)))
+	tmp21, err := this._io.ReadBytes(int(this._parent.BlockSize - 4))
 	if err != nil {
 		return err
 	}

@@ -9,14 +9,13 @@ digraph {
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 			<TR><TD PORT="chunk_pos">0</TD><TD PORT="chunk_size">...</TD><TD>Riff::Chunk</TD><TD PORT="chunk_type">chunk</TD></TR>
 		</TABLE>>];
-		wav__inst__subchunks [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-			<TR><TD PORT="subchunks_pos">0</TD><TD PORT="subchunks_size">...</TD><TD>ChunkType</TD><TD PORT="subchunks_type">subchunks</TD></TR>
-			<TR><TD COLSPAN="4" PORT="subchunks__repeat">repeat to end of stream</TD></TR>
+		wav__inst__chunk_id [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>chunk_id</TD><TD>Kaitai::Struct::Stream::resolve_enum(FOURCC, chunk.id)</TD></TR>
 		</TABLE>>];
-		wav__inst__parent_chunk_data [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-			<TR><TD PORT="parent_chunk_data_pos">0</TD><TD PORT="parent_chunk_data_size">...</TD><TD>Riff::ParentChunkData</TD><TD PORT="parent_chunk_data_type">parent_chunk_data</TD></TR>
+		wav__inst__form_type [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>form_type</TD><TD>Kaitai::Struct::Stream::resolve_enum(FOURCC, parent_chunk_data.form_type)</TD></TR>
 		</TABLE>>];
 		wav__inst__is_form_type_wave [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
@@ -26,107 +25,136 @@ digraph {
 			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
 			<TR><TD>is_riff_chunk</TD><TD>chunk_id == :fourcc_riff</TD></TR>
 		</TABLE>>];
-		wav__inst__chunk_id [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-			<TR><TD>chunk_id</TD><TD>Kaitai::Struct::Stream::resolve_enum(FOURCC, chunk.id)</TD></TR>
+		wav__inst__parent_chunk_data [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="parent_chunk_data_pos">0</TD><TD PORT="parent_chunk_data_size">...</TD><TD>Riff::ParentChunkData</TD><TD PORT="parent_chunk_data_type">parent_chunk_data</TD></TR>
+			<TR><TD COLSPAN="4" PORT="parent_chunk_data__if">if is_riff_chunk</TD></TR>
 		</TABLE>>];
-		wav__inst__form_type [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-			<TR><TD>form_type</TD><TD>Kaitai::Struct::Stream::resolve_enum(FOURCC, parent_chunk_data.form_type)</TD></TR>
+		wav__inst__subchunks [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="subchunks_pos">0</TD><TD PORT="subchunks_size">...</TD><TD>ChunkType</TD><TD PORT="subchunks_type">subchunks</TD></TR>
+			<TR><TD COLSPAN="4" PORT="subchunks__repeat">repeat to end of stream</TD></TR>
+			<TR><TD COLSPAN="4" PORT="subchunks__if">if is_form_type_wave</TD></TR>
 		</TABLE>>];
-		subgraph cluster__sample_type {
-			label="Wav::SampleType";
+		subgraph cluster__afsp_chunk_type {
+			label="Wav::AfspChunkType";
 			graph[style=dotted];
 
-			sample_type__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			afsp_chunk_type__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="sample_pos">0</TD><TD PORT="sample_size">2</TD><TD>u2le</TD><TD PORT="sample_type">sample</TD></TR>
+				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD>41 46 73 70</TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD PORT="info_records_pos">4</TD><TD PORT="info_records_size">...</TD><TD>str(term=0, ASCII)</TD><TD PORT="info_records_type">info_records</TD></TR>
+				<TR><TD COLSPAN="4" PORT="info_records__repeat">repeat to end of stream</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__format_chunk_type {
-			label="Wav::FormatChunkType";
+		subgraph cluster__axml_chunk_type {
+			label="Wav::AxmlChunkType";
 			graph[style=dotted];
 
-			format_chunk_type__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="w_format_tag_pos">0</TD><TD PORT="w_format_tag_size">2</TD><TD>u2le→WFormatTagType</TD><TD PORT="w_format_tag_type">w_format_tag</TD></TR>
-				<TR><TD PORT="n_channels_pos">2</TD><TD PORT="n_channels_size">2</TD><TD>u2le</TD><TD PORT="n_channels_type">n_channels</TD></TR>
-				<TR><TD PORT="n_samples_per_sec_pos">4</TD><TD PORT="n_samples_per_sec_size">4</TD><TD>u4le</TD><TD PORT="n_samples_per_sec_type">n_samples_per_sec</TD></TR>
-				<TR><TD PORT="n_avg_bytes_per_sec_pos">8</TD><TD PORT="n_avg_bytes_per_sec_size">4</TD><TD>u4le</TD><TD PORT="n_avg_bytes_per_sec_type">n_avg_bytes_per_sec</TD></TR>
-				<TR><TD PORT="n_block_align_pos">12</TD><TD PORT="n_block_align_size">2</TD><TD>u2le</TD><TD PORT="n_block_align_type">n_block_align</TD></TR>
-				<TR><TD PORT="w_bits_per_sample_pos">14</TD><TD PORT="w_bits_per_sample_size">2</TD><TD>u2le</TD><TD PORT="w_bits_per_sample_type">w_bits_per_sample</TD></TR>
-				<TR><TD PORT="cb_size_pos">16</TD><TD PORT="cb_size_size">2</TD><TD>u2le</TD><TD PORT="cb_size_type">cb_size</TD></TR>
-				<TR><TD PORT="w_valid_bits_per_sample_pos">18</TD><TD PORT="w_valid_bits_per_sample_size">2</TD><TD>u2le</TD><TD PORT="w_valid_bits_per_sample_type">w_valid_bits_per_sample</TD></TR>
-				<TR><TD PORT="channel_mask_and_subformat_pos">20</TD><TD PORT="channel_mask_and_subformat_size">20</TD><TD>ChannelMaskAndSubformatType</TD><TD PORT="channel_mask_and_subformat_type">channel_mask_and_subformat</TD></TR>
-			</TABLE>>];
-			format_chunk_type__inst__is_extensible [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>is_extensible</TD><TD>w_format_tag == :w_format_tag_type_extensible</TD></TR>
-			</TABLE>>];
-			format_chunk_type__inst__is_basic_pcm [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>is_basic_pcm</TD><TD>w_format_tag == :w_format_tag_type_pcm</TD></TR>
-			</TABLE>>];
-			format_chunk_type__inst__is_basic_float [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>is_basic_float</TD><TD>w_format_tag == :w_format_tag_type_ieee_float</TD></TR>
-			</TABLE>>];
-			format_chunk_type__inst__is_cb_size_meaningful [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>is_cb_size_meaningful</TD><TD> ((!(is_basic_pcm)) &amp;&amp; (cb_size != 0)) </TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__pmx_chunk_type {
-			label="Wav::PmxChunkType";
-			graph[style=dotted];
-
-			pmx_chunk_type__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			axml_chunk_type__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="data_pos">0</TD><TD PORT="data_size">⇲</TD><TD>str(UTF-8)</TD><TD PORT="data_type">data</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__fact_chunk_type {
-			label="Wav::FactChunkType";
+		subgraph cluster__bext_chunk_type {
+			label="Wav::BextChunkType";
 			graph[style=dotted];
 
-			fact_chunk_type__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			bext_chunk_type__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="num_samples_per_channel_pos">0</TD><TD PORT="num_samples_per_channel_size">4</TD><TD>u4le</TD><TD PORT="num_samples_per_channel_type">num_samples_per_channel</TD></TR>
+				<TR><TD PORT="description_pos">0</TD><TD PORT="description_size">256</TD><TD>str(ASCII)</TD><TD PORT="description_type">description</TD></TR>
+				<TR><TD PORT="originator_pos">256</TD><TD PORT="originator_size">32</TD><TD>str(ASCII)</TD><TD PORT="originator_type">originator</TD></TR>
+				<TR><TD PORT="originator_reference_pos">288</TD><TD PORT="originator_reference_size">32</TD><TD>str(ASCII)</TD><TD PORT="originator_reference_type">originator_reference</TD></TR>
+				<TR><TD PORT="origination_date_pos">320</TD><TD PORT="origination_date_size">10</TD><TD>str(ASCII)</TD><TD PORT="origination_date_type">origination_date</TD></TR>
+				<TR><TD PORT="origination_time_pos">330</TD><TD PORT="origination_time_size">8</TD><TD>str(ASCII)</TD><TD PORT="origination_time_type">origination_time</TD></TR>
+				<TR><TD PORT="time_reference_low_pos">338</TD><TD PORT="time_reference_low_size">4</TD><TD>u4le</TD><TD PORT="time_reference_low_type">time_reference_low</TD></TR>
+				<TR><TD PORT="time_reference_high_pos">342</TD><TD PORT="time_reference_high_size">4</TD><TD>u4le</TD><TD PORT="time_reference_high_type">time_reference_high</TD></TR>
+				<TR><TD PORT="version_pos">346</TD><TD PORT="version_size">2</TD><TD>u2le</TD><TD PORT="version_type">version</TD></TR>
+				<TR><TD PORT="umid_pos">348</TD><TD PORT="umid_size">64</TD><TD></TD><TD PORT="umid_type">umid</TD></TR>
+				<TR><TD PORT="loudness_value_pos">412</TD><TD PORT="loudness_value_size">2</TD><TD>u2le</TD><TD PORT="loudness_value_type">loudness_value</TD></TR>
+				<TR><TD PORT="loudness_range_pos">414</TD><TD PORT="loudness_range_size">2</TD><TD>u2le</TD><TD PORT="loudness_range_type">loudness_range</TD></TR>
+				<TR><TD PORT="max_true_peak_level_pos">416</TD><TD PORT="max_true_peak_level_size">2</TD><TD>u2le</TD><TD PORT="max_true_peak_level_type">max_true_peak_level</TD></TR>
+				<TR><TD PORT="max_momentary_loudness_pos">418</TD><TD PORT="max_momentary_loudness_size">2</TD><TD>u2le</TD><TD PORT="max_momentary_loudness_type">max_momentary_loudness</TD></TR>
+				<TR><TD PORT="max_short_term_loudness_pos">420</TD><TD PORT="max_short_term_loudness_size">2</TD><TD>u2le</TD><TD PORT="max_short_term_loudness_type">max_short_term_loudness</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__guid_type {
-			label="Wav::GuidType";
+		subgraph cluster__channel_mask_and_subformat_type {
+			label="Wav::ChannelMaskAndSubformatType";
 			graph[style=dotted];
 
-			guid_type__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			channel_mask_and_subformat_type__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="data1_pos">0</TD><TD PORT="data1_size">4</TD><TD>u4le</TD><TD PORT="data1_type">data1</TD></TR>
-				<TR><TD PORT="data2_pos">4</TD><TD PORT="data2_size">2</TD><TD>u2le</TD><TD PORT="data2_type">data2</TD></TR>
-				<TR><TD PORT="data3_pos">6</TD><TD PORT="data3_size">2</TD><TD>u2le</TD><TD PORT="data3_type">data3</TD></TR>
-				<TR><TD PORT="data4_pos">8</TD><TD PORT="data4_size">4</TD><TD>u4be</TD><TD PORT="data4_type">data4</TD></TR>
-				<TR><TD PORT="data4a_pos">12</TD><TD PORT="data4a_size">4</TD><TD>u4be</TD><TD PORT="data4a_type">data4a</TD></TR>
+				<TR><TD PORT="dw_channel_mask_pos">0</TD><TD PORT="dw_channel_mask_size">4</TD><TD>ChannelMaskType</TD><TD PORT="dw_channel_mask_type">dw_channel_mask</TD></TR>
+				<TR><TD PORT="subformat_pos">4</TD><TD PORT="subformat_size">16</TD><TD>GuidType</TD><TD PORT="subformat_type">subformat</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__ixml_chunk_type {
-			label="Wav::IxmlChunkType";
+		subgraph cluster__channel_mask_type {
+			label="Wav::ChannelMaskType";
 			graph[style=dotted];
 
-			ixml_chunk_type__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			channel_mask_type__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="data_pos">0</TD><TD PORT="data_size">⇲</TD><TD>str(UTF-8)</TD><TD PORT="data_type">data</TD></TR>
+				<TR><TD PORT="front_right_of_center_pos">0</TD><TD PORT="front_right_of_center_size">1b</TD><TD>b1be→bool</TD><TD PORT="front_right_of_center_type">front_right_of_center</TD></TR>
+				<TR><TD PORT="front_left_of_center_pos">0:1</TD><TD PORT="front_left_of_center_size">1b</TD><TD>b1be→bool</TD><TD PORT="front_left_of_center_type">front_left_of_center</TD></TR>
+				<TR><TD PORT="back_right_pos">0:2</TD><TD PORT="back_right_size">1b</TD><TD>b1be→bool</TD><TD PORT="back_right_type">back_right</TD></TR>
+				<TR><TD PORT="back_left_pos">0:3</TD><TD PORT="back_left_size">1b</TD><TD>b1be→bool</TD><TD PORT="back_left_type">back_left</TD></TR>
+				<TR><TD PORT="low_frequency_pos">0:4</TD><TD PORT="low_frequency_size">1b</TD><TD>b1be→bool</TD><TD PORT="low_frequency_type">low_frequency</TD></TR>
+				<TR><TD PORT="front_center_pos">0:5</TD><TD PORT="front_center_size">1b</TD><TD>b1be→bool</TD><TD PORT="front_center_type">front_center</TD></TR>
+				<TR><TD PORT="front_right_pos">0:6</TD><TD PORT="front_right_size">1b</TD><TD>b1be→bool</TD><TD PORT="front_right_type">front_right</TD></TR>
+				<TR><TD PORT="front_left_pos">0:7</TD><TD PORT="front_left_size">1b</TD><TD>b1be→bool</TD><TD PORT="front_left_type">front_left</TD></TR>
+				<TR><TD PORT="top_center_pos">1</TD><TD PORT="top_center_size">1b</TD><TD>b1be→bool</TD><TD PORT="top_center_type">top_center</TD></TR>
+				<TR><TD PORT="side_right_pos">1:1</TD><TD PORT="side_right_size">1b</TD><TD>b1be→bool</TD><TD PORT="side_right_type">side_right</TD></TR>
+				<TR><TD PORT="side_left_pos">1:2</TD><TD PORT="side_left_size">1b</TD><TD>b1be→bool</TD><TD PORT="side_left_type">side_left</TD></TR>
+				<TR><TD PORT="back_center_pos">1:3</TD><TD PORT="back_center_size">1b</TD><TD>b1be→bool</TD><TD PORT="back_center_type">back_center</TD></TR>
+				<TR><TD PORT="top_back_left_pos">1:4</TD><TD PORT="top_back_left_size">1b</TD><TD>b1be→bool</TD><TD PORT="top_back_left_type">top_back_left</TD></TR>
+				<TR><TD PORT="top_front_right_pos">1:5</TD><TD PORT="top_front_right_size">1b</TD><TD>b1be→bool</TD><TD PORT="top_front_right_type">top_front_right</TD></TR>
+				<TR><TD PORT="top_front_center_pos">1:6</TD><TD PORT="top_front_center_size">1b</TD><TD>b1be→bool</TD><TD PORT="top_front_center_type">top_front_center</TD></TR>
+				<TR><TD PORT="top_front_left_pos">1:7</TD><TD PORT="top_front_left_size">1b</TD><TD>b1be→bool</TD><TD PORT="top_front_left_type">top_front_left</TD></TR>
+				<TR><TD PORT="unused1_pos">2</TD><TD PORT="unused1_size">6b</TD><TD>b6be</TD><TD PORT="unused1_type">unused1</TD></TR>
+				<TR><TD PORT="top_back_right_pos">2:6</TD><TD PORT="top_back_right_size">1b</TD><TD>b1be→bool</TD><TD PORT="top_back_right_type">top_back_right</TD></TR>
+				<TR><TD PORT="top_back_center_pos">2:7</TD><TD PORT="top_back_center_size">1b</TD><TD>b1be→bool</TD><TD PORT="top_back_center_type">top_back_center</TD></TR>
+				<TR><TD PORT="unused2_pos">3</TD><TD PORT="unused2_size">1</TD><TD>b8be</TD><TD PORT="unused2_type">unused2</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__info_chunk_type {
-			label="Wav::InfoChunkType";
+		subgraph cluster__chunk_type {
+			label="Wav::ChunkType";
 			graph[style=dotted];
 
-			info_chunk_type__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			chunk_type__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="chunk_pos">0</TD><TD PORT="chunk_size">...</TD><TD>Riff::Chunk</TD><TD PORT="chunk_type">chunk</TD></TR>
 			</TABLE>>];
-			info_chunk_type__inst__chunk_data [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			chunk_type__inst__chunk_data [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="chunk_data_pos">0</TD><TD PORT="chunk_data_size">...</TD><TD>str(ASCII)</TD><TD PORT="chunk_data_type">chunk_data</TD></TR>
+				<TR><TD PORT="chunk_data_pos">0</TD><TD PORT="chunk_data_size">...</TD><TD>switch (chunk_id)</TD><TD PORT="chunk_data_type">chunk_data</TD></TR>
+			</TABLE>>];
+			chunk_type__inst__chunk_id [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>chunk_id</TD><TD>Kaitai::Struct::Stream::resolve_enum(Wav::FOURCC, chunk.id)</TD></TR>
+			</TABLE>>];
+chunk_type__inst__chunk_data_chunk_data_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>:fourcc_afsp</TD><TD PORT="case0">AfspChunkType</TD></TR>
+	<TR><TD>:fourcc_axml</TD><TD PORT="case1">AxmlChunkType</TD></TR>
+	<TR><TD>:fourcc_bext</TD><TD PORT="case2">BextChunkType</TD></TR>
+	<TR><TD>:fourcc_cue</TD><TD PORT="case3">CueChunkType</TD></TR>
+	<TR><TD>:fourcc_data</TD><TD PORT="case4">DataChunkType</TD></TR>
+	<TR><TD>:fourcc_fact</TD><TD PORT="case5">FactChunkType</TD></TR>
+	<TR><TD>:fourcc_fmt</TD><TD PORT="case6">FormatChunkType</TD></TR>
+	<TR><TD>:fourcc_ixml</TD><TD PORT="case7">IxmlChunkType</TD></TR>
+	<TR><TD>:fourcc_list</TD><TD PORT="case8">ListChunkType</TD></TR>
+	<TR><TD>:fourcc_pmx</TD><TD PORT="case9">PmxChunkType</TD></TR>
+</TABLE>>];
+		}
+		subgraph cluster__cue_chunk_type {
+			label="Wav::CueChunkType";
+			graph[style=dotted];
+
+			cue_chunk_type__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="dw_cue_points_pos">0</TD><TD PORT="dw_cue_points_size">4</TD><TD>u4le</TD><TD PORT="dw_cue_points_type">dw_cue_points</TD></TR>
+				<TR><TD PORT="cue_points_pos">4</TD><TD PORT="cue_points_size">24</TD><TD>CuePointType</TD><TD PORT="cue_points_type">cue_points</TD></TR>
+				<TR><TD COLSPAN="4" PORT="cue_points__repeat">repeat dw_cue_points times</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__cue_point_type {
@@ -152,34 +180,84 @@ digraph {
 				<TR><TD PORT="data_pos">0</TD><TD PORT="data_size">⇲</TD><TD></TD><TD PORT="data_type">data</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__samples_type {
-			label="Wav::SamplesType";
+		subgraph cluster__fact_chunk_type {
+			label="Wav::FactChunkType";
 			graph[style=dotted];
 
-			samples_type__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			fact_chunk_type__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="samples_pos">0</TD><TD PORT="samples_size">4</TD><TD>u4le</TD><TD PORT="samples_type">samples</TD></TR>
+				<TR><TD PORT="num_samples_per_channel_pos">0</TD><TD PORT="num_samples_per_channel_size">4</TD><TD>u4le</TD><TD PORT="num_samples_per_channel_type">num_samples_per_channel</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__channel_mask_and_subformat_type {
-			label="Wav::ChannelMaskAndSubformatType";
+		subgraph cluster__format_chunk_type {
+			label="Wav::FormatChunkType";
 			graph[style=dotted];
 
-			channel_mask_and_subformat_type__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			format_chunk_type__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="dw_channel_mask_pos">0</TD><TD PORT="dw_channel_mask_size">4</TD><TD>ChannelMaskType</TD><TD PORT="dw_channel_mask_type">dw_channel_mask</TD></TR>
-				<TR><TD PORT="subformat_pos">4</TD><TD PORT="subformat_size">16</TD><TD>GuidType</TD><TD PORT="subformat_type">subformat</TD></TR>
+				<TR><TD PORT="w_format_tag_pos">0</TD><TD PORT="w_format_tag_size">2</TD><TD>u2le→WFormatTagType</TD><TD PORT="w_format_tag_type">w_format_tag</TD></TR>
+				<TR><TD PORT="n_channels_pos">2</TD><TD PORT="n_channels_size">2</TD><TD>u2le</TD><TD PORT="n_channels_type">n_channels</TD></TR>
+				<TR><TD PORT="n_samples_per_sec_pos">4</TD><TD PORT="n_samples_per_sec_size">4</TD><TD>u4le</TD><TD PORT="n_samples_per_sec_type">n_samples_per_sec</TD></TR>
+				<TR><TD PORT="n_avg_bytes_per_sec_pos">8</TD><TD PORT="n_avg_bytes_per_sec_size">4</TD><TD>u4le</TD><TD PORT="n_avg_bytes_per_sec_type">n_avg_bytes_per_sec</TD></TR>
+				<TR><TD PORT="n_block_align_pos">12</TD><TD PORT="n_block_align_size">2</TD><TD>u2le</TD><TD PORT="n_block_align_type">n_block_align</TD></TR>
+				<TR><TD PORT="w_bits_per_sample_pos">14</TD><TD PORT="w_bits_per_sample_size">2</TD><TD>u2le</TD><TD PORT="w_bits_per_sample_type">w_bits_per_sample</TD></TR>
+				<TR><TD PORT="cb_size_pos">16</TD><TD PORT="cb_size_size">2</TD><TD>u2le</TD><TD PORT="cb_size_type">cb_size</TD></TR>
+				<TR><TD COLSPAN="4" PORT="cb_size__if">if !(is_basic_pcm)</TD></TR>
+				<TR><TD PORT="w_valid_bits_per_sample_pos">18</TD><TD PORT="w_valid_bits_per_sample_size">2</TD><TD>u2le</TD><TD PORT="w_valid_bits_per_sample_type">w_valid_bits_per_sample</TD></TR>
+				<TR><TD COLSPAN="4" PORT="w_valid_bits_per_sample__if">if is_cb_size_meaningful</TD></TR>
+				<TR><TD PORT="channel_mask_and_subformat_pos">20</TD><TD PORT="channel_mask_and_subformat_size">20</TD><TD>ChannelMaskAndSubformatType</TD><TD PORT="channel_mask_and_subformat_type">channel_mask_and_subformat</TD></TR>
+				<TR><TD COLSPAN="4" PORT="channel_mask_and_subformat__if">if is_extensible</TD></TR>
+			</TABLE>>];
+			format_chunk_type__inst__is_basic_float [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_basic_float</TD><TD>w_format_tag == :w_format_tag_type_ieee_float</TD></TR>
+			</TABLE>>];
+			format_chunk_type__inst__is_basic_pcm [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_basic_pcm</TD><TD>w_format_tag == :w_format_tag_type_pcm</TD></TR>
+			</TABLE>>];
+			format_chunk_type__inst__is_cb_size_meaningful [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_cb_size_meaningful</TD><TD> ((!(is_basic_pcm)) &amp;&amp; (cb_size != 0)) </TD></TR>
+			</TABLE>>];
+			format_chunk_type__inst__is_extensible [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_extensible</TD><TD>w_format_tag == :w_format_tag_type_extensible</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__cue_chunk_type {
-			label="Wav::CueChunkType";
+		subgraph cluster__guid_type {
+			label="Wav::GuidType";
 			graph[style=dotted];
 
-			cue_chunk_type__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			guid_type__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="dw_cue_points_pos">0</TD><TD PORT="dw_cue_points_size">4</TD><TD>u4le</TD><TD PORT="dw_cue_points_type">dw_cue_points</TD></TR>
-				<TR><TD PORT="cue_points_pos">4</TD><TD PORT="cue_points_size">24</TD><TD>CuePointType</TD><TD PORT="cue_points_type">cue_points</TD></TR>
-				<TR><TD COLSPAN="4" PORT="cue_points__repeat">repeat dw_cue_points times</TD></TR>
+				<TR><TD PORT="data1_pos">0</TD><TD PORT="data1_size">4</TD><TD>u4le</TD><TD PORT="data1_type">data1</TD></TR>
+				<TR><TD PORT="data2_pos">4</TD><TD PORT="data2_size">2</TD><TD>u2le</TD><TD PORT="data2_type">data2</TD></TR>
+				<TR><TD PORT="data3_pos">6</TD><TD PORT="data3_size">2</TD><TD>u2le</TD><TD PORT="data3_type">data3</TD></TR>
+				<TR><TD PORT="data4_pos">8</TD><TD PORT="data4_size">4</TD><TD>u4be</TD><TD PORT="data4_type">data4</TD></TR>
+				<TR><TD PORT="data4a_pos">12</TD><TD PORT="data4a_size">4</TD><TD>u4be</TD><TD PORT="data4a_type">data4a</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__info_chunk_type {
+			label="Wav::InfoChunkType";
+			graph[style=dotted];
+
+			info_chunk_type__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="chunk_pos">0</TD><TD PORT="chunk_size">...</TD><TD>Riff::Chunk</TD><TD PORT="chunk_type">chunk</TD></TR>
+			</TABLE>>];
+			info_chunk_type__inst__chunk_data [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="chunk_data_pos">0</TD><TD PORT="chunk_data_size">...</TD><TD>str(term=0, ASCII)</TD><TD PORT="chunk_data_type">chunk_data</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__ixml_chunk_type {
+			label="Wav::IxmlChunkType";
+			graph[style=dotted];
+
+			ixml_chunk_type__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="data_pos">0</TD><TD PORT="data_size">⇲</TD><TD>str(UTF-8)</TD><TD PORT="data_type">data</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__list_chunk_type {
@@ -204,143 +282,75 @@ list_chunk_type__inst__subchunks_subchunks_switch [label=<<TABLE BORDER="0" CELL
 	<TR><TD>:fourcc_info</TD><TD PORT="case0">InfoChunkType</TD></TR>
 </TABLE>>];
 		}
-		subgraph cluster__channel_mask_type {
-			label="Wav::ChannelMaskType";
+		subgraph cluster__pmx_chunk_type {
+			label="Wav::PmxChunkType";
 			graph[style=dotted];
 
-			channel_mask_type__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="front_right_of_center_pos">0</TD><TD PORT="front_right_of_center_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="front_right_of_center_type">front_right_of_center</TD></TR>
-				<TR><TD PORT="front_left_of_center_pos">0:1</TD><TD PORT="front_left_of_center_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="front_left_of_center_type">front_left_of_center</TD></TR>
-				<TR><TD PORT="back_right_pos">0:2</TD><TD PORT="back_right_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="back_right_type">back_right</TD></TR>
-				<TR><TD PORT="back_left_pos">0:3</TD><TD PORT="back_left_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="back_left_type">back_left</TD></TR>
-				<TR><TD PORT="low_frequency_pos">0:4</TD><TD PORT="low_frequency_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="low_frequency_type">low_frequency</TD></TR>
-				<TR><TD PORT="front_center_pos">0:5</TD><TD PORT="front_center_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="front_center_type">front_center</TD></TR>
-				<TR><TD PORT="front_right_pos">0:6</TD><TD PORT="front_right_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="front_right_type">front_right</TD></TR>
-				<TR><TD PORT="front_left_pos">0:7</TD><TD PORT="front_left_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="front_left_type">front_left</TD></TR>
-				<TR><TD PORT="top_center_pos">1</TD><TD PORT="top_center_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="top_center_type">top_center</TD></TR>
-				<TR><TD PORT="side_right_pos">1:1</TD><TD PORT="side_right_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="side_right_type">side_right</TD></TR>
-				<TR><TD PORT="side_left_pos">1:2</TD><TD PORT="side_left_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="side_left_type">side_left</TD></TR>
-				<TR><TD PORT="back_center_pos">1:3</TD><TD PORT="back_center_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="back_center_type">back_center</TD></TR>
-				<TR><TD PORT="top_back_left_pos">1:4</TD><TD PORT="top_back_left_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="top_back_left_type">top_back_left</TD></TR>
-				<TR><TD PORT="top_front_right_pos">1:5</TD><TD PORT="top_front_right_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="top_front_right_type">top_front_right</TD></TR>
-				<TR><TD PORT="top_front_center_pos">1:6</TD><TD PORT="top_front_center_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="top_front_center_type">top_front_center</TD></TR>
-				<TR><TD PORT="top_front_left_pos">1:7</TD><TD PORT="top_front_left_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="top_front_left_type">top_front_left</TD></TR>
-				<TR><TD PORT="unused1_pos">2</TD><TD PORT="unused1_size">6b</TD><TD>b6</TD><TD PORT="unused1_type">unused1</TD></TR>
-				<TR><TD PORT="top_back_right_pos">2:6</TD><TD PORT="top_back_right_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="top_back_right_type">top_back_right</TD></TR>
-				<TR><TD PORT="top_back_center_pos">2:7</TD><TD PORT="top_back_center_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="top_back_center_type">top_back_center</TD></TR>
-				<TR><TD PORT="unused2_pos">3</TD><TD PORT="unused2_size">1</TD><TD>b8</TD><TD PORT="unused2_type">unused2</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__afsp_chunk_type {
-			label="Wav::AfspChunkType";
-			graph[style=dotted];
-
-			afsp_chunk_type__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD></TD><TD PORT="magic_type">magic</TD></TR>
-				<TR><TD PORT="info_records_pos">4</TD><TD PORT="info_records_size">...</TD><TD>str(ASCII)</TD><TD PORT="info_records_type">info_records</TD></TR>
-				<TR><TD COLSPAN="4" PORT="info_records__repeat">repeat to end of stream</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__axml_chunk_type {
-			label="Wav::AxmlChunkType";
-			graph[style=dotted];
-
-			axml_chunk_type__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			pmx_chunk_type__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="data_pos">0</TD><TD PORT="data_size">⇲</TD><TD>str(UTF-8)</TD><TD PORT="data_type">data</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__chunk_type {
-			label="Wav::ChunkType";
+		subgraph cluster__sample_type {
+			label="Wav::SampleType";
 			graph[style=dotted];
 
-			chunk_type__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			sample_type__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="chunk_pos">0</TD><TD PORT="chunk_size">...</TD><TD>Riff::Chunk</TD><TD PORT="chunk_type">chunk</TD></TR>
+				<TR><TD PORT="sample_pos">0</TD><TD PORT="sample_size">2</TD><TD>u2le</TD><TD PORT="sample_type">sample</TD></TR>
 			</TABLE>>];
-			chunk_type__inst__chunk_id [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>chunk_id</TD><TD>Kaitai::Struct::Stream::resolve_enum(Wav::FOURCC, chunk.id)</TD></TR>
-			</TABLE>>];
-			chunk_type__inst__chunk_data [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="chunk_data_pos">0</TD><TD PORT="chunk_data_size">...</TD><TD>switch (chunk_id)</TD><TD PORT="chunk_data_type">chunk_data</TD></TR>
-			</TABLE>>];
-chunk_type__inst__chunk_data_chunk_data_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
-	<TR><TD>:fourcc_fact</TD><TD PORT="case0">FactChunkType</TD></TR>
-	<TR><TD>:fourcc_list</TD><TD PORT="case1">ListChunkType</TD></TR>
-	<TR><TD>:fourcc_fmt</TD><TD PORT="case2">FormatChunkType</TD></TR>
-	<TR><TD>:fourcc_afsp</TD><TD PORT="case3">AfspChunkType</TD></TR>
-	<TR><TD>:fourcc_bext</TD><TD PORT="case4">BextChunkType</TD></TR>
-	<TR><TD>:fourcc_cue</TD><TD PORT="case5">CueChunkType</TD></TR>
-	<TR><TD>:fourcc_ixml</TD><TD PORT="case6">IxmlChunkType</TD></TR>
-	<TR><TD>:fourcc_pmx</TD><TD PORT="case7">PmxChunkType</TD></TR>
-	<TR><TD>:fourcc_axml</TD><TD PORT="case8">AxmlChunkType</TD></TR>
-	<TR><TD>:fourcc_data</TD><TD PORT="case9">DataChunkType</TD></TR>
-</TABLE>>];
 		}
-		subgraph cluster__bext_chunk_type {
-			label="Wav::BextChunkType";
+		subgraph cluster__samples_type {
+			label="Wav::SamplesType";
 			graph[style=dotted];
 
-			bext_chunk_type__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			samples_type__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="description_pos">0</TD><TD PORT="description_size">256</TD><TD>str(ASCII)</TD><TD PORT="description_type">description</TD></TR>
-				<TR><TD PORT="originator_pos">256</TD><TD PORT="originator_size">32</TD><TD>str(ASCII)</TD><TD PORT="originator_type">originator</TD></TR>
-				<TR><TD PORT="originator_reference_pos">288</TD><TD PORT="originator_reference_size">32</TD><TD>str(ASCII)</TD><TD PORT="originator_reference_type">originator_reference</TD></TR>
-				<TR><TD PORT="origination_date_pos">320</TD><TD PORT="origination_date_size">10</TD><TD>str(ASCII)</TD><TD PORT="origination_date_type">origination_date</TD></TR>
-				<TR><TD PORT="origination_time_pos">330</TD><TD PORT="origination_time_size">8</TD><TD>str(ASCII)</TD><TD PORT="origination_time_type">origination_time</TD></TR>
-				<TR><TD PORT="time_reference_low_pos">338</TD><TD PORT="time_reference_low_size">4</TD><TD>u4le</TD><TD PORT="time_reference_low_type">time_reference_low</TD></TR>
-				<TR><TD PORT="time_reference_high_pos">342</TD><TD PORT="time_reference_high_size">4</TD><TD>u4le</TD><TD PORT="time_reference_high_type">time_reference_high</TD></TR>
-				<TR><TD PORT="version_pos">346</TD><TD PORT="version_size">2</TD><TD>u2le</TD><TD PORT="version_type">version</TD></TR>
-				<TR><TD PORT="umid_pos">348</TD><TD PORT="umid_size">64</TD><TD></TD><TD PORT="umid_type">umid</TD></TR>
-				<TR><TD PORT="loudness_value_pos">412</TD><TD PORT="loudness_value_size">2</TD><TD>u2le</TD><TD PORT="loudness_value_type">loudness_value</TD></TR>
-				<TR><TD PORT="loudness_range_pos">414</TD><TD PORT="loudness_range_size">2</TD><TD>u2le</TD><TD PORT="loudness_range_type">loudness_range</TD></TR>
-				<TR><TD PORT="max_true_peak_level_pos">416</TD><TD PORT="max_true_peak_level_size">2</TD><TD>u2le</TD><TD PORT="max_true_peak_level_type">max_true_peak_level</TD></TR>
-				<TR><TD PORT="max_momentary_loudness_pos">418</TD><TD PORT="max_momentary_loudness_size">2</TD><TD>u2le</TD><TD PORT="max_momentary_loudness_type">max_momentary_loudness</TD></TR>
-				<TR><TD PORT="max_short_term_loudness_pos">420</TD><TD PORT="max_short_term_loudness_size">2</TD><TD>u2le</TD><TD PORT="max_short_term_loudness_type">max_short_term_loudness</TD></TR>
+				<TR><TD PORT="samples_pos">0</TD><TD PORT="samples_size">4</TD><TD>u4le</TD><TD PORT="samples_type">samples</TD></TR>
 			</TABLE>>];
 		}
 	}
 	wav__seq:chunk_type -> chunk__seq [style=bold];
-	wav__inst__subchunks:subchunks_type -> chunk_type__seq [style=bold];
-	wav__inst__parent_chunk_data:parent_chunk_data_type -> parent_chunk_data__seq [style=bold];
+	chunk__seq:id_type -> wav__inst__chunk_id [color="#404040"];
+	parent_chunk_data__seq:form_type_type -> wav__inst__form_type [color="#404040"];
 	wav__inst__is_riff_chunk:is_riff_chunk_type -> wav__inst__is_form_type_wave [color="#404040"];
 	wav__inst__form_type:form_type_type -> wav__inst__is_form_type_wave [color="#404040"];
 	wav__inst__chunk_id:chunk_id_type -> wav__inst__is_riff_chunk [color="#404040"];
-	chunk__seq:id_type -> wav__inst__chunk_id [color="#404040"];
-	parent_chunk_data__seq:form_type_type -> wav__inst__form_type [color="#404040"];
-	format_chunk_type__seq:channel_mask_and_subformat_type -> channel_mask_and_subformat_type__seq [style=bold];
-	format_chunk_type__seq:w_format_tag_type -> format_chunk_type__inst__is_extensible [color="#404040"];
-	format_chunk_type__seq:w_format_tag_type -> format_chunk_type__inst__is_basic_pcm [color="#404040"];
-	format_chunk_type__seq:w_format_tag_type -> format_chunk_type__inst__is_basic_float [color="#404040"];
-	format_chunk_type__inst__is_basic_pcm:is_basic_pcm_type -> format_chunk_type__inst__is_cb_size_meaningful [color="#404040"];
-	format_chunk_type__seq:cb_size_type -> format_chunk_type__inst__is_cb_size_meaningful [color="#404040"];
-	info_chunk_type__seq:chunk_type -> chunk__seq [style=bold];
+	wav__inst__parent_chunk_data:parent_chunk_data_type -> parent_chunk_data__seq [style=bold];
+	wav__inst__is_riff_chunk:is_riff_chunk_type -> wav__inst__parent_chunk_data:parent_chunk_data__if [color="#404040"];
+	wav__inst__subchunks:subchunks_type -> chunk_type__seq [style=bold];
+	wav__inst__is_form_type_wave:is_form_type_wave_type -> wav__inst__subchunks:subchunks__if [color="#404040"];
 	channel_mask_and_subformat_type__seq:dw_channel_mask_type -> channel_mask_type__seq [style=bold];
 	channel_mask_and_subformat_type__seq:subformat_type -> guid_type__seq [style=bold];
+	chunk_type__seq:chunk_type -> chunk__seq [style=bold];
+	chunk_type__inst__chunk_data:chunk_data_type -> chunk_type__inst__chunk_data_chunk_data_switch [style=bold];
+	chunk_type__inst__chunk_data_chunk_data_switch:case0 -> afsp_chunk_type__seq [style=bold];
+	chunk_type__inst__chunk_data_chunk_data_switch:case1 -> axml_chunk_type__seq [style=bold];
+	chunk_type__inst__chunk_data_chunk_data_switch:case2 -> bext_chunk_type__seq [style=bold];
+	chunk_type__inst__chunk_data_chunk_data_switch:case3 -> cue_chunk_type__seq [style=bold];
+	chunk_type__inst__chunk_data_chunk_data_switch:case4 -> data_chunk_type__seq [style=bold];
+	chunk_type__inst__chunk_data_chunk_data_switch:case5 -> fact_chunk_type__seq [style=bold];
+	chunk_type__inst__chunk_data_chunk_data_switch:case6 -> format_chunk_type__seq [style=bold];
+	chunk_type__inst__chunk_data_chunk_data_switch:case7 -> ixml_chunk_type__seq [style=bold];
+	chunk_type__inst__chunk_data_chunk_data_switch:case8 -> list_chunk_type__seq [style=bold];
+	chunk_type__inst__chunk_data_chunk_data_switch:case9 -> pmx_chunk_type__seq [style=bold];
+	chunk_type__inst__chunk_id:chunk_id_type -> chunk_type__inst__chunk_data:chunk_data_type [color="#404040"];
+	chunk__seq:id_type -> chunk_type__inst__chunk_id [color="#404040"];
 	cue_chunk_type__seq:cue_points_type -> cue_point_type__seq [style=bold];
 	cue_chunk_type__seq:dw_cue_points_type -> cue_chunk_type__seq:cue_points__repeat [color="#404040"];
+	format_chunk_type__inst__is_basic_pcm:is_basic_pcm_type -> format_chunk_type__seq:cb_size__if [color="#404040"];
+	format_chunk_type__inst__is_cb_size_meaningful:is_cb_size_meaningful_type -> format_chunk_type__seq:w_valid_bits_per_sample__if [color="#404040"];
+	format_chunk_type__seq:channel_mask_and_subformat_type -> channel_mask_and_subformat_type__seq [style=bold];
+	format_chunk_type__inst__is_extensible:is_extensible_type -> format_chunk_type__seq:channel_mask_and_subformat__if [color="#404040"];
+	format_chunk_type__seq:w_format_tag_type -> format_chunk_type__inst__is_basic_float [color="#404040"];
+	format_chunk_type__seq:w_format_tag_type -> format_chunk_type__inst__is_basic_pcm [color="#404040"];
+	format_chunk_type__inst__is_basic_pcm:is_basic_pcm_type -> format_chunk_type__inst__is_cb_size_meaningful [color="#404040"];
+	format_chunk_type__seq:cb_size_type -> format_chunk_type__inst__is_cb_size_meaningful [color="#404040"];
+	format_chunk_type__seq:w_format_tag_type -> format_chunk_type__inst__is_extensible [color="#404040"];
+	info_chunk_type__seq:chunk_type -> chunk__seq [style=bold];
 	list_chunk_type__seq:parent_chunk_data_type -> parent_chunk_data__seq [style=bold];
 	parent_chunk_data__seq:form_type_type -> list_chunk_type__inst__form_type [color="#404040"];
 	list_chunk_type__inst__subchunks:subchunks_type -> list_chunk_type__inst__subchunks_subchunks_switch [style=bold];
 	list_chunk_type__inst__subchunks_subchunks_switch:case0 -> info_chunk_type__seq [style=bold];
 	list_chunk_type__inst__form_type:form_type_type -> list_chunk_type__inst__subchunks:subchunks_type [color="#404040"];
-	chunk_type__seq:chunk_type -> chunk__seq [style=bold];
-	chunk__seq:id_type -> chunk_type__inst__chunk_id [color="#404040"];
-	chunk_type__inst__chunk_data:chunk_data_type -> chunk_type__inst__chunk_data_chunk_data_switch [style=bold];
-	chunk_type__inst__chunk_data_chunk_data_switch:case0 -> fact_chunk_type__seq [style=bold];
-	chunk_type__inst__chunk_data_chunk_data_switch:case1 -> list_chunk_type__seq [style=bold];
-	chunk_type__inst__chunk_data_chunk_data_switch:case2 -> format_chunk_type__seq [style=bold];
-	chunk_type__inst__chunk_data_chunk_data_switch:case3 -> afsp_chunk_type__seq [style=bold];
-	chunk_type__inst__chunk_data_chunk_data_switch:case4 -> bext_chunk_type__seq [style=bold];
-	chunk_type__inst__chunk_data_chunk_data_switch:case5 -> cue_chunk_type__seq [style=bold];
-	chunk_type__inst__chunk_data_chunk_data_switch:case6 -> ixml_chunk_type__seq [style=bold];
-	chunk_type__inst__chunk_data_chunk_data_switch:case7 -> pmx_chunk_type__seq [style=bold];
-	chunk_type__inst__chunk_data_chunk_data_switch:case8 -> axml_chunk_type__seq [style=bold];
-	chunk_type__inst__chunk_data_chunk_data_switch:case9 -> data_chunk_type__seq [style=bold];
-	chunk_type__inst__chunk_id:chunk_id_type -> chunk_type__inst__chunk_data:chunk_data_type [color="#404040"];
 }

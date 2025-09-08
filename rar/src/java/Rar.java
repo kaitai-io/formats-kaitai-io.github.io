@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -49,25 +50,6 @@ public class Rar extends KaitaiStruct {
         public static BlockTypes byId(long id) { return byId.get(id); }
     }
 
-    public enum Oses {
-        MS_DOS(0),
-        OS_2(1),
-        WINDOWS(2),
-        UNIX(3),
-        MAC_OS(4),
-        BEOS(5);
-
-        private final long id;
-        Oses(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map<Long, Oses> byId = new HashMap<Long, Oses>(6);
-        static {
-            for (Oses e : Oses.values())
-                byId.put(e.id(), e);
-        }
-        public static Oses byId(long id) { return byId.get(id); }
-    }
-
     public enum Methods {
         STORE(48),
         FASTEST(49),
@@ -85,6 +67,25 @@ public class Rar extends KaitaiStruct {
                 byId.put(e.id(), e);
         }
         public static Methods byId(long id) { return byId.get(id); }
+    }
+
+    public enum Oses {
+        MS_DOS(0),
+        OS_2(1),
+        WINDOWS(2),
+        UNIX(3),
+        MAC_OS(4),
+        BEOS(5);
+
+        private final long id;
+        Oses(long id) { this.id = id; }
+        public long id() { return id; }
+        private static final Map<Long, Oses> byId = new HashMap<Long, Oses>(6);
+        static {
+            for (Oses e : Oses.values())
+                byId.put(e.id(), e);
+        }
+        public static Oses byId(long id) { return byId.get(id); }
     }
 
     public Rar(KaitaiStream _io) {
@@ -122,70 +123,20 @@ public class Rar extends KaitaiStruct {
         }
     }
 
-    /**
-     * RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and
-     * 8-byte magic (and pretty different block format) for v5+. This
-     * type would parse and validate both versions of signature. Note
-     * that actually this signature is a valid RAR "block": in theory,
-     * one can omit signature reading at all, and read this normally,
-     * as a block, if exact RAR version is known (and thus it's
-     * possible to choose correct block format).
-     */
-    public static class MagicSignature extends KaitaiStruct {
-        public static MagicSignature fromFile(String fileName) throws IOException {
-            return new MagicSignature(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public MagicSignature(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public MagicSignature(KaitaiStream _io, Rar _parent) {
-            this(_io, _parent, null);
-        }
-
-        public MagicSignature(KaitaiStream _io, Rar _parent, Rar _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.magic1 = this._io.readBytes(6);
-            if (!(Arrays.equals(magic1(), new byte[] { 82, 97, 114, 33, 26, 7 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 82, 97, 114, 33, 26, 7 }, magic1(), _io(), "/types/magic_signature/seq/0");
+    public void _fetchInstances() {
+        this.magic._fetchInstances();
+        for (int i = 0; i < this.blocks.size(); i++) {
+            switch (magic().version()) {
+            case 0: {
+                ((Block) (this.blocks.get(((Number) (i)).intValue())))._fetchInstances();
+                break;
             }
-            this.version = this._io.readU1();
-            if (version() == 1) {
-                this.magic3 = this._io.readBytes(1);
-                if (!(Arrays.equals(magic3(), new byte[] { 0 }))) {
-                    throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0 }, magic3(), _io(), "/types/magic_signature/seq/2");
-                }
+            case 1: {
+                ((BlockV5) (this.blocks.get(((Number) (i)).intValue())))._fetchInstances();
+                break;
+            }
             }
         }
-        private byte[] magic1;
-        private int version;
-        private byte[] magic3;
-        private Rar _root;
-        private Rar _parent;
-
-        /**
-         * Fixed part of file's magic signature that doesn't change with RAR version
-         */
-        public byte[] magic1() { return magic1; }
-
-        /**
-         * Variable part of magic signature: 0 means old (RAR 1.5-4.0)
-         * format, 1 means new (RAR 5+) format
-         */
-        public int version() { return version; }
-
-        /**
-         * New format (RAR 5+) magic contains extra byte
-         */
-        public byte[] magic3() { return magic3; }
-        public Rar _root() { return _root; }
-        public Rar _parent() { return _parent; }
     }
 
     /**
@@ -225,9 +176,8 @@ public class Rar extends KaitaiStruct {
                 if (on != null) {
                     switch (blockType()) {
                     case FILE_HEADER: {
-                        this._raw_body = this._io.readBytes(bodySize());
-                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                        this.body = new BlockFileHeader(_io__raw_body, this, _root);
+                        KaitaiStream _io_body = this._io.substream(bodySize());
+                        this.body = new BlockFileHeader(_io_body, this, _root);
                         break;
                     }
                     default: {
@@ -243,6 +193,35 @@ public class Rar extends KaitaiStruct {
                 this.addBody = this._io.readBytes(addSize());
             }
         }
+
+        public void _fetchInstances() {
+            if (hasAdd()) {
+            }
+            {
+                BlockTypes on = blockType();
+                if (on != null) {
+                    switch (blockType()) {
+                    case FILE_HEADER: {
+                        ((BlockFileHeader) (this.body))._fetchInstances();
+                        break;
+                    }
+                    default: {
+                        break;
+                    }
+                    }
+                } else {
+                }
+            }
+            if (hasAdd()) {
+            }
+        }
+        private Integer bodySize;
+        public Integer bodySize() {
+            if (this.bodySize != null)
+                return this.bodySize;
+            this.bodySize = ((Number) (blockSize() - headerSize())).intValue();
+            return this.bodySize;
+        }
         private Boolean hasAdd;
 
         /**
@@ -251,25 +230,15 @@ public class Rar extends KaitaiStruct {
         public Boolean hasAdd() {
             if (this.hasAdd != null)
                 return this.hasAdd;
-            boolean _tmp = (boolean) ((flags() & 32768) != 0);
-            this.hasAdd = _tmp;
+            this.hasAdd = (flags() & 32768) != 0;
             return this.hasAdd;
         }
         private Byte headerSize;
         public Byte headerSize() {
             if (this.headerSize != null)
                 return this.headerSize;
-            byte _tmp = (byte) ((hasAdd() ? 11 : 7));
-            this.headerSize = _tmp;
+            this.headerSize = ((Number) ((hasAdd() ? 11 : 7))).byteValue();
             return this.headerSize;
-        }
-        private Integer bodySize;
-        public Integer bodySize() {
-            if (this.bodySize != null)
-                return this.bodySize;
-            int _tmp = (int) ((blockSize() - headerSize()));
-            this.bodySize = _tmp;
-            return this.bodySize;
         }
         private int crc16;
         private BlockTypes blockType;
@@ -280,7 +249,6 @@ public class Rar extends KaitaiStruct {
         private byte[] addBody;
         private Rar _root;
         private Rar _parent;
-        private byte[] _raw_body;
 
         /**
          * CRC16 of whole block or some part of it (depends on block type)
@@ -306,7 +274,6 @@ public class Rar extends KaitaiStruct {
         public byte[] addBody() { return addBody; }
         public Rar _root() { return _root; }
         public Rar _parent() { return _parent; }
-        public byte[] _raw_body() { return _raw_body; }
     }
     public static class BlockFileHeader extends KaitaiStruct {
         public static BlockFileHeader fromFile(String fileName) throws IOException {
@@ -331,9 +298,8 @@ public class Rar extends KaitaiStruct {
             this.lowUnpSize = this._io.readU4le();
             this.hostOs = Rar.Oses.byId(this._io.readU1());
             this.fileCrc32 = this._io.readU4le();
-            this._raw_fileTime = this._io.readBytes(4);
-            KaitaiStream _io__raw_fileTime = new ByteBufferKaitaiStream(_raw_fileTime);
-            this.fileTime = new DosDatetime(_io__raw_fileTime);
+            KaitaiStream _io_fileTime = this._io.substream(4);
+            this.fileTime = new DosDatetime(_io_fileTime);
             this.rarVersion = this._io.readU1();
             this.method = Rar.Methods.byId(this._io.readU1());
             this.nameSize = this._io.readU2le();
@@ -344,6 +310,14 @@ public class Rar extends KaitaiStruct {
             this.fileName = this._io.readBytes(nameSize());
             if ((_parent().flags() & 1024) != 0) {
                 this.salt = this._io.readU8le();
+            }
+        }
+
+        public void _fetchInstances() {
+            this.fileTime._fetchInstances();
+            if ((_parent().flags() & 256) != 0) {
+            }
+            if ((_parent().flags() & 1024) != 0) {
             }
         }
         private long lowUnpSize;
@@ -359,7 +333,6 @@ public class Rar extends KaitaiStruct {
         private Long salt;
         private Rar _root;
         private Rar.Block _parent;
-        private byte[] _raw_fileTime;
 
         /**
          * Uncompressed file size (lower 32 bits, if 64-bit header flag is present)
@@ -405,7 +378,6 @@ public class Rar extends KaitaiStruct {
         public Long salt() { return salt; }
         public Rar _root() { return _root; }
         public Rar.Block _parent() { return _parent; }
-        public byte[] _raw_fileTime() { return _raw_fileTime; }
     }
     public static class BlockV5 extends KaitaiStruct {
         public static BlockV5 fromFile(String fileName) throws IOException {
@@ -428,13 +400,87 @@ public class Rar extends KaitaiStruct {
         }
         private void _read() {
         }
+
+        public void _fetchInstances() {
+        }
         private Rar _root;
         private Rar _parent;
         public Rar _root() { return _root; }
         public Rar _parent() { return _parent; }
     }
+
+    /**
+     * RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and
+     * 8-byte magic (and pretty different block format) for v5+. This
+     * type would parse and validate both versions of signature. Note
+     * that actually this signature is a valid RAR "block": in theory,
+     * one can omit signature reading at all, and read this normally,
+     * as a block, if exact RAR version is known (and thus it's
+     * possible to choose correct block format).
+     */
+    public static class MagicSignature extends KaitaiStruct {
+        public static MagicSignature fromFile(String fileName) throws IOException {
+            return new MagicSignature(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public MagicSignature(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public MagicSignature(KaitaiStream _io, Rar _parent) {
+            this(_io, _parent, null);
+        }
+
+        public MagicSignature(KaitaiStream _io, Rar _parent, Rar _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.magic1 = this._io.readBytes(6);
+            if (!(Arrays.equals(this.magic1, new byte[] { 82, 97, 114, 33, 26, 7 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 82, 97, 114, 33, 26, 7 }, this.magic1, this._io, "/types/magic_signature/seq/0");
+            }
+            this.version = this._io.readU1();
+            if (version() == 1) {
+                this.magic3 = this._io.readBytes(1);
+                if (!(Arrays.equals(this.magic3, new byte[] { 0 }))) {
+                    throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0 }, this.magic3, this._io, "/types/magic_signature/seq/2");
+                }
+            }
+        }
+
+        public void _fetchInstances() {
+            if (version() == 1) {
+            }
+        }
+        private byte[] magic1;
+        private int version;
+        private byte[] magic3;
+        private Rar _root;
+        private Rar _parent;
+
+        /**
+         * Fixed part of file's magic signature that doesn't change with RAR version
+         */
+        public byte[] magic1() { return magic1; }
+
+        /**
+         * Variable part of magic signature: 0 means old (RAR 1.5-4.0)
+         * format, 1 means new (RAR 5+) format
+         */
+        public int version() { return version; }
+
+        /**
+         * New format (RAR 5+) magic contains extra byte
+         */
+        public byte[] magic3() { return magic3; }
+        public Rar _root() { return _root; }
+        public Rar _parent() { return _parent; }
+    }
     private MagicSignature magic;
-    private ArrayList<KaitaiStruct> blocks;
+    private List<KaitaiStruct> blocks;
     private Rar _root;
     private KaitaiStruct _parent;
 
@@ -446,7 +492,7 @@ public class Rar extends KaitaiStruct {
     /**
      * Sequence of blocks that constitute the RAR file
      */
-    public ArrayList<KaitaiStruct> blocks() { return blocks; }
+    public List<KaitaiStruct> blocks() { return blocks; }
     public Rar _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

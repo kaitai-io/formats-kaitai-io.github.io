@@ -15,7 +15,7 @@ type AndesFirmware struct {
 	Dlm []byte
 	_io *kaitai.Stream
 	_root *AndesFirmware
-	_parent interface{}
+	_parent kaitai.Struct
 	_raw_ImageHeader []byte
 }
 func NewAndesFirmware() *AndesFirmware {
@@ -23,7 +23,11 @@ func NewAndesFirmware() *AndesFirmware {
 	}
 }
 
-func (this *AndesFirmware) Read(io *kaitai.Stream, parent interface{}, root *AndesFirmware) (err error) {
+func (this AndesFirmware) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *AndesFirmware) Read(io *kaitai.Stream, parent kaitai.Struct, root *AndesFirmware) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -69,6 +73,10 @@ type AndesFirmware_ImageHeader struct {
 func NewAndesFirmware_ImageHeader() *AndesFirmware_ImageHeader {
 	return &AndesFirmware_ImageHeader{
 	}
+}
+
+func (this AndesFirmware_ImageHeader) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *AndesFirmware_ImageHeader) Read(io *kaitai.Stream, parent *AndesFirmware, root *AndesFirmware) (err error) {

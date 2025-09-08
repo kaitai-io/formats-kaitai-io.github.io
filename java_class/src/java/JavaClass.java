@@ -6,9 +6,10 @@ import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 
 /**
@@ -39,18 +40,18 @@ public class JavaClass extends KaitaiStruct {
     }
     private void _read() {
         this.magic = this._io.readBytes(4);
-        if (!(Arrays.equals(magic(), new byte[] { -54, -2, -70, -66 }))) {
-            throw new KaitaiStream.ValidationNotEqualError(new byte[] { -54, -2, -70, -66 }, magic(), _io(), "/seq/0");
+        if (!(Arrays.equals(this.magic, new byte[] { -54, -2, -70, -66 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { -54, -2, -70, -66 }, this.magic, this._io, "/seq/0");
         }
         this.versionMinor = this._io.readU2be();
         this.versionMajor = this._io.readU2be();
-        if (!(versionMajor() >= 43)) {
-            throw new KaitaiStream.ValidationLessThanError(43, versionMajor(), _io(), "/seq/2");
+        if (!(this.versionMajor >= 43)) {
+            throw new KaitaiStream.ValidationLessThanError(43, this.versionMajor, this._io, "/seq/2");
         }
         this.constantPoolCount = this._io.readU2be();
         this.constantPool = new ArrayList<ConstantPoolEntry>();
-        for (int i = 0; i < (constantPoolCount() - 1); i++) {
-            this.constantPool.add(new ConstantPoolEntry(this._io, this, _root, (i != 0 ? constantPool().get((int) (i - 1)).isTwoEntries() : false)));
+        for (int i = 0; i < constantPoolCount() - 1; i++) {
+            this.constantPool.add(new ConstantPoolEntry(this._io, this, _root, (i != 0 ? constantPool().get(((Number) (i - 1)).intValue()).isTwoEntries() : false)));
         }
         this.accessFlags = this._io.readU2be();
         this.thisClass = this._io.readU2be();
@@ -77,83 +78,21 @@ public class JavaClass extends KaitaiStruct {
         }
     }
 
-    /**
-     * `class` file format version 45.3 (appeared in the very first publicly
-     * known release of Java SE AND JDK 1.0.2, released 23th January 1996) is so
-     * ancient that it's taken for granted. Earlier formats seem to be
-     * undocumented. Changes of `version_minor` don't change `class` format.
-     * Earlier `version_major`s likely belong to Oak programming language, the
-     * proprietary predecessor of Java.
-     * @see "James Gosling, Bill Joy and Guy Steele. The Java Language Specification. English. Ed. by Lisa Friendly. Addison-Wesley, Aug. 1996, p. 825. ISBN: 0-201-63451-1."
-     * @see "Frank Yellin and Tim Lindholm. The Java Virtual Machine Specification. English. Ed. by Lisa Friendly. Addison-Wesley, Sept. 1996, p. 475. ISBN: 0-201-63452-X."
-     */
-    public static class VersionGuard extends KaitaiStruct {
-
-        public VersionGuard(KaitaiStream _io, int major) {
-            this(_io, null, null, major);
+    public void _fetchInstances() {
+        for (int i = 0; i < this.constantPool.size(); i++) {
+            this.constantPool.get(((Number) (i)).intValue())._fetchInstances();
         }
-
-        public VersionGuard(KaitaiStream _io, KaitaiStruct _parent, int major) {
-            this(_io, _parent, null, major);
+        for (int i = 0; i < this.interfaces.size(); i++) {
         }
-
-        public VersionGuard(KaitaiStream _io, KaitaiStruct _parent, JavaClass _root, int major) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            this.major = major;
-            _read();
+        for (int i = 0; i < this.fields.size(); i++) {
+            this.fields.get(((Number) (i)).intValue())._fetchInstances();
         }
-        private void _read() {
-            this._unnamed0 = this._io.readBytes(0);
-            {
-                byte[] _it = _unnamed0();
-                if (!(_root().versionMajor() >= major())) {
-                    throw new KaitaiStream.ValidationExprError(_unnamed0(), _io(), "/types/version_guard/seq/0");
-                }
-            }
+        for (int i = 0; i < this.methods.size(); i++) {
+            this.methods.get(((Number) (i)).intValue())._fetchInstances();
         }
-        private byte[] _unnamed0;
-        private int major;
-        private JavaClass _root;
-        private KaitaiStruct _parent;
-        public byte[] _unnamed0() { return _unnamed0; }
-        public int major() { return major; }
-        public JavaClass _root() { return _root; }
-        public KaitaiStruct _parent() { return _parent; }
-    }
-
-    /**
-     * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.5">Source</a>
-     */
-    public static class FloatCpInfo extends KaitaiStruct {
-        public static FloatCpInfo fromFile(String fileName) throws IOException {
-            return new FloatCpInfo(new ByteBufferKaitaiStream(fileName));
+        for (int i = 0; i < this.attributes.size(); i++) {
+            this.attributes.get(((Number) (i)).intValue())._fetchInstances();
         }
-
-        public FloatCpInfo(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public FloatCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
-            this(_io, _parent, null);
-        }
-
-        public FloatCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.value = this._io.readF4be();
-        }
-        private float value;
-        private JavaClass _root;
-        private JavaClass.ConstantPoolEntry _parent;
-        public float value() { return value; }
-        public JavaClass _root() { return _root; }
-        public JavaClass.ConstantPoolEntry _parent() { return _parent; }
     }
 
     /**
@@ -182,32 +121,52 @@ public class JavaClass extends KaitaiStruct {
             this.nameIndex = this._io.readU2be();
             this.attributeLength = this._io.readU4be();
             switch (nameAsStr()) {
-            case "SourceFile": {
-                this._raw_info = this._io.readBytes(attributeLength());
-                KaitaiStream _io__raw_info = new ByteBufferKaitaiStream(_raw_info);
-                this.info = new AttrBodySourceFile(_io__raw_info, this, _root);
-                break;
-            }
-            case "LineNumberTable": {
-                this._raw_info = this._io.readBytes(attributeLength());
-                KaitaiStream _io__raw_info = new ByteBufferKaitaiStream(_raw_info);
-                this.info = new AttrBodyLineNumberTable(_io__raw_info, this, _root);
+            case "Code": {
+                KaitaiStream _io_info = this._io.substream(attributeLength());
+                this.info = new AttrBodyCode(_io_info, this, _root);
                 break;
             }
             case "Exceptions": {
-                this._raw_info = this._io.readBytes(attributeLength());
-                KaitaiStream _io__raw_info = new ByteBufferKaitaiStream(_raw_info);
-                this.info = new AttrBodyExceptions(_io__raw_info, this, _root);
+                KaitaiStream _io_info = this._io.substream(attributeLength());
+                this.info = new AttrBodyExceptions(_io_info, this, _root);
                 break;
             }
-            case "Code": {
-                this._raw_info = this._io.readBytes(attributeLength());
-                KaitaiStream _io__raw_info = new ByteBufferKaitaiStream(_raw_info);
-                this.info = new AttrBodyCode(_io__raw_info, this, _root);
+            case "LineNumberTable": {
+                KaitaiStream _io_info = this._io.substream(attributeLength());
+                this.info = new AttrBodyLineNumberTable(_io_info, this, _root);
+                break;
+            }
+            case "SourceFile": {
+                KaitaiStream _io_info = this._io.substream(attributeLength());
+                this.info = new AttrBodySourceFile(_io_info, this, _root);
                 break;
             }
             default: {
                 this.info = this._io.readBytes(attributeLength());
+                break;
+            }
+            }
+        }
+
+        public void _fetchInstances() {
+            switch (nameAsStr()) {
+            case "Code": {
+                ((AttrBodyCode) (this.info))._fetchInstances();
+                break;
+            }
+            case "Exceptions": {
+                ((AttrBodyExceptions) (this.info))._fetchInstances();
+                break;
+            }
+            case "LineNumberTable": {
+                ((AttrBodyLineNumberTable) (this.info))._fetchInstances();
+                break;
+            }
+            case "SourceFile": {
+                ((AttrBodySourceFile) (this.info))._fetchInstances();
+                break;
+            }
+            default: {
                 break;
             }
             }
@@ -252,6 +211,15 @@ public class JavaClass extends KaitaiStruct {
                 }
             }
 
+            public void _fetchInstances() {
+                for (int i = 0; i < this.exceptionTable.size(); i++) {
+                    this.exceptionTable.get(((Number) (i)).intValue())._fetchInstances();
+                }
+                for (int i = 0; i < this.attributes.size(); i++) {
+                    this.attributes.get(((Number) (i)).intValue())._fetchInstances();
+                }
+            }
+
             /**
              * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.3">Source</a>
              */
@@ -280,12 +248,15 @@ public class JavaClass extends KaitaiStruct {
                     this.handlerPc = this._io.readU2be();
                     this.catchType = this._io.readU2be();
                 }
+
+                public void _fetchInstances() {
+                }
                 private ConstantPoolEntry catchException;
                 public ConstantPoolEntry catchException() {
                     if (this.catchException != null)
                         return this.catchException;
                     if (catchType() != 0) {
-                        this.catchException = _root().constantPool().get((int) (catchType() - 1));
+                        this.catchException = _root().constantPool().get(((Number) (catchType() - 1)).intValue());
                     }
                     return this.catchException;
                 }
@@ -327,9 +298,9 @@ public class JavaClass extends KaitaiStruct {
             private long codeLength;
             private byte[] code;
             private int exceptionTableLength;
-            private ArrayList<ExceptionEntry> exceptionTable;
+            private List<ExceptionEntry> exceptionTable;
             private int attributesCount;
-            private ArrayList<AttributeInfo> attributes;
+            private List<AttributeInfo> attributes;
             private JavaClass _root;
             private JavaClass.AttributeInfo _parent;
             public int maxStack() { return maxStack; }
@@ -337,9 +308,9 @@ public class JavaClass extends KaitaiStruct {
             public long codeLength() { return codeLength; }
             public byte[] code() { return code; }
             public int exceptionTableLength() { return exceptionTableLength; }
-            public ArrayList<ExceptionEntry> exceptionTable() { return exceptionTable; }
+            public List<ExceptionEntry> exceptionTable() { return exceptionTable; }
             public int attributesCount() { return attributesCount; }
-            public ArrayList<AttributeInfo> attributes() { return attributes; }
+            public List<AttributeInfo> attributes() { return attributes; }
             public JavaClass _root() { return _root; }
             public JavaClass.AttributeInfo _parent() { return _parent; }
         }
@@ -373,6 +344,12 @@ public class JavaClass extends KaitaiStruct {
                     this.exceptions.add(new ExceptionTableEntry(this._io, this, _root));
                 }
             }
+
+            public void _fetchInstances() {
+                for (int i = 0; i < this.exceptions.size(); i++) {
+                    this.exceptions.get(((Number) (i)).intValue())._fetchInstances();
+                }
+            }
             public static class ExceptionTableEntry extends KaitaiStruct {
                 public static ExceptionTableEntry fromFile(String fileName) throws IOException {
                     return new ExceptionTableEntry(new ByteBufferKaitaiStream(fileName));
@@ -395,11 +372,14 @@ public class JavaClass extends KaitaiStruct {
                 private void _read() {
                     this.index = this._io.readU2be();
                 }
+
+                public void _fetchInstances() {
+                }
                 private JavaClass.ClassCpInfo asInfo;
                 public JavaClass.ClassCpInfo asInfo() {
                     if (this.asInfo != null)
                         return this.asInfo;
-                    this.asInfo = ((JavaClass.ClassCpInfo) (_root().constantPool().get((int) (index() - 1)).cpInfo()));
+                    this.asInfo = ((JavaClass.ClassCpInfo) (_root().constantPool().get(((Number) (index() - 1)).intValue()).cpInfo()));
                     return this.asInfo;
                 }
                 private String nameAsStr;
@@ -417,51 +397,11 @@ public class JavaClass extends KaitaiStruct {
                 public JavaClass.AttributeInfo.AttrBodyExceptions _parent() { return _parent; }
             }
             private int numberOfExceptions;
-            private ArrayList<ExceptionTableEntry> exceptions;
+            private List<ExceptionTableEntry> exceptions;
             private JavaClass _root;
             private JavaClass.AttributeInfo _parent;
             public int numberOfExceptions() { return numberOfExceptions; }
-            public ArrayList<ExceptionTableEntry> exceptions() { return exceptions; }
-            public JavaClass _root() { return _root; }
-            public JavaClass.AttributeInfo _parent() { return _parent; }
-        }
-
-        /**
-         * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.10">Source</a>
-         */
-        public static class AttrBodySourceFile extends KaitaiStruct {
-            public static AttrBodySourceFile fromFile(String fileName) throws IOException {
-                return new AttrBodySourceFile(new ByteBufferKaitaiStream(fileName));
-            }
-
-            public AttrBodySourceFile(KaitaiStream _io) {
-                this(_io, null, null);
-            }
-
-            public AttrBodySourceFile(KaitaiStream _io, JavaClass.AttributeInfo _parent) {
-                this(_io, _parent, null);
-            }
-
-            public AttrBodySourceFile(KaitaiStream _io, JavaClass.AttributeInfo _parent, JavaClass _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.sourcefileIndex = this._io.readU2be();
-            }
-            private String sourcefileAsStr;
-            public String sourcefileAsStr() {
-                if (this.sourcefileAsStr != null)
-                    return this.sourcefileAsStr;
-                this.sourcefileAsStr = ((JavaClass.Utf8CpInfo) (_root().constantPool().get((int) (sourcefileIndex() - 1)).cpInfo())).value();
-                return this.sourcefileAsStr;
-            }
-            private int sourcefileIndex;
-            private JavaClass _root;
-            private JavaClass.AttributeInfo _parent;
-            public int sourcefileIndex() { return sourcefileIndex; }
+            public List<ExceptionTableEntry> exceptions() { return exceptions; }
             public JavaClass _root() { return _root; }
             public JavaClass.AttributeInfo _parent() { return _parent; }
         }
@@ -495,6 +435,12 @@ public class JavaClass extends KaitaiStruct {
                     this.lineNumberTable.add(new LineNumberTableEntry(this._io, this, _root));
                 }
             }
+
+            public void _fetchInstances() {
+                for (int i = 0; i < this.lineNumberTable.size(); i++) {
+                    this.lineNumberTable.get(((Number) (i)).intValue())._fetchInstances();
+                }
+            }
             public static class LineNumberTableEntry extends KaitaiStruct {
                 public static LineNumberTableEntry fromFile(String fileName) throws IOException {
                     return new LineNumberTableEntry(new ByteBufferKaitaiStream(fileName));
@@ -518,6 +464,9 @@ public class JavaClass extends KaitaiStruct {
                     this.startPc = this._io.readU2be();
                     this.lineNumber = this._io.readU2be();
                 }
+
+                public void _fetchInstances() {
+                }
                 private int startPc;
                 private int lineNumber;
                 private JavaClass _root;
@@ -528,11 +477,54 @@ public class JavaClass extends KaitaiStruct {
                 public JavaClass.AttributeInfo.AttrBodyLineNumberTable _parent() { return _parent; }
             }
             private int lineNumberTableLength;
-            private ArrayList<LineNumberTableEntry> lineNumberTable;
+            private List<LineNumberTableEntry> lineNumberTable;
             private JavaClass _root;
             private JavaClass.AttributeInfo _parent;
             public int lineNumberTableLength() { return lineNumberTableLength; }
-            public ArrayList<LineNumberTableEntry> lineNumberTable() { return lineNumberTable; }
+            public List<LineNumberTableEntry> lineNumberTable() { return lineNumberTable; }
+            public JavaClass _root() { return _root; }
+            public JavaClass.AttributeInfo _parent() { return _parent; }
+        }
+
+        /**
+         * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.7.10">Source</a>
+         */
+        public static class AttrBodySourceFile extends KaitaiStruct {
+            public static AttrBodySourceFile fromFile(String fileName) throws IOException {
+                return new AttrBodySourceFile(new ByteBufferKaitaiStream(fileName));
+            }
+
+            public AttrBodySourceFile(KaitaiStream _io) {
+                this(_io, null, null);
+            }
+
+            public AttrBodySourceFile(KaitaiStream _io, JavaClass.AttributeInfo _parent) {
+                this(_io, _parent, null);
+            }
+
+            public AttrBodySourceFile(KaitaiStream _io, JavaClass.AttributeInfo _parent, JavaClass _root) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                _read();
+            }
+            private void _read() {
+                this.sourcefileIndex = this._io.readU2be();
+            }
+
+            public void _fetchInstances() {
+            }
+            private String sourcefileAsStr;
+            public String sourcefileAsStr() {
+                if (this.sourcefileAsStr != null)
+                    return this.sourcefileAsStr;
+                this.sourcefileAsStr = ((JavaClass.Utf8CpInfo) (_root().constantPool().get(((Number) (sourcefileIndex() - 1)).intValue()).cpInfo())).value();
+                return this.sourcefileAsStr;
+            }
+            private int sourcefileIndex;
+            private JavaClass _root;
+            private JavaClass.AttributeInfo _parent;
+            public int sourcefileIndex() { return sourcefileIndex; }
             public JavaClass _root() { return _root; }
             public JavaClass.AttributeInfo _parent() { return _parent; }
         }
@@ -540,7 +532,7 @@ public class JavaClass extends KaitaiStruct {
         public String nameAsStr() {
             if (this.nameAsStr != null)
                 return this.nameAsStr;
-            this.nameAsStr = ((JavaClass.Utf8CpInfo) (_root().constantPool().get((int) (nameIndex() - 1)).cpInfo())).value();
+            this.nameAsStr = ((JavaClass.Utf8CpInfo) (_root().constantPool().get(((Number) (nameIndex() - 1)).intValue()).cpInfo())).value();
             return this.nameAsStr;
         }
         private int nameIndex;
@@ -548,595 +540,11 @@ public class JavaClass extends KaitaiStruct {
         private Object info;
         private JavaClass _root;
         private KaitaiStruct _parent;
-        private byte[] _raw_info;
         public int nameIndex() { return nameIndex; }
         public long attributeLength() { return attributeLength; }
         public Object info() { return info; }
         public JavaClass _root() { return _root; }
         public KaitaiStruct _parent() { return _parent; }
-        public byte[] _raw_info() { return _raw_info; }
-    }
-
-    /**
-     * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.2">Source</a>
-     */
-    public static class MethodRefCpInfo extends KaitaiStruct {
-        public static MethodRefCpInfo fromFile(String fileName) throws IOException {
-            return new MethodRefCpInfo(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public MethodRefCpInfo(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public MethodRefCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
-            this(_io, _parent, null);
-        }
-
-        public MethodRefCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.classIndex = this._io.readU2be();
-            this.nameAndTypeIndex = this._io.readU2be();
-        }
-        private JavaClass.ClassCpInfo classAsInfo;
-        public JavaClass.ClassCpInfo classAsInfo() {
-            if (this.classAsInfo != null)
-                return this.classAsInfo;
-            this.classAsInfo = ((JavaClass.ClassCpInfo) (_root().constantPool().get((int) (classIndex() - 1)).cpInfo()));
-            return this.classAsInfo;
-        }
-        private JavaClass.NameAndTypeCpInfo nameAndTypeAsInfo;
-        public JavaClass.NameAndTypeCpInfo nameAndTypeAsInfo() {
-            if (this.nameAndTypeAsInfo != null)
-                return this.nameAndTypeAsInfo;
-            this.nameAndTypeAsInfo = ((JavaClass.NameAndTypeCpInfo) (_root().constantPool().get((int) (nameAndTypeIndex() - 1)).cpInfo()));
-            return this.nameAndTypeAsInfo;
-        }
-        private int classIndex;
-        private int nameAndTypeIndex;
-        private JavaClass _root;
-        private JavaClass.ConstantPoolEntry _parent;
-        public int classIndex() { return classIndex; }
-        public int nameAndTypeIndex() { return nameAndTypeIndex; }
-        public JavaClass _root() { return _root; }
-        public JavaClass.ConstantPoolEntry _parent() { return _parent; }
-    }
-
-    /**
-     * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.5">Source</a>
-     */
-    public static class FieldInfo extends KaitaiStruct {
-        public static FieldInfo fromFile(String fileName) throws IOException {
-            return new FieldInfo(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public FieldInfo(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public FieldInfo(KaitaiStream _io, JavaClass _parent) {
-            this(_io, _parent, null);
-        }
-
-        public FieldInfo(KaitaiStream _io, JavaClass _parent, JavaClass _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.accessFlags = this._io.readU2be();
-            this.nameIndex = this._io.readU2be();
-            this.descriptorIndex = this._io.readU2be();
-            this.attributesCount = this._io.readU2be();
-            this.attributes = new ArrayList<AttributeInfo>();
-            for (int i = 0; i < attributesCount(); i++) {
-                this.attributes.add(new AttributeInfo(this._io, this, _root));
-            }
-        }
-        private String nameAsStr;
-        public String nameAsStr() {
-            if (this.nameAsStr != null)
-                return this.nameAsStr;
-            this.nameAsStr = ((JavaClass.Utf8CpInfo) (_root().constantPool().get((int) (nameIndex() - 1)).cpInfo())).value();
-            return this.nameAsStr;
-        }
-        private int accessFlags;
-        private int nameIndex;
-        private int descriptorIndex;
-        private int attributesCount;
-        private ArrayList<AttributeInfo> attributes;
-        private JavaClass _root;
-        private JavaClass _parent;
-        public int accessFlags() { return accessFlags; }
-        public int nameIndex() { return nameIndex; }
-        public int descriptorIndex() { return descriptorIndex; }
-        public int attributesCount() { return attributesCount; }
-        public ArrayList<AttributeInfo> attributes() { return attributes; }
-        public JavaClass _root() { return _root; }
-        public JavaClass _parent() { return _parent; }
-    }
-
-    /**
-     * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.6">Source</a>
-     */
-    public static class DoubleCpInfo extends KaitaiStruct {
-        public static DoubleCpInfo fromFile(String fileName) throws IOException {
-            return new DoubleCpInfo(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public DoubleCpInfo(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public DoubleCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
-            this(_io, _parent, null);
-        }
-
-        public DoubleCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.value = this._io.readF8be();
-        }
-        private double value;
-        private JavaClass _root;
-        private JavaClass.ConstantPoolEntry _parent;
-        public double value() { return value; }
-        public JavaClass _root() { return _root; }
-        public JavaClass.ConstantPoolEntry _parent() { return _parent; }
-    }
-
-    /**
-     * @see <a href="https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-4.html#jvms-4.4.10">Source</a>
-     */
-    public static class DynamicCpInfo extends KaitaiStruct {
-        public static DynamicCpInfo fromFile(String fileName) throws IOException {
-            return new DynamicCpInfo(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public DynamicCpInfo(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public DynamicCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
-            this(_io, _parent, null);
-        }
-
-        public DynamicCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this._unnamed0 = new VersionGuard(this._io, this, _root, 55);
-            this.bootstrapMethodAttrIndex = this._io.readU2be();
-            this.nameAndTypeIndex = this._io.readU2be();
-        }
-        private VersionGuard _unnamed0;
-        private int bootstrapMethodAttrIndex;
-        private int nameAndTypeIndex;
-        private JavaClass _root;
-        private JavaClass.ConstantPoolEntry _parent;
-        public VersionGuard _unnamed0() { return _unnamed0; }
-        public int bootstrapMethodAttrIndex() { return bootstrapMethodAttrIndex; }
-        public int nameAndTypeIndex() { return nameAndTypeIndex; }
-        public JavaClass _root() { return _root; }
-        public JavaClass.ConstantPoolEntry _parent() { return _parent; }
-    }
-
-    /**
-     * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.5">Source</a>
-     */
-    public static class LongCpInfo extends KaitaiStruct {
-        public static LongCpInfo fromFile(String fileName) throws IOException {
-            return new LongCpInfo(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public LongCpInfo(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public LongCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
-            this(_io, _parent, null);
-        }
-
-        public LongCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.value = this._io.readU8be();
-        }
-        private long value;
-        private JavaClass _root;
-        private JavaClass.ConstantPoolEntry _parent;
-        public long value() { return value; }
-        public JavaClass _root() { return _root; }
-        public JavaClass.ConstantPoolEntry _parent() { return _parent; }
-    }
-
-    /**
-     * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.10">Source</a>
-     */
-    public static class InvokeDynamicCpInfo extends KaitaiStruct {
-        public static InvokeDynamicCpInfo fromFile(String fileName) throws IOException {
-            return new InvokeDynamicCpInfo(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public InvokeDynamicCpInfo(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public InvokeDynamicCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
-            this(_io, _parent, null);
-        }
-
-        public InvokeDynamicCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this._unnamed0 = new VersionGuard(this._io, this, _root, 51);
-            this.bootstrapMethodAttrIndex = this._io.readU2be();
-            this.nameAndTypeIndex = this._io.readU2be();
-        }
-        private VersionGuard _unnamed0;
-        private int bootstrapMethodAttrIndex;
-        private int nameAndTypeIndex;
-        private JavaClass _root;
-        private JavaClass.ConstantPoolEntry _parent;
-        public VersionGuard _unnamed0() { return _unnamed0; }
-        public int bootstrapMethodAttrIndex() { return bootstrapMethodAttrIndex; }
-        public int nameAndTypeIndex() { return nameAndTypeIndex; }
-        public JavaClass _root() { return _root; }
-        public JavaClass.ConstantPoolEntry _parent() { return _parent; }
-    }
-
-    /**
-     * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.8">Source</a>
-     */
-    public static class MethodHandleCpInfo extends KaitaiStruct {
-        public static MethodHandleCpInfo fromFile(String fileName) throws IOException {
-            return new MethodHandleCpInfo(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public enum ReferenceKindEnum {
-            GET_FIELD(1),
-            GET_STATIC(2),
-            PUT_FIELD(3),
-            PUT_STATIC(4),
-            INVOKE_VIRTUAL(5),
-            INVOKE_STATIC(6),
-            INVOKE_SPECIAL(7),
-            NEW_INVOKE_SPECIAL(8),
-            INVOKE_INTERFACE(9);
-
-            private final long id;
-            ReferenceKindEnum(long id) { this.id = id; }
-            public long id() { return id; }
-            private static final Map<Long, ReferenceKindEnum> byId = new HashMap<Long, ReferenceKindEnum>(9);
-            static {
-                for (ReferenceKindEnum e : ReferenceKindEnum.values())
-                    byId.put(e.id(), e);
-            }
-            public static ReferenceKindEnum byId(long id) { return byId.get(id); }
-        }
-
-        public MethodHandleCpInfo(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public MethodHandleCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
-            this(_io, _parent, null);
-        }
-
-        public MethodHandleCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this._unnamed0 = new VersionGuard(this._io, this, _root, 51);
-            this.referenceKind = ReferenceKindEnum.byId(this._io.readU1());
-            this.referenceIndex = this._io.readU2be();
-        }
-        private VersionGuard _unnamed0;
-        private ReferenceKindEnum referenceKind;
-        private int referenceIndex;
-        private JavaClass _root;
-        private JavaClass.ConstantPoolEntry _parent;
-        public VersionGuard _unnamed0() { return _unnamed0; }
-        public ReferenceKindEnum referenceKind() { return referenceKind; }
-        public int referenceIndex() { return referenceIndex; }
-        public JavaClass _root() { return _root; }
-        public JavaClass.ConstantPoolEntry _parent() { return _parent; }
-    }
-
-    /**
-     * Project Jigsaw modules introduced in Java 9
-     * @see <a href="https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-3.html#jvms-3.16">Source</a>
-     * @see <a href="https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-4.html#jvms-4.4.11">Source</a>
-     * @see <a href="https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-4.html#jvms-4.4.12">Source</a>
-     */
-    public static class ModulePackageCpInfo extends KaitaiStruct {
-        public static ModulePackageCpInfo fromFile(String fileName) throws IOException {
-            return new ModulePackageCpInfo(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public ModulePackageCpInfo(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public ModulePackageCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
-            this(_io, _parent, null);
-        }
-
-        public ModulePackageCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this._unnamed0 = new VersionGuard(this._io, this, _root, 53);
-            this.nameIndex = this._io.readU2be();
-        }
-        private JavaClass.Utf8CpInfo nameAsInfo;
-        public JavaClass.Utf8CpInfo nameAsInfo() {
-            if (this.nameAsInfo != null)
-                return this.nameAsInfo;
-            this.nameAsInfo = ((JavaClass.Utf8CpInfo) (_root().constantPool().get((int) (nameIndex() - 1)).cpInfo()));
-            return this.nameAsInfo;
-        }
-        private String nameAsStr;
-        public String nameAsStr() {
-            if (this.nameAsStr != null)
-                return this.nameAsStr;
-            this.nameAsStr = nameAsInfo().value();
-            return this.nameAsStr;
-        }
-        private VersionGuard _unnamed0;
-        private int nameIndex;
-        private JavaClass _root;
-        private JavaClass.ConstantPoolEntry _parent;
-        public VersionGuard _unnamed0() { return _unnamed0; }
-        public int nameIndex() { return nameIndex; }
-        public JavaClass _root() { return _root; }
-        public JavaClass.ConstantPoolEntry _parent() { return _parent; }
-    }
-
-    /**
-     * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.6">Source</a>
-     */
-    public static class NameAndTypeCpInfo extends KaitaiStruct {
-        public static NameAndTypeCpInfo fromFile(String fileName) throws IOException {
-            return new NameAndTypeCpInfo(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public NameAndTypeCpInfo(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public NameAndTypeCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
-            this(_io, _parent, null);
-        }
-
-        public NameAndTypeCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.nameIndex = this._io.readU2be();
-            this.descriptorIndex = this._io.readU2be();
-        }
-        private JavaClass.Utf8CpInfo nameAsInfo;
-        public JavaClass.Utf8CpInfo nameAsInfo() {
-            if (this.nameAsInfo != null)
-                return this.nameAsInfo;
-            this.nameAsInfo = ((JavaClass.Utf8CpInfo) (_root().constantPool().get((int) (nameIndex() - 1)).cpInfo()));
-            return this.nameAsInfo;
-        }
-        private String nameAsStr;
-        public String nameAsStr() {
-            if (this.nameAsStr != null)
-                return this.nameAsStr;
-            this.nameAsStr = nameAsInfo().value();
-            return this.nameAsStr;
-        }
-        private JavaClass.Utf8CpInfo descriptorAsInfo;
-        public JavaClass.Utf8CpInfo descriptorAsInfo() {
-            if (this.descriptorAsInfo != null)
-                return this.descriptorAsInfo;
-            this.descriptorAsInfo = ((JavaClass.Utf8CpInfo) (_root().constantPool().get((int) (descriptorIndex() - 1)).cpInfo()));
-            return this.descriptorAsInfo;
-        }
-        private String descriptorAsStr;
-        public String descriptorAsStr() {
-            if (this.descriptorAsStr != null)
-                return this.descriptorAsStr;
-            this.descriptorAsStr = descriptorAsInfo().value();
-            return this.descriptorAsStr;
-        }
-        private int nameIndex;
-        private int descriptorIndex;
-        private JavaClass _root;
-        private JavaClass.ConstantPoolEntry _parent;
-        public int nameIndex() { return nameIndex; }
-        public int descriptorIndex() { return descriptorIndex; }
-        public JavaClass _root() { return _root; }
-        public JavaClass.ConstantPoolEntry _parent() { return _parent; }
-    }
-
-    /**
-     * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.7">Source</a>
-     */
-    public static class Utf8CpInfo extends KaitaiStruct {
-        public static Utf8CpInfo fromFile(String fileName) throws IOException {
-            return new Utf8CpInfo(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Utf8CpInfo(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Utf8CpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Utf8CpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.strLen = this._io.readU2be();
-            this.value = new String(this._io.readBytes(strLen()), Charset.forName("UTF-8"));
-        }
-        private int strLen;
-        private String value;
-        private JavaClass _root;
-        private JavaClass.ConstantPoolEntry _parent;
-        public int strLen() { return strLen; }
-        public String value() { return value; }
-        public JavaClass _root() { return _root; }
-        public JavaClass.ConstantPoolEntry _parent() { return _parent; }
-    }
-
-    /**
-     * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.3">Source</a>
-     */
-    public static class StringCpInfo extends KaitaiStruct {
-        public static StringCpInfo fromFile(String fileName) throws IOException {
-            return new StringCpInfo(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public StringCpInfo(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public StringCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
-            this(_io, _parent, null);
-        }
-
-        public StringCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.stringIndex = this._io.readU2be();
-        }
-        private int stringIndex;
-        private JavaClass _root;
-        private JavaClass.ConstantPoolEntry _parent;
-        public int stringIndex() { return stringIndex; }
-        public JavaClass _root() { return _root; }
-        public JavaClass.ConstantPoolEntry _parent() { return _parent; }
-    }
-
-    /**
-     * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.9">Source</a>
-     */
-    public static class MethodTypeCpInfo extends KaitaiStruct {
-        public static MethodTypeCpInfo fromFile(String fileName) throws IOException {
-            return new MethodTypeCpInfo(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public MethodTypeCpInfo(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public MethodTypeCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
-            this(_io, _parent, null);
-        }
-
-        public MethodTypeCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this._unnamed0 = new VersionGuard(this._io, this, _root, 51);
-            this.descriptorIndex = this._io.readU2be();
-        }
-        private VersionGuard _unnamed0;
-        private int descriptorIndex;
-        private JavaClass _root;
-        private JavaClass.ConstantPoolEntry _parent;
-        public VersionGuard _unnamed0() { return _unnamed0; }
-        public int descriptorIndex() { return descriptorIndex; }
-        public JavaClass _root() { return _root; }
-        public JavaClass.ConstantPoolEntry _parent() { return _parent; }
-    }
-
-    /**
-     * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.2">Source</a>
-     */
-    public static class InterfaceMethodRefCpInfo extends KaitaiStruct {
-        public static InterfaceMethodRefCpInfo fromFile(String fileName) throws IOException {
-            return new InterfaceMethodRefCpInfo(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public InterfaceMethodRefCpInfo(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public InterfaceMethodRefCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
-            this(_io, _parent, null);
-        }
-
-        public InterfaceMethodRefCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.classIndex = this._io.readU2be();
-            this.nameAndTypeIndex = this._io.readU2be();
-        }
-        private JavaClass.ClassCpInfo classAsInfo;
-        public JavaClass.ClassCpInfo classAsInfo() {
-            if (this.classAsInfo != null)
-                return this.classAsInfo;
-            this.classAsInfo = ((JavaClass.ClassCpInfo) (_root().constantPool().get((int) (classIndex() - 1)).cpInfo()));
-            return this.classAsInfo;
-        }
-        private JavaClass.NameAndTypeCpInfo nameAndTypeAsInfo;
-        public JavaClass.NameAndTypeCpInfo nameAndTypeAsInfo() {
-            if (this.nameAndTypeAsInfo != null)
-                return this.nameAndTypeAsInfo;
-            this.nameAndTypeAsInfo = ((JavaClass.NameAndTypeCpInfo) (_root().constantPool().get((int) (nameAndTypeIndex() - 1)).cpInfo()));
-            return this.nameAndTypeAsInfo;
-        }
-        private int classIndex;
-        private int nameAndTypeIndex;
-        private JavaClass _root;
-        private JavaClass.ConstantPoolEntry _parent;
-        public int classIndex() { return classIndex; }
-        public int nameAndTypeIndex() { return nameAndTypeIndex; }
-        public JavaClass _root() { return _root; }
-        public JavaClass.ConstantPoolEntry _parent() { return _parent; }
     }
 
     /**
@@ -1164,11 +572,14 @@ public class JavaClass extends KaitaiStruct {
         private void _read() {
             this.nameIndex = this._io.readU2be();
         }
+
+        public void _fetchInstances() {
+        }
         private JavaClass.Utf8CpInfo nameAsInfo;
         public JavaClass.Utf8CpInfo nameAsInfo() {
             if (this.nameAsInfo != null)
                 return this.nameAsInfo;
-            this.nameAsInfo = ((JavaClass.Utf8CpInfo) (_root().constantPool().get((int) (nameIndex() - 1)).cpInfo()));
+            this.nameAsInfo = ((JavaClass.Utf8CpInfo) (_root().constantPool().get(((Number) (nameIndex() - 1)).intValue()).cpInfo()));
             return this.nameAsInfo;
         }
         private String nameAsStr;
@@ -1245,72 +656,154 @@ public class JavaClass extends KaitaiStruct {
                     TagEnum on = tag();
                     if (on != null) {
                         switch (tag()) {
-                        case INTERFACE_METHOD_REF: {
-                            this.cpInfo = new InterfaceMethodRefCpInfo(this._io, this, _root);
-                            break;
-                        }
                         case CLASS_TYPE: {
                             this.cpInfo = new ClassCpInfo(this._io, this, _root);
-                            break;
-                        }
-                        case DYNAMIC: {
-                            this.cpInfo = new DynamicCpInfo(this._io, this, _root);
-                            break;
-                        }
-                        case UTF8: {
-                            this.cpInfo = new Utf8CpInfo(this._io, this, _root);
-                            break;
-                        }
-                        case METHOD_TYPE: {
-                            this.cpInfo = new MethodTypeCpInfo(this._io, this, _root);
-                            break;
-                        }
-                        case INTEGER: {
-                            this.cpInfo = new IntegerCpInfo(this._io, this, _root);
-                            break;
-                        }
-                        case STRING: {
-                            this.cpInfo = new StringCpInfo(this._io, this, _root);
-                            break;
-                        }
-                        case FLOAT: {
-                            this.cpInfo = new FloatCpInfo(this._io, this, _root);
-                            break;
-                        }
-                        case MODULE: {
-                            this.cpInfo = new ModulePackageCpInfo(this._io, this, _root);
-                            break;
-                        }
-                        case LONG: {
-                            this.cpInfo = new LongCpInfo(this._io, this, _root);
-                            break;
-                        }
-                        case METHOD_REF: {
-                            this.cpInfo = new MethodRefCpInfo(this._io, this, _root);
                             break;
                         }
                         case DOUBLE: {
                             this.cpInfo = new DoubleCpInfo(this._io, this, _root);
                             break;
                         }
-                        case INVOKE_DYNAMIC: {
-                            this.cpInfo = new InvokeDynamicCpInfo(this._io, this, _root);
+                        case DYNAMIC: {
+                            this.cpInfo = new DynamicCpInfo(this._io, this, _root);
                             break;
                         }
                         case FIELD_REF: {
                             this.cpInfo = new FieldRefCpInfo(this._io, this, _root);
                             break;
                         }
+                        case FLOAT: {
+                            this.cpInfo = new FloatCpInfo(this._io, this, _root);
+                            break;
+                        }
+                        case INTEGER: {
+                            this.cpInfo = new IntegerCpInfo(this._io, this, _root);
+                            break;
+                        }
+                        case INTERFACE_METHOD_REF: {
+                            this.cpInfo = new InterfaceMethodRefCpInfo(this._io, this, _root);
+                            break;
+                        }
+                        case INVOKE_DYNAMIC: {
+                            this.cpInfo = new InvokeDynamicCpInfo(this._io, this, _root);
+                            break;
+                        }
+                        case LONG: {
+                            this.cpInfo = new LongCpInfo(this._io, this, _root);
+                            break;
+                        }
                         case METHOD_HANDLE: {
                             this.cpInfo = new MethodHandleCpInfo(this._io, this, _root);
+                            break;
+                        }
+                        case METHOD_REF: {
+                            this.cpInfo = new MethodRefCpInfo(this._io, this, _root);
+                            break;
+                        }
+                        case METHOD_TYPE: {
+                            this.cpInfo = new MethodTypeCpInfo(this._io, this, _root);
+                            break;
+                        }
+                        case MODULE: {
+                            this.cpInfo = new ModulePackageCpInfo(this._io, this, _root);
+                            break;
+                        }
+                        case NAME_AND_TYPE: {
+                            this.cpInfo = new NameAndTypeCpInfo(this._io, this, _root);
                             break;
                         }
                         case PACKAGE: {
                             this.cpInfo = new ModulePackageCpInfo(this._io, this, _root);
                             break;
                         }
+                        case STRING: {
+                            this.cpInfo = new StringCpInfo(this._io, this, _root);
+                            break;
+                        }
+                        case UTF8: {
+                            this.cpInfo = new Utf8CpInfo(this._io, this, _root);
+                            break;
+                        }
+                        }
+                    }
+                }
+            }
+        }
+
+        public void _fetchInstances() {
+            if (!(isPrevTwoEntries())) {
+            }
+            if (!(isPrevTwoEntries())) {
+                {
+                    TagEnum on = tag();
+                    if (on != null) {
+                        switch (tag()) {
+                        case CLASS_TYPE: {
+                            ((ClassCpInfo) (this.cpInfo))._fetchInstances();
+                            break;
+                        }
+                        case DOUBLE: {
+                            ((DoubleCpInfo) (this.cpInfo))._fetchInstances();
+                            break;
+                        }
+                        case DYNAMIC: {
+                            ((DynamicCpInfo) (this.cpInfo))._fetchInstances();
+                            break;
+                        }
+                        case FIELD_REF: {
+                            ((FieldRefCpInfo) (this.cpInfo))._fetchInstances();
+                            break;
+                        }
+                        case FLOAT: {
+                            ((FloatCpInfo) (this.cpInfo))._fetchInstances();
+                            break;
+                        }
+                        case INTEGER: {
+                            ((IntegerCpInfo) (this.cpInfo))._fetchInstances();
+                            break;
+                        }
+                        case INTERFACE_METHOD_REF: {
+                            ((InterfaceMethodRefCpInfo) (this.cpInfo))._fetchInstances();
+                            break;
+                        }
+                        case INVOKE_DYNAMIC: {
+                            ((InvokeDynamicCpInfo) (this.cpInfo))._fetchInstances();
+                            break;
+                        }
+                        case LONG: {
+                            ((LongCpInfo) (this.cpInfo))._fetchInstances();
+                            break;
+                        }
+                        case METHOD_HANDLE: {
+                            ((MethodHandleCpInfo) (this.cpInfo))._fetchInstances();
+                            break;
+                        }
+                        case METHOD_REF: {
+                            ((MethodRefCpInfo) (this.cpInfo))._fetchInstances();
+                            break;
+                        }
+                        case METHOD_TYPE: {
+                            ((MethodTypeCpInfo) (this.cpInfo))._fetchInstances();
+                            break;
+                        }
+                        case MODULE: {
+                            ((ModulePackageCpInfo) (this.cpInfo))._fetchInstances();
+                            break;
+                        }
                         case NAME_AND_TYPE: {
-                            this.cpInfo = new NameAndTypeCpInfo(this._io, this, _root);
+                            ((NameAndTypeCpInfo) (this.cpInfo))._fetchInstances();
+                            break;
+                        }
+                        case PACKAGE: {
+                            ((ModulePackageCpInfo) (this.cpInfo))._fetchInstances();
+                            break;
+                        }
+                        case STRING: {
+                            ((StringCpInfo) (this.cpInfo))._fetchInstances();
+                            break;
+                        }
+                        case UTF8: {
+                            ((Utf8CpInfo) (this.cpInfo))._fetchInstances();
                             break;
                         }
                         }
@@ -1322,8 +815,7 @@ public class JavaClass extends KaitaiStruct {
         public Boolean isTwoEntries() {
             if (this.isTwoEntries != null)
                 return this.isTwoEntries;
-            boolean _tmp = (boolean) ((isPrevTwoEntries() ? false :  ((tag() == TagEnum.LONG) || (tag() == TagEnum.DOUBLE)) ));
-            this.isTwoEntries = _tmp;
+            this.isTwoEntries = (isPrevTwoEntries() ? false :  ((tag() == TagEnum.LONG) || (tag() == TagEnum.DOUBLE)) );
             return this.isTwoEntries;
         }
         private TagEnum tag;
@@ -1336,6 +828,468 @@ public class JavaClass extends KaitaiStruct {
         public boolean isPrevTwoEntries() { return isPrevTwoEntries; }
         public JavaClass _root() { return _root; }
         public JavaClass _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.6">Source</a>
+     */
+    public static class DoubleCpInfo extends KaitaiStruct {
+        public static DoubleCpInfo fromFile(String fileName) throws IOException {
+            return new DoubleCpInfo(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public DoubleCpInfo(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public DoubleCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
+            this(_io, _parent, null);
+        }
+
+        public DoubleCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.value = this._io.readF8be();
+        }
+
+        public void _fetchInstances() {
+        }
+        private double value;
+        private JavaClass _root;
+        private JavaClass.ConstantPoolEntry _parent;
+        public double value() { return value; }
+        public JavaClass _root() { return _root; }
+        public JavaClass.ConstantPoolEntry _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-4.html#jvms-4.4.10">Source</a>
+     */
+    public static class DynamicCpInfo extends KaitaiStruct {
+        public static DynamicCpInfo fromFile(String fileName) throws IOException {
+            return new DynamicCpInfo(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public DynamicCpInfo(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public DynamicCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
+            this(_io, _parent, null);
+        }
+
+        public DynamicCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this._unnamed0 = new VersionGuard(this._io, this, _root, 55);
+            this.bootstrapMethodAttrIndex = this._io.readU2be();
+            this.nameAndTypeIndex = this._io.readU2be();
+        }
+
+        public void _fetchInstances() {
+            this._unnamed0._fetchInstances();
+        }
+        private VersionGuard _unnamed0;
+        private int bootstrapMethodAttrIndex;
+        private int nameAndTypeIndex;
+        private JavaClass _root;
+        private JavaClass.ConstantPoolEntry _parent;
+        public VersionGuard _unnamed0() { return _unnamed0; }
+        public int bootstrapMethodAttrIndex() { return bootstrapMethodAttrIndex; }
+        public int nameAndTypeIndex() { return nameAndTypeIndex; }
+        public JavaClass _root() { return _root; }
+        public JavaClass.ConstantPoolEntry _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.5">Source</a>
+     */
+    public static class FieldInfo extends KaitaiStruct {
+        public static FieldInfo fromFile(String fileName) throws IOException {
+            return new FieldInfo(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public FieldInfo(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public FieldInfo(KaitaiStream _io, JavaClass _parent) {
+            this(_io, _parent, null);
+        }
+
+        public FieldInfo(KaitaiStream _io, JavaClass _parent, JavaClass _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.accessFlags = this._io.readU2be();
+            this.nameIndex = this._io.readU2be();
+            this.descriptorIndex = this._io.readU2be();
+            this.attributesCount = this._io.readU2be();
+            this.attributes = new ArrayList<AttributeInfo>();
+            for (int i = 0; i < attributesCount(); i++) {
+                this.attributes.add(new AttributeInfo(this._io, this, _root));
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.attributes.size(); i++) {
+                this.attributes.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private String nameAsStr;
+        public String nameAsStr() {
+            if (this.nameAsStr != null)
+                return this.nameAsStr;
+            this.nameAsStr = ((JavaClass.Utf8CpInfo) (_root().constantPool().get(((Number) (nameIndex() - 1)).intValue()).cpInfo())).value();
+            return this.nameAsStr;
+        }
+        private int accessFlags;
+        private int nameIndex;
+        private int descriptorIndex;
+        private int attributesCount;
+        private List<AttributeInfo> attributes;
+        private JavaClass _root;
+        private JavaClass _parent;
+        public int accessFlags() { return accessFlags; }
+        public int nameIndex() { return nameIndex; }
+        public int descriptorIndex() { return descriptorIndex; }
+        public int attributesCount() { return attributesCount; }
+        public List<AttributeInfo> attributes() { return attributes; }
+        public JavaClass _root() { return _root; }
+        public JavaClass _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.2">Source</a>
+     */
+    public static class FieldRefCpInfo extends KaitaiStruct {
+        public static FieldRefCpInfo fromFile(String fileName) throws IOException {
+            return new FieldRefCpInfo(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public FieldRefCpInfo(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public FieldRefCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
+            this(_io, _parent, null);
+        }
+
+        public FieldRefCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.classIndex = this._io.readU2be();
+            this.nameAndTypeIndex = this._io.readU2be();
+        }
+
+        public void _fetchInstances() {
+        }
+        private JavaClass.ClassCpInfo classAsInfo;
+        public JavaClass.ClassCpInfo classAsInfo() {
+            if (this.classAsInfo != null)
+                return this.classAsInfo;
+            this.classAsInfo = ((JavaClass.ClassCpInfo) (_root().constantPool().get(((Number) (classIndex() - 1)).intValue()).cpInfo()));
+            return this.classAsInfo;
+        }
+        private JavaClass.NameAndTypeCpInfo nameAndTypeAsInfo;
+        public JavaClass.NameAndTypeCpInfo nameAndTypeAsInfo() {
+            if (this.nameAndTypeAsInfo != null)
+                return this.nameAndTypeAsInfo;
+            this.nameAndTypeAsInfo = ((JavaClass.NameAndTypeCpInfo) (_root().constantPool().get(((Number) (nameAndTypeIndex() - 1)).intValue()).cpInfo()));
+            return this.nameAndTypeAsInfo;
+        }
+        private int classIndex;
+        private int nameAndTypeIndex;
+        private JavaClass _root;
+        private JavaClass.ConstantPoolEntry _parent;
+        public int classIndex() { return classIndex; }
+        public int nameAndTypeIndex() { return nameAndTypeIndex; }
+        public JavaClass _root() { return _root; }
+        public JavaClass.ConstantPoolEntry _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.5">Source</a>
+     */
+    public static class FloatCpInfo extends KaitaiStruct {
+        public static FloatCpInfo fromFile(String fileName) throws IOException {
+            return new FloatCpInfo(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public FloatCpInfo(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public FloatCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
+            this(_io, _parent, null);
+        }
+
+        public FloatCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.value = this._io.readF4be();
+        }
+
+        public void _fetchInstances() {
+        }
+        private float value;
+        private JavaClass _root;
+        private JavaClass.ConstantPoolEntry _parent;
+        public float value() { return value; }
+        public JavaClass _root() { return _root; }
+        public JavaClass.ConstantPoolEntry _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.4">Source</a>
+     */
+    public static class IntegerCpInfo extends KaitaiStruct {
+        public static IntegerCpInfo fromFile(String fileName) throws IOException {
+            return new IntegerCpInfo(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public IntegerCpInfo(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public IntegerCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
+            this(_io, _parent, null);
+        }
+
+        public IntegerCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.value = this._io.readU4be();
+        }
+
+        public void _fetchInstances() {
+        }
+        private long value;
+        private JavaClass _root;
+        private JavaClass.ConstantPoolEntry _parent;
+        public long value() { return value; }
+        public JavaClass _root() { return _root; }
+        public JavaClass.ConstantPoolEntry _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.2">Source</a>
+     */
+    public static class InterfaceMethodRefCpInfo extends KaitaiStruct {
+        public static InterfaceMethodRefCpInfo fromFile(String fileName) throws IOException {
+            return new InterfaceMethodRefCpInfo(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public InterfaceMethodRefCpInfo(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public InterfaceMethodRefCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
+            this(_io, _parent, null);
+        }
+
+        public InterfaceMethodRefCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.classIndex = this._io.readU2be();
+            this.nameAndTypeIndex = this._io.readU2be();
+        }
+
+        public void _fetchInstances() {
+        }
+        private JavaClass.ClassCpInfo classAsInfo;
+        public JavaClass.ClassCpInfo classAsInfo() {
+            if (this.classAsInfo != null)
+                return this.classAsInfo;
+            this.classAsInfo = ((JavaClass.ClassCpInfo) (_root().constantPool().get(((Number) (classIndex() - 1)).intValue()).cpInfo()));
+            return this.classAsInfo;
+        }
+        private JavaClass.NameAndTypeCpInfo nameAndTypeAsInfo;
+        public JavaClass.NameAndTypeCpInfo nameAndTypeAsInfo() {
+            if (this.nameAndTypeAsInfo != null)
+                return this.nameAndTypeAsInfo;
+            this.nameAndTypeAsInfo = ((JavaClass.NameAndTypeCpInfo) (_root().constantPool().get(((Number) (nameAndTypeIndex() - 1)).intValue()).cpInfo()));
+            return this.nameAndTypeAsInfo;
+        }
+        private int classIndex;
+        private int nameAndTypeIndex;
+        private JavaClass _root;
+        private JavaClass.ConstantPoolEntry _parent;
+        public int classIndex() { return classIndex; }
+        public int nameAndTypeIndex() { return nameAndTypeIndex; }
+        public JavaClass _root() { return _root; }
+        public JavaClass.ConstantPoolEntry _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.10">Source</a>
+     */
+    public static class InvokeDynamicCpInfo extends KaitaiStruct {
+        public static InvokeDynamicCpInfo fromFile(String fileName) throws IOException {
+            return new InvokeDynamicCpInfo(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public InvokeDynamicCpInfo(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public InvokeDynamicCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
+            this(_io, _parent, null);
+        }
+
+        public InvokeDynamicCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this._unnamed0 = new VersionGuard(this._io, this, _root, 51);
+            this.bootstrapMethodAttrIndex = this._io.readU2be();
+            this.nameAndTypeIndex = this._io.readU2be();
+        }
+
+        public void _fetchInstances() {
+            this._unnamed0._fetchInstances();
+        }
+        private VersionGuard _unnamed0;
+        private int bootstrapMethodAttrIndex;
+        private int nameAndTypeIndex;
+        private JavaClass _root;
+        private JavaClass.ConstantPoolEntry _parent;
+        public VersionGuard _unnamed0() { return _unnamed0; }
+        public int bootstrapMethodAttrIndex() { return bootstrapMethodAttrIndex; }
+        public int nameAndTypeIndex() { return nameAndTypeIndex; }
+        public JavaClass _root() { return _root; }
+        public JavaClass.ConstantPoolEntry _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.5">Source</a>
+     */
+    public static class LongCpInfo extends KaitaiStruct {
+        public static LongCpInfo fromFile(String fileName) throws IOException {
+            return new LongCpInfo(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public LongCpInfo(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public LongCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
+            this(_io, _parent, null);
+        }
+
+        public LongCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.value = this._io.readU8be();
+        }
+
+        public void _fetchInstances() {
+        }
+        private long value;
+        private JavaClass _root;
+        private JavaClass.ConstantPoolEntry _parent;
+        public long value() { return value; }
+        public JavaClass _root() { return _root; }
+        public JavaClass.ConstantPoolEntry _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.8">Source</a>
+     */
+    public static class MethodHandleCpInfo extends KaitaiStruct {
+        public static MethodHandleCpInfo fromFile(String fileName) throws IOException {
+            return new MethodHandleCpInfo(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public enum ReferenceKindEnum {
+            GET_FIELD(1),
+            GET_STATIC(2),
+            PUT_FIELD(3),
+            PUT_STATIC(4),
+            INVOKE_VIRTUAL(5),
+            INVOKE_STATIC(6),
+            INVOKE_SPECIAL(7),
+            NEW_INVOKE_SPECIAL(8),
+            INVOKE_INTERFACE(9);
+
+            private final long id;
+            ReferenceKindEnum(long id) { this.id = id; }
+            public long id() { return id; }
+            private static final Map<Long, ReferenceKindEnum> byId = new HashMap<Long, ReferenceKindEnum>(9);
+            static {
+                for (ReferenceKindEnum e : ReferenceKindEnum.values())
+                    byId.put(e.id(), e);
+            }
+            public static ReferenceKindEnum byId(long id) { return byId.get(id); }
+        }
+
+        public MethodHandleCpInfo(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public MethodHandleCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
+            this(_io, _parent, null);
+        }
+
+        public MethodHandleCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this._unnamed0 = new VersionGuard(this._io, this, _root, 51);
+            this.referenceKind = ReferenceKindEnum.byId(this._io.readU1());
+            this.referenceIndex = this._io.readU2be();
+        }
+
+        public void _fetchInstances() {
+            this._unnamed0._fetchInstances();
+        }
+        private VersionGuard _unnamed0;
+        private ReferenceKindEnum referenceKind;
+        private int referenceIndex;
+        private JavaClass _root;
+        private JavaClass.ConstantPoolEntry _parent;
+        public VersionGuard _unnamed0() { return _unnamed0; }
+        public ReferenceKindEnum referenceKind() { return referenceKind; }
+        public int referenceIndex() { return referenceIndex; }
+        public JavaClass _root() { return _root; }
+        public JavaClass.ConstantPoolEntry _parent() { return _parent; }
     }
 
     /**
@@ -1370,79 +1324,52 @@ public class JavaClass extends KaitaiStruct {
                 this.attributes.add(new AttributeInfo(this._io, this, _root));
             }
         }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.attributes.size(); i++) {
+                this.attributes.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
         private String nameAsStr;
         public String nameAsStr() {
             if (this.nameAsStr != null)
                 return this.nameAsStr;
-            this.nameAsStr = ((JavaClass.Utf8CpInfo) (_root().constantPool().get((int) (nameIndex() - 1)).cpInfo())).value();
+            this.nameAsStr = ((JavaClass.Utf8CpInfo) (_root().constantPool().get(((Number) (nameIndex() - 1)).intValue()).cpInfo())).value();
             return this.nameAsStr;
         }
         private int accessFlags;
         private int nameIndex;
         private int descriptorIndex;
         private int attributesCount;
-        private ArrayList<AttributeInfo> attributes;
+        private List<AttributeInfo> attributes;
         private JavaClass _root;
         private JavaClass _parent;
         public int accessFlags() { return accessFlags; }
         public int nameIndex() { return nameIndex; }
         public int descriptorIndex() { return descriptorIndex; }
         public int attributesCount() { return attributesCount; }
-        public ArrayList<AttributeInfo> attributes() { return attributes; }
+        public List<AttributeInfo> attributes() { return attributes; }
         public JavaClass _root() { return _root; }
         public JavaClass _parent() { return _parent; }
     }
 
     /**
-     * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.4">Source</a>
-     */
-    public static class IntegerCpInfo extends KaitaiStruct {
-        public static IntegerCpInfo fromFile(String fileName) throws IOException {
-            return new IntegerCpInfo(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public IntegerCpInfo(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public IntegerCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
-            this(_io, _parent, null);
-        }
-
-        public IntegerCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.value = this._io.readU4be();
-        }
-        private long value;
-        private JavaClass _root;
-        private JavaClass.ConstantPoolEntry _parent;
-        public long value() { return value; }
-        public JavaClass _root() { return _root; }
-        public JavaClass.ConstantPoolEntry _parent() { return _parent; }
-    }
-
-    /**
      * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.2">Source</a>
      */
-    public static class FieldRefCpInfo extends KaitaiStruct {
-        public static FieldRefCpInfo fromFile(String fileName) throws IOException {
-            return new FieldRefCpInfo(new ByteBufferKaitaiStream(fileName));
+    public static class MethodRefCpInfo extends KaitaiStruct {
+        public static MethodRefCpInfo fromFile(String fileName) throws IOException {
+            return new MethodRefCpInfo(new ByteBufferKaitaiStream(fileName));
         }
 
-        public FieldRefCpInfo(KaitaiStream _io) {
+        public MethodRefCpInfo(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public FieldRefCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
+        public MethodRefCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
             this(_io, _parent, null);
         }
 
-        public FieldRefCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
+        public MethodRefCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
@@ -1452,18 +1379,21 @@ public class JavaClass extends KaitaiStruct {
             this.classIndex = this._io.readU2be();
             this.nameAndTypeIndex = this._io.readU2be();
         }
+
+        public void _fetchInstances() {
+        }
         private JavaClass.ClassCpInfo classAsInfo;
         public JavaClass.ClassCpInfo classAsInfo() {
             if (this.classAsInfo != null)
                 return this.classAsInfo;
-            this.classAsInfo = ((JavaClass.ClassCpInfo) (_root().constantPool().get((int) (classIndex() - 1)).cpInfo()));
+            this.classAsInfo = ((JavaClass.ClassCpInfo) (_root().constantPool().get(((Number) (classIndex() - 1)).intValue()).cpInfo()));
             return this.classAsInfo;
         }
         private JavaClass.NameAndTypeCpInfo nameAndTypeAsInfo;
         public JavaClass.NameAndTypeCpInfo nameAndTypeAsInfo() {
             if (this.nameAndTypeAsInfo != null)
                 return this.nameAndTypeAsInfo;
-            this.nameAndTypeAsInfo = ((JavaClass.NameAndTypeCpInfo) (_root().constantPool().get((int) (nameAndTypeIndex() - 1)).cpInfo()));
+            this.nameAndTypeAsInfo = ((JavaClass.NameAndTypeCpInfo) (_root().constantPool().get(((Number) (nameAndTypeIndex() - 1)).intValue()).cpInfo()));
             return this.nameAndTypeAsInfo;
         }
         private int classIndex;
@@ -1475,40 +1405,328 @@ public class JavaClass extends KaitaiStruct {
         public JavaClass _root() { return _root; }
         public JavaClass.ConstantPoolEntry _parent() { return _parent; }
     }
+
+    /**
+     * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.9">Source</a>
+     */
+    public static class MethodTypeCpInfo extends KaitaiStruct {
+        public static MethodTypeCpInfo fromFile(String fileName) throws IOException {
+            return new MethodTypeCpInfo(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public MethodTypeCpInfo(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public MethodTypeCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
+            this(_io, _parent, null);
+        }
+
+        public MethodTypeCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this._unnamed0 = new VersionGuard(this._io, this, _root, 51);
+            this.descriptorIndex = this._io.readU2be();
+        }
+
+        public void _fetchInstances() {
+            this._unnamed0._fetchInstances();
+        }
+        private VersionGuard _unnamed0;
+        private int descriptorIndex;
+        private JavaClass _root;
+        private JavaClass.ConstantPoolEntry _parent;
+        public VersionGuard _unnamed0() { return _unnamed0; }
+        public int descriptorIndex() { return descriptorIndex; }
+        public JavaClass _root() { return _root; }
+        public JavaClass.ConstantPoolEntry _parent() { return _parent; }
+    }
+
+    /**
+     * Project Jigsaw modules introduced in Java 9
+     * @see <a href="https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-3.html#jvms-3.16">Source</a>
+     * @see <a href="https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-4.html#jvms-4.4.11">Source</a>
+     * @see <a href="https://docs.oracle.com/javase/specs/jvms/se19/html/jvms-4.html#jvms-4.4.12">Source</a>
+     */
+    public static class ModulePackageCpInfo extends KaitaiStruct {
+        public static ModulePackageCpInfo fromFile(String fileName) throws IOException {
+            return new ModulePackageCpInfo(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public ModulePackageCpInfo(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public ModulePackageCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
+            this(_io, _parent, null);
+        }
+
+        public ModulePackageCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this._unnamed0 = new VersionGuard(this._io, this, _root, 53);
+            this.nameIndex = this._io.readU2be();
+        }
+
+        public void _fetchInstances() {
+            this._unnamed0._fetchInstances();
+        }
+        private JavaClass.Utf8CpInfo nameAsInfo;
+        public JavaClass.Utf8CpInfo nameAsInfo() {
+            if (this.nameAsInfo != null)
+                return this.nameAsInfo;
+            this.nameAsInfo = ((JavaClass.Utf8CpInfo) (_root().constantPool().get(((Number) (nameIndex() - 1)).intValue()).cpInfo()));
+            return this.nameAsInfo;
+        }
+        private String nameAsStr;
+        public String nameAsStr() {
+            if (this.nameAsStr != null)
+                return this.nameAsStr;
+            this.nameAsStr = nameAsInfo().value();
+            return this.nameAsStr;
+        }
+        private VersionGuard _unnamed0;
+        private int nameIndex;
+        private JavaClass _root;
+        private JavaClass.ConstantPoolEntry _parent;
+        public VersionGuard _unnamed0() { return _unnamed0; }
+        public int nameIndex() { return nameIndex; }
+        public JavaClass _root() { return _root; }
+        public JavaClass.ConstantPoolEntry _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.6">Source</a>
+     */
+    public static class NameAndTypeCpInfo extends KaitaiStruct {
+        public static NameAndTypeCpInfo fromFile(String fileName) throws IOException {
+            return new NameAndTypeCpInfo(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public NameAndTypeCpInfo(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public NameAndTypeCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
+            this(_io, _parent, null);
+        }
+
+        public NameAndTypeCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.nameIndex = this._io.readU2be();
+            this.descriptorIndex = this._io.readU2be();
+        }
+
+        public void _fetchInstances() {
+        }
+        private JavaClass.Utf8CpInfo descriptorAsInfo;
+        public JavaClass.Utf8CpInfo descriptorAsInfo() {
+            if (this.descriptorAsInfo != null)
+                return this.descriptorAsInfo;
+            this.descriptorAsInfo = ((JavaClass.Utf8CpInfo) (_root().constantPool().get(((Number) (descriptorIndex() - 1)).intValue()).cpInfo()));
+            return this.descriptorAsInfo;
+        }
+        private String descriptorAsStr;
+        public String descriptorAsStr() {
+            if (this.descriptorAsStr != null)
+                return this.descriptorAsStr;
+            this.descriptorAsStr = descriptorAsInfo().value();
+            return this.descriptorAsStr;
+        }
+        private JavaClass.Utf8CpInfo nameAsInfo;
+        public JavaClass.Utf8CpInfo nameAsInfo() {
+            if (this.nameAsInfo != null)
+                return this.nameAsInfo;
+            this.nameAsInfo = ((JavaClass.Utf8CpInfo) (_root().constantPool().get(((Number) (nameIndex() - 1)).intValue()).cpInfo()));
+            return this.nameAsInfo;
+        }
+        private String nameAsStr;
+        public String nameAsStr() {
+            if (this.nameAsStr != null)
+                return this.nameAsStr;
+            this.nameAsStr = nameAsInfo().value();
+            return this.nameAsStr;
+        }
+        private int nameIndex;
+        private int descriptorIndex;
+        private JavaClass _root;
+        private JavaClass.ConstantPoolEntry _parent;
+        public int nameIndex() { return nameIndex; }
+        public int descriptorIndex() { return descriptorIndex; }
+        public JavaClass _root() { return _root; }
+        public JavaClass.ConstantPoolEntry _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.3">Source</a>
+     */
+    public static class StringCpInfo extends KaitaiStruct {
+        public static StringCpInfo fromFile(String fileName) throws IOException {
+            return new StringCpInfo(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public StringCpInfo(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public StringCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
+            this(_io, _parent, null);
+        }
+
+        public StringCpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.stringIndex = this._io.readU2be();
+        }
+
+        public void _fetchInstances() {
+        }
+        private int stringIndex;
+        private JavaClass _root;
+        private JavaClass.ConstantPoolEntry _parent;
+        public int stringIndex() { return stringIndex; }
+        public JavaClass _root() { return _root; }
+        public JavaClass.ConstantPoolEntry _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4.7">Source</a>
+     */
+    public static class Utf8CpInfo extends KaitaiStruct {
+        public static Utf8CpInfo fromFile(String fileName) throws IOException {
+            return new Utf8CpInfo(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Utf8CpInfo(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Utf8CpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Utf8CpInfo(KaitaiStream _io, JavaClass.ConstantPoolEntry _parent, JavaClass _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.strLen = this._io.readU2be();
+            this.value = new String(this._io.readBytes(strLen()), StandardCharsets.UTF_8);
+        }
+
+        public void _fetchInstances() {
+        }
+        private int strLen;
+        private String value;
+        private JavaClass _root;
+        private JavaClass.ConstantPoolEntry _parent;
+        public int strLen() { return strLen; }
+        public String value() { return value; }
+        public JavaClass _root() { return _root; }
+        public JavaClass.ConstantPoolEntry _parent() { return _parent; }
+    }
+
+    /**
+     * `class` file format version 45.3 (appeared in the very first publicly
+     * known release of Java SE AND JDK 1.0.2, released 23th January 1996) is so
+     * ancient that it's taken for granted. Earlier formats seem to be
+     * undocumented. Changes of `version_minor` don't change `class` format.
+     * Earlier `version_major`s likely belong to Oak programming language, the
+     * proprietary predecessor of Java.
+     * @see "James Gosling, Bill Joy and Guy Steele. The Java Language Specification. English. Ed. by Lisa Friendly. Addison-Wesley, Aug. 1996, p. 825. ISBN: 0-201-63451-1."
+     * @see "Frank Yellin and Tim Lindholm. The Java Virtual Machine Specification. English. Ed. by Lisa Friendly. Addison-Wesley, Sept. 1996, p. 475. ISBN: 0-201-63452-X."
+     */
+    public static class VersionGuard extends KaitaiStruct {
+
+        public VersionGuard(KaitaiStream _io, int major) {
+            this(_io, null, null, major);
+        }
+
+        public VersionGuard(KaitaiStream _io, KaitaiStruct _parent, int major) {
+            this(_io, _parent, null, major);
+        }
+
+        public VersionGuard(KaitaiStream _io, KaitaiStruct _parent, JavaClass _root, int major) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            this.major = major;
+            _read();
+        }
+        private void _read() {
+            this._unnamed0 = this._io.readBytes(0);
+            {
+                byte[] _it = this._unnamed0;
+                if (!(_root().versionMajor() >= major())) {
+                    throw new KaitaiStream.ValidationExprError(this._unnamed0, this._io, "/types/version_guard/seq/0");
+                }
+            }
+        }
+
+        public void _fetchInstances() {
+        }
+        private byte[] _unnamed0;
+        private int major;
+        private JavaClass _root;
+        private KaitaiStruct _parent;
+        public byte[] _unnamed0() { return _unnamed0; }
+        public int major() { return major; }
+        public JavaClass _root() { return _root; }
+        public KaitaiStruct _parent() { return _parent; }
+    }
     private byte[] magic;
     private int versionMinor;
     private int versionMajor;
     private int constantPoolCount;
-    private ArrayList<ConstantPoolEntry> constantPool;
+    private List<ConstantPoolEntry> constantPool;
     private int accessFlags;
     private int thisClass;
     private int superClass;
     private int interfacesCount;
-    private ArrayList<Integer> interfaces;
+    private List<Integer> interfaces;
     private int fieldsCount;
-    private ArrayList<FieldInfo> fields;
+    private List<FieldInfo> fields;
     private int methodsCount;
-    private ArrayList<MethodInfo> methods;
+    private List<MethodInfo> methods;
     private int attributesCount;
-    private ArrayList<AttributeInfo> attributes;
+    private List<AttributeInfo> attributes;
     private JavaClass _root;
     private KaitaiStruct _parent;
     public byte[] magic() { return magic; }
     public int versionMinor() { return versionMinor; }
     public int versionMajor() { return versionMajor; }
     public int constantPoolCount() { return constantPoolCount; }
-    public ArrayList<ConstantPoolEntry> constantPool() { return constantPool; }
+    public List<ConstantPoolEntry> constantPool() { return constantPool; }
     public int accessFlags() { return accessFlags; }
     public int thisClass() { return thisClass; }
     public int superClass() { return superClass; }
     public int interfacesCount() { return interfacesCount; }
-    public ArrayList<Integer> interfaces() { return interfaces; }
+    public List<Integer> interfaces() { return interfaces; }
     public int fieldsCount() { return fieldsCount; }
-    public ArrayList<FieldInfo> fields() { return fields; }
+    public List<FieldInfo> fields() { return fields; }
     public int methodsCount() { return methodsCount; }
-    public ArrayList<MethodInfo> methods() { return methods; }
+    public List<MethodInfo> methods() { return methods; }
     public int attributesCount() { return attributesCount; }
-    public ArrayList<AttributeInfo> attributes() { return attributes; }
+    public List<AttributeInfo> attributes() { return attributes; }
     public JavaClass _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

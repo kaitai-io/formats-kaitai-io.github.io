@@ -1,10 +1,8 @@
 import kaitai_struct_nim_runtime
 import options
-import /network/ethernet_frame
-import /windows/windows_systemtime
+import windows_systemtime
+import ethernet_frame
 
-import "windows_systemtime"
-import "ethernet_frame"
 type
   MicrosoftNetworkMonitorV2* = ref object of KaitaiStruct
     `signature`*: seq[byte]
@@ -133,6 +131,13 @@ type
     zwave_r3 = 262
     wattstopper_dlm = 263
     iso_14443 = 264
+  MicrosoftNetworkMonitorV2_Frame* = ref object of KaitaiStruct
+    `tsDelta`*: uint64
+    `origLen`*: uint32
+    `incLen`*: uint32
+    `body`*: KaitaiStruct
+    `parent`*: MicrosoftNetworkMonitorV2_FrameIndexEntry
+    `rawBody`*: seq[byte]
   MicrosoftNetworkMonitorV2_FrameIndex* = ref object of KaitaiStruct
     `entries`*: seq[MicrosoftNetworkMonitorV2_FrameIndexEntry]
     `parent`*: MicrosoftNetworkMonitorV2
@@ -141,18 +146,11 @@ type
     `parent`*: MicrosoftNetworkMonitorV2_FrameIndex
     `bodyInst`: MicrosoftNetworkMonitorV2_Frame
     `bodyInstFlag`: bool
-  MicrosoftNetworkMonitorV2_Frame* = ref object of KaitaiStruct
-    `tsDelta`*: uint64
-    `origLen`*: uint32
-    `incLen`*: uint32
-    `body`*: KaitaiStruct
-    `parent`*: MicrosoftNetworkMonitorV2_FrameIndexEntry
-    `rawBody`*: seq[byte]
 
 proc read*(_: typedesc[MicrosoftNetworkMonitorV2], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MicrosoftNetworkMonitorV2
+proc read*(_: typedesc[MicrosoftNetworkMonitorV2_Frame], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftNetworkMonitorV2_FrameIndexEntry): MicrosoftNetworkMonitorV2_Frame
 proc read*(_: typedesc[MicrosoftNetworkMonitorV2_FrameIndex], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftNetworkMonitorV2): MicrosoftNetworkMonitorV2_FrameIndex
 proc read*(_: typedesc[MicrosoftNetworkMonitorV2_FrameIndexEntry], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftNetworkMonitorV2_FrameIndex): MicrosoftNetworkMonitorV2_FrameIndexEntry
-proc read*(_: typedesc[MicrosoftNetworkMonitorV2_Frame], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftNetworkMonitorV2_FrameIndexEntry): MicrosoftNetworkMonitorV2_Frame
 
 proc frameTable*(this: MicrosoftNetworkMonitorV2): MicrosoftNetworkMonitorV2_FrameIndex
 proc body*(this: MicrosoftNetworkMonitorV2_FrameIndexEntry): MicrosoftNetworkMonitorV2_Frame
@@ -202,7 +200,7 @@ proc read*(_: typedesc[MicrosoftNetworkMonitorV2], io: KaitaiStream, root: Kaita
   ##[
   Timestamp of capture start
   ]##
-  let timeCaptureStartExpr = WindowsSystemtime.read(this.io, this.root, this)
+  let timeCaptureStartExpr = WindowsSystemtime.read(this.io, nil, nil)
   this.timeCaptureStart = timeCaptureStartExpr
   let frameTableOfsExpr = this.io.readU4le()
   this.frameTableOfs = frameTableOfsExpr
@@ -249,6 +247,59 @@ proc frameTable(this: MicrosoftNetworkMonitorV2): MicrosoftNetworkMonitorV2_Fram
 
 proc fromFile*(_: typedesc[MicrosoftNetworkMonitorV2], filename: string): MicrosoftNetworkMonitorV2 =
   MicrosoftNetworkMonitorV2.read(newKaitaiFileStream(filename), nil, nil)
+
+
+##[
+A container for actually captured network data. Allow to
+timestamp individual frames and designates how much data from
+the original packet was actually written into the file.
+
+@see <a href="https://learn.microsoft.com/en-us/windows/win32/netmon2/frame">Source</a>
+]##
+proc read*(_: typedesc[MicrosoftNetworkMonitorV2_Frame], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftNetworkMonitorV2_FrameIndexEntry): MicrosoftNetworkMonitorV2_Frame =
+  template this: untyped = result
+  this = new(MicrosoftNetworkMonitorV2_Frame)
+  let root = if root == nil: cast[MicrosoftNetworkMonitorV2](this) else: cast[MicrosoftNetworkMonitorV2](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+
+  ##[
+  Time stamp - usecs since start of capture
+  ]##
+  let tsDeltaExpr = this.io.readU8le()
+  this.tsDelta = tsDeltaExpr
+
+  ##[
+  Actual length of packet
+  ]##
+  let origLenExpr = this.io.readU4le()
+  this.origLen = origLenExpr
+
+  ##[
+  Number of octets captured in file
+  ]##
+  let incLenExpr = this.io.readU4le()
+  this.incLen = incLenExpr
+
+  ##[
+  Actual packet captured from the network
+  ]##
+  block:
+    let on = MicrosoftNetworkMonitorV2(this.root).macType
+    if on == microsoft_network_monitor_v2.ethernet:
+      let rawBodyExpr = this.io.readBytes(int(this.incLen))
+      this.rawBody = rawBodyExpr
+      let rawBodyIo = newKaitaiStream(rawBodyExpr)
+      let bodyExpr = EthernetFrame.read(rawBodyIo, nil, nil)
+      this.body = bodyExpr
+    else:
+      let bodyExpr = this.io.readBytes(int(this.incLen))
+      this.body = bodyExpr
+
+proc fromFile*(_: typedesc[MicrosoftNetworkMonitorV2_Frame], filename: string): MicrosoftNetworkMonitorV2_Frame =
+  MicrosoftNetworkMonitorV2_Frame.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[MicrosoftNetworkMonitorV2_FrameIndex], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftNetworkMonitorV2): MicrosoftNetworkMonitorV2_FrameIndex =
   template this: untyped = result
@@ -307,57 +358,4 @@ proc body(this: MicrosoftNetworkMonitorV2_FrameIndexEntry): MicrosoftNetworkMoni
 
 proc fromFile*(_: typedesc[MicrosoftNetworkMonitorV2_FrameIndexEntry], filename: string): MicrosoftNetworkMonitorV2_FrameIndexEntry =
   MicrosoftNetworkMonitorV2_FrameIndexEntry.read(newKaitaiFileStream(filename), nil, nil)
-
-
-##[
-A container for actually captured network data. Allow to
-timestamp individual frames and designates how much data from
-the original packet was actually written into the file.
-
-@see <a href="https://learn.microsoft.com/en-us/windows/win32/netmon2/frame">Source</a>
-]##
-proc read*(_: typedesc[MicrosoftNetworkMonitorV2_Frame], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftNetworkMonitorV2_FrameIndexEntry): MicrosoftNetworkMonitorV2_Frame =
-  template this: untyped = result
-  this = new(MicrosoftNetworkMonitorV2_Frame)
-  let root = if root == nil: cast[MicrosoftNetworkMonitorV2](this) else: cast[MicrosoftNetworkMonitorV2](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-
-  ##[
-  Time stamp - usecs since start of capture
-  ]##
-  let tsDeltaExpr = this.io.readU8le()
-  this.tsDelta = tsDeltaExpr
-
-  ##[
-  Actual length of packet
-  ]##
-  let origLenExpr = this.io.readU4le()
-  this.origLen = origLenExpr
-
-  ##[
-  Number of octets captured in file
-  ]##
-  let incLenExpr = this.io.readU4le()
-  this.incLen = incLenExpr
-
-  ##[
-  Actual packet captured from the network
-  ]##
-  block:
-    let on = MicrosoftNetworkMonitorV2(this.root).macType
-    if on == microsoft_network_monitor_v2.ethernet:
-      let rawBodyExpr = this.io.readBytes(int(this.incLen))
-      this.rawBody = rawBodyExpr
-      let rawBodyIo = newKaitaiStream(rawBodyExpr)
-      let bodyExpr = EthernetFrame.read(rawBodyIo, this.root, this)
-      this.body = bodyExpr
-    else:
-      let bodyExpr = this.io.readBytes(int(this.incLen))
-      this.body = bodyExpr
-
-proc fromFile*(_: typedesc[MicrosoftNetworkMonitorV2_Frame], filename: string): MicrosoftNetworkMonitorV2_Frame =
-  MicrosoftNetworkMonitorV2_Frame.read(newKaitaiFileStream(filename), nil, nil)
 

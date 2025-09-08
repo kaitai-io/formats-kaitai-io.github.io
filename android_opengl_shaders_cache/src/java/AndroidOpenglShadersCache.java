@@ -5,8 +5,9 @@ import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.Arrays;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.List;
+import java.nio.charset.StandardCharsets;
 
 
 /**
@@ -35,13 +36,17 @@ public class AndroidOpenglShadersCache extends KaitaiStruct {
     }
     private void _read() {
         this.magic = this._io.readBytes(4);
-        if (!(Arrays.equals(magic(), new byte[] { 69, 71, 76, 36 }))) {
-            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 69, 71, 76, 36 }, magic(), _io(), "/seq/0");
+        if (!(Arrays.equals(this.magic, new byte[] { 69, 71, 76, 36 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 69, 71, 76, 36 }, this.magic, this._io, "/seq/0");
         }
         this.crc32 = this._io.readU4le();
         this._raw_contents = this._io.readBytesFull();
-        KaitaiStream _io__raw_contents = new ByteBufferKaitaiStream(_raw_contents);
+        KaitaiStream _io__raw_contents = new ByteBufferKaitaiStream(this._raw_contents);
         this.contents = new Cache(_io__raw_contents, this, _root);
+    }
+
+    public void _fetchInstances() {
+        this.contents._fetchInstances();
     }
     public static class Alignment extends KaitaiStruct {
         public static Alignment fromFile(String fileName) throws IOException {
@@ -63,7 +68,10 @@ public class AndroidOpenglShadersCache extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.alignment = this._io.readBytes(((_io().pos() + 3) & (~3 - _io().pos())));
+            this.alignment = this._io.readBytes(_io().pos() + 3 & ~3 - _io().pos());
+        }
+
+        public void _fetchInstances() {
         }
         private byte[] alignment;
         private AndroidOpenglShadersCache _root;
@@ -75,41 +83,6 @@ public class AndroidOpenglShadersCache extends KaitaiStruct {
         public byte[] alignment() { return alignment; }
         public AndroidOpenglShadersCache _root() { return _root; }
         public KaitaiStruct _parent() { return _parent; }
-    }
-    public static class PrefixedString extends KaitaiStruct {
-        public static PrefixedString fromFile(String fileName) throws IOException {
-            return new PrefixedString(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public PrefixedString(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public PrefixedString(KaitaiStream _io, AndroidOpenglShadersCache.Cache _parent) {
-            this(_io, _parent, null);
-        }
-
-        public PrefixedString(KaitaiStream _io, AndroidOpenglShadersCache.Cache _parent, AndroidOpenglShadersCache _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.lenStr = this._io.readU4le();
-            this.str = new String(KaitaiStream.bytesTerminate(this._io.readBytes(lenStr()), (byte) 0, false), Charset.forName("ascii"));
-            this.alignment = new Alignment(this._io, this, _root);
-        }
-        private long lenStr;
-        private String str;
-        private Alignment alignment;
-        private AndroidOpenglShadersCache _root;
-        private AndroidOpenglShadersCache.Cache _parent;
-        public long lenStr() { return lenStr; }
-        public String str() { return str; }
-        public Alignment alignment() { return alignment; }
-        public AndroidOpenglShadersCache _root() { return _root; }
-        public AndroidOpenglShadersCache.Cache _parent() { return _parent; }
     }
 
     /**
@@ -136,8 +109,8 @@ public class AndroidOpenglShadersCache extends KaitaiStruct {
         }
         private void _read() {
             this.magic = this._io.readBytes(4);
-            if (!(Arrays.equals(magic(), new byte[] { 36, 98, 66, 95 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 36, 98, 66, 95 }, magic(), _io(), "/types/cache/seq/0");
+            if (!(Arrays.equals(this.magic, new byte[] { 36, 98, 66, 95 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 36, 98, 66, 95 }, this.magic, this._io, "/types/cache/seq/0");
             }
             this.version = this._io.readU4le();
             this.deviceVersion = this._io.readU4le();
@@ -148,6 +121,15 @@ public class AndroidOpenglShadersCache extends KaitaiStruct {
             this.entries = new ArrayList<Entry>();
             for (int i = 0; i < numEntries(); i++) {
                 this.entries.add(new Entry(this._io, this, _root));
+            }
+        }
+
+        public void _fetchInstances() {
+            if (version() >= 3) {
+                this.buildId._fetchInstances();
+            }
+            for (int i = 0; i < this.entries.size(); i++) {
+                this.entries.get(((Number) (i)).intValue())._fetchInstances();
             }
         }
         public static class Entry extends KaitaiStruct {
@@ -176,6 +158,10 @@ public class AndroidOpenglShadersCache extends KaitaiStruct {
                 this.value = this._io.readBytes(lenValue());
                 this.alignment = new Alignment(this._io, this, _root);
             }
+
+            public void _fetchInstances() {
+                this.alignment._fetchInstances();
+            }
             private long lenKey;
             private long lenValue;
             private byte[] key;
@@ -196,7 +182,7 @@ public class AndroidOpenglShadersCache extends KaitaiStruct {
         private long deviceVersion;
         private long numEntries;
         private PrefixedString buildId;
-        private ArrayList<Entry> entries;
+        private List<Entry> entries;
         private AndroidOpenglShadersCache _root;
         private AndroidOpenglShadersCache _parent;
         public byte[] magic() { return magic; }
@@ -204,9 +190,48 @@ public class AndroidOpenglShadersCache extends KaitaiStruct {
         public long deviceVersion() { return deviceVersion; }
         public long numEntries() { return numEntries; }
         public PrefixedString buildId() { return buildId; }
-        public ArrayList<Entry> entries() { return entries; }
+        public List<Entry> entries() { return entries; }
         public AndroidOpenglShadersCache _root() { return _root; }
         public AndroidOpenglShadersCache _parent() { return _parent; }
+    }
+    public static class PrefixedString extends KaitaiStruct {
+        public static PrefixedString fromFile(String fileName) throws IOException {
+            return new PrefixedString(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public PrefixedString(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public PrefixedString(KaitaiStream _io, AndroidOpenglShadersCache.Cache _parent) {
+            this(_io, _parent, null);
+        }
+
+        public PrefixedString(KaitaiStream _io, AndroidOpenglShadersCache.Cache _parent, AndroidOpenglShadersCache _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.lenStr = this._io.readU4le();
+            this.str = new String(KaitaiStream.bytesTerminate(this._io.readBytes(lenStr()), (byte) 0, false), StandardCharsets.US_ASCII);
+            this.alignment = new Alignment(this._io, this, _root);
+        }
+
+        public void _fetchInstances() {
+            this.alignment._fetchInstances();
+        }
+        private long lenStr;
+        private String str;
+        private Alignment alignment;
+        private AndroidOpenglShadersCache _root;
+        private AndroidOpenglShadersCache.Cache _parent;
+        public long lenStr() { return lenStr; }
+        public String str() { return str; }
+        public Alignment alignment() { return alignment; }
+        public AndroidOpenglShadersCache _root() { return _root; }
+        public AndroidOpenglShadersCache.Cache _parent() { return _parent; }
     }
     private byte[] magic;
     private long crc32;

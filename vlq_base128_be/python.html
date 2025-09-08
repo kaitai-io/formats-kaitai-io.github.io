@@ -191,7 +191,22 @@ consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered
                 
                 <li>
                 
+                <a href="go.html" title="Variable length quantity, unsigned integer, base128, big-endian parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Variable length quantity, unsigned integer, base128, big-endian parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
                 <a href="java.html" title="Variable length quantity, unsigned integer, base128, big-endian parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="java-write.html" title="Variable length quantity, unsigned integer, base128, big-endian parsing Java (read-write) library">Java (read-write)</a></li>
                 
                 
                 <li>
@@ -226,7 +241,17 @@ consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered
                 
                 <li>
                 
+                <a href="python-write.html" title="Variable length quantity, unsigned integer, base128, big-endian parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="Variable length quantity, unsigned integer, base128, big-endian parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="Variable length quantity, unsigned integer, base128, big-endian parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -301,13 +326,14 @@ consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered
 
         <div class="row">
             <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+<span class="c1"># type: ignore</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">kaitaistruct</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">kaitaistruct</span><span class="w"> </span><span class="kn">import</span> <span class="n">KaitaiStruct</span><span class="p">,</span> <span class="n">KaitaiStream</span><span class="p">,</span> <span class="n">BytesIO</span>
 
 
-<span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">kaitaistruct</span><span class="p">,</span> <span class="s1">&#39;API_VERSION&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">):</span>
-    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">kaitaistruct</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span>
+<span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">kaitaistruct</span><span class="p">,</span> <span class="s1">&#39;API_VERSION&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">kaitaistruct</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">VlqBase128Be</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A variable-length unsigned integer using base128 encoding. 1-byte groups</span>
@@ -326,9 +352,9 @@ consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered
 <span class="sd">    This particular implementation supports serialized values to up 8 bytes long.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">VlqBase128Be</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="ow">or</span> <span class="bp">self</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -337,17 +363,25 @@ consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered
         <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
             <span class="n">_</span> <span class="o">=</span> <span class="n">VlqBase128Be</span><span class="o">.</span><span class="n">Group</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">_</span><span class="o">.</span><span class="n">has_next</span><span class="p">):</span>
+            <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="n">_</span><span class="o">.</span><span class="n">has_next</span><span class="p">)):</span>
                 <span class="k">break</span>
             <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">)):</span>
+            <span class="k">pass</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+
 
     <span class="k">class</span><span class="w"> </span><span class="nc">Group</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;One byte group, clearly divided into 7-bit &quot;value&quot; chunk and 1-bit &quot;continuation&quot; flag.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">VlqBase128Be</span><span class="o">.</span><span class="n">Group</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -355,12 +389,16 @@ consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered
             <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
 
 
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+
+
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">last</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_last&#39;</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_last</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_m_last</span> <span class="o">=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_m_last</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_last&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
     <span class="nd">@property</span>
@@ -369,7 +407,7 @@ consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_value&#39;</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_value</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_m_value</span> <span class="o">=</span> <span class="p">(((((((</span><span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">last</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">+</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">[(</span><span class="bp">self</span><span class="o">.</span><span class="n">last</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)]</span><span class="o">.</span><span class="n">value</span> <span class="o">&lt;&lt;</span> <span class="mi">7</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="k">else</span> <span class="mi">0</span><span class="p">))</span> <span class="o">+</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">[(</span><span class="bp">self</span><span class="o">.</span><span class="n">last</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)]</span><span class="o">.</span><span class="n">value</span> <span class="o">&lt;&lt;</span> <span class="mi">14</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last</span> <span class="o">&gt;=</span> <span class="mi">2</span> <span class="k">else</span> <span class="mi">0</span><span class="p">))</span> <span class="o">+</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">[(</span><span class="bp">self</span><span class="o">.</span><span class="n">last</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)]</span><span class="o">.</span><span class="n">value</span> <span class="o">&lt;&lt;</span> <span class="mi">21</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last</span> <span class="o">&gt;=</span> <span class="mi">3</span> <span class="k">else</span> <span class="mi">0</span><span class="p">))</span> <span class="o">+</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">[(</span><span class="bp">self</span><span class="o">.</span><span class="n">last</span> <span class="o">-</span> <span class="mi">4</span><span class="p">)]</span><span class="o">.</span><span class="n">value</span> <span class="o">&lt;&lt;</span> <span class="mi">28</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last</span> <span class="o">&gt;=</span> <span class="mi">4</span> <span class="k">else</span> <span class="mi">0</span><span class="p">))</span> <span class="o">+</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">[(</span><span class="bp">self</span><span class="o">.</span><span class="n">last</span> <span class="o">-</span> <span class="mi">5</span><span class="p">)]</span><span class="o">.</span><span class="n">value</span> <span class="o">&lt;&lt;</span> <span class="mi">35</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last</span> <span class="o">&gt;=</span> <span class="mi">5</span> <span class="k">else</span> <span class="mi">0</span><span class="p">))</span> <span class="o">+</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">[(</span><span class="bp">self</span><span class="o">.</span><span class="n">last</span> <span class="o">-</span> <span class="mi">6</span><span class="p">)]</span><span class="o">.</span><span class="n">value</span> <span class="o">&lt;&lt;</span> <span class="mi">42</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last</span> <span class="o">&gt;=</span> <span class="mi">6</span> <span class="k">else</span> <span class="mi">0</span><span class="p">))</span> <span class="o">+</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">[(</span><span class="bp">self</span><span class="o">.</span><span class="n">last</span> <span class="o">-</span> <span class="mi">7</span><span class="p">)]</span><span class="o">.</span><span class="n">value</span> <span class="o">&lt;&lt;</span> <span class="mi">49</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last</span> <span class="o">&gt;=</span> <span class="mi">7</span> <span class="k">else</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_m_value</span> <span class="o">=</span> <span class="p">(((((((</span><span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">last</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">last</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">&lt;&lt;</span> <span class="mi">7</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="k">else</span> <span class="mi">0</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">last</span> <span class="o">-</span> <span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">&lt;&lt;</span> <span class="mi">14</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last</span> <span class="o">&gt;=</span> <span class="mi">2</span> <span class="k">else</span> <span class="mi">0</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">last</span> <span class="o">-</span> <span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">&lt;&lt;</span> <span class="mi">21</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last</span> <span class="o">&gt;=</span> <span class="mi">3</span> <span class="k">else</span> <span class="mi">0</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">last</span> <span class="o">-</span> <span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">&lt;&lt;</span> <span class="mi">28</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last</span> <span class="o">&gt;=</span> <span class="mi">4</span> <span class="k">else</span> <span class="mi">0</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">last</span> <span class="o">-</span> <span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">&lt;&lt;</span> <span class="mi">35</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last</span> <span class="o">&gt;=</span> <span class="mi">5</span> <span class="k">else</span> <span class="mi">0</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">last</span> <span class="o">-</span> <span class="mi">6</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">&lt;&lt;</span> <span class="mi">42</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last</span> <span class="o">&gt;=</span> <span class="mi">6</span> <span class="k">else</span> <span class="mi">0</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">last</span> <span class="o">-</span> <span class="mi">7</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">&lt;&lt;</span> <span class="mi">49</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last</span> <span class="o">&gt;=</span> <span class="mi">7</span> <span class="k">else</span> <span class="mi">0</span><span class="p">))</span>
         <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_value&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 </pre></div>
 

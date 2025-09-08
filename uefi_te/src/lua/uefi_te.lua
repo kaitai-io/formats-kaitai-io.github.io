@@ -5,8 +5,8 @@
 local class = require("class")
 require("kaitaistruct")
 local stringstream = require("string_stream")
-local enum = require("enum")
 local str_decode = require("string_decode")
+local enum = require("enum")
 
 -- 
 -- This type of executables could be found inside the UEFI firmware. The UEFI
@@ -45,6 +45,72 @@ function UefiTe:_read()
   for i = 0, self.te_hdr.num_sections - 1 do
     self.sections[i + 1] = UefiTe.Section(self._io, self, self._root)
   end
+end
+
+
+UefiTe.DataDir = class.class(KaitaiStruct)
+
+function UefiTe.DataDir:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function UefiTe.DataDir:_read()
+  self.virtual_address = self._io:read_u4le()
+  self.size = self._io:read_u4le()
+end
+
+
+UefiTe.HeaderDataDirs = class.class(KaitaiStruct)
+
+function UefiTe.HeaderDataDirs:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function UefiTe.HeaderDataDirs:_read()
+  self.base_relocation_table = UefiTe.DataDir(self._io, self, self._root)
+  self.debug = UefiTe.DataDir(self._io, self, self._root)
+end
+
+
+UefiTe.Section = class.class(KaitaiStruct)
+
+function UefiTe.Section:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function UefiTe.Section:_read()
+  self.name = str_decode.decode(KaitaiStream.bytes_strip_right(self._io:read_bytes(8), 0), "UTF-8")
+  self.virtual_size = self._io:read_u4le()
+  self.virtual_address = self._io:read_u4le()
+  self.size_of_raw_data = self._io:read_u4le()
+  self.pointer_to_raw_data = self._io:read_u4le()
+  self.pointer_to_relocations = self._io:read_u4le()
+  self.pointer_to_linenumbers = self._io:read_u4le()
+  self.num_relocations = self._io:read_u2le()
+  self.num_linenumbers = self._io:read_u2le()
+  self.characteristics = self._io:read_u4le()
+end
+
+UefiTe.Section.property.body = {}
+function UefiTe.Section.property.body:get()
+  if self._m_body ~= nil then
+    return self._m_body
+  end
+
+  local _pos = self._io:pos()
+  self._io:seek((self.pointer_to_raw_data - self._root.te_hdr.stripped_size) + self._root.te_hdr._io:size())
+  self._m_body = self._io:read_bytes(self.size_of_raw_data)
+  self._io:seek(_pos)
+  return self._m_body
 end
 
 
@@ -100,14 +166,14 @@ UefiTe.TeHeader.SubsystemEnum = enum.Enum {
 function UefiTe.TeHeader:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function UefiTe.TeHeader:_read()
   self.magic = self._io:read_bytes(2)
   if not(self.magic == "\086\090") then
-    error("not equal, expected " ..  "\086\090" .. ", but got " .. self.magic)
+    error("not equal, expected " .. "\086\090" .. ", but got " .. self.magic)
   end
   self.machine = UefiTe.TeHeader.MachineType(self._io:read_u2le())
   self.num_sections = self._io:read_u1()
@@ -117,72 +183,6 @@ function UefiTe.TeHeader:_read()
   self.base_of_code = self._io:read_u4le()
   self.image_base = self._io:read_u8le()
   self.data_dirs = UefiTe.HeaderDataDirs(self._io, self, self._root)
-end
-
-
-UefiTe.HeaderDataDirs = class.class(KaitaiStruct)
-
-function UefiTe.HeaderDataDirs:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function UefiTe.HeaderDataDirs:_read()
-  self.base_relocation_table = UefiTe.DataDir(self._io, self, self._root)
-  self.debug = UefiTe.DataDir(self._io, self, self._root)
-end
-
-
-UefiTe.DataDir = class.class(KaitaiStruct)
-
-function UefiTe.DataDir:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function UefiTe.DataDir:_read()
-  self.virtual_address = self._io:read_u4le()
-  self.size = self._io:read_u4le()
-end
-
-
-UefiTe.Section = class.class(KaitaiStruct)
-
-function UefiTe.Section:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function UefiTe.Section:_read()
-  self.name = str_decode.decode(KaitaiStream.bytes_strip_right(self._io:read_bytes(8), 0), "UTF-8")
-  self.virtual_size = self._io:read_u4le()
-  self.virtual_address = self._io:read_u4le()
-  self.size_of_raw_data = self._io:read_u4le()
-  self.pointer_to_raw_data = self._io:read_u4le()
-  self.pointer_to_relocations = self._io:read_u4le()
-  self.pointer_to_linenumbers = self._io:read_u4le()
-  self.num_relocations = self._io:read_u2le()
-  self.num_linenumbers = self._io:read_u2le()
-  self.characteristics = self._io:read_u4le()
-end
-
-UefiTe.Section.property.body = {}
-function UefiTe.Section.property.body:get()
-  if self._m_body ~= nil then
-    return self._m_body
-  end
-
-  local _pos = self._io:pos()
-  self._io:seek(((self.pointer_to_raw_data - self._root.te_hdr.stripped_size) + self._root.te_hdr._io:size()))
-  self._m_body = self._io:read_bytes(self.size_of_raw_data)
-  self._io:seek(_pos)
-  return self._m_body
 end
 
 

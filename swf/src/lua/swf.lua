@@ -62,7 +62,7 @@ function Swf:_read()
   self.compression = Swf.Compressions(self._io:read_u1())
   self.signature = self._io:read_bytes(2)
   if not(self.signature == "\087\083") then
-    error("not equal, expected " ..  "\087\083" .. ", but got " .. self.signature)
+    error("not equal, expected " .. "\087\083" .. ", but got " .. self.signature)
   end
   self.version = self._io:read_u1()
   self.len_file = self._io:read_u4le()
@@ -80,28 +80,51 @@ function Swf:_read()
 end
 
 
-Swf.Rgb = class.class(KaitaiStruct)
+Swf.DefineSoundBody = class.class(KaitaiStruct)
 
-function Swf.Rgb:_init(io, parent, root)
+Swf.DefineSoundBody.Bps = enum.Enum {
+  sound_8_bit = 0,
+  sound_16_bit = 1,
+}
+
+Swf.DefineSoundBody.Channels = enum.Enum {
+  mono = 0,
+  stereo = 1,
+}
+
+Swf.DefineSoundBody.SamplingRates = enum.Enum {
+  rate_5_5_khz = 0,
+  rate_11_khz = 1,
+  rate_22_khz = 2,
+  rate_44_khz = 3,
+}
+
+function Swf.DefineSoundBody:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function Swf.Rgb:_read()
-  self.r = self._io:read_u1()
-  self.g = self._io:read_u1()
-  self.b = self._io:read_u1()
+function Swf.DefineSoundBody:_read()
+  self.id = self._io:read_u2le()
+  self.format = self._io:read_bits_int_be(4)
+  self.sampling_rate = Swf.DefineSoundBody.SamplingRates(self._io:read_bits_int_be(2))
+  self.bits_per_sample = Swf.DefineSoundBody.Bps(self._io:read_bits_int_be(1))
+  self.num_channels = Swf.DefineSoundBody.Channels(self._io:read_bits_int_be(1))
+  self._io:align_to_byte()
+  self.num_samples = self._io:read_u4le()
 end
 
+-- 
+-- Sound sampling rate, as per enum. Ignored for Nellymoser and Speex codecs.
 
 Swf.DoAbcBody = class.class(KaitaiStruct)
 
 function Swf.DoAbcBody:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -112,12 +135,125 @@ function Swf.DoAbcBody:_read()
 end
 
 
+Swf.RecordHeader = class.class(KaitaiStruct)
+
+function Swf.RecordHeader:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Swf.RecordHeader:_read()
+  self.tag_code_and_length = self._io:read_u2le()
+  if self.small_len == 63 then
+    self.big_len = self._io:read_s4le()
+  end
+end
+
+Swf.RecordHeader.property.len = {}
+function Swf.RecordHeader.property.len:get()
+  if self._m_len ~= nil then
+    return self._m_len
+  end
+
+  self._m_len = utils.box_unwrap((self.small_len == 63) and utils.box_wrap(self.big_len) or (self.small_len))
+  return self._m_len
+end
+
+Swf.RecordHeader.property.small_len = {}
+function Swf.RecordHeader.property.small_len:get()
+  if self._m_small_len ~= nil then
+    return self._m_small_len
+  end
+
+  self._m_small_len = self.tag_code_and_length & 63
+  return self._m_small_len
+end
+
+Swf.RecordHeader.property.tag_type = {}
+function Swf.RecordHeader.property.tag_type:get()
+  if self._m_tag_type ~= nil then
+    return self._m_tag_type
+  end
+
+  self._m_tag_type = Swf.TagType(self.tag_code_and_length >> 6)
+  return self._m_tag_type
+end
+
+
+Swf.Rect = class.class(KaitaiStruct)
+
+function Swf.Rect:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Swf.Rect:_read()
+  self.b1 = self._io:read_u1()
+  self.skip = self._io:read_bytes(self.num_bytes)
+end
+
+Swf.Rect.property.num_bits = {}
+function Swf.Rect.property.num_bits:get()
+  if self._m_num_bits ~= nil then
+    return self._m_num_bits
+  end
+
+  self._m_num_bits = self.b1 >> 3
+  return self._m_num_bits
+end
+
+Swf.Rect.property.num_bytes = {}
+function Swf.Rect.property.num_bytes:get()
+  if self._m_num_bytes ~= nil then
+    return self._m_num_bytes
+  end
+
+  self._m_num_bytes = math.floor(((self.num_bits * 4 - 3) + 7) / 8)
+  return self._m_num_bytes
+end
+
+
+Swf.Rgb = class.class(KaitaiStruct)
+
+function Swf.Rgb:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Swf.Rgb:_read()
+  self.r = self._io:read_u1()
+  self.g = self._io:read_u1()
+  self.b = self._io:read_u1()
+end
+
+
+Swf.ScriptLimitsBody = class.class(KaitaiStruct)
+
+function Swf.ScriptLimitsBody:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Swf.ScriptLimitsBody:_read()
+  self.max_recursion_depth = self._io:read_u2le()
+  self.script_timeout_seconds = self._io:read_u2le()
+end
+
+
 Swf.SwfBody = class.class(KaitaiStruct)
 
 function Swf.SwfBody:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -137,89 +273,12 @@ function Swf.SwfBody:_read()
 end
 
 
-Swf.Rect = class.class(KaitaiStruct)
-
-function Swf.Rect:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Swf.Rect:_read()
-  self.b1 = self._io:read_u1()
-  self.skip = self._io:read_bytes(self.num_bytes)
-end
-
-Swf.Rect.property.num_bits = {}
-function Swf.Rect.property.num_bits:get()
-  if self._m_num_bits ~= nil then
-    return self._m_num_bits
-  end
-
-  self._m_num_bits = (self.b1 >> 3)
-  return self._m_num_bits
-end
-
-Swf.Rect.property.num_bytes = {}
-function Swf.Rect.property.num_bytes:get()
-  if self._m_num_bytes ~= nil then
-    return self._m_num_bytes
-  end
-
-  self._m_num_bytes = math.floor((((self.num_bits * 4) - 3) + 7) / 8)
-  return self._m_num_bytes
-end
-
-
-Swf.Tag = class.class(KaitaiStruct)
-
-function Swf.Tag:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Swf.Tag:_read()
-  self.record_header = Swf.RecordHeader(self._io, self, self._root)
-  local _on = self.record_header.tag_type
-  if _on == Swf.TagType.define_sound then
-    self._raw_tag_body = self._io:read_bytes(self.record_header.len)
-    local _io = KaitaiStream(stringstream(self._raw_tag_body))
-    self.tag_body = Swf.DefineSoundBody(_io, self, self._root)
-  elseif _on == Swf.TagType.set_background_color then
-    self._raw_tag_body = self._io:read_bytes(self.record_header.len)
-    local _io = KaitaiStream(stringstream(self._raw_tag_body))
-    self.tag_body = Swf.Rgb(_io, self, self._root)
-  elseif _on == Swf.TagType.script_limits then
-    self._raw_tag_body = self._io:read_bytes(self.record_header.len)
-    local _io = KaitaiStream(stringstream(self._raw_tag_body))
-    self.tag_body = Swf.ScriptLimitsBody(_io, self, self._root)
-  elseif _on == Swf.TagType.do_abc then
-    self._raw_tag_body = self._io:read_bytes(self.record_header.len)
-    local _io = KaitaiStream(stringstream(self._raw_tag_body))
-    self.tag_body = Swf.DoAbcBody(_io, self, self._root)
-  elseif _on == Swf.TagType.export_assets then
-    self._raw_tag_body = self._io:read_bytes(self.record_header.len)
-    local _io = KaitaiStream(stringstream(self._raw_tag_body))
-    self.tag_body = Swf.SymbolClassBody(_io, self, self._root)
-  elseif _on == Swf.TagType.symbol_class then
-    self._raw_tag_body = self._io:read_bytes(self.record_header.len)
-    local _io = KaitaiStream(stringstream(self._raw_tag_body))
-    self.tag_body = Swf.SymbolClassBody(_io, self, self._root)
-  else
-    self.tag_body = self._io:read_bytes(self.record_header.len)
-  end
-end
-
-
 Swf.SymbolClassBody = class.class(KaitaiStruct)
 
 function Swf.SymbolClassBody:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -237,7 +296,7 @@ Swf.SymbolClassBody.Symbol = class.class(KaitaiStruct)
 function Swf.SymbolClassBody.Symbol:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -247,104 +306,45 @@ function Swf.SymbolClassBody.Symbol:_read()
 end
 
 
-Swf.DefineSoundBody = class.class(KaitaiStruct)
+Swf.Tag = class.class(KaitaiStruct)
 
-Swf.DefineSoundBody.SamplingRates = enum.Enum {
-  rate_5_5_khz = 0,
-  rate_11_khz = 1,
-  rate_22_khz = 2,
-  rate_44_khz = 3,
-}
-
-Swf.DefineSoundBody.Bps = enum.Enum {
-  sound_8_bit = 0,
-  sound_16_bit = 1,
-}
-
-Swf.DefineSoundBody.Channels = enum.Enum {
-  mono = 0,
-  stereo = 1,
-}
-
-function Swf.DefineSoundBody:_init(io, parent, root)
+function Swf.Tag:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function Swf.DefineSoundBody:_read()
-  self.id = self._io:read_u2le()
-  self.format = self._io:read_bits_int_be(4)
-  self.sampling_rate = Swf.DefineSoundBody.SamplingRates(self._io:read_bits_int_be(2))
-  self.bits_per_sample = Swf.DefineSoundBody.Bps(self._io:read_bits_int_be(1))
-  self.num_channels = Swf.DefineSoundBody.Channels(self._io:read_bits_int_be(1))
-  self._io:align_to_byte()
-  self.num_samples = self._io:read_u4le()
-end
-
--- 
--- Sound sampling rate, as per enum. Ignored for Nellymoser and Speex codecs.
-
-Swf.RecordHeader = class.class(KaitaiStruct)
-
-function Swf.RecordHeader:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Swf.RecordHeader:_read()
-  self.tag_code_and_length = self._io:read_u2le()
-  if self.small_len == 63 then
-    self.big_len = self._io:read_s4le()
+function Swf.Tag:_read()
+  self.record_header = Swf.RecordHeader(self._io, self, self._root)
+  local _on = self.record_header.tag_type
+  if _on == Swf.TagType.define_sound then
+    self._raw_tag_body = self._io:read_bytes(self.record_header.len)
+    local _io = KaitaiStream(stringstream(self._raw_tag_body))
+    self.tag_body = Swf.DefineSoundBody(_io, self, self._root)
+  elseif _on == Swf.TagType.do_abc then
+    self._raw_tag_body = self._io:read_bytes(self.record_header.len)
+    local _io = KaitaiStream(stringstream(self._raw_tag_body))
+    self.tag_body = Swf.DoAbcBody(_io, self, self._root)
+  elseif _on == Swf.TagType.export_assets then
+    self._raw_tag_body = self._io:read_bytes(self.record_header.len)
+    local _io = KaitaiStream(stringstream(self._raw_tag_body))
+    self.tag_body = Swf.SymbolClassBody(_io, self, self._root)
+  elseif _on == Swf.TagType.script_limits then
+    self._raw_tag_body = self._io:read_bytes(self.record_header.len)
+    local _io = KaitaiStream(stringstream(self._raw_tag_body))
+    self.tag_body = Swf.ScriptLimitsBody(_io, self, self._root)
+  elseif _on == Swf.TagType.set_background_color then
+    self._raw_tag_body = self._io:read_bytes(self.record_header.len)
+    local _io = KaitaiStream(stringstream(self._raw_tag_body))
+    self.tag_body = Swf.Rgb(_io, self, self._root)
+  elseif _on == Swf.TagType.symbol_class then
+    self._raw_tag_body = self._io:read_bytes(self.record_header.len)
+    local _io = KaitaiStream(stringstream(self._raw_tag_body))
+    self.tag_body = Swf.SymbolClassBody(_io, self, self._root)
+  else
+    self.tag_body = self._io:read_bytes(self.record_header.len)
   end
-end
-
-Swf.RecordHeader.property.tag_type = {}
-function Swf.RecordHeader.property.tag_type:get()
-  if self._m_tag_type ~= nil then
-    return self._m_tag_type
-  end
-
-  self._m_tag_type = Swf.TagType((self.tag_code_and_length >> 6))
-  return self._m_tag_type
-end
-
-Swf.RecordHeader.property.small_len = {}
-function Swf.RecordHeader.property.small_len:get()
-  if self._m_small_len ~= nil then
-    return self._m_small_len
-  end
-
-  self._m_small_len = (self.tag_code_and_length & 63)
-  return self._m_small_len
-end
-
-Swf.RecordHeader.property.len = {}
-function Swf.RecordHeader.property.len:get()
-  if self._m_len ~= nil then
-    return self._m_len
-  end
-
-  self._m_len = utils.box_unwrap((self.small_len == 63) and utils.box_wrap(self.big_len) or (self.small_len))
-  return self._m_len
-end
-
-
-Swf.ScriptLimitsBody = class.class(KaitaiStruct)
-
-function Swf.ScriptLimitsBody:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Swf.ScriptLimitsBody:_read()
-  self.max_recursion_depth = self._io:read_u2le()
-  self.script_timeout_seconds = self._io:read_u2le()
 end
 
 

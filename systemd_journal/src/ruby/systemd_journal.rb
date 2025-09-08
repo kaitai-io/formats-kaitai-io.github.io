@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -25,30 +25,102 @@ class SystemdJournal < Kaitai::Struct::Struct
     2 => :state_archived,
   }
   I__STATE = STATE.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
-    @_raw_header = @_io.read_bytes(len_header)
-    _io__raw_header = Kaitai::Struct::Stream.new(@_raw_header)
-    @header = Header.new(_io__raw_header, self, @_root)
+    _io_header = @_io.substream(len_header)
+    @header = Header.new(_io_header, self, @_root)
     @objects = []
     (header.num_objects).times { |i|
       @objects << JournalObject.new(@_io, self, @_root)
     }
     self
   end
+
+  ##
+  # Data objects are designed to carry log payload, typically in
+  # form of a "key=value" string in `payload` attribute.
+  # @see https://www.freedesktop.org/wiki/Software/systemd/journal-files/#dataobjects Source
+  class DataObject < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @hash = @_io.read_u8le
+      @ofs_next_hash = @_io.read_u8le
+      @ofs_head_field = @_io.read_u8le
+      @ofs_entry = @_io.read_u8le
+      @ofs_entry_array = @_io.read_u8le
+      @num_entries = @_io.read_u8le
+      @payload = @_io.read_bytes_full
+      self
+    end
+    def entry
+      return @entry unless @entry.nil?
+      if ofs_entry != 0
+        io = _root._io
+        _pos = io.pos
+        io.seek(ofs_entry)
+        @entry = JournalObject.new(io, self, @_root)
+        io.seek(_pos)
+      end
+      @entry
+    end
+    def entry_array
+      return @entry_array unless @entry_array.nil?
+      if ofs_entry_array != 0
+        io = _root._io
+        _pos = io.pos
+        io.seek(ofs_entry_array)
+        @entry_array = JournalObject.new(io, self, @_root)
+        io.seek(_pos)
+      end
+      @entry_array
+    end
+    def head_field
+      return @head_field unless @head_field.nil?
+      if ofs_head_field != 0
+        io = _root._io
+        _pos = io.pos
+        io.seek(ofs_head_field)
+        @head_field = JournalObject.new(io, self, @_root)
+        io.seek(_pos)
+      end
+      @head_field
+    end
+    def next_hash
+      return @next_hash unless @next_hash.nil?
+      if ofs_next_hash != 0
+        io = _root._io
+        _pos = io.pos
+        io.seek(ofs_next_hash)
+        @next_hash = JournalObject.new(io, self, @_root)
+        io.seek(_pos)
+      end
+      @next_hash
+    end
+    attr_reader :hash
+    attr_reader :ofs_next_hash
+    attr_reader :ofs_head_field
+    attr_reader :ofs_entry
+    attr_reader :ofs_entry_array
+    attr_reader :num_entries
+    attr_reader :payload
+  end
   class Header < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
       @signature = @_io.read_bytes(8)
-      raise Kaitai::Struct::ValidationNotEqualError.new([76, 80, 75, 83, 72, 72, 82, 72].pack('C*'), signature, _io, "/types/header/seq/0") if not signature == [76, 80, 75, 83, 72, 72, 82, 72].pack('C*')
+      raise Kaitai::Struct::ValidationNotEqualError.new([76, 80, 75, 83, 72, 72, 82, 72].pack('C*'), @signature, @_io, "/types/header/seq/0") if not @signature == [76, 80, 75, 83, 72, 72, 82, 72].pack('C*')
       @compatible_flags = @_io.read_u4le
       @incompatible_flags = @_io.read_u4le
       @state = Kaitai::Struct::Stream::resolve_enum(SystemdJournal::STATE, @_io.read_u1)
@@ -131,24 +203,23 @@ class SystemdJournal < Kaitai::Struct::Struct
       7 => :object_types_tag,
     }
     I__OBJECT_TYPES = OBJECT_TYPES.invert
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @padding = @_io.read_bytes(((8 - _io.pos) % 8))
+      @padding = @_io.read_bytes((8 - _io.pos) % 8)
       @object_type = Kaitai::Struct::Stream::resolve_enum(OBJECT_TYPES, @_io.read_u1)
       @flags = @_io.read_u1
       @reserved = @_io.read_bytes(6)
       @len_object = @_io.read_u8le
       case object_type
       when :object_types_data
-        @_raw_payload = @_io.read_bytes((len_object - 16))
-        _io__raw_payload = Kaitai::Struct::Stream.new(@_raw_payload)
-        @payload = DataObject.new(_io__raw_payload, self, @_root)
+        _io_payload = @_io.substream(len_object - 16)
+        @payload = DataObject.new(_io_payload, self, @_root)
       else
-        @payload = @_io.read_bytes((len_object - 16))
+        @payload = @_io.read_bytes(len_object - 16)
       end
       self
     end
@@ -159,91 +230,6 @@ class SystemdJournal < Kaitai::Struct::Struct
     attr_reader :len_object
     attr_reader :payload
     attr_reader :_raw_payload
-  end
-
-  ##
-  # Data objects are designed to carry log payload, typically in
-  # form of a "key=value" string in `payload` attribute.
-  # @see https://www.freedesktop.org/wiki/Software/systemd/journal-files/#dataobjects Source
-  class DataObject < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @hash = @_io.read_u8le
-      @ofs_next_hash = @_io.read_u8le
-      @ofs_head_field = @_io.read_u8le
-      @ofs_entry = @_io.read_u8le
-      @ofs_entry_array = @_io.read_u8le
-      @num_entries = @_io.read_u8le
-      @payload = @_io.read_bytes_full
-      self
-    end
-    def next_hash
-      return @next_hash unless @next_hash.nil?
-      if ofs_next_hash != 0
-        io = _root._io
-        _pos = io.pos
-        io.seek(ofs_next_hash)
-        @next_hash = JournalObject.new(io, self, @_root)
-        io.seek(_pos)
-      end
-      @next_hash
-    end
-    def head_field
-      return @head_field unless @head_field.nil?
-      if ofs_head_field != 0
-        io = _root._io
-        _pos = io.pos
-        io.seek(ofs_head_field)
-        @head_field = JournalObject.new(io, self, @_root)
-        io.seek(_pos)
-      end
-      @head_field
-    end
-    def entry
-      return @entry unless @entry.nil?
-      if ofs_entry != 0
-        io = _root._io
-        _pos = io.pos
-        io.seek(ofs_entry)
-        @entry = JournalObject.new(io, self, @_root)
-        io.seek(_pos)
-      end
-      @entry
-    end
-    def entry_array
-      return @entry_array unless @entry_array.nil?
-      if ofs_entry_array != 0
-        io = _root._io
-        _pos = io.pos
-        io.seek(ofs_entry_array)
-        @entry_array = JournalObject.new(io, self, @_root)
-        io.seek(_pos)
-      end
-      @entry_array
-    end
-    attr_reader :hash
-    attr_reader :ofs_next_hash
-    attr_reader :ofs_head_field
-    attr_reader :ofs_entry
-    attr_reader :ofs_entry_array
-    attr_reader :num_entries
-    attr_reader :payload
-  end
-
-  ##
-  # Header length is used to set substream size, as it thus required
-  # prior to declaration of header.
-  def len_header
-    return @len_header unless @len_header.nil?
-    _pos = @_io.pos
-    @_io.seek(88)
-    @len_header = @_io.read_u8le
-    @_io.seek(_pos)
-    @len_header
   end
   def data_hash_table
     return @data_hash_table unless @data_hash_table.nil?
@@ -260,6 +246,18 @@ class SystemdJournal < Kaitai::Struct::Struct
     @field_hash_table = @_io.read_bytes(header.len_field_hash_table)
     @_io.seek(_pos)
     @field_hash_table
+  end
+
+  ##
+  # Header length is used to set substream size, as it thus required
+  # prior to declaration of header.
+  def len_header
+    return @len_header unless @len_header.nil?
+    _pos = @_io.pos
+    @_io.seek(88)
+    @len_header = @_io.read_u8le
+    @_io.seek(_pos)
+    @len_header
   end
   attr_reader :header
   attr_reader :objects

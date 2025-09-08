@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -42,14 +42,14 @@ class Gzip < Kaitai::Struct::Struct
     255 => :oses_unknown,
   }
   I__OSES = OSES.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
     @magic = @_io.read_bytes(2)
-    raise Kaitai::Struct::ValidationNotEqualError.new([31, 139].pack('C*'), magic, _io, "/seq/0") if not magic == [31, 139].pack('C*')
+    raise Kaitai::Struct::ValidationNotEqualError.new([31, 139].pack('C*'), @magic, @_io, "/seq/0") if not @magic == [31, 139].pack('C*')
     @compression_method = Kaitai::Struct::Stream::resolve_enum(COMPRESSION_METHODS, @_io.read_u1)
     @flags = Flags.new(@_io, self, @_root)
     @mod_time = @_io.read_u4le
@@ -70,13 +70,47 @@ class Gzip < Kaitai::Struct::Struct
     if flags.has_header_crc
       @header_crc16 = @_io.read_u2le
     end
-    @body = @_io.read_bytes(((_io.size - _io.pos) - 8))
+    @body = @_io.read_bytes((_io.size - _io.pos) - 8)
     @body_crc32 = @_io.read_u4le
     @len_uncompressed = @_io.read_u4le
     self
   end
+  class ExtraFlagsDeflate < Kaitai::Struct::Struct
+
+    COMPRESSION_STRENGTHS = {
+      2 => :compression_strengths_best,
+      4 => :compression_strengths_fast,
+    }
+    I__COMPRESSION_STRENGTHS = COMPRESSION_STRENGTHS.invert
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @compression_strength = Kaitai::Struct::Stream::resolve_enum(COMPRESSION_STRENGTHS, @_io.read_u1)
+      self
+    end
+    attr_reader :compression_strength
+  end
+  class Extras < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @len_subfields = @_io.read_u2le
+      _io_subfields = @_io.substream(len_subfields)
+      @subfields = Subfields.new(_io_subfields, self, @_root)
+      self
+    end
+    attr_reader :len_subfields
+    attr_reader :subfields
+    attr_reader :_raw_subfields
+  end
   class Flags < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -107,44 +141,6 @@ class Gzip < Kaitai::Struct::Struct
     # compressor's point of view.
     attr_reader :is_text
   end
-  class ExtraFlagsDeflate < Kaitai::Struct::Struct
-
-    COMPRESSION_STRENGTHS = {
-      2 => :compression_strengths_best,
-      4 => :compression_strengths_fast,
-    }
-    I__COMPRESSION_STRENGTHS = COMPRESSION_STRENGTHS.invert
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @compression_strength = Kaitai::Struct::Stream::resolve_enum(COMPRESSION_STRENGTHS, @_io.read_u1)
-      self
-    end
-    attr_reader :compression_strength
-  end
-
-  ##
-  # Container for many subfields, constrained by size of stream.
-  class Subfields < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @entries = []
-      i = 0
-      while not @_io.eof?
-        @entries << Subfield.new(@_io, self, @_root)
-        i += 1
-      end
-      self
-    end
-    attr_reader :entries
-  end
 
   ##
   # Every subfield follows typical [TLV scheme](https://en.wikipedia.org/wiki/Type-length-value):
@@ -156,7 +152,7 @@ class Gzip < Kaitai::Struct::Struct
   # This way it's possible to for arbitrary parser to skip over
   # subfields it does not support.
   class Subfield < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -174,22 +170,25 @@ class Gzip < Kaitai::Struct::Struct
     attr_reader :len_data
     attr_reader :data
   end
-  class Extras < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+
+  ##
+  # Container for many subfields, constrained by size of stream.
+  class Subfields < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @len_subfields = @_io.read_u2le
-      @_raw_subfields = @_io.read_bytes(len_subfields)
-      _io__raw_subfields = Kaitai::Struct::Stream.new(@_raw_subfields)
-      @subfields = Subfields.new(_io__raw_subfields, self, @_root)
+      @entries = []
+      i = 0
+      while not @_io.eof?
+        @entries << Subfield.new(@_io, self, @_root)
+        i += 1
+      end
       self
     end
-    attr_reader :len_subfields
-    attr_reader :subfields
-    attr_reader :_raw_subfields
+    attr_reader :entries
   end
   attr_reader :magic
 

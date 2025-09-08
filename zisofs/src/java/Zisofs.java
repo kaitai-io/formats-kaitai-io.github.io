@@ -6,6 +6,7 @@ import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -41,13 +42,77 @@ public class Zisofs extends KaitaiStruct {
         _read();
     }
     private void _read() {
-        this._raw_header = this._io.readBytes(16);
-        KaitaiStream _io__raw_header = new ByteBufferKaitaiStream(_raw_header);
-        this.header = new Header(_io__raw_header, this, _root);
+        KaitaiStream _io_header = this._io.substream(16);
+        this.header = new Header(_io_header, this, _root);
         this.blockPointers = new ArrayList<Long>();
-        for (int i = 0; i < (header().numBlocks() + 1); i++) {
+        for (int i = 0; i < header().numBlocks() + 1; i++) {
             this.blockPointers.add(this._io.readU4le());
         }
+    }
+
+    public void _fetchInstances() {
+        this.header._fetchInstances();
+        for (int i = 0; i < this.blockPointers.size(); i++) {
+        }
+        blocks();
+        if (this.blocks != null) {
+            for (int i = 0; i < this.blocks.size(); i++) {
+                this.blocks.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+    }
+    public static class Block extends KaitaiStruct {
+
+        public Block(KaitaiStream _io, long ofsStart, long ofsEnd) {
+            this(_io, null, null, ofsStart, ofsEnd);
+        }
+
+        public Block(KaitaiStream _io, Zisofs _parent, long ofsStart, long ofsEnd) {
+            this(_io, _parent, null, ofsStart, ofsEnd);
+        }
+
+        public Block(KaitaiStream _io, Zisofs _parent, Zisofs _root, long ofsStart, long ofsEnd) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            this.ofsStart = ofsStart;
+            this.ofsEnd = ofsEnd;
+            _read();
+        }
+        private void _read() {
+        }
+
+        public void _fetchInstances() {
+            data();
+            if (this.data != null) {
+            }
+        }
+        private byte[] data;
+        public byte[] data() {
+            if (this.data != null)
+                return this.data;
+            KaitaiStream io = _root()._io();
+            long _pos = io.pos();
+            io.seek(ofsStart());
+            this.data = io.readBytes(lenData());
+            io.seek(_pos);
+            return this.data;
+        }
+        private Integer lenData;
+        public Integer lenData() {
+            if (this.lenData != null)
+                return this.lenData;
+            this.lenData = ((Number) (ofsEnd() - ofsStart())).intValue();
+            return this.lenData;
+        }
+        private long ofsStart;
+        private long ofsEnd;
+        private Zisofs _root;
+        private Zisofs _parent;
+        public long ofsStart() { return ofsStart; }
+        public long ofsEnd() { return ofsEnd; }
+        public Zisofs _root() { return _root; }
+        public Zisofs _parent() { return _parent; }
     }
     public static class Header extends KaitaiStruct {
         public static Header fromFile(String fileName) throws IOException {
@@ -70,29 +135,31 @@ public class Zisofs extends KaitaiStruct {
         }
         private void _read() {
             this.magic = this._io.readBytes(8);
-            if (!(Arrays.equals(magic(), new byte[] { 55, -28, 83, -106, -55, -37, -42, 7 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 55, -28, 83, -106, -55, -37, -42, 7 }, magic(), _io(), "/types/header/seq/0");
+            if (!(Arrays.equals(this.magic, new byte[] { 55, -28, 83, -106, -55, -37, -42, 7 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 55, -28, 83, -106, -55, -37, -42, 7 }, this.magic, this._io, "/types/header/seq/0");
             }
             this.uncompressedSize = this._io.readU4le();
             this.lenHeader = this._io.readU1();
-            if (!(lenHeader() == 4)) {
-                throw new KaitaiStream.ValidationNotEqualError(4, lenHeader(), _io(), "/types/header/seq/2");
+            if (!(this.lenHeader == 4)) {
+                throw new KaitaiStream.ValidationNotEqualError(4, this.lenHeader, this._io, "/types/header/seq/2");
             }
             this.blockSizeLog2 = this._io.readU1();
-            if (!( ((blockSizeLog2() == 15) || (blockSizeLog2() == 16) || (blockSizeLog2() == 17)) )) {
-                throw new KaitaiStream.ValidationNotAnyOfError(blockSizeLog2(), _io(), "/types/header/seq/3");
+            if (!( ((this.blockSizeLog2 == 15) || (this.blockSizeLog2 == 16) || (this.blockSizeLog2 == 17)) )) {
+                throw new KaitaiStream.ValidationNotAnyOfError(this.blockSizeLog2, this._io, "/types/header/seq/3");
             }
             this.reserved = this._io.readBytes(2);
-            if (!(Arrays.equals(reserved(), new byte[] { 0, 0 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0 }, reserved(), _io(), "/types/header/seq/4");
+            if (!(Arrays.equals(this.reserved, new byte[] { 0, 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0 }, this.reserved, this._io, "/types/header/seq/4");
             }
+        }
+
+        public void _fetchInstances() {
         }
         private Integer blockSize;
         public Integer blockSize() {
             if (this.blockSize != null)
                 return this.blockSize;
-            int _tmp = (int) ((1 << blockSizeLog2()));
-            this.blockSize = _tmp;
+            this.blockSize = ((Number) (1 << blockSizeLog2())).intValue();
             return this.blockSize;
         }
         private Integer numBlocks;
@@ -103,8 +170,7 @@ public class Zisofs extends KaitaiStruct {
         public Integer numBlocks() {
             if (this.numBlocks != null)
                 return this.numBlocks;
-            int _tmp = (int) (((uncompressedSize() / blockSize()) + (KaitaiStream.mod(uncompressedSize(), blockSize()) != 0 ? 1 : 0)));
-            this.numBlocks = _tmp;
+            this.numBlocks = ((Number) (uncompressedSize() / blockSize() + (KaitaiStream.mod(uncompressedSize(), blockSize()) != 0 ? 1 : 0))).intValue();
             return this.numBlocks;
         }
         private byte[] magic;
@@ -130,77 +196,27 @@ public class Zisofs extends KaitaiStruct {
         public Zisofs _root() { return _root; }
         public Zisofs _parent() { return _parent; }
     }
-    public static class Block extends KaitaiStruct {
-
-        public Block(KaitaiStream _io, long ofsStart, long ofsEnd) {
-            this(_io, null, null, ofsStart, ofsEnd);
-        }
-
-        public Block(KaitaiStream _io, Zisofs _parent, long ofsStart, long ofsEnd) {
-            this(_io, _parent, null, ofsStart, ofsEnd);
-        }
-
-        public Block(KaitaiStream _io, Zisofs _parent, Zisofs _root, long ofsStart, long ofsEnd) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            this.ofsStart = ofsStart;
-            this.ofsEnd = ofsEnd;
-            _read();
-        }
-        private void _read() {
-        }
-        private Integer lenData;
-        public Integer lenData() {
-            if (this.lenData != null)
-                return this.lenData;
-            int _tmp = (int) ((ofsEnd() - ofsStart()));
-            this.lenData = _tmp;
-            return this.lenData;
-        }
-        private byte[] data;
-        public byte[] data() {
-            if (this.data != null)
-                return this.data;
-            KaitaiStream io = _root()._io();
-            long _pos = io.pos();
-            io.seek(ofsStart());
-            this.data = io.readBytes(lenData());
-            io.seek(_pos);
-            return this.data;
-        }
-        private long ofsStart;
-        private long ofsEnd;
-        private Zisofs _root;
-        private Zisofs _parent;
-        public long ofsStart() { return ofsStart; }
-        public long ofsEnd() { return ofsEnd; }
-        public Zisofs _root() { return _root; }
-        public Zisofs _parent() { return _parent; }
-    }
-    private ArrayList<Block> blocks;
-    public ArrayList<Block> blocks() {
+    private List<Block> blocks;
+    public List<Block> blocks() {
         if (this.blocks != null)
             return this.blocks;
         this.blocks = new ArrayList<Block>();
         for (int i = 0; i < header().numBlocks(); i++) {
-            this.blocks.add(new Block(this._io, this, _root, blockPointers().get((int) i), blockPointers().get((int) (i + 1))));
+            this.blocks.add(new Block(this._io, this, _root, blockPointers().get(((Number) (i)).intValue()), blockPointers().get(((Number) (i + 1)).intValue())));
         }
         return this.blocks;
     }
     private Header header;
-    private ArrayList<Long> blockPointers;
+    private List<Long> blockPointers;
     private Zisofs _root;
     private KaitaiStruct _parent;
-    private byte[] _raw_header;
     public Header header() { return header; }
 
     /**
      * The final pointer (`block_pointers[header.num_blocks]`) indicates the end
      * of the last block. Typically this is also the end of the file data.
      */
-    public ArrayList<Long> blockPointers() { return blockPointers; }
+    public List<Long> blockPointers() { return blockPointers; }
     public Zisofs _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
-    public byte[] _raw_header() { return _raw_header; }
 }

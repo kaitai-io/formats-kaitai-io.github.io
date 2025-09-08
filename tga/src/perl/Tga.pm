@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Encode;
 
 ########################################################################
@@ -36,7 +36,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -60,7 +60,7 @@ sub _read {
     $self->{img_descriptor} = $self->{_io}->read_u1();
     $self->{image_id} = $self->{_io}->read_bytes($self->image_id_len());
     if ($self->color_map_type() == $Tga::COLOR_MAP_ENUM_HAS_COLOR_MAP) {
-        $self->{color_map} = ();
+        $self->{color_map} = [];
         my $n_color_map = $self->num_color_map();
         for (my $i = 0; $i < $n_color_map; $i++) {
             push @{$self->{color_map}}, $self->{_io}->read_bytes(int(($self->color_map_depth() + 7) / 8));
@@ -72,7 +72,7 @@ sub footer {
     my ($self) = @_;
     return $self->{footer} if ($self->{footer});
     my $_pos = $self->{_io}->pos();
-    $self->{_io}->seek(($self->_io()->size() - 26));
+    $self->{_io}->seek($self->_io()->size() - 26);
     $self->{footer} = Tga::TgaFooter->new($self->{_io}, $self, $self->{_root});
     $self->{_io}->seek($_pos);
     return $self->{footer};
@@ -149,75 +149,6 @@ sub color_map {
 }
 
 ########################################################################
-package Tga::TgaFooter;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{ext_area_ofs} = $self->{_io}->read_u4le();
-    $self->{dev_dir_ofs} = $self->{_io}->read_u4le();
-    $self->{version_magic} = $self->{_io}->read_bytes(18);
-}
-
-sub is_valid {
-    my ($self) = @_;
-    return $self->{is_valid} if ($self->{is_valid});
-    $self->{is_valid} = $self->version_magic() eq pack('C*', (84, 82, 85, 69, 86, 73, 83, 73, 79, 78, 45, 88, 70, 73, 76, 69, 46, 0));
-    return $self->{is_valid};
-}
-
-sub ext_area {
-    my ($self) = @_;
-    return $self->{ext_area} if ($self->{ext_area});
-    if ($self->is_valid()) {
-        my $_pos = $self->{_io}->pos();
-        $self->{_io}->seek($self->ext_area_ofs());
-        $self->{ext_area} = Tga::TgaExtArea->new($self->{_io}, $self, $self->{_root});
-        $self->{_io}->seek($_pos);
-    }
-    return $self->{ext_area};
-}
-
-sub ext_area_ofs {
-    my ($self) = @_;
-    return $self->{ext_area_ofs};
-}
-
-sub dev_dir_ofs {
-    my ($self) = @_;
-    return $self->{dev_dir_ofs};
-}
-
-sub version_magic {
-    my ($self) = @_;
-    return $self->{version_magic};
-}
-
-########################################################################
 package Tga::TgaExtArea;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -237,7 +168,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -249,7 +180,7 @@ sub _read {
 
     $self->{ext_area_size} = $self->{_io}->read_u2le();
     $self->{author_name} = Encode::decode("ASCII", $self->{_io}->read_bytes(41));
-    $self->{comments} = ();
+    $self->{comments} = [];
     my $n_comments = 4;
     for (my $i = 0; $i < $n_comments; $i++) {
         push @{$self->{comments}}, Encode::decode("ASCII", $self->{_io}->read_bytes(81));
@@ -341,6 +272,75 @@ sub scan_line_ofs {
 sub attributes {
     my ($self) = @_;
     return $self->{attributes};
+}
+
+########################################################################
+package Tga::TgaFooter;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{ext_area_ofs} = $self->{_io}->read_u4le();
+    $self->{dev_dir_ofs} = $self->{_io}->read_u4le();
+    $self->{version_magic} = $self->{_io}->read_bytes(18);
+}
+
+sub ext_area {
+    my ($self) = @_;
+    return $self->{ext_area} if ($self->{ext_area});
+    if ($self->is_valid()) {
+        my $_pos = $self->{_io}->pos();
+        $self->{_io}->seek($self->ext_area_ofs());
+        $self->{ext_area} = Tga::TgaExtArea->new($self->{_io}, $self, $self->{_root});
+        $self->{_io}->seek($_pos);
+    }
+    return $self->{ext_area};
+}
+
+sub is_valid {
+    my ($self) = @_;
+    return $self->{is_valid} if ($self->{is_valid});
+    $self->{is_valid} = $self->version_magic() eq pack('C*', (84, 82, 85, 69, 86, 73, 83, 73, 79, 78, 45, 88, 70, 73, 76, 69, 46, 0));
+    return $self->{is_valid};
+}
+
+sub ext_area_ofs {
+    my ($self) = @_;
+    return $self->{ext_area_ofs};
+}
+
+sub dev_dir_ofs {
+    my ($self) = @_;
+    return $self->{dev_dir_ofs};
+}
+
+sub version_magic {
+    my ($self) = @_;
+    return $self->{version_magic};
 }
 
 1;

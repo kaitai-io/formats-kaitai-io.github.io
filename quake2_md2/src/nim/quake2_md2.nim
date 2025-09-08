@@ -23,33 +23,27 @@ type
     `parent`*: KaitaiStruct
     `rawFramesInst`*: seq[seq[byte]]
     `rawGlCmdsInst`*: seq[byte]
-    `animNumFramesInst`: seq[byte]
-    `animNumFramesInstFlag`: bool
-    `anormsTableInst`: seq[seq[float64]]
-    `anormsTableInstFlag`: bool
-    `texCoordsInst`: seq[Quake2Md2_TexPoint]
-    `texCoordsInstFlag`: bool
-    `trianglesInst`: seq[Quake2Md2_Triangle]
-    `trianglesInstFlag`: bool
-    `framesInst`: seq[Quake2Md2_Frame]
-    `framesInstFlag`: bool
     `animNamesInst`: seq[string]
     `animNamesInstFlag`: bool
+    `animNumFramesInst`: seq[byte]
+    `animNumFramesInstFlag`: bool
+    `animStartIndicesInst`: seq[byte]
+    `animStartIndicesInstFlag`: bool
+    `anormsTableInst`: seq[seq[float64]]
+    `anormsTableInstFlag`: bool
+    `framesInst`: seq[Quake2Md2_Frame]
+    `framesInstFlag`: bool
     `glCmdsInst`: Quake2Md2_GlCmdsList
     `glCmdsInstFlag`: bool
     `skinsInst`: seq[string]
     `skinsInstFlag`: bool
-    `animStartIndicesInst`: seq[byte]
-    `animStartIndicesInstFlag`: bool
+    `texCoordsInst`: seq[Quake2Md2_TexPoint]
+    `texCoordsInstFlag`: bool
+    `trianglesInst`: seq[Quake2Md2_Triangle]
+    `trianglesInstFlag`: bool
   Quake2Md2_GlPrimitive* = enum
     triangle_strip = 0
     triangle_fan = 1
-  Quake2Md2_Vertex* = ref object of KaitaiStruct
-    `position`*: Quake2Md2_CompressedVec
-    `normalIndex`*: uint8
-    `parent`*: Quake2Md2_Frame
-    `normalInst`: seq[float64]
-    `normalInstFlag`: bool
   Quake2Md2_CompressedVec* = ref object of KaitaiStruct
     `xCompressed`*: uint8
     `yCompressed`*: uint8
@@ -61,36 +55,12 @@ type
     `yInstFlag`: bool
     `zInst`: float64
     `zInstFlag`: bool
-  Quake2Md2_Triangle* = ref object of KaitaiStruct
-    `vertexIndices`*: seq[uint16]
-    `texPointIndices`*: seq[uint16]
-    `parent`*: Quake2Md2
   Quake2Md2_Frame* = ref object of KaitaiStruct
     `scale`*: Quake2Md2_Vec3f
     `translate`*: Quake2Md2_Vec3f
     `name`*: string
     `vertices`*: seq[Quake2Md2_Vertex]
     `parent`*: Quake2Md2
-  Quake2Md2_GlCmdsList* = ref object of KaitaiStruct
-    `items`*: seq[Quake2Md2_GlCmd]
-    `parent`*: Quake2Md2
-  Quake2Md2_TexPoint* = ref object of KaitaiStruct
-    `sPx`*: uint16
-    `tPx`*: uint16
-    `parent`*: Quake2Md2
-    `sNormalizedInst`: float64
-    `sNormalizedInstFlag`: bool
-    `tNormalizedInst`: float64
-    `tNormalizedInstFlag`: bool
-  Quake2Md2_Vec3f* = ref object of KaitaiStruct
-    `x`*: float32
-    `y`*: float32
-    `z`*: float32
-    `parent`*: Quake2Md2_Frame
-  Quake2Md2_GlVertex* = ref object of KaitaiStruct
-    `texCoordsNormalized`*: seq[float32]
-    `vertexIndex`*: uint32
-    `parent`*: Quake2Md2_GlCmd
   Quake2Md2_GlCmd* = ref object of KaitaiStruct
     `cmdNumVertices`*: int32
     `vertices`*: seq[Quake2Md2_GlVertex]
@@ -99,35 +69,65 @@ type
     `numVerticesInstFlag`: bool
     `primitiveInst`: Quake2Md2_GlPrimitive
     `primitiveInstFlag`: bool
+  Quake2Md2_GlCmdsList* = ref object of KaitaiStruct
+    `items`*: seq[Quake2Md2_GlCmd]
+    `parent`*: Quake2Md2
+  Quake2Md2_GlVertex* = ref object of KaitaiStruct
+    `texCoordsNormalized`*: seq[float32]
+    `vertexIndex`*: uint32
+    `parent`*: Quake2Md2_GlCmd
+  Quake2Md2_TexPoint* = ref object of KaitaiStruct
+    `sPx`*: uint16
+    `tPx`*: uint16
+    `parent`*: Quake2Md2
+    `sNormalizedInst`: float64
+    `sNormalizedInstFlag`: bool
+    `tNormalizedInst`: float64
+    `tNormalizedInstFlag`: bool
+  Quake2Md2_Triangle* = ref object of KaitaiStruct
+    `vertexIndices`*: seq[uint16]
+    `texPointIndices`*: seq[uint16]
+    `parent`*: Quake2Md2
+  Quake2Md2_Vec3f* = ref object of KaitaiStruct
+    `x`*: float32
+    `y`*: float32
+    `z`*: float32
+    `parent`*: Quake2Md2_Frame
+  Quake2Md2_Vertex* = ref object of KaitaiStruct
+    `position`*: Quake2Md2_CompressedVec
+    `normalIndex`*: uint8
+    `parent`*: Quake2Md2_Frame
+    `normalInst`: seq[float64]
+    `normalInstFlag`: bool
 
 proc read*(_: typedesc[Quake2Md2], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Quake2Md2
-proc read*(_: typedesc[Quake2Md2_Vertex], io: KaitaiStream, root: KaitaiStruct, parent: Quake2Md2_Frame): Quake2Md2_Vertex
 proc read*(_: typedesc[Quake2Md2_CompressedVec], io: KaitaiStream, root: KaitaiStruct, parent: Quake2Md2_Vertex): Quake2Md2_CompressedVec
-proc read*(_: typedesc[Quake2Md2_Triangle], io: KaitaiStream, root: KaitaiStruct, parent: Quake2Md2): Quake2Md2_Triangle
 proc read*(_: typedesc[Quake2Md2_Frame], io: KaitaiStream, root: KaitaiStruct, parent: Quake2Md2): Quake2Md2_Frame
-proc read*(_: typedesc[Quake2Md2_GlCmdsList], io: KaitaiStream, root: KaitaiStruct, parent: Quake2Md2): Quake2Md2_GlCmdsList
-proc read*(_: typedesc[Quake2Md2_TexPoint], io: KaitaiStream, root: KaitaiStruct, parent: Quake2Md2): Quake2Md2_TexPoint
-proc read*(_: typedesc[Quake2Md2_Vec3f], io: KaitaiStream, root: KaitaiStruct, parent: Quake2Md2_Frame): Quake2Md2_Vec3f
-proc read*(_: typedesc[Quake2Md2_GlVertex], io: KaitaiStream, root: KaitaiStruct, parent: Quake2Md2_GlCmd): Quake2Md2_GlVertex
 proc read*(_: typedesc[Quake2Md2_GlCmd], io: KaitaiStream, root: KaitaiStruct, parent: Quake2Md2_GlCmdsList): Quake2Md2_GlCmd
+proc read*(_: typedesc[Quake2Md2_GlCmdsList], io: KaitaiStream, root: KaitaiStruct, parent: Quake2Md2): Quake2Md2_GlCmdsList
+proc read*(_: typedesc[Quake2Md2_GlVertex], io: KaitaiStream, root: KaitaiStruct, parent: Quake2Md2_GlCmd): Quake2Md2_GlVertex
+proc read*(_: typedesc[Quake2Md2_TexPoint], io: KaitaiStream, root: KaitaiStruct, parent: Quake2Md2): Quake2Md2_TexPoint
+proc read*(_: typedesc[Quake2Md2_Triangle], io: KaitaiStream, root: KaitaiStruct, parent: Quake2Md2): Quake2Md2_Triangle
+proc read*(_: typedesc[Quake2Md2_Vec3f], io: KaitaiStream, root: KaitaiStruct, parent: Quake2Md2_Frame): Quake2Md2_Vec3f
+proc read*(_: typedesc[Quake2Md2_Vertex], io: KaitaiStream, root: KaitaiStruct, parent: Quake2Md2_Frame): Quake2Md2_Vertex
 
-proc animNumFrames*(this: Quake2Md2): seq[byte]
-proc anormsTable*(this: Quake2Md2): seq[seq[float64]]
-proc texCoords*(this: Quake2Md2): seq[Quake2Md2_TexPoint]
-proc triangles*(this: Quake2Md2): seq[Quake2Md2_Triangle]
-proc frames*(this: Quake2Md2): seq[Quake2Md2_Frame]
 proc animNames*(this: Quake2Md2): seq[string]
+proc animNumFrames*(this: Quake2Md2): seq[byte]
+proc animStartIndices*(this: Quake2Md2): seq[byte]
+proc anormsTable*(this: Quake2Md2): seq[seq[float64]]
+proc frames*(this: Quake2Md2): seq[Quake2Md2_Frame]
 proc glCmds*(this: Quake2Md2): Quake2Md2_GlCmdsList
 proc skins*(this: Quake2Md2): seq[string]
-proc animStartIndices*(this: Quake2Md2): seq[byte]
-proc normal*(this: Quake2Md2_Vertex): seq[float64]
+proc texCoords*(this: Quake2Md2): seq[Quake2Md2_TexPoint]
+proc triangles*(this: Quake2Md2): seq[Quake2Md2_Triangle]
 proc x*(this: Quake2Md2_CompressedVec): float64
 proc y*(this: Quake2Md2_CompressedVec): float64
 proc z*(this: Quake2Md2_CompressedVec): float64
-proc sNormalized*(this: Quake2Md2_TexPoint): float64
-proc tNormalized*(this: Quake2Md2_TexPoint): float64
 proc numVertices*(this: Quake2Md2_GlCmd): int
 proc primitive*(this: Quake2Md2_GlCmd): Quake2Md2_GlPrimitive
+proc sNormalized*(this: Quake2Md2_TexPoint): float64
+proc tNormalized*(this: Quake2Md2_TexPoint): float64
+proc normal*(this: Quake2Md2_Vertex): seq[float64]
 
 
 ##[
@@ -242,6 +242,14 @@ proc read*(_: typedesc[Quake2Md2], io: KaitaiStream, root: KaitaiStruct, parent:
   let ofsEofExpr = this.io.readU4le()
   this.ofsEof = ofsEofExpr
 
+proc animNames(this: Quake2Md2): seq[string] = 
+  if this.animNamesInstFlag:
+    return this.animNamesInst
+  let animNamesInstExpr = seq[string](@[string("stand"), string("run"), string("attack"), string("pain1"), string("pain2"), string("pain3"), string("jump"), string("flip"), string("salute"), string("taunt"), string("wave"), string("point"), string("crstnd"), string("crwalk"), string("crattak"), string("crpain"), string("crdeath"), string("death1"), string("death2"), string("death3")])
+  this.animNamesInst = animNamesInstExpr
+  this.animNamesInstFlag = true
+  return this.animNamesInst
+
 proc animNumFrames(this: Quake2Md2): seq[byte] = 
   if this.animNumFramesInstFlag:
     return this.animNumFramesInst
@@ -249,6 +257,14 @@ proc animNumFrames(this: Quake2Md2): seq[byte] =
   this.animNumFramesInst = animNumFramesInstExpr
   this.animNumFramesInstFlag = true
   return this.animNumFramesInst
+
+proc animStartIndices(this: Quake2Md2): seq[byte] = 
+  if this.animStartIndicesInstFlag:
+    return this.animStartIndicesInst
+  let animStartIndicesInstExpr = seq[byte](@[0'u8, 40'u8, 46'u8, 54'u8, 58'u8, 62'u8, 66'u8, 72'u8, 84'u8, 95'u8, 112'u8, 123'u8, 135'u8, 154'u8, 160'u8, 169'u8, 173'u8, 178'u8, 184'u8, 190'u8])
+  this.animStartIndicesInst = animStartIndicesInstExpr
+  this.animStartIndicesInstFlag = true
+  return this.animStartIndicesInst
 
 proc anormsTable(this: Quake2Md2): seq[seq[float64]] = 
 
@@ -262,6 +278,47 @@ from">Quake anorms.h</a>
   this.anormsTableInst = anormsTableInstExpr
   this.anormsTableInstFlag = true
   return this.anormsTableInst
+
+proc frames(this: Quake2Md2): seq[Quake2Md2_Frame] = 
+  if this.framesInstFlag:
+    return this.framesInst
+  let pos = this.io.pos()
+  this.io.seek(int(this.ofsFrames))
+  for i in 0 ..< int(this.numFrames):
+    let buf = this.io.readBytes(int(this.bytesPerFrame))
+    this.rawFramesInst.add(buf)
+    let rawFramesInstIo = newKaitaiStream(buf)
+    let it = Quake2Md2_Frame.read(rawFramesInstIo, this.root, this)
+    this.framesInst.add(it)
+  this.io.seek(pos)
+  this.framesInstFlag = true
+  return this.framesInst
+
+proc glCmds(this: Quake2Md2): Quake2Md2_GlCmdsList = 
+  if this.glCmdsInstFlag:
+    return this.glCmdsInst
+  let pos = this.io.pos()
+  this.io.seek(int(this.ofsGlCmds))
+  let rawGlCmdsInstExpr = this.io.readBytes(int(4 * this.numGlCmds))
+  this.rawGlCmdsInst = rawGlCmdsInstExpr
+  let rawGlCmdsInstIo = newKaitaiStream(rawGlCmdsInstExpr)
+  let glCmdsInstExpr = Quake2Md2_GlCmdsList.read(rawGlCmdsInstIo, this.root, this)
+  this.glCmdsInst = glCmdsInstExpr
+  this.io.seek(pos)
+  this.glCmdsInstFlag = true
+  return this.glCmdsInst
+
+proc skins(this: Quake2Md2): seq[string] = 
+  if this.skinsInstFlag:
+    return this.skinsInst
+  let pos = this.io.pos()
+  this.io.seek(int(this.ofsSkins))
+  for i in 0 ..< int(this.numSkins):
+    let it = encode(this.io.readBytes(int(64)).bytesTerminate(0, false), "ASCII")
+    this.skinsInst.add(it)
+  this.io.seek(pos)
+  this.skinsInstFlag = true
+  return this.skinsInst
 
 proc texCoords(this: Quake2Md2): seq[Quake2Md2_TexPoint] = 
   if this.texCoordsInstFlag:
@@ -287,89 +344,8 @@ proc triangles(this: Quake2Md2): seq[Quake2Md2_Triangle] =
   this.trianglesInstFlag = true
   return this.trianglesInst
 
-proc frames(this: Quake2Md2): seq[Quake2Md2_Frame] = 
-  if this.framesInstFlag:
-    return this.framesInst
-  let pos = this.io.pos()
-  this.io.seek(int(this.ofsFrames))
-  for i in 0 ..< int(this.numFrames):
-    let buf = this.io.readBytes(int(this.bytesPerFrame))
-    this.rawFramesInst.add(buf)
-    let rawFramesInstIo = newKaitaiStream(buf)
-    let it = Quake2Md2_Frame.read(rawFramesInstIo, this.root, this)
-    this.framesInst.add(it)
-  this.io.seek(pos)
-  this.framesInstFlag = true
-  return this.framesInst
-
-proc animNames(this: Quake2Md2): seq[string] = 
-  if this.animNamesInstFlag:
-    return this.animNamesInst
-  let animNamesInstExpr = seq[string](@[string("stand"), string("run"), string("attack"), string("pain1"), string("pain2"), string("pain3"), string("jump"), string("flip"), string("salute"), string("taunt"), string("wave"), string("point"), string("crstnd"), string("crwalk"), string("crattak"), string("crpain"), string("crdeath"), string("death1"), string("death2"), string("death3")])
-  this.animNamesInst = animNamesInstExpr
-  this.animNamesInstFlag = true
-  return this.animNamesInst
-
-proc glCmds(this: Quake2Md2): Quake2Md2_GlCmdsList = 
-  if this.glCmdsInstFlag:
-    return this.glCmdsInst
-  let pos = this.io.pos()
-  this.io.seek(int(this.ofsGlCmds))
-  let rawGlCmdsInstExpr = this.io.readBytes(int((4 * this.numGlCmds)))
-  this.rawGlCmdsInst = rawGlCmdsInstExpr
-  let rawGlCmdsInstIo = newKaitaiStream(rawGlCmdsInstExpr)
-  let glCmdsInstExpr = Quake2Md2_GlCmdsList.read(rawGlCmdsInstIo, this.root, this)
-  this.glCmdsInst = glCmdsInstExpr
-  this.io.seek(pos)
-  this.glCmdsInstFlag = true
-  return this.glCmdsInst
-
-proc skins(this: Quake2Md2): seq[string] = 
-  if this.skinsInstFlag:
-    return this.skinsInst
-  let pos = this.io.pos()
-  this.io.seek(int(this.ofsSkins))
-  for i in 0 ..< int(this.numSkins):
-    let it = encode(this.io.readBytes(int(64)).bytesTerminate(0, false), "ascii")
-    this.skinsInst.add(it)
-  this.io.seek(pos)
-  this.skinsInstFlag = true
-  return this.skinsInst
-
-proc animStartIndices(this: Quake2Md2): seq[byte] = 
-  if this.animStartIndicesInstFlag:
-    return this.animStartIndicesInst
-  let animStartIndicesInstExpr = seq[byte](@[0'u8, 40'u8, 46'u8, 54'u8, 58'u8, 62'u8, 66'u8, 72'u8, 84'u8, 95'u8, 112'u8, 123'u8, 135'u8, 154'u8, 160'u8, 169'u8, 173'u8, 178'u8, 184'u8, 190'u8])
-  this.animStartIndicesInst = animStartIndicesInstExpr
-  this.animStartIndicesInstFlag = true
-  return this.animStartIndicesInst
-
 proc fromFile*(_: typedesc[Quake2Md2], filename: string): Quake2Md2 =
   Quake2Md2.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Quake2Md2_Vertex], io: KaitaiStream, root: KaitaiStruct, parent: Quake2Md2_Frame): Quake2Md2_Vertex =
-  template this: untyped = result
-  this = new(Quake2Md2_Vertex)
-  let root = if root == nil: cast[Quake2Md2](this) else: cast[Quake2Md2](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let positionExpr = Quake2Md2_CompressedVec.read(this.io, this.root, this)
-  this.position = positionExpr
-  let normalIndexExpr = this.io.readU1()
-  this.normalIndex = normalIndexExpr
-
-proc normal(this: Quake2Md2_Vertex): seq[float64] = 
-  if this.normalInstFlag:
-    return this.normalInst
-  let normalInstExpr = seq[float64](Quake2Md2(this.root).anormsTable[this.normalIndex])
-  this.normalInst = normalInstExpr
-  this.normalInstFlag = true
-  return this.normalInst
-
-proc fromFile*(_: typedesc[Quake2Md2_Vertex], filename: string): Quake2Md2_Vertex =
-  Quake2Md2_Vertex.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[Quake2Md2_CompressedVec], io: KaitaiStream, root: KaitaiStruct, parent: Quake2Md2_Vertex): Quake2Md2_CompressedVec =
   template this: untyped = result
@@ -389,7 +365,7 @@ proc read*(_: typedesc[Quake2Md2_CompressedVec], io: KaitaiStream, root: KaitaiS
 proc x(this: Quake2Md2_CompressedVec): float64 = 
   if this.xInstFlag:
     return this.xInst
-  let xInstExpr = float64(((this.xCompressed * this.parent.parent.scale.x) + this.parent.parent.translate.x))
+  let xInstExpr = float64(this.xCompressed * this.parent.parent.scale.x + this.parent.parent.translate.x)
   this.xInst = xInstExpr
   this.xInstFlag = true
   return this.xInst
@@ -397,7 +373,7 @@ proc x(this: Quake2Md2_CompressedVec): float64 =
 proc y(this: Quake2Md2_CompressedVec): float64 = 
   if this.yInstFlag:
     return this.yInst
-  let yInstExpr = float64(((this.yCompressed * this.parent.parent.scale.y) + this.parent.parent.translate.y))
+  let yInstExpr = float64(this.yCompressed * this.parent.parent.scale.y + this.parent.parent.translate.y)
   this.yInst = yInstExpr
   this.yInstFlag = true
   return this.yInst
@@ -405,39 +381,13 @@ proc y(this: Quake2Md2_CompressedVec): float64 =
 proc z(this: Quake2Md2_CompressedVec): float64 = 
   if this.zInstFlag:
     return this.zInst
-  let zInstExpr = float64(((this.zCompressed * this.parent.parent.scale.z) + this.parent.parent.translate.z))
+  let zInstExpr = float64(this.zCompressed * this.parent.parent.scale.z + this.parent.parent.translate.z)
   this.zInst = zInstExpr
   this.zInstFlag = true
   return this.zInst
 
 proc fromFile*(_: typedesc[Quake2Md2_CompressedVec], filename: string): Quake2Md2_CompressedVec =
   Quake2Md2_CompressedVec.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Quake2Md2_Triangle], io: KaitaiStream, root: KaitaiStruct, parent: Quake2Md2): Quake2Md2_Triangle =
-  template this: untyped = result
-  this = new(Quake2Md2_Triangle)
-  let root = if root == nil: cast[Quake2Md2](this) else: cast[Quake2Md2](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-
-  ##[
-  indices to `_root.frames[i].vertices` (for each frame with index `i`)
-  ]##
-  for i in 0 ..< int(3):
-    let it = this.io.readU2le()
-    this.vertexIndices.add(it)
-
-  ##[
-  indices to `_root.tex_coords`
-  ]##
-  for i in 0 ..< int(3):
-    let it = this.io.readU2le()
-    this.texPointIndices.add(it)
-
-proc fromFile*(_: typedesc[Quake2Md2_Triangle], filename: string): Quake2Md2_Triangle =
-  Quake2Md2_Triangle.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[Quake2Md2_Frame], io: KaitaiStream, root: KaitaiStruct, parent: Quake2Md2): Quake2Md2_Frame =
   template this: untyped = result
@@ -451,7 +401,7 @@ proc read*(_: typedesc[Quake2Md2_Frame], io: KaitaiStream, root: KaitaiStruct, p
   this.scale = scaleExpr
   let translateExpr = Quake2Md2_Vec3f.read(this.io, this.root, this)
   this.translate = translateExpr
-  let nameExpr = encode(this.io.readBytes(int(16)).bytesTerminate(0, false), "ascii")
+  let nameExpr = encode(this.io.readBytes(int(16)).bytesTerminate(0, false), "ASCII")
   this.name = nameExpr
   for i in 0 ..< int(Quake2Md2(this.root).verticesPerFrame):
     let it = Quake2Md2_Vertex.read(this.io, this.root, this)
@@ -459,98 +409,6 @@ proc read*(_: typedesc[Quake2Md2_Frame], io: KaitaiStream, root: KaitaiStruct, p
 
 proc fromFile*(_: typedesc[Quake2Md2_Frame], filename: string): Quake2Md2_Frame =
   Quake2Md2_Frame.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Quake2Md2_GlCmdsList], io: KaitaiStream, root: KaitaiStruct, parent: Quake2Md2): Quake2Md2_GlCmdsList =
-  template this: untyped = result
-  this = new(Quake2Md2_GlCmdsList)
-  let root = if root == nil: cast[Quake2Md2](this) else: cast[Quake2Md2](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  if not(this.io.isEof):
-    block:
-      var i: int
-      while true:
-        let it = Quake2Md2_GlCmd.read(this.io, this.root, this)
-        this.items.add(it)
-        if it.cmdNumVertices == 0:
-          break
-        inc i
-
-proc fromFile*(_: typedesc[Quake2Md2_GlCmdsList], filename: string): Quake2Md2_GlCmdsList =
-  Quake2Md2_GlCmdsList.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Quake2Md2_TexPoint], io: KaitaiStream, root: KaitaiStruct, parent: Quake2Md2): Quake2Md2_TexPoint =
-  template this: untyped = result
-  this = new(Quake2Md2_TexPoint)
-  let root = if root == nil: cast[Quake2Md2](this) else: cast[Quake2Md2](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let sPxExpr = this.io.readU2le()
-  this.sPx = sPxExpr
-  let tPxExpr = this.io.readU2le()
-  this.tPx = tPxExpr
-
-proc sNormalized(this: Quake2Md2_TexPoint): float64 = 
-  if this.sNormalizedInstFlag:
-    return this.sNormalizedInst
-  let sNormalizedInstExpr = float64(((this.sPx + 0.0) div Quake2Md2(this.root).skinWidthPx))
-  this.sNormalizedInst = sNormalizedInstExpr
-  this.sNormalizedInstFlag = true
-  return this.sNormalizedInst
-
-proc tNormalized(this: Quake2Md2_TexPoint): float64 = 
-  if this.tNormalizedInstFlag:
-    return this.tNormalizedInst
-  let tNormalizedInstExpr = float64(((this.tPx + 0.0) div Quake2Md2(this.root).skinHeightPx))
-  this.tNormalizedInst = tNormalizedInstExpr
-  this.tNormalizedInstFlag = true
-  return this.tNormalizedInst
-
-proc fromFile*(_: typedesc[Quake2Md2_TexPoint], filename: string): Quake2Md2_TexPoint =
-  Quake2Md2_TexPoint.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Quake2Md2_Vec3f], io: KaitaiStream, root: KaitaiStruct, parent: Quake2Md2_Frame): Quake2Md2_Vec3f =
-  template this: untyped = result
-  this = new(Quake2Md2_Vec3f)
-  let root = if root == nil: cast[Quake2Md2](this) else: cast[Quake2Md2](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let xExpr = this.io.readF4le()
-  this.x = xExpr
-  let yExpr = this.io.readF4le()
-  this.y = yExpr
-  let zExpr = this.io.readF4le()
-  this.z = zExpr
-
-proc fromFile*(_: typedesc[Quake2Md2_Vec3f], filename: string): Quake2Md2_Vec3f =
-  Quake2Md2_Vec3f.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Quake2Md2_GlVertex], io: KaitaiStream, root: KaitaiStruct, parent: Quake2Md2_GlCmd): Quake2Md2_GlVertex =
-  template this: untyped = result
-  this = new(Quake2Md2_GlVertex)
-  let root = if root == nil: cast[Quake2Md2](this) else: cast[Quake2Md2](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  for i in 0 ..< int(2):
-    let it = this.io.readF4le()
-    this.texCoordsNormalized.add(it)
-
-  ##[
-  index to `_root.frames[i].vertices` (for each frame with index `i`)
-  ]##
-  let vertexIndexExpr = this.io.readU4le()
-  this.vertexIndex = vertexIndexExpr
-
-proc fromFile*(_: typedesc[Quake2Md2_GlVertex], filename: string): Quake2Md2_GlVertex =
-  Quake2Md2_GlVertex.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[Quake2Md2_GlCmd], io: KaitaiStream, root: KaitaiStruct, parent: Quake2Md2_GlCmdsList): Quake2Md2_GlCmd =
   template this: untyped = result
@@ -584,4 +442,146 @@ proc primitive(this: Quake2Md2_GlCmd): Quake2Md2_GlPrimitive =
 
 proc fromFile*(_: typedesc[Quake2Md2_GlCmd], filename: string): Quake2Md2_GlCmd =
   Quake2Md2_GlCmd.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Quake2Md2_GlCmdsList], io: KaitaiStream, root: KaitaiStruct, parent: Quake2Md2): Quake2Md2_GlCmdsList =
+  template this: untyped = result
+  this = new(Quake2Md2_GlCmdsList)
+  let root = if root == nil: cast[Quake2Md2](this) else: cast[Quake2Md2](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  if not(this.io.isEof):
+    block:
+      var i: int
+      while true:
+        let it = Quake2Md2_GlCmd.read(this.io, this.root, this)
+        this.items.add(it)
+        if it.cmdNumVertices == 0:
+          break
+        inc i
+
+proc fromFile*(_: typedesc[Quake2Md2_GlCmdsList], filename: string): Quake2Md2_GlCmdsList =
+  Quake2Md2_GlCmdsList.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Quake2Md2_GlVertex], io: KaitaiStream, root: KaitaiStruct, parent: Quake2Md2_GlCmd): Quake2Md2_GlVertex =
+  template this: untyped = result
+  this = new(Quake2Md2_GlVertex)
+  let root = if root == nil: cast[Quake2Md2](this) else: cast[Quake2Md2](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  for i in 0 ..< int(2):
+    let it = this.io.readF4le()
+    this.texCoordsNormalized.add(it)
+
+  ##[
+  index to `_root.frames[i].vertices` (for each frame with index `i`)
+  ]##
+  let vertexIndexExpr = this.io.readU4le()
+  this.vertexIndex = vertexIndexExpr
+
+proc fromFile*(_: typedesc[Quake2Md2_GlVertex], filename: string): Quake2Md2_GlVertex =
+  Quake2Md2_GlVertex.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Quake2Md2_TexPoint], io: KaitaiStream, root: KaitaiStruct, parent: Quake2Md2): Quake2Md2_TexPoint =
+  template this: untyped = result
+  this = new(Quake2Md2_TexPoint)
+  let root = if root == nil: cast[Quake2Md2](this) else: cast[Quake2Md2](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let sPxExpr = this.io.readU2le()
+  this.sPx = sPxExpr
+  let tPxExpr = this.io.readU2le()
+  this.tPx = tPxExpr
+
+proc sNormalized(this: Quake2Md2_TexPoint): float64 = 
+  if this.sNormalizedInstFlag:
+    return this.sNormalizedInst
+  let sNormalizedInstExpr = float64((this.sPx + 0.0) div Quake2Md2(this.root).skinWidthPx)
+  this.sNormalizedInst = sNormalizedInstExpr
+  this.sNormalizedInstFlag = true
+  return this.sNormalizedInst
+
+proc tNormalized(this: Quake2Md2_TexPoint): float64 = 
+  if this.tNormalizedInstFlag:
+    return this.tNormalizedInst
+  let tNormalizedInstExpr = float64((this.tPx + 0.0) div Quake2Md2(this.root).skinHeightPx)
+  this.tNormalizedInst = tNormalizedInstExpr
+  this.tNormalizedInstFlag = true
+  return this.tNormalizedInst
+
+proc fromFile*(_: typedesc[Quake2Md2_TexPoint], filename: string): Quake2Md2_TexPoint =
+  Quake2Md2_TexPoint.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Quake2Md2_Triangle], io: KaitaiStream, root: KaitaiStruct, parent: Quake2Md2): Quake2Md2_Triangle =
+  template this: untyped = result
+  this = new(Quake2Md2_Triangle)
+  let root = if root == nil: cast[Quake2Md2](this) else: cast[Quake2Md2](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+
+  ##[
+  indices to `_root.frames[i].vertices` (for each frame with index `i`)
+  ]##
+  for i in 0 ..< int(3):
+    let it = this.io.readU2le()
+    this.vertexIndices.add(it)
+
+  ##[
+  indices to `_root.tex_coords`
+  ]##
+  for i in 0 ..< int(3):
+    let it = this.io.readU2le()
+    this.texPointIndices.add(it)
+
+proc fromFile*(_: typedesc[Quake2Md2_Triangle], filename: string): Quake2Md2_Triangle =
+  Quake2Md2_Triangle.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Quake2Md2_Vec3f], io: KaitaiStream, root: KaitaiStruct, parent: Quake2Md2_Frame): Quake2Md2_Vec3f =
+  template this: untyped = result
+  this = new(Quake2Md2_Vec3f)
+  let root = if root == nil: cast[Quake2Md2](this) else: cast[Quake2Md2](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let xExpr = this.io.readF4le()
+  this.x = xExpr
+  let yExpr = this.io.readF4le()
+  this.y = yExpr
+  let zExpr = this.io.readF4le()
+  this.z = zExpr
+
+proc fromFile*(_: typedesc[Quake2Md2_Vec3f], filename: string): Quake2Md2_Vec3f =
+  Quake2Md2_Vec3f.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Quake2Md2_Vertex], io: KaitaiStream, root: KaitaiStruct, parent: Quake2Md2_Frame): Quake2Md2_Vertex =
+  template this: untyped = result
+  this = new(Quake2Md2_Vertex)
+  let root = if root == nil: cast[Quake2Md2](this) else: cast[Quake2Md2](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let positionExpr = Quake2Md2_CompressedVec.read(this.io, this.root, this)
+  this.position = positionExpr
+  let normalIndexExpr = this.io.readU1()
+  this.normalIndex = normalIndexExpr
+
+proc normal(this: Quake2Md2_Vertex): seq[float64] = 
+  if this.normalInstFlag:
+    return this.normalInst
+  let normalInstExpr = seq[float64](Quake2Md2(this.root).anormsTable[this.normalIndex])
+  this.normalInst = normalInstExpr
+  this.normalInstFlag = true
+  return this.normalInst
+
+proc fromFile*(_: typedesc[Quake2Md2_Vertex], filename: string): Quake2Md2_Vertex =
+  Quake2Md2_Vertex.read(newKaitaiFileStream(filename), nil, nil)
 

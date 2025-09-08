@@ -15,14 +15,18 @@ type Respack struct {
 	Json string
 	_io *kaitai.Stream
 	_root *Respack
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewRespack() *Respack {
 	return &Respack{
 	}
 }
 
-func (this *Respack) Read(io *kaitai.Stream, parent interface{}, root *Respack) (err error) {
+func (this Respack) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Respack) Read(io *kaitai.Stream, parent kaitai.Struct, root *Respack) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -53,6 +57,10 @@ type Respack_Header struct {
 func NewRespack_Header() *Respack_Header {
 	return &Respack_Header{
 	}
+}
+
+func (this Respack_Header) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Respack_Header) Read(io *kaitai.Stream, parent *Respack, root *Respack) (err error) {

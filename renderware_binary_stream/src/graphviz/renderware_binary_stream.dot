@@ -14,67 +14,28 @@ digraph {
 		</TABLE>>];
 		renderware_binary_stream__inst__version [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-			<TR><TD>version</TD><TD>((library_id_stamp &amp; 4294901760) != 0 ? ((((library_id_stamp &gt;&gt; 14) &amp; 261888) + 196608) | ((library_id_stamp &gt;&gt; 16) &amp; 63)) : (library_id_stamp &lt;&lt; 8))</TD></TR>
+			<TR><TD>version</TD><TD>(library_id_stamp &amp; 4294901760 != 0 ? (library_id_stamp &gt;&gt; 14 &amp; 261888) + 196608 | library_id_stamp &gt;&gt; 16 &amp; 63 : library_id_stamp &lt;&lt; 8)</TD></TR>
 		</TABLE>>];
 renderware_binary_stream__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
 	<TR><TD>:sections_atomic</TD><TD PORT="case0">ListWithHeader</TD></TR>
-	<TR><TD>:sections_geometry</TD><TD PORT="case1">ListWithHeader</TD></TR>
-	<TR><TD>:sections_texture_dictionary</TD><TD PORT="case2">ListWithHeader</TD></TR>
-	<TR><TD>:sections_geometry_list</TD><TD PORT="case3">ListWithHeader</TD></TR>
-	<TR><TD>:sections_texture_native</TD><TD PORT="case4">ListWithHeader</TD></TR>
-	<TR><TD>:sections_clump</TD><TD PORT="case5">ListWithHeader</TD></TR>
-	<TR><TD>:sections_frame_list</TD><TD PORT="case6">ListWithHeader</TD></TR>
+	<TR><TD>:sections_clump</TD><TD PORT="case1">ListWithHeader</TD></TR>
+	<TR><TD>:sections_frame_list</TD><TD PORT="case2">ListWithHeader</TD></TR>
+	<TR><TD>:sections_geometry</TD><TD PORT="case3">ListWithHeader</TD></TR>
+	<TR><TD>:sections_geometry_list</TD><TD PORT="case4">ListWithHeader</TD></TR>
+	<TR><TD>:sections_texture_dictionary</TD><TD PORT="case5">ListWithHeader</TD></TR>
+	<TR><TD>:sections_texture_native</TD><TD PORT="case6">ListWithHeader</TD></TR>
 </TABLE>>];
-		subgraph cluster__struct_clump {
-			label="RenderwareBinaryStream::StructClump";
+		subgraph cluster__frame {
+			label="RenderwareBinaryStream::Frame";
 			graph[style=dotted];
 
-			struct_clump__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			frame__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="num_atomics_pos">0</TD><TD PORT="num_atomics_size">4</TD><TD>u4le</TD><TD PORT="num_atomics_type">num_atomics</TD></TR>
-				<TR><TD PORT="num_lights_pos">4</TD><TD PORT="num_lights_size">4</TD><TD>u4le</TD><TD PORT="num_lights_type">num_lights</TD></TR>
-				<TR><TD PORT="num_cameras_pos">8</TD><TD PORT="num_cameras_size">4</TD><TD>u4le</TD><TD PORT="num_cameras_type">num_cameras</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__struct_geometry {
-			label="RenderwareBinaryStream::StructGeometry";
-			graph[style=dotted];
-
-			struct_geometry__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="format_pos">0</TD><TD PORT="format_size">4</TD><TD>u4le</TD><TD PORT="format_type">format</TD></TR>
-				<TR><TD PORT="num_triangles_pos">4</TD><TD PORT="num_triangles_size">4</TD><TD>u4le</TD><TD PORT="num_triangles_type">num_triangles</TD></TR>
-				<TR><TD PORT="num_vertices_pos">8</TD><TD PORT="num_vertices_size">4</TD><TD>u4le</TD><TD PORT="num_vertices_type">num_vertices</TD></TR>
-				<TR><TD PORT="num_morph_targets_pos">12</TD><TD PORT="num_morph_targets_size">4</TD><TD>u4le</TD><TD PORT="num_morph_targets_type">num_morph_targets</TD></TR>
-				<TR><TD PORT="surf_prop_pos">16</TD><TD PORT="surf_prop_size">12</TD><TD>SurfaceProperties</TD><TD PORT="surf_prop_type">surf_prop</TD></TR>
-				<TR><TD PORT="geometry_pos">28</TD><TD PORT="geometry_size">...</TD><TD>GeometryNonNative</TD><TD PORT="geometry_type">geometry</TD></TR>
-				<TR><TD PORT="morph_targets_pos">...</TD><TD PORT="morph_targets_size">...</TD><TD>MorphTarget</TD><TD PORT="morph_targets_type">morph_targets</TD></TR>
-				<TR><TD COLSPAN="4" PORT="morph_targets__repeat">repeat num_morph_targets times</TD></TR>
-			</TABLE>>];
-			struct_geometry__inst__num_uv_layers_raw [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>num_uv_layers_raw</TD><TD>((format &amp; 16711680) &gt;&gt; 16)</TD></TR>
-			</TABLE>>];
-			struct_geometry__inst__is_textured [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>is_textured</TD><TD>(format &amp; 4) != 0</TD></TR>
-			</TABLE>>];
-			struct_geometry__inst__is_native [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>is_native</TD><TD>(format &amp; 16777216) != 0</TD></TR>
-			</TABLE>>];
-			struct_geometry__inst__num_uv_layers [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>num_uv_layers</TD><TD>(num_uv_layers_raw == 0 ? (is_textured2 ? 2 : (is_textured ? 1 : 0)) : num_uv_layers_raw)</TD></TR>
-			</TABLE>>];
-			struct_geometry__inst__is_textured2 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>is_textured2</TD><TD>(format &amp; 128) != 0</TD></TR>
-			</TABLE>>];
-			struct_geometry__inst__is_prelit [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>is_prelit</TD><TD>(format &amp; 8) != 0</TD></TR>
+				<TR><TD PORT="rotation_matrix_pos">0</TD><TD PORT="rotation_matrix_size">36</TD><TD>Matrix</TD><TD PORT="rotation_matrix_type">rotation_matrix</TD></TR>
+				<TR><TD PORT="position_pos">36</TD><TD PORT="position_size">12</TD><TD>Vector3d</TD><TD PORT="position_type">position</TD></TR>
+				<TR><TD PORT="cur_frame_idx_pos">48</TD><TD PORT="cur_frame_idx_size">4</TD><TD>s4le</TD><TD PORT="cur_frame_idx_type">cur_frame_idx</TD></TR>
+				<TR><TD PORT="matrix_creation_flags_pos">52</TD><TD PORT="matrix_creation_flags_size">4</TD><TD>u4le</TD><TD PORT="matrix_creation_flags_type">matrix_creation_flags</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__geometry_non_native {
@@ -85,19 +46,65 @@ renderware_binary_stream__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="prelit_colors_pos">0</TD><TD PORT="prelit_colors_size">4</TD><TD>Rgba</TD><TD PORT="prelit_colors_type">prelit_colors</TD></TR>
 				<TR><TD COLSPAN="4" PORT="prelit_colors__repeat">repeat _parent.num_vertices times</TD></TR>
+				<TR><TD COLSPAN="4" PORT="prelit_colors__if">if _parent.is_prelit</TD></TR>
 				<TR><TD PORT="uv_layers_pos">...</TD><TD PORT="uv_layers_size">...</TD><TD>UvLayer</TD><TD PORT="uv_layers_type">uv_layers</TD></TR>
 				<TR><TD COLSPAN="4" PORT="uv_layers__repeat">repeat _parent.num_uv_layers times</TD></TR>
 				<TR><TD PORT="triangles_pos">...</TD><TD PORT="triangles_size">8</TD><TD>Triangle</TD><TD PORT="triangles_type">triangles</TD></TR>
 				<TR><TD COLSPAN="4" PORT="triangles__repeat">repeat _parent.num_triangles times</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__struct_geometry_list {
-			label="RenderwareBinaryStream::StructGeometryList";
+		subgraph cluster__list_with_header {
+			label="RenderwareBinaryStream::ListWithHeader";
 			graph[style=dotted];
 
-			struct_geometry_list__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			list_with_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="num_geometries_pos">0</TD><TD PORT="num_geometries_size">4</TD><TD>u4le</TD><TD PORT="num_geometries_type">num_geometries</TD></TR>
+				<TR><TD PORT="code_pos">0</TD><TD PORT="code_size">4</TD><TD>01 00 00 00</TD><TD PORT="code_type">code</TD></TR>
+				<TR><TD PORT="header_size_pos">4</TD><TD PORT="header_size_size">4</TD><TD>u4le</TD><TD PORT="header_size_type">header_size</TD></TR>
+				<TR><TD PORT="library_id_stamp_pos">8</TD><TD PORT="library_id_stamp_size">4</TD><TD>u4le</TD><TD PORT="library_id_stamp_type">library_id_stamp</TD></TR>
+				<TR><TD PORT="header_pos">12</TD><TD PORT="header_size">...</TD><TD>switch (_parent.code)</TD><TD PORT="header_type">header</TD></TR>
+				<TR><TD PORT="entries_pos">...</TD><TD PORT="entries_size">...</TD><TD>RenderwareBinaryStream</TD><TD PORT="entries_type">entries</TD></TR>
+				<TR><TD COLSPAN="4" PORT="entries__repeat">repeat to end of stream</TD></TR>
+			</TABLE>>];
+			list_with_header__inst__version [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>version</TD><TD>(library_id_stamp &amp; 4294901760 != 0 ? (library_id_stamp &gt;&gt; 14 &amp; 261888) + 196608 | library_id_stamp &gt;&gt; 16 &amp; 63 : library_id_stamp &lt;&lt; 8)</TD></TR>
+			</TABLE>>];
+list_with_header__seq_header_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>:sections_atomic</TD><TD PORT="case0">StructAtomic</TD></TR>
+	<TR><TD>:sections_clump</TD><TD PORT="case1">StructClump</TD></TR>
+	<TR><TD>:sections_frame_list</TD><TD PORT="case2">StructFrameList</TD></TR>
+	<TR><TD>:sections_geometry</TD><TD PORT="case3">StructGeometry</TD></TR>
+	<TR><TD>:sections_geometry_list</TD><TD PORT="case4">StructGeometryList</TD></TR>
+	<TR><TD>:sections_texture_dictionary</TD><TD PORT="case5">StructTextureDictionary</TD></TR>
+</TABLE>>];
+		}
+		subgraph cluster__matrix {
+			label="RenderwareBinaryStream::Matrix";
+			graph[style=dotted];
+
+			matrix__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="entries_pos">0</TD><TD PORT="entries_size">12</TD><TD>Vector3d</TD><TD PORT="entries_type">entries</TD></TR>
+				<TR><TD COLSPAN="4" PORT="entries__repeat">repeat 3 times</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__morph_target {
+			label="RenderwareBinaryStream::MorphTarget";
+			graph[style=dotted];
+
+			morph_target__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="bounding_sphere_pos">0</TD><TD PORT="bounding_sphere_size">16</TD><TD>Sphere</TD><TD PORT="bounding_sphere_type">bounding_sphere</TD></TR>
+				<TR><TD PORT="has_vertices_pos">16</TD><TD PORT="has_vertices_size">4</TD><TD>u4le</TD><TD PORT="has_vertices_type">has_vertices</TD></TR>
+				<TR><TD PORT="has_normals_pos">20</TD><TD PORT="has_normals_size">4</TD><TD>u4le</TD><TD PORT="has_normals_type">has_normals</TD></TR>
+				<TR><TD PORT="vertices_pos">24</TD><TD PORT="vertices_size">12</TD><TD>Vector3d</TD><TD PORT="vertices_type">vertices</TD></TR>
+				<TR><TD COLSPAN="4" PORT="vertices__repeat">repeat _parent.num_vertices times</TD></TR>
+				<TR><TD COLSPAN="4" PORT="vertices__if">if has_vertices != 0</TD></TR>
+				<TR><TD PORT="normals_pos">...</TD><TD PORT="normals_size">12</TD><TD>Vector3d</TD><TD PORT="normals_type">normals</TD></TR>
+				<TR><TD COLSPAN="4" PORT="normals__repeat">repeat _parent.num_vertices times</TD></TR>
+				<TR><TD COLSPAN="4" PORT="normals__if">if has_normals != 0</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__rgba {
@@ -124,21 +131,6 @@ renderware_binary_stream__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="
 				<TR><TD PORT="radius_pos">12</TD><TD PORT="radius_size">4</TD><TD>f4le</TD><TD PORT="radius_type">radius</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__morph_target {
-			label="RenderwareBinaryStream::MorphTarget";
-			graph[style=dotted];
-
-			morph_target__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="bounding_sphere_pos">0</TD><TD PORT="bounding_sphere_size">16</TD><TD>Sphere</TD><TD PORT="bounding_sphere_type">bounding_sphere</TD></TR>
-				<TR><TD PORT="has_vertices_pos">16</TD><TD PORT="has_vertices_size">4</TD><TD>u4le</TD><TD PORT="has_vertices_type">has_vertices</TD></TR>
-				<TR><TD PORT="has_normals_pos">20</TD><TD PORT="has_normals_size">4</TD><TD>u4le</TD><TD PORT="has_normals_type">has_normals</TD></TR>
-				<TR><TD PORT="vertices_pos">24</TD><TD PORT="vertices_size">12</TD><TD>Vector3d</TD><TD PORT="vertices_type">vertices</TD></TR>
-				<TR><TD COLSPAN="4" PORT="vertices__repeat">repeat _parent.num_vertices times</TD></TR>
-				<TR><TD PORT="normals_pos">...</TD><TD PORT="normals_size">12</TD><TD>Vector3d</TD><TD PORT="normals_type">normals</TD></TR>
-				<TR><TD COLSPAN="4" PORT="normals__repeat">repeat _parent.num_vertices times</TD></TR>
-			</TABLE>>];
-		}
 		subgraph cluster__struct_atomic {
 			label="RenderwareBinaryStream::StructAtomic";
 			graph[style=dotted];
@@ -147,22 +139,24 @@ renderware_binary_stream__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="frame_index_pos">0</TD><TD PORT="frame_index_size">4</TD><TD>u4le</TD><TD PORT="frame_index_type">frame_index</TD></TR>
 				<TR><TD PORT="geometry_index_pos">4</TD><TD PORT="geometry_index_size">4</TD><TD>u4le</TD><TD PORT="geometry_index_type">geometry_index</TD></TR>
-				<TR><TD PORT="flag_render_pos">8</TD><TD PORT="flag_render_size">1b</TD><TD>BitsType1(LittleBitEndian)</TD><TD PORT="flag_render_type">flag_render</TD></TR>
-				<TR><TD PORT="_unnamed3_pos">8:1</TD><TD PORT="_unnamed3_size">1b</TD><TD>BitsType1(LittleBitEndian)</TD><TD PORT="_unnamed3_type">_unnamed3</TD></TR>
-				<TR><TD PORT="flag_collision_test_pos">8:2</TD><TD PORT="flag_collision_test_size">1b</TD><TD>BitsType1(LittleBitEndian)</TD><TD PORT="flag_collision_test_type">flag_collision_test</TD></TR>
-				<TR><TD PORT="_unnamed5_pos">8:3</TD><TD PORT="_unnamed5_size">29b</TD><TD>b29</TD><TD PORT="_unnamed5_type">_unnamed5</TD></TR>
+				<TR><TD PORT="flag_render_pos">8</TD><TD PORT="flag_render_size">1b</TD><TD>b1le→bool</TD><TD PORT="flag_render_type">flag_render</TD></TR>
+				<TR><TD PORT="_unnamed3_pos">8:1</TD><TD PORT="_unnamed3_size">1b</TD><TD>b1le→bool</TD><TD PORT="_unnamed3_type">_unnamed3</TD></TR>
+				<TR><TD PORT="flag_collision_test_pos">8:2</TD><TD PORT="flag_collision_test_size">1b</TD><TD>b1le→bool</TD><TD PORT="flag_collision_test_type">flag_collision_test</TD></TR>
+				<TR><TD PORT="_unnamed5_pos">8:3</TD><TD PORT="_unnamed5_size">29b</TD><TD>b29le</TD><TD PORT="_unnamed5_type">_unnamed5</TD></TR>
 				<TR><TD PORT="unused_pos">12</TD><TD PORT="unused_size">4</TD><TD>u4le</TD><TD PORT="unused_type">unused</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__surface_properties {
-			label="RenderwareBinaryStream::SurfaceProperties";
+		subgraph cluster__struct_clump {
+			label="RenderwareBinaryStream::StructClump";
 			graph[style=dotted];
 
-			surface_properties__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			struct_clump__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="ambient_pos">0</TD><TD PORT="ambient_size">4</TD><TD>f4le</TD><TD PORT="ambient_type">ambient</TD></TR>
-				<TR><TD PORT="specular_pos">4</TD><TD PORT="specular_size">4</TD><TD>f4le</TD><TD PORT="specular_type">specular</TD></TR>
-				<TR><TD PORT="diffuse_pos">8</TD><TD PORT="diffuse_size">4</TD><TD>f4le</TD><TD PORT="diffuse_type">diffuse</TD></TR>
+				<TR><TD PORT="num_atomics_pos">0</TD><TD PORT="num_atomics_size">4</TD><TD>u4le</TD><TD PORT="num_atomics_type">num_atomics</TD></TR>
+				<TR><TD PORT="num_lights_pos">4</TD><TD PORT="num_lights_size">4</TD><TD>u4le</TD><TD PORT="num_lights_type">num_lights</TD></TR>
+				<TR><TD COLSPAN="4" PORT="num_lights__if">if _parent.version &gt;= 208896</TD></TR>
+				<TR><TD PORT="num_cameras_pos">8</TD><TD PORT="num_cameras_size">4</TD><TD>u4le</TD><TD PORT="num_cameras_type">num_cameras</TD></TR>
+				<TR><TD COLSPAN="4" PORT="num_cameras__if">if _parent.version &gt;= 208896</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__struct_frame_list {
@@ -176,53 +170,86 @@ renderware_binary_stream__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="
 				<TR><TD COLSPAN="4" PORT="frames__repeat">repeat num_frames times</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__matrix {
-			label="RenderwareBinaryStream::Matrix";
+		subgraph cluster__struct_geometry {
+			label="RenderwareBinaryStream::StructGeometry";
 			graph[style=dotted];
 
-			matrix__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			struct_geometry__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="entries_pos">0</TD><TD PORT="entries_size">12</TD><TD>Vector3d</TD><TD PORT="entries_type">entries</TD></TR>
-				<TR><TD COLSPAN="4" PORT="entries__repeat">repeat 3 times</TD></TR>
+				<TR><TD PORT="format_pos">0</TD><TD PORT="format_size">4</TD><TD>u4le</TD><TD PORT="format_type">format</TD></TR>
+				<TR><TD PORT="num_triangles_pos">4</TD><TD PORT="num_triangles_size">4</TD><TD>u4le</TD><TD PORT="num_triangles_type">num_triangles</TD></TR>
+				<TR><TD PORT="num_vertices_pos">8</TD><TD PORT="num_vertices_size">4</TD><TD>u4le</TD><TD PORT="num_vertices_type">num_vertices</TD></TR>
+				<TR><TD PORT="num_morph_targets_pos">12</TD><TD PORT="num_morph_targets_size">4</TD><TD>u4le</TD><TD PORT="num_morph_targets_type">num_morph_targets</TD></TR>
+				<TR><TD PORT="surf_prop_pos">16</TD><TD PORT="surf_prop_size">12</TD><TD>SurfaceProperties</TD><TD PORT="surf_prop_type">surf_prop</TD></TR>
+				<TR><TD COLSPAN="4" PORT="surf_prop__if">if _parent.version &lt; 212992</TD></TR>
+				<TR><TD PORT="geometry_pos">28</TD><TD PORT="geometry_size">...</TD><TD>GeometryNonNative</TD><TD PORT="geometry_type">geometry</TD></TR>
+				<TR><TD COLSPAN="4" PORT="geometry__if">if !(is_native)</TD></TR>
+				<TR><TD PORT="morph_targets_pos">...</TD><TD PORT="morph_targets_size">...</TD><TD>MorphTarget</TD><TD PORT="morph_targets_type">morph_targets</TD></TR>
+				<TR><TD COLSPAN="4" PORT="morph_targets__repeat">repeat num_morph_targets times</TD></TR>
 			</TABLE>>];
-		}
-		subgraph cluster__vector_3d {
-			label="RenderwareBinaryStream::Vector3d";
-			graph[style=dotted];
-
-			vector_3d__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="x_pos">0</TD><TD PORT="x_size">4</TD><TD>f4le</TD><TD PORT="x_type">x</TD></TR>
-				<TR><TD PORT="y_pos">4</TD><TD PORT="y_size">4</TD><TD>f4le</TD><TD PORT="y_type">y</TD></TR>
-				<TR><TD PORT="z_pos">8</TD><TD PORT="z_size">4</TD><TD>f4le</TD><TD PORT="z_type">z</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__list_with_header {
-			label="RenderwareBinaryStream::ListWithHeader";
-			graph[style=dotted];
-
-			list_with_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="code_pos">0</TD><TD PORT="code_size">4</TD><TD></TD><TD PORT="code_type">code</TD></TR>
-				<TR><TD PORT="header_size_pos">4</TD><TD PORT="header_size_size">4</TD><TD>u4le</TD><TD PORT="header_size_type">header_size</TD></TR>
-				<TR><TD PORT="library_id_stamp_pos">8</TD><TD PORT="library_id_stamp_size">4</TD><TD>u4le</TD><TD PORT="library_id_stamp_type">library_id_stamp</TD></TR>
-				<TR><TD PORT="header_pos">12</TD><TD PORT="header_size">...</TD><TD>switch (_parent.code)</TD><TD PORT="header_type">header</TD></TR>
-				<TR><TD PORT="entries_pos">...</TD><TD PORT="entries_size">...</TD><TD>RenderwareBinaryStream</TD><TD PORT="entries_type">entries</TD></TR>
-				<TR><TD COLSPAN="4" PORT="entries__repeat">repeat to end of stream</TD></TR>
-			</TABLE>>];
-			list_with_header__inst__version [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			struct_geometry__inst__is_native [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>version</TD><TD>((library_id_stamp &amp; 4294901760) != 0 ? ((((library_id_stamp &gt;&gt; 14) &amp; 261888) + 196608) | ((library_id_stamp &gt;&gt; 16) &amp; 63)) : (library_id_stamp &lt;&lt; 8))</TD></TR>
+				<TR><TD>is_native</TD><TD>format &amp; 16777216 != 0</TD></TR>
 			</TABLE>>];
-list_with_header__seq_header_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
-	<TR><TD>:sections_atomic</TD><TD PORT="case0">StructAtomic</TD></TR>
-	<TR><TD>:sections_geometry</TD><TD PORT="case1">StructGeometry</TD></TR>
-	<TR><TD>:sections_texture_dictionary</TD><TD PORT="case2">StructTextureDictionary</TD></TR>
-	<TR><TD>:sections_geometry_list</TD><TD PORT="case3">StructGeometryList</TD></TR>
-	<TR><TD>:sections_clump</TD><TD PORT="case4">StructClump</TD></TR>
-	<TR><TD>:sections_frame_list</TD><TD PORT="case5">StructFrameList</TD></TR>
-</TABLE>>];
+			struct_geometry__inst__is_prelit [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_prelit</TD><TD>format &amp; 8 != 0</TD></TR>
+			</TABLE>>];
+			struct_geometry__inst__is_textured [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_textured</TD><TD>format &amp; 4 != 0</TD></TR>
+			</TABLE>>];
+			struct_geometry__inst__is_textured2 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_textured2</TD><TD>format &amp; 128 != 0</TD></TR>
+			</TABLE>>];
+			struct_geometry__inst__num_uv_layers [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>num_uv_layers</TD><TD>(num_uv_layers_raw == 0 ? (is_textured2 ? 2 : (is_textured ? 1 : 0)) : num_uv_layers_raw)</TD></TR>
+			</TABLE>>];
+			struct_geometry__inst__num_uv_layers_raw [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>num_uv_layers_raw</TD><TD>(format &amp; 16711680) &gt;&gt; 16</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__struct_geometry_list {
+			label="RenderwareBinaryStream::StructGeometryList";
+			graph[style=dotted];
+
+			struct_geometry_list__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="num_geometries_pos">0</TD><TD PORT="num_geometries_size">4</TD><TD>u4le</TD><TD PORT="num_geometries_type">num_geometries</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__struct_texture_dictionary {
+			label="RenderwareBinaryStream::StructTextureDictionary";
+			graph[style=dotted];
+
+			struct_texture_dictionary__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="num_textures_pos">0</TD><TD PORT="num_textures_size">4</TD><TD>u4le</TD><TD PORT="num_textures_type">num_textures</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__surface_properties {
+			label="RenderwareBinaryStream::SurfaceProperties";
+			graph[style=dotted];
+
+			surface_properties__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="ambient_pos">0</TD><TD PORT="ambient_size">4</TD><TD>f4le</TD><TD PORT="ambient_type">ambient</TD></TR>
+				<TR><TD PORT="specular_pos">4</TD><TD PORT="specular_size">4</TD><TD>f4le</TD><TD PORT="specular_type">specular</TD></TR>
+				<TR><TD PORT="diffuse_pos">8</TD><TD PORT="diffuse_size">4</TD><TD>f4le</TD><TD PORT="diffuse_type">diffuse</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__tex_coord {
+			label="RenderwareBinaryStream::TexCoord";
+			graph[style=dotted];
+
+			tex_coord__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="u_pos">0</TD><TD PORT="u_size">4</TD><TD>f4le</TD><TD PORT="u_type">u</TD></TR>
+				<TR><TD PORT="v_pos">4</TD><TD PORT="v_size">4</TD><TD>f4le</TD><TD PORT="v_type">v</TD></TR>
+			</TABLE>>];
 		}
 		subgraph cluster__triangle {
 			label="RenderwareBinaryStream::Triangle";
@@ -236,28 +263,6 @@ list_with_header__seq_header_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CEL
 				<TR><TD PORT="vertex3_pos">6</TD><TD PORT="vertex3_size">2</TD><TD>u2le</TD><TD PORT="vertex3_type">vertex3</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__frame {
-			label="RenderwareBinaryStream::Frame";
-			graph[style=dotted];
-
-			frame__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="rotation_matrix_pos">0</TD><TD PORT="rotation_matrix_size">36</TD><TD>Matrix</TD><TD PORT="rotation_matrix_type">rotation_matrix</TD></TR>
-				<TR><TD PORT="position_pos">36</TD><TD PORT="position_size">12</TD><TD>Vector3d</TD><TD PORT="position_type">position</TD></TR>
-				<TR><TD PORT="cur_frame_idx_pos">48</TD><TD PORT="cur_frame_idx_size">4</TD><TD>s4le</TD><TD PORT="cur_frame_idx_type">cur_frame_idx</TD></TR>
-				<TR><TD PORT="matrix_creation_flags_pos">52</TD><TD PORT="matrix_creation_flags_size">4</TD><TD>u4le</TD><TD PORT="matrix_creation_flags_type">matrix_creation_flags</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__tex_coord {
-			label="RenderwareBinaryStream::TexCoord";
-			graph[style=dotted];
-
-			tex_coord__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="u_pos">0</TD><TD PORT="u_size">4</TD><TD>f4le</TD><TD PORT="u_type">u</TD></TR>
-				<TR><TD PORT="v_pos">4</TD><TD PORT="v_size">4</TD><TD>f4le</TD><TD PORT="v_type">v</TD></TR>
-			</TABLE>>];
-		}
 		subgraph cluster__uv_layer {
 			label="RenderwareBinaryStream::UvLayer";
 			graph[style=dotted];
@@ -268,13 +273,15 @@ list_with_header__seq_header_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CEL
 				<TR><TD COLSPAN="4" PORT="tex_coords__repeat">repeat num_vertices times</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__struct_texture_dictionary {
-			label="RenderwareBinaryStream::StructTextureDictionary";
+		subgraph cluster__vector_3d {
+			label="RenderwareBinaryStream::Vector3d";
 			graph[style=dotted];
 
-			struct_texture_dictionary__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			vector_3d__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="num_textures_pos">0</TD><TD PORT="num_textures_size">4</TD><TD>u4le</TD><TD PORT="num_textures_type">num_textures</TD></TR>
+				<TR><TD PORT="x_pos">0</TD><TD PORT="x_size">4</TD><TD>f4le</TD><TD PORT="x_type">x</TD></TR>
+				<TR><TD PORT="y_pos">4</TD><TD PORT="y_size">4</TD><TD>f4le</TD><TD PORT="y_type">y</TD></TR>
+				<TR><TD PORT="z_pos">8</TD><TD PORT="z_size">4</TD><TD>f4le</TD><TD PORT="z_type">z</TD></TR>
 			</TABLE>>];
 		}
 	}
@@ -288,51 +295,51 @@ list_with_header__seq_header_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CEL
 	renderware_binary_stream__seq_body_switch:case6 -> list_with_header__seq [style=bold];
 	renderware_binary_stream__seq:code_type -> renderware_binary_stream__seq:body_type [color="#404040"];
 	renderware_binary_stream__seq:library_id_stamp_type -> renderware_binary_stream__inst__version [color="#404040"];
-	renderware_binary_stream__seq:library_id_stamp_type -> renderware_binary_stream__inst__version [color="#404040"];
-	renderware_binary_stream__seq:library_id_stamp_type -> renderware_binary_stream__inst__version [color="#404040"];
-	renderware_binary_stream__seq:library_id_stamp_type -> renderware_binary_stream__inst__version [color="#404040"];
-	struct_geometry__seq:surf_prop_type -> surface_properties__seq [style=bold];
-	struct_geometry__seq:geometry_type -> geometry_non_native__seq [style=bold];
-	struct_geometry__seq:morph_targets_type -> morph_target__seq [style=bold];
-	struct_geometry__seq:num_morph_targets_type -> struct_geometry__seq:morph_targets__repeat [color="#404040"];
-	struct_geometry__seq:format_type -> struct_geometry__inst__num_uv_layers_raw [color="#404040"];
-	struct_geometry__seq:format_type -> struct_geometry__inst__is_textured [color="#404040"];
-	struct_geometry__seq:format_type -> struct_geometry__inst__is_native [color="#404040"];
-	struct_geometry__inst__num_uv_layers_raw:num_uv_layers_raw_type -> struct_geometry__inst__num_uv_layers [color="#404040"];
-	struct_geometry__inst__is_textured2:is_textured2_type -> struct_geometry__inst__num_uv_layers [color="#404040"];
-	struct_geometry__inst__is_textured:is_textured_type -> struct_geometry__inst__num_uv_layers [color="#404040"];
-	struct_geometry__inst__num_uv_layers_raw:num_uv_layers_raw_type -> struct_geometry__inst__num_uv_layers [color="#404040"];
-	struct_geometry__seq:format_type -> struct_geometry__inst__is_textured2 [color="#404040"];
-	struct_geometry__seq:format_type -> struct_geometry__inst__is_prelit [color="#404040"];
+	frame__seq:rotation_matrix_type -> matrix__seq [style=bold];
+	frame__seq:position_type -> vector_3d__seq [style=bold];
 	geometry_non_native__seq:prelit_colors_type -> rgba__seq [style=bold];
 	struct_geometry__seq:num_vertices_type -> geometry_non_native__seq:prelit_colors__repeat [color="#404040"];
+	struct_geometry__inst__is_prelit:is_prelit_type -> geometry_non_native__seq:prelit_colors__if [color="#404040"];
 	geometry_non_native__seq:uv_layers_type -> uv_layer__seq [style=bold];
 	struct_geometry__inst__num_uv_layers:num_uv_layers_type -> geometry_non_native__seq:uv_layers__repeat [color="#404040"];
 	geometry_non_native__seq:triangles_type -> triangle__seq [style=bold];
 	struct_geometry__seq:num_triangles_type -> geometry_non_native__seq:triangles__repeat [color="#404040"];
-	morph_target__seq:bounding_sphere_type -> sphere__seq [style=bold];
-	morph_target__seq:vertices_type -> vector_3d__seq [style=bold];
-	struct_geometry__seq:num_vertices_type -> morph_target__seq:vertices__repeat [color="#404040"];
-	morph_target__seq:normals_type -> vector_3d__seq [style=bold];
-	struct_geometry__seq:num_vertices_type -> morph_target__seq:normals__repeat [color="#404040"];
-	struct_frame_list__seq:frames_type -> frame__seq [style=bold];
-	struct_frame_list__seq:num_frames_type -> struct_frame_list__seq:frames__repeat [color="#404040"];
-	matrix__seq:entries_type -> vector_3d__seq [style=bold];
 	list_with_header__seq:header_type -> list_with_header__seq_header_switch [style=bold];
 	list_with_header__seq_header_switch:case0 -> struct_atomic__seq [style=bold];
-	list_with_header__seq_header_switch:case1 -> struct_geometry__seq [style=bold];
-	list_with_header__seq_header_switch:case2 -> struct_texture_dictionary__seq [style=bold];
-	list_with_header__seq_header_switch:case3 -> struct_geometry_list__seq [style=bold];
-	list_with_header__seq_header_switch:case4 -> struct_clump__seq [style=bold];
-	list_with_header__seq_header_switch:case5 -> struct_frame_list__seq [style=bold];
+	list_with_header__seq_header_switch:case1 -> struct_clump__seq [style=bold];
+	list_with_header__seq_header_switch:case2 -> struct_frame_list__seq [style=bold];
+	list_with_header__seq_header_switch:case3 -> struct_geometry__seq [style=bold];
+	list_with_header__seq_header_switch:case4 -> struct_geometry_list__seq [style=bold];
+	list_with_header__seq_header_switch:case5 -> struct_texture_dictionary__seq [style=bold];
 	renderware_binary_stream__seq:code_type -> list_with_header__seq:header_type [color="#404040"];
 	list_with_header__seq:entries_type -> renderware_binary_stream__seq [style=bold];
 	list_with_header__seq:library_id_stamp_type -> list_with_header__inst__version [color="#404040"];
-	list_with_header__seq:library_id_stamp_type -> list_with_header__inst__version [color="#404040"];
-	list_with_header__seq:library_id_stamp_type -> list_with_header__inst__version [color="#404040"];
-	list_with_header__seq:library_id_stamp_type -> list_with_header__inst__version [color="#404040"];
-	frame__seq:rotation_matrix_type -> matrix__seq [style=bold];
-	frame__seq:position_type -> vector_3d__seq [style=bold];
+	matrix__seq:entries_type -> vector_3d__seq [style=bold];
+	morph_target__seq:bounding_sphere_type -> sphere__seq [style=bold];
+	morph_target__seq:vertices_type -> vector_3d__seq [style=bold];
+	struct_geometry__seq:num_vertices_type -> morph_target__seq:vertices__repeat [color="#404040"];
+	morph_target__seq:has_vertices_type -> morph_target__seq:vertices__if [color="#404040"];
+	morph_target__seq:normals_type -> vector_3d__seq [style=bold];
+	struct_geometry__seq:num_vertices_type -> morph_target__seq:normals__repeat [color="#404040"];
+	morph_target__seq:has_normals_type -> morph_target__seq:normals__if [color="#404040"];
+	list_with_header__inst__version:version_type -> struct_clump__seq:num_lights__if [color="#404040"];
+	list_with_header__inst__version:version_type -> struct_clump__seq:num_cameras__if [color="#404040"];
+	struct_frame_list__seq:frames_type -> frame__seq [style=bold];
+	struct_frame_list__seq:num_frames_type -> struct_frame_list__seq:frames__repeat [color="#404040"];
+	struct_geometry__seq:surf_prop_type -> surface_properties__seq [style=bold];
+	list_with_header__inst__version:version_type -> struct_geometry__seq:surf_prop__if [color="#404040"];
+	struct_geometry__seq:geometry_type -> geometry_non_native__seq [style=bold];
+	struct_geometry__inst__is_native:is_native_type -> struct_geometry__seq:geometry__if [color="#404040"];
+	struct_geometry__seq:morph_targets_type -> morph_target__seq [style=bold];
+	struct_geometry__seq:num_morph_targets_type -> struct_geometry__seq:morph_targets__repeat [color="#404040"];
+	struct_geometry__seq:format_type -> struct_geometry__inst__is_native [color="#404040"];
+	struct_geometry__seq:format_type -> struct_geometry__inst__is_prelit [color="#404040"];
+	struct_geometry__seq:format_type -> struct_geometry__inst__is_textured [color="#404040"];
+	struct_geometry__seq:format_type -> struct_geometry__inst__is_textured2 [color="#404040"];
+	struct_geometry__inst__num_uv_layers_raw:num_uv_layers_raw_type -> struct_geometry__inst__num_uv_layers [color="#404040"];
+	struct_geometry__inst__is_textured2:is_textured2_type -> struct_geometry__inst__num_uv_layers [color="#404040"];
+	struct_geometry__inst__is_textured:is_textured_type -> struct_geometry__inst__num_uv_layers [color="#404040"];
+	struct_geometry__seq:format_type -> struct_geometry__inst__num_uv_layers_raw [color="#404040"];
 	uv_layer__seq:tex_coords_type -> tex_coord__seq [style=bold];
 	uv_layer__params:num_vertices_type -> uv_layer__seq:tex_coords__repeat [color="#404040"];
 }

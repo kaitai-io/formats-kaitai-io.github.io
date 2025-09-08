@@ -19,14 +19,18 @@ type MonomakhSaprChg struct {
 	Ent []*MonomakhSaprChg_Block
 	_io *kaitai.Stream
 	_root *MonomakhSaprChg
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewMonomakhSaprChg() *MonomakhSaprChg {
 	return &MonomakhSaprChg{
 	}
 }
 
-func (this *MonomakhSaprChg) Read(io *kaitai.Stream, parent interface{}, root *MonomakhSaprChg) (err error) {
+func (this MonomakhSaprChg) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *MonomakhSaprChg) Read(io *kaitai.Stream, parent kaitai.Struct, root *MonomakhSaprChg) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -37,7 +41,7 @@ func (this *MonomakhSaprChg) Read(io *kaitai.Stream, parent interface{}, root *M
 	}
 	tmp1 = tmp1
 	this.Title = string(tmp1)
-	for i := 1;; i++ {
+	for i := 0;; i++ {
 		tmp2, err := this._io.EOF()
 		if err != nil {
 			return err
@@ -65,6 +69,10 @@ type MonomakhSaprChg_Block struct {
 func NewMonomakhSaprChg_Block() *MonomakhSaprChg_Block {
 	return &MonomakhSaprChg_Block{
 	}
+}
+
+func (this MonomakhSaprChg_Block) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *MonomakhSaprChg_Block) Read(io *kaitai.Stream, parent *MonomakhSaprChg, root *MonomakhSaprChg) (err error) {

@@ -8,7 +8,8 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 
 /**
@@ -60,52 +61,44 @@ public class GltfBinary extends KaitaiStruct {
             }
         }
     }
-    public static class Header extends KaitaiStruct {
-        public static Header fromFile(String fileName) throws IOException {
-            return new Header(new ByteBufferKaitaiStream(fileName));
+
+    public void _fetchInstances() {
+        this.header._fetchInstances();
+        for (int i = 0; i < this.chunks.size(); i++) {
+            this.chunks.get(((Number) (i)).intValue())._fetchInstances();
+        }
+    }
+    public static class Bin extends KaitaiStruct {
+        public static Bin fromFile(String fileName) throws IOException {
+            return new Bin(new ByteBufferKaitaiStream(fileName));
         }
 
-        public Header(KaitaiStream _io) {
+        public Bin(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public Header(KaitaiStream _io, GltfBinary _parent) {
+        public Bin(KaitaiStream _io, GltfBinary.Chunk _parent) {
             this(_io, _parent, null);
         }
 
-        public Header(KaitaiStream _io, GltfBinary _parent, GltfBinary _root) {
+        public Bin(KaitaiStream _io, GltfBinary.Chunk _parent, GltfBinary _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.magic = this._io.readBytes(4);
-            if (!(Arrays.equals(magic(), new byte[] { 103, 108, 84, 70 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 103, 108, 84, 70 }, magic(), _io(), "/types/header/seq/0");
-            }
-            this.version = this._io.readU4le();
-            this.length = this._io.readU4le();
+            this.data = this._io.readBytesFull();
         }
-        private byte[] magic;
-        private long version;
-        private long length;
+
+        public void _fetchInstances() {
+        }
+        private byte[] data;
         private GltfBinary _root;
-        private GltfBinary _parent;
-        public byte[] magic() { return magic; }
-
-        /**
-         * Indicates the version of the Binary glTF container format.
-         * For this specification, should be set to 2.
-         */
-        public long version() { return version; }
-
-        /**
-         * Total length of the Binary glTF, including Header and all Chunks, in bytes.
-         */
-        public long length() { return length; }
+        private GltfBinary.Chunk _parent;
+        public byte[] data() { return data; }
         public GltfBinary _root() { return _root; }
-        public GltfBinary _parent() { return _parent; }
+        public GltfBinary.Chunk _parent() { return _parent; }
     }
     public static class Chunk extends KaitaiStruct {
         public static Chunk fromFile(String fileName) throws IOException {
@@ -133,16 +126,14 @@ public class GltfBinary extends KaitaiStruct {
                 ChunkType on = type();
                 if (on != null) {
                     switch (type()) {
-                    case JSON: {
-                        this._raw_data = this._io.readBytes(lenData());
-                        KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
-                        this.data = new Json(_io__raw_data, this, _root);
+                    case BIN: {
+                        KaitaiStream _io_data = this._io.substream(lenData());
+                        this.data = new Bin(_io_data, this, _root);
                         break;
                     }
-                    case BIN: {
-                        this._raw_data = this._io.readBytes(lenData());
-                        KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
-                        this.data = new Bin(_io__raw_data, this, _root);
+                    case JSON: {
+                        KaitaiStream _io_data = this._io.substream(lenData());
+                        this.data = new Json(_io_data, this, _root);
                         break;
                     }
                     default: {
@@ -155,18 +146,88 @@ public class GltfBinary extends KaitaiStruct {
                 }
             }
         }
+
+        public void _fetchInstances() {
+            {
+                ChunkType on = type();
+                if (on != null) {
+                    switch (type()) {
+                    case BIN: {
+                        ((Bin) (this.data))._fetchInstances();
+                        break;
+                    }
+                    case JSON: {
+                        ((Json) (this.data))._fetchInstances();
+                        break;
+                    }
+                    default: {
+                        break;
+                    }
+                    }
+                } else {
+                }
+            }
+        }
         private long lenData;
         private ChunkType type;
         private Object data;
         private GltfBinary _root;
         private GltfBinary _parent;
-        private byte[] _raw_data;
         public long lenData() { return lenData; }
         public ChunkType type() { return type; }
         public Object data() { return data; }
         public GltfBinary _root() { return _root; }
         public GltfBinary _parent() { return _parent; }
-        public byte[] _raw_data() { return _raw_data; }
+    }
+    public static class Header extends KaitaiStruct {
+        public static Header fromFile(String fileName) throws IOException {
+            return new Header(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Header(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Header(KaitaiStream _io, GltfBinary _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Header(KaitaiStream _io, GltfBinary _parent, GltfBinary _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.magic = this._io.readBytes(4);
+            if (!(Arrays.equals(this.magic, new byte[] { 103, 108, 84, 70 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 103, 108, 84, 70 }, this.magic, this._io, "/types/header/seq/0");
+            }
+            this.version = this._io.readU4le();
+            this.length = this._io.readU4le();
+        }
+
+        public void _fetchInstances() {
+        }
+        private byte[] magic;
+        private long version;
+        private long length;
+        private GltfBinary _root;
+        private GltfBinary _parent;
+        public byte[] magic() { return magic; }
+
+        /**
+         * Indicates the version of the Binary glTF container format.
+         * For this specification, should be set to 2.
+         */
+        public long version() { return version; }
+
+        /**
+         * Total length of the Binary glTF, including Header and all Chunks, in bytes.
+         */
+        public long length() { return length; }
+        public GltfBinary _root() { return _root; }
+        public GltfBinary _parent() { return _parent; }
     }
     public static class Json extends KaitaiStruct {
         public static Json fromFile(String fileName) throws IOException {
@@ -188,7 +249,10 @@ public class GltfBinary extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.data = new String(this._io.readBytesFull(), Charset.forName("UTF-8"));
+            this.data = new String(this._io.readBytesFull(), StandardCharsets.UTF_8);
+        }
+
+        public void _fetchInstances() {
         }
         private String data;
         private GltfBinary _root;
@@ -202,41 +266,12 @@ public class GltfBinary extends KaitaiStruct {
         public GltfBinary _root() { return _root; }
         public GltfBinary.Chunk _parent() { return _parent; }
     }
-    public static class Bin extends KaitaiStruct {
-        public static Bin fromFile(String fileName) throws IOException {
-            return new Bin(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Bin(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Bin(KaitaiStream _io, GltfBinary.Chunk _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Bin(KaitaiStream _io, GltfBinary.Chunk _parent, GltfBinary _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.data = this._io.readBytesFull();
-        }
-        private byte[] data;
-        private GltfBinary _root;
-        private GltfBinary.Chunk _parent;
-        public byte[] data() { return data; }
-        public GltfBinary _root() { return _root; }
-        public GltfBinary.Chunk _parent() { return _parent; }
-    }
     private Header header;
-    private ArrayList<Chunk> chunks;
+    private List<Chunk> chunks;
     private GltfBinary _root;
     private KaitaiStruct _parent;
     public Header header() { return header; }
-    public ArrayList<Chunk> chunks() { return chunks; }
+    public List<Chunk> chunks() { return chunks; }
     public GltfBinary _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -18,8 +18,8 @@ end
 # @see https://source.android.com/docs/core/architecture/dto/partitions Source
 # @see https://android.googlesource.com/platform/system/libufdt/+/refs/tags/android-10.0.0_r47 Source
 class AndroidDto < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -31,56 +31,8 @@ class AndroidDto < Kaitai::Struct::Struct
     }
     self
   end
-  class DtTableHeader < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @magic = @_io.read_bytes(4)
-      raise Kaitai::Struct::ValidationNotEqualError.new([215, 183, 171, 30].pack('C*'), magic, _io, "/types/dt_table_header/seq/0") if not magic == [215, 183, 171, 30].pack('C*')
-      @total_size = @_io.read_u4be
-      @header_size = @_io.read_u4be
-      @dt_entry_size = @_io.read_u4be
-      @dt_entry_count = @_io.read_u4be
-      @dt_entries_offset = @_io.read_u4be
-      @page_size = @_io.read_u4be
-      @version = @_io.read_u4be
-      self
-    end
-    attr_reader :magic
-
-    ##
-    # includes dt_table_header + all dt_table_entry and all dtb/dtbo
-    attr_reader :total_size
-
-    ##
-    # sizeof(dt_table_header)
-    attr_reader :header_size
-
-    ##
-    # sizeof(dt_table_entry)
-    attr_reader :dt_entry_size
-
-    ##
-    # number of dt_table_entry
-    attr_reader :dt_entry_count
-
-    ##
-    # offset to the first dt_table_entry from head of dt_table_header
-    attr_reader :dt_entries_offset
-
-    ##
-    # flash page size
-    attr_reader :page_size
-
-    ##
-    # DTBO image version
-    attr_reader :version
-  end
   class DtTableEntry < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -128,6 +80,54 @@ class AndroidDto < Kaitai::Struct::Struct
     ##
     # optional, must be zero if unused
     attr_reader :custom
+  end
+  class DtTableHeader < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @magic = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([215, 183, 171, 30].pack('C*'), @magic, @_io, "/types/dt_table_header/seq/0") if not @magic == [215, 183, 171, 30].pack('C*')
+      @total_size = @_io.read_u4be
+      @header_size = @_io.read_u4be
+      @dt_entry_size = @_io.read_u4be
+      @dt_entry_count = @_io.read_u4be
+      @dt_entries_offset = @_io.read_u4be
+      @page_size = @_io.read_u4be
+      @version = @_io.read_u4be
+      self
+    end
+    attr_reader :magic
+
+    ##
+    # includes dt_table_header + all dt_table_entry and all dtb/dtbo
+    attr_reader :total_size
+
+    ##
+    # sizeof(dt_table_header)
+    attr_reader :header_size
+
+    ##
+    # sizeof(dt_table_entry)
+    attr_reader :dt_entry_size
+
+    ##
+    # number of dt_table_entry
+    attr_reader :dt_entry_count
+
+    ##
+    # offset to the first dt_table_entry from head of dt_table_header
+    attr_reader :dt_entries_offset
+
+    ##
+    # flash page size
+    attr_reader :page_size
+
+    ##
+    # DTBO image version
+    attr_reader :version
   end
   attr_reader :header
   attr_reader :entries

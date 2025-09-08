@@ -20,6 +20,11 @@ const (
 	Dbf_DeleteState__False Dbf_DeleteState = 32
 	Dbf_DeleteState__True Dbf_DeleteState = 42
 )
+var values_Dbf_DeleteState = map[Dbf_DeleteState]struct{}{32: {}, 42: {}}
+func (v Dbf_DeleteState) isDefined() bool {
+	_, ok := values_Dbf_DeleteState[v]
+	return ok
+}
 type Dbf struct {
 	Header1 *Dbf_Header1
 	Header2 *Dbf_Header2
@@ -27,7 +32,7 @@ type Dbf struct {
 	Records []*Dbf_Record
 	_io *kaitai.Stream
 	_root *Dbf
-	_parent interface{}
+	_parent kaitai.Struct
 	_raw_Header2 []byte
 	_raw_Records [][]byte
 }
@@ -36,7 +41,11 @@ func NewDbf() *Dbf {
 	}
 }
 
-func (this *Dbf) Read(io *kaitai.Stream, parent interface{}, root *Dbf) (err error) {
+func (this Dbf) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Dbf) Read(io *kaitai.Stream, parent kaitai.Struct, root *Dbf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -47,7 +56,7 @@ func (this *Dbf) Read(io *kaitai.Stream, parent interface{}, root *Dbf) (err err
 		return err
 	}
 	this.Header1 = tmp1
-	tmp2, err := this._io.ReadBytes(int(((this.Header1.LenHeader - 12) - 1)))
+	tmp2, err := this._io.ReadBytes(int((this.Header1.LenHeader - 12) - 1))
 	if err != nil {
 		return err
 	}
@@ -87,65 +96,6 @@ func (this *Dbf) Read(io *kaitai.Stream, parent interface{}, root *Dbf) (err err
 	}
 	return err
 }
-type Dbf_Header2 struct {
-	HeaderDbase3 *Dbf_HeaderDbase3
-	HeaderDbase7 *Dbf_HeaderDbase7
-	Fields []*Dbf_Field
-	_io *kaitai.Stream
-	_root *Dbf
-	_parent *Dbf
-}
-func NewDbf_Header2() *Dbf_Header2 {
-	return &Dbf_Header2{
-	}
-}
-
-func (this *Dbf_Header2) Read(io *kaitai.Stream, parent *Dbf, root *Dbf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp7, err := this._root.Header1.DbaseLevel()
-	if err != nil {
-		return err
-	}
-	if (tmp7 == 3) {
-		tmp8 := NewDbf_HeaderDbase3()
-		err = tmp8.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.HeaderDbase3 = tmp8
-	}
-	tmp9, err := this._root.Header1.DbaseLevel()
-	if err != nil {
-		return err
-	}
-	if (tmp9 == 7) {
-		tmp10 := NewDbf_HeaderDbase7()
-		err = tmp10.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.HeaderDbase7 = tmp10
-	}
-	for i := 1;; i++ {
-		tmp11, err := this._io.EOF()
-		if err != nil {
-			return err
-		}
-		if tmp11 {
-			break
-		}
-		tmp12 := NewDbf_Field()
-		err = tmp12.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Fields = append(this.Fields, tmp12)
-	}
-	return err
-}
 type Dbf_Field struct {
 	Name string
 	Datatype uint8
@@ -166,65 +116,69 @@ func NewDbf_Field() *Dbf_Field {
 	}
 }
 
+func (this Dbf_Field) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Dbf_Field) Read(io *kaitai.Stream, parent *Dbf_Header2, root *Dbf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp13, err := this._io.ReadBytes(int(11))
+	tmp7, err := this._io.ReadBytes(int(11))
 	if err != nil {
 		return err
 	}
-	tmp13 = kaitai.BytesTerminate(tmp13, 0, false)
-	this.Name = string(tmp13)
-	tmp14, err := this._io.ReadU1()
+	tmp7 = kaitai.BytesTerminate(tmp7, 0, false)
+	this.Name = string(tmp7)
+	tmp8, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Datatype = tmp14
-	tmp15, err := this._io.ReadU4le()
+	this.Datatype = tmp8
+	tmp9, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.DataAddress = uint32(tmp15)
-	tmp16, err := this._io.ReadU1()
+	this.DataAddress = uint32(tmp9)
+	tmp10, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Length = tmp16
-	tmp17, err := this._io.ReadU1()
+	this.Length = tmp10
+	tmp11, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.DecimalCount = tmp17
-	tmp18, err := this._io.ReadBytes(int(2))
+	this.DecimalCount = tmp11
+	tmp12, err := this._io.ReadBytes(int(2))
 	if err != nil {
 		return err
 	}
-	tmp18 = tmp18
-	this.Reserved1 = tmp18
-	tmp19, err := this._io.ReadU1()
+	tmp12 = tmp12
+	this.Reserved1 = tmp12
+	tmp13, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.WorkAreaId = tmp19
-	tmp20, err := this._io.ReadBytes(int(2))
+	this.WorkAreaId = tmp13
+	tmp14, err := this._io.ReadBytes(int(2))
 	if err != nil {
 		return err
 	}
-	tmp20 = tmp20
-	this.Reserved2 = tmp20
-	tmp21, err := this._io.ReadU1()
+	tmp14 = tmp14
+	this.Reserved2 = tmp14
+	tmp15, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.SetFieldsFlag = tmp21
-	tmp22, err := this._io.ReadBytes(int(8))
+	this.SetFieldsFlag = tmp15
+	tmp16, err := this._io.ReadBytes(int(8))
 	if err != nil {
 		return err
 	}
-	tmp22 = tmp22
-	this.Reserved3 = tmp22
+	tmp16 = tmp16
+	this.Reserved3 = tmp16
 	return err
 }
 
@@ -250,55 +204,122 @@ func NewDbf_Header1() *Dbf_Header1 {
 	}
 }
 
+func (this Dbf_Header1) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Dbf_Header1) Read(io *kaitai.Stream, parent *Dbf, root *Dbf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp23, err := this._io.ReadU1()
+	tmp17, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Version = tmp23
-	tmp24, err := this._io.ReadU1()
+	this.Version = tmp17
+	tmp18, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.LastUpdateY = tmp24
-	tmp25, err := this._io.ReadU1()
+	this.LastUpdateY = tmp18
+	tmp19, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.LastUpdateM = tmp25
-	tmp26, err := this._io.ReadU1()
+	this.LastUpdateM = tmp19
+	tmp20, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.LastUpdateD = tmp26
-	tmp27, err := this._io.ReadU4le()
+	this.LastUpdateD = tmp20
+	tmp21, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.NumRecords = uint32(tmp27)
-	tmp28, err := this._io.ReadU2le()
+	this.NumRecords = uint32(tmp21)
+	tmp22, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.LenHeader = uint16(tmp28)
-	tmp29, err := this._io.ReadU2le()
+	this.LenHeader = uint16(tmp22)
+	tmp23, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.LenRecord = uint16(tmp29)
+	this.LenRecord = uint16(tmp23)
 	return err
 }
 func (this *Dbf_Header1) DbaseLevel() (v int, err error) {
 	if (this._f_dbaseLevel) {
 		return this.dbaseLevel, nil
 	}
-	this.dbaseLevel = int((this.Version & 7))
 	this._f_dbaseLevel = true
+	this.dbaseLevel = int(this.Version & 7)
 	return this.dbaseLevel, nil
+}
+type Dbf_Header2 struct {
+	HeaderDbase3 *Dbf_HeaderDbase3
+	HeaderDbase7 *Dbf_HeaderDbase7
+	Fields []*Dbf_Field
+	_io *kaitai.Stream
+	_root *Dbf
+	_parent *Dbf
+}
+func NewDbf_Header2() *Dbf_Header2 {
+	return &Dbf_Header2{
+	}
+}
+
+func (this Dbf_Header2) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Dbf_Header2) Read(io *kaitai.Stream, parent *Dbf, root *Dbf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp24, err := this._root.Header1.DbaseLevel()
+	if err != nil {
+		return err
+	}
+	if (tmp24 == 3) {
+		tmp25 := NewDbf_HeaderDbase3()
+		err = tmp25.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.HeaderDbase3 = tmp25
+	}
+	tmp26, err := this._root.Header1.DbaseLevel()
+	if err != nil {
+		return err
+	}
+	if (tmp26 == 7) {
+		tmp27 := NewDbf_HeaderDbase7()
+		err = tmp27.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.HeaderDbase7 = tmp27
+	}
+	for i := 0;; i++ {
+		tmp28, err := this._io.EOF()
+		if err != nil {
+			return err
+		}
+		if tmp28 {
+			break
+		}
+		tmp29 := NewDbf_Field()
+		err = tmp29.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Fields = append(this.Fields, tmp29)
+	}
+	return err
 }
 type Dbf_HeaderDbase3 struct {
 	Reserved1 []byte
@@ -311,6 +332,10 @@ type Dbf_HeaderDbase3 struct {
 func NewDbf_HeaderDbase3() *Dbf_HeaderDbase3 {
 	return &Dbf_HeaderDbase3{
 	}
+}
+
+func (this Dbf_HeaderDbase3) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Dbf_HeaderDbase3) Read(io *kaitai.Stream, parent *Dbf_Header2, root *Dbf) (err error) {
@@ -355,6 +380,10 @@ type Dbf_HeaderDbase7 struct {
 func NewDbf_HeaderDbase7() *Dbf_HeaderDbase7 {
 	return &Dbf_HeaderDbase7{
 	}
+}
+
+func (this Dbf_HeaderDbase7) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Dbf_HeaderDbase7) Read(io *kaitai.Stream, parent *Dbf_Header2, root *Dbf) (err error) {
@@ -430,6 +459,10 @@ type Dbf_Record struct {
 func NewDbf_Record() *Dbf_Record {
 	return &Dbf_Record{
 	}
+}
+
+func (this Dbf_Record) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Dbf_Record) Read(io *kaitai.Stream, parent *Dbf, root *Dbf) (err error) {

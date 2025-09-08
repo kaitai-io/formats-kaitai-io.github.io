@@ -2,13 +2,16 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class asn1_der_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -41,11 +44,11 @@
 class asn1_der_t : public kaitai::kstruct {
 
 public:
+    class body_object_id_t;
+    class body_printable_string_t;
     class body_sequence_t;
     class body_utf8string_t;
-    class body_object_id_t;
     class len_encoded_t;
-    class body_printable_string_t;
 
     enum type_tag_t {
         TYPE_TAG_END_OF_CONTENT = 0,
@@ -68,6 +71,12 @@ public:
         TYPE_TAG_SEQUENCE_30 = 48,
         TYPE_TAG_SET = 49
     };
+    static bool _is_defined_type_tag_t(type_tag_t v);
+
+private:
+    static const std::set<type_tag_t> _values_type_tag_t;
+
+public:
 
     asn1_der_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, asn1_der_t* p__root = nullptr);
 
@@ -77,6 +86,74 @@ private:
 
 public:
     ~asn1_der_t();
+
+    /**
+     * \sa https://learn.microsoft.com/en-us/windows/win32/seccertenroll/about-object-identifier Source
+     */
+
+    class body_object_id_t : public kaitai::kstruct {
+
+    public:
+
+        body_object_id_t(kaitai::kstream* p__io, asn1_der_t* p__parent = nullptr, asn1_der_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~body_object_id_t();
+
+    private:
+        bool f_first;
+        int32_t m_first;
+
+    public:
+        int32_t first();
+
+    private:
+        bool f_second;
+        int32_t m_second;
+
+    public:
+        int32_t second();
+
+    private:
+        uint8_t m_first_and_second;
+        std::string m_rest;
+        asn1_der_t* m__root;
+        asn1_der_t* m__parent;
+
+    public:
+        uint8_t first_and_second() const { return m_first_and_second; }
+        std::string rest() const { return m_rest; }
+        asn1_der_t* _root() const { return m__root; }
+        asn1_der_t* _parent() const { return m__parent; }
+    };
+
+    class body_printable_string_t : public kaitai::kstruct {
+
+    public:
+
+        body_printable_string_t(kaitai::kstream* p__io, asn1_der_t* p__parent = nullptr, asn1_der_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~body_printable_string_t();
+
+    private:
+        std::string m_str;
+        asn1_der_t* m__root;
+        asn1_der_t* m__parent;
+
+    public:
+        std::string str() const { return m_str; }
+        asn1_der_t* _root() const { return m__root; }
+        asn1_der_t* _parent() const { return m__parent; }
+    };
 
     class body_sequence_t : public kaitai::kstruct {
 
@@ -126,50 +203,6 @@ public:
         asn1_der_t* _parent() const { return m__parent; }
     };
 
-    /**
-     * \sa https://learn.microsoft.com/en-us/windows/win32/seccertenroll/about-object-identifier Source
-     */
-
-    class body_object_id_t : public kaitai::kstruct {
-
-    public:
-
-        body_object_id_t(kaitai::kstream* p__io, asn1_der_t* p__parent = nullptr, asn1_der_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~body_object_id_t();
-
-    private:
-        bool f_first;
-        int32_t m_first;
-
-    public:
-        int32_t first();
-
-    private:
-        bool f_second;
-        int32_t m_second;
-
-    public:
-        int32_t second();
-
-    private:
-        uint8_t m_first_and_second;
-        std::string m_rest;
-        asn1_der_t* m__root;
-        asn1_der_t* m__parent;
-
-    public:
-        uint8_t first_and_second() const { return m_first_and_second; }
-        std::string rest() const { return m_rest; }
-        asn1_der_t* _root() const { return m__root; }
-        asn1_der_t* _parent() const { return m__parent; }
-    };
-
     class len_encoded_t : public kaitai::kstruct {
 
     public:
@@ -213,30 +246,6 @@ public:
         uint8_t b1() const { return m_b1; }
         uint16_t int2() const { return m_int2; }
         uint8_t int1() const { return m_int1; }
-        asn1_der_t* _root() const { return m__root; }
-        asn1_der_t* _parent() const { return m__parent; }
-    };
-
-    class body_printable_string_t : public kaitai::kstruct {
-
-    public:
-
-        body_printable_string_t(kaitai::kstream* p__io, asn1_der_t* p__parent = nullptr, asn1_der_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~body_printable_string_t();
-
-    private:
-        std::string m_str;
-        asn1_der_t* m__root;
-        asn1_der_t* m__parent;
-
-    public:
-        std::string str() const { return m_str; }
         asn1_der_t* _root() const { return m__root; }
         asn1_der_t* _parent() const { return m__parent; }
     };

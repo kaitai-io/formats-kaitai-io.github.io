@@ -14,8 +14,8 @@
 
 namespace {
     class DosMz extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \DosMz $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\DosMz $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -49,20 +49,20 @@ namespace {
 
 namespace DosMz {
     class ExeHeader extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \DosMz $_parent = null, \DosMz $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\DosMz $_parent = null, ?\DosMz $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_mz = new \DosMz\MzHeader($this->_io, $this, $this->_root);
-            $this->_m_restOfHeader = $this->_io->readBytes(($this->mz()->lenHeader() - 28));
+            $this->_m_restOfHeader = $this->_io->readBytes($this->mz()->lenHeader() - 28);
         }
         protected $_m_lenBody;
         public function lenBody() {
             if ($this->_m_lenBody !== null)
                 return $this->_m_lenBody;
-            $this->_m_lenBody = (($this->mz()->lastPageExtraBytes() == 0 ? ($this->mz()->numPages() * 512) : ((($this->mz()->numPages() - 1) * 512) + $this->mz()->lastPageExtraBytes())) - $this->mz()->lenHeader());
+            $this->_m_lenBody = ($this->mz()->lastPageExtraBytes() == 0 ? $this->mz()->numPages() * 512 : ($this->mz()->numPages() - 1) * 512 + $this->mz()->lastPageExtraBytes()) - $this->mz()->lenHeader();
             return $this->_m_lenBody;
         }
         protected $_m_mz;
@@ -74,15 +74,15 @@ namespace DosMz {
 
 namespace DosMz {
     class MzHeader extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \DosMz\ExeHeader $_parent = null, \DosMz $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\DosMz\ExeHeader $_parent = null, ?\DosMz $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(2), "ASCII");
-            if (!( (($this->magic() == "MZ") || ($this->magic() == "ZM")) )) {
-                throw new \Kaitai\Struct\Error\ValidationNotAnyOfError($this->magic(), $this->_io(), "/types/mz_header/seq/0");
+            if (!( (($this->_m_magic == "MZ") || ($this->_m_magic == "ZM")) )) {
+                throw new \Kaitai\Struct\Error\ValidationNotAnyOfError($this->_m_magic, $this->_io, "/types/mz_header/seq/0");
             }
             $this->_m_lastPageExtraBytes = $this->_io->readU2le();
             $this->_m_numPages = $this->_io->readU2le();
@@ -102,7 +102,7 @@ namespace DosMz {
         public function lenHeader() {
             if ($this->_m_lenHeader !== null)
                 return $this->_m_lenHeader;
-            $this->_m_lenHeader = ($this->headerSize() * 16);
+            $this->_m_lenHeader = $this->headerSize() * 16;
             return $this->_m_lenHeader;
         }
         protected $_m_magic;
@@ -138,7 +138,7 @@ namespace DosMz {
 
 namespace DosMz {
     class Relocation extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \DosMz $_parent = null, \DosMz $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\DosMz $_parent = null, ?\DosMz $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }

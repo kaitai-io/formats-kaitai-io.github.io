@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
-from enum import Enum
+from enum import IntEnum
 
 
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class VmwareVmdk(KaitaiStruct):
     """
@@ -14,13 +15,13 @@ class VmwareVmdk(KaitaiStruct):
        Source - https://github.com/libyal/libvmdk/blob/main/documentation/VMWare%20Virtual%20Disk%20Format%20(VMDK).asciidoc#41-file-header
     """
 
-    class CompressionMethods(Enum):
+    class CompressionMethods(IntEnum):
         none = 0
         deflate = 1
     def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
+        super(VmwareVmdk, self).__init__(_io)
         self._parent = _parent
-        self._root = _root if _root else self
+        self._root = _root or self
         self._read()
 
     def _read(self):
@@ -41,15 +42,32 @@ class VmwareVmdk(KaitaiStruct):
         self.stuff = self._io.read_bytes(4)
         self.compression_method = KaitaiStream.resolve_enum(VmwareVmdk.CompressionMethods, self._io.read_u2le())
 
+
+    def _fetch_instances(self):
+        pass
+        self.flags._fetch_instances()
+        _ = self.descriptor
+        if hasattr(self, '_m_descriptor'):
+            pass
+
+        _ = self.grain_primary
+        if hasattr(self, '_m_grain_primary'):
+            pass
+
+        _ = self.grain_secondary
+        if hasattr(self, '_m_grain_secondary'):
+            pass
+
+
     class HeaderFlags(KaitaiStruct):
         """
         .. seealso::
            Source - https://github.com/libyal/libvmdk/blob/main/documentation/VMWare%20Virtual%20Disk%20Format%20(VMDK).asciidoc#411-flags
         """
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(VmwareVmdk.HeaderFlags, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -57,22 +75,16 @@ class VmwareVmdk(KaitaiStruct):
             self.zeroed_grain_table_entry = self._io.read_bits_int_be(1) != 0
             self.use_secondary_grain_dir = self._io.read_bits_int_be(1) != 0
             self.valid_new_line_detection_test = self._io.read_bits_int_be(1) != 0
-            self._io.align_to_byte()
             self.reserved2 = self._io.read_u1()
             self.reserved3 = self._io.read_bits_int_be(6)
             self.has_metadata = self._io.read_bits_int_be(1) != 0
             self.has_compressed_grain = self._io.read_bits_int_be(1) != 0
-            self._io.align_to_byte()
             self.reserved4 = self._io.read_u1()
 
 
-    @property
-    def len_sector(self):
-        if hasattr(self, '_m_len_sector'):
-            return self._m_len_sector
+        def _fetch_instances(self):
+            pass
 
-        self._m_len_sector = 512
-        return getattr(self, '_m_len_sector', None)
 
     @property
     def descriptor(self):
@@ -80,8 +92,8 @@ class VmwareVmdk(KaitaiStruct):
             return self._m_descriptor
 
         _pos = self._io.pos()
-        self._io.seek((self.start_descriptor * self._root.len_sector))
-        self._m_descriptor = self._io.read_bytes((self.size_descriptor * self._root.len_sector))
+        self._io.seek(self.start_descriptor * self._root.len_sector)
+        self._m_descriptor = self._io.read_bytes(self.size_descriptor * self._root.len_sector)
         self._io.seek(_pos)
         return getattr(self, '_m_descriptor', None)
 
@@ -91,8 +103,8 @@ class VmwareVmdk(KaitaiStruct):
             return self._m_grain_primary
 
         _pos = self._io.pos()
-        self._io.seek((self.start_primary_grain * self._root.len_sector))
-        self._m_grain_primary = self._io.read_bytes((self.size_grain * self._root.len_sector))
+        self._io.seek(self.start_primary_grain * self._root.len_sector)
+        self._m_grain_primary = self._io.read_bytes(self.size_grain * self._root.len_sector)
         self._io.seek(_pos)
         return getattr(self, '_m_grain_primary', None)
 
@@ -102,9 +114,17 @@ class VmwareVmdk(KaitaiStruct):
             return self._m_grain_secondary
 
         _pos = self._io.pos()
-        self._io.seek((self.start_secondary_grain * self._root.len_sector))
-        self._m_grain_secondary = self._io.read_bytes((self.size_grain * self._root.len_sector))
+        self._io.seek(self.start_secondary_grain * self._root.len_sector)
+        self._m_grain_secondary = self._io.read_bytes(self.size_grain * self._root.len_sector)
         self._io.seek(_pos)
         return getattr(self, '_m_grain_secondary', None)
+
+    @property
+    def len_sector(self):
+        if hasattr(self, '_m_len_sector'):
+            return self._m_len_sector
+
+        self._m_len_sector = 512
+        return getattr(self, '_m_len_sector', None)
 
 

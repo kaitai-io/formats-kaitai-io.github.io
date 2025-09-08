@@ -219,6 +219,11 @@ the integration time before comparing them.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="Avantes USB spectrometer ROH file 6.0 parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="Avantes USB spectrometer ROH file 6.0 parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -249,7 +254,17 @@ the integration time before comparing them.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="Avantes USB spectrometer ROH file 6.0 parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="Avantes USB spectrometer ROH file 6.0 parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="Avantes USB spectrometer ROH file 6.0 parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -313,8 +328,8 @@ the integration time before comparing them.</p>
 
 <span class="k">namespace</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">AvantesRoh60</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\AvantesRoh60</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\AvantesRoh60</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span> <span class="o">===</span> <span class="k">null</span> <span class="o">?</span> <span class="nv">$this</span> <span class="o">:</span> <span class="nv">$_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
         <span class="p">}</span>
 
@@ -338,7 +353,7 @@ the integration time before comparing them.</p>
                 <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_unknown3</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readF4le</span><span class="p">();</span>
             <span class="p">}</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_spectrum</span> <span class="o">=</span> <span class="p">[];</span>
-            <span class="nv">$n</span> <span class="o">=</span> <span class="p">((</span><span class="nb">intval</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ipixlast</span><span class="p">())</span> <span class="o">-</span> <span class="nb">intval</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ipixfirst</span><span class="p">()))</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+            <span class="nv">$n</span> <span class="o">=</span> <span class="p">(</span><span class="nb">intval</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ipixlast</span><span class="p">())</span> <span class="o">-</span> <span class="nb">intval</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ipixfirst</span><span class="p">()))</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
             <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
                 <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_spectrum</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readF4le</span><span class="p">();</span>
             <span class="p">}</span>

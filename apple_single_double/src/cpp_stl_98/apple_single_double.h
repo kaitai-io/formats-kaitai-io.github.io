@@ -3,12 +3,15 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class apple_single_double_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -45,6 +48,13 @@ public:
         FILE_TYPE_APPLE_SINGLE = 333312,
         FILE_TYPE_APPLE_DOUBLE = 333319
     };
+    static bool _is_defined_file_type_t(file_type_t v);
+
+private:
+    static const std::set<file_type_t> _values_file_type_t;
+    static std::set<file_type_t> _build_values_file_type_t();
+
+public:
 
     apple_single_double_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, apple_single_double_t* p__root = 0);
 
@@ -75,6 +85,13 @@ public:
             TYPES_AFP_FILE_INFO = 14,
             TYPES_AFP_DIRECTORY_ID = 15
         };
+        static bool _is_defined_types_t(types_t v);
+
+    private:
+        static const std::set<types_t> _values_types_t;
+        static std::set<types_t> _build_values_types_t();
+
+    public:
 
         entry_t(kaitai::kstream* p__io, apple_single_double_t* p__parent = 0, apple_single_double_t* p__root = 0);
 

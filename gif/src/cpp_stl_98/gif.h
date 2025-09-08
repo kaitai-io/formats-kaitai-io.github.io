@@ -3,12 +3,15 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class gif_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -34,31 +37,45 @@
 class gif_t : public kaitai::kstruct {
 
 public:
-    class image_data_t;
-    class color_table_entry_t;
-    class logical_screen_descriptor_struct_t;
-    class local_image_descriptor_t;
+    class application_id_t;
     class block_t;
     class color_table_t;
-    class header_t;
-    class ext_graphic_control_t;
-    class subblock_t;
-    class application_id_t;
+    class color_table_entry_t;
     class ext_application_t;
-    class subblocks_t;
+    class ext_graphic_control_t;
     class extension_t;
+    class header_t;
+    class image_data_t;
+    class local_image_descriptor_t;
+    class logical_screen_descriptor_struct_t;
+    class subblock_t;
+    class subblocks_t;
 
     enum block_type_t {
         BLOCK_TYPE_EXTENSION = 33,
         BLOCK_TYPE_LOCAL_IMAGE_DESCRIPTOR = 44,
         BLOCK_TYPE_END_OF_FILE = 59
     };
+    static bool _is_defined_block_type_t(block_type_t v);
+
+private:
+    static const std::set<block_type_t> _values_block_type_t;
+    static std::set<block_type_t> _build_values_block_type_t();
+
+public:
 
     enum extension_label_t {
         EXTENSION_LABEL_GRAPHIC_CONTROL = 249,
         EXTENSION_LABEL_COMMENT = 254,
         EXTENSION_LABEL_APPLICATION = 255
     };
+    static bool _is_defined_extension_label_t(extension_label_t v);
+
+private:
+    static const std::set<extension_label_t> _values_extension_label_t;
+    static std::set<extension_label_t> _build_values_extension_label_t();
+
+public:
 
     gif_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, gif_t* p__root = 0);
 
@@ -69,192 +86,32 @@ private:
 public:
     ~gif_t();
 
-    /**
-     * \sa https://www.w3.org/Graphics/GIF/spec-gif89a.txt - section 22
-     */
-
-    class image_data_t : public kaitai::kstruct {
+    class application_id_t : public kaitai::kstruct {
 
     public:
 
-        image_data_t(kaitai::kstream* p__io, gif_t::local_image_descriptor_t* p__parent = 0, gif_t* p__root = 0);
+        application_id_t(kaitai::kstream* p__io, gif_t::ext_application_t* p__parent = 0, gif_t* p__root = 0);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~image_data_t();
+        ~application_id_t();
 
     private:
-        uint8_t m_lzw_min_code_size;
-        subblocks_t* m_subblocks;
+        uint8_t m_len_bytes;
+        std::string m_application_identifier;
+        std::string m_application_auth_code;
         gif_t* m__root;
-        gif_t::local_image_descriptor_t* m__parent;
+        gif_t::ext_application_t* m__parent;
 
     public:
-        uint8_t lzw_min_code_size() const { return m_lzw_min_code_size; }
-        subblocks_t* subblocks() const { return m_subblocks; }
+        uint8_t len_bytes() const { return m_len_bytes; }
+        std::string application_identifier() const { return m_application_identifier; }
+        std::string application_auth_code() const { return m_application_auth_code; }
         gif_t* _root() const { return m__root; }
-        gif_t::local_image_descriptor_t* _parent() const { return m__parent; }
-    };
-
-    class color_table_entry_t : public kaitai::kstruct {
-
-    public:
-
-        color_table_entry_t(kaitai::kstream* p__io, gif_t::color_table_t* p__parent = 0, gif_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~color_table_entry_t();
-
-    private:
-        uint8_t m_red;
-        uint8_t m_green;
-        uint8_t m_blue;
-        gif_t* m__root;
-        gif_t::color_table_t* m__parent;
-
-    public:
-        uint8_t red() const { return m_red; }
-        uint8_t green() const { return m_green; }
-        uint8_t blue() const { return m_blue; }
-        gif_t* _root() const { return m__root; }
-        gif_t::color_table_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * \sa https://www.w3.org/Graphics/GIF/spec-gif89a.txt - section 18
-     */
-
-    class logical_screen_descriptor_struct_t : public kaitai::kstruct {
-
-    public:
-
-        logical_screen_descriptor_struct_t(kaitai::kstream* p__io, gif_t* p__parent = 0, gif_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~logical_screen_descriptor_struct_t();
-
-    private:
-        bool f_has_color_table;
-        bool m_has_color_table;
-
-    public:
-        bool has_color_table();
-
-    private:
-        bool f_color_table_size;
-        int32_t m_color_table_size;
-
-    public:
-        int32_t color_table_size();
-
-    private:
-        uint16_t m_screen_width;
-        uint16_t m_screen_height;
-        uint8_t m_flags;
-        uint8_t m_bg_color_index;
-        uint8_t m_pixel_aspect_ratio;
-        gif_t* m__root;
-        gif_t* m__parent;
-
-    public:
-        uint16_t screen_width() const { return m_screen_width; }
-        uint16_t screen_height() const { return m_screen_height; }
-        uint8_t flags() const { return m_flags; }
-        uint8_t bg_color_index() const { return m_bg_color_index; }
-        uint8_t pixel_aspect_ratio() const { return m_pixel_aspect_ratio; }
-        gif_t* _root() const { return m__root; }
-        gif_t* _parent() const { return m__parent; }
-    };
-
-    class local_image_descriptor_t : public kaitai::kstruct {
-
-    public:
-
-        local_image_descriptor_t(kaitai::kstream* p__io, gif_t::block_t* p__parent = 0, gif_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~local_image_descriptor_t();
-
-    private:
-        bool f_has_color_table;
-        bool m_has_color_table;
-
-    public:
-        bool has_color_table();
-
-    private:
-        bool f_has_interlace;
-        bool m_has_interlace;
-
-    public:
-        bool has_interlace();
-
-    private:
-        bool f_has_sorted_color_table;
-        bool m_has_sorted_color_table;
-
-    public:
-        bool has_sorted_color_table();
-
-    private:
-        bool f_color_table_size;
-        int32_t m_color_table_size;
-
-    public:
-        int32_t color_table_size();
-
-    private:
-        uint16_t m_left;
-        uint16_t m_top;
-        uint16_t m_width;
-        uint16_t m_height;
-        uint8_t m_flags;
-        color_table_t* m_local_color_table;
-        bool n_local_color_table;
-
-    public:
-        bool _is_null_local_color_table() { local_color_table(); return n_local_color_table; };
-
-    private:
-        image_data_t* m_image_data;
-        gif_t* m__root;
-        gif_t::block_t* m__parent;
-        std::string m__raw_local_color_table;
-        bool n__raw_local_color_table;
-
-    public:
-        bool _is_null__raw_local_color_table() { _raw_local_color_table(); return n__raw_local_color_table; };
-
-    private:
-        kaitai::kstream* m__io__raw_local_color_table;
-
-    public:
-        uint16_t left() const { return m_left; }
-        uint16_t top() const { return m_top; }
-        uint16_t width() const { return m_width; }
-        uint16_t height() const { return m_height; }
-        uint8_t flags() const { return m_flags; }
-        color_table_t* local_color_table() const { return m_local_color_table; }
-        image_data_t* image_data() const { return m_image_data; }
-        gif_t* _root() const { return m__root; }
-        gif_t::block_t* _parent() const { return m__parent; }
-        std::string _raw_local_color_table() const { return m__raw_local_color_table; }
-        kaitai::kstream* _io__raw_local_color_table() const { return m__io__raw_local_color_table; }
+        gif_t::ext_application_t* _parent() const { return m__parent; }
     };
 
     class block_t : public kaitai::kstruct {
@@ -317,34 +174,58 @@ public:
         kaitai::kstruct* _parent() const { return m__parent; }
     };
 
-    /**
-     * \sa https://www.w3.org/Graphics/GIF/spec-gif89a.txt - section 17
-     */
-
-    class header_t : public kaitai::kstruct {
+    class color_table_entry_t : public kaitai::kstruct {
 
     public:
 
-        header_t(kaitai::kstream* p__io, gif_t* p__parent = 0, gif_t* p__root = 0);
+        color_table_entry_t(kaitai::kstream* p__io, gif_t::color_table_t* p__parent = 0, gif_t* p__root = 0);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~header_t();
+        ~color_table_entry_t();
 
     private:
-        std::string m_magic;
-        std::string m_version;
+        uint8_t m_red;
+        uint8_t m_green;
+        uint8_t m_blue;
         gif_t* m__root;
-        gif_t* m__parent;
+        gif_t::color_table_t* m__parent;
 
     public:
-        std::string magic() const { return m_magic; }
-        std::string version() const { return m_version; }
+        uint8_t red() const { return m_red; }
+        uint8_t green() const { return m_green; }
+        uint8_t blue() const { return m_blue; }
         gif_t* _root() const { return m__root; }
-        gif_t* _parent() const { return m__parent; }
+        gif_t::color_table_t* _parent() const { return m__parent; }
+    };
+
+    class ext_application_t : public kaitai::kstruct {
+
+    public:
+
+        ext_application_t(kaitai::kstream* p__io, gif_t::extension_t* p__parent = 0, gif_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~ext_application_t();
+
+    private:
+        application_id_t* m_application_id;
+        std::vector<subblock_t*>* m_subblocks;
+        gif_t* m__root;
+        gif_t::extension_t* m__parent;
+
+    public:
+        application_id_t* application_id() const { return m_application_id; }
+        std::vector<subblock_t*>* subblocks() const { return m_subblocks; }
+        gif_t* _root() const { return m__root; }
+        gif_t::extension_t* _parent() const { return m__parent; }
     };
 
     /**
@@ -397,6 +278,222 @@ public:
         gif_t::extension_t* _parent() const { return m__parent; }
     };
 
+    class extension_t : public kaitai::kstruct {
+
+    public:
+
+        extension_t(kaitai::kstream* p__io, gif_t::block_t* p__parent = 0, gif_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~extension_t();
+
+    private:
+        extension_label_t m_label;
+        kaitai::kstruct* m_body;
+        gif_t* m__root;
+        gif_t::block_t* m__parent;
+
+    public:
+        extension_label_t label() const { return m_label; }
+        kaitai::kstruct* body() const { return m_body; }
+        gif_t* _root() const { return m__root; }
+        gif_t::block_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * \sa https://www.w3.org/Graphics/GIF/spec-gif89a.txt - section 17
+     */
+
+    class header_t : public kaitai::kstruct {
+
+    public:
+
+        header_t(kaitai::kstream* p__io, gif_t* p__parent = 0, gif_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~header_t();
+
+    private:
+        std::string m_magic;
+        std::string m_version;
+        gif_t* m__root;
+        gif_t* m__parent;
+
+    public:
+        std::string magic() const { return m_magic; }
+        std::string version() const { return m_version; }
+        gif_t* _root() const { return m__root; }
+        gif_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * \sa https://www.w3.org/Graphics/GIF/spec-gif89a.txt - section 22
+     */
+
+    class image_data_t : public kaitai::kstruct {
+
+    public:
+
+        image_data_t(kaitai::kstream* p__io, gif_t::local_image_descriptor_t* p__parent = 0, gif_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~image_data_t();
+
+    private:
+        uint8_t m_lzw_min_code_size;
+        subblocks_t* m_subblocks;
+        gif_t* m__root;
+        gif_t::local_image_descriptor_t* m__parent;
+
+    public:
+        uint8_t lzw_min_code_size() const { return m_lzw_min_code_size; }
+        subblocks_t* subblocks() const { return m_subblocks; }
+        gif_t* _root() const { return m__root; }
+        gif_t::local_image_descriptor_t* _parent() const { return m__parent; }
+    };
+
+    class local_image_descriptor_t : public kaitai::kstruct {
+
+    public:
+
+        local_image_descriptor_t(kaitai::kstream* p__io, gif_t::block_t* p__parent = 0, gif_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~local_image_descriptor_t();
+
+    private:
+        bool f_color_table_size;
+        int32_t m_color_table_size;
+
+    public:
+        int32_t color_table_size();
+
+    private:
+        bool f_has_color_table;
+        bool m_has_color_table;
+
+    public:
+        bool has_color_table();
+
+    private:
+        bool f_has_interlace;
+        bool m_has_interlace;
+
+    public:
+        bool has_interlace();
+
+    private:
+        bool f_has_sorted_color_table;
+        bool m_has_sorted_color_table;
+
+    public:
+        bool has_sorted_color_table();
+
+    private:
+        uint16_t m_left;
+        uint16_t m_top;
+        uint16_t m_width;
+        uint16_t m_height;
+        uint8_t m_flags;
+        color_table_t* m_local_color_table;
+        bool n_local_color_table;
+
+    public:
+        bool _is_null_local_color_table() { local_color_table(); return n_local_color_table; };
+
+    private:
+        image_data_t* m_image_data;
+        gif_t* m__root;
+        gif_t::block_t* m__parent;
+        std::string m__raw_local_color_table;
+        bool n__raw_local_color_table;
+
+    public:
+        bool _is_null__raw_local_color_table() { _raw_local_color_table(); return n__raw_local_color_table; };
+
+    private:
+        kaitai::kstream* m__io__raw_local_color_table;
+
+    public:
+        uint16_t left() const { return m_left; }
+        uint16_t top() const { return m_top; }
+        uint16_t width() const { return m_width; }
+        uint16_t height() const { return m_height; }
+        uint8_t flags() const { return m_flags; }
+        color_table_t* local_color_table() const { return m_local_color_table; }
+        image_data_t* image_data() const { return m_image_data; }
+        gif_t* _root() const { return m__root; }
+        gif_t::block_t* _parent() const { return m__parent; }
+        std::string _raw_local_color_table() const { return m__raw_local_color_table; }
+        kaitai::kstream* _io__raw_local_color_table() const { return m__io__raw_local_color_table; }
+    };
+
+    /**
+     * \sa https://www.w3.org/Graphics/GIF/spec-gif89a.txt - section 18
+     */
+
+    class logical_screen_descriptor_struct_t : public kaitai::kstruct {
+
+    public:
+
+        logical_screen_descriptor_struct_t(kaitai::kstream* p__io, gif_t* p__parent = 0, gif_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~logical_screen_descriptor_struct_t();
+
+    private:
+        bool f_color_table_size;
+        int32_t m_color_table_size;
+
+    public:
+        int32_t color_table_size();
+
+    private:
+        bool f_has_color_table;
+        bool m_has_color_table;
+
+    public:
+        bool has_color_table();
+
+    private:
+        uint16_t m_screen_width;
+        uint16_t m_screen_height;
+        uint8_t m_flags;
+        uint8_t m_bg_color_index;
+        uint8_t m_pixel_aspect_ratio;
+        gif_t* m__root;
+        gif_t* m__parent;
+
+    public:
+        uint16_t screen_width() const { return m_screen_width; }
+        uint16_t screen_height() const { return m_screen_height; }
+        uint8_t flags() const { return m_flags; }
+        uint8_t bg_color_index() const { return m_bg_color_index; }
+        uint8_t pixel_aspect_ratio() const { return m_pixel_aspect_ratio; }
+        gif_t* _root() const { return m__root; }
+        gif_t* _parent() const { return m__parent; }
+    };
+
     class subblock_t : public kaitai::kstruct {
 
     public:
@@ -423,60 +520,6 @@ public:
         kaitai::kstruct* _parent() const { return m__parent; }
     };
 
-    class application_id_t : public kaitai::kstruct {
-
-    public:
-
-        application_id_t(kaitai::kstream* p__io, gif_t::ext_application_t* p__parent = 0, gif_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~application_id_t();
-
-    private:
-        uint8_t m_len_bytes;
-        std::string m_application_identifier;
-        std::string m_application_auth_code;
-        gif_t* m__root;
-        gif_t::ext_application_t* m__parent;
-
-    public:
-        uint8_t len_bytes() const { return m_len_bytes; }
-        std::string application_identifier() const { return m_application_identifier; }
-        std::string application_auth_code() const { return m_application_auth_code; }
-        gif_t* _root() const { return m__root; }
-        gif_t::ext_application_t* _parent() const { return m__parent; }
-    };
-
-    class ext_application_t : public kaitai::kstruct {
-
-    public:
-
-        ext_application_t(kaitai::kstream* p__io, gif_t::extension_t* p__parent = 0, gif_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~ext_application_t();
-
-    private:
-        application_id_t* m_application_id;
-        std::vector<subblock_t*>* m_subblocks;
-        gif_t* m__root;
-        gif_t::extension_t* m__parent;
-
-    public:
-        application_id_t* application_id() const { return m_application_id; }
-        std::vector<subblock_t*>* subblocks() const { return m_subblocks; }
-        gif_t* _root() const { return m__root; }
-        gif_t::extension_t* _parent() const { return m__parent; }
-    };
-
     class subblocks_t : public kaitai::kstruct {
 
     public:
@@ -499,32 +542,6 @@ public:
         std::vector<subblock_t*>* entries() const { return m_entries; }
         gif_t* _root() const { return m__root; }
         kaitai::kstruct* _parent() const { return m__parent; }
-    };
-
-    class extension_t : public kaitai::kstruct {
-
-    public:
-
-        extension_t(kaitai::kstream* p__io, gif_t::block_t* p__parent = 0, gif_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~extension_t();
-
-    private:
-        extension_label_t m_label;
-        kaitai::kstruct* m_body;
-        gif_t* m__root;
-        gif_t::block_t* m__parent;
-
-    public:
-        extension_label_t label() const { return m_label; }
-        kaitai::kstruct* body() const { return m_body; }
-        gif_t* _root() const { return m__root; }
-        gif_t::block_t* _parent() const { return m__parent; }
     };
 
 private:

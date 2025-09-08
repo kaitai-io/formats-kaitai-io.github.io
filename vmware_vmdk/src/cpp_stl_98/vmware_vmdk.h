@@ -3,11 +3,14 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class vmware_vmdk_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
+#include <set>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -23,6 +26,13 @@ public:
         COMPRESSION_METHODS_NONE = 0,
         COMPRESSION_METHODS_DEFLATE = 1
     };
+    static bool _is_defined_compression_methods_t(compression_methods_t v);
+
+private:
+    static const std::set<compression_methods_t> _values_compression_methods_t;
+    static std::set<compression_methods_t> _build_values_compression_methods_t();
+
+public:
 
     vmware_vmdk_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, vmware_vmdk_t* p__root = 0);
 
@@ -78,13 +88,6 @@ public:
     };
 
 private:
-    bool f_len_sector;
-    int32_t m_len_sector;
-
-public:
-    int32_t len_sector();
-
-private:
     bool f_descriptor;
     std::string m_descriptor;
 
@@ -104,6 +107,13 @@ private:
 
 public:
     std::string grain_secondary();
+
+private:
+    bool f_len_sector;
+    int32_t m_len_sector;
+
+public:
+    int32_t len_sector();
 
 private:
     std::string m_magic;

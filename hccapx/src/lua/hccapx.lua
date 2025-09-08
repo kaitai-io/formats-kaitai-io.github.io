@@ -32,14 +32,14 @@ Hccapx.HccapxRecord = class.class(KaitaiStruct)
 function Hccapx.HccapxRecord:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function Hccapx.HccapxRecord:_read()
   self.magic = self._io:read_bytes(4)
   if not(self.magic == "\072\067\080\088") then
-    error("not equal, expected " ..  "\072\067\080\088" .. ", but got " .. self.magic)
+    error("not equal, expected " .. "\072\067\080\088" .. ", but got " .. self.magic)
   end
   self.version = self._io:read_u4le()
   self.ignore_replay_counter = self._io:read_bits_int_be(1) ~= 0
@@ -47,7 +47,7 @@ function Hccapx.HccapxRecord:_read()
   self._io:align_to_byte()
   self.len_essid = self._io:read_u1()
   self.essid = self._io:read_bytes(self.len_essid)
-  self.padding1 = self._io:read_bytes((32 - self.len_essid))
+  self.padding1 = self._io:read_bytes(32 - self.len_essid)
   self.keyver = self._io:read_u1()
   self.keymic = self._io:read_bytes(16)
   self.mac_ap = self._io:read_bytes(6)
@@ -56,7 +56,7 @@ function Hccapx.HccapxRecord:_read()
   self.nonce_station = self._io:read_bytes(32)
   self.len_eapol = self._io:read_u2le()
   self.eapol = self._io:read_bytes(self.len_eapol)
-  self.padding2 = self._io:read_bytes((256 - self.len_eapol))
+  self.padding2 = self._io:read_bytes(256 - self.len_eapol)
 end
 
 -- 

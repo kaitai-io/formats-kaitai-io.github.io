@@ -89,15 +89,23 @@ public class RtpPacket extends KaitaiStruct {
         this.csrcCount = this._io.readBitsIntBe(4);
         this.marker = this._io.readBitsIntBe(1) != 0;
         this.payloadType = PayloadTypeEnum.byId(this._io.readBitsIntBe(7));
-        this._io.alignToByte();
         this.sequenceNumber = this._io.readU2be();
         this.timestamp = this._io.readU4be();
         this.ssrc = this._io.readU4be();
         if (hasExtension()) {
             this.headerExtension = new HeaderExtention(this._io, this, _root);
         }
-        this.data = this._io.readBytes(((_io().size() - _io().pos()) - lenPadding()));
+        this.data = this._io.readBytes((_io().size() - _io().pos()) - lenPadding());
         this.padding = this._io.readBytes(lenPadding());
+    }
+
+    public void _fetchInstances() {
+        if (hasExtension()) {
+            this.headerExtension._fetchInstances();
+        }
+        lenPaddingIfExists();
+        if (this.lenPaddingIfExists != null) {
+        }
     }
     public static class HeaderExtention extends KaitaiStruct {
         public static HeaderExtention fromFile(String fileName) throws IOException {
@@ -122,6 +130,9 @@ public class RtpPacket extends KaitaiStruct {
             this.id = this._io.readU2be();
             this.length = this._io.readU2be();
         }
+
+        public void _fetchInstances() {
+        }
         private int id;
         private int length;
         private RtpPacket _root;
@@ -130,6 +141,17 @@ public class RtpPacket extends KaitaiStruct {
         public int length() { return length; }
         public RtpPacket _root() { return _root; }
         public RtpPacket _parent() { return _parent; }
+    }
+    private Integer lenPadding;
+
+    /**
+     * Always returns number of padding bytes to in the payload.
+     */
+    public Integer lenPadding() {
+        if (this.lenPadding != null)
+            return this.lenPadding;
+        this.lenPadding = ((Number) ((hasPadding() ? lenPaddingIfExists() : 0))).intValue();
+        return this.lenPadding;
     }
     private Integer lenPaddingIfExists;
 
@@ -142,23 +164,11 @@ public class RtpPacket extends KaitaiStruct {
             return this.lenPaddingIfExists;
         if (hasPadding()) {
             long _pos = this._io.pos();
-            this._io.seek((_io().size() - 1));
+            this._io.seek(_io().size() - 1);
             this.lenPaddingIfExists = this._io.readU1();
             this._io.seek(_pos);
         }
         return this.lenPaddingIfExists;
-    }
-    private Integer lenPadding;
-
-    /**
-     * Always returns number of padding bytes to in the payload.
-     */
-    public Integer lenPadding() {
-        if (this.lenPadding != null)
-            return this.lenPadding;
-        int _tmp = (int) ((hasPadding() ? lenPaddingIfExists() : 0));
-        this.lenPadding = _tmp;
-        return this.lenPadding;
     }
     private long version;
     private boolean hasPadding;

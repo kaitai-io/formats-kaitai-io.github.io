@@ -205,6 +205,11 @@ format.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="systemd journal file parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="systemd journal file parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -235,7 +240,17 @@ format.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="systemd journal file parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="systemd journal file parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="systemd journal file parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -281,8 +296,8 @@ format.</p>
 
 <span class="k">namespace</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">SystemdJournal</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\SystemdJournal</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\SystemdJournal</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span> <span class="o">===</span> <span class="k">null</span> <span class="o">?</span> <span class="nv">$this</span> <span class="o">:</span> <span class="nv">$_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
         <span class="p">}</span>
 
@@ -295,21 +310,6 @@ format.</p>
             <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
                 <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_objects</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\SystemdJournal\JournalObject</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
             <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_lenHeader</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * Header length is used to set substream size, as it thus required</span>
-<span class="sd">         * prior to declaration of header.</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">lenHeader</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenHeader</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenHeader</span><span class="p">;</span>
-            <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="mi">88</span><span class="p">);</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenHeader</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU8le</span><span class="p">();</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenHeader</span><span class="p">;</span>
         <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_dataHashTable</span><span class="p">;</span>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">dataHashTable</span><span class="p">()</span> <span class="p">{</span>
@@ -331,6 +331,21 @@ format.</p>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
             <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_fieldHashTable</span><span class="p">;</span>
         <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_lenHeader</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Header length is used to set substream size, as it thus required</span>
+<span class="sd">         * prior to declaration of header.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">lenHeader</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenHeader</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenHeader</span><span class="p">;</span>
+            <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="mi">88</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenHeader</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenHeader</span><span class="p">;</span>
+        <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_header</span><span class="p">;</span>
         <span class="k">protected</span> <span class="nv">$_m_objects</span><span class="p">;</span>
         <span class="k">protected</span> <span class="nv">$_m__raw_header</span><span class="p">;</span>
@@ -340,17 +355,107 @@ format.</p>
     <span class="p">}</span>
 <span class="p">}</span>
 
+<span class="sd">/**</span>
+<span class="sd"> * Data objects are designed to carry log payload, typically in</span>
+<span class="sd"> * form of a &quot;key=value&quot; string in `payload` attribute.</span>
+<span class="sd"> */</span>
+
+<span class="k">namespace</span> <span class="nx">SystemdJournal</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">DataObject</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\SystemdJournal\JournalObject</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\SystemdJournal</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hash</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ofsNextHash</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ofsHeadField</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ofsEntry</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ofsEntryArray</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numEntries</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payload</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytesFull</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_entry</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">entry</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entry</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entry</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ofsEntry</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nv">$io</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">();</span>
+                <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
+                <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ofsEntry</span><span class="p">());</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entry</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\SystemdJournal\JournalObject</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entry</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_entryArray</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">entryArray</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entryArray</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entryArray</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ofsEntryArray</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nv">$io</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">();</span>
+                <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
+                <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ofsEntryArray</span><span class="p">());</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entryArray</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\SystemdJournal\JournalObject</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entryArray</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_headField</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">headField</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_headField</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_headField</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ofsHeadField</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nv">$io</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">();</span>
+                <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
+                <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ofsHeadField</span><span class="p">());</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_headField</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\SystemdJournal\JournalObject</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_headField</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_nextHash</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">nextHash</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nextHash</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nextHash</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ofsNextHash</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nv">$io</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">();</span>
+                <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
+                <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ofsNextHash</span><span class="p">());</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nextHash</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\SystemdJournal\JournalObject</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nextHash</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_hash</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_ofsNextHash</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_ofsHeadField</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_ofsEntry</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_ofsEntryArray</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_numEntries</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_payload</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">hash</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hash</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">ofsNextHash</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ofsNextHash</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">ofsHeadField</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ofsHeadField</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">ofsEntry</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ofsEntry</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">ofsEntryArray</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ofsEntryArray</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">numEntries</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numEntries</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">payload</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payload</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
 <span class="k">namespace</span> <span class="nx">SystemdJournal</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">Header</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\SystemdJournal</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\SystemdJournal</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\SystemdJournal</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\SystemdJournal</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
         <span class="p">}</span>
 
         <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_signature</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
-            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">signature</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\x4C\x50\x4B\x53\x48\x48\x52\x48</span><span class="s2">&quot;</span><span class="p">))</span> <span class="p">{</span>
-                <span class="k">throw</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Error\ValidationNotEqualError</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\x4C\x50\x4B\x53\x48\x48\x52\x48</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">signature</span><span class="p">(),</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">(),</span> <span class="s2">&quot;/types/header/seq/0&quot;</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_signature</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\x4C\x50\x4B\x53\x48\x48\x52\x48</span><span class="s2">&quot;</span><span class="p">))</span> <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Error\ValidationNotEqualError</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\x4C\x50\x4B\x53\x48\x48\x52\x48</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_signature</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="s2">&quot;/types/header/seq/0&quot;</span><span class="p">);</span>
             <span class="p">}</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_compatibleFlags</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_incompatibleFlags</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
@@ -449,25 +554,25 @@ format.</p>
 
 <span class="k">namespace</span> <span class="nx">SystemdJournal</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">JournalObject</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\SystemdJournal</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\SystemdJournal</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
         <span class="p">}</span>
 
         <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_padding</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">mod</span><span class="p">((</span><span class="mi">8</span> <span class="o">-</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">()),</span> <span class="mi">8</span><span class="p">));</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_padding</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">mod</span><span class="p">(</span><span class="mi">8</span> <span class="o">-</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">(),</span> <span class="mi">8</span><span class="p">));</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_objectType</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_flags</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_reserved</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenObject</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU8le</span><span class="p">();</span>
             <span class="k">switch</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">objectType</span><span class="p">())</span> <span class="p">{</span>
                 <span class="k">case</span> <span class="nx">\SystemdJournal\JournalObject\ObjectTypes</span><span class="o">::</span><span class="na">DATA</span><span class="o">:</span>
-                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_payload</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenObject</span><span class="p">()</span> <span class="o">-</span> <span class="mi">16</span><span class="p">));</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_payload</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenObject</span><span class="p">()</span> <span class="o">-</span> <span class="mi">16</span><span class="p">);</span>
                     <span class="nv">$_io__raw_payload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_payload</span><span class="p">);</span>
                     <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\SystemdJournal\DataObject</span><span class="p">(</span><span class="nv">$_io__raw_payload</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="k">default</span><span class="o">:</span>
-                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payload</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenObject</span><span class="p">()</span> <span class="o">-</span> <span class="mi">16</span><span class="p">));</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payload</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenObject</span><span class="p">()</span> <span class="o">-</span> <span class="mi">16</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
             <span class="p">}</span>
         <span class="p">}</span>
@@ -498,96 +603,12 @@ format.</p>
         <span class="k">const</span> <span class="no">FIELD_HASH_TABLE</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">ENTRY_ARRAY</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">TAG</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">}</span>
 
-<span class="sd">/**</span>
-<span class="sd"> * Data objects are designed to carry log payload, typically in</span>
-<span class="sd"> * form of a &quot;key=value&quot; string in `payload` attribute.</span>
-<span class="sd"> */</span>
+        <span class="k">private</span> <span class="k">const</span> <span class="no">_VALUES</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">1</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">2</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">3</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">4</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">5</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">6</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">7</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">];</span>
 
-<span class="k">namespace</span> <span class="nx">SystemdJournal</span> <span class="p">{</span>
-    <span class="k">class</span> <span class="nc">DataObject</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\SystemdJournal\JournalObject</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\SystemdJournal</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">isDefined</span><span class="p">(</span><span class="nx">int</span> <span class="nv">$v</span><span class="p">)</span><span class="o">:</span> <span class="nx">bool</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nb">isset</span><span class="p">(</span><span class="nx">self</span><span class="o">::</span><span class="na">_VALUES</span><span class="p">[</span><span class="nv">$v</span><span class="p">]);</span>
         <span class="p">}</span>
-
-        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hash</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU8le</span><span class="p">();</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ofsNextHash</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU8le</span><span class="p">();</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ofsHeadField</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU8le</span><span class="p">();</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ofsEntry</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU8le</span><span class="p">();</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ofsEntryArray</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU8le</span><span class="p">();</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numEntries</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU8le</span><span class="p">();</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payload</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytesFull</span><span class="p">();</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_nextHash</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">nextHash</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nextHash</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nextHash</span><span class="p">;</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ofsNextHash</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-                <span class="nv">$io</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">();</span>
-                <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
-                <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ofsNextHash</span><span class="p">());</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nextHash</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\SystemdJournal\JournalObject</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-                <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
-            <span class="p">}</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nextHash</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_headField</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">headField</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_headField</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_headField</span><span class="p">;</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ofsHeadField</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-                <span class="nv">$io</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">();</span>
-                <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
-                <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ofsHeadField</span><span class="p">());</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_headField</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\SystemdJournal\JournalObject</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-                <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
-            <span class="p">}</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_headField</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_entry</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">entry</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entry</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entry</span><span class="p">;</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ofsEntry</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-                <span class="nv">$io</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">();</span>
-                <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
-                <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ofsEntry</span><span class="p">());</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entry</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\SystemdJournal\JournalObject</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-                <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
-            <span class="p">}</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entry</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_entryArray</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">entryArray</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entryArray</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entryArray</span><span class="p">;</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ofsEntryArray</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-                <span class="nv">$io</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">();</span>
-                <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
-                <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ofsEntryArray</span><span class="p">());</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entryArray</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\SystemdJournal\JournalObject</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-                <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
-            <span class="p">}</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entryArray</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_hash</span><span class="p">;</span>
-        <span class="k">protected</span> <span class="nv">$_m_ofsNextHash</span><span class="p">;</span>
-        <span class="k">protected</span> <span class="nv">$_m_ofsHeadField</span><span class="p">;</span>
-        <span class="k">protected</span> <span class="nv">$_m_ofsEntry</span><span class="p">;</span>
-        <span class="k">protected</span> <span class="nv">$_m_ofsEntryArray</span><span class="p">;</span>
-        <span class="k">protected</span> <span class="nv">$_m_numEntries</span><span class="p">;</span>
-        <span class="k">protected</span> <span class="nv">$_m_payload</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">hash</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hash</span><span class="p">;</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">ofsNextHash</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ofsNextHash</span><span class="p">;</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">ofsHeadField</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ofsHeadField</span><span class="p">;</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">ofsEntry</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ofsEntry</span><span class="p">;</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">ofsEntryArray</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ofsEntryArray</span><span class="p">;</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">numEntries</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numEntries</span><span class="p">;</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">payload</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payload</span><span class="p">;</span> <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
@@ -608,6 +629,12 @@ format.</p>
 <span class="sd">         * File has been rotated, no further updates to this file are to be expected</span>
 <span class="sd">         */</span>
         <span class="k">const</span> <span class="no">ARCHIVED</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+
+        <span class="k">private</span> <span class="k">const</span> <span class="no">_VALUES</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">1</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span> <span class="mi">2</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">];</span>
+
+        <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">isDefined</span><span class="p">(</span><span class="nx">int</span> <span class="nv">$v</span><span class="p">)</span><span class="o">:</span> <span class="nx">bool</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nb">isset</span><span class="p">(</span><span class="nx">self</span><span class="o">::</span><span class="na">_VALUES</span><span class="p">[</span><span class="nv">$v</span><span class="p">]);</span>
+        <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>

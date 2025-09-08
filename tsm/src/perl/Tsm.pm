@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Encode;
 
 ########################################################################
@@ -25,7 +25,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -42,7 +42,7 @@ sub index {
     my ($self) = @_;
     return $self->{index} if ($self->{index});
     my $_pos = $self->{_io}->pos();
-    $self->{_io}->seek(($self->_io()->size() - 8));
+    $self->{_io}->seek($self->_io()->size() - 8);
     $self->{index} = Tsm::Index->new($self->{_io}, $self, $self->{_root});
     $self->{_io}->seek($_pos);
     return $self->{index};
@@ -73,7 +73,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -117,7 +117,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -135,11 +135,14 @@ sub entries {
     return $self->{entries} if ($self->{entries});
     my $_pos = $self->{_io}->pos();
     $self->{_io}->seek($self->offset());
-    $self->{entries} = ();
-    do {
-        $_ = Tsm::Index::IndexHeader->new($self->{_io}, $self, $self->{_root});
-        push @{$self->{entries}}, $_;
-    } until ($self->_io()->pos() == ($self->_io()->size() - 8));
+    $self->{entries} = [];
+    {
+        my $_it;
+        do {
+            $_it = Tsm::Index::IndexHeader->new($self->{_io}, $self, $self->{_root});
+            push @{$self->{entries}}, $_it;
+        } until ($self->_io()->pos() == $self->_io()->size() - 8);
+    }
     $self->{_io}->seek($_pos);
     return $self->{entries};
 }
@@ -169,7 +172,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -183,7 +186,7 @@ sub _read {
     $self->{key} = Encode::decode("UTF-8", $self->{_io}->read_bytes($self->key_len()));
     $self->{type} = $self->{_io}->read_u1();
     $self->{entry_count} = $self->{_io}->read_u2be();
-    $self->{index_entries} = ();
+    $self->{index_entries} = [];
     my $n_index_entries = $self->entry_count();
     for (my $i = 0; $i < $n_index_entries; $i++) {
         push @{$self->{index_entries}}, Tsm::Index::IndexHeader::IndexEntry->new($self->{_io}, $self, $self->{_root});
@@ -235,7 +238,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -302,7 +305,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -313,7 +316,7 @@ sub _read {
     my ($self) = @_;
 
     $self->{crc32} = $self->{_io}->read_u4be();
-    $self->{data} = $self->{_io}->read_bytes(($self->_parent()->block_size() - 4));
+    $self->{data} = $self->{_io}->read_bytes($self->_parent()->block_size() - 4);
 }
 
 sub crc32 {

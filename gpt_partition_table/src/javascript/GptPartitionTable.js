@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.GptPartitionTable = factory(root.KaitaiStream);
+    factory(root.GptPartitionTable || (root.GptPartitionTable = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (GptPartitionTable_, KaitaiStream) {
 /**
  * @see {@link https://en.wikipedia.org/wiki/GUID_Partition_Table|Source}
  */
@@ -28,7 +28,7 @@ var GptPartitionTable = (function() {
     function PartitionEntry(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -48,14 +48,14 @@ var GptPartitionTable = (function() {
     function PartitionHeader(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     PartitionHeader.prototype._read = function() {
       this.signature = this._io.readBytes(8);
-      if (!((KaitaiStream.byteArrayCompare(this.signature, [69, 70, 73, 32, 80, 65, 82, 84]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([69, 70, 73, 32, 80, 65, 82, 84], this.signature, this._io, "/types/partition_header/seq/0");
+      if (!((KaitaiStream.byteArrayCompare(this.signature, new Uint8Array([69, 70, 73, 32, 80, 65, 82, 84])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([69, 70, 73, 32, 80, 65, 82, 84]), this.signature, this._io, "/types/partition_header/seq/0");
       }
       this.revision = this._io.readU4le();
       this.headerSize = this._io.readU4le();
@@ -77,7 +77,7 @@ var GptPartitionTable = (function() {
           return this._m_entries;
         var io = this._root._io;
         var _pos = io.pos;
-        io.seek((this.entriesStart * this._root.sectorSize));
+        io.seek(this.entriesStart * this._root.sectorSize);
         this._raw__m_entries = [];
         this._m_entries = [];
         for (var i = 0; i < this.entriesCount; i++) {
@@ -92,12 +92,16 @@ var GptPartitionTable = (function() {
 
     return PartitionHeader;
   })();
-  Object.defineProperty(GptPartitionTable.prototype, 'sectorSize', {
+  Object.defineProperty(GptPartitionTable.prototype, 'backup', {
     get: function() {
-      if (this._m_sectorSize !== undefined)
-        return this._m_sectorSize;
-      this._m_sectorSize = 512;
-      return this._m_sectorSize;
+      if (this._m_backup !== undefined)
+        return this._m_backup;
+      var io = this._root._io;
+      var _pos = io.pos;
+      io.seek(this._io.size - this._root.sectorSize);
+      this._m_backup = new PartitionHeader(io, this, this._root);
+      io.seek(_pos);
+      return this._m_backup;
     }
   });
   Object.defineProperty(GptPartitionTable.prototype, 'primary', {
@@ -112,20 +116,16 @@ var GptPartitionTable = (function() {
       return this._m_primary;
     }
   });
-  Object.defineProperty(GptPartitionTable.prototype, 'backup', {
+  Object.defineProperty(GptPartitionTable.prototype, 'sectorSize', {
     get: function() {
-      if (this._m_backup !== undefined)
-        return this._m_backup;
-      var io = this._root._io;
-      var _pos = io.pos;
-      io.seek((this._io.size - this._root.sectorSize));
-      this._m_backup = new PartitionHeader(io, this, this._root);
-      io.seek(_pos);
-      return this._m_backup;
+      if (this._m_sectorSize !== undefined)
+        return this._m_sectorSize;
+      this._m_sectorSize = 512;
+      return this._m_sectorSize;
     }
   });
 
   return GptPartitionTable;
 })();
-return GptPartitionTable;
-}));
+GptPartitionTable_.GptPartitionTable = GptPartitionTable;
+});

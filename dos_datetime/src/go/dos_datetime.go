@@ -45,14 +45,18 @@ type DosDatetime struct {
 	Date *DosDatetime_Date
 	_io *kaitai.Stream
 	_root *DosDatetime
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewDosDatetime() *DosDatetime {
 	return &DosDatetime{
 	}
 }
 
-func (this *DosDatetime) Read(io *kaitai.Stream, parent interface{}, root *DosDatetime) (err error) {
+func (this DosDatetime) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *DosDatetime) Read(io *kaitai.Stream, parent kaitai.Struct, root *DosDatetime) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -71,28 +75,32 @@ func (this *DosDatetime) Read(io *kaitai.Stream, parent interface{}, root *DosDa
 	this.Date = tmp2
 	return err
 }
-type DosDatetime_Time struct {
-	SecondDiv2 uint64
-	Minute uint64
-	Hour uint64
+type DosDatetime_Date struct {
+	Day uint64
+	Month uint64
+	YearMinus1980 uint64
 	_io *kaitai.Stream
 	_root *DosDatetime
 	_parent *DosDatetime
-	_f_second bool
-	second int
-	_f_paddedSecond bool
-	paddedSecond string
-	_f_paddedMinute bool
-	paddedMinute string
-	_f_paddedHour bool
-	paddedHour string
+	_f_paddedDay bool
+	paddedDay string
+	_f_paddedMonth bool
+	paddedMonth string
+	_f_paddedYear bool
+	paddedYear string
+	_f_year bool
+	year int
 }
-func NewDosDatetime_Time() *DosDatetime_Time {
-	return &DosDatetime_Time{
+func NewDosDatetime_Date() *DosDatetime_Date {
+	return &DosDatetime_Date{
 	}
 }
 
-func (this *DosDatetime_Time) Read(io *kaitai.Stream, parent *DosDatetime, root *DosDatetime) (err error) {
+func (this DosDatetime_Date) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *DosDatetime_Date) Read(io *kaitai.Stream, parent *DosDatetime, root *DosDatetime) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -101,137 +109,97 @@ func (this *DosDatetime_Time) Read(io *kaitai.Stream, parent *DosDatetime, root 
 	if err != nil {
 		return err
 	}
-	this.SecondDiv2 = tmp3
-	if !(this.SecondDiv2 <= 29) {
-		return kaitai.NewValidationGreaterThanError(29, this.SecondDiv2, this._io, "/types/time/seq/0")
-	}
-	tmp4, err := this._io.ReadBitsIntLe(6)
-	if err != nil {
-		return err
-	}
-	this.Minute = tmp4
-	if !(this.Minute <= 59) {
-		return kaitai.NewValidationGreaterThanError(59, this.Minute, this._io, "/types/time/seq/1")
-	}
-	tmp5, err := this._io.ReadBitsIntLe(5)
-	if err != nil {
-		return err
-	}
-	this.Hour = tmp5
-	if !(this.Hour <= 23) {
-		return kaitai.NewValidationGreaterThanError(23, this.Hour, this._io, "/types/time/seq/2")
-	}
-	return err
-}
-func (this *DosDatetime_Time) Second() (v int, err error) {
-	if (this._f_second) {
-		return this.second, nil
-	}
-	this.second = int((2 * this.SecondDiv2))
-	this._f_second = true
-	return this.second, nil
-}
-func (this *DosDatetime_Time) PaddedSecond() (v string, err error) {
-	if (this._f_paddedSecond) {
-		return this.paddedSecond, nil
-	}
-	var tmp6 string;
-	tmp7, err := this.Second()
-	if err != nil {
-		return "", err
-	}
-	if (tmp7 <= 9) {
-		tmp6 = "0"
-	} else {
-		tmp6 = ""
-	}
-	tmp8, err := this.Second()
-	if err != nil {
-		return "", err
-	}
-	this.paddedSecond = string(tmp6 + strconv.FormatInt(int64(tmp8), 10))
-	this._f_paddedSecond = true
-	return this.paddedSecond, nil
-}
-func (this *DosDatetime_Time) PaddedMinute() (v string, err error) {
-	if (this._f_paddedMinute) {
-		return this.paddedMinute, nil
-	}
-	var tmp9 string;
-	if (this.Minute <= 9) {
-		tmp9 = "0"
-	} else {
-		tmp9 = ""
-	}
-	this.paddedMinute = string(tmp9 + strconv.FormatInt(int64(this.Minute), 10))
-	this._f_paddedMinute = true
-	return this.paddedMinute, nil
-}
-func (this *DosDatetime_Time) PaddedHour() (v string, err error) {
-	if (this._f_paddedHour) {
-		return this.paddedHour, nil
-	}
-	var tmp10 string;
-	if (this.Hour <= 9) {
-		tmp10 = "0"
-	} else {
-		tmp10 = ""
-	}
-	this.paddedHour = string(tmp10 + strconv.FormatInt(int64(this.Hour), 10))
-	this._f_paddedHour = true
-	return this.paddedHour, nil
-}
-type DosDatetime_Date struct {
-	Day uint64
-	Month uint64
-	YearMinus1980 uint64
-	_io *kaitai.Stream
-	_root *DosDatetime
-	_parent *DosDatetime
-	_f_year bool
-	year int
-	_f_paddedDay bool
-	paddedDay string
-	_f_paddedMonth bool
-	paddedMonth string
-	_f_paddedYear bool
-	paddedYear string
-}
-func NewDosDatetime_Date() *DosDatetime_Date {
-	return &DosDatetime_Date{
-	}
-}
-
-func (this *DosDatetime_Date) Read(io *kaitai.Stream, parent *DosDatetime, root *DosDatetime) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp11, err := this._io.ReadBitsIntLe(5)
-	if err != nil {
-		return err
-	}
-	this.Day = tmp11
+	this.Day = tmp3
 	if !(this.Day >= 1) {
 		return kaitai.NewValidationLessThanError(1, this.Day, this._io, "/types/date/seq/0")
 	}
-	tmp12, err := this._io.ReadBitsIntLe(4)
+	tmp4, err := this._io.ReadBitsIntLe(4)
 	if err != nil {
 		return err
 	}
-	this.Month = tmp12
+	this.Month = tmp4
 	if !(this.Month >= 1) {
 		return kaitai.NewValidationLessThanError(1, this.Month, this._io, "/types/date/seq/1")
 	}
 	if !(this.Month <= 12) {
 		return kaitai.NewValidationGreaterThanError(12, this.Month, this._io, "/types/date/seq/1")
 	}
-	tmp13, err := this._io.ReadBitsIntLe(7)
+	tmp5, err := this._io.ReadBitsIntLe(7)
 	if err != nil {
 		return err
 	}
-	this.YearMinus1980 = tmp13
+	this.YearMinus1980 = tmp5
 	return err
+}
+func (this *DosDatetime_Date) PaddedDay() (v string, err error) {
+	if (this._f_paddedDay) {
+		return this.paddedDay, nil
+	}
+	this._f_paddedDay = true
+	var tmp6 string;
+	if (this.Day <= 9) {
+		tmp6 = "0"
+	} else {
+		tmp6 = ""
+	}
+	this.paddedDay = string(tmp6 + strconv.FormatInt(int64(this.Day), 10))
+	return this.paddedDay, nil
+}
+func (this *DosDatetime_Date) PaddedMonth() (v string, err error) {
+	if (this._f_paddedMonth) {
+		return this.paddedMonth, nil
+	}
+	this._f_paddedMonth = true
+	var tmp7 string;
+	if (this.Month <= 9) {
+		tmp7 = "0"
+	} else {
+		tmp7 = ""
+	}
+	this.paddedMonth = string(tmp7 + strconv.FormatInt(int64(this.Month), 10))
+	return this.paddedMonth, nil
+}
+func (this *DosDatetime_Date) PaddedYear() (v string, err error) {
+	if (this._f_paddedYear) {
+		return this.paddedYear, nil
+	}
+	this._f_paddedYear = true
+	var tmp8 string;
+	tmp9, err := this.Year()
+	if err != nil {
+		return "", err
+	}
+	if (tmp9 <= 999) {
+		var tmp10 string;
+		tmp11, err := this.Year()
+		if err != nil {
+			return "", err
+		}
+		if (tmp11 <= 99) {
+			var tmp12 string;
+			tmp13, err := this.Year()
+			if err != nil {
+				return "", err
+			}
+			if (tmp13 <= 9) {
+				tmp12 = "0"
+			} else {
+				tmp12 = ""
+			}
+			tmp10 = "0" + tmp12
+		} else {
+			tmp10 = ""
+		}
+		tmp8 = "0" + tmp10
+	} else {
+		tmp8 = ""
+	}
+	tmp14, err := this.Year()
+	if err != nil {
+		return "", err
+	}
+	this.paddedYear = string(tmp8 + strconv.FormatInt(int64(tmp14), 10))
+	return this.paddedYear, nil
 }
 
 /**
@@ -241,77 +209,121 @@ func (this *DosDatetime_Date) Year() (v int, err error) {
 	if (this._f_year) {
 		return this.year, nil
 	}
-	this.year = int((1980 + this.YearMinus1980))
 	this._f_year = true
+	this.year = int(1980 + this.YearMinus1980)
 	return this.year, nil
 }
-func (this *DosDatetime_Date) PaddedDay() (v string, err error) {
-	if (this._f_paddedDay) {
-		return this.paddedDay, nil
-	}
-	var tmp14 string;
-	if (this.Day <= 9) {
-		tmp14 = "0"
-	} else {
-		tmp14 = ""
-	}
-	this.paddedDay = string(tmp14 + strconv.FormatInt(int64(this.Day), 10))
-	this._f_paddedDay = true
-	return this.paddedDay, nil
+type DosDatetime_Time struct {
+	SecondDiv2 uint64
+	Minute uint64
+	Hour uint64
+	_io *kaitai.Stream
+	_root *DosDatetime
+	_parent *DosDatetime
+	_f_paddedHour bool
+	paddedHour string
+	_f_paddedMinute bool
+	paddedMinute string
+	_f_paddedSecond bool
+	paddedSecond string
+	_f_second bool
+	second int
 }
-func (this *DosDatetime_Date) PaddedMonth() (v string, err error) {
-	if (this._f_paddedMonth) {
-		return this.paddedMonth, nil
+func NewDosDatetime_Time() *DosDatetime_Time {
+	return &DosDatetime_Time{
 	}
-	var tmp15 string;
-	if (this.Month <= 9) {
-		tmp15 = "0"
-	} else {
-		tmp15 = ""
-	}
-	this.paddedMonth = string(tmp15 + strconv.FormatInt(int64(this.Month), 10))
-	this._f_paddedMonth = true
-	return this.paddedMonth, nil
 }
-func (this *DosDatetime_Date) PaddedYear() (v string, err error) {
-	if (this._f_paddedYear) {
-		return this.paddedYear, nil
+
+func (this DosDatetime_Time) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *DosDatetime_Time) Read(io *kaitai.Stream, parent *DosDatetime, root *DosDatetime) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp15, err := this._io.ReadBitsIntLe(5)
+	if err != nil {
+		return err
 	}
-	var tmp16 string;
-	tmp17, err := this.Year()
+	this.SecondDiv2 = tmp15
+	if !(this.SecondDiv2 <= 29) {
+		return kaitai.NewValidationGreaterThanError(29, this.SecondDiv2, this._io, "/types/time/seq/0")
+	}
+	tmp16, err := this._io.ReadBitsIntLe(6)
+	if err != nil {
+		return err
+	}
+	this.Minute = tmp16
+	if !(this.Minute <= 59) {
+		return kaitai.NewValidationGreaterThanError(59, this.Minute, this._io, "/types/time/seq/1")
+	}
+	tmp17, err := this._io.ReadBitsIntLe(5)
+	if err != nil {
+		return err
+	}
+	this.Hour = tmp17
+	if !(this.Hour <= 23) {
+		return kaitai.NewValidationGreaterThanError(23, this.Hour, this._io, "/types/time/seq/2")
+	}
+	return err
+}
+func (this *DosDatetime_Time) PaddedHour() (v string, err error) {
+	if (this._f_paddedHour) {
+		return this.paddedHour, nil
+	}
+	this._f_paddedHour = true
+	var tmp18 string;
+	if (this.Hour <= 9) {
+		tmp18 = "0"
+	} else {
+		tmp18 = ""
+	}
+	this.paddedHour = string(tmp18 + strconv.FormatInt(int64(this.Hour), 10))
+	return this.paddedHour, nil
+}
+func (this *DosDatetime_Time) PaddedMinute() (v string, err error) {
+	if (this._f_paddedMinute) {
+		return this.paddedMinute, nil
+	}
+	this._f_paddedMinute = true
+	var tmp19 string;
+	if (this.Minute <= 9) {
+		tmp19 = "0"
+	} else {
+		tmp19 = ""
+	}
+	this.paddedMinute = string(tmp19 + strconv.FormatInt(int64(this.Minute), 10))
+	return this.paddedMinute, nil
+}
+func (this *DosDatetime_Time) PaddedSecond() (v string, err error) {
+	if (this._f_paddedSecond) {
+		return this.paddedSecond, nil
+	}
+	this._f_paddedSecond = true
+	var tmp20 string;
+	tmp21, err := this.Second()
 	if err != nil {
 		return "", err
 	}
-	if (tmp17 <= 999) {
-		var tmp18 string;
-		tmp19, err := this.Year()
-		if err != nil {
-			return "", err
-		}
-		if (tmp19 <= 99) {
-			var tmp20 string;
-			tmp21, err := this.Year()
-			if err != nil {
-				return "", err
-			}
-			if (tmp21 <= 9) {
-				tmp20 = "0"
-			} else {
-				tmp20 = ""
-			}
-			tmp18 = "0" + tmp20
-		} else {
-			tmp18 = ""
-		}
-		tmp16 = "0" + tmp18
+	if (tmp21 <= 9) {
+		tmp20 = "0"
 	} else {
-		tmp16 = ""
+		tmp20 = ""
 	}
-	tmp22, err := this.Year()
+	tmp22, err := this.Second()
 	if err != nil {
 		return "", err
 	}
-	this.paddedYear = string(tmp16 + strconv.FormatInt(int64(tmp22), 10))
-	this._f_paddedYear = true
-	return this.paddedYear, nil
+	this.paddedSecond = string(tmp20 + strconv.FormatInt(int64(tmp22), 10))
+	return this.paddedSecond, nil
+}
+func (this *DosDatetime_Time) Second() (v int, err error) {
+	if (this._f_second) {
+		return this.second, nil
+	}
+	this._f_second = true
+	this.second = int(2 * this.SecondDiv2)
+	return this.second, nil
 }

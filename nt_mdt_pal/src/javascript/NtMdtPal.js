@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.NtMdtPal = factory(root.KaitaiStream);
+    factory(root.NtMdtPal || (root.NtMdtPal = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (NtMdtPal_, KaitaiStream) {
 /**
  * It is a color scheme for visualising SPM scans.
  */
@@ -23,8 +23,8 @@ var NtMdtPal = (function() {
   }
   NtMdtPal.prototype._read = function() {
     this.signature = this._io.readBytes(26);
-    if (!((KaitaiStream.byteArrayCompare(this.signature, [78, 84, 45, 77, 68, 84, 32, 80, 97, 108, 101, 116, 116, 101, 32, 70, 105, 108, 101, 32, 32, 49, 46, 48, 48, 33]) == 0))) {
-      throw new KaitaiStream.ValidationNotEqualError([78, 84, 45, 77, 68, 84, 32, 80, 97, 108, 101, 116, 116, 101, 32, 70, 105, 108, 101, 32, 32, 49, 46, 48, 48, 33], this.signature, this._io, "/seq/0");
+    if (!((KaitaiStream.byteArrayCompare(this.signature, new Uint8Array([78, 84, 45, 77, 68, 84, 32, 80, 97, 108, 101, 116, 116, 101, 32, 70, 105, 108, 101, 32, 32, 49, 46, 48, 48, 33])) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([78, 84, 45, 77, 68, 84, 32, 80, 97, 108, 101, 116, 116, 101, 32, 70, 105, 108, 101, 32, 32, 49, 46, 48, 48, 33]), this.signature, this._io, "/seq/0");
     }
     this.count = this._io.readU4be();
     this.meta = [];
@@ -38,11 +38,52 @@ var NtMdtPal = (function() {
     }
   }
 
+  var ColTable = NtMdtPal.ColTable = (function() {
+    function ColTable(_io, _parent, _root, index) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+      this.index = index;
+
+      this._read();
+    }
+    ColTable.prototype._read = function() {
+      this.size1 = this._io.readU1();
+      this.unkn = this._io.readU1();
+      this.title = KaitaiStream.bytesToStr(this._io.readBytes(this._root.meta[this.index].nameSize), "UTF-16LE");
+      this.unkn1 = this._io.readU2be();
+      this.colors = [];
+      for (var i = 0; i < this._root.meta[this.index].colorsCount - 1; i++) {
+        this.colors.push(new Color(this._io, this, this._root));
+      }
+    }
+
+    return ColTable;
+  })();
+
+  var Color = NtMdtPal.Color = (function() {
+    function Color(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Color.prototype._read = function() {
+      this.red = this._io.readU1();
+      this.unkn = this._io.readU1();
+      this.blue = this._io.readU1();
+      this.green = this._io.readU1();
+    }
+
+    return Color;
+  })();
+
   var Meta = NtMdtPal.Meta = (function() {
     function Meta(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -81,48 +122,7 @@ var NtMdtPal = (function() {
     return Meta;
   })();
 
-  var Color = NtMdtPal.Color = (function() {
-    function Color(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Color.prototype._read = function() {
-      this.red = this._io.readU1();
-      this.unkn = this._io.readU1();
-      this.blue = this._io.readU1();
-      this.green = this._io.readU1();
-    }
-
-    return Color;
-  })();
-
-  var ColTable = NtMdtPal.ColTable = (function() {
-    function ColTable(_io, _parent, _root, index) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-      this.index = index;
-
-      this._read();
-    }
-    ColTable.prototype._read = function() {
-      this.size1 = this._io.readU1();
-      this.unkn = this._io.readU1();
-      this.title = KaitaiStream.bytesToStr(this._io.readBytes(this._root.meta[this.index].nameSize), "UTF-16LE");
-      this.unkn1 = this._io.readU2be();
-      this.colors = [];
-      for (var i = 0; i < (this._root.meta[this.index].colorsCount - 1); i++) {
-        this.colors.push(new Color(this._io, this, this._root));
-      }
-    }
-
-    return ColTable;
-  })();
-
   return NtMdtPal;
 })();
-return NtMdtPal;
-}));
+NtMdtPal_.NtMdtPal = NtMdtPal;
+});

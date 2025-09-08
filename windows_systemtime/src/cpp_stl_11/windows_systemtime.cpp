@@ -4,7 +4,7 @@
 
 windows_systemtime_t::windows_systemtime_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, windows_systemtime_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     _read();
 }
 

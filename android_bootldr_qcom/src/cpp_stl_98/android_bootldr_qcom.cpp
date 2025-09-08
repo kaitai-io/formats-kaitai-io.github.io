@@ -5,7 +5,7 @@
 
 android_bootldr_qcom_t::android_bootldr_qcom_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, android_bootldr_qcom_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     m_img_headers = 0;
     m_img_bodies = 0;
     f_img_bodies = false;
@@ -20,8 +20,8 @@ android_bootldr_qcom_t::android_bootldr_qcom_t(kaitai::kstream* p__io, kaitai::k
 
 void android_bootldr_qcom_t::_read() {
     m_magic = m__io->read_bytes(8);
-    if (!(magic() == std::string("\x42\x4F\x4F\x54\x4C\x44\x52\x21", 8))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\x42\x4F\x4F\x54\x4C\x44\x52\x21", 8), magic(), _io(), std::string("/seq/0"));
+    if (!(m_magic == std::string("\x42\x4F\x4F\x54\x4C\x44\x52\x21", 8))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\x42\x4F\x4F\x54\x4C\x44\x52\x21", 8), m_magic, m__io, std::string("/seq/0"));
     }
     m_num_images = m__io->read_u4le();
     m_ofs_img_bodies = m__io->read_u4le();
@@ -54,30 +54,6 @@ void android_bootldr_qcom_t::_clean_up() {
     }
 }
 
-android_bootldr_qcom_t::img_header_t::img_header_t(kaitai::kstream* p__io, android_bootldr_qcom_t* p__parent, android_bootldr_qcom_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void android_bootldr_qcom_t::img_header_t::_read() {
-    m_name = kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_terminate(m__io->read_bytes(64), 0, false), std::string("ASCII"));
-    m_len_body = m__io->read_u4le();
-}
-
-android_bootldr_qcom_t::img_header_t::~img_header_t() {
-    _clean_up();
-}
-
-void android_bootldr_qcom_t::img_header_t::_clean_up() {
-}
-
 android_bootldr_qcom_t::img_body_t::img_body_t(int32_t p_idx, kaitai::kstream* p__io, android_bootldr_qcom_t* p__parent, android_bootldr_qcom_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
@@ -106,14 +82,39 @@ void android_bootldr_qcom_t::img_body_t::_clean_up() {
 android_bootldr_qcom_t::img_header_t* android_bootldr_qcom_t::img_body_t::img_header() {
     if (f_img_header)
         return m_img_header;
-    m_img_header = _root()->img_headers()->at(idx());
     f_img_header = true;
+    m_img_header = _root()->img_headers()->at(idx());
     return m_img_header;
+}
+
+android_bootldr_qcom_t::img_header_t::img_header_t(kaitai::kstream* p__io, android_bootldr_qcom_t* p__parent, android_bootldr_qcom_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void android_bootldr_qcom_t::img_header_t::_read() {
+    m_name = kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_terminate(m__io->read_bytes(64), 0, false), "ASCII");
+    m_len_body = m__io->read_u4le();
+}
+
+android_bootldr_qcom_t::img_header_t::~img_header_t() {
+    _clean_up();
+}
+
+void android_bootldr_qcom_t::img_header_t::_clean_up() {
 }
 
 std::vector<android_bootldr_qcom_t::img_body_t*>* android_bootldr_qcom_t::img_bodies() {
     if (f_img_bodies)
         return m_img_bodies;
+    f_img_bodies = true;
     std::streampos _pos = m__io->pos();
     m__io->seek(ofs_img_bodies());
     m_img_bodies = new std::vector<img_body_t*>();
@@ -122,6 +123,5 @@ std::vector<android_bootldr_qcom_t::img_body_t*>* android_bootldr_qcom_t::img_bo
         m_img_bodies->push_back(new img_body_t(i, m__io, this, m__root));
     }
     m__io->seek(_pos);
-    f_img_bodies = true;
     return m_img_bodies;
 }

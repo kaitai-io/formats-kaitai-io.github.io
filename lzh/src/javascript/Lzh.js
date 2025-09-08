@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream', './DosDatetime'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./DosDatetime'));
+    define(['exports', 'kaitai-struct/KaitaiStream', './DosDatetime'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'), require('./DosDatetime'));
   } else {
-    root.Lzh = factory(root.KaitaiStream, root.DosDatetime);
+    factory(root.Lzh || (root.Lzh = {}), root.KaitaiStream, root.DosDatetime || (root.DosDatetime = {}));
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, DosDatetime) {
+})(typeof self !== 'undefined' ? self : this, function (Lzh_, KaitaiStream, DosDatetime_) {
 /**
  * LHA (LHarc, LZH) is a file format used by a popular freeware
  * eponymous archiver, created in 1988 by Haruyasu Yoshizaki. Over the
@@ -36,34 +36,16 @@ var Lzh = (function() {
     }
   }
 
-  var Record = Lzh.Record = (function() {
-    function Record(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Record.prototype._read = function() {
-      this.headerLen = this._io.readU1();
-      if (this.headerLen > 0) {
-        this.fileRecord = new FileRecord(this._io, this, this._root);
-      }
-    }
-
-    return Record;
-  })();
-
   var FileRecord = Lzh.FileRecord = (function() {
     function FileRecord(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     FileRecord.prototype._read = function() {
-      this._raw_header = this._io.readBytes((this._parent.headerLen - 1));
+      this._raw_header = this._io.readBytes(this._parent.headerLen - 1);
       var _io__raw_header = new KaitaiStream(this._raw_header);
       this.header = new Header(_io__raw_header, this, this._root);
       if (this.header.header1.lhaLevel == 0) {
@@ -79,7 +61,7 @@ var Lzh = (function() {
     function Header(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -113,7 +95,7 @@ var Lzh = (function() {
     function Header1(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -124,7 +106,7 @@ var Lzh = (function() {
       this.fileSizeUncompr = this._io.readU4le();
       this._raw_fileTimestamp = this._io.readBytes(4);
       var _io__raw_fileTimestamp = new KaitaiStream(this._raw_fileTimestamp);
-      this.fileTimestamp = new DosDatetime(_io__raw_fileTimestamp, this, null);
+      this.fileTimestamp = new DosDatetime_.DosDatetime(_io__raw_fileTimestamp, null, null);
       this.attr = this._io.readU1();
       this.lhaLevel = this._io.readU1();
     }
@@ -148,7 +130,25 @@ var Lzh = (function() {
     return Header1;
   })();
 
+  var Record = Lzh.Record = (function() {
+    function Record(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Record.prototype._read = function() {
+      this.headerLen = this._io.readU1();
+      if (this.headerLen > 0) {
+        this.fileRecord = new FileRecord(this._io, this, this._root);
+      }
+    }
+
+    return Record;
+  })();
+
   return Lzh;
 })();
-return Lzh;
-}));
+Lzh_.Lzh = Lzh;
+});

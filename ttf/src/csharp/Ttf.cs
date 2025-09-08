@@ -35,14 +35,18 @@ namespace Kaitai
                 _directoryTable.Add(new DirTableEntry(m_io, this, m_root));
             }
         }
-        public partial class Post : KaitaiStruct
+
+        /// <summary>
+        /// cmap - Character To Glyph Index Mapping Table This table defines the mapping of character codes to the glyph index values used in the font.
+        /// </summary>
+        public partial class Cmap : KaitaiStruct
         {
-            public static Post FromFile(string fileName)
+            public static Cmap FromFile(string fileName)
             {
-                return new Post(new KaitaiStream(fileName));
+                return new Cmap(new KaitaiStream(fileName));
             }
 
-            public Post(KaitaiStream p__io, Ttf.DirTableEntry p__parent = null, Ttf p__root = null) : base(p__io)
+            public Cmap(KaitaiStream p__io, Ttf.DirTableEntry p__parent = null, Ttf p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -50,27 +54,30 @@ namespace Kaitai
             }
             private void _read()
             {
-                _format = new Fixed(m_io, this, m_root);
-                _italicAngle = new Fixed(m_io, this, m_root);
-                _underlinePosition = m_io.ReadS2be();
-                _underlineThichness = m_io.ReadS2be();
-                _isFixedPitch = m_io.ReadU4be();
-                _minMemType42 = m_io.ReadU4be();
-                _maxMemType42 = m_io.ReadU4be();
-                _minMemType1 = m_io.ReadU4be();
-                _maxMemType1 = m_io.ReadU4be();
-                if ( ((Format.Major == 2) && (Format.Minor == 0)) ) {
-                    _format20 = new Format20(m_io, this, m_root);
+                _versionNumber = m_io.ReadU2be();
+                _numberOfEncodingTables = m_io.ReadU2be();
+                _tables = new List<SubtableHeader>();
+                for (var i = 0; i < NumberOfEncodingTables; i++)
+                {
+                    _tables.Add(new SubtableHeader(m_io, this, m_root));
                 }
             }
-            public partial class Format20 : KaitaiStruct
+            public partial class Subtable : KaitaiStruct
             {
-                public static Format20 FromFile(string fileName)
+                public static Subtable FromFile(string fileName)
                 {
-                    return new Format20(new KaitaiStream(fileName));
+                    return new Subtable(new KaitaiStream(fileName));
                 }
 
-                public Format20(KaitaiStream p__io, Ttf.Post p__parent = null, Ttf p__root = null) : base(p__io)
+
+                public enum SubtableFormat
+                {
+                    ByteEncodingTable = 0,
+                    HighByteMappingThroughTable = 2,
+                    SegmentMappingToDeltaValues = 4,
+                    TrimmedTableMapping = 6,
+                }
+                public Subtable(KaitaiStream p__io, Ttf.Cmap.SubtableHeader p__parent = null, Ttf p__root = null) : base(p__io)
                 {
                     m_parent = p__parent;
                     m_root = p__root;
@@ -78,31 +85,48 @@ namespace Kaitai
                 }
                 private void _read()
                 {
-                    _numberOfGlyphs = m_io.ReadU2be();
-                    _glyphNameIndex = new List<ushort>();
-                    for (var i = 0; i < NumberOfGlyphs; i++)
-                    {
-                        _glyphNameIndex.Add(m_io.ReadU2be());
+                    _format = ((SubtableFormat) m_io.ReadU2be());
+                    _length = m_io.ReadU2be();
+                    _version = m_io.ReadU2be();
+                    switch (Format) {
+                    case SubtableFormat.ByteEncodingTable: {
+                        __raw_value = m_io.ReadBytes(Length - 6);
+                        var io___raw_value = new KaitaiStream(__raw_value);
+                        _value = new ByteEncodingTable(io___raw_value, this, m_root);
+                        break;
                     }
-                    _glyphNames = new List<PascalString>();
-                    {
-                        var i = 0;
-                        PascalString M_;
-                        do {
-                            M_ = new PascalString(m_io, this, m_root);
-                            _glyphNames.Add(M_);
-                            i++;
-                        } while (!( ((M_.Length == 0) || (M_Io.IsEof)) ));
+                    case SubtableFormat.HighByteMappingThroughTable: {
+                        __raw_value = m_io.ReadBytes(Length - 6);
+                        var io___raw_value = new KaitaiStream(__raw_value);
+                        _value = new HighByteMappingThroughTable(io___raw_value, this, m_root);
+                        break;
+                    }
+                    case SubtableFormat.SegmentMappingToDeltaValues: {
+                        __raw_value = m_io.ReadBytes(Length - 6);
+                        var io___raw_value = new KaitaiStream(__raw_value);
+                        _value = new SegmentMappingToDeltaValues(io___raw_value, this, m_root);
+                        break;
+                    }
+                    case SubtableFormat.TrimmedTableMapping: {
+                        __raw_value = m_io.ReadBytes(Length - 6);
+                        var io___raw_value = new KaitaiStream(__raw_value);
+                        _value = new TrimmedTableMapping(io___raw_value, this, m_root);
+                        break;
+                    }
+                    default: {
+                        _value = m_io.ReadBytes(Length - 6);
+                        break;
+                    }
                     }
                 }
-                public partial class PascalString : KaitaiStruct
+                public partial class ByteEncodingTable : KaitaiStruct
                 {
-                    public static PascalString FromFile(string fileName)
+                    public static ByteEncodingTable FromFile(string fileName)
                     {
-                        return new PascalString(new KaitaiStream(fileName));
+                        return new ByteEncodingTable(new KaitaiStream(fileName));
                     }
 
-                    public PascalString(KaitaiStream p__io, Ttf.Post.Format20 p__parent = null, Ttf p__root = null) : base(p__io)
+                    public ByteEncodingTable(KaitaiStream p__io, Ttf.Cmap.Subtable p__parent = null, Ttf p__root = null) : base(p__io)
                     {
                         m_parent = p__parent;
                         m_root = p__root;
@@ -110,108 +134,251 @@ namespace Kaitai
                     }
                     private void _read()
                     {
-                        _length = m_io.ReadU1();
-                        if (Length != 0) {
-                            _value = System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytes(Length));
+                        _glyphIdArray = m_io.ReadBytes(256);
+                    }
+                    private byte[] _glyphIdArray;
+                    private Ttf m_root;
+                    private Ttf.Cmap.Subtable m_parent;
+                    public byte[] GlyphIdArray { get { return _glyphIdArray; } }
+                    public Ttf M_Root { get { return m_root; } }
+                    public Ttf.Cmap.Subtable M_Parent { get { return m_parent; } }
+                }
+                public partial class HighByteMappingThroughTable : KaitaiStruct
+                {
+                    public static HighByteMappingThroughTable FromFile(string fileName)
+                    {
+                        return new HighByteMappingThroughTable(new KaitaiStream(fileName));
+                    }
+
+                    public HighByteMappingThroughTable(KaitaiStream p__io, Ttf.Cmap.Subtable p__parent = null, Ttf p__root = null) : base(p__io)
+                    {
+                        m_parent = p__parent;
+                        m_root = p__root;
+                        _read();
+                    }
+                    private void _read()
+                    {
+                        _subHeaderKeys = new List<ushort>();
+                        for (var i = 0; i < 256; i++)
+                        {
+                            _subHeaderKeys.Add(m_io.ReadU2be());
                         }
                     }
-                    private byte _length;
-                    private string _value;
+                    private List<ushort> _subHeaderKeys;
                     private Ttf m_root;
-                    private Ttf.Post.Format20 m_parent;
-                    public byte Length { get { return _length; } }
-                    public string Value { get { return _value; } }
+                    private Ttf.Cmap.Subtable m_parent;
+                    public List<ushort> SubHeaderKeys { get { return _subHeaderKeys; } }
                     public Ttf M_Root { get { return m_root; } }
-                    public Ttf.Post.Format20 M_Parent { get { return m_parent; } }
+                    public Ttf.Cmap.Subtable M_Parent { get { return m_parent; } }
                 }
-                private ushort _numberOfGlyphs;
-                private List<ushort> _glyphNameIndex;
-                private List<PascalString> _glyphNames;
+                public partial class SegmentMappingToDeltaValues : KaitaiStruct
+                {
+                    public static SegmentMappingToDeltaValues FromFile(string fileName)
+                    {
+                        return new SegmentMappingToDeltaValues(new KaitaiStream(fileName));
+                    }
+
+                    public SegmentMappingToDeltaValues(KaitaiStream p__io, Ttf.Cmap.Subtable p__parent = null, Ttf p__root = null) : base(p__io)
+                    {
+                        m_parent = p__parent;
+                        m_root = p__root;
+                        f_segCount = false;
+                        _read();
+                    }
+                    private void _read()
+                    {
+                        _segCountX2 = m_io.ReadU2be();
+                        _searchRange = m_io.ReadU2be();
+                        _entrySelector = m_io.ReadU2be();
+                        _rangeShift = m_io.ReadU2be();
+                        _endCount = new List<ushort>();
+                        for (var i = 0; i < SegCount; i++)
+                        {
+                            _endCount.Add(m_io.ReadU2be());
+                        }
+                        _reservedPad = m_io.ReadU2be();
+                        _startCount = new List<ushort>();
+                        for (var i = 0; i < SegCount; i++)
+                        {
+                            _startCount.Add(m_io.ReadU2be());
+                        }
+                        _idDelta = new List<ushort>();
+                        for (var i = 0; i < SegCount; i++)
+                        {
+                            _idDelta.Add(m_io.ReadU2be());
+                        }
+                        _idRangeOffset = new List<ushort>();
+                        for (var i = 0; i < SegCount; i++)
+                        {
+                            _idRangeOffset.Add(m_io.ReadU2be());
+                        }
+                        _glyphIdArray = new List<ushort>();
+                        {
+                            var i = 0;
+                            while (!m_io.IsEof) {
+                                _glyphIdArray.Add(m_io.ReadU2be());
+                                i++;
+                            }
+                        }
+                    }
+                    private bool f_segCount;
+                    private int _segCount;
+                    public int SegCount
+                    {
+                        get
+                        {
+                            if (f_segCount)
+                                return _segCount;
+                            f_segCount = true;
+                            _segCount = (int) (SegCountX2 / 2);
+                            return _segCount;
+                        }
+                    }
+                    private ushort _segCountX2;
+                    private ushort _searchRange;
+                    private ushort _entrySelector;
+                    private ushort _rangeShift;
+                    private List<ushort> _endCount;
+                    private ushort _reservedPad;
+                    private List<ushort> _startCount;
+                    private List<ushort> _idDelta;
+                    private List<ushort> _idRangeOffset;
+                    private List<ushort> _glyphIdArray;
+                    private Ttf m_root;
+                    private Ttf.Cmap.Subtable m_parent;
+                    public ushort SegCountX2 { get { return _segCountX2; } }
+                    public ushort SearchRange { get { return _searchRange; } }
+                    public ushort EntrySelector { get { return _entrySelector; } }
+                    public ushort RangeShift { get { return _rangeShift; } }
+                    public List<ushort> EndCount { get { return _endCount; } }
+                    public ushort ReservedPad { get { return _reservedPad; } }
+                    public List<ushort> StartCount { get { return _startCount; } }
+                    public List<ushort> IdDelta { get { return _idDelta; } }
+                    public List<ushort> IdRangeOffset { get { return _idRangeOffset; } }
+                    public List<ushort> GlyphIdArray { get { return _glyphIdArray; } }
+                    public Ttf M_Root { get { return m_root; } }
+                    public Ttf.Cmap.Subtable M_Parent { get { return m_parent; } }
+                }
+                public partial class TrimmedTableMapping : KaitaiStruct
+                {
+                    public static TrimmedTableMapping FromFile(string fileName)
+                    {
+                        return new TrimmedTableMapping(new KaitaiStream(fileName));
+                    }
+
+                    public TrimmedTableMapping(KaitaiStream p__io, Ttf.Cmap.Subtable p__parent = null, Ttf p__root = null) : base(p__io)
+                    {
+                        m_parent = p__parent;
+                        m_root = p__root;
+                        _read();
+                    }
+                    private void _read()
+                    {
+                        _firstCode = m_io.ReadU2be();
+                        _entryCount = m_io.ReadU2be();
+                        _glyphIdArray = new List<ushort>();
+                        for (var i = 0; i < EntryCount; i++)
+                        {
+                            _glyphIdArray.Add(m_io.ReadU2be());
+                        }
+                    }
+                    private ushort _firstCode;
+                    private ushort _entryCount;
+                    private List<ushort> _glyphIdArray;
+                    private Ttf m_root;
+                    private Ttf.Cmap.Subtable m_parent;
+                    public ushort FirstCode { get { return _firstCode; } }
+                    public ushort EntryCount { get { return _entryCount; } }
+                    public List<ushort> GlyphIdArray { get { return _glyphIdArray; } }
+                    public Ttf M_Root { get { return m_root; } }
+                    public Ttf.Cmap.Subtable M_Parent { get { return m_parent; } }
+                }
+                private SubtableFormat _format;
+                private ushort _length;
+                private ushort _version;
+                private object _value;
                 private Ttf m_root;
-                private Ttf.Post m_parent;
-                public ushort NumberOfGlyphs { get { return _numberOfGlyphs; } }
-                public List<ushort> GlyphNameIndex { get { return _glyphNameIndex; } }
-                public List<PascalString> GlyphNames { get { return _glyphNames; } }
+                private Ttf.Cmap.SubtableHeader m_parent;
+                private byte[] __raw_value;
+                public SubtableFormat Format { get { return _format; } }
+                public ushort Length { get { return _length; } }
+                public ushort Version { get { return _version; } }
+                public object Value { get { return _value; } }
                 public Ttf M_Root { get { return m_root; } }
-                public Ttf.Post M_Parent { get { return m_parent; } }
+                public Ttf.Cmap.SubtableHeader M_Parent { get { return m_parent; } }
+                public byte[] M_RawValue { get { return __raw_value; } }
             }
-            private Fixed _format;
-            private Fixed _italicAngle;
-            private short _underlinePosition;
-            private short _underlineThichness;
-            private uint _isFixedPitch;
-            private uint _minMemType42;
-            private uint _maxMemType42;
-            private uint _minMemType1;
-            private uint _maxMemType1;
-            private Format20 _format20;
+            public partial class SubtableHeader : KaitaiStruct
+            {
+                public static SubtableHeader FromFile(string fileName)
+                {
+                    return new SubtableHeader(new KaitaiStream(fileName));
+                }
+
+                public SubtableHeader(KaitaiStream p__io, Ttf.Cmap p__parent = null, Ttf p__root = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    f_table = false;
+                    _read();
+                }
+                private void _read()
+                {
+                    _platformId = m_io.ReadU2be();
+                    _encodingId = m_io.ReadU2be();
+                    _subtableOffset = m_io.ReadU4be();
+                }
+                private bool f_table;
+                private Subtable _table;
+                public Subtable Table
+                {
+                    get
+                    {
+                        if (f_table)
+                            return _table;
+                        f_table = true;
+                        KaitaiStream io = M_Parent.M_Io;
+                        long _pos = io.Pos;
+                        io.Seek(SubtableOffset);
+                        _table = new Subtable(io, this, m_root);
+                        io.Seek(_pos);
+                        return _table;
+                    }
+                }
+                private ushort _platformId;
+                private ushort _encodingId;
+                private uint _subtableOffset;
+                private Ttf m_root;
+                private Ttf.Cmap m_parent;
+                public ushort PlatformId { get { return _platformId; } }
+                public ushort EncodingId { get { return _encodingId; } }
+                public uint SubtableOffset { get { return _subtableOffset; } }
+                public Ttf M_Root { get { return m_root; } }
+                public Ttf.Cmap M_Parent { get { return m_parent; } }
+            }
+            private ushort _versionNumber;
+            private ushort _numberOfEncodingTables;
+            private List<SubtableHeader> _tables;
             private Ttf m_root;
             private Ttf.DirTableEntry m_parent;
-            public Fixed Format { get { return _format; } }
-            public Fixed ItalicAngle { get { return _italicAngle; } }
-            public short UnderlinePosition { get { return _underlinePosition; } }
-            public short UnderlineThichness { get { return _underlineThichness; } }
-            public uint IsFixedPitch { get { return _isFixedPitch; } }
-            public uint MinMemType42 { get { return _minMemType42; } }
-            public uint MaxMemType42 { get { return _maxMemType42; } }
-            public uint MinMemType1 { get { return _minMemType1; } }
-            public uint MaxMemType1 { get { return _maxMemType1; } }
-            public Format20 Format20 { get { return _format20; } }
+            public ushort VersionNumber { get { return _versionNumber; } }
+            public ushort NumberOfEncodingTables { get { return _numberOfEncodingTables; } }
+            public List<SubtableHeader> Tables { get { return _tables; } }
             public Ttf M_Root { get { return m_root; } }
             public Ttf.DirTableEntry M_Parent { get { return m_parent; } }
         }
 
         /// <summary>
-        /// Name table is meant to include human-readable string metadata
-        /// that describes font: name of the font, its styles, copyright &amp;
-        /// trademark notices, vendor and designer info, etc.
-        /// 
-        /// The table includes a list of &quot;name records&quot;, each of which
-        /// corresponds to a single metadata entry.
+        /// cvt  - Control Value Table This table contains a list of values that can be referenced by instructions. They can be used, among other things, to control characteristics for different glyphs.
         /// </summary>
-        /// <remarks>
-        /// Reference: <a href="https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6name.html">Source</a>
-        /// </remarks>
-        public partial class Name : KaitaiStruct
+        public partial class Cvt : KaitaiStruct
         {
-            public static Name FromFile(string fileName)
+            public static Cvt FromFile(string fileName)
             {
-                return new Name(new KaitaiStream(fileName));
+                return new Cvt(new KaitaiStream(fileName));
             }
 
-
-            public enum Platforms
-            {
-                Unicode = 0,
-                Macintosh = 1,
-                Reserved2 = 2,
-                Microsoft = 3,
-            }
-
-            public enum Names
-            {
-                Copyright = 0,
-                FontFamily = 1,
-                FontSubfamily = 2,
-                UniqueSubfamilyId = 3,
-                FullFontName = 4,
-                NameTableVersion = 5,
-                PostscriptFontName = 6,
-                Trademark = 7,
-                Manufacturer = 8,
-                Designer = 9,
-                Description = 10,
-                UrlVendor = 11,
-                UrlDesigner = 12,
-                License = 13,
-                UrlLicense = 14,
-                Reserved15 = 15,
-                PreferredFamily = 16,
-                PreferredSubfamily = 17,
-                CompatibleFullName = 18,
-                SampleText = 19,
-            }
-            public Name(KaitaiStream p__io, Ttf.DirTableEntry p__parent = null, Ttf p__root = null) : base(p__io)
+            public Cvt(KaitaiStream p__io, Ttf.DirTableEntry p__parent = null, Ttf p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -219,100 +386,344 @@ namespace Kaitai
             }
             private void _read()
             {
-                _formatSelector = m_io.ReadU2be();
-                _numNameRecords = m_io.ReadU2be();
-                _ofsStrings = m_io.ReadU2be();
-                _nameRecords = new List<NameRecord>();
-                for (var i = 0; i < NumNameRecords; i++)
+                _fwords = new List<short>();
                 {
-                    _nameRecords.Add(new NameRecord(m_io, this, m_root));
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _fwords.Add(m_io.ReadS2be());
+                        i++;
+                    }
                 }
             }
-            public partial class NameRecord : KaitaiStruct
+            private List<short> _fwords;
+            private Ttf m_root;
+            private Ttf.DirTableEntry m_parent;
+            public List<short> Fwords { get { return _fwords; } }
+            public Ttf M_Root { get { return m_root; } }
+            public Ttf.DirTableEntry M_Parent { get { return m_parent; } }
+        }
+        public partial class DirTableEntry : KaitaiStruct
+        {
+            public static DirTableEntry FromFile(string fileName)
             {
-                public static NameRecord FromFile(string fileName)
+                return new DirTableEntry(new KaitaiStream(fileName));
+            }
+
+            public DirTableEntry(KaitaiStream p__io, Ttf p__parent = null, Ttf p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_value = false;
+                _read();
+            }
+            private void _read()
+            {
+                _tag = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(4));
+                _checksum = m_io.ReadU4be();
+                _offset = m_io.ReadU4be();
+                _length = m_io.ReadU4be();
+            }
+            private bool f_value;
+            private object _value;
+            public object Value
+            {
+                get
                 {
-                    return new NameRecord(new KaitaiStream(fileName));
+                    if (f_value)
+                        return _value;
+                    f_value = true;
+                    KaitaiStream io = M_Root.M_Io;
+                    long _pos = io.Pos;
+                    io.Seek(Offset);
+                    switch (Tag) {
+                    case "OS/2": {
+                        __raw_value = io.ReadBytes(Length);
+                        var io___raw_value = new KaitaiStream(__raw_value);
+                        _value = new Os2(io___raw_value, this, m_root);
+                        break;
+                    }
+                    case "cmap": {
+                        __raw_value = io.ReadBytes(Length);
+                        var io___raw_value = new KaitaiStream(__raw_value);
+                        _value = new Cmap(io___raw_value, this, m_root);
+                        break;
+                    }
+                    case "cvt ": {
+                        __raw_value = io.ReadBytes(Length);
+                        var io___raw_value = new KaitaiStream(__raw_value);
+                        _value = new Cvt(io___raw_value, this, m_root);
+                        break;
+                    }
+                    case "fpgm": {
+                        __raw_value = io.ReadBytes(Length);
+                        var io___raw_value = new KaitaiStream(__raw_value);
+                        _value = new Fpgm(io___raw_value, this, m_root);
+                        break;
+                    }
+                    case "glyf": {
+                        __raw_value = io.ReadBytes(Length);
+                        var io___raw_value = new KaitaiStream(__raw_value);
+                        _value = new Glyf(io___raw_value, this, m_root);
+                        break;
+                    }
+                    case "head": {
+                        __raw_value = io.ReadBytes(Length);
+                        var io___raw_value = new KaitaiStream(__raw_value);
+                        _value = new Head(io___raw_value, this, m_root);
+                        break;
+                    }
+                    case "hhea": {
+                        __raw_value = io.ReadBytes(Length);
+                        var io___raw_value = new KaitaiStream(__raw_value);
+                        _value = new Hhea(io___raw_value, this, m_root);
+                        break;
+                    }
+                    case "kern": {
+                        __raw_value = io.ReadBytes(Length);
+                        var io___raw_value = new KaitaiStream(__raw_value);
+                        _value = new Kern(io___raw_value, this, m_root);
+                        break;
+                    }
+                    case "maxp": {
+                        __raw_value = io.ReadBytes(Length);
+                        var io___raw_value = new KaitaiStream(__raw_value);
+                        _value = new Maxp(io___raw_value, this, m_root);
+                        break;
+                    }
+                    case "name": {
+                        __raw_value = io.ReadBytes(Length);
+                        var io___raw_value = new KaitaiStream(__raw_value);
+                        _value = new Name(io___raw_value, this, m_root);
+                        break;
+                    }
+                    case "post": {
+                        __raw_value = io.ReadBytes(Length);
+                        var io___raw_value = new KaitaiStream(__raw_value);
+                        _value = new Post(io___raw_value, this, m_root);
+                        break;
+                    }
+                    case "prep": {
+                        __raw_value = io.ReadBytes(Length);
+                        var io___raw_value = new KaitaiStream(__raw_value);
+                        _value = new Prep(io___raw_value, this, m_root);
+                        break;
+                    }
+                    default: {
+                        _value = io.ReadBytes(Length);
+                        break;
+                    }
+                    }
+                    io.Seek(_pos);
+                    return _value;
+                }
+            }
+            private string _tag;
+            private uint _checksum;
+            private uint _offset;
+            private uint _length;
+            private Ttf m_root;
+            private Ttf m_parent;
+            private byte[] __raw_value;
+            public string Tag { get { return _tag; } }
+            public uint Checksum { get { return _checksum; } }
+            public uint Offset { get { return _offset; } }
+            public uint Length { get { return _length; } }
+            public Ttf M_Root { get { return m_root; } }
+            public Ttf M_Parent { get { return m_parent; } }
+            public byte[] M_RawValue { get { return __raw_value; } }
+        }
+        public partial class Fixed : KaitaiStruct
+        {
+            public static Fixed FromFile(string fileName)
+            {
+                return new Fixed(new KaitaiStream(fileName));
+            }
+
+            public Fixed(KaitaiStream p__io, KaitaiStruct p__parent = null, Ttf p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _major = m_io.ReadU2be();
+                _minor = m_io.ReadU2be();
+            }
+            private ushort _major;
+            private ushort _minor;
+            private Ttf m_root;
+            private KaitaiStruct m_parent;
+            public ushort Major { get { return _major; } }
+            public ushort Minor { get { return _minor; } }
+            public Ttf M_Root { get { return m_root; } }
+            public KaitaiStruct M_Parent { get { return m_parent; } }
+        }
+        public partial class Fpgm : KaitaiStruct
+        {
+            public static Fpgm FromFile(string fileName)
+            {
+                return new Fpgm(new KaitaiStream(fileName));
+            }
+
+            public Fpgm(KaitaiStream p__io, Ttf.DirTableEntry p__parent = null, Ttf p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _instructions = m_io.ReadBytesFull();
+            }
+            private byte[] _instructions;
+            private Ttf m_root;
+            private Ttf.DirTableEntry m_parent;
+            public byte[] Instructions { get { return _instructions; } }
+            public Ttf M_Root { get { return m_root; } }
+            public Ttf.DirTableEntry M_Parent { get { return m_parent; } }
+        }
+        public partial class Glyf : KaitaiStruct
+        {
+            public static Glyf FromFile(string fileName)
+            {
+                return new Glyf(new KaitaiStream(fileName));
+            }
+
+            public Glyf(KaitaiStream p__io, Ttf.DirTableEntry p__parent = null, Ttf p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _numberOfContours = m_io.ReadS2be();
+                _xMin = m_io.ReadS2be();
+                _yMin = m_io.ReadS2be();
+                _xMax = m_io.ReadS2be();
+                _yMax = m_io.ReadS2be();
+                if (NumberOfContours > 0) {
+                    _value = new SimpleGlyph(m_io, this, m_root);
+                }
+            }
+            public partial class SimpleGlyph : KaitaiStruct
+            {
+                public static SimpleGlyph FromFile(string fileName)
+                {
+                    return new SimpleGlyph(new KaitaiStream(fileName));
                 }
 
-                public NameRecord(KaitaiStream p__io, Ttf.Name p__parent = null, Ttf p__root = null) : base(p__io)
+                public SimpleGlyph(KaitaiStream p__io, Ttf.Glyf p__parent = null, Ttf p__root = null) : base(p__io)
                 {
                     m_parent = p__parent;
                     m_root = p__root;
-                    f_asciiValue = false;
-                    f_unicodeValue = false;
+                    f_pointCount = false;
                     _read();
                 }
                 private void _read()
                 {
-                    _platformId = ((Ttf.Name.Platforms) m_io.ReadU2be());
-                    _encodingId = m_io.ReadU2be();
-                    _languageId = m_io.ReadU2be();
-                    _nameId = ((Ttf.Name.Names) m_io.ReadU2be());
-                    _lenStr = m_io.ReadU2be();
-                    _ofsStr = m_io.ReadU2be();
+                    _endPtsOfContours = new List<ushort>();
+                    for (var i = 0; i < M_Parent.NumberOfContours; i++)
+                    {
+                        _endPtsOfContours.Add(m_io.ReadU2be());
+                    }
+                    _instructionLength = m_io.ReadU2be();
+                    _instructions = m_io.ReadBytes(InstructionLength);
+                    _flags = new List<Flag>();
+                    for (var i = 0; i < PointCount; i++)
+                    {
+                        _flags.Add(new Flag(m_io, this, m_root));
+                    }
                 }
-                private bool f_asciiValue;
-                private string _asciiValue;
-                public string AsciiValue
+                public partial class Flag : KaitaiStruct
+                {
+                    public static Flag FromFile(string fileName)
+                    {
+                        return new Flag(new KaitaiStream(fileName));
+                    }
+
+                    public Flag(KaitaiStream p__io, Ttf.Glyf.SimpleGlyph p__parent = null, Ttf p__root = null) : base(p__io)
+                    {
+                        m_parent = p__parent;
+                        m_root = p__root;
+                        _read();
+                    }
+                    private void _read()
+                    {
+                        _reserved = m_io.ReadBitsIntBe(2);
+                        _yIsSame = m_io.ReadBitsIntBe(1) != 0;
+                        _xIsSame = m_io.ReadBitsIntBe(1) != 0;
+                        _repeat = m_io.ReadBitsIntBe(1) != 0;
+                        _yShortVector = m_io.ReadBitsIntBe(1) != 0;
+                        _xShortVector = m_io.ReadBitsIntBe(1) != 0;
+                        _onCurve = m_io.ReadBitsIntBe(1) != 0;
+                        m_io.AlignToByte();
+                        if (Repeat) {
+                            _repeatValue = m_io.ReadU1();
+                        }
+                    }
+                    private ulong _reserved;
+                    private bool _yIsSame;
+                    private bool _xIsSame;
+                    private bool _repeat;
+                    private bool _yShortVector;
+                    private bool _xShortVector;
+                    private bool _onCurve;
+                    private byte? _repeatValue;
+                    private Ttf m_root;
+                    private Ttf.Glyf.SimpleGlyph m_parent;
+                    public ulong Reserved { get { return _reserved; } }
+                    public bool YIsSame { get { return _yIsSame; } }
+                    public bool XIsSame { get { return _xIsSame; } }
+                    public bool Repeat { get { return _repeat; } }
+                    public bool YShortVector { get { return _yShortVector; } }
+                    public bool XShortVector { get { return _xShortVector; } }
+                    public bool OnCurve { get { return _onCurve; } }
+                    public byte? RepeatValue { get { return _repeatValue; } }
+                    public Ttf M_Root { get { return m_root; } }
+                    public Ttf.Glyf.SimpleGlyph M_Parent { get { return m_parent; } }
+                }
+                private bool f_pointCount;
+                private int _pointCount;
+                public int PointCount
                 {
                     get
                     {
-                        if (f_asciiValue)
-                            return _asciiValue;
-                        KaitaiStream io = M_Parent.M_Io;
-                        long _pos = io.Pos;
-                        io.Seek((M_Parent.OfsStrings + OfsStr));
-                        _asciiValue = System.Text.Encoding.GetEncoding("ascii").GetString(io.ReadBytes(LenStr));
-                        io.Seek(_pos);
-                        f_asciiValue = true;
-                        return _asciiValue;
+                        if (f_pointCount)
+                            return _pointCount;
+                        f_pointCount = true;
+                        _pointCount = (int) (EndPtsOfContours.Max() + 1);
+                        return _pointCount;
                     }
                 }
-                private bool f_unicodeValue;
-                private string _unicodeValue;
-                public string UnicodeValue
-                {
-                    get
-                    {
-                        if (f_unicodeValue)
-                            return _unicodeValue;
-                        KaitaiStream io = M_Parent.M_Io;
-                        long _pos = io.Pos;
-                        io.Seek((M_Parent.OfsStrings + OfsStr));
-                        _unicodeValue = System.Text.Encoding.GetEncoding("utf-16be").GetString(io.ReadBytes(LenStr));
-                        io.Seek(_pos);
-                        f_unicodeValue = true;
-                        return _unicodeValue;
-                    }
-                }
-                private Platforms _platformId;
-                private ushort _encodingId;
-                private ushort _languageId;
-                private Names _nameId;
-                private ushort _lenStr;
-                private ushort _ofsStr;
+                private List<ushort> _endPtsOfContours;
+                private ushort _instructionLength;
+                private byte[] _instructions;
+                private List<Flag> _flags;
                 private Ttf m_root;
-                private Ttf.Name m_parent;
-                public Platforms PlatformId { get { return _platformId; } }
-                public ushort EncodingId { get { return _encodingId; } }
-                public ushort LanguageId { get { return _languageId; } }
-                public Names NameId { get { return _nameId; } }
-                public ushort LenStr { get { return _lenStr; } }
-                public ushort OfsStr { get { return _ofsStr; } }
+                private Ttf.Glyf m_parent;
+                public List<ushort> EndPtsOfContours { get { return _endPtsOfContours; } }
+                public ushort InstructionLength { get { return _instructionLength; } }
+                public byte[] Instructions { get { return _instructions; } }
+                public List<Flag> Flags { get { return _flags; } }
                 public Ttf M_Root { get { return m_root; } }
-                public Ttf.Name M_Parent { get { return m_parent; } }
+                public Ttf.Glyf M_Parent { get { return m_parent; } }
             }
-            private ushort _formatSelector;
-            private ushort _numNameRecords;
-            private ushort _ofsStrings;
-            private List<NameRecord> _nameRecords;
+            private short _numberOfContours;
+            private short _xMin;
+            private short _yMin;
+            private short _xMax;
+            private short _yMax;
+            private SimpleGlyph _value;
             private Ttf m_root;
             private Ttf.DirTableEntry m_parent;
-            public ushort FormatSelector { get { return _formatSelector; } }
-            public ushort NumNameRecords { get { return _numNameRecords; } }
-            public ushort OfsStrings { get { return _ofsStrings; } }
-            public List<NameRecord> NameRecords { get { return _nameRecords; } }
+            public short NumberOfContours { get { return _numberOfContours; } }
+            public short XMin { get { return _xMin; } }
+            public short YMin { get { return _yMin; } }
+            public short XMax { get { return _xMax; } }
+            public short YMax { get { return _yMax; } }
+            public SimpleGlyph Value { get { return _value; } }
             public Ttf M_Root { get { return m_root; } }
             public Ttf.DirTableEntry M_Parent { get { return m_parent; } }
         }
@@ -351,9 +762,9 @@ namespace Kaitai
                 _fontRevision = new Fixed(m_io, this, m_root);
                 _checksumAdjustment = m_io.ReadU4be();
                 _magicNumber = m_io.ReadBytes(4);
-                if (!((KaitaiStream.ByteArrayCompare(MagicNumber, new byte[] { 95, 15, 60, 245 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_magicNumber, new byte[] { 95, 15, 60, 245 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 95, 15, 60, 245 }, MagicNumber, M_Io, "/types/head/seq/3");
+                    throw new ValidationNotEqualError(new byte[] { 95, 15, 60, 245 }, _magicNumber, m_io, "/types/head/seq/3");
                 }
                 _flags = ((Flags) m_io.ReadU2be());
                 _unitsPerEm = m_io.ReadU2be();
@@ -408,30 +819,6 @@ namespace Kaitai
             public Ttf M_Root { get { return m_root; } }
             public Ttf.DirTableEntry M_Parent { get { return m_parent; } }
         }
-        public partial class Prep : KaitaiStruct
-        {
-            public static Prep FromFile(string fileName)
-            {
-                return new Prep(new KaitaiStream(fileName));
-            }
-
-            public Prep(KaitaiStream p__io, Ttf.DirTableEntry p__parent = null, Ttf p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _instructions = m_io.ReadBytesFull();
-            }
-            private byte[] _instructions;
-            private Ttf m_root;
-            private Ttf.DirTableEntry m_parent;
-            public byte[] Instructions { get { return _instructions; } }
-            public Ttf M_Root { get { return m_root; } }
-            public Ttf.DirTableEntry M_Parent { get { return m_parent; } }
-        }
         public partial class Hhea : KaitaiStruct
         {
             public static Hhea FromFile(string fileName)
@@ -458,9 +845,9 @@ namespace Kaitai
                 _caretSlopeRise = m_io.ReadS2be();
                 _caretSlopeRun = m_io.ReadS2be();
                 _reserved = m_io.ReadBytes(10);
-                if (!((KaitaiStream.ByteArrayCompare(Reserved, new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_reserved, new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, Reserved, M_Io, "/types/hhea/seq/10");
+                    throw new ValidationNotEqualError(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, _reserved, m_io, "/types/hhea/seq/10");
                 }
                 _metricDataFormat = m_io.ReadS2be();
                 _numberOfHmetrics = m_io.ReadU2be();
@@ -521,30 +908,6 @@ namespace Kaitai
             public byte[] Reserved { get { return _reserved; } }
             public short MetricDataFormat { get { return _metricDataFormat; } }
             public ushort NumberOfHmetrics { get { return _numberOfHmetrics; } }
-            public Ttf M_Root { get { return m_root; } }
-            public Ttf.DirTableEntry M_Parent { get { return m_parent; } }
-        }
-        public partial class Fpgm : KaitaiStruct
-        {
-            public static Fpgm FromFile(string fileName)
-            {
-                return new Fpgm(new KaitaiStream(fileName));
-            }
-
-            public Fpgm(KaitaiStream p__io, Ttf.DirTableEntry p__parent = null, Ttf p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _instructions = m_io.ReadBytesFull();
-            }
-            private byte[] _instructions;
-            private Ttf m_root;
-            private Ttf.DirTableEntry m_parent;
-            public byte[] Instructions { get { return _instructions; } }
             public Ttf M_Root { get { return m_root; } }
             public Ttf.DirTableEntry M_Parent { get { return m_parent; } }
         }
@@ -703,135 +1066,363 @@ namespace Kaitai
             public Ttf M_Root { get { return m_root; } }
             public Ttf.DirTableEntry M_Parent { get { return m_parent; } }
         }
-        public partial class DirTableEntry : KaitaiStruct
+        public partial class Maxp : KaitaiStruct
         {
-            public static DirTableEntry FromFile(string fileName)
+            public static Maxp FromFile(string fileName)
             {
-                return new DirTableEntry(new KaitaiStream(fileName));
+                return new Maxp(new KaitaiStream(fileName));
             }
 
-            public DirTableEntry(KaitaiStream p__io, Ttf p__parent = null, Ttf p__root = null) : base(p__io)
+            public Maxp(KaitaiStream p__io, Ttf.DirTableEntry p__parent = null, Ttf p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
-                f_value = false;
+                f_isVersion10 = false;
                 _read();
             }
             private void _read()
             {
-                _tag = System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytes(4));
-                _checksum = m_io.ReadU4be();
-                _offset = m_io.ReadU4be();
-                _length = m_io.ReadU4be();
+                _tableVersionNumber = new Fixed(m_io, this, m_root);
+                _numGlyphs = m_io.ReadU2be();
+                if (IsVersion10) {
+                    _version10Body = new MaxpVersion10Body(m_io, this, m_root);
+                }
             }
-            private bool f_value;
-            private object _value;
-            public object Value
+            private bool f_isVersion10;
+            private bool _isVersion10;
+            public bool IsVersion10
             {
                 get
                 {
-                    if (f_value)
-                        return _value;
-                    KaitaiStream io = M_Root.M_Io;
-                    long _pos = io.Pos;
-                    io.Seek(Offset);
-                    switch (Tag) {
-                    case "head": {
-                        __raw_value = io.ReadBytes(Length);
-                        var io___raw_value = new KaitaiStream(__raw_value);
-                        _value = new Head(io___raw_value, this, m_root);
-                        break;
-                    }
-                    case "cvt ": {
-                        __raw_value = io.ReadBytes(Length);
-                        var io___raw_value = new KaitaiStream(__raw_value);
-                        _value = new Cvt(io___raw_value, this, m_root);
-                        break;
-                    }
-                    case "prep": {
-                        __raw_value = io.ReadBytes(Length);
-                        var io___raw_value = new KaitaiStream(__raw_value);
-                        _value = new Prep(io___raw_value, this, m_root);
-                        break;
-                    }
-                    case "kern": {
-                        __raw_value = io.ReadBytes(Length);
-                        var io___raw_value = new KaitaiStream(__raw_value);
-                        _value = new Kern(io___raw_value, this, m_root);
-                        break;
-                    }
-                    case "hhea": {
-                        __raw_value = io.ReadBytes(Length);
-                        var io___raw_value = new KaitaiStream(__raw_value);
-                        _value = new Hhea(io___raw_value, this, m_root);
-                        break;
-                    }
-                    case "post": {
-                        __raw_value = io.ReadBytes(Length);
-                        var io___raw_value = new KaitaiStream(__raw_value);
-                        _value = new Post(io___raw_value, this, m_root);
-                        break;
-                    }
-                    case "OS/2": {
-                        __raw_value = io.ReadBytes(Length);
-                        var io___raw_value = new KaitaiStream(__raw_value);
-                        _value = new Os2(io___raw_value, this, m_root);
-                        break;
-                    }
-                    case "name": {
-                        __raw_value = io.ReadBytes(Length);
-                        var io___raw_value = new KaitaiStream(__raw_value);
-                        _value = new Name(io___raw_value, this, m_root);
-                        break;
-                    }
-                    case "maxp": {
-                        __raw_value = io.ReadBytes(Length);
-                        var io___raw_value = new KaitaiStream(__raw_value);
-                        _value = new Maxp(io___raw_value, this, m_root);
-                        break;
-                    }
-                    case "glyf": {
-                        __raw_value = io.ReadBytes(Length);
-                        var io___raw_value = new KaitaiStream(__raw_value);
-                        _value = new Glyf(io___raw_value, this, m_root);
-                        break;
-                    }
-                    case "fpgm": {
-                        __raw_value = io.ReadBytes(Length);
-                        var io___raw_value = new KaitaiStream(__raw_value);
-                        _value = new Fpgm(io___raw_value, this, m_root);
-                        break;
-                    }
-                    case "cmap": {
-                        __raw_value = io.ReadBytes(Length);
-                        var io___raw_value = new KaitaiStream(__raw_value);
-                        _value = new Cmap(io___raw_value, this, m_root);
-                        break;
-                    }
-                    default: {
-                        _value = io.ReadBytes(Length);
-                        break;
-                    }
-                    }
-                    io.Seek(_pos);
-                    f_value = true;
-                    return _value;
+                    if (f_isVersion10)
+                        return _isVersion10;
+                    f_isVersion10 = true;
+                    _isVersion10 = (bool) ( ((TableVersionNumber.Major == 1) && (TableVersionNumber.Minor == 0)) );
+                    return _isVersion10;
                 }
             }
-            private string _tag;
-            private uint _checksum;
-            private uint _offset;
-            private uint _length;
+            private Fixed _tableVersionNumber;
+            private ushort _numGlyphs;
+            private MaxpVersion10Body _version10Body;
+            private Ttf m_root;
+            private Ttf.DirTableEntry m_parent;
+
+            /// <summary>
+            /// 0x00010000 for version 1.0.
+            /// </summary>
+            public Fixed TableVersionNumber { get { return _tableVersionNumber; } }
+
+            /// <summary>
+            /// The number of glyphs in the font.
+            /// </summary>
+            public ushort NumGlyphs { get { return _numGlyphs; } }
+            public MaxpVersion10Body Version10Body { get { return _version10Body; } }
+            public Ttf M_Root { get { return m_root; } }
+            public Ttf.DirTableEntry M_Parent { get { return m_parent; } }
+        }
+        public partial class MaxpVersion10Body : KaitaiStruct
+        {
+            public static MaxpVersion10Body FromFile(string fileName)
+            {
+                return new MaxpVersion10Body(new KaitaiStream(fileName));
+            }
+
+            public MaxpVersion10Body(KaitaiStream p__io, Ttf.Maxp p__parent = null, Ttf p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _maxPoints = m_io.ReadU2be();
+                _maxContours = m_io.ReadU2be();
+                _maxCompositePoints = m_io.ReadU2be();
+                _maxCompositeContours = m_io.ReadU2be();
+                _maxZones = m_io.ReadU2be();
+                _maxTwilightPoints = m_io.ReadU2be();
+                _maxStorage = m_io.ReadU2be();
+                _maxFunctionDefs = m_io.ReadU2be();
+                _maxInstructionDefs = m_io.ReadU2be();
+                _maxStackElements = m_io.ReadU2be();
+                _maxSizeOfInstructions = m_io.ReadU2be();
+                _maxComponentElements = m_io.ReadU2be();
+                _maxComponentDepth = m_io.ReadU2be();
+            }
+            private ushort _maxPoints;
+            private ushort _maxContours;
+            private ushort _maxCompositePoints;
+            private ushort _maxCompositeContours;
+            private ushort _maxZones;
+            private ushort _maxTwilightPoints;
+            private ushort _maxStorage;
+            private ushort _maxFunctionDefs;
+            private ushort _maxInstructionDefs;
+            private ushort _maxStackElements;
+            private ushort _maxSizeOfInstructions;
+            private ushort _maxComponentElements;
+            private ushort _maxComponentDepth;
+            private Ttf m_root;
+            private Ttf.Maxp m_parent;
+
+            /// <summary>
+            /// Maximum points in a non-composite glyph.
+            /// </summary>
+            public ushort MaxPoints { get { return _maxPoints; } }
+
+            /// <summary>
+            /// Maximum contours in a non-composite glyph.
+            /// </summary>
+            public ushort MaxContours { get { return _maxContours; } }
+
+            /// <summary>
+            /// Maximum points in a composite glyph.
+            /// </summary>
+            public ushort MaxCompositePoints { get { return _maxCompositePoints; } }
+
+            /// <summary>
+            /// Maximum contours in a composite glyph.
+            /// </summary>
+            public ushort MaxCompositeContours { get { return _maxCompositeContours; } }
+
+            /// <summary>
+            /// 1 if instructions do not use the twilight zone (Z0), or 2 if instructions do use Z0; should be set to 2 in most cases.
+            /// </summary>
+            public ushort MaxZones { get { return _maxZones; } }
+
+            /// <summary>
+            /// Maximum points used in Z0.
+            /// </summary>
+            public ushort MaxTwilightPoints { get { return _maxTwilightPoints; } }
+
+            /// <summary>
+            /// Number of Storage Area locations.
+            /// </summary>
+            public ushort MaxStorage { get { return _maxStorage; } }
+
+            /// <summary>
+            /// Number of FDEFs.
+            /// </summary>
+            public ushort MaxFunctionDefs { get { return _maxFunctionDefs; } }
+
+            /// <summary>
+            /// Number of IDEFs.
+            /// </summary>
+            public ushort MaxInstructionDefs { get { return _maxInstructionDefs; } }
+
+            /// <summary>
+            /// Maximum stack depth.
+            /// </summary>
+            public ushort MaxStackElements { get { return _maxStackElements; } }
+
+            /// <summary>
+            /// Maximum byte count for glyph instructions.
+            /// </summary>
+            public ushort MaxSizeOfInstructions { get { return _maxSizeOfInstructions; } }
+
+            /// <summary>
+            /// Maximum number of components referenced at &quot;top level&quot; for any composite glyph.
+            /// </summary>
+            public ushort MaxComponentElements { get { return _maxComponentElements; } }
+
+            /// <summary>
+            /// Maximum levels of recursion; 1 for simple components.
+            /// </summary>
+            public ushort MaxComponentDepth { get { return _maxComponentDepth; } }
+            public Ttf M_Root { get { return m_root; } }
+            public Ttf.Maxp M_Parent { get { return m_parent; } }
+        }
+
+        /// <summary>
+        /// Name table is meant to include human-readable string metadata
+        /// that describes font: name of the font, its styles, copyright &amp;
+        /// trademark notices, vendor and designer info, etc.
+        /// 
+        /// The table includes a list of &quot;name records&quot;, each of which
+        /// corresponds to a single metadata entry.
+        /// </summary>
+        /// <remarks>
+        /// Reference: <a href="https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6name.html">Source</a>
+        /// </remarks>
+        public partial class Name : KaitaiStruct
+        {
+            public static Name FromFile(string fileName)
+            {
+                return new Name(new KaitaiStream(fileName));
+            }
+
+
+            public enum Names
+            {
+                Copyright = 0,
+                FontFamily = 1,
+                FontSubfamily = 2,
+                UniqueSubfamilyId = 3,
+                FullFontName = 4,
+                NameTableVersion = 5,
+                PostscriptFontName = 6,
+                Trademark = 7,
+                Manufacturer = 8,
+                Designer = 9,
+                Description = 10,
+                UrlVendor = 11,
+                UrlDesigner = 12,
+                License = 13,
+                UrlLicense = 14,
+                Reserved15 = 15,
+                PreferredFamily = 16,
+                PreferredSubfamily = 17,
+                CompatibleFullName = 18,
+                SampleText = 19,
+            }
+
+            public enum Platforms
+            {
+                Unicode = 0,
+                Macintosh = 1,
+                Reserved2 = 2,
+                Microsoft = 3,
+            }
+            public Name(KaitaiStream p__io, Ttf.DirTableEntry p__parent = null, Ttf p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _formatSelector = m_io.ReadU2be();
+                _numNameRecords = m_io.ReadU2be();
+                _ofsStrings = m_io.ReadU2be();
+                _nameRecords = new List<NameRecord>();
+                for (var i = 0; i < NumNameRecords; i++)
+                {
+                    _nameRecords.Add(new NameRecord(m_io, this, m_root));
+                }
+            }
+            public partial class NameRecord : KaitaiStruct
+            {
+                public static NameRecord FromFile(string fileName)
+                {
+                    return new NameRecord(new KaitaiStream(fileName));
+                }
+
+                public NameRecord(KaitaiStream p__io, Ttf.Name p__parent = null, Ttf p__root = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    f_asciiValue = false;
+                    f_unicodeValue = false;
+                    _read();
+                }
+                private void _read()
+                {
+                    _platformId = ((Ttf.Name.Platforms) m_io.ReadU2be());
+                    _encodingId = m_io.ReadU2be();
+                    _languageId = m_io.ReadU2be();
+                    _nameId = ((Ttf.Name.Names) m_io.ReadU2be());
+                    _lenStr = m_io.ReadU2be();
+                    _ofsStr = m_io.ReadU2be();
+                }
+                private bool f_asciiValue;
+                private string _asciiValue;
+                public string AsciiValue
+                {
+                    get
+                    {
+                        if (f_asciiValue)
+                            return _asciiValue;
+                        f_asciiValue = true;
+                        KaitaiStream io = M_Parent.M_Io;
+                        long _pos = io.Pos;
+                        io.Seek(M_Parent.OfsStrings + OfsStr);
+                        _asciiValue = System.Text.Encoding.GetEncoding("ASCII").GetString(io.ReadBytes(LenStr));
+                        io.Seek(_pos);
+                        return _asciiValue;
+                    }
+                }
+                private bool f_unicodeValue;
+                private string _unicodeValue;
+                public string UnicodeValue
+                {
+                    get
+                    {
+                        if (f_unicodeValue)
+                            return _unicodeValue;
+                        f_unicodeValue = true;
+                        KaitaiStream io = M_Parent.M_Io;
+                        long _pos = io.Pos;
+                        io.Seek(M_Parent.OfsStrings + OfsStr);
+                        _unicodeValue = System.Text.Encoding.GetEncoding("UTF-16BE").GetString(io.ReadBytes(LenStr));
+                        io.Seek(_pos);
+                        return _unicodeValue;
+                    }
+                }
+                private Platforms _platformId;
+                private ushort _encodingId;
+                private ushort _languageId;
+                private Names _nameId;
+                private ushort _lenStr;
+                private ushort _ofsStr;
+                private Ttf m_root;
+                private Ttf.Name m_parent;
+                public Platforms PlatformId { get { return _platformId; } }
+                public ushort EncodingId { get { return _encodingId; } }
+                public ushort LanguageId { get { return _languageId; } }
+                public Names NameId { get { return _nameId; } }
+                public ushort LenStr { get { return _lenStr; } }
+                public ushort OfsStr { get { return _ofsStr; } }
+                public Ttf M_Root { get { return m_root; } }
+                public Ttf.Name M_Parent { get { return m_parent; } }
+            }
+            private ushort _formatSelector;
+            private ushort _numNameRecords;
+            private ushort _ofsStrings;
+            private List<NameRecord> _nameRecords;
+            private Ttf m_root;
+            private Ttf.DirTableEntry m_parent;
+            public ushort FormatSelector { get { return _formatSelector; } }
+            public ushort NumNameRecords { get { return _numNameRecords; } }
+            public ushort OfsStrings { get { return _ofsStrings; } }
+            public List<NameRecord> NameRecords { get { return _nameRecords; } }
+            public Ttf M_Root { get { return m_root; } }
+            public Ttf.DirTableEntry M_Parent { get { return m_parent; } }
+        }
+        public partial class OffsetTable : KaitaiStruct
+        {
+            public static OffsetTable FromFile(string fileName)
+            {
+                return new OffsetTable(new KaitaiStream(fileName));
+            }
+
+            public OffsetTable(KaitaiStream p__io, Ttf p__parent = null, Ttf p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _sfntVersion = new Fixed(m_io, this, m_root);
+                _numTables = m_io.ReadU2be();
+                _searchRange = m_io.ReadU2be();
+                _entrySelector = m_io.ReadU2be();
+                _rangeShift = m_io.ReadU2be();
+            }
+            private Fixed _sfntVersion;
+            private ushort _numTables;
+            private ushort _searchRange;
+            private ushort _entrySelector;
+            private ushort _rangeShift;
             private Ttf m_root;
             private Ttf m_parent;
-            private byte[] __raw_value;
-            public string Tag { get { return _tag; } }
-            public uint Checksum { get { return _checksum; } }
-            public uint Offset { get { return _offset; } }
-            public uint Length { get { return _length; } }
+            public Fixed SfntVersion { get { return _sfntVersion; } }
+            public ushort NumTables { get { return _numTables; } }
+            public ushort SearchRange { get { return _searchRange; } }
+            public ushort EntrySelector { get { return _entrySelector; } }
+            public ushort RangeShift { get { return _rangeShift; } }
             public Ttf M_Root { get { return m_root; } }
             public Ttf M_Parent { get { return m_parent; } }
-            public byte[] M_RawValue { get { return __raw_value; } }
         }
 
         /// <summary>
@@ -844,6 +1435,24 @@ namespace Kaitai
                 return new Os2(new KaitaiStream(fileName));
             }
 
+
+            public enum FsSelection
+            {
+                Italic = 1,
+                Underscore = 2,
+                Negative = 4,
+                Outlined = 8,
+                Strikeout = 16,
+                Bold = 32,
+                Regular = 64,
+            }
+
+            public enum FsType
+            {
+                RestrictedLicenseEmbedding = 2,
+                PreviewAndPrintEmbedding = 4,
+                EditableEmbedding = 8,
+            }
 
             public enum WeightClass
             {
@@ -869,24 +1478,6 @@ namespace Kaitai
                 Expanded = 7,
                 ExtraExpanded = 8,
                 UltraExpanded = 9,
-            }
-
-            public enum FsType
-            {
-                RestrictedLicenseEmbedding = 2,
-                PreviewAndPrintEmbedding = 4,
-                EditableEmbedding = 8,
-            }
-
-            public enum FsSelection
-            {
-                Italic = 1,
-                Underscore = 2,
-                Negative = 4,
-                Outlined = 8,
-                Strikeout = 16,
-                Bold = 32,
-                Regular = 64,
             }
             public Os2(KaitaiStream p__io, Ttf.DirTableEntry p__parent = null, Ttf p__root = null) : base(p__io)
             {
@@ -914,7 +1505,7 @@ namespace Kaitai
                 _sFamilyClass = m_io.ReadS2be();
                 _panose = new Panose(m_io, this, m_root);
                 _unicodeRange = new UnicodeRange(m_io, this, m_root);
-                _achVendId = System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytes(4));
+                _achVendId = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(4));
                 _selection = ((FsSelection) m_io.ReadU2be());
                 _firstCharIndex = m_io.ReadU2be();
                 _lastCharIndex = m_io.ReadU2be();
@@ -925,6 +1516,135 @@ namespace Kaitai
                 _winDescent = m_io.ReadU2be();
                 _codePageRange = new CodePageRange(m_io, this, m_root);
             }
+            public partial class CodePageRange : KaitaiStruct
+            {
+                public static CodePageRange FromFile(string fileName)
+                {
+                    return new CodePageRange(new KaitaiStream(fileName));
+                }
+
+                public CodePageRange(KaitaiStream p__io, Ttf.Os2 p__parent = null, Ttf p__root = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    _read();
+                }
+                private void _read()
+                {
+                    _symbolCharacterSet = m_io.ReadBitsIntBe(1) != 0;
+                    _oemCharacterSet = m_io.ReadBitsIntBe(1) != 0;
+                    _macintoshCharacterSet = m_io.ReadBitsIntBe(1) != 0;
+                    _reservedForAlternateAnsiOem = m_io.ReadBitsIntBe(7);
+                    _cp1361KoreanJohab = m_io.ReadBitsIntBe(1) != 0;
+                    _cp950ChineseTraditionalCharsTaiwanAndHongKong = m_io.ReadBitsIntBe(1) != 0;
+                    _cp949KoreanWansung = m_io.ReadBitsIntBe(1) != 0;
+                    _cp936ChineseSimplifiedCharsPrcAndSingapore = m_io.ReadBitsIntBe(1) != 0;
+                    _cp932JisJapan = m_io.ReadBitsIntBe(1) != 0;
+                    _cp874Thai = m_io.ReadBitsIntBe(1) != 0;
+                    _reservedForAlternateAnsi = m_io.ReadBitsIntBe(8);
+                    _cp1257WindowsBaltic = m_io.ReadBitsIntBe(1) != 0;
+                    _cp1256Arabic = m_io.ReadBitsIntBe(1) != 0;
+                    _cp1255Hebrew = m_io.ReadBitsIntBe(1) != 0;
+                    _cp1254Turkish = m_io.ReadBitsIntBe(1) != 0;
+                    _cp1253Greek = m_io.ReadBitsIntBe(1) != 0;
+                    _cp1251Cyrillic = m_io.ReadBitsIntBe(1) != 0;
+                    _cp1250Latin2EasternEurope = m_io.ReadBitsIntBe(1) != 0;
+                    _cp1252Latin1 = m_io.ReadBitsIntBe(1) != 0;
+                    _cp437Us = m_io.ReadBitsIntBe(1) != 0;
+                    _cp850WeLatin1 = m_io.ReadBitsIntBe(1) != 0;
+                    _cp708ArabicAsmo708 = m_io.ReadBitsIntBe(1) != 0;
+                    _cp737GreekFormer437G = m_io.ReadBitsIntBe(1) != 0;
+                    _cp775MsDosBaltic = m_io.ReadBitsIntBe(1) != 0;
+                    _cp852Latin2 = m_io.ReadBitsIntBe(1) != 0;
+                    _cp855IbmCyrillicPrimarilyRussian = m_io.ReadBitsIntBe(1) != 0;
+                    _cp857IbmTurkish = m_io.ReadBitsIntBe(1) != 0;
+                    _cp860MsDosPortuguese = m_io.ReadBitsIntBe(1) != 0;
+                    _cp861MsDosIcelandic = m_io.ReadBitsIntBe(1) != 0;
+                    _cp862Hebrew = m_io.ReadBitsIntBe(1) != 0;
+                    _cp863MsDosCanadianFrench = m_io.ReadBitsIntBe(1) != 0;
+                    _cp864Arabic = m_io.ReadBitsIntBe(1) != 0;
+                    _cp865MsDosNordic = m_io.ReadBitsIntBe(1) != 0;
+                    _cp866MsDosRussian = m_io.ReadBitsIntBe(1) != 0;
+                    _cp869IbmGreek = m_io.ReadBitsIntBe(1) != 0;
+                    _reservedForOem = m_io.ReadBitsIntBe(16);
+                }
+                private bool _symbolCharacterSet;
+                private bool _oemCharacterSet;
+                private bool _macintoshCharacterSet;
+                private ulong _reservedForAlternateAnsiOem;
+                private bool _cp1361KoreanJohab;
+                private bool _cp950ChineseTraditionalCharsTaiwanAndHongKong;
+                private bool _cp949KoreanWansung;
+                private bool _cp936ChineseSimplifiedCharsPrcAndSingapore;
+                private bool _cp932JisJapan;
+                private bool _cp874Thai;
+                private ulong _reservedForAlternateAnsi;
+                private bool _cp1257WindowsBaltic;
+                private bool _cp1256Arabic;
+                private bool _cp1255Hebrew;
+                private bool _cp1254Turkish;
+                private bool _cp1253Greek;
+                private bool _cp1251Cyrillic;
+                private bool _cp1250Latin2EasternEurope;
+                private bool _cp1252Latin1;
+                private bool _cp437Us;
+                private bool _cp850WeLatin1;
+                private bool _cp708ArabicAsmo708;
+                private bool _cp737GreekFormer437G;
+                private bool _cp775MsDosBaltic;
+                private bool _cp852Latin2;
+                private bool _cp855IbmCyrillicPrimarilyRussian;
+                private bool _cp857IbmTurkish;
+                private bool _cp860MsDosPortuguese;
+                private bool _cp861MsDosIcelandic;
+                private bool _cp862Hebrew;
+                private bool _cp863MsDosCanadianFrench;
+                private bool _cp864Arabic;
+                private bool _cp865MsDosNordic;
+                private bool _cp866MsDosRussian;
+                private bool _cp869IbmGreek;
+                private ulong _reservedForOem;
+                private Ttf m_root;
+                private Ttf.Os2 m_parent;
+                public bool SymbolCharacterSet { get { return _symbolCharacterSet; } }
+                public bool OemCharacterSet { get { return _oemCharacterSet; } }
+                public bool MacintoshCharacterSet { get { return _macintoshCharacterSet; } }
+                public ulong ReservedForAlternateAnsiOem { get { return _reservedForAlternateAnsiOem; } }
+                public bool Cp1361KoreanJohab { get { return _cp1361KoreanJohab; } }
+                public bool Cp950ChineseTraditionalCharsTaiwanAndHongKong { get { return _cp950ChineseTraditionalCharsTaiwanAndHongKong; } }
+                public bool Cp949KoreanWansung { get { return _cp949KoreanWansung; } }
+                public bool Cp936ChineseSimplifiedCharsPrcAndSingapore { get { return _cp936ChineseSimplifiedCharsPrcAndSingapore; } }
+                public bool Cp932JisJapan { get { return _cp932JisJapan; } }
+                public bool Cp874Thai { get { return _cp874Thai; } }
+                public ulong ReservedForAlternateAnsi { get { return _reservedForAlternateAnsi; } }
+                public bool Cp1257WindowsBaltic { get { return _cp1257WindowsBaltic; } }
+                public bool Cp1256Arabic { get { return _cp1256Arabic; } }
+                public bool Cp1255Hebrew { get { return _cp1255Hebrew; } }
+                public bool Cp1254Turkish { get { return _cp1254Turkish; } }
+                public bool Cp1253Greek { get { return _cp1253Greek; } }
+                public bool Cp1251Cyrillic { get { return _cp1251Cyrillic; } }
+                public bool Cp1250Latin2EasternEurope { get { return _cp1250Latin2EasternEurope; } }
+                public bool Cp1252Latin1 { get { return _cp1252Latin1; } }
+                public bool Cp437Us { get { return _cp437Us; } }
+                public bool Cp850WeLatin1 { get { return _cp850WeLatin1; } }
+                public bool Cp708ArabicAsmo708 { get { return _cp708ArabicAsmo708; } }
+                public bool Cp737GreekFormer437G { get { return _cp737GreekFormer437G; } }
+                public bool Cp775MsDosBaltic { get { return _cp775MsDosBaltic; } }
+                public bool Cp852Latin2 { get { return _cp852Latin2; } }
+                public bool Cp855IbmCyrillicPrimarilyRussian { get { return _cp855IbmCyrillicPrimarilyRussian; } }
+                public bool Cp857IbmTurkish { get { return _cp857IbmTurkish; } }
+                public bool Cp860MsDosPortuguese { get { return _cp860MsDosPortuguese; } }
+                public bool Cp861MsDosIcelandic { get { return _cp861MsDosIcelandic; } }
+                public bool Cp862Hebrew { get { return _cp862Hebrew; } }
+                public bool Cp863MsDosCanadianFrench { get { return _cp863MsDosCanadianFrench; } }
+                public bool Cp864Arabic { get { return _cp864Arabic; } }
+                public bool Cp865MsDosNordic { get { return _cp865MsDosNordic; } }
+                public bool Cp866MsDosRussian { get { return _cp866MsDosRussian; } }
+                public bool Cp869IbmGreek { get { return _cp869IbmGreek; } }
+                public ulong ReservedForOem { get { return _reservedForOem; } }
+                public Ttf M_Root { get { return m_root; } }
+                public Ttf.Os2 M_Parent { get { return m_parent; } }
+            }
             public partial class Panose : KaitaiStruct
             {
                 public static Panose FromFile(string fileName)
@@ -933,34 +1653,34 @@ namespace Kaitai
                 }
 
 
-                public enum Weight
+                public enum ArmStyle
                 {
                     Any = 0,
                     NoFit = 1,
-                    VeryLight = 2,
-                    Light = 3,
-                    Thin = 4,
-                    Book = 5,
-                    Medium = 6,
-                    Demi = 7,
-                    Bold = 8,
-                    Heavy = 9,
-                    Black = 10,
-                    Nord = 11,
+                    StraightArmsHorizontal = 2,
+                    StraightArmsWedge = 3,
+                    StraightArmsVertical = 4,
+                    StraightArmsSingleSerif = 5,
+                    StraightArmsDoubleSerif = 6,
+                    NonStraightArmsHorizontal = 7,
+                    NonStraightArmsWedge = 8,
+                    NonStraightArmsVertical = 9,
+                    NonStraightArmsSingleSerif = 10,
+                    NonStraightArmsDoubleSerif = 11,
                 }
 
-                public enum Proportion
+                public enum Contrast
                 {
                     Any = 0,
                     NoFit = 1,
-                    OldStyle = 2,
-                    Modern = 3,
-                    EvenWidth = 4,
-                    Expanded = 5,
-                    Condensed = 6,
-                    VeryExpanded = 7,
-                    VeryCondensed = 8,
-                    Monospaced = 9,
+                    None = 2,
+                    VeryLow = 3,
+                    Low = 4,
+                    MediumLow = 5,
+                    Medium = 6,
+                    MediumHigh = 7,
+                    High = 8,
+                    VeryHigh = 9,
                 }
 
                 public enum FamilyKind
@@ -993,6 +1713,38 @@ namespace Kaitai
                     ObliqueSquare = 15,
                 }
 
+                public enum Midline
+                {
+                    Any = 0,
+                    NoFit = 1,
+                    StandardTrimmed = 2,
+                    StandardPointed = 3,
+                    StandardSerifed = 4,
+                    HighTrimmed = 5,
+                    HighPointed = 6,
+                    HighSerifed = 7,
+                    ConstantTrimmed = 8,
+                    ConstantPointed = 9,
+                    ConstantSerifed = 10,
+                    LowTrimmed = 11,
+                    LowPointed = 12,
+                    LowSerifed = 13,
+                }
+
+                public enum Proportion
+                {
+                    Any = 0,
+                    NoFit = 1,
+                    OldStyle = 2,
+                    Modern = 3,
+                    EvenWidth = 4,
+                    Expanded = 5,
+                    Condensed = 6,
+                    VeryExpanded = 7,
+                    VeryCondensed = 8,
+                    Monospaced = 9,
+                }
+
                 public enum SerifStyle
                 {
                     Any = 0,
@@ -1013,34 +1765,6 @@ namespace Kaitai
                     Rounded = 15,
                 }
 
-                public enum XHeight
-                {
-                    Any = 0,
-                    NoFit = 1,
-                    ConstantSmall = 2,
-                    ConstantStandard = 3,
-                    ConstantLarge = 4,
-                    DuckingSmall = 5,
-                    DuckingStandard = 6,
-                    DuckingLarge = 7,
-                }
-
-                public enum ArmStyle
-                {
-                    Any = 0,
-                    NoFit = 1,
-                    StraightArmsHorizontal = 2,
-                    StraightArmsWedge = 3,
-                    StraightArmsVertical = 4,
-                    StraightArmsSingleSerif = 5,
-                    StraightArmsDoubleSerif = 6,
-                    NonStraightArmsHorizontal = 7,
-                    NonStraightArmsWedge = 8,
-                    NonStraightArmsVertical = 9,
-                    NonStraightArmsSingleSerif = 10,
-                    NonStraightArmsDoubleSerif = 11,
-                }
-
                 public enum StrokeVariation
                 {
                     Any = 0,
@@ -1054,36 +1778,32 @@ namespace Kaitai
                     InstantVertical = 8,
                 }
 
-                public enum Contrast
+                public enum Weight
                 {
                     Any = 0,
                     NoFit = 1,
-                    None = 2,
-                    VeryLow = 3,
-                    Low = 4,
-                    MediumLow = 5,
+                    VeryLight = 2,
+                    Light = 3,
+                    Thin = 4,
+                    Book = 5,
                     Medium = 6,
-                    MediumHigh = 7,
-                    High = 8,
-                    VeryHigh = 9,
+                    Demi = 7,
+                    Bold = 8,
+                    Heavy = 9,
+                    Black = 10,
+                    Nord = 11,
                 }
 
-                public enum Midline
+                public enum XHeight
                 {
                     Any = 0,
                     NoFit = 1,
-                    StandardTrimmed = 2,
-                    StandardPointed = 3,
-                    StandardSerifed = 4,
-                    HighTrimmed = 5,
-                    HighPointed = 6,
-                    HighSerifed = 7,
-                    ConstantTrimmed = 8,
-                    ConstantPointed = 9,
-                    ConstantSerifed = 10,
-                    LowTrimmed = 11,
-                    LowPointed = 12,
-                    LowSerifed = 13,
+                    ConstantSmall = 2,
+                    ConstantStandard = 3,
+                    ConstantLarge = 4,
+                    DuckingSmall = 5,
+                    DuckingStandard = 6,
+                    DuckingLarge = 7,
                 }
                 public Panose(KaitaiStream p__io, Ttf.Os2 p__parent = null, Ttf p__root = null) : base(p__io)
                 {
@@ -1364,135 +2084,6 @@ namespace Kaitai
                 public Ttf M_Root { get { return m_root; } }
                 public Ttf.Os2 M_Parent { get { return m_parent; } }
             }
-            public partial class CodePageRange : KaitaiStruct
-            {
-                public static CodePageRange FromFile(string fileName)
-                {
-                    return new CodePageRange(new KaitaiStream(fileName));
-                }
-
-                public CodePageRange(KaitaiStream p__io, Ttf.Os2 p__parent = null, Ttf p__root = null) : base(p__io)
-                {
-                    m_parent = p__parent;
-                    m_root = p__root;
-                    _read();
-                }
-                private void _read()
-                {
-                    _symbolCharacterSet = m_io.ReadBitsIntBe(1) != 0;
-                    _oemCharacterSet = m_io.ReadBitsIntBe(1) != 0;
-                    _macintoshCharacterSet = m_io.ReadBitsIntBe(1) != 0;
-                    _reservedForAlternateAnsiOem = m_io.ReadBitsIntBe(7);
-                    _cp1361KoreanJohab = m_io.ReadBitsIntBe(1) != 0;
-                    _cp950ChineseTraditionalCharsTaiwanAndHongKong = m_io.ReadBitsIntBe(1) != 0;
-                    _cp949KoreanWansung = m_io.ReadBitsIntBe(1) != 0;
-                    _cp936ChineseSimplifiedCharsPrcAndSingapore = m_io.ReadBitsIntBe(1) != 0;
-                    _cp932JisJapan = m_io.ReadBitsIntBe(1) != 0;
-                    _cp874Thai = m_io.ReadBitsIntBe(1) != 0;
-                    _reservedForAlternateAnsi = m_io.ReadBitsIntBe(8);
-                    _cp1257WindowsBaltic = m_io.ReadBitsIntBe(1) != 0;
-                    _cp1256Arabic = m_io.ReadBitsIntBe(1) != 0;
-                    _cp1255Hebrew = m_io.ReadBitsIntBe(1) != 0;
-                    _cp1254Turkish = m_io.ReadBitsIntBe(1) != 0;
-                    _cp1253Greek = m_io.ReadBitsIntBe(1) != 0;
-                    _cp1251Cyrillic = m_io.ReadBitsIntBe(1) != 0;
-                    _cp1250Latin2EasternEurope = m_io.ReadBitsIntBe(1) != 0;
-                    _cp1252Latin1 = m_io.ReadBitsIntBe(1) != 0;
-                    _cp437Us = m_io.ReadBitsIntBe(1) != 0;
-                    _cp850WeLatin1 = m_io.ReadBitsIntBe(1) != 0;
-                    _cp708ArabicAsmo708 = m_io.ReadBitsIntBe(1) != 0;
-                    _cp737GreekFormer437G = m_io.ReadBitsIntBe(1) != 0;
-                    _cp775MsDosBaltic = m_io.ReadBitsIntBe(1) != 0;
-                    _cp852Latin2 = m_io.ReadBitsIntBe(1) != 0;
-                    _cp855IbmCyrillicPrimarilyRussian = m_io.ReadBitsIntBe(1) != 0;
-                    _cp857IbmTurkish = m_io.ReadBitsIntBe(1) != 0;
-                    _cp860MsDosPortuguese = m_io.ReadBitsIntBe(1) != 0;
-                    _cp861MsDosIcelandic = m_io.ReadBitsIntBe(1) != 0;
-                    _cp862Hebrew = m_io.ReadBitsIntBe(1) != 0;
-                    _cp863MsDosCanadianFrench = m_io.ReadBitsIntBe(1) != 0;
-                    _cp864Arabic = m_io.ReadBitsIntBe(1) != 0;
-                    _cp865MsDosNordic = m_io.ReadBitsIntBe(1) != 0;
-                    _cp866MsDosRussian = m_io.ReadBitsIntBe(1) != 0;
-                    _cp869IbmGreek = m_io.ReadBitsIntBe(1) != 0;
-                    _reservedForOem = m_io.ReadBitsIntBe(16);
-                }
-                private bool _symbolCharacterSet;
-                private bool _oemCharacterSet;
-                private bool _macintoshCharacterSet;
-                private ulong _reservedForAlternateAnsiOem;
-                private bool _cp1361KoreanJohab;
-                private bool _cp950ChineseTraditionalCharsTaiwanAndHongKong;
-                private bool _cp949KoreanWansung;
-                private bool _cp936ChineseSimplifiedCharsPrcAndSingapore;
-                private bool _cp932JisJapan;
-                private bool _cp874Thai;
-                private ulong _reservedForAlternateAnsi;
-                private bool _cp1257WindowsBaltic;
-                private bool _cp1256Arabic;
-                private bool _cp1255Hebrew;
-                private bool _cp1254Turkish;
-                private bool _cp1253Greek;
-                private bool _cp1251Cyrillic;
-                private bool _cp1250Latin2EasternEurope;
-                private bool _cp1252Latin1;
-                private bool _cp437Us;
-                private bool _cp850WeLatin1;
-                private bool _cp708ArabicAsmo708;
-                private bool _cp737GreekFormer437G;
-                private bool _cp775MsDosBaltic;
-                private bool _cp852Latin2;
-                private bool _cp855IbmCyrillicPrimarilyRussian;
-                private bool _cp857IbmTurkish;
-                private bool _cp860MsDosPortuguese;
-                private bool _cp861MsDosIcelandic;
-                private bool _cp862Hebrew;
-                private bool _cp863MsDosCanadianFrench;
-                private bool _cp864Arabic;
-                private bool _cp865MsDosNordic;
-                private bool _cp866MsDosRussian;
-                private bool _cp869IbmGreek;
-                private ulong _reservedForOem;
-                private Ttf m_root;
-                private Ttf.Os2 m_parent;
-                public bool SymbolCharacterSet { get { return _symbolCharacterSet; } }
-                public bool OemCharacterSet { get { return _oemCharacterSet; } }
-                public bool MacintoshCharacterSet { get { return _macintoshCharacterSet; } }
-                public ulong ReservedForAlternateAnsiOem { get { return _reservedForAlternateAnsiOem; } }
-                public bool Cp1361KoreanJohab { get { return _cp1361KoreanJohab; } }
-                public bool Cp950ChineseTraditionalCharsTaiwanAndHongKong { get { return _cp950ChineseTraditionalCharsTaiwanAndHongKong; } }
-                public bool Cp949KoreanWansung { get { return _cp949KoreanWansung; } }
-                public bool Cp936ChineseSimplifiedCharsPrcAndSingapore { get { return _cp936ChineseSimplifiedCharsPrcAndSingapore; } }
-                public bool Cp932JisJapan { get { return _cp932JisJapan; } }
-                public bool Cp874Thai { get { return _cp874Thai; } }
-                public ulong ReservedForAlternateAnsi { get { return _reservedForAlternateAnsi; } }
-                public bool Cp1257WindowsBaltic { get { return _cp1257WindowsBaltic; } }
-                public bool Cp1256Arabic { get { return _cp1256Arabic; } }
-                public bool Cp1255Hebrew { get { return _cp1255Hebrew; } }
-                public bool Cp1254Turkish { get { return _cp1254Turkish; } }
-                public bool Cp1253Greek { get { return _cp1253Greek; } }
-                public bool Cp1251Cyrillic { get { return _cp1251Cyrillic; } }
-                public bool Cp1250Latin2EasternEurope { get { return _cp1250Latin2EasternEurope; } }
-                public bool Cp1252Latin1 { get { return _cp1252Latin1; } }
-                public bool Cp437Us { get { return _cp437Us; } }
-                public bool Cp850WeLatin1 { get { return _cp850WeLatin1; } }
-                public bool Cp708ArabicAsmo708 { get { return _cp708ArabicAsmo708; } }
-                public bool Cp737GreekFormer437G { get { return _cp737GreekFormer437G; } }
-                public bool Cp775MsDosBaltic { get { return _cp775MsDosBaltic; } }
-                public bool Cp852Latin2 { get { return _cp852Latin2; } }
-                public bool Cp855IbmCyrillicPrimarilyRussian { get { return _cp855IbmCyrillicPrimarilyRussian; } }
-                public bool Cp857IbmTurkish { get { return _cp857IbmTurkish; } }
-                public bool Cp860MsDosPortuguese { get { return _cp860MsDosPortuguese; } }
-                public bool Cp861MsDosIcelandic { get { return _cp861MsDosIcelandic; } }
-                public bool Cp862Hebrew { get { return _cp862Hebrew; } }
-                public bool Cp863MsDosCanadianFrench { get { return _cp863MsDosCanadianFrench; } }
-                public bool Cp864Arabic { get { return _cp864Arabic; } }
-                public bool Cp865MsDosNordic { get { return _cp865MsDosNordic; } }
-                public bool Cp866MsDosRussian { get { return _cp866MsDosRussian; } }
-                public bool Cp869IbmGreek { get { return _cp869IbmGreek; } }
-                public ulong ReservedForOem { get { return _reservedForOem; } }
-                public Ttf M_Root { get { return m_root; } }
-                public Ttf.Os2 M_Parent { get { return m_parent; } }
-            }
             private ushort _version;
             private short _xAvgCharWidth;
             private WeightClass _weightClass;
@@ -1658,14 +2249,14 @@ namespace Kaitai
             public Ttf M_Root { get { return m_root; } }
             public Ttf.DirTableEntry M_Parent { get { return m_parent; } }
         }
-        public partial class Fixed : KaitaiStruct
+        public partial class Post : KaitaiStruct
         {
-            public static Fixed FromFile(string fileName)
+            public static Post FromFile(string fileName)
             {
-                return new Fixed(new KaitaiStream(fileName));
+                return new Post(new KaitaiStream(fileName));
             }
 
-            public Fixed(KaitaiStream p__io, KaitaiStruct p__parent = null, Ttf p__root = null) : base(p__io)
+            public Post(KaitaiStream p__io, Ttf.DirTableEntry p__parent = null, Ttf p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -1673,490 +2264,27 @@ namespace Kaitai
             }
             private void _read()
             {
-                _major = m_io.ReadU2be();
-                _minor = m_io.ReadU2be();
-            }
-            private ushort _major;
-            private ushort _minor;
-            private Ttf m_root;
-            private KaitaiStruct m_parent;
-            public ushort Major { get { return _major; } }
-            public ushort Minor { get { return _minor; } }
-            public Ttf M_Root { get { return m_root; } }
-            public KaitaiStruct M_Parent { get { return m_parent; } }
-        }
-        public partial class Glyf : KaitaiStruct
-        {
-            public static Glyf FromFile(string fileName)
-            {
-                return new Glyf(new KaitaiStream(fileName));
-            }
-
-            public Glyf(KaitaiStream p__io, Ttf.DirTableEntry p__parent = null, Ttf p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _numberOfContours = m_io.ReadS2be();
-                _xMin = m_io.ReadS2be();
-                _yMin = m_io.ReadS2be();
-                _xMax = m_io.ReadS2be();
-                _yMax = m_io.ReadS2be();
-                if (NumberOfContours > 0) {
-                    _value = new SimpleGlyph(m_io, this, m_root);
+                _format = new Fixed(m_io, this, m_root);
+                _italicAngle = new Fixed(m_io, this, m_root);
+                _underlinePosition = m_io.ReadS2be();
+                _underlineThichness = m_io.ReadS2be();
+                _isFixedPitch = m_io.ReadU4be();
+                _minMemType42 = m_io.ReadU4be();
+                _maxMemType42 = m_io.ReadU4be();
+                _minMemType1 = m_io.ReadU4be();
+                _maxMemType1 = m_io.ReadU4be();
+                if ( ((Format.Major == 2) && (Format.Minor == 0)) ) {
+                    _format20 = new Format20(m_io, this, m_root);
                 }
             }
-            public partial class SimpleGlyph : KaitaiStruct
+            public partial class Format20 : KaitaiStruct
             {
-                public static SimpleGlyph FromFile(string fileName)
+                public static Format20 FromFile(string fileName)
                 {
-                    return new SimpleGlyph(new KaitaiStream(fileName));
+                    return new Format20(new KaitaiStream(fileName));
                 }
 
-                public SimpleGlyph(KaitaiStream p__io, Ttf.Glyf p__parent = null, Ttf p__root = null) : base(p__io)
-                {
-                    m_parent = p__parent;
-                    m_root = p__root;
-                    f_pointCount = false;
-                    _read();
-                }
-                private void _read()
-                {
-                    _endPtsOfContours = new List<ushort>();
-                    for (var i = 0; i < M_Parent.NumberOfContours; i++)
-                    {
-                        _endPtsOfContours.Add(m_io.ReadU2be());
-                    }
-                    _instructionLength = m_io.ReadU2be();
-                    _instructions = m_io.ReadBytes(InstructionLength);
-                    _flags = new List<Flag>();
-                    for (var i = 0; i < PointCount; i++)
-                    {
-                        _flags.Add(new Flag(m_io, this, m_root));
-                    }
-                }
-                public partial class Flag : KaitaiStruct
-                {
-                    public static Flag FromFile(string fileName)
-                    {
-                        return new Flag(new KaitaiStream(fileName));
-                    }
-
-                    public Flag(KaitaiStream p__io, Ttf.Glyf.SimpleGlyph p__parent = null, Ttf p__root = null) : base(p__io)
-                    {
-                        m_parent = p__parent;
-                        m_root = p__root;
-                        _read();
-                    }
-                    private void _read()
-                    {
-                        _reserved = m_io.ReadBitsIntBe(2);
-                        _yIsSame = m_io.ReadBitsIntBe(1) != 0;
-                        _xIsSame = m_io.ReadBitsIntBe(1) != 0;
-                        _repeat = m_io.ReadBitsIntBe(1) != 0;
-                        _yShortVector = m_io.ReadBitsIntBe(1) != 0;
-                        _xShortVector = m_io.ReadBitsIntBe(1) != 0;
-                        _onCurve = m_io.ReadBitsIntBe(1) != 0;
-                        m_io.AlignToByte();
-                        if (Repeat) {
-                            _repeatValue = m_io.ReadU1();
-                        }
-                    }
-                    private ulong _reserved;
-                    private bool _yIsSame;
-                    private bool _xIsSame;
-                    private bool _repeat;
-                    private bool _yShortVector;
-                    private bool _xShortVector;
-                    private bool _onCurve;
-                    private byte? _repeatValue;
-                    private Ttf m_root;
-                    private Ttf.Glyf.SimpleGlyph m_parent;
-                    public ulong Reserved { get { return _reserved; } }
-                    public bool YIsSame { get { return _yIsSame; } }
-                    public bool XIsSame { get { return _xIsSame; } }
-                    public bool Repeat { get { return _repeat; } }
-                    public bool YShortVector { get { return _yShortVector; } }
-                    public bool XShortVector { get { return _xShortVector; } }
-                    public bool OnCurve { get { return _onCurve; } }
-                    public byte? RepeatValue { get { return _repeatValue; } }
-                    public Ttf M_Root { get { return m_root; } }
-                    public Ttf.Glyf.SimpleGlyph M_Parent { get { return m_parent; } }
-                }
-                private bool f_pointCount;
-                private int _pointCount;
-                public int PointCount
-                {
-                    get
-                    {
-                        if (f_pointCount)
-                            return _pointCount;
-                        _pointCount = (int) ((EndPtsOfContours.Max() + 1));
-                        f_pointCount = true;
-                        return _pointCount;
-                    }
-                }
-                private List<ushort> _endPtsOfContours;
-                private ushort _instructionLength;
-                private byte[] _instructions;
-                private List<Flag> _flags;
-                private Ttf m_root;
-                private Ttf.Glyf m_parent;
-                public List<ushort> EndPtsOfContours { get { return _endPtsOfContours; } }
-                public ushort InstructionLength { get { return _instructionLength; } }
-                public byte[] Instructions { get { return _instructions; } }
-                public List<Flag> Flags { get { return _flags; } }
-                public Ttf M_Root { get { return m_root; } }
-                public Ttf.Glyf M_Parent { get { return m_parent; } }
-            }
-            private short _numberOfContours;
-            private short _xMin;
-            private short _yMin;
-            private short _xMax;
-            private short _yMax;
-            private SimpleGlyph _value;
-            private Ttf m_root;
-            private Ttf.DirTableEntry m_parent;
-            public short NumberOfContours { get { return _numberOfContours; } }
-            public short XMin { get { return _xMin; } }
-            public short YMin { get { return _yMin; } }
-            public short XMax { get { return _xMax; } }
-            public short YMax { get { return _yMax; } }
-            public SimpleGlyph Value { get { return _value; } }
-            public Ttf M_Root { get { return m_root; } }
-            public Ttf.DirTableEntry M_Parent { get { return m_parent; } }
-        }
-
-        /// <summary>
-        /// cvt  - Control Value Table This table contains a list of values that can be referenced by instructions. They can be used, among other things, to control characteristics for different glyphs.
-        /// </summary>
-        public partial class Cvt : KaitaiStruct
-        {
-            public static Cvt FromFile(string fileName)
-            {
-                return new Cvt(new KaitaiStream(fileName));
-            }
-
-            public Cvt(KaitaiStream p__io, Ttf.DirTableEntry p__parent = null, Ttf p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _fwords = new List<short>();
-                {
-                    var i = 0;
-                    while (!m_io.IsEof) {
-                        _fwords.Add(m_io.ReadS2be());
-                        i++;
-                    }
-                }
-            }
-            private List<short> _fwords;
-            private Ttf m_root;
-            private Ttf.DirTableEntry m_parent;
-            public List<short> Fwords { get { return _fwords; } }
-            public Ttf M_Root { get { return m_root; } }
-            public Ttf.DirTableEntry M_Parent { get { return m_parent; } }
-        }
-        public partial class Maxp : KaitaiStruct
-        {
-            public static Maxp FromFile(string fileName)
-            {
-                return new Maxp(new KaitaiStream(fileName));
-            }
-
-            public Maxp(KaitaiStream p__io, Ttf.DirTableEntry p__parent = null, Ttf p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_isVersion10 = false;
-                _read();
-            }
-            private void _read()
-            {
-                _tableVersionNumber = new Fixed(m_io, this, m_root);
-                _numGlyphs = m_io.ReadU2be();
-                if (IsVersion10) {
-                    _version10Body = new MaxpVersion10Body(m_io, this, m_root);
-                }
-            }
-            private bool f_isVersion10;
-            private bool _isVersion10;
-            public bool IsVersion10
-            {
-                get
-                {
-                    if (f_isVersion10)
-                        return _isVersion10;
-                    _isVersion10 = (bool) ( ((TableVersionNumber.Major == 1) && (TableVersionNumber.Minor == 0)) );
-                    f_isVersion10 = true;
-                    return _isVersion10;
-                }
-            }
-            private Fixed _tableVersionNumber;
-            private ushort _numGlyphs;
-            private MaxpVersion10Body _version10Body;
-            private Ttf m_root;
-            private Ttf.DirTableEntry m_parent;
-
-            /// <summary>
-            /// 0x00010000 for version 1.0.
-            /// </summary>
-            public Fixed TableVersionNumber { get { return _tableVersionNumber; } }
-
-            /// <summary>
-            /// The number of glyphs in the font.
-            /// </summary>
-            public ushort NumGlyphs { get { return _numGlyphs; } }
-            public MaxpVersion10Body Version10Body { get { return _version10Body; } }
-            public Ttf M_Root { get { return m_root; } }
-            public Ttf.DirTableEntry M_Parent { get { return m_parent; } }
-        }
-        public partial class MaxpVersion10Body : KaitaiStruct
-        {
-            public static MaxpVersion10Body FromFile(string fileName)
-            {
-                return new MaxpVersion10Body(new KaitaiStream(fileName));
-            }
-
-            public MaxpVersion10Body(KaitaiStream p__io, Ttf.Maxp p__parent = null, Ttf p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _maxPoints = m_io.ReadU2be();
-                _maxContours = m_io.ReadU2be();
-                _maxCompositePoints = m_io.ReadU2be();
-                _maxCompositeContours = m_io.ReadU2be();
-                _maxZones = m_io.ReadU2be();
-                _maxTwilightPoints = m_io.ReadU2be();
-                _maxStorage = m_io.ReadU2be();
-                _maxFunctionDefs = m_io.ReadU2be();
-                _maxInstructionDefs = m_io.ReadU2be();
-                _maxStackElements = m_io.ReadU2be();
-                _maxSizeOfInstructions = m_io.ReadU2be();
-                _maxComponentElements = m_io.ReadU2be();
-                _maxComponentDepth = m_io.ReadU2be();
-            }
-            private ushort _maxPoints;
-            private ushort _maxContours;
-            private ushort _maxCompositePoints;
-            private ushort _maxCompositeContours;
-            private ushort _maxZones;
-            private ushort _maxTwilightPoints;
-            private ushort _maxStorage;
-            private ushort _maxFunctionDefs;
-            private ushort _maxInstructionDefs;
-            private ushort _maxStackElements;
-            private ushort _maxSizeOfInstructions;
-            private ushort _maxComponentElements;
-            private ushort _maxComponentDepth;
-            private Ttf m_root;
-            private Ttf.Maxp m_parent;
-
-            /// <summary>
-            /// Maximum points in a non-composite glyph.
-            /// </summary>
-            public ushort MaxPoints { get { return _maxPoints; } }
-
-            /// <summary>
-            /// Maximum contours in a non-composite glyph.
-            /// </summary>
-            public ushort MaxContours { get { return _maxContours; } }
-
-            /// <summary>
-            /// Maximum points in a composite glyph.
-            /// </summary>
-            public ushort MaxCompositePoints { get { return _maxCompositePoints; } }
-
-            /// <summary>
-            /// Maximum contours in a composite glyph.
-            /// </summary>
-            public ushort MaxCompositeContours { get { return _maxCompositeContours; } }
-
-            /// <summary>
-            /// 1 if instructions do not use the twilight zone (Z0), or 2 if instructions do use Z0; should be set to 2 in most cases.
-            /// </summary>
-            public ushort MaxZones { get { return _maxZones; } }
-
-            /// <summary>
-            /// Maximum points used in Z0.
-            /// </summary>
-            public ushort MaxTwilightPoints { get { return _maxTwilightPoints; } }
-
-            /// <summary>
-            /// Number of Storage Area locations.
-            /// </summary>
-            public ushort MaxStorage { get { return _maxStorage; } }
-
-            /// <summary>
-            /// Number of FDEFs.
-            /// </summary>
-            public ushort MaxFunctionDefs { get { return _maxFunctionDefs; } }
-
-            /// <summary>
-            /// Number of IDEFs.
-            /// </summary>
-            public ushort MaxInstructionDefs { get { return _maxInstructionDefs; } }
-
-            /// <summary>
-            /// Maximum stack depth.
-            /// </summary>
-            public ushort MaxStackElements { get { return _maxStackElements; } }
-
-            /// <summary>
-            /// Maximum byte count for glyph instructions.
-            /// </summary>
-            public ushort MaxSizeOfInstructions { get { return _maxSizeOfInstructions; } }
-
-            /// <summary>
-            /// Maximum number of components referenced at &quot;top level&quot; for any composite glyph.
-            /// </summary>
-            public ushort MaxComponentElements { get { return _maxComponentElements; } }
-
-            /// <summary>
-            /// Maximum levels of recursion; 1 for simple components.
-            /// </summary>
-            public ushort MaxComponentDepth { get { return _maxComponentDepth; } }
-            public Ttf M_Root { get { return m_root; } }
-            public Ttf.Maxp M_Parent { get { return m_parent; } }
-        }
-        public partial class OffsetTable : KaitaiStruct
-        {
-            public static OffsetTable FromFile(string fileName)
-            {
-                return new OffsetTable(new KaitaiStream(fileName));
-            }
-
-            public OffsetTable(KaitaiStream p__io, Ttf p__parent = null, Ttf p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _sfntVersion = new Fixed(m_io, this, m_root);
-                _numTables = m_io.ReadU2be();
-                _searchRange = m_io.ReadU2be();
-                _entrySelector = m_io.ReadU2be();
-                _rangeShift = m_io.ReadU2be();
-            }
-            private Fixed _sfntVersion;
-            private ushort _numTables;
-            private ushort _searchRange;
-            private ushort _entrySelector;
-            private ushort _rangeShift;
-            private Ttf m_root;
-            private Ttf m_parent;
-            public Fixed SfntVersion { get { return _sfntVersion; } }
-            public ushort NumTables { get { return _numTables; } }
-            public ushort SearchRange { get { return _searchRange; } }
-            public ushort EntrySelector { get { return _entrySelector; } }
-            public ushort RangeShift { get { return _rangeShift; } }
-            public Ttf M_Root { get { return m_root; } }
-            public Ttf M_Parent { get { return m_parent; } }
-        }
-
-        /// <summary>
-        /// cmap - Character To Glyph Index Mapping Table This table defines the mapping of character codes to the glyph index values used in the font.
-        /// </summary>
-        public partial class Cmap : KaitaiStruct
-        {
-            public static Cmap FromFile(string fileName)
-            {
-                return new Cmap(new KaitaiStream(fileName));
-            }
-
-            public Cmap(KaitaiStream p__io, Ttf.DirTableEntry p__parent = null, Ttf p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _versionNumber = m_io.ReadU2be();
-                _numberOfEncodingTables = m_io.ReadU2be();
-                _tables = new List<SubtableHeader>();
-                for (var i = 0; i < NumberOfEncodingTables; i++)
-                {
-                    _tables.Add(new SubtableHeader(m_io, this, m_root));
-                }
-            }
-            public partial class SubtableHeader : KaitaiStruct
-            {
-                public static SubtableHeader FromFile(string fileName)
-                {
-                    return new SubtableHeader(new KaitaiStream(fileName));
-                }
-
-                public SubtableHeader(KaitaiStream p__io, Ttf.Cmap p__parent = null, Ttf p__root = null) : base(p__io)
-                {
-                    m_parent = p__parent;
-                    m_root = p__root;
-                    f_table = false;
-                    _read();
-                }
-                private void _read()
-                {
-                    _platformId = m_io.ReadU2be();
-                    _encodingId = m_io.ReadU2be();
-                    _subtableOffset = m_io.ReadU4be();
-                }
-                private bool f_table;
-                private Subtable _table;
-                public Subtable Table
-                {
-                    get
-                    {
-                        if (f_table)
-                            return _table;
-                        KaitaiStream io = M_Parent.M_Io;
-                        long _pos = io.Pos;
-                        io.Seek(SubtableOffset);
-                        _table = new Subtable(io, this, m_root);
-                        io.Seek(_pos);
-                        f_table = true;
-                        return _table;
-                    }
-                }
-                private ushort _platformId;
-                private ushort _encodingId;
-                private uint _subtableOffset;
-                private Ttf m_root;
-                private Ttf.Cmap m_parent;
-                public ushort PlatformId { get { return _platformId; } }
-                public ushort EncodingId { get { return _encodingId; } }
-                public uint SubtableOffset { get { return _subtableOffset; } }
-                public Ttf M_Root { get { return m_root; } }
-                public Ttf.Cmap M_Parent { get { return m_parent; } }
-            }
-            public partial class Subtable : KaitaiStruct
-            {
-                public static Subtable FromFile(string fileName)
-                {
-                    return new Subtable(new KaitaiStream(fileName));
-                }
-
-
-                public enum SubtableFormat
-                {
-                    ByteEncodingTable = 0,
-                    HighByteMappingThroughTable = 2,
-                    SegmentMappingToDeltaValues = 4,
-                    TrimmedTableMapping = 6,
-                }
-                public Subtable(KaitaiStream p__io, Ttf.Cmap.SubtableHeader p__parent = null, Ttf p__root = null) : base(p__io)
+                public Format20(KaitaiStream p__io, Ttf.Post p__parent = null, Ttf p__root = null) : base(p__io)
                 {
                     m_parent = p__parent;
                     m_root = p__root;
@@ -2164,48 +2292,31 @@ namespace Kaitai
                 }
                 private void _read()
                 {
-                    _format = ((SubtableFormat) m_io.ReadU2be());
-                    _length = m_io.ReadU2be();
-                    _version = m_io.ReadU2be();
-                    switch (Format) {
-                    case SubtableFormat.ByteEncodingTable: {
-                        __raw_value = m_io.ReadBytes((Length - 6));
-                        var io___raw_value = new KaitaiStream(__raw_value);
-                        _value = new ByteEncodingTable(io___raw_value, this, m_root);
-                        break;
+                    _numberOfGlyphs = m_io.ReadU2be();
+                    _glyphNameIndex = new List<ushort>();
+                    for (var i = 0; i < NumberOfGlyphs; i++)
+                    {
+                        _glyphNameIndex.Add(m_io.ReadU2be());
                     }
-                    case SubtableFormat.SegmentMappingToDeltaValues: {
-                        __raw_value = m_io.ReadBytes((Length - 6));
-                        var io___raw_value = new KaitaiStream(__raw_value);
-                        _value = new SegmentMappingToDeltaValues(io___raw_value, this, m_root);
-                        break;
-                    }
-                    case SubtableFormat.HighByteMappingThroughTable: {
-                        __raw_value = m_io.ReadBytes((Length - 6));
-                        var io___raw_value = new KaitaiStream(__raw_value);
-                        _value = new HighByteMappingThroughTable(io___raw_value, this, m_root);
-                        break;
-                    }
-                    case SubtableFormat.TrimmedTableMapping: {
-                        __raw_value = m_io.ReadBytes((Length - 6));
-                        var io___raw_value = new KaitaiStream(__raw_value);
-                        _value = new TrimmedTableMapping(io___raw_value, this, m_root);
-                        break;
-                    }
-                    default: {
-                        _value = m_io.ReadBytes((Length - 6));
-                        break;
-                    }
+                    _glyphNames = new List<PascalString>();
+                    {
+                        var i = 0;
+                        PascalString M_;
+                        do {
+                            M_ = new PascalString(m_io, this, m_root);
+                            _glyphNames.Add(M_);
+                            i++;
+                        } while (!( ((M_.Length == 0) || (M_Io.IsEof)) ));
                     }
                 }
-                public partial class ByteEncodingTable : KaitaiStruct
+                public partial class PascalString : KaitaiStruct
                 {
-                    public static ByteEncodingTable FromFile(string fileName)
+                    public static PascalString FromFile(string fileName)
                     {
-                        return new ByteEncodingTable(new KaitaiStream(fileName));
+                        return new PascalString(new KaitaiStream(fileName));
                     }
 
-                    public ByteEncodingTable(KaitaiStream p__io, Ttf.Cmap.Subtable p__parent = null, Ttf p__root = null) : base(p__io)
+                    public PascalString(KaitaiStream p__io, Ttf.Post.Format20 p__parent = null, Ttf p__root = null) : base(p__io)
                     {
                         m_parent = p__parent;
                         m_root = p__root;
@@ -2213,188 +2324,77 @@ namespace Kaitai
                     }
                     private void _read()
                     {
-                        _glyphIdArray = m_io.ReadBytes(256);
+                        _length = m_io.ReadU1();
+                        if (Length != 0) {
+                            _value = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(Length));
+                        }
                     }
-                    private byte[] _glyphIdArray;
+                    private byte _length;
+                    private string _value;
                     private Ttf m_root;
-                    private Ttf.Cmap.Subtable m_parent;
-                    public byte[] GlyphIdArray { get { return _glyphIdArray; } }
+                    private Ttf.Post.Format20 m_parent;
+                    public byte Length { get { return _length; } }
+                    public string Value { get { return _value; } }
                     public Ttf M_Root { get { return m_root; } }
-                    public Ttf.Cmap.Subtable M_Parent { get { return m_parent; } }
+                    public Ttf.Post.Format20 M_Parent { get { return m_parent; } }
                 }
-                public partial class HighByteMappingThroughTable : KaitaiStruct
-                {
-                    public static HighByteMappingThroughTable FromFile(string fileName)
-                    {
-                        return new HighByteMappingThroughTable(new KaitaiStream(fileName));
-                    }
-
-                    public HighByteMappingThroughTable(KaitaiStream p__io, Ttf.Cmap.Subtable p__parent = null, Ttf p__root = null) : base(p__io)
-                    {
-                        m_parent = p__parent;
-                        m_root = p__root;
-                        _read();
-                    }
-                    private void _read()
-                    {
-                        _subHeaderKeys = new List<ushort>();
-                        for (var i = 0; i < 256; i++)
-                        {
-                            _subHeaderKeys.Add(m_io.ReadU2be());
-                        }
-                    }
-                    private List<ushort> _subHeaderKeys;
-                    private Ttf m_root;
-                    private Ttf.Cmap.Subtable m_parent;
-                    public List<ushort> SubHeaderKeys { get { return _subHeaderKeys; } }
-                    public Ttf M_Root { get { return m_root; } }
-                    public Ttf.Cmap.Subtable M_Parent { get { return m_parent; } }
-                }
-                public partial class SegmentMappingToDeltaValues : KaitaiStruct
-                {
-                    public static SegmentMappingToDeltaValues FromFile(string fileName)
-                    {
-                        return new SegmentMappingToDeltaValues(new KaitaiStream(fileName));
-                    }
-
-                    public SegmentMappingToDeltaValues(KaitaiStream p__io, Ttf.Cmap.Subtable p__parent = null, Ttf p__root = null) : base(p__io)
-                    {
-                        m_parent = p__parent;
-                        m_root = p__root;
-                        f_segCount = false;
-                        _read();
-                    }
-                    private void _read()
-                    {
-                        _segCountX2 = m_io.ReadU2be();
-                        _searchRange = m_io.ReadU2be();
-                        _entrySelector = m_io.ReadU2be();
-                        _rangeShift = m_io.ReadU2be();
-                        _endCount = new List<ushort>();
-                        for (var i = 0; i < SegCount; i++)
-                        {
-                            _endCount.Add(m_io.ReadU2be());
-                        }
-                        _reservedPad = m_io.ReadU2be();
-                        _startCount = new List<ushort>();
-                        for (var i = 0; i < SegCount; i++)
-                        {
-                            _startCount.Add(m_io.ReadU2be());
-                        }
-                        _idDelta = new List<ushort>();
-                        for (var i = 0; i < SegCount; i++)
-                        {
-                            _idDelta.Add(m_io.ReadU2be());
-                        }
-                        _idRangeOffset = new List<ushort>();
-                        for (var i = 0; i < SegCount; i++)
-                        {
-                            _idRangeOffset.Add(m_io.ReadU2be());
-                        }
-                        _glyphIdArray = new List<ushort>();
-                        {
-                            var i = 0;
-                            while (!m_io.IsEof) {
-                                _glyphIdArray.Add(m_io.ReadU2be());
-                                i++;
-                            }
-                        }
-                    }
-                    private bool f_segCount;
-                    private int _segCount;
-                    public int SegCount
-                    {
-                        get
-                        {
-                            if (f_segCount)
-                                return _segCount;
-                            _segCount = (int) ((SegCountX2 / 2));
-                            f_segCount = true;
-                            return _segCount;
-                        }
-                    }
-                    private ushort _segCountX2;
-                    private ushort _searchRange;
-                    private ushort _entrySelector;
-                    private ushort _rangeShift;
-                    private List<ushort> _endCount;
-                    private ushort _reservedPad;
-                    private List<ushort> _startCount;
-                    private List<ushort> _idDelta;
-                    private List<ushort> _idRangeOffset;
-                    private List<ushort> _glyphIdArray;
-                    private Ttf m_root;
-                    private Ttf.Cmap.Subtable m_parent;
-                    public ushort SegCountX2 { get { return _segCountX2; } }
-                    public ushort SearchRange { get { return _searchRange; } }
-                    public ushort EntrySelector { get { return _entrySelector; } }
-                    public ushort RangeShift { get { return _rangeShift; } }
-                    public List<ushort> EndCount { get { return _endCount; } }
-                    public ushort ReservedPad { get { return _reservedPad; } }
-                    public List<ushort> StartCount { get { return _startCount; } }
-                    public List<ushort> IdDelta { get { return _idDelta; } }
-                    public List<ushort> IdRangeOffset { get { return _idRangeOffset; } }
-                    public List<ushort> GlyphIdArray { get { return _glyphIdArray; } }
-                    public Ttf M_Root { get { return m_root; } }
-                    public Ttf.Cmap.Subtable M_Parent { get { return m_parent; } }
-                }
-                public partial class TrimmedTableMapping : KaitaiStruct
-                {
-                    public static TrimmedTableMapping FromFile(string fileName)
-                    {
-                        return new TrimmedTableMapping(new KaitaiStream(fileName));
-                    }
-
-                    public TrimmedTableMapping(KaitaiStream p__io, Ttf.Cmap.Subtable p__parent = null, Ttf p__root = null) : base(p__io)
-                    {
-                        m_parent = p__parent;
-                        m_root = p__root;
-                        _read();
-                    }
-                    private void _read()
-                    {
-                        _firstCode = m_io.ReadU2be();
-                        _entryCount = m_io.ReadU2be();
-                        _glyphIdArray = new List<ushort>();
-                        for (var i = 0; i < EntryCount; i++)
-                        {
-                            _glyphIdArray.Add(m_io.ReadU2be());
-                        }
-                    }
-                    private ushort _firstCode;
-                    private ushort _entryCount;
-                    private List<ushort> _glyphIdArray;
-                    private Ttf m_root;
-                    private Ttf.Cmap.Subtable m_parent;
-                    public ushort FirstCode { get { return _firstCode; } }
-                    public ushort EntryCount { get { return _entryCount; } }
-                    public List<ushort> GlyphIdArray { get { return _glyphIdArray; } }
-                    public Ttf M_Root { get { return m_root; } }
-                    public Ttf.Cmap.Subtable M_Parent { get { return m_parent; } }
-                }
-                private SubtableFormat _format;
-                private ushort _length;
-                private ushort _version;
-                private object _value;
+                private ushort _numberOfGlyphs;
+                private List<ushort> _glyphNameIndex;
+                private List<PascalString> _glyphNames;
                 private Ttf m_root;
-                private Ttf.Cmap.SubtableHeader m_parent;
-                private byte[] __raw_value;
-                public SubtableFormat Format { get { return _format; } }
-                public ushort Length { get { return _length; } }
-                public ushort Version { get { return _version; } }
-                public object Value { get { return _value; } }
+                private Ttf.Post m_parent;
+                public ushort NumberOfGlyphs { get { return _numberOfGlyphs; } }
+                public List<ushort> GlyphNameIndex { get { return _glyphNameIndex; } }
+                public List<PascalString> GlyphNames { get { return _glyphNames; } }
                 public Ttf M_Root { get { return m_root; } }
-                public Ttf.Cmap.SubtableHeader M_Parent { get { return m_parent; } }
-                public byte[] M_RawValue { get { return __raw_value; } }
+                public Ttf.Post M_Parent { get { return m_parent; } }
             }
-            private ushort _versionNumber;
-            private ushort _numberOfEncodingTables;
-            private List<SubtableHeader> _tables;
+            private Fixed _format;
+            private Fixed _italicAngle;
+            private short _underlinePosition;
+            private short _underlineThichness;
+            private uint _isFixedPitch;
+            private uint _minMemType42;
+            private uint _maxMemType42;
+            private uint _minMemType1;
+            private uint _maxMemType1;
+            private Format20 _format20;
             private Ttf m_root;
             private Ttf.DirTableEntry m_parent;
-            public ushort VersionNumber { get { return _versionNumber; } }
-            public ushort NumberOfEncodingTables { get { return _numberOfEncodingTables; } }
-            public List<SubtableHeader> Tables { get { return _tables; } }
+            public Fixed Format { get { return _format; } }
+            public Fixed ItalicAngle { get { return _italicAngle; } }
+            public short UnderlinePosition { get { return _underlinePosition; } }
+            public short UnderlineThichness { get { return _underlineThichness; } }
+            public uint IsFixedPitch { get { return _isFixedPitch; } }
+            public uint MinMemType42 { get { return _minMemType42; } }
+            public uint MaxMemType42 { get { return _maxMemType42; } }
+            public uint MinMemType1 { get { return _minMemType1; } }
+            public uint MaxMemType1 { get { return _maxMemType1; } }
+            public Format20 Format20 { get { return _format20; } }
+            public Ttf M_Root { get { return m_root; } }
+            public Ttf.DirTableEntry M_Parent { get { return m_parent; } }
+        }
+        public partial class Prep : KaitaiStruct
+        {
+            public static Prep FromFile(string fileName)
+            {
+                return new Prep(new KaitaiStream(fileName));
+            }
+
+            public Prep(KaitaiStream p__io, Ttf.DirTableEntry p__parent = null, Ttf p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _instructions = m_io.ReadBytesFull();
+            }
+            private byte[] _instructions;
+            private Ttf m_root;
+            private Ttf.DirTableEntry m_parent;
+            public byte[] Instructions { get { return _instructions; } }
             public Ttf M_Root { get { return m_root; } }
             public Ttf.DirTableEntry M_Parent { get { return m_parent; } }
         }

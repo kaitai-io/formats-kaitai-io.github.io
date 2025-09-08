@@ -7,7 +7,8 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
-import java.nio.charset.Charset;
+import java.util.List;
+import java.nio.charset.StandardCharsets;
 
 
 /**
@@ -72,37 +73,52 @@ public class DimeMessage extends KaitaiStruct {
         }
     }
 
+    public void _fetchInstances() {
+        for (int i = 0; i < this.records.size(); i++) {
+            this.records.get(((Number) (i)).intValue())._fetchInstances();
+        }
+    }
+
     /**
-     * padding to the next 4-byte boundary
+     * one element of the option field
      */
-    public static class Padding extends KaitaiStruct {
-        public static Padding fromFile(String fileName) throws IOException {
-            return new Padding(new ByteBufferKaitaiStream(fileName));
+    public static class OptionElement extends KaitaiStruct {
+        public static OptionElement fromFile(String fileName) throws IOException {
+            return new OptionElement(new ByteBufferKaitaiStream(fileName));
         }
 
-        public Padding(KaitaiStream _io) {
+        public OptionElement(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public Padding(KaitaiStream _io, DimeMessage.Record _parent) {
+        public OptionElement(KaitaiStream _io, DimeMessage.OptionField _parent) {
             this(_io, _parent, null);
         }
 
-        public Padding(KaitaiStream _io, DimeMessage.Record _parent, DimeMessage _root) {
+        public OptionElement(KaitaiStream _io, DimeMessage.OptionField _parent, DimeMessage _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.boundaryPadding = this._io.readBytes(KaitaiStream.mod(-(_io().pos()), 4));
+            this.elementFormat = this._io.readU2be();
+            this.lenElement = this._io.readU2be();
+            this.elementData = this._io.readBytes(lenElement());
         }
-        private byte[] boundaryPadding;
+
+        public void _fetchInstances() {
+        }
+        private int elementFormat;
+        private int lenElement;
+        private byte[] elementData;
         private DimeMessage _root;
-        private DimeMessage.Record _parent;
-        public byte[] boundaryPadding() { return boundaryPadding; }
+        private DimeMessage.OptionField _parent;
+        public int elementFormat() { return elementFormat; }
+        public int lenElement() { return lenElement; }
+        public byte[] elementData() { return elementData; }
         public DimeMessage _root() { return _root; }
-        public DimeMessage.Record _parent() { return _parent; }
+        public DimeMessage.OptionField _parent() { return _parent; }
     }
 
     /**
@@ -137,51 +153,54 @@ public class DimeMessage extends KaitaiStruct {
                 }
             }
         }
-        private ArrayList<OptionElement> optionElements;
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.optionElements.size(); i++) {
+                this.optionElements.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private List<OptionElement> optionElements;
         private DimeMessage _root;
         private DimeMessage.Record _parent;
-        public ArrayList<OptionElement> optionElements() { return optionElements; }
+        public List<OptionElement> optionElements() { return optionElements; }
         public DimeMessage _root() { return _root; }
         public DimeMessage.Record _parent() { return _parent; }
     }
 
     /**
-     * one element of the option field
+     * padding to the next 4-byte boundary
      */
-    public static class OptionElement extends KaitaiStruct {
-        public static OptionElement fromFile(String fileName) throws IOException {
-            return new OptionElement(new ByteBufferKaitaiStream(fileName));
+    public static class Padding extends KaitaiStruct {
+        public static Padding fromFile(String fileName) throws IOException {
+            return new Padding(new ByteBufferKaitaiStream(fileName));
         }
 
-        public OptionElement(KaitaiStream _io) {
+        public Padding(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public OptionElement(KaitaiStream _io, DimeMessage.OptionField _parent) {
+        public Padding(KaitaiStream _io, DimeMessage.Record _parent) {
             this(_io, _parent, null);
         }
 
-        public OptionElement(KaitaiStream _io, DimeMessage.OptionField _parent, DimeMessage _root) {
+        public Padding(KaitaiStream _io, DimeMessage.Record _parent, DimeMessage _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.elementFormat = this._io.readU2be();
-            this.lenElement = this._io.readU2be();
-            this.elementData = this._io.readBytes(lenElement());
+            this.boundaryPadding = this._io.readBytes(KaitaiStream.mod(-(_io().pos()), 4));
         }
-        private int elementFormat;
-        private int lenElement;
-        private byte[] elementData;
+
+        public void _fetchInstances() {
+        }
+        private byte[] boundaryPadding;
         private DimeMessage _root;
-        private DimeMessage.OptionField _parent;
-        public int elementFormat() { return elementFormat; }
-        public int lenElement() { return lenElement; }
-        public byte[] elementData() { return elementData; }
+        private DimeMessage.Record _parent;
+        public byte[] boundaryPadding() { return boundaryPadding; }
         public DimeMessage _root() { return _root; }
-        public DimeMessage.OptionField _parent() { return _parent; }
+        public DimeMessage.Record _parent() { return _parent; }
     }
 
     /**
@@ -213,21 +232,27 @@ public class DimeMessage extends KaitaiStruct {
             this.isChunkRecord = this._io.readBitsIntBe(1) != 0;
             this.typeFormat = DimeMessage.TypeFormats.byId(this._io.readBitsIntBe(4));
             this.reserved = this._io.readBitsIntBe(4);
-            this._io.alignToByte();
             this.lenOptions = this._io.readU2be();
             this.lenId = this._io.readU2be();
             this.lenType = this._io.readU2be();
             this.lenData = this._io.readU4be();
-            this._raw_options = this._io.readBytes(lenOptions());
-            KaitaiStream _io__raw_options = new ByteBufferKaitaiStream(_raw_options);
-            this.options = new OptionField(_io__raw_options, this, _root);
+            KaitaiStream _io_options = this._io.substream(lenOptions());
+            this.options = new OptionField(_io_options, this, _root);
             this.optionsPadding = new Padding(this._io, this, _root);
-            this.id = new String(this._io.readBytes(lenId()), Charset.forName("ASCII"));
+            this.id = new String(this._io.readBytes(lenId()), StandardCharsets.US_ASCII);
             this.idPadding = new Padding(this._io, this, _root);
-            this.type = new String(this._io.readBytes(lenType()), Charset.forName("ASCII"));
+            this.type = new String(this._io.readBytes(lenType()), StandardCharsets.US_ASCII);
             this.typePadding = new Padding(this._io, this, _root);
             this.data = this._io.readBytes(lenData());
             this.dataPadding = new Padding(this._io, this, _root);
+        }
+
+        public void _fetchInstances() {
+            this.options._fetchInstances();
+            this.optionsPadding._fetchInstances();
+            this.idPadding._fetchInstances();
+            this.typePadding._fetchInstances();
+            this.dataPadding._fetchInstances();
         }
         private long version;
         private boolean isFirstRecord;
@@ -249,7 +274,6 @@ public class DimeMessage extends KaitaiStruct {
         private Padding dataPadding;
         private DimeMessage _root;
         private DimeMessage _parent;
-        private byte[] _raw_options;
 
         /**
          * DIME format version (always 1)
@@ -322,12 +346,11 @@ public class DimeMessage extends KaitaiStruct {
         public Padding dataPadding() { return dataPadding; }
         public DimeMessage _root() { return _root; }
         public DimeMessage _parent() { return _parent; }
-        public byte[] _raw_options() { return _raw_options; }
     }
-    private ArrayList<Record> records;
+    private List<Record> records;
     private DimeMessage _root;
     private KaitaiStruct _parent;
-    public ArrayList<Record> records() { return records; }
+    public List<Record> records() { return records; }
     public DimeMessage _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

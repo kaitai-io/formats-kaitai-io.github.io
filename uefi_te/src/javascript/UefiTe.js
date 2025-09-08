@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.UefiTe = factory(root.KaitaiStream);
+    factory(root.UefiTe || (root.UefiTe = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (UefiTe_, KaitaiStream) {
 /**
  * This type of executables could be found inside the UEFI firmware. The UEFI
  * firmware is stored in SPI flash memory, which is a chip soldered on a
@@ -48,6 +48,73 @@ var UefiTe = (function() {
       this.sections.push(new Section(this._io, this, this._root));
     }
   }
+
+  var DataDir = UefiTe.DataDir = (function() {
+    function DataDir(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    DataDir.prototype._read = function() {
+      this.virtualAddress = this._io.readU4le();
+      this.size = this._io.readU4le();
+    }
+
+    return DataDir;
+  })();
+
+  var HeaderDataDirs = UefiTe.HeaderDataDirs = (function() {
+    function HeaderDataDirs(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    HeaderDataDirs.prototype._read = function() {
+      this.baseRelocationTable = new DataDir(this._io, this, this._root);
+      this.debug = new DataDir(this._io, this, this._root);
+    }
+
+    return HeaderDataDirs;
+  })();
+
+  var Section = UefiTe.Section = (function() {
+    function Section(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Section.prototype._read = function() {
+      this.name = KaitaiStream.bytesToStr(KaitaiStream.bytesStripRight(this._io.readBytes(8), 0), "UTF-8");
+      this.virtualSize = this._io.readU4le();
+      this.virtualAddress = this._io.readU4le();
+      this.sizeOfRawData = this._io.readU4le();
+      this.pointerToRawData = this._io.readU4le();
+      this.pointerToRelocations = this._io.readU4le();
+      this.pointerToLinenumbers = this._io.readU4le();
+      this.numRelocations = this._io.readU2le();
+      this.numLinenumbers = this._io.readU2le();
+      this.characteristics = this._io.readU4le();
+    }
+    Object.defineProperty(Section.prototype, 'body', {
+      get: function() {
+        if (this._m_body !== undefined)
+          return this._m_body;
+        var _pos = this._io.pos;
+        this._io.seek((this.pointerToRawData - this._root.teHdr.strippedSize) + this._root.teHdr._io.size);
+        this._m_body = this._io.readBytes(this.sizeOfRawData);
+        this._io.seek(_pos);
+        return this._m_body;
+      }
+    });
+
+    return Section;
+  })();
 
   var TeHeader = UefiTe.TeHeader = (function() {
     TeHeader.MachineType = Object.freeze({
@@ -143,14 +210,14 @@ var UefiTe = (function() {
     function TeHeader(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     TeHeader.prototype._read = function() {
       this.magic = this._io.readBytes(2);
-      if (!((KaitaiStream.byteArrayCompare(this.magic, [86, 90]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([86, 90], this.magic, this._io, "/types/te_header/seq/0");
+      if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([86, 90])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([86, 90]), this.magic, this._io, "/types/te_header/seq/0");
       }
       this.machine = this._io.readU2le();
       this.numSections = this._io.readU1();
@@ -165,74 +232,7 @@ var UefiTe = (function() {
     return TeHeader;
   })();
 
-  var HeaderDataDirs = UefiTe.HeaderDataDirs = (function() {
-    function HeaderDataDirs(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    HeaderDataDirs.prototype._read = function() {
-      this.baseRelocationTable = new DataDir(this._io, this, this._root);
-      this.debug = new DataDir(this._io, this, this._root);
-    }
-
-    return HeaderDataDirs;
-  })();
-
-  var DataDir = UefiTe.DataDir = (function() {
-    function DataDir(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    DataDir.prototype._read = function() {
-      this.virtualAddress = this._io.readU4le();
-      this.size = this._io.readU4le();
-    }
-
-    return DataDir;
-  })();
-
-  var Section = UefiTe.Section = (function() {
-    function Section(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Section.prototype._read = function() {
-      this.name = KaitaiStream.bytesToStr(KaitaiStream.bytesStripRight(this._io.readBytes(8), 0), "UTF-8");
-      this.virtualSize = this._io.readU4le();
-      this.virtualAddress = this._io.readU4le();
-      this.sizeOfRawData = this._io.readU4le();
-      this.pointerToRawData = this._io.readU4le();
-      this.pointerToRelocations = this._io.readU4le();
-      this.pointerToLinenumbers = this._io.readU4le();
-      this.numRelocations = this._io.readU2le();
-      this.numLinenumbers = this._io.readU2le();
-      this.characteristics = this._io.readU4le();
-    }
-    Object.defineProperty(Section.prototype, 'body', {
-      get: function() {
-        if (this._m_body !== undefined)
-          return this._m_body;
-        var _pos = this._io.pos;
-        this._io.seek(((this.pointerToRawData - this._root.teHdr.strippedSize) + this._root.teHdr._io.size));
-        this._m_body = this._io.readBytes(this.sizeOfRawData);
-        this._io.seek(_pos);
-        return this._m_body;
-      }
-    });
-
-    return Section;
-  })();
-
   return UefiTe;
 })();
-return UefiTe;
-}));
+UefiTe_.UefiTe = UefiTe;
+});

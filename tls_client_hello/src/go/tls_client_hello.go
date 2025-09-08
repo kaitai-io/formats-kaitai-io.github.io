@@ -14,14 +14,18 @@ type TlsClientHello struct {
 	Extensions *TlsClientHello_Extensions
 	_io *kaitai.Stream
 	_root *TlsClientHello
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewTlsClientHello() *TlsClientHello {
 	return &TlsClientHello{
 	}
 }
 
-func (this *TlsClientHello) Read(io *kaitai.Stream, parent interface{}, root *TlsClientHello) (err error) {
+func (this TlsClientHello) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *TlsClientHello) Read(io *kaitai.Stream, parent kaitai.Struct, root *TlsClientHello) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -70,138 +74,46 @@ func (this *TlsClientHello) Read(io *kaitai.Stream, parent interface{}, root *Tl
 	}
 	return err
 }
-type TlsClientHello_ServerName struct {
-	NameType uint8
-	Length uint16
-	HostName []byte
-	_io *kaitai.Stream
-	_root *TlsClientHello
-	_parent *TlsClientHello_Sni
-}
-func NewTlsClientHello_ServerName() *TlsClientHello_ServerName {
-	return &TlsClientHello_ServerName{
-	}
-}
-
-func (this *TlsClientHello_ServerName) Read(io *kaitai.Stream, parent *TlsClientHello_Sni, root *TlsClientHello) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp8, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.NameType = tmp8
-	tmp9, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.Length = uint16(tmp9)
-	tmp10, err := this._io.ReadBytes(int(this.Length))
-	if err != nil {
-		return err
-	}
-	tmp10 = tmp10
-	this.HostName = tmp10
-	return err
-}
-type TlsClientHello_Random struct {
-	GmtUnixTime uint32
-	Random []byte
-	_io *kaitai.Stream
-	_root *TlsClientHello
-	_parent *TlsClientHello
-}
-func NewTlsClientHello_Random() *TlsClientHello_Random {
-	return &TlsClientHello_Random{
-	}
-}
-
-func (this *TlsClientHello_Random) Read(io *kaitai.Stream, parent *TlsClientHello, root *TlsClientHello) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp11, err := this._io.ReadU4be()
-	if err != nil {
-		return err
-	}
-	this.GmtUnixTime = uint32(tmp11)
-	tmp12, err := this._io.ReadBytes(int(28))
-	if err != nil {
-		return err
-	}
-	tmp12 = tmp12
-	this.Random = tmp12
-	return err
-}
-type TlsClientHello_SessionId struct {
-	Len uint8
-	Sid []byte
-	_io *kaitai.Stream
-	_root *TlsClientHello
-	_parent *TlsClientHello
-}
-func NewTlsClientHello_SessionId() *TlsClientHello_SessionId {
-	return &TlsClientHello_SessionId{
-	}
-}
-
-func (this *TlsClientHello_SessionId) Read(io *kaitai.Stream, parent *TlsClientHello, root *TlsClientHello) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp13, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Len = tmp13
-	tmp14, err := this._io.ReadBytes(int(this.Len))
-	if err != nil {
-		return err
-	}
-	tmp14 = tmp14
-	this.Sid = tmp14
-	return err
-}
-type TlsClientHello_Sni struct {
-	ListLength uint16
-	ServerNames []*TlsClientHello_ServerName
+type TlsClientHello_Alpn struct {
+	ExtLen uint16
+	AlpnProtocols []*TlsClientHello_Protocol
 	_io *kaitai.Stream
 	_root *TlsClientHello
 	_parent *TlsClientHello_Extension
 }
-func NewTlsClientHello_Sni() *TlsClientHello_Sni {
-	return &TlsClientHello_Sni{
+func NewTlsClientHello_Alpn() *TlsClientHello_Alpn {
+	return &TlsClientHello_Alpn{
 	}
 }
 
-func (this *TlsClientHello_Sni) Read(io *kaitai.Stream, parent *TlsClientHello_Extension, root *TlsClientHello) (err error) {
+func (this TlsClientHello_Alpn) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *TlsClientHello_Alpn) Read(io *kaitai.Stream, parent *TlsClientHello_Extension, root *TlsClientHello) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp15, err := this._io.ReadU2be()
+	tmp8, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.ListLength = uint16(tmp15)
-	for i := 1;; i++ {
-		tmp16, err := this._io.EOF()
+	this.ExtLen = uint16(tmp8)
+	for i := 0;; i++ {
+		tmp9, err := this._io.EOF()
 		if err != nil {
 			return err
 		}
-		if tmp16 {
+		if tmp9 {
 			break
 		}
-		tmp17 := NewTlsClientHello_ServerName()
-		err = tmp17.Read(this._io, this, this._root)
+		tmp10 := NewTlsClientHello_Protocol()
+		err = tmp10.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.ServerNames = append(this.ServerNames, tmp17)
+		this.AlpnProtocols = append(this.AlpnProtocols, tmp10)
 	}
 	return err
 }
@@ -217,23 +129,27 @@ func NewTlsClientHello_CipherSuites() *TlsClientHello_CipherSuites {
 	}
 }
 
+func (this TlsClientHello_CipherSuites) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *TlsClientHello_CipherSuites) Read(io *kaitai.Stream, parent *TlsClientHello, root *TlsClientHello) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp18, err := this._io.ReadU2be()
+	tmp11, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.Len = uint16(tmp18)
-	for i := 0; i < int((this.Len / 2)); i++ {
+	this.Len = uint16(tmp11)
+	for i := 0; i < int(this.Len / 2); i++ {
 		_ = i
-		tmp19, err := this._io.ReadU2be()
+		tmp12, err := this._io.ReadU2be()
 		if err != nil {
 			return err
 		}
-		this.CipherSuites = append(this.CipherSuites, tmp19)
+		this.CipherSuites = append(this.CipherSuites, tmp12)
 	}
 	return err
 }
@@ -249,159 +165,26 @@ func NewTlsClientHello_CompressionMethods() *TlsClientHello_CompressionMethods {
 	}
 }
 
+func (this TlsClientHello_CompressionMethods) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *TlsClientHello_CompressionMethods) Read(io *kaitai.Stream, parent *TlsClientHello, root *TlsClientHello) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp20, err := this._io.ReadU1()
+	tmp13, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Len = tmp20
-	tmp21, err := this._io.ReadBytes(int(this.Len))
+	this.Len = tmp13
+	tmp14, err := this._io.ReadBytes(int(this.Len))
 	if err != nil {
 		return err
 	}
-	tmp21 = tmp21
-	this.CompressionMethods = tmp21
-	return err
-}
-type TlsClientHello_Alpn struct {
-	ExtLen uint16
-	AlpnProtocols []*TlsClientHello_Protocol
-	_io *kaitai.Stream
-	_root *TlsClientHello
-	_parent *TlsClientHello_Extension
-}
-func NewTlsClientHello_Alpn() *TlsClientHello_Alpn {
-	return &TlsClientHello_Alpn{
-	}
-}
-
-func (this *TlsClientHello_Alpn) Read(io *kaitai.Stream, parent *TlsClientHello_Extension, root *TlsClientHello) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp22, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.ExtLen = uint16(tmp22)
-	for i := 1;; i++ {
-		tmp23, err := this._io.EOF()
-		if err != nil {
-			return err
-		}
-		if tmp23 {
-			break
-		}
-		tmp24 := NewTlsClientHello_Protocol()
-		err = tmp24.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.AlpnProtocols = append(this.AlpnProtocols, tmp24)
-	}
-	return err
-}
-type TlsClientHello_Extensions struct {
-	Len uint16
-	Extensions []*TlsClientHello_Extension
-	_io *kaitai.Stream
-	_root *TlsClientHello
-	_parent *TlsClientHello
-}
-func NewTlsClientHello_Extensions() *TlsClientHello_Extensions {
-	return &TlsClientHello_Extensions{
-	}
-}
-
-func (this *TlsClientHello_Extensions) Read(io *kaitai.Stream, parent *TlsClientHello, root *TlsClientHello) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp25, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.Len = uint16(tmp25)
-	for i := 1;; i++ {
-		tmp26, err := this._io.EOF()
-		if err != nil {
-			return err
-		}
-		if tmp26 {
-			break
-		}
-		tmp27 := NewTlsClientHello_Extension()
-		err = tmp27.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Extensions = append(this.Extensions, tmp27)
-	}
-	return err
-}
-type TlsClientHello_Version struct {
-	Major uint8
-	Minor uint8
-	_io *kaitai.Stream
-	_root *TlsClientHello
-	_parent *TlsClientHello
-}
-func NewTlsClientHello_Version() *TlsClientHello_Version {
-	return &TlsClientHello_Version{
-	}
-}
-
-func (this *TlsClientHello_Version) Read(io *kaitai.Stream, parent *TlsClientHello, root *TlsClientHello) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp28, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Major = tmp28
-	tmp29, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Minor = tmp29
-	return err
-}
-type TlsClientHello_Protocol struct {
-	Strlen uint8
-	Name []byte
-	_io *kaitai.Stream
-	_root *TlsClientHello
-	_parent *TlsClientHello_Alpn
-}
-func NewTlsClientHello_Protocol() *TlsClientHello_Protocol {
-	return &TlsClientHello_Protocol{
-	}
-}
-
-func (this *TlsClientHello_Protocol) Read(io *kaitai.Stream, parent *TlsClientHello_Alpn, root *TlsClientHello) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp30, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Strlen = tmp30
-	tmp31, err := this._io.ReadBytes(int(this.Strlen))
-	if err != nil {
-		return err
-	}
-	tmp31 = tmp31
-	this.Name = tmp31
+	tmp14 = tmp14
+	this.CompressionMethods = tmp14
 	return err
 }
 type TlsClientHello_Extension struct {
@@ -418,57 +201,322 @@ func NewTlsClientHello_Extension() *TlsClientHello_Extension {
 	}
 }
 
+func (this TlsClientHello_Extension) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *TlsClientHello_Extension) Read(io *kaitai.Stream, parent *TlsClientHello_Extensions, root *TlsClientHello) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp32, err := this._io.ReadU2be()
+	tmp15, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.Type = uint16(tmp32)
-	tmp33, err := this._io.ReadU2be()
+	this.Type = uint16(tmp15)
+	tmp16, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.Len = uint16(tmp33)
+	this.Len = uint16(tmp16)
 	switch (this.Type) {
 	case 0:
-		tmp34, err := this._io.ReadBytes(int(this.Len))
+		tmp17, err := this._io.ReadBytes(int(this.Len))
 		if err != nil {
 			return err
 		}
-		tmp34 = tmp34
-		this._raw_Body = tmp34
+		tmp17 = tmp17
+		this._raw_Body = tmp17
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp35 := NewTlsClientHello_Sni()
-		err = tmp35.Read(_io__raw_Body, this, this._root)
+		tmp18 := NewTlsClientHello_Sni()
+		err = tmp18.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Body = tmp35
+		this.Body = tmp18
 	case 16:
-		tmp36, err := this._io.ReadBytes(int(this.Len))
+		tmp19, err := this._io.ReadBytes(int(this.Len))
 		if err != nil {
 			return err
 		}
-		tmp36 = tmp36
-		this._raw_Body = tmp36
+		tmp19 = tmp19
+		this._raw_Body = tmp19
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp37 := NewTlsClientHello_Alpn()
-		err = tmp37.Read(_io__raw_Body, this, this._root)
+		tmp20 := NewTlsClientHello_Alpn()
+		err = tmp20.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Body = tmp37
+		this.Body = tmp20
 	default:
-		tmp38, err := this._io.ReadBytes(int(this.Len))
+		tmp21, err := this._io.ReadBytes(int(this.Len))
 		if err != nil {
 			return err
 		}
-		tmp38 = tmp38
-		this._raw_Body = tmp38
+		tmp21 = tmp21
+		this._raw_Body = tmp21
 	}
+	return err
+}
+type TlsClientHello_Extensions struct {
+	Len uint16
+	Extensions []*TlsClientHello_Extension
+	_io *kaitai.Stream
+	_root *TlsClientHello
+	_parent *TlsClientHello
+}
+func NewTlsClientHello_Extensions() *TlsClientHello_Extensions {
+	return &TlsClientHello_Extensions{
+	}
+}
+
+func (this TlsClientHello_Extensions) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *TlsClientHello_Extensions) Read(io *kaitai.Stream, parent *TlsClientHello, root *TlsClientHello) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp22, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.Len = uint16(tmp22)
+	for i := 0;; i++ {
+		tmp23, err := this._io.EOF()
+		if err != nil {
+			return err
+		}
+		if tmp23 {
+			break
+		}
+		tmp24 := NewTlsClientHello_Extension()
+		err = tmp24.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Extensions = append(this.Extensions, tmp24)
+	}
+	return err
+}
+type TlsClientHello_Protocol struct {
+	Strlen uint8
+	Name []byte
+	_io *kaitai.Stream
+	_root *TlsClientHello
+	_parent *TlsClientHello_Alpn
+}
+func NewTlsClientHello_Protocol() *TlsClientHello_Protocol {
+	return &TlsClientHello_Protocol{
+	}
+}
+
+func (this TlsClientHello_Protocol) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *TlsClientHello_Protocol) Read(io *kaitai.Stream, parent *TlsClientHello_Alpn, root *TlsClientHello) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp25, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Strlen = tmp25
+	tmp26, err := this._io.ReadBytes(int(this.Strlen))
+	if err != nil {
+		return err
+	}
+	tmp26 = tmp26
+	this.Name = tmp26
+	return err
+}
+type TlsClientHello_Random struct {
+	GmtUnixTime uint32
+	Random []byte
+	_io *kaitai.Stream
+	_root *TlsClientHello
+	_parent *TlsClientHello
+}
+func NewTlsClientHello_Random() *TlsClientHello_Random {
+	return &TlsClientHello_Random{
+	}
+}
+
+func (this TlsClientHello_Random) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *TlsClientHello_Random) Read(io *kaitai.Stream, parent *TlsClientHello, root *TlsClientHello) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp27, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.GmtUnixTime = uint32(tmp27)
+	tmp28, err := this._io.ReadBytes(int(28))
+	if err != nil {
+		return err
+	}
+	tmp28 = tmp28
+	this.Random = tmp28
+	return err
+}
+type TlsClientHello_ServerName struct {
+	NameType uint8
+	Length uint16
+	HostName []byte
+	_io *kaitai.Stream
+	_root *TlsClientHello
+	_parent *TlsClientHello_Sni
+}
+func NewTlsClientHello_ServerName() *TlsClientHello_ServerName {
+	return &TlsClientHello_ServerName{
+	}
+}
+
+func (this TlsClientHello_ServerName) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *TlsClientHello_ServerName) Read(io *kaitai.Stream, parent *TlsClientHello_Sni, root *TlsClientHello) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp29, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.NameType = tmp29
+	tmp30, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.Length = uint16(tmp30)
+	tmp31, err := this._io.ReadBytes(int(this.Length))
+	if err != nil {
+		return err
+	}
+	tmp31 = tmp31
+	this.HostName = tmp31
+	return err
+}
+type TlsClientHello_SessionId struct {
+	Len uint8
+	Sid []byte
+	_io *kaitai.Stream
+	_root *TlsClientHello
+	_parent *TlsClientHello
+}
+func NewTlsClientHello_SessionId() *TlsClientHello_SessionId {
+	return &TlsClientHello_SessionId{
+	}
+}
+
+func (this TlsClientHello_SessionId) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *TlsClientHello_SessionId) Read(io *kaitai.Stream, parent *TlsClientHello, root *TlsClientHello) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp32, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Len = tmp32
+	tmp33, err := this._io.ReadBytes(int(this.Len))
+	if err != nil {
+		return err
+	}
+	tmp33 = tmp33
+	this.Sid = tmp33
+	return err
+}
+type TlsClientHello_Sni struct {
+	ListLength uint16
+	ServerNames []*TlsClientHello_ServerName
+	_io *kaitai.Stream
+	_root *TlsClientHello
+	_parent *TlsClientHello_Extension
+}
+func NewTlsClientHello_Sni() *TlsClientHello_Sni {
+	return &TlsClientHello_Sni{
+	}
+}
+
+func (this TlsClientHello_Sni) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *TlsClientHello_Sni) Read(io *kaitai.Stream, parent *TlsClientHello_Extension, root *TlsClientHello) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp34, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.ListLength = uint16(tmp34)
+	for i := 0;; i++ {
+		tmp35, err := this._io.EOF()
+		if err != nil {
+			return err
+		}
+		if tmp35 {
+			break
+		}
+		tmp36 := NewTlsClientHello_ServerName()
+		err = tmp36.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.ServerNames = append(this.ServerNames, tmp36)
+	}
+	return err
+}
+type TlsClientHello_Version struct {
+	Major uint8
+	Minor uint8
+	_io *kaitai.Stream
+	_root *TlsClientHello
+	_parent *TlsClientHello
+}
+func NewTlsClientHello_Version() *TlsClientHello_Version {
+	return &TlsClientHello_Version{
+	}
+}
+
+func (this TlsClientHello_Version) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *TlsClientHello_Version) Read(io *kaitai.Stream, parent *TlsClientHello, root *TlsClientHello) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp37, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Major = tmp37
+	tmp38, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Minor = tmp38
 	return err
 }

@@ -126,6 +126,11 @@ const (
 	MicrosoftNetworkMonitorV2_Linktype__WattstopperDlm MicrosoftNetworkMonitorV2_Linktype = 263
 	MicrosoftNetworkMonitorV2_Linktype__Iso14443 MicrosoftNetworkMonitorV2_Linktype = 264
 )
+var values_MicrosoftNetworkMonitorV2_Linktype = map[MicrosoftNetworkMonitorV2_Linktype]struct{}{0: {}, 1: {}, 3: {}, 6: {}, 7: {}, 8: {}, 9: {}, 10: {}, 50: {}, 51: {}, 100: {}, 101: {}, 104: {}, 105: {}, 107: {}, 108: {}, 113: {}, 114: {}, 117: {}, 119: {}, 122: {}, 123: {}, 127: {}, 129: {}, 138: {}, 139: {}, 140: {}, 141: {}, 142: {}, 143: {}, 144: {}, 147: {}, 148: {}, 149: {}, 150: {}, 151: {}, 152: {}, 153: {}, 154: {}, 155: {}, 156: {}, 157: {}, 158: {}, 159: {}, 160: {}, 161: {}, 162: {}, 163: {}, 165: {}, 166: {}, 169: {}, 170: {}, 171: {}, 177: {}, 187: {}, 189: {}, 192: {}, 195: {}, 196: {}, 197: {}, 201: {}, 202: {}, 203: {}, 204: {}, 205: {}, 206: {}, 209: {}, 215: {}, 220: {}, 224: {}, 225: {}, 226: {}, 227: {}, 228: {}, 229: {}, 230: {}, 231: {}, 235: {}, 236: {}, 237: {}, 239: {}, 240: {}, 241: {}, 242: {}, 243: {}, 244: {}, 245: {}, 247: {}, 248: {}, 249: {}, 250: {}, 251: {}, 253: {}, 254: {}, 255: {}, 256: {}, 257: {}, 258: {}, 259: {}, 260: {}, 261: {}, 262: {}, 263: {}, 264: {}}
+func (v MicrosoftNetworkMonitorV2_Linktype) isDefined() bool {
+	_, ok := values_MicrosoftNetworkMonitorV2_Linktype[v]
+	return ok
+}
 type MicrosoftNetworkMonitorV2 struct {
 	Signature []byte
 	VersionMinor uint8
@@ -146,7 +151,7 @@ type MicrosoftNetworkMonitorV2 struct {
 	ConversationStatsLen uint32
 	_io *kaitai.Stream
 	_root *MicrosoftNetworkMonitorV2
-	_parent interface{}
+	_parent kaitai.Struct
 	_raw_frameTable []byte
 	_f_frameTable bool
 	frameTable *MicrosoftNetworkMonitorV2_FrameIndex
@@ -156,7 +161,11 @@ func NewMicrosoftNetworkMonitorV2() *MicrosoftNetworkMonitorV2 {
 	}
 }
 
-func (this *MicrosoftNetworkMonitorV2) Read(io *kaitai.Stream, parent interface{}, root *MicrosoftNetworkMonitorV2) (err error) {
+func (this MicrosoftNetworkMonitorV2) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *MicrosoftNetworkMonitorV2) Read(io *kaitai.Stream, parent kaitai.Struct, root *MicrosoftNetworkMonitorV2) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -186,7 +195,7 @@ func (this *MicrosoftNetworkMonitorV2) Read(io *kaitai.Stream, parent interface{
 	}
 	this.MacType = MicrosoftNetworkMonitorV2_Linktype(tmp4)
 	tmp5 := NewWindowsSystemtime()
-	err = tmp5.Read(this._io, this, nil)
+	err = tmp5.Read(this._io, nil, nil)
 	if err != nil {
 		return err
 	}
@@ -261,6 +270,7 @@ func (this *MicrosoftNetworkMonitorV2) FrameTable() (v *MicrosoftNetworkMonitorV
 	if (this._f_frameTable) {
 		return this.frameTable, nil
 	}
+	this._f_frameTable = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
@@ -286,8 +296,6 @@ func (this *MicrosoftNetworkMonitorV2) FrameTable() (v *MicrosoftNetworkMonitorV
 	if err != nil {
 		return nil, err
 	}
-	this._f_frameTable = true
-	this._f_frameTable = true
 	return this.frameTable, nil
 }
 
@@ -305,104 +313,6 @@ func (this *MicrosoftNetworkMonitorV2) FrameTable() (v *MicrosoftNetworkMonitorV
 
 /**
  * Timestamp of capture start
- */
-type MicrosoftNetworkMonitorV2_FrameIndex struct {
-	Entries []*MicrosoftNetworkMonitorV2_FrameIndexEntry
-	_io *kaitai.Stream
-	_root *MicrosoftNetworkMonitorV2
-	_parent *MicrosoftNetworkMonitorV2
-}
-func NewMicrosoftNetworkMonitorV2_FrameIndex() *MicrosoftNetworkMonitorV2_FrameIndex {
-	return &MicrosoftNetworkMonitorV2_FrameIndex{
-	}
-}
-
-func (this *MicrosoftNetworkMonitorV2_FrameIndex) Read(io *kaitai.Stream, parent *MicrosoftNetworkMonitorV2, root *MicrosoftNetworkMonitorV2) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	for i := 1;; i++ {
-		tmp20, err := this._io.EOF()
-		if err != nil {
-			return err
-		}
-		if tmp20 {
-			break
-		}
-		tmp21 := NewMicrosoftNetworkMonitorV2_FrameIndexEntry()
-		err = tmp21.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Entries = append(this.Entries, tmp21)
-	}
-	return err
-}
-
-/**
- * Each index entry is just a pointer to where the frame data is
- * stored in the file.
- */
-type MicrosoftNetworkMonitorV2_FrameIndexEntry struct {
-	Ofs uint32
-	_io *kaitai.Stream
-	_root *MicrosoftNetworkMonitorV2
-	_parent *MicrosoftNetworkMonitorV2_FrameIndex
-	_f_body bool
-	body *MicrosoftNetworkMonitorV2_Frame
-}
-func NewMicrosoftNetworkMonitorV2_FrameIndexEntry() *MicrosoftNetworkMonitorV2_FrameIndexEntry {
-	return &MicrosoftNetworkMonitorV2_FrameIndexEntry{
-	}
-}
-
-func (this *MicrosoftNetworkMonitorV2_FrameIndexEntry) Read(io *kaitai.Stream, parent *MicrosoftNetworkMonitorV2_FrameIndex, root *MicrosoftNetworkMonitorV2) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp22, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Ofs = uint32(tmp22)
-	return err
-}
-
-/**
- * Frame body itself
- */
-func (this *MicrosoftNetworkMonitorV2_FrameIndexEntry) Body() (v *MicrosoftNetworkMonitorV2_Frame, err error) {
-	if (this._f_body) {
-		return this.body, nil
-	}
-	thisIo := this._root._io
-	_pos, err := thisIo.Pos()
-	if err != nil {
-		return nil, err
-	}
-	_, err = thisIo.Seek(int64(this.Ofs), io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	tmp23 := NewMicrosoftNetworkMonitorV2_Frame()
-	err = tmp23.Read(thisIo, this, this._root)
-	if err != nil {
-		return nil, err
-	}
-	this.body = tmp23
-	_, err = thisIo.Seek(_pos, io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	this._f_body = true
-	this._f_body = true
-	return this.body, nil
-}
-
-/**
- * Absolute pointer to frame data in the file
  */
 
 /**
@@ -426,48 +336,52 @@ func NewMicrosoftNetworkMonitorV2_Frame() *MicrosoftNetworkMonitorV2_Frame {
 	}
 }
 
+func (this MicrosoftNetworkMonitorV2_Frame) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *MicrosoftNetworkMonitorV2_Frame) Read(io *kaitai.Stream, parent *MicrosoftNetworkMonitorV2_FrameIndexEntry, root *MicrosoftNetworkMonitorV2) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp24, err := this._io.ReadU8le()
+	tmp20, err := this._io.ReadU8le()
 	if err != nil {
 		return err
 	}
-	this.TsDelta = uint64(tmp24)
-	tmp25, err := this._io.ReadU4le()
+	this.TsDelta = uint64(tmp20)
+	tmp21, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.OrigLen = uint32(tmp25)
-	tmp26, err := this._io.ReadU4le()
+	this.OrigLen = uint32(tmp21)
+	tmp22, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.IncLen = uint32(tmp26)
+	this.IncLen = uint32(tmp22)
 	switch (this._root.MacType) {
 	case MicrosoftNetworkMonitorV2_Linktype__Ethernet:
-		tmp27, err := this._io.ReadBytes(int(this.IncLen))
+		tmp23, err := this._io.ReadBytes(int(this.IncLen))
 		if err != nil {
 			return err
 		}
-		tmp27 = tmp27
-		this._raw_Body = tmp27
+		tmp23 = tmp23
+		this._raw_Body = tmp23
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp28 := NewEthernetFrame()
-		err = tmp28.Read(_io__raw_Body, this, nil)
+		tmp24 := NewEthernetFrame()
+		err = tmp24.Read(_io__raw_Body, nil, nil)
 		if err != nil {
 			return err
 		}
-		this.Body = tmp28
+		this.Body = tmp24
 	default:
-		tmp29, err := this._io.ReadBytes(int(this.IncLen))
+		tmp25, err := this._io.ReadBytes(int(this.IncLen))
 		if err != nil {
 			return err
 		}
-		tmp29 = tmp29
-		this._raw_Body = tmp29
+		tmp25 = tmp25
+		this._raw_Body = tmp25
 	}
 	return err
 }
@@ -486,4 +400,109 @@ func (this *MicrosoftNetworkMonitorV2_Frame) Read(io *kaitai.Stream, parent *Mic
 
 /**
  * Actual packet captured from the network
+ */
+type MicrosoftNetworkMonitorV2_FrameIndex struct {
+	Entries []*MicrosoftNetworkMonitorV2_FrameIndexEntry
+	_io *kaitai.Stream
+	_root *MicrosoftNetworkMonitorV2
+	_parent *MicrosoftNetworkMonitorV2
+}
+func NewMicrosoftNetworkMonitorV2_FrameIndex() *MicrosoftNetworkMonitorV2_FrameIndex {
+	return &MicrosoftNetworkMonitorV2_FrameIndex{
+	}
+}
+
+func (this MicrosoftNetworkMonitorV2_FrameIndex) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *MicrosoftNetworkMonitorV2_FrameIndex) Read(io *kaitai.Stream, parent *MicrosoftNetworkMonitorV2, root *MicrosoftNetworkMonitorV2) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	for i := 0;; i++ {
+		tmp26, err := this._io.EOF()
+		if err != nil {
+			return err
+		}
+		if tmp26 {
+			break
+		}
+		tmp27 := NewMicrosoftNetworkMonitorV2_FrameIndexEntry()
+		err = tmp27.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Entries = append(this.Entries, tmp27)
+	}
+	return err
+}
+
+/**
+ * Each index entry is just a pointer to where the frame data is
+ * stored in the file.
+ */
+type MicrosoftNetworkMonitorV2_FrameIndexEntry struct {
+	Ofs uint32
+	_io *kaitai.Stream
+	_root *MicrosoftNetworkMonitorV2
+	_parent *MicrosoftNetworkMonitorV2_FrameIndex
+	_f_body bool
+	body *MicrosoftNetworkMonitorV2_Frame
+}
+func NewMicrosoftNetworkMonitorV2_FrameIndexEntry() *MicrosoftNetworkMonitorV2_FrameIndexEntry {
+	return &MicrosoftNetworkMonitorV2_FrameIndexEntry{
+	}
+}
+
+func (this MicrosoftNetworkMonitorV2_FrameIndexEntry) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *MicrosoftNetworkMonitorV2_FrameIndexEntry) Read(io *kaitai.Stream, parent *MicrosoftNetworkMonitorV2_FrameIndex, root *MicrosoftNetworkMonitorV2) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp28, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Ofs = uint32(tmp28)
+	return err
+}
+
+/**
+ * Frame body itself
+ */
+func (this *MicrosoftNetworkMonitorV2_FrameIndexEntry) Body() (v *MicrosoftNetworkMonitorV2_Frame, err error) {
+	if (this._f_body) {
+		return this.body, nil
+	}
+	this._f_body = true
+	thisIo := this._root._io
+	_pos, err := thisIo.Pos()
+	if err != nil {
+		return nil, err
+	}
+	_, err = thisIo.Seek(int64(this.Ofs), io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	tmp29 := NewMicrosoftNetworkMonitorV2_Frame()
+	err = tmp29.Read(thisIo, this, this._root)
+	if err != nil {
+		return nil, err
+	}
+	this.body = tmp29
+	_, err = thisIo.Seek(_pos, io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	return this.body, nil
+}
+
+/**
+ * Absolute pointer to frame data in the file
  */

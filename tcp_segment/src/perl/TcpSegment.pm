@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 
 ########################################################################
 package TcpSegment;
@@ -24,7 +24,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -45,8 +45,8 @@ sub _read {
     $self->{window_size} = $self->{_io}->read_u2be();
     $self->{checksum} = $self->{_io}->read_u2be();
     $self->{urgent_pointer} = $self->{_io}->read_u2be();
-    if ((($self->data_offset() * 4) - 20) != 0) {
-        $self->{options} = $self->{_io}->read_bytes((($self->data_offset() * 4) - 20));
+    if ($self->data_offset() * 4 - 20 != 0) {
+        $self->{options} = $self->{_io}->read_bytes($self->data_offset() * 4 - 20);
     }
     $self->{body} = $self->{_io}->read_bytes_full();
 }
@@ -131,7 +131,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -189,6 +189,13 @@ sub syn {
 sub fin {
     my ($self) = @_;
     return $self->{fin};
+}
+
+use overload '""' => \&_to_string;
+
+sub _to_string {
+    my ($self) = @_;
+    return ((((((($self->cwr() ? "|CWR" : "") . ($self->ece() ? "|ECE" : "")) . ($self->urg() ? "|URG" : "")) . ($self->ack() ? "|ACK" : "")) . ($self->psh() ? "|PSH" : "")) . ($self->rst() ? "|RST" : "")) . ($self->syn() ? "|SYN" : "")) . ($self->fin() ? "|FIN" : "")
 }
 
 1;

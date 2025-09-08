@@ -14,18 +14,22 @@ type GranTurismoVol struct {
 	Offsets []uint32
 	_io *kaitai.Stream
 	_root *GranTurismoVol
-	_parent interface{}
-	_f_ofsDir bool
-	ofsDir uint32
+	_parent kaitai.Struct
 	_f_files bool
 	files []*GranTurismoVol_FileInfo
+	_f_ofsDir bool
+	ofsDir uint32
 }
 func NewGranTurismoVol() *GranTurismoVol {
 	return &GranTurismoVol{
 	}
 }
 
-func (this *GranTurismoVol) Read(io *kaitai.Stream, parent interface{}, root *GranTurismoVol) (err error) {
+func (this GranTurismoVol) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *GranTurismoVol) Read(io *kaitai.Stream, parent kaitai.Struct, root *GranTurismoVol) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -68,18 +72,11 @@ func (this *GranTurismoVol) Read(io *kaitai.Stream, parent interface{}, root *Gr
 	}
 	return err
 }
-func (this *GranTurismoVol) OfsDir() (v uint32, err error) {
-	if (this._f_ofsDir) {
-		return this.ofsDir, nil
-	}
-	this.ofsDir = uint32(this.Offsets[1])
-	this._f_ofsDir = true
-	return this.ofsDir, nil
-}
 func (this *GranTurismoVol) Files() (v []*GranTurismoVol_FileInfo, err error) {
 	if (this._f_files) {
 		return this.files, nil
 	}
+	this._f_files = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
@@ -88,7 +85,7 @@ func (this *GranTurismoVol) Files() (v []*GranTurismoVol_FileInfo, err error) {
 	if err != nil {
 		return nil, err
 	}
-	_, err = this._io.Seek(int64((tmp6 & uint32(4294965248))), io.SeekStart)
+	_, err = this._io.Seek(int64(tmp6 & uint32(4294965248)), io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
@@ -105,9 +102,15 @@ func (this *GranTurismoVol) Files() (v []*GranTurismoVol_FileInfo, err error) {
 	if err != nil {
 		return nil, err
 	}
-	this._f_files = true
-	this._f_files = true
 	return this.files, nil
+}
+func (this *GranTurismoVol) OfsDir() (v uint32, err error) {
+	if (this._f_ofsDir) {
+		return this.ofsDir, nil
+	}
+	this._f_ofsDir = true
+	this.ofsDir = uint32(this.Offsets[1])
+	return this.ofsDir, nil
 }
 type GranTurismoVol_FileInfo struct {
 	Timestamp uint32
@@ -117,18 +120,22 @@ type GranTurismoVol_FileInfo struct {
 	_io *kaitai.Stream
 	_root *GranTurismoVol
 	_parent *GranTurismoVol
-	_f_size bool
-	size int
 	_f_body bool
 	body []byte
 	_f_isDir bool
 	isDir bool
 	_f_isLastEntry bool
 	isLastEntry bool
+	_f_size bool
+	size int
 }
 func NewGranTurismoVol_FileInfo() *GranTurismoVol_FileInfo {
 	return &GranTurismoVol_FileInfo{
 	}
+}
+
+func (this GranTurismoVol_FileInfo) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *GranTurismoVol_FileInfo) Read(io *kaitai.Stream, parent *GranTurismoVol, root *GranTurismoVol) (err error) {
@@ -159,18 +166,11 @@ func (this *GranTurismoVol_FileInfo) Read(io *kaitai.Stream, parent *GranTurismo
 	this.Name = string(tmp11)
 	return err
 }
-func (this *GranTurismoVol_FileInfo) Size() (v int, err error) {
-	if (this._f_size) {
-		return this.size, nil
-	}
-	this.size = int(((this._root.Offsets[(this.OffsetIdx + 1)] & uint32(4294965248)) - this._root.Offsets[this.OffsetIdx]))
-	this._f_size = true
-	return this.size, nil
-}
 func (this *GranTurismoVol_FileInfo) Body() (v []byte, err error) {
 	if (this._f_body) {
 		return this.body, nil
 	}
+	this._f_body = true
 	tmp12, err := this.IsDir()
 	if err != nil {
 		return nil, err
@@ -180,7 +180,7 @@ func (this *GranTurismoVol_FileInfo) Body() (v []byte, err error) {
 		if err != nil {
 			return nil, err
 		}
-		_, err = this._io.Seek(int64((this._root.Offsets[this.OffsetIdx] & uint32(4294965248))), io.SeekStart)
+		_, err = this._io.Seek(int64(this._root.Offsets[this.OffsetIdx] & uint32(4294965248)), io.SeekStart)
 		if err != nil {
 			return nil, err
 		}
@@ -198,24 +198,30 @@ func (this *GranTurismoVol_FileInfo) Body() (v []byte, err error) {
 		if err != nil {
 			return nil, err
 		}
-		this._f_body = true
 	}
-	this._f_body = true
 	return this.body, nil
 }
 func (this *GranTurismoVol_FileInfo) IsDir() (v bool, err error) {
 	if (this._f_isDir) {
 		return this.isDir, nil
 	}
-	this.isDir = bool((this.Flags & 1) != 0)
 	this._f_isDir = true
+	this.isDir = bool(this.Flags & 1 != 0)
 	return this.isDir, nil
 }
 func (this *GranTurismoVol_FileInfo) IsLastEntry() (v bool, err error) {
 	if (this._f_isLastEntry) {
 		return this.isLastEntry, nil
 	}
-	this.isLastEntry = bool((this.Flags & 128) != 0)
 	this._f_isLastEntry = true
+	this.isLastEntry = bool(this.Flags & 128 != 0)
 	return this.isLastEntry, nil
+}
+func (this *GranTurismoVol_FileInfo) Size() (v int, err error) {
+	if (this._f_size) {
+		return this.size, nil
+	}
+	this._f_size = true
+	this.size = int(this._root.Offsets[this.OffsetIdx + 1] & uint32(4294965248) - this._root.Offsets[this.OffsetIdx])
+	return this.size, nil
 }

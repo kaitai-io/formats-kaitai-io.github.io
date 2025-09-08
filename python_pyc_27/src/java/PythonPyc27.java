@@ -8,7 +8,8 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Arrays;
 import java.util.ArrayList;
-import java.nio.charset.Charset;
+import java.util.List;
+import java.nio.charset.StandardCharsets;
 
 
 /**
@@ -83,6 +84,53 @@ public class PythonPyc27 extends KaitaiStruct {
         this.modificationTimestamp = this._io.readU4le();
         this.body = new PyObject(this._io, this, _root);
     }
+
+    public void _fetchInstances() {
+        this.body._fetchInstances();
+    }
+    public static class Assembly extends KaitaiStruct {
+        public static Assembly fromFile(String fileName) throws IOException {
+            return new Assembly(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Assembly(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Assembly(KaitaiStream _io, PythonPyc27.CodeObject _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Assembly(KaitaiStream _io, PythonPyc27.CodeObject _parent, PythonPyc27 _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.stringMagic = this._io.readBytes(1);
+            if (!(Arrays.equals(this.stringMagic, new byte[] { 115 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 115 }, this.stringMagic, this._io, "/types/assembly/seq/0");
+            }
+            this.length = this._io.readU4le();
+            KaitaiStream _io_items = this._io.substream(length());
+            this.items = new OpArgs(_io_items, this, _root);
+        }
+
+        public void _fetchInstances() {
+            this.items._fetchInstances();
+        }
+        private byte[] stringMagic;
+        private long length;
+        private OpArgs items;
+        private PythonPyc27 _root;
+        private PythonPyc27.CodeObject _parent;
+        public byte[] stringMagic() { return stringMagic; }
+        public long length() { return length; }
+        public OpArgs items() { return items; }
+        public PythonPyc27 _root() { return _root; }
+        public PythonPyc27.CodeObject _parent() { return _parent; }
+    }
     public static class CodeObject extends KaitaiStruct {
         public static CodeObject fromFile(String fileName) throws IOException {
             return new CodeObject(new ByteBufferKaitaiStream(fileName));
@@ -134,6 +182,18 @@ public class PythonPyc27 extends KaitaiStruct {
             this.firstLineNo = this._io.readU4le();
             this.lnotab = new PyObject(this._io, this, _root);
         }
+
+        public void _fetchInstances() {
+            this.code._fetchInstances();
+            this.consts._fetchInstances();
+            this.names._fetchInstances();
+            this.varNames._fetchInstances();
+            this.freeVars._fetchInstances();
+            this.cellVars._fetchInstances();
+            this.filename._fetchInstances();
+            this.name._fetchInstances();
+            this.lnotab._fetchInstances();
+        }
         private long argCount;
         private long localCount;
         private long stackSize;
@@ -166,48 +226,6 @@ public class PythonPyc27 extends KaitaiStruct {
         public PyObject lnotab() { return lnotab; }
         public PythonPyc27 _root() { return _root; }
         public PythonPyc27.PyObject _parent() { return _parent; }
-    }
-    public static class Assembly extends KaitaiStruct {
-        public static Assembly fromFile(String fileName) throws IOException {
-            return new Assembly(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Assembly(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Assembly(KaitaiStream _io, PythonPyc27.CodeObject _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Assembly(KaitaiStream _io, PythonPyc27.CodeObject _parent, PythonPyc27 _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.stringMagic = this._io.readBytes(1);
-            if (!(Arrays.equals(stringMagic(), new byte[] { 115 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 115 }, stringMagic(), _io(), "/types/assembly/seq/0");
-            }
-            this.length = this._io.readU4le();
-            this._raw_items = this._io.readBytes(length());
-            KaitaiStream _io__raw_items = new ByteBufferKaitaiStream(_raw_items);
-            this.items = new OpArgs(_io__raw_items, this, _root);
-        }
-        private byte[] stringMagic;
-        private long length;
-        private OpArgs items;
-        private PythonPyc27 _root;
-        private PythonPyc27.CodeObject _parent;
-        private byte[] _raw_items;
-        public byte[] stringMagic() { return stringMagic; }
-        public long length() { return length; }
-        public OpArgs items() { return items; }
-        public PythonPyc27 _root() { return _root; }
-        public PythonPyc27.CodeObject _parent() { return _parent; }
-        public byte[] _raw_items() { return _raw_items; }
     }
     public static class OpArg extends KaitaiStruct {
         public static OpArg fromFile(String fileName) throws IOException {
@@ -366,6 +384,11 @@ public class PythonPyc27 extends KaitaiStruct {
                 this.arg = this._io.readU2le();
             }
         }
+
+        public void _fetchInstances() {
+            if (opCode().id() >= OpCodeEnum.STORE_NAME.id()) {
+            }
+        }
         private OpCodeEnum opCode;
         private Integer arg;
         private PythonPyc27 _root;
@@ -374,6 +397,48 @@ public class PythonPyc27 extends KaitaiStruct {
         public Integer arg() { return arg; }
         public PythonPyc27 _root() { return _root; }
         public PythonPyc27.OpArgs _parent() { return _parent; }
+    }
+    public static class OpArgs extends KaitaiStruct {
+        public static OpArgs fromFile(String fileName) throws IOException {
+            return new OpArgs(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public OpArgs(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public OpArgs(KaitaiStream _io, PythonPyc27.Assembly _parent) {
+            this(_io, _parent, null);
+        }
+
+        public OpArgs(KaitaiStream _io, PythonPyc27.Assembly _parent, PythonPyc27 _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.items = new ArrayList<OpArg>();
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.items.add(new OpArg(this._io, this, _root));
+                    i++;
+                }
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.items.size(); i++) {
+                this.items.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private List<OpArg> items;
+        private PythonPyc27 _root;
+        private PythonPyc27.Assembly _parent;
+        public List<OpArg> items() { return items; }
+        public PythonPyc27 _root() { return _root; }
+        public PythonPyc27.Assembly _parent() { return _parent; }
     }
     public static class PyObject extends KaitaiStruct {
         public static PyObject fromFile(String fileName) throws IOException {
@@ -423,69 +488,123 @@ public class PythonPyc27 extends KaitaiStruct {
                 ObjectType on = type();
                 if (on != null) {
                     switch (type()) {
-                    case STRING: {
-                        this.value = new PyString(this._io, this, _root);
-                        break;
-                    }
-                    case TUPLE: {
-                        this.value = new Tuple(this._io, this, _root);
+                    case CODE_OBJECT: {
+                        this.value = new CodeObject(this._io, this, _root);
                         break;
                     }
                     case INT: {
-                        this.value = (Object) (this._io.readU4le());
-                        break;
-                    }
-                    case PY_TRUE: {
-                        this.value = new PyTrue(this._io, this, _root);
-                        break;
-                    }
-                    case PY_FALSE: {
-                        this.value = new PyFalse(this._io, this, _root);
-                        break;
-                    }
-                    case NONE: {
-                        this.value = new PyNone(this._io, this, _root);
-                        break;
-                    }
-                    case STRING_REF: {
-                        this.value = new StringRef(this._io, this, _root);
-                        break;
-                    }
-                    case CODE_OBJECT: {
-                        this.value = new CodeObject(this._io, this, _root);
+                        this.value = ((Object) (this._io.readU4le()));
                         break;
                     }
                     case INTERNED: {
                         this.value = new InternedString(this._io, this, _root);
                         break;
                     }
+                    case NONE: {
+                        this.value = new PyNone(this._io, this, _root);
+                        break;
+                    }
+                    case PY_FALSE: {
+                        this.value = new PyFalse(this._io, this, _root);
+                        break;
+                    }
+                    case PY_TRUE: {
+                        this.value = new PyTrue(this._io, this, _root);
+                        break;
+                    }
+                    case STRING: {
+                        this.value = new PyString(this._io, this, _root);
+                        break;
+                    }
+                    case STRING_REF: {
+                        this.value = new StringRef(this._io, this, _root);
+                        break;
+                    }
+                    case TUPLE: {
+                        this.value = new Tuple(this._io, this, _root);
+                        break;
+                    }
                     }
                 }
             }
         }
-        public static class PyNone extends KaitaiStruct {
-            public static PyNone fromFile(String fileName) throws IOException {
-                return new PyNone(new ByteBufferKaitaiStream(fileName));
+
+        public void _fetchInstances() {
+            {
+                ObjectType on = type();
+                if (on != null) {
+                    switch (type()) {
+                    case CODE_OBJECT: {
+                        ((CodeObject) (this.value))._fetchInstances();
+                        break;
+                    }
+                    case INT: {
+                        break;
+                    }
+                    case INTERNED: {
+                        ((InternedString) (this.value))._fetchInstances();
+                        break;
+                    }
+                    case NONE: {
+                        ((PyNone) (this.value))._fetchInstances();
+                        break;
+                    }
+                    case PY_FALSE: {
+                        ((PyFalse) (this.value))._fetchInstances();
+                        break;
+                    }
+                    case PY_TRUE: {
+                        ((PyTrue) (this.value))._fetchInstances();
+                        break;
+                    }
+                    case STRING: {
+                        ((PyString) (this.value))._fetchInstances();
+                        break;
+                    }
+                    case STRING_REF: {
+                        ((StringRef) (this.value))._fetchInstances();
+                        break;
+                    }
+                    case TUPLE: {
+                        ((Tuple) (this.value))._fetchInstances();
+                        break;
+                    }
+                    }
+                }
+            }
+        }
+        public static class InternedString extends KaitaiStruct {
+            public static InternedString fromFile(String fileName) throws IOException {
+                return new InternedString(new ByteBufferKaitaiStream(fileName));
             }
 
-            public PyNone(KaitaiStream _io) {
+            public InternedString(KaitaiStream _io) {
                 this(_io, null, null);
             }
 
-            public PyNone(KaitaiStream _io, PythonPyc27.PyObject _parent) {
+            public InternedString(KaitaiStream _io, PythonPyc27.PyObject _parent) {
                 this(_io, _parent, null);
             }
 
-            public PyNone(KaitaiStream _io, PythonPyc27.PyObject _parent, PythonPyc27 _root) {
+            public InternedString(KaitaiStream _io, PythonPyc27.PyObject _parent, PythonPyc27 _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
                 _read();
             }
             private void _read() {
+                this.length = this._io.readU4le();
+                this.data = new String(this._io.readBytes(length()), StandardCharsets.UTF_8);
             }
+
+            public void _fetchInstances() {
+            }
+            private long length;
+            private String data;
             private PythonPyc27 _root;
             private PythonPyc27.PyObject _parent;
+            public long length() { return length; }
+            public String data() { return data; }
             public PythonPyc27 _root() { return _root; }
             public PythonPyc27.PyObject _parent() { return _parent; }
         }
@@ -509,6 +628,102 @@ public class PythonPyc27 extends KaitaiStruct {
                 _read();
             }
             private void _read() {
+            }
+
+            public void _fetchInstances() {
+            }
+            private PythonPyc27 _root;
+            private PythonPyc27.PyObject _parent;
+            public PythonPyc27 _root() { return _root; }
+            public PythonPyc27.PyObject _parent() { return _parent; }
+        }
+        public static class PyNone extends KaitaiStruct {
+            public static PyNone fromFile(String fileName) throws IOException {
+                return new PyNone(new ByteBufferKaitaiStream(fileName));
+            }
+
+            public PyNone(KaitaiStream _io) {
+                this(_io, null, null);
+            }
+
+            public PyNone(KaitaiStream _io, PythonPyc27.PyObject _parent) {
+                this(_io, _parent, null);
+            }
+
+            public PyNone(KaitaiStream _io, PythonPyc27.PyObject _parent, PythonPyc27 _root) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                _read();
+            }
+            private void _read() {
+            }
+
+            public void _fetchInstances() {
+            }
+            private PythonPyc27 _root;
+            private PythonPyc27.PyObject _parent;
+            public PythonPyc27 _root() { return _root; }
+            public PythonPyc27.PyObject _parent() { return _parent; }
+        }
+        public static class PyString extends KaitaiStruct {
+            public static PyString fromFile(String fileName) throws IOException {
+                return new PyString(new ByteBufferKaitaiStream(fileName));
+            }
+
+            public PyString(KaitaiStream _io) {
+                this(_io, null, null);
+            }
+
+            public PyString(KaitaiStream _io, PythonPyc27.PyObject _parent) {
+                this(_io, _parent, null);
+            }
+
+            public PyString(KaitaiStream _io, PythonPyc27.PyObject _parent, PythonPyc27 _root) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                _read();
+            }
+            private void _read() {
+                this.length = this._io.readU4le();
+                this.data = this._io.readBytes(length());
+            }
+
+            public void _fetchInstances() {
+            }
+            private long length;
+            private byte[] data;
+            private PythonPyc27 _root;
+            private PythonPyc27.PyObject _parent;
+            public long length() { return length; }
+            public byte[] data() { return data; }
+            public PythonPyc27 _root() { return _root; }
+            public PythonPyc27.PyObject _parent() { return _parent; }
+        }
+        public static class PyTrue extends KaitaiStruct {
+            public static PyTrue fromFile(String fileName) throws IOException {
+                return new PyTrue(new ByteBufferKaitaiStream(fileName));
+            }
+
+            public PyTrue(KaitaiStream _io) {
+                this(_io, null, null);
+            }
+
+            public PyTrue(KaitaiStream _io, PythonPyc27.PyObject _parent) {
+                this(_io, _parent, null);
+            }
+
+            public PyTrue(KaitaiStream _io, PythonPyc27.PyObject _parent, PythonPyc27 _root) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                _read();
+            }
+            private void _read() {
+            }
+
+            public void _fetchInstances() {
             }
             private PythonPyc27 _root;
             private PythonPyc27.PyObject _parent;
@@ -537,36 +752,13 @@ public class PythonPyc27 extends KaitaiStruct {
             private void _read() {
                 this.internedListIndex = this._io.readU4le();
             }
+
+            public void _fetchInstances() {
+            }
             private long internedListIndex;
             private PythonPyc27 _root;
             private PythonPyc27.PyObject _parent;
             public long internedListIndex() { return internedListIndex; }
-            public PythonPyc27 _root() { return _root; }
-            public PythonPyc27.PyObject _parent() { return _parent; }
-        }
-        public static class PyTrue extends KaitaiStruct {
-            public static PyTrue fromFile(String fileName) throws IOException {
-                return new PyTrue(new ByteBufferKaitaiStream(fileName));
-            }
-
-            public PyTrue(KaitaiStream _io) {
-                this(_io, null, null);
-            }
-
-            public PyTrue(KaitaiStream _io, PythonPyc27.PyObject _parent) {
-                this(_io, _parent, null);
-            }
-
-            public PyTrue(KaitaiStream _io, PythonPyc27.PyObject _parent, PythonPyc27 _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-            }
-            private PythonPyc27 _root;
-            private PythonPyc27.PyObject _parent;
             public PythonPyc27 _root() { return _root; }
             public PythonPyc27.PyObject _parent() { return _parent; }
         }
@@ -596,12 +788,18 @@ public class PythonPyc27 extends KaitaiStruct {
                     this.items.add(new PyObject(this._io, this, _root));
                 }
             }
+
+            public void _fetchInstances() {
+                for (int i = 0; i < this.items.size(); i++) {
+                    this.items.get(((Number) (i)).intValue())._fetchInstances();
+                }
+            }
             private long count;
-            private ArrayList<PyObject> items;
+            private List<PyObject> items;
             private PythonPyc27 _root;
             private PythonPyc27.PyObject _parent;
             public long count() { return count; }
-            public ArrayList<PyObject> items() { return items; }
+            public List<PyObject> items() { return items; }
             public PythonPyc27 _root() { return _root; }
             public PythonPyc27.PyObject _parent() { return _parent; }
         }
@@ -626,7 +824,10 @@ public class PythonPyc27 extends KaitaiStruct {
             }
             private void _read() {
                 this.length = this._io.readU4le();
-                this.data = new String(this._io.readBytes(length()), Charset.forName("utf-8"));
+                this.data = new String(this._io.readBytes(length()), StandardCharsets.UTF_8);
+            }
+
+            public void _fetchInstances() {
             }
             private long length;
             private String data;
@@ -637,70 +838,6 @@ public class PythonPyc27 extends KaitaiStruct {
             public PythonPyc27 _root() { return _root; }
             public KaitaiStruct _parent() { return _parent; }
         }
-        public static class InternedString extends KaitaiStruct {
-            public static InternedString fromFile(String fileName) throws IOException {
-                return new InternedString(new ByteBufferKaitaiStream(fileName));
-            }
-
-            public InternedString(KaitaiStream _io) {
-                this(_io, null, null);
-            }
-
-            public InternedString(KaitaiStream _io, PythonPyc27.PyObject _parent) {
-                this(_io, _parent, null);
-            }
-
-            public InternedString(KaitaiStream _io, PythonPyc27.PyObject _parent, PythonPyc27 _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.length = this._io.readU4le();
-                this.data = new String(this._io.readBytes(length()), Charset.forName("utf-8"));
-            }
-            private long length;
-            private String data;
-            private PythonPyc27 _root;
-            private PythonPyc27.PyObject _parent;
-            public long length() { return length; }
-            public String data() { return data; }
-            public PythonPyc27 _root() { return _root; }
-            public PythonPyc27.PyObject _parent() { return _parent; }
-        }
-        public static class PyString extends KaitaiStruct {
-            public static PyString fromFile(String fileName) throws IOException {
-                return new PyString(new ByteBufferKaitaiStream(fileName));
-            }
-
-            public PyString(KaitaiStream _io) {
-                this(_io, null, null);
-            }
-
-            public PyString(KaitaiStream _io, PythonPyc27.PyObject _parent) {
-                this(_io, _parent, null);
-            }
-
-            public PyString(KaitaiStream _io, PythonPyc27.PyObject _parent, PythonPyc27 _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.length = this._io.readU4le();
-                this.data = this._io.readBytes(length());
-            }
-            private long length;
-            private byte[] data;
-            private PythonPyc27 _root;
-            private PythonPyc27.PyObject _parent;
-            public long length() { return length; }
-            public byte[] data() { return data; }
-            public PythonPyc27 _root() { return _root; }
-            public PythonPyc27.PyObject _parent() { return _parent; }
-        }
         private ObjectType type;
         private Object value;
         private PythonPyc27 _root;
@@ -709,42 +846,6 @@ public class PythonPyc27 extends KaitaiStruct {
         public Object value() { return value; }
         public PythonPyc27 _root() { return _root; }
         public KaitaiStruct _parent() { return _parent; }
-    }
-    public static class OpArgs extends KaitaiStruct {
-        public static OpArgs fromFile(String fileName) throws IOException {
-            return new OpArgs(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public OpArgs(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public OpArgs(KaitaiStream _io, PythonPyc27.Assembly _parent) {
-            this(_io, _parent, null);
-        }
-
-        public OpArgs(KaitaiStream _io, PythonPyc27.Assembly _parent, PythonPyc27 _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.items = new ArrayList<OpArg>();
-            {
-                int i = 0;
-                while (!this._io.isEof()) {
-                    this.items.add(new OpArg(this._io, this, _root));
-                    i++;
-                }
-            }
-        }
-        private ArrayList<OpArg> items;
-        private PythonPyc27 _root;
-        private PythonPyc27.Assembly _parent;
-        public ArrayList<OpArg> items() { return items; }
-        public PythonPyc27 _root() { return _root; }
-        public PythonPyc27.Assembly _parent() { return _parent; }
     }
     private Version versionMagic;
     private int crlf;

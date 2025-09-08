@@ -16,14 +16,17 @@ local utils = require("utils")
 --   * <http://littlesvr.ca/apng/>
 Png = class.class(KaitaiStruct)
 
-Png.PhysUnit = enum.Enum {
-  unknown = 0,
-  meter = 1,
-}
-
 Png.BlendOpValues = enum.Enum {
   source = 0,
   over = 1,
+}
+
+Png.ColorType = enum.Enum {
+  greyscale = 0,
+  truecolor = 2,
+  indexed = 3,
+  greyscale_alpha = 4,
+  truecolor_alpha = 6,
 }
 
 Png.CompressionMethods = enum.Enum {
@@ -36,12 +39,9 @@ Png.DisposeOpValues = enum.Enum {
   previous = 2,
 }
 
-Png.ColorType = enum.Enum {
-  greyscale = 0,
-  truecolor = 2,
-  indexed = 3,
-  greyscale_alpha = 4,
-  truecolor_alpha = 6,
+Png.PhysUnit = enum.Enum {
+  unknown = 0,
+  meter = 1,
 }
 
 function Png:_init(io, parent, root)
@@ -54,15 +54,15 @@ end
 function Png:_read()
   self.magic = self._io:read_bytes(8)
   if not(self.magic == "\137\080\078\071\013\010\026\010") then
-    error("not equal, expected " ..  "\137\080\078\071\013\010\026\010" .. ", but got " .. self.magic)
+    error("not equal, expected " .. "\137\080\078\071\013\010\026\010" .. ", but got " .. self.magic)
   end
   self.ihdr_len = self._io:read_u4be()
   if not(self.ihdr_len == 13) then
-    error("not equal, expected " ..  13 .. ", but got " .. self.ihdr_len)
+    error("not equal, expected " .. 13 .. ", but got " .. self.ihdr_len)
   end
   self.ihdr_type = self._io:read_bytes(4)
   if not(self.ihdr_type == "\073\072\068\082") then
-    error("not equal, expected " ..  "\073\072\068\082" .. ", but got " .. self.ihdr_type)
+    error("not equal, expected " .. "\073\072\068\082" .. ", but got " .. self.ihdr_type)
   end
   self.ihdr = Png.IhdrChunk(self._io, self, self._root)
   self.ihdr_crc = self._io:read_bytes(4)
@@ -79,142 +79,53 @@ function Png:_read()
 end
 
 
-Png.Rgb = class.class(KaitaiStruct)
+-- 
+-- See also: Source (https://wiki.mozilla.org/APNG_Specification#.60acTL.60:_The_Animation_Control_Chunk)
+Png.AnimationControlChunk = class.class(KaitaiStruct)
 
-function Png.Rgb:_init(io, parent, root)
+function Png.AnimationControlChunk:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function Png.Rgb:_read()
-  self.r = self._io:read_u1()
-  self.g = self._io:read_u1()
-  self.b = self._io:read_u1()
+function Png.AnimationControlChunk:_read()
+  self.num_frames = self._io:read_u4be()
+  self.num_plays = self._io:read_u4be()
 end
-
-
-Png.Chunk = class.class(KaitaiStruct)
-
-function Png.Chunk:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Png.Chunk:_read()
-  self.len = self._io:read_u4be()
-  self.type = str_decode.decode(self._io:read_bytes(4), "UTF-8")
-  local _on = self.type
-  if _on == "iTXt" then
-    self._raw_body = self._io:read_bytes(self.len)
-    local _io = KaitaiStream(stringstream(self._raw_body))
-    self.body = Png.InternationalTextChunk(_io, self, self._root)
-  elseif _on == "gAMA" then
-    self._raw_body = self._io:read_bytes(self.len)
-    local _io = KaitaiStream(stringstream(self._raw_body))
-    self.body = Png.GamaChunk(_io, self, self._root)
-  elseif _on == "tIME" then
-    self._raw_body = self._io:read_bytes(self.len)
-    local _io = KaitaiStream(stringstream(self._raw_body))
-    self.body = Png.TimeChunk(_io, self, self._root)
-  elseif _on == "PLTE" then
-    self._raw_body = self._io:read_bytes(self.len)
-    local _io = KaitaiStream(stringstream(self._raw_body))
-    self.body = Png.PlteChunk(_io, self, self._root)
-  elseif _on == "bKGD" then
-    self._raw_body = self._io:read_bytes(self.len)
-    local _io = KaitaiStream(stringstream(self._raw_body))
-    self.body = Png.BkgdChunk(_io, self, self._root)
-  elseif _on == "pHYs" then
-    self._raw_body = self._io:read_bytes(self.len)
-    local _io = KaitaiStream(stringstream(self._raw_body))
-    self.body = Png.PhysChunk(_io, self, self._root)
-  elseif _on == "fdAT" then
-    self._raw_body = self._io:read_bytes(self.len)
-    local _io = KaitaiStream(stringstream(self._raw_body))
-    self.body = Png.FrameDataChunk(_io, self, self._root)
-  elseif _on == "tEXt" then
-    self._raw_body = self._io:read_bytes(self.len)
-    local _io = KaitaiStream(stringstream(self._raw_body))
-    self.body = Png.TextChunk(_io, self, self._root)
-  elseif _on == "cHRM" then
-    self._raw_body = self._io:read_bytes(self.len)
-    local _io = KaitaiStream(stringstream(self._raw_body))
-    self.body = Png.ChrmChunk(_io, self, self._root)
-  elseif _on == "acTL" then
-    self._raw_body = self._io:read_bytes(self.len)
-    local _io = KaitaiStream(stringstream(self._raw_body))
-    self.body = Png.AnimationControlChunk(_io, self, self._root)
-  elseif _on == "sRGB" then
-    self._raw_body = self._io:read_bytes(self.len)
-    local _io = KaitaiStream(stringstream(self._raw_body))
-    self.body = Png.SrgbChunk(_io, self, self._root)
-  elseif _on == "zTXt" then
-    self._raw_body = self._io:read_bytes(self.len)
-    local _io = KaitaiStream(stringstream(self._raw_body))
-    self.body = Png.CompressedTextChunk(_io, self, self._root)
-  elseif _on == "fcTL" then
-    self._raw_body = self._io:read_bytes(self.len)
-    local _io = KaitaiStream(stringstream(self._raw_body))
-    self.body = Png.FrameControlChunk(_io, self, self._root)
-  else
-    self.body = self._io:read_bytes(self.len)
-  end
-  self.crc = self._io:read_bytes(4)
-end
-
 
 -- 
--- Background chunk for images with indexed palette.
-Png.BkgdIndexed = class.class(KaitaiStruct)
+-- Number of frames, must be equal to the number of `frame_control_chunk`s.
+-- 
+-- Number of times to loop, 0 indicates infinite looping.
 
-function Png.BkgdIndexed:_init(io, parent, root)
+-- 
+-- Background chunk stores default background color to display this
+-- image against. Contents depend on `color_type` of the image.
+-- See also: Source (https://www.w3.org/TR/png/#11bKGD)
+Png.BkgdChunk = class.class(KaitaiStruct)
+
+function Png.BkgdChunk:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function Png.BkgdIndexed:_read()
-  self.palette_index = self._io:read_u1()
-end
-
-
-Png.Point = class.class(KaitaiStruct)
-
-function Png.Point:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Png.Point:_read()
-  self.x_int = self._io:read_u4be()
-  self.y_int = self._io:read_u4be()
-end
-
-Png.Point.property.x = {}
-function Png.Point.property.x:get()
-  if self._m_x ~= nil then
-    return self._m_x
+function Png.BkgdChunk:_read()
+  local _on = self._root.ihdr.color_type
+  if _on == Png.ColorType.greyscale then
+    self.bkgd = Png.BkgdGreyscale(self._io, self, self._root)
+  elseif _on == Png.ColorType.greyscale_alpha then
+    self.bkgd = Png.BkgdGreyscale(self._io, self, self._root)
+  elseif _on == Png.ColorType.indexed then
+    self.bkgd = Png.BkgdIndexed(self._io, self, self._root)
+  elseif _on == Png.ColorType.truecolor then
+    self.bkgd = Png.BkgdTruecolor(self._io, self, self._root)
+  elseif _on == Png.ColorType.truecolor_alpha then
+    self.bkgd = Png.BkgdTruecolor(self._io, self, self._root)
   end
-
-  self._m_x = (self.x_int / 100000.0)
-  return self._m_x
-end
-
-Png.Point.property.y = {}
-function Png.Point.property.y:get()
-  if self._m_y ~= nil then
-    return self._m_y
-  end
-
-  self._m_y = (self.y_int / 100000.0)
-  return self._m_y
 end
 
 
@@ -225,12 +136,46 @@ Png.BkgdGreyscale = class.class(KaitaiStruct)
 function Png.BkgdGreyscale:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function Png.BkgdGreyscale:_read()
   self.value = self._io:read_u2be()
+end
+
+
+-- 
+-- Background chunk for images with indexed palette.
+Png.BkgdIndexed = class.class(KaitaiStruct)
+
+function Png.BkgdIndexed:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Png.BkgdIndexed:_read()
+  self.palette_index = self._io:read_u1()
+end
+
+
+-- 
+-- Background chunk for truecolor images.
+Png.BkgdTruecolor = class.class(KaitaiStruct)
+
+function Png.BkgdTruecolor:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Png.BkgdTruecolor:_read()
+  self.red = self._io:read_u2be()
+  self.green = self._io:read_u2be()
+  self.blue = self._io:read_u2be()
 end
 
 
@@ -241,7 +186,7 @@ Png.ChrmChunk = class.class(KaitaiStruct)
 function Png.ChrmChunk:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -253,69 +198,75 @@ function Png.ChrmChunk:_read()
 end
 
 
--- 
--- See also: Source (https://www.w3.org/TR/png/#11IHDR)
-Png.IhdrChunk = class.class(KaitaiStruct)
+Png.Chunk = class.class(KaitaiStruct)
 
-function Png.IhdrChunk:_init(io, parent, root)
+function Png.Chunk:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function Png.IhdrChunk:_read()
-  self.width = self._io:read_u4be()
-  self.height = self._io:read_u4be()
-  self.bit_depth = self._io:read_u1()
-  self.color_type = Png.ColorType(self._io:read_u1())
-  self.compression_method = self._io:read_u1()
-  self.filter_method = self._io:read_u1()
-  self.interlace_method = self._io:read_u1()
-end
-
-
--- 
--- See also: Source (https://www.w3.org/TR/png/#11PLTE)
-Png.PlteChunk = class.class(KaitaiStruct)
-
-function Png.PlteChunk:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Png.PlteChunk:_read()
-  self.entries = {}
-  local i = 0
-  while not self._io:is_eof() do
-    self.entries[i + 1] = Png.Rgb(self._io, self, self._root)
-    i = i + 1
+function Png.Chunk:_read()
+  self.len = self._io:read_u4be()
+  self.type = str_decode.decode(self._io:read_bytes(4), "UTF-8")
+  local _on = self.type
+  if _on == "PLTE" then
+    self._raw_body = self._io:read_bytes(self.len)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = Png.PlteChunk(_io, self, self._root)
+  elseif _on == "acTL" then
+    self._raw_body = self._io:read_bytes(self.len)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = Png.AnimationControlChunk(_io, self, self._root)
+  elseif _on == "bKGD" then
+    self._raw_body = self._io:read_bytes(self.len)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = Png.BkgdChunk(_io, self, self._root)
+  elseif _on == "cHRM" then
+    self._raw_body = self._io:read_bytes(self.len)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = Png.ChrmChunk(_io, self, self._root)
+  elseif _on == "fcTL" then
+    self._raw_body = self._io:read_bytes(self.len)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = Png.FrameControlChunk(_io, self, self._root)
+  elseif _on == "fdAT" then
+    self._raw_body = self._io:read_bytes(self.len)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = Png.FrameDataChunk(_io, self, self._root)
+  elseif _on == "gAMA" then
+    self._raw_body = self._io:read_bytes(self.len)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = Png.GamaChunk(_io, self, self._root)
+  elseif _on == "iTXt" then
+    self._raw_body = self._io:read_bytes(self.len)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = Png.InternationalTextChunk(_io, self, self._root)
+  elseif _on == "pHYs" then
+    self._raw_body = self._io:read_bytes(self.len)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = Png.PhysChunk(_io, self, self._root)
+  elseif _on == "sRGB" then
+    self._raw_body = self._io:read_bytes(self.len)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = Png.SrgbChunk(_io, self, self._root)
+  elseif _on == "tEXt" then
+    self._raw_body = self._io:read_bytes(self.len)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = Png.TextChunk(_io, self, self._root)
+  elseif _on == "tIME" then
+    self._raw_body = self._io:read_bytes(self.len)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = Png.TimeChunk(_io, self, self._root)
+  elseif _on == "zTXt" then
+    self._raw_body = self._io:read_bytes(self.len)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = Png.CompressedTextChunk(_io, self, self._root)
+  else
+    self.body = self._io:read_bytes(self.len)
   end
-end
-
-
--- 
--- See also: Source (https://www.w3.org/TR/png/#11sRGB)
-Png.SrgbChunk = class.class(KaitaiStruct)
-
-Png.SrgbChunk.Intent = enum.Enum {
-  perceptual = 0,
-  relative_colorimetric = 1,
-  saturation = 2,
-  absolute_colorimetric = 3,
-}
-
-function Png.SrgbChunk:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Png.SrgbChunk:_read()
-  self.render_intent = Png.SrgbChunk.Intent(self._io:read_u1())
+  self.crc = self._io:read_bytes(4)
 end
 
 
@@ -329,7 +280,7 @@ Png.CompressedTextChunk = class.class(KaitaiStruct)
 function Png.CompressedTextChunk:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -344,139 +295,13 @@ end
 -- Indicates purpose of the following text data.
 
 -- 
--- See also: Source (https://wiki.mozilla.org/APNG_Specification#.60fdAT.60:_The_Frame_Data_Chunk)
-Png.FrameDataChunk = class.class(KaitaiStruct)
-
-function Png.FrameDataChunk:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Png.FrameDataChunk:_read()
-  self.sequence_number = self._io:read_u4be()
-  self.frame_data = self._io:read_bytes_full()
-end
-
--- 
--- Sequence number of the animation chunk. The fcTL and fdAT chunks
--- have a 4 byte sequence number. Both chunk types share the sequence.
--- The first fcTL chunk must contain sequence number 0, and the sequence
--- numbers in the remaining fcTL and fdAT chunks must be in order, with
--- no gaps or duplicates.
--- 
--- Frame data for the frame. At least one fdAT chunk is required for
--- each frame. The compressed datastream is the concatenation of the
--- contents of the data fields of all the fdAT chunks within a frame.
-
--- 
--- Background chunk for truecolor images.
-Png.BkgdTruecolor = class.class(KaitaiStruct)
-
-function Png.BkgdTruecolor:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Png.BkgdTruecolor:_read()
-  self.red = self._io:read_u2be()
-  self.green = self._io:read_u2be()
-  self.blue = self._io:read_u2be()
-end
-
-
--- 
--- See also: Source (https://www.w3.org/TR/png/#11gAMA)
-Png.GamaChunk = class.class(KaitaiStruct)
-
-function Png.GamaChunk:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Png.GamaChunk:_read()
-  self.gamma_int = self._io:read_u4be()
-end
-
-Png.GamaChunk.property.gamma_ratio = {}
-function Png.GamaChunk.property.gamma_ratio:get()
-  if self._m_gamma_ratio ~= nil then
-    return self._m_gamma_ratio
-  end
-
-  self._m_gamma_ratio = (100000.0 / self.gamma_int)
-  return self._m_gamma_ratio
-end
-
-
--- 
--- Background chunk stores default background color to display this
--- image against. Contents depend on `color_type` of the image.
--- See also: Source (https://www.w3.org/TR/png/#11bKGD)
-Png.BkgdChunk = class.class(KaitaiStruct)
-
-function Png.BkgdChunk:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Png.BkgdChunk:_read()
-  local _on = self._root.ihdr.color_type
-  if _on == Png.ColorType.indexed then
-    self.bkgd = Png.BkgdIndexed(self._io, self, self._root)
-  elseif _on == Png.ColorType.truecolor_alpha then
-    self.bkgd = Png.BkgdTruecolor(self._io, self, self._root)
-  elseif _on == Png.ColorType.greyscale_alpha then
-    self.bkgd = Png.BkgdGreyscale(self._io, self, self._root)
-  elseif _on == Png.ColorType.truecolor then
-    self.bkgd = Png.BkgdTruecolor(self._io, self, self._root)
-  elseif _on == Png.ColorType.greyscale then
-    self.bkgd = Png.BkgdGreyscale(self._io, self, self._root)
-  end
-end
-
-
--- 
--- "Physical size" chunk stores data that allows to translate
--- logical pixels into physical units (meters, etc) and vice-versa.
--- See also: Source (https://www.w3.org/TR/png/#11pHYs)
-Png.PhysChunk = class.class(KaitaiStruct)
-
-function Png.PhysChunk:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Png.PhysChunk:_read()
-  self.pixels_per_unit_x = self._io:read_u4be()
-  self.pixels_per_unit_y = self._io:read_u4be()
-  self.unit = Png.PhysUnit(self._io:read_u1())
-end
-
--- 
--- Number of pixels per physical unit (typically, 1 meter) by X
--- axis.
--- 
--- Number of pixels per physical unit (typically, 1 meter) by Y
--- axis.
-
--- 
 -- See also: Source (https://wiki.mozilla.org/APNG_Specification#.60fcTL.60:_The_Frame_Control_Chunk)
 Png.FrameControlChunk = class.class(KaitaiStruct)
 
 function Png.FrameControlChunk:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -497,11 +322,11 @@ function Png.FrameControlChunk:_read()
     error("ValidationGreaterThanError")
   end
   self.x_offset = self._io:read_u4be()
-  if not(self.x_offset <= (self._root.ihdr.width - self.width)) then
+  if not(self.x_offset <= self._root.ihdr.width - self.width) then
     error("ValidationGreaterThanError")
   end
   self.y_offset = self._io:read_u4be()
-  if not(self.y_offset <= (self._root.ihdr.height - self.height)) then
+  if not(self.y_offset <= self._root.ihdr.height - self.height) then
     error("ValidationGreaterThanError")
   end
   self.delay_num = self._io:read_u2be()
@@ -518,7 +343,7 @@ function Png.FrameControlChunk.property.delay:get()
     return self._m_delay
   end
 
-  self._m_delay = (self.delay_num / utils.box_unwrap((self.delay_den == 0) and utils.box_wrap(100.0) or (self.delay_den)))
+  self._m_delay = self.delay_num / utils.box_unwrap((self.delay_den == 0) and utils.box_wrap(100.0) or (self.delay_den))
   return self._m_delay
 end
 
@@ -542,6 +367,81 @@ end
 -- Type of frame area rendering for this frame.
 
 -- 
+-- See also: Source (https://wiki.mozilla.org/APNG_Specification#.60fdAT.60:_The_Frame_Data_Chunk)
+Png.FrameDataChunk = class.class(KaitaiStruct)
+
+function Png.FrameDataChunk:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Png.FrameDataChunk:_read()
+  self.sequence_number = self._io:read_u4be()
+  self.frame_data = self._io:read_bytes_full()
+end
+
+-- 
+-- Sequence number of the animation chunk. The fcTL and fdAT chunks
+-- have a 4 byte sequence number. Both chunk types share the sequence.
+-- The first fcTL chunk must contain sequence number 0, and the sequence
+-- numbers in the remaining fcTL and fdAT chunks must be in order, with
+-- no gaps or duplicates.
+-- 
+-- Frame data for the frame. At least one fdAT chunk is required for
+-- each frame. The compressed datastream is the concatenation of the
+-- contents of the data fields of all the fdAT chunks within a frame.
+
+-- 
+-- See also: Source (https://www.w3.org/TR/png/#11gAMA)
+Png.GamaChunk = class.class(KaitaiStruct)
+
+function Png.GamaChunk:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Png.GamaChunk:_read()
+  self.gamma_int = self._io:read_u4be()
+end
+
+Png.GamaChunk.property.gamma_ratio = {}
+function Png.GamaChunk.property.gamma_ratio:get()
+  if self._m_gamma_ratio ~= nil then
+    return self._m_gamma_ratio
+  end
+
+  self._m_gamma_ratio = 100000.0 / self.gamma_int
+  return self._m_gamma_ratio
+end
+
+
+-- 
+-- See also: Source (https://www.w3.org/TR/png/#11IHDR)
+Png.IhdrChunk = class.class(KaitaiStruct)
+
+function Png.IhdrChunk:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Png.IhdrChunk:_read()
+  self.width = self._io:read_u4be()
+  self.height = self._io:read_u4be()
+  self.bit_depth = self._io:read_u1()
+  self.color_type = Png.ColorType(self._io:read_u1())
+  self.compression_method = self._io:read_u1()
+  self.filter_method = self._io:read_u1()
+  self.interlace_method = self._io:read_u1()
+end
+
+
+-- 
 -- International text chunk effectively allows to store key-value string pairs in
 -- PNG container. Both "key" (keyword) and "value" (text) parts are
 -- given in pre-defined subset of iso8859-1 without control
@@ -552,7 +452,7 @@ Png.InternationalTextChunk = class.class(KaitaiStruct)
 function Png.InternationalTextChunk:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -583,6 +483,127 @@ end
 -- allowed.
 
 -- 
+-- "Physical size" chunk stores data that allows to translate
+-- logical pixels into physical units (meters, etc) and vice-versa.
+-- See also: Source (https://www.w3.org/TR/png/#11pHYs)
+Png.PhysChunk = class.class(KaitaiStruct)
+
+function Png.PhysChunk:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Png.PhysChunk:_read()
+  self.pixels_per_unit_x = self._io:read_u4be()
+  self.pixels_per_unit_y = self._io:read_u4be()
+  self.unit = Png.PhysUnit(self._io:read_u1())
+end
+
+-- 
+-- Number of pixels per physical unit (typically, 1 meter) by X
+-- axis.
+-- 
+-- Number of pixels per physical unit (typically, 1 meter) by Y
+-- axis.
+
+-- 
+-- See also: Source (https://www.w3.org/TR/png/#11PLTE)
+Png.PlteChunk = class.class(KaitaiStruct)
+
+function Png.PlteChunk:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Png.PlteChunk:_read()
+  self.entries = {}
+  local i = 0
+  while not self._io:is_eof() do
+    self.entries[i + 1] = Png.Rgb(self._io, self, self._root)
+    i = i + 1
+  end
+end
+
+
+Png.Point = class.class(KaitaiStruct)
+
+function Png.Point:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Png.Point:_read()
+  self.x_int = self._io:read_u4be()
+  self.y_int = self._io:read_u4be()
+end
+
+Png.Point.property.x = {}
+function Png.Point.property.x:get()
+  if self._m_x ~= nil then
+    return self._m_x
+  end
+
+  self._m_x = self.x_int / 100000.0
+  return self._m_x
+end
+
+Png.Point.property.y = {}
+function Png.Point.property.y:get()
+  if self._m_y ~= nil then
+    return self._m_y
+  end
+
+  self._m_y = self.y_int / 100000.0
+  return self._m_y
+end
+
+
+Png.Rgb = class.class(KaitaiStruct)
+
+function Png.Rgb:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Png.Rgb:_read()
+  self.r = self._io:read_u1()
+  self.g = self._io:read_u1()
+  self.b = self._io:read_u1()
+end
+
+
+-- 
+-- See also: Source (https://www.w3.org/TR/png/#11sRGB)
+Png.SrgbChunk = class.class(KaitaiStruct)
+
+Png.SrgbChunk.Intent = enum.Enum {
+  perceptual = 0,
+  relative_colorimetric = 1,
+  saturation = 2,
+  absolute_colorimetric = 3,
+}
+
+function Png.SrgbChunk:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Png.SrgbChunk:_read()
+  self.render_intent = Png.SrgbChunk.Intent(self._io:read_u1())
+end
+
+
+-- 
 -- Text chunk effectively allows to store key-value string pairs in
 -- PNG container. Both "key" (keyword) and "value" (text) parts are
 -- given in pre-defined subset of iso8859-1 without control
@@ -593,38 +614,17 @@ Png.TextChunk = class.class(KaitaiStruct)
 function Png.TextChunk:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function Png.TextChunk:_read()
-  self.keyword = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "iso8859-1")
-  self.text = str_decode.decode(self._io:read_bytes_full(), "iso8859-1")
+  self.keyword = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "ISO-8859-1")
+  self.text = str_decode.decode(self._io:read_bytes_full(), "ISO-8859-1")
 end
 
 -- 
 -- Indicates purpose of the following text data.
-
--- 
--- See also: Source (https://wiki.mozilla.org/APNG_Specification#.60acTL.60:_The_Animation_Control_Chunk)
-Png.AnimationControlChunk = class.class(KaitaiStruct)
-
-function Png.AnimationControlChunk:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Png.AnimationControlChunk:_read()
-  self.num_frames = self._io:read_u4be()
-  self.num_plays = self._io:read_u4be()
-end
-
--- 
--- Number of frames, must be equal to the number of `frame_control_chunk`s.
--- 
--- Number of times to loop, 0 indicates infinite looping.
 
 -- 
 -- Time chunk stores time stamp of last modification of this image,
@@ -635,7 +635,7 @@ Png.TimeChunk = class.class(KaitaiStruct)
 function Png.TimeChunk:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 

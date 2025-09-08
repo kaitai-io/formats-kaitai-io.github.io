@@ -36,13 +36,6 @@ type
     communication_prohibited_by_admin = 13
     host_precedence_violation = 14
     precedence_cuttoff_in_effect = 15
-  IcmpPacket_TimeExceededMsg* = ref object of KaitaiStruct
-    `code`*: IcmpPacket_TimeExceededMsg_TimeExceededCode
-    `checksum`*: uint16
-    `parent`*: IcmpPacket
-  IcmpPacket_TimeExceededMsg_TimeExceededCode* = enum
-    time_to_live_exceeded_in_transit = 0
-    fragment_reassembly_time_exceeded = 1
   IcmpPacket_EchoMsg* = ref object of KaitaiStruct
     `code`*: seq[byte]
     `checksum`*: uint16
@@ -50,11 +43,18 @@ type
     `seqNum`*: uint16
     `data`*: seq[byte]
     `parent`*: IcmpPacket
+  IcmpPacket_TimeExceededMsg* = ref object of KaitaiStruct
+    `code`*: IcmpPacket_TimeExceededMsg_TimeExceededCode
+    `checksum`*: uint16
+    `parent`*: IcmpPacket
+  IcmpPacket_TimeExceededMsg_TimeExceededCode* = enum
+    time_to_live_exceeded_in_transit = 0
+    fragment_reassembly_time_exceeded = 1
 
 proc read*(_: typedesc[IcmpPacket], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): IcmpPacket
 proc read*(_: typedesc[IcmpPacket_DestinationUnreachableMsg], io: KaitaiStream, root: KaitaiStruct, parent: IcmpPacket): IcmpPacket_DestinationUnreachableMsg
-proc read*(_: typedesc[IcmpPacket_TimeExceededMsg], io: KaitaiStream, root: KaitaiStruct, parent: IcmpPacket): IcmpPacket_TimeExceededMsg
 proc read*(_: typedesc[IcmpPacket_EchoMsg], io: KaitaiStream, root: KaitaiStruct, parent: IcmpPacket): IcmpPacket_EchoMsg
+proc read*(_: typedesc[IcmpPacket_TimeExceededMsg], io: KaitaiStream, root: KaitaiStruct, parent: IcmpPacket): IcmpPacket_TimeExceededMsg
 
 
 proc read*(_: typedesc[IcmpPacket], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): IcmpPacket =
@@ -96,22 +96,6 @@ proc read*(_: typedesc[IcmpPacket_DestinationUnreachableMsg], io: KaitaiStream, 
 proc fromFile*(_: typedesc[IcmpPacket_DestinationUnreachableMsg], filename: string): IcmpPacket_DestinationUnreachableMsg =
   IcmpPacket_DestinationUnreachableMsg.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[IcmpPacket_TimeExceededMsg], io: KaitaiStream, root: KaitaiStruct, parent: IcmpPacket): IcmpPacket_TimeExceededMsg =
-  template this: untyped = result
-  this = new(IcmpPacket_TimeExceededMsg)
-  let root = if root == nil: cast[IcmpPacket](this) else: cast[IcmpPacket](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let codeExpr = IcmpPacket_TimeExceededMsg_TimeExceededCode(this.io.readU1())
-  this.code = codeExpr
-  let checksumExpr = this.io.readU2be()
-  this.checksum = checksumExpr
-
-proc fromFile*(_: typedesc[IcmpPacket_TimeExceededMsg], filename: string): IcmpPacket_TimeExceededMsg =
-  IcmpPacket_TimeExceededMsg.read(newKaitaiFileStream(filename), nil, nil)
-
 proc read*(_: typedesc[IcmpPacket_EchoMsg], io: KaitaiStream, root: KaitaiStruct, parent: IcmpPacket): IcmpPacket_EchoMsg =
   template this: untyped = result
   this = new(IcmpPacket_EchoMsg)
@@ -133,4 +117,20 @@ proc read*(_: typedesc[IcmpPacket_EchoMsg], io: KaitaiStream, root: KaitaiStruct
 
 proc fromFile*(_: typedesc[IcmpPacket_EchoMsg], filename: string): IcmpPacket_EchoMsg =
   IcmpPacket_EchoMsg.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[IcmpPacket_TimeExceededMsg], io: KaitaiStream, root: KaitaiStruct, parent: IcmpPacket): IcmpPacket_TimeExceededMsg =
+  template this: untyped = result
+  this = new(IcmpPacket_TimeExceededMsg)
+  let root = if root == nil: cast[IcmpPacket](this) else: cast[IcmpPacket](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let codeExpr = IcmpPacket_TimeExceededMsg_TimeExceededCode(this.io.readU1())
+  this.code = codeExpr
+  let checksumExpr = this.io.readU2be()
+  this.checksum = checksumExpr
+
+proc fromFile*(_: typedesc[IcmpPacket_TimeExceededMsg], filename: string): IcmpPacket_TimeExceededMsg =
+  IcmpPacket_TimeExceededMsg.read(newKaitaiFileStream(filename), nil, nil)
 

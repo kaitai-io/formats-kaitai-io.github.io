@@ -37,13 +37,6 @@ type
     `parent`*: Lvm2_PhysicalVolume_Label_VolumeHeader
     `dataInst`: string
     `dataInstFlag`: bool
-  Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor* = ref object of KaitaiStruct
-    `offset`*: uint64
-    `size`*: uint64
-    `parent`*: Lvm2_PhysicalVolume_Label_VolumeHeader
-    `rawDataInst`*: seq[byte]
-    `dataInst`: Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea
-    `dataInstFlag`: bool
   Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea* = ref object of KaitaiStruct
     `header`*: Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader
     `parent`*: Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor
@@ -65,6 +58,13 @@ type
     `parent`*: Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader
   Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader_RawLocationDescriptor_RawLocationDescriptorFlags* = enum
     raw_location_ignored = 1
+  Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor* = ref object of KaitaiStruct
+    `offset`*: uint64
+    `size`*: uint64
+    `parent`*: Lvm2_PhysicalVolume_Label_VolumeHeader
+    `rawDataInst`*: seq[byte]
+    `dataInst`: Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea
+    `dataInstFlag`: bool
 
 proc read*(_: typedesc[Lvm2], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Lvm2
 proc read*(_: typedesc[Lvm2_PhysicalVolume], io: KaitaiStream, root: KaitaiStruct, parent: Lvm2): Lvm2_PhysicalVolume
@@ -73,15 +73,15 @@ proc read*(_: typedesc[Lvm2_PhysicalVolume_Label_LabelHeader], io: KaitaiStream,
 proc read*(_: typedesc[Lvm2_PhysicalVolume_Label_LabelHeader_LabelHeader], io: KaitaiStream, root: KaitaiStruct, parent: Lvm2_PhysicalVolume_Label_LabelHeader): Lvm2_PhysicalVolume_Label_LabelHeader_LabelHeader
 proc read*(_: typedesc[Lvm2_PhysicalVolume_Label_VolumeHeader], io: KaitaiStream, root: KaitaiStruct, parent: Lvm2_PhysicalVolume_Label): Lvm2_PhysicalVolume_Label_VolumeHeader
 proc read*(_: typedesc[Lvm2_PhysicalVolume_Label_VolumeHeader_DataAreaDescriptor], io: KaitaiStream, root: KaitaiStruct, parent: Lvm2_PhysicalVolume_Label_VolumeHeader): Lvm2_PhysicalVolume_Label_VolumeHeader_DataAreaDescriptor
-proc read*(_: typedesc[Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor], io: KaitaiStream, root: KaitaiStruct, parent: Lvm2_PhysicalVolume_Label_VolumeHeader): Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor
 proc read*(_: typedesc[Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea], io: KaitaiStream, root: KaitaiStruct, parent: Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor): Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea
 proc read*(_: typedesc[Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader
 proc read*(_: typedesc[Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader_RawLocationDescriptor], io: KaitaiStream, root: KaitaiStruct, parent: Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader): Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader_RawLocationDescriptor
+proc read*(_: typedesc[Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor], io: KaitaiStream, root: KaitaiStruct, parent: Lvm2_PhysicalVolume_Label_VolumeHeader): Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor
 
 proc sectorSize*(this: Lvm2): int
 proc data*(this: Lvm2_PhysicalVolume_Label_VolumeHeader_DataAreaDescriptor): string
-proc data*(this: Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor): Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea
 proc metadata*(this: Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader): seq[byte]
+proc data*(this: Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor): Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea
 
 
 ##[
@@ -217,7 +217,7 @@ proc read*(_: typedesc[Lvm2_PhysicalVolume_Label_VolumeHeader], io: KaitaiStream
   Contains a UUID stored as an ASCII string. The physical volume identifier can be used to uniquely identify a physical volume. The physical volume identifier is stored as: 9LBcEB7PQTGIlLI0KxrtzrynjuSL983W but is equivalent to its formatted variant: 9LBcEB-7PQT-GIlL-I0Kx-rtzr-ynju-SL983W, which is used in the metadata.
 
   ]##
-  let idExpr = encode(this.io.readBytes(int(32)), "ascii")
+  let idExpr = encode(this.io.readBytes(int(32)), "ASCII")
   this.id = idExpr
 
   ##[
@@ -277,7 +277,7 @@ proc data(this: Lvm2_PhysicalVolume_Label_VolumeHeader_DataAreaDescriptor): stri
   if this.size != 0:
     let pos = this.io.pos()
     this.io.seek(int(this.offset))
-    let dataInstExpr = encode(this.io.readBytes(int(this.size)), "ascii")
+    let dataInstExpr = encode(this.io.readBytes(int(this.size)), "ASCII")
     this.dataInst = dataInstExpr
     this.io.seek(pos)
   this.dataInstFlag = true
@@ -285,45 +285,6 @@ proc data(this: Lvm2_PhysicalVolume_Label_VolumeHeader_DataAreaDescriptor): stri
 
 proc fromFile*(_: typedesc[Lvm2_PhysicalVolume_Label_VolumeHeader_DataAreaDescriptor], filename: string): Lvm2_PhysicalVolume_Label_VolumeHeader_DataAreaDescriptor =
   Lvm2_PhysicalVolume_Label_VolumeHeader_DataAreaDescriptor.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor], io: KaitaiStream, root: KaitaiStruct, parent: Lvm2_PhysicalVolume_Label_VolumeHeader): Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor =
-  template this: untyped = result
-  this = new(Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor)
-  let root = if root == nil: cast[Lvm2](this) else: cast[Lvm2](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-
-  ##[
-  The offset, in bytes, relative from the start of the physical volume
-  ]##
-  let offsetExpr = this.io.readU8le()
-  this.offset = offsetExpr
-
-  ##[
-  Value in bytes
-  ]##
-  let sizeExpr = this.io.readU8le()
-  this.size = sizeExpr
-
-proc data(this: Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor): Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea = 
-  if this.dataInstFlag:
-    return this.dataInst
-  if this.size != 0:
-    let pos = this.io.pos()
-    this.io.seek(int(this.offset))
-    let rawDataInstExpr = this.io.readBytes(int(this.size))
-    this.rawDataInst = rawDataInstExpr
-    let rawDataInstIo = newKaitaiStream(rawDataInstExpr)
-    let dataInstExpr = Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea.read(rawDataInstIo, this.root, this)
-    this.dataInst = dataInstExpr
-    this.io.seek(pos)
-  this.dataInstFlag = true
-  return this.dataInst
-
-proc fromFile*(_: typedesc[Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor], filename: string): Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor =
-  Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor.read(newKaitaiFileStream(filename), nil, nil)
 
 
 ##[
@@ -431,4 +392,43 @@ proc read*(_: typedesc[Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_Metad
 
 proc fromFile*(_: typedesc[Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader_RawLocationDescriptor], filename: string): Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader_RawLocationDescriptor =
   Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader_RawLocationDescriptor.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor], io: KaitaiStream, root: KaitaiStruct, parent: Lvm2_PhysicalVolume_Label_VolumeHeader): Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor =
+  template this: untyped = result
+  this = new(Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor)
+  let root = if root == nil: cast[Lvm2](this) else: cast[Lvm2](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+
+  ##[
+  The offset, in bytes, relative from the start of the physical volume
+  ]##
+  let offsetExpr = this.io.readU8le()
+  this.offset = offsetExpr
+
+  ##[
+  Value in bytes
+  ]##
+  let sizeExpr = this.io.readU8le()
+  this.size = sizeExpr
+
+proc data(this: Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor): Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea = 
+  if this.dataInstFlag:
+    return this.dataInst
+  if this.size != 0:
+    let pos = this.io.pos()
+    this.io.seek(int(this.offset))
+    let rawDataInstExpr = this.io.readBytes(int(this.size))
+    this.rawDataInst = rawDataInstExpr
+    let rawDataInstIo = newKaitaiStream(rawDataInstExpr)
+    let dataInstExpr = Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea.read(rawDataInstIo, this.root, this)
+    this.dataInst = dataInstExpr
+    this.io.seek(pos)
+  this.dataInstFlag = true
+  return this.dataInst
+
+proc fromFile*(_: typedesc[Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor], filename: string): Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor =
+  Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor.read(newKaitaiFileStream(filename), nil, nil)
 

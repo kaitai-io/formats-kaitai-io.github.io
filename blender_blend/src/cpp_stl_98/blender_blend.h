@@ -3,12 +3,15 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class blender_blend_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -29,21 +32,35 @@
 class blender_blend_t : public kaitai::kstruct {
 
 public:
+    class dna1_body_t;
+    class dna_field_t;
     class dna_struct_t;
     class file_block_t;
-    class dna1_body_t;
     class header_t;
-    class dna_field_t;
-
-    enum ptr_size_t {
-        PTR_SIZE_BITS_64 = 45,
-        PTR_SIZE_BITS_32 = 95
-    };
 
     enum endian_t {
         ENDIAN_BE = 86,
         ENDIAN_LE = 118
     };
+    static bool _is_defined_endian_t(endian_t v);
+
+private:
+    static const std::set<endian_t> _values_endian_t;
+    static std::set<endian_t> _build_values_endian_t();
+
+public:
+
+    enum ptr_size_t {
+        PTR_SIZE_BITS_64 = 45,
+        PTR_SIZE_BITS_32 = 95
+    };
+    static bool _is_defined_ptr_size_t(ptr_size_t v);
+
+private:
+    static const std::set<ptr_size_t> _values_ptr_size_t;
+    static std::set<ptr_size_t> _build_values_ptr_size_t();
+
+public:
 
     blender_blend_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, blender_blend_t* p__root = 0);
 
@@ -53,6 +70,113 @@ private:
 
 public:
     ~blender_blend_t();
+
+    /**
+     * DNA1, also known as "Structure DNA", is a special block in
+     * .blend file, which contains machine-readable specifications of
+     * all other structures used in this .blend file.
+     * 
+     * Effectively, this block contains:
+     * 
+     * * a sequence of "names" (strings which represent field names)
+     * * a sequence of "types" (strings which represent type name)
+     * * a sequence of "type lengths"
+     * * a sequence of "structs" (which describe contents of every
+     *   structure, referring to types and names by index)
+     * \sa https://archive.blender.org/wiki/index.php/Dev:Source/Architecture/File_Format/#Structure_DNA Source
+     */
+
+    class dna1_body_t : public kaitai::kstruct {
+
+    public:
+
+        dna1_body_t(kaitai::kstream* p__io, blender_blend_t::file_block_t* p__parent = 0, blender_blend_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~dna1_body_t();
+
+    private:
+        std::string m_id;
+        std::string m_name_magic;
+        uint32_t m_num_names;
+        std::vector<std::string>* m_names;
+        std::string m_padding_1;
+        std::string m_type_magic;
+        uint32_t m_num_types;
+        std::vector<std::string>* m_types;
+        std::string m_padding_2;
+        std::string m_tlen_magic;
+        std::vector<uint16_t>* m_lengths;
+        std::string m_padding_3;
+        std::string m_strc_magic;
+        uint32_t m_num_structs;
+        std::vector<dna_struct_t*>* m_structs;
+        blender_blend_t* m__root;
+        blender_blend_t::file_block_t* m__parent;
+
+    public:
+        std::string id() const { return m_id; }
+        std::string name_magic() const { return m_name_magic; }
+        uint32_t num_names() const { return m_num_names; }
+        std::vector<std::string>* names() const { return m_names; }
+        std::string padding_1() const { return m_padding_1; }
+        std::string type_magic() const { return m_type_magic; }
+        uint32_t num_types() const { return m_num_types; }
+        std::vector<std::string>* types() const { return m_types; }
+        std::string padding_2() const { return m_padding_2; }
+        std::string tlen_magic() const { return m_tlen_magic; }
+        std::vector<uint16_t>* lengths() const { return m_lengths; }
+        std::string padding_3() const { return m_padding_3; }
+        std::string strc_magic() const { return m_strc_magic; }
+        uint32_t num_structs() const { return m_num_structs; }
+        std::vector<dna_struct_t*>* structs() const { return m_structs; }
+        blender_blend_t* _root() const { return m__root; }
+        blender_blend_t::file_block_t* _parent() const { return m__parent; }
+    };
+
+    class dna_field_t : public kaitai::kstruct {
+
+    public:
+
+        dna_field_t(kaitai::kstream* p__io, blender_blend_t::dna_struct_t* p__parent = 0, blender_blend_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~dna_field_t();
+
+    private:
+        bool f_name;
+        std::string m_name;
+
+    public:
+        std::string name();
+
+    private:
+        bool f_type;
+        std::string m_type;
+
+    public:
+        std::string type();
+
+    private:
+        uint16_t m_idx_type;
+        uint16_t m_idx_name;
+        blender_blend_t* m__root;
+        blender_blend_t::dna_struct_t* m__parent;
+
+    public:
+        uint16_t idx_type() const { return m_idx_type; }
+        uint16_t idx_name() const { return m_idx_name; }
+        blender_blend_t* _root() const { return m__root; }
+        blender_blend_t::dna_struct_t* _parent() const { return m__parent; }
+    };
 
     /**
      * DNA struct contains a `type` (type name), which is specified as
@@ -171,73 +295,6 @@ public:
         kaitai::kstream* _io__raw_body() const { return m__io__raw_body; }
     };
 
-    /**
-     * DNA1, also known as "Structure DNA", is a special block in
-     * .blend file, which contains machine-readable specifications of
-     * all other structures used in this .blend file.
-     * 
-     * Effectively, this block contains:
-     * 
-     * * a sequence of "names" (strings which represent field names)
-     * * a sequence of "types" (strings which represent type name)
-     * * a sequence of "type lengths"
-     * * a sequence of "structs" (which describe contents of every
-     *   structure, referring to types and names by index)
-     * \sa https://archive.blender.org/wiki/index.php/Dev:Source/Architecture/File_Format/#Structure_DNA Source
-     */
-
-    class dna1_body_t : public kaitai::kstruct {
-
-    public:
-
-        dna1_body_t(kaitai::kstream* p__io, blender_blend_t::file_block_t* p__parent = 0, blender_blend_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~dna1_body_t();
-
-    private:
-        std::string m_id;
-        std::string m_name_magic;
-        uint32_t m_num_names;
-        std::vector<std::string>* m_names;
-        std::string m_padding_1;
-        std::string m_type_magic;
-        uint32_t m_num_types;
-        std::vector<std::string>* m_types;
-        std::string m_padding_2;
-        std::string m_tlen_magic;
-        std::vector<uint16_t>* m_lengths;
-        std::string m_padding_3;
-        std::string m_strc_magic;
-        uint32_t m_num_structs;
-        std::vector<dna_struct_t*>* m_structs;
-        blender_blend_t* m__root;
-        blender_blend_t::file_block_t* m__parent;
-
-    public:
-        std::string id() const { return m_id; }
-        std::string name_magic() const { return m_name_magic; }
-        uint32_t num_names() const { return m_num_names; }
-        std::vector<std::string>* names() const { return m_names; }
-        std::string padding_1() const { return m_padding_1; }
-        std::string type_magic() const { return m_type_magic; }
-        uint32_t num_types() const { return m_num_types; }
-        std::vector<std::string>* types() const { return m_types; }
-        std::string padding_2() const { return m_padding_2; }
-        std::string tlen_magic() const { return m_tlen_magic; }
-        std::vector<uint16_t>* lengths() const { return m_lengths; }
-        std::string padding_3() const { return m_padding_3; }
-        std::string strc_magic() const { return m_strc_magic; }
-        uint32_t num_structs() const { return m_num_structs; }
-        std::vector<dna_struct_t*>* structs() const { return m_structs; }
-        blender_blend_t* _root() const { return m__root; }
-        blender_blend_t::file_block_t* _parent() const { return m__parent; }
-    };
-
     class header_t : public kaitai::kstruct {
 
     public:
@@ -289,46 +346,6 @@ public:
         std::string version() const { return m_version; }
         blender_blend_t* _root() const { return m__root; }
         blender_blend_t* _parent() const { return m__parent; }
-    };
-
-    class dna_field_t : public kaitai::kstruct {
-
-    public:
-
-        dna_field_t(kaitai::kstream* p__io, blender_blend_t::dna_struct_t* p__parent = 0, blender_blend_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~dna_field_t();
-
-    private:
-        bool f_type;
-        std::string m_type;
-
-    public:
-        std::string type();
-
-    private:
-        bool f_name;
-        std::string m_name;
-
-    public:
-        std::string name();
-
-    private:
-        uint16_t m_idx_type;
-        uint16_t m_idx_name;
-        blender_blend_t* m__root;
-        blender_blend_t::dna_struct_t* m__parent;
-
-    public:
-        uint16_t idx_type() const { return m_idx_type; }
-        uint16_t idx_name() const { return m_idx_name; }
-        blender_blend_t* _root() const { return m__root; }
-        blender_blend_t::dna_struct_t* _parent() const { return m__parent; }
     };
 
 private:

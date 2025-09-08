@@ -21,30 +21,17 @@ type
     movi = 1769369453
     hdrl = 1819436136
     strl = 1819440243
-  Avi_StreamType* = enum
-    mids = 1935960429
-    vids = 1935960438
-    auds = 1935963489
-    txts = 1937012852
   Avi_HandlerType* = enum
     mp3 = 85
     ac3 = 8192
     dts = 8193
     cvid = 1684633187
     xvid = 1684633208
-  Avi_ListBody* = ref object of KaitaiStruct
-    `listType`*: Avi_ChunkType
-    `data`*: Avi_Blocks
-    `parent`*: Avi_Block
-  Avi_Rect* = ref object of KaitaiStruct
-    `left`*: int16
-    `top`*: int16
-    `right`*: int16
-    `bottom`*: int16
-    `parent`*: Avi_StrhBody
-  Avi_Blocks* = ref object of KaitaiStruct
-    `entries`*: seq[Avi_Block]
-    `parent`*: KaitaiStruct
+  Avi_StreamType* = enum
+    mids = 1935960429
+    vids = 1935960438
+    auds = 1935963489
+    txts = 1937012852
   Avi_AvihBody* = ref object of KaitaiStruct
     `microSecPerFrame`*: uint32
     `maxBytesPerSec`*: uint32
@@ -64,6 +51,21 @@ type
     `data`*: KaitaiStruct
     `parent`*: Avi_Blocks
     `rawData`*: seq[byte]
+  Avi_Blocks* = ref object of KaitaiStruct
+    `entries`*: seq[Avi_Block]
+    `parent`*: KaitaiStruct
+  Avi_ListBody* = ref object of KaitaiStruct
+    `listType`*: Avi_ChunkType
+    `data`*: Avi_Blocks
+    `parent`*: Avi_Block
+  Avi_Rect* = ref object of KaitaiStruct
+    `left`*: int16
+    `top`*: int16
+    `right`*: int16
+    `bottom`*: int16
+    `parent`*: Avi_StrhBody
+  Avi_StrfBody* = ref object of KaitaiStruct
+    `parent`*: KaitaiStruct
   Avi_StrhBody* = ref object of KaitaiStruct
     `fccType`*: Avi_StreamType
     `fccHandler`*: Avi_HandlerType
@@ -80,17 +82,15 @@ type
     `sampleSize`*: uint32
     `frame`*: Avi_Rect
     `parent`*: Avi_Block
-  Avi_StrfBody* = ref object of KaitaiStruct
-    `parent`*: KaitaiStruct
 
 proc read*(_: typedesc[Avi], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Avi
-proc read*(_: typedesc[Avi_ListBody], io: KaitaiStream, root: KaitaiStruct, parent: Avi_Block): Avi_ListBody
-proc read*(_: typedesc[Avi_Rect], io: KaitaiStream, root: KaitaiStruct, parent: Avi_StrhBody): Avi_Rect
-proc read*(_: typedesc[Avi_Blocks], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Avi_Blocks
 proc read*(_: typedesc[Avi_AvihBody], io: KaitaiStream, root: KaitaiStruct, parent: Avi_Block): Avi_AvihBody
 proc read*(_: typedesc[Avi_Block], io: KaitaiStream, root: KaitaiStruct, parent: Avi_Blocks): Avi_Block
-proc read*(_: typedesc[Avi_StrhBody], io: KaitaiStream, root: KaitaiStruct, parent: Avi_Block): Avi_StrhBody
+proc read*(_: typedesc[Avi_Blocks], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Avi_Blocks
+proc read*(_: typedesc[Avi_ListBody], io: KaitaiStream, root: KaitaiStruct, parent: Avi_Block): Avi_ListBody
+proc read*(_: typedesc[Avi_Rect], io: KaitaiStream, root: KaitaiStruct, parent: Avi_StrhBody): Avi_Rect
 proc read*(_: typedesc[Avi_StrfBody], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Avi_StrfBody
+proc read*(_: typedesc[Avi_StrhBody], io: KaitaiStream, root: KaitaiStruct, parent: Avi_Block): Avi_StrhBody
 
 
 
@@ -111,7 +111,7 @@ proc read*(_: typedesc[Avi], io: KaitaiStream, root: KaitaiStruct, parent: Kaita
   this.fileSize = fileSizeExpr
   let magic2Expr = this.io.readBytes(int(4))
   this.magic2 = magic2Expr
-  let rawDataExpr = this.io.readBytes(int((this.fileSize - 4)))
+  let rawDataExpr = this.io.readBytes(int(this.fileSize - 4))
   this.rawData = rawDataExpr
   let rawDataIo = newKaitaiStream(rawDataExpr)
   let dataExpr = Avi_Blocks.read(rawDataIo, this.root, this)
@@ -119,60 +119,6 @@ proc read*(_: typedesc[Avi], io: KaitaiStream, root: KaitaiStruct, parent: Kaita
 
 proc fromFile*(_: typedesc[Avi], filename: string): Avi =
   Avi.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Avi_ListBody], io: KaitaiStream, root: KaitaiStruct, parent: Avi_Block): Avi_ListBody =
-  template this: untyped = result
-  this = new(Avi_ListBody)
-  let root = if root == nil: cast[Avi](this) else: cast[Avi](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let listTypeExpr = Avi_ChunkType(this.io.readU4le())
-  this.listType = listTypeExpr
-  let dataExpr = Avi_Blocks.read(this.io, this.root, this)
-  this.data = dataExpr
-
-proc fromFile*(_: typedesc[Avi_ListBody], filename: string): Avi_ListBody =
-  Avi_ListBody.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Avi_Rect], io: KaitaiStream, root: KaitaiStruct, parent: Avi_StrhBody): Avi_Rect =
-  template this: untyped = result
-  this = new(Avi_Rect)
-  let root = if root == nil: cast[Avi](this) else: cast[Avi](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let leftExpr = this.io.readS2le()
-  this.left = leftExpr
-  let topExpr = this.io.readS2le()
-  this.top = topExpr
-  let rightExpr = this.io.readS2le()
-  this.right = rightExpr
-  let bottomExpr = this.io.readS2le()
-  this.bottom = bottomExpr
-
-proc fromFile*(_: typedesc[Avi_Rect], filename: string): Avi_Rect =
-  Avi_Rect.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Avi_Blocks], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Avi_Blocks =
-  template this: untyped = result
-  this = new(Avi_Blocks)
-  let root = if root == nil: cast[Avi](this) else: cast[Avi](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  block:
-    var i: int
-    while not this.io.isEof:
-      let it = Avi_Block.read(this.io, this.root, this)
-      this.entries.add(it)
-      inc i
-
-proc fromFile*(_: typedesc[Avi_Blocks], filename: string): Avi_Blocks =
-  Avi_Blocks.read(newKaitaiFileStream(filename), nil, nil)
 
 
 ##[
@@ -227,17 +173,17 @@ proc read*(_: typedesc[Avi_Block], io: KaitaiStream, root: KaitaiStruct, parent:
   this.blockSize = blockSizeExpr
   block:
     let on = this.fourCc
-    if on == avi.list:
-      let rawDataExpr = this.io.readBytes(int(this.blockSize))
-      this.rawData = rawDataExpr
-      let rawDataIo = newKaitaiStream(rawDataExpr)
-      let dataExpr = Avi_ListBody.read(rawDataIo, this.root, this)
-      this.data = dataExpr
-    elif on == avi.avih:
+    if on == avi.avih:
       let rawDataExpr = this.io.readBytes(int(this.blockSize))
       this.rawData = rawDataExpr
       let rawDataIo = newKaitaiStream(rawDataExpr)
       let dataExpr = Avi_AvihBody.read(rawDataIo, this.root, this)
+      this.data = dataExpr
+    elif on == avi.list:
+      let rawDataExpr = this.io.readBytes(int(this.blockSize))
+      this.rawData = rawDataExpr
+      let rawDataIo = newKaitaiStream(rawDataExpr)
+      let dataExpr = Avi_ListBody.read(rawDataIo, this.root, this)
       this.data = dataExpr
     elif on == avi.strh:
       let rawDataExpr = this.io.readBytes(int(this.blockSize))
@@ -251,6 +197,76 @@ proc read*(_: typedesc[Avi_Block], io: KaitaiStream, root: KaitaiStruct, parent:
 
 proc fromFile*(_: typedesc[Avi_Block], filename: string): Avi_Block =
   Avi_Block.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Avi_Blocks], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Avi_Blocks =
+  template this: untyped = result
+  this = new(Avi_Blocks)
+  let root = if root == nil: cast[Avi](this) else: cast[Avi](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  block:
+    var i: int
+    while not this.io.isEof:
+      let it = Avi_Block.read(this.io, this.root, this)
+      this.entries.add(it)
+      inc i
+
+proc fromFile*(_: typedesc[Avi_Blocks], filename: string): Avi_Blocks =
+  Avi_Blocks.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Avi_ListBody], io: KaitaiStream, root: KaitaiStruct, parent: Avi_Block): Avi_ListBody =
+  template this: untyped = result
+  this = new(Avi_ListBody)
+  let root = if root == nil: cast[Avi](this) else: cast[Avi](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let listTypeExpr = Avi_ChunkType(this.io.readU4le())
+  this.listType = listTypeExpr
+  let dataExpr = Avi_Blocks.read(this.io, this.root, this)
+  this.data = dataExpr
+
+proc fromFile*(_: typedesc[Avi_ListBody], filename: string): Avi_ListBody =
+  Avi_ListBody.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Avi_Rect], io: KaitaiStream, root: KaitaiStruct, parent: Avi_StrhBody): Avi_Rect =
+  template this: untyped = result
+  this = new(Avi_Rect)
+  let root = if root == nil: cast[Avi](this) else: cast[Avi](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let leftExpr = this.io.readS2le()
+  this.left = leftExpr
+  let topExpr = this.io.readS2le()
+  this.top = topExpr
+  let rightExpr = this.io.readS2le()
+  this.right = rightExpr
+  let bottomExpr = this.io.readS2le()
+  this.bottom = bottomExpr
+
+proc fromFile*(_: typedesc[Avi_Rect], filename: string): Avi_Rect =
+  Avi_Rect.read(newKaitaiFileStream(filename), nil, nil)
+
+
+##[
+Stream format description
+]##
+proc read*(_: typedesc[Avi_StrfBody], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Avi_StrfBody =
+  template this: untyped = result
+  this = new(Avi_StrfBody)
+  let root = if root == nil: cast[Avi](this) else: cast[Avi](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+
+proc fromFile*(_: typedesc[Avi_StrfBody], filename: string): Avi_StrfBody =
+  Avi_StrfBody.read(newKaitaiFileStream(filename), nil, nil)
 
 
 ##[
@@ -304,20 +320,4 @@ proc read*(_: typedesc[Avi_StrhBody], io: KaitaiStream, root: KaitaiStruct, pare
 
 proc fromFile*(_: typedesc[Avi_StrhBody], filename: string): Avi_StrhBody =
   Avi_StrhBody.read(newKaitaiFileStream(filename), nil, nil)
-
-
-##[
-Stream format description
-]##
-proc read*(_: typedesc[Avi_StrfBody], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Avi_StrfBody =
-  template this: untyped = result
-  this = new(Avi_StrfBody)
-  let root = if root == nil: cast[Avi](this) else: cast[Avi](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-
-proc fromFile*(_: typedesc[Avi_StrfBody], filename: string): Avi_StrfBody =
-  Avi_StrfBody.read(newKaitaiFileStream(filename), nil, nil)
 

@@ -28,14 +28,18 @@ type Vp8DuckIvf struct {
 	ImageData []*Vp8DuckIvf_Blocks
 	_io *kaitai.Stream
 	_root *Vp8DuckIvf
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewVp8DuckIvf() *Vp8DuckIvf {
 	return &Vp8DuckIvf{
 	}
 }
 
-func (this *Vp8DuckIvf) Read(io *kaitai.Stream, parent interface{}, root *Vp8DuckIvf) (err error) {
+func (this Vp8DuckIvf) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Vp8DuckIvf) Read(io *kaitai.Stream, parent kaitai.Struct, root *Vp8DuckIvf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -145,30 +149,6 @@ func (this *Vp8DuckIvf) Read(io *kaitai.Stream, parent interface{}, root *Vp8Duc
 /**
  * the number of frames (if not a camera stream)
  */
-type Vp8DuckIvf_Blocks struct {
-	Entries *Vp8DuckIvf_Block
-	_io *kaitai.Stream
-	_root *Vp8DuckIvf
-	_parent *Vp8DuckIvf
-}
-func NewVp8DuckIvf_Blocks() *Vp8DuckIvf_Blocks {
-	return &Vp8DuckIvf_Blocks{
-	}
-}
-
-func (this *Vp8DuckIvf_Blocks) Read(io *kaitai.Stream, parent *Vp8DuckIvf, root *Vp8DuckIvf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp12 := NewVp8DuckIvf_Block()
-	err = tmp12.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Entries = tmp12
-	return err
-}
 type Vp8DuckIvf_Block struct {
 	LenFrame uint32
 	Timestamp uint64
@@ -182,30 +162,62 @@ func NewVp8DuckIvf_Block() *Vp8DuckIvf_Block {
 	}
 }
 
+func (this Vp8DuckIvf_Block) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Vp8DuckIvf_Block) Read(io *kaitai.Stream, parent *Vp8DuckIvf_Blocks, root *Vp8DuckIvf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp13, err := this._io.ReadU4le()
+	tmp12, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.LenFrame = uint32(tmp13)
-	tmp14, err := this._io.ReadU8le()
+	this.LenFrame = uint32(tmp12)
+	tmp13, err := this._io.ReadU8le()
 	if err != nil {
 		return err
 	}
-	this.Timestamp = uint64(tmp14)
-	tmp15, err := this._io.ReadBytes(int(this.LenFrame))
+	this.Timestamp = uint64(tmp13)
+	tmp14, err := this._io.ReadBytes(int(this.LenFrame))
 	if err != nil {
 		return err
 	}
-	tmp15 = tmp15
-	this.Framedata = tmp15
+	tmp14 = tmp14
+	this.Framedata = tmp14
 	return err
 }
 
 /**
  * size of the frame data
  */
+type Vp8DuckIvf_Blocks struct {
+	Entries *Vp8DuckIvf_Block
+	_io *kaitai.Stream
+	_root *Vp8DuckIvf
+	_parent *Vp8DuckIvf
+}
+func NewVp8DuckIvf_Blocks() *Vp8DuckIvf_Blocks {
+	return &Vp8DuckIvf_Blocks{
+	}
+}
+
+func (this Vp8DuckIvf_Blocks) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Vp8DuckIvf_Blocks) Read(io *kaitai.Stream, parent *Vp8DuckIvf, root *Vp8DuckIvf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp15 := NewVp8DuckIvf_Block()
+	err = tmp15.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Entries = tmp15
+	return err
+}

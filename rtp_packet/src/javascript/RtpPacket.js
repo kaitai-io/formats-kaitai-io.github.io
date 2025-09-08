@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.RtpPacket = factory(root.KaitaiStream);
+    factory(root.RtpPacket || (root.RtpPacket = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (RtpPacket_, KaitaiStream) {
 /**
  * The Real-time Transport Protocol (RTP) is a widely used network
  * protocol for transmitting audio or video. It usually works with the
@@ -114,7 +114,7 @@ var RtpPacket = (function() {
     if (this.hasExtension) {
       this.headerExtension = new HeaderExtention(this._io, this, this._root);
     }
-    this.data = this._io.readBytes(((this._io.size - this._io.pos) - this.lenPadding));
+    this.data = this._io.readBytes((this._io.size - this._io.pos) - this.lenPadding);
     this.padding = this._io.readBytes(this.lenPadding);
   }
 
@@ -122,7 +122,7 @@ var RtpPacket = (function() {
     function HeaderExtention(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -133,24 +133,6 @@ var RtpPacket = (function() {
 
     return HeaderExtention;
   })();
-
-  /**
-   * If padding bit is enabled, last byte of data contains number of
-   * bytes appended to the payload as padding.
-   */
-  Object.defineProperty(RtpPacket.prototype, 'lenPaddingIfExists', {
-    get: function() {
-      if (this._m_lenPaddingIfExists !== undefined)
-        return this._m_lenPaddingIfExists;
-      if (this.hasPadding) {
-        var _pos = this._io.pos;
-        this._io.seek((this._io.size - 1));
-        this._m_lenPaddingIfExists = this._io.readU1();
-        this._io.seek(_pos);
-      }
-      return this._m_lenPaddingIfExists;
-    }
-  });
 
   /**
    * Always returns number of padding bytes to in the payload.
@@ -165,10 +147,28 @@ var RtpPacket = (function() {
   });
 
   /**
+   * If padding bit is enabled, last byte of data contains number of
+   * bytes appended to the payload as padding.
+   */
+  Object.defineProperty(RtpPacket.prototype, 'lenPaddingIfExists', {
+    get: function() {
+      if (this._m_lenPaddingIfExists !== undefined)
+        return this._m_lenPaddingIfExists;
+      if (this.hasPadding) {
+        var _pos = this._io.pos;
+        this._io.seek(this._io.size - 1);
+        this._m_lenPaddingIfExists = this._io.readU1();
+        this._io.seek(_pos);
+      }
+      return this._m_lenPaddingIfExists;
+    }
+  });
+
+  /**
    * Payload without padding.
    */
 
   return RtpPacket;
 })();
-return RtpPacket;
-}));
+RtpPacket_.RtpPacket = RtpPacket;
+});

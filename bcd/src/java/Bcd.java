@@ -5,6 +5,7 @@ import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -60,11 +61,24 @@ public class Bcd extends KaitaiStruct {
         for (int i = 0; i < numDigits(); i++) {
             switch (bitsPerDigit()) {
             case 4: {
-                this.digits.add((int) (this._io.readBitsIntBe(4)));
+                this.digits.add(((Number) (this._io.readBitsIntBe(4))).intValue());
                 break;
             }
             case 8: {
-                this.digits.add((int) (this._io.readU1()));
+                this.digits.add(((Number) (this._io.readU1())).intValue());
+                break;
+            }
+            }
+        }
+    }
+
+    public void _fetchInstances() {
+        for (int i = 0; i < this.digits.size(); i++) {
+            switch (bitsPerDigit()) {
+            case 4: {
+                break;
+            }
+            case 8: {
                 break;
             }
             }
@@ -78,9 +92,19 @@ public class Bcd extends KaitaiStruct {
     public Integer asInt() {
         if (this.asInt != null)
             return this.asInt;
-        int _tmp = (int) ((isLe() ? asIntLe() : asIntBe()));
-        this.asInt = _tmp;
+        this.asInt = ((Number) ((isLe() ? asIntLe() : asIntBe()))).intValue();
         return this.asInt;
+    }
+    private Integer asIntBe;
+
+    /**
+     * Value of this BCD number as integer (treating digit order as big-endian).
+     */
+    public Integer asIntBe() {
+        if (this.asIntBe != null)
+            return this.asIntBe;
+        this.asIntBe = ((Number) (digits().get(((Number) (lastIdx())).intValue()) + (numDigits() < 2 ? 0 : digits().get(((Number) (lastIdx() - 1)).intValue()) * 10 + (numDigits() < 3 ? 0 : digits().get(((Number) (lastIdx() - 2)).intValue()) * 100 + (numDigits() < 4 ? 0 : digits().get(((Number) (lastIdx() - 3)).intValue()) * 1000 + (numDigits() < 5 ? 0 : digits().get(((Number) (lastIdx() - 4)).intValue()) * 10000 + (numDigits() < 6 ? 0 : digits().get(((Number) (lastIdx() - 5)).intValue()) * 100000 + (numDigits() < 7 ? 0 : digits().get(((Number) (lastIdx() - 6)).intValue()) * 1000000 + (numDigits() < 8 ? 0 : digits().get(((Number) (lastIdx() - 7)).intValue()) * 10000000))))))))).intValue();
+        return this.asIntBe;
     }
     private Integer asIntLe;
 
@@ -90,8 +114,7 @@ public class Bcd extends KaitaiStruct {
     public Integer asIntLe() {
         if (this.asIntLe != null)
             return this.asIntLe;
-        int _tmp = (int) ((digits().get((int) 0) + (numDigits() < 2 ? 0 : ((digits().get((int) 1) * 10) + (numDigits() < 3 ? 0 : ((digits().get((int) 2) * 100) + (numDigits() < 4 ? 0 : ((digits().get((int) 3) * 1000) + (numDigits() < 5 ? 0 : ((digits().get((int) 4) * 10000) + (numDigits() < 6 ? 0 : ((digits().get((int) 5) * 100000) + (numDigits() < 7 ? 0 : ((digits().get((int) 6) * 1000000) + (numDigits() < 8 ? 0 : (digits().get((int) 7) * 10000000))))))))))))))));
-        this.asIntLe = _tmp;
+        this.asIntLe = ((Number) (digits().get(((int) 0)) + (numDigits() < 2 ? 0 : digits().get(((int) 1)) * 10 + (numDigits() < 3 ? 0 : digits().get(((int) 2)) * 100 + (numDigits() < 4 ? 0 : digits().get(((int) 3)) * 1000 + (numDigits() < 5 ? 0 : digits().get(((int) 4)) * 10000 + (numDigits() < 6 ? 0 : digits().get(((int) 5)) * 100000 + (numDigits() < 7 ? 0 : digits().get(((int) 6)) * 1000000 + (numDigits() < 8 ? 0 : digits().get(((int) 7)) * 10000000))))))))).intValue();
         return this.asIntLe;
     }
     private Integer lastIdx;
@@ -102,29 +125,16 @@ public class Bcd extends KaitaiStruct {
     public Integer lastIdx() {
         if (this.lastIdx != null)
             return this.lastIdx;
-        int _tmp = (int) ((numDigits() - 1));
-        this.lastIdx = _tmp;
+        this.lastIdx = ((Number) (numDigits() - 1)).intValue();
         return this.lastIdx;
     }
-    private Integer asIntBe;
-
-    /**
-     * Value of this BCD number as integer (treating digit order as big-endian).
-     */
-    public Integer asIntBe() {
-        if (this.asIntBe != null)
-            return this.asIntBe;
-        int _tmp = (int) ((digits().get((int) lastIdx()) + (numDigits() < 2 ? 0 : ((digits().get((int) (lastIdx() - 1)) * 10) + (numDigits() < 3 ? 0 : ((digits().get((int) (lastIdx() - 2)) * 100) + (numDigits() < 4 ? 0 : ((digits().get((int) (lastIdx() - 3)) * 1000) + (numDigits() < 5 ? 0 : ((digits().get((int) (lastIdx() - 4)) * 10000) + (numDigits() < 6 ? 0 : ((digits().get((int) (lastIdx() - 5)) * 100000) + (numDigits() < 7 ? 0 : ((digits().get((int) (lastIdx() - 6)) * 1000000) + (numDigits() < 8 ? 0 : (digits().get((int) (lastIdx() - 7)) * 10000000))))))))))))))));
-        this.asIntBe = _tmp;
-        return this.asIntBe;
-    }
-    private ArrayList<Integer> digits;
+    private List<Integer> digits;
     private int numDigits;
     private int bitsPerDigit;
     private boolean isLe;
     private Bcd _root;
     private KaitaiStruct _parent;
-    public ArrayList<Integer> digits() { return digits; }
+    public List<Integer> digits() { return digits; }
 
     /**
      * Number of digits in this BCD representation. Only values from 1 to 8 inclusive are supported.

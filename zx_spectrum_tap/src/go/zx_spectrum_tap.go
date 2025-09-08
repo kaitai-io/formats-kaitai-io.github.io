@@ -21,6 +21,11 @@ const (
 	ZxSpectrumTap_FlagEnum__Header ZxSpectrumTap_FlagEnum = 0
 	ZxSpectrumTap_FlagEnum__Data ZxSpectrumTap_FlagEnum = 255
 )
+var values_ZxSpectrumTap_FlagEnum = map[ZxSpectrumTap_FlagEnum]struct{}{0: {}, 255: {}}
+func (v ZxSpectrumTap_FlagEnum) isDefined() bool {
+	_, ok := values_ZxSpectrumTap_FlagEnum[v]
+	return ok
+}
 
 type ZxSpectrumTap_HeaderTypeEnum int
 const (
@@ -29,23 +34,32 @@ const (
 	ZxSpectrumTap_HeaderTypeEnum__CharArray ZxSpectrumTap_HeaderTypeEnum = 2
 	ZxSpectrumTap_HeaderTypeEnum__Bytes ZxSpectrumTap_HeaderTypeEnum = 3
 )
+var values_ZxSpectrumTap_HeaderTypeEnum = map[ZxSpectrumTap_HeaderTypeEnum]struct{}{0: {}, 1: {}, 2: {}, 3: {}}
+func (v ZxSpectrumTap_HeaderTypeEnum) isDefined() bool {
+	_, ok := values_ZxSpectrumTap_HeaderTypeEnum[v]
+	return ok
+}
 type ZxSpectrumTap struct {
 	Blocks []*ZxSpectrumTap_Block
 	_io *kaitai.Stream
 	_root *ZxSpectrumTap
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewZxSpectrumTap() *ZxSpectrumTap {
 	return &ZxSpectrumTap{
 	}
 }
 
-func (this *ZxSpectrumTap) Read(io *kaitai.Stream, parent interface{}, root *ZxSpectrumTap) (err error) {
+func (this ZxSpectrumTap) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *ZxSpectrumTap) Read(io *kaitai.Stream, parent kaitai.Struct, root *ZxSpectrumTap) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	for i := 1;; i++ {
+	for i := 0;; i++ {
 		tmp1, err := this._io.EOF()
 		if err != nil {
 			return err
@@ -62,6 +76,53 @@ func (this *ZxSpectrumTap) Read(io *kaitai.Stream, parent interface{}, root *ZxS
 	}
 	return err
 }
+type ZxSpectrumTap_ArrayParams struct {
+	Reserved uint8
+	VarName uint8
+	Reserved1 []byte
+	_io *kaitai.Stream
+	_root *ZxSpectrumTap
+	_parent *ZxSpectrumTap_Header
+}
+func NewZxSpectrumTap_ArrayParams() *ZxSpectrumTap_ArrayParams {
+	return &ZxSpectrumTap_ArrayParams{
+	}
+}
+
+func (this ZxSpectrumTap_ArrayParams) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *ZxSpectrumTap_ArrayParams) Read(io *kaitai.Stream, parent *ZxSpectrumTap_Header, root *ZxSpectrumTap) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp3, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Reserved = tmp3
+	tmp4, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.VarName = tmp4
+	tmp5, err := this._io.ReadBytes(int(2))
+	if err != nil {
+		return err
+	}
+	tmp5 = tmp5
+	this.Reserved1 = tmp5
+	if !(bytes.Equal(this.Reserved1, []uint8{0, 128})) {
+		return kaitai.NewValidationNotEqualError([]uint8{0, 128}, this.Reserved1, this._io, "/types/array_params/seq/2")
+	}
+	return err
+}
+
+/**
+ * Variable name (1..26 meaning A$..Z$ +192)
+ */
 type ZxSpectrumTap_Block struct {
 	LenBlock uint16
 	Flag ZxSpectrumTap_FlagEnum
@@ -77,74 +138,49 @@ func NewZxSpectrumTap_Block() *ZxSpectrumTap_Block {
 	}
 }
 
+func (this ZxSpectrumTap_Block) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *ZxSpectrumTap_Block) Read(io *kaitai.Stream, parent *ZxSpectrumTap, root *ZxSpectrumTap) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp3, err := this._io.ReadU2le()
+	tmp6, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.LenBlock = uint16(tmp3)
-	tmp4, err := this._io.ReadU1()
+	this.LenBlock = uint16(tmp6)
+	tmp7, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Flag = ZxSpectrumTap_FlagEnum(tmp4)
+	this.Flag = ZxSpectrumTap_FlagEnum(tmp7)
 	if ( ((this.LenBlock == 19) && (this.Flag == ZxSpectrumTap_FlagEnum__Header)) ) {
-		tmp5 := NewZxSpectrumTap_Header()
-		err = tmp5.Read(this._io, this, this._root)
+		tmp8 := NewZxSpectrumTap_Header()
+		err = tmp8.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Header = tmp5
+		this.Header = tmp8
 	}
 	if (this.LenBlock == 19) {
-		tmp6, err := this._io.ReadBytes(int((this.Header.LenData + 4)))
+		tmp9, err := this._io.ReadBytes(int(this.Header.LenData + 4))
 		if err != nil {
 			return err
 		}
-		tmp6 = tmp6
-		this.Data = tmp6
+		tmp9 = tmp9
+		this.Data = tmp9
 	}
 	if (this.Flag == ZxSpectrumTap_FlagEnum__Data) {
-		tmp7, err := this._io.ReadBytes(int((this.LenBlock - 1)))
+		tmp10, err := this._io.ReadBytes(int(this.LenBlock - 1))
 		if err != nil {
 			return err
 		}
-		tmp7 = tmp7
-		this.HeaderlessData = tmp7
+		tmp10 = tmp10
+		this.HeaderlessData = tmp10
 	}
-	return err
-}
-type ZxSpectrumTap_ProgramParams struct {
-	AutostartLine uint16
-	LenProgram uint16
-	_io *kaitai.Stream
-	_root *ZxSpectrumTap
-	_parent *ZxSpectrumTap_Header
-}
-func NewZxSpectrumTap_ProgramParams() *ZxSpectrumTap_ProgramParams {
-	return &ZxSpectrumTap_ProgramParams{
-	}
-}
-
-func (this *ZxSpectrumTap_ProgramParams) Read(io *kaitai.Stream, parent *ZxSpectrumTap_Header, root *ZxSpectrumTap) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp8, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.AutostartLine = uint16(tmp8)
-	tmp9, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.LenProgram = uint16(tmp9)
 	return err
 }
 type ZxSpectrumTap_BytesParams struct {
@@ -159,29 +195,33 @@ func NewZxSpectrumTap_BytesParams() *ZxSpectrumTap_BytesParams {
 	}
 }
 
+func (this ZxSpectrumTap_BytesParams) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *ZxSpectrumTap_BytesParams) Read(io *kaitai.Stream, parent *ZxSpectrumTap_Header, root *ZxSpectrumTap) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp10, err := this._io.ReadU2le()
+	tmp11, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.StartAddress = uint16(tmp10)
-	tmp11, err := this._io.ReadBytes(int(2))
+	this.StartAddress = uint16(tmp11)
+	tmp12, err := this._io.ReadBytes(int(2))
 	if err != nil {
 		return err
 	}
-	tmp11 = tmp11
-	this.Reserved = tmp11
+	tmp12 = tmp12
+	this.Reserved = tmp12
 	return err
 }
 type ZxSpectrumTap_Header struct {
 	HeaderType ZxSpectrumTap_HeaderTypeEnum
 	Filename []byte
 	LenData uint16
-	Params interface{}
+	Params kaitai.Struct
 	Checksum uint8
 	_io *kaitai.Stream
 	_root *ZxSpectrumTap
@@ -192,37 +232,34 @@ func NewZxSpectrumTap_Header() *ZxSpectrumTap_Header {
 	}
 }
 
+func (this ZxSpectrumTap_Header) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *ZxSpectrumTap_Header) Read(io *kaitai.Stream, parent *ZxSpectrumTap_Block, root *ZxSpectrumTap) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp12, err := this._io.ReadU1()
+	tmp13, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.HeaderType = ZxSpectrumTap_HeaderTypeEnum(tmp12)
-	tmp13, err := this._io.ReadBytes(int(10))
+	this.HeaderType = ZxSpectrumTap_HeaderTypeEnum(tmp13)
+	tmp14, err := this._io.ReadBytes(int(10))
 	if err != nil {
 		return err
 	}
-	tmp13 = kaitai.BytesStripRight(tmp13, 32)
-	this.Filename = tmp13
-	tmp14, err := this._io.ReadU2le()
+	tmp14 = kaitai.BytesStripRight(tmp14, 32)
+	this.Filename = tmp14
+	tmp15, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.LenData = uint16(tmp14)
+	this.LenData = uint16(tmp15)
 	switch (this.HeaderType) {
-	case ZxSpectrumTap_HeaderTypeEnum__Program:
-		tmp15 := NewZxSpectrumTap_ProgramParams()
-		err = tmp15.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Params = tmp15
-	case ZxSpectrumTap_HeaderTypeEnum__NumArray:
-		tmp16 := NewZxSpectrumTap_ArrayParams()
+	case ZxSpectrumTap_HeaderTypeEnum__Bytes:
+		tmp16 := NewZxSpectrumTap_BytesParams()
 		err = tmp16.Read(this._io, this, this._root)
 		if err != nil {
 			return err
@@ -235,65 +272,62 @@ func (this *ZxSpectrumTap_Header) Read(io *kaitai.Stream, parent *ZxSpectrumTap_
 			return err
 		}
 		this.Params = tmp17
-	case ZxSpectrumTap_HeaderTypeEnum__Bytes:
-		tmp18 := NewZxSpectrumTap_BytesParams()
+	case ZxSpectrumTap_HeaderTypeEnum__NumArray:
+		tmp18 := NewZxSpectrumTap_ArrayParams()
 		err = tmp18.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Params = tmp18
+	case ZxSpectrumTap_HeaderTypeEnum__Program:
+		tmp19 := NewZxSpectrumTap_ProgramParams()
+		err = tmp19.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Params = tmp19
 	}
-	tmp19, err := this._io.ReadU1()
+	tmp20, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Checksum = tmp19
+	this.Checksum = tmp20
 	return err
 }
 
 /**
  * Bitwise XOR of all bytes including the flag byte
  */
-type ZxSpectrumTap_ArrayParams struct {
-	Reserved uint8
-	VarName uint8
-	Reserved1 []byte
+type ZxSpectrumTap_ProgramParams struct {
+	AutostartLine uint16
+	LenProgram uint16
 	_io *kaitai.Stream
 	_root *ZxSpectrumTap
 	_parent *ZxSpectrumTap_Header
 }
-func NewZxSpectrumTap_ArrayParams() *ZxSpectrumTap_ArrayParams {
-	return &ZxSpectrumTap_ArrayParams{
+func NewZxSpectrumTap_ProgramParams() *ZxSpectrumTap_ProgramParams {
+	return &ZxSpectrumTap_ProgramParams{
 	}
 }
 
-func (this *ZxSpectrumTap_ArrayParams) Read(io *kaitai.Stream, parent *ZxSpectrumTap_Header, root *ZxSpectrumTap) (err error) {
+func (this ZxSpectrumTap_ProgramParams) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *ZxSpectrumTap_ProgramParams) Read(io *kaitai.Stream, parent *ZxSpectrumTap_Header, root *ZxSpectrumTap) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp20, err := this._io.ReadU1()
+	tmp21, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.Reserved = tmp20
-	tmp21, err := this._io.ReadU1()
+	this.AutostartLine = uint16(tmp21)
+	tmp22, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.VarName = tmp21
-	tmp22, err := this._io.ReadBytes(int(2))
-	if err != nil {
-		return err
-	}
-	tmp22 = tmp22
-	this.Reserved1 = tmp22
-	if !(bytes.Equal(this.Reserved1, []uint8{0, 128})) {
-		return kaitai.NewValidationNotEqualError([]uint8{0, 128}, this.Reserved1, this._io, "/types/array_params/seq/2")
-	}
+	this.LenProgram = uint16(tmp22)
 	return err
 }
-
-/**
- * Variable name (1..26 meaning A$..Z$ +192)
- */

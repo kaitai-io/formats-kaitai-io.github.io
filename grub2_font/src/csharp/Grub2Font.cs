@@ -27,9 +27,9 @@ namespace Kaitai
         private void _read()
         {
             _magic = m_io.ReadBytes(12);
-            if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 70, 73, 76, 69, 0, 0, 0, 4, 80, 70, 70, 50 }) == 0)))
+            if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 70, 73, 76, 69, 0, 0, 0, 4, 80, 70, 70, 50 }) == 0)))
             {
-                throw new ValidationNotEqualError(new byte[] { 70, 73, 76, 69, 0, 0, 0, 4, 80, 70, 70, 50 }, Magic, M_Io, "/seq/0");
+                throw new ValidationNotEqualError(new byte[] { 70, 73, 76, 69, 0, 0, 0, 4, 80, 70, 70, 50 }, _magic, m_io, "/seq/0");
             }
             _sections = new List<Section>();
             {
@@ -41,229 +41,6 @@ namespace Kaitai
                     i++;
                 } while (!(M_.SectionType == "DATA"));
             }
-        }
-        public partial class PtszSection : KaitaiStruct
-        {
-            public static PtszSection FromFile(string fileName)
-            {
-                return new PtszSection(new KaitaiStream(fileName));
-            }
-
-            public PtszSection(KaitaiStream p__io, Grub2Font.Section p__parent = null, Grub2Font p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _fontPointSize = m_io.ReadU2be();
-            }
-            private ushort _fontPointSize;
-            private Grub2Font m_root;
-            private Grub2Font.Section m_parent;
-            public ushort FontPointSize { get { return _fontPointSize; } }
-            public Grub2Font M_Root { get { return m_root; } }
-            public Grub2Font.Section M_Parent { get { return m_parent; } }
-        }
-        public partial class FamiSection : KaitaiStruct
-        {
-            public static FamiSection FromFile(string fileName)
-            {
-                return new FamiSection(new KaitaiStream(fileName));
-            }
-
-            public FamiSection(KaitaiStream p__io, Grub2Font.Section p__parent = null, Grub2Font p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _fontFamilyName = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytesTerm(0, false, true, true));
-            }
-            private string _fontFamilyName;
-            private Grub2Font m_root;
-            private Grub2Font.Section m_parent;
-            public string FontFamilyName { get { return _fontFamilyName; } }
-            public Grub2Font M_Root { get { return m_root; } }
-            public Grub2Font.Section M_Parent { get { return m_parent; } }
-        }
-        public partial class WeigSection : KaitaiStruct
-        {
-            public static WeigSection FromFile(string fileName)
-            {
-                return new WeigSection(new KaitaiStream(fileName));
-            }
-
-            public WeigSection(KaitaiStream p__io, Grub2Font.Section p__parent = null, Grub2Font p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _fontWeight = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytesTerm(0, false, true, true));
-            }
-            private string _fontWeight;
-            private Grub2Font m_root;
-            private Grub2Font.Section m_parent;
-            public string FontWeight { get { return _fontWeight; } }
-            public Grub2Font M_Root { get { return m_root; } }
-            public Grub2Font.Section M_Parent { get { return m_parent; } }
-        }
-        public partial class MaxwSection : KaitaiStruct
-        {
-            public static MaxwSection FromFile(string fileName)
-            {
-                return new MaxwSection(new KaitaiStream(fileName));
-            }
-
-            public MaxwSection(KaitaiStream p__io, Grub2Font.Section p__parent = null, Grub2Font p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _maximumCharacterWidth = m_io.ReadU2be();
-            }
-            private ushort _maximumCharacterWidth;
-            private Grub2Font m_root;
-            private Grub2Font.Section m_parent;
-            public ushort MaximumCharacterWidth { get { return _maximumCharacterWidth; } }
-            public Grub2Font M_Root { get { return m_root; } }
-            public Grub2Font.Section M_Parent { get { return m_parent; } }
-        }
-        public partial class DescSection : KaitaiStruct
-        {
-            public static DescSection FromFile(string fileName)
-            {
-                return new DescSection(new KaitaiStream(fileName));
-            }
-
-            public DescSection(KaitaiStream p__io, Grub2Font.Section p__parent = null, Grub2Font p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _descentInPixels = m_io.ReadU2be();
-            }
-            private ushort _descentInPixels;
-            private Grub2Font m_root;
-            private Grub2Font.Section m_parent;
-            public ushort DescentInPixels { get { return _descentInPixels; } }
-            public Grub2Font M_Root { get { return m_root; } }
-            public Grub2Font.Section M_Parent { get { return m_parent; } }
-        }
-        public partial class Section : KaitaiStruct
-        {
-            public static Section FromFile(string fileName)
-            {
-                return new Section(new KaitaiStream(fileName));
-            }
-
-            public Section(KaitaiStream p__io, Grub2Font p__parent = null, Grub2Font p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _sectionType = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(4));
-                _lenBody = m_io.ReadU4be();
-                if (SectionType != "DATA") {
-                    switch (SectionType) {
-                    case "MAXH": {
-                        __raw_body = m_io.ReadBytes(LenBody);
-                        var io___raw_body = new KaitaiStream(__raw_body);
-                        _body = new MaxhSection(io___raw_body, this, m_root);
-                        break;
-                    }
-                    case "FAMI": {
-                        __raw_body = m_io.ReadBytes(LenBody);
-                        var io___raw_body = new KaitaiStream(__raw_body);
-                        _body = new FamiSection(io___raw_body, this, m_root);
-                        break;
-                    }
-                    case "PTSZ": {
-                        __raw_body = m_io.ReadBytes(LenBody);
-                        var io___raw_body = new KaitaiStream(__raw_body);
-                        _body = new PtszSection(io___raw_body, this, m_root);
-                        break;
-                    }
-                    case "MAXW": {
-                        __raw_body = m_io.ReadBytes(LenBody);
-                        var io___raw_body = new KaitaiStream(__raw_body);
-                        _body = new MaxwSection(io___raw_body, this, m_root);
-                        break;
-                    }
-                    case "SLAN": {
-                        __raw_body = m_io.ReadBytes(LenBody);
-                        var io___raw_body = new KaitaiStream(__raw_body);
-                        _body = new SlanSection(io___raw_body, this, m_root);
-                        break;
-                    }
-                    case "WEIG": {
-                        __raw_body = m_io.ReadBytes(LenBody);
-                        var io___raw_body = new KaitaiStream(__raw_body);
-                        _body = new WeigSection(io___raw_body, this, m_root);
-                        break;
-                    }
-                    case "CHIX": {
-                        __raw_body = m_io.ReadBytes(LenBody);
-                        var io___raw_body = new KaitaiStream(__raw_body);
-                        _body = new ChixSection(io___raw_body, this, m_root);
-                        break;
-                    }
-                    case "DESC": {
-                        __raw_body = m_io.ReadBytes(LenBody);
-                        var io___raw_body = new KaitaiStream(__raw_body);
-                        _body = new DescSection(io___raw_body, this, m_root);
-                        break;
-                    }
-                    case "NAME": {
-                        __raw_body = m_io.ReadBytes(LenBody);
-                        var io___raw_body = new KaitaiStream(__raw_body);
-                        _body = new NameSection(io___raw_body, this, m_root);
-                        break;
-                    }
-                    case "ASCE": {
-                        __raw_body = m_io.ReadBytes(LenBody);
-                        var io___raw_body = new KaitaiStream(__raw_body);
-                        _body = new AsceSection(io___raw_body, this, m_root);
-                        break;
-                    }
-                    default: {
-                        _body = m_io.ReadBytes(LenBody);
-                        break;
-                    }
-                    }
-                }
-            }
-            private string _sectionType;
-            private uint _lenBody;
-            private object _body;
-            private Grub2Font m_root;
-            private Grub2Font m_parent;
-            private byte[] __raw_body;
-            public string SectionType { get { return _sectionType; } }
-
-            /// <summary>
-            /// Should be set to `0xFFFF_FFFF` for `section_type != &quot;DATA&quot;`
-            /// </summary>
-            public uint LenBody { get { return _lenBody; } }
-            public object Body { get { return _body; } }
-            public Grub2Font M_Root { get { return m_root; } }
-            public Grub2Font M_Parent { get { return m_parent; } }
-            public byte[] M_RawBody { get { return __raw_body; } }
         }
         public partial class AsceSection : KaitaiStruct
         {
@@ -341,12 +118,12 @@ namespace Kaitai
                     {
                         if (f_definition)
                             return _definition;
+                        f_definition = true;
                         KaitaiStream io = M_Root.M_Io;
                         long _pos = io.Pos;
                         io.Seek(OfsDefinition);
                         _definition = new CharacterDefinition(io, this, m_root);
                         io.Seek(_pos);
-                        f_definition = true;
                         return _definition;
                     }
                 }
@@ -385,7 +162,7 @@ namespace Kaitai
                     _xOffset = m_io.ReadS2be();
                     _yOffset = m_io.ReadS2be();
                     _deviceWidth = m_io.ReadS2be();
-                    _bitmapData = m_io.ReadBytes((((Width * Height) + 7) / 8));
+                    _bitmapData = m_io.ReadBytes((Width * Height + 7) / 8);
                 }
                 private ushort _width;
                 private ushort _height;
@@ -426,6 +203,54 @@ namespace Kaitai
             public Grub2Font M_Root { get { return m_root; } }
             public Grub2Font.Section M_Parent { get { return m_parent; } }
         }
+        public partial class DescSection : KaitaiStruct
+        {
+            public static DescSection FromFile(string fileName)
+            {
+                return new DescSection(new KaitaiStream(fileName));
+            }
+
+            public DescSection(KaitaiStream p__io, Grub2Font.Section p__parent = null, Grub2Font p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _descentInPixels = m_io.ReadU2be();
+            }
+            private ushort _descentInPixels;
+            private Grub2Font m_root;
+            private Grub2Font.Section m_parent;
+            public ushort DescentInPixels { get { return _descentInPixels; } }
+            public Grub2Font M_Root { get { return m_root; } }
+            public Grub2Font.Section M_Parent { get { return m_parent; } }
+        }
+        public partial class FamiSection : KaitaiStruct
+        {
+            public static FamiSection FromFile(string fileName)
+            {
+                return new FamiSection(new KaitaiStream(fileName));
+            }
+
+            public FamiSection(KaitaiStream p__io, Grub2Font.Section p__parent = null, Grub2Font p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _fontFamilyName = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytesTerm(0, false, true, true));
+            }
+            private string _fontFamilyName;
+            private Grub2Font m_root;
+            private Grub2Font.Section m_parent;
+            public string FontFamilyName { get { return _fontFamilyName; } }
+            public Grub2Font M_Root { get { return m_root; } }
+            public Grub2Font.Section M_Parent { get { return m_parent; } }
+        }
         public partial class MaxhSection : KaitaiStruct
         {
             public static MaxhSection FromFile(string fileName)
@@ -447,6 +272,30 @@ namespace Kaitai
             private Grub2Font m_root;
             private Grub2Font.Section m_parent;
             public ushort MaximumCharacterHeight { get { return _maximumCharacterHeight; } }
+            public Grub2Font M_Root { get { return m_root; } }
+            public Grub2Font.Section M_Parent { get { return m_parent; } }
+        }
+        public partial class MaxwSection : KaitaiStruct
+        {
+            public static MaxwSection FromFile(string fileName)
+            {
+                return new MaxwSection(new KaitaiStream(fileName));
+            }
+
+            public MaxwSection(KaitaiStream p__io, Grub2Font.Section p__parent = null, Grub2Font p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _maximumCharacterWidth = m_io.ReadU2be();
+            }
+            private ushort _maximumCharacterWidth;
+            private Grub2Font m_root;
+            private Grub2Font.Section m_parent;
+            public ushort MaximumCharacterWidth { get { return _maximumCharacterWidth; } }
             public Grub2Font M_Root { get { return m_root; } }
             public Grub2Font.Section M_Parent { get { return m_parent; } }
         }
@@ -474,6 +323,133 @@ namespace Kaitai
             public Grub2Font M_Root { get { return m_root; } }
             public Grub2Font.Section M_Parent { get { return m_parent; } }
         }
+        public partial class PtszSection : KaitaiStruct
+        {
+            public static PtszSection FromFile(string fileName)
+            {
+                return new PtszSection(new KaitaiStream(fileName));
+            }
+
+            public PtszSection(KaitaiStream p__io, Grub2Font.Section p__parent = null, Grub2Font p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _fontPointSize = m_io.ReadU2be();
+            }
+            private ushort _fontPointSize;
+            private Grub2Font m_root;
+            private Grub2Font.Section m_parent;
+            public ushort FontPointSize { get { return _fontPointSize; } }
+            public Grub2Font M_Root { get { return m_root; } }
+            public Grub2Font.Section M_Parent { get { return m_parent; } }
+        }
+        public partial class Section : KaitaiStruct
+        {
+            public static Section FromFile(string fileName)
+            {
+                return new Section(new KaitaiStream(fileName));
+            }
+
+            public Section(KaitaiStream p__io, Grub2Font p__parent = null, Grub2Font p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _sectionType = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(4));
+                _lenBody = m_io.ReadU4be();
+                if (SectionType != "DATA") {
+                    switch (SectionType) {
+                    case "ASCE": {
+                        __raw_body = m_io.ReadBytes(LenBody);
+                        var io___raw_body = new KaitaiStream(__raw_body);
+                        _body = new AsceSection(io___raw_body, this, m_root);
+                        break;
+                    }
+                    case "CHIX": {
+                        __raw_body = m_io.ReadBytes(LenBody);
+                        var io___raw_body = new KaitaiStream(__raw_body);
+                        _body = new ChixSection(io___raw_body, this, m_root);
+                        break;
+                    }
+                    case "DESC": {
+                        __raw_body = m_io.ReadBytes(LenBody);
+                        var io___raw_body = new KaitaiStream(__raw_body);
+                        _body = new DescSection(io___raw_body, this, m_root);
+                        break;
+                    }
+                    case "FAMI": {
+                        __raw_body = m_io.ReadBytes(LenBody);
+                        var io___raw_body = new KaitaiStream(__raw_body);
+                        _body = new FamiSection(io___raw_body, this, m_root);
+                        break;
+                    }
+                    case "MAXH": {
+                        __raw_body = m_io.ReadBytes(LenBody);
+                        var io___raw_body = new KaitaiStream(__raw_body);
+                        _body = new MaxhSection(io___raw_body, this, m_root);
+                        break;
+                    }
+                    case "MAXW": {
+                        __raw_body = m_io.ReadBytes(LenBody);
+                        var io___raw_body = new KaitaiStream(__raw_body);
+                        _body = new MaxwSection(io___raw_body, this, m_root);
+                        break;
+                    }
+                    case "NAME": {
+                        __raw_body = m_io.ReadBytes(LenBody);
+                        var io___raw_body = new KaitaiStream(__raw_body);
+                        _body = new NameSection(io___raw_body, this, m_root);
+                        break;
+                    }
+                    case "PTSZ": {
+                        __raw_body = m_io.ReadBytes(LenBody);
+                        var io___raw_body = new KaitaiStream(__raw_body);
+                        _body = new PtszSection(io___raw_body, this, m_root);
+                        break;
+                    }
+                    case "SLAN": {
+                        __raw_body = m_io.ReadBytes(LenBody);
+                        var io___raw_body = new KaitaiStream(__raw_body);
+                        _body = new SlanSection(io___raw_body, this, m_root);
+                        break;
+                    }
+                    case "WEIG": {
+                        __raw_body = m_io.ReadBytes(LenBody);
+                        var io___raw_body = new KaitaiStream(__raw_body);
+                        _body = new WeigSection(io___raw_body, this, m_root);
+                        break;
+                    }
+                    default: {
+                        _body = m_io.ReadBytes(LenBody);
+                        break;
+                    }
+                    }
+                }
+            }
+            private string _sectionType;
+            private uint _lenBody;
+            private object _body;
+            private Grub2Font m_root;
+            private Grub2Font m_parent;
+            private byte[] __raw_body;
+            public string SectionType { get { return _sectionType; } }
+
+            /// <summary>
+            /// Should be set to `0xFFFF_FFFF` for `section_type != &quot;DATA&quot;`
+            /// </summary>
+            public uint LenBody { get { return _lenBody; } }
+            public object Body { get { return _body; } }
+            public Grub2Font M_Root { get { return m_root; } }
+            public Grub2Font M_Parent { get { return m_parent; } }
+            public byte[] M_RawBody { get { return __raw_body; } }
+        }
         public partial class SlanSection : KaitaiStruct
         {
             public static SlanSection FromFile(string fileName)
@@ -495,6 +471,30 @@ namespace Kaitai
             private Grub2Font m_root;
             private Grub2Font.Section m_parent;
             public string FontSlant { get { return _fontSlant; } }
+            public Grub2Font M_Root { get { return m_root; } }
+            public Grub2Font.Section M_Parent { get { return m_parent; } }
+        }
+        public partial class WeigSection : KaitaiStruct
+        {
+            public static WeigSection FromFile(string fileName)
+            {
+                return new WeigSection(new KaitaiStream(fileName));
+            }
+
+            public WeigSection(KaitaiStream p__io, Grub2Font.Section p__parent = null, Grub2Font p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _fontWeight = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytesTerm(0, false, true, true));
+            }
+            private string _fontWeight;
+            private Grub2Font m_root;
+            private Grub2Font.Section m_parent;
+            public string FontWeight { get { return _fontWeight; } }
             public Grub2Font M_Root { get { return m_root; } }
             public Grub2Font.Section M_Parent { get { return m_parent; } }
         }

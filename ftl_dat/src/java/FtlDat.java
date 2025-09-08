@@ -5,7 +5,8 @@ import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 public class FtlDat extends KaitaiStruct {
     public static FtlDat fromFile(String fileName) throws IOException {
@@ -33,6 +34,12 @@ public class FtlDat extends KaitaiStruct {
             this.files.add(new File(this._io, this, _root));
         }
     }
+
+    public void _fetchInstances() {
+        for (int i = 0; i < this.files.size(); i++) {
+            this.files.get(((Number) (i)).intValue())._fetchInstances();
+        }
+    }
     public static class File extends KaitaiStruct {
         public static File fromFile(String fileName) throws IOException {
             return new File(new ByteBufferKaitaiStream(fileName));
@@ -54,6 +61,13 @@ public class FtlDat extends KaitaiStruct {
         }
         private void _read() {
             this.ofsMeta = this._io.readU4le();
+        }
+
+        public void _fetchInstances() {
+            meta();
+            if (this.meta != null) {
+                this.meta._fetchInstances();
+            }
         }
         private Meta meta;
         public Meta meta() {
@@ -96,8 +110,11 @@ public class FtlDat extends KaitaiStruct {
         private void _read() {
             this.lenFile = this._io.readU4le();
             this.lenFilename = this._io.readU4le();
-            this.filename = new String(this._io.readBytes(lenFilename()), Charset.forName("UTF-8"));
+            this.filename = new String(this._io.readBytes(lenFilename()), StandardCharsets.UTF_8);
             this.body = this._io.readBytes(lenFile());
+        }
+
+        public void _fetchInstances() {
         }
         private long lenFile;
         private long lenFilename;
@@ -113,7 +130,7 @@ public class FtlDat extends KaitaiStruct {
         public FtlDat.File _parent() { return _parent; }
     }
     private long numFiles;
-    private ArrayList<File> files;
+    private List<File> files;
     private FtlDat _root;
     private KaitaiStruct _parent;
 
@@ -121,7 +138,7 @@ public class FtlDat extends KaitaiStruct {
      * Number of files in the archive
      */
     public long numFiles() { return numFiles; }
-    public ArrayList<File> files() { return files; }
+    public List<File> files() { return files; }
     public FtlDat _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

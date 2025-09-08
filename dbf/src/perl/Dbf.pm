@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Encode;
 
 ########################################################################
@@ -28,7 +28,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -39,12 +39,12 @@ sub _read {
     my ($self) = @_;
 
     $self->{header1} = Dbf::Header1->new($self->{_io}, $self, $self->{_root});
-    $self->{_raw_header2} = $self->{_io}->read_bytes((($self->header1()->len_header() - 12) - 1));
+    $self->{_raw_header2} = $self->{_io}->read_bytes(($self->header1()->len_header() - 12) - 1);
     my $io__raw_header2 = IO::KaitaiStruct::Stream->new($self->{_raw_header2});
     $self->{header2} = Dbf::Header2->new($io__raw_header2, $self, $self->{_root});
     $self->{header_terminator} = $self->{_io}->read_bytes(1);
-    $self->{_raw_records} = ();
-    $self->{records} = ();
+    $self->{_raw_records} = [];
+    $self->{records} = [];
     my $n_records = $self->header1()->num_records();
     for (my $i = 0; $i < $n_records; $i++) {
         push @{$self->{_raw_records}}, $self->{_io}->read_bytes($self->header1()->len_record());
@@ -84,63 +84,6 @@ sub _raw_records {
 }
 
 ########################################################################
-package Dbf::Header2;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    if ($self->_root()->header1()->dbase_level() == 3) {
-        $self->{header_dbase_3} = Dbf::HeaderDbase3->new($self->{_io}, $self, $self->{_root});
-    }
-    if ($self->_root()->header1()->dbase_level() == 7) {
-        $self->{header_dbase_7} = Dbf::HeaderDbase7->new($self->{_io}, $self, $self->{_root});
-    }
-    $self->{fields} = ();
-    while (!$self->{_io}->is_eof()) {
-        push @{$self->{fields}}, Dbf::Field->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub header_dbase_3 {
-    my ($self) = @_;
-    return $self->{header_dbase_3};
-}
-
-sub header_dbase_7 {
-    my ($self) = @_;
-    return $self->{header_dbase_7};
-}
-
-sub fields {
-    my ($self) = @_;
-    return $self->{fields};
-}
-
-########################################################################
 package Dbf::Field;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -160,7 +103,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -252,7 +195,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -274,7 +217,7 @@ sub _read {
 sub dbase_level {
     my ($self) = @_;
     return $self->{dbase_level} if ($self->{dbase_level});
-    $self->{dbase_level} = ($self->version() & 7);
+    $self->{dbase_level} = $self->version() & 7;
     return $self->{dbase_level};
 }
 
@@ -314,6 +257,63 @@ sub len_record {
 }
 
 ########################################################################
+package Dbf::Header2;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    if ($self->_root()->header1()->dbase_level() == 3) {
+        $self->{header_dbase_3} = Dbf::HeaderDbase3->new($self->{_io}, $self, $self->{_root});
+    }
+    if ($self->_root()->header1()->dbase_level() == 7) {
+        $self->{header_dbase_7} = Dbf::HeaderDbase7->new($self->{_io}, $self, $self->{_root});
+    }
+    $self->{fields} = [];
+    while (!$self->{_io}->is_eof()) {
+        push @{$self->{fields}}, Dbf::Field->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub header_dbase_3 {
+    my ($self) = @_;
+    return $self->{header_dbase_3};
+}
+
+sub header_dbase_7 {
+    my ($self) = @_;
+    return $self->{header_dbase_7};
+}
+
+sub fields {
+    my ($self) = @_;
+    return $self->{fields};
+}
+
+########################################################################
 package Dbf::HeaderDbase3;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -333,7 +333,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -383,7 +383,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -469,7 +469,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -480,7 +480,7 @@ sub _read {
     my ($self) = @_;
 
     $self->{deleted} = $self->{_io}->read_u1();
-    $self->{record_fields} = ();
+    $self->{record_fields} = [];
     my $n_record_fields = scalar(@{$self->_root()->header2()->fields()});
     for (my $i = 0; $i < $n_record_fields; $i++) {
         push @{$self->{record_fields}}, $self->{_io}->read_bytes(@{$self->_root()->header2()->fields()}[$i]->length());

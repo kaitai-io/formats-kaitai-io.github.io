@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.Hccap = factory(root.KaitaiStream);
+    factory(root.Hccap || (root.Hccap = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Hccap_, KaitaiStream) {
 /**
  * Native format of Hashcat password "recovery" utility.
  * 
@@ -34,11 +34,25 @@ var Hccap = (function() {
     }
   }
 
+  var EapolDummy = Hccap.EapolDummy = (function() {
+    function EapolDummy(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    EapolDummy.prototype._read = function() {
+    }
+
+    return EapolDummy;
+  })();
+
   var HccapRecord = Hccap.HccapRecord = (function() {
     function HccapRecord(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -105,21 +119,7 @@ var Hccap = (function() {
     return HccapRecord;
   })();
 
-  var EapolDummy = Hccap.EapolDummy = (function() {
-    function EapolDummy(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    EapolDummy.prototype._read = function() {
-    }
-
-    return EapolDummy;
-  })();
-
   return Hccap;
 })();
-return Hccap;
-}));
+Hccap_.Hccap = Hccap;
+});

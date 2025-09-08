@@ -31,36 +31,45 @@ const (
 	Dex_ClassAccessFlags__Annotation Dex_ClassAccessFlags = 8192
 	Dex_ClassAccessFlags__Enum Dex_ClassAccessFlags = 16384
 )
+var values_Dex_ClassAccessFlags = map[Dex_ClassAccessFlags]struct{}{1: {}, 2: {}, 4: {}, 8: {}, 16: {}, 512: {}, 1024: {}, 4096: {}, 8192: {}, 16384: {}}
+func (v Dex_ClassAccessFlags) isDefined() bool {
+	_, ok := values_Dex_ClassAccessFlags[v]
+	return ok
+}
 type Dex struct {
 	Header *Dex_HeaderItem
 	_io *kaitai.Stream
 	_root *Dex
-	_parent interface{}
-	_f_stringIds bool
-	stringIds []*Dex_StringIdItem
-	_f_methodIds bool
-	methodIds []*Dex_MethodIdItem
-	_f_linkData bool
-	linkData []byte
-	_f_map bool
-	map *Dex_MapList
+	_parent kaitai.Struct
 	_f_classDefs bool
 	classDefs []*Dex_ClassDefItem
 	_f_data bool
 	data []byte
-	_f_typeIds bool
-	typeIds []*Dex_TypeIdItem
-	_f_protoIds bool
-	protoIds []*Dex_ProtoIdItem
 	_f_fieldIds bool
 	fieldIds []*Dex_FieldIdItem
+	_f_linkData bool
+	linkData []byte
+	_f_map bool
+	map *Dex_MapList
+	_f_methodIds bool
+	methodIds []*Dex_MethodIdItem
+	_f_protoIds bool
+	protoIds []*Dex_ProtoIdItem
+	_f_stringIds bool
+	stringIds []*Dex_StringIdItem
+	_f_typeIds bool
+	typeIds []*Dex_TypeIdItem
 }
 func NewDex() *Dex {
 	return &Dex{
 	}
 }
 
-func (this *Dex) Read(io *kaitai.Stream, parent interface{}, root *Dex) (err error) {
+func (this Dex) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Dex) Read(io *kaitai.Stream, parent kaitai.Struct, root *Dex) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -75,42 +84,172 @@ func (this *Dex) Read(io *kaitai.Stream, parent interface{}, root *Dex) (err err
 }
 
 /**
- * string identifiers list.
+ * class definitions list.
  * 
- * These are identifiers for all the strings used by this file, either for
- * internal naming (e.g., type descriptors) or as constant objects referred to by code.
+ * The classes must be ordered such that a given class's superclass and
+ * implemented interfaces appear in the list earlier than the referring class.
  * 
- * This list must be sorted by string contents, using UTF-16 code point values
- * (not in a locale-sensitive manner), and it must not contain any duplicate entries.
+ * Furthermore, it is invalid for a definition for the same-named class to
+ * appear more than once in the list.
  */
-func (this *Dex) StringIds() (v []*Dex_StringIdItem, err error) {
-	if (this._f_stringIds) {
-		return this.stringIds, nil
+func (this *Dex) ClassDefs() (v []*Dex_ClassDefItem, err error) {
+	if (this._f_classDefs) {
+		return this.classDefs, nil
 	}
+	this._f_classDefs = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
 	}
-	_, err = this._io.Seek(int64(this.Header.StringIdsOff), io.SeekStart)
+	_, err = this._io.Seek(int64(this.Header.ClassDefsOff), io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
-	for i := 0; i < int(this.Header.StringIdsSize); i++ {
+	for i := 0; i < int(this.Header.ClassDefsSize); i++ {
 		_ = i
-		tmp2 := NewDex_StringIdItem()
+		tmp2 := NewDex_ClassDefItem()
 		err = tmp2.Read(this._io, this, this._root)
 		if err != nil {
 			return nil, err
 		}
-		this.stringIds = append(this.stringIds, tmp2)
+		this.classDefs = append(this.classDefs, tmp2)
 	}
 	_, err = this._io.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
-	this._f_stringIds = true
-	this._f_stringIds = true
-	return this.stringIds, nil
+	return this.classDefs, nil
+}
+
+/**
+ * data area, containing all the support data for the tables listed above.
+ * 
+ * Different items have different alignment requirements, and padding bytes
+ * are inserted before each item if necessary to achieve proper alignment.
+ */
+func (this *Dex) Data() (v []byte, err error) {
+	if (this._f_data) {
+		return this.data, nil
+	}
+	this._f_data = true
+	_pos, err := this._io.Pos()
+	if err != nil {
+		return nil, err
+	}
+	_, err = this._io.Seek(int64(this.Header.DataOff), io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	tmp3, err := this._io.ReadBytes(int(this.Header.DataSize))
+	if err != nil {
+		return nil, err
+	}
+	tmp3 = tmp3
+	this.data = tmp3
+	_, err = this._io.Seek(_pos, io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	return this.data, nil
+}
+
+/**
+ * field identifiers list.
+ * 
+ * These are identifiers for all fields referred to by this file, whether defined in the file or not.
+ * 
+ * This list must be sorted, where the defining type (by type_id index)
+ * is the major order, field name (by string_id index) is the intermediate
+ * order, and type (by type_id index) is the minor order.
+ * 
+ * The list must not contain any duplicate entries.
+ */
+func (this *Dex) FieldIds() (v []*Dex_FieldIdItem, err error) {
+	if (this._f_fieldIds) {
+		return this.fieldIds, nil
+	}
+	this._f_fieldIds = true
+	_pos, err := this._io.Pos()
+	if err != nil {
+		return nil, err
+	}
+	_, err = this._io.Seek(int64(this.Header.FieldIdsOff), io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	for i := 0; i < int(this.Header.FieldIdsSize); i++ {
+		_ = i
+		tmp4 := NewDex_FieldIdItem()
+		err = tmp4.Read(this._io, this, this._root)
+		if err != nil {
+			return nil, err
+		}
+		this.fieldIds = append(this.fieldIds, tmp4)
+	}
+	_, err = this._io.Seek(_pos, io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	return this.fieldIds, nil
+}
+
+/**
+ * data used in statically linked files.
+ * 
+ * The format of the data in this section is left unspecified by this document.
+ * 
+ * This section is empty in unlinked files, and runtime implementations may
+ * use it as they see fit.
+ */
+func (this *Dex) LinkData() (v []byte, err error) {
+	if (this._f_linkData) {
+		return this.linkData, nil
+	}
+	this._f_linkData = true
+	_pos, err := this._io.Pos()
+	if err != nil {
+		return nil, err
+	}
+	_, err = this._io.Seek(int64(this.Header.LinkOff), io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	tmp5, err := this._io.ReadBytes(int(this.Header.LinkSize))
+	if err != nil {
+		return nil, err
+	}
+	tmp5 = tmp5
+	this.linkData = tmp5
+	_, err = this._io.Seek(_pos, io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	return this.linkData, nil
+}
+func (this *Dex) Map() (v *Dex_MapList, err error) {
+	if (this._f_map) {
+		return this.map, nil
+	}
+	this._f_map = true
+	_pos, err := this._io.Pos()
+	if err != nil {
+		return nil, err
+	}
+	_, err = this._io.Seek(int64(this.Header.MapOff), io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	tmp6 := NewDex_MapList()
+	err = tmp6.Read(this._io, this, this._root)
+	if err != nil {
+		return nil, err
+	}
+	this.map = tmp6
+	_, err = this._io.Seek(_pos, io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	return this.map, nil
 }
 
 /**
@@ -129,6 +268,7 @@ func (this *Dex) MethodIds() (v []*Dex_MethodIdItem, err error) {
 	if (this._f_methodIds) {
 		return this.methodIds, nil
 	}
+	this._f_methodIds = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
@@ -139,191 +279,18 @@ func (this *Dex) MethodIds() (v []*Dex_MethodIdItem, err error) {
 	}
 	for i := 0; i < int(this.Header.MethodIdsSize); i++ {
 		_ = i
-		tmp3 := NewDex_MethodIdItem()
-		err = tmp3.Read(this._io, this, this._root)
+		tmp7 := NewDex_MethodIdItem()
+		err = tmp7.Read(this._io, this, this._root)
 		if err != nil {
 			return nil, err
 		}
-		this.methodIds = append(this.methodIds, tmp3)
+		this.methodIds = append(this.methodIds, tmp7)
 	}
 	_, err = this._io.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
-	this._f_methodIds = true
-	this._f_methodIds = true
 	return this.methodIds, nil
-}
-
-/**
- * data used in statically linked files.
- * 
- * The format of the data in this section is left unspecified by this document.
- * 
- * This section is empty in unlinked files, and runtime implementations may
- * use it as they see fit.
- */
-func (this *Dex) LinkData() (v []byte, err error) {
-	if (this._f_linkData) {
-		return this.linkData, nil
-	}
-	_pos, err := this._io.Pos()
-	if err != nil {
-		return nil, err
-	}
-	_, err = this._io.Seek(int64(this.Header.LinkOff), io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	tmp4, err := this._io.ReadBytes(int(this.Header.LinkSize))
-	if err != nil {
-		return nil, err
-	}
-	tmp4 = tmp4
-	this.linkData = tmp4
-	_, err = this._io.Seek(_pos, io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	this._f_linkData = true
-	this._f_linkData = true
-	return this.linkData, nil
-}
-func (this *Dex) Map() (v *Dex_MapList, err error) {
-	if (this._f_map) {
-		return this.map, nil
-	}
-	_pos, err := this._io.Pos()
-	if err != nil {
-		return nil, err
-	}
-	_, err = this._io.Seek(int64(this.Header.MapOff), io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	tmp5 := NewDex_MapList()
-	err = tmp5.Read(this._io, this, this._root)
-	if err != nil {
-		return nil, err
-	}
-	this.map = tmp5
-	_, err = this._io.Seek(_pos, io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	this._f_map = true
-	this._f_map = true
-	return this.map, nil
-}
-
-/**
- * class definitions list.
- * 
- * The classes must be ordered such that a given class's superclass and
- * implemented interfaces appear in the list earlier than the referring class.
- * 
- * Furthermore, it is invalid for a definition for the same-named class to
- * appear more than once in the list.
- */
-func (this *Dex) ClassDefs() (v []*Dex_ClassDefItem, err error) {
-	if (this._f_classDefs) {
-		return this.classDefs, nil
-	}
-	_pos, err := this._io.Pos()
-	if err != nil {
-		return nil, err
-	}
-	_, err = this._io.Seek(int64(this.Header.ClassDefsOff), io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	for i := 0; i < int(this.Header.ClassDefsSize); i++ {
-		_ = i
-		tmp6 := NewDex_ClassDefItem()
-		err = tmp6.Read(this._io, this, this._root)
-		if err != nil {
-			return nil, err
-		}
-		this.classDefs = append(this.classDefs, tmp6)
-	}
-	_, err = this._io.Seek(_pos, io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	this._f_classDefs = true
-	this._f_classDefs = true
-	return this.classDefs, nil
-}
-
-/**
- * data area, containing all the support data for the tables listed above.
- * 
- * Different items have different alignment requirements, and padding bytes
- * are inserted before each item if necessary to achieve proper alignment.
- */
-func (this *Dex) Data() (v []byte, err error) {
-	if (this._f_data) {
-		return this.data, nil
-	}
-	_pos, err := this._io.Pos()
-	if err != nil {
-		return nil, err
-	}
-	_, err = this._io.Seek(int64(this.Header.DataOff), io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	tmp7, err := this._io.ReadBytes(int(this.Header.DataSize))
-	if err != nil {
-		return nil, err
-	}
-	tmp7 = tmp7
-	this.data = tmp7
-	_, err = this._io.Seek(_pos, io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	this._f_data = true
-	this._f_data = true
-	return this.data, nil
-}
-
-/**
- * type identifiers list.
- * 
- * These are identifiers for all types (classes, arrays, or primitive types)
- * referred to by this file, whether defined in the file or not.
- * 
- * This list must be sorted by string_id index, and it must not contain any duplicate entries.
- */
-func (this *Dex) TypeIds() (v []*Dex_TypeIdItem, err error) {
-	if (this._f_typeIds) {
-		return this.typeIds, nil
-	}
-	_pos, err := this._io.Pos()
-	if err != nil {
-		return nil, err
-	}
-	_, err = this._io.Seek(int64(this.Header.TypeIdsOff), io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	for i := 0; i < int(this.Header.TypeIdsSize); i++ {
-		_ = i
-		tmp8 := NewDex_TypeIdItem()
-		err = tmp8.Read(this._io, this, this._root)
-		if err != nil {
-			return nil, err
-		}
-		this.typeIds = append(this.typeIds, tmp8)
-	}
-	_, err = this._io.Seek(_pos, io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	this._f_typeIds = true
-	this._f_typeIds = true
-	return this.typeIds, nil
 }
 
 /**
@@ -339,6 +306,7 @@ func (this *Dex) ProtoIds() (v []*Dex_ProtoIdItem, err error) {
 	if (this._f_protoIds) {
 		return this.protoIds, nil
 	}
+	this._f_protoIds = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
@@ -349,68 +317,1088 @@ func (this *Dex) ProtoIds() (v []*Dex_ProtoIdItem, err error) {
 	}
 	for i := 0; i < int(this.Header.ProtoIdsSize); i++ {
 		_ = i
-		tmp9 := NewDex_ProtoIdItem()
-		err = tmp9.Read(this._io, this, this._root)
+		tmp8 := NewDex_ProtoIdItem()
+		err = tmp8.Read(this._io, this, this._root)
 		if err != nil {
 			return nil, err
 		}
-		this.protoIds = append(this.protoIds, tmp9)
+		this.protoIds = append(this.protoIds, tmp8)
 	}
 	_, err = this._io.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
-	this._f_protoIds = true
-	this._f_protoIds = true
 	return this.protoIds, nil
 }
 
 /**
- * field identifiers list.
+ * string identifiers list.
  * 
- * These are identifiers for all fields referred to by this file, whether defined in the file or not.
+ * These are identifiers for all the strings used by this file, either for
+ * internal naming (e.g., type descriptors) or as constant objects referred to by code.
  * 
- * This list must be sorted, where the defining type (by type_id index)
- * is the major order, field name (by string_id index) is the intermediate
- * order, and type (by type_id index) is the minor order.
- * 
- * The list must not contain any duplicate entries.
+ * This list must be sorted by string contents, using UTF-16 code point values
+ * (not in a locale-sensitive manner), and it must not contain any duplicate entries.
  */
-func (this *Dex) FieldIds() (v []*Dex_FieldIdItem, err error) {
-	if (this._f_fieldIds) {
-		return this.fieldIds, nil
+func (this *Dex) StringIds() (v []*Dex_StringIdItem, err error) {
+	if (this._f_stringIds) {
+		return this.stringIds, nil
 	}
+	this._f_stringIds = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
 	}
-	_, err = this._io.Seek(int64(this.Header.FieldIdsOff), io.SeekStart)
+	_, err = this._io.Seek(int64(this.Header.StringIdsOff), io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
-	for i := 0; i < int(this.Header.FieldIdsSize); i++ {
+	for i := 0; i < int(this.Header.StringIdsSize); i++ {
 		_ = i
-		tmp10 := NewDex_FieldIdItem()
-		err = tmp10.Read(this._io, this, this._root)
+		tmp9 := NewDex_StringIdItem()
+		err = tmp9.Read(this._io, this, this._root)
 		if err != nil {
 			return nil, err
 		}
-		this.fieldIds = append(this.fieldIds, tmp10)
+		this.stringIds = append(this.stringIds, tmp9)
 	}
 	_, err = this._io.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
-	this._f_fieldIds = true
-	this._f_fieldIds = true
-	return this.fieldIds, nil
+	return this.stringIds, nil
 }
+
+/**
+ * type identifiers list.
+ * 
+ * These are identifiers for all types (classes, arrays, or primitive types)
+ * referred to by this file, whether defined in the file or not.
+ * 
+ * This list must be sorted by string_id index, and it must not contain any duplicate entries.
+ */
+func (this *Dex) TypeIds() (v []*Dex_TypeIdItem, err error) {
+	if (this._f_typeIds) {
+		return this.typeIds, nil
+	}
+	this._f_typeIds = true
+	_pos, err := this._io.Pos()
+	if err != nil {
+		return nil, err
+	}
+	_, err = this._io.Seek(int64(this.Header.TypeIdsOff), io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	for i := 0; i < int(this.Header.TypeIdsSize); i++ {
+		_ = i
+		tmp10 := NewDex_TypeIdItem()
+		err = tmp10.Read(this._io, this, this._root)
+		if err != nil {
+			return nil, err
+		}
+		this.typeIds = append(this.typeIds, tmp10)
+	}
+	_, err = this._io.Seek(_pos, io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	return this.typeIds, nil
+}
+type Dex_AnnotationElement struct {
+	NameIdx *VlqBase128Le
+	Value *Dex_EncodedValue
+	_io *kaitai.Stream
+	_root *Dex
+	_parent *Dex_EncodedAnnotation
+}
+func NewDex_AnnotationElement() *Dex_AnnotationElement {
+	return &Dex_AnnotationElement{
+	}
+}
+
+func (this Dex_AnnotationElement) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Dex_AnnotationElement) Read(io *kaitai.Stream, parent *Dex_EncodedAnnotation, root *Dex) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp11 := NewVlqBase128Le()
+	err = tmp11.Read(this._io, nil, nil)
+	if err != nil {
+		return err
+	}
+	this.NameIdx = tmp11
+	tmp12 := NewDex_EncodedValue()
+	err = tmp12.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Value = tmp12
+	return err
+}
+
+/**
+ * element name, represented as an index into the string_ids section.
+ * 
+ * The string must conform to the syntax for MemberName, defined above.
+ */
+
+/**
+ * element value
+ */
+type Dex_CallSiteIdItem struct {
+	CallSiteOff uint32
+	_io *kaitai.Stream
+	_root *Dex
+	_parent kaitai.Struct
+}
+func NewDex_CallSiteIdItem() *Dex_CallSiteIdItem {
+	return &Dex_CallSiteIdItem{
+	}
+}
+
+func (this Dex_CallSiteIdItem) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Dex_CallSiteIdItem) Read(io *kaitai.Stream, parent kaitai.Struct, root *Dex) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp13, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.CallSiteOff = uint32(tmp13)
+	return err
+}
+
+/**
+ * offset from the start of the file to call site definition.
+ * 
+ * The offset should be in the data section, and the data there should
+ * be in the format specified by "call_site_item" below.
+ */
+type Dex_ClassDataItem struct {
+	StaticFieldsSize *VlqBase128Le
+	InstanceFieldsSize *VlqBase128Le
+	DirectMethodsSize *VlqBase128Le
+	VirtualMethodsSize *VlqBase128Le
+	StaticFields []*Dex_EncodedField
+	InstanceFields []*Dex_EncodedField
+	DirectMethods []*Dex_EncodedMethod
+	VirtualMethods []*Dex_EncodedMethod
+	_io *kaitai.Stream
+	_root *Dex
+	_parent *Dex_ClassDefItem
+}
+func NewDex_ClassDataItem() *Dex_ClassDataItem {
+	return &Dex_ClassDataItem{
+	}
+}
+
+func (this Dex_ClassDataItem) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Dex_ClassDataItem) Read(io *kaitai.Stream, parent *Dex_ClassDefItem, root *Dex) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp14 := NewVlqBase128Le()
+	err = tmp14.Read(this._io, nil, nil)
+	if err != nil {
+		return err
+	}
+	this.StaticFieldsSize = tmp14
+	tmp15 := NewVlqBase128Le()
+	err = tmp15.Read(this._io, nil, nil)
+	if err != nil {
+		return err
+	}
+	this.InstanceFieldsSize = tmp15
+	tmp16 := NewVlqBase128Le()
+	err = tmp16.Read(this._io, nil, nil)
+	if err != nil {
+		return err
+	}
+	this.DirectMethodsSize = tmp16
+	tmp17 := NewVlqBase128Le()
+	err = tmp17.Read(this._io, nil, nil)
+	if err != nil {
+		return err
+	}
+	this.VirtualMethodsSize = tmp17
+	tmp18, err := this.StaticFieldsSize.Value()
+	if err != nil {
+		return err
+	}
+	for i := 0; i < int(tmp18); i++ {
+		_ = i
+		tmp19 := NewDex_EncodedField()
+		err = tmp19.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.StaticFields = append(this.StaticFields, tmp19)
+	}
+	tmp20, err := this.InstanceFieldsSize.Value()
+	if err != nil {
+		return err
+	}
+	for i := 0; i < int(tmp20); i++ {
+		_ = i
+		tmp21 := NewDex_EncodedField()
+		err = tmp21.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.InstanceFields = append(this.InstanceFields, tmp21)
+	}
+	tmp22, err := this.DirectMethodsSize.Value()
+	if err != nil {
+		return err
+	}
+	for i := 0; i < int(tmp22); i++ {
+		_ = i
+		tmp23 := NewDex_EncodedMethod()
+		err = tmp23.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.DirectMethods = append(this.DirectMethods, tmp23)
+	}
+	tmp24, err := this.VirtualMethodsSize.Value()
+	if err != nil {
+		return err
+	}
+	for i := 0; i < int(tmp24); i++ {
+		_ = i
+		tmp25 := NewDex_EncodedMethod()
+		err = tmp25.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.VirtualMethods = append(this.VirtualMethods, tmp25)
+	}
+	return err
+}
+
+/**
+ * the number of static fields defined in this item
+ */
+
+/**
+ * the number of instance fields defined in this item
+ */
+
+/**
+ * the number of direct methods defined in this item
+ */
+
+/**
+ * the number of virtual methods defined in this item
+ */
+
+/**
+ * the defined static fields, represented as a sequence of encoded elements.
+ * 
+ * The fields must be sorted by field_idx in increasing order.
+ */
+
+/**
+ * the defined instance fields, represented as a sequence of encoded elements.
+ * 
+ * The fields must be sorted by field_idx in increasing order.
+ */
+
+/**
+ * the defined direct (any of static, private, or constructor) methods,
+ * represented as a sequence of encoded elements.
+ * 
+ * The methods must be sorted by method_idx in increasing order.
+ */
+
+/**
+ * the defined virtual (none of static, private, or constructor) methods,
+ * represented as a sequence of encoded elements.
+ * 
+ * This list should not include inherited methods unless overridden by
+ * the class that this item represents.
+ * 
+ * The methods must be sorted by method_idx in increasing order.
+ * 
+ * The method_idx of a virtual method must not be the same as any direct method.
+ */
+type Dex_ClassDefItem struct {
+	ClassIdx uint32
+	AccessFlags Dex_ClassAccessFlags
+	SuperclassIdx uint32
+	InterfacesOff uint32
+	SourceFileIdx uint32
+	AnnotationsOff uint32
+	ClassDataOff uint32
+	StaticValuesOff uint32
+	_io *kaitai.Stream
+	_root *Dex
+	_parent *Dex
+	_f_classData bool
+	classData *Dex_ClassDataItem
+	_f_staticValues bool
+	staticValues *Dex_EncodedArrayItem
+	_f_typeName bool
+	typeName string
+}
+func NewDex_ClassDefItem() *Dex_ClassDefItem {
+	return &Dex_ClassDefItem{
+	}
+}
+
+func (this Dex_ClassDefItem) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Dex_ClassDefItem) Read(io *kaitai.Stream, parent *Dex, root *Dex) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp26, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.ClassIdx = uint32(tmp26)
+	tmp27, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.AccessFlags = Dex_ClassAccessFlags(tmp27)
+	tmp28, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.SuperclassIdx = uint32(tmp28)
+	tmp29, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.InterfacesOff = uint32(tmp29)
+	tmp30, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.SourceFileIdx = uint32(tmp30)
+	tmp31, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.AnnotationsOff = uint32(tmp31)
+	tmp32, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.ClassDataOff = uint32(tmp32)
+	tmp33, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.StaticValuesOff = uint32(tmp33)
+	return err
+}
+func (this *Dex_ClassDefItem) ClassData() (v *Dex_ClassDataItem, err error) {
+	if (this._f_classData) {
+		return this.classData, nil
+	}
+	this._f_classData = true
+	if (this.ClassDataOff != 0) {
+		_pos, err := this._io.Pos()
+		if err != nil {
+			return nil, err
+		}
+		_, err = this._io.Seek(int64(this.ClassDataOff), io.SeekStart)
+		if err != nil {
+			return nil, err
+		}
+		tmp34 := NewDex_ClassDataItem()
+		err = tmp34.Read(this._io, this, this._root)
+		if err != nil {
+			return nil, err
+		}
+		this.classData = tmp34
+		_, err = this._io.Seek(_pos, io.SeekStart)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return this.classData, nil
+}
+func (this *Dex_ClassDefItem) StaticValues() (v *Dex_EncodedArrayItem, err error) {
+	if (this._f_staticValues) {
+		return this.staticValues, nil
+	}
+	this._f_staticValues = true
+	if (this.StaticValuesOff != 0) {
+		_pos, err := this._io.Pos()
+		if err != nil {
+			return nil, err
+		}
+		_, err = this._io.Seek(int64(this.StaticValuesOff), io.SeekStart)
+		if err != nil {
+			return nil, err
+		}
+		tmp35 := NewDex_EncodedArrayItem()
+		err = tmp35.Read(this._io, this, this._root)
+		if err != nil {
+			return nil, err
+		}
+		this.staticValues = tmp35
+		_, err = this._io.Seek(_pos, io.SeekStart)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return this.staticValues, nil
+}
+func (this *Dex_ClassDefItem) TypeName() (v string, err error) {
+	if (this._f_typeName) {
+		return this.typeName, nil
+	}
+	this._f_typeName = true
+	tmp36, err := this._root.TypeIds()
+	if err != nil {
+		return "", err
+	}
+	tmp37, err := tmp36[this.ClassIdx].TypeName()
+	if err != nil {
+		return "", err
+	}
+	this.typeName = string(tmp37)
+	return this.typeName, nil
+}
+
+/**
+ * index into the type_ids list for this class.
+ * 
+ * This must be a class type, and not an array or primitive type.
+ */
+
+/**
+ * access flags for the class (public, final, etc.).
+ * 
+ * See "access_flags Definitions" for details.
+ */
+
+/**
+ * index into the type_ids list for the superclass,
+ * or the constant value NO_INDEX if this class has no superclass
+ * (i.e., it is a root class such as Object).
+ * 
+ * If present, this must be a class type, and not an array or primitive type.
+ */
+
+/**
+ * offset from the start of the file to the list of interfaces, or 0 if there are none.
+ * 
+ * This offset should be in the data section, and the data there should
+ * be in the format specified by "type_list" below. Each of the elements
+ * of the list must be a class type (not an array or primitive type),
+ * and there must not be any duplicates.
+ */
+
+/**
+ * index into the string_ids list for the name of the file containing
+ * the original source for (at least most of) this class, or the
+ * special value NO_INDEX to represent a lack of this information.
+ * 
+ * The debug_info_item of any given method may override this source file,
+ * but the expectation is that most classes will only come from one source file.
+ */
+
+/**
+ * offset from the start of the file to the annotations structure for
+ * this class, or 0 if there are no annotations on this class.
+ * 
+ * This offset, if non-zero, should be in the data section, and the data
+ * there should be in the format specified by "annotations_directory_item"
+ * below,with all items referring to this class as the definer.
+ */
+
+/**
+ * offset from the start of the file to the associated class data for this
+ * item, or 0 if there is no class data for this class.
+ * 
+ * (This may be the case, for example, if this class is a marker interface.)
+ * 
+ * The offset, if non-zero, should be in the data section, and the data
+ * there should be in the format specified by "class_data_item" below,
+ * with all items referring to this class as the definer.
+ */
+
+/**
+ * offset from the start of the file to the list of initial values for
+ * static fields, or 0 if there are none (and all static fields are to be
+ * initialized with 0 or null).
+ * 
+ * This offset should be in the data section, and the data there should
+ * be in the format specified by "encoded_array_item" below.
+ * 
+ * The size of the array must be no larger than the number of static fields
+ * declared by this class, and the elements correspond to the static fields
+ * in the same order as declared in the corresponding field_list.
+ * 
+ * The type of each array element must match the declared type of its
+ * corresponding field.
+ * 
+ * If there are fewer elements in the array than there are static fields,
+ * then the leftover fields are initialized with a type-appropriate 0 or null.
+ */
+type Dex_EncodedAnnotation struct {
+	TypeIdx *VlqBase128Le
+	Size *VlqBase128Le
+	Elements []*Dex_AnnotationElement
+	_io *kaitai.Stream
+	_root *Dex
+	_parent *Dex_EncodedValue
+}
+func NewDex_EncodedAnnotation() *Dex_EncodedAnnotation {
+	return &Dex_EncodedAnnotation{
+	}
+}
+
+func (this Dex_EncodedAnnotation) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Dex_EncodedAnnotation) Read(io *kaitai.Stream, parent *Dex_EncodedValue, root *Dex) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp38 := NewVlqBase128Le()
+	err = tmp38.Read(this._io, nil, nil)
+	if err != nil {
+		return err
+	}
+	this.TypeIdx = tmp38
+	tmp39 := NewVlqBase128Le()
+	err = tmp39.Read(this._io, nil, nil)
+	if err != nil {
+		return err
+	}
+	this.Size = tmp39
+	tmp40, err := this.Size.Value()
+	if err != nil {
+		return err
+	}
+	for i := 0; i < int(tmp40); i++ {
+		_ = i
+		tmp41 := NewDex_AnnotationElement()
+		err = tmp41.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Elements = append(this.Elements, tmp41)
+	}
+	return err
+}
+
+/**
+ * type of the annotation.
+ * 
+ * This must be a class (not array or primitive) type.
+ */
+
+/**
+ * number of name-value mappings in this annotation
+ */
+
+/**
+ * elements of the annotation, represented directly in-line (not as offsets).
+ * 
+ * Elements must be sorted in increasing order by string_id index.
+ */
+type Dex_EncodedArray struct {
+	Size *VlqBase128Le
+	Values []*Dex_EncodedValue
+	_io *kaitai.Stream
+	_root *Dex
+	_parent kaitai.Struct
+}
+func NewDex_EncodedArray() *Dex_EncodedArray {
+	return &Dex_EncodedArray{
+	}
+}
+
+func (this Dex_EncodedArray) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Dex_EncodedArray) Read(io *kaitai.Stream, parent kaitai.Struct, root *Dex) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp42 := NewVlqBase128Le()
+	err = tmp42.Read(this._io, nil, nil)
+	if err != nil {
+		return err
+	}
+	this.Size = tmp42
+	tmp43, err := this.Size.Value()
+	if err != nil {
+		return err
+	}
+	for i := 0; i < int(tmp43); i++ {
+		_ = i
+		tmp44 := NewDex_EncodedValue()
+		err = tmp44.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Values = append(this.Values, tmp44)
+	}
+	return err
+}
+type Dex_EncodedArrayItem struct {
+	Value *Dex_EncodedArray
+	_io *kaitai.Stream
+	_root *Dex
+	_parent *Dex_ClassDefItem
+}
+func NewDex_EncodedArrayItem() *Dex_EncodedArrayItem {
+	return &Dex_EncodedArrayItem{
+	}
+}
+
+func (this Dex_EncodedArrayItem) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Dex_EncodedArrayItem) Read(io *kaitai.Stream, parent *Dex_ClassDefItem, root *Dex) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp45 := NewDex_EncodedArray()
+	err = tmp45.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Value = tmp45
+	return err
+}
+type Dex_EncodedField struct {
+	FieldIdxDiff *VlqBase128Le
+	AccessFlags *VlqBase128Le
+	_io *kaitai.Stream
+	_root *Dex
+	_parent *Dex_ClassDataItem
+}
+func NewDex_EncodedField() *Dex_EncodedField {
+	return &Dex_EncodedField{
+	}
+}
+
+func (this Dex_EncodedField) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Dex_EncodedField) Read(io *kaitai.Stream, parent *Dex_ClassDataItem, root *Dex) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp46 := NewVlqBase128Le()
+	err = tmp46.Read(this._io, nil, nil)
+	if err != nil {
+		return err
+	}
+	this.FieldIdxDiff = tmp46
+	tmp47 := NewVlqBase128Le()
+	err = tmp47.Read(this._io, nil, nil)
+	if err != nil {
+		return err
+	}
+	this.AccessFlags = tmp47
+	return err
+}
+
+/**
+ * index into the field_ids list for the identity of this field
+ * (includes the name and descriptor), represented as a difference
+ * from the index of previous element in the list.
+ * 
+ * The index of the first element in a list is represented directly.
+ */
+
+/**
+ * access flags for the field (public, final, etc.).
+ * 
+ * See "access_flags Definitions" for details.
+ */
+type Dex_EncodedMethod struct {
+	MethodIdxDiff *VlqBase128Le
+	AccessFlags *VlqBase128Le
+	CodeOff *VlqBase128Le
+	_io *kaitai.Stream
+	_root *Dex
+	_parent *Dex_ClassDataItem
+}
+func NewDex_EncodedMethod() *Dex_EncodedMethod {
+	return &Dex_EncodedMethod{
+	}
+}
+
+func (this Dex_EncodedMethod) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Dex_EncodedMethod) Read(io *kaitai.Stream, parent *Dex_ClassDataItem, root *Dex) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp48 := NewVlqBase128Le()
+	err = tmp48.Read(this._io, nil, nil)
+	if err != nil {
+		return err
+	}
+	this.MethodIdxDiff = tmp48
+	tmp49 := NewVlqBase128Le()
+	err = tmp49.Read(this._io, nil, nil)
+	if err != nil {
+		return err
+	}
+	this.AccessFlags = tmp49
+	tmp50 := NewVlqBase128Le()
+	err = tmp50.Read(this._io, nil, nil)
+	if err != nil {
+		return err
+	}
+	this.CodeOff = tmp50
+	return err
+}
+
+/**
+ * index into the method_ids list for the identity of this method
+ * (includes the name and descriptor), represented as a difference
+ * from the index of previous element in the list.
+ * 
+ * The index of the first element in a list is represented directly.
+ */
+
+/**
+ * access flags for the field (public, final, etc.).
+ * 
+ * See "access_flags Definitions" for details.
+ */
+
+/**
+ * offset from the start of the file to the code structure for this method,
+ * or 0 if this method is either abstract or native.
+ * 
+ * The offset should be to a location in the data section.
+ * 
+ * The format of the data is specified by "code_item" below.
+ */
+
+type Dex_EncodedValue_ValueTypeEnum int
+const (
+	Dex_EncodedValue_ValueTypeEnum__Byte Dex_EncodedValue_ValueTypeEnum = 0
+	Dex_EncodedValue_ValueTypeEnum__Short Dex_EncodedValue_ValueTypeEnum = 2
+	Dex_EncodedValue_ValueTypeEnum__Char Dex_EncodedValue_ValueTypeEnum = 3
+	Dex_EncodedValue_ValueTypeEnum__Int Dex_EncodedValue_ValueTypeEnum = 4
+	Dex_EncodedValue_ValueTypeEnum__Long Dex_EncodedValue_ValueTypeEnum = 6
+	Dex_EncodedValue_ValueTypeEnum__Float Dex_EncodedValue_ValueTypeEnum = 16
+	Dex_EncodedValue_ValueTypeEnum__Double Dex_EncodedValue_ValueTypeEnum = 17
+	Dex_EncodedValue_ValueTypeEnum__MethodType Dex_EncodedValue_ValueTypeEnum = 21
+	Dex_EncodedValue_ValueTypeEnum__MethodHandle Dex_EncodedValue_ValueTypeEnum = 22
+	Dex_EncodedValue_ValueTypeEnum__String Dex_EncodedValue_ValueTypeEnum = 23
+	Dex_EncodedValue_ValueTypeEnum__Type Dex_EncodedValue_ValueTypeEnum = 24
+	Dex_EncodedValue_ValueTypeEnum__Field Dex_EncodedValue_ValueTypeEnum = 25
+	Dex_EncodedValue_ValueTypeEnum__Method Dex_EncodedValue_ValueTypeEnum = 26
+	Dex_EncodedValue_ValueTypeEnum__Enum Dex_EncodedValue_ValueTypeEnum = 27
+	Dex_EncodedValue_ValueTypeEnum__Array Dex_EncodedValue_ValueTypeEnum = 28
+	Dex_EncodedValue_ValueTypeEnum__Annotation Dex_EncodedValue_ValueTypeEnum = 29
+	Dex_EncodedValue_ValueTypeEnum__Null Dex_EncodedValue_ValueTypeEnum = 30
+	Dex_EncodedValue_ValueTypeEnum__Boolean Dex_EncodedValue_ValueTypeEnum = 31
+)
+var values_Dex_EncodedValue_ValueTypeEnum = map[Dex_EncodedValue_ValueTypeEnum]struct{}{0: {}, 2: {}, 3: {}, 4: {}, 6: {}, 16: {}, 17: {}, 21: {}, 22: {}, 23: {}, 24: {}, 25: {}, 26: {}, 27: {}, 28: {}, 29: {}, 30: {}, 31: {}}
+func (v Dex_EncodedValue_ValueTypeEnum) isDefined() bool {
+	_, ok := values_Dex_EncodedValue_ValueTypeEnum[v]
+	return ok
+}
+type Dex_EncodedValue struct {
+	ValueArg uint64
+	ValueType Dex_EncodedValue_ValueTypeEnum
+	Value interface{}
+	_io *kaitai.Stream
+	_root *Dex
+	_parent kaitai.Struct
+}
+func NewDex_EncodedValue() *Dex_EncodedValue {
+	return &Dex_EncodedValue{
+	}
+}
+
+func (this Dex_EncodedValue) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Dex_EncodedValue) Read(io *kaitai.Stream, parent kaitai.Struct, root *Dex) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp51, err := this._io.ReadBitsIntBe(3)
+	if err != nil {
+		return err
+	}
+	this.ValueArg = tmp51
+	tmp52, err := this._io.ReadBitsIntBe(5)
+	if err != nil {
+		return err
+	}
+	this.ValueType = Dex_EncodedValue_ValueTypeEnum(tmp52)
+	this._io.AlignToByte()
+	switch (this.ValueType) {
+	case Dex_EncodedValue_ValueTypeEnum__Annotation:
+		tmp53 := NewDex_EncodedAnnotation()
+		err = tmp53.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Value = tmp53
+	case Dex_EncodedValue_ValueTypeEnum__Array:
+		tmp54 := NewDex_EncodedArray()
+		err = tmp54.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Value = tmp54
+	case Dex_EncodedValue_ValueTypeEnum__Byte:
+		tmp55, err := this._io.ReadS1()
+		if err != nil {
+			return err
+		}
+		this.Value = tmp55
+	case Dex_EncodedValue_ValueTypeEnum__Char:
+		tmp56, err := this._io.ReadU2le()
+		if err != nil {
+			return err
+		}
+		this.Value = tmp56
+	case Dex_EncodedValue_ValueTypeEnum__Double:
+		tmp57, err := this._io.ReadF8le()
+		if err != nil {
+			return err
+		}
+		this.Value = tmp57
+	case Dex_EncodedValue_ValueTypeEnum__Enum:
+		tmp58, err := this._io.ReadU4le()
+		if err != nil {
+			return err
+		}
+		this.Value = tmp58
+	case Dex_EncodedValue_ValueTypeEnum__Field:
+		tmp59, err := this._io.ReadU4le()
+		if err != nil {
+			return err
+		}
+		this.Value = tmp59
+	case Dex_EncodedValue_ValueTypeEnum__Float:
+		tmp60, err := this._io.ReadF4le()
+		if err != nil {
+			return err
+		}
+		this.Value = tmp60
+	case Dex_EncodedValue_ValueTypeEnum__Int:
+		tmp61, err := this._io.ReadS4le()
+		if err != nil {
+			return err
+		}
+		this.Value = tmp61
+	case Dex_EncodedValue_ValueTypeEnum__Long:
+		tmp62, err := this._io.ReadS8le()
+		if err != nil {
+			return err
+		}
+		this.Value = tmp62
+	case Dex_EncodedValue_ValueTypeEnum__Method:
+		tmp63, err := this._io.ReadU4le()
+		if err != nil {
+			return err
+		}
+		this.Value = tmp63
+	case Dex_EncodedValue_ValueTypeEnum__MethodHandle:
+		tmp64, err := this._io.ReadU4le()
+		if err != nil {
+			return err
+		}
+		this.Value = tmp64
+	case Dex_EncodedValue_ValueTypeEnum__MethodType:
+		tmp65, err := this._io.ReadU4le()
+		if err != nil {
+			return err
+		}
+		this.Value = tmp65
+	case Dex_EncodedValue_ValueTypeEnum__Short:
+		tmp66, err := this._io.ReadS2le()
+		if err != nil {
+			return err
+		}
+		this.Value = tmp66
+	case Dex_EncodedValue_ValueTypeEnum__String:
+		tmp67, err := this._io.ReadU4le()
+		if err != nil {
+			return err
+		}
+		this.Value = tmp67
+	case Dex_EncodedValue_ValueTypeEnum__Type:
+		tmp68, err := this._io.ReadU4le()
+		if err != nil {
+			return err
+		}
+		this.Value = tmp68
+	}
+	return err
+}
+type Dex_FieldIdItem struct {
+	ClassIdx uint16
+	TypeIdx uint16
+	NameIdx uint32
+	_io *kaitai.Stream
+	_root *Dex
+	_parent *Dex
+	_f_className bool
+	className string
+	_f_fieldName bool
+	fieldName string
+	_f_typeName bool
+	typeName string
+}
+func NewDex_FieldIdItem() *Dex_FieldIdItem {
+	return &Dex_FieldIdItem{
+	}
+}
+
+func (this Dex_FieldIdItem) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Dex_FieldIdItem) Read(io *kaitai.Stream, parent *Dex, root *Dex) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp69, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.ClassIdx = uint16(tmp69)
+	tmp70, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.TypeIdx = uint16(tmp70)
+	tmp71, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.NameIdx = uint32(tmp71)
+	return err
+}
+
+/**
+ * the definer of this field
+ */
+func (this *Dex_FieldIdItem) ClassName() (v string, err error) {
+	if (this._f_className) {
+		return this.className, nil
+	}
+	this._f_className = true
+	tmp72, err := this._root.TypeIds()
+	if err != nil {
+		return "", err
+	}
+	tmp73, err := tmp72[this.ClassIdx].TypeName()
+	if err != nil {
+		return "", err
+	}
+	this.className = string(tmp73)
+	return this.className, nil
+}
+
+/**
+ * the name of this field
+ */
+func (this *Dex_FieldIdItem) FieldName() (v string, err error) {
+	if (this._f_fieldName) {
+		return this.fieldName, nil
+	}
+	this._f_fieldName = true
+	tmp74, err := this._root.StringIds()
+	if err != nil {
+		return "", err
+	}
+	tmp75, err := tmp74[this.NameIdx].Value()
+	if err != nil {
+		return "", err
+	}
+	this.fieldName = string(tmp75.Data)
+	return this.fieldName, nil
+}
+
+/**
+ * the type of this field
+ */
+func (this *Dex_FieldIdItem) TypeName() (v string, err error) {
+	if (this._f_typeName) {
+		return this.typeName, nil
+	}
+	this._f_typeName = true
+	tmp76, err := this._root.TypeIds()
+	if err != nil {
+		return "", err
+	}
+	tmp77, err := tmp76[this.TypeIdx].TypeName()
+	if err != nil {
+		return "", err
+	}
+	this.typeName = string(tmp77)
+	return this.typeName, nil
+}
+
+/**
+ * index into the type_ids list for the definer of this field.
+ * This must be a class type, and not an array or primitive type.
+ */
+
+/**
+ * index into the type_ids list for the type of this field
+ */
+
+/**
+ * index into the string_ids list for the name of this field.
+ * The string must conform to the syntax for MemberName, defined above.
+ */
 
 type Dex_HeaderItem_EndianConstant int
 const (
 	Dex_HeaderItem_EndianConstant__EndianConstant Dex_HeaderItem_EndianConstant = 305419896
 	Dex_HeaderItem_EndianConstant__ReverseEndianConstant Dex_HeaderItem_EndianConstant = 2018915346
 )
+var values_Dex_HeaderItem_EndianConstant = map[Dex_HeaderItem_EndianConstant]struct{}{305419896: {}, 2018915346: {}}
+func (v Dex_HeaderItem_EndianConstant) isDefined() bool {
+	_, ok := values_Dex_HeaderItem_EndianConstant[v]
+	return ok
+}
 type Dex_HeaderItem struct {
 	Magic []byte
 	VersionStr string
@@ -445,137 +1433,141 @@ func NewDex_HeaderItem() *Dex_HeaderItem {
 	}
 }
 
+func (this Dex_HeaderItem) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Dex_HeaderItem) Read(io *kaitai.Stream, parent *Dex, root *Dex) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp11, err := this._io.ReadBytes(int(4))
+	tmp78, err := this._io.ReadBytes(int(4))
 	if err != nil {
 		return err
 	}
-	tmp11 = tmp11
-	this.Magic = tmp11
+	tmp78 = tmp78
+	this.Magic = tmp78
 	if !(bytes.Equal(this.Magic, []uint8{100, 101, 120, 10})) {
 		return kaitai.NewValidationNotEqualError([]uint8{100, 101, 120, 10}, this.Magic, this._io, "/types/header_item/seq/0")
 	}
-	tmp12, err := this._io.ReadBytes(int(4))
+	tmp79, err := this._io.ReadBytes(int(4))
 	if err != nil {
 		return err
 	}
-	tmp12 = kaitai.BytesTerminate(tmp12, 0, false)
-	this.VersionStr = string(tmp12)
-	tmp13, err := this._io.ReadU4le()
+	tmp79 = kaitai.BytesTerminate(tmp79, 0, false)
+	this.VersionStr = string(tmp79)
+	tmp80, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Checksum = uint32(tmp13)
-	tmp14, err := this._io.ReadBytes(int(20))
+	this.Checksum = uint32(tmp80)
+	tmp81, err := this._io.ReadBytes(int(20))
 	if err != nil {
 		return err
 	}
-	tmp14 = tmp14
-	this.Signature = tmp14
-	tmp15, err := this._io.ReadU4le()
+	tmp81 = tmp81
+	this.Signature = tmp81
+	tmp82, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.FileSize = uint32(tmp15)
-	tmp16, err := this._io.ReadU4le()
+	this.FileSize = uint32(tmp82)
+	tmp83, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.HeaderSize = uint32(tmp16)
-	tmp17, err := this._io.ReadU4le()
+	this.HeaderSize = uint32(tmp83)
+	tmp84, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.EndianTag = Dex_HeaderItem_EndianConstant(tmp17)
-	tmp18, err := this._io.ReadU4le()
+	this.EndianTag = Dex_HeaderItem_EndianConstant(tmp84)
+	tmp85, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.LinkSize = uint32(tmp18)
-	tmp19, err := this._io.ReadU4le()
+	this.LinkSize = uint32(tmp85)
+	tmp86, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.LinkOff = uint32(tmp19)
-	tmp20, err := this._io.ReadU4le()
+	this.LinkOff = uint32(tmp86)
+	tmp87, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.MapOff = uint32(tmp20)
-	tmp21, err := this._io.ReadU4le()
+	this.MapOff = uint32(tmp87)
+	tmp88, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.StringIdsSize = uint32(tmp21)
-	tmp22, err := this._io.ReadU4le()
+	this.StringIdsSize = uint32(tmp88)
+	tmp89, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.StringIdsOff = uint32(tmp22)
-	tmp23, err := this._io.ReadU4le()
+	this.StringIdsOff = uint32(tmp89)
+	tmp90, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.TypeIdsSize = uint32(tmp23)
-	tmp24, err := this._io.ReadU4le()
+	this.TypeIdsSize = uint32(tmp90)
+	tmp91, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.TypeIdsOff = uint32(tmp24)
-	tmp25, err := this._io.ReadU4le()
+	this.TypeIdsOff = uint32(tmp91)
+	tmp92, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.ProtoIdsSize = uint32(tmp25)
-	tmp26, err := this._io.ReadU4le()
+	this.ProtoIdsSize = uint32(tmp92)
+	tmp93, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.ProtoIdsOff = uint32(tmp26)
-	tmp27, err := this._io.ReadU4le()
+	this.ProtoIdsOff = uint32(tmp93)
+	tmp94, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.FieldIdsSize = uint32(tmp27)
-	tmp28, err := this._io.ReadU4le()
+	this.FieldIdsSize = uint32(tmp94)
+	tmp95, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.FieldIdsOff = uint32(tmp28)
-	tmp29, err := this._io.ReadU4le()
+	this.FieldIdsOff = uint32(tmp95)
+	tmp96, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.MethodIdsSize = uint32(tmp29)
-	tmp30, err := this._io.ReadU4le()
+	this.MethodIdsSize = uint32(tmp96)
+	tmp97, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.MethodIdsOff = uint32(tmp30)
-	tmp31, err := this._io.ReadU4le()
+	this.MethodIdsOff = uint32(tmp97)
+	tmp98, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.ClassDefsSize = uint32(tmp31)
-	tmp32, err := this._io.ReadU4le()
+	this.ClassDefsSize = uint32(tmp98)
+	tmp99, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.ClassDefsOff = uint32(tmp32)
-	tmp33, err := this._io.ReadU4le()
+	this.ClassDefsOff = uint32(tmp99)
+	tmp100, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.DataSize = uint32(tmp33)
-	tmp34, err := this._io.ReadU4le()
+	this.DataSize = uint32(tmp100)
+	tmp101, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.DataOff = uint32(tmp34)
+	this.DataOff = uint32(tmp101)
 	return err
 }
 
@@ -683,1397 +1675,6 @@ func (this *Dex_HeaderItem) Read(io *kaitai.Stream, parent *Dex, root *Dex) (err
 /**
  * offset from the start of the file to the start of the data section.
  */
-type Dex_MapList struct {
-	Size uint32
-	List []*Dex_MapItem
-	_io *kaitai.Stream
-	_root *Dex
-	_parent *Dex
-}
-func NewDex_MapList() *Dex_MapList {
-	return &Dex_MapList{
-	}
-}
-
-func (this *Dex_MapList) Read(io *kaitai.Stream, parent *Dex, root *Dex) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp35, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Size = uint32(tmp35)
-	for i := 0; i < int(this.Size); i++ {
-		_ = i
-		tmp36 := NewDex_MapItem()
-		err = tmp36.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.List = append(this.List, tmp36)
-	}
-	return err
-}
-
-type Dex_EncodedValue_ValueTypeEnum int
-const (
-	Dex_EncodedValue_ValueTypeEnum__Byte Dex_EncodedValue_ValueTypeEnum = 0
-	Dex_EncodedValue_ValueTypeEnum__Short Dex_EncodedValue_ValueTypeEnum = 2
-	Dex_EncodedValue_ValueTypeEnum__Char Dex_EncodedValue_ValueTypeEnum = 3
-	Dex_EncodedValue_ValueTypeEnum__Int Dex_EncodedValue_ValueTypeEnum = 4
-	Dex_EncodedValue_ValueTypeEnum__Long Dex_EncodedValue_ValueTypeEnum = 6
-	Dex_EncodedValue_ValueTypeEnum__Float Dex_EncodedValue_ValueTypeEnum = 16
-	Dex_EncodedValue_ValueTypeEnum__Double Dex_EncodedValue_ValueTypeEnum = 17
-	Dex_EncodedValue_ValueTypeEnum__MethodType Dex_EncodedValue_ValueTypeEnum = 21
-	Dex_EncodedValue_ValueTypeEnum__MethodHandle Dex_EncodedValue_ValueTypeEnum = 22
-	Dex_EncodedValue_ValueTypeEnum__String Dex_EncodedValue_ValueTypeEnum = 23
-	Dex_EncodedValue_ValueTypeEnum__Type Dex_EncodedValue_ValueTypeEnum = 24
-	Dex_EncodedValue_ValueTypeEnum__Field Dex_EncodedValue_ValueTypeEnum = 25
-	Dex_EncodedValue_ValueTypeEnum__Method Dex_EncodedValue_ValueTypeEnum = 26
-	Dex_EncodedValue_ValueTypeEnum__Enum Dex_EncodedValue_ValueTypeEnum = 27
-	Dex_EncodedValue_ValueTypeEnum__Array Dex_EncodedValue_ValueTypeEnum = 28
-	Dex_EncodedValue_ValueTypeEnum__Annotation Dex_EncodedValue_ValueTypeEnum = 29
-	Dex_EncodedValue_ValueTypeEnum__Null Dex_EncodedValue_ValueTypeEnum = 30
-	Dex_EncodedValue_ValueTypeEnum__Boolean Dex_EncodedValue_ValueTypeEnum = 31
-)
-type Dex_EncodedValue struct {
-	ValueArg uint64
-	ValueType Dex_EncodedValue_ValueTypeEnum
-	Value interface{}
-	_io *kaitai.Stream
-	_root *Dex
-	_parent interface{}
-}
-func NewDex_EncodedValue() *Dex_EncodedValue {
-	return &Dex_EncodedValue{
-	}
-}
-
-func (this *Dex_EncodedValue) Read(io *kaitai.Stream, parent interface{}, root *Dex) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp37, err := this._io.ReadBitsIntBe(3)
-	if err != nil {
-		return err
-	}
-	this.ValueArg = tmp37
-	tmp38, err := this._io.ReadBitsIntBe(5)
-	if err != nil {
-		return err
-	}
-	this.ValueType = Dex_EncodedValue_ValueTypeEnum(tmp38)
-	this._io.AlignToByte()
-	switch (this.ValueType) {
-	case Dex_EncodedValue_ValueTypeEnum__Int:
-		tmp39, err := this._io.ReadS4le()
-		if err != nil {
-			return err
-		}
-		this.Value = tmp39
-	case Dex_EncodedValue_ValueTypeEnum__Annotation:
-		tmp40 := NewDex_EncodedAnnotation()
-		err = tmp40.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Value = tmp40
-	case Dex_EncodedValue_ValueTypeEnum__Long:
-		tmp41, err := this._io.ReadS8le()
-		if err != nil {
-			return err
-		}
-		this.Value = tmp41
-	case Dex_EncodedValue_ValueTypeEnum__MethodHandle:
-		tmp42, err := this._io.ReadU4le()
-		if err != nil {
-			return err
-		}
-		this.Value = tmp42
-	case Dex_EncodedValue_ValueTypeEnum__Byte:
-		tmp43, err := this._io.ReadS1()
-		if err != nil {
-			return err
-		}
-		this.Value = tmp43
-	case Dex_EncodedValue_ValueTypeEnum__Array:
-		tmp44 := NewDex_EncodedArray()
-		err = tmp44.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Value = tmp44
-	case Dex_EncodedValue_ValueTypeEnum__MethodType:
-		tmp45, err := this._io.ReadU4le()
-		if err != nil {
-			return err
-		}
-		this.Value = tmp45
-	case Dex_EncodedValue_ValueTypeEnum__Short:
-		tmp46, err := this._io.ReadS2le()
-		if err != nil {
-			return err
-		}
-		this.Value = tmp46
-	case Dex_EncodedValue_ValueTypeEnum__Method:
-		tmp47, err := this._io.ReadU4le()
-		if err != nil {
-			return err
-		}
-		this.Value = tmp47
-	case Dex_EncodedValue_ValueTypeEnum__Double:
-		tmp48, err := this._io.ReadF8le()
-		if err != nil {
-			return err
-		}
-		this.Value = tmp48
-	case Dex_EncodedValue_ValueTypeEnum__Float:
-		tmp49, err := this._io.ReadF4le()
-		if err != nil {
-			return err
-		}
-		this.Value = tmp49
-	case Dex_EncodedValue_ValueTypeEnum__Type:
-		tmp50, err := this._io.ReadU4le()
-		if err != nil {
-			return err
-		}
-		this.Value = tmp50
-	case Dex_EncodedValue_ValueTypeEnum__Enum:
-		tmp51, err := this._io.ReadU4le()
-		if err != nil {
-			return err
-		}
-		this.Value = tmp51
-	case Dex_EncodedValue_ValueTypeEnum__Field:
-		tmp52, err := this._io.ReadU4le()
-		if err != nil {
-			return err
-		}
-		this.Value = tmp52
-	case Dex_EncodedValue_ValueTypeEnum__String:
-		tmp53, err := this._io.ReadU4le()
-		if err != nil {
-			return err
-		}
-		this.Value = tmp53
-	case Dex_EncodedValue_ValueTypeEnum__Char:
-		tmp54, err := this._io.ReadU2le()
-		if err != nil {
-			return err
-		}
-		this.Value = tmp54
-	}
-	return err
-}
-type Dex_CallSiteIdItem struct {
-	CallSiteOff uint32
-	_io *kaitai.Stream
-	_root *Dex
-	_parent interface{}
-}
-func NewDex_CallSiteIdItem() *Dex_CallSiteIdItem {
-	return &Dex_CallSiteIdItem{
-	}
-}
-
-func (this *Dex_CallSiteIdItem) Read(io *kaitai.Stream, parent interface{}, root *Dex) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp55, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.CallSiteOff = uint32(tmp55)
-	return err
-}
-
-/**
- * offset from the start of the file to call site definition.
- * 
- * The offset should be in the data section, and the data there should
- * be in the format specified by "call_site_item" below.
- */
-type Dex_MethodIdItem struct {
-	ClassIdx uint16
-	ProtoIdx uint16
-	NameIdx uint32
-	_io *kaitai.Stream
-	_root *Dex
-	_parent *Dex
-	_f_className bool
-	className string
-	_f_protoDesc bool
-	protoDesc string
-	_f_methodName bool
-	methodName string
-}
-func NewDex_MethodIdItem() *Dex_MethodIdItem {
-	return &Dex_MethodIdItem{
-	}
-}
-
-func (this *Dex_MethodIdItem) Read(io *kaitai.Stream, parent *Dex, root *Dex) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp56, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.ClassIdx = uint16(tmp56)
-	tmp57, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.ProtoIdx = uint16(tmp57)
-	tmp58, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.NameIdx = uint32(tmp58)
-	return err
-}
-
-/**
- * the definer of this method
- */
-func (this *Dex_MethodIdItem) ClassName() (v string, err error) {
-	if (this._f_className) {
-		return this.className, nil
-	}
-	tmp59, err := this._root.TypeIds()
-	if err != nil {
-		return "", err
-	}
-	tmp60, err := tmp59[this.ClassIdx].TypeName()
-	if err != nil {
-		return "", err
-	}
-	this.className = string(tmp60)
-	this._f_className = true
-	return this.className, nil
-}
-
-/**
- * the short-form descriptor of the prototype of this method
- */
-func (this *Dex_MethodIdItem) ProtoDesc() (v string, err error) {
-	if (this._f_protoDesc) {
-		return this.protoDesc, nil
-	}
-	tmp61, err := this._root.ProtoIds()
-	if err != nil {
-		return "", err
-	}
-	tmp62, err := tmp61[this.ProtoIdx].ShortyDesc()
-	if err != nil {
-		return "", err
-	}
-	this.protoDesc = string(tmp62)
-	this._f_protoDesc = true
-	return this.protoDesc, nil
-}
-
-/**
- * the name of this method
- */
-func (this *Dex_MethodIdItem) MethodName() (v string, err error) {
-	if (this._f_methodName) {
-		return this.methodName, nil
-	}
-	tmp63, err := this._root.StringIds()
-	if err != nil {
-		return "", err
-	}
-	tmp64, err := tmp63[this.NameIdx].Value()
-	if err != nil {
-		return "", err
-	}
-	this.methodName = string(tmp64.Data)
-	this._f_methodName = true
-	return this.methodName, nil
-}
-
-/**
- * index into the type_ids list for the definer of this method.
- * This must be a class or array type, and not a primitive type.
- */
-
-/**
- * index into the proto_ids list for the prototype of this method
- */
-
-/**
- * index into the string_ids list for the name of this method.
- * The string must conform to the syntax for MemberName, defined above.
- */
-type Dex_TypeItem struct {
-	TypeIdx uint16
-	_io *kaitai.Stream
-	_root *Dex
-	_parent *Dex_TypeList
-	_f_value bool
-	value string
-}
-func NewDex_TypeItem() *Dex_TypeItem {
-	return &Dex_TypeItem{
-	}
-}
-
-func (this *Dex_TypeItem) Read(io *kaitai.Stream, parent *Dex_TypeList, root *Dex) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp65, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.TypeIdx = uint16(tmp65)
-	return err
-}
-func (this *Dex_TypeItem) Value() (v string, err error) {
-	if (this._f_value) {
-		return this.value, nil
-	}
-	tmp66, err := this._root.TypeIds()
-	if err != nil {
-		return "", err
-	}
-	tmp67, err := tmp66[this.TypeIdx].TypeName()
-	if err != nil {
-		return "", err
-	}
-	this.value = string(tmp67)
-	this._f_value = true
-	return this.value, nil
-}
-type Dex_TypeIdItem struct {
-	DescriptorIdx uint32
-	_io *kaitai.Stream
-	_root *Dex
-	_parent *Dex
-	_f_typeName bool
-	typeName string
-}
-func NewDex_TypeIdItem() *Dex_TypeIdItem {
-	return &Dex_TypeIdItem{
-	}
-}
-
-func (this *Dex_TypeIdItem) Read(io *kaitai.Stream, parent *Dex, root *Dex) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp68, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.DescriptorIdx = uint32(tmp68)
-	return err
-}
-func (this *Dex_TypeIdItem) TypeName() (v string, err error) {
-	if (this._f_typeName) {
-		return this.typeName, nil
-	}
-	tmp69, err := this._root.StringIds()
-	if err != nil {
-		return "", err
-	}
-	tmp70, err := tmp69[this.DescriptorIdx].Value()
-	if err != nil {
-		return "", err
-	}
-	this.typeName = string(tmp70.Data)
-	this._f_typeName = true
-	return this.typeName, nil
-}
-
-/**
- * index into the string_ids list for the descriptor string of this type.
- * The string must conform to the syntax for TypeDescriptor, defined above.
- */
-type Dex_AnnotationElement struct {
-	NameIdx *VlqBase128Le
-	Value *Dex_EncodedValue
-	_io *kaitai.Stream
-	_root *Dex
-	_parent *Dex_EncodedAnnotation
-}
-func NewDex_AnnotationElement() *Dex_AnnotationElement {
-	return &Dex_AnnotationElement{
-	}
-}
-
-func (this *Dex_AnnotationElement) Read(io *kaitai.Stream, parent *Dex_EncodedAnnotation, root *Dex) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp71 := NewVlqBase128Le()
-	err = tmp71.Read(this._io, this, nil)
-	if err != nil {
-		return err
-	}
-	this.NameIdx = tmp71
-	tmp72 := NewDex_EncodedValue()
-	err = tmp72.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Value = tmp72
-	return err
-}
-
-/**
- * element name, represented as an index into the string_ids section.
- * 
- * The string must conform to the syntax for MemberName, defined above.
- */
-
-/**
- * element value
- */
-type Dex_EncodedField struct {
-	FieldIdxDiff *VlqBase128Le
-	AccessFlags *VlqBase128Le
-	_io *kaitai.Stream
-	_root *Dex
-	_parent *Dex_ClassDataItem
-}
-func NewDex_EncodedField() *Dex_EncodedField {
-	return &Dex_EncodedField{
-	}
-}
-
-func (this *Dex_EncodedField) Read(io *kaitai.Stream, parent *Dex_ClassDataItem, root *Dex) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp73 := NewVlqBase128Le()
-	err = tmp73.Read(this._io, this, nil)
-	if err != nil {
-		return err
-	}
-	this.FieldIdxDiff = tmp73
-	tmp74 := NewVlqBase128Le()
-	err = tmp74.Read(this._io, this, nil)
-	if err != nil {
-		return err
-	}
-	this.AccessFlags = tmp74
-	return err
-}
-
-/**
- * index into the field_ids list for the identity of this field
- * (includes the name and descriptor), represented as a difference
- * from the index of previous element in the list.
- * 
- * The index of the first element in a list is represented directly.
- */
-
-/**
- * access flags for the field (public, final, etc.).
- * 
- * See "access_flags Definitions" for details.
- */
-type Dex_EncodedArrayItem struct {
-	Value *Dex_EncodedArray
-	_io *kaitai.Stream
-	_root *Dex
-	_parent *Dex_ClassDefItem
-}
-func NewDex_EncodedArrayItem() *Dex_EncodedArrayItem {
-	return &Dex_EncodedArrayItem{
-	}
-}
-
-func (this *Dex_EncodedArrayItem) Read(io *kaitai.Stream, parent *Dex_ClassDefItem, root *Dex) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp75 := NewDex_EncodedArray()
-	err = tmp75.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Value = tmp75
-	return err
-}
-type Dex_ClassDataItem struct {
-	StaticFieldsSize *VlqBase128Le
-	InstanceFieldsSize *VlqBase128Le
-	DirectMethodsSize *VlqBase128Le
-	VirtualMethodsSize *VlqBase128Le
-	StaticFields []*Dex_EncodedField
-	InstanceFields []*Dex_EncodedField
-	DirectMethods []*Dex_EncodedMethod
-	VirtualMethods []*Dex_EncodedMethod
-	_io *kaitai.Stream
-	_root *Dex
-	_parent *Dex_ClassDefItem
-}
-func NewDex_ClassDataItem() *Dex_ClassDataItem {
-	return &Dex_ClassDataItem{
-	}
-}
-
-func (this *Dex_ClassDataItem) Read(io *kaitai.Stream, parent *Dex_ClassDefItem, root *Dex) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp76 := NewVlqBase128Le()
-	err = tmp76.Read(this._io, this, nil)
-	if err != nil {
-		return err
-	}
-	this.StaticFieldsSize = tmp76
-	tmp77 := NewVlqBase128Le()
-	err = tmp77.Read(this._io, this, nil)
-	if err != nil {
-		return err
-	}
-	this.InstanceFieldsSize = tmp77
-	tmp78 := NewVlqBase128Le()
-	err = tmp78.Read(this._io, this, nil)
-	if err != nil {
-		return err
-	}
-	this.DirectMethodsSize = tmp78
-	tmp79 := NewVlqBase128Le()
-	err = tmp79.Read(this._io, this, nil)
-	if err != nil {
-		return err
-	}
-	this.VirtualMethodsSize = tmp79
-	tmp80, err := this.StaticFieldsSize.Value()
-	if err != nil {
-		return err
-	}
-	for i := 0; i < int(tmp80); i++ {
-		_ = i
-		tmp81 := NewDex_EncodedField()
-		err = tmp81.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.StaticFields = append(this.StaticFields, tmp81)
-	}
-	tmp82, err := this.InstanceFieldsSize.Value()
-	if err != nil {
-		return err
-	}
-	for i := 0; i < int(tmp82); i++ {
-		_ = i
-		tmp83 := NewDex_EncodedField()
-		err = tmp83.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.InstanceFields = append(this.InstanceFields, tmp83)
-	}
-	tmp84, err := this.DirectMethodsSize.Value()
-	if err != nil {
-		return err
-	}
-	for i := 0; i < int(tmp84); i++ {
-		_ = i
-		tmp85 := NewDex_EncodedMethod()
-		err = tmp85.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.DirectMethods = append(this.DirectMethods, tmp85)
-	}
-	tmp86, err := this.VirtualMethodsSize.Value()
-	if err != nil {
-		return err
-	}
-	for i := 0; i < int(tmp86); i++ {
-		_ = i
-		tmp87 := NewDex_EncodedMethod()
-		err = tmp87.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.VirtualMethods = append(this.VirtualMethods, tmp87)
-	}
-	return err
-}
-
-/**
- * the number of static fields defined in this item
- */
-
-/**
- * the number of instance fields defined in this item
- */
-
-/**
- * the number of direct methods defined in this item
- */
-
-/**
- * the number of virtual methods defined in this item
- */
-
-/**
- * the defined static fields, represented as a sequence of encoded elements.
- * 
- * The fields must be sorted by field_idx in increasing order.
- */
-
-/**
- * the defined instance fields, represented as a sequence of encoded elements.
- * 
- * The fields must be sorted by field_idx in increasing order.
- */
-
-/**
- * the defined direct (any of static, private, or constructor) methods,
- * represented as a sequence of encoded elements.
- * 
- * The methods must be sorted by method_idx in increasing order.
- */
-
-/**
- * the defined virtual (none of static, private, or constructor) methods,
- * represented as a sequence of encoded elements.
- * 
- * This list should not include inherited methods unless overridden by
- * the class that this item represents.
- * 
- * The methods must be sorted by method_idx in increasing order.
- * 
- * The method_idx of a virtual method must not be the same as any direct method.
- */
-type Dex_FieldIdItem struct {
-	ClassIdx uint16
-	TypeIdx uint16
-	NameIdx uint32
-	_io *kaitai.Stream
-	_root *Dex
-	_parent *Dex
-	_f_className bool
-	className string
-	_f_typeName bool
-	typeName string
-	_f_fieldName bool
-	fieldName string
-}
-func NewDex_FieldIdItem() *Dex_FieldIdItem {
-	return &Dex_FieldIdItem{
-	}
-}
-
-func (this *Dex_FieldIdItem) Read(io *kaitai.Stream, parent *Dex, root *Dex) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp88, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.ClassIdx = uint16(tmp88)
-	tmp89, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.TypeIdx = uint16(tmp89)
-	tmp90, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.NameIdx = uint32(tmp90)
-	return err
-}
-
-/**
- * the definer of this field
- */
-func (this *Dex_FieldIdItem) ClassName() (v string, err error) {
-	if (this._f_className) {
-		return this.className, nil
-	}
-	tmp91, err := this._root.TypeIds()
-	if err != nil {
-		return "", err
-	}
-	tmp92, err := tmp91[this.ClassIdx].TypeName()
-	if err != nil {
-		return "", err
-	}
-	this.className = string(tmp92)
-	this._f_className = true
-	return this.className, nil
-}
-
-/**
- * the type of this field
- */
-func (this *Dex_FieldIdItem) TypeName() (v string, err error) {
-	if (this._f_typeName) {
-		return this.typeName, nil
-	}
-	tmp93, err := this._root.TypeIds()
-	if err != nil {
-		return "", err
-	}
-	tmp94, err := tmp93[this.TypeIdx].TypeName()
-	if err != nil {
-		return "", err
-	}
-	this.typeName = string(tmp94)
-	this._f_typeName = true
-	return this.typeName, nil
-}
-
-/**
- * the name of this field
- */
-func (this *Dex_FieldIdItem) FieldName() (v string, err error) {
-	if (this._f_fieldName) {
-		return this.fieldName, nil
-	}
-	tmp95, err := this._root.StringIds()
-	if err != nil {
-		return "", err
-	}
-	tmp96, err := tmp95[this.NameIdx].Value()
-	if err != nil {
-		return "", err
-	}
-	this.fieldName = string(tmp96.Data)
-	this._f_fieldName = true
-	return this.fieldName, nil
-}
-
-/**
- * index into the type_ids list for the definer of this field.
- * This must be a class type, and not an array or primitive type.
- */
-
-/**
- * index into the type_ids list for the type of this field
- */
-
-/**
- * index into the string_ids list for the name of this field.
- * The string must conform to the syntax for MemberName, defined above.
- */
-type Dex_EncodedAnnotation struct {
-	TypeIdx *VlqBase128Le
-	Size *VlqBase128Le
-	Elements []*Dex_AnnotationElement
-	_io *kaitai.Stream
-	_root *Dex
-	_parent *Dex_EncodedValue
-}
-func NewDex_EncodedAnnotation() *Dex_EncodedAnnotation {
-	return &Dex_EncodedAnnotation{
-	}
-}
-
-func (this *Dex_EncodedAnnotation) Read(io *kaitai.Stream, parent *Dex_EncodedValue, root *Dex) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp97 := NewVlqBase128Le()
-	err = tmp97.Read(this._io, this, nil)
-	if err != nil {
-		return err
-	}
-	this.TypeIdx = tmp97
-	tmp98 := NewVlqBase128Le()
-	err = tmp98.Read(this._io, this, nil)
-	if err != nil {
-		return err
-	}
-	this.Size = tmp98
-	tmp99, err := this.Size.Value()
-	if err != nil {
-		return err
-	}
-	for i := 0; i < int(tmp99); i++ {
-		_ = i
-		tmp100 := NewDex_AnnotationElement()
-		err = tmp100.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Elements = append(this.Elements, tmp100)
-	}
-	return err
-}
-
-/**
- * type of the annotation.
- * 
- * This must be a class (not array or primitive) type.
- */
-
-/**
- * number of name-value mappings in this annotation
- */
-
-/**
- * elements of the annotation, represented directly in-line (not as offsets).
- * 
- * Elements must be sorted in increasing order by string_id index.
- */
-type Dex_ClassDefItem struct {
-	ClassIdx uint32
-	AccessFlags Dex_ClassAccessFlags
-	SuperclassIdx uint32
-	InterfacesOff uint32
-	SourceFileIdx uint32
-	AnnotationsOff uint32
-	ClassDataOff uint32
-	StaticValuesOff uint32
-	_io *kaitai.Stream
-	_root *Dex
-	_parent *Dex
-	_f_typeName bool
-	typeName string
-	_f_classData bool
-	classData *Dex_ClassDataItem
-	_f_staticValues bool
-	staticValues *Dex_EncodedArrayItem
-}
-func NewDex_ClassDefItem() *Dex_ClassDefItem {
-	return &Dex_ClassDefItem{
-	}
-}
-
-func (this *Dex_ClassDefItem) Read(io *kaitai.Stream, parent *Dex, root *Dex) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp101, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.ClassIdx = uint32(tmp101)
-	tmp102, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.AccessFlags = Dex_ClassAccessFlags(tmp102)
-	tmp103, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.SuperclassIdx = uint32(tmp103)
-	tmp104, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.InterfacesOff = uint32(tmp104)
-	tmp105, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.SourceFileIdx = uint32(tmp105)
-	tmp106, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.AnnotationsOff = uint32(tmp106)
-	tmp107, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.ClassDataOff = uint32(tmp107)
-	tmp108, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.StaticValuesOff = uint32(tmp108)
-	return err
-}
-func (this *Dex_ClassDefItem) TypeName() (v string, err error) {
-	if (this._f_typeName) {
-		return this.typeName, nil
-	}
-	tmp109, err := this._root.TypeIds()
-	if err != nil {
-		return "", err
-	}
-	tmp110, err := tmp109[this.ClassIdx].TypeName()
-	if err != nil {
-		return "", err
-	}
-	this.typeName = string(tmp110)
-	this._f_typeName = true
-	return this.typeName, nil
-}
-func (this *Dex_ClassDefItem) ClassData() (v *Dex_ClassDataItem, err error) {
-	if (this._f_classData) {
-		return this.classData, nil
-	}
-	if (this.ClassDataOff != 0) {
-		_pos, err := this._io.Pos()
-		if err != nil {
-			return nil, err
-		}
-		_, err = this._io.Seek(int64(this.ClassDataOff), io.SeekStart)
-		if err != nil {
-			return nil, err
-		}
-		tmp111 := NewDex_ClassDataItem()
-		err = tmp111.Read(this._io, this, this._root)
-		if err != nil {
-			return nil, err
-		}
-		this.classData = tmp111
-		_, err = this._io.Seek(_pos, io.SeekStart)
-		if err != nil {
-			return nil, err
-		}
-		this._f_classData = true
-	}
-	this._f_classData = true
-	return this.classData, nil
-}
-func (this *Dex_ClassDefItem) StaticValues() (v *Dex_EncodedArrayItem, err error) {
-	if (this._f_staticValues) {
-		return this.staticValues, nil
-	}
-	if (this.StaticValuesOff != 0) {
-		_pos, err := this._io.Pos()
-		if err != nil {
-			return nil, err
-		}
-		_, err = this._io.Seek(int64(this.StaticValuesOff), io.SeekStart)
-		if err != nil {
-			return nil, err
-		}
-		tmp112 := NewDex_EncodedArrayItem()
-		err = tmp112.Read(this._io, this, this._root)
-		if err != nil {
-			return nil, err
-		}
-		this.staticValues = tmp112
-		_, err = this._io.Seek(_pos, io.SeekStart)
-		if err != nil {
-			return nil, err
-		}
-		this._f_staticValues = true
-	}
-	this._f_staticValues = true
-	return this.staticValues, nil
-}
-
-/**
- * index into the type_ids list for this class.
- * 
- * This must be a class type, and not an array or primitive type.
- */
-
-/**
- * access flags for the class (public, final, etc.).
- * 
- * See "access_flags Definitions" for details.
- */
-
-/**
- * index into the type_ids list for the superclass,
- * or the constant value NO_INDEX if this class has no superclass
- * (i.e., it is a root class such as Object).
- * 
- * If present, this must be a class type, and not an array or primitive type.
- */
-
-/**
- * offset from the start of the file to the list of interfaces, or 0 if there are none.
- * 
- * This offset should be in the data section, and the data there should
- * be in the format specified by "type_list" below. Each of the elements
- * of the list must be a class type (not an array or primitive type),
- * and there must not be any duplicates.
- */
-
-/**
- * index into the string_ids list for the name of the file containing
- * the original source for (at least most of) this class, or the
- * special value NO_INDEX to represent a lack of this information.
- * 
- * The debug_info_item of any given method may override this source file,
- * but the expectation is that most classes will only come from one source file.
- */
-
-/**
- * offset from the start of the file to the annotations structure for
- * this class, or 0 if there are no annotations on this class.
- * 
- * This offset, if non-zero, should be in the data section, and the data
- * there should be in the format specified by "annotations_directory_item"
- * below,with all items referring to this class as the definer.
- */
-
-/**
- * offset from the start of the file to the associated class data for this
- * item, or 0 if there is no class data for this class.
- * 
- * (This may be the case, for example, if this class is a marker interface.)
- * 
- * The offset, if non-zero, should be in the data section, and the data
- * there should be in the format specified by "class_data_item" below,
- * with all items referring to this class as the definer.
- */
-
-/**
- * offset from the start of the file to the list of initial values for
- * static fields, or 0 if there are none (and all static fields are to be
- * initialized with 0 or null).
- * 
- * This offset should be in the data section, and the data there should
- * be in the format specified by "encoded_array_item" below.
- * 
- * The size of the array must be no larger than the number of static fields
- * declared by this class, and the elements correspond to the static fields
- * in the same order as declared in the corresponding field_list.
- * 
- * The type of each array element must match the declared type of its
- * corresponding field.
- * 
- * If there are fewer elements in the array than there are static fields,
- * then the leftover fields are initialized with a type-appropriate 0 or null.
- */
-type Dex_TypeList struct {
-	Size uint32
-	List []*Dex_TypeItem
-	_io *kaitai.Stream
-	_root *Dex
-	_parent *Dex_ProtoIdItem
-}
-func NewDex_TypeList() *Dex_TypeList {
-	return &Dex_TypeList{
-	}
-}
-
-func (this *Dex_TypeList) Read(io *kaitai.Stream, parent *Dex_ProtoIdItem, root *Dex) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp113, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Size = uint32(tmp113)
-	for i := 0; i < int(this.Size); i++ {
-		_ = i
-		tmp114 := NewDex_TypeItem()
-		err = tmp114.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.List = append(this.List, tmp114)
-	}
-	return err
-}
-type Dex_StringIdItem struct {
-	StringDataOff uint32
-	_io *kaitai.Stream
-	_root *Dex
-	_parent *Dex
-	_f_value bool
-	value *Dex_StringIdItem_StringDataItem
-}
-func NewDex_StringIdItem() *Dex_StringIdItem {
-	return &Dex_StringIdItem{
-	}
-}
-
-func (this *Dex_StringIdItem) Read(io *kaitai.Stream, parent *Dex, root *Dex) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp115, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.StringDataOff = uint32(tmp115)
-	return err
-}
-func (this *Dex_StringIdItem) Value() (v *Dex_StringIdItem_StringDataItem, err error) {
-	if (this._f_value) {
-		return this.value, nil
-	}
-	_pos, err := this._io.Pos()
-	if err != nil {
-		return nil, err
-	}
-	_, err = this._io.Seek(int64(this.StringDataOff), io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	tmp116 := NewDex_StringIdItem_StringDataItem()
-	err = tmp116.Read(this._io, this, this._root)
-	if err != nil {
-		return nil, err
-	}
-	this.value = tmp116
-	_, err = this._io.Seek(_pos, io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	this._f_value = true
-	this._f_value = true
-	return this.value, nil
-}
-
-/**
- * offset from the start of the file to the string data for this item.
- * The offset should be to a location in the data section, and the data
- * should be in the format specified by "string_data_item" below.
- * There is no alignment requirement for the offset.
- */
-type Dex_StringIdItem_StringDataItem struct {
-	Utf16Size *VlqBase128Le
-	Data string
-	_io *kaitai.Stream
-	_root *Dex
-	_parent *Dex_StringIdItem
-}
-func NewDex_StringIdItem_StringDataItem() *Dex_StringIdItem_StringDataItem {
-	return &Dex_StringIdItem_StringDataItem{
-	}
-}
-
-func (this *Dex_StringIdItem_StringDataItem) Read(io *kaitai.Stream, parent *Dex_StringIdItem, root *Dex) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp117 := NewVlqBase128Le()
-	err = tmp117.Read(this._io, this, nil)
-	if err != nil {
-		return err
-	}
-	this.Utf16Size = tmp117
-	tmp118, err := this.Utf16Size.Value()
-	if err != nil {
-		return err
-	}
-	tmp119, err := this._io.ReadBytes(int(tmp118))
-	if err != nil {
-		return err
-	}
-	tmp119 = tmp119
-	this.Data = string(tmp119)
-	return err
-}
-type Dex_ProtoIdItem struct {
-	ShortyIdx uint32
-	ReturnTypeIdx uint32
-	ParametersOff uint32
-	_io *kaitai.Stream
-	_root *Dex
-	_parent *Dex
-	_f_shortyDesc bool
-	shortyDesc string
-	_f_paramsTypes bool
-	paramsTypes *Dex_TypeList
-	_f_returnType bool
-	returnType string
-}
-func NewDex_ProtoIdItem() *Dex_ProtoIdItem {
-	return &Dex_ProtoIdItem{
-	}
-}
-
-func (this *Dex_ProtoIdItem) Read(io *kaitai.Stream, parent *Dex, root *Dex) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp120, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.ShortyIdx = uint32(tmp120)
-	tmp121, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.ReturnTypeIdx = uint32(tmp121)
-	tmp122, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.ParametersOff = uint32(tmp122)
-	return err
-}
-
-/**
- * short-form descriptor string of this prototype, as pointed to by shorty_idx
- */
-func (this *Dex_ProtoIdItem) ShortyDesc() (v string, err error) {
-	if (this._f_shortyDesc) {
-		return this.shortyDesc, nil
-	}
-	tmp123, err := this._root.StringIds()
-	if err != nil {
-		return "", err
-	}
-	tmp124, err := tmp123[this.ShortyIdx].Value()
-	if err != nil {
-		return "", err
-	}
-	this.shortyDesc = string(tmp124.Data)
-	this._f_shortyDesc = true
-	return this.shortyDesc, nil
-}
-
-/**
- * list of parameter types for this prototype
- */
-func (this *Dex_ProtoIdItem) ParamsTypes() (v *Dex_TypeList, err error) {
-	if (this._f_paramsTypes) {
-		return this.paramsTypes, nil
-	}
-	if (this.ParametersOff != 0) {
-		thisIo := this._root._io
-		_pos, err := thisIo.Pos()
-		if err != nil {
-			return nil, err
-		}
-		_, err = thisIo.Seek(int64(this.ParametersOff), io.SeekStart)
-		if err != nil {
-			return nil, err
-		}
-		tmp125 := NewDex_TypeList()
-		err = tmp125.Read(thisIo, this, this._root)
-		if err != nil {
-			return nil, err
-		}
-		this.paramsTypes = tmp125
-		_, err = thisIo.Seek(_pos, io.SeekStart)
-		if err != nil {
-			return nil, err
-		}
-		this._f_paramsTypes = true
-	}
-	this._f_paramsTypes = true
-	return this.paramsTypes, nil
-}
-
-/**
- * return type of this prototype
- */
-func (this *Dex_ProtoIdItem) ReturnType() (v string, err error) {
-	if (this._f_returnType) {
-		return this.returnType, nil
-	}
-	tmp126, err := this._root.TypeIds()
-	if err != nil {
-		return "", err
-	}
-	tmp127, err := tmp126[this.ReturnTypeIdx].TypeName()
-	if err != nil {
-		return "", err
-	}
-	this.returnType = string(tmp127)
-	this._f_returnType = true
-	return this.returnType, nil
-}
-
-/**
- * index into the string_ids list for the short-form descriptor string of this prototype.
- * The string must conform to the syntax for ShortyDescriptor, defined above,
- * and must correspond to the return type and parameters of this item.
- */
-
-/**
- * index into the type_ids list for the return type of this prototype
- */
-
-/**
- * offset from the start of the file to the list of parameter types for this prototype,
- * or 0 if this prototype has no parameters.
- * This offset, if non-zero, should be in the data section, and the data
- * there should be in the format specified by "type_list" below.
- * Additionally, there should be no reference to the type void in the list.
- */
-type Dex_EncodedMethod struct {
-	MethodIdxDiff *VlqBase128Le
-	AccessFlags *VlqBase128Le
-	CodeOff *VlqBase128Le
-	_io *kaitai.Stream
-	_root *Dex
-	_parent *Dex_ClassDataItem
-}
-func NewDex_EncodedMethod() *Dex_EncodedMethod {
-	return &Dex_EncodedMethod{
-	}
-}
-
-func (this *Dex_EncodedMethod) Read(io *kaitai.Stream, parent *Dex_ClassDataItem, root *Dex) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp128 := NewVlqBase128Le()
-	err = tmp128.Read(this._io, this, nil)
-	if err != nil {
-		return err
-	}
-	this.MethodIdxDiff = tmp128
-	tmp129 := NewVlqBase128Le()
-	err = tmp129.Read(this._io, this, nil)
-	if err != nil {
-		return err
-	}
-	this.AccessFlags = tmp129
-	tmp130 := NewVlqBase128Le()
-	err = tmp130.Read(this._io, this, nil)
-	if err != nil {
-		return err
-	}
-	this.CodeOff = tmp130
-	return err
-}
-
-/**
- * index into the method_ids list for the identity of this method
- * (includes the name and descriptor), represented as a difference
- * from the index of previous element in the list.
- * 
- * The index of the first element in a list is represented directly.
- */
-
-/**
- * access flags for the field (public, final, etc.).
- * 
- * See "access_flags Definitions" for details.
- */
-
-/**
- * offset from the start of the file to the code structure for this method,
- * or 0 if this method is either abstract or native.
- * 
- * The offset should be to a location in the data section.
- * 
- * The format of the data is specified by "code_item" below.
- */
 
 type Dex_MapItem_MapItemType int
 const (
@@ -2098,6 +1699,11 @@ const (
 	Dex_MapItem_MapItemType__EncodedArrayItem Dex_MapItem_MapItemType = 8197
 	Dex_MapItem_MapItemType__AnnotationsDirectoryItem Dex_MapItem_MapItemType = 8198
 )
+var values_Dex_MapItem_MapItemType = map[Dex_MapItem_MapItemType]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 4096: {}, 4097: {}, 4098: {}, 4099: {}, 8192: {}, 8193: {}, 8194: {}, 8195: {}, 8196: {}, 8197: {}, 8198: {}}
+func (v Dex_MapItem_MapItemType) isDefined() bool {
+	_, ok := values_Dex_MapItem_MapItemType[v]
+	return ok
+}
 type Dex_MapItem struct {
 	Type Dex_MapItem_MapItemType
 	Unused uint16
@@ -2112,31 +1718,35 @@ func NewDex_MapItem() *Dex_MapItem {
 	}
 }
 
+func (this Dex_MapItem) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Dex_MapItem) Read(io *kaitai.Stream, parent *Dex_MapList, root *Dex) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp131, err := this._io.ReadU2le()
+	tmp102, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.Type = Dex_MapItem_MapItemType(tmp131)
-	tmp132, err := this._io.ReadU2le()
+	this.Type = Dex_MapItem_MapItemType(tmp102)
+	tmp103, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.Unused = uint16(tmp132)
-	tmp133, err := this._io.ReadU4le()
+	this.Unused = uint16(tmp103)
+	tmp104, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Size = uint32(tmp133)
-	tmp134, err := this._io.ReadU4le()
+	this.Size = uint32(tmp104)
+	tmp105, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Offset = uint32(tmp134)
+	this.Offset = uint32(tmp105)
 	return err
 }
 
@@ -2155,41 +1765,526 @@ func (this *Dex_MapItem) Read(io *kaitai.Stream, parent *Dex_MapList, root *Dex)
 /**
  * offset from the start of the file to the items in question
  */
-type Dex_EncodedArray struct {
-	Size *VlqBase128Le
-	Values []*Dex_EncodedValue
+type Dex_MapList struct {
+	Size uint32
+	List []*Dex_MapItem
 	_io *kaitai.Stream
 	_root *Dex
-	_parent interface{}
+	_parent *Dex
 }
-func NewDex_EncodedArray() *Dex_EncodedArray {
-	return &Dex_EncodedArray{
+func NewDex_MapList() *Dex_MapList {
+	return &Dex_MapList{
 	}
 }
 
-func (this *Dex_EncodedArray) Read(io *kaitai.Stream, parent interface{}, root *Dex) (err error) {
+func (this Dex_MapList) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Dex_MapList) Read(io *kaitai.Stream, parent *Dex, root *Dex) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp135 := NewVlqBase128Le()
-	err = tmp135.Read(this._io, this, nil)
+	tmp106, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Size = tmp135
-	tmp136, err := this.Size.Value()
-	if err != nil {
-		return err
-	}
-	for i := 0; i < int(tmp136); i++ {
+	this.Size = uint32(tmp106)
+	for i := 0; i < int(this.Size); i++ {
 		_ = i
-		tmp137 := NewDex_EncodedValue()
+		tmp107 := NewDex_MapItem()
+		err = tmp107.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.List = append(this.List, tmp107)
+	}
+	return err
+}
+type Dex_MethodIdItem struct {
+	ClassIdx uint16
+	ProtoIdx uint16
+	NameIdx uint32
+	_io *kaitai.Stream
+	_root *Dex
+	_parent *Dex
+	_f_className bool
+	className string
+	_f_methodName bool
+	methodName string
+	_f_protoDesc bool
+	protoDesc string
+}
+func NewDex_MethodIdItem() *Dex_MethodIdItem {
+	return &Dex_MethodIdItem{
+	}
+}
+
+func (this Dex_MethodIdItem) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Dex_MethodIdItem) Read(io *kaitai.Stream, parent *Dex, root *Dex) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp108, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.ClassIdx = uint16(tmp108)
+	tmp109, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.ProtoIdx = uint16(tmp109)
+	tmp110, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.NameIdx = uint32(tmp110)
+	return err
+}
+
+/**
+ * the definer of this method
+ */
+func (this *Dex_MethodIdItem) ClassName() (v string, err error) {
+	if (this._f_className) {
+		return this.className, nil
+	}
+	this._f_className = true
+	tmp111, err := this._root.TypeIds()
+	if err != nil {
+		return "", err
+	}
+	tmp112, err := tmp111[this.ClassIdx].TypeName()
+	if err != nil {
+		return "", err
+	}
+	this.className = string(tmp112)
+	return this.className, nil
+}
+
+/**
+ * the name of this method
+ */
+func (this *Dex_MethodIdItem) MethodName() (v string, err error) {
+	if (this._f_methodName) {
+		return this.methodName, nil
+	}
+	this._f_methodName = true
+	tmp113, err := this._root.StringIds()
+	if err != nil {
+		return "", err
+	}
+	tmp114, err := tmp113[this.NameIdx].Value()
+	if err != nil {
+		return "", err
+	}
+	this.methodName = string(tmp114.Data)
+	return this.methodName, nil
+}
+
+/**
+ * the short-form descriptor of the prototype of this method
+ */
+func (this *Dex_MethodIdItem) ProtoDesc() (v string, err error) {
+	if (this._f_protoDesc) {
+		return this.protoDesc, nil
+	}
+	this._f_protoDesc = true
+	tmp115, err := this._root.ProtoIds()
+	if err != nil {
+		return "", err
+	}
+	tmp116, err := tmp115[this.ProtoIdx].ShortyDesc()
+	if err != nil {
+		return "", err
+	}
+	this.protoDesc = string(tmp116)
+	return this.protoDesc, nil
+}
+
+/**
+ * index into the type_ids list for the definer of this method.
+ * This must be a class or array type, and not a primitive type.
+ */
+
+/**
+ * index into the proto_ids list for the prototype of this method
+ */
+
+/**
+ * index into the string_ids list for the name of this method.
+ * The string must conform to the syntax for MemberName, defined above.
+ */
+type Dex_ProtoIdItem struct {
+	ShortyIdx uint32
+	ReturnTypeIdx uint32
+	ParametersOff uint32
+	_io *kaitai.Stream
+	_root *Dex
+	_parent *Dex
+	_f_paramsTypes bool
+	paramsTypes *Dex_TypeList
+	_f_returnType bool
+	returnType string
+	_f_shortyDesc bool
+	shortyDesc string
+}
+func NewDex_ProtoIdItem() *Dex_ProtoIdItem {
+	return &Dex_ProtoIdItem{
+	}
+}
+
+func (this Dex_ProtoIdItem) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Dex_ProtoIdItem) Read(io *kaitai.Stream, parent *Dex, root *Dex) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp117, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.ShortyIdx = uint32(tmp117)
+	tmp118, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.ReturnTypeIdx = uint32(tmp118)
+	tmp119, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.ParametersOff = uint32(tmp119)
+	return err
+}
+
+/**
+ * list of parameter types for this prototype
+ */
+func (this *Dex_ProtoIdItem) ParamsTypes() (v *Dex_TypeList, err error) {
+	if (this._f_paramsTypes) {
+		return this.paramsTypes, nil
+	}
+	this._f_paramsTypes = true
+	if (this.ParametersOff != 0) {
+		thisIo := this._root._io
+		_pos, err := thisIo.Pos()
+		if err != nil {
+			return nil, err
+		}
+		_, err = thisIo.Seek(int64(this.ParametersOff), io.SeekStart)
+		if err != nil {
+			return nil, err
+		}
+		tmp120 := NewDex_TypeList()
+		err = tmp120.Read(thisIo, this, this._root)
+		if err != nil {
+			return nil, err
+		}
+		this.paramsTypes = tmp120
+		_, err = thisIo.Seek(_pos, io.SeekStart)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return this.paramsTypes, nil
+}
+
+/**
+ * return type of this prototype
+ */
+func (this *Dex_ProtoIdItem) ReturnType() (v string, err error) {
+	if (this._f_returnType) {
+		return this.returnType, nil
+	}
+	this._f_returnType = true
+	tmp121, err := this._root.TypeIds()
+	if err != nil {
+		return "", err
+	}
+	tmp122, err := tmp121[this.ReturnTypeIdx].TypeName()
+	if err != nil {
+		return "", err
+	}
+	this.returnType = string(tmp122)
+	return this.returnType, nil
+}
+
+/**
+ * short-form descriptor string of this prototype, as pointed to by shorty_idx
+ */
+func (this *Dex_ProtoIdItem) ShortyDesc() (v string, err error) {
+	if (this._f_shortyDesc) {
+		return this.shortyDesc, nil
+	}
+	this._f_shortyDesc = true
+	tmp123, err := this._root.StringIds()
+	if err != nil {
+		return "", err
+	}
+	tmp124, err := tmp123[this.ShortyIdx].Value()
+	if err != nil {
+		return "", err
+	}
+	this.shortyDesc = string(tmp124.Data)
+	return this.shortyDesc, nil
+}
+
+/**
+ * index into the string_ids list for the short-form descriptor string of this prototype.
+ * The string must conform to the syntax for ShortyDescriptor, defined above,
+ * and must correspond to the return type and parameters of this item.
+ */
+
+/**
+ * index into the type_ids list for the return type of this prototype
+ */
+
+/**
+ * offset from the start of the file to the list of parameter types for this prototype,
+ * or 0 if this prototype has no parameters.
+ * This offset, if non-zero, should be in the data section, and the data
+ * there should be in the format specified by "type_list" below.
+ * Additionally, there should be no reference to the type void in the list.
+ */
+type Dex_StringIdItem struct {
+	StringDataOff uint32
+	_io *kaitai.Stream
+	_root *Dex
+	_parent *Dex
+	_f_value bool
+	value *Dex_StringIdItem_StringDataItem
+}
+func NewDex_StringIdItem() *Dex_StringIdItem {
+	return &Dex_StringIdItem{
+	}
+}
+
+func (this Dex_StringIdItem) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Dex_StringIdItem) Read(io *kaitai.Stream, parent *Dex, root *Dex) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp125, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.StringDataOff = uint32(tmp125)
+	return err
+}
+func (this *Dex_StringIdItem) Value() (v *Dex_StringIdItem_StringDataItem, err error) {
+	if (this._f_value) {
+		return this.value, nil
+	}
+	this._f_value = true
+	_pos, err := this._io.Pos()
+	if err != nil {
+		return nil, err
+	}
+	_, err = this._io.Seek(int64(this.StringDataOff), io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	tmp126 := NewDex_StringIdItem_StringDataItem()
+	err = tmp126.Read(this._io, this, this._root)
+	if err != nil {
+		return nil, err
+	}
+	this.value = tmp126
+	_, err = this._io.Seek(_pos, io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	return this.value, nil
+}
+
+/**
+ * offset from the start of the file to the string data for this item.
+ * The offset should be to a location in the data section, and the data
+ * should be in the format specified by "string_data_item" below.
+ * There is no alignment requirement for the offset.
+ */
+type Dex_StringIdItem_StringDataItem struct {
+	Utf16Size *VlqBase128Le
+	Data string
+	_io *kaitai.Stream
+	_root *Dex
+	_parent *Dex_StringIdItem
+}
+func NewDex_StringIdItem_StringDataItem() *Dex_StringIdItem_StringDataItem {
+	return &Dex_StringIdItem_StringDataItem{
+	}
+}
+
+func (this Dex_StringIdItem_StringDataItem) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Dex_StringIdItem_StringDataItem) Read(io *kaitai.Stream, parent *Dex_StringIdItem, root *Dex) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp127 := NewVlqBase128Le()
+	err = tmp127.Read(this._io, nil, nil)
+	if err != nil {
+		return err
+	}
+	this.Utf16Size = tmp127
+	tmp128, err := this.Utf16Size.Value()
+	if err != nil {
+		return err
+	}
+	tmp129, err := this._io.ReadBytes(int(tmp128))
+	if err != nil {
+		return err
+	}
+	tmp129 = tmp129
+	this.Data = string(tmp129)
+	return err
+}
+type Dex_TypeIdItem struct {
+	DescriptorIdx uint32
+	_io *kaitai.Stream
+	_root *Dex
+	_parent *Dex
+	_f_typeName bool
+	typeName string
+}
+func NewDex_TypeIdItem() *Dex_TypeIdItem {
+	return &Dex_TypeIdItem{
+	}
+}
+
+func (this Dex_TypeIdItem) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Dex_TypeIdItem) Read(io *kaitai.Stream, parent *Dex, root *Dex) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp130, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.DescriptorIdx = uint32(tmp130)
+	return err
+}
+func (this *Dex_TypeIdItem) TypeName() (v string, err error) {
+	if (this._f_typeName) {
+		return this.typeName, nil
+	}
+	this._f_typeName = true
+	tmp131, err := this._root.StringIds()
+	if err != nil {
+		return "", err
+	}
+	tmp132, err := tmp131[this.DescriptorIdx].Value()
+	if err != nil {
+		return "", err
+	}
+	this.typeName = string(tmp132.Data)
+	return this.typeName, nil
+}
+
+/**
+ * index into the string_ids list for the descriptor string of this type.
+ * The string must conform to the syntax for TypeDescriptor, defined above.
+ */
+type Dex_TypeItem struct {
+	TypeIdx uint16
+	_io *kaitai.Stream
+	_root *Dex
+	_parent *Dex_TypeList
+	_f_value bool
+	value string
+}
+func NewDex_TypeItem() *Dex_TypeItem {
+	return &Dex_TypeItem{
+	}
+}
+
+func (this Dex_TypeItem) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Dex_TypeItem) Read(io *kaitai.Stream, parent *Dex_TypeList, root *Dex) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp133, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.TypeIdx = uint16(tmp133)
+	return err
+}
+func (this *Dex_TypeItem) Value() (v string, err error) {
+	if (this._f_value) {
+		return this.value, nil
+	}
+	this._f_value = true
+	tmp134, err := this._root.TypeIds()
+	if err != nil {
+		return "", err
+	}
+	tmp135, err := tmp134[this.TypeIdx].TypeName()
+	if err != nil {
+		return "", err
+	}
+	this.value = string(tmp135)
+	return this.value, nil
+}
+type Dex_TypeList struct {
+	Size uint32
+	List []*Dex_TypeItem
+	_io *kaitai.Stream
+	_root *Dex
+	_parent *Dex_ProtoIdItem
+}
+func NewDex_TypeList() *Dex_TypeList {
+	return &Dex_TypeList{
+	}
+}
+
+func (this Dex_TypeList) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Dex_TypeList) Read(io *kaitai.Stream, parent *Dex_ProtoIdItem, root *Dex) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp136, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Size = uint32(tmp136)
+	for i := 0; i < int(this.Size); i++ {
+		_ = i
+		tmp137 := NewDex_TypeItem()
 		err = tmp137.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Values = append(this.Values, tmp137)
+		this.List = append(this.List, tmp137)
 	}
 	return err
 }

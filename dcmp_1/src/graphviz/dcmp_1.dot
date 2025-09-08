@@ -21,38 +21,12 @@ digraph {
 			</TABLE>>];
 chunk__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
-	<TR><TD>:tag_kind_extended</TD><TD PORT="case0">ExtendedBody</TD></TR>
-	<TR><TD>:tag_kind_literal</TD><TD PORT="case1">LiteralBody</TD></TR>
-	<TR><TD>:tag_kind_end</TD><TD PORT="case2">EndBody</TD></TR>
-	<TR><TD>:tag_kind_table_lookup</TD><TD PORT="case3">TableLookupBody</TD></TR>
-	<TR><TD>:tag_kind_backreference</TD><TD PORT="case4">BackreferenceBody</TD></TR>
+	<TR><TD>:tag_kind_backreference</TD><TD PORT="case0">BackreferenceBody</TD></TR>
+	<TR><TD>:tag_kind_end</TD><TD PORT="case1">EndBody</TD></TR>
+	<TR><TD>:tag_kind_extended</TD><TD PORT="case2">ExtendedBody</TD></TR>
+	<TR><TD>:tag_kind_literal</TD><TD PORT="case3">LiteralBody</TD></TR>
+	<TR><TD>:tag_kind_table_lookup</TD><TD PORT="case4">TableLookupBody</TD></TR>
 </TABLE>>];
-			subgraph cluster__literal_body {
-				label="Dcmp1::Chunk::LiteralBody";
-				graph[style=dotted];
-
-				literal_body__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="len_literal_separate_pos">0</TD><TD PORT="len_literal_separate_size">1</TD><TD>u1</TD><TD PORT="len_literal_separate_type">len_literal_separate</TD></TR>
-					<TR><TD PORT="literal_pos">1</TD><TD PORT="literal_size">len_literal</TD><TD></TD><TD PORT="literal_type">literal</TD></TR>
-				</TABLE>>];
-				literal_body__inst__do_store [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-					<TR><TD>do_store</TD><TD>(is_len_literal_separate ? tag == 209 : (tag &amp; 16) != 0)</TD></TR>
-				</TABLE>>];
-				literal_body__inst__len_literal_m1_in_tag [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-					<TR><TD>len_literal_m1_in_tag</TD><TD>(tag &amp; 15)</TD></TR>
-				</TABLE>>];
-				literal_body__inst__is_len_literal_separate [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-					<TR><TD>is_len_literal_separate</TD><TD>tag &gt;= 208</TD></TR>
-				</TABLE>>];
-				literal_body__inst__len_literal [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-					<TR><TD>len_literal</TD><TD>(is_len_literal_separate ? len_literal_separate : (len_literal_m1_in_tag + 1))</TD></TR>
-				</TABLE>>];
-			}
 			subgraph cluster__backreference_body {
 				label="Dcmp1::Chunk::BackreferenceBody";
 				graph[style=dotted];
@@ -60,38 +34,23 @@ chunk__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				backreference_body__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 					<TR><TD PORT="index_separate_minus_pos">0</TD><TD PORT="index_separate_minus_size">1</TD><TD>u1</TD><TD PORT="index_separate_minus_type">index_separate_minus</TD></TR>
-				</TABLE>>];
-				backreference_body__inst__is_index_separate [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-					<TR><TD>is_index_separate</TD><TD>tag == 210</TD></TR>
-				</TABLE>>];
-				backreference_body__inst__index_in_tag [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-					<TR><TD>index_in_tag</TD><TD>(tag - 32)</TD></TR>
-				</TABLE>>];
-				backreference_body__inst__index_separate [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-					<TR><TD>index_separate</TD><TD>(index_separate_minus + 176)</TD></TR>
+					<TR><TD COLSPAN="4" PORT="index_separate_minus__if">if is_index_separate</TD></TR>
 				</TABLE>>];
 				backreference_body__inst__index [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
 					<TR><TD>index</TD><TD>(is_index_separate ? index_separate : index_in_tag)</TD></TR>
 				</TABLE>>];
-			}
-			subgraph cluster__table_lookup_body {
-				label="Dcmp1::Chunk::TableLookupBody";
-				graph[style=dotted];
-
-				table_lookup_body__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				</TABLE>>];
-				table_lookup_body__inst__lookup_table [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				backreference_body__inst__index_in_tag [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-					<TR><TD>lookup_table</TD><TD>[[0, 0].pack('C*'), [0, 1].pack('C*'), [0, 2].pack('C*'), [0, 3].pack('C*'), [46, 1].pack('C*'), [62, 1].pack('C*'), [1, 1].pack('C*'), [30, 1].pack('C*'), [255, 255].pack('C*'), [14, 1].pack('C*'), [49, 0].pack('C*'), [17, 18].pack('C*'), [1, 7].pack('C*'), [51, 50].pack('C*'), [18, 57].pack('C*'), [237, 16].pack('C*'), [1, 39].pack('C*'), [35, 34].pack('C*'), [1, 55].pack('C*'), [7, 6].pack('C*'), [1, 23].pack('C*'), [1, 35].pack('C*'), [0, 255].pack('C*'), [0, 47].pack('C*'), [7, 14].pack('C*'), [253, 60].pack('C*'), [1, 53].pack('C*'), [1, 21].pack('C*'), [1, 2].pack('C*'), [0, 7].pack('C*'), [0, 62].pack('C*'), [5, 213].pack('C*'), [2, 1].pack('C*'), [6, 7].pack('C*'), [7, 8].pack('C*'), [48, 1].pack('C*'), [1, 51].pack('C*'), [0, 16].pack('C*'), [23, 22].pack('C*'), [55, 62].pack('C*'), [54, 55].pack('C*')]</TD></TR>
+					<TR><TD>index_in_tag</TD><TD>tag - 32</TD></TR>
 				</TABLE>>];
-				table_lookup_body__inst__value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				backreference_body__inst__index_separate [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-					<TR><TD>value</TD><TD>lookup_table[(tag - 213)]</TD></TR>
+					<TR><TD>index_separate</TD><TD>index_separate_minus + 176</TD></TR>
+				</TABLE>>];
+				backreference_body__inst__is_index_separate [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>is_index_separate</TD><TD>tag == 210</TD></TR>
 				</TABLE>>];
 			}
 			subgraph cluster__end_body {
@@ -124,64 +83,98 @@ extended_body__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPAC
 						<TR><TD PORT="to_repeat_raw_pos">0</TD><TD PORT="to_repeat_raw_size">...</TD><TD>DcmpVariableLengthInteger</TD><TD PORT="to_repeat_raw_type">to_repeat_raw</TD></TR>
 						<TR><TD PORT="repeat_count_m1_raw_pos">...</TD><TD PORT="repeat_count_m1_raw_size">...</TD><TD>DcmpVariableLengthInteger</TD><TD PORT="repeat_count_m1_raw_type">repeat_count_m1_raw</TD></TR>
 					</TABLE>>];
-					repeat_body__inst__to_repeat [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					repeat_body__inst__repeat_count [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 						<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-						<TR><TD>to_repeat</TD><TD>to_repeat_raw.value</TD></TR>
+						<TR><TD>repeat_count</TD><TD>repeat_count_m1 + 1</TD></TR>
 					</TABLE>>];
 					repeat_body__inst__repeat_count_m1 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 						<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
 						<TR><TD>repeat_count_m1</TD><TD>repeat_count_m1_raw.value</TD></TR>
 					</TABLE>>];
-					repeat_body__inst__repeat_count [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					repeat_body__inst__to_repeat [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 						<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-						<TR><TD>repeat_count</TD><TD>(repeat_count_m1 + 1)</TD></TR>
+						<TR><TD>to_repeat</TD><TD>to_repeat_raw.value</TD></TR>
 					</TABLE>>];
 				}
+			}
+			subgraph cluster__literal_body {
+				label="Dcmp1::Chunk::LiteralBody";
+				graph[style=dotted];
+
+				literal_body__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="len_literal_separate_pos">0</TD><TD PORT="len_literal_separate_size">1</TD><TD>u1</TD><TD PORT="len_literal_separate_type">len_literal_separate</TD></TR>
+					<TR><TD COLSPAN="4" PORT="len_literal_separate__if">if is_len_literal_separate</TD></TR>
+					<TR><TD PORT="literal_pos">1</TD><TD PORT="literal_size">len_literal</TD><TD></TD><TD PORT="literal_type">literal</TD></TR>
+				</TABLE>>];
+				literal_body__inst__do_store [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>do_store</TD><TD>(is_len_literal_separate ? tag == 209 : tag &amp; 16 != 0)</TD></TR>
+				</TABLE>>];
+				literal_body__inst__is_len_literal_separate [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>is_len_literal_separate</TD><TD>tag &gt;= 208</TD></TR>
+				</TABLE>>];
+				literal_body__inst__len_literal [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>len_literal</TD><TD>(is_len_literal_separate ? len_literal_separate : len_literal_m1_in_tag + 1)</TD></TR>
+				</TABLE>>];
+				literal_body__inst__len_literal_m1_in_tag [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>len_literal_m1_in_tag</TD><TD>tag &amp; 15</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__table_lookup_body {
+				label="Dcmp1::Chunk::TableLookupBody";
+				graph[style=dotted];
+
+				table_lookup_body__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				</TABLE>>];
+				table_lookup_body__inst__lookup_table [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>lookup_table</TD><TD>[[0, 0].pack('C*'), [0, 1].pack('C*'), [0, 2].pack('C*'), [0, 3].pack('C*'), [46, 1].pack('C*'), [62, 1].pack('C*'), [1, 1].pack('C*'), [30, 1].pack('C*'), [255, 255].pack('C*'), [14, 1].pack('C*'), [49, 0].pack('C*'), [17, 18].pack('C*'), [1, 7].pack('C*'), [51, 50].pack('C*'), [18, 57].pack('C*'), [237, 16].pack('C*'), [1, 39].pack('C*'), [35, 34].pack('C*'), [1, 55].pack('C*'), [7, 6].pack('C*'), [1, 23].pack('C*'), [1, 35].pack('C*'), [0, 255].pack('C*'), [0, 47].pack('C*'), [7, 14].pack('C*'), [253, 60].pack('C*'), [1, 53].pack('C*'), [1, 21].pack('C*'), [1, 2].pack('C*'), [0, 7].pack('C*'), [0, 62].pack('C*'), [5, 213].pack('C*'), [2, 1].pack('C*'), [6, 7].pack('C*'), [7, 8].pack('C*'), [48, 1].pack('C*'), [1, 51].pack('C*'), [0, 16].pack('C*'), [23, 22].pack('C*'), [55, 62].pack('C*'), [54, 55].pack('C*')]</TD></TR>
+				</TABLE>>];
+				table_lookup_body__inst__value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>value</TD><TD>lookup_table[tag - 213]</TD></TR>
+				</TABLE>>];
 			}
 		}
 	}
 	dcmp_1__seq:chunks_type -> chunk__seq [style=bold];
 	chunk__seq:tag_type -> dcmp_1__seq:chunks__repeat [color="#404040"];
 	chunk__seq:body_type -> chunk__seq_body_switch [style=bold];
-	chunk__seq_body_switch:case0 -> extended_body__seq [style=bold];
-	chunk__seq_body_switch:case1 -> literal_body__seq [style=bold];
-	chunk__seq_body_switch:case2 -> end_body__seq [style=bold];
-	chunk__seq_body_switch:case3 -> table_lookup_body__seq [style=bold];
-	chunk__seq_body_switch:case4 -> backreference_body__seq [style=bold];
+	chunk__seq_body_switch:case0 -> backreference_body__seq [style=bold];
+	chunk__seq_body_switch:case1 -> end_body__seq [style=bold];
+	chunk__seq_body_switch:case2 -> extended_body__seq [style=bold];
+	chunk__seq_body_switch:case3 -> literal_body__seq [style=bold];
+	chunk__seq_body_switch:case4 -> table_lookup_body__seq [style=bold];
 	chunk__seq:tag_type -> chunk__seq:body_type [color="#404040"];
-	chunk__seq:tag_type -> chunk__seq:body_type [color="#404040"];
-	chunk__seq:tag_type -> chunk__seq:body_type [color="#404040"];
-	chunk__seq:tag_type -> chunk__seq:body_type [color="#404040"];
-	chunk__seq:tag_type -> chunk__seq:body_type [color="#404040"];
-	chunk__seq:tag_type -> chunk__seq:body_type [color="#404040"];
-	chunk__seq:tag_type -> chunk__seq:body_type [color="#404040"];
-	chunk__seq:tag_type -> chunk__seq:body_type [color="#404040"];
-	chunk__seq:tag_type -> chunk__seq:body_type [color="#404040"];
-	chunk__seq:tag_type -> chunk__seq:body_type [color="#404040"];
-	chunk__seq:tag_type -> chunk__seq:body_type [color="#404040"];
-	literal_body__inst__len_literal:len_literal_type -> literal_body__seq:literal_size [color="#404040"];
-	literal_body__inst__is_len_literal_separate:is_len_literal_separate_type -> literal_body__inst__do_store [color="#404040"];
-	literal_body__params:tag_type -> literal_body__inst__do_store [color="#404040"];
-	literal_body__params:tag_type -> literal_body__inst__do_store [color="#404040"];
-	literal_body__params:tag_type -> literal_body__inst__len_literal_m1_in_tag [color="#404040"];
-	literal_body__params:tag_type -> literal_body__inst__is_len_literal_separate [color="#404040"];
-	literal_body__inst__is_len_literal_separate:is_len_literal_separate_type -> literal_body__inst__len_literal [color="#404040"];
-	literal_body__seq:len_literal_separate_type -> literal_body__inst__len_literal [color="#404040"];
-	literal_body__inst__len_literal_m1_in_tag:len_literal_m1_in_tag_type -> literal_body__inst__len_literal [color="#404040"];
-	backreference_body__params:tag_type -> backreference_body__inst__is_index_separate [color="#404040"];
-	backreference_body__params:tag_type -> backreference_body__inst__index_in_tag [color="#404040"];
-	backreference_body__seq:index_separate_minus_type -> backreference_body__inst__index_separate [color="#404040"];
+	backreference_body__inst__is_index_separate:is_index_separate_type -> backreference_body__seq:index_separate_minus__if [color="#404040"];
 	backreference_body__inst__is_index_separate:is_index_separate_type -> backreference_body__inst__index [color="#404040"];
 	backreference_body__inst__index_separate:index_separate_type -> backreference_body__inst__index [color="#404040"];
 	backreference_body__inst__index_in_tag:index_in_tag_type -> backreference_body__inst__index [color="#404040"];
-	table_lookup_body__inst__lookup_table:lookup_table_type -> table_lookup_body__inst__value [color="#404040"];
-	table_lookup_body__params:tag_type -> table_lookup_body__inst__value [color="#404040"];
+	backreference_body__params:tag_type -> backreference_body__inst__index_in_tag [color="#404040"];
+	backreference_body__seq:index_separate_minus_type -> backreference_body__inst__index_separate [color="#404040"];
+	backreference_body__params:tag_type -> backreference_body__inst__is_index_separate [color="#404040"];
 	extended_body__seq:body_type -> extended_body__seq_body_switch [style=bold];
 	extended_body__seq_body_switch:case0 -> repeat_body__seq [style=bold];
 	extended_body__seq:tag_type -> extended_body__seq:body_type [color="#404040"];
 	repeat_body__seq:to_repeat_raw_type -> dcmp_variable_length_integer__seq [style=bold];
 	repeat_body__seq:repeat_count_m1_raw_type -> dcmp_variable_length_integer__seq [style=bold];
-	dcmp_variable_length_integer__inst__value:value_type -> repeat_body__inst__to_repeat [color="#404040"];
-	dcmp_variable_length_integer__inst__value:value_type -> repeat_body__inst__repeat_count_m1 [color="#404040"];
 	repeat_body__inst__repeat_count_m1:repeat_count_m1_type -> repeat_body__inst__repeat_count [color="#404040"];
+	dcmp_variable_length_integer__inst__value:value_type -> repeat_body__inst__repeat_count_m1 [color="#404040"];
+	dcmp_variable_length_integer__inst__value:value_type -> repeat_body__inst__to_repeat [color="#404040"];
+	literal_body__inst__is_len_literal_separate:is_len_literal_separate_type -> literal_body__seq:len_literal_separate__if [color="#404040"];
+	literal_body__inst__len_literal:len_literal_type -> literal_body__seq:literal_size [color="#404040"];
+	literal_body__inst__is_len_literal_separate:is_len_literal_separate_type -> literal_body__inst__do_store [color="#404040"];
+	literal_body__params:tag_type -> literal_body__inst__do_store [color="#404040"];
+	literal_body__params:tag_type -> literal_body__inst__is_len_literal_separate [color="#404040"];
+	literal_body__inst__is_len_literal_separate:is_len_literal_separate_type -> literal_body__inst__len_literal [color="#404040"];
+	literal_body__seq:len_literal_separate_type -> literal_body__inst__len_literal [color="#404040"];
+	literal_body__inst__len_literal_m1_in_tag:len_literal_m1_in_tag_type -> literal_body__inst__len_literal [color="#404040"];
+	literal_body__params:tag_type -> literal_body__inst__len_literal_m1_in_tag [color="#404040"];
+	table_lookup_body__inst__lookup_table:lookup_table_type -> table_lookup_body__inst__value [color="#404040"];
+	table_lookup_body__params:tag_type -> table_lookup_body__inst__value [color="#404040"];
 }

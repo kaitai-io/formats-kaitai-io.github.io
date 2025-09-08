@@ -124,6 +124,7 @@ namespace Kaitai
                     {
                         if (f_nextIfd)
                             return _nextIfd;
+                        f_nextIfd = true;
                         if (NextIfdOfs != 0) {
                             long _pos = m_io.Pos;
                             m_io.Seek(NextIfdOfs);
@@ -133,7 +134,6 @@ namespace Kaitai
                                 _nextIfd = new Ifd(m_io, this, m_root, m_isLe);
                             }
                             m_io.Seek(_pos);
-                            f_nextIfd = true;
                         }
                         return _nextIfd;
                     }
@@ -636,10 +636,10 @@ namespace Kaitai
                     m_parent = p__parent;
                     m_root = p__root;
                     m_isLe = isLe;
-                    f_typeByteLength = false;
                     f_byteLength = false;
-                    f_isImmediateData = false;
                     f_data = false;
+                    f_isImmediateData = false;
+                    f_typeByteLength = false;
                     _read();
                 }
                 private void _read()
@@ -667,19 +667,6 @@ namespace Kaitai
                     _length = m_io.ReadU4be();
                     _ofsOrData = m_io.ReadU4be();
                 }
-                private bool f_typeByteLength;
-                private sbyte _typeByteLength;
-                public sbyte TypeByteLength
-                {
-                    get
-                    {
-                        if (f_typeByteLength)
-                            return _typeByteLength;
-                        _typeByteLength = (sbyte) ((FieldType == FieldTypeEnum.Word ? 2 : (FieldType == FieldTypeEnum.Dword ? 4 : 1)));
-                        f_typeByteLength = true;
-                        return _typeByteLength;
-                    }
-                }
                 private bool f_byteLength;
                 private int _byteLength;
                 public int ByteLength
@@ -688,22 +675,9 @@ namespace Kaitai
                     {
                         if (f_byteLength)
                             return _byteLength;
-                        _byteLength = (int) ((Length * TypeByteLength));
                         f_byteLength = true;
+                        _byteLength = (int) (Length * TypeByteLength);
                         return _byteLength;
-                    }
-                }
-                private bool f_isImmediateData;
-                private bool _isImmediateData;
-                public bool IsImmediateData
-                {
-                    get
-                    {
-                        if (f_isImmediateData)
-                            return _isImmediateData;
-                        _isImmediateData = (bool) (ByteLength <= 4);
-                        f_isImmediateData = true;
-                        return _isImmediateData;
                     }
                 }
                 private bool f_data;
@@ -714,6 +688,7 @@ namespace Kaitai
                     {
                         if (f_data)
                             return _data;
+                        f_data = true;
                         if (!(IsImmediateData)) {
                             KaitaiStream io = M_Root.M_Io;
                             long _pos = io.Pos;
@@ -724,9 +699,34 @@ namespace Kaitai
                                 _data = io.ReadBytes(ByteLength);
                             }
                             io.Seek(_pos);
-                            f_data = true;
                         }
                         return _data;
+                    }
+                }
+                private bool f_isImmediateData;
+                private bool _isImmediateData;
+                public bool IsImmediateData
+                {
+                    get
+                    {
+                        if (f_isImmediateData)
+                            return _isImmediateData;
+                        f_isImmediateData = true;
+                        _isImmediateData = (bool) (ByteLength <= 4);
+                        return _isImmediateData;
+                    }
+                }
+                private bool f_typeByteLength;
+                private sbyte _typeByteLength;
+                public sbyte TypeByteLength
+                {
+                    get
+                    {
+                        if (f_typeByteLength)
+                            return _typeByteLength;
+                        f_typeByteLength = true;
+                        _typeByteLength = (sbyte) ((FieldType == FieldTypeEnum.Word ? 2 : (FieldType == FieldTypeEnum.Dword ? 4 : 1)));
+                        return _typeByteLength;
                     }
                 }
                 private TagEnum _tag;
@@ -750,6 +750,7 @@ namespace Kaitai
                 {
                     if (f_ifd0)
                         return _ifd0;
+                    f_ifd0 = true;
                     long _pos = m_io.Pos;
                     m_io.Seek(Ifd0Ofs);
                     if (m_isLe == true) {
@@ -758,7 +759,6 @@ namespace Kaitai
                         _ifd0 = new Ifd(m_io, this, m_root, m_isLe);
                     }
                     m_io.Seek(_pos);
-                    f_ifd0 = true;
                     return _ifd0;
                 }
             }

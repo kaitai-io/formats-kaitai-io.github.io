@@ -7,8 +7,8 @@
 
 namespace {
     class Tga extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Tga $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Tga $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -39,7 +39,7 @@ namespace {
             if ($this->_m_footer !== null)
                 return $this->_m_footer;
             $_pos = $this->_io->pos();
-            $this->_io->seek(($this->_io()->size() - 26));
+            $this->_io->seek($this->_io()->size() - 26);
             $this->_m_footer = new \Tga\TgaFooter($this->_io, $this, $this->_root);
             $this->_io->seek($_pos);
             return $this->_m_footer;
@@ -101,56 +101,8 @@ namespace {
 }
 
 namespace Tga {
-    class TgaFooter extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Tga $_parent = null, \Tga $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_extAreaOfs = $this->_io->readU4le();
-            $this->_m_devDirOfs = $this->_io->readU4le();
-            $this->_m_versionMagic = $this->_io->readBytes(18);
-        }
-        protected $_m_isValid;
-        public function isValid() {
-            if ($this->_m_isValid !== null)
-                return $this->_m_isValid;
-            $this->_m_isValid = $this->versionMagic() == "\x54\x52\x55\x45\x56\x49\x53\x49\x4F\x4E\x2D\x58\x46\x49\x4C\x45\x2E\x00";
-            return $this->_m_isValid;
-        }
-        protected $_m_extArea;
-        public function extArea() {
-            if ($this->_m_extArea !== null)
-                return $this->_m_extArea;
-            if ($this->isValid()) {
-                $_pos = $this->_io->pos();
-                $this->_io->seek($this->extAreaOfs());
-                $this->_m_extArea = new \Tga\TgaExtArea($this->_io, $this, $this->_root);
-                $this->_io->seek($_pos);
-            }
-            return $this->_m_extArea;
-        }
-        protected $_m_extAreaOfs;
-        protected $_m_devDirOfs;
-        protected $_m_versionMagic;
-
-        /**
-         * Offset to extension area
-         */
-        public function extAreaOfs() { return $this->_m_extAreaOfs; }
-
-        /**
-         * Offset to developer directory
-         */
-        public function devDirOfs() { return $this->_m_devDirOfs; }
-        public function versionMagic() { return $this->_m_versionMagic; }
-    }
-}
-
-namespace Tga {
     class TgaExtArea extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Tga\TgaFooter $_parent = null, \Tga $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Tga\TgaFooter $_parent = null, ?\Tga $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -250,9 +202,63 @@ namespace Tga {
 }
 
 namespace Tga {
+    class TgaFooter extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Tga $_parent = null, ?\Tga $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_extAreaOfs = $this->_io->readU4le();
+            $this->_m_devDirOfs = $this->_io->readU4le();
+            $this->_m_versionMagic = $this->_io->readBytes(18);
+        }
+        protected $_m_extArea;
+        public function extArea() {
+            if ($this->_m_extArea !== null)
+                return $this->_m_extArea;
+            if ($this->isValid()) {
+                $_pos = $this->_io->pos();
+                $this->_io->seek($this->extAreaOfs());
+                $this->_m_extArea = new \Tga\TgaExtArea($this->_io, $this, $this->_root);
+                $this->_io->seek($_pos);
+            }
+            return $this->_m_extArea;
+        }
+        protected $_m_isValid;
+        public function isValid() {
+            if ($this->_m_isValid !== null)
+                return $this->_m_isValid;
+            $this->_m_isValid = $this->versionMagic() == "\x54\x52\x55\x45\x56\x49\x53\x49\x4F\x4E\x2D\x58\x46\x49\x4C\x45\x2E\x00";
+            return $this->_m_isValid;
+        }
+        protected $_m_extAreaOfs;
+        protected $_m_devDirOfs;
+        protected $_m_versionMagic;
+
+        /**
+         * Offset to extension area
+         */
+        public function extAreaOfs() { return $this->_m_extAreaOfs; }
+
+        /**
+         * Offset to developer directory
+         */
+        public function devDirOfs() { return $this->_m_devDirOfs; }
+        public function versionMagic() { return $this->_m_versionMagic; }
+    }
+}
+
+namespace Tga {
     class ColorMapEnum {
         const NO_COLOR_MAP = 0;
         const HAS_COLOR_MAP = 1;
+
+        private const _VALUES = [0 => true, 1 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
@@ -265,5 +271,11 @@ namespace Tga {
         const RLE_COLOR_MAPPED = 9;
         const RLE_TRUE_COLOR = 10;
         const RLE_BW = 11;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 9 => true, 10 => true, 11 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

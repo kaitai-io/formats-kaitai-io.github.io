@@ -25,23 +25,32 @@ const (
 	Specpr_RecordType__DataContinuation Specpr_RecordType = 2
 	Specpr_RecordType__TextContinuation Specpr_RecordType = 3
 )
+var values_Specpr_RecordType = map[Specpr_RecordType]struct{}{0: {}, 1: {}, 2: {}, 3: {}}
+func (v Specpr_RecordType) isDefined() bool {
+	_, ok := values_Specpr_RecordType[v]
+	return ok
+}
 type Specpr struct {
 	Records []*Specpr_Record
 	_io *kaitai.Stream
 	_root *Specpr
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewSpecpr() *Specpr {
 	return &Specpr{
 	}
 }
 
-func (this *Specpr) Read(io *kaitai.Stream, parent interface{}, root *Specpr) (err error) {
+func (this Specpr) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Specpr) Read(io *kaitai.Stream, parent kaitai.Struct, root *Specpr) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	for i := 1;; i++ {
+	for i := 0;; i++ {
 		tmp1, err := this._io.EOF()
 		if err != nil {
 			return err
@@ -58,6 +67,77 @@ func (this *Specpr) Read(io *kaitai.Stream, parent interface{}, root *Specpr) (e
 	}
 	return err
 }
+type Specpr_CoarseTimestamp struct {
+	ScaledSeconds int32
+	_io *kaitai.Stream
+	_root *Specpr
+	_parent *Specpr_DataInitial
+	_f_seconds bool
+	seconds float64
+}
+func NewSpecpr_CoarseTimestamp() *Specpr_CoarseTimestamp {
+	return &Specpr_CoarseTimestamp{
+	}
+}
+
+func (this Specpr_CoarseTimestamp) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Specpr_CoarseTimestamp) Read(io *kaitai.Stream, parent *Specpr_DataInitial, root *Specpr) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp3, err := this._io.ReadS4be()
+	if err != nil {
+		return err
+	}
+	this.ScaledSeconds = int32(tmp3)
+	return err
+}
+func (this *Specpr_CoarseTimestamp) Seconds() (v float64, err error) {
+	if (this._f_seconds) {
+		return this.seconds, nil
+	}
+	this._f_seconds = true
+	this.seconds = float64(this.ScaledSeconds * 24000)
+	return this.seconds, nil
+}
+type Specpr_DataContinuation struct {
+	Cdata []float32
+	_io *kaitai.Stream
+	_root *Specpr
+	_parent *Specpr_Record
+}
+func NewSpecpr_DataContinuation() *Specpr_DataContinuation {
+	return &Specpr_DataContinuation{
+	}
+}
+
+func (this Specpr_DataContinuation) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Specpr_DataContinuation) Read(io *kaitai.Stream, parent *Specpr_Record, root *Specpr) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	for i := 0; i < int(383); i++ {
+		_ = i
+		tmp4, err := this._io.ReadF4be()
+		if err != nil {
+			return err
+		}
+		this.Cdata = append(this.Cdata, tmp4)
+	}
+	return err
+}
+
+/**
+ * The continuation of the data values (383 channels of 32 bit real numbers).
+ */
 type Specpr_DataInitial struct {
 	Ids *Specpr_Identifiers
 	Iscta *Specpr_CoarseTimestamp
@@ -99,172 +179,176 @@ func NewSpecpr_DataInitial() *Specpr_DataInitial {
 	}
 }
 
+func (this Specpr_DataInitial) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Specpr_DataInitial) Read(io *kaitai.Stream, parent *Specpr_Record, root *Specpr) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp3 := NewSpecpr_Identifiers()
-	err = tmp3.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Ids = tmp3
-	tmp4 := NewSpecpr_CoarseTimestamp()
-	err = tmp4.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Iscta = tmp4
-	tmp5 := NewSpecpr_CoarseTimestamp()
+	tmp5 := NewSpecpr_Identifiers()
 	err = tmp5.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Isctb = tmp5
-	tmp6, err := this._io.ReadS4be()
+	this.Ids = tmp5
+	tmp6 := NewSpecpr_CoarseTimestamp()
+	err = tmp6.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Jdatea = int32(tmp6)
-	tmp7, err := this._io.ReadS4be()
+	this.Iscta = tmp6
+	tmp7 := NewSpecpr_CoarseTimestamp()
+	err = tmp7.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Jdateb = int32(tmp7)
-	tmp8 := NewSpecpr_CoarseTimestamp()
-	err = tmp8.Read(this._io, this, this._root)
+	this.Isctb = tmp7
+	tmp8, err := this._io.ReadS4be()
 	if err != nil {
 		return err
 	}
-	this.Istb = tmp8
+	this.Jdatea = int32(tmp8)
 	tmp9, err := this._io.ReadS4be()
 	if err != nil {
 		return err
 	}
-	this.Isra = int32(tmp9)
-	tmp10, err := this._io.ReadS4be()
+	this.Jdateb = int32(tmp9)
+	tmp10 := NewSpecpr_CoarseTimestamp()
+	err = tmp10.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Isdec = int32(tmp10)
+	this.Istb = tmp10
 	tmp11, err := this._io.ReadS4be()
 	if err != nil {
 		return err
 	}
-	this.Itchan = int32(tmp11)
+	this.Isra = int32(tmp11)
 	tmp12, err := this._io.ReadS4be()
 	if err != nil {
 		return err
 	}
-	this.Irmas = int32(tmp12)
+	this.Isdec = int32(tmp12)
 	tmp13, err := this._io.ReadS4be()
 	if err != nil {
 		return err
 	}
-	this.Revs = int32(tmp13)
-	for i := 0; i < int(2); i++ {
-		_ = i
-		tmp14, err := this._io.ReadS4be()
-		if err != nil {
-			return err
-		}
-		this.Iband = append(this.Iband, tmp14)
+	this.Itchan = int32(tmp13)
+	tmp14, err := this._io.ReadS4be()
+	if err != nil {
+		return err
 	}
+	this.Irmas = int32(tmp14)
 	tmp15, err := this._io.ReadS4be()
 	if err != nil {
 		return err
 	}
-	this.Irwav = int32(tmp15)
-	tmp16, err := this._io.ReadS4be()
-	if err != nil {
-		return err
+	this.Revs = int32(tmp15)
+	for i := 0; i < int(2); i++ {
+		_ = i
+		tmp16, err := this._io.ReadS4be()
+		if err != nil {
+			return err
+		}
+		this.Iband = append(this.Iband, tmp16)
 	}
-	this.Irespt = int32(tmp16)
 	tmp17, err := this._io.ReadS4be()
 	if err != nil {
 		return err
 	}
-	this.Irecno = int32(tmp17)
+	this.Irwav = int32(tmp17)
 	tmp18, err := this._io.ReadS4be()
 	if err != nil {
 		return err
 	}
-	this.Itpntr = int32(tmp18)
-	tmp19, err := this._io.ReadBytes(int(60))
+	this.Irespt = int32(tmp18)
+	tmp19, err := this._io.ReadS4be()
 	if err != nil {
 		return err
 	}
-	tmp19 = kaitai.BytesStripRight(tmp19, 32)
-	this.Ihist = string(tmp19)
+	this.Irecno = int32(tmp19)
+	tmp20, err := this._io.ReadS4be()
+	if err != nil {
+		return err
+	}
+	this.Itpntr = int32(tmp20)
+	tmp21, err := this._io.ReadBytes(int(60))
+	if err != nil {
+		return err
+	}
+	tmp21 = kaitai.BytesStripRight(tmp21, 32)
+	this.Ihist = string(tmp21)
 	for i := 0; i < int(4); i++ {
 		_ = i
-		tmp20, err := this._io.ReadBytes(int(74))
+		tmp22, err := this._io.ReadBytes(int(74))
 		if err != nil {
 			return err
 		}
-		tmp20 = tmp20
-		this.Mhist = append(this.Mhist, string(tmp20))
+		tmp22 = tmp22
+		this.Mhist = append(this.Mhist, string(tmp22))
 	}
-	tmp21, err := this._io.ReadS4be()
+	tmp23, err := this._io.ReadS4be()
 	if err != nil {
 		return err
 	}
-	this.Nruns = int32(tmp21)
-	tmp22 := NewSpecpr_IllumAngle()
-	err = tmp22.Read(this._io, this, this._root)
+	this.Nruns = int32(tmp23)
+	tmp24 := NewSpecpr_IllumAngle()
+	err = tmp24.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Siangl = tmp22
-	tmp23 := NewSpecpr_IllumAngle()
-	err = tmp23.Read(this._io, this, this._root)
+	this.Siangl = tmp24
+	tmp25 := NewSpecpr_IllumAngle()
+	err = tmp25.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Seangl = tmp23
-	tmp24, err := this._io.ReadS4be()
-	if err != nil {
-		return err
-	}
-	this.Sphase = int32(tmp24)
-	tmp25, err := this._io.ReadS4be()
-	if err != nil {
-		return err
-	}
-	this.Iwtrns = int32(tmp25)
+	this.Seangl = tmp25
 	tmp26, err := this._io.ReadS4be()
 	if err != nil {
 		return err
 	}
-	this.Itimch = int32(tmp26)
-	tmp27, err := this._io.ReadF4be()
+	this.Sphase = int32(tmp26)
+	tmp27, err := this._io.ReadS4be()
 	if err != nil {
 		return err
 	}
-	this.Xnrm = float32(tmp27)
-	tmp28, err := this._io.ReadF4be()
+	this.Iwtrns = int32(tmp27)
+	tmp28, err := this._io.ReadS4be()
 	if err != nil {
 		return err
 	}
-	this.Scatim = float32(tmp28)
+	this.Itimch = int32(tmp28)
 	tmp29, err := this._io.ReadF4be()
 	if err != nil {
 		return err
 	}
-	this.Timint = float32(tmp29)
+	this.Xnrm = float32(tmp29)
 	tmp30, err := this._io.ReadF4be()
 	if err != nil {
 		return err
 	}
-	this.Tempd = float32(tmp30)
+	this.Scatim = float32(tmp30)
+	tmp31, err := this._io.ReadF4be()
+	if err != nil {
+		return err
+	}
+	this.Timint = float32(tmp31)
+	tmp32, err := this._io.ReadF4be()
+	if err != nil {
+		return err
+	}
+	this.Tempd = float32(tmp32)
 	for i := 0; i < int(256); i++ {
 		_ = i
-		tmp31, err := this._io.ReadF4be()
+		tmp33, err := this._io.ReadF4be()
 		if err != nil {
 			return err
 		}
-		this.Data = append(this.Data, tmp31)
+		this.Data = append(this.Data, tmp33)
 	}
 	return err
 }
@@ -276,8 +360,8 @@ func (this *Specpr_DataInitial) PhaseAngleArcsec() (v float64, err error) {
 	if (this._f_phaseAngleArcsec) {
 		return this.phaseAngleArcsec, nil
 	}
-	this.phaseAngleArcsec = float64((this.Sphase / 1500))
 	this._f_phaseAngleArcsec = true
+	this.phaseAngleArcsec = float64(this.Sphase / 1500)
 	return this.phaseAngleArcsec, nil
 }
 
@@ -397,39 +481,6 @@ func (this *Specpr_DataInitial) PhaseAngleArcsec() (v float64, err error) {
 /**
  * The spectral data (256 channels of 32 bit real data numbers).
  */
-type Specpr_CoarseTimestamp struct {
-	ScaledSeconds int32
-	_io *kaitai.Stream
-	_root *Specpr
-	_parent *Specpr_DataInitial
-	_f_seconds bool
-	seconds float64
-}
-func NewSpecpr_CoarseTimestamp() *Specpr_CoarseTimestamp {
-	return &Specpr_CoarseTimestamp{
-	}
-}
-
-func (this *Specpr_CoarseTimestamp) Read(io *kaitai.Stream, parent *Specpr_DataInitial, root *Specpr) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp32, err := this._io.ReadS4be()
-	if err != nil {
-		return err
-	}
-	this.ScaledSeconds = int32(tmp32)
-	return err
-}
-func (this *Specpr_CoarseTimestamp) Seconds() (v float64, err error) {
-	if (this._f_seconds) {
-		return this.seconds, nil
-	}
-	this.seconds = float64((this.ScaledSeconds * 24000))
-	this._f_seconds = true
-	return this.seconds, nil
-}
 
 /**
  * it is big endian
@@ -453,62 +504,66 @@ func NewSpecpr_Icflag() *Specpr_Icflag {
 	}
 }
 
+func (this Specpr_Icflag) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Specpr_Icflag) Read(io *kaitai.Stream, parent *Specpr_Record, root *Specpr) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp33, err := this._io.ReadBitsIntBe(26)
+	tmp34, err := this._io.ReadBitsIntBe(26)
 	if err != nil {
 		return err
 	}
-	this.Reserved = tmp33
-	tmp34, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.IsctbType = tmp34 != 0
+	this.Reserved = tmp34
 	tmp35, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.IsctaType = tmp35 != 0
+	this.IsctbType = tmp35 != 0
 	tmp36, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.CoordinateMode = tmp36 != 0
+	this.IsctaType = tmp36 != 0
 	tmp37, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Errors = tmp37 != 0
+	this.CoordinateMode = tmp37 != 0
 	tmp38, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Text = tmp38 != 0
+	this.Errors = tmp38 != 0
 	tmp39, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Continuation = tmp39 != 0
+	this.Text = tmp39 != 0
+	tmp40, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Continuation = tmp40 != 0
 	return err
 }
 func (this *Specpr_Icflag) Type() (v Specpr_RecordType, err error) {
 	if (this._f_type) {
 		return this.type, nil
 	}
-	tmp40 := 0
-	if this.Text {
-		tmp40 = 1
-	}
+	this._f_type = true
 	tmp41 := 0
-	if this.Continuation {
+	if this.Text {
 		tmp41 = 1
 	}
-	this.type = Specpr_RecordType(Specpr_RecordType(((tmp40 * 1) + (tmp41 * 2))))
-	this._f_type = true
+	tmp42 := 0
+	if this.Continuation {
+		tmp42 = 1
+	}
+	this.type = Specpr_RecordType(Specpr_RecordType(tmp41 * 1 + tmp42 * 2))
 	return this.type, nil
 }
 
@@ -548,49 +603,23 @@ func (this *Specpr_Icflag) Type() (v Specpr_RecordType, err error) {
  *   # channels (limited by arrays of 4864)
  *   # or 19860 characters of text (bit 1=1).
  */
-type Specpr_DataContinuation struct {
-	Cdata []float32
-	_io *kaitai.Stream
-	_root *Specpr
-	_parent *Specpr_Record
-}
-func NewSpecpr_DataContinuation() *Specpr_DataContinuation {
-	return &Specpr_DataContinuation{
-	}
-}
-
-func (this *Specpr_DataContinuation) Read(io *kaitai.Stream, parent *Specpr_Record, root *Specpr) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	for i := 0; i < int(383); i++ {
-		_ = i
-		tmp42, err := this._io.ReadF4be()
-		if err != nil {
-			return err
-		}
-		this.Cdata = append(this.Cdata, tmp42)
-	}
-	return err
-}
-
-/**
- * The continuation of the data values (383 channels of 32 bit real numbers).
- */
 type Specpr_Identifiers struct {
 	Ititle string
 	Usernm string
 	_io *kaitai.Stream
 	_root *Specpr
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewSpecpr_Identifiers() *Specpr_Identifiers {
 	return &Specpr_Identifiers{
 	}
 }
 
-func (this *Specpr_Identifiers) Read(io *kaitai.Stream, parent interface{}, root *Specpr) (err error) {
+func (this Specpr_Identifiers) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Specpr_Identifiers) Read(io *kaitai.Stream, parent kaitai.Struct, root *Specpr) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -622,16 +651,20 @@ type Specpr_IllumAngle struct {
 	_io *kaitai.Stream
 	_root *Specpr
 	_parent *Specpr_DataInitial
-	_f_secondsTotal bool
-	secondsTotal int
-	_f_minutesTotal bool
-	minutesTotal int
 	_f_degreesTotal bool
 	degreesTotal int
+	_f_minutesTotal bool
+	minutesTotal int
+	_f_secondsTotal bool
+	secondsTotal int
 }
 func NewSpecpr_IllumAngle() *Specpr_IllumAngle {
 	return &Specpr_IllumAngle{
 	}
+}
+
+func (this Specpr_IllumAngle) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Specpr_IllumAngle) Read(io *kaitai.Stream, parent *Specpr_DataInitial, root *Specpr) (err error) {
@@ -646,96 +679,41 @@ func (this *Specpr_IllumAngle) Read(io *kaitai.Stream, parent *Specpr_DataInitia
 	this.Angl = int32(tmp45)
 	return err
 }
-func (this *Specpr_IllumAngle) SecondsTotal() (v int, err error) {
-	if (this._f_secondsTotal) {
-		return this.secondsTotal, nil
+func (this *Specpr_IllumAngle) DegreesTotal() (v int, err error) {
+	if (this._f_degreesTotal) {
+		return this.degreesTotal, nil
 	}
-	this.secondsTotal = int((this.Angl / 6000))
-	this._f_secondsTotal = true
-	return this.secondsTotal, nil
+	this._f_degreesTotal = true
+	tmp46, err := this.MinutesTotal()
+	if err != nil {
+		return 0, err
+	}
+	this.degreesTotal = int(tmp46 / 60)
+	return this.degreesTotal, nil
 }
 func (this *Specpr_IllumAngle) MinutesTotal() (v int, err error) {
 	if (this._f_minutesTotal) {
 		return this.minutesTotal, nil
 	}
-	tmp46, err := this.SecondsTotal()
+	this._f_minutesTotal = true
+	tmp47, err := this.SecondsTotal()
 	if err != nil {
 		return 0, err
 	}
-	this.minutesTotal = int((tmp46 / 60))
-	this._f_minutesTotal = true
+	this.minutesTotal = int(tmp47 / 60)
 	return this.minutesTotal, nil
 }
-func (this *Specpr_IllumAngle) DegreesTotal() (v int, err error) {
-	if (this._f_degreesTotal) {
-		return this.degreesTotal, nil
+func (this *Specpr_IllumAngle) SecondsTotal() (v int, err error) {
+	if (this._f_secondsTotal) {
+		return this.secondsTotal, nil
 	}
-	tmp47, err := this.MinutesTotal()
-	if err != nil {
-		return 0, err
-	}
-	this.degreesTotal = int((tmp47 / 60))
-	this._f_degreesTotal = true
-	return this.degreesTotal, nil
+	this._f_secondsTotal = true
+	this.secondsTotal = int(this.Angl / 6000)
+	return this.secondsTotal, nil
 }
 
 /**
  * (Integer*4 number, in arc-seconds*6000). (90 degrees=1944000000; -90 deg <= angle <= 90 deg)
- */
-type Specpr_TextInitial struct {
-	Ids *Specpr_Identifiers
-	Itxtpt uint32
-	Itxtch int32
-	Itext string
-	_io *kaitai.Stream
-	_root *Specpr
-	_parent *Specpr_Record
-}
-func NewSpecpr_TextInitial() *Specpr_TextInitial {
-	return &Specpr_TextInitial{
-	}
-}
-
-func (this *Specpr_TextInitial) Read(io *kaitai.Stream, parent *Specpr_Record, root *Specpr) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp48 := NewSpecpr_Identifiers()
-	err = tmp48.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Ids = tmp48
-	tmp49, err := this._io.ReadU4be()
-	if err != nil {
-		return err
-	}
-	this.Itxtpt = uint32(tmp49)
-	tmp50, err := this._io.ReadS4be()
-	if err != nil {
-		return err
-	}
-	this.Itxtch = int32(tmp50)
-	tmp51, err := this._io.ReadBytes(int(1476))
-	if err != nil {
-		return err
-	}
-	tmp51 = tmp51
-	this.Itext = string(tmp51)
-	return err
-}
-
-/**
- * Text data record pointer. This pointer points  to a data record where additional text may be may be found.
- */
-
-/**
- * The number of text characters (maximum= 19860).
- */
-
-/**
- * 1476 characters of text.  Text has embedded newlines so the number of lines available is limited only by the number of characters available.
  */
 type Specpr_Record struct {
 	Icflag *Specpr_Icflag
@@ -750,85 +728,89 @@ func NewSpecpr_Record() *Specpr_Record {
 	}
 }
 
+func (this Specpr_Record) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Specpr_Record) Read(io *kaitai.Stream, parent *Specpr, root *Specpr) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp52 := NewSpecpr_Icflag()
-	err = tmp52.Read(this._io, this, this._root)
+	tmp48 := NewSpecpr_Icflag()
+	err = tmp48.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Icflag = tmp52
-	tmp53, err := this.Icflag.Type()
+	this.Icflag = tmp48
+	tmp49, err := this.Icflag.Type()
 	if err != nil {
 		return err
 	}
-	switch (tmp53) {
+	switch (tmp49) {
+	case Specpr_RecordType__DataContinuation:
+		tmp50, err := this._io.ReadBytes(int(1536 - 4))
+		if err != nil {
+			return err
+		}
+		tmp50 = tmp50
+		this._raw_Content = tmp50
+		_io__raw_Content := kaitai.NewStream(bytes.NewReader(this._raw_Content))
+		tmp51 := NewSpecpr_DataContinuation()
+		err = tmp51.Read(_io__raw_Content, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Content = tmp51
 	case Specpr_RecordType__DataInitial:
-		tmp54, err := this._io.ReadBytes(int((1536 - 4)))
+		tmp52, err := this._io.ReadBytes(int(1536 - 4))
+		if err != nil {
+			return err
+		}
+		tmp52 = tmp52
+		this._raw_Content = tmp52
+		_io__raw_Content := kaitai.NewStream(bytes.NewReader(this._raw_Content))
+		tmp53 := NewSpecpr_DataInitial()
+		err = tmp53.Read(_io__raw_Content, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Content = tmp53
+	case Specpr_RecordType__TextContinuation:
+		tmp54, err := this._io.ReadBytes(int(1536 - 4))
 		if err != nil {
 			return err
 		}
 		tmp54 = tmp54
 		this._raw_Content = tmp54
 		_io__raw_Content := kaitai.NewStream(bytes.NewReader(this._raw_Content))
-		tmp55 := NewSpecpr_DataInitial()
+		tmp55 := NewSpecpr_TextContinuation()
 		err = tmp55.Read(_io__raw_Content, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Content = tmp55
-	case Specpr_RecordType__DataContinuation:
-		tmp56, err := this._io.ReadBytes(int((1536 - 4)))
+	case Specpr_RecordType__TextInitial:
+		tmp56, err := this._io.ReadBytes(int(1536 - 4))
 		if err != nil {
 			return err
 		}
 		tmp56 = tmp56
 		this._raw_Content = tmp56
 		_io__raw_Content := kaitai.NewStream(bytes.NewReader(this._raw_Content))
-		tmp57 := NewSpecpr_DataContinuation()
+		tmp57 := NewSpecpr_TextInitial()
 		err = tmp57.Read(_io__raw_Content, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Content = tmp57
-	case Specpr_RecordType__TextContinuation:
-		tmp58, err := this._io.ReadBytes(int((1536 - 4)))
+	default:
+		tmp58, err := this._io.ReadBytes(int(1536 - 4))
 		if err != nil {
 			return err
 		}
 		tmp58 = tmp58
 		this._raw_Content = tmp58
-		_io__raw_Content := kaitai.NewStream(bytes.NewReader(this._raw_Content))
-		tmp59 := NewSpecpr_TextContinuation()
-		err = tmp59.Read(_io__raw_Content, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Content = tmp59
-	case Specpr_RecordType__TextInitial:
-		tmp60, err := this._io.ReadBytes(int((1536 - 4)))
-		if err != nil {
-			return err
-		}
-		tmp60 = tmp60
-		this._raw_Content = tmp60
-		_io__raw_Content := kaitai.NewStream(bytes.NewReader(this._raw_Content))
-		tmp61 := NewSpecpr_TextInitial()
-		err = tmp61.Read(_io__raw_Content, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Content = tmp61
-	default:
-		tmp62, err := this._io.ReadBytes(int((1536 - 4)))
-		if err != nil {
-			return err
-		}
-		tmp62 = tmp62
-		this._raw_Content = tmp62
 	}
 	return err
 }
@@ -847,20 +829,83 @@ func NewSpecpr_TextContinuation() *Specpr_TextContinuation {
 	}
 }
 
+func (this Specpr_TextContinuation) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Specpr_TextContinuation) Read(io *kaitai.Stream, parent *Specpr_Record, root *Specpr) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp63, err := this._io.ReadBytes(int(1532))
+	tmp59, err := this._io.ReadBytes(int(1532))
 	if err != nil {
 		return err
 	}
-	tmp63 = tmp63
-	this.Tdata = string(tmp63)
+	tmp59 = tmp59
+	this.Tdata = string(tmp59)
 	return err
 }
 
 /**
  * 1532 characters of text.
+ */
+type Specpr_TextInitial struct {
+	Ids *Specpr_Identifiers
+	Itxtpt uint32
+	Itxtch int32
+	Itext string
+	_io *kaitai.Stream
+	_root *Specpr
+	_parent *Specpr_Record
+}
+func NewSpecpr_TextInitial() *Specpr_TextInitial {
+	return &Specpr_TextInitial{
+	}
+}
+
+func (this Specpr_TextInitial) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Specpr_TextInitial) Read(io *kaitai.Stream, parent *Specpr_Record, root *Specpr) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp60 := NewSpecpr_Identifiers()
+	err = tmp60.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Ids = tmp60
+	tmp61, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.Itxtpt = uint32(tmp61)
+	tmp62, err := this._io.ReadS4be()
+	if err != nil {
+		return err
+	}
+	this.Itxtch = int32(tmp62)
+	tmp63, err := this._io.ReadBytes(int(1476))
+	if err != nil {
+		return err
+	}
+	tmp63 = tmp63
+	this.Itext = string(tmp63)
+	return err
+}
+
+/**
+ * Text data record pointer. This pointer points  to a data record where additional text may be may be found.
+ */
+
+/**
+ * The number of text characters (maximum= 19860).
+ */
+
+/**
+ * 1476 characters of text.  Text has embedded newlines so the number of lines available is limited only by the number of characters available.
  */

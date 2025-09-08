@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
-from enum import Enum
+from enum import IntEnum
 
 
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Quake2Md2(KaitaiStruct):
     """The MD2 format is used for 3D animated models in id Sofware's Quake II.
@@ -88,13 +89,13 @@ class Quake2Md2(KaitaiStruct):
        Source - http://wiki.polycount.com/wiki/OldSiteResourcesQuake2FramesList
     """
 
-    class GlPrimitive(Enum):
+    class GlPrimitive(IntEnum):
         triangle_strip = 0
         triangle_fan = 1
     def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
+        super(Quake2Md2, self).__init__(_io)
         self._parent = _parent
-        self._root = _root if _root else self
+        self._root = _root or self
         self._read()
 
     def _read(self):
@@ -120,31 +121,51 @@ class Quake2Md2(KaitaiStruct):
         self.ofs_gl_cmds = self._io.read_u4le()
         self.ofs_eof = self._io.read_u4le()
 
-    class Vertex(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
 
-        def _read(self):
-            self.position = Quake2Md2.CompressedVec(self._io, self, self._root)
-            self.normal_index = self._io.read_u1()
+    def _fetch_instances(self):
+        pass
+        _ = self.frames
+        if hasattr(self, '_m_frames'):
+            pass
+            for i in range(len(self._m_frames)):
+                pass
+                self._m_frames[i]._fetch_instances()
 
-        @property
-        def normal(self):
-            if hasattr(self, '_m_normal'):
-                return self._m_normal
 
-            self._m_normal = self._root.anorms_table[self.normal_index]
-            return getattr(self, '_m_normal', None)
+        _ = self.gl_cmds
+        if hasattr(self, '_m_gl_cmds'):
+            pass
+            self._m_gl_cmds._fetch_instances()
+
+        _ = self.skins
+        if hasattr(self, '_m_skins'):
+            pass
+            for i in range(len(self._m_skins)):
+                pass
+
+
+        _ = self.tex_coords
+        if hasattr(self, '_m_tex_coords'):
+            pass
+            for i in range(len(self._m_tex_coords)):
+                pass
+                self._m_tex_coords[i]._fetch_instances()
+
+
+        _ = self.triangles
+        if hasattr(self, '_m_triangles'):
+            pass
+            for i in range(len(self._m_triangles)):
+                pass
+                self._m_triangles[i]._fetch_instances()
+
 
 
     class CompressedVec(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(Quake2Md2.CompressedVec, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -152,12 +173,16 @@ class Quake2Md2(KaitaiStruct):
             self.y_compressed = self._io.read_u1()
             self.z_compressed = self._io.read_u1()
 
+
+        def _fetch_instances(self):
+            pass
+
         @property
         def x(self):
             if hasattr(self, '_m_x'):
                 return self._m_x
 
-            self._m_x = ((self.x_compressed * self._parent._parent.scale.x) + self._parent._parent.translate.x)
+            self._m_x = self.x_compressed * self._parent._parent.scale.x + self._parent._parent.translate.x
             return getattr(self, '_m_x', None)
 
         @property
@@ -165,7 +190,7 @@ class Quake2Md2(KaitaiStruct):
             if hasattr(self, '_m_y'):
                 return self._m_y
 
-            self._m_y = ((self.y_compressed * self._parent._parent.scale.y) + self._parent._parent.translate.y)
+            self._m_y = self.y_compressed * self._parent._parent.scale.y + self._parent._parent.translate.y
             return getattr(self, '_m_y', None)
 
         @property
@@ -173,126 +198,42 @@ class Quake2Md2(KaitaiStruct):
             if hasattr(self, '_m_z'):
                 return self._m_z
 
-            self._m_z = ((self.z_compressed * self._parent._parent.scale.z) + self._parent._parent.translate.z)
+            self._m_z = self.z_compressed * self._parent._parent.scale.z + self._parent._parent.translate.z
             return getattr(self, '_m_z', None)
-
-
-    class Triangle(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.vertex_indices = []
-            for i in range(3):
-                self.vertex_indices.append(self._io.read_u2le())
-
-            self.tex_point_indices = []
-            for i in range(3):
-                self.tex_point_indices.append(self._io.read_u2le())
-
 
 
     class Frame(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(Quake2Md2.Frame, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
             self.scale = Quake2Md2.Vec3f(self._io, self, self._root)
             self.translate = Quake2Md2.Vec3f(self._io, self, self._root)
-            self.name = (KaitaiStream.bytes_terminate(self._io.read_bytes(16), 0, False)).decode(u"ascii")
+            self.name = (KaitaiStream.bytes_terminate(self._io.read_bytes(16), 0, False)).decode(u"ASCII")
             self.vertices = []
             for i in range(self._root.vertices_per_frame):
                 self.vertices.append(Quake2Md2.Vertex(self._io, self, self._root))
 
 
 
-    class GlCmdsList(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
+        def _fetch_instances(self):
+            pass
+            self.scale._fetch_instances()
+            self.translate._fetch_instances()
+            for i in range(len(self.vertices)):
+                pass
+                self.vertices[i]._fetch_instances()
 
-        def _read(self):
-            if not (self._io.is_eof()):
-                self.items = []
-                i = 0
-                while True:
-                    _ = Quake2Md2.GlCmd(self._io, self, self._root)
-                    self.items.append(_)
-                    if _.cmd_num_vertices == 0:
-                        break
-                    i += 1
-
-
-
-    class TexPoint(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.s_px = self._io.read_u2le()
-            self.t_px = self._io.read_u2le()
-
-        @property
-        def s_normalized(self):
-            if hasattr(self, '_m_s_normalized'):
-                return self._m_s_normalized
-
-            self._m_s_normalized = ((self.s_px + 0.0) / self._root.skin_width_px)
-            return getattr(self, '_m_s_normalized', None)
-
-        @property
-        def t_normalized(self):
-            if hasattr(self, '_m_t_normalized'):
-                return self._m_t_normalized
-
-            self._m_t_normalized = ((self.t_px + 0.0) / self._root.skin_height_px)
-            return getattr(self, '_m_t_normalized', None)
-
-
-    class Vec3f(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.x = self._io.read_f4le()
-            self.y = self._io.read_f4le()
-            self.z = self._io.read_f4le()
-
-
-    class GlVertex(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.tex_coords_normalized = []
-            for i in range(2):
-                self.tex_coords_normalized.append(self._io.read_f4le())
-
-            self.vertex_index = self._io.read_u4le()
 
 
     class GlCmd(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(Quake2Md2.GlCmd, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -300,6 +241,14 @@ class Quake2Md2(KaitaiStruct):
             self.vertices = []
             for i in range(self.num_vertices):
                 self.vertices.append(Quake2Md2.GlVertex(self._io, self, self._root))
+
+
+
+        def _fetch_instances(self):
+            pass
+            for i in range(len(self.vertices)):
+                pass
+                self.vertices[i]._fetch_instances()
 
 
         @property
@@ -319,6 +268,170 @@ class Quake2Md2(KaitaiStruct):
             return getattr(self, '_m_primitive', None)
 
 
+    class GlCmdsList(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(Quake2Md2.GlCmdsList, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            if (not (self._io.is_eof())):
+                pass
+                self.items = []
+                i = 0
+                while True:
+                    _ = Quake2Md2.GlCmd(self._io, self, self._root)
+                    self.items.append(_)
+                    if _.cmd_num_vertices == 0:
+                        break
+                    i += 1
+
+
+
+        def _fetch_instances(self):
+            pass
+            if (not (self._io.is_eof())):
+                pass
+                for i in range(len(self.items)):
+                    pass
+                    self.items[i]._fetch_instances()
+
+
+
+
+    class GlVertex(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(Quake2Md2.GlVertex, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.tex_coords_normalized = []
+            for i in range(2):
+                self.tex_coords_normalized.append(self._io.read_f4le())
+
+            self.vertex_index = self._io.read_u4le()
+
+
+        def _fetch_instances(self):
+            pass
+            for i in range(len(self.tex_coords_normalized)):
+                pass
+
+
+
+    class TexPoint(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(Quake2Md2.TexPoint, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.s_px = self._io.read_u2le()
+            self.t_px = self._io.read_u2le()
+
+
+        def _fetch_instances(self):
+            pass
+
+        @property
+        def s_normalized(self):
+            if hasattr(self, '_m_s_normalized'):
+                return self._m_s_normalized
+
+            self._m_s_normalized = (self.s_px + 0.0) / self._root.skin_width_px
+            return getattr(self, '_m_s_normalized', None)
+
+        @property
+        def t_normalized(self):
+            if hasattr(self, '_m_t_normalized'):
+                return self._m_t_normalized
+
+            self._m_t_normalized = (self.t_px + 0.0) / self._root.skin_height_px
+            return getattr(self, '_m_t_normalized', None)
+
+
+    class Triangle(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(Quake2Md2.Triangle, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.vertex_indices = []
+            for i in range(3):
+                self.vertex_indices.append(self._io.read_u2le())
+
+            self.tex_point_indices = []
+            for i in range(3):
+                self.tex_point_indices.append(self._io.read_u2le())
+
+
+
+        def _fetch_instances(self):
+            pass
+            for i in range(len(self.vertex_indices)):
+                pass
+
+            for i in range(len(self.tex_point_indices)):
+                pass
+
+
+
+    class Vec3f(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(Quake2Md2.Vec3f, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.x = self._io.read_f4le()
+            self.y = self._io.read_f4le()
+            self.z = self._io.read_f4le()
+
+
+        def _fetch_instances(self):
+            pass
+
+
+    class Vertex(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(Quake2Md2.Vertex, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.position = Quake2Md2.CompressedVec(self._io, self, self._root)
+            self.normal_index = self._io.read_u1()
+
+
+        def _fetch_instances(self):
+            pass
+            self.position._fetch_instances()
+
+        @property
+        def normal(self):
+            if hasattr(self, '_m_normal'):
+                return self._m_normal
+
+            self._m_normal = self._root.anorms_table[self.normal_index]
+            return getattr(self, '_m_normal', None)
+
+
+    @property
+    def anim_names(self):
+        if hasattr(self, '_m_anim_names'):
+            return self._m_anim_names
+
+        self._m_anim_names = [u"stand", u"run", u"attack", u"pain1", u"pain2", u"pain3", u"jump", u"flip", u"salute", u"taunt", u"wave", u"point", u"crstnd", u"crwalk", u"crattak", u"crpain", u"crdeath", u"death1", u"death2", u"death3"]
+        return getattr(self, '_m_anim_names', None)
+
     @property
     def anim_num_frames(self):
         if hasattr(self, '_m_anim_num_frames'):
@@ -326,6 +439,14 @@ class Quake2Md2(KaitaiStruct):
 
         self._m_anim_num_frames = b"\x28\x06\x08\x04\x04\x04\x06\x0C\x0B\x11\x0B\x0C\x13\x06\x09\x04\x05\x06\x06\x08"
         return getattr(self, '_m_anim_num_frames', None)
+
+    @property
+    def anim_start_indices(self):
+        if hasattr(self, '_m_anim_start_indices'):
+            return self._m_anim_start_indices
+
+        self._m_anim_start_indices = b"\x00\x28\x2E\x36\x3A\x3E\x42\x48\x54\x5F\x70\x7B\x87\x9A\xA0\xA9\xAD\xB2\xB8\xBE"
+        return getattr(self, '_m_anim_start_indices', None)
 
     @property
     def anorms_table(self):
@@ -339,6 +460,50 @@ class Quake2Md2(KaitaiStruct):
 
         self._m_anorms_table = [[-0.525731, 0.000000, 0.850651], [-0.442863, 0.238856, 0.864188], [-0.295242, 0.000000, 0.955423], [-0.309017, 0.500000, 0.809017], [-0.162460, 0.262866, 0.951056], [0.000000, 0.000000, 1.000000], [0.000000, 0.850651, 0.525731], [-0.147621, 0.716567, 0.681718], [0.147621, 0.716567, 0.681718], [0.000000, 0.525731, 0.850651], [0.309017, 0.500000, 0.809017], [0.525731, 0.000000, 0.850651], [0.295242, 0.000000, 0.955423], [0.442863, 0.238856, 0.864188], [0.162460, 0.262866, 0.951056], [-0.681718, 0.147621, 0.716567], [-0.809017, 0.309017, 0.500000], [-0.587785, 0.425325, 0.688191], [-0.850651, 0.525731, 0.000000], [-0.864188, 0.442863, 0.238856], [-0.716567, 0.681718, 0.147621], [-0.688191, 0.587785, 0.425325], [-0.500000, 0.809017, 0.309017], [-0.238856, 0.864188, 0.442863], [-0.425325, 0.688191, 0.587785], [-0.716567, 0.681718, -0.147621], [-0.500000, 0.809017, -0.309017], [-0.525731, 0.850651, 0.000000], [0.000000, 0.850651, -0.525731], [-0.238856, 0.864188, -0.442863], [0.000000, 0.955423, -0.295242], [-0.262866, 0.951056, -0.162460], [0.000000, 1.000000, 0.000000], [0.000000, 0.955423, 0.295242], [-0.262866, 0.951056, 0.162460], [0.238856, 0.864188, 0.442863], [0.262866, 0.951056, 0.162460], [0.500000, 0.809017, 0.309017], [0.238856, 0.864188, -0.442863], [0.262866, 0.951056, -0.162460], [0.500000, 0.809017, -0.309017], [0.850651, 0.525731, 0.000000], [0.716567, 0.681718, 0.147621], [0.716567, 0.681718, -0.147621], [0.525731, 0.850651, 0.000000], [0.425325, 0.688191, 0.587785], [0.864188, 0.442863, 0.238856], [0.688191, 0.587785, 0.425325], [0.809017, 0.309017, 0.500000], [0.681718, 0.147621, 0.716567], [0.587785, 0.425325, 0.688191], [0.955423, 0.295242, 0.000000], [1.000000, 0.000000, 0.000000], [0.951056, 0.162460, 0.262866], [0.850651, -0.525731, 0.000000], [0.955423, -0.295242, 0.000000], [0.864188, -0.442863, 0.238856], [0.951056, -0.162460, 0.262866], [0.809017, -0.309017, 0.500000], [0.681718, -0.147621, 0.716567], [0.850651, 0.000000, 0.525731], [0.864188, 0.442863, -0.238856], [0.809017, 0.309017, -0.500000], [0.951056, 0.162460, -0.262866], [0.525731, 0.000000, -0.850651], [0.681718, 0.147621, -0.716567], [0.681718, -0.147621, -0.716567], [0.850651, 0.000000, -0.525731], [0.809017, -0.309017, -0.500000], [0.864188, -0.442863, -0.238856], [0.951056, -0.162460, -0.262866], [0.147621, 0.716567, -0.681718], [0.309017, 0.500000, -0.809017], [0.425325, 0.688191, -0.587785], [0.442863, 0.238856, -0.864188], [0.587785, 0.425325, -0.688191], [0.688191, 0.587785, -0.425325], [-0.147621, 0.716567, -0.681718], [-0.309017, 0.500000, -0.809017], [0.000000, 0.525731, -0.850651], [-0.525731, 0.000000, -0.850651], [-0.442863, 0.238856, -0.864188], [-0.295242, 0.000000, -0.955423], [-0.162460, 0.262866, -0.951056], [0.000000, 0.000000, -1.000000], [0.295242, 0.000000, -0.955423], [0.162460, 0.262866, -0.951056], [-0.442863, -0.238856, -0.864188], [-0.309017, -0.500000, -0.809017], [-0.162460, -0.262866, -0.951056], [0.000000, -0.850651, -0.525731], [-0.147621, -0.716567, -0.681718], [0.147621, -0.716567, -0.681718], [0.000000, -0.525731, -0.850651], [0.309017, -0.500000, -0.809017], [0.442863, -0.238856, -0.864188], [0.162460, -0.262866, -0.951056], [0.238856, -0.864188, -0.442863], [0.500000, -0.809017, -0.309017], [0.425325, -0.688191, -0.587785], [0.716567, -0.681718, -0.147621], [0.688191, -0.587785, -0.425325], [0.587785, -0.425325, -0.688191], [0.000000, -0.955423, -0.295242], [0.000000, -1.000000, 0.000000], [0.262866, -0.951056, -0.162460], [0.000000, -0.850651, 0.525731], [0.000000, -0.955423, 0.295242], [0.238856, -0.864188, 0.442863], [0.262866, -0.951056, 0.162460], [0.500000, -0.809017, 0.309017], [0.716567, -0.681718, 0.147621], [0.525731, -0.850651, 0.000000], [-0.238856, -0.864188, -0.442863], [-0.500000, -0.809017, -0.309017], [-0.262866, -0.951056, -0.162460], [-0.850651, -0.525731, 0.000000], [-0.716567, -0.681718, -0.147621], [-0.716567, -0.681718, 0.147621], [-0.525731, -0.850651, 0.000000], [-0.500000, -0.809017, 0.309017], [-0.238856, -0.864188, 0.442863], [-0.262866, -0.951056, 0.162460], [-0.864188, -0.442863, 0.238856], [-0.809017, -0.309017, 0.500000], [-0.688191, -0.587785, 0.425325], [-0.681718, -0.147621, 0.716567], [-0.442863, -0.238856, 0.864188], [-0.587785, -0.425325, 0.688191], [-0.309017, -0.500000, 0.809017], [-0.147621, -0.716567, 0.681718], [-0.425325, -0.688191, 0.587785], [-0.162460, -0.262866, 0.951056], [0.442863, -0.238856, 0.864188], [0.162460, -0.262866, 0.951056], [0.309017, -0.500000, 0.809017], [0.147621, -0.716567, 0.681718], [0.000000, -0.525731, 0.850651], [0.425325, -0.688191, 0.587785], [0.587785, -0.425325, 0.688191], [0.688191, -0.587785, 0.425325], [-0.955423, 0.295242, 0.000000], [-0.951056, 0.162460, 0.262866], [-1.000000, 0.000000, 0.000000], [-0.850651, 0.000000, 0.525731], [-0.955423, -0.295242, 0.000000], [-0.951056, -0.162460, 0.262866], [-0.864188, 0.442863, -0.238856], [-0.951056, 0.162460, -0.262866], [-0.809017, 0.309017, -0.500000], [-0.864188, -0.442863, -0.238856], [-0.951056, -0.162460, -0.262866], [-0.809017, -0.309017, -0.500000], [-0.681718, 0.147621, -0.716567], [-0.681718, -0.147621, -0.716567], [-0.850651, 0.000000, -0.525731], [-0.688191, 0.587785, -0.425325], [-0.587785, 0.425325, -0.688191], [-0.425325, 0.688191, -0.587785], [-0.425325, -0.688191, -0.587785], [-0.587785, -0.425325, -0.688191], [-0.688191, -0.587785, -0.425325]]
         return getattr(self, '_m_anorms_table', None)
+
+    @property
+    def frames(self):
+        if hasattr(self, '_m_frames'):
+            return self._m_frames
+
+        _pos = self._io.pos()
+        self._io.seek(self.ofs_frames)
+        self._raw__m_frames = []
+        self._m_frames = []
+        for i in range(self.num_frames):
+            self._raw__m_frames.append(self._io.read_bytes(self.bytes_per_frame))
+            _io__raw__m_frames = KaitaiStream(BytesIO(self._raw__m_frames[i]))
+            self._m_frames.append(Quake2Md2.Frame(_io__raw__m_frames, self, self._root))
+
+        self._io.seek(_pos)
+        return getattr(self, '_m_frames', None)
+
+    @property
+    def gl_cmds(self):
+        if hasattr(self, '_m_gl_cmds'):
+            return self._m_gl_cmds
+
+        _pos = self._io.pos()
+        self._io.seek(self.ofs_gl_cmds)
+        self._raw__m_gl_cmds = self._io.read_bytes(4 * self.num_gl_cmds)
+        _io__raw__m_gl_cmds = KaitaiStream(BytesIO(self._raw__m_gl_cmds))
+        self._m_gl_cmds = Quake2Md2.GlCmdsList(_io__raw__m_gl_cmds, self, self._root)
+        self._io.seek(_pos)
+        return getattr(self, '_m_gl_cmds', None)
+
+    @property
+    def skins(self):
+        if hasattr(self, '_m_skins'):
+            return self._m_skins
+
+        _pos = self._io.pos()
+        self._io.seek(self.ofs_skins)
+        self._m_skins = []
+        for i in range(self.num_skins):
+            self._m_skins.append((KaitaiStream.bytes_terminate(self._io.read_bytes(64), 0, False)).decode(u"ASCII"))
+
+        self._io.seek(_pos)
+        return getattr(self, '_m_skins', None)
 
     @property
     def tex_coords(self):
@@ -367,65 +532,5 @@ class Quake2Md2(KaitaiStruct):
 
         self._io.seek(_pos)
         return getattr(self, '_m_triangles', None)
-
-    @property
-    def frames(self):
-        if hasattr(self, '_m_frames'):
-            return self._m_frames
-
-        _pos = self._io.pos()
-        self._io.seek(self.ofs_frames)
-        self._raw__m_frames = []
-        self._m_frames = []
-        for i in range(self.num_frames):
-            self._raw__m_frames.append(self._io.read_bytes(self.bytes_per_frame))
-            _io__raw__m_frames = KaitaiStream(BytesIO(self._raw__m_frames[i]))
-            self._m_frames.append(Quake2Md2.Frame(_io__raw__m_frames, self, self._root))
-
-        self._io.seek(_pos)
-        return getattr(self, '_m_frames', None)
-
-    @property
-    def anim_names(self):
-        if hasattr(self, '_m_anim_names'):
-            return self._m_anim_names
-
-        self._m_anim_names = [u"stand", u"run", u"attack", u"pain1", u"pain2", u"pain3", u"jump", u"flip", u"salute", u"taunt", u"wave", u"point", u"crstnd", u"crwalk", u"crattak", u"crpain", u"crdeath", u"death1", u"death2", u"death3"]
-        return getattr(self, '_m_anim_names', None)
-
-    @property
-    def gl_cmds(self):
-        if hasattr(self, '_m_gl_cmds'):
-            return self._m_gl_cmds
-
-        _pos = self._io.pos()
-        self._io.seek(self.ofs_gl_cmds)
-        self._raw__m_gl_cmds = self._io.read_bytes((4 * self.num_gl_cmds))
-        _io__raw__m_gl_cmds = KaitaiStream(BytesIO(self._raw__m_gl_cmds))
-        self._m_gl_cmds = Quake2Md2.GlCmdsList(_io__raw__m_gl_cmds, self, self._root)
-        self._io.seek(_pos)
-        return getattr(self, '_m_gl_cmds', None)
-
-    @property
-    def skins(self):
-        if hasattr(self, '_m_skins'):
-            return self._m_skins
-
-        _pos = self._io.pos()
-        self._io.seek(self.ofs_skins)
-        self._m_skins = []
-        for i in range(self.num_skins):
-            self._m_skins.append((KaitaiStream.bytes_terminate(self._io.read_bytes(64), 0, False)).decode(u"ascii"))
-
-        self._io.seek(_pos)
-        return getattr(self, '_m_skins', None)
-
-    @property
-    def anim_start_indices(self):
-        if hasattr(self, '_m_anim_start_indices'):
-            return self._m_anim_start_indices
-
-        self._m_anim_start_indices = b"\x00\x28\x2E\x36\x3A\x3E\x42\x48\x54\x5F\x70\x7B\x87\x9A\xA0\xA9\xAD\xB2\xB8\xBE"
-        return getattr(self, '_m_anim_start_indices', None)
 
 

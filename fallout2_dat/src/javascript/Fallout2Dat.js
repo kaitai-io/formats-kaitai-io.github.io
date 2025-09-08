@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.Fallout2Dat = factory(root.KaitaiStream);
+    factory(root.Fallout2Dat || (root.Fallout2Dat = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Fallout2Dat_, KaitaiStream) {
 var Fallout2Dat = (function() {
   Fallout2Dat.Compression = Object.freeze({
     NONE: 0,
@@ -28,62 +28,11 @@ var Fallout2Dat = (function() {
   Fallout2Dat.prototype._read = function() {
   }
 
-  var Pstr = Fallout2Dat.Pstr = (function() {
-    function Pstr(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Pstr.prototype._read = function() {
-      this.size = this._io.readU4le();
-      this.str = KaitaiStream.bytesToStr(this._io.readBytes(this.size), "ASCII");
-    }
-
-    return Pstr;
-  })();
-
-  var Footer = Fallout2Dat.Footer = (function() {
-    function Footer(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Footer.prototype._read = function() {
-      this.indexSize = this._io.readU4le();
-      this.fileSize = this._io.readU4le();
-    }
-
-    return Footer;
-  })();
-
-  var Index = Fallout2Dat.Index = (function() {
-    function Index(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Index.prototype._read = function() {
-      this.fileCount = this._io.readU4le();
-      this.files = [];
-      for (var i = 0; i < this.fileCount; i++) {
-        this.files.push(new File(this._io, this, this._root));
-      }
-    }
-
-    return Index;
-  })();
-
   var File = Fallout2Dat.File = (function() {
     function File(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -94,6 +43,16 @@ var Fallout2Dat = (function() {
       this.sizePacked = this._io.readU4le();
       this.offset = this._io.readU4le();
     }
+    Object.defineProperty(File.prototype, 'contents', {
+      get: function() {
+        if (this._m_contents !== undefined)
+          return this._m_contents;
+        if ( ((this.flags == Fallout2Dat.Compression.ZLIB) || (this.flags == Fallout2Dat.Compression.NONE)) ) {
+          this._m_contents = (this.flags == Fallout2Dat.Compression.ZLIB ? this.contentsZlib : this.contentsRaw);
+        }
+        return this._m_contents;
+      }
+    });
     Object.defineProperty(File.prototype, 'contentsRaw', {
       get: function() {
         if (this._m_contentsRaw !== undefined)
@@ -123,25 +82,66 @@ var Fallout2Dat = (function() {
         return this._m_contentsZlib;
       }
     });
-    Object.defineProperty(File.prototype, 'contents', {
-      get: function() {
-        if (this._m_contents !== undefined)
-          return this._m_contents;
-        if ( ((this.flags == Fallout2Dat.Compression.ZLIB) || (this.flags == Fallout2Dat.Compression.NONE)) ) {
-          this._m_contents = (this.flags == Fallout2Dat.Compression.ZLIB ? this.contentsZlib : this.contentsRaw);
-        }
-        return this._m_contents;
-      }
-    });
 
     return File;
+  })();
+
+  var Footer = Fallout2Dat.Footer = (function() {
+    function Footer(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Footer.prototype._read = function() {
+      this.indexSize = this._io.readU4le();
+      this.fileSize = this._io.readU4le();
+    }
+
+    return Footer;
+  })();
+
+  var Index = Fallout2Dat.Index = (function() {
+    function Index(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Index.prototype._read = function() {
+      this.fileCount = this._io.readU4le();
+      this.files = [];
+      for (var i = 0; i < this.fileCount; i++) {
+        this.files.push(new File(this._io, this, this._root));
+      }
+    }
+
+    return Index;
+  })();
+
+  var Pstr = Fallout2Dat.Pstr = (function() {
+    function Pstr(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Pstr.prototype._read = function() {
+      this.size = this._io.readU4le();
+      this.str = KaitaiStream.bytesToStr(this._io.readBytes(this.size), "ASCII");
+    }
+
+    return Pstr;
   })();
   Object.defineProperty(Fallout2Dat.prototype, 'footer', {
     get: function() {
       if (this._m_footer !== undefined)
         return this._m_footer;
       var _pos = this._io.pos;
-      this._io.seek((this._io.size - 8));
+      this._io.seek(this._io.size - 8);
       this._m_footer = new Footer(this._io, this, this._root);
       this._io.seek(_pos);
       return this._m_footer;
@@ -152,7 +152,7 @@ var Fallout2Dat = (function() {
       if (this._m_index !== undefined)
         return this._m_index;
       var _pos = this._io.pos;
-      this._io.seek(((this._io.size - 8) - this.footer.indexSize));
+      this._io.seek((this._io.size - 8) - this.footer.indexSize);
       this._m_index = new Index(this._io, this, this._root);
       this._io.seek(_pos);
       return this._m_index;
@@ -161,5 +161,5 @@ var Fallout2Dat = (function() {
 
   return Fallout2Dat;
 })();
-return Fallout2Dat;
-}));
+Fallout2Dat_.Fallout2Dat = Fallout2Dat;
+});

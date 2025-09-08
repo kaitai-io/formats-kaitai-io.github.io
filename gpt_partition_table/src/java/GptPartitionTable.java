@@ -4,8 +4,9 @@ import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.List;
 import java.util.ArrayList;
 
 
@@ -33,6 +34,17 @@ public class GptPartitionTable extends KaitaiStruct {
     }
     private void _read() {
     }
+
+    public void _fetchInstances() {
+        backup();
+        if (this.backup != null) {
+            this.backup._fetchInstances();
+        }
+        primary();
+        if (this.primary != null) {
+            this.primary._fetchInstances();
+        }
+    }
     public static class PartitionEntry extends KaitaiStruct {
         public static PartitionEntry fromFile(String fileName) throws IOException {
             return new PartitionEntry(new ByteBufferKaitaiStream(fileName));
@@ -58,7 +70,10 @@ public class GptPartitionTable extends KaitaiStruct {
             this.firstLba = this._io.readU8le();
             this.lastLba = this._io.readU8le();
             this.attributes = this._io.readU8le();
-            this.name = new String(this._io.readBytes(72), Charset.forName("UTF-16LE"));
+            this.name = new String(this._io.readBytes(72), StandardCharsets.UTF_16LE);
+        }
+
+        public void _fetchInstances() {
         }
         private byte[] typeGuid;
         private byte[] guid;
@@ -98,8 +113,8 @@ public class GptPartitionTable extends KaitaiStruct {
         }
         private void _read() {
             this.signature = this._io.readBytes(8);
-            if (!(Arrays.equals(signature(), new byte[] { 69, 70, 73, 32, 80, 65, 82, 84 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 69, 70, 73, 32, 80, 65, 82, 84 }, signature(), _io(), "/types/partition_header/seq/0");
+            if (!(Arrays.equals(this.signature, new byte[] { 69, 70, 73, 32, 80, 65, 82, 84 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 69, 70, 73, 32, 80, 65, 82, 84 }, this.signature, this._io, "/types/partition_header/seq/0");
             }
             this.revision = this._io.readU4le();
             this.headerSize = this._io.readU4le();
@@ -115,19 +130,26 @@ public class GptPartitionTable extends KaitaiStruct {
             this.entriesSize = this._io.readU4le();
             this.crc32Array = this._io.readU4le();
         }
-        private ArrayList<PartitionEntry> entries;
-        public ArrayList<PartitionEntry> entries() {
+
+        public void _fetchInstances() {
+            entries();
+            if (this.entries != null) {
+                for (int i = 0; i < this.entries.size(); i++) {
+                    this.entries.get(((Number) (i)).intValue())._fetchInstances();
+                }
+            }
+        }
+        private List<PartitionEntry> entries;
+        public List<PartitionEntry> entries() {
             if (this.entries != null)
                 return this.entries;
             KaitaiStream io = _root()._io();
             long _pos = io.pos();
-            io.seek((entriesStart() * _root().sectorSize()));
-            this._raw_entries = new ArrayList<byte[]>();
+            io.seek(entriesStart() * _root().sectorSize());
             this.entries = new ArrayList<PartitionEntry>();
             for (int i = 0; i < entriesCount(); i++) {
-                this._raw_entries.add(io.readBytes(entriesSize()));
-                KaitaiStream _io__raw_entries = new ByteBufferKaitaiStream(_raw_entries.get(_raw_entries.size() - 1));
-                this.entries.add(new PartitionEntry(_io__raw_entries, this, _root));
+                KaitaiStream _io_entries = io.substream(entriesSize());
+                this.entries.add(new PartitionEntry(_io_entries, this, _root));
             }
             io.seek(_pos);
             return this.entries;
@@ -148,7 +170,6 @@ public class GptPartitionTable extends KaitaiStruct {
         private long crc32Array;
         private GptPartitionTable _root;
         private GptPartitionTable _parent;
-        private ArrayList<byte[]> _raw_entries;
         public byte[] signature() { return signature; }
         public long revision() { return revision; }
         public long headerSize() { return headerSize; }
@@ -165,15 +186,17 @@ public class GptPartitionTable extends KaitaiStruct {
         public long crc32Array() { return crc32Array; }
         public GptPartitionTable _root() { return _root; }
         public GptPartitionTable _parent() { return _parent; }
-        public ArrayList<byte[]> _raw_entries() { return _raw_entries; }
     }
-    private Integer sectorSize;
-    public Integer sectorSize() {
-        if (this.sectorSize != null)
-            return this.sectorSize;
-        int _tmp = (int) (512);
-        this.sectorSize = _tmp;
-        return this.sectorSize;
+    private PartitionHeader backup;
+    public PartitionHeader backup() {
+        if (this.backup != null)
+            return this.backup;
+        KaitaiStream io = _root()._io();
+        long _pos = io.pos();
+        io.seek(_io().size() - _root().sectorSize());
+        this.backup = new PartitionHeader(io, this, _root);
+        io.seek(_pos);
+        return this.backup;
     }
     private PartitionHeader primary;
     public PartitionHeader primary() {
@@ -186,16 +209,12 @@ public class GptPartitionTable extends KaitaiStruct {
         io.seek(_pos);
         return this.primary;
     }
-    private PartitionHeader backup;
-    public PartitionHeader backup() {
-        if (this.backup != null)
-            return this.backup;
-        KaitaiStream io = _root()._io();
-        long _pos = io.pos();
-        io.seek((_io().size() - _root().sectorSize()));
-        this.backup = new PartitionHeader(io, this, _root);
-        io.seek(_pos);
-        return this.backup;
+    private Integer sectorSize;
+    public Integer sectorSize() {
+        if (this.sectorSize != null)
+            return this.sectorSize;
+        this.sectorSize = ((int) 512);
+        return this.sectorSize;
     }
     private GptPartitionTable _root;
     private KaitaiStruct _parent;

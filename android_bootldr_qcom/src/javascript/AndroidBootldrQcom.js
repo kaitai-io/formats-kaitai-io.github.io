@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.AndroidBootldrQcom = factory(root.KaitaiStream);
+    factory(root.AndroidBootldrQcom || (root.AndroidBootldrQcom = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (AndroidBootldrQcom_, KaitaiStream) {
 /**
  * A bootloader for Android used on various devices powered by Qualcomm
  * Snapdragon chips:
@@ -126,8 +126,8 @@ var AndroidBootldrQcom = (function() {
   }
   AndroidBootldrQcom.prototype._read = function() {
     this.magic = this._io.readBytes(8);
-    if (!((KaitaiStream.byteArrayCompare(this.magic, [66, 79, 79, 84, 76, 68, 82, 33]) == 0))) {
-      throw new KaitaiStream.ValidationNotEqualError([66, 79, 79, 84, 76, 68, 82, 33], this.magic, this._io, "/seq/0");
+    if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([66, 79, 79, 84, 76, 68, 82, 33])) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([66, 79, 79, 84, 76, 68, 82, 33]), this.magic, this._io, "/seq/0");
     }
     this.numImages = this._io.readU4le();
     this.ofsImgBodies = this._io.readU4le();
@@ -138,27 +138,11 @@ var AndroidBootldrQcom = (function() {
     }
   }
 
-  var ImgHeader = AndroidBootldrQcom.ImgHeader = (function() {
-    function ImgHeader(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    ImgHeader.prototype._read = function() {
-      this.name = KaitaiStream.bytesToStr(KaitaiStream.bytesTerminate(this._io.readBytes(64), 0, false), "ASCII");
-      this.lenBody = this._io.readU4le();
-    }
-
-    return ImgHeader;
-  })();
-
   var ImgBody = AndroidBootldrQcom.ImgBody = (function() {
     function ImgBody(_io, _parent, _root, idx) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
       this.idx = idx;
 
       this._read();
@@ -176,6 +160,22 @@ var AndroidBootldrQcom = (function() {
     });
 
     return ImgBody;
+  })();
+
+  var ImgHeader = AndroidBootldrQcom.ImgHeader = (function() {
+    function ImgHeader(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    ImgHeader.prototype._read = function() {
+      this.name = KaitaiStream.bytesToStr(KaitaiStream.bytesTerminate(this._io.readBytes(64), 0, false), "ASCII");
+      this.lenBody = this._io.readU4le();
+    }
+
+    return ImgHeader;
   })();
   Object.defineProperty(AndroidBootldrQcom.prototype, 'imgBodies', {
     get: function() {
@@ -217,5 +217,5 @@ var AndroidBootldrQcom = (function() {
 
   return AndroidBootldrQcom;
 })();
-return AndroidBootldrQcom;
-}));
+AndroidBootldrQcom_.AndroidBootldrQcom = AndroidBootldrQcom;
+});

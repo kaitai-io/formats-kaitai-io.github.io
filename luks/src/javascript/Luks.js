@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.Luks = factory(root.KaitaiStream);
+    factory(root.Luks || (root.Luks = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Luks_, KaitaiStream) {
 /**
  * Linux Unified Key Setup (LUKS) is a format specification for storing disk
  * encryption parameters and up to 8 user keys (which can unlock the master key).
@@ -31,18 +31,18 @@ var Luks = (function() {
     function PartitionHeader(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     PartitionHeader.prototype._read = function() {
       this.magic = this._io.readBytes(6);
-      if (!((KaitaiStream.byteArrayCompare(this.magic, [76, 85, 75, 83, 186, 190]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([76, 85, 75, 83, 186, 190], this.magic, this._io, "/types/partition_header/seq/0");
+      if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([76, 85, 75, 83, 186, 190])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([76, 85, 75, 83, 186, 190]), this.magic, this._io, "/types/partition_header/seq/0");
       }
       this.version = this._io.readBytes(2);
-      if (!((KaitaiStream.byteArrayCompare(this.version, [0, 1]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([0, 1], this.version, this._io, "/types/partition_header/seq/1");
+      if (!((KaitaiStream.byteArrayCompare(this.version, new Uint8Array([0, 1])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([0, 1]), this.version, this._io, "/types/partition_header/seq/1");
       }
       this.cipherNameSpecification = KaitaiStream.bytesToStr(this._io.readBytes(32), "ASCII");
       this.cipherModeSpecification = KaitaiStream.bytesToStr(this._io.readBytes(32), "ASCII");
@@ -71,7 +71,7 @@ var Luks = (function() {
       function KeySlot(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -87,8 +87,8 @@ var Luks = (function() {
           if (this._m_keyMaterial !== undefined)
             return this._m_keyMaterial;
           var _pos = this._io.pos;
-          this._io.seek((this.startSectorOfKeyMaterial * 512));
-          this._m_keyMaterial = this._io.readBytes((this._parent.numberOfKeyBytes * this.numberOfAntiForensicStripes));
+          this._io.seek(this.startSectorOfKeyMaterial * 512);
+          this._m_keyMaterial = this._io.readBytes(this._parent.numberOfKeyBytes * this.numberOfAntiForensicStripes);
           this._io.seek(_pos);
           return this._m_keyMaterial;
         }
@@ -104,7 +104,7 @@ var Luks = (function() {
       if (this._m_payload !== undefined)
         return this._m_payload;
       var _pos = this._io.pos;
-      this._io.seek((this.partitionHeader.payloadOffset * 512));
+      this._io.seek(this.partitionHeader.payloadOffset * 512);
       this._m_payload = this._io.readBytesFull();
       this._io.seek(_pos);
       return this._m_payload;
@@ -113,5 +113,5 @@ var Luks = (function() {
 
   return Luks;
 })();
-return Luks;
-}));
+Luks_.Luks = Luks;
+});

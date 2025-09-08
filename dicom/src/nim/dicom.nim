@@ -4030,10 +4030,13 @@ type
     item = 4294893568
     item_delimitation_item = 4294893581
     sequence_delimitation_item = 4294893789
-  Dicom_TFileHeader* = ref object of KaitaiStruct
-    `preamble`*: seq[byte]
-    `magic`*: seq[byte]
-    `parent`*: Dicom
+  Dicom_SeqItem* = ref object of KaitaiStruct
+    `tagGroup`*: seq[byte]
+    `tagElem`*: uint16
+    `valueLen`*: uint32
+    `value`*: seq[byte]
+    `items`*: seq[Dicom_TDataElementExplicit]
+    `parent`*: KaitaiStruct
   Dicom_TDataElementExplicit* = ref object of KaitaiStruct
     `tagGroup`*: uint16
     `tagElem`*: uint16
@@ -4062,39 +4065,36 @@ type
     `items`*: seq[Dicom_SeqItem]
     `elements`*: seq[Dicom_TDataElementExplicit]
     `parent`*: KaitaiStruct
-    `tagInst`: Dicom_Tags
-    `tagInstFlag`: bool
-    `isTransferSyntaxChangeExplicitInst`: bool
-    `isTransferSyntaxChangeExplicitInstFlag`: bool
-    `isLongLenInst`: bool
-    `isLongLenInstFlag`: bool
-    `pIsTransferSyntaxChangeExplicitInst`: bool
-    `pIsTransferSyntaxChangeExplicitInstFlag`: bool
     `isForcedExplicitInst`: bool
     `isForcedExplicitInstFlag`: bool
-  Dicom_SeqItem* = ref object of KaitaiStruct
-    `tagGroup`*: seq[byte]
-    `tagElem`*: uint16
-    `valueLen`*: uint32
-    `value`*: seq[byte]
-    `items`*: seq[Dicom_TDataElementExplicit]
-    `parent`*: KaitaiStruct
+    `isLongLenInst`: bool
+    `isLongLenInstFlag`: bool
+    `isTransferSyntaxChangeExplicitInst`: bool
+    `isTransferSyntaxChangeExplicitInstFlag`: bool
+    `pIsTransferSyntaxChangeExplicitInst`: bool
+    `pIsTransferSyntaxChangeExplicitInstFlag`: bool
+    `tagInst`: Dicom_Tags
+    `tagInstFlag`: bool
+  Dicom_TFileHeader* = ref object of KaitaiStruct
+    `preamble`*: seq[byte]
+    `magic`*: seq[byte]
+    `parent`*: Dicom
 
 proc read*(_: typedesc[Dicom], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Dicom
-proc read*(_: typedesc[Dicom_TFileHeader], io: KaitaiStream, root: KaitaiStruct, parent: Dicom): Dicom_TFileHeader
+proc read*(_: typedesc[Dicom_SeqItem], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Dicom_SeqItem
 proc read*(_: typedesc[Dicom_TDataElementExplicit], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Dicom_TDataElementExplicit
 proc read*(_: typedesc[Dicom_TDataElementImplicit], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Dicom_TDataElementImplicit
-proc read*(_: typedesc[Dicom_SeqItem], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Dicom_SeqItem
+proc read*(_: typedesc[Dicom_TFileHeader], io: KaitaiStream, root: KaitaiStruct, parent: Dicom): Dicom_TFileHeader
 
 proc isForcedImplicit*(this: Dicom_TDataElementExplicit): bool
 proc isLongLen*(this: Dicom_TDataElementExplicit): bool
 proc isTransferSyntaxChangeImplicit*(this: Dicom_TDataElementExplicit): bool
 proc tag*(this: Dicom_TDataElementExplicit): Dicom_Tags
-proc tag*(this: Dicom_TDataElementImplicit): Dicom_Tags
-proc isTransferSyntaxChangeExplicit*(this: Dicom_TDataElementImplicit): bool
-proc isLongLen*(this: Dicom_TDataElementImplicit): bool
-proc pIsTransferSyntaxChangeExplicit*(this: Dicom_TDataElementImplicit): bool
 proc isForcedExplicit*(this: Dicom_TDataElementImplicit): bool
+proc isLongLen*(this: Dicom_TDataElementImplicit): bool
+proc isTransferSyntaxChangeExplicit*(this: Dicom_TDataElementImplicit): bool
+proc pIsTransferSyntaxChangeExplicit*(this: Dicom_TDataElementImplicit): bool
+proc tag*(this: Dicom_TDataElementImplicit): Dicom_Tags
 
 
 ##[
@@ -4131,21 +4131,35 @@ proc read*(_: typedesc[Dicom], io: KaitaiStream, root: KaitaiStruct, parent: Kai
 proc fromFile*(_: typedesc[Dicom], filename: string): Dicom =
   Dicom.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[Dicom_TFileHeader], io: KaitaiStream, root: KaitaiStruct, parent: Dicom): Dicom_TFileHeader =
+proc read*(_: typedesc[Dicom_SeqItem], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Dicom_SeqItem =
   template this: untyped = result
-  this = new(Dicom_TFileHeader)
+  this = new(Dicom_SeqItem)
   let root = if root == nil: cast[Dicom](this) else: cast[Dicom](root)
   this.io = io
   this.root = root
   this.parent = parent
 
-  let preambleExpr = this.io.readBytes(int(128))
-  this.preamble = preambleExpr
-  let magicExpr = this.io.readBytes(int(4))
-  this.magic = magicExpr
+  let tagGroupExpr = this.io.readBytes(int(2))
+  this.tagGroup = tagGroupExpr
+  let tagElemExpr = this.io.readU2le()
+  this.tagElem = tagElemExpr
+  let valueLenExpr = this.io.readU4le()
+  this.valueLen = valueLenExpr
+  if this.valueLen != 4294967295'i64:
+    let valueExpr = this.io.readBytes(int(this.valueLen))
+    this.value = valueExpr
+  if this.valueLen == 4294967295'i64:
+    block:
+      var i: int
+      while true:
+        let it = Dicom_TDataElementExplicit.read(this.io, this.root, this)
+        this.items.add(it)
+        if  ((it.tagGroup == 65534) and (it.tagElem == 57357)) :
+          break
+        inc i
 
-proc fromFile*(_: typedesc[Dicom_TFileHeader], filename: string): Dicom_TFileHeader =
-  Dicom_TFileHeader.read(newKaitaiFileStream(filename), nil, nil)
+proc fromFile*(_: typedesc[Dicom_SeqItem], filename: string): Dicom_SeqItem =
+  Dicom_SeqItem.read(newKaitaiFileStream(filename), nil, nil)
 
 
 ##[
@@ -4224,7 +4238,7 @@ proc isTransferSyntaxChangeImplicit(this: Dicom_TDataElementExplicit): bool =
 proc tag(this: Dicom_TDataElementExplicit): Dicom_Tags = 
   if this.tagInstFlag:
     return this.tagInst
-  let tagInstExpr = Dicom_Tags(Dicom_Tags(((this.tagGroup shl 16) or this.tagElem)))
+  let tagInstExpr = Dicom_Tags(Dicom_Tags(this.tagGroup shl 16 or this.tagElem))
   this.tagInst = tagInstExpr
   this.tagInstFlag = true
   return this.tagInst
@@ -4282,21 +4296,13 @@ proc read*(_: typedesc[Dicom_TDataElementImplicit], io: KaitaiStream, root: Kait
         this.elements.add(it)
         inc i
 
-proc tag(this: Dicom_TDataElementImplicit): Dicom_Tags = 
-  if this.tagInstFlag:
-    return this.tagInst
-  let tagInstExpr = Dicom_Tags(Dicom_Tags(((this.tagGroup shl 16) or this.tagElem)))
-  this.tagInst = tagInstExpr
-  this.tagInstFlag = true
-  return this.tagInst
-
-proc isTransferSyntaxChangeExplicit(this: Dicom_TDataElementImplicit): bool = 
-  if this.isTransferSyntaxChangeExplicitInstFlag:
-    return this.isTransferSyntaxChangeExplicitInst
-  let isTransferSyntaxChangeExplicitInstExpr = bool(this.pIsTransferSyntaxChangeExplicit)
-  this.isTransferSyntaxChangeExplicitInst = isTransferSyntaxChangeExplicitInstExpr
-  this.isTransferSyntaxChangeExplicitInstFlag = true
-  return this.isTransferSyntaxChangeExplicitInst
+proc isForcedExplicit(this: Dicom_TDataElementImplicit): bool = 
+  if this.isForcedExplicitInstFlag:
+    return this.isForcedExplicitInst
+  let isForcedExplicitInstExpr = bool(this.tagGroup == 2)
+  this.isForcedExplicitInst = isForcedExplicitInstExpr
+  this.isForcedExplicitInstFlag = true
+  return this.isForcedExplicitInst
 
 proc isLongLen(this: Dicom_TDataElementImplicit): bool = 
   if this.isLongLenInstFlag:
@@ -4306,6 +4312,14 @@ proc isLongLen(this: Dicom_TDataElementImplicit): bool =
   this.isLongLenInstFlag = true
   return this.isLongLenInst
 
+proc isTransferSyntaxChangeExplicit(this: Dicom_TDataElementImplicit): bool = 
+  if this.isTransferSyntaxChangeExplicitInstFlag:
+    return this.isTransferSyntaxChangeExplicitInst
+  let isTransferSyntaxChangeExplicitInstExpr = bool(this.pIsTransferSyntaxChangeExplicit)
+  this.isTransferSyntaxChangeExplicitInst = isTransferSyntaxChangeExplicitInstExpr
+  this.isTransferSyntaxChangeExplicitInstFlag = true
+  return this.isTransferSyntaxChangeExplicitInst
+
 proc pIsTransferSyntaxChangeExplicit(this: Dicom_TDataElementImplicit): bool = 
   if this.pIsTransferSyntaxChangeExplicitInstFlag:
     return this.pIsTransferSyntaxChangeExplicitInst
@@ -4314,44 +4328,30 @@ proc pIsTransferSyntaxChangeExplicit(this: Dicom_TDataElementImplicit): bool =
   this.pIsTransferSyntaxChangeExplicitInstFlag = true
   return this.pIsTransferSyntaxChangeExplicitInst
 
-proc isForcedExplicit(this: Dicom_TDataElementImplicit): bool = 
-  if this.isForcedExplicitInstFlag:
-    return this.isForcedExplicitInst
-  let isForcedExplicitInstExpr = bool(this.tagGroup == 2)
-  this.isForcedExplicitInst = isForcedExplicitInstExpr
-  this.isForcedExplicitInstFlag = true
-  return this.isForcedExplicitInst
+proc tag(this: Dicom_TDataElementImplicit): Dicom_Tags = 
+  if this.tagInstFlag:
+    return this.tagInst
+  let tagInstExpr = Dicom_Tags(Dicom_Tags(this.tagGroup shl 16 or this.tagElem))
+  this.tagInst = tagInstExpr
+  this.tagInstFlag = true
+  return this.tagInst
 
 proc fromFile*(_: typedesc[Dicom_TDataElementImplicit], filename: string): Dicom_TDataElementImplicit =
   Dicom_TDataElementImplicit.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[Dicom_SeqItem], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Dicom_SeqItem =
+proc read*(_: typedesc[Dicom_TFileHeader], io: KaitaiStream, root: KaitaiStruct, parent: Dicom): Dicom_TFileHeader =
   template this: untyped = result
-  this = new(Dicom_SeqItem)
+  this = new(Dicom_TFileHeader)
   let root = if root == nil: cast[Dicom](this) else: cast[Dicom](root)
   this.io = io
   this.root = root
   this.parent = parent
 
-  let tagGroupExpr = this.io.readBytes(int(2))
-  this.tagGroup = tagGroupExpr
-  let tagElemExpr = this.io.readU2le()
-  this.tagElem = tagElemExpr
-  let valueLenExpr = this.io.readU4le()
-  this.valueLen = valueLenExpr
-  if this.valueLen != 4294967295'i64:
-    let valueExpr = this.io.readBytes(int(this.valueLen))
-    this.value = valueExpr
-  if this.valueLen == 4294967295'i64:
-    block:
-      var i: int
-      while true:
-        let it = Dicom_TDataElementExplicit.read(this.io, this.root, this)
-        this.items.add(it)
-        if  ((it.tagGroup == 65534) and (it.tagElem == 57357)) :
-          break
-        inc i
+  let preambleExpr = this.io.readBytes(int(128))
+  this.preamble = preambleExpr
+  let magicExpr = this.io.readBytes(int(4))
+  this.magic = magicExpr
 
-proc fromFile*(_: typedesc[Dicom_SeqItem], filename: string): Dicom_SeqItem =
-  Dicom_SeqItem.read(newKaitaiFileStream(filename), nil, nil)
+proc fromFile*(_: typedesc[Dicom_TFileHeader], filename: string): Dicom_TFileHeader =
+  Dicom_TFileHeader.read(newKaitaiFileStream(filename), nil, nil)
 

@@ -39,15 +39,15 @@ type Bcd struct {
 	IsLe bool
 	_io *kaitai.Stream
 	_root *Bcd
-	_parent interface{}
+	_parent kaitai.Struct
 	_f_asInt bool
 	asInt int
+	_f_asIntBe bool
+	asIntBe int
 	_f_asIntLe bool
 	asIntLe int
 	_f_lastIdx bool
 	lastIdx int
-	_f_asIntBe bool
-	asIntBe int
 }
 func NewBcd(numDigits uint8, bitsPerDigit uint8, isLe bool) *Bcd {
 	return &Bcd{
@@ -57,7 +57,11 @@ func NewBcd(numDigits uint8, bitsPerDigit uint8, isLe bool) *Bcd {
 	}
 }
 
-func (this *Bcd) Read(io *kaitai.Stream, parent interface{}, root *Bcd) (err error) {
+func (this Bcd) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Bcd) Read(io *kaitai.Stream, parent kaitai.Struct, root *Bcd) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -89,6 +93,7 @@ func (this *Bcd) AsInt() (v int, err error) {
 	if (this._f_asInt) {
 		return this.asInt, nil
 	}
+	this._f_asInt = true
 	var tmp3 int;
 	if (this.IsLe) {
 		tmp4, err := this.AsIntLe()
@@ -104,8 +109,93 @@ func (this *Bcd) AsInt() (v int, err error) {
 		tmp3 = tmp5
 	}
 	this.asInt = int(tmp3)
-	this._f_asInt = true
 	return this.asInt, nil
+}
+
+/**
+ * Value of this BCD number as integer (treating digit order as big-endian).
+ */
+func (this *Bcd) AsIntBe() (v int, err error) {
+	if (this._f_asIntBe) {
+		return this.asIntBe, nil
+	}
+	this._f_asIntBe = true
+	tmp6, err := this.LastIdx()
+	if err != nil {
+		return 0, err
+	}
+	var tmp7 int8;
+	if (this.NumDigits < 2) {
+		tmp7 = 0
+	} else {
+		tmp8, err := this.LastIdx()
+		if err != nil {
+			return 0, err
+		}
+		var tmp9 int8;
+		if (this.NumDigits < 3) {
+			tmp9 = 0
+		} else {
+			tmp10, err := this.LastIdx()
+			if err != nil {
+				return 0, err
+			}
+			var tmp11 int8;
+			if (this.NumDigits < 4) {
+				tmp11 = 0
+			} else {
+				tmp12, err := this.LastIdx()
+				if err != nil {
+					return 0, err
+				}
+				var tmp13 int8;
+				if (this.NumDigits < 5) {
+					tmp13 = 0
+				} else {
+					tmp14, err := this.LastIdx()
+					if err != nil {
+						return 0, err
+					}
+					var tmp15 int8;
+					if (this.NumDigits < 6) {
+						tmp15 = 0
+					} else {
+						tmp16, err := this.LastIdx()
+						if err != nil {
+							return 0, err
+						}
+						var tmp17 int8;
+						if (this.NumDigits < 7) {
+							tmp17 = 0
+						} else {
+							tmp18, err := this.LastIdx()
+							if err != nil {
+								return 0, err
+							}
+							var tmp19 int8;
+							if (this.NumDigits < 8) {
+								tmp19 = 0
+							} else {
+								tmp20, err := this.LastIdx()
+								if err != nil {
+									return 0, err
+								}
+								tmp19 = this.Digits[tmp20 - 7] * 10000000
+							}
+							tmp17 = this.Digits[tmp18 - 6] * 1000000 + tmp19
+						}
+						tmp15 = this.Digits[tmp16 - 5] * 100000 + tmp17
+					}
+					tmp13 = this.Digits[tmp14 - 4] * 10000 + tmp15
+				}
+				tmp11 = this.Digits[tmp12 - 3] * 1000 + tmp13
+			}
+			tmp9 = this.Digits[tmp10 - 2] * 100 + tmp11
+		}
+		tmp7 = this.Digits[tmp8 - 1] * 10 + tmp9
+	}
+	this.asIntBe = int(this.Digits[tmp6] + tmp7)
+	return this.asIntBe, nil
 }
 
 /**
@@ -115,50 +205,50 @@ func (this *Bcd) AsIntLe() (v int, err error) {
 	if (this._f_asIntLe) {
 		return this.asIntLe, nil
 	}
-	var tmp6 int8;
-	if (this.NumDigits < 2) {
-		tmp6 = 0
-	} else {
-		var tmp7 int8;
-		if (this.NumDigits < 3) {
-			tmp7 = 0
-		} else {
-			var tmp8 int8;
-			if (this.NumDigits < 4) {
-				tmp8 = 0
-			} else {
-				var tmp9 int8;
-				if (this.NumDigits < 5) {
-					tmp9 = 0
-				} else {
-					var tmp10 int8;
-					if (this.NumDigits < 6) {
-						tmp10 = 0
-					} else {
-						var tmp11 int8;
-						if (this.NumDigits < 7) {
-							tmp11 = 0
-						} else {
-							var tmp12 int8;
-							if (this.NumDigits < 8) {
-								tmp12 = 0
-							} else {
-								tmp12 = (this.Digits[7] * 10000000)
-							}
-							tmp11 = ((this.Digits[6] * 1000000) + tmp12)
-						}
-						tmp10 = ((this.Digits[5] * 100000) + tmp11)
-					}
-					tmp9 = ((this.Digits[4] * 10000) + tmp10)
-				}
-				tmp8 = ((this.Digits[3] * 1000) + tmp9)
-			}
-			tmp7 = ((this.Digits[2] * 100) + tmp8)
-		}
-		tmp6 = ((this.Digits[1] * 10) + tmp7)
-	}
-	this.asIntLe = int((this.Digits[0] + tmp6))
 	this._f_asIntLe = true
+	var tmp21 int8;
+	if (this.NumDigits < 2) {
+		tmp21 = 0
+	} else {
+		var tmp22 int8;
+		if (this.NumDigits < 3) {
+			tmp22 = 0
+		} else {
+			var tmp23 int8;
+			if (this.NumDigits < 4) {
+				tmp23 = 0
+			} else {
+				var tmp24 int8;
+				if (this.NumDigits < 5) {
+					tmp24 = 0
+				} else {
+					var tmp25 int8;
+					if (this.NumDigits < 6) {
+						tmp25 = 0
+					} else {
+						var tmp26 int8;
+						if (this.NumDigits < 7) {
+							tmp26 = 0
+						} else {
+							var tmp27 int8;
+							if (this.NumDigits < 8) {
+								tmp27 = 0
+							} else {
+								tmp27 = this.Digits[7] * 10000000
+							}
+							tmp26 = this.Digits[6] * 1000000 + tmp27
+						}
+						tmp25 = this.Digits[5] * 100000 + tmp26
+					}
+					tmp24 = this.Digits[4] * 10000 + tmp25
+				}
+				tmp23 = this.Digits[3] * 1000 + tmp24
+			}
+			tmp22 = this.Digits[2] * 100 + tmp23
+		}
+		tmp21 = this.Digits[1] * 10 + tmp22
+	}
+	this.asIntLe = int(this.Digits[0] + tmp21)
 	return this.asIntLe, nil
 }
 
@@ -169,93 +259,7 @@ func (this *Bcd) LastIdx() (v int, err error) {
 	if (this._f_lastIdx) {
 		return this.lastIdx, nil
 	}
-	this.lastIdx = int((this.NumDigits - 1))
 	this._f_lastIdx = true
+	this.lastIdx = int(this.NumDigits - 1)
 	return this.lastIdx, nil
-}
-
-/**
- * Value of this BCD number as integer (treating digit order as big-endian).
- */
-func (this *Bcd) AsIntBe() (v int, err error) {
-	if (this._f_asIntBe) {
-		return this.asIntBe, nil
-	}
-	tmp13, err := this.LastIdx()
-	if err != nil {
-		return 0, err
-	}
-	var tmp14 int8;
-	if (this.NumDigits < 2) {
-		tmp14 = 0
-	} else {
-		tmp15, err := this.LastIdx()
-		if err != nil {
-			return 0, err
-		}
-		var tmp16 int8;
-		if (this.NumDigits < 3) {
-			tmp16 = 0
-		} else {
-			tmp17, err := this.LastIdx()
-			if err != nil {
-				return 0, err
-			}
-			var tmp18 int8;
-			if (this.NumDigits < 4) {
-				tmp18 = 0
-			} else {
-				tmp19, err := this.LastIdx()
-				if err != nil {
-					return 0, err
-				}
-				var tmp20 int8;
-				if (this.NumDigits < 5) {
-					tmp20 = 0
-				} else {
-					tmp21, err := this.LastIdx()
-					if err != nil {
-						return 0, err
-					}
-					var tmp22 int8;
-					if (this.NumDigits < 6) {
-						tmp22 = 0
-					} else {
-						tmp23, err := this.LastIdx()
-						if err != nil {
-							return 0, err
-						}
-						var tmp24 int8;
-						if (this.NumDigits < 7) {
-							tmp24 = 0
-						} else {
-							tmp25, err := this.LastIdx()
-							if err != nil {
-								return 0, err
-							}
-							var tmp26 int8;
-							if (this.NumDigits < 8) {
-								tmp26 = 0
-							} else {
-								tmp27, err := this.LastIdx()
-								if err != nil {
-									return 0, err
-								}
-								tmp26 = (this.Digits[(tmp27 - 7)] * 10000000)
-							}
-							tmp24 = ((this.Digits[(tmp25 - 6)] * 1000000) + tmp26)
-						}
-						tmp22 = ((this.Digits[(tmp23 - 5)] * 100000) + tmp24)
-					}
-					tmp20 = ((this.Digits[(tmp21 - 4)] * 10000) + tmp22)
-				}
-				tmp18 = ((this.Digits[(tmp19 - 3)] * 1000) + tmp20)
-			}
-			tmp16 = ((this.Digits[(tmp17 - 2)] * 100) + tmp18)
-		}
-		tmp14 = ((this.Digits[(tmp15 - 1)] * 10) + tmp16)
-	}
-	this.asIntBe = int((this.Digits[tmp13] + tmp14))
-	this._f_asIntBe = true
-	return this.asIntBe, nil
 }

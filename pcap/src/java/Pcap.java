@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -270,6 +271,13 @@ public class Pcap extends KaitaiStruct {
         }
     }
 
+    public void _fetchInstances() {
+        this.hdr._fetchInstances();
+        for (int i = 0; i < this.packets.size(); i++) {
+            this.packets.get(((Number) (i)).intValue())._fetchInstances();
+        }
+    }
+
     /**
      * @see <a href="https://wiki.wireshark.org/Development/LibpcapFileFormat#Global_Header">Source</a>
      */
@@ -294,18 +302,21 @@ public class Pcap extends KaitaiStruct {
         }
         private void _read() {
             this.magicNumber = this._io.readBytes(4);
-            if (!(Arrays.equals(magicNumber(), new byte[] { -44, -61, -78, -95 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { -44, -61, -78, -95 }, magicNumber(), _io(), "/types/header/seq/0");
+            if (!(Arrays.equals(this.magicNumber, new byte[] { -44, -61, -78, -95 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { -44, -61, -78, -95 }, this.magicNumber, this._io, "/types/header/seq/0");
             }
             this.versionMajor = this._io.readU2le();
-            if (!(versionMajor() == 2)) {
-                throw new KaitaiStream.ValidationNotEqualError(2, versionMajor(), _io(), "/types/header/seq/1");
+            if (!(this.versionMajor == 2)) {
+                throw new KaitaiStream.ValidationNotEqualError(2, this.versionMajor, this._io, "/types/header/seq/1");
             }
             this.versionMinor = this._io.readU2le();
             this.thiszone = this._io.readS4le();
             this.sigfigs = this._io.readU4le();
             this.snaplen = this._io.readU4le();
             this.network = Pcap.Linktype.byId(this._io.readU4le());
+        }
+
+        public void _fetchInstances() {
         }
         private byte[] magicNumber;
         private int versionMajor;
@@ -379,16 +390,14 @@ public class Pcap extends KaitaiStruct {
                 Linktype on = _root().hdr().network();
                 if (on != null) {
                     switch (_root().hdr().network()) {
-                    case PPI: {
-                        this._raw_body = this._io.readBytes((inclLen() < _root().hdr().snaplen() ? inclLen() : _root().hdr().snaplen()));
-                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                        this.body = new PacketPpi(_io__raw_body);
+                    case ETHERNET: {
+                        KaitaiStream _io_body = this._io.substream((inclLen() < _root().hdr().snaplen() ? inclLen() : _root().hdr().snaplen()));
+                        this.body = new EthernetFrame(_io_body);
                         break;
                     }
-                    case ETHERNET: {
-                        this._raw_body = this._io.readBytes((inclLen() < _root().hdr().snaplen() ? inclLen() : _root().hdr().snaplen()));
-                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                        this.body = new EthernetFrame(_io__raw_body);
+                    case PPI: {
+                        KaitaiStream _io_body = this._io.substream((inclLen() < _root().hdr().snaplen() ? inclLen() : _root().hdr().snaplen()));
+                        this.body = new PacketPpi(_io_body);
                         break;
                     }
                     default: {
@@ -401,6 +410,28 @@ public class Pcap extends KaitaiStruct {
                 }
             }
         }
+
+        public void _fetchInstances() {
+            {
+                Linktype on = _root().hdr().network();
+                if (on != null) {
+                    switch (_root().hdr().network()) {
+                    case ETHERNET: {
+                        ((EthernetFrame) (this.body))._fetchInstances();
+                        break;
+                    }
+                    case PPI: {
+                        ((PacketPpi) (this.body))._fetchInstances();
+                        break;
+                    }
+                    default: {
+                        break;
+                    }
+                    }
+                } else {
+                }
+            }
+        }
         private long tsSec;
         private long tsUsec;
         private long inclLen;
@@ -408,7 +439,6 @@ public class Pcap extends KaitaiStruct {
         private Object body;
         private Pcap _root;
         private Pcap _parent;
-        private byte[] _raw_body;
         public long tsSec() { return tsSec; }
         public long tsUsec() { return tsUsec; }
 
@@ -428,14 +458,13 @@ public class Pcap extends KaitaiStruct {
         public Object body() { return body; }
         public Pcap _root() { return _root; }
         public Pcap _parent() { return _parent; }
-        public byte[] _raw_body() { return _raw_body; }
     }
     private Header hdr;
-    private ArrayList<Packet> packets;
+    private List<Packet> packets;
     private Pcap _root;
     private KaitaiStruct _parent;
     public Header hdr() { return hdr; }
-    public ArrayList<Packet> packets() { return packets; }
+    public List<Packet> packets() { return packets; }
     public Pcap _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

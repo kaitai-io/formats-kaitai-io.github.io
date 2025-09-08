@@ -2,16 +2,16 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
 ##
 # @see https://web.archive.org/web/20170215190034/http://rewiki.regengedanken.de/wiki/.AGG_(Heroes_of_Might_and_Magic) Source
 class HeroesOfMightAndMagicAgg < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -24,7 +24,7 @@ class HeroesOfMightAndMagicAgg < Kaitai::Struct::Struct
     self
   end
   class Entry < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -50,13 +50,13 @@ class HeroesOfMightAndMagicAgg < Kaitai::Struct::Struct
     attr_reader :size2
   end
   class Filename < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @str = (@_io.read_bytes_term(0, false, true, true)).force_encoding("ASCII")
+      @str = (@_io.read_bytes_term(0, false, true, true)).force_encoding("ASCII").encode('UTF-8')
       self
     end
     attr_reader :str
@@ -64,13 +64,12 @@ class HeroesOfMightAndMagicAgg < Kaitai::Struct::Struct
   def filenames
     return @filenames unless @filenames.nil?
     _pos = @_io.pos
-    @_io.seek((entries.last.offset + entries.last.size))
+    @_io.seek(entries.last.offset + entries.last.size)
     @_raw_filenames = []
     @filenames = []
     (num_files).times { |i|
-      @_raw_filenames << @_io.read_bytes(15)
-      _io__raw_filenames = Kaitai::Struct::Stream.new(@_raw_filenames[i])
-      @filenames << Filename.new(_io__raw_filenames, self, @_root)
+      _io_filenames = @_io.substream(15)
+      @filenames << Filename.new(_io_filenames, self, @_root)
     }
     @_io.seek(_pos)
     @filenames

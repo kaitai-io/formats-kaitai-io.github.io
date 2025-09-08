@@ -14,8 +14,8 @@
 
 namespace {
     class Vdi extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Vdi $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Vdi $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -71,17 +71,129 @@ namespace {
 }
 
 namespace Vdi {
-    class Header extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Vdi $_parent = null, \Vdi $_root = null) {
+    class BlocksMap extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Vdi $_parent = null, ?\Vdi $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_text = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(64), "utf-8");
+            $this->_m_index = [];
+            $n = $this->_root()->header()->headerMain()->blocksInImage();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_index[] = new \Vdi\BlocksMap\BlockIndex($this->_io, $this, $this->_root);
+            }
+        }
+        protected $_m_index;
+        public function index() { return $this->_m_index; }
+    }
+}
+
+namespace Vdi\BlocksMap {
+    class BlockIndex extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Vdi\BlocksMap $_parent = null, ?\Vdi $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_index = $this->_io->readU4le();
+        }
+        protected $_m_block;
+        public function block() {
+            if ($this->_m_block !== null)
+                return $this->_m_block;
+            if ($this->isAllocated()) {
+                $this->_m_block = $this->_root()->disk()->blocks()[$this->index()];
+            }
+            return $this->_m_block;
+        }
+        protected $_m_isAllocated;
+        public function isAllocated() {
+            if ($this->_m_isAllocated !== null)
+                return $this->_m_isAllocated;
+            $this->_m_isAllocated = $this->index() < $this->_root()->blockDiscarded();
+            return $this->_m_isAllocated;
+        }
+        protected $_m_index;
+        public function index() { return $this->_m_index; }
+    }
+}
+
+namespace Vdi {
+    class Disk extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Vdi $_parent = null, ?\Vdi $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_blocks = [];
+            $n = $this->_root()->header()->headerMain()->blocksInImage();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_blocks[] = new \Vdi\Disk\Block($this->_io, $this, $this->_root);
+            }
+        }
+        protected $_m_blocks;
+        public function blocks() { return $this->_m_blocks; }
+    }
+}
+
+namespace Vdi\Disk {
+    class Block extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Vdi\Disk $_parent = null, ?\Vdi $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_metadata = $this->_io->readBytes($this->_root()->header()->headerMain()->blockMetadataSize());
+            $this->_m__raw_data = [];
+            $this->_m_data = [];
+            $i = 0;
+            while (!$this->_io->isEof()) {
+                $this->_m__raw_data[] = $this->_io->readBytes($this->_root()->header()->headerMain()->blockDataSize());
+                $_io__raw_data = new \Kaitai\Struct\Stream(end($this->_m__raw_data));
+                $this->_m_data[] = new \Vdi\Disk\Block\Sector($_io__raw_data, $this, $this->_root);
+                $i++;
+            }
+        }
+        protected $_m_metadata;
+        protected $_m_data;
+        protected $_m__raw_data;
+        public function metadata() { return $this->_m_metadata; }
+        public function data() { return $this->_m_data; }
+        public function _raw_data() { return $this->_m__raw_data; }
+    }
+}
+
+namespace Vdi\Disk\Block {
+    class Sector extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Vdi\Disk\Block $_parent = null, ?\Vdi $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_data = $this->_io->readBytes($this->_root()->header()->headerMain()->geometry()->sectorSize());
+        }
+        protected $_m_data;
+        public function data() { return $this->_m_data; }
+    }
+}
+
+namespace Vdi {
+    class Header extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Vdi $_parent = null, ?\Vdi $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_text = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(64), "UTF-8");
             $this->_m_signature = $this->_io->readBytes(4);
-            if (!($this->signature() == "\x7F\x10\xDA\xBE")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x7F\x10\xDA\xBE", $this->signature(), $this->_io(), "/types/header/seq/1");
+            if (!($this->_m_signature == "\x7F\x10\xDA\xBE")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x7F\x10\xDA\xBE", $this->_m_signature, $this->_io, "/types/header/seq/1");
             }
             $this->_m_version = new \Vdi\Header\Version($this->_io, $this, $this->_root);
             if ($this->subheaderSizeIsDynamic()) {
@@ -91,12 +203,12 @@ namespace Vdi {
             $_io__raw_headerMain = new \Kaitai\Struct\Stream($this->_m__raw_headerMain);
             $this->_m_headerMain = new \Vdi\Header\HeaderMain($_io__raw_headerMain, $this, $this->_root);
         }
-        protected $_m_headerSize;
-        public function headerSize() {
-            if ($this->_m_headerSize !== null)
-                return $this->_m_headerSize;
-            $this->_m_headerSize = ($this->subheaderSizeIsDynamic() ? $this->headerSizeOptional() : 336);
-            return $this->_m_headerSize;
+        protected $_m_blockSize;
+        public function blockSize() {
+            if ($this->_m_blockSize !== null)
+                return $this->_m_blockSize;
+            $this->_m_blockSize = $this->headerMain()->blockMetadataSize() + $this->headerMain()->blockDataSize();
+            return $this->_m_blockSize;
         }
         protected $_m_blocksMapOffset;
         public function blocksMapOffset() {
@@ -105,12 +217,12 @@ namespace Vdi {
             $this->_m_blocksMapOffset = $this->headerMain()->blocksMapOffset();
             return $this->_m_blocksMapOffset;
         }
-        protected $_m_subheaderSizeIsDynamic;
-        public function subheaderSizeIsDynamic() {
-            if ($this->_m_subheaderSizeIsDynamic !== null)
-                return $this->_m_subheaderSizeIsDynamic;
-            $this->_m_subheaderSizeIsDynamic = $this->version()->major() >= 1;
-            return $this->_m_subheaderSizeIsDynamic;
+        protected $_m_blocksMapSize;
+        public function blocksMapSize() {
+            if ($this->_m_blocksMapSize !== null)
+                return $this->_m_blocksMapSize;
+            $this->_m_blocksMapSize = intval((($this->headerMain()->blocksInImage() * 4 + $this->headerMain()->geometry()->sectorSize()) - 1) / $this->headerMain()->geometry()->sectorSize()) * $this->headerMain()->geometry()->sectorSize();
+            return $this->_m_blocksMapSize;
         }
         protected $_m_blocksOffset;
         public function blocksOffset() {
@@ -119,19 +231,19 @@ namespace Vdi {
             $this->_m_blocksOffset = $this->headerMain()->offsetData();
             return $this->_m_blocksOffset;
         }
-        protected $_m_blockSize;
-        public function blockSize() {
-            if ($this->_m_blockSize !== null)
-                return $this->_m_blockSize;
-            $this->_m_blockSize = ($this->headerMain()->blockMetadataSize() + $this->headerMain()->blockDataSize());
-            return $this->_m_blockSize;
+        protected $_m_headerSize;
+        public function headerSize() {
+            if ($this->_m_headerSize !== null)
+                return $this->_m_headerSize;
+            $this->_m_headerSize = ($this->subheaderSizeIsDynamic() ? $this->headerSizeOptional() : 336);
+            return $this->_m_headerSize;
         }
-        protected $_m_blocksMapSize;
-        public function blocksMapSize() {
-            if ($this->_m_blocksMapSize !== null)
-                return $this->_m_blocksMapSize;
-            $this->_m_blocksMapSize = (intval(((($this->headerMain()->blocksInImage() * 4) + $this->headerMain()->geometry()->sectorSize()) - 1) / $this->headerMain()->geometry()->sectorSize()) * $this->headerMain()->geometry()->sectorSize());
-            return $this->_m_blocksMapSize;
+        protected $_m_subheaderSizeIsDynamic;
+        public function subheaderSizeIsDynamic() {
+            if ($this->_m_subheaderSizeIsDynamic !== null)
+                return $this->_m_subheaderSizeIsDynamic;
+            $this->_m_subheaderSizeIsDynamic = $this->version()->major() >= 1;
+            return $this->_m_subheaderSizeIsDynamic;
         }
         protected $_m_text;
         protected $_m_signature;
@@ -149,41 +261,8 @@ namespace Vdi {
 }
 
 namespace Vdi\Header {
-    class Uuid extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Vdi\Header\HeaderMain $_parent = null, \Vdi $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_uuid = $this->_io->readBytes(16);
-        }
-        protected $_m_uuid;
-        public function uuid() { return $this->_m_uuid; }
-    }
-}
-
-namespace Vdi\Header {
-    class Version extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Vdi\Header $_parent = null, \Vdi $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_major = $this->_io->readU2le();
-            $this->_m_minor = $this->_io->readU2le();
-        }
-        protected $_m_major;
-        protected $_m_minor;
-        public function major() { return $this->_m_major; }
-        public function minor() { return $this->_m_minor; }
-    }
-}
-
-namespace Vdi\Header {
     class HeaderMain extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Vdi\Header $_parent = null, \Vdi $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Vdi\Header $_parent = null, ?\Vdi $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -191,7 +270,7 @@ namespace Vdi\Header {
         private function _read() {
             $this->_m_imageType = $this->_io->readU4le();
             $this->_m_imageFlags = new \Vdi\Header\HeaderMain\Flags($this->_io, $this, $this->_root);
-            $this->_m_description = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(256), "utf-8");
+            $this->_m_description = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(256), "UTF-8");
             if ($this->_parent()->version()->major() >= 1) {
                 $this->_m_blocksMapOffset = $this->_io->readU4le();
             }
@@ -215,7 +294,7 @@ namespace Vdi\Header {
             if ($this->_parent()->version()->major() >= 1) {
                 $this->_m_uuidParent = new \Vdi\Header\Uuid($this->_io, $this, $this->_root);
             }
-            if ( (($this->_parent()->version()->major() >= 1) && (($this->_io()->pos() + 16) <= $this->_io()->size())) ) {
+            if ( (($this->_parent()->version()->major() >= 1) && ($this->_io()->pos() + 16 <= $this->_io()->size())) ) {
                 $this->_m_lchcGeometry = new \Vdi\Header\HeaderMain\Geometry($this->_io, $this, $this->_root);
             }
         }
@@ -261,32 +340,8 @@ namespace Vdi\Header {
 }
 
 namespace Vdi\Header\HeaderMain {
-    class Geometry extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Vdi\Header\HeaderMain $_parent = null, \Vdi $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_cylinders = $this->_io->readU4le();
-            $this->_m_heads = $this->_io->readU4le();
-            $this->_m_sectors = $this->_io->readU4le();
-            $this->_m_sectorSize = $this->_io->readU4le();
-        }
-        protected $_m_cylinders;
-        protected $_m_heads;
-        protected $_m_sectors;
-        protected $_m_sectorSize;
-        public function cylinders() { return $this->_m_cylinders; }
-        public function heads() { return $this->_m_heads; }
-        public function sectors() { return $this->_m_sectors; }
-        public function sectorSize() { return $this->_m_sectorSize; }
-    }
-}
-
-namespace Vdi\Header\HeaderMain {
     class Flags extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Vdi\Header\HeaderMain $_parent = null, \Vdi $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Vdi\Header\HeaderMain $_parent = null, ?\Vdi $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -314,115 +369,60 @@ namespace Vdi\Header\HeaderMain {
     }
 }
 
-namespace Vdi {
-    class BlocksMap extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Vdi $_parent = null, \Vdi $_root = null) {
+namespace Vdi\Header\HeaderMain {
+    class Geometry extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Vdi\Header\HeaderMain $_parent = null, ?\Vdi $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_index = [];
-            $n = $this->_root()->header()->headerMain()->blocksInImage();
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_index[] = new \Vdi\BlocksMap\BlockIndex($this->_io, $this, $this->_root);
-            }
+            $this->_m_cylinders = $this->_io->readU4le();
+            $this->_m_heads = $this->_io->readU4le();
+            $this->_m_sectors = $this->_io->readU4le();
+            $this->_m_sectorSize = $this->_io->readU4le();
         }
-        protected $_m_index;
-        public function index() { return $this->_m_index; }
+        protected $_m_cylinders;
+        protected $_m_heads;
+        protected $_m_sectors;
+        protected $_m_sectorSize;
+        public function cylinders() { return $this->_m_cylinders; }
+        public function heads() { return $this->_m_heads; }
+        public function sectors() { return $this->_m_sectors; }
+        public function sectorSize() { return $this->_m_sectorSize; }
     }
 }
 
-namespace Vdi\BlocksMap {
-    class BlockIndex extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Vdi\BlocksMap $_parent = null, \Vdi $_root = null) {
+namespace Vdi\Header {
+    class Uuid extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Vdi\Header\HeaderMain $_parent = null, ?\Vdi $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_index = $this->_io->readU4le();
+            $this->_m_uuid = $this->_io->readBytes(16);
         }
-        protected $_m_isAllocated;
-        public function isAllocated() {
-            if ($this->_m_isAllocated !== null)
-                return $this->_m_isAllocated;
-            $this->_m_isAllocated = $this->index() < $this->_root()->blockDiscarded();
-            return $this->_m_isAllocated;
-        }
-        protected $_m_block;
-        public function block() {
-            if ($this->_m_block !== null)
-                return $this->_m_block;
-            if ($this->isAllocated()) {
-                $this->_m_block = $this->_root()->disk()->blocks()[$this->index()];
-            }
-            return $this->_m_block;
-        }
-        protected $_m_index;
-        public function index() { return $this->_m_index; }
+        protected $_m_uuid;
+        public function uuid() { return $this->_m_uuid; }
     }
 }
 
-namespace Vdi {
-    class Disk extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Vdi $_parent = null, \Vdi $_root = null) {
+namespace Vdi\Header {
+    class Version extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Vdi\Header $_parent = null, ?\Vdi $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_blocks = [];
-            $n = $this->_root()->header()->headerMain()->blocksInImage();
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_blocks[] = new \Vdi\Disk\Block($this->_io, $this, $this->_root);
-            }
+            $this->_m_major = $this->_io->readU2le();
+            $this->_m_minor = $this->_io->readU2le();
         }
-        protected $_m_blocks;
-        public function blocks() { return $this->_m_blocks; }
-    }
-}
-
-namespace Vdi\Disk {
-    class Block extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Vdi\Disk $_parent = null, \Vdi $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_metadata = $this->_io->readBytes($this->_root()->header()->headerMain()->blockMetadataSize());
-            $this->_m__raw_data = [];
-            $this->_m_data = [];
-            $i = 0;
-            while (!$this->_io->isEof()) {
-                $this->_m__raw_data[] = $this->_io->readBytes($this->_root()->header()->headerMain()->blockDataSize());
-                $_io__raw_data = new \Kaitai\Struct\Stream(end($this->_m__raw_data));
-                $this->_m_data[] = new \Vdi\Disk\Block\Sector($_io__raw_data, $this, $this->_root);
-                $i++;
-            }
-        }
-        protected $_m_metadata;
-        protected $_m_data;
-        protected $_m__raw_data;
-        public function metadata() { return $this->_m_metadata; }
-        public function data() { return $this->_m_data; }
-        public function _raw_data() { return $this->_m__raw_data; }
-    }
-}
-
-namespace Vdi\Disk\Block {
-    class Sector extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Vdi\Disk\Block $_parent = null, \Vdi $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_data = $this->_io->readBytes($this->_root()->header()->headerMain()->geometry()->sectorSize());
-        }
-        protected $_m_data;
-        public function data() { return $this->_m_data; }
+        protected $_m_major;
+        protected $_m_minor;
+        public function major() { return $this->_m_major; }
+        public function minor() { return $this->_m_minor; }
     }
 }
 
@@ -432,5 +432,11 @@ namespace Vdi {
         const STATIC = 2;
         const UNDO = 3;
         const DIFF = 4;
+
+        private const _VALUES = [1 => true, 2 => true, 3 => true, 4 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

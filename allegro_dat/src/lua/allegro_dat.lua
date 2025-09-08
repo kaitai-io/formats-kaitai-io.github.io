@@ -38,7 +38,7 @@ function AllegroDat:_read()
   self.pack_magic = AllegroDat.PackEnum(self._io:read_u4be())
   self.dat_magic = self._io:read_bytes(4)
   if not(self.dat_magic == "\065\076\076\046") then
-    error("not equal, expected " ..  "\065\076\076\046" .. ", but got " .. self.dat_magic)
+    error("not equal, expected " .. "\065\076\076\046" .. ", but got " .. self.dat_magic)
   end
   self.num_objects = self._io:read_u4be()
   self.objects = {}
@@ -48,32 +48,12 @@ function AllegroDat:_read()
 end
 
 
--- 
--- Simple monochrome monospaced font, 95 characters, 8x16 px
--- characters.
-AllegroDat.DatFont16 = class.class(KaitaiStruct)
-
-function AllegroDat.DatFont16:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function AllegroDat.DatFont16:_read()
-  self.chars = {}
-  for i = 0, 95 - 1 do
-    self.chars[i + 1] = self._io:read_bytes(16)
-  end
-end
-
-
 AllegroDat.DatBitmap = class.class(KaitaiStruct)
 
 function AllegroDat.DatBitmap:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -90,22 +70,104 @@ AllegroDat.DatFont = class.class(KaitaiStruct)
 function AllegroDat.DatFont:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function AllegroDat.DatFont:_read()
   self.font_size = self._io:read_s2be()
   local _on = self.font_size
-  if _on == 8 then
-    self.body = AllegroDat.DatFont8(self._io, self, self._root)
+  if _on == 0 then
+    self.body = AllegroDat.DatFont39(self._io, self, self._root)
   elseif _on == 16 then
     self.body = AllegroDat.DatFont16(self._io, self, self._root)
-  elseif _on == 0 then
-    self.body = AllegroDat.DatFont39(self._io, self, self._root)
+  elseif _on == 8 then
+    self.body = AllegroDat.DatFont8(self._io, self, self._root)
   end
 end
 
+
+-- 
+-- Simple monochrome monospaced font, 95 characters, 8x16 px
+-- characters.
+AllegroDat.DatFont16 = class.class(KaitaiStruct)
+
+function AllegroDat.DatFont16:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function AllegroDat.DatFont16:_read()
+  self.chars = {}
+  for i = 0, 95 - 1 do
+    self.chars[i + 1] = self._io:read_bytes(16)
+  end
+end
+
+
+-- 
+-- New bitmap font format introduced since Allegro 3.9: allows
+-- flexible designation of character ranges, 8-bit colored
+-- characters, etc.
+AllegroDat.DatFont39 = class.class(KaitaiStruct)
+
+function AllegroDat.DatFont39:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function AllegroDat.DatFont39:_read()
+  self.num_ranges = self._io:read_s2be()
+  self.ranges = {}
+  for i = 0, self.num_ranges - 1 do
+    self.ranges[i + 1] = AllegroDat.DatFont39.Range(self._io, self, self._root)
+  end
+end
+
+
+AllegroDat.DatFont39.FontChar = class.class(KaitaiStruct)
+
+function AllegroDat.DatFont39.FontChar:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function AllegroDat.DatFont39.FontChar:_read()
+  self.width = self._io:read_u2be()
+  self.height = self._io:read_u2be()
+  self.body = self._io:read_bytes(self.width * self.height)
+end
+
+
+AllegroDat.DatFont39.Range = class.class(KaitaiStruct)
+
+function AllegroDat.DatFont39.Range:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function AllegroDat.DatFont39.Range:_read()
+  self.mono = self._io:read_u1()
+  self.start_char = self._io:read_u4be()
+  self.end_char = self._io:read_u4be()
+  self.chars = {}
+  for i = 0, (self.end_char - self.start_char) + 1 - 1 do
+    self.chars[i + 1] = AllegroDat.DatFont39.FontChar(self._io, self, self._root)
+  end
+end
+
+-- 
+-- First character in range.
+-- 
+-- Last character in range (inclusive).
 
 -- 
 -- Simple monochrome monospaced font, 95 characters, 8x8 px
@@ -115,7 +177,7 @@ AllegroDat.DatFont8 = class.class(KaitaiStruct)
 function AllegroDat.DatFont8:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -132,7 +194,7 @@ AllegroDat.DatObject = class.class(KaitaiStruct)
 function AllegroDat.DatObject:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -154,14 +216,14 @@ function AllegroDat.DatObject:_read()
     self._raw_body = self._io:read_bytes(self.len_compressed)
     local _io = KaitaiStream(stringstream(self._raw_body))
     self.body = AllegroDat.DatBitmap(_io, self, self._root)
-  elseif _on == "RLE " then
-    self._raw_body = self._io:read_bytes(self.len_compressed)
-    local _io = KaitaiStream(stringstream(self._raw_body))
-    self.body = AllegroDat.DatRleSprite(_io, self, self._root)
   elseif _on == "FONT" then
     self._raw_body = self._io:read_bytes(self.len_compressed)
     local _io = KaitaiStream(stringstream(self._raw_body))
     self.body = AllegroDat.DatFont(_io, self, self._root)
+  elseif _on == "RLE " then
+    self._raw_body = self._io:read_bytes(self.len_compressed)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = AllegroDat.DatRleSprite(_io, self, self._root)
   else
     self.body = self._io:read_bytes(self.len_compressed)
   end
@@ -178,65 +240,21 @@ function AllegroDat.DatObject.property.type:get()
 end
 
 
--- 
--- New bitmap font format introduced since Allegro 3.9: allows
--- flexible designation of character ranges, 8-bit colored
--- characters, etc.
-AllegroDat.DatFont39 = class.class(KaitaiStruct)
+AllegroDat.DatRleSprite = class.class(KaitaiStruct)
 
-function AllegroDat.DatFont39:_init(io, parent, root)
+function AllegroDat.DatRleSprite:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function AllegroDat.DatFont39:_read()
-  self.num_ranges = self._io:read_s2be()
-  self.ranges = {}
-  for i = 0, self.num_ranges - 1 do
-    self.ranges[i + 1] = AllegroDat.DatFont39.Range(self._io, self, self._root)
-  end
-end
-
-
-AllegroDat.DatFont39.Range = class.class(KaitaiStruct)
-
-function AllegroDat.DatFont39.Range:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function AllegroDat.DatFont39.Range:_read()
-  self.mono = self._io:read_u1()
-  self.start_char = self._io:read_u4be()
-  self.end_char = self._io:read_u4be()
-  self.chars = {}
-  for i = 0, ((self.end_char - self.start_char) + 1) - 1 do
-    self.chars[i + 1] = AllegroDat.DatFont39.FontChar(self._io, self, self._root)
-  end
-end
-
--- 
--- First character in range.
--- 
--- Last character in range (inclusive).
-
-AllegroDat.DatFont39.FontChar = class.class(KaitaiStruct)
-
-function AllegroDat.DatFont39.FontChar:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function AllegroDat.DatFont39.FontChar:_read()
+function AllegroDat.DatRleSprite:_read()
+  self.bits_per_pixel = self._io:read_s2be()
   self.width = self._io:read_u2be()
   self.height = self._io:read_u2be()
-  self.body = self._io:read_bytes((self.width * self.height))
+  self.len_image = self._io:read_u4be()
+  self.image = self._io:read_bytes_full()
 end
 
 
@@ -245,7 +263,7 @@ AllegroDat.Property = class.class(KaitaiStruct)
 function AllegroDat.Property:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -270,24 +288,6 @@ function AllegroDat.Property.property.is_valid:get()
 
   self._m_is_valid = self.magic == "prop"
   return self._m_is_valid
-end
-
-
-AllegroDat.DatRleSprite = class.class(KaitaiStruct)
-
-function AllegroDat.DatRleSprite:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function AllegroDat.DatRleSprite:_read()
-  self.bits_per_pixel = self._io:read_s2be()
-  self.width = self._io:read_u2be()
-  self.height = self._io:read_u2be()
-  self.len_image = self._io:read_u4be()
-  self.image = self._io:read_bytes_full()
 end
 
 

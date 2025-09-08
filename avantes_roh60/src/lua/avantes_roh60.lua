@@ -59,7 +59,7 @@ function AvantesRoh60:_read()
     self.unknown3[i + 1] = self._io:read_f4le()
   end
   self.spectrum = {}
-  for i = 0, (((self.ipixlast > 0) and math.floor(self.ipixlast) or math.ceil(self.ipixlast) - (self.ipixfirst > 0) and math.floor(self.ipixfirst) or math.ceil(self.ipixfirst)) - 1) - 1 do
+  for i = 0, (((self.ipixlast > 0) and math.floor(self.ipixlast) or math.ceil(self.ipixlast)) - ((self.ipixfirst > 0) and math.floor(self.ipixfirst) or math.ceil(self.ipixfirst))) - 1 - 1 do
     self.spectrum[i + 1] = self._io:read_f4le()
   end
   self.integration_ms = self._io:read_f4le()

@@ -8,86 +8,20 @@ digraph {
 		fasttracker_xm_module__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 			<TR><TD PORT="preheader_pos">0</TD><TD PORT="preheader_size">64</TD><TD>Preheader</TD><TD PORT="preheader_type">preheader</TD></TR>
-			<TR><TD PORT="header_pos">64</TD><TD PORT="header_size">(preheader.header_size - 4)</TD><TD>Header</TD><TD PORT="header_type">header</TD></TR>
+			<TR><TD PORT="header_pos">64</TD><TD PORT="header_size">preheader.header_size - 4</TD><TD>Header</TD><TD PORT="header_type">header</TD></TR>
 			<TR><TD PORT="patterns_pos">...</TD><TD PORT="patterns_size">...</TD><TD>Pattern</TD><TD PORT="patterns_type">patterns</TD></TR>
 			<TR><TD COLSPAN="4" PORT="patterns__repeat">repeat header.num_patterns times</TD></TR>
 			<TR><TD PORT="instruments_pos">...</TD><TD PORT="instruments_size">...</TD><TD>Instrument</TD><TD PORT="instruments_type">instruments</TD></TR>
 			<TR><TD COLSPAN="4" PORT="instruments__repeat">repeat header.num_instruments times</TD></TR>
 		</TABLE>>];
-		subgraph cluster__preheader {
-			label="FasttrackerXmModule::Preheader";
-			graph[style=dotted];
-
-			preheader__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="signature0_pos">0</TD><TD PORT="signature0_size">17</TD><TD></TD><TD PORT="signature0_type">signature0</TD></TR>
-				<TR><TD PORT="module_name_pos">17</TD><TD PORT="module_name_size">20</TD><TD>str(utf-8)</TD><TD PORT="module_name_type">module_name</TD></TR>
-				<TR><TD PORT="signature1_pos">37</TD><TD PORT="signature1_size">1</TD><TD></TD><TD PORT="signature1_type">signature1</TD></TR>
-				<TR><TD PORT="tracker_name_pos">38</TD><TD PORT="tracker_name_size">20</TD><TD>str(utf-8)</TD><TD PORT="tracker_name_type">tracker_name</TD></TR>
-				<TR><TD PORT="version_number_pos">58</TD><TD PORT="version_number_size">2</TD><TD>Version</TD><TD PORT="version_number_type">version_number</TD></TR>
-				<TR><TD PORT="header_size_pos">60</TD><TD PORT="header_size_size">4</TD><TD>u4le</TD><TD PORT="header_size_type">header_size</TD></TR>
-			</TABLE>>];
-			subgraph cluster__version {
-				label="FasttrackerXmModule::Preheader::Version";
-				graph[style=dotted];
-
-				version__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="minor_pos">0</TD><TD PORT="minor_size">1</TD><TD>u1</TD><TD PORT="minor_type">minor</TD></TR>
-					<TR><TD PORT="major_pos">1</TD><TD PORT="major_size">1</TD><TD>u1</TD><TD PORT="major_type">major</TD></TR>
-				</TABLE>>];
-				version__inst__value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-					<TR><TD>value</TD><TD>((major &lt;&lt; 8) | minor)</TD></TR>
-				</TABLE>>];
-			}
-		}
-		subgraph cluster__pattern {
-			label="FasttrackerXmModule::Pattern";
-			graph[style=dotted];
-
-			pattern__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="header_pos">0</TD><TD PORT="header_size">...</TD><TD>Header</TD><TD PORT="header_type">header</TD></TR>
-				<TR><TD PORT="packed_data_pos">...</TD><TD PORT="packed_data_size">header.main.len_packed_pattern</TD><TD></TD><TD PORT="packed_data_type">packed_data</TD></TR>
-			</TABLE>>];
-			subgraph cluster__header {
-				label="FasttrackerXmModule::Pattern::Header";
-				graph[style=dotted];
-
-				header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="header_length_pos">0</TD><TD PORT="header_length_size">4</TD><TD>u4le</TD><TD PORT="header_length_type">header_length</TD></TR>
-					<TR><TD PORT="main_pos">4</TD><TD PORT="main_size">(header_length - 4)</TD><TD>HeaderMain</TD><TD PORT="main_type">main</TD></TR>
-				</TABLE>>];
-				subgraph cluster__header_main {
-					label="FasttrackerXmModule::Pattern::Header::HeaderMain";
-					graph[style=dotted];
-
-					header_main__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-						<TR><TD PORT="packing_type_pos">0</TD><TD PORT="packing_type_size">1</TD><TD>u1</TD><TD PORT="packing_type_type">packing_type</TD></TR>
-						<TR><TD PORT="num_rows_raw_pos">1</TD><TD PORT="num_rows_raw_size">...</TD><TD>switch (_root.preheader.version_number.value)</TD><TD PORT="num_rows_raw_type">num_rows_raw</TD></TR>
-						<TR><TD PORT="len_packed_pattern_pos">...</TD><TD PORT="len_packed_pattern_size">2</TD><TD>u2le</TD><TD PORT="len_packed_pattern_type">len_packed_pattern</TD></TR>
-					</TABLE>>];
-					header_main__inst__num_rows [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-						<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-						<TR><TD>num_rows</TD><TD>(num_rows_raw + (_root.preheader.version_number.value == 258 ? 1 : 0))</TD></TR>
-					</TABLE>>];
-header_main__seq_num_rows_raw_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
-</TABLE>>];
-				}
-			}
-		}
 		subgraph cluster__flags {
 			label="FasttrackerXmModule::Flags";
 			graph[style=dotted];
 
 			flags__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="reserved_pos">0</TD><TD PORT="reserved_size">15b</TD><TD>b15</TD><TD PORT="reserved_type">reserved</TD></TR>
-				<TR><TD PORT="freq_table_type_pos">1:7</TD><TD PORT="freq_table_type_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="freq_table_type_type">freq_table_type</TD></TR>
+				<TR><TD PORT="reserved_pos">0</TD><TD PORT="reserved_size">15b</TD><TD>b15be</TD><TD PORT="reserved_type">reserved</TD></TR>
+				<TR><TD PORT="freq_table_type_pos">1:7</TD><TD PORT="freq_table_type_size">1b</TD><TD>b1be→bool</TD><TD PORT="freq_table_type_type">freq_table_type</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__header {
@@ -115,24 +49,12 @@ header_main__seq_num_rows_raw_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CE
 			instrument__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="header_size_pos">0</TD><TD PORT="header_size_size">4</TD><TD>u4le</TD><TD PORT="header_size_type">header_size</TD></TR>
-				<TR><TD PORT="header_pos">4</TD><TD PORT="header_size">(header_size - 4)</TD><TD>Header</TD><TD PORT="header_type">header</TD></TR>
+				<TR><TD PORT="header_pos">4</TD><TD PORT="header_size">header_size - 4</TD><TD>Header</TD><TD PORT="header_type">header</TD></TR>
 				<TR><TD PORT="samples_headers_pos">...</TD><TD PORT="samples_headers_size">40</TD><TD>SampleHeader</TD><TD PORT="samples_headers_type">samples_headers</TD></TR>
 				<TR><TD COLSPAN="4" PORT="samples_headers__repeat">repeat header.num_samples times</TD></TR>
 				<TR><TD PORT="samples_pos">...</TD><TD PORT="samples_size">...</TD><TD>SamplesData</TD><TD PORT="samples_type">samples</TD></TR>
 				<TR><TD COLSPAN="4" PORT="samples__repeat">repeat header.num_samples times</TD></TR>
 			</TABLE>>];
-			subgraph cluster__header {
-				label="FasttrackerXmModule::Instrument::Header";
-				graph[style=dotted];
-
-				header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="name_pos">0</TD><TD PORT="name_size">22</TD><TD>str(utf-8)</TD><TD PORT="name_type">name</TD></TR>
-					<TR><TD PORT="type_pos">22</TD><TD PORT="type_size">1</TD><TD>u1</TD><TD PORT="type_type">type</TD></TR>
-					<TR><TD PORT="num_samples_pos">23</TD><TD PORT="num_samples_size">2</TD><TD>u2le</TD><TD PORT="num_samples_type">num_samples</TD></TR>
-					<TR><TD PORT="extra_header_pos">25</TD><TD PORT="extra_header_size">214</TD><TD>ExtraHeader</TD><TD PORT="extra_header_type">extra_header</TD></TR>
-				</TABLE>>];
-			}
 			subgraph cluster__extra_header {
 				label="FasttrackerXmModule::Instrument::ExtraHeader";
 				graph[style=dotted];
@@ -174,13 +96,17 @@ header_main__seq_num_rows_raw_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CE
 					</TABLE>>];
 				}
 			}
-			subgraph cluster__samples_data {
-				label="FasttrackerXmModule::Instrument::SamplesData";
+			subgraph cluster__header {
+				label="FasttrackerXmModule::Instrument::Header";
 				graph[style=dotted];
 
-				samples_data__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="data_pos">0</TD><TD PORT="data_size">(header.sample_length * (header.type.is_sample_data_16_bit ? 2 : 1))</TD><TD></TD><TD PORT="data_type">data</TD></TR>
+					<TR><TD PORT="name_pos">0</TD><TD PORT="name_size">22</TD><TD>str(UTF-8)</TD><TD PORT="name_type">name</TD></TR>
+					<TR><TD PORT="type_pos">22</TD><TD PORT="type_size">1</TD><TD>u1</TD><TD PORT="type_type">type</TD></TR>
+					<TR><TD PORT="num_samples_pos">23</TD><TD PORT="num_samples_size">2</TD><TD>u2le</TD><TD PORT="num_samples_type">num_samples</TD></TR>
+					<TR><TD PORT="extra_header_pos">25</TD><TD PORT="extra_header_size">214</TD><TD>ExtraHeader</TD><TD PORT="extra_header_type">extra_header</TD></TR>
+					<TR><TD COLSPAN="4" PORT="extra_header__if">if num_samples &gt; 0</TD></TR>
 				</TABLE>>];
 			}
 			subgraph cluster__sample_header {
@@ -198,7 +124,7 @@ header_main__seq_num_rows_raw_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CE
 					<TR><TD PORT="panning_pos">15</TD><TD PORT="panning_size">1</TD><TD>u1</TD><TD PORT="panning_type">panning</TD></TR>
 					<TR><TD PORT="relative_note_number_pos">16</TD><TD PORT="relative_note_number_size">1</TD><TD>s1</TD><TD PORT="relative_note_number_type">relative_note_number</TD></TR>
 					<TR><TD PORT="reserved_pos">17</TD><TD PORT="reserved_size">1</TD><TD>u1</TD><TD PORT="reserved_type">reserved</TD></TR>
-					<TR><TD PORT="name_pos">18</TD><TD PORT="name_size">22</TD><TD>str(utf-8)</TD><TD PORT="name_type">name</TD></TR>
+					<TR><TD PORT="name_pos">18</TD><TD PORT="name_size">22</TD><TD>str(UTF-8)</TD><TD PORT="name_type">name</TD></TR>
 				</TABLE>>];
 				subgraph cluster__loop_type {
 					label="FasttrackerXmModule::Instrument::SampleHeader::LoopType";
@@ -206,12 +132,87 @@ header_main__seq_num_rows_raw_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CE
 
 					loop_type__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-						<TR><TD PORT="reserved0_pos">0</TD><TD PORT="reserved0_size">3b</TD><TD>b3</TD><TD PORT="reserved0_type">reserved0</TD></TR>
-						<TR><TD PORT="is_sample_data_16_bit_pos">0:3</TD><TD PORT="is_sample_data_16_bit_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="is_sample_data_16_bit_type">is_sample_data_16_bit</TD></TR>
-						<TR><TD PORT="reserved1_pos">0:4</TD><TD PORT="reserved1_size">2b</TD><TD>b2</TD><TD PORT="reserved1_type">reserved1</TD></TR>
-						<TR><TD PORT="loop_type_pos">0:6</TD><TD PORT="loop_type_size">2b</TD><TD>b2→LoopType</TD><TD PORT="loop_type_type">loop_type</TD></TR>
+						<TR><TD PORT="reserved0_pos">0</TD><TD PORT="reserved0_size">3b</TD><TD>b3be</TD><TD PORT="reserved0_type">reserved0</TD></TR>
+						<TR><TD PORT="is_sample_data_16_bit_pos">0:3</TD><TD PORT="is_sample_data_16_bit_size">1b</TD><TD>b1be→bool</TD><TD PORT="is_sample_data_16_bit_type">is_sample_data_16_bit</TD></TR>
+						<TR><TD PORT="reserved1_pos">0:4</TD><TD PORT="reserved1_size">2b</TD><TD>b2be</TD><TD PORT="reserved1_type">reserved1</TD></TR>
+						<TR><TD PORT="loop_type_pos">0:6</TD><TD PORT="loop_type_size">2b</TD><TD>b2be→LoopType</TD><TD PORT="loop_type_type">loop_type</TD></TR>
 					</TABLE>>];
 				}
+			}
+			subgraph cluster__samples_data {
+				label="FasttrackerXmModule::Instrument::SamplesData";
+				graph[style=dotted];
+
+				samples_data__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="data_pos">0</TD><TD PORT="data_size">header.sample_length * (header.type.is_sample_data_16_bit ? 2 : 1)</TD><TD></TD><TD PORT="data_type">data</TD></TR>
+				</TABLE>>];
+			}
+		}
+		subgraph cluster__pattern {
+			label="FasttrackerXmModule::Pattern";
+			graph[style=dotted];
+
+			pattern__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="header_pos">0</TD><TD PORT="header_size">...</TD><TD>Header</TD><TD PORT="header_type">header</TD></TR>
+				<TR><TD PORT="packed_data_pos">...</TD><TD PORT="packed_data_size">header.main.len_packed_pattern</TD><TD></TD><TD PORT="packed_data_type">packed_data</TD></TR>
+			</TABLE>>];
+			subgraph cluster__header {
+				label="FasttrackerXmModule::Pattern::Header";
+				graph[style=dotted];
+
+				header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="header_length_pos">0</TD><TD PORT="header_length_size">4</TD><TD>u4le</TD><TD PORT="header_length_type">header_length</TD></TR>
+					<TR><TD PORT="main_pos">4</TD><TD PORT="main_size">header_length - 4</TD><TD>HeaderMain</TD><TD PORT="main_type">main</TD></TR>
+				</TABLE>>];
+				subgraph cluster__header_main {
+					label="FasttrackerXmModule::Pattern::Header::HeaderMain";
+					graph[style=dotted];
+
+					header_main__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="packing_type_pos">0</TD><TD PORT="packing_type_size">1</TD><TD>u1</TD><TD PORT="packing_type_type">packing_type</TD></TR>
+						<TR><TD PORT="num_rows_raw_pos">1</TD><TD PORT="num_rows_raw_size">...</TD><TD>switch (_root.preheader.version_number.value)</TD><TD PORT="num_rows_raw_type">num_rows_raw</TD></TR>
+						<TR><TD PORT="len_packed_pattern_pos">...</TD><TD PORT="len_packed_pattern_size">2</TD><TD>u2le</TD><TD PORT="len_packed_pattern_type">len_packed_pattern</TD></TR>
+					</TABLE>>];
+					header_main__inst__num_rows [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+						<TR><TD>num_rows</TD><TD>num_rows_raw + (_root.preheader.version_number.value == 258 ? 1 : 0)</TD></TR>
+					</TABLE>>];
+header_main__seq_num_rows_raw_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+</TABLE>>];
+				}
+			}
+		}
+		subgraph cluster__preheader {
+			label="FasttrackerXmModule::Preheader";
+			graph[style=dotted];
+
+			preheader__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="signature0_pos">0</TD><TD PORT="signature0_size">17</TD><TD>45 78 74 65 6E 64 65 64 20 4D 6F 64 75 6C 65 3A 20</TD><TD PORT="signature0_type">signature0</TD></TR>
+				<TR><TD PORT="module_name_pos">17</TD><TD PORT="module_name_size">20</TD><TD>str(UTF-8)</TD><TD PORT="module_name_type">module_name</TD></TR>
+				<TR><TD PORT="signature1_pos">37</TD><TD PORT="signature1_size">1</TD><TD>1A</TD><TD PORT="signature1_type">signature1</TD></TR>
+				<TR><TD PORT="tracker_name_pos">38</TD><TD PORT="tracker_name_size">20</TD><TD>str(UTF-8)</TD><TD PORT="tracker_name_type">tracker_name</TD></TR>
+				<TR><TD PORT="version_number_pos">58</TD><TD PORT="version_number_size">2</TD><TD>Version</TD><TD PORT="version_number_type">version_number</TD></TR>
+				<TR><TD PORT="header_size_pos">60</TD><TD PORT="header_size_size">4</TD><TD>u4le</TD><TD PORT="header_size_type">header_size</TD></TR>
+			</TABLE>>];
+			subgraph cluster__version {
+				label="FasttrackerXmModule::Preheader::Version";
+				graph[style=dotted];
+
+				version__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="minor_pos">0</TD><TD PORT="minor_size">1</TD><TD>u1</TD><TD PORT="minor_type">minor</TD></TR>
+					<TR><TD PORT="major_pos">1</TD><TD PORT="major_size">1</TD><TD>u1</TD><TD PORT="major_type">major</TD></TR>
+				</TABLE>>];
+				version__inst__value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>value</TD><TD>major &lt;&lt; 8 | minor</TD></TR>
+				</TABLE>>];
 			}
 		}
 	}
@@ -222,9 +223,20 @@ header_main__seq_num_rows_raw_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CE
 	header__seq:num_patterns_type -> fasttracker_xm_module__seq:patterns__repeat [color="#404040"];
 	fasttracker_xm_module__seq:instruments_type -> instrument__seq [style=bold];
 	header__seq:num_instruments_type -> fasttracker_xm_module__seq:instruments__repeat [color="#404040"];
-	preheader__seq:version_number_type -> version__seq [style=bold];
-	version__seq:major_type -> version__inst__value [color="#404040"];
-	version__seq:minor_type -> version__inst__value [color="#404040"];
+	header__seq:flags_type -> flags__seq [style=bold];
+	instrument__seq:header_size_type -> instrument__seq:header_size [color="#404040"];
+	instrument__seq:header_type -> header__seq [style=bold];
+	instrument__seq:samples_headers_type -> sample_header__seq [style=bold];
+	header__seq:num_samples_type -> instrument__seq:samples_headers__repeat [color="#404040"];
+	instrument__seq:samples_type -> samples_data__seq [style=bold];
+	header__seq:num_samples_type -> instrument__seq:samples__repeat [color="#404040"];
+	extra_header__seq:volume_points_type -> envelope_point__seq [style=bold];
+	extra_header__seq:panning_points_type -> envelope_point__seq [style=bold];
+	header__seq:extra_header_type -> extra_header__seq [style=bold];
+	header__seq:num_samples_type -> header__seq:extra_header__if [color="#404040"];
+	sample_header__seq:type_type -> loop_type__seq [style=bold];
+	sample_header__seq:sample_length_type -> samples_data__seq:data_size [color="#404040"];
+	loop_type__seq:is_sample_data_16_bit_type -> samples_data__seq:data_size [color="#404040"];
 	pattern__seq:header_type -> header__seq [style=bold];
 	header_main__seq:len_packed_pattern_type -> pattern__seq:packed_data_size [color="#404040"];
 	header__seq:header_length_type -> header__seq:main_size [color="#404040"];
@@ -233,17 +245,7 @@ header_main__seq_num_rows_raw_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CE
 	version__inst__value:value_type -> header_main__seq:num_rows_raw_type [color="#404040"];
 	header_main__seq:num_rows_raw_type -> header_main__inst__num_rows [color="#404040"];
 	version__inst__value:value_type -> header_main__inst__num_rows [color="#404040"];
-	header__seq:flags_type -> flags__seq [style=bold];
-	instrument__seq:header_size_type -> instrument__seq:header_size [color="#404040"];
-	instrument__seq:header_type -> header__seq [style=bold];
-	instrument__seq:samples_headers_type -> sample_header__seq [style=bold];
-	header__seq:num_samples_type -> instrument__seq:samples_headers__repeat [color="#404040"];
-	instrument__seq:samples_type -> samples_data__seq [style=bold];
-	header__seq:num_samples_type -> instrument__seq:samples__repeat [color="#404040"];
-	header__seq:extra_header_type -> extra_header__seq [style=bold];
-	extra_header__seq:volume_points_type -> envelope_point__seq [style=bold];
-	extra_header__seq:panning_points_type -> envelope_point__seq [style=bold];
-	sample_header__seq:sample_length_type -> samples_data__seq:data_size [color="#404040"];
-	loop_type__seq:is_sample_data_16_bit_type -> samples_data__seq:data_size [color="#404040"];
-	sample_header__seq:type_type -> loop_type__seq [style=bold];
+	preheader__seq:version_number_type -> version__seq [style=bold];
+	version__seq:major_type -> version__inst__value [color="#404040"];
+	version__seq:minor_type -> version__inst__value [color="#404040"];
 }

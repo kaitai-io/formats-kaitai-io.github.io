@@ -2,45 +2,28 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
 ##
 # @see https://quakewiki.org/wiki/.pak#Format_specification Source
 class QuakePak < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
     @magic = @_io.read_bytes(4)
-    raise Kaitai::Struct::ValidationNotEqualError.new([80, 65, 67, 75].pack('C*'), magic, _io, "/seq/0") if not magic == [80, 65, 67, 75].pack('C*')
+    raise Kaitai::Struct::ValidationNotEqualError.new([80, 65, 67, 75].pack('C*'), @magic, @_io, "/seq/0") if not @magic == [80, 65, 67, 75].pack('C*')
     @ofs_index = @_io.read_u4le
     @len_index = @_io.read_u4le
     self
   end
-  class IndexStruct < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @entries = []
-      i = 0
-      while not @_io.eof?
-        @entries << IndexEntry.new(@_io, self, @_root)
-        i += 1
-      end
-      self
-    end
-    attr_reader :entries
-  end
   class IndexEntry < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -64,13 +47,29 @@ class QuakePak < Kaitai::Struct::Struct
     attr_reader :ofs
     attr_reader :size
   end
+  class IndexStruct < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @entries = []
+      i = 0
+      while not @_io.eof?
+        @entries << IndexEntry.new(@_io, self, @_root)
+        i += 1
+      end
+      self
+    end
+    attr_reader :entries
+  end
   def index
     return @index unless @index.nil?
     _pos = @_io.pos
     @_io.seek(ofs_index)
-    @_raw_index = @_io.read_bytes(len_index)
-    _io__raw_index = Kaitai::Struct::Stream.new(@_raw_index)
-    @index = IndexStruct.new(_io__raw_index, self, @_root)
+    _io_index = @_io.substream(len_index)
+    @index = IndexStruct.new(_io_index, self, @_root)
     @_io.seek(_pos)
     @index
   end

@@ -4,10 +4,10 @@
 
 local class = require("class")
 require("kaitaistruct")
+require("dcmp_variable_length_integer")
 local enum = require("enum")
 local utils = require("utils")
 
-require("dcmp_variable_length_integer")
 -- 
 -- Compressed resource data in `'dcmp' (1)` format,
 -- as stored in compressed resources with header type `8` and decompressor ID `1`.
@@ -83,23 +83,23 @@ Dcmp1.Chunk.TagKind = enum.Enum {
 function Dcmp1.Chunk:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function Dcmp1.Chunk:_read()
   self.tag = self._io:read_u1()
   local _on = utils.box_unwrap(( ((self.tag >= 0) and (self.tag <= 31)) ) and utils.box_wrap(Dcmp1.Chunk.TagKind.literal) or (utils.box_unwrap(( ((self.tag >= 32) and (self.tag <= 207)) ) and utils.box_wrap(Dcmp1.Chunk.TagKind.backreference) or (utils.box_unwrap(( ((self.tag >= 208) and (self.tag <= 209)) ) and utils.box_wrap(Dcmp1.Chunk.TagKind.literal) or (utils.box_unwrap((self.tag == 210) and utils.box_wrap(Dcmp1.Chunk.TagKind.backreference) or (utils.box_unwrap(( ((self.tag >= 213) and (self.tag <= 253)) ) and utils.box_wrap(Dcmp1.Chunk.TagKind.table_lookup) or (utils.box_unwrap((self.tag == 254) and utils.box_wrap(Dcmp1.Chunk.TagKind.extended) or (utils.box_unwrap((self.tag == 255) and utils.box_wrap(Dcmp1.Chunk.TagKind.end) or (Dcmp1.Chunk.TagKind.invalid))))))))))))))
-  if _on == Dcmp1.Chunk.TagKind.extended then
+  if _on == Dcmp1.Chunk.TagKind.backreference then
+    self.body = Dcmp1.Chunk.BackreferenceBody(self.tag, self._io, self, self._root)
+  elseif _on == Dcmp1.Chunk.TagKind.end then
+    self.body = Dcmp1.Chunk.EndBody(self._io, self, self._root)
+  elseif _on == Dcmp1.Chunk.TagKind.extended then
     self.body = Dcmp1.Chunk.ExtendedBody(self._io, self, self._root)
   elseif _on == Dcmp1.Chunk.TagKind.literal then
     self.body = Dcmp1.Chunk.LiteralBody(self.tag, self._io, self, self._root)
-  elseif _on == Dcmp1.Chunk.TagKind.end then
-    self.body = Dcmp1.Chunk.EndBody(self._io, self, self._root)
   elseif _on == Dcmp1.Chunk.TagKind.table_lookup then
     self.body = Dcmp1.Chunk.TableLookupBody(self.tag, self._io, self, self._root)
-  elseif _on == Dcmp1.Chunk.TagKind.backreference then
-    self.body = Dcmp1.Chunk.BackreferenceBody(self.tag, self._io, self, self._root)
   end
 end
 
@@ -114,6 +114,216 @@ end
 -- the body is a zero-length structure.
 
 -- 
+-- The body of a backreference chunk.
+-- 
+-- This chunk expands to the data stored in a preceding literal chunk,
+-- indicated by an index number (`index`).
+Dcmp1.Chunk.BackreferenceBody = class.class(KaitaiStruct)
+
+function Dcmp1.Chunk.BackreferenceBody:_init(tag, io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self.tag = tag
+  self:_read()
+end
+
+function Dcmp1.Chunk.BackreferenceBody:_read()
+  if self.is_index_separate then
+    self.index_separate_minus = self._io:read_u1()
+  end
+end
+
+-- 
+-- The index of the referenced literal chunk.
+-- 
+-- Stored literals are assigned index numbers in the order in which they appear in the compressed data,
+-- starting at 0.
+-- Non-stored literals are not counted in the numbering and cannot be referenced using backreferences.
+-- Once an index is assigned to a stored literal,
+-- it is never changed or unassigned for the entire length of the compressed data.
+-- 
+-- As the name indicates,
+-- a backreference can only reference stored literal chunks found *before* the backreference,
+-- not ones that come after it.
+Dcmp1.Chunk.BackreferenceBody.property.index = {}
+function Dcmp1.Chunk.BackreferenceBody.property.index:get()
+  if self._m_index ~= nil then
+    return self._m_index
+  end
+
+  self._m_index = utils.box_unwrap((self.is_index_separate) and utils.box_wrap(self.index_separate) or (self.index_in_tag))
+  return self._m_index
+end
+
+-- 
+-- The index of the referenced literal chunk,
+-- as stored in the tag byte.
+Dcmp1.Chunk.BackreferenceBody.property.index_in_tag = {}
+function Dcmp1.Chunk.BackreferenceBody.property.index_in_tag:get()
+  if self._m_index_in_tag ~= nil then
+    return self._m_index_in_tag
+  end
+
+  self._m_index_in_tag = self.tag - 32
+  return self._m_index_in_tag
+end
+
+-- 
+-- The index of the referenced literal chunk,
+-- as stored separately from the tag byte,
+-- with the implicit offset corrected for.
+Dcmp1.Chunk.BackreferenceBody.property.index_separate = {}
+function Dcmp1.Chunk.BackreferenceBody.property.index_separate:get()
+  if self._m_index_separate ~= nil then
+    return self._m_index_separate
+  end
+
+  if self.is_index_separate then
+    self._m_index_separate = self.index_separate_minus + 176
+  end
+  return self._m_index_separate
+end
+
+-- 
+-- Whether the index is stored separately from the tag.
+Dcmp1.Chunk.BackreferenceBody.property.is_index_separate = {}
+function Dcmp1.Chunk.BackreferenceBody.property.is_index_separate:get()
+  if self._m_is_index_separate ~= nil then
+    return self._m_is_index_separate
+  end
+
+  self._m_is_index_separate = self.tag == 210
+  return self._m_is_index_separate
+end
+
+-- 
+-- The index of the referenced literal chunk,
+-- stored separately from the tag.
+-- The value in this field is stored minus 0xb0.
+-- 
+-- This field is only present if the tag byte is 0xd2.
+-- For other tag bytes,
+-- the index is encoded in the tag byte.
+-- Values smaller than 0xb0 cannot be stored in this field,
+-- they must always be encoded in the tag byte.
+-- 
+-- The tag byte preceding this chunk body.
+
+-- 
+-- The body of an end chunk.
+-- This body is always empty.
+-- 
+-- The last chunk in the compressed data must always be an end chunk.
+-- An end chunk cannot appear elsewhere in the compressed data.
+Dcmp1.Chunk.EndBody = class.class(KaitaiStruct)
+
+function Dcmp1.Chunk.EndBody:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Dcmp1.Chunk.EndBody:_read()
+end
+
+
+-- 
+-- The body of an extended chunk.
+-- The meaning of this chunk depends on the extended tag byte stored in the chunk data.
+Dcmp1.Chunk.ExtendedBody = class.class(KaitaiStruct)
+
+function Dcmp1.Chunk.ExtendedBody:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Dcmp1.Chunk.ExtendedBody:_read()
+  self.tag = self._io:read_u1()
+  local _on = self.tag
+  if _on == 2 then
+    self.body = Dcmp1.Chunk.ExtendedBody.RepeatBody(self._io, self, self._root)
+  end
+end
+
+-- 
+-- The chunk's extended tag byte.
+-- This controls the structure of the body and the meaning of the chunk.
+-- 
+-- The chunk's body.
+
+-- 
+-- The body of a repeat chunk.
+-- 
+-- This chunk expands to the same byte repeated a number of times,
+-- i. e. it implements a form of run-length encoding.
+Dcmp1.Chunk.ExtendedBody.RepeatBody = class.class(KaitaiStruct)
+
+function Dcmp1.Chunk.ExtendedBody.RepeatBody:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Dcmp1.Chunk.ExtendedBody.RepeatBody:_read()
+  self.to_repeat_raw = DcmpVariableLengthInteger(self._io)
+  self.repeat_count_m1_raw = DcmpVariableLengthInteger(self._io)
+end
+
+-- 
+-- The number of times to repeat the value.
+-- 
+-- This value must be positive.
+Dcmp1.Chunk.ExtendedBody.RepeatBody.property.repeat_count = {}
+function Dcmp1.Chunk.ExtendedBody.RepeatBody.property.repeat_count:get()
+  if self._m_repeat_count ~= nil then
+    return self._m_repeat_count
+  end
+
+  self._m_repeat_count = self.repeat_count_m1 + 1
+  return self._m_repeat_count
+end
+
+-- 
+-- The number of times to repeat the value,
+-- minus one.
+-- 
+-- This value must not be negative.
+Dcmp1.Chunk.ExtendedBody.RepeatBody.property.repeat_count_m1 = {}
+function Dcmp1.Chunk.ExtendedBody.RepeatBody.property.repeat_count_m1:get()
+  if self._m_repeat_count_m1 ~= nil then
+    return self._m_repeat_count_m1
+  end
+
+  self._m_repeat_count_m1 = self.repeat_count_m1_raw.value
+  return self._m_repeat_count_m1
+end
+
+-- 
+-- The value to repeat.
+-- 
+-- Although it is stored as a variable-length integer,
+-- this value must fit into an unsigned 8-bit integer.
+Dcmp1.Chunk.ExtendedBody.RepeatBody.property.to_repeat = {}
+function Dcmp1.Chunk.ExtendedBody.RepeatBody.property.to_repeat:get()
+  if self._m_to_repeat ~= nil then
+    return self._m_to_repeat
+  end
+
+  self._m_to_repeat = self.to_repeat_raw.value
+  return self._m_to_repeat
+end
+
+-- 
+-- Raw variable-length integer representation of `to_repeat`.
+-- 
+-- Raw variable-length integer representation of `repeat_count_m1`.
+
+-- 
 -- The body of a literal data chunk.
 -- 
 -- The data that this chunk expands to is stored literally in the body (`literal`).
@@ -124,7 +334,7 @@ Dcmp1.Chunk.LiteralBody = class.class(KaitaiStruct)
 function Dcmp1.Chunk.LiteralBody:_init(tag, io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self.tag = tag
   self:_read()
 end
@@ -146,27 +356,8 @@ function Dcmp1.Chunk.LiteralBody.property.do_store:get()
     return self._m_do_store
   end
 
-  self._m_do_store = utils.box_unwrap((self.is_len_literal_separate) and utils.box_wrap(self.tag == 209) or ((self.tag & 16) ~= 0))
+  self._m_do_store = utils.box_unwrap((self.is_len_literal_separate) and utils.box_wrap(self.tag == 209) or (self.tag & 16 ~= 0))
   return self._m_do_store
-end
-
--- 
--- The part of the tag byte that indicates the length of the literal data,
--- in bytes,
--- minus one.
--- 
--- If the tag byte is 0xd0 or 0xd1,
--- the length is stored in a separate byte after the tag byte and before the literal data.
-Dcmp1.Chunk.LiteralBody.property.len_literal_m1_in_tag = {}
-function Dcmp1.Chunk.LiteralBody.property.len_literal_m1_in_tag:get()
-  if self._m_len_literal_m1_in_tag ~= nil then
-    return self._m_len_literal_m1_in_tag
-  end
-
-  if not(self.is_len_literal_separate) then
-    self._m_len_literal_m1_in_tag = (self.tag & 15)
-  end
-  return self._m_len_literal_m1_in_tag
 end
 
 -- 
@@ -194,8 +385,27 @@ function Dcmp1.Chunk.LiteralBody.property.len_literal:get()
     return self._m_len_literal
   end
 
-  self._m_len_literal = utils.box_unwrap((self.is_len_literal_separate) and utils.box_wrap(self.len_literal_separate) or ((self.len_literal_m1_in_tag + 1)))
+  self._m_len_literal = utils.box_unwrap((self.is_len_literal_separate) and utils.box_wrap(self.len_literal_separate) or (self.len_literal_m1_in_tag + 1))
   return self._m_len_literal
+end
+
+-- 
+-- The part of the tag byte that indicates the length of the literal data,
+-- in bytes,
+-- minus one.
+-- 
+-- If the tag byte is 0xd0 or 0xd1,
+-- the length is stored in a separate byte after the tag byte and before the literal data.
+Dcmp1.Chunk.LiteralBody.property.len_literal_m1_in_tag = {}
+function Dcmp1.Chunk.LiteralBody.property.len_literal_m1_in_tag:get()
+  if self._m_len_literal_m1_in_tag ~= nil then
+    return self._m_len_literal_m1_in_tag
+  end
+
+  if not(self.is_len_literal_separate) then
+    self._m_len_literal_m1_in_tag = self.tag & 15
+  end
+  return self._m_len_literal_m1_in_tag
 end
 
 -- 
@@ -212,103 +422,6 @@ end
 -- The tag byte preceding this chunk body.
 
 -- 
--- The body of a backreference chunk.
--- 
--- This chunk expands to the data stored in a preceding literal chunk,
--- indicated by an index number (`index`).
-Dcmp1.Chunk.BackreferenceBody = class.class(KaitaiStruct)
-
-function Dcmp1.Chunk.BackreferenceBody:_init(tag, io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self.tag = tag
-  self:_read()
-end
-
-function Dcmp1.Chunk.BackreferenceBody:_read()
-  if self.is_index_separate then
-    self.index_separate_minus = self._io:read_u1()
-  end
-end
-
--- 
--- Whether the index is stored separately from the tag.
-Dcmp1.Chunk.BackreferenceBody.property.is_index_separate = {}
-function Dcmp1.Chunk.BackreferenceBody.property.is_index_separate:get()
-  if self._m_is_index_separate ~= nil then
-    return self._m_is_index_separate
-  end
-
-  self._m_is_index_separate = self.tag == 210
-  return self._m_is_index_separate
-end
-
--- 
--- The index of the referenced literal chunk,
--- as stored in the tag byte.
-Dcmp1.Chunk.BackreferenceBody.property.index_in_tag = {}
-function Dcmp1.Chunk.BackreferenceBody.property.index_in_tag:get()
-  if self._m_index_in_tag ~= nil then
-    return self._m_index_in_tag
-  end
-
-  self._m_index_in_tag = (self.tag - 32)
-  return self._m_index_in_tag
-end
-
--- 
--- The index of the referenced literal chunk,
--- as stored separately from the tag byte,
--- with the implicit offset corrected for.
-Dcmp1.Chunk.BackreferenceBody.property.index_separate = {}
-function Dcmp1.Chunk.BackreferenceBody.property.index_separate:get()
-  if self._m_index_separate ~= nil then
-    return self._m_index_separate
-  end
-
-  if self.is_index_separate then
-    self._m_index_separate = (self.index_separate_minus + 176)
-  end
-  return self._m_index_separate
-end
-
--- 
--- The index of the referenced literal chunk.
--- 
--- Stored literals are assigned index numbers in the order in which they appear in the compressed data,
--- starting at 0.
--- Non-stored literals are not counted in the numbering and cannot be referenced using backreferences.
--- Once an index is assigned to a stored literal,
--- it is never changed or unassigned for the entire length of the compressed data.
--- 
--- As the name indicates,
--- a backreference can only reference stored literal chunks found *before* the backreference,
--- not ones that come after it.
-Dcmp1.Chunk.BackreferenceBody.property.index = {}
-function Dcmp1.Chunk.BackreferenceBody.property.index:get()
-  if self._m_index ~= nil then
-    return self._m_index
-  end
-
-  self._m_index = utils.box_unwrap((self.is_index_separate) and utils.box_wrap(self.index_separate) or (self.index_in_tag))
-  return self._m_index
-end
-
--- 
--- The index of the referenced literal chunk,
--- stored separately from the tag.
--- The value in this field is stored minus 0xb0.
--- 
--- This field is only present if the tag byte is 0xd2.
--- For other tag bytes,
--- the index is encoded in the tag byte.
--- Values smaller than 0xb0 cannot be stored in this field,
--- they must always be encoded in the tag byte.
--- 
--- The tag byte preceding this chunk body.
-
--- 
 -- The body of a table lookup chunk.
 -- This body is always empty.
 -- 
@@ -320,7 +433,7 @@ Dcmp1.Chunk.TableLookupBody = class.class(KaitaiStruct)
 function Dcmp1.Chunk.TableLookupBody:_init(tag, io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self.tag = tag
   self:_read()
 end
@@ -358,117 +471,4 @@ end
 
 -- 
 -- The tag byte preceding this chunk body.
-
--- 
--- The body of an end chunk.
--- This body is always empty.
--- 
--- The last chunk in the compressed data must always be an end chunk.
--- An end chunk cannot appear elsewhere in the compressed data.
-Dcmp1.Chunk.EndBody = class.class(KaitaiStruct)
-
-function Dcmp1.Chunk.EndBody:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Dcmp1.Chunk.EndBody:_read()
-end
-
-
--- 
--- The body of an extended chunk.
--- The meaning of this chunk depends on the extended tag byte stored in the chunk data.
-Dcmp1.Chunk.ExtendedBody = class.class(KaitaiStruct)
-
-function Dcmp1.Chunk.ExtendedBody:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Dcmp1.Chunk.ExtendedBody:_read()
-  self.tag = self._io:read_u1()
-  local _on = self.tag
-  if _on == 2 then
-    self.body = Dcmp1.Chunk.ExtendedBody.RepeatBody(self._io, self, self._root)
-  end
-end
-
--- 
--- The chunk's extended tag byte.
--- This controls the structure of the body and the meaning of the chunk.
--- 
--- The chunk's body.
-
--- 
--- The body of a repeat chunk.
--- 
--- This chunk expands to the same byte repeated a number of times,
--- i. e. it implements a form of run-length encoding.
-Dcmp1.Chunk.ExtendedBody.RepeatBody = class.class(KaitaiStruct)
-
-function Dcmp1.Chunk.ExtendedBody.RepeatBody:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Dcmp1.Chunk.ExtendedBody.RepeatBody:_read()
-  self.to_repeat_raw = DcmpVariableLengthInteger(self._io)
-  self.repeat_count_m1_raw = DcmpVariableLengthInteger(self._io)
-end
-
--- 
--- The value to repeat.
--- 
--- Although it is stored as a variable-length integer,
--- this value must fit into an unsigned 8-bit integer.
-Dcmp1.Chunk.ExtendedBody.RepeatBody.property.to_repeat = {}
-function Dcmp1.Chunk.ExtendedBody.RepeatBody.property.to_repeat:get()
-  if self._m_to_repeat ~= nil then
-    return self._m_to_repeat
-  end
-
-  self._m_to_repeat = self.to_repeat_raw.value
-  return self._m_to_repeat
-end
-
--- 
--- The number of times to repeat the value,
--- minus one.
--- 
--- This value must not be negative.
-Dcmp1.Chunk.ExtendedBody.RepeatBody.property.repeat_count_m1 = {}
-function Dcmp1.Chunk.ExtendedBody.RepeatBody.property.repeat_count_m1:get()
-  if self._m_repeat_count_m1 ~= nil then
-    return self._m_repeat_count_m1
-  end
-
-  self._m_repeat_count_m1 = self.repeat_count_m1_raw.value
-  return self._m_repeat_count_m1
-end
-
--- 
--- The number of times to repeat the value.
--- 
--- This value must be positive.
-Dcmp1.Chunk.ExtendedBody.RepeatBody.property.repeat_count = {}
-function Dcmp1.Chunk.ExtendedBody.RepeatBody.property.repeat_count:get()
-  if self._m_repeat_count ~= nil then
-    return self._m_repeat_count
-  end
-
-  self._m_repeat_count = (self.repeat_count_m1 + 1)
-  return self._m_repeat_count
-end
-
--- 
--- Raw variable-length integer representation of `to_repeat`.
--- 
--- Raw variable-length integer representation of `repeat_count_m1`.
 

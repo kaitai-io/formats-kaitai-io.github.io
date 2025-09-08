@@ -24,18 +24,28 @@ import (
  * @see <a href="https://www.sqlite.org/fileformat.html">Source</a>
  */
 
-type Sqlite3_Versions int
-const (
-	Sqlite3_Versions__Legacy Sqlite3_Versions = 1
-	Sqlite3_Versions__Wal Sqlite3_Versions = 2
-)
-
 type Sqlite3_Encodings int
 const (
 	Sqlite3_Encodings__Utf8 Sqlite3_Encodings = 1
 	Sqlite3_Encodings__Utf16le Sqlite3_Encodings = 2
 	Sqlite3_Encodings__Utf16be Sqlite3_Encodings = 3
 )
+var values_Sqlite3_Encodings = map[Sqlite3_Encodings]struct{}{1: {}, 2: {}, 3: {}}
+func (v Sqlite3_Encodings) isDefined() bool {
+	_, ok := values_Sqlite3_Encodings[v]
+	return ok
+}
+
+type Sqlite3_Versions int
+const (
+	Sqlite3_Versions__Legacy Sqlite3_Versions = 1
+	Sqlite3_Versions__Wal Sqlite3_Versions = 2
+)
+var values_Sqlite3_Versions = map[Sqlite3_Versions]struct{}{1: {}, 2: {}}
+func (v Sqlite3_Versions) isDefined() bool {
+	_, ok := values_Sqlite3_Versions[v]
+	return ok
+}
 type Sqlite3 struct {
 	Magic []byte
 	LenPageMod uint16
@@ -63,7 +73,7 @@ type Sqlite3 struct {
 	RootPage *Sqlite3_BtreePage
 	_io *kaitai.Stream
 	_root *Sqlite3
-	_parent interface{}
+	_parent kaitai.Struct
 	_f_lenPage bool
 	lenPage int
 }
@@ -72,7 +82,11 @@ func NewSqlite3() *Sqlite3 {
 	}
 }
 
-func (this *Sqlite3) Read(io *kaitai.Stream, parent interface{}, root *Sqlite3) (err error) {
+func (this Sqlite3) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Sqlite3) Read(io *kaitai.Stream, parent kaitai.Struct, root *Sqlite3) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -209,6 +223,7 @@ func (this *Sqlite3) LenPage() (v int, err error) {
 	if (this._f_lenPage) {
 		return this.lenPage, nil
 	}
+	this._f_lenPage = true
 	var tmp25 int;
 	if (this.LenPageMod == 1) {
 		tmp25 = 65536
@@ -216,7 +231,6 @@ func (this *Sqlite3) LenPage() (v int, err error) {
 		tmp25 = this.LenPageMod
 	}
 	this.lenPage = int(tmp25)
-	this._f_lenPage = true
 	return this.lenPage, nil
 }
 
@@ -281,94 +295,6 @@ func (this *Sqlite3) LenPage() (v int, err error) {
 /**
  * The "Application ID" set by PRAGMA application_id.
  */
-type Sqlite3_Serial struct {
-	Code *VlqBase128Be
-	_io *kaitai.Stream
-	_root *Sqlite3
-	_parent *Sqlite3_Serials
-	_f_isBlob bool
-	isBlob bool
-	_f_isString bool
-	isString bool
-	_f_lenContent bool
-	lenContent int
-}
-func NewSqlite3_Serial() *Sqlite3_Serial {
-	return &Sqlite3_Serial{
-	}
-}
-
-func (this *Sqlite3_Serial) Read(io *kaitai.Stream, parent *Sqlite3_Serials, root *Sqlite3) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp26 := NewVlqBase128Be()
-	err = tmp26.Read(this._io, this, nil)
-	if err != nil {
-		return err
-	}
-	this.Code = tmp26
-	return err
-}
-func (this *Sqlite3_Serial) IsBlob() (v bool, err error) {
-	if (this._f_isBlob) {
-		return this.isBlob, nil
-	}
-	tmp27, err := this.Code.Value()
-	if err != nil {
-		return false, err
-	}
-	tmp29, err := this.Code.Value()
-	if err != nil {
-		return false, err
-	}
-	tmp28 := tmp29 % 2
-	if tmp28 < 0 {
-		tmp28 += 2
-	}
-	this.isBlob = bool( ((tmp27 >= 12) && (tmp28 == 0)) )
-	this._f_isBlob = true
-	return this.isBlob, nil
-}
-func (this *Sqlite3_Serial) IsString() (v bool, err error) {
-	if (this._f_isString) {
-		return this.isString, nil
-	}
-	tmp30, err := this.Code.Value()
-	if err != nil {
-		return false, err
-	}
-	tmp32, err := this.Code.Value()
-	if err != nil {
-		return false, err
-	}
-	tmp31 := tmp32 % 2
-	if tmp31 < 0 {
-		tmp31 += 2
-	}
-	this.isString = bool( ((tmp30 >= 13) && (tmp31 == 1)) )
-	this._f_isString = true
-	return this.isString, nil
-}
-func (this *Sqlite3_Serial) LenContent() (v int, err error) {
-	if (this._f_lenContent) {
-		return this.lenContent, nil
-	}
-	tmp33, err := this.Code.Value()
-	if err != nil {
-		return 0, err
-	}
-	if (tmp33 >= 12) {
-		tmp34, err := this.Code.Value()
-		if err != nil {
-			return 0, err
-		}
-		this.lenContent = int(((tmp34 - 12) / 2))
-	}
-	this._f_lenContent = true
-	return this.lenContent, nil
-}
 type Sqlite3_BtreePage struct {
 	PageType uint8
 	FirstFreeblock uint16
@@ -386,277 +312,56 @@ func NewSqlite3_BtreePage() *Sqlite3_BtreePage {
 	}
 }
 
+func (this Sqlite3_BtreePage) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Sqlite3_BtreePage) Read(io *kaitai.Stream, parent *Sqlite3, root *Sqlite3) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp35, err := this._io.ReadU1()
+	tmp26, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.PageType = tmp35
-	tmp36, err := this._io.ReadU2be()
+	this.PageType = tmp26
+	tmp27, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.FirstFreeblock = uint16(tmp36)
-	tmp37, err := this._io.ReadU2be()
+	this.FirstFreeblock = uint16(tmp27)
+	tmp28, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.NumCells = uint16(tmp37)
-	tmp38, err := this._io.ReadU2be()
+	this.NumCells = uint16(tmp28)
+	tmp29, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.OfsCells = uint16(tmp38)
-	tmp39, err := this._io.ReadU1()
+	this.OfsCells = uint16(tmp29)
+	tmp30, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.NumFragFreeBytes = tmp39
+	this.NumFragFreeBytes = tmp30
 	if ( ((this.PageType == 2) || (this.PageType == 5)) ) {
-		tmp40, err := this._io.ReadU4be()
+		tmp31, err := this._io.ReadU4be()
 		if err != nil {
 			return err
 		}
-		this.RightPtr = uint32(tmp40)
+		this.RightPtr = uint32(tmp31)
 	}
 	for i := 0; i < int(this.NumCells); i++ {
 		_ = i
-		tmp41 := NewSqlite3_RefCell()
-		err = tmp41.Read(this._io, this, this._root)
+		tmp32 := NewSqlite3_RefCell()
+		err = tmp32.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Cells = append(this.Cells, tmp41)
+		this.Cells = append(this.Cells, tmp32)
 	}
-	return err
-}
-
-/**
- * @see <a href="https://www.sqlite.org/fileformat.html#b_tree_pages">Source</a>
- */
-type Sqlite3_CellIndexLeaf struct {
-	LenPayload *VlqBase128Be
-	Payload *Sqlite3_CellPayload
-	_io *kaitai.Stream
-	_root *Sqlite3
-	_parent *Sqlite3_RefCell
-	_raw_Payload []byte
-}
-func NewSqlite3_CellIndexLeaf() *Sqlite3_CellIndexLeaf {
-	return &Sqlite3_CellIndexLeaf{
-	}
-}
-
-func (this *Sqlite3_CellIndexLeaf) Read(io *kaitai.Stream, parent *Sqlite3_RefCell, root *Sqlite3) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp42 := NewVlqBase128Be()
-	err = tmp42.Read(this._io, this, nil)
-	if err != nil {
-		return err
-	}
-	this.LenPayload = tmp42
-	tmp43, err := this.LenPayload.Value()
-	if err != nil {
-		return err
-	}
-	tmp44, err := this._io.ReadBytes(int(tmp43))
-	if err != nil {
-		return err
-	}
-	tmp44 = tmp44
-	this._raw_Payload = tmp44
-	_io__raw_Payload := kaitai.NewStream(bytes.NewReader(this._raw_Payload))
-	tmp45 := NewSqlite3_CellPayload()
-	err = tmp45.Read(_io__raw_Payload, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Payload = tmp45
-	return err
-}
-type Sqlite3_Serials struct {
-	Entries []*Sqlite3_Serial
-	_io *kaitai.Stream
-	_root *Sqlite3
-	_parent *Sqlite3_CellPayload
-}
-func NewSqlite3_Serials() *Sqlite3_Serials {
-	return &Sqlite3_Serials{
-	}
-}
-
-func (this *Sqlite3_Serials) Read(io *kaitai.Stream, parent *Sqlite3_CellPayload, root *Sqlite3) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	for i := 1;; i++ {
-		tmp46, err := this._io.EOF()
-		if err != nil {
-			return err
-		}
-		if tmp46 {
-			break
-		}
-		tmp47 := NewSqlite3_Serial()
-		err = tmp47.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Entries = append(this.Entries, tmp47)
-	}
-	return err
-}
-
-/**
- * @see <a href="https://www.sqlite.org/fileformat.html#b_tree_pages">Source</a>
- */
-type Sqlite3_CellTableLeaf struct {
-	LenPayload *VlqBase128Be
-	RowId *VlqBase128Be
-	Payload *Sqlite3_CellPayload
-	_io *kaitai.Stream
-	_root *Sqlite3
-	_parent *Sqlite3_RefCell
-	_raw_Payload []byte
-}
-func NewSqlite3_CellTableLeaf() *Sqlite3_CellTableLeaf {
-	return &Sqlite3_CellTableLeaf{
-	}
-}
-
-func (this *Sqlite3_CellTableLeaf) Read(io *kaitai.Stream, parent *Sqlite3_RefCell, root *Sqlite3) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp48 := NewVlqBase128Be()
-	err = tmp48.Read(this._io, this, nil)
-	if err != nil {
-		return err
-	}
-	this.LenPayload = tmp48
-	tmp49 := NewVlqBase128Be()
-	err = tmp49.Read(this._io, this, nil)
-	if err != nil {
-		return err
-	}
-	this.RowId = tmp49
-	tmp50, err := this.LenPayload.Value()
-	if err != nil {
-		return err
-	}
-	tmp51, err := this._io.ReadBytes(int(tmp50))
-	if err != nil {
-		return err
-	}
-	tmp51 = tmp51
-	this._raw_Payload = tmp51
-	_io__raw_Payload := kaitai.NewStream(bytes.NewReader(this._raw_Payload))
-	tmp52 := NewSqlite3_CellPayload()
-	err = tmp52.Read(_io__raw_Payload, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Payload = tmp52
-	return err
-}
-
-/**
- * @see <a href="https://sqlite.org/fileformat2.html#record_format">Source</a>
- */
-type Sqlite3_CellPayload struct {
-	LenHeaderAndLen *VlqBase128Be
-	ColumnSerials *Sqlite3_Serials
-	ColumnContents []*Sqlite3_ColumnContent
-	_io *kaitai.Stream
-	_root *Sqlite3
-	_parent interface{}
-	_raw_ColumnSerials []byte
-}
-func NewSqlite3_CellPayload() *Sqlite3_CellPayload {
-	return &Sqlite3_CellPayload{
-	}
-}
-
-func (this *Sqlite3_CellPayload) Read(io *kaitai.Stream, parent interface{}, root *Sqlite3) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp53 := NewVlqBase128Be()
-	err = tmp53.Read(this._io, this, nil)
-	if err != nil {
-		return err
-	}
-	this.LenHeaderAndLen = tmp53
-	tmp54, err := this.LenHeaderAndLen.Value()
-	if err != nil {
-		return err
-	}
-	tmp55, err := this._io.ReadBytes(int((tmp54 - 1)))
-	if err != nil {
-		return err
-	}
-	tmp55 = tmp55
-	this._raw_ColumnSerials = tmp55
-	_io__raw_ColumnSerials := kaitai.NewStream(bytes.NewReader(this._raw_ColumnSerials))
-	tmp56 := NewSqlite3_Serials()
-	err = tmp56.Read(_io__raw_ColumnSerials, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.ColumnSerials = tmp56
-	for i := 0; i < int(len(this.ColumnSerials.Entries)); i++ {
-		_ = i
-		tmp57 := NewSqlite3_ColumnContent(this.ColumnSerials.Entries[i])
-		err = tmp57.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.ColumnContents = append(this.ColumnContents, tmp57)
-	}
-	return err
-}
-
-/**
- * @see <a href="https://www.sqlite.org/fileformat.html#b_tree_pages">Source</a>
- */
-type Sqlite3_CellTableInterior struct {
-	LeftChildPage uint32
-	RowId *VlqBase128Be
-	_io *kaitai.Stream
-	_root *Sqlite3
-	_parent *Sqlite3_RefCell
-}
-func NewSqlite3_CellTableInterior() *Sqlite3_CellTableInterior {
-	return &Sqlite3_CellTableInterior{
-	}
-}
-
-func (this *Sqlite3_CellTableInterior) Read(io *kaitai.Stream, parent *Sqlite3_RefCell, root *Sqlite3) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp58, err := this._io.ReadU4be()
-	if err != nil {
-		return err
-	}
-	this.LeftChildPage = uint32(tmp58)
-	tmp59 := NewVlqBase128Be()
-	err = tmp59.Read(this._io, this, nil)
-	if err != nil {
-		return err
-	}
-	this.RowId = tmp59
 	return err
 }
 
@@ -677,39 +382,251 @@ func NewSqlite3_CellIndexInterior() *Sqlite3_CellIndexInterior {
 	}
 }
 
+func (this Sqlite3_CellIndexInterior) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Sqlite3_CellIndexInterior) Read(io *kaitai.Stream, parent *Sqlite3_RefCell, root *Sqlite3) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp60, err := this._io.ReadU4be()
+	tmp33, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.LeftChildPage = uint32(tmp60)
-	tmp61 := NewVlqBase128Be()
-	err = tmp61.Read(this._io, this, nil)
+	this.LeftChildPage = uint32(tmp33)
+	tmp34 := NewVlqBase128Be()
+	err = tmp34.Read(this._io, nil, nil)
 	if err != nil {
 		return err
 	}
-	this.LenPayload = tmp61
-	tmp62, err := this.LenPayload.Value()
+	this.LenPayload = tmp34
+	tmp35, err := this.LenPayload.Value()
 	if err != nil {
 		return err
 	}
-	tmp63, err := this._io.ReadBytes(int(tmp62))
+	tmp36, err := this._io.ReadBytes(int(tmp35))
 	if err != nil {
 		return err
 	}
-	tmp63 = tmp63
-	this._raw_Payload = tmp63
+	tmp36 = tmp36
+	this._raw_Payload = tmp36
 	_io__raw_Payload := kaitai.NewStream(bytes.NewReader(this._raw_Payload))
-	tmp64 := NewSqlite3_CellPayload()
-	err = tmp64.Read(_io__raw_Payload, this, this._root)
+	tmp37 := NewSqlite3_CellPayload()
+	err = tmp37.Read(_io__raw_Payload, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Payload = tmp64
+	this.Payload = tmp37
+	return err
+}
+
+/**
+ * @see <a href="https://www.sqlite.org/fileformat.html#b_tree_pages">Source</a>
+ */
+type Sqlite3_CellIndexLeaf struct {
+	LenPayload *VlqBase128Be
+	Payload *Sqlite3_CellPayload
+	_io *kaitai.Stream
+	_root *Sqlite3
+	_parent *Sqlite3_RefCell
+	_raw_Payload []byte
+}
+func NewSqlite3_CellIndexLeaf() *Sqlite3_CellIndexLeaf {
+	return &Sqlite3_CellIndexLeaf{
+	}
+}
+
+func (this Sqlite3_CellIndexLeaf) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Sqlite3_CellIndexLeaf) Read(io *kaitai.Stream, parent *Sqlite3_RefCell, root *Sqlite3) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp38 := NewVlqBase128Be()
+	err = tmp38.Read(this._io, nil, nil)
+	if err != nil {
+		return err
+	}
+	this.LenPayload = tmp38
+	tmp39, err := this.LenPayload.Value()
+	if err != nil {
+		return err
+	}
+	tmp40, err := this._io.ReadBytes(int(tmp39))
+	if err != nil {
+		return err
+	}
+	tmp40 = tmp40
+	this._raw_Payload = tmp40
+	_io__raw_Payload := kaitai.NewStream(bytes.NewReader(this._raw_Payload))
+	tmp41 := NewSqlite3_CellPayload()
+	err = tmp41.Read(_io__raw_Payload, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Payload = tmp41
+	return err
+}
+
+/**
+ * @see <a href="https://sqlite.org/fileformat2.html#record_format">Source</a>
+ */
+type Sqlite3_CellPayload struct {
+	LenHeaderAndLen *VlqBase128Be
+	ColumnSerials *Sqlite3_Serials
+	ColumnContents []*Sqlite3_ColumnContent
+	_io *kaitai.Stream
+	_root *Sqlite3
+	_parent kaitai.Struct
+	_raw_ColumnSerials []byte
+}
+func NewSqlite3_CellPayload() *Sqlite3_CellPayload {
+	return &Sqlite3_CellPayload{
+	}
+}
+
+func (this Sqlite3_CellPayload) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Sqlite3_CellPayload) Read(io *kaitai.Stream, parent kaitai.Struct, root *Sqlite3) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp42 := NewVlqBase128Be()
+	err = tmp42.Read(this._io, nil, nil)
+	if err != nil {
+		return err
+	}
+	this.LenHeaderAndLen = tmp42
+	tmp43, err := this.LenHeaderAndLen.Value()
+	if err != nil {
+		return err
+	}
+	tmp44, err := this._io.ReadBytes(int(tmp43 - 1))
+	if err != nil {
+		return err
+	}
+	tmp44 = tmp44
+	this._raw_ColumnSerials = tmp44
+	_io__raw_ColumnSerials := kaitai.NewStream(bytes.NewReader(this._raw_ColumnSerials))
+	tmp45 := NewSqlite3_Serials()
+	err = tmp45.Read(_io__raw_ColumnSerials, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.ColumnSerials = tmp45
+	for i := 0; i < int(len(this.ColumnSerials.Entries)); i++ {
+		_ = i
+		tmp46 := NewSqlite3_ColumnContent(this.ColumnSerials.Entries[i])
+		err = tmp46.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.ColumnContents = append(this.ColumnContents, tmp46)
+	}
+	return err
+}
+
+/**
+ * @see <a href="https://www.sqlite.org/fileformat.html#b_tree_pages">Source</a>
+ */
+type Sqlite3_CellTableInterior struct {
+	LeftChildPage uint32
+	RowId *VlqBase128Be
+	_io *kaitai.Stream
+	_root *Sqlite3
+	_parent *Sqlite3_RefCell
+}
+func NewSqlite3_CellTableInterior() *Sqlite3_CellTableInterior {
+	return &Sqlite3_CellTableInterior{
+	}
+}
+
+func (this Sqlite3_CellTableInterior) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Sqlite3_CellTableInterior) Read(io *kaitai.Stream, parent *Sqlite3_RefCell, root *Sqlite3) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp47, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.LeftChildPage = uint32(tmp47)
+	tmp48 := NewVlqBase128Be()
+	err = tmp48.Read(this._io, nil, nil)
+	if err != nil {
+		return err
+	}
+	this.RowId = tmp48
+	return err
+}
+
+/**
+ * @see <a href="https://www.sqlite.org/fileformat.html#b_tree_pages">Source</a>
+ */
+type Sqlite3_CellTableLeaf struct {
+	LenPayload *VlqBase128Be
+	RowId *VlqBase128Be
+	Payload *Sqlite3_CellPayload
+	_io *kaitai.Stream
+	_root *Sqlite3
+	_parent *Sqlite3_RefCell
+	_raw_Payload []byte
+}
+func NewSqlite3_CellTableLeaf() *Sqlite3_CellTableLeaf {
+	return &Sqlite3_CellTableLeaf{
+	}
+}
+
+func (this Sqlite3_CellTableLeaf) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Sqlite3_CellTableLeaf) Read(io *kaitai.Stream, parent *Sqlite3_RefCell, root *Sqlite3) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp49 := NewVlqBase128Be()
+	err = tmp49.Read(this._io, nil, nil)
+	if err != nil {
+		return err
+	}
+	this.LenPayload = tmp49
+	tmp50 := NewVlqBase128Be()
+	err = tmp50.Read(this._io, nil, nil)
+	if err != nil {
+		return err
+	}
+	this.RowId = tmp50
+	tmp51, err := this.LenPayload.Value()
+	if err != nil {
+		return err
+	}
+	tmp52, err := this._io.ReadBytes(int(tmp51))
+	if err != nil {
+		return err
+	}
+	tmp52 = tmp52
+	this._raw_Payload = tmp52
+	_io__raw_Payload := kaitai.NewStream(bytes.NewReader(this._raw_Payload))
+	tmp53 := NewSqlite3_CellPayload()
+	err = tmp53.Read(_io__raw_Payload, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Payload = tmp53
 	return err
 }
 type Sqlite3_ColumnContent struct {
@@ -728,100 +645,104 @@ func NewSqlite3_ColumnContent(serialType *Sqlite3_Serial) *Sqlite3_ColumnContent
 	}
 }
 
+func (this Sqlite3_ColumnContent) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Sqlite3_ColumnContent) Read(io *kaitai.Stream, parent *Sqlite3_CellPayload, root *Sqlite3) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp65, err := this.SerialType.Code.Value()
+	tmp54, err := this.SerialType.Code.Value()
 	if err != nil {
 		return err
 	}
-	tmp66, err := this.SerialType.Code.Value()
+	tmp55, err := this.SerialType.Code.Value()
 	if err != nil {
 		return err
 	}
-	if ( ((tmp65 >= 1) && (tmp66 <= 6)) ) {
-		tmp67, err := this.SerialType.Code.Value()
+	if ( ((tmp54 >= 1) && (tmp55 <= 6)) ) {
+		tmp56, err := this.SerialType.Code.Value()
 		if err != nil {
 			return err
 		}
-		switch (tmp67) {
-		case 4:
-			tmp68, err := this._io.ReadU4be()
-			if err != nil {
-				return err
-			}
-			this.AsInt = tmp68
-		case 6:
-			tmp69, err := this._io.ReadU8be()
-			if err != nil {
-				return err
-			}
-			this.AsInt = tmp69
+		switch (tmp56) {
 		case 1:
-			tmp70, err := this._io.ReadU1()
+			tmp57, err := this._io.ReadU1()
 			if err != nil {
 				return err
 			}
-			this.AsInt = tmp70
-		case 3:
-			tmp71, err := this._io.ReadBitsIntBe(24)
-			if err != nil {
-				return err
-			}
-			this.AsInt = tmp71
-		case 5:
-			tmp72, err := this._io.ReadBitsIntBe(48)
-			if err != nil {
-				return err
-			}
-			this.AsInt = tmp72
+			this.AsInt = tmp57
 		case 2:
-			tmp73, err := this._io.ReadU2be()
+			tmp58, err := this._io.ReadU2be()
 			if err != nil {
 				return err
 			}
-			this.AsInt = tmp73
+			this.AsInt = tmp58
+		case 3:
+			tmp59, err := this._io.ReadBitsIntBe(24)
+			if err != nil {
+				return err
+			}
+			this.AsInt = tmp59
+		case 4:
+			tmp60, err := this._io.ReadU4be()
+			if err != nil {
+				return err
+			}
+			this.AsInt = tmp60
+		case 5:
+			tmp61, err := this._io.ReadBitsIntBe(48)
+			if err != nil {
+				return err
+			}
+			this.AsInt = tmp61
+		case 6:
+			tmp62, err := this._io.ReadU8be()
+			if err != nil {
+				return err
+			}
+			this.AsInt = tmp62
 		}
 	}
-	tmp74, err := this.SerialType.Code.Value()
+	tmp63, err := this.SerialType.Code.Value()
 	if err != nil {
 		return err
 	}
-	if (tmp74 == 7) {
-		tmp75, err := this._io.ReadF8be()
+	if (tmp63 == 7) {
+		tmp64, err := this._io.ReadF8be()
 		if err != nil {
 			return err
 		}
-		this.AsFloat = float64(tmp75)
+		this.AsFloat = float64(tmp64)
 	}
-	tmp76, err := this.SerialType.IsBlob()
+	tmp65, err := this.SerialType.IsBlob()
 	if err != nil {
 		return err
 	}
-	if (tmp76) {
-		tmp77, err := this.SerialType.LenContent()
+	if (tmp65) {
+		tmp66, err := this.SerialType.LenContent()
 		if err != nil {
 			return err
 		}
-		tmp78, err := this._io.ReadBytes(int(tmp77))
+		tmp67, err := this._io.ReadBytes(int(tmp66))
 		if err != nil {
 			return err
 		}
-		tmp78 = tmp78
-		this.AsBlob = tmp78
+		tmp67 = tmp67
+		this.AsBlob = tmp67
 	}
-	tmp79, err := this.SerialType.LenContent()
+	tmp68, err := this.SerialType.LenContent()
 	if err != nil {
 		return err
 	}
-	tmp80, err := this._io.ReadBytes(int(tmp79))
+	tmp69, err := this._io.ReadBytes(int(tmp68))
 	if err != nil {
 		return err
 	}
-	tmp80 = tmp80
-	this.AsStr = string(tmp80)
+	tmp69 = tmp69
+	this.AsStr = string(tmp69)
 	return err
 }
 type Sqlite3_RefCell struct {
@@ -830,11 +751,15 @@ type Sqlite3_RefCell struct {
 	_root *Sqlite3
 	_parent *Sqlite3_BtreePage
 	_f_body bool
-	body interface{}
+	body kaitai.Struct
 }
 func NewSqlite3_RefCell() *Sqlite3_RefCell {
 	return &Sqlite3_RefCell{
 	}
+}
+
+func (this Sqlite3_RefCell) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Sqlite3_RefCell) Read(io *kaitai.Stream, parent *Sqlite3_BtreePage, root *Sqlite3) (err error) {
@@ -842,17 +767,18 @@ func (this *Sqlite3_RefCell) Read(io *kaitai.Stream, parent *Sqlite3_BtreePage, 
 	this._parent = parent
 	this._root = root
 
-	tmp81, err := this._io.ReadU2be()
+	tmp70, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.OfsBody = uint16(tmp81)
+	this.OfsBody = uint16(tmp70)
 	return err
 }
-func (this *Sqlite3_RefCell) Body() (v interface{}, err error) {
+func (this *Sqlite3_RefCell) Body() (v kaitai.Struct, err error) {
 	if (this._f_body) {
 		return this.body, nil
 	}
+	this._f_body = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
@@ -862,40 +788,167 @@ func (this *Sqlite3_RefCell) Body() (v interface{}, err error) {
 		return nil, err
 	}
 	switch (this._parent.PageType) {
-	case 13:
-		tmp82 := NewSqlite3_CellTableLeaf()
-		err = tmp82.Read(this._io, this, this._root)
-		if err != nil {
-			return nil, err
-		}
-		this.body = tmp82
-	case 5:
-		tmp83 := NewSqlite3_CellTableInterior()
-		err = tmp83.Read(this._io, this, this._root)
-		if err != nil {
-			return nil, err
-		}
-		this.body = tmp83
 	case 10:
-		tmp84 := NewSqlite3_CellIndexLeaf()
-		err = tmp84.Read(this._io, this, this._root)
+		tmp71 := NewSqlite3_CellIndexLeaf()
+		err = tmp71.Read(this._io, this, this._root)
 		if err != nil {
 			return nil, err
 		}
-		this.body = tmp84
+		this.body = tmp71
+	case 13:
+		tmp72 := NewSqlite3_CellTableLeaf()
+		err = tmp72.Read(this._io, this, this._root)
+		if err != nil {
+			return nil, err
+		}
+		this.body = tmp72
 	case 2:
-		tmp85 := NewSqlite3_CellIndexInterior()
-		err = tmp85.Read(this._io, this, this._root)
+		tmp73 := NewSqlite3_CellIndexInterior()
+		err = tmp73.Read(this._io, this, this._root)
 		if err != nil {
 			return nil, err
 		}
-		this.body = tmp85
+		this.body = tmp73
+	case 5:
+		tmp74 := NewSqlite3_CellTableInterior()
+		err = tmp74.Read(this._io, this, this._root)
+		if err != nil {
+			return nil, err
+		}
+		this.body = tmp74
 	}
 	_, err = this._io.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
-	this._f_body = true
-	this._f_body = true
 	return this.body, nil
+}
+type Sqlite3_Serial struct {
+	Code *VlqBase128Be
+	_io *kaitai.Stream
+	_root *Sqlite3
+	_parent *Sqlite3_Serials
+	_f_isBlob bool
+	isBlob bool
+	_f_isString bool
+	isString bool
+	_f_lenContent bool
+	lenContent int
+}
+func NewSqlite3_Serial() *Sqlite3_Serial {
+	return &Sqlite3_Serial{
+	}
+}
+
+func (this Sqlite3_Serial) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Sqlite3_Serial) Read(io *kaitai.Stream, parent *Sqlite3_Serials, root *Sqlite3) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp75 := NewVlqBase128Be()
+	err = tmp75.Read(this._io, nil, nil)
+	if err != nil {
+		return err
+	}
+	this.Code = tmp75
+	return err
+}
+func (this *Sqlite3_Serial) IsBlob() (v bool, err error) {
+	if (this._f_isBlob) {
+		return this.isBlob, nil
+	}
+	this._f_isBlob = true
+	tmp76, err := this.Code.Value()
+	if err != nil {
+		return false, err
+	}
+	tmp78, err := this.Code.Value()
+	if err != nil {
+		return false, err
+	}
+	tmp77 := tmp78 % 2
+	if tmp77 < 0 {
+		tmp77 += 2
+	}
+	this.isBlob = bool( ((tmp76 >= 12) && (tmp77 == 0)) )
+	return this.isBlob, nil
+}
+func (this *Sqlite3_Serial) IsString() (v bool, err error) {
+	if (this._f_isString) {
+		return this.isString, nil
+	}
+	this._f_isString = true
+	tmp79, err := this.Code.Value()
+	if err != nil {
+		return false, err
+	}
+	tmp81, err := this.Code.Value()
+	if err != nil {
+		return false, err
+	}
+	tmp80 := tmp81 % 2
+	if tmp80 < 0 {
+		tmp80 += 2
+	}
+	this.isString = bool( ((tmp79 >= 13) && (tmp80 == 1)) )
+	return this.isString, nil
+}
+func (this *Sqlite3_Serial) LenContent() (v int, err error) {
+	if (this._f_lenContent) {
+		return this.lenContent, nil
+	}
+	this._f_lenContent = true
+	tmp82, err := this.Code.Value()
+	if err != nil {
+		return 0, err
+	}
+	if (tmp82 >= 12) {
+		tmp83, err := this.Code.Value()
+		if err != nil {
+			return 0, err
+		}
+		this.lenContent = int((tmp83 - 12) / 2)
+	}
+	return this.lenContent, nil
+}
+type Sqlite3_Serials struct {
+	Entries []*Sqlite3_Serial
+	_io *kaitai.Stream
+	_root *Sqlite3
+	_parent *Sqlite3_CellPayload
+}
+func NewSqlite3_Serials() *Sqlite3_Serials {
+	return &Sqlite3_Serials{
+	}
+}
+
+func (this Sqlite3_Serials) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Sqlite3_Serials) Read(io *kaitai.Stream, parent *Sqlite3_CellPayload, root *Sqlite3) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	for i := 0;; i++ {
+		tmp84, err := this._io.EOF()
+		if err != nil {
+			return err
+		}
+		if tmp84 {
+			break
+		}
+		tmp85 := NewSqlite3_Serial()
+		err = tmp85.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Entries = append(this.Entries, tmp85)
+	}
+	return err
 }

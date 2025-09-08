@@ -191,6 +191,11 @@ frames with the <code>fin</code> bit set.</p>
                 <a href="java.html" title="WebSocket parsing Java library">Java</a></li>
                 
                 
+                <li>
+                
+                <a href="java-write.html" title="WebSocket parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
                 <li class="active">
                 
                 <a href="javascript.html" title="WebSocket parsing JavaScript library">JavaScript</a></li>
@@ -223,7 +228,17 @@ frames with the <code>fin</code> bit set.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="WebSocket parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="WebSocket parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="WebSocket parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -296,13 +311,13 @@ frames with the <code>fin</code> bit set.</p>
 
 <span class="p">(</span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">root</span><span class="p">,</span><span class="w"> </span><span class="nx">factory</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="ow">typeof</span><span class="w"> </span><span class="nx">define</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;function&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">define</span><span class="p">.</span><span class="nx">amd</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">define</span><span class="p">([</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">],</span><span class="w"> </span><span class="nx">factory</span><span class="p">);</span>
-<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="ow">typeof</span><span class="w"> </span><span class="nx">module</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;object&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">factory</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">));</span>
+<span class="w">    </span><span class="nx">define</span><span class="p">([</span><span class="s1">&#39;exports&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">],</span><span class="w"> </span><span class="nx">factory</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="ow">typeof</span><span class="w"> </span><span class="nx">exports</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;object&#39;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">exports</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="ow">typeof</span><span class="w"> </span><span class="nx">exports</span><span class="p">.</span><span class="nx">nodeType</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s1">&#39;number&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">factory</span><span class="p">(</span><span class="nx">exports</span><span class="p">,</span><span class="w"> </span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">));</span>
 <span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">root</span><span class="p">.</span><span class="nx">Websocket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">KaitaiStream</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">Websocket</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">Websocket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}),</span><span class="w"> </span><span class="nx">root</span><span class="p">.</span><span class="nx">KaitaiStream</span><span class="p">);</span>
 <span class="w">  </span><span class="p">}</span>
-<span class="p">}(</span><span class="ow">typeof</span><span class="w"> </span><span class="nx">self</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s1">&#39;undefined&#39;</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nx">self</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="p">})(</span><span class="ow">typeof</span><span class="w"> </span><span class="nx">self</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s1">&#39;undefined&#39;</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nx">self</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="nx">Websocket_</span><span class="p">,</span><span class="w"> </span><span class="nx">KaitaiStream</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="cm">/**</span>
 <span class="cm"> * The WebSocket protocol establishes a two-way communication channel via TCP.</span>
 <span class="cm"> * Messages are made up of one or more dataframes, and are delineated by</span>
@@ -366,11 +381,32 @@ frames with the <code>fin</code> bit set.</p>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 
+<span class="w">  </span><span class="kd">var</span><span class="w"> </span><span class="nx">Dataframe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Websocket</span><span class="p">.</span><span class="nx">Dataframe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">function</span><span class="w"> </span><span class="nx">Dataframe</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">_parent</span><span class="p">,</span><span class="w"> </span><span class="nx">_root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_io</span><span class="p">;</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_parent</span><span class="p">;</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="p">;</span>
+
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="nx">Dataframe</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">FrameHeader</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">initialFrame</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">opcode</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="nx">Websocket</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">TEXT</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">payloadBytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">lenPayload</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">initialFrame</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">opcode</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nx">Websocket</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">TEXT</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">payloadText</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">lenPayload</span><span class="p">),</span><span class="w"> </span><span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">Dataframe</span><span class="p">;</span>
+<span class="w">  </span><span class="p">})();</span>
+
 <span class="w">  </span><span class="kd">var</span><span class="w"> </span><span class="nx">FrameHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Websocket</span><span class="p">.</span><span class="nx">FrameHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="kd">function</span><span class="w"> </span><span class="nx">FrameHeader</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">_parent</span><span class="p">,</span><span class="w"> </span><span class="nx">_root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_io</span><span class="p">;</span>
 <span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_parent</span><span class="p">;</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="p">;</span>
 
 <span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
 <span class="w">    </span><span class="p">}</span>
@@ -407,7 +443,7 @@ frames with the <code>fin</code> bit set.</p>
 <span class="w">    </span><span class="kd">function</span><span class="w"> </span><span class="nx">InitialFrame</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">_parent</span><span class="p">,</span><span class="w"> </span><span class="nx">_root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_io</span><span class="p">;</span>
 <span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_parent</span><span class="p">;</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
+<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="p">;</span>
 
 <span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
 <span class="w">    </span><span class="p">}</span>
@@ -424,31 +460,10 @@ frames with the <code>fin</code> bit set.</p>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">InitialFrame</span><span class="p">;</span>
 <span class="w">  </span><span class="p">})();</span>
 
-<span class="w">  </span><span class="kd">var</span><span class="w"> </span><span class="nx">Dataframe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Websocket</span><span class="p">.</span><span class="nx">Dataframe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">function</span><span class="w"> </span><span class="nx">Dataframe</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">_parent</span><span class="p">,</span><span class="w"> </span><span class="nx">_root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_io</span><span class="p">;</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_parent</span><span class="p">;</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
-
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="nx">Dataframe</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">FrameHeader</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
-<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">initialFrame</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">opcode</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="nx">Websocket</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">TEXT</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">payloadBytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">lenPayload</span><span class="p">);</span>
-<span class="w">      </span><span class="p">}</span>
-<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">initialFrame</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">opcode</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nx">Websocket</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">TEXT</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="nx">payloadText</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">lenPayload</span><span class="p">),</span><span class="w"> </span><span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
-<span class="w">      </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">Dataframe</span><span class="p">;</span>
-<span class="w">  </span><span class="p">})();</span>
-
 <span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">Websocket</span><span class="p">;</span>
 <span class="p">})();</span>
-<span class="k">return</span><span class="w"> </span><span class="nx">Websocket</span><span class="p">;</span>
-<span class="p">}));</span>
+<span class="nx">Websocket_</span><span class="p">.</span><span class="nx">Websocket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Websocket</span><span class="p">;</span>
+<span class="p">});</span>
 </pre></div>
 
         </div>

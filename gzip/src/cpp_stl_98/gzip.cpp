@@ -2,10 +2,42 @@
 
 #include "gzip.h"
 #include "kaitai/exceptions.h"
+std::set<gzip_t::compression_methods_t> gzip_t::_build_values_compression_methods_t() {
+    std::set<gzip_t::compression_methods_t> _t;
+    _t.insert(gzip_t::COMPRESSION_METHODS_DEFLATE);
+    return _t;
+}
+const std::set<gzip_t::compression_methods_t> gzip_t::_values_compression_methods_t = gzip_t::_build_values_compression_methods_t();
+bool gzip_t::_is_defined_compression_methods_t(gzip_t::compression_methods_t v) {
+    return gzip_t::_values_compression_methods_t.find(v) != gzip_t::_values_compression_methods_t.end();
+}
+std::set<gzip_t::oses_t> gzip_t::_build_values_oses_t() {
+    std::set<gzip_t::oses_t> _t;
+    _t.insert(gzip_t::OSES_FAT);
+    _t.insert(gzip_t::OSES_AMIGA);
+    _t.insert(gzip_t::OSES_VMS);
+    _t.insert(gzip_t::OSES_UNIX);
+    _t.insert(gzip_t::OSES_VM_CMS);
+    _t.insert(gzip_t::OSES_ATARI_TOS);
+    _t.insert(gzip_t::OSES_HPFS);
+    _t.insert(gzip_t::OSES_MACINTOSH);
+    _t.insert(gzip_t::OSES_Z_SYSTEM);
+    _t.insert(gzip_t::OSES_CP_M);
+    _t.insert(gzip_t::OSES_TOPS_20);
+    _t.insert(gzip_t::OSES_NTFS);
+    _t.insert(gzip_t::OSES_QDOS);
+    _t.insert(gzip_t::OSES_ACORN_RISCOS);
+    _t.insert(gzip_t::OSES_UNKNOWN);
+    return _t;
+}
+const std::set<gzip_t::oses_t> gzip_t::_values_oses_t = gzip_t::_build_values_oses_t();
+bool gzip_t::_is_defined_oses_t(gzip_t::oses_t v) {
+    return gzip_t::_values_oses_t.find(v) != gzip_t::_values_oses_t.end();
+}
 
 gzip_t::gzip_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, gzip_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     m_flags = 0;
     m_extras = 0;
 
@@ -19,8 +51,8 @@ gzip_t::gzip_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, gzip_t* p__ro
 
 void gzip_t::_read() {
     m_magic = m__io->read_bytes(2);
-    if (!(magic() == std::string("\x1F\x8B", 2))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\x1F\x8B", 2), magic(), _io(), std::string("/seq/0"));
+    if (!(m_magic == std::string("\x1F\x8B", 2))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\x1F\x8B", 2), m_magic, m__io, std::string("/seq/0"));
     }
     m_compression_method = static_cast<gzip_t::compression_methods_t>(m__io->read_u1());
     m_flags = new flags_t(m__io, this, m__root);
@@ -54,7 +86,7 @@ void gzip_t::_read() {
         n_header_crc16 = false;
         m_header_crc16 = m__io->read_u2le();
     }
-    m_body = m__io->read_bytes(((_io()->size() - _io()->pos()) - 8));
+    m_body = m__io->read_bytes((_io()->size() - _io()->pos()) - 8);
     m_body_crc32 = m__io->read_u4le();
     m_len_uncompressed = m__io->read_u4le();
 }
@@ -82,6 +114,73 @@ void gzip_t::_clean_up() {
     if (!n_comment) {
     }
     if (!n_header_crc16) {
+    }
+}
+std::set<gzip_t::extra_flags_deflate_t::compression_strengths_t> gzip_t::extra_flags_deflate_t::_build_values_compression_strengths_t() {
+    std::set<gzip_t::extra_flags_deflate_t::compression_strengths_t> _t;
+    _t.insert(gzip_t::extra_flags_deflate_t::COMPRESSION_STRENGTHS_BEST);
+    _t.insert(gzip_t::extra_flags_deflate_t::COMPRESSION_STRENGTHS_FAST);
+    return _t;
+}
+const std::set<gzip_t::extra_flags_deflate_t::compression_strengths_t> gzip_t::extra_flags_deflate_t::_values_compression_strengths_t = gzip_t::extra_flags_deflate_t::_build_values_compression_strengths_t();
+bool gzip_t::extra_flags_deflate_t::_is_defined_compression_strengths_t(gzip_t::extra_flags_deflate_t::compression_strengths_t v) {
+    return gzip_t::extra_flags_deflate_t::_values_compression_strengths_t.find(v) != gzip_t::extra_flags_deflate_t::_values_compression_strengths_t.end();
+}
+
+gzip_t::extra_flags_deflate_t::extra_flags_deflate_t(kaitai::kstream* p__io, gzip_t* p__parent, gzip_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void gzip_t::extra_flags_deflate_t::_read() {
+    m_compression_strength = static_cast<gzip_t::extra_flags_deflate_t::compression_strengths_t>(m__io->read_u1());
+}
+
+gzip_t::extra_flags_deflate_t::~extra_flags_deflate_t() {
+    _clean_up();
+}
+
+void gzip_t::extra_flags_deflate_t::_clean_up() {
+}
+
+gzip_t::extras_t::extras_t(kaitai::kstream* p__io, gzip_t* p__parent, gzip_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_subfields = 0;
+    m__io__raw_subfields = 0;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void gzip_t::extras_t::_read() {
+    m_len_subfields = m__io->read_u2le();
+    m__raw_subfields = m__io->read_bytes(len_subfields());
+    m__io__raw_subfields = new kaitai::kstream(m__raw_subfields);
+    m_subfields = new subfields_t(m__io__raw_subfields, this, m__root);
+}
+
+gzip_t::extras_t::~extras_t() {
+    _clean_up();
+}
+
+void gzip_t::extras_t::_clean_up() {
+    if (m__io__raw_subfields) {
+        delete m__io__raw_subfields; m__io__raw_subfields = 0;
+    }
+    if (m_subfields) {
+        delete m_subfields; m_subfields = 0;
     }
 }
 
@@ -113,7 +212,7 @@ gzip_t::flags_t::~flags_t() {
 void gzip_t::flags_t::_clean_up() {
 }
 
-gzip_t::extra_flags_deflate_t::extra_flags_deflate_t(kaitai::kstream* p__io, gzip_t* p__parent, gzip_t* p__root) : kaitai::kstruct(p__io) {
+gzip_t::subfield_t::subfield_t(kaitai::kstream* p__io, gzip_t::subfields_t* p__parent, gzip_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
 
@@ -125,15 +224,17 @@ gzip_t::extra_flags_deflate_t::extra_flags_deflate_t(kaitai::kstream* p__io, gzi
     }
 }
 
-void gzip_t::extra_flags_deflate_t::_read() {
-    m_compression_strength = static_cast<gzip_t::extra_flags_deflate_t::compression_strengths_t>(m__io->read_u1());
+void gzip_t::subfield_t::_read() {
+    m_id = m__io->read_u2le();
+    m_len_data = m__io->read_u2le();
+    m_data = m__io->read_bytes(len_data());
 }
 
-gzip_t::extra_flags_deflate_t::~extra_flags_deflate_t() {
+gzip_t::subfield_t::~subfield_t() {
     _clean_up();
 }
 
-void gzip_t::extra_flags_deflate_t::_clean_up() {
+void gzip_t::subfield_t::_clean_up() {
 }
 
 gzip_t::subfields_t::subfields_t(kaitai::kstream* p__io, gzip_t::extras_t* p__parent, gzip_t* p__root) : kaitai::kstruct(p__io) {
@@ -170,64 +271,5 @@ void gzip_t::subfields_t::_clean_up() {
             delete *it;
         }
         delete m_entries; m_entries = 0;
-    }
-}
-
-gzip_t::subfield_t::subfield_t(kaitai::kstream* p__io, gzip_t::subfields_t* p__parent, gzip_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void gzip_t::subfield_t::_read() {
-    m_id = m__io->read_u2le();
-    m_len_data = m__io->read_u2le();
-    m_data = m__io->read_bytes(len_data());
-}
-
-gzip_t::subfield_t::~subfield_t() {
-    _clean_up();
-}
-
-void gzip_t::subfield_t::_clean_up() {
-}
-
-gzip_t::extras_t::extras_t(kaitai::kstream* p__io, gzip_t* p__parent, gzip_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    m_subfields = 0;
-    m__io__raw_subfields = 0;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void gzip_t::extras_t::_read() {
-    m_len_subfields = m__io->read_u2le();
-    m__raw_subfields = m__io->read_bytes(len_subfields());
-    m__io__raw_subfields = new kaitai::kstream(m__raw_subfields);
-    m_subfields = new subfields_t(m__io__raw_subfields, this, m__root);
-}
-
-gzip_t::extras_t::~extras_t() {
-    _clean_up();
-}
-
-void gzip_t::extras_t::_clean_up() {
-    if (m__io__raw_subfields) {
-        delete m__io__raw_subfields; m__io__raw_subfields = 0;
-    }
-    if (m_subfields) {
-        delete m_subfields; m_subfields = 0;
     }
 }

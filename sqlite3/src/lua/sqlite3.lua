@@ -4,12 +4,12 @@
 
 local class = require("class")
 require("kaitaistruct")
+require("vlq_base128_be")
 local enum = require("enum")
 local utils = require("utils")
 local stringstream = require("string_stream")
 local str_decode = require("string_decode")
 
-require("vlq_base128_be")
 -- 
 -- SQLite3 is a popular serverless SQL engine, implemented as a library
 -- to be used within other applications. It keeps its databases as
@@ -27,15 +27,15 @@ require("vlq_base128_be")
 -- See also: Source (https://www.sqlite.org/fileformat.html)
 Sqlite3 = class.class(KaitaiStruct)
 
-Sqlite3.Versions = enum.Enum {
-  legacy = 1,
-  wal = 2,
-}
-
 Sqlite3.Encodings = enum.Enum {
   utf_8 = 1,
   utf_16le = 2,
   utf_16be = 3,
+}
+
+Sqlite3.Versions = enum.Enum {
+  legacy = 1,
+  wal = 2,
 }
 
 function Sqlite3:_init(io, parent, root)
@@ -48,7 +48,7 @@ end
 function Sqlite3:_read()
   self.magic = self._io:read_bytes(16)
   if not(self.magic == "\083\081\076\105\116\101\032\102\111\114\109\097\116\032\051\000") then
-    error("not equal, expected " ..  "\083\081\076\105\116\101\032\102\111\114\109\097\116\032\051\000" .. ", but got " .. self.magic)
+    error("not equal, expected " .. "\083\081\076\105\116\101\032\102\111\114\109\097\116\032\051\000" .. ", but got " .. self.magic)
   end
   self.len_page_mod = self._io:read_u2be()
   self.write_version = Sqlite3.Versions(self._io:read_u1())
@@ -118,58 +118,12 @@ end
 -- 
 -- The "Application ID" set by PRAGMA application_id.
 
-Sqlite3.Serial = class.class(KaitaiStruct)
-
-function Sqlite3.Serial:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Sqlite3.Serial:_read()
-  self.code = VlqBase128Be(self._io)
-end
-
-Sqlite3.Serial.property.is_blob = {}
-function Sqlite3.Serial.property.is_blob:get()
-  if self._m_is_blob ~= nil then
-    return self._m_is_blob
-  end
-
-  self._m_is_blob =  ((self.code.value >= 12) and ((self.code.value % 2) == 0)) 
-  return self._m_is_blob
-end
-
-Sqlite3.Serial.property.is_string = {}
-function Sqlite3.Serial.property.is_string:get()
-  if self._m_is_string ~= nil then
-    return self._m_is_string
-  end
-
-  self._m_is_string =  ((self.code.value >= 13) and ((self.code.value % 2) == 1)) 
-  return self._m_is_string
-end
-
-Sqlite3.Serial.property.len_content = {}
-function Sqlite3.Serial.property.len_content:get()
-  if self._m_len_content ~= nil then
-    return self._m_len_content
-  end
-
-  if self.code.value >= 12 then
-    self._m_len_content = math.floor((self.code.value - 12) / 2)
-  end
-  return self._m_len_content
-end
-
-
 Sqlite3.BtreePage = class.class(KaitaiStruct)
 
 function Sqlite3.BtreePage:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -191,16 +145,17 @@ end
 
 -- 
 -- See also: Source (https://www.sqlite.org/fileformat.html#b_tree_pages)
-Sqlite3.CellIndexLeaf = class.class(KaitaiStruct)
+Sqlite3.CellIndexInterior = class.class(KaitaiStruct)
 
-function Sqlite3.CellIndexLeaf:_init(io, parent, root)
+function Sqlite3.CellIndexInterior:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function Sqlite3.CellIndexLeaf:_read()
+function Sqlite3.CellIndexInterior:_read()
+  self.left_child_page = self._io:read_u4be()
   self.len_payload = VlqBase128Be(self._io)
   self._raw_payload = self._io:read_bytes(self.len_payload.value)
   local _io = KaitaiStream(stringstream(self._raw_payload))
@@ -208,39 +163,19 @@ function Sqlite3.CellIndexLeaf:_read()
 end
 
 
-Sqlite3.Serials = class.class(KaitaiStruct)
-
-function Sqlite3.Serials:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Sqlite3.Serials:_read()
-  self.entries = {}
-  local i = 0
-  while not self._io:is_eof() do
-    self.entries[i + 1] = Sqlite3.Serial(self._io, self, self._root)
-    i = i + 1
-  end
-end
-
-
 -- 
 -- See also: Source (https://www.sqlite.org/fileformat.html#b_tree_pages)
-Sqlite3.CellTableLeaf = class.class(KaitaiStruct)
+Sqlite3.CellIndexLeaf = class.class(KaitaiStruct)
 
-function Sqlite3.CellTableLeaf:_init(io, parent, root)
+function Sqlite3.CellIndexLeaf:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function Sqlite3.CellTableLeaf:_read()
+function Sqlite3.CellIndexLeaf:_read()
   self.len_payload = VlqBase128Be(self._io)
-  self.row_id = VlqBase128Be(self._io)
   self._raw_payload = self._io:read_bytes(self.len_payload.value)
   local _io = KaitaiStream(stringstream(self._raw_payload))
   self.payload = Sqlite3.CellPayload(_io, self, self._root)
@@ -254,13 +189,13 @@ Sqlite3.CellPayload = class.class(KaitaiStruct)
 function Sqlite3.CellPayload:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function Sqlite3.CellPayload:_read()
   self.len_header_and_len = VlqBase128Be(self._io)
-  self._raw_column_serials = self._io:read_bytes((self.len_header_and_len.value - 1))
+  self._raw_column_serials = self._io:read_bytes(self.len_header_and_len.value - 1)
   local _io = KaitaiStream(stringstream(self._raw_column_serials))
   self.column_serials = Sqlite3.Serials(_io, self, self._root)
   self.column_contents = {}
@@ -277,7 +212,7 @@ Sqlite3.CellTableInterior = class.class(KaitaiStruct)
 function Sqlite3.CellTableInterior:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -289,18 +224,18 @@ end
 
 -- 
 -- See also: Source (https://www.sqlite.org/fileformat.html#b_tree_pages)
-Sqlite3.CellIndexInterior = class.class(KaitaiStruct)
+Sqlite3.CellTableLeaf = class.class(KaitaiStruct)
 
-function Sqlite3.CellIndexInterior:_init(io, parent, root)
+function Sqlite3.CellTableLeaf:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function Sqlite3.CellIndexInterior:_read()
-  self.left_child_page = self._io:read_u4be()
+function Sqlite3.CellTableLeaf:_read()
   self.len_payload = VlqBase128Be(self._io)
+  self.row_id = VlqBase128Be(self._io)
   self._raw_payload = self._io:read_bytes(self.len_payload.value)
   local _io = KaitaiStream(stringstream(self._raw_payload))
   self.payload = Sqlite3.CellPayload(_io, self, self._root)
@@ -312,7 +247,7 @@ Sqlite3.ColumnContent = class.class(KaitaiStruct)
 function Sqlite3.ColumnContent:_init(serial_type, io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self.serial_type = serial_type
   self:_read()
 end
@@ -320,18 +255,18 @@ end
 function Sqlite3.ColumnContent:_read()
   if  ((self.serial_type.code.value >= 1) and (self.serial_type.code.value <= 6))  then
     local _on = self.serial_type.code.value
-    if _on == 4 then
-      self.as_int = self._io:read_u4be()
-    elseif _on == 6 then
-      self.as_int = self._io:read_u8be()
-    elseif _on == 1 then
+    if _on == 1 then
       self.as_int = self._io:read_u1()
-    elseif _on == 3 then
-      self.as_int = self._io:read_bits_int_be(24)
-    elseif _on == 5 then
-      self.as_int = self._io:read_bits_int_be(48)
     elseif _on == 2 then
       self.as_int = self._io:read_u2be()
+    elseif _on == 3 then
+      self.as_int = self._io:read_bits_int_be(24)
+    elseif _on == 4 then
+      self.as_int = self._io:read_u4be()
+    elseif _on == 5 then
+      self.as_int = self._io:read_bits_int_be(48)
+    elseif _on == 6 then
+      self.as_int = self._io:read_u8be()
     end
   end
   if self.serial_type.code.value == 7 then
@@ -349,7 +284,7 @@ Sqlite3.RefCell = class.class(KaitaiStruct)
 function Sqlite3.RefCell:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -366,17 +301,82 @@ function Sqlite3.RefCell.property.body:get()
   local _pos = self._io:pos()
   self._io:seek(self.ofs_body)
   local _on = self._parent.page_type
-  if _on == 13 then
-    self._m_body = Sqlite3.CellTableLeaf(self._io, self, self._root)
-  elseif _on == 5 then
-    self._m_body = Sqlite3.CellTableInterior(self._io, self, self._root)
-  elseif _on == 10 then
+  if _on == 10 then
     self._m_body = Sqlite3.CellIndexLeaf(self._io, self, self._root)
+  elseif _on == 13 then
+    self._m_body = Sqlite3.CellTableLeaf(self._io, self, self._root)
   elseif _on == 2 then
     self._m_body = Sqlite3.CellIndexInterior(self._io, self, self._root)
+  elseif _on == 5 then
+    self._m_body = Sqlite3.CellTableInterior(self._io, self, self._root)
   end
   self._io:seek(_pos)
   return self._m_body
+end
+
+
+Sqlite3.Serial = class.class(KaitaiStruct)
+
+function Sqlite3.Serial:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Sqlite3.Serial:_read()
+  self.code = VlqBase128Be(self._io)
+end
+
+Sqlite3.Serial.property.is_blob = {}
+function Sqlite3.Serial.property.is_blob:get()
+  if self._m_is_blob ~= nil then
+    return self._m_is_blob
+  end
+
+  self._m_is_blob =  ((self.code.value >= 12) and (self.code.value % 2 == 0)) 
+  return self._m_is_blob
+end
+
+Sqlite3.Serial.property.is_string = {}
+function Sqlite3.Serial.property.is_string:get()
+  if self._m_is_string ~= nil then
+    return self._m_is_string
+  end
+
+  self._m_is_string =  ((self.code.value >= 13) and (self.code.value % 2 == 1)) 
+  return self._m_is_string
+end
+
+Sqlite3.Serial.property.len_content = {}
+function Sqlite3.Serial.property.len_content:get()
+  if self._m_len_content ~= nil then
+    return self._m_len_content
+  end
+
+  if self.code.value >= 12 then
+    self._m_len_content = math.floor((self.code.value - 12) / 2)
+  end
+  return self._m_len_content
+end
+
+
+Sqlite3.Serials = class.class(KaitaiStruct)
+
+function Sqlite3.Serials:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Sqlite3.Serials:_read()
+  self.entries = {}
+  local i = 0
+  while not self._io:is_eof() do
+    self.entries[i + 1] = Sqlite3.Serial(self._io, self, self._root)
+    i = i + 1
+  end
 end
 
 

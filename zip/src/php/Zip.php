@@ -16,8 +16,8 @@
 
 namespace {
     class Zip extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Zip $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Zip $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -35,282 +35,8 @@ namespace {
 }
 
 namespace Zip {
-    class LocalFile extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Zip\PkSection $_parent = null, \Zip $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_header = new \Zip\LocalFileHeader($this->_io, $this, $this->_root);
-            $this->_m_body = $this->_io->readBytes($this->header()->lenBodyCompressed());
-        }
-        protected $_m_header;
-        protected $_m_body;
-        public function header() { return $this->_m_header; }
-        public function body() { return $this->_m_body; }
-    }
-}
-
-namespace Zip {
-    class DataDescriptor extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Zip\PkSection $_parent = null, \Zip $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_crc32 = $this->_io->readU4le();
-            $this->_m_lenBodyCompressed = $this->_io->readU4le();
-            $this->_m_lenBodyUncompressed = $this->_io->readU4le();
-        }
-        protected $_m_crc32;
-        protected $_m_lenBodyCompressed;
-        protected $_m_lenBodyUncompressed;
-        public function crc32() { return $this->_m_crc32; }
-        public function lenBodyCompressed() { return $this->_m_lenBodyCompressed; }
-        public function lenBodyUncompressed() { return $this->_m_lenBodyUncompressed; }
-    }
-}
-
-namespace Zip {
-    class ExtraField extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Zip\Extras $_parent = null, \Zip $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_code = $this->_io->readU2le();
-            $this->_m_lenBody = $this->_io->readU2le();
-            switch ($this->code()) {
-                case \Zip\ExtraCodes::NTFS:
-                    $this->_m__raw_body = $this->_io->readBytes($this->lenBody());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \Zip\ExtraField\Ntfs($_io__raw_body, $this, $this->_root);
-                    break;
-                case \Zip\ExtraCodes::EXTENDED_TIMESTAMP:
-                    $this->_m__raw_body = $this->_io->readBytes($this->lenBody());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \Zip\ExtraField\ExtendedTimestamp($_io__raw_body, $this, $this->_root);
-                    break;
-                case \Zip\ExtraCodes::INFOZIP_UNIX_VAR_SIZE:
-                    $this->_m__raw_body = $this->_io->readBytes($this->lenBody());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \Zip\ExtraField\InfozipUnixVarSize($_io__raw_body, $this, $this->_root);
-                    break;
-                default:
-                    $this->_m_body = $this->_io->readBytes($this->lenBody());
-                    break;
-            }
-        }
-        protected $_m_code;
-        protected $_m_lenBody;
-        protected $_m_body;
-        protected $_m__raw_body;
-        public function code() { return $this->_m_code; }
-        public function lenBody() { return $this->_m_lenBody; }
-        public function body() { return $this->_m_body; }
-        public function _raw_body() { return $this->_m__raw_body; }
-    }
-}
-
-namespace Zip\ExtraField {
-    class Ntfs extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Zip\ExtraField $_parent = null, \Zip $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_reserved = $this->_io->readU4le();
-            $this->_m_attributes = [];
-            $i = 0;
-            while (!$this->_io->isEof()) {
-                $this->_m_attributes[] = new \Zip\ExtraField\Ntfs\Attribute($this->_io, $this, $this->_root);
-                $i++;
-            }
-        }
-        protected $_m_reserved;
-        protected $_m_attributes;
-        public function reserved() { return $this->_m_reserved; }
-        public function attributes() { return $this->_m_attributes; }
-    }
-}
-
-namespace Zip\ExtraField\Ntfs {
-    class Attribute extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Zip\ExtraField\Ntfs $_parent = null, \Zip $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_tag = $this->_io->readU2le();
-            $this->_m_lenBody = $this->_io->readU2le();
-            switch ($this->tag()) {
-                case 1:
-                    $this->_m__raw_body = $this->_io->readBytes($this->lenBody());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \Zip\ExtraField\Ntfs\Attribute1($_io__raw_body, $this, $this->_root);
-                    break;
-                default:
-                    $this->_m_body = $this->_io->readBytes($this->lenBody());
-                    break;
-            }
-        }
-        protected $_m_tag;
-        protected $_m_lenBody;
-        protected $_m_body;
-        protected $_m__raw_body;
-        public function tag() { return $this->_m_tag; }
-        public function lenBody() { return $this->_m_lenBody; }
-        public function body() { return $this->_m_body; }
-        public function _raw_body() { return $this->_m__raw_body; }
-    }
-}
-
-namespace Zip\ExtraField\Ntfs {
-    class Attribute1 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Zip\ExtraField\Ntfs\Attribute $_parent = null, \Zip $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_lastModTime = $this->_io->readU8le();
-            $this->_m_lastAccessTime = $this->_io->readU8le();
-            $this->_m_creationTime = $this->_io->readU8le();
-        }
-        protected $_m_lastModTime;
-        protected $_m_lastAccessTime;
-        protected $_m_creationTime;
-        public function lastModTime() { return $this->_m_lastModTime; }
-        public function lastAccessTime() { return $this->_m_lastAccessTime; }
-        public function creationTime() { return $this->_m_creationTime; }
-    }
-}
-
-namespace Zip\ExtraField {
-    class ExtendedTimestamp extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Zip\ExtraField $_parent = null, \Zip $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m__raw_flags = $this->_io->readBytes(1);
-            $_io__raw_flags = new \Kaitai\Struct\Stream($this->_m__raw_flags);
-            $this->_m_flags = new \Zip\ExtraField\ExtendedTimestamp\InfoFlags($_io__raw_flags, $this, $this->_root);
-            if ($this->flags()->hasModTime()) {
-                $this->_m_modTime = $this->_io->readU4le();
-            }
-            if ($this->flags()->hasAccessTime()) {
-                $this->_m_accessTime = $this->_io->readU4le();
-            }
-            if ($this->flags()->hasCreateTime()) {
-                $this->_m_createTime = $this->_io->readU4le();
-            }
-        }
-        protected $_m_flags;
-        protected $_m_modTime;
-        protected $_m_accessTime;
-        protected $_m_createTime;
-        protected $_m__raw_flags;
-        public function flags() { return $this->_m_flags; }
-
-        /**
-         * Unix timestamp
-         */
-        public function modTime() { return $this->_m_modTime; }
-
-        /**
-         * Unix timestamp
-         */
-        public function accessTime() { return $this->_m_accessTime; }
-
-        /**
-         * Unix timestamp
-         */
-        public function createTime() { return $this->_m_createTime; }
-        public function _raw_flags() { return $this->_m__raw_flags; }
-    }
-}
-
-namespace Zip\ExtraField\ExtendedTimestamp {
-    class InfoFlags extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Zip\ExtraField\ExtendedTimestamp $_parent = null, \Zip $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_hasModTime = $this->_io->readBitsIntLe(1) != 0;
-            $this->_m_hasAccessTime = $this->_io->readBitsIntLe(1) != 0;
-            $this->_m_hasCreateTime = $this->_io->readBitsIntLe(1) != 0;
-            $this->_m_reserved = $this->_io->readBitsIntLe(5);
-        }
-        protected $_m_hasModTime;
-        protected $_m_hasAccessTime;
-        protected $_m_hasCreateTime;
-        protected $_m_reserved;
-        public function hasModTime() { return $this->_m_hasModTime; }
-        public function hasAccessTime() { return $this->_m_hasAccessTime; }
-        public function hasCreateTime() { return $this->_m_hasCreateTime; }
-        public function reserved() { return $this->_m_reserved; }
-    }
-}
-
-namespace Zip\ExtraField {
-    class InfozipUnixVarSize extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Zip\ExtraField $_parent = null, \Zip $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_version = $this->_io->readU1();
-            $this->_m_lenUid = $this->_io->readU1();
-            $this->_m_uid = $this->_io->readBytes($this->lenUid());
-            $this->_m_lenGid = $this->_io->readU1();
-            $this->_m_gid = $this->_io->readBytes($this->lenGid());
-        }
-        protected $_m_version;
-        protected $_m_lenUid;
-        protected $_m_uid;
-        protected $_m_lenGid;
-        protected $_m_gid;
-
-        /**
-         * Version of this extra field, currently 1
-         */
-        public function version() { return $this->_m_version; }
-
-        /**
-         * Size of UID field
-         */
-        public function lenUid() { return $this->_m_lenUid; }
-
-        /**
-         * UID (User ID) for a file
-         */
-        public function uid() { return $this->_m_uid; }
-
-        /**
-         * Size of GID field
-         */
-        public function lenGid() { return $this->_m_lenGid; }
-
-        /**
-         * GID (Group ID) for a file
-         */
-        public function gid() { return $this->_m_gid; }
-    }
-}
-
-namespace Zip {
     class CentralDirEntry extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Zip\PkSection $_parent = null, \Zip $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Zip\PkSection $_parent = null, ?\Zip $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -393,45 +119,300 @@ namespace Zip {
 }
 
 namespace Zip {
-    class PkSection extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Zip $_root = null) {
+    class DataDescriptor extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Zip\PkSection $_parent = null, ?\Zip $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_magic = $this->_io->readBytes(2);
-            if (!($this->magic() == "\x50\x4B")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x50\x4B", $this->magic(), $this->_io(), "/types/pk_section/seq/0");
-            }
-            $this->_m_sectionType = $this->_io->readU2le();
-            switch ($this->sectionType()) {
-                case 513:
-                    $this->_m_body = new \Zip\CentralDirEntry($this->_io, $this, $this->_root);
+            $this->_m_crc32 = $this->_io->readU4le();
+            $this->_m_lenBodyCompressed = $this->_io->readU4le();
+            $this->_m_lenBodyUncompressed = $this->_io->readU4le();
+        }
+        protected $_m_crc32;
+        protected $_m_lenBodyCompressed;
+        protected $_m_lenBodyUncompressed;
+        public function crc32() { return $this->_m_crc32; }
+        public function lenBodyCompressed() { return $this->_m_lenBodyCompressed; }
+        public function lenBodyUncompressed() { return $this->_m_lenBodyUncompressed; }
+    }
+}
+
+namespace Zip {
+    class EndOfCentralDir extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Zip\PkSection $_parent = null, ?\Zip $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_diskOfEndOfCentralDir = $this->_io->readU2le();
+            $this->_m_diskOfCentralDir = $this->_io->readU2le();
+            $this->_m_numCentralDirEntriesOnDisk = $this->_io->readU2le();
+            $this->_m_numCentralDirEntriesTotal = $this->_io->readU2le();
+            $this->_m_lenCentralDir = $this->_io->readU4le();
+            $this->_m_ofsCentralDir = $this->_io->readU4le();
+            $this->_m_lenComment = $this->_io->readU2le();
+            $this->_m_comment = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->lenComment()), "UTF-8");
+        }
+        protected $_m_diskOfEndOfCentralDir;
+        protected $_m_diskOfCentralDir;
+        protected $_m_numCentralDirEntriesOnDisk;
+        protected $_m_numCentralDirEntriesTotal;
+        protected $_m_lenCentralDir;
+        protected $_m_ofsCentralDir;
+        protected $_m_lenComment;
+        protected $_m_comment;
+        public function diskOfEndOfCentralDir() { return $this->_m_diskOfEndOfCentralDir; }
+        public function diskOfCentralDir() { return $this->_m_diskOfCentralDir; }
+        public function numCentralDirEntriesOnDisk() { return $this->_m_numCentralDirEntriesOnDisk; }
+        public function numCentralDirEntriesTotal() { return $this->_m_numCentralDirEntriesTotal; }
+        public function lenCentralDir() { return $this->_m_lenCentralDir; }
+        public function ofsCentralDir() { return $this->_m_ofsCentralDir; }
+        public function lenComment() { return $this->_m_lenComment; }
+        public function comment() { return $this->_m_comment; }
+    }
+}
+
+namespace Zip {
+    class ExtraField extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Zip\Extras $_parent = null, ?\Zip $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_code = $this->_io->readU2le();
+            $this->_m_lenBody = $this->_io->readU2le();
+            switch ($this->code()) {
+                case \Zip\ExtraCodes::EXTENDED_TIMESTAMP:
+                    $this->_m__raw_body = $this->_io->readBytes($this->lenBody());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \Zip\ExtraField\ExtendedTimestamp($_io__raw_body, $this, $this->_root);
                     break;
-                case 1027:
-                    $this->_m_body = new \Zip\LocalFile($this->_io, $this, $this->_root);
+                case \Zip\ExtraCodes::INFOZIP_UNIX_VAR_SIZE:
+                    $this->_m__raw_body = $this->_io->readBytes($this->lenBody());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \Zip\ExtraField\InfozipUnixVarSize($_io__raw_body, $this, $this->_root);
                     break;
-                case 1541:
-                    $this->_m_body = new \Zip\EndOfCentralDir($this->_io, $this, $this->_root);
+                case \Zip\ExtraCodes::NTFS:
+                    $this->_m__raw_body = $this->_io->readBytes($this->lenBody());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \Zip\ExtraField\Ntfs($_io__raw_body, $this, $this->_root);
                     break;
-                case 2055:
-                    $this->_m_body = new \Zip\DataDescriptor($this->_io, $this, $this->_root);
+                default:
+                    $this->_m_body = $this->_io->readBytes($this->lenBody());
                     break;
             }
         }
-        protected $_m_magic;
-        protected $_m_sectionType;
+        protected $_m_code;
+        protected $_m_lenBody;
         protected $_m_body;
-        public function magic() { return $this->_m_magic; }
-        public function sectionType() { return $this->_m_sectionType; }
+        protected $_m__raw_body;
+        public function code() { return $this->_m_code; }
+        public function lenBody() { return $this->_m_lenBody; }
         public function body() { return $this->_m_body; }
+        public function _raw_body() { return $this->_m__raw_body; }
+    }
+}
+
+namespace Zip\ExtraField {
+    class ExtendedTimestamp extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Zip\ExtraField $_parent = null, ?\Zip $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m__raw_flags = $this->_io->readBytes(1);
+            $_io__raw_flags = new \Kaitai\Struct\Stream($this->_m__raw_flags);
+            $this->_m_flags = new \Zip\ExtraField\ExtendedTimestamp\InfoFlags($_io__raw_flags, $this, $this->_root);
+            if ($this->flags()->hasModTime()) {
+                $this->_m_modTime = $this->_io->readU4le();
+            }
+            if ($this->flags()->hasAccessTime()) {
+                $this->_m_accessTime = $this->_io->readU4le();
+            }
+            if ($this->flags()->hasCreateTime()) {
+                $this->_m_createTime = $this->_io->readU4le();
+            }
+        }
+        protected $_m_flags;
+        protected $_m_modTime;
+        protected $_m_accessTime;
+        protected $_m_createTime;
+        protected $_m__raw_flags;
+        public function flags() { return $this->_m_flags; }
+
+        /**
+         * Unix timestamp
+         */
+        public function modTime() { return $this->_m_modTime; }
+
+        /**
+         * Unix timestamp
+         */
+        public function accessTime() { return $this->_m_accessTime; }
+
+        /**
+         * Unix timestamp
+         */
+        public function createTime() { return $this->_m_createTime; }
+        public function _raw_flags() { return $this->_m__raw_flags; }
+    }
+}
+
+namespace Zip\ExtraField\ExtendedTimestamp {
+    class InfoFlags extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Zip\ExtraField\ExtendedTimestamp $_parent = null, ?\Zip $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_hasModTime = $this->_io->readBitsIntLe(1) != 0;
+            $this->_m_hasAccessTime = $this->_io->readBitsIntLe(1) != 0;
+            $this->_m_hasCreateTime = $this->_io->readBitsIntLe(1) != 0;
+            $this->_m_reserved = $this->_io->readBitsIntLe(5);
+        }
+        protected $_m_hasModTime;
+        protected $_m_hasAccessTime;
+        protected $_m_hasCreateTime;
+        protected $_m_reserved;
+        public function hasModTime() { return $this->_m_hasModTime; }
+        public function hasAccessTime() { return $this->_m_hasAccessTime; }
+        public function hasCreateTime() { return $this->_m_hasCreateTime; }
+        public function reserved() { return $this->_m_reserved; }
+    }
+}
+
+namespace Zip\ExtraField {
+    class InfozipUnixVarSize extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Zip\ExtraField $_parent = null, ?\Zip $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_version = $this->_io->readU1();
+            $this->_m_lenUid = $this->_io->readU1();
+            $this->_m_uid = $this->_io->readBytes($this->lenUid());
+            $this->_m_lenGid = $this->_io->readU1();
+            $this->_m_gid = $this->_io->readBytes($this->lenGid());
+        }
+        protected $_m_version;
+        protected $_m_lenUid;
+        protected $_m_uid;
+        protected $_m_lenGid;
+        protected $_m_gid;
+
+        /**
+         * Version of this extra field, currently 1
+         */
+        public function version() { return $this->_m_version; }
+
+        /**
+         * Size of UID field
+         */
+        public function lenUid() { return $this->_m_lenUid; }
+
+        /**
+         * UID (User ID) for a file
+         */
+        public function uid() { return $this->_m_uid; }
+
+        /**
+         * Size of GID field
+         */
+        public function lenGid() { return $this->_m_lenGid; }
+
+        /**
+         * GID (Group ID) for a file
+         */
+        public function gid() { return $this->_m_gid; }
+    }
+}
+
+namespace Zip\ExtraField {
+    class Ntfs extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Zip\ExtraField $_parent = null, ?\Zip $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_reserved = $this->_io->readU4le();
+            $this->_m_attributes = [];
+            $i = 0;
+            while (!$this->_io->isEof()) {
+                $this->_m_attributes[] = new \Zip\ExtraField\Ntfs\Attribute($this->_io, $this, $this->_root);
+                $i++;
+            }
+        }
+        protected $_m_reserved;
+        protected $_m_attributes;
+        public function reserved() { return $this->_m_reserved; }
+        public function attributes() { return $this->_m_attributes; }
+    }
+}
+
+namespace Zip\ExtraField\Ntfs {
+    class Attribute extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Zip\ExtraField\Ntfs $_parent = null, ?\Zip $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_tag = $this->_io->readU2le();
+            $this->_m_lenBody = $this->_io->readU2le();
+            switch ($this->tag()) {
+                case 1:
+                    $this->_m__raw_body = $this->_io->readBytes($this->lenBody());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \Zip\ExtraField\Ntfs\Attribute1($_io__raw_body, $this, $this->_root);
+                    break;
+                default:
+                    $this->_m_body = $this->_io->readBytes($this->lenBody());
+                    break;
+            }
+        }
+        protected $_m_tag;
+        protected $_m_lenBody;
+        protected $_m_body;
+        protected $_m__raw_body;
+        public function tag() { return $this->_m_tag; }
+        public function lenBody() { return $this->_m_lenBody; }
+        public function body() { return $this->_m_body; }
+        public function _raw_body() { return $this->_m__raw_body; }
+    }
+}
+
+namespace Zip\ExtraField\Ntfs {
+    class Attribute1 extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Zip\ExtraField\Ntfs\Attribute $_parent = null, ?\Zip $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_lastModTime = $this->_io->readU8le();
+            $this->_m_lastAccessTime = $this->_io->readU8le();
+            $this->_m_creationTime = $this->_io->readU8le();
+        }
+        protected $_m_lastModTime;
+        protected $_m_lastAccessTime;
+        protected $_m_creationTime;
+        public function lastModTime() { return $this->_m_lastModTime; }
+        public function lastAccessTime() { return $this->_m_lastAccessTime; }
+        public function creationTime() { return $this->_m_creationTime; }
     }
 }
 
 namespace Zip {
     class Extras extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Zip $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Zip $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -450,8 +431,26 @@ namespace Zip {
 }
 
 namespace Zip {
+    class LocalFile extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Zip\PkSection $_parent = null, ?\Zip $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_header = new \Zip\LocalFileHeader($this->_io, $this, $this->_root);
+            $this->_m_body = $this->_io->readBytes($this->header()->lenBodyCompressed());
+        }
+        protected $_m_header;
+        protected $_m_body;
+        public function header() { return $this->_m_header; }
+        public function body() { return $this->_m_body; }
+    }
+}
+
+namespace Zip {
     class LocalFileHeader extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Zip\LocalFile $_parent = null, \Zip $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Zip\LocalFile $_parent = null, ?\Zip $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -508,7 +507,7 @@ namespace Zip {
 
 namespace Zip\LocalFileHeader {
     class GpFlags extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Zip\LocalFileHeader $_parent = null, \Zip $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Zip\LocalFileHeader $_parent = null, ?\Zip $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -544,7 +543,7 @@ namespace Zip\LocalFileHeader {
             if ($this->_m_implodedDictByteSize !== null)
                 return $this->_m_implodedDictByteSize;
             if ($this->_parent()->compressionMethod() == \Zip\Compression::IMPLODED) {
-                $this->_m_implodedDictByteSize = ((($this->compOptionsRaw() & 1) != 0 ? 8 : 4) * 1024);
+                $this->_m_implodedDictByteSize = (($this->compOptionsRaw() & 1) != 0 ? 8 : 4) * 1024;
             }
             return $this->_m_implodedDictByteSize;
         }
@@ -601,42 +600,49 @@ namespace Zip\LocalFileHeader\GpFlags {
         const MAXIMUM = 1;
         const FAST = 2;
         const SUPER_FAST = 3;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
 namespace Zip {
-    class EndOfCentralDir extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Zip\PkSection $_parent = null, \Zip $_root = null) {
+    class PkSection extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Zip $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_diskOfEndOfCentralDir = $this->_io->readU2le();
-            $this->_m_diskOfCentralDir = $this->_io->readU2le();
-            $this->_m_numCentralDirEntriesOnDisk = $this->_io->readU2le();
-            $this->_m_numCentralDirEntriesTotal = $this->_io->readU2le();
-            $this->_m_lenCentralDir = $this->_io->readU4le();
-            $this->_m_ofsCentralDir = $this->_io->readU4le();
-            $this->_m_lenComment = $this->_io->readU2le();
-            $this->_m_comment = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->lenComment()), "UTF-8");
+            $this->_m_magic = $this->_io->readBytes(2);
+            if (!($this->_m_magic == "\x50\x4B")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x50\x4B", $this->_m_magic, $this->_io, "/types/pk_section/seq/0");
+            }
+            $this->_m_sectionType = $this->_io->readU2le();
+            switch ($this->sectionType()) {
+                case 1027:
+                    $this->_m_body = new \Zip\LocalFile($this->_io, $this, $this->_root);
+                    break;
+                case 1541:
+                    $this->_m_body = new \Zip\EndOfCentralDir($this->_io, $this, $this->_root);
+                    break;
+                case 2055:
+                    $this->_m_body = new \Zip\DataDescriptor($this->_io, $this, $this->_root);
+                    break;
+                case 513:
+                    $this->_m_body = new \Zip\CentralDirEntry($this->_io, $this, $this->_root);
+                    break;
+            }
         }
-        protected $_m_diskOfEndOfCentralDir;
-        protected $_m_diskOfCentralDir;
-        protected $_m_numCentralDirEntriesOnDisk;
-        protected $_m_numCentralDirEntriesTotal;
-        protected $_m_lenCentralDir;
-        protected $_m_ofsCentralDir;
-        protected $_m_lenComment;
-        protected $_m_comment;
-        public function diskOfEndOfCentralDir() { return $this->_m_diskOfEndOfCentralDir; }
-        public function diskOfCentralDir() { return $this->_m_diskOfCentralDir; }
-        public function numCentralDirEntriesOnDisk() { return $this->_m_numCentralDirEntriesOnDisk; }
-        public function numCentralDirEntriesTotal() { return $this->_m_numCentralDirEntriesTotal; }
-        public function lenCentralDir() { return $this->_m_lenCentralDir; }
-        public function ofsCentralDir() { return $this->_m_ofsCentralDir; }
-        public function lenComment() { return $this->_m_lenComment; }
-        public function comment() { return $this->_m_comment; }
+        protected $_m_magic;
+        protected $_m_sectionType;
+        protected $_m_body;
+        public function magic() { return $this->_m_magic; }
+        public function sectionType() { return $this->_m_sectionType; }
+        public function body() { return $this->_m_body; }
     }
 }
 
@@ -663,6 +669,12 @@ namespace Zip {
         const WAVPACK = 97;
         const PPMD = 98;
         const AEX_ENCRYPTION_MARKER = 99;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 8 => true, 9 => true, 10 => true, 12 => true, 14 => true, 18 => true, 19 => true, 93 => true, 94 => true, 95 => true, 96 => true, 97 => true, 98 => true, 99 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
@@ -694,5 +706,11 @@ namespace Zip {
         const APACHE_COMMONS_COMPRESS = 41246;
         const MICROSOFT_OPEN_PACKAGING_GROWTH_HINT = 41504;
         const SMS_QDOS = 64842;
+
+        private const _VALUES = [1 => true, 7 => true, 9 => true, 10 => true, 12 => true, 13 => true, 14 => true, 15 => true, 20 => true, 21 => true, 22 => true, 23 => true, 24 => true, 25 => true, 101 => true, 102 => true, 18064 => true, 21589 => true, 25922 => true, 30062 => true, 30805 => true, 30837 => true, 39169 => true, 41246 => true, 41504 => true, 64842 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

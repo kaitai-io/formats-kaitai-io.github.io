@@ -24,8 +24,8 @@
 
 namespace {
     class UefiTe extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \UefiTe $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\UefiTe $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -49,16 +49,104 @@ namespace {
 }
 
 namespace UefiTe {
+    class DataDir extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\UefiTe\HeaderDataDirs $_parent = null, ?\UefiTe $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_virtualAddress = $this->_io->readU4le();
+            $this->_m_size = $this->_io->readU4le();
+        }
+        protected $_m_virtualAddress;
+        protected $_m_size;
+        public function virtualAddress() { return $this->_m_virtualAddress; }
+        public function size() { return $this->_m_size; }
+    }
+}
+
+namespace UefiTe {
+    class HeaderDataDirs extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\UefiTe\TeHeader $_parent = null, ?\UefiTe $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_baseRelocationTable = new \UefiTe\DataDir($this->_io, $this, $this->_root);
+            $this->_m_debug = new \UefiTe\DataDir($this->_io, $this, $this->_root);
+        }
+        protected $_m_baseRelocationTable;
+        protected $_m_debug;
+        public function baseRelocationTable() { return $this->_m_baseRelocationTable; }
+        public function debug() { return $this->_m_debug; }
+    }
+}
+
+namespace UefiTe {
+    class Section extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\UefiTe $_parent = null, ?\UefiTe $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_name = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesStripRight($this->_io->readBytes(8), 0), "UTF-8");
+            $this->_m_virtualSize = $this->_io->readU4le();
+            $this->_m_virtualAddress = $this->_io->readU4le();
+            $this->_m_sizeOfRawData = $this->_io->readU4le();
+            $this->_m_pointerToRawData = $this->_io->readU4le();
+            $this->_m_pointerToRelocations = $this->_io->readU4le();
+            $this->_m_pointerToLinenumbers = $this->_io->readU4le();
+            $this->_m_numRelocations = $this->_io->readU2le();
+            $this->_m_numLinenumbers = $this->_io->readU2le();
+            $this->_m_characteristics = $this->_io->readU4le();
+        }
+        protected $_m_body;
+        public function body() {
+            if ($this->_m_body !== null)
+                return $this->_m_body;
+            $_pos = $this->_io->pos();
+            $this->_io->seek(($this->pointerToRawData() - $this->_root()->teHdr()->strippedSize()) + $this->_root()->teHdr()->_io()->size());
+            $this->_m_body = $this->_io->readBytes($this->sizeOfRawData());
+            $this->_io->seek($_pos);
+            return $this->_m_body;
+        }
+        protected $_m_name;
+        protected $_m_virtualSize;
+        protected $_m_virtualAddress;
+        protected $_m_sizeOfRawData;
+        protected $_m_pointerToRawData;
+        protected $_m_pointerToRelocations;
+        protected $_m_pointerToLinenumbers;
+        protected $_m_numRelocations;
+        protected $_m_numLinenumbers;
+        protected $_m_characteristics;
+        public function name() { return $this->_m_name; }
+        public function virtualSize() { return $this->_m_virtualSize; }
+        public function virtualAddress() { return $this->_m_virtualAddress; }
+        public function sizeOfRawData() { return $this->_m_sizeOfRawData; }
+        public function pointerToRawData() { return $this->_m_pointerToRawData; }
+        public function pointerToRelocations() { return $this->_m_pointerToRelocations; }
+        public function pointerToLinenumbers() { return $this->_m_pointerToLinenumbers; }
+        public function numRelocations() { return $this->_m_numRelocations; }
+        public function numLinenumbers() { return $this->_m_numLinenumbers; }
+        public function characteristics() { return $this->_m_characteristics; }
+    }
+}
+
+namespace UefiTe {
     class TeHeader extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \UefiTe $_parent = null, \UefiTe $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\UefiTe $_parent = null, ?\UefiTe $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic = $this->_io->readBytes(2);
-            if (!($this->magic() == "\x56\x5A")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x56\x5A", $this->magic(), $this->_io(), "/types/te_header/seq/0");
+            if (!($this->_m_magic == "\x56\x5A")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x56\x5A", $this->_m_magic, $this->_io, "/types/te_header/seq/0");
             }
             $this->_m_machine = $this->_io->readU2le();
             $this->_m_numSections = $this->_io->readU1();
@@ -239,6 +327,12 @@ namespace UefiTe\TeHeader {
          * ARM64 little endian
          */
         const ARM64 = 43620;
+
+        private const _VALUES = [0 => true, 332 => true, 358 => true, 361 => true, 388 => true, 418 => true, 419 => true, 422 => true, 424 => true, 448 => true, 450 => true, 452 => true, 467 => true, 496 => true, 497 => true, 512 => true, 614 => true, 644 => true, 870 => true, 1126 => true, 3772 => true, 20530 => true, 20580 => true, 20776 => true, 25138 => true, 25188 => true, 34404 => true, 36929 => true, 43620 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
@@ -256,93 +350,11 @@ namespace UefiTe\TeHeader {
         const EFI_ROM = 13;
         const XBOX = 14;
         const WINDOWS_BOOT_APPLICATION = 16;
-    }
-}
 
-namespace UefiTe {
-    class HeaderDataDirs extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \UefiTe\TeHeader $_parent = null, \UefiTe $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 7 => true, 9 => true, 10 => true, 11 => true, 12 => true, 13 => true, 14 => true, 16 => true];
 
-        private function _read() {
-            $this->_m_baseRelocationTable = new \UefiTe\DataDir($this->_io, $this, $this->_root);
-            $this->_m_debug = new \UefiTe\DataDir($this->_io, $this, $this->_root);
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
         }
-        protected $_m_baseRelocationTable;
-        protected $_m_debug;
-        public function baseRelocationTable() { return $this->_m_baseRelocationTable; }
-        public function debug() { return $this->_m_debug; }
-    }
-}
-
-namespace UefiTe {
-    class DataDir extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \UefiTe\HeaderDataDirs $_parent = null, \UefiTe $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_virtualAddress = $this->_io->readU4le();
-            $this->_m_size = $this->_io->readU4le();
-        }
-        protected $_m_virtualAddress;
-        protected $_m_size;
-        public function virtualAddress() { return $this->_m_virtualAddress; }
-        public function size() { return $this->_m_size; }
-    }
-}
-
-namespace UefiTe {
-    class Section extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \UefiTe $_parent = null, \UefiTe $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_name = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesStripRight($this->_io->readBytes(8), 0), "UTF-8");
-            $this->_m_virtualSize = $this->_io->readU4le();
-            $this->_m_virtualAddress = $this->_io->readU4le();
-            $this->_m_sizeOfRawData = $this->_io->readU4le();
-            $this->_m_pointerToRawData = $this->_io->readU4le();
-            $this->_m_pointerToRelocations = $this->_io->readU4le();
-            $this->_m_pointerToLinenumbers = $this->_io->readU4le();
-            $this->_m_numRelocations = $this->_io->readU2le();
-            $this->_m_numLinenumbers = $this->_io->readU2le();
-            $this->_m_characteristics = $this->_io->readU4le();
-        }
-        protected $_m_body;
-        public function body() {
-            if ($this->_m_body !== null)
-                return $this->_m_body;
-            $_pos = $this->_io->pos();
-            $this->_io->seek((($this->pointerToRawData() - $this->_root()->teHdr()->strippedSize()) + $this->_root()->teHdr()->_io()->size()));
-            $this->_m_body = $this->_io->readBytes($this->sizeOfRawData());
-            $this->_io->seek($_pos);
-            return $this->_m_body;
-        }
-        protected $_m_name;
-        protected $_m_virtualSize;
-        protected $_m_virtualAddress;
-        protected $_m_sizeOfRawData;
-        protected $_m_pointerToRawData;
-        protected $_m_pointerToRelocations;
-        protected $_m_pointerToLinenumbers;
-        protected $_m_numRelocations;
-        protected $_m_numLinenumbers;
-        protected $_m_characteristics;
-        public function name() { return $this->_m_name; }
-        public function virtualSize() { return $this->_m_virtualSize; }
-        public function virtualAddress() { return $this->_m_virtualAddress; }
-        public function sizeOfRawData() { return $this->_m_sizeOfRawData; }
-        public function pointerToRawData() { return $this->_m_pointerToRawData; }
-        public function pointerToRelocations() { return $this->_m_pointerToRelocations; }
-        public function pointerToLinenumbers() { return $this->_m_pointerToLinenumbers; }
-        public function numRelocations() { return $this->_m_numRelocations; }
-        public function numLinenumbers() { return $this->_m_numLinenumbers; }
-        public function characteristics() { return $this->_m_characteristics; }
     }
 }

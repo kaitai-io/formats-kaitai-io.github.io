@@ -37,7 +37,7 @@ proc read*(_: typedesc[UdpDatagram], io: KaitaiStream, root: KaitaiStruct, paren
   this.length = lengthExpr
   let checksumExpr = this.io.readU2be()
   this.checksum = checksumExpr
-  let bodyExpr = this.io.readBytes(int((this.length - 8)))
+  let bodyExpr = this.io.readBytes(int(this.length - 8))
   this.body = bodyExpr
 
 proc fromFile*(_: typedesc[UdpDatagram], filename: string): UdpDatagram =

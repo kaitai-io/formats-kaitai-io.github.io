@@ -32,6 +32,11 @@ const (
 	Gif_BlockType__LocalImageDescriptor Gif_BlockType = 44
 	Gif_BlockType__EndOfFile Gif_BlockType = 59
 )
+var values_Gif_BlockType = map[Gif_BlockType]struct{}{33: {}, 44: {}, 59: {}}
+func (v Gif_BlockType) isDefined() bool {
+	_, ok := values_Gif_BlockType[v]
+	return ok
+}
 
 type Gif_ExtensionLabel int
 const (
@@ -39,6 +44,11 @@ const (
 	Gif_ExtensionLabel__Comment Gif_ExtensionLabel = 254
 	Gif_ExtensionLabel__Application Gif_ExtensionLabel = 255
 )
+var values_Gif_ExtensionLabel = map[Gif_ExtensionLabel]struct{}{249: {}, 254: {}, 255: {}}
+func (v Gif_ExtensionLabel) isDefined() bool {
+	_, ok := values_Gif_ExtensionLabel[v]
+	return ok
+}
 type Gif struct {
 	Hdr *Gif_Header
 	LogicalScreenDescriptor *Gif_LogicalScreenDescriptorStruct
@@ -46,7 +56,7 @@ type Gif struct {
 	Blocks []*Gif_Block
 	_io *kaitai.Stream
 	_root *Gif
-	_parent interface{}
+	_parent kaitai.Struct
 	_raw_GlobalColorTable []byte
 }
 func NewGif() *Gif {
@@ -54,7 +64,11 @@ func NewGif() *Gif {
 	}
 }
 
-func (this *Gif) Read(io *kaitai.Stream, parent interface{}, root *Gif) (err error) {
+func (this Gif) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Gif) Read(io *kaitai.Stream, parent kaitai.Struct, root *Gif) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -80,7 +94,7 @@ func (this *Gif) Read(io *kaitai.Stream, parent interface{}, root *Gif) (err err
 		if err != nil {
 			return err
 		}
-		tmp5, err := this._io.ReadBytes(int((tmp4 * 3)))
+		tmp5, err := this._io.ReadBytes(int(tmp4 * 3))
 		if err != nil {
 			return err
 		}
@@ -116,23 +130,24 @@ func (this *Gif) Read(io *kaitai.Stream, parent interface{}, root *Gif) (err err
 /**
  * @see <a href="https://www.w3.org/Graphics/GIF/spec-gif89a.txt">- section 18</a>
  */
-
-/**
- * @see <a href="https://www.w3.org/Graphics/GIF/spec-gif89a.txt">- section 22</a>
- */
-type Gif_ImageData struct {
-	LzwMinCodeSize uint8
-	Subblocks *Gif_Subblocks
+type Gif_ApplicationId struct {
+	LenBytes uint8
+	ApplicationIdentifier string
+	ApplicationAuthCode []byte
 	_io *kaitai.Stream
 	_root *Gif
-	_parent *Gif_LocalImageDescriptor
+	_parent *Gif_ExtApplication
 }
-func NewGif_ImageData() *Gif_ImageData {
-	return &Gif_ImageData{
+func NewGif_ApplicationId() *Gif_ApplicationId {
+	return &Gif_ApplicationId{
 	}
 }
 
-func (this *Gif_ImageData) Read(io *kaitai.Stream, parent *Gif_LocalImageDescriptor, root *Gif) (err error) {
+func (this Gif_ApplicationId) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Gif_ApplicationId) Read(io *kaitai.Stream, parent *Gif_ExtApplication, root *Gif) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -141,13 +156,107 @@ func (this *Gif_ImageData) Read(io *kaitai.Stream, parent *Gif_LocalImageDescrip
 	if err != nil {
 		return err
 	}
-	this.LzwMinCodeSize = tmp9
-	tmp10 := NewGif_Subblocks()
-	err = tmp10.Read(this._io, this, this._root)
+	this.LenBytes = tmp9
+	if !(this.LenBytes == 11) {
+		return kaitai.NewValidationNotEqualError(11, this.LenBytes, this._io, "/types/application_id/seq/0")
+	}
+	tmp10, err := this._io.ReadBytes(int(8))
 	if err != nil {
 		return err
 	}
-	this.Subblocks = tmp10
+	tmp10 = tmp10
+	this.ApplicationIdentifier = string(tmp10)
+	tmp11, err := this._io.ReadBytes(int(3))
+	if err != nil {
+		return err
+	}
+	tmp11 = tmp11
+	this.ApplicationAuthCode = tmp11
+	return err
+}
+type Gif_Block struct {
+	BlockType Gif_BlockType
+	Body kaitai.Struct
+	_io *kaitai.Stream
+	_root *Gif
+	_parent *Gif
+}
+func NewGif_Block() *Gif_Block {
+	return &Gif_Block{
+	}
+}
+
+func (this Gif_Block) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Gif_Block) Read(io *kaitai.Stream, parent *Gif, root *Gif) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp12, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.BlockType = Gif_BlockType(tmp12)
+	switch (this.BlockType) {
+	case Gif_BlockType__Extension:
+		tmp13 := NewGif_Extension()
+		err = tmp13.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp13
+	case Gif_BlockType__LocalImageDescriptor:
+		tmp14 := NewGif_LocalImageDescriptor()
+		err = tmp14.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp14
+	}
+	return err
+}
+
+/**
+ * @see <a href="https://www.w3.org/Graphics/GIF/spec-gif89a.txt">- section 19</a>
+ */
+type Gif_ColorTable struct {
+	Entries []*Gif_ColorTableEntry
+	_io *kaitai.Stream
+	_root *Gif
+	_parent kaitai.Struct
+}
+func NewGif_ColorTable() *Gif_ColorTable {
+	return &Gif_ColorTable{
+	}
+}
+
+func (this Gif_ColorTable) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Gif_ColorTable) Read(io *kaitai.Stream, parent kaitai.Struct, root *Gif) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	for i := 0;; i++ {
+		tmp15, err := this._io.EOF()
+		if err != nil {
+			return err
+		}
+		if tmp15 {
+			break
+		}
+		tmp16 := NewGif_ColorTableEntry()
+		err = tmp16.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Entries = append(this.Entries, tmp16)
+	}
 	return err
 }
 type Gif_ColorTableEntry struct {
@@ -163,331 +272,71 @@ func NewGif_ColorTableEntry() *Gif_ColorTableEntry {
 	}
 }
 
+func (this Gif_ColorTableEntry) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Gif_ColorTableEntry) Read(io *kaitai.Stream, parent *Gif_ColorTable, root *Gif) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp11, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Red = tmp11
-	tmp12, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Green = tmp12
-	tmp13, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Blue = tmp13
-	return err
-}
-
-/**
- * @see <a href="https://www.w3.org/Graphics/GIF/spec-gif89a.txt">- section 18</a>
- */
-type Gif_LogicalScreenDescriptorStruct struct {
-	ScreenWidth uint16
-	ScreenHeight uint16
-	Flags uint8
-	BgColorIndex uint8
-	PixelAspectRatio uint8
-	_io *kaitai.Stream
-	_root *Gif
-	_parent *Gif
-	_f_hasColorTable bool
-	hasColorTable bool
-	_f_colorTableSize bool
-	colorTableSize int
-}
-func NewGif_LogicalScreenDescriptorStruct() *Gif_LogicalScreenDescriptorStruct {
-	return &Gif_LogicalScreenDescriptorStruct{
-	}
-}
-
-func (this *Gif_LogicalScreenDescriptorStruct) Read(io *kaitai.Stream, parent *Gif, root *Gif) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp14, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.ScreenWidth = uint16(tmp14)
-	tmp15, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.ScreenHeight = uint16(tmp15)
-	tmp16, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Flags = tmp16
 	tmp17, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.BgColorIndex = tmp17
+	this.Red = tmp17
 	tmp18, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.PixelAspectRatio = tmp18
+	this.Green = tmp18
+	tmp19, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Blue = tmp19
 	return err
 }
-func (this *Gif_LogicalScreenDescriptorStruct) HasColorTable() (v bool, err error) {
-	if (this._f_hasColorTable) {
-		return this.hasColorTable, nil
-	}
-	this.hasColorTable = bool((this.Flags & 128) != 0)
-	this._f_hasColorTable = true
-	return this.hasColorTable, nil
-}
-func (this *Gif_LogicalScreenDescriptorStruct) ColorTableSize() (v int, err error) {
-	if (this._f_colorTableSize) {
-		return this.colorTableSize, nil
-	}
-	this.colorTableSize = int((2 << (this.Flags & 7)))
-	this._f_colorTableSize = true
-	return this.colorTableSize, nil
-}
-type Gif_LocalImageDescriptor struct {
-	Left uint16
-	Top uint16
-	Width uint16
-	Height uint16
-	Flags uint8
-	LocalColorTable *Gif_ColorTable
-	ImageData *Gif_ImageData
+type Gif_ExtApplication struct {
+	ApplicationId *Gif_ApplicationId
+	Subblocks []*Gif_Subblock
 	_io *kaitai.Stream
 	_root *Gif
-	_parent *Gif_Block
-	_raw_LocalColorTable []byte
-	_f_hasColorTable bool
-	hasColorTable bool
-	_f_hasInterlace bool
-	hasInterlace bool
-	_f_hasSortedColorTable bool
-	hasSortedColorTable bool
-	_f_colorTableSize bool
-	colorTableSize int
+	_parent *Gif_Extension
 }
-func NewGif_LocalImageDescriptor() *Gif_LocalImageDescriptor {
-	return &Gif_LocalImageDescriptor{
+func NewGif_ExtApplication() *Gif_ExtApplication {
+	return &Gif_ExtApplication{
 	}
 }
 
-func (this *Gif_LocalImageDescriptor) Read(io *kaitai.Stream, parent *Gif_Block, root *Gif) (err error) {
+func (this Gif_ExtApplication) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Gif_ExtApplication) Read(io *kaitai.Stream, parent *Gif_Extension, root *Gif) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp19, err := this._io.ReadU2le()
+	tmp20 := NewGif_ApplicationId()
+	err = tmp20.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Left = uint16(tmp19)
-	tmp20, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.Top = uint16(tmp20)
-	tmp21, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.Width = uint16(tmp21)
-	tmp22, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.Height = uint16(tmp22)
-	tmp23, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Flags = tmp23
-	tmp24, err := this.HasColorTable()
-	if err != nil {
-		return err
-	}
-	if (tmp24) {
-		tmp25, err := this.ColorTableSize()
-		if err != nil {
-			return err
-		}
-		tmp26, err := this._io.ReadBytes(int((tmp25 * 3)))
-		if err != nil {
-			return err
-		}
-		tmp26 = tmp26
-		this._raw_LocalColorTable = tmp26
-		_io__raw_LocalColorTable := kaitai.NewStream(bytes.NewReader(this._raw_LocalColorTable))
-		tmp27 := NewGif_ColorTable()
-		err = tmp27.Read(_io__raw_LocalColorTable, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.LocalColorTable = tmp27
-	}
-	tmp28 := NewGif_ImageData()
-	err = tmp28.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.ImageData = tmp28
-	return err
-}
-func (this *Gif_LocalImageDescriptor) HasColorTable() (v bool, err error) {
-	if (this._f_hasColorTable) {
-		return this.hasColorTable, nil
-	}
-	this.hasColorTable = bool((this.Flags & 128) != 0)
-	this._f_hasColorTable = true
-	return this.hasColorTable, nil
-}
-func (this *Gif_LocalImageDescriptor) HasInterlace() (v bool, err error) {
-	if (this._f_hasInterlace) {
-		return this.hasInterlace, nil
-	}
-	this.hasInterlace = bool((this.Flags & 64) != 0)
-	this._f_hasInterlace = true
-	return this.hasInterlace, nil
-}
-func (this *Gif_LocalImageDescriptor) HasSortedColorTable() (v bool, err error) {
-	if (this._f_hasSortedColorTable) {
-		return this.hasSortedColorTable, nil
-	}
-	this.hasSortedColorTable = bool((this.Flags & 32) != 0)
-	this._f_hasSortedColorTable = true
-	return this.hasSortedColorTable, nil
-}
-func (this *Gif_LocalImageDescriptor) ColorTableSize() (v int, err error) {
-	if (this._f_colorTableSize) {
-		return this.colorTableSize, nil
-	}
-	this.colorTableSize = int((2 << (this.Flags & 7)))
-	this._f_colorTableSize = true
-	return this.colorTableSize, nil
-}
-type Gif_Block struct {
-	BlockType Gif_BlockType
-	Body interface{}
-	_io *kaitai.Stream
-	_root *Gif
-	_parent *Gif
-}
-func NewGif_Block() *Gif_Block {
-	return &Gif_Block{
-	}
-}
-
-func (this *Gif_Block) Read(io *kaitai.Stream, parent *Gif, root *Gif) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp29, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.BlockType = Gif_BlockType(tmp29)
-	switch (this.BlockType) {
-	case Gif_BlockType__Extension:
-		tmp30 := NewGif_Extension()
-		err = tmp30.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp30
-	case Gif_BlockType__LocalImageDescriptor:
-		tmp31 := NewGif_LocalImageDescriptor()
-		err = tmp31.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp31
-	}
-	return err
-}
-
-/**
- * @see <a href="https://www.w3.org/Graphics/GIF/spec-gif89a.txt">- section 19</a>
- */
-type Gif_ColorTable struct {
-	Entries []*Gif_ColorTableEntry
-	_io *kaitai.Stream
-	_root *Gif
-	_parent interface{}
-}
-func NewGif_ColorTable() *Gif_ColorTable {
-	return &Gif_ColorTable{
-	}
-}
-
-func (this *Gif_ColorTable) Read(io *kaitai.Stream, parent interface{}, root *Gif) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
+	this.ApplicationId = tmp20
 	for i := 1;; i++ {
-		tmp32, err := this._io.EOF()
+		tmp21 := NewGif_Subblock()
+		err = tmp21.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		if tmp32 {
+		_it := tmp21
+		this.Subblocks = append(this.Subblocks, _it)
+		if _it.LenBytes == 0 {
 			break
 		}
-		tmp33 := NewGif_ColorTableEntry()
-		err = tmp33.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Entries = append(this.Entries, tmp33)
 	}
-	return err
-}
-
-/**
- * @see <a href="https://www.w3.org/Graphics/GIF/spec-gif89a.txt">- section 17</a>
- */
-type Gif_Header struct {
-	Magic []byte
-	Version string
-	_io *kaitai.Stream
-	_root *Gif
-	_parent *Gif
-}
-func NewGif_Header() *Gif_Header {
-	return &Gif_Header{
-	}
-}
-
-func (this *Gif_Header) Read(io *kaitai.Stream, parent *Gif, root *Gif) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp34, err := this._io.ReadBytes(int(3))
-	if err != nil {
-		return err
-	}
-	tmp34 = tmp34
-	this.Magic = tmp34
-	if !(bytes.Equal(this.Magic, []uint8{71, 73, 70})) {
-		return kaitai.NewValidationNotEqualError([]uint8{71, 73, 70}, this.Magic, this._io, "/types/header/seq/0")
-	}
-	tmp35, err := this._io.ReadBytes(int(3))
-	if err != nil {
-		return err
-	}
-	tmp35 = tmp35
-	this.Version = string(tmp35)
 	return err
 }
 
@@ -513,41 +362,45 @@ func NewGif_ExtGraphicControl() *Gif_ExtGraphicControl {
 	}
 }
 
+func (this Gif_ExtGraphicControl) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Gif_ExtGraphicControl) Read(io *kaitai.Stream, parent *Gif_Extension, root *Gif) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp36, err := this._io.ReadBytes(int(1))
+	tmp22, err := this._io.ReadBytes(int(1))
 	if err != nil {
 		return err
 	}
-	tmp36 = tmp36
-	this.BlockSize = tmp36
+	tmp22 = tmp22
+	this.BlockSize = tmp22
 	if !(bytes.Equal(this.BlockSize, []uint8{4})) {
 		return kaitai.NewValidationNotEqualError([]uint8{4}, this.BlockSize, this._io, "/types/ext_graphic_control/seq/0")
 	}
-	tmp37, err := this._io.ReadU1()
+	tmp23, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Flags = tmp37
-	tmp38, err := this._io.ReadU2le()
+	this.Flags = tmp23
+	tmp24, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.DelayTime = uint16(tmp38)
-	tmp39, err := this._io.ReadU1()
+	this.DelayTime = uint16(tmp24)
+	tmp25, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.TransparentIdx = tmp39
-	tmp40, err := this._io.ReadBytes(int(1))
+	this.TransparentIdx = tmp25
+	tmp26, err := this._io.ReadBytes(int(1))
 	if err != nil {
 		return err
 	}
-	tmp40 = tmp40
-	this.Terminator = tmp40
+	tmp26 = tmp26
+	this.Terminator = tmp26
 	if !(bytes.Equal(this.Terminator, []uint8{0})) {
 		return kaitai.NewValidationNotEqualError([]uint8{0}, this.Terminator, this._io, "/types/ext_graphic_control/seq/4")
 	}
@@ -557,158 +410,21 @@ func (this *Gif_ExtGraphicControl) TransparentColorFlag() (v bool, err error) {
 	if (this._f_transparentColorFlag) {
 		return this.transparentColorFlag, nil
 	}
-	this.transparentColorFlag = bool((this.Flags & 1) != 0)
 	this._f_transparentColorFlag = true
+	this.transparentColorFlag = bool(this.Flags & 1 != 0)
 	return this.transparentColorFlag, nil
 }
 func (this *Gif_ExtGraphicControl) UserInputFlag() (v bool, err error) {
 	if (this._f_userInputFlag) {
 		return this.userInputFlag, nil
 	}
-	this.userInputFlag = bool((this.Flags & 2) != 0)
 	this._f_userInputFlag = true
+	this.userInputFlag = bool(this.Flags & 2 != 0)
 	return this.userInputFlag, nil
-}
-type Gif_Subblock struct {
-	LenBytes uint8
-	Bytes []byte
-	_io *kaitai.Stream
-	_root *Gif
-	_parent interface{}
-}
-func NewGif_Subblock() *Gif_Subblock {
-	return &Gif_Subblock{
-	}
-}
-
-func (this *Gif_Subblock) Read(io *kaitai.Stream, parent interface{}, root *Gif) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp41, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.LenBytes = tmp41
-	tmp42, err := this._io.ReadBytes(int(this.LenBytes))
-	if err != nil {
-		return err
-	}
-	tmp42 = tmp42
-	this.Bytes = tmp42
-	return err
-}
-type Gif_ApplicationId struct {
-	LenBytes uint8
-	ApplicationIdentifier string
-	ApplicationAuthCode []byte
-	_io *kaitai.Stream
-	_root *Gif
-	_parent *Gif_ExtApplication
-}
-func NewGif_ApplicationId() *Gif_ApplicationId {
-	return &Gif_ApplicationId{
-	}
-}
-
-func (this *Gif_ApplicationId) Read(io *kaitai.Stream, parent *Gif_ExtApplication, root *Gif) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp43, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.LenBytes = tmp43
-	if !(this.LenBytes == 11) {
-		return kaitai.NewValidationNotEqualError(11, this.LenBytes, this._io, "/types/application_id/seq/0")
-	}
-	tmp44, err := this._io.ReadBytes(int(8))
-	if err != nil {
-		return err
-	}
-	tmp44 = tmp44
-	this.ApplicationIdentifier = string(tmp44)
-	tmp45, err := this._io.ReadBytes(int(3))
-	if err != nil {
-		return err
-	}
-	tmp45 = tmp45
-	this.ApplicationAuthCode = tmp45
-	return err
-}
-type Gif_ExtApplication struct {
-	ApplicationId *Gif_ApplicationId
-	Subblocks []*Gif_Subblock
-	_io *kaitai.Stream
-	_root *Gif
-	_parent *Gif_Extension
-}
-func NewGif_ExtApplication() *Gif_ExtApplication {
-	return &Gif_ExtApplication{
-	}
-}
-
-func (this *Gif_ExtApplication) Read(io *kaitai.Stream, parent *Gif_Extension, root *Gif) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp46 := NewGif_ApplicationId()
-	err = tmp46.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.ApplicationId = tmp46
-	for i := 1;; i++ {
-		tmp47 := NewGif_Subblock()
-		err = tmp47.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		_it := tmp47
-		this.Subblocks = append(this.Subblocks, _it)
-		if _it.LenBytes == 0 {
-			break
-		}
-	}
-	return err
-}
-type Gif_Subblocks struct {
-	Entries []*Gif_Subblock
-	_io *kaitai.Stream
-	_root *Gif
-	_parent interface{}
-}
-func NewGif_Subblocks() *Gif_Subblocks {
-	return &Gif_Subblocks{
-	}
-}
-
-func (this *Gif_Subblocks) Read(io *kaitai.Stream, parent interface{}, root *Gif) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	for i := 1;; i++ {
-		tmp48 := NewGif_Subblock()
-		err = tmp48.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		_it := tmp48
-		this.Entries = append(this.Entries, _it)
-		if _it.LenBytes == 0 {
-			break
-		}
-	}
-	return err
 }
 type Gif_Extension struct {
 	Label Gif_ExtensionLabel
-	Body interface{}
+	Body kaitai.Struct
 	_io *kaitai.Stream
 	_root *Gif
 	_parent *Gif_Block
@@ -718,45 +434,395 @@ func NewGif_Extension() *Gif_Extension {
 	}
 }
 
+func (this Gif_Extension) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Gif_Extension) Read(io *kaitai.Stream, parent *Gif_Block, root *Gif) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
+	tmp27, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Label = Gif_ExtensionLabel(tmp27)
+	switch (this.Label) {
+	case Gif_ExtensionLabel__Application:
+		tmp28 := NewGif_ExtApplication()
+		err = tmp28.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp28
+	case Gif_ExtensionLabel__Comment:
+		tmp29 := NewGif_Subblocks()
+		err = tmp29.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp29
+	case Gif_ExtensionLabel__GraphicControl:
+		tmp30 := NewGif_ExtGraphicControl()
+		err = tmp30.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp30
+	default:
+		tmp31 := NewGif_Subblocks()
+		err = tmp31.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp31
+	}
+	return err
+}
+
+/**
+ * @see <a href="https://www.w3.org/Graphics/GIF/spec-gif89a.txt">- section 17</a>
+ */
+type Gif_Header struct {
+	Magic []byte
+	Version string
+	_io *kaitai.Stream
+	_root *Gif
+	_parent *Gif
+}
+func NewGif_Header() *Gif_Header {
+	return &Gif_Header{
+	}
+}
+
+func (this Gif_Header) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Gif_Header) Read(io *kaitai.Stream, parent *Gif, root *Gif) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp32, err := this._io.ReadBytes(int(3))
+	if err != nil {
+		return err
+	}
+	tmp32 = tmp32
+	this.Magic = tmp32
+	if !(bytes.Equal(this.Magic, []uint8{71, 73, 70})) {
+		return kaitai.NewValidationNotEqualError([]uint8{71, 73, 70}, this.Magic, this._io, "/types/header/seq/0")
+	}
+	tmp33, err := this._io.ReadBytes(int(3))
+	if err != nil {
+		return err
+	}
+	tmp33 = tmp33
+	this.Version = string(tmp33)
+	return err
+}
+
+/**
+ * @see <a href="https://www.w3.org/Graphics/GIF/spec-gif89a.txt">- section 22</a>
+ */
+type Gif_ImageData struct {
+	LzwMinCodeSize uint8
+	Subblocks *Gif_Subblocks
+	_io *kaitai.Stream
+	_root *Gif
+	_parent *Gif_LocalImageDescriptor
+}
+func NewGif_ImageData() *Gif_ImageData {
+	return &Gif_ImageData{
+	}
+}
+
+func (this Gif_ImageData) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Gif_ImageData) Read(io *kaitai.Stream, parent *Gif_LocalImageDescriptor, root *Gif) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp34, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.LzwMinCodeSize = tmp34
+	tmp35 := NewGif_Subblocks()
+	err = tmp35.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Subblocks = tmp35
+	return err
+}
+type Gif_LocalImageDescriptor struct {
+	Left uint16
+	Top uint16
+	Width uint16
+	Height uint16
+	Flags uint8
+	LocalColorTable *Gif_ColorTable
+	ImageData *Gif_ImageData
+	_io *kaitai.Stream
+	_root *Gif
+	_parent *Gif_Block
+	_raw_LocalColorTable []byte
+	_f_colorTableSize bool
+	colorTableSize int
+	_f_hasColorTable bool
+	hasColorTable bool
+	_f_hasInterlace bool
+	hasInterlace bool
+	_f_hasSortedColorTable bool
+	hasSortedColorTable bool
+}
+func NewGif_LocalImageDescriptor() *Gif_LocalImageDescriptor {
+	return &Gif_LocalImageDescriptor{
+	}
+}
+
+func (this Gif_LocalImageDescriptor) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Gif_LocalImageDescriptor) Read(io *kaitai.Stream, parent *Gif_Block, root *Gif) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp36, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.Left = uint16(tmp36)
+	tmp37, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.Top = uint16(tmp37)
+	tmp38, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.Width = uint16(tmp38)
+	tmp39, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.Height = uint16(tmp39)
+	tmp40, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Flags = tmp40
+	tmp41, err := this.HasColorTable()
+	if err != nil {
+		return err
+	}
+	if (tmp41) {
+		tmp42, err := this.ColorTableSize()
+		if err != nil {
+			return err
+		}
+		tmp43, err := this._io.ReadBytes(int(tmp42 * 3))
+		if err != nil {
+			return err
+		}
+		tmp43 = tmp43
+		this._raw_LocalColorTable = tmp43
+		_io__raw_LocalColorTable := kaitai.NewStream(bytes.NewReader(this._raw_LocalColorTable))
+		tmp44 := NewGif_ColorTable()
+		err = tmp44.Read(_io__raw_LocalColorTable, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.LocalColorTable = tmp44
+	}
+	tmp45 := NewGif_ImageData()
+	err = tmp45.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.ImageData = tmp45
+	return err
+}
+func (this *Gif_LocalImageDescriptor) ColorTableSize() (v int, err error) {
+	if (this._f_colorTableSize) {
+		return this.colorTableSize, nil
+	}
+	this._f_colorTableSize = true
+	this.colorTableSize = int(2 << (this.Flags & 7))
+	return this.colorTableSize, nil
+}
+func (this *Gif_LocalImageDescriptor) HasColorTable() (v bool, err error) {
+	if (this._f_hasColorTable) {
+		return this.hasColorTable, nil
+	}
+	this._f_hasColorTable = true
+	this.hasColorTable = bool(this.Flags & 128 != 0)
+	return this.hasColorTable, nil
+}
+func (this *Gif_LocalImageDescriptor) HasInterlace() (v bool, err error) {
+	if (this._f_hasInterlace) {
+		return this.hasInterlace, nil
+	}
+	this._f_hasInterlace = true
+	this.hasInterlace = bool(this.Flags & 64 != 0)
+	return this.hasInterlace, nil
+}
+func (this *Gif_LocalImageDescriptor) HasSortedColorTable() (v bool, err error) {
+	if (this._f_hasSortedColorTable) {
+		return this.hasSortedColorTable, nil
+	}
+	this._f_hasSortedColorTable = true
+	this.hasSortedColorTable = bool(this.Flags & 32 != 0)
+	return this.hasSortedColorTable, nil
+}
+
+/**
+ * @see <a href="https://www.w3.org/Graphics/GIF/spec-gif89a.txt">- section 18</a>
+ */
+type Gif_LogicalScreenDescriptorStruct struct {
+	ScreenWidth uint16
+	ScreenHeight uint16
+	Flags uint8
+	BgColorIndex uint8
+	PixelAspectRatio uint8
+	_io *kaitai.Stream
+	_root *Gif
+	_parent *Gif
+	_f_colorTableSize bool
+	colorTableSize int
+	_f_hasColorTable bool
+	hasColorTable bool
+}
+func NewGif_LogicalScreenDescriptorStruct() *Gif_LogicalScreenDescriptorStruct {
+	return &Gif_LogicalScreenDescriptorStruct{
+	}
+}
+
+func (this Gif_LogicalScreenDescriptorStruct) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Gif_LogicalScreenDescriptorStruct) Read(io *kaitai.Stream, parent *Gif, root *Gif) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp46, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.ScreenWidth = uint16(tmp46)
+	tmp47, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.ScreenHeight = uint16(tmp47)
+	tmp48, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Flags = tmp48
 	tmp49, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Label = Gif_ExtensionLabel(tmp49)
-	switch (this.Label) {
-	case Gif_ExtensionLabel__Application:
-		tmp50 := NewGif_ExtApplication()
-		err = tmp50.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp50
-	case Gif_ExtensionLabel__Comment:
-		tmp51 := NewGif_Subblocks()
-		err = tmp51.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp51
-	case Gif_ExtensionLabel__GraphicControl:
-		tmp52 := NewGif_ExtGraphicControl()
-		err = tmp52.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp52
-	default:
-		tmp53 := NewGif_Subblocks()
+	this.BgColorIndex = tmp49
+	tmp50, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.PixelAspectRatio = tmp50
+	return err
+}
+func (this *Gif_LogicalScreenDescriptorStruct) ColorTableSize() (v int, err error) {
+	if (this._f_colorTableSize) {
+		return this.colorTableSize, nil
+	}
+	this._f_colorTableSize = true
+	this.colorTableSize = int(2 << (this.Flags & 7))
+	return this.colorTableSize, nil
+}
+func (this *Gif_LogicalScreenDescriptorStruct) HasColorTable() (v bool, err error) {
+	if (this._f_hasColorTable) {
+		return this.hasColorTable, nil
+	}
+	this._f_hasColorTable = true
+	this.hasColorTable = bool(this.Flags & 128 != 0)
+	return this.hasColorTable, nil
+}
+type Gif_Subblock struct {
+	LenBytes uint8
+	Bytes []byte
+	_io *kaitai.Stream
+	_root *Gif
+	_parent kaitai.Struct
+}
+func NewGif_Subblock() *Gif_Subblock {
+	return &Gif_Subblock{
+	}
+}
+
+func (this Gif_Subblock) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Gif_Subblock) Read(io *kaitai.Stream, parent kaitai.Struct, root *Gif) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp51, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.LenBytes = tmp51
+	tmp52, err := this._io.ReadBytes(int(this.LenBytes))
+	if err != nil {
+		return err
+	}
+	tmp52 = tmp52
+	this.Bytes = tmp52
+	return err
+}
+type Gif_Subblocks struct {
+	Entries []*Gif_Subblock
+	_io *kaitai.Stream
+	_root *Gif
+	_parent kaitai.Struct
+}
+func NewGif_Subblocks() *Gif_Subblocks {
+	return &Gif_Subblocks{
+	}
+}
+
+func (this Gif_Subblocks) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Gif_Subblocks) Read(io *kaitai.Stream, parent kaitai.Struct, root *Gif) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	for i := 1;; i++ {
+		tmp53 := NewGif_Subblock()
 		err = tmp53.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Body = tmp53
+		_it := tmp53
+		this.Entries = append(this.Entries, _it)
+		if _it.LenBytes == 0 {
+			break
+		}
 	}
 	return err
 }

@@ -9,6 +9,79 @@ digraph {
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 			<TR><TD PORT="atoms_pos">0</TD><TD PORT="atoms_size">...</TD><TD>AtomList</TD><TD PORT="atoms_type">atoms</TD></TR>
 		</TABLE>>];
+		subgraph cluster__atom {
+			label="QuicktimeMov::Atom";
+			graph[style=dotted];
+
+			atom__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="len32_pos">0</TD><TD PORT="len32_size">4</TD><TD>u4be</TD><TD PORT="len32_type">len32</TD></TR>
+				<TR><TD PORT="atom_type_pos">4</TD><TD PORT="atom_type_size">4</TD><TD>u4be→AtomType</TD><TD PORT="atom_type_type">atom_type</TD></TR>
+				<TR><TD PORT="len64_pos">8</TD><TD PORT="len64_size">8</TD><TD>u8be</TD><TD PORT="len64_type">len64</TD></TR>
+				<TR><TD COLSPAN="4" PORT="len64__if">if len32 == 1</TD></TR>
+				<TR><TD PORT="body_pos">16</TD><TD PORT="body_size">...</TD><TD>switch (atom_type)</TD><TD PORT="body_type">body</TD></TR>
+			</TABLE>>];
+			atom__inst__len [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>len</TD><TD>(len32 == 0 ? _io.size - 8 : (len32 == 1 ? len64 - 16 : len32 - 8))</TD></TR>
+			</TABLE>>];
+atom__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>:atom_type_dinf</TD><TD PORT="case0">AtomList</TD></TR>
+	<TR><TD>:atom_type_ftyp</TD><TD PORT="case1">FtypBody</TD></TR>
+	<TR><TD>:atom_type_mdia</TD><TD PORT="case2">AtomList</TD></TR>
+	<TR><TD>:atom_type_minf</TD><TD PORT="case3">AtomList</TD></TR>
+	<TR><TD>:atom_type_moof</TD><TD PORT="case4">AtomList</TD></TR>
+	<TR><TD>:atom_type_moov</TD><TD PORT="case5">AtomList</TD></TR>
+	<TR><TD>:atom_type_mvhd</TD><TD PORT="case6">MvhdBody</TD></TR>
+	<TR><TD>:atom_type_stbl</TD><TD PORT="case7">AtomList</TD></TR>
+	<TR><TD>:atom_type_tkhd</TD><TD PORT="case8">TkhdBody</TD></TR>
+	<TR><TD>:atom_type_traf</TD><TD PORT="case9">AtomList</TD></TR>
+	<TR><TD>:atom_type_trak</TD><TD PORT="case10">AtomList</TD></TR>
+</TABLE>>];
+		}
+		subgraph cluster__atom_list {
+			label="QuicktimeMov::AtomList";
+			graph[style=dotted];
+
+			atom_list__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="items_pos">0</TD><TD PORT="items_size">...</TD><TD>Atom</TD><TD PORT="items_type">items</TD></TR>
+				<TR><TD COLSPAN="4" PORT="items__repeat">repeat to end of stream</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__fixed16 {
+			label="QuicktimeMov::Fixed16";
+			graph[style=dotted];
+
+			fixed16__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="int_part_pos">0</TD><TD PORT="int_part_size">1</TD><TD>s1</TD><TD PORT="int_part_type">int_part</TD></TR>
+				<TR><TD PORT="frac_part_pos">1</TD><TD PORT="frac_part_size">1</TD><TD>u1</TD><TD PORT="frac_part_type">frac_part</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__fixed32 {
+			label="QuicktimeMov::Fixed32";
+			graph[style=dotted];
+
+			fixed32__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="int_part_pos">0</TD><TD PORT="int_part_size">2</TD><TD>s2be</TD><TD PORT="int_part_type">int_part</TD></TR>
+				<TR><TD PORT="frac_part_pos">2</TD><TD PORT="frac_part_size">2</TD><TD>u2be</TD><TD PORT="frac_part_type">frac_part</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__ftyp_body {
+			label="QuicktimeMov::FtypBody";
+			graph[style=dotted];
+
+			ftyp_body__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="major_brand_pos">0</TD><TD PORT="major_brand_size">4</TD><TD>u4be→Brand</TD><TD PORT="major_brand_type">major_brand</TD></TR>
+				<TR><TD PORT="minor_version_pos">4</TD><TD PORT="minor_version_size">4</TD><TD></TD><TD PORT="minor_version_type">minor_version</TD></TR>
+				<TR><TD PORT="compatible_brands_pos">8</TD><TD PORT="compatible_brands_size">4</TD><TD>u4be→Brand</TD><TD PORT="compatible_brands_type">compatible_brands</TD></TR>
+				<TR><TD COLSPAN="4" PORT="compatible_brands__repeat">repeat to end of stream</TD></TR>
+			</TABLE>>];
+		}
 		subgraph cluster__mvhd_body {
 			label="QuicktimeMov::MvhdBody";
 			graph[style=dotted];
@@ -34,68 +107,6 @@ digraph {
 				<TR><TD PORT="next_track_id_pos">96</TD><TD PORT="next_track_id_size">4</TD><TD>u4be</TD><TD PORT="next_track_id_type">next_track_id</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__ftyp_body {
-			label="QuicktimeMov::FtypBody";
-			graph[style=dotted];
-
-			ftyp_body__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="major_brand_pos">0</TD><TD PORT="major_brand_size">4</TD><TD>u4be→Brand</TD><TD PORT="major_brand_type">major_brand</TD></TR>
-				<TR><TD PORT="minor_version_pos">4</TD><TD PORT="minor_version_size">4</TD><TD></TD><TD PORT="minor_version_type">minor_version</TD></TR>
-				<TR><TD PORT="compatible_brands_pos">8</TD><TD PORT="compatible_brands_size">4</TD><TD>u4be→Brand</TD><TD PORT="compatible_brands_type">compatible_brands</TD></TR>
-				<TR><TD COLSPAN="4" PORT="compatible_brands__repeat">repeat to end of stream</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__fixed32 {
-			label="QuicktimeMov::Fixed32";
-			graph[style=dotted];
-
-			fixed32__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="int_part_pos">0</TD><TD PORT="int_part_size">2</TD><TD>s2be</TD><TD PORT="int_part_type">int_part</TD></TR>
-				<TR><TD PORT="frac_part_pos">2</TD><TD PORT="frac_part_size">2</TD><TD>u2be</TD><TD PORT="frac_part_type">frac_part</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__fixed16 {
-			label="QuicktimeMov::Fixed16";
-			graph[style=dotted];
-
-			fixed16__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="int_part_pos">0</TD><TD PORT="int_part_size">1</TD><TD>s1</TD><TD PORT="int_part_type">int_part</TD></TR>
-				<TR><TD PORT="frac_part_pos">1</TD><TD PORT="frac_part_size">1</TD><TD>u1</TD><TD PORT="frac_part_type">frac_part</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__atom {
-			label="QuicktimeMov::Atom";
-			graph[style=dotted];
-
-			atom__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="len32_pos">0</TD><TD PORT="len32_size">4</TD><TD>u4be</TD><TD PORT="len32_type">len32</TD></TR>
-				<TR><TD PORT="atom_type_pos">4</TD><TD PORT="atom_type_size">4</TD><TD>u4be→AtomType</TD><TD PORT="atom_type_type">atom_type</TD></TR>
-				<TR><TD PORT="len64_pos">8</TD><TD PORT="len64_size">8</TD><TD>u8be</TD><TD PORT="len64_type">len64</TD></TR>
-				<TR><TD PORT="body_pos">16</TD><TD PORT="body_size">...</TD><TD>switch (atom_type)</TD><TD PORT="body_type">body</TD></TR>
-			</TABLE>>];
-			atom__inst__len [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>len</TD><TD>(len32 == 0 ? (_io.size - 8) : (len32 == 1 ? (len64 - 16) : (len32 - 8)))</TD></TR>
-			</TABLE>>];
-atom__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
-	<TR><TD>:atom_type_moof</TD><TD PORT="case0">AtomList</TD></TR>
-	<TR><TD>:atom_type_tkhd</TD><TD PORT="case1">TkhdBody</TD></TR>
-	<TR><TD>:atom_type_stbl</TD><TD PORT="case2">AtomList</TD></TR>
-	<TR><TD>:atom_type_traf</TD><TD PORT="case3">AtomList</TD></TR>
-	<TR><TD>:atom_type_minf</TD><TD PORT="case4">AtomList</TD></TR>
-	<TR><TD>:atom_type_trak</TD><TD PORT="case5">AtomList</TD></TR>
-	<TR><TD>:atom_type_moov</TD><TD PORT="case6">AtomList</TD></TR>
-	<TR><TD>:atom_type_mdia</TD><TD PORT="case7">AtomList</TD></TR>
-	<TR><TD>:atom_type_dinf</TD><TD PORT="case8">AtomList</TD></TR>
-	<TR><TD>:atom_type_mvhd</TD><TD PORT="case9">MvhdBody</TD></TR>
-	<TR><TD>:atom_type_ftyp</TD><TD PORT="case10">FtypBody</TD></TR>
-</TABLE>>];
-		}
 		subgraph cluster__tkhd_body {
 			label="QuicktimeMov::TkhdBody";
 			graph[style=dotted];
@@ -119,38 +130,27 @@ atom__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD PORT="height_pos">80</TD><TD PORT="height_size">4</TD><TD>Fixed32</TD><TD PORT="height_type">height</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__atom_list {
-			label="QuicktimeMov::AtomList";
-			graph[style=dotted];
-
-			atom_list__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="items_pos">0</TD><TD PORT="items_size">...</TD><TD>Atom</TD><TD PORT="items_type">items</TD></TR>
-				<TR><TD COLSPAN="4" PORT="items__repeat">repeat to end of stream</TD></TR>
-			</TABLE>>];
-		}
 	}
 	quicktime_mov__seq:atoms_type -> atom_list__seq [style=bold];
-	mvhd_body__seq:preferred_rate_type -> fixed32__seq [style=bold];
-	mvhd_body__seq:preferred_volume_type -> fixed16__seq [style=bold];
+	atom__seq:len32_type -> atom__seq:len64__if [color="#404040"];
 	atom__seq:body_type -> atom__seq_body_switch [style=bold];
 	atom__seq_body_switch:case0 -> atom_list__seq [style=bold];
-	atom__seq_body_switch:case1 -> tkhd_body__seq [style=bold];
+	atom__seq_body_switch:case1 -> ftyp_body__seq [style=bold];
 	atom__seq_body_switch:case2 -> atom_list__seq [style=bold];
 	atom__seq_body_switch:case3 -> atom_list__seq [style=bold];
 	atom__seq_body_switch:case4 -> atom_list__seq [style=bold];
 	atom__seq_body_switch:case5 -> atom_list__seq [style=bold];
-	atom__seq_body_switch:case6 -> atom_list__seq [style=bold];
+	atom__seq_body_switch:case6 -> mvhd_body__seq [style=bold];
 	atom__seq_body_switch:case7 -> atom_list__seq [style=bold];
-	atom__seq_body_switch:case8 -> atom_list__seq [style=bold];
-	atom__seq_body_switch:case9 -> mvhd_body__seq [style=bold];
-	atom__seq_body_switch:case10 -> ftyp_body__seq [style=bold];
+	atom__seq_body_switch:case8 -> tkhd_body__seq [style=bold];
+	atom__seq_body_switch:case9 -> atom_list__seq [style=bold];
+	atom__seq_body_switch:case10 -> atom_list__seq [style=bold];
 	atom__seq:atom_type_type -> atom__seq:body_type [color="#404040"];
 	atom__seq:len32_type -> atom__inst__len [color="#404040"];
-	atom__seq:len32_type -> atom__inst__len [color="#404040"];
 	atom__seq:len64_type -> atom__inst__len [color="#404040"];
-	atom__seq:len32_type -> atom__inst__len [color="#404040"];
+	atom_list__seq:items_type -> atom__seq [style=bold];
+	mvhd_body__seq:preferred_rate_type -> fixed32__seq [style=bold];
+	mvhd_body__seq:preferred_volume_type -> fixed16__seq [style=bold];
 	tkhd_body__seq:width_type -> fixed32__seq [style=bold];
 	tkhd_body__seq:height_type -> fixed32__seq [style=bold];
-	atom_list__seq:items_type -> atom__seq [style=bold];
 }

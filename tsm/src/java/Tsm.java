@@ -5,8 +5,9 @@ import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.Arrays;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -41,6 +42,14 @@ public class Tsm extends KaitaiStruct {
     private void _read() {
         this.header = new Header(this._io, this, _root);
     }
+
+    public void _fetchInstances() {
+        this.header._fetchInstances();
+        index();
+        if (this.index != null) {
+            this.index._fetchInstances();
+        }
+    }
     public static class Header extends KaitaiStruct {
         public static Header fromFile(String fileName) throws IOException {
             return new Header(new ByteBufferKaitaiStream(fileName));
@@ -62,10 +71,13 @@ public class Tsm extends KaitaiStruct {
         }
         private void _read() {
             this.magic = this._io.readBytes(4);
-            if (!(Arrays.equals(magic(), new byte[] { 22, -47, 22, -47 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 22, -47, 22, -47 }, magic(), _io(), "/types/header/seq/0");
+            if (!(Arrays.equals(this.magic, new byte[] { 22, -47, 22, -47 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 22, -47, 22, -47 }, this.magic, this._io, "/types/header/seq/0");
             }
             this.version = this._io.readU1();
+        }
+
+        public void _fetchInstances() {
         }
         private byte[] magic;
         private int version;
@@ -98,6 +110,15 @@ public class Tsm extends KaitaiStruct {
         private void _read() {
             this.offset = this._io.readU8be();
         }
+
+        public void _fetchInstances() {
+            entries();
+            if (this.entries != null) {
+                for (int i = 0; i < this.entries.size(); i++) {
+                    this.entries.get(((Number) (i)).intValue())._fetchInstances();
+                }
+            }
+        }
         public static class IndexHeader extends KaitaiStruct {
             public static IndexHeader fromFile(String fileName) throws IOException {
                 return new IndexHeader(new ByteBufferKaitaiStream(fileName));
@@ -119,12 +140,18 @@ public class Tsm extends KaitaiStruct {
             }
             private void _read() {
                 this.keyLen = this._io.readU2be();
-                this.key = new String(this._io.readBytes(keyLen()), Charset.forName("UTF-8"));
+                this.key = new String(this._io.readBytes(keyLen()), StandardCharsets.UTF_8);
                 this.type = this._io.readU1();
                 this.entryCount = this._io.readU2be();
                 this.indexEntries = new ArrayList<IndexEntry>();
                 for (int i = 0; i < entryCount(); i++) {
                     this.indexEntries.add(new IndexEntry(this._io, this, _root));
+                }
+            }
+
+            public void _fetchInstances() {
+                for (int i = 0; i < this.indexEntries.size(); i++) {
+                    this.indexEntries.get(((Number) (i)).intValue())._fetchInstances();
                 }
             }
             public static class IndexEntry extends KaitaiStruct {
@@ -152,6 +179,13 @@ public class Tsm extends KaitaiStruct {
                     this.blockOffset = this._io.readU8be();
                     this.blockSize = this._io.readU4be();
                 }
+
+                public void _fetchInstances() {
+                    block();
+                    if (this.block != null) {
+                        this.block._fetchInstances();
+                    }
+                }
                 public static class BlockEntry extends KaitaiStruct {
                     public static BlockEntry fromFile(String fileName) throws IOException {
                         return new BlockEntry(new ByteBufferKaitaiStream(fileName));
@@ -173,7 +207,10 @@ public class Tsm extends KaitaiStruct {
                     }
                     private void _read() {
                         this.crc32 = this._io.readU4be();
-                        this.data = this._io.readBytes((_parent().blockSize() - 4));
+                        this.data = this._io.readBytes(_parent().blockSize() - 4);
+                    }
+
+                    public void _fetchInstances() {
                     }
                     private long crc32;
                     private byte[] data;
@@ -212,19 +249,19 @@ public class Tsm extends KaitaiStruct {
             private String key;
             private int type;
             private int entryCount;
-            private ArrayList<IndexEntry> indexEntries;
+            private List<IndexEntry> indexEntries;
             private Tsm _root;
             private Tsm.Index _parent;
             public int keyLen() { return keyLen; }
             public String key() { return key; }
             public int type() { return type; }
             public int entryCount() { return entryCount; }
-            public ArrayList<IndexEntry> indexEntries() { return indexEntries; }
+            public List<IndexEntry> indexEntries() { return indexEntries; }
             public Tsm _root() { return _root; }
             public Tsm.Index _parent() { return _parent; }
         }
-        private ArrayList<IndexHeader> entries;
-        public ArrayList<IndexHeader> entries() {
+        private List<IndexHeader> entries;
+        public List<IndexHeader> entries() {
             if (this.entries != null)
                 return this.entries;
             long _pos = this._io.pos();
@@ -237,7 +274,7 @@ public class Tsm extends KaitaiStruct {
                     _it = new IndexHeader(this._io, this, _root);
                     this.entries.add(_it);
                     i++;
-                } while (!(_io().pos() == (_io().size() - 8)));
+                } while (!(_io().pos() == _io().size() - 8));
             }
             this._io.seek(_pos);
             return this.entries;
@@ -254,7 +291,7 @@ public class Tsm extends KaitaiStruct {
         if (this.index != null)
             return this.index;
         long _pos = this._io.pos();
-        this._io.seek((_io().size() - 8));
+        this._io.seek(_io().size() - 8);
         this.index = new Index(this._io, this, _root);
         this._io.seek(_pos);
         return this.index;

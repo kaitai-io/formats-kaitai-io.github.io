@@ -21,11 +21,11 @@ type AndroidNanoappHeader struct {
 	Reserved []byte
 	_io *kaitai.Stream
 	_root *AndroidNanoappHeader
-	_parent interface{}
-	_f_isSigned bool
-	isSigned bool
+	_parent kaitai.Struct
 	_f_isEncrypted bool
 	isEncrypted bool
+	_f_isSigned bool
+	isSigned bool
 	_f_isTcmCapable bool
 	isTcmCapable bool
 }
@@ -34,7 +34,11 @@ func NewAndroidNanoappHeader() *AndroidNanoappHeader {
 	}
 }
 
-func (this *AndroidNanoappHeader) Read(io *kaitai.Stream, parent interface{}, root *AndroidNanoappHeader) (err error) {
+func (this AndroidNanoappHeader) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *AndroidNanoappHeader) Read(io *kaitai.Stream, parent kaitai.Struct, root *AndroidNanoappHeader) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -97,27 +101,27 @@ func (this *AndroidNanoappHeader) Read(io *kaitai.Stream, parent interface{}, ro
 	}
 	return err
 }
-func (this *AndroidNanoappHeader) IsSigned() (v bool, err error) {
-	if (this._f_isSigned) {
-		return this.isSigned, nil
-	}
-	this.isSigned = bool((this.Flags & 1) != 0)
-	this._f_isSigned = true
-	return this.isSigned, nil
-}
 func (this *AndroidNanoappHeader) IsEncrypted() (v bool, err error) {
 	if (this._f_isEncrypted) {
 		return this.isEncrypted, nil
 	}
-	this.isEncrypted = bool((this.Flags & 2) != 0)
 	this._f_isEncrypted = true
+	this.isEncrypted = bool(this.Flags & 2 != 0)
 	return this.isEncrypted, nil
+}
+func (this *AndroidNanoappHeader) IsSigned() (v bool, err error) {
+	if (this._f_isSigned) {
+		return this.isSigned, nil
+	}
+	this._f_isSigned = true
+	this.isSigned = bool(this.Flags & 1 != 0)
+	return this.isSigned, nil
 }
 func (this *AndroidNanoappHeader) IsTcmCapable() (v bool, err error) {
 	if (this._f_isTcmCapable) {
 		return this.isTcmCapable, nil
 	}
-	this.isTcmCapable = bool((this.Flags & 4) != 0)
 	this._f_isTcmCapable = true
+	this.isTcmCapable = bool(this.Flags & 4 != 0)
 	return this.isTcmCapable, nil
 }

@@ -49,24 +49,24 @@ type
     `rest`*: seq[uint16]
     `noop`*: seq[byte]
     `parent`*: WindowsResourceFile_Resource
+    `asStringInst`: string
+    `asStringInstFlag`: bool
+    `isStringInst`: bool
+    `isStringInstFlag`: bool
     `savePos1Inst`: int
     `savePos1InstFlag`: bool
     `savePos2Inst`: int
     `savePos2InstFlag`: bool
-    `isStringInst`: bool
-    `isStringInstFlag`: bool
-    `asStringInst`: string
-    `asStringInstFlag`: bool
 
 proc read*(_: typedesc[WindowsResourceFile], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): WindowsResourceFile
 proc read*(_: typedesc[WindowsResourceFile_Resource], io: KaitaiStream, root: KaitaiStruct, parent: WindowsResourceFile): WindowsResourceFile_Resource
 proc read*(_: typedesc[WindowsResourceFile_UnicodeOrId], io: KaitaiStream, root: KaitaiStruct, parent: WindowsResourceFile_Resource): WindowsResourceFile_UnicodeOrId
 
 proc typeAsPredef*(this: WindowsResourceFile_Resource): WindowsResourceFile_Resource_PredefTypes
+proc asString*(this: WindowsResourceFile_UnicodeOrId): string
+proc isString*(this: WindowsResourceFile_UnicodeOrId): bool
 proc savePos1*(this: WindowsResourceFile_UnicodeOrId): int
 proc savePos2*(this: WindowsResourceFile_UnicodeOrId): int
-proc isString*(this: WindowsResourceFile_UnicodeOrId): bool
-proc asString*(this: WindowsResourceFile_UnicodeOrId): string
 
 
 ##[
@@ -148,7 +148,7 @@ optional padding after it)
   this.type = typeExpr
   let nameExpr = WindowsResourceFile_UnicodeOrId.read(this.io, this.root, this)
   this.name = nameExpr
-  let padding1Expr = this.io.readBytes(int(((4 - this.io.pos) %%% 4)))
+  let padding1Expr = this.io.readBytes(int((4 - this.io.pos) %%% 4))
   this.padding1 = padding1Expr
   let formatVersionExpr = this.io.readU4le()
   this.formatVersion = formatVersionExpr
@@ -170,7 +170,7 @@ optional padding after it)
   this.characteristics = characteristicsExpr
   let valueExpr = this.io.readBytes(int(this.valueSize))
   this.value = valueExpr
-  let padding2Expr = this.io.readBytes(int(((4 - this.io.pos) %%% 4)))
+  let padding2Expr = this.io.readBytes(int((4 - this.io.pos) %%% 4))
   this.padding2 = padding2Expr
 
 proc typeAsPredef(this: WindowsResourceFile_Resource): WindowsResourceFile_Resource_PredefTypes = 
@@ -229,6 +229,26 @@ proc read*(_: typedesc[WindowsResourceFile_UnicodeOrId], io: KaitaiStream, root:
     let noopExpr = this.io.readBytes(int(0))
     this.noop = noopExpr
 
+proc asString(this: WindowsResourceFile_UnicodeOrId): string = 
+  if this.asStringInstFlag:
+    return this.asStringInst
+  if this.isString:
+    let pos = this.io.pos()
+    this.io.seek(int(this.savePos1))
+    let asStringInstExpr = encode(this.io.readBytes(int((this.savePos2 - this.savePos1) - 2)), "UTF-16LE")
+    this.asStringInst = asStringInstExpr
+    this.io.seek(pos)
+  this.asStringInstFlag = true
+  return this.asStringInst
+
+proc isString(this: WindowsResourceFile_UnicodeOrId): bool = 
+  if this.isStringInstFlag:
+    return this.isStringInst
+  let isStringInstExpr = bool(this.first != 65535)
+  this.isStringInst = isStringInstExpr
+  this.isStringInstFlag = true
+  return this.isStringInst
+
 proc savePos1(this: WindowsResourceFile_UnicodeOrId): int = 
   if this.savePos1InstFlag:
     return this.savePos1Inst
@@ -244,26 +264,6 @@ proc savePos2(this: WindowsResourceFile_UnicodeOrId): int =
   this.savePos2Inst = savePos2InstExpr
   this.savePos2InstFlag = true
   return this.savePos2Inst
-
-proc isString(this: WindowsResourceFile_UnicodeOrId): bool = 
-  if this.isStringInstFlag:
-    return this.isStringInst
-  let isStringInstExpr = bool(this.first != 65535)
-  this.isStringInst = isStringInstExpr
-  this.isStringInstFlag = true
-  return this.isStringInst
-
-proc asString(this: WindowsResourceFile_UnicodeOrId): string = 
-  if this.asStringInstFlag:
-    return this.asStringInst
-  if this.isString:
-    let pos = this.io.pos()
-    this.io.seek(int(this.savePos1))
-    let asStringInstExpr = encode(this.io.readBytes(int(((this.savePos2 - this.savePos1) - 2))), "UTF-16LE")
-    this.asStringInst = asStringInstExpr
-    this.io.seek(pos)
-  this.asStringInstFlag = true
-  return this.asStringInst
 
 proc fromFile*(_: typedesc[WindowsResourceFile_UnicodeOrId], filename: string): WindowsResourceFile_UnicodeOrId =
   WindowsResourceFile_UnicodeOrId.read(newKaitaiFileStream(filename), nil, nil)

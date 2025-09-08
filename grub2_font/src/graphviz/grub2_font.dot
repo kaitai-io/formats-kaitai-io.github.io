@@ -7,79 +7,10 @@ digraph {
 
 		grub2_font__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-			<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">12</TD><TD></TD><TD PORT="magic_type">magic</TD></TR>
+			<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">12</TD><TD>46 49 4C 45 00 00 00 04 50 46 46 32</TD><TD PORT="magic_type">magic</TD></TR>
 			<TR><TD PORT="sections_pos">12</TD><TD PORT="sections_size">...</TD><TD>Section</TD><TD PORT="sections_type">sections</TD></TR>
 			<TR><TD COLSPAN="4" PORT="sections__repeat">repeat until _.section_type == &quot;DATA&quot;</TD></TR>
 		</TABLE>>];
-		subgraph cluster__ptsz_section {
-			label="Grub2Font::PtszSection";
-			graph[style=dotted];
-
-			ptsz_section__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="font_point_size_pos">0</TD><TD PORT="font_point_size_size">2</TD><TD>u2be</TD><TD PORT="font_point_size_type">font_point_size</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__fami_section {
-			label="Grub2Font::FamiSection";
-			graph[style=dotted];
-
-			fami_section__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="font_family_name_pos">0</TD><TD PORT="font_family_name_size">...</TD><TD>str(ASCII)</TD><TD PORT="font_family_name_type">font_family_name</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__weig_section {
-			label="Grub2Font::WeigSection";
-			graph[style=dotted];
-
-			weig_section__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="font_weight_pos">0</TD><TD PORT="font_weight_size">...</TD><TD>str(ASCII)</TD><TD PORT="font_weight_type">font_weight</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__maxw_section {
-			label="Grub2Font::MaxwSection";
-			graph[style=dotted];
-
-			maxw_section__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="maximum_character_width_pos">0</TD><TD PORT="maximum_character_width_size">2</TD><TD>u2be</TD><TD PORT="maximum_character_width_type">maximum_character_width</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__desc_section {
-			label="Grub2Font::DescSection";
-			graph[style=dotted];
-
-			desc_section__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="descent_in_pixels_pos">0</TD><TD PORT="descent_in_pixels_size">2</TD><TD>u2be</TD><TD PORT="descent_in_pixels_type">descent_in_pixels</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__section {
-			label="Grub2Font::Section";
-			graph[style=dotted];
-
-			section__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="section_type_pos">0</TD><TD PORT="section_type_size">4</TD><TD>str(ASCII)</TD><TD PORT="section_type_type">section_type</TD></TR>
-				<TR><TD PORT="len_body_pos">4</TD><TD PORT="len_body_size">4</TD><TD>u4be</TD><TD PORT="len_body_type">len_body</TD></TR>
-				<TR><TD PORT="body_pos">8</TD><TD PORT="body_size">...</TD><TD>switch (section_type)</TD><TD PORT="body_type">body</TD></TR>
-			</TABLE>>];
-section__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
-	<TR><TD>&quot;MAXH&quot;</TD><TD PORT="case0">MaxhSection</TD></TR>
-	<TR><TD>&quot;FAMI&quot;</TD><TD PORT="case1">FamiSection</TD></TR>
-	<TR><TD>&quot;PTSZ&quot;</TD><TD PORT="case2">PtszSection</TD></TR>
-	<TR><TD>&quot;MAXW&quot;</TD><TD PORT="case3">MaxwSection</TD></TR>
-	<TR><TD>&quot;SLAN&quot;</TD><TD PORT="case4">SlanSection</TD></TR>
-	<TR><TD>&quot;WEIG&quot;</TD><TD PORT="case5">WeigSection</TD></TR>
-	<TR><TD>&quot;CHIX&quot;</TD><TD PORT="case6">ChixSection</TD></TR>
-	<TR><TD>&quot;DESC&quot;</TD><TD PORT="case7">DescSection</TD></TR>
-	<TR><TD>&quot;NAME&quot;</TD><TD PORT="case8">NameSection</TD></TR>
-	<TR><TD>&quot;ASCE&quot;</TD><TD PORT="case9">AsceSection</TD></TR>
-</TABLE>>];
-		}
 		subgraph cluster__asce_section {
 			label="Grub2Font::AsceSection";
 			graph[style=dotted];
@@ -124,9 +55,27 @@ section__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0
 					<TR><TD PORT="x_offset_pos">4</TD><TD PORT="x_offset_size">2</TD><TD>s2be</TD><TD PORT="x_offset_type">x_offset</TD></TR>
 					<TR><TD PORT="y_offset_pos">6</TD><TD PORT="y_offset_size">2</TD><TD>s2be</TD><TD PORT="y_offset_type">y_offset</TD></TR>
 					<TR><TD PORT="device_width_pos">8</TD><TD PORT="device_width_size">2</TD><TD>s2be</TD><TD PORT="device_width_type">device_width</TD></TR>
-					<TR><TD PORT="bitmap_data_pos">10</TD><TD PORT="bitmap_data_size">(((width * height) + 7) / 8)</TD><TD></TD><TD PORT="bitmap_data_type">bitmap_data</TD></TR>
+					<TR><TD PORT="bitmap_data_pos">10</TD><TD PORT="bitmap_data_size">(width * height + 7) / 8</TD><TD></TD><TD PORT="bitmap_data_type">bitmap_data</TD></TR>
 				</TABLE>>];
 			}
+		}
+		subgraph cluster__desc_section {
+			label="Grub2Font::DescSection";
+			graph[style=dotted];
+
+			desc_section__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="descent_in_pixels_pos">0</TD><TD PORT="descent_in_pixels_size">2</TD><TD>u2be</TD><TD PORT="descent_in_pixels_type">descent_in_pixels</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__fami_section {
+			label="Grub2Font::FamiSection";
+			graph[style=dotted];
+
+			fami_section__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="font_family_name_pos">0</TD><TD PORT="font_family_name_size">...</TD><TD>str(term=0, ASCII)</TD><TD PORT="font_family_name_type">font_family_name</TD></TR>
+			</TABLE>>];
 		}
 		subgraph cluster__maxh_section {
 			label="Grub2Font::MaxhSection";
@@ -137,14 +86,57 @@ section__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0
 				<TR><TD PORT="maximum_character_height_pos">0</TD><TD PORT="maximum_character_height_size">2</TD><TD>u2be</TD><TD PORT="maximum_character_height_type">maximum_character_height</TD></TR>
 			</TABLE>>];
 		}
+		subgraph cluster__maxw_section {
+			label="Grub2Font::MaxwSection";
+			graph[style=dotted];
+
+			maxw_section__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="maximum_character_width_pos">0</TD><TD PORT="maximum_character_width_size">2</TD><TD>u2be</TD><TD PORT="maximum_character_width_type">maximum_character_width</TD></TR>
+			</TABLE>>];
+		}
 		subgraph cluster__name_section {
 			label="Grub2Font::NameSection";
 			graph[style=dotted];
 
 			name_section__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="font_name_pos">0</TD><TD PORT="font_name_size">...</TD><TD>str(ASCII)</TD><TD PORT="font_name_type">font_name</TD></TR>
+				<TR><TD PORT="font_name_pos">0</TD><TD PORT="font_name_size">...</TD><TD>str(term=0, ASCII)</TD><TD PORT="font_name_type">font_name</TD></TR>
 			</TABLE>>];
+		}
+		subgraph cluster__ptsz_section {
+			label="Grub2Font::PtszSection";
+			graph[style=dotted];
+
+			ptsz_section__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="font_point_size_pos">0</TD><TD PORT="font_point_size_size">2</TD><TD>u2be</TD><TD PORT="font_point_size_type">font_point_size</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__section {
+			label="Grub2Font::Section";
+			graph[style=dotted];
+
+			section__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="section_type_pos">0</TD><TD PORT="section_type_size">4</TD><TD>str(ASCII)</TD><TD PORT="section_type_type">section_type</TD></TR>
+				<TR><TD PORT="len_body_pos">4</TD><TD PORT="len_body_size">4</TD><TD>u4be</TD><TD PORT="len_body_type">len_body</TD></TR>
+				<TR><TD PORT="body_pos">8</TD><TD PORT="body_size">...</TD><TD>switch (section_type)</TD><TD PORT="body_type">body</TD></TR>
+				<TR><TD COLSPAN="4" PORT="body__if">if section_type != &quot;DATA&quot;</TD></TR>
+			</TABLE>>];
+section__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>&quot;ASCE&quot;</TD><TD PORT="case0">AsceSection</TD></TR>
+	<TR><TD>&quot;CHIX&quot;</TD><TD PORT="case1">ChixSection</TD></TR>
+	<TR><TD>&quot;DESC&quot;</TD><TD PORT="case2">DescSection</TD></TR>
+	<TR><TD>&quot;FAMI&quot;</TD><TD PORT="case3">FamiSection</TD></TR>
+	<TR><TD>&quot;MAXH&quot;</TD><TD PORT="case4">MaxhSection</TD></TR>
+	<TR><TD>&quot;MAXW&quot;</TD><TD PORT="case5">MaxwSection</TD></TR>
+	<TR><TD>&quot;NAME&quot;</TD><TD PORT="case6">NameSection</TD></TR>
+	<TR><TD>&quot;PTSZ&quot;</TD><TD PORT="case7">PtszSection</TD></TR>
+	<TR><TD>&quot;SLAN&quot;</TD><TD PORT="case8">SlanSection</TD></TR>
+	<TR><TD>&quot;WEIG&quot;</TD><TD PORT="case9">WeigSection</TD></TR>
+</TABLE>>];
 		}
 		subgraph cluster__slan_section {
 			label="Grub2Font::SlanSection";
@@ -152,27 +144,37 @@ section__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0
 
 			slan_section__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="font_slant_pos">0</TD><TD PORT="font_slant_size">...</TD><TD>str(ASCII)</TD><TD PORT="font_slant_type">font_slant</TD></TR>
+				<TR><TD PORT="font_slant_pos">0</TD><TD PORT="font_slant_size">...</TD><TD>str(term=0, ASCII)</TD><TD PORT="font_slant_type">font_slant</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__weig_section {
+			label="Grub2Font::WeigSection";
+			graph[style=dotted];
+
+			weig_section__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="font_weight_pos">0</TD><TD PORT="font_weight_size">...</TD><TD>str(term=0, ASCII)</TD><TD PORT="font_weight_type">font_weight</TD></TR>
 			</TABLE>>];
 		}
 	}
 	grub2_font__seq:sections_type -> section__seq [style=bold];
 	section__seq:section_type_type -> grub2_font__seq:sections__repeat [color="#404040"];
-	section__seq:body_type -> section__seq_body_switch [style=bold];
-	section__seq_body_switch:case0 -> maxh_section__seq [style=bold];
-	section__seq_body_switch:case1 -> fami_section__seq [style=bold];
-	section__seq_body_switch:case2 -> ptsz_section__seq [style=bold];
-	section__seq_body_switch:case3 -> maxw_section__seq [style=bold];
-	section__seq_body_switch:case4 -> slan_section__seq [style=bold];
-	section__seq_body_switch:case5 -> weig_section__seq [style=bold];
-	section__seq_body_switch:case6 -> chix_section__seq [style=bold];
-	section__seq_body_switch:case7 -> desc_section__seq [style=bold];
-	section__seq_body_switch:case8 -> name_section__seq [style=bold];
-	section__seq_body_switch:case9 -> asce_section__seq [style=bold];
-	section__seq:section_type_type -> section__seq:body_type [color="#404040"];
 	chix_section__seq:characters_type -> character__seq [style=bold];
 	character__seq:ofs_definition_type -> character__inst__definition:definition_pos [color="#404040"];
 	character__inst__definition:definition_type -> character_definition__seq [style=bold];
 	character_definition__seq:width_type -> character_definition__seq:bitmap_data_size [color="#404040"];
 	character_definition__seq:height_type -> character_definition__seq:bitmap_data_size [color="#404040"];
+	section__seq:body_type -> section__seq_body_switch [style=bold];
+	section__seq_body_switch:case0 -> asce_section__seq [style=bold];
+	section__seq_body_switch:case1 -> chix_section__seq [style=bold];
+	section__seq_body_switch:case2 -> desc_section__seq [style=bold];
+	section__seq_body_switch:case3 -> fami_section__seq [style=bold];
+	section__seq_body_switch:case4 -> maxh_section__seq [style=bold];
+	section__seq_body_switch:case5 -> maxw_section__seq [style=bold];
+	section__seq_body_switch:case6 -> name_section__seq [style=bold];
+	section__seq_body_switch:case7 -> ptsz_section__seq [style=bold];
+	section__seq_body_switch:case8 -> slan_section__seq [style=bold];
+	section__seq_body_switch:case9 -> weig_section__seq [style=bold];
+	section__seq:section_type_type -> section__seq:body_type [color="#404040"];
+	section__seq:section_type_type -> section__seq:body__if [color="#404040"];
 }

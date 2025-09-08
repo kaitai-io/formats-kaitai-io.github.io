@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 
 ########################################################################
 package WindowsEvtLog;
@@ -24,7 +24,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -35,7 +35,7 @@ sub _read {
     my ($self) = @_;
 
     $self->{header} = WindowsEvtLog::Header->new($self->{_io}, $self, $self->{_root});
-    $self->{records} = ();
+    $self->{records} = [];
     while (!$self->{_io}->is_eof()) {
         push @{$self->{records}}, WindowsEvtLog::Record->new($self->{_io}, $self, $self->{_root});
     }
@@ -49,6 +49,68 @@ sub header {
 sub records {
     my ($self) = @_;
     return $self->{records};
+}
+
+########################################################################
+package WindowsEvtLog::CursorRecordBody;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{magic} = $self->{_io}->read_bytes(12);
+    $self->{ofs_first_record} = $self->{_io}->read_u4le();
+    $self->{ofs_next_record} = $self->{_io}->read_u4le();
+    $self->{idx_next_record} = $self->{_io}->read_u4le();
+    $self->{idx_first_record} = $self->{_io}->read_u4le();
+}
+
+sub magic {
+    my ($self) = @_;
+    return $self->{magic};
+}
+
+sub ofs_first_record {
+    my ($self) = @_;
+    return $self->{ofs_first_record};
+}
+
+sub ofs_next_record {
+    my ($self) = @_;
+    return $self->{ofs_next_record};
+}
+
+sub idx_next_record {
+    my ($self) = @_;
+    return $self->{idx_next_record};
+}
+
+sub idx_first_record {
+    my ($self) = @_;
+    return $self->{idx_first_record};
 }
 
 ########################################################################
@@ -71,7 +133,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -175,7 +237,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -237,7 +299,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -251,17 +313,17 @@ sub _read {
     $self->{type} = $self->{_io}->read_u4le();
     my $_on = $self->type();
     if ($_on == 1699505740) {
-        $self->{_raw_body} = $self->{_io}->read_bytes(($self->len_record() - 12));
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len_record() - 12);
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = WindowsEvtLog::RecordBody->new($io__raw_body, $self, $self->{_root});
     }
     elsif ($_on == 286331153) {
-        $self->{_raw_body} = $self->{_io}->read_bytes(($self->len_record() - 12));
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len_record() - 12);
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = WindowsEvtLog::CursorRecordBody->new($io__raw_body, $self, $self->{_root});
     }
     else {
-        $self->{body} = $self->{_io}->read_bytes(($self->len_record() - 12));
+        $self->{body} = $self->{_io}->read_bytes($self->len_record() - 12);
     }
     $self->{len_record2} = $self->{_io}->read_u4le();
 }
@@ -317,7 +379,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -342,24 +404,24 @@ sub _read {
     $self->{ofs_data} = $self->{_io}->read_u4le();
 }
 
-sub user_sid {
-    my ($self) = @_;
-    return $self->{user_sid} if ($self->{user_sid});
-    my $_pos = $self->{_io}->pos();
-    $self->{_io}->seek(($self->ofs_user_sid() - 8));
-    $self->{user_sid} = $self->{_io}->read_bytes($self->len_user_sid());
-    $self->{_io}->seek($_pos);
-    return $self->{user_sid};
-}
-
 sub data {
     my ($self) = @_;
     return $self->{data} if ($self->{data});
     my $_pos = $self->{_io}->pos();
-    $self->{_io}->seek(($self->ofs_data() - 8));
+    $self->{_io}->seek($self->ofs_data() - 8);
     $self->{data} = $self->{_io}->read_bytes($self->len_data());
     $self->{_io}->seek($_pos);
     return $self->{data};
+}
+
+sub user_sid {
+    my ($self) = @_;
+    return $self->{user_sid} if ($self->{user_sid});
+    my $_pos = $self->{_io}->pos();
+    $self->{_io}->seek($self->ofs_user_sid() - 8);
+    $self->{user_sid} = $self->{_io}->read_bytes($self->len_user_sid());
+    $self->{_io}->seek($_pos);
+    return $self->{user_sid};
 }
 
 sub idx {
@@ -425,68 +487,6 @@ sub len_data {
 sub ofs_data {
     my ($self) = @_;
     return $self->{ofs_data};
-}
-
-########################################################################
-package WindowsEvtLog::CursorRecordBody;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{magic} = $self->{_io}->read_bytes(12);
-    $self->{ofs_first_record} = $self->{_io}->read_u4le();
-    $self->{ofs_next_record} = $self->{_io}->read_u4le();
-    $self->{idx_next_record} = $self->{_io}->read_u4le();
-    $self->{idx_first_record} = $self->{_io}->read_u4le();
-}
-
-sub magic {
-    my ($self) = @_;
-    return $self->{magic};
-}
-
-sub ofs_first_record {
-    my ($self) = @_;
-    return $self->{ofs_first_record};
-}
-
-sub ofs_next_record {
-    my ($self) = @_;
-    return $self->{ofs_next_record};
-}
-
-sub idx_next_record {
-    my ($self) = @_;
-    return $self->{idx_next_record};
-}
-
-sub idx_first_record {
-    my ($self) = @_;
-    return $self->{idx_first_record};
 }
 
 1;

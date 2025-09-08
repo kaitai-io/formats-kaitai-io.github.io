@@ -1,8 +1,7 @@
 import kaitai_struct_nim_runtime
 import options
-import /network/protocol_body
+import protocol_body
 
-import "protocol_body"
 type
   Ipv6Packet* = ref object of KaitaiStruct
     `version`*: uint64
@@ -45,7 +44,7 @@ proc read*(_: typedesc[Ipv6Packet], io: KaitaiStream, root: KaitaiStruct, parent
   this.srcIpv6Addr = srcIpv6AddrExpr
   let dstIpv6AddrExpr = this.io.readBytes(int(16))
   this.dstIpv6Addr = dstIpv6AddrExpr
-  let nextHeaderExpr = ProtocolBody.read(this.io, this.root, this, this.nextHeaderType)
+  let nextHeaderExpr = ProtocolBody.read(this.io, nil, nil, this.nextHeaderType)
   this.nextHeader = nextHeaderExpr
   let restExpr = this.io.readBytesFull()
   this.rest = restExpr

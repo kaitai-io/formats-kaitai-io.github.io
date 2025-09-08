@@ -7,45 +7,45 @@ type
     `time`*: DosDatetime_Time
     `date`*: DosDatetime_Date
     `parent`*: KaitaiStruct
-  DosDatetime_Time* = ref object of KaitaiStruct
-    `secondDiv2`*: uint64
-    `minute`*: uint64
-    `hour`*: uint64
-    `parent`*: DosDatetime
-    `secondInst`: int
-    `secondInstFlag`: bool
-    `paddedSecondInst`: string
-    `paddedSecondInstFlag`: bool
-    `paddedMinuteInst`: string
-    `paddedMinuteInstFlag`: bool
-    `paddedHourInst`: string
-    `paddedHourInstFlag`: bool
   DosDatetime_Date* = ref object of KaitaiStruct
     `day`*: uint64
     `month`*: uint64
     `yearMinus1980`*: uint64
     `parent`*: DosDatetime
-    `yearInst`: int
-    `yearInstFlag`: bool
     `paddedDayInst`: string
     `paddedDayInstFlag`: bool
     `paddedMonthInst`: string
     `paddedMonthInstFlag`: bool
     `paddedYearInst`: string
     `paddedYearInstFlag`: bool
+    `yearInst`: int
+    `yearInstFlag`: bool
+  DosDatetime_Time* = ref object of KaitaiStruct
+    `secondDiv2`*: uint64
+    `minute`*: uint64
+    `hour`*: uint64
+    `parent`*: DosDatetime
+    `paddedHourInst`: string
+    `paddedHourInstFlag`: bool
+    `paddedMinuteInst`: string
+    `paddedMinuteInstFlag`: bool
+    `paddedSecondInst`: string
+    `paddedSecondInstFlag`: bool
+    `secondInst`: int
+    `secondInstFlag`: bool
 
 proc read*(_: typedesc[DosDatetime], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): DosDatetime
-proc read*(_: typedesc[DosDatetime_Time], io: KaitaiStream, root: KaitaiStruct, parent: DosDatetime): DosDatetime_Time
 proc read*(_: typedesc[DosDatetime_Date], io: KaitaiStream, root: KaitaiStruct, parent: DosDatetime): DosDatetime_Date
+proc read*(_: typedesc[DosDatetime_Time], io: KaitaiStream, root: KaitaiStruct, parent: DosDatetime): DosDatetime_Time
 
-proc second*(this: DosDatetime_Time): int
-proc paddedSecond*(this: DosDatetime_Time): string
-proc paddedMinute*(this: DosDatetime_Time): string
-proc paddedHour*(this: DosDatetime_Time): string
-proc year*(this: DosDatetime_Date): int
 proc paddedDay*(this: DosDatetime_Date): string
 proc paddedMonth*(this: DosDatetime_Date): string
 proc paddedYear*(this: DosDatetime_Date): string
+proc year*(this: DosDatetime_Date): int
+proc paddedHour*(this: DosDatetime_Time): string
+proc paddedMinute*(this: DosDatetime_Time): string
+proc paddedSecond*(this: DosDatetime_Time): string
+proc second*(this: DosDatetime_Time): int
 
 
 ##[
@@ -99,56 +99,6 @@ proc read*(_: typedesc[DosDatetime], io: KaitaiStream, root: KaitaiStruct, paren
 proc fromFile*(_: typedesc[DosDatetime], filename: string): DosDatetime =
   DosDatetime.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[DosDatetime_Time], io: KaitaiStream, root: KaitaiStruct, parent: DosDatetime): DosDatetime_Time =
-  template this: untyped = result
-  this = new(DosDatetime_Time)
-  let root = if root == nil: cast[DosDatetime](this) else: cast[DosDatetime](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let secondDiv2Expr = this.io.readBitsIntLe(5)
-  this.secondDiv2 = secondDiv2Expr
-  let minuteExpr = this.io.readBitsIntLe(6)
-  this.minute = minuteExpr
-  let hourExpr = this.io.readBitsIntLe(5)
-  this.hour = hourExpr
-
-proc second(this: DosDatetime_Time): int = 
-  if this.secondInstFlag:
-    return this.secondInst
-  let secondInstExpr = int((2 * this.secondDiv2))
-  this.secondInst = secondInstExpr
-  this.secondInstFlag = true
-  return this.secondInst
-
-proc paddedSecond(this: DosDatetime_Time): string = 
-  if this.paddedSecondInstFlag:
-    return this.paddedSecondInst
-  let paddedSecondInstExpr = string(($(if this.second <= 9: "0" else: "") & $intToStr(int(this.second))))
-  this.paddedSecondInst = paddedSecondInstExpr
-  this.paddedSecondInstFlag = true
-  return this.paddedSecondInst
-
-proc paddedMinute(this: DosDatetime_Time): string = 
-  if this.paddedMinuteInstFlag:
-    return this.paddedMinuteInst
-  let paddedMinuteInstExpr = string(($(if this.minute <= 9: "0" else: "") & $intToStr(int(this.minute))))
-  this.paddedMinuteInst = paddedMinuteInstExpr
-  this.paddedMinuteInstFlag = true
-  return this.paddedMinuteInst
-
-proc paddedHour(this: DosDatetime_Time): string = 
-  if this.paddedHourInstFlag:
-    return this.paddedHourInst
-  let paddedHourInstExpr = string(($(if this.hour <= 9: "0" else: "") & $intToStr(int(this.hour))))
-  this.paddedHourInst = paddedHourInstExpr
-  this.paddedHourInstFlag = true
-  return this.paddedHourInst
-
-proc fromFile*(_: typedesc[DosDatetime_Time], filename: string): DosDatetime_Time =
-  DosDatetime_Time.read(newKaitaiFileStream(filename), nil, nil)
-
 proc read*(_: typedesc[DosDatetime_Date], io: KaitaiStream, root: KaitaiStruct, parent: DosDatetime): DosDatetime_Date =
   template this: untyped = result
   this = new(DosDatetime_Date)
@@ -163,18 +113,6 @@ proc read*(_: typedesc[DosDatetime_Date], io: KaitaiStream, root: KaitaiStruct, 
   this.month = monthExpr
   let yearMinus1980Expr = this.io.readBitsIntLe(7)
   this.yearMinus1980 = yearMinus1980Expr
-
-proc year(this: DosDatetime_Date): int = 
-
-  ##[
-  only years from 1980 to 2107 (1980 + 127) can be represented
-  ]##
-  if this.yearInstFlag:
-    return this.yearInst
-  let yearInstExpr = int((1980 + this.yearMinus1980))
-  this.yearInst = yearInstExpr
-  this.yearInstFlag = true
-  return this.yearInst
 
 proc paddedDay(this: DosDatetime_Date): string = 
   if this.paddedDayInstFlag:
@@ -200,6 +138,68 @@ proc paddedYear(this: DosDatetime_Date): string =
   this.paddedYearInstFlag = true
   return this.paddedYearInst
 
+proc year(this: DosDatetime_Date): int = 
+
+  ##[
+  only years from 1980 to 2107 (1980 + 127) can be represented
+  ]##
+  if this.yearInstFlag:
+    return this.yearInst
+  let yearInstExpr = int(1980 + this.yearMinus1980)
+  this.yearInst = yearInstExpr
+  this.yearInstFlag = true
+  return this.yearInst
+
 proc fromFile*(_: typedesc[DosDatetime_Date], filename: string): DosDatetime_Date =
   DosDatetime_Date.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[DosDatetime_Time], io: KaitaiStream, root: KaitaiStruct, parent: DosDatetime): DosDatetime_Time =
+  template this: untyped = result
+  this = new(DosDatetime_Time)
+  let root = if root == nil: cast[DosDatetime](this) else: cast[DosDatetime](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let secondDiv2Expr = this.io.readBitsIntLe(5)
+  this.secondDiv2 = secondDiv2Expr
+  let minuteExpr = this.io.readBitsIntLe(6)
+  this.minute = minuteExpr
+  let hourExpr = this.io.readBitsIntLe(5)
+  this.hour = hourExpr
+
+proc paddedHour(this: DosDatetime_Time): string = 
+  if this.paddedHourInstFlag:
+    return this.paddedHourInst
+  let paddedHourInstExpr = string(($(if this.hour <= 9: "0" else: "") & $intToStr(int(this.hour))))
+  this.paddedHourInst = paddedHourInstExpr
+  this.paddedHourInstFlag = true
+  return this.paddedHourInst
+
+proc paddedMinute(this: DosDatetime_Time): string = 
+  if this.paddedMinuteInstFlag:
+    return this.paddedMinuteInst
+  let paddedMinuteInstExpr = string(($(if this.minute <= 9: "0" else: "") & $intToStr(int(this.minute))))
+  this.paddedMinuteInst = paddedMinuteInstExpr
+  this.paddedMinuteInstFlag = true
+  return this.paddedMinuteInst
+
+proc paddedSecond(this: DosDatetime_Time): string = 
+  if this.paddedSecondInstFlag:
+    return this.paddedSecondInst
+  let paddedSecondInstExpr = string(($(if this.second <= 9: "0" else: "") & $intToStr(int(this.second))))
+  this.paddedSecondInst = paddedSecondInstExpr
+  this.paddedSecondInstFlag = true
+  return this.paddedSecondInst
+
+proc second(this: DosDatetime_Time): int = 
+  if this.secondInstFlag:
+    return this.secondInst
+  let secondInstExpr = int(2 * this.secondDiv2)
+  this.secondInst = secondInstExpr
+  this.secondInstFlag = true
+  return this.secondInst
+
+proc fromFile*(_: typedesc[DosDatetime_Time], filename: string): DosDatetime_Time =
+  DosDatetime_Time.read(newKaitaiFileStream(filename), nil, nil)
 

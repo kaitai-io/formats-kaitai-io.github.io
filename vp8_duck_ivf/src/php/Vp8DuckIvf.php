@@ -11,21 +11,21 @@
 
 namespace {
     class Vp8DuckIvf extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Vp8DuckIvf $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Vp8DuckIvf $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic1 = $this->_io->readBytes(4);
-            if (!($this->magic1() == "\x44\x4B\x49\x46")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x44\x4B\x49\x46", $this->magic1(), $this->_io(), "/seq/0");
+            if (!($this->_m_magic1 == "\x44\x4B\x49\x46")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x44\x4B\x49\x46", $this->_m_magic1, $this->_io, "/seq/0");
             }
             $this->_m_version = $this->_io->readU2le();
             $this->_m_lenHeader = $this->_io->readU2le();
             $this->_m_codec = $this->_io->readBytes(4);
-            if (!($this->codec() == "\x56\x50\x38\x30")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x56\x50\x38\x30", $this->codec(), $this->_io(), "/seq/3");
+            if (!($this->_m_codec == "\x56\x50\x38\x30")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x56\x50\x38\x30", $this->_m_codec, $this->_io, "/seq/3");
             }
             $this->_m_width = $this->_io->readU2le();
             $this->_m_height = $this->_io->readU2le();
@@ -101,23 +101,8 @@ namespace {
 }
 
 namespace Vp8DuckIvf {
-    class Blocks extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Vp8DuckIvf $_parent = null, \Vp8DuckIvf $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_entries = new \Vp8DuckIvf\Block($this->_io, $this, $this->_root);
-        }
-        protected $_m_entries;
-        public function entries() { return $this->_m_entries; }
-    }
-}
-
-namespace Vp8DuckIvf {
     class Block extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Vp8DuckIvf\Blocks $_parent = null, \Vp8DuckIvf $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Vp8DuckIvf\Blocks $_parent = null, ?\Vp8DuckIvf $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -137,5 +122,20 @@ namespace Vp8DuckIvf {
         public function lenFrame() { return $this->_m_lenFrame; }
         public function timestamp() { return $this->_m_timestamp; }
         public function framedata() { return $this->_m_framedata; }
+    }
+}
+
+namespace Vp8DuckIvf {
+    class Blocks extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Vp8DuckIvf $_parent = null, ?\Vp8DuckIvf $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_entries = new \Vp8DuckIvf\Block($this->_io, $this, $this->_root);
+        }
+        protected $_m_entries;
+        public function entries() { return $this->_m_entries; }
     }
 }

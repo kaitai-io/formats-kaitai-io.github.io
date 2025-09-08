@@ -26,6 +26,12 @@ namespace Kaitai
         }
 
 
+        public enum CompressionType
+        {
+            None = 0,
+            Rle = 32222,
+        }
+
         public enum ImageType
         {
             Rgb332 = 7763,
@@ -36,12 +42,6 @@ namespace Kaitai
             BlackWhite = 32170,
             Rgb16c = 47253,
             Rgb565 = 58821,
-        }
-
-        public enum CompressionType
-        {
-            None = 0,
-            Rle = 32222,
         }
         public Pif(KaitaiStream p__io, KaitaiStruct p__parent = null, Pif p__root = null) : base(p__io)
         {
@@ -60,63 +60,47 @@ namespace Kaitai
                 _colorTable = new ColorTableData(io___raw_colorTable, this, m_root);
             }
         }
-        public partial class PifHeader : KaitaiStruct
+        public partial class ColorTableData : KaitaiStruct
         {
-            public static PifHeader FromFile(string fileName)
+            public static ColorTableData FromFile(string fileName)
             {
-                return new PifHeader(new KaitaiStream(fileName));
+                return new ColorTableData(new KaitaiStream(fileName));
             }
 
-            public PifHeader(KaitaiStream p__io, Pif p__parent = null, Pif p__root = null) : base(p__io)
+            public ColorTableData(KaitaiStream p__io, Pif p__parent = null, Pif p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
-                f_ofsImageDataMin = false;
                 _read();
             }
             private void _read()
             {
-                _magic = m_io.ReadBytes(4);
-                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 80, 73, 70, 0 }) == 0)))
+                _entries = new List<int>();
                 {
-                    throw new ValidationNotEqualError(new byte[] { 80, 73, 70, 0 }, Magic, M_Io, "/types/pif_header/seq/0");
-                }
-                _lenFile = m_io.ReadU4le();
-                if (!(LenFile >= OfsImageDataMin))
-                {
-                    throw new ValidationLessThanError(OfsImageDataMin, LenFile, M_Io, "/types/pif_header/seq/1");
-                }
-                _ofsImageData = m_io.ReadU4le();
-                if (!(OfsImageData >= OfsImageDataMin))
-                {
-                    throw new ValidationLessThanError(OfsImageDataMin, OfsImageData, M_Io, "/types/pif_header/seq/2");
-                }
-                if (!(OfsImageData <= LenFile))
-                {
-                    throw new ValidationGreaterThanError(LenFile, OfsImageData, M_Io, "/types/pif_header/seq/2");
-                }
-            }
-            private bool f_ofsImageDataMin;
-            private int _ofsImageDataMin;
-            public int OfsImageDataMin
-            {
-                get
-                {
-                    if (f_ofsImageDataMin)
-                        return _ofsImageDataMin;
-                    _ofsImageDataMin = (int) ((12 + 16));
-                    f_ofsImageDataMin = true;
-                    return _ofsImageDataMin;
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        switch (M_Root.InfoHeader.ImageType) {
+                        case Pif.ImageType.IndexedRgb332: {
+                            _entries.Add(m_io.ReadBitsIntLe(8));
+                            break;
+                        }
+                        case Pif.ImageType.IndexedRgb565: {
+                            _entries.Add(m_io.ReadBitsIntLe(16));
+                            break;
+                        }
+                        case Pif.ImageType.IndexedRgb888: {
+                            _entries.Add(m_io.ReadBitsIntLe(24));
+                            break;
+                        }
+                        }
+                        i++;
+                    }
                 }
             }
-            private byte[] _magic;
-            private uint _lenFile;
-            private uint _ofsImageData;
+            private List<int> _entries;
             private Pif m_root;
             private Pif m_parent;
-            public byte[] Magic { get { return _magic; } }
-            public uint LenFile { get { return _lenFile; } }
-            public uint OfsImageData { get { return _ofsImageData; } }
+            public List<int> Entries { get { return _entries; } }
             public Pif M_Root { get { return m_root; } }
             public Pif M_Parent { get { return m_parent; } }
         }
@@ -140,38 +124,38 @@ namespace Kaitai
             private void _read()
             {
                 _imageType = ((Pif.ImageType) m_io.ReadU2le());
-                if (!( ((ImageType == Pif.ImageType.Rgb888) || (ImageType == Pif.ImageType.Rgb565) || (ImageType == Pif.ImageType.Rgb332) || (ImageType == Pif.ImageType.Rgb16c) || (ImageType == Pif.ImageType.BlackWhite) || (ImageType == Pif.ImageType.IndexedRgb888) || (ImageType == Pif.ImageType.IndexedRgb565) || (ImageType == Pif.ImageType.IndexedRgb332)) ))
+                if (!( ((_imageType == Pif.ImageType.Rgb888) || (_imageType == Pif.ImageType.Rgb565) || (_imageType == Pif.ImageType.Rgb332) || (_imageType == Pif.ImageType.Rgb16c) || (_imageType == Pif.ImageType.BlackWhite) || (_imageType == Pif.ImageType.IndexedRgb888) || (_imageType == Pif.ImageType.IndexedRgb565) || (_imageType == Pif.ImageType.IndexedRgb332)) ))
                 {
-                    throw new ValidationNotAnyOfError(ImageType, M_Io, "/types/information_header/seq/0");
+                    throw new ValidationNotAnyOfError(_imageType, m_io, "/types/information_header/seq/0");
                 }
                 _bitsPerPixel = m_io.ReadU2le();
                 {
-                    ushort M_ = BitsPerPixel;
+                    ushort M_ = _bitsPerPixel;
                     if (!((ImageType == Pif.ImageType.Rgb888 ? M_ == 24 : (ImageType == Pif.ImageType.Rgb565 ? M_ == 16 : (ImageType == Pif.ImageType.Rgb332 ? M_ == 8 : (ImageType == Pif.ImageType.Rgb16c ? M_ == 4 : (ImageType == Pif.ImageType.BlackWhite ? M_ == 1 : (UsesIndexedMode ? M_ <= 8 : true))))))))
                     {
-                        throw new ValidationExprError(BitsPerPixel, M_Io, "/types/information_header/seq/1");
+                        throw new ValidationExprError(_bitsPerPixel, m_io, "/types/information_header/seq/1");
                     }
                 }
                 _width = m_io.ReadU2le();
                 _height = m_io.ReadU2le();
                 _lenImageData = m_io.ReadU4le();
-                if (!(LenImageData <= (M_Root.FileHeader.LenFile - M_Root.FileHeader.OfsImageData)))
+                if (!(_lenImageData <= M_Root.FileHeader.LenFile - M_Root.FileHeader.OfsImageData))
                 {
-                    throw new ValidationGreaterThanError((M_Root.FileHeader.LenFile - M_Root.FileHeader.OfsImageData), LenImageData, M_Io, "/types/information_header/seq/4");
+                    throw new ValidationGreaterThanError(M_Root.FileHeader.LenFile - M_Root.FileHeader.OfsImageData, _lenImageData, m_io, "/types/information_header/seq/4");
                 }
                 _lenColorTable = m_io.ReadU2le();
-                if (!(LenColorTable >= (UsesIndexedMode ? (LenColorTableEntry * 1) : 0)))
+                if (!(_lenColorTable >= (UsesIndexedMode ? LenColorTableEntry * 1 : 0)))
                 {
-                    throw new ValidationLessThanError((UsesIndexedMode ? (LenColorTableEntry * 1) : 0), LenColorTable, M_Io, "/types/information_header/seq/5");
+                    throw new ValidationLessThanError((UsesIndexedMode ? LenColorTableEntry * 1 : 0), _lenColorTable, m_io, "/types/information_header/seq/5");
                 }
-                if (!(LenColorTable <= (UsesIndexedMode ? (LenColorTableMax < LenColorTableFull ? LenColorTableMax : LenColorTableFull) : 0)))
+                if (!(_lenColorTable <= (UsesIndexedMode ? (LenColorTableMax < LenColorTableFull ? LenColorTableMax : LenColorTableFull) : 0)))
                 {
-                    throw new ValidationGreaterThanError((UsesIndexedMode ? (LenColorTableMax < LenColorTableFull ? LenColorTableMax : LenColorTableFull) : 0), LenColorTable, M_Io, "/types/information_header/seq/5");
+                    throw new ValidationGreaterThanError((UsesIndexedMode ? (LenColorTableMax < LenColorTableFull ? LenColorTableMax : LenColorTableFull) : 0), _lenColorTable, m_io, "/types/information_header/seq/5");
                 }
                 _compression = ((Pif.CompressionType) m_io.ReadU2le());
-                if (!( ((Compression == Pif.CompressionType.None) || (Compression == Pif.CompressionType.Rle)) ))
+                if (!( ((_compression == Pif.CompressionType.None) || (_compression == Pif.CompressionType.Rle)) ))
                 {
-                    throw new ValidationNotAnyOfError(Compression, M_Io, "/types/information_header/seq/6");
+                    throw new ValidationNotAnyOfError(_compression, m_io, "/types/information_header/seq/6");
                 }
             }
             private bool f_lenColorTableEntry;
@@ -182,8 +166,8 @@ namespace Kaitai
                 {
                     if (f_lenColorTableEntry)
                         return _lenColorTableEntry;
-                    _lenColorTableEntry = (sbyte) ((ImageType == Pif.ImageType.IndexedRgb888 ? 3 : (ImageType == Pif.ImageType.IndexedRgb565 ? 2 : (ImageType == Pif.ImageType.IndexedRgb332 ? 1 : 0))));
                     f_lenColorTableEntry = true;
+                    _lenColorTableEntry = (sbyte) ((ImageType == Pif.ImageType.IndexedRgb888 ? 3 : (ImageType == Pif.ImageType.IndexedRgb565 ? 2 : (ImageType == Pif.ImageType.IndexedRgb332 ? 1 : 0))));
                     return _lenColorTableEntry;
                 }
             }
@@ -195,8 +179,8 @@ namespace Kaitai
                 {
                     if (f_lenColorTableFull)
                         return _lenColorTableFull;
-                    _lenColorTableFull = (int) ((LenColorTableEntry * (1 << BitsPerPixel)));
                     f_lenColorTableFull = true;
+                    _lenColorTableFull = (int) (LenColorTableEntry * (1 << BitsPerPixel));
                     return _lenColorTableFull;
                 }
             }
@@ -208,8 +192,8 @@ namespace Kaitai
                 {
                     if (f_lenColorTableMax)
                         return _lenColorTableMax;
-                    _lenColorTableMax = (int) ((M_Root.FileHeader.OfsImageData - M_Root.FileHeader.OfsImageDataMin));
                     f_lenColorTableMax = true;
+                    _lenColorTableMax = (int) (M_Root.FileHeader.OfsImageData - M_Root.FileHeader.OfsImageDataMin);
                     return _lenColorTableMax;
                 }
             }
@@ -221,8 +205,8 @@ namespace Kaitai
                 {
                     if (f_usesIndexedMode)
                         return _usesIndexedMode;
-                    _usesIndexedMode = (bool) (LenColorTableEntry != 0);
                     f_usesIndexedMode = true;
+                    _usesIndexedMode = (bool) (LenColorTableEntry != 0);
                     return _usesIndexedMode;
                 }
             }
@@ -266,47 +250,63 @@ namespace Kaitai
             public Pif M_Root { get { return m_root; } }
             public Pif M_Parent { get { return m_parent; } }
         }
-        public partial class ColorTableData : KaitaiStruct
+        public partial class PifHeader : KaitaiStruct
         {
-            public static ColorTableData FromFile(string fileName)
+            public static PifHeader FromFile(string fileName)
             {
-                return new ColorTableData(new KaitaiStream(fileName));
+                return new PifHeader(new KaitaiStream(fileName));
             }
 
-            public ColorTableData(KaitaiStream p__io, Pif p__parent = null, Pif p__root = null) : base(p__io)
+            public PifHeader(KaitaiStream p__io, Pif p__parent = null, Pif p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
+                f_ofsImageDataMin = false;
                 _read();
             }
             private void _read()
             {
-                _entries = new List<int>();
+                _magic = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 80, 73, 70, 0 }) == 0)))
                 {
-                    var i = 0;
-                    while (!m_io.IsEof) {
-                        switch (M_Root.InfoHeader.ImageType) {
-                        case Pif.ImageType.IndexedRgb888: {
-                            _entries.Add(m_io.ReadBitsIntLe(24));
-                            break;
-                        }
-                        case Pif.ImageType.IndexedRgb565: {
-                            _entries.Add(m_io.ReadBitsIntLe(16));
-                            break;
-                        }
-                        case Pif.ImageType.IndexedRgb332: {
-                            _entries.Add(m_io.ReadBitsIntLe(8));
-                            break;
-                        }
-                        }
-                        i++;
-                    }
+                    throw new ValidationNotEqualError(new byte[] { 80, 73, 70, 0 }, _magic, m_io, "/types/pif_header/seq/0");
+                }
+                _lenFile = m_io.ReadU4le();
+                if (!(_lenFile >= OfsImageDataMin))
+                {
+                    throw new ValidationLessThanError(OfsImageDataMin, _lenFile, m_io, "/types/pif_header/seq/1");
+                }
+                _ofsImageData = m_io.ReadU4le();
+                if (!(_ofsImageData >= OfsImageDataMin))
+                {
+                    throw new ValidationLessThanError(OfsImageDataMin, _ofsImageData, m_io, "/types/pif_header/seq/2");
+                }
+                if (!(_ofsImageData <= LenFile))
+                {
+                    throw new ValidationGreaterThanError(LenFile, _ofsImageData, m_io, "/types/pif_header/seq/2");
                 }
             }
-            private List<int> _entries;
+            private bool f_ofsImageDataMin;
+            private int _ofsImageDataMin;
+            public int OfsImageDataMin
+            {
+                get
+                {
+                    if (f_ofsImageDataMin)
+                        return _ofsImageDataMin;
+                    f_ofsImageDataMin = true;
+                    _ofsImageDataMin = (int) (12 + 16);
+                    return _ofsImageDataMin;
+                }
+            }
+            private byte[] _magic;
+            private uint _lenFile;
+            private uint _ofsImageData;
             private Pif m_root;
             private Pif m_parent;
-            public List<int> Entries { get { return _entries; } }
+            public byte[] Magic { get { return _magic; } }
+            public uint LenFile { get { return _lenFile; } }
+            public uint OfsImageData { get { return _ofsImageData; } }
             public Pif M_Root { get { return m_root; } }
             public Pif M_Parent { get { return m_parent; } }
         }
@@ -318,11 +318,11 @@ namespace Kaitai
             {
                 if (f_imageData)
                     return _imageData;
+                f_imageData = true;
                 long _pos = m_io.Pos;
                 m_io.Seek(FileHeader.OfsImageData);
                 _imageData = m_io.ReadBytes(InfoHeader.LenImageData);
                 m_io.Seek(_pos);
-                f_imageData = true;
                 return _imageData;
             }
         }

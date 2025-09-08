@@ -3,22 +3,22 @@
 
 namespace {
     class Avi extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Avi $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Avi $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic1 = $this->_io->readBytes(4);
-            if (!($this->magic1() == "\x52\x49\x46\x46")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x52\x49\x46\x46", $this->magic1(), $this->_io(), "/seq/0");
+            if (!($this->_m_magic1 == "\x52\x49\x46\x46")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x52\x49\x46\x46", $this->_m_magic1, $this->_io, "/seq/0");
             }
             $this->_m_fileSize = $this->_io->readU4le();
             $this->_m_magic2 = $this->_io->readBytes(4);
-            if (!($this->magic2() == "\x41\x56\x49\x20")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x41\x56\x49\x20", $this->magic2(), $this->_io(), "/seq/2");
+            if (!($this->_m_magic2 == "\x41\x56\x49\x20")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x41\x56\x49\x20", $this->_m_magic2, $this->_io, "/seq/2");
             }
-            $this->_m__raw_data = $this->_io->readBytes(($this->fileSize() - 4));
+            $this->_m__raw_data = $this->_io->readBytes($this->fileSize() - 4);
             $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
             $this->_m_data = new \Avi\Blocks($_io__raw_data, $this, $this->_root);
         }
@@ -35,75 +35,13 @@ namespace {
     }
 }
 
-namespace Avi {
-    class ListBody extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Avi\Block $_parent = null, \Avi $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_listType = $this->_io->readU4le();
-            $this->_m_data = new \Avi\Blocks($this->_io, $this, $this->_root);
-        }
-        protected $_m_listType;
-        protected $_m_data;
-        public function listType() { return $this->_m_listType; }
-        public function data() { return $this->_m_data; }
-    }
-}
-
-namespace Avi {
-    class Rect extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Avi\StrhBody $_parent = null, \Avi $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_left = $this->_io->readS2le();
-            $this->_m_top = $this->_io->readS2le();
-            $this->_m_right = $this->_io->readS2le();
-            $this->_m_bottom = $this->_io->readS2le();
-        }
-        protected $_m_left;
-        protected $_m_top;
-        protected $_m_right;
-        protected $_m_bottom;
-        public function left() { return $this->_m_left; }
-        public function top() { return $this->_m_top; }
-        public function right() { return $this->_m_right; }
-        public function bottom() { return $this->_m_bottom; }
-    }
-}
-
-namespace Avi {
-    class Blocks extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Avi $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_entries = [];
-            $i = 0;
-            while (!$this->_io->isEof()) {
-                $this->_m_entries[] = new \Avi\Block($this->_io, $this, $this->_root);
-                $i++;
-            }
-        }
-        protected $_m_entries;
-        public function entries() { return $this->_m_entries; }
-    }
-}
-
 /**
  * Main header of an AVI file, defined as AVIMAINHEADER structure
  */
 
 namespace Avi {
     class AvihBody extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Avi\Block $_parent = null, \Avi $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Avi\Block $_parent = null, ?\Avi $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -148,7 +86,7 @@ namespace Avi {
 
 namespace Avi {
     class Block extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Avi\Blocks $_parent = null, \Avi $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Avi\Blocks $_parent = null, ?\Avi $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -157,15 +95,15 @@ namespace Avi {
             $this->_m_fourCc = $this->_io->readU4le();
             $this->_m_blockSize = $this->_io->readU4le();
             switch ($this->fourCc()) {
-                case \Avi\ChunkType::LIST:
-                    $this->_m__raw_data = $this->_io->readBytes($this->blockSize());
-                    $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                    $this->_m_data = new \Avi\ListBody($_io__raw_data, $this, $this->_root);
-                    break;
                 case \Avi\ChunkType::AVIH:
                     $this->_m__raw_data = $this->_io->readBytes($this->blockSize());
                     $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
                     $this->_m_data = new \Avi\AvihBody($_io__raw_data, $this, $this->_root);
+                    break;
+                case \Avi\ChunkType::LIST:
+                    $this->_m__raw_data = $this->_io->readBytes($this->blockSize());
+                    $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                    $this->_m_data = new \Avi\ListBody($_io__raw_data, $this, $this->_root);
                     break;
                 case \Avi\ChunkType::STRH:
                     $this->_m__raw_data = $this->_io->readBytes($this->blockSize());
@@ -188,13 +126,91 @@ namespace Avi {
     }
 }
 
+namespace Avi {
+    class Blocks extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Avi $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_entries = [];
+            $i = 0;
+            while (!$this->_io->isEof()) {
+                $this->_m_entries[] = new \Avi\Block($this->_io, $this, $this->_root);
+                $i++;
+            }
+        }
+        protected $_m_entries;
+        public function entries() { return $this->_m_entries; }
+    }
+}
+
+namespace Avi {
+    class ListBody extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Avi\Block $_parent = null, ?\Avi $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_listType = $this->_io->readU4le();
+            $this->_m_data = new \Avi\Blocks($this->_io, $this, $this->_root);
+        }
+        protected $_m_listType;
+        protected $_m_data;
+        public function listType() { return $this->_m_listType; }
+        public function data() { return $this->_m_data; }
+    }
+}
+
+namespace Avi {
+    class Rect extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Avi\StrhBody $_parent = null, ?\Avi $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_left = $this->_io->readS2le();
+            $this->_m_top = $this->_io->readS2le();
+            $this->_m_right = $this->_io->readS2le();
+            $this->_m_bottom = $this->_io->readS2le();
+        }
+        protected $_m_left;
+        protected $_m_top;
+        protected $_m_right;
+        protected $_m_bottom;
+        public function left() { return $this->_m_left; }
+        public function top() { return $this->_m_top; }
+        public function right() { return $this->_m_right; }
+        public function bottom() { return $this->_m_bottom; }
+    }
+}
+
+/**
+ * Stream format description
+ */
+
+namespace Avi {
+    class StrfBody extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Avi $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+        }
+    }
+}
+
 /**
  * Stream header (one header per stream), defined as AVISTREAMHEADER structure
  */
 
 namespace Avi {
     class StrhBody extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Avi\Block $_parent = null, \Avi $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Avi\Block $_parent = null, ?\Avi $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -254,22 +270,6 @@ namespace Avi {
     }
 }
 
-/**
- * Stream format description
- */
-
-namespace Avi {
-    class StrfBody extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Avi $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-        }
-    }
-}
-
 namespace Avi {
     class ChunkType {
         const IDX1 = 829973609;
@@ -283,15 +283,12 @@ namespace Avi {
         const MOVI = 1769369453;
         const HDRL = 1819436136;
         const STRL = 1819440243;
-    }
-}
 
-namespace Avi {
-    class StreamType {
-        const MIDS = 1935960429;
-        const VIDS = 1935960438;
-        const AUDS = 1935963489;
-        const TXTS = 1937012852;
+        private const _VALUES = [829973609 => true, 1263424842 => true, 1330007625 => true, 1413894985 => true, 1414744396 => true, 1718776947 => true, 1751742049 => true, 1752331379 => true, 1769369453 => true, 1819436136 => true, 1819440243 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
@@ -302,5 +299,26 @@ namespace Avi {
         const DTS = 8193;
         const CVID = 1684633187;
         const XVID = 1684633208;
+
+        private const _VALUES = [85 => true, 8192 => true, 8193 => true, 1684633187 => true, 1684633208 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
+    }
+}
+
+namespace Avi {
+    class StreamType {
+        const MIDS = 1935960429;
+        const VIDS = 1935960438;
+        const AUDS = 1935963489;
+        const TXTS = 1937012852;
+
+        private const _VALUES = [1935960429 => true, 1935960438 => true, 1935963489 => true, 1937012852 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

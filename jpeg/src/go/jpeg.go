@@ -33,23 +33,32 @@ const (
 	Jpeg_ComponentId__I Jpeg_ComponentId = 4
 	Jpeg_ComponentId__Q Jpeg_ComponentId = 5
 )
+var values_Jpeg_ComponentId = map[Jpeg_ComponentId]struct{}{1: {}, 2: {}, 3: {}, 4: {}, 5: {}}
+func (v Jpeg_ComponentId) isDefined() bool {
+	_, ok := values_Jpeg_ComponentId[v]
+	return ok
+}
 type Jpeg struct {
 	Segments []*Jpeg_Segment
 	_io *kaitai.Stream
 	_root *Jpeg
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewJpeg() *Jpeg {
 	return &Jpeg{
 	}
 }
 
-func (this *Jpeg) Read(io *kaitai.Stream, parent interface{}, root *Jpeg) (err error) {
+func (this Jpeg) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Jpeg) Read(io *kaitai.Stream, parent kaitai.Struct, root *Jpeg) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	for i := 1;; i++ {
+	for i := 0;; i++ {
 		tmp1, err := this._io.EOF()
 		if err != nil {
 			return err
@@ -64,6 +73,52 @@ func (this *Jpeg) Read(io *kaitai.Stream, parent interface{}, root *Jpeg) (err e
 		}
 		this.Segments = append(this.Segments, tmp2)
 	}
+	return err
+}
+type Jpeg_ExifInJpeg struct {
+	ExtraZero []byte
+	Data *Exif
+	_io *kaitai.Stream
+	_root *Jpeg
+	_parent *Jpeg_SegmentApp1
+	_raw_Data []byte
+}
+func NewJpeg_ExifInJpeg() *Jpeg_ExifInJpeg {
+	return &Jpeg_ExifInJpeg{
+	}
+}
+
+func (this Jpeg_ExifInJpeg) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Jpeg_ExifInJpeg) Read(io *kaitai.Stream, parent *Jpeg_SegmentApp1, root *Jpeg) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp3, err := this._io.ReadBytes(int(1))
+	if err != nil {
+		return err
+	}
+	tmp3 = tmp3
+	this.ExtraZero = tmp3
+	if !(bytes.Equal(this.ExtraZero, []uint8{0})) {
+		return kaitai.NewValidationNotEqualError([]uint8{0}, this.ExtraZero, this._io, "/types/exif_in_jpeg/seq/0")
+	}
+	tmp4, err := this._io.ReadBytesFull()
+	if err != nil {
+		return err
+	}
+	tmp4 = tmp4
+	this._raw_Data = tmp4
+	_io__raw_Data := kaitai.NewStream(bytes.NewReader(this._raw_Data))
+	tmp5 := NewExif()
+	err = tmp5.Read(_io__raw_Data, nil, nil)
+	if err != nil {
+		return err
+	}
+	this.Data = tmp5
 	return err
 }
 
@@ -103,6 +158,11 @@ const (
 	Jpeg_Segment_MarkerEnum__App15 Jpeg_Segment_MarkerEnum = 239
 	Jpeg_Segment_MarkerEnum__Com Jpeg_Segment_MarkerEnum = 254
 )
+var values_Jpeg_Segment_MarkerEnum = map[Jpeg_Segment_MarkerEnum]struct{}{1: {}, 192: {}, 193: {}, 194: {}, 195: {}, 196: {}, 197: {}, 198: {}, 199: {}, 216: {}, 217: {}, 218: {}, 219: {}, 220: {}, 221: {}, 222: {}, 224: {}, 225: {}, 226: {}, 227: {}, 228: {}, 229: {}, 230: {}, 231: {}, 232: {}, 233: {}, 234: {}, 235: {}, 236: {}, 237: {}, 238: {}, 239: {}, 254: {}}
+func (v Jpeg_Segment_MarkerEnum) isDefined() bool {
+	_, ok := values_Jpeg_Segment_MarkerEnum[v]
+	return ok
+}
 type Jpeg_Segment struct {
 	Magic []byte
 	Marker Jpeg_Segment_MarkerEnum
@@ -119,109 +179,377 @@ func NewJpeg_Segment() *Jpeg_Segment {
 	}
 }
 
+func (this Jpeg_Segment) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Jpeg_Segment) Read(io *kaitai.Stream, parent *Jpeg, root *Jpeg) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp3, err := this._io.ReadBytes(int(1))
+	tmp6, err := this._io.ReadBytes(int(1))
 	if err != nil {
 		return err
 	}
-	tmp3 = tmp3
-	this.Magic = tmp3
+	tmp6 = tmp6
+	this.Magic = tmp6
 	if !(bytes.Equal(this.Magic, []uint8{255})) {
 		return kaitai.NewValidationNotEqualError([]uint8{255}, this.Magic, this._io, "/types/segment/seq/0")
 	}
-	tmp4, err := this._io.ReadU1()
+	tmp7, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Marker = Jpeg_Segment_MarkerEnum(tmp4)
+	this.Marker = Jpeg_Segment_MarkerEnum(tmp7)
 	if ( ((this.Marker != Jpeg_Segment_MarkerEnum__Soi) && (this.Marker != Jpeg_Segment_MarkerEnum__Eoi)) ) {
-		tmp5, err := this._io.ReadU2be()
+		tmp8, err := this._io.ReadU2be()
 		if err != nil {
 			return err
 		}
-		this.Length = uint16(tmp5)
+		this.Length = uint16(tmp8)
 	}
 	if ( ((this.Marker != Jpeg_Segment_MarkerEnum__Soi) && (this.Marker != Jpeg_Segment_MarkerEnum__Eoi)) ) {
 		switch (this.Marker) {
-		case Jpeg_Segment_MarkerEnum__App1:
-			tmp6, err := this._io.ReadBytes(int((this.Length - 2)))
-			if err != nil {
-				return err
-			}
-			tmp6 = tmp6
-			this._raw_Data = tmp6
-			_io__raw_Data := kaitai.NewStream(bytes.NewReader(this._raw_Data))
-			tmp7 := NewJpeg_SegmentApp1()
-			err = tmp7.Read(_io__raw_Data, this, this._root)
-			if err != nil {
-				return err
-			}
-			this.Data = tmp7
 		case Jpeg_Segment_MarkerEnum__App0:
-			tmp8, err := this._io.ReadBytes(int((this.Length - 2)))
+			tmp9, err := this._io.ReadBytes(int(this.Length - 2))
 			if err != nil {
 				return err
 			}
-			tmp8 = tmp8
-			this._raw_Data = tmp8
+			tmp9 = tmp9
+			this._raw_Data = tmp9
 			_io__raw_Data := kaitai.NewStream(bytes.NewReader(this._raw_Data))
-			tmp9 := NewJpeg_SegmentApp0()
-			err = tmp9.Read(_io__raw_Data, this, this._root)
+			tmp10 := NewJpeg_SegmentApp0()
+			err = tmp10.Read(_io__raw_Data, this, this._root)
 			if err != nil {
 				return err
 			}
-			this.Data = tmp9
+			this.Data = tmp10
+		case Jpeg_Segment_MarkerEnum__App1:
+			tmp11, err := this._io.ReadBytes(int(this.Length - 2))
+			if err != nil {
+				return err
+			}
+			tmp11 = tmp11
+			this._raw_Data = tmp11
+			_io__raw_Data := kaitai.NewStream(bytes.NewReader(this._raw_Data))
+			tmp12 := NewJpeg_SegmentApp1()
+			err = tmp12.Read(_io__raw_Data, this, this._root)
+			if err != nil {
+				return err
+			}
+			this.Data = tmp12
 		case Jpeg_Segment_MarkerEnum__Sof0:
-			tmp10, err := this._io.ReadBytes(int((this.Length - 2)))
+			tmp13, err := this._io.ReadBytes(int(this.Length - 2))
 			if err != nil {
 				return err
 			}
-			tmp10 = tmp10
-			this._raw_Data = tmp10
+			tmp13 = tmp13
+			this._raw_Data = tmp13
 			_io__raw_Data := kaitai.NewStream(bytes.NewReader(this._raw_Data))
-			tmp11 := NewJpeg_SegmentSof0()
-			err = tmp11.Read(_io__raw_Data, this, this._root)
+			tmp14 := NewJpeg_SegmentSof0()
+			err = tmp14.Read(_io__raw_Data, this, this._root)
 			if err != nil {
 				return err
 			}
-			this.Data = tmp11
+			this.Data = tmp14
 		case Jpeg_Segment_MarkerEnum__Sos:
-			tmp12, err := this._io.ReadBytes(int((this.Length - 2)))
+			tmp15, err := this._io.ReadBytes(int(this.Length - 2))
 			if err != nil {
 				return err
 			}
-			tmp12 = tmp12
-			this._raw_Data = tmp12
+			tmp15 = tmp15
+			this._raw_Data = tmp15
 			_io__raw_Data := kaitai.NewStream(bytes.NewReader(this._raw_Data))
-			tmp13 := NewJpeg_SegmentSos()
-			err = tmp13.Read(_io__raw_Data, this, this._root)
+			tmp16 := NewJpeg_SegmentSos()
+			err = tmp16.Read(_io__raw_Data, this, this._root)
 			if err != nil {
 				return err
 			}
-			this.Data = tmp13
+			this.Data = tmp16
 		default:
-			tmp14, err := this._io.ReadBytes(int((this.Length - 2)))
+			tmp17, err := this._io.ReadBytes(int(this.Length - 2))
 			if err != nil {
 				return err
 			}
-			tmp14 = tmp14
-			this._raw_Data = tmp14
+			tmp17 = tmp17
+			this._raw_Data = tmp17
 		}
 	}
 	if (this.Marker == Jpeg_Segment_MarkerEnum__Sos) {
-		tmp15, err := this._io.ReadBytesFull()
+		tmp18, err := this._io.ReadBytesFull()
 		if err != nil {
 			return err
 		}
-		tmp15 = tmp15
-		this.ImageData = tmp15
+		tmp18 = tmp18
+		this.ImageData = tmp18
 	}
 	return err
 }
+
+type Jpeg_SegmentApp0_DensityUnit int
+const (
+	Jpeg_SegmentApp0_DensityUnit__NoUnits Jpeg_SegmentApp0_DensityUnit = 0
+	Jpeg_SegmentApp0_DensityUnit__PixelsPerInch Jpeg_SegmentApp0_DensityUnit = 1
+	Jpeg_SegmentApp0_DensityUnit__PixelsPerCm Jpeg_SegmentApp0_DensityUnit = 2
+)
+var values_Jpeg_SegmentApp0_DensityUnit = map[Jpeg_SegmentApp0_DensityUnit]struct{}{0: {}, 1: {}, 2: {}}
+func (v Jpeg_SegmentApp0_DensityUnit) isDefined() bool {
+	_, ok := values_Jpeg_SegmentApp0_DensityUnit[v]
+	return ok
+}
+type Jpeg_SegmentApp0 struct {
+	Magic string
+	VersionMajor uint8
+	VersionMinor uint8
+	DensityUnits Jpeg_SegmentApp0_DensityUnit
+	DensityX uint16
+	DensityY uint16
+	ThumbnailX uint8
+	ThumbnailY uint8
+	Thumbnail []byte
+	_io *kaitai.Stream
+	_root *Jpeg
+	_parent *Jpeg_Segment
+}
+func NewJpeg_SegmentApp0() *Jpeg_SegmentApp0 {
+	return &Jpeg_SegmentApp0{
+	}
+}
+
+func (this Jpeg_SegmentApp0) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Jpeg_SegmentApp0) Read(io *kaitai.Stream, parent *Jpeg_Segment, root *Jpeg) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp19, err := this._io.ReadBytes(int(5))
+	if err != nil {
+		return err
+	}
+	tmp19 = tmp19
+	this.Magic = string(tmp19)
+	tmp20, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.VersionMajor = tmp20
+	tmp21, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.VersionMinor = tmp21
+	tmp22, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.DensityUnits = Jpeg_SegmentApp0_DensityUnit(tmp22)
+	tmp23, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.DensityX = uint16(tmp23)
+	tmp24, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.DensityY = uint16(tmp24)
+	tmp25, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.ThumbnailX = tmp25
+	tmp26, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.ThumbnailY = tmp26
+	tmp27, err := this._io.ReadBytes(int((this.ThumbnailX * this.ThumbnailY) * 3))
+	if err != nil {
+		return err
+	}
+	tmp27 = tmp27
+	this.Thumbnail = tmp27
+	return err
+}
+
+/**
+ * Horizontal pixel density. Must not be zero.
+ */
+
+/**
+ * Vertical pixel density. Must not be zero.
+ */
+
+/**
+ * Horizontal pixel count of the following embedded RGB thumbnail. May be zero.
+ */
+
+/**
+ * Vertical pixel count of the following embedded RGB thumbnail. May be zero.
+ */
+
+/**
+ * Uncompressed 24 bit RGB (8 bits per color channel) raster thumbnail data in the order R0, G0, B0, ... Rn, Gn, Bn
+ */
+type Jpeg_SegmentApp1 struct {
+	Magic string
+	Body *Jpeg_ExifInJpeg
+	_io *kaitai.Stream
+	_root *Jpeg
+	_parent *Jpeg_Segment
+}
+func NewJpeg_SegmentApp1() *Jpeg_SegmentApp1 {
+	return &Jpeg_SegmentApp1{
+	}
+}
+
+func (this Jpeg_SegmentApp1) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Jpeg_SegmentApp1) Read(io *kaitai.Stream, parent *Jpeg_Segment, root *Jpeg) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp28, err := this._io.ReadBytesTerm(0, false, true, true)
+	if err != nil {
+		return err
+	}
+	this.Magic = string(tmp28)
+	switch (this.Magic) {
+	case "Exif":
+		tmp29 := NewJpeg_ExifInJpeg()
+		err = tmp29.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp29
+	}
+	return err
+}
+type Jpeg_SegmentSof0 struct {
+	BitsPerSample uint8
+	ImageHeight uint16
+	ImageWidth uint16
+	NumComponents uint8
+	Components []*Jpeg_SegmentSof0_Component
+	_io *kaitai.Stream
+	_root *Jpeg
+	_parent *Jpeg_Segment
+}
+func NewJpeg_SegmentSof0() *Jpeg_SegmentSof0 {
+	return &Jpeg_SegmentSof0{
+	}
+}
+
+func (this Jpeg_SegmentSof0) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Jpeg_SegmentSof0) Read(io *kaitai.Stream, parent *Jpeg_Segment, root *Jpeg) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp30, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.BitsPerSample = tmp30
+	tmp31, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.ImageHeight = uint16(tmp31)
+	tmp32, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.ImageWidth = uint16(tmp32)
+	tmp33, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.NumComponents = tmp33
+	for i := 0; i < int(this.NumComponents); i++ {
+		_ = i
+		tmp34 := NewJpeg_SegmentSof0_Component()
+		err = tmp34.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Components = append(this.Components, tmp34)
+	}
+	return err
+}
+type Jpeg_SegmentSof0_Component struct {
+	Id Jpeg_ComponentId
+	SamplingFactors uint8
+	QuantizationTableId uint8
+	_io *kaitai.Stream
+	_root *Jpeg
+	_parent *Jpeg_SegmentSof0
+	_f_samplingX bool
+	samplingX int
+	_f_samplingY bool
+	samplingY int
+}
+func NewJpeg_SegmentSof0_Component() *Jpeg_SegmentSof0_Component {
+	return &Jpeg_SegmentSof0_Component{
+	}
+}
+
+func (this Jpeg_SegmentSof0_Component) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Jpeg_SegmentSof0_Component) Read(io *kaitai.Stream, parent *Jpeg_SegmentSof0, root *Jpeg) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp35, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Id = Jpeg_ComponentId(tmp35)
+	tmp36, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.SamplingFactors = tmp36
+	tmp37, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.QuantizationTableId = tmp37
+	return err
+}
+func (this *Jpeg_SegmentSof0_Component) SamplingX() (v int, err error) {
+	if (this._f_samplingX) {
+		return this.samplingX, nil
+	}
+	this._f_samplingX = true
+	this.samplingX = int((this.SamplingFactors & 240) >> 4)
+	return this.samplingX, nil
+}
+func (this *Jpeg_SegmentSof0_Component) SamplingY() (v int, err error) {
+	if (this._f_samplingY) {
+		return this.samplingY, nil
+	}
+	this._f_samplingY = true
+	this.samplingY = int(this.SamplingFactors & 15)
+	return this.samplingY, nil
+}
+
+/**
+ * Component selector
+ */
 type Jpeg_SegmentSos struct {
 	NumComponents uint8
 	Components []*Jpeg_SegmentSos_Component
@@ -237,40 +565,44 @@ func NewJpeg_SegmentSos() *Jpeg_SegmentSos {
 	}
 }
 
+func (this Jpeg_SegmentSos) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Jpeg_SegmentSos) Read(io *kaitai.Stream, parent *Jpeg_Segment, root *Jpeg) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp16, err := this._io.ReadU1()
+	tmp38, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.NumComponents = tmp16
+	this.NumComponents = tmp38
 	for i := 0; i < int(this.NumComponents); i++ {
 		_ = i
-		tmp17 := NewJpeg_SegmentSos_Component()
-		err = tmp17.Read(this._io, this, this._root)
+		tmp39 := NewJpeg_SegmentSos_Component()
+		err = tmp39.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Components = append(this.Components, tmp17)
+		this.Components = append(this.Components, tmp39)
 	}
-	tmp18, err := this._io.ReadU1()
+	tmp40, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.StartSpectralSelection = tmp18
-	tmp19, err := this._io.ReadU1()
+	this.StartSpectralSelection = tmp40
+	tmp41, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.EndSpectral = tmp19
-	tmp20, err := this._io.ReadU1()
+	this.EndSpectral = tmp41
+	tmp42, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.ApprBitPos = tmp20
+	this.ApprBitPos = tmp42
 	return err
 }
 
@@ -305,309 +637,28 @@ func NewJpeg_SegmentSos_Component() *Jpeg_SegmentSos_Component {
 	}
 }
 
+func (this Jpeg_SegmentSos_Component) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Jpeg_SegmentSos_Component) Read(io *kaitai.Stream, parent *Jpeg_SegmentSos, root *Jpeg) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp21, err := this._io.ReadU1()
+	tmp43, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Id = Jpeg_ComponentId(tmp21)
-	tmp22, err := this._io.ReadU1()
+	this.Id = Jpeg_ComponentId(tmp43)
+	tmp44, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.HuffmanTable = tmp22
+	this.HuffmanTable = tmp44
 	return err
 }
 
 /**
  * Scan component selector
- */
-type Jpeg_SegmentApp1 struct {
-	Magic string
-	Body *Jpeg_ExifInJpeg
-	_io *kaitai.Stream
-	_root *Jpeg
-	_parent *Jpeg_Segment
-}
-func NewJpeg_SegmentApp1() *Jpeg_SegmentApp1 {
-	return &Jpeg_SegmentApp1{
-	}
-}
-
-func (this *Jpeg_SegmentApp1) Read(io *kaitai.Stream, parent *Jpeg_Segment, root *Jpeg) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp23, err := this._io.ReadBytesTerm(0, false, true, true)
-	if err != nil {
-		return err
-	}
-	this.Magic = string(tmp23)
-	switch (this.Magic) {
-	case "Exif":
-		tmp24 := NewJpeg_ExifInJpeg()
-		err = tmp24.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp24
-	}
-	return err
-}
-type Jpeg_SegmentSof0 struct {
-	BitsPerSample uint8
-	ImageHeight uint16
-	ImageWidth uint16
-	NumComponents uint8
-	Components []*Jpeg_SegmentSof0_Component
-	_io *kaitai.Stream
-	_root *Jpeg
-	_parent *Jpeg_Segment
-}
-func NewJpeg_SegmentSof0() *Jpeg_SegmentSof0 {
-	return &Jpeg_SegmentSof0{
-	}
-}
-
-func (this *Jpeg_SegmentSof0) Read(io *kaitai.Stream, parent *Jpeg_Segment, root *Jpeg) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp25, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.BitsPerSample = tmp25
-	tmp26, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.ImageHeight = uint16(tmp26)
-	tmp27, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.ImageWidth = uint16(tmp27)
-	tmp28, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.NumComponents = tmp28
-	for i := 0; i < int(this.NumComponents); i++ {
-		_ = i
-		tmp29 := NewJpeg_SegmentSof0_Component()
-		err = tmp29.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Components = append(this.Components, tmp29)
-	}
-	return err
-}
-type Jpeg_SegmentSof0_Component struct {
-	Id Jpeg_ComponentId
-	SamplingFactors uint8
-	QuantizationTableId uint8
-	_io *kaitai.Stream
-	_root *Jpeg
-	_parent *Jpeg_SegmentSof0
-	_f_samplingX bool
-	samplingX int
-	_f_samplingY bool
-	samplingY int
-}
-func NewJpeg_SegmentSof0_Component() *Jpeg_SegmentSof0_Component {
-	return &Jpeg_SegmentSof0_Component{
-	}
-}
-
-func (this *Jpeg_SegmentSof0_Component) Read(io *kaitai.Stream, parent *Jpeg_SegmentSof0, root *Jpeg) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp30, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Id = Jpeg_ComponentId(tmp30)
-	tmp31, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.SamplingFactors = tmp31
-	tmp32, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.QuantizationTableId = tmp32
-	return err
-}
-func (this *Jpeg_SegmentSof0_Component) SamplingX() (v int, err error) {
-	if (this._f_samplingX) {
-		return this.samplingX, nil
-	}
-	this.samplingX = int(((this.SamplingFactors & 240) >> 4))
-	this._f_samplingX = true
-	return this.samplingX, nil
-}
-func (this *Jpeg_SegmentSof0_Component) SamplingY() (v int, err error) {
-	if (this._f_samplingY) {
-		return this.samplingY, nil
-	}
-	this.samplingY = int((this.SamplingFactors & 15))
-	this._f_samplingY = true
-	return this.samplingY, nil
-}
-
-/**
- * Component selector
- */
-type Jpeg_ExifInJpeg struct {
-	ExtraZero []byte
-	Data *Exif
-	_io *kaitai.Stream
-	_root *Jpeg
-	_parent *Jpeg_SegmentApp1
-	_raw_Data []byte
-}
-func NewJpeg_ExifInJpeg() *Jpeg_ExifInJpeg {
-	return &Jpeg_ExifInJpeg{
-	}
-}
-
-func (this *Jpeg_ExifInJpeg) Read(io *kaitai.Stream, parent *Jpeg_SegmentApp1, root *Jpeg) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp33, err := this._io.ReadBytes(int(1))
-	if err != nil {
-		return err
-	}
-	tmp33 = tmp33
-	this.ExtraZero = tmp33
-	if !(bytes.Equal(this.ExtraZero, []uint8{0})) {
-		return kaitai.NewValidationNotEqualError([]uint8{0}, this.ExtraZero, this._io, "/types/exif_in_jpeg/seq/0")
-	}
-	tmp34, err := this._io.ReadBytesFull()
-	if err != nil {
-		return err
-	}
-	tmp34 = tmp34
-	this._raw_Data = tmp34
-	_io__raw_Data := kaitai.NewStream(bytes.NewReader(this._raw_Data))
-	tmp35 := NewExif()
-	err = tmp35.Read(_io__raw_Data, this, nil)
-	if err != nil {
-		return err
-	}
-	this.Data = tmp35
-	return err
-}
-
-type Jpeg_SegmentApp0_DensityUnit int
-const (
-	Jpeg_SegmentApp0_DensityUnit__NoUnits Jpeg_SegmentApp0_DensityUnit = 0
-	Jpeg_SegmentApp0_DensityUnit__PixelsPerInch Jpeg_SegmentApp0_DensityUnit = 1
-	Jpeg_SegmentApp0_DensityUnit__PixelsPerCm Jpeg_SegmentApp0_DensityUnit = 2
-)
-type Jpeg_SegmentApp0 struct {
-	Magic string
-	VersionMajor uint8
-	VersionMinor uint8
-	DensityUnits Jpeg_SegmentApp0_DensityUnit
-	DensityX uint16
-	DensityY uint16
-	ThumbnailX uint8
-	ThumbnailY uint8
-	Thumbnail []byte
-	_io *kaitai.Stream
-	_root *Jpeg
-	_parent *Jpeg_Segment
-}
-func NewJpeg_SegmentApp0() *Jpeg_SegmentApp0 {
-	return &Jpeg_SegmentApp0{
-	}
-}
-
-func (this *Jpeg_SegmentApp0) Read(io *kaitai.Stream, parent *Jpeg_Segment, root *Jpeg) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp36, err := this._io.ReadBytes(int(5))
-	if err != nil {
-		return err
-	}
-	tmp36 = tmp36
-	this.Magic = string(tmp36)
-	tmp37, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.VersionMajor = tmp37
-	tmp38, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.VersionMinor = tmp38
-	tmp39, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.DensityUnits = Jpeg_SegmentApp0_DensityUnit(tmp39)
-	tmp40, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.DensityX = uint16(tmp40)
-	tmp41, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.DensityY = uint16(tmp41)
-	tmp42, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.ThumbnailX = tmp42
-	tmp43, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.ThumbnailY = tmp43
-	tmp44, err := this._io.ReadBytes(int(((this.ThumbnailX * this.ThumbnailY) * 3)))
-	if err != nil {
-		return err
-	}
-	tmp44 = tmp44
-	this.Thumbnail = tmp44
-	return err
-}
-
-/**
- * Horizontal pixel density. Must not be zero.
- */
-
-/**
- * Vertical pixel density. Must not be zero.
- */
-
-/**
- * Horizontal pixel count of the following embedded RGB thumbnail. May be zero.
- */
-
-/**
- * Vertical pixel count of the following embedded RGB thumbnail. May be zero.
- */
-
-/**
- * Uncompressed 24 bit RGB (8 bits per color channel) raster thumbnail data in the order R0, G0, B0, ... Rn, Gn, Bn
  */

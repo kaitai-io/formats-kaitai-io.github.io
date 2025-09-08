@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Encode;
 
 ########################################################################
@@ -25,7 +25,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -37,11 +37,15 @@ sub _read {
 
 }
 
-sub sector_size {
+sub backup {
     my ($self) = @_;
-    return $self->{sector_size} if ($self->{sector_size});
-    $self->{sector_size} = 512;
-    return $self->{sector_size};
+    return $self->{backup} if ($self->{backup});
+    my $io = $self->_root()->_io();
+    my $_pos = $io->pos();
+    $io->seek($self->_io()->size() - $self->_root()->sector_size());
+    $self->{backup} = GptPartitionTable::PartitionHeader->new($io, $self, $self->{_root});
+    $io->seek($_pos);
+    return $self->{backup};
 }
 
 sub primary {
@@ -55,15 +59,11 @@ sub primary {
     return $self->{primary};
 }
 
-sub backup {
+sub sector_size {
     my ($self) = @_;
-    return $self->{backup} if ($self->{backup});
-    my $io = $self->_root()->_io();
-    my $_pos = $io->pos();
-    $io->seek(($self->_io()->size() - $self->_root()->sector_size()));
-    $self->{backup} = GptPartitionTable::PartitionHeader->new($io, $self, $self->{_root});
-    $io->seek($_pos);
-    return $self->{backup};
+    return $self->{sector_size} if ($self->{sector_size});
+    $self->{sector_size} = 512;
+    return $self->{sector_size};
 }
 
 ########################################################################
@@ -86,7 +86,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -154,7 +154,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -185,9 +185,9 @@ sub entries {
     return $self->{entries} if ($self->{entries});
     my $io = $self->_root()->_io();
     my $_pos = $io->pos();
-    $io->seek(($self->entries_start() * $self->_root()->sector_size()));
-    $self->{_raw_entries} = ();
-    $self->{entries} = ();
+    $io->seek($self->entries_start() * $self->_root()->sector_size());
+    $self->{_raw_entries} = [];
+    $self->{entries} = [];
     my $n_entries = $self->entries_count();
     for (my $i = 0; $i < $n_entries; $i++) {
         push @{$self->{_raw_entries}}, $io->read_bytes($self->entries_size());

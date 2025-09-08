@@ -24,8 +24,8 @@
 
 namespace {
     class DcmpVariableLengthInteger extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \DcmpVariableLengthInteger $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\DcmpVariableLengthInteger $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -50,7 +50,7 @@ namespace {
         public function value() {
             if ($this->_m_value !== null)
                 return $this->_m_value;
-            $this->_m_value = ($this->first() == 255 ? $this->more() : ($this->first() >= 128 ? ((($this->first() << 8) | $this->more()) - 49152) : $this->first()));
+            $this->_m_value = ($this->first() == 255 ? $this->more() : ($this->first() >= 128 ? ($this->first() << 8 | $this->more()) - 49152 : $this->first()));
             return $this->_m_value;
         }
         protected $_m_first;

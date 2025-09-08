@@ -5,8 +5,8 @@
 local class = require("class")
 require("kaitaistruct")
 local enum = require("enum")
-local str_decode = require("string_decode")
 local stringstream = require("string_stream")
+local str_decode = require("string_decode")
 
 -- 
 -- Windows MiniDump (MDMP) file provides a concise way to store process
@@ -82,11 +82,11 @@ end
 function WindowsMinidump:_read()
   self.magic1 = self._io:read_bytes(4)
   if not(self.magic1 == "\077\068\077\080") then
-    error("not equal, expected " ..  "\077\068\077\080" .. ", but got " .. self.magic1)
+    error("not equal, expected " .. "\077\068\077\080" .. ", but got " .. self.magic1)
   end
   self.magic2 = self._io:read_bytes(2)
   if not(self.magic2 == "\147\167") then
-    error("not equal, expected " ..  "\147\167" .. ", but got " .. self.magic2)
+    error("not equal, expected " .. "\147\167" .. ", but got " .. self.magic2)
   end
   self.version = self._io:read_u2le()
   self.num_streams = self._io:read_u4le()
@@ -114,22 +114,111 @@ end
 
 
 -- 
--- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread_list)
-WindowsMinidump.ThreadList = class.class(KaitaiStruct)
+-- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_directory)
+WindowsMinidump.Dir = class.class(KaitaiStruct)
 
-function WindowsMinidump.ThreadList:_init(io, parent, root)
+function WindowsMinidump.Dir:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function WindowsMinidump.ThreadList:_read()
-  self.num_threads = self._io:read_u4le()
-  self.threads = {}
-  for i = 0, self.num_threads - 1 do
-    self.threads[i + 1] = WindowsMinidump.Thread(self._io, self, self._root)
+function WindowsMinidump.Dir:_read()
+  self.stream_type = WindowsMinidump.StreamTypes(self._io:read_u4le())
+  self.len_data = self._io:read_u4le()
+  self.ofs_data = self._io:read_u4le()
+end
+
+WindowsMinidump.Dir.property.data = {}
+function WindowsMinidump.Dir.property.data:get()
+  if self._m_data ~= nil then
+    return self._m_data
   end
+
+  local _pos = self._io:pos()
+  self._io:seek(self.ofs_data)
+  local _on = self.stream_type
+  if _on == WindowsMinidump.StreamTypes.exception then
+    self._raw__m_data = self._io:read_bytes(self.len_data)
+    local _io = KaitaiStream(stringstream(self._raw__m_data))
+    self._m_data = WindowsMinidump.ExceptionStream(_io, self, self._root)
+  elseif _on == WindowsMinidump.StreamTypes.memory_list then
+    self._raw__m_data = self._io:read_bytes(self.len_data)
+    local _io = KaitaiStream(stringstream(self._raw__m_data))
+    self._m_data = WindowsMinidump.MemoryList(_io, self, self._root)
+  elseif _on == WindowsMinidump.StreamTypes.misc_info then
+    self._raw__m_data = self._io:read_bytes(self.len_data)
+    local _io = KaitaiStream(stringstream(self._raw__m_data))
+    self._m_data = WindowsMinidump.MiscInfo(_io, self, self._root)
+  elseif _on == WindowsMinidump.StreamTypes.system_info then
+    self._raw__m_data = self._io:read_bytes(self.len_data)
+    local _io = KaitaiStream(stringstream(self._raw__m_data))
+    self._m_data = WindowsMinidump.SystemInfo(_io, self, self._root)
+  elseif _on == WindowsMinidump.StreamTypes.thread_list then
+    self._raw__m_data = self._io:read_bytes(self.len_data)
+    local _io = KaitaiStream(stringstream(self._raw__m_data))
+    self._m_data = WindowsMinidump.ThreadList(_io, self, self._root)
+  else
+    self._m_data = self._io:read_bytes(self.len_data)
+  end
+  self._io:seek(_pos)
+  return self._m_data
+end
+
+-- 
+-- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_location_descriptor)
+
+-- 
+-- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception)
+WindowsMinidump.ExceptionRecord = class.class(KaitaiStruct)
+
+function WindowsMinidump.ExceptionRecord:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function WindowsMinidump.ExceptionRecord:_read()
+  self.code = self._io:read_u4le()
+  self.flags = self._io:read_u4le()
+  self.inner_exception = self._io:read_u8le()
+  self.addr = self._io:read_u8le()
+  self.num_params = self._io:read_u4le()
+  self.reserved = self._io:read_u4le()
+  self.params = {}
+  for i = 0, 15 - 1 do
+    self.params[i + 1] = self._io:read_u8le()
+  end
+end
+
+-- 
+-- Memory address where exception has occurred.
+-- 
+-- Additional parameters passed along with exception raise
+-- function (for WinAPI, that is `RaiseException`). Meaning is
+-- exception-specific. Given that this type is originally
+-- defined by a C structure, it is described there as array of
+-- fixed number of elements (`EXCEPTION_MAXIMUM_PARAMETERS` =
+-- 15), but in reality only first `num_params` would be used.
+
+-- 
+-- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception_stream)
+WindowsMinidump.ExceptionStream = class.class(KaitaiStruct)
+
+function WindowsMinidump.ExceptionStream:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function WindowsMinidump.ExceptionStream:_read()
+  self.thread_id = self._io:read_u4le()
+  self.reserved = self._io:read_u4le()
+  self.exception_rec = WindowsMinidump.ExceptionRecord(self._io, self, self._root)
+  self.thread_context = WindowsMinidump.LocationDescriptor(self._io, self, self._root)
 end
 
 
@@ -140,7 +229,7 @@ WindowsMinidump.LocationDescriptor = class.class(KaitaiStruct)
 function WindowsMinidump.LocationDescriptor:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -165,6 +254,43 @@ end
 
 
 -- 
+-- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor)
+WindowsMinidump.MemoryDescriptor = class.class(KaitaiStruct)
+
+function WindowsMinidump.MemoryDescriptor:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function WindowsMinidump.MemoryDescriptor:_read()
+  self.addr_memory_range = self._io:read_u8le()
+  self.memory = WindowsMinidump.LocationDescriptor(self._io, self, self._root)
+end
+
+
+-- 
+-- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list)
+WindowsMinidump.MemoryList = class.class(KaitaiStruct)
+
+function WindowsMinidump.MemoryList:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function WindowsMinidump.MemoryList:_read()
+  self.num_mem_ranges = self._io:read_u4le()
+  self.mem_ranges = {}
+  for i = 0, self.num_mem_ranges - 1 do
+    self.mem_ranges[i + 1] = WindowsMinidump.MemoryDescriptor(self._io, self, self._root)
+  end
+end
+
+
+-- 
 -- Specific string serialization scheme used in MiniDump format is
 -- actually a simple 32-bit length-prefixed UTF-16 string.
 -- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_string)
@@ -173,13 +299,39 @@ WindowsMinidump.MinidumpString = class.class(KaitaiStruct)
 function WindowsMinidump.MinidumpString:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function WindowsMinidump.MinidumpString:_read()
   self.len_str = self._io:read_u4le()
   self.str = str_decode.decode(self._io:read_bytes(self.len_str), "UTF-16LE")
+end
+
+
+-- 
+-- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_misc_info)
+WindowsMinidump.MiscInfo = class.class(KaitaiStruct)
+
+function WindowsMinidump.MiscInfo:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function WindowsMinidump.MiscInfo:_read()
+  self.len_info = self._io:read_u4le()
+  self.flags1 = self._io:read_u4le()
+  self.process_id = self._io:read_u4le()
+  self.process_create_time = self._io:read_u4le()
+  self.process_user_time = self._io:read_u4le()
+  self.process_kernel_time = self._io:read_u4le()
+  self.cpu_max_mhz = self._io:read_u4le()
+  self.cpu_cur_mhz = self._io:read_u4le()
+  self.cpu_limit_mhz = self._io:read_u4le()
+  self.cpu_max_idle_state = self._io:read_u4le()
+  self.cpu_cur_idle_state = self._io:read_u4le()
 end
 
 
@@ -200,7 +352,7 @@ WindowsMinidump.SystemInfo.CpuArchs = enum.Enum {
 function WindowsMinidump.SystemInfo:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -237,129 +389,13 @@ end
 
 
 -- 
--- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception)
-WindowsMinidump.ExceptionRecord = class.class(KaitaiStruct)
-
-function WindowsMinidump.ExceptionRecord:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function WindowsMinidump.ExceptionRecord:_read()
-  self.code = self._io:read_u4le()
-  self.flags = self._io:read_u4le()
-  self.inner_exception = self._io:read_u8le()
-  self.addr = self._io:read_u8le()
-  self.num_params = self._io:read_u4le()
-  self.reserved = self._io:read_u4le()
-  self.params = {}
-  for i = 0, 15 - 1 do
-    self.params[i + 1] = self._io:read_u8le()
-  end
-end
-
--- 
--- Memory address where exception has occurred.
--- 
--- Additional parameters passed along with exception raise
--- function (for WinAPI, that is `RaiseException`). Meaning is
--- exception-specific. Given that this type is originally
--- defined by a C structure, it is described there as array of
--- fixed number of elements (`EXCEPTION_MAXIMUM_PARAMETERS` =
--- 15), but in reality only first `num_params` would be used.
-
--- 
--- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_misc_info)
-WindowsMinidump.MiscInfo = class.class(KaitaiStruct)
-
-function WindowsMinidump.MiscInfo:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function WindowsMinidump.MiscInfo:_read()
-  self.len_info = self._io:read_u4le()
-  self.flags1 = self._io:read_u4le()
-  self.process_id = self._io:read_u4le()
-  self.process_create_time = self._io:read_u4le()
-  self.process_user_time = self._io:read_u4le()
-  self.process_kernel_time = self._io:read_u4le()
-  self.cpu_max_mhz = self._io:read_u4le()
-  self.cpu_cur_mhz = self._io:read_u4le()
-  self.cpu_limit_mhz = self._io:read_u4le()
-  self.cpu_max_idle_state = self._io:read_u4le()
-  self.cpu_cur_idle_state = self._io:read_u4le()
-end
-
-
--- 
--- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_directory)
-WindowsMinidump.Dir = class.class(KaitaiStruct)
-
-function WindowsMinidump.Dir:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function WindowsMinidump.Dir:_read()
-  self.stream_type = WindowsMinidump.StreamTypes(self._io:read_u4le())
-  self.len_data = self._io:read_u4le()
-  self.ofs_data = self._io:read_u4le()
-end
-
-WindowsMinidump.Dir.property.data = {}
-function WindowsMinidump.Dir.property.data:get()
-  if self._m_data ~= nil then
-    return self._m_data
-  end
-
-  local _pos = self._io:pos()
-  self._io:seek(self.ofs_data)
-  local _on = self.stream_type
-  if _on == WindowsMinidump.StreamTypes.memory_list then
-    self._raw__m_data = self._io:read_bytes(self.len_data)
-    local _io = KaitaiStream(stringstream(self._raw__m_data))
-    self._m_data = WindowsMinidump.MemoryList(_io, self, self._root)
-  elseif _on == WindowsMinidump.StreamTypes.misc_info then
-    self._raw__m_data = self._io:read_bytes(self.len_data)
-    local _io = KaitaiStream(stringstream(self._raw__m_data))
-    self._m_data = WindowsMinidump.MiscInfo(_io, self, self._root)
-  elseif _on == WindowsMinidump.StreamTypes.thread_list then
-    self._raw__m_data = self._io:read_bytes(self.len_data)
-    local _io = KaitaiStream(stringstream(self._raw__m_data))
-    self._m_data = WindowsMinidump.ThreadList(_io, self, self._root)
-  elseif _on == WindowsMinidump.StreamTypes.exception then
-    self._raw__m_data = self._io:read_bytes(self.len_data)
-    local _io = KaitaiStream(stringstream(self._raw__m_data))
-    self._m_data = WindowsMinidump.ExceptionStream(_io, self, self._root)
-  elseif _on == WindowsMinidump.StreamTypes.system_info then
-    self._raw__m_data = self._io:read_bytes(self.len_data)
-    local _io = KaitaiStream(stringstream(self._raw__m_data))
-    self._m_data = WindowsMinidump.SystemInfo(_io, self, self._root)
-  else
-    self._m_data = self._io:read_bytes(self.len_data)
-  end
-  self._io:seek(_pos)
-  return self._m_data
-end
-
--- 
--- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_location_descriptor)
-
--- 
 -- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread)
 WindowsMinidump.Thread = class.class(KaitaiStruct)
 
 function WindowsMinidump.Thread:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -377,58 +413,22 @@ end
 -- Thread Environment Block.
 
 -- 
--- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list)
-WindowsMinidump.MemoryList = class.class(KaitaiStruct)
+-- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread_list)
+WindowsMinidump.ThreadList = class.class(KaitaiStruct)
 
-function WindowsMinidump.MemoryList:_init(io, parent, root)
+function WindowsMinidump.ThreadList:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function WindowsMinidump.MemoryList:_read()
-  self.num_mem_ranges = self._io:read_u4le()
-  self.mem_ranges = {}
-  for i = 0, self.num_mem_ranges - 1 do
-    self.mem_ranges[i + 1] = WindowsMinidump.MemoryDescriptor(self._io, self, self._root)
+function WindowsMinidump.ThreadList:_read()
+  self.num_threads = self._io:read_u4le()
+  self.threads = {}
+  for i = 0, self.num_threads - 1 do
+    self.threads[i + 1] = WindowsMinidump.Thread(self._io, self, self._root)
   end
-end
-
-
--- 
--- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor)
-WindowsMinidump.MemoryDescriptor = class.class(KaitaiStruct)
-
-function WindowsMinidump.MemoryDescriptor:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function WindowsMinidump.MemoryDescriptor:_read()
-  self.addr_memory_range = self._io:read_u8le()
-  self.memory = WindowsMinidump.LocationDescriptor(self._io, self, self._root)
-end
-
-
--- 
--- See also: Source (https://learn.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception_stream)
-WindowsMinidump.ExceptionStream = class.class(KaitaiStruct)
-
-function WindowsMinidump.ExceptionStream:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function WindowsMinidump.ExceptionStream:_read()
-  self.thread_id = self._io:read_u4le()
-  self.reserved = self._io:read_u4le()
-  self.exception_rec = WindowsMinidump.ExceptionRecord(self._io, self, self._root)
-  self.thread_context = WindowsMinidump.LocationDescriptor(self._io, self, self._root)
 end
 
 

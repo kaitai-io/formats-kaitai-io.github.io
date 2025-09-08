@@ -26,14 +26,18 @@ type GenmidiOp2 struct {
 	InstrumentNames []string
 	_io *kaitai.Stream
 	_root *GenmidiOp2
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewGenmidiOp2() *GenmidiOp2 {
 	return &GenmidiOp2{
 	}
 }
 
-func (this *GenmidiOp2) Read(io *kaitai.Stream, parent interface{}, root *GenmidiOp2) (err error) {
+func (this GenmidiOp2) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *GenmidiOp2) Read(io *kaitai.Stream, parent kaitai.Struct, root *GenmidiOp2) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -67,55 +71,6 @@ func (this *GenmidiOp2) Read(io *kaitai.Stream, parent interface{}, root *Genmid
 	}
 	return err
 }
-type GenmidiOp2_InstrumentEntry struct {
-	Flags uint16
-	Finetune uint8
-	Note uint8
-	Instruments []*GenmidiOp2_Instrument
-	_io *kaitai.Stream
-	_root *GenmidiOp2
-	_parent *GenmidiOp2
-}
-func NewGenmidiOp2_InstrumentEntry() *GenmidiOp2_InstrumentEntry {
-	return &GenmidiOp2_InstrumentEntry{
-	}
-}
-
-func (this *GenmidiOp2_InstrumentEntry) Read(io *kaitai.Stream, parent *GenmidiOp2, root *GenmidiOp2) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp4, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.Flags = uint16(tmp4)
-	tmp5, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Finetune = tmp5
-	tmp6, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Note = tmp6
-	for i := 0; i < int(2); i++ {
-		_ = i
-		tmp7 := NewGenmidiOp2_Instrument()
-		err = tmp7.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Instruments = append(this.Instruments, tmp7)
-	}
-	return err
-}
-
-/**
- * MIDI note for fixed instruments, 0 otherwise
- */
 type GenmidiOp2_Instrument struct {
 	Op1 *GenmidiOp2_OpSettings
 	Feedback uint8
@@ -131,38 +86,42 @@ func NewGenmidiOp2_Instrument() *GenmidiOp2_Instrument {
 	}
 }
 
+func (this GenmidiOp2_Instrument) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *GenmidiOp2_Instrument) Read(io *kaitai.Stream, parent *GenmidiOp2_InstrumentEntry, root *GenmidiOp2) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp8 := NewGenmidiOp2_OpSettings()
-	err = tmp8.Read(this._io, this, this._root)
+	tmp4 := NewGenmidiOp2_OpSettings()
+	err = tmp4.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Op1 = tmp8
-	tmp9, err := this._io.ReadU1()
+	this.Op1 = tmp4
+	tmp5, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Feedback = tmp9
-	tmp10 := NewGenmidiOp2_OpSettings()
-	err = tmp10.Read(this._io, this, this._root)
+	this.Feedback = tmp5
+	tmp6 := NewGenmidiOp2_OpSettings()
+	err = tmp6.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Op2 = tmp10
-	tmp11, err := this._io.ReadU1()
+	this.Op2 = tmp6
+	tmp7, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Unused = tmp11
-	tmp12, err := this._io.ReadS2le()
+	this.Unused = tmp7
+	tmp8, err := this._io.ReadS2le()
 	if err != nil {
 		return err
 	}
-	this.BaseNote = int16(tmp12)
+	this.BaseNote = int16(tmp8)
 	return err
 }
 
@@ -172,6 +131,59 @@ func (this *GenmidiOp2_Instrument) Read(io *kaitai.Stream, parent *GenmidiOp2_In
 
 /**
  * Base note offset
+ */
+type GenmidiOp2_InstrumentEntry struct {
+	Flags uint16
+	Finetune uint8
+	Note uint8
+	Instruments []*GenmidiOp2_Instrument
+	_io *kaitai.Stream
+	_root *GenmidiOp2
+	_parent *GenmidiOp2
+}
+func NewGenmidiOp2_InstrumentEntry() *GenmidiOp2_InstrumentEntry {
+	return &GenmidiOp2_InstrumentEntry{
+	}
+}
+
+func (this GenmidiOp2_InstrumentEntry) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *GenmidiOp2_InstrumentEntry) Read(io *kaitai.Stream, parent *GenmidiOp2, root *GenmidiOp2) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp9, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.Flags = uint16(tmp9)
+	tmp10, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Finetune = tmp10
+	tmp11, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Note = tmp11
+	for i := 0; i < int(2); i++ {
+		_ = i
+		tmp12 := NewGenmidiOp2_Instrument()
+		err = tmp12.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Instruments = append(this.Instruments, tmp12)
+	}
+	return err
+}
+
+/**
+ * MIDI note for fixed instruments, 0 otherwise
  */
 
 /**
@@ -191,6 +203,10 @@ type GenmidiOp2_OpSettings struct {
 func NewGenmidiOp2_OpSettings() *GenmidiOp2_OpSettings {
 	return &GenmidiOp2_OpSettings{
 	}
+}
+
+func (this GenmidiOp2_OpSettings) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *GenmidiOp2_OpSettings) Read(io *kaitai.Stream, parent *GenmidiOp2_Instrument, root *GenmidiOp2) (err error) {

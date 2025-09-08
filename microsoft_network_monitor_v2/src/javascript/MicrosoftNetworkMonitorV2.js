@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream', './WindowsSystemtime', './EthernetFrame'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./WindowsSystemtime'), require('./EthernetFrame'));
+    define(['exports', 'kaitai-struct/KaitaiStream', './WindowsSystemtime', './EthernetFrame'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'), require('./WindowsSystemtime'), require('./EthernetFrame'));
   } else {
-    root.MicrosoftNetworkMonitorV2 = factory(root.KaitaiStream, root.WindowsSystemtime, root.EthernetFrame);
+    factory(root.MicrosoftNetworkMonitorV2 || (root.MicrosoftNetworkMonitorV2 = {}), root.KaitaiStream, root.WindowsSystemtime || (root.WindowsSystemtime = {}), root.EthernetFrame || (root.EthernetFrame = {}));
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, WindowsSystemtime, EthernetFrame) {
+})(typeof self !== 'undefined' ? self : this, function (MicrosoftNetworkMonitorV2_, KaitaiStream, WindowsSystemtime_, EthernetFrame_) {
 /**
  * Microsoft Network Monitor (AKA Netmon) is a proprietary Microsoft's
  * network packet sniffing and analysis tool. It can save captured
@@ -243,13 +243,13 @@ var MicrosoftNetworkMonitorV2 = (function() {
   }
   MicrosoftNetworkMonitorV2.prototype._read = function() {
     this.signature = this._io.readBytes(4);
-    if (!((KaitaiStream.byteArrayCompare(this.signature, [71, 77, 66, 85]) == 0))) {
-      throw new KaitaiStream.ValidationNotEqualError([71, 77, 66, 85], this.signature, this._io, "/seq/0");
+    if (!((KaitaiStream.byteArrayCompare(this.signature, new Uint8Array([71, 77, 66, 85])) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([71, 77, 66, 85]), this.signature, this._io, "/seq/0");
     }
     this.versionMinor = this._io.readU1();
     this.versionMajor = this._io.readU1();
     this.macType = this._io.readU2le();
-    this.timeCaptureStart = new WindowsSystemtime(this._io, this, null);
+    this.timeCaptureStart = new WindowsSystemtime_.WindowsSystemtime(this._io, null, null);
     this.frameTableOfs = this._io.readU4le();
     this.frameTableLen = this._io.readU4le();
     this.userDataOfs = this._io.readU4le();
@@ -264,11 +264,61 @@ var MicrosoftNetworkMonitorV2 = (function() {
     this.conversationStatsLen = this._io.readU4le();
   }
 
+  /**
+   * A container for actually captured network data. Allow to
+   * timestamp individual frames and designates how much data from
+   * the original packet was actually written into the file.
+   * @see {@link https://learn.microsoft.com/en-us/windows/win32/netmon2/frame|Source}
+   */
+
+  var Frame = MicrosoftNetworkMonitorV2.Frame = (function() {
+    function Frame(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Frame.prototype._read = function() {
+      this.tsDelta = this._io.readU8le();
+      this.origLen = this._io.readU4le();
+      this.incLen = this._io.readU4le();
+      switch (this._root.macType) {
+      case MicrosoftNetworkMonitorV2.Linktype.ETHERNET:
+        this._raw_body = this._io.readBytes(this.incLen);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new EthernetFrame_.EthernetFrame(_io__raw_body, null, null);
+        break;
+      default:
+        this.body = this._io.readBytes(this.incLen);
+        break;
+      }
+    }
+
+    /**
+     * Time stamp - usecs since start of capture
+     */
+
+    /**
+     * Actual length of packet
+     */
+
+    /**
+     * Number of octets captured in file
+     */
+
+    /**
+     * Actual packet captured from the network
+     */
+
+    return Frame;
+  })();
+
   var FrameIndex = MicrosoftNetworkMonitorV2.FrameIndex = (function() {
     function FrameIndex(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -293,7 +343,7 @@ var MicrosoftNetworkMonitorV2 = (function() {
     function FrameIndexEntry(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -322,56 +372,6 @@ var MicrosoftNetworkMonitorV2 = (function() {
      */
 
     return FrameIndexEntry;
-  })();
-
-  /**
-   * A container for actually captured network data. Allow to
-   * timestamp individual frames and designates how much data from
-   * the original packet was actually written into the file.
-   * @see {@link https://learn.microsoft.com/en-us/windows/win32/netmon2/frame|Source}
-   */
-
-  var Frame = MicrosoftNetworkMonitorV2.Frame = (function() {
-    function Frame(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Frame.prototype._read = function() {
-      this.tsDelta = this._io.readU8le();
-      this.origLen = this._io.readU4le();
-      this.incLen = this._io.readU4le();
-      switch (this._root.macType) {
-      case MicrosoftNetworkMonitorV2.Linktype.ETHERNET:
-        this._raw_body = this._io.readBytes(this.incLen);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new EthernetFrame(_io__raw_body, this, null);
-        break;
-      default:
-        this.body = this._io.readBytes(this.incLen);
-        break;
-      }
-    }
-
-    /**
-     * Time stamp - usecs since start of capture
-     */
-
-    /**
-     * Actual length of packet
-     */
-
-    /**
-     * Number of octets captured in file
-     */
-
-    /**
-     * Actual packet captured from the network
-     */
-
-    return Frame;
   })();
 
   /**
@@ -409,5 +409,5 @@ var MicrosoftNetworkMonitorV2 = (function() {
 
   return MicrosoftNetworkMonitorV2;
 })();
-return MicrosoftNetworkMonitorV2;
-}));
+MicrosoftNetworkMonitorV2_.MicrosoftNetworkMonitorV2 = MicrosoftNetworkMonitorV2;
+});

@@ -6,7 +6,8 @@ import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 
 /**
@@ -44,6 +45,13 @@ public class Rtpdump extends KaitaiStruct {
             }
         }
     }
+
+    public void _fetchInstances() {
+        this.fileHeader._fetchInstances();
+        for (int i = 0; i < this.packets.size(); i++) {
+            this.packets.get(((Number) (i)).intValue())._fetchInstances();
+        }
+    }
     public static class HeaderT extends KaitaiStruct {
         public static HeaderT fromFile(String fileName) throws IOException {
             return new HeaderT(new ByteBufferKaitaiStream(fileName));
@@ -65,20 +73,23 @@ public class Rtpdump extends KaitaiStruct {
         }
         private void _read() {
             this.shebang = this._io.readBytes(12);
-            if (!(Arrays.equals(shebang(), new byte[] { 35, 33, 114, 116, 112, 112, 108, 97, 121, 49, 46, 48 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 35, 33, 114, 116, 112, 112, 108, 97, 121, 49, 46, 48 }, shebang(), _io(), "/types/header_t/seq/0");
+            if (!(Arrays.equals(this.shebang, new byte[] { 35, 33, 114, 116, 112, 112, 108, 97, 121, 49, 46, 48 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 35, 33, 114, 116, 112, 112, 108, 97, 121, 49, 46, 48 }, this.shebang, this._io, "/types/header_t/seq/0");
             }
             this.space = this._io.readBytes(1);
-            if (!(Arrays.equals(space(), new byte[] { 32 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 32 }, space(), _io(), "/types/header_t/seq/1");
+            if (!(Arrays.equals(this.space, new byte[] { 32 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 32 }, this.space, this._io, "/types/header_t/seq/1");
             }
-            this.ip = new String(this._io.readBytesTerm((byte) 47, false, true, true), Charset.forName("ascii"));
-            this.port = new String(this._io.readBytesTerm((byte) 10, false, true, true), Charset.forName("ascii"));
+            this.ip = new String(this._io.readBytesTerm((byte) 47, false, true, true), StandardCharsets.US_ASCII);
+            this.port = new String(this._io.readBytesTerm((byte) 10, false, true, true), StandardCharsets.US_ASCII);
             this.startSec = this._io.readU4be();
             this.startUsec = this._io.readU4be();
             this.ip2 = this._io.readU4be();
             this.port2 = this._io.readU2be();
             this.padding = this._io.readU2be();
+        }
+
+        public void _fetchInstances() {
         }
         private byte[] shebang;
         private byte[] space;
@@ -146,9 +157,12 @@ public class Rtpdump extends KaitaiStruct {
             this.length = this._io.readU2be();
             this.lenBody = this._io.readU2be();
             this.packetUsec = this._io.readU4be();
-            this._raw_body = this._io.readBytes(lenBody());
-            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-            this.body = new RtpPacket(_io__raw_body);
+            KaitaiStream _io_body = this._io.substream(lenBody());
+            this.body = new RtpPacket(_io_body);
+        }
+
+        public void _fetchInstances() {
+            this.body._fetchInstances();
         }
         private int length;
         private int lenBody;
@@ -156,7 +170,6 @@ public class Rtpdump extends KaitaiStruct {
         private RtpPacket body;
         private Rtpdump _root;
         private Rtpdump _parent;
-        private byte[] _raw_body;
 
         /**
          * packet length (including this header).
@@ -175,14 +188,13 @@ public class Rtpdump extends KaitaiStruct {
         public RtpPacket body() { return body; }
         public Rtpdump _root() { return _root; }
         public Rtpdump _parent() { return _parent; }
-        public byte[] _raw_body() { return _raw_body; }
     }
     private HeaderT fileHeader;
-    private ArrayList<PacketT> packets;
+    private List<PacketT> packets;
     private Rtpdump _root;
     private KaitaiStruct _parent;
     public HeaderT fileHeader() { return fileHeader; }
-    public ArrayList<PacketT> packets() { return packets; }
+    public List<PacketT> packets() { return packets; }
     public Rtpdump _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

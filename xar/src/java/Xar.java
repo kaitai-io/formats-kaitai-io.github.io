@@ -6,8 +6,8 @@ import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.nio.charset.Charset;
 
 
 /**
@@ -58,52 +58,18 @@ public class Xar extends KaitaiStruct {
     }
     private void _read() {
         this.headerPrefix = new FileHeaderPrefix(this._io, this, _root);
-        this._raw_header = this._io.readBytes((headerPrefix().lenHeader() - 6));
-        KaitaiStream _io__raw_header = new ByteBufferKaitaiStream(_raw_header);
-        this.header = new FileHeader(_io__raw_header, this, _root);
+        KaitaiStream _io_header = this._io.substream(headerPrefix().lenHeader() - 6);
+        this.header = new FileHeader(_io_header, this, _root);
         this._raw__raw_toc = this._io.readBytes(header().lenTocCompressed());
-        this._raw_toc = KaitaiStream.processZlib(_raw__raw_toc);
-        KaitaiStream _io__raw_toc = new ByteBufferKaitaiStream(_raw_toc);
+        this._raw_toc = KaitaiStream.processZlib(this._raw__raw_toc);
+        KaitaiStream _io__raw_toc = new ByteBufferKaitaiStream(this._raw_toc);
         this.toc = new TocType(_io__raw_toc, this, _root);
     }
-    public static class FileHeaderPrefix extends KaitaiStruct {
-        public static FileHeaderPrefix fromFile(String fileName) throws IOException {
-            return new FileHeaderPrefix(new ByteBufferKaitaiStream(fileName));
-        }
 
-        public FileHeaderPrefix(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public FileHeaderPrefix(KaitaiStream _io, Xar _parent) {
-            this(_io, _parent, null);
-        }
-
-        public FileHeaderPrefix(KaitaiStream _io, Xar _parent, Xar _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.magic = this._io.readBytes(4);
-            if (!(Arrays.equals(magic(), new byte[] { 120, 97, 114, 33 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 120, 97, 114, 33 }, magic(), _io(), "/types/file_header_prefix/seq/0");
-            }
-            this.lenHeader = this._io.readU2be();
-        }
-        private byte[] magic;
-        private int lenHeader;
-        private Xar _root;
-        private Xar _parent;
-        public byte[] magic() { return magic; }
-
-        /**
-         * internal; access `_root.header.len_header` instead
-         */
-        public int lenHeader() { return lenHeader; }
-        public Xar _root() { return _root; }
-        public Xar _parent() { return _parent; }
+    public void _fetchInstances() {
+        this.headerPrefix._fetchInstances();
+        this.header._fetchInstances();
+        this.toc._fetchInstances();
     }
     public static class FileHeader extends KaitaiStruct {
         public static FileHeader fromFile(String fileName) throws IOException {
@@ -126,20 +92,25 @@ public class Xar extends KaitaiStruct {
         }
         private void _read() {
             this.version = this._io.readU2be();
-            if (!(version() == 1)) {
-                throw new KaitaiStream.ValidationNotEqualError(1, version(), _io(), "/types/file_header/seq/0");
+            if (!(this.version == 1)) {
+                throw new KaitaiStream.ValidationNotEqualError(1, this.version, this._io, "/types/file_header/seq/0");
             }
             this.lenTocCompressed = this._io.readU8be();
             this.tocLengthUncompressed = this._io.readU8be();
             this.checksumAlgorithmInt = this._io.readU4be();
             if (hasChecksumAlgName()) {
-                this.checksumAlgName = new String(KaitaiStream.bytesTerminate(this._io.readBytesFull(), (byte) 0, false), Charset.forName("UTF-8"));
+                this.checksumAlgName = new String(KaitaiStream.bytesTerminate(this._io.readBytesFull(), (byte) 0, false), StandardCharsets.UTF_8);
                 {
-                    String _it = checksumAlgName();
-                    if (!( ((!(_it).equals("")) && (!(_it).equals("none"))) )) {
-                        throw new KaitaiStream.ValidationExprError(checksumAlgName(), _io(), "/types/file_header/seq/4");
+                    String _it = this.checksumAlgName;
+                    if (!( ((!_it.equals("")) && (!_it.equals("none"))) )) {
+                        throw new KaitaiStream.ValidationExprError(this.checksumAlgName, this._io, "/types/file_header/seq/4");
                     }
                 }
+            }
+        }
+
+        public void _fetchInstances() {
+            if (hasChecksumAlgName()) {
             }
         }
         private String checksumAlgorithmName;
@@ -176,16 +147,14 @@ public class Xar extends KaitaiStruct {
         public Boolean hasChecksumAlgName() {
             if (this.hasChecksumAlgName != null)
                 return this.hasChecksumAlgName;
-            boolean _tmp = (boolean) ( ((checksumAlgorithmInt() == _root().checksumAlgorithmOther()) && (lenHeader() >= 32) && (KaitaiStream.mod(lenHeader(), 4) == 0)) );
-            this.hasChecksumAlgName = _tmp;
+            this.hasChecksumAlgName =  ((checksumAlgorithmInt() == _root().checksumAlgorithmOther()) && (lenHeader() >= 32) && (KaitaiStream.mod(lenHeader(), 4) == 0)) ;
             return this.hasChecksumAlgName;
         }
         private Integer lenHeader;
         public Integer lenHeader() {
             if (this.lenHeader != null)
                 return this.lenHeader;
-            int _tmp = (int) (_root().headerPrefix().lenHeader());
-            this.lenHeader = _tmp;
+            this.lenHeader = ((Number) (_root().headerPrefix().lenHeader())).intValue();
             return this.lenHeader;
         }
         private int version;
@@ -211,6 +180,48 @@ public class Xar extends KaitaiStruct {
         public Xar _root() { return _root; }
         public Xar _parent() { return _parent; }
     }
+    public static class FileHeaderPrefix extends KaitaiStruct {
+        public static FileHeaderPrefix fromFile(String fileName) throws IOException {
+            return new FileHeaderPrefix(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public FileHeaderPrefix(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public FileHeaderPrefix(KaitaiStream _io, Xar _parent) {
+            this(_io, _parent, null);
+        }
+
+        public FileHeaderPrefix(KaitaiStream _io, Xar _parent, Xar _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.magic = this._io.readBytes(4);
+            if (!(Arrays.equals(this.magic, new byte[] { 120, 97, 114, 33 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 120, 97, 114, 33 }, this.magic, this._io, "/types/file_header_prefix/seq/0");
+            }
+            this.lenHeader = this._io.readU2be();
+        }
+
+        public void _fetchInstances() {
+        }
+        private byte[] magic;
+        private int lenHeader;
+        private Xar _root;
+        private Xar _parent;
+        public byte[] magic() { return magic; }
+
+        /**
+         * internal; access `_root.header.len_header` instead
+         */
+        public int lenHeader() { return lenHeader; }
+        public Xar _root() { return _root; }
+        public Xar _parent() { return _parent; }
+    }
     public static class TocType extends KaitaiStruct {
         public static TocType fromFile(String fileName) throws IOException {
             return new TocType(new ByteBufferKaitaiStream(fileName));
@@ -231,7 +242,10 @@ public class Xar extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.xmlString = new String(this._io.readBytesFull(), Charset.forName("UTF-8"));
+            this.xmlString = new String(this._io.readBytesFull(), StandardCharsets.UTF_8);
+        }
+
+        public void _fetchInstances() {
         }
         private String xmlString;
         private Xar _root;
@@ -248,8 +262,7 @@ public class Xar extends KaitaiStruct {
     public Byte checksumAlgorithmOther() {
         if (this.checksumAlgorithmOther != null)
             return this.checksumAlgorithmOther;
-        byte _tmp = (byte) (3);
-        this.checksumAlgorithmOther = _tmp;
+        this.checksumAlgorithmOther = ((byte) 3);
         return this.checksumAlgorithmOther;
     }
     private FileHeaderPrefix headerPrefix;
@@ -257,7 +270,6 @@ public class Xar extends KaitaiStruct {
     private TocType toc;
     private Xar _root;
     private KaitaiStruct _parent;
-    private byte[] _raw_header;
     private byte[] _raw_toc;
     private byte[] _raw__raw_toc;
 
@@ -273,7 +285,6 @@ public class Xar extends KaitaiStruct {
     public TocType toc() { return toc; }
     public Xar _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
-    public byte[] _raw_header() { return _raw_header; }
     public byte[] _raw_toc() { return _raw_toc; }
     public byte[] _raw__raw_toc() { return _raw__raw_toc; }
 }

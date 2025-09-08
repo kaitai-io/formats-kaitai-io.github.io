@@ -2,13 +2,13 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 class TlsClientHello < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -23,102 +23,8 @@ class TlsClientHello < Kaitai::Struct::Struct
     end
     self
   end
-  class ServerName < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @name_type = @_io.read_u1
-      @length = @_io.read_u2be
-      @host_name = @_io.read_bytes(length)
-      self
-    end
-    attr_reader :name_type
-    attr_reader :length
-    attr_reader :host_name
-  end
-  class Random < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @gmt_unix_time = @_io.read_u4be
-      @random = @_io.read_bytes(28)
-      self
-    end
-    attr_reader :gmt_unix_time
-    attr_reader :random
-  end
-  class SessionId < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @len = @_io.read_u1
-      @sid = @_io.read_bytes(len)
-      self
-    end
-    attr_reader :len
-    attr_reader :sid
-  end
-  class Sni < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @list_length = @_io.read_u2be
-      @server_names = []
-      i = 0
-      while not @_io.eof?
-        @server_names << ServerName.new(@_io, self, @_root)
-        i += 1
-      end
-      self
-    end
-    attr_reader :list_length
-    attr_reader :server_names
-  end
-  class CipherSuites < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @len = @_io.read_u2be
-      @cipher_suites = []
-      ((len / 2)).times { |i|
-        @cipher_suites << @_io.read_u2be
-      }
-      self
-    end
-    attr_reader :len
-    attr_reader :cipher_suites
-  end
-  class CompressionMethods < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @len = @_io.read_u1
-      @compression_methods = @_io.read_bytes(len)
-      self
-    end
-    attr_reader :len
-    attr_reader :compression_methods
-  end
   class Alpn < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -136,8 +42,65 @@ class TlsClientHello < Kaitai::Struct::Struct
     attr_reader :ext_len
     attr_reader :alpn_protocols
   end
+  class CipherSuites < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @len = @_io.read_u2be
+      @cipher_suites = []
+      (len / 2).times { |i|
+        @cipher_suites << @_io.read_u2be
+      }
+      self
+    end
+    attr_reader :len
+    attr_reader :cipher_suites
+  end
+  class CompressionMethods < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @len = @_io.read_u1
+      @compression_methods = @_io.read_bytes(len)
+      self
+    end
+    attr_reader :len
+    attr_reader :compression_methods
+  end
+  class Extension < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @type = @_io.read_u2be
+      @len = @_io.read_u2be
+      case type
+      when 0
+        _io_body = @_io.substream(len)
+        @body = Sni.new(_io_body, self, @_root)
+      when 16
+        _io_body = @_io.substream(len)
+        @body = Alpn.new(_io_body, self, @_root)
+      else
+        @body = @_io.read_bytes(len)
+      end
+      self
+    end
+    attr_reader :type
+    attr_reader :len
+    attr_reader :body
+    attr_reader :_raw_body
+  end
   class Extensions < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -155,22 +118,8 @@ class TlsClientHello < Kaitai::Struct::Struct
     attr_reader :len
     attr_reader :extensions
   end
-  class Version < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @major = @_io.read_u1
-      @minor = @_io.read_u1
-      self
-    end
-    attr_reader :major
-    attr_reader :minor
-  end
   class Protocol < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -183,33 +132,82 @@ class TlsClientHello < Kaitai::Struct::Struct
     attr_reader :strlen
     attr_reader :name
   end
-  class Extension < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  class Random < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @type = @_io.read_u2be
-      @len = @_io.read_u2be
-      case type
-      when 0
-        @_raw_body = @_io.read_bytes(len)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = Sni.new(_io__raw_body, self, @_root)
-      when 16
-        @_raw_body = @_io.read_bytes(len)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = Alpn.new(_io__raw_body, self, @_root)
-      else
-        @body = @_io.read_bytes(len)
+      @gmt_unix_time = @_io.read_u4be
+      @random = @_io.read_bytes(28)
+      self
+    end
+    attr_reader :gmt_unix_time
+    attr_reader :random
+  end
+  class ServerName < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @name_type = @_io.read_u1
+      @length = @_io.read_u2be
+      @host_name = @_io.read_bytes(length)
+      self
+    end
+    attr_reader :name_type
+    attr_reader :length
+    attr_reader :host_name
+  end
+  class SessionId < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @len = @_io.read_u1
+      @sid = @_io.read_bytes(len)
+      self
+    end
+    attr_reader :len
+    attr_reader :sid
+  end
+  class Sni < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @list_length = @_io.read_u2be
+      @server_names = []
+      i = 0
+      while not @_io.eof?
+        @server_names << ServerName.new(@_io, self, @_root)
+        i += 1
       end
       self
     end
-    attr_reader :type
-    attr_reader :len
-    attr_reader :body
-    attr_reader :_raw_body
+    attr_reader :list_length
+    attr_reader :server_names
+  end
+  class Version < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @major = @_io.read_u1
+      @minor = @_io.read_u1
+      self
+    end
+    attr_reader :major
+    attr_reader :minor
   end
   attr_reader :version
   attr_reader :random

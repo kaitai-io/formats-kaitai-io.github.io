@@ -43,6 +43,11 @@ const (
 	QuicktimeMov_AtomType__Udta QuicktimeMov_AtomType = 1969517665
 	QuicktimeMov_AtomType__Vmhd QuicktimeMov_AtomType = 1986881636
 )
+var values_QuicktimeMov_AtomType = map[QuicktimeMov_AtomType]struct{}{1484026465: {}, 1684631142: {}, 1685218662: {}, 1701082227: {}, 1701606260: {}, 1718773093: {}, 1718909296: {}, 1751411826: {}, 1768907891: {}, 1835295092: {}, 1835296868: {}, 1835297121: {}, 1835365473: {}, 1835626086: {}, 1836019558: {}, 1836019574: {}, 1836476516: {}, 1936549988: {}, 1937007212: {}, 1937007471: {}, 1937011555: {}, 1937011556: {}, 1937011578: {}, 1937011827: {}, 1953196132: {}, 1953653094: {}, 1953653099: {}, 1953654118: {}, 1969517665: {}, 1986881636: {}}
+func (v QuicktimeMov_AtomType) isDefined() bool {
+	_, ok := values_QuicktimeMov_AtomType[v]
+	return ok
+}
 
 type QuicktimeMov_Brand int
 const (
@@ -302,18 +307,27 @@ const (
 	QuicktimeMov_Brand__Vwpt QuicktimeMov_Brand = 1987539060
 	QuicktimeMov_Brand__Yt4 QuicktimeMov_Brand = 2037658656
 )
+var values_QuicktimeMov_Brand = map[QuicktimeMov_Brand]struct{}{862401121: {}, 862414134: {}, 862414135: {}, 862414137: {}, 862414393: {}, 862414646: {}, 862414649: {}, 862414905: {}, 862416185: {}, 862416193: {}, 862416948: {}, 862416949: {}, 862416950: {}, 862416951: {}, 862416952: {}, 862416953: {}, 862417462: {}, 862417465: {}, 862417718: {}, 862417721: {}, 862417976: {}, 862417977: {}, 862418038: {}, 862418546: {}, 863400545: {}, 863400546: {}, 863400557: {}, 1095914057: {}, 1128351056: {}, 1128555891: {}, 1244811312: {}, 1244811313: {}, 1279476039: {}, 1295270176: {}, 1295270432: {}, 1295274016: {}, 1295275552: {}, 1296118081: {}, 1296118082: {}, 1296454477: {}, 1296520022: {}, 1297109065: {}, 1297305174: {}, 1298743618: {}, 1298743619: {}, 1298743662: {}, 1298743925: {}, 1298744173: {}, 1298745409: {}, 1298745410: {}, 1298745413: {}, 1298747506: {}, 1380930387: {}, 1397047637: {}, 1397047883: {}, 1480676931: {}, 1633973353: {}, 1634296883: {}, 1635135537: {}, 1635148593: {}, 1635148649: {}, 1635148659: {}, 1635148901: {}, 1635150182: {}, 1635150191: {}, 1635150195: {}, 1650620525: {}, 1667314797: {}, 1667314803: {}, 1667326305: {}, 1667326307: {}, 1667326572: {}, 1667329377: {}, 1667329379: {}, 1667330422: {}, 1667330933: {}, 1667458401: {}, 1667458662: {}, 1667525937: {}, 1667525940: {}, 1667588451: {}, 1667655780: {}, 1667658596: {}, 1667785777: {}, 1667785778: {}, 1667785830: {}, 1667786102: {}, 1667786801: {}, 1667786852: {}, 1667853940: {}, 1668048689: {}, 1668048690: {}, 1668113970: {}, 1668114019: {}, 1668114022: {}, 1668114028: {}, 1668114035: {}, 1668114541: {}, 1668114547: {}, 1668246896: {}, 1668507697: {}, 1668637745: {}, 1668637746: {}, 1668637752: {}, 1668637753: {}, 1668642404: {}, 1668704612: {}, 1668707939: {}, 1668773492: {}, 1684090977: {}, 1684090978: {}, 1684091233: {}, 1684091234: {}, 1684091489: {}, 1684091490: {}, 1684091745: {}, 1684091746: {}, 1684108136: {}, 1684175153: {}, 1684890161: {}, 1685286259: {}, 1685353265: {}, 1685353266: {}, 1685353267: {}, 1685467489: {}, 1685467490: {}, 1685467745: {}, 1685467746: {}, 1685468001: {}, 1685468002: {}, 1685484081: {}, 1685484593: {}, 1685614368: {}, 1701671783: {}, 1751476579: {}, 1751476589: {}, 1751476595: {}, 1751476600: {}, 1751478121: {}, 1751479907: {}, 1751479908: {}, 1751479913: {}, 1751479917: {}, 1751479923: {}, 1751479928: {}, 1752589157: {}, 1752589161: {}, 1752589176: {}, 1752593513: {}, 1768317281: {}, 1768317288: {}, 1768317289: {}, 1768317299: {}, 1768317301: {}, 1768317302: {}, 1768319076: {}, 1768319080: {}, 1768319090: {}, 1768319091: {}, 1768319093: {}, 1768319096: {}, 1768321645: {}, 1768321892: {}, 1768763753: {}, 1768763764: {}, 1768764009: {}, 1768764020: {}, 1769169714: {}, 1769172786: {}, 1769172787: {}, 1769172788: {}, 1769172789: {}, 1769172790: {}, 1769172791: {}, 1769172792: {}, 1769172793: {}, 1769172833: {}, 1769172834: {}, 1769172835: {}, 1769172845: {}, 1781688691: {}, 1781689193: {}, 1781689203: {}, 1785737760: {}, 1785750887: {}, 1785751411: {}, 1785752864: {}, 1785753449: {}, 1785754473: {}, 1785755680: {}, 1785755746: {}, 1786276896: {}, 1786278688: {}, 1786278755: {}, 1786278761: {}, 1786278771: {}, 1818784869: {}, 1818784873: {}, 1819112295: {}, 1835622758: {}, 1835623985: {}, 1835623986: {}, 1835676275: {}, 1835692082: {}, 1836069425: {}, 1836069937: {}, 1836069938: {}, 1836070705: {}, 1836086630: {}, 1836278888: {}, 1836279345: {}, 1836280184: {}, 1852402543: {}, 1852601196: {}, 1852989811: {}, 1868640868: {}, 1868653164: {}, 1868850022: {}, 1869443184: {}, 1869637170: {}, 1869641778: {}, 1870029936: {}, 1870031993: {}, 1885431398: {}, 1885433441: {}, 1885955686: {}, 1886217830: {}, 1886287465: {}, 1886545252: {}, 1903435808: {}, 1919249519: {}, 1919513464: {}, 1935963680: {}, 1936027254: {}, 1936289139: {}, 1936290680: {}, 1936290921: {}, 1936290934: {}, 1936484401: {}, 1936484402: {}, 1936484403: {}, 1936946035: {}, 1953787244: {}, 1953789814: {}, 1969780329: {}, 1970170214: {}, 1970697845: {}, 1983081840: {}, 1983081844: {}, 1983082100: {}, 1983083380: {}, 1987470185: {}, 1987473257: {}, 1987539060: {}, 2037658656: {}}
+func (v QuicktimeMov_Brand) isDefined() bool {
+	_, ok := values_QuicktimeMov_Brand[v]
+	return ok
+}
 type QuicktimeMov struct {
 	Atoms *QuicktimeMov_AtomList
 	_io *kaitai.Stream
 	_root *QuicktimeMov
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewQuicktimeMov() *QuicktimeMov {
 	return &QuicktimeMov{
 	}
 }
 
-func (this *QuicktimeMov) Read(io *kaitai.Stream, parent interface{}, root *QuicktimeMov) (err error) {
+func (this QuicktimeMov) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *QuicktimeMov) Read(io *kaitai.Stream, parent kaitai.Struct, root *QuicktimeMov) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -324,6 +338,450 @@ func (this *QuicktimeMov) Read(io *kaitai.Stream, parent interface{}, root *Quic
 		return err
 	}
 	this.Atoms = tmp1
+	return err
+}
+type QuicktimeMov_Atom struct {
+	Len32 uint32
+	AtomType QuicktimeMov_AtomType
+	Len64 uint64
+	Body interface{}
+	_io *kaitai.Stream
+	_root *QuicktimeMov
+	_parent *QuicktimeMov_AtomList
+	_raw_Body []byte
+	_f_len bool
+	len int
+}
+func NewQuicktimeMov_Atom() *QuicktimeMov_Atom {
+	return &QuicktimeMov_Atom{
+	}
+}
+
+func (this QuicktimeMov_Atom) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *QuicktimeMov_Atom) Read(io *kaitai.Stream, parent *QuicktimeMov_AtomList, root *QuicktimeMov) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp2, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.Len32 = uint32(tmp2)
+	tmp3, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.AtomType = QuicktimeMov_AtomType(tmp3)
+	if (this.Len32 == 1) {
+		tmp4, err := this._io.ReadU8be()
+		if err != nil {
+			return err
+		}
+		this.Len64 = uint64(tmp4)
+	}
+	switch (this.AtomType) {
+	case QuicktimeMov_AtomType__Dinf:
+		tmp5, err := this.Len()
+		if err != nil {
+			return err
+		}
+		tmp6, err := this._io.ReadBytes(int(tmp5))
+		if err != nil {
+			return err
+		}
+		tmp6 = tmp6
+		this._raw_Body = tmp6
+		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+		tmp7 := NewQuicktimeMov_AtomList()
+		err = tmp7.Read(_io__raw_Body, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp7
+	case QuicktimeMov_AtomType__Ftyp:
+		tmp8, err := this.Len()
+		if err != nil {
+			return err
+		}
+		tmp9, err := this._io.ReadBytes(int(tmp8))
+		if err != nil {
+			return err
+		}
+		tmp9 = tmp9
+		this._raw_Body = tmp9
+		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+		tmp10 := NewQuicktimeMov_FtypBody()
+		err = tmp10.Read(_io__raw_Body, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp10
+	case QuicktimeMov_AtomType__Mdia:
+		tmp11, err := this.Len()
+		if err != nil {
+			return err
+		}
+		tmp12, err := this._io.ReadBytes(int(tmp11))
+		if err != nil {
+			return err
+		}
+		tmp12 = tmp12
+		this._raw_Body = tmp12
+		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+		tmp13 := NewQuicktimeMov_AtomList()
+		err = tmp13.Read(_io__raw_Body, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp13
+	case QuicktimeMov_AtomType__Minf:
+		tmp14, err := this.Len()
+		if err != nil {
+			return err
+		}
+		tmp15, err := this._io.ReadBytes(int(tmp14))
+		if err != nil {
+			return err
+		}
+		tmp15 = tmp15
+		this._raw_Body = tmp15
+		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+		tmp16 := NewQuicktimeMov_AtomList()
+		err = tmp16.Read(_io__raw_Body, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp16
+	case QuicktimeMov_AtomType__Moof:
+		tmp17, err := this.Len()
+		if err != nil {
+			return err
+		}
+		tmp18, err := this._io.ReadBytes(int(tmp17))
+		if err != nil {
+			return err
+		}
+		tmp18 = tmp18
+		this._raw_Body = tmp18
+		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+		tmp19 := NewQuicktimeMov_AtomList()
+		err = tmp19.Read(_io__raw_Body, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp19
+	case QuicktimeMov_AtomType__Moov:
+		tmp20, err := this.Len()
+		if err != nil {
+			return err
+		}
+		tmp21, err := this._io.ReadBytes(int(tmp20))
+		if err != nil {
+			return err
+		}
+		tmp21 = tmp21
+		this._raw_Body = tmp21
+		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+		tmp22 := NewQuicktimeMov_AtomList()
+		err = tmp22.Read(_io__raw_Body, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp22
+	case QuicktimeMov_AtomType__Mvhd:
+		tmp23, err := this.Len()
+		if err != nil {
+			return err
+		}
+		tmp24, err := this._io.ReadBytes(int(tmp23))
+		if err != nil {
+			return err
+		}
+		tmp24 = tmp24
+		this._raw_Body = tmp24
+		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+		tmp25 := NewQuicktimeMov_MvhdBody()
+		err = tmp25.Read(_io__raw_Body, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp25
+	case QuicktimeMov_AtomType__Stbl:
+		tmp26, err := this.Len()
+		if err != nil {
+			return err
+		}
+		tmp27, err := this._io.ReadBytes(int(tmp26))
+		if err != nil {
+			return err
+		}
+		tmp27 = tmp27
+		this._raw_Body = tmp27
+		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+		tmp28 := NewQuicktimeMov_AtomList()
+		err = tmp28.Read(_io__raw_Body, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp28
+	case QuicktimeMov_AtomType__Tkhd:
+		tmp29, err := this.Len()
+		if err != nil {
+			return err
+		}
+		tmp30, err := this._io.ReadBytes(int(tmp29))
+		if err != nil {
+			return err
+		}
+		tmp30 = tmp30
+		this._raw_Body = tmp30
+		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+		tmp31 := NewQuicktimeMov_TkhdBody()
+		err = tmp31.Read(_io__raw_Body, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp31
+	case QuicktimeMov_AtomType__Traf:
+		tmp32, err := this.Len()
+		if err != nil {
+			return err
+		}
+		tmp33, err := this._io.ReadBytes(int(tmp32))
+		if err != nil {
+			return err
+		}
+		tmp33 = tmp33
+		this._raw_Body = tmp33
+		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+		tmp34 := NewQuicktimeMov_AtomList()
+		err = tmp34.Read(_io__raw_Body, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp34
+	case QuicktimeMov_AtomType__Trak:
+		tmp35, err := this.Len()
+		if err != nil {
+			return err
+		}
+		tmp36, err := this._io.ReadBytes(int(tmp35))
+		if err != nil {
+			return err
+		}
+		tmp36 = tmp36
+		this._raw_Body = tmp36
+		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+		tmp37 := NewQuicktimeMov_AtomList()
+		err = tmp37.Read(_io__raw_Body, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp37
+	default:
+		tmp38, err := this.Len()
+		if err != nil {
+			return err
+		}
+		tmp39, err := this._io.ReadBytes(int(tmp38))
+		if err != nil {
+			return err
+		}
+		tmp39 = tmp39
+		this._raw_Body = tmp39
+	}
+	return err
+}
+func (this *QuicktimeMov_Atom) Len() (v int, err error) {
+	if (this._f_len) {
+		return this.len, nil
+	}
+	this._f_len = true
+	var tmp40 int;
+	if (this.Len32 == 0) {
+		tmp41, err := this._io.Size()
+		if err != nil {
+			return 0, err
+		}
+		tmp40 = tmp41 - 8
+	} else {
+		var tmp42 int;
+		if (this.Len32 == 1) {
+			tmp42 = this.Len64 - 16
+		} else {
+			tmp42 = this.Len32 - 8
+		}
+		tmp40 = tmp42
+	}
+	this.len = int(tmp40)
+	return this.len, nil
+}
+type QuicktimeMov_AtomList struct {
+	Items []*QuicktimeMov_Atom
+	_io *kaitai.Stream
+	_root *QuicktimeMov
+	_parent kaitai.Struct
+}
+func NewQuicktimeMov_AtomList() *QuicktimeMov_AtomList {
+	return &QuicktimeMov_AtomList{
+	}
+}
+
+func (this QuicktimeMov_AtomList) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *QuicktimeMov_AtomList) Read(io *kaitai.Stream, parent kaitai.Struct, root *QuicktimeMov) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	for i := 0;; i++ {
+		tmp43, err := this._io.EOF()
+		if err != nil {
+			return err
+		}
+		if tmp43 {
+			break
+		}
+		tmp44 := NewQuicktimeMov_Atom()
+		err = tmp44.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Items = append(this.Items, tmp44)
+	}
+	return err
+}
+
+/**
+ * Fixed-point 16-bit number.
+ */
+type QuicktimeMov_Fixed16 struct {
+	IntPart int8
+	FracPart uint8
+	_io *kaitai.Stream
+	_root *QuicktimeMov
+	_parent *QuicktimeMov_MvhdBody
+}
+func NewQuicktimeMov_Fixed16() *QuicktimeMov_Fixed16 {
+	return &QuicktimeMov_Fixed16{
+	}
+}
+
+func (this QuicktimeMov_Fixed16) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *QuicktimeMov_Fixed16) Read(io *kaitai.Stream, parent *QuicktimeMov_MvhdBody, root *QuicktimeMov) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp45, err := this._io.ReadS1()
+	if err != nil {
+		return err
+	}
+	this.IntPart = tmp45
+	tmp46, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.FracPart = tmp46
+	return err
+}
+
+/**
+ * Fixed-point 32-bit number.
+ */
+type QuicktimeMov_Fixed32 struct {
+	IntPart int16
+	FracPart uint16
+	_io *kaitai.Stream
+	_root *QuicktimeMov
+	_parent kaitai.Struct
+}
+func NewQuicktimeMov_Fixed32() *QuicktimeMov_Fixed32 {
+	return &QuicktimeMov_Fixed32{
+	}
+}
+
+func (this QuicktimeMov_Fixed32) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *QuicktimeMov_Fixed32) Read(io *kaitai.Stream, parent kaitai.Struct, root *QuicktimeMov) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp47, err := this._io.ReadS2be()
+	if err != nil {
+		return err
+	}
+	this.IntPart = int16(tmp47)
+	tmp48, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.FracPart = uint16(tmp48)
+	return err
+}
+
+/**
+ * @see <a href="https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-CJBCBIFF">Source</a>
+ */
+type QuicktimeMov_FtypBody struct {
+	MajorBrand QuicktimeMov_Brand
+	MinorVersion []byte
+	CompatibleBrands []QuicktimeMov_Brand
+	_io *kaitai.Stream
+	_root *QuicktimeMov
+	_parent *QuicktimeMov_Atom
+}
+func NewQuicktimeMov_FtypBody() *QuicktimeMov_FtypBody {
+	return &QuicktimeMov_FtypBody{
+	}
+}
+
+func (this QuicktimeMov_FtypBody) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *QuicktimeMov_FtypBody) Read(io *kaitai.Stream, parent *QuicktimeMov_Atom, root *QuicktimeMov) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp49, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.MajorBrand = QuicktimeMov_Brand(tmp49)
+	tmp50, err := this._io.ReadBytes(int(4))
+	if err != nil {
+		return err
+	}
+	tmp50 = tmp50
+	this.MinorVersion = tmp50
+	for i := 0;; i++ {
+		tmp51, err := this._io.EOF()
+		if err != nil {
+			return err
+		}
+		if tmp51 {
+			break
+		}
+		tmp52, err := this._io.ReadU4be()
+		if err != nil {
+			return err
+		}
+		this.CompatibleBrands = append(this.CompatibleBrands, QuicktimeMov_Brand(tmp52))
+	}
 	return err
 }
 
@@ -357,101 +815,105 @@ func NewQuicktimeMov_MvhdBody() *QuicktimeMov_MvhdBody {
 	}
 }
 
+func (this QuicktimeMov_MvhdBody) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *QuicktimeMov_MvhdBody) Read(io *kaitai.Stream, parent *QuicktimeMov_Atom, root *QuicktimeMov) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp2, err := this._io.ReadU1()
+	tmp53, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Version = tmp2
-	tmp3, err := this._io.ReadBytes(int(3))
+	this.Version = tmp53
+	tmp54, err := this._io.ReadBytes(int(3))
 	if err != nil {
 		return err
 	}
-	tmp3 = tmp3
-	this.Flags = tmp3
-	tmp4, err := this._io.ReadU4be()
+	tmp54 = tmp54
+	this.Flags = tmp54
+	tmp55, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.CreationTime = uint32(tmp4)
-	tmp5, err := this._io.ReadU4be()
+	this.CreationTime = uint32(tmp55)
+	tmp56, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.ModificationTime = uint32(tmp5)
-	tmp6, err := this._io.ReadU4be()
+	this.ModificationTime = uint32(tmp56)
+	tmp57, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.TimeScale = uint32(tmp6)
-	tmp7, err := this._io.ReadU4be()
+	this.TimeScale = uint32(tmp57)
+	tmp58, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.Duration = uint32(tmp7)
-	tmp8 := NewQuicktimeMov_Fixed32()
-	err = tmp8.Read(this._io, this, this._root)
+	this.Duration = uint32(tmp58)
+	tmp59 := NewQuicktimeMov_Fixed32()
+	err = tmp59.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.PreferredRate = tmp8
-	tmp9 := NewQuicktimeMov_Fixed16()
-	err = tmp9.Read(this._io, this, this._root)
+	this.PreferredRate = tmp59
+	tmp60 := NewQuicktimeMov_Fixed16()
+	err = tmp60.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.PreferredVolume = tmp9
-	tmp10, err := this._io.ReadBytes(int(10))
+	this.PreferredVolume = tmp60
+	tmp61, err := this._io.ReadBytes(int(10))
 	if err != nil {
 		return err
 	}
-	tmp10 = tmp10
-	this.Reserved1 = tmp10
-	tmp11, err := this._io.ReadBytes(int(36))
+	tmp61 = tmp61
+	this.Reserved1 = tmp61
+	tmp62, err := this._io.ReadBytes(int(36))
 	if err != nil {
 		return err
 	}
-	tmp11 = tmp11
-	this.Matrix = tmp11
-	tmp12, err := this._io.ReadU4be()
+	tmp62 = tmp62
+	this.Matrix = tmp62
+	tmp63, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.PreviewTime = uint32(tmp12)
-	tmp13, err := this._io.ReadU4be()
+	this.PreviewTime = uint32(tmp63)
+	tmp64, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.PreviewDuration = uint32(tmp13)
-	tmp14, err := this._io.ReadU4be()
+	this.PreviewDuration = uint32(tmp64)
+	tmp65, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.PosterTime = uint32(tmp14)
-	tmp15, err := this._io.ReadU4be()
+	this.PosterTime = uint32(tmp65)
+	tmp66, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.SelectionTime = uint32(tmp15)
-	tmp16, err := this._io.ReadU4be()
+	this.SelectionTime = uint32(tmp66)
+	tmp67, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.SelectionDuration = uint32(tmp16)
-	tmp17, err := this._io.ReadU4be()
+	this.SelectionDuration = uint32(tmp67)
+	tmp68, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.CurrentTime = uint32(tmp17)
-	tmp18, err := this._io.ReadU4be()
+	this.CurrentTime = uint32(tmp68)
+	tmp69, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.NextTrackId = uint32(tmp18)
+	this.NextTrackId = uint32(tmp69)
 	return err
 }
 
@@ -517,397 +979,6 @@ func (this *QuicktimeMov_MvhdBody) Read(io *kaitai.Stream, parent *QuicktimeMov_
  */
 
 /**
- * @see <a href="https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-CJBCBIFF">Source</a>
- */
-type QuicktimeMov_FtypBody struct {
-	MajorBrand QuicktimeMov_Brand
-	MinorVersion []byte
-	CompatibleBrands []QuicktimeMov_Brand
-	_io *kaitai.Stream
-	_root *QuicktimeMov
-	_parent *QuicktimeMov_Atom
-}
-func NewQuicktimeMov_FtypBody() *QuicktimeMov_FtypBody {
-	return &QuicktimeMov_FtypBody{
-	}
-}
-
-func (this *QuicktimeMov_FtypBody) Read(io *kaitai.Stream, parent *QuicktimeMov_Atom, root *QuicktimeMov) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp19, err := this._io.ReadU4be()
-	if err != nil {
-		return err
-	}
-	this.MajorBrand = QuicktimeMov_Brand(tmp19)
-	tmp20, err := this._io.ReadBytes(int(4))
-	if err != nil {
-		return err
-	}
-	tmp20 = tmp20
-	this.MinorVersion = tmp20
-	for i := 1;; i++ {
-		tmp21, err := this._io.EOF()
-		if err != nil {
-			return err
-		}
-		if tmp21 {
-			break
-		}
-		tmp22, err := this._io.ReadU4be()
-		if err != nil {
-			return err
-		}
-		this.CompatibleBrands = append(this.CompatibleBrands, QuicktimeMov_Brand(tmp22))
-	}
-	return err
-}
-
-/**
- * Fixed-point 32-bit number.
- */
-type QuicktimeMov_Fixed32 struct {
-	IntPart int16
-	FracPart uint16
-	_io *kaitai.Stream
-	_root *QuicktimeMov
-	_parent interface{}
-}
-func NewQuicktimeMov_Fixed32() *QuicktimeMov_Fixed32 {
-	return &QuicktimeMov_Fixed32{
-	}
-}
-
-func (this *QuicktimeMov_Fixed32) Read(io *kaitai.Stream, parent interface{}, root *QuicktimeMov) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp23, err := this._io.ReadS2be()
-	if err != nil {
-		return err
-	}
-	this.IntPart = int16(tmp23)
-	tmp24, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.FracPart = uint16(tmp24)
-	return err
-}
-
-/**
- * Fixed-point 16-bit number.
- */
-type QuicktimeMov_Fixed16 struct {
-	IntPart int8
-	FracPart uint8
-	_io *kaitai.Stream
-	_root *QuicktimeMov
-	_parent *QuicktimeMov_MvhdBody
-}
-func NewQuicktimeMov_Fixed16() *QuicktimeMov_Fixed16 {
-	return &QuicktimeMov_Fixed16{
-	}
-}
-
-func (this *QuicktimeMov_Fixed16) Read(io *kaitai.Stream, parent *QuicktimeMov_MvhdBody, root *QuicktimeMov) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp25, err := this._io.ReadS1()
-	if err != nil {
-		return err
-	}
-	this.IntPart = tmp25
-	tmp26, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.FracPart = tmp26
-	return err
-}
-type QuicktimeMov_Atom struct {
-	Len32 uint32
-	AtomType QuicktimeMov_AtomType
-	Len64 uint64
-	Body interface{}
-	_io *kaitai.Stream
-	_root *QuicktimeMov
-	_parent *QuicktimeMov_AtomList
-	_raw_Body []byte
-	_f_len bool
-	len int
-}
-func NewQuicktimeMov_Atom() *QuicktimeMov_Atom {
-	return &QuicktimeMov_Atom{
-	}
-}
-
-func (this *QuicktimeMov_Atom) Read(io *kaitai.Stream, parent *QuicktimeMov_AtomList, root *QuicktimeMov) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp27, err := this._io.ReadU4be()
-	if err != nil {
-		return err
-	}
-	this.Len32 = uint32(tmp27)
-	tmp28, err := this._io.ReadU4be()
-	if err != nil {
-		return err
-	}
-	this.AtomType = QuicktimeMov_AtomType(tmp28)
-	if (this.Len32 == 1) {
-		tmp29, err := this._io.ReadU8be()
-		if err != nil {
-			return err
-		}
-		this.Len64 = uint64(tmp29)
-	}
-	switch (this.AtomType) {
-	case QuicktimeMov_AtomType__Moof:
-		tmp30, err := this.Len()
-		if err != nil {
-			return err
-		}
-		tmp31, err := this._io.ReadBytes(int(tmp30))
-		if err != nil {
-			return err
-		}
-		tmp31 = tmp31
-		this._raw_Body = tmp31
-		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp32 := NewQuicktimeMov_AtomList()
-		err = tmp32.Read(_io__raw_Body, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp32
-	case QuicktimeMov_AtomType__Tkhd:
-		tmp33, err := this.Len()
-		if err != nil {
-			return err
-		}
-		tmp34, err := this._io.ReadBytes(int(tmp33))
-		if err != nil {
-			return err
-		}
-		tmp34 = tmp34
-		this._raw_Body = tmp34
-		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp35 := NewQuicktimeMov_TkhdBody()
-		err = tmp35.Read(_io__raw_Body, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp35
-	case QuicktimeMov_AtomType__Stbl:
-		tmp36, err := this.Len()
-		if err != nil {
-			return err
-		}
-		tmp37, err := this._io.ReadBytes(int(tmp36))
-		if err != nil {
-			return err
-		}
-		tmp37 = tmp37
-		this._raw_Body = tmp37
-		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp38 := NewQuicktimeMov_AtomList()
-		err = tmp38.Read(_io__raw_Body, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp38
-	case QuicktimeMov_AtomType__Traf:
-		tmp39, err := this.Len()
-		if err != nil {
-			return err
-		}
-		tmp40, err := this._io.ReadBytes(int(tmp39))
-		if err != nil {
-			return err
-		}
-		tmp40 = tmp40
-		this._raw_Body = tmp40
-		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp41 := NewQuicktimeMov_AtomList()
-		err = tmp41.Read(_io__raw_Body, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp41
-	case QuicktimeMov_AtomType__Minf:
-		tmp42, err := this.Len()
-		if err != nil {
-			return err
-		}
-		tmp43, err := this._io.ReadBytes(int(tmp42))
-		if err != nil {
-			return err
-		}
-		tmp43 = tmp43
-		this._raw_Body = tmp43
-		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp44 := NewQuicktimeMov_AtomList()
-		err = tmp44.Read(_io__raw_Body, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp44
-	case QuicktimeMov_AtomType__Trak:
-		tmp45, err := this.Len()
-		if err != nil {
-			return err
-		}
-		tmp46, err := this._io.ReadBytes(int(tmp45))
-		if err != nil {
-			return err
-		}
-		tmp46 = tmp46
-		this._raw_Body = tmp46
-		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp47 := NewQuicktimeMov_AtomList()
-		err = tmp47.Read(_io__raw_Body, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp47
-	case QuicktimeMov_AtomType__Moov:
-		tmp48, err := this.Len()
-		if err != nil {
-			return err
-		}
-		tmp49, err := this._io.ReadBytes(int(tmp48))
-		if err != nil {
-			return err
-		}
-		tmp49 = tmp49
-		this._raw_Body = tmp49
-		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp50 := NewQuicktimeMov_AtomList()
-		err = tmp50.Read(_io__raw_Body, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp50
-	case QuicktimeMov_AtomType__Mdia:
-		tmp51, err := this.Len()
-		if err != nil {
-			return err
-		}
-		tmp52, err := this._io.ReadBytes(int(tmp51))
-		if err != nil {
-			return err
-		}
-		tmp52 = tmp52
-		this._raw_Body = tmp52
-		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp53 := NewQuicktimeMov_AtomList()
-		err = tmp53.Read(_io__raw_Body, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp53
-	case QuicktimeMov_AtomType__Dinf:
-		tmp54, err := this.Len()
-		if err != nil {
-			return err
-		}
-		tmp55, err := this._io.ReadBytes(int(tmp54))
-		if err != nil {
-			return err
-		}
-		tmp55 = tmp55
-		this._raw_Body = tmp55
-		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp56 := NewQuicktimeMov_AtomList()
-		err = tmp56.Read(_io__raw_Body, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp56
-	case QuicktimeMov_AtomType__Mvhd:
-		tmp57, err := this.Len()
-		if err != nil {
-			return err
-		}
-		tmp58, err := this._io.ReadBytes(int(tmp57))
-		if err != nil {
-			return err
-		}
-		tmp58 = tmp58
-		this._raw_Body = tmp58
-		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp59 := NewQuicktimeMov_MvhdBody()
-		err = tmp59.Read(_io__raw_Body, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp59
-	case QuicktimeMov_AtomType__Ftyp:
-		tmp60, err := this.Len()
-		if err != nil {
-			return err
-		}
-		tmp61, err := this._io.ReadBytes(int(tmp60))
-		if err != nil {
-			return err
-		}
-		tmp61 = tmp61
-		this._raw_Body = tmp61
-		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp62 := NewQuicktimeMov_FtypBody()
-		err = tmp62.Read(_io__raw_Body, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp62
-	default:
-		tmp63, err := this.Len()
-		if err != nil {
-			return err
-		}
-		tmp64, err := this._io.ReadBytes(int(tmp63))
-		if err != nil {
-			return err
-		}
-		tmp64 = tmp64
-		this._raw_Body = tmp64
-	}
-	return err
-}
-func (this *QuicktimeMov_Atom) Len() (v int, err error) {
-	if (this._f_len) {
-		return this.len, nil
-	}
-	var tmp65 int;
-	if (this.Len32 == 0) {
-		tmp66, err := this._io.Size()
-		if err != nil {
-			return 0, err
-		}
-		tmp65 = (tmp66 - 8)
-	} else {
-		var tmp67 int;
-		if (this.Len32 == 1) {
-			tmp67 = (this.Len64 - 16)
-		} else {
-			tmp67 = (this.Len32 - 8)
-		}
-		tmp65 = tmp67
-	}
-	this.len = int(tmp65)
-	this._f_len = true
-	return this.len, nil
-}
-
-/**
  * @see <a href="https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-25550">Source</a>
  */
 type QuicktimeMov_TkhdBody struct {
@@ -935,128 +1006,99 @@ func NewQuicktimeMov_TkhdBody() *QuicktimeMov_TkhdBody {
 	}
 }
 
+func (this QuicktimeMov_TkhdBody) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *QuicktimeMov_TkhdBody) Read(io *kaitai.Stream, parent *QuicktimeMov_Atom, root *QuicktimeMov) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp68, err := this._io.ReadU1()
+	tmp70, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Version = tmp68
-	tmp69, err := this._io.ReadBytes(int(3))
+	this.Version = tmp70
+	tmp71, err := this._io.ReadBytes(int(3))
 	if err != nil {
 		return err
 	}
-	tmp69 = tmp69
-	this.Flags = tmp69
-	tmp70, err := this._io.ReadU4be()
-	if err != nil {
-		return err
-	}
-	this.CreationTime = uint32(tmp70)
-	tmp71, err := this._io.ReadU4be()
-	if err != nil {
-		return err
-	}
-	this.ModificationTime = uint32(tmp71)
+	tmp71 = tmp71
+	this.Flags = tmp71
 	tmp72, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.TrackId = uint32(tmp72)
-	tmp73, err := this._io.ReadBytes(int(4))
+	this.CreationTime = uint32(tmp72)
+	tmp73, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	tmp73 = tmp73
-	this.Reserved1 = tmp73
+	this.ModificationTime = uint32(tmp73)
 	tmp74, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.Duration = uint32(tmp74)
-	tmp75, err := this._io.ReadBytes(int(8))
+	this.TrackId = uint32(tmp74)
+	tmp75, err := this._io.ReadBytes(int(4))
 	if err != nil {
 		return err
 	}
 	tmp75 = tmp75
-	this.Reserved2 = tmp75
-	tmp76, err := this._io.ReadU2be()
+	this.Reserved1 = tmp75
+	tmp76, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.Layer = uint16(tmp76)
-	tmp77, err := this._io.ReadU2be()
+	this.Duration = uint32(tmp76)
+	tmp77, err := this._io.ReadBytes(int(8))
 	if err != nil {
 		return err
 	}
-	this.AlternativeGroup = uint16(tmp77)
+	tmp77 = tmp77
+	this.Reserved2 = tmp77
 	tmp78, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.Volume = uint16(tmp78)
+	this.Layer = uint16(tmp78)
 	tmp79, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.Reserved3 = uint16(tmp79)
-	tmp80, err := this._io.ReadBytes(int(36))
+	this.AlternativeGroup = uint16(tmp79)
+	tmp80, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	tmp80 = tmp80
-	this.Matrix = tmp80
-	tmp81 := NewQuicktimeMov_Fixed32()
-	err = tmp81.Read(this._io, this, this._root)
+	this.Volume = uint16(tmp80)
+	tmp81, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.Width = tmp81
-	tmp82 := NewQuicktimeMov_Fixed32()
-	err = tmp82.Read(this._io, this, this._root)
+	this.Reserved3 = uint16(tmp81)
+	tmp82, err := this._io.ReadBytes(int(36))
 	if err != nil {
 		return err
 	}
-	this.Height = tmp82
+	tmp82 = tmp82
+	this.Matrix = tmp82
+	tmp83 := NewQuicktimeMov_Fixed32()
+	err = tmp83.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Width = tmp83
+	tmp84 := NewQuicktimeMov_Fixed32()
+	err = tmp84.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Height = tmp84
 	return err
 }
 
 /**
  * Integer that uniquely identifies the track. The value 0 cannot be used.
  */
-type QuicktimeMov_AtomList struct {
-	Items []*QuicktimeMov_Atom
-	_io *kaitai.Stream
-	_root *QuicktimeMov
-	_parent interface{}
-}
-func NewQuicktimeMov_AtomList() *QuicktimeMov_AtomList {
-	return &QuicktimeMov_AtomList{
-	}
-}
-
-func (this *QuicktimeMov_AtomList) Read(io *kaitai.Stream, parent interface{}, root *QuicktimeMov) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	for i := 1;; i++ {
-		tmp83, err := this._io.EOF()
-		if err != nil {
-			return err
-		}
-		if tmp83 {
-			break
-		}
-		tmp84 := NewQuicktimeMov_Atom()
-		err = tmp84.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Items = append(this.Items, tmp84)
-	}
-	return err
-}

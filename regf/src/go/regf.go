@@ -29,7 +29,7 @@ type Regf struct {
 	HiveBins []*Regf_HiveBin
 	_io *kaitai.Stream
 	_root *Regf
-	_parent interface{}
+	_parent kaitai.Struct
 	_raw_HiveBins [][]byte
 }
 func NewRegf() *Regf {
@@ -37,7 +37,11 @@ func NewRegf() *Regf {
 	}
 }
 
-func (this *Regf) Read(io *kaitai.Stream, parent interface{}, root *Regf) (err error) {
+func (this Regf) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Regf) Read(io *kaitai.Stream, parent kaitai.Struct, root *Regf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -48,7 +52,7 @@ func (this *Regf) Read(io *kaitai.Stream, parent interface{}, root *Regf) (err e
 		return err
 	}
 	this.Header = tmp1
-	for i := 1;; i++ {
+	for i := 0;; i++ {
 		tmp2, err := this._io.EOF()
 		if err != nil {
 			return err
@@ -72,27 +76,183 @@ func (this *Regf) Read(io *kaitai.Stream, parent interface{}, root *Regf) (err e
 	}
 	return err
 }
+
+type Regf_FileHeader_FileFormat int
+const (
+	Regf_FileHeader_FileFormat__DirectMemoryLoad Regf_FileHeader_FileFormat = 1
+)
+var values_Regf_FileHeader_FileFormat = map[Regf_FileHeader_FileFormat]struct{}{1: {}}
+func (v Regf_FileHeader_FileFormat) isDefined() bool {
+	_, ok := values_Regf_FileHeader_FileFormat[v]
+	return ok
+}
+
+type Regf_FileHeader_FileType int
+const (
+	Regf_FileHeader_FileType__Normal Regf_FileHeader_FileType = 0
+	Regf_FileHeader_FileType__TransactionLog Regf_FileHeader_FileType = 1
+)
+var values_Regf_FileHeader_FileType = map[Regf_FileHeader_FileType]struct{}{0: {}, 1: {}}
+func (v Regf_FileHeader_FileType) isDefined() bool {
+	_, ok := values_Regf_FileHeader_FileType[v]
+	return ok
+}
+type Regf_FileHeader struct {
+	Signature []byte
+	PrimarySequenceNumber uint32
+	SecondarySequenceNumber uint32
+	LastModificationDateAndTime *Regf_Filetime
+	MajorVersion uint32
+	MinorVersion uint32
+	Type Regf_FileHeader_FileType
+	Format Regf_FileHeader_FileFormat
+	RootKeyOffset uint32
+	HiveBinsDataSize uint32
+	ClusteringFactor uint32
+	Unknown1 []byte
+	Unknown2 []byte
+	Checksum uint32
+	Reserved []byte
+	BootType uint32
+	BootRecover uint32
+	_io *kaitai.Stream
+	_root *Regf
+	_parent *Regf
+}
+func NewRegf_FileHeader() *Regf_FileHeader {
+	return &Regf_FileHeader{
+	}
+}
+
+func (this Regf_FileHeader) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Regf_FileHeader) Read(io *kaitai.Stream, parent *Regf, root *Regf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp5, err := this._io.ReadBytes(int(4))
+	if err != nil {
+		return err
+	}
+	tmp5 = tmp5
+	this.Signature = tmp5
+	if !(bytes.Equal(this.Signature, []uint8{114, 101, 103, 102})) {
+		return kaitai.NewValidationNotEqualError([]uint8{114, 101, 103, 102}, this.Signature, this._io, "/types/file_header/seq/0")
+	}
+	tmp6, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.PrimarySequenceNumber = uint32(tmp6)
+	tmp7, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.SecondarySequenceNumber = uint32(tmp7)
+	tmp8 := NewRegf_Filetime()
+	err = tmp8.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.LastModificationDateAndTime = tmp8
+	tmp9, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.MajorVersion = uint32(tmp9)
+	tmp10, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.MinorVersion = uint32(tmp10)
+	tmp11, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Type = Regf_FileHeader_FileType(tmp11)
+	tmp12, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Format = Regf_FileHeader_FileFormat(tmp12)
+	tmp13, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.RootKeyOffset = uint32(tmp13)
+	tmp14, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.HiveBinsDataSize = uint32(tmp14)
+	tmp15, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.ClusteringFactor = uint32(tmp15)
+	tmp16, err := this._io.ReadBytes(int(64))
+	if err != nil {
+		return err
+	}
+	tmp16 = tmp16
+	this.Unknown1 = tmp16
+	tmp17, err := this._io.ReadBytes(int(396))
+	if err != nil {
+		return err
+	}
+	tmp17 = tmp17
+	this.Unknown2 = tmp17
+	tmp18, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Checksum = uint32(tmp18)
+	tmp19, err := this._io.ReadBytes(int(3576))
+	if err != nil {
+		return err
+	}
+	tmp19 = tmp19
+	this.Reserved = tmp19
+	tmp20, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.BootType = uint32(tmp20)
+	tmp21, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.BootRecover = uint32(tmp21)
+	return err
+}
 type Regf_Filetime struct {
 	Value uint64
 	_io *kaitai.Stream
 	_root *Regf
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewRegf_Filetime() *Regf_Filetime {
 	return &Regf_Filetime{
 	}
 }
 
-func (this *Regf_Filetime) Read(io *kaitai.Stream, parent interface{}, root *Regf) (err error) {
+func (this Regf_Filetime) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Regf_Filetime) Read(io *kaitai.Stream, parent kaitai.Struct, root *Regf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp5, err := this._io.ReadU8le()
+	tmp22, err := this._io.ReadU8le()
 	if err != nil {
 		return err
 	}
-	this.Value = uint64(tmp5)
+	this.Value = uint64(tmp22)
 	return err
 }
 type Regf_HiveBin struct {
@@ -107,123 +267,38 @@ func NewRegf_HiveBin() *Regf_HiveBin {
 	}
 }
 
+func (this Regf_HiveBin) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Regf_HiveBin) Read(io *kaitai.Stream, parent *Regf, root *Regf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp6 := NewRegf_HiveBinHeader()
-	err = tmp6.Read(this._io, this, this._root)
+	tmp23 := NewRegf_HiveBinHeader()
+	err = tmp23.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Header = tmp6
-	for i := 1;; i++ {
-		tmp7, err := this._io.EOF()
+	this.Header = tmp23
+	for i := 0;; i++ {
+		tmp24, err := this._io.EOF()
 		if err != nil {
 			return err
 		}
-		if tmp7 {
+		if tmp24 {
 			break
 		}
-		tmp8 := NewRegf_HiveBinCell()
-		err = tmp8.Read(this._io, this, this._root)
+		tmp25 := NewRegf_HiveBinCell()
+		err = tmp25.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Cells = append(this.Cells, tmp8)
+		this.Cells = append(this.Cells, tmp25)
 	}
 	return err
 }
-type Regf_HiveBinHeader struct {
-	Signature []byte
-	Offset uint32
-	Size uint32
-	Unknown1 uint32
-	Unknown2 uint32
-	Timestamp *Regf_Filetime
-	Unknown4 uint32
-	_io *kaitai.Stream
-	_root *Regf
-	_parent *Regf_HiveBin
-}
-func NewRegf_HiveBinHeader() *Regf_HiveBinHeader {
-	return &Regf_HiveBinHeader{
-	}
-}
-
-func (this *Regf_HiveBinHeader) Read(io *kaitai.Stream, parent *Regf_HiveBin, root *Regf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp9, err := this._io.ReadBytes(int(4))
-	if err != nil {
-		return err
-	}
-	tmp9 = tmp9
-	this.Signature = tmp9
-	if !(bytes.Equal(this.Signature, []uint8{104, 98, 105, 110})) {
-		return kaitai.NewValidationNotEqualError([]uint8{104, 98, 105, 110}, this.Signature, this._io, "/types/hive_bin_header/seq/0")
-	}
-	tmp10, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Offset = uint32(tmp10)
-	tmp11, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Size = uint32(tmp11)
-	tmp12, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Unknown1 = uint32(tmp12)
-	tmp13, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Unknown2 = uint32(tmp13)
-	tmp14 := NewRegf_Filetime()
-	err = tmp14.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Timestamp = tmp14
-	tmp15, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Unknown4 = uint32(tmp15)
-	return err
-}
-
-/**
- * The offset of the hive bin, Value in bytes and relative from
- * the start of the hive bin data
- */
-
-/**
- * Size of the hive bin
- */
-
-/**
- * 0 most of the time, can contain remnant data
- */
-
-/**
- * 0 most of the time, can contain remnant data
- */
-
-/**
- * Only the root (first) hive bin seems to contain a valid FILETIME
- */
-
-/**
- * Contains number of bytes
- */
 type Regf_HiveBinCell struct {
 	CellSizeRaw int32
 	Identifier string
@@ -242,160 +317,164 @@ func NewRegf_HiveBinCell() *Regf_HiveBinCell {
 	}
 }
 
+func (this Regf_HiveBinCell) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Regf_HiveBinCell) Read(io *kaitai.Stream, parent *Regf_HiveBin, root *Regf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp16, err := this._io.ReadS4le()
+	tmp26, err := this._io.ReadS4le()
 	if err != nil {
 		return err
 	}
-	this.CellSizeRaw = int32(tmp16)
-	tmp17, err := this._io.ReadBytes(int(2))
+	this.CellSizeRaw = int32(tmp26)
+	tmp27, err := this._io.ReadBytes(int(2))
 	if err != nil {
 		return err
 	}
-	tmp17 = tmp17
-	this.Identifier = string(tmp17)
+	tmp27 = tmp27
+	this.Identifier = string(tmp27)
 	switch (this.Identifier) {
-	case "li":
-		tmp18, err := this.CellSize()
-		if err != nil {
-			return err
-		}
-		tmp19, err := this._io.ReadBytes(int(((tmp18 - 2) - 4)))
-		if err != nil {
-			return err
-		}
-		tmp19 = tmp19
-		this._raw_Data = tmp19
-		_io__raw_Data := kaitai.NewStream(bytes.NewReader(this._raw_Data))
-		tmp20 := NewRegf_HiveBinCell_SubKeyListLi()
-		err = tmp20.Read(_io__raw_Data, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Data = tmp20
-	case "vk":
-		tmp21, err := this.CellSize()
-		if err != nil {
-			return err
-		}
-		tmp22, err := this._io.ReadBytes(int(((tmp21 - 2) - 4)))
-		if err != nil {
-			return err
-		}
-		tmp22 = tmp22
-		this._raw_Data = tmp22
-		_io__raw_Data := kaitai.NewStream(bytes.NewReader(this._raw_Data))
-		tmp23 := NewRegf_HiveBinCell_SubKeyListVk()
-		err = tmp23.Read(_io__raw_Data, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Data = tmp23
 	case "lf":
-		tmp24, err := this.CellSize()
+		tmp28, err := this.CellSize()
 		if err != nil {
 			return err
 		}
-		tmp25, err := this._io.ReadBytes(int(((tmp24 - 2) - 4)))
+		tmp29, err := this._io.ReadBytes(int((tmp28 - 2) - 4))
 		if err != nil {
 			return err
 		}
-		tmp25 = tmp25
-		this._raw_Data = tmp25
+		tmp29 = tmp29
+		this._raw_Data = tmp29
 		_io__raw_Data := kaitai.NewStream(bytes.NewReader(this._raw_Data))
-		tmp26 := NewRegf_HiveBinCell_SubKeyListLhLf()
-		err = tmp26.Read(_io__raw_Data, this, this._root)
+		tmp30 := NewRegf_HiveBinCell_SubKeyListLhLf()
+		err = tmp30.Read(_io__raw_Data, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Data = tmp26
-	case "ri":
-		tmp27, err := this.CellSize()
-		if err != nil {
-			return err
-		}
-		tmp28, err := this._io.ReadBytes(int(((tmp27 - 2) - 4)))
-		if err != nil {
-			return err
-		}
-		tmp28 = tmp28
-		this._raw_Data = tmp28
-		_io__raw_Data := kaitai.NewStream(bytes.NewReader(this._raw_Data))
-		tmp29 := NewRegf_HiveBinCell_SubKeyListRi()
-		err = tmp29.Read(_io__raw_Data, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Data = tmp29
+		this.Data = tmp30
 	case "lh":
-		tmp30, err := this.CellSize()
+		tmp31, err := this.CellSize()
 		if err != nil {
 			return err
 		}
-		tmp31, err := this._io.ReadBytes(int(((tmp30 - 2) - 4)))
+		tmp32, err := this._io.ReadBytes(int((tmp31 - 2) - 4))
 		if err != nil {
 			return err
 		}
-		tmp31 = tmp31
-		this._raw_Data = tmp31
+		tmp32 = tmp32
+		this._raw_Data = tmp32
 		_io__raw_Data := kaitai.NewStream(bytes.NewReader(this._raw_Data))
-		tmp32 := NewRegf_HiveBinCell_SubKeyListLhLf()
-		err = tmp32.Read(_io__raw_Data, this, this._root)
+		tmp33 := NewRegf_HiveBinCell_SubKeyListLhLf()
+		err = tmp33.Read(_io__raw_Data, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Data = tmp32
+		this.Data = tmp33
+	case "li":
+		tmp34, err := this.CellSize()
+		if err != nil {
+			return err
+		}
+		tmp35, err := this._io.ReadBytes(int((tmp34 - 2) - 4))
+		if err != nil {
+			return err
+		}
+		tmp35 = tmp35
+		this._raw_Data = tmp35
+		_io__raw_Data := kaitai.NewStream(bytes.NewReader(this._raw_Data))
+		tmp36 := NewRegf_HiveBinCell_SubKeyListLi()
+		err = tmp36.Read(_io__raw_Data, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Data = tmp36
 	case "nk":
-		tmp33, err := this.CellSize()
+		tmp37, err := this.CellSize()
 		if err != nil {
 			return err
 		}
-		tmp34, err := this._io.ReadBytes(int(((tmp33 - 2) - 4)))
+		tmp38, err := this._io.ReadBytes(int((tmp37 - 2) - 4))
 		if err != nil {
 			return err
 		}
-		tmp34 = tmp34
-		this._raw_Data = tmp34
+		tmp38 = tmp38
+		this._raw_Data = tmp38
 		_io__raw_Data := kaitai.NewStream(bytes.NewReader(this._raw_Data))
-		tmp35 := NewRegf_HiveBinCell_NamedKey()
-		err = tmp35.Read(_io__raw_Data, this, this._root)
+		tmp39 := NewRegf_HiveBinCell_NamedKey()
+		err = tmp39.Read(_io__raw_Data, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Data = tmp35
+		this.Data = tmp39
+	case "ri":
+		tmp40, err := this.CellSize()
+		if err != nil {
+			return err
+		}
+		tmp41, err := this._io.ReadBytes(int((tmp40 - 2) - 4))
+		if err != nil {
+			return err
+		}
+		tmp41 = tmp41
+		this._raw_Data = tmp41
+		_io__raw_Data := kaitai.NewStream(bytes.NewReader(this._raw_Data))
+		tmp42 := NewRegf_HiveBinCell_SubKeyListRi()
+		err = tmp42.Read(_io__raw_Data, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Data = tmp42
 	case "sk":
-		tmp36, err := this.CellSize()
+		tmp43, err := this.CellSize()
 		if err != nil {
 			return err
 		}
-		tmp37, err := this._io.ReadBytes(int(((tmp36 - 2) - 4)))
+		tmp44, err := this._io.ReadBytes(int((tmp43 - 2) - 4))
 		if err != nil {
 			return err
 		}
-		tmp37 = tmp37
-		this._raw_Data = tmp37
+		tmp44 = tmp44
+		this._raw_Data = tmp44
 		_io__raw_Data := kaitai.NewStream(bytes.NewReader(this._raw_Data))
-		tmp38 := NewRegf_HiveBinCell_SubKeyListSk()
-		err = tmp38.Read(_io__raw_Data, this, this._root)
+		tmp45 := NewRegf_HiveBinCell_SubKeyListSk()
+		err = tmp45.Read(_io__raw_Data, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Data = tmp38
+		this.Data = tmp45
+	case "vk":
+		tmp46, err := this.CellSize()
+		if err != nil {
+			return err
+		}
+		tmp47, err := this._io.ReadBytes(int((tmp46 - 2) - 4))
+		if err != nil {
+			return err
+		}
+		tmp47 = tmp47
+		this._raw_Data = tmp47
+		_io__raw_Data := kaitai.NewStream(bytes.NewReader(this._raw_Data))
+		tmp48 := NewRegf_HiveBinCell_SubKeyListVk()
+		err = tmp48.Read(_io__raw_Data, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Data = tmp48
 	default:
-		tmp39, err := this.CellSize()
+		tmp49, err := this.CellSize()
 		if err != nil {
 			return err
 		}
-		tmp40, err := this._io.ReadBytes(int(((tmp39 - 2) - 4)))
+		tmp50, err := this._io.ReadBytes(int((tmp49 - 2) - 4))
 		if err != nil {
 			return err
 		}
-		tmp40 = tmp40
-		this._raw_Data = tmp40
+		tmp50 = tmp50
+		this._raw_Data = tmp50
 	}
 	return err
 }
@@ -403,265 +482,23 @@ func (this *Regf_HiveBinCell) CellSize() (v int, err error) {
 	if (this._f_cellSize) {
 		return this.cellSize, nil
 	}
-	var tmp41 int;
-	if (this.CellSizeRaw < 0) {
-		tmp41 = -1
-	} else {
-		tmp41 = 1
-	}
-	this.cellSize = int((tmp41 * this.CellSizeRaw))
 	this._f_cellSize = true
+	var tmp51 int;
+	if (this.CellSizeRaw < 0) {
+		tmp51 = -1
+	} else {
+		tmp51 = 1
+	}
+	this.cellSize = int(tmp51 * this.CellSizeRaw)
 	return this.cellSize, nil
 }
 func (this *Regf_HiveBinCell) IsAllocated() (v bool, err error) {
 	if (this._f_isAllocated) {
 		return this.isAllocated, nil
 	}
-	this.isAllocated = bool(this.CellSizeRaw < 0)
 	this._f_isAllocated = true
+	this.isAllocated = bool(this.CellSizeRaw < 0)
 	return this.isAllocated, nil
-}
-
-type Regf_HiveBinCell_SubKeyListVk_DataTypeEnum int
-const (
-	Regf_HiveBinCell_SubKeyListVk_DataTypeEnum__RegNone Regf_HiveBinCell_SubKeyListVk_DataTypeEnum = 0
-	Regf_HiveBinCell_SubKeyListVk_DataTypeEnum__RegSz Regf_HiveBinCell_SubKeyListVk_DataTypeEnum = 1
-	Regf_HiveBinCell_SubKeyListVk_DataTypeEnum__RegExpandSz Regf_HiveBinCell_SubKeyListVk_DataTypeEnum = 2
-	Regf_HiveBinCell_SubKeyListVk_DataTypeEnum__RegBinary Regf_HiveBinCell_SubKeyListVk_DataTypeEnum = 3
-	Regf_HiveBinCell_SubKeyListVk_DataTypeEnum__RegDword Regf_HiveBinCell_SubKeyListVk_DataTypeEnum = 4
-	Regf_HiveBinCell_SubKeyListVk_DataTypeEnum__RegDwordBigEndian Regf_HiveBinCell_SubKeyListVk_DataTypeEnum = 5
-	Regf_HiveBinCell_SubKeyListVk_DataTypeEnum__RegLink Regf_HiveBinCell_SubKeyListVk_DataTypeEnum = 6
-	Regf_HiveBinCell_SubKeyListVk_DataTypeEnum__RegMultiSz Regf_HiveBinCell_SubKeyListVk_DataTypeEnum = 7
-	Regf_HiveBinCell_SubKeyListVk_DataTypeEnum__RegResourceList Regf_HiveBinCell_SubKeyListVk_DataTypeEnum = 8
-	Regf_HiveBinCell_SubKeyListVk_DataTypeEnum__RegFullResourceDescriptor Regf_HiveBinCell_SubKeyListVk_DataTypeEnum = 9
-	Regf_HiveBinCell_SubKeyListVk_DataTypeEnum__RegResourceRequirementsList Regf_HiveBinCell_SubKeyListVk_DataTypeEnum = 10
-	Regf_HiveBinCell_SubKeyListVk_DataTypeEnum__RegQword Regf_HiveBinCell_SubKeyListVk_DataTypeEnum = 11
-)
-
-type Regf_HiveBinCell_SubKeyListVk_VkFlags int
-const (
-	Regf_HiveBinCell_SubKeyListVk_VkFlags__ValueCompName Regf_HiveBinCell_SubKeyListVk_VkFlags = 1
-)
-type Regf_HiveBinCell_SubKeyListVk struct {
-	ValueNameSize uint16
-	DataSize uint32
-	DataOffset uint32
-	DataType Regf_HiveBinCell_SubKeyListVk_DataTypeEnum
-	Flags Regf_HiveBinCell_SubKeyListVk_VkFlags
-	Padding uint16
-	ValueName string
-	_io *kaitai.Stream
-	_root *Regf
-	_parent *Regf_HiveBinCell
-}
-func NewRegf_HiveBinCell_SubKeyListVk() *Regf_HiveBinCell_SubKeyListVk {
-	return &Regf_HiveBinCell_SubKeyListVk{
-	}
-}
-
-func (this *Regf_HiveBinCell_SubKeyListVk) Read(io *kaitai.Stream, parent *Regf_HiveBinCell, root *Regf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp42, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.ValueNameSize = uint16(tmp42)
-	tmp43, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.DataSize = uint32(tmp43)
-	tmp44, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.DataOffset = uint32(tmp44)
-	tmp45, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.DataType = Regf_HiveBinCell_SubKeyListVk_DataTypeEnum(tmp45)
-	tmp46, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.Flags = Regf_HiveBinCell_SubKeyListVk_VkFlags(tmp46)
-	tmp47, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.Padding = uint16(tmp47)
-	if (this.Flags == Regf_HiveBinCell_SubKeyListVk_VkFlags__ValueCompName) {
-		tmp48, err := this._io.ReadBytes(int(this.ValueNameSize))
-		if err != nil {
-			return err
-		}
-		tmp48 = tmp48
-		this.ValueName = string(tmp48)
-	}
-	return err
-}
-type Regf_HiveBinCell_SubKeyListLhLf struct {
-	Count uint16
-	Items []*Regf_HiveBinCell_SubKeyListLhLf_Item
-	_io *kaitai.Stream
-	_root *Regf
-	_parent *Regf_HiveBinCell
-}
-func NewRegf_HiveBinCell_SubKeyListLhLf() *Regf_HiveBinCell_SubKeyListLhLf {
-	return &Regf_HiveBinCell_SubKeyListLhLf{
-	}
-}
-
-func (this *Regf_HiveBinCell_SubKeyListLhLf) Read(io *kaitai.Stream, parent *Regf_HiveBinCell, root *Regf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp49, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.Count = uint16(tmp49)
-	for i := 0; i < int(this.Count); i++ {
-		_ = i
-		tmp50 := NewRegf_HiveBinCell_SubKeyListLhLf_Item()
-		err = tmp50.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Items = append(this.Items, tmp50)
-	}
-	return err
-}
-type Regf_HiveBinCell_SubKeyListLhLf_Item struct {
-	NamedKeyOffset uint32
-	HashValue uint32
-	_io *kaitai.Stream
-	_root *Regf
-	_parent *Regf_HiveBinCell_SubKeyListLhLf
-}
-func NewRegf_HiveBinCell_SubKeyListLhLf_Item() *Regf_HiveBinCell_SubKeyListLhLf_Item {
-	return &Regf_HiveBinCell_SubKeyListLhLf_Item{
-	}
-}
-
-func (this *Regf_HiveBinCell_SubKeyListLhLf_Item) Read(io *kaitai.Stream, parent *Regf_HiveBinCell_SubKeyListLhLf, root *Regf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp51, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.NamedKeyOffset = uint32(tmp51)
-	tmp52, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.HashValue = uint32(tmp52)
-	return err
-}
-type Regf_HiveBinCell_SubKeyListSk struct {
-	Unknown1 uint16
-	PreviousSecurityKeyOffset uint32
-	NextSecurityKeyOffset uint32
-	ReferenceCount uint32
-	_io *kaitai.Stream
-	_root *Regf
-	_parent *Regf_HiveBinCell
-}
-func NewRegf_HiveBinCell_SubKeyListSk() *Regf_HiveBinCell_SubKeyListSk {
-	return &Regf_HiveBinCell_SubKeyListSk{
-	}
-}
-
-func (this *Regf_HiveBinCell_SubKeyListSk) Read(io *kaitai.Stream, parent *Regf_HiveBinCell, root *Regf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp53, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.Unknown1 = uint16(tmp53)
-	tmp54, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.PreviousSecurityKeyOffset = uint32(tmp54)
-	tmp55, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.NextSecurityKeyOffset = uint32(tmp55)
-	tmp56, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.ReferenceCount = uint32(tmp56)
-	return err
-}
-type Regf_HiveBinCell_SubKeyListLi struct {
-	Count uint16
-	Items []*Regf_HiveBinCell_SubKeyListLi_Item
-	_io *kaitai.Stream
-	_root *Regf
-	_parent *Regf_HiveBinCell
-}
-func NewRegf_HiveBinCell_SubKeyListLi() *Regf_HiveBinCell_SubKeyListLi {
-	return &Regf_HiveBinCell_SubKeyListLi{
-	}
-}
-
-func (this *Regf_HiveBinCell_SubKeyListLi) Read(io *kaitai.Stream, parent *Regf_HiveBinCell, root *Regf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp57, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.Count = uint16(tmp57)
-	for i := 0; i < int(this.Count); i++ {
-		_ = i
-		tmp58 := NewRegf_HiveBinCell_SubKeyListLi_Item()
-		err = tmp58.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Items = append(this.Items, tmp58)
-	}
-	return err
-}
-type Regf_HiveBinCell_SubKeyListLi_Item struct {
-	NamedKeyOffset uint32
-	_io *kaitai.Stream
-	_root *Regf
-	_parent *Regf_HiveBinCell_SubKeyListLi
-}
-func NewRegf_HiveBinCell_SubKeyListLi_Item() *Regf_HiveBinCell_SubKeyListLi_Item {
-	return &Regf_HiveBinCell_SubKeyListLi_Item{
-	}
-}
-
-func (this *Regf_HiveBinCell_SubKeyListLi_Item) Read(io *kaitai.Stream, parent *Regf_HiveBinCell_SubKeyListLi, root *Regf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp59, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.NamedKeyOffset = uint32(tmp59)
-	return err
 }
 
 type Regf_HiveBinCell_NamedKey_NkFlags int
@@ -679,6 +516,11 @@ const (
 	Regf_HiveBinCell_NamedKey_NkFlags__Unknown1 Regf_HiveBinCell_NamedKey_NkFlags = 4096
 	Regf_HiveBinCell_NamedKey_NkFlags__Unknown2 Regf_HiveBinCell_NamedKey_NkFlags = 16384
 )
+var values_Regf_HiveBinCell_NamedKey_NkFlags = map[Regf_HiveBinCell_NamedKey_NkFlags]struct{}{1: {}, 2: {}, 4: {}, 8: {}, 16: {}, 32: {}, 64: {}, 128: {}, 256: {}, 512: {}, 4096: {}, 16384: {}}
+func (v Regf_HiveBinCell_NamedKey_NkFlags) isDefined() bool {
+	_, ok := values_Regf_HiveBinCell_NamedKey_NkFlags[v]
+	return ok
+}
 type Regf_HiveBinCell_NamedKey struct {
 	Flags Regf_HiveBinCell_NamedKey_NkFlags
 	LastKeyWrittenDateAndTime *Regf_Filetime
@@ -709,113 +551,251 @@ func NewRegf_HiveBinCell_NamedKey() *Regf_HiveBinCell_NamedKey {
 	}
 }
 
+func (this Regf_HiveBinCell_NamedKey) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Regf_HiveBinCell_NamedKey) Read(io *kaitai.Stream, parent *Regf_HiveBinCell, root *Regf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp60, err := this._io.ReadU2le()
+	tmp52, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.Flags = Regf_HiveBinCell_NamedKey_NkFlags(tmp60)
-	tmp61 := NewRegf_Filetime()
-	err = tmp61.Read(this._io, this, this._root)
+	this.Flags = Regf_HiveBinCell_NamedKey_NkFlags(tmp52)
+	tmp53 := NewRegf_Filetime()
+	err = tmp53.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.LastKeyWrittenDateAndTime = tmp61
+	this.LastKeyWrittenDateAndTime = tmp53
+	tmp54, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Unknown1 = uint32(tmp54)
+	tmp55, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.ParentKeyOffset = uint32(tmp55)
+	tmp56, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.NumberOfSubKeys = uint32(tmp56)
+	tmp57, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.NumberOfVolatileSubKeys = uint32(tmp57)
+	tmp58, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.SubKeysListOffset = uint32(tmp58)
+	tmp59, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.NumberOfValues = uint32(tmp59)
+	tmp60, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.ValuesListOffset = uint32(tmp60)
+	tmp61, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.SecurityKeyOffset = uint32(tmp61)
 	tmp62, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Unknown1 = uint32(tmp62)
+	this.ClassNameOffset = uint32(tmp62)
 	tmp63, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.ParentKeyOffset = uint32(tmp63)
+	this.LargestSubKeyNameSize = uint32(tmp63)
 	tmp64, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.NumberOfSubKeys = uint32(tmp64)
+	this.LargestSubKeyClassNameSize = uint32(tmp64)
 	tmp65, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.NumberOfVolatileSubKeys = uint32(tmp65)
+	this.LargestValueNameSize = uint32(tmp65)
 	tmp66, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.SubKeysListOffset = uint32(tmp66)
+	this.LargestValueDataSize = uint32(tmp66)
 	tmp67, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.NumberOfValues = uint32(tmp67)
-	tmp68, err := this._io.ReadU4le()
+	this.Unknown2 = uint32(tmp67)
+	tmp68, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.ValuesListOffset = uint32(tmp68)
-	tmp69, err := this._io.ReadU4le()
+	this.KeyNameSize = uint16(tmp68)
+	tmp69, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.SecurityKeyOffset = uint32(tmp69)
+	this.ClassNameSize = uint16(tmp69)
 	tmp70, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.ClassNameOffset = uint32(tmp70)
-	tmp71, err := this._io.ReadU4le()
+	this.UnknownStringSize = uint32(tmp70)
+	tmp71, err := this._io.ReadBytes(int(this.UnknownStringSize))
 	if err != nil {
 		return err
 	}
-	this.LargestSubKeyNameSize = uint32(tmp71)
-	tmp72, err := this._io.ReadU4le()
+	tmp71 = tmp71
+	this.UnknownString = string(tmp71)
+	return err
+}
+type Regf_HiveBinCell_SubKeyListLhLf struct {
+	Count uint16
+	Items []*Regf_HiveBinCell_SubKeyListLhLf_Item
+	_io *kaitai.Stream
+	_root *Regf
+	_parent *Regf_HiveBinCell
+}
+func NewRegf_HiveBinCell_SubKeyListLhLf() *Regf_HiveBinCell_SubKeyListLhLf {
+	return &Regf_HiveBinCell_SubKeyListLhLf{
+	}
+}
+
+func (this Regf_HiveBinCell_SubKeyListLhLf) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Regf_HiveBinCell_SubKeyListLhLf) Read(io *kaitai.Stream, parent *Regf_HiveBinCell, root *Regf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp72, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.LargestSubKeyClassNameSize = uint32(tmp72)
-	tmp73, err := this._io.ReadU4le()
-	if err != nil {
-		return err
+	this.Count = uint16(tmp72)
+	for i := 0; i < int(this.Count); i++ {
+		_ = i
+		tmp73 := NewRegf_HiveBinCell_SubKeyListLhLf_Item()
+		err = tmp73.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Items = append(this.Items, tmp73)
 	}
-	this.LargestValueNameSize = uint32(tmp73)
+	return err
+}
+type Regf_HiveBinCell_SubKeyListLhLf_Item struct {
+	NamedKeyOffset uint32
+	HashValue uint32
+	_io *kaitai.Stream
+	_root *Regf
+	_parent *Regf_HiveBinCell_SubKeyListLhLf
+}
+func NewRegf_HiveBinCell_SubKeyListLhLf_Item() *Regf_HiveBinCell_SubKeyListLhLf_Item {
+	return &Regf_HiveBinCell_SubKeyListLhLf_Item{
+	}
+}
+
+func (this Regf_HiveBinCell_SubKeyListLhLf_Item) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Regf_HiveBinCell_SubKeyListLhLf_Item) Read(io *kaitai.Stream, parent *Regf_HiveBinCell_SubKeyListLhLf, root *Regf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
 	tmp74, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.LargestValueDataSize = uint32(tmp74)
+	this.NamedKeyOffset = uint32(tmp74)
 	tmp75, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Unknown2 = uint32(tmp75)
+	this.HashValue = uint32(tmp75)
+	return err
+}
+type Regf_HiveBinCell_SubKeyListLi struct {
+	Count uint16
+	Items []*Regf_HiveBinCell_SubKeyListLi_Item
+	_io *kaitai.Stream
+	_root *Regf
+	_parent *Regf_HiveBinCell
+}
+func NewRegf_HiveBinCell_SubKeyListLi() *Regf_HiveBinCell_SubKeyListLi {
+	return &Regf_HiveBinCell_SubKeyListLi{
+	}
+}
+
+func (this Regf_HiveBinCell_SubKeyListLi) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Regf_HiveBinCell_SubKeyListLi) Read(io *kaitai.Stream, parent *Regf_HiveBinCell, root *Regf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
 	tmp76, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.KeyNameSize = uint16(tmp76)
-	tmp77, err := this._io.ReadU2le()
-	if err != nil {
-		return err
+	this.Count = uint16(tmp76)
+	for i := 0; i < int(this.Count); i++ {
+		_ = i
+		tmp77 := NewRegf_HiveBinCell_SubKeyListLi_Item()
+		err = tmp77.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Items = append(this.Items, tmp77)
 	}
-	this.ClassNameSize = uint16(tmp77)
+	return err
+}
+type Regf_HiveBinCell_SubKeyListLi_Item struct {
+	NamedKeyOffset uint32
+	_io *kaitai.Stream
+	_root *Regf
+	_parent *Regf_HiveBinCell_SubKeyListLi
+}
+func NewRegf_HiveBinCell_SubKeyListLi_Item() *Regf_HiveBinCell_SubKeyListLi_Item {
+	return &Regf_HiveBinCell_SubKeyListLi_Item{
+	}
+}
+
+func (this Regf_HiveBinCell_SubKeyListLi_Item) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Regf_HiveBinCell_SubKeyListLi_Item) Read(io *kaitai.Stream, parent *Regf_HiveBinCell_SubKeyListLi, root *Regf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
 	tmp78, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.UnknownStringSize = uint32(tmp78)
-	tmp79, err := this._io.ReadBytes(int(this.UnknownStringSize))
-	if err != nil {
-		return err
-	}
-	tmp79 = tmp79
-	this.UnknownString = string(tmp79)
+	this.NamedKeyOffset = uint32(tmp78)
 	return err
 }
 type Regf_HiveBinCell_SubKeyListRi struct {
@@ -830,24 +810,28 @@ func NewRegf_HiveBinCell_SubKeyListRi() *Regf_HiveBinCell_SubKeyListRi {
 	}
 }
 
+func (this Regf_HiveBinCell_SubKeyListRi) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Regf_HiveBinCell_SubKeyListRi) Read(io *kaitai.Stream, parent *Regf_HiveBinCell, root *Regf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp80, err := this._io.ReadU2le()
+	tmp79, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.Count = uint16(tmp80)
+	this.Count = uint16(tmp79)
 	for i := 0; i < int(this.Count); i++ {
 		_ = i
-		tmp81 := NewRegf_HiveBinCell_SubKeyListRi_Item()
-		err = tmp81.Read(this._io, this, this._root)
+		tmp80 := NewRegf_HiveBinCell_SubKeyListRi_Item()
+		err = tmp80.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Items = append(this.Items, tmp81)
+		this.Items = append(this.Items, tmp80)
 	}
 	return err
 }
@@ -862,153 +846,254 @@ func NewRegf_HiveBinCell_SubKeyListRi_Item() *Regf_HiveBinCell_SubKeyListRi_Item
 	}
 }
 
+func (this Regf_HiveBinCell_SubKeyListRi_Item) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Regf_HiveBinCell_SubKeyListRi_Item) Read(io *kaitai.Stream, parent *Regf_HiveBinCell_SubKeyListRi, root *Regf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp82, err := this._io.ReadU4le()
+	tmp81, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.SubKeyListOffset = uint32(tmp82)
+	this.SubKeyListOffset = uint32(tmp81)
 	return err
 }
-
-type Regf_FileHeader_FileType int
-const (
-	Regf_FileHeader_FileType__Normal Regf_FileHeader_FileType = 0
-	Regf_FileHeader_FileType__TransactionLog Regf_FileHeader_FileType = 1
-)
-
-type Regf_FileHeader_FileFormat int
-const (
-	Regf_FileHeader_FileFormat__DirectMemoryLoad Regf_FileHeader_FileFormat = 1
-)
-type Regf_FileHeader struct {
-	Signature []byte
-	PrimarySequenceNumber uint32
-	SecondarySequenceNumber uint32
-	LastModificationDateAndTime *Regf_Filetime
-	MajorVersion uint32
-	MinorVersion uint32
-	Type Regf_FileHeader_FileType
-	Format Regf_FileHeader_FileFormat
-	RootKeyOffset uint32
-	HiveBinsDataSize uint32
-	ClusteringFactor uint32
-	Unknown1 []byte
-	Unknown2 []byte
-	Checksum uint32
-	Reserved []byte
-	BootType uint32
-	BootRecover uint32
+type Regf_HiveBinCell_SubKeyListSk struct {
+	Unknown1 uint16
+	PreviousSecurityKeyOffset uint32
+	NextSecurityKeyOffset uint32
+	ReferenceCount uint32
 	_io *kaitai.Stream
 	_root *Regf
-	_parent *Regf
+	_parent *Regf_HiveBinCell
 }
-func NewRegf_FileHeader() *Regf_FileHeader {
-	return &Regf_FileHeader{
+func NewRegf_HiveBinCell_SubKeyListSk() *Regf_HiveBinCell_SubKeyListSk {
+	return &Regf_HiveBinCell_SubKeyListSk{
 	}
 }
 
-func (this *Regf_FileHeader) Read(io *kaitai.Stream, parent *Regf, root *Regf) (err error) {
+func (this Regf_HiveBinCell_SubKeyListSk) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Regf_HiveBinCell_SubKeyListSk) Read(io *kaitai.Stream, parent *Regf_HiveBinCell, root *Regf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp83, err := this._io.ReadBytes(int(4))
+	tmp82, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	tmp83 = tmp83
-	this.Signature = tmp83
-	if !(bytes.Equal(this.Signature, []uint8{114, 101, 103, 102})) {
-		return kaitai.NewValidationNotEqualError([]uint8{114, 101, 103, 102}, this.Signature, this._io, "/types/file_header/seq/0")
+	this.Unknown1 = uint16(tmp82)
+	tmp83, err := this._io.ReadU4le()
+	if err != nil {
+		return err
 	}
+	this.PreviousSecurityKeyOffset = uint32(tmp83)
 	tmp84, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.PrimarySequenceNumber = uint32(tmp84)
+	this.NextSecurityKeyOffset = uint32(tmp84)
 	tmp85, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.SecondarySequenceNumber = uint32(tmp85)
-	tmp86 := NewRegf_Filetime()
-	err = tmp86.Read(this._io, this, this._root)
+	this.ReferenceCount = uint32(tmp85)
+	return err
+}
+
+type Regf_HiveBinCell_SubKeyListVk_DataTypeEnum int
+const (
+	Regf_HiveBinCell_SubKeyListVk_DataTypeEnum__RegNone Regf_HiveBinCell_SubKeyListVk_DataTypeEnum = 0
+	Regf_HiveBinCell_SubKeyListVk_DataTypeEnum__RegSz Regf_HiveBinCell_SubKeyListVk_DataTypeEnum = 1
+	Regf_HiveBinCell_SubKeyListVk_DataTypeEnum__RegExpandSz Regf_HiveBinCell_SubKeyListVk_DataTypeEnum = 2
+	Regf_HiveBinCell_SubKeyListVk_DataTypeEnum__RegBinary Regf_HiveBinCell_SubKeyListVk_DataTypeEnum = 3
+	Regf_HiveBinCell_SubKeyListVk_DataTypeEnum__RegDword Regf_HiveBinCell_SubKeyListVk_DataTypeEnum = 4
+	Regf_HiveBinCell_SubKeyListVk_DataTypeEnum__RegDwordBigEndian Regf_HiveBinCell_SubKeyListVk_DataTypeEnum = 5
+	Regf_HiveBinCell_SubKeyListVk_DataTypeEnum__RegLink Regf_HiveBinCell_SubKeyListVk_DataTypeEnum = 6
+	Regf_HiveBinCell_SubKeyListVk_DataTypeEnum__RegMultiSz Regf_HiveBinCell_SubKeyListVk_DataTypeEnum = 7
+	Regf_HiveBinCell_SubKeyListVk_DataTypeEnum__RegResourceList Regf_HiveBinCell_SubKeyListVk_DataTypeEnum = 8
+	Regf_HiveBinCell_SubKeyListVk_DataTypeEnum__RegFullResourceDescriptor Regf_HiveBinCell_SubKeyListVk_DataTypeEnum = 9
+	Regf_HiveBinCell_SubKeyListVk_DataTypeEnum__RegResourceRequirementsList Regf_HiveBinCell_SubKeyListVk_DataTypeEnum = 10
+	Regf_HiveBinCell_SubKeyListVk_DataTypeEnum__RegQword Regf_HiveBinCell_SubKeyListVk_DataTypeEnum = 11
+)
+var values_Regf_HiveBinCell_SubKeyListVk_DataTypeEnum = map[Regf_HiveBinCell_SubKeyListVk_DataTypeEnum]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}, 10: {}, 11: {}}
+func (v Regf_HiveBinCell_SubKeyListVk_DataTypeEnum) isDefined() bool {
+	_, ok := values_Regf_HiveBinCell_SubKeyListVk_DataTypeEnum[v]
+	return ok
+}
+
+type Regf_HiveBinCell_SubKeyListVk_VkFlags int
+const (
+	Regf_HiveBinCell_SubKeyListVk_VkFlags__ValueCompName Regf_HiveBinCell_SubKeyListVk_VkFlags = 1
+)
+var values_Regf_HiveBinCell_SubKeyListVk_VkFlags = map[Regf_HiveBinCell_SubKeyListVk_VkFlags]struct{}{1: {}}
+func (v Regf_HiveBinCell_SubKeyListVk_VkFlags) isDefined() bool {
+	_, ok := values_Regf_HiveBinCell_SubKeyListVk_VkFlags[v]
+	return ok
+}
+type Regf_HiveBinCell_SubKeyListVk struct {
+	ValueNameSize uint16
+	DataSize uint32
+	DataOffset uint32
+	DataType Regf_HiveBinCell_SubKeyListVk_DataTypeEnum
+	Flags Regf_HiveBinCell_SubKeyListVk_VkFlags
+	Padding uint16
+	ValueName string
+	_io *kaitai.Stream
+	_root *Regf
+	_parent *Regf_HiveBinCell
+}
+func NewRegf_HiveBinCell_SubKeyListVk() *Regf_HiveBinCell_SubKeyListVk {
+	return &Regf_HiveBinCell_SubKeyListVk{
+	}
+}
+
+func (this Regf_HiveBinCell_SubKeyListVk) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Regf_HiveBinCell_SubKeyListVk) Read(io *kaitai.Stream, parent *Regf_HiveBinCell, root *Regf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp86, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.LastModificationDateAndTime = tmp86
+	this.ValueNameSize = uint16(tmp86)
 	tmp87, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.MajorVersion = uint32(tmp87)
+	this.DataSize = uint32(tmp87)
 	tmp88, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.MinorVersion = uint32(tmp88)
+	this.DataOffset = uint32(tmp88)
 	tmp89, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Type = Regf_FileHeader_FileType(tmp89)
-	tmp90, err := this._io.ReadU4le()
+	this.DataType = Regf_HiveBinCell_SubKeyListVk_DataTypeEnum(tmp89)
+	tmp90, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.Format = Regf_FileHeader_FileFormat(tmp90)
-	tmp91, err := this._io.ReadU4le()
+	this.Flags = Regf_HiveBinCell_SubKeyListVk_VkFlags(tmp90)
+	tmp91, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.RootKeyOffset = uint32(tmp91)
-	tmp92, err := this._io.ReadU4le()
+	this.Padding = uint16(tmp91)
+	if (this.Flags == Regf_HiveBinCell_SubKeyListVk_VkFlags__ValueCompName) {
+		tmp92, err := this._io.ReadBytes(int(this.ValueNameSize))
+		if err != nil {
+			return err
+		}
+		tmp92 = tmp92
+		this.ValueName = string(tmp92)
+	}
+	return err
+}
+type Regf_HiveBinHeader struct {
+	Signature []byte
+	Offset uint32
+	Size uint32
+	Unknown1 uint32
+	Unknown2 uint32
+	Timestamp *Regf_Filetime
+	Unknown4 uint32
+	_io *kaitai.Stream
+	_root *Regf
+	_parent *Regf_HiveBin
+}
+func NewRegf_HiveBinHeader() *Regf_HiveBinHeader {
+	return &Regf_HiveBinHeader{
+	}
+}
+
+func (this Regf_HiveBinHeader) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Regf_HiveBinHeader) Read(io *kaitai.Stream, parent *Regf_HiveBin, root *Regf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp93, err := this._io.ReadBytes(int(4))
 	if err != nil {
 		return err
 	}
-	this.HiveBinsDataSize = uint32(tmp92)
-	tmp93, err := this._io.ReadU4le()
+	tmp93 = tmp93
+	this.Signature = tmp93
+	if !(bytes.Equal(this.Signature, []uint8{104, 98, 105, 110})) {
+		return kaitai.NewValidationNotEqualError([]uint8{104, 98, 105, 110}, this.Signature, this._io, "/types/hive_bin_header/seq/0")
+	}
+	tmp94, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.ClusteringFactor = uint32(tmp93)
-	tmp94, err := this._io.ReadBytes(int(64))
+	this.Offset = uint32(tmp94)
+	tmp95, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	tmp94 = tmp94
-	this.Unknown1 = tmp94
-	tmp95, err := this._io.ReadBytes(int(396))
-	if err != nil {
-		return err
-	}
-	tmp95 = tmp95
-	this.Unknown2 = tmp95
+	this.Size = uint32(tmp95)
 	tmp96, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Checksum = uint32(tmp96)
-	tmp97, err := this._io.ReadBytes(int(3576))
+	this.Unknown1 = uint32(tmp96)
+	tmp97, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	tmp97 = tmp97
-	this.Reserved = tmp97
-	tmp98, err := this._io.ReadU4le()
+	this.Unknown2 = uint32(tmp97)
+	tmp98 := NewRegf_Filetime()
+	err = tmp98.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.BootType = uint32(tmp98)
+	this.Timestamp = tmp98
 	tmp99, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.BootRecover = uint32(tmp99)
+	this.Unknown4 = uint32(tmp99)
 	return err
 }
+
+/**
+ * The offset of the hive bin, Value in bytes and relative from
+ * the start of the hive bin data
+ */
+
+/**
+ * Size of the hive bin
+ */
+
+/**
+ * 0 most of the time, can contain remnant data
+ */
+
+/**
+ * 0 most of the time, can contain remnant data
+ */
+
+/**
+ * Only the root (first) hive bin seems to contain a valid FILETIME
+ */
+
+/**
+ * Contains number of bytes
+ */

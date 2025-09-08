@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.Uimage = factory(root.KaitaiStream);
+    factory(root.Uimage || (root.Uimage = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Uimage_, KaitaiStream) {
 /**
  * The new uImage format allows more flexibility in handling images of various
  * types (kernel, ramdisk, etc.), it also enhances integrity protection of images
@@ -17,68 +17,6 @@
  */
 
 var Uimage = (function() {
-  Uimage.UimageOs = Object.freeze({
-    INVALID: 0,
-    OPENBSD: 1,
-    NETBSD: 2,
-    FREEBSD: 3,
-    BSD4_4: 4,
-    LINUX: 5,
-    SVR4: 6,
-    ESIX: 7,
-    SOLARIS: 8,
-    IRIX: 9,
-    SCO: 10,
-    DELL: 11,
-    NCR: 12,
-    LYNXOS: 13,
-    VXWORKS: 14,
-    PSOS: 15,
-    QNX: 16,
-    U_BOOT: 17,
-    RTEMS: 18,
-    ARTOS: 19,
-    UNITY: 20,
-    INTEGRITY: 21,
-    OSE: 22,
-    PLAN9: 23,
-    OPENRTOS: 24,
-    ARM_TRUSTED_FIRMWARE: 25,
-    TEE: 26,
-    OPENSBI: 27,
-    EFI: 28,
-
-    0: "INVALID",
-    1: "OPENBSD",
-    2: "NETBSD",
-    3: "FREEBSD",
-    4: "BSD4_4",
-    5: "LINUX",
-    6: "SVR4",
-    7: "ESIX",
-    8: "SOLARIS",
-    9: "IRIX",
-    10: "SCO",
-    11: "DELL",
-    12: "NCR",
-    13: "LYNXOS",
-    14: "VXWORKS",
-    15: "PSOS",
-    16: "QNX",
-    17: "U_BOOT",
-    18: "RTEMS",
-    19: "ARTOS",
-    20: "UNITY",
-    21: "INTEGRITY",
-    22: "OSE",
-    23: "PLAN9",
-    24: "OPENRTOS",
-    25: "ARM_TRUSTED_FIRMWARE",
-    26: "TEE",
-    27: "OPENSBI",
-    28: "EFI",
-  });
-
   Uimage.UimageArch = Object.freeze({
     INVALID: 0,
     ALPHA: 1,
@@ -153,6 +91,68 @@ var Uimage = (function() {
     4: "LZO",
     5: "LZ4",
     6: "ZSTD",
+  });
+
+  Uimage.UimageOs = Object.freeze({
+    INVALID: 0,
+    OPENBSD: 1,
+    NETBSD: 2,
+    FREEBSD: 3,
+    BSD4_4: 4,
+    LINUX: 5,
+    SVR4: 6,
+    ESIX: 7,
+    SOLARIS: 8,
+    IRIX: 9,
+    SCO: 10,
+    DELL: 11,
+    NCR: 12,
+    LYNXOS: 13,
+    VXWORKS: 14,
+    PSOS: 15,
+    QNX: 16,
+    U_BOOT: 17,
+    RTEMS: 18,
+    ARTOS: 19,
+    UNITY: 20,
+    INTEGRITY: 21,
+    OSE: 22,
+    PLAN9: 23,
+    OPENRTOS: 24,
+    ARM_TRUSTED_FIRMWARE: 25,
+    TEE: 26,
+    OPENSBI: 27,
+    EFI: 28,
+
+    0: "INVALID",
+    1: "OPENBSD",
+    2: "NETBSD",
+    3: "FREEBSD",
+    4: "BSD4_4",
+    5: "LINUX",
+    6: "SVR4",
+    7: "ESIX",
+    8: "SOLARIS",
+    9: "IRIX",
+    10: "SCO",
+    11: "DELL",
+    12: "NCR",
+    13: "LYNXOS",
+    14: "VXWORKS",
+    15: "PSOS",
+    16: "QNX",
+    17: "U_BOOT",
+    18: "RTEMS",
+    19: "ARTOS",
+    20: "UNITY",
+    21: "INTEGRITY",
+    22: "OSE",
+    23: "PLAN9",
+    24: "OPENRTOS",
+    25: "ARM_TRUSTED_FIRMWARE",
+    26: "TEE",
+    27: "OPENSBI",
+    28: "EFI",
   });
 
   Uimage.UimageType = Object.freeze({
@@ -257,14 +257,14 @@ var Uimage = (function() {
     function Uheader(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     Uheader.prototype._read = function() {
       this.magic = this._io.readBytes(4);
-      if (!((KaitaiStream.byteArrayCompare(this.magic, [39, 5, 25, 86]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([39, 5, 25, 86], this.magic, this._io, "/types/uheader/seq/0");
+      if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([39, 5, 25, 86])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([39, 5, 25, 86]), this.magic, this._io, "/types/uheader/seq/0");
       }
       this.headerCrc = this._io.readU4be();
       this.timestamp = this._io.readU4be();
@@ -284,5 +284,5 @@ var Uimage = (function() {
 
   return Uimage;
 })();
-return Uimage;
-}));
+Uimage_.Uimage = Uimage;
+});

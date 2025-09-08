@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -57,13 +58,152 @@ public class SystemdJournal extends KaitaiStruct {
         _read();
     }
     private void _read() {
-        this._raw_header = this._io.readBytes(lenHeader());
-        KaitaiStream _io__raw_header = new ByteBufferKaitaiStream(_raw_header);
-        this.header = new Header(_io__raw_header, this, _root);
+        KaitaiStream _io_header = this._io.substream(lenHeader());
+        this.header = new Header(_io_header, this, _root);
         this.objects = new ArrayList<JournalObject>();
         for (int i = 0; i < header().numObjects(); i++) {
             this.objects.add(new JournalObject(this._io, this, _root));
         }
+    }
+
+    public void _fetchInstances() {
+        this.header._fetchInstances();
+        for (int i = 0; i < this.objects.size(); i++) {
+            this.objects.get(((Number) (i)).intValue())._fetchInstances();
+        }
+        dataHashTable();
+        if (this.dataHashTable != null) {
+        }
+        fieldHashTable();
+        if (this.fieldHashTable != null) {
+        }
+        lenHeader();
+        if (this.lenHeader != null) {
+        }
+    }
+
+    /**
+     * Data objects are designed to carry log payload, typically in
+     * form of a "key=value" string in `payload` attribute.
+     * @see <a href="https://www.freedesktop.org/wiki/Software/systemd/journal-files/#dataobjects">Source</a>
+     */
+    public static class DataObject extends KaitaiStruct {
+        public static DataObject fromFile(String fileName) throws IOException {
+            return new DataObject(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public DataObject(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public DataObject(KaitaiStream _io, SystemdJournal.JournalObject _parent) {
+            this(_io, _parent, null);
+        }
+
+        public DataObject(KaitaiStream _io, SystemdJournal.JournalObject _parent, SystemdJournal _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.hash = this._io.readU8le();
+            this.ofsNextHash = this._io.readU8le();
+            this.ofsHeadField = this._io.readU8le();
+            this.ofsEntry = this._io.readU8le();
+            this.ofsEntryArray = this._io.readU8le();
+            this.numEntries = this._io.readU8le();
+            this.payload = this._io.readBytesFull();
+        }
+
+        public void _fetchInstances() {
+            entry();
+            if (this.entry != null) {
+                this.entry._fetchInstances();
+            }
+            entryArray();
+            if (this.entryArray != null) {
+                this.entryArray._fetchInstances();
+            }
+            headField();
+            if (this.headField != null) {
+                this.headField._fetchInstances();
+            }
+            nextHash();
+            if (this.nextHash != null) {
+                this.nextHash._fetchInstances();
+            }
+        }
+        private JournalObject entry;
+        public JournalObject entry() {
+            if (this.entry != null)
+                return this.entry;
+            if (ofsEntry() != 0) {
+                KaitaiStream io = _root()._io();
+                long _pos = io.pos();
+                io.seek(ofsEntry());
+                this.entry = new JournalObject(io, this, _root);
+                io.seek(_pos);
+            }
+            return this.entry;
+        }
+        private JournalObject entryArray;
+        public JournalObject entryArray() {
+            if (this.entryArray != null)
+                return this.entryArray;
+            if (ofsEntryArray() != 0) {
+                KaitaiStream io = _root()._io();
+                long _pos = io.pos();
+                io.seek(ofsEntryArray());
+                this.entryArray = new JournalObject(io, this, _root);
+                io.seek(_pos);
+            }
+            return this.entryArray;
+        }
+        private JournalObject headField;
+        public JournalObject headField() {
+            if (this.headField != null)
+                return this.headField;
+            if (ofsHeadField() != 0) {
+                KaitaiStream io = _root()._io();
+                long _pos = io.pos();
+                io.seek(ofsHeadField());
+                this.headField = new JournalObject(io, this, _root);
+                io.seek(_pos);
+            }
+            return this.headField;
+        }
+        private JournalObject nextHash;
+        public JournalObject nextHash() {
+            if (this.nextHash != null)
+                return this.nextHash;
+            if (ofsNextHash() != 0) {
+                KaitaiStream io = _root()._io();
+                long _pos = io.pos();
+                io.seek(ofsNextHash());
+                this.nextHash = new JournalObject(io, this, _root);
+                io.seek(_pos);
+            }
+            return this.nextHash;
+        }
+        private long hash;
+        private long ofsNextHash;
+        private long ofsHeadField;
+        private long ofsEntry;
+        private long ofsEntryArray;
+        private long numEntries;
+        private byte[] payload;
+        private SystemdJournal _root;
+        private SystemdJournal.JournalObject _parent;
+        public long hash() { return hash; }
+        public long ofsNextHash() { return ofsNextHash; }
+        public long ofsHeadField() { return ofsHeadField; }
+        public long ofsEntry() { return ofsEntry; }
+        public long ofsEntryArray() { return ofsEntryArray; }
+        public long numEntries() { return numEntries; }
+        public byte[] payload() { return payload; }
+        public SystemdJournal _root() { return _root; }
+        public SystemdJournal.JournalObject _parent() { return _parent; }
     }
     public static class Header extends KaitaiStruct {
         public static Header fromFile(String fileName) throws IOException {
@@ -86,8 +226,8 @@ public class SystemdJournal extends KaitaiStruct {
         }
         private void _read() {
             this.signature = this._io.readBytes(8);
-            if (!(Arrays.equals(signature(), new byte[] { 76, 80, 75, 83, 72, 72, 82, 72 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 76, 80, 75, 83, 72, 72, 82, 72 }, signature(), _io(), "/types/header/seq/0");
+            if (!(Arrays.equals(this.signature, new byte[] { 76, 80, 75, 83, 72, 72, 82, 72 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 76, 80, 75, 83, 72, 72, 82, 72 }, this.signature, this._io, "/types/header/seq/0");
             }
             this.compatibleFlags = this._io.readU4le();
             this.incompatibleFlags = this._io.readU4le();
@@ -123,6 +263,17 @@ public class SystemdJournal extends KaitaiStruct {
             }
             if (!(_io().isEof())) {
                 this.numEntryArrays = this._io.readU8le();
+            }
+        }
+
+        public void _fetchInstances() {
+            if (!(_io().isEof())) {
+            }
+            if (!(_io().isEof())) {
+            }
+            if (!(_io().isEof())) {
+            }
+            if (!(_io().isEof())) {
             }
         }
         private byte[] signature;
@@ -231,7 +382,7 @@ public class SystemdJournal extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.padding = this._io.readBytes(KaitaiStream.mod((8 - _io().pos()), 8));
+            this.padding = this._io.readBytes(KaitaiStream.mod(8 - _io().pos(), 8));
             this.objectType = ObjectTypes.byId(this._io.readU1());
             this.flags = this._io.readU1();
             this.reserved = this._io.readBytes(6);
@@ -241,18 +392,35 @@ public class SystemdJournal extends KaitaiStruct {
                 if (on != null) {
                     switch (objectType()) {
                     case DATA: {
-                        this._raw_payload = this._io.readBytes((lenObject() - 16));
-                        KaitaiStream _io__raw_payload = new ByteBufferKaitaiStream(_raw_payload);
-                        this.payload = new DataObject(_io__raw_payload, this, _root);
+                        KaitaiStream _io_payload = this._io.substream(lenObject() - 16);
+                        this.payload = new DataObject(_io_payload, this, _root);
                         break;
                     }
                     default: {
-                        this.payload = this._io.readBytes((lenObject() - 16));
+                        this.payload = this._io.readBytes(lenObject() - 16);
                         break;
                     }
                     }
                 } else {
-                    this.payload = this._io.readBytes((lenObject() - 16));
+                    this.payload = this._io.readBytes(lenObject() - 16);
+                }
+            }
+        }
+
+        public void _fetchInstances() {
+            {
+                ObjectTypes on = objectType();
+                if (on != null) {
+                    switch (objectType()) {
+                    case DATA: {
+                        ((DataObject) (this.payload))._fetchInstances();
+                        break;
+                    }
+                    default: {
+                        break;
+                    }
+                    }
+                } else {
                 }
             }
         }
@@ -264,7 +432,6 @@ public class SystemdJournal extends KaitaiStruct {
         private Object payload;
         private SystemdJournal _root;
         private KaitaiStruct _parent;
-        private byte[] _raw_payload;
         public byte[] padding() { return padding; }
         public ObjectTypes objectType() { return objectType; }
         public int flags() { return flags; }
@@ -273,127 +440,6 @@ public class SystemdJournal extends KaitaiStruct {
         public Object payload() { return payload; }
         public SystemdJournal _root() { return _root; }
         public KaitaiStruct _parent() { return _parent; }
-        public byte[] _raw_payload() { return _raw_payload; }
-    }
-
-    /**
-     * Data objects are designed to carry log payload, typically in
-     * form of a "key=value" string in `payload` attribute.
-     * @see <a href="https://www.freedesktop.org/wiki/Software/systemd/journal-files/#dataobjects">Source</a>
-     */
-    public static class DataObject extends KaitaiStruct {
-        public static DataObject fromFile(String fileName) throws IOException {
-            return new DataObject(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public DataObject(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public DataObject(KaitaiStream _io, SystemdJournal.JournalObject _parent) {
-            this(_io, _parent, null);
-        }
-
-        public DataObject(KaitaiStream _io, SystemdJournal.JournalObject _parent, SystemdJournal _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.hash = this._io.readU8le();
-            this.ofsNextHash = this._io.readU8le();
-            this.ofsHeadField = this._io.readU8le();
-            this.ofsEntry = this._io.readU8le();
-            this.ofsEntryArray = this._io.readU8le();
-            this.numEntries = this._io.readU8le();
-            this.payload = this._io.readBytesFull();
-        }
-        private JournalObject nextHash;
-        public JournalObject nextHash() {
-            if (this.nextHash != null)
-                return this.nextHash;
-            if (ofsNextHash() != 0) {
-                KaitaiStream io = _root()._io();
-                long _pos = io.pos();
-                io.seek(ofsNextHash());
-                this.nextHash = new JournalObject(io, this, _root);
-                io.seek(_pos);
-            }
-            return this.nextHash;
-        }
-        private JournalObject headField;
-        public JournalObject headField() {
-            if (this.headField != null)
-                return this.headField;
-            if (ofsHeadField() != 0) {
-                KaitaiStream io = _root()._io();
-                long _pos = io.pos();
-                io.seek(ofsHeadField());
-                this.headField = new JournalObject(io, this, _root);
-                io.seek(_pos);
-            }
-            return this.headField;
-        }
-        private JournalObject entry;
-        public JournalObject entry() {
-            if (this.entry != null)
-                return this.entry;
-            if (ofsEntry() != 0) {
-                KaitaiStream io = _root()._io();
-                long _pos = io.pos();
-                io.seek(ofsEntry());
-                this.entry = new JournalObject(io, this, _root);
-                io.seek(_pos);
-            }
-            return this.entry;
-        }
-        private JournalObject entryArray;
-        public JournalObject entryArray() {
-            if (this.entryArray != null)
-                return this.entryArray;
-            if (ofsEntryArray() != 0) {
-                KaitaiStream io = _root()._io();
-                long _pos = io.pos();
-                io.seek(ofsEntryArray());
-                this.entryArray = new JournalObject(io, this, _root);
-                io.seek(_pos);
-            }
-            return this.entryArray;
-        }
-        private long hash;
-        private long ofsNextHash;
-        private long ofsHeadField;
-        private long ofsEntry;
-        private long ofsEntryArray;
-        private long numEntries;
-        private byte[] payload;
-        private SystemdJournal _root;
-        private SystemdJournal.JournalObject _parent;
-        public long hash() { return hash; }
-        public long ofsNextHash() { return ofsNextHash; }
-        public long ofsHeadField() { return ofsHeadField; }
-        public long ofsEntry() { return ofsEntry; }
-        public long ofsEntryArray() { return ofsEntryArray; }
-        public long numEntries() { return numEntries; }
-        public byte[] payload() { return payload; }
-        public SystemdJournal _root() { return _root; }
-        public SystemdJournal.JournalObject _parent() { return _parent; }
-    }
-    private Long lenHeader;
-
-    /**
-     * Header length is used to set substream size, as it thus required
-     * prior to declaration of header.
-     */
-    public Long lenHeader() {
-        if (this.lenHeader != null)
-            return this.lenHeader;
-        long _pos = this._io.pos();
-        this._io.seek(88);
-        this.lenHeader = this._io.readU8le();
-        this._io.seek(_pos);
-        return this.lenHeader;
     }
     private byte[] dataHashTable;
     public byte[] dataHashTable() {
@@ -415,14 +461,27 @@ public class SystemdJournal extends KaitaiStruct {
         this._io.seek(_pos);
         return this.fieldHashTable;
     }
+    private Long lenHeader;
+
+    /**
+     * Header length is used to set substream size, as it thus required
+     * prior to declaration of header.
+     */
+    public Long lenHeader() {
+        if (this.lenHeader != null)
+            return this.lenHeader;
+        long _pos = this._io.pos();
+        this._io.seek(88);
+        this.lenHeader = this._io.readU8le();
+        this._io.seek(_pos);
+        return this.lenHeader;
+    }
     private Header header;
-    private ArrayList<JournalObject> objects;
+    private List<JournalObject> objects;
     private SystemdJournal _root;
     private KaitaiStruct _parent;
-    private byte[] _raw_header;
     public Header header() { return header; }
-    public ArrayList<JournalObject> objects() { return objects; }
+    public List<JournalObject> objects() { return objects; }
     public SystemdJournal _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
-    public byte[] _raw_header() { return _raw_header; }
 }

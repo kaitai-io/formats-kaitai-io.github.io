@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Encode;
 
 ########################################################################
@@ -139,7 +139,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -149,7 +149,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{sections} = ();
+    $self->{sections} = [];
     while (!$self->{_io}->is_eof()) {
         push @{$self->{sections}}, Warcraft2Pud::Section->new($self->{_io}, $self, $self->{_root});
     }
@@ -161,7 +161,7 @@ sub sections {
 }
 
 ########################################################################
-package Warcraft2Pud::SectionStartingResource;
+package Warcraft2Pud::Section;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -180,7 +180,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -190,91 +190,82 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{resources_by_player} = ();
-    while (!$self->{_io}->is_eof()) {
-        push @{$self->{resources_by_player}}, $self->{_io}->read_u2le();
+    $self->{name} = Encode::decode("ASCII", $self->{_io}->read_bytes(4));
+    $self->{size} = $self->{_io}->read_u4le();
+    my $_on = $self->name();
+    if ($_on eq "DIM ") {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->size());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = Warcraft2Pud::SectionDim->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on eq "ERA ") {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->size());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = Warcraft2Pud::SectionEra->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on eq "ERAX") {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->size());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = Warcraft2Pud::SectionEra->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on eq "OWNR") {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->size());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = Warcraft2Pud::SectionOwnr->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on eq "SGLD") {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->size());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = Warcraft2Pud::SectionStartingResource->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on eq "SLBR") {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->size());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = Warcraft2Pud::SectionStartingResource->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on eq "SOIL") {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->size());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = Warcraft2Pud::SectionStartingResource->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on eq "TYPE") {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->size());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = Warcraft2Pud::SectionType->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on eq "UNIT") {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->size());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = Warcraft2Pud::SectionUnit->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on eq "VER ") {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->size());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = Warcraft2Pud::SectionVer->new($io__raw_body, $self, $self->{_root});
+    }
+    else {
+        $self->{body} = $self->{_io}->read_bytes($self->size());
     }
 }
 
-sub resources_by_player {
+sub name {
     my ($self) = @_;
-    return $self->{resources_by_player};
+    return $self->{name};
 }
 
-########################################################################
-package Warcraft2Pud::SectionEra;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
+sub size {
     my ($self) = @_;
-
-    $self->{terrain} = $self->{_io}->read_u2le();
+    return $self->{size};
 }
 
-sub terrain {
+sub body {
     my ($self) = @_;
-    return $self->{terrain};
+    return $self->{body};
 }
 
-########################################################################
-package Warcraft2Pud::SectionVer;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
+sub _raw_body {
     my ($self) = @_;
-
-    $self->{version} = $self->{_io}->read_u2le();
-}
-
-sub version {
-    my ($self) = @_;
-    return $self->{version};
+    return $self->{_raw_body};
 }
 
 ########################################################################
@@ -297,7 +288,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -322,6 +313,126 @@ sub y {
 }
 
 ########################################################################
+package Warcraft2Pud::SectionEra;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{terrain} = $self->{_io}->read_u2le();
+}
+
+sub terrain {
+    my ($self) = @_;
+    return $self->{terrain};
+}
+
+########################################################################
+package Warcraft2Pud::SectionOwnr;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{controller_by_player} = [];
+    while (!$self->{_io}->is_eof()) {
+        push @{$self->{controller_by_player}}, $self->{_io}->read_u1();
+    }
+}
+
+sub controller_by_player {
+    my ($self) = @_;
+    return $self->{controller_by_player};
+}
+
+########################################################################
+package Warcraft2Pud::SectionStartingResource;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{resources_by_player} = [];
+    while (!$self->{_io}->is_eof()) {
+        push @{$self->{resources_by_player}}, $self->{_io}->read_u2le();
+    }
+}
+
+sub resources_by_player {
+    my ($self) = @_;
+    return $self->{resources_by_player};
+}
+
+########################################################################
 package Warcraft2Pud::SectionType;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -341,7 +452,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -391,7 +502,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -401,7 +512,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{units} = ();
+    $self->{units} = [];
     while (!$self->{_io}->is_eof()) {
         push @{$self->{units}}, Warcraft2Pud::Unit->new($self->{_io}, $self, $self->{_root});
     }
@@ -413,7 +524,7 @@ sub units {
 }
 
 ########################################################################
-package Warcraft2Pud::Section;
+package Warcraft2Pud::SectionVer;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -432,7 +543,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -442,123 +553,12 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{name} = Encode::decode("ASCII", $self->{_io}->read_bytes(4));
-    $self->{size} = $self->{_io}->read_u4le();
-    my $_on = $self->name();
-    if ($_on eq "SLBR") {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->size());
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = Warcraft2Pud::SectionStartingResource->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on eq "ERAX") {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->size());
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = Warcraft2Pud::SectionEra->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on eq "OWNR") {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->size());
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = Warcraft2Pud::SectionOwnr->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on eq "ERA ") {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->size());
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = Warcraft2Pud::SectionEra->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on eq "SGLD") {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->size());
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = Warcraft2Pud::SectionStartingResource->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on eq "VER ") {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->size());
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = Warcraft2Pud::SectionVer->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on eq "SOIL") {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->size());
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = Warcraft2Pud::SectionStartingResource->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on eq "UNIT") {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->size());
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = Warcraft2Pud::SectionUnit->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on eq "DIM ") {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->size());
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = Warcraft2Pud::SectionDim->new($io__raw_body, $self, $self->{_root});
-    }
-    elsif ($_on eq "TYPE") {
-        $self->{_raw_body} = $self->{_io}->read_bytes($self->size());
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = Warcraft2Pud::SectionType->new($io__raw_body, $self, $self->{_root});
-    }
-    else {
-        $self->{body} = $self->{_io}->read_bytes($self->size());
-    }
+    $self->{version} = $self->{_io}->read_u2le();
 }
 
-sub name {
+sub version {
     my ($self) = @_;
-    return $self->{name};
-}
-
-sub size {
-    my ($self) = @_;
-    return $self->{size};
-}
-
-sub body {
-    my ($self) = @_;
-    return $self->{body};
-}
-
-sub _raw_body {
-    my ($self) = @_;
-    return $self->{_raw_body};
-}
-
-########################################################################
-package Warcraft2Pud::SectionOwnr;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{controller_by_player} = ();
-    while (!$self->{_io}->is_eof()) {
-        push @{$self->{controller_by_player}}, $self->{_io}->read_u1();
-    }
-}
-
-sub controller_by_player {
-    my ($self) = @_;
-    return $self->{controller_by_player};
+    return $self->{version};
 }
 
 ########################################################################
@@ -581,7 +581,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -602,7 +602,7 @@ sub resource {
     my ($self) = @_;
     return $self->{resource} if ($self->{resource});
     if ( (($self->u_type() == $Warcraft2Pud::UNIT_TYPE_GOLD_MINE) || ($self->u_type() == $Warcraft2Pud::UNIT_TYPE_HUMAN_OIL_WELL) || ($self->u_type() == $Warcraft2Pud::UNIT_TYPE_ORC_OIL_WELL) || ($self->u_type() == $Warcraft2Pud::UNIT_TYPE_OIL_PATCH)) ) {
-        $self->{resource} = ($self->options() * 2500);
+        $self->{resource} = $self->options() * 2500;
     }
     return $self->{resource};
 }

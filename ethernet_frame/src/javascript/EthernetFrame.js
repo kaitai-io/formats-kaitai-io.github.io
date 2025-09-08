@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream', './Ipv4Packet', './Ipv6Packet'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./Ipv4Packet'), require('./Ipv6Packet'));
+    define(['exports', 'kaitai-struct/KaitaiStream', './Ipv6Packet', './Ipv4Packet'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'), require('./Ipv6Packet'), require('./Ipv4Packet'));
   } else {
-    root.EthernetFrame = factory(root.KaitaiStream, root.Ipv4Packet, root.Ipv6Packet);
+    factory(root.EthernetFrame || (root.EthernetFrame = {}), root.KaitaiStream, root.Ipv6Packet || (root.Ipv6Packet = {}), root.Ipv4Packet || (root.Ipv4Packet = {}));
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, Ipv4Packet, Ipv6Packet) {
+})(typeof self !== 'undefined' ? self : this, function (EthernetFrame_, KaitaiStream, Ipv6Packet_, Ipv4Packet_) {
 /**
  * Ethernet frame is a OSI data link layer (layer 2) protocol data unit
  * for Ethernet networks. In practice, many other networks and/or
@@ -60,12 +60,12 @@ var EthernetFrame = (function() {
     case EthernetFrame.EtherTypeEnum.IPV4:
       this._raw_body = this._io.readBytesFull();
       var _io__raw_body = new KaitaiStream(this._raw_body);
-      this.body = new Ipv4Packet(_io__raw_body, this, null);
+      this.body = new Ipv4Packet_.Ipv4Packet(_io__raw_body, null, null);
       break;
     case EthernetFrame.EtherTypeEnum.IPV6:
       this._raw_body = this._io.readBytesFull();
       var _io__raw_body = new KaitaiStream(this._raw_body);
-      this.body = new Ipv6Packet(_io__raw_body, this, null);
+      this.body = new Ipv6Packet_.Ipv6Packet(_io__raw_body, null, null);
       break;
     default:
       this.body = this._io.readBytesFull();
@@ -82,7 +82,7 @@ var EthernetFrame = (function() {
     function TagControlInfo(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -140,5 +140,5 @@ var EthernetFrame = (function() {
 
   return EthernetFrame;
 })();
-return EthernetFrame;
-}));
+EthernetFrame_.EthernetFrame = EthernetFrame;
+});

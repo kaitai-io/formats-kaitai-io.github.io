@@ -6,19 +6,23 @@ type SomeIpContainer struct {
 	SomeIpPackages []*SomeIp
 	_io *kaitai.Stream
 	_root *SomeIpContainer
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewSomeIpContainer() *SomeIpContainer {
 	return &SomeIpContainer{
 	}
 }
 
-func (this *SomeIpContainer) Read(io *kaitai.Stream, parent interface{}, root *SomeIpContainer) (err error) {
+func (this SomeIpContainer) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *SomeIpContainer) Read(io *kaitai.Stream, parent kaitai.Struct, root *SomeIpContainer) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	for i := 1;; i++ {
+	for i := 0;; i++ {
 		tmp1, err := this._io.EOF()
 		if err != nil {
 			return err
@@ -27,7 +31,7 @@ func (this *SomeIpContainer) Read(io *kaitai.Stream, parent interface{}, root *S
 			break
 		}
 		tmp2 := NewSomeIp()
-		err = tmp2.Read(this._io, this, nil)
+		err = tmp2.Read(this._io, nil, nil)
 		if err != nil {
 			return err
 		}

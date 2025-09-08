@@ -24,17 +24,17 @@ namespace Kaitai
         }
 
 
+        public enum ByteOrder
+        {
+            Le = 0,
+            Be = 1,
+        }
+
         public enum PixmapFormat
         {
             XYBitmap = 0,
             XYPixmap = 1,
             ZPixmap = 2,
-        }
-
-        public enum ByteOrder
-        {
-            Le = 0,
-            Be = 1,
         }
 
         public enum VisualClass
@@ -55,7 +55,7 @@ namespace Kaitai
         private void _read()
         {
             _lenHeader = m_io.ReadU4be();
-            __raw_hdr = m_io.ReadBytes((LenHeader - 4));
+            __raw_hdr = m_io.ReadBytes(LenHeader - 4);
             var io___raw_hdr = new KaitaiStream(__raw_hdr);
             _hdr = new Header(io___raw_hdr, this, m_root);
             __raw_colorMap = new List<byte[]>();
@@ -66,6 +66,49 @@ namespace Kaitai
                 var io___raw_colorMap = new KaitaiStream(__raw_colorMap[__raw_colorMap.Count - 1]);
                 _colorMap.Add(new ColorMapEntry(io___raw_colorMap, this, m_root));
             }
+        }
+        public partial class ColorMapEntry : KaitaiStruct
+        {
+            public static ColorMapEntry FromFile(string fileName)
+            {
+                return new ColorMapEntry(new KaitaiStream(fileName));
+            }
+
+            public ColorMapEntry(KaitaiStream p__io, Xwd p__parent = null, Xwd p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _entryNumber = m_io.ReadU4be();
+                _red = m_io.ReadU2be();
+                _green = m_io.ReadU2be();
+                _blue = m_io.ReadU2be();
+                _flags = m_io.ReadU1();
+                _padding = m_io.ReadU1();
+            }
+            private uint _entryNumber;
+            private ushort _red;
+            private ushort _green;
+            private ushort _blue;
+            private byte _flags;
+            private byte _padding;
+            private Xwd m_root;
+            private Xwd m_parent;
+
+            /// <summary>
+            /// Number of the color map entry
+            /// </summary>
+            public uint EntryNumber { get { return _entryNumber; } }
+            public ushort Red { get { return _red; } }
+            public ushort Green { get { return _green; } }
+            public ushort Blue { get { return _blue; } }
+            public byte Flags { get { return _flags; } }
+            public byte Padding { get { return _padding; } }
+            public Xwd M_Root { get { return m_root; } }
+            public Xwd M_Parent { get { return m_parent; } }
         }
         public partial class Header : KaitaiStruct
         {
@@ -260,49 +303,6 @@ namespace Kaitai
             /// Program that created this xwd file
             /// </summary>
             public string Creator { get { return _creator; } }
-            public Xwd M_Root { get { return m_root; } }
-            public Xwd M_Parent { get { return m_parent; } }
-        }
-        public partial class ColorMapEntry : KaitaiStruct
-        {
-            public static ColorMapEntry FromFile(string fileName)
-            {
-                return new ColorMapEntry(new KaitaiStream(fileName));
-            }
-
-            public ColorMapEntry(KaitaiStream p__io, Xwd p__parent = null, Xwd p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _entryNumber = m_io.ReadU4be();
-                _red = m_io.ReadU2be();
-                _green = m_io.ReadU2be();
-                _blue = m_io.ReadU2be();
-                _flags = m_io.ReadU1();
-                _padding = m_io.ReadU1();
-            }
-            private uint _entryNumber;
-            private ushort _red;
-            private ushort _green;
-            private ushort _blue;
-            private byte _flags;
-            private byte _padding;
-            private Xwd m_root;
-            private Xwd m_parent;
-
-            /// <summary>
-            /// Number of the color map entry
-            /// </summary>
-            public uint EntryNumber { get { return _entryNumber; } }
-            public ushort Red { get { return _red; } }
-            public ushort Green { get { return _green; } }
-            public ushort Blue { get { return _blue; } }
-            public byte Flags { get { return _flags; } }
-            public byte Padding { get { return _padding; } }
             public Xwd M_Root { get { return m_root; } }
             public Xwd M_Parent { get { return m_parent; } }
         }

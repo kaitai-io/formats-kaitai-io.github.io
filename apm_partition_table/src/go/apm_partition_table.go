@@ -13,51 +13,37 @@ import (
 type ApmPartitionTable struct {
 	_io *kaitai.Stream
 	_root *ApmPartitionTable
-	_parent interface{}
-	_raw_partitionLookup []byte
+	_parent kaitai.Struct
 	_raw_partitionEntries [][]byte
-	_f_sectorSize bool
-	sectorSize int
-	_f_partitionLookup bool
-	partitionLookup *ApmPartitionTable_PartitionEntry
+	_raw_partitionLookup []byte
 	_f_partitionEntries bool
 	partitionEntries []*ApmPartitionTable_PartitionEntry
+	_f_partitionLookup bool
+	partitionLookup *ApmPartitionTable_PartitionEntry
+	_f_sectorSize bool
+	sectorSize int
 }
 func NewApmPartitionTable() *ApmPartitionTable {
 	return &ApmPartitionTable{
 	}
 }
 
-func (this *ApmPartitionTable) Read(io *kaitai.Stream, parent interface{}, root *ApmPartitionTable) (err error) {
+func (this ApmPartitionTable) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *ApmPartitionTable) Read(io *kaitai.Stream, parent kaitai.Struct, root *ApmPartitionTable) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
 	return err
 }
-
-/**
- * 0x200 (512) bytes for disks, 0x1000 (4096) bytes is not supported by APM
- * 0x800 (2048) bytes for CDROM
- */
-func (this *ApmPartitionTable) SectorSize() (v int, err error) {
-	if (this._f_sectorSize) {
-		return this.sectorSize, nil
+func (this *ApmPartitionTable) PartitionEntries() (v []*ApmPartitionTable_PartitionEntry, err error) {
+	if (this._f_partitionEntries) {
+		return this.partitionEntries, nil
 	}
-	this.sectorSize = int(512)
-	this._f_sectorSize = true
-	return this.sectorSize, nil
-}
-
-/**
- * Every partition entry contains the number of partition entries.
- * We parse the first entry, to know how many to parse, including the first one.
- * No logic is given what to do if other entries have a different number.
- */
-func (this *ApmPartitionTable) PartitionLookup() (v *ApmPartitionTable_PartitionEntry, err error) {
-	if (this._f_partitionLookup) {
-		return this.partitionLookup, nil
-	}
+	this._f_partitionEntries = true
 	thisIo := this._root._io
 	_pos, err := thisIo.Pos()
 	if err != nil {
@@ -71,79 +57,95 @@ func (this *ApmPartitionTable) PartitionLookup() (v *ApmPartitionTable_Partition
 	if err != nil {
 		return nil, err
 	}
-	tmp2, err := this.SectorSize()
+	tmp2, err := this._root.PartitionLookup()
 	if err != nil {
 		return nil, err
 	}
-	tmp3, err := thisIo.ReadBytes(int(tmp2))
-	if err != nil {
-		return nil, err
+	for i := 0; i < int(tmp2.NumberOfPartitions); i++ {
+		_ = i
+		tmp3, err := this.SectorSize()
+		if err != nil {
+			return nil, err
+		}
+		tmp4, err := thisIo.ReadBytes(int(tmp3))
+		if err != nil {
+			return nil, err
+		}
+		tmp4 = tmp4
+		this._raw_partitionEntries = append(this._raw_partitionEntries, tmp4)
+		_io__raw_partitionEntries := kaitai.NewStream(bytes.NewReader(this._raw_partitionEntries[i]))
+		tmp5 := NewApmPartitionTable_PartitionEntry()
+		err = tmp5.Read(_io__raw_partitionEntries, this, this._root)
+		if err != nil {
+			return nil, err
+		}
+		this.partitionEntries = append(this.partitionEntries, tmp5)
 	}
-	tmp3 = tmp3
-	this._raw_partitionLookup = tmp3
-	_io__raw_partitionLookup := kaitai.NewStream(bytes.NewReader(this._raw_partitionLookup))
-	tmp4 := NewApmPartitionTable_PartitionEntry()
-	err = tmp4.Read(_io__raw_partitionLookup, this, this._root)
-	if err != nil {
-		return nil, err
-	}
-	this.partitionLookup = tmp4
 	_, err = thisIo.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
-	this._f_partitionLookup = true
-	this._f_partitionLookup = true
-	return this.partitionLookup, nil
+	return this.partitionEntries, nil
 }
-func (this *ApmPartitionTable) PartitionEntries() (v []*ApmPartitionTable_PartitionEntry, err error) {
-	if (this._f_partitionEntries) {
-		return this.partitionEntries, nil
+
+/**
+ * Every partition entry contains the number of partition entries.
+ * We parse the first entry, to know how many to parse, including the first one.
+ * No logic is given what to do if other entries have a different number.
+ */
+func (this *ApmPartitionTable) PartitionLookup() (v *ApmPartitionTable_PartitionEntry, err error) {
+	if (this._f_partitionLookup) {
+		return this.partitionLookup, nil
 	}
+	this._f_partitionLookup = true
 	thisIo := this._root._io
 	_pos, err := thisIo.Pos()
 	if err != nil {
 		return nil, err
 	}
-	tmp5, err := this._root.SectorSize()
+	tmp6, err := this._root.SectorSize()
 	if err != nil {
 		return nil, err
 	}
-	_, err = thisIo.Seek(int64(tmp5), io.SeekStart)
+	_, err = thisIo.Seek(int64(tmp6), io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
-	tmp6, err := this._root.PartitionLookup()
+	tmp7, err := this.SectorSize()
 	if err != nil {
 		return nil, err
 	}
-	for i := 0; i < int(tmp6.NumberOfPartitions); i++ {
-		_ = i
-		tmp7, err := this.SectorSize()
-		if err != nil {
-			return nil, err
-		}
-		tmp8, err := thisIo.ReadBytes(int(tmp7))
-		if err != nil {
-			return nil, err
-		}
-		tmp8 = tmp8
-		this._raw_partitionEntries = append(this._raw_partitionEntries, tmp8)
-		_io__raw_partitionEntries := kaitai.NewStream(bytes.NewReader(this._raw_partitionEntries[i]))
-		tmp9 := NewApmPartitionTable_PartitionEntry()
-		err = tmp9.Read(_io__raw_partitionEntries, this, this._root)
-		if err != nil {
-			return nil, err
-		}
-		this.partitionEntries = append(this.partitionEntries, tmp9)
+	tmp8, err := thisIo.ReadBytes(int(tmp7))
+	if err != nil {
+		return nil, err
 	}
+	tmp8 = tmp8
+	this._raw_partitionLookup = tmp8
+	_io__raw_partitionLookup := kaitai.NewStream(bytes.NewReader(this._raw_partitionLookup))
+	tmp9 := NewApmPartitionTable_PartitionEntry()
+	err = tmp9.Read(_io__raw_partitionLookup, this, this._root)
+	if err != nil {
+		return nil, err
+	}
+	this.partitionLookup = tmp9
 	_, err = thisIo.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
-	this._f_partitionEntries = true
-	this._f_partitionEntries = true
-	return this.partitionEntries, nil
+	return this.partitionLookup, nil
+}
+
+/**
+ * 0x200 (512) bytes for disks, 0x1000 (4096) bytes is not supported by APM
+ * 0x800 (2048) bytes for CDROM
+ */
+func (this *ApmPartitionTable) SectorSize() (v int, err error) {
+	if (this._f_sectorSize) {
+		return this.sectorSize, nil
+	}
+	this._f_sectorSize = true
+	this.sectorSize = int(512)
+	return this.sectorSize, nil
 }
 type ApmPartitionTable_PartitionEntry struct {
 	Magic []byte
@@ -167,16 +169,20 @@ type ApmPartitionTable_PartitionEntry struct {
 	_io *kaitai.Stream
 	_root *ApmPartitionTable
 	_parent *ApmPartitionTable
-	_f_partition bool
-	partition []byte
-	_f_data bool
-	data []byte
 	_f_bootCode bool
 	bootCode []byte
+	_f_data bool
+	data []byte
+	_f_partition bool
+	partition []byte
 }
 func NewApmPartitionTable_PartitionEntry() *ApmPartitionTable_PartitionEntry {
 	return &ApmPartitionTable_PartitionEntry{
 	}
+}
+
+func (this ApmPartitionTable_PartitionEntry) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *ApmPartitionTable_PartitionEntry) Read(io *kaitai.Stream, parent *ApmPartitionTable, root *ApmPartitionTable) (err error) {
@@ -286,49 +292,51 @@ func (this *ApmPartitionTable_PartitionEntry) Read(io *kaitai.Stream, parent *Ap
 	this.ProcessorType = string(tmp27)
 	return err
 }
-func (this *ApmPartitionTable_PartitionEntry) Partition() (v []byte, err error) {
-	if (this._f_partition) {
-		return this.partition, nil
+func (this *ApmPartitionTable_PartitionEntry) BootCode() (v []byte, err error) {
+	if (this._f_bootCode) {
+		return this.bootCode, nil
 	}
-	if ((this.PartitionStatus & 1) != 0) {
-		thisIo := this._root._io
-		_pos, err := thisIo.Pos()
-		if err != nil {
-			return nil, err
-		}
-		tmp28, err := this._root.SectorSize()
-		if err != nil {
-			return nil, err
-		}
-		_, err = thisIo.Seek(int64((this.PartitionStart * tmp28)), io.SeekStart)
-		if err != nil {
-			return nil, err
-		}
-		tmp29, err := this._root.SectorSize()
-		if err != nil {
-			return nil, err
-		}
-		tmp30, err := thisIo.ReadBytes(int((this.PartitionSize * tmp29)))
-		if err != nil {
-			return nil, err
-		}
-		tmp30 = tmp30
-		this.partition = tmp30
-		_, err = thisIo.Seek(_pos, io.SeekStart)
-		if err != nil {
-			return nil, err
-		}
-		this._f_partition = true
+	this._f_bootCode = true
+	thisIo := this._root._io
+	_pos, err := thisIo.Pos()
+	if err != nil {
+		return nil, err
 	}
-	this._f_partition = true
-	return this.partition, nil
+	tmp28, err := this._root.SectorSize()
+	if err != nil {
+		return nil, err
+	}
+	_, err = thisIo.Seek(int64(this.BootCodeStart * tmp28), io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	tmp29, err := thisIo.ReadBytes(int(this.BootCodeSize))
+	if err != nil {
+		return nil, err
+	}
+	tmp29 = tmp29
+	this.bootCode = tmp29
+	_, err = thisIo.Seek(_pos, io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	return this.bootCode, nil
 }
 func (this *ApmPartitionTable_PartitionEntry) Data() (v []byte, err error) {
 	if (this._f_data) {
 		return this.data, nil
 	}
+	this._f_data = true
 	thisIo := this._root._io
 	_pos, err := thisIo.Pos()
+	if err != nil {
+		return nil, err
+	}
+	tmp30, err := this._root.SectorSize()
+	if err != nil {
+		return nil, err
+	}
+	_, err = thisIo.Seek(int64(this.DataStart * tmp30), io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
@@ -336,58 +344,53 @@ func (this *ApmPartitionTable_PartitionEntry) Data() (v []byte, err error) {
 	if err != nil {
 		return nil, err
 	}
-	_, err = thisIo.Seek(int64((this.DataStart * tmp31)), io.SeekStart)
+	tmp32, err := thisIo.ReadBytes(int(this.DataSize * tmp31))
 	if err != nil {
 		return nil, err
 	}
-	tmp32, err := this._root.SectorSize()
-	if err != nil {
-		return nil, err
-	}
-	tmp33, err := thisIo.ReadBytes(int((this.DataSize * tmp32)))
-	if err != nil {
-		return nil, err
-	}
-	tmp33 = tmp33
-	this.data = tmp33
+	tmp32 = tmp32
+	this.data = tmp32
 	_, err = thisIo.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
-	this._f_data = true
-	this._f_data = true
 	return this.data, nil
 }
-func (this *ApmPartitionTable_PartitionEntry) BootCode() (v []byte, err error) {
-	if (this._f_bootCode) {
-		return this.bootCode, nil
+func (this *ApmPartitionTable_PartitionEntry) Partition() (v []byte, err error) {
+	if (this._f_partition) {
+		return this.partition, nil
 	}
-	thisIo := this._root._io
-	_pos, err := thisIo.Pos()
-	if err != nil {
-		return nil, err
+	this._f_partition = true
+	if (this.PartitionStatus & 1 != 0) {
+		thisIo := this._root._io
+		_pos, err := thisIo.Pos()
+		if err != nil {
+			return nil, err
+		}
+		tmp33, err := this._root.SectorSize()
+		if err != nil {
+			return nil, err
+		}
+		_, err = thisIo.Seek(int64(this.PartitionStart * tmp33), io.SeekStart)
+		if err != nil {
+			return nil, err
+		}
+		tmp34, err := this._root.SectorSize()
+		if err != nil {
+			return nil, err
+		}
+		tmp35, err := thisIo.ReadBytes(int(this.PartitionSize * tmp34))
+		if err != nil {
+			return nil, err
+		}
+		tmp35 = tmp35
+		this.partition = tmp35
+		_, err = thisIo.Seek(_pos, io.SeekStart)
+		if err != nil {
+			return nil, err
+		}
 	}
-	tmp34, err := this._root.SectorSize()
-	if err != nil {
-		return nil, err
-	}
-	_, err = thisIo.Seek(int64((this.BootCodeStart * tmp34)), io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	tmp35, err := thisIo.ReadBytes(int(this.BootCodeSize))
-	if err != nil {
-		return nil, err
-	}
-	tmp35 = tmp35
-	this.bootCode = tmp35
-	_, err = thisIo.Seek(_pos, io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	this._f_bootCode = true
-	this._f_bootCode = true
-	return this.bootCode, nil
+	return this.partition, nil
 }
 
 /**

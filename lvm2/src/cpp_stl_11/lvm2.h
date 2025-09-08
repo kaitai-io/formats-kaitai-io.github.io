@@ -2,13 +2,16 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class lvm2_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
 #include <vector>
+#include <set>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -141,8 +144,8 @@ public:
 
             public:
                 class data_area_descriptor_t;
-                class metadata_area_descriptor_t;
                 class metadata_area_t;
+                class metadata_area_descriptor_t;
 
                 volume_header_t(kaitai::kstream* p__io, lvm2_t::physical_volume_t::label_t* p__parent = nullptr, lvm2_t* p__root = nullptr);
 
@@ -200,63 +203,6 @@ public:
                     lvm2_t::physical_volume_t::label_t::volume_header_t* _parent() const { return m__parent; }
                 };
 
-                class metadata_area_descriptor_t : public kaitai::kstruct {
-
-                public:
-
-                    metadata_area_descriptor_t(kaitai::kstream* p__io, lvm2_t::physical_volume_t::label_t::volume_header_t* p__parent = nullptr, lvm2_t* p__root = nullptr);
-
-                private:
-                    void _read();
-                    void _clean_up();
-
-                public:
-                    ~metadata_area_descriptor_t();
-
-                private:
-                    bool f_data;
-                    std::unique_ptr<metadata_area_t> m_data;
-                    bool n_data;
-
-                public:
-                    bool _is_null_data() { data(); return n_data; };
-
-                private:
-
-                public:
-                    metadata_area_t* data();
-
-                private:
-                    uint64_t m_offset;
-                    uint64_t m_size;
-                    lvm2_t* m__root;
-                    lvm2_t::physical_volume_t::label_t::volume_header_t* m__parent;
-                    std::string m__raw_data;
-                    bool n__raw_data;
-
-                public:
-                    bool _is_null__raw_data() { _raw_data(); return n__raw_data; };
-
-                private:
-                    std::unique_ptr<kaitai::kstream> m__io__raw_data;
-
-                public:
-
-                    /**
-                     * The offset, in bytes, relative from the start of the physical volume
-                     */
-                    uint64_t offset() const { return m_offset; }
-
-                    /**
-                     * Value in bytes
-                     */
-                    uint64_t size() const { return m_size; }
-                    lvm2_t* _root() const { return m__root; }
-                    lvm2_t::physical_volume_t::label_t::volume_header_t* _parent() const { return m__parent; }
-                    std::string _raw_data() const { return m__raw_data; }
-                    kaitai::kstream* _io__raw_data() const { return m__io__raw_data.get(); }
-                };
-
                 /**
                  * According to `[REDHAT]` the metadata area is a circular buffer. New metadata is appended to the old metadata and then the pointer to the start of it is updated. The metadata area, therefore, can contain copies of older versions of the metadata.
                  */
@@ -300,6 +246,12 @@ public:
                             enum raw_location_descriptor_flags_t {
                                 RAW_LOCATION_DESCRIPTOR_FLAGS_RAW_LOCATION_IGNORED = 1
                             };
+                            static bool _is_defined_raw_location_descriptor_flags_t(raw_location_descriptor_flags_t v);
+
+                        private:
+                            static const std::set<raw_location_descriptor_flags_t> _values_raw_location_descriptor_flags_t;
+
+                        public:
 
                             raw_location_descriptor_t(kaitai::kstream* p__io, lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_t::metadata_area_header_t* p__parent = nullptr, lvm2_t* p__root = nullptr);
 
@@ -388,6 +340,63 @@ public:
                     metadata_area_header_t* header() const { return m_header.get(); }
                     lvm2_t* _root() const { return m__root; }
                     lvm2_t::physical_volume_t::label_t::volume_header_t::metadata_area_descriptor_t* _parent() const { return m__parent; }
+                };
+
+                class metadata_area_descriptor_t : public kaitai::kstruct {
+
+                public:
+
+                    metadata_area_descriptor_t(kaitai::kstream* p__io, lvm2_t::physical_volume_t::label_t::volume_header_t* p__parent = nullptr, lvm2_t* p__root = nullptr);
+
+                private:
+                    void _read();
+                    void _clean_up();
+
+                public:
+                    ~metadata_area_descriptor_t();
+
+                private:
+                    bool f_data;
+                    std::unique_ptr<metadata_area_t> m_data;
+                    bool n_data;
+
+                public:
+                    bool _is_null_data() { data(); return n_data; };
+
+                private:
+
+                public:
+                    metadata_area_t* data();
+
+                private:
+                    uint64_t m_offset;
+                    uint64_t m_size;
+                    lvm2_t* m__root;
+                    lvm2_t::physical_volume_t::label_t::volume_header_t* m__parent;
+                    std::string m__raw_data;
+                    bool n__raw_data;
+
+                public:
+                    bool _is_null__raw_data() { _raw_data(); return n__raw_data; };
+
+                private:
+                    std::unique_ptr<kaitai::kstream> m__io__raw_data;
+
+                public:
+
+                    /**
+                     * The offset, in bytes, relative from the start of the physical volume
+                     */
+                    uint64_t offset() const { return m_offset; }
+
+                    /**
+                     * Value in bytes
+                     */
+                    uint64_t size() const { return m_size; }
+                    lvm2_t* _root() const { return m__root; }
+                    lvm2_t::physical_volume_t::label_t::volume_header_t* _parent() const { return m__parent; }
+                    std::string _raw_data() const { return m__raw_data; }
+                    kaitai::kstream* _io__raw_data() const { return m__io__raw_data.get(); }
                 };
 
             private:

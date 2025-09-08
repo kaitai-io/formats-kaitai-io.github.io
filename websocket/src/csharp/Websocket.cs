@@ -59,6 +59,40 @@ namespace Kaitai
                 }
             }
         }
+        public partial class Dataframe : KaitaiStruct
+        {
+            public static Dataframe FromFile(string fileName)
+            {
+                return new Dataframe(new KaitaiStream(fileName));
+            }
+
+            public Dataframe(KaitaiStream p__io, Websocket p__parent = null, Websocket p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _header = new FrameHeader(m_io, this, m_root);
+                if (M_Root.InitialFrame.Header.Opcode != Websocket.Opcode.Text) {
+                    _payloadBytes = m_io.ReadBytes(Header.LenPayload);
+                }
+                if (M_Root.InitialFrame.Header.Opcode == Websocket.Opcode.Text) {
+                    _payloadText = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(Header.LenPayload));
+                }
+            }
+            private FrameHeader _header;
+            private byte[] _payloadBytes;
+            private string _payloadText;
+            private Websocket m_root;
+            private Websocket m_parent;
+            public FrameHeader Header { get { return _header; } }
+            public byte[] PayloadBytes { get { return _payloadBytes; } }
+            public string PayloadText { get { return _payloadText; } }
+            public Websocket M_Root { get { return m_root; } }
+            public Websocket M_Parent { get { return m_parent; } }
+        }
         public partial class FrameHeader : KaitaiStruct
         {
             public static FrameHeader FromFile(string fileName)
@@ -99,8 +133,8 @@ namespace Kaitai
                 {
                     if (f_lenPayload)
                         return _lenPayload;
-                    _lenPayload = (int) ((LenPayloadPrimary <= 125 ? LenPayloadPrimary : (LenPayloadPrimary == 126 ? LenPayloadExtended1 : LenPayloadExtended2)));
                     f_lenPayload = true;
+                    _lenPayload = (int) ((LenPayloadPrimary <= 125 ? LenPayloadPrimary : (LenPayloadPrimary == 126 ? LenPayloadExtended1 : LenPayloadExtended2)));
                     return _lenPayload;
                 }
             }
@@ -145,40 +179,6 @@ namespace Kaitai
                     _payloadBytes = m_io.ReadBytes(Header.LenPayload);
                 }
                 if (Header.Opcode == Websocket.Opcode.Text) {
-                    _payloadText = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(Header.LenPayload));
-                }
-            }
-            private FrameHeader _header;
-            private byte[] _payloadBytes;
-            private string _payloadText;
-            private Websocket m_root;
-            private Websocket m_parent;
-            public FrameHeader Header { get { return _header; } }
-            public byte[] PayloadBytes { get { return _payloadBytes; } }
-            public string PayloadText { get { return _payloadText; } }
-            public Websocket M_Root { get { return m_root; } }
-            public Websocket M_Parent { get { return m_parent; } }
-        }
-        public partial class Dataframe : KaitaiStruct
-        {
-            public static Dataframe FromFile(string fileName)
-            {
-                return new Dataframe(new KaitaiStream(fileName));
-            }
-
-            public Dataframe(KaitaiStream p__io, Websocket p__parent = null, Websocket p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _header = new FrameHeader(m_io, this, m_root);
-                if (M_Root.InitialFrame.Header.Opcode != Websocket.Opcode.Text) {
-                    _payloadBytes = m_io.ReadBytes(Header.LenPayload);
-                }
-                if (M_Root.InitialFrame.Header.Opcode == Websocket.Opcode.Text) {
                     _payloadText = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(Header.LenPayload));
                 }
             }

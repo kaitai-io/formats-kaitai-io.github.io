@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.GenmidiOp2 = factory(root.KaitaiStream);
+    factory(root.GenmidiOp2 || (root.GenmidiOp2 = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (GenmidiOp2_, KaitaiStream) {
 /**
  * GENMIDI.OP2 is a sound bank file used by players based on DMX sound
  * library to play MIDI files with General MIDI instruments using OPL2
@@ -34,8 +34,8 @@ var GenmidiOp2 = (function() {
   }
   GenmidiOp2.prototype._read = function() {
     this.magic = this._io.readBytes(8);
-    if (!((KaitaiStream.byteArrayCompare(this.magic, [35, 79, 80, 76, 95, 73, 73, 35]) == 0))) {
-      throw new KaitaiStream.ValidationNotEqualError([35, 79, 80, 76, 95, 73, 73, 35], this.magic, this._io, "/seq/0");
+    if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([35, 79, 80, 76, 95, 73, 73, 35])) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([35, 79, 80, 76, 95, 73, 73, 35]), this.magic, this._io, "/seq/0");
     }
     this.instruments = [];
     for (var i = 0; i < 175; i++) {
@@ -47,36 +47,11 @@ var GenmidiOp2 = (function() {
     }
   }
 
-  var InstrumentEntry = GenmidiOp2.InstrumentEntry = (function() {
-    function InstrumentEntry(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    InstrumentEntry.prototype._read = function() {
-      this.flags = this._io.readU2le();
-      this.finetune = this._io.readU1();
-      this.note = this._io.readU1();
-      this.instruments = [];
-      for (var i = 0; i < 2; i++) {
-        this.instruments.push(new Instrument(this._io, this, this._root));
-      }
-    }
-
-    /**
-     * MIDI note for fixed instruments, 0 otherwise
-     */
-
-    return InstrumentEntry;
-  })();
-
   var Instrument = GenmidiOp2.Instrument = (function() {
     function Instrument(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -99,6 +74,31 @@ var GenmidiOp2 = (function() {
     return Instrument;
   })();
 
+  var InstrumentEntry = GenmidiOp2.InstrumentEntry = (function() {
+    function InstrumentEntry(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    InstrumentEntry.prototype._read = function() {
+      this.flags = this._io.readU2le();
+      this.finetune = this._io.readU1();
+      this.note = this._io.readU1();
+      this.instruments = [];
+      for (var i = 0; i < 2; i++) {
+        this.instruments.push(new Instrument(this._io, this, this._root));
+      }
+    }
+
+    /**
+     * MIDI note for fixed instruments, 0 otherwise
+     */
+
+    return InstrumentEntry;
+  })();
+
   /**
    * OPL2 settings for one operator (carrier or modulator)
    */
@@ -107,7 +107,7 @@ var GenmidiOp2 = (function() {
     function OpSettings(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -149,5 +149,5 @@ var GenmidiOp2 = (function() {
 
   return GenmidiOp2;
 })();
-return GenmidiOp2;
-}));
+GenmidiOp2_.GenmidiOp2 = GenmidiOp2;
+});

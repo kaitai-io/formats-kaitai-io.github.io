@@ -6,9 +6,10 @@ import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
-import java.nio.charset.Charset;
 import java.util.Arrays;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -38,6 +39,21 @@ public class PhpSerializedValue extends KaitaiStruct {
         return new PhpSerializedValue(new ByteBufferKaitaiStream(fileName));
     }
 
+    public enum BoolValue {
+        FALSE(48),
+        TRUE(49);
+
+        private final long id;
+        BoolValue(long id) { this.id = id; }
+        public long id() { return id; }
+        private static final Map<Long, BoolValue> byId = new HashMap<Long, BoolValue>(2);
+        static {
+            for (BoolValue e : BoolValue.values())
+                byId.put(e.id(), e);
+        }
+        public static BoolValue byId(long id) { return byId.get(id); }
+    }
+
     public enum ValueType {
         CUSTOM_SERIALIZED_OBJECT(67),
         NULL(78),
@@ -63,21 +79,6 @@ public class PhpSerializedValue extends KaitaiStruct {
         public static ValueType byId(long id) { return byId.get(id); }
     }
 
-    public enum BoolValue {
-        FALSE(48),
-        TRUE(49);
-
-        private final long id;
-        BoolValue(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map<Long, BoolValue> byId = new HashMap<Long, BoolValue>(2);
-        static {
-            for (BoolValue e : BoolValue.values())
-                byId.put(e.id(), e);
-        }
-        public static BoolValue byId(long id) { return byId.get(id); }
-    }
-
     public PhpSerializedValue(KaitaiStream _io) {
         this(_io, null, null);
     }
@@ -98,31 +99,23 @@ public class PhpSerializedValue extends KaitaiStruct {
             ValueType on = type();
             if (on != null) {
                 switch (type()) {
+                case ARRAY: {
+                    this.contents = new ArrayContents(this._io, this, _root);
+                    break;
+                }
+                case BOOL: {
+                    this.contents = new BoolContents(this._io, this, _root);
+                    break;
+                }
                 case CUSTOM_SERIALIZED_OBJECT: {
                     this.contents = new CustomSerializedObjectContents(this._io, this, _root);
-                    break;
-                }
-                case PHP_3_OBJECT: {
-                    this.contents = new Php3ObjectContents(this._io, this, _root);
-                    break;
-                }
-                case OBJECT: {
-                    this.contents = new ObjectContents(this._io, this, _root);
-                    break;
-                }
-                case VARIABLE_REFERENCE: {
-                    this.contents = new IntContents(this._io, this, _root);
-                    break;
-                }
-                case PHP_6_STRING: {
-                    this.contents = new StringContents(this._io, this, _root);
                     break;
                 }
                 case FLOAT: {
                     this.contents = new FloatContents(this._io, this, _root);
                     break;
                 }
-                case OBJECT_REFERENCE: {
+                case INT: {
                     this.contents = new IntContents(this._io, this, _root);
                     break;
                 }
@@ -130,279 +123,91 @@ public class PhpSerializedValue extends KaitaiStruct {
                     this.contents = new NullContents(this._io, this, _root);
                     break;
                 }
-                case BOOL: {
-                    this.contents = new BoolContents(this._io, this, _root);
+                case OBJECT: {
+                    this.contents = new ObjectContents(this._io, this, _root);
                     break;
                 }
-                case INT: {
+                case OBJECT_REFERENCE: {
                     this.contents = new IntContents(this._io, this, _root);
                     break;
                 }
-                case ARRAY: {
-                    this.contents = new ArrayContents(this._io, this, _root);
+                case PHP_3_OBJECT: {
+                    this.contents = new Php3ObjectContents(this._io, this, _root);
+                    break;
+                }
+                case PHP_6_STRING: {
+                    this.contents = new StringContents(this._io, this, _root);
                     break;
                 }
                 case STRING: {
                     this.contents = new StringContents(this._io, this, _root);
                     break;
                 }
+                case VARIABLE_REFERENCE: {
+                    this.contents = new IntContents(this._io, this, _root);
+                    break;
+                }
                 }
             }
         }
     }
 
-    /**
-     * A mapping (a sequence of key-value pairs) prefixed with its size.
-     */
-    public static class CountPrefixedMapping extends KaitaiStruct {
-        public static CountPrefixedMapping fromFile(String fileName) throws IOException {
-            return new CountPrefixedMapping(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public CountPrefixedMapping(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public CountPrefixedMapping(KaitaiStream _io, KaitaiStruct _parent) {
-            this(_io, _parent, null);
-        }
-
-        public CountPrefixedMapping(KaitaiStream _io, KaitaiStruct _parent, PhpSerializedValue _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.numEntriesDec = new String(this._io.readBytesTerm((byte) 58, false, true, true), Charset.forName("ASCII"));
-            this.openingBrace = this._io.readBytes(1);
-            if (!(Arrays.equals(openingBrace(), new byte[] { 123 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 123 }, openingBrace(), _io(), "/types/count_prefixed_mapping/seq/1");
-            }
-            this.entries = new ArrayList<MappingEntry>();
-            for (int i = 0; i < numEntries(); i++) {
-                this.entries.add(new MappingEntry(this._io, this, _root));
-            }
-            this.closingBrace = this._io.readBytes(1);
-            if (!(Arrays.equals(closingBrace(), new byte[] { 125 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 125 }, closingBrace(), _io(), "/types/count_prefixed_mapping/seq/3");
-            }
-        }
-        private Integer numEntries;
-
-        /**
-         * The number of key-value pairs in the mapping, parsed as an integer.
-         */
-        public Integer numEntries() {
-            if (this.numEntries != null)
-                return this.numEntries;
-            int _tmp = (int) (Long.parseLong(numEntriesDec(), 10));
-            this.numEntries = _tmp;
-            return this.numEntries;
-        }
-        private String numEntriesDec;
-        private byte[] openingBrace;
-        private ArrayList<MappingEntry> entries;
-        private byte[] closingBrace;
-        private PhpSerializedValue _root;
-        private KaitaiStruct _parent;
-
-        /**
-         * The number of key-value pairs in the mapping, in ASCII decimal.
-         */
-        public String numEntriesDec() { return numEntriesDec; }
-        public byte[] openingBrace() { return openingBrace; }
-
-        /**
-         * The key-value pairs contained in the mapping.
-         */
-        public ArrayList<MappingEntry> entries() { return entries; }
-        public byte[] closingBrace() { return closingBrace; }
-        public PhpSerializedValue _root() { return _root; }
-        public KaitaiStruct _parent() { return _parent; }
-    }
-
-    /**
-     * The contents of a floating-point value.
-     */
-    public static class FloatContents extends KaitaiStruct {
-        public static FloatContents fromFile(String fileName) throws IOException {
-            return new FloatContents(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public FloatContents(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public FloatContents(KaitaiStream _io, PhpSerializedValue _parent) {
-            this(_io, _parent, null);
-        }
-
-        public FloatContents(KaitaiStream _io, PhpSerializedValue _parent, PhpSerializedValue _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.colon = this._io.readBytes(1);
-            if (!(Arrays.equals(colon(), new byte[] { 58 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 58 }, colon(), _io(), "/types/float_contents/seq/0");
-            }
-            this.valueDec = new String(this._io.readBytesTerm((byte) 59, false, true, true), Charset.forName("ASCII"));
-        }
-        private byte[] colon;
-        private String valueDec;
-        private PhpSerializedValue _root;
-        private PhpSerializedValue _parent;
-        public byte[] colon() { return colon; }
-
-        /**
-         * The value of the `float`, in ASCII decimal, as generated by PHP's
-         * usual double-to-string conversion. In particular, this means that:
-         * 
-         * * A decimal point may not be included (for integral numbers)
-         * * The number may use exponent notation (e. g. `1.0E+16`)
-         * * Positive and negative infinity are represented as `INF`
-         *   and `-INF`, respectively
-         * * Not-a-number is represented as `NAN`
-         */
-        public String valueDec() { return valueDec; }
-        public PhpSerializedValue _root() { return _root; }
-        public PhpSerializedValue _parent() { return _parent; }
-    }
-
-    /**
-     * A quoted string prefixed with its length.
-     * 
-     * Despite the quotes surrounding the string data, it can contain
-     * arbitrary bytes, which are never escaped in any way.
-     * This does not cause any ambiguities when parsing - the bounds of
-     * the string are determined only by the length field, not by the quotes.
-     */
-    public static class LengthPrefixedQuotedString extends KaitaiStruct {
-        public static LengthPrefixedQuotedString fromFile(String fileName) throws IOException {
-            return new LengthPrefixedQuotedString(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public LengthPrefixedQuotedString(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public LengthPrefixedQuotedString(KaitaiStream _io, KaitaiStruct _parent) {
-            this(_io, _parent, null);
-        }
-
-        public LengthPrefixedQuotedString(KaitaiStream _io, KaitaiStruct _parent, PhpSerializedValue _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.lenDataDec = new String(this._io.readBytesTerm((byte) 58, false, true, true), Charset.forName("ASCII"));
-            this.openingQuote = this._io.readBytes(1);
-            if (!(Arrays.equals(openingQuote(), new byte[] { 34 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 34 }, openingQuote(), _io(), "/types/length_prefixed_quoted_string/seq/1");
-            }
-            this.data = this._io.readBytes(lenData());
-            this.closingQuote = this._io.readBytes(1);
-            if (!(Arrays.equals(closingQuote(), new byte[] { 34 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 34 }, closingQuote(), _io(), "/types/length_prefixed_quoted_string/seq/3");
+    public void _fetchInstances() {
+        {
+            ValueType on = type();
+            if (on != null) {
+                switch (type()) {
+                case ARRAY: {
+                    ((ArrayContents) (this.contents))._fetchInstances();
+                    break;
+                }
+                case BOOL: {
+                    ((BoolContents) (this.contents))._fetchInstances();
+                    break;
+                }
+                case CUSTOM_SERIALIZED_OBJECT: {
+                    ((CustomSerializedObjectContents) (this.contents))._fetchInstances();
+                    break;
+                }
+                case FLOAT: {
+                    ((FloatContents) (this.contents))._fetchInstances();
+                    break;
+                }
+                case INT: {
+                    ((IntContents) (this.contents))._fetchInstances();
+                    break;
+                }
+                case NULL: {
+                    ((NullContents) (this.contents))._fetchInstances();
+                    break;
+                }
+                case OBJECT: {
+                    ((ObjectContents) (this.contents))._fetchInstances();
+                    break;
+                }
+                case OBJECT_REFERENCE: {
+                    ((IntContents) (this.contents))._fetchInstances();
+                    break;
+                }
+                case PHP_3_OBJECT: {
+                    ((Php3ObjectContents) (this.contents))._fetchInstances();
+                    break;
+                }
+                case PHP_6_STRING: {
+                    ((StringContents) (this.contents))._fetchInstances();
+                    break;
+                }
+                case STRING: {
+                    ((StringContents) (this.contents))._fetchInstances();
+                    break;
+                }
+                case VARIABLE_REFERENCE: {
+                    ((IntContents) (this.contents))._fetchInstances();
+                    break;
+                }
+                }
             }
         }
-        private Integer lenData;
-
-        /**
-         * The length of the string's contents in bytes, parsed as an integer.
-         * The quotes are not counted in this size number.
-         */
-        public Integer lenData() {
-            if (this.lenData != null)
-                return this.lenData;
-            int _tmp = (int) (Long.parseLong(lenDataDec(), 10));
-            this.lenData = _tmp;
-            return this.lenData;
-        }
-        private String lenDataDec;
-        private byte[] openingQuote;
-        private byte[] data;
-        private byte[] closingQuote;
-        private PhpSerializedValue _root;
-        private KaitaiStruct _parent;
-
-        /**
-         * The length of the string's data in bytes, in ASCII decimal.
-         * The quotes are not counted in this length number.
-         */
-        public String lenDataDec() { return lenDataDec; }
-        public byte[] openingQuote() { return openingQuote; }
-
-        /**
-         * The data contained in the string. The quotes are not included.
-         */
-        public byte[] data() { return data; }
-        public byte[] closingQuote() { return closingQuote; }
-        public PhpSerializedValue _root() { return _root; }
-        public KaitaiStruct _parent() { return _parent; }
-    }
-
-    /**
-     * The contents of an object value serialized in the default format.
-     * Unlike its PHP 3 counterpart, it contains a class name.
-     */
-    public static class ObjectContents extends KaitaiStruct {
-        public static ObjectContents fromFile(String fileName) throws IOException {
-            return new ObjectContents(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public ObjectContents(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public ObjectContents(KaitaiStream _io, PhpSerializedValue _parent) {
-            this(_io, _parent, null);
-        }
-
-        public ObjectContents(KaitaiStream _io, PhpSerializedValue _parent, PhpSerializedValue _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.colon1 = this._io.readBytes(1);
-            if (!(Arrays.equals(colon1(), new byte[] { 58 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 58 }, colon1(), _io(), "/types/object_contents/seq/0");
-            }
-            this.className = new LengthPrefixedQuotedString(this._io, this, _root);
-            this.colon2 = this._io.readBytes(1);
-            if (!(Arrays.equals(colon2(), new byte[] { 58 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 58 }, colon2(), _io(), "/types/object_contents/seq/2");
-            }
-            this.properties = new CountPrefixedMapping(this._io, this, _root);
-        }
-        private byte[] colon1;
-        private LengthPrefixedQuotedString className;
-        private byte[] colon2;
-        private CountPrefixedMapping properties;
-        private PhpSerializedValue _root;
-        private PhpSerializedValue _parent;
-        public byte[] colon1() { return colon1; }
-
-        /**
-         * The name of the object's class.
-         */
-        public LengthPrefixedQuotedString className() { return className; }
-        public byte[] colon2() { return colon2; }
-
-        /**
-         * The object's properties. Keys ust be of type `string`,
-         * values may have any type.
-         */
-        public CountPrefixedMapping properties() { return properties; }
-        public PhpSerializedValue _root() { return _root; }
-        public PhpSerializedValue _parent() { return _parent; }
     }
 
     /**
@@ -429,10 +234,14 @@ public class PhpSerializedValue extends KaitaiStruct {
         }
         private void _read() {
             this.colon = this._io.readBytes(1);
-            if (!(Arrays.equals(colon(), new byte[] { 58 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 58 }, colon(), _io(), "/types/array_contents/seq/0");
+            if (!(Arrays.equals(this.colon, new byte[] { 58 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 58 }, this.colon, this._io, "/types/array_contents/seq/0");
             }
             this.elements = new CountPrefixedMapping(this._io, this, _root);
+        }
+
+        public void _fetchInstances() {
+            this.elements._fetchInstances();
         }
         private byte[] colon;
         private CountPrefixedMapping elements;
@@ -447,6 +256,145 @@ public class PhpSerializedValue extends KaitaiStruct {
         public CountPrefixedMapping elements() { return elements; }
         public PhpSerializedValue _root() { return _root; }
         public PhpSerializedValue _parent() { return _parent; }
+    }
+
+    /**
+     * The contents of a boolean value (`value_type::bool`).
+     */
+    public static class BoolContents extends KaitaiStruct {
+        public static BoolContents fromFile(String fileName) throws IOException {
+            return new BoolContents(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public BoolContents(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public BoolContents(KaitaiStream _io, PhpSerializedValue _parent) {
+            this(_io, _parent, null);
+        }
+
+        public BoolContents(KaitaiStream _io, PhpSerializedValue _parent, PhpSerializedValue _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.colon = this._io.readBytes(1);
+            if (!(Arrays.equals(this.colon, new byte[] { 58 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 58 }, this.colon, this._io, "/types/bool_contents/seq/0");
+            }
+            this.valueDec = PhpSerializedValue.BoolValue.byId(this._io.readU1());
+            this.semicolon = this._io.readBytes(1);
+            if (!(Arrays.equals(this.semicolon, new byte[] { 59 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 59 }, this.semicolon, this._io, "/types/bool_contents/seq/2");
+            }
+        }
+
+        public void _fetchInstances() {
+        }
+        private Boolean value;
+
+        /**
+         * The value of the `bool`, parsed as a boolean.
+         */
+        public Boolean value() {
+            if (this.value != null)
+                return this.value;
+            this.value = valueDec() == PhpSerializedValue.BoolValue.TRUE;
+            return this.value;
+        }
+        private byte[] colon;
+        private BoolValue valueDec;
+        private byte[] semicolon;
+        private PhpSerializedValue _root;
+        private PhpSerializedValue _parent;
+        public byte[] colon() { return colon; }
+
+        /**
+         * The value of the `bool`: `0` for `false` or `1` for `true`.
+         */
+        public BoolValue valueDec() { return valueDec; }
+        public byte[] semicolon() { return semicolon; }
+        public PhpSerializedValue _root() { return _root; }
+        public PhpSerializedValue _parent() { return _parent; }
+    }
+
+    /**
+     * A mapping (a sequence of key-value pairs) prefixed with its size.
+     */
+    public static class CountPrefixedMapping extends KaitaiStruct {
+        public static CountPrefixedMapping fromFile(String fileName) throws IOException {
+            return new CountPrefixedMapping(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public CountPrefixedMapping(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public CountPrefixedMapping(KaitaiStream _io, KaitaiStruct _parent) {
+            this(_io, _parent, null);
+        }
+
+        public CountPrefixedMapping(KaitaiStream _io, KaitaiStruct _parent, PhpSerializedValue _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.numEntriesDec = new String(this._io.readBytesTerm((byte) 58, false, true, true), StandardCharsets.US_ASCII);
+            this.openingBrace = this._io.readBytes(1);
+            if (!(Arrays.equals(this.openingBrace, new byte[] { 123 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 123 }, this.openingBrace, this._io, "/types/count_prefixed_mapping/seq/1");
+            }
+            this.entries = new ArrayList<MappingEntry>();
+            for (int i = 0; i < numEntries(); i++) {
+                this.entries.add(new MappingEntry(this._io, this, _root));
+            }
+            this.closingBrace = this._io.readBytes(1);
+            if (!(Arrays.equals(this.closingBrace, new byte[] { 125 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 125 }, this.closingBrace, this._io, "/types/count_prefixed_mapping/seq/3");
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.entries.size(); i++) {
+                this.entries.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private Integer numEntries;
+
+        /**
+         * The number of key-value pairs in the mapping, parsed as an integer.
+         */
+        public Integer numEntries() {
+            if (this.numEntries != null)
+                return this.numEntries;
+            this.numEntries = ((Number) (Long.parseLong(numEntriesDec(), 10))).intValue();
+            return this.numEntries;
+        }
+        private String numEntriesDec;
+        private byte[] openingBrace;
+        private List<MappingEntry> entries;
+        private byte[] closingBrace;
+        private PhpSerializedValue _root;
+        private KaitaiStruct _parent;
+
+        /**
+         * The number of key-value pairs in the mapping, in ASCII decimal.
+         */
+        public String numEntriesDec() { return numEntriesDec; }
+        public byte[] openingBrace() { return openingBrace; }
+
+        /**
+         * The key-value pairs contained in the mapping.
+         */
+        public List<MappingEntry> entries() { return entries; }
+        public byte[] closingBrace() { return closingBrace; }
+        public PhpSerializedValue _root() { return _root; }
+        public KaitaiStruct _parent() { return _parent; }
     }
 
     /**
@@ -474,24 +422,28 @@ public class PhpSerializedValue extends KaitaiStruct {
         }
         private void _read() {
             this.colon1 = this._io.readBytes(1);
-            if (!(Arrays.equals(colon1(), new byte[] { 58 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 58 }, colon1(), _io(), "/types/custom_serialized_object_contents/seq/0");
+            if (!(Arrays.equals(this.colon1, new byte[] { 58 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 58 }, this.colon1, this._io, "/types/custom_serialized_object_contents/seq/0");
             }
             this.className = new LengthPrefixedQuotedString(this._io, this, _root);
             this.colon2 = this._io.readBytes(1);
-            if (!(Arrays.equals(colon2(), new byte[] { 58 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 58 }, colon2(), _io(), "/types/custom_serialized_object_contents/seq/2");
+            if (!(Arrays.equals(this.colon2, new byte[] { 58 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 58 }, this.colon2, this._io, "/types/custom_serialized_object_contents/seq/2");
             }
-            this.lenDataDec = new String(this._io.readBytesTerm((byte) 58, false, true, true), Charset.forName("ASCII"));
+            this.lenDataDec = new String(this._io.readBytesTerm((byte) 58, false, true, true), StandardCharsets.US_ASCII);
             this.openingBrace = this._io.readBytes(1);
-            if (!(Arrays.equals(openingBrace(), new byte[] { 123 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 123 }, openingBrace(), _io(), "/types/custom_serialized_object_contents/seq/4");
+            if (!(Arrays.equals(this.openingBrace, new byte[] { 123 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 123 }, this.openingBrace, this._io, "/types/custom_serialized_object_contents/seq/4");
             }
             this.data = this._io.readBytes(lenData());
             this.closingQuote = this._io.readBytes(1);
-            if (!(Arrays.equals(closingQuote(), new byte[] { 125 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 125 }, closingQuote(), _io(), "/types/custom_serialized_object_contents/seq/6");
+            if (!(Arrays.equals(this.closingQuote, new byte[] { 125 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 125 }, this.closingQuote, this._io, "/types/custom_serialized_object_contents/seq/6");
             }
+        }
+
+        public void _fetchInstances() {
+            this.className._fetchInstances();
         }
         private Integer lenData;
 
@@ -502,8 +454,7 @@ public class PhpSerializedValue extends KaitaiStruct {
         public Integer lenData() {
             if (this.lenData != null)
                 return this.lenData;
-            int _tmp = (int) (Long.parseLong(lenDataDec(), 10));
-            this.lenData = _tmp;
+            this.lenData = ((Number) (Long.parseLong(lenDataDec(), 10))).intValue();
             return this.lenData;
         }
         private byte[] colon1;
@@ -545,6 +496,244 @@ public class PhpSerializedValue extends KaitaiStruct {
     }
 
     /**
+     * The contents of a floating-point value.
+     */
+    public static class FloatContents extends KaitaiStruct {
+        public static FloatContents fromFile(String fileName) throws IOException {
+            return new FloatContents(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public FloatContents(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public FloatContents(KaitaiStream _io, PhpSerializedValue _parent) {
+            this(_io, _parent, null);
+        }
+
+        public FloatContents(KaitaiStream _io, PhpSerializedValue _parent, PhpSerializedValue _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.colon = this._io.readBytes(1);
+            if (!(Arrays.equals(this.colon, new byte[] { 58 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 58 }, this.colon, this._io, "/types/float_contents/seq/0");
+            }
+            this.valueDec = new String(this._io.readBytesTerm((byte) 59, false, true, true), StandardCharsets.US_ASCII);
+        }
+
+        public void _fetchInstances() {
+        }
+        private byte[] colon;
+        private String valueDec;
+        private PhpSerializedValue _root;
+        private PhpSerializedValue _parent;
+        public byte[] colon() { return colon; }
+
+        /**
+         * The value of the `float`, in ASCII decimal, as generated by PHP's
+         * usual double-to-string conversion. In particular, this means that:
+         * 
+         * * A decimal point may not be included (for integral numbers)
+         * * The number may use exponent notation (e. g. `1.0E+16`)
+         * * Positive and negative infinity are represented as `INF`
+         *   and `-INF`, respectively
+         * * Not-a-number is represented as `NAN`
+         */
+        public String valueDec() { return valueDec; }
+        public PhpSerializedValue _root() { return _root; }
+        public PhpSerializedValue _parent() { return _parent; }
+    }
+
+    /**
+     * The contents of an integer-like value:
+     * either an actual integer (`value_type::int`) or a reference
+     * (`value_type::variable_reference`, `value_type::object_reference`).
+     */
+    public static class IntContents extends KaitaiStruct {
+        public static IntContents fromFile(String fileName) throws IOException {
+            return new IntContents(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public IntContents(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public IntContents(KaitaiStream _io, PhpSerializedValue _parent) {
+            this(_io, _parent, null);
+        }
+
+        public IntContents(KaitaiStream _io, PhpSerializedValue _parent, PhpSerializedValue _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.colon = this._io.readBytes(1);
+            if (!(Arrays.equals(this.colon, new byte[] { 58 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 58 }, this.colon, this._io, "/types/int_contents/seq/0");
+            }
+            this.valueDec = new String(this._io.readBytesTerm((byte) 59, false, true, true), StandardCharsets.US_ASCII);
+        }
+
+        public void _fetchInstances() {
+        }
+        private Integer value;
+
+        /**
+         * The value of the `int`, parsed as an integer.
+         */
+        public Integer value() {
+            if (this.value != null)
+                return this.value;
+            this.value = ((Number) (Long.parseLong(valueDec(), 10))).intValue();
+            return this.value;
+        }
+        private byte[] colon;
+        private String valueDec;
+        private PhpSerializedValue _root;
+        private PhpSerializedValue _parent;
+        public byte[] colon() { return colon; }
+
+        /**
+         * The value of the `int`, in ASCII decimal.
+         */
+        public String valueDec() { return valueDec; }
+        public PhpSerializedValue _root() { return _root; }
+        public PhpSerializedValue _parent() { return _parent; }
+    }
+
+    /**
+     * A quoted string prefixed with its length.
+     * 
+     * Despite the quotes surrounding the string data, it can contain
+     * arbitrary bytes, which are never escaped in any way.
+     * This does not cause any ambiguities when parsing - the bounds of
+     * the string are determined only by the length field, not by the quotes.
+     */
+    public static class LengthPrefixedQuotedString extends KaitaiStruct {
+        public static LengthPrefixedQuotedString fromFile(String fileName) throws IOException {
+            return new LengthPrefixedQuotedString(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public LengthPrefixedQuotedString(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public LengthPrefixedQuotedString(KaitaiStream _io, KaitaiStruct _parent) {
+            this(_io, _parent, null);
+        }
+
+        public LengthPrefixedQuotedString(KaitaiStream _io, KaitaiStruct _parent, PhpSerializedValue _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.lenDataDec = new String(this._io.readBytesTerm((byte) 58, false, true, true), StandardCharsets.US_ASCII);
+            this.openingQuote = this._io.readBytes(1);
+            if (!(Arrays.equals(this.openingQuote, new byte[] { 34 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 34 }, this.openingQuote, this._io, "/types/length_prefixed_quoted_string/seq/1");
+            }
+            this.data = this._io.readBytes(lenData());
+            this.closingQuote = this._io.readBytes(1);
+            if (!(Arrays.equals(this.closingQuote, new byte[] { 34 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 34 }, this.closingQuote, this._io, "/types/length_prefixed_quoted_string/seq/3");
+            }
+        }
+
+        public void _fetchInstances() {
+        }
+        private Integer lenData;
+
+        /**
+         * The length of the string's contents in bytes, parsed as an integer.
+         * The quotes are not counted in this size number.
+         */
+        public Integer lenData() {
+            if (this.lenData != null)
+                return this.lenData;
+            this.lenData = ((Number) (Long.parseLong(lenDataDec(), 10))).intValue();
+            return this.lenData;
+        }
+        private String lenDataDec;
+        private byte[] openingQuote;
+        private byte[] data;
+        private byte[] closingQuote;
+        private PhpSerializedValue _root;
+        private KaitaiStruct _parent;
+
+        /**
+         * The length of the string's data in bytes, in ASCII decimal.
+         * The quotes are not counted in this length number.
+         */
+        public String lenDataDec() { return lenDataDec; }
+        public byte[] openingQuote() { return openingQuote; }
+
+        /**
+         * The data contained in the string. The quotes are not included.
+         */
+        public byte[] data() { return data; }
+        public byte[] closingQuote() { return closingQuote; }
+        public PhpSerializedValue _root() { return _root; }
+        public KaitaiStruct _parent() { return _parent; }
+    }
+
+    /**
+     * A mapping entry consisting of a key and a value.
+     */
+    public static class MappingEntry extends KaitaiStruct {
+        public static MappingEntry fromFile(String fileName) throws IOException {
+            return new MappingEntry(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public MappingEntry(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public MappingEntry(KaitaiStream _io, PhpSerializedValue.CountPrefixedMapping _parent) {
+            this(_io, _parent, null);
+        }
+
+        public MappingEntry(KaitaiStream _io, PhpSerializedValue.CountPrefixedMapping _parent, PhpSerializedValue _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.key = new PhpSerializedValue(this._io, this, _root);
+            this.value = new PhpSerializedValue(this._io, this, _root);
+        }
+
+        public void _fetchInstances() {
+            this.key._fetchInstances();
+            this.value._fetchInstances();
+        }
+        private PhpSerializedValue key;
+        private PhpSerializedValue value;
+        private PhpSerializedValue _root;
+        private PhpSerializedValue.CountPrefixedMapping _parent;
+
+        /**
+         * The key of the entry.
+         */
+        public PhpSerializedValue key() { return key; }
+
+        /**
+         * The value of the entry.
+         */
+        public PhpSerializedValue value() { return value; }
+        public PhpSerializedValue _root() { return _root; }
+        public PhpSerializedValue.CountPrefixedMapping _parent() { return _parent; }
+    }
+
+    /**
      * The contents of a null value (`value_type::null`). This structure
      * contains no actual data, since there is only a single `NULL` value.
      */
@@ -569,14 +758,80 @@ public class PhpSerializedValue extends KaitaiStruct {
         }
         private void _read() {
             this.semicolon = this._io.readBytes(1);
-            if (!(Arrays.equals(semicolon(), new byte[] { 59 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 59 }, semicolon(), _io(), "/types/null_contents/seq/0");
+            if (!(Arrays.equals(this.semicolon, new byte[] { 59 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 59 }, this.semicolon, this._io, "/types/null_contents/seq/0");
             }
+        }
+
+        public void _fetchInstances() {
         }
         private byte[] semicolon;
         private PhpSerializedValue _root;
         private PhpSerializedValue _parent;
         public byte[] semicolon() { return semicolon; }
+        public PhpSerializedValue _root() { return _root; }
+        public PhpSerializedValue _parent() { return _parent; }
+    }
+
+    /**
+     * The contents of an object value serialized in the default format.
+     * Unlike its PHP 3 counterpart, it contains a class name.
+     */
+    public static class ObjectContents extends KaitaiStruct {
+        public static ObjectContents fromFile(String fileName) throws IOException {
+            return new ObjectContents(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public ObjectContents(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public ObjectContents(KaitaiStream _io, PhpSerializedValue _parent) {
+            this(_io, _parent, null);
+        }
+
+        public ObjectContents(KaitaiStream _io, PhpSerializedValue _parent, PhpSerializedValue _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.colon1 = this._io.readBytes(1);
+            if (!(Arrays.equals(this.colon1, new byte[] { 58 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 58 }, this.colon1, this._io, "/types/object_contents/seq/0");
+            }
+            this.className = new LengthPrefixedQuotedString(this._io, this, _root);
+            this.colon2 = this._io.readBytes(1);
+            if (!(Arrays.equals(this.colon2, new byte[] { 58 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 58 }, this.colon2, this._io, "/types/object_contents/seq/2");
+            }
+            this.properties = new CountPrefixedMapping(this._io, this, _root);
+        }
+
+        public void _fetchInstances() {
+            this.className._fetchInstances();
+            this.properties._fetchInstances();
+        }
+        private byte[] colon1;
+        private LengthPrefixedQuotedString className;
+        private byte[] colon2;
+        private CountPrefixedMapping properties;
+        private PhpSerializedValue _root;
+        private PhpSerializedValue _parent;
+        public byte[] colon1() { return colon1; }
+
+        /**
+         * The name of the object's class.
+         */
+        public LengthPrefixedQuotedString className() { return className; }
+        public byte[] colon2() { return colon2; }
+
+        /**
+         * The object's properties. Keys ust be of type `string`,
+         * values may have any type.
+         */
+        public CountPrefixedMapping properties() { return properties; }
         public PhpSerializedValue _root() { return _root; }
         public PhpSerializedValue _parent() { return _parent; }
     }
@@ -606,10 +861,14 @@ public class PhpSerializedValue extends KaitaiStruct {
         }
         private void _read() {
             this.colon = this._io.readBytes(1);
-            if (!(Arrays.equals(colon(), new byte[] { 58 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 58 }, colon(), _io(), "/types/php_3_object_contents/seq/0");
+            if (!(Arrays.equals(this.colon, new byte[] { 58 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 58 }, this.colon, this._io, "/types/php_3_object_contents/seq/0");
             }
             this.properties = new CountPrefixedMapping(this._io, this, _root);
+        }
+
+        public void _fetchInstances() {
+            this.properties._fetchInstances();
         }
         private byte[] colon;
         private CountPrefixedMapping properties;
@@ -622,67 +881,6 @@ public class PhpSerializedValue extends KaitaiStruct {
          * values may have any type.
          */
         public CountPrefixedMapping properties() { return properties; }
-        public PhpSerializedValue _root() { return _root; }
-        public PhpSerializedValue _parent() { return _parent; }
-    }
-
-    /**
-     * The contents of a boolean value (`value_type::bool`).
-     */
-    public static class BoolContents extends KaitaiStruct {
-        public static BoolContents fromFile(String fileName) throws IOException {
-            return new BoolContents(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public BoolContents(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public BoolContents(KaitaiStream _io, PhpSerializedValue _parent) {
-            this(_io, _parent, null);
-        }
-
-        public BoolContents(KaitaiStream _io, PhpSerializedValue _parent, PhpSerializedValue _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.colon = this._io.readBytes(1);
-            if (!(Arrays.equals(colon(), new byte[] { 58 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 58 }, colon(), _io(), "/types/bool_contents/seq/0");
-            }
-            this.valueDec = PhpSerializedValue.BoolValue.byId(this._io.readU1());
-            this.semicolon = this._io.readBytes(1);
-            if (!(Arrays.equals(semicolon(), new byte[] { 59 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 59 }, semicolon(), _io(), "/types/bool_contents/seq/2");
-            }
-        }
-        private Boolean value;
-
-        /**
-         * The value of the `bool`, parsed as a boolean.
-         */
-        public Boolean value() {
-            if (this.value != null)
-                return this.value;
-            boolean _tmp = (boolean) (valueDec() == PhpSerializedValue.BoolValue.TRUE);
-            this.value = _tmp;
-            return this.value;
-        }
-        private byte[] colon;
-        private BoolValue valueDec;
-        private byte[] semicolon;
-        private PhpSerializedValue _root;
-        private PhpSerializedValue _parent;
-        public byte[] colon() { return colon; }
-
-        /**
-         * The value of the `bool`: `0` for `false` or `1` for `true`.
-         */
-        public BoolValue valueDec() { return valueDec; }
-        public byte[] semicolon() { return semicolon; }
         public PhpSerializedValue _root() { return _root; }
         public PhpSerializedValue _parent() { return _parent; }
     }
@@ -714,14 +912,18 @@ public class PhpSerializedValue extends KaitaiStruct {
         }
         private void _read() {
             this.colon = this._io.readBytes(1);
-            if (!(Arrays.equals(colon(), new byte[] { 58 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 58 }, colon(), _io(), "/types/string_contents/seq/0");
+            if (!(Arrays.equals(this.colon, new byte[] { 58 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 58 }, this.colon, this._io, "/types/string_contents/seq/0");
             }
             this.string = new LengthPrefixedQuotedString(this._io, this, _root);
             this.semicolon = this._io.readBytes(1);
-            if (!(Arrays.equals(semicolon(), new byte[] { 59 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 59 }, semicolon(), _io(), "/types/string_contents/seq/2");
+            if (!(Arrays.equals(this.semicolon, new byte[] { 59 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 59 }, this.semicolon, this._io, "/types/string_contents/seq/2");
             }
+        }
+
+        public void _fetchInstances() {
+            this.string._fetchInstances();
         }
         private byte[] value;
 
@@ -744,107 +946,6 @@ public class PhpSerializedValue extends KaitaiStruct {
         public byte[] semicolon() { return semicolon; }
         public PhpSerializedValue _root() { return _root; }
         public PhpSerializedValue _parent() { return _parent; }
-    }
-
-    /**
-     * The contents of an integer-like value:
-     * either an actual integer (`value_type::int`) or a reference
-     * (`value_type::variable_reference`, `value_type::object_reference`).
-     */
-    public static class IntContents extends KaitaiStruct {
-        public static IntContents fromFile(String fileName) throws IOException {
-            return new IntContents(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public IntContents(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public IntContents(KaitaiStream _io, PhpSerializedValue _parent) {
-            this(_io, _parent, null);
-        }
-
-        public IntContents(KaitaiStream _io, PhpSerializedValue _parent, PhpSerializedValue _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.colon = this._io.readBytes(1);
-            if (!(Arrays.equals(colon(), new byte[] { 58 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 58 }, colon(), _io(), "/types/int_contents/seq/0");
-            }
-            this.valueDec = new String(this._io.readBytesTerm((byte) 59, false, true, true), Charset.forName("ASCII"));
-        }
-        private Integer value;
-
-        /**
-         * The value of the `int`, parsed as an integer.
-         */
-        public Integer value() {
-            if (this.value != null)
-                return this.value;
-            int _tmp = (int) (Long.parseLong(valueDec(), 10));
-            this.value = _tmp;
-            return this.value;
-        }
-        private byte[] colon;
-        private String valueDec;
-        private PhpSerializedValue _root;
-        private PhpSerializedValue _parent;
-        public byte[] colon() { return colon; }
-
-        /**
-         * The value of the `int`, in ASCII decimal.
-         */
-        public String valueDec() { return valueDec; }
-        public PhpSerializedValue _root() { return _root; }
-        public PhpSerializedValue _parent() { return _parent; }
-    }
-
-    /**
-     * A mapping entry consisting of a key and a value.
-     */
-    public static class MappingEntry extends KaitaiStruct {
-        public static MappingEntry fromFile(String fileName) throws IOException {
-            return new MappingEntry(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public MappingEntry(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public MappingEntry(KaitaiStream _io, PhpSerializedValue.CountPrefixedMapping _parent) {
-            this(_io, _parent, null);
-        }
-
-        public MappingEntry(KaitaiStream _io, PhpSerializedValue.CountPrefixedMapping _parent, PhpSerializedValue _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.key = new PhpSerializedValue(this._io);
-            this.value = new PhpSerializedValue(this._io);
-        }
-        private PhpSerializedValue key;
-        private PhpSerializedValue value;
-        private PhpSerializedValue _root;
-        private PhpSerializedValue.CountPrefixedMapping _parent;
-
-        /**
-         * The key of the entry.
-         */
-        public PhpSerializedValue key() { return key; }
-
-        /**
-         * The value of the entry.
-         */
-        public PhpSerializedValue value() { return value; }
-        public PhpSerializedValue _root() { return _root; }
-        public PhpSerializedValue.CountPrefixedMapping _parent() { return _parent; }
     }
     private ValueType type;
     private KaitaiStruct contents;

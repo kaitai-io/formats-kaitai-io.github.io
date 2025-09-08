@@ -1,15 +1,16 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
-from enum import Enum
-
-
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
-
-import packet_ppi
 import ethernet_frame
+import packet_ppi
+from enum import IntEnum
+
+
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
+
 class Pcap(KaitaiStruct):
     """PCAP (named after libpcap / winpcap) is a popular format for saving
     network traffic grabbed by network sniffers. It is typically
@@ -20,7 +21,7 @@ class Pcap(KaitaiStruct):
        Source - https://wiki.wireshark.org/Development/LibpcapFileFormat
     """
 
-    class Linktype(Enum):
+    class Linktype(IntEnum):
         null_linktype = 0
         ethernet = 1
         exp_ethernet = 2
@@ -231,9 +232,9 @@ class Pcap(KaitaiStruct):
         silabs_debug_channel = 298
         fira_uci = 299
     def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
+        super(Pcap, self).__init__(_io)
         self._parent = _parent
-        self._root = _root if _root else self
+        self._root = _root or self
         self._read()
 
     def _read(self):
@@ -245,15 +246,24 @@ class Pcap(KaitaiStruct):
             i += 1
 
 
+
+    def _fetch_instances(self):
+        pass
+        self.hdr._fetch_instances()
+        for i in range(len(self.packets)):
+            pass
+            self.packets[i]._fetch_instances()
+
+
     class Header(KaitaiStruct):
         """
         .. seealso::
            Source - https://wiki.wireshark.org/Development/LibpcapFileFormat#Global_Header
         """
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(Pcap.Header, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -270,15 +280,19 @@ class Pcap(KaitaiStruct):
             self.network = KaitaiStream.resolve_enum(Pcap.Linktype, self._io.read_u4le())
 
 
+        def _fetch_instances(self):
+            pass
+
+
     class Packet(KaitaiStruct):
         """
         .. seealso::
            Source - https://wiki.wireshark.org/Development/LibpcapFileFormat#Record_.28Packet.29_Header
         """
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(Pcap.Packet, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -287,16 +301,32 @@ class Pcap(KaitaiStruct):
             self.incl_len = self._io.read_u4le()
             self.orig_len = self._io.read_u4le()
             _on = self._root.hdr.network
-            if _on == Pcap.Linktype.ppi:
-                self._raw_body = self._io.read_bytes((self.incl_len if self.incl_len < self._root.hdr.snaplen else self._root.hdr.snaplen))
-                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
-                self.body = packet_ppi.PacketPpi(_io__raw_body)
-            elif _on == Pcap.Linktype.ethernet:
+            if _on == Pcap.Linktype.ethernet:
+                pass
                 self._raw_body = self._io.read_bytes((self.incl_len if self.incl_len < self._root.hdr.snaplen else self._root.hdr.snaplen))
                 _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
                 self.body = ethernet_frame.EthernetFrame(_io__raw_body)
+            elif _on == Pcap.Linktype.ppi:
+                pass
+                self._raw_body = self._io.read_bytes((self.incl_len if self.incl_len < self._root.hdr.snaplen else self._root.hdr.snaplen))
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = packet_ppi.PacketPpi(_io__raw_body)
             else:
+                pass
                 self.body = self._io.read_bytes((self.incl_len if self.incl_len < self._root.hdr.snaplen else self._root.hdr.snaplen))
+
+
+        def _fetch_instances(self):
+            pass
+            _on = self._root.hdr.network
+            if _on == Pcap.Linktype.ethernet:
+                pass
+                self.body._fetch_instances()
+            elif _on == Pcap.Linktype.ppi:
+                pass
+                self.body._fetch_instances()
+            else:
+                pass
 
 
 

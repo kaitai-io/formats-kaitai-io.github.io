@@ -1,14 +1,15 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
-from enum import Enum
-
-
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
-
 import vlq_base128_be
+from enum import IntEnum
+
+
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
+
 class StandardMidiFile(KaitaiStruct):
     """Standard MIDI file, typically known just as "MID", is a standard way
     to serialize series of MIDI events, which is a protocol used in many
@@ -26,9 +27,9 @@ class StandardMidiFile(KaitaiStruct):
     these, but files employing this mechanism are relatively rare.
     """
     def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
+        super(StandardMidiFile, self).__init__(_io)
         self._parent = _parent
-        self._root = _root if _root else self
+        self._root = _root or self
         self._read()
 
     def _read(self):
@@ -38,156 +39,70 @@ class StandardMidiFile(KaitaiStruct):
             self.tracks.append(StandardMidiFile.Track(self._io, self, self._root))
 
 
-    class TrackEvents(KaitaiStruct):
+
+    def _fetch_instances(self):
+        pass
+        self.hdr._fetch_instances()
+        for i in range(len(self.tracks)):
+            pass
+            self.tracks[i]._fetch_instances()
+
+
+    class ChannelPressureEvent(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(StandardMidiFile.ChannelPressureEvent, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
-            self.event = []
-            i = 0
-            while not self._io.is_eof():
-                self.event.append(StandardMidiFile.TrackEvent(self._io, self, self._root))
-                i += 1
-
-
-
-    class TrackEvent(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.v_time = vlq_base128_be.VlqBase128Be(self._io)
-            self.event_header = self._io.read_u1()
-            if self.event_header == 255:
-                self.meta_event_body = StandardMidiFile.MetaEventBody(self._io, self, self._root)
-
-            if self.event_header == 240:
-                self.sysex_body = StandardMidiFile.SysexEventBody(self._io, self, self._root)
-
-            _on = self.event_type
-            if _on == 224:
-                self.event_body = StandardMidiFile.PitchBendEvent(self._io, self, self._root)
-            elif _on == 144:
-                self.event_body = StandardMidiFile.NoteOnEvent(self._io, self, self._root)
-            elif _on == 208:
-                self.event_body = StandardMidiFile.ChannelPressureEvent(self._io, self, self._root)
-            elif _on == 192:
-                self.event_body = StandardMidiFile.ProgramChangeEvent(self._io, self, self._root)
-            elif _on == 160:
-                self.event_body = StandardMidiFile.PolyphonicPressureEvent(self._io, self, self._root)
-            elif _on == 176:
-                self.event_body = StandardMidiFile.ControllerEvent(self._io, self, self._root)
-            elif _on == 128:
-                self.event_body = StandardMidiFile.NoteOffEvent(self._io, self, self._root)
-
-        @property
-        def event_type(self):
-            if hasattr(self, '_m_event_type'):
-                return self._m_event_type
-
-            self._m_event_type = (self.event_header & 240)
-            return getattr(self, '_m_event_type', None)
-
-        @property
-        def channel(self):
-            if hasattr(self, '_m_channel'):
-                return self._m_channel
-
-            if self.event_type != 240:
-                self._m_channel = (self.event_header & 15)
-
-            return getattr(self, '_m_channel', None)
-
-
-    class PitchBendEvent(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.b1 = self._io.read_u1()
-            self.b2 = self._io.read_u1()
-
-        @property
-        def bend_value(self):
-            if hasattr(self, '_m_bend_value'):
-                return self._m_bend_value
-
-            self._m_bend_value = (((self.b2 << 7) + self.b1) - 16384)
-            return getattr(self, '_m_bend_value', None)
-
-        @property
-        def adj_bend_value(self):
-            if hasattr(self, '_m_adj_bend_value'):
-                return self._m_adj_bend_value
-
-            self._m_adj_bend_value = (self.bend_value - 16384)
-            return getattr(self, '_m_adj_bend_value', None)
-
-
-    class ProgramChangeEvent(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.program = self._io.read_u1()
-
-
-    class NoteOnEvent(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.note = self._io.read_u1()
-            self.velocity = self._io.read_u1()
-
-
-    class PolyphonicPressureEvent(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.note = self._io.read_u1()
             self.pressure = self._io.read_u1()
 
 
-    class Track(KaitaiStruct):
+        def _fetch_instances(self):
+            pass
+
+
+    class ControllerEvent(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(StandardMidiFile.ControllerEvent, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.controller = self._io.read_u1()
+            self.value = self._io.read_u1()
+
+
+        def _fetch_instances(self):
+            pass
+
+
+    class Header(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(StandardMidiFile.Header, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
             self._read()
 
         def _read(self):
             self.magic = self._io.read_bytes(4)
-            if not self.magic == b"\x4D\x54\x72\x6B":
-                raise kaitaistruct.ValidationNotEqualError(b"\x4D\x54\x72\x6B", self.magic, self._io, u"/types/track/seq/0")
-            self.len_events = self._io.read_u4be()
-            self._raw_events = self._io.read_bytes(self.len_events)
-            _io__raw_events = KaitaiStream(BytesIO(self._raw_events))
-            self.events = StandardMidiFile.TrackEvents(_io__raw_events, self, self._root)
+            if not self.magic == b"\x4D\x54\x68\x64":
+                raise kaitaistruct.ValidationNotEqualError(b"\x4D\x54\x68\x64", self.magic, self._io, u"/types/header/seq/0")
+            self.len_header = self._io.read_u4be()
+            self.format = self._io.read_u2be()
+            self.num_tracks = self._io.read_u2be()
+            self.division = self._io.read_s2be()
+
+
+        def _fetch_instances(self):
+            pass
 
 
     class MetaEventBody(KaitaiStruct):
 
-        class MetaTypeEnum(Enum):
+        class MetaTypeEnum(IntEnum):
             sequence_number = 0
             text_event = 1
             copyright = 2
@@ -204,9 +119,9 @@ class StandardMidiFile(KaitaiStruct):
             key_signature = 89
             sequencer_specific_event = 127
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(StandardMidiFile.MetaEventBody, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -215,52 +130,16 @@ class StandardMidiFile(KaitaiStruct):
             self.body = self._io.read_bytes(self.len.value)
 
 
-    class ControllerEvent(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.controller = self._io.read_u1()
-            self.value = self._io.read_u1()
-
-
-    class Header(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.magic = self._io.read_bytes(4)
-            if not self.magic == b"\x4D\x54\x68\x64":
-                raise kaitaistruct.ValidationNotEqualError(b"\x4D\x54\x68\x64", self.magic, self._io, u"/types/header/seq/0")
-            self.len_header = self._io.read_u4be()
-            self.format = self._io.read_u2be()
-            self.num_tracks = self._io.read_u2be()
-            self.division = self._io.read_s2be()
-
-
-    class SysexEventBody(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.len = vlq_base128_be.VlqBase128Be(self._io)
-            self.data = self._io.read_bytes(self.len.value)
+        def _fetch_instances(self):
+            pass
+            self.len._fetch_instances()
 
 
     class NoteOffEvent(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(StandardMidiFile.NoteOffEvent, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -268,15 +147,246 @@ class StandardMidiFile(KaitaiStruct):
             self.velocity = self._io.read_u1()
 
 
-    class ChannelPressureEvent(KaitaiStruct):
+        def _fetch_instances(self):
+            pass
+
+
+    class NoteOnEvent(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(StandardMidiFile.NoteOnEvent, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
+            self.note = self._io.read_u1()
+            self.velocity = self._io.read_u1()
+
+
+        def _fetch_instances(self):
+            pass
+
+
+    class PitchBendEvent(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(StandardMidiFile.PitchBendEvent, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.b1 = self._io.read_u1()
+            self.b2 = self._io.read_u1()
+
+
+        def _fetch_instances(self):
+            pass
+
+        @property
+        def adj_bend_value(self):
+            if hasattr(self, '_m_adj_bend_value'):
+                return self._m_adj_bend_value
+
+            self._m_adj_bend_value = self.bend_value - 16384
+            return getattr(self, '_m_adj_bend_value', None)
+
+        @property
+        def bend_value(self):
+            if hasattr(self, '_m_bend_value'):
+                return self._m_bend_value
+
+            self._m_bend_value = ((self.b2 << 7) + self.b1) - 16384
+            return getattr(self, '_m_bend_value', None)
+
+
+    class PolyphonicPressureEvent(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(StandardMidiFile.PolyphonicPressureEvent, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.note = self._io.read_u1()
             self.pressure = self._io.read_u1()
+
+
+        def _fetch_instances(self):
+            pass
+
+
+    class ProgramChangeEvent(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(StandardMidiFile.ProgramChangeEvent, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.program = self._io.read_u1()
+
+
+        def _fetch_instances(self):
+            pass
+
+
+    class SysexEventBody(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(StandardMidiFile.SysexEventBody, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.len = vlq_base128_be.VlqBase128Be(self._io)
+            self.data = self._io.read_bytes(self.len.value)
+
+
+        def _fetch_instances(self):
+            pass
+            self.len._fetch_instances()
+
+
+    class Track(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(StandardMidiFile.Track, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.magic = self._io.read_bytes(4)
+            if not self.magic == b"\x4D\x54\x72\x6B":
+                raise kaitaistruct.ValidationNotEqualError(b"\x4D\x54\x72\x6B", self.magic, self._io, u"/types/track/seq/0")
+            self.len_events = self._io.read_u4be()
+            self._raw_events = self._io.read_bytes(self.len_events)
+            _io__raw_events = KaitaiStream(BytesIO(self._raw_events))
+            self.events = StandardMidiFile.TrackEvents(_io__raw_events, self, self._root)
+
+
+        def _fetch_instances(self):
+            pass
+            self.events._fetch_instances()
+
+
+    class TrackEvent(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(StandardMidiFile.TrackEvent, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.v_time = vlq_base128_be.VlqBase128Be(self._io)
+            self.event_header = self._io.read_u1()
+            if self.event_header == 255:
+                pass
+                self.meta_event_body = StandardMidiFile.MetaEventBody(self._io, self, self._root)
+
+            if self.event_header == 240:
+                pass
+                self.sysex_body = StandardMidiFile.SysexEventBody(self._io, self, self._root)
+
+            _on = self.event_type
+            if _on == 128:
+                pass
+                self.event_body = StandardMidiFile.NoteOffEvent(self._io, self, self._root)
+            elif _on == 144:
+                pass
+                self.event_body = StandardMidiFile.NoteOnEvent(self._io, self, self._root)
+            elif _on == 160:
+                pass
+                self.event_body = StandardMidiFile.PolyphonicPressureEvent(self._io, self, self._root)
+            elif _on == 176:
+                pass
+                self.event_body = StandardMidiFile.ControllerEvent(self._io, self, self._root)
+            elif _on == 192:
+                pass
+                self.event_body = StandardMidiFile.ProgramChangeEvent(self._io, self, self._root)
+            elif _on == 208:
+                pass
+                self.event_body = StandardMidiFile.ChannelPressureEvent(self._io, self, self._root)
+            elif _on == 224:
+                pass
+                self.event_body = StandardMidiFile.PitchBendEvent(self._io, self, self._root)
+
+
+        def _fetch_instances(self):
+            pass
+            self.v_time._fetch_instances()
+            if self.event_header == 255:
+                pass
+                self.meta_event_body._fetch_instances()
+
+            if self.event_header == 240:
+                pass
+                self.sysex_body._fetch_instances()
+
+            _on = self.event_type
+            if _on == 128:
+                pass
+                self.event_body._fetch_instances()
+            elif _on == 144:
+                pass
+                self.event_body._fetch_instances()
+            elif _on == 160:
+                pass
+                self.event_body._fetch_instances()
+            elif _on == 176:
+                pass
+                self.event_body._fetch_instances()
+            elif _on == 192:
+                pass
+                self.event_body._fetch_instances()
+            elif _on == 208:
+                pass
+                self.event_body._fetch_instances()
+            elif _on == 224:
+                pass
+                self.event_body._fetch_instances()
+
+        @property
+        def channel(self):
+            if hasattr(self, '_m_channel'):
+                return self._m_channel
+
+            if self.event_type != 240:
+                pass
+                self._m_channel = self.event_header & 15
+
+            return getattr(self, '_m_channel', None)
+
+        @property
+        def event_type(self):
+            if hasattr(self, '_m_event_type'):
+                return self._m_event_type
+
+            self._m_event_type = self.event_header & 240
+            return getattr(self, '_m_event_type', None)
+
+
+    class TrackEvents(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(StandardMidiFile.TrackEvents, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.event = []
+            i = 0
+            while not self._io.is_eof():
+                self.event.append(StandardMidiFile.TrackEvent(self._io, self, self._root))
+                i += 1
+
+
+
+        def _fetch_instances(self):
+            pass
+            for i in range(len(self.event)):
+                pass
+                self.event[i]._fetch_instances()
+
 
 
 

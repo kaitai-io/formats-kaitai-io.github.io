@@ -1,11 +1,12 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class DosMz(KaitaiStruct):
     """DOS MZ file format is a traditional format for executables in MS-DOS
@@ -21,40 +22,58 @@ class DosMz(KaitaiStruct):
        Source - http://www.delorie.com/djgpp/doc/exe/
     """
     def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
+        super(DosMz, self).__init__(_io)
         self._parent = _parent
-        self._root = _root if _root else self
+        self._root = _root or self
         self._read()
 
     def _read(self):
         self.header = DosMz.ExeHeader(self._io, self, self._root)
         self.body = self._io.read_bytes(self.header.len_body)
 
+
+    def _fetch_instances(self):
+        pass
+        self.header._fetch_instances()
+        _ = self.relocations
+        if hasattr(self, '_m_relocations'):
+            pass
+            for i in range(len(self._m_relocations)):
+                pass
+                self._m_relocations[i]._fetch_instances()
+
+
+
     class ExeHeader(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(DosMz.ExeHeader, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
             self.mz = DosMz.MzHeader(self._io, self, self._root)
-            self.rest_of_header = self._io.read_bytes((self.mz.len_header - 28))
+            self.rest_of_header = self._io.read_bytes(self.mz.len_header - 28)
+
+
+        def _fetch_instances(self):
+            pass
+            self.mz._fetch_instances()
 
         @property
         def len_body(self):
             if hasattr(self, '_m_len_body'):
                 return self._m_len_body
 
-            self._m_len_body = (((self.mz.num_pages * 512) if self.mz.last_page_extra_bytes == 0 else (((self.mz.num_pages - 1) * 512) + self.mz.last_page_extra_bytes)) - self.mz.len_header)
+            self._m_len_body = (self.mz.num_pages * 512 if self.mz.last_page_extra_bytes == 0 else (self.mz.num_pages - 1) * 512 + self.mz.last_page_extra_bytes) - self.mz.len_header
             return getattr(self, '_m_len_body', None)
 
 
     class MzHeader(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(DosMz.MzHeader, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -75,25 +94,33 @@ class DosMz(KaitaiStruct):
             self.ofs_relocations = self._io.read_u2le()
             self.overlay_id = self._io.read_u2le()
 
+
+        def _fetch_instances(self):
+            pass
+
         @property
         def len_header(self):
             if hasattr(self, '_m_len_header'):
                 return self._m_len_header
 
-            self._m_len_header = (self.header_size * 16)
+            self._m_len_header = self.header_size * 16
             return getattr(self, '_m_len_header', None)
 
 
     class Relocation(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(DosMz.Relocation, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
             self.ofs = self._io.read_u2le()
             self.seg = self._io.read_u2le()
+
+
+        def _fetch_instances(self):
+            pass
 
 
     @property
@@ -102,6 +129,7 @@ class DosMz(KaitaiStruct):
             return self._m_relocations
 
         if self.header.mz.ofs_relocations != 0:
+            pass
             io = self.header._io
             _pos = io.pos()
             io.seek(self.header.mz.ofs_relocations)

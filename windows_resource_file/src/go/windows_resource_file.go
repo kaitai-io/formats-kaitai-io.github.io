@@ -37,19 +37,23 @@ type WindowsResourceFile struct {
 	Resources []*WindowsResourceFile_Resource
 	_io *kaitai.Stream
 	_root *WindowsResourceFile
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewWindowsResourceFile() *WindowsResourceFile {
 	return &WindowsResourceFile{
 	}
 }
 
-func (this *WindowsResourceFile) Read(io *kaitai.Stream, parent interface{}, root *WindowsResourceFile) (err error) {
+func (this WindowsResourceFile) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *WindowsResourceFile) Read(io *kaitai.Stream, parent kaitai.Struct, root *WindowsResourceFile) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	for i := 1;; i++ {
+	for i := 0;; i++ {
 		tmp1, err := this._io.EOF()
 		if err != nil {
 			return err
@@ -98,6 +102,11 @@ const (
 	WindowsResourceFile_Resource_PredefTypes__Html WindowsResourceFile_Resource_PredefTypes = 23
 	WindowsResourceFile_Resource_PredefTypes__Manifest WindowsResourceFile_Resource_PredefTypes = 24
 )
+var values_WindowsResourceFile_Resource_PredefTypes = map[WindowsResourceFile_Resource_PredefTypes]struct{}{1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}, 10: {}, 11: {}, 12: {}, 14: {}, 16: {}, 17: {}, 19: {}, 20: {}, 21: {}, 22: {}, 23: {}, 24: {}}
+func (v WindowsResourceFile_Resource_PredefTypes) isDefined() bool {
+	_, ok := values_WindowsResourceFile_Resource_PredefTypes[v]
+	return ok
+}
 type WindowsResourceFile_Resource struct {
 	ValueSize uint32
 	HeaderSize uint32
@@ -120,6 +129,10 @@ type WindowsResourceFile_Resource struct {
 func NewWindowsResourceFile_Resource() *WindowsResourceFile_Resource {
 	return &WindowsResourceFile_Resource{
 	}
+}
+
+func (this WindowsResourceFile_Resource) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *WindowsResourceFile_Resource) Read(io *kaitai.Stream, parent *WindowsResourceFile, root *WindowsResourceFile) (err error) {
@@ -221,6 +234,7 @@ func (this *WindowsResourceFile_Resource) TypeAsPredef() (v WindowsResourceFile_
 	if (this._f_typeAsPredef) {
 		return this.typeAsPredef, nil
 	}
+	this._f_typeAsPredef = true
 	tmp19, err := this.Type.IsString()
 	if err != nil {
 		return nil, err
@@ -228,7 +242,6 @@ func (this *WindowsResourceFile_Resource) TypeAsPredef() (v WindowsResourceFile_
 	if ( ((!(tmp19)) && (this.Type.AsNumeric <= 255)) ) {
 		this.typeAsPredef = WindowsResourceFile_Resource_PredefTypes(WindowsResourceFile_Resource_PredefTypes(this.Type.AsNumeric))
 	}
-	this._f_typeAsPredef = true
 	return this.typeAsPredef, nil
 }
 
@@ -264,18 +277,22 @@ type WindowsResourceFile_UnicodeOrId struct {
 	_io *kaitai.Stream
 	_root *WindowsResourceFile
 	_parent *WindowsResourceFile_Resource
+	_f_asString bool
+	asString string
+	_f_isString bool
+	isString bool
 	_f_savePos1 bool
 	savePos1 int
 	_f_savePos2 bool
 	savePos2 int
-	_f_isString bool
-	isString bool
-	_f_asString bool
-	asString string
 }
 func NewWindowsResourceFile_UnicodeOrId() *WindowsResourceFile_UnicodeOrId {
 	return &WindowsResourceFile_UnicodeOrId{
 	}
+}
+
+func (this WindowsResourceFile_UnicodeOrId) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *WindowsResourceFile_UnicodeOrId) Read(io *kaitai.Stream, parent *WindowsResourceFile_Resource, root *WindowsResourceFile) (err error) {
@@ -340,48 +357,29 @@ func (this *WindowsResourceFile_UnicodeOrId) Read(io *kaitai.Stream, parent *Win
 	}
 	return err
 }
-func (this *WindowsResourceFile_UnicodeOrId) SavePos1() (v int, err error) {
-	if (this._f_savePos1) {
-		return this.savePos1, nil
-	}
-	tmp29, err := this._io.Pos()
-	if err != nil {
-		return 0, err
-	}
-	this.savePos1 = int(tmp29)
-	this._f_savePos1 = true
-	return this.savePos1, nil
-}
-func (this *WindowsResourceFile_UnicodeOrId) SavePos2() (v int, err error) {
-	if (this._f_savePos2) {
-		return this.savePos2, nil
-	}
-	tmp30, err := this._io.Pos()
-	if err != nil {
-		return 0, err
-	}
-	this.savePos2 = int(tmp30)
-	this._f_savePos2 = true
-	return this.savePos2, nil
-}
-func (this *WindowsResourceFile_UnicodeOrId) IsString() (v bool, err error) {
-	if (this._f_isString) {
-		return this.isString, nil
-	}
-	this.isString = bool(this.First != 65535)
-	this._f_isString = true
-	return this.isString, nil
-}
 func (this *WindowsResourceFile_UnicodeOrId) AsString() (v string, err error) {
 	if (this._f_asString) {
 		return this.asString, nil
 	}
-	tmp31, err := this.IsString()
+	this._f_asString = true
+	tmp29, err := this.IsString()
 	if err != nil {
 		return "", err
 	}
-	if (tmp31) {
+	if (tmp29) {
 		_pos, err := this._io.Pos()
+		if err != nil {
+			return "", err
+		}
+		tmp30, err := this.SavePos1()
+		if err != nil {
+			return "", err
+		}
+		_, err = this._io.Seek(int64(tmp30), io.SeekStart)
+		if err != nil {
+			return "", err
+		}
+		tmp31, err := this.SavePos2()
 		if err != nil {
 			return "", err
 		}
@@ -389,34 +387,52 @@ func (this *WindowsResourceFile_UnicodeOrId) AsString() (v string, err error) {
 		if err != nil {
 			return "", err
 		}
-		_, err = this._io.Seek(int64(tmp32), io.SeekStart)
+		tmp33, err := this._io.ReadBytes(int((tmp31 - tmp32) - 2))
 		if err != nil {
 			return "", err
 		}
-		tmp33, err := this.SavePos2()
+		tmp33 = tmp33
+		tmp34, err := kaitai.BytesToStr(tmp33, unicode.UTF16(unicode.LittleEndian, unicode.IgnoreBOM).NewDecoder())
 		if err != nil {
 			return "", err
 		}
-		tmp34, err := this.SavePos1()
-		if err != nil {
-			return "", err
-		}
-		tmp35, err := this._io.ReadBytes(int(((tmp33 - tmp34) - 2)))
-		if err != nil {
-			return "", err
-		}
-		tmp35 = tmp35
-		tmp36, err := kaitai.BytesToStr(tmp35, unicode.UTF16(unicode.LittleEndian, unicode.IgnoreBOM).NewDecoder())
-		if err != nil {
-			return "", err
-		}
-		this.asString = tmp36
+		this.asString = tmp34
 		_, err = this._io.Seek(_pos, io.SeekStart)
 		if err != nil {
 			return "", err
 		}
-		this._f_asString = true
 	}
-	this._f_asString = true
 	return this.asString, nil
+}
+func (this *WindowsResourceFile_UnicodeOrId) IsString() (v bool, err error) {
+	if (this._f_isString) {
+		return this.isString, nil
+	}
+	this._f_isString = true
+	this.isString = bool(this.First != 65535)
+	return this.isString, nil
+}
+func (this *WindowsResourceFile_UnicodeOrId) SavePos1() (v int, err error) {
+	if (this._f_savePos1) {
+		return this.savePos1, nil
+	}
+	this._f_savePos1 = true
+	tmp35, err := this._io.Pos()
+	if err != nil {
+		return 0, err
+	}
+	this.savePos1 = int(tmp35)
+	return this.savePos1, nil
+}
+func (this *WindowsResourceFile_UnicodeOrId) SavePos2() (v int, err error) {
+	if (this._f_savePos2) {
+		return this.savePos2, nil
+	}
+	this._f_savePos2 = true
+	tmp36, err := this._io.Pos()
+	if err != nil {
+		return 0, err
+	}
+	this.savePos2 = int(tmp36)
+	return this.savePos2, nil
 }

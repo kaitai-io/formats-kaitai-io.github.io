@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -19,54 +19,33 @@ end
 # @see http://ftp.rpm.org/max-rpm/ Source
 class Rpm < Kaitai::Struct::Struct
 
-  OPERATING_SYSTEMS = {
-    1 => :operating_systems_linux,
-    2 => :operating_systems_irix,
-    255 => :operating_systems_no_os,
+  ARCHITECTURES = {
+    1 => :architectures_x86,
+    2 => :architectures_alpha,
+    3 => :architectures_sparc,
+    4 => :architectures_mips,
+    5 => :architectures_ppc,
+    6 => :architectures_m68k,
+    7 => :architectures_sgi,
+    8 => :architectures_rs6000,
+    9 => :architectures_ia64,
+    10 => :architectures_sparc64,
+    11 => :architectures_mips64,
+    12 => :architectures_arm,
+    13 => :architectures_m68k_mint,
+    14 => :architectures_s390,
+    15 => :architectures_s390x,
+    16 => :architectures_ppc64,
+    17 => :architectures_sh,
+    18 => :architectures_xtensa,
+    19 => :architectures_aarch64,
+    20 => :architectures_mips_r6,
+    21 => :architectures_mips64_r6,
+    22 => :architectures_riscv,
+    23 => :architectures_loongarch64,
+    255 => :architectures_no_arch,
   }
-  I__OPERATING_SYSTEMS = OPERATING_SYSTEMS.invert
-
-  SIGNATURE_TAGS = {
-    62 => :signature_tags_signatures,
-    63 => :signature_tags_header_immutable,
-    100 => :signature_tags_i18n_table,
-    264 => :signature_tags_bad_sha1_1_obsolete,
-    265 => :signature_tags_bad_sha1_2_obsolete,
-    267 => :signature_tags_dsa,
-    268 => :signature_tags_rsa,
-    269 => :signature_tags_sha1,
-    270 => :signature_tags_long_size,
-    271 => :signature_tags_long_archive_size,
-    273 => :signature_tags_sha256,
-    274 => :signature_tags_file_signatures,
-    275 => :signature_tags_file_signature_length,
-    276 => :signature_tags_verity_signatures,
-    277 => :signature_tags_verity_signature_algo,
-    1000 => :signature_tags_size,
-    1001 => :signature_tags_le_md5_1_obsolete,
-    1002 => :signature_tags_pgp,
-    1003 => :signature_tags_le_md5_2_obsolete,
-    1004 => :signature_tags_md5,
-    1005 => :signature_tags_gpg,
-    1006 => :signature_tags_pgp5_obsolete,
-    1007 => :signature_tags_payload_size,
-    1008 => :signature_tags_reserved_space,
-  }
-  I__SIGNATURE_TAGS = SIGNATURE_TAGS.invert
-
-  RECORD_TYPES = {
-    0 => :record_types_not_implemented,
-    1 => :record_types_char,
-    2 => :record_types_uint8,
-    3 => :record_types_uint16,
-    4 => :record_types_uint32,
-    5 => :record_types_uint64,
-    6 => :record_types_string,
-    7 => :record_types_bin,
-    8 => :record_types_string_array,
-    9 => :record_types_i18n_string,
-  }
-  I__RECORD_TYPES = RECORD_TYPES.invert
+  I__ARCHITECTURES = ARCHITECTURES.invert
 
   HEADER_TAGS = {
     62 => :header_tags_signatures,
@@ -372,48 +351,69 @@ class Rpm < Kaitai::Struct::Struct
   }
   I__HEADER_TAGS = HEADER_TAGS.invert
 
+  OPERATING_SYSTEMS = {
+    1 => :operating_systems_linux,
+    2 => :operating_systems_irix,
+    255 => :operating_systems_no_os,
+  }
+  I__OPERATING_SYSTEMS = OPERATING_SYSTEMS.invert
+
+  RECORD_TYPES = {
+    0 => :record_types_not_implemented,
+    1 => :record_types_char,
+    2 => :record_types_uint8,
+    3 => :record_types_uint16,
+    4 => :record_types_uint32,
+    5 => :record_types_uint64,
+    6 => :record_types_string,
+    7 => :record_types_bin,
+    8 => :record_types_string_array,
+    9 => :record_types_i18n_string,
+  }
+  I__RECORD_TYPES = RECORD_TYPES.invert
+
   RPM_TYPES = {
     0 => :rpm_types_binary,
     1 => :rpm_types_source,
   }
   I__RPM_TYPES = RPM_TYPES.invert
 
-  ARCHITECTURES = {
-    1 => :architectures_x86,
-    2 => :architectures_alpha,
-    3 => :architectures_sparc,
-    4 => :architectures_mips,
-    5 => :architectures_ppc,
-    6 => :architectures_m68k,
-    7 => :architectures_sgi,
-    8 => :architectures_rs6000,
-    9 => :architectures_ia64,
-    10 => :architectures_sparc64,
-    11 => :architectures_mips64,
-    12 => :architectures_arm,
-    13 => :architectures_m68k_mint,
-    14 => :architectures_s390,
-    15 => :architectures_s390x,
-    16 => :architectures_ppc64,
-    17 => :architectures_sh,
-    18 => :architectures_xtensa,
-    19 => :architectures_aarch64,
-    20 => :architectures_mips_r6,
-    21 => :architectures_mips64_r6,
-    22 => :architectures_riscv,
-    23 => :architectures_loongarch64,
-    255 => :architectures_no_arch,
+  SIGNATURE_TAGS = {
+    62 => :signature_tags_signatures,
+    63 => :signature_tags_header_immutable,
+    100 => :signature_tags_i18n_table,
+    264 => :signature_tags_bad_sha1_1_obsolete,
+    265 => :signature_tags_bad_sha1_2_obsolete,
+    267 => :signature_tags_dsa,
+    268 => :signature_tags_rsa,
+    269 => :signature_tags_sha1,
+    270 => :signature_tags_long_size,
+    271 => :signature_tags_long_archive_size,
+    273 => :signature_tags_sha256,
+    274 => :signature_tags_file_signatures,
+    275 => :signature_tags_file_signature_length,
+    276 => :signature_tags_verity_signatures,
+    277 => :signature_tags_verity_signature_algo,
+    1000 => :signature_tags_size,
+    1001 => :signature_tags_le_md5_1_obsolete,
+    1002 => :signature_tags_pgp,
+    1003 => :signature_tags_le_md5_2_obsolete,
+    1004 => :signature_tags_md5,
+    1005 => :signature_tags_gpg,
+    1006 => :signature_tags_pgp5_obsolete,
+    1007 => :signature_tags_payload_size,
+    1008 => :signature_tags_reserved_space,
   }
-  I__ARCHITECTURES = ARCHITECTURES.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  I__SIGNATURE_TAGS = SIGNATURE_TAGS.invert
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
     @lead = Lead.new(@_io, self, @_root)
     @signature = Header.new(@_io, self, @_root, true)
-    @signature_padding = @_io.read_bytes((-(_io.pos) % 8))
+    @signature_padding = @_io.read_bytes(-(_io.pos) % 8)
     if ofs_header < 0
       @_unnamed3 = @_io.read_bytes(0)
     end
@@ -423,26 +423,157 @@ class Rpm < Kaitai::Struct::Struct
     end
     @signature_tags_steps = []
     (signature.header_record.num_index_records).times { |i|
-      @signature_tags_steps << SignatureTagsStep.new(@_io, self, @_root, i, (i < 1 ? -1 : signature_tags_steps[(i - 1)].size_tag_idx))
+      @signature_tags_steps << SignatureTagsStep.new(@_io, self, @_root, i, (i < 1 ? -1 : signature_tags_steps[i - 1].size_tag_idx))
     }
     self
   end
-  class RecordTypeStringArray < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self, num_values)
+  class Dummy < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
-      @num_values = num_values
       _read
     end
 
     def _read
-      @values = []
-      (num_values).times { |i|
-        @values << (@_io.read_bytes_term(0, false, true, true)).force_encoding("UTF-8")
-      }
       self
     end
-    attr_reader :values
-    attr_reader :num_values
+  end
+
+  ##
+  # header structure used for both the "header" and "signature", but some tag
+  # values have different meanings in signature and header (hence they use
+  # different enums)
+  class Header < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil, is_signature)
+      super(_io, _parent, _root)
+      @is_signature = is_signature
+      _read
+    end
+
+    def _read
+      @header_record = HeaderRecord.new(@_io, self, @_root)
+      @index_records = []
+      (header_record.num_index_records).times { |i|
+        @index_records << HeaderIndexRecord.new(@_io, self, @_root)
+      }
+      _io_storage_section = @_io.substream(header_record.len_storage_section)
+      @storage_section = Dummy.new(_io_storage_section, self, @_root)
+      self
+    end
+    def is_header
+      return @is_header unless @is_header.nil?
+      @is_header = !(is_signature)
+      @is_header
+    end
+    attr_reader :header_record
+    attr_reader :index_records
+    attr_reader :storage_section
+    attr_reader :is_signature
+    attr_reader :_raw_storage_section
+  end
+  class HeaderIndexRecord < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @tag_raw = @_io.read_u4be
+      @record_type = Kaitai::Struct::Stream::resolve_enum(Rpm::RECORD_TYPES, @_io.read_u4be)
+      @ofs_body = @_io.read_u4be
+      @count = @_io.read_u4be
+      self
+    end
+    def body
+      return @body unless @body.nil?
+      io = _parent.storage_section._io
+      _pos = io.pos
+      io.seek(ofs_body)
+      case record_type
+      when :record_types_bin
+        @body = RecordTypeBin.new(io, self, @_root, len_value)
+      when :record_types_char
+        @body = RecordTypeUint8.new(io, self, @_root, num_values)
+      when :record_types_i18n_string
+        @body = RecordTypeStringArray.new(io, self, @_root, num_values)
+      when :record_types_string
+        @body = RecordTypeString.new(io, self, @_root)
+      when :record_types_string_array
+        @body = RecordTypeStringArray.new(io, self, @_root, num_values)
+      when :record_types_uint16
+        @body = RecordTypeUint16.new(io, self, @_root, num_values)
+      when :record_types_uint32
+        @body = RecordTypeUint32.new(io, self, @_root, num_values)
+      when :record_types_uint64
+        @body = RecordTypeUint64.new(io, self, @_root, num_values)
+      when :record_types_uint8
+        @body = RecordTypeUint8.new(io, self, @_root, num_values)
+      end
+      io.seek(_pos)
+      @body
+    end
+    def header_tag
+      return @header_tag unless @header_tag.nil?
+      if _parent.is_header
+        @header_tag = Kaitai::Struct::Stream::resolve_enum(Rpm::HEADER_TAGS, tag_raw)
+      end
+      @header_tag
+    end
+    def len_value
+      return @len_value unless @len_value.nil?
+      if record_type == :record_types_bin
+        @len_value = count
+      end
+      @len_value
+    end
+    def num_values
+      return @num_values unless @num_values.nil?
+      if record_type != :record_types_bin
+        @num_values = count
+      end
+      @num_values
+    end
+    def signature_tag
+      return @signature_tag unless @signature_tag.nil?
+      if _parent.is_signature
+        @signature_tag = Kaitai::Struct::Stream::resolve_enum(Rpm::SIGNATURE_TAGS, tag_raw)
+      end
+      @signature_tag
+    end
+
+    ##
+    # prefer to access `signature_tag` and `header_tag` instead
+    attr_reader :tag_raw
+    attr_reader :record_type
+    attr_reader :ofs_body
+
+    ##
+    # internal; access `num_values` and `len_value` instead
+    attr_reader :count
+  end
+  class HeaderRecord < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @magic = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([142, 173, 232, 1].pack('C*'), @magic, @_io, "/types/header_record/seq/0") if not @magic == [142, 173, 232, 1].pack('C*')
+      @reserved = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([0, 0, 0, 0].pack('C*'), @reserved, @_io, "/types/header_record/seq/1") if not @reserved == [0, 0, 0, 0].pack('C*')
+      @num_index_records = @_io.read_u4be
+      raise Kaitai::Struct::ValidationLessThanError.new(1, @num_index_records, @_io, "/types/header_record/seq/2") if not @num_index_records >= 1
+      @len_storage_section = @_io.read_u4be
+      self
+    end
+    attr_reader :magic
+    attr_reader :reserved
+    attr_reader :num_index_records
+
+    ##
+    # Size of the storage area for the data
+    # pointed to by the Index Records.
+    attr_reader :len_storage_section
   end
 
   ##
@@ -460,21 +591,21 @@ class Rpm < Kaitai::Struct::Struct
   # must pass them), but otherwise you should not make decisions based on the
   # values given here.
   class Lead < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
       @magic = @_io.read_bytes(4)
-      raise Kaitai::Struct::ValidationNotEqualError.new([237, 171, 238, 219].pack('C*'), magic, _io, "/types/lead/seq/0") if not magic == [237, 171, 238, 219].pack('C*')
+      raise Kaitai::Struct::ValidationNotEqualError.new([237, 171, 238, 219].pack('C*'), @magic, @_io, "/types/lead/seq/0") if not @magic == [237, 171, 238, 219].pack('C*')
       @version = RpmVersion.new(@_io, self, @_root)
       @type = Kaitai::Struct::Stream::resolve_enum(Rpm::RPM_TYPES, @_io.read_u2be)
       @architecture = Kaitai::Struct::Stream::resolve_enum(Rpm::ARCHITECTURES, @_io.read_u2be)
       @package_name = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(66), 0, false)).force_encoding("UTF-8")
       @os = Kaitai::Struct::Stream::resolve_enum(Rpm::OPERATING_SYSTEMS, @_io.read_u2be)
       @signature_type = @_io.read_u2be
-      raise Kaitai::Struct::ValidationNotEqualError.new(5, signature_type, _io, "/types/lead/seq/6") if not signature_type == 5
+      raise Kaitai::Struct::ValidationNotEqualError.new(5, @signature_type, @_io, "/types/lead/seq/6") if not @signature_type == 5
       @reserved = @_io.read_bytes(16)
       self
     end
@@ -487,8 +618,25 @@ class Rpm < Kaitai::Struct::Struct
     attr_reader :signature_type
     attr_reader :reserved
   end
+  class RecordTypeBin < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil, len_value)
+      super(_io, _parent, _root)
+      @len_value = len_value
+      _read
+    end
+
+    def _read
+      @values = []
+      (1).times { |i|
+        @values << @_io.read_bytes(len_value)
+      }
+      self
+    end
+    attr_reader :values
+    attr_reader :len_value
+  end
   class RecordTypeString < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -502,8 +650,112 @@ class Rpm < Kaitai::Struct::Struct
     end
     attr_reader :values
   end
+  class RecordTypeStringArray < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil, num_values)
+      super(_io, _parent, _root)
+      @num_values = num_values
+      _read
+    end
+
+    def _read
+      @values = []
+      (num_values).times { |i|
+        @values << (@_io.read_bytes_term(0, false, true, true)).force_encoding("UTF-8")
+      }
+      self
+    end
+    attr_reader :values
+    attr_reader :num_values
+  end
+  class RecordTypeUint16 < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil, num_values)
+      super(_io, _parent, _root)
+      @num_values = num_values
+      _read
+    end
+
+    def _read
+      @values = []
+      (num_values).times { |i|
+        @values << @_io.read_u2be
+      }
+      self
+    end
+    attr_reader :values
+    attr_reader :num_values
+  end
+  class RecordTypeUint32 < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil, num_values)
+      super(_io, _parent, _root)
+      @num_values = num_values
+      _read
+    end
+
+    def _read
+      @values = []
+      (num_values).times { |i|
+        @values << @_io.read_u4be
+      }
+      self
+    end
+    attr_reader :values
+    attr_reader :num_values
+  end
+  class RecordTypeUint64 < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil, num_values)
+      super(_io, _parent, _root)
+      @num_values = num_values
+      _read
+    end
+
+    def _read
+      @values = []
+      (num_values).times { |i|
+        @values << @_io.read_u8be
+      }
+      self
+    end
+    attr_reader :values
+    attr_reader :num_values
+  end
+  class RecordTypeUint8 < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil, num_values)
+      super(_io, _parent, _root)
+      @num_values = num_values
+      _read
+    end
+
+    def _read
+      @values = []
+      (num_values).times { |i|
+        @values << @_io.read_u1
+      }
+      self
+    end
+    attr_reader :values
+    attr_reader :num_values
+  end
+  class RpmVersion < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @major = @_io.read_u1
+      raise Kaitai::Struct::ValidationLessThanError.new(3, @major, @_io, "/types/rpm_version/seq/0") if not @major >= 3
+      raise Kaitai::Struct::ValidationGreaterThanError.new(4, @major, @_io, "/types/rpm_version/seq/0") if not @major <= 4
+      @minor = @_io.read_u1
+      self
+    end
+
+    ##
+    # @see https://github.com/rpm-software-management/rpm/blob/afad3167/lib/rpmlead.c#L102 Source
+    attr_reader :major
+    attr_reader :minor
+  end
   class SignatureTagsStep < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self, idx, prev_size_tag_idx)
+    def initialize(_io, _parent = nil, _root = nil, idx, prev_size_tag_idx)
       super(_io, _parent, _root)
       @idx = idx
       @prev_size_tag_idx = prev_size_tag_idx
@@ -521,277 +773,32 @@ class Rpm < Kaitai::Struct::Struct
     attr_reader :idx
     attr_reader :prev_size_tag_idx
   end
-  class RecordTypeUint32 < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self, num_values)
-      super(_io, _parent, _root)
-      @num_values = num_values
-      _read
-    end
-
-    def _read
-      @values = []
-      (num_values).times { |i|
-        @values << @_io.read_u4be
-      }
-      self
-    end
-    attr_reader :values
-    attr_reader :num_values
-  end
-  class RecordTypeUint16 < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self, num_values)
-      super(_io, _parent, _root)
-      @num_values = num_values
-      _read
-    end
-
-    def _read
-      @values = []
-      (num_values).times { |i|
-        @values << @_io.read_u2be
-      }
-      self
-    end
-    attr_reader :values
-    attr_reader :num_values
-  end
-  class HeaderIndexRecord < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @tag_raw = @_io.read_u4be
-      @record_type = Kaitai::Struct::Stream::resolve_enum(Rpm::RECORD_TYPES, @_io.read_u4be)
-      @ofs_body = @_io.read_u4be
-      @count = @_io.read_u4be
-      self
-    end
-    def num_values
-      return @num_values unless @num_values.nil?
-      if record_type != :record_types_bin
-        @num_values = count
-      end
-      @num_values
-    end
-    def body
-      return @body unless @body.nil?
-      io = _parent.storage_section._io
-      _pos = io.pos
-      io.seek(ofs_body)
-      case record_type
-      when :record_types_uint32
-        @body = RecordTypeUint32.new(io, self, @_root, num_values)
-      when :record_types_uint64
-        @body = RecordTypeUint64.new(io, self, @_root, num_values)
-      when :record_types_bin
-        @body = RecordTypeBin.new(io, self, @_root, len_value)
-      when :record_types_string
-        @body = RecordTypeString.new(io, self, @_root)
-      when :record_types_uint8
-        @body = RecordTypeUint8.new(io, self, @_root, num_values)
-      when :record_types_i18n_string
-        @body = RecordTypeStringArray.new(io, self, @_root, num_values)
-      when :record_types_uint16
-        @body = RecordTypeUint16.new(io, self, @_root, num_values)
-      when :record_types_char
-        @body = RecordTypeUint8.new(io, self, @_root, num_values)
-      when :record_types_string_array
-        @body = RecordTypeStringArray.new(io, self, @_root, num_values)
-      end
-      io.seek(_pos)
-      @body
-    end
-    def signature_tag
-      return @signature_tag unless @signature_tag.nil?
-      if _parent.is_signature
-        @signature_tag = Kaitai::Struct::Stream::resolve_enum(Rpm::SIGNATURE_TAGS, tag_raw)
-      end
-      @signature_tag
-    end
-    def len_value
-      return @len_value unless @len_value.nil?
-      if record_type == :record_types_bin
-        @len_value = count
-      end
-      @len_value
-    end
-    def header_tag
-      return @header_tag unless @header_tag.nil?
-      if _parent.is_header
-        @header_tag = Kaitai::Struct::Stream::resolve_enum(Rpm::HEADER_TAGS, tag_raw)
-      end
-      @header_tag
-    end
-
-    ##
-    # prefer to access `signature_tag` and `header_tag` instead
-    attr_reader :tag_raw
-    attr_reader :record_type
-    attr_reader :ofs_body
-
-    ##
-    # internal; access `num_values` and `len_value` instead
-    attr_reader :count
-  end
-  class RpmVersion < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @major = @_io.read_u1
-      raise Kaitai::Struct::ValidationLessThanError.new(3, major, _io, "/types/rpm_version/seq/0") if not major >= 3
-      raise Kaitai::Struct::ValidationGreaterThanError.new(4, major, _io, "/types/rpm_version/seq/0") if not major <= 4
-      @minor = @_io.read_u1
-      self
-    end
-
-    ##
-    # @see https://github.com/rpm-software-management/rpm/blob/afad3167/lib/rpmlead.c#L102 Source
-    attr_reader :major
-    attr_reader :minor
-  end
-  class Dummy < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      self
-    end
-  end
-  class RecordTypeUint8 < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self, num_values)
-      super(_io, _parent, _root)
-      @num_values = num_values
-      _read
-    end
-
-    def _read
-      @values = []
-      (num_values).times { |i|
-        @values << @_io.read_u1
-      }
-      self
-    end
-    attr_reader :values
-    attr_reader :num_values
-  end
-  class RecordTypeUint64 < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self, num_values)
-      super(_io, _parent, _root)
-      @num_values = num_values
-      _read
-    end
-
-    def _read
-      @values = []
-      (num_values).times { |i|
-        @values << @_io.read_u8be
-      }
-      self
-    end
-    attr_reader :values
-    attr_reader :num_values
-  end
-  class RecordTypeBin < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self, len_value)
-      super(_io, _parent, _root)
-      @len_value = len_value
-      _read
-    end
-
-    def _read
-      @values = []
-      (1).times { |i|
-        @values << @_io.read_bytes(len_value)
-      }
-      self
-    end
-    attr_reader :values
-    attr_reader :len_value
-  end
-  class HeaderRecord < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @magic = @_io.read_bytes(4)
-      raise Kaitai::Struct::ValidationNotEqualError.new([142, 173, 232, 1].pack('C*'), magic, _io, "/types/header_record/seq/0") if not magic == [142, 173, 232, 1].pack('C*')
-      @reserved = @_io.read_bytes(4)
-      raise Kaitai::Struct::ValidationNotEqualError.new([0, 0, 0, 0].pack('C*'), reserved, _io, "/types/header_record/seq/1") if not reserved == [0, 0, 0, 0].pack('C*')
-      @num_index_records = @_io.read_u4be
-      raise Kaitai::Struct::ValidationLessThanError.new(1, num_index_records, _io, "/types/header_record/seq/2") if not num_index_records >= 1
-      @len_storage_section = @_io.read_u4be
-      self
-    end
-    attr_reader :magic
-    attr_reader :reserved
-    attr_reader :num_index_records
-
-    ##
-    # Size of the storage area for the data
-    # pointed to by the Index Records.
-    attr_reader :len_storage_section
-  end
-
-  ##
-  # header structure used for both the "header" and "signature", but some tag
-  # values have different meanings in signature and header (hence they use
-  # different enums)
-  class Header < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self, is_signature)
-      super(_io, _parent, _root)
-      @is_signature = is_signature
-      _read
-    end
-
-    def _read
-      @header_record = HeaderRecord.new(@_io, self, @_root)
-      @index_records = []
-      (header_record.num_index_records).times { |i|
-        @index_records << HeaderIndexRecord.new(@_io, self, @_root)
-      }
-      @_raw_storage_section = @_io.read_bytes(header_record.len_storage_section)
-      _io__raw_storage_section = Kaitai::Struct::Stream.new(@_raw_storage_section)
-      @storage_section = Dummy.new(_io__raw_storage_section, self, @_root)
-      self
-    end
-    def is_header
-      return @is_header unless @is_header.nil?
-      @is_header = !(is_signature)
-      @is_header
-    end
-    attr_reader :header_record
-    attr_reader :index_records
-    attr_reader :storage_section
-    attr_reader :is_signature
-    attr_reader :_raw_storage_section
-  end
   def has_signature_size_tag
     return @has_signature_size_tag unless @has_signature_size_tag.nil?
     @has_signature_size_tag = signature_tags_steps.last.size_tag_idx != -1
     @has_signature_size_tag
   end
-  def signature_size_tag
-    return @signature_size_tag unless @signature_size_tag.nil?
-    if has_signature_size_tag
-      @signature_size_tag = signature.index_records[signature_tags_steps.last.size_tag_idx]
-    end
-    @signature_size_tag
+  def len_header
+    return @len_header unless @len_header.nil?
+    @len_header = ofs_payload - ofs_header
+    @len_header
   end
   def len_payload
     return @len_payload unless @len_payload.nil?
     if has_signature_size_tag
-      @len_payload = (signature_size_tag.body.values[0] - len_header)
+      @len_payload = signature_size_tag.body.values[0] - len_header
     end
     @len_payload
+  end
+  def ofs_header
+    return @ofs_header unless @ofs_header.nil?
+    @ofs_header = _io.pos
+    @ofs_header
+  end
+  def ofs_payload
+    return @ofs_payload unless @ofs_payload.nil?
+    @ofs_payload = _io.pos
+    @ofs_payload
   end
   def payload
     return @payload unless @payload.nil?
@@ -803,20 +810,12 @@ class Rpm < Kaitai::Struct::Struct
     end
     @payload
   end
-  def len_header
-    return @len_header unless @len_header.nil?
-    @len_header = (ofs_payload - ofs_header)
-    @len_header
-  end
-  def ofs_header
-    return @ofs_header unless @ofs_header.nil?
-    @ofs_header = _io.pos
-    @ofs_header
-  end
-  def ofs_payload
-    return @ofs_payload unless @ofs_payload.nil?
-    @ofs_payload = _io.pos
-    @ofs_payload
+  def signature_size_tag
+    return @signature_size_tag unless @signature_size_tag.nil?
+    if has_signature_size_tag
+      @signature_size_tag = signature.index_records[signature_tags_steps.last.size_tag_idx]
+    end
+    @signature_size_tag
   end
   attr_reader :lead
   attr_reader :signature

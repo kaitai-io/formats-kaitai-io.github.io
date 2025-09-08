@@ -5,6 +5,7 @@ import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class SomeIpContainer extends KaitaiStruct {
     public static SomeIpContainer fromFile(String fileName) throws IOException {
@@ -35,10 +36,16 @@ public class SomeIpContainer extends KaitaiStruct {
             }
         }
     }
-    private ArrayList<SomeIp> someIpPackages;
+
+    public void _fetchInstances() {
+        for (int i = 0; i < this.someIpPackages.size(); i++) {
+            this.someIpPackages.get(((Number) (i)).intValue())._fetchInstances();
+        }
+    }
+    private List<SomeIp> someIpPackages;
     private SomeIpContainer _root;
     private KaitaiStruct _parent;
-    public ArrayList<SomeIp> someIpPackages() { return someIpPackages; }
+    public List<SomeIp> someIpPackages() { return someIpPackages; }
     public SomeIpContainer _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

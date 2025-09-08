@@ -49,7 +49,7 @@ function VlqBase128Be.property.last:get()
     return self._m_last
   end
 
-  self._m_last = (#self.groups - 1)
+  self._m_last = #self.groups - 1
   return self._m_last
 end
 
@@ -61,7 +61,7 @@ function VlqBase128Be.property.value:get()
     return self._m_value
   end
 
-  self._m_value = (((((((self.groups[self.last + 1].value + utils.box_unwrap((self.last >= 1) and utils.box_wrap((self.groups[(self.last - 1) + 1].value << 7)) or (0))) + utils.box_unwrap((self.last >= 2) and utils.box_wrap((self.groups[(self.last - 2) + 1].value << 14)) or (0))) + utils.box_unwrap((self.last >= 3) and utils.box_wrap((self.groups[(self.last - 3) + 1].value << 21)) or (0))) + utils.box_unwrap((self.last >= 4) and utils.box_wrap((self.groups[(self.last - 4) + 1].value << 28)) or (0))) + utils.box_unwrap((self.last >= 5) and utils.box_wrap((self.groups[(self.last - 5) + 1].value << 35)) or (0))) + utils.box_unwrap((self.last >= 6) and utils.box_wrap((self.groups[(self.last - 6) + 1].value << 42)) or (0))) + utils.box_unwrap((self.last >= 7) and utils.box_wrap((self.groups[(self.last - 7) + 1].value << 49)) or (0)))
+  self._m_value = (((((((self.groups[self.last + 1].value + utils.box_unwrap((self.last >= 1) and utils.box_wrap(self.groups[(self.last - 1) + 1].value << 7) or (0))) + utils.box_unwrap((self.last >= 2) and utils.box_wrap(self.groups[(self.last - 2) + 1].value << 14) or (0))) + utils.box_unwrap((self.last >= 3) and utils.box_wrap(self.groups[(self.last - 3) + 1].value << 21) or (0))) + utils.box_unwrap((self.last >= 4) and utils.box_wrap(self.groups[(self.last - 4) + 1].value << 28) or (0))) + utils.box_unwrap((self.last >= 5) and utils.box_wrap(self.groups[(self.last - 5) + 1].value << 35) or (0))) + utils.box_unwrap((self.last >= 6) and utils.box_wrap(self.groups[(self.last - 6) + 1].value << 42) or (0))) + utils.box_unwrap((self.last >= 7) and utils.box_wrap(self.groups[(self.last - 7) + 1].value << 49) or (0)))
   return self._m_value
 end
 
@@ -73,7 +73,7 @@ VlqBase128Be.Group = class.class(KaitaiStruct)
 function VlqBase128Be.Group:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 

@@ -35,6 +35,11 @@ const (
 	AppleSingleDouble_FileType__AppleSingle AppleSingleDouble_FileType = 333312
 	AppleSingleDouble_FileType__AppleDouble AppleSingleDouble_FileType = 333319
 )
+var values_AppleSingleDouble_FileType = map[AppleSingleDouble_FileType]struct{}{333312: {}, 333319: {}}
+func (v AppleSingleDouble_FileType) isDefined() bool {
+	_, ok := values_AppleSingleDouble_FileType[v]
+	return ok
+}
 type AppleSingleDouble struct {
 	Magic AppleSingleDouble_FileType
 	Version uint32
@@ -43,14 +48,18 @@ type AppleSingleDouble struct {
 	Entries []*AppleSingleDouble_Entry
 	_io *kaitai.Stream
 	_root *AppleSingleDouble
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewAppleSingleDouble() *AppleSingleDouble {
 	return &AppleSingleDouble{
 	}
 }
 
-func (this *AppleSingleDouble) Read(io *kaitai.Stream, parent interface{}, root *AppleSingleDouble) (err error) {
+func (this AppleSingleDouble) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *AppleSingleDouble) Read(io *kaitai.Stream, parent kaitai.Struct, root *AppleSingleDouble) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -109,6 +118,11 @@ const (
 	AppleSingleDouble_Entry_Types__AfpFileInfo AppleSingleDouble_Entry_Types = 14
 	AppleSingleDouble_Entry_Types__AfpDirectoryId AppleSingleDouble_Entry_Types = 15
 )
+var values_AppleSingleDouble_Entry_Types = map[AppleSingleDouble_Entry_Types]struct{}{1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 8: {}, 9: {}, 10: {}, 11: {}, 12: {}, 13: {}, 14: {}, 15: {}}
+func (v AppleSingleDouble_Entry_Types) isDefined() bool {
+	_, ok := values_AppleSingleDouble_Entry_Types[v]
+	return ok
+}
 type AppleSingleDouble_Entry struct {
 	Type AppleSingleDouble_Entry_Types
 	OfsBody uint32
@@ -123,6 +137,10 @@ type AppleSingleDouble_Entry struct {
 func NewAppleSingleDouble_Entry() *AppleSingleDouble_Entry {
 	return &AppleSingleDouble_Entry{
 	}
+}
+
+func (this AppleSingleDouble_Entry) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *AppleSingleDouble_Entry) Read(io *kaitai.Stream, parent *AppleSingleDouble, root *AppleSingleDouble) (err error) {
@@ -151,6 +169,7 @@ func (this *AppleSingleDouble_Entry) Body() (v interface{}, err error) {
 	if (this._f_body) {
 		return this.body, nil
 	}
+	this._f_body = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
@@ -186,8 +205,6 @@ func (this *AppleSingleDouble_Entry) Body() (v interface{}, err error) {
 	if err != nil {
 		return nil, err
 	}
-	this._f_body = true
-	this._f_body = true
 	return this.body, nil
 }
 
@@ -208,6 +225,10 @@ type AppleSingleDouble_FinderInfo struct {
 func NewAppleSingleDouble_FinderInfo() *AppleSingleDouble_FinderInfo {
 	return &AppleSingleDouble_FinderInfo{
 	}
+}
+
+func (this AppleSingleDouble_FinderInfo) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *AppleSingleDouble_FinderInfo) Read(io *kaitai.Stream, parent *AppleSingleDouble_Entry, root *AppleSingleDouble) (err error) {
@@ -267,6 +288,10 @@ type AppleSingleDouble_Point struct {
 func NewAppleSingleDouble_Point() *AppleSingleDouble_Point {
 	return &AppleSingleDouble_Point{
 	}
+}
+
+func (this AppleSingleDouble_Point) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *AppleSingleDouble_Point) Read(io *kaitai.Stream, parent *AppleSingleDouble_FinderInfo, root *AppleSingleDouble) (err error) {

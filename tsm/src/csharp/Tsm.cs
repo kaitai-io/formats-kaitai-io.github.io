@@ -49,9 +49,9 @@ namespace Kaitai
             private void _read()
             {
                 _magic = m_io.ReadBytes(4);
-                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 22, 209, 22, 209 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 22, 209, 22, 209 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 22, 209, 22, 209 }, Magic, M_Io, "/types/header/seq/0");
+                    throw new ValidationNotEqualError(new byte[] { 22, 209, 22, 209 }, _magic, m_io, "/types/header/seq/0");
                 }
                 _version = m_io.ReadU1();
             }
@@ -144,7 +144,7 @@ namespace Kaitai
                         private void _read()
                         {
                             _crc32 = m_io.ReadU4be();
-                            _data = m_io.ReadBytes((M_Parent.BlockSize - 4));
+                            _data = m_io.ReadBytes(M_Parent.BlockSize - 4);
                         }
                         private uint _crc32;
                         private byte[] _data;
@@ -163,12 +163,12 @@ namespace Kaitai
                         {
                             if (f_block)
                                 return _block;
+                            f_block = true;
                             KaitaiStream io = M_Root.M_Io;
                             long _pos = io.Pos;
                             io.Seek(BlockOffset);
                             _block = new BlockEntry(io, this, m_root);
                             io.Seek(_pos);
-                            f_block = true;
                             return _block;
                         }
                     }
@@ -208,6 +208,7 @@ namespace Kaitai
                 {
                     if (f_entries)
                         return _entries;
+                    f_entries = true;
                     long _pos = m_io.Pos;
                     m_io.Seek(Offset);
                     _entries = new List<IndexHeader>();
@@ -218,10 +219,9 @@ namespace Kaitai
                             M_ = new IndexHeader(m_io, this, m_root);
                             _entries.Add(M_);
                             i++;
-                        } while (!(M_Io.Pos == (M_Io.Size - 8)));
+                        } while (!(M_Io.Pos == M_Io.Size - 8));
                     }
                     m_io.Seek(_pos);
-                    f_entries = true;
                     return _entries;
                 }
             }
@@ -240,11 +240,11 @@ namespace Kaitai
             {
                 if (f_index)
                     return _index;
+                f_index = true;
                 long _pos = m_io.Pos;
-                m_io.Seek((M_Io.Size - 8));
+                m_io.Seek(M_Io.Size - 8);
                 _index = new Index(m_io, this, m_root);
                 m_io.Seek(_pos);
-                f_index = true;
                 return _index;
             }
         }

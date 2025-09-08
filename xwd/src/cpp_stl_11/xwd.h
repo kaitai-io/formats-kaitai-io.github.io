@@ -2,13 +2,16 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class xwd_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -26,19 +29,31 @@
 class xwd_t : public kaitai::kstruct {
 
 public:
-    class header_t;
     class color_map_entry_t;
+    class header_t;
+
+    enum byte_order_t {
+        BYTE_ORDER_LE = 0,
+        BYTE_ORDER_BE = 1
+    };
+    static bool _is_defined_byte_order_t(byte_order_t v);
+
+private:
+    static const std::set<byte_order_t> _values_byte_order_t;
+
+public:
 
     enum pixmap_format_t {
         PIXMAP_FORMAT_X_Y_BITMAP = 0,
         PIXMAP_FORMAT_X_Y_PIXMAP = 1,
         PIXMAP_FORMAT_Z_PIXMAP = 2
     };
+    static bool _is_defined_pixmap_format_t(pixmap_format_t v);
 
-    enum byte_order_t {
-        BYTE_ORDER_LE = 0,
-        BYTE_ORDER_BE = 1
-    };
+private:
+    static const std::set<pixmap_format_t> _values_pixmap_format_t;
+
+public:
 
     enum visual_class_t {
         VISUAL_CLASS_STATIC_GRAY = 0,
@@ -48,6 +63,12 @@ public:
         VISUAL_CLASS_TRUE_COLOR = 4,
         VISUAL_CLASS_DIRECT_COLOR = 5
     };
+    static bool _is_defined_visual_class_t(visual_class_t v);
+
+private:
+    static const std::set<visual_class_t> _values_visual_class_t;
+
+public:
 
     xwd_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, xwd_t* p__root = nullptr);
 
@@ -57,6 +78,44 @@ private:
 
 public:
     ~xwd_t();
+
+    class color_map_entry_t : public kaitai::kstruct {
+
+    public:
+
+        color_map_entry_t(kaitai::kstream* p__io, xwd_t* p__parent = nullptr, xwd_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~color_map_entry_t();
+
+    private:
+        uint32_t m_entry_number;
+        uint16_t m_red;
+        uint16_t m_green;
+        uint16_t m_blue;
+        uint8_t m_flags;
+        uint8_t m_padding;
+        xwd_t* m__root;
+        xwd_t* m__parent;
+
+    public:
+
+        /**
+         * Number of the color map entry
+         */
+        uint32_t entry_number() const { return m_entry_number; }
+        uint16_t red() const { return m_red; }
+        uint16_t green() const { return m_green; }
+        uint16_t blue() const { return m_blue; }
+        uint8_t flags() const { return m_flags; }
+        uint8_t padding() const { return m_padding; }
+        xwd_t* _root() const { return m__root; }
+        xwd_t* _parent() const { return m__parent; }
+    };
 
     class header_t : public kaitai::kstruct {
 
@@ -226,44 +285,6 @@ public:
          * Program that created this xwd file
          */
         std::string creator() const { return m_creator; }
-        xwd_t* _root() const { return m__root; }
-        xwd_t* _parent() const { return m__parent; }
-    };
-
-    class color_map_entry_t : public kaitai::kstruct {
-
-    public:
-
-        color_map_entry_t(kaitai::kstream* p__io, xwd_t* p__parent = nullptr, xwd_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~color_map_entry_t();
-
-    private:
-        uint32_t m_entry_number;
-        uint16_t m_red;
-        uint16_t m_green;
-        uint16_t m_blue;
-        uint8_t m_flags;
-        uint8_t m_padding;
-        xwd_t* m__root;
-        xwd_t* m__parent;
-
-    public:
-
-        /**
-         * Number of the color map entry
-         */
-        uint32_t entry_number() const { return m_entry_number; }
-        uint16_t red() const { return m_red; }
-        uint16_t green() const { return m_green; }
-        uint16_t blue() const { return m_blue; }
-        uint8_t flags() const { return m_flags; }
-        uint8_t padding() const { return m_padding; }
         xwd_t* _root() const { return m__root; }
         xwd_t* _parent() const { return m__parent; }
     };

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
 
 
 /**
@@ -48,6 +49,15 @@ public class BitcoinTransaction extends KaitaiStruct {
         }
         this.locktime = this._io.readU4le();
     }
+
+    public void _fetchInstances() {
+        for (int i = 0; i < this.vins.size(); i++) {
+            this.vins.get(((Number) (i)).intValue())._fetchInstances();
+        }
+        for (int i = 0; i < this.vouts.size(); i++) {
+            this.vouts.get(((Number) (i)).intValue())._fetchInstances();
+        }
+    }
     public static class Vin extends KaitaiStruct {
         public static Vin fromFile(String fileName) throws IOException {
             return new Vin(new ByteBufferKaitaiStream(fileName));
@@ -71,13 +81,16 @@ public class BitcoinTransaction extends KaitaiStruct {
             this.txid = this._io.readBytes(32);
             this.outputId = this._io.readU4le();
             this.lenScript = this._io.readU1();
-            this._raw_scriptSig = this._io.readBytes(lenScript());
-            KaitaiStream _io__raw_scriptSig = new ByteBufferKaitaiStream(_raw_scriptSig);
-            this.scriptSig = new ScriptSignature(_io__raw_scriptSig, this, _root);
+            KaitaiStream _io_scriptSig = this._io.substream(lenScript());
+            this.scriptSig = new ScriptSignature(_io_scriptSig, this, _root);
             this.endOfVin = this._io.readBytes(4);
-            if (!(Arrays.equals(endOfVin(), new byte[] { -1, -1, -1, -1 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { -1, -1, -1, -1 }, endOfVin(), _io(), "/types/vin/seq/4");
+            if (!(Arrays.equals(this.endOfVin, new byte[] { -1, -1, -1, -1 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { -1, -1, -1, -1 }, this.endOfVin, this._io, "/types/vin/seq/4");
             }
+        }
+
+        public void _fetchInstances() {
+            this.scriptSig._fetchInstances();
         }
         public static class ScriptSignature extends KaitaiStruct {
             public static ScriptSignature fromFile(String fileName) throws IOException {
@@ -122,6 +135,11 @@ public class BitcoinTransaction extends KaitaiStruct {
                 this.lenPubkeyStack = this._io.readU1();
                 this.pubkey = new PublicKey(this._io, this, _root);
             }
+
+            public void _fetchInstances() {
+                this.derSig._fetchInstances();
+                this.pubkey._fetchInstances();
+            }
             public static class DerSignature extends KaitaiStruct {
                 public static DerSignature fromFile(String fileName) throws IOException {
                     return new DerSignature(new ByteBufferKaitaiStream(fileName));
@@ -143,22 +161,25 @@ public class BitcoinTransaction extends KaitaiStruct {
                 }
                 private void _read() {
                     this.sequence = this._io.readBytes(1);
-                    if (!(Arrays.equals(sequence(), new byte[] { 48 }))) {
-                        throw new KaitaiStream.ValidationNotEqualError(new byte[] { 48 }, sequence(), _io(), "/types/vin/types/script_signature/types/der_signature/seq/0");
+                    if (!(Arrays.equals(this.sequence, new byte[] { 48 }))) {
+                        throw new KaitaiStream.ValidationNotEqualError(new byte[] { 48 }, this.sequence, this._io, "/types/vin/types/script_signature/types/der_signature/seq/0");
                     }
                     this.lenSig = this._io.readU1();
                     this.sep1 = this._io.readBytes(1);
-                    if (!(Arrays.equals(sep1(), new byte[] { 2 }))) {
-                        throw new KaitaiStream.ValidationNotEqualError(new byte[] { 2 }, sep1(), _io(), "/types/vin/types/script_signature/types/der_signature/seq/2");
+                    if (!(Arrays.equals(this.sep1, new byte[] { 2 }))) {
+                        throw new KaitaiStream.ValidationNotEqualError(new byte[] { 2 }, this.sep1, this._io, "/types/vin/types/script_signature/types/der_signature/seq/2");
                     }
                     this.lenSigR = this._io.readU1();
                     this.sigR = this._io.readBytes(lenSigR());
                     this.sep2 = this._io.readBytes(1);
-                    if (!(Arrays.equals(sep2(), new byte[] { 2 }))) {
-                        throw new KaitaiStream.ValidationNotEqualError(new byte[] { 2 }, sep2(), _io(), "/types/vin/types/script_signature/types/der_signature/seq/5");
+                    if (!(Arrays.equals(this.sep2, new byte[] { 2 }))) {
+                        throw new KaitaiStream.ValidationNotEqualError(new byte[] { 2 }, this.sep2, this._io, "/types/vin/types/script_signature/types/der_signature/seq/5");
                     }
                     this.lenSigS = this._io.readU1();
                     this.sigS = this._io.readBytes(lenSigS());
+                }
+
+                public void _fetchInstances() {
                 }
                 private byte[] sequence;
                 private int lenSig;
@@ -223,6 +244,9 @@ public class BitcoinTransaction extends KaitaiStruct {
                     this.x = this._io.readBytes(32);
                     this.y = this._io.readBytes(32);
                 }
+
+                public void _fetchInstances() {
+                }
                 private int type;
                 private byte[] x;
                 private byte[] y;
@@ -279,7 +303,6 @@ public class BitcoinTransaction extends KaitaiStruct {
         private byte[] endOfVin;
         private BitcoinTransaction _root;
         private BitcoinTransaction _parent;
-        private byte[] _raw_scriptSig;
 
         /**
          * Previous transaction hash.
@@ -311,7 +334,6 @@ public class BitcoinTransaction extends KaitaiStruct {
         public byte[] endOfVin() { return endOfVin; }
         public BitcoinTransaction _root() { return _root; }
         public BitcoinTransaction _parent() { return _parent; }
-        public byte[] _raw_scriptSig() { return _raw_scriptSig; }
     }
     public static class Vout extends KaitaiStruct {
         public static Vout fromFile(String fileName) throws IOException {
@@ -336,6 +358,9 @@ public class BitcoinTransaction extends KaitaiStruct {
             this.amount = this._io.readU8le();
             this.lenScript = this._io.readU1();
             this.scriptPubKey = this._io.readBytes(lenScript());
+        }
+
+        public void _fetchInstances() {
         }
         private long amount;
         private int lenScript;
@@ -365,9 +390,9 @@ public class BitcoinTransaction extends KaitaiStruct {
     }
     private long version;
     private int numVins;
-    private ArrayList<Vin> vins;
+    private List<Vin> vins;
     private int numVouts;
-    private ArrayList<Vout> vouts;
+    private List<Vout> vouts;
     private long locktime;
     private BitcoinTransaction _root;
     private KaitaiStruct _parent;
@@ -386,7 +411,7 @@ public class BitcoinTransaction extends KaitaiStruct {
      * Input transactions.
      * An input refers to an output from a previous transaction.
      */
-    public ArrayList<Vin> vins() { return vins; }
+    public List<Vin> vins() { return vins; }
 
     /**
      * Number of output transactions.
@@ -396,7 +421,7 @@ public class BitcoinTransaction extends KaitaiStruct {
     /**
      * Output transactions.
      */
-    public ArrayList<Vout> vouts() { return vouts; }
+    public List<Vout> vouts() { return vouts; }
     public long locktime() { return locktime; }
     public BitcoinTransaction _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }

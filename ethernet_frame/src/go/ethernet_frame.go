@@ -25,6 +25,11 @@ const (
 	EthernetFrame_EtherTypeEnum__Ieee8021qTpid EthernetFrame_EtherTypeEnum = 33024
 	EthernetFrame_EtherTypeEnum__Ipv6 EthernetFrame_EtherTypeEnum = 34525
 )
+var values_EthernetFrame_EtherTypeEnum = map[EthernetFrame_EtherTypeEnum]struct{}{2048: {}, 2049: {}, 2050: {}, 2051: {}, 2052: {}, 2053: {}, 2054: {}, 33024: {}, 34525: {}}
+func (v EthernetFrame_EtherTypeEnum) isDefined() bool {
+	_, ok := values_EthernetFrame_EtherTypeEnum[v]
+	return ok
+}
 type EthernetFrame struct {
 	DstMac []byte
 	SrcMac []byte
@@ -34,7 +39,7 @@ type EthernetFrame struct {
 	Body interface{}
 	_io *kaitai.Stream
 	_root *EthernetFrame
-	_parent interface{}
+	_parent kaitai.Struct
 	_raw_Body []byte
 	_f_etherType bool
 	etherType EthernetFrame_EtherTypeEnum
@@ -44,7 +49,11 @@ func NewEthernetFrame() *EthernetFrame {
 	}
 }
 
-func (this *EthernetFrame) Read(io *kaitai.Stream, parent interface{}, root *EthernetFrame) (err error) {
+func (this EthernetFrame) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *EthernetFrame) Read(io *kaitai.Stream, parent kaitai.Struct, root *EthernetFrame) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -95,7 +104,7 @@ func (this *EthernetFrame) Read(io *kaitai.Stream, parent interface{}, root *Eth
 		this._raw_Body = tmp7
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
 		tmp8 := NewIpv4Packet()
-		err = tmp8.Read(_io__raw_Body, this, nil)
+		err = tmp8.Read(_io__raw_Body, nil, nil)
 		if err != nil {
 			return err
 		}
@@ -109,7 +118,7 @@ func (this *EthernetFrame) Read(io *kaitai.Stream, parent interface{}, root *Eth
 		this._raw_Body = tmp9
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
 		tmp10 := NewIpv6Packet()
-		err = tmp10.Read(_io__raw_Body, this, nil)
+		err = tmp10.Read(_io__raw_Body, nil, nil)
 		if err != nil {
 			return err
 		}
@@ -135,6 +144,7 @@ func (this *EthernetFrame) EtherType() (v EthernetFrame_EtherTypeEnum, err error
 	if (this._f_etherType) {
 		return this.etherType, nil
 	}
+	this._f_etherType = true
 	var tmp12 EthernetFrame_EtherTypeEnum;
 	if (this.EtherType1 == EthernetFrame_EtherTypeEnum__Ieee8021qTpid) {
 		tmp12 = this.EtherType2
@@ -142,7 +152,6 @@ func (this *EthernetFrame) EtherType() (v EthernetFrame_EtherTypeEnum, err error
 		tmp12 = this.EtherType1
 	}
 	this.etherType = EthernetFrame_EtherTypeEnum(tmp12)
-	this._f_etherType = true
 	return this.etherType, nil
 }
 
@@ -173,6 +182,10 @@ type EthernetFrame_TagControlInfo struct {
 func NewEthernetFrame_TagControlInfo() *EthernetFrame_TagControlInfo {
 	return &EthernetFrame_TagControlInfo{
 	}
+}
+
+func (this EthernetFrame_TagControlInfo) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *EthernetFrame_TagControlInfo) Read(io *kaitai.Stream, parent *EthernetFrame, root *EthernetFrame) (err error) {

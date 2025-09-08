@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 
 ########################################################################
 package Ogg;
@@ -24,7 +24,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -34,7 +34,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{pages} = ();
+    $self->{pages} = [];
     while (!$self->{_io}->is_eof()) {
         push @{$self->{pages}}, Ogg::Page->new($self->{_io}, $self, $self->{_root});
     }
@@ -65,7 +65,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -87,12 +87,12 @@ sub _read {
     $self->{page_seq_num} = $self->{_io}->read_u4le();
     $self->{crc32} = $self->{_io}->read_u4le();
     $self->{num_segments} = $self->{_io}->read_u1();
-    $self->{len_segments} = ();
+    $self->{len_segments} = [];
     my $n_len_segments = $self->num_segments();
     for (my $i = 0; $i < $n_len_segments; $i++) {
         push @{$self->{len_segments}}, $self->{_io}->read_u1();
     }
-    $self->{segments} = ();
+    $self->{segments} = [];
     my $n_segments = $self->num_segments();
     for (my $i = 0; $i < $n_segments; $i++) {
         push @{$self->{segments}}, $self->{_io}->read_bytes(@{$self->len_segments()}[$i]);

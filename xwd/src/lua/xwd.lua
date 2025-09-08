@@ -20,15 +20,15 @@ local str_decode = require("string_decode")
 -- and thus is probably a poor choice for true cross-platform usage.
 Xwd = class.class(KaitaiStruct)
 
+Xwd.ByteOrder = enum.Enum {
+  le = 0,
+  be = 1,
+}
+
 Xwd.PixmapFormat = enum.Enum {
   x_y_bitmap = 0,
   x_y_pixmap = 1,
   z_pixmap = 2,
-}
-
-Xwd.ByteOrder = enum.Enum {
-  le = 0,
-  be = 1,
 }
 
 Xwd.VisualClass = enum.Enum {
@@ -49,7 +49,7 @@ end
 
 function Xwd:_read()
   self.len_header = self._io:read_u4be()
-  self._raw_hdr = self._io:read_bytes((self.len_header - 4))
+  self._raw_hdr = self._io:read_bytes(self.len_header - 4)
   local _io = KaitaiStream(stringstream(self._raw_hdr))
   self.hdr = Xwd.Header(_io, self, self._root)
   self._raw_color_map = {}
@@ -64,12 +64,33 @@ end
 -- 
 -- Size of the header in bytes.
 
+Xwd.ColorMapEntry = class.class(KaitaiStruct)
+
+function Xwd.ColorMapEntry:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Xwd.ColorMapEntry:_read()
+  self.entry_number = self._io:read_u4be()
+  self.red = self._io:read_u2be()
+  self.green = self._io:read_u2be()
+  self.blue = self._io:read_u2be()
+  self.flags = self._io:read_u1()
+  self.padding = self._io:read_u1()
+end
+
+-- 
+-- Number of the color map entry.
+
 Xwd.Header = class.class(KaitaiStruct)
 
 function Xwd.Header:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -151,25 +172,4 @@ end
 -- Window border width.
 -- 
 -- Program that created this xwd file.
-
-Xwd.ColorMapEntry = class.class(KaitaiStruct)
-
-function Xwd.ColorMapEntry:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Xwd.ColorMapEntry:_read()
-  self.entry_number = self._io:read_u4be()
-  self.red = self._io:read_u2be()
-  self.green = self._io:read_u2be()
-  self.blue = self._io:read_u2be()
-  self.flags = self._io:read_u1()
-  self.padding = self._io:read_u1()
-end
-
--- 
--- Number of the color map entry.
 

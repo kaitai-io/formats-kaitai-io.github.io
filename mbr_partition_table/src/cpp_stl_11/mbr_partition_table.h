@@ -2,13 +2,15 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class mbr_partition_table_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -26,8 +28,8 @@
 class mbr_partition_table_t : public kaitai::kstruct {
 
 public:
-    class partition_entry_t;
     class chs_t;
+    class partition_entry_t;
 
     mbr_partition_table_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, mbr_partition_table_t* p__root = nullptr);
 
@@ -37,6 +39,48 @@ private:
 
 public:
     ~mbr_partition_table_t();
+
+    class chs_t : public kaitai::kstruct {
+
+    public:
+
+        chs_t(kaitai::kstream* p__io, mbr_partition_table_t::partition_entry_t* p__parent = nullptr, mbr_partition_table_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~chs_t();
+
+    private:
+        bool f_cylinder;
+        int32_t m_cylinder;
+
+    public:
+        int32_t cylinder();
+
+    private:
+        bool f_sector;
+        int32_t m_sector;
+
+    public:
+        int32_t sector();
+
+    private:
+        uint8_t m_head;
+        uint8_t m_b2;
+        uint8_t m_b3;
+        mbr_partition_table_t* m__root;
+        mbr_partition_table_t::partition_entry_t* m__parent;
+
+    public:
+        uint8_t head() const { return m_head; }
+        uint8_t b2() const { return m_b2; }
+        uint8_t b3() const { return m_b3; }
+        mbr_partition_table_t* _root() const { return m__root; }
+        mbr_partition_table_t::partition_entry_t* _parent() const { return m__parent; }
+    };
 
     class partition_entry_t : public kaitai::kstruct {
 
@@ -70,48 +114,6 @@ public:
         uint32_t num_sectors() const { return m_num_sectors; }
         mbr_partition_table_t* _root() const { return m__root; }
         mbr_partition_table_t* _parent() const { return m__parent; }
-    };
-
-    class chs_t : public kaitai::kstruct {
-
-    public:
-
-        chs_t(kaitai::kstream* p__io, mbr_partition_table_t::partition_entry_t* p__parent = nullptr, mbr_partition_table_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~chs_t();
-
-    private:
-        bool f_sector;
-        int32_t m_sector;
-
-    public:
-        int32_t sector();
-
-    private:
-        bool f_cylinder;
-        int32_t m_cylinder;
-
-    public:
-        int32_t cylinder();
-
-    private:
-        uint8_t m_head;
-        uint8_t m_b2;
-        uint8_t m_b3;
-        mbr_partition_table_t* m__root;
-        mbr_partition_table_t::partition_entry_t* m__parent;
-
-    public:
-        uint8_t head() const { return m_head; }
-        uint8_t b2() const { return m_b2; }
-        uint8_t b3() const { return m_b3; }
-        mbr_partition_table_t* _root() const { return m__root; }
-        mbr_partition_table_t::partition_entry_t* _parent() const { return m__parent; }
     };
 
 private:

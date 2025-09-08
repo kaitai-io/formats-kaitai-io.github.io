@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -84,8 +85,8 @@ public class Gzip extends KaitaiStruct {
     }
     private void _read() {
         this.magic = this._io.readBytes(2);
-        if (!(Arrays.equals(magic(), new byte[] { 31, -117 }))) {
-            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 31, -117 }, magic(), _io(), "/seq/0");
+        if (!(Arrays.equals(this.magic, new byte[] { 31, -117 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 31, -117 }, this.magic, this._io, "/seq/0");
         }
         this.compressionMethod = CompressionMethods.byId(this._io.readU1());
         this.flags = new Flags(this._io, this, _root);
@@ -114,66 +115,33 @@ public class Gzip extends KaitaiStruct {
         if (flags().hasHeaderCrc()) {
             this.headerCrc16 = this._io.readU2le();
         }
-        this.body = this._io.readBytes(((_io().size() - _io().pos()) - 8));
+        this.body = this._io.readBytes((_io().size() - _io().pos()) - 8);
         this.bodyCrc32 = this._io.readU4le();
         this.lenUncompressed = this._io.readU4le();
     }
-    public static class Flags extends KaitaiStruct {
-        public static Flags fromFile(String fileName) throws IOException {
-            return new Flags(new ByteBufferKaitaiStream(fileName));
+
+    public void _fetchInstances() {
+        this.flags._fetchInstances();
+        {
+            CompressionMethods on = compressionMethod();
+            if (on != null) {
+                switch (compressionMethod()) {
+                case DEFLATE: {
+                    this.extraFlags._fetchInstances();
+                    break;
+                }
+                }
+            }
         }
-
-        public Flags(KaitaiStream _io) {
-            this(_io, null, null);
+        if (flags().hasExtra()) {
+            this.extras._fetchInstances();
         }
-
-        public Flags(KaitaiStream _io, Gzip _parent) {
-            this(_io, _parent, null);
+        if (flags().hasName()) {
         }
-
-        public Flags(KaitaiStream _io, Gzip _parent, Gzip _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
+        if (flags().hasComment()) {
         }
-        private void _read() {
-            this.reserved1 = this._io.readBitsIntBe(3);
-            this.hasComment = this._io.readBitsIntBe(1) != 0;
-            this.hasName = this._io.readBitsIntBe(1) != 0;
-            this.hasExtra = this._io.readBitsIntBe(1) != 0;
-            this.hasHeaderCrc = this._io.readBitsIntBe(1) != 0;
-            this.isText = this._io.readBitsIntBe(1) != 0;
+        if (flags().hasHeaderCrc()) {
         }
-        private long reserved1;
-        private boolean hasComment;
-        private boolean hasName;
-        private boolean hasExtra;
-        private boolean hasHeaderCrc;
-        private boolean isText;
-        private Gzip _root;
-        private Gzip _parent;
-        public long reserved1() { return reserved1; }
-        public boolean hasComment() { return hasComment; }
-        public boolean hasName() { return hasName; }
-
-        /**
-         * If true, optional extra fields are present in the archive.
-         */
-        public boolean hasExtra() { return hasExtra; }
-
-        /**
-         * If true, this archive includes a CRC16 checksum for the header.
-         */
-        public boolean hasHeaderCrc() { return hasHeaderCrc; }
-
-        /**
-         * If true, file inside this archive is a text file from
-         * compressor's point of view.
-         */
-        public boolean isText() { return isText; }
-        public Gzip _root() { return _root; }
-        public Gzip _parent() { return _parent; }
     }
     public static class ExtraFlagsDeflate extends KaitaiStruct {
         public static ExtraFlagsDeflate fromFile(String fileName) throws IOException {
@@ -212,6 +180,9 @@ public class Gzip extends KaitaiStruct {
         private void _read() {
             this.compressionStrength = CompressionStrengths.byId(this._io.readU1());
         }
+
+        public void _fetchInstances() {
+        }
         private CompressionStrengths compressionStrength;
         private Gzip _root;
         private Gzip _parent;
@@ -219,45 +190,102 @@ public class Gzip extends KaitaiStruct {
         public Gzip _root() { return _root; }
         public Gzip _parent() { return _parent; }
     }
-
-    /**
-     * Container for many subfields, constrained by size of stream.
-     */
-    public static class Subfields extends KaitaiStruct {
-        public static Subfields fromFile(String fileName) throws IOException {
-            return new Subfields(new ByteBufferKaitaiStream(fileName));
+    public static class Extras extends KaitaiStruct {
+        public static Extras fromFile(String fileName) throws IOException {
+            return new Extras(new ByteBufferKaitaiStream(fileName));
         }
 
-        public Subfields(KaitaiStream _io) {
+        public Extras(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public Subfields(KaitaiStream _io, Gzip.Extras _parent) {
+        public Extras(KaitaiStream _io, Gzip _parent) {
             this(_io, _parent, null);
         }
 
-        public Subfields(KaitaiStream _io, Gzip.Extras _parent, Gzip _root) {
+        public Extras(KaitaiStream _io, Gzip _parent, Gzip _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.entries = new ArrayList<Subfield>();
-            {
-                int i = 0;
-                while (!this._io.isEof()) {
-                    this.entries.add(new Subfield(this._io, this, _root));
-                    i++;
-                }
-            }
+            this.lenSubfields = this._io.readU2le();
+            KaitaiStream _io_subfields = this._io.substream(lenSubfields());
+            this.subfields = new Subfields(_io_subfields, this, _root);
         }
-        private ArrayList<Subfield> entries;
+
+        public void _fetchInstances() {
+            this.subfields._fetchInstances();
+        }
+        private int lenSubfields;
+        private Subfields subfields;
         private Gzip _root;
-        private Gzip.Extras _parent;
-        public ArrayList<Subfield> entries() { return entries; }
+        private Gzip _parent;
+        public int lenSubfields() { return lenSubfields; }
+        public Subfields subfields() { return subfields; }
         public Gzip _root() { return _root; }
-        public Gzip.Extras _parent() { return _parent; }
+        public Gzip _parent() { return _parent; }
+    }
+    public static class Flags extends KaitaiStruct {
+        public static Flags fromFile(String fileName) throws IOException {
+            return new Flags(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Flags(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Flags(KaitaiStream _io, Gzip _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Flags(KaitaiStream _io, Gzip _parent, Gzip _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.reserved1 = this._io.readBitsIntBe(3);
+            this.hasComment = this._io.readBitsIntBe(1) != 0;
+            this.hasName = this._io.readBitsIntBe(1) != 0;
+            this.hasExtra = this._io.readBitsIntBe(1) != 0;
+            this.hasHeaderCrc = this._io.readBitsIntBe(1) != 0;
+            this.isText = this._io.readBitsIntBe(1) != 0;
+        }
+
+        public void _fetchInstances() {
+        }
+        private long reserved1;
+        private boolean hasComment;
+        private boolean hasName;
+        private boolean hasExtra;
+        private boolean hasHeaderCrc;
+        private boolean isText;
+        private Gzip _root;
+        private Gzip _parent;
+        public long reserved1() { return reserved1; }
+        public boolean hasComment() { return hasComment; }
+        public boolean hasName() { return hasName; }
+
+        /**
+         * If true, optional extra fields are present in the archive.
+         */
+        public boolean hasExtra() { return hasExtra; }
+
+        /**
+         * If true, this archive includes a CRC16 checksum for the header.
+         */
+        public boolean hasHeaderCrc() { return hasHeaderCrc; }
+
+        /**
+         * If true, file inside this archive is a text file from
+         * compressor's point of view.
+         */
+        public boolean isText() { return isText; }
+        public Gzip _root() { return _root; }
+        public Gzip _parent() { return _parent; }
     }
 
     /**
@@ -294,6 +322,9 @@ public class Gzip extends KaitaiStruct {
             this.lenData = this._io.readU2le();
             this.data = this._io.readBytes(lenData());
         }
+
+        public void _fetchInstances() {
+        }
         private int id;
         private int lenData;
         private byte[] data;
@@ -309,41 +340,51 @@ public class Gzip extends KaitaiStruct {
         public Gzip _root() { return _root; }
         public Gzip.Subfields _parent() { return _parent; }
     }
-    public static class Extras extends KaitaiStruct {
-        public static Extras fromFile(String fileName) throws IOException {
-            return new Extras(new ByteBufferKaitaiStream(fileName));
+
+    /**
+     * Container for many subfields, constrained by size of stream.
+     */
+    public static class Subfields extends KaitaiStruct {
+        public static Subfields fromFile(String fileName) throws IOException {
+            return new Subfields(new ByteBufferKaitaiStream(fileName));
         }
 
-        public Extras(KaitaiStream _io) {
+        public Subfields(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public Extras(KaitaiStream _io, Gzip _parent) {
+        public Subfields(KaitaiStream _io, Gzip.Extras _parent) {
             this(_io, _parent, null);
         }
 
-        public Extras(KaitaiStream _io, Gzip _parent, Gzip _root) {
+        public Subfields(KaitaiStream _io, Gzip.Extras _parent, Gzip _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.lenSubfields = this._io.readU2le();
-            this._raw_subfields = this._io.readBytes(lenSubfields());
-            KaitaiStream _io__raw_subfields = new ByteBufferKaitaiStream(_raw_subfields);
-            this.subfields = new Subfields(_io__raw_subfields, this, _root);
+            this.entries = new ArrayList<Subfield>();
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.entries.add(new Subfield(this._io, this, _root));
+                    i++;
+                }
+            }
         }
-        private int lenSubfields;
-        private Subfields subfields;
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.entries.size(); i++) {
+                this.entries.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private List<Subfield> entries;
         private Gzip _root;
-        private Gzip _parent;
-        private byte[] _raw_subfields;
-        public int lenSubfields() { return lenSubfields; }
-        public Subfields subfields() { return subfields; }
+        private Gzip.Extras _parent;
+        public List<Subfield> entries() { return entries; }
         public Gzip _root() { return _root; }
-        public Gzip _parent() { return _parent; }
-        public byte[] _raw_subfields() { return _raw_subfields; }
+        public Gzip.Extras _parent() { return _parent; }
     }
     private byte[] magic;
     private CompressionMethods compressionMethod;

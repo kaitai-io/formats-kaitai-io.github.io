@@ -1,8 +1,7 @@
 import kaitai_struct_nim_runtime
 import options
-import /common/vlq_base128_be
+import vlq_base128_be
 
-import "vlq_base128_be"
 type
   Sqlite3* = ref object of KaitaiStruct
     `magic`*: seq[byte]
@@ -32,22 +31,13 @@ type
     `parent`*: KaitaiStruct
     `lenPageInst`: int
     `lenPageInstFlag`: bool
-  Sqlite3_Versions* = enum
-    legacy = 1
-    wal = 2
   Sqlite3_Encodings* = enum
     utf_8 = 1
     utf_16le = 2
     utf_16be = 3
-  Sqlite3_Serial* = ref object of KaitaiStruct
-    `code`*: VlqBase128Be
-    `parent`*: Sqlite3_Serials
-    `isBlobInst`: bool
-    `isBlobInstFlag`: bool
-    `isStringInst`: bool
-    `isStringInstFlag`: bool
-    `lenContentInst`: int
-    `lenContentInstFlag`: bool
+  Sqlite3_Versions* = enum
+    legacy = 1
+    wal = 2
   Sqlite3_BtreePage* = ref object of KaitaiStruct
     `pageType`*: uint8
     `firstFreeblock`*: uint16
@@ -57,17 +47,14 @@ type
     `rightPtr`*: uint32
     `cells`*: seq[Sqlite3_RefCell]
     `parent`*: Sqlite3
-  Sqlite3_CellIndexLeaf* = ref object of KaitaiStruct
+  Sqlite3_CellIndexInterior* = ref object of KaitaiStruct
+    `leftChildPage`*: uint32
     `lenPayload`*: VlqBase128Be
     `payload`*: Sqlite3_CellPayload
     `parent`*: Sqlite3_RefCell
     `rawPayload`*: seq[byte]
-  Sqlite3_Serials* = ref object of KaitaiStruct
-    `entries`*: seq[Sqlite3_Serial]
-    `parent`*: Sqlite3_CellPayload
-  Sqlite3_CellTableLeaf* = ref object of KaitaiStruct
+  Sqlite3_CellIndexLeaf* = ref object of KaitaiStruct
     `lenPayload`*: VlqBase128Be
-    `rowId`*: VlqBase128Be
     `payload`*: Sqlite3_CellPayload
     `parent`*: Sqlite3_RefCell
     `rawPayload`*: seq[byte]
@@ -81,9 +68,9 @@ type
     `leftChildPage`*: uint32
     `rowId`*: VlqBase128Be
     `parent`*: Sqlite3_RefCell
-  Sqlite3_CellIndexInterior* = ref object of KaitaiStruct
-    `leftChildPage`*: uint32
+  Sqlite3_CellTableLeaf* = ref object of KaitaiStruct
     `lenPayload`*: VlqBase128Be
+    `rowId`*: VlqBase128Be
     `payload`*: Sqlite3_CellPayload
     `parent`*: Sqlite3_RefCell
     `rawPayload`*: seq[byte]
@@ -99,24 +86,36 @@ type
     `parent`*: Sqlite3_BtreePage
     `bodyInst`: KaitaiStruct
     `bodyInstFlag`: bool
+  Sqlite3_Serial* = ref object of KaitaiStruct
+    `code`*: VlqBase128Be
+    `parent`*: Sqlite3_Serials
+    `isBlobInst`: bool
+    `isBlobInstFlag`: bool
+    `isStringInst`: bool
+    `isStringInstFlag`: bool
+    `lenContentInst`: int
+    `lenContentInstFlag`: bool
+  Sqlite3_Serials* = ref object of KaitaiStruct
+    `entries`*: seq[Sqlite3_Serial]
+    `parent`*: Sqlite3_CellPayload
 
 proc read*(_: typedesc[Sqlite3], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Sqlite3
-proc read*(_: typedesc[Sqlite3_Serial], io: KaitaiStream, root: KaitaiStruct, parent: Sqlite3_Serials): Sqlite3_Serial
 proc read*(_: typedesc[Sqlite3_BtreePage], io: KaitaiStream, root: KaitaiStruct, parent: Sqlite3): Sqlite3_BtreePage
+proc read*(_: typedesc[Sqlite3_CellIndexInterior], io: KaitaiStream, root: KaitaiStruct, parent: Sqlite3_RefCell): Sqlite3_CellIndexInterior
 proc read*(_: typedesc[Sqlite3_CellIndexLeaf], io: KaitaiStream, root: KaitaiStruct, parent: Sqlite3_RefCell): Sqlite3_CellIndexLeaf
-proc read*(_: typedesc[Sqlite3_Serials], io: KaitaiStream, root: KaitaiStruct, parent: Sqlite3_CellPayload): Sqlite3_Serials
-proc read*(_: typedesc[Sqlite3_CellTableLeaf], io: KaitaiStream, root: KaitaiStruct, parent: Sqlite3_RefCell): Sqlite3_CellTableLeaf
 proc read*(_: typedesc[Sqlite3_CellPayload], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Sqlite3_CellPayload
 proc read*(_: typedesc[Sqlite3_CellTableInterior], io: KaitaiStream, root: KaitaiStruct, parent: Sqlite3_RefCell): Sqlite3_CellTableInterior
-proc read*(_: typedesc[Sqlite3_CellIndexInterior], io: KaitaiStream, root: KaitaiStruct, parent: Sqlite3_RefCell): Sqlite3_CellIndexInterior
+proc read*(_: typedesc[Sqlite3_CellTableLeaf], io: KaitaiStream, root: KaitaiStruct, parent: Sqlite3_RefCell): Sqlite3_CellTableLeaf
 proc read*(_: typedesc[Sqlite3_ColumnContent], io: KaitaiStream, root: KaitaiStruct, parent: Sqlite3_CellPayload, serialType: any): Sqlite3_ColumnContent
 proc read*(_: typedesc[Sqlite3_RefCell], io: KaitaiStream, root: KaitaiStruct, parent: Sqlite3_BtreePage): Sqlite3_RefCell
+proc read*(_: typedesc[Sqlite3_Serial], io: KaitaiStream, root: KaitaiStruct, parent: Sqlite3_Serials): Sqlite3_Serial
+proc read*(_: typedesc[Sqlite3_Serials], io: KaitaiStream, root: KaitaiStruct, parent: Sqlite3_CellPayload): Sqlite3_Serials
 
 proc lenPage*(this: Sqlite3): int
+proc body*(this: Sqlite3_RefCell): KaitaiStruct
 proc isBlob*(this: Sqlite3_Serial): bool
 proc isString*(this: Sqlite3_Serial): bool
 proc lenContent*(this: Sqlite3_Serial): int
-proc body*(this: Sqlite3_RefCell): KaitaiStruct
 
 
 ##[
@@ -267,45 +266,6 @@ proc lenPage(this: Sqlite3): int =
 proc fromFile*(_: typedesc[Sqlite3], filename: string): Sqlite3 =
   Sqlite3.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[Sqlite3_Serial], io: KaitaiStream, root: KaitaiStruct, parent: Sqlite3_Serials): Sqlite3_Serial =
-  template this: untyped = result
-  this = new(Sqlite3_Serial)
-  let root = if root == nil: cast[Sqlite3](this) else: cast[Sqlite3](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let codeExpr = VlqBase128Be.read(this.io, this.root, this)
-  this.code = codeExpr
-
-proc isBlob(this: Sqlite3_Serial): bool = 
-  if this.isBlobInstFlag:
-    return this.isBlobInst
-  let isBlobInstExpr = bool( ((this.code.value >= 12) and ((this.code.value %%% 2) == 0)) )
-  this.isBlobInst = isBlobInstExpr
-  this.isBlobInstFlag = true
-  return this.isBlobInst
-
-proc isString(this: Sqlite3_Serial): bool = 
-  if this.isStringInstFlag:
-    return this.isStringInst
-  let isStringInstExpr = bool( ((this.code.value >= 13) and ((this.code.value %%% 2) == 1)) )
-  this.isStringInst = isStringInstExpr
-  this.isStringInstFlag = true
-  return this.isStringInst
-
-proc lenContent(this: Sqlite3_Serial): int = 
-  if this.lenContentInstFlag:
-    return this.lenContentInst
-  if this.code.value >= 12:
-    let lenContentInstExpr = int(((this.code.value - 12) div 2))
-    this.lenContentInst = lenContentInstExpr
-  this.lenContentInstFlag = true
-  return this.lenContentInst
-
-proc fromFile*(_: typedesc[Sqlite3_Serial], filename: string): Sqlite3_Serial =
-  Sqlite3_Serial.read(newKaitaiFileStream(filename), nil, nil)
-
 proc read*(_: typedesc[Sqlite3_BtreePage], io: KaitaiStream, root: KaitaiStruct, parent: Sqlite3): Sqlite3_BtreePage =
   template this: untyped = result
   this = new(Sqlite3_BtreePage)
@@ -338,6 +298,31 @@ proc fromFile*(_: typedesc[Sqlite3_BtreePage], filename: string): Sqlite3_BtreeP
 ##[
 @see <a href="https://www.sqlite.org/fileformat.html#b_tree_pages">Source</a>
 ]##
+proc read*(_: typedesc[Sqlite3_CellIndexInterior], io: KaitaiStream, root: KaitaiStruct, parent: Sqlite3_RefCell): Sqlite3_CellIndexInterior =
+  template this: untyped = result
+  this = new(Sqlite3_CellIndexInterior)
+  let root = if root == nil: cast[Sqlite3](this) else: cast[Sqlite3](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let leftChildPageExpr = this.io.readU4be()
+  this.leftChildPage = leftChildPageExpr
+  let lenPayloadExpr = VlqBase128Be.read(this.io, nil, nil)
+  this.lenPayload = lenPayloadExpr
+  let rawPayloadExpr = this.io.readBytes(int(this.lenPayload.value))
+  this.rawPayload = rawPayloadExpr
+  let rawPayloadIo = newKaitaiStream(rawPayloadExpr)
+  let payloadExpr = Sqlite3_CellPayload.read(rawPayloadIo, this.root, this)
+  this.payload = payloadExpr
+
+proc fromFile*(_: typedesc[Sqlite3_CellIndexInterior], filename: string): Sqlite3_CellIndexInterior =
+  Sqlite3_CellIndexInterior.read(newKaitaiFileStream(filename), nil, nil)
+
+
+##[
+@see <a href="https://www.sqlite.org/fileformat.html#b_tree_pages">Source</a>
+]##
 proc read*(_: typedesc[Sqlite3_CellIndexLeaf], io: KaitaiStream, root: KaitaiStruct, parent: Sqlite3_RefCell): Sqlite3_CellIndexLeaf =
   template this: untyped = result
   this = new(Sqlite3_CellIndexLeaf)
@@ -346,7 +331,7 @@ proc read*(_: typedesc[Sqlite3_CellIndexLeaf], io: KaitaiStream, root: KaitaiStr
   this.root = root
   this.parent = parent
 
-  let lenPayloadExpr = VlqBase128Be.read(this.io, this.root, this)
+  let lenPayloadExpr = VlqBase128Be.read(this.io, nil, nil)
   this.lenPayload = lenPayloadExpr
   let rawPayloadExpr = this.io.readBytes(int(this.lenPayload.value))
   this.rawPayload = rawPayloadExpr
@@ -356,49 +341,6 @@ proc read*(_: typedesc[Sqlite3_CellIndexLeaf], io: KaitaiStream, root: KaitaiStr
 
 proc fromFile*(_: typedesc[Sqlite3_CellIndexLeaf], filename: string): Sqlite3_CellIndexLeaf =
   Sqlite3_CellIndexLeaf.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Sqlite3_Serials], io: KaitaiStream, root: KaitaiStruct, parent: Sqlite3_CellPayload): Sqlite3_Serials =
-  template this: untyped = result
-  this = new(Sqlite3_Serials)
-  let root = if root == nil: cast[Sqlite3](this) else: cast[Sqlite3](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  block:
-    var i: int
-    while not this.io.isEof:
-      let it = Sqlite3_Serial.read(this.io, this.root, this)
-      this.entries.add(it)
-      inc i
-
-proc fromFile*(_: typedesc[Sqlite3_Serials], filename: string): Sqlite3_Serials =
-  Sqlite3_Serials.read(newKaitaiFileStream(filename), nil, nil)
-
-
-##[
-@see <a href="https://www.sqlite.org/fileformat.html#b_tree_pages">Source</a>
-]##
-proc read*(_: typedesc[Sqlite3_CellTableLeaf], io: KaitaiStream, root: KaitaiStruct, parent: Sqlite3_RefCell): Sqlite3_CellTableLeaf =
-  template this: untyped = result
-  this = new(Sqlite3_CellTableLeaf)
-  let root = if root == nil: cast[Sqlite3](this) else: cast[Sqlite3](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let lenPayloadExpr = VlqBase128Be.read(this.io, this.root, this)
-  this.lenPayload = lenPayloadExpr
-  let rowIdExpr = VlqBase128Be.read(this.io, this.root, this)
-  this.rowId = rowIdExpr
-  let rawPayloadExpr = this.io.readBytes(int(this.lenPayload.value))
-  this.rawPayload = rawPayloadExpr
-  let rawPayloadIo = newKaitaiStream(rawPayloadExpr)
-  let payloadExpr = Sqlite3_CellPayload.read(rawPayloadIo, this.root, this)
-  this.payload = payloadExpr
-
-proc fromFile*(_: typedesc[Sqlite3_CellTableLeaf], filename: string): Sqlite3_CellTableLeaf =
-  Sqlite3_CellTableLeaf.read(newKaitaiFileStream(filename), nil, nil)
 
 
 ##[
@@ -412,9 +354,9 @@ proc read*(_: typedesc[Sqlite3_CellPayload], io: KaitaiStream, root: KaitaiStruc
   this.root = root
   this.parent = parent
 
-  let lenHeaderAndLenExpr = VlqBase128Be.read(this.io, this.root, this)
+  let lenHeaderAndLenExpr = VlqBase128Be.read(this.io, nil, nil)
   this.lenHeaderAndLen = lenHeaderAndLenExpr
-  let rawColumnSerialsExpr = this.io.readBytes(int((this.lenHeaderAndLen.value - 1)))
+  let rawColumnSerialsExpr = this.io.readBytes(int(this.lenHeaderAndLen.value - 1))
   this.rawColumnSerials = rawColumnSerialsExpr
   let rawColumnSerialsIo = newKaitaiStream(rawColumnSerialsExpr)
   let columnSerialsExpr = Sqlite3_Serials.read(rawColumnSerialsIo, this.root, this)
@@ -440,7 +382,7 @@ proc read*(_: typedesc[Sqlite3_CellTableInterior], io: KaitaiStream, root: Kaita
 
   let leftChildPageExpr = this.io.readU4be()
   this.leftChildPage = leftChildPageExpr
-  let rowIdExpr = VlqBase128Be.read(this.io, this.root, this)
+  let rowIdExpr = VlqBase128Be.read(this.io, nil, nil)
   this.rowId = rowIdExpr
 
 proc fromFile*(_: typedesc[Sqlite3_CellTableInterior], filename: string): Sqlite3_CellTableInterior =
@@ -450,26 +392,26 @@ proc fromFile*(_: typedesc[Sqlite3_CellTableInterior], filename: string): Sqlite
 ##[
 @see <a href="https://www.sqlite.org/fileformat.html#b_tree_pages">Source</a>
 ]##
-proc read*(_: typedesc[Sqlite3_CellIndexInterior], io: KaitaiStream, root: KaitaiStruct, parent: Sqlite3_RefCell): Sqlite3_CellIndexInterior =
+proc read*(_: typedesc[Sqlite3_CellTableLeaf], io: KaitaiStream, root: KaitaiStruct, parent: Sqlite3_RefCell): Sqlite3_CellTableLeaf =
   template this: untyped = result
-  this = new(Sqlite3_CellIndexInterior)
+  this = new(Sqlite3_CellTableLeaf)
   let root = if root == nil: cast[Sqlite3](this) else: cast[Sqlite3](root)
   this.io = io
   this.root = root
   this.parent = parent
 
-  let leftChildPageExpr = this.io.readU4be()
-  this.leftChildPage = leftChildPageExpr
-  let lenPayloadExpr = VlqBase128Be.read(this.io, this.root, this)
+  let lenPayloadExpr = VlqBase128Be.read(this.io, nil, nil)
   this.lenPayload = lenPayloadExpr
+  let rowIdExpr = VlqBase128Be.read(this.io, nil, nil)
+  this.rowId = rowIdExpr
   let rawPayloadExpr = this.io.readBytes(int(this.lenPayload.value))
   this.rawPayload = rawPayloadExpr
   let rawPayloadIo = newKaitaiStream(rawPayloadExpr)
   let payloadExpr = Sqlite3_CellPayload.read(rawPayloadIo, this.root, this)
   this.payload = payloadExpr
 
-proc fromFile*(_: typedesc[Sqlite3_CellIndexInterior], filename: string): Sqlite3_CellIndexInterior =
-  Sqlite3_CellIndexInterior.read(newKaitaiFileStream(filename), nil, nil)
+proc fromFile*(_: typedesc[Sqlite3_CellTableLeaf], filename: string): Sqlite3_CellTableLeaf =
+  Sqlite3_CellTableLeaf.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[Sqlite3_ColumnContent], io: KaitaiStream, root: KaitaiStruct, parent: Sqlite3_CellPayload, serialType: any): Sqlite3_ColumnContent =
   template this: untyped = result
@@ -484,23 +426,23 @@ proc read*(_: typedesc[Sqlite3_ColumnContent], io: KaitaiStream, root: KaitaiStr
   if  ((this.serialType.code.value >= 1) and (this.serialType.code.value <= 6)) :
     block:
       let on = this.serialType.code.value
-      if on == 4:
-        let asIntExpr = int(this.io.readU4be())
-        this.asInt = asIntExpr
-      elif on == 6:
-        let asIntExpr = int(this.io.readU8be())
-        this.asInt = asIntExpr
-      elif on == 1:
+      if on == 1:
         let asIntExpr = int(this.io.readU1())
+        this.asInt = asIntExpr
+      elif on == 2:
+        let asIntExpr = int(this.io.readU2be())
         this.asInt = asIntExpr
       elif on == 3:
         let asIntExpr = int(this.io.readBitsIntBe(24))
         this.asInt = asIntExpr
+      elif on == 4:
+        let asIntExpr = int(this.io.readU4be())
+        this.asInt = asIntExpr
       elif on == 5:
         let asIntExpr = int(this.io.readBitsIntBe(48))
         this.asInt = asIntExpr
-      elif on == 2:
-        let asIntExpr = int(this.io.readU2be())
+      elif on == 6:
+        let asIntExpr = int(this.io.readU8be())
         this.asInt = asIntExpr
   if this.serialType.code.value == 7:
     let asFloatExpr = this.io.readF8be()
@@ -532,17 +474,17 @@ proc body(this: Sqlite3_RefCell): KaitaiStruct =
   this.io.seek(int(this.ofsBody))
   block:
     let on = this.parent.pageType
-    if on == 13:
-      let bodyInstExpr = Sqlite3_CellTableLeaf.read(this.io, this.root, this)
-      this.bodyInst = bodyInstExpr
-    elif on == 5:
-      let bodyInstExpr = Sqlite3_CellTableInterior.read(this.io, this.root, this)
-      this.bodyInst = bodyInstExpr
-    elif on == 10:
+    if on == 10:
       let bodyInstExpr = Sqlite3_CellIndexLeaf.read(this.io, this.root, this)
+      this.bodyInst = bodyInstExpr
+    elif on == 13:
+      let bodyInstExpr = Sqlite3_CellTableLeaf.read(this.io, this.root, this)
       this.bodyInst = bodyInstExpr
     elif on == 2:
       let bodyInstExpr = Sqlite3_CellIndexInterior.read(this.io, this.root, this)
+      this.bodyInst = bodyInstExpr
+    elif on == 5:
+      let bodyInstExpr = Sqlite3_CellTableInterior.read(this.io, this.root, this)
       this.bodyInst = bodyInstExpr
   this.io.seek(pos)
   this.bodyInstFlag = true
@@ -550,4 +492,61 @@ proc body(this: Sqlite3_RefCell): KaitaiStruct =
 
 proc fromFile*(_: typedesc[Sqlite3_RefCell], filename: string): Sqlite3_RefCell =
   Sqlite3_RefCell.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Sqlite3_Serial], io: KaitaiStream, root: KaitaiStruct, parent: Sqlite3_Serials): Sqlite3_Serial =
+  template this: untyped = result
+  this = new(Sqlite3_Serial)
+  let root = if root == nil: cast[Sqlite3](this) else: cast[Sqlite3](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let codeExpr = VlqBase128Be.read(this.io, nil, nil)
+  this.code = codeExpr
+
+proc isBlob(this: Sqlite3_Serial): bool = 
+  if this.isBlobInstFlag:
+    return this.isBlobInst
+  let isBlobInstExpr = bool( ((this.code.value >= 12) and (this.code.value %%% 2 == 0)) )
+  this.isBlobInst = isBlobInstExpr
+  this.isBlobInstFlag = true
+  return this.isBlobInst
+
+proc isString(this: Sqlite3_Serial): bool = 
+  if this.isStringInstFlag:
+    return this.isStringInst
+  let isStringInstExpr = bool( ((this.code.value >= 13) and (this.code.value %%% 2 == 1)) )
+  this.isStringInst = isStringInstExpr
+  this.isStringInstFlag = true
+  return this.isStringInst
+
+proc lenContent(this: Sqlite3_Serial): int = 
+  if this.lenContentInstFlag:
+    return this.lenContentInst
+  if this.code.value >= 12:
+    let lenContentInstExpr = int((this.code.value - 12) div 2)
+    this.lenContentInst = lenContentInstExpr
+  this.lenContentInstFlag = true
+  return this.lenContentInst
+
+proc fromFile*(_: typedesc[Sqlite3_Serial], filename: string): Sqlite3_Serial =
+  Sqlite3_Serial.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Sqlite3_Serials], io: KaitaiStream, root: KaitaiStruct, parent: Sqlite3_CellPayload): Sqlite3_Serials =
+  template this: untyped = result
+  this = new(Sqlite3_Serials)
+  let root = if root == nil: cast[Sqlite3](this) else: cast[Sqlite3](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  block:
+    var i: int
+    while not this.io.isEof:
+      let it = Sqlite3_Serial.read(this.io, this.root, this)
+      this.entries.add(it)
+      inc i
+
+proc fromFile*(_: typedesc[Sqlite3_Serials], filename: string): Sqlite3_Serials =
+  Sqlite3_Serials.read(newKaitaiFileStream(filename), nil, nil)
 

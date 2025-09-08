@@ -114,7 +114,7 @@ password the client used was the correct one.
   this.lenEssid = lenEssidExpr
   let essidExpr = this.io.readBytes(int(this.lenEssid))
   this.essid = essidExpr
-  let padding1Expr = this.io.readBytes(int((32 - this.lenEssid)))
+  let padding1Expr = this.io.readBytes(int(32 - this.lenEssid))
   this.padding1 = padding1Expr
 
   ##[
@@ -164,7 +164,7 @@ password the client used was the correct one.
   this.lenEapol = lenEapolExpr
   let eapolExpr = this.io.readBytes(int(this.lenEapol))
   this.eapol = eapolExpr
-  let padding2Expr = this.io.readBytes(int((256 - this.lenEapol)))
+  let padding2Expr = this.io.readBytes(int(256 - this.lenEapol))
   this.padding2 = padding2Expr
 
 proc fromFile*(_: typedesc[Hccapx_HccapxRecord], filename: string): Hccapx_HccapxRecord =

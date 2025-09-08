@@ -5,10 +5,11 @@ import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.Arrays;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
 
 
 /**
@@ -46,6 +47,10 @@ public class Lvm2 extends KaitaiStruct {
     private void _read() {
         this.pv = new PhysicalVolume(this._io, this, _root);
     }
+
+    public void _fetchInstances() {
+        this.pv._fetchInstances();
+    }
     public static class PhysicalVolume extends KaitaiStruct {
         public static PhysicalVolume fromFile(String fileName) throws IOException {
             return new PhysicalVolume(new ByteBufferKaitaiStream(fileName));
@@ -68,6 +73,10 @@ public class Lvm2 extends KaitaiStruct {
         private void _read() {
             this.emptySector = this._io.readBytes(_root().sectorSize());
             this.label = new Label(this._io, this, _root);
+        }
+
+        public void _fetchInstances() {
+            this.label._fetchInstances();
         }
         public static class Label extends KaitaiStruct {
             public static Label fromFile(String fileName) throws IOException {
@@ -92,6 +101,11 @@ public class Lvm2 extends KaitaiStruct {
                 this.labelHeader = new LabelHeader(this._io, this, _root);
                 this.volumeHeader = new VolumeHeader(this._io, this, _root);
             }
+
+            public void _fetchInstances() {
+                this.labelHeader._fetchInstances();
+                this.volumeHeader._fetchInstances();
+            }
             public static class LabelHeader extends KaitaiStruct {
                 public static LabelHeader fromFile(String fileName) throws IOException {
                     return new LabelHeader(new ByteBufferKaitaiStream(fileName));
@@ -113,12 +127,16 @@ public class Lvm2 extends KaitaiStruct {
                 }
                 private void _read() {
                     this.signature = this._io.readBytes(8);
-                    if (!(Arrays.equals(signature(), new byte[] { 76, 65, 66, 69, 76, 79, 78, 69 }))) {
-                        throw new KaitaiStream.ValidationNotEqualError(new byte[] { 76, 65, 66, 69, 76, 79, 78, 69 }, signature(), _io(), "/types/physical_volume/types/label/types/label_header/seq/0");
+                    if (!(Arrays.equals(this.signature, new byte[] { 76, 65, 66, 69, 76, 79, 78, 69 }))) {
+                        throw new KaitaiStream.ValidationNotEqualError(new byte[] { 76, 65, 66, 69, 76, 79, 78, 69 }, this.signature, this._io, "/types/physical_volume/types/label/types/label_header/seq/0");
                     }
                     this.sectorNumber = this._io.readU8le();
                     this.checksum = this._io.readU4le();
                     this.labelHeader = new LabelHeader(this._io, this, _root);
+                }
+
+                public void _fetchInstances() {
+                    this.labelHeader._fetchInstances();
                 }
                 public static class LabelHeader extends KaitaiStruct {
                     public static LabelHeader fromFile(String fileName) throws IOException {
@@ -142,9 +160,12 @@ public class Lvm2 extends KaitaiStruct {
                     private void _read() {
                         this.dataOffset = this._io.readU4le();
                         this.typeIndicator = this._io.readBytes(8);
-                        if (!(Arrays.equals(typeIndicator(), new byte[] { 76, 86, 77, 50, 32, 48, 48, 49 }))) {
-                            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 76, 86, 77, 50, 32, 48, 48, 49 }, typeIndicator(), _io(), "/types/physical_volume/types/label/types/label_header/types/label_header_/seq/1");
+                        if (!(Arrays.equals(this.typeIndicator, new byte[] { 76, 86, 77, 50, 32, 48, 48, 49 }))) {
+                            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 76, 86, 77, 50, 32, 48, 48, 49 }, this.typeIndicator, this._io, "/types/physical_volume/types/label/types/label_header/types/label_header_/seq/1");
                         }
+                    }
+
+                    public void _fetchInstances() {
                     }
                     private long dataOffset;
                     private byte[] typeIndicator;
@@ -200,7 +221,7 @@ public class Lvm2 extends KaitaiStruct {
                     _read();
                 }
                 private void _read() {
-                    this.id = new String(this._io.readBytes(32), Charset.forName("ascii"));
+                    this.id = new String(this._io.readBytes(32), StandardCharsets.US_ASCII);
                     this.size = this._io.readU8le();
                     this.dataAreaDescriptors = new ArrayList<DataAreaDescriptor>();
                     {
@@ -221,6 +242,15 @@ public class Lvm2 extends KaitaiStruct {
                             this.metadataAreaDescriptors.add(_it);
                             i++;
                         } while (!( ((_it.size() != 0) && (_it.offset() != 0)) ));
+                    }
+                }
+
+                public void _fetchInstances() {
+                    for (int i = 0; i < this.dataAreaDescriptors.size(); i++) {
+                        this.dataAreaDescriptors.get(((Number) (i)).intValue())._fetchInstances();
+                    }
+                    for (int i = 0; i < this.metadataAreaDescriptors.size(); i++) {
+                        this.metadataAreaDescriptors.get(((Number) (i)).intValue())._fetchInstances();
                     }
                 }
                 public static class DataAreaDescriptor extends KaitaiStruct {
@@ -246,6 +276,12 @@ public class Lvm2 extends KaitaiStruct {
                         this.offset = this._io.readU8le();
                         this.size = this._io.readU8le();
                     }
+
+                    public void _fetchInstances() {
+                        data();
+                        if (this.data != null) {
+                        }
+                    }
                     private String data;
                     public String data() {
                         if (this.data != null)
@@ -253,7 +289,7 @@ public class Lvm2 extends KaitaiStruct {
                         if (size() != 0) {
                             long _pos = this._io.pos();
                             this._io.seek(offset());
-                            this.data = new String(this._io.readBytes(size()), Charset.forName("ascii"));
+                            this.data = new String(this._io.readBytes(size()), StandardCharsets.US_ASCII);
                             this._io.seek(_pos);
                         }
                         return this.data;
@@ -274,62 +310,6 @@ public class Lvm2 extends KaitaiStruct {
                     public long size() { return size; }
                     public Lvm2 _root() { return _root; }
                     public Lvm2.PhysicalVolume.Label.VolumeHeader _parent() { return _parent; }
-                }
-                public static class MetadataAreaDescriptor extends KaitaiStruct {
-                    public static MetadataAreaDescriptor fromFile(String fileName) throws IOException {
-                        return new MetadataAreaDescriptor(new ByteBufferKaitaiStream(fileName));
-                    }
-
-                    public MetadataAreaDescriptor(KaitaiStream _io) {
-                        this(_io, null, null);
-                    }
-
-                    public MetadataAreaDescriptor(KaitaiStream _io, Lvm2.PhysicalVolume.Label.VolumeHeader _parent) {
-                        this(_io, _parent, null);
-                    }
-
-                    public MetadataAreaDescriptor(KaitaiStream _io, Lvm2.PhysicalVolume.Label.VolumeHeader _parent, Lvm2 _root) {
-                        super(_io);
-                        this._parent = _parent;
-                        this._root = _root;
-                        _read();
-                    }
-                    private void _read() {
-                        this.offset = this._io.readU8le();
-                        this.size = this._io.readU8le();
-                    }
-                    private MetadataArea data;
-                    public MetadataArea data() {
-                        if (this.data != null)
-                            return this.data;
-                        if (size() != 0) {
-                            long _pos = this._io.pos();
-                            this._io.seek(offset());
-                            this._raw_data = this._io.readBytes(size());
-                            KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
-                            this.data = new MetadataArea(_io__raw_data, this, _root);
-                            this._io.seek(_pos);
-                        }
-                        return this.data;
-                    }
-                    private long offset;
-                    private long size;
-                    private Lvm2 _root;
-                    private Lvm2.PhysicalVolume.Label.VolumeHeader _parent;
-                    private byte[] _raw_data;
-
-                    /**
-                     * The offset, in bytes, relative from the start of the physical volume
-                     */
-                    public long offset() { return offset; }
-
-                    /**
-                     * Value in bytes
-                     */
-                    public long size() { return size; }
-                    public Lvm2 _root() { return _root; }
-                    public Lvm2.PhysicalVolume.Label.VolumeHeader _parent() { return _parent; }
-                    public byte[] _raw_data() { return _raw_data; }
                 }
 
                 /**
@@ -357,6 +337,10 @@ public class Lvm2 extends KaitaiStruct {
                     private void _read() {
                         this.header = new MetadataAreaHeader(this._io, this, _root);
                     }
+
+                    public void _fetchInstances() {
+                        this.header._fetchInstances();
+                    }
                     public static class MetadataAreaHeader extends KaitaiStruct {
                         public static MetadataAreaHeader fromFile(String fileName) throws IOException {
                             return new MetadataAreaHeader(new ByteBufferKaitaiStream(fileName));
@@ -379,8 +363,8 @@ public class Lvm2 extends KaitaiStruct {
                         private void _read() {
                             this.checksum = new MetadataAreaHeader(this._io, this, _root);
                             this.signature = this._io.readBytes(16);
-                            if (!(Arrays.equals(signature(), new byte[] { 32, 76, 86, 77, 50, 32, 120, 91, 53, 65, 37, 114, 48, 78, 42, 62 }))) {
-                                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 32, 76, 86, 77, 50, 32, 120, 91, 53, 65, 37, 114, 48, 78, 42, 62 }, signature(), _io(), "/types/physical_volume/types/label/types/volume_header/types/metadata_area/types/metadata_area_header/seq/1");
+                            if (!(Arrays.equals(this.signature, new byte[] { 32, 76, 86, 77, 50, 32, 120, 91, 53, 65, 37, 114, 48, 78, 42, 62 }))) {
+                                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 32, 76, 86, 77, 50, 32, 120, 91, 53, 65, 37, 114, 48, 78, 42, 62 }, this.signature, this._io, "/types/physical_volume/types/label/types/volume_header/types/metadata_area/types/metadata_area_header/seq/1");
                             }
                             this.version = this._io.readU4le();
                             this.metadataAreaOffset = this._io.readU8le();
@@ -394,6 +378,16 @@ public class Lvm2 extends KaitaiStruct {
                                     this.rawLocationDescriptors.add(_it);
                                     i++;
                                 } while (!( ((_it.offset() != 0) && (_it.size() != 0) && (_it.checksum() != 0)) ));
+                            }
+                        }
+
+                        public void _fetchInstances() {
+                            this.checksum._fetchInstances();
+                            for (int i = 0; i < this.rawLocationDescriptors.size(); i++) {
+                                this.rawLocationDescriptors.get(((Number) (i)).intValue())._fetchInstances();
+                            }
+                            metadata();
+                            if (this.metadata != null) {
                             }
                         }
 
@@ -439,6 +433,9 @@ public class Lvm2 extends KaitaiStruct {
                                 this.checksum = this._io.readU4le();
                                 this.flags = RawLocationDescriptorFlags.byId(this._io.readU4le());
                             }
+
+                            public void _fetchInstances() {
+                            }
                             private long offset;
                             private long size;
                             private long checksum;
@@ -479,7 +476,7 @@ public class Lvm2 extends KaitaiStruct {
                         private long version;
                         private long metadataAreaOffset;
                         private long metadataAreaSize;
-                        private ArrayList<RawLocationDescriptor> rawLocationDescriptors;
+                        private List<RawLocationDescriptor> rawLocationDescriptors;
                         private Lvm2 _root;
                         private KaitaiStruct _parent;
 
@@ -499,7 +496,7 @@ public class Lvm2 extends KaitaiStruct {
                         /**
                          * The last descriptor in the list is terminator and consists of 0-byte values.
                          */
-                        public ArrayList<RawLocationDescriptor> rawLocationDescriptors() { return rawLocationDescriptors; }
+                        public List<RawLocationDescriptor> rawLocationDescriptors() { return rawLocationDescriptors; }
                         public Lvm2 _root() { return _root; }
                         public KaitaiStruct _parent() { return _parent; }
                     }
@@ -510,10 +507,70 @@ public class Lvm2 extends KaitaiStruct {
                     public Lvm2 _root() { return _root; }
                     public Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataAreaDescriptor _parent() { return _parent; }
                 }
+                public static class MetadataAreaDescriptor extends KaitaiStruct {
+                    public static MetadataAreaDescriptor fromFile(String fileName) throws IOException {
+                        return new MetadataAreaDescriptor(new ByteBufferKaitaiStream(fileName));
+                    }
+
+                    public MetadataAreaDescriptor(KaitaiStream _io) {
+                        this(_io, null, null);
+                    }
+
+                    public MetadataAreaDescriptor(KaitaiStream _io, Lvm2.PhysicalVolume.Label.VolumeHeader _parent) {
+                        this(_io, _parent, null);
+                    }
+
+                    public MetadataAreaDescriptor(KaitaiStream _io, Lvm2.PhysicalVolume.Label.VolumeHeader _parent, Lvm2 _root) {
+                        super(_io);
+                        this._parent = _parent;
+                        this._root = _root;
+                        _read();
+                    }
+                    private void _read() {
+                        this.offset = this._io.readU8le();
+                        this.size = this._io.readU8le();
+                    }
+
+                    public void _fetchInstances() {
+                        data();
+                        if (this.data != null) {
+                            this.data._fetchInstances();
+                        }
+                    }
+                    private MetadataArea data;
+                    public MetadataArea data() {
+                        if (this.data != null)
+                            return this.data;
+                        if (size() != 0) {
+                            long _pos = this._io.pos();
+                            this._io.seek(offset());
+                            KaitaiStream _io_data = this._io.substream(size());
+                            this.data = new MetadataArea(_io_data, this, _root);
+                            this._io.seek(_pos);
+                        }
+                        return this.data;
+                    }
+                    private long offset;
+                    private long size;
+                    private Lvm2 _root;
+                    private Lvm2.PhysicalVolume.Label.VolumeHeader _parent;
+
+                    /**
+                     * The offset, in bytes, relative from the start of the physical volume
+                     */
+                    public long offset() { return offset; }
+
+                    /**
+                     * Value in bytes
+                     */
+                    public long size() { return size; }
+                    public Lvm2 _root() { return _root; }
+                    public Lvm2.PhysicalVolume.Label.VolumeHeader _parent() { return _parent; }
+                }
                 private String id;
                 private long size;
-                private ArrayList<DataAreaDescriptor> dataAreaDescriptors;
-                private ArrayList<MetadataAreaDescriptor> metadataAreaDescriptors;
+                private List<DataAreaDescriptor> dataAreaDescriptors;
+                private List<MetadataAreaDescriptor> metadataAreaDescriptors;
                 private Lvm2 _root;
                 private Lvm2.PhysicalVolume.Label _parent;
 
@@ -530,8 +587,8 @@ public class Lvm2 extends KaitaiStruct {
                 /**
                  * The last descriptor in the list is terminator and consists of 0-byte values.
                  */
-                public ArrayList<DataAreaDescriptor> dataAreaDescriptors() { return dataAreaDescriptors; }
-                public ArrayList<MetadataAreaDescriptor> metadataAreaDescriptors() { return metadataAreaDescriptors; }
+                public List<DataAreaDescriptor> dataAreaDescriptors() { return dataAreaDescriptors; }
+                public List<MetadataAreaDescriptor> metadataAreaDescriptors() { return metadataAreaDescriptors; }
                 public Lvm2 _root() { return _root; }
                 public Lvm2.PhysicalVolume.Label _parent() { return _parent; }
             }
@@ -557,8 +614,7 @@ public class Lvm2 extends KaitaiStruct {
     public Integer sectorSize() {
         if (this.sectorSize != null)
             return this.sectorSize;
-        int _tmp = (int) (512);
-        this.sectorSize = _tmp;
+        this.sectorSize = ((int) 512);
         return this.sectorSize;
     }
     private PhysicalVolume pv;

@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -16,16 +16,16 @@ end
 # which can be downloaded from <https://developers.google.com/android/images>
 # @see https://android.googlesource.com/device/asus/fugu/+/android-8.1.0_r5/releasetools.py Source
 class AndroidBootldrAsus < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
     @magic = @_io.read_bytes(8)
-    raise Kaitai::Struct::ValidationNotEqualError.new([66, 79, 79, 84, 76, 68, 82, 33].pack('C*'), magic, _io, "/seq/0") if not magic == [66, 79, 79, 84, 76, 68, 82, 33].pack('C*')
+    raise Kaitai::Struct::ValidationNotEqualError.new([66, 79, 79, 84, 76, 68, 82, 33].pack('C*'), @magic, @_io, "/seq/0") if not @magic == [66, 79, 79, 84, 76, 68, 82, 33].pack('C*')
     @revision = @_io.read_u2le
-    raise Kaitai::Struct::ValidationLessThanError.new(2, revision, _io, "/seq/1") if not revision >= 2
+    raise Kaitai::Struct::ValidationLessThanError.new(2, @revision, @_io, "/seq/1") if not @revision >= 2
     @reserved1 = @_io.read_u2le
     @reserved2 = @_io.read_u4le
     @images = []
@@ -35,18 +35,18 @@ class AndroidBootldrAsus < Kaitai::Struct::Struct
     self
   end
   class Image < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @chunk_id = (@_io.read_bytes(8)).force_encoding("ASCII")
-      raise Kaitai::Struct::ValidationNotAnyOfError.new(chunk_id, _io, "/types/image/seq/0") if not  ((chunk_id == "IFWI!!!!") || (chunk_id == "DROIDBT!") || (chunk_id == "SPLASHS!")) 
+      @chunk_id = (@_io.read_bytes(8)).force_encoding("ASCII").encode('UTF-8')
+      raise Kaitai::Struct::ValidationNotAnyOfError.new(@chunk_id, @_io, "/types/image/seq/0") if not  ((@chunk_id == "IFWI!!!!") || (@chunk_id == "DROIDBT!") || (@chunk_id == "SPLASHS!")) 
       @len_body = @_io.read_u4le
       @flags = @_io.read_u1
-      _ = flags
-      raise Kaitai::Struct::ValidationExprError.new(flags, _io, "/types/image/seq/2") if not (_ & 1) != 0
+      _ = @flags
+      raise Kaitai::Struct::ValidationExprError.new(@flags, @_io, "/types/image/seq/2") if not _ & 1 != 0
       @reserved1 = @_io.read_u1
       @reserved2 = @_io.read_u1
       @reserved3 = @_io.read_u1

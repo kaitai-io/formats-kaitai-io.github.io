@@ -1,0 +1,375 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__bmp {
+		label="Bmp";
+		graph[style=dotted];
+
+		bmp__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="file_hdr_pos">0</TD><TD PORT="file_hdr_size">14</TD><TD>FileHeader</TD><TD PORT="file_hdr_type">file_hdr</TD></TR>
+			<TR><TD PORT="dib_info_pos">14</TD><TD PORT="dib_info_size">file_hdr.ofs_bitmap - 14</TD><TD>BitmapInfo</TD><TD PORT="dib_info_type">dib_info</TD></TR>
+			<TR><TD PORT="bitmap_pos">...</TD><TD PORT="bitmap_size">⇲</TD><TD>Bitmap</TD><TD PORT="bitmap_type">bitmap</TD></TR>
+		</TABLE>>];
+		subgraph cluster__bitmap {
+			label="Bmp::Bitmap";
+			graph[style=dotted];
+
+			bitmap__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__bitmap_header {
+			label="Bmp::BitmapHeader";
+			graph[style=dotted];
+
+			bitmap_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="image_width_pos">0</TD><TD PORT="image_width_size">...</TD><TD>switch (is_core_header)</TD><TD PORT="image_width_type">image_width</TD></TR>
+				<TR><TD PORT="image_height_raw_pos">...</TD><TD PORT="image_height_raw_size">...</TD><TD>switch (is_core_header)</TD><TD PORT="image_height_raw_type">image_height_raw</TD></TR>
+				<TR><TD PORT="num_planes_pos">...</TD><TD PORT="num_planes_size">2</TD><TD>u2le</TD><TD PORT="num_planes_type">num_planes</TD></TR>
+				<TR><TD PORT="bits_per_pixel_pos">...</TD><TD PORT="bits_per_pixel_size">2</TD><TD>u2le</TD><TD PORT="bits_per_pixel_type">bits_per_pixel</TD></TR>
+				<TR><TD PORT="bitmap_info_ext_pos">...</TD><TD PORT="bitmap_info_ext_size">28</TD><TD>BitmapInfoExtension</TD><TD PORT="bitmap_info_ext_type">bitmap_info_ext</TD></TR>
+				<TR><TD COLSPAN="4" PORT="bitmap_info_ext__if">if extends_bitmap_info</TD></TR>
+				<TR><TD PORT="color_mask_pos">...</TD><TD PORT="color_mask_size">16</TD><TD>ColorMask</TD><TD PORT="color_mask_type">color_mask</TD></TR>
+				<TR><TD COLSPAN="4" PORT="color_mask__if">if is_color_mask_here</TD></TR>
+				<TR><TD PORT="os2_2x_bitmap_ext_pos">...</TD><TD PORT="os2_2x_bitmap_ext_size">24</TD><TD>Os22xBitmapExtension</TD><TD PORT="os2_2x_bitmap_ext_type">os2_2x_bitmap_ext</TD></TR>
+				<TR><TD COLSPAN="4" PORT="os2_2x_bitmap_ext__if">if extends_os2_2x_bitmap</TD></TR>
+				<TR><TD PORT="bitmap_v4_ext_pos">...</TD><TD PORT="bitmap_v4_ext_size">52</TD><TD>BitmapV4Extension</TD><TD PORT="bitmap_v4_ext_type">bitmap_v4_ext</TD></TR>
+				<TR><TD COLSPAN="4" PORT="bitmap_v4_ext__if">if extends_bitmap_v4</TD></TR>
+				<TR><TD PORT="bitmap_v5_ext_pos">...</TD><TD PORT="bitmap_v5_ext_size">16</TD><TD>BitmapV5Extension</TD><TD PORT="bitmap_v5_ext_type">bitmap_v5_ext</TD></TR>
+				<TR><TD COLSPAN="4" PORT="bitmap_v5_ext__if">if extends_bitmap_v5</TD></TR>
+			</TABLE>>];
+			bitmap_header__inst__bottom_up [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>bottom_up</TD><TD>image_height_raw &gt; 0</TD></TR>
+			</TABLE>>];
+			bitmap_header__inst__extends_bitmap_info [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>extends_bitmap_info</TD><TD>len_header &gt;= (Bmp::I__HEADER_TYPE[:header_type_bitmap_info_header] || :header_type_bitmap_info_header)</TD></TR>
+			</TABLE>>];
+			bitmap_header__inst__extends_bitmap_v4 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>extends_bitmap_v4</TD><TD>len_header &gt;= (Bmp::I__HEADER_TYPE[:header_type_bitmap_v4_header] || :header_type_bitmap_v4_header)</TD></TR>
+			</TABLE>>];
+			bitmap_header__inst__extends_bitmap_v5 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>extends_bitmap_v5</TD><TD>len_header &gt;= (Bmp::I__HEADER_TYPE[:header_type_bitmap_v5_header] || :header_type_bitmap_v5_header)</TD></TR>
+			</TABLE>>];
+			bitmap_header__inst__extends_os2_2x_bitmap [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>extends_os2_2x_bitmap</TD><TD>len_header == (Bmp::I__HEADER_TYPE[:header_type_os2_2x_bitmap_header] || :header_type_os2_2x_bitmap_header)</TD></TR>
+			</TABLE>>];
+			bitmap_header__inst__image_height [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>image_height</TD><TD>(image_height_raw &lt; 0 ? -(image_height_raw) : image_height_raw)</TD></TR>
+			</TABLE>>];
+			bitmap_header__inst__is_color_mask_here [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_color_mask_here</TD><TD> ((len_header == (Bmp::I__HEADER_TYPE[:header_type_bitmap_v2_info_header] || :header_type_bitmap_v2_info_header)) || (len_header == (Bmp::I__HEADER_TYPE[:header_type_bitmap_v3_info_header] || :header_type_bitmap_v3_info_header)) || (extends_bitmap_v4)) </TD></TR>
+			</TABLE>>];
+			bitmap_header__inst__is_core_header [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_core_header</TD><TD>len_header == (Bmp::I__HEADER_TYPE[:header_type_bitmap_core_header] || :header_type_bitmap_core_header)</TD></TR>
+			</TABLE>>];
+			bitmap_header__inst__uses_fixed_palette [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>uses_fixed_palette</TD><TD> ((!( ((bits_per_pixel == 16) || (bits_per_pixel == 24) || (bits_per_pixel == 32)) )) &amp;&amp; (!( ((extends_bitmap_info) &amp;&amp; (!(extends_os2_2x_bitmap)) &amp;&amp; ( ((bitmap_info_ext.compression == :compressions_jpeg) || (bitmap_info_ext.compression == :compressions_png)) )) ))) </TD></TR>
+			</TABLE>>];
+bitmap_header__seq_image_width_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+</TABLE>>];
+bitmap_header__seq_image_height_raw_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+</TABLE>>];
+		}
+		subgraph cluster__bitmap_info {
+			label="Bmp::BitmapInfo";
+			graph[style=dotted];
+
+			bitmap_info__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="len_header_pos">0</TD><TD PORT="len_header_size">4</TD><TD>u4le</TD><TD PORT="len_header_type">len_header</TD></TR>
+				<TR><TD PORT="header_pos">4</TD><TD PORT="header_size">len_header - 4</TD><TD>BitmapHeader</TD><TD PORT="header_type">header</TD></TR>
+				<TR><TD PORT="color_mask_pos">...</TD><TD PORT="color_mask_size">16</TD><TD>ColorMask</TD><TD PORT="color_mask_type">color_mask</TD></TR>
+				<TR><TD COLSPAN="4" PORT="color_mask__if">if is_color_mask_here</TD></TR>
+				<TR><TD PORT="color_table_pos">...</TD><TD PORT="color_table_size">⇲</TD><TD>ColorTable</TD><TD PORT="color_table_type">color_table</TD></TR>
+				<TR><TD COLSPAN="4" PORT="color_table__if">if !(_io.eof?)</TD></TR>
+			</TABLE>>];
+			bitmap_info__inst__color_mask_alpha [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>color_mask_alpha</TD><TD>( ((is_color_mask_given) &amp;&amp; (color_mask_given.has_alpha_mask))  ? color_mask_given.alpha_mask : 0)</TD></TR>
+			</TABLE>>];
+			bitmap_info__inst__color_mask_blue [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>color_mask_blue</TD><TD>(is_color_mask_given ? color_mask_given.blue_mask : (header.bits_per_pixel == 16 ? 31 : ( ((header.bits_per_pixel == 24) || (header.bits_per_pixel == 32))  ? 255 : 0)))</TD></TR>
+			</TABLE>>];
+			bitmap_info__inst__color_mask_given [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>color_mask_given</TD><TD>(is_color_mask_here ? color_mask : header.color_mask)</TD></TR>
+			</TABLE>>];
+			bitmap_info__inst__color_mask_green [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>color_mask_green</TD><TD>(is_color_mask_given ? color_mask_given.green_mask : (header.bits_per_pixel == 16 ? 992 : ( ((header.bits_per_pixel == 24) || (header.bits_per_pixel == 32))  ? 65280 : 0)))</TD></TR>
+			</TABLE>>];
+			bitmap_info__inst__color_mask_red [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>color_mask_red</TD><TD>(is_color_mask_given ? color_mask_given.red_mask : (header.bits_per_pixel == 16 ? 31744 : ( ((header.bits_per_pixel == 24) || (header.bits_per_pixel == 32))  ? 16711680 : 0)))</TD></TR>
+			</TABLE>>];
+			bitmap_info__inst__is_color_mask_given [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_color_mask_given</TD><TD> ((header.extends_bitmap_info) &amp;&amp; ( ((header.bitmap_info_ext.compression == :compressions_bitfields) || (header.bitmap_info_ext.compression == :compressions_alpha_bitfields)) ) &amp;&amp; ( ((is_color_mask_here) || (header.is_color_mask_here)) )) </TD></TR>
+			</TABLE>>];
+			bitmap_info__inst__is_color_mask_here [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_color_mask_here</TD><TD> ((!(_io.eof?)) &amp;&amp; (header.len_header == (Bmp::I__HEADER_TYPE[:header_type_bitmap_info_header] || :header_type_bitmap_info_header)) &amp;&amp; ( ((header.bitmap_info_ext.compression == :compressions_bitfields) || (header.bitmap_info_ext.compression == :compressions_alpha_bitfields)) )) </TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__bitmap_info_extension {
+			label="Bmp::BitmapInfoExtension";
+			graph[style=dotted];
+
+			bitmap_info_extension__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="compression_pos">0</TD><TD PORT="compression_size">4</TD><TD>u4le→Compressions</TD><TD PORT="compression_type">compression</TD></TR>
+				<TR><TD COLSPAN="4" PORT="compression__if">if !(_parent.extends_os2_2x_bitmap)</TD></TR>
+				<TR><TD PORT="os2_compression_pos">4</TD><TD PORT="os2_compression_size">4</TD><TD>u4le→Os2Compressions</TD><TD PORT="os2_compression_type">os2_compression</TD></TR>
+				<TR><TD COLSPAN="4" PORT="os2_compression__if">if _parent.extends_os2_2x_bitmap</TD></TR>
+				<TR><TD PORT="len_image_pos">8</TD><TD PORT="len_image_size">4</TD><TD>u4le</TD><TD PORT="len_image_type">len_image</TD></TR>
+				<TR><TD PORT="x_resolution_pos">12</TD><TD PORT="x_resolution_size">4</TD><TD>u4le</TD><TD PORT="x_resolution_type">x_resolution</TD></TR>
+				<TR><TD PORT="y_resolution_pos">16</TD><TD PORT="y_resolution_size">4</TD><TD>u4le</TD><TD PORT="y_resolution_type">y_resolution</TD></TR>
+				<TR><TD PORT="num_colors_used_pos">20</TD><TD PORT="num_colors_used_size">4</TD><TD>u4le</TD><TD PORT="num_colors_used_type">num_colors_used</TD></TR>
+				<TR><TD PORT="num_colors_important_pos">24</TD><TD PORT="num_colors_important_size">4</TD><TD>u4le</TD><TD PORT="num_colors_important_type">num_colors_important</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__bitmap_v4_extension {
+			label="Bmp::BitmapV4Extension";
+			graph[style=dotted];
+
+			bitmap_v4_extension__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="color_space_type_pos">0</TD><TD PORT="color_space_type_size">4</TD><TD>u4le→ColorSpace</TD><TD PORT="color_space_type_type">color_space_type</TD></TR>
+				<TR><TD PORT="endpoint_red_pos">4</TD><TD PORT="endpoint_red_size">12</TD><TD>CieXyz</TD><TD PORT="endpoint_red_type">endpoint_red</TD></TR>
+				<TR><TD PORT="endpoint_green_pos">16</TD><TD PORT="endpoint_green_size">12</TD><TD>CieXyz</TD><TD PORT="endpoint_green_type">endpoint_green</TD></TR>
+				<TR><TD PORT="endpoint_blue_pos">28</TD><TD PORT="endpoint_blue_size">12</TD><TD>CieXyz</TD><TD PORT="endpoint_blue_type">endpoint_blue</TD></TR>
+				<TR><TD PORT="gamma_red_pos">40</TD><TD PORT="gamma_red_size">4</TD><TD>FixedPoint16Dot16</TD><TD PORT="gamma_red_type">gamma_red</TD></TR>
+				<TR><TD PORT="gamma_blue_pos">44</TD><TD PORT="gamma_blue_size">4</TD><TD>FixedPoint16Dot16</TD><TD PORT="gamma_blue_type">gamma_blue</TD></TR>
+				<TR><TD PORT="gamma_green_pos">48</TD><TD PORT="gamma_green_size">4</TD><TD>FixedPoint16Dot16</TD><TD PORT="gamma_green_type">gamma_green</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__bitmap_v5_extension {
+			label="Bmp::BitmapV5Extension";
+			graph[style=dotted];
+
+			bitmap_v5_extension__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="intent_pos">0</TD><TD PORT="intent_size">4</TD><TD>u4le→Intent</TD><TD PORT="intent_type">intent</TD></TR>
+				<TR><TD PORT="ofs_profile_pos">4</TD><TD PORT="ofs_profile_size">4</TD><TD>u4le</TD><TD PORT="ofs_profile_type">ofs_profile</TD></TR>
+				<TR><TD PORT="len_profile_pos">8</TD><TD PORT="len_profile_size">4</TD><TD>u4le</TD><TD PORT="len_profile_type">len_profile</TD></TR>
+				<TR><TD PORT="reserved_pos">12</TD><TD PORT="reserved_size">4</TD><TD>u4le</TD><TD PORT="reserved_type">reserved</TD></TR>
+			</TABLE>>];
+			bitmap_v5_extension__inst__has_profile [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>has_profile</TD><TD> ((_parent.bitmap_v4_ext.color_space_type == :color_space_profile_linked) || (_parent.bitmap_v4_ext.color_space_type == :color_space_profile_embedded)) </TD></TR>
+			</TABLE>>];
+			bitmap_v5_extension__inst__profile_data [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="profile_data_pos">14 + ofs_profile</TD><TD PORT="profile_data_size">...</TD><TD>switch (_parent.bitmap_v4_ext.color_space_type == :color_space_profile_linked)</TD><TD PORT="profile_data_type">profile_data</TD></TR>
+				<TR><TD COLSPAN="4" PORT="profile_data__if">if has_profile</TD></TR>
+			</TABLE>>];
+bitmap_v5_extension__inst__profile_data_profile_data_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+</TABLE>>];
+		}
+		subgraph cluster__cie_xyz {
+			label="Bmp::CieXyz";
+			graph[style=dotted];
+
+			cie_xyz__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="x_pos">0</TD><TD PORT="x_size">4</TD><TD>FixedPoint2Dot30</TD><TD PORT="x_type">x</TD></TR>
+				<TR><TD PORT="y_pos">4</TD><TD PORT="y_size">4</TD><TD>FixedPoint2Dot30</TD><TD PORT="y_type">y</TD></TR>
+				<TR><TD PORT="z_pos">8</TD><TD PORT="z_size">4</TD><TD>FixedPoint2Dot30</TD><TD PORT="z_type">z</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__color_mask {
+			label="Bmp::ColorMask";
+			graph[style=dotted];
+
+			color_mask__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="red_mask_pos">0</TD><TD PORT="red_mask_size">4</TD><TD>u4le</TD><TD PORT="red_mask_type">red_mask</TD></TR>
+				<TR><TD PORT="green_mask_pos">4</TD><TD PORT="green_mask_size">4</TD><TD>u4le</TD><TD PORT="green_mask_type">green_mask</TD></TR>
+				<TR><TD PORT="blue_mask_pos">8</TD><TD PORT="blue_mask_size">4</TD><TD>u4le</TD><TD PORT="blue_mask_type">blue_mask</TD></TR>
+				<TR><TD PORT="alpha_mask_pos">12</TD><TD PORT="alpha_mask_size">4</TD><TD>u4le</TD><TD PORT="alpha_mask_type">alpha_mask</TD></TR>
+				<TR><TD COLSPAN="4" PORT="alpha_mask__if">if has_alpha_mask</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__color_table {
+			label="Bmp::ColorTable";
+			graph[style=dotted];
+
+			color_table__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="colors_pos">0</TD><TD PORT="colors_size">4</TD><TD>RgbRecord</TD><TD PORT="colors_type">colors</TD></TR>
+				<TR><TD COLSPAN="4" PORT="colors__repeat">repeat ( ((num_colors &gt; 0) &amp;&amp; (num_colors &lt; num_colors_present))  ? num_colors : num_colors_present) times</TD></TR>
+			</TABLE>>];
+			color_table__inst__num_colors_present [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>num_colors_present</TD><TD>_io.size / (has_reserved_field ? 4 : 3)</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__file_header {
+			label="Bmp::FileHeader";
+			graph[style=dotted];
+
+			file_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="file_type_pos">0</TD><TD PORT="file_type_size">2</TD><TD>42 4D</TD><TD PORT="file_type_type">file_type</TD></TR>
+				<TR><TD PORT="len_file_pos">2</TD><TD PORT="len_file_size">4</TD><TD>u4le</TD><TD PORT="len_file_type">len_file</TD></TR>
+				<TR><TD PORT="reserved1_pos">6</TD><TD PORT="reserved1_size">2</TD><TD>u2le</TD><TD PORT="reserved1_type">reserved1</TD></TR>
+				<TR><TD PORT="reserved2_pos">8</TD><TD PORT="reserved2_size">2</TD><TD>u2le</TD><TD PORT="reserved2_type">reserved2</TD></TR>
+				<TR><TD PORT="ofs_bitmap_pos">10</TD><TD PORT="ofs_bitmap_size">4</TD><TD>s4le</TD><TD PORT="ofs_bitmap_type">ofs_bitmap</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__fixed_point_16_dot_16 {
+			label="Bmp::FixedPoint16Dot16";
+			graph[style=dotted];
+
+			fixed_point_16_dot_16__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="raw_pos">0</TD><TD PORT="raw_size">4</TD><TD>u4le</TD><TD PORT="raw_type">raw</TD></TR>
+			</TABLE>>];
+			fixed_point_16_dot_16__inst__value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>value</TD><TD>(raw + 0.0) / (1 &lt;&lt; 16)</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__fixed_point_2_dot_30 {
+			label="Bmp::FixedPoint2Dot30";
+			graph[style=dotted];
+
+			fixed_point_2_dot_30__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="raw_pos">0</TD><TD PORT="raw_size">4</TD><TD>u4le</TD><TD PORT="raw_type">raw</TD></TR>
+			</TABLE>>];
+			fixed_point_2_dot_30__inst__value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>value</TD><TD>(raw + 0.0) / (1 &lt;&lt; 30)</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__os2_2x_bitmap_extension {
+			label="Bmp::Os22xBitmapExtension";
+			graph[style=dotted];
+
+			os2_2x_bitmap_extension__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="units_pos">0</TD><TD PORT="units_size">2</TD><TD>u2le</TD><TD PORT="units_type">units</TD></TR>
+				<TR><TD PORT="reserved_pos">2</TD><TD PORT="reserved_size">2</TD><TD>u2le</TD><TD PORT="reserved_type">reserved</TD></TR>
+				<TR><TD PORT="recording_pos">4</TD><TD PORT="recording_size">2</TD><TD>u2le</TD><TD PORT="recording_type">recording</TD></TR>
+				<TR><TD PORT="rendering_pos">6</TD><TD PORT="rendering_size">2</TD><TD>u2le→Os2Rendering</TD><TD PORT="rendering_type">rendering</TD></TR>
+				<TR><TD PORT="size1_pos">8</TD><TD PORT="size1_size">4</TD><TD>u4le</TD><TD PORT="size1_type">size1</TD></TR>
+				<TR><TD PORT="size2_pos">12</TD><TD PORT="size2_size">4</TD><TD>u4le</TD><TD PORT="size2_type">size2</TD></TR>
+				<TR><TD PORT="color_encoding_pos">16</TD><TD PORT="color_encoding_size">4</TD><TD>u4le</TD><TD PORT="color_encoding_type">color_encoding</TD></TR>
+				<TR><TD PORT="identifier_pos">20</TD><TD PORT="identifier_size">4</TD><TD>u4le</TD><TD PORT="identifier_type">identifier</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__rgb_record {
+			label="Bmp::RgbRecord";
+			graph[style=dotted];
+
+			rgb_record__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="blue_pos">0</TD><TD PORT="blue_size">1</TD><TD>u1</TD><TD PORT="blue_type">blue</TD></TR>
+				<TR><TD PORT="green_pos">1</TD><TD PORT="green_size">1</TD><TD>u1</TD><TD PORT="green_type">green</TD></TR>
+				<TR><TD PORT="red_pos">2</TD><TD PORT="red_size">1</TD><TD>u1</TD><TD PORT="red_type">red</TD></TR>
+				<TR><TD PORT="reserved_pos">3</TD><TD PORT="reserved_size">1</TD><TD>u1</TD><TD PORT="reserved_type">reserved</TD></TR>
+				<TR><TD COLSPAN="4" PORT="reserved__if">if has_reserved_field</TD></TR>
+			</TABLE>>];
+		}
+	}
+	bmp__seq:file_hdr_type -> file_header__seq [style=bold];
+	file_header__seq:ofs_bitmap_type -> bmp__seq:dib_info_size [color="#404040"];
+	bmp__seq:file_hdr_size -> bmp__seq:dib_info_size [color="#404040"];
+	bmp__seq:dib_info_type -> bitmap_info__seq [style=bold];
+	bmp__seq:bitmap_type -> bitmap__seq [style=bold];
+	bitmap_header__seq:image_width_type -> bitmap_header__seq_image_width_switch [style=bold];
+	bitmap_header__inst__is_core_header:is_core_header_type -> bitmap_header__seq:image_width_type [color="#404040"];
+	bitmap_header__seq:image_height_raw_type -> bitmap_header__seq_image_height_raw_switch [style=bold];
+	bitmap_header__inst__is_core_header:is_core_header_type -> bitmap_header__seq:image_height_raw_type [color="#404040"];
+	bitmap_header__seq:bitmap_info_ext_type -> bitmap_info_extension__seq [style=bold];
+	bitmap_header__inst__extends_bitmap_info:extends_bitmap_info_type -> bitmap_header__seq:bitmap_info_ext__if [color="#404040"];
+	bitmap_header__seq:color_mask_type -> color_mask__seq [style=bold];
+	bitmap_header__inst__is_color_mask_here:is_color_mask_here_type -> bitmap_header__seq:color_mask__if [color="#404040"];
+	bitmap_header__seq:os2_2x_bitmap_ext_type -> os2_2x_bitmap_extension__seq [style=bold];
+	bitmap_header__inst__extends_os2_2x_bitmap:extends_os2_2x_bitmap_type -> bitmap_header__seq:os2_2x_bitmap_ext__if [color="#404040"];
+	bitmap_header__seq:bitmap_v4_ext_type -> bitmap_v4_extension__seq [style=bold];
+	bitmap_header__inst__extends_bitmap_v4:extends_bitmap_v4_type -> bitmap_header__seq:bitmap_v4_ext__if [color="#404040"];
+	bitmap_header__seq:bitmap_v5_ext_type -> bitmap_v5_extension__seq [style=bold];
+	bitmap_header__inst__extends_bitmap_v5:extends_bitmap_v5_type -> bitmap_header__seq:bitmap_v5_ext__if [color="#404040"];
+	bitmap_header__seq:image_height_raw_type -> bitmap_header__inst__bottom_up [color="#404040"];
+	bitmap_header__params:len_header_type -> bitmap_header__inst__extends_bitmap_info [color="#404040"];
+	bitmap_header__params:len_header_type -> bitmap_header__inst__extends_bitmap_v4 [color="#404040"];
+	bitmap_header__params:len_header_type -> bitmap_header__inst__extends_bitmap_v5 [color="#404040"];
+	bitmap_header__params:len_header_type -> bitmap_header__inst__extends_os2_2x_bitmap [color="#404040"];
+	bitmap_header__seq:image_height_raw_type -> bitmap_header__inst__image_height [color="#404040"];
+	bitmap_header__params:len_header_type -> bitmap_header__inst__is_color_mask_here [color="#404040"];
+	bitmap_header__inst__extends_bitmap_v4:extends_bitmap_v4_type -> bitmap_header__inst__is_color_mask_here [color="#404040"];
+	bitmap_header__params:len_header_type -> bitmap_header__inst__is_core_header [color="#404040"];
+	bitmap_header__seq:bits_per_pixel_type -> bitmap_header__inst__uses_fixed_palette [color="#404040"];
+	bitmap_header__inst__extends_bitmap_info:extends_bitmap_info_type -> bitmap_header__inst__uses_fixed_palette [color="#404040"];
+	bitmap_header__inst__extends_os2_2x_bitmap:extends_os2_2x_bitmap_type -> bitmap_header__inst__uses_fixed_palette [color="#404040"];
+	bitmap_info_extension__seq:compression_type -> bitmap_header__inst__uses_fixed_palette [color="#404040"];
+	bitmap_info__seq:len_header_type -> bitmap_info__seq:header_size [color="#404040"];
+	bitmap_info__seq:len_header_size -> bitmap_info__seq:header_size [color="#404040"];
+	bitmap_info__seq:header_type -> bitmap_header__seq [style=bold];
+	bitmap_info__seq:color_mask_type -> color_mask__seq [style=bold];
+	bitmap_info__inst__is_color_mask_here:is_color_mask_here_type -> bitmap_info__seq:color_mask__if [color="#404040"];
+	bitmap_info__seq:color_table_type -> color_table__seq [style=bold];
+	bitmap_info__inst__is_color_mask_given:is_color_mask_given_type -> bitmap_info__inst__color_mask_alpha [color="#404040"];
+	color_mask__params:has_alpha_mask_type -> bitmap_info__inst__color_mask_alpha [color="#404040"];
+	color_mask__seq:alpha_mask_type -> bitmap_info__inst__color_mask_alpha [color="#404040"];
+	bitmap_info__inst__is_color_mask_given:is_color_mask_given_type -> bitmap_info__inst__color_mask_blue [color="#404040"];
+	color_mask__seq:blue_mask_type -> bitmap_info__inst__color_mask_blue [color="#404040"];
+	bitmap_header__seq:bits_per_pixel_type -> bitmap_info__inst__color_mask_blue [color="#404040"];
+	bitmap_info__inst__is_color_mask_here:is_color_mask_here_type -> bitmap_info__inst__color_mask_given [color="#404040"];
+	bitmap_info__seq:color_mask_type -> bitmap_info__inst__color_mask_given [color="#404040"];
+	bitmap_header__seq:color_mask_type -> bitmap_info__inst__color_mask_given [color="#404040"];
+	bitmap_info__inst__is_color_mask_given:is_color_mask_given_type -> bitmap_info__inst__color_mask_green [color="#404040"];
+	color_mask__seq:green_mask_type -> bitmap_info__inst__color_mask_green [color="#404040"];
+	bitmap_header__seq:bits_per_pixel_type -> bitmap_info__inst__color_mask_green [color="#404040"];
+	bitmap_info__inst__is_color_mask_given:is_color_mask_given_type -> bitmap_info__inst__color_mask_red [color="#404040"];
+	color_mask__seq:red_mask_type -> bitmap_info__inst__color_mask_red [color="#404040"];
+	bitmap_header__seq:bits_per_pixel_type -> bitmap_info__inst__color_mask_red [color="#404040"];
+	bitmap_header__inst__extends_bitmap_info:extends_bitmap_info_type -> bitmap_info__inst__is_color_mask_given [color="#404040"];
+	bitmap_info_extension__seq:compression_type -> bitmap_info__inst__is_color_mask_given [color="#404040"];
+	bitmap_info__inst__is_color_mask_here:is_color_mask_here_type -> bitmap_info__inst__is_color_mask_given [color="#404040"];
+	bitmap_header__inst__is_color_mask_here:is_color_mask_here_type -> bitmap_info__inst__is_color_mask_given [color="#404040"];
+	bitmap_header__params:len_header_type -> bitmap_info__inst__is_color_mask_here [color="#404040"];
+	bitmap_info_extension__seq:compression_type -> bitmap_info__inst__is_color_mask_here [color="#404040"];
+	bitmap_header__inst__extends_os2_2x_bitmap:extends_os2_2x_bitmap_type -> bitmap_info_extension__seq:compression__if [color="#404040"];
+	bitmap_header__inst__extends_os2_2x_bitmap:extends_os2_2x_bitmap_type -> bitmap_info_extension__seq:os2_compression__if [color="#404040"];
+	bitmap_v4_extension__seq:endpoint_red_type -> cie_xyz__seq [style=bold];
+	bitmap_v4_extension__seq:endpoint_green_type -> cie_xyz__seq [style=bold];
+	bitmap_v4_extension__seq:endpoint_blue_type -> cie_xyz__seq [style=bold];
+	bitmap_v4_extension__seq:gamma_red_type -> fixed_point_16_dot_16__seq [style=bold];
+	bitmap_v4_extension__seq:gamma_blue_type -> fixed_point_16_dot_16__seq [style=bold];
+	bitmap_v4_extension__seq:gamma_green_type -> fixed_point_16_dot_16__seq [style=bold];
+	bitmap_v4_extension__seq:color_space_type_type -> bitmap_v5_extension__inst__has_profile [color="#404040"];
+	bmp__seq:file_hdr_size -> bitmap_v5_extension__inst__profile_data:profile_data_pos [color="#404040"];
+	bitmap_v5_extension__seq:ofs_profile_type -> bitmap_v5_extension__inst__profile_data:profile_data_pos [color="#404040"];
+	bitmap_v5_extension__inst__profile_data:profile_data_type -> bitmap_v5_extension__inst__profile_data_profile_data_switch [style=bold];
+	bitmap_v4_extension__seq:color_space_type_type -> bitmap_v5_extension__inst__profile_data:profile_data_type [color="#404040"];
+	bitmap_v5_extension__inst__has_profile:has_profile_type -> bitmap_v5_extension__inst__profile_data:profile_data__if [color="#404040"];
+	cie_xyz__seq:x_type -> fixed_point_2_dot_30__seq [style=bold];
+	cie_xyz__seq:y_type -> fixed_point_2_dot_30__seq [style=bold];
+	cie_xyz__seq:z_type -> fixed_point_2_dot_30__seq [style=bold];
+	color_mask__params:has_alpha_mask_type -> color_mask__seq:alpha_mask__if [color="#404040"];
+	color_table__seq:colors_type -> rgb_record__seq [style=bold];
+	color_table__params:num_colors_type -> color_table__seq:colors__repeat [color="#404040"];
+	color_table__inst__num_colors_present:num_colors_present_type -> color_table__seq:colors__repeat [color="#404040"];
+	color_table__params:has_reserved_field_type -> color_table__inst__num_colors_present [color="#404040"];
+	fixed_point_16_dot_16__seq:raw_type -> fixed_point_16_dot_16__inst__value [color="#404040"];
+	fixed_point_2_dot_30__seq:raw_type -> fixed_point_2_dot_30__inst__value [color="#404040"];
+	rgb_record__params:has_reserved_field_type -> rgb_record__seq:reserved__if [color="#404040"];
+}

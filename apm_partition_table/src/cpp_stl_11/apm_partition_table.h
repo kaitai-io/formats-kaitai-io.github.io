@@ -2,13 +2,15 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class apm_partition_table_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -43,6 +45,20 @@ public:
         ~partition_entry_t();
 
     private:
+        bool f_boot_code;
+        std::string m_boot_code;
+
+    public:
+        std::string boot_code();
+
+    private:
+        bool f_data;
+        std::string m_data;
+
+    public:
+        std::string data();
+
+    private:
         bool f_partition;
         std::string m_partition;
         bool n_partition;
@@ -54,20 +70,6 @@ public:
 
     public:
         std::string partition();
-
-    private:
-        bool f_data;
-        std::string m_data;
-
-    public:
-        std::string data();
-
-    private:
-        bool f_boot_code;
-        std::string m_boot_code;
-
-    public:
-        std::string boot_code();
 
     private:
         std::string m_magic;
@@ -151,16 +153,11 @@ public:
     };
 
 private:
-    bool f_sector_size;
-    int32_t m_sector_size;
+    bool f_partition_entries;
+    std::unique_ptr<std::vector<std::unique_ptr<partition_entry_t>>> m_partition_entries;
 
 public:
-
-    /**
-     * 0x200 (512) bytes for disks, 0x1000 (4096) bytes is not supported by APM
-     * 0x800 (2048) bytes for CDROM
-     */
-    int32_t sector_size();
+    std::vector<std::unique_ptr<partition_entry_t>>* partition_entries();
 
 private:
     bool f_partition_lookup;
@@ -176,25 +173,30 @@ public:
     partition_entry_t* partition_lookup();
 
 private:
-    bool f_partition_entries;
-    std::unique_ptr<std::vector<std::unique_ptr<partition_entry_t>>> m_partition_entries;
+    bool f_sector_size;
+    int32_t m_sector_size;
 
 public:
-    std::vector<std::unique_ptr<partition_entry_t>>* partition_entries();
+
+    /**
+     * 0x200 (512) bytes for disks, 0x1000 (4096) bytes is not supported by APM
+     * 0x800 (2048) bytes for CDROM
+     */
+    int32_t sector_size();
 
 private:
     apm_partition_table_t* m__root;
     kaitai::kstruct* m__parent;
-    std::string m__raw_partition_lookup;
-    std::unique_ptr<kaitai::kstream> m__io__raw_partition_lookup;
     std::unique_ptr<std::vector<std::string>> m__raw_partition_entries;
     std::unique_ptr<std::vector<std::unique_ptr<kaitai::kstream>>> m__io__raw_partition_entries;
+    std::string m__raw_partition_lookup;
+    std::unique_ptr<kaitai::kstream> m__io__raw_partition_lookup;
 
 public:
     apm_partition_table_t* _root() const { return m__root; }
     kaitai::kstruct* _parent() const { return m__parent; }
-    std::string _raw_partition_lookup() const { return m__raw_partition_lookup; }
-    kaitai::kstream* _io__raw_partition_lookup() const { return m__io__raw_partition_lookup.get(); }
     std::vector<std::string>* _raw_partition_entries() const { return m__raw_partition_entries.get(); }
     std::vector<std::unique_ptr<kaitai::kstream>>* _io__raw_partition_entries() const { return m__io__raw_partition_entries.get(); }
+    std::string _raw_partition_lookup() const { return m__raw_partition_lookup; }
+    kaitai::kstream* _io__raw_partition_lookup() const { return m__io__raw_partition_lookup.get(); }
 };

@@ -19,28 +19,28 @@ type
     `bootHeaderSize`*: uint32
     `dtb`*: AndroidImg_LoadLong
     `parent`*: KaitaiStruct
-    `kernelImgInst`: seq[byte]
-    `kernelImgInstFlag`: bool
-    `tagsOffsetInst`: int
-    `tagsOffsetInstFlag`: bool
-    `ramdiskOffsetInst`: int
-    `ramdiskOffsetInstFlag`: bool
-    `secondOffsetInst`: int
-    `secondOffsetInstFlag`: bool
-    `kernelOffsetInst`: int
-    `kernelOffsetInstFlag`: bool
-    `dtbOffsetInst`: int
-    `dtbOffsetInstFlag`: bool
+    `baseInst`: int
+    `baseInstFlag`: bool
     `dtbImgInst`: seq[byte]
     `dtbImgInstFlag`: bool
+    `dtbOffsetInst`: int
+    `dtbOffsetInstFlag`: bool
+    `kernelImgInst`: seq[byte]
+    `kernelImgInstFlag`: bool
+    `kernelOffsetInst`: int
+    `kernelOffsetInstFlag`: bool
     `ramdiskImgInst`: seq[byte]
     `ramdiskImgInstFlag`: bool
+    `ramdiskOffsetInst`: int
+    `ramdiskOffsetInstFlag`: bool
     `recoveryDtboImgInst`: seq[byte]
     `recoveryDtboImgInstFlag`: bool
     `secondImgInst`: seq[byte]
     `secondImgInstFlag`: bool
-    `baseInst`: int
-    `baseInstFlag`: bool
+    `secondOffsetInst`: int
+    `secondOffsetInstFlag`: bool
+    `tagsOffsetInst`: int
+    `tagsOffsetInstFlag`: bool
   AndroidImg_Load* = ref object of KaitaiStruct
     `size`*: uint32
     `addr`*: uint32
@@ -49,46 +49,46 @@ type
     `size`*: uint32
     `addr`*: uint64
     `parent`*: AndroidImg
-  AndroidImg_SizeOffset* = ref object of KaitaiStruct
-    `size`*: uint32
-    `offset`*: uint64
-    `parent`*: AndroidImg
   AndroidImg_OsVersion* = ref object of KaitaiStruct
     `version`*: uint32
     `parent`*: AndroidImg
+    `majorInst`: int
+    `majorInstFlag`: bool
+    `minorInst`: int
+    `minorInstFlag`: bool
     `monthInst`: int
     `monthInstFlag`: bool
     `patchInst`: int
     `patchInstFlag`: bool
     `yearInst`: int
     `yearInstFlag`: bool
-    `majorInst`: int
-    `majorInstFlag`: bool
-    `minorInst`: int
-    `minorInstFlag`: bool
+  AndroidImg_SizeOffset* = ref object of KaitaiStruct
+    `size`*: uint32
+    `offset`*: uint64
+    `parent`*: AndroidImg
 
 proc read*(_: typedesc[AndroidImg], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): AndroidImg
 proc read*(_: typedesc[AndroidImg_Load], io: KaitaiStream, root: KaitaiStruct, parent: AndroidImg): AndroidImg_Load
 proc read*(_: typedesc[AndroidImg_LoadLong], io: KaitaiStream, root: KaitaiStruct, parent: AndroidImg): AndroidImg_LoadLong
-proc read*(_: typedesc[AndroidImg_SizeOffset], io: KaitaiStream, root: KaitaiStruct, parent: AndroidImg): AndroidImg_SizeOffset
 proc read*(_: typedesc[AndroidImg_OsVersion], io: KaitaiStream, root: KaitaiStruct, parent: AndroidImg): AndroidImg_OsVersion
+proc read*(_: typedesc[AndroidImg_SizeOffset], io: KaitaiStream, root: KaitaiStruct, parent: AndroidImg): AndroidImg_SizeOffset
 
-proc kernelImg*(this: AndroidImg): seq[byte]
-proc tagsOffset*(this: AndroidImg): int
-proc ramdiskOffset*(this: AndroidImg): int
-proc secondOffset*(this: AndroidImg): int
-proc kernelOffset*(this: AndroidImg): int
-proc dtbOffset*(this: AndroidImg): int
+proc base*(this: AndroidImg): int
 proc dtbImg*(this: AndroidImg): seq[byte]
+proc dtbOffset*(this: AndroidImg): int
+proc kernelImg*(this: AndroidImg): seq[byte]
+proc kernelOffset*(this: AndroidImg): int
 proc ramdiskImg*(this: AndroidImg): seq[byte]
+proc ramdiskOffset*(this: AndroidImg): int
 proc recoveryDtboImg*(this: AndroidImg): seq[byte]
 proc secondImg*(this: AndroidImg): seq[byte]
-proc base*(this: AndroidImg): int
+proc secondOffset*(this: AndroidImg): int
+proc tagsOffset*(this: AndroidImg): int
+proc major*(this: AndroidImg_OsVersion): int
+proc minor*(this: AndroidImg_OsVersion): int
 proc month*(this: AndroidImg_OsVersion): int
 proc patch*(this: AndroidImg_OsVersion): int
 proc year*(this: AndroidImg_OsVersion): int
-proc major*(this: AndroidImg_OsVersion): int
-proc minor*(this: AndroidImg_OsVersion): int
 
 
 ##[
@@ -136,6 +136,43 @@ proc read*(_: typedesc[AndroidImg], io: KaitaiStream, root: KaitaiStruct, parent
     let dtbExpr = AndroidImg_LoadLong.read(this.io, this.root, this)
     this.dtb = dtbExpr
 
+proc base(this: AndroidImg): int = 
+
+  ##[
+  base loading address
+  ]##
+  if this.baseInstFlag:
+    return this.baseInst
+  let baseInstExpr = int(this.kernel.addr - 32768)
+  this.baseInst = baseInstExpr
+  this.baseInstFlag = true
+  return this.baseInst
+
+proc dtbImg(this: AndroidImg): seq[byte] = 
+  if this.dtbImgInstFlag:
+    return this.dtbImgInst
+  if  ((this.headerVersion > 1) and (this.dtb.size > 0)) :
+    let pos = this.io.pos()
+    this.io.seek(int((((((((this.pageSize + this.kernel.size) + this.ramdisk.size) + this.second.size) + this.recoveryDtbo.size) + this.pageSize) - 1) div this.pageSize) * this.pageSize))
+    let dtbImgInstExpr = this.io.readBytes(int(this.dtb.size))
+    this.dtbImgInst = dtbImgInstExpr
+    this.io.seek(pos)
+  this.dtbImgInstFlag = true
+  return this.dtbImgInst
+
+proc dtbOffset(this: AndroidImg): int = 
+
+  ##[
+  dtb offset from base
+  ]##
+  if this.dtbOffsetInstFlag:
+    return this.dtbOffsetInst
+  if this.headerVersion > 1:
+    let dtbOffsetInstExpr = int((if this.dtb.addr > 0: this.dtb.addr - this.base else: 0))
+    this.dtbOffsetInst = dtbOffsetInstExpr
+  this.dtbOffsetInstFlag = true
+  return this.dtbOffsetInst
+
 proc kernelImg(this: AndroidImg): seq[byte] = 
   if this.kernelImgInstFlag:
     return this.kernelImgInst
@@ -147,17 +184,29 @@ proc kernelImg(this: AndroidImg): seq[byte] =
   this.kernelImgInstFlag = true
   return this.kernelImgInst
 
-proc tagsOffset(this: AndroidImg): int = 
+proc kernelOffset(this: AndroidImg): int = 
 
   ##[
-  tags offset from base
+  kernel offset from base
   ]##
-  if this.tagsOffsetInstFlag:
-    return this.tagsOffsetInst
-  let tagsOffsetInstExpr = int((this.tagsLoad - this.base))
-  this.tagsOffsetInst = tagsOffsetInstExpr
-  this.tagsOffsetInstFlag = true
-  return this.tagsOffsetInst
+  if this.kernelOffsetInstFlag:
+    return this.kernelOffsetInst
+  let kernelOffsetInstExpr = int(this.kernel.addr - this.base)
+  this.kernelOffsetInst = kernelOffsetInstExpr
+  this.kernelOffsetInstFlag = true
+  return this.kernelOffsetInst
+
+proc ramdiskImg(this: AndroidImg): seq[byte] = 
+  if this.ramdiskImgInstFlag:
+    return this.ramdiskImgInst
+  if this.ramdisk.size > 0:
+    let pos = this.io.pos()
+    this.io.seek(int(((((this.pageSize + this.kernel.size) + this.pageSize) - 1) div this.pageSize) * this.pageSize))
+    let ramdiskImgInstExpr = this.io.readBytes(int(this.ramdisk.size))
+    this.ramdiskImgInst = ramdiskImgInstExpr
+    this.io.seek(pos)
+  this.ramdiskImgInstFlag = true
+  return this.ramdiskImgInst
 
 proc ramdiskOffset(this: AndroidImg): int = 
 
@@ -166,71 +215,10 @@ proc ramdiskOffset(this: AndroidImg): int =
   ]##
   if this.ramdiskOffsetInstFlag:
     return this.ramdiskOffsetInst
-  let ramdiskOffsetInstExpr = int((if this.ramdisk.addr > 0: (this.ramdisk.addr - this.base) else: 0))
+  let ramdiskOffsetInstExpr = int((if this.ramdisk.addr > 0: this.ramdisk.addr - this.base else: 0))
   this.ramdiskOffsetInst = ramdiskOffsetInstExpr
   this.ramdiskOffsetInstFlag = true
   return this.ramdiskOffsetInst
-
-proc secondOffset(this: AndroidImg): int = 
-
-  ##[
-  2nd bootloader offset from base
-  ]##
-  if this.secondOffsetInstFlag:
-    return this.secondOffsetInst
-  let secondOffsetInstExpr = int((if this.second.addr > 0: (this.second.addr - this.base) else: 0))
-  this.secondOffsetInst = secondOffsetInstExpr
-  this.secondOffsetInstFlag = true
-  return this.secondOffsetInst
-
-proc kernelOffset(this: AndroidImg): int = 
-
-  ##[
-  kernel offset from base
-  ]##
-  if this.kernelOffsetInstFlag:
-    return this.kernelOffsetInst
-  let kernelOffsetInstExpr = int((this.kernel.addr - this.base))
-  this.kernelOffsetInst = kernelOffsetInstExpr
-  this.kernelOffsetInstFlag = true
-  return this.kernelOffsetInst
-
-proc dtbOffset(this: AndroidImg): int = 
-
-  ##[
-  dtb offset from base
-  ]##
-  if this.dtbOffsetInstFlag:
-    return this.dtbOffsetInst
-  if this.headerVersion > 1:
-    let dtbOffsetInstExpr = int((if this.dtb.addr > 0: (this.dtb.addr - this.base) else: 0))
-    this.dtbOffsetInst = dtbOffsetInstExpr
-  this.dtbOffsetInstFlag = true
-  return this.dtbOffsetInst
-
-proc dtbImg(this: AndroidImg): seq[byte] = 
-  if this.dtbImgInstFlag:
-    return this.dtbImgInst
-  if  ((this.headerVersion > 1) and (this.dtb.size > 0)) :
-    let pos = this.io.pos()
-    this.io.seek(int(((((((((this.pageSize + this.kernel.size) + this.ramdisk.size) + this.second.size) + this.recoveryDtbo.size) + this.pageSize) - 1) div this.pageSize) * this.pageSize)))
-    let dtbImgInstExpr = this.io.readBytes(int(this.dtb.size))
-    this.dtbImgInst = dtbImgInstExpr
-    this.io.seek(pos)
-  this.dtbImgInstFlag = true
-  return this.dtbImgInst
-
-proc ramdiskImg(this: AndroidImg): seq[byte] = 
-  if this.ramdiskImgInstFlag:
-    return this.ramdiskImgInst
-  if this.ramdisk.size > 0:
-    let pos = this.io.pos()
-    this.io.seek(int((((((this.pageSize + this.kernel.size) + this.pageSize) - 1) div this.pageSize) * this.pageSize)))
-    let ramdiskImgInstExpr = this.io.readBytes(int(this.ramdisk.size))
-    this.ramdiskImgInst = ramdiskImgInstExpr
-    this.io.seek(pos)
-  this.ramdiskImgInstFlag = true
-  return this.ramdiskImgInst
 
 proc recoveryDtboImg(this: AndroidImg): seq[byte] = 
   if this.recoveryDtboImgInstFlag:
@@ -249,24 +237,36 @@ proc secondImg(this: AndroidImg): seq[byte] =
     return this.secondImgInst
   if this.second.size > 0:
     let pos = this.io.pos()
-    this.io.seek(int(((((((this.pageSize + this.kernel.size) + this.ramdisk.size) + this.pageSize) - 1) div this.pageSize) * this.pageSize)))
+    this.io.seek(int((((((this.pageSize + this.kernel.size) + this.ramdisk.size) + this.pageSize) - 1) div this.pageSize) * this.pageSize))
     let secondImgInstExpr = this.io.readBytes(int(this.second.size))
     this.secondImgInst = secondImgInstExpr
     this.io.seek(pos)
   this.secondImgInstFlag = true
   return this.secondImgInst
 
-proc base(this: AndroidImg): int = 
+proc secondOffset(this: AndroidImg): int = 
 
   ##[
-  base loading address
+  2nd bootloader offset from base
   ]##
-  if this.baseInstFlag:
-    return this.baseInst
-  let baseInstExpr = int((this.kernel.addr - 32768))
-  this.baseInst = baseInstExpr
-  this.baseInstFlag = true
-  return this.baseInst
+  if this.secondOffsetInstFlag:
+    return this.secondOffsetInst
+  let secondOffsetInstExpr = int((if this.second.addr > 0: this.second.addr - this.base else: 0))
+  this.secondOffsetInst = secondOffsetInstExpr
+  this.secondOffsetInstFlag = true
+  return this.secondOffsetInst
+
+proc tagsOffset(this: AndroidImg): int = 
+
+  ##[
+  tags offset from base
+  ]##
+  if this.tagsOffsetInstFlag:
+    return this.tagsOffsetInst
+  let tagsOffsetInstExpr = int(this.tagsLoad - this.base)
+  this.tagsOffsetInst = tagsOffsetInstExpr
+  this.tagsOffsetInstFlag = true
+  return this.tagsOffsetInst
 
 proc fromFile*(_: typedesc[AndroidImg], filename: string): AndroidImg =
   AndroidImg.read(newKaitaiFileStream(filename), nil, nil)
@@ -303,6 +303,60 @@ proc read*(_: typedesc[AndroidImg_LoadLong], io: KaitaiStream, root: KaitaiStruc
 proc fromFile*(_: typedesc[AndroidImg_LoadLong], filename: string): AndroidImg_LoadLong =
   AndroidImg_LoadLong.read(newKaitaiFileStream(filename), nil, nil)
 
+proc read*(_: typedesc[AndroidImg_OsVersion], io: KaitaiStream, root: KaitaiStruct, parent: AndroidImg): AndroidImg_OsVersion =
+  template this: untyped = result
+  this = new(AndroidImg_OsVersion)
+  let root = if root == nil: cast[AndroidImg](this) else: cast[AndroidImg](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let versionExpr = this.io.readU4le()
+  this.version = versionExpr
+
+proc major(this: AndroidImg_OsVersion): int = 
+  if this.majorInstFlag:
+    return this.majorInst
+  let majorInstExpr = int(this.version shr 25 and 127)
+  this.majorInst = majorInstExpr
+  this.majorInstFlag = true
+  return this.majorInst
+
+proc minor(this: AndroidImg_OsVersion): int = 
+  if this.minorInstFlag:
+    return this.minorInst
+  let minorInstExpr = int(this.version shr 18 and 127)
+  this.minorInst = minorInstExpr
+  this.minorInstFlag = true
+  return this.minorInst
+
+proc month(this: AndroidImg_OsVersion): int = 
+  if this.monthInstFlag:
+    return this.monthInst
+  let monthInstExpr = int(this.version and 15)
+  this.monthInst = monthInstExpr
+  this.monthInstFlag = true
+  return this.monthInst
+
+proc patch(this: AndroidImg_OsVersion): int = 
+  if this.patchInstFlag:
+    return this.patchInst
+  let patchInstExpr = int(this.version shr 11 and 127)
+  this.patchInst = patchInstExpr
+  this.patchInstFlag = true
+  return this.patchInst
+
+proc year(this: AndroidImg_OsVersion): int = 
+  if this.yearInstFlag:
+    return this.yearInst
+  let yearInstExpr = int((this.version shr 4 and 127) + 2000)
+  this.yearInst = yearInstExpr
+  this.yearInstFlag = true
+  return this.yearInst
+
+proc fromFile*(_: typedesc[AndroidImg_OsVersion], filename: string): AndroidImg_OsVersion =
+  AndroidImg_OsVersion.read(newKaitaiFileStream(filename), nil, nil)
+
 proc read*(_: typedesc[AndroidImg_SizeOffset], io: KaitaiStream, root: KaitaiStruct, parent: AndroidImg): AndroidImg_SizeOffset =
   template this: untyped = result
   this = new(AndroidImg_SizeOffset)
@@ -318,58 +372,4 @@ proc read*(_: typedesc[AndroidImg_SizeOffset], io: KaitaiStream, root: KaitaiStr
 
 proc fromFile*(_: typedesc[AndroidImg_SizeOffset], filename: string): AndroidImg_SizeOffset =
   AndroidImg_SizeOffset.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[AndroidImg_OsVersion], io: KaitaiStream, root: KaitaiStruct, parent: AndroidImg): AndroidImg_OsVersion =
-  template this: untyped = result
-  this = new(AndroidImg_OsVersion)
-  let root = if root == nil: cast[AndroidImg](this) else: cast[AndroidImg](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let versionExpr = this.io.readU4le()
-  this.version = versionExpr
-
-proc month(this: AndroidImg_OsVersion): int = 
-  if this.monthInstFlag:
-    return this.monthInst
-  let monthInstExpr = int((this.version and 15))
-  this.monthInst = monthInstExpr
-  this.monthInstFlag = true
-  return this.monthInst
-
-proc patch(this: AndroidImg_OsVersion): int = 
-  if this.patchInstFlag:
-    return this.patchInst
-  let patchInstExpr = int(((this.version shr 11) and 127))
-  this.patchInst = patchInstExpr
-  this.patchInstFlag = true
-  return this.patchInst
-
-proc year(this: AndroidImg_OsVersion): int = 
-  if this.yearInstFlag:
-    return this.yearInst
-  let yearInstExpr = int((((this.version shr 4) and 127) + 2000))
-  this.yearInst = yearInstExpr
-  this.yearInstFlag = true
-  return this.yearInst
-
-proc major(this: AndroidImg_OsVersion): int = 
-  if this.majorInstFlag:
-    return this.majorInst
-  let majorInstExpr = int(((this.version shr 25) and 127))
-  this.majorInst = majorInstExpr
-  this.majorInstFlag = true
-  return this.majorInst
-
-proc minor(this: AndroidImg_OsVersion): int = 
-  if this.minorInstFlag:
-    return this.minorInst
-  let minorInstExpr = int(((this.version shr 18) and 127))
-  this.minorInst = minorInstExpr
-  this.minorInstFlag = true
-  return this.minorInst
-
-proc fromFile*(_: typedesc[AndroidImg_OsVersion], filename: string): AndroidImg_OsVersion =
-  AndroidImg_OsVersion.read(newKaitaiFileStream(filename), nil, nil)
 

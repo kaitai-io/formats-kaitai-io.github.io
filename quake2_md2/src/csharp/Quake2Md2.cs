@@ -98,28 +98,28 @@ namespace Kaitai
         {
             m_parent = p__parent;
             m_root = p__root ?? this;
-            f_animNumFrames = false;
-            f_anormsTable = false;
-            f_texCoords = false;
-            f_triangles = false;
-            f_frames = false;
             f_animNames = false;
+            f_animNumFrames = false;
+            f_animStartIndices = false;
+            f_anormsTable = false;
+            f_frames = false;
             f_glCmds = false;
             f_skins = false;
-            f_animStartIndices = false;
+            f_texCoords = false;
+            f_triangles = false;
             _read();
         }
         private void _read()
         {
             _magic = m_io.ReadBytes(4);
-            if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 73, 68, 80, 50 }) == 0)))
+            if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 73, 68, 80, 50 }) == 0)))
             {
-                throw new ValidationNotEqualError(new byte[] { 73, 68, 80, 50 }, Magic, M_Io, "/seq/0");
+                throw new ValidationNotEqualError(new byte[] { 73, 68, 80, 50 }, _magic, m_io, "/seq/0");
             }
             _version = m_io.ReadU4le();
-            if (!(Version == 8))
+            if (!(_version == 8))
             {
-                throw new ValidationNotEqualError(8, Version, M_Io, "/seq/1");
+                throw new ValidationNotEqualError(8, _version, m_io, "/seq/1");
             }
             _skinWidthPx = m_io.ReadU4le();
             _skinHeightPx = m_io.ReadU4le();
@@ -136,47 +136,6 @@ namespace Kaitai
             _ofsFrames = m_io.ReadU4le();
             _ofsGlCmds = m_io.ReadU4le();
             _ofsEof = m_io.ReadU4le();
-        }
-        public partial class Vertex : KaitaiStruct
-        {
-            public static Vertex FromFile(string fileName)
-            {
-                return new Vertex(new KaitaiStream(fileName));
-            }
-
-            public Vertex(KaitaiStream p__io, Quake2Md2.Frame p__parent = null, Quake2Md2 p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_normal = false;
-                _read();
-            }
-            private void _read()
-            {
-                _position = new CompressedVec(m_io, this, m_root);
-                _normalIndex = m_io.ReadU1();
-            }
-            private bool f_normal;
-            private List<double> _normal;
-            public List<double> Normal
-            {
-                get
-                {
-                    if (f_normal)
-                        return _normal;
-                    _normal = (List<double>) (M_Root.AnormsTable[NormalIndex]);
-                    f_normal = true;
-                    return _normal;
-                }
-            }
-            private CompressedVec _position;
-            private byte _normalIndex;
-            private Quake2Md2 m_root;
-            private Quake2Md2.Frame m_parent;
-            public CompressedVec Position { get { return _position; } }
-            public byte NormalIndex { get { return _normalIndex; } }
-            public Quake2Md2 M_Root { get { return m_root; } }
-            public Quake2Md2.Frame M_Parent { get { return m_parent; } }
         }
         public partial class CompressedVec : KaitaiStruct
         {
@@ -208,8 +167,8 @@ namespace Kaitai
                 {
                     if (f_x)
                         return _x;
-                    _x = (double) (((XCompressed * M_Parent.M_Parent.Scale.X) + M_Parent.M_Parent.Translate.X));
                     f_x = true;
+                    _x = (double) (XCompressed * M_Parent.M_Parent.Scale.X + M_Parent.M_Parent.Translate.X);
                     return _x;
                 }
             }
@@ -221,8 +180,8 @@ namespace Kaitai
                 {
                     if (f_y)
                         return _y;
-                    _y = (double) (((YCompressed * M_Parent.M_Parent.Scale.Y) + M_Parent.M_Parent.Translate.Y));
                     f_y = true;
+                    _y = (double) (YCompressed * M_Parent.M_Parent.Scale.Y + M_Parent.M_Parent.Translate.Y);
                     return _y;
                 }
             }
@@ -234,8 +193,8 @@ namespace Kaitai
                 {
                     if (f_z)
                         return _z;
-                    _z = (double) (((ZCompressed * M_Parent.M_Parent.Scale.Z) + M_Parent.M_Parent.Translate.Z));
                     f_z = true;
+                    _z = (double) (ZCompressed * M_Parent.M_Parent.Scale.Z + M_Parent.M_Parent.Translate.Z);
                     return _z;
                 }
             }
@@ -249,6 +208,227 @@ namespace Kaitai
             public byte ZCompressed { get { return _zCompressed; } }
             public Quake2Md2 M_Root { get { return m_root; } }
             public Quake2Md2.Vertex M_Parent { get { return m_parent; } }
+        }
+        public partial class Frame : KaitaiStruct
+        {
+            public static Frame FromFile(string fileName)
+            {
+                return new Frame(new KaitaiStream(fileName));
+            }
+
+            public Frame(KaitaiStream p__io, Quake2Md2 p__parent = null, Quake2Md2 p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _scale = new Vec3f(m_io, this, m_root);
+                _translate = new Vec3f(m_io, this, m_root);
+                _name = System.Text.Encoding.GetEncoding("ASCII").GetString(KaitaiStream.BytesTerminate(m_io.ReadBytes(16), 0, false));
+                _vertices = new List<Vertex>();
+                for (var i = 0; i < M_Root.VerticesPerFrame; i++)
+                {
+                    _vertices.Add(new Vertex(m_io, this, m_root));
+                }
+            }
+            private Vec3f _scale;
+            private Vec3f _translate;
+            private string _name;
+            private List<Vertex> _vertices;
+            private Quake2Md2 m_root;
+            private Quake2Md2 m_parent;
+            public Vec3f Scale { get { return _scale; } }
+            public Vec3f Translate { get { return _translate; } }
+            public string Name { get { return _name; } }
+            public List<Vertex> Vertices { get { return _vertices; } }
+            public Quake2Md2 M_Root { get { return m_root; } }
+            public Quake2Md2 M_Parent { get { return m_parent; } }
+        }
+        public partial class GlCmd : KaitaiStruct
+        {
+            public static GlCmd FromFile(string fileName)
+            {
+                return new GlCmd(new KaitaiStream(fileName));
+            }
+
+            public GlCmd(KaitaiStream p__io, Quake2Md2.GlCmdsList p__parent = null, Quake2Md2 p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_numVertices = false;
+                f_primitive = false;
+                _read();
+            }
+            private void _read()
+            {
+                _cmdNumVertices = m_io.ReadS4le();
+                _vertices = new List<GlVertex>();
+                for (var i = 0; i < NumVertices; i++)
+                {
+                    _vertices.Add(new GlVertex(m_io, this, m_root));
+                }
+            }
+            private bool f_numVertices;
+            private int _numVertices;
+            public int NumVertices
+            {
+                get
+                {
+                    if (f_numVertices)
+                        return _numVertices;
+                    f_numVertices = true;
+                    _numVertices = (int) ((CmdNumVertices < 0 ? -(CmdNumVertices) : CmdNumVertices));
+                    return _numVertices;
+                }
+            }
+            private bool f_primitive;
+            private GlPrimitive _primitive;
+            public GlPrimitive Primitive
+            {
+                get
+                {
+                    if (f_primitive)
+                        return _primitive;
+                    f_primitive = true;
+                    _primitive = (GlPrimitive) ((CmdNumVertices < 0 ? Quake2Md2.GlPrimitive.TriangleFan : Quake2Md2.GlPrimitive.TriangleStrip));
+                    return _primitive;
+                }
+            }
+            private int _cmdNumVertices;
+            private List<GlVertex> _vertices;
+            private Quake2Md2 m_root;
+            private Quake2Md2.GlCmdsList m_parent;
+            public int CmdNumVertices { get { return _cmdNumVertices; } }
+            public List<GlVertex> Vertices { get { return _vertices; } }
+            public Quake2Md2 M_Root { get { return m_root; } }
+            public Quake2Md2.GlCmdsList M_Parent { get { return m_parent; } }
+        }
+        public partial class GlCmdsList : KaitaiStruct
+        {
+            public static GlCmdsList FromFile(string fileName)
+            {
+                return new GlCmdsList(new KaitaiStream(fileName));
+            }
+
+            public GlCmdsList(KaitaiStream p__io, Quake2Md2 p__parent = null, Quake2Md2 p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                if (!(M_Io.IsEof)) {
+                    _items = new List<GlCmd>();
+                    {
+                        var i = 0;
+                        GlCmd M_;
+                        do {
+                            M_ = new GlCmd(m_io, this, m_root);
+                            _items.Add(M_);
+                            i++;
+                        } while (!(M_.CmdNumVertices == 0));
+                    }
+                }
+            }
+            private List<GlCmd> _items;
+            private Quake2Md2 m_root;
+            private Quake2Md2 m_parent;
+            public List<GlCmd> Items { get { return _items; } }
+            public Quake2Md2 M_Root { get { return m_root; } }
+            public Quake2Md2 M_Parent { get { return m_parent; } }
+        }
+        public partial class GlVertex : KaitaiStruct
+        {
+            public static GlVertex FromFile(string fileName)
+            {
+                return new GlVertex(new KaitaiStream(fileName));
+            }
+
+            public GlVertex(KaitaiStream p__io, Quake2Md2.GlCmd p__parent = null, Quake2Md2 p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _texCoordsNormalized = new List<float>();
+                for (var i = 0; i < 2; i++)
+                {
+                    _texCoordsNormalized.Add(m_io.ReadF4le());
+                }
+                _vertexIndex = m_io.ReadU4le();
+            }
+            private List<float> _texCoordsNormalized;
+            private uint _vertexIndex;
+            private Quake2Md2 m_root;
+            private Quake2Md2.GlCmd m_parent;
+            public List<float> TexCoordsNormalized { get { return _texCoordsNormalized; } }
+
+            /// <summary>
+            /// index to `_root.frames[i].vertices` (for each frame with index `i`)
+            /// </summary>
+            public uint VertexIndex { get { return _vertexIndex; } }
+            public Quake2Md2 M_Root { get { return m_root; } }
+            public Quake2Md2.GlCmd M_Parent { get { return m_parent; } }
+        }
+        public partial class TexPoint : KaitaiStruct
+        {
+            public static TexPoint FromFile(string fileName)
+            {
+                return new TexPoint(new KaitaiStream(fileName));
+            }
+
+            public TexPoint(KaitaiStream p__io, Quake2Md2 p__parent = null, Quake2Md2 p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_sNormalized = false;
+                f_tNormalized = false;
+                _read();
+            }
+            private void _read()
+            {
+                _sPx = m_io.ReadU2le();
+                _tPx = m_io.ReadU2le();
+            }
+            private bool f_sNormalized;
+            private double _sNormalized;
+            public double SNormalized
+            {
+                get
+                {
+                    if (f_sNormalized)
+                        return _sNormalized;
+                    f_sNormalized = true;
+                    _sNormalized = (double) ((SPx + 0.0) / M_Root.SkinWidthPx);
+                    return _sNormalized;
+                }
+            }
+            private bool f_tNormalized;
+            private double _tNormalized;
+            public double TNormalized
+            {
+                get
+                {
+                    if (f_tNormalized)
+                        return _tNormalized;
+                    f_tNormalized = true;
+                    _tNormalized = (double) ((TPx + 0.0) / M_Root.SkinHeightPx);
+                    return _tNormalized;
+                }
+            }
+            private ushort _sPx;
+            private ushort _tPx;
+            private Quake2Md2 m_root;
+            private Quake2Md2 m_parent;
+            public ushort SPx { get { return _sPx; } }
+            public ushort TPx { get { return _tPx; } }
+            public Quake2Md2 M_Root { get { return m_root; } }
+            public Quake2Md2 M_Parent { get { return m_parent; } }
         }
         public partial class Triangle : KaitaiStruct
         {
@@ -293,133 +473,6 @@ namespace Kaitai
             public Quake2Md2 M_Root { get { return m_root; } }
             public Quake2Md2 M_Parent { get { return m_parent; } }
         }
-        public partial class Frame : KaitaiStruct
-        {
-            public static Frame FromFile(string fileName)
-            {
-                return new Frame(new KaitaiStream(fileName));
-            }
-
-            public Frame(KaitaiStream p__io, Quake2Md2 p__parent = null, Quake2Md2 p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _scale = new Vec3f(m_io, this, m_root);
-                _translate = new Vec3f(m_io, this, m_root);
-                _name = System.Text.Encoding.GetEncoding("ascii").GetString(KaitaiStream.BytesTerminate(m_io.ReadBytes(16), 0, false));
-                _vertices = new List<Vertex>();
-                for (var i = 0; i < M_Root.VerticesPerFrame; i++)
-                {
-                    _vertices.Add(new Vertex(m_io, this, m_root));
-                }
-            }
-            private Vec3f _scale;
-            private Vec3f _translate;
-            private string _name;
-            private List<Vertex> _vertices;
-            private Quake2Md2 m_root;
-            private Quake2Md2 m_parent;
-            public Vec3f Scale { get { return _scale; } }
-            public Vec3f Translate { get { return _translate; } }
-            public string Name { get { return _name; } }
-            public List<Vertex> Vertices { get { return _vertices; } }
-            public Quake2Md2 M_Root { get { return m_root; } }
-            public Quake2Md2 M_Parent { get { return m_parent; } }
-        }
-        public partial class GlCmdsList : KaitaiStruct
-        {
-            public static GlCmdsList FromFile(string fileName)
-            {
-                return new GlCmdsList(new KaitaiStream(fileName));
-            }
-
-            public GlCmdsList(KaitaiStream p__io, Quake2Md2 p__parent = null, Quake2Md2 p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                if (!(M_Io.IsEof)) {
-                    _items = new List<GlCmd>();
-                    {
-                        var i = 0;
-                        GlCmd M_;
-                        do {
-                            M_ = new GlCmd(m_io, this, m_root);
-                            _items.Add(M_);
-                            i++;
-                        } while (!(M_.CmdNumVertices == 0));
-                    }
-                }
-            }
-            private List<GlCmd> _items;
-            private Quake2Md2 m_root;
-            private Quake2Md2 m_parent;
-            public List<GlCmd> Items { get { return _items; } }
-            public Quake2Md2 M_Root { get { return m_root; } }
-            public Quake2Md2 M_Parent { get { return m_parent; } }
-        }
-        public partial class TexPoint : KaitaiStruct
-        {
-            public static TexPoint FromFile(string fileName)
-            {
-                return new TexPoint(new KaitaiStream(fileName));
-            }
-
-            public TexPoint(KaitaiStream p__io, Quake2Md2 p__parent = null, Quake2Md2 p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_sNormalized = false;
-                f_tNormalized = false;
-                _read();
-            }
-            private void _read()
-            {
-                _sPx = m_io.ReadU2le();
-                _tPx = m_io.ReadU2le();
-            }
-            private bool f_sNormalized;
-            private double _sNormalized;
-            public double SNormalized
-            {
-                get
-                {
-                    if (f_sNormalized)
-                        return _sNormalized;
-                    _sNormalized = (double) (((SPx + 0.0) / M_Root.SkinWidthPx));
-                    f_sNormalized = true;
-                    return _sNormalized;
-                }
-            }
-            private bool f_tNormalized;
-            private double _tNormalized;
-            public double TNormalized
-            {
-                get
-                {
-                    if (f_tNormalized)
-                        return _tNormalized;
-                    _tNormalized = (double) (((TPx + 0.0) / M_Root.SkinHeightPx));
-                    f_tNormalized = true;
-                    return _tNormalized;
-                }
-            }
-            private ushort _sPx;
-            private ushort _tPx;
-            private Quake2Md2 m_root;
-            private Quake2Md2 m_parent;
-            public ushort SPx { get { return _sPx; } }
-            public ushort TPx { get { return _tPx; } }
-            public Quake2Md2 M_Root { get { return m_root; } }
-            public Quake2Md2 M_Parent { get { return m_parent; } }
-        }
         public partial class Vec3f : KaitaiStruct
         {
             public static Vec3f FromFile(string fileName)
@@ -450,99 +503,59 @@ namespace Kaitai
             public Quake2Md2 M_Root { get { return m_root; } }
             public Quake2Md2.Frame M_Parent { get { return m_parent; } }
         }
-        public partial class GlVertex : KaitaiStruct
+        public partial class Vertex : KaitaiStruct
         {
-            public static GlVertex FromFile(string fileName)
+            public static Vertex FromFile(string fileName)
             {
-                return new GlVertex(new KaitaiStream(fileName));
+                return new Vertex(new KaitaiStream(fileName));
             }
 
-            public GlVertex(KaitaiStream p__io, Quake2Md2.GlCmd p__parent = null, Quake2Md2 p__root = null) : base(p__io)
+            public Vertex(KaitaiStream p__io, Quake2Md2.Frame p__parent = null, Quake2Md2 p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
+                f_normal = false;
                 _read();
             }
             private void _read()
             {
-                _texCoordsNormalized = new List<float>();
-                for (var i = 0; i < 2; i++)
-                {
-                    _texCoordsNormalized.Add(m_io.ReadF4le());
-                }
-                _vertexIndex = m_io.ReadU4le();
+                _position = new CompressedVec(m_io, this, m_root);
+                _normalIndex = m_io.ReadU1();
             }
-            private List<float> _texCoordsNormalized;
-            private uint _vertexIndex;
+            private bool f_normal;
+            private List<double> _normal;
+            public List<double> Normal
+            {
+                get
+                {
+                    if (f_normal)
+                        return _normal;
+                    f_normal = true;
+                    _normal = (List<double>) (M_Root.AnormsTable[NormalIndex]);
+                    return _normal;
+                }
+            }
+            private CompressedVec _position;
+            private byte _normalIndex;
             private Quake2Md2 m_root;
-            private Quake2Md2.GlCmd m_parent;
-            public List<float> TexCoordsNormalized { get { return _texCoordsNormalized; } }
-
-            /// <summary>
-            /// index to `_root.frames[i].vertices` (for each frame with index `i`)
-            /// </summary>
-            public uint VertexIndex { get { return _vertexIndex; } }
+            private Quake2Md2.Frame m_parent;
+            public CompressedVec Position { get { return _position; } }
+            public byte NormalIndex { get { return _normalIndex; } }
             public Quake2Md2 M_Root { get { return m_root; } }
-            public Quake2Md2.GlCmd M_Parent { get { return m_parent; } }
+            public Quake2Md2.Frame M_Parent { get { return m_parent; } }
         }
-        public partial class GlCmd : KaitaiStruct
+        private bool f_animNames;
+        private List<string> _animNames;
+        public List<string> AnimNames
         {
-            public static GlCmd FromFile(string fileName)
+            get
             {
-                return new GlCmd(new KaitaiStream(fileName));
+                if (f_animNames)
+                    return _animNames;
+                f_animNames = true;
+                _animNames = (List<string>) (new List<string> { "stand", "run", "attack", "pain1", "pain2", "pain3", "jump", "flip", "salute", "taunt", "wave", "point", "crstnd", "crwalk", "crattak", "crpain", "crdeath", "death1", "death2", "death3" });
+                return _animNames;
             }
-
-            public GlCmd(KaitaiStream p__io, Quake2Md2.GlCmdsList p__parent = null, Quake2Md2 p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_numVertices = false;
-                f_primitive = false;
-                _read();
-            }
-            private void _read()
-            {
-                _cmdNumVertices = m_io.ReadS4le();
-                _vertices = new List<GlVertex>();
-                for (var i = 0; i < NumVertices; i++)
-                {
-                    _vertices.Add(new GlVertex(m_io, this, m_root));
-                }
-            }
-            private bool f_numVertices;
-            private int _numVertices;
-            public int NumVertices
-            {
-                get
-                {
-                    if (f_numVertices)
-                        return _numVertices;
-                    _numVertices = (int) ((CmdNumVertices < 0 ? -(CmdNumVertices) : CmdNumVertices));
-                    f_numVertices = true;
-                    return _numVertices;
-                }
-            }
-            private bool f_primitive;
-            private GlPrimitive _primitive;
-            public GlPrimitive Primitive
-            {
-                get
-                {
-                    if (f_primitive)
-                        return _primitive;
-                    _primitive = (GlPrimitive) ((CmdNumVertices < 0 ? Quake2Md2.GlPrimitive.TriangleFan : Quake2Md2.GlPrimitive.TriangleStrip));
-                    f_primitive = true;
-                    return _primitive;
-                }
-            }
-            private int _cmdNumVertices;
-            private List<GlVertex> _vertices;
-            private Quake2Md2 m_root;
-            private Quake2Md2.GlCmdsList m_parent;
-            public int CmdNumVertices { get { return _cmdNumVertices; } }
-            public List<GlVertex> Vertices { get { return _vertices; } }
-            public Quake2Md2 M_Root { get { return m_root; } }
-            public Quake2Md2.GlCmdsList M_Parent { get { return m_parent; } }
         }
         private bool f_animNumFrames;
         private byte[] _animNumFrames;
@@ -552,9 +565,22 @@ namespace Kaitai
             {
                 if (f_animNumFrames)
                     return _animNumFrames;
-                _animNumFrames = (byte[]) (new byte[] { 40, 6, 8, 4, 4, 4, 6, 12, 11, 17, 11, 12, 19, 6, 9, 4, 5, 6, 6, 8 });
                 f_animNumFrames = true;
+                _animNumFrames = (byte[]) (new byte[] { 40, 6, 8, 4, 4, 4, 6, 12, 11, 17, 11, 12, 19, 6, 9, 4, 5, 6, 6, 8 });
                 return _animNumFrames;
+            }
+        }
+        private bool f_animStartIndices;
+        private byte[] _animStartIndices;
+        public byte[] AnimStartIndices
+        {
+            get
+            {
+                if (f_animStartIndices)
+                    return _animStartIndices;
+                f_animStartIndices = true;
+                _animStartIndices = (byte[]) (new byte[] { 0, 40, 46, 54, 58, 62, 66, 72, 84, 95, 112, 123, 135, 154, 160, 169, 173, 178, 184, 190 });
+                return _animStartIndices;
             }
         }
         private bool f_anormsTable;
@@ -570,49 +596,9 @@ namespace Kaitai
             {
                 if (f_anormsTable)
                     return _anormsTable;
-                _anormsTable = (List<List<double>>) (new List<List<double>> { new List<double> { -0.525731, 0.000000, 0.850651 }, new List<double> { -0.442863, 0.238856, 0.864188 }, new List<double> { -0.295242, 0.000000, 0.955423 }, new List<double> { -0.309017, 0.500000, 0.809017 }, new List<double> { -0.162460, 0.262866, 0.951056 }, new List<double> { 0.000000, 0.000000, 1.000000 }, new List<double> { 0.000000, 0.850651, 0.525731 }, new List<double> { -0.147621, 0.716567, 0.681718 }, new List<double> { 0.147621, 0.716567, 0.681718 }, new List<double> { 0.000000, 0.525731, 0.850651 }, new List<double> { 0.309017, 0.500000, 0.809017 }, new List<double> { 0.525731, 0.000000, 0.850651 }, new List<double> { 0.295242, 0.000000, 0.955423 }, new List<double> { 0.442863, 0.238856, 0.864188 }, new List<double> { 0.162460, 0.262866, 0.951056 }, new List<double> { -0.681718, 0.147621, 0.716567 }, new List<double> { -0.809017, 0.309017, 0.500000 }, new List<double> { -0.587785, 0.425325, 0.688191 }, new List<double> { -0.850651, 0.525731, 0.000000 }, new List<double> { -0.864188, 0.442863, 0.238856 }, new List<double> { -0.716567, 0.681718, 0.147621 }, new List<double> { -0.688191, 0.587785, 0.425325 }, new List<double> { -0.500000, 0.809017, 0.309017 }, new List<double> { -0.238856, 0.864188, 0.442863 }, new List<double> { -0.425325, 0.688191, 0.587785 }, new List<double> { -0.716567, 0.681718, -0.147621 }, new List<double> { -0.500000, 0.809017, -0.309017 }, new List<double> { -0.525731, 0.850651, 0.000000 }, new List<double> { 0.000000, 0.850651, -0.525731 }, new List<double> { -0.238856, 0.864188, -0.442863 }, new List<double> { 0.000000, 0.955423, -0.295242 }, new List<double> { -0.262866, 0.951056, -0.162460 }, new List<double> { 0.000000, 1.000000, 0.000000 }, new List<double> { 0.000000, 0.955423, 0.295242 }, new List<double> { -0.262866, 0.951056, 0.162460 }, new List<double> { 0.238856, 0.864188, 0.442863 }, new List<double> { 0.262866, 0.951056, 0.162460 }, new List<double> { 0.500000, 0.809017, 0.309017 }, new List<double> { 0.238856, 0.864188, -0.442863 }, new List<double> { 0.262866, 0.951056, -0.162460 }, new List<double> { 0.500000, 0.809017, -0.309017 }, new List<double> { 0.850651, 0.525731, 0.000000 }, new List<double> { 0.716567, 0.681718, 0.147621 }, new List<double> { 0.716567, 0.681718, -0.147621 }, new List<double> { 0.525731, 0.850651, 0.000000 }, new List<double> { 0.425325, 0.688191, 0.587785 }, new List<double> { 0.864188, 0.442863, 0.238856 }, new List<double> { 0.688191, 0.587785, 0.425325 }, new List<double> { 0.809017, 0.309017, 0.500000 }, new List<double> { 0.681718, 0.147621, 0.716567 }, new List<double> { 0.587785, 0.425325, 0.688191 }, new List<double> { 0.955423, 0.295242, 0.000000 }, new List<double> { 1.000000, 0.000000, 0.000000 }, new List<double> { 0.951056, 0.162460, 0.262866 }, new List<double> { 0.850651, -0.525731, 0.000000 }, new List<double> { 0.955423, -0.295242, 0.000000 }, new List<double> { 0.864188, -0.442863, 0.238856 }, new List<double> { 0.951056, -0.162460, 0.262866 }, new List<double> { 0.809017, -0.309017, 0.500000 }, new List<double> { 0.681718, -0.147621, 0.716567 }, new List<double> { 0.850651, 0.000000, 0.525731 }, new List<double> { 0.864188, 0.442863, -0.238856 }, new List<double> { 0.809017, 0.309017, -0.500000 }, new List<double> { 0.951056, 0.162460, -0.262866 }, new List<double> { 0.525731, 0.000000, -0.850651 }, new List<double> { 0.681718, 0.147621, -0.716567 }, new List<double> { 0.681718, -0.147621, -0.716567 }, new List<double> { 0.850651, 0.000000, -0.525731 }, new List<double> { 0.809017, -0.309017, -0.500000 }, new List<double> { 0.864188, -0.442863, -0.238856 }, new List<double> { 0.951056, -0.162460, -0.262866 }, new List<double> { 0.147621, 0.716567, -0.681718 }, new List<double> { 0.309017, 0.500000, -0.809017 }, new List<double> { 0.425325, 0.688191, -0.587785 }, new List<double> { 0.442863, 0.238856, -0.864188 }, new List<double> { 0.587785, 0.425325, -0.688191 }, new List<double> { 0.688191, 0.587785, -0.425325 }, new List<double> { -0.147621, 0.716567, -0.681718 }, new List<double> { -0.309017, 0.500000, -0.809017 }, new List<double> { 0.000000, 0.525731, -0.850651 }, new List<double> { -0.525731, 0.000000, -0.850651 }, new List<double> { -0.442863, 0.238856, -0.864188 }, new List<double> { -0.295242, 0.000000, -0.955423 }, new List<double> { -0.162460, 0.262866, -0.951056 }, new List<double> { 0.000000, 0.000000, -1.000000 }, new List<double> { 0.295242, 0.000000, -0.955423 }, new List<double> { 0.162460, 0.262866, -0.951056 }, new List<double> { -0.442863, -0.238856, -0.864188 }, new List<double> { -0.309017, -0.500000, -0.809017 }, new List<double> { -0.162460, -0.262866, -0.951056 }, new List<double> { 0.000000, -0.850651, -0.525731 }, new List<double> { -0.147621, -0.716567, -0.681718 }, new List<double> { 0.147621, -0.716567, -0.681718 }, new List<double> { 0.000000, -0.525731, -0.850651 }, new List<double> { 0.309017, -0.500000, -0.809017 }, new List<double> { 0.442863, -0.238856, -0.864188 }, new List<double> { 0.162460, -0.262866, -0.951056 }, new List<double> { 0.238856, -0.864188, -0.442863 }, new List<double> { 0.500000, -0.809017, -0.309017 }, new List<double> { 0.425325, -0.688191, -0.587785 }, new List<double> { 0.716567, -0.681718, -0.147621 }, new List<double> { 0.688191, -0.587785, -0.425325 }, new List<double> { 0.587785, -0.425325, -0.688191 }, new List<double> { 0.000000, -0.955423, -0.295242 }, new List<double> { 0.000000, -1.000000, 0.000000 }, new List<double> { 0.262866, -0.951056, -0.162460 }, new List<double> { 0.000000, -0.850651, 0.525731 }, new List<double> { 0.000000, -0.955423, 0.295242 }, new List<double> { 0.238856, -0.864188, 0.442863 }, new List<double> { 0.262866, -0.951056, 0.162460 }, new List<double> { 0.500000, -0.809017, 0.309017 }, new List<double> { 0.716567, -0.681718, 0.147621 }, new List<double> { 0.525731, -0.850651, 0.000000 }, new List<double> { -0.238856, -0.864188, -0.442863 }, new List<double> { -0.500000, -0.809017, -0.309017 }, new List<double> { -0.262866, -0.951056, -0.162460 }, new List<double> { -0.850651, -0.525731, 0.000000 }, new List<double> { -0.716567, -0.681718, -0.147621 }, new List<double> { -0.716567, -0.681718, 0.147621 }, new List<double> { -0.525731, -0.850651, 0.000000 }, new List<double> { -0.500000, -0.809017, 0.309017 }, new List<double> { -0.238856, -0.864188, 0.442863 }, new List<double> { -0.262866, -0.951056, 0.162460 }, new List<double> { -0.864188, -0.442863, 0.238856 }, new List<double> { -0.809017, -0.309017, 0.500000 }, new List<double> { -0.688191, -0.587785, 0.425325 }, new List<double> { -0.681718, -0.147621, 0.716567 }, new List<double> { -0.442863, -0.238856, 0.864188 }, new List<double> { -0.587785, -0.425325, 0.688191 }, new List<double> { -0.309017, -0.500000, 0.809017 }, new List<double> { -0.147621, -0.716567, 0.681718 }, new List<double> { -0.425325, -0.688191, 0.587785 }, new List<double> { -0.162460, -0.262866, 0.951056 }, new List<double> { 0.442863, -0.238856, 0.864188 }, new List<double> { 0.162460, -0.262866, 0.951056 }, new List<double> { 0.309017, -0.500000, 0.809017 }, new List<double> { 0.147621, -0.716567, 0.681718 }, new List<double> { 0.000000, -0.525731, 0.850651 }, new List<double> { 0.425325, -0.688191, 0.587785 }, new List<double> { 0.587785, -0.425325, 0.688191 }, new List<double> { 0.688191, -0.587785, 0.425325 }, new List<double> { -0.955423, 0.295242, 0.000000 }, new List<double> { -0.951056, 0.162460, 0.262866 }, new List<double> { -1.000000, 0.000000, 0.000000 }, new List<double> { -0.850651, 0.000000, 0.525731 }, new List<double> { -0.955423, -0.295242, 0.000000 }, new List<double> { -0.951056, -0.162460, 0.262866 }, new List<double> { -0.864188, 0.442863, -0.238856 }, new List<double> { -0.951056, 0.162460, -0.262866 }, new List<double> { -0.809017, 0.309017, -0.500000 }, new List<double> { -0.864188, -0.442863, -0.238856 }, new List<double> { -0.951056, -0.162460, -0.262866 }, new List<double> { -0.809017, -0.309017, -0.500000 }, new List<double> { -0.681718, 0.147621, -0.716567 }, new List<double> { -0.681718, -0.147621, -0.716567 }, new List<double> { -0.850651, 0.000000, -0.525731 }, new List<double> { -0.688191, 0.587785, -0.425325 }, new List<double> { -0.587785, 0.425325, -0.688191 }, new List<double> { -0.425325, 0.688191, -0.587785 }, new List<double> { -0.425325, -0.688191, -0.587785 }, new List<double> { -0.587785, -0.425325, -0.688191 }, new List<double> { -0.688191, -0.587785, -0.425325 } });
                 f_anormsTable = true;
+                _anormsTable = (List<List<double>>) (new List<List<double>> { new List<double> { -0.525731, 0.000000, 0.850651 }, new List<double> { -0.442863, 0.238856, 0.864188 }, new List<double> { -0.295242, 0.000000, 0.955423 }, new List<double> { -0.309017, 0.500000, 0.809017 }, new List<double> { -0.162460, 0.262866, 0.951056 }, new List<double> { 0.000000, 0.000000, 1.000000 }, new List<double> { 0.000000, 0.850651, 0.525731 }, new List<double> { -0.147621, 0.716567, 0.681718 }, new List<double> { 0.147621, 0.716567, 0.681718 }, new List<double> { 0.000000, 0.525731, 0.850651 }, new List<double> { 0.309017, 0.500000, 0.809017 }, new List<double> { 0.525731, 0.000000, 0.850651 }, new List<double> { 0.295242, 0.000000, 0.955423 }, new List<double> { 0.442863, 0.238856, 0.864188 }, new List<double> { 0.162460, 0.262866, 0.951056 }, new List<double> { -0.681718, 0.147621, 0.716567 }, new List<double> { -0.809017, 0.309017, 0.500000 }, new List<double> { -0.587785, 0.425325, 0.688191 }, new List<double> { -0.850651, 0.525731, 0.000000 }, new List<double> { -0.864188, 0.442863, 0.238856 }, new List<double> { -0.716567, 0.681718, 0.147621 }, new List<double> { -0.688191, 0.587785, 0.425325 }, new List<double> { -0.500000, 0.809017, 0.309017 }, new List<double> { -0.238856, 0.864188, 0.442863 }, new List<double> { -0.425325, 0.688191, 0.587785 }, new List<double> { -0.716567, 0.681718, -0.147621 }, new List<double> { -0.500000, 0.809017, -0.309017 }, new List<double> { -0.525731, 0.850651, 0.000000 }, new List<double> { 0.000000, 0.850651, -0.525731 }, new List<double> { -0.238856, 0.864188, -0.442863 }, new List<double> { 0.000000, 0.955423, -0.295242 }, new List<double> { -0.262866, 0.951056, -0.162460 }, new List<double> { 0.000000, 1.000000, 0.000000 }, new List<double> { 0.000000, 0.955423, 0.295242 }, new List<double> { -0.262866, 0.951056, 0.162460 }, new List<double> { 0.238856, 0.864188, 0.442863 }, new List<double> { 0.262866, 0.951056, 0.162460 }, new List<double> { 0.500000, 0.809017, 0.309017 }, new List<double> { 0.238856, 0.864188, -0.442863 }, new List<double> { 0.262866, 0.951056, -0.162460 }, new List<double> { 0.500000, 0.809017, -0.309017 }, new List<double> { 0.850651, 0.525731, 0.000000 }, new List<double> { 0.716567, 0.681718, 0.147621 }, new List<double> { 0.716567, 0.681718, -0.147621 }, new List<double> { 0.525731, 0.850651, 0.000000 }, new List<double> { 0.425325, 0.688191, 0.587785 }, new List<double> { 0.864188, 0.442863, 0.238856 }, new List<double> { 0.688191, 0.587785, 0.425325 }, new List<double> { 0.809017, 0.309017, 0.500000 }, new List<double> { 0.681718, 0.147621, 0.716567 }, new List<double> { 0.587785, 0.425325, 0.688191 }, new List<double> { 0.955423, 0.295242, 0.000000 }, new List<double> { 1.000000, 0.000000, 0.000000 }, new List<double> { 0.951056, 0.162460, 0.262866 }, new List<double> { 0.850651, -0.525731, 0.000000 }, new List<double> { 0.955423, -0.295242, 0.000000 }, new List<double> { 0.864188, -0.442863, 0.238856 }, new List<double> { 0.951056, -0.162460, 0.262866 }, new List<double> { 0.809017, -0.309017, 0.500000 }, new List<double> { 0.681718, -0.147621, 0.716567 }, new List<double> { 0.850651, 0.000000, 0.525731 }, new List<double> { 0.864188, 0.442863, -0.238856 }, new List<double> { 0.809017, 0.309017, -0.500000 }, new List<double> { 0.951056, 0.162460, -0.262866 }, new List<double> { 0.525731, 0.000000, -0.850651 }, new List<double> { 0.681718, 0.147621, -0.716567 }, new List<double> { 0.681718, -0.147621, -0.716567 }, new List<double> { 0.850651, 0.000000, -0.525731 }, new List<double> { 0.809017, -0.309017, -0.500000 }, new List<double> { 0.864188, -0.442863, -0.238856 }, new List<double> { 0.951056, -0.162460, -0.262866 }, new List<double> { 0.147621, 0.716567, -0.681718 }, new List<double> { 0.309017, 0.500000, -0.809017 }, new List<double> { 0.425325, 0.688191, -0.587785 }, new List<double> { 0.442863, 0.238856, -0.864188 }, new List<double> { 0.587785, 0.425325, -0.688191 }, new List<double> { 0.688191, 0.587785, -0.425325 }, new List<double> { -0.147621, 0.716567, -0.681718 }, new List<double> { -0.309017, 0.500000, -0.809017 }, new List<double> { 0.000000, 0.525731, -0.850651 }, new List<double> { -0.525731, 0.000000, -0.850651 }, new List<double> { -0.442863, 0.238856, -0.864188 }, new List<double> { -0.295242, 0.000000, -0.955423 }, new List<double> { -0.162460, 0.262866, -0.951056 }, new List<double> { 0.000000, 0.000000, -1.000000 }, new List<double> { 0.295242, 0.000000, -0.955423 }, new List<double> { 0.162460, 0.262866, -0.951056 }, new List<double> { -0.442863, -0.238856, -0.864188 }, new List<double> { -0.309017, -0.500000, -0.809017 }, new List<double> { -0.162460, -0.262866, -0.951056 }, new List<double> { 0.000000, -0.850651, -0.525731 }, new List<double> { -0.147621, -0.716567, -0.681718 }, new List<double> { 0.147621, -0.716567, -0.681718 }, new List<double> { 0.000000, -0.525731, -0.850651 }, new List<double> { 0.309017, -0.500000, -0.809017 }, new List<double> { 0.442863, -0.238856, -0.864188 }, new List<double> { 0.162460, -0.262866, -0.951056 }, new List<double> { 0.238856, -0.864188, -0.442863 }, new List<double> { 0.500000, -0.809017, -0.309017 }, new List<double> { 0.425325, -0.688191, -0.587785 }, new List<double> { 0.716567, -0.681718, -0.147621 }, new List<double> { 0.688191, -0.587785, -0.425325 }, new List<double> { 0.587785, -0.425325, -0.688191 }, new List<double> { 0.000000, -0.955423, -0.295242 }, new List<double> { 0.000000, -1.000000, 0.000000 }, new List<double> { 0.262866, -0.951056, -0.162460 }, new List<double> { 0.000000, -0.850651, 0.525731 }, new List<double> { 0.000000, -0.955423, 0.295242 }, new List<double> { 0.238856, -0.864188, 0.442863 }, new List<double> { 0.262866, -0.951056, 0.162460 }, new List<double> { 0.500000, -0.809017, 0.309017 }, new List<double> { 0.716567, -0.681718, 0.147621 }, new List<double> { 0.525731, -0.850651, 0.000000 }, new List<double> { -0.238856, -0.864188, -0.442863 }, new List<double> { -0.500000, -0.809017, -0.309017 }, new List<double> { -0.262866, -0.951056, -0.162460 }, new List<double> { -0.850651, -0.525731, 0.000000 }, new List<double> { -0.716567, -0.681718, -0.147621 }, new List<double> { -0.716567, -0.681718, 0.147621 }, new List<double> { -0.525731, -0.850651, 0.000000 }, new List<double> { -0.500000, -0.809017, 0.309017 }, new List<double> { -0.238856, -0.864188, 0.442863 }, new List<double> { -0.262866, -0.951056, 0.162460 }, new List<double> { -0.864188, -0.442863, 0.238856 }, new List<double> { -0.809017, -0.309017, 0.500000 }, new List<double> { -0.688191, -0.587785, 0.425325 }, new List<double> { -0.681718, -0.147621, 0.716567 }, new List<double> { -0.442863, -0.238856, 0.864188 }, new List<double> { -0.587785, -0.425325, 0.688191 }, new List<double> { -0.309017, -0.500000, 0.809017 }, new List<double> { -0.147621, -0.716567, 0.681718 }, new List<double> { -0.425325, -0.688191, 0.587785 }, new List<double> { -0.162460, -0.262866, 0.951056 }, new List<double> { 0.442863, -0.238856, 0.864188 }, new List<double> { 0.162460, -0.262866, 0.951056 }, new List<double> { 0.309017, -0.500000, 0.809017 }, new List<double> { 0.147621, -0.716567, 0.681718 }, new List<double> { 0.000000, -0.525731, 0.850651 }, new List<double> { 0.425325, -0.688191, 0.587785 }, new List<double> { 0.587785, -0.425325, 0.688191 }, new List<double> { 0.688191, -0.587785, 0.425325 }, new List<double> { -0.955423, 0.295242, 0.000000 }, new List<double> { -0.951056, 0.162460, 0.262866 }, new List<double> { -1.000000, 0.000000, 0.000000 }, new List<double> { -0.850651, 0.000000, 0.525731 }, new List<double> { -0.955423, -0.295242, 0.000000 }, new List<double> { -0.951056, -0.162460, 0.262866 }, new List<double> { -0.864188, 0.442863, -0.238856 }, new List<double> { -0.951056, 0.162460, -0.262866 }, new List<double> { -0.809017, 0.309017, -0.500000 }, new List<double> { -0.864188, -0.442863, -0.238856 }, new List<double> { -0.951056, -0.162460, -0.262866 }, new List<double> { -0.809017, -0.309017, -0.500000 }, new List<double> { -0.681718, 0.147621, -0.716567 }, new List<double> { -0.681718, -0.147621, -0.716567 }, new List<double> { -0.850651, 0.000000, -0.525731 }, new List<double> { -0.688191, 0.587785, -0.425325 }, new List<double> { -0.587785, 0.425325, -0.688191 }, new List<double> { -0.425325, 0.688191, -0.587785 }, new List<double> { -0.425325, -0.688191, -0.587785 }, new List<double> { -0.587785, -0.425325, -0.688191 }, new List<double> { -0.688191, -0.587785, -0.425325 } });
                 return _anormsTable;
-            }
-        }
-        private bool f_texCoords;
-        private List<TexPoint> _texCoords;
-        public List<TexPoint> TexCoords
-        {
-            get
-            {
-                if (f_texCoords)
-                    return _texCoords;
-                long _pos = m_io.Pos;
-                m_io.Seek(OfsTexCoords);
-                _texCoords = new List<TexPoint>();
-                for (var i = 0; i < NumTexCoords; i++)
-                {
-                    _texCoords.Add(new TexPoint(m_io, this, m_root));
-                }
-                m_io.Seek(_pos);
-                f_texCoords = true;
-                return _texCoords;
-            }
-        }
-        private bool f_triangles;
-        private List<Triangle> _triangles;
-        public List<Triangle> Triangles
-        {
-            get
-            {
-                if (f_triangles)
-                    return _triangles;
-                long _pos = m_io.Pos;
-                m_io.Seek(OfsTriangles);
-                _triangles = new List<Triangle>();
-                for (var i = 0; i < NumTriangles; i++)
-                {
-                    _triangles.Add(new Triangle(m_io, this, m_root));
-                }
-                m_io.Seek(_pos);
-                f_triangles = true;
-                return _triangles;
             }
         }
         private bool f_frames;
@@ -623,6 +609,7 @@ namespace Kaitai
             {
                 if (f_frames)
                     return _frames;
+                f_frames = true;
                 long _pos = m_io.Pos;
                 m_io.Seek(OfsFrames);
                 __raw_frames = new List<byte[]>();
@@ -634,21 +621,7 @@ namespace Kaitai
                     _frames.Add(new Frame(io___raw_frames, this, m_root));
                 }
                 m_io.Seek(_pos);
-                f_frames = true;
                 return _frames;
-            }
-        }
-        private bool f_animNames;
-        private List<string> _animNames;
-        public List<string> AnimNames
-        {
-            get
-            {
-                if (f_animNames)
-                    return _animNames;
-                _animNames = (List<string>) (new List<string> { "stand", "run", "attack", "pain1", "pain2", "pain3", "jump", "flip", "salute", "taunt", "wave", "point", "crstnd", "crwalk", "crattak", "crpain", "crdeath", "death1", "death2", "death3" });
-                f_animNames = true;
-                return _animNames;
             }
         }
         private bool f_glCmds;
@@ -659,13 +632,13 @@ namespace Kaitai
             {
                 if (f_glCmds)
                     return _glCmds;
+                f_glCmds = true;
                 long _pos = m_io.Pos;
                 m_io.Seek(OfsGlCmds);
-                __raw_glCmds = m_io.ReadBytes((4 * NumGlCmds));
+                __raw_glCmds = m_io.ReadBytes(4 * NumGlCmds);
                 var io___raw_glCmds = new KaitaiStream(__raw_glCmds);
                 _glCmds = new GlCmdsList(io___raw_glCmds, this, m_root);
                 m_io.Seek(_pos);
-                f_glCmds = true;
                 return _glCmds;
             }
         }
@@ -677,29 +650,56 @@ namespace Kaitai
             {
                 if (f_skins)
                     return _skins;
+                f_skins = true;
                 long _pos = m_io.Pos;
                 m_io.Seek(OfsSkins);
                 _skins = new List<string>();
                 for (var i = 0; i < NumSkins; i++)
                 {
-                    _skins.Add(System.Text.Encoding.GetEncoding("ascii").GetString(KaitaiStream.BytesTerminate(m_io.ReadBytes(64), 0, false)));
+                    _skins.Add(System.Text.Encoding.GetEncoding("ASCII").GetString(KaitaiStream.BytesTerminate(m_io.ReadBytes(64), 0, false)));
                 }
                 m_io.Seek(_pos);
-                f_skins = true;
                 return _skins;
             }
         }
-        private bool f_animStartIndices;
-        private byte[] _animStartIndices;
-        public byte[] AnimStartIndices
+        private bool f_texCoords;
+        private List<TexPoint> _texCoords;
+        public List<TexPoint> TexCoords
         {
             get
             {
-                if (f_animStartIndices)
-                    return _animStartIndices;
-                _animStartIndices = (byte[]) (new byte[] { 0, 40, 46, 54, 58, 62, 66, 72, 84, 95, 112, 123, 135, 154, 160, 169, 173, 178, 184, 190 });
-                f_animStartIndices = true;
-                return _animStartIndices;
+                if (f_texCoords)
+                    return _texCoords;
+                f_texCoords = true;
+                long _pos = m_io.Pos;
+                m_io.Seek(OfsTexCoords);
+                _texCoords = new List<TexPoint>();
+                for (var i = 0; i < NumTexCoords; i++)
+                {
+                    _texCoords.Add(new TexPoint(m_io, this, m_root));
+                }
+                m_io.Seek(_pos);
+                return _texCoords;
+            }
+        }
+        private bool f_triangles;
+        private List<Triangle> _triangles;
+        public List<Triangle> Triangles
+        {
+            get
+            {
+                if (f_triangles)
+                    return _triangles;
+                f_triangles = true;
+                long _pos = m_io.Pos;
+                m_io.Seek(OfsTriangles);
+                _triangles = new List<Triangle>();
+                for (var i = 0; i < NumTriangles; i++)
+                {
+                    _triangles.Add(new Triangle(m_io, this, m_root));
+                }
+                m_io.Seek(_pos);
+                return _triangles;
             }
         }
         private byte[] _magic;

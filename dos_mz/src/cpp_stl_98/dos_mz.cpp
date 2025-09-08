@@ -5,7 +5,7 @@
 
 dos_mz_t::dos_mz_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, dos_mz_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     m_header = 0;
     m_relocations = 0;
     f_relocations = false;
@@ -57,7 +57,7 @@ dos_mz_t::exe_header_t::exe_header_t(kaitai::kstream* p__io, dos_mz_t* p__parent
 
 void dos_mz_t::exe_header_t::_read() {
     m_mz = new mz_header_t(m__io, this, m__root);
-    m_rest_of_header = m__io->read_bytes((mz()->len_header() - 28));
+    m_rest_of_header = m__io->read_bytes(mz()->len_header() - 28);
 }
 
 dos_mz_t::exe_header_t::~exe_header_t() {
@@ -73,8 +73,8 @@ void dos_mz_t::exe_header_t::_clean_up() {
 int32_t dos_mz_t::exe_header_t::len_body() {
     if (f_len_body)
         return m_len_body;
-    m_len_body = (((mz()->last_page_extra_bytes() == 0) ? ((mz()->num_pages() * 512)) : ((((mz()->num_pages() - 1) * 512) + mz()->last_page_extra_bytes()))) - mz()->len_header());
     f_len_body = true;
+    m_len_body = ((mz()->last_page_extra_bytes() == 0) ? (mz()->num_pages() * 512) : ((mz()->num_pages() - 1) * 512 + mz()->last_page_extra_bytes())) - mz()->len_header();
     return m_len_body;
 }
 
@@ -92,9 +92,9 @@ dos_mz_t::mz_header_t::mz_header_t(kaitai::kstream* p__io, dos_mz_t::exe_header_
 }
 
 void dos_mz_t::mz_header_t::_read() {
-    m_magic = kaitai::kstream::bytes_to_str(m__io->read_bytes(2), std::string("ASCII"));
-    if (!( ((magic() == (std::string("MZ"))) || (magic() == (std::string("ZM")))) )) {
-        throw kaitai::validation_not_any_of_error<std::string>(magic(), _io(), std::string("/types/mz_header/seq/0"));
+    m_magic = kaitai::kstream::bytes_to_str(m__io->read_bytes(2), "ASCII");
+    if (!( ((m_magic == std::string("MZ")) || (m_magic == std::string("ZM"))) )) {
+        throw kaitai::validation_not_any_of_error<std::string>(m_magic, m__io, std::string("/types/mz_header/seq/0"));
     }
     m_last_page_extra_bytes = m__io->read_u2le();
     m_num_pages = m__io->read_u2le();
@@ -121,8 +121,8 @@ void dos_mz_t::mz_header_t::_clean_up() {
 int32_t dos_mz_t::mz_header_t::len_header() {
     if (f_len_header)
         return m_len_header;
-    m_len_header = (header_size() * 16);
     f_len_header = true;
+    m_len_header = header_size() * 16;
     return m_len_header;
 }
 
@@ -153,6 +153,7 @@ void dos_mz_t::relocation_t::_clean_up() {
 std::vector<dos_mz_t::relocation_t*>* dos_mz_t::relocations() {
     if (f_relocations)
         return m_relocations;
+    f_relocations = true;
     n_relocations = true;
     if (header()->mz()->ofs_relocations() != 0) {
         n_relocations = false;
@@ -165,7 +166,6 @@ std::vector<dos_mz_t::relocation_t*>* dos_mz_t::relocations() {
             m_relocations->push_back(new relocation_t(io, this, m__root));
         }
         io->seek(_pos);
-        f_relocations = true;
     }
     return m_relocations;
 }

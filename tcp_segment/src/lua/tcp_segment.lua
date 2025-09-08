@@ -4,6 +4,7 @@
 
 local class = require("class")
 require("kaitaistruct")
+local utils = require("utils")
 
 -- 
 -- TCP is one of the core Internet protocols on transport layer (AKA
@@ -31,8 +32,8 @@ function TcpSegment:_read()
   self.window_size = self._io:read_u2be()
   self.checksum = self._io:read_u2be()
   self.urgent_pointer = self._io:read_u2be()
-  if ((self.data_offset * 4) - 20) ~= 0 then
-    self.options = self._io:read_bytes(((self.data_offset * 4) - 20))
+  if self.data_offset * 4 - 20 ~= 0 then
+    self.options = self._io:read_bytes(self.data_offset * 4 - 20)
   end
   self.body = self._io:read_bytes_full()
 end
@@ -55,7 +56,7 @@ TcpSegment.Flags = class.class(KaitaiStruct)
 function TcpSegment.Flags:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -86,4 +87,7 @@ end
 -- Synchronize sequence numbers.
 -- 
 -- No more data from sender.
+function TcpSegment.Flags:__tostring()
+  return utils.box_unwrap((self.cwr) and utils.box_wrap("|CWR") or ("")) .. utils.box_unwrap((self.ece) and utils.box_wrap("|ECE") or ("")) .. utils.box_unwrap((self.urg) and utils.box_wrap("|URG") or ("")) .. utils.box_unwrap((self.ack) and utils.box_wrap("|ACK") or ("")) .. utils.box_unwrap((self.psh) and utils.box_wrap("|PSH") or ("")) .. utils.box_unwrap((self.rst) and utils.box_wrap("|RST") or ("")) .. utils.box_unwrap((self.syn) and utils.box_wrap("|SYN") or ("")) .. utils.box_unwrap((self.fin) and utils.box_wrap("|FIN") or (""))
+end
 

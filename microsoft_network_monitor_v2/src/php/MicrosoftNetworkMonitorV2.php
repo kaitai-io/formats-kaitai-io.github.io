@@ -14,15 +14,15 @@
 
 namespace {
     class MicrosoftNetworkMonitorV2 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \MicrosoftNetworkMonitorV2 $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\MicrosoftNetworkMonitorV2 $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_signature = $this->_io->readBytes(4);
-            if (!($this->signature() == "\x47\x4D\x42\x55")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x47\x4D\x42\x55", $this->signature(), $this->_io(), "/seq/0");
+            if (!($this->_m_signature == "\x47\x4D\x42\x55")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x47\x4D\x42\x55", $this->_m_signature, $this->_io, "/seq/0");
             }
             $this->_m_versionMinor = $this->_io->readU1();
             $this->_m_versionMajor = $this->_io->readU1();
@@ -112,65 +112,6 @@ namespace {
     }
 }
 
-namespace MicrosoftNetworkMonitorV2 {
-    class FrameIndex extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \MicrosoftNetworkMonitorV2 $_parent = null, \MicrosoftNetworkMonitorV2 $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_entries = [];
-            $i = 0;
-            while (!$this->_io->isEof()) {
-                $this->_m_entries[] = new \MicrosoftNetworkMonitorV2\FrameIndexEntry($this->_io, $this, $this->_root);
-                $i++;
-            }
-        }
-        protected $_m_entries;
-        public function entries() { return $this->_m_entries; }
-    }
-}
-
-/**
- * Each index entry is just a pointer to where the frame data is
- * stored in the file.
- */
-
-namespace MicrosoftNetworkMonitorV2 {
-    class FrameIndexEntry extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \MicrosoftNetworkMonitorV2\FrameIndex $_parent = null, \MicrosoftNetworkMonitorV2 $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_ofs = $this->_io->readU4le();
-        }
-        protected $_m_body;
-
-        /**
-         * Frame body itself
-         */
-        public function body() {
-            if ($this->_m_body !== null)
-                return $this->_m_body;
-            $io = $this->_root()->_io();
-            $_pos = $io->pos();
-            $io->seek($this->ofs());
-            $this->_m_body = new \MicrosoftNetworkMonitorV2\Frame($io, $this, $this->_root);
-            $io->seek($_pos);
-            return $this->_m_body;
-        }
-        protected $_m_ofs;
-
-        /**
-         * Absolute pointer to frame data in the file
-         */
-        public function ofs() { return $this->_m_ofs; }
-    }
-}
-
 /**
  * A container for actually captured network data. Allow to
  * timestamp individual frames and designates how much data from
@@ -179,7 +120,7 @@ namespace MicrosoftNetworkMonitorV2 {
 
 namespace MicrosoftNetworkMonitorV2 {
     class Frame extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \MicrosoftNetworkMonitorV2\FrameIndexEntry $_parent = null, \MicrosoftNetworkMonitorV2 $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\MicrosoftNetworkMonitorV2\FrameIndexEntry $_parent = null, ?\MicrosoftNetworkMonitorV2 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -225,6 +166,65 @@ namespace MicrosoftNetworkMonitorV2 {
          */
         public function body() { return $this->_m_body; }
         public function _raw_body() { return $this->_m__raw_body; }
+    }
+}
+
+namespace MicrosoftNetworkMonitorV2 {
+    class FrameIndex extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\MicrosoftNetworkMonitorV2 $_parent = null, ?\MicrosoftNetworkMonitorV2 $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_entries = [];
+            $i = 0;
+            while (!$this->_io->isEof()) {
+                $this->_m_entries[] = new \MicrosoftNetworkMonitorV2\FrameIndexEntry($this->_io, $this, $this->_root);
+                $i++;
+            }
+        }
+        protected $_m_entries;
+        public function entries() { return $this->_m_entries; }
+    }
+}
+
+/**
+ * Each index entry is just a pointer to where the frame data is
+ * stored in the file.
+ */
+
+namespace MicrosoftNetworkMonitorV2 {
+    class FrameIndexEntry extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\MicrosoftNetworkMonitorV2\FrameIndex $_parent = null, ?\MicrosoftNetworkMonitorV2 $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_ofs = $this->_io->readU4le();
+        }
+        protected $_m_body;
+
+        /**
+         * Frame body itself
+         */
+        public function body() {
+            if ($this->_m_body !== null)
+                return $this->_m_body;
+            $io = $this->_root()->_io();
+            $_pos = $io->pos();
+            $io->seek($this->ofs());
+            $this->_m_body = new \MicrosoftNetworkMonitorV2\Frame($io, $this, $this->_root);
+            $io->seek($_pos);
+            return $this->_m_body;
+        }
+        protected $_m_ofs;
+
+        /**
+         * Absolute pointer to frame data in the file
+         */
+        public function ofs() { return $this->_m_ofs; }
     }
 }
 
@@ -334,5 +334,11 @@ namespace MicrosoftNetworkMonitorV2 {
         const ZWAVE_R3 = 262;
         const WATTSTOPPER_DLM = 263;
         const ISO_14443 = 264;
+
+        private const _VALUES = [0 => true, 1 => true, 3 => true, 6 => true, 7 => true, 8 => true, 9 => true, 10 => true, 50 => true, 51 => true, 100 => true, 101 => true, 104 => true, 105 => true, 107 => true, 108 => true, 113 => true, 114 => true, 117 => true, 119 => true, 122 => true, 123 => true, 127 => true, 129 => true, 138 => true, 139 => true, 140 => true, 141 => true, 142 => true, 143 => true, 144 => true, 147 => true, 148 => true, 149 => true, 150 => true, 151 => true, 152 => true, 153 => true, 154 => true, 155 => true, 156 => true, 157 => true, 158 => true, 159 => true, 160 => true, 161 => true, 162 => true, 163 => true, 165 => true, 166 => true, 169 => true, 170 => true, 171 => true, 177 => true, 187 => true, 189 => true, 192 => true, 195 => true, 196 => true, 197 => true, 201 => true, 202 => true, 203 => true, 204 => true, 205 => true, 206 => true, 209 => true, 215 => true, 220 => true, 224 => true, 225 => true, 226 => true, 227 => true, 228 => true, 229 => true, 230 => true, 231 => true, 235 => true, 236 => true, 237 => true, 239 => true, 240 => true, 241 => true, 242 => true, 243 => true, 244 => true, 245 => true, 247 => true, 248 => true, 249 => true, 250 => true, 251 => true, 253 => true, 254 => true, 255 => true, 256 => true, 257 => true, 258 => true, 259 => true, 260 => true, 261 => true, 262 => true, 263 => true, 264 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

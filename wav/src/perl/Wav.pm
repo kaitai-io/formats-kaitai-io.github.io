@@ -2,7 +2,8 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
+use Riff;
 use Encode;
 
 ########################################################################
@@ -18,6 +19,26 @@ sub from_file {
     binmode($fd);
     return new($class, IO::KaitaiStruct::Stream->new($fd));
 }
+
+our $FOURCC_ID3 = 540238953;
+our $FOURCC_CUE = 543520099;
+our $FOURCC_FMT = 544501094;
+our $FOURCC_WAVE = 1163280727;
+our $FOURCC_RIFF = 1179011410;
+our $FOURCC_PEAK = 1262568784;
+our $FOURCC_IXML = 1280137321;
+our $FOURCC_INFO = 1330007625;
+our $FOURCC_LIST = 1414744396;
+our $FOURCC_PMX = 1481461855;
+our $FOURCC_CHNA = 1634625635;
+our $FOURCC_DATA = 1635017060;
+our $FOURCC_UMID = 1684630901;
+our $FOURCC_MINF = 1718511981;
+our $FOURCC_AXML = 1819113569;
+our $FOURCC_REGN = 1852269938;
+our $FOURCC_AFSP = 1886611041;
+our $FOURCC_FACT = 1952670054;
+our $FOURCC_BEXT = 1954047330;
 
 our $W_FORMAT_TAG_TYPE_UNKNOWN = 0;
 our $W_FORMAT_TAG_TYPE_PCM = 1;
@@ -285,33 +306,13 @@ our $W_FORMAT_TAG_TYPE_FLAC = 61868;
 our $W_FORMAT_TAG_TYPE_EXTENSIBLE = 65534;
 our $W_FORMAT_TAG_TYPE_DEVELOPMENT = 65535;
 
-our $FOURCC_ID3 = 540238953;
-our $FOURCC_CUE = 543520099;
-our $FOURCC_FMT = 544501094;
-our $FOURCC_WAVE = 1163280727;
-our $FOURCC_RIFF = 1179011410;
-our $FOURCC_PEAK = 1262568784;
-our $FOURCC_IXML = 1280137321;
-our $FOURCC_INFO = 1330007625;
-our $FOURCC_LIST = 1414744396;
-our $FOURCC_PMX = 1481461855;
-our $FOURCC_CHNA = 1634625635;
-our $FOURCC_DATA = 1635017060;
-our $FOURCC_UMID = 1684630901;
-our $FOURCC_MINF = 1718511981;
-our $FOURCC_AXML = 1819113569;
-our $FOURCC_REGN = 1852269938;
-our $FOURCC_AFSP = 1886611041;
-our $FOURCC_FACT = 1952670054;
-our $FOURCC_BEXT = 1954047330;
-
 sub new {
     my ($class, $_io, $_parent, $_root) = @_;
     my $self = IO::KaitaiStruct::Struct->new($_io);
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -321,50 +322,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{chunk} = Riff::Chunk->new($self->{_io}, $self, $self->{_root});
-}
-
-sub subchunks {
-    my ($self) = @_;
-    return $self->{subchunks} if ($self->{subchunks});
-    if ($self->is_form_type_wave()) {
-        my $io = $self->parent_chunk_data()->subchunks_slot()->_io();
-        my $_pos = $io->pos();
-        $io->seek(0);
-        $self->{subchunks} = ();
-        while (!$io->is_eof()) {
-            push @{$self->{subchunks}}, Wav::ChunkType->new($io, $self, $self->{_root});
-        }
-        $io->seek($_pos);
-    }
-    return $self->{subchunks};
-}
-
-sub parent_chunk_data {
-    my ($self) = @_;
-    return $self->{parent_chunk_data} if ($self->{parent_chunk_data});
-    if ($self->is_riff_chunk()) {
-        my $io = $self->chunk()->data_slot()->_io();
-        my $_pos = $io->pos();
-        $io->seek(0);
-        $self->{parent_chunk_data} = Riff::ParentChunkData->new($io, $self, $self->{_root});
-        $io->seek($_pos);
-    }
-    return $self->{parent_chunk_data};
-}
-
-sub is_form_type_wave {
-    my ($self) = @_;
-    return $self->{is_form_type_wave} if ($self->{is_form_type_wave});
-    $self->{is_form_type_wave} =  (($self->is_riff_chunk()) && ($self->form_type() == $Wav::FOURCC_WAVE)) ;
-    return $self->{is_form_type_wave};
-}
-
-sub is_riff_chunk {
-    my ($self) = @_;
-    return $self->{is_riff_chunk} if ($self->{is_riff_chunk});
-    $self->{is_riff_chunk} = $self->chunk_id() == $Wav::FOURCC_RIFF;
-    return $self->{is_riff_chunk};
+    $self->{chunk} = Riff::Chunk->new($self->{_io});
 }
 
 sub chunk_id {
@@ -381,13 +339,56 @@ sub form_type {
     return $self->{form_type};
 }
 
+sub is_form_type_wave {
+    my ($self) = @_;
+    return $self->{is_form_type_wave} if ($self->{is_form_type_wave});
+    $self->{is_form_type_wave} =  (($self->is_riff_chunk()) && ($self->form_type() == $Wav::FOURCC_WAVE)) ;
+    return $self->{is_form_type_wave};
+}
+
+sub is_riff_chunk {
+    my ($self) = @_;
+    return $self->{is_riff_chunk} if ($self->{is_riff_chunk});
+    $self->{is_riff_chunk} = $self->chunk_id() == $Wav::FOURCC_RIFF;
+    return $self->{is_riff_chunk};
+}
+
+sub parent_chunk_data {
+    my ($self) = @_;
+    return $self->{parent_chunk_data} if ($self->{parent_chunk_data});
+    if ($self->is_riff_chunk()) {
+        my $io = $self->chunk()->data_slot()->_io();
+        my $_pos = $io->pos();
+        $io->seek(0);
+        $self->{parent_chunk_data} = Riff::ParentChunkData->new($io);
+        $io->seek($_pos);
+    }
+    return $self->{parent_chunk_data};
+}
+
+sub subchunks {
+    my ($self) = @_;
+    return $self->{subchunks} if ($self->{subchunks});
+    if ($self->is_form_type_wave()) {
+        my $io = $self->parent_chunk_data()->subchunks_slot()->_io();
+        my $_pos = $io->pos();
+        $io->seek(0);
+        $self->{subchunks} = [];
+        while (!$io->is_eof()) {
+            push @{$self->{subchunks}}, Wav::ChunkType->new($io, $self, $self->{_root});
+        }
+        $io->seek($_pos);
+    }
+    return $self->{subchunks};
+}
+
 sub chunk {
     my ($self) = @_;
     return $self->{chunk};
 }
 
 ########################################################################
-package Wav::SampleType;
+package Wav::AfspChunkType;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -406,7 +407,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -416,16 +417,25 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{sample} = $self->{_io}->read_u2le();
+    $self->{magic} = $self->{_io}->read_bytes(4);
+    $self->{info_records} = [];
+    while (!$self->{_io}->is_eof()) {
+        push @{$self->{info_records}}, Encode::decode("ASCII", $self->{_io}->read_bytes_term(0, 0, 1, 1));
+    }
 }
 
-sub sample {
+sub magic {
     my ($self) = @_;
-    return $self->{sample};
+    return $self->{magic};
+}
+
+sub info_records {
+    my ($self) = @_;
+    return $self->{info_records};
 }
 
 ########################################################################
-package Wav::FormatChunkType;
+package Wav::AxmlChunkType;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -444,127 +454,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{w_format_tag} = $self->{_io}->read_u2le();
-    $self->{n_channels} = $self->{_io}->read_u2le();
-    $self->{n_samples_per_sec} = $self->{_io}->read_u4le();
-    $self->{n_avg_bytes_per_sec} = $self->{_io}->read_u4le();
-    $self->{n_block_align} = $self->{_io}->read_u2le();
-    $self->{w_bits_per_sample} = $self->{_io}->read_u2le();
-    if (!($self->is_basic_pcm())) {
-        $self->{cb_size} = $self->{_io}->read_u2le();
-    }
-    if ($self->is_cb_size_meaningful()) {
-        $self->{w_valid_bits_per_sample} = $self->{_io}->read_u2le();
-    }
-    if ($self->is_extensible()) {
-        $self->{channel_mask_and_subformat} = Wav::ChannelMaskAndSubformatType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub is_extensible {
-    my ($self) = @_;
-    return $self->{is_extensible} if ($self->{is_extensible});
-    $self->{is_extensible} = $self->w_format_tag() == $Wav::W_FORMAT_TAG_TYPE_EXTENSIBLE;
-    return $self->{is_extensible};
-}
-
-sub is_basic_pcm {
-    my ($self) = @_;
-    return $self->{is_basic_pcm} if ($self->{is_basic_pcm});
-    $self->{is_basic_pcm} = $self->w_format_tag() == $Wav::W_FORMAT_TAG_TYPE_PCM;
-    return $self->{is_basic_pcm};
-}
-
-sub is_basic_float {
-    my ($self) = @_;
-    return $self->{is_basic_float} if ($self->{is_basic_float});
-    $self->{is_basic_float} = $self->w_format_tag() == $Wav::W_FORMAT_TAG_TYPE_IEEE_FLOAT;
-    return $self->{is_basic_float};
-}
-
-sub is_cb_size_meaningful {
-    my ($self) = @_;
-    return $self->{is_cb_size_meaningful} if ($self->{is_cb_size_meaningful});
-    $self->{is_cb_size_meaningful} =  ((!($self->is_basic_pcm())) && ($self->cb_size() != 0)) ;
-    return $self->{is_cb_size_meaningful};
-}
-
-sub w_format_tag {
-    my ($self) = @_;
-    return $self->{w_format_tag};
-}
-
-sub n_channels {
-    my ($self) = @_;
-    return $self->{n_channels};
-}
-
-sub n_samples_per_sec {
-    my ($self) = @_;
-    return $self->{n_samples_per_sec};
-}
-
-sub n_avg_bytes_per_sec {
-    my ($self) = @_;
-    return $self->{n_avg_bytes_per_sec};
-}
-
-sub n_block_align {
-    my ($self) = @_;
-    return $self->{n_block_align};
-}
-
-sub w_bits_per_sample {
-    my ($self) = @_;
-    return $self->{w_bits_per_sample};
-}
-
-sub cb_size {
-    my ($self) = @_;
-    return $self->{cb_size};
-}
-
-sub w_valid_bits_per_sample {
-    my ($self) = @_;
-    return $self->{w_valid_bits_per_sample};
-}
-
-sub channel_mask_and_subformat {
-    my ($self) = @_;
-    return $self->{channel_mask_and_subformat};
-}
-
-########################################################################
-package Wav::PmxChunkType;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -583,7 +473,7 @@ sub data {
 }
 
 ########################################################################
-package Wav::FactChunkType;
+package Wav::BextChunkType;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -602,7 +492,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -612,305 +502,90 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{num_samples_per_channel} = $self->{_io}->read_u4le();
+    $self->{description} = Encode::decode("ASCII", IO::KaitaiStruct::Stream::bytes_terminate($self->{_io}->read_bytes(256), 0, 0));
+    $self->{originator} = Encode::decode("ASCII", IO::KaitaiStruct::Stream::bytes_terminate($self->{_io}->read_bytes(32), 0, 0));
+    $self->{originator_reference} = Encode::decode("ASCII", IO::KaitaiStruct::Stream::bytes_terminate($self->{_io}->read_bytes(32), 0, 0));
+    $self->{origination_date} = Encode::decode("ASCII", $self->{_io}->read_bytes(10));
+    $self->{origination_time} = Encode::decode("ASCII", $self->{_io}->read_bytes(8));
+    $self->{time_reference_low} = $self->{_io}->read_u4le();
+    $self->{time_reference_high} = $self->{_io}->read_u4le();
+    $self->{version} = $self->{_io}->read_u2le();
+    $self->{umid} = $self->{_io}->read_bytes(64);
+    $self->{loudness_value} = $self->{_io}->read_u2le();
+    $self->{loudness_range} = $self->{_io}->read_u2le();
+    $self->{max_true_peak_level} = $self->{_io}->read_u2le();
+    $self->{max_momentary_loudness} = $self->{_io}->read_u2le();
+    $self->{max_short_term_loudness} = $self->{_io}->read_u2le();
 }
 
-sub num_samples_per_channel {
+sub description {
     my ($self) = @_;
-    return $self->{num_samples_per_channel};
+    return $self->{description};
 }
 
-########################################################################
-package Wav::GuidType;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
+sub originator {
     my ($self) = @_;
-
-    $self->{data1} = $self->{_io}->read_u4le();
-    $self->{data2} = $self->{_io}->read_u2le();
-    $self->{data3} = $self->{_io}->read_u2le();
-    $self->{data4} = $self->{_io}->read_u4be();
-    $self->{data4a} = $self->{_io}->read_u4be();
+    return $self->{originator};
 }
 
-sub data1 {
+sub originator_reference {
     my ($self) = @_;
-    return $self->{data1};
+    return $self->{originator_reference};
 }
 
-sub data2 {
+sub origination_date {
     my ($self) = @_;
-    return $self->{data2};
+    return $self->{origination_date};
 }
 
-sub data3 {
+sub origination_time {
     my ($self) = @_;
-    return $self->{data3};
+    return $self->{origination_time};
 }
 
-sub data4 {
+sub time_reference_low {
     my ($self) = @_;
-    return $self->{data4};
+    return $self->{time_reference_low};
 }
 
-sub data4a {
+sub time_reference_high {
     my ($self) = @_;
-    return $self->{data4a};
+    return $self->{time_reference_high};
 }
 
-########################################################################
-package Wav::IxmlChunkType;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
+sub version {
     my ($self) = @_;
-
-    $self->{data} = Encode::decode("UTF-8", $self->{_io}->read_bytes_full());
+    return $self->{version};
 }
 
-sub data {
+sub umid {
     my ($self) = @_;
-    return $self->{data};
+    return $self->{umid};
 }
 
-########################################################################
-package Wav::InfoChunkType;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
+sub loudness_value {
     my ($self) = @_;
-
-    $self->{chunk} = Riff::Chunk->new($self->{_io}, $self, $self->{_root});
+    return $self->{loudness_value};
 }
 
-sub chunk_data {
+sub loudness_range {
     my ($self) = @_;
-    return $self->{chunk_data} if ($self->{chunk_data});
-    my $io = $self->chunk()->data_slot()->_io();
-    my $_pos = $io->pos();
-    $io->seek(0);
-    $self->{chunk_data} = Encode::decode("ASCII", $io->read_bytes_term(0, 0, 1, 1));
-    $io->seek($_pos);
-    return $self->{chunk_data};
+    return $self->{loudness_range};
 }
 
-sub chunk {
+sub max_true_peak_level {
     my ($self) = @_;
-    return $self->{chunk};
+    return $self->{max_true_peak_level};
 }
 
-########################################################################
-package Wav::CuePointType;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
+sub max_momentary_loudness {
     my ($self) = @_;
-
-    $self->{dw_name} = $self->{_io}->read_u4le();
-    $self->{dw_position} = $self->{_io}->read_u4le();
-    $self->{fcc_chunk} = $self->{_io}->read_u4le();
-    $self->{dw_chunk_start} = $self->{_io}->read_u4le();
-    $self->{dw_block_start} = $self->{_io}->read_u4le();
-    $self->{dw_sample_offset} = $self->{_io}->read_u4le();
+    return $self->{max_momentary_loudness};
 }
 
-sub dw_name {
+sub max_short_term_loudness {
     my ($self) = @_;
-    return $self->{dw_name};
-}
-
-sub dw_position {
-    my ($self) = @_;
-    return $self->{dw_position};
-}
-
-sub fcc_chunk {
-    my ($self) = @_;
-    return $self->{fcc_chunk};
-}
-
-sub dw_chunk_start {
-    my ($self) = @_;
-    return $self->{dw_chunk_start};
-}
-
-sub dw_block_start {
-    my ($self) = @_;
-    return $self->{dw_block_start};
-}
-
-sub dw_sample_offset {
-    my ($self) = @_;
-    return $self->{dw_sample_offset};
-}
-
-########################################################################
-package Wav::DataChunkType;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{data} = $self->{_io}->read_bytes_full();
-}
-
-sub data {
-    my ($self) = @_;
-    return $self->{data};
-}
-
-########################################################################
-package Wav::SamplesType;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{samples} = $self->{_io}->read_u4le();
-}
-
-sub samples {
-    my ($self) = @_;
-    return $self->{samples};
+    return $self->{max_short_term_loudness};
 }
 
 ########################################################################
@@ -933,7 +608,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -958,116 +633,6 @@ sub subformat {
 }
 
 ########################################################################
-package Wav::CueChunkType;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{dw_cue_points} = $self->{_io}->read_u4le();
-    $self->{cue_points} = ();
-    my $n_cue_points = $self->dw_cue_points();
-    for (my $i = 0; $i < $n_cue_points; $i++) {
-        push @{$self->{cue_points}}, Wav::CuePointType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub dw_cue_points {
-    my ($self) = @_;
-    return $self->{dw_cue_points};
-}
-
-sub cue_points {
-    my ($self) = @_;
-    return $self->{cue_points};
-}
-
-########################################################################
-package Wav::ListChunkType;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{parent_chunk_data} = Riff::ParentChunkData->new($self->{_io}, $self, $self->{_root});
-}
-
-sub form_type {
-    my ($self) = @_;
-    return $self->{form_type} if ($self->{form_type});
-    $self->{form_type} = $self->parent_chunk_data()->form_type();
-    return $self->{form_type};
-}
-
-sub subchunks {
-    my ($self) = @_;
-    return $self->{subchunks} if ($self->{subchunks});
-    my $io = $self->parent_chunk_data()->subchunks_slot()->_io();
-    my $_pos = $io->pos();
-    $io->seek(0);
-    $self->{subchunks} = ();
-    while (!$io->is_eof()) {
-        my $_on = $self->form_type();
-        if ($_on == $Wav::FOURCC_INFO) {
-            push @{$self->{subchunks}}, Wav::InfoChunkType->new($io, $self, $self->{_root});
-        }
-    }
-    $io->seek($_pos);
-    return $self->{subchunks};
-}
-
-sub parent_chunk_data {
-    my ($self) = @_;
-    return $self->{parent_chunk_data};
-}
-
-########################################################################
 package Wav::ChannelMaskType;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -1087,7 +652,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -1220,91 +785,6 @@ sub unused2 {
 }
 
 ########################################################################
-package Wav::AfspChunkType;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{magic} = $self->{_io}->read_bytes(4);
-    $self->{info_records} = ();
-    while (!$self->{_io}->is_eof()) {
-        push @{$self->{info_records}}, Encode::decode("ASCII", $self->{_io}->read_bytes_term(0, 0, 1, 1));
-    }
-}
-
-sub magic {
-    my ($self) = @_;
-    return $self->{magic};
-}
-
-sub info_records {
-    my ($self) = @_;
-    return $self->{info_records};
-}
-
-########################################################################
-package Wav::AxmlChunkType;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{data} = Encode::decode("UTF-8", $self->{_io}->read_bytes_full());
-}
-
-sub data {
-    my ($self) = @_;
-    return $self->{data};
-}
-
-########################################################################
 package Wav::ChunkType;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -1324,7 +804,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -1334,14 +814,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{chunk} = Riff::Chunk->new($self->{_io}, $self, $self->{_root});
-}
-
-sub chunk_id {
-    my ($self) = @_;
-    return $self->{chunk_id} if ($self->{chunk_id});
-    $self->{chunk_id} = $self->chunk()->id();
-    return $self->{chunk_id};
+    $self->{chunk} = Riff::Chunk->new($self->{_io});
 }
 
 sub chunk_data {
@@ -1351,17 +824,11 @@ sub chunk_data {
     my $_pos = $io->pos();
     $io->seek(0);
     my $_on = $self->chunk_id();
-    if ($_on == $Wav::FOURCC_FACT) {
-        $self->{chunk_data} = Wav::FactChunkType->new($io, $self, $self->{_root});
-    }
-    elsif ($_on == $Wav::FOURCC_LIST) {
-        $self->{chunk_data} = Wav::ListChunkType->new($io, $self, $self->{_root});
-    }
-    elsif ($_on == $Wav::FOURCC_FMT) {
-        $self->{chunk_data} = Wav::FormatChunkType->new($io, $self, $self->{_root});
-    }
-    elsif ($_on == $Wav::FOURCC_AFSP) {
+    if ($_on == $Wav::FOURCC_AFSP) {
         $self->{chunk_data} = Wav::AfspChunkType->new($io, $self, $self->{_root});
+    }
+    elsif ($_on == $Wav::FOURCC_AXML) {
+        $self->{chunk_data} = Wav::AxmlChunkType->new($io, $self, $self->{_root});
     }
     elsif ($_on == $Wav::FOURCC_BEXT) {
         $self->{chunk_data} = Wav::BextChunkType->new($io, $self, $self->{_root});
@@ -1369,20 +836,33 @@ sub chunk_data {
     elsif ($_on == $Wav::FOURCC_CUE) {
         $self->{chunk_data} = Wav::CueChunkType->new($io, $self, $self->{_root});
     }
+    elsif ($_on == $Wav::FOURCC_DATA) {
+        $self->{chunk_data} = Wav::DataChunkType->new($io, $self, $self->{_root});
+    }
+    elsif ($_on == $Wav::FOURCC_FACT) {
+        $self->{chunk_data} = Wav::FactChunkType->new($io, $self, $self->{_root});
+    }
+    elsif ($_on == $Wav::FOURCC_FMT) {
+        $self->{chunk_data} = Wav::FormatChunkType->new($io, $self, $self->{_root});
+    }
     elsif ($_on == $Wav::FOURCC_IXML) {
         $self->{chunk_data} = Wav::IxmlChunkType->new($io, $self, $self->{_root});
+    }
+    elsif ($_on == $Wav::FOURCC_LIST) {
+        $self->{chunk_data} = Wav::ListChunkType->new($io, $self, $self->{_root});
     }
     elsif ($_on == $Wav::FOURCC_PMX) {
         $self->{chunk_data} = Wav::PmxChunkType->new($io, $self, $self->{_root});
     }
-    elsif ($_on == $Wav::FOURCC_AXML) {
-        $self->{chunk_data} = Wav::AxmlChunkType->new($io, $self, $self->{_root});
-    }
-    elsif ($_on == $Wav::FOURCC_DATA) {
-        $self->{chunk_data} = Wav::DataChunkType->new($io, $self, $self->{_root});
-    }
     $io->seek($_pos);
     return $self->{chunk_data};
+}
+
+sub chunk_id {
+    my ($self) = @_;
+    return $self->{chunk_id} if ($self->{chunk_id});
+    $self->{chunk_id} = $self->chunk()->id();
+    return $self->{chunk_id};
 }
 
 sub chunk {
@@ -1391,7 +871,7 @@ sub chunk {
 }
 
 ########################################################################
-package Wav::BextChunkType;
+package Wav::CueChunkType;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -1410,7 +890,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -1420,90 +900,611 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{description} = Encode::decode("ASCII", IO::KaitaiStruct::Stream::bytes_terminate($self->{_io}->read_bytes(256), 0, 0));
-    $self->{originator} = Encode::decode("ASCII", IO::KaitaiStruct::Stream::bytes_terminate($self->{_io}->read_bytes(32), 0, 0));
-    $self->{originator_reference} = Encode::decode("ASCII", IO::KaitaiStruct::Stream::bytes_terminate($self->{_io}->read_bytes(32), 0, 0));
-    $self->{origination_date} = Encode::decode("ASCII", $self->{_io}->read_bytes(10));
-    $self->{origination_time} = Encode::decode("ASCII", $self->{_io}->read_bytes(8));
-    $self->{time_reference_low} = $self->{_io}->read_u4le();
-    $self->{time_reference_high} = $self->{_io}->read_u4le();
-    $self->{version} = $self->{_io}->read_u2le();
-    $self->{umid} = $self->{_io}->read_bytes(64);
-    $self->{loudness_value} = $self->{_io}->read_u2le();
-    $self->{loudness_range} = $self->{_io}->read_u2le();
-    $self->{max_true_peak_level} = $self->{_io}->read_u2le();
-    $self->{max_momentary_loudness} = $self->{_io}->read_u2le();
-    $self->{max_short_term_loudness} = $self->{_io}->read_u2le();
+    $self->{dw_cue_points} = $self->{_io}->read_u4le();
+    $self->{cue_points} = [];
+    my $n_cue_points = $self->dw_cue_points();
+    for (my $i = 0; $i < $n_cue_points; $i++) {
+        push @{$self->{cue_points}}, Wav::CuePointType->new($self->{_io}, $self, $self->{_root});
+    }
 }
 
-sub description {
+sub dw_cue_points {
     my ($self) = @_;
-    return $self->{description};
+    return $self->{dw_cue_points};
 }
 
-sub originator {
+sub cue_points {
     my ($self) = @_;
-    return $self->{originator};
+    return $self->{cue_points};
 }
 
-sub originator_reference {
-    my ($self) = @_;
-    return $self->{originator_reference};
+########################################################################
+package Wav::CuePointType;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
 }
 
-sub origination_date {
-    my ($self) = @_;
-    return $self->{origination_date};
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
 }
 
-sub origination_time {
+sub _read {
     my ($self) = @_;
-    return $self->{origination_time};
+
+    $self->{dw_name} = $self->{_io}->read_u4le();
+    $self->{dw_position} = $self->{_io}->read_u4le();
+    $self->{fcc_chunk} = $self->{_io}->read_u4le();
+    $self->{dw_chunk_start} = $self->{_io}->read_u4le();
+    $self->{dw_block_start} = $self->{_io}->read_u4le();
+    $self->{dw_sample_offset} = $self->{_io}->read_u4le();
 }
 
-sub time_reference_low {
+sub dw_name {
     my ($self) = @_;
-    return $self->{time_reference_low};
+    return $self->{dw_name};
 }
 
-sub time_reference_high {
+sub dw_position {
     my ($self) = @_;
-    return $self->{time_reference_high};
+    return $self->{dw_position};
 }
 
-sub version {
+sub fcc_chunk {
     my ($self) = @_;
-    return $self->{version};
+    return $self->{fcc_chunk};
 }
 
-sub umid {
+sub dw_chunk_start {
     my ($self) = @_;
-    return $self->{umid};
+    return $self->{dw_chunk_start};
 }
 
-sub loudness_value {
+sub dw_block_start {
     my ($self) = @_;
-    return $self->{loudness_value};
+    return $self->{dw_block_start};
 }
 
-sub loudness_range {
+sub dw_sample_offset {
     my ($self) = @_;
-    return $self->{loudness_range};
+    return $self->{dw_sample_offset};
 }
 
-sub max_true_peak_level {
-    my ($self) = @_;
-    return $self->{max_true_peak_level};
+########################################################################
+package Wav::DataChunkType;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
 }
 
-sub max_momentary_loudness {
-    my ($self) = @_;
-    return $self->{max_momentary_loudness};
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
 }
 
-sub max_short_term_loudness {
+sub _read {
     my ($self) = @_;
-    return $self->{max_short_term_loudness};
+
+    $self->{data} = $self->{_io}->read_bytes_full();
+}
+
+sub data {
+    my ($self) = @_;
+    return $self->{data};
+}
+
+########################################################################
+package Wav::FactChunkType;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{num_samples_per_channel} = $self->{_io}->read_u4le();
+}
+
+sub num_samples_per_channel {
+    my ($self) = @_;
+    return $self->{num_samples_per_channel};
+}
+
+########################################################################
+package Wav::FormatChunkType;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{w_format_tag} = $self->{_io}->read_u2le();
+    $self->{n_channels} = $self->{_io}->read_u2le();
+    $self->{n_samples_per_sec} = $self->{_io}->read_u4le();
+    $self->{n_avg_bytes_per_sec} = $self->{_io}->read_u4le();
+    $self->{n_block_align} = $self->{_io}->read_u2le();
+    $self->{w_bits_per_sample} = $self->{_io}->read_u2le();
+    if (!($self->is_basic_pcm())) {
+        $self->{cb_size} = $self->{_io}->read_u2le();
+    }
+    if ($self->is_cb_size_meaningful()) {
+        $self->{w_valid_bits_per_sample} = $self->{_io}->read_u2le();
+    }
+    if ($self->is_extensible()) {
+        $self->{channel_mask_and_subformat} = Wav::ChannelMaskAndSubformatType->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub is_basic_float {
+    my ($self) = @_;
+    return $self->{is_basic_float} if ($self->{is_basic_float});
+    $self->{is_basic_float} = $self->w_format_tag() == $Wav::W_FORMAT_TAG_TYPE_IEEE_FLOAT;
+    return $self->{is_basic_float};
+}
+
+sub is_basic_pcm {
+    my ($self) = @_;
+    return $self->{is_basic_pcm} if ($self->{is_basic_pcm});
+    $self->{is_basic_pcm} = $self->w_format_tag() == $Wav::W_FORMAT_TAG_TYPE_PCM;
+    return $self->{is_basic_pcm};
+}
+
+sub is_cb_size_meaningful {
+    my ($self) = @_;
+    return $self->{is_cb_size_meaningful} if ($self->{is_cb_size_meaningful});
+    $self->{is_cb_size_meaningful} =  ((!($self->is_basic_pcm())) && ($self->cb_size() != 0)) ;
+    return $self->{is_cb_size_meaningful};
+}
+
+sub is_extensible {
+    my ($self) = @_;
+    return $self->{is_extensible} if ($self->{is_extensible});
+    $self->{is_extensible} = $self->w_format_tag() == $Wav::W_FORMAT_TAG_TYPE_EXTENSIBLE;
+    return $self->{is_extensible};
+}
+
+sub w_format_tag {
+    my ($self) = @_;
+    return $self->{w_format_tag};
+}
+
+sub n_channels {
+    my ($self) = @_;
+    return $self->{n_channels};
+}
+
+sub n_samples_per_sec {
+    my ($self) = @_;
+    return $self->{n_samples_per_sec};
+}
+
+sub n_avg_bytes_per_sec {
+    my ($self) = @_;
+    return $self->{n_avg_bytes_per_sec};
+}
+
+sub n_block_align {
+    my ($self) = @_;
+    return $self->{n_block_align};
+}
+
+sub w_bits_per_sample {
+    my ($self) = @_;
+    return $self->{w_bits_per_sample};
+}
+
+sub cb_size {
+    my ($self) = @_;
+    return $self->{cb_size};
+}
+
+sub w_valid_bits_per_sample {
+    my ($self) = @_;
+    return $self->{w_valid_bits_per_sample};
+}
+
+sub channel_mask_and_subformat {
+    my ($self) = @_;
+    return $self->{channel_mask_and_subformat};
+}
+
+########################################################################
+package Wav::GuidType;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{data1} = $self->{_io}->read_u4le();
+    $self->{data2} = $self->{_io}->read_u2le();
+    $self->{data3} = $self->{_io}->read_u2le();
+    $self->{data4} = $self->{_io}->read_u4be();
+    $self->{data4a} = $self->{_io}->read_u4be();
+}
+
+sub data1 {
+    my ($self) = @_;
+    return $self->{data1};
+}
+
+sub data2 {
+    my ($self) = @_;
+    return $self->{data2};
+}
+
+sub data3 {
+    my ($self) = @_;
+    return $self->{data3};
+}
+
+sub data4 {
+    my ($self) = @_;
+    return $self->{data4};
+}
+
+sub data4a {
+    my ($self) = @_;
+    return $self->{data4a};
+}
+
+########################################################################
+package Wav::InfoChunkType;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{chunk} = Riff::Chunk->new($self->{_io});
+}
+
+sub chunk_data {
+    my ($self) = @_;
+    return $self->{chunk_data} if ($self->{chunk_data});
+    my $io = $self->chunk()->data_slot()->_io();
+    my $_pos = $io->pos();
+    $io->seek(0);
+    $self->{chunk_data} = Encode::decode("ASCII", $io->read_bytes_term(0, 0, 1, 1));
+    $io->seek($_pos);
+    return $self->{chunk_data};
+}
+
+sub chunk {
+    my ($self) = @_;
+    return $self->{chunk};
+}
+
+########################################################################
+package Wav::IxmlChunkType;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{data} = Encode::decode("UTF-8", $self->{_io}->read_bytes_full());
+}
+
+sub data {
+    my ($self) = @_;
+    return $self->{data};
+}
+
+########################################################################
+package Wav::ListChunkType;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{parent_chunk_data} = Riff::ParentChunkData->new($self->{_io});
+}
+
+sub form_type {
+    my ($self) = @_;
+    return $self->{form_type} if ($self->{form_type});
+    $self->{form_type} = $self->parent_chunk_data()->form_type();
+    return $self->{form_type};
+}
+
+sub subchunks {
+    my ($self) = @_;
+    return $self->{subchunks} if ($self->{subchunks});
+    my $io = $self->parent_chunk_data()->subchunks_slot()->_io();
+    my $_pos = $io->pos();
+    $io->seek(0);
+    $self->{subchunks} = [];
+    while (!$io->is_eof()) {
+        my $_on = $self->form_type();
+        if ($_on == $Wav::FOURCC_INFO) {
+            push @{$self->{subchunks}}, Wav::InfoChunkType->new($io, $self, $self->{_root});
+        }
+    }
+    $io->seek($_pos);
+    return $self->{subchunks};
+}
+
+sub parent_chunk_data {
+    my ($self) = @_;
+    return $self->{parent_chunk_data};
+}
+
+########################################################################
+package Wav::PmxChunkType;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{data} = Encode::decode("UTF-8", $self->{_io}->read_bytes_full());
+}
+
+sub data {
+    my ($self) = @_;
+    return $self->{data};
+}
+
+########################################################################
+package Wav::SampleType;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{sample} = $self->{_io}->read_u2le();
+}
+
+sub sample {
+    my ($self) = @_;
+    return $self->{sample};
+}
+
+########################################################################
+package Wav::SamplesType;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{samples} = $self->{_io}->read_u4le();
+}
+
+sub samples {
+    my ($self) = @_;
+    return $self->{samples};
 }
 
 1;

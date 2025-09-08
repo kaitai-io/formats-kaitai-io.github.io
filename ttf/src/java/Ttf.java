@@ -5,11 +5,12 @@ import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.Arrays;
+import java.util.List;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
+import java.util.Arrays;
 
 
 /**
@@ -43,309 +44,888 @@ public class Ttf extends KaitaiStruct {
             this.directoryTable.add(new DirTableEntry(this._io, this, _root));
         }
     }
-    public static class Post extends KaitaiStruct {
-        public static Post fromFile(String fileName) throws IOException {
-            return new Post(new ByteBufferKaitaiStream(fileName));
+
+    public void _fetchInstances() {
+        this.offsetTable._fetchInstances();
+        for (int i = 0; i < this.directoryTable.size(); i++) {
+            this.directoryTable.get(((Number) (i)).intValue())._fetchInstances();
+        }
+    }
+
+    /**
+     * cmap - Character To Glyph Index Mapping Table This table defines the mapping of character codes to the glyph index values used in the font.
+     */
+    public static class Cmap extends KaitaiStruct {
+        public static Cmap fromFile(String fileName) throws IOException {
+            return new Cmap(new ByteBufferKaitaiStream(fileName));
         }
 
-        public Post(KaitaiStream _io) {
+        public Cmap(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public Post(KaitaiStream _io, Ttf.DirTableEntry _parent) {
+        public Cmap(KaitaiStream _io, Ttf.DirTableEntry _parent) {
             this(_io, _parent, null);
         }
 
-        public Post(KaitaiStream _io, Ttf.DirTableEntry _parent, Ttf _root) {
+        public Cmap(KaitaiStream _io, Ttf.DirTableEntry _parent, Ttf _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.format = new Fixed(this._io, this, _root);
-            this.italicAngle = new Fixed(this._io, this, _root);
-            this.underlinePosition = this._io.readS2be();
-            this.underlineThichness = this._io.readS2be();
-            this.isFixedPitch = this._io.readU4be();
-            this.minMemType42 = this._io.readU4be();
-            this.maxMemType42 = this._io.readU4be();
-            this.minMemType1 = this._io.readU4be();
-            this.maxMemType1 = this._io.readU4be();
-            if ( ((format().major() == 2) && (format().minor() == 0)) ) {
-                this.format20 = new Format20(this._io, this, _root);
+            this.versionNumber = this._io.readU2be();
+            this.numberOfEncodingTables = this._io.readU2be();
+            this.tables = new ArrayList<SubtableHeader>();
+            for (int i = 0; i < numberOfEncodingTables(); i++) {
+                this.tables.add(new SubtableHeader(this._io, this, _root));
             }
         }
-        public static class Format20 extends KaitaiStruct {
-            public static Format20 fromFile(String fileName) throws IOException {
-                return new Format20(new ByteBufferKaitaiStream(fileName));
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.tables.size(); i++) {
+                this.tables.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        public static class Subtable extends KaitaiStruct {
+            public static Subtable fromFile(String fileName) throws IOException {
+                return new Subtable(new ByteBufferKaitaiStream(fileName));
             }
 
-            public Format20(KaitaiStream _io) {
+            public enum SubtableFormat {
+                BYTE_ENCODING_TABLE(0),
+                HIGH_BYTE_MAPPING_THROUGH_TABLE(2),
+                SEGMENT_MAPPING_TO_DELTA_VALUES(4),
+                TRIMMED_TABLE_MAPPING(6);
+
+                private final long id;
+                SubtableFormat(long id) { this.id = id; }
+                public long id() { return id; }
+                private static final Map<Long, SubtableFormat> byId = new HashMap<Long, SubtableFormat>(4);
+                static {
+                    for (SubtableFormat e : SubtableFormat.values())
+                        byId.put(e.id(), e);
+                }
+                public static SubtableFormat byId(long id) { return byId.get(id); }
+            }
+
+            public Subtable(KaitaiStream _io) {
                 this(_io, null, null);
             }
 
-            public Format20(KaitaiStream _io, Ttf.Post _parent) {
+            public Subtable(KaitaiStream _io, Ttf.Cmap.SubtableHeader _parent) {
                 this(_io, _parent, null);
             }
 
-            public Format20(KaitaiStream _io, Ttf.Post _parent, Ttf _root) {
+            public Subtable(KaitaiStream _io, Ttf.Cmap.SubtableHeader _parent, Ttf _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
                 _read();
             }
             private void _read() {
-                this.numberOfGlyphs = this._io.readU2be();
-                this.glyphNameIndex = new ArrayList<Integer>();
-                for (int i = 0; i < numberOfGlyphs(); i++) {
-                    this.glyphNameIndex.add(this._io.readU2be());
-                }
-                this.glyphNames = new ArrayList<PascalString>();
+                this.format = SubtableFormat.byId(this._io.readU2be());
+                this.length = this._io.readU2be();
+                this.version = this._io.readU2be();
                 {
-                    PascalString _it;
-                    int i = 0;
-                    do {
-                        _it = new PascalString(this._io, this, _root);
-                        this.glyphNames.add(_it);
-                        i++;
-                    } while (!( ((_it.length() == 0) || (_io().isEof())) ));
+                    SubtableFormat on = format();
+                    if (on != null) {
+                        switch (format()) {
+                        case BYTE_ENCODING_TABLE: {
+                            KaitaiStream _io_value = this._io.substream(length() - 6);
+                            this.value = new ByteEncodingTable(_io_value, this, _root);
+                            break;
+                        }
+                        case HIGH_BYTE_MAPPING_THROUGH_TABLE: {
+                            KaitaiStream _io_value = this._io.substream(length() - 6);
+                            this.value = new HighByteMappingThroughTable(_io_value, this, _root);
+                            break;
+                        }
+                        case SEGMENT_MAPPING_TO_DELTA_VALUES: {
+                            KaitaiStream _io_value = this._io.substream(length() - 6);
+                            this.value = new SegmentMappingToDeltaValues(_io_value, this, _root);
+                            break;
+                        }
+                        case TRIMMED_TABLE_MAPPING: {
+                            KaitaiStream _io_value = this._io.substream(length() - 6);
+                            this.value = new TrimmedTableMapping(_io_value, this, _root);
+                            break;
+                        }
+                        default: {
+                            this.value = this._io.readBytes(length() - 6);
+                            break;
+                        }
+                        }
+                    } else {
+                        this.value = this._io.readBytes(length() - 6);
+                    }
                 }
             }
-            public static class PascalString extends KaitaiStruct {
-                public static PascalString fromFile(String fileName) throws IOException {
-                    return new PascalString(new ByteBufferKaitaiStream(fileName));
+
+            public void _fetchInstances() {
+                {
+                    SubtableFormat on = format();
+                    if (on != null) {
+                        switch (format()) {
+                        case BYTE_ENCODING_TABLE: {
+                            ((ByteEncodingTable) (this.value))._fetchInstances();
+                            break;
+                        }
+                        case HIGH_BYTE_MAPPING_THROUGH_TABLE: {
+                            ((HighByteMappingThroughTable) (this.value))._fetchInstances();
+                            break;
+                        }
+                        case SEGMENT_MAPPING_TO_DELTA_VALUES: {
+                            ((SegmentMappingToDeltaValues) (this.value))._fetchInstances();
+                            break;
+                        }
+                        case TRIMMED_TABLE_MAPPING: {
+                            ((TrimmedTableMapping) (this.value))._fetchInstances();
+                            break;
+                        }
+                        default: {
+                            break;
+                        }
+                        }
+                    } else {
+                    }
+                }
+            }
+            public static class ByteEncodingTable extends KaitaiStruct {
+                public static ByteEncodingTable fromFile(String fileName) throws IOException {
+                    return new ByteEncodingTable(new ByteBufferKaitaiStream(fileName));
                 }
 
-                public PascalString(KaitaiStream _io) {
+                public ByteEncodingTable(KaitaiStream _io) {
                     this(_io, null, null);
                 }
 
-                public PascalString(KaitaiStream _io, Ttf.Post.Format20 _parent) {
+                public ByteEncodingTable(KaitaiStream _io, Ttf.Cmap.Subtable _parent) {
                     this(_io, _parent, null);
                 }
 
-                public PascalString(KaitaiStream _io, Ttf.Post.Format20 _parent, Ttf _root) {
+                public ByteEncodingTable(KaitaiStream _io, Ttf.Cmap.Subtable _parent, Ttf _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
                     _read();
                 }
                 private void _read() {
-                    this.length = this._io.readU1();
-                    if (length() != 0) {
-                        this.value = new String(this._io.readBytes(length()), Charset.forName("ascii"));
+                    this.glyphIdArray = this._io.readBytes(256);
+                }
+
+                public void _fetchInstances() {
+                }
+                private byte[] glyphIdArray;
+                private Ttf _root;
+                private Ttf.Cmap.Subtable _parent;
+                public byte[] glyphIdArray() { return glyphIdArray; }
+                public Ttf _root() { return _root; }
+                public Ttf.Cmap.Subtable _parent() { return _parent; }
+            }
+            public static class HighByteMappingThroughTable extends KaitaiStruct {
+                public static HighByteMappingThroughTable fromFile(String fileName) throws IOException {
+                    return new HighByteMappingThroughTable(new ByteBufferKaitaiStream(fileName));
+                }
+
+                public HighByteMappingThroughTable(KaitaiStream _io) {
+                    this(_io, null, null);
+                }
+
+                public HighByteMappingThroughTable(KaitaiStream _io, Ttf.Cmap.Subtable _parent) {
+                    this(_io, _parent, null);
+                }
+
+                public HighByteMappingThroughTable(KaitaiStream _io, Ttf.Cmap.Subtable _parent, Ttf _root) {
+                    super(_io);
+                    this._parent = _parent;
+                    this._root = _root;
+                    _read();
+                }
+                private void _read() {
+                    this.subHeaderKeys = new ArrayList<Integer>();
+                    for (int i = 0; i < 256; i++) {
+                        this.subHeaderKeys.add(this._io.readU2be());
                     }
                 }
-                private int length;
-                private String value;
+
+                public void _fetchInstances() {
+                    for (int i = 0; i < this.subHeaderKeys.size(); i++) {
+                    }
+                }
+                private List<Integer> subHeaderKeys;
                 private Ttf _root;
-                private Ttf.Post.Format20 _parent;
-                public int length() { return length; }
-                public String value() { return value; }
+                private Ttf.Cmap.Subtable _parent;
+                public List<Integer> subHeaderKeys() { return subHeaderKeys; }
                 public Ttf _root() { return _root; }
-                public Ttf.Post.Format20 _parent() { return _parent; }
+                public Ttf.Cmap.Subtable _parent() { return _parent; }
             }
-            private int numberOfGlyphs;
-            private ArrayList<Integer> glyphNameIndex;
-            private ArrayList<PascalString> glyphNames;
+            public static class SegmentMappingToDeltaValues extends KaitaiStruct {
+                public static SegmentMappingToDeltaValues fromFile(String fileName) throws IOException {
+                    return new SegmentMappingToDeltaValues(new ByteBufferKaitaiStream(fileName));
+                }
+
+                public SegmentMappingToDeltaValues(KaitaiStream _io) {
+                    this(_io, null, null);
+                }
+
+                public SegmentMappingToDeltaValues(KaitaiStream _io, Ttf.Cmap.Subtable _parent) {
+                    this(_io, _parent, null);
+                }
+
+                public SegmentMappingToDeltaValues(KaitaiStream _io, Ttf.Cmap.Subtable _parent, Ttf _root) {
+                    super(_io);
+                    this._parent = _parent;
+                    this._root = _root;
+                    _read();
+                }
+                private void _read() {
+                    this.segCountX2 = this._io.readU2be();
+                    this.searchRange = this._io.readU2be();
+                    this.entrySelector = this._io.readU2be();
+                    this.rangeShift = this._io.readU2be();
+                    this.endCount = new ArrayList<Integer>();
+                    for (int i = 0; i < segCount(); i++) {
+                        this.endCount.add(this._io.readU2be());
+                    }
+                    this.reservedPad = this._io.readU2be();
+                    this.startCount = new ArrayList<Integer>();
+                    for (int i = 0; i < segCount(); i++) {
+                        this.startCount.add(this._io.readU2be());
+                    }
+                    this.idDelta = new ArrayList<Integer>();
+                    for (int i = 0; i < segCount(); i++) {
+                        this.idDelta.add(this._io.readU2be());
+                    }
+                    this.idRangeOffset = new ArrayList<Integer>();
+                    for (int i = 0; i < segCount(); i++) {
+                        this.idRangeOffset.add(this._io.readU2be());
+                    }
+                    this.glyphIdArray = new ArrayList<Integer>();
+                    {
+                        int i = 0;
+                        while (!this._io.isEof()) {
+                            this.glyphIdArray.add(this._io.readU2be());
+                            i++;
+                        }
+                    }
+                }
+
+                public void _fetchInstances() {
+                    for (int i = 0; i < this.endCount.size(); i++) {
+                    }
+                    for (int i = 0; i < this.startCount.size(); i++) {
+                    }
+                    for (int i = 0; i < this.idDelta.size(); i++) {
+                    }
+                    for (int i = 0; i < this.idRangeOffset.size(); i++) {
+                    }
+                    for (int i = 0; i < this.glyphIdArray.size(); i++) {
+                    }
+                }
+                private Integer segCount;
+                public Integer segCount() {
+                    if (this.segCount != null)
+                        return this.segCount;
+                    this.segCount = ((Number) (segCountX2() / 2)).intValue();
+                    return this.segCount;
+                }
+                private int segCountX2;
+                private int searchRange;
+                private int entrySelector;
+                private int rangeShift;
+                private List<Integer> endCount;
+                private int reservedPad;
+                private List<Integer> startCount;
+                private List<Integer> idDelta;
+                private List<Integer> idRangeOffset;
+                private List<Integer> glyphIdArray;
+                private Ttf _root;
+                private Ttf.Cmap.Subtable _parent;
+                public int segCountX2() { return segCountX2; }
+                public int searchRange() { return searchRange; }
+                public int entrySelector() { return entrySelector; }
+                public int rangeShift() { return rangeShift; }
+                public List<Integer> endCount() { return endCount; }
+                public int reservedPad() { return reservedPad; }
+                public List<Integer> startCount() { return startCount; }
+                public List<Integer> idDelta() { return idDelta; }
+                public List<Integer> idRangeOffset() { return idRangeOffset; }
+                public List<Integer> glyphIdArray() { return glyphIdArray; }
+                public Ttf _root() { return _root; }
+                public Ttf.Cmap.Subtable _parent() { return _parent; }
+            }
+            public static class TrimmedTableMapping extends KaitaiStruct {
+                public static TrimmedTableMapping fromFile(String fileName) throws IOException {
+                    return new TrimmedTableMapping(new ByteBufferKaitaiStream(fileName));
+                }
+
+                public TrimmedTableMapping(KaitaiStream _io) {
+                    this(_io, null, null);
+                }
+
+                public TrimmedTableMapping(KaitaiStream _io, Ttf.Cmap.Subtable _parent) {
+                    this(_io, _parent, null);
+                }
+
+                public TrimmedTableMapping(KaitaiStream _io, Ttf.Cmap.Subtable _parent, Ttf _root) {
+                    super(_io);
+                    this._parent = _parent;
+                    this._root = _root;
+                    _read();
+                }
+                private void _read() {
+                    this.firstCode = this._io.readU2be();
+                    this.entryCount = this._io.readU2be();
+                    this.glyphIdArray = new ArrayList<Integer>();
+                    for (int i = 0; i < entryCount(); i++) {
+                        this.glyphIdArray.add(this._io.readU2be());
+                    }
+                }
+
+                public void _fetchInstances() {
+                    for (int i = 0; i < this.glyphIdArray.size(); i++) {
+                    }
+                }
+                private int firstCode;
+                private int entryCount;
+                private List<Integer> glyphIdArray;
+                private Ttf _root;
+                private Ttf.Cmap.Subtable _parent;
+                public int firstCode() { return firstCode; }
+                public int entryCount() { return entryCount; }
+                public List<Integer> glyphIdArray() { return glyphIdArray; }
+                public Ttf _root() { return _root; }
+                public Ttf.Cmap.Subtable _parent() { return _parent; }
+            }
+            private SubtableFormat format;
+            private int length;
+            private int version;
+            private Object value;
             private Ttf _root;
-            private Ttf.Post _parent;
-            public int numberOfGlyphs() { return numberOfGlyphs; }
-            public ArrayList<Integer> glyphNameIndex() { return glyphNameIndex; }
-            public ArrayList<PascalString> glyphNames() { return glyphNames; }
+            private Ttf.Cmap.SubtableHeader _parent;
+            public SubtableFormat format() { return format; }
+            public int length() { return length; }
+            public int version() { return version; }
+            public Object value() { return value; }
             public Ttf _root() { return _root; }
-            public Ttf.Post _parent() { return _parent; }
+            public Ttf.Cmap.SubtableHeader _parent() { return _parent; }
         }
-        private Fixed format;
-        private Fixed italicAngle;
-        private short underlinePosition;
-        private short underlineThichness;
-        private long isFixedPitch;
-        private long minMemType42;
-        private long maxMemType42;
-        private long minMemType1;
-        private long maxMemType1;
-        private Format20 format20;
-        private Ttf _root;
-        private Ttf.DirTableEntry _parent;
-        public Fixed format() { return format; }
-        public Fixed italicAngle() { return italicAngle; }
-        public short underlinePosition() { return underlinePosition; }
-        public short underlineThichness() { return underlineThichness; }
-        public long isFixedPitch() { return isFixedPitch; }
-        public long minMemType42() { return minMemType42; }
-        public long maxMemType42() { return maxMemType42; }
-        public long minMemType1() { return minMemType1; }
-        public long maxMemType1() { return maxMemType1; }
-        public Format20 format20() { return format20; }
-        public Ttf _root() { return _root; }
-        public Ttf.DirTableEntry _parent() { return _parent; }
-    }
-
-    /**
-     * Name table is meant to include human-readable string metadata
-     * that describes font: name of the font, its styles, copyright &
-     * trademark notices, vendor and designer info, etc.
-     * 
-     * The table includes a list of "name records", each of which
-     * corresponds to a single metadata entry.
-     * @see <a href="https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6name.html">Source</a>
-     */
-    public static class Name extends KaitaiStruct {
-        public static Name fromFile(String fileName) throws IOException {
-            return new Name(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public enum Platforms {
-            UNICODE(0),
-            MACINTOSH(1),
-            RESERVED_2(2),
-            MICROSOFT(3);
-
-            private final long id;
-            Platforms(long id) { this.id = id; }
-            public long id() { return id; }
-            private static final Map<Long, Platforms> byId = new HashMap<Long, Platforms>(4);
-            static {
-                for (Platforms e : Platforms.values())
-                    byId.put(e.id(), e);
-            }
-            public static Platforms byId(long id) { return byId.get(id); }
-        }
-
-        public enum Names {
-            COPYRIGHT(0),
-            FONT_FAMILY(1),
-            FONT_SUBFAMILY(2),
-            UNIQUE_SUBFAMILY_ID(3),
-            FULL_FONT_NAME(4),
-            NAME_TABLE_VERSION(5),
-            POSTSCRIPT_FONT_NAME(6),
-            TRADEMARK(7),
-            MANUFACTURER(8),
-            DESIGNER(9),
-            DESCRIPTION(10),
-            URL_VENDOR(11),
-            URL_DESIGNER(12),
-            LICENSE(13),
-            URL_LICENSE(14),
-            RESERVED_15(15),
-            PREFERRED_FAMILY(16),
-            PREFERRED_SUBFAMILY(17),
-            COMPATIBLE_FULL_NAME(18),
-            SAMPLE_TEXT(19);
-
-            private final long id;
-            Names(long id) { this.id = id; }
-            public long id() { return id; }
-            private static final Map<Long, Names> byId = new HashMap<Long, Names>(20);
-            static {
-                for (Names e : Names.values())
-                    byId.put(e.id(), e);
-            }
-            public static Names byId(long id) { return byId.get(id); }
-        }
-
-        public Name(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Name(KaitaiStream _io, Ttf.DirTableEntry _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Name(KaitaiStream _io, Ttf.DirTableEntry _parent, Ttf _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.formatSelector = this._io.readU2be();
-            this.numNameRecords = this._io.readU2be();
-            this.ofsStrings = this._io.readU2be();
-            this.nameRecords = new ArrayList<NameRecord>();
-            for (int i = 0; i < numNameRecords(); i++) {
-                this.nameRecords.add(new NameRecord(this._io, this, _root));
-            }
-        }
-        public static class NameRecord extends KaitaiStruct {
-            public static NameRecord fromFile(String fileName) throws IOException {
-                return new NameRecord(new ByteBufferKaitaiStream(fileName));
+        public static class SubtableHeader extends KaitaiStruct {
+            public static SubtableHeader fromFile(String fileName) throws IOException {
+                return new SubtableHeader(new ByteBufferKaitaiStream(fileName));
             }
 
-            public NameRecord(KaitaiStream _io) {
+            public SubtableHeader(KaitaiStream _io) {
                 this(_io, null, null);
             }
 
-            public NameRecord(KaitaiStream _io, Ttf.Name _parent) {
+            public SubtableHeader(KaitaiStream _io, Ttf.Cmap _parent) {
                 this(_io, _parent, null);
             }
 
-            public NameRecord(KaitaiStream _io, Ttf.Name _parent, Ttf _root) {
+            public SubtableHeader(KaitaiStream _io, Ttf.Cmap _parent, Ttf _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
                 _read();
             }
             private void _read() {
-                this.platformId = Ttf.Name.Platforms.byId(this._io.readU2be());
+                this.platformId = this._io.readU2be();
                 this.encodingId = this._io.readU2be();
-                this.languageId = this._io.readU2be();
-                this.nameId = Ttf.Name.Names.byId(this._io.readU2be());
-                this.lenStr = this._io.readU2be();
-                this.ofsStr = this._io.readU2be();
+                this.subtableOffset = this._io.readU4be();
             }
-            private String asciiValue;
-            public String asciiValue() {
-                if (this.asciiValue != null)
-                    return this.asciiValue;
+
+            public void _fetchInstances() {
+                table();
+                if (this.table != null) {
+                    this.table._fetchInstances();
+                }
+            }
+            private Subtable table;
+            public Subtable table() {
+                if (this.table != null)
+                    return this.table;
                 KaitaiStream io = _parent()._io();
                 long _pos = io.pos();
-                io.seek((_parent().ofsStrings() + ofsStr()));
-                this.asciiValue = new String(io.readBytes(lenStr()), Charset.forName("ascii"));
+                io.seek(subtableOffset());
+                this.table = new Subtable(io, this, _root);
                 io.seek(_pos);
-                return this.asciiValue;
+                return this.table;
             }
-            private String unicodeValue;
-            public String unicodeValue() {
-                if (this.unicodeValue != null)
-                    return this.unicodeValue;
-                KaitaiStream io = _parent()._io();
-                long _pos = io.pos();
-                io.seek((_parent().ofsStrings() + ofsStr()));
-                this.unicodeValue = new String(io.readBytes(lenStr()), Charset.forName("utf-16be"));
-                io.seek(_pos);
-                return this.unicodeValue;
-            }
-            private Platforms platformId;
+            private int platformId;
             private int encodingId;
-            private int languageId;
-            private Names nameId;
-            private int lenStr;
-            private int ofsStr;
+            private long subtableOffset;
             private Ttf _root;
-            private Ttf.Name _parent;
-            public Platforms platformId() { return platformId; }
+            private Ttf.Cmap _parent;
+            public int platformId() { return platformId; }
             public int encodingId() { return encodingId; }
-            public int languageId() { return languageId; }
-            public Names nameId() { return nameId; }
-            public int lenStr() { return lenStr; }
-            public int ofsStr() { return ofsStr; }
+            public long subtableOffset() { return subtableOffset; }
             public Ttf _root() { return _root; }
-            public Ttf.Name _parent() { return _parent; }
+            public Ttf.Cmap _parent() { return _parent; }
         }
-        private int formatSelector;
-        private int numNameRecords;
-        private int ofsStrings;
-        private ArrayList<NameRecord> nameRecords;
+        private int versionNumber;
+        private int numberOfEncodingTables;
+        private List<SubtableHeader> tables;
         private Ttf _root;
         private Ttf.DirTableEntry _parent;
-        public int formatSelector() { return formatSelector; }
-        public int numNameRecords() { return numNameRecords; }
-        public int ofsStrings() { return ofsStrings; }
-        public ArrayList<NameRecord> nameRecords() { return nameRecords; }
+        public int versionNumber() { return versionNumber; }
+        public int numberOfEncodingTables() { return numberOfEncodingTables; }
+        public List<SubtableHeader> tables() { return tables; }
+        public Ttf _root() { return _root; }
+        public Ttf.DirTableEntry _parent() { return _parent; }
+    }
+
+    /**
+     * cvt  - Control Value Table This table contains a list of values that can be referenced by instructions. They can be used, among other things, to control characteristics for different glyphs.
+     */
+    public static class Cvt extends KaitaiStruct {
+        public static Cvt fromFile(String fileName) throws IOException {
+            return new Cvt(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Cvt(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Cvt(KaitaiStream _io, Ttf.DirTableEntry _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Cvt(KaitaiStream _io, Ttf.DirTableEntry _parent, Ttf _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.fwords = new ArrayList<Short>();
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.fwords.add(this._io.readS2be());
+                    i++;
+                }
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.fwords.size(); i++) {
+            }
+        }
+        private List<Short> fwords;
+        private Ttf _root;
+        private Ttf.DirTableEntry _parent;
+        public List<Short> fwords() { return fwords; }
+        public Ttf _root() { return _root; }
+        public Ttf.DirTableEntry _parent() { return _parent; }
+    }
+    public static class DirTableEntry extends KaitaiStruct {
+        public static DirTableEntry fromFile(String fileName) throws IOException {
+            return new DirTableEntry(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public DirTableEntry(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public DirTableEntry(KaitaiStream _io, Ttf _parent) {
+            this(_io, _parent, null);
+        }
+
+        public DirTableEntry(KaitaiStream _io, Ttf _parent, Ttf _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.tag = new String(this._io.readBytes(4), StandardCharsets.US_ASCII);
+            this.checksum = this._io.readU4be();
+            this.offset = this._io.readU4be();
+            this.length = this._io.readU4be();
+        }
+
+        public void _fetchInstances() {
+            value();
+            if (this.value != null) {
+                switch (tag()) {
+                case "OS/2": {
+                    ((Os2) (this.value))._fetchInstances();
+                    break;
+                }
+                case "cmap": {
+                    ((Cmap) (this.value))._fetchInstances();
+                    break;
+                }
+                case "cvt ": {
+                    ((Cvt) (this.value))._fetchInstances();
+                    break;
+                }
+                case "fpgm": {
+                    ((Fpgm) (this.value))._fetchInstances();
+                    break;
+                }
+                case "glyf": {
+                    ((Glyf) (this.value))._fetchInstances();
+                    break;
+                }
+                case "head": {
+                    ((Head) (this.value))._fetchInstances();
+                    break;
+                }
+                case "hhea": {
+                    ((Hhea) (this.value))._fetchInstances();
+                    break;
+                }
+                case "kern": {
+                    ((Kern) (this.value))._fetchInstances();
+                    break;
+                }
+                case "maxp": {
+                    ((Maxp) (this.value))._fetchInstances();
+                    break;
+                }
+                case "name": {
+                    ((Name) (this.value))._fetchInstances();
+                    break;
+                }
+                case "post": {
+                    ((Post) (this.value))._fetchInstances();
+                    break;
+                }
+                case "prep": {
+                    ((Prep) (this.value))._fetchInstances();
+                    break;
+                }
+                default: {
+                    break;
+                }
+                }
+            }
+        }
+        private Object value;
+        public Object value() {
+            if (this.value != null)
+                return this.value;
+            KaitaiStream io = _root()._io();
+            long _pos = io.pos();
+            io.seek(offset());
+            switch (tag()) {
+            case "OS/2": {
+                KaitaiStream _io_value = io.substream(length());
+                this.value = new Os2(_io_value, this, _root);
+                break;
+            }
+            case "cmap": {
+                KaitaiStream _io_value = io.substream(length());
+                this.value = new Cmap(_io_value, this, _root);
+                break;
+            }
+            case "cvt ": {
+                KaitaiStream _io_value = io.substream(length());
+                this.value = new Cvt(_io_value, this, _root);
+                break;
+            }
+            case "fpgm": {
+                KaitaiStream _io_value = io.substream(length());
+                this.value = new Fpgm(_io_value, this, _root);
+                break;
+            }
+            case "glyf": {
+                KaitaiStream _io_value = io.substream(length());
+                this.value = new Glyf(_io_value, this, _root);
+                break;
+            }
+            case "head": {
+                KaitaiStream _io_value = io.substream(length());
+                this.value = new Head(_io_value, this, _root);
+                break;
+            }
+            case "hhea": {
+                KaitaiStream _io_value = io.substream(length());
+                this.value = new Hhea(_io_value, this, _root);
+                break;
+            }
+            case "kern": {
+                KaitaiStream _io_value = io.substream(length());
+                this.value = new Kern(_io_value, this, _root);
+                break;
+            }
+            case "maxp": {
+                KaitaiStream _io_value = io.substream(length());
+                this.value = new Maxp(_io_value, this, _root);
+                break;
+            }
+            case "name": {
+                KaitaiStream _io_value = io.substream(length());
+                this.value = new Name(_io_value, this, _root);
+                break;
+            }
+            case "post": {
+                KaitaiStream _io_value = io.substream(length());
+                this.value = new Post(_io_value, this, _root);
+                break;
+            }
+            case "prep": {
+                KaitaiStream _io_value = io.substream(length());
+                this.value = new Prep(_io_value, this, _root);
+                break;
+            }
+            default: {
+                this.value = io.readBytes(length());
+                break;
+            }
+            }
+            io.seek(_pos);
+            return this.value;
+        }
+        private String tag;
+        private long checksum;
+        private long offset;
+        private long length;
+        private Ttf _root;
+        private Ttf _parent;
+        public String tag() { return tag; }
+        public long checksum() { return checksum; }
+        public long offset() { return offset; }
+        public long length() { return length; }
+        public Ttf _root() { return _root; }
+        public Ttf _parent() { return _parent; }
+    }
+    public static class Fixed extends KaitaiStruct {
+        public static Fixed fromFile(String fileName) throws IOException {
+            return new Fixed(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Fixed(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Fixed(KaitaiStream _io, KaitaiStruct _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Fixed(KaitaiStream _io, KaitaiStruct _parent, Ttf _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.major = this._io.readU2be();
+            this.minor = this._io.readU2be();
+        }
+
+        public void _fetchInstances() {
+        }
+        private int major;
+        private int minor;
+        private Ttf _root;
+        private KaitaiStruct _parent;
+        public int major() { return major; }
+        public int minor() { return minor; }
+        public Ttf _root() { return _root; }
+        public KaitaiStruct _parent() { return _parent; }
+    }
+    public static class Fpgm extends KaitaiStruct {
+        public static Fpgm fromFile(String fileName) throws IOException {
+            return new Fpgm(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Fpgm(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Fpgm(KaitaiStream _io, Ttf.DirTableEntry _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Fpgm(KaitaiStream _io, Ttf.DirTableEntry _parent, Ttf _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.instructions = this._io.readBytesFull();
+        }
+
+        public void _fetchInstances() {
+        }
+        private byte[] instructions;
+        private Ttf _root;
+        private Ttf.DirTableEntry _parent;
+        public byte[] instructions() { return instructions; }
+        public Ttf _root() { return _root; }
+        public Ttf.DirTableEntry _parent() { return _parent; }
+    }
+    public static class Glyf extends KaitaiStruct {
+        public static Glyf fromFile(String fileName) throws IOException {
+            return new Glyf(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Glyf(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Glyf(KaitaiStream _io, Ttf.DirTableEntry _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Glyf(KaitaiStream _io, Ttf.DirTableEntry _parent, Ttf _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.numberOfContours = this._io.readS2be();
+            this.xMin = this._io.readS2be();
+            this.yMin = this._io.readS2be();
+            this.xMax = this._io.readS2be();
+            this.yMax = this._io.readS2be();
+            if (numberOfContours() > 0) {
+                this.value = new SimpleGlyph(this._io, this, _root);
+            }
+        }
+
+        public void _fetchInstances() {
+            if (numberOfContours() > 0) {
+                this.value._fetchInstances();
+            }
+        }
+        public static class SimpleGlyph extends KaitaiStruct {
+            public static SimpleGlyph fromFile(String fileName) throws IOException {
+                return new SimpleGlyph(new ByteBufferKaitaiStream(fileName));
+            }
+
+            public SimpleGlyph(KaitaiStream _io) {
+                this(_io, null, null);
+            }
+
+            public SimpleGlyph(KaitaiStream _io, Ttf.Glyf _parent) {
+                this(_io, _parent, null);
+            }
+
+            public SimpleGlyph(KaitaiStream _io, Ttf.Glyf _parent, Ttf _root) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                _read();
+            }
+            private void _read() {
+                this.endPtsOfContours = new ArrayList<Integer>();
+                for (int i = 0; i < _parent().numberOfContours(); i++) {
+                    this.endPtsOfContours.add(this._io.readU2be());
+                }
+                this.instructionLength = this._io.readU2be();
+                this.instructions = this._io.readBytes(instructionLength());
+                this.flags = new ArrayList<Flag>();
+                for (int i = 0; i < pointCount(); i++) {
+                    this.flags.add(new Flag(this._io, this, _root));
+                }
+            }
+
+            public void _fetchInstances() {
+                for (int i = 0; i < this.endPtsOfContours.size(); i++) {
+                }
+                for (int i = 0; i < this.flags.size(); i++) {
+                    this.flags.get(((Number) (i)).intValue())._fetchInstances();
+                }
+            }
+            public static class Flag extends KaitaiStruct {
+                public static Flag fromFile(String fileName) throws IOException {
+                    return new Flag(new ByteBufferKaitaiStream(fileName));
+                }
+
+                public Flag(KaitaiStream _io) {
+                    this(_io, null, null);
+                }
+
+                public Flag(KaitaiStream _io, Ttf.Glyf.SimpleGlyph _parent) {
+                    this(_io, _parent, null);
+                }
+
+                public Flag(KaitaiStream _io, Ttf.Glyf.SimpleGlyph _parent, Ttf _root) {
+                    super(_io);
+                    this._parent = _parent;
+                    this._root = _root;
+                    _read();
+                }
+                private void _read() {
+                    this.reserved = this._io.readBitsIntBe(2);
+                    this.yIsSame = this._io.readBitsIntBe(1) != 0;
+                    this.xIsSame = this._io.readBitsIntBe(1) != 0;
+                    this.repeat = this._io.readBitsIntBe(1) != 0;
+                    this.yShortVector = this._io.readBitsIntBe(1) != 0;
+                    this.xShortVector = this._io.readBitsIntBe(1) != 0;
+                    this.onCurve = this._io.readBitsIntBe(1) != 0;
+                    if (repeat()) {
+                        this.repeatValue = this._io.readU1();
+                    }
+                }
+
+                public void _fetchInstances() {
+                    if (repeat()) {
+                    }
+                }
+                private long reserved;
+                private boolean yIsSame;
+                private boolean xIsSame;
+                private boolean repeat;
+                private boolean yShortVector;
+                private boolean xShortVector;
+                private boolean onCurve;
+                private Integer repeatValue;
+                private Ttf _root;
+                private Ttf.Glyf.SimpleGlyph _parent;
+                public long reserved() { return reserved; }
+                public boolean yIsSame() { return yIsSame; }
+                public boolean xIsSame() { return xIsSame; }
+                public boolean repeat() { return repeat; }
+                public boolean yShortVector() { return yShortVector; }
+                public boolean xShortVector() { return xShortVector; }
+                public boolean onCurve() { return onCurve; }
+                public Integer repeatValue() { return repeatValue; }
+                public Ttf _root() { return _root; }
+                public Ttf.Glyf.SimpleGlyph _parent() { return _parent; }
+            }
+            private Integer pointCount;
+            public Integer pointCount() {
+                if (this.pointCount != null)
+                    return this.pointCount;
+                this.pointCount = ((Number) (Collections.max(endPtsOfContours()) + 1)).intValue();
+                return this.pointCount;
+            }
+            private List<Integer> endPtsOfContours;
+            private int instructionLength;
+            private byte[] instructions;
+            private List<Flag> flags;
+            private Ttf _root;
+            private Ttf.Glyf _parent;
+            public List<Integer> endPtsOfContours() { return endPtsOfContours; }
+            public int instructionLength() { return instructionLength; }
+            public byte[] instructions() { return instructions; }
+            public List<Flag> flags() { return flags; }
+            public Ttf _root() { return _root; }
+            public Ttf.Glyf _parent() { return _parent; }
+        }
+        private short numberOfContours;
+        private short xMin;
+        private short yMin;
+        private short xMax;
+        private short yMax;
+        private SimpleGlyph value;
+        private Ttf _root;
+        private Ttf.DirTableEntry _parent;
+        public short numberOfContours() { return numberOfContours; }
+        public short xMin() { return xMin; }
+        public short yMin() { return yMin; }
+        public short xMax() { return xMax; }
+        public short yMax() { return yMax; }
+        public SimpleGlyph value() { return value; }
         public Ttf _root() { return _root; }
         public Ttf.DirTableEntry _parent() { return _parent; }
     }
@@ -407,8 +987,8 @@ public class Ttf extends KaitaiStruct {
             this.fontRevision = new Fixed(this._io, this, _root);
             this.checksumAdjustment = this._io.readU4be();
             this.magicNumber = this._io.readBytes(4);
-            if (!(Arrays.equals(magicNumber(), new byte[] { 95, 15, 60, -11 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 95, 15, 60, -11 }, magicNumber(), _io(), "/types/head/seq/3");
+            if (!(Arrays.equals(this.magicNumber, new byte[] { 95, 15, 60, -11 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 95, 15, 60, -11 }, this.magicNumber, this._io, "/types/head/seq/3");
             }
             this.flags = Flags.byId(this._io.readU2be());
             this.unitsPerEm = this._io.readU2be();
@@ -423,6 +1003,11 @@ public class Ttf extends KaitaiStruct {
             this.fontDirectionHint = FontDirectionHint.byId(this._io.readS2be());
             this.indexToLocFormat = this._io.readS2be();
             this.glyphDataFormat = this._io.readS2be();
+        }
+
+        public void _fetchInstances() {
+            this.version._fetchInstances();
+            this.fontRevision._fetchInstances();
         }
         private Fixed version;
         private Fixed fontRevision;
@@ -463,35 +1048,6 @@ public class Ttf extends KaitaiStruct {
         public Ttf _root() { return _root; }
         public Ttf.DirTableEntry _parent() { return _parent; }
     }
-    public static class Prep extends KaitaiStruct {
-        public static Prep fromFile(String fileName) throws IOException {
-            return new Prep(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Prep(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Prep(KaitaiStream _io, Ttf.DirTableEntry _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Prep(KaitaiStream _io, Ttf.DirTableEntry _parent, Ttf _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.instructions = this._io.readBytesFull();
-        }
-        private byte[] instructions;
-        private Ttf _root;
-        private Ttf.DirTableEntry _parent;
-        public byte[] instructions() { return instructions; }
-        public Ttf _root() { return _root; }
-        public Ttf.DirTableEntry _parent() { return _parent; }
-    }
     public static class Hhea extends KaitaiStruct {
         public static Hhea fromFile(String fileName) throws IOException {
             return new Hhea(new ByteBufferKaitaiStream(fileName));
@@ -523,11 +1079,15 @@ public class Ttf extends KaitaiStruct {
             this.caretSlopeRise = this._io.readS2be();
             this.caretSlopeRun = this._io.readS2be();
             this.reserved = this._io.readBytes(10);
-            if (!(Arrays.equals(reserved(), new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, reserved(), _io(), "/types/hhea/seq/10");
+            if (!(Arrays.equals(this.reserved, new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, this.reserved, this._io, "/types/hhea/seq/10");
             }
             this.metricDataFormat = this._io.readS2be();
             this.numberOfHmetrics = this._io.readU2be();
+        }
+
+        public void _fetchInstances() {
+            this.version._fetchInstances();
         }
         private Fixed version;
         private short ascender;
@@ -588,35 +1148,6 @@ public class Ttf extends KaitaiStruct {
         public Ttf _root() { return _root; }
         public Ttf.DirTableEntry _parent() { return _parent; }
     }
-    public static class Fpgm extends KaitaiStruct {
-        public static Fpgm fromFile(String fileName) throws IOException {
-            return new Fpgm(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Fpgm(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Fpgm(KaitaiStream _io, Ttf.DirTableEntry _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Fpgm(KaitaiStream _io, Ttf.DirTableEntry _parent, Ttf _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.instructions = this._io.readBytesFull();
-        }
-        private byte[] instructions;
-        private Ttf _root;
-        private Ttf.DirTableEntry _parent;
-        public byte[] instructions() { return instructions; }
-        public Ttf _root() { return _root; }
-        public Ttf.DirTableEntry _parent() { return _parent; }
-    }
     public static class Kern extends KaitaiStruct {
         public static Kern fromFile(String fileName) throws IOException {
             return new Kern(new ByteBufferKaitaiStream(fileName));
@@ -642,6 +1173,12 @@ public class Ttf extends KaitaiStruct {
             this.subtables = new ArrayList<Subtable>();
             for (int i = 0; i < subtableCount(); i++) {
                 this.subtables.add(new Subtable(this._io, this, _root));
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.subtables.size(); i++) {
+                this.subtables.get(((Number) (i)).intValue())._fetchInstances();
             }
         }
         public static class Subtable extends KaitaiStruct {
@@ -672,9 +1209,14 @@ public class Ttf extends KaitaiStruct {
                 this.isCrossStream = this._io.readBitsIntBe(1) != 0;
                 this.isMinimum = this._io.readBitsIntBe(1) != 0;
                 this.isHorizontal = this._io.readBitsIntBe(1) != 0;
-                this._io.alignToByte();
                 if (format() == 0) {
                     this.format0 = new Format0(this._io, this, _root);
+                }
+            }
+
+            public void _fetchInstances() {
+                if (format() == 0) {
+                    this.format0._fetchInstances();
                 }
             }
             public static class Format0 extends KaitaiStruct {
@@ -706,6 +1248,12 @@ public class Ttf extends KaitaiStruct {
                         this.kerningPairs.add(new KerningPair(this._io, this, _root));
                     }
                 }
+
+                public void _fetchInstances() {
+                    for (int i = 0; i < this.kerningPairs.size(); i++) {
+                        this.kerningPairs.get(((Number) (i)).intValue())._fetchInstances();
+                    }
+                }
                 public static class KerningPair extends KaitaiStruct {
                     public static KerningPair fromFile(String fileName) throws IOException {
                         return new KerningPair(new ByteBufferKaitaiStream(fileName));
@@ -730,6 +1278,9 @@ public class Ttf extends KaitaiStruct {
                         this.right = this._io.readU2be();
                         this.value = this._io.readS2be();
                     }
+
+                    public void _fetchInstances() {
+                    }
                     private int left;
                     private int right;
                     private short value;
@@ -745,14 +1296,14 @@ public class Ttf extends KaitaiStruct {
                 private int searchRange;
                 private int entrySelector;
                 private int rangeShift;
-                private ArrayList<KerningPair> kerningPairs;
+                private List<KerningPair> kerningPairs;
                 private Ttf _root;
                 private Ttf.Kern.Subtable _parent;
                 public int pairCount() { return pairCount; }
                 public int searchRange() { return searchRange; }
                 public int entrySelector() { return entrySelector; }
                 public int rangeShift() { return rangeShift; }
-                public ArrayList<KerningPair> kerningPairs() { return kerningPairs; }
+                public List<KerningPair> kerningPairs() { return kerningPairs; }
                 public Ttf _root() { return _root; }
                 public Ttf.Kern.Subtable _parent() { return _parent; }
             }
@@ -781,142 +1332,420 @@ public class Ttf extends KaitaiStruct {
         }
         private int version;
         private int subtableCount;
-        private ArrayList<Subtable> subtables;
+        private List<Subtable> subtables;
         private Ttf _root;
         private Ttf.DirTableEntry _parent;
         public int version() { return version; }
         public int subtableCount() { return subtableCount; }
-        public ArrayList<Subtable> subtables() { return subtables; }
+        public List<Subtable> subtables() { return subtables; }
         public Ttf _root() { return _root; }
         public Ttf.DirTableEntry _parent() { return _parent; }
     }
-    public static class DirTableEntry extends KaitaiStruct {
-        public static DirTableEntry fromFile(String fileName) throws IOException {
-            return new DirTableEntry(new ByteBufferKaitaiStream(fileName));
+    public static class Maxp extends KaitaiStruct {
+        public static Maxp fromFile(String fileName) throws IOException {
+            return new Maxp(new ByteBufferKaitaiStream(fileName));
         }
 
-        public DirTableEntry(KaitaiStream _io) {
+        public Maxp(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public DirTableEntry(KaitaiStream _io, Ttf _parent) {
+        public Maxp(KaitaiStream _io, Ttf.DirTableEntry _parent) {
             this(_io, _parent, null);
         }
 
-        public DirTableEntry(KaitaiStream _io, Ttf _parent, Ttf _root) {
+        public Maxp(KaitaiStream _io, Ttf.DirTableEntry _parent, Ttf _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.tag = new String(this._io.readBytes(4), Charset.forName("ascii"));
-            this.checksum = this._io.readU4be();
-            this.offset = this._io.readU4be();
-            this.length = this._io.readU4be();
+            this.tableVersionNumber = new Fixed(this._io, this, _root);
+            this.numGlyphs = this._io.readU2be();
+            if (isVersion10()) {
+                this.version10Body = new MaxpVersion10Body(this._io, this, _root);
+            }
         }
-        private Object value;
-        public Object value() {
-            if (this.value != null)
-                return this.value;
-            KaitaiStream io = _root()._io();
-            long _pos = io.pos();
-            io.seek(offset());
-            switch (tag()) {
-            case "head": {
-                this._raw_value = io.readBytes(length());
-                KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                this.value = new Head(_io__raw_value, this, _root);
-                break;
+
+        public void _fetchInstances() {
+            this.tableVersionNumber._fetchInstances();
+            if (isVersion10()) {
+                this.version10Body._fetchInstances();
             }
-            case "cvt ": {
-                this._raw_value = io.readBytes(length());
-                KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                this.value = new Cvt(_io__raw_value, this, _root);
-                break;
-            }
-            case "prep": {
-                this._raw_value = io.readBytes(length());
-                KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                this.value = new Prep(_io__raw_value, this, _root);
-                break;
-            }
-            case "kern": {
-                this._raw_value = io.readBytes(length());
-                KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                this.value = new Kern(_io__raw_value, this, _root);
-                break;
-            }
-            case "hhea": {
-                this._raw_value = io.readBytes(length());
-                KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                this.value = new Hhea(_io__raw_value, this, _root);
-                break;
-            }
-            case "post": {
-                this._raw_value = io.readBytes(length());
-                KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                this.value = new Post(_io__raw_value, this, _root);
-                break;
-            }
-            case "OS/2": {
-                this._raw_value = io.readBytes(length());
-                KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                this.value = new Os2(_io__raw_value, this, _root);
-                break;
-            }
-            case "name": {
-                this._raw_value = io.readBytes(length());
-                KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                this.value = new Name(_io__raw_value, this, _root);
-                break;
-            }
-            case "maxp": {
-                this._raw_value = io.readBytes(length());
-                KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                this.value = new Maxp(_io__raw_value, this, _root);
-                break;
-            }
-            case "glyf": {
-                this._raw_value = io.readBytes(length());
-                KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                this.value = new Glyf(_io__raw_value, this, _root);
-                break;
-            }
-            case "fpgm": {
-                this._raw_value = io.readBytes(length());
-                KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                this.value = new Fpgm(_io__raw_value, this, _root);
-                break;
-            }
-            case "cmap": {
-                this._raw_value = io.readBytes(length());
-                KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                this.value = new Cmap(_io__raw_value, this, _root);
-                break;
-            }
-            default: {
-                this.value = io.readBytes(length());
-                break;
-            }
-            }
-            io.seek(_pos);
-            return this.value;
         }
-        private String tag;
-        private long checksum;
-        private long offset;
-        private long length;
+        private Boolean isVersion10;
+        public Boolean isVersion10() {
+            if (this.isVersion10 != null)
+                return this.isVersion10;
+            this.isVersion10 =  ((tableVersionNumber().major() == 1) && (tableVersionNumber().minor() == 0)) ;
+            return this.isVersion10;
+        }
+        private Fixed tableVersionNumber;
+        private int numGlyphs;
+        private MaxpVersion10Body version10Body;
+        private Ttf _root;
+        private Ttf.DirTableEntry _parent;
+
+        /**
+         * 0x00010000 for version 1.0.
+         */
+        public Fixed tableVersionNumber() { return tableVersionNumber; }
+
+        /**
+         * The number of glyphs in the font.
+         */
+        public int numGlyphs() { return numGlyphs; }
+        public MaxpVersion10Body version10Body() { return version10Body; }
+        public Ttf _root() { return _root; }
+        public Ttf.DirTableEntry _parent() { return _parent; }
+    }
+    public static class MaxpVersion10Body extends KaitaiStruct {
+        public static MaxpVersion10Body fromFile(String fileName) throws IOException {
+            return new MaxpVersion10Body(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public MaxpVersion10Body(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public MaxpVersion10Body(KaitaiStream _io, Ttf.Maxp _parent) {
+            this(_io, _parent, null);
+        }
+
+        public MaxpVersion10Body(KaitaiStream _io, Ttf.Maxp _parent, Ttf _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.maxPoints = this._io.readU2be();
+            this.maxContours = this._io.readU2be();
+            this.maxCompositePoints = this._io.readU2be();
+            this.maxCompositeContours = this._io.readU2be();
+            this.maxZones = this._io.readU2be();
+            this.maxTwilightPoints = this._io.readU2be();
+            this.maxStorage = this._io.readU2be();
+            this.maxFunctionDefs = this._io.readU2be();
+            this.maxInstructionDefs = this._io.readU2be();
+            this.maxStackElements = this._io.readU2be();
+            this.maxSizeOfInstructions = this._io.readU2be();
+            this.maxComponentElements = this._io.readU2be();
+            this.maxComponentDepth = this._io.readU2be();
+        }
+
+        public void _fetchInstances() {
+        }
+        private int maxPoints;
+        private int maxContours;
+        private int maxCompositePoints;
+        private int maxCompositeContours;
+        private int maxZones;
+        private int maxTwilightPoints;
+        private int maxStorage;
+        private int maxFunctionDefs;
+        private int maxInstructionDefs;
+        private int maxStackElements;
+        private int maxSizeOfInstructions;
+        private int maxComponentElements;
+        private int maxComponentDepth;
+        private Ttf _root;
+        private Ttf.Maxp _parent;
+
+        /**
+         * Maximum points in a non-composite glyph.
+         */
+        public int maxPoints() { return maxPoints; }
+
+        /**
+         * Maximum contours in a non-composite glyph.
+         */
+        public int maxContours() { return maxContours; }
+
+        /**
+         * Maximum points in a composite glyph.
+         */
+        public int maxCompositePoints() { return maxCompositePoints; }
+
+        /**
+         * Maximum contours in a composite glyph.
+         */
+        public int maxCompositeContours() { return maxCompositeContours; }
+
+        /**
+         * 1 if instructions do not use the twilight zone (Z0), or 2 if instructions do use Z0; should be set to 2 in most cases.
+         */
+        public int maxZones() { return maxZones; }
+
+        /**
+         * Maximum points used in Z0.
+         */
+        public int maxTwilightPoints() { return maxTwilightPoints; }
+
+        /**
+         * Number of Storage Area locations.
+         */
+        public int maxStorage() { return maxStorage; }
+
+        /**
+         * Number of FDEFs.
+         */
+        public int maxFunctionDefs() { return maxFunctionDefs; }
+
+        /**
+         * Number of IDEFs.
+         */
+        public int maxInstructionDefs() { return maxInstructionDefs; }
+
+        /**
+         * Maximum stack depth.
+         */
+        public int maxStackElements() { return maxStackElements; }
+
+        /**
+         * Maximum byte count for glyph instructions.
+         */
+        public int maxSizeOfInstructions() { return maxSizeOfInstructions; }
+
+        /**
+         * Maximum number of components referenced at "top level" for any composite glyph.
+         */
+        public int maxComponentElements() { return maxComponentElements; }
+
+        /**
+         * Maximum levels of recursion; 1 for simple components.
+         */
+        public int maxComponentDepth() { return maxComponentDepth; }
+        public Ttf _root() { return _root; }
+        public Ttf.Maxp _parent() { return _parent; }
+    }
+
+    /**
+     * Name table is meant to include human-readable string metadata
+     * that describes font: name of the font, its styles, copyright &
+     * trademark notices, vendor and designer info, etc.
+     * 
+     * The table includes a list of "name records", each of which
+     * corresponds to a single metadata entry.
+     * @see <a href="https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6name.html">Source</a>
+     */
+    public static class Name extends KaitaiStruct {
+        public static Name fromFile(String fileName) throws IOException {
+            return new Name(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public enum Names {
+            COPYRIGHT(0),
+            FONT_FAMILY(1),
+            FONT_SUBFAMILY(2),
+            UNIQUE_SUBFAMILY_ID(3),
+            FULL_FONT_NAME(4),
+            NAME_TABLE_VERSION(5),
+            POSTSCRIPT_FONT_NAME(6),
+            TRADEMARK(7),
+            MANUFACTURER(8),
+            DESIGNER(9),
+            DESCRIPTION(10),
+            URL_VENDOR(11),
+            URL_DESIGNER(12),
+            LICENSE(13),
+            URL_LICENSE(14),
+            RESERVED_15(15),
+            PREFERRED_FAMILY(16),
+            PREFERRED_SUBFAMILY(17),
+            COMPATIBLE_FULL_NAME(18),
+            SAMPLE_TEXT(19);
+
+            private final long id;
+            Names(long id) { this.id = id; }
+            public long id() { return id; }
+            private static final Map<Long, Names> byId = new HashMap<Long, Names>(20);
+            static {
+                for (Names e : Names.values())
+                    byId.put(e.id(), e);
+            }
+            public static Names byId(long id) { return byId.get(id); }
+        }
+
+        public enum Platforms {
+            UNICODE(0),
+            MACINTOSH(1),
+            RESERVED_2(2),
+            MICROSOFT(3);
+
+            private final long id;
+            Platforms(long id) { this.id = id; }
+            public long id() { return id; }
+            private static final Map<Long, Platforms> byId = new HashMap<Long, Platforms>(4);
+            static {
+                for (Platforms e : Platforms.values())
+                    byId.put(e.id(), e);
+            }
+            public static Platforms byId(long id) { return byId.get(id); }
+        }
+
+        public Name(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Name(KaitaiStream _io, Ttf.DirTableEntry _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Name(KaitaiStream _io, Ttf.DirTableEntry _parent, Ttf _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.formatSelector = this._io.readU2be();
+            this.numNameRecords = this._io.readU2be();
+            this.ofsStrings = this._io.readU2be();
+            this.nameRecords = new ArrayList<NameRecord>();
+            for (int i = 0; i < numNameRecords(); i++) {
+                this.nameRecords.add(new NameRecord(this._io, this, _root));
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.nameRecords.size(); i++) {
+                this.nameRecords.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        public static class NameRecord extends KaitaiStruct {
+            public static NameRecord fromFile(String fileName) throws IOException {
+                return new NameRecord(new ByteBufferKaitaiStream(fileName));
+            }
+
+            public NameRecord(KaitaiStream _io) {
+                this(_io, null, null);
+            }
+
+            public NameRecord(KaitaiStream _io, Ttf.Name _parent) {
+                this(_io, _parent, null);
+            }
+
+            public NameRecord(KaitaiStream _io, Ttf.Name _parent, Ttf _root) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                _read();
+            }
+            private void _read() {
+                this.platformId = Ttf.Name.Platforms.byId(this._io.readU2be());
+                this.encodingId = this._io.readU2be();
+                this.languageId = this._io.readU2be();
+                this.nameId = Ttf.Name.Names.byId(this._io.readU2be());
+                this.lenStr = this._io.readU2be();
+                this.ofsStr = this._io.readU2be();
+            }
+
+            public void _fetchInstances() {
+                asciiValue();
+                if (this.asciiValue != null) {
+                }
+                unicodeValue();
+                if (this.unicodeValue != null) {
+                }
+            }
+            private String asciiValue;
+            public String asciiValue() {
+                if (this.asciiValue != null)
+                    return this.asciiValue;
+                KaitaiStream io = _parent()._io();
+                long _pos = io.pos();
+                io.seek(_parent().ofsStrings() + ofsStr());
+                this.asciiValue = new String(io.readBytes(lenStr()), StandardCharsets.US_ASCII);
+                io.seek(_pos);
+                return this.asciiValue;
+            }
+            private String unicodeValue;
+            public String unicodeValue() {
+                if (this.unicodeValue != null)
+                    return this.unicodeValue;
+                KaitaiStream io = _parent()._io();
+                long _pos = io.pos();
+                io.seek(_parent().ofsStrings() + ofsStr());
+                this.unicodeValue = new String(io.readBytes(lenStr()), StandardCharsets.UTF_16BE);
+                io.seek(_pos);
+                return this.unicodeValue;
+            }
+            private Platforms platformId;
+            private int encodingId;
+            private int languageId;
+            private Names nameId;
+            private int lenStr;
+            private int ofsStr;
+            private Ttf _root;
+            private Ttf.Name _parent;
+            public Platforms platformId() { return platformId; }
+            public int encodingId() { return encodingId; }
+            public int languageId() { return languageId; }
+            public Names nameId() { return nameId; }
+            public int lenStr() { return lenStr; }
+            public int ofsStr() { return ofsStr; }
+            public Ttf _root() { return _root; }
+            public Ttf.Name _parent() { return _parent; }
+        }
+        private int formatSelector;
+        private int numNameRecords;
+        private int ofsStrings;
+        private List<NameRecord> nameRecords;
+        private Ttf _root;
+        private Ttf.DirTableEntry _parent;
+        public int formatSelector() { return formatSelector; }
+        public int numNameRecords() { return numNameRecords; }
+        public int ofsStrings() { return ofsStrings; }
+        public List<NameRecord> nameRecords() { return nameRecords; }
+        public Ttf _root() { return _root; }
+        public Ttf.DirTableEntry _parent() { return _parent; }
+    }
+    public static class OffsetTable extends KaitaiStruct {
+        public static OffsetTable fromFile(String fileName) throws IOException {
+            return new OffsetTable(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public OffsetTable(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public OffsetTable(KaitaiStream _io, Ttf _parent) {
+            this(_io, _parent, null);
+        }
+
+        public OffsetTable(KaitaiStream _io, Ttf _parent, Ttf _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.sfntVersion = new Fixed(this._io, this, _root);
+            this.numTables = this._io.readU2be();
+            this.searchRange = this._io.readU2be();
+            this.entrySelector = this._io.readU2be();
+            this.rangeShift = this._io.readU2be();
+        }
+
+        public void _fetchInstances() {
+            this.sfntVersion._fetchInstances();
+        }
+        private Fixed sfntVersion;
+        private int numTables;
+        private int searchRange;
+        private int entrySelector;
+        private int rangeShift;
         private Ttf _root;
         private Ttf _parent;
-        private byte[] _raw_value;
-        public String tag() { return tag; }
-        public long checksum() { return checksum; }
-        public long offset() { return offset; }
-        public long length() { return length; }
+        public Fixed sfntVersion() { return sfntVersion; }
+        public int numTables() { return numTables; }
+        public int searchRange() { return searchRange; }
+        public int entrySelector() { return entrySelector; }
+        public int rangeShift() { return rangeShift; }
         public Ttf _root() { return _root; }
         public Ttf _parent() { return _parent; }
-        public byte[] _raw_value() { return _raw_value; }
     }
 
     /**
@@ -925,6 +1754,42 @@ public class Ttf extends KaitaiStruct {
     public static class Os2 extends KaitaiStruct {
         public static Os2 fromFile(String fileName) throws IOException {
             return new Os2(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public enum FsSelection {
+            ITALIC(1),
+            UNDERSCORE(2),
+            NEGATIVE(4),
+            OUTLINED(8),
+            STRIKEOUT(16),
+            BOLD(32),
+            REGULAR(64);
+
+            private final long id;
+            FsSelection(long id) { this.id = id; }
+            public long id() { return id; }
+            private static final Map<Long, FsSelection> byId = new HashMap<Long, FsSelection>(7);
+            static {
+                for (FsSelection e : FsSelection.values())
+                    byId.put(e.id(), e);
+            }
+            public static FsSelection byId(long id) { return byId.get(id); }
+        }
+
+        public enum FsType {
+            RESTRICTED_LICENSE_EMBEDDING(2),
+            PREVIEW_AND_PRINT_EMBEDDING(4),
+            EDITABLE_EMBEDDING(8);
+
+            private final long id;
+            FsType(long id) { this.id = id; }
+            public long id() { return id; }
+            private static final Map<Long, FsType> byId = new HashMap<Long, FsType>(3);
+            static {
+                for (FsType e : FsType.values())
+                    byId.put(e.id(), e);
+            }
+            public static FsType byId(long id) { return byId.get(id); }
         }
 
         public enum WeightClass {
@@ -971,42 +1836,6 @@ public class Ttf extends KaitaiStruct {
             public static WidthClass byId(long id) { return byId.get(id); }
         }
 
-        public enum FsType {
-            RESTRICTED_LICENSE_EMBEDDING(2),
-            PREVIEW_AND_PRINT_EMBEDDING(4),
-            EDITABLE_EMBEDDING(8);
-
-            private final long id;
-            FsType(long id) { this.id = id; }
-            public long id() { return id; }
-            private static final Map<Long, FsType> byId = new HashMap<Long, FsType>(3);
-            static {
-                for (FsType e : FsType.values())
-                    byId.put(e.id(), e);
-            }
-            public static FsType byId(long id) { return byId.get(id); }
-        }
-
-        public enum FsSelection {
-            ITALIC(1),
-            UNDERSCORE(2),
-            NEGATIVE(4),
-            OUTLINED(8),
-            STRIKEOUT(16),
-            BOLD(32),
-            REGULAR(64);
-
-            private final long id;
-            FsSelection(long id) { this.id = id; }
-            public long id() { return id; }
-            private static final Map<Long, FsSelection> byId = new HashMap<Long, FsSelection>(7);
-            static {
-                for (FsSelection e : FsSelection.values())
-                    byId.put(e.id(), e);
-            }
-            public static FsSelection byId(long id) { return byId.get(id); }
-        }
-
         public Os2(KaitaiStream _io) {
             this(_io, null, null);
         }
@@ -1040,7 +1869,7 @@ public class Ttf extends KaitaiStruct {
             this.sFamilyClass = this._io.readS2be();
             this.panose = new Panose(this._io, this, _root);
             this.unicodeRange = new UnicodeRange(this._io, this, _root);
-            this.achVendId = new String(this._io.readBytes(4), Charset.forName("ascii"));
+            this.achVendId = new String(this._io.readBytes(4), StandardCharsets.US_ASCII);
             this.selection = FsSelection.byId(this._io.readU2be());
             this.firstCharIndex = this._io.readU2be();
             this.lastCharIndex = this._io.readU2be();
@@ -1051,57 +1880,200 @@ public class Ttf extends KaitaiStruct {
             this.winDescent = this._io.readU2be();
             this.codePageRange = new CodePageRange(this._io, this, _root);
         }
+
+        public void _fetchInstances() {
+            this.panose._fetchInstances();
+            this.unicodeRange._fetchInstances();
+            this.codePageRange._fetchInstances();
+        }
+        public static class CodePageRange extends KaitaiStruct {
+            public static CodePageRange fromFile(String fileName) throws IOException {
+                return new CodePageRange(new ByteBufferKaitaiStream(fileName));
+            }
+
+            public CodePageRange(KaitaiStream _io) {
+                this(_io, null, null);
+            }
+
+            public CodePageRange(KaitaiStream _io, Ttf.Os2 _parent) {
+                this(_io, _parent, null);
+            }
+
+            public CodePageRange(KaitaiStream _io, Ttf.Os2 _parent, Ttf _root) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                _read();
+            }
+            private void _read() {
+                this.symbolCharacterSet = this._io.readBitsIntBe(1) != 0;
+                this.oemCharacterSet = this._io.readBitsIntBe(1) != 0;
+                this.macintoshCharacterSet = this._io.readBitsIntBe(1) != 0;
+                this.reservedForAlternateAnsiOem = this._io.readBitsIntBe(7);
+                this.cp1361KoreanJohab = this._io.readBitsIntBe(1) != 0;
+                this.cp950ChineseTraditionalCharsTaiwanAndHongKong = this._io.readBitsIntBe(1) != 0;
+                this.cp949KoreanWansung = this._io.readBitsIntBe(1) != 0;
+                this.cp936ChineseSimplifiedCharsPrcAndSingapore = this._io.readBitsIntBe(1) != 0;
+                this.cp932JisJapan = this._io.readBitsIntBe(1) != 0;
+                this.cp874Thai = this._io.readBitsIntBe(1) != 0;
+                this.reservedForAlternateAnsi = this._io.readBitsIntBe(8);
+                this.cp1257WindowsBaltic = this._io.readBitsIntBe(1) != 0;
+                this.cp1256Arabic = this._io.readBitsIntBe(1) != 0;
+                this.cp1255Hebrew = this._io.readBitsIntBe(1) != 0;
+                this.cp1254Turkish = this._io.readBitsIntBe(1) != 0;
+                this.cp1253Greek = this._io.readBitsIntBe(1) != 0;
+                this.cp1251Cyrillic = this._io.readBitsIntBe(1) != 0;
+                this.cp1250Latin2EasternEurope = this._io.readBitsIntBe(1) != 0;
+                this.cp1252Latin1 = this._io.readBitsIntBe(1) != 0;
+                this.cp437Us = this._io.readBitsIntBe(1) != 0;
+                this.cp850WeLatin1 = this._io.readBitsIntBe(1) != 0;
+                this.cp708ArabicAsmo708 = this._io.readBitsIntBe(1) != 0;
+                this.cp737GreekFormer437G = this._io.readBitsIntBe(1) != 0;
+                this.cp775MsDosBaltic = this._io.readBitsIntBe(1) != 0;
+                this.cp852Latin2 = this._io.readBitsIntBe(1) != 0;
+                this.cp855IbmCyrillicPrimarilyRussian = this._io.readBitsIntBe(1) != 0;
+                this.cp857IbmTurkish = this._io.readBitsIntBe(1) != 0;
+                this.cp860MsDosPortuguese = this._io.readBitsIntBe(1) != 0;
+                this.cp861MsDosIcelandic = this._io.readBitsIntBe(1) != 0;
+                this.cp862Hebrew = this._io.readBitsIntBe(1) != 0;
+                this.cp863MsDosCanadianFrench = this._io.readBitsIntBe(1) != 0;
+                this.cp864Arabic = this._io.readBitsIntBe(1) != 0;
+                this.cp865MsDosNordic = this._io.readBitsIntBe(1) != 0;
+                this.cp866MsDosRussian = this._io.readBitsIntBe(1) != 0;
+                this.cp869IbmGreek = this._io.readBitsIntBe(1) != 0;
+                this.reservedForOem = this._io.readBitsIntBe(16);
+            }
+
+            public void _fetchInstances() {
+            }
+            private boolean symbolCharacterSet;
+            private boolean oemCharacterSet;
+            private boolean macintoshCharacterSet;
+            private long reservedForAlternateAnsiOem;
+            private boolean cp1361KoreanJohab;
+            private boolean cp950ChineseTraditionalCharsTaiwanAndHongKong;
+            private boolean cp949KoreanWansung;
+            private boolean cp936ChineseSimplifiedCharsPrcAndSingapore;
+            private boolean cp932JisJapan;
+            private boolean cp874Thai;
+            private long reservedForAlternateAnsi;
+            private boolean cp1257WindowsBaltic;
+            private boolean cp1256Arabic;
+            private boolean cp1255Hebrew;
+            private boolean cp1254Turkish;
+            private boolean cp1253Greek;
+            private boolean cp1251Cyrillic;
+            private boolean cp1250Latin2EasternEurope;
+            private boolean cp1252Latin1;
+            private boolean cp437Us;
+            private boolean cp850WeLatin1;
+            private boolean cp708ArabicAsmo708;
+            private boolean cp737GreekFormer437G;
+            private boolean cp775MsDosBaltic;
+            private boolean cp852Latin2;
+            private boolean cp855IbmCyrillicPrimarilyRussian;
+            private boolean cp857IbmTurkish;
+            private boolean cp860MsDosPortuguese;
+            private boolean cp861MsDosIcelandic;
+            private boolean cp862Hebrew;
+            private boolean cp863MsDosCanadianFrench;
+            private boolean cp864Arabic;
+            private boolean cp865MsDosNordic;
+            private boolean cp866MsDosRussian;
+            private boolean cp869IbmGreek;
+            private long reservedForOem;
+            private Ttf _root;
+            private Ttf.Os2 _parent;
+            public boolean symbolCharacterSet() { return symbolCharacterSet; }
+            public boolean oemCharacterSet() { return oemCharacterSet; }
+            public boolean macintoshCharacterSet() { return macintoshCharacterSet; }
+            public long reservedForAlternateAnsiOem() { return reservedForAlternateAnsiOem; }
+            public boolean cp1361KoreanJohab() { return cp1361KoreanJohab; }
+            public boolean cp950ChineseTraditionalCharsTaiwanAndHongKong() { return cp950ChineseTraditionalCharsTaiwanAndHongKong; }
+            public boolean cp949KoreanWansung() { return cp949KoreanWansung; }
+            public boolean cp936ChineseSimplifiedCharsPrcAndSingapore() { return cp936ChineseSimplifiedCharsPrcAndSingapore; }
+            public boolean cp932JisJapan() { return cp932JisJapan; }
+            public boolean cp874Thai() { return cp874Thai; }
+            public long reservedForAlternateAnsi() { return reservedForAlternateAnsi; }
+            public boolean cp1257WindowsBaltic() { return cp1257WindowsBaltic; }
+            public boolean cp1256Arabic() { return cp1256Arabic; }
+            public boolean cp1255Hebrew() { return cp1255Hebrew; }
+            public boolean cp1254Turkish() { return cp1254Turkish; }
+            public boolean cp1253Greek() { return cp1253Greek; }
+            public boolean cp1251Cyrillic() { return cp1251Cyrillic; }
+            public boolean cp1250Latin2EasternEurope() { return cp1250Latin2EasternEurope; }
+            public boolean cp1252Latin1() { return cp1252Latin1; }
+            public boolean cp437Us() { return cp437Us; }
+            public boolean cp850WeLatin1() { return cp850WeLatin1; }
+            public boolean cp708ArabicAsmo708() { return cp708ArabicAsmo708; }
+            public boolean cp737GreekFormer437G() { return cp737GreekFormer437G; }
+            public boolean cp775MsDosBaltic() { return cp775MsDosBaltic; }
+            public boolean cp852Latin2() { return cp852Latin2; }
+            public boolean cp855IbmCyrillicPrimarilyRussian() { return cp855IbmCyrillicPrimarilyRussian; }
+            public boolean cp857IbmTurkish() { return cp857IbmTurkish; }
+            public boolean cp860MsDosPortuguese() { return cp860MsDosPortuguese; }
+            public boolean cp861MsDosIcelandic() { return cp861MsDosIcelandic; }
+            public boolean cp862Hebrew() { return cp862Hebrew; }
+            public boolean cp863MsDosCanadianFrench() { return cp863MsDosCanadianFrench; }
+            public boolean cp864Arabic() { return cp864Arabic; }
+            public boolean cp865MsDosNordic() { return cp865MsDosNordic; }
+            public boolean cp866MsDosRussian() { return cp866MsDosRussian; }
+            public boolean cp869IbmGreek() { return cp869IbmGreek; }
+            public long reservedForOem() { return reservedForOem; }
+            public Ttf _root() { return _root; }
+            public Ttf.Os2 _parent() { return _parent; }
+        }
         public static class Panose extends KaitaiStruct {
             public static Panose fromFile(String fileName) throws IOException {
                 return new Panose(new ByteBufferKaitaiStream(fileName));
             }
 
-            public enum Weight {
+            public enum ArmStyle {
                 ANY(0),
                 NO_FIT(1),
-                VERY_LIGHT(2),
-                LIGHT(3),
-                THIN(4),
-                BOOK(5),
-                MEDIUM(6),
-                DEMI(7),
-                BOLD(8),
-                HEAVY(9),
-                BLACK(10),
-                NORD(11);
+                STRAIGHT_ARMS_HORIZONTAL(2),
+                STRAIGHT_ARMS_WEDGE(3),
+                STRAIGHT_ARMS_VERTICAL(4),
+                STRAIGHT_ARMS_SINGLE_SERIF(5),
+                STRAIGHT_ARMS_DOUBLE_SERIF(6),
+                NON_STRAIGHT_ARMS_HORIZONTAL(7),
+                NON_STRAIGHT_ARMS_WEDGE(8),
+                NON_STRAIGHT_ARMS_VERTICAL(9),
+                NON_STRAIGHT_ARMS_SINGLE_SERIF(10),
+                NON_STRAIGHT_ARMS_DOUBLE_SERIF(11);
 
                 private final long id;
-                Weight(long id) { this.id = id; }
+                ArmStyle(long id) { this.id = id; }
                 public long id() { return id; }
-                private static final Map<Long, Weight> byId = new HashMap<Long, Weight>(12);
+                private static final Map<Long, ArmStyle> byId = new HashMap<Long, ArmStyle>(12);
                 static {
-                    for (Weight e : Weight.values())
+                    for (ArmStyle e : ArmStyle.values())
                         byId.put(e.id(), e);
                 }
-                public static Weight byId(long id) { return byId.get(id); }
+                public static ArmStyle byId(long id) { return byId.get(id); }
             }
 
-            public enum Proportion {
+            public enum Contrast {
                 ANY(0),
                 NO_FIT(1),
-                OLD_STYLE(2),
-                MODERN(3),
-                EVEN_WIDTH(4),
-                EXPANDED(5),
-                CONDENSED(6),
-                VERY_EXPANDED(7),
-                VERY_CONDENSED(8),
-                MONOSPACED(9);
+                NONE(2),
+                VERY_LOW(3),
+                LOW(4),
+                MEDIUM_LOW(5),
+                MEDIUM(6),
+                MEDIUM_HIGH(7),
+                HIGH(8),
+                VERY_HIGH(9);
 
                 private final long id;
-                Proportion(long id) { this.id = id; }
+                Contrast(long id) { this.id = id; }
                 public long id() { return id; }
-                private static final Map<Long, Proportion> byId = new HashMap<Long, Proportion>(10);
+                private static final Map<Long, Contrast> byId = new HashMap<Long, Contrast>(10);
                 static {
-                    for (Proportion e : Proportion.values())
+                    for (Contrast e : Contrast.values())
                         byId.put(e.id(), e);
                 }
-                public static Proportion byId(long id) { return byId.get(id); }
+                public static Contrast byId(long id) { return byId.get(id); }
             }
 
             public enum FamilyKind {
@@ -1152,6 +2124,56 @@ public class Ttf extends KaitaiStruct {
                 public static LetterForm byId(long id) { return byId.get(id); }
             }
 
+            public enum Midline {
+                ANY(0),
+                NO_FIT(1),
+                STANDARD_TRIMMED(2),
+                STANDARD_POINTED(3),
+                STANDARD_SERIFED(4),
+                HIGH_TRIMMED(5),
+                HIGH_POINTED(6),
+                HIGH_SERIFED(7),
+                CONSTANT_TRIMMED(8),
+                CONSTANT_POINTED(9),
+                CONSTANT_SERIFED(10),
+                LOW_TRIMMED(11),
+                LOW_POINTED(12),
+                LOW_SERIFED(13);
+
+                private final long id;
+                Midline(long id) { this.id = id; }
+                public long id() { return id; }
+                private static final Map<Long, Midline> byId = new HashMap<Long, Midline>(14);
+                static {
+                    for (Midline e : Midline.values())
+                        byId.put(e.id(), e);
+                }
+                public static Midline byId(long id) { return byId.get(id); }
+            }
+
+            public enum Proportion {
+                ANY(0),
+                NO_FIT(1),
+                OLD_STYLE(2),
+                MODERN(3),
+                EVEN_WIDTH(4),
+                EXPANDED(5),
+                CONDENSED(6),
+                VERY_EXPANDED(7),
+                VERY_CONDENSED(8),
+                MONOSPACED(9);
+
+                private final long id;
+                Proportion(long id) { this.id = id; }
+                public long id() { return id; }
+                private static final Map<Long, Proportion> byId = new HashMap<Long, Proportion>(10);
+                static {
+                    for (Proportion e : Proportion.values())
+                        byId.put(e.id(), e);
+                }
+                public static Proportion byId(long id) { return byId.get(id); }
+            }
+
             public enum SerifStyle {
                 ANY(0),
                 NO_FIT(1),
@@ -1181,52 +2203,6 @@ public class Ttf extends KaitaiStruct {
                 public static SerifStyle byId(long id) { return byId.get(id); }
             }
 
-            public enum XHeight {
-                ANY(0),
-                NO_FIT(1),
-                CONSTANT_SMALL(2),
-                CONSTANT_STANDARD(3),
-                CONSTANT_LARGE(4),
-                DUCKING_SMALL(5),
-                DUCKING_STANDARD(6),
-                DUCKING_LARGE(7);
-
-                private final long id;
-                XHeight(long id) { this.id = id; }
-                public long id() { return id; }
-                private static final Map<Long, XHeight> byId = new HashMap<Long, XHeight>(8);
-                static {
-                    for (XHeight e : XHeight.values())
-                        byId.put(e.id(), e);
-                }
-                public static XHeight byId(long id) { return byId.get(id); }
-            }
-
-            public enum ArmStyle {
-                ANY(0),
-                NO_FIT(1),
-                STRAIGHT_ARMS_HORIZONTAL(2),
-                STRAIGHT_ARMS_WEDGE(3),
-                STRAIGHT_ARMS_VERTICAL(4),
-                STRAIGHT_ARMS_SINGLE_SERIF(5),
-                STRAIGHT_ARMS_DOUBLE_SERIF(6),
-                NON_STRAIGHT_ARMS_HORIZONTAL(7),
-                NON_STRAIGHT_ARMS_WEDGE(8),
-                NON_STRAIGHT_ARMS_VERTICAL(9),
-                NON_STRAIGHT_ARMS_SINGLE_SERIF(10),
-                NON_STRAIGHT_ARMS_DOUBLE_SERIF(11);
-
-                private final long id;
-                ArmStyle(long id) { this.id = id; }
-                public long id() { return id; }
-                private static final Map<Long, ArmStyle> byId = new HashMap<Long, ArmStyle>(12);
-                static {
-                    for (ArmStyle e : ArmStyle.values())
-                        byId.put(e.id(), e);
-                }
-                public static ArmStyle byId(long id) { return byId.get(id); }
-            }
-
             public enum StrokeVariation {
                 ANY(0),
                 NO_FIT(1),
@@ -1249,54 +2225,50 @@ public class Ttf extends KaitaiStruct {
                 public static StrokeVariation byId(long id) { return byId.get(id); }
             }
 
-            public enum Contrast {
+            public enum Weight {
                 ANY(0),
                 NO_FIT(1),
-                NONE(2),
-                VERY_LOW(3),
-                LOW(4),
-                MEDIUM_LOW(5),
+                VERY_LIGHT(2),
+                LIGHT(3),
+                THIN(4),
+                BOOK(5),
                 MEDIUM(6),
-                MEDIUM_HIGH(7),
-                HIGH(8),
-                VERY_HIGH(9);
+                DEMI(7),
+                BOLD(8),
+                HEAVY(9),
+                BLACK(10),
+                NORD(11);
 
                 private final long id;
-                Contrast(long id) { this.id = id; }
+                Weight(long id) { this.id = id; }
                 public long id() { return id; }
-                private static final Map<Long, Contrast> byId = new HashMap<Long, Contrast>(10);
+                private static final Map<Long, Weight> byId = new HashMap<Long, Weight>(12);
                 static {
-                    for (Contrast e : Contrast.values())
+                    for (Weight e : Weight.values())
                         byId.put(e.id(), e);
                 }
-                public static Contrast byId(long id) { return byId.get(id); }
+                public static Weight byId(long id) { return byId.get(id); }
             }
 
-            public enum Midline {
+            public enum XHeight {
                 ANY(0),
                 NO_FIT(1),
-                STANDARD_TRIMMED(2),
-                STANDARD_POINTED(3),
-                STANDARD_SERIFED(4),
-                HIGH_TRIMMED(5),
-                HIGH_POINTED(6),
-                HIGH_SERIFED(7),
-                CONSTANT_TRIMMED(8),
-                CONSTANT_POINTED(9),
-                CONSTANT_SERIFED(10),
-                LOW_TRIMMED(11),
-                LOW_POINTED(12),
-                LOW_SERIFED(13);
+                CONSTANT_SMALL(2),
+                CONSTANT_STANDARD(3),
+                CONSTANT_LARGE(4),
+                DUCKING_SMALL(5),
+                DUCKING_STANDARD(6),
+                DUCKING_LARGE(7);
 
                 private final long id;
-                Midline(long id) { this.id = id; }
+                XHeight(long id) { this.id = id; }
                 public long id() { return id; }
-                private static final Map<Long, Midline> byId = new HashMap<Long, Midline>(14);
+                private static final Map<Long, XHeight> byId = new HashMap<Long, XHeight>(8);
                 static {
-                    for (Midline e : Midline.values())
+                    for (XHeight e : XHeight.values())
                         byId.put(e.id(), e);
                 }
-                public static Midline byId(long id) { return byId.get(id); }
+                public static XHeight byId(long id) { return byId.get(id); }
             }
 
             public Panose(KaitaiStream _io) {
@@ -1324,6 +2296,9 @@ public class Ttf extends KaitaiStruct {
                 this.letterForm = LetterForm.byId(this._io.readU1());
                 this.midline = Midline.byId(this._io.readU1());
                 this.xHeight = XHeight.byId(this._io.readU1());
+            }
+
+            public void _fetchInstances() {
             }
             private FamilyKind familyType;
             private SerifStyle serifStyle;
@@ -1440,8 +2415,10 @@ public class Ttf extends KaitaiStruct {
                 this.arabicPresentationFormsB = this._io.readBitsIntBe(1) != 0;
                 this.halfwidthAndFullwidthForms = this._io.readBitsIntBe(1) != 0;
                 this.specials = this._io.readBitsIntBe(1) != 0;
-                this._io.alignToByte();
                 this.reserved = this._io.readBytes(7);
+            }
+
+            public void _fetchInstances() {
             }
             private boolean basicLatin;
             private boolean latin1Supplement;
@@ -1587,140 +2564,6 @@ public class Ttf extends KaitaiStruct {
             public boolean halfwidthAndFullwidthForms() { return halfwidthAndFullwidthForms; }
             public boolean specials() { return specials; }
             public byte[] reserved() { return reserved; }
-            public Ttf _root() { return _root; }
-            public Ttf.Os2 _parent() { return _parent; }
-        }
-        public static class CodePageRange extends KaitaiStruct {
-            public static CodePageRange fromFile(String fileName) throws IOException {
-                return new CodePageRange(new ByteBufferKaitaiStream(fileName));
-            }
-
-            public CodePageRange(KaitaiStream _io) {
-                this(_io, null, null);
-            }
-
-            public CodePageRange(KaitaiStream _io, Ttf.Os2 _parent) {
-                this(_io, _parent, null);
-            }
-
-            public CodePageRange(KaitaiStream _io, Ttf.Os2 _parent, Ttf _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.symbolCharacterSet = this._io.readBitsIntBe(1) != 0;
-                this.oemCharacterSet = this._io.readBitsIntBe(1) != 0;
-                this.macintoshCharacterSet = this._io.readBitsIntBe(1) != 0;
-                this.reservedForAlternateAnsiOem = this._io.readBitsIntBe(7);
-                this.cp1361KoreanJohab = this._io.readBitsIntBe(1) != 0;
-                this.cp950ChineseTraditionalCharsTaiwanAndHongKong = this._io.readBitsIntBe(1) != 0;
-                this.cp949KoreanWansung = this._io.readBitsIntBe(1) != 0;
-                this.cp936ChineseSimplifiedCharsPrcAndSingapore = this._io.readBitsIntBe(1) != 0;
-                this.cp932JisJapan = this._io.readBitsIntBe(1) != 0;
-                this.cp874Thai = this._io.readBitsIntBe(1) != 0;
-                this.reservedForAlternateAnsi = this._io.readBitsIntBe(8);
-                this.cp1257WindowsBaltic = this._io.readBitsIntBe(1) != 0;
-                this.cp1256Arabic = this._io.readBitsIntBe(1) != 0;
-                this.cp1255Hebrew = this._io.readBitsIntBe(1) != 0;
-                this.cp1254Turkish = this._io.readBitsIntBe(1) != 0;
-                this.cp1253Greek = this._io.readBitsIntBe(1) != 0;
-                this.cp1251Cyrillic = this._io.readBitsIntBe(1) != 0;
-                this.cp1250Latin2EasternEurope = this._io.readBitsIntBe(1) != 0;
-                this.cp1252Latin1 = this._io.readBitsIntBe(1) != 0;
-                this.cp437Us = this._io.readBitsIntBe(1) != 0;
-                this.cp850WeLatin1 = this._io.readBitsIntBe(1) != 0;
-                this.cp708ArabicAsmo708 = this._io.readBitsIntBe(1) != 0;
-                this.cp737GreekFormer437G = this._io.readBitsIntBe(1) != 0;
-                this.cp775MsDosBaltic = this._io.readBitsIntBe(1) != 0;
-                this.cp852Latin2 = this._io.readBitsIntBe(1) != 0;
-                this.cp855IbmCyrillicPrimarilyRussian = this._io.readBitsIntBe(1) != 0;
-                this.cp857IbmTurkish = this._io.readBitsIntBe(1) != 0;
-                this.cp860MsDosPortuguese = this._io.readBitsIntBe(1) != 0;
-                this.cp861MsDosIcelandic = this._io.readBitsIntBe(1) != 0;
-                this.cp862Hebrew = this._io.readBitsIntBe(1) != 0;
-                this.cp863MsDosCanadianFrench = this._io.readBitsIntBe(1) != 0;
-                this.cp864Arabic = this._io.readBitsIntBe(1) != 0;
-                this.cp865MsDosNordic = this._io.readBitsIntBe(1) != 0;
-                this.cp866MsDosRussian = this._io.readBitsIntBe(1) != 0;
-                this.cp869IbmGreek = this._io.readBitsIntBe(1) != 0;
-                this.reservedForOem = this._io.readBitsIntBe(16);
-            }
-            private boolean symbolCharacterSet;
-            private boolean oemCharacterSet;
-            private boolean macintoshCharacterSet;
-            private long reservedForAlternateAnsiOem;
-            private boolean cp1361KoreanJohab;
-            private boolean cp950ChineseTraditionalCharsTaiwanAndHongKong;
-            private boolean cp949KoreanWansung;
-            private boolean cp936ChineseSimplifiedCharsPrcAndSingapore;
-            private boolean cp932JisJapan;
-            private boolean cp874Thai;
-            private long reservedForAlternateAnsi;
-            private boolean cp1257WindowsBaltic;
-            private boolean cp1256Arabic;
-            private boolean cp1255Hebrew;
-            private boolean cp1254Turkish;
-            private boolean cp1253Greek;
-            private boolean cp1251Cyrillic;
-            private boolean cp1250Latin2EasternEurope;
-            private boolean cp1252Latin1;
-            private boolean cp437Us;
-            private boolean cp850WeLatin1;
-            private boolean cp708ArabicAsmo708;
-            private boolean cp737GreekFormer437G;
-            private boolean cp775MsDosBaltic;
-            private boolean cp852Latin2;
-            private boolean cp855IbmCyrillicPrimarilyRussian;
-            private boolean cp857IbmTurkish;
-            private boolean cp860MsDosPortuguese;
-            private boolean cp861MsDosIcelandic;
-            private boolean cp862Hebrew;
-            private boolean cp863MsDosCanadianFrench;
-            private boolean cp864Arabic;
-            private boolean cp865MsDosNordic;
-            private boolean cp866MsDosRussian;
-            private boolean cp869IbmGreek;
-            private long reservedForOem;
-            private Ttf _root;
-            private Ttf.Os2 _parent;
-            public boolean symbolCharacterSet() { return symbolCharacterSet; }
-            public boolean oemCharacterSet() { return oemCharacterSet; }
-            public boolean macintoshCharacterSet() { return macintoshCharacterSet; }
-            public long reservedForAlternateAnsiOem() { return reservedForAlternateAnsiOem; }
-            public boolean cp1361KoreanJohab() { return cp1361KoreanJohab; }
-            public boolean cp950ChineseTraditionalCharsTaiwanAndHongKong() { return cp950ChineseTraditionalCharsTaiwanAndHongKong; }
-            public boolean cp949KoreanWansung() { return cp949KoreanWansung; }
-            public boolean cp936ChineseSimplifiedCharsPrcAndSingapore() { return cp936ChineseSimplifiedCharsPrcAndSingapore; }
-            public boolean cp932JisJapan() { return cp932JisJapan; }
-            public boolean cp874Thai() { return cp874Thai; }
-            public long reservedForAlternateAnsi() { return reservedForAlternateAnsi; }
-            public boolean cp1257WindowsBaltic() { return cp1257WindowsBaltic; }
-            public boolean cp1256Arabic() { return cp1256Arabic; }
-            public boolean cp1255Hebrew() { return cp1255Hebrew; }
-            public boolean cp1254Turkish() { return cp1254Turkish; }
-            public boolean cp1253Greek() { return cp1253Greek; }
-            public boolean cp1251Cyrillic() { return cp1251Cyrillic; }
-            public boolean cp1250Latin2EasternEurope() { return cp1250Latin2EasternEurope; }
-            public boolean cp1252Latin1() { return cp1252Latin1; }
-            public boolean cp437Us() { return cp437Us; }
-            public boolean cp850WeLatin1() { return cp850WeLatin1; }
-            public boolean cp708ArabicAsmo708() { return cp708ArabicAsmo708; }
-            public boolean cp737GreekFormer437G() { return cp737GreekFormer437G; }
-            public boolean cp775MsDosBaltic() { return cp775MsDosBaltic; }
-            public boolean cp852Latin2() { return cp852Latin2; }
-            public boolean cp855IbmCyrillicPrimarilyRussian() { return cp855IbmCyrillicPrimarilyRussian; }
-            public boolean cp857IbmTurkish() { return cp857IbmTurkish; }
-            public boolean cp860MsDosPortuguese() { return cp860MsDosPortuguese; }
-            public boolean cp861MsDosIcelandic() { return cp861MsDosIcelandic; }
-            public boolean cp862Hebrew() { return cp862Hebrew; }
-            public boolean cp863MsDosCanadianFrench() { return cp863MsDosCanadianFrench; }
-            public boolean cp864Arabic() { return cp864Arabic; }
-            public boolean cp865MsDosNordic() { return cp865MsDosNordic; }
-            public boolean cp866MsDosRussian() { return cp866MsDosRussian; }
-            public boolean cp869IbmGreek() { return cp869IbmGreek; }
-            public long reservedForOem() { return reservedForOem; }
             public Ttf _root() { return _root; }
             public Ttf.Os2 _parent() { return _parent; }
         }
@@ -1889,809 +2732,204 @@ public class Ttf extends KaitaiStruct {
         public Ttf _root() { return _root; }
         public Ttf.DirTableEntry _parent() { return _parent; }
     }
-    public static class Fixed extends KaitaiStruct {
-        public static Fixed fromFile(String fileName) throws IOException {
-            return new Fixed(new ByteBufferKaitaiStream(fileName));
+    public static class Post extends KaitaiStruct {
+        public static Post fromFile(String fileName) throws IOException {
+            return new Post(new ByteBufferKaitaiStream(fileName));
         }
 
-        public Fixed(KaitaiStream _io) {
+        public Post(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public Fixed(KaitaiStream _io, KaitaiStruct _parent) {
+        public Post(KaitaiStream _io, Ttf.DirTableEntry _parent) {
             this(_io, _parent, null);
         }
 
-        public Fixed(KaitaiStream _io, KaitaiStruct _parent, Ttf _root) {
+        public Post(KaitaiStream _io, Ttf.DirTableEntry _parent, Ttf _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.major = this._io.readU2be();
-            this.minor = this._io.readU2be();
-        }
-        private int major;
-        private int minor;
-        private Ttf _root;
-        private KaitaiStruct _parent;
-        public int major() { return major; }
-        public int minor() { return minor; }
-        public Ttf _root() { return _root; }
-        public KaitaiStruct _parent() { return _parent; }
-    }
-    public static class Glyf extends KaitaiStruct {
-        public static Glyf fromFile(String fileName) throws IOException {
-            return new Glyf(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Glyf(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Glyf(KaitaiStream _io, Ttf.DirTableEntry _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Glyf(KaitaiStream _io, Ttf.DirTableEntry _parent, Ttf _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.numberOfContours = this._io.readS2be();
-            this.xMin = this._io.readS2be();
-            this.yMin = this._io.readS2be();
-            this.xMax = this._io.readS2be();
-            this.yMax = this._io.readS2be();
-            if (numberOfContours() > 0) {
-                this.value = new SimpleGlyph(this._io, this, _root);
+            this.format = new Fixed(this._io, this, _root);
+            this.italicAngle = new Fixed(this._io, this, _root);
+            this.underlinePosition = this._io.readS2be();
+            this.underlineThichness = this._io.readS2be();
+            this.isFixedPitch = this._io.readU4be();
+            this.minMemType42 = this._io.readU4be();
+            this.maxMemType42 = this._io.readU4be();
+            this.minMemType1 = this._io.readU4be();
+            this.maxMemType1 = this._io.readU4be();
+            if ( ((format().major() == 2) && (format().minor() == 0)) ) {
+                this.format20 = new Format20(this._io, this, _root);
             }
         }
-        public static class SimpleGlyph extends KaitaiStruct {
-            public static SimpleGlyph fromFile(String fileName) throws IOException {
-                return new SimpleGlyph(new ByteBufferKaitaiStream(fileName));
+
+        public void _fetchInstances() {
+            this.format._fetchInstances();
+            this.italicAngle._fetchInstances();
+            if ( ((format().major() == 2) && (format().minor() == 0)) ) {
+                this.format20._fetchInstances();
+            }
+        }
+        public static class Format20 extends KaitaiStruct {
+            public static Format20 fromFile(String fileName) throws IOException {
+                return new Format20(new ByteBufferKaitaiStream(fileName));
             }
 
-            public SimpleGlyph(KaitaiStream _io) {
+            public Format20(KaitaiStream _io) {
                 this(_io, null, null);
             }
 
-            public SimpleGlyph(KaitaiStream _io, Ttf.Glyf _parent) {
+            public Format20(KaitaiStream _io, Ttf.Post _parent) {
                 this(_io, _parent, null);
             }
 
-            public SimpleGlyph(KaitaiStream _io, Ttf.Glyf _parent, Ttf _root) {
+            public Format20(KaitaiStream _io, Ttf.Post _parent, Ttf _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
                 _read();
             }
             private void _read() {
-                this.endPtsOfContours = new ArrayList<Integer>();
-                for (int i = 0; i < _parent().numberOfContours(); i++) {
-                    this.endPtsOfContours.add(this._io.readU2be());
+                this.numberOfGlyphs = this._io.readU2be();
+                this.glyphNameIndex = new ArrayList<Integer>();
+                for (int i = 0; i < numberOfGlyphs(); i++) {
+                    this.glyphNameIndex.add(this._io.readU2be());
                 }
-                this.instructionLength = this._io.readU2be();
-                this.instructions = this._io.readBytes(instructionLength());
-                this.flags = new ArrayList<Flag>();
-                for (int i = 0; i < pointCount(); i++) {
-                    this.flags.add(new Flag(this._io, this, _root));
-                }
-            }
-            public static class Flag extends KaitaiStruct {
-                public static Flag fromFile(String fileName) throws IOException {
-                    return new Flag(new ByteBufferKaitaiStream(fileName));
-                }
-
-                public Flag(KaitaiStream _io) {
-                    this(_io, null, null);
-                }
-
-                public Flag(KaitaiStream _io, Ttf.Glyf.SimpleGlyph _parent) {
-                    this(_io, _parent, null);
-                }
-
-                public Flag(KaitaiStream _io, Ttf.Glyf.SimpleGlyph _parent, Ttf _root) {
-                    super(_io);
-                    this._parent = _parent;
-                    this._root = _root;
-                    _read();
-                }
-                private void _read() {
-                    this.reserved = this._io.readBitsIntBe(2);
-                    this.yIsSame = this._io.readBitsIntBe(1) != 0;
-                    this.xIsSame = this._io.readBitsIntBe(1) != 0;
-                    this.repeat = this._io.readBitsIntBe(1) != 0;
-                    this.yShortVector = this._io.readBitsIntBe(1) != 0;
-                    this.xShortVector = this._io.readBitsIntBe(1) != 0;
-                    this.onCurve = this._io.readBitsIntBe(1) != 0;
-                    this._io.alignToByte();
-                    if (repeat()) {
-                        this.repeatValue = this._io.readU1();
-                    }
-                }
-                private long reserved;
-                private boolean yIsSame;
-                private boolean xIsSame;
-                private boolean repeat;
-                private boolean yShortVector;
-                private boolean xShortVector;
-                private boolean onCurve;
-                private Integer repeatValue;
-                private Ttf _root;
-                private Ttf.Glyf.SimpleGlyph _parent;
-                public long reserved() { return reserved; }
-                public boolean yIsSame() { return yIsSame; }
-                public boolean xIsSame() { return xIsSame; }
-                public boolean repeat() { return repeat; }
-                public boolean yShortVector() { return yShortVector; }
-                public boolean xShortVector() { return xShortVector; }
-                public boolean onCurve() { return onCurve; }
-                public Integer repeatValue() { return repeatValue; }
-                public Ttf _root() { return _root; }
-                public Ttf.Glyf.SimpleGlyph _parent() { return _parent; }
-            }
-            private Integer pointCount;
-            public Integer pointCount() {
-                if (this.pointCount != null)
-                    return this.pointCount;
-                int _tmp = (int) ((Collections.max(endPtsOfContours()) + 1));
-                this.pointCount = _tmp;
-                return this.pointCount;
-            }
-            private ArrayList<Integer> endPtsOfContours;
-            private int instructionLength;
-            private byte[] instructions;
-            private ArrayList<Flag> flags;
-            private Ttf _root;
-            private Ttf.Glyf _parent;
-            public ArrayList<Integer> endPtsOfContours() { return endPtsOfContours; }
-            public int instructionLength() { return instructionLength; }
-            public byte[] instructions() { return instructions; }
-            public ArrayList<Flag> flags() { return flags; }
-            public Ttf _root() { return _root; }
-            public Ttf.Glyf _parent() { return _parent; }
-        }
-        private short numberOfContours;
-        private short xMin;
-        private short yMin;
-        private short xMax;
-        private short yMax;
-        private SimpleGlyph value;
-        private Ttf _root;
-        private Ttf.DirTableEntry _parent;
-        public short numberOfContours() { return numberOfContours; }
-        public short xMin() { return xMin; }
-        public short yMin() { return yMin; }
-        public short xMax() { return xMax; }
-        public short yMax() { return yMax; }
-        public SimpleGlyph value() { return value; }
-        public Ttf _root() { return _root; }
-        public Ttf.DirTableEntry _parent() { return _parent; }
-    }
-
-    /**
-     * cvt  - Control Value Table This table contains a list of values that can be referenced by instructions. They can be used, among other things, to control characteristics for different glyphs.
-     */
-    public static class Cvt extends KaitaiStruct {
-        public static Cvt fromFile(String fileName) throws IOException {
-            return new Cvt(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Cvt(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Cvt(KaitaiStream _io, Ttf.DirTableEntry _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Cvt(KaitaiStream _io, Ttf.DirTableEntry _parent, Ttf _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.fwords = new ArrayList<Short>();
-            {
-                int i = 0;
-                while (!this._io.isEof()) {
-                    this.fwords.add(this._io.readS2be());
-                    i++;
-                }
-            }
-        }
-        private ArrayList<Short> fwords;
-        private Ttf _root;
-        private Ttf.DirTableEntry _parent;
-        public ArrayList<Short> fwords() { return fwords; }
-        public Ttf _root() { return _root; }
-        public Ttf.DirTableEntry _parent() { return _parent; }
-    }
-    public static class Maxp extends KaitaiStruct {
-        public static Maxp fromFile(String fileName) throws IOException {
-            return new Maxp(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Maxp(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Maxp(KaitaiStream _io, Ttf.DirTableEntry _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Maxp(KaitaiStream _io, Ttf.DirTableEntry _parent, Ttf _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.tableVersionNumber = new Fixed(this._io, this, _root);
-            this.numGlyphs = this._io.readU2be();
-            if (isVersion10()) {
-                this.version10Body = new MaxpVersion10Body(this._io, this, _root);
-            }
-        }
-        private Boolean isVersion10;
-        public Boolean isVersion10() {
-            if (this.isVersion10 != null)
-                return this.isVersion10;
-            boolean _tmp = (boolean) ( ((tableVersionNumber().major() == 1) && (tableVersionNumber().minor() == 0)) );
-            this.isVersion10 = _tmp;
-            return this.isVersion10;
-        }
-        private Fixed tableVersionNumber;
-        private int numGlyphs;
-        private MaxpVersion10Body version10Body;
-        private Ttf _root;
-        private Ttf.DirTableEntry _parent;
-
-        /**
-         * 0x00010000 for version 1.0.
-         */
-        public Fixed tableVersionNumber() { return tableVersionNumber; }
-
-        /**
-         * The number of glyphs in the font.
-         */
-        public int numGlyphs() { return numGlyphs; }
-        public MaxpVersion10Body version10Body() { return version10Body; }
-        public Ttf _root() { return _root; }
-        public Ttf.DirTableEntry _parent() { return _parent; }
-    }
-    public static class MaxpVersion10Body extends KaitaiStruct {
-        public static MaxpVersion10Body fromFile(String fileName) throws IOException {
-            return new MaxpVersion10Body(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public MaxpVersion10Body(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public MaxpVersion10Body(KaitaiStream _io, Ttf.Maxp _parent) {
-            this(_io, _parent, null);
-        }
-
-        public MaxpVersion10Body(KaitaiStream _io, Ttf.Maxp _parent, Ttf _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.maxPoints = this._io.readU2be();
-            this.maxContours = this._io.readU2be();
-            this.maxCompositePoints = this._io.readU2be();
-            this.maxCompositeContours = this._io.readU2be();
-            this.maxZones = this._io.readU2be();
-            this.maxTwilightPoints = this._io.readU2be();
-            this.maxStorage = this._io.readU2be();
-            this.maxFunctionDefs = this._io.readU2be();
-            this.maxInstructionDefs = this._io.readU2be();
-            this.maxStackElements = this._io.readU2be();
-            this.maxSizeOfInstructions = this._io.readU2be();
-            this.maxComponentElements = this._io.readU2be();
-            this.maxComponentDepth = this._io.readU2be();
-        }
-        private int maxPoints;
-        private int maxContours;
-        private int maxCompositePoints;
-        private int maxCompositeContours;
-        private int maxZones;
-        private int maxTwilightPoints;
-        private int maxStorage;
-        private int maxFunctionDefs;
-        private int maxInstructionDefs;
-        private int maxStackElements;
-        private int maxSizeOfInstructions;
-        private int maxComponentElements;
-        private int maxComponentDepth;
-        private Ttf _root;
-        private Ttf.Maxp _parent;
-
-        /**
-         * Maximum points in a non-composite glyph.
-         */
-        public int maxPoints() { return maxPoints; }
-
-        /**
-         * Maximum contours in a non-composite glyph.
-         */
-        public int maxContours() { return maxContours; }
-
-        /**
-         * Maximum points in a composite glyph.
-         */
-        public int maxCompositePoints() { return maxCompositePoints; }
-
-        /**
-         * Maximum contours in a composite glyph.
-         */
-        public int maxCompositeContours() { return maxCompositeContours; }
-
-        /**
-         * 1 if instructions do not use the twilight zone (Z0), or 2 if instructions do use Z0; should be set to 2 in most cases.
-         */
-        public int maxZones() { return maxZones; }
-
-        /**
-         * Maximum points used in Z0.
-         */
-        public int maxTwilightPoints() { return maxTwilightPoints; }
-
-        /**
-         * Number of Storage Area locations.
-         */
-        public int maxStorage() { return maxStorage; }
-
-        /**
-         * Number of FDEFs.
-         */
-        public int maxFunctionDefs() { return maxFunctionDefs; }
-
-        /**
-         * Number of IDEFs.
-         */
-        public int maxInstructionDefs() { return maxInstructionDefs; }
-
-        /**
-         * Maximum stack depth.
-         */
-        public int maxStackElements() { return maxStackElements; }
-
-        /**
-         * Maximum byte count for glyph instructions.
-         */
-        public int maxSizeOfInstructions() { return maxSizeOfInstructions; }
-
-        /**
-         * Maximum number of components referenced at "top level" for any composite glyph.
-         */
-        public int maxComponentElements() { return maxComponentElements; }
-
-        /**
-         * Maximum levels of recursion; 1 for simple components.
-         */
-        public int maxComponentDepth() { return maxComponentDepth; }
-        public Ttf _root() { return _root; }
-        public Ttf.Maxp _parent() { return _parent; }
-    }
-    public static class OffsetTable extends KaitaiStruct {
-        public static OffsetTable fromFile(String fileName) throws IOException {
-            return new OffsetTable(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public OffsetTable(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public OffsetTable(KaitaiStream _io, Ttf _parent) {
-            this(_io, _parent, null);
-        }
-
-        public OffsetTable(KaitaiStream _io, Ttf _parent, Ttf _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.sfntVersion = new Fixed(this._io, this, _root);
-            this.numTables = this._io.readU2be();
-            this.searchRange = this._io.readU2be();
-            this.entrySelector = this._io.readU2be();
-            this.rangeShift = this._io.readU2be();
-        }
-        private Fixed sfntVersion;
-        private int numTables;
-        private int searchRange;
-        private int entrySelector;
-        private int rangeShift;
-        private Ttf _root;
-        private Ttf _parent;
-        public Fixed sfntVersion() { return sfntVersion; }
-        public int numTables() { return numTables; }
-        public int searchRange() { return searchRange; }
-        public int entrySelector() { return entrySelector; }
-        public int rangeShift() { return rangeShift; }
-        public Ttf _root() { return _root; }
-        public Ttf _parent() { return _parent; }
-    }
-
-    /**
-     * cmap - Character To Glyph Index Mapping Table This table defines the mapping of character codes to the glyph index values used in the font.
-     */
-    public static class Cmap extends KaitaiStruct {
-        public static Cmap fromFile(String fileName) throws IOException {
-            return new Cmap(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Cmap(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Cmap(KaitaiStream _io, Ttf.DirTableEntry _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Cmap(KaitaiStream _io, Ttf.DirTableEntry _parent, Ttf _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.versionNumber = this._io.readU2be();
-            this.numberOfEncodingTables = this._io.readU2be();
-            this.tables = new ArrayList<SubtableHeader>();
-            for (int i = 0; i < numberOfEncodingTables(); i++) {
-                this.tables.add(new SubtableHeader(this._io, this, _root));
-            }
-        }
-        public static class SubtableHeader extends KaitaiStruct {
-            public static SubtableHeader fromFile(String fileName) throws IOException {
-                return new SubtableHeader(new ByteBufferKaitaiStream(fileName));
-            }
-
-            public SubtableHeader(KaitaiStream _io) {
-                this(_io, null, null);
-            }
-
-            public SubtableHeader(KaitaiStream _io, Ttf.Cmap _parent) {
-                this(_io, _parent, null);
-            }
-
-            public SubtableHeader(KaitaiStream _io, Ttf.Cmap _parent, Ttf _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.platformId = this._io.readU2be();
-                this.encodingId = this._io.readU2be();
-                this.subtableOffset = this._io.readU4be();
-            }
-            private Subtable table;
-            public Subtable table() {
-                if (this.table != null)
-                    return this.table;
-                KaitaiStream io = _parent()._io();
-                long _pos = io.pos();
-                io.seek(subtableOffset());
-                this.table = new Subtable(io, this, _root);
-                io.seek(_pos);
-                return this.table;
-            }
-            private int platformId;
-            private int encodingId;
-            private long subtableOffset;
-            private Ttf _root;
-            private Ttf.Cmap _parent;
-            public int platformId() { return platformId; }
-            public int encodingId() { return encodingId; }
-            public long subtableOffset() { return subtableOffset; }
-            public Ttf _root() { return _root; }
-            public Ttf.Cmap _parent() { return _parent; }
-        }
-        public static class Subtable extends KaitaiStruct {
-            public static Subtable fromFile(String fileName) throws IOException {
-                return new Subtable(new ByteBufferKaitaiStream(fileName));
-            }
-
-            public enum SubtableFormat {
-                BYTE_ENCODING_TABLE(0),
-                HIGH_BYTE_MAPPING_THROUGH_TABLE(2),
-                SEGMENT_MAPPING_TO_DELTA_VALUES(4),
-                TRIMMED_TABLE_MAPPING(6);
-
-                private final long id;
-                SubtableFormat(long id) { this.id = id; }
-                public long id() { return id; }
-                private static final Map<Long, SubtableFormat> byId = new HashMap<Long, SubtableFormat>(4);
-                static {
-                    for (SubtableFormat e : SubtableFormat.values())
-                        byId.put(e.id(), e);
-                }
-                public static SubtableFormat byId(long id) { return byId.get(id); }
-            }
-
-            public Subtable(KaitaiStream _io) {
-                this(_io, null, null);
-            }
-
-            public Subtable(KaitaiStream _io, Ttf.Cmap.SubtableHeader _parent) {
-                this(_io, _parent, null);
-            }
-
-            public Subtable(KaitaiStream _io, Ttf.Cmap.SubtableHeader _parent, Ttf _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.format = SubtableFormat.byId(this._io.readU2be());
-                this.length = this._io.readU2be();
-                this.version = this._io.readU2be();
+                this.glyphNames = new ArrayList<PascalString>();
                 {
-                    SubtableFormat on = format();
-                    if (on != null) {
-                        switch (format()) {
-                        case BYTE_ENCODING_TABLE: {
-                            this._raw_value = this._io.readBytes((length() - 6));
-                            KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                            this.value = new ByteEncodingTable(_io__raw_value, this, _root);
-                            break;
-                        }
-                        case SEGMENT_MAPPING_TO_DELTA_VALUES: {
-                            this._raw_value = this._io.readBytes((length() - 6));
-                            KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                            this.value = new SegmentMappingToDeltaValues(_io__raw_value, this, _root);
-                            break;
-                        }
-                        case HIGH_BYTE_MAPPING_THROUGH_TABLE: {
-                            this._raw_value = this._io.readBytes((length() - 6));
-                            KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                            this.value = new HighByteMappingThroughTable(_io__raw_value, this, _root);
-                            break;
-                        }
-                        case TRIMMED_TABLE_MAPPING: {
-                            this._raw_value = this._io.readBytes((length() - 6));
-                            KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                            this.value = new TrimmedTableMapping(_io__raw_value, this, _root);
-                            break;
-                        }
-                        default: {
-                            this.value = this._io.readBytes((length() - 6));
-                            break;
-                        }
-                        }
-                    } else {
-                        this.value = this._io.readBytes((length() - 6));
-                    }
+                    PascalString _it;
+                    int i = 0;
+                    do {
+                        _it = new PascalString(this._io, this, _root);
+                        this.glyphNames.add(_it);
+                        i++;
+                    } while (!( ((_it.length() == 0) || (_io().isEof())) ));
                 }
             }
-            public static class ByteEncodingTable extends KaitaiStruct {
-                public static ByteEncodingTable fromFile(String fileName) throws IOException {
-                    return new ByteEncodingTable(new ByteBufferKaitaiStream(fileName));
+
+            public void _fetchInstances() {
+                for (int i = 0; i < this.glyphNameIndex.size(); i++) {
+                }
+                for (int i = 0; i < this.glyphNames.size(); i++) {
+                    this.glyphNames.get(((Number) (i)).intValue())._fetchInstances();
+                }
+            }
+            public static class PascalString extends KaitaiStruct {
+                public static PascalString fromFile(String fileName) throws IOException {
+                    return new PascalString(new ByteBufferKaitaiStream(fileName));
                 }
 
-                public ByteEncodingTable(KaitaiStream _io) {
+                public PascalString(KaitaiStream _io) {
                     this(_io, null, null);
                 }
 
-                public ByteEncodingTable(KaitaiStream _io, Ttf.Cmap.Subtable _parent) {
+                public PascalString(KaitaiStream _io, Ttf.Post.Format20 _parent) {
                     this(_io, _parent, null);
                 }
 
-                public ByteEncodingTable(KaitaiStream _io, Ttf.Cmap.Subtable _parent, Ttf _root) {
+                public PascalString(KaitaiStream _io, Ttf.Post.Format20 _parent, Ttf _root) {
                     super(_io);
                     this._parent = _parent;
                     this._root = _root;
                     _read();
                 }
                 private void _read() {
-                    this.glyphIdArray = this._io.readBytes(256);
+                    this.length = this._io.readU1();
+                    if (length() != 0) {
+                        this.value = new String(this._io.readBytes(length()), StandardCharsets.US_ASCII);
+                    }
                 }
-                private byte[] glyphIdArray;
+
+                public void _fetchInstances() {
+                    if (length() != 0) {
+                    }
+                }
+                private int length;
+                private String value;
                 private Ttf _root;
-                private Ttf.Cmap.Subtable _parent;
-                public byte[] glyphIdArray() { return glyphIdArray; }
+                private Ttf.Post.Format20 _parent;
+                public int length() { return length; }
+                public String value() { return value; }
                 public Ttf _root() { return _root; }
-                public Ttf.Cmap.Subtable _parent() { return _parent; }
+                public Ttf.Post.Format20 _parent() { return _parent; }
             }
-            public static class HighByteMappingThroughTable extends KaitaiStruct {
-                public static HighByteMappingThroughTable fromFile(String fileName) throws IOException {
-                    return new HighByteMappingThroughTable(new ByteBufferKaitaiStream(fileName));
-                }
-
-                public HighByteMappingThroughTable(KaitaiStream _io) {
-                    this(_io, null, null);
-                }
-
-                public HighByteMappingThroughTable(KaitaiStream _io, Ttf.Cmap.Subtable _parent) {
-                    this(_io, _parent, null);
-                }
-
-                public HighByteMappingThroughTable(KaitaiStream _io, Ttf.Cmap.Subtable _parent, Ttf _root) {
-                    super(_io);
-                    this._parent = _parent;
-                    this._root = _root;
-                    _read();
-                }
-                private void _read() {
-                    this.subHeaderKeys = new ArrayList<Integer>();
-                    for (int i = 0; i < 256; i++) {
-                        this.subHeaderKeys.add(this._io.readU2be());
-                    }
-                }
-                private ArrayList<Integer> subHeaderKeys;
-                private Ttf _root;
-                private Ttf.Cmap.Subtable _parent;
-                public ArrayList<Integer> subHeaderKeys() { return subHeaderKeys; }
-                public Ttf _root() { return _root; }
-                public Ttf.Cmap.Subtable _parent() { return _parent; }
-            }
-            public static class SegmentMappingToDeltaValues extends KaitaiStruct {
-                public static SegmentMappingToDeltaValues fromFile(String fileName) throws IOException {
-                    return new SegmentMappingToDeltaValues(new ByteBufferKaitaiStream(fileName));
-                }
-
-                public SegmentMappingToDeltaValues(KaitaiStream _io) {
-                    this(_io, null, null);
-                }
-
-                public SegmentMappingToDeltaValues(KaitaiStream _io, Ttf.Cmap.Subtable _parent) {
-                    this(_io, _parent, null);
-                }
-
-                public SegmentMappingToDeltaValues(KaitaiStream _io, Ttf.Cmap.Subtable _parent, Ttf _root) {
-                    super(_io);
-                    this._parent = _parent;
-                    this._root = _root;
-                    _read();
-                }
-                private void _read() {
-                    this.segCountX2 = this._io.readU2be();
-                    this.searchRange = this._io.readU2be();
-                    this.entrySelector = this._io.readU2be();
-                    this.rangeShift = this._io.readU2be();
-                    this.endCount = new ArrayList<Integer>();
-                    for (int i = 0; i < segCount(); i++) {
-                        this.endCount.add(this._io.readU2be());
-                    }
-                    this.reservedPad = this._io.readU2be();
-                    this.startCount = new ArrayList<Integer>();
-                    for (int i = 0; i < segCount(); i++) {
-                        this.startCount.add(this._io.readU2be());
-                    }
-                    this.idDelta = new ArrayList<Integer>();
-                    for (int i = 0; i < segCount(); i++) {
-                        this.idDelta.add(this._io.readU2be());
-                    }
-                    this.idRangeOffset = new ArrayList<Integer>();
-                    for (int i = 0; i < segCount(); i++) {
-                        this.idRangeOffset.add(this._io.readU2be());
-                    }
-                    this.glyphIdArray = new ArrayList<Integer>();
-                    {
-                        int i = 0;
-                        while (!this._io.isEof()) {
-                            this.glyphIdArray.add(this._io.readU2be());
-                            i++;
-                        }
-                    }
-                }
-                private Integer segCount;
-                public Integer segCount() {
-                    if (this.segCount != null)
-                        return this.segCount;
-                    int _tmp = (int) ((segCountX2() / 2));
-                    this.segCount = _tmp;
-                    return this.segCount;
-                }
-                private int segCountX2;
-                private int searchRange;
-                private int entrySelector;
-                private int rangeShift;
-                private ArrayList<Integer> endCount;
-                private int reservedPad;
-                private ArrayList<Integer> startCount;
-                private ArrayList<Integer> idDelta;
-                private ArrayList<Integer> idRangeOffset;
-                private ArrayList<Integer> glyphIdArray;
-                private Ttf _root;
-                private Ttf.Cmap.Subtable _parent;
-                public int segCountX2() { return segCountX2; }
-                public int searchRange() { return searchRange; }
-                public int entrySelector() { return entrySelector; }
-                public int rangeShift() { return rangeShift; }
-                public ArrayList<Integer> endCount() { return endCount; }
-                public int reservedPad() { return reservedPad; }
-                public ArrayList<Integer> startCount() { return startCount; }
-                public ArrayList<Integer> idDelta() { return idDelta; }
-                public ArrayList<Integer> idRangeOffset() { return idRangeOffset; }
-                public ArrayList<Integer> glyphIdArray() { return glyphIdArray; }
-                public Ttf _root() { return _root; }
-                public Ttf.Cmap.Subtable _parent() { return _parent; }
-            }
-            public static class TrimmedTableMapping extends KaitaiStruct {
-                public static TrimmedTableMapping fromFile(String fileName) throws IOException {
-                    return new TrimmedTableMapping(new ByteBufferKaitaiStream(fileName));
-                }
-
-                public TrimmedTableMapping(KaitaiStream _io) {
-                    this(_io, null, null);
-                }
-
-                public TrimmedTableMapping(KaitaiStream _io, Ttf.Cmap.Subtable _parent) {
-                    this(_io, _parent, null);
-                }
-
-                public TrimmedTableMapping(KaitaiStream _io, Ttf.Cmap.Subtable _parent, Ttf _root) {
-                    super(_io);
-                    this._parent = _parent;
-                    this._root = _root;
-                    _read();
-                }
-                private void _read() {
-                    this.firstCode = this._io.readU2be();
-                    this.entryCount = this._io.readU2be();
-                    this.glyphIdArray = new ArrayList<Integer>();
-                    for (int i = 0; i < entryCount(); i++) {
-                        this.glyphIdArray.add(this._io.readU2be());
-                    }
-                }
-                private int firstCode;
-                private int entryCount;
-                private ArrayList<Integer> glyphIdArray;
-                private Ttf _root;
-                private Ttf.Cmap.Subtable _parent;
-                public int firstCode() { return firstCode; }
-                public int entryCount() { return entryCount; }
-                public ArrayList<Integer> glyphIdArray() { return glyphIdArray; }
-                public Ttf _root() { return _root; }
-                public Ttf.Cmap.Subtable _parent() { return _parent; }
-            }
-            private SubtableFormat format;
-            private int length;
-            private int version;
-            private Object value;
+            private int numberOfGlyphs;
+            private List<Integer> glyphNameIndex;
+            private List<PascalString> glyphNames;
             private Ttf _root;
-            private Ttf.Cmap.SubtableHeader _parent;
-            private byte[] _raw_value;
-            public SubtableFormat format() { return format; }
-            public int length() { return length; }
-            public int version() { return version; }
-            public Object value() { return value; }
+            private Ttf.Post _parent;
+            public int numberOfGlyphs() { return numberOfGlyphs; }
+            public List<Integer> glyphNameIndex() { return glyphNameIndex; }
+            public List<PascalString> glyphNames() { return glyphNames; }
             public Ttf _root() { return _root; }
-            public Ttf.Cmap.SubtableHeader _parent() { return _parent; }
-            public byte[] _raw_value() { return _raw_value; }
+            public Ttf.Post _parent() { return _parent; }
         }
-        private int versionNumber;
-        private int numberOfEncodingTables;
-        private ArrayList<SubtableHeader> tables;
+        private Fixed format;
+        private Fixed italicAngle;
+        private short underlinePosition;
+        private short underlineThichness;
+        private long isFixedPitch;
+        private long minMemType42;
+        private long maxMemType42;
+        private long minMemType1;
+        private long maxMemType1;
+        private Format20 format20;
         private Ttf _root;
         private Ttf.DirTableEntry _parent;
-        public int versionNumber() { return versionNumber; }
-        public int numberOfEncodingTables() { return numberOfEncodingTables; }
-        public ArrayList<SubtableHeader> tables() { return tables; }
+        public Fixed format() { return format; }
+        public Fixed italicAngle() { return italicAngle; }
+        public short underlinePosition() { return underlinePosition; }
+        public short underlineThichness() { return underlineThichness; }
+        public long isFixedPitch() { return isFixedPitch; }
+        public long minMemType42() { return minMemType42; }
+        public long maxMemType42() { return maxMemType42; }
+        public long minMemType1() { return minMemType1; }
+        public long maxMemType1() { return maxMemType1; }
+        public Format20 format20() { return format20; }
+        public Ttf _root() { return _root; }
+        public Ttf.DirTableEntry _parent() { return _parent; }
+    }
+    public static class Prep extends KaitaiStruct {
+        public static Prep fromFile(String fileName) throws IOException {
+            return new Prep(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Prep(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Prep(KaitaiStream _io, Ttf.DirTableEntry _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Prep(KaitaiStream _io, Ttf.DirTableEntry _parent, Ttf _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.instructions = this._io.readBytesFull();
+        }
+
+        public void _fetchInstances() {
+        }
+        private byte[] instructions;
+        private Ttf _root;
+        private Ttf.DirTableEntry _parent;
+        public byte[] instructions() { return instructions; }
         public Ttf _root() { return _root; }
         public Ttf.DirTableEntry _parent() { return _parent; }
     }
     private OffsetTable offsetTable;
-    private ArrayList<DirTableEntry> directoryTable;
+    private List<DirTableEntry> directoryTable;
     private Ttf _root;
     private KaitaiStruct _parent;
     public OffsetTable offsetTable() { return offsetTable; }
-    public ArrayList<DirTableEntry> directoryTable() { return directoryTable; }
+    public List<DirTableEntry> directoryTable() { return directoryTable; }
     public Ttf _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

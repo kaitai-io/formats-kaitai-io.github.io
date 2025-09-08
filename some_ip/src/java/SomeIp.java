@@ -37,13 +37,25 @@ public class SomeIp extends KaitaiStruct {
         this.header = new Header(this._io, this, _root);
         switch (header().messageId().value()) {
         case 4294934784L: {
-            this._raw_payload = this._io.readBytes((header().length() - 8));
-            KaitaiStream _io__raw_payload = new ByteBufferKaitaiStream(_raw_payload);
-            this.payload = new SomeIpSd(_io__raw_payload);
+            KaitaiStream _io_payload = this._io.substream(header().length() - 8);
+            this.payload = new SomeIpSd(_io_payload);
             break;
         }
         default: {
-            this.payload = this._io.readBytes((header().length() - 8));
+            this.payload = this._io.readBytes(header().length() - 8);
+            break;
+        }
+        }
+    }
+
+    public void _fetchInstances() {
+        this.header._fetchInstances();
+        switch (header().messageId().value()) {
+        case 4294934784L: {
+            ((SomeIpSd) (this.payload))._fetchInstances();
+            break;
+        }
+        default: {
             break;
         }
         }
@@ -115,17 +127,20 @@ public class SomeIp extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this._raw_messageId = this._io.readBytes(4);
-            KaitaiStream _io__raw_messageId = new ByteBufferKaitaiStream(_raw_messageId);
-            this.messageId = new MessageId(_io__raw_messageId, this, _root);
+            KaitaiStream _io_messageId = this._io.substream(4);
+            this.messageId = new MessageId(_io_messageId, this, _root);
             this.length = this._io.readU4be();
-            this._raw_requestId = this._io.readBytes(4);
-            KaitaiStream _io__raw_requestId = new ByteBufferKaitaiStream(_raw_requestId);
-            this.requestId = new RequestId(_io__raw_requestId, this, _root);
+            KaitaiStream _io_requestId = this._io.substream(4);
+            this.requestId = new RequestId(_io_requestId, this, _root);
             this.protocolVersion = this._io.readU1();
             this.interfaceVersion = this._io.readU1();
             this.messageType = MessageTypeEnum.byId(this._io.readU1());
             this.returnCode = ReturnCodeEnum.byId(this._io.readU1());
+        }
+
+        public void _fetchInstances() {
+            this.messageId._fetchInstances();
+            this.requestId._fetchInstances();
         }
 
         /**
@@ -164,6 +179,16 @@ public class SomeIp extends KaitaiStruct {
                 }
                 if (subId() == true) {
                     this.eventId = this._io.readBitsIntBe(15);
+                }
+            }
+
+            public void _fetchInstances() {
+                if (subId() == false) {
+                }
+                if (subId() == true) {
+                }
+                value();
+                if (this.value != null) {
                 }
             }
             private Long value;
@@ -240,6 +265,12 @@ public class SomeIp extends KaitaiStruct {
                 this.clientId = this._io.readU2be();
                 this.sessionId = this._io.readU2be();
             }
+
+            public void _fetchInstances() {
+                value();
+                if (this.value != null) {
+                }
+            }
             private Long value;
 
             /**
@@ -272,8 +303,7 @@ public class SomeIp extends KaitaiStruct {
         public Boolean isValidServiceDiscovery() {
             if (this.isValidServiceDiscovery != null)
                 return this.isValidServiceDiscovery;
-            boolean _tmp = (boolean) ( ((messageId().value() == 4294934784L) && (protocolVersion() == 1) && (interfaceVersion() == 1) && (messageType() == MessageTypeEnum.NOTIFICATION) && (returnCode() == ReturnCodeEnum.OK)) );
-            this.isValidServiceDiscovery = _tmp;
+            this.isValidServiceDiscovery =  ((messageId().value() == 4294934784L) && (protocolVersion() == 1) && (interfaceVersion() == 1) && (messageType() == MessageTypeEnum.NOTIFICATION) && (returnCode() == ReturnCodeEnum.OK)) ;
             return this.isValidServiceDiscovery;
         }
         private MessageId messageId;
@@ -285,8 +315,6 @@ public class SomeIp extends KaitaiStruct {
         private ReturnCodeEnum returnCode;
         private SomeIp _root;
         private SomeIp _parent;
-        private byte[] _raw_messageId;
-        private byte[] _raw_requestId;
 
         /**
          * The Message ID shall be a 32 Bit identifier that is used to identify
@@ -333,17 +361,13 @@ public class SomeIp extends KaitaiStruct {
         public ReturnCodeEnum returnCode() { return returnCode; }
         public SomeIp _root() { return _root; }
         public SomeIp _parent() { return _parent; }
-        public byte[] _raw_messageId() { return _raw_messageId; }
-        public byte[] _raw_requestId() { return _raw_requestId; }
     }
     private Header header;
     private Object payload;
     private SomeIp _root;
     private KaitaiStruct _parent;
-    private byte[] _raw_payload;
     public Header header() { return header; }
     public Object payload() { return payload; }
     public SomeIp _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
-    public byte[] _raw_payload() { return _raw_payload; }
 }

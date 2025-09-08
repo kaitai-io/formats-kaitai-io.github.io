@@ -5,6 +5,7 @@ import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -63,10 +64,16 @@ public class VlqBase128Le extends KaitaiStruct {
             Group _it;
             int i = 0;
             do {
-                _it = new Group(this._io, this, _root, i, (i != 0 ? groups().get((int) (i - 1)).intermValue() : 0), (i != 0 ? (i == 9 ? 0x8000000000000000L : (groups().get((int) (i - 1)).multiplier() * 128)) : 1));
+                _it = new Group(this._io, this, _root, i, (i != 0 ? groups().get(((Number) (i - 1)).intValue()).intermValue() : 0), (i != 0 ? (i == 9 ? 0x8000000000000000L : groups().get(((Number) (i - 1)).intValue()).multiplier() * 128) : 1));
                 this.groups.add(_it);
                 i++;
             } while (!(!(_it.hasNext())));
+        }
+    }
+
+    public void _fetchInstances() {
+        for (int i = 0; i < this.groups.size(); i++) {
+            this.groups.get(((Number) (i)).intValue())._fetchInstances();
         }
     }
 
@@ -94,20 +101,22 @@ public class VlqBase128Le extends KaitaiStruct {
         }
         private void _read() {
             this.hasNext = this._io.readBitsIntBe(1) != 0;
-            if (!(hasNext() == (idx() == 9 ? false : hasNext()))) {
-                throw new KaitaiStream.ValidationNotEqualError((idx() == 9 ? false : hasNext()), hasNext(), _io(), "/types/group/seq/0");
+            if (!(this.hasNext == (idx() == 9 ? false : hasNext()))) {
+                throw new KaitaiStream.ValidationNotEqualError((idx() == 9 ? false : hasNext()), this.hasNext, this._io, "/types/group/seq/0");
             }
             this.value = this._io.readBitsIntBe(7);
-            if (!(value() <= ((long) ((idx() == 9 ? 1 : 127))))) {
-                throw new KaitaiStream.ValidationGreaterThanError(((long) ((idx() == 9 ? 1 : 127))), value(), _io(), "/types/group/seq/1");
+            if (!(this.value <= ((Number) ((idx() == 9 ? 1 : 127))).longValue())) {
+                throw new KaitaiStream.ValidationGreaterThanError(((Number) ((idx() == 9 ? 1 : 127))).longValue(), this.value, this._io, "/types/group/seq/1");
             }
+        }
+
+        public void _fetchInstances() {
         }
         private Long intermValue;
         public Long intermValue() {
             if (this.intermValue != null)
                 return this.intermValue;
-            long _tmp = (long) (((long) ((prevIntermValue() + (value() * multiplier())))));
-            this.intermValue = _tmp;
+            this.intermValue = ((Number) (((Number) (prevIntermValue() + value() * multiplier())).longValue())).longValue();
             return this.intermValue;
         }
         private boolean hasNext;
@@ -145,9 +154,15 @@ public class VlqBase128Le extends KaitaiStruct {
     public Integer len() {
         if (this.len != null)
             return this.len;
-        int _tmp = (int) (groups().size());
-        this.len = _tmp;
+        this.len = ((Number) (groups().size())).intValue();
         return this.len;
+    }
+    private Long signBit;
+    public Long signBit() {
+        if (this.signBit != null)
+            return this.signBit;
+        this.signBit = ((Number) (((Number) ((len() == 10 ? 0x8000000000000000L : groups().get(groups().size() - 1).multiplier() * 64))).longValue())).longValue();
+        return this.signBit;
     }
     private Long value;
 
@@ -157,30 +172,20 @@ public class VlqBase128Le extends KaitaiStruct {
     public Long value() {
         if (this.value != null)
             return this.value;
-        long _tmp = (long) (groups().get(groups().size() - 1).intermValue());
-        this.value = _tmp;
+        this.value = ((Number) (groups().get(groups().size() - 1).intermValue())).longValue();
         return this.value;
-    }
-    private Long signBit;
-    public Long signBit() {
-        if (this.signBit != null)
-            return this.signBit;
-        long _tmp = (long) (((long) ((len() == 10 ? 0x8000000000000000L : (groups().get(groups().size() - 1).multiplier() * 64)))));
-        this.signBit = _tmp;
-        return this.signBit;
     }
     private Long valueSigned;
     public Long valueSigned() {
         if (this.valueSigned != null)
             return this.valueSigned;
-        long _tmp = (long) (( ((signBit() > 0) && (value() >= signBit()))  ? -(((long) ((signBit() - (value() - signBit()))))) : ((long) (value()))));
-        this.valueSigned = _tmp;
+        this.valueSigned = ((Number) (( ((signBit() > 0) && (value() >= signBit()))  ? -(((Number) (signBit() - (value() - signBit()))).longValue()) : ((Number) (value())).longValue()))).longValue();
         return this.valueSigned;
     }
-    private ArrayList<Group> groups;
+    private List<Group> groups;
     private VlqBase128Le _root;
     private KaitaiStruct _parent;
-    public ArrayList<Group> groups() { return groups; }
+    public List<Group> groups() { return groups; }
     public VlqBase128Le _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

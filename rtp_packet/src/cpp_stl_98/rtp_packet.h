@@ -3,11 +3,14 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class rtp_packet_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
+#include <set>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -60,6 +63,13 @@ public:
         PAYLOAD_TYPE_ENUM_H263 = 34,
         PAYLOAD_TYPE_ENUM_MPEG_PS = 96
     };
+    static bool _is_defined_payload_type_enum_t(payload_type_enum_t v);
+
+private:
+    static const std::set<payload_type_enum_t> _values_payload_type_enum_t;
+    static std::set<payload_type_enum_t> _build_values_payload_type_enum_t();
+
+public:
 
     rtp_packet_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, rtp_packet_t* p__root = 0);
 
@@ -97,6 +107,17 @@ public:
     };
 
 private:
+    bool f_len_padding;
+    uint8_t m_len_padding;
+
+public:
+
+    /**
+     * Always returns number of padding bytes to in the payload.
+     */
+    uint8_t len_padding();
+
+private:
     bool f_len_padding_if_exists;
     uint8_t m_len_padding_if_exists;
     bool n_len_padding_if_exists;
@@ -113,17 +134,6 @@ public:
      * bytes appended to the payload as padding.
      */
     uint8_t len_padding_if_exists();
-
-private:
-    bool f_len_padding;
-    uint8_t m_len_padding;
-
-public:
-
-    /**
-     * Always returns number of padding bytes to in the payload.
-     */
-    uint8_t len_padding();
 
 private:
     uint64_t m_version;

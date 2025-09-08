@@ -4,15 +4,15 @@
 
 bcd_t::bcd_t(uint8_t p_num_digits, uint8_t p_bits_per_digit, bool p_is_le, kaitai::kstream* p__io, kaitai::kstruct* p__parent, bcd_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     m_num_digits = p_num_digits;
     m_bits_per_digit = p_bits_per_digit;
     m_is_le = p_is_le;
     m_digits = 0;
     f_as_int = false;
+    f_as_int_be = false;
     f_as_int_le = false;
     f_last_idx = false;
-    f_as_int_be = false;
 
     try {
         _read();
@@ -52,31 +52,31 @@ void bcd_t::_clean_up() {
 int32_t bcd_t::as_int() {
     if (f_as_int)
         return m_as_int;
-    m_as_int = ((is_le()) ? (as_int_le()) : (as_int_be()));
     f_as_int = true;
+    m_as_int = ((is_le()) ? (as_int_le()) : (as_int_be()));
     return m_as_int;
+}
+
+int32_t bcd_t::as_int_be() {
+    if (f_as_int_be)
+        return m_as_int_be;
+    f_as_int_be = true;
+    m_as_int_be = digits()->at(last_idx()) + ((num_digits() < 2) ? (0) : (digits()->at(last_idx() - 1) * 10 + ((num_digits() < 3) ? (0) : (digits()->at(last_idx() - 2) * 100 + ((num_digits() < 4) ? (0) : (digits()->at(last_idx() - 3) * 1000 + ((num_digits() < 5) ? (0) : (digits()->at(last_idx() - 4) * 10000 + ((num_digits() < 6) ? (0) : (digits()->at(last_idx() - 5) * 100000 + ((num_digits() < 7) ? (0) : (digits()->at(last_idx() - 6) * 1000000 + ((num_digits() < 8) ? (0) : (digits()->at(last_idx() - 7) * 10000000))))))))))))));
+    return m_as_int_be;
 }
 
 int32_t bcd_t::as_int_le() {
     if (f_as_int_le)
         return m_as_int_le;
-    m_as_int_le = (digits()->at(0) + ((num_digits() < 2) ? (0) : (((digits()->at(1) * 10) + ((num_digits() < 3) ? (0) : (((digits()->at(2) * 100) + ((num_digits() < 4) ? (0) : (((digits()->at(3) * 1000) + ((num_digits() < 5) ? (0) : (((digits()->at(4) * 10000) + ((num_digits() < 6) ? (0) : (((digits()->at(5) * 100000) + ((num_digits() < 7) ? (0) : (((digits()->at(6) * 1000000) + ((num_digits() < 8) ? (0) : ((digits()->at(7) * 10000000))))))))))))))))))))));
     f_as_int_le = true;
+    m_as_int_le = digits()->at(0) + ((num_digits() < 2) ? (0) : (digits()->at(1) * 10 + ((num_digits() < 3) ? (0) : (digits()->at(2) * 100 + ((num_digits() < 4) ? (0) : (digits()->at(3) * 1000 + ((num_digits() < 5) ? (0) : (digits()->at(4) * 10000 + ((num_digits() < 6) ? (0) : (digits()->at(5) * 100000 + ((num_digits() < 7) ? (0) : (digits()->at(6) * 1000000 + ((num_digits() < 8) ? (0) : (digits()->at(7) * 10000000))))))))))))));
     return m_as_int_le;
 }
 
 int32_t bcd_t::last_idx() {
     if (f_last_idx)
         return m_last_idx;
-    m_last_idx = (num_digits() - 1);
     f_last_idx = true;
+    m_last_idx = num_digits() - 1;
     return m_last_idx;
-}
-
-int32_t bcd_t::as_int_be() {
-    if (f_as_int_be)
-        return m_as_int_be;
-    m_as_int_be = (digits()->at(last_idx()) + ((num_digits() < 2) ? (0) : (((digits()->at((last_idx() - 1)) * 10) + ((num_digits() < 3) ? (0) : (((digits()->at((last_idx() - 2)) * 100) + ((num_digits() < 4) ? (0) : (((digits()->at((last_idx() - 3)) * 1000) + ((num_digits() < 5) ? (0) : (((digits()->at((last_idx() - 4)) * 10000) + ((num_digits() < 6) ? (0) : (((digits()->at((last_idx() - 5)) * 100000) + ((num_digits() < 7) ? (0) : (((digits()->at((last_idx() - 6)) * 1000000) + ((num_digits() < 8) ? (0) : ((digits()->at((last_idx() - 7)) * 10000000))))))))))))))))))))));
-    f_as_int_be = true;
-    return m_as_int_be;
 }

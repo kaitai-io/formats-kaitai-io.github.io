@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.Dicom = factory(root.KaitaiStream);
+    factory(root.Dicom || (root.Dicom = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Dicom_, KaitaiStream) {
 /**
  * DICOM (Digital Imaging and Communications in Medicine), AKA NEMA
  * PS3, AKA ISO 12052:2006, is a file format and network protocol
@@ -8091,23 +8091,36 @@ var Dicom = (function() {
     }
   }
 
-  var TFileHeader = Dicom.TFileHeader = (function() {
-    function TFileHeader(_io, _parent, _root) {
+  var SeqItem = Dicom.SeqItem = (function() {
+    function SeqItem(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    TFileHeader.prototype._read = function() {
-      this.preamble = this._io.readBytes(128);
-      this.magic = this._io.readBytes(4);
-      if (!((KaitaiStream.byteArrayCompare(this.magic, [68, 73, 67, 77]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([68, 73, 67, 77], this.magic, this._io, "/types/t_file_header/seq/1");
+    SeqItem.prototype._read = function() {
+      this.tagGroup = this._io.readBytes(2);
+      if (!((KaitaiStream.byteArrayCompare(this.tagGroup, new Uint8Array([254, 255])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([254, 255]), this.tagGroup, this._io, "/types/seq_item/seq/0");
+      }
+      this.tagElem = this._io.readU2le();
+      this.valueLen = this._io.readU4le();
+      if (this.valueLen != 4294967295) {
+        this.value = this._io.readBytes(this.valueLen);
+      }
+      if (this.valueLen == 4294967295) {
+        this.items = [];
+        var i = 0;
+        do {
+          var _ = new TDataElementExplicit(this._io, this, this._root);
+          this.items.push(_);
+          i++;
+        } while (!( ((_.tagGroup == 65534) && (_.tagElem == 57357)) ));
       }
     }
 
-    return TFileHeader;
+    return SeqItem;
   })();
 
   /**
@@ -8118,7 +8131,7 @@ var Dicom = (function() {
     function TDataElementExplicit(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -8188,7 +8201,7 @@ var Dicom = (function() {
       get: function() {
         if (this._m_tag !== undefined)
           return this._m_tag;
-        this._m_tag = ((this.tagGroup << 16) | this.tagElem);
+        this._m_tag = this.tagGroup << 16 | this.tagElem;
         return this._m_tag;
       }
     });
@@ -8204,7 +8217,7 @@ var Dicom = (function() {
     function TDataElementImplicit(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -8246,20 +8259,12 @@ var Dicom = (function() {
         }
       }
     }
-    Object.defineProperty(TDataElementImplicit.prototype, 'tag', {
+    Object.defineProperty(TDataElementImplicit.prototype, 'isForcedExplicit', {
       get: function() {
-        if (this._m_tag !== undefined)
-          return this._m_tag;
-        this._m_tag = ((this.tagGroup << 16) | this.tagElem);
-        return this._m_tag;
-      }
-    });
-    Object.defineProperty(TDataElementImplicit.prototype, 'isTransferSyntaxChangeExplicit', {
-      get: function() {
-        if (this._m_isTransferSyntaxChangeExplicit !== undefined)
-          return this._m_isTransferSyntaxChangeExplicit;
-        this._m_isTransferSyntaxChangeExplicit = this.pIsTransferSyntaxChangeExplicit;
-        return this._m_isTransferSyntaxChangeExplicit;
+        if (this._m_isForcedExplicit !== undefined)
+          return this._m_isForcedExplicit;
+        this._m_isForcedExplicit = this.tagGroup == 2;
+        return this._m_isForcedExplicit;
       }
     });
     Object.defineProperty(TDataElementImplicit.prototype, 'isLongLen', {
@@ -8270,59 +8275,54 @@ var Dicom = (function() {
         return this._m_isLongLen;
       }
     });
+    Object.defineProperty(TDataElementImplicit.prototype, 'isTransferSyntaxChangeExplicit', {
+      get: function() {
+        if (this._m_isTransferSyntaxChangeExplicit !== undefined)
+          return this._m_isTransferSyntaxChangeExplicit;
+        this._m_isTransferSyntaxChangeExplicit = this.pIsTransferSyntaxChangeExplicit;
+        return this._m_isTransferSyntaxChangeExplicit;
+      }
+    });
     Object.defineProperty(TDataElementImplicit.prototype, 'pIsTransferSyntaxChangeExplicit', {
       get: function() {
         if (this._m_pIsTransferSyntaxChangeExplicit !== undefined)
           return this._m_pIsTransferSyntaxChangeExplicit;
-        this._m_pIsTransferSyntaxChangeExplicit = (KaitaiStream.byteArrayCompare(this.value, [49, 46, 50, 46, 56, 52, 48, 46, 49, 48, 48, 48, 56, 46, 49, 46, 50, 46, 49, 0]) == 0);
+        this._m_pIsTransferSyntaxChangeExplicit = (KaitaiStream.byteArrayCompare(this.value, new Uint8Array([49, 46, 50, 46, 56, 52, 48, 46, 49, 48, 48, 48, 56, 46, 49, 46, 50, 46, 49, 0])) == 0);
         return this._m_pIsTransferSyntaxChangeExplicit;
       }
     });
-    Object.defineProperty(TDataElementImplicit.prototype, 'isForcedExplicit', {
+    Object.defineProperty(TDataElementImplicit.prototype, 'tag', {
       get: function() {
-        if (this._m_isForcedExplicit !== undefined)
-          return this._m_isForcedExplicit;
-        this._m_isForcedExplicit = this.tagGroup == 2;
-        return this._m_isForcedExplicit;
+        if (this._m_tag !== undefined)
+          return this._m_tag;
+        this._m_tag = this.tagGroup << 16 | this.tagElem;
+        return this._m_tag;
       }
     });
 
     return TDataElementImplicit;
   })();
 
-  var SeqItem = Dicom.SeqItem = (function() {
-    function SeqItem(_io, _parent, _root) {
+  var TFileHeader = Dicom.TFileHeader = (function() {
+    function TFileHeader(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    SeqItem.prototype._read = function() {
-      this.tagGroup = this._io.readBytes(2);
-      if (!((KaitaiStream.byteArrayCompare(this.tagGroup, [254, 255]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([254, 255], this.tagGroup, this._io, "/types/seq_item/seq/0");
-      }
-      this.tagElem = this._io.readU2le();
-      this.valueLen = this._io.readU4le();
-      if (this.valueLen != 4294967295) {
-        this.value = this._io.readBytes(this.valueLen);
-      }
-      if (this.valueLen == 4294967295) {
-        this.items = [];
-        var i = 0;
-        do {
-          var _ = new TDataElementExplicit(this._io, this, this._root);
-          this.items.push(_);
-          i++;
-        } while (!( ((_.tagGroup == 65534) && (_.tagElem == 57357)) ));
+    TFileHeader.prototype._read = function() {
+      this.preamble = this._io.readBytes(128);
+      this.magic = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([68, 73, 67, 77])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([68, 73, 67, 77]), this.magic, this._io, "/types/t_file_header/seq/1");
       }
     }
 
-    return SeqItem;
+    return TFileHeader;
   })();
 
   return Dicom;
 })();
-return Dicom;
-}));
+Dicom_.Dicom = Dicom;
+});

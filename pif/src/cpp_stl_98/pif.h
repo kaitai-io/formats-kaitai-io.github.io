@@ -3,12 +3,15 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class pif_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -24,9 +27,21 @@
 class pif_t : public kaitai::kstruct {
 
 public:
-    class pif_header_t;
-    class information_header_t;
     class color_table_data_t;
+    class information_header_t;
+    class pif_header_t;
+
+    enum compression_type_t {
+        COMPRESSION_TYPE_NONE = 0,
+        COMPRESSION_TYPE_RLE = 32222
+    };
+    static bool _is_defined_compression_type_t(compression_type_t v);
+
+private:
+    static const std::set<compression_type_t> _values_compression_type_t;
+    static std::set<compression_type_t> _build_values_compression_type_t();
+
+public:
 
     enum image_type_t {
         IMAGE_TYPE_RGB332 = 7763,
@@ -38,11 +53,13 @@ public:
         IMAGE_TYPE_RGB16C = 47253,
         IMAGE_TYPE_RGB565 = 58821
     };
+    static bool _is_defined_image_type_t(image_type_t v);
 
-    enum compression_type_t {
-        COMPRESSION_TYPE_NONE = 0,
-        COMPRESSION_TYPE_RLE = 32222
-    };
+private:
+    static const std::set<image_type_t> _values_image_type_t;
+    static std::set<image_type_t> _build_values_image_type_t();
+
+public:
 
     pif_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, pif_t* p__root = 0);
 
@@ -53,37 +70,26 @@ private:
 public:
     ~pif_t();
 
-    class pif_header_t : public kaitai::kstruct {
+    class color_table_data_t : public kaitai::kstruct {
 
     public:
 
-        pif_header_t(kaitai::kstream* p__io, pif_t* p__parent = 0, pif_t* p__root = 0);
+        color_table_data_t(kaitai::kstream* p__io, pif_t* p__parent = 0, pif_t* p__root = 0);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~pif_header_t();
+        ~color_table_data_t();
 
     private:
-        bool f_ofs_image_data_min;
-        int32_t m_ofs_image_data_min;
-
-    public:
-        int32_t ofs_image_data_min();
-
-    private:
-        std::string m_magic;
-        uint32_t m_len_file;
-        uint32_t m_ofs_image_data;
+        std::vector<int32_t>* m_entries;
         pif_t* m__root;
         pif_t* m__parent;
 
     public:
-        std::string magic() const { return m_magic; }
-        uint32_t len_file() const { return m_len_file; }
-        uint32_t ofs_image_data() const { return m_ofs_image_data; }
+        std::vector<int32_t>* entries() const { return m_entries; }
         pif_t* _root() const { return m__root; }
         pif_t* _parent() const { return m__parent; }
     };
@@ -173,26 +179,37 @@ public:
         pif_t* _parent() const { return m__parent; }
     };
 
-    class color_table_data_t : public kaitai::kstruct {
+    class pif_header_t : public kaitai::kstruct {
 
     public:
 
-        color_table_data_t(kaitai::kstream* p__io, pif_t* p__parent = 0, pif_t* p__root = 0);
+        pif_header_t(kaitai::kstream* p__io, pif_t* p__parent = 0, pif_t* p__root = 0);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~color_table_data_t();
+        ~pif_header_t();
 
     private:
-        std::vector<int32_t>* m_entries;
+        bool f_ofs_image_data_min;
+        int32_t m_ofs_image_data_min;
+
+    public:
+        int32_t ofs_image_data_min();
+
+    private:
+        std::string m_magic;
+        uint32_t m_len_file;
+        uint32_t m_ofs_image_data;
         pif_t* m__root;
         pif_t* m__parent;
 
     public:
-        std::vector<int32_t>* entries() const { return m_entries; }
+        std::string magic() const { return m_magic; }
+        uint32_t len_file() const { return m_len_file; }
+        uint32_t ofs_image_data() const { return m_ofs_image_data; }
         pif_t* _root() const { return m__root; }
         pif_t* _parent() const { return m__parent; }
     };

@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -18,8 +18,8 @@ end
 # added support for relocations.
 # @see http://www.delorie.com/djgpp/doc/exe/ Source
 class DosMz < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -29,33 +29,33 @@ class DosMz < Kaitai::Struct::Struct
     self
   end
   class ExeHeader < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
       @mz = MzHeader.new(@_io, self, @_root)
-      @rest_of_header = @_io.read_bytes((mz.len_header - 28))
+      @rest_of_header = @_io.read_bytes(mz.len_header - 28)
       self
     end
     def len_body
       return @len_body unless @len_body.nil?
-      @len_body = ((mz.last_page_extra_bytes == 0 ? (mz.num_pages * 512) : (((mz.num_pages - 1) * 512) + mz.last_page_extra_bytes)) - mz.len_header)
+      @len_body = (mz.last_page_extra_bytes == 0 ? mz.num_pages * 512 : (mz.num_pages - 1) * 512 + mz.last_page_extra_bytes) - mz.len_header
       @len_body
     end
     attr_reader :mz
     attr_reader :rest_of_header
   end
   class MzHeader < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @magic = (@_io.read_bytes(2)).force_encoding("ASCII")
-      raise Kaitai::Struct::ValidationNotAnyOfError.new(magic, _io, "/types/mz_header/seq/0") if not  ((magic == "MZ") || (magic == "ZM")) 
+      @magic = (@_io.read_bytes(2)).force_encoding("ASCII").encode('UTF-8')
+      raise Kaitai::Struct::ValidationNotAnyOfError.new(@magic, @_io, "/types/mz_header/seq/0") if not  ((@magic == "MZ") || (@magic == "ZM")) 
       @last_page_extra_bytes = @_io.read_u2le
       @num_pages = @_io.read_u2le
       @num_relocations = @_io.read_u2le
@@ -73,7 +73,7 @@ class DosMz < Kaitai::Struct::Struct
     end
     def len_header
       return @len_header unless @len_header.nil?
-      @len_header = (header_size * 16)
+      @len_header = header_size * 16
       @len_header
     end
     attr_reader :magic
@@ -92,7 +92,7 @@ class DosMz < Kaitai::Struct::Struct
     attr_reader :overlay_id
   end
   class Relocation < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end

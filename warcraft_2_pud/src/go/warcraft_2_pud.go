@@ -31,6 +31,11 @@ const (
 	Warcraft2Pud_Controller__RescuePassive Warcraft2Pud_Controller = 6
 	Warcraft2Pud_Controller__RescueActive Warcraft2Pud_Controller = 7
 )
+var values_Warcraft2Pud_Controller = map[Warcraft2Pud_Controller]struct{}{1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}}
+func (v Warcraft2Pud_Controller) isDefined() bool {
+	_, ok := values_Warcraft2Pud_Controller[v]
+	return ok
+}
 
 type Warcraft2Pud_TerrainType int
 const (
@@ -39,6 +44,11 @@ const (
 	Warcraft2Pud_TerrainType__Wasteland Warcraft2Pud_TerrainType = 2
 	Warcraft2Pud_TerrainType__Swamp Warcraft2Pud_TerrainType = 3
 )
+var values_Warcraft2Pud_TerrainType = map[Warcraft2Pud_TerrainType]struct{}{0: {}, 1: {}, 2: {}, 3: {}}
+func (v Warcraft2Pud_TerrainType) isDefined() bool {
+	_, ok := values_Warcraft2Pud_TerrainType[v]
+	return ok
+}
 
 type Warcraft2Pud_UnitType int
 const (
@@ -143,23 +153,32 @@ const (
 	Warcraft2Pud_UnitType__HumanWall Warcraft2Pud_UnitType = 103
 	Warcraft2Pud_UnitType__OrcWall Warcraft2Pud_UnitType = 104
 )
+var values_Warcraft2Pud_UnitType = map[Warcraft2Pud_UnitType]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}, 10: {}, 11: {}, 12: {}, 13: {}, 14: {}, 15: {}, 16: {}, 17: {}, 18: {}, 19: {}, 20: {}, 21: {}, 22: {}, 23: {}, 24: {}, 25: {}, 26: {}, 27: {}, 28: {}, 29: {}, 30: {}, 31: {}, 32: {}, 33: {}, 35: {}, 38: {}, 39: {}, 40: {}, 41: {}, 42: {}, 43: {}, 44: {}, 45: {}, 46: {}, 47: {}, 49: {}, 50: {}, 51: {}, 52: {}, 53: {}, 55: {}, 56: {}, 57: {}, 58: {}, 59: {}, 60: {}, 61: {}, 62: {}, 63: {}, 64: {}, 65: {}, 66: {}, 67: {}, 68: {}, 69: {}, 70: {}, 71: {}, 72: {}, 73: {}, 74: {}, 75: {}, 76: {}, 77: {}, 78: {}, 79: {}, 80: {}, 81: {}, 82: {}, 83: {}, 84: {}, 85: {}, 86: {}, 87: {}, 88: {}, 89: {}, 90: {}, 91: {}, 92: {}, 93: {}, 94: {}, 95: {}, 96: {}, 97: {}, 98: {}, 99: {}, 100: {}, 101: {}, 102: {}, 103: {}, 104: {}}
+func (v Warcraft2Pud_UnitType) isDefined() bool {
+	_, ok := values_Warcraft2Pud_UnitType[v]
+	return ok
+}
 type Warcraft2Pud struct {
 	Sections []*Warcraft2Pud_Section
 	_io *kaitai.Stream
 	_root *Warcraft2Pud
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewWarcraft2Pud() *Warcraft2Pud {
 	return &Warcraft2Pud{
 	}
 }
 
-func (this *Warcraft2Pud) Read(io *kaitai.Stream, parent interface{}, root *Warcraft2Pud) (err error) {
+func (this Warcraft2Pud) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Warcraft2Pud) Read(io *kaitai.Stream, parent kaitai.Struct, root *Warcraft2Pud) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	for i := 1;; i++ {
+	for i := 0;; i++ {
 		tmp1, err := this._io.EOF()
 		if err != nil {
 			return err
@@ -176,36 +195,222 @@ func (this *Warcraft2Pud) Read(io *kaitai.Stream, parent interface{}, root *Warc
 	}
 	return err
 }
-type Warcraft2Pud_SectionStartingResource struct {
-	ResourcesByPlayer []uint16
+type Warcraft2Pud_Section struct {
+	Name string
+	Size uint32
+	Body interface{}
 	_io *kaitai.Stream
 	_root *Warcraft2Pud
-	_parent *Warcraft2Pud_Section
+	_parent *Warcraft2Pud
+	_raw_Body []byte
 }
-func NewWarcraft2Pud_SectionStartingResource() *Warcraft2Pud_SectionStartingResource {
-	return &Warcraft2Pud_SectionStartingResource{
+func NewWarcraft2Pud_Section() *Warcraft2Pud_Section {
+	return &Warcraft2Pud_Section{
 	}
 }
 
-func (this *Warcraft2Pud_SectionStartingResource) Read(io *kaitai.Stream, parent *Warcraft2Pud_Section, root *Warcraft2Pud) (err error) {
+func (this Warcraft2Pud_Section) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Warcraft2Pud_Section) Read(io *kaitai.Stream, parent *Warcraft2Pud, root *Warcraft2Pud) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	for i := 1;; i++ {
-		tmp3, err := this._io.EOF()
-		if err != nil {
-			return err
-		}
-		if tmp3 {
-			break
-		}
-		tmp4, err := this._io.ReadU2le()
-		if err != nil {
-			return err
-		}
-		this.ResourcesByPlayer = append(this.ResourcesByPlayer, tmp4)
+	tmp3, err := this._io.ReadBytes(int(4))
+	if err != nil {
+		return err
 	}
+	tmp3 = tmp3
+	this.Name = string(tmp3)
+	tmp4, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Size = uint32(tmp4)
+	switch (this.Name) {
+	case "DIM ":
+		tmp5, err := this._io.ReadBytes(int(this.Size))
+		if err != nil {
+			return err
+		}
+		tmp5 = tmp5
+		this._raw_Body = tmp5
+		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+		tmp6 := NewWarcraft2Pud_SectionDim()
+		err = tmp6.Read(_io__raw_Body, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp6
+	case "ERA ":
+		tmp7, err := this._io.ReadBytes(int(this.Size))
+		if err != nil {
+			return err
+		}
+		tmp7 = tmp7
+		this._raw_Body = tmp7
+		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+		tmp8 := NewWarcraft2Pud_SectionEra()
+		err = tmp8.Read(_io__raw_Body, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp8
+	case "ERAX":
+		tmp9, err := this._io.ReadBytes(int(this.Size))
+		if err != nil {
+			return err
+		}
+		tmp9 = tmp9
+		this._raw_Body = tmp9
+		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+		tmp10 := NewWarcraft2Pud_SectionEra()
+		err = tmp10.Read(_io__raw_Body, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp10
+	case "OWNR":
+		tmp11, err := this._io.ReadBytes(int(this.Size))
+		if err != nil {
+			return err
+		}
+		tmp11 = tmp11
+		this._raw_Body = tmp11
+		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+		tmp12 := NewWarcraft2Pud_SectionOwnr()
+		err = tmp12.Read(_io__raw_Body, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp12
+	case "SGLD":
+		tmp13, err := this._io.ReadBytes(int(this.Size))
+		if err != nil {
+			return err
+		}
+		tmp13 = tmp13
+		this._raw_Body = tmp13
+		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+		tmp14 := NewWarcraft2Pud_SectionStartingResource()
+		err = tmp14.Read(_io__raw_Body, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp14
+	case "SLBR":
+		tmp15, err := this._io.ReadBytes(int(this.Size))
+		if err != nil {
+			return err
+		}
+		tmp15 = tmp15
+		this._raw_Body = tmp15
+		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+		tmp16 := NewWarcraft2Pud_SectionStartingResource()
+		err = tmp16.Read(_io__raw_Body, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp16
+	case "SOIL":
+		tmp17, err := this._io.ReadBytes(int(this.Size))
+		if err != nil {
+			return err
+		}
+		tmp17 = tmp17
+		this._raw_Body = tmp17
+		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+		tmp18 := NewWarcraft2Pud_SectionStartingResource()
+		err = tmp18.Read(_io__raw_Body, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp18
+	case "TYPE":
+		tmp19, err := this._io.ReadBytes(int(this.Size))
+		if err != nil {
+			return err
+		}
+		tmp19 = tmp19
+		this._raw_Body = tmp19
+		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+		tmp20 := NewWarcraft2Pud_SectionType()
+		err = tmp20.Read(_io__raw_Body, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp20
+	case "UNIT":
+		tmp21, err := this._io.ReadBytes(int(this.Size))
+		if err != nil {
+			return err
+		}
+		tmp21 = tmp21
+		this._raw_Body = tmp21
+		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+		tmp22 := NewWarcraft2Pud_SectionUnit()
+		err = tmp22.Read(_io__raw_Body, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp22
+	case "VER ":
+		tmp23, err := this._io.ReadBytes(int(this.Size))
+		if err != nil {
+			return err
+		}
+		tmp23 = tmp23
+		this._raw_Body = tmp23
+		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+		tmp24 := NewWarcraft2Pud_SectionVer()
+		err = tmp24.Read(_io__raw_Body, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp24
+	default:
+		tmp25, err := this._io.ReadBytes(int(this.Size))
+		if err != nil {
+			return err
+		}
+		tmp25 = tmp25
+		this._raw_Body = tmp25
+	}
+	return err
+}
+type Warcraft2Pud_SectionDim struct {
+	X uint16
+	Y uint16
+	_io *kaitai.Stream
+	_root *Warcraft2Pud
+	_parent *Warcraft2Pud_Section
+}
+func NewWarcraft2Pud_SectionDim() *Warcraft2Pud_SectionDim {
+	return &Warcraft2Pud_SectionDim{
+	}
+}
+
+func (this Warcraft2Pud_SectionDim) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Warcraft2Pud_SectionDim) Read(io *kaitai.Stream, parent *Warcraft2Pud_Section, root *Warcraft2Pud) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp26, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.X = uint16(tmp26)
+	tmp27, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.Y = uint16(tmp27)
 	return err
 }
 
@@ -223,72 +428,96 @@ func NewWarcraft2Pud_SectionEra() *Warcraft2Pud_SectionEra {
 	}
 }
 
+func (this Warcraft2Pud_SectionEra) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Warcraft2Pud_SectionEra) Read(io *kaitai.Stream, parent *Warcraft2Pud_Section, root *Warcraft2Pud) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp5, err := this._io.ReadU2le()
+	tmp28, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.Terrain = Warcraft2Pud_TerrainType(tmp5)
+	this.Terrain = Warcraft2Pud_TerrainType(tmp28)
 	return err
 }
 
 /**
- * Section that specifies format version.
+ * Section that specifies who controls each player.
  */
-type Warcraft2Pud_SectionVer struct {
-	Version uint16
+type Warcraft2Pud_SectionOwnr struct {
+	ControllerByPlayer []Warcraft2Pud_Controller
 	_io *kaitai.Stream
 	_root *Warcraft2Pud
 	_parent *Warcraft2Pud_Section
 }
-func NewWarcraft2Pud_SectionVer() *Warcraft2Pud_SectionVer {
-	return &Warcraft2Pud_SectionVer{
+func NewWarcraft2Pud_SectionOwnr() *Warcraft2Pud_SectionOwnr {
+	return &Warcraft2Pud_SectionOwnr{
 	}
 }
 
-func (this *Warcraft2Pud_SectionVer) Read(io *kaitai.Stream, parent *Warcraft2Pud_Section, root *Warcraft2Pud) (err error) {
+func (this Warcraft2Pud_SectionOwnr) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Warcraft2Pud_SectionOwnr) Read(io *kaitai.Stream, parent *Warcraft2Pud_Section, root *Warcraft2Pud) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp6, err := this._io.ReadU2le()
-	if err != nil {
-		return err
+	for i := 0;; i++ {
+		tmp29, err := this._io.EOF()
+		if err != nil {
+			return err
+		}
+		if tmp29 {
+			break
+		}
+		tmp30, err := this._io.ReadU1()
+		if err != nil {
+			return err
+		}
+		this.ControllerByPlayer = append(this.ControllerByPlayer, Warcraft2Pud_Controller(tmp30))
 	}
-	this.Version = uint16(tmp6)
 	return err
 }
-type Warcraft2Pud_SectionDim struct {
-	X uint16
-	Y uint16
+type Warcraft2Pud_SectionStartingResource struct {
+	ResourcesByPlayer []uint16
 	_io *kaitai.Stream
 	_root *Warcraft2Pud
 	_parent *Warcraft2Pud_Section
 }
-func NewWarcraft2Pud_SectionDim() *Warcraft2Pud_SectionDim {
-	return &Warcraft2Pud_SectionDim{
+func NewWarcraft2Pud_SectionStartingResource() *Warcraft2Pud_SectionStartingResource {
+	return &Warcraft2Pud_SectionStartingResource{
 	}
 }
 
-func (this *Warcraft2Pud_SectionDim) Read(io *kaitai.Stream, parent *Warcraft2Pud_Section, root *Warcraft2Pud) (err error) {
+func (this Warcraft2Pud_SectionStartingResource) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Warcraft2Pud_SectionStartingResource) Read(io *kaitai.Stream, parent *Warcraft2Pud_Section, root *Warcraft2Pud) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp7, err := this._io.ReadU2le()
-	if err != nil {
-		return err
+	for i := 0;; i++ {
+		tmp31, err := this._io.EOF()
+		if err != nil {
+			return err
+		}
+		if tmp31 {
+			break
+		}
+		tmp32, err := this._io.ReadU2le()
+		if err != nil {
+			return err
+		}
+		this.ResourcesByPlayer = append(this.ResourcesByPlayer, tmp32)
 	}
-	this.X = uint16(tmp7)
-	tmp8, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.Y = uint16(tmp8)
 	return err
 }
 
@@ -311,31 +540,35 @@ func NewWarcraft2Pud_SectionType() *Warcraft2Pud_SectionType {
 	}
 }
 
+func (this Warcraft2Pud_SectionType) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Warcraft2Pud_SectionType) Read(io *kaitai.Stream, parent *Warcraft2Pud_Section, root *Warcraft2Pud) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp9, err := this._io.ReadBytes(int(10))
+	tmp33, err := this._io.ReadBytes(int(10))
 	if err != nil {
 		return err
 	}
-	tmp9 = tmp9
-	this.Magic = tmp9
+	tmp33 = tmp33
+	this.Magic = tmp33
 	if !(bytes.Equal(this.Magic, []uint8{87, 65, 82, 50, 32, 77, 65, 80, 0, 0})) {
 		return kaitai.NewValidationNotEqualError([]uint8{87, 65, 82, 50, 32, 77, 65, 80, 0, 0}, this.Magic, this._io, "/types/section_type/seq/0")
 	}
-	tmp10, err := this._io.ReadBytes(int(2))
+	tmp34, err := this._io.ReadBytes(int(2))
 	if err != nil {
 		return err
 	}
-	tmp10 = tmp10
-	this.Unused = tmp10
-	tmp11, err := this._io.ReadU4le()
+	tmp34 = tmp34
+	this.Unused = tmp34
+	tmp35, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.IdTag = uint32(tmp11)
+	this.IdTag = uint32(tmp35)
 	return err
 }
 
@@ -357,243 +590,61 @@ func NewWarcraft2Pud_SectionUnit() *Warcraft2Pud_SectionUnit {
 	}
 }
 
+func (this Warcraft2Pud_SectionUnit) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Warcraft2Pud_SectionUnit) Read(io *kaitai.Stream, parent *Warcraft2Pud_Section, root *Warcraft2Pud) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	for i := 1;; i++ {
-		tmp12, err := this._io.EOF()
+	for i := 0;; i++ {
+		tmp36, err := this._io.EOF()
 		if err != nil {
 			return err
 		}
-		if tmp12 {
+		if tmp36 {
 			break
 		}
-		tmp13 := NewWarcraft2Pud_Unit()
-		err = tmp13.Read(this._io, this, this._root)
+		tmp37 := NewWarcraft2Pud_Unit()
+		err = tmp37.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Units = append(this.Units, tmp13)
-	}
-	return err
-}
-type Warcraft2Pud_Section struct {
-	Name string
-	Size uint32
-	Body interface{}
-	_io *kaitai.Stream
-	_root *Warcraft2Pud
-	_parent *Warcraft2Pud
-	_raw_Body []byte
-}
-func NewWarcraft2Pud_Section() *Warcraft2Pud_Section {
-	return &Warcraft2Pud_Section{
-	}
-}
-
-func (this *Warcraft2Pud_Section) Read(io *kaitai.Stream, parent *Warcraft2Pud, root *Warcraft2Pud) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp14, err := this._io.ReadBytes(int(4))
-	if err != nil {
-		return err
-	}
-	tmp14 = tmp14
-	this.Name = string(tmp14)
-	tmp15, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Size = uint32(tmp15)
-	switch (this.Name) {
-	case "SLBR":
-		tmp16, err := this._io.ReadBytes(int(this.Size))
-		if err != nil {
-			return err
-		}
-		tmp16 = tmp16
-		this._raw_Body = tmp16
-		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp17 := NewWarcraft2Pud_SectionStartingResource()
-		err = tmp17.Read(_io__raw_Body, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp17
-	case "ERAX":
-		tmp18, err := this._io.ReadBytes(int(this.Size))
-		if err != nil {
-			return err
-		}
-		tmp18 = tmp18
-		this._raw_Body = tmp18
-		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp19 := NewWarcraft2Pud_SectionEra()
-		err = tmp19.Read(_io__raw_Body, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp19
-	case "OWNR":
-		tmp20, err := this._io.ReadBytes(int(this.Size))
-		if err != nil {
-			return err
-		}
-		tmp20 = tmp20
-		this._raw_Body = tmp20
-		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp21 := NewWarcraft2Pud_SectionOwnr()
-		err = tmp21.Read(_io__raw_Body, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp21
-	case "ERA ":
-		tmp22, err := this._io.ReadBytes(int(this.Size))
-		if err != nil {
-			return err
-		}
-		tmp22 = tmp22
-		this._raw_Body = tmp22
-		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp23 := NewWarcraft2Pud_SectionEra()
-		err = tmp23.Read(_io__raw_Body, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp23
-	case "SGLD":
-		tmp24, err := this._io.ReadBytes(int(this.Size))
-		if err != nil {
-			return err
-		}
-		tmp24 = tmp24
-		this._raw_Body = tmp24
-		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp25 := NewWarcraft2Pud_SectionStartingResource()
-		err = tmp25.Read(_io__raw_Body, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp25
-	case "VER ":
-		tmp26, err := this._io.ReadBytes(int(this.Size))
-		if err != nil {
-			return err
-		}
-		tmp26 = tmp26
-		this._raw_Body = tmp26
-		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp27 := NewWarcraft2Pud_SectionVer()
-		err = tmp27.Read(_io__raw_Body, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp27
-	case "SOIL":
-		tmp28, err := this._io.ReadBytes(int(this.Size))
-		if err != nil {
-			return err
-		}
-		tmp28 = tmp28
-		this._raw_Body = tmp28
-		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp29 := NewWarcraft2Pud_SectionStartingResource()
-		err = tmp29.Read(_io__raw_Body, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp29
-	case "UNIT":
-		tmp30, err := this._io.ReadBytes(int(this.Size))
-		if err != nil {
-			return err
-		}
-		tmp30 = tmp30
-		this._raw_Body = tmp30
-		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp31 := NewWarcraft2Pud_SectionUnit()
-		err = tmp31.Read(_io__raw_Body, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp31
-	case "DIM ":
-		tmp32, err := this._io.ReadBytes(int(this.Size))
-		if err != nil {
-			return err
-		}
-		tmp32 = tmp32
-		this._raw_Body = tmp32
-		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp33 := NewWarcraft2Pud_SectionDim()
-		err = tmp33.Read(_io__raw_Body, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp33
-	case "TYPE":
-		tmp34, err := this._io.ReadBytes(int(this.Size))
-		if err != nil {
-			return err
-		}
-		tmp34 = tmp34
-		this._raw_Body = tmp34
-		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp35 := NewWarcraft2Pud_SectionType()
-		err = tmp35.Read(_io__raw_Body, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp35
-	default:
-		tmp36, err := this._io.ReadBytes(int(this.Size))
-		if err != nil {
-			return err
-		}
-		tmp36 = tmp36
-		this._raw_Body = tmp36
+		this.Units = append(this.Units, tmp37)
 	}
 	return err
 }
 
 /**
- * Section that specifies who controls each player.
+ * Section that specifies format version.
  */
-type Warcraft2Pud_SectionOwnr struct {
-	ControllerByPlayer []Warcraft2Pud_Controller
+type Warcraft2Pud_SectionVer struct {
+	Version uint16
 	_io *kaitai.Stream
 	_root *Warcraft2Pud
 	_parent *Warcraft2Pud_Section
 }
-func NewWarcraft2Pud_SectionOwnr() *Warcraft2Pud_SectionOwnr {
-	return &Warcraft2Pud_SectionOwnr{
+func NewWarcraft2Pud_SectionVer() *Warcraft2Pud_SectionVer {
+	return &Warcraft2Pud_SectionVer{
 	}
 }
 
-func (this *Warcraft2Pud_SectionOwnr) Read(io *kaitai.Stream, parent *Warcraft2Pud_Section, root *Warcraft2Pud) (err error) {
+func (this Warcraft2Pud_SectionVer) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Warcraft2Pud_SectionVer) Read(io *kaitai.Stream, parent *Warcraft2Pud_Section, root *Warcraft2Pud) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	for i := 1;; i++ {
-		tmp37, err := this._io.EOF()
-		if err != nil {
-			return err
-		}
-		if tmp37 {
-			break
-		}
-		tmp38, err := this._io.ReadU1()
-		if err != nil {
-			return err
-		}
-		this.ControllerByPlayer = append(this.ControllerByPlayer, Warcraft2Pud_Controller(tmp38))
+	tmp38, err := this._io.ReadU2le()
+	if err != nil {
+		return err
 	}
+	this.Version = uint16(tmp38)
 	return err
 }
 type Warcraft2Pud_Unit struct {
@@ -611,6 +662,10 @@ type Warcraft2Pud_Unit struct {
 func NewWarcraft2Pud_Unit() *Warcraft2Pud_Unit {
 	return &Warcraft2Pud_Unit{
 	}
+}
+
+func (this Warcraft2Pud_Unit) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Warcraft2Pud_Unit) Read(io *kaitai.Stream, parent *Warcraft2Pud_SectionUnit, root *Warcraft2Pud) (err error) {
@@ -649,10 +704,10 @@ func (this *Warcraft2Pud_Unit) Resource() (v int, err error) {
 	if (this._f_resource) {
 		return this.resource, nil
 	}
-	if ( ((this.UType == Warcraft2Pud_UnitType__GoldMine) || (this.UType == Warcraft2Pud_UnitType__HumanOilWell) || (this.UType == Warcraft2Pud_UnitType__OrcOilWell) || (this.UType == Warcraft2Pud_UnitType__OilPatch)) ) {
-		this.resource = int((this.Options * 2500))
-	}
 	this._f_resource = true
+	if ( ((this.UType == Warcraft2Pud_UnitType__GoldMine) || (this.UType == Warcraft2Pud_UnitType__HumanOilWell) || (this.UType == Warcraft2Pud_UnitType__OrcOilWell) || (this.UType == Warcraft2Pud_UnitType__OilPatch)) ) {
+		this.resource = int(this.Options * 2500)
+	}
 	return this.resource, nil
 }
 

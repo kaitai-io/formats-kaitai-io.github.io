@@ -47,146 +47,6 @@ namespace Kaitai
                 } while (!(M_.LenData == 0));
             }
         }
-        public partial class ShellItemData : KaitaiStruct
-        {
-            public static ShellItemData FromFile(string fileName)
-            {
-                return new ShellItemData(new KaitaiStream(fileName));
-            }
-
-            public ShellItemData(KaitaiStream p__io, WindowsShellItems.ShellItem p__parent = null, WindowsShellItems p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _code = m_io.ReadU1();
-                switch (Code) {
-                case 31: {
-                    _body1 = new RootFolderBody(m_io, this, m_root);
-                    break;
-                }
-                }
-                switch ((Code & 112)) {
-                case 32: {
-                    _body2 = new VolumeBody(m_io, this, m_root);
-                    break;
-                }
-                case 48: {
-                    _body2 = new FileEntryBody(m_io, this, m_root);
-                    break;
-                }
-                }
-            }
-            private byte _code;
-            private RootFolderBody _body1;
-            private KaitaiStruct _body2;
-            private WindowsShellItems m_root;
-            private WindowsShellItems.ShellItem m_parent;
-            public byte Code { get { return _code; } }
-            public RootFolderBody Body1 { get { return _body1; } }
-            public KaitaiStruct Body2 { get { return _body2; } }
-            public WindowsShellItems M_Root { get { return m_root; } }
-            public WindowsShellItems.ShellItem M_Parent { get { return m_parent; } }
-        }
-
-        /// <remarks>
-        /// Reference: <a href="https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf">Section 2.2.2</a>
-        /// </remarks>
-        public partial class ShellItem : KaitaiStruct
-        {
-            public static ShellItem FromFile(string fileName)
-            {
-                return new ShellItem(new KaitaiStream(fileName));
-            }
-
-            public ShellItem(KaitaiStream p__io, WindowsShellItems p__parent = null, WindowsShellItems p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _lenData = m_io.ReadU2le();
-                if (LenData >= 2) {
-                    __raw_data = m_io.ReadBytes((LenData - 2));
-                    var io___raw_data = new KaitaiStream(__raw_data);
-                    _data = new ShellItemData(io___raw_data, this, m_root);
-                }
-            }
-            private ushort _lenData;
-            private ShellItemData _data;
-            private WindowsShellItems m_root;
-            private WindowsShellItems m_parent;
-            private byte[] __raw_data;
-            public ushort LenData { get { return _lenData; } }
-            public ShellItemData Data { get { return _data; } }
-            public WindowsShellItems M_Root { get { return m_root; } }
-            public WindowsShellItems M_Parent { get { return m_parent; } }
-            public byte[] M_RawData { get { return __raw_data; } }
-        }
-
-        /// <remarks>
-        /// Reference: <a href="https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#32-root-folder-shell-item">Source</a>
-        /// </remarks>
-        public partial class RootFolderBody : KaitaiStruct
-        {
-            public static RootFolderBody FromFile(string fileName)
-            {
-                return new RootFolderBody(new KaitaiStream(fileName));
-            }
-
-            public RootFolderBody(KaitaiStream p__io, WindowsShellItems.ShellItemData p__parent = null, WindowsShellItems p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _sortIndex = m_io.ReadU1();
-                _shellFolderId = m_io.ReadBytes(16);
-            }
-            private byte _sortIndex;
-            private byte[] _shellFolderId;
-            private WindowsShellItems m_root;
-            private WindowsShellItems.ShellItemData m_parent;
-            public byte SortIndex { get { return _sortIndex; } }
-            public byte[] ShellFolderId { get { return _shellFolderId; } }
-            public WindowsShellItems M_Root { get { return m_root; } }
-            public WindowsShellItems.ShellItemData M_Parent { get { return m_parent; } }
-        }
-
-        /// <remarks>
-        /// Reference: <a href="https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#33-volume-shell-item">Source</a>
-        /// </remarks>
-        public partial class VolumeBody : KaitaiStruct
-        {
-            public static VolumeBody FromFile(string fileName)
-            {
-                return new VolumeBody(new KaitaiStream(fileName));
-            }
-
-            public VolumeBody(KaitaiStream p__io, WindowsShellItems.ShellItemData p__parent = null, WindowsShellItems p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _flags = m_io.ReadU1();
-            }
-            private byte _flags;
-            private WindowsShellItems m_root;
-            private WindowsShellItems.ShellItemData m_parent;
-            public byte Flags { get { return _flags; } }
-            public WindowsShellItems M_Root { get { return m_root; } }
-            public WindowsShellItems.ShellItemData M_Parent { get { return m_parent; } }
-        }
 
         /// <remarks>
         /// Reference: <a href="https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#34-file-entry-shell-item">Source</a>
@@ -221,8 +81,8 @@ namespace Kaitai
                 {
                     if (f_isDir)
                         return _isDir;
-                    _isDir = (bool) ((M_Parent.Code & 1) != 0);
                     f_isDir = true;
+                    _isDir = (bool) ((M_Parent.Code & 1) != 0);
                     return _isDir;
                 }
             }
@@ -234,8 +94,8 @@ namespace Kaitai
                 {
                     if (f_isFile)
                         return _isFile;
-                    _isFile = (bool) ((M_Parent.Code & 2) != 0);
                     f_isFile = true;
+                    _isFile = (bool) ((M_Parent.Code & 2) != 0);
                     return _isFile;
                 }
             }
@@ -249,6 +109,146 @@ namespace Kaitai
             public uint FileSize { get { return _fileSize; } }
             public uint LastModTime { get { return _lastModTime; } }
             public ushort FileAttrs { get { return _fileAttrs; } }
+            public WindowsShellItems M_Root { get { return m_root; } }
+            public WindowsShellItems.ShellItemData M_Parent { get { return m_parent; } }
+        }
+
+        /// <remarks>
+        /// Reference: <a href="https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#32-root-folder-shell-item">Source</a>
+        /// </remarks>
+        public partial class RootFolderBody : KaitaiStruct
+        {
+            public static RootFolderBody FromFile(string fileName)
+            {
+                return new RootFolderBody(new KaitaiStream(fileName));
+            }
+
+            public RootFolderBody(KaitaiStream p__io, WindowsShellItems.ShellItemData p__parent = null, WindowsShellItems p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _sortIndex = m_io.ReadU1();
+                _shellFolderId = m_io.ReadBytes(16);
+            }
+            private byte _sortIndex;
+            private byte[] _shellFolderId;
+            private WindowsShellItems m_root;
+            private WindowsShellItems.ShellItemData m_parent;
+            public byte SortIndex { get { return _sortIndex; } }
+            public byte[] ShellFolderId { get { return _shellFolderId; } }
+            public WindowsShellItems M_Root { get { return m_root; } }
+            public WindowsShellItems.ShellItemData M_Parent { get { return m_parent; } }
+        }
+
+        /// <remarks>
+        /// Reference: <a href="https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf">Section 2.2.2</a>
+        /// </remarks>
+        public partial class ShellItem : KaitaiStruct
+        {
+            public static ShellItem FromFile(string fileName)
+            {
+                return new ShellItem(new KaitaiStream(fileName));
+            }
+
+            public ShellItem(KaitaiStream p__io, WindowsShellItems p__parent = null, WindowsShellItems p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _lenData = m_io.ReadU2le();
+                if (LenData >= 2) {
+                    __raw_data = m_io.ReadBytes(LenData - 2);
+                    var io___raw_data = new KaitaiStream(__raw_data);
+                    _data = new ShellItemData(io___raw_data, this, m_root);
+                }
+            }
+            private ushort _lenData;
+            private ShellItemData _data;
+            private WindowsShellItems m_root;
+            private WindowsShellItems m_parent;
+            private byte[] __raw_data;
+            public ushort LenData { get { return _lenData; } }
+            public ShellItemData Data { get { return _data; } }
+            public WindowsShellItems M_Root { get { return m_root; } }
+            public WindowsShellItems M_Parent { get { return m_parent; } }
+            public byte[] M_RawData { get { return __raw_data; } }
+        }
+        public partial class ShellItemData : KaitaiStruct
+        {
+            public static ShellItemData FromFile(string fileName)
+            {
+                return new ShellItemData(new KaitaiStream(fileName));
+            }
+
+            public ShellItemData(KaitaiStream p__io, WindowsShellItems.ShellItem p__parent = null, WindowsShellItems p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _code = m_io.ReadU1();
+                switch (Code) {
+                case 31: {
+                    _body1 = new RootFolderBody(m_io, this, m_root);
+                    break;
+                }
+                }
+                switch (Code & 112) {
+                case 32: {
+                    _body2 = new VolumeBody(m_io, this, m_root);
+                    break;
+                }
+                case 48: {
+                    _body2 = new FileEntryBody(m_io, this, m_root);
+                    break;
+                }
+                }
+            }
+            private byte _code;
+            private RootFolderBody _body1;
+            private KaitaiStruct _body2;
+            private WindowsShellItems m_root;
+            private WindowsShellItems.ShellItem m_parent;
+            public byte Code { get { return _code; } }
+            public RootFolderBody Body1 { get { return _body1; } }
+            public KaitaiStruct Body2 { get { return _body2; } }
+            public WindowsShellItems M_Root { get { return m_root; } }
+            public WindowsShellItems.ShellItem M_Parent { get { return m_parent; } }
+        }
+
+        /// <remarks>
+        /// Reference: <a href="https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#33-volume-shell-item">Source</a>
+        /// </remarks>
+        public partial class VolumeBody : KaitaiStruct
+        {
+            public static VolumeBody FromFile(string fileName)
+            {
+                return new VolumeBody(new KaitaiStream(fileName));
+            }
+
+            public VolumeBody(KaitaiStream p__io, WindowsShellItems.ShellItemData p__parent = null, WindowsShellItems p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _flags = m_io.ReadU1();
+            }
+            private byte _flags;
+            private WindowsShellItems m_root;
+            private WindowsShellItems.ShellItemData m_parent;
+            public byte Flags { get { return _flags; } }
             public WindowsShellItems M_Root { get { return m_root; } }
             public WindowsShellItems.ShellItemData M_Parent { get { return m_parent; } }
         }

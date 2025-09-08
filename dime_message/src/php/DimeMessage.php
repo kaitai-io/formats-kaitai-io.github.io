@@ -15,8 +15,8 @@
 
 namespace {
     class DimeMessage extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \DimeMessage $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\DimeMessage $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -34,55 +34,12 @@ namespace {
 }
 
 /**
- * padding to the next 4-byte boundary
- */
-
-namespace DimeMessage {
-    class Padding extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \DimeMessage\Record $_parent = null, \DimeMessage $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_boundaryPadding = $this->_io->readBytes(\Kaitai\Struct\Stream::mod(-($this->_io()->pos()), 4));
-        }
-        protected $_m_boundaryPadding;
-        public function boundaryPadding() { return $this->_m_boundaryPadding; }
-    }
-}
-
-/**
- * the option field of the record
- */
-
-namespace DimeMessage {
-    class OptionField extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \DimeMessage\Record $_parent = null, \DimeMessage $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_optionElements = [];
-            $i = 0;
-            while (!$this->_io->isEof()) {
-                $this->_m_optionElements[] = new \DimeMessage\OptionElement($this->_io, $this, $this->_root);
-                $i++;
-            }
-        }
-        protected $_m_optionElements;
-        public function optionElements() { return $this->_m_optionElements; }
-    }
-}
-
-/**
  * one element of the option field
  */
 
 namespace DimeMessage {
     class OptionElement extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \DimeMessage\OptionField $_parent = null, \DimeMessage $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\DimeMessage\OptionField $_parent = null, ?\DimeMessage $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -102,12 +59,55 @@ namespace DimeMessage {
 }
 
 /**
+ * the option field of the record
+ */
+
+namespace DimeMessage {
+    class OptionField extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\DimeMessage\Record $_parent = null, ?\DimeMessage $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_optionElements = [];
+            $i = 0;
+            while (!$this->_io->isEof()) {
+                $this->_m_optionElements[] = new \DimeMessage\OptionElement($this->_io, $this, $this->_root);
+                $i++;
+            }
+        }
+        protected $_m_optionElements;
+        public function optionElements() { return $this->_m_optionElements; }
+    }
+}
+
+/**
+ * padding to the next 4-byte boundary
+ */
+
+namespace DimeMessage {
+    class Padding extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\DimeMessage\Record $_parent = null, ?\DimeMessage $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_boundaryPadding = $this->_io->readBytes(\Kaitai\Struct\Stream::mod(-($this->_io()->pos()), 4));
+        }
+        protected $_m_boundaryPadding;
+        public function boundaryPadding() { return $this->_m_boundaryPadding; }
+    }
+}
+
+/**
  * each individual fragment of the message
  */
 
 namespace DimeMessage {
     class Record extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \DimeMessage $_parent = null, \DimeMessage $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\DimeMessage $_parent = null, ?\DimeMessage $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -235,5 +235,11 @@ namespace DimeMessage {
         const ABSOLUTE_URI = 2;
         const UNKNOWN = 3;
         const NONE = 4;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

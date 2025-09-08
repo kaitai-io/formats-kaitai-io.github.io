@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.Websocket = factory(root.KaitaiStream);
+    factory(root.Websocket || (root.Websocket = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Websocket_, KaitaiStream) {
 /**
  * The WebSocket protocol establishes a two-way communication channel via TCP.
  * Messages are made up of one or more dataframes, and are delineated by
@@ -72,11 +72,32 @@ var Websocket = (function() {
     }
   }
 
+  var Dataframe = Websocket.Dataframe = (function() {
+    function Dataframe(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Dataframe.prototype._read = function() {
+      this.header = new FrameHeader(this._io, this, this._root);
+      if (this._root.initialFrame.header.opcode != Websocket.Opcode.TEXT) {
+        this.payloadBytes = this._io.readBytes(this.header.lenPayload);
+      }
+      if (this._root.initialFrame.header.opcode == Websocket.Opcode.TEXT) {
+        this.payloadText = KaitaiStream.bytesToStr(this._io.readBytes(this.header.lenPayload), "UTF-8");
+      }
+    }
+
+    return Dataframe;
+  })();
+
   var FrameHeader = Websocket.FrameHeader = (function() {
     function FrameHeader(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -113,7 +134,7 @@ var Websocket = (function() {
     function InitialFrame(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -130,28 +151,7 @@ var Websocket = (function() {
     return InitialFrame;
   })();
 
-  var Dataframe = Websocket.Dataframe = (function() {
-    function Dataframe(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Dataframe.prototype._read = function() {
-      this.header = new FrameHeader(this._io, this, this._root);
-      if (this._root.initialFrame.header.opcode != Websocket.Opcode.TEXT) {
-        this.payloadBytes = this._io.readBytes(this.header.lenPayload);
-      }
-      if (this._root.initialFrame.header.opcode == Websocket.Opcode.TEXT) {
-        this.payloadText = KaitaiStream.bytesToStr(this._io.readBytes(this.header.lenPayload), "UTF-8");
-      }
-    }
-
-    return Dataframe;
-  })();
-
   return Websocket;
 })();
-return Websocket;
-}));
+Websocket_.Websocket = Websocket;
+});

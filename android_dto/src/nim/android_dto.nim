@@ -6,6 +6,15 @@ type
     `header`*: AndroidDto_DtTableHeader
     `entries`*: seq[AndroidDto_DtTableEntry]
     `parent`*: KaitaiStruct
+  AndroidDto_DtTableEntry* = ref object of KaitaiStruct
+    `dtSize`*: uint32
+    `dtOffset`*: uint32
+    `id`*: uint32
+    `rev`*: uint32
+    `custom`*: seq[uint32]
+    `parent`*: AndroidDto
+    `bodyInst`: seq[byte]
+    `bodyInstFlag`: bool
   AndroidDto_DtTableHeader* = ref object of KaitaiStruct
     `magic`*: seq[byte]
     `totalSize`*: uint32
@@ -16,19 +25,10 @@ type
     `pageSize`*: uint32
     `version`*: uint32
     `parent`*: AndroidDto
-  AndroidDto_DtTableEntry* = ref object of KaitaiStruct
-    `dtSize`*: uint32
-    `dtOffset`*: uint32
-    `id`*: uint32
-    `rev`*: uint32
-    `custom`*: seq[uint32]
-    `parent`*: AndroidDto
-    `bodyInst`: seq[byte]
-    `bodyInstFlag`: bool
 
 proc read*(_: typedesc[AndroidDto], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): AndroidDto
-proc read*(_: typedesc[AndroidDto_DtTableHeader], io: KaitaiStream, root: KaitaiStruct, parent: AndroidDto): AndroidDto_DtTableHeader
 proc read*(_: typedesc[AndroidDto_DtTableEntry], io: KaitaiStream, root: KaitaiStruct, parent: AndroidDto): AndroidDto_DtTableEntry
+proc read*(_: typedesc[AndroidDto_DtTableHeader], io: KaitaiStream, root: KaitaiStruct, parent: AndroidDto): AndroidDto_DtTableHeader
 
 proc body*(this: AndroidDto_DtTableEntry): seq[byte]
 
@@ -61,62 +61,6 @@ proc read*(_: typedesc[AndroidDto], io: KaitaiStream, root: KaitaiStruct, parent
 
 proc fromFile*(_: typedesc[AndroidDto], filename: string): AndroidDto =
   AndroidDto.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[AndroidDto_DtTableHeader], io: KaitaiStream, root: KaitaiStruct, parent: AndroidDto): AndroidDto_DtTableHeader =
-  template this: untyped = result
-  this = new(AndroidDto_DtTableHeader)
-  let root = if root == nil: cast[AndroidDto](this) else: cast[AndroidDto](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let magicExpr = this.io.readBytes(int(4))
-  this.magic = magicExpr
-
-  ##[
-  includes dt_table_header + all dt_table_entry and all dtb/dtbo
-  ]##
-  let totalSizeExpr = this.io.readU4be()
-  this.totalSize = totalSizeExpr
-
-  ##[
-  sizeof(dt_table_header)
-  ]##
-  let headerSizeExpr = this.io.readU4be()
-  this.headerSize = headerSizeExpr
-
-  ##[
-  sizeof(dt_table_entry)
-  ]##
-  let dtEntrySizeExpr = this.io.readU4be()
-  this.dtEntrySize = dtEntrySizeExpr
-
-  ##[
-  number of dt_table_entry
-  ]##
-  let dtEntryCountExpr = this.io.readU4be()
-  this.dtEntryCount = dtEntryCountExpr
-
-  ##[
-  offset to the first dt_table_entry from head of dt_table_header
-  ]##
-  let dtEntriesOffsetExpr = this.io.readU4be()
-  this.dtEntriesOffset = dtEntriesOffsetExpr
-
-  ##[
-  flash page size
-  ]##
-  let pageSizeExpr = this.io.readU4be()
-  this.pageSize = pageSizeExpr
-
-  ##[
-  DTBO image version
-  ]##
-  let versionExpr = this.io.readU4be()
-  this.version = versionExpr
-
-proc fromFile*(_: typedesc[AndroidDto_DtTableHeader], filename: string): AndroidDto_DtTableHeader =
-  AndroidDto_DtTableHeader.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[AndroidDto_DtTableEntry], io: KaitaiStream, root: KaitaiStruct, parent: AndroidDto): AndroidDto_DtTableEntry =
   template this: untyped = result
@@ -176,4 +120,60 @@ proc body(this: AndroidDto_DtTableEntry): seq[byte] =
 
 proc fromFile*(_: typedesc[AndroidDto_DtTableEntry], filename: string): AndroidDto_DtTableEntry =
   AndroidDto_DtTableEntry.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[AndroidDto_DtTableHeader], io: KaitaiStream, root: KaitaiStruct, parent: AndroidDto): AndroidDto_DtTableHeader =
+  template this: untyped = result
+  this = new(AndroidDto_DtTableHeader)
+  let root = if root == nil: cast[AndroidDto](this) else: cast[AndroidDto](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let magicExpr = this.io.readBytes(int(4))
+  this.magic = magicExpr
+
+  ##[
+  includes dt_table_header + all dt_table_entry and all dtb/dtbo
+  ]##
+  let totalSizeExpr = this.io.readU4be()
+  this.totalSize = totalSizeExpr
+
+  ##[
+  sizeof(dt_table_header)
+  ]##
+  let headerSizeExpr = this.io.readU4be()
+  this.headerSize = headerSizeExpr
+
+  ##[
+  sizeof(dt_table_entry)
+  ]##
+  let dtEntrySizeExpr = this.io.readU4be()
+  this.dtEntrySize = dtEntrySizeExpr
+
+  ##[
+  number of dt_table_entry
+  ]##
+  let dtEntryCountExpr = this.io.readU4be()
+  this.dtEntryCount = dtEntryCountExpr
+
+  ##[
+  offset to the first dt_table_entry from head of dt_table_header
+  ]##
+  let dtEntriesOffsetExpr = this.io.readU4be()
+  this.dtEntriesOffset = dtEntriesOffsetExpr
+
+  ##[
+  flash page size
+  ]##
+  let pageSizeExpr = this.io.readU4be()
+  this.pageSize = pageSizeExpr
+
+  ##[
+  DTBO image version
+  ]##
+  let versionExpr = this.io.readU4be()
+  this.version = versionExpr
+
+proc fromFile*(_: typedesc[AndroidDto_DtTableHeader], filename: string): AndroidDto_DtTableHeader =
+  AndroidDto_DtTableHeader.read(newKaitaiFileStream(filename), nil, nil)
 

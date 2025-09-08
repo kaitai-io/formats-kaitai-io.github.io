@@ -8,8 +8,8 @@
 
 namespace {
     class Rtpdump extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Rtpdump $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Rtpdump $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -31,22 +31,22 @@ namespace {
 
 namespace Rtpdump {
     class HeaderT extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Rtpdump $_parent = null, \Rtpdump $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Rtpdump $_parent = null, ?\Rtpdump $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_shebang = $this->_io->readBytes(12);
-            if (!($this->shebang() == "\x23\x21\x72\x74\x70\x70\x6C\x61\x79\x31\x2E\x30")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x23\x21\x72\x74\x70\x70\x6C\x61\x79\x31\x2E\x30", $this->shebang(), $this->_io(), "/types/header_t/seq/0");
+            if (!($this->_m_shebang == "\x23\x21\x72\x74\x70\x70\x6C\x61\x79\x31\x2E\x30")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x23\x21\x72\x74\x70\x70\x6C\x61\x79\x31\x2E\x30", $this->_m_shebang, $this->_io, "/types/header_t/seq/0");
             }
             $this->_m_space = $this->_io->readBytes(1);
-            if (!($this->space() == "\x20")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x20", $this->space(), $this->_io(), "/types/header_t/seq/1");
+            if (!($this->_m_space == "\x20")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x20", $this->_m_space, $this->_io, "/types/header_t/seq/1");
             }
-            $this->_m_ip = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(47, false, true, true), "ascii");
-            $this->_m_port = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(10, false, true, true), "ascii");
+            $this->_m_ip = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(47, false, true, true), "ASCII");
+            $this->_m_port = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(10, false, true, true), "ASCII");
             $this->_m_startSec = $this->_io->readU4be();
             $this->_m_startUsec = $this->_io->readU4be();
             $this->_m_ip2 = $this->_io->readU4be();
@@ -96,7 +96,7 @@ namespace Rtpdump {
 
 namespace Rtpdump {
     class PacketT extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Rtpdump $_parent = null, \Rtpdump $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Rtpdump $_parent = null, ?\Rtpdump $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }

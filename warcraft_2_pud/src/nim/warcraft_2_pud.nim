@@ -119,18 +119,24 @@ type
     runestone = 102
     human_wall = 103
     orc_wall = 104
-  Warcraft2Pud_SectionStartingResource* = ref object of KaitaiStruct
-    `resourcesByPlayer`*: seq[uint16]
+  Warcraft2Pud_Section* = ref object of KaitaiStruct
+    `name`*: string
+    `size`*: uint32
+    `body`*: KaitaiStruct
+    `parent`*: Warcraft2Pud
+    `rawBody`*: seq[byte]
+  Warcraft2Pud_SectionDim* = ref object of KaitaiStruct
+    `x`*: uint16
+    `y`*: uint16
     `parent`*: Warcraft2Pud_Section
   Warcraft2Pud_SectionEra* = ref object of KaitaiStruct
     `terrain`*: Warcraft2Pud_TerrainType
     `parent`*: Warcraft2Pud_Section
-  Warcraft2Pud_SectionVer* = ref object of KaitaiStruct
-    `version`*: uint16
+  Warcraft2Pud_SectionOwnr* = ref object of KaitaiStruct
+    `controllerByPlayer`*: seq[Warcraft2Pud_Controller]
     `parent`*: Warcraft2Pud_Section
-  Warcraft2Pud_SectionDim* = ref object of KaitaiStruct
-    `x`*: uint16
-    `y`*: uint16
+  Warcraft2Pud_SectionStartingResource* = ref object of KaitaiStruct
+    `resourcesByPlayer`*: seq[uint16]
     `parent`*: Warcraft2Pud_Section
   Warcraft2Pud_SectionType* = ref object of KaitaiStruct
     `magic`*: seq[byte]
@@ -140,14 +146,8 @@ type
   Warcraft2Pud_SectionUnit* = ref object of KaitaiStruct
     `units`*: seq[Warcraft2Pud_Unit]
     `parent`*: Warcraft2Pud_Section
-  Warcraft2Pud_Section* = ref object of KaitaiStruct
-    `name`*: string
-    `size`*: uint32
-    `body`*: KaitaiStruct
-    `parent`*: Warcraft2Pud
-    `rawBody`*: seq[byte]
-  Warcraft2Pud_SectionOwnr* = ref object of KaitaiStruct
-    `controllerByPlayer`*: seq[Warcraft2Pud_Controller]
+  Warcraft2Pud_SectionVer* = ref object of KaitaiStruct
+    `version`*: uint16
     `parent`*: Warcraft2Pud_Section
   Warcraft2Pud_Unit* = ref object of KaitaiStruct
     `x`*: uint16
@@ -160,14 +160,14 @@ type
     `resourceInstFlag`: bool
 
 proc read*(_: typedesc[Warcraft2Pud], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Warcraft2Pud
-proc read*(_: typedesc[Warcraft2Pud_SectionStartingResource], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionStartingResource
-proc read*(_: typedesc[Warcraft2Pud_SectionEra], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionEra
-proc read*(_: typedesc[Warcraft2Pud_SectionVer], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionVer
+proc read*(_: typedesc[Warcraft2Pud_Section], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud): Warcraft2Pud_Section
 proc read*(_: typedesc[Warcraft2Pud_SectionDim], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionDim
+proc read*(_: typedesc[Warcraft2Pud_SectionEra], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionEra
+proc read*(_: typedesc[Warcraft2Pud_SectionOwnr], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionOwnr
+proc read*(_: typedesc[Warcraft2Pud_SectionStartingResource], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionStartingResource
 proc read*(_: typedesc[Warcraft2Pud_SectionType], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionType
 proc read*(_: typedesc[Warcraft2Pud_SectionUnit], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionUnit
-proc read*(_: typedesc[Warcraft2Pud_Section], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud): Warcraft2Pud_Section
-proc read*(_: typedesc[Warcraft2Pud_SectionOwnr], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionOwnr
+proc read*(_: typedesc[Warcraft2Pud_SectionVer], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionVer
 proc read*(_: typedesc[Warcraft2Pud_Unit], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_SectionUnit): Warcraft2Pud_Unit
 
 proc resource*(this: Warcraft2Pud_Unit): int
@@ -206,23 +206,102 @@ proc read*(_: typedesc[Warcraft2Pud], io: KaitaiStream, root: KaitaiStruct, pare
 proc fromFile*(_: typedesc[Warcraft2Pud], filename: string): Warcraft2Pud =
   Warcraft2Pud.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[Warcraft2Pud_SectionStartingResource], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionStartingResource =
+proc read*(_: typedesc[Warcraft2Pud_Section], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud): Warcraft2Pud_Section =
   template this: untyped = result
-  this = new(Warcraft2Pud_SectionStartingResource)
+  this = new(Warcraft2Pud_Section)
   let root = if root == nil: cast[Warcraft2Pud](this) else: cast[Warcraft2Pud](root)
   this.io = io
   this.root = root
   this.parent = parent
 
+  let nameExpr = encode(this.io.readBytes(int(4)), "ASCII")
+  this.name = nameExpr
+  let sizeExpr = this.io.readU4le()
+  this.size = sizeExpr
   block:
-    var i: int
-    while not this.io.isEof:
-      let it = this.io.readU2le()
-      this.resourcesByPlayer.add(it)
-      inc i
+    let on = this.name
+    if on == "DIM ":
+      let rawBodyExpr = this.io.readBytes(int(this.size))
+      this.rawBody = rawBodyExpr
+      let rawBodyIo = newKaitaiStream(rawBodyExpr)
+      let bodyExpr = Warcraft2Pud_SectionDim.read(rawBodyIo, this.root, this)
+      this.body = bodyExpr
+    elif on == "ERA ":
+      let rawBodyExpr = this.io.readBytes(int(this.size))
+      this.rawBody = rawBodyExpr
+      let rawBodyIo = newKaitaiStream(rawBodyExpr)
+      let bodyExpr = Warcraft2Pud_SectionEra.read(rawBodyIo, this.root, this)
+      this.body = bodyExpr
+    elif on == "ERAX":
+      let rawBodyExpr = this.io.readBytes(int(this.size))
+      this.rawBody = rawBodyExpr
+      let rawBodyIo = newKaitaiStream(rawBodyExpr)
+      let bodyExpr = Warcraft2Pud_SectionEra.read(rawBodyIo, this.root, this)
+      this.body = bodyExpr
+    elif on == "OWNR":
+      let rawBodyExpr = this.io.readBytes(int(this.size))
+      this.rawBody = rawBodyExpr
+      let rawBodyIo = newKaitaiStream(rawBodyExpr)
+      let bodyExpr = Warcraft2Pud_SectionOwnr.read(rawBodyIo, this.root, this)
+      this.body = bodyExpr
+    elif on == "SGLD":
+      let rawBodyExpr = this.io.readBytes(int(this.size))
+      this.rawBody = rawBodyExpr
+      let rawBodyIo = newKaitaiStream(rawBodyExpr)
+      let bodyExpr = Warcraft2Pud_SectionStartingResource.read(rawBodyIo, this.root, this)
+      this.body = bodyExpr
+    elif on == "SLBR":
+      let rawBodyExpr = this.io.readBytes(int(this.size))
+      this.rawBody = rawBodyExpr
+      let rawBodyIo = newKaitaiStream(rawBodyExpr)
+      let bodyExpr = Warcraft2Pud_SectionStartingResource.read(rawBodyIo, this.root, this)
+      this.body = bodyExpr
+    elif on == "SOIL":
+      let rawBodyExpr = this.io.readBytes(int(this.size))
+      this.rawBody = rawBodyExpr
+      let rawBodyIo = newKaitaiStream(rawBodyExpr)
+      let bodyExpr = Warcraft2Pud_SectionStartingResource.read(rawBodyIo, this.root, this)
+      this.body = bodyExpr
+    elif on == "TYPE":
+      let rawBodyExpr = this.io.readBytes(int(this.size))
+      this.rawBody = rawBodyExpr
+      let rawBodyIo = newKaitaiStream(rawBodyExpr)
+      let bodyExpr = Warcraft2Pud_SectionType.read(rawBodyIo, this.root, this)
+      this.body = bodyExpr
+    elif on == "UNIT":
+      let rawBodyExpr = this.io.readBytes(int(this.size))
+      this.rawBody = rawBodyExpr
+      let rawBodyIo = newKaitaiStream(rawBodyExpr)
+      let bodyExpr = Warcraft2Pud_SectionUnit.read(rawBodyIo, this.root, this)
+      this.body = bodyExpr
+    elif on == "VER ":
+      let rawBodyExpr = this.io.readBytes(int(this.size))
+      this.rawBody = rawBodyExpr
+      let rawBodyIo = newKaitaiStream(rawBodyExpr)
+      let bodyExpr = Warcraft2Pud_SectionVer.read(rawBodyIo, this.root, this)
+      this.body = bodyExpr
+    else:
+      let bodyExpr = this.io.readBytes(int(this.size))
+      this.body = bodyExpr
 
-proc fromFile*(_: typedesc[Warcraft2Pud_SectionStartingResource], filename: string): Warcraft2Pud_SectionStartingResource =
-  Warcraft2Pud_SectionStartingResource.read(newKaitaiFileStream(filename), nil, nil)
+proc fromFile*(_: typedesc[Warcraft2Pud_Section], filename: string): Warcraft2Pud_Section =
+  Warcraft2Pud_Section.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Warcraft2Pud_SectionDim], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionDim =
+  template this: untyped = result
+  this = new(Warcraft2Pud_SectionDim)
+  let root = if root == nil: cast[Warcraft2Pud](this) else: cast[Warcraft2Pud](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let xExpr = this.io.readU2le()
+  this.x = xExpr
+  let yExpr = this.io.readU2le()
+  this.y = yExpr
+
+proc fromFile*(_: typedesc[Warcraft2Pud_SectionDim], filename: string): Warcraft2Pud_SectionDim =
+  Warcraft2Pud_SectionDim.read(newKaitaiFileStream(filename), nil, nil)
 
 
 ##[
@@ -244,37 +323,43 @@ proc fromFile*(_: typedesc[Warcraft2Pud_SectionEra], filename: string): Warcraft
 
 
 ##[
-Section that specifies format version.
+Section that specifies who controls each player.
 ]##
-proc read*(_: typedesc[Warcraft2Pud_SectionVer], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionVer =
+proc read*(_: typedesc[Warcraft2Pud_SectionOwnr], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionOwnr =
   template this: untyped = result
-  this = new(Warcraft2Pud_SectionVer)
+  this = new(Warcraft2Pud_SectionOwnr)
   let root = if root == nil: cast[Warcraft2Pud](this) else: cast[Warcraft2Pud](root)
   this.io = io
   this.root = root
   this.parent = parent
 
-  let versionExpr = this.io.readU2le()
-  this.version = versionExpr
+  block:
+    var i: int
+    while not this.io.isEof:
+      let it = Warcraft2Pud_Controller(this.io.readU1())
+      this.controllerByPlayer.add(it)
+      inc i
 
-proc fromFile*(_: typedesc[Warcraft2Pud_SectionVer], filename: string): Warcraft2Pud_SectionVer =
-  Warcraft2Pud_SectionVer.read(newKaitaiFileStream(filename), nil, nil)
+proc fromFile*(_: typedesc[Warcraft2Pud_SectionOwnr], filename: string): Warcraft2Pud_SectionOwnr =
+  Warcraft2Pud_SectionOwnr.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[Warcraft2Pud_SectionDim], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionDim =
+proc read*(_: typedesc[Warcraft2Pud_SectionStartingResource], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionStartingResource =
   template this: untyped = result
-  this = new(Warcraft2Pud_SectionDim)
+  this = new(Warcraft2Pud_SectionStartingResource)
   let root = if root == nil: cast[Warcraft2Pud](this) else: cast[Warcraft2Pud](root)
   this.io = io
   this.root = root
   this.parent = parent
 
-  let xExpr = this.io.readU2le()
-  this.x = xExpr
-  let yExpr = this.io.readU2le()
-  this.y = yExpr
+  block:
+    var i: int
+    while not this.io.isEof:
+      let it = this.io.readU2le()
+      this.resourcesByPlayer.add(it)
+      inc i
 
-proc fromFile*(_: typedesc[Warcraft2Pud_SectionDim], filename: string): Warcraft2Pud_SectionDim =
-  Warcraft2Pud_SectionDim.read(newKaitaiFileStream(filename), nil, nil)
+proc fromFile*(_: typedesc[Warcraft2Pud_SectionStartingResource], filename: string): Warcraft2Pud_SectionStartingResource =
+  Warcraft2Pud_SectionStartingResource.read(newKaitaiFileStream(filename), nil, nil)
 
 
 ##[
@@ -328,108 +413,23 @@ proc read*(_: typedesc[Warcraft2Pud_SectionUnit], io: KaitaiStream, root: Kaitai
 proc fromFile*(_: typedesc[Warcraft2Pud_SectionUnit], filename: string): Warcraft2Pud_SectionUnit =
   Warcraft2Pud_SectionUnit.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[Warcraft2Pud_Section], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud): Warcraft2Pud_Section =
-  template this: untyped = result
-  this = new(Warcraft2Pud_Section)
-  let root = if root == nil: cast[Warcraft2Pud](this) else: cast[Warcraft2Pud](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let nameExpr = encode(this.io.readBytes(int(4)), "ASCII")
-  this.name = nameExpr
-  let sizeExpr = this.io.readU4le()
-  this.size = sizeExpr
-  block:
-    let on = this.name
-    if on == "SLBR":
-      let rawBodyExpr = this.io.readBytes(int(this.size))
-      this.rawBody = rawBodyExpr
-      let rawBodyIo = newKaitaiStream(rawBodyExpr)
-      let bodyExpr = Warcraft2Pud_SectionStartingResource.read(rawBodyIo, this.root, this)
-      this.body = bodyExpr
-    elif on == "ERAX":
-      let rawBodyExpr = this.io.readBytes(int(this.size))
-      this.rawBody = rawBodyExpr
-      let rawBodyIo = newKaitaiStream(rawBodyExpr)
-      let bodyExpr = Warcraft2Pud_SectionEra.read(rawBodyIo, this.root, this)
-      this.body = bodyExpr
-    elif on == "OWNR":
-      let rawBodyExpr = this.io.readBytes(int(this.size))
-      this.rawBody = rawBodyExpr
-      let rawBodyIo = newKaitaiStream(rawBodyExpr)
-      let bodyExpr = Warcraft2Pud_SectionOwnr.read(rawBodyIo, this.root, this)
-      this.body = bodyExpr
-    elif on == "ERA ":
-      let rawBodyExpr = this.io.readBytes(int(this.size))
-      this.rawBody = rawBodyExpr
-      let rawBodyIo = newKaitaiStream(rawBodyExpr)
-      let bodyExpr = Warcraft2Pud_SectionEra.read(rawBodyIo, this.root, this)
-      this.body = bodyExpr
-    elif on == "SGLD":
-      let rawBodyExpr = this.io.readBytes(int(this.size))
-      this.rawBody = rawBodyExpr
-      let rawBodyIo = newKaitaiStream(rawBodyExpr)
-      let bodyExpr = Warcraft2Pud_SectionStartingResource.read(rawBodyIo, this.root, this)
-      this.body = bodyExpr
-    elif on == "VER ":
-      let rawBodyExpr = this.io.readBytes(int(this.size))
-      this.rawBody = rawBodyExpr
-      let rawBodyIo = newKaitaiStream(rawBodyExpr)
-      let bodyExpr = Warcraft2Pud_SectionVer.read(rawBodyIo, this.root, this)
-      this.body = bodyExpr
-    elif on == "SOIL":
-      let rawBodyExpr = this.io.readBytes(int(this.size))
-      this.rawBody = rawBodyExpr
-      let rawBodyIo = newKaitaiStream(rawBodyExpr)
-      let bodyExpr = Warcraft2Pud_SectionStartingResource.read(rawBodyIo, this.root, this)
-      this.body = bodyExpr
-    elif on == "UNIT":
-      let rawBodyExpr = this.io.readBytes(int(this.size))
-      this.rawBody = rawBodyExpr
-      let rawBodyIo = newKaitaiStream(rawBodyExpr)
-      let bodyExpr = Warcraft2Pud_SectionUnit.read(rawBodyIo, this.root, this)
-      this.body = bodyExpr
-    elif on == "DIM ":
-      let rawBodyExpr = this.io.readBytes(int(this.size))
-      this.rawBody = rawBodyExpr
-      let rawBodyIo = newKaitaiStream(rawBodyExpr)
-      let bodyExpr = Warcraft2Pud_SectionDim.read(rawBodyIo, this.root, this)
-      this.body = bodyExpr
-    elif on == "TYPE":
-      let rawBodyExpr = this.io.readBytes(int(this.size))
-      this.rawBody = rawBodyExpr
-      let rawBodyIo = newKaitaiStream(rawBodyExpr)
-      let bodyExpr = Warcraft2Pud_SectionType.read(rawBodyIo, this.root, this)
-      this.body = bodyExpr
-    else:
-      let bodyExpr = this.io.readBytes(int(this.size))
-      this.body = bodyExpr
-
-proc fromFile*(_: typedesc[Warcraft2Pud_Section], filename: string): Warcraft2Pud_Section =
-  Warcraft2Pud_Section.read(newKaitaiFileStream(filename), nil, nil)
-
 
 ##[
-Section that specifies who controls each player.
+Section that specifies format version.
 ]##
-proc read*(_: typedesc[Warcraft2Pud_SectionOwnr], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionOwnr =
+proc read*(_: typedesc[Warcraft2Pud_SectionVer], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_Section): Warcraft2Pud_SectionVer =
   template this: untyped = result
-  this = new(Warcraft2Pud_SectionOwnr)
+  this = new(Warcraft2Pud_SectionVer)
   let root = if root == nil: cast[Warcraft2Pud](this) else: cast[Warcraft2Pud](root)
   this.io = io
   this.root = root
   this.parent = parent
 
-  block:
-    var i: int
-    while not this.io.isEof:
-      let it = Warcraft2Pud_Controller(this.io.readU1())
-      this.controllerByPlayer.add(it)
-      inc i
+  let versionExpr = this.io.readU2le()
+  this.version = versionExpr
 
-proc fromFile*(_: typedesc[Warcraft2Pud_SectionOwnr], filename: string): Warcraft2Pud_SectionOwnr =
-  Warcraft2Pud_SectionOwnr.read(newKaitaiFileStream(filename), nil, nil)
+proc fromFile*(_: typedesc[Warcraft2Pud_SectionVer], filename: string): Warcraft2Pud_SectionVer =
+  Warcraft2Pud_SectionVer.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[Warcraft2Pud_Unit], io: KaitaiStream, root: KaitaiStruct, parent: Warcraft2Pud_SectionUnit): Warcraft2Pud_Unit =
   template this: untyped = result
@@ -458,7 +458,7 @@ proc resource(this: Warcraft2Pud_Unit): int =
   if this.resourceInstFlag:
     return this.resourceInst
   if  ((this.uType == warcraft_2_pud.gold_mine) or (this.uType == warcraft_2_pud.human_oil_well) or (this.uType == warcraft_2_pud.orc_oil_well) or (this.uType == warcraft_2_pud.oil_patch)) :
-    let resourceInstExpr = int((this.options * 2500))
+    let resourceInstExpr = int(this.options * 2500)
     this.resourceInst = resourceInstExpr
   this.resourceInstFlag = true
   return this.resourceInst

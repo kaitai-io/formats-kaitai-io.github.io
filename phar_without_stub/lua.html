@@ -242,6 +242,11 @@ standard encoding of the system on which the phar was created.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="PHP phar archive (without stub) parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="PHP phar archive (without stub) parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -272,7 +277,17 @@ standard encoding of the system on which the phar was created.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="PHP phar archive (without stub) parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="PHP phar archive (without stub) parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="PHP phar archive (without stub) parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -308,10 +323,10 @@ standard encoding of the system on which the phar was created.</p>
 
 <span class="kd">local</span><span class="w"> </span><span class="nv">class</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
 <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;kaitaistruct&quot;</span><span class="p">)</span>
+<span class="nb">require</span><span class="p">(</span><span class="s2">&quot;php_serialized_value&quot;</span><span class="p">)</span>
 <span class="kd">local</span><span class="w"> </span><span class="nv">enum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">&quot;enum&quot;</span><span class="p">)</span>
 <span class="kd">local</span><span class="w"> </span><span class="nv">stringstream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_stream&quot;</span><span class="p">)</span>
 
-<span class="nb">require</span><span class="p">(</span><span class="s2">&quot;php_serialized_value&quot;</span><span class="p">)</span>
 <span class="c1">-- </span>
 <span class="c1">-- A phar (PHP archive) file. The phar format is a custom archive format</span>
 <span class="c1">-- from the PHP ecosystem that is used to package a complete PHP library</span>
@@ -402,113 +417,6 @@ standard encoding of the system on which the phar was created.</p>
 <span class="c1">-- been tampered with. Only the OpenSSL signature type is a true</span>
 <span class="c1">-- cryptographic signature.</span>
 
-<span class="nv">PharWithoutStub</span><span class="p">.</span><span class="py">SerializedValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">PharWithoutStub</span><span class="p">.</span><span class="nc">SerializedValue</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">PharWithoutStub</span><span class="p">.</span><span class="nc">SerializedValue</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">raw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes_full</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- The serialized value, parsed as a structure.</span>
-<span class="nv">PharWithoutStub</span><span class="p">.</span><span class="py">SerializedValue</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">parsed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">PharWithoutStub</span><span class="p">.</span><span class="nc">SerializedValue</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">parsed</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_parsed</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_parsed</span>
-<span class="w">  </span><span class="kr">end</span>
-
-<span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">pos</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_parsed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">PhpSerializedValue</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">(</span><span class="nv">_pos</span><span class="p">)</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_parsed</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- The serialized value, as a raw byte array.</span>
-
-<span class="nv">PharWithoutStub</span><span class="p">.</span><span class="py">Signature</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">PharWithoutStub</span><span class="p">.</span><span class="nc">Signature</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">PharWithoutStub</span><span class="p">.</span><span class="nc">Signature</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(((</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">pos</span><span class="p">())</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">8</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">PharWithoutStub</span><span class="p">.</span><span class="nf">SignatureType</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">())</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">magic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">magic</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\071\066\077\066</span><span class="s2">&quot;</span><span class="p">)</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span><span class="w"> </span><span class="o">..</span><span class="w">  </span><span class="s2">&quot;</span><span class="se">\071\066\077\066</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s2">&quot;, but got &quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">magic</span><span class="p">)</span>
-<span class="w">  </span><span class="kr">end</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- The signature data. The size and contents depend on the</span>
-<span class="c1">-- signature type.</span>
-<span class="c1">-- </span>
-<span class="c1">-- The signature type.</span>
-
-<span class="nv">PharWithoutStub</span><span class="p">.</span><span class="py">FileFlags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">PharWithoutStub</span><span class="p">.</span><span class="nc">FileFlags</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">PharWithoutStub</span><span class="p">.</span><span class="nc">FileFlags</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- The file&#39;s permission bits.</span>
-<span class="nv">PharWithoutStub</span><span class="p">.</span><span class="py">FileFlags</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">permissions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">PharWithoutStub</span><span class="p">.</span><span class="nc">FileFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">permissions</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_permissions</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_permissions</span>
-<span class="w">  </span><span class="kr">end</span>
-
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_permissions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">value</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">511</span><span class="p">)</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_permissions</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- Whether this file&#39;s data is stored using zlib compression.</span>
-<span class="nv">PharWithoutStub</span><span class="p">.</span><span class="py">FileFlags</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">zlib_compressed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">PharWithoutStub</span><span class="p">.</span><span class="nc">FileFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">zlib_compressed</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_zlib_compressed</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_zlib_compressed</span>
-<span class="w">  </span><span class="kr">end</span>
-
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_zlib_compressed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">value</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">4096</span><span class="p">)</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_zlib_compressed</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- Whether this file&#39;s data is stored using bzip2 compression.</span>
-<span class="nv">PharWithoutStub</span><span class="p">.</span><span class="py">FileFlags</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">bzip2_compressed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">PharWithoutStub</span><span class="p">.</span><span class="nc">FileFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">bzip2_compressed</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_bzip2_compressed</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_bzip2_compressed</span>
-<span class="w">  </span><span class="kr">end</span>
-
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_bzip2_compressed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">value</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">8192</span><span class="p">)</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_bzip2_compressed</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- The unparsed flag bits.</span>
-
 <span class="c1">-- </span>
 <span class="c1">-- A phar API version number. This version number is meant to indicate</span>
 <span class="c1">-- which features are used in a specific phar, so that tools reading</span>
@@ -547,7 +455,7 @@ standard encoding of the system on which the phar was created.</p>
 <span class="kr">function</span><span class="w"> </span><span class="nc">PharWithoutStub</span><span class="p">.</span><span class="nc">ApiVersion</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
@@ -559,30 +467,121 @@ standard encoding of the system on which the phar was created.</p>
 <span class="kr">end</span>
 
 
+<span class="nv">PharWithoutStub</span><span class="p">.</span><span class="py">FileEntry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">PharWithoutStub</span><span class="p">.</span><span class="nc">FileEntry</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">PharWithoutStub</span><span class="p">.</span><span class="nc">FileEntry</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">len_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_filename</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">len_data_uncompressed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">timestamp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">len_data_compressed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">crc32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">PharWithoutStub</span><span class="p">.</span><span class="nf">FileFlags</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">len_metadata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">len_metadata</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_metadata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_metadata</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">KaitaiStream</span><span class="p">(</span><span class="nf">stringstream</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_metadata</span><span class="p">))</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">metadata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">PharWithoutStub</span><span class="p">.</span><span class="nf">SerializedValue</span><span class="p">(</span><span class="nv">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The length of the file name, in bytes.</span>
+<span class="c1">-- </span>
+<span class="c1">-- The name of this file. If the name ends with a slash, this entry</span>
+<span class="c1">-- represents a directory, otherwise a regular file. Directory entries</span>
+<span class="c1">-- are supported since phar API version 1.1.1.</span>
+<span class="c1">-- (Explicit directory entries are only needed for empty directories.</span>
+<span class="c1">-- Non-empty directories are implied by the files located inside them.)</span>
+<span class="c1">-- </span>
+<span class="c1">-- The length of the file&#39;s data when uncompressed, in bytes.</span>
+<span class="c1">-- </span>
+<span class="c1">-- The time at which the file was added or last updated, as a</span>
+<span class="c1">-- Unix timestamp.</span>
+<span class="c1">-- </span>
+<span class="c1">-- The length of the file&#39;s data when compressed, in bytes.</span>
+<span class="c1">-- </span>
+<span class="c1">-- The CRC32 checksum of the file&#39;s uncompressed data.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Flags for this file.</span>
+<span class="c1">-- </span>
+<span class="c1">-- The length of the metadata, in bytes, or 0 if there is none.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Metadata for this file, in the format used by PHP&#39;s</span>
+<span class="c1">-- `serialize` function. The meaning of the serialized data is not</span>
+<span class="c1">-- specified further, it may be used to store arbitrary custom data</span>
+<span class="c1">-- about the file.</span>
+
+<span class="nv">PharWithoutStub</span><span class="p">.</span><span class="py">FileFlags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">PharWithoutStub</span><span class="p">.</span><span class="nc">FileFlags</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">PharWithoutStub</span><span class="p">.</span><span class="nc">FileFlags</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Whether this file&#39;s data is stored using bzip2 compression.</span>
+<span class="nv">PharWithoutStub</span><span class="p">.</span><span class="py">FileFlags</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">bzip2_compressed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">PharWithoutStub</span><span class="p">.</span><span class="nc">FileFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">bzip2_compressed</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_bzip2_compressed</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_bzip2_compressed</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_bzip2_compressed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">value</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">8192</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_bzip2_compressed</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The file&#39;s permission bits.</span>
+<span class="nv">PharWithoutStub</span><span class="p">.</span><span class="py">FileFlags</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">permissions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">PharWithoutStub</span><span class="p">.</span><span class="nc">FileFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">permissions</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_permissions</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_permissions</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_permissions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">value</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">511</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_permissions</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Whether this file&#39;s data is stored using zlib compression.</span>
+<span class="nv">PharWithoutStub</span><span class="p">.</span><span class="py">FileFlags</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">zlib_compressed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">PharWithoutStub</span><span class="p">.</span><span class="nc">FileFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">zlib_compressed</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_zlib_compressed</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_zlib_compressed</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_zlib_compressed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">value</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">4096</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_zlib_compressed</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The unparsed flag bits.</span>
+
 <span class="nv">PharWithoutStub</span><span class="p">.</span><span class="py">GlobalFlags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
 <span class="kr">function</span><span class="w"> </span><span class="nc">PharWithoutStub</span><span class="p">.</span><span class="nc">GlobalFlags</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
 <span class="kr">function</span><span class="w"> </span><span class="nc">PharWithoutStub</span><span class="p">.</span><span class="nc">GlobalFlags</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- Whether any of the files in this phar are stored using</span>
-<span class="c1">-- zlib compression.</span>
-<span class="nv">PharWithoutStub</span><span class="p">.</span><span class="py">GlobalFlags</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">any_zlib_compressed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">PharWithoutStub</span><span class="p">.</span><span class="nc">GlobalFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">any_zlib_compressed</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_any_zlib_compressed</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_any_zlib_compressed</span>
-<span class="w">  </span><span class="kr">end</span>
-
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_any_zlib_compressed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">value</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">4096</span><span class="p">)</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_any_zlib_compressed</span>
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
@@ -594,8 +593,21 @@ standard encoding of the system on which the phar was created.</p>
 <span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_any_bzip2_compressed</span>
 <span class="w">  </span><span class="kr">end</span>
 
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_any_bzip2_compressed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">value</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">8192</span><span class="p">)</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_any_bzip2_compressed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">value</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">8192</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span>
 <span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_any_bzip2_compressed</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Whether any of the files in this phar are stored using</span>
+<span class="c1">-- zlib compression.</span>
+<span class="nv">PharWithoutStub</span><span class="p">.</span><span class="py">GlobalFlags</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">any_zlib_compressed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">PharWithoutStub</span><span class="p">.</span><span class="nc">GlobalFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">any_zlib_compressed</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_any_zlib_compressed</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_any_zlib_compressed</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_any_zlib_compressed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">value</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">4096</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_any_zlib_compressed</span>
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
@@ -606,7 +618,7 @@ standard encoding of the system on which the phar was created.</p>
 <span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_has_signature</span>
 <span class="w">  </span><span class="kr">end</span>
 
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_has_signature</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">value</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">65536</span><span class="p">)</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_has_signature</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">value</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">65536</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span>
 <span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_has_signature</span>
 <span class="kr">end</span>
 
@@ -618,7 +630,7 @@ standard encoding of the system on which the phar was created.</p>
 <span class="kr">function</span><span class="w"> </span><span class="nc">PharWithoutStub</span><span class="p">.</span><span class="nc">Manifest</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
@@ -666,57 +678,60 @@ standard encoding of the system on which the phar was created.</p>
 <span class="c1">-- </span>
 <span class="c1">-- Manifest entries for the files contained in this phar.</span>
 
-<span class="nv">PharWithoutStub</span><span class="p">.</span><span class="py">FileEntry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
+<span class="nv">PharWithoutStub</span><span class="p">.</span><span class="py">SerializedValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
-<span class="kr">function</span><span class="w"> </span><span class="nc">PharWithoutStub</span><span class="p">.</span><span class="nc">FileEntry</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">PharWithoutStub</span><span class="p">.</span><span class="nc">SerializedValue</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
-<span class="kr">function</span><span class="w"> </span><span class="nc">PharWithoutStub</span><span class="p">.</span><span class="nc">FileEntry</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">len_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_filename</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">len_data_uncompressed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">timestamp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">len_data_compressed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">crc32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">PharWithoutStub</span><span class="p">.</span><span class="nf">FileFlags</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">len_metadata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">len_metadata</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_metadata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_metadata</span><span class="p">)</span>
-<span class="w">    </span><span class="kd">local</span><span class="w"> </span><span class="nv">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">KaitaiStream</span><span class="p">(</span><span class="nf">stringstream</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_metadata</span><span class="p">))</span>
-<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">metadata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">PharWithoutStub</span><span class="p">.</span><span class="nf">SerializedValue</span><span class="p">(</span><span class="nv">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">PharWithoutStub</span><span class="p">.</span><span class="nc">SerializedValue</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">raw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes_full</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The serialized value, parsed as a structure.</span>
+<span class="nv">PharWithoutStub</span><span class="p">.</span><span class="py">SerializedValue</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">parsed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">PharWithoutStub</span><span class="p">.</span><span class="nc">SerializedValue</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">parsed</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_parsed</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_parsed</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">pos</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_parsed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">PhpSerializedValue</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">seek</span><span class="p">(</span><span class="nv">_pos</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_parsed</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The serialized value, as a raw byte array.</span>
+
+<span class="nv">PharWithoutStub</span><span class="p">.</span><span class="py">Signature</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">PharWithoutStub</span><span class="p">.</span><span class="nc">Signature</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">PharWithoutStub</span><span class="p">.</span><span class="nc">Signature</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">pos</span><span class="p">())</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">8</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">PharWithoutStub</span><span class="p">.</span><span class="nf">SignatureType</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">())</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">magic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">magic</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\071\066\077\066</span><span class="s2">&quot;</span><span class="p">)</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\071\066\077\066</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s2">&quot;, but got &quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">magic</span><span class="p">)</span>
 <span class="w">  </span><span class="kr">end</span>
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
-<span class="c1">-- The length of the file name, in bytes.</span>
+<span class="c1">-- The signature data. The size and contents depend on the</span>
+<span class="c1">-- signature type.</span>
 <span class="c1">-- </span>
-<span class="c1">-- The name of this file. If the name ends with a slash, this entry</span>
-<span class="c1">-- represents a directory, otherwise a regular file. Directory entries</span>
-<span class="c1">-- are supported since phar API version 1.1.1.</span>
-<span class="c1">-- (Explicit directory entries are only needed for empty directories.</span>
-<span class="c1">-- Non-empty directories are implied by the files located inside them.)</span>
-<span class="c1">-- </span>
-<span class="c1">-- The length of the file&#39;s data when uncompressed, in bytes.</span>
-<span class="c1">-- </span>
-<span class="c1">-- The time at which the file was added or last updated, as a</span>
-<span class="c1">-- Unix timestamp.</span>
-<span class="c1">-- </span>
-<span class="c1">-- The length of the file&#39;s data when compressed, in bytes.</span>
-<span class="c1">-- </span>
-<span class="c1">-- The CRC32 checksum of the file&#39;s uncompressed data.</span>
-<span class="c1">-- </span>
-<span class="c1">-- Flags for this file.</span>
-<span class="c1">-- </span>
-<span class="c1">-- The length of the metadata, in bytes, or 0 if there is none.</span>
-<span class="c1">-- </span>
-<span class="c1">-- Metadata for this file, in the format used by PHP&#39;s</span>
-<span class="c1">-- `serialize` function. The meaning of the serialized data is not</span>
-<span class="c1">-- specified further, it may be used to store arbitrary custom data</span>
-<span class="c1">-- about the file.</span>
+<span class="c1">-- The signature type.</span>
 </pre></div>
 
         </div>

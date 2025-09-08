@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -11,46 +11,6 @@ end
 # The OpenPGP Message Format is a format to store encryption and signature keys for emails.
 # @see https://www.rfc-editor.org/rfc/rfc4880 Source
 class OpenpgpMessage < Kaitai::Struct::Struct
-
-  PUBLIC_KEY_ALGORITHMS = {
-    1 => :public_key_algorithms_rsa_encrypt_or_sign_hac,
-    2 => :public_key_algorithms_rsa_encrypt_only_hac,
-    3 => :public_key_algorithms_rsa_sign_only_hac,
-    16 => :public_key_algorithms_elgamal_encrypt_only_elgamal_hac,
-    17 => :public_key_algorithms_dsa_digital_signature_algorithm_fips_hac,
-    18 => :public_key_algorithms_reserved_for_elliptic_curve,
-    19 => :public_key_algorithms_reserved_for_ecdsa,
-    20 => :public_key_algorithms_reserved_formerly_elgamal_encrypt_or_sign_,
-    21 => :public_key_algorithms_reserved_for_diffie_hellman_x_as_defined_for_ietf_s_mime,
-    100 => :public_key_algorithms_private_experimental_algorithm_00,
-    101 => :public_key_algorithms_private_experimental_algorithm_01,
-    102 => :public_key_algorithms_private_experimental_algorithm_02,
-    103 => :public_key_algorithms_private_experimental_algorithm_03,
-    104 => :public_key_algorithms_private_experimental_algorithm_04,
-    105 => :public_key_algorithms_private_experimental_algorithm_05,
-    106 => :public_key_algorithms_private_experimental_algorithm_06,
-    107 => :public_key_algorithms_private_experimental_algorithm_07,
-    108 => :public_key_algorithms_private_experimental_algorithm_08,
-    109 => :public_key_algorithms_private_experimental_algorithm_09,
-    110 => :public_key_algorithms_private_experimental_algorithm_10,
-  }
-  I__PUBLIC_KEY_ALGORITHMS = PUBLIC_KEY_ALGORITHMS.invert
-
-  SERVER_FLAGS = {
-    128 => :server_flags_no_modify,
-  }
-  I__SERVER_FLAGS = SERVER_FLAGS.invert
-
-  KEY_FLAGS = {
-    1 => :key_flags_this_key_may_be_used_to_certify_other_keys,
-    2 => :key_flags_this_key_may_be_used_to_sign_data,
-    4 => :key_flags_this_key_may_be_used_to_encrypt_communications,
-    8 => :key_flags_this_key_may_be_used_to_encrypt_storage,
-    16 => :key_flags_the_private_component_of_this_key_may_have_been_split_by_a_secret_sharing_mechanism,
-    32 => :key_flags_this_key_may_be_used_for_authentication,
-    128 => :key_flags_the_private_component_of_this_key_may_be_in_the_possession_of_more_than_one_person,
-  }
-  I__KEY_FLAGS = KEY_FLAGS.invert
 
   COMPRESSION_ALGORITHMS = {
     0 => :compression_algorithms_uncompressed,
@@ -70,46 +30,6 @@ class OpenpgpMessage < Kaitai::Struct::Struct
     110 => :compression_algorithms_private_experimental_algorithm_10,
   }
   I__COMPRESSION_ALGORITHMS = COMPRESSION_ALGORITHMS.invert
-
-  PACKET_TAGS = {
-    0 => :packet_tags_reserved_a_packet_tag_must_not_have_this_value,
-    1 => :packet_tags_public_key_encrypted_session_key_packet,
-    2 => :packet_tags_signature_packet,
-    3 => :packet_tags_symmetric_key_encrypted_session_key_packet,
-    4 => :packet_tags_one_pass_signature_packet,
-    5 => :packet_tags_secret_key_packet,
-    6 => :packet_tags_public_key_packet,
-    7 => :packet_tags_secret_subkey_packet,
-    8 => :packet_tags_compressed_data_packet,
-    9 => :packet_tags_symmetrically_encrypted_data_packet,
-    10 => :packet_tags_marker_packet,
-    11 => :packet_tags_literal_data_packet,
-    12 => :packet_tags_trust_packet,
-    13 => :packet_tags_user_id_packet,
-    14 => :packet_tags_public_subkey_packet,
-    17 => :packet_tags_user_attribute_packet,
-    18 => :packet_tags_sym_encrypted_and_integrity_protected_data_packet,
-    19 => :packet_tags_modification_detection_code_packet,
-    60 => :packet_tags_private_or_experimental_values_0,
-    61 => :packet_tags_private_or_experimental_values_1,
-    62 => :packet_tags_private_or_experimental_values_2,
-    63 => :packet_tags_private_or_experimental_values_3,
-  }
-  I__PACKET_TAGS = PACKET_TAGS.invert
-
-  REVOCATION_CODES = {
-    0 => :revocation_codes_no_reason_specified_key_revocations_or_cert_revocations,
-    1 => :revocation_codes_key_is_superseded_key_revocations,
-    2 => :revocation_codes_key_material_has_been_compromised_key_revocations,
-    3 => :revocation_codes_key_is_retired_and_no_longer_used_key_revocations,
-    32 => :revocation_codes_user_id_information_is_no_longer_valid_cert_revocations,
-    100 => :revocation_codes_private_use_1,
-    101 => :revocation_codes_private_use_2,
-    102 => :revocation_codes_private_use_3,
-    103 => :revocation_codes_private_use_4,
-    110 => :revocation_codes_private_use_11,
-  }
-  I__REVOCATION_CODES = REVOCATION_CODES.invert
 
   HASH_ALGORITHMS = {
     1 => :hash_algorithms_md5,
@@ -137,31 +57,85 @@ class OpenpgpMessage < Kaitai::Struct::Struct
   }
   I__HASH_ALGORITHMS = HASH_ALGORITHMS.invert
 
-  SYMMETRIC_KEY_ALGORITHM = {
-    0 => :symmetric_key_algorithm_plain,
-    1 => :symmetric_key_algorithm_idea,
-    2 => :symmetric_key_algorithm_triple_des,
-    3 => :symmetric_key_algorithm_cast5,
-    4 => :symmetric_key_algorithm_blowfisch,
-    5 => :symmetric_key_algorithm_reserved5,
-    6 => :symmetric_key_algorithm_reserved6,
-    7 => :symmetric_key_algorithm_aes_128,
-    8 => :symmetric_key_algorithm_aes_192,
-    9 => :symmetric_key_algorithm_aes_256,
-    10 => :symmetric_key_algorithm_twofish_256,
-    100 => :symmetric_key_algorithm_private_experimental_algorithm_00,
-    101 => :symmetric_key_algorithm_private_experimental_algorithm_01,
-    102 => :symmetric_key_algorithm_private_experimental_algorithm_02,
-    103 => :symmetric_key_algorithm_private_experimental_algorithm_03,
-    104 => :symmetric_key_algorithm_private_experimental_algorithm_04,
-    105 => :symmetric_key_algorithm_private_experimental_algorithm_05,
-    106 => :symmetric_key_algorithm_private_experimental_algorithm_06,
-    107 => :symmetric_key_algorithm_private_experimental_algorithm_07,
-    108 => :symmetric_key_algorithm_private_experimental_algorithm_08,
-    109 => :symmetric_key_algorithm_private_experimental_algorithm_09,
-    110 => :symmetric_key_algorithm_private_experimental_algorithm_10,
+  KEY_FLAGS = {
+    1 => :key_flags_this_key_may_be_used_to_certify_other_keys,
+    2 => :key_flags_this_key_may_be_used_to_sign_data,
+    4 => :key_flags_this_key_may_be_used_to_encrypt_communications,
+    8 => :key_flags_this_key_may_be_used_to_encrypt_storage,
+    16 => :key_flags_the_private_component_of_this_key_may_have_been_split_by_a_secret_sharing_mechanism,
+    32 => :key_flags_this_key_may_be_used_for_authentication,
+    128 => :key_flags_the_private_component_of_this_key_may_be_in_the_possession_of_more_than_one_person,
   }
-  I__SYMMETRIC_KEY_ALGORITHM = SYMMETRIC_KEY_ALGORITHM.invert
+  I__KEY_FLAGS = KEY_FLAGS.invert
+
+  PACKET_TAGS = {
+    0 => :packet_tags_reserved_a_packet_tag_must_not_have_this_value,
+    1 => :packet_tags_public_key_encrypted_session_key_packet,
+    2 => :packet_tags_signature_packet,
+    3 => :packet_tags_symmetric_key_encrypted_session_key_packet,
+    4 => :packet_tags_one_pass_signature_packet,
+    5 => :packet_tags_secret_key_packet,
+    6 => :packet_tags_public_key_packet,
+    7 => :packet_tags_secret_subkey_packet,
+    8 => :packet_tags_compressed_data_packet,
+    9 => :packet_tags_symmetrically_encrypted_data_packet,
+    10 => :packet_tags_marker_packet,
+    11 => :packet_tags_literal_data_packet,
+    12 => :packet_tags_trust_packet,
+    13 => :packet_tags_user_id_packet,
+    14 => :packet_tags_public_subkey_packet,
+    17 => :packet_tags_user_attribute_packet,
+    18 => :packet_tags_sym_encrypted_and_integrity_protected_data_packet,
+    19 => :packet_tags_modification_detection_code_packet,
+    60 => :packet_tags_private_or_experimental_values_0,
+    61 => :packet_tags_private_or_experimental_values_1,
+    62 => :packet_tags_private_or_experimental_values_2,
+    63 => :packet_tags_private_or_experimental_values_3,
+  }
+  I__PACKET_TAGS = PACKET_TAGS.invert
+
+  PUBLIC_KEY_ALGORITHMS = {
+    1 => :public_key_algorithms_rsa_encrypt_or_sign_hac,
+    2 => :public_key_algorithms_rsa_encrypt_only_hac,
+    3 => :public_key_algorithms_rsa_sign_only_hac,
+    16 => :public_key_algorithms_elgamal_encrypt_only_elgamal_hac,
+    17 => :public_key_algorithms_dsa_digital_signature_algorithm_fips_hac,
+    18 => :public_key_algorithms_reserved_for_elliptic_curve,
+    19 => :public_key_algorithms_reserved_for_ecdsa,
+    20 => :public_key_algorithms_reserved_formerly_elgamal_encrypt_or_sign_,
+    21 => :public_key_algorithms_reserved_for_diffie_hellman_x_as_defined_for_ietf_s_mime,
+    100 => :public_key_algorithms_private_experimental_algorithm_00,
+    101 => :public_key_algorithms_private_experimental_algorithm_01,
+    102 => :public_key_algorithms_private_experimental_algorithm_02,
+    103 => :public_key_algorithms_private_experimental_algorithm_03,
+    104 => :public_key_algorithms_private_experimental_algorithm_04,
+    105 => :public_key_algorithms_private_experimental_algorithm_05,
+    106 => :public_key_algorithms_private_experimental_algorithm_06,
+    107 => :public_key_algorithms_private_experimental_algorithm_07,
+    108 => :public_key_algorithms_private_experimental_algorithm_08,
+    109 => :public_key_algorithms_private_experimental_algorithm_09,
+    110 => :public_key_algorithms_private_experimental_algorithm_10,
+  }
+  I__PUBLIC_KEY_ALGORITHMS = PUBLIC_KEY_ALGORITHMS.invert
+
+  REVOCATION_CODES = {
+    0 => :revocation_codes_no_reason_specified_key_revocations_or_cert_revocations,
+    1 => :revocation_codes_key_is_superseded_key_revocations,
+    2 => :revocation_codes_key_material_has_been_compromised_key_revocations,
+    3 => :revocation_codes_key_is_retired_and_no_longer_used_key_revocations,
+    32 => :revocation_codes_user_id_information_is_no_longer_valid_cert_revocations,
+    100 => :revocation_codes_private_use_1,
+    101 => :revocation_codes_private_use_2,
+    102 => :revocation_codes_private_use_3,
+    103 => :revocation_codes_private_use_4,
+    110 => :revocation_codes_private_use_11,
+  }
+  I__REVOCATION_CODES = REVOCATION_CODES.invert
+
+  SERVER_FLAGS = {
+    128 => :server_flags_no_modify,
+  }
+  I__SERVER_FLAGS = SERVER_FLAGS.invert
 
   SUBPACKET_TYPES = {
     0 => :subpacket_types_reserved0,
@@ -199,8 +173,34 @@ class OpenpgpMessage < Kaitai::Struct::Struct
     32 => :subpacket_types_embedded_signature,
   }
   I__SUBPACKET_TYPES = SUBPACKET_TYPES.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+
+  SYMMETRIC_KEY_ALGORITHM = {
+    0 => :symmetric_key_algorithm_plain,
+    1 => :symmetric_key_algorithm_idea,
+    2 => :symmetric_key_algorithm_triple_des,
+    3 => :symmetric_key_algorithm_cast5,
+    4 => :symmetric_key_algorithm_blowfisch,
+    5 => :symmetric_key_algorithm_reserved5,
+    6 => :symmetric_key_algorithm_reserved6,
+    7 => :symmetric_key_algorithm_aes_128,
+    8 => :symmetric_key_algorithm_aes_192,
+    9 => :symmetric_key_algorithm_aes_256,
+    10 => :symmetric_key_algorithm_twofish_256,
+    100 => :symmetric_key_algorithm_private_experimental_algorithm_00,
+    101 => :symmetric_key_algorithm_private_experimental_algorithm_01,
+    102 => :symmetric_key_algorithm_private_experimental_algorithm_02,
+    103 => :symmetric_key_algorithm_private_experimental_algorithm_03,
+    104 => :symmetric_key_algorithm_private_experimental_algorithm_04,
+    105 => :symmetric_key_algorithm_private_experimental_algorithm_05,
+    106 => :symmetric_key_algorithm_private_experimental_algorithm_06,
+    107 => :symmetric_key_algorithm_private_experimental_algorithm_07,
+    108 => :symmetric_key_algorithm_private_experimental_algorithm_08,
+    109 => :symmetric_key_algorithm_private_experimental_algorithm_09,
+    110 => :symmetric_key_algorithm_private_experimental_algorithm_10,
+  }
+  I__SYMMETRIC_KEY_ALGORITHM = SYMMETRIC_KEY_ALGORITHM.invert
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -213,176 +213,68 @@ class OpenpgpMessage < Kaitai::Struct::Struct
     end
     self
   end
-  class PreferredHashAlgorithms < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  class EmbeddedSignature < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @algorithm = []
-      i = 0
-      while not @_io.eof?
-        @algorithm << Kaitai::Struct::Stream::resolve_enum(OpenpgpMessage::HASH_ALGORITHMS, @_io.read_u1)
-        i += 1
-      end
+      @signature_packet = SignaturePacket.new(@_io, self, @_root)
       self
     end
-    attr_reader :algorithm
+    attr_reader :signature_packet
   end
-  class PreferredCompressionAlgorithms < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  class ExportableCertification < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @algorithm = []
-      i = 0
-      while not @_io.eof?
-        @algorithm << Kaitai::Struct::Stream::resolve_enum(OpenpgpMessage::COMPRESSION_ALGORITHMS, @_io.read_u1)
-        i += 1
-      end
+      @exportable = @_io.read_u1
       self
     end
-    attr_reader :algorithm
+    attr_reader :exportable
   end
-  class SignersUserId < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  class Features < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @user_id = (@_io.read_bytes_full).force_encoding("UTF-8")
+      @flags = @_io.read_bytes_full
       self
     end
-    attr_reader :user_id
+    attr_reader :flags
   end
-  class SecretKeyPacket < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  class Issuer < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @public_key = PublicKeyPacket.new(@_io, self, @_root)
-      @string_to_key = @_io.read_u1
-      if string_to_key >= 254
-        @symmetric_encryption_algorithm = Kaitai::Struct::Stream::resolve_enum(OpenpgpMessage::SYMMETRIC_KEY_ALGORITHM, @_io.read_u1)
-      end
-      @secret_key = @_io.read_bytes_full
+      @keyid = @_io.read_u8be
       self
     end
-    attr_reader :public_key
-    attr_reader :string_to_key
-    attr_reader :symmetric_encryption_algorithm
-    attr_reader :secret_key
+    attr_reader :keyid
   end
-  class KeyServerPreferences < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  class KeyExpirationTime < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @flag = []
-      i = 0
-      while not @_io.eof?
-        @flag << Kaitai::Struct::Stream::resolve_enum(OpenpgpMessage::SERVER_FLAGS, @_io.read_u1)
-        i += 1
-      end
+      @time = @_io.read_u4be
       self
     end
-    attr_reader :flag
-  end
-  class RegularExpression < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @regex = (@_io.read_bytes_term(0, false, true, true)).force_encoding("UTF-8")
-      self
-    end
-    attr_reader :regex
-  end
-  class Subpackets < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @subpacketss = []
-      i = 0
-      while not @_io.eof?
-        @subpacketss << Subpacket.new(@_io, self, @_root)
-        i += 1
-      end
-      self
-    end
-    attr_reader :subpacketss
-  end
-  class RevocationKey < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @class = @_io.read_u1
-      @public_key_algorithm = Kaitai::Struct::Stream::resolve_enum(OpenpgpMessage::PUBLIC_KEY_ALGORITHMS, @_io.read_u1)
-      @fingerprint = @_io.read_bytes(20)
-      self
-    end
-    attr_reader :class
-    attr_reader :public_key_algorithm
-    attr_reader :fingerprint
-  end
-  class UserIdPacket < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @user_id = (@_io.read_bytes_full).force_encoding("UTF-8")
-      self
-    end
-    attr_reader :user_id
-  end
-  class PolicyUri < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @uri = (@_io.read_bytes_full).force_encoding("UTF-8")
-      self
-    end
-    attr_reader :uri
-  end
-  class SignatureTarget < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @public_key_algorithm = Kaitai::Struct::Stream::resolve_enum(OpenpgpMessage::PUBLIC_KEY_ALGORITHMS, @_io.read_u1)
-      @hash_algorithm = Kaitai::Struct::Stream::resolve_enum(OpenpgpMessage::HASH_ALGORITHMS, @_io.read_u1)
-      @hash = @_io.read_bytes_full
-      self
-    end
-    attr_reader :public_key_algorithm
-    attr_reader :hash_algorithm
-    attr_reader :hash
+    attr_reader :time
   end
   class KeyFlags < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -398,325 +290,25 @@ class OpenpgpMessage < Kaitai::Struct::Struct
     end
     attr_reader :flag
   end
-  class Features < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  class KeyServerPreferences < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @flags = @_io.read_bytes_full
-      self
-    end
-    attr_reader :flags
-  end
-  class PrimaryUserId < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @user_id = @_io.read_u1
-      self
-    end
-    attr_reader :user_id
-  end
-  class Subpacket < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @len = LenSubpacket.new(@_io, self, @_root)
-      @subpacket_type = Kaitai::Struct::Stream::resolve_enum(OpenpgpMessage::SUBPACKET_TYPES, @_io.read_u1)
-      case subpacket_type
-      when :subpacket_types_preferred_key_server
-        @_raw_content = @_io.read_bytes((len.len - 1))
-        _io__raw_content = Kaitai::Struct::Stream.new(@_raw_content)
-        @content = PreferredKeyServer.new(_io__raw_content, self, @_root)
-      when :subpacket_types_issuer
-        @_raw_content = @_io.read_bytes((len.len - 1))
-        _io__raw_content = Kaitai::Struct::Stream.new(@_raw_content)
-        @content = Issuer.new(_io__raw_content, self, @_root)
-      when :subpacket_types_revocable
-        @_raw_content = @_io.read_bytes((len.len - 1))
-        _io__raw_content = Kaitai::Struct::Stream.new(@_raw_content)
-        @content = Revocable.new(_io__raw_content, self, @_root)
-      when :subpacket_types_signature_target
-        @_raw_content = @_io.read_bytes((len.len - 1))
-        _io__raw_content = Kaitai::Struct::Stream.new(@_raw_content)
-        @content = SignatureTarget.new(_io__raw_content, self, @_root)
-      when :subpacket_types_regular_expression
-        @_raw_content = @_io.read_bytes((len.len - 1))
-        _io__raw_content = Kaitai::Struct::Stream.new(@_raw_content)
-        @content = RegularExpression.new(_io__raw_content, self, @_root)
-      when :subpacket_types_exportable_certification
-        @_raw_content = @_io.read_bytes((len.len - 1))
-        _io__raw_content = Kaitai::Struct::Stream.new(@_raw_content)
-        @content = ExportableCertification.new(_io__raw_content, self, @_root)
-      when :subpacket_types_reason_for_revocation
-        @_raw_content = @_io.read_bytes((len.len - 1))
-        _io__raw_content = Kaitai::Struct::Stream.new(@_raw_content)
-        @content = ReasonForRevocation.new(_io__raw_content, self, @_root)
-      when :subpacket_types_key_server_preferences
-        @_raw_content = @_io.read_bytes((len.len - 1))
-        _io__raw_content = Kaitai::Struct::Stream.new(@_raw_content)
-        @content = KeyServerPreferences.new(_io__raw_content, self, @_root)
-      when :subpacket_types_signature_creation_time
-        @_raw_content = @_io.read_bytes((len.len - 1))
-        _io__raw_content = Kaitai::Struct::Stream.new(@_raw_content)
-        @content = SignatureCreationTime.new(_io__raw_content, self, @_root)
-      when :subpacket_types_preferred_hash_algorithms
-        @_raw_content = @_io.read_bytes((len.len - 1))
-        _io__raw_content = Kaitai::Struct::Stream.new(@_raw_content)
-        @content = PreferredHashAlgorithms.new(_io__raw_content, self, @_root)
-      when :subpacket_types_trust_signature
-        @_raw_content = @_io.read_bytes((len.len - 1))
-        _io__raw_content = Kaitai::Struct::Stream.new(@_raw_content)
-        @content = TrustSignature.new(_io__raw_content, self, @_root)
-      when :subpacket_types_key_expiration_time
-        @_raw_content = @_io.read_bytes((len.len - 1))
-        _io__raw_content = Kaitai::Struct::Stream.new(@_raw_content)
-        @content = KeyExpirationTime.new(_io__raw_content, self, @_root)
-      when :subpacket_types_key_flags
-        @_raw_content = @_io.read_bytes((len.len - 1))
-        _io__raw_content = Kaitai::Struct::Stream.new(@_raw_content)
-        @content = KeyFlags.new(_io__raw_content, self, @_root)
-      when :subpacket_types_signature_expiration_time
-        @_raw_content = @_io.read_bytes((len.len - 1))
-        _io__raw_content = Kaitai::Struct::Stream.new(@_raw_content)
-        @content = SignatureExpirationTime.new(_io__raw_content, self, @_root)
-      when :subpacket_types_features
-        @_raw_content = @_io.read_bytes((len.len - 1))
-        _io__raw_content = Kaitai::Struct::Stream.new(@_raw_content)
-        @content = Features.new(_io__raw_content, self, @_root)
-      when :subpacket_types_signers_user_id
-        @_raw_content = @_io.read_bytes((len.len - 1))
-        _io__raw_content = Kaitai::Struct::Stream.new(@_raw_content)
-        @content = SignersUserId.new(_io__raw_content, self, @_root)
-      when :subpacket_types_notation_data
-        @_raw_content = @_io.read_bytes((len.len - 1))
-        _io__raw_content = Kaitai::Struct::Stream.new(@_raw_content)
-        @content = NotationData.new(_io__raw_content, self, @_root)
-      when :subpacket_types_revocation_key
-        @_raw_content = @_io.read_bytes((len.len - 1))
-        _io__raw_content = Kaitai::Struct::Stream.new(@_raw_content)
-        @content = RevocationKey.new(_io__raw_content, self, @_root)
-      when :subpacket_types_preferred_compression_algorithms
-        @_raw_content = @_io.read_bytes((len.len - 1))
-        _io__raw_content = Kaitai::Struct::Stream.new(@_raw_content)
-        @content = PreferredCompressionAlgorithms.new(_io__raw_content, self, @_root)
-      when :subpacket_types_policy_uri
-        @_raw_content = @_io.read_bytes((len.len - 1))
-        _io__raw_content = Kaitai::Struct::Stream.new(@_raw_content)
-        @content = PolicyUri.new(_io__raw_content, self, @_root)
-      when :subpacket_types_primary_user_id
-        @_raw_content = @_io.read_bytes((len.len - 1))
-        _io__raw_content = Kaitai::Struct::Stream.new(@_raw_content)
-        @content = PrimaryUserId.new(_io__raw_content, self, @_root)
-      when :subpacket_types_embedded_signature
-        @_raw_content = @_io.read_bytes((len.len - 1))
-        _io__raw_content = Kaitai::Struct::Stream.new(@_raw_content)
-        @content = EmbeddedSignature.new(_io__raw_content, self, @_root)
-      else
-        @content = @_io.read_bytes((len.len - 1))
+      @flag = []
+      i = 0
+      while not @_io.eof?
+        @flag << Kaitai::Struct::Stream::resolve_enum(OpenpgpMessage::SERVER_FLAGS, @_io.read_u1)
+        i += 1
       end
       self
     end
-    attr_reader :len
-    attr_reader :subpacket_type
-    attr_reader :content
-    attr_reader :_raw_content
-  end
-  class OldPacket < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      case _parent.len_type
-      when 0
-        @len = @_io.read_u1
-      when 1
-        @len = @_io.read_u2be
-      when 2
-        @len = @_io.read_u4be
-      end
-      case _parent.packet_type_old
-      when :packet_tags_public_key_packet
-        @_raw_body = @_io.read_bytes(len)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = PublicKeyPacket.new(_io__raw_body, self, @_root)
-      when :packet_tags_public_subkey_packet
-        @_raw_body = @_io.read_bytes(len)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = PublicKeyPacket.new(_io__raw_body, self, @_root)
-      when :packet_tags_user_id_packet
-        @_raw_body = @_io.read_bytes(len)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = UserIdPacket.new(_io__raw_body, self, @_root)
-      when :packet_tags_signature_packet
-        @_raw_body = @_io.read_bytes(len)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SignaturePacket.new(_io__raw_body, self, @_root)
-      when :packet_tags_secret_subkey_packet
-        @_raw_body = @_io.read_bytes(len)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = PublicKeyPacket.new(_io__raw_body, self, @_root)
-      when :packet_tags_secret_key_packet
-        @_raw_body = @_io.read_bytes(len)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SecretKeyPacket.new(_io__raw_body, self, @_root)
-      else
-        @body = @_io.read_bytes(len)
-      end
-      self
-    end
-    attr_reader :len
-    attr_reader :body
-    attr_reader :_raw_body
-  end
-  class Issuer < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @keyid = @_io.read_u8be
-      self
-    end
-    attr_reader :keyid
-  end
-  class ExportableCertification < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @exportable = @_io.read_u1
-      self
-    end
-    attr_reader :exportable
-  end
-  class SignatureExpirationTime < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @time = @_io.read_u4be
-      self
-    end
-    attr_reader :time
-  end
-  class SignatureCreationTime < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @time = @_io.read_u4be
-      self
-    end
-    attr_reader :time
-  end
-  class SignaturePacket < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @version = @_io.read_u1
-      @signature_type = @_io.read_u1
-      @public_key_algorithm = Kaitai::Struct::Stream::resolve_enum(OpenpgpMessage::PUBLIC_KEY_ALGORITHMS, @_io.read_u1)
-      @hash_algorithm = Kaitai::Struct::Stream::resolve_enum(OpenpgpMessage::HASH_ALGORITHMS, @_io.read_u1)
-      @len_hashed_subpacket = @_io.read_u2be
-      @_raw_hashed_subpackets = @_io.read_bytes(len_hashed_subpacket)
-      _io__raw_hashed_subpackets = Kaitai::Struct::Stream.new(@_raw_hashed_subpackets)
-      @hashed_subpackets = Subpackets.new(_io__raw_hashed_subpackets, self, @_root)
-      @len_unhashed_subpacket = @_io.read_u2be
-      @_raw_unhashed_subpackets = @_io.read_bytes(len_unhashed_subpacket)
-      _io__raw_unhashed_subpackets = Kaitai::Struct::Stream.new(@_raw_unhashed_subpackets)
-      @unhashed_subpackets = Subpackets.new(_io__raw_unhashed_subpackets, self, @_root)
-      @left_signed_hash = @_io.read_u2be
-      @rsa_n = @_io.read_u2be
-      @signature = @_io.read_bytes_full
-      self
-    end
-    attr_reader :version
-    attr_reader :signature_type
-    attr_reader :public_key_algorithm
-    attr_reader :hash_algorithm
-    attr_reader :len_hashed_subpacket
-    attr_reader :hashed_subpackets
-    attr_reader :len_unhashed_subpacket
-    attr_reader :unhashed_subpackets
-    attr_reader :left_signed_hash
-    attr_reader :rsa_n
-    attr_reader :signature
-    attr_reader :_raw_hashed_subpackets
-    attr_reader :_raw_unhashed_subpackets
-  end
-  class Revocable < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @revocable = @_io.read_u1
-      self
-    end
-    attr_reader :revocable
-  end
-  class EmbeddedSignature < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @signature_packet = SignaturePacket.new(@_io, self, @_root)
-      self
-    end
-    attr_reader :signature_packet
-  end
-  class PreferredKeyServer < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @uri = (@_io.read_bytes_full).force_encoding("UTF-8")
-      self
-    end
-    attr_reader :uri
-  end
-  class ReasonForRevocation < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @revocation_code = Kaitai::Struct::Stream::resolve_enum(OpenpgpMessage::REVOCATION_CODES, @_io.read_u1)
-      @reason = (@_io.read_bytes_full).force_encoding("UTF-8")
-      self
-    end
-    attr_reader :revocation_code
-    attr_reader :reason
+    attr_reader :flag
   end
   class LenSubpacket < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -733,7 +325,7 @@ class OpenpgpMessage < Kaitai::Struct::Struct
     end
     def len
       return @len unless @len.nil?
-      @len = (first_octet < 192 ? first_octet : ( ((first_octet >= 192) && (first_octet < 255))  ? ((((first_octet - 192) << 8) + second_octet) + 192) : scalar))
+      @len = (first_octet < 192 ? first_octet : ( ((first_octet >= 192) && (first_octet < 255))  ? ((first_octet - 192 << 8) + second_octet) + 192 : scalar))
       @len
     end
     attr_reader :first_octet
@@ -741,7 +333,7 @@ class OpenpgpMessage < Kaitai::Struct::Struct
     attr_reader :scalar
   end
   class NotationData < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -760,44 +352,51 @@ class OpenpgpMessage < Kaitai::Struct::Struct
     attr_reader :name
     attr_reader :value
   end
-  class PublicKeyPacket < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  class OldPacket < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @version = @_io.read_u1
-      @timestamp = @_io.read_u4be
-      @public_key_algorithm = Kaitai::Struct::Stream::resolve_enum(OpenpgpMessage::PUBLIC_KEY_ALGORITHMS, @_io.read_u1)
-      @len_alg = @_io.read_u2be
-      @rsa_n = @_io.read_bytes((len_alg / 8))
-      @padding = @_io.read_u2be
-      @rsa_e = @_io.read_bytes(3)
+      case _parent.len_type
+      when 0
+        @len = @_io.read_u1
+      when 1
+        @len = @_io.read_u2be
+      when 2
+        @len = @_io.read_u4be
+      end
+      case _parent.packet_type_old
+      when :packet_tags_public_key_packet
+        _io_body = @_io.substream(len)
+        @body = PublicKeyPacket.new(_io_body, self, @_root)
+      when :packet_tags_public_subkey_packet
+        _io_body = @_io.substream(len)
+        @body = PublicKeyPacket.new(_io_body, self, @_root)
+      when :packet_tags_secret_key_packet
+        _io_body = @_io.substream(len)
+        @body = SecretKeyPacket.new(_io_body, self, @_root)
+      when :packet_tags_secret_subkey_packet
+        _io_body = @_io.substream(len)
+        @body = PublicKeyPacket.new(_io_body, self, @_root)
+      when :packet_tags_signature_packet
+        _io_body = @_io.substream(len)
+        @body = SignaturePacket.new(_io_body, self, @_root)
+      when :packet_tags_user_id_packet
+        _io_body = @_io.substream(len)
+        @body = UserIdPacket.new(_io_body, self, @_root)
+      else
+        @body = @_io.read_bytes(len)
+      end
       self
     end
-    attr_reader :version
-    attr_reader :timestamp
-    attr_reader :public_key_algorithm
-    attr_reader :len_alg
-    attr_reader :rsa_n
-    attr_reader :padding
-    attr_reader :rsa_e
-  end
-  class KeyExpirationTime < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @time = @_io.read_u4be
-      self
-    end
-    attr_reader :time
+    attr_reader :len
+    attr_reader :body
+    attr_reader :_raw_body
   end
   class Packet < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -828,8 +427,367 @@ class OpenpgpMessage < Kaitai::Struct::Struct
     attr_reader :len_type
     attr_reader :body
   end
+  class PolicyUri < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @uri = (@_io.read_bytes_full).force_encoding("UTF-8")
+      self
+    end
+    attr_reader :uri
+  end
+  class PreferredCompressionAlgorithms < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @algorithm = []
+      i = 0
+      while not @_io.eof?
+        @algorithm << Kaitai::Struct::Stream::resolve_enum(OpenpgpMessage::COMPRESSION_ALGORITHMS, @_io.read_u1)
+        i += 1
+      end
+      self
+    end
+    attr_reader :algorithm
+  end
+  class PreferredHashAlgorithms < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @algorithm = []
+      i = 0
+      while not @_io.eof?
+        @algorithm << Kaitai::Struct::Stream::resolve_enum(OpenpgpMessage::HASH_ALGORITHMS, @_io.read_u1)
+        i += 1
+      end
+      self
+    end
+    attr_reader :algorithm
+  end
+  class PreferredKeyServer < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @uri = (@_io.read_bytes_full).force_encoding("UTF-8")
+      self
+    end
+    attr_reader :uri
+  end
+  class PrimaryUserId < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @user_id = @_io.read_u1
+      self
+    end
+    attr_reader :user_id
+  end
+  class PublicKeyPacket < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @version = @_io.read_u1
+      @timestamp = @_io.read_u4be
+      @public_key_algorithm = Kaitai::Struct::Stream::resolve_enum(OpenpgpMessage::PUBLIC_KEY_ALGORITHMS, @_io.read_u1)
+      @len_alg = @_io.read_u2be
+      @rsa_n = @_io.read_bytes(len_alg / 8)
+      @padding = @_io.read_u2be
+      @rsa_e = @_io.read_bytes(3)
+      self
+    end
+    attr_reader :version
+    attr_reader :timestamp
+    attr_reader :public_key_algorithm
+    attr_reader :len_alg
+    attr_reader :rsa_n
+    attr_reader :padding
+    attr_reader :rsa_e
+  end
+  class ReasonForRevocation < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @revocation_code = Kaitai::Struct::Stream::resolve_enum(OpenpgpMessage::REVOCATION_CODES, @_io.read_u1)
+      @reason = (@_io.read_bytes_full).force_encoding("UTF-8")
+      self
+    end
+    attr_reader :revocation_code
+    attr_reader :reason
+  end
+  class RegularExpression < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @regex = (@_io.read_bytes_term(0, false, true, true)).force_encoding("UTF-8")
+      self
+    end
+    attr_reader :regex
+  end
+  class Revocable < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @revocable = @_io.read_u1
+      self
+    end
+    attr_reader :revocable
+  end
+  class RevocationKey < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @class = @_io.read_u1
+      @public_key_algorithm = Kaitai::Struct::Stream::resolve_enum(OpenpgpMessage::PUBLIC_KEY_ALGORITHMS, @_io.read_u1)
+      @fingerprint = @_io.read_bytes(20)
+      self
+    end
+    attr_reader :class
+    attr_reader :public_key_algorithm
+    attr_reader :fingerprint
+  end
+  class SecretKeyPacket < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @public_key = PublicKeyPacket.new(@_io, self, @_root)
+      @string_to_key = @_io.read_u1
+      if string_to_key >= 254
+        @symmetric_encryption_algorithm = Kaitai::Struct::Stream::resolve_enum(OpenpgpMessage::SYMMETRIC_KEY_ALGORITHM, @_io.read_u1)
+      end
+      @secret_key = @_io.read_bytes_full
+      self
+    end
+    attr_reader :public_key
+    attr_reader :string_to_key
+    attr_reader :symmetric_encryption_algorithm
+    attr_reader :secret_key
+  end
+  class SignatureCreationTime < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @time = @_io.read_u4be
+      self
+    end
+    attr_reader :time
+  end
+  class SignatureExpirationTime < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @time = @_io.read_u4be
+      self
+    end
+    attr_reader :time
+  end
+  class SignaturePacket < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @version = @_io.read_u1
+      @signature_type = @_io.read_u1
+      @public_key_algorithm = Kaitai::Struct::Stream::resolve_enum(OpenpgpMessage::PUBLIC_KEY_ALGORITHMS, @_io.read_u1)
+      @hash_algorithm = Kaitai::Struct::Stream::resolve_enum(OpenpgpMessage::HASH_ALGORITHMS, @_io.read_u1)
+      @len_hashed_subpacket = @_io.read_u2be
+      _io_hashed_subpackets = @_io.substream(len_hashed_subpacket)
+      @hashed_subpackets = Subpackets.new(_io_hashed_subpackets, self, @_root)
+      @len_unhashed_subpacket = @_io.read_u2be
+      _io_unhashed_subpackets = @_io.substream(len_unhashed_subpacket)
+      @unhashed_subpackets = Subpackets.new(_io_unhashed_subpackets, self, @_root)
+      @left_signed_hash = @_io.read_u2be
+      @rsa_n = @_io.read_u2be
+      @signature = @_io.read_bytes_full
+      self
+    end
+    attr_reader :version
+    attr_reader :signature_type
+    attr_reader :public_key_algorithm
+    attr_reader :hash_algorithm
+    attr_reader :len_hashed_subpacket
+    attr_reader :hashed_subpackets
+    attr_reader :len_unhashed_subpacket
+    attr_reader :unhashed_subpackets
+    attr_reader :left_signed_hash
+    attr_reader :rsa_n
+    attr_reader :signature
+    attr_reader :_raw_hashed_subpackets
+    attr_reader :_raw_unhashed_subpackets
+  end
+  class SignatureTarget < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @public_key_algorithm = Kaitai::Struct::Stream::resolve_enum(OpenpgpMessage::PUBLIC_KEY_ALGORITHMS, @_io.read_u1)
+      @hash_algorithm = Kaitai::Struct::Stream::resolve_enum(OpenpgpMessage::HASH_ALGORITHMS, @_io.read_u1)
+      @hash = @_io.read_bytes_full
+      self
+    end
+    attr_reader :public_key_algorithm
+    attr_reader :hash_algorithm
+    attr_reader :hash
+  end
+  class SignersUserId < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @user_id = (@_io.read_bytes_full).force_encoding("UTF-8")
+      self
+    end
+    attr_reader :user_id
+  end
+  class Subpacket < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @len = LenSubpacket.new(@_io, self, @_root)
+      @subpacket_type = Kaitai::Struct::Stream::resolve_enum(OpenpgpMessage::SUBPACKET_TYPES, @_io.read_u1)
+      case subpacket_type
+      when :subpacket_types_embedded_signature
+        _io_content = @_io.substream(len.len - 1)
+        @content = EmbeddedSignature.new(_io_content, self, @_root)
+      when :subpacket_types_exportable_certification
+        _io_content = @_io.substream(len.len - 1)
+        @content = ExportableCertification.new(_io_content, self, @_root)
+      when :subpacket_types_features
+        _io_content = @_io.substream(len.len - 1)
+        @content = Features.new(_io_content, self, @_root)
+      when :subpacket_types_issuer
+        _io_content = @_io.substream(len.len - 1)
+        @content = Issuer.new(_io_content, self, @_root)
+      when :subpacket_types_key_expiration_time
+        _io_content = @_io.substream(len.len - 1)
+        @content = KeyExpirationTime.new(_io_content, self, @_root)
+      when :subpacket_types_key_flags
+        _io_content = @_io.substream(len.len - 1)
+        @content = KeyFlags.new(_io_content, self, @_root)
+      when :subpacket_types_key_server_preferences
+        _io_content = @_io.substream(len.len - 1)
+        @content = KeyServerPreferences.new(_io_content, self, @_root)
+      when :subpacket_types_notation_data
+        _io_content = @_io.substream(len.len - 1)
+        @content = NotationData.new(_io_content, self, @_root)
+      when :subpacket_types_policy_uri
+        _io_content = @_io.substream(len.len - 1)
+        @content = PolicyUri.new(_io_content, self, @_root)
+      when :subpacket_types_preferred_compression_algorithms
+        _io_content = @_io.substream(len.len - 1)
+        @content = PreferredCompressionAlgorithms.new(_io_content, self, @_root)
+      when :subpacket_types_preferred_hash_algorithms
+        _io_content = @_io.substream(len.len - 1)
+        @content = PreferredHashAlgorithms.new(_io_content, self, @_root)
+      when :subpacket_types_preferred_key_server
+        _io_content = @_io.substream(len.len - 1)
+        @content = PreferredKeyServer.new(_io_content, self, @_root)
+      when :subpacket_types_primary_user_id
+        _io_content = @_io.substream(len.len - 1)
+        @content = PrimaryUserId.new(_io_content, self, @_root)
+      when :subpacket_types_reason_for_revocation
+        _io_content = @_io.substream(len.len - 1)
+        @content = ReasonForRevocation.new(_io_content, self, @_root)
+      when :subpacket_types_regular_expression
+        _io_content = @_io.substream(len.len - 1)
+        @content = RegularExpression.new(_io_content, self, @_root)
+      when :subpacket_types_revocable
+        _io_content = @_io.substream(len.len - 1)
+        @content = Revocable.new(_io_content, self, @_root)
+      when :subpacket_types_revocation_key
+        _io_content = @_io.substream(len.len - 1)
+        @content = RevocationKey.new(_io_content, self, @_root)
+      when :subpacket_types_signature_creation_time
+        _io_content = @_io.substream(len.len - 1)
+        @content = SignatureCreationTime.new(_io_content, self, @_root)
+      when :subpacket_types_signature_expiration_time
+        _io_content = @_io.substream(len.len - 1)
+        @content = SignatureExpirationTime.new(_io_content, self, @_root)
+      when :subpacket_types_signature_target
+        _io_content = @_io.substream(len.len - 1)
+        @content = SignatureTarget.new(_io_content, self, @_root)
+      when :subpacket_types_signers_user_id
+        _io_content = @_io.substream(len.len - 1)
+        @content = SignersUserId.new(_io_content, self, @_root)
+      when :subpacket_types_trust_signature
+        _io_content = @_io.substream(len.len - 1)
+        @content = TrustSignature.new(_io_content, self, @_root)
+      else
+        @content = @_io.read_bytes(len.len - 1)
+      end
+      self
+    end
+    attr_reader :len
+    attr_reader :subpacket_type
+    attr_reader :content
+    attr_reader :_raw_content
+  end
+  class Subpackets < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @subpacketss = []
+      i = 0
+      while not @_io.eof?
+        @subpacketss << Subpacket.new(@_io, self, @_root)
+        i += 1
+      end
+      self
+    end
+    attr_reader :subpacketss
+  end
   class TrustSignature < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -841,6 +799,18 @@ class OpenpgpMessage < Kaitai::Struct::Struct
     end
     attr_reader :level
     attr_reader :amount
+  end
+  class UserIdPacket < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @user_id = (@_io.read_bytes_full).force_encoding("UTF-8")
+      self
+    end
+    attr_reader :user_id
   end
   attr_reader :packets
 end

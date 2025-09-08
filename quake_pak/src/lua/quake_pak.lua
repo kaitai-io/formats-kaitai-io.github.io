@@ -21,7 +21,7 @@ end
 function QuakePak:_read()
   self.magic = self._io:read_bytes(4)
   if not(self.magic == "\080\065\067\075") then
-    error("not equal, expected " ..  "\080\065\067\075" .. ", but got " .. self.magic)
+    error("not equal, expected " .. "\080\065\067\075" .. ", but got " .. self.magic)
   end
   self.ofs_index = self._io:read_u4le()
   self.len_index = self._io:read_u4le()
@@ -43,31 +43,12 @@ function QuakePak.property.index:get()
 end
 
 
-QuakePak.IndexStruct = class.class(KaitaiStruct)
-
-function QuakePak.IndexStruct:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function QuakePak.IndexStruct:_read()
-  self.entries = {}
-  local i = 0
-  while not self._io:is_eof() do
-    self.entries[i + 1] = QuakePak.IndexEntry(self._io, self, self._root)
-    i = i + 1
-  end
-end
-
-
 QuakePak.IndexEntry = class.class(KaitaiStruct)
 
 function QuakePak.IndexEntry:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -89,6 +70,25 @@ function QuakePak.IndexEntry.property.body:get()
   self._m_body = _io:read_bytes(self.size)
   _io:seek(_pos)
   return self._m_body
+end
+
+
+QuakePak.IndexStruct = class.class(KaitaiStruct)
+
+function QuakePak.IndexStruct:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function QuakePak.IndexStruct:_read()
+  self.entries = {}
+  local i = 0
+  while not self._io:is_eof() do
+    self.entries[i + 1] = QuakePak.IndexEntry(self._io, self, self._root)
+    i = i + 1
+  end
 end
 
 

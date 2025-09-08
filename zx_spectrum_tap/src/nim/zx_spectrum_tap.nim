@@ -13,6 +13,11 @@ type
     num_array = 1
     char_array = 2
     bytes = 3
+  ZxSpectrumTap_ArrayParams* = ref object of KaitaiStruct
+    `reserved`*: uint8
+    `varName`*: uint8
+    `reserved1`*: seq[byte]
+    `parent`*: ZxSpectrumTap_Header
   ZxSpectrumTap_Block* = ref object of KaitaiStruct
     `lenBlock`*: uint16
     `flag`*: ZxSpectrumTap_FlagEnum
@@ -20,10 +25,6 @@ type
     `data`*: seq[byte]
     `headerlessData`*: seq[byte]
     `parent`*: ZxSpectrumTap
-  ZxSpectrumTap_ProgramParams* = ref object of KaitaiStruct
-    `autostartLine`*: uint16
-    `lenProgram`*: uint16
-    `parent`*: ZxSpectrumTap_Header
   ZxSpectrumTap_BytesParams* = ref object of KaitaiStruct
     `startAddress`*: uint16
     `reserved`*: seq[byte]
@@ -35,18 +36,17 @@ type
     `params`*: KaitaiStruct
     `checksum`*: uint8
     `parent`*: ZxSpectrumTap_Block
-  ZxSpectrumTap_ArrayParams* = ref object of KaitaiStruct
-    `reserved`*: uint8
-    `varName`*: uint8
-    `reserved1`*: seq[byte]
+  ZxSpectrumTap_ProgramParams* = ref object of KaitaiStruct
+    `autostartLine`*: uint16
+    `lenProgram`*: uint16
     `parent`*: ZxSpectrumTap_Header
 
 proc read*(_: typedesc[ZxSpectrumTap], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): ZxSpectrumTap
+proc read*(_: typedesc[ZxSpectrumTap_ArrayParams], io: KaitaiStream, root: KaitaiStruct, parent: ZxSpectrumTap_Header): ZxSpectrumTap_ArrayParams
 proc read*(_: typedesc[ZxSpectrumTap_Block], io: KaitaiStream, root: KaitaiStruct, parent: ZxSpectrumTap): ZxSpectrumTap_Block
-proc read*(_: typedesc[ZxSpectrumTap_ProgramParams], io: KaitaiStream, root: KaitaiStruct, parent: ZxSpectrumTap_Header): ZxSpectrumTap_ProgramParams
 proc read*(_: typedesc[ZxSpectrumTap_BytesParams], io: KaitaiStream, root: KaitaiStruct, parent: ZxSpectrumTap_Header): ZxSpectrumTap_BytesParams
 proc read*(_: typedesc[ZxSpectrumTap_Header], io: KaitaiStream, root: KaitaiStruct, parent: ZxSpectrumTap_Block): ZxSpectrumTap_Header
-proc read*(_: typedesc[ZxSpectrumTap_ArrayParams], io: KaitaiStream, root: KaitaiStruct, parent: ZxSpectrumTap_Header): ZxSpectrumTap_ArrayParams
+proc read*(_: typedesc[ZxSpectrumTap_ProgramParams], io: KaitaiStream, root: KaitaiStruct, parent: ZxSpectrumTap_Header): ZxSpectrumTap_ProgramParams
 
 
 
@@ -78,6 +78,28 @@ proc read*(_: typedesc[ZxSpectrumTap], io: KaitaiStream, root: KaitaiStruct, par
 proc fromFile*(_: typedesc[ZxSpectrumTap], filename: string): ZxSpectrumTap =
   ZxSpectrumTap.read(newKaitaiFileStream(filename), nil, nil)
 
+proc read*(_: typedesc[ZxSpectrumTap_ArrayParams], io: KaitaiStream, root: KaitaiStruct, parent: ZxSpectrumTap_Header): ZxSpectrumTap_ArrayParams =
+  template this: untyped = result
+  this = new(ZxSpectrumTap_ArrayParams)
+  let root = if root == nil: cast[ZxSpectrumTap](this) else: cast[ZxSpectrumTap](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let reservedExpr = this.io.readU1()
+  this.reserved = reservedExpr
+
+  ##[
+  Variable name (1..26 meaning A$..Z$ +192)
+  ]##
+  let varNameExpr = this.io.readU1()
+  this.varName = varNameExpr
+  let reserved1Expr = this.io.readBytes(int(2))
+  this.reserved1 = reserved1Expr
+
+proc fromFile*(_: typedesc[ZxSpectrumTap_ArrayParams], filename: string): ZxSpectrumTap_ArrayParams =
+  ZxSpectrumTap_ArrayParams.read(newKaitaiFileStream(filename), nil, nil)
+
 proc read*(_: typedesc[ZxSpectrumTap_Block], io: KaitaiStream, root: KaitaiStruct, parent: ZxSpectrumTap): ZxSpectrumTap_Block =
   template this: untyped = result
   this = new(ZxSpectrumTap_Block)
@@ -94,30 +116,14 @@ proc read*(_: typedesc[ZxSpectrumTap_Block], io: KaitaiStream, root: KaitaiStruc
     let headerExpr = ZxSpectrumTap_Header.read(this.io, this.root, this)
     this.header = headerExpr
   if this.lenBlock == 19:
-    let dataExpr = this.io.readBytes(int((this.header.lenData + 4)))
+    let dataExpr = this.io.readBytes(int(this.header.lenData + 4))
     this.data = dataExpr
   if this.flag == zx_spectrum_tap.data:
-    let headerlessDataExpr = this.io.readBytes(int((this.lenBlock - 1)))
+    let headerlessDataExpr = this.io.readBytes(int(this.lenBlock - 1))
     this.headerlessData = headerlessDataExpr
 
 proc fromFile*(_: typedesc[ZxSpectrumTap_Block], filename: string): ZxSpectrumTap_Block =
   ZxSpectrumTap_Block.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[ZxSpectrumTap_ProgramParams], io: KaitaiStream, root: KaitaiStruct, parent: ZxSpectrumTap_Header): ZxSpectrumTap_ProgramParams =
-  template this: untyped = result
-  this = new(ZxSpectrumTap_ProgramParams)
-  let root = if root == nil: cast[ZxSpectrumTap](this) else: cast[ZxSpectrumTap](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let autostartLineExpr = this.io.readU2le()
-  this.autostartLine = autostartLineExpr
-  let lenProgramExpr = this.io.readU2le()
-  this.lenProgram = lenProgramExpr
-
-proc fromFile*(_: typedesc[ZxSpectrumTap_ProgramParams], filename: string): ZxSpectrumTap_ProgramParams =
-  ZxSpectrumTap_ProgramParams.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[ZxSpectrumTap_BytesParams], io: KaitaiStream, root: KaitaiStruct, parent: ZxSpectrumTap_Header): ZxSpectrumTap_BytesParams =
   template this: untyped = result
@@ -151,17 +157,17 @@ proc read*(_: typedesc[ZxSpectrumTap_Header], io: KaitaiStream, root: KaitaiStru
   this.lenData = lenDataExpr
   block:
     let on = this.headerType
-    if on == zx_spectrum_tap.program:
-      let paramsExpr = ZxSpectrumTap_ProgramParams.read(this.io, this.root, this)
-      this.params = paramsExpr
-    elif on == zx_spectrum_tap.num_array:
-      let paramsExpr = ZxSpectrumTap_ArrayParams.read(this.io, this.root, this)
+    if on == zx_spectrum_tap.bytes:
+      let paramsExpr = ZxSpectrumTap_BytesParams.read(this.io, this.root, this)
       this.params = paramsExpr
     elif on == zx_spectrum_tap.char_array:
       let paramsExpr = ZxSpectrumTap_ArrayParams.read(this.io, this.root, this)
       this.params = paramsExpr
-    elif on == zx_spectrum_tap.bytes:
-      let paramsExpr = ZxSpectrumTap_BytesParams.read(this.io, this.root, this)
+    elif on == zx_spectrum_tap.num_array:
+      let paramsExpr = ZxSpectrumTap_ArrayParams.read(this.io, this.root, this)
+      this.params = paramsExpr
+    elif on == zx_spectrum_tap.program:
+      let paramsExpr = ZxSpectrumTap_ProgramParams.read(this.io, this.root, this)
       this.params = paramsExpr
 
   ##[
@@ -173,25 +179,19 @@ proc read*(_: typedesc[ZxSpectrumTap_Header], io: KaitaiStream, root: KaitaiStru
 proc fromFile*(_: typedesc[ZxSpectrumTap_Header], filename: string): ZxSpectrumTap_Header =
   ZxSpectrumTap_Header.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[ZxSpectrumTap_ArrayParams], io: KaitaiStream, root: KaitaiStruct, parent: ZxSpectrumTap_Header): ZxSpectrumTap_ArrayParams =
+proc read*(_: typedesc[ZxSpectrumTap_ProgramParams], io: KaitaiStream, root: KaitaiStruct, parent: ZxSpectrumTap_Header): ZxSpectrumTap_ProgramParams =
   template this: untyped = result
-  this = new(ZxSpectrumTap_ArrayParams)
+  this = new(ZxSpectrumTap_ProgramParams)
   let root = if root == nil: cast[ZxSpectrumTap](this) else: cast[ZxSpectrumTap](root)
   this.io = io
   this.root = root
   this.parent = parent
 
-  let reservedExpr = this.io.readU1()
-  this.reserved = reservedExpr
+  let autostartLineExpr = this.io.readU2le()
+  this.autostartLine = autostartLineExpr
+  let lenProgramExpr = this.io.readU2le()
+  this.lenProgram = lenProgramExpr
 
-  ##[
-  Variable name (1..26 meaning A$..Z$ +192)
-  ]##
-  let varNameExpr = this.io.readU1()
-  this.varName = varNameExpr
-  let reserved1Expr = this.io.readBytes(int(2))
-  this.reserved1 = reserved1Expr
-
-proc fromFile*(_: typedesc[ZxSpectrumTap_ArrayParams], filename: string): ZxSpectrumTap_ArrayParams =
-  ZxSpectrumTap_ArrayParams.read(newKaitaiFileStream(filename), nil, nil)
+proc fromFile*(_: typedesc[ZxSpectrumTap_ProgramParams], filename: string): ZxSpectrumTap_ProgramParams =
+  ZxSpectrumTap_ProgramParams.read(newKaitaiFileStream(filename), nil, nil)
 

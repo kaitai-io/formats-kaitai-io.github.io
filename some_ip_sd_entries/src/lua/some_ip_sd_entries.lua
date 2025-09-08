@@ -42,7 +42,7 @@ SomeIpSdEntries.SdEntry.EntryTypes = enum.Enum {
 function SomeIpSdEntries.SdEntry:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -66,7 +66,7 @@ SomeIpSdEntries.SdEntry.SdEntryHeader = class.class(KaitaiStruct)
 function SomeIpSdEntries.SdEntry.SdEntryHeader:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -84,26 +84,12 @@ function SomeIpSdEntries.SdEntry.SdEntryHeader:_read()
 end
 
 
-SomeIpSdEntries.SdEntry.SdServiceEntry = class.class(KaitaiStruct)
-
-function SomeIpSdEntries.SdEntry.SdServiceEntry:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function SomeIpSdEntries.SdEntry.SdServiceEntry:_read()
-  self.minor_version = self._io:read_u4be()
-end
-
-
 SomeIpSdEntries.SdEntry.SdEventgroupEntry = class.class(KaitaiStruct)
 
 function SomeIpSdEntries.SdEntry.SdEventgroupEntry:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -114,6 +100,20 @@ function SomeIpSdEntries.SdEntry.SdEventgroupEntry:_read()
   self.counter = self._io:read_bits_int_be(4)
   self._io:align_to_byte()
   self.event_group_id = self._io:read_u2be()
+end
+
+
+SomeIpSdEntries.SdEntry.SdServiceEntry = class.class(KaitaiStruct)
+
+function SomeIpSdEntries.SdEntry.SdServiceEntry:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function SomeIpSdEntries.SdEntry.SdServiceEntry:_read()
+  self.minor_version = self._io:read_u4be()
 end
 
 

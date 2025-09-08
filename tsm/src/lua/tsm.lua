@@ -35,7 +35,7 @@ function Tsm.property.index:get()
   end
 
   local _pos = self._io:pos()
-  self._io:seek((self._io:size() - 8))
+  self._io:seek(self._io:size() - 8)
   self._m_index = Tsm.Index(self._io, self, self._root)
   self._io:seek(_pos)
   return self._m_index
@@ -47,14 +47,14 @@ Tsm.Header = class.class(KaitaiStruct)
 function Tsm.Header:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function Tsm.Header:_read()
   self.magic = self._io:read_bytes(4)
   if not(self.magic == "\022\209\022\209") then
-    error("not equal, expected " ..  "\022\209\022\209" .. ", but got " .. self.magic)
+    error("not equal, expected " .. "\022\209\022\209" .. ", but got " .. self.magic)
   end
   self.version = self._io:read_u1()
 end
@@ -65,7 +65,7 @@ Tsm.Index = class.class(KaitaiStruct)
 function Tsm.Index:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -86,7 +86,7 @@ function Tsm.Index.property.entries:get()
   while true do
     local _ = Tsm.Index.IndexHeader(self._io, self, self._root)
     self._m_entries[i + 1] = _
-    if self._io:pos() == (self._io:size() - 8) then
+    if self._io:pos() == self._io:size() - 8 then
       break
     end
     i = i + 1
@@ -101,7 +101,7 @@ Tsm.Index.IndexHeader = class.class(KaitaiStruct)
 function Tsm.Index.IndexHeader:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -122,7 +122,7 @@ Tsm.Index.IndexHeader.IndexEntry = class.class(KaitaiStruct)
 function Tsm.Index.IndexHeader.IndexEntry:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -153,13 +153,13 @@ Tsm.Index.IndexHeader.IndexEntry.BlockEntry = class.class(KaitaiStruct)
 function Tsm.Index.IndexHeader.IndexEntry.BlockEntry:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function Tsm.Index.IndexHeader.IndexEntry.BlockEntry:_read()
   self.crc32 = self._io:read_u4be()
-  self.data = self._io:read_bytes((self._parent.block_size - 4))
+  self.data = self._io:read_bytes(self._parent.block_size - 4)
 end
 
 

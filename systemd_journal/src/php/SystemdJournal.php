@@ -14,8 +14,8 @@
 
 namespace {
     class SystemdJournal extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \SystemdJournal $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\SystemdJournal $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -28,21 +28,6 @@ namespace {
             for ($i = 0; $i < $n; $i++) {
                 $this->_m_objects[] = new \SystemdJournal\JournalObject($this->_io, $this, $this->_root);
             }
-        }
-        protected $_m_lenHeader;
-
-        /**
-         * Header length is used to set substream size, as it thus required
-         * prior to declaration of header.
-         */
-        public function lenHeader() {
-            if ($this->_m_lenHeader !== null)
-                return $this->_m_lenHeader;
-            $_pos = $this->_io->pos();
-            $this->_io->seek(88);
-            $this->_m_lenHeader = $this->_io->readU8le();
-            $this->_io->seek($_pos);
-            return $this->_m_lenHeader;
         }
         protected $_m_dataHashTable;
         public function dataHashTable() {
@@ -64,6 +49,21 @@ namespace {
             $this->_io->seek($_pos);
             return $this->_m_fieldHashTable;
         }
+        protected $_m_lenHeader;
+
+        /**
+         * Header length is used to set substream size, as it thus required
+         * prior to declaration of header.
+         */
+        public function lenHeader() {
+            if ($this->_m_lenHeader !== null)
+                return $this->_m_lenHeader;
+            $_pos = $this->_io->pos();
+            $this->_io->seek(88);
+            $this->_m_lenHeader = $this->_io->readU8le();
+            $this->_io->seek($_pos);
+            return $this->_m_lenHeader;
+        }
         protected $_m_header;
         protected $_m_objects;
         protected $_m__raw_header;
@@ -73,17 +73,107 @@ namespace {
     }
 }
 
+/**
+ * Data objects are designed to carry log payload, typically in
+ * form of a "key=value" string in `payload` attribute.
+ */
+
+namespace SystemdJournal {
+    class DataObject extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\SystemdJournal\JournalObject $_parent = null, ?\SystemdJournal $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_hash = $this->_io->readU8le();
+            $this->_m_ofsNextHash = $this->_io->readU8le();
+            $this->_m_ofsHeadField = $this->_io->readU8le();
+            $this->_m_ofsEntry = $this->_io->readU8le();
+            $this->_m_ofsEntryArray = $this->_io->readU8le();
+            $this->_m_numEntries = $this->_io->readU8le();
+            $this->_m_payload = $this->_io->readBytesFull();
+        }
+        protected $_m_entry;
+        public function entry() {
+            if ($this->_m_entry !== null)
+                return $this->_m_entry;
+            if ($this->ofsEntry() != 0) {
+                $io = $this->_root()->_io();
+                $_pos = $io->pos();
+                $io->seek($this->ofsEntry());
+                $this->_m_entry = new \SystemdJournal\JournalObject($io, $this, $this->_root);
+                $io->seek($_pos);
+            }
+            return $this->_m_entry;
+        }
+        protected $_m_entryArray;
+        public function entryArray() {
+            if ($this->_m_entryArray !== null)
+                return $this->_m_entryArray;
+            if ($this->ofsEntryArray() != 0) {
+                $io = $this->_root()->_io();
+                $_pos = $io->pos();
+                $io->seek($this->ofsEntryArray());
+                $this->_m_entryArray = new \SystemdJournal\JournalObject($io, $this, $this->_root);
+                $io->seek($_pos);
+            }
+            return $this->_m_entryArray;
+        }
+        protected $_m_headField;
+        public function headField() {
+            if ($this->_m_headField !== null)
+                return $this->_m_headField;
+            if ($this->ofsHeadField() != 0) {
+                $io = $this->_root()->_io();
+                $_pos = $io->pos();
+                $io->seek($this->ofsHeadField());
+                $this->_m_headField = new \SystemdJournal\JournalObject($io, $this, $this->_root);
+                $io->seek($_pos);
+            }
+            return $this->_m_headField;
+        }
+        protected $_m_nextHash;
+        public function nextHash() {
+            if ($this->_m_nextHash !== null)
+                return $this->_m_nextHash;
+            if ($this->ofsNextHash() != 0) {
+                $io = $this->_root()->_io();
+                $_pos = $io->pos();
+                $io->seek($this->ofsNextHash());
+                $this->_m_nextHash = new \SystemdJournal\JournalObject($io, $this, $this->_root);
+                $io->seek($_pos);
+            }
+            return $this->_m_nextHash;
+        }
+        protected $_m_hash;
+        protected $_m_ofsNextHash;
+        protected $_m_ofsHeadField;
+        protected $_m_ofsEntry;
+        protected $_m_ofsEntryArray;
+        protected $_m_numEntries;
+        protected $_m_payload;
+        public function hash() { return $this->_m_hash; }
+        public function ofsNextHash() { return $this->_m_ofsNextHash; }
+        public function ofsHeadField() { return $this->_m_ofsHeadField; }
+        public function ofsEntry() { return $this->_m_ofsEntry; }
+        public function ofsEntryArray() { return $this->_m_ofsEntryArray; }
+        public function numEntries() { return $this->_m_numEntries; }
+        public function payload() { return $this->_m_payload; }
+    }
+}
+
 namespace SystemdJournal {
     class Header extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \SystemdJournal $_parent = null, \SystemdJournal $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\SystemdJournal $_parent = null, ?\SystemdJournal $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_signature = $this->_io->readBytes(8);
-            if (!($this->signature() == "\x4C\x50\x4B\x53\x48\x48\x52\x48")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x4C\x50\x4B\x53\x48\x48\x52\x48", $this->signature(), $this->_io(), "/types/header/seq/0");
+            if (!($this->_m_signature == "\x4C\x50\x4B\x53\x48\x48\x52\x48")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x4C\x50\x4B\x53\x48\x48\x52\x48", $this->_m_signature, $this->_io, "/types/header/seq/0");
             }
             $this->_m_compatibleFlags = $this->_io->readU4le();
             $this->_m_incompatibleFlags = $this->_io->readU4le();
@@ -182,25 +272,25 @@ namespace SystemdJournal {
 
 namespace SystemdJournal {
     class JournalObject extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \SystemdJournal $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\SystemdJournal $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_padding = $this->_io->readBytes(\Kaitai\Struct\Stream::mod((8 - $this->_io()->pos()), 8));
+            $this->_m_padding = $this->_io->readBytes(\Kaitai\Struct\Stream::mod(8 - $this->_io()->pos(), 8));
             $this->_m_objectType = $this->_io->readU1();
             $this->_m_flags = $this->_io->readU1();
             $this->_m_reserved = $this->_io->readBytes(6);
             $this->_m_lenObject = $this->_io->readU8le();
             switch ($this->objectType()) {
                 case \SystemdJournal\JournalObject\ObjectTypes::DATA:
-                    $this->_m__raw_payload = $this->_io->readBytes(($this->lenObject() - 16));
+                    $this->_m__raw_payload = $this->_io->readBytes($this->lenObject() - 16);
                     $_io__raw_payload = new \Kaitai\Struct\Stream($this->_m__raw_payload);
                     $this->_m_payload = new \SystemdJournal\DataObject($_io__raw_payload, $this, $this->_root);
                     break;
                 default:
-                    $this->_m_payload = $this->_io->readBytes(($this->lenObject() - 16));
+                    $this->_m_payload = $this->_io->readBytes($this->lenObject() - 16);
                     break;
             }
         }
@@ -231,96 +321,12 @@ namespace SystemdJournal\JournalObject {
         const FIELD_HASH_TABLE = 5;
         const ENTRY_ARRAY = 6;
         const TAG = 7;
-    }
-}
 
-/**
- * Data objects are designed to carry log payload, typically in
- * form of a "key=value" string in `payload` attribute.
- */
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 7 => true];
 
-namespace SystemdJournal {
-    class DataObject extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \SystemdJournal\JournalObject $_parent = null, \SystemdJournal $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
         }
-
-        private function _read() {
-            $this->_m_hash = $this->_io->readU8le();
-            $this->_m_ofsNextHash = $this->_io->readU8le();
-            $this->_m_ofsHeadField = $this->_io->readU8le();
-            $this->_m_ofsEntry = $this->_io->readU8le();
-            $this->_m_ofsEntryArray = $this->_io->readU8le();
-            $this->_m_numEntries = $this->_io->readU8le();
-            $this->_m_payload = $this->_io->readBytesFull();
-        }
-        protected $_m_nextHash;
-        public function nextHash() {
-            if ($this->_m_nextHash !== null)
-                return $this->_m_nextHash;
-            if ($this->ofsNextHash() != 0) {
-                $io = $this->_root()->_io();
-                $_pos = $io->pos();
-                $io->seek($this->ofsNextHash());
-                $this->_m_nextHash = new \SystemdJournal\JournalObject($io, $this, $this->_root);
-                $io->seek($_pos);
-            }
-            return $this->_m_nextHash;
-        }
-        protected $_m_headField;
-        public function headField() {
-            if ($this->_m_headField !== null)
-                return $this->_m_headField;
-            if ($this->ofsHeadField() != 0) {
-                $io = $this->_root()->_io();
-                $_pos = $io->pos();
-                $io->seek($this->ofsHeadField());
-                $this->_m_headField = new \SystemdJournal\JournalObject($io, $this, $this->_root);
-                $io->seek($_pos);
-            }
-            return $this->_m_headField;
-        }
-        protected $_m_entry;
-        public function entry() {
-            if ($this->_m_entry !== null)
-                return $this->_m_entry;
-            if ($this->ofsEntry() != 0) {
-                $io = $this->_root()->_io();
-                $_pos = $io->pos();
-                $io->seek($this->ofsEntry());
-                $this->_m_entry = new \SystemdJournal\JournalObject($io, $this, $this->_root);
-                $io->seek($_pos);
-            }
-            return $this->_m_entry;
-        }
-        protected $_m_entryArray;
-        public function entryArray() {
-            if ($this->_m_entryArray !== null)
-                return $this->_m_entryArray;
-            if ($this->ofsEntryArray() != 0) {
-                $io = $this->_root()->_io();
-                $_pos = $io->pos();
-                $io->seek($this->ofsEntryArray());
-                $this->_m_entryArray = new \SystemdJournal\JournalObject($io, $this, $this->_root);
-                $io->seek($_pos);
-            }
-            return $this->_m_entryArray;
-        }
-        protected $_m_hash;
-        protected $_m_ofsNextHash;
-        protected $_m_ofsHeadField;
-        protected $_m_ofsEntry;
-        protected $_m_ofsEntryArray;
-        protected $_m_numEntries;
-        protected $_m_payload;
-        public function hash() { return $this->_m_hash; }
-        public function ofsNextHash() { return $this->_m_ofsNextHash; }
-        public function ofsHeadField() { return $this->_m_ofsHeadField; }
-        public function ofsEntry() { return $this->_m_ofsEntry; }
-        public function ofsEntryArray() { return $this->_m_ofsEntryArray; }
-        public function numEntries() { return $this->_m_numEntries; }
-        public function payload() { return $this->_m_payload; }
     }
 }
 
@@ -341,5 +347,11 @@ namespace SystemdJournal {
          * File has been rotated, no further updates to this file are to be expected
          */
         const ARCHIVED = 2;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

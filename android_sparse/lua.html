@@ -173,7 +173,17 @@ format first have to be converted back to their original format.</p>
                 
                 <li>
                 
+                <a href="graphviz.html" title="Android sparse image parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
                 <a href="java.html" title="Android sparse image parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="java-write.html" title="Android sparse image parsing Java (read-write) library">Java (read-write)</a></li>
                 
                 
                 <li>
@@ -188,6 +198,11 @@ format first have to be converted back to their original format.</p>
                 
                 <li>
                 
+                <a href="perl.html" title="Android sparse image parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
                 <a href="php.html" title="Android sparse image parsing PHP library">PHP</a></li>
                 
                 
@@ -198,7 +213,17 @@ format first have to be converted back to their original format.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="Android sparse image parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="Android sparse image parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="Android sparse image parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -268,7 +293,7 @@ format first have to be converted back to their original format.</p>
 
 <span class="kr">function</span><span class="w"> </span><span class="nc">AndroidSparse</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">header_prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">AndroidSparse</span><span class="p">.</span><span class="nf">FileHeaderPrefix</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">header_prefix</span><span class="p">.</span><span class="py">len_header</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">10</span><span class="p">))</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">header_prefix</span><span class="p">.</span><span class="py">len_header</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span>
 <span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">KaitaiStream</span><span class="p">(</span><span class="nf">stringstream</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_raw_header</span><span class="p">))</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">AndroidSparse</span><span class="p">.</span><span class="nf">FileHeader</span><span class="p">(</span><span class="nv">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">chunks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
@@ -280,92 +305,12 @@ format first have to be converted back to their original format.</p>
 <span class="c1">-- </span>
 <span class="c1">-- internal; access `_root.header` instead.</span>
 
-<span class="nv">AndroidSparse</span><span class="p">.</span><span class="py">FileHeaderPrefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">AndroidSparse</span><span class="p">.</span><span class="nc">FileHeaderPrefix</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">AndroidSparse</span><span class="p">.</span><span class="nc">FileHeaderPrefix</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">magic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">magic</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\058\255\038\237</span><span class="s2">&quot;</span><span class="p">)</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span><span class="w"> </span><span class="o">..</span><span class="w">  </span><span class="s2">&quot;</span><span class="se">\058\255\038\237</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s2">&quot;, but got &quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">magic</span><span class="p">)</span>
-<span class="w">  </span><span class="kr">end</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">AndroidSparse</span><span class="p">.</span><span class="nf">Version</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">len_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2le</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- internal; access `_root.header.version` instead.</span>
-<span class="c1">-- </span>
-<span class="c1">-- internal; access `_root.header.len_header` instead.</span>
-
-<span class="nv">AndroidSparse</span><span class="p">.</span><span class="py">FileHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">AndroidSparse</span><span class="p">.</span><span class="nc">FileHeader</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">AndroidSparse</span><span class="p">.</span><span class="nc">FileHeader</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">len_chunk_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2le</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">block_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
-<span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">block_size</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="p">((</span><span class="nv">_</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;ValidationExprError&quot;</span><span class="p">)</span>
-<span class="w">  </span><span class="kr">end</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">num_blocks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">num_chunks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">checksum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="nv">AndroidSparse</span><span class="p">.</span><span class="py">FileHeader</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">AndroidSparse</span><span class="p">.</span><span class="nc">FileHeader</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">version</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_version</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_version</span>
-<span class="w">  </span><span class="kr">end</span>
-
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">header_prefix</span><span class="p">.</span><span class="py">version</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_version</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- size of file header, should be 28.</span>
-<span class="nv">AndroidSparse</span><span class="p">.</span><span class="py">FileHeader</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">len_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">AndroidSparse</span><span class="p">.</span><span class="nc">FileHeader</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">len_header</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_header</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_header</span>
-<span class="w">  </span><span class="kr">end</span>
-
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">header_prefix</span><span class="p">.</span><span class="py">len_header</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_header</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- size of chunk header, should be 12.</span>
-<span class="c1">-- </span>
-<span class="c1">-- block size in bytes, must be a multiple of 4.</span>
-<span class="c1">-- </span>
-<span class="c1">-- blocks in the original data.</span>
-<span class="c1">-- </span>
-<span class="c1">-- CRC32 checksum of the original data</span>
-<span class="c1">-- </span>
-<span class="c1">-- In practice always 0; if checksum writing is requested, a CRC32 chunk is written</span>
-<span class="c1">-- at the end of the file instead. The canonical `libsparse` implementation does this</span>
-<span class="c1">-- and other implementations tend to follow it, see</span>
-<span class="c1">-- &lt;https://gitlab.com/teskje/android-sparse-rs/-/blob/57c2577/src/write.rs#L112-114&gt;</span>
-
 <span class="nv">AndroidSparse</span><span class="p">.</span><span class="py">Chunk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
 <span class="kr">function</span><span class="w"> </span><span class="nc">AndroidSparse</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
@@ -387,7 +332,7 @@ format first have to be converted back to their original format.</p>
 <span class="kr">function</span><span class="w"> </span><span class="nc">AndroidSparse</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">.</span><span class="nc">ChunkHeader</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
@@ -396,8 +341,8 @@ format first have to be converted back to their original format.</p>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">reserved1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2le</span><span class="p">()</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">num_body_blocks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">len_chunk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_chunk</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_unwrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">len_body_expected</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_wrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">header</span><span class="p">.</span><span class="py">len_chunk_header</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">len_body_expected</span><span class="p">))</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_chunk</span><span class="p">)))</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span><span class="w"> </span><span class="o">..</span><span class="w">  </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_unwrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">len_body_expected</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_wrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">header</span><span class="p">.</span><span class="py">len_chunk_header</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">len_body_expected</span><span class="p">))</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_chunk</span><span class="p">))</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s2">&quot;, but got &quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">len_chunk</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_chunk</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_unwrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">len_body_expected</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_wrap</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">header</span><span class="p">.</span><span class="py">len_chunk_header</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">len_body_expected</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_chunk</span><span class="p">)))</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_unwrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">len_body_expected</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_wrap</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">header</span><span class="p">.</span><span class="py">len_chunk_header</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">len_body_expected</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_chunk</span><span class="p">))</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s2">&quot;, but got &quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">len_chunk</span><span class="p">)</span>
 <span class="w">  </span><span class="kr">end</span>
 <span class="kr">end</span>
 
@@ -407,7 +352,7 @@ format first have to be converted back to their original format.</p>
 <span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_body</span>
 <span class="w">  </span><span class="kr">end</span>
 
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_chunk</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">header</span><span class="p">.</span><span class="py">len_chunk_header</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">len_chunk</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">header</span><span class="p">.</span><span class="py">len_chunk_header</span>
 <span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_body</span>
 <span class="kr">end</span>
 
@@ -422,7 +367,7 @@ format first have to be converted back to their original format.</p>
 <span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_body_expected</span>
 <span class="w">  </span><span class="kr">end</span>
 
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_body_expected</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_unwrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">chunk_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">AndroidSparse</span><span class="p">.</span><span class="py">ChunkTypes</span><span class="p">.</span><span class="py">raw</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_wrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">header</span><span class="p">.</span><span class="py">block_size</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">num_body_blocks</span><span class="p">))</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_unwrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">chunk_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">AndroidSparse</span><span class="p">.</span><span class="py">ChunkTypes</span><span class="p">.</span><span class="py">fill</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_wrap</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_unwrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">chunk_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">AndroidSparse</span><span class="p">.</span><span class="py">ChunkTypes</span><span class="p">.</span><span class="py">dont_care</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_wrap</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_unwrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">chunk_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">AndroidSparse</span><span class="p">.</span><span class="py">ChunkTypes</span><span class="p">.</span><span class="py">crc32</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_wrap</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))))))))</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_body_expected</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_unwrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">chunk_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">AndroidSparse</span><span class="p">.</span><span class="py">ChunkTypes</span><span class="p">.</span><span class="py">raw</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_wrap</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">header</span><span class="p">.</span><span class="py">block_size</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">num_body_blocks</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_unwrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">chunk_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">AndroidSparse</span><span class="p">.</span><span class="py">ChunkTypes</span><span class="p">.</span><span class="py">fill</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_wrap</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_unwrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">chunk_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">AndroidSparse</span><span class="p">.</span><span class="py">ChunkTypes</span><span class="p">.</span><span class="py">dont_care</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_wrap</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_unwrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">chunk_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">AndroidSparse</span><span class="p">.</span><span class="py">ChunkTypes</span><span class="p">.</span><span class="py">crc32</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_wrap</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))))))))</span>
 <span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_body_expected</span>
 <span class="kr">end</span>
 
@@ -431,19 +376,99 @@ format first have to be converted back to their original format.</p>
 <span class="c1">-- </span>
 <span class="c1">-- in bytes of chunk input file including chunk header and data.</span>
 
+<span class="nv">AndroidSparse</span><span class="p">.</span><span class="py">FileHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">AndroidSparse</span><span class="p">.</span><span class="nc">FileHeader</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">AndroidSparse</span><span class="p">.</span><span class="nc">FileHeader</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">len_chunk_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2le</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">block_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
+<span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">block_size</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="p">(</span><span class="nv">_</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;ValidationExprError&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">num_blocks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">num_chunks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">checksum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u4le</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- size of file header, should be 28.</span>
+<span class="nv">AndroidSparse</span><span class="p">.</span><span class="py">FileHeader</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">len_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">AndroidSparse</span><span class="p">.</span><span class="nc">FileHeader</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">len_header</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_header</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_header</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">header_prefix</span><span class="p">.</span><span class="py">len_header</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_header</span>
+<span class="kr">end</span>
+
+<span class="nv">AndroidSparse</span><span class="p">.</span><span class="py">FileHeader</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">AndroidSparse</span><span class="p">.</span><span class="nc">FileHeader</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">version</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_version</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_version</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">.</span><span class="py">header_prefix</span><span class="p">.</span><span class="py">version</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_version</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- size of chunk header, should be 12.</span>
+<span class="c1">-- </span>
+<span class="c1">-- block size in bytes, must be a multiple of 4.</span>
+<span class="c1">-- </span>
+<span class="c1">-- blocks in the original data.</span>
+<span class="c1">-- </span>
+<span class="c1">-- CRC32 checksum of the original data</span>
+<span class="c1">-- </span>
+<span class="c1">-- In practice always 0; if checksum writing is requested, a CRC32 chunk is written</span>
+<span class="c1">-- at the end of the file instead. The canonical `libsparse` implementation does this</span>
+<span class="c1">-- and other implementations tend to follow it, see</span>
+<span class="c1">-- &lt;https://gitlab.com/teskje/android-sparse-rs/-/blob/57c2577/src/write.rs#L112-114&gt;</span>
+
+<span class="nv">AndroidSparse</span><span class="p">.</span><span class="py">FileHeaderPrefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">AndroidSparse</span><span class="p">.</span><span class="nc">FileHeaderPrefix</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">AndroidSparse</span><span class="p">.</span><span class="nc">FileHeaderPrefix</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">magic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">magic</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\058\255\038\237</span><span class="s2">&quot;</span><span class="p">)</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\058\255\038\237</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s2">&quot;, but got &quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">magic</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">AndroidSparse</span><span class="p">.</span><span class="nf">Version</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">len_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2le</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- internal; access `_root.header.version` instead.</span>
+<span class="c1">-- </span>
+<span class="c1">-- internal; access `_root.header.len_header` instead.</span>
+
 <span class="nv">AndroidSparse</span><span class="p">.</span><span class="py">Version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
 <span class="kr">function</span><span class="w"> </span><span class="nc">AndroidSparse</span><span class="p">.</span><span class="nc">Version</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
 <span class="kr">function</span><span class="w"> </span><span class="nc">AndroidSparse</span><span class="p">.</span><span class="nc">Version</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">major</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2le</span><span class="p">()</span>
 <span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">major</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span><span class="w"> </span><span class="o">..</span><span class="w">  </span><span class="mi">1</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s2">&quot;, but got &quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">major</span><span class="p">)</span>
+<span class="w">    </span><span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="s2">&quot;, but got &quot;</span><span class="w"> </span><span class="o">..</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">major</span><span class="p">)</span>
 <span class="w">  </span><span class="kr">end</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">minor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u2le</span><span class="p">()</span>
 <span class="kr">end</span>

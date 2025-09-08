@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Encode;
 
 ########################################################################
@@ -25,7 +25,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -36,7 +36,7 @@ sub _read {
     my ($self) = @_;
 
     $self->{num_files} = $self->{_io}->read_u4le();
-    $self->{files} = ();
+    $self->{files} = [];
     my $n_files = $self->num_files();
     for (my $i = 0; $i < $n_files; $i++) {
         push @{$self->{files}}, FtlDat::File->new($self->{_io}, $self, $self->{_root});
@@ -73,7 +73,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -123,7 +123,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 

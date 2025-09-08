@@ -2,16 +2,18 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class packet_ppi_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
 #include "ethernet_frame.h"
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
-class ethernet_frame_t;
 
 /**
  * PPI is a standard for link layer packet encapsulation, proposed as
@@ -27,22 +29,13 @@ class ethernet_frame_t;
 class packet_ppi_t : public kaitai::kstruct {
 
 public:
-    class packet_ppi_fields_t;
-    class radio_802_11n_mac_ext_body_t;
     class mac_flags_t;
+    class packet_ppi_field_t;
+    class packet_ppi_fields_t;
     class packet_ppi_header_t;
     class radio_802_11_common_body_t;
-    class packet_ppi_field_t;
+    class radio_802_11n_mac_ext_body_t;
     class radio_802_11n_mac_phy_ext_body_t;
-
-    enum pfh_type_t {
-        PFH_TYPE_RADIO_802_11_COMMON = 2,
-        PFH_TYPE_RADIO_802_11N_MAC_EXT = 3,
-        PFH_TYPE_RADIO_802_11N_MAC_PHY_EXT = 4,
-        PFH_TYPE_SPECTRUM_MAP = 5,
-        PFH_TYPE_PROCESS_INFO = 6,
-        PFH_TYPE_CAPTURE_INFO = 7
-    };
 
     enum linktype_t {
         LINKTYPE_NULL_LINKTYPE = 0,
@@ -150,6 +143,27 @@ public:
         LINKTYPE_WATTSTOPPER_DLM = 263,
         LINKTYPE_ISO_14443 = 264
     };
+    static bool _is_defined_linktype_t(linktype_t v);
+
+private:
+    static const std::set<linktype_t> _values_linktype_t;
+
+public:
+
+    enum pfh_type_t {
+        PFH_TYPE_RADIO_802_11_COMMON = 2,
+        PFH_TYPE_RADIO_802_11N_MAC_EXT = 3,
+        PFH_TYPE_RADIO_802_11N_MAC_PHY_EXT = 4,
+        PFH_TYPE_SPECTRUM_MAP = 5,
+        PFH_TYPE_PROCESS_INFO = 6,
+        PFH_TYPE_CAPTURE_INFO = 7
+    };
+    static bool _is_defined_pfh_type_t(pfh_type_t v);
+
+private:
+    static const std::set<pfh_type_t> _values_pfh_type_t;
+
+public:
 
     packet_ppi_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, packet_ppi_t* p__root = nullptr);
 
@@ -159,64 +173,6 @@ private:
 
 public:
     ~packet_ppi_t();
-
-    class packet_ppi_fields_t : public kaitai::kstruct {
-
-    public:
-
-        packet_ppi_fields_t(kaitai::kstream* p__io, packet_ppi_t* p__parent = nullptr, packet_ppi_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~packet_ppi_fields_t();
-
-    private:
-        std::unique_ptr<std::vector<std::unique_ptr<packet_ppi_field_t>>> m_entries;
-        packet_ppi_t* m__root;
-        packet_ppi_t* m__parent;
-
-    public:
-        std::vector<std::unique_ptr<packet_ppi_field_t>>* entries() const { return m_entries.get(); }
-        packet_ppi_t* _root() const { return m__root; }
-        packet_ppi_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * \sa https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 4.1.3
-     */
-
-    class radio_802_11n_mac_ext_body_t : public kaitai::kstruct {
-
-    public:
-
-        radio_802_11n_mac_ext_body_t(kaitai::kstream* p__io, packet_ppi_t::packet_ppi_field_t* p__parent = nullptr, packet_ppi_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~radio_802_11n_mac_ext_body_t();
-
-    private:
-        std::unique_ptr<mac_flags_t> m_flags;
-        uint32_t m_a_mpdu_id;
-        uint8_t m_num_delimiters;
-        std::string m_reserved;
-        packet_ppi_t* m__root;
-        packet_ppi_t::packet_ppi_field_t* m__parent;
-
-    public:
-        mac_flags_t* flags() const { return m_flags.get(); }
-        uint32_t a_mpdu_id() const { return m_a_mpdu_id; }
-        uint8_t num_delimiters() const { return m_num_delimiters; }
-        std::string reserved() const { return m_reserved; }
-        packet_ppi_t* _root() const { return m__root; }
-        packet_ppi_t::packet_ppi_field_t* _parent() const { return m__parent; }
-    };
 
     class mac_flags_t : public kaitai::kstruct {
 
@@ -284,6 +240,72 @@ public:
         std::string unused2() const { return m_unused2; }
         packet_ppi_t* _root() const { return m__root; }
         kaitai::kstruct* _parent() const { return m__parent; }
+    };
+
+    /**
+     * \sa https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 3.1
+     */
+
+    class packet_ppi_field_t : public kaitai::kstruct {
+
+    public:
+
+        packet_ppi_field_t(kaitai::kstream* p__io, packet_ppi_t::packet_ppi_fields_t* p__parent = nullptr, packet_ppi_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~packet_ppi_field_t();
+
+    private:
+        pfh_type_t m_pfh_type;
+        uint16_t m_pfh_datalen;
+        std::unique_ptr<kaitai::kstruct> m_body;
+        bool n_body;
+
+    public:
+        bool _is_null_body() { body(); return n_body; };
+
+    private:
+        packet_ppi_t* m__root;
+        packet_ppi_t::packet_ppi_fields_t* m__parent;
+        std::string m__raw_body;
+        std::unique_ptr<kaitai::kstream> m__io__raw_body;
+
+    public:
+        pfh_type_t pfh_type() const { return m_pfh_type; }
+        uint16_t pfh_datalen() const { return m_pfh_datalen; }
+        kaitai::kstruct* body() const { return m_body.get(); }
+        packet_ppi_t* _root() const { return m__root; }
+        packet_ppi_t::packet_ppi_fields_t* _parent() const { return m__parent; }
+        std::string _raw_body() const { return m__raw_body; }
+        kaitai::kstream* _io__raw_body() const { return m__io__raw_body.get(); }
+    };
+
+    class packet_ppi_fields_t : public kaitai::kstruct {
+
+    public:
+
+        packet_ppi_fields_t(kaitai::kstream* p__io, packet_ppi_t* p__parent = nullptr, packet_ppi_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~packet_ppi_fields_t();
+
+    private:
+        std::unique_ptr<std::vector<std::unique_ptr<packet_ppi_field_t>>> m_entries;
+        packet_ppi_t* m__root;
+        packet_ppi_t* m__parent;
+
+    public:
+        std::vector<std::unique_ptr<packet_ppi_field_t>>* entries() const { return m_entries.get(); }
+        packet_ppi_t* _root() const { return m__root; }
+        packet_ppi_t* _parent() const { return m__parent; }
     };
 
     /**
@@ -365,45 +387,37 @@ public:
     };
 
     /**
-     * \sa https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 3.1
+     * \sa https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 4.1.3
      */
 
-    class packet_ppi_field_t : public kaitai::kstruct {
+    class radio_802_11n_mac_ext_body_t : public kaitai::kstruct {
 
     public:
 
-        packet_ppi_field_t(kaitai::kstream* p__io, packet_ppi_t::packet_ppi_fields_t* p__parent = nullptr, packet_ppi_t* p__root = nullptr);
+        radio_802_11n_mac_ext_body_t(kaitai::kstream* p__io, packet_ppi_t::packet_ppi_field_t* p__parent = nullptr, packet_ppi_t* p__root = nullptr);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~packet_ppi_field_t();
+        ~radio_802_11n_mac_ext_body_t();
 
     private:
-        pfh_type_t m_pfh_type;
-        uint16_t m_pfh_datalen;
-        std::unique_ptr<kaitai::kstruct> m_body;
-        bool n_body;
-
-    public:
-        bool _is_null_body() { body(); return n_body; };
-
-    private:
+        std::unique_ptr<mac_flags_t> m_flags;
+        uint32_t m_a_mpdu_id;
+        uint8_t m_num_delimiters;
+        std::string m_reserved;
         packet_ppi_t* m__root;
-        packet_ppi_t::packet_ppi_fields_t* m__parent;
-        std::string m__raw_body;
-        std::unique_ptr<kaitai::kstream> m__io__raw_body;
+        packet_ppi_t::packet_ppi_field_t* m__parent;
 
     public:
-        pfh_type_t pfh_type() const { return m_pfh_type; }
-        uint16_t pfh_datalen() const { return m_pfh_datalen; }
-        kaitai::kstruct* body() const { return m_body.get(); }
+        mac_flags_t* flags() const { return m_flags.get(); }
+        uint32_t a_mpdu_id() const { return m_a_mpdu_id; }
+        uint8_t num_delimiters() const { return m_num_delimiters; }
+        std::string reserved() const { return m_reserved; }
         packet_ppi_t* _root() const { return m__root; }
-        packet_ppi_t::packet_ppi_fields_t* _parent() const { return m__parent; }
-        std::string _raw_body() const { return m__raw_body; }
-        kaitai::kstream* _io__raw_body() const { return m__io__raw_body.get(); }
+        packet_ppi_t::packet_ppi_field_t* _parent() const { return m__parent; }
     };
 
     /**

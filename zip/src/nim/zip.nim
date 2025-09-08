@@ -1,8 +1,7 @@
 import kaitai_struct_nim_runtime
 import options
-import /common/dos_datetime
+import dos_datetime
 
-import "dos_datetime"
 type
   Zip* = ref object of KaitaiStruct
     `sections`*: seq[Zip_PkSection]
@@ -56,56 +55,6 @@ type
     apache_commons_compress = 41246
     microsoft_open_packaging_growth_hint = 41504
     sms_qdos = 64842
-  Zip_LocalFile* = ref object of KaitaiStruct
-    `header`*: Zip_LocalFileHeader
-    `body`*: seq[byte]
-    `parent`*: Zip_PkSection
-  Zip_DataDescriptor* = ref object of KaitaiStruct
-    `crc32`*: uint32
-    `lenBodyCompressed`*: uint32
-    `lenBodyUncompressed`*: uint32
-    `parent`*: Zip_PkSection
-  Zip_ExtraField* = ref object of KaitaiStruct
-    `code`*: Zip_ExtraCodes
-    `lenBody`*: uint16
-    `body`*: KaitaiStruct
-    `parent`*: Zip_Extras
-    `rawBody`*: seq[byte]
-  Zip_ExtraField_Ntfs* = ref object of KaitaiStruct
-    `reserved`*: uint32
-    `attributes`*: seq[Zip_ExtraField_Ntfs_Attribute]
-    `parent`*: Zip_ExtraField
-  Zip_ExtraField_Ntfs_Attribute* = ref object of KaitaiStruct
-    `tag`*: uint16
-    `lenBody`*: uint16
-    `body`*: KaitaiStruct
-    `parent`*: Zip_ExtraField_Ntfs
-    `rawBody`*: seq[byte]
-  Zip_ExtraField_Ntfs_Attribute1* = ref object of KaitaiStruct
-    `lastModTime`*: uint64
-    `lastAccessTime`*: uint64
-    `creationTime`*: uint64
-    `parent`*: Zip_ExtraField_Ntfs_Attribute
-  Zip_ExtraField_ExtendedTimestamp* = ref object of KaitaiStruct
-    `flags`*: Zip_ExtraField_ExtendedTimestamp_InfoFlags
-    `modTime`*: uint32
-    `accessTime`*: uint32
-    `createTime`*: uint32
-    `parent`*: Zip_ExtraField
-    `rawFlags`*: seq[byte]
-  Zip_ExtraField_ExtendedTimestamp_InfoFlags* = ref object of KaitaiStruct
-    `hasModTime`*: bool
-    `hasAccessTime`*: bool
-    `hasCreateTime`*: bool
-    `reserved`*: uint64
-    `parent`*: Zip_ExtraField_ExtendedTimestamp
-  Zip_ExtraField_InfozipUnixVarSize* = ref object of KaitaiStruct
-    `version`*: uint8
-    `lenUid`*: uint8
-    `uid`*: seq[byte]
-    `lenGid`*: uint8
-    `gid`*: seq[byte]
-    `parent`*: Zip_ExtraField
   Zip_CentralDirEntry* = ref object of KaitaiStruct
     `versionMadeBy`*: uint16
     `versionNeededToExtract`*: uint16
@@ -130,14 +79,69 @@ type
     `rawExtra`*: seq[byte]
     `localHeaderInst`: Zip_PkSection
     `localHeaderInstFlag`: bool
-  Zip_PkSection* = ref object of KaitaiStruct
-    `magic`*: seq[byte]
-    `sectionType`*: uint16
+  Zip_DataDescriptor* = ref object of KaitaiStruct
+    `crc32`*: uint32
+    `lenBodyCompressed`*: uint32
+    `lenBodyUncompressed`*: uint32
+    `parent`*: Zip_PkSection
+  Zip_EndOfCentralDir* = ref object of KaitaiStruct
+    `diskOfEndOfCentralDir`*: uint16
+    `diskOfCentralDir`*: uint16
+    `numCentralDirEntriesOnDisk`*: uint16
+    `numCentralDirEntriesTotal`*: uint16
+    `lenCentralDir`*: uint32
+    `ofsCentralDir`*: uint32
+    `lenComment`*: uint16
+    `comment`*: string
+    `parent`*: Zip_PkSection
+  Zip_ExtraField* = ref object of KaitaiStruct
+    `code`*: Zip_ExtraCodes
+    `lenBody`*: uint16
     `body`*: KaitaiStruct
-    `parent`*: KaitaiStruct
+    `parent`*: Zip_Extras
+    `rawBody`*: seq[byte]
+  Zip_ExtraField_ExtendedTimestamp* = ref object of KaitaiStruct
+    `flags`*: Zip_ExtraField_ExtendedTimestamp_InfoFlags
+    `modTime`*: uint32
+    `accessTime`*: uint32
+    `createTime`*: uint32
+    `parent`*: Zip_ExtraField
+    `rawFlags`*: seq[byte]
+  Zip_ExtraField_ExtendedTimestamp_InfoFlags* = ref object of KaitaiStruct
+    `hasModTime`*: bool
+    `hasAccessTime`*: bool
+    `hasCreateTime`*: bool
+    `reserved`*: uint64
+    `parent`*: Zip_ExtraField_ExtendedTimestamp
+  Zip_ExtraField_InfozipUnixVarSize* = ref object of KaitaiStruct
+    `version`*: uint8
+    `lenUid`*: uint8
+    `uid`*: seq[byte]
+    `lenGid`*: uint8
+    `gid`*: seq[byte]
+    `parent`*: Zip_ExtraField
+  Zip_ExtraField_Ntfs* = ref object of KaitaiStruct
+    `reserved`*: uint32
+    `attributes`*: seq[Zip_ExtraField_Ntfs_Attribute]
+    `parent`*: Zip_ExtraField
+  Zip_ExtraField_Ntfs_Attribute* = ref object of KaitaiStruct
+    `tag`*: uint16
+    `lenBody`*: uint16
+    `body`*: KaitaiStruct
+    `parent`*: Zip_ExtraField_Ntfs
+    `rawBody`*: seq[byte]
+  Zip_ExtraField_Ntfs_Attribute1* = ref object of KaitaiStruct
+    `lastModTime`*: uint64
+    `lastAccessTime`*: uint64
+    `creationTime`*: uint64
+    `parent`*: Zip_ExtraField_Ntfs_Attribute
   Zip_Extras* = ref object of KaitaiStruct
     `entries`*: seq[Zip_ExtraField]
     `parent`*: KaitaiStruct
+  Zip_LocalFile* = ref object of KaitaiStruct
+    `header`*: Zip_LocalFileHeader
+    `body`*: seq[byte]
+    `parent`*: Zip_PkSection
   Zip_LocalFileHeader* = ref object of KaitaiStruct
     `version`*: uint16
     `flags`*: Zip_LocalFileHeader_GpFlags
@@ -180,33 +184,28 @@ type
     maximum = 1
     fast = 2
     super_fast = 3
-  Zip_EndOfCentralDir* = ref object of KaitaiStruct
-    `diskOfEndOfCentralDir`*: uint16
-    `diskOfCentralDir`*: uint16
-    `numCentralDirEntriesOnDisk`*: uint16
-    `numCentralDirEntriesTotal`*: uint16
-    `lenCentralDir`*: uint32
-    `ofsCentralDir`*: uint32
-    `lenComment`*: uint16
-    `comment`*: string
-    `parent`*: Zip_PkSection
+  Zip_PkSection* = ref object of KaitaiStruct
+    `magic`*: seq[byte]
+    `sectionType`*: uint16
+    `body`*: KaitaiStruct
+    `parent`*: KaitaiStruct
 
 proc read*(_: typedesc[Zip], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Zip
-proc read*(_: typedesc[Zip_LocalFile], io: KaitaiStream, root: KaitaiStruct, parent: Zip_PkSection): Zip_LocalFile
+proc read*(_: typedesc[Zip_CentralDirEntry], io: KaitaiStream, root: KaitaiStruct, parent: Zip_PkSection): Zip_CentralDirEntry
 proc read*(_: typedesc[Zip_DataDescriptor], io: KaitaiStream, root: KaitaiStruct, parent: Zip_PkSection): Zip_DataDescriptor
+proc read*(_: typedesc[Zip_EndOfCentralDir], io: KaitaiStream, root: KaitaiStruct, parent: Zip_PkSection): Zip_EndOfCentralDir
 proc read*(_: typedesc[Zip_ExtraField], io: KaitaiStream, root: KaitaiStruct, parent: Zip_Extras): Zip_ExtraField
-proc read*(_: typedesc[Zip_ExtraField_Ntfs], io: KaitaiStream, root: KaitaiStruct, parent: Zip_ExtraField): Zip_ExtraField_Ntfs
-proc read*(_: typedesc[Zip_ExtraField_Ntfs_Attribute], io: KaitaiStream, root: KaitaiStruct, parent: Zip_ExtraField_Ntfs): Zip_ExtraField_Ntfs_Attribute
-proc read*(_: typedesc[Zip_ExtraField_Ntfs_Attribute1], io: KaitaiStream, root: KaitaiStruct, parent: Zip_ExtraField_Ntfs_Attribute): Zip_ExtraField_Ntfs_Attribute1
 proc read*(_: typedesc[Zip_ExtraField_ExtendedTimestamp], io: KaitaiStream, root: KaitaiStruct, parent: Zip_ExtraField): Zip_ExtraField_ExtendedTimestamp
 proc read*(_: typedesc[Zip_ExtraField_ExtendedTimestamp_InfoFlags], io: KaitaiStream, root: KaitaiStruct, parent: Zip_ExtraField_ExtendedTimestamp): Zip_ExtraField_ExtendedTimestamp_InfoFlags
 proc read*(_: typedesc[Zip_ExtraField_InfozipUnixVarSize], io: KaitaiStream, root: KaitaiStruct, parent: Zip_ExtraField): Zip_ExtraField_InfozipUnixVarSize
-proc read*(_: typedesc[Zip_CentralDirEntry], io: KaitaiStream, root: KaitaiStruct, parent: Zip_PkSection): Zip_CentralDirEntry
-proc read*(_: typedesc[Zip_PkSection], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Zip_PkSection
+proc read*(_: typedesc[Zip_ExtraField_Ntfs], io: KaitaiStream, root: KaitaiStruct, parent: Zip_ExtraField): Zip_ExtraField_Ntfs
+proc read*(_: typedesc[Zip_ExtraField_Ntfs_Attribute], io: KaitaiStream, root: KaitaiStruct, parent: Zip_ExtraField_Ntfs): Zip_ExtraField_Ntfs_Attribute
+proc read*(_: typedesc[Zip_ExtraField_Ntfs_Attribute1], io: KaitaiStream, root: KaitaiStruct, parent: Zip_ExtraField_Ntfs_Attribute): Zip_ExtraField_Ntfs_Attribute1
 proc read*(_: typedesc[Zip_Extras], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Zip_Extras
+proc read*(_: typedesc[Zip_LocalFile], io: KaitaiStream, root: KaitaiStruct, parent: Zip_PkSection): Zip_LocalFile
 proc read*(_: typedesc[Zip_LocalFileHeader], io: KaitaiStream, root: KaitaiStruct, parent: Zip_LocalFile): Zip_LocalFileHeader
 proc read*(_: typedesc[Zip_LocalFileHeader_GpFlags], io: KaitaiStream, root: KaitaiStruct, parent: Zip_LocalFileHeader): Zip_LocalFileHeader_GpFlags
-proc read*(_: typedesc[Zip_EndOfCentralDir], io: KaitaiStream, root: KaitaiStruct, parent: Zip_PkSection): Zip_EndOfCentralDir
+proc read*(_: typedesc[Zip_PkSection], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Zip_PkSection
 
 proc localHeader*(this: Zip_CentralDirEntry): Zip_PkSection
 proc deflatedMode*(this: Zip_LocalFileHeader_GpFlags): Zip_LocalFileHeader_GpFlags_DeflateMode
@@ -248,21 +247,74 @@ proc read*(_: typedesc[Zip], io: KaitaiStream, root: KaitaiStruct, parent: Kaita
 proc fromFile*(_: typedesc[Zip], filename: string): Zip =
   Zip.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[Zip_LocalFile], io: KaitaiStream, root: KaitaiStruct, parent: Zip_PkSection): Zip_LocalFile =
+
+##[
+@see <a href="https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT">- 4.3.12</a>
+]##
+proc read*(_: typedesc[Zip_CentralDirEntry], io: KaitaiStream, root: KaitaiStruct, parent: Zip_PkSection): Zip_CentralDirEntry =
   template this: untyped = result
-  this = new(Zip_LocalFile)
+  this = new(Zip_CentralDirEntry)
   let root = if root == nil: cast[Zip](this) else: cast[Zip](root)
   this.io = io
   this.root = root
   this.parent = parent
 
-  let headerExpr = Zip_LocalFileHeader.read(this.io, this.root, this)
-  this.header = headerExpr
-  let bodyExpr = this.io.readBytes(int(this.header.lenBodyCompressed))
-  this.body = bodyExpr
+  let versionMadeByExpr = this.io.readU2le()
+  this.versionMadeBy = versionMadeByExpr
+  let versionNeededToExtractExpr = this.io.readU2le()
+  this.versionNeededToExtract = versionNeededToExtractExpr
+  let flagsExpr = this.io.readU2le()
+  this.flags = flagsExpr
+  let compressionMethodExpr = Zip_Compression(this.io.readU2le())
+  this.compressionMethod = compressionMethodExpr
+  let rawFileModTimeExpr = this.io.readBytes(int(4))
+  this.rawFileModTime = rawFileModTimeExpr
+  let rawFileModTimeIo = newKaitaiStream(rawFileModTimeExpr)
+  let fileModTimeExpr = DosDatetime.read(rawFileModTimeIo, nil, nil)
+  this.fileModTime = fileModTimeExpr
+  let crc32Expr = this.io.readU4le()
+  this.crc32 = crc32Expr
+  let lenBodyCompressedExpr = this.io.readU4le()
+  this.lenBodyCompressed = lenBodyCompressedExpr
+  let lenBodyUncompressedExpr = this.io.readU4le()
+  this.lenBodyUncompressed = lenBodyUncompressedExpr
+  let lenFileNameExpr = this.io.readU2le()
+  this.lenFileName = lenFileNameExpr
+  let lenExtraExpr = this.io.readU2le()
+  this.lenExtra = lenExtraExpr
+  let lenCommentExpr = this.io.readU2le()
+  this.lenComment = lenCommentExpr
+  let diskNumberStartExpr = this.io.readU2le()
+  this.diskNumberStart = diskNumberStartExpr
+  let intFileAttrExpr = this.io.readU2le()
+  this.intFileAttr = intFileAttrExpr
+  let extFileAttrExpr = this.io.readU4le()
+  this.extFileAttr = extFileAttrExpr
+  let ofsLocalHeaderExpr = this.io.readS4le()
+  this.ofsLocalHeader = ofsLocalHeaderExpr
+  let fileNameExpr = encode(this.io.readBytes(int(this.lenFileName)), "UTF-8")
+  this.fileName = fileNameExpr
+  let rawExtraExpr = this.io.readBytes(int(this.lenExtra))
+  this.rawExtra = rawExtraExpr
+  let rawExtraIo = newKaitaiStream(rawExtraExpr)
+  let extraExpr = Zip_Extras.read(rawExtraIo, this.root, this)
+  this.extra = extraExpr
+  let commentExpr = encode(this.io.readBytes(int(this.lenComment)), "UTF-8")
+  this.comment = commentExpr
 
-proc fromFile*(_: typedesc[Zip_LocalFile], filename: string): Zip_LocalFile =
-  Zip_LocalFile.read(newKaitaiFileStream(filename), nil, nil)
+proc localHeader(this: Zip_CentralDirEntry): Zip_PkSection = 
+  if this.localHeaderInstFlag:
+    return this.localHeaderInst
+  let pos = this.io.pos()
+  this.io.seek(int(this.ofsLocalHeader))
+  let localHeaderInstExpr = Zip_PkSection.read(this.io, this.root, this)
+  this.localHeaderInst = localHeaderInstExpr
+  this.io.seek(pos)
+  this.localHeaderInstFlag = true
+  return this.localHeaderInst
+
+proc fromFile*(_: typedesc[Zip_CentralDirEntry], filename: string): Zip_CentralDirEntry =
+  Zip_CentralDirEntry.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[Zip_DataDescriptor], io: KaitaiStream, root: KaitaiStruct, parent: Zip_PkSection): Zip_DataDescriptor =
   template this: untyped = result
@@ -282,6 +334,34 @@ proc read*(_: typedesc[Zip_DataDescriptor], io: KaitaiStream, root: KaitaiStruct
 proc fromFile*(_: typedesc[Zip_DataDescriptor], filename: string): Zip_DataDescriptor =
   Zip_DataDescriptor.read(newKaitaiFileStream(filename), nil, nil)
 
+proc read*(_: typedesc[Zip_EndOfCentralDir], io: KaitaiStream, root: KaitaiStruct, parent: Zip_PkSection): Zip_EndOfCentralDir =
+  template this: untyped = result
+  this = new(Zip_EndOfCentralDir)
+  let root = if root == nil: cast[Zip](this) else: cast[Zip](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let diskOfEndOfCentralDirExpr = this.io.readU2le()
+  this.diskOfEndOfCentralDir = diskOfEndOfCentralDirExpr
+  let diskOfCentralDirExpr = this.io.readU2le()
+  this.diskOfCentralDir = diskOfCentralDirExpr
+  let numCentralDirEntriesOnDiskExpr = this.io.readU2le()
+  this.numCentralDirEntriesOnDisk = numCentralDirEntriesOnDiskExpr
+  let numCentralDirEntriesTotalExpr = this.io.readU2le()
+  this.numCentralDirEntriesTotal = numCentralDirEntriesTotalExpr
+  let lenCentralDirExpr = this.io.readU4le()
+  this.lenCentralDir = lenCentralDirExpr
+  let ofsCentralDirExpr = this.io.readU4le()
+  this.ofsCentralDir = ofsCentralDirExpr
+  let lenCommentExpr = this.io.readU2le()
+  this.lenComment = lenCommentExpr
+  let commentExpr = encode(this.io.readBytes(int(this.lenComment)), "UTF-8")
+  this.comment = commentExpr
+
+proc fromFile*(_: typedesc[Zip_EndOfCentralDir], filename: string): Zip_EndOfCentralDir =
+  Zip_EndOfCentralDir.read(newKaitaiFileStream(filename), nil, nil)
+
 proc read*(_: typedesc[Zip_ExtraField], io: KaitaiStream, root: KaitaiStruct, parent: Zip_Extras): Zip_ExtraField =
   template this: untyped = result
   this = new(Zip_ExtraField)
@@ -296,13 +376,7 @@ proc read*(_: typedesc[Zip_ExtraField], io: KaitaiStream, root: KaitaiStruct, pa
   this.lenBody = lenBodyExpr
   block:
     let on = this.code
-    if on == zip.ntfs:
-      let rawBodyExpr = this.io.readBytes(int(this.lenBody))
-      this.rawBody = rawBodyExpr
-      let rawBodyIo = newKaitaiStream(rawBodyExpr)
-      let bodyExpr = Zip_ExtraField_Ntfs.read(rawBodyIo, this.root, this)
-      this.body = bodyExpr
-    elif on == zip.extended_timestamp:
+    if on == zip.extended_timestamp:
       let rawBodyExpr = this.io.readBytes(int(this.lenBody))
       this.rawBody = rawBodyExpr
       let rawBodyIo = newKaitaiStream(rawBodyExpr)
@@ -314,81 +388,18 @@ proc read*(_: typedesc[Zip_ExtraField], io: KaitaiStream, root: KaitaiStruct, pa
       let rawBodyIo = newKaitaiStream(rawBodyExpr)
       let bodyExpr = Zip_ExtraField_InfozipUnixVarSize.read(rawBodyIo, this.root, this)
       this.body = bodyExpr
+    elif on == zip.ntfs:
+      let rawBodyExpr = this.io.readBytes(int(this.lenBody))
+      this.rawBody = rawBodyExpr
+      let rawBodyIo = newKaitaiStream(rawBodyExpr)
+      let bodyExpr = Zip_ExtraField_Ntfs.read(rawBodyIo, this.root, this)
+      this.body = bodyExpr
     else:
       let bodyExpr = this.io.readBytes(int(this.lenBody))
       this.body = bodyExpr
 
 proc fromFile*(_: typedesc[Zip_ExtraField], filename: string): Zip_ExtraField =
   Zip_ExtraField.read(newKaitaiFileStream(filename), nil, nil)
-
-
-##[
-@see <a href="https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L191">Source</a>
-]##
-proc read*(_: typedesc[Zip_ExtraField_Ntfs], io: KaitaiStream, root: KaitaiStruct, parent: Zip_ExtraField): Zip_ExtraField_Ntfs =
-  template this: untyped = result
-  this = new(Zip_ExtraField_Ntfs)
-  let root = if root == nil: cast[Zip](this) else: cast[Zip](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let reservedExpr = this.io.readU4le()
-  this.reserved = reservedExpr
-  block:
-    var i: int
-    while not this.io.isEof:
-      let it = Zip_ExtraField_Ntfs_Attribute.read(this.io, this.root, this)
-      this.attributes.add(it)
-      inc i
-
-proc fromFile*(_: typedesc[Zip_ExtraField_Ntfs], filename: string): Zip_ExtraField_Ntfs =
-  Zip_ExtraField_Ntfs.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Zip_ExtraField_Ntfs_Attribute], io: KaitaiStream, root: KaitaiStruct, parent: Zip_ExtraField_Ntfs): Zip_ExtraField_Ntfs_Attribute =
-  template this: untyped = result
-  this = new(Zip_ExtraField_Ntfs_Attribute)
-  let root = if root == nil: cast[Zip](this) else: cast[Zip](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let tagExpr = this.io.readU2le()
-  this.tag = tagExpr
-  let lenBodyExpr = this.io.readU2le()
-  this.lenBody = lenBodyExpr
-  block:
-    let on = this.tag
-    if on == 1:
-      let rawBodyExpr = this.io.readBytes(int(this.lenBody))
-      this.rawBody = rawBodyExpr
-      let rawBodyIo = newKaitaiStream(rawBodyExpr)
-      let bodyExpr = Zip_ExtraField_Ntfs_Attribute1.read(rawBodyIo, this.root, this)
-      this.body = bodyExpr
-    else:
-      let bodyExpr = this.io.readBytes(int(this.lenBody))
-      this.body = bodyExpr
-
-proc fromFile*(_: typedesc[Zip_ExtraField_Ntfs_Attribute], filename: string): Zip_ExtraField_Ntfs_Attribute =
-  Zip_ExtraField_Ntfs_Attribute.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Zip_ExtraField_Ntfs_Attribute1], io: KaitaiStream, root: KaitaiStruct, parent: Zip_ExtraField_Ntfs_Attribute): Zip_ExtraField_Ntfs_Attribute1 =
-  template this: untyped = result
-  this = new(Zip_ExtraField_Ntfs_Attribute1)
-  let root = if root == nil: cast[Zip](this) else: cast[Zip](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let lastModTimeExpr = this.io.readU8le()
-  this.lastModTime = lastModTimeExpr
-  let lastAccessTimeExpr = this.io.readU8le()
-  this.lastAccessTime = lastAccessTimeExpr
-  let creationTimeExpr = this.io.readU8le()
-  this.creationTime = creationTimeExpr
-
-proc fromFile*(_: typedesc[Zip_ExtraField_Ntfs_Attribute1], filename: string): Zip_ExtraField_Ntfs_Attribute1 =
-  Zip_ExtraField_Ntfs_Attribute1.read(newKaitaiFileStream(filename), nil, nil)
 
 
 ##[
@@ -500,102 +511,72 @@ proc fromFile*(_: typedesc[Zip_ExtraField_InfozipUnixVarSize], filename: string)
 
 
 ##[
-@see <a href="https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT">- 4.3.12</a>
+@see <a href="https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L191">Source</a>
 ]##
-proc read*(_: typedesc[Zip_CentralDirEntry], io: KaitaiStream, root: KaitaiStruct, parent: Zip_PkSection): Zip_CentralDirEntry =
+proc read*(_: typedesc[Zip_ExtraField_Ntfs], io: KaitaiStream, root: KaitaiStruct, parent: Zip_ExtraField): Zip_ExtraField_Ntfs =
   template this: untyped = result
-  this = new(Zip_CentralDirEntry)
+  this = new(Zip_ExtraField_Ntfs)
   let root = if root == nil: cast[Zip](this) else: cast[Zip](root)
   this.io = io
   this.root = root
   this.parent = parent
 
-  let versionMadeByExpr = this.io.readU2le()
-  this.versionMadeBy = versionMadeByExpr
-  let versionNeededToExtractExpr = this.io.readU2le()
-  this.versionNeededToExtract = versionNeededToExtractExpr
-  let flagsExpr = this.io.readU2le()
-  this.flags = flagsExpr
-  let compressionMethodExpr = Zip_Compression(this.io.readU2le())
-  this.compressionMethod = compressionMethodExpr
-  let rawFileModTimeExpr = this.io.readBytes(int(4))
-  this.rawFileModTime = rawFileModTimeExpr
-  let rawFileModTimeIo = newKaitaiStream(rawFileModTimeExpr)
-  let fileModTimeExpr = DosDatetime.read(rawFileModTimeIo, this.root, this)
-  this.fileModTime = fileModTimeExpr
-  let crc32Expr = this.io.readU4le()
-  this.crc32 = crc32Expr
-  let lenBodyCompressedExpr = this.io.readU4le()
-  this.lenBodyCompressed = lenBodyCompressedExpr
-  let lenBodyUncompressedExpr = this.io.readU4le()
-  this.lenBodyUncompressed = lenBodyUncompressedExpr
-  let lenFileNameExpr = this.io.readU2le()
-  this.lenFileName = lenFileNameExpr
-  let lenExtraExpr = this.io.readU2le()
-  this.lenExtra = lenExtraExpr
-  let lenCommentExpr = this.io.readU2le()
-  this.lenComment = lenCommentExpr
-  let diskNumberStartExpr = this.io.readU2le()
-  this.diskNumberStart = diskNumberStartExpr
-  let intFileAttrExpr = this.io.readU2le()
-  this.intFileAttr = intFileAttrExpr
-  let extFileAttrExpr = this.io.readU4le()
-  this.extFileAttr = extFileAttrExpr
-  let ofsLocalHeaderExpr = this.io.readS4le()
-  this.ofsLocalHeader = ofsLocalHeaderExpr
-  let fileNameExpr = encode(this.io.readBytes(int(this.lenFileName)), "UTF-8")
-  this.fileName = fileNameExpr
-  let rawExtraExpr = this.io.readBytes(int(this.lenExtra))
-  this.rawExtra = rawExtraExpr
-  let rawExtraIo = newKaitaiStream(rawExtraExpr)
-  let extraExpr = Zip_Extras.read(rawExtraIo, this.root, this)
-  this.extra = extraExpr
-  let commentExpr = encode(this.io.readBytes(int(this.lenComment)), "UTF-8")
-  this.comment = commentExpr
-
-proc localHeader(this: Zip_CentralDirEntry): Zip_PkSection = 
-  if this.localHeaderInstFlag:
-    return this.localHeaderInst
-  let pos = this.io.pos()
-  this.io.seek(int(this.ofsLocalHeader))
-  let localHeaderInstExpr = Zip_PkSection.read(this.io, this.root, this)
-  this.localHeaderInst = localHeaderInstExpr
-  this.io.seek(pos)
-  this.localHeaderInstFlag = true
-  return this.localHeaderInst
-
-proc fromFile*(_: typedesc[Zip_CentralDirEntry], filename: string): Zip_CentralDirEntry =
-  Zip_CentralDirEntry.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Zip_PkSection], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Zip_PkSection =
-  template this: untyped = result
-  this = new(Zip_PkSection)
-  let root = if root == nil: cast[Zip](this) else: cast[Zip](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let magicExpr = this.io.readBytes(int(2))
-  this.magic = magicExpr
-  let sectionTypeExpr = this.io.readU2le()
-  this.sectionType = sectionTypeExpr
+  let reservedExpr = this.io.readU4le()
+  this.reserved = reservedExpr
   block:
-    let on = this.sectionType
-    if on == 513:
-      let bodyExpr = Zip_CentralDirEntry.read(this.io, this.root, this)
+    var i: int
+    while not this.io.isEof:
+      let it = Zip_ExtraField_Ntfs_Attribute.read(this.io, this.root, this)
+      this.attributes.add(it)
+      inc i
+
+proc fromFile*(_: typedesc[Zip_ExtraField_Ntfs], filename: string): Zip_ExtraField_Ntfs =
+  Zip_ExtraField_Ntfs.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Zip_ExtraField_Ntfs_Attribute], io: KaitaiStream, root: KaitaiStruct, parent: Zip_ExtraField_Ntfs): Zip_ExtraField_Ntfs_Attribute =
+  template this: untyped = result
+  this = new(Zip_ExtraField_Ntfs_Attribute)
+  let root = if root == nil: cast[Zip](this) else: cast[Zip](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let tagExpr = this.io.readU2le()
+  this.tag = tagExpr
+  let lenBodyExpr = this.io.readU2le()
+  this.lenBody = lenBodyExpr
+  block:
+    let on = this.tag
+    if on == 1:
+      let rawBodyExpr = this.io.readBytes(int(this.lenBody))
+      this.rawBody = rawBodyExpr
+      let rawBodyIo = newKaitaiStream(rawBodyExpr)
+      let bodyExpr = Zip_ExtraField_Ntfs_Attribute1.read(rawBodyIo, this.root, this)
       this.body = bodyExpr
-    elif on == 1027:
-      let bodyExpr = Zip_LocalFile.read(this.io, this.root, this)
-      this.body = bodyExpr
-    elif on == 1541:
-      let bodyExpr = Zip_EndOfCentralDir.read(this.io, this.root, this)
-      this.body = bodyExpr
-    elif on == 2055:
-      let bodyExpr = Zip_DataDescriptor.read(this.io, this.root, this)
+    else:
+      let bodyExpr = this.io.readBytes(int(this.lenBody))
       this.body = bodyExpr
 
-proc fromFile*(_: typedesc[Zip_PkSection], filename: string): Zip_PkSection =
-  Zip_PkSection.read(newKaitaiFileStream(filename), nil, nil)
+proc fromFile*(_: typedesc[Zip_ExtraField_Ntfs_Attribute], filename: string): Zip_ExtraField_Ntfs_Attribute =
+  Zip_ExtraField_Ntfs_Attribute.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Zip_ExtraField_Ntfs_Attribute1], io: KaitaiStream, root: KaitaiStruct, parent: Zip_ExtraField_Ntfs_Attribute): Zip_ExtraField_Ntfs_Attribute1 =
+  template this: untyped = result
+  this = new(Zip_ExtraField_Ntfs_Attribute1)
+  let root = if root == nil: cast[Zip](this) else: cast[Zip](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let lastModTimeExpr = this.io.readU8le()
+  this.lastModTime = lastModTimeExpr
+  let lastAccessTimeExpr = this.io.readU8le()
+  this.lastAccessTime = lastAccessTimeExpr
+  let creationTimeExpr = this.io.readU8le()
+  this.creationTime = creationTimeExpr
+
+proc fromFile*(_: typedesc[Zip_ExtraField_Ntfs_Attribute1], filename: string): Zip_ExtraField_Ntfs_Attribute1 =
+  Zip_ExtraField_Ntfs_Attribute1.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[Zip_Extras], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Zip_Extras =
   template this: untyped = result
@@ -614,6 +595,22 @@ proc read*(_: typedesc[Zip_Extras], io: KaitaiStream, root: KaitaiStruct, parent
 
 proc fromFile*(_: typedesc[Zip_Extras], filename: string): Zip_Extras =
   Zip_Extras.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Zip_LocalFile], io: KaitaiStream, root: KaitaiStruct, parent: Zip_PkSection): Zip_LocalFile =
+  template this: untyped = result
+  this = new(Zip_LocalFile)
+  let root = if root == nil: cast[Zip](this) else: cast[Zip](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let headerExpr = Zip_LocalFileHeader.read(this.io, this.root, this)
+  this.header = headerExpr
+  let bodyExpr = this.io.readBytes(int(this.header.lenBodyCompressed))
+  this.body = bodyExpr
+
+proc fromFile*(_: typedesc[Zip_LocalFile], filename: string): Zip_LocalFile =
+  Zip_LocalFile.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[Zip_LocalFileHeader], io: KaitaiStream, root: KaitaiStruct, parent: Zip_LocalFile): Zip_LocalFileHeader =
   template this: untyped = result
@@ -635,7 +632,7 @@ proc read*(_: typedesc[Zip_LocalFileHeader], io: KaitaiStream, root: KaitaiStruc
   let rawFileModTimeExpr = this.io.readBytes(int(4))
   this.rawFileModTime = rawFileModTimeExpr
   let rawFileModTimeIo = newKaitaiStream(rawFileModTimeExpr)
-  let fileModTimeExpr = DosDatetime.read(rawFileModTimeIo, this.root, this)
+  let fileModTimeExpr = DosDatetime.read(rawFileModTimeIo, nil, nil)
   this.fileModTime = fileModTimeExpr
   let crc32Expr = this.io.readU4le()
   this.crc32 = crc32Expr
@@ -715,7 +712,7 @@ proc implodedDictByteSize(this: Zip_LocalFileHeader_GpFlags): int =
   if this.implodedDictByteSizeInstFlag:
     return this.implodedDictByteSizeInst
   if this.parent.compressionMethod == zip.imploded:
-    let implodedDictByteSizeInstExpr = int(((if (this.compOptionsRaw and 1) != 0: 8 else: 4) * 1024))
+    let implodedDictByteSizeInstExpr = int((if (this.compOptionsRaw and 1) != 0: 8 else: 4) * 1024)
     this.implodedDictByteSizeInst = implodedDictByteSizeInstExpr
   this.implodedDictByteSizeInstFlag = true
   return this.implodedDictByteSizeInst
@@ -741,31 +738,33 @@ proc lzmaHasEosMarker(this: Zip_LocalFileHeader_GpFlags): bool =
 proc fromFile*(_: typedesc[Zip_LocalFileHeader_GpFlags], filename: string): Zip_LocalFileHeader_GpFlags =
   Zip_LocalFileHeader_GpFlags.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[Zip_EndOfCentralDir], io: KaitaiStream, root: KaitaiStruct, parent: Zip_PkSection): Zip_EndOfCentralDir =
+proc read*(_: typedesc[Zip_PkSection], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Zip_PkSection =
   template this: untyped = result
-  this = new(Zip_EndOfCentralDir)
+  this = new(Zip_PkSection)
   let root = if root == nil: cast[Zip](this) else: cast[Zip](root)
   this.io = io
   this.root = root
   this.parent = parent
 
-  let diskOfEndOfCentralDirExpr = this.io.readU2le()
-  this.diskOfEndOfCentralDir = diskOfEndOfCentralDirExpr
-  let diskOfCentralDirExpr = this.io.readU2le()
-  this.diskOfCentralDir = diskOfCentralDirExpr
-  let numCentralDirEntriesOnDiskExpr = this.io.readU2le()
-  this.numCentralDirEntriesOnDisk = numCentralDirEntriesOnDiskExpr
-  let numCentralDirEntriesTotalExpr = this.io.readU2le()
-  this.numCentralDirEntriesTotal = numCentralDirEntriesTotalExpr
-  let lenCentralDirExpr = this.io.readU4le()
-  this.lenCentralDir = lenCentralDirExpr
-  let ofsCentralDirExpr = this.io.readU4le()
-  this.ofsCentralDir = ofsCentralDirExpr
-  let lenCommentExpr = this.io.readU2le()
-  this.lenComment = lenCommentExpr
-  let commentExpr = encode(this.io.readBytes(int(this.lenComment)), "UTF-8")
-  this.comment = commentExpr
+  let magicExpr = this.io.readBytes(int(2))
+  this.magic = magicExpr
+  let sectionTypeExpr = this.io.readU2le()
+  this.sectionType = sectionTypeExpr
+  block:
+    let on = this.sectionType
+    if on == 1027:
+      let bodyExpr = Zip_LocalFile.read(this.io, this.root, this)
+      this.body = bodyExpr
+    elif on == 1541:
+      let bodyExpr = Zip_EndOfCentralDir.read(this.io, this.root, this)
+      this.body = bodyExpr
+    elif on == 2055:
+      let bodyExpr = Zip_DataDescriptor.read(this.io, this.root, this)
+      this.body = bodyExpr
+    elif on == 513:
+      let bodyExpr = Zip_CentralDirEntry.read(this.io, this.root, this)
+      this.body = bodyExpr
 
-proc fromFile*(_: typedesc[Zip_EndOfCentralDir], filename: string): Zip_EndOfCentralDir =
-  Zip_EndOfCentralDir.read(newKaitaiFileStream(filename), nil, nil)
+proc fromFile*(_: typedesc[Zip_PkSection], filename: string): Zip_PkSection =
+  Zip_PkSection.read(newKaitaiFileStream(filename), nil, nil)
 

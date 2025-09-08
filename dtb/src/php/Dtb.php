@@ -27,15 +27,15 @@
 
 namespace {
     class Dtb extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Dtb $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Dtb $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic = $this->_io->readBytes(4);
-            if (!($this->magic() == "\xD0\x0D\xFE\xED")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\xD0\x0D\xFE\xED", $this->magic(), $this->_io(), "/seq/0");
+            if (!($this->_m_magic == "\xD0\x0D\xFE\xED")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\xD0\x0D\xFE\xED", $this->_m_magic, $this->_io, "/seq/0");
             }
             $this->_m_totalSize = $this->_io->readU4be();
             $this->_m_ofsStructureBlock = $this->_io->readU4be();
@@ -43,8 +43,8 @@ namespace {
             $this->_m_ofsMemoryReservationBlock = $this->_io->readU4be();
             $this->_m_version = $this->_io->readU4be();
             $this->_m_minCompatibleVersion = $this->_io->readU4be();
-            if (!($this->minCompatibleVersion() <= $this->version())) {
-                throw new \Kaitai\Struct\Error\ValidationGreaterThanError($this->version(), $this->minCompatibleVersion(), $this->_io(), "/seq/6");
+            if (!($this->_m_minCompatibleVersion <= $this->version())) {
+                throw new \Kaitai\Struct\Error\ValidationGreaterThanError($this->version(), $this->_m_minCompatibleVersion, $this->_io, "/seq/6");
             }
             $this->_m_bootCpuidPhys = $this->_io->readU4be();
             $this->_m_lenStringsBlock = $this->_io->readU4be();
@@ -56,23 +56,11 @@ namespace {
                 return $this->_m_memoryReservationBlock;
             $_pos = $this->_io->pos();
             $this->_io->seek($this->ofsMemoryReservationBlock());
-            $this->_m__raw_memoryReservationBlock = $this->_io->readBytes(($this->ofsStructureBlock() - $this->ofsMemoryReservationBlock()));
+            $this->_m__raw_memoryReservationBlock = $this->_io->readBytes($this->ofsStructureBlock() - $this->ofsMemoryReservationBlock());
             $_io__raw_memoryReservationBlock = new \Kaitai\Struct\Stream($this->_m__raw_memoryReservationBlock);
             $this->_m_memoryReservationBlock = new \Dtb\MemoryBlock($_io__raw_memoryReservationBlock, $this, $this->_root);
             $this->_io->seek($_pos);
             return $this->_m_memoryReservationBlock;
-        }
-        protected $_m_structureBlock;
-        public function structureBlock() {
-            if ($this->_m_structureBlock !== null)
-                return $this->_m_structureBlock;
-            $_pos = $this->_io->pos();
-            $this->_io->seek($this->ofsStructureBlock());
-            $this->_m__raw_structureBlock = $this->_io->readBytes($this->lenStructureBlock());
-            $_io__raw_structureBlock = new \Kaitai\Struct\Stream($this->_m__raw_structureBlock);
-            $this->_m_structureBlock = new \Dtb\FdtBlock($_io__raw_structureBlock, $this, $this->_root);
-            $this->_io->seek($_pos);
-            return $this->_m_structureBlock;
         }
         protected $_m_stringsBlock;
         public function stringsBlock() {
@@ -86,6 +74,18 @@ namespace {
             $this->_io->seek($_pos);
             return $this->_m_stringsBlock;
         }
+        protected $_m_structureBlock;
+        public function structureBlock() {
+            if ($this->_m_structureBlock !== null)
+                return $this->_m_structureBlock;
+            $_pos = $this->_io->pos();
+            $this->_io->seek($this->ofsStructureBlock());
+            $this->_m__raw_structureBlock = $this->_io->readBytes($this->lenStructureBlock());
+            $_io__raw_structureBlock = new \Kaitai\Struct\Stream($this->_m__raw_structureBlock);
+            $this->_m_structureBlock = new \Dtb\FdtBlock($_io__raw_structureBlock, $this, $this->_root);
+            $this->_io->seek($_pos);
+            return $this->_m_structureBlock;
+        }
         protected $_m_magic;
         protected $_m_totalSize;
         protected $_m_ofsStructureBlock;
@@ -97,8 +97,8 @@ namespace {
         protected $_m_lenStringsBlock;
         protected $_m_lenStructureBlock;
         protected $_m__raw_memoryReservationBlock;
-        protected $_m__raw_structureBlock;
         protected $_m__raw_stringsBlock;
+        protected $_m__raw_structureBlock;
         public function magic() { return $this->_m_magic; }
         public function totalSize() { return $this->_m_totalSize; }
         public function ofsStructureBlock() { return $this->_m_ofsStructureBlock; }
@@ -110,34 +110,32 @@ namespace {
         public function lenStringsBlock() { return $this->_m_lenStringsBlock; }
         public function lenStructureBlock() { return $this->_m_lenStructureBlock; }
         public function _raw_memoryReservationBlock() { return $this->_m__raw_memoryReservationBlock; }
-        public function _raw_structureBlock() { return $this->_m__raw_structureBlock; }
         public function _raw_stringsBlock() { return $this->_m__raw_stringsBlock; }
+        public function _raw_structureBlock() { return $this->_m__raw_structureBlock; }
     }
 }
 
 namespace Dtb {
-    class MemoryBlock extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Dtb $_parent = null, \Dtb $_root = null) {
+    class FdtBeginNode extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Dtb\FdtNode $_parent = null, ?\Dtb $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_entries = [];
-            $i = 0;
-            while (!$this->_io->isEof()) {
-                $this->_m_entries[] = new \Dtb\MemoryBlockEntry($this->_io, $this, $this->_root);
-                $i++;
-            }
+            $this->_m_name = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, true), "ASCII");
+            $this->_m_padding = $this->_io->readBytes(\Kaitai\Struct\Stream::mod(-($this->_io()->pos()), 4));
         }
-        protected $_m_entries;
-        public function entries() { return $this->_m_entries; }
+        protected $_m_name;
+        protected $_m_padding;
+        public function name() { return $this->_m_name; }
+        public function padding() { return $this->_m_padding; }
     }
 }
 
 namespace Dtb {
     class FdtBlock extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Dtb $_parent = null, \Dtb $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Dtb $_parent = null, ?\Dtb $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -157,54 +155,33 @@ namespace Dtb {
 }
 
 namespace Dtb {
-    class MemoryBlockEntry extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Dtb\MemoryBlock $_parent = null, \Dtb $_root = null) {
+    class FdtNode extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Dtb\FdtBlock $_parent = null, ?\Dtb $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_address = $this->_io->readU8be();
-            $this->_m_size = $this->_io->readU8be();
-        }
-        protected $_m_address;
-        protected $_m_size;
-
-        /**
-         * physical address of a reserved memory region
-         */
-        public function address() { return $this->_m_address; }
-
-        /**
-         * size of a reserved memory region
-         */
-        public function size() { return $this->_m_size; }
-    }
-}
-
-namespace Dtb {
-    class Strings extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Dtb $_parent = null, \Dtb $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_strings = [];
-            $i = 0;
-            while (!$this->_io->isEof()) {
-                $this->_m_strings[] = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, true), "ASCII");
-                $i++;
+            $this->_m_type = $this->_io->readU4be();
+            switch ($this->type()) {
+                case \Dtb\Fdt::BEGIN_NODE:
+                    $this->_m_body = new \Dtb\FdtBeginNode($this->_io, $this, $this->_root);
+                    break;
+                case \Dtb\Fdt::PROP:
+                    $this->_m_body = new \Dtb\FdtProp($this->_io, $this, $this->_root);
+                    break;
             }
         }
-        protected $_m_strings;
-        public function strings() { return $this->_m_strings; }
+        protected $_m_type;
+        protected $_m_body;
+        public function type() { return $this->_m_type; }
+        public function body() { return $this->_m_body; }
     }
 }
 
 namespace Dtb {
     class FdtProp extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Dtb\FdtNode $_parent = null, \Dtb $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Dtb\FdtNode $_parent = null, ?\Dtb $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -238,45 +215,68 @@ namespace Dtb {
 }
 
 namespace Dtb {
-    class FdtNode extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Dtb\FdtBlock $_parent = null, \Dtb $_root = null) {
+    class MemoryBlock extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Dtb $_parent = null, ?\Dtb $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_type = $this->_io->readU4be();
-            switch ($this->type()) {
-                case \Dtb\Fdt::BEGIN_NODE:
-                    $this->_m_body = new \Dtb\FdtBeginNode($this->_io, $this, $this->_root);
-                    break;
-                case \Dtb\Fdt::PROP:
-                    $this->_m_body = new \Dtb\FdtProp($this->_io, $this, $this->_root);
-                    break;
+            $this->_m_entries = [];
+            $i = 0;
+            while (!$this->_io->isEof()) {
+                $this->_m_entries[] = new \Dtb\MemoryBlockEntry($this->_io, $this, $this->_root);
+                $i++;
             }
         }
-        protected $_m_type;
-        protected $_m_body;
-        public function type() { return $this->_m_type; }
-        public function body() { return $this->_m_body; }
+        protected $_m_entries;
+        public function entries() { return $this->_m_entries; }
     }
 }
 
 namespace Dtb {
-    class FdtBeginNode extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Dtb\FdtNode $_parent = null, \Dtb $_root = null) {
+    class MemoryBlockEntry extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Dtb\MemoryBlock $_parent = null, ?\Dtb $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_name = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, true), "ASCII");
-            $this->_m_padding = $this->_io->readBytes(\Kaitai\Struct\Stream::mod(-($this->_io()->pos()), 4));
+            $this->_m_address = $this->_io->readU8be();
+            $this->_m_size = $this->_io->readU8be();
         }
-        protected $_m_name;
-        protected $_m_padding;
-        public function name() { return $this->_m_name; }
-        public function padding() { return $this->_m_padding; }
+        protected $_m_address;
+        protected $_m_size;
+
+        /**
+         * physical address of a reserved memory region
+         */
+        public function address() { return $this->_m_address; }
+
+        /**
+         * size of a reserved memory region
+         */
+        public function size() { return $this->_m_size; }
+    }
+}
+
+namespace Dtb {
+    class Strings extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Dtb $_parent = null, ?\Dtb $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_strings = [];
+            $i = 0;
+            while (!$this->_io->isEof()) {
+                $this->_m_strings[] = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, true), "ASCII");
+                $i++;
+            }
+        }
+        protected $_m_strings;
+        public function strings() { return $this->_m_strings; }
     }
 }
 
@@ -287,5 +287,11 @@ namespace Dtb {
         const PROP = 3;
         const NOP = 4;
         const END = 9;
+
+        private const _VALUES = [1 => true, 2 => true, 3 => true, 4 => true, 9 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

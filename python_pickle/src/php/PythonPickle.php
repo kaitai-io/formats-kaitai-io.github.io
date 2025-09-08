@@ -31,8 +31,8 @@
 
 namespace {
     class PythonPickle extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \PythonPickle $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\PythonPickle $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -53,65 +53,12 @@ namespace {
 /**
  * Length prefixed string, between 0 and 2**64-1 bytes long.
  * 
- * Only a 64-bit build of Python would produce a pickle containing strings
- * large enough to need this type. Such a pickle could not be unpickled on
- * a 32-bit build of Python, because the string would be larger than
- * `sys.maxsize`.
+ * The contents are deserilised into a `bytearray` object.
  */
 
 namespace PythonPickle {
-    class Unicodestring8 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PythonPickle\Op $_parent = null, \PythonPickle $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_len = $this->_io->readU8le();
-            $this->_m_val = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->len()), "utf8");
-        }
-        protected $_m_len;
-        protected $_m_val;
-        public function len() { return $this->_m_len; }
-        public function val() { return $this->_m_val; }
-    }
-}
-
-/**
- * Large signed integer, in the range -2**(8*255-1) to 2**(8*255-1)-1,
- * encoded as two's complement.
- */
-
-namespace PythonPickle {
-    class Long1 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PythonPickle\Op $_parent = null, \PythonPickle $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_len = $this->_io->readU1();
-            $this->_m_val = $this->_io->readBytes($this->len());
-        }
-        protected $_m_len;
-        protected $_m_val;
-        public function len() { return $this->_m_len; }
-        public function val() { return $this->_m_val; }
-    }
-}
-
-/**
- * Length prefixed string, between 0 and 2**64-1 bytes long.
- * 
- * Only a 64-bit build of Python would produce a pickle containing strings
- * large enough to need this type. Such a pickle could not be unpickled on
- * a 32-bit build of Python, because the string would be larger than
- * `sys.maxsize`.
- */
-
-namespace PythonPickle {
-    class Bytes8 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PythonPickle\Op $_parent = null, \PythonPickle $_root = null) {
+    class Bytearray8 extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PythonPickle\Op $_parent = null, ?\PythonPickle $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -133,7 +80,7 @@ namespace PythonPickle {
 
 namespace PythonPickle {
     class Bytes1 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PythonPickle\Op $_parent = null, \PythonPickle $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PythonPickle\Op $_parent = null, ?\PythonPickle $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -155,7 +102,141 @@ namespace PythonPickle {
 
 namespace PythonPickle {
     class Bytes4 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PythonPickle\Op $_parent = null, \PythonPickle $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PythonPickle\Op $_parent = null, ?\PythonPickle $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_len = $this->_io->readU4le();
+            $this->_m_val = $this->_io->readBytes($this->len());
+        }
+        protected $_m_len;
+        protected $_m_val;
+        public function len() { return $this->_m_len; }
+        public function val() { return $this->_m_val; }
+    }
+}
+
+/**
+ * Length prefixed string, between 0 and 2**64-1 bytes long.
+ * 
+ * Only a 64-bit build of Python would produce a pickle containing strings
+ * large enough to need this type. Such a pickle could not be unpickled on
+ * a 32-bit build of Python, because the string would be larger than
+ * `sys.maxsize`.
+ */
+
+namespace PythonPickle {
+    class Bytes8 extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PythonPickle\Op $_parent = null, ?\PythonPickle $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_len = $this->_io->readU8le();
+            $this->_m_val = $this->_io->readBytes($this->len());
+        }
+        protected $_m_len;
+        protected $_m_val;
+        public function len() { return $this->_m_len; }
+        public function val() { return $this->_m_val; }
+    }
+}
+
+/**
+ * Integer, encoded with the ASCII chracters [0-9-], followed by 'L'.
+ */
+
+namespace PythonPickle {
+    class DecimalnlLong extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PythonPickle\Op $_parent = null, ?\PythonPickle $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_val = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(10, false, true, true), "ASCII");
+        }
+        protected $_m_val;
+        public function val() { return $this->_m_val; }
+    }
+}
+
+/**
+ * Integer or boolean, encoded with the ASCII characters [0-9-].
+ * 
+ * The values '00' and '01' encode the Python values `False` and `True`.
+ * Normally a value would not contain leading '0' characters.
+ */
+
+namespace PythonPickle {
+    class DecimalnlShort extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PythonPickle\Op $_parent = null, ?\PythonPickle $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_val = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(10, false, true, true), "ASCII");
+        }
+        protected $_m_val;
+        public function val() { return $this->_m_val; }
+    }
+}
+
+/**
+ * Double float, encoded with the ASCII characters [0-9.e+-], '-inf', 'inf',
+ * or 'nan'.
+ */
+
+namespace PythonPickle {
+    class Floatnl extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PythonPickle\Op $_parent = null, ?\PythonPickle $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_val = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(10, false, true, true), "ASCII");
+        }
+        protected $_m_val;
+        public function val() { return $this->_m_val; }
+    }
+}
+
+/**
+ * Large signed integer, in the range -2**(8*255-1) to 2**(8*255-1)-1,
+ * encoded as two's complement.
+ */
+
+namespace PythonPickle {
+    class Long1 extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PythonPickle\Op $_parent = null, ?\PythonPickle $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_len = $this->_io->readU1();
+            $this->_m_val = $this->_io->readBytes($this->len());
+        }
+        protected $_m_len;
+        protected $_m_val;
+        public function len() { return $this->_m_len; }
+        public function val() { return $this->_m_val; }
+    }
+}
+
+/**
+ * Large signed integer, in the range -2**(8*2**32-1) to 2**(8*2**32-1)-1,
+ * encoded as two's complement.
+ */
+
+namespace PythonPickle {
+    class Long4 extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PythonPickle\Op $_parent = null, ?\PythonPickle $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -177,292 +258,19 @@ namespace PythonPickle {
 
 namespace PythonPickle {
     class NoArg extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PythonPickle\Op $_parent = null, \PythonPickle $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PythonPickle\Op $_parent = null, ?\PythonPickle $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
         }
-    }
-}
-
-/**
- * Unquoted string, does not contain string escapes.
- */
-
-namespace PythonPickle {
-    class StringnlNoescape extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \PythonPickle $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_val = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(10, false, true, true), "ascii");
-        }
-        protected $_m_val;
-        public function val() { return $this->_m_val; }
-    }
-}
-
-/**
- * Integer, encoded with the ASCII chracters [0-9-], followed by 'L'.
- */
-
-namespace PythonPickle {
-    class DecimalnlLong extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PythonPickle\Op $_parent = null, \PythonPickle $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_val = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(10, false, true, true), "ascii");
-        }
-        protected $_m_val;
-        public function val() { return $this->_m_val; }
-    }
-}
-
-/**
- * Length prefixed string, between 0 and 2**32-1 bytes long
- */
-
-namespace PythonPickle {
-    class Unicodestring4 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PythonPickle\Op $_parent = null, \PythonPickle $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_len = $this->_io->readU4le();
-            $this->_m_val = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->len()), "utf8");
-        }
-        protected $_m_len;
-        protected $_m_val;
-        public function len() { return $this->_m_len; }
-        public function val() { return $this->_m_val; }
-    }
-}
-
-/**
- * Unquoted string, containing Python Unicode escapes.
- */
-
-namespace PythonPickle {
-    class Unicodestringnl extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PythonPickle\Op $_parent = null, \PythonPickle $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_val = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(10, false, true, true), "ascii");
-        }
-        protected $_m_val;
-        public function val() { return $this->_m_val; }
-    }
-}
-
-/**
- * Large signed integer, in the range -2**(8*2**32-1) to 2**(8*2**32-1)-1,
- * encoded as two's complement.
- */
-
-namespace PythonPickle {
-    class Long4 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PythonPickle\Op $_parent = null, \PythonPickle $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_len = $this->_io->readU4le();
-            $this->_m_val = $this->_io->readBytes($this->len());
-        }
-        protected $_m_len;
-        protected $_m_val;
-        public function len() { return $this->_m_len; }
-        public function val() { return $this->_m_val; }
-    }
-}
-
-/**
- * Length prefixed string, between 0 and 255 bytes long. Encoding is
- * unspecified.
- * 
- * The default Python 2.x string type (`str`) is a sequence of bytes.
- * These are pickled as `string1` or `string4`, when protocol == 2.
- * The bytes are written directly, no explicit encoding is performed.
- * 
- * Python 3.x will not pickle an object as `string1` or `string4`.
- * Instead, opcodes and types with a known encoding are used.
- * When unpickling
- * 
- * - `pickle.Unpickler` objects default to ASCII, which can be overriden
- * - `pickletools.dis` uses latin1, and cannot be overriden
- */
-
-namespace PythonPickle {
-    class String1 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PythonPickle\Op $_parent = null, \PythonPickle $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_len = $this->_io->readU1();
-            $this->_m_val = $this->_io->readBytes($this->len());
-        }
-        protected $_m_len;
-        protected $_m_val;
-        public function len() { return $this->_m_len; }
-        public function val() { return $this->_m_val; }
-    }
-}
-
-/**
- * Length prefixed string, between 0 and 2**64-1 bytes long.
- * 
- * The contents are deserilised into a `bytearray` object.
- */
-
-namespace PythonPickle {
-    class Bytearray8 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PythonPickle\Op $_parent = null, \PythonPickle $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_len = $this->_io->readU8le();
-            $this->_m_val = $this->_io->readBytes($this->len());
-        }
-        protected $_m_len;
-        protected $_m_val;
-        public function len() { return $this->_m_len; }
-        public function val() { return $this->_m_val; }
-    }
-}
-
-/**
- * Integer or boolean, encoded with the ASCII characters [0-9-].
- * 
- * The values '00' and '01' encode the Python values `False` and `True`.
- * Normally a value would not contain leading '0' characters.
- */
-
-namespace PythonPickle {
-    class DecimalnlShort extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PythonPickle\Op $_parent = null, \PythonPickle $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_val = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(10, false, true, true), "ascii");
-        }
-        protected $_m_val;
-        public function val() { return $this->_m_val; }
-    }
-}
-
-/**
- * Length prefixed string, between 0 and 255 bytes long
- */
-
-namespace PythonPickle {
-    class Unicodestring1 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PythonPickle\Op $_parent = null, \PythonPickle $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_len = $this->_io->readU1();
-            $this->_m_val = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->len()), "utf8");
-        }
-        protected $_m_len;
-        protected $_m_val;
-        public function len() { return $this->_m_len; }
-        public function val() { return $this->_m_val; }
-    }
-}
-
-/**
- * Quoted string, possibly containing Python string escapes.
- */
-
-namespace PythonPickle {
-    class Stringnl extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PythonPickle\Op $_parent = null, \PythonPickle $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_val = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(10, false, true, true), "ascii");
-        }
-        protected $_m_val;
-        public function val() { return $this->_m_val; }
-    }
-}
-
-/**
- * Pair of unquoted, unescaped strings.
- */
-
-namespace PythonPickle {
-    class StringnlNoescapePair extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PythonPickle\Op $_parent = null, \PythonPickle $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_val1 = new \PythonPickle\StringnlNoescape($this->_io, $this, $this->_root);
-            $this->_m_val2 = new \PythonPickle\StringnlNoescape($this->_io, $this, $this->_root);
-        }
-        protected $_m_val1;
-        protected $_m_val2;
-        public function val1() { return $this->_m_val1; }
-        public function val2() { return $this->_m_val2; }
-    }
-}
-
-/**
- * Length prefixed string, between 0 and 2**31-1 bytes long. Encoding is
- * unspecified.
- * 
- * Although the len field is signed, any length < 0 will raise an exception
- * during unpickling.
- * 
- * See the documentation for `string1` for further detail about encodings.
- */
-
-namespace PythonPickle {
-    class String4 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PythonPickle\Op $_parent = null, \PythonPickle $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_len = $this->_io->readS4le();
-            $this->_m_val = $this->_io->readBytes($this->len());
-        }
-        protected $_m_len;
-        protected $_m_val;
-        public function len() { return $this->_m_len; }
-        public function val() { return $this->_m_val; }
     }
 }
 
 namespace PythonPickle {
     class Op extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PythonPickle $_parent = null, \PythonPickle $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PythonPickle $_parent = null, ?\PythonPickle $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -470,70 +278,10 @@ namespace PythonPickle {
         private function _read() {
             $this->_m_code = $this->_io->readU1();
             switch ($this->code()) {
-                case \PythonPickle\Opcode::EXT4:
-                    $this->_m_arg = $this->_io->readU4le();
-                    break;
-                case \PythonPickle\Opcode::TUPLE1:
-                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
-                    break;
-                case \PythonPickle\Opcode::SETITEM:
-                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
-                    break;
-                case \PythonPickle\Opcode::READONLY_BUFFER:
-                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
-                    break;
-                case \PythonPickle\Opcode::STOP:
-                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
-                    break;
-                case \PythonPickle\Opcode::EXT2:
-                    $this->_m_arg = $this->_io->readU2le();
-                    break;
-                case \PythonPickle\Opcode::EMPTY_TUPLE:
-                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
-                    break;
-                case \PythonPickle\Opcode::NEWTRUE:
-                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
-                    break;
-                case \PythonPickle\Opcode::LONG:
-                    $this->_m_arg = new \PythonPickle\DecimalnlLong($this->_io, $this, $this->_root);
-                    break;
-                case \PythonPickle\Opcode::NEWOBJ:
-                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
-                    break;
-                case \PythonPickle\Opcode::BYTEARRAY8:
-                    $this->_m_arg = new \PythonPickle\Bytearray8($this->_io, $this, $this->_root);
-                    break;
-                case \PythonPickle\Opcode::PUT:
-                    $this->_m_arg = new \PythonPickle\DecimalnlShort($this->_io, $this, $this->_root);
-                    break;
-                case \PythonPickle\Opcode::STACK_GLOBAL:
-                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
-                    break;
-                case \PythonPickle\Opcode::POP_MARK:
+                case \PythonPickle\Opcode::ADDITEMS:
                     $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
                     break;
                 case \PythonPickle\Opcode::APPEND:
-                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
-                    break;
-                case \PythonPickle\Opcode::NEWFALSE:
-                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
-                    break;
-                case \PythonPickle\Opcode::BINPERSID:
-                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
-                    break;
-                case \PythonPickle\Opcode::BUILD:
-                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
-                    break;
-                case \PythonPickle\Opcode::EMPTY_DICT:
-                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
-                    break;
-                case \PythonPickle\Opcode::TUPLE2:
-                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
-                    break;
-                case \PythonPickle\Opcode::LONG4:
-                    $this->_m_arg = new \PythonPickle\Long4($this->_io, $this, $this->_root);
-                    break;
-                case \PythonPickle\Opcode::NEXT_BUFFER:
                     $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
                     break;
                 case \PythonPickle\Opcode::APPENDS:
@@ -542,95 +290,104 @@ namespace PythonPickle {
                 case \PythonPickle\Opcode::BINBYTES:
                     $this->_m_arg = new \PythonPickle\Bytes4($this->_io, $this, $this->_root);
                     break;
-                case \PythonPickle\Opcode::DUP:
-                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
-                    break;
-                case \PythonPickle\Opcode::LIST:
-                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
-                    break;
-                case \PythonPickle\Opcode::PROTO:
-                    $this->_m_arg = $this->_io->readU1();
-                    break;
-                case \PythonPickle\Opcode::POP:
-                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
-                    break;
-                case \PythonPickle\Opcode::FRAME:
-                    $this->_m_arg = $this->_io->readU8le();
-                    break;
-                case \PythonPickle\Opcode::STRING:
-                    $this->_m_arg = new \PythonPickle\Stringnl($this->_io, $this, $this->_root);
-                    break;
-                case \PythonPickle\Opcode::BINUNICODE:
-                    $this->_m_arg = new \PythonPickle\Unicodestring4($this->_io, $this, $this->_root);
-                    break;
-                case \PythonPickle\Opcode::FLOAT:
-                    $this->_m_arg = new \PythonPickle\Floatnl($this->_io, $this, $this->_root);
-                    break;
-                case \PythonPickle\Opcode::REDUCE:
-                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
-                    break;
-                case \PythonPickle\Opcode::GLOBAL_OPCODE:
-                    $this->_m_arg = new \PythonPickle\StringnlNoescapePair($this->_io, $this, $this->_root);
-                    break;
-                case \PythonPickle\Opcode::BINPUT:
-                    $this->_m_arg = $this->_io->readU1();
-                    break;
-                case \PythonPickle\Opcode::MEMOIZE:
-                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
-                    break;
-                case \PythonPickle\Opcode::PERSID:
-                    $this->_m_arg = new \PythonPickle\StringnlNoescape($this->_io, $this, $this->_root);
-                    break;
-                case \PythonPickle\Opcode::EXT1:
-                    $this->_m_arg = $this->_io->readU1();
-                    break;
-                case \PythonPickle\Opcode::NONE:
-                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
-                    break;
-                case \PythonPickle\Opcode::SHORT_BINUNICODE:
-                    $this->_m_arg = new \PythonPickle\Unicodestring1($this->_io, $this, $this->_root);
-                    break;
-                case \PythonPickle\Opcode::OBJ:
-                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
+                case \PythonPickle\Opcode::BINBYTES8:
+                    $this->_m_arg = new \PythonPickle\Bytes8($this->_io, $this, $this->_root);
                     break;
                 case \PythonPickle\Opcode::BINFLOAT:
                     $this->_m_arg = $this->_io->readF8be();
                     break;
-                case \PythonPickle\Opcode::NEWOBJ_EX:
+                case \PythonPickle\Opcode::BINGET:
+                    $this->_m_arg = $this->_io->readU1();
+                    break;
+                case \PythonPickle\Opcode::BININT:
+                    $this->_m_arg = $this->_io->readS4le();
+                    break;
+                case \PythonPickle\Opcode::BININT1:
+                    $this->_m_arg = $this->_io->readU1();
+                    break;
+                case \PythonPickle\Opcode::BININT2:
+                    $this->_m_arg = $this->_io->readU2le();
+                    break;
+                case \PythonPickle\Opcode::BINPERSID:
+                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
+                    break;
+                case \PythonPickle\Opcode::BINPUT:
+                    $this->_m_arg = $this->_io->readU1();
+                    break;
+                case \PythonPickle\Opcode::BINSTRING:
+                    $this->_m_arg = new \PythonPickle\String4($this->_io, $this, $this->_root);
+                    break;
+                case \PythonPickle\Opcode::BINUNICODE:
+                    $this->_m_arg = new \PythonPickle\Unicodestring4($this->_io, $this, $this->_root);
+                    break;
+                case \PythonPickle\Opcode::BINUNICODE8:
+                    $this->_m_arg = new \PythonPickle\Unicodestring8($this->_io, $this, $this->_root);
+                    break;
+                case \PythonPickle\Opcode::BUILD:
+                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
+                    break;
+                case \PythonPickle\Opcode::BYTEARRAY8:
+                    $this->_m_arg = new \PythonPickle\Bytearray8($this->_io, $this, $this->_root);
+                    break;
+                case \PythonPickle\Opcode::DICT:
+                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
+                    break;
+                case \PythonPickle\Opcode::DUP:
+                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
+                    break;
+                case \PythonPickle\Opcode::EMPTY_DICT:
                     $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
                     break;
                 case \PythonPickle\Opcode::EMPTY_LIST:
                     $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
                     break;
-                case \PythonPickle\Opcode::TUPLE:
+                case \PythonPickle\Opcode::EMPTY_SET:
                     $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
                     break;
-                case \PythonPickle\Opcode::BINUNICODE8:
-                    $this->_m_arg = new \PythonPickle\Unicodestring8($this->_io, $this, $this->_root);
+                case \PythonPickle\Opcode::EMPTY_TUPLE:
+                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
                     break;
-                case \PythonPickle\Opcode::BINGET:
+                case \PythonPickle\Opcode::EXT1:
                     $this->_m_arg = $this->_io->readU1();
                     break;
-                case \PythonPickle\Opcode::DICT:
-                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
-                    break;
-                case \PythonPickle\Opcode::BINSTRING:
-                    $this->_m_arg = new \PythonPickle\String4($this->_io, $this, $this->_root);
-                    break;
-                case \PythonPickle\Opcode::SETITEMS:
-                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
-                    break;
-                case \PythonPickle\Opcode::BININT2:
+                case \PythonPickle\Opcode::EXT2:
                     $this->_m_arg = $this->_io->readU2le();
                     break;
-                case \PythonPickle\Opcode::BINBYTES8:
-                    $this->_m_arg = new \PythonPickle\Bytes8($this->_io, $this, $this->_root);
+                case \PythonPickle\Opcode::EXT4:
+                    $this->_m_arg = $this->_io->readU4le();
                     break;
-                case \PythonPickle\Opcode::BININT1:
-                    $this->_m_arg = $this->_io->readU1();
+                case \PythonPickle\Opcode::FLOAT:
+                    $this->_m_arg = new \PythonPickle\Floatnl($this->_io, $this, $this->_root);
+                    break;
+                case \PythonPickle\Opcode::FRAME:
+                    $this->_m_arg = $this->_io->readU8le();
+                    break;
+                case \PythonPickle\Opcode::FROZENSET:
+                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
+                    break;
+                case \PythonPickle\Opcode::GET:
+                    $this->_m_arg = new \PythonPickle\DecimalnlShort($this->_io, $this, $this->_root);
+                    break;
+                case \PythonPickle\Opcode::GLOBAL_OPCODE:
+                    $this->_m_arg = new \PythonPickle\StringnlNoescapePair($this->_io, $this, $this->_root);
                     break;
                 case \PythonPickle\Opcode::INST:
                     $this->_m_arg = new \PythonPickle\StringnlNoescapePair($this->_io, $this, $this->_root);
+                    break;
+                case \PythonPickle\Opcode::INT:
+                    $this->_m_arg = new \PythonPickle\DecimalnlShort($this->_io, $this, $this->_root);
+                    break;
+                case \PythonPickle\Opcode::LIST:
+                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
+                    break;
+                case \PythonPickle\Opcode::LONG:
+                    $this->_m_arg = new \PythonPickle\DecimalnlLong($this->_io, $this, $this->_root);
+                    break;
+                case \PythonPickle\Opcode::LONG1:
+                    $this->_m_arg = new \PythonPickle\Long1($this->_io, $this, $this->_root);
+                    break;
+                case \PythonPickle\Opcode::LONG4:
+                    $this->_m_arg = new \PythonPickle\Long4($this->_io, $this, $this->_root);
                     break;
                 case \PythonPickle\Opcode::LONG_BINGET:
                     $this->_m_arg = $this->_io->readU4le();
@@ -638,41 +395,92 @@ namespace PythonPickle {
                 case \PythonPickle\Opcode::LONG_BINPUT:
                     $this->_m_arg = $this->_io->readU4le();
                     break;
-                case \PythonPickle\Opcode::INT:
+                case \PythonPickle\Opcode::MARK:
+                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
+                    break;
+                case \PythonPickle\Opcode::MEMOIZE:
+                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
+                    break;
+                case \PythonPickle\Opcode::NEWFALSE:
+                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
+                    break;
+                case \PythonPickle\Opcode::NEWOBJ:
+                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
+                    break;
+                case \PythonPickle\Opcode::NEWOBJ_EX:
+                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
+                    break;
+                case \PythonPickle\Opcode::NEWTRUE:
+                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
+                    break;
+                case \PythonPickle\Opcode::NEXT_BUFFER:
+                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
+                    break;
+                case \PythonPickle\Opcode::NONE:
+                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
+                    break;
+                case \PythonPickle\Opcode::OBJ:
+                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
+                    break;
+                case \PythonPickle\Opcode::PERSID:
+                    $this->_m_arg = new \PythonPickle\StringnlNoescape($this->_io, $this, $this->_root);
+                    break;
+                case \PythonPickle\Opcode::POP:
+                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
+                    break;
+                case \PythonPickle\Opcode::POP_MARK:
+                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
+                    break;
+                case \PythonPickle\Opcode::PROTO:
+                    $this->_m_arg = $this->_io->readU1();
+                    break;
+                case \PythonPickle\Opcode::PUT:
                     $this->_m_arg = new \PythonPickle\DecimalnlShort($this->_io, $this, $this->_root);
                     break;
-                case \PythonPickle\Opcode::BININT:
-                    $this->_m_arg = $this->_io->readS4le();
+                case \PythonPickle\Opcode::READONLY_BUFFER:
+                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
                     break;
-                case \PythonPickle\Opcode::UNICODE:
-                    $this->_m_arg = new \PythonPickle\Unicodestringnl($this->_io, $this, $this->_root);
+                case \PythonPickle\Opcode::REDUCE:
+                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
                     break;
-                case \PythonPickle\Opcode::LONG1:
-                    $this->_m_arg = new \PythonPickle\Long1($this->_io, $this, $this->_root);
+                case \PythonPickle\Opcode::SETITEM:
+                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
+                    break;
+                case \PythonPickle\Opcode::SETITEMS:
+                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
+                    break;
+                case \PythonPickle\Opcode::SHORT_BINBYTES:
+                    $this->_m_arg = new \PythonPickle\Bytes1($this->_io, $this, $this->_root);
                     break;
                 case \PythonPickle\Opcode::SHORT_BINSTRING:
                     $this->_m_arg = new \PythonPickle\String1($this->_io, $this, $this->_root);
                     break;
-                case \PythonPickle\Opcode::MARK:
+                case \PythonPickle\Opcode::SHORT_BINUNICODE:
+                    $this->_m_arg = new \PythonPickle\Unicodestring1($this->_io, $this, $this->_root);
+                    break;
+                case \PythonPickle\Opcode::STACK_GLOBAL:
                     $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
                     break;
-                case \PythonPickle\Opcode::FROZENSET:
+                case \PythonPickle\Opcode::STOP:
+                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
+                    break;
+                case \PythonPickle\Opcode::STRING:
+                    $this->_m_arg = new \PythonPickle\Stringnl($this->_io, $this, $this->_root);
+                    break;
+                case \PythonPickle\Opcode::TUPLE:
+                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
+                    break;
+                case \PythonPickle\Opcode::TUPLE1:
+                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
+                    break;
+                case \PythonPickle\Opcode::TUPLE2:
                     $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
                     break;
                 case \PythonPickle\Opcode::TUPLE3:
                     $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
                     break;
-                case \PythonPickle\Opcode::ADDITEMS:
-                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
-                    break;
-                case \PythonPickle\Opcode::GET:
-                    $this->_m_arg = new \PythonPickle\DecimalnlShort($this->_io, $this, $this->_root);
-                    break;
-                case \PythonPickle\Opcode::EMPTY_SET:
-                    $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
-                    break;
-                case \PythonPickle\Opcode::SHORT_BINBYTES:
-                    $this->_m_arg = new \PythonPickle\Bytes1($this->_io, $this, $this->_root);
+                case \PythonPickle\Opcode::UNICODE:
+                    $this->_m_arg = new \PythonPickle\Unicodestringnl($this->_io, $this, $this->_root);
                     break;
             }
         }
@@ -695,19 +503,211 @@ namespace PythonPickle {
 }
 
 /**
- * Double float, encoded with the ASCII characters [0-9.e+-], '-inf', 'inf',
- * or 'nan'.
+ * Length prefixed string, between 0 and 255 bytes long. Encoding is
+ * unspecified.
+ * 
+ * The default Python 2.x string type (`str`) is a sequence of bytes.
+ * These are pickled as `string1` or `string4`, when protocol == 2.
+ * The bytes are written directly, no explicit encoding is performed.
+ * 
+ * Python 3.x will not pickle an object as `string1` or `string4`.
+ * Instead, opcodes and types with a known encoding are used.
+ * When unpickling
+ * 
+ * - `pickle.Unpickler` objects default to ASCII, which can be overriden
+ * - `pickletools.dis` uses latin1, and cannot be overriden
  */
 
 namespace PythonPickle {
-    class Floatnl extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PythonPickle\Op $_parent = null, \PythonPickle $_root = null) {
+    class String1 extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PythonPickle\Op $_parent = null, ?\PythonPickle $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_val = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(10, false, true, true), "ascii");
+            $this->_m_len = $this->_io->readU1();
+            $this->_m_val = $this->_io->readBytes($this->len());
+        }
+        protected $_m_len;
+        protected $_m_val;
+        public function len() { return $this->_m_len; }
+        public function val() { return $this->_m_val; }
+    }
+}
+
+/**
+ * Length prefixed string, between 0 and 2**31-1 bytes long. Encoding is
+ * unspecified.
+ * 
+ * Although the len field is signed, any length < 0 will raise an exception
+ * during unpickling.
+ * 
+ * See the documentation for `string1` for further detail about encodings.
+ */
+
+namespace PythonPickle {
+    class String4 extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PythonPickle\Op $_parent = null, ?\PythonPickle $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_len = $this->_io->readS4le();
+            $this->_m_val = $this->_io->readBytes($this->len());
+        }
+        protected $_m_len;
+        protected $_m_val;
+        public function len() { return $this->_m_len; }
+        public function val() { return $this->_m_val; }
+    }
+}
+
+/**
+ * Quoted string, possibly containing Python string escapes.
+ */
+
+namespace PythonPickle {
+    class Stringnl extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PythonPickle\Op $_parent = null, ?\PythonPickle $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_val = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(10, false, true, true), "ASCII");
+        }
+        protected $_m_val;
+        public function val() { return $this->_m_val; }
+    }
+}
+
+/**
+ * Unquoted string, does not contain string escapes.
+ */
+
+namespace PythonPickle {
+    class StringnlNoescape extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\PythonPickle $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_val = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(10, false, true, true), "ASCII");
+        }
+        protected $_m_val;
+        public function val() { return $this->_m_val; }
+    }
+}
+
+/**
+ * Pair of unquoted, unescaped strings.
+ */
+
+namespace PythonPickle {
+    class StringnlNoescapePair extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PythonPickle\Op $_parent = null, ?\PythonPickle $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_val1 = new \PythonPickle\StringnlNoescape($this->_io, $this, $this->_root);
+            $this->_m_val2 = new \PythonPickle\StringnlNoescape($this->_io, $this, $this->_root);
+        }
+        protected $_m_val1;
+        protected $_m_val2;
+        public function val1() { return $this->_m_val1; }
+        public function val2() { return $this->_m_val2; }
+    }
+}
+
+/**
+ * Length prefixed string, between 0 and 255 bytes long
+ */
+
+namespace PythonPickle {
+    class Unicodestring1 extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PythonPickle\Op $_parent = null, ?\PythonPickle $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_len = $this->_io->readU1();
+            $this->_m_val = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->len()), "UTF-8");
+        }
+        protected $_m_len;
+        protected $_m_val;
+        public function len() { return $this->_m_len; }
+        public function val() { return $this->_m_val; }
+    }
+}
+
+/**
+ * Length prefixed string, between 0 and 2**32-1 bytes long
+ */
+
+namespace PythonPickle {
+    class Unicodestring4 extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PythonPickle\Op $_parent = null, ?\PythonPickle $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_len = $this->_io->readU4le();
+            $this->_m_val = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->len()), "UTF-8");
+        }
+        protected $_m_len;
+        protected $_m_val;
+        public function len() { return $this->_m_len; }
+        public function val() { return $this->_m_val; }
+    }
+}
+
+/**
+ * Length prefixed string, between 0 and 2**64-1 bytes long.
+ * 
+ * Only a 64-bit build of Python would produce a pickle containing strings
+ * large enough to need this type. Such a pickle could not be unpickled on
+ * a 32-bit build of Python, because the string would be larger than
+ * `sys.maxsize`.
+ */
+
+namespace PythonPickle {
+    class Unicodestring8 extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PythonPickle\Op $_parent = null, ?\PythonPickle $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_len = $this->_io->readU8le();
+            $this->_m_val = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->len()), "UTF-8");
+        }
+        protected $_m_len;
+        protected $_m_val;
+        public function len() { return $this->_m_len; }
+        public function val() { return $this->_m_val; }
+    }
+}
+
+/**
+ * Unquoted string, containing Python Unicode escapes.
+ */
+
+namespace PythonPickle {
+    class Unicodestringnl extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PythonPickle\Op $_parent = null, ?\PythonPickle $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_val = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(10, false, true, true), "ASCII");
         }
         protected $_m_val;
         public function val() { return $this->_m_val; }
@@ -1059,5 +1059,11 @@ namespace PythonPickle {
          * make top of stack readonly
          */
         const READONLY_BUFFER = 152;
+
+        private const _VALUES = [40 => true, 41 => true, 46 => true, 48 => true, 49 => true, 50 => true, 66 => true, 67 => true, 70 => true, 71 => true, 73 => true, 74 => true, 75 => true, 76 => true, 77 => true, 78 => true, 80 => true, 81 => true, 82 => true, 83 => true, 84 => true, 85 => true, 86 => true, 88 => true, 93 => true, 97 => true, 98 => true, 99 => true, 100 => true, 101 => true, 103 => true, 104 => true, 105 => true, 106 => true, 108 => true, 111 => true, 112 => true, 113 => true, 114 => true, 115 => true, 116 => true, 117 => true, 125 => true, 128 => true, 129 => true, 130 => true, 131 => true, 132 => true, 133 => true, 134 => true, 135 => true, 136 => true, 137 => true, 138 => true, 139 => true, 140 => true, 141 => true, 142 => true, 143 => true, 144 => true, 145 => true, 146 => true, 147 => true, 148 => true, 149 => true, 150 => true, 151 => true, 152 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

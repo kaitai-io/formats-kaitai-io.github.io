@@ -2,10 +2,32 @@
 
 #include "shapefile_index.h"
 #include "kaitai/exceptions.h"
+std::set<shapefile_index_t::shape_type_t> shapefile_index_t::_build_values_shape_type_t() {
+    std::set<shapefile_index_t::shape_type_t> _t;
+    _t.insert(shapefile_index_t::SHAPE_TYPE_NULL_SHAPE);
+    _t.insert(shapefile_index_t::SHAPE_TYPE_POINT);
+    _t.insert(shapefile_index_t::SHAPE_TYPE_POLY_LINE);
+    _t.insert(shapefile_index_t::SHAPE_TYPE_POLYGON);
+    _t.insert(shapefile_index_t::SHAPE_TYPE_MULTI_POINT);
+    _t.insert(shapefile_index_t::SHAPE_TYPE_POINT_Z);
+    _t.insert(shapefile_index_t::SHAPE_TYPE_POLY_LINE_Z);
+    _t.insert(shapefile_index_t::SHAPE_TYPE_POLYGON_Z);
+    _t.insert(shapefile_index_t::SHAPE_TYPE_MULTI_POINT_Z);
+    _t.insert(shapefile_index_t::SHAPE_TYPE_POINT_M);
+    _t.insert(shapefile_index_t::SHAPE_TYPE_POLY_LINE_M);
+    _t.insert(shapefile_index_t::SHAPE_TYPE_POLYGON_M);
+    _t.insert(shapefile_index_t::SHAPE_TYPE_MULTI_POINT_M);
+    _t.insert(shapefile_index_t::SHAPE_TYPE_MULTI_PATCH);
+    return _t;
+}
+const std::set<shapefile_index_t::shape_type_t> shapefile_index_t::_values_shape_type_t = shapefile_index_t::_build_values_shape_type_t();
+bool shapefile_index_t::_is_defined_shape_type_t(shapefile_index_t::shape_type_t v) {
+    return shapefile_index_t::_values_shape_type_t.find(v) != shapefile_index_t::_values_shape_type_t.end();
+}
 
 shapefile_index_t::shapefile_index_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, shapefile_index_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     m_header = 0;
     m_records = 0;
 
@@ -43,87 +65,6 @@ void shapefile_index_t::_clean_up() {
         }
         delete m_records; m_records = 0;
     }
-}
-
-shapefile_index_t::file_header_t::file_header_t(kaitai::kstream* p__io, shapefile_index_t* p__parent, shapefile_index_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    m_bounding_box = 0;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void shapefile_index_t::file_header_t::_read() {
-    m_file_code = m__io->read_bytes(4);
-    if (!(file_code() == std::string("\x00\x00\x27\x0A", 4))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\x00\x00\x27\x0A", 4), file_code(), _io(), std::string("/types/file_header/seq/0"));
-    }
-    m_unused_field_1 = m__io->read_bytes(4);
-    if (!(unused_field_1() == std::string("\x00\x00\x00\x00", 4))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\x00\x00\x00\x00", 4), unused_field_1(), _io(), std::string("/types/file_header/seq/1"));
-    }
-    m_unused_field_2 = m__io->read_bytes(4);
-    if (!(unused_field_2() == std::string("\x00\x00\x00\x00", 4))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\x00\x00\x00\x00", 4), unused_field_2(), _io(), std::string("/types/file_header/seq/2"));
-    }
-    m_unused_field_3 = m__io->read_bytes(4);
-    if (!(unused_field_3() == std::string("\x00\x00\x00\x00", 4))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\x00\x00\x00\x00", 4), unused_field_3(), _io(), std::string("/types/file_header/seq/3"));
-    }
-    m_unused_field_4 = m__io->read_bytes(4);
-    if (!(unused_field_4() == std::string("\x00\x00\x00\x00", 4))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\x00\x00\x00\x00", 4), unused_field_4(), _io(), std::string("/types/file_header/seq/4"));
-    }
-    m_unused_field_5 = m__io->read_bytes(4);
-    if (!(unused_field_5() == std::string("\x00\x00\x00\x00", 4))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\x00\x00\x00\x00", 4), unused_field_5(), _io(), std::string("/types/file_header/seq/5"));
-    }
-    m_file_length = m__io->read_s4be();
-    m_version = m__io->read_bytes(4);
-    if (!(version() == std::string("\xE8\x03\x00\x00", 4))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\xE8\x03\x00\x00", 4), version(), _io(), std::string("/types/file_header/seq/7"));
-    }
-    m_shape_type = static_cast<shapefile_index_t::shape_type_t>(m__io->read_s4le());
-    m_bounding_box = new bounding_box_x_y_z_m_t(m__io, this, m__root);
-}
-
-shapefile_index_t::file_header_t::~file_header_t() {
-    _clean_up();
-}
-
-void shapefile_index_t::file_header_t::_clean_up() {
-    if (m_bounding_box) {
-        delete m_bounding_box; m_bounding_box = 0;
-    }
-}
-
-shapefile_index_t::record_t::record_t(kaitai::kstream* p__io, shapefile_index_t* p__parent, shapefile_index_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void shapefile_index_t::record_t::_read() {
-    m_offset = m__io->read_s4be();
-    m_content_length = m__io->read_s4be();
-}
-
-shapefile_index_t::record_t::~record_t() {
-    _clean_up();
-}
-
-void shapefile_index_t::record_t::_clean_up() {
 }
 
 shapefile_index_t::bounding_box_x_y_z_m_t::bounding_box_x_y_z_m_t(kaitai::kstream* p__io, shapefile_index_t::file_header_t* p__parent, shapefile_index_t* p__root) : kaitai::kstruct(p__io) {
@@ -190,4 +131,85 @@ shapefile_index_t::bounds_min_max_t::~bounds_min_max_t() {
 }
 
 void shapefile_index_t::bounds_min_max_t::_clean_up() {
+}
+
+shapefile_index_t::file_header_t::file_header_t(kaitai::kstream* p__io, shapefile_index_t* p__parent, shapefile_index_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_bounding_box = 0;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void shapefile_index_t::file_header_t::_read() {
+    m_file_code = m__io->read_bytes(4);
+    if (!(m_file_code == std::string("\x00\x00\x27\x0A", 4))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\x00\x00\x27\x0A", 4), m_file_code, m__io, std::string("/types/file_header/seq/0"));
+    }
+    m_unused_field_1 = m__io->read_bytes(4);
+    if (!(m_unused_field_1 == std::string("\x00\x00\x00\x00", 4))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\x00\x00\x00\x00", 4), m_unused_field_1, m__io, std::string("/types/file_header/seq/1"));
+    }
+    m_unused_field_2 = m__io->read_bytes(4);
+    if (!(m_unused_field_2 == std::string("\x00\x00\x00\x00", 4))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\x00\x00\x00\x00", 4), m_unused_field_2, m__io, std::string("/types/file_header/seq/2"));
+    }
+    m_unused_field_3 = m__io->read_bytes(4);
+    if (!(m_unused_field_3 == std::string("\x00\x00\x00\x00", 4))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\x00\x00\x00\x00", 4), m_unused_field_3, m__io, std::string("/types/file_header/seq/3"));
+    }
+    m_unused_field_4 = m__io->read_bytes(4);
+    if (!(m_unused_field_4 == std::string("\x00\x00\x00\x00", 4))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\x00\x00\x00\x00", 4), m_unused_field_4, m__io, std::string("/types/file_header/seq/4"));
+    }
+    m_unused_field_5 = m__io->read_bytes(4);
+    if (!(m_unused_field_5 == std::string("\x00\x00\x00\x00", 4))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\x00\x00\x00\x00", 4), m_unused_field_5, m__io, std::string("/types/file_header/seq/5"));
+    }
+    m_file_length = m__io->read_s4be();
+    m_version = m__io->read_bytes(4);
+    if (!(m_version == std::string("\xE8\x03\x00\x00", 4))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\xE8\x03\x00\x00", 4), m_version, m__io, std::string("/types/file_header/seq/7"));
+    }
+    m_shape_type = static_cast<shapefile_index_t::shape_type_t>(m__io->read_s4le());
+    m_bounding_box = new bounding_box_x_y_z_m_t(m__io, this, m__root);
+}
+
+shapefile_index_t::file_header_t::~file_header_t() {
+    _clean_up();
+}
+
+void shapefile_index_t::file_header_t::_clean_up() {
+    if (m_bounding_box) {
+        delete m_bounding_box; m_bounding_box = 0;
+    }
+}
+
+shapefile_index_t::record_t::record_t(kaitai::kstream* p__io, shapefile_index_t* p__parent, shapefile_index_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void shapefile_index_t::record_t::_read() {
+    m_offset = m__io->read_s4be();
+    m_content_length = m__io->read_s4be();
+}
+
+shapefile_index_t::record_t::~record_t() {
+    _clean_up();
+}
+
+void shapefile_index_t::record_t::_clean_up() {
 }

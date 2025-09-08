@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -14,14 +14,14 @@ end
 # contained inside).
 # @see https://learn.microsoft.com/en-us/previous-versions/ms997538(v=msdn.10) Source
 class Ico < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
     @magic = @_io.read_bytes(4)
-    raise Kaitai::Struct::ValidationNotEqualError.new([0, 0, 1, 0].pack('C*'), magic, _io, "/seq/0") if not magic == [0, 0, 1, 0].pack('C*')
+    raise Kaitai::Struct::ValidationNotEqualError.new([0, 0, 1, 0].pack('C*'), @magic, @_io, "/seq/0") if not @magic == [0, 0, 1, 0].pack('C*')
     @num_images = @_io.read_u2le
     @images = []
     (num_images).times { |i|
@@ -30,7 +30,7 @@ class Ico < Kaitai::Struct::Struct
     self
   end
   class IconDirEntry < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -40,7 +40,7 @@ class Ico < Kaitai::Struct::Struct
       @height = @_io.read_u1
       @num_colors = @_io.read_u1
       @reserved = @_io.read_bytes(1)
-      raise Kaitai::Struct::ValidationNotEqualError.new([0].pack('C*'), reserved, _io, "/types/icon_dir_entry/seq/3") if not reserved == [0].pack('C*')
+      raise Kaitai::Struct::ValidationNotEqualError.new([0].pack('C*'), @reserved, @_io, "/types/icon_dir_entry/seq/3") if not @reserved == [0].pack('C*')
       @num_planes = @_io.read_u2le
       @bpp = @_io.read_u2le
       @len_img = @_io.read_u4le
@@ -62,6 +62,14 @@ class Ico < Kaitai::Struct::Struct
     end
 
     ##
+    # True if this image is in PNG format.
+    def is_png
+      return @is_png unless @is_png.nil?
+      @is_png = png_header == [137, 80, 78, 71, 13, 10, 26, 10].pack('C*')
+      @is_png
+    end
+
+    ##
     # Pre-reads first 8 bytes of the image to determine if it's an
     # embedded PNG file.
     def png_header
@@ -71,14 +79,6 @@ class Ico < Kaitai::Struct::Struct
       @png_header = @_io.read_bytes(8)
       @_io.seek(_pos)
       @png_header
-    end
-
-    ##
-    # True if this image is in PNG format.
-    def is_png
-      return @is_png unless @is_png.nil?
-      @is_png = png_header == [137, 80, 78, 71, 13, 10, 26, 10].pack('C*')
-      @is_png
     end
 
     ##

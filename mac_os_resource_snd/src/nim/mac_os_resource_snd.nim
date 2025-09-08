@@ -41,19 +41,18 @@ type
     buffer_cmd = 81
     rate_cmd = 82
     get_rate_cmd = 85
-  MacOsResourceSnd_SoundHeaderType* = enum
-    standard = 0
-    compressed = 254
-    extended = 255
+  MacOsResourceSnd_CompressionTypeEnum* = enum
+    variable_compression = -2
+    fixed_compression = -1
+    not_compressed = 0
+    two_to_one = 1
+    eight_to_three = 2
+    three_to_one = 3
+    six_to_one = 4
   MacOsResourceSnd_DataType* = enum
     square_wave_synth = 1
     wave_table_synth = 3
     sampled_synth = 5
-  MacOsResourceSnd_WaveInitOption* = enum
-    channel0 = 4
-    channel1 = 5
-    channel2 = 6
-    channel3 = 7
   MacOsResourceSnd_InitOption* = enum
     chan_left = 2
     chan_right = 3
@@ -63,18 +62,67 @@ type
     stereo = 192
     mace3 = 768
     mace6 = 1024
-  MacOsResourceSnd_CompressionTypeEnum* = enum
-    variable_compression = -2
-    fixed_compression = -1
-    not_compressed = 0
-    two_to_one = 1
-    eight_to_three = 2
-    three_to_one = 3
-    six_to_one = 4
+  MacOsResourceSnd_SoundHeaderType* = enum
+    standard = 0
+    compressed = 254
+    extended = 255
+  MacOsResourceSnd_WaveInitOption* = enum
+    channel0 = 4
+    channel1 = 5
+    channel2 = 6
+    channel3 = 7
+  MacOsResourceSnd_Compressed* = ref object of KaitaiStruct
+    `format`*: string
+    `reserved`*: seq[byte]
+    `stateVarsPtr`*: uint32
+    `leftOverSamplesPtr`*: uint32
+    `compressionId`*: int16
+    `packetSize`*: uint16
+    `synthesizerId`*: uint16
+    `parent`*: MacOsResourceSnd_ExtendedOrCompressed
+    `compressionTypeInst`: MacOsResourceSnd_CompressionTypeEnum
+    `compressionTypeInstFlag`: bool
+  MacOsResourceSnd_DataFormat* = ref object of KaitaiStruct
+    `id`*: MacOsResourceSnd_DataType
+    `options`*: uint32
+    `parent`*: MacOsResourceSnd
+    `compInitInst`: MacOsResourceSnd_InitOption
+    `compInitInstFlag`: bool
+    `initCompMaskInst`: int
+    `initCompMaskInstFlag`: bool
+    `initPanMaskInst`: int8
+    `initPanMaskInstFlag`: bool
+    `initStereoMaskInst`: uint8
+    `initStereoMaskInstFlag`: bool
+    `panInitInst`: MacOsResourceSnd_InitOption
+    `panInitInstFlag`: bool
+    `stereoInitInst`: MacOsResourceSnd_InitOption
+    `stereoInitInstFlag`: bool
+    `waveInitInst`: MacOsResourceSnd_WaveInitOption
+    `waveInitInstFlag`: bool
+    `waveInitChannelMaskInst`: int8
+    `waveInitChannelMaskInstFlag`: bool
   MacOsResourceSnd_Extended* = ref object of KaitaiStruct
     `instrumentChunkPtr`*: uint32
     `aesRecordingPtr`*: uint32
     `parent`*: MacOsResourceSnd_ExtendedOrCompressed
+  MacOsResourceSnd_ExtendedOrCompressed* = ref object of KaitaiStruct
+    `numFrames`*: uint32
+    `aiffSampleRate`*: seq[byte]
+    `markerChunk`*: uint32
+    `extended`*: MacOsResourceSnd_Extended
+    `compressed`*: MacOsResourceSnd_Compressed
+    `bitsPerSample`*: uint16
+    `reserved`*: seq[byte]
+    `parent`*: MacOsResourceSnd_SoundHeader
+  MacOsResourceSnd_SoundCommand* = ref object of KaitaiStruct
+    `isDataOffset`*: bool
+    `cmd`*: MacOsResourceSnd_CmdType
+    `param1`*: uint16
+    `param2`*: uint32
+    `parent`*: MacOsResourceSnd
+    `soundHeaderInst`: MacOsResourceSnd_SoundHeader
+    `soundHeaderInstFlag`: bool
   MacOsResourceSnd_SoundHeader* = ref object of KaitaiStruct
     `unnamed0`*: seq[byte]
     `samplePtr`*: uint32
@@ -88,91 +136,43 @@ type
     `extendedOrCompressed`*: MacOsResourceSnd_ExtendedOrCompressed
     `sampleArea`*: seq[byte]
     `parent`*: MacOsResourceSnd_SoundCommand
-    `startOfsInst`: int
-    `startOfsInstFlag`: bool
     `baseFreqeuncyInst`: float64
     `baseFreqeuncyInstFlag`: bool
     `soundHeaderTypeInst`: MacOsResourceSnd_SoundHeaderType
     `soundHeaderTypeInstFlag`: bool
+    `startOfsInst`: int
+    `startOfsInstFlag`: bool
   MacOsResourceSnd_UnsignedFixedPoint* = ref object of KaitaiStruct
     `integerPart`*: uint16
     `fractionPart`*: uint16
     `parent`*: MacOsResourceSnd_SoundHeader
     `valueInst`: float64
     `valueInstFlag`: bool
-  MacOsResourceSnd_SoundCommand* = ref object of KaitaiStruct
-    `isDataOffset`*: bool
-    `cmd`*: MacOsResourceSnd_CmdType
-    `param1`*: uint16
-    `param2`*: uint32
-    `parent`*: MacOsResourceSnd
-    `soundHeaderInst`: MacOsResourceSnd_SoundHeader
-    `soundHeaderInstFlag`: bool
-  MacOsResourceSnd_Compressed* = ref object of KaitaiStruct
-    `format`*: string
-    `reserved`*: seq[byte]
-    `stateVarsPtr`*: uint32
-    `leftOverSamplesPtr`*: uint32
-    `compressionId`*: int16
-    `packetSize`*: uint16
-    `synthesizerId`*: uint16
-    `parent`*: MacOsResourceSnd_ExtendedOrCompressed
-    `compressionTypeInst`: MacOsResourceSnd_CompressionTypeEnum
-    `compressionTypeInstFlag`: bool
-  MacOsResourceSnd_ExtendedOrCompressed* = ref object of KaitaiStruct
-    `numFrames`*: uint32
-    `aiffSampleRate`*: seq[byte]
-    `markerChunk`*: uint32
-    `extended`*: MacOsResourceSnd_Extended
-    `compressed`*: MacOsResourceSnd_Compressed
-    `bitsPerSample`*: uint16
-    `reserved`*: seq[byte]
-    `parent`*: MacOsResourceSnd_SoundHeader
-  MacOsResourceSnd_DataFormat* = ref object of KaitaiStruct
-    `id`*: MacOsResourceSnd_DataType
-    `options`*: uint32
-    `parent`*: MacOsResourceSnd
-    `initPanMaskInst`: int8
-    `initPanMaskInstFlag`: bool
-    `waveInitChannelMaskInst`: int8
-    `waveInitChannelMaskInstFlag`: bool
-    `initStereoMaskInst`: uint8
-    `initStereoMaskInstFlag`: bool
-    `waveInitInst`: MacOsResourceSnd_WaveInitOption
-    `waveInitInstFlag`: bool
-    `panInitInst`: MacOsResourceSnd_InitOption
-    `panInitInstFlag`: bool
-    `initCompMaskInst`: int
-    `initCompMaskInstFlag`: bool
-    `stereoInitInst`: MacOsResourceSnd_InitOption
-    `stereoInitInstFlag`: bool
-    `compInitInst`: MacOsResourceSnd_InitOption
-    `compInitInstFlag`: bool
 
 proc read*(_: typedesc[MacOsResourceSnd], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MacOsResourceSnd
+proc read*(_: typedesc[MacOsResourceSnd_Compressed], io: KaitaiStream, root: KaitaiStruct, parent: MacOsResourceSnd_ExtendedOrCompressed): MacOsResourceSnd_Compressed
+proc read*(_: typedesc[MacOsResourceSnd_DataFormat], io: KaitaiStream, root: KaitaiStruct, parent: MacOsResourceSnd): MacOsResourceSnd_DataFormat
 proc read*(_: typedesc[MacOsResourceSnd_Extended], io: KaitaiStream, root: KaitaiStruct, parent: MacOsResourceSnd_ExtendedOrCompressed): MacOsResourceSnd_Extended
+proc read*(_: typedesc[MacOsResourceSnd_ExtendedOrCompressed], io: KaitaiStream, root: KaitaiStruct, parent: MacOsResourceSnd_SoundHeader): MacOsResourceSnd_ExtendedOrCompressed
+proc read*(_: typedesc[MacOsResourceSnd_SoundCommand], io: KaitaiStream, root: KaitaiStruct, parent: MacOsResourceSnd): MacOsResourceSnd_SoundCommand
 proc read*(_: typedesc[MacOsResourceSnd_SoundHeader], io: KaitaiStream, root: KaitaiStruct, parent: MacOsResourceSnd_SoundCommand): MacOsResourceSnd_SoundHeader
 proc read*(_: typedesc[MacOsResourceSnd_UnsignedFixedPoint], io: KaitaiStream, root: KaitaiStruct, parent: MacOsResourceSnd_SoundHeader): MacOsResourceSnd_UnsignedFixedPoint
-proc read*(_: typedesc[MacOsResourceSnd_SoundCommand], io: KaitaiStream, root: KaitaiStruct, parent: MacOsResourceSnd): MacOsResourceSnd_SoundCommand
-proc read*(_: typedesc[MacOsResourceSnd_Compressed], io: KaitaiStream, root: KaitaiStruct, parent: MacOsResourceSnd_ExtendedOrCompressed): MacOsResourceSnd_Compressed
-proc read*(_: typedesc[MacOsResourceSnd_ExtendedOrCompressed], io: KaitaiStream, root: KaitaiStruct, parent: MacOsResourceSnd_SoundHeader): MacOsResourceSnd_ExtendedOrCompressed
-proc read*(_: typedesc[MacOsResourceSnd_DataFormat], io: KaitaiStream, root: KaitaiStruct, parent: MacOsResourceSnd): MacOsResourceSnd_DataFormat
 
 proc midiNoteToFrequency*(this: MacOsResourceSnd): seq[float64]
-proc startOfs*(this: MacOsResourceSnd_SoundHeader): int
+proc compressionType*(this: MacOsResourceSnd_Compressed): MacOsResourceSnd_CompressionTypeEnum
+proc compInit*(this: MacOsResourceSnd_DataFormat): MacOsResourceSnd_InitOption
+proc initCompMask*(this: MacOsResourceSnd_DataFormat): int
+proc initPanMask*(this: MacOsResourceSnd_DataFormat): int8
+proc initStereoMask*(this: MacOsResourceSnd_DataFormat): uint8
+proc panInit*(this: MacOsResourceSnd_DataFormat): MacOsResourceSnd_InitOption
+proc stereoInit*(this: MacOsResourceSnd_DataFormat): MacOsResourceSnd_InitOption
+proc waveInit*(this: MacOsResourceSnd_DataFormat): MacOsResourceSnd_WaveInitOption
+proc waveInitChannelMask*(this: MacOsResourceSnd_DataFormat): int8
+proc soundHeader*(this: MacOsResourceSnd_SoundCommand): MacOsResourceSnd_SoundHeader
 proc baseFreqeuncy*(this: MacOsResourceSnd_SoundHeader): float64
 proc soundHeaderType*(this: MacOsResourceSnd_SoundHeader): MacOsResourceSnd_SoundHeaderType
+proc startOfs*(this: MacOsResourceSnd_SoundHeader): int
 proc value*(this: MacOsResourceSnd_UnsignedFixedPoint): float64
-proc soundHeader*(this: MacOsResourceSnd_SoundCommand): MacOsResourceSnd_SoundHeader
-proc compressionType*(this: MacOsResourceSnd_Compressed): MacOsResourceSnd_CompressionTypeEnum
-proc initPanMask*(this: MacOsResourceSnd_DataFormat): int8
-proc waveInitChannelMask*(this: MacOsResourceSnd_DataFormat): int8
-proc initStereoMask*(this: MacOsResourceSnd_DataFormat): uint8
-proc waveInit*(this: MacOsResourceSnd_DataFormat): MacOsResourceSnd_WaveInitOption
-proc panInit*(this: MacOsResourceSnd_DataFormat): MacOsResourceSnd_InitOption
-proc initCompMask*(this: MacOsResourceSnd_DataFormat): int
-proc stereoInit*(this: MacOsResourceSnd_DataFormat): MacOsResourceSnd_InitOption
-proc compInit*(this: MacOsResourceSnd_DataFormat): MacOsResourceSnd_InitOption
 
 
 ##[
@@ -226,6 +226,170 @@ The lookup table represents the formula (2 ** ((midi_note - 69) / 12)) * 440
 proc fromFile*(_: typedesc[MacOsResourceSnd], filename: string): MacOsResourceSnd =
   MacOsResourceSnd.read(newKaitaiFileStream(filename), nil, nil)
 
+proc read*(_: typedesc[MacOsResourceSnd_Compressed], io: KaitaiStream, root: KaitaiStruct, parent: MacOsResourceSnd_ExtendedOrCompressed): MacOsResourceSnd_Compressed =
+  template this: untyped = result
+  this = new(MacOsResourceSnd_Compressed)
+  let root = if root == nil: cast[MacOsResourceSnd](this) else: cast[MacOsResourceSnd](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+
+  ##[
+  data format type
+  ]##
+  let formatExpr = encode(this.io.readBytes(int(4)), "ASCII")
+  this.format = formatExpr
+  let reservedExpr = this.io.readBytes(int(4))
+  this.reserved = reservedExpr
+
+  ##[
+  pointer to StateBlock
+  ]##
+  let stateVarsPtrExpr = this.io.readU4be()
+  this.stateVarsPtr = stateVarsPtrExpr
+
+  ##[
+  pointer to LeftOverBlock
+  ]##
+  let leftOverSamplesPtrExpr = this.io.readU4be()
+  this.leftOverSamplesPtr = leftOverSamplesPtrExpr
+
+  ##[
+  ID of compression algorithm
+  ]##
+  let compressionIdExpr = this.io.readS2be()
+  this.compressionId = compressionIdExpr
+
+  ##[
+  number of bits per packet
+  ]##
+  let packetSizeExpr = this.io.readU2be()
+  this.packetSize = packetSizeExpr
+
+  ##[
+  Latest Sound Manager documentation specifies this field as:
+This field is unused. You should set it to 0.
+Inside Macintosh (Volume VI, 1991) specifies it as:
+Indicates the resource ID number of the 'snth' resource that was used to compress the packets contained in the compressed sound header.
+
+  @see <a href="https://vintageapple.org/inside_o/pdf/Inside_Macintosh_Volume_VI_1991.pdf">Page 22-49, absolute page number 1169 in the PDF</a>
+  ]##
+  let synthesizerIdExpr = this.io.readU2be()
+  this.synthesizerId = synthesizerIdExpr
+
+proc compressionType(this: MacOsResourceSnd_Compressed): MacOsResourceSnd_CompressionTypeEnum = 
+  if this.compressionTypeInstFlag:
+    return this.compressionTypeInst
+  let compressionTypeInstExpr = MacOsResourceSnd_CompressionTypeEnum(MacOsResourceSnd_CompressionTypeEnum(this.compressionId))
+  this.compressionTypeInst = compressionTypeInstExpr
+  this.compressionTypeInstFlag = true
+  return this.compressionTypeInst
+
+proc fromFile*(_: typedesc[MacOsResourceSnd_Compressed], filename: string): MacOsResourceSnd_Compressed =
+  MacOsResourceSnd_Compressed.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[MacOsResourceSnd_DataFormat], io: KaitaiStream, root: KaitaiStruct, parent: MacOsResourceSnd): MacOsResourceSnd_DataFormat =
+  template this: untyped = result
+  this = new(MacOsResourceSnd_DataFormat)
+  let root = if root == nil: cast[MacOsResourceSnd](this) else: cast[MacOsResourceSnd](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let idExpr = MacOsResourceSnd_DataType(this.io.readU2be())
+  this.id = idExpr
+
+  ##[
+  contains initialisation options for the SndNewChannel function
+  ]##
+  let optionsExpr = this.io.readU4be()
+  this.options = optionsExpr
+
+proc compInit(this: MacOsResourceSnd_DataFormat): MacOsResourceSnd_InitOption = 
+  if this.compInitInstFlag:
+    return this.compInitInst
+  let compInitInstExpr = MacOsResourceSnd_InitOption(MacOsResourceSnd_InitOption(this.options and this.initCompMask))
+  this.compInitInst = compInitInstExpr
+  this.compInitInstFlag = true
+  return this.compInitInst
+
+proc initCompMask(this: MacOsResourceSnd_DataFormat): int = 
+
+  ##[
+  mask for compression IDs
+  ]##
+  if this.initCompMaskInstFlag:
+    return this.initCompMaskInst
+  let initCompMaskInstExpr = int(65280)
+  this.initCompMaskInst = initCompMaskInstExpr
+  this.initCompMaskInstFlag = true
+  return this.initCompMaskInst
+
+proc initPanMask(this: MacOsResourceSnd_DataFormat): int8 = 
+
+  ##[
+  mask for right/left pan values
+  ]##
+  if this.initPanMaskInstFlag:
+    return this.initPanMaskInst
+  let initPanMaskInstExpr = int8(3)
+  this.initPanMaskInst = initPanMaskInstExpr
+  this.initPanMaskInstFlag = true
+  return this.initPanMaskInst
+
+proc initStereoMask(this: MacOsResourceSnd_DataFormat): uint8 = 
+
+  ##[
+  mask for mono/stereo values
+  ]##
+  if this.initStereoMaskInstFlag:
+    return this.initStereoMaskInst
+  let initStereoMaskInstExpr = uint8(192)
+  this.initStereoMaskInst = initStereoMaskInstExpr
+  this.initStereoMaskInstFlag = true
+  return this.initStereoMaskInst
+
+proc panInit(this: MacOsResourceSnd_DataFormat): MacOsResourceSnd_InitOption = 
+  if this.panInitInstFlag:
+    return this.panInitInst
+  let panInitInstExpr = MacOsResourceSnd_InitOption(MacOsResourceSnd_InitOption(this.options and this.initPanMask))
+  this.panInitInst = panInitInstExpr
+  this.panInitInstFlag = true
+  return this.panInitInst
+
+proc stereoInit(this: MacOsResourceSnd_DataFormat): MacOsResourceSnd_InitOption = 
+  if this.stereoInitInstFlag:
+    return this.stereoInitInst
+  let stereoInitInstExpr = MacOsResourceSnd_InitOption(MacOsResourceSnd_InitOption(this.options and this.initStereoMask))
+  this.stereoInitInst = stereoInitInstExpr
+  this.stereoInitInstFlag = true
+  return this.stereoInitInst
+
+proc waveInit(this: MacOsResourceSnd_DataFormat): MacOsResourceSnd_WaveInitOption = 
+  if this.waveInitInstFlag:
+    return this.waveInitInst
+  if this.id == mac_os_resource_snd.wave_table_synth:
+    let waveInitInstExpr = MacOsResourceSnd_WaveInitOption(MacOsResourceSnd_WaveInitOption(this.options and this.waveInitChannelMask))
+    this.waveInitInst = waveInitInstExpr
+  this.waveInitInstFlag = true
+  return this.waveInitInst
+
+proc waveInitChannelMask(this: MacOsResourceSnd_DataFormat): int8 = 
+
+  ##[
+  wave table only, Sound Manager 2.0 and earlier
+  ]##
+  if this.waveInitChannelMaskInstFlag:
+    return this.waveInitChannelMaskInst
+  let waveInitChannelMaskInstExpr = int8(7)
+  this.waveInitChannelMaskInst = waveInitChannelMaskInstExpr
+  this.waveInitChannelMaskInstFlag = true
+  return this.waveInitChannelMaskInst
+
+proc fromFile*(_: typedesc[MacOsResourceSnd_DataFormat], filename: string): MacOsResourceSnd_DataFormat =
+  MacOsResourceSnd_DataFormat.read(newKaitaiFileStream(filename), nil, nil)
+
 proc read*(_: typedesc[MacOsResourceSnd_Extended], io: KaitaiStream, root: KaitaiStruct, parent: MacOsResourceSnd_ExtendedOrCompressed): MacOsResourceSnd_Extended =
   template this: untyped = result
   this = new(MacOsResourceSnd_Extended)
@@ -249,6 +413,84 @@ proc read*(_: typedesc[MacOsResourceSnd_Extended], io: KaitaiStream, root: Kaita
 
 proc fromFile*(_: typedesc[MacOsResourceSnd_Extended], filename: string): MacOsResourceSnd_Extended =
   MacOsResourceSnd_Extended.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[MacOsResourceSnd_ExtendedOrCompressed], io: KaitaiStream, root: KaitaiStruct, parent: MacOsResourceSnd_SoundHeader): MacOsResourceSnd_ExtendedOrCompressed =
+  template this: untyped = result
+  this = new(MacOsResourceSnd_ExtendedOrCompressed)
+  let root = if root == nil: cast[MacOsResourceSnd](this) else: cast[MacOsResourceSnd](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let numFramesExpr = this.io.readU4be()
+  this.numFrames = numFramesExpr
+
+  ##[
+  rate of original sample (Extended80)
+  ]##
+  let aiffSampleRateExpr = this.io.readBytes(int(10))
+  this.aiffSampleRate = aiffSampleRateExpr
+
+  ##[
+  reserved
+  ]##
+  let markerChunkExpr = this.io.readU4be()
+  this.markerChunk = markerChunkExpr
+  if this.parent.soundHeaderType == mac_os_resource_snd.extended:
+    let extendedExpr = MacOsResourceSnd_Extended.read(this.io, this.root, this)
+    this.extended = extendedExpr
+  if this.parent.soundHeaderType == mac_os_resource_snd.compressed:
+    let compressedExpr = MacOsResourceSnd_Compressed.read(this.io, this.root, this)
+    this.compressed = compressedExpr
+
+  ##[
+  number of bits per sample
+  ]##
+  let bitsPerSampleExpr = this.io.readU2be()
+  this.bitsPerSample = bitsPerSampleExpr
+
+  ##[
+  reserved
+  ]##
+  if this.parent.soundHeaderType == mac_os_resource_snd.extended:
+    let reservedExpr = this.io.readBytes(int(14))
+    this.reserved = reservedExpr
+
+proc fromFile*(_: typedesc[MacOsResourceSnd_ExtendedOrCompressed], filename: string): MacOsResourceSnd_ExtendedOrCompressed =
+  MacOsResourceSnd_ExtendedOrCompressed.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[MacOsResourceSnd_SoundCommand], io: KaitaiStream, root: KaitaiStruct, parent: MacOsResourceSnd): MacOsResourceSnd_SoundCommand =
+  template this: untyped = result
+  this = new(MacOsResourceSnd_SoundCommand)
+  let root = if root == nil: cast[MacOsResourceSnd](this) else: cast[MacOsResourceSnd](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let isDataOffsetExpr = this.io.readBitsIntBe(1) != 0
+  this.isDataOffset = isDataOffsetExpr
+  let cmdExpr = MacOsResourceSnd_CmdType(this.io.readBitsIntBe(15))
+  this.cmd = cmdExpr
+  alignToByte(this.io)
+  let param1Expr = this.io.readU2be()
+  this.param1 = param1Expr
+  let param2Expr = this.io.readU4be()
+  this.param2 = param2Expr
+
+proc soundHeader(this: MacOsResourceSnd_SoundCommand): MacOsResourceSnd_SoundHeader = 
+  if this.soundHeaderInstFlag:
+    return this.soundHeaderInst
+  if  ((this.isDataOffset) and (this.cmd == mac_os_resource_snd.buffer_cmd)) :
+    let pos = this.io.pos()
+    this.io.seek(int(this.param2))
+    let soundHeaderInstExpr = MacOsResourceSnd_SoundHeader.read(this.io, this.root, this)
+    this.soundHeaderInst = soundHeaderInstExpr
+    this.io.seek(pos)
+  this.soundHeaderInstFlag = true
+  return this.soundHeaderInst
+
+proc fromFile*(_: typedesc[MacOsResourceSnd_SoundCommand], filename: string): MacOsResourceSnd_SoundCommand =
+  MacOsResourceSnd_SoundCommand.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[MacOsResourceSnd_SoundHeader], io: KaitaiStream, root: KaitaiStruct, parent: MacOsResourceSnd_SoundCommand): MacOsResourceSnd_SoundHeader =
   template this: untyped = result
@@ -319,16 +561,8 @@ proc read*(_: typedesc[MacOsResourceSnd_SoundHeader], io: KaitaiStream, root: Ka
   sampled-sound data
   ]##
   if this.samplePtr == 0:
-    let sampleAreaExpr = this.io.readBytes(int((if this.soundHeaderType == mac_os_resource_snd.standard: this.numSamples else: (if this.soundHeaderType == mac_os_resource_snd.extended: (((this.extendedOrCompressed.numFrames * this.numChannels) * this.extendedOrCompressed.bitsPerSample) div 8) else: (this.io.size - this.io.pos)))))
+    let sampleAreaExpr = this.io.readBytes(int((if this.soundHeaderType == mac_os_resource_snd.standard: this.numSamples else: (if this.soundHeaderType == mac_os_resource_snd.extended: ((this.extendedOrCompressed.numFrames * this.numChannels) * this.extendedOrCompressed.bitsPerSample) div 8 else: this.io.size - this.io.pos))))
     this.sampleArea = sampleAreaExpr
-
-proc startOfs(this: MacOsResourceSnd_SoundHeader): int = 
-  if this.startOfsInstFlag:
-    return this.startOfsInst
-  let startOfsInstExpr = int(this.io.pos)
-  this.startOfsInst = startOfsInstExpr
-  this.startOfsInstFlag = true
-  return this.startOfsInst
 
 proc baseFreqeuncy(this: MacOsResourceSnd_SoundHeader): float64 = 
 
@@ -350,12 +584,20 @@ proc soundHeaderType(this: MacOsResourceSnd_SoundHeader): MacOsResourceSnd_Sound
   if this.soundHeaderTypeInstFlag:
     return this.soundHeaderTypeInst
   let pos = this.io.pos()
-  this.io.seek(int((this.startOfs + 20)))
+  this.io.seek(int(this.startOfs + 20))
   let soundHeaderTypeInstExpr = MacOsResourceSnd_SoundHeaderType(this.io.readU1())
   this.soundHeaderTypeInst = soundHeaderTypeInstExpr
   this.io.seek(pos)
   this.soundHeaderTypeInstFlag = true
   return this.soundHeaderTypeInst
+
+proc startOfs(this: MacOsResourceSnd_SoundHeader): int = 
+  if this.startOfsInstFlag:
+    return this.startOfsInst
+  let startOfsInstExpr = int(this.io.pos)
+  this.startOfsInst = startOfsInstExpr
+  this.startOfsInstFlag = true
+  return this.startOfsInst
 
 proc fromFile*(_: typedesc[MacOsResourceSnd_SoundHeader], filename: string): MacOsResourceSnd_SoundHeader =
   MacOsResourceSnd_SoundHeader.read(newKaitaiFileStream(filename), nil, nil)
@@ -376,253 +618,11 @@ proc read*(_: typedesc[MacOsResourceSnd_UnsignedFixedPoint], io: KaitaiStream, r
 proc value(this: MacOsResourceSnd_UnsignedFixedPoint): float64 = 
   if this.valueInstFlag:
     return this.valueInst
-  let valueInstExpr = float64((this.integerPart + (this.fractionPart div 65535.0)))
+  let valueInstExpr = float64(this.integerPart + this.fractionPart div 65535.0)
   this.valueInst = valueInstExpr
   this.valueInstFlag = true
   return this.valueInst
 
 proc fromFile*(_: typedesc[MacOsResourceSnd_UnsignedFixedPoint], filename: string): MacOsResourceSnd_UnsignedFixedPoint =
   MacOsResourceSnd_UnsignedFixedPoint.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[MacOsResourceSnd_SoundCommand], io: KaitaiStream, root: KaitaiStruct, parent: MacOsResourceSnd): MacOsResourceSnd_SoundCommand =
-  template this: untyped = result
-  this = new(MacOsResourceSnd_SoundCommand)
-  let root = if root == nil: cast[MacOsResourceSnd](this) else: cast[MacOsResourceSnd](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let isDataOffsetExpr = this.io.readBitsIntBe(1) != 0
-  this.isDataOffset = isDataOffsetExpr
-  let cmdExpr = MacOsResourceSnd_CmdType(this.io.readBitsIntBe(15))
-  this.cmd = cmdExpr
-  alignToByte(this.io)
-  let param1Expr = this.io.readU2be()
-  this.param1 = param1Expr
-  let param2Expr = this.io.readU4be()
-  this.param2 = param2Expr
-
-proc soundHeader(this: MacOsResourceSnd_SoundCommand): MacOsResourceSnd_SoundHeader = 
-  if this.soundHeaderInstFlag:
-    return this.soundHeaderInst
-  if  ((this.isDataOffset) and (this.cmd == mac_os_resource_snd.buffer_cmd)) :
-    let pos = this.io.pos()
-    this.io.seek(int(this.param2))
-    let soundHeaderInstExpr = MacOsResourceSnd_SoundHeader.read(this.io, this.root, this)
-    this.soundHeaderInst = soundHeaderInstExpr
-    this.io.seek(pos)
-  this.soundHeaderInstFlag = true
-  return this.soundHeaderInst
-
-proc fromFile*(_: typedesc[MacOsResourceSnd_SoundCommand], filename: string): MacOsResourceSnd_SoundCommand =
-  MacOsResourceSnd_SoundCommand.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[MacOsResourceSnd_Compressed], io: KaitaiStream, root: KaitaiStruct, parent: MacOsResourceSnd_ExtendedOrCompressed): MacOsResourceSnd_Compressed =
-  template this: untyped = result
-  this = new(MacOsResourceSnd_Compressed)
-  let root = if root == nil: cast[MacOsResourceSnd](this) else: cast[MacOsResourceSnd](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-
-  ##[
-  data format type
-  ]##
-  let formatExpr = encode(this.io.readBytes(int(4)), "ASCII")
-  this.format = formatExpr
-  let reservedExpr = this.io.readBytes(int(4))
-  this.reserved = reservedExpr
-
-  ##[
-  pointer to StateBlock
-  ]##
-  let stateVarsPtrExpr = this.io.readU4be()
-  this.stateVarsPtr = stateVarsPtrExpr
-
-  ##[
-  pointer to LeftOverBlock
-  ]##
-  let leftOverSamplesPtrExpr = this.io.readU4be()
-  this.leftOverSamplesPtr = leftOverSamplesPtrExpr
-
-  ##[
-  ID of compression algorithm
-  ]##
-  let compressionIdExpr = this.io.readS2be()
-  this.compressionId = compressionIdExpr
-
-  ##[
-  number of bits per packet
-  ]##
-  let packetSizeExpr = this.io.readU2be()
-  this.packetSize = packetSizeExpr
-
-  ##[
-  Latest Sound Manager documentation specifies this field as:
-This field is unused. You should set it to 0.
-Inside Macintosh (Volume VI, 1991) specifies it as:
-Indicates the resource ID number of the 'snth' resource that was used to compress the packets contained in the compressed sound header.
-
-  @see <a href="https://vintageapple.org/inside_o/pdf/Inside_Macintosh_Volume_VI_1991.pdf">Page 22-49, absolute page number 1169 in the PDF</a>
-  ]##
-  let synthesizerIdExpr = this.io.readU2be()
-  this.synthesizerId = synthesizerIdExpr
-
-proc compressionType(this: MacOsResourceSnd_Compressed): MacOsResourceSnd_CompressionTypeEnum = 
-  if this.compressionTypeInstFlag:
-    return this.compressionTypeInst
-  let compressionTypeInstExpr = MacOsResourceSnd_CompressionTypeEnum(MacOsResourceSnd_CompressionTypeEnum(this.compressionId))
-  this.compressionTypeInst = compressionTypeInstExpr
-  this.compressionTypeInstFlag = true
-  return this.compressionTypeInst
-
-proc fromFile*(_: typedesc[MacOsResourceSnd_Compressed], filename: string): MacOsResourceSnd_Compressed =
-  MacOsResourceSnd_Compressed.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[MacOsResourceSnd_ExtendedOrCompressed], io: KaitaiStream, root: KaitaiStruct, parent: MacOsResourceSnd_SoundHeader): MacOsResourceSnd_ExtendedOrCompressed =
-  template this: untyped = result
-  this = new(MacOsResourceSnd_ExtendedOrCompressed)
-  let root = if root == nil: cast[MacOsResourceSnd](this) else: cast[MacOsResourceSnd](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let numFramesExpr = this.io.readU4be()
-  this.numFrames = numFramesExpr
-
-  ##[
-  rate of original sample (Extended80)
-  ]##
-  let aiffSampleRateExpr = this.io.readBytes(int(10))
-  this.aiffSampleRate = aiffSampleRateExpr
-
-  ##[
-  reserved
-  ]##
-  let markerChunkExpr = this.io.readU4be()
-  this.markerChunk = markerChunkExpr
-  if this.parent.soundHeaderType == mac_os_resource_snd.extended:
-    let extendedExpr = MacOsResourceSnd_Extended.read(this.io, this.root, this)
-    this.extended = extendedExpr
-  if this.parent.soundHeaderType == mac_os_resource_snd.compressed:
-    let compressedExpr = MacOsResourceSnd_Compressed.read(this.io, this.root, this)
-    this.compressed = compressedExpr
-
-  ##[
-  number of bits per sample
-  ]##
-  let bitsPerSampleExpr = this.io.readU2be()
-  this.bitsPerSample = bitsPerSampleExpr
-
-  ##[
-  reserved
-  ]##
-  if this.parent.soundHeaderType == mac_os_resource_snd.extended:
-    let reservedExpr = this.io.readBytes(int(14))
-    this.reserved = reservedExpr
-
-proc fromFile*(_: typedesc[MacOsResourceSnd_ExtendedOrCompressed], filename: string): MacOsResourceSnd_ExtendedOrCompressed =
-  MacOsResourceSnd_ExtendedOrCompressed.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[MacOsResourceSnd_DataFormat], io: KaitaiStream, root: KaitaiStruct, parent: MacOsResourceSnd): MacOsResourceSnd_DataFormat =
-  template this: untyped = result
-  this = new(MacOsResourceSnd_DataFormat)
-  let root = if root == nil: cast[MacOsResourceSnd](this) else: cast[MacOsResourceSnd](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let idExpr = MacOsResourceSnd_DataType(this.io.readU2be())
-  this.id = idExpr
-
-  ##[
-  contains initialisation options for the SndNewChannel function
-  ]##
-  let optionsExpr = this.io.readU4be()
-  this.options = optionsExpr
-
-proc initPanMask(this: MacOsResourceSnd_DataFormat): int8 = 
-
-  ##[
-  mask for right/left pan values
-  ]##
-  if this.initPanMaskInstFlag:
-    return this.initPanMaskInst
-  let initPanMaskInstExpr = int8(3)
-  this.initPanMaskInst = initPanMaskInstExpr
-  this.initPanMaskInstFlag = true
-  return this.initPanMaskInst
-
-proc waveInitChannelMask(this: MacOsResourceSnd_DataFormat): int8 = 
-
-  ##[
-  wave table only, Sound Manager 2.0 and earlier
-  ]##
-  if this.waveInitChannelMaskInstFlag:
-    return this.waveInitChannelMaskInst
-  let waveInitChannelMaskInstExpr = int8(7)
-  this.waveInitChannelMaskInst = waveInitChannelMaskInstExpr
-  this.waveInitChannelMaskInstFlag = true
-  return this.waveInitChannelMaskInst
-
-proc initStereoMask(this: MacOsResourceSnd_DataFormat): uint8 = 
-
-  ##[
-  mask for mono/stereo values
-  ]##
-  if this.initStereoMaskInstFlag:
-    return this.initStereoMaskInst
-  let initStereoMaskInstExpr = uint8(192)
-  this.initStereoMaskInst = initStereoMaskInstExpr
-  this.initStereoMaskInstFlag = true
-  return this.initStereoMaskInst
-
-proc waveInit(this: MacOsResourceSnd_DataFormat): MacOsResourceSnd_WaveInitOption = 
-  if this.waveInitInstFlag:
-    return this.waveInitInst
-  if this.id == mac_os_resource_snd.wave_table_synth:
-    let waveInitInstExpr = MacOsResourceSnd_WaveInitOption(MacOsResourceSnd_WaveInitOption((this.options and this.waveInitChannelMask)))
-    this.waveInitInst = waveInitInstExpr
-  this.waveInitInstFlag = true
-  return this.waveInitInst
-
-proc panInit(this: MacOsResourceSnd_DataFormat): MacOsResourceSnd_InitOption = 
-  if this.panInitInstFlag:
-    return this.panInitInst
-  let panInitInstExpr = MacOsResourceSnd_InitOption(MacOsResourceSnd_InitOption((this.options and this.initPanMask)))
-  this.panInitInst = panInitInstExpr
-  this.panInitInstFlag = true
-  return this.panInitInst
-
-proc initCompMask(this: MacOsResourceSnd_DataFormat): int = 
-
-  ##[
-  mask for compression IDs
-  ]##
-  if this.initCompMaskInstFlag:
-    return this.initCompMaskInst
-  let initCompMaskInstExpr = int(65280)
-  this.initCompMaskInst = initCompMaskInstExpr
-  this.initCompMaskInstFlag = true
-  return this.initCompMaskInst
-
-proc stereoInit(this: MacOsResourceSnd_DataFormat): MacOsResourceSnd_InitOption = 
-  if this.stereoInitInstFlag:
-    return this.stereoInitInst
-  let stereoInitInstExpr = MacOsResourceSnd_InitOption(MacOsResourceSnd_InitOption((this.options and this.initStereoMask)))
-  this.stereoInitInst = stereoInitInstExpr
-  this.stereoInitInstFlag = true
-  return this.stereoInitInst
-
-proc compInit(this: MacOsResourceSnd_DataFormat): MacOsResourceSnd_InitOption = 
-  if this.compInitInstFlag:
-    return this.compInitInst
-  let compInitInstExpr = MacOsResourceSnd_InitOption(MacOsResourceSnd_InitOption((this.options and this.initCompMask)))
-  this.compInitInst = compInitInstExpr
-  this.compInitInstFlag = true
-  return this.compInitInst
-
-proc fromFile*(_: typedesc[MacOsResourceSnd_DataFormat], filename: string): MacOsResourceSnd_DataFormat =
-  MacOsResourceSnd_DataFormat.read(newKaitaiFileStream(filename), nil, nil)
 

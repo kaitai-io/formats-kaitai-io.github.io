@@ -23,6 +23,11 @@ type
     reserved_control_d = 13
     reserved_control_e = 14
     reserved_control_f = 15
+  Websocket_Dataframe* = ref object of KaitaiStruct
+    `header`*: Websocket_FrameHeader
+    `payloadBytes`*: seq[byte]
+    `payloadText`*: string
+    `parent`*: Websocket
   Websocket_FrameHeader* = ref object of KaitaiStruct
     `finished`*: bool
     `reserved`*: uint64
@@ -40,16 +45,11 @@ type
     `payloadBytes`*: seq[byte]
     `payloadText`*: string
     `parent`*: Websocket
-  Websocket_Dataframe* = ref object of KaitaiStruct
-    `header`*: Websocket_FrameHeader
-    `payloadBytes`*: seq[byte]
-    `payloadText`*: string
-    `parent`*: Websocket
 
 proc read*(_: typedesc[Websocket], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Websocket
+proc read*(_: typedesc[Websocket_Dataframe], io: KaitaiStream, root: KaitaiStruct, parent: Websocket): Websocket_Dataframe
 proc read*(_: typedesc[Websocket_FrameHeader], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Websocket_FrameHeader
 proc read*(_: typedesc[Websocket_InitialFrame], io: KaitaiStream, root: KaitaiStruct, parent: Websocket): Websocket_InitialFrame
-proc read*(_: typedesc[Websocket_Dataframe], io: KaitaiStream, root: KaitaiStruct, parent: Websocket): Websocket_Dataframe
 
 proc lenPayload*(this: Websocket_FrameHeader): int
 
@@ -82,6 +82,26 @@ proc read*(_: typedesc[Websocket], io: KaitaiStream, root: KaitaiStruct, parent:
 
 proc fromFile*(_: typedesc[Websocket], filename: string): Websocket =
   Websocket.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Websocket_Dataframe], io: KaitaiStream, root: KaitaiStruct, parent: Websocket): Websocket_Dataframe =
+  template this: untyped = result
+  this = new(Websocket_Dataframe)
+  let root = if root == nil: cast[Websocket](this) else: cast[Websocket](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let headerExpr = Websocket_FrameHeader.read(this.io, this.root, this)
+  this.header = headerExpr
+  if Websocket(this.root).initialFrame.header.opcode != websocket.text:
+    let payloadBytesExpr = this.io.readBytes(int(this.header.lenPayload))
+    this.payloadBytes = payloadBytesExpr
+  if Websocket(this.root).initialFrame.header.opcode == websocket.text:
+    let payloadTextExpr = encode(this.io.readBytes(int(this.header.lenPayload)), "UTF-8")
+    this.payloadText = payloadTextExpr
+
+proc fromFile*(_: typedesc[Websocket_Dataframe], filename: string): Websocket_Dataframe =
+  Websocket_Dataframe.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[Websocket_FrameHeader], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Websocket_FrameHeader =
   template this: untyped = result
@@ -142,24 +162,4 @@ proc read*(_: typedesc[Websocket_InitialFrame], io: KaitaiStream, root: KaitaiSt
 
 proc fromFile*(_: typedesc[Websocket_InitialFrame], filename: string): Websocket_InitialFrame =
   Websocket_InitialFrame.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Websocket_Dataframe], io: KaitaiStream, root: KaitaiStruct, parent: Websocket): Websocket_Dataframe =
-  template this: untyped = result
-  this = new(Websocket_Dataframe)
-  let root = if root == nil: cast[Websocket](this) else: cast[Websocket](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let headerExpr = Websocket_FrameHeader.read(this.io, this.root, this)
-  this.header = headerExpr
-  if Websocket(this.root).initialFrame.header.opcode != websocket.text:
-    let payloadBytesExpr = this.io.readBytes(int(this.header.lenPayload))
-    this.payloadBytes = payloadBytesExpr
-  if Websocket(this.root).initialFrame.header.opcode == websocket.text:
-    let payloadTextExpr = encode(this.io.readBytes(int(this.header.lenPayload)), "UTF-8")
-    this.payloadText = payloadTextExpr
-
-proc fromFile*(_: typedesc[Websocket_Dataframe], filename: string): Websocket_Dataframe =
-  Websocket_Dataframe.read(newKaitaiFileStream(filename), nil, nil)
 

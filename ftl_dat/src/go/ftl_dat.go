@@ -10,14 +10,18 @@ type FtlDat struct {
 	Files []*FtlDat_File
 	_io *kaitai.Stream
 	_root *FtlDat
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewFtlDat() *FtlDat {
 	return &FtlDat{
 	}
 }
 
-func (this *FtlDat) Read(io *kaitai.Stream, parent interface{}, root *FtlDat) (err error) {
+func (this FtlDat) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *FtlDat) Read(io *kaitai.Stream, parent kaitai.Struct, root *FtlDat) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -55,6 +59,10 @@ func NewFtlDat_File() *FtlDat_File {
 	}
 }
 
+func (this FtlDat_File) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *FtlDat_File) Read(io *kaitai.Stream, parent *FtlDat, root *FtlDat) (err error) {
 	this._io = io
 	this._parent = parent
@@ -71,6 +79,7 @@ func (this *FtlDat_File) Meta() (v *FtlDat_Meta, err error) {
 	if (this._f_meta) {
 		return this.meta, nil
 	}
+	this._f_meta = true
 	if (this.OfsMeta != 0) {
 		_pos, err := this._io.Pos()
 		if err != nil {
@@ -90,9 +99,7 @@ func (this *FtlDat_File) Meta() (v *FtlDat_Meta, err error) {
 		if err != nil {
 			return nil, err
 		}
-		this._f_meta = true
 	}
-	this._f_meta = true
 	return this.meta, nil
 }
 type FtlDat_Meta struct {
@@ -107,6 +114,10 @@ type FtlDat_Meta struct {
 func NewFtlDat_Meta() *FtlDat_Meta {
 	return &FtlDat_Meta{
 	}
+}
+
+func (this FtlDat_Meta) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *FtlDat_Meta) Read(io *kaitai.Stream, parent *FtlDat_File, root *FtlDat) (err error) {

@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -26,8 +26,8 @@ class Specpr < Kaitai::Struct::Struct
     3 => :record_type_text_continuation,
   }
   I__RECORD_TYPE = RECORD_TYPE.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -40,8 +40,43 @@ class Specpr < Kaitai::Struct::Struct
     end
     self
   end
+  class CoarseTimestamp < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @scaled_seconds = @_io.read_s4be
+      self
+    end
+    def seconds
+      return @seconds unless @seconds.nil?
+      @seconds = scaled_seconds * 24000
+      @seconds
+    end
+    attr_reader :scaled_seconds
+  end
+  class DataContinuation < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @cdata = []
+      (383).times { |i|
+        @cdata << @_io.read_f4be
+      }
+      self
+    end
+
+    ##
+    # The continuation of the data values (383 channels of 32 bit real numbers).
+    attr_reader :cdata
+  end
   class DataInitial < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -66,10 +101,10 @@ class Specpr < Kaitai::Struct::Struct
       @irespt = @_io.read_s4be
       @irecno = @_io.read_s4be
       @itpntr = @_io.read_s4be
-      @ihist = (Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(60), 32)).force_encoding("ascii")
+      @ihist = (Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(60), 32)).force_encoding("ASCII").encode('UTF-8')
       @mhist = []
       (4).times { |i|
-        @mhist << (@_io.read_bytes(74)).force_encoding("ascii")
+        @mhist << (@_io.read_bytes(74)).force_encoding("ASCII").encode('UTF-8')
       }
       @nruns = @_io.read_s4be
       @siangl = IllumAngle.new(@_io, self, @_root)
@@ -92,7 +127,7 @@ class Specpr < Kaitai::Struct::Struct
     # The phase angle between iangl and eangl in seconds
     def phase_angle_arcsec
       return @phase_angle_arcsec unless @phase_angle_arcsec.nil?
-      @phase_angle_arcsec = (sphase / 1500)
+      @phase_angle_arcsec = sphase / 1500
       @phase_angle_arcsec
     end
     attr_reader :ids
@@ -214,28 +249,11 @@ class Specpr < Kaitai::Struct::Struct
     # The spectral data (256 channels of 32 bit real data numbers).
     attr_reader :data
   end
-  class CoarseTimestamp < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @scaled_seconds = @_io.read_s4be
-      self
-    end
-    def seconds
-      return @seconds unless @seconds.nil?
-      @seconds = (scaled_seconds * 24000)
-      @seconds
-    end
-    attr_reader :scaled_seconds
-  end
 
   ##
   # it is big endian
   class Icflag < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -252,7 +270,7 @@ class Specpr < Kaitai::Struct::Struct
     end
     def type
       return @type unless @type.nil?
-      @type = Kaitai::Struct::Stream::resolve_enum(Specpr::RECORD_TYPE, (((text ? 1 : 0) * 1) + ((continuation ? 1 : 0) * 2)))
+      @type = Kaitai::Struct::Stream::resolve_enum(Specpr::RECORD_TYPE, (text ? 1 : 0) * 1 + (continuation ? 1 : 0) * 2)
       @type
     end
     attr_reader :reserved
@@ -294,33 +312,15 @@ class Specpr < Kaitai::Struct::Struct
     #   # or 19860 characters of text (bit 1=1).
     attr_reader :continuation
   end
-  class DataContinuation < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @cdata = []
-      (383).times { |i|
-        @cdata << @_io.read_f4be
-      }
-      self
-    end
-
-    ##
-    # The continuation of the data values (383 channels of 32 bit real numbers).
-    attr_reader :cdata
-  end
   class Identifiers < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @ititle = (Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(40), 32)).force_encoding("ascii")
-      @usernm = (@_io.read_bytes(8)).force_encoding("ascii")
+      @ititle = (Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(40), 32)).force_encoding("ASCII").encode('UTF-8')
+      @usernm = (@_io.read_bytes(8)).force_encoding("ASCII").encode('UTF-8')
       self
     end
 
@@ -333,7 +333,7 @@ class Specpr < Kaitai::Struct::Struct
     attr_reader :usernm
   end
   class IllumAngle < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -342,28 +342,76 @@ class Specpr < Kaitai::Struct::Struct
       @angl = @_io.read_s4be
       self
     end
-    def seconds_total
-      return @seconds_total unless @seconds_total.nil?
-      @seconds_total = (angl / 6000)
-      @seconds_total
+    def degrees_total
+      return @degrees_total unless @degrees_total.nil?
+      @degrees_total = minutes_total / 60
+      @degrees_total
     end
     def minutes_total
       return @minutes_total unless @minutes_total.nil?
-      @minutes_total = (seconds_total / 60)
+      @minutes_total = seconds_total / 60
       @minutes_total
     end
-    def degrees_total
-      return @degrees_total unless @degrees_total.nil?
-      @degrees_total = (minutes_total / 60)
-      @degrees_total
+    def seconds_total
+      return @seconds_total unless @seconds_total.nil?
+      @seconds_total = angl / 6000
+      @seconds_total
     end
 
     ##
     # (Integer*4 number, in arc-seconds*6000). (90 degrees=1944000000; -90 deg <= angle <= 90 deg)
     attr_reader :angl
   end
+  class Record < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @icflag = Icflag.new(@_io, self, @_root)
+      case icflag.type
+      when :record_type_data_continuation
+        _io_content = @_io.substream(1536 - 4)
+        @content = DataContinuation.new(_io_content, self, @_root)
+      when :record_type_data_initial
+        _io_content = @_io.substream(1536 - 4)
+        @content = DataInitial.new(_io_content, self, @_root)
+      when :record_type_text_continuation
+        _io_content = @_io.substream(1536 - 4)
+        @content = TextContinuation.new(_io_content, self, @_root)
+      when :record_type_text_initial
+        _io_content = @_io.substream(1536 - 4)
+        @content = TextInitial.new(_io_content, self, @_root)
+      else
+        @content = @_io.read_bytes(1536 - 4)
+      end
+      self
+    end
+
+    ##
+    # Total number of bytes comprising the document.
+    attr_reader :icflag
+    attr_reader :content
+    attr_reader :_raw_content
+  end
+  class TextContinuation < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @tdata = (@_io.read_bytes(1532)).force_encoding("ASCII").encode('UTF-8')
+      self
+    end
+
+    ##
+    # 1532 characters of text.
+    attr_reader :tdata
+  end
   class TextInitial < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -372,7 +420,7 @@ class Specpr < Kaitai::Struct::Struct
       @ids = Identifiers.new(@_io, self, @_root)
       @itxtpt = @_io.read_u4be
       @itxtch = @_io.read_s4be
-      @itext = (@_io.read_bytes(1476)).force_encoding("ascii")
+      @itext = (@_io.read_bytes(1476)).force_encoding("ASCII").encode('UTF-8')
       self
     end
     attr_reader :ids
@@ -388,58 +436,6 @@ class Specpr < Kaitai::Struct::Struct
     ##
     # 1476 characters of text.  Text has embedded newlines so the number of lines available is limited only by the number of characters available.
     attr_reader :itext
-  end
-  class Record < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @icflag = Icflag.new(@_io, self, @_root)
-      case icflag.type
-      when :record_type_data_initial
-        @_raw_content = @_io.read_bytes((1536 - 4))
-        _io__raw_content = Kaitai::Struct::Stream.new(@_raw_content)
-        @content = DataInitial.new(_io__raw_content, self, @_root)
-      when :record_type_data_continuation
-        @_raw_content = @_io.read_bytes((1536 - 4))
-        _io__raw_content = Kaitai::Struct::Stream.new(@_raw_content)
-        @content = DataContinuation.new(_io__raw_content, self, @_root)
-      when :record_type_text_continuation
-        @_raw_content = @_io.read_bytes((1536 - 4))
-        _io__raw_content = Kaitai::Struct::Stream.new(@_raw_content)
-        @content = TextContinuation.new(_io__raw_content, self, @_root)
-      when :record_type_text_initial
-        @_raw_content = @_io.read_bytes((1536 - 4))
-        _io__raw_content = Kaitai::Struct::Stream.new(@_raw_content)
-        @content = TextInitial.new(_io__raw_content, self, @_root)
-      else
-        @content = @_io.read_bytes((1536 - 4))
-      end
-      self
-    end
-
-    ##
-    # Total number of bytes comprising the document.
-    attr_reader :icflag
-    attr_reader :content
-    attr_reader :_raw_content
-  end
-  class TextContinuation < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @tdata = (@_io.read_bytes(1532)).force_encoding("ascii")
-      self
-    end
-
-    ##
-    # 1532 characters of text.
-    attr_reader :tdata
   end
   attr_reader :records
 end

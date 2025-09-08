@@ -204,6 +204,11 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="java-write.html" title="Mifare Classic RFID tag dump parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="Mifare Classic RFID tag dump parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -234,7 +239,17 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="python-write.html" title="Mifare Classic RFID tag dump parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="Mifare Classic RFID tag dump parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="Mifare Classic RFID tag dump parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -274,8 +289,8 @@ section#format-index .row {
 
 <span class="k">namespace</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">MifareClassic</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\MifareClassic</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\MifareClassic</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span> <span class="o">===</span> <span class="k">null</span> <span class="o">?</span> <span class="nv">$this</span> <span class="o">:</span> <span class="nv">$_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
         <span class="p">}</span>
 
@@ -284,7 +299,7 @@ section#format-index .row {
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sectors</span> <span class="o">=</span> <span class="p">[];</span>
             <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
             <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">isEof</span><span class="p">())</span> <span class="p">{</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_sectors</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">((((</span><span class="nv">$i</span> <span class="o">&gt;=</span> <span class="mi">32</span> <span class="o">?</span> <span class="mi">4</span> <span class="o">:</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">4</span><span class="p">)</span> <span class="o">*</span> <span class="mi">16</span><span class="p">));</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_sectors</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(((</span><span class="nv">$i</span> <span class="o">&gt;=</span> <span class="mi">32</span> <span class="o">?</span> <span class="mi">4</span> <span class="o">:</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">4</span><span class="p">)</span> <span class="o">*</span> <span class="mi">16</span><span class="p">);</span>
                 <span class="nv">$_io__raw_sectors</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nb">end</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_sectors</span><span class="p">));</span>
                 <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sectors</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MifareClassic\Sector</span><span class="p">(</span><span class="nv">$i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">$_io__raw_sectors</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
                 <span class="nv">$i</span><span class="o">++</span><span class="p">;</span>
@@ -299,7 +314,7 @@ section#format-index .row {
 
 <span class="k">namespace</span> <span class="nx">MifareClassic</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">Key</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\MifareClassic\Trailer</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\MifareClassic</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\MifareClassic\Trailer</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\MifareClassic</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
         <span class="p">}</span>
@@ -313,8 +328,43 @@ section#format-index .row {
 <span class="p">}</span>
 
 <span class="k">namespace</span> <span class="nx">MifareClassic</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">Manufacturer</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\MifareClassic\Sector</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\MifareClassic</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nuid</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bcc</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sak</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_atqa</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_manufacturer</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_nuid</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_bcc</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_sak</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_atqa</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_manufacturer</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * beware for 7bytes UID it goes over next fields</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">nuid</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nuid</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">bcc</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bcc</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">sak</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sak</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">atqa</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_atqa</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * may contain manufacture date as BCD</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">manufacturer</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_manufacturer</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">MifareClassic</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">Sector</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">bool</span> <span class="nv">$hasManufacturer</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\MifareClassic</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\MifareClassic</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">bool</span> <span class="nv">$hasManufacturer</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\MifareClassic</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\MifareClassic</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasManufacturer</span> <span class="o">=</span> <span class="nv">$hasManufacturer</span><span class="p">;</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
@@ -324,7 +374,7 @@ section#format-index .row {
             <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">hasManufacturer</span><span class="p">())</span> <span class="p">{</span>
                 <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_manufacturer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MifareClassic\Manufacturer</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
             <span class="p">}</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_dataFiller</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">size</span><span class="p">()</span> <span class="o">-</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">())</span> <span class="o">-</span> <span class="mi">16</span><span class="p">));</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_dataFiller</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">size</span><span class="p">()</span> <span class="o">-</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">())</span> <span class="o">-</span> <span class="mi">16</span><span class="p">);</span>
             <span class="nv">$_io__raw_dataFiller</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_dataFiller</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dataFiller</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MifareClassic\Sector\Filler</span><span class="p">(</span><span class="nv">$_io__raw_dataFiller</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_trailer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MifareClassic\Trailer</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
@@ -335,13 +385,6 @@ section#format-index .row {
                 <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_blockSize</span><span class="p">;</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_blockSize</span> <span class="o">=</span> <span class="mi">16</span><span class="p">;</span>
             <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_blockSize</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_data</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">data</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">dataFiller</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">data</span><span class="p">();</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data</span><span class="p">;</span>
         <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_blocks</span><span class="p">;</span>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">blocks</span><span class="p">()</span> <span class="p">{</span>
@@ -358,6 +401,13 @@ section#format-index .row {
             <span class="p">}</span>
             <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
             <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_blocks</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_data</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">data</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">dataFiller</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">data</span><span class="p">();</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data</span><span class="p">;</span>
         <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_values</span><span class="p">;</span>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">values</span><span class="p">()</span> <span class="p">{</span>
@@ -383,9 +433,28 @@ section#format-index .row {
     <span class="p">}</span>
 <span class="p">}</span>
 
+<span class="sd">/**</span>
+<span class="sd"> * only to create _io</span>
+<span class="sd"> */</span>
+
+<span class="k">namespace</span> <span class="nx">MifareClassic\Sector</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">Filler</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\MifareClassic\Sector</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\MifareClassic</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">size</span><span class="p">());</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_data</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">data</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
 <span class="k">namespace</span> <span class="nx">MifareClassic\Sector</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">Values</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\MifareClassic\Sector</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\MifareClassic</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\MifareClassic\Sector</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\MifareClassic</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
         <span class="p">}</span>
@@ -405,7 +474,7 @@ section#format-index .row {
 
 <span class="k">namespace</span> <span class="nx">MifareClassic\Sector\Values</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">ValueBlock</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\MifareClassic\Sector\Values</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\MifareClassic</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\MifareClassic\Sector\Values</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\MifareClassic</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
         <span class="p">}</span>
@@ -445,13 +514,6 @@ section#format-index .row {
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_valid</span> <span class="o">=</span>  <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">valueValid</span><span class="p">())</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">addrValid</span><span class="p">()))</span> <span class="p">;</span>
             <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_valid</span><span class="p">;</span>
         <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_valueValid</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">valueValid</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_valueValid</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_valueValid</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_valueValid</span> <span class="o">=</span>  <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">valuez</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="o">~</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">valuez</span><span class="p">()[</span><span class="mi">1</span><span class="p">]))</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">valuez</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">valuez</span><span class="p">()[</span><span class="mi">2</span><span class="p">]))</span> <span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_valueValid</span><span class="p">;</span>
-        <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_value</span><span class="p">;</span>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">value</span><span class="p">()</span> <span class="p">{</span>
             <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
@@ -461,6 +523,13 @@ section#format-index .row {
             <span class="p">}</span>
             <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span><span class="p">;</span>
         <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_valueValid</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">valueValid</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_valueValid</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_valueValid</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_valueValid</span> <span class="o">=</span>  <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">valuez</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="o">~</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">valuez</span><span class="p">()[</span><span class="mi">1</span><span class="p">]))</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">valuez</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">valuez</span><span class="p">()[</span><span class="mi">2</span><span class="p">]))</span> <span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_valueValid</span><span class="p">;</span>
+        <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_valuez</span><span class="p">;</span>
         <span class="k">protected</span> <span class="nv">$_m_addrz</span><span class="p">;</span>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">valuez</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_valuez</span><span class="p">;</span> <span class="p">}</span>
@@ -468,63 +537,9 @@ section#format-index .row {
     <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="sd">/**</span>
-<span class="sd"> * only to create _io</span>
-<span class="sd"> */</span>
-
-<span class="k">namespace</span> <span class="nx">MifareClassic\Sector</span> <span class="p">{</span>
-    <span class="k">class</span> <span class="nc">Filler</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\MifareClassic\Sector</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\MifareClassic</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
-        <span class="p">}</span>
-
-        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">size</span><span class="p">());</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_data</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">data</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data</span><span class="p">;</span> <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="k">namespace</span> <span class="nx">MifareClassic</span> <span class="p">{</span>
-    <span class="k">class</span> <span class="nc">Manufacturer</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\MifareClassic\Sector</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\MifareClassic</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
-        <span class="p">}</span>
-
-        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nuid</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bcc</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sak</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_atqa</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_manufacturer</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_nuid</span><span class="p">;</span>
-        <span class="k">protected</span> <span class="nv">$_m_bcc</span><span class="p">;</span>
-        <span class="k">protected</span> <span class="nv">$_m_sak</span><span class="p">;</span>
-        <span class="k">protected</span> <span class="nv">$_m_atqa</span><span class="p">;</span>
-        <span class="k">protected</span> <span class="nv">$_m_manufacturer</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * beware for 7bytes UID it goes over next fields</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">nuid</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nuid</span><span class="p">;</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">bcc</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bcc</span><span class="p">;</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">sak</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sak</span><span class="p">;</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">atqa</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_atqa</span><span class="p">;</span> <span class="p">}</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * may contain manufacture date as BCD</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">manufacturer</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_manufacturer</span><span class="p">;</span> <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
 <span class="k">namespace</span> <span class="nx">MifareClassic</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">Trailer</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\MifareClassic\Sector</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\MifareClassic</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\MifareClassic\Sector</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\MifareClassic</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
         <span class="p">}</span>
@@ -544,19 +559,19 @@ section#format-index .row {
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_acBits</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
             <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_acBits</span><span class="p">;</span>
         <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_acCountOfChunks</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">acCountOfChunks</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_acCountOfChunks</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_acCountOfChunks</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_acCountOfChunks</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">acBits</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_acCountOfChunks</span><span class="p">;</span>
+        <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_acsInSector</span><span class="p">;</span>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">acsInSector</span><span class="p">()</span> <span class="p">{</span>
             <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_acsInSector</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
                 <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_acsInSector</span><span class="p">;</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_acsInSector</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
             <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_acsInSector</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_acCountOfChunks</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">acCountOfChunks</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_acCountOfChunks</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_acCountOfChunks</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_acCountOfChunks</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">acBits</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2</span><span class="p">);</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_acCountOfChunks</span><span class="p">;</span>
         <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_keyA</span><span class="p">;</span>
         <span class="k">protected</span> <span class="nv">$_m_accessBits</span><span class="p">;</span>
@@ -573,7 +588,7 @@ section#format-index .row {
 
 <span class="k">namespace</span> <span class="nx">MifareClassic\Trailer</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">AccessConditions</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\MifareClassic\Trailer</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\MifareClassic</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\MifareClassic\Trailer</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\MifareClassic</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
         <span class="p">}</span>
@@ -585,6 +600,34 @@ section#format-index .row {
                 <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_rawChunks</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsIntBe</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
             <span class="p">}</span>
         <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_acsRaw</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">acsRaw</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_acsRaw</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_acsRaw</span><span class="p">;</span>
+            <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_acsRaw</span> <span class="o">=</span> <span class="p">[];</span>
+            <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">acsInSector</span><span class="p">();</span>
+            <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_acsRaw</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MifareClassic\Trailer\AccessConditions\Ac</span><span class="p">(</span><span class="nv">$i</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_acsRaw</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_chunks</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">chunks</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunks</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunks</span><span class="p">;</span>
+            <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunks</span> <span class="o">=</span> <span class="p">[];</span>
+            <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">acBits</span><span class="p">();</span>
+            <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunks</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MifareClassic\Trailer\AccessConditions\ValidChunk</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">rawChunks</span><span class="p">()[</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">remaps</span><span class="p">()[</span><span class="nv">$i</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">invChunkNo</span><span class="p">()],</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">rawChunks</span><span class="p">()[</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">remaps</span><span class="p">()[</span><span class="nv">$i</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">chunkNo</span><span class="p">()],</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunks</span><span class="p">;</span>
+        <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_dataAcs</span><span class="p">;</span>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">dataAcs</span><span class="p">()</span> <span class="p">{</span>
             <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dataAcs</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
@@ -592,7 +635,7 @@ section#format-index .row {
             <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dataAcs</span> <span class="o">=</span> <span class="p">[];</span>
-            <span class="nv">$n</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">acsInSector</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+            <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">acsInSector</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
             <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
                 <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dataAcs</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MifareClassic\Trailer\AccessConditions\DataAc</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">acsRaw</span><span class="p">()[</span><span class="nv">$i</span><span class="p">],</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
             <span class="p">}</span>
@@ -613,43 +656,15 @@ section#format-index .row {
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
             <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_remaps</span><span class="p">;</span>
         <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_acsRaw</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">acsRaw</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_acsRaw</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_acsRaw</span><span class="p">;</span>
-            <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_acsRaw</span> <span class="o">=</span> <span class="p">[];</span>
-            <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">acsInSector</span><span class="p">();</span>
-            <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_acsRaw</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MifareClassic\Trailer\AccessConditions\Ac</span><span class="p">(</span><span class="nv">$i</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-            <span class="p">}</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_acsRaw</span><span class="p">;</span>
-        <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_trailerAc</span><span class="p">;</span>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">trailerAc</span><span class="p">()</span> <span class="p">{</span>
             <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_trailerAc</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
                 <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_trailerAc</span><span class="p">;</span>
             <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_trailerAc</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MifareClassic\Trailer\AccessConditions\TrailerAc</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">acsRaw</span><span class="p">()[(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">acsInSector</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)],</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_trailerAc</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MifareClassic\Trailer\AccessConditions\TrailerAc</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">acsRaw</span><span class="p">()[</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">acsInSector</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
             <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_trailerAc</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_chunks</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">chunks</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunks</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunks</span><span class="p">;</span>
-            <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunks</span> <span class="o">=</span> <span class="p">[];</span>
-            <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">acBits</span><span class="p">();</span>
-            <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunks</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MifareClassic\Trailer\AccessConditions\ValidChunk</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">rawChunks</span><span class="p">()[</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">remaps</span><span class="p">()[</span><span class="nv">$i</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">invChunkNo</span><span class="p">()],</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">rawChunks</span><span class="p">()[</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">remaps</span><span class="p">()[</span><span class="nv">$i</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">chunkNo</span><span class="p">()],</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
-            <span class="p">}</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunks</span><span class="p">;</span>
         <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_rawChunks</span><span class="p">;</span>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">rawChunks</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_rawChunks</span><span class="p">;</span> <span class="p">}</span>
@@ -657,148 +672,8 @@ section#format-index .row {
 <span class="p">}</span>
 
 <span class="k">namespace</span> <span class="nx">MifareClassic\Trailer\AccessConditions</span> <span class="p">{</span>
-    <span class="k">class</span> <span class="nc">TrailerAc</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\MifareClassic\Trailer\AccessConditions\Ac</span> <span class="nv">$ac</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\MifareClassic\Trailer\AccessConditions</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\MifareClassic</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ac</span> <span class="o">=</span> <span class="nv">$ac</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
-        <span class="p">}</span>
-
-        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_canReadKeyB</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * key A is required</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">canReadKeyB</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_canReadKeyB</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_canReadKeyB</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_canReadKeyB</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ac</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">invShiftVal</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mi">2</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_canReadKeyB</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_canWriteKeys</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">canWriteKeys</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_canWriteKeys</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_canWriteKeys</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_canWriteKeys</span> <span class="o">=</span>  <span class="p">((</span><span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">mod</span><span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ac</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">invShiftVal</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ac</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">invShiftVal</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">6</span><span class="p">))</span> <span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_canWriteKeys</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_canWriteAccessBits</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">canWriteAccessBits</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_canWriteAccessBits</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_canWriteAccessBits</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_canWriteAccessBits</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ac</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">bits</span><span class="p">()[</span><span class="mi">2</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">b</span><span class="p">();</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_canWriteAccessBits</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_keyBControlsWrite</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">keyBControlsWrite</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_keyBControlsWrite</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_keyBControlsWrite</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_keyBControlsWrite</span> <span class="o">=</span> <span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">canReadKeyB</span><span class="p">());</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_keyBControlsWrite</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_ac</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">ac</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ac</span><span class="p">;</span> <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="k">namespace</span> <span class="nx">MifareClassic\Trailer\AccessConditions</span> <span class="p">{</span>
-    <span class="k">class</span> <span class="nc">ChunkBitRemap</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">int</span> <span class="nv">$bitNo</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\MifareClassic\Trailer\AccessConditions</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\MifareClassic</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bitNo</span> <span class="o">=</span> <span class="nv">$bitNo</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
-        <span class="p">}</span>
-
-        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_shiftValue</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">shiftValue</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_shiftValue</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_shiftValue</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_shiftValue</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">bitNo</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">?</span> <span class="o">-</span><span class="mi">1</span> <span class="o">:</span> <span class="mi">1</span><span class="p">);</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_shiftValue</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_chunkNo</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">chunkNo</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkNo</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkNo</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkNo</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">mod</span><span class="p">(((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">invChunkNo</span><span class="p">()</span> <span class="o">+</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">shiftValue</span><span class="p">())</span> <span class="o">+</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">acCountOfChunks</span><span class="p">()),</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">acCountOfChunks</span><span class="p">());</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkNo</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_invChunkNo</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">invChunkNo</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_invChunkNo</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_invChunkNo</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_invChunkNo</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">bitNo</span><span class="p">()</span> <span class="o">+</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">shiftValue</span><span class="p">());</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_invChunkNo</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_bitNo</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">bitNo</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bitNo</span><span class="p">;</span> <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="k">namespace</span> <span class="nx">MifareClassic\Trailer\AccessConditions</span> <span class="p">{</span>
-    <span class="k">class</span> <span class="nc">DataAc</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\MifareClassic\Trailer\AccessConditions\Ac</span> <span class="nv">$ac</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\MifareClassic\Trailer\AccessConditions</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\MifareClassic</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ac</span> <span class="o">=</span> <span class="nv">$ac</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
-        <span class="p">}</span>
-
-        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_readKeyARequired</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">readKeyARequired</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_readKeyARequired</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_readKeyARequired</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_readKeyARequired</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ac</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">val</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mi">4</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_readKeyARequired</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_writeKeyBRequired</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">writeKeyBRequired</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_writeKeyBRequired</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_writeKeyBRequired</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_writeKeyBRequired</span> <span class="o">=</span>  <span class="p">((</span> <span class="p">((</span><span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">readKeyARequired</span><span class="p">()))</span> <span class="o">||</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">readKeyBRequired</span><span class="p">()))</span> <span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ac</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">bits</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">b</span><span class="p">())))</span> <span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_writeKeyBRequired</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_writeKeyARequired</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">writeKeyARequired</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_writeKeyARequired</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_writeKeyARequired</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_writeKeyARequired</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ac</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">val</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_writeKeyARequired</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_readKeyBRequired</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">readKeyBRequired</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_readKeyBRequired</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_readKeyBRequired</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_readKeyBRequired</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ac</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">val</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mi">6</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_readKeyBRequired</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_decrementAvailable</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">decrementAvailable</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_decrementAvailable</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_decrementAvailable</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_decrementAvailable</span> <span class="o">=</span>  <span class="p">((</span> <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ac</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">bits</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">b</span><span class="p">())</span> <span class="o">||</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ac</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">bits</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">b</span><span class="p">())))</span> <span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ac</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">bits</span><span class="p">()[</span><span class="mi">2</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">b</span><span class="p">())))</span> <span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_decrementAvailable</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_incrementAvailable</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">incrementAvailable</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_incrementAvailable</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_incrementAvailable</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_incrementAvailable</span> <span class="o">=</span>  <span class="p">((</span> <span class="p">((</span><span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ac</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">bits</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">b</span><span class="p">()))</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">readKeyARequired</span><span class="p">()))</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">readKeyBRequired</span><span class="p">())))</span> <span class="p">)</span> <span class="o">||</span> <span class="p">(</span> <span class="p">((</span><span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ac</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">bits</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">b</span><span class="p">()))</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">readKeyARequired</span><span class="p">())</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">readKeyBRequired</span><span class="p">()))</span> <span class="p">))</span> <span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_incrementAvailable</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_ac</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">ac</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ac</span><span class="p">;</span> <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="k">namespace</span> <span class="nx">MifareClassic\Trailer\AccessConditions</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">Ac</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">int</span> <span class="nv">$index</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\MifareClassic\Trailer\AccessConditions</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\MifareClassic</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">int</span> <span class="nv">$index</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\MifareClassic\Trailer\AccessConditions</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\MifareClassic</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_index</span> <span class="o">=</span> <span class="nv">$index</span><span class="p">;</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
@@ -820,6 +695,13 @@ section#format-index .row {
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
             <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bits</span><span class="p">;</span>
         <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_invShiftVal</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">invShiftVal</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_invShiftVal</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_invShiftVal</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_invShiftVal</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">bits</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">n</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span> <span class="o">|</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">bits</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">n</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">|</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">bits</span><span class="p">()[</span><span class="mi">2</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">n</span><span class="p">();</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_invShiftVal</span><span class="p">;</span>
+        <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_val</span><span class="p">;</span>
 
         <span class="sd">/**</span>
@@ -828,15 +710,8 @@ section#format-index .row {
         <span class="k">public</span> <span class="k">function</span> <span class="nf">val</span><span class="p">()</span> <span class="p">{</span>
             <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_val</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
                 <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_val</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_val</span> <span class="o">=</span> <span class="p">(((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">bits</span><span class="p">()[</span><span class="mi">2</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">n</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">bits</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">n</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">))</span> <span class="o">|</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">bits</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">n</span><span class="p">());</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_val</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">bits</span><span class="p">()[</span><span class="mi">2</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">n</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span> <span class="o">|</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">bits</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">n</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">|</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">bits</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">n</span><span class="p">();</span>
             <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_val</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_invShiftVal</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">invShiftVal</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_invShiftVal</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_invShiftVal</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_invShiftVal</span> <span class="o">=</span> <span class="p">(((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">bits</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">n</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">bits</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">n</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">))</span> <span class="o">|</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">bits</span><span class="p">()[</span><span class="mi">2</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">n</span><span class="p">());</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_invShiftVal</span><span class="p">;</span>
         <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_index</span><span class="p">;</span>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">index</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_index</span><span class="p">;</span> <span class="p">}</span>
@@ -845,7 +720,7 @@ section#format-index .row {
 
 <span class="k">namespace</span> <span class="nx">MifareClassic\Trailer\AccessConditions\Ac</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">AcBit</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">int</span> <span class="nv">$i</span><span class="p">,</span> <span class="nx">int</span> <span class="nv">$chunk</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\MifareClassic\Trailer\AccessConditions\Ac</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\MifareClassic</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">int</span> <span class="nv">$i</span><span class="p">,</span> <span class="nx">int</span> <span class="nv">$chunk</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\MifareClassic\Trailer\AccessConditions\Ac</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\MifareClassic</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_i</span> <span class="o">=</span> <span class="nv">$i</span><span class="p">;</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunk</span> <span class="o">=</span> <span class="nv">$chunk</span><span class="p">;</span>
@@ -854,19 +729,19 @@ section#format-index .row {
 
         <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
         <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_n</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">n</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_n</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_n</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_n</span> <span class="o">=</span> <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">chunk</span><span class="p">()</span> <span class="o">&gt;&gt;</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">i</span><span class="p">())</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">);</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_n</span><span class="p">;</span>
-        <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_b</span><span class="p">;</span>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">b</span><span class="p">()</span> <span class="p">{</span>
             <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_b</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
                 <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_b</span><span class="p">;</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_b</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">n</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">;</span>
             <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_b</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_n</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">n</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_n</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_n</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">chunk</span><span class="p">()</span> <span class="o">&gt;&gt;</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">i</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_n</span><span class="p">;</span>
         <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_i</span><span class="p">;</span>
         <span class="k">protected</span> <span class="nv">$_m_chunk</span><span class="p">;</span>
@@ -876,8 +751,148 @@ section#format-index .row {
 <span class="p">}</span>
 
 <span class="k">namespace</span> <span class="nx">MifareClassic\Trailer\AccessConditions</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">ChunkBitRemap</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">int</span> <span class="nv">$bitNo</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\MifareClassic\Trailer\AccessConditions</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\MifareClassic</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bitNo</span> <span class="o">=</span> <span class="nv">$bitNo</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_chunkNo</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">chunkNo</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkNo</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkNo</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkNo</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">mod</span><span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">invChunkNo</span><span class="p">()</span> <span class="o">+</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">shiftValue</span><span class="p">())</span> <span class="o">+</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">acCountOfChunks</span><span class="p">(),</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">acCountOfChunks</span><span class="p">());</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkNo</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_invChunkNo</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">invChunkNo</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_invChunkNo</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_invChunkNo</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_invChunkNo</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">bitNo</span><span class="p">()</span> <span class="o">+</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">shiftValue</span><span class="p">();</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_invChunkNo</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_shiftValue</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">shiftValue</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_shiftValue</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_shiftValue</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_shiftValue</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">bitNo</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">?</span> <span class="o">-</span><span class="mi">1</span> <span class="o">:</span> <span class="mi">1</span><span class="p">);</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_shiftValue</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_bitNo</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">bitNo</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bitNo</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">MifareClassic\Trailer\AccessConditions</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">DataAc</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\MifareClassic\Trailer\AccessConditions\Ac</span> <span class="nv">$ac</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\MifareClassic\Trailer\AccessConditions</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\MifareClassic</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ac</span> <span class="o">=</span> <span class="nv">$ac</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_decrementAvailable</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">decrementAvailable</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_decrementAvailable</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_decrementAvailable</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_decrementAvailable</span> <span class="o">=</span>  <span class="p">((</span> <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ac</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">bits</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">b</span><span class="p">())</span> <span class="o">||</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ac</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">bits</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">b</span><span class="p">())))</span> <span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ac</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">bits</span><span class="p">()[</span><span class="mi">2</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">b</span><span class="p">())))</span> <span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_decrementAvailable</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_incrementAvailable</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">incrementAvailable</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_incrementAvailable</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_incrementAvailable</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_incrementAvailable</span> <span class="o">=</span>  <span class="p">((</span> <span class="p">((</span><span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ac</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">bits</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">b</span><span class="p">()))</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">readKeyARequired</span><span class="p">()))</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">readKeyBRequired</span><span class="p">())))</span> <span class="p">)</span> <span class="o">||</span> <span class="p">(</span> <span class="p">((</span><span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ac</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">bits</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">b</span><span class="p">()))</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">readKeyARequired</span><span class="p">())</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">readKeyBRequired</span><span class="p">()))</span> <span class="p">))</span> <span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_incrementAvailable</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_readKeyARequired</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">readKeyARequired</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_readKeyARequired</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_readKeyARequired</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_readKeyARequired</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ac</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">val</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mi">4</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_readKeyARequired</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_readKeyBRequired</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">readKeyBRequired</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_readKeyBRequired</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_readKeyBRequired</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_readKeyBRequired</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ac</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">val</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mi">6</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_readKeyBRequired</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_writeKeyARequired</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">writeKeyARequired</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_writeKeyARequired</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_writeKeyARequired</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_writeKeyARequired</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ac</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">val</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_writeKeyARequired</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_writeKeyBRequired</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">writeKeyBRequired</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_writeKeyBRequired</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_writeKeyBRequired</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_writeKeyBRequired</span> <span class="o">=</span>  <span class="p">((</span> <span class="p">((</span><span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">readKeyARequired</span><span class="p">()))</span> <span class="o">||</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">readKeyBRequired</span><span class="p">()))</span> <span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ac</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">bits</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">b</span><span class="p">())))</span> <span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_writeKeyBRequired</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_ac</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">ac</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ac</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">MifareClassic\Trailer\AccessConditions</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">TrailerAc</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\MifareClassic\Trailer\AccessConditions\Ac</span> <span class="nv">$ac</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\MifareClassic\Trailer\AccessConditions</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\MifareClassic</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ac</span> <span class="o">=</span> <span class="nv">$ac</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_canReadKeyB</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * key A is required</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">canReadKeyB</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_canReadKeyB</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_canReadKeyB</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_canReadKeyB</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ac</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">invShiftVal</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mi">2</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_canReadKeyB</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_canWriteAccessBits</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">canWriteAccessBits</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_canWriteAccessBits</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_canWriteAccessBits</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_canWriteAccessBits</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ac</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">bits</span><span class="p">()[</span><span class="mi">2</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">b</span><span class="p">();</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_canWriteAccessBits</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_canWriteKeys</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">canWriteKeys</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_canWriteKeys</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_canWriteKeys</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_canWriteKeys</span> <span class="o">=</span>  <span class="p">((</span><span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">mod</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ac</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">invShiftVal</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ac</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">invShiftVal</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">6</span><span class="p">))</span> <span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_canWriteKeys</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_keyBControlsWrite</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">keyBControlsWrite</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_keyBControlsWrite</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_keyBControlsWrite</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_keyBControlsWrite</span> <span class="o">=</span> <span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">canReadKeyB</span><span class="p">());</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_keyBControlsWrite</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_ac</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">ac</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ac</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">MifareClassic\Trailer\AccessConditions</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">ValidChunk</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">int</span> <span class="nv">$invChunk</span><span class="p">,</span> <span class="nx">int</span> <span class="nv">$chunk</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\MifareClassic\Trailer\AccessConditions</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\MifareClassic</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">int</span> <span class="nv">$invChunk</span><span class="p">,</span> <span class="nx">int</span> <span class="nv">$chunk</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="o">?</span><span class="nx">\MifareClassic\Trailer\AccessConditions</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="o">?</span><span class="nx">\MifareClassic</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_invChunk</span> <span class="o">=</span> <span class="nv">$invChunk</span><span class="p">;</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunk</span> <span class="o">=</span> <span class="nv">$chunk</span><span class="p">;</span>

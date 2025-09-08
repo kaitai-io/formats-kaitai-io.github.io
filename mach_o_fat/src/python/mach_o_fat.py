@@ -1,13 +1,14 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
-
-
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
-
 import mach_o
+
+
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
+
 class MachOFat(KaitaiStruct):
     """This is a simple container format that encapsulates multiple Mach-O files,
     each generally for a different architecture. XNU can execute these files just
@@ -17,9 +18,9 @@ class MachOFat(KaitaiStruct):
        Source - https://opensource.apple.com/source/xnu/xnu-7195.121.3/EXTERNAL_HEADERS/mach-o/fat.h.auto.html
     """
     def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
+        super(MachOFat, self).__init__(_io)
         self._parent = _parent
-        self._root = _root if _root else self
+        self._root = _root or self
         self._read()
 
     def _read(self):
@@ -32,19 +33,36 @@ class MachOFat(KaitaiStruct):
             self.fat_archs.append(MachOFat.FatArch(self._io, self, self._root))
 
 
+
+    def _fetch_instances(self):
+        pass
+        for i in range(len(self.fat_archs)):
+            pass
+            self.fat_archs[i]._fetch_instances()
+
+
     class FatArch(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(MachOFat.FatArch, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
-            self.cpu_type = KaitaiStream.resolve_enum(MachO.CpuType, self._io.read_u4be())
+            self.cpu_type = KaitaiStream.resolve_enum(mach_o.MachO.CpuType, self._io.read_u4be())
             self.cpu_subtype = self._io.read_u4be()
             self.ofs_object = self._io.read_u4be()
             self.len_object = self._io.read_u4be()
             self.align = self._io.read_u4be()
+
+
+        def _fetch_instances(self):
+            pass
+            _ = self.object
+            if hasattr(self, '_m_object'):
+                pass
+                self._m_object._fetch_instances()
+
 
         @property
         def object(self):

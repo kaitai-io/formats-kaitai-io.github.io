@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
-from enum import Enum
+from enum import IntEnum
 
 
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class RubyMarshal(KaitaiStruct):
     """Ruby's Marshal module allows serialization and deserialization of
@@ -34,7 +35,7 @@ class RubyMarshal(KaitaiStruct):
        Source - https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Stream+Format
     """
 
-    class Codes(Enum):
+    class Codes(IntEnum):
         ruby_string = 34
         const_nil = 48
         ruby_symbol = 58
@@ -49,9 +50,9 @@ class RubyMarshal(KaitaiStruct):
         bignum = 108
         ruby_hash = 123
     def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
+        super(RubyMarshal, self).__init__(_io)
         self._parent = _parent
-        self._root = _root if _root else self
+        self._root = _root or self
         self._read()
 
     def _read(self):
@@ -60,20 +61,10 @@ class RubyMarshal(KaitaiStruct):
             raise kaitaistruct.ValidationNotEqualError(b"\x04\x08", self.version, self._io, u"/seq/0")
         self.records = RubyMarshal.Record(self._io, self, self._root)
 
-    class RubyArray(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
 
-        def _read(self):
-            self.num_elements = RubyMarshal.PackedInt(self._io, self, self._root)
-            self.elements = []
-            for i in range(self.num_elements.value):
-                self.elements.append(RubyMarshal.Record(self._io, self, self._root))
-
-
+    def _fetch_instances(self):
+        pass
+        self.records._fetch_instances()
 
     class Bignum(KaitaiStruct):
         """
@@ -81,51 +72,50 @@ class RubyMarshal(KaitaiStruct):
            Source - https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Bignum
         """
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(RubyMarshal.Bignum, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
             self.sign = self._io.read_u1()
             self.len_div_2 = RubyMarshal.PackedInt(self._io, self, self._root)
-            self.body = self._io.read_bytes((self.len_div_2.value * 2))
+            self.body = self._io.read_bytes(self.len_div_2.value * 2)
 
 
-    class RubyStruct(KaitaiStruct):
+        def _fetch_instances(self):
+            pass
+            self.len_div_2._fetch_instances()
+
+
+    class InstanceVar(KaitaiStruct):
         """
         .. seealso::
-           Source - https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Struct
+           Source - https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Instance+Variables
         """
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(RubyMarshal.InstanceVar, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
-            self.name = RubyMarshal.Record(self._io, self, self._root)
-            self.num_members = RubyMarshal.PackedInt(self._io, self, self._root)
-            self.members = []
-            for i in range(self.num_members.value):
-                self.members.append(RubyMarshal.Pair(self._io, self, self._root))
+            self.obj = RubyMarshal.Record(self._io, self, self._root)
+            self.num_vars = RubyMarshal.PackedInt(self._io, self, self._root)
+            self.vars = []
+            for i in range(self.num_vars.value):
+                self.vars.append(RubyMarshal.Pair(self._io, self, self._root))
 
 
 
-    class RubySymbol(KaitaiStruct):
-        """
-        .. seealso::
-           Source - https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Symbols+and+Byte+Sequence
-        """
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
+        def _fetch_instances(self):
+            pass
+            self.obj._fetch_instances()
+            self.num_vars._fetch_instances()
+            for i in range(len(self.vars)):
+                pass
+                self.vars[i]._fetch_instances()
 
-        def _read(self):
-            self.len = RubyMarshal.PackedInt(self._io, self, self._root)
-            self.name = (self._io.read_bytes(self.len.value)).decode(u"UTF-8")
 
 
     class PackedInt(KaitaiStruct):
@@ -159,35 +149,71 @@ class RubyMarshal(KaitaiStruct):
            Source - https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Fixnum+and+long
         """
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(RubyMarshal.PackedInt, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
             self.code = self._io.read_u1()
             _on = self.code
-            if _on == 4:
-                self.encoded = self._io.read_u4le()
-            elif _on == 1:
+            if _on == 1:
+                pass
                 self.encoded = self._io.read_u1()
+            elif _on == 2:
+                pass
+                self.encoded = self._io.read_u2le()
             elif _on == 252:
+                pass
                 self.encoded = self._io.read_u4le()
             elif _on == 253:
+                pass
                 self.encoded = self._io.read_u2le()
-            elif _on == 3:
-                self.encoded = self._io.read_u2le()
-            elif _on == 2:
+            elif _on == 254:
+                pass
                 self.encoded = self._io.read_u2le()
             elif _on == 255:
+                pass
                 self.encoded = self._io.read_u1()
-            elif _on == 254:
+            elif _on == 3:
+                pass
                 self.encoded = self._io.read_u2le()
+            elif _on == 4:
+                pass
+                self.encoded = self._io.read_u4le()
             _on = self.code
-            if _on == 3:
+            if _on == 253:
+                pass
                 self.encoded2 = self._io.read_u1()
+            elif _on == 3:
+                pass
+                self.encoded2 = self._io.read_u1()
+
+
+        def _fetch_instances(self):
+            pass
+            _on = self.code
+            if _on == 1:
+                pass
+            elif _on == 2:
+                pass
+            elif _on == 252:
+                pass
             elif _on == 253:
-                self.encoded2 = self._io.read_u1()
+                pass
+            elif _on == 254:
+                pass
+            elif _on == 255:
+                pass
+            elif _on == 3:
+                pass
+            elif _on == 4:
+                pass
+            _on = self.code
+            if _on == 253:
+                pass
+            elif _on == 3:
+                pass
 
         @property
         def is_immediate(self):
@@ -202,15 +228,15 @@ class RubyMarshal(KaitaiStruct):
             if hasattr(self, '_m_value'):
                 return self._m_value
 
-            self._m_value = (((self.code - 5) if self.code < 128 else (4 - (~(self.code) & 127))) if self.is_immediate else (0 if self.code == 0 else ((self.encoded - 256) if self.code == 255 else ((self.encoded - 65536) if self.code == 254 else ((((self.encoded2 << 16) | self.encoded) - 16777216) if self.code == 253 else (((self.encoded2 << 16) | self.encoded) if self.code == 3 else self.encoded))))))
+            self._m_value = ((self.code - 5 if self.code < 128 else 4 - (~(self.code) & 127)) if self.is_immediate else (0 if self.code == 0 else (self.encoded - 256 if self.code == 255 else (self.encoded - 65536 if self.code == 254 else ((self.encoded2 << 16 | self.encoded) - 16777216 if self.code == 253 else (self.encoded2 << 16 | self.encoded if self.code == 3 else self.encoded))))))
             return getattr(self, '_m_value', None)
 
 
     class Pair(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(RubyMarshal.Pair, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -218,24 +244,10 @@ class RubyMarshal(KaitaiStruct):
             self.value = RubyMarshal.Record(self._io, self, self._root)
 
 
-    class InstanceVar(KaitaiStruct):
-        """
-        .. seealso::
-           Source - https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Instance+Variables
-        """
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.obj = RubyMarshal.Record(self._io, self, self._root)
-            self.num_vars = RubyMarshal.PackedInt(self._io, self, self._root)
-            self.vars = []
-            for i in range(self.num_vars.value):
-                self.vars.append(RubyMarshal.Pair(self._io, self, self._root))
-
+        def _fetch_instances(self):
+            pass
+            self.key._fetch_instances()
+            self.value._fetch_instances()
 
 
     class Record(KaitaiStruct):
@@ -244,34 +256,103 @@ class RubyMarshal(KaitaiStruct):
         as `body`, to be determined by `code`.
         """
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(RubyMarshal.Record, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
             self.code = KaitaiStream.resolve_enum(RubyMarshal.Codes, self._io.read_u1())
             _on = self.code
-            if _on == RubyMarshal.Codes.packed_int:
-                self.body = RubyMarshal.PackedInt(self._io, self, self._root)
-            elif _on == RubyMarshal.Codes.bignum:
+            if _on == RubyMarshal.Codes.bignum:
+                pass
                 self.body = RubyMarshal.Bignum(self._io, self, self._root)
-            elif _on == RubyMarshal.Codes.ruby_array:
-                self.body = RubyMarshal.RubyArray(self._io, self, self._root)
-            elif _on == RubyMarshal.Codes.ruby_symbol_link:
-                self.body = RubyMarshal.PackedInt(self._io, self, self._root)
-            elif _on == RubyMarshal.Codes.ruby_struct:
-                self.body = RubyMarshal.RubyStruct(self._io, self, self._root)
-            elif _on == RubyMarshal.Codes.ruby_string:
-                self.body = RubyMarshal.RubyString(self._io, self, self._root)
             elif _on == RubyMarshal.Codes.instance_var:
+                pass
                 self.body = RubyMarshal.InstanceVar(self._io, self, self._root)
-            elif _on == RubyMarshal.Codes.ruby_hash:
-                self.body = RubyMarshal.RubyHash(self._io, self, self._root)
-            elif _on == RubyMarshal.Codes.ruby_symbol:
-                self.body = RubyMarshal.RubySymbol(self._io, self, self._root)
-            elif _on == RubyMarshal.Codes.ruby_object_link:
+            elif _on == RubyMarshal.Codes.packed_int:
+                pass
                 self.body = RubyMarshal.PackedInt(self._io, self, self._root)
+            elif _on == RubyMarshal.Codes.ruby_array:
+                pass
+                self.body = RubyMarshal.RubyArray(self._io, self, self._root)
+            elif _on == RubyMarshal.Codes.ruby_hash:
+                pass
+                self.body = RubyMarshal.RubyHash(self._io, self, self._root)
+            elif _on == RubyMarshal.Codes.ruby_object_link:
+                pass
+                self.body = RubyMarshal.PackedInt(self._io, self, self._root)
+            elif _on == RubyMarshal.Codes.ruby_string:
+                pass
+                self.body = RubyMarshal.RubyString(self._io, self, self._root)
+            elif _on == RubyMarshal.Codes.ruby_struct:
+                pass
+                self.body = RubyMarshal.RubyStruct(self._io, self, self._root)
+            elif _on == RubyMarshal.Codes.ruby_symbol:
+                pass
+                self.body = RubyMarshal.RubySymbol(self._io, self, self._root)
+            elif _on == RubyMarshal.Codes.ruby_symbol_link:
+                pass
+                self.body = RubyMarshal.PackedInt(self._io, self, self._root)
+
+
+        def _fetch_instances(self):
+            pass
+            _on = self.code
+            if _on == RubyMarshal.Codes.bignum:
+                pass
+                self.body._fetch_instances()
+            elif _on == RubyMarshal.Codes.instance_var:
+                pass
+                self.body._fetch_instances()
+            elif _on == RubyMarshal.Codes.packed_int:
+                pass
+                self.body._fetch_instances()
+            elif _on == RubyMarshal.Codes.ruby_array:
+                pass
+                self.body._fetch_instances()
+            elif _on == RubyMarshal.Codes.ruby_hash:
+                pass
+                self.body._fetch_instances()
+            elif _on == RubyMarshal.Codes.ruby_object_link:
+                pass
+                self.body._fetch_instances()
+            elif _on == RubyMarshal.Codes.ruby_string:
+                pass
+                self.body._fetch_instances()
+            elif _on == RubyMarshal.Codes.ruby_struct:
+                pass
+                self.body._fetch_instances()
+            elif _on == RubyMarshal.Codes.ruby_symbol:
+                pass
+                self.body._fetch_instances()
+            elif _on == RubyMarshal.Codes.ruby_symbol_link:
+                pass
+                self.body._fetch_instances()
+
+
+    class RubyArray(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(RubyMarshal.RubyArray, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.num_elements = RubyMarshal.PackedInt(self._io, self, self._root)
+            self.elements = []
+            for i in range(self.num_elements.value):
+                self.elements.append(RubyMarshal.Record(self._io, self, self._root))
+
+
+
+        def _fetch_instances(self):
+            pass
+            self.num_elements._fetch_instances()
+            for i in range(len(self.elements)):
+                pass
+                self.elements[i]._fetch_instances()
+
 
 
     class RubyHash(KaitaiStruct):
@@ -280,9 +361,9 @@ class RubyMarshal(KaitaiStruct):
            Source - https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Hash+and+Hash+with+Default+Value
         """
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(RubyMarshal.RubyHash, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -293,20 +374,85 @@ class RubyMarshal(KaitaiStruct):
 
 
 
+        def _fetch_instances(self):
+            pass
+            self.num_pairs._fetch_instances()
+            for i in range(len(self.pairs)):
+                pass
+                self.pairs[i]._fetch_instances()
+
+
+
     class RubyString(KaitaiStruct):
         """
         .. seealso::
            Source - https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-String
         """
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(RubyMarshal.RubyString, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
             self.len = RubyMarshal.PackedInt(self._io, self, self._root)
             self.body = self._io.read_bytes(self.len.value)
+
+
+        def _fetch_instances(self):
+            pass
+            self.len._fetch_instances()
+
+
+    class RubyStruct(KaitaiStruct):
+        """
+        .. seealso::
+           Source - https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Struct
+        """
+        def __init__(self, _io, _parent=None, _root=None):
+            super(RubyMarshal.RubyStruct, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.name = RubyMarshal.Record(self._io, self, self._root)
+            self.num_members = RubyMarshal.PackedInt(self._io, self, self._root)
+            self.members = []
+            for i in range(self.num_members.value):
+                self.members.append(RubyMarshal.Pair(self._io, self, self._root))
+
+
+
+        def _fetch_instances(self):
+            pass
+            self.name._fetch_instances()
+            self.num_members._fetch_instances()
+            for i in range(len(self.members)):
+                pass
+                self.members[i]._fetch_instances()
+
+
+
+    class RubySymbol(KaitaiStruct):
+        """
+        .. seealso::
+           Source - https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Symbols+and+Byte+Sequence
+        """
+        def __init__(self, _io, _parent=None, _root=None):
+            super(RubyMarshal.RubySymbol, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.len = RubyMarshal.PackedInt(self._io, self, self._root)
+            self.name = (self._io.read_bytes(self.len.value)).decode(u"UTF-8")
+
+
+        def _fetch_instances(self):
+            pass
+            self.len._fetch_instances()
 
 
 

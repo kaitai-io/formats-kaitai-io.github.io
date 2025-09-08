@@ -15,9 +15,9 @@ namespace Kaitai
         {
             m_parent = p__parent;
             m_root = p__root ?? this;
-            f_version = false;
             f_ihl = false;
             f_ihlBytes = false;
+            f_version = false;
             _read();
         }
         private void _read()
@@ -32,12 +32,84 @@ namespace Kaitai
             _headerChecksum = m_io.ReadU2be();
             _srcIpAddr = m_io.ReadBytes(4);
             _dstIpAddr = m_io.ReadBytes(4);
-            __raw_options = m_io.ReadBytes((IhlBytes - 20));
+            __raw_options = m_io.ReadBytes(IhlBytes - 20);
             var io___raw_options = new KaitaiStream(__raw_options);
             _options = new Ipv4Options(io___raw_options, this, m_root);
-            __raw_body = m_io.ReadBytes((TotalLength - IhlBytes));
+            __raw_body = m_io.ReadBytes(TotalLength - IhlBytes);
             var io___raw_body = new KaitaiStream(__raw_body);
             _body = new ProtocolBody(Protocol, io___raw_body);
+        }
+        public partial class Ipv4Option : KaitaiStruct
+        {
+            public static Ipv4Option FromFile(string fileName)
+            {
+                return new Ipv4Option(new KaitaiStream(fileName));
+            }
+
+            public Ipv4Option(KaitaiStream p__io, Ipv4Packet.Ipv4Options p__parent = null, Ipv4Packet p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_copy = false;
+                f_number = false;
+                f_optClass = false;
+                _read();
+            }
+            private void _read()
+            {
+                _b1 = m_io.ReadU1();
+                _len = m_io.ReadU1();
+                _body = m_io.ReadBytes((Len > 2 ? Len - 2 : 0));
+            }
+            private bool f_copy;
+            private int _copy;
+            public int Copy
+            {
+                get
+                {
+                    if (f_copy)
+                        return _copy;
+                    f_copy = true;
+                    _copy = (int) ((B1 & 128) >> 7);
+                    return _copy;
+                }
+            }
+            private bool f_number;
+            private int _number;
+            public int Number
+            {
+                get
+                {
+                    if (f_number)
+                        return _number;
+                    f_number = true;
+                    _number = (int) (B1 & 31);
+                    return _number;
+                }
+            }
+            private bool f_optClass;
+            private int _optClass;
+            public int OptClass
+            {
+                get
+                {
+                    if (f_optClass)
+                        return _optClass;
+                    f_optClass = true;
+                    _optClass = (int) ((B1 & 96) >> 5);
+                    return _optClass;
+                }
+            }
+            private byte _b1;
+            private byte _len;
+            private byte[] _body;
+            private Ipv4Packet m_root;
+            private Ipv4Packet.Ipv4Options m_parent;
+            public byte B1 { get { return _b1; } }
+            public byte Len { get { return _len; } }
+            public byte[] Body { get { return _body; } }
+            public Ipv4Packet M_Root { get { return m_root; } }
+            public Ipv4Packet.Ipv4Options M_Parent { get { return m_parent; } }
         }
         public partial class Ipv4Options : KaitaiStruct
         {
@@ -70,91 +142,6 @@ namespace Kaitai
             public Ipv4Packet M_Root { get { return m_root; } }
             public Ipv4Packet M_Parent { get { return m_parent; } }
         }
-        public partial class Ipv4Option : KaitaiStruct
-        {
-            public static Ipv4Option FromFile(string fileName)
-            {
-                return new Ipv4Option(new KaitaiStream(fileName));
-            }
-
-            public Ipv4Option(KaitaiStream p__io, Ipv4Packet.Ipv4Options p__parent = null, Ipv4Packet p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_copy = false;
-                f_optClass = false;
-                f_number = false;
-                _read();
-            }
-            private void _read()
-            {
-                _b1 = m_io.ReadU1();
-                _len = m_io.ReadU1();
-                _body = m_io.ReadBytes((Len > 2 ? (Len - 2) : 0));
-            }
-            private bool f_copy;
-            private int _copy;
-            public int Copy
-            {
-                get
-                {
-                    if (f_copy)
-                        return _copy;
-                    _copy = (int) (((B1 & 128) >> 7));
-                    f_copy = true;
-                    return _copy;
-                }
-            }
-            private bool f_optClass;
-            private int _optClass;
-            public int OptClass
-            {
-                get
-                {
-                    if (f_optClass)
-                        return _optClass;
-                    _optClass = (int) (((B1 & 96) >> 5));
-                    f_optClass = true;
-                    return _optClass;
-                }
-            }
-            private bool f_number;
-            private int _number;
-            public int Number
-            {
-                get
-                {
-                    if (f_number)
-                        return _number;
-                    _number = (int) ((B1 & 31));
-                    f_number = true;
-                    return _number;
-                }
-            }
-            private byte _b1;
-            private byte _len;
-            private byte[] _body;
-            private Ipv4Packet m_root;
-            private Ipv4Packet.Ipv4Options m_parent;
-            public byte B1 { get { return _b1; } }
-            public byte Len { get { return _len; } }
-            public byte[] Body { get { return _body; } }
-            public Ipv4Packet M_Root { get { return m_root; } }
-            public Ipv4Packet.Ipv4Options M_Parent { get { return m_parent; } }
-        }
-        private bool f_version;
-        private int _version;
-        public int Version
-        {
-            get
-            {
-                if (f_version)
-                    return _version;
-                _version = (int) (((B1 & 240) >> 4));
-                f_version = true;
-                return _version;
-            }
-        }
         private bool f_ihl;
         private int _ihl;
         public int Ihl
@@ -163,8 +150,8 @@ namespace Kaitai
             {
                 if (f_ihl)
                     return _ihl;
-                _ihl = (int) ((B1 & 15));
                 f_ihl = true;
+                _ihl = (int) (B1 & 15);
                 return _ihl;
             }
         }
@@ -176,9 +163,22 @@ namespace Kaitai
             {
                 if (f_ihlBytes)
                     return _ihlBytes;
-                _ihlBytes = (int) ((Ihl * 4));
                 f_ihlBytes = true;
+                _ihlBytes = (int) (Ihl * 4);
                 return _ihlBytes;
+            }
+        }
+        private bool f_version;
+        private int _version;
+        public int Version
+        {
+            get
+            {
+                if (f_version)
+                    return _version;
+                f_version = true;
+                _version = (int) ((B1 & 240) >> 4);
+                return _version;
             }
         }
         private byte _b1;

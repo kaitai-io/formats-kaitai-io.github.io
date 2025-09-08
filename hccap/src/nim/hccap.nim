@@ -5,6 +5,8 @@ type
   Hccap* = ref object of KaitaiStruct
     `records`*: seq[Hccap_HccapRecord]
     `parent`*: KaitaiStruct
+  Hccap_EapolDummy* = ref object of KaitaiStruct
+    `parent`*: Hccap_HccapRecord
   Hccap_HccapRecord* = ref object of KaitaiStruct
     `essid`*: seq[byte]
     `macAp`*: seq[byte]
@@ -19,12 +21,10 @@ type
     `rawEapolBuffer`*: seq[byte]
     `eapolInst`: seq[byte]
     `eapolInstFlag`: bool
-  Hccap_EapolDummy* = ref object of KaitaiStruct
-    `parent`*: Hccap_HccapRecord
 
 proc read*(_: typedesc[Hccap], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Hccap
-proc read*(_: typedesc[Hccap_HccapRecord], io: KaitaiStream, root: KaitaiStruct, parent: Hccap): Hccap_HccapRecord
 proc read*(_: typedesc[Hccap_EapolDummy], io: KaitaiStream, root: KaitaiStruct, parent: Hccap_HccapRecord): Hccap_EapolDummy
+proc read*(_: typedesc[Hccap_HccapRecord], io: KaitaiStream, root: KaitaiStruct, parent: Hccap): Hccap_HccapRecord
 
 proc eapol*(this: Hccap_HccapRecord): seq[byte]
 
@@ -54,6 +54,18 @@ proc read*(_: typedesc[Hccap], io: KaitaiStream, root: KaitaiStruct, parent: Kai
 
 proc fromFile*(_: typedesc[Hccap], filename: string): Hccap =
   Hccap.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Hccap_EapolDummy], io: KaitaiStream, root: KaitaiStruct, parent: Hccap_HccapRecord): Hccap_EapolDummy =
+  template this: untyped = result
+  this = new(Hccap_EapolDummy)
+  let root = if root == nil: cast[Hccap](this) else: cast[Hccap](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+
+proc fromFile*(_: typedesc[Hccap_EapolDummy], filename: string): Hccap_EapolDummy =
+  Hccap_EapolDummy.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[Hccap_HccapRecord], io: KaitaiStream, root: KaitaiStruct, parent: Hccap): Hccap_HccapRecord =
   template this: untyped = result
@@ -135,16 +147,4 @@ proc eapol(this: Hccap_HccapRecord): seq[byte] =
 
 proc fromFile*(_: typedesc[Hccap_HccapRecord], filename: string): Hccap_HccapRecord =
   Hccap_HccapRecord.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Hccap_EapolDummy], io: KaitaiStream, root: KaitaiStruct, parent: Hccap_HccapRecord): Hccap_EapolDummy =
-  template this: untyped = result
-  this = new(Hccap_EapolDummy)
-  let root = if root == nil: cast[Hccap](this) else: cast[Hccap](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-
-proc fromFile*(_: typedesc[Hccap_EapolDummy], filename: string): Hccap_EapolDummy =
-  Hccap_EapolDummy.read(newKaitaiFileStream(filename), nil, nil)
 

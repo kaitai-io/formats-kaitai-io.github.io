@@ -56,6 +56,41 @@ namespace Kaitai
                 }
             }
         }
+        public partial class ExifInJpeg : KaitaiStruct
+        {
+            public static ExifInJpeg FromFile(string fileName)
+            {
+                return new ExifInJpeg(new KaitaiStream(fileName));
+            }
+
+            public ExifInJpeg(KaitaiStream p__io, Jpeg.SegmentApp1 p__parent = null, Jpeg p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _extraZero = m_io.ReadBytes(1);
+                if (!((KaitaiStream.ByteArrayCompare(_extraZero, new byte[] { 0 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 0 }, _extraZero, m_io, "/types/exif_in_jpeg/seq/0");
+                }
+                __raw_data = m_io.ReadBytesFull();
+                var io___raw_data = new KaitaiStream(__raw_data);
+                _data = new Exif(io___raw_data);
+            }
+            private byte[] _extraZero;
+            private Exif _data;
+            private Jpeg m_root;
+            private Jpeg.SegmentApp1 m_parent;
+            private byte[] __raw_data;
+            public byte[] ExtraZero { get { return _extraZero; } }
+            public Exif Data { get { return _data; } }
+            public Jpeg M_Root { get { return m_root; } }
+            public Jpeg.SegmentApp1 M_Parent { get { return m_parent; } }
+            public byte[] M_RawData { get { return __raw_data; } }
+        }
         public partial class Segment : KaitaiStruct
         {
             public static Segment FromFile(string fileName)
@@ -109,9 +144,9 @@ namespace Kaitai
             private void _read()
             {
                 _magic = m_io.ReadBytes(1);
-                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 255 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 255 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 255 }, Magic, M_Io, "/types/segment/seq/0");
+                    throw new ValidationNotEqualError(new byte[] { 255 }, _magic, m_io, "/types/segment/seq/0");
                 }
                 _marker = ((MarkerEnum) m_io.ReadU1());
                 if ( ((Marker != MarkerEnum.Soi) && (Marker != MarkerEnum.Eoi)) ) {
@@ -119,32 +154,32 @@ namespace Kaitai
                 }
                 if ( ((Marker != MarkerEnum.Soi) && (Marker != MarkerEnum.Eoi)) ) {
                     switch (Marker) {
-                    case MarkerEnum.App1: {
-                        __raw_data = m_io.ReadBytes((Length - 2));
-                        var io___raw_data = new KaitaiStream(__raw_data);
-                        _data = new SegmentApp1(io___raw_data, this, m_root);
-                        break;
-                    }
                     case MarkerEnum.App0: {
-                        __raw_data = m_io.ReadBytes((Length - 2));
+                        __raw_data = m_io.ReadBytes(Length - 2);
                         var io___raw_data = new KaitaiStream(__raw_data);
                         _data = new SegmentApp0(io___raw_data, this, m_root);
                         break;
                     }
+                    case MarkerEnum.App1: {
+                        __raw_data = m_io.ReadBytes(Length - 2);
+                        var io___raw_data = new KaitaiStream(__raw_data);
+                        _data = new SegmentApp1(io___raw_data, this, m_root);
+                        break;
+                    }
                     case MarkerEnum.Sof0: {
-                        __raw_data = m_io.ReadBytes((Length - 2));
+                        __raw_data = m_io.ReadBytes(Length - 2);
                         var io___raw_data = new KaitaiStream(__raw_data);
                         _data = new SegmentSof0(io___raw_data, this, m_root);
                         break;
                     }
                     case MarkerEnum.Sos: {
-                        __raw_data = m_io.ReadBytes((Length - 2));
+                        __raw_data = m_io.ReadBytes(Length - 2);
                         var io___raw_data = new KaitaiStream(__raw_data);
                         _data = new SegmentSos(io___raw_data, this, m_root);
                         break;
                     }
                     default: {
-                        _data = m_io.ReadBytes((Length - 2));
+                        _data = m_io.ReadBytes(Length - 2);
                         break;
                     }
                     }
@@ -170,14 +205,21 @@ namespace Kaitai
             public Jpeg M_Parent { get { return m_parent; } }
             public byte[] M_RawData { get { return __raw_data; } }
         }
-        public partial class SegmentSos : KaitaiStruct
+        public partial class SegmentApp0 : KaitaiStruct
         {
-            public static SegmentSos FromFile(string fileName)
+            public static SegmentApp0 FromFile(string fileName)
             {
-                return new SegmentSos(new KaitaiStream(fileName));
+                return new SegmentApp0(new KaitaiStream(fileName));
             }
 
-            public SegmentSos(KaitaiStream p__io, Jpeg.Segment p__parent = null, Jpeg p__root = null) : base(p__io)
+
+            public enum DensityUnit
+            {
+                NoUnits = 0,
+                PixelsPerInch = 1,
+                PixelsPerCm = 2,
+            }
+            public SegmentApp0(KaitaiStream p__io, Jpeg.Segment p__parent = null, Jpeg p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -185,79 +227,56 @@ namespace Kaitai
             }
             private void _read()
             {
-                _numComponents = m_io.ReadU1();
-                _components = new List<Component>();
-                for (var i = 0; i < NumComponents; i++)
-                {
-                    _components.Add(new Component(m_io, this, m_root));
-                }
-                _startSpectralSelection = m_io.ReadU1();
-                _endSpectral = m_io.ReadU1();
-                _apprBitPos = m_io.ReadU1();
+                _magic = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(5));
+                _versionMajor = m_io.ReadU1();
+                _versionMinor = m_io.ReadU1();
+                _densityUnits = ((DensityUnit) m_io.ReadU1());
+                _densityX = m_io.ReadU2be();
+                _densityY = m_io.ReadU2be();
+                _thumbnailX = m_io.ReadU1();
+                _thumbnailY = m_io.ReadU1();
+                _thumbnail = m_io.ReadBytes((ThumbnailX * ThumbnailY) * 3);
             }
-            public partial class Component : KaitaiStruct
-            {
-                public static Component FromFile(string fileName)
-                {
-                    return new Component(new KaitaiStream(fileName));
-                }
-
-                public Component(KaitaiStream p__io, Jpeg.SegmentSos p__parent = null, Jpeg p__root = null) : base(p__io)
-                {
-                    m_parent = p__parent;
-                    m_root = p__root;
-                    _read();
-                }
-                private void _read()
-                {
-                    _id = ((Jpeg.ComponentId) m_io.ReadU1());
-                    _huffmanTable = m_io.ReadU1();
-                }
-                private ComponentId _id;
-                private byte _huffmanTable;
-                private Jpeg m_root;
-                private Jpeg.SegmentSos m_parent;
-
-                /// <summary>
-                /// Scan component selector
-                /// </summary>
-                public ComponentId Id { get { return _id; } }
-                public byte HuffmanTable { get { return _huffmanTable; } }
-                public Jpeg M_Root { get { return m_root; } }
-                public Jpeg.SegmentSos M_Parent { get { return m_parent; } }
-            }
-            private byte _numComponents;
-            private List<Component> _components;
-            private byte _startSpectralSelection;
-            private byte _endSpectral;
-            private byte _apprBitPos;
+            private string _magic;
+            private byte _versionMajor;
+            private byte _versionMinor;
+            private DensityUnit _densityUnits;
+            private ushort _densityX;
+            private ushort _densityY;
+            private byte _thumbnailX;
+            private byte _thumbnailY;
+            private byte[] _thumbnail;
             private Jpeg m_root;
             private Jpeg.Segment m_parent;
+            public string Magic { get { return _magic; } }
+            public byte VersionMajor { get { return _versionMajor; } }
+            public byte VersionMinor { get { return _versionMinor; } }
+            public DensityUnit DensityUnits { get { return _densityUnits; } }
 
             /// <summary>
-            /// Number of components in scan
+            /// Horizontal pixel density. Must not be zero.
             /// </summary>
-            public byte NumComponents { get { return _numComponents; } }
+            public ushort DensityX { get { return _densityX; } }
 
             /// <summary>
-            /// Scan components specification
+            /// Vertical pixel density. Must not be zero.
             /// </summary>
-            public List<Component> Components { get { return _components; } }
+            public ushort DensityY { get { return _densityY; } }
 
             /// <summary>
-            /// Start of spectral selection or predictor selection
+            /// Horizontal pixel count of the following embedded RGB thumbnail. May be zero.
             /// </summary>
-            public byte StartSpectralSelection { get { return _startSpectralSelection; } }
+            public byte ThumbnailX { get { return _thumbnailX; } }
 
             /// <summary>
-            /// End of spectral selection
+            /// Vertical pixel count of the following embedded RGB thumbnail. May be zero.
             /// </summary>
-            public byte EndSpectral { get { return _endSpectral; } }
+            public byte ThumbnailY { get { return _thumbnailY; } }
 
             /// <summary>
-            /// Successive approximation bit position high + Successive approximation bit position low or point transform
+            /// Uncompressed 24 bit RGB (8 bits per color channel) raster thumbnail data in the order R0, G0, B0, ... Rn, Gn, Bn
             /// </summary>
-            public byte ApprBitPos { get { return _apprBitPos; } }
+            public byte[] Thumbnail { get { return _thumbnail; } }
             public Jpeg M_Root { get { return m_root; } }
             public Jpeg.Segment M_Parent { get { return m_parent; } }
         }
@@ -347,8 +366,8 @@ namespace Kaitai
                     {
                         if (f_samplingX)
                             return _samplingX;
-                        _samplingX = (int) (((SamplingFactors & 240) >> 4));
                         f_samplingX = true;
+                        _samplingX = (int) ((SamplingFactors & 240) >> 4);
                         return _samplingX;
                     }
                 }
@@ -360,8 +379,8 @@ namespace Kaitai
                     {
                         if (f_samplingY)
                             return _samplingY;
-                        _samplingY = (int) ((SamplingFactors & 15));
                         f_samplingY = true;
+                        _samplingY = (int) (SamplingFactors & 15);
                         return _samplingY;
                     }
                 }
@@ -395,14 +414,14 @@ namespace Kaitai
             public Jpeg M_Root { get { return m_root; } }
             public Jpeg.Segment M_Parent { get { return m_parent; } }
         }
-        public partial class ExifInJpeg : KaitaiStruct
+        public partial class SegmentSos : KaitaiStruct
         {
-            public static ExifInJpeg FromFile(string fileName)
+            public static SegmentSos FromFile(string fileName)
             {
-                return new ExifInJpeg(new KaitaiStream(fileName));
+                return new SegmentSos(new KaitaiStream(fileName));
             }
 
-            public ExifInJpeg(KaitaiStream p__io, Jpeg.SegmentApp1 p__parent = null, Jpeg p__root = null) : base(p__io)
+            public SegmentSos(KaitaiStream p__io, Jpeg.Segment p__parent = null, Jpeg p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -410,98 +429,79 @@ namespace Kaitai
             }
             private void _read()
             {
-                _extraZero = m_io.ReadBytes(1);
-                if (!((KaitaiStream.ByteArrayCompare(ExtraZero, new byte[] { 0 }) == 0)))
+                _numComponents = m_io.ReadU1();
+                _components = new List<Component>();
+                for (var i = 0; i < NumComponents; i++)
                 {
-                    throw new ValidationNotEqualError(new byte[] { 0 }, ExtraZero, M_Io, "/types/exif_in_jpeg/seq/0");
+                    _components.Add(new Component(m_io, this, m_root));
                 }
-                __raw_data = m_io.ReadBytesFull();
-                var io___raw_data = new KaitaiStream(__raw_data);
-                _data = new Exif(io___raw_data);
+                _startSpectralSelection = m_io.ReadU1();
+                _endSpectral = m_io.ReadU1();
+                _apprBitPos = m_io.ReadU1();
             }
-            private byte[] _extraZero;
-            private Exif _data;
-            private Jpeg m_root;
-            private Jpeg.SegmentApp1 m_parent;
-            private byte[] __raw_data;
-            public byte[] ExtraZero { get { return _extraZero; } }
-            public Exif Data { get { return _data; } }
-            public Jpeg M_Root { get { return m_root; } }
-            public Jpeg.SegmentApp1 M_Parent { get { return m_parent; } }
-            public byte[] M_RawData { get { return __raw_data; } }
-        }
-        public partial class SegmentApp0 : KaitaiStruct
-        {
-            public static SegmentApp0 FromFile(string fileName)
+            public partial class Component : KaitaiStruct
             {
-                return new SegmentApp0(new KaitaiStream(fileName));
-            }
+                public static Component FromFile(string fileName)
+                {
+                    return new Component(new KaitaiStream(fileName));
+                }
 
+                public Component(KaitaiStream p__io, Jpeg.SegmentSos p__parent = null, Jpeg p__root = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    _read();
+                }
+                private void _read()
+                {
+                    _id = ((Jpeg.ComponentId) m_io.ReadU1());
+                    _huffmanTable = m_io.ReadU1();
+                }
+                private ComponentId _id;
+                private byte _huffmanTable;
+                private Jpeg m_root;
+                private Jpeg.SegmentSos m_parent;
 
-            public enum DensityUnit
-            {
-                NoUnits = 0,
-                PixelsPerInch = 1,
-                PixelsPerCm = 2,
+                /// <summary>
+                /// Scan component selector
+                /// </summary>
+                public ComponentId Id { get { return _id; } }
+                public byte HuffmanTable { get { return _huffmanTable; } }
+                public Jpeg M_Root { get { return m_root; } }
+                public Jpeg.SegmentSos M_Parent { get { return m_parent; } }
             }
-            public SegmentApp0(KaitaiStream p__io, Jpeg.Segment p__parent = null, Jpeg p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _magic = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(5));
-                _versionMajor = m_io.ReadU1();
-                _versionMinor = m_io.ReadU1();
-                _densityUnits = ((DensityUnit) m_io.ReadU1());
-                _densityX = m_io.ReadU2be();
-                _densityY = m_io.ReadU2be();
-                _thumbnailX = m_io.ReadU1();
-                _thumbnailY = m_io.ReadU1();
-                _thumbnail = m_io.ReadBytes(((ThumbnailX * ThumbnailY) * 3));
-            }
-            private string _magic;
-            private byte _versionMajor;
-            private byte _versionMinor;
-            private DensityUnit _densityUnits;
-            private ushort _densityX;
-            private ushort _densityY;
-            private byte _thumbnailX;
-            private byte _thumbnailY;
-            private byte[] _thumbnail;
+            private byte _numComponents;
+            private List<Component> _components;
+            private byte _startSpectralSelection;
+            private byte _endSpectral;
+            private byte _apprBitPos;
             private Jpeg m_root;
             private Jpeg.Segment m_parent;
-            public string Magic { get { return _magic; } }
-            public byte VersionMajor { get { return _versionMajor; } }
-            public byte VersionMinor { get { return _versionMinor; } }
-            public DensityUnit DensityUnits { get { return _densityUnits; } }
 
             /// <summary>
-            /// Horizontal pixel density. Must not be zero.
+            /// Number of components in scan
             /// </summary>
-            public ushort DensityX { get { return _densityX; } }
+            public byte NumComponents { get { return _numComponents; } }
 
             /// <summary>
-            /// Vertical pixel density. Must not be zero.
+            /// Scan components specification
             /// </summary>
-            public ushort DensityY { get { return _densityY; } }
+            public List<Component> Components { get { return _components; } }
 
             /// <summary>
-            /// Horizontal pixel count of the following embedded RGB thumbnail. May be zero.
+            /// Start of spectral selection or predictor selection
             /// </summary>
-            public byte ThumbnailX { get { return _thumbnailX; } }
+            public byte StartSpectralSelection { get { return _startSpectralSelection; } }
 
             /// <summary>
-            /// Vertical pixel count of the following embedded RGB thumbnail. May be zero.
+            /// End of spectral selection
             /// </summary>
-            public byte ThumbnailY { get { return _thumbnailY; } }
+            public byte EndSpectral { get { return _endSpectral; } }
 
             /// <summary>
-            /// Uncompressed 24 bit RGB (8 bits per color channel) raster thumbnail data in the order R0, G0, B0, ... Rn, Gn, Bn
+            /// Successive approximation bit position high + Successive approximation bit position low or point transform
             /// </summary>
-            public byte[] Thumbnail { get { return _thumbnail; } }
+            public byte ApprBitPos { get { return _apprBitPos; } }
             public Jpeg M_Root { get { return m_root; } }
             public Jpeg.Segment M_Parent { get { return m_parent; } }
         }

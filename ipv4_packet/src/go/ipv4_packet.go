@@ -20,22 +20,26 @@ type Ipv4Packet struct {
 	Body *ProtocolBody
 	_io *kaitai.Stream
 	_root *Ipv4Packet
-	_parent interface{}
+	_parent kaitai.Struct
 	_raw_Options []byte
 	_raw_Body []byte
-	_f_version bool
-	version int
 	_f_ihl bool
 	ihl int
 	_f_ihlBytes bool
 	ihlBytes int
+	_f_version bool
+	version int
 }
 func NewIpv4Packet() *Ipv4Packet {
 	return &Ipv4Packet{
 	}
 }
 
-func (this *Ipv4Packet) Read(io *kaitai.Stream, parent interface{}, root *Ipv4Packet) (err error) {
+func (this Ipv4Packet) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Ipv4Packet) Read(io *kaitai.Stream, parent kaitai.Struct, root *Ipv4Packet) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -96,7 +100,7 @@ func (this *Ipv4Packet) Read(io *kaitai.Stream, parent interface{}, root *Ipv4Pa
 	if err != nil {
 		return err
 	}
-	tmp12, err := this._io.ReadBytes(int((tmp11 - 20)))
+	tmp12, err := this._io.ReadBytes(int(tmp11 - 20))
 	if err != nil {
 		return err
 	}
@@ -113,7 +117,7 @@ func (this *Ipv4Packet) Read(io *kaitai.Stream, parent interface{}, root *Ipv4Pa
 	if err != nil {
 		return err
 	}
-	tmp15, err := this._io.ReadBytes(int((this.TotalLength - tmp14)))
+	tmp15, err := this._io.ReadBytes(int(this.TotalLength - tmp14))
 	if err != nil {
 		return err
 	}
@@ -121,40 +125,116 @@ func (this *Ipv4Packet) Read(io *kaitai.Stream, parent interface{}, root *Ipv4Pa
 	this._raw_Body = tmp15
 	_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
 	tmp16 := NewProtocolBody(this.Protocol)
-	err = tmp16.Read(_io__raw_Body, this, nil)
+	err = tmp16.Read(_io__raw_Body, nil, nil)
 	if err != nil {
 		return err
 	}
 	this.Body = tmp16
 	return err
 }
-func (this *Ipv4Packet) Version() (v int, err error) {
-	if (this._f_version) {
-		return this.version, nil
-	}
-	this.version = int(((this.B1 & 240) >> 4))
-	this._f_version = true
-	return this.version, nil
-}
 func (this *Ipv4Packet) Ihl() (v int, err error) {
 	if (this._f_ihl) {
 		return this.ihl, nil
 	}
-	this.ihl = int((this.B1 & 15))
 	this._f_ihl = true
+	this.ihl = int(this.B1 & 15)
 	return this.ihl, nil
 }
 func (this *Ipv4Packet) IhlBytes() (v int, err error) {
 	if (this._f_ihlBytes) {
 		return this.ihlBytes, nil
 	}
+	this._f_ihlBytes = true
 	tmp17, err := this.Ihl()
 	if err != nil {
 		return 0, err
 	}
-	this.ihlBytes = int((tmp17 * 4))
-	this._f_ihlBytes = true
+	this.ihlBytes = int(tmp17 * 4)
 	return this.ihlBytes, nil
+}
+func (this *Ipv4Packet) Version() (v int, err error) {
+	if (this._f_version) {
+		return this.version, nil
+	}
+	this._f_version = true
+	this.version = int((this.B1 & 240) >> 4)
+	return this.version, nil
+}
+type Ipv4Packet_Ipv4Option struct {
+	B1 uint8
+	Len uint8
+	Body []byte
+	_io *kaitai.Stream
+	_root *Ipv4Packet
+	_parent *Ipv4Packet_Ipv4Options
+	_f_copy bool
+	copy int
+	_f_number bool
+	number int
+	_f_optClass bool
+	optClass int
+}
+func NewIpv4Packet_Ipv4Option() *Ipv4Packet_Ipv4Option {
+	return &Ipv4Packet_Ipv4Option{
+	}
+}
+
+func (this Ipv4Packet_Ipv4Option) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Ipv4Packet_Ipv4Option) Read(io *kaitai.Stream, parent *Ipv4Packet_Ipv4Options, root *Ipv4Packet) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp18, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.B1 = tmp18
+	tmp19, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Len = tmp19
+	var tmp20 int;
+	if (this.Len > 2) {
+		tmp20 = this.Len - 2
+	} else {
+		tmp20 = 0
+	}
+	tmp21, err := this._io.ReadBytes(int(tmp20))
+	if err != nil {
+		return err
+	}
+	tmp21 = tmp21
+	this.Body = tmp21
+	return err
+}
+func (this *Ipv4Packet_Ipv4Option) Copy() (v int, err error) {
+	if (this._f_copy) {
+		return this.copy, nil
+	}
+	this._f_copy = true
+	this.copy = int((this.B1 & 128) >> 7)
+	return this.copy, nil
+}
+func (this *Ipv4Packet_Ipv4Option) Number() (v int, err error) {
+	if (this._f_number) {
+		return this.number, nil
+	}
+	this._f_number = true
+	this.number = int(this.B1 & 31)
+	return this.number, nil
+}
+func (this *Ipv4Packet_Ipv4Option) OptClass() (v int, err error) {
+	if (this._f_optClass) {
+		return this.optClass, nil
+	}
+	this._f_optClass = true
+	this.optClass = int((this.B1 & 96) >> 5)
+	return this.optClass, nil
 }
 type Ipv4Packet_Ipv4Options struct {
 	Entries []*Ipv4Packet_Ipv4Option
@@ -167,97 +247,29 @@ func NewIpv4Packet_Ipv4Options() *Ipv4Packet_Ipv4Options {
 	}
 }
 
+func (this Ipv4Packet_Ipv4Options) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Ipv4Packet_Ipv4Options) Read(io *kaitai.Stream, parent *Ipv4Packet, root *Ipv4Packet) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	for i := 1;; i++ {
-		tmp18, err := this._io.EOF()
+	for i := 0;; i++ {
+		tmp22, err := this._io.EOF()
 		if err != nil {
 			return err
 		}
-		if tmp18 {
+		if tmp22 {
 			break
 		}
-		tmp19 := NewIpv4Packet_Ipv4Option()
-		err = tmp19.Read(this._io, this, this._root)
+		tmp23 := NewIpv4Packet_Ipv4Option()
+		err = tmp23.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Entries = append(this.Entries, tmp19)
+		this.Entries = append(this.Entries, tmp23)
 	}
 	return err
-}
-type Ipv4Packet_Ipv4Option struct {
-	B1 uint8
-	Len uint8
-	Body []byte
-	_io *kaitai.Stream
-	_root *Ipv4Packet
-	_parent *Ipv4Packet_Ipv4Options
-	_f_copy bool
-	copy int
-	_f_optClass bool
-	optClass int
-	_f_number bool
-	number int
-}
-func NewIpv4Packet_Ipv4Option() *Ipv4Packet_Ipv4Option {
-	return &Ipv4Packet_Ipv4Option{
-	}
-}
-
-func (this *Ipv4Packet_Ipv4Option) Read(io *kaitai.Stream, parent *Ipv4Packet_Ipv4Options, root *Ipv4Packet) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp20, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.B1 = tmp20
-	tmp21, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Len = tmp21
-	var tmp22 int;
-	if (this.Len > 2) {
-		tmp22 = (this.Len - 2)
-	} else {
-		tmp22 = 0
-	}
-	tmp23, err := this._io.ReadBytes(int(tmp22))
-	if err != nil {
-		return err
-	}
-	tmp23 = tmp23
-	this.Body = tmp23
-	return err
-}
-func (this *Ipv4Packet_Ipv4Option) Copy() (v int, err error) {
-	if (this._f_copy) {
-		return this.copy, nil
-	}
-	this.copy = int(((this.B1 & 128) >> 7))
-	this._f_copy = true
-	return this.copy, nil
-}
-func (this *Ipv4Packet_Ipv4Option) OptClass() (v int, err error) {
-	if (this._f_optClass) {
-		return this.optClass, nil
-	}
-	this.optClass = int(((this.B1 & 96) >> 5))
-	this._f_optClass = true
-	return this.optClass, nil
-}
-func (this *Ipv4Packet_Ipv4Option) Number() (v int, err error) {
-	if (this._f_number) {
-		return this.number, nil
-	}
-	this.number = int((this.B1 & 31))
-	this._f_number = true
-	return this.number, nil
 }

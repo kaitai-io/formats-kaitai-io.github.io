@@ -94,180 +94,6 @@ namespace Kaitai
                 _signature = new Signature(io___raw_signature, this, m_root);
             }
         }
-        public partial class SerializedValue : KaitaiStruct
-        {
-            public static SerializedValue FromFile(string fileName)
-            {
-                return new SerializedValue(new KaitaiStream(fileName));
-            }
-
-            public SerializedValue(KaitaiStream p__io, KaitaiStruct p__parent = null, PharWithoutStub p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_parsed = false;
-                _read();
-            }
-            private void _read()
-            {
-                _raw = m_io.ReadBytesFull();
-            }
-            private bool f_parsed;
-            private PhpSerializedValue _parsed;
-
-            /// <summary>
-            /// The serialized value, parsed as a structure.
-            /// </summary>
-            public PhpSerializedValue Parsed
-            {
-                get
-                {
-                    if (f_parsed)
-                        return _parsed;
-                    long _pos = m_io.Pos;
-                    m_io.Seek(0);
-                    _parsed = new PhpSerializedValue(m_io);
-                    m_io.Seek(_pos);
-                    f_parsed = true;
-                    return _parsed;
-                }
-            }
-            private byte[] _raw;
-            private PharWithoutStub m_root;
-            private KaitaiStruct m_parent;
-
-            /// <summary>
-            /// The serialized value, as a raw byte array.
-            /// </summary>
-            public byte[] Raw { get { return _raw; } }
-            public PharWithoutStub M_Root { get { return m_root; } }
-            public KaitaiStruct M_Parent { get { return m_parent; } }
-        }
-        public partial class Signature : KaitaiStruct
-        {
-            public static Signature FromFile(string fileName)
-            {
-                return new Signature(new KaitaiStream(fileName));
-            }
-
-            public Signature(KaitaiStream p__io, PharWithoutStub p__parent = null, PharWithoutStub p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _data = m_io.ReadBytes(((M_Io.Size - M_Io.Pos) - 8));
-                _type = ((PharWithoutStub.SignatureType) m_io.ReadU4le());
-                _magic = m_io.ReadBytes(4);
-                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 71, 66, 77, 66 }) == 0)))
-                {
-                    throw new ValidationNotEqualError(new byte[] { 71, 66, 77, 66 }, Magic, M_Io, "/types/signature/seq/2");
-                }
-            }
-            private byte[] _data;
-            private SignatureType _type;
-            private byte[] _magic;
-            private PharWithoutStub m_root;
-            private PharWithoutStub m_parent;
-
-            /// <summary>
-            /// The signature data. The size and contents depend on the
-            /// signature type.
-            /// </summary>
-            public byte[] Data { get { return _data; } }
-
-            /// <summary>
-            /// The signature type.
-            /// </summary>
-            public SignatureType Type { get { return _type; } }
-            public byte[] Magic { get { return _magic; } }
-            public PharWithoutStub M_Root { get { return m_root; } }
-            public PharWithoutStub M_Parent { get { return m_parent; } }
-        }
-        public partial class FileFlags : KaitaiStruct
-        {
-            public static FileFlags FromFile(string fileName)
-            {
-                return new FileFlags(new KaitaiStream(fileName));
-            }
-
-            public FileFlags(KaitaiStream p__io, PharWithoutStub.FileEntry p__parent = null, PharWithoutStub p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_permissions = false;
-                f_zlibCompressed = false;
-                f_bzip2Compressed = false;
-                _read();
-            }
-            private void _read()
-            {
-                _value = m_io.ReadU4le();
-            }
-            private bool f_permissions;
-            private int _permissions;
-
-            /// <summary>
-            /// The file's permission bits.
-            /// </summary>
-            public int Permissions
-            {
-                get
-                {
-                    if (f_permissions)
-                        return _permissions;
-                    _permissions = (int) ((Value & 511));
-                    f_permissions = true;
-                    return _permissions;
-                }
-            }
-            private bool f_zlibCompressed;
-            private bool _zlibCompressed;
-
-            /// <summary>
-            /// Whether this file's data is stored using zlib compression.
-            /// </summary>
-            public bool ZlibCompressed
-            {
-                get
-                {
-                    if (f_zlibCompressed)
-                        return _zlibCompressed;
-                    _zlibCompressed = (bool) ((Value & 4096) != 0);
-                    f_zlibCompressed = true;
-                    return _zlibCompressed;
-                }
-            }
-            private bool f_bzip2Compressed;
-            private bool _bzip2Compressed;
-
-            /// <summary>
-            /// Whether this file's data is stored using bzip2 compression.
-            /// </summary>
-            public bool Bzip2Compressed
-            {
-                get
-                {
-                    if (f_bzip2Compressed)
-                        return _bzip2Compressed;
-                    _bzip2Compressed = (bool) ((Value & 8192) != 0);
-                    f_bzip2Compressed = true;
-                    return _bzip2Compressed;
-                }
-            }
-            private uint _value;
-            private PharWithoutStub m_root;
-            private PharWithoutStub.FileEntry m_parent;
-
-            /// <summary>
-            /// The unparsed flag bits.
-            /// </summary>
-            public uint Value { get { return _value; } }
-            public PharWithoutStub M_Root { get { return m_root; } }
-            public PharWithoutStub.FileEntry M_Parent { get { return m_parent; } }
-        }
 
         /// <summary>
         /// A phar API version number. This version number is meant to indicate
@@ -336,6 +162,186 @@ namespace Kaitai
             public PharWithoutStub M_Root { get { return m_root; } }
             public PharWithoutStub.Manifest M_Parent { get { return m_parent; } }
         }
+        public partial class FileEntry : KaitaiStruct
+        {
+            public static FileEntry FromFile(string fileName)
+            {
+                return new FileEntry(new KaitaiStream(fileName));
+            }
+
+            public FileEntry(KaitaiStream p__io, PharWithoutStub.Manifest p__parent = null, PharWithoutStub p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _lenFilename = m_io.ReadU4le();
+                _filename = m_io.ReadBytes(LenFilename);
+                _lenDataUncompressed = m_io.ReadU4le();
+                _timestamp = m_io.ReadU4le();
+                _lenDataCompressed = m_io.ReadU4le();
+                _crc32 = m_io.ReadU4le();
+                _flags = new FileFlags(m_io, this, m_root);
+                _lenMetadata = m_io.ReadU4le();
+                if (LenMetadata != 0) {
+                    __raw_metadata = m_io.ReadBytes(LenMetadata);
+                    var io___raw_metadata = new KaitaiStream(__raw_metadata);
+                    _metadata = new SerializedValue(io___raw_metadata, this, m_root);
+                }
+            }
+            private uint _lenFilename;
+            private byte[] _filename;
+            private uint _lenDataUncompressed;
+            private uint _timestamp;
+            private uint _lenDataCompressed;
+            private uint _crc32;
+            private FileFlags _flags;
+            private uint _lenMetadata;
+            private SerializedValue _metadata;
+            private PharWithoutStub m_root;
+            private PharWithoutStub.Manifest m_parent;
+            private byte[] __raw_metadata;
+
+            /// <summary>
+            /// The length of the file name, in bytes.
+            /// </summary>
+            public uint LenFilename { get { return _lenFilename; } }
+
+            /// <summary>
+            /// The name of this file. If the name ends with a slash, this entry
+            /// represents a directory, otherwise a regular file. Directory entries
+            /// are supported since phar API version 1.1.1.
+            /// (Explicit directory entries are only needed for empty directories.
+            /// Non-empty directories are implied by the files located inside them.)
+            /// </summary>
+            public byte[] Filename { get { return _filename; } }
+
+            /// <summary>
+            /// The length of the file's data when uncompressed, in bytes.
+            /// </summary>
+            public uint LenDataUncompressed { get { return _lenDataUncompressed; } }
+
+            /// <summary>
+            /// The time at which the file was added or last updated, as a
+            /// Unix timestamp.
+            /// </summary>
+            public uint Timestamp { get { return _timestamp; } }
+
+            /// <summary>
+            /// The length of the file's data when compressed, in bytes.
+            /// </summary>
+            public uint LenDataCompressed { get { return _lenDataCompressed; } }
+
+            /// <summary>
+            /// The CRC32 checksum of the file's uncompressed data.
+            /// </summary>
+            public uint Crc32 { get { return _crc32; } }
+
+            /// <summary>
+            /// Flags for this file.
+            /// </summary>
+            public FileFlags Flags { get { return _flags; } }
+
+            /// <summary>
+            /// The length of the metadata, in bytes, or 0 if there is none.
+            /// </summary>
+            public uint LenMetadata { get { return _lenMetadata; } }
+
+            /// <summary>
+            /// Metadata for this file, in the format used by PHP's
+            /// `serialize` function. The meaning of the serialized data is not
+            /// specified further, it may be used to store arbitrary custom data
+            /// about the file.
+            /// </summary>
+            public SerializedValue Metadata { get { return _metadata; } }
+            public PharWithoutStub M_Root { get { return m_root; } }
+            public PharWithoutStub.Manifest M_Parent { get { return m_parent; } }
+            public byte[] M_RawMetadata { get { return __raw_metadata; } }
+        }
+        public partial class FileFlags : KaitaiStruct
+        {
+            public static FileFlags FromFile(string fileName)
+            {
+                return new FileFlags(new KaitaiStream(fileName));
+            }
+
+            public FileFlags(KaitaiStream p__io, PharWithoutStub.FileEntry p__parent = null, PharWithoutStub p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_bzip2Compressed = false;
+                f_permissions = false;
+                f_zlibCompressed = false;
+                _read();
+            }
+            private void _read()
+            {
+                _value = m_io.ReadU4le();
+            }
+            private bool f_bzip2Compressed;
+            private bool _bzip2Compressed;
+
+            /// <summary>
+            /// Whether this file's data is stored using bzip2 compression.
+            /// </summary>
+            public bool Bzip2Compressed
+            {
+                get
+                {
+                    if (f_bzip2Compressed)
+                        return _bzip2Compressed;
+                    f_bzip2Compressed = true;
+                    _bzip2Compressed = (bool) ((Value & 8192) != 0);
+                    return _bzip2Compressed;
+                }
+            }
+            private bool f_permissions;
+            private int _permissions;
+
+            /// <summary>
+            /// The file's permission bits.
+            /// </summary>
+            public int Permissions
+            {
+                get
+                {
+                    if (f_permissions)
+                        return _permissions;
+                    f_permissions = true;
+                    _permissions = (int) (Value & 511);
+                    return _permissions;
+                }
+            }
+            private bool f_zlibCompressed;
+            private bool _zlibCompressed;
+
+            /// <summary>
+            /// Whether this file's data is stored using zlib compression.
+            /// </summary>
+            public bool ZlibCompressed
+            {
+                get
+                {
+                    if (f_zlibCompressed)
+                        return _zlibCompressed;
+                    f_zlibCompressed = true;
+                    _zlibCompressed = (bool) ((Value & 4096) != 0);
+                    return _zlibCompressed;
+                }
+            }
+            private uint _value;
+            private PharWithoutStub m_root;
+            private PharWithoutStub.FileEntry m_parent;
+
+            /// <summary>
+            /// The unparsed flag bits.
+            /// </summary>
+            public uint Value { get { return _value; } }
+            public PharWithoutStub M_Root { get { return m_root; } }
+            public PharWithoutStub.FileEntry M_Parent { get { return m_parent; } }
+        }
         public partial class GlobalFlags : KaitaiStruct
         {
             public static GlobalFlags FromFile(string fileName)
@@ -347,32 +353,14 @@ namespace Kaitai
             {
                 m_parent = p__parent;
                 m_root = p__root;
-                f_anyZlibCompressed = false;
                 f_anyBzip2Compressed = false;
+                f_anyZlibCompressed = false;
                 f_hasSignature = false;
                 _read();
             }
             private void _read()
             {
                 _value = m_io.ReadU4le();
-            }
-            private bool f_anyZlibCompressed;
-            private bool _anyZlibCompressed;
-
-            /// <summary>
-            /// Whether any of the files in this phar are stored using
-            /// zlib compression.
-            /// </summary>
-            public bool AnyZlibCompressed
-            {
-                get
-                {
-                    if (f_anyZlibCompressed)
-                        return _anyZlibCompressed;
-                    _anyZlibCompressed = (bool) ((Value & 4096) != 0);
-                    f_anyZlibCompressed = true;
-                    return _anyZlibCompressed;
-                }
             }
             private bool f_anyBzip2Compressed;
             private bool _anyBzip2Compressed;
@@ -387,9 +375,27 @@ namespace Kaitai
                 {
                     if (f_anyBzip2Compressed)
                         return _anyBzip2Compressed;
-                    _anyBzip2Compressed = (bool) ((Value & 8192) != 0);
                     f_anyBzip2Compressed = true;
+                    _anyBzip2Compressed = (bool) ((Value & 8192) != 0);
                     return _anyBzip2Compressed;
+                }
+            }
+            private bool f_anyZlibCompressed;
+            private bool _anyZlibCompressed;
+
+            /// <summary>
+            /// Whether any of the files in this phar are stored using
+            /// zlib compression.
+            /// </summary>
+            public bool AnyZlibCompressed
+            {
+                get
+                {
+                    if (f_anyZlibCompressed)
+                        return _anyZlibCompressed;
+                    f_anyZlibCompressed = true;
+                    _anyZlibCompressed = (bool) ((Value & 4096) != 0);
+                    return _anyZlibCompressed;
                 }
             }
             private bool f_hasSignature;
@@ -404,8 +410,8 @@ namespace Kaitai
                 {
                     if (f_hasSignature)
                         return _hasSignature;
-                    _hasSignature = (bool) ((Value & 65536) != 0);
                     f_hasSignature = true;
+                    _hasSignature = (bool) ((Value & 65536) != 0);
                     return _hasSignature;
                 }
             }
@@ -520,14 +526,63 @@ namespace Kaitai
             public PharWithoutStub M_Parent { get { return m_parent; } }
             public byte[] M_RawMetadata { get { return __raw_metadata; } }
         }
-        public partial class FileEntry : KaitaiStruct
+        public partial class SerializedValue : KaitaiStruct
         {
-            public static FileEntry FromFile(string fileName)
+            public static SerializedValue FromFile(string fileName)
             {
-                return new FileEntry(new KaitaiStream(fileName));
+                return new SerializedValue(new KaitaiStream(fileName));
             }
 
-            public FileEntry(KaitaiStream p__io, PharWithoutStub.Manifest p__parent = null, PharWithoutStub p__root = null) : base(p__io)
+            public SerializedValue(KaitaiStream p__io, KaitaiStruct p__parent = null, PharWithoutStub p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_parsed = false;
+                _read();
+            }
+            private void _read()
+            {
+                _raw = m_io.ReadBytesFull();
+            }
+            private bool f_parsed;
+            private PhpSerializedValue _parsed;
+
+            /// <summary>
+            /// The serialized value, parsed as a structure.
+            /// </summary>
+            public PhpSerializedValue Parsed
+            {
+                get
+                {
+                    if (f_parsed)
+                        return _parsed;
+                    f_parsed = true;
+                    long _pos = m_io.Pos;
+                    m_io.Seek(0);
+                    _parsed = new PhpSerializedValue(m_io);
+                    m_io.Seek(_pos);
+                    return _parsed;
+                }
+            }
+            private byte[] _raw;
+            private PharWithoutStub m_root;
+            private KaitaiStruct m_parent;
+
+            /// <summary>
+            /// The serialized value, as a raw byte array.
+            /// </summary>
+            public byte[] Raw { get { return _raw; } }
+            public PharWithoutStub M_Root { get { return m_root; } }
+            public KaitaiStruct M_Parent { get { return m_parent; } }
+        }
+        public partial class Signature : KaitaiStruct
+        {
+            public static Signature FromFile(string fileName)
+            {
+                return new Signature(new KaitaiStream(fileName));
+            }
+
+            public Signature(KaitaiStream p__io, PharWithoutStub p__parent = null, PharWithoutStub p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -535,88 +590,33 @@ namespace Kaitai
             }
             private void _read()
             {
-                _lenFilename = m_io.ReadU4le();
-                _filename = m_io.ReadBytes(LenFilename);
-                _lenDataUncompressed = m_io.ReadU4le();
-                _timestamp = m_io.ReadU4le();
-                _lenDataCompressed = m_io.ReadU4le();
-                _crc32 = m_io.ReadU4le();
-                _flags = new FileFlags(m_io, this, m_root);
-                _lenMetadata = m_io.ReadU4le();
-                if (LenMetadata != 0) {
-                    __raw_metadata = m_io.ReadBytes(LenMetadata);
-                    var io___raw_metadata = new KaitaiStream(__raw_metadata);
-                    _metadata = new SerializedValue(io___raw_metadata, this, m_root);
+                _data = m_io.ReadBytes((M_Io.Size - M_Io.Pos) - 8);
+                _type = ((PharWithoutStub.SignatureType) m_io.ReadU4le());
+                _magic = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 71, 66, 77, 66 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 71, 66, 77, 66 }, _magic, m_io, "/types/signature/seq/2");
                 }
             }
-            private uint _lenFilename;
-            private byte[] _filename;
-            private uint _lenDataUncompressed;
-            private uint _timestamp;
-            private uint _lenDataCompressed;
-            private uint _crc32;
-            private FileFlags _flags;
-            private uint _lenMetadata;
-            private SerializedValue _metadata;
+            private byte[] _data;
+            private SignatureType _type;
+            private byte[] _magic;
             private PharWithoutStub m_root;
-            private PharWithoutStub.Manifest m_parent;
-            private byte[] __raw_metadata;
+            private PharWithoutStub m_parent;
 
             /// <summary>
-            /// The length of the file name, in bytes.
+            /// The signature data. The size and contents depend on the
+            /// signature type.
             /// </summary>
-            public uint LenFilename { get { return _lenFilename; } }
+            public byte[] Data { get { return _data; } }
 
             /// <summary>
-            /// The name of this file. If the name ends with a slash, this entry
-            /// represents a directory, otherwise a regular file. Directory entries
-            /// are supported since phar API version 1.1.1.
-            /// (Explicit directory entries are only needed for empty directories.
-            /// Non-empty directories are implied by the files located inside them.)
+            /// The signature type.
             /// </summary>
-            public byte[] Filename { get { return _filename; } }
-
-            /// <summary>
-            /// The length of the file's data when uncompressed, in bytes.
-            /// </summary>
-            public uint LenDataUncompressed { get { return _lenDataUncompressed; } }
-
-            /// <summary>
-            /// The time at which the file was added or last updated, as a
-            /// Unix timestamp.
-            /// </summary>
-            public uint Timestamp { get { return _timestamp; } }
-
-            /// <summary>
-            /// The length of the file's data when compressed, in bytes.
-            /// </summary>
-            public uint LenDataCompressed { get { return _lenDataCompressed; } }
-
-            /// <summary>
-            /// The CRC32 checksum of the file's uncompressed data.
-            /// </summary>
-            public uint Crc32 { get { return _crc32; } }
-
-            /// <summary>
-            /// Flags for this file.
-            /// </summary>
-            public FileFlags Flags { get { return _flags; } }
-
-            /// <summary>
-            /// The length of the metadata, in bytes, or 0 if there is none.
-            /// </summary>
-            public uint LenMetadata { get { return _lenMetadata; } }
-
-            /// <summary>
-            /// Metadata for this file, in the format used by PHP's
-            /// `serialize` function. The meaning of the serialized data is not
-            /// specified further, it may be used to store arbitrary custom data
-            /// about the file.
-            /// </summary>
-            public SerializedValue Metadata { get { return _metadata; } }
+            public SignatureType Type { get { return _type; } }
+            public byte[] Magic { get { return _magic; } }
             public PharWithoutStub M_Root { get { return m_root; } }
-            public PharWithoutStub.Manifest M_Parent { get { return m_parent; } }
-            public byte[] M_RawMetadata { get { return __raw_metadata; } }
+            public PharWithoutStub M_Parent { get { return m_parent; } }
         }
         private Manifest _manifest;
         private List<byte[]> _files;

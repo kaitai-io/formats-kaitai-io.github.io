@@ -14,17 +14,17 @@ digraph {
 			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
 			<TR><TD>as_int</TD><TD>(is_le ? as_int_le : as_int_be)</TD></TR>
 		</TABLE>>];
+		bcd__inst__as_int_be [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>as_int_be</TD><TD>digits[last_idx] + (num_digits &lt; 2 ? 0 : digits[last_idx - 1] * 10 + (num_digits &lt; 3 ? 0 : digits[last_idx - 2] * 100 + (num_digits &lt; 4 ? 0 : digits[last_idx - 3] * 1000 + (num_digits &lt; 5 ? 0 : digits[last_idx - 4] * 10000 + (num_digits &lt; 6 ? 0 : digits[last_idx - 5] * 100000 + (num_digits &lt; 7 ? 0 : digits[last_idx - 6] * 1000000 + (num_digits &lt; 8 ? 0 : digits[last_idx - 7] * 10000000)))))))</TD></TR>
+		</TABLE>>];
 		bcd__inst__as_int_le [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-			<TR><TD>as_int_le</TD><TD>(digits[0] + (num_digits &lt; 2 ? 0 : ((digits[1] * 10) + (num_digits &lt; 3 ? 0 : ((digits[2] * 100) + (num_digits &lt; 4 ? 0 : ((digits[3] * 1000) + (num_digits &lt; 5 ? 0 : ((digits[4] * 10000) + (num_digits &lt; 6 ? 0 : ((digits[5] * 100000) + (num_digits &lt; 7 ? 0 : ((digits[6] * 1000000) + (num_digits &lt; 8 ? 0 : (digits[7] * 10000000)))))))))))))))</TD></TR>
+			<TR><TD>as_int_le</TD><TD>digits[0] + (num_digits &lt; 2 ? 0 : digits[1] * 10 + (num_digits &lt; 3 ? 0 : digits[2] * 100 + (num_digits &lt; 4 ? 0 : digits[3] * 1000 + (num_digits &lt; 5 ? 0 : digits[4] * 10000 + (num_digits &lt; 6 ? 0 : digits[5] * 100000 + (num_digits &lt; 7 ? 0 : digits[6] * 1000000 + (num_digits &lt; 8 ? 0 : digits[7] * 10000000)))))))</TD></TR>
 		</TABLE>>];
 		bcd__inst__last_idx [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-			<TR><TD>last_idx</TD><TD>(num_digits - 1)</TD></TR>
-		</TABLE>>];
-		bcd__inst__as_int_be [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-			<TR><TD>as_int_be</TD><TD>(digits[last_idx] + (num_digits &lt; 2 ? 0 : ((digits[(last_idx - 1)] * 10) + (num_digits &lt; 3 ? 0 : ((digits[(last_idx - 2)] * 100) + (num_digits &lt; 4 ? 0 : ((digits[(last_idx - 3)] * 1000) + (num_digits &lt; 5 ? 0 : ((digits[(last_idx - 4)] * 10000) + (num_digits &lt; 6 ? 0 : ((digits[(last_idx - 5)] * 100000) + (num_digits &lt; 7 ? 0 : ((digits[(last_idx - 6)] * 1000000) + (num_digits &lt; 8 ? 0 : (digits[(last_idx - 7)] * 10000000)))))))))))))))</TD></TR>
+			<TR><TD>last_idx</TD><TD>num_digits - 1</TD></TR>
 		</TABLE>>];
 bcd__seq_digits_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
@@ -36,43 +36,10 @@ bcd__seq_digits_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	bcd__params:is_le_type -> bcd__inst__as_int [color="#404040"];
 	bcd__inst__as_int_le:as_int_le_type -> bcd__inst__as_int [color="#404040"];
 	bcd__inst__as_int_be:as_int_be_type -> bcd__inst__as_int [color="#404040"];
+	bcd__seq:digits_type -> bcd__inst__as_int_be [color="#404040"];
+	bcd__inst__last_idx:last_idx_type -> bcd__inst__as_int_be [color="#404040"];
+	bcd__params:num_digits_type -> bcd__inst__as_int_be [color="#404040"];
 	bcd__seq:digits_type -> bcd__inst__as_int_le [color="#404040"];
 	bcd__params:num_digits_type -> bcd__inst__as_int_le [color="#404040"];
-	bcd__seq:digits_type -> bcd__inst__as_int_le [color="#404040"];
-	bcd__params:num_digits_type -> bcd__inst__as_int_le [color="#404040"];
-	bcd__seq:digits_type -> bcd__inst__as_int_le [color="#404040"];
-	bcd__params:num_digits_type -> bcd__inst__as_int_le [color="#404040"];
-	bcd__seq:digits_type -> bcd__inst__as_int_le [color="#404040"];
-	bcd__params:num_digits_type -> bcd__inst__as_int_le [color="#404040"];
-	bcd__seq:digits_type -> bcd__inst__as_int_le [color="#404040"];
-	bcd__params:num_digits_type -> bcd__inst__as_int_le [color="#404040"];
-	bcd__seq:digits_type -> bcd__inst__as_int_le [color="#404040"];
-	bcd__params:num_digits_type -> bcd__inst__as_int_le [color="#404040"];
-	bcd__seq:digits_type -> bcd__inst__as_int_le [color="#404040"];
-	bcd__params:num_digits_type -> bcd__inst__as_int_le [color="#404040"];
-	bcd__seq:digits_type -> bcd__inst__as_int_le [color="#404040"];
 	bcd__params:num_digits_type -> bcd__inst__last_idx [color="#404040"];
-	bcd__seq:digits_type -> bcd__inst__as_int_be [color="#404040"];
-	bcd__inst__last_idx:last_idx_type -> bcd__inst__as_int_be [color="#404040"];
-	bcd__params:num_digits_type -> bcd__inst__as_int_be [color="#404040"];
-	bcd__seq:digits_type -> bcd__inst__as_int_be [color="#404040"];
-	bcd__inst__last_idx:last_idx_type -> bcd__inst__as_int_be [color="#404040"];
-	bcd__params:num_digits_type -> bcd__inst__as_int_be [color="#404040"];
-	bcd__seq:digits_type -> bcd__inst__as_int_be [color="#404040"];
-	bcd__inst__last_idx:last_idx_type -> bcd__inst__as_int_be [color="#404040"];
-	bcd__params:num_digits_type -> bcd__inst__as_int_be [color="#404040"];
-	bcd__seq:digits_type -> bcd__inst__as_int_be [color="#404040"];
-	bcd__inst__last_idx:last_idx_type -> bcd__inst__as_int_be [color="#404040"];
-	bcd__params:num_digits_type -> bcd__inst__as_int_be [color="#404040"];
-	bcd__seq:digits_type -> bcd__inst__as_int_be [color="#404040"];
-	bcd__inst__last_idx:last_idx_type -> bcd__inst__as_int_be [color="#404040"];
-	bcd__params:num_digits_type -> bcd__inst__as_int_be [color="#404040"];
-	bcd__seq:digits_type -> bcd__inst__as_int_be [color="#404040"];
-	bcd__inst__last_idx:last_idx_type -> bcd__inst__as_int_be [color="#404040"];
-	bcd__params:num_digits_type -> bcd__inst__as_int_be [color="#404040"];
-	bcd__seq:digits_type -> bcd__inst__as_int_be [color="#404040"];
-	bcd__inst__last_idx:last_idx_type -> bcd__inst__as_int_be [color="#404040"];
-	bcd__params:num_digits_type -> bcd__inst__as_int_be [color="#404040"];
-	bcd__seq:digits_type -> bcd__inst__as_int_be [color="#404040"];
-	bcd__inst__last_idx:last_idx_type -> bcd__inst__as_int_be [color="#404040"];
 }

@@ -11,20 +11,20 @@ type
     `parent`*: KaitaiStruct
     `imgBodiesInst`: seq[AndroidBootldrQcom_ImgBody]
     `imgBodiesInstFlag`: bool
-  AndroidBootldrQcom_ImgHeader* = ref object of KaitaiStruct
-    `name`*: string
-    `lenBody`*: uint32
-    `parent`*: AndroidBootldrQcom
   AndroidBootldrQcom_ImgBody* = ref object of KaitaiStruct
     `body`*: seq[byte]
     `idx`*: int32
     `parent`*: AndroidBootldrQcom
     `imgHeaderInst`: AndroidBootldrQcom_ImgHeader
     `imgHeaderInstFlag`: bool
+  AndroidBootldrQcom_ImgHeader* = ref object of KaitaiStruct
+    `name`*: string
+    `lenBody`*: uint32
+    `parent`*: AndroidBootldrQcom
 
 proc read*(_: typedesc[AndroidBootldrQcom], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): AndroidBootldrQcom
-proc read*(_: typedesc[AndroidBootldrQcom_ImgHeader], io: KaitaiStream, root: KaitaiStruct, parent: AndroidBootldrQcom): AndroidBootldrQcom_ImgHeader
 proc read*(_: typedesc[AndroidBootldrQcom_ImgBody], io: KaitaiStream, root: KaitaiStruct, parent: AndroidBootldrQcom, idx: any): AndroidBootldrQcom_ImgBody
+proc read*(_: typedesc[AndroidBootldrQcom_ImgHeader], io: KaitaiStream, root: KaitaiStruct, parent: AndroidBootldrQcom): AndroidBootldrQcom_ImgHeader
 
 proc imgBodies*(this: AndroidBootldrQcom): seq[AndroidBootldrQcom_ImgBody]
 proc imgHeader*(this: AndroidBootldrQcom_ImgBody): AndroidBootldrQcom_ImgHeader
@@ -196,22 +196,6 @@ proc imgBodies(this: AndroidBootldrQcom): seq[AndroidBootldrQcom_ImgBody] =
 proc fromFile*(_: typedesc[AndroidBootldrQcom], filename: string): AndroidBootldrQcom =
   AndroidBootldrQcom.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[AndroidBootldrQcom_ImgHeader], io: KaitaiStream, root: KaitaiStruct, parent: AndroidBootldrQcom): AndroidBootldrQcom_ImgHeader =
-  template this: untyped = result
-  this = new(AndroidBootldrQcom_ImgHeader)
-  let root = if root == nil: cast[AndroidBootldrQcom](this) else: cast[AndroidBootldrQcom](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let nameExpr = encode(this.io.readBytes(int(64)).bytesTerminate(0, false), "ASCII")
-  this.name = nameExpr
-  let lenBodyExpr = this.io.readU4le()
-  this.lenBody = lenBodyExpr
-
-proc fromFile*(_: typedesc[AndroidBootldrQcom_ImgHeader], filename: string): AndroidBootldrQcom_ImgHeader =
-  AndroidBootldrQcom_ImgHeader.read(newKaitaiFileStream(filename), nil, nil)
-
 proc read*(_: typedesc[AndroidBootldrQcom_ImgBody], io: KaitaiStream, root: KaitaiStruct, parent: AndroidBootldrQcom, idx: any): AndroidBootldrQcom_ImgBody =
   template this: untyped = result
   this = new(AndroidBootldrQcom_ImgBody)
@@ -235,4 +219,20 @@ proc imgHeader(this: AndroidBootldrQcom_ImgBody): AndroidBootldrQcom_ImgHeader =
 
 proc fromFile*(_: typedesc[AndroidBootldrQcom_ImgBody], filename: string): AndroidBootldrQcom_ImgBody =
   AndroidBootldrQcom_ImgBody.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[AndroidBootldrQcom_ImgHeader], io: KaitaiStream, root: KaitaiStruct, parent: AndroidBootldrQcom): AndroidBootldrQcom_ImgHeader =
+  template this: untyped = result
+  this = new(AndroidBootldrQcom_ImgHeader)
+  let root = if root == nil: cast[AndroidBootldrQcom](this) else: cast[AndroidBootldrQcom](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let nameExpr = encode(this.io.readBytes(int(64)).bytesTerminate(0, false), "ASCII")
+  this.name = nameExpr
+  let lenBodyExpr = this.io.readU4le()
+  this.lenBody = lenBodyExpr
+
+proc fromFile*(_: typedesc[AndroidBootldrQcom_ImgHeader], filename: string): AndroidBootldrQcom_ImgHeader =
+  AndroidBootldrQcom_ImgHeader.read(newKaitaiFileStream(filename), nil, nil)
 

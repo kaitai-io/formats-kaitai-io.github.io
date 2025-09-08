@@ -51,14 +51,18 @@ type QuakeMdl struct {
 	Frames []*QuakeMdl_MdlFrame
 	_io *kaitai.Stream
 	_root *QuakeMdl
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewQuakeMdl() *QuakeMdl {
 	return &QuakeMdl{
 	}
 }
 
-func (this *QuakeMdl) Read(io *kaitai.Stream, parent interface{}, root *QuakeMdl) (err error) {
+func (this QuakeMdl) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *QuakeMdl) Read(io *kaitai.Stream, parent kaitai.Struct, root *QuakeMdl) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -107,77 +111,91 @@ func (this *QuakeMdl) Read(io *kaitai.Stream, parent interface{}, root *QuakeMdl
 	}
 	return err
 }
-type QuakeMdl_MdlVertex struct {
-	Values []uint8
-	NormalIndex uint8
-	_io *kaitai.Stream
-	_root *QuakeMdl
-	_parent interface{}
-}
-func NewQuakeMdl_MdlVertex() *QuakeMdl_MdlVertex {
-	return &QuakeMdl_MdlVertex{
-	}
-}
-
-func (this *QuakeMdl_MdlVertex) Read(io *kaitai.Stream, parent interface{}, root *QuakeMdl) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	for i := 0; i < int(3); i++ {
-		_ = i
-		tmp6, err := this._io.ReadU1()
-		if err != nil {
-			return err
-		}
-		this.Values = append(this.Values, tmp6)
-	}
-	tmp7, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.NormalIndex = tmp7
-	return err
-}
-
-/**
- * @see <a href="https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L79-L83">Source</a>
- * @see <a href="https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD2">Source</a>
- */
-type QuakeMdl_MdlTexcoord struct {
-	OnSeam int32
-	S int32
-	T int32
+type QuakeMdl_MdlFrame struct {
+	Type int32
+	Min *QuakeMdl_MdlVertex
+	Max *QuakeMdl_MdlVertex
+	Time []float32
+	Frames []*QuakeMdl_MdlSimpleFrame
 	_io *kaitai.Stream
 	_root *QuakeMdl
 	_parent *QuakeMdl
+	_f_numSimpleFrames bool
+	numSimpleFrames int32
 }
-func NewQuakeMdl_MdlTexcoord() *QuakeMdl_MdlTexcoord {
-	return &QuakeMdl_MdlTexcoord{
+func NewQuakeMdl_MdlFrame() *QuakeMdl_MdlFrame {
+	return &QuakeMdl_MdlFrame{
 	}
 }
 
-func (this *QuakeMdl_MdlTexcoord) Read(io *kaitai.Stream, parent *QuakeMdl, root *QuakeMdl) (err error) {
+func (this QuakeMdl_MdlFrame) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *QuakeMdl_MdlFrame) Read(io *kaitai.Stream, parent *QuakeMdl, root *QuakeMdl) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp8, err := this._io.ReadS4le()
+	tmp6, err := this._io.ReadS4le()
 	if err != nil {
 		return err
 	}
-	this.OnSeam = int32(tmp8)
-	tmp9, err := this._io.ReadS4le()
+	this.Type = int32(tmp6)
+	if (this.Type != 0) {
+		tmp7 := NewQuakeMdl_MdlVertex()
+		err = tmp7.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Min = tmp7
+	}
+	if (this.Type != 0) {
+		tmp8 := NewQuakeMdl_MdlVertex()
+		err = tmp8.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Max = tmp8
+	}
+	if (this.Type != 0) {
+		for i := 0; i < int(this.Type); i++ {
+			_ = i
+			tmp9, err := this._io.ReadF4le()
+			if err != nil {
+				return err
+			}
+			this.Time = append(this.Time, tmp9)
+		}
+	}
+	tmp10, err := this.NumSimpleFrames()
 	if err != nil {
 		return err
 	}
-	this.S = int32(tmp9)
-	tmp10, err := this._io.ReadS4le()
-	if err != nil {
-		return err
+	for i := 0; i < int(tmp10); i++ {
+		_ = i
+		tmp11 := NewQuakeMdl_MdlSimpleFrame()
+		err = tmp11.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Frames = append(this.Frames, tmp11)
 	}
-	this.T = int32(tmp10)
 	return err
+}
+func (this *QuakeMdl_MdlFrame) NumSimpleFrames() (v int32, err error) {
+	if (this._f_numSimpleFrames) {
+		return this.numSimpleFrames, nil
+	}
+	this._f_numSimpleFrames = true
+	var tmp12 int8;
+	if (this.Type == 0) {
+		tmp12 = 1
+	} else {
+		tmp12 = this.Type
+	}
+	this.numSimpleFrames = int32(tmp12)
+	return this.numSimpleFrames, nil
 }
 
 /**
@@ -211,96 +229,100 @@ func NewQuakeMdl_MdlHeader() *QuakeMdl_MdlHeader {
 	}
 }
 
+func (this QuakeMdl_MdlHeader) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *QuakeMdl_MdlHeader) Read(io *kaitai.Stream, parent *QuakeMdl, root *QuakeMdl) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp11, err := this._io.ReadBytes(int(4))
+	tmp13, err := this._io.ReadBytes(int(4))
 	if err != nil {
 		return err
 	}
-	tmp11 = tmp11
-	this.Ident = tmp11
+	tmp13 = tmp13
+	this.Ident = tmp13
 	if !(bytes.Equal(this.Ident, []uint8{73, 68, 80, 79})) {
 		return kaitai.NewValidationNotEqualError([]uint8{73, 68, 80, 79}, this.Ident, this._io, "/types/mdl_header/seq/0")
 	}
-	tmp12, err := this._io.ReadS4le()
+	tmp14, err := this._io.ReadS4le()
 	if err != nil {
 		return err
 	}
-	this.Version = int32(tmp12)
+	this.Version = int32(tmp14)
 	if !(this.Version == 6) {
 		return kaitai.NewValidationNotEqualError(6, this.Version, this._io, "/types/mdl_header/seq/1")
 	}
-	tmp13 := NewQuakeMdl_Vec3()
-	err = tmp13.Read(this._io, this, this._root)
+	tmp15 := NewQuakeMdl_Vec3()
+	err = tmp15.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Scale = tmp13
-	tmp14 := NewQuakeMdl_Vec3()
-	err = tmp14.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Origin = tmp14
-	tmp15, err := this._io.ReadF4le()
-	if err != nil {
-		return err
-	}
-	this.Radius = float32(tmp15)
+	this.Scale = tmp15
 	tmp16 := NewQuakeMdl_Vec3()
 	err = tmp16.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.EyePosition = tmp16
-	tmp17, err := this._io.ReadS4le()
+	this.Origin = tmp16
+	tmp17, err := this._io.ReadF4le()
 	if err != nil {
 		return err
 	}
-	this.NumSkins = int32(tmp17)
-	tmp18, err := this._io.ReadS4le()
+	this.Radius = float32(tmp17)
+	tmp18 := NewQuakeMdl_Vec3()
+	err = tmp18.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.SkinWidth = int32(tmp18)
+	this.EyePosition = tmp18
 	tmp19, err := this._io.ReadS4le()
 	if err != nil {
 		return err
 	}
-	this.SkinHeight = int32(tmp19)
+	this.NumSkins = int32(tmp19)
 	tmp20, err := this._io.ReadS4le()
 	if err != nil {
 		return err
 	}
-	this.NumVerts = int32(tmp20)
+	this.SkinWidth = int32(tmp20)
 	tmp21, err := this._io.ReadS4le()
 	if err != nil {
 		return err
 	}
-	this.NumTris = int32(tmp21)
+	this.SkinHeight = int32(tmp21)
 	tmp22, err := this._io.ReadS4le()
 	if err != nil {
 		return err
 	}
-	this.NumFrames = int32(tmp22)
+	this.NumVerts = int32(tmp22)
 	tmp23, err := this._io.ReadS4le()
 	if err != nil {
 		return err
 	}
-	this.Synctype = int32(tmp23)
+	this.NumTris = int32(tmp23)
 	tmp24, err := this._io.ReadS4le()
 	if err != nil {
 		return err
 	}
-	this.Flags = int32(tmp24)
-	tmp25, err := this._io.ReadF4le()
+	this.NumFrames = int32(tmp24)
+	tmp25, err := this._io.ReadS4le()
 	if err != nil {
 		return err
 	}
-	this.Size = float32(tmp25)
+	this.Synctype = int32(tmp25)
+	tmp26, err := this._io.ReadS4le()
+	if err != nil {
+		return err
+	}
+	this.Flags = int32(tmp26)
+	tmp27, err := this._io.ReadF4le()
+	if err != nil {
+		return err
+	}
+	this.Size = float32(tmp27)
 	return err
 }
 
@@ -311,8 +333,8 @@ func (this *QuakeMdl_MdlHeader) SkinSize() (v int, err error) {
 	if (this._f_skinSize) {
 		return this.skinSize, nil
 	}
-	this.skinSize = int((this.SkinWidth * this.SkinHeight))
 	this._f_skinSize = true
+	this.skinSize = int(this.SkinWidth * this.SkinHeight)
 	return this.skinSize, nil
 }
 
@@ -353,6 +375,58 @@ func (this *QuakeMdl_MdlHeader) SkinSize() (v int, err error) {
 /**
  * Number of animation frames included in this model.
  */
+type QuakeMdl_MdlSimpleFrame struct {
+	BboxMin *QuakeMdl_MdlVertex
+	BboxMax *QuakeMdl_MdlVertex
+	Name string
+	Vertices []*QuakeMdl_MdlVertex
+	_io *kaitai.Stream
+	_root *QuakeMdl
+	_parent *QuakeMdl_MdlFrame
+}
+func NewQuakeMdl_MdlSimpleFrame() *QuakeMdl_MdlSimpleFrame {
+	return &QuakeMdl_MdlSimpleFrame{
+	}
+}
+
+func (this QuakeMdl_MdlSimpleFrame) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *QuakeMdl_MdlSimpleFrame) Read(io *kaitai.Stream, parent *QuakeMdl_MdlFrame, root *QuakeMdl) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp28 := NewQuakeMdl_MdlVertex()
+	err = tmp28.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.BboxMin = tmp28
+	tmp29 := NewQuakeMdl_MdlVertex()
+	err = tmp29.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.BboxMax = tmp29
+	tmp30, err := this._io.ReadBytes(int(16))
+	if err != nil {
+		return err
+	}
+	tmp30 = kaitai.BytesTerminate(kaitai.BytesStripRight(tmp30, 0), 0, false)
+	this.Name = string(tmp30)
+	for i := 0; i < int(this._root.Header.NumVerts); i++ {
+		_ = i
+		tmp31 := NewQuakeMdl_MdlVertex()
+		err = tmp31.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Vertices = append(this.Vertices, tmp31)
+	}
+	return err
+}
 type QuakeMdl_MdlSkin struct {
 	Group int32
 	SingleTextureData []byte
@@ -368,190 +442,108 @@ func NewQuakeMdl_MdlSkin() *QuakeMdl_MdlSkin {
 	}
 }
 
+func (this QuakeMdl_MdlSkin) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *QuakeMdl_MdlSkin) Read(io *kaitai.Stream, parent *QuakeMdl, root *QuakeMdl) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp26, err := this._io.ReadS4le()
+	tmp32, err := this._io.ReadS4le()
 	if err != nil {
 		return err
 	}
-	this.Group = int32(tmp26)
+	this.Group = int32(tmp32)
 	if (this.Group == 0) {
-		tmp27, err := this._root.Header.SkinSize()
+		tmp33, err := this._root.Header.SkinSize()
 		if err != nil {
 			return err
 		}
-		tmp28, err := this._io.ReadBytes(int(tmp27))
+		tmp34, err := this._io.ReadBytes(int(tmp33))
 		if err != nil {
 			return err
 		}
-		tmp28 = tmp28
-		this.SingleTextureData = tmp28
+		tmp34 = tmp34
+		this.SingleTextureData = tmp34
 	}
 	if (this.Group != 0) {
-		tmp29, err := this._io.ReadU4le()
+		tmp35, err := this._io.ReadU4le()
 		if err != nil {
 			return err
 		}
-		this.NumFrames = uint32(tmp29)
-	}
-	if (this.Group != 0) {
-		for i := 0; i < int(this.NumFrames); i++ {
-			_ = i
-			tmp30, err := this._io.ReadF4le()
-			if err != nil {
-				return err
-			}
-			this.FrameTimes = append(this.FrameTimes, tmp30)
-		}
+		this.NumFrames = uint32(tmp35)
 	}
 	if (this.Group != 0) {
 		for i := 0; i < int(this.NumFrames); i++ {
-			_ = i
-			tmp31, err := this._root.Header.SkinSize()
-			if err != nil {
-				return err
-			}
-			tmp32, err := this._io.ReadBytes(int(tmp31))
-			if err != nil {
-				return err
-			}
-			tmp32 = tmp32
-			this.GroupTextureData = append(this.GroupTextureData, tmp32)
-		}
-	}
-	return err
-}
-type QuakeMdl_MdlFrame struct {
-	Type int32
-	Min *QuakeMdl_MdlVertex
-	Max *QuakeMdl_MdlVertex
-	Time []float32
-	Frames []*QuakeMdl_MdlSimpleFrame
-	_io *kaitai.Stream
-	_root *QuakeMdl
-	_parent *QuakeMdl
-	_f_numSimpleFrames bool
-	numSimpleFrames int32
-}
-func NewQuakeMdl_MdlFrame() *QuakeMdl_MdlFrame {
-	return &QuakeMdl_MdlFrame{
-	}
-}
-
-func (this *QuakeMdl_MdlFrame) Read(io *kaitai.Stream, parent *QuakeMdl, root *QuakeMdl) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp33, err := this._io.ReadS4le()
-	if err != nil {
-		return err
-	}
-	this.Type = int32(tmp33)
-	if (this.Type != 0) {
-		tmp34 := NewQuakeMdl_MdlVertex()
-		err = tmp34.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Min = tmp34
-	}
-	if (this.Type != 0) {
-		tmp35 := NewQuakeMdl_MdlVertex()
-		err = tmp35.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Max = tmp35
-	}
-	if (this.Type != 0) {
-		for i := 0; i < int(this.Type); i++ {
 			_ = i
 			tmp36, err := this._io.ReadF4le()
 			if err != nil {
 				return err
 			}
-			this.Time = append(this.Time, tmp36)
+			this.FrameTimes = append(this.FrameTimes, tmp36)
 		}
 	}
-	tmp37, err := this.NumSimpleFrames()
-	if err != nil {
-		return err
-	}
-	for i := 0; i < int(tmp37); i++ {
-		_ = i
-		tmp38 := NewQuakeMdl_MdlSimpleFrame()
-		err = tmp38.Read(this._io, this, this._root)
-		if err != nil {
-			return err
+	if (this.Group != 0) {
+		for i := 0; i < int(this.NumFrames); i++ {
+			_ = i
+			tmp37, err := this._root.Header.SkinSize()
+			if err != nil {
+				return err
+			}
+			tmp38, err := this._io.ReadBytes(int(tmp37))
+			if err != nil {
+				return err
+			}
+			tmp38 = tmp38
+			this.GroupTextureData = append(this.GroupTextureData, tmp38)
 		}
-		this.Frames = append(this.Frames, tmp38)
 	}
 	return err
 }
-func (this *QuakeMdl_MdlFrame) NumSimpleFrames() (v int32, err error) {
-	if (this._f_numSimpleFrames) {
-		return this.numSimpleFrames, nil
-	}
-	var tmp39 int8;
-	if (this.Type == 0) {
-		tmp39 = 1
-	} else {
-		tmp39 = this.Type
-	}
-	this.numSimpleFrames = int32(tmp39)
-	this._f_numSimpleFrames = true
-	return this.numSimpleFrames, nil
-}
-type QuakeMdl_MdlSimpleFrame struct {
-	BboxMin *QuakeMdl_MdlVertex
-	BboxMax *QuakeMdl_MdlVertex
-	Name string
-	Vertices []*QuakeMdl_MdlVertex
+
+/**
+ * @see <a href="https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L79-L83">Source</a>
+ * @see <a href="https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD2">Source</a>
+ */
+type QuakeMdl_MdlTexcoord struct {
+	OnSeam int32
+	S int32
+	T int32
 	_io *kaitai.Stream
 	_root *QuakeMdl
-	_parent *QuakeMdl_MdlFrame
+	_parent *QuakeMdl
 }
-func NewQuakeMdl_MdlSimpleFrame() *QuakeMdl_MdlSimpleFrame {
-	return &QuakeMdl_MdlSimpleFrame{
+func NewQuakeMdl_MdlTexcoord() *QuakeMdl_MdlTexcoord {
+	return &QuakeMdl_MdlTexcoord{
 	}
 }
 
-func (this *QuakeMdl_MdlSimpleFrame) Read(io *kaitai.Stream, parent *QuakeMdl_MdlFrame, root *QuakeMdl) (err error) {
+func (this QuakeMdl_MdlTexcoord) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *QuakeMdl_MdlTexcoord) Read(io *kaitai.Stream, parent *QuakeMdl, root *QuakeMdl) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp40 := NewQuakeMdl_MdlVertex()
-	err = tmp40.Read(this._io, this, this._root)
+	tmp39, err := this._io.ReadS4le()
 	if err != nil {
 		return err
 	}
-	this.BboxMin = tmp40
-	tmp41 := NewQuakeMdl_MdlVertex()
-	err = tmp41.Read(this._io, this, this._root)
+	this.OnSeam = int32(tmp39)
+	tmp40, err := this._io.ReadS4le()
 	if err != nil {
 		return err
 	}
-	this.BboxMax = tmp41
-	tmp42, err := this._io.ReadBytes(int(16))
+	this.S = int32(tmp40)
+	tmp41, err := this._io.ReadS4le()
 	if err != nil {
 		return err
 	}
-	tmp42 = kaitai.BytesTerminate(kaitai.BytesStripRight(tmp42, 0), 0, false)
-	this.Name = string(tmp42)
-	for i := 0; i < int(this._root.Header.NumVerts); i++ {
-		_ = i
-		tmp43 := NewQuakeMdl_MdlVertex()
-		err = tmp43.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Vertices = append(this.Vertices, tmp43)
-	}
+	this.T = int32(tmp41)
 	return err
 }
 
@@ -573,24 +565,64 @@ func NewQuakeMdl_MdlTriangle() *QuakeMdl_MdlTriangle {
 	}
 }
 
+func (this QuakeMdl_MdlTriangle) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *QuakeMdl_MdlTriangle) Read(io *kaitai.Stream, parent *QuakeMdl, root *QuakeMdl) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp44, err := this._io.ReadS4le()
+	tmp42, err := this._io.ReadS4le()
 	if err != nil {
 		return err
 	}
-	this.FacesFront = int32(tmp44)
+	this.FacesFront = int32(tmp42)
 	for i := 0; i < int(3); i++ {
 		_ = i
-		tmp45, err := this._io.ReadS4le()
+		tmp43, err := this._io.ReadS4le()
 		if err != nil {
 			return err
 		}
-		this.Vertices = append(this.Vertices, tmp45)
+		this.Vertices = append(this.Vertices, tmp43)
 	}
+	return err
+}
+type QuakeMdl_MdlVertex struct {
+	Values []uint8
+	NormalIndex uint8
+	_io *kaitai.Stream
+	_root *QuakeMdl
+	_parent kaitai.Struct
+}
+func NewQuakeMdl_MdlVertex() *QuakeMdl_MdlVertex {
+	return &QuakeMdl_MdlVertex{
+	}
+}
+
+func (this QuakeMdl_MdlVertex) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *QuakeMdl_MdlVertex) Read(io *kaitai.Stream, parent kaitai.Struct, root *QuakeMdl) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	for i := 0; i < int(3); i++ {
+		_ = i
+		tmp44, err := this._io.ReadU1()
+		if err != nil {
+			return err
+		}
+		this.Values = append(this.Values, tmp44)
+	}
+	tmp45, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.NormalIndex = tmp45
 	return err
 }
 
@@ -610,6 +642,10 @@ type QuakeMdl_Vec3 struct {
 func NewQuakeMdl_Vec3() *QuakeMdl_Vec3 {
 	return &QuakeMdl_Vec3{
 	}
+}
+
+func (this QuakeMdl_Vec3) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *QuakeMdl_Vec3) Read(io *kaitai.Stream, parent *QuakeMdl_MdlHeader, root *QuakeMdl) (err error) {

@@ -1,10 +1,27 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 #include "ethernet_frame.h"
+std::set<ethernet_frame_t::ether_type_enum_t> ethernet_frame_t::_build_values_ether_type_enum_t() {
+    std::set<ethernet_frame_t::ether_type_enum_t> _t;
+    _t.insert(ethernet_frame_t::ETHER_TYPE_ENUM_IPV4);
+    _t.insert(ethernet_frame_t::ETHER_TYPE_ENUM_X_75_INTERNET);
+    _t.insert(ethernet_frame_t::ETHER_TYPE_ENUM_NBS_INTERNET);
+    _t.insert(ethernet_frame_t::ETHER_TYPE_ENUM_ECMA_INTERNET);
+    _t.insert(ethernet_frame_t::ETHER_TYPE_ENUM_CHAOSNET);
+    _t.insert(ethernet_frame_t::ETHER_TYPE_ENUM_X_25_LEVEL_3);
+    _t.insert(ethernet_frame_t::ETHER_TYPE_ENUM_ARP);
+    _t.insert(ethernet_frame_t::ETHER_TYPE_ENUM_IEEE_802_1Q_TPID);
+    _t.insert(ethernet_frame_t::ETHER_TYPE_ENUM_IPV6);
+    return _t;
+}
+const std::set<ethernet_frame_t::ether_type_enum_t> ethernet_frame_t::_values_ether_type_enum_t = ethernet_frame_t::_build_values_ether_type_enum_t();
+bool ethernet_frame_t::_is_defined_ether_type_enum_t(ethernet_frame_t::ether_type_enum_t v) {
+    return ethernet_frame_t::_values_ether_type_enum_t.find(v) != ethernet_frame_t::_values_ether_type_enum_t.end();
+}
 
 ethernet_frame_t::ethernet_frame_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, ethernet_frame_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     m_tci = 0;
     m__io__raw_body = 0;
     f_ether_type = false;
@@ -104,7 +121,7 @@ void ethernet_frame_t::tag_control_info_t::_clean_up() {
 ethernet_frame_t::ether_type_enum_t ethernet_frame_t::ether_type() {
     if (f_ether_type)
         return m_ether_type;
-    m_ether_type = ((ether_type_1() == ethernet_frame_t::ETHER_TYPE_ENUM_IEEE_802_1Q_TPID) ? (ether_type_2()) : (ether_type_1()));
     f_ether_type = true;
+    m_ether_type = ((ether_type_1() == ethernet_frame_t::ETHER_TYPE_ENUM_IEEE_802_1Q_TPID) ? (ether_type_2()) : (ether_type_1()));
     return m_ether_type;
 }

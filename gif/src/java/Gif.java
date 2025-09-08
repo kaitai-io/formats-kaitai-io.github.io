@@ -7,8 +7,9 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Arrays;
-import java.nio.charset.Charset;
 
 
 /**
@@ -85,9 +86,8 @@ public class Gif extends KaitaiStruct {
         this.hdr = new Header(this._io, this, _root);
         this.logicalScreenDescriptor = new LogicalScreenDescriptorStruct(this._io, this, _root);
         if (logicalScreenDescriptor().hasColorTable()) {
-            this._raw_globalColorTable = this._io.readBytes((logicalScreenDescriptor().colorTableSize() * 3));
-            KaitaiStream _io__raw_globalColorTable = new ByteBufferKaitaiStream(_raw_globalColorTable);
-            this.globalColorTable = new ColorTable(_io__raw_globalColorTable, this, _root);
+            KaitaiStream _io_globalColorTable = this._io.substream(logicalScreenDescriptor().colorTableSize() * 3);
+            this.globalColorTable = new ColorTable(_io_globalColorTable, this, _root);
         }
         this.blocks = new ArrayList<Block>();
         {
@@ -101,221 +101,56 @@ public class Gif extends KaitaiStruct {
         }
     }
 
-    /**
-     * @see <a href="https://www.w3.org/Graphics/GIF/spec-gif89a.txt">- section 22</a>
-     */
-    public static class ImageData extends KaitaiStruct {
-        public static ImageData fromFile(String fileName) throws IOException {
-            return new ImageData(new ByteBufferKaitaiStream(fileName));
+    public void _fetchInstances() {
+        this.hdr._fetchInstances();
+        this.logicalScreenDescriptor._fetchInstances();
+        if (logicalScreenDescriptor().hasColorTable()) {
+            this.globalColorTable._fetchInstances();
         }
-
-        public ImageData(KaitaiStream _io) {
-            this(_io, null, null);
+        for (int i = 0; i < this.blocks.size(); i++) {
+            this.blocks.get(((Number) (i)).intValue())._fetchInstances();
         }
-
-        public ImageData(KaitaiStream _io, Gif.LocalImageDescriptor _parent) {
-            this(_io, _parent, null);
-        }
-
-        public ImageData(KaitaiStream _io, Gif.LocalImageDescriptor _parent, Gif _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.lzwMinCodeSize = this._io.readU1();
-            this.subblocks = new Subblocks(this._io, this, _root);
-        }
-        private int lzwMinCodeSize;
-        private Subblocks subblocks;
-        private Gif _root;
-        private Gif.LocalImageDescriptor _parent;
-        public int lzwMinCodeSize() { return lzwMinCodeSize; }
-        public Subblocks subblocks() { return subblocks; }
-        public Gif _root() { return _root; }
-        public Gif.LocalImageDescriptor _parent() { return _parent; }
     }
-    public static class ColorTableEntry extends KaitaiStruct {
-        public static ColorTableEntry fromFile(String fileName) throws IOException {
-            return new ColorTableEntry(new ByteBufferKaitaiStream(fileName));
+    public static class ApplicationId extends KaitaiStruct {
+        public static ApplicationId fromFile(String fileName) throws IOException {
+            return new ApplicationId(new ByteBufferKaitaiStream(fileName));
         }
 
-        public ColorTableEntry(KaitaiStream _io) {
+        public ApplicationId(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public ColorTableEntry(KaitaiStream _io, Gif.ColorTable _parent) {
+        public ApplicationId(KaitaiStream _io, Gif.ExtApplication _parent) {
             this(_io, _parent, null);
         }
 
-        public ColorTableEntry(KaitaiStream _io, Gif.ColorTable _parent, Gif _root) {
+        public ApplicationId(KaitaiStream _io, Gif.ExtApplication _parent, Gif _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.red = this._io.readU1();
-            this.green = this._io.readU1();
-            this.blue = this._io.readU1();
-        }
-        private int red;
-        private int green;
-        private int blue;
-        private Gif _root;
-        private Gif.ColorTable _parent;
-        public int red() { return red; }
-        public int green() { return green; }
-        public int blue() { return blue; }
-        public Gif _root() { return _root; }
-        public Gif.ColorTable _parent() { return _parent; }
-    }
-
-    /**
-     * @see <a href="https://www.w3.org/Graphics/GIF/spec-gif89a.txt">- section 18</a>
-     */
-    public static class LogicalScreenDescriptorStruct extends KaitaiStruct {
-        public static LogicalScreenDescriptorStruct fromFile(String fileName) throws IOException {
-            return new LogicalScreenDescriptorStruct(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public LogicalScreenDescriptorStruct(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public LogicalScreenDescriptorStruct(KaitaiStream _io, Gif _parent) {
-            this(_io, _parent, null);
-        }
-
-        public LogicalScreenDescriptorStruct(KaitaiStream _io, Gif _parent, Gif _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.screenWidth = this._io.readU2le();
-            this.screenHeight = this._io.readU2le();
-            this.flags = this._io.readU1();
-            this.bgColorIndex = this._io.readU1();
-            this.pixelAspectRatio = this._io.readU1();
-        }
-        private Boolean hasColorTable;
-        public Boolean hasColorTable() {
-            if (this.hasColorTable != null)
-                return this.hasColorTable;
-            boolean _tmp = (boolean) ((flags() & 128) != 0);
-            this.hasColorTable = _tmp;
-            return this.hasColorTable;
-        }
-        private Integer colorTableSize;
-        public Integer colorTableSize() {
-            if (this.colorTableSize != null)
-                return this.colorTableSize;
-            int _tmp = (int) ((2 << (flags() & 7)));
-            this.colorTableSize = _tmp;
-            return this.colorTableSize;
-        }
-        private int screenWidth;
-        private int screenHeight;
-        private int flags;
-        private int bgColorIndex;
-        private int pixelAspectRatio;
-        private Gif _root;
-        private Gif _parent;
-        public int screenWidth() { return screenWidth; }
-        public int screenHeight() { return screenHeight; }
-        public int flags() { return flags; }
-        public int bgColorIndex() { return bgColorIndex; }
-        public int pixelAspectRatio() { return pixelAspectRatio; }
-        public Gif _root() { return _root; }
-        public Gif _parent() { return _parent; }
-    }
-    public static class LocalImageDescriptor extends KaitaiStruct {
-        public static LocalImageDescriptor fromFile(String fileName) throws IOException {
-            return new LocalImageDescriptor(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public LocalImageDescriptor(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public LocalImageDescriptor(KaitaiStream _io, Gif.Block _parent) {
-            this(_io, _parent, null);
-        }
-
-        public LocalImageDescriptor(KaitaiStream _io, Gif.Block _parent, Gif _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.left = this._io.readU2le();
-            this.top = this._io.readU2le();
-            this.width = this._io.readU2le();
-            this.height = this._io.readU2le();
-            this.flags = this._io.readU1();
-            if (hasColorTable()) {
-                this._raw_localColorTable = this._io.readBytes((colorTableSize() * 3));
-                KaitaiStream _io__raw_localColorTable = new ByteBufferKaitaiStream(_raw_localColorTable);
-                this.localColorTable = new ColorTable(_io__raw_localColorTable, this, _root);
+            this.lenBytes = this._io.readU1();
+            if (!(this.lenBytes == 11)) {
+                throw new KaitaiStream.ValidationNotEqualError(11, this.lenBytes, this._io, "/types/application_id/seq/0");
             }
-            this.imageData = new ImageData(this._io, this, _root);
+            this.applicationIdentifier = new String(this._io.readBytes(8), StandardCharsets.US_ASCII);
+            this.applicationAuthCode = this._io.readBytes(3);
         }
-        private Boolean hasColorTable;
-        public Boolean hasColorTable() {
-            if (this.hasColorTable != null)
-                return this.hasColorTable;
-            boolean _tmp = (boolean) ((flags() & 128) != 0);
-            this.hasColorTable = _tmp;
-            return this.hasColorTable;
+
+        public void _fetchInstances() {
         }
-        private Boolean hasInterlace;
-        public Boolean hasInterlace() {
-            if (this.hasInterlace != null)
-                return this.hasInterlace;
-            boolean _tmp = (boolean) ((flags() & 64) != 0);
-            this.hasInterlace = _tmp;
-            return this.hasInterlace;
-        }
-        private Boolean hasSortedColorTable;
-        public Boolean hasSortedColorTable() {
-            if (this.hasSortedColorTable != null)
-                return this.hasSortedColorTable;
-            boolean _tmp = (boolean) ((flags() & 32) != 0);
-            this.hasSortedColorTable = _tmp;
-            return this.hasSortedColorTable;
-        }
-        private Integer colorTableSize;
-        public Integer colorTableSize() {
-            if (this.colorTableSize != null)
-                return this.colorTableSize;
-            int _tmp = (int) ((2 << (flags() & 7)));
-            this.colorTableSize = _tmp;
-            return this.colorTableSize;
-        }
-        private int left;
-        private int top;
-        private int width;
-        private int height;
-        private int flags;
-        private ColorTable localColorTable;
-        private ImageData imageData;
+        private int lenBytes;
+        private String applicationIdentifier;
+        private byte[] applicationAuthCode;
         private Gif _root;
-        private Gif.Block _parent;
-        private byte[] _raw_localColorTable;
-        public int left() { return left; }
-        public int top() { return top; }
-        public int width() { return width; }
-        public int height() { return height; }
-        public int flags() { return flags; }
-        public ColorTable localColorTable() { return localColorTable; }
-        public ImageData imageData() { return imageData; }
+        private Gif.ExtApplication _parent;
+        public int lenBytes() { return lenBytes; }
+        public String applicationIdentifier() { return applicationIdentifier; }
+        public byte[] applicationAuthCode() { return applicationAuthCode; }
         public Gif _root() { return _root; }
-        public Gif.Block _parent() { return _parent; }
-        public byte[] _raw_localColorTable() { return _raw_localColorTable; }
+        public Gif.ExtApplication _parent() { return _parent; }
     }
     public static class Block extends KaitaiStruct {
         public static Block fromFile(String fileName) throws IOException {
@@ -348,6 +183,24 @@ public class Gif extends KaitaiStruct {
                     }
                     case LOCAL_IMAGE_DESCRIPTOR: {
                         this.body = new LocalImageDescriptor(this._io, this, _root);
+                        break;
+                    }
+                    }
+                }
+            }
+        }
+
+        public void _fetchInstances() {
+            {
+                BlockType on = blockType();
+                if (on != null) {
+                    switch (blockType()) {
+                    case EXTENSION: {
+                        ((Extension) (this.body))._fetchInstances();
+                        break;
+                    }
+                    case LOCAL_IMAGE_DESCRIPTOR: {
+                        ((LocalImageDescriptor) (this.body))._fetchInstances();
                         break;
                     }
                     }
@@ -396,188 +249,56 @@ public class Gif extends KaitaiStruct {
                 }
             }
         }
-        private ArrayList<ColorTableEntry> entries;
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.entries.size(); i++) {
+                this.entries.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private List<ColorTableEntry> entries;
         private Gif _root;
         private KaitaiStruct _parent;
-        public ArrayList<ColorTableEntry> entries() { return entries; }
+        public List<ColorTableEntry> entries() { return entries; }
         public Gif _root() { return _root; }
         public KaitaiStruct _parent() { return _parent; }
     }
-
-    /**
-     * @see <a href="https://www.w3.org/Graphics/GIF/spec-gif89a.txt">- section 17</a>
-     */
-    public static class Header extends KaitaiStruct {
-        public static Header fromFile(String fileName) throws IOException {
-            return new Header(new ByteBufferKaitaiStream(fileName));
+    public static class ColorTableEntry extends KaitaiStruct {
+        public static ColorTableEntry fromFile(String fileName) throws IOException {
+            return new ColorTableEntry(new ByteBufferKaitaiStream(fileName));
         }
 
-        public Header(KaitaiStream _io) {
+        public ColorTableEntry(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public Header(KaitaiStream _io, Gif _parent) {
+        public ColorTableEntry(KaitaiStream _io, Gif.ColorTable _parent) {
             this(_io, _parent, null);
         }
 
-        public Header(KaitaiStream _io, Gif _parent, Gif _root) {
+        public ColorTableEntry(KaitaiStream _io, Gif.ColorTable _parent, Gif _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.magic = this._io.readBytes(3);
-            if (!(Arrays.equals(magic(), new byte[] { 71, 73, 70 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 71, 73, 70 }, magic(), _io(), "/types/header/seq/0");
-            }
-            this.version = new String(this._io.readBytes(3), Charset.forName("ASCII"));
+            this.red = this._io.readU1();
+            this.green = this._io.readU1();
+            this.blue = this._io.readU1();
         }
-        private byte[] magic;
-        private String version;
+
+        public void _fetchInstances() {
+        }
+        private int red;
+        private int green;
+        private int blue;
         private Gif _root;
-        private Gif _parent;
-        public byte[] magic() { return magic; }
-        public String version() { return version; }
+        private Gif.ColorTable _parent;
+        public int red() { return red; }
+        public int green() { return green; }
+        public int blue() { return blue; }
         public Gif _root() { return _root; }
-        public Gif _parent() { return _parent; }
-    }
-
-    /**
-     * @see <a href="https://www.w3.org/Graphics/GIF/spec-gif89a.txt">- section 23</a>
-     */
-    public static class ExtGraphicControl extends KaitaiStruct {
-        public static ExtGraphicControl fromFile(String fileName) throws IOException {
-            return new ExtGraphicControl(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public ExtGraphicControl(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public ExtGraphicControl(KaitaiStream _io, Gif.Extension _parent) {
-            this(_io, _parent, null);
-        }
-
-        public ExtGraphicControl(KaitaiStream _io, Gif.Extension _parent, Gif _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.blockSize = this._io.readBytes(1);
-            if (!(Arrays.equals(blockSize(), new byte[] { 4 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 4 }, blockSize(), _io(), "/types/ext_graphic_control/seq/0");
-            }
-            this.flags = this._io.readU1();
-            this.delayTime = this._io.readU2le();
-            this.transparentIdx = this._io.readU1();
-            this.terminator = this._io.readBytes(1);
-            if (!(Arrays.equals(terminator(), new byte[] { 0 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0 }, terminator(), _io(), "/types/ext_graphic_control/seq/4");
-            }
-        }
-        private Boolean transparentColorFlag;
-        public Boolean transparentColorFlag() {
-            if (this.transparentColorFlag != null)
-                return this.transparentColorFlag;
-            boolean _tmp = (boolean) ((flags() & 1) != 0);
-            this.transparentColorFlag = _tmp;
-            return this.transparentColorFlag;
-        }
-        private Boolean userInputFlag;
-        public Boolean userInputFlag() {
-            if (this.userInputFlag != null)
-                return this.userInputFlag;
-            boolean _tmp = (boolean) ((flags() & 2) != 0);
-            this.userInputFlag = _tmp;
-            return this.userInputFlag;
-        }
-        private byte[] blockSize;
-        private int flags;
-        private int delayTime;
-        private int transparentIdx;
-        private byte[] terminator;
-        private Gif _root;
-        private Gif.Extension _parent;
-        public byte[] blockSize() { return blockSize; }
-        public int flags() { return flags; }
-        public int delayTime() { return delayTime; }
-        public int transparentIdx() { return transparentIdx; }
-        public byte[] terminator() { return terminator; }
-        public Gif _root() { return _root; }
-        public Gif.Extension _parent() { return _parent; }
-    }
-    public static class Subblock extends KaitaiStruct {
-        public static Subblock fromFile(String fileName) throws IOException {
-            return new Subblock(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Subblock(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Subblock(KaitaiStream _io, KaitaiStruct _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Subblock(KaitaiStream _io, KaitaiStruct _parent, Gif _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.lenBytes = this._io.readU1();
-            this.bytes = this._io.readBytes(lenBytes());
-        }
-        private int lenBytes;
-        private byte[] bytes;
-        private Gif _root;
-        private KaitaiStruct _parent;
-        public int lenBytes() { return lenBytes; }
-        public byte[] bytes() { return bytes; }
-        public Gif _root() { return _root; }
-        public KaitaiStruct _parent() { return _parent; }
-    }
-    public static class ApplicationId extends KaitaiStruct {
-        public static ApplicationId fromFile(String fileName) throws IOException {
-            return new ApplicationId(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public ApplicationId(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public ApplicationId(KaitaiStream _io, Gif.ExtApplication _parent) {
-            this(_io, _parent, null);
-        }
-
-        public ApplicationId(KaitaiStream _io, Gif.ExtApplication _parent, Gif _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.lenBytes = this._io.readU1();
-            if (!(lenBytes() == 11)) {
-                throw new KaitaiStream.ValidationNotEqualError(11, lenBytes(), _io(), "/types/application_id/seq/0");
-            }
-            this.applicationIdentifier = new String(this._io.readBytes(8), Charset.forName("ASCII"));
-            this.applicationAuthCode = this._io.readBytes(3);
-        }
-        private int lenBytes;
-        private String applicationIdentifier;
-        private byte[] applicationAuthCode;
-        private Gif _root;
-        private Gif.ExtApplication _parent;
-        public int lenBytes() { return lenBytes; }
-        public String applicationIdentifier() { return applicationIdentifier; }
-        public byte[] applicationAuthCode() { return applicationAuthCode; }
-        public Gif _root() { return _root; }
-        public Gif.ExtApplication _parent() { return _parent; }
+        public Gif.ColorTable _parent() { return _parent; }
     }
     public static class ExtApplication extends KaitaiStruct {
         public static ExtApplication fromFile(String fileName) throws IOException {
@@ -611,52 +332,89 @@ public class Gif extends KaitaiStruct {
                 } while (!(_it.lenBytes() == 0));
             }
         }
+
+        public void _fetchInstances() {
+            this.applicationId._fetchInstances();
+            for (int i = 0; i < this.subblocks.size(); i++) {
+                this.subblocks.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
         private ApplicationId applicationId;
-        private ArrayList<Subblock> subblocks;
+        private List<Subblock> subblocks;
         private Gif _root;
         private Gif.Extension _parent;
         public ApplicationId applicationId() { return applicationId; }
-        public ArrayList<Subblock> subblocks() { return subblocks; }
+        public List<Subblock> subblocks() { return subblocks; }
         public Gif _root() { return _root; }
         public Gif.Extension _parent() { return _parent; }
     }
-    public static class Subblocks extends KaitaiStruct {
-        public static Subblocks fromFile(String fileName) throws IOException {
-            return new Subblocks(new ByteBufferKaitaiStream(fileName));
+
+    /**
+     * @see <a href="https://www.w3.org/Graphics/GIF/spec-gif89a.txt">- section 23</a>
+     */
+    public static class ExtGraphicControl extends KaitaiStruct {
+        public static ExtGraphicControl fromFile(String fileName) throws IOException {
+            return new ExtGraphicControl(new ByteBufferKaitaiStream(fileName));
         }
 
-        public Subblocks(KaitaiStream _io) {
+        public ExtGraphicControl(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public Subblocks(KaitaiStream _io, KaitaiStruct _parent) {
+        public ExtGraphicControl(KaitaiStream _io, Gif.Extension _parent) {
             this(_io, _parent, null);
         }
 
-        public Subblocks(KaitaiStream _io, KaitaiStruct _parent, Gif _root) {
+        public ExtGraphicControl(KaitaiStream _io, Gif.Extension _parent, Gif _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.entries = new ArrayList<Subblock>();
-            {
-                Subblock _it;
-                int i = 0;
-                do {
-                    _it = new Subblock(this._io, this, _root);
-                    this.entries.add(_it);
-                    i++;
-                } while (!(_it.lenBytes() == 0));
+            this.blockSize = this._io.readBytes(1);
+            if (!(Arrays.equals(this.blockSize, new byte[] { 4 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 4 }, this.blockSize, this._io, "/types/ext_graphic_control/seq/0");
+            }
+            this.flags = this._io.readU1();
+            this.delayTime = this._io.readU2le();
+            this.transparentIdx = this._io.readU1();
+            this.terminator = this._io.readBytes(1);
+            if (!(Arrays.equals(this.terminator, new byte[] { 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0 }, this.terminator, this._io, "/types/ext_graphic_control/seq/4");
             }
         }
-        private ArrayList<Subblock> entries;
+
+        public void _fetchInstances() {
+        }
+        private Boolean transparentColorFlag;
+        public Boolean transparentColorFlag() {
+            if (this.transparentColorFlag != null)
+                return this.transparentColorFlag;
+            this.transparentColorFlag = (flags() & 1) != 0;
+            return this.transparentColorFlag;
+        }
+        private Boolean userInputFlag;
+        public Boolean userInputFlag() {
+            if (this.userInputFlag != null)
+                return this.userInputFlag;
+            this.userInputFlag = (flags() & 2) != 0;
+            return this.userInputFlag;
+        }
+        private byte[] blockSize;
+        private int flags;
+        private int delayTime;
+        private int transparentIdx;
+        private byte[] terminator;
         private Gif _root;
-        private KaitaiStruct _parent;
-        public ArrayList<Subblock> entries() { return entries; }
+        private Gif.Extension _parent;
+        public byte[] blockSize() { return blockSize; }
+        public int flags() { return flags; }
+        public int delayTime() { return delayTime; }
+        public int transparentIdx() { return transparentIdx; }
+        public byte[] terminator() { return terminator; }
         public Gif _root() { return _root; }
-        public KaitaiStruct _parent() { return _parent; }
+        public Gif.Extension _parent() { return _parent; }
     }
     public static class Extension extends KaitaiStruct {
         public static Extension fromFile(String fileName) throws IOException {
@@ -705,6 +463,34 @@ public class Gif extends KaitaiStruct {
                 }
             }
         }
+
+        public void _fetchInstances() {
+            {
+                ExtensionLabel on = label();
+                if (on != null) {
+                    switch (label()) {
+                    case APPLICATION: {
+                        ((ExtApplication) (this.body))._fetchInstances();
+                        break;
+                    }
+                    case COMMENT: {
+                        ((Subblocks) (this.body))._fetchInstances();
+                        break;
+                    }
+                    case GRAPHIC_CONTROL: {
+                        ((ExtGraphicControl) (this.body))._fetchInstances();
+                        break;
+                    }
+                    default: {
+                        ((Subblocks) (this.body))._fetchInstances();
+                        break;
+                    }
+                    }
+                } else {
+                    ((Subblocks) (this.body))._fetchInstances();
+                }
+            }
+        }
         private ExtensionLabel label;
         private KaitaiStruct body;
         private Gif _root;
@@ -714,13 +500,320 @@ public class Gif extends KaitaiStruct {
         public Gif _root() { return _root; }
         public Gif.Block _parent() { return _parent; }
     }
+
+    /**
+     * @see <a href="https://www.w3.org/Graphics/GIF/spec-gif89a.txt">- section 17</a>
+     */
+    public static class Header extends KaitaiStruct {
+        public static Header fromFile(String fileName) throws IOException {
+            return new Header(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Header(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Header(KaitaiStream _io, Gif _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Header(KaitaiStream _io, Gif _parent, Gif _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.magic = this._io.readBytes(3);
+            if (!(Arrays.equals(this.magic, new byte[] { 71, 73, 70 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 71, 73, 70 }, this.magic, this._io, "/types/header/seq/0");
+            }
+            this.version = new String(this._io.readBytes(3), StandardCharsets.US_ASCII);
+        }
+
+        public void _fetchInstances() {
+        }
+        private byte[] magic;
+        private String version;
+        private Gif _root;
+        private Gif _parent;
+        public byte[] magic() { return magic; }
+        public String version() { return version; }
+        public Gif _root() { return _root; }
+        public Gif _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://www.w3.org/Graphics/GIF/spec-gif89a.txt">- section 22</a>
+     */
+    public static class ImageData extends KaitaiStruct {
+        public static ImageData fromFile(String fileName) throws IOException {
+            return new ImageData(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public ImageData(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public ImageData(KaitaiStream _io, Gif.LocalImageDescriptor _parent) {
+            this(_io, _parent, null);
+        }
+
+        public ImageData(KaitaiStream _io, Gif.LocalImageDescriptor _parent, Gif _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.lzwMinCodeSize = this._io.readU1();
+            this.subblocks = new Subblocks(this._io, this, _root);
+        }
+
+        public void _fetchInstances() {
+            this.subblocks._fetchInstances();
+        }
+        private int lzwMinCodeSize;
+        private Subblocks subblocks;
+        private Gif _root;
+        private Gif.LocalImageDescriptor _parent;
+        public int lzwMinCodeSize() { return lzwMinCodeSize; }
+        public Subblocks subblocks() { return subblocks; }
+        public Gif _root() { return _root; }
+        public Gif.LocalImageDescriptor _parent() { return _parent; }
+    }
+    public static class LocalImageDescriptor extends KaitaiStruct {
+        public static LocalImageDescriptor fromFile(String fileName) throws IOException {
+            return new LocalImageDescriptor(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public LocalImageDescriptor(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public LocalImageDescriptor(KaitaiStream _io, Gif.Block _parent) {
+            this(_io, _parent, null);
+        }
+
+        public LocalImageDescriptor(KaitaiStream _io, Gif.Block _parent, Gif _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.left = this._io.readU2le();
+            this.top = this._io.readU2le();
+            this.width = this._io.readU2le();
+            this.height = this._io.readU2le();
+            this.flags = this._io.readU1();
+            if (hasColorTable()) {
+                KaitaiStream _io_localColorTable = this._io.substream(colorTableSize() * 3);
+                this.localColorTable = new ColorTable(_io_localColorTable, this, _root);
+            }
+            this.imageData = new ImageData(this._io, this, _root);
+        }
+
+        public void _fetchInstances() {
+            if (hasColorTable()) {
+                this.localColorTable._fetchInstances();
+            }
+            this.imageData._fetchInstances();
+        }
+        private Integer colorTableSize;
+        public Integer colorTableSize() {
+            if (this.colorTableSize != null)
+                return this.colorTableSize;
+            this.colorTableSize = ((Number) (2 << (flags() & 7))).intValue();
+            return this.colorTableSize;
+        }
+        private Boolean hasColorTable;
+        public Boolean hasColorTable() {
+            if (this.hasColorTable != null)
+                return this.hasColorTable;
+            this.hasColorTable = (flags() & 128) != 0;
+            return this.hasColorTable;
+        }
+        private Boolean hasInterlace;
+        public Boolean hasInterlace() {
+            if (this.hasInterlace != null)
+                return this.hasInterlace;
+            this.hasInterlace = (flags() & 64) != 0;
+            return this.hasInterlace;
+        }
+        private Boolean hasSortedColorTable;
+        public Boolean hasSortedColorTable() {
+            if (this.hasSortedColorTable != null)
+                return this.hasSortedColorTable;
+            this.hasSortedColorTable = (flags() & 32) != 0;
+            return this.hasSortedColorTable;
+        }
+        private int left;
+        private int top;
+        private int width;
+        private int height;
+        private int flags;
+        private ColorTable localColorTable;
+        private ImageData imageData;
+        private Gif _root;
+        private Gif.Block _parent;
+        public int left() { return left; }
+        public int top() { return top; }
+        public int width() { return width; }
+        public int height() { return height; }
+        public int flags() { return flags; }
+        public ColorTable localColorTable() { return localColorTable; }
+        public ImageData imageData() { return imageData; }
+        public Gif _root() { return _root; }
+        public Gif.Block _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://www.w3.org/Graphics/GIF/spec-gif89a.txt">- section 18</a>
+     */
+    public static class LogicalScreenDescriptorStruct extends KaitaiStruct {
+        public static LogicalScreenDescriptorStruct fromFile(String fileName) throws IOException {
+            return new LogicalScreenDescriptorStruct(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public LogicalScreenDescriptorStruct(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public LogicalScreenDescriptorStruct(KaitaiStream _io, Gif _parent) {
+            this(_io, _parent, null);
+        }
+
+        public LogicalScreenDescriptorStruct(KaitaiStream _io, Gif _parent, Gif _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.screenWidth = this._io.readU2le();
+            this.screenHeight = this._io.readU2le();
+            this.flags = this._io.readU1();
+            this.bgColorIndex = this._io.readU1();
+            this.pixelAspectRatio = this._io.readU1();
+        }
+
+        public void _fetchInstances() {
+        }
+        private Integer colorTableSize;
+        public Integer colorTableSize() {
+            if (this.colorTableSize != null)
+                return this.colorTableSize;
+            this.colorTableSize = ((Number) (2 << (flags() & 7))).intValue();
+            return this.colorTableSize;
+        }
+        private Boolean hasColorTable;
+        public Boolean hasColorTable() {
+            if (this.hasColorTable != null)
+                return this.hasColorTable;
+            this.hasColorTable = (flags() & 128) != 0;
+            return this.hasColorTable;
+        }
+        private int screenWidth;
+        private int screenHeight;
+        private int flags;
+        private int bgColorIndex;
+        private int pixelAspectRatio;
+        private Gif _root;
+        private Gif _parent;
+        public int screenWidth() { return screenWidth; }
+        public int screenHeight() { return screenHeight; }
+        public int flags() { return flags; }
+        public int bgColorIndex() { return bgColorIndex; }
+        public int pixelAspectRatio() { return pixelAspectRatio; }
+        public Gif _root() { return _root; }
+        public Gif _parent() { return _parent; }
+    }
+    public static class Subblock extends KaitaiStruct {
+        public static Subblock fromFile(String fileName) throws IOException {
+            return new Subblock(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Subblock(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Subblock(KaitaiStream _io, KaitaiStruct _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Subblock(KaitaiStream _io, KaitaiStruct _parent, Gif _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.lenBytes = this._io.readU1();
+            this.bytes = this._io.readBytes(lenBytes());
+        }
+
+        public void _fetchInstances() {
+        }
+        private int lenBytes;
+        private byte[] bytes;
+        private Gif _root;
+        private KaitaiStruct _parent;
+        public int lenBytes() { return lenBytes; }
+        public byte[] bytes() { return bytes; }
+        public Gif _root() { return _root; }
+        public KaitaiStruct _parent() { return _parent; }
+    }
+    public static class Subblocks extends KaitaiStruct {
+        public static Subblocks fromFile(String fileName) throws IOException {
+            return new Subblocks(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Subblocks(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Subblocks(KaitaiStream _io, KaitaiStruct _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Subblocks(KaitaiStream _io, KaitaiStruct _parent, Gif _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.entries = new ArrayList<Subblock>();
+            {
+                Subblock _it;
+                int i = 0;
+                do {
+                    _it = new Subblock(this._io, this, _root);
+                    this.entries.add(_it);
+                    i++;
+                } while (!(_it.lenBytes() == 0));
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.entries.size(); i++) {
+                this.entries.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private List<Subblock> entries;
+        private Gif _root;
+        private KaitaiStruct _parent;
+        public List<Subblock> entries() { return entries; }
+        public Gif _root() { return _root; }
+        public KaitaiStruct _parent() { return _parent; }
+    }
     private Header hdr;
     private LogicalScreenDescriptorStruct logicalScreenDescriptor;
     private ColorTable globalColorTable;
-    private ArrayList<Block> blocks;
+    private List<Block> blocks;
     private Gif _root;
     private KaitaiStruct _parent;
-    private byte[] _raw_globalColorTable;
     public Header hdr() { return hdr; }
     public LogicalScreenDescriptorStruct logicalScreenDescriptor() { return logicalScreenDescriptor; }
 
@@ -728,8 +821,7 @@ public class Gif extends KaitaiStruct {
      * @see <a href="https://www.w3.org/Graphics/GIF/spec-gif89a.txt">- section 18</a>
      */
     public ColorTable globalColorTable() { return globalColorTable; }
-    public ArrayList<Block> blocks() { return blocks; }
+    public List<Block> blocks() { return blocks; }
     public Gif _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
-    public byte[] _raw_globalColorTable() { return _raw_globalColorTable; }
 }

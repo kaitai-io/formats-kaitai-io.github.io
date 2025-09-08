@@ -4,7 +4,7 @@
 
 lzh_t::lzh_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, lzh_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     m_entries = 0;
 
     try {
@@ -39,40 +39,6 @@ void lzh_t::_clean_up() {
     }
 }
 
-lzh_t::record_t::record_t(kaitai::kstream* p__io, lzh_t* p__parent, lzh_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    m_file_record = 0;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void lzh_t::record_t::_read() {
-    m_header_len = m__io->read_u1();
-    n_file_record = true;
-    if (header_len() > 0) {
-        n_file_record = false;
-        m_file_record = new file_record_t(m__io, this, m__root);
-    }
-}
-
-lzh_t::record_t::~record_t() {
-    _clean_up();
-}
-
-void lzh_t::record_t::_clean_up() {
-    if (!n_file_record) {
-        if (m_file_record) {
-            delete m_file_record; m_file_record = 0;
-        }
-    }
-}
-
 lzh_t::file_record_t::file_record_t(kaitai::kstream* p__io, lzh_t::record_t* p__parent, lzh_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
@@ -88,7 +54,7 @@ lzh_t::file_record_t::file_record_t(kaitai::kstream* p__io, lzh_t::record_t* p__
 }
 
 void lzh_t::file_record_t::_read() {
-    m__raw_header = m__io->read_bytes((_parent()->header_len() - 1));
+    m__raw_header = m__io->read_bytes(_parent()->header_len() - 1);
     m__io__raw_header = new kaitai::kstream(m__raw_header);
     m_header = new header_t(m__io__raw_header, this, m__root);
     n_file_uncompr_crc16 = true;
@@ -137,7 +103,7 @@ void lzh_t::header_t::_read() {
     n_filename = true;
     if (header1()->lha_level() == 0) {
         n_filename = false;
-        m_filename = kaitai::kstream::bytes_to_str(m__io->read_bytes(filename_len()), std::string("ASCII"));
+        m_filename = kaitai::kstream::bytes_to_str(m__io->read_bytes(filename_len()), "ASCII");
     }
     n_file_uncompr_crc16 = true;
     if (header1()->lha_level() == 2) {
@@ -192,7 +158,7 @@ lzh_t::header1_t::header1_t(kaitai::kstream* p__io, lzh_t::header_t* p__parent, 
 
 void lzh_t::header1_t::_read() {
     m_header_checksum = m__io->read_u1();
-    m_method_id = kaitai::kstream::bytes_to_str(m__io->read_bytes(5), std::string("ASCII"));
+    m_method_id = kaitai::kstream::bytes_to_str(m__io->read_bytes(5), "ASCII");
     m_file_size_compr = m__io->read_u4le();
     m_file_size_uncompr = m__io->read_u4le();
     m__raw_file_timestamp = m__io->read_bytes(4);
@@ -212,5 +178,39 @@ void lzh_t::header1_t::_clean_up() {
     }
     if (m_file_timestamp) {
         delete m_file_timestamp; m_file_timestamp = 0;
+    }
+}
+
+lzh_t::record_t::record_t(kaitai::kstream* p__io, lzh_t* p__parent, lzh_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_file_record = 0;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void lzh_t::record_t::_read() {
+    m_header_len = m__io->read_u1();
+    n_file_record = true;
+    if (header_len() > 0) {
+        n_file_record = false;
+        m_file_record = new file_record_t(m__io, this, m__root);
+    }
+}
+
+lzh_t::record_t::~record_t() {
+    _clean_up();
+}
+
+void lzh_t::record_t::_clean_up() {
+    if (!n_file_record) {
+        if (m_file_record) {
+            delete m_file_record; m_file_record = 0;
+        }
     }
 }

@@ -14,38 +14,6 @@ local str_decode = require("string_decode")
 -- See also: Source (https://source.denx.de/u-boot/u-boot/-/raw/e4dba4ba6f/include/image.h)
 Uimage = class.class(KaitaiStruct)
 
-Uimage.UimageOs = enum.Enum {
-  invalid = 0,
-  openbsd = 1,
-  netbsd = 2,
-  freebsd = 3,
-  bsd4_4 = 4,
-  linux = 5,
-  svr4 = 6,
-  esix = 7,
-  solaris = 8,
-  irix = 9,
-  sco = 10,
-  dell = 11,
-  ncr = 12,
-  lynxos = 13,
-  vxworks = 14,
-  psos = 15,
-  qnx = 16,
-  u_boot = 17,
-  rtems = 18,
-  artos = 19,
-  unity = 20,
-  integrity = 21,
-  ose = 22,
-  plan9 = 23,
-  openrtos = 24,
-  arm_trusted_firmware = 25,
-  tee = 26,
-  opensbi = 27,
-  efi = 28,
-}
-
 Uimage.UimageArch = enum.Enum {
   invalid = 0,
   alpha = 1,
@@ -84,6 +52,38 @@ Uimage.UimageComp = enum.Enum {
   lzo = 4,
   lz4 = 5,
   zstd = 6,
+}
+
+Uimage.UimageOs = enum.Enum {
+  invalid = 0,
+  openbsd = 1,
+  netbsd = 2,
+  freebsd = 3,
+  bsd4_4 = 4,
+  linux = 5,
+  svr4 = 6,
+  esix = 7,
+  solaris = 8,
+  irix = 9,
+  sco = 10,
+  dell = 11,
+  ncr = 12,
+  lynxos = 13,
+  vxworks = 14,
+  psos = 15,
+  qnx = 16,
+  u_boot = 17,
+  rtems = 18,
+  artos = 19,
+  unity = 20,
+  integrity = 21,
+  ose = 22,
+  plan9 = 23,
+  openrtos = 24,
+  arm_trusted_firmware = 25,
+  tee = 26,
+  opensbi = 27,
+  efi = 28,
 }
 
 Uimage.UimageType = enum.Enum {
@@ -148,14 +148,14 @@ Uimage.Uheader = class.class(KaitaiStruct)
 function Uimage.Uheader:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function Uimage.Uheader:_read()
   self.magic = self._io:read_bytes(4)
   if not(self.magic == "\039\005\025\086") then
-    error("not equal, expected " ..  "\039\005\025\086" .. ", but got " .. self.magic)
+    error("not equal, expected " .. "\039\005\025\086" .. ", but got " .. self.magic)
   end
   self.header_crc = self._io:read_u4be()
   self.timestamp = self._io:read_u4be()

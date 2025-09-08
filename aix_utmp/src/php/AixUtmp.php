@@ -7,8 +7,8 @@
 
 namespace {
     class AixUtmp extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \AixUtmp $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\AixUtmp $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -26,21 +26,47 @@ namespace {
 }
 
 namespace AixUtmp {
-    class Record extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \AixUtmp $_parent = null, \AixUtmp $_root = null) {
+    class ExitStatus extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\AixUtmp\Record $_parent = null, ?\AixUtmp $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_user = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(256), "ascii");
-            $this->_m_inittabId = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(14), "ascii");
-            $this->_m_device = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(64), "ascii");
+            $this->_m_terminationCode = $this->_io->readS2be();
+            $this->_m_exitCode = $this->_io->readS2be();
+        }
+        protected $_m_terminationCode;
+        protected $_m_exitCode;
+
+        /**
+         * process termination status
+         */
+        public function terminationCode() { return $this->_m_terminationCode; }
+
+        /**
+         * process exit status
+         */
+        public function exitCode() { return $this->_m_exitCode; }
+    }
+}
+
+namespace AixUtmp {
+    class Record extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\AixUtmp $_parent = null, ?\AixUtmp $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_user = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(256), "ASCII");
+            $this->_m_inittabId = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(14), "ASCII");
+            $this->_m_device = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(64), "ASCII");
             $this->_m_pid = $this->_io->readU8be();
             $this->_m_type = $this->_io->readS2be();
             $this->_m_timestamp = $this->_io->readS8be();
             $this->_m_exitStatus = new \AixUtmp\ExitStatus($this->_io, $this, $this->_root);
-            $this->_m_hostname = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(256), "ascii");
+            $this->_m_hostname = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(256), "ASCII");
             $this->_m_dblWordPad = $this->_io->readS4be();
             $this->_m_reservedA = $this->_io->readBytes(8);
             $this->_m_reservedV = $this->_io->readBytes(24);
@@ -103,32 +129,6 @@ namespace AixUtmp {
 }
 
 namespace AixUtmp {
-    class ExitStatus extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \AixUtmp\Record $_parent = null, \AixUtmp $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_terminationCode = $this->_io->readS2be();
-            $this->_m_exitCode = $this->_io->readS2be();
-        }
-        protected $_m_terminationCode;
-        protected $_m_exitCode;
-
-        /**
-         * process termination status
-         */
-        public function terminationCode() { return $this->_m_terminationCode; }
-
-        /**
-         * process exit status
-         */
-        public function exitCode() { return $this->_m_exitCode; }
-    }
-}
-
-namespace AixUtmp {
     class EntryType {
         const EMPTY = 0;
         const RUN_LVL = 1;
@@ -140,5 +140,11 @@ namespace AixUtmp {
         const USER_PROCESS = 7;
         const DEAD_PROCESS = 8;
         const ACCOUNTING = 9;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 7 => true, 8 => true, 9 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

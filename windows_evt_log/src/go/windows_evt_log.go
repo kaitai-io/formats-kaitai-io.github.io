@@ -36,14 +36,18 @@ type WindowsEvtLog struct {
 	Records []*WindowsEvtLog_Record
 	_io *kaitai.Stream
 	_root *WindowsEvtLog
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewWindowsEvtLog() *WindowsEvtLog {
 	return &WindowsEvtLog{
 	}
 }
 
-func (this *WindowsEvtLog) Read(io *kaitai.Stream, parent interface{}, root *WindowsEvtLog) (err error) {
+func (this WindowsEvtLog) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *WindowsEvtLog) Read(io *kaitai.Stream, parent kaitai.Struct, root *WindowsEvtLog) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -54,7 +58,7 @@ func (this *WindowsEvtLog) Read(io *kaitai.Stream, parent interface{}, root *Win
 		return err
 	}
 	this.Header = tmp1
-	for i := 1;; i++ {
+	for i := 0;; i++ {
 		tmp2, err := this._io.EOF()
 		if err != nil {
 			return err
@@ -69,6 +73,65 @@ func (this *WindowsEvtLog) Read(io *kaitai.Stream, parent interface{}, root *Win
 		}
 		this.Records = append(this.Records, tmp3)
 	}
+	return err
+}
+
+/**
+ * @see <a href="https://forensics.wiki/windows_event_log_(evt)/#cursor-record">Source</a>
+ */
+type WindowsEvtLog_CursorRecordBody struct {
+	Magic []byte
+	OfsFirstRecord uint32
+	OfsNextRecord uint32
+	IdxNextRecord uint32
+	IdxFirstRecord uint32
+	_io *kaitai.Stream
+	_root *WindowsEvtLog
+	_parent *WindowsEvtLog_Record
+}
+func NewWindowsEvtLog_CursorRecordBody() *WindowsEvtLog_CursorRecordBody {
+	return &WindowsEvtLog_CursorRecordBody{
+	}
+}
+
+func (this WindowsEvtLog_CursorRecordBody) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *WindowsEvtLog_CursorRecordBody) Read(io *kaitai.Stream, parent *WindowsEvtLog_Record, root *WindowsEvtLog) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp4, err := this._io.ReadBytes(int(12))
+	if err != nil {
+		return err
+	}
+	tmp4 = tmp4
+	this.Magic = tmp4
+	if !(bytes.Equal(this.Magic, []uint8{34, 34, 34, 34, 51, 51, 51, 51, 68, 68, 68, 68})) {
+		return kaitai.NewValidationNotEqualError([]uint8{34, 34, 34, 34, 51, 51, 51, 51, 68, 68, 68, 68}, this.Magic, this._io, "/types/cursor_record_body/seq/0")
+	}
+	tmp5, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.OfsFirstRecord = uint32(tmp5)
+	tmp6, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.OfsNextRecord = uint32(tmp6)
+	tmp7, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.IdxNextRecord = uint32(tmp7)
+	tmp8, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.IdxFirstRecord = uint32(tmp8)
 	return err
 }
 
@@ -97,76 +160,80 @@ func NewWindowsEvtLog_Header() *WindowsEvtLog_Header {
 	}
 }
 
+func (this WindowsEvtLog_Header) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *WindowsEvtLog_Header) Read(io *kaitai.Stream, parent *WindowsEvtLog, root *WindowsEvtLog) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp4, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.LenHeader = uint32(tmp4)
-	tmp5, err := this._io.ReadBytes(int(4))
-	if err != nil {
-		return err
-	}
-	tmp5 = tmp5
-	this.Magic = tmp5
-	if !(bytes.Equal(this.Magic, []uint8{76, 102, 76, 101})) {
-		return kaitai.NewValidationNotEqualError([]uint8{76, 102, 76, 101}, this.Magic, this._io, "/types/header/seq/1")
-	}
-	tmp6, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.VersionMajor = uint32(tmp6)
-	tmp7, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.VersionMinor = uint32(tmp7)
-	tmp8, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.OfsStart = uint32(tmp8)
 	tmp9, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.OfsEnd = uint32(tmp9)
-	tmp10, err := this._io.ReadU4le()
+	this.LenHeader = uint32(tmp9)
+	tmp10, err := this._io.ReadBytes(int(4))
 	if err != nil {
 		return err
 	}
-	this.CurRecIdx = uint32(tmp10)
+	tmp10 = tmp10
+	this.Magic = tmp10
+	if !(bytes.Equal(this.Magic, []uint8{76, 102, 76, 101})) {
+		return kaitai.NewValidationNotEqualError([]uint8{76, 102, 76, 101}, this.Magic, this._io, "/types/header/seq/1")
+	}
 	tmp11, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.OldestRecIdx = uint32(tmp11)
+	this.VersionMajor = uint32(tmp11)
 	tmp12, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.LenFileMax = uint32(tmp12)
-	tmp13 := NewWindowsEvtLog_Header_Flags()
-	err = tmp13.Read(this._io, this, this._root)
+	this.VersionMinor = uint32(tmp12)
+	tmp13, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Flags = tmp13
+	this.OfsStart = uint32(tmp13)
 	tmp14, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Retention = uint32(tmp14)
+	this.OfsEnd = uint32(tmp14)
 	tmp15, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.LenHeader2 = uint32(tmp15)
+	this.CurRecIdx = uint32(tmp15)
+	tmp16, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.OldestRecIdx = uint32(tmp16)
+	tmp17, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.LenFileMax = uint32(tmp17)
+	tmp18 := NewWindowsEvtLog_Header_Flags()
+	err = tmp18.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Flags = tmp18
+	tmp19, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Retention = uint32(tmp19)
+	tmp20, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.LenHeader2 = uint32(tmp20)
 	return err
 }
 
@@ -213,36 +280,40 @@ func NewWindowsEvtLog_Header_Flags() *WindowsEvtLog_Header_Flags {
 	}
 }
 
+func (this WindowsEvtLog_Header_Flags) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *WindowsEvtLog_Header_Flags) Read(io *kaitai.Stream, parent *WindowsEvtLog_Header, root *WindowsEvtLog) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp16, err := this._io.ReadBitsIntBe(28)
+	tmp21, err := this._io.ReadBitsIntBe(28)
 	if err != nil {
 		return err
 	}
-	this.Reserved = tmp16
-	tmp17, err := this._io.ReadBitsIntBe(1)
+	this.Reserved = tmp21
+	tmp22, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Archive = tmp17 != 0
-	tmp18, err := this._io.ReadBitsIntBe(1)
+	this.Archive = tmp22 != 0
+	tmp23, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.LogFull = tmp18 != 0
-	tmp19, err := this._io.ReadBitsIntBe(1)
+	this.LogFull = tmp23 != 0
+	tmp24, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Wrap = tmp19 != 0
-	tmp20, err := this._io.ReadBitsIntBe(1)
+	this.Wrap = tmp24 != 0
+	tmp25, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Dirty = tmp20 != 0
+	this.Dirty = tmp25 != 0
 	return err
 }
 
@@ -281,63 +352,67 @@ func NewWindowsEvtLog_Record() *WindowsEvtLog_Record {
 	}
 }
 
+func (this WindowsEvtLog_Record) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *WindowsEvtLog_Record) Read(io *kaitai.Stream, parent *WindowsEvtLog, root *WindowsEvtLog) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp21, err := this._io.ReadU4le()
+	tmp26, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.LenRecord = uint32(tmp21)
-	tmp22, err := this._io.ReadU4le()
+	this.LenRecord = uint32(tmp26)
+	tmp27, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Type = uint32(tmp22)
+	this.Type = uint32(tmp27)
 	switch (this.Type) {
 	case 1699505740:
-		tmp23, err := this._io.ReadBytes(int((this.LenRecord - 12)))
+		tmp28, err := this._io.ReadBytes(int(this.LenRecord - 12))
 		if err != nil {
 			return err
 		}
-		tmp23 = tmp23
-		this._raw_Body = tmp23
+		tmp28 = tmp28
+		this._raw_Body = tmp28
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp24 := NewWindowsEvtLog_RecordBody()
-		err = tmp24.Read(_io__raw_Body, this, this._root)
+		tmp29 := NewWindowsEvtLog_RecordBody()
+		err = tmp29.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Body = tmp24
+		this.Body = tmp29
 	case 286331153:
-		tmp25, err := this._io.ReadBytes(int((this.LenRecord - 12)))
+		tmp30, err := this._io.ReadBytes(int(this.LenRecord - 12))
 		if err != nil {
 			return err
 		}
-		tmp25 = tmp25
-		this._raw_Body = tmp25
+		tmp30 = tmp30
+		this._raw_Body = tmp30
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp26 := NewWindowsEvtLog_CursorRecordBody()
-		err = tmp26.Read(_io__raw_Body, this, this._root)
+		tmp31 := NewWindowsEvtLog_CursorRecordBody()
+		err = tmp31.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Body = tmp26
+		this.Body = tmp31
 	default:
-		tmp27, err := this._io.ReadBytes(int((this.LenRecord - 12)))
+		tmp32, err := this._io.ReadBytes(int(this.LenRecord - 12))
 		if err != nil {
 			return err
 		}
-		tmp27 = tmp27
-		this._raw_Body = tmp27
+		tmp32 = tmp32
+		this._raw_Body = tmp32
 	}
-	tmp28, err := this._io.ReadU4le()
+	tmp33, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.LenRecord2 = uint32(tmp28)
+	this.LenRecord2 = uint32(tmp33)
 	return err
 }
 
@@ -373,6 +448,11 @@ const (
 	WindowsEvtLog_RecordBody_EventTypes__Info WindowsEvtLog_RecordBody_EventTypes = 4
 	WindowsEvtLog_RecordBody_EventTypes__Warning WindowsEvtLog_RecordBody_EventTypes = 5
 )
+var values_WindowsEvtLog_RecordBody_EventTypes = map[WindowsEvtLog_RecordBody_EventTypes]struct{}{1: {}, 2: {}, 3: {}, 4: {}, 5: {}}
+func (v WindowsEvtLog_RecordBody_EventTypes) isDefined() bool {
+	_, ok := values_WindowsEvtLog_RecordBody_EventTypes[v]
+	return ok
+}
 type WindowsEvtLog_RecordBody struct {
 	Idx uint32
 	TimeGenerated uint32
@@ -390,14 +470,18 @@ type WindowsEvtLog_RecordBody struct {
 	_io *kaitai.Stream
 	_root *WindowsEvtLog
 	_parent *WindowsEvtLog_Record
-	_f_userSid bool
-	userSid []byte
 	_f_data bool
 	data []byte
+	_f_userSid bool
+	userSid []byte
 }
 func NewWindowsEvtLog_RecordBody() *WindowsEvtLog_RecordBody {
 	return &WindowsEvtLog_RecordBody{
 	}
+}
+
+func (this WindowsEvtLog_RecordBody) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *WindowsEvtLog_RecordBody) Read(io *kaitai.Stream, parent *WindowsEvtLog_Record, root *WindowsEvtLog) (err error) {
@@ -405,125 +489,123 @@ func (this *WindowsEvtLog_RecordBody) Read(io *kaitai.Stream, parent *WindowsEvt
 	this._parent = parent
 	this._root = root
 
-	tmp29, err := this._io.ReadU4le()
+	tmp34, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Idx = uint32(tmp29)
-	tmp30, err := this._io.ReadU4le()
+	this.Idx = uint32(tmp34)
+	tmp35, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.TimeGenerated = uint32(tmp30)
-	tmp31, err := this._io.ReadU4le()
+	this.TimeGenerated = uint32(tmp35)
+	tmp36, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.TimeWritten = uint32(tmp31)
-	tmp32, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.EventId = uint32(tmp32)
-	tmp33, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.EventType = WindowsEvtLog_RecordBody_EventTypes(tmp33)
-	tmp34, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.NumStrings = uint16(tmp34)
-	tmp35, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.EventCategory = uint16(tmp35)
-	tmp36, err := this._io.ReadBytes(int(6))
-	if err != nil {
-		return err
-	}
-	tmp36 = tmp36
-	this.Reserved = tmp36
+	this.TimeWritten = uint32(tmp36)
 	tmp37, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.OfsStrings = uint32(tmp37)
-	tmp38, err := this._io.ReadU4le()
+	this.EventId = uint32(tmp37)
+	tmp38, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.LenUserSid = uint32(tmp38)
-	tmp39, err := this._io.ReadU4le()
+	this.EventType = WindowsEvtLog_RecordBody_EventTypes(tmp38)
+	tmp39, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.OfsUserSid = uint32(tmp39)
-	tmp40, err := this._io.ReadU4le()
+	this.NumStrings = uint16(tmp39)
+	tmp40, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.LenData = uint32(tmp40)
-	tmp41, err := this._io.ReadU4le()
+	this.EventCategory = uint16(tmp40)
+	tmp41, err := this._io.ReadBytes(int(6))
 	if err != nil {
 		return err
 	}
-	this.OfsData = uint32(tmp41)
+	tmp41 = tmp41
+	this.Reserved = tmp41
+	tmp42, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.OfsStrings = uint32(tmp42)
+	tmp43, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.LenUserSid = uint32(tmp43)
+	tmp44, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.OfsUserSid = uint32(tmp44)
+	tmp45, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.LenData = uint32(tmp45)
+	tmp46, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.OfsData = uint32(tmp46)
 	return err
-}
-func (this *WindowsEvtLog_RecordBody) UserSid() (v []byte, err error) {
-	if (this._f_userSid) {
-		return this.userSid, nil
-	}
-	_pos, err := this._io.Pos()
-	if err != nil {
-		return nil, err
-	}
-	_, err = this._io.Seek(int64((this.OfsUserSid - 8)), io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	tmp42, err := this._io.ReadBytes(int(this.LenUserSid))
-	if err != nil {
-		return nil, err
-	}
-	tmp42 = tmp42
-	this.userSid = tmp42
-	_, err = this._io.Seek(_pos, io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	this._f_userSid = true
-	this._f_userSid = true
-	return this.userSid, nil
 }
 func (this *WindowsEvtLog_RecordBody) Data() (v []byte, err error) {
 	if (this._f_data) {
 		return this.data, nil
 	}
+	this._f_data = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
 	}
-	_, err = this._io.Seek(int64((this.OfsData - 8)), io.SeekStart)
+	_, err = this._io.Seek(int64(this.OfsData - 8), io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
-	tmp43, err := this._io.ReadBytes(int(this.LenData))
+	tmp47, err := this._io.ReadBytes(int(this.LenData))
 	if err != nil {
 		return nil, err
 	}
-	tmp43 = tmp43
-	this.data = tmp43
+	tmp47 = tmp47
+	this.data = tmp47
 	_, err = this._io.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
-	this._f_data = true
-	this._f_data = true
 	return this.data, nil
+}
+func (this *WindowsEvtLog_RecordBody) UserSid() (v []byte, err error) {
+	if (this._f_userSid) {
+		return this.userSid, nil
+	}
+	this._f_userSid = true
+	_pos, err := this._io.Pos()
+	if err != nil {
+		return nil, err
+	}
+	_, err = this._io.Seek(int64(this.OfsUserSid - 8), io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	tmp48, err := this._io.ReadBytes(int(this.LenUserSid))
+	if err != nil {
+		return nil, err
+	}
+	tmp48 = tmp48
+	this.userSid = tmp48
+	_, err = this._io.Seek(_pos, io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	return this.userSid, nil
 }
 
 /**
@@ -559,58 +641,3 @@ func (this *WindowsEvtLog_RecordBody) Data() (v []byte, err error) {
 /**
  * Offset of strings present in the log
  */
-
-/**
- * @see <a href="https://forensics.wiki/windows_event_log_(evt)/#cursor-record">Source</a>
- */
-type WindowsEvtLog_CursorRecordBody struct {
-	Magic []byte
-	OfsFirstRecord uint32
-	OfsNextRecord uint32
-	IdxNextRecord uint32
-	IdxFirstRecord uint32
-	_io *kaitai.Stream
-	_root *WindowsEvtLog
-	_parent *WindowsEvtLog_Record
-}
-func NewWindowsEvtLog_CursorRecordBody() *WindowsEvtLog_CursorRecordBody {
-	return &WindowsEvtLog_CursorRecordBody{
-	}
-}
-
-func (this *WindowsEvtLog_CursorRecordBody) Read(io *kaitai.Stream, parent *WindowsEvtLog_Record, root *WindowsEvtLog) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp44, err := this._io.ReadBytes(int(12))
-	if err != nil {
-		return err
-	}
-	tmp44 = tmp44
-	this.Magic = tmp44
-	if !(bytes.Equal(this.Magic, []uint8{34, 34, 34, 34, 51, 51, 51, 51, 68, 68, 68, 68})) {
-		return kaitai.NewValidationNotEqualError([]uint8{34, 34, 34, 34, 51, 51, 51, 51, 68, 68, 68, 68}, this.Magic, this._io, "/types/cursor_record_body/seq/0")
-	}
-	tmp45, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.OfsFirstRecord = uint32(tmp45)
-	tmp46, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.OfsNextRecord = uint32(tmp46)
-	tmp47, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.IdxNextRecord = uint32(tmp47)
-	tmp48, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.IdxFirstRecord = uint32(tmp48)
-	return err
-}

@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 class IcmpPacket < Kaitai::Struct::Struct
@@ -17,8 +17,8 @@ class IcmpPacket < Kaitai::Struct::Struct
     11 => :icmp_type_enum_time_exceeded,
   }
   I__ICMP_TYPE_ENUM = ICMP_TYPE_ENUM.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -56,7 +56,7 @@ class IcmpPacket < Kaitai::Struct::Struct
       15 => :destination_unreachable_code_precedence_cuttoff_in_effect,
     }
     I__DESTINATION_UNREACHABLE_CODE = DESTINATION_UNREACHABLE_CODE.invert
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -69,35 +69,15 @@ class IcmpPacket < Kaitai::Struct::Struct
     attr_reader :code
     attr_reader :checksum
   end
-  class TimeExceededMsg < Kaitai::Struct::Struct
-
-    TIME_EXCEEDED_CODE = {
-      0 => :time_exceeded_code_time_to_live_exceeded_in_transit,
-      1 => :time_exceeded_code_fragment_reassembly_time_exceeded,
-    }
-    I__TIME_EXCEEDED_CODE = TIME_EXCEEDED_CODE.invert
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @code = Kaitai::Struct::Stream::resolve_enum(TIME_EXCEEDED_CODE, @_io.read_u1)
-      @checksum = @_io.read_u2be
-      self
-    end
-    attr_reader :code
-    attr_reader :checksum
-  end
   class EchoMsg < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
       @code = @_io.read_bytes(1)
-      raise Kaitai::Struct::ValidationNotEqualError.new([0].pack('C*'), code, _io, "/types/echo_msg/seq/0") if not code == [0].pack('C*')
+      raise Kaitai::Struct::ValidationNotEqualError.new([0].pack('C*'), @code, @_io, "/types/echo_msg/seq/0") if not @code == [0].pack('C*')
       @checksum = @_io.read_u2be
       @identifier = @_io.read_u2be
       @seq_num = @_io.read_u2be
@@ -109,6 +89,26 @@ class IcmpPacket < Kaitai::Struct::Struct
     attr_reader :identifier
     attr_reader :seq_num
     attr_reader :data
+  end
+  class TimeExceededMsg < Kaitai::Struct::Struct
+
+    TIME_EXCEEDED_CODE = {
+      0 => :time_exceeded_code_time_to_live_exceeded_in_transit,
+      1 => :time_exceeded_code_fragment_reassembly_time_exceeded,
+    }
+    I__TIME_EXCEEDED_CODE = TIME_EXCEEDED_CODE.invert
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @code = Kaitai::Struct::Stream::resolve_enum(TIME_EXCEEDED_CODE, @_io.read_u1)
+      @checksum = @_io.read_u2be
+      self
+    end
+    attr_reader :code
+    attr_reader :checksum
   end
   attr_reader :icmp_type
   attr_reader :destination_unreachable

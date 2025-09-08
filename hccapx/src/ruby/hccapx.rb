@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -11,8 +11,8 @@ end
 # Native format of Hashcat password "recovery" utility
 # @see https://hashcat.net/wiki/doku.php?id=hccapx Source
 class Hccapx < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -26,21 +26,21 @@ class Hccapx < Kaitai::Struct::Struct
     self
   end
   class HccapxRecord < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
       @magic = @_io.read_bytes(4)
-      raise Kaitai::Struct::ValidationNotEqualError.new([72, 67, 80, 88].pack('C*'), magic, _io, "/types/hccapx_record/seq/0") if not magic == [72, 67, 80, 88].pack('C*')
+      raise Kaitai::Struct::ValidationNotEqualError.new([72, 67, 80, 88].pack('C*'), @magic, @_io, "/types/hccapx_record/seq/0") if not @magic == [72, 67, 80, 88].pack('C*')
       @version = @_io.read_u4le
       @ignore_replay_counter = @_io.read_bits_int_be(1) != 0
       @message_pair = @_io.read_bits_int_be(7)
       @_io.align_to_byte
       @len_essid = @_io.read_u1
       @essid = @_io.read_bytes(len_essid)
-      @padding1 = @_io.read_bytes((32 - len_essid))
+      @padding1 = @_io.read_bytes(32 - len_essid)
       @keyver = @_io.read_u1
       @keymic = @_io.read_bytes(16)
       @mac_ap = @_io.read_bytes(6)
@@ -49,7 +49,7 @@ class Hccapx < Kaitai::Struct::Struct
       @nonce_station = @_io.read_bytes(32)
       @len_eapol = @_io.read_u2le
       @eapol = @_io.read_bytes(len_eapol)
-      @padding2 = @_io.read_bytes((256 - len_eapol))
+      @padding2 = @_io.read_bytes(256 - len_eapol)
       self
     end
     attr_reader :magic

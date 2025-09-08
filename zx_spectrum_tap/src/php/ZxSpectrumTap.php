@@ -12,8 +12,8 @@
 
 namespace {
     class ZxSpectrumTap extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \ZxSpectrumTap $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\ZxSpectrumTap $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -31,8 +31,36 @@ namespace {
 }
 
 namespace ZxSpectrumTap {
+    class ArrayParams extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\ZxSpectrumTap\Header $_parent = null, ?\ZxSpectrumTap $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_reserved = $this->_io->readU1();
+            $this->_m_varName = $this->_io->readU1();
+            $this->_m_reserved1 = $this->_io->readBytes(2);
+            if (!($this->_m_reserved1 == "\x00\x80")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00\x80", $this->_m_reserved1, $this->_io, "/types/array_params/seq/2");
+            }
+        }
+        protected $_m_reserved;
+        protected $_m_varName;
+        protected $_m_reserved1;
+        public function reserved() { return $this->_m_reserved; }
+
+        /**
+         * Variable name (1..26 meaning A$..Z$ +192)
+         */
+        public function varName() { return $this->_m_varName; }
+        public function reserved1() { return $this->_m_reserved1; }
+    }
+}
+
+namespace ZxSpectrumTap {
     class Block extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \ZxSpectrumTap $_parent = null, \ZxSpectrumTap $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\ZxSpectrumTap $_parent = null, ?\ZxSpectrumTap $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -44,10 +72,10 @@ namespace ZxSpectrumTap {
                 $this->_m_header = new \ZxSpectrumTap\Header($this->_io, $this, $this->_root);
             }
             if ($this->lenBlock() == 19) {
-                $this->_m_data = $this->_io->readBytes(($this->header()->lenData() + 4));
+                $this->_m_data = $this->_io->readBytes($this->header()->lenData() + 4);
             }
             if ($this->flag() == \ZxSpectrumTap\FlagEnum::DATA) {
-                $this->_m_headerlessData = $this->_io->readBytes(($this->lenBlock() - 1));
+                $this->_m_headerlessData = $this->_io->readBytes($this->lenBlock() - 1);
             }
         }
         protected $_m_lenBlock;
@@ -64,26 +92,8 @@ namespace ZxSpectrumTap {
 }
 
 namespace ZxSpectrumTap {
-    class ProgramParams extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \ZxSpectrumTap\Header $_parent = null, \ZxSpectrumTap $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_autostartLine = $this->_io->readU2le();
-            $this->_m_lenProgram = $this->_io->readU2le();
-        }
-        protected $_m_autostartLine;
-        protected $_m_lenProgram;
-        public function autostartLine() { return $this->_m_autostartLine; }
-        public function lenProgram() { return $this->_m_lenProgram; }
-    }
-}
-
-namespace ZxSpectrumTap {
     class BytesParams extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \ZxSpectrumTap\Header $_parent = null, \ZxSpectrumTap $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\ZxSpectrumTap\Header $_parent = null, ?\ZxSpectrumTap $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -101,7 +111,7 @@ namespace ZxSpectrumTap {
 
 namespace ZxSpectrumTap {
     class Header extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \ZxSpectrumTap\Block $_parent = null, \ZxSpectrumTap $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\ZxSpectrumTap\Block $_parent = null, ?\ZxSpectrumTap $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -111,17 +121,17 @@ namespace ZxSpectrumTap {
             $this->_m_filename = \Kaitai\Struct\Stream::bytesStripRight($this->_io->readBytes(10), 32);
             $this->_m_lenData = $this->_io->readU2le();
             switch ($this->headerType()) {
-                case \ZxSpectrumTap\HeaderTypeEnum::PROGRAM:
-                    $this->_m_params = new \ZxSpectrumTap\ProgramParams($this->_io, $this, $this->_root);
-                    break;
-                case \ZxSpectrumTap\HeaderTypeEnum::NUM_ARRAY:
-                    $this->_m_params = new \ZxSpectrumTap\ArrayParams($this->_io, $this, $this->_root);
+                case \ZxSpectrumTap\HeaderTypeEnum::BYTES:
+                    $this->_m_params = new \ZxSpectrumTap\BytesParams($this->_io, $this, $this->_root);
                     break;
                 case \ZxSpectrumTap\HeaderTypeEnum::CHAR_ARRAY:
                     $this->_m_params = new \ZxSpectrumTap\ArrayParams($this->_io, $this, $this->_root);
                     break;
-                case \ZxSpectrumTap\HeaderTypeEnum::BYTES:
-                    $this->_m_params = new \ZxSpectrumTap\BytesParams($this->_io, $this, $this->_root);
+                case \ZxSpectrumTap\HeaderTypeEnum::NUM_ARRAY:
+                    $this->_m_params = new \ZxSpectrumTap\ArrayParams($this->_io, $this, $this->_root);
+                    break;
+                case \ZxSpectrumTap\HeaderTypeEnum::PROGRAM:
+                    $this->_m_params = new \ZxSpectrumTap\ProgramParams($this->_io, $this, $this->_root);
                     break;
             }
             $this->_m_checksum = $this->_io->readU1();
@@ -144,30 +154,20 @@ namespace ZxSpectrumTap {
 }
 
 namespace ZxSpectrumTap {
-    class ArrayParams extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \ZxSpectrumTap\Header $_parent = null, \ZxSpectrumTap $_root = null) {
+    class ProgramParams extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\ZxSpectrumTap\Header $_parent = null, ?\ZxSpectrumTap $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_reserved = $this->_io->readU1();
-            $this->_m_varName = $this->_io->readU1();
-            $this->_m_reserved1 = $this->_io->readBytes(2);
-            if (!($this->reserved1() == "\x00\x80")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00\x80", $this->reserved1(), $this->_io(), "/types/array_params/seq/2");
-            }
+            $this->_m_autostartLine = $this->_io->readU2le();
+            $this->_m_lenProgram = $this->_io->readU2le();
         }
-        protected $_m_reserved;
-        protected $_m_varName;
-        protected $_m_reserved1;
-        public function reserved() { return $this->_m_reserved; }
-
-        /**
-         * Variable name (1..26 meaning A$..Z$ +192)
-         */
-        public function varName() { return $this->_m_varName; }
-        public function reserved1() { return $this->_m_reserved1; }
+        protected $_m_autostartLine;
+        protected $_m_lenProgram;
+        public function autostartLine() { return $this->_m_autostartLine; }
+        public function lenProgram() { return $this->_m_lenProgram; }
     }
 }
 
@@ -175,6 +175,12 @@ namespace ZxSpectrumTap {
     class FlagEnum {
         const HEADER = 0;
         const DATA = 255;
+
+        private const _VALUES = [0 => true, 255 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
@@ -184,5 +190,11 @@ namespace ZxSpectrumTap {
         const NUM_ARRAY = 1;
         const CHAR_ARRAY = 2;
         const BYTES = 3;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

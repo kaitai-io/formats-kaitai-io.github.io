@@ -18,7 +18,7 @@ type SomeIp struct {
 	Payload interface{}
 	_io *kaitai.Stream
 	_root *SomeIp
-	_parent interface{}
+	_parent kaitai.Struct
 	_raw_Payload []byte
 }
 func NewSomeIp() *SomeIp {
@@ -26,7 +26,11 @@ func NewSomeIp() *SomeIp {
 	}
 }
 
-func (this *SomeIp) Read(io *kaitai.Stream, parent interface{}, root *SomeIp) (err error) {
+func (this SomeIp) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *SomeIp) Read(io *kaitai.Stream, parent kaitai.Struct, root *SomeIp) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -43,7 +47,7 @@ func (this *SomeIp) Read(io *kaitai.Stream, parent interface{}, root *SomeIp) (e
 	}
 	switch (tmp2) {
 	case uint32(4294934784):
-		tmp3, err := this._io.ReadBytes(int((this.Header.Length - 8)))
+		tmp3, err := this._io.ReadBytes(int(this.Header.Length - 8))
 		if err != nil {
 			return err
 		}
@@ -51,13 +55,13 @@ func (this *SomeIp) Read(io *kaitai.Stream, parent interface{}, root *SomeIp) (e
 		this._raw_Payload = tmp3
 		_io__raw_Payload := kaitai.NewStream(bytes.NewReader(this._raw_Payload))
 		tmp4 := NewSomeIpSd()
-		err = tmp4.Read(_io__raw_Payload, this, nil)
+		err = tmp4.Read(_io__raw_Payload, nil, nil)
 		if err != nil {
 			return err
 		}
 		this.Payload = tmp4
 	default:
-		tmp5, err := this._io.ReadBytes(int((this.Header.Length - 8)))
+		tmp5, err := this._io.ReadBytes(int(this.Header.Length - 8))
 		if err != nil {
 			return err
 		}
@@ -80,6 +84,11 @@ const (
 	SomeIp_Header_MessageTypeEnum__ResponseAck SomeIp_Header_MessageTypeEnum = 192
 	SomeIp_Header_MessageTypeEnum__ErrorAck SomeIp_Header_MessageTypeEnum = 193
 )
+var values_SomeIp_Header_MessageTypeEnum = map[SomeIp_Header_MessageTypeEnum]struct{}{0: {}, 1: {}, 2: {}, 64: {}, 65: {}, 66: {}, 128: {}, 129: {}, 192: {}, 193: {}}
+func (v SomeIp_Header_MessageTypeEnum) isDefined() bool {
+	_, ok := values_SomeIp_Header_MessageTypeEnum[v]
+	return ok
+}
 
 type SomeIp_Header_ReturnCodeEnum int
 const (
@@ -95,6 +104,11 @@ const (
 	SomeIp_Header_ReturnCodeEnum__MalformedMessage SomeIp_Header_ReturnCodeEnum = 9
 	SomeIp_Header_ReturnCodeEnum__WrongMessageType SomeIp_Header_ReturnCodeEnum = 10
 )
+var values_SomeIp_Header_ReturnCodeEnum = map[SomeIp_Header_ReturnCodeEnum]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}, 10: {}}
+func (v SomeIp_Header_ReturnCodeEnum) isDefined() bool {
+	_, ok := values_SomeIp_Header_ReturnCodeEnum[v]
+	return ok
+}
 type SomeIp_Header struct {
 	MessageId *SomeIp_Header_MessageId
 	Length uint32
@@ -114,6 +128,10 @@ type SomeIp_Header struct {
 func NewSomeIp_Header() *SomeIp_Header {
 	return &SomeIp_Header{
 	}
+}
+
+func (this SomeIp_Header) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *SomeIp_Header) Read(io *kaitai.Stream, parent *SomeIp, root *SomeIp) (err error) {
@@ -183,12 +201,12 @@ func (this *SomeIp_Header) IsValidServiceDiscovery() (v bool, err error) {
 	if (this._f_isValidServiceDiscovery) {
 		return this.isValidServiceDiscovery, nil
 	}
+	this._f_isValidServiceDiscovery = true
 	tmp15, err := this.MessageId.Value()
 	if err != nil {
 		return false, err
 	}
 	this.isValidServiceDiscovery = bool( ((tmp15 == uint32(4294934784)) && (this.ProtocolVersion == 1) && (this.InterfaceVersion == 1) && (this.MessageType == SomeIp_Header_MessageTypeEnum__Notification) && (this.ReturnCode == SomeIp_Header_ReturnCodeEnum__Ok)) )
-	this._f_isValidServiceDiscovery = true
 	return this.isValidServiceDiscovery, nil
 }
 
@@ -254,6 +272,10 @@ func NewSomeIp_Header_MessageId() *SomeIp_Header_MessageId {
 	}
 }
 
+func (this SomeIp_Header_MessageId) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *SomeIp_Header_MessageId) Read(io *kaitai.Stream, parent *SomeIp_Header, root *SomeIp) (err error) {
 	this._io = io
 	this._parent = parent
@@ -293,6 +315,7 @@ func (this *SomeIp_Header_MessageId) Value() (v uint32, err error) {
 	if (this._f_value) {
 		return this.value, nil
 	}
+	this._f_value = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return 0, err
@@ -310,8 +333,6 @@ func (this *SomeIp_Header_MessageId) Value() (v uint32, err error) {
 	if err != nil {
 		return 0, err
 	}
-	this._f_value = true
-	this._f_value = true
 	return this.value, nil
 }
 
@@ -352,6 +373,10 @@ func NewSomeIp_Header_RequestId() *SomeIp_Header_RequestId {
 	}
 }
 
+func (this SomeIp_Header_RequestId) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *SomeIp_Header_RequestId) Read(io *kaitai.Stream, parent *SomeIp_Header, root *SomeIp) (err error) {
 	this._io = io
 	this._parent = parent
@@ -377,6 +402,7 @@ func (this *SomeIp_Header_RequestId) Value() (v uint32, err error) {
 	if (this._f_value) {
 		return this.value, nil
 	}
+	this._f_value = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return 0, err
@@ -394,7 +420,5 @@ func (this *SomeIp_Header_RequestId) Value() (v uint32, err error) {
 	if err != nil {
 		return 0, err
 	}
-	this._f_value = true
-	this._f_value = true
 	return this.value, nil
 }

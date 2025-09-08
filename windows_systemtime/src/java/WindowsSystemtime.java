@@ -40,6 +40,9 @@ public class WindowsSystemtime extends KaitaiStruct {
         this.sec = this._io.readU2le();
         this.msec = this._io.readU2le();
     }
+
+    public void _fetchInstances() {
+    }
     private int year;
     private int month;
     private int dow;

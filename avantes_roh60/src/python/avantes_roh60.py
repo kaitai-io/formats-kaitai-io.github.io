@@ -1,11 +1,12 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class AvantesRoh60(KaitaiStruct):
     """Avantes USB spectrometers are supplied with a Windows binary which
@@ -36,9 +37,9 @@ class AvantesRoh60(KaitaiStruct):
     Written and tested by Filip Dominec, 2017-2018
     """
     def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
+        super(AvantesRoh60, self).__init__(_io)
         self._parent = _parent
-        self._root = _root if _root else self
+        self._root = _root or self
         self._read()
 
     def _read(self):
@@ -59,11 +60,24 @@ class AvantesRoh60(KaitaiStruct):
             self.unknown3.append(self._io.read_f4le())
 
         self.spectrum = []
-        for i in range(((int(self.ipixlast) - int(self.ipixfirst)) - 1)):
+        for i in range((int(self.ipixlast) - int(self.ipixfirst)) - 1):
             self.spectrum.append(self._io.read_f4le())
 
         self.integration_ms = self._io.read_f4le()
         self.averaging = self._io.read_f4le()
         self.pixel_smoothing = self._io.read_f4le()
+
+
+    def _fetch_instances(self):
+        pass
+        for i in range(len(self.unknown2)):
+            pass
+
+        for i in range(len(self.unknown3)):
+            pass
+
+        for i in range(len(self.spectrum)):
+            pass
+
 
 

@@ -4,10 +4,10 @@
 
 local class = require("class")
 require("kaitaistruct")
+require("dos_datetime")
 local stringstream = require("string_stream")
 local str_decode = require("string_decode")
 
-require("dos_datetime")
 -- 
 -- LHA (LHarc, LZH) is a file format used by a popular freeware
 -- eponymous archiver, created in 1988 by Haruyasu Yoshizaki. Over the
@@ -35,34 +35,17 @@ function Lzh:_read()
 end
 
 
-Lzh.Record = class.class(KaitaiStruct)
-
-function Lzh.Record:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Lzh.Record:_read()
-  self.header_len = self._io:read_u1()
-  if self.header_len > 0 then
-    self.file_record = Lzh.FileRecord(self._io, self, self._root)
-  end
-end
-
-
 Lzh.FileRecord = class.class(KaitaiStruct)
 
 function Lzh.FileRecord:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function Lzh.FileRecord:_read()
-  self._raw_header = self._io:read_bytes((self._parent.header_len - 1))
+  self._raw_header = self._io:read_bytes(self._parent.header_len - 1)
   local _io = KaitaiStream(stringstream(self._raw_header))
   self.header = Lzh.Header(_io, self, self._root)
   if self.header.header1.lha_level == 0 then
@@ -77,7 +60,7 @@ Lzh.Header = class.class(KaitaiStruct)
 function Lzh.Header:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -108,7 +91,7 @@ Lzh.Header1 = class.class(KaitaiStruct)
 function Lzh.Header1:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -132,4 +115,21 @@ end
 -- Original file date/time.
 -- 
 -- File or directory attribute.
+
+Lzh.Record = class.class(KaitaiStruct)
+
+function Lzh.Record:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Lzh.Record:_read()
+  self.header_len = self._io:read_u1()
+  if self.header_len > 0 then
+    self.file_record = Lzh.FileRecord(self._io, self, self._root)
+  end
+end
+
 

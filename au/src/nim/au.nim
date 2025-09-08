@@ -82,7 +82,7 @@ proc read*(_: typedesc[Au], io: KaitaiStream, root: KaitaiStruct, parent: Kaitai
   this.magic = magicExpr
   let ofsDataExpr = this.io.readU4be()
   this.ofsData = ofsDataExpr
-  let rawHeaderExpr = this.io.readBytes(int(((this.ofsData - 4) - 4)))
+  let rawHeaderExpr = this.io.readBytes(int((this.ofsData - 4) - 4))
   this.rawHeader = rawHeaderExpr
   let rawHeaderIo = newKaitaiStream(rawHeaderExpr)
   let headerExpr = Au_Header.read(rawHeaderIo, this.root, this)
@@ -91,7 +91,7 @@ proc read*(_: typedesc[Au], io: KaitaiStream, root: KaitaiStruct, parent: Kaitai
 proc lenData(this: Au): int = 
   if this.lenDataInstFlag:
     return this.lenDataInst
-  let lenDataInstExpr = int((if this.header.dataSize == 4294967295'i64: (this.io.size - this.ofsData) else: this.header.dataSize))
+  let lenDataInstExpr = int((if this.header.dataSize == 4294967295'i64: this.io.size - this.ofsData else: this.header.dataSize))
   this.lenDataInst = lenDataInstExpr
   this.lenDataInstFlag = true
   return this.lenDataInst

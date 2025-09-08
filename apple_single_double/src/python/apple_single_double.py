@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
-from enum import Enum
+from enum import IntEnum
 
 
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class AppleSingleDouble(KaitaiStruct):
     """AppleSingle and AppleDouble files are used by certain Mac
@@ -33,13 +34,13 @@ class AppleSingleDouble(KaitaiStruct):
        Source - http://kaiser-edv.de/documents/AppleSingle_AppleDouble.pdf
     """
 
-    class FileType(Enum):
+    class FileType(IntEnum):
         apple_single = 333312
         apple_double = 333319
     def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
+        super(AppleSingleDouble, self).__init__(_io)
         self._parent = _parent
-        self._root = _root if _root else self
+        self._root = _root or self
         self._read()
 
     def _read(self):
@@ -52,9 +53,17 @@ class AppleSingleDouble(KaitaiStruct):
             self.entries.append(AppleSingleDouble.Entry(self._io, self, self._root))
 
 
+
+    def _fetch_instances(self):
+        pass
+        for i in range(len(self.entries)):
+            pass
+            self.entries[i]._fetch_instances()
+
+
     class Entry(KaitaiStruct):
 
-        class Types(Enum):
+        class Types(IntEnum):
             data_fork = 1
             resource_fork = 2
             real_name = 3
@@ -70,15 +79,29 @@ class AppleSingleDouble(KaitaiStruct):
             afp_file_info = 14
             afp_directory_id = 15
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(AppleSingleDouble.Entry, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
             self.type = KaitaiStream.resolve_enum(AppleSingleDouble.Entry.Types, self._io.read_u4be())
             self.ofs_body = self._io.read_u4be()
             self.len_body = self._io.read_u4be()
+
+
+        def _fetch_instances(self):
+            pass
+            _ = self.body
+            if hasattr(self, '_m_body'):
+                pass
+                _on = self.type
+                if _on == AppleSingleDouble.Entry.Types.finder_info:
+                    pass
+                    self._m_body._fetch_instances()
+                else:
+                    pass
+
 
         @property
         def body(self):
@@ -89,10 +112,12 @@ class AppleSingleDouble(KaitaiStruct):
             self._io.seek(self.ofs_body)
             _on = self.type
             if _on == AppleSingleDouble.Entry.Types.finder_info:
+                pass
                 self._raw__m_body = self._io.read_bytes(self.len_body)
                 _io__raw__m_body = KaitaiStream(BytesIO(self._raw__m_body))
                 self._m_body = AppleSingleDouble.FinderInfo(_io__raw__m_body, self, self._root)
             else:
+                pass
                 self._m_body = self._io.read_bytes(self.len_body)
             self._io.seek(_pos)
             return getattr(self, '_m_body', None)
@@ -105,9 +130,9 @@ class AppleSingleDouble(KaitaiStruct):
            older Inside Macintosh, Volume II page 84 or Volume IV page 104.
         """
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(AppleSingleDouble.FinderInfo, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -118,17 +143,26 @@ class AppleSingleDouble(KaitaiStruct):
             self.folder_id = self._io.read_u2be()
 
 
+        def _fetch_instances(self):
+            pass
+            self.location._fetch_instances()
+
+
     class Point(KaitaiStruct):
         """Specifies 2D coordinate in QuickDraw grid."""
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(AppleSingleDouble.Point, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
             self.x = self._io.read_u2be()
             self.y = self._io.read_u2be()
+
+
+        def _fetch_instances(self):
+            pass
 
 
 

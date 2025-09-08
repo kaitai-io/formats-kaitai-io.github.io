@@ -226,6 +226,11 @@ actually a subset of ASCII:</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="Flattened Devicetree Format parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="Flattened Devicetree Format parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -256,7 +261,17 @@ actually a subset of ASCII:</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="Flattened Devicetree Format parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="Flattened Devicetree Format parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="Flattened Devicetree Format parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -329,6 +344,11 @@ actually a subset of ASCII:</p>
 <span class="w">	</span><span class="nx">Dtb_Fdt__Nop</span><span class="w"> </span><span class="nx">Dtb_Fdt</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">4</span>
 <span class="w">	</span><span class="nx">Dtb_Fdt__End</span><span class="w"> </span><span class="nx">Dtb_Fdt</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">9</span>
 <span class="p">)</span>
+<span class="kd">var</span><span class="w"> </span><span class="nx">values_Dtb_Fdt</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kd">map</span><span class="p">[</span><span class="nx">Dtb_Fdt</span><span class="p">]</span><span class="kd">struct</span><span class="p">{}{</span><span class="mi">1</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">2</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">3</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">4</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"> </span><span class="mi">9</span><span class="p">:</span><span class="w"> </span><span class="p">{}}</span>
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="w"> </span><span class="nx">Dtb_Fdt</span><span class="p">)</span><span class="w"> </span><span class="nx">isDefined</span><span class="p">()</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">ok</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">values_Dtb_Fdt</span><span class="p">[</span><span class="nx">v</span><span class="p">]</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">ok</span>
+<span class="p">}</span>
 <span class="kd">type</span><span class="w"> </span><span class="nx">Dtb</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
 <span class="w">	</span><span class="nx">Magic</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span>
 <span class="w">	</span><span class="nx">TotalSize</span><span class="w"> </span><span class="kt">uint32</span>
@@ -342,23 +362,27 @@ actually a subset of ASCII:</p>
 <span class="w">	</span><span class="nx">LenStructureBlock</span><span class="w"> </span><span class="kt">uint32</span>
 <span class="w">	</span><span class="nx">_io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
 <span class="w">	</span><span class="nx">_root</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb</span>
-<span class="w">	</span><span class="nx">_parent</span><span class="w"> </span><span class="kd">interface</span><span class="p">{}</span>
+<span class="w">	</span><span class="nx">_parent</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Struct</span>
 <span class="w">	</span><span class="nx">_raw_memoryReservationBlock</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span>
-<span class="w">	</span><span class="nx">_raw_structureBlock</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span>
 <span class="w">	</span><span class="nx">_raw_stringsBlock</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span>
+<span class="w">	</span><span class="nx">_raw_structureBlock</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span>
 <span class="w">	</span><span class="nx">_f_memoryReservationBlock</span><span class="w"> </span><span class="kt">bool</span>
 <span class="w">	</span><span class="nx">memoryReservationBlock</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb_MemoryBlock</span>
-<span class="w">	</span><span class="nx">_f_structureBlock</span><span class="w"> </span><span class="kt">bool</span>
-<span class="w">	</span><span class="nx">structureBlock</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb_FdtBlock</span>
 <span class="w">	</span><span class="nx">_f_stringsBlock</span><span class="w"> </span><span class="kt">bool</span>
 <span class="w">	</span><span class="nx">stringsBlock</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb_Strings</span>
+<span class="w">	</span><span class="nx">_f_structureBlock</span><span class="w"> </span><span class="kt">bool</span>
+<span class="w">	</span><span class="nx">structureBlock</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb_FdtBlock</span>
 <span class="p">}</span>
 <span class="kd">func</span><span class="w"> </span><span class="nx">NewDtb</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb</span><span class="w"> </span><span class="p">{</span>
 <span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">Dtb</span><span class="p">{</span>
 <span class="w">	</span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="kd">interface</span><span class="p">{},</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="nx">Dtb</span><span class="p">)</span><span class="w"> </span><span class="nx">IO_</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Struct</span><span class="p">,</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">io</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">parent</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">root</span>
@@ -426,6 +450,7 @@ actually a subset of ASCII:</p>
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_memoryReservationBlock</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">memoryReservationBlock</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
 <span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_memoryReservationBlock</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span>
 <span class="w">	</span><span class="nx">_pos</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Pos</span><span class="p">()</span>
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
@@ -434,7 +459,7 @@ actually a subset of ASCII:</p>
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">tmp11</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">((</span><span class="nx">this</span><span class="p">.</span><span class="nx">OfsStructureBlock</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">OfsMemoryReservationBlock</span><span class="p">)))</span>
+<span class="w">	</span><span class="nx">tmp11</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">OfsStructureBlock</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">OfsMemoryReservationBlock</span><span class="p">))</span>
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">	</span><span class="p">}</span>
@@ -451,47 +476,13 @@ actually a subset of ASCII:</p>
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_memoryReservationBlock</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_memoryReservationBlock</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span>
 <span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">memoryReservationBlock</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
-<span class="p">}</span>
-<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb</span><span class="p">)</span><span class="w"> </span><span class="nx">StructureBlock</span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb_FdtBlock</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_structureBlock</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">structureBlock</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
-<span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">_pos</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Pos</span><span class="p">()</span>
-<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
-<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
-<span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Seek</span><span class="p">(</span><span class="nb">int64</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">OfsStructureBlock</span><span class="p">),</span><span class="w"> </span><span class="nx">io</span><span class="p">.</span><span class="nx">SeekStart</span><span class="p">)</span>
-<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
-<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
-<span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">tmp13</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenStructureBlock</span><span class="p">))</span>
-<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
-<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
-<span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">tmp13</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp13</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_structureBlock</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp13</span>
-<span class="w">	</span><span class="nx">_io__raw_structureBlock</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_structureBlock</span><span class="p">))</span>
-<span class="w">	</span><span class="nx">tmp14</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewDtb_FdtBlock</span><span class="p">()</span>
-<span class="w">	</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp14</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_structureBlock</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
-<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
-<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
-<span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">structureBlock</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp14</span>
-<span class="w">	</span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">,</span><span class="w"> </span><span class="nx">io</span><span class="p">.</span><span class="nx">SeekStart</span><span class="p">)</span>
-<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
-<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
-<span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_structureBlock</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_structureBlock</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span>
-<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">structureBlock</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
 <span class="p">}</span>
 <span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb</span><span class="p">)</span><span class="w"> </span><span class="nx">StringsBlock</span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb_Strings</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_stringsBlock</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">stringsBlock</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
 <span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_stringsBlock</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span>
 <span class="w">	</span><span class="nx">_pos</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Pos</span><span class="p">()</span>
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
@@ -500,58 +491,97 @@ actually a subset of ASCII:</p>
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">tmp15</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenStringsBlock</span><span class="p">))</span>
+<span class="w">	</span><span class="nx">tmp13</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenStringsBlock</span><span class="p">))</span>
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">tmp15</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp15</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_stringsBlock</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp15</span>
+<span class="w">	</span><span class="nx">tmp13</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp13</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_stringsBlock</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp13</span>
 <span class="w">	</span><span class="nx">_io__raw_stringsBlock</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_stringsBlock</span><span class="p">))</span>
-<span class="w">	</span><span class="nx">tmp16</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewDtb_Strings</span><span class="p">()</span>
-<span class="w">	</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp16</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_stringsBlock</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+<span class="w">	</span><span class="nx">tmp14</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewDtb_Strings</span><span class="p">()</span>
+<span class="w">	</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp14</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_stringsBlock</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">stringsBlock</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp16</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">stringsBlock</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp14</span>
 <span class="w">	</span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">,</span><span class="w"> </span><span class="nx">io</span><span class="p">.</span><span class="nx">SeekStart</span><span class="p">)</span>
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_stringsBlock</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_stringsBlock</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span>
 <span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">stringsBlock</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
 <span class="p">}</span>
-<span class="kd">type</span><span class="w"> </span><span class="nx">Dtb_MemoryBlock</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
-<span class="w">	</span><span class="nx">Entries</span><span class="w"> </span><span class="p">[]</span><span class="o">*</span><span class="nx">Dtb_MemoryBlockEntry</span>
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb</span><span class="p">)</span><span class="w"> </span><span class="nx">StructureBlock</span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb_FdtBlock</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_structureBlock</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">structureBlock</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_structureBlock</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">	</span><span class="nx">_pos</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Pos</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Seek</span><span class="p">(</span><span class="nb">int64</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">OfsStructureBlock</span><span class="p">),</span><span class="w"> </span><span class="nx">io</span><span class="p">.</span><span class="nx">SeekStart</span><span class="p">)</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp15</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenStructureBlock</span><span class="p">))</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp15</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp15</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_structureBlock</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp15</span>
+<span class="w">	</span><span class="nx">_io__raw_structureBlock</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_structureBlock</span><span class="p">))</span>
+<span class="w">	</span><span class="nx">tmp16</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewDtb_FdtBlock</span><span class="p">()</span>
+<span class="w">	</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp16</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_structureBlock</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">structureBlock</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp16</span>
+<span class="w">	</span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">,</span><span class="w"> </span><span class="nx">io</span><span class="p">.</span><span class="nx">SeekStart</span><span class="p">)</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">structureBlock</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="p">}</span>
+<span class="kd">type</span><span class="w"> </span><span class="nx">Dtb_FdtBeginNode</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">Name</span><span class="w"> </span><span class="kt">string</span>
+<span class="w">	</span><span class="nx">Padding</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span>
 <span class="w">	</span><span class="nx">_io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
 <span class="w">	</span><span class="nx">_root</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb</span>
-<span class="w">	</span><span class="nx">_parent</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb</span>
+<span class="w">	</span><span class="nx">_parent</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb_FdtNode</span>
 <span class="p">}</span>
-<span class="kd">func</span><span class="w"> </span><span class="nx">NewDtb_MemoryBlock</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb_MemoryBlock</span><span class="w"> </span><span class="p">{</span>
-<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">Dtb_MemoryBlock</span><span class="p">{</span>
+<span class="kd">func</span><span class="w"> </span><span class="nx">NewDtb_FdtBeginNode</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb_FdtBeginNode</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">Dtb_FdtBeginNode</span><span class="p">{</span>
 <span class="w">	</span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb_MemoryBlock</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb</span><span class="p">,</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="nx">Dtb_FdtBeginNode</span><span class="p">)</span><span class="w"> </span><span class="nx">IO_</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb_FdtBeginNode</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb_FdtNode</span><span class="p">,</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">io</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">parent</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">root</span>
 
-<span class="w">	</span><span class="k">for</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="mi">1</span><span class="p">;;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="w"> </span><span class="p">{</span>
-<span class="w">		</span><span class="nx">tmp17</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">EOF</span><span class="p">()</span>
-<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
-<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
-<span class="w">		</span><span class="p">}</span>
-<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">tmp17</span><span class="w"> </span><span class="p">{</span>
-<span class="w">			</span><span class="k">break</span>
-<span class="w">		</span><span class="p">}</span>
-<span class="w">		</span><span class="nx">tmp18</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewDtb_MemoryBlockEntry</span><span class="p">()</span>
-<span class="w">		</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp18</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
-<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
-<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
-<span class="w">		</span><span class="p">}</span>
-<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">Entries</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">append</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Entries</span><span class="p">,</span><span class="w"> </span><span class="nx">tmp18</span><span class="p">)</span>
+<span class="w">	</span><span class="nx">tmp17</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Name</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">string</span><span class="p">(</span><span class="nx">tmp17</span><span class="p">)</span>
+<span class="w">	</span><span class="nx">tmp19</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Pos</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp18</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="o">-</span><span class="p">(</span><span class="nx">tmp19</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">4</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">tmp18</span><span class="w"> </span><span class="p">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp18</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">4</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp20</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">tmp18</span><span class="p">))</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp20</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp20</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Padding</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp20</span>
 <span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="p">}</span>
 <span class="kd">type</span><span class="w"> </span><span class="nx">Dtb_FdtBlock</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
@@ -565,22 +595,193 @@ actually a subset of ASCII:</p>
 <span class="w">	</span><span class="p">}</span>
 <span class="p">}</span>
 
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="nx">Dtb_FdtBlock</span><span class="p">)</span><span class="w"> </span><span class="nx">IO_</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span>
+<span class="p">}</span>
+
 <span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb_FdtBlock</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb</span><span class="p">,</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">io</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">parent</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">root</span>
 
 <span class="w">	</span><span class="k">for</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="mi">1</span><span class="p">;;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="w"> </span><span class="p">{</span>
-<span class="w">		</span><span class="nx">tmp19</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewDtb_FdtNode</span><span class="p">()</span>
-<span class="w">		</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp19</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+<span class="w">		</span><span class="nx">tmp21</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewDtb_FdtNode</span><span class="p">()</span>
+<span class="w">		</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp21</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 <span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">		</span><span class="p">}</span>
-<span class="w">		</span><span class="nx">_it</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">tmp19</span>
+<span class="w">		</span><span class="nx">_it</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">tmp21</span>
 <span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">Nodes</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">append</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Nodes</span><span class="p">,</span><span class="w"> </span><span class="nx">_it</span><span class="p">)</span>
 <span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">_it</span><span class="p">.</span><span class="nx">Type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nx">Dtb_Fdt__End</span><span class="w"> </span><span class="p">{</span>
 <span class="w">			</span><span class="k">break</span>
 <span class="w">		</span><span class="p">}</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">type</span><span class="w"> </span><span class="nx">Dtb_FdtNode</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">Type</span><span class="w"> </span><span class="nx">Dtb_Fdt</span>
+<span class="w">	</span><span class="nx">Body</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Struct</span>
+<span class="w">	</span><span class="nx">_io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+<span class="w">	</span><span class="nx">_root</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb</span>
+<span class="w">	</span><span class="nx">_parent</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb_FdtBlock</span>
+<span class="p">}</span>
+<span class="kd">func</span><span class="w"> </span><span class="nx">NewDtb_FdtNode</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb_FdtNode</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">Dtb_FdtNode</span><span class="p">{</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="nx">Dtb_FdtNode</span><span class="p">)</span><span class="w"> </span><span class="nx">IO_</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb_FdtNode</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb_FdtBlock</span><span class="p">,</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">io</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">parent</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">root</span>
+
+<span class="w">	</span><span class="nx">tmp22</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4be</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Type</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">Dtb_Fdt</span><span class="p">(</span><span class="nx">tmp22</span><span class="p">)</span>
+<span class="w">	</span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Type</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="nx">Dtb_Fdt__BeginNode</span><span class="p">:</span>
+<span class="w">		</span><span class="nx">tmp23</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewDtb_FdtBeginNode</span><span class="p">()</span>
+<span class="w">		</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp23</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">Body</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp23</span>
+<span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="nx">Dtb_Fdt__Prop</span><span class="p">:</span>
+<span class="w">		</span><span class="nx">tmp24</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewDtb_FdtProp</span><span class="p">()</span>
+<span class="w">		</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp24</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">Body</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp24</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">type</span><span class="w"> </span><span class="nx">Dtb_FdtProp</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">LenProperty</span><span class="w"> </span><span class="kt">uint32</span>
+<span class="w">	</span><span class="nx">OfsName</span><span class="w"> </span><span class="kt">uint32</span>
+<span class="w">	</span><span class="nx">Property</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span>
+<span class="w">	</span><span class="nx">Padding</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span>
+<span class="w">	</span><span class="nx">_io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+<span class="w">	</span><span class="nx">_root</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb</span>
+<span class="w">	</span><span class="nx">_parent</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb_FdtNode</span>
+<span class="w">	</span><span class="nx">_f_name</span><span class="w"> </span><span class="kt">bool</span>
+<span class="w">	</span><span class="nx">name</span><span class="w"> </span><span class="kt">string</span>
+<span class="p">}</span>
+<span class="kd">func</span><span class="w"> </span><span class="nx">NewDtb_FdtProp</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb_FdtProp</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">Dtb_FdtProp</span><span class="p">{</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="nx">Dtb_FdtProp</span><span class="p">)</span><span class="w"> </span><span class="nx">IO_</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb_FdtProp</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb_FdtNode</span><span class="p">,</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">io</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">parent</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">root</span>
+
+<span class="w">	</span><span class="nx">tmp25</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4be</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenProperty</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp25</span><span class="p">)</span>
+<span class="w">	</span><span class="nx">tmp26</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4be</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">OfsName</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp26</span><span class="p">)</span>
+<span class="w">	</span><span class="nx">tmp27</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenProperty</span><span class="p">))</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp27</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp27</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Property</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp27</span>
+<span class="w">	</span><span class="nx">tmp29</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Pos</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp28</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="o">-</span><span class="p">(</span><span class="nx">tmp29</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">4</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">tmp28</span><span class="w"> </span><span class="p">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp28</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">4</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp30</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">tmp28</span><span class="p">))</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp30</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp30</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Padding</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp30</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb_FdtProp</span><span class="p">)</span><span class="w"> </span><span class="nx">Name</span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_name</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_name</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">	</span><span class="nx">tmp31</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">StringsBlock</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">thisIo</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">tmp31</span><span class="p">.</span><span class="nx">_io</span>
+<span class="w">	</span><span class="nx">_pos</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">thisIo</span><span class="p">.</span><span class="nx">Pos</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">thisIo</span><span class="p">.</span><span class="nx">Seek</span><span class="p">(</span><span class="nb">int64</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">OfsName</span><span class="p">),</span><span class="w"> </span><span class="nx">io</span><span class="p">.</span><span class="nx">SeekStart</span><span class="p">)</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">tmp32</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">thisIo</span><span class="p">.</span><span class="nx">ReadBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">name</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">string</span><span class="p">(</span><span class="nx">tmp32</span><span class="p">)</span>
+<span class="w">	</span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">thisIo</span><span class="p">.</span><span class="nx">Seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">,</span><span class="w"> </span><span class="nx">io</span><span class="p">.</span><span class="nx">SeekStart</span><span class="p">)</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
+<span class="p">}</span>
+<span class="kd">type</span><span class="w"> </span><span class="nx">Dtb_MemoryBlock</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">Entries</span><span class="w"> </span><span class="p">[]</span><span class="o">*</span><span class="nx">Dtb_MemoryBlockEntry</span>
+<span class="w">	</span><span class="nx">_io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+<span class="w">	</span><span class="nx">_root</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb</span>
+<span class="w">	</span><span class="nx">_parent</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb</span>
+<span class="p">}</span>
+<span class="kd">func</span><span class="w"> </span><span class="nx">NewDtb_MemoryBlock</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb_MemoryBlock</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">Dtb_MemoryBlock</span><span class="p">{</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="nx">Dtb_MemoryBlock</span><span class="p">)</span><span class="w"> </span><span class="nx">IO_</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb_MemoryBlock</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb</span><span class="p">,</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">io</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">parent</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">root</span>
+
+<span class="w">	</span><span class="k">for</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="mi">0</span><span class="p">;;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp33</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">EOF</span><span class="p">()</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">tmp33</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">break</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">tmp34</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewDtb_MemoryBlockEntry</span><span class="p">()</span>
+<span class="w">		</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp34</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">Entries</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">append</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Entries</span><span class="p">,</span><span class="w"> </span><span class="nx">tmp34</span><span class="p">)</span>
 <span class="w">	</span><span class="p">}</span>
 <span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="p">}</span>
@@ -596,21 +797,25 @@ actually a subset of ASCII:</p>
 <span class="w">	</span><span class="p">}</span>
 <span class="p">}</span>
 
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="nx">Dtb_MemoryBlockEntry</span><span class="p">)</span><span class="w"> </span><span class="nx">IO_</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span>
+<span class="p">}</span>
+
 <span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb_MemoryBlockEntry</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb_MemoryBlock</span><span class="p">,</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">io</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">parent</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">root</span>
 
-<span class="w">	</span><span class="nx">tmp20</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU8be</span><span class="p">()</span>
+<span class="w">	</span><span class="nx">tmp35</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU8be</span><span class="p">()</span>
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Address</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint64</span><span class="p">(</span><span class="nx">tmp20</span><span class="p">)</span>
-<span class="w">	</span><span class="nx">tmp21</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU8be</span><span class="p">()</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Address</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint64</span><span class="p">(</span><span class="nx">tmp35</span><span class="p">)</span>
+<span class="w">	</span><span class="nx">tmp36</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU8be</span><span class="p">()</span>
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Size</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint64</span><span class="p">(</span><span class="nx">tmp21</span><span class="p">)</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Size</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint64</span><span class="p">(</span><span class="nx">tmp36</span><span class="p">)</span>
 <span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="p">}</span>
 
@@ -632,186 +837,29 @@ actually a subset of ASCII:</p>
 <span class="w">	</span><span class="p">}</span>
 <span class="p">}</span>
 
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="nx">Dtb_Strings</span><span class="p">)</span><span class="w"> </span><span class="nx">IO_</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span>
+<span class="p">}</span>
+
 <span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb_Strings</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb</span><span class="p">,</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">io</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">parent</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">root</span>
 
-<span class="w">	</span><span class="k">for</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="mi">1</span><span class="p">;;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="w"> </span><span class="p">{</span>
-<span class="w">		</span><span class="nx">tmp22</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">EOF</span><span class="p">()</span>
+<span class="w">	</span><span class="k">for</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="mi">0</span><span class="p">;;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp37</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">EOF</span><span class="p">()</span>
 <span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">		</span><span class="p">}</span>
-<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">tmp22</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">tmp37</span><span class="w"> </span><span class="p">{</span>
 <span class="w">			</span><span class="k">break</span>
 <span class="w">		</span><span class="p">}</span>
-<span class="w">		</span><span class="nx">tmp23</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
+<span class="w">		</span><span class="nx">tmp38</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
 <span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">		</span><span class="p">}</span>
-<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">Strings</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">append</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Strings</span><span class="p">,</span><span class="w"> </span><span class="nb">string</span><span class="p">(</span><span class="nx">tmp23</span><span class="p">))</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">Strings</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">append</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Strings</span><span class="p">,</span><span class="w"> </span><span class="nb">string</span><span class="p">(</span><span class="nx">tmp38</span><span class="p">))</span>
 <span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
-<span class="p">}</span>
-<span class="kd">type</span><span class="w"> </span><span class="nx">Dtb_FdtProp</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
-<span class="w">	</span><span class="nx">LenProperty</span><span class="w"> </span><span class="kt">uint32</span>
-<span class="w">	</span><span class="nx">OfsName</span><span class="w"> </span><span class="kt">uint32</span>
-<span class="w">	</span><span class="nx">Property</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span>
-<span class="w">	</span><span class="nx">Padding</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span>
-<span class="w">	</span><span class="nx">_io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
-<span class="w">	</span><span class="nx">_root</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb</span>
-<span class="w">	</span><span class="nx">_parent</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb_FdtNode</span>
-<span class="w">	</span><span class="nx">_f_name</span><span class="w"> </span><span class="kt">bool</span>
-<span class="w">	</span><span class="nx">name</span><span class="w"> </span><span class="kt">string</span>
-<span class="p">}</span>
-<span class="kd">func</span><span class="w"> </span><span class="nx">NewDtb_FdtProp</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb_FdtProp</span><span class="w"> </span><span class="p">{</span>
-<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">Dtb_FdtProp</span><span class="p">{</span>
-<span class="w">	</span><span class="p">}</span>
-<span class="p">}</span>
-
-<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb_FdtProp</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb_FdtNode</span><span class="p">,</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">io</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">parent</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">root</span>
-
-<span class="w">	</span><span class="nx">tmp24</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4be</span><span class="p">()</span>
-<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
-<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
-<span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenProperty</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp24</span><span class="p">)</span>
-<span class="w">	</span><span class="nx">tmp25</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4be</span><span class="p">()</span>
-<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
-<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
-<span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">OfsName</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp25</span><span class="p">)</span>
-<span class="w">	</span><span class="nx">tmp26</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenProperty</span><span class="p">))</span>
-<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
-<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
-<span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">tmp26</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp26</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Property</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp26</span>
-<span class="w">	</span><span class="nx">tmp28</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Pos</span><span class="p">()</span>
-<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
-<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
-<span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">tmp27</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="o">-</span><span class="p">(</span><span class="nx">tmp28</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">4</span>
-<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">tmp27</span><span class="w"> </span><span class="p">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">{</span>
-<span class="w">		</span><span class="nx">tmp27</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">4</span>
-<span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">tmp29</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">tmp27</span><span class="p">))</span>
-<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
-<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
-<span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">tmp29</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp29</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Padding</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp29</span>
-<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
-<span class="p">}</span>
-<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb_FdtProp</span><span class="p">)</span><span class="w"> </span><span class="nx">Name</span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="nx">v</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_name</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
-<span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">tmp30</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">StringsBlock</span><span class="p">()</span>
-<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
-<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
-<span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">thisIo</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">tmp30</span><span class="p">.</span><span class="nx">_io</span>
-<span class="w">	</span><span class="nx">_pos</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">thisIo</span><span class="p">.</span><span class="nx">Pos</span><span class="p">()</span>
-<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
-<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
-<span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">thisIo</span><span class="p">.</span><span class="nx">Seek</span><span class="p">(</span><span class="nb">int64</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">OfsName</span><span class="p">),</span><span class="w"> </span><span class="nx">io</span><span class="p">.</span><span class="nx">SeekStart</span><span class="p">)</span>
-<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
-<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
-<span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">tmp31</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">thisIo</span><span class="p">.</span><span class="nx">ReadBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
-<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
-<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
-<span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">name</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">string</span><span class="p">(</span><span class="nx">tmp31</span><span class="p">)</span>
-<span class="w">	</span><span class="nx">_</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">thisIo</span><span class="p">.</span><span class="nx">Seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">,</span><span class="w"> </span><span class="nx">io</span><span class="p">.</span><span class="nx">SeekStart</span><span class="p">)</span>
-<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
-<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span>
-<span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_name</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_name</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span>
-<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span>
-<span class="p">}</span>
-<span class="kd">type</span><span class="w"> </span><span class="nx">Dtb_FdtNode</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
-<span class="w">	</span><span class="nx">Type</span><span class="w"> </span><span class="nx">Dtb_Fdt</span>
-<span class="w">	</span><span class="nx">Body</span><span class="w"> </span><span class="kd">interface</span><span class="p">{}</span>
-<span class="w">	</span><span class="nx">_io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
-<span class="w">	</span><span class="nx">_root</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb</span>
-<span class="w">	</span><span class="nx">_parent</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb_FdtBlock</span>
-<span class="p">}</span>
-<span class="kd">func</span><span class="w"> </span><span class="nx">NewDtb_FdtNode</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb_FdtNode</span><span class="w"> </span><span class="p">{</span>
-<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">Dtb_FdtNode</span><span class="p">{</span>
-<span class="w">	</span><span class="p">}</span>
-<span class="p">}</span>
-
-<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb_FdtNode</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb_FdtBlock</span><span class="p">,</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">io</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">parent</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">root</span>
-
-<span class="w">	</span><span class="nx">tmp32</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4be</span><span class="p">()</span>
-<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
-<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
-<span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Type</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">Dtb_Fdt</span><span class="p">(</span><span class="nx">tmp32</span><span class="p">)</span>
-<span class="w">	</span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Type</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="nx">Dtb_Fdt__BeginNode</span><span class="p">:</span>
-<span class="w">		</span><span class="nx">tmp33</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewDtb_FdtBeginNode</span><span class="p">()</span>
-<span class="w">		</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp33</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
-<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
-<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
-<span class="w">		</span><span class="p">}</span>
-<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">Body</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp33</span>
-<span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="nx">Dtb_Fdt__Prop</span><span class="p">:</span>
-<span class="w">		</span><span class="nx">tmp34</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewDtb_FdtProp</span><span class="p">()</span>
-<span class="w">		</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp34</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
-<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
-<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
-<span class="w">		</span><span class="p">}</span>
-<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">Body</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp34</span>
-<span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
-<span class="p">}</span>
-<span class="kd">type</span><span class="w"> </span><span class="nx">Dtb_FdtBeginNode</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
-<span class="w">	</span><span class="nx">Name</span><span class="w"> </span><span class="kt">string</span>
-<span class="w">	</span><span class="nx">Padding</span><span class="w"> </span><span class="p">[]</span><span class="kt">byte</span>
-<span class="w">	</span><span class="nx">_io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
-<span class="w">	</span><span class="nx">_root</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb</span>
-<span class="w">	</span><span class="nx">_parent</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb_FdtNode</span>
-<span class="p">}</span>
-<span class="kd">func</span><span class="w"> </span><span class="nx">NewDtb_FdtBeginNode</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb_FdtBeginNode</span><span class="w"> </span><span class="p">{</span>
-<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">Dtb_FdtBeginNode</span><span class="p">{</span>
-<span class="w">	</span><span class="p">}</span>
-<span class="p">}</span>
-
-<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb_FdtBeginNode</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb_FdtNode</span><span class="p">,</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">Dtb</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">io</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">parent</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">root</span>
-
-<span class="w">	</span><span class="nx">tmp35</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
-<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
-<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
-<span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Name</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">string</span><span class="p">(</span><span class="nx">tmp35</span><span class="p">)</span>
-<span class="w">	</span><span class="nx">tmp37</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Pos</span><span class="p">()</span>
-<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
-<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
-<span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">tmp36</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="o">-</span><span class="p">(</span><span class="nx">tmp37</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">4</span>
-<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">tmp36</span><span class="w"> </span><span class="p">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">{</span>
-<span class="w">		</span><span class="nx">tmp36</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">4</span>
-<span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">tmp38</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">tmp36</span><span class="p">))</span>
-<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
-<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
-<span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">tmp38</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp38</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Padding</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp38</span>
 <span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="p">}</span>
 </pre></div>

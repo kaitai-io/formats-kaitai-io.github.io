@@ -26,11 +26,16 @@ const (
 	Vdi_ImageType__Undo Vdi_ImageType = 3
 	Vdi_ImageType__Diff Vdi_ImageType = 4
 )
+var values_Vdi_ImageType = map[Vdi_ImageType]struct{}{1: {}, 2: {}, 3: {}, 4: {}}
+func (v Vdi_ImageType) isDefined() bool {
+	_, ok := values_Vdi_ImageType[v]
+	return ok
+}
 type Vdi struct {
 	Header *Vdi_Header
 	_io *kaitai.Stream
 	_root *Vdi
-	_parent interface{}
+	_parent kaitai.Struct
 	_raw_blocksMap []byte
 	_f_blockDiscarded bool
 	blockDiscarded int
@@ -46,7 +51,11 @@ func NewVdi() *Vdi {
 	}
 }
 
-func (this *Vdi) Read(io *kaitai.Stream, parent interface{}, root *Vdi) (err error) {
+func (this Vdi) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Vdi) Read(io *kaitai.Stream, parent kaitai.Struct, root *Vdi) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -63,16 +72,16 @@ func (this *Vdi) BlockDiscarded() (v int, err error) {
 	if (this._f_blockDiscarded) {
 		return this.blockDiscarded, nil
 	}
-	this.blockDiscarded = int(uint32(4294967294))
 	this._f_blockDiscarded = true
+	this.blockDiscarded = int(uint32(4294967294))
 	return this.blockDiscarded, nil
 }
 func (this *Vdi) BlockUnallocated() (v int, err error) {
 	if (this._f_blockUnallocated) {
 		return this.blockUnallocated, nil
 	}
-	this.blockUnallocated = int(uint32(4294967295))
 	this._f_blockUnallocated = true
+	this.blockUnallocated = int(uint32(4294967295))
 	return this.blockUnallocated, nil
 }
 
@@ -84,6 +93,7 @@ func (this *Vdi) BlocksMap() (v *Vdi_BlocksMap, err error) {
 	if (this._f_blocksMap) {
 		return this.blocksMap, nil
 	}
+	this._f_blocksMap = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
@@ -117,14 +127,13 @@ func (this *Vdi) BlocksMap() (v *Vdi_BlocksMap, err error) {
 	if err != nil {
 		return nil, err
 	}
-	this._f_blocksMap = true
-	this._f_blocksMap = true
 	return this.blocksMap, nil
 }
 func (this *Vdi) Disk() (v *Vdi_Disk, err error) {
 	if (this._f_disk) {
 		return this.disk, nil
 	}
+	this._f_disk = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
@@ -147,9 +156,210 @@ func (this *Vdi) Disk() (v *Vdi_Disk, err error) {
 	if err != nil {
 		return nil, err
 	}
-	this._f_disk = true
-	this._f_disk = true
 	return this.disk, nil
+}
+type Vdi_BlocksMap struct {
+	Index []*Vdi_BlocksMap_BlockIndex
+	_io *kaitai.Stream
+	_root *Vdi
+	_parent *Vdi
+}
+func NewVdi_BlocksMap() *Vdi_BlocksMap {
+	return &Vdi_BlocksMap{
+	}
+}
+
+func (this Vdi_BlocksMap) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Vdi_BlocksMap) Read(io *kaitai.Stream, parent *Vdi, root *Vdi) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	for i := 0; i < int(this._root.Header.HeaderMain.BlocksInImage); i++ {
+		_ = i
+		tmp8 := NewVdi_BlocksMap_BlockIndex()
+		err = tmp8.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Index = append(this.Index, tmp8)
+	}
+	return err
+}
+type Vdi_BlocksMap_BlockIndex struct {
+	Index uint32
+	_io *kaitai.Stream
+	_root *Vdi
+	_parent *Vdi_BlocksMap
+	_f_block bool
+	block *Vdi_Disk_Block
+	_f_isAllocated bool
+	isAllocated bool
+}
+func NewVdi_BlocksMap_BlockIndex() *Vdi_BlocksMap_BlockIndex {
+	return &Vdi_BlocksMap_BlockIndex{
+	}
+}
+
+func (this Vdi_BlocksMap_BlockIndex) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Vdi_BlocksMap_BlockIndex) Read(io *kaitai.Stream, parent *Vdi_BlocksMap, root *Vdi) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp9, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Index = uint32(tmp9)
+	return err
+}
+func (this *Vdi_BlocksMap_BlockIndex) Block() (v *Vdi_Disk_Block, err error) {
+	if (this._f_block) {
+		return this.block, nil
+	}
+	this._f_block = true
+	tmp10, err := this.IsAllocated()
+	if err != nil {
+		return nil, err
+	}
+	if (tmp10) {
+		tmp11, err := this._root.Disk()
+		if err != nil {
+			return nil, err
+		}
+		this.block = tmp11.Blocks[this.Index]
+	}
+	return this.block, nil
+}
+func (this *Vdi_BlocksMap_BlockIndex) IsAllocated() (v bool, err error) {
+	if (this._f_isAllocated) {
+		return this.isAllocated, nil
+	}
+	this._f_isAllocated = true
+	tmp12, err := this._root.BlockDiscarded()
+	if err != nil {
+		return false, err
+	}
+	this.isAllocated = bool(this.Index < tmp12)
+	return this.isAllocated, nil
+}
+type Vdi_Disk struct {
+	Blocks []*Vdi_Disk_Block
+	_io *kaitai.Stream
+	_root *Vdi
+	_parent *Vdi
+}
+func NewVdi_Disk() *Vdi_Disk {
+	return &Vdi_Disk{
+	}
+}
+
+func (this Vdi_Disk) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Vdi_Disk) Read(io *kaitai.Stream, parent *Vdi, root *Vdi) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	for i := 0; i < int(this._root.Header.HeaderMain.BlocksInImage); i++ {
+		_ = i
+		tmp13 := NewVdi_Disk_Block()
+		err = tmp13.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Blocks = append(this.Blocks, tmp13)
+	}
+	return err
+}
+type Vdi_Disk_Block struct {
+	Metadata []byte
+	Data []*Vdi_Disk_Block_Sector
+	_io *kaitai.Stream
+	_root *Vdi
+	_parent *Vdi_Disk
+	_raw_Data [][]byte
+}
+func NewVdi_Disk_Block() *Vdi_Disk_Block {
+	return &Vdi_Disk_Block{
+	}
+}
+
+func (this Vdi_Disk_Block) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Vdi_Disk_Block) Read(io *kaitai.Stream, parent *Vdi_Disk, root *Vdi) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp14, err := this._io.ReadBytes(int(this._root.Header.HeaderMain.BlockMetadataSize))
+	if err != nil {
+		return err
+	}
+	tmp14 = tmp14
+	this.Metadata = tmp14
+	for i := 0;; i++ {
+		tmp15, err := this._io.EOF()
+		if err != nil {
+			return err
+		}
+		if tmp15 {
+			break
+		}
+		tmp16, err := this._io.ReadBytes(int(this._root.Header.HeaderMain.BlockDataSize))
+		if err != nil {
+			return err
+		}
+		tmp16 = tmp16
+		this._raw_Data = append(this._raw_Data, tmp16)
+		_io__raw_Data := kaitai.NewStream(bytes.NewReader(this._raw_Data[len(this._raw_Data) - 1]))
+		tmp17 := NewVdi_Disk_Block_Sector()
+		err = tmp17.Read(_io__raw_Data, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Data = append(this.Data, tmp17)
+	}
+	return err
+}
+type Vdi_Disk_Block_Sector struct {
+	Data []byte
+	_io *kaitai.Stream
+	_root *Vdi
+	_parent *Vdi_Disk_Block
+}
+func NewVdi_Disk_Block_Sector() *Vdi_Disk_Block_Sector {
+	return &Vdi_Disk_Block_Sector{
+	}
+}
+
+func (this Vdi_Disk_Block_Sector) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Vdi_Disk_Block_Sector) Read(io *kaitai.Stream, parent *Vdi_Disk_Block, root *Vdi) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp18, err := this._io.ReadBytes(int(this._root.Header.HeaderMain.Geometry.SectorSize))
+	if err != nil {
+		return err
+	}
+	tmp18 = tmp18
+	this.Data = tmp18
+	return err
 }
 type Vdi_Header struct {
 	Text string
@@ -161,22 +371,26 @@ type Vdi_Header struct {
 	_root *Vdi
 	_parent *Vdi
 	_raw_HeaderMain []byte
-	_f_headerSize bool
-	headerSize int
-	_f_blocksMapOffset bool
-	blocksMapOffset uint32
-	_f_subheaderSizeIsDynamic bool
-	subheaderSizeIsDynamic bool
-	_f_blocksOffset bool
-	blocksOffset uint32
 	_f_blockSize bool
 	blockSize int
+	_f_blocksMapOffset bool
+	blocksMapOffset uint32
 	_f_blocksMapSize bool
 	blocksMapSize int
+	_f_blocksOffset bool
+	blocksOffset uint32
+	_f_headerSize bool
+	headerSize int
+	_f_subheaderSizeIsDynamic bool
+	subheaderSizeIsDynamic bool
 }
 func NewVdi_Header() *Vdi_Header {
 	return &Vdi_Header{
 	}
+}
+
+func (this Vdi_Header) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Vdi_Header) Read(io *kaitai.Stream, parent *Vdi, root *Vdi) (err error) {
@@ -184,167 +398,114 @@ func (this *Vdi_Header) Read(io *kaitai.Stream, parent *Vdi, root *Vdi) (err err
 	this._parent = parent
 	this._root = root
 
-	tmp8, err := this._io.ReadBytes(int(64))
+	tmp19, err := this._io.ReadBytes(int(64))
 	if err != nil {
 		return err
 	}
-	tmp8 = tmp8
-	this.Text = string(tmp8)
-	tmp9, err := this._io.ReadBytes(int(4))
+	tmp19 = tmp19
+	this.Text = string(tmp19)
+	tmp20, err := this._io.ReadBytes(int(4))
 	if err != nil {
 		return err
 	}
-	tmp9 = tmp9
-	this.Signature = tmp9
+	tmp20 = tmp20
+	this.Signature = tmp20
 	if !(bytes.Equal(this.Signature, []uint8{127, 16, 218, 190})) {
 		return kaitai.NewValidationNotEqualError([]uint8{127, 16, 218, 190}, this.Signature, this._io, "/types/header/seq/1")
 	}
-	tmp10 := NewVdi_Header_Version()
-	err = tmp10.Read(this._io, this, this._root)
+	tmp21 := NewVdi_Header_Version()
+	err = tmp21.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Version = tmp10
-	tmp11, err := this.SubheaderSizeIsDynamic()
+	this.Version = tmp21
+	tmp22, err := this.SubheaderSizeIsDynamic()
 	if err != nil {
 		return err
 	}
-	if (tmp11) {
-		tmp12, err := this._io.ReadU4le()
+	if (tmp22) {
+		tmp23, err := this._io.ReadU4le()
 		if err != nil {
 			return err
 		}
-		this.HeaderSizeOptional = uint32(tmp12)
+		this.HeaderSizeOptional = uint32(tmp23)
 	}
-	tmp13, err := this.HeaderSize()
+	tmp24, err := this.HeaderSize()
 	if err != nil {
 		return err
 	}
-	tmp14, err := this._io.ReadBytes(int(tmp13))
+	tmp25, err := this._io.ReadBytes(int(tmp24))
 	if err != nil {
 		return err
 	}
-	tmp14 = tmp14
-	this._raw_HeaderMain = tmp14
+	tmp25 = tmp25
+	this._raw_HeaderMain = tmp25
 	_io__raw_HeaderMain := kaitai.NewStream(bytes.NewReader(this._raw_HeaderMain))
-	tmp15 := NewVdi_Header_HeaderMain()
-	err = tmp15.Read(_io__raw_HeaderMain, this, this._root)
+	tmp26 := NewVdi_Header_HeaderMain()
+	err = tmp26.Read(_io__raw_HeaderMain, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.HeaderMain = tmp15
+	this.HeaderMain = tmp26
 	return err
-}
-func (this *Vdi_Header) HeaderSize() (v int, err error) {
-	if (this._f_headerSize) {
-		return this.headerSize, nil
-	}
-	var tmp16 uint32;
-	tmp17, err := this.SubheaderSizeIsDynamic()
-	if err != nil {
-		return 0, err
-	}
-	if (tmp17) {
-		tmp16 = this.HeaderSizeOptional
-	} else {
-		tmp16 = 336
-	}
-	this.headerSize = int(tmp16)
-	this._f_headerSize = true
-	return this.headerSize, nil
-}
-func (this *Vdi_Header) BlocksMapOffset() (v uint32, err error) {
-	if (this._f_blocksMapOffset) {
-		return this.blocksMapOffset, nil
-	}
-	this.blocksMapOffset = uint32(this.HeaderMain.BlocksMapOffset)
-	this._f_blocksMapOffset = true
-	return this.blocksMapOffset, nil
-}
-func (this *Vdi_Header) SubheaderSizeIsDynamic() (v bool, err error) {
-	if (this._f_subheaderSizeIsDynamic) {
-		return this.subheaderSizeIsDynamic, nil
-	}
-	this.subheaderSizeIsDynamic = bool(this.Version.Major >= 1)
-	this._f_subheaderSizeIsDynamic = true
-	return this.subheaderSizeIsDynamic, nil
-}
-func (this *Vdi_Header) BlocksOffset() (v uint32, err error) {
-	if (this._f_blocksOffset) {
-		return this.blocksOffset, nil
-	}
-	this.blocksOffset = uint32(this.HeaderMain.OffsetData)
-	this._f_blocksOffset = true
-	return this.blocksOffset, nil
 }
 func (this *Vdi_Header) BlockSize() (v int, err error) {
 	if (this._f_blockSize) {
 		return this.blockSize, nil
 	}
-	this.blockSize = int((this.HeaderMain.BlockMetadataSize + this.HeaderMain.BlockDataSize))
 	this._f_blockSize = true
+	this.blockSize = int(this.HeaderMain.BlockMetadataSize + this.HeaderMain.BlockDataSize)
 	return this.blockSize, nil
+}
+func (this *Vdi_Header) BlocksMapOffset() (v uint32, err error) {
+	if (this._f_blocksMapOffset) {
+		return this.blocksMapOffset, nil
+	}
+	this._f_blocksMapOffset = true
+	this.blocksMapOffset = uint32(this.HeaderMain.BlocksMapOffset)
+	return this.blocksMapOffset, nil
 }
 func (this *Vdi_Header) BlocksMapSize() (v int, err error) {
 	if (this._f_blocksMapSize) {
 		return this.blocksMapSize, nil
 	}
-	this.blocksMapSize = int((((((this.HeaderMain.BlocksInImage * 4) + this.HeaderMain.Geometry.SectorSize) - 1) / this.HeaderMain.Geometry.SectorSize) * this.HeaderMain.Geometry.SectorSize))
 	this._f_blocksMapSize = true
+	this.blocksMapSize = int((((this.HeaderMain.BlocksInImage * 4 + this.HeaderMain.Geometry.SectorSize) - 1) / this.HeaderMain.Geometry.SectorSize) * this.HeaderMain.Geometry.SectorSize)
 	return this.blocksMapSize, nil
 }
-type Vdi_Header_Uuid struct {
-	Uuid []byte
-	_io *kaitai.Stream
-	_root *Vdi
-	_parent *Vdi_Header_HeaderMain
-}
-func NewVdi_Header_Uuid() *Vdi_Header_Uuid {
-	return &Vdi_Header_Uuid{
+func (this *Vdi_Header) BlocksOffset() (v uint32, err error) {
+	if (this._f_blocksOffset) {
+		return this.blocksOffset, nil
 	}
+	this._f_blocksOffset = true
+	this.blocksOffset = uint32(this.HeaderMain.OffsetData)
+	return this.blocksOffset, nil
 }
-
-func (this *Vdi_Header_Uuid) Read(io *kaitai.Stream, parent *Vdi_Header_HeaderMain, root *Vdi) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp18, err := this._io.ReadBytes(int(16))
+func (this *Vdi_Header) HeaderSize() (v int, err error) {
+	if (this._f_headerSize) {
+		return this.headerSize, nil
+	}
+	this._f_headerSize = true
+	var tmp27 uint32;
+	tmp28, err := this.SubheaderSizeIsDynamic()
 	if err != nil {
-		return err
+		return 0, err
 	}
-	tmp18 = tmp18
-	this.Uuid = tmp18
-	return err
+	if (tmp28) {
+		tmp27 = this.HeaderSizeOptional
+	} else {
+		tmp27 = 336
+	}
+	this.headerSize = int(tmp27)
+	return this.headerSize, nil
 }
-type Vdi_Header_Version struct {
-	Major uint16
-	Minor uint16
-	_io *kaitai.Stream
-	_root *Vdi
-	_parent *Vdi_Header
-}
-func NewVdi_Header_Version() *Vdi_Header_Version {
-	return &Vdi_Header_Version{
+func (this *Vdi_Header) SubheaderSizeIsDynamic() (v bool, err error) {
+	if (this._f_subheaderSizeIsDynamic) {
+		return this.subheaderSizeIsDynamic, nil
 	}
-}
-
-func (this *Vdi_Header_Version) Read(io *kaitai.Stream, parent *Vdi_Header, root *Vdi) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp19, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.Major = uint16(tmp19)
-	tmp20, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.Minor = uint16(tmp20)
-	return err
+	this._f_subheaderSizeIsDynamic = true
+	this.subheaderSizeIsDynamic = bool(this.Version.Major >= 1)
+	return this.subheaderSizeIsDynamic, nil
 }
 type Vdi_Header_HeaderMain struct {
 	ImageType Vdi_ImageType
@@ -373,123 +534,127 @@ func NewVdi_Header_HeaderMain() *Vdi_Header_HeaderMain {
 	}
 }
 
+func (this Vdi_Header_HeaderMain) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Vdi_Header_HeaderMain) Read(io *kaitai.Stream, parent *Vdi_Header, root *Vdi) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp21, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.ImageType = Vdi_ImageType(tmp21)
-	tmp22 := NewVdi_Header_HeaderMain_Flags()
-	err = tmp22.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.ImageFlags = tmp22
-	tmp23, err := this._io.ReadBytes(int(256))
-	if err != nil {
-		return err
-	}
-	tmp23 = tmp23
-	this.Description = string(tmp23)
-	if (this._parent.Version.Major >= 1) {
-		tmp24, err := this._io.ReadU4le()
-		if err != nil {
-			return err
-		}
-		this.BlocksMapOffset = uint32(tmp24)
-	}
-	if (this._parent.Version.Major >= 1) {
-		tmp25, err := this._io.ReadU4le()
-		if err != nil {
-			return err
-		}
-		this.OffsetData = uint32(tmp25)
-	}
-	tmp26 := NewVdi_Header_HeaderMain_Geometry()
-	err = tmp26.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Geometry = tmp26
-	if (this._parent.Version.Major >= 1) {
-		tmp27, err := this._io.ReadU4le()
-		if err != nil {
-			return err
-		}
-		this.Reserved1 = uint32(tmp27)
-	}
-	tmp28, err := this._io.ReadU8le()
-	if err != nil {
-		return err
-	}
-	this.DiskSize = uint64(tmp28)
 	tmp29, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.BlockDataSize = uint32(tmp29)
+	this.ImageType = Vdi_ImageType(tmp29)
+	tmp30 := NewVdi_Header_HeaderMain_Flags()
+	err = tmp30.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.ImageFlags = tmp30
+	tmp31, err := this._io.ReadBytes(int(256))
+	if err != nil {
+		return err
+	}
+	tmp31 = tmp31
+	this.Description = string(tmp31)
 	if (this._parent.Version.Major >= 1) {
-		tmp30, err := this._io.ReadU4le()
+		tmp32, err := this._io.ReadU4le()
 		if err != nil {
 			return err
 		}
-		this.BlockMetadataSize = uint32(tmp30)
+		this.BlocksMapOffset = uint32(tmp32)
 	}
-	tmp31, err := this._io.ReadU4le()
-	if err != nil {
-		return err
+	if (this._parent.Version.Major >= 1) {
+		tmp33, err := this._io.ReadU4le()
+		if err != nil {
+			return err
+		}
+		this.OffsetData = uint32(tmp33)
 	}
-	this.BlocksInImage = uint32(tmp31)
-	tmp32, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.BlocksAllocated = uint32(tmp32)
-	tmp33 := NewVdi_Header_Uuid()
-	err = tmp33.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.UuidImage = tmp33
-	tmp34 := NewVdi_Header_Uuid()
+	tmp34 := NewVdi_Header_HeaderMain_Geometry()
 	err = tmp34.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.UuidLastSnap = tmp34
-	tmp35 := NewVdi_Header_Uuid()
-	err = tmp35.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.UuidLink = tmp35
+	this.Geometry = tmp34
 	if (this._parent.Version.Major >= 1) {
-		tmp36 := NewVdi_Header_Uuid()
-		err = tmp36.Read(this._io, this, this._root)
+		tmp35, err := this._io.ReadU4le()
 		if err != nil {
 			return err
 		}
-		this.UuidParent = tmp36
+		this.Reserved1 = uint32(tmp35)
 	}
-	tmp37, err := this._io.Pos()
+	tmp36, err := this._io.ReadU8le()
 	if err != nil {
 		return err
 	}
-	tmp38, err := this._io.Size()
+	this.DiskSize = uint64(tmp36)
+	tmp37, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	if ( ((this._parent.Version.Major >= 1) && ((tmp37 + 16) <= tmp38)) ) {
-		tmp39 := NewVdi_Header_HeaderMain_Geometry()
-		err = tmp39.Read(this._io, this, this._root)
+	this.BlockDataSize = uint32(tmp37)
+	if (this._parent.Version.Major >= 1) {
+		tmp38, err := this._io.ReadU4le()
 		if err != nil {
 			return err
 		}
-		this.LchcGeometry = tmp39
+		this.BlockMetadataSize = uint32(tmp38)
+	}
+	tmp39, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.BlocksInImage = uint32(tmp39)
+	tmp40, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.BlocksAllocated = uint32(tmp40)
+	tmp41 := NewVdi_Header_Uuid()
+	err = tmp41.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.UuidImage = tmp41
+	tmp42 := NewVdi_Header_Uuid()
+	err = tmp42.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.UuidLastSnap = tmp42
+	tmp43 := NewVdi_Header_Uuid()
+	err = tmp43.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.UuidLink = tmp43
+	if (this._parent.Version.Major >= 1) {
+		tmp44 := NewVdi_Header_Uuid()
+		err = tmp44.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.UuidParent = tmp44
+	}
+	tmp45, err := this._io.Pos()
+	if err != nil {
+		return err
+	}
+	tmp46, err := this._io.Size()
+	if err != nil {
+		return err
+	}
+	if ( ((this._parent.Version.Major >= 1) && (tmp45 + 16 <= tmp46)) ) {
+		tmp47 := NewVdi_Header_HeaderMain_Geometry()
+		err = tmp47.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.LchcGeometry = tmp47
 	}
 	return err
 }
@@ -497,47 +662,6 @@ func (this *Vdi_Header_HeaderMain) Read(io *kaitai.Stream, parent *Vdi_Header, r
 /**
  * Size of block (bytes).
  */
-type Vdi_Header_HeaderMain_Geometry struct {
-	Cylinders uint32
-	Heads uint32
-	Sectors uint32
-	SectorSize uint32
-	_io *kaitai.Stream
-	_root *Vdi
-	_parent *Vdi_Header_HeaderMain
-}
-func NewVdi_Header_HeaderMain_Geometry() *Vdi_Header_HeaderMain_Geometry {
-	return &Vdi_Header_HeaderMain_Geometry{
-	}
-}
-
-func (this *Vdi_Header_HeaderMain_Geometry) Read(io *kaitai.Stream, parent *Vdi_Header_HeaderMain, root *Vdi) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp40, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Cylinders = uint32(tmp40)
-	tmp41, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Heads = uint32(tmp41)
-	tmp42, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Sectors = uint32(tmp42)
-	tmp43, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.SectorSize = uint32(tmp43)
-	return err
-}
 type Vdi_Header_HeaderMain_Flags struct {
 	Reserved0 uint64
 	ZeroExpand bool
@@ -554,223 +678,150 @@ func NewVdi_Header_HeaderMain_Flags() *Vdi_Header_HeaderMain_Flags {
 	}
 }
 
+func (this Vdi_Header_HeaderMain_Flags) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Vdi_Header_HeaderMain_Flags) Read(io *kaitai.Stream, parent *Vdi_Header_HeaderMain, root *Vdi) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp44, err := this._io.ReadBitsIntBe(15)
+	tmp48, err := this._io.ReadBitsIntBe(15)
 	if err != nil {
 		return err
 	}
-	this.Reserved0 = tmp44
-	tmp45, err := this._io.ReadBitsIntBe(1)
+	this.Reserved0 = tmp48
+	tmp49, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.ZeroExpand = tmp45 != 0
-	tmp46, err := this._io.ReadBitsIntBe(6)
+	this.ZeroExpand = tmp49 != 0
+	tmp50, err := this._io.ReadBitsIntBe(6)
 	if err != nil {
 		return err
 	}
-	this.Reserved1 = tmp46
-	tmp47, err := this._io.ReadBitsIntBe(1)
+	this.Reserved1 = tmp50
+	tmp51, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Diff = tmp47 != 0
-	tmp48, err := this._io.ReadBitsIntBe(1)
+	this.Diff = tmp51 != 0
+	tmp52, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Fixed = tmp48 != 0
-	tmp49, err := this._io.ReadBitsIntBe(8)
+	this.Fixed = tmp52 != 0
+	tmp53, err := this._io.ReadBitsIntBe(8)
 	if err != nil {
 		return err
 	}
-	this.Reserved2 = tmp49
+	this.Reserved2 = tmp53
 	return err
 }
-type Vdi_BlocksMap struct {
-	Index []*Vdi_BlocksMap_BlockIndex
+type Vdi_Header_HeaderMain_Geometry struct {
+	Cylinders uint32
+	Heads uint32
+	Sectors uint32
+	SectorSize uint32
 	_io *kaitai.Stream
 	_root *Vdi
-	_parent *Vdi
+	_parent *Vdi_Header_HeaderMain
 }
-func NewVdi_BlocksMap() *Vdi_BlocksMap {
-	return &Vdi_BlocksMap{
+func NewVdi_Header_HeaderMain_Geometry() *Vdi_Header_HeaderMain_Geometry {
+	return &Vdi_Header_HeaderMain_Geometry{
 	}
 }
 
-func (this *Vdi_BlocksMap) Read(io *kaitai.Stream, parent *Vdi, root *Vdi) (err error) {
+func (this Vdi_Header_HeaderMain_Geometry) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Vdi_Header_HeaderMain_Geometry) Read(io *kaitai.Stream, parent *Vdi_Header_HeaderMain, root *Vdi) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	for i := 0; i < int(this._root.Header.HeaderMain.BlocksInImage); i++ {
-		_ = i
-		tmp50 := NewVdi_BlocksMap_BlockIndex()
-		err = tmp50.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Index = append(this.Index, tmp50)
-	}
-	return err
-}
-type Vdi_BlocksMap_BlockIndex struct {
-	Index uint32
-	_io *kaitai.Stream
-	_root *Vdi
-	_parent *Vdi_BlocksMap
-	_f_isAllocated bool
-	isAllocated bool
-	_f_block bool
-	block *Vdi_Disk_Block
-}
-func NewVdi_BlocksMap_BlockIndex() *Vdi_BlocksMap_BlockIndex {
-	return &Vdi_BlocksMap_BlockIndex{
-	}
-}
-
-func (this *Vdi_BlocksMap_BlockIndex) Read(io *kaitai.Stream, parent *Vdi_BlocksMap, root *Vdi) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp51, err := this._io.ReadU4le()
+	tmp54, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Index = uint32(tmp51)
-	return err
-}
-func (this *Vdi_BlocksMap_BlockIndex) IsAllocated() (v bool, err error) {
-	if (this._f_isAllocated) {
-		return this.isAllocated, nil
-	}
-	tmp52, err := this._root.BlockDiscarded()
-	if err != nil {
-		return false, err
-	}
-	this.isAllocated = bool(this.Index < tmp52)
-	this._f_isAllocated = true
-	return this.isAllocated, nil
-}
-func (this *Vdi_BlocksMap_BlockIndex) Block() (v *Vdi_Disk_Block, err error) {
-	if (this._f_block) {
-		return this.block, nil
-	}
-	tmp53, err := this.IsAllocated()
-	if err != nil {
-		return nil, err
-	}
-	if (tmp53) {
-		tmp54, err := this._root.Disk()
-		if err != nil {
-			return nil, err
-		}
-		this.block = tmp54.Blocks[this.Index]
-	}
-	this._f_block = true
-	return this.block, nil
-}
-type Vdi_Disk struct {
-	Blocks []*Vdi_Disk_Block
-	_io *kaitai.Stream
-	_root *Vdi
-	_parent *Vdi
-}
-func NewVdi_Disk() *Vdi_Disk {
-	return &Vdi_Disk{
-	}
-}
-
-func (this *Vdi_Disk) Read(io *kaitai.Stream, parent *Vdi, root *Vdi) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	for i := 0; i < int(this._root.Header.HeaderMain.BlocksInImage); i++ {
-		_ = i
-		tmp55 := NewVdi_Disk_Block()
-		err = tmp55.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Blocks = append(this.Blocks, tmp55)
-	}
-	return err
-}
-type Vdi_Disk_Block struct {
-	Metadata []byte
-	Data []*Vdi_Disk_Block_Sector
-	_io *kaitai.Stream
-	_root *Vdi
-	_parent *Vdi_Disk
-	_raw_Data [][]byte
-}
-func NewVdi_Disk_Block() *Vdi_Disk_Block {
-	return &Vdi_Disk_Block{
-	}
-}
-
-func (this *Vdi_Disk_Block) Read(io *kaitai.Stream, parent *Vdi_Disk, root *Vdi) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp56, err := this._io.ReadBytes(int(this._root.Header.HeaderMain.BlockMetadataSize))
+	this.Cylinders = uint32(tmp54)
+	tmp55, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	tmp56 = tmp56
-	this.Metadata = tmp56
-	for i := 1;; i++ {
-		tmp57, err := this._io.EOF()
-		if err != nil {
-			return err
-		}
-		if tmp57 {
-			break
-		}
-		tmp58, err := this._io.ReadBytes(int(this._root.Header.HeaderMain.BlockDataSize))
-		if err != nil {
-			return err
-		}
-		tmp58 = tmp58
-		this._raw_Data = append(this._raw_Data, tmp58)
-		_io__raw_Data := kaitai.NewStream(bytes.NewReader(this._raw_Data[len(this._raw_Data) - 1]))
-		tmp59 := NewVdi_Disk_Block_Sector()
-		err = tmp59.Read(_io__raw_Data, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Data = append(this.Data, tmp59)
+	this.Heads = uint32(tmp55)
+	tmp56, err := this._io.ReadU4le()
+	if err != nil {
+		return err
 	}
+	this.Sectors = uint32(tmp56)
+	tmp57, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.SectorSize = uint32(tmp57)
 	return err
 }
-type Vdi_Disk_Block_Sector struct {
-	Data []byte
+type Vdi_Header_Uuid struct {
+	Uuid []byte
 	_io *kaitai.Stream
 	_root *Vdi
-	_parent *Vdi_Disk_Block
+	_parent *Vdi_Header_HeaderMain
 }
-func NewVdi_Disk_Block_Sector() *Vdi_Disk_Block_Sector {
-	return &Vdi_Disk_Block_Sector{
+func NewVdi_Header_Uuid() *Vdi_Header_Uuid {
+	return &Vdi_Header_Uuid{
 	}
 }
 
-func (this *Vdi_Disk_Block_Sector) Read(io *kaitai.Stream, parent *Vdi_Disk_Block, root *Vdi) (err error) {
+func (this Vdi_Header_Uuid) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Vdi_Header_Uuid) Read(io *kaitai.Stream, parent *Vdi_Header_HeaderMain, root *Vdi) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp60, err := this._io.ReadBytes(int(this._root.Header.HeaderMain.Geometry.SectorSize))
+	tmp58, err := this._io.ReadBytes(int(16))
 	if err != nil {
 		return err
 	}
-	tmp60 = tmp60
-	this.Data = tmp60
+	tmp58 = tmp58
+	this.Uuid = tmp58
+	return err
+}
+type Vdi_Header_Version struct {
+	Major uint16
+	Minor uint16
+	_io *kaitai.Stream
+	_root *Vdi
+	_parent *Vdi_Header
+}
+func NewVdi_Header_Version() *Vdi_Header_Version {
+	return &Vdi_Header_Version{
+	}
+}
+
+func (this Vdi_Header_Version) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Vdi_Header_Version) Read(io *kaitai.Stream, parent *Vdi_Header, root *Vdi) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp59, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.Major = uint16(tmp59)
+	tmp60, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.Minor = uint16(tmp60)
 	return err
 }

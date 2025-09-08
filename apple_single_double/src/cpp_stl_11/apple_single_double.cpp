@@ -1,10 +1,17 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 #include "apple_single_double.h"
+const std::set<apple_single_double_t::file_type_t> apple_single_double_t::_values_file_type_t{
+    apple_single_double_t::FILE_TYPE_APPLE_SINGLE,
+    apple_single_double_t::FILE_TYPE_APPLE_DOUBLE,
+};
+bool apple_single_double_t::_is_defined_file_type_t(apple_single_double_t::file_type_t v) {
+    return apple_single_double_t::_values_file_type_t.find(v) != apple_single_double_t::_values_file_type_t.end();
+}
 
 apple_single_double_t::apple_single_double_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, apple_single_double_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     m_entries = nullptr;
     _read();
 }
@@ -26,6 +33,25 @@ apple_single_double_t::~apple_single_double_t() {
 }
 
 void apple_single_double_t::_clean_up() {
+}
+const std::set<apple_single_double_t::entry_t::types_t> apple_single_double_t::entry_t::_values_types_t{
+    apple_single_double_t::entry_t::TYPES_DATA_FORK,
+    apple_single_double_t::entry_t::TYPES_RESOURCE_FORK,
+    apple_single_double_t::entry_t::TYPES_REAL_NAME,
+    apple_single_double_t::entry_t::TYPES_COMMENT,
+    apple_single_double_t::entry_t::TYPES_ICON_BW,
+    apple_single_double_t::entry_t::TYPES_ICON_COLOR,
+    apple_single_double_t::entry_t::TYPES_FILE_DATES_INFO,
+    apple_single_double_t::entry_t::TYPES_FINDER_INFO,
+    apple_single_double_t::entry_t::TYPES_MACINTOSH_FILE_INFO,
+    apple_single_double_t::entry_t::TYPES_PRODOS_FILE_INFO,
+    apple_single_double_t::entry_t::TYPES_MSDOS_FILE_INFO,
+    apple_single_double_t::entry_t::TYPES_AFP_SHORT_NAME,
+    apple_single_double_t::entry_t::TYPES_AFP_FILE_INFO,
+    apple_single_double_t::entry_t::TYPES_AFP_DIRECTORY_ID,
+};
+bool apple_single_double_t::entry_t::_is_defined_types_t(apple_single_double_t::entry_t::types_t v) {
+    return apple_single_double_t::entry_t::_values_types_t.find(v) != apple_single_double_t::entry_t::_values_types_t.end();
 }
 
 apple_single_double_t::entry_t::entry_t(kaitai::kstream* p__io, apple_single_double_t* p__parent, apple_single_double_t* p__root) : kaitai::kstruct(p__io) {
@@ -54,6 +80,7 @@ void apple_single_double_t::entry_t::_clean_up() {
 apple_single_double_t::finder_info_t* apple_single_double_t::entry_t::body() {
     if (f_body)
         return m_body.get();
+    f_body = true;
     std::streampos _pos = m__io->pos();
     m__io->seek(ofs_body());
     n_body = true;
@@ -71,7 +98,6 @@ apple_single_double_t::finder_info_t* apple_single_double_t::entry_t::body() {
     }
     }
     m__io->seek(_pos);
-    f_body = true;
     return m_body.get();
 }
 

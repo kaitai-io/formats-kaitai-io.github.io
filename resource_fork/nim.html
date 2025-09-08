@@ -241,6 +241,11 @@ such as custom file icons.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="Macintosh resource fork data parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="Macintosh resource fork data parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -271,7 +276,17 @@ such as custom file icons.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="Macintosh resource fork data parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="Macintosh resource fork data parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="Macintosh resource fork data parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -303,9 +318,8 @@ such as custom file icons.</p>
         <div class="row">
             <div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="n">kaitai_struct_nim_runtime</span>
 <span class="kn">import</span><span class="w"> </span><span class="n">options</span>
-<span class="kn">import</span><span class="w"> </span><span class="o">/</span><span class="n">common</span><span class="o">/</span><span class="n">bytes_with_io</span>
+<span class="kn">import</span><span class="w"> </span><span class="n">bytes_with_io</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="s">&quot;bytes_with_io&quot;</span>
 <span class="k">type</span>
 <span class="w">  </span><span class="n">ResourceFork</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
 <span class="w">    </span><span class="p">`</span><span class="n">header</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_FileHeader</span>
@@ -314,22 +328,22 @@ such as custom file icons.</p>
 <span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
 <span class="w">    </span><span class="p">`</span><span class="n">rawDataBlocksWithIoInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
 <span class="w">    </span><span class="p">`</span><span class="n">rawResourceMapInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-<span class="w">    </span><span class="p">`</span><span class="n">dataBlocksWithIoInst</span><span class="p">`:</span><span class="w"> </span><span class="n">BytesWithIo</span>
-<span class="w">    </span><span class="p">`</span><span class="n">dataBlocksWithIoInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
 <span class="w">    </span><span class="p">`</span><span class="n">dataBlocksInst</span><span class="p">`:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
 <span class="w">    </span><span class="p">`</span><span class="n">dataBlocksInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">dataBlocksWithIoInst</span><span class="p">`:</span><span class="w"> </span><span class="n">BytesWithIo</span>
+<span class="w">    </span><span class="p">`</span><span class="n">dataBlocksWithIoInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
 <span class="w">    </span><span class="p">`</span><span class="n">resourceMapInst</span><span class="p">`:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap</span>
 <span class="w">    </span><span class="p">`</span><span class="n">resourceMapInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">  </span><span class="n">ResourceFork_DataBlock</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">lenData</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">data</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference</span>
 <span class="w">  </span><span class="n">ResourceFork_FileHeader</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
 <span class="w">    </span><span class="p">`</span><span class="n">ofsDataBlocks</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
 <span class="w">    </span><span class="p">`</span><span class="n">ofsResourceMap</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
 <span class="w">    </span><span class="p">`</span><span class="n">lenDataBlocks</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
 <span class="w">    </span><span class="p">`</span><span class="n">lenResourceMap</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
 <span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
-<span class="w">  </span><span class="n">ResourceFork_DataBlock</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
-<span class="w">    </span><span class="p">`</span><span class="n">lenData</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
-<span class="w">    </span><span class="p">`</span><span class="n">data</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference</span>
 <span class="w">  </span><span class="n">ResourceFork_ResourceMap</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
 <span class="w">    </span><span class="p">`</span><span class="n">reservedFileHeaderCopy</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_FileHeader</span>
 <span class="w">    </span><span class="p">`</span><span class="n">reservedNextResourceMapHandle</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
@@ -339,14 +353,14 @@ such as custom file icons.</p>
 <span class="w">    </span><span class="p">`</span><span class="n">ofsNames</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
 <span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork</span>
 <span class="w">    </span><span class="p">`</span><span class="n">rawFileAttributes</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-<span class="w">    </span><span class="p">`</span><span class="n">rawTypeListAndReferenceListsInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
 <span class="w">    </span><span class="p">`</span><span class="n">rawNamesWithIoInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-<span class="w">    </span><span class="p">`</span><span class="n">typeListAndReferenceListsInst</span><span class="p">`:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists</span>
-<span class="w">    </span><span class="p">`</span><span class="n">typeListAndReferenceListsInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
-<span class="w">    </span><span class="p">`</span><span class="n">namesWithIoInst</span><span class="p">`:</span><span class="w"> </span><span class="n">BytesWithIo</span>
-<span class="w">    </span><span class="p">`</span><span class="n">namesWithIoInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">rawTypeListAndReferenceListsInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
 <span class="w">    </span><span class="p">`</span><span class="n">namesInst</span><span class="p">`:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
 <span class="w">    </span><span class="p">`</span><span class="n">namesInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">namesWithIoInst</span><span class="p">`:</span><span class="w"> </span><span class="n">BytesWithIo</span>
+<span class="w">    </span><span class="p">`</span><span class="n">namesWithIoInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">typeListAndReferenceListsInst</span><span class="p">`:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists</span>
+<span class="w">    </span><span class="p">`</span><span class="n">typeListAndReferenceListsInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
 <span class="w">  </span><span class="n">ResourceFork_ResourceMap_FileAttributes</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
 <span class="w">    </span><span class="p">`</span><span class="n">resourcesLocked</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">bool</span>
 <span class="w">    </span><span class="p">`</span><span class="n">reserved0</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint64</span>
@@ -358,10 +372,42 @@ such as custom file icons.</p>
 <span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap</span>
 <span class="w">    </span><span class="p">`</span><span class="n">asIntInst</span><span class="p">`:</span><span class="w"> </span><span class="n">uint16</span>
 <span class="w">    </span><span class="p">`</span><span class="n">asIntInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">  </span><span class="n">ResourceFork_ResourceMap_Name</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">lenValue</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint8</span>
+<span class="w">    </span><span class="p">`</span><span class="n">value</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference</span>
 <span class="w">  </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
 <span class="w">    </span><span class="p">`</span><span class="n">typeList</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList</span>
 <span class="w">    </span><span class="p">`</span><span class="n">referenceLists</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
 <span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap</span>
+<span class="w">  </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">references</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">numReferences</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry</span>
+<span class="w">  </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">id</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">int16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">ofsName</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">attributes</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference_Attributes</span>
+<span class="w">    </span><span class="p">`</span><span class="n">ofsDataBlock</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint64</span>
+<span class="w">    </span><span class="p">`</span><span class="n">reservedHandle</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList</span>
+<span class="w">    </span><span class="p">`</span><span class="n">rawAttributes</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">dataBlockInst</span><span class="p">`:</span><span class="w"> </span><span class="n">ResourceFork_DataBlock</span>
+<span class="w">    </span><span class="p">`</span><span class="n">dataBlockInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">nameInst</span><span class="p">`:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_Name</span>
+<span class="w">    </span><span class="p">`</span><span class="n">nameInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">  </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference_Attributes</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">systemReference</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">loadIntoSystemHeap</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">purgeable</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">locked</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">protected</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">preload</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">needsWrite</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">compressed</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference</span>
+<span class="w">    </span><span class="p">`</span><span class="n">asIntInst</span><span class="p">`:</span><span class="w"> </span><span class="n">uint8</span>
+<span class="w">    </span><span class="p">`</span><span class="n">asIntInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
 <span class="w">  </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
 <span class="w">    </span><span class="p">`</span><span class="n">numTypesM1</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
 <span class="w">    </span><span class="p">`</span><span class="n">entries</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry</span><span class="o">]</span>
@@ -377,65 +423,33 @@ such as custom file icons.</p>
 <span class="w">    </span><span class="p">`</span><span class="n">numReferencesInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
 <span class="w">    </span><span class="p">`</span><span class="n">referenceListInst</span><span class="p">`:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList</span>
 <span class="w">    </span><span class="p">`</span><span class="n">referenceListInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
-<span class="w">  </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
-<span class="w">    </span><span class="p">`</span><span class="n">references</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference</span><span class="o">]</span>
-<span class="w">    </span><span class="p">`</span><span class="n">numReferences</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
-<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry</span>
-<span class="w">  </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
-<span class="w">    </span><span class="p">`</span><span class="n">id</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">int16</span>
-<span class="w">    </span><span class="p">`</span><span class="n">ofsName</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
-<span class="w">    </span><span class="p">`</span><span class="n">attributes</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference_Attributes</span>
-<span class="w">    </span><span class="p">`</span><span class="n">ofsDataBlock</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint64</span>
-<span class="w">    </span><span class="p">`</span><span class="n">reservedHandle</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
-<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList</span>
-<span class="w">    </span><span class="p">`</span><span class="n">rawAttributes</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-<span class="w">    </span><span class="p">`</span><span class="n">nameInst</span><span class="p">`:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_Name</span>
-<span class="w">    </span><span class="p">`</span><span class="n">nameInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
-<span class="w">    </span><span class="p">`</span><span class="n">dataBlockInst</span><span class="p">`:</span><span class="w"> </span><span class="n">ResourceFork_DataBlock</span>
-<span class="w">    </span><span class="p">`</span><span class="n">dataBlockInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
-<span class="w">  </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference_Attributes</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
-<span class="w">    </span><span class="p">`</span><span class="n">systemReference</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">bool</span>
-<span class="w">    </span><span class="p">`</span><span class="n">loadIntoSystemHeap</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">bool</span>
-<span class="w">    </span><span class="p">`</span><span class="n">purgeable</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">bool</span>
-<span class="w">    </span><span class="p">`</span><span class="n">locked</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">bool</span>
-<span class="w">    </span><span class="p">`</span><span class="n">protected</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">bool</span>
-<span class="w">    </span><span class="p">`</span><span class="n">preload</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">bool</span>
-<span class="w">    </span><span class="p">`</span><span class="n">needsWrite</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">bool</span>
-<span class="w">    </span><span class="p">`</span><span class="n">compressed</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">bool</span>
-<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference</span>
-<span class="w">    </span><span class="p">`</span><span class="n">asIntInst</span><span class="p">`:</span><span class="w"> </span><span class="n">uint8</span>
-<span class="w">    </span><span class="p">`</span><span class="n">asIntInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
-<span class="w">  </span><span class="n">ResourceFork_ResourceMap_Name</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
-<span class="w">    </span><span class="p">`</span><span class="n">lenValue</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint8</span>
-<span class="w">    </span><span class="p">`</span><span class="n">value</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference</span>
 
 <span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ResourceFork], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): ResourceFork</span>
-<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ResourceFork_FileHeader], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): ResourceFork_FileHeader</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ResourceFork_DataBlock], io: KaitaiStream, root: KaitaiStruct, parent: ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference): ResourceFork_DataBlock</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ResourceFork_FileHeader], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): ResourceFork_FileHeader</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ResourceFork_ResourceMap], io: KaitaiStream, root: KaitaiStruct, parent: ResourceFork): ResourceFork_ResourceMap</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ResourceFork_ResourceMap_FileAttributes], io: KaitaiStream, root: KaitaiStruct, parent: ResourceFork_ResourceMap): ResourceFork_ResourceMap_FileAttributes</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ResourceFork_ResourceMap_Name], io: KaitaiStream, root: KaitaiStruct, parent: ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference): ResourceFork_ResourceMap_Name</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ResourceFork_ResourceMap_TypeListAndReferenceLists], io: KaitaiStream, root: KaitaiStruct, parent: ResourceFork_ResourceMap): ResourceFork_ResourceMap_TypeListAndReferenceLists</span>
-<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList], io: KaitaiStream, root: KaitaiStruct, parent: ResourceFork_ResourceMap_TypeListAndReferenceLists): ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList</span>
-<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry], io: KaitaiStream, root: KaitaiStruct, parent: ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList): ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList], io: KaitaiStream, root: KaitaiStruct, parent: ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry, numReferences: any): ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference], io: KaitaiStream, root: KaitaiStruct, parent: ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList): ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference_Attributes], io: KaitaiStream, root: KaitaiStruct, parent: ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference): ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference_Attributes</span>
-<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ResourceFork_ResourceMap_Name], io: KaitaiStream, root: KaitaiStruct, parent: ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference): ResourceFork_ResourceMap_Name</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList], io: KaitaiStream, root: KaitaiStruct, parent: ResourceFork_ResourceMap_TypeListAndReferenceLists): ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry], io: KaitaiStream, root: KaitaiStruct, parent: ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList): ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry</span>
 
-<span class="k">proc</span><span class="w"> </span><span class="nf">dataBlocksWithIo</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork</span><span class="p">):</span><span class="w"> </span><span class="n">BytesWithIo</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">dataBlocks</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork</span><span class="p">):</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">dataBlocksWithIo</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork</span><span class="p">):</span><span class="w"> </span><span class="n">BytesWithIo</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">resourceMap</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork</span><span class="p">):</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap</span>
-<span class="k">proc</span><span class="w"> </span><span class="nf">typeListAndReferenceLists</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap</span><span class="p">):</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists</span>
-<span class="k">proc</span><span class="w"> </span><span class="nf">namesWithIo</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap</span><span class="p">):</span><span class="w"> </span><span class="n">BytesWithIo</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">names</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap</span><span class="p">):</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">namesWithIo</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap</span><span class="p">):</span><span class="w"> </span><span class="n">BytesWithIo</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">typeListAndReferenceLists</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap</span><span class="p">):</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">asInt</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_FileAttributes</span><span class="p">):</span><span class="w"> </span><span class="n">uint16</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">dataBlock</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference</span><span class="p">):</span><span class="w"> </span><span class="n">ResourceFork_DataBlock</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">name</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference</span><span class="p">):</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_Name</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">asInt</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference_Attributes</span><span class="p">):</span><span class="w"> </span><span class="n">uint8</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">numTypes</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">numReferences</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">referenceList</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry</span><span class="p">):</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList</span>
-<span class="k">proc</span><span class="w"> </span><span class="nf">name</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference</span><span class="p">):</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_Name</span>
-<span class="k">proc</span><span class="w"> </span><span class="nf">dataBlock</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference</span><span class="p">):</span><span class="w"> </span><span class="n">ResourceFork_DataBlock</span>
-<span class="k">proc</span><span class="w"> </span><span class="nf">asInt</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference_Attributes</span><span class="p">):</span><span class="w"> </span><span class="n">uint8</span>
 
 
 <span class="sd">##[</span>
@@ -525,26 +539,6 @@ such as custom file icons.</p>
 <span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">applicationDataExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">128</span><span class="p">))</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">applicationData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">applicationDataExpr</span>
 
-<span class="k">proc</span><span class="w"> </span><span class="nf">dataBlocksWithIo</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork</span><span class="p">):</span><span class="w"> </span><span class="n">BytesWithIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  Use `data_blocks` instead,</span>
-<span class="sd">unless you need access to this instance&#39;s `_io`.</span>
-
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">dataBlocksWithIoInstFlag</span><span class="p">:</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">dataBlocksWithIoInst</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">ofsDataBlocks</span><span class="p">))</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">rawDataBlocksWithIoInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">lenDataBlocks</span><span class="p">))</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">rawDataBlocksWithIoInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rawDataBlocksWithIoInstExpr</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">rawDataBlocksWithIoInstIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawDataBlocksWithIoInstExpr</span><span class="p">)</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">dataBlocksWithIoInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BytesWithIo</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawDataBlocksWithIoInstIo</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">dataBlocksWithIoInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dataBlocksWithIoInstExpr</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">dataBlocksWithIoInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">dataBlocksWithIoInst</span>
-
 <span class="k">proc</span><span class="w"> </span><span class="nf">dataBlocks</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork</span><span class="p">):</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
 
 <span class="w">  </span><span class="sd">##[</span>
@@ -570,6 +564,26 @@ such as custom file icons.</p>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">dataBlocksInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
 <span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">dataBlocksInst</span>
 
+<span class="k">proc</span><span class="w"> </span><span class="nf">dataBlocksWithIo</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork</span><span class="p">):</span><span class="w"> </span><span class="n">BytesWithIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Use `data_blocks` instead,</span>
+<span class="sd">unless you need access to this instance&#39;s `_io`.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">dataBlocksWithIoInstFlag</span><span class="p">:</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">dataBlocksWithIoInst</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">ofsDataBlocks</span><span class="p">))</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">rawDataBlocksWithIoInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">lenDataBlocks</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">rawDataBlocksWithIoInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rawDataBlocksWithIoInstExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">rawDataBlocksWithIoInstIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawDataBlocksWithIoInstExpr</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">dataBlocksWithIoInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BytesWithIo</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawDataBlocksWithIoInstIo</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">dataBlocksWithIoInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dataBlocksWithIoInstExpr</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">dataBlocksWithIoInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">dataBlocksWithIoInst</span>
+
 <span class="k">proc</span><span class="w"> </span><span class="nf">resourceMap</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork</span><span class="p">):</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
 
 <span class="w">  </span><span class="sd">##[</span>
@@ -590,6 +604,41 @@ such as custom file icons.</p>
 
 <span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ResourceFork], filename: string): ResourceFork =</span>
 <span class="w">  </span><span class="n">ResourceFork</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="sd">A resource data block,</span>
+<span class="sd">as stored in the resource data area.</span>
+
+<span class="sd">Each data block stores the data contained in a resource,</span>
+<span class="sd">along with its length.</span>
+
+<span class="sd">]##</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ResourceFork_DataBlock], io: KaitaiStream, root: KaitaiStruct, parent: ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference): ResourceFork_DataBlock =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">ResourceFork_DataBlock</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">ResourceFork</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">ResourceFork</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
+
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The length of the resource data stored in this block.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lenDataExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lenData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lenDataExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The data stored in this block.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">dataExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenData</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dataExpr</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ResourceFork_DataBlock], filename: string): ResourceFork_DataBlock =</span>
+<span class="w">  </span><span class="n">ResourceFork_DataBlock</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 
 
 <span class="sd">##[</span>
@@ -653,41 +702,6 @@ such as custom file icons.</p>
 
 
 <span class="sd">##[</span>
-<span class="sd">A resource data block,</span>
-<span class="sd">as stored in the resource data area.</span>
-
-<span class="sd">Each data block stores the data contained in a resource,</span>
-<span class="sd">along with its length.</span>
-
-<span class="sd">]##</span>
-<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ResourceFork_DataBlock], io: KaitaiStream, root: KaitaiStruct, parent: ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference): ResourceFork_DataBlock =</span>
-<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
-<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">ResourceFork_DataBlock</span><span class="p">)</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">ResourceFork</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">ResourceFork</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
-
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  The length of the resource data stored in this block.</span>
-
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lenDataExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lenData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lenDataExpr</span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  The data stored in this block.</span>
-
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">dataExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenData</span><span class="p">))</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dataExpr</span>
-
-<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ResourceFork_DataBlock], filename: string): ResourceFork_DataBlock =</span>
-<span class="w">  </span><span class="n">ResourceFork_DataBlock</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
-
-
-<span class="sd">##[</span>
 <span class="sd">Resource map,</span>
 <span class="sd">containing information about the resources in the file and where they are located in the data area.</span>
 
@@ -748,23 +762,17 @@ such as custom file icons.</p>
 <span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">ofsNamesExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">ofsNames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ofsNamesExpr</span>
 
-<span class="k">proc</span><span class="w"> </span><span class="nf">typeListAndReferenceLists</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap</span><span class="p">):</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">names</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap</span><span class="p">):</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
 
 <span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  The resource map&#39;s resource type list, followed by the resource reference list area.</span>
+<span class="sd">  Storage area for the names of all resources.</span>
 <span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">typeListAndReferenceListsInstFlag</span><span class="p">:</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">typeListAndReferenceListsInst</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">ofsTypeList</span><span class="p">))</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">rawTypeListAndReferenceListsInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">ofsNames</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">ofsTypeList</span><span class="p">)))</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">rawTypeListAndReferenceListsInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rawTypeListAndReferenceListsInstExpr</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">rawTypeListAndReferenceListsInstIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawTypeListAndReferenceListsInstExpr</span><span class="p">)</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">typeListAndReferenceListsInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawTypeListAndReferenceListsInstIo</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">typeListAndReferenceListsInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">typeListAndReferenceListsInstExpr</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">typeListAndReferenceListsInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">typeListAndReferenceListsInst</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">namesInstFlag</span><span class="p">:</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">namesInst</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">namesInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">namesWithIo</span><span class="p">.</span><span class="n">data</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">namesInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">namesInstExpr</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">namesInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">namesInst</span>
 
 <span class="k">proc</span><span class="w"> </span><span class="nf">namesWithIo</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap</span><span class="p">):</span><span class="w"> </span><span class="n">BytesWithIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
 
@@ -780,23 +788,29 @@ such as custom file icons.</p>
 <span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">rawNamesWithIoInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesFull</span><span class="p">()</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">rawNamesWithIoInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rawNamesWithIoInstExpr</span>
 <span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">rawNamesWithIoInstIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawNamesWithIoInstExpr</span><span class="p">)</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">namesWithIoInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BytesWithIo</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawNamesWithIoInstIo</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">namesWithIoInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BytesWithIo</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawNamesWithIoInstIo</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">namesWithIoInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">namesWithIoInstExpr</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">namesWithIoInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
 <span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">namesWithIoInst</span>
 
-<span class="k">proc</span><span class="w"> </span><span class="nf">names</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap</span><span class="p">):</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">typeListAndReferenceLists</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap</span><span class="p">):</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
 
 <span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  Storage area for the names of all resources.</span>
+<span class="sd">  The resource map&#39;s resource type list, followed by the resource reference list area.</span>
 <span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">namesInstFlag</span><span class="p">:</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">namesInst</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">namesInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">namesWithIo</span><span class="p">.</span><span class="n">data</span><span class="p">)</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">namesInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">namesInstExpr</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">namesInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">namesInst</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">typeListAndReferenceListsInstFlag</span><span class="p">:</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">typeListAndReferenceListsInst</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">ofsTypeList</span><span class="p">))</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">rawTypeListAndReferenceListsInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">ofsNames</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">ofsTypeList</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">rawTypeListAndReferenceListsInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rawTypeListAndReferenceListsInstExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">rawTypeListAndReferenceListsInstIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawTypeListAndReferenceListsInstExpr</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">typeListAndReferenceListsInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawTypeListAndReferenceListsInstIo</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">typeListAndReferenceListsInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">typeListAndReferenceListsInstExpr</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">typeListAndReferenceListsInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">typeListAndReferenceListsInst</span>
 
 <span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ResourceFork_ResourceMap], filename: string): ResourceFork_ResourceMap =</span>
 <span class="w">  </span><span class="n">ResourceFork_ResourceMap</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
@@ -915,6 +929,66 @@ such as custom file icons.</p>
 
 
 <span class="sd">##[</span>
+<span class="sd">A resource name,</span>
+<span class="sd">as stored in the resource name storage area in the resource map.</span>
+
+<span class="sd">The resource names are not required to appear in any particular order.</span>
+<span class="sd">There may be unused space between and around resource names,</span>
+<span class="sd">but in practice they are often contiguous.</span>
+
+<span class="sd">]##</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ResourceFork_ResourceMap_Name], io: KaitaiStream, root: KaitaiStruct, parent: ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference): ResourceFork_ResourceMap_Name =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">ResourceFork_ResourceMap_Name</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">ResourceFork</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">ResourceFork</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
+
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The length of the resource name, in bytes.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lenValueExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lenValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lenValueExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The resource name.</span>
+
+<span class="sd">This field is exposed as a byte array,</span>
+<span class="sd">because there is no universal encoding for resource names.</span>
+<span class="sd">Most Classic Mac software does not deal with encodings explicitly and instead assumes that all strings,</span>
+<span class="sd">including resource names,</span>
+<span class="sd">use the system encoding,</span>
+<span class="sd">which varies depending on the system language.</span>
+<span class="sd">This means that resource names can use different encodings depending on what system language they were created with.</span>
+
+<span class="sd">Many resource names are plain ASCII,</span>
+<span class="sd">meaning that the encoding often does not matter</span>
+<span class="sd">(because all Mac OS encodings are ASCII-compatible).</span>
+<span class="sd">For non-ASCII resource names,</span>
+<span class="sd">the most common encoding is perhaps MacRoman</span>
+<span class="sd">(used for English and other Western languages),</span>
+<span class="sd">but other encodings are also sometimes used,</span>
+<span class="sd">especially for software in non-Western languages.</span>
+
+<span class="sd">There is no requirement that all names in a single resource file use the same encoding.</span>
+<span class="sd">For example,</span>
+<span class="sd">localized software may have some (but not all) of its resource names translated.</span>
+<span class="sd">For non-Western languages,</span>
+<span class="sd">this can lead to some resource names using MacRoman,</span>
+<span class="sd">and others using a different encoding.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">valueExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenValue</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">valueExpr</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ResourceFork_ResourceMap_Name], filename: string): ResourceFork_ResourceMap_Name =</span>
+<span class="w">  </span><span class="n">ResourceFork_ResourceMap_Name</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
 <span class="sd">Resource type list and storage area for resource reference lists in the resource map.</span>
 
 <span class="sd">The two parts are combined into a single type here for technical reasons:</span>
@@ -951,131 +1025,6 @@ such as custom file icons.</p>
 
 <span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ResourceFork_ResourceMap_TypeListAndReferenceLists], filename: string): ResourceFork_ResourceMap_TypeListAndReferenceLists =</span>
 <span class="w">  </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
-
-
-<span class="sd">##[</span>
-<span class="sd">Resource type list in the resource map.</span>
-<span class="sd">]##</span>
-<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList], io: KaitaiStream, root: KaitaiStruct, parent: ResourceFork_ResourceMap_TypeListAndReferenceLists): ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList =</span>
-<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
-<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList</span><span class="p">)</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">ResourceFork</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">ResourceFork</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
-
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  The number of resource types in this list,</span>
-<span class="sd">minus one.</span>
-
-<span class="sd">If the resource list is empty,</span>
-<span class="sd">the value of this field is `0xffff`,</span>
-<span class="sd">i. e. `-1` truncated to a 16-bit unsigned integer.</span>
-
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">numTypesM1Expr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">numTypesM1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">numTypesM1Expr</span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  Entries in the resource type list.</span>
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">..</span><span class="o">&lt;</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">numTypes</span><span class="p">):</span>
-<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
-<span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">entries</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
-
-<span class="k">proc</span><span class="w"> </span><span class="nf">numTypes</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  The number of resource types in this list.</span>
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">numTypesInstFlag</span><span class="p">:</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">numTypesInst</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">numTypesInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">numTypesM1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">%%%</span><span class="w"> </span><span class="mi">65536</span><span class="p">))</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">numTypesInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">numTypesInstExpr</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">numTypesInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">numTypesInst</span>
-
-<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList], filename: string): ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList =</span>
-<span class="w">  </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
-
-
-<span class="sd">##[</span>
-<span class="sd">A single entry in the resource type list.</span>
-
-<span class="sd">Each entry corresponds to exactly one resource reference list.</span>
-
-<span class="sd">]##</span>
-<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry], io: KaitaiStream, root: KaitaiStruct, parent: ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList): ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry =</span>
-<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
-<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry</span><span class="p">)</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">ResourceFork</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">ResourceFork</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
-
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  The four-character type code of the resources in the reference list.</span>
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">typeExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="k">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">typeExpr</span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  The number of resources in the reference list for this type,</span>
-<span class="sd">minus one.</span>
-
-<span class="sd">Empty reference lists should never exist.</span>
-
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">numReferencesM1Expr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">numReferencesM1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">numReferencesM1Expr</span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  Offset of the resource reference list for this resource type,</span>
-<span class="sd">from the start of the resource type list.</span>
-
-<span class="sd">Although the offset is relative to the start of the type list,</span>
-<span class="sd">it should never point into the type list itself,</span>
-<span class="sd">but into the reference list storage area that directly follows it.</span>
-<span class="sd">That is,</span>
-<span class="sd">it should always be at least `_parent._sizeof`.</span>
-
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">ofsReferenceListExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">ofsReferenceList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ofsReferenceListExpr</span>
-
-<span class="k">proc</span><span class="w"> </span><span class="nf">numReferences</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  The number of resources in the reference list for this type.</span>
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">numReferencesInstFlag</span><span class="p">:</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">numReferencesInst</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">numReferencesInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">numReferencesM1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">%%%</span><span class="w"> </span><span class="mi">65536</span><span class="p">))</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">numReferencesInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">numReferencesInstExpr</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">numReferencesInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">numReferencesInst</span>
-
-<span class="k">proc</span><span class="w"> </span><span class="nf">referenceList</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry</span><span class="p">):</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  The resource reference list for this resource type.</span>
-
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">referenceListInstFlag</span><span class="p">:</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">referenceListInst</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">io</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
-<span class="w">  </span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">ofsReferenceList</span><span class="p">))</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">referenceListInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">numReferences</span><span class="p">)</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">referenceListInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">referenceListInstExpr</span>
-<span class="w">  </span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">referenceListInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">referenceListInst</span>
-
-<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry], filename: string): ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry =</span>
-<span class="w">  </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 
 
 <span class="sd">##[</span>
@@ -1162,6 +1111,23 @@ such as custom file icons.</p>
 <span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">reservedHandleExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">reservedHandle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">reservedHandleExpr</span>
 
+<span class="k">proc</span><span class="w"> </span><span class="nf">dataBlock</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference</span><span class="p">):</span><span class="w"> </span><span class="n">ResourceFork_DataBlock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The data block containing the data for the resource described by this reference.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">dataBlockInstFlag</span><span class="p">:</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">dataBlockInst</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ResourceFork</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">dataBlocksWithIo</span><span class="p">.</span><span class="n">io</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
+<span class="w">  </span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">ofsDataBlock</span><span class="p">))</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">dataBlockInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ResourceFork_DataBlock</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">dataBlockInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dataBlockInstExpr</span>
+<span class="w">  </span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">dataBlockInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">dataBlockInst</span>
+
 <span class="k">proc</span><span class="w"> </span><span class="nf">name</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference</span><span class="p">):</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
 
 <span class="w">  </span><span class="sd">##[</span>
@@ -1179,23 +1145,6 @@ such as custom file icons.</p>
 <span class="w">    </span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">nameInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
 <span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">nameInst</span>
-
-<span class="k">proc</span><span class="w"> </span><span class="nf">dataBlock</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference</span><span class="p">):</span><span class="w"> </span><span class="n">ResourceFork_DataBlock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  The data block containing the data for the resource described by this reference.</span>
-
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">dataBlockInstFlag</span><span class="p">:</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">dataBlockInst</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ResourceFork</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">dataBlocksWithIo</span><span class="p">.</span><span class="n">io</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
-<span class="w">  </span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">ofsDataBlock</span><span class="p">))</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">dataBlockInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ResourceFork_DataBlock</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">dataBlockInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dataBlockInstExpr</span>
-<span class="w">  </span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">dataBlockInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">dataBlockInst</span>
 
 <span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference], filename: string): ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference =</span>
 <span class="w">  </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
@@ -1359,17 +1308,11 @@ such as custom file icons.</p>
 
 
 <span class="sd">##[</span>
-<span class="sd">A resource name,</span>
-<span class="sd">as stored in the resource name storage area in the resource map.</span>
-
-<span class="sd">The resource names are not required to appear in any particular order.</span>
-<span class="sd">There may be unused space between and around resource names,</span>
-<span class="sd">but in practice they are often contiguous.</span>
-
+<span class="sd">Resource type list in the resource map.</span>
 <span class="sd">]##</span>
-<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ResourceFork_ResourceMap_Name], io: KaitaiStream, root: KaitaiStruct, parent: ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference): ResourceFork_ResourceMap_Name =</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList], io: KaitaiStream, root: KaitaiStruct, parent: ResourceFork_ResourceMap_TypeListAndReferenceLists): ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList =</span>
 <span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
-<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">ResourceFork_ResourceMap_Name</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList</span><span class="p">)</span>
 <span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">ResourceFork</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">ResourceFork</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
@@ -1377,45 +1320,116 @@ such as custom file icons.</p>
 
 
 <span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  The length of the resource name, in bytes.</span>
+<span class="sd">  The number of resource types in this list,</span>
+<span class="sd">minus one.</span>
+
+<span class="sd">If the resource list is empty,</span>
+<span class="sd">the value of this field is `0xffff`,</span>
+<span class="sd">i. e. `-1` truncated to a 16-bit unsigned integer.</span>
 
 <span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lenValueExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lenValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lenValueExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">numTypesM1Expr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">numTypesM1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">numTypesM1Expr</span>
 
 <span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  The resource name.</span>
+<span class="sd">  Entries in the resource type list.</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">..</span><span class="o">&lt;</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">numTypes</span><span class="p">):</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">entries</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
 
-<span class="sd">This field is exposed as a byte array,</span>
-<span class="sd">because there is no universal encoding for resource names.</span>
-<span class="sd">Most Classic Mac software does not deal with encodings explicitly and instead assumes that all strings,</span>
-<span class="sd">including resource names,</span>
-<span class="sd">use the system encoding,</span>
-<span class="sd">which varies depending on the system language.</span>
-<span class="sd">This means that resource names can use different encodings depending on what system language they were created with.</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">numTypes</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
 
-<span class="sd">Many resource names are plain ASCII,</span>
-<span class="sd">meaning that the encoding often does not matter</span>
-<span class="sd">(because all Mac OS encodings are ASCII-compatible).</span>
-<span class="sd">For non-ASCII resource names,</span>
-<span class="sd">the most common encoding is perhaps MacRoman</span>
-<span class="sd">(used for English and other Western languages),</span>
-<span class="sd">but other encodings are also sometimes used,</span>
-<span class="sd">especially for software in non-Western languages.</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The number of resource types in this list.</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">numTypesInstFlag</span><span class="p">:</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">numTypesInst</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">numTypesInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">numTypesM1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">%%%</span><span class="w"> </span><span class="mi">65536</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">numTypesInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">numTypesInstExpr</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">numTypesInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">numTypesInst</span>
 
-<span class="sd">There is no requirement that all names in a single resource file use the same encoding.</span>
-<span class="sd">For example,</span>
-<span class="sd">localized software may have some (but not all) of its resource names translated.</span>
-<span class="sd">For non-Western languages,</span>
-<span class="sd">this can lead to some resource names using MacRoman,</span>
-<span class="sd">and others using a different encoding.</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList], filename: string): ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList =</span>
+<span class="w">  </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="sd">A single entry in the resource type list.</span>
+
+<span class="sd">Each entry corresponds to exactly one resource reference list.</span>
+
+<span class="sd">]##</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry], io: KaitaiStream, root: KaitaiStruct, parent: ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList): ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">ResourceFork</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">ResourceFork</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
+
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The four-character type code of the resources in the reference list.</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">typeExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="k">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">typeExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The number of resources in the reference list for this type,</span>
+<span class="sd">minus one.</span>
+
+<span class="sd">Empty reference lists should never exist.</span>
 
 <span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">valueExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenValue</span><span class="p">))</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">valueExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">numReferencesM1Expr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">numReferencesM1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">numReferencesM1Expr</span>
 
-<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ResourceFork_ResourceMap_Name], filename: string): ResourceFork_ResourceMap_Name =</span>
-<span class="w">  </span><span class="n">ResourceFork_ResourceMap_Name</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Offset of the resource reference list for this resource type,</span>
+<span class="sd">from the start of the resource type list.</span>
+
+<span class="sd">Although the offset is relative to the start of the type list,</span>
+<span class="sd">it should never point into the type list itself,</span>
+<span class="sd">but into the reference list storage area that directly follows it.</span>
+<span class="sd">That is,</span>
+<span class="sd">it should always be at least `_parent._sizeof`.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">ofsReferenceListExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">ofsReferenceList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ofsReferenceListExpr</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">numReferences</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The number of resources in the reference list for this type.</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">numReferencesInstFlag</span><span class="p">:</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">numReferencesInst</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">numReferencesInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">numReferencesM1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">%%%</span><span class="w"> </span><span class="mi">65536</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">numReferencesInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">numReferencesInstExpr</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">numReferencesInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">numReferencesInst</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">referenceList</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry</span><span class="p">):</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  The resource reference list for this resource type.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">referenceListInstFlag</span><span class="p">:</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">referenceListInst</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">io</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
+<span class="w">  </span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">ofsReferenceList</span><span class="p">))</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">referenceListInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">numReferences</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">referenceListInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">referenceListInstExpr</span>
+<span class="w">  </span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">referenceListInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">referenceListInst</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry], filename: string): ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry =</span>
+<span class="w">  </span><span class="n">ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 </pre></div>
 
         </div>

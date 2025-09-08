@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.Swf = factory(root.KaitaiStream);
+    factory(root.Swf || (root.Swf = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Swf_, KaitaiStream) {
 /**
  * SWF files are used by Adobe Flash (AKA Shockwave Flash, Macromedia
  * Flash) to encode rich interactive multimedia content and are,
@@ -84,8 +84,8 @@ var Swf = (function() {
   Swf.prototype._read = function() {
     this.compression = this._io.readU1();
     this.signature = this._io.readBytes(2);
-    if (!((KaitaiStream.byteArrayCompare(this.signature, [87, 83]) == 0))) {
-      throw new KaitaiStream.ValidationNotEqualError([87, 83], this.signature, this._io, "/seq/1");
+    if (!((KaitaiStream.byteArrayCompare(this.signature, new Uint8Array([87, 83])) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([87, 83]), this.signature, this._io, "/seq/1");
     }
     this.version = this._io.readU1();
     this.lenFile = this._io.readU4le();
@@ -102,28 +102,64 @@ var Swf = (function() {
     }
   }
 
-  var Rgb = Swf.Rgb = (function() {
-    function Rgb(_io, _parent, _root) {
+  var DefineSoundBody = Swf.DefineSoundBody = (function() {
+    DefineSoundBody.Bps = Object.freeze({
+      SOUND_8_BIT: 0,
+      SOUND_16_BIT: 1,
+
+      0: "SOUND_8_BIT",
+      1: "SOUND_16_BIT",
+    });
+
+    DefineSoundBody.Channels = Object.freeze({
+      MONO: 0,
+      STEREO: 1,
+
+      0: "MONO",
+      1: "STEREO",
+    });
+
+    DefineSoundBody.SamplingRates = Object.freeze({
+      RATE_5_5_KHZ: 0,
+      RATE_11_KHZ: 1,
+      RATE_22_KHZ: 2,
+      RATE_44_KHZ: 3,
+
+      0: "RATE_5_5_KHZ",
+      1: "RATE_11_KHZ",
+      2: "RATE_22_KHZ",
+      3: "RATE_44_KHZ",
+    });
+
+    function DefineSoundBody(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    Rgb.prototype._read = function() {
-      this.r = this._io.readU1();
-      this.g = this._io.readU1();
-      this.b = this._io.readU1();
+    DefineSoundBody.prototype._read = function() {
+      this.id = this._io.readU2le();
+      this.format = this._io.readBitsIntBe(4);
+      this.samplingRate = this._io.readBitsIntBe(2);
+      this.bitsPerSample = this._io.readBitsIntBe(1);
+      this.numChannels = this._io.readBitsIntBe(1);
+      this._io.alignToByte();
+      this.numSamples = this._io.readU4le();
     }
 
-    return Rgb;
+    /**
+     * Sound sampling rate, as per enum. Ignored for Nellymoser and Speex codecs.
+     */
+
+    return DefineSoundBody;
   })();
 
   var DoAbcBody = Swf.DoAbcBody = (function() {
     function DoAbcBody(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -136,11 +172,118 @@ var Swf = (function() {
     return DoAbcBody;
   })();
 
+  var RecordHeader = Swf.RecordHeader = (function() {
+    function RecordHeader(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    RecordHeader.prototype._read = function() {
+      this.tagCodeAndLength = this._io.readU2le();
+      if (this.smallLen == 63) {
+        this.bigLen = this._io.readS4le();
+      }
+    }
+    Object.defineProperty(RecordHeader.prototype, 'len', {
+      get: function() {
+        if (this._m_len !== undefined)
+          return this._m_len;
+        this._m_len = (this.smallLen == 63 ? this.bigLen : this.smallLen);
+        return this._m_len;
+      }
+    });
+    Object.defineProperty(RecordHeader.prototype, 'smallLen', {
+      get: function() {
+        if (this._m_smallLen !== undefined)
+          return this._m_smallLen;
+        this._m_smallLen = this.tagCodeAndLength & 63;
+        return this._m_smallLen;
+      }
+    });
+    Object.defineProperty(RecordHeader.prototype, 'tagType', {
+      get: function() {
+        if (this._m_tagType !== undefined)
+          return this._m_tagType;
+        this._m_tagType = this.tagCodeAndLength >>> 6;
+        return this._m_tagType;
+      }
+    });
+
+    return RecordHeader;
+  })();
+
+  var Rect = Swf.Rect = (function() {
+    function Rect(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Rect.prototype._read = function() {
+      this.b1 = this._io.readU1();
+      this.skip = this._io.readBytes(this.numBytes);
+    }
+    Object.defineProperty(Rect.prototype, 'numBits', {
+      get: function() {
+        if (this._m_numBits !== undefined)
+          return this._m_numBits;
+        this._m_numBits = this.b1 >>> 3;
+        return this._m_numBits;
+      }
+    });
+    Object.defineProperty(Rect.prototype, 'numBytes', {
+      get: function() {
+        if (this._m_numBytes !== undefined)
+          return this._m_numBytes;
+        this._m_numBytes = Math.floor(((this.numBits * 4 - 3) + 7) / 8);
+        return this._m_numBytes;
+      }
+    });
+
+    return Rect;
+  })();
+
+  var Rgb = Swf.Rgb = (function() {
+    function Rgb(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Rgb.prototype._read = function() {
+      this.r = this._io.readU1();
+      this.g = this._io.readU1();
+      this.b = this._io.readU1();
+    }
+
+    return Rgb;
+  })();
+
+  var ScriptLimitsBody = Swf.ScriptLimitsBody = (function() {
+    function ScriptLimitsBody(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    ScriptLimitsBody.prototype._read = function() {
+      this.maxRecursionDepth = this._io.readU2le();
+      this.scriptTimeoutSeconds = this._io.readU2le();
+    }
+
+    return ScriptLimitsBody;
+  })();
+
   var SwfBody = Swf.SwfBody = (function() {
     function SwfBody(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -162,93 +305,11 @@ var Swf = (function() {
     return SwfBody;
   })();
 
-  var Rect = Swf.Rect = (function() {
-    function Rect(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Rect.prototype._read = function() {
-      this.b1 = this._io.readU1();
-      this.skip = this._io.readBytes(this.numBytes);
-    }
-    Object.defineProperty(Rect.prototype, 'numBits', {
-      get: function() {
-        if (this._m_numBits !== undefined)
-          return this._m_numBits;
-        this._m_numBits = (this.b1 >>> 3);
-        return this._m_numBits;
-      }
-    });
-    Object.defineProperty(Rect.prototype, 'numBytes', {
-      get: function() {
-        if (this._m_numBytes !== undefined)
-          return this._m_numBytes;
-        this._m_numBytes = Math.floor((((this.numBits * 4) - 3) + 7) / 8);
-        return this._m_numBytes;
-      }
-    });
-
-    return Rect;
-  })();
-
-  var Tag = Swf.Tag = (function() {
-    function Tag(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Tag.prototype._read = function() {
-      this.recordHeader = new RecordHeader(this._io, this, this._root);
-      switch (this.recordHeader.tagType) {
-      case Swf.TagType.DEFINE_SOUND:
-        this._raw_tagBody = this._io.readBytes(this.recordHeader.len);
-        var _io__raw_tagBody = new KaitaiStream(this._raw_tagBody);
-        this.tagBody = new DefineSoundBody(_io__raw_tagBody, this, this._root);
-        break;
-      case Swf.TagType.SET_BACKGROUND_COLOR:
-        this._raw_tagBody = this._io.readBytes(this.recordHeader.len);
-        var _io__raw_tagBody = new KaitaiStream(this._raw_tagBody);
-        this.tagBody = new Rgb(_io__raw_tagBody, this, this._root);
-        break;
-      case Swf.TagType.SCRIPT_LIMITS:
-        this._raw_tagBody = this._io.readBytes(this.recordHeader.len);
-        var _io__raw_tagBody = new KaitaiStream(this._raw_tagBody);
-        this.tagBody = new ScriptLimitsBody(_io__raw_tagBody, this, this._root);
-        break;
-      case Swf.TagType.DO_ABC:
-        this._raw_tagBody = this._io.readBytes(this.recordHeader.len);
-        var _io__raw_tagBody = new KaitaiStream(this._raw_tagBody);
-        this.tagBody = new DoAbcBody(_io__raw_tagBody, this, this._root);
-        break;
-      case Swf.TagType.EXPORT_ASSETS:
-        this._raw_tagBody = this._io.readBytes(this.recordHeader.len);
-        var _io__raw_tagBody = new KaitaiStream(this._raw_tagBody);
-        this.tagBody = new SymbolClassBody(_io__raw_tagBody, this, this._root);
-        break;
-      case Swf.TagType.SYMBOL_CLASS:
-        this._raw_tagBody = this._io.readBytes(this.recordHeader.len);
-        var _io__raw_tagBody = new KaitaiStream(this._raw_tagBody);
-        this.tagBody = new SymbolClassBody(_io__raw_tagBody, this, this._root);
-        break;
-      default:
-        this.tagBody = this._io.readBytes(this.recordHeader.len);
-        break;
-      }
-    }
-
-    return Tag;
-  })();
-
   var SymbolClassBody = Swf.SymbolClassBody = (function() {
     function SymbolClassBody(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -264,7 +325,7 @@ var Swf = (function() {
       function Symbol(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -279,118 +340,57 @@ var Swf = (function() {
     return SymbolClassBody;
   })();
 
-  var DefineSoundBody = Swf.DefineSoundBody = (function() {
-    DefineSoundBody.SamplingRates = Object.freeze({
-      RATE_5_5_KHZ: 0,
-      RATE_11_KHZ: 1,
-      RATE_22_KHZ: 2,
-      RATE_44_KHZ: 3,
-
-      0: "RATE_5_5_KHZ",
-      1: "RATE_11_KHZ",
-      2: "RATE_22_KHZ",
-      3: "RATE_44_KHZ",
-    });
-
-    DefineSoundBody.Bps = Object.freeze({
-      SOUND_8_BIT: 0,
-      SOUND_16_BIT: 1,
-
-      0: "SOUND_8_BIT",
-      1: "SOUND_16_BIT",
-    });
-
-    DefineSoundBody.Channels = Object.freeze({
-      MONO: 0,
-      STEREO: 1,
-
-      0: "MONO",
-      1: "STEREO",
-    });
-
-    function DefineSoundBody(_io, _parent, _root) {
+  var Tag = Swf.Tag = (function() {
+    function Tag(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    DefineSoundBody.prototype._read = function() {
-      this.id = this._io.readU2le();
-      this.format = this._io.readBitsIntBe(4);
-      this.samplingRate = this._io.readBitsIntBe(2);
-      this.bitsPerSample = this._io.readBitsIntBe(1);
-      this.numChannels = this._io.readBitsIntBe(1);
-      this._io.alignToByte();
-      this.numSamples = this._io.readU4le();
-    }
-
-    /**
-     * Sound sampling rate, as per enum. Ignored for Nellymoser and Speex codecs.
-     */
-
-    return DefineSoundBody;
-  })();
-
-  var RecordHeader = Swf.RecordHeader = (function() {
-    function RecordHeader(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    RecordHeader.prototype._read = function() {
-      this.tagCodeAndLength = this._io.readU2le();
-      if (this.smallLen == 63) {
-        this.bigLen = this._io.readS4le();
+    Tag.prototype._read = function() {
+      this.recordHeader = new RecordHeader(this._io, this, this._root);
+      switch (this.recordHeader.tagType) {
+      case Swf.TagType.DEFINE_SOUND:
+        this._raw_tagBody = this._io.readBytes(this.recordHeader.len);
+        var _io__raw_tagBody = new KaitaiStream(this._raw_tagBody);
+        this.tagBody = new DefineSoundBody(_io__raw_tagBody, this, this._root);
+        break;
+      case Swf.TagType.DO_ABC:
+        this._raw_tagBody = this._io.readBytes(this.recordHeader.len);
+        var _io__raw_tagBody = new KaitaiStream(this._raw_tagBody);
+        this.tagBody = new DoAbcBody(_io__raw_tagBody, this, this._root);
+        break;
+      case Swf.TagType.EXPORT_ASSETS:
+        this._raw_tagBody = this._io.readBytes(this.recordHeader.len);
+        var _io__raw_tagBody = new KaitaiStream(this._raw_tagBody);
+        this.tagBody = new SymbolClassBody(_io__raw_tagBody, this, this._root);
+        break;
+      case Swf.TagType.SCRIPT_LIMITS:
+        this._raw_tagBody = this._io.readBytes(this.recordHeader.len);
+        var _io__raw_tagBody = new KaitaiStream(this._raw_tagBody);
+        this.tagBody = new ScriptLimitsBody(_io__raw_tagBody, this, this._root);
+        break;
+      case Swf.TagType.SET_BACKGROUND_COLOR:
+        this._raw_tagBody = this._io.readBytes(this.recordHeader.len);
+        var _io__raw_tagBody = new KaitaiStream(this._raw_tagBody);
+        this.tagBody = new Rgb(_io__raw_tagBody, this, this._root);
+        break;
+      case Swf.TagType.SYMBOL_CLASS:
+        this._raw_tagBody = this._io.readBytes(this.recordHeader.len);
+        var _io__raw_tagBody = new KaitaiStream(this._raw_tagBody);
+        this.tagBody = new SymbolClassBody(_io__raw_tagBody, this, this._root);
+        break;
+      default:
+        this.tagBody = this._io.readBytes(this.recordHeader.len);
+        break;
       }
     }
-    Object.defineProperty(RecordHeader.prototype, 'tagType', {
-      get: function() {
-        if (this._m_tagType !== undefined)
-          return this._m_tagType;
-        this._m_tagType = (this.tagCodeAndLength >>> 6);
-        return this._m_tagType;
-      }
-    });
-    Object.defineProperty(RecordHeader.prototype, 'smallLen', {
-      get: function() {
-        if (this._m_smallLen !== undefined)
-          return this._m_smallLen;
-        this._m_smallLen = (this.tagCodeAndLength & 63);
-        return this._m_smallLen;
-      }
-    });
-    Object.defineProperty(RecordHeader.prototype, 'len', {
-      get: function() {
-        if (this._m_len !== undefined)
-          return this._m_len;
-        this._m_len = (this.smallLen == 63 ? this.bigLen : this.smallLen);
-        return this._m_len;
-      }
-    });
 
-    return RecordHeader;
-  })();
-
-  var ScriptLimitsBody = Swf.ScriptLimitsBody = (function() {
-    function ScriptLimitsBody(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    ScriptLimitsBody.prototype._read = function() {
-      this.maxRecursionDepth = this._io.readU2le();
-      this.scriptTimeoutSeconds = this._io.readU2le();
-    }
-
-    return ScriptLimitsBody;
+    return Tag;
   })();
 
   return Swf;
 })();
-return Swf;
-}));
+Swf_.Swf = Swf;
+});

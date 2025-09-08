@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -28,47 +28,85 @@ class AndroidSparse < Kaitai::Struct::Struct
     51908 => :chunk_types_crc32,
   }
   I__CHUNK_TYPES = CHUNK_TYPES.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
     @header_prefix = FileHeaderPrefix.new(@_io, self, @_root)
-    @_raw_header = @_io.read_bytes((header_prefix.len_header - 10))
-    _io__raw_header = Kaitai::Struct::Stream.new(@_raw_header)
-    @header = FileHeader.new(_io__raw_header, self, @_root)
+    _io_header = @_io.substream(header_prefix.len_header - 10)
+    @header = FileHeader.new(_io_header, self, @_root)
     @chunks = []
     (header.num_chunks).times { |i|
       @chunks << Chunk.new(@_io, self, @_root)
     }
     self
   end
-  class FileHeaderPrefix < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  class Chunk < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @magic = @_io.read_bytes(4)
-      raise Kaitai::Struct::ValidationNotEqualError.new([58, 255, 38, 237].pack('C*'), magic, _io, "/types/file_header_prefix/seq/0") if not magic == [58, 255, 38, 237].pack('C*')
-      @version = Version.new(@_io, self, @_root)
-      @len_header = @_io.read_u2le
+      _io_header = @_io.substream(_root.header.len_chunk_header)
+      @header = ChunkHeader.new(_io_header, self, @_root)
+      case header.chunk_type
+      when :chunk_types_crc32
+        @body = @_io.read_u4le
+      else
+        @body = @_io.read_bytes(header.len_body)
+      end
       self
     end
-    attr_reader :magic
+    class ChunkHeader < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = nil)
+        super(_io, _parent, _root)
+        _read
+      end
 
-    ##
-    # internal; access `_root.header.version` instead
-    attr_reader :version
+      def _read
+        @chunk_type = Kaitai::Struct::Stream::resolve_enum(AndroidSparse::CHUNK_TYPES, @_io.read_u2le)
+        @reserved1 = @_io.read_u2le
+        @num_body_blocks = @_io.read_u4le
+        @len_chunk = @_io.read_u4le
+        raise Kaitai::Struct::ValidationNotEqualError.new((len_body_expected != -1 ? _root.header.len_chunk_header + len_body_expected : len_chunk), @len_chunk, @_io, "/types/chunk/types/chunk_header/seq/3") if not @len_chunk == (len_body_expected != -1 ? _root.header.len_chunk_header + len_body_expected : len_chunk)
+        self
+      end
+      def len_body
+        return @len_body unless @len_body.nil?
+        @len_body = len_chunk - _root.header.len_chunk_header
+        @len_body
+      end
 
-    ##
-    # internal; access `_root.header.len_header` instead
-    attr_reader :len_header
+      ##
+      # @see https://android.googlesource.com/platform/system/core/+/e8d02c50d7/libsparse/sparse_read.cpp#184 Source
+      # @see https://android.googlesource.com/platform/system/core/+/e8d02c50d7/libsparse/sparse_read.cpp#215 Source
+      # @see https://android.googlesource.com/platform/system/core/+/e8d02c50d7/libsparse/sparse_read.cpp#249 Source
+      # @see https://android.googlesource.com/platform/system/core/+/e8d02c50d7/libsparse/sparse_read.cpp#270 Source
+      def len_body_expected
+        return @len_body_expected unless @len_body_expected.nil?
+        @len_body_expected = (chunk_type == :chunk_types_raw ? _root.header.block_size * num_body_blocks : (chunk_type == :chunk_types_fill ? 4 : (chunk_type == :chunk_types_dont_care ? 0 : (chunk_type == :chunk_types_crc32 ? 4 : -1))))
+        @len_body_expected
+      end
+      attr_reader :chunk_type
+      attr_reader :reserved1
+
+      ##
+      # size of the chunk body in blocks in output image
+      attr_reader :num_body_blocks
+
+      ##
+      # in bytes of chunk input file including chunk header and data
+      attr_reader :len_chunk
+    end
+    attr_reader :header
+    attr_reader :body
+    attr_reader :_raw_header
   end
   class FileHeader < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -76,17 +114,12 @@ class AndroidSparse < Kaitai::Struct::Struct
     def _read
       @len_chunk_header = @_io.read_u2le
       @block_size = @_io.read_u4le
-      _ = block_size
-      raise Kaitai::Struct::ValidationExprError.new(block_size, _io, "/types/file_header/seq/1") if not (_ % 4) == 0
+      _ = @block_size
+      raise Kaitai::Struct::ValidationExprError.new(@block_size, @_io, "/types/file_header/seq/1") if not _ % 4 == 0
       @num_blocks = @_io.read_u4le
       @num_chunks = @_io.read_u4le
       @checksum = @_io.read_u4le
       self
-    end
-    def version
-      return @version unless @version.nil?
-      @version = _root.header_prefix.version
-      @version
     end
 
     ##
@@ -95,6 +128,11 @@ class AndroidSparse < Kaitai::Struct::Struct
       return @len_header unless @len_header.nil?
       @len_header = _root.header_prefix.len_header
       @len_header
+    end
+    def version
+      return @version unless @version.nil?
+      @version = _root.header_prefix.version
+      @version
     end
 
     ##
@@ -119,78 +157,38 @@ class AndroidSparse < Kaitai::Struct::Struct
     # <https://gitlab.com/teskje/android-sparse-rs/-/blob/57c2577/src/write.rs#L112-114>
     attr_reader :checksum
   end
-  class Chunk < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  class FileHeaderPrefix < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @_raw_header = @_io.read_bytes(_root.header.len_chunk_header)
-      _io__raw_header = Kaitai::Struct::Stream.new(@_raw_header)
-      @header = ChunkHeader.new(_io__raw_header, self, @_root)
-      case header.chunk_type
-      when :chunk_types_crc32
-        @body = @_io.read_u4le
-      else
-        @body = @_io.read_bytes(header.len_body)
-      end
+      @magic = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([58, 255, 38, 237].pack('C*'), @magic, @_io, "/types/file_header_prefix/seq/0") if not @magic == [58, 255, 38, 237].pack('C*')
+      @version = Version.new(@_io, self, @_root)
+      @len_header = @_io.read_u2le
       self
     end
-    class ChunkHeader < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
+    attr_reader :magic
 
-      def _read
-        @chunk_type = Kaitai::Struct::Stream::resolve_enum(AndroidSparse::CHUNK_TYPES, @_io.read_u2le)
-        @reserved1 = @_io.read_u2le
-        @num_body_blocks = @_io.read_u4le
-        @len_chunk = @_io.read_u4le
-        raise Kaitai::Struct::ValidationNotEqualError.new((len_body_expected != -1 ? (_root.header.len_chunk_header + len_body_expected) : len_chunk), len_chunk, _io, "/types/chunk/types/chunk_header/seq/3") if not len_chunk == (len_body_expected != -1 ? (_root.header.len_chunk_header + len_body_expected) : len_chunk)
-        self
-      end
-      def len_body
-        return @len_body unless @len_body.nil?
-        @len_body = (len_chunk - _root.header.len_chunk_header)
-        @len_body
-      end
+    ##
+    # internal; access `_root.header.version` instead
+    attr_reader :version
 
-      ##
-      # @see https://android.googlesource.com/platform/system/core/+/e8d02c50d7/libsparse/sparse_read.cpp#184 Source
-      # @see https://android.googlesource.com/platform/system/core/+/e8d02c50d7/libsparse/sparse_read.cpp#215 Source
-      # @see https://android.googlesource.com/platform/system/core/+/e8d02c50d7/libsparse/sparse_read.cpp#249 Source
-      # @see https://android.googlesource.com/platform/system/core/+/e8d02c50d7/libsparse/sparse_read.cpp#270 Source
-      def len_body_expected
-        return @len_body_expected unless @len_body_expected.nil?
-        @len_body_expected = (chunk_type == :chunk_types_raw ? (_root.header.block_size * num_body_blocks) : (chunk_type == :chunk_types_fill ? 4 : (chunk_type == :chunk_types_dont_care ? 0 : (chunk_type == :chunk_types_crc32 ? 4 : -1))))
-        @len_body_expected
-      end
-      attr_reader :chunk_type
-      attr_reader :reserved1
-
-      ##
-      # size of the chunk body in blocks in output image
-      attr_reader :num_body_blocks
-
-      ##
-      # in bytes of chunk input file including chunk header and data
-      attr_reader :len_chunk
-    end
-    attr_reader :header
-    attr_reader :body
-    attr_reader :_raw_header
+    ##
+    # internal; access `_root.header.len_header` instead
+    attr_reader :len_header
   end
   class Version < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
       @major = @_io.read_u2le
-      raise Kaitai::Struct::ValidationNotEqualError.new(1, major, _io, "/types/version/seq/0") if not major == 1
+      raise Kaitai::Struct::ValidationNotEqualError.new(1, @major, @_io, "/types/version/seq/0") if not @major == 1
       @minor = @_io.read_u2le
       self
     end

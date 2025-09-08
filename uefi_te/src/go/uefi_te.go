@@ -33,7 +33,7 @@ type UefiTe struct {
 	Sections []*UefiTe_Section
 	_io *kaitai.Stream
 	_root *UefiTe
-	_parent interface{}
+	_parent kaitai.Struct
 	_raw_TeHdr []byte
 }
 func NewUefiTe() *UefiTe {
@@ -41,7 +41,11 @@ func NewUefiTe() *UefiTe {
 	}
 }
 
-func (this *UefiTe) Read(io *kaitai.Stream, parent interface{}, root *UefiTe) (err error) {
+func (this UefiTe) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *UefiTe) Read(io *kaitai.Stream, parent kaitai.Struct, root *UefiTe) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -69,6 +73,187 @@ func (this *UefiTe) Read(io *kaitai.Stream, parent interface{}, root *UefiTe) (e
 		this.Sections = append(this.Sections, tmp3)
 	}
 	return err
+}
+type UefiTe_DataDir struct {
+	VirtualAddress uint32
+	Size uint32
+	_io *kaitai.Stream
+	_root *UefiTe
+	_parent *UefiTe_HeaderDataDirs
+}
+func NewUefiTe_DataDir() *UefiTe_DataDir {
+	return &UefiTe_DataDir{
+	}
+}
+
+func (this UefiTe_DataDir) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *UefiTe_DataDir) Read(io *kaitai.Stream, parent *UefiTe_HeaderDataDirs, root *UefiTe) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp4, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.VirtualAddress = uint32(tmp4)
+	tmp5, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Size = uint32(tmp5)
+	return err
+}
+type UefiTe_HeaderDataDirs struct {
+	BaseRelocationTable *UefiTe_DataDir
+	Debug *UefiTe_DataDir
+	_io *kaitai.Stream
+	_root *UefiTe
+	_parent *UefiTe_TeHeader
+}
+func NewUefiTe_HeaderDataDirs() *UefiTe_HeaderDataDirs {
+	return &UefiTe_HeaderDataDirs{
+	}
+}
+
+func (this UefiTe_HeaderDataDirs) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *UefiTe_HeaderDataDirs) Read(io *kaitai.Stream, parent *UefiTe_TeHeader, root *UefiTe) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp6 := NewUefiTe_DataDir()
+	err = tmp6.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.BaseRelocationTable = tmp6
+	tmp7 := NewUefiTe_DataDir()
+	err = tmp7.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Debug = tmp7
+	return err
+}
+type UefiTe_Section struct {
+	Name string
+	VirtualSize uint32
+	VirtualAddress uint32
+	SizeOfRawData uint32
+	PointerToRawData uint32
+	PointerToRelocations uint32
+	PointerToLinenumbers uint32
+	NumRelocations uint16
+	NumLinenumbers uint16
+	Characteristics uint32
+	_io *kaitai.Stream
+	_root *UefiTe
+	_parent *UefiTe
+	_f_body bool
+	body []byte
+}
+func NewUefiTe_Section() *UefiTe_Section {
+	return &UefiTe_Section{
+	}
+}
+
+func (this UefiTe_Section) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *UefiTe_Section) Read(io *kaitai.Stream, parent *UefiTe, root *UefiTe) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp8, err := this._io.ReadBytes(int(8))
+	if err != nil {
+		return err
+	}
+	tmp8 = kaitai.BytesStripRight(tmp8, 0)
+	this.Name = string(tmp8)
+	tmp9, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.VirtualSize = uint32(tmp9)
+	tmp10, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.VirtualAddress = uint32(tmp10)
+	tmp11, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.SizeOfRawData = uint32(tmp11)
+	tmp12, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.PointerToRawData = uint32(tmp12)
+	tmp13, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.PointerToRelocations = uint32(tmp13)
+	tmp14, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.PointerToLinenumbers = uint32(tmp14)
+	tmp15, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.NumRelocations = uint16(tmp15)
+	tmp16, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.NumLinenumbers = uint16(tmp16)
+	tmp17, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Characteristics = uint32(tmp17)
+	return err
+}
+func (this *UefiTe_Section) Body() (v []byte, err error) {
+	if (this._f_body) {
+		return this.body, nil
+	}
+	this._f_body = true
+	_pos, err := this._io.Pos()
+	if err != nil {
+		return nil, err
+	}
+	tmp18, err := this._root.TeHdr._io.Size()
+	if err != nil {
+		return nil, err
+	}
+	_, err = this._io.Seek(int64((this.PointerToRawData - this._root.TeHdr.StrippedSize) + tmp18), io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	tmp19, err := this._io.ReadBytes(int(this.SizeOfRawData))
+	if err != nil {
+		return nil, err
+	}
+	tmp19 = tmp19
+	this.body = tmp19
+	_, err = this._io.Seek(_pos, io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	return this.body, nil
 }
 
 type UefiTe_TeHeader_MachineType int
@@ -103,6 +288,11 @@ const (
 	UefiTe_TeHeader_MachineType__M32r UefiTe_TeHeader_MachineType = 36929
 	UefiTe_TeHeader_MachineType__Arm64 UefiTe_TeHeader_MachineType = 43620
 )
+var values_UefiTe_TeHeader_MachineType = map[UefiTe_TeHeader_MachineType]struct{}{0: {}, 332: {}, 358: {}, 361: {}, 388: {}, 418: {}, 419: {}, 422: {}, 424: {}, 448: {}, 450: {}, 452: {}, 467: {}, 496: {}, 497: {}, 512: {}, 614: {}, 644: {}, 870: {}, 1126: {}, 3772: {}, 20530: {}, 20580: {}, 20776: {}, 25138: {}, 25188: {}, 34404: {}, 36929: {}, 43620: {}}
+func (v UefiTe_TeHeader_MachineType) isDefined() bool {
+	_, ok := values_UefiTe_TeHeader_MachineType[v]
+	return ok
+}
 
 type UefiTe_TeHeader_SubsystemEnum int
 const (
@@ -119,6 +309,11 @@ const (
 	UefiTe_TeHeader_SubsystemEnum__Xbox UefiTe_TeHeader_SubsystemEnum = 14
 	UefiTe_TeHeader_SubsystemEnum__WindowsBootApplication UefiTe_TeHeader_SubsystemEnum = 16
 )
+var values_UefiTe_TeHeader_SubsystemEnum = map[UefiTe_TeHeader_SubsystemEnum]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 7: {}, 9: {}, 10: {}, 11: {}, 12: {}, 13: {}, 14: {}, 16: {}}
+func (v UefiTe_TeHeader_SubsystemEnum) isDefined() bool {
+	_, ok := values_UefiTe_TeHeader_SubsystemEnum[v]
+	return ok
+}
 type UefiTe_TeHeader struct {
 	Magic []byte
 	Machine UefiTe_TeHeader_MachineType
@@ -138,230 +333,64 @@ func NewUefiTe_TeHeader() *UefiTe_TeHeader {
 	}
 }
 
+func (this UefiTe_TeHeader) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *UefiTe_TeHeader) Read(io *kaitai.Stream, parent *UefiTe, root *UefiTe) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp4, err := this._io.ReadBytes(int(2))
+	tmp20, err := this._io.ReadBytes(int(2))
 	if err != nil {
 		return err
 	}
-	tmp4 = tmp4
-	this.Magic = tmp4
+	tmp20 = tmp20
+	this.Magic = tmp20
 	if !(bytes.Equal(this.Magic, []uint8{86, 90})) {
 		return kaitai.NewValidationNotEqualError([]uint8{86, 90}, this.Magic, this._io, "/types/te_header/seq/0")
 	}
-	tmp5, err := this._io.ReadU2le()
+	tmp21, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.Machine = UefiTe_TeHeader_MachineType(tmp5)
-	tmp6, err := this._io.ReadU1()
+	this.Machine = UefiTe_TeHeader_MachineType(tmp21)
+	tmp22, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.NumSections = tmp6
-	tmp7, err := this._io.ReadU1()
+	this.NumSections = tmp22
+	tmp23, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Subsystem = UefiTe_TeHeader_SubsystemEnum(tmp7)
-	tmp8, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.StrippedSize = uint16(tmp8)
-	tmp9, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.EntryPointAddr = uint32(tmp9)
-	tmp10, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.BaseOfCode = uint32(tmp10)
-	tmp11, err := this._io.ReadU8le()
-	if err != nil {
-		return err
-	}
-	this.ImageBase = uint64(tmp11)
-	tmp12 := NewUefiTe_HeaderDataDirs()
-	err = tmp12.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.DataDirs = tmp12
-	return err
-}
-type UefiTe_HeaderDataDirs struct {
-	BaseRelocationTable *UefiTe_DataDir
-	Debug *UefiTe_DataDir
-	_io *kaitai.Stream
-	_root *UefiTe
-	_parent *UefiTe_TeHeader
-}
-func NewUefiTe_HeaderDataDirs() *UefiTe_HeaderDataDirs {
-	return &UefiTe_HeaderDataDirs{
-	}
-}
-
-func (this *UefiTe_HeaderDataDirs) Read(io *kaitai.Stream, parent *UefiTe_TeHeader, root *UefiTe) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp13 := NewUefiTe_DataDir()
-	err = tmp13.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.BaseRelocationTable = tmp13
-	tmp14 := NewUefiTe_DataDir()
-	err = tmp14.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Debug = tmp14
-	return err
-}
-type UefiTe_DataDir struct {
-	VirtualAddress uint32
-	Size uint32
-	_io *kaitai.Stream
-	_root *UefiTe
-	_parent *UefiTe_HeaderDataDirs
-}
-func NewUefiTe_DataDir() *UefiTe_DataDir {
-	return &UefiTe_DataDir{
-	}
-}
-
-func (this *UefiTe_DataDir) Read(io *kaitai.Stream, parent *UefiTe_HeaderDataDirs, root *UefiTe) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp15, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.VirtualAddress = uint32(tmp15)
-	tmp16, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Size = uint32(tmp16)
-	return err
-}
-type UefiTe_Section struct {
-	Name string
-	VirtualSize uint32
-	VirtualAddress uint32
-	SizeOfRawData uint32
-	PointerToRawData uint32
-	PointerToRelocations uint32
-	PointerToLinenumbers uint32
-	NumRelocations uint16
-	NumLinenumbers uint16
-	Characteristics uint32
-	_io *kaitai.Stream
-	_root *UefiTe
-	_parent *UefiTe
-	_f_body bool
-	body []byte
-}
-func NewUefiTe_Section() *UefiTe_Section {
-	return &UefiTe_Section{
-	}
-}
-
-func (this *UefiTe_Section) Read(io *kaitai.Stream, parent *UefiTe, root *UefiTe) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp17, err := this._io.ReadBytes(int(8))
-	if err != nil {
-		return err
-	}
-	tmp17 = kaitai.BytesStripRight(tmp17, 0)
-	this.Name = string(tmp17)
-	tmp18, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.VirtualSize = uint32(tmp18)
-	tmp19, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.VirtualAddress = uint32(tmp19)
-	tmp20, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.SizeOfRawData = uint32(tmp20)
-	tmp21, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.PointerToRawData = uint32(tmp21)
-	tmp22, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.PointerToRelocations = uint32(tmp22)
-	tmp23, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.PointerToLinenumbers = uint32(tmp23)
+	this.Subsystem = UefiTe_TeHeader_SubsystemEnum(tmp23)
 	tmp24, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.NumRelocations = uint16(tmp24)
-	tmp25, err := this._io.ReadU2le()
+	this.StrippedSize = uint16(tmp24)
+	tmp25, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.NumLinenumbers = uint16(tmp25)
+	this.EntryPointAddr = uint32(tmp25)
 	tmp26, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Characteristics = uint32(tmp26)
+	this.BaseOfCode = uint32(tmp26)
+	tmp27, err := this._io.ReadU8le()
+	if err != nil {
+		return err
+	}
+	this.ImageBase = uint64(tmp27)
+	tmp28 := NewUefiTe_HeaderDataDirs()
+	err = tmp28.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.DataDirs = tmp28
 	return err
-}
-func (this *UefiTe_Section) Body() (v []byte, err error) {
-	if (this._f_body) {
-		return this.body, nil
-	}
-	_pos, err := this._io.Pos()
-	if err != nil {
-		return nil, err
-	}
-	tmp27, err := this._root.TeHdr._io.Size()
-	if err != nil {
-		return nil, err
-	}
-	_, err = this._io.Seek(int64(((this.PointerToRawData - this._root.TeHdr.StrippedSize) + tmp27)), io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	tmp28, err := this._io.ReadBytes(int(this.SizeOfRawData))
-	if err != nil {
-		return nil, err
-	}
-	tmp28 = tmp28
-	this.body = tmp28
-	_, err = this._io.Seek(_pos, io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	this._f_body = true
-	this._f_body = true
-	return this.body, nil
 }

@@ -1,11 +1,12 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class EfivarSignatureList(KaitaiStruct):
     """Parse UEFI variables db and dbx that contain signatures, certificates and
@@ -30,9 +31,9 @@ class EfivarSignatureList(KaitaiStruct):
        Source - https://uefi.org/sites/default/files/resources/UEFI_Spec_2_8_final.pdf
     """
     def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
+        super(EfivarSignatureList, self).__init__(_io)
         self._parent = _parent
-        self._root = _root if _root else self
+        self._root = _root or self
         self._read()
 
     def _read(self):
@@ -44,15 +45,68 @@ class EfivarSignatureList(KaitaiStruct):
             i += 1
 
 
+
+    def _fetch_instances(self):
+        pass
+        self.var_attributes._fetch_instances()
+        for i in range(len(self.signatures)):
+            pass
+            self.signatures[i]._fetch_instances()
+
+
+    class EfiVarAttr(KaitaiStruct):
+        """Attributes of a UEFI variable."""
+        def __init__(self, _io, _parent=None, _root=None):
+            super(EfivarSignatureList.EfiVarAttr, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.enhanced_authenticated_access = self._io.read_bits_int_be(1) != 0
+            self.append_write = self._io.read_bits_int_be(1) != 0
+            self.time_based_authenticated_write_access = self._io.read_bits_int_be(1) != 0
+            self.authenticated_write_access = self._io.read_bits_int_be(1) != 0
+            self.hardware_error_record = self._io.read_bits_int_be(1) != 0
+            self.runtime_access = self._io.read_bits_int_be(1) != 0
+            self.bootservice_access = self._io.read_bits_int_be(1) != 0
+            self.non_volatile = self._io.read_bits_int_be(1) != 0
+            self.reserved1 = self._io.read_bits_int_be(24)
+
+
+        def _fetch_instances(self):
+            pass
+
+
+    class SignatureData(KaitaiStruct):
+        """
+        .. seealso::
+           EFI_SIGNATURE_DATA
+        """
+        def __init__(self, _io, _parent=None, _root=None):
+            super(EfivarSignatureList.SignatureData, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.owner = self._io.read_bytes(16)
+            self.data = self._io.read_bytes_full()
+
+
+        def _fetch_instances(self):
+            pass
+
+
     class SignatureList(KaitaiStruct):
         """
         .. seealso::
            EFI_SIGNATURE_LIST
         """
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(EfivarSignatureList.SignatureList, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -62,6 +116,7 @@ class EfivarSignatureList(KaitaiStruct):
             self.len_signature = self._io.read_u4le()
             self.header = self._io.read_bytes(self.len_signature_header)
             if self.len_signature > 0:
+                pass
                 self._raw_signatures = []
                 self.signatures = []
                 for i in range(((self.len_signature_list - self.len_signature_header) - 28) // self.len_signature):
@@ -71,57 +126,29 @@ class EfivarSignatureList(KaitaiStruct):
 
 
 
-        @property
-        def is_cert_sha512_x509(self):
-            """SHA512 hash of an X.509 certificate's To-Be-Signed contents, and a time of revocation.
-            
-            .. seealso::
-               EFI_CERT_X509_SHA512_GUID
-            """
-            if hasattr(self, '_m_is_cert_sha512_x509'):
-                return self._m_is_cert_sha512_x509
 
-            self._m_is_cert_sha512_x509 = self.signature_type == b"\x63\xBF\x6D\x44\x02\x25\xDA\x4C\xBC\xFA\x24\x65\xD2\xB0\xFE\x9D"
-            return getattr(self, '_m_is_cert_sha512_x509', None)
+        def _fetch_instances(self):
+            pass
+            if self.len_signature > 0:
+                pass
+                for i in range(len(self.signatures)):
+                    pass
+                    self.signatures[i]._fetch_instances()
+
+
 
         @property
-        def is_cert_sha224(self):
-            """SHA-224 hash.
+        def is_cert_der_pkcs7(self):
+            """DER-encoded PKCS #7 version 1.5 [RFC2315].
             
             .. seealso::
-               EFI_CERT_SHA224_GUID
+               EFI_CERT_TYPE_PKCS7_GUID
             """
-            if hasattr(self, '_m_is_cert_sha224'):
-                return self._m_is_cert_sha224
+            if hasattr(self, '_m_is_cert_der_pkcs7'):
+                return self._m_is_cert_der_pkcs7
 
-            self._m_is_cert_sha224 = self.signature_type == b"\x33\x52\x6E\x0B\x5C\xA6\xC9\x44\x94\x07\xD9\xAB\x83\xBF\xC8\xBD"
-            return getattr(self, '_m_is_cert_sha224', None)
-
-        @property
-        def is_cert_x509(self):
-            """X.509 certificate.
-            
-            .. seealso::
-               EFI_CERT_X509_GUID
-            """
-            if hasattr(self, '_m_is_cert_x509'):
-                return self._m_is_cert_x509
-
-            self._m_is_cert_x509 = self.signature_type == b"\xA1\x59\xC0\xA5\xE4\x94\xA7\x4A\x87\xB5\xAB\x15\x5C\x2B\xF0\x72"
-            return getattr(self, '_m_is_cert_x509', None)
-
-        @property
-        def is_cert_sha256_x509(self):
-            """SHA256 hash of an X.509 certificate's To-Be-Signed contents, and a time of revocation.
-            
-            .. seealso::
-               EFI_CERT_X509_SHA256_GUID
-            """
-            if hasattr(self, '_m_is_cert_sha256_x509'):
-                return self._m_is_cert_sha256_x509
-
-            self._m_is_cert_sha256_x509 = self.signature_type == b"\x92\xA4\xD2\x3B\xC0\x96\x79\x40\xB4\x20\xFC\xF9\x8E\xF1\x03\xED"
-            return getattr(self, '_m_is_cert_sha256_x509', None)
+            self._m_is_cert_der_pkcs7 = self.signature_type == b"\x9D\xD2\xAF\x4A\xDF\x68\xEE\x49\x8A\xA9\x34\x7D\x37\x56\x65\xA7"
+            return getattr(self, '_m_is_cert_der_pkcs7', None)
 
         @property
         def is_cert_rsa2048_key(self):
@@ -137,45 +164,6 @@ class EfivarSignatureList(KaitaiStruct):
             return getattr(self, '_m_is_cert_rsa2048_key', None)
 
         @property
-        def is_cert_sha512(self):
-            """SHA-512 hash.
-            
-            .. seealso::
-               EFI_CERT_SHA512_GUID
-            """
-            if hasattr(self, '_m_is_cert_sha512'):
-                return self._m_is_cert_sha512
-
-            self._m_is_cert_sha512 = self.signature_type == b"\xAE\x0F\x3E\x09\xC4\xA6\x50\x4F\x9F\x1B\xD4\x1E\x2B\x89\xC1\x9A"
-            return getattr(self, '_m_is_cert_sha512', None)
-
-        @property
-        def is_cert_sha384(self):
-            """SHA-384 hash.
-            
-            .. seealso::
-               EFI_CERT_SHA384_GUID
-            """
-            if hasattr(self, '_m_is_cert_sha384'):
-                return self._m_is_cert_sha384
-
-            self._m_is_cert_sha384 = self.signature_type == b"\x07\x53\x3E\xFF\xD0\x9F\xC9\x48\x85\xF1\x8A\xD5\x6C\x70\x1E\x01"
-            return getattr(self, '_m_is_cert_sha384', None)
-
-        @property
-        def is_cert_sha1(self):
-            """SHA-1 hash.
-            
-            .. seealso::
-               EFI_CERT_SHA1_GUID
-            """
-            if hasattr(self, '_m_is_cert_sha1'):
-                return self._m_is_cert_sha1
-
-            self._m_is_cert_sha1 = self.signature_type == b"\x12\xA5\x6C\x82\x10\xCF\xC9\x4A\xB1\x87\xBE\x01\x49\x66\x31\xBD"
-            return getattr(self, '_m_is_cert_sha1', None)
-
-        @property
         def is_cert_rsa2048_sha1(self):
             """RSA-2048 signature of a SHA-1 hash.
             
@@ -187,32 +175,6 @@ class EfivarSignatureList(KaitaiStruct):
 
             self._m_is_cert_rsa2048_sha1 = self.signature_type == b"\x4F\x44\xF8\x67\x43\x87\xF1\x48\xA3\x28\x1E\xAA\xB8\x73\x60\x80"
             return getattr(self, '_m_is_cert_rsa2048_sha1', None)
-
-        @property
-        def is_cert_sha256(self):
-            """SHA-256 hash.
-            
-            .. seealso::
-               EFI_CERT_SHA256_GUID
-            """
-            if hasattr(self, '_m_is_cert_sha256'):
-                return self._m_is_cert_sha256
-
-            self._m_is_cert_sha256 = self.signature_type == b"\x26\x16\xC4\xC1\x4C\x50\x92\x40\xAC\xA9\x41\xF9\x36\x93\x43\x28"
-            return getattr(self, '_m_is_cert_sha256', None)
-
-        @property
-        def is_cert_sha384_x509(self):
-            """SHA384 hash of an X.509 certificate's To-Be-Signed contents, and a time of revocation.
-            
-            .. seealso::
-               EFI_CERT_X509_SHA384_GUID
-            """
-            if hasattr(self, '_m_is_cert_sha384_x509'):
-                return self._m_is_cert_sha384_x509
-
-            self._m_is_cert_sha384_x509 = self.signature_type == b"\x6E\x87\x76\x70\xC2\x80\xE6\x4E\xAA\xD2\x28\xB3\x49\xA6\x86\x5B"
-            return getattr(self, '_m_is_cert_sha384_x509', None)
 
         @property
         def is_cert_rsa2048_sha256(self):
@@ -228,53 +190,121 @@ class EfivarSignatureList(KaitaiStruct):
             return getattr(self, '_m_is_cert_rsa2048_sha256', None)
 
         @property
-        def is_cert_der_pkcs7(self):
-            """DER-encoded PKCS #7 version 1.5 [RFC2315].
+        def is_cert_sha1(self):
+            """SHA-1 hash.
             
             .. seealso::
-               EFI_CERT_TYPE_PKCS7_GUID
+               EFI_CERT_SHA1_GUID
             """
-            if hasattr(self, '_m_is_cert_der_pkcs7'):
-                return self._m_is_cert_der_pkcs7
+            if hasattr(self, '_m_is_cert_sha1'):
+                return self._m_is_cert_sha1
 
-            self._m_is_cert_der_pkcs7 = self.signature_type == b"\x9D\xD2\xAF\x4A\xDF\x68\xEE\x49\x8A\xA9\x34\x7D\x37\x56\x65\xA7"
-            return getattr(self, '_m_is_cert_der_pkcs7', None)
+            self._m_is_cert_sha1 = self.signature_type == b"\x12\xA5\x6C\x82\x10\xCF\xC9\x4A\xB1\x87\xBE\x01\x49\x66\x31\xBD"
+            return getattr(self, '_m_is_cert_sha1', None)
 
+        @property
+        def is_cert_sha224(self):
+            """SHA-224 hash.
+            
+            .. seealso::
+               EFI_CERT_SHA224_GUID
+            """
+            if hasattr(self, '_m_is_cert_sha224'):
+                return self._m_is_cert_sha224
 
-    class SignatureData(KaitaiStruct):
-        """
-        .. seealso::
-           EFI_SIGNATURE_DATA
-        """
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
+            self._m_is_cert_sha224 = self.signature_type == b"\x33\x52\x6E\x0B\x5C\xA6\xC9\x44\x94\x07\xD9\xAB\x83\xBF\xC8\xBD"
+            return getattr(self, '_m_is_cert_sha224', None)
 
-        def _read(self):
-            self.owner = self._io.read_bytes(16)
-            self.data = self._io.read_bytes_full()
+        @property
+        def is_cert_sha256(self):
+            """SHA-256 hash.
+            
+            .. seealso::
+               EFI_CERT_SHA256_GUID
+            """
+            if hasattr(self, '_m_is_cert_sha256'):
+                return self._m_is_cert_sha256
 
+            self._m_is_cert_sha256 = self.signature_type == b"\x26\x16\xC4\xC1\x4C\x50\x92\x40\xAC\xA9\x41\xF9\x36\x93\x43\x28"
+            return getattr(self, '_m_is_cert_sha256', None)
 
-    class EfiVarAttr(KaitaiStruct):
-        """Attributes of a UEFI variable."""
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
+        @property
+        def is_cert_sha256_x509(self):
+            """SHA256 hash of an X.509 certificate's To-Be-Signed contents, and a time of revocation.
+            
+            .. seealso::
+               EFI_CERT_X509_SHA256_GUID
+            """
+            if hasattr(self, '_m_is_cert_sha256_x509'):
+                return self._m_is_cert_sha256_x509
 
-        def _read(self):
-            self.enhanced_authenticated_access = self._io.read_bits_int_be(1) != 0
-            self.append_write = self._io.read_bits_int_be(1) != 0
-            self.time_based_authenticated_write_access = self._io.read_bits_int_be(1) != 0
-            self.authenticated_write_access = self._io.read_bits_int_be(1) != 0
-            self.hardware_error_record = self._io.read_bits_int_be(1) != 0
-            self.runtime_access = self._io.read_bits_int_be(1) != 0
-            self.bootservice_access = self._io.read_bits_int_be(1) != 0
-            self.non_volatile = self._io.read_bits_int_be(1) != 0
-            self.reserved1 = self._io.read_bits_int_be(24)
+            self._m_is_cert_sha256_x509 = self.signature_type == b"\x92\xA4\xD2\x3B\xC0\x96\x79\x40\xB4\x20\xFC\xF9\x8E\xF1\x03\xED"
+            return getattr(self, '_m_is_cert_sha256_x509', None)
+
+        @property
+        def is_cert_sha384(self):
+            """SHA-384 hash.
+            
+            .. seealso::
+               EFI_CERT_SHA384_GUID
+            """
+            if hasattr(self, '_m_is_cert_sha384'):
+                return self._m_is_cert_sha384
+
+            self._m_is_cert_sha384 = self.signature_type == b"\x07\x53\x3E\xFF\xD0\x9F\xC9\x48\x85\xF1\x8A\xD5\x6C\x70\x1E\x01"
+            return getattr(self, '_m_is_cert_sha384', None)
+
+        @property
+        def is_cert_sha384_x509(self):
+            """SHA384 hash of an X.509 certificate's To-Be-Signed contents, and a time of revocation.
+            
+            .. seealso::
+               EFI_CERT_X509_SHA384_GUID
+            """
+            if hasattr(self, '_m_is_cert_sha384_x509'):
+                return self._m_is_cert_sha384_x509
+
+            self._m_is_cert_sha384_x509 = self.signature_type == b"\x6E\x87\x76\x70\xC2\x80\xE6\x4E\xAA\xD2\x28\xB3\x49\xA6\x86\x5B"
+            return getattr(self, '_m_is_cert_sha384_x509', None)
+
+        @property
+        def is_cert_sha512(self):
+            """SHA-512 hash.
+            
+            .. seealso::
+               EFI_CERT_SHA512_GUID
+            """
+            if hasattr(self, '_m_is_cert_sha512'):
+                return self._m_is_cert_sha512
+
+            self._m_is_cert_sha512 = self.signature_type == b"\xAE\x0F\x3E\x09\xC4\xA6\x50\x4F\x9F\x1B\xD4\x1E\x2B\x89\xC1\x9A"
+            return getattr(self, '_m_is_cert_sha512', None)
+
+        @property
+        def is_cert_sha512_x509(self):
+            """SHA512 hash of an X.509 certificate's To-Be-Signed contents, and a time of revocation.
+            
+            .. seealso::
+               EFI_CERT_X509_SHA512_GUID
+            """
+            if hasattr(self, '_m_is_cert_sha512_x509'):
+                return self._m_is_cert_sha512_x509
+
+            self._m_is_cert_sha512_x509 = self.signature_type == b"\x63\xBF\x6D\x44\x02\x25\xDA\x4C\xBC\xFA\x24\x65\xD2\xB0\xFE\x9D"
+            return getattr(self, '_m_is_cert_sha512_x509', None)
+
+        @property
+        def is_cert_x509(self):
+            """X.509 certificate.
+            
+            .. seealso::
+               EFI_CERT_X509_GUID
+            """
+            if hasattr(self, '_m_is_cert_x509'):
+                return self._m_is_cert_x509
+
+            self._m_is_cert_x509 = self.signature_type == b"\xA1\x59\xC0\xA5\xE4\x94\xA7\x4A\x87\xB5\xAB\x15\x5C\x2B\xF0\x72"
+            return getattr(self, '_m_is_cert_x509', None)
 
 
 

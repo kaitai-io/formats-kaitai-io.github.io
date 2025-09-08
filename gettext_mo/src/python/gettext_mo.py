@@ -1,11 +1,12 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class GettextMo(KaitaiStruct):
     """[GNU gettext](https://www.gnu.org/software/gettext/) is a popular
@@ -26,26 +27,59 @@ class GettextMo(KaitaiStruct):
        Source - https://gitlab.com/worr/libintl
     """
     def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
+        super(GettextMo, self).__init__(_io)
         self._parent = _parent
-        self._root = _root if _root else self
+        self._root = _root or self
         self._read()
 
     def _read(self):
         self.signature = self._io.read_bytes(4)
         self.mo = GettextMo.Mo(self._io, self, self._root)
 
+
+    def _fetch_instances(self):
+        pass
+        self.mo._fetch_instances()
+
     class HashLookupIteration(KaitaiStruct):
         def __init__(self, idx, collision_step, _io, _parent=None, _root=None):
-            self._io = _io
+            super(GettextMo.HashLookupIteration, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self.idx = idx
             self.collision_step = collision_step
             self._read()
 
         def _read(self):
             pass
+
+
+        def _fetch_instances(self):
+            pass
+            _ = self.next
+            if hasattr(self, '_m_next'):
+                pass
+                self._m_next._fetch_instances()
+
+
+        @property
+        def next(self):
+            if hasattr(self, '_m_next'):
+                return self._m_next
+
+            _pos = self._io.pos()
+            self._io.seek(0)
+            self._m_next = GettextMo.HashLookupIteration(self._root.mo.hashtable_items[self.next_idx].val, self.collision_step, self._io, self, self._root)
+            self._io.seek(_pos)
+            return getattr(self, '_m_next', None)
+
+        @property
+        def next_idx(self):
+            if hasattr(self, '_m_next_idx'):
+                return self._m_next_idx
+
+            self._m_next_idx = (self.idx + self.collision_step) - (self._root.mo.num_hashtable_items if self.idx >= self._root.mo.num_hashtable_items - self.collision_step else 0)
+            return getattr(self, '_m_next_idx', None)
 
         @property
         def original(self):
@@ -62,59 +96,6 @@ class GettextMo(KaitaiStruct):
 
             self._m_translation = self._root.mo.translations[self.idx].str
             return getattr(self, '_m_translation', None)
-
-        @property
-        def next_idx(self):
-            if hasattr(self, '_m_next_idx'):
-                return self._m_next_idx
-
-            self._m_next_idx = ((self.idx + self.collision_step) - (self._root.mo.num_hashtable_items if self.idx >= (self._root.mo.num_hashtable_items - self.collision_step) else 0))
-            return getattr(self, '_m_next_idx', None)
-
-        @property
-        def next(self):
-            if hasattr(self, '_m_next'):
-                return self._m_next
-
-            _pos = self._io.pos()
-            self._io.seek(0)
-            self._m_next = GettextMo.HashLookupIteration(self._root.mo.hashtable_items[self.next_idx].val, self.collision_step, self._io, self, self._root)
-            self._io.seek(_pos)
-            return getattr(self, '_m_next', None)
-
-
-    class LookupIteration(KaitaiStruct):
-        def __init__(self, current, query, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self.current = current
-            self.query = query
-            self._read()
-
-        def _read(self):
-            pass
-
-        @property
-        def found(self):
-            if hasattr(self, '_m_found'):
-                return self._m_found
-
-            self._m_found = self.query == self.current.original
-            return getattr(self, '_m_found', None)
-
-        @property
-        def next(self):
-            if hasattr(self, '_m_next'):
-                return self._m_next
-
-            if not (self.found):
-                _pos = self._io.pos()
-                self._io.seek(0)
-                self._m_next = GettextMo.LookupIteration(self.current.next, self.query, self._io, self, self._root)
-                self._io.seek(_pos)
-
-            return getattr(self, '_m_next', None)
 
 
     class HashtableLookup(KaitaiStruct):
@@ -134,9 +115,9 @@ class GettextMo(KaitaiStruct):
            Source - https://gitlab.com/worr/libintl/raw/master/src/lib/libintl/gettext.c
         """
         def __init__(self, query, hash, _io, _parent=None, _root=None):
-            self._io = _io
+            super(GettextMo.HashtableLookup, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self.query = query
             self.hash = hash
             self._read()
@@ -144,21 +125,38 @@ class GettextMo(KaitaiStruct):
         def _read(self):
             pass
 
+
+        def _fetch_instances(self):
+            pass
+            _ = self.entry
+            if hasattr(self, '_m_entry'):
+                pass
+                self._m_entry._fetch_instances()
+
+            _ = self.hash_lookup_iteration
+            if hasattr(self, '_m_hash_lookup_iteration'):
+                pass
+                self._m_hash_lookup_iteration._fetch_instances()
+
+
         @property
         def collision_step(self):
             if hasattr(self, '_m_collision_step'):
                 return self._m_collision_step
 
-            self._m_collision_step = ((self.hash % (self._root.mo.num_hashtable_items - 2)) + 1)
+            self._m_collision_step = self.hash % (self._root.mo.num_hashtable_items - 2) + 1
             return getattr(self, '_m_collision_step', None)
 
         @property
-        def idx(self):
-            if hasattr(self, '_m_idx'):
-                return self._m_idx
+        def entry(self):
+            if hasattr(self, '_m_entry'):
+                return self._m_entry
 
-            self._m_idx = (self.hash % self._root.mo.num_hashtable_items)
-            return getattr(self, '_m_idx', None)
+            _pos = self._io.pos()
+            self._io.seek(0)
+            self._m_entry = GettextMo.LookupIteration(self.hash_lookup_iteration, self.query, self._io, self, self._root)
+            self._io.seek(_pos)
+            return getattr(self, '_m_entry', None)
 
         @property
         def hash_lookup_iteration(self):
@@ -172,29 +170,72 @@ class GettextMo(KaitaiStruct):
             return getattr(self, '_m_hash_lookup_iteration', None)
 
         @property
-        def entry(self):
-            if hasattr(self, '_m_entry'):
-                return self._m_entry
+        def idx(self):
+            if hasattr(self, '_m_idx'):
+                return self._m_idx
 
-            _pos = self._io.pos()
-            self._io.seek(0)
-            self._m_entry = GettextMo.LookupIteration(self.hash_lookup_iteration, self.query, self._io, self, self._root)
-            self._io.seek(_pos)
-            return getattr(self, '_m_entry', None)
+            self._m_idx = self.hash % self._root.mo.num_hashtable_items
+            return getattr(self, '_m_idx', None)
+
+
+    class LookupIteration(KaitaiStruct):
+        def __init__(self, current, query, _io, _parent=None, _root=None):
+            super(GettextMo.LookupIteration, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self.current = current
+            self.query = query
+            self._read()
+
+        def _read(self):
+            pass
+
+
+        def _fetch_instances(self):
+            pass
+            _ = self.next
+            if hasattr(self, '_m_next'):
+                pass
+                self._m_next._fetch_instances()
+
+
+        @property
+        def found(self):
+            if hasattr(self, '_m_found'):
+                return self._m_found
+
+            self._m_found = self.query == self.current.original
+            return getattr(self, '_m_found', None)
+
+        @property
+        def next(self):
+            if hasattr(self, '_m_next'):
+                return self._m_next
+
+            if (not (self.found)):
+                pass
+                _pos = self._io.pos()
+                self._io.seek(0)
+                self._m_next = GettextMo.LookupIteration(self.current.next, self.query, self._io, self, self._root)
+                self._io.seek(_pos)
+
+            return getattr(self, '_m_next', None)
 
 
     class Mo(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(GettextMo.Mo, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
             _on = self._root.signature
             if _on == b"\xDE\x12\x04\x95":
+                pass
                 self._is_le = True
             elif _on == b"\x95\x04\x12\xDE":
+                pass
                 self._is_le = False
             if not hasattr(self, '_is_le'):
                 raise kaitaistruct.UndecidedEndiannessError("/types/mo")
@@ -219,111 +260,40 @@ class GettextMo(KaitaiStruct):
             self.num_hashtable_items = self._io.read_u4be()
             self.ofs_hashtable_items = self._io.read_u4be()
 
-        class Version(KaitaiStruct):
-            def __init__(self, _io, _parent=None, _root=None, _is_le=None):
-                self._io = _io
-                self._parent = _parent
-                self._root = _root if _root else self
-                self._is_le = _is_le
-                self._read()
 
-            def _read(self):
-                if not hasattr(self, '_is_le'):
-                    raise kaitaistruct.UndecidedEndiannessError("/types/mo/types/version")
-                elif self._is_le == True:
-                    self._read_le()
-                elif self._is_le == False:
-                    self._read_be()
-
-            def _read_le(self):
-                self.version_raw = self._io.read_u4le()
-
-            def _read_be(self):
-                self.version_raw = self._io.read_u4be()
-
-            @property
-            def major(self):
-                if hasattr(self, '_m_major'):
-                    return self._m_major
-
-                self._m_major = (self.version_raw >> 16)
-                return getattr(self, '_m_major', None)
-
-            @property
-            def minor(self):
-                if hasattr(self, '_m_minor'):
-                    return self._m_minor
-
-                self._m_minor = (self.version_raw & 65535)
-                return getattr(self, '_m_minor', None)
+        def _fetch_instances(self):
+            pass
+            self.version._fetch_instances()
+            _ = self.hashtable_items
+            if hasattr(self, '_m_hashtable_items'):
+                pass
+                for i in range(len(self._m_hashtable_items)):
+                    pass
+                    self._m_hashtable_items[i]._fetch_instances()
 
 
-        class HashtableItem(KaitaiStruct):
-            def __init__(self, _io, _parent=None, _root=None, _is_le=None):
-                self._io = _io
-                self._parent = _parent
-                self._root = _root if _root else self
-                self._is_le = _is_le
-                self._read()
+            _ = self.originals
+            if hasattr(self, '_m_originals'):
+                pass
+                for i in range(len(self._m_originals)):
+                    pass
+                    self._m_originals[i]._fetch_instances()
 
-            def _read(self):
-                if not hasattr(self, '_is_le'):
-                    raise kaitaistruct.UndecidedEndiannessError("/types/mo/types/hashtable_item")
-                elif self._is_le == True:
-                    self._read_le()
-                elif self._is_le == False:
-                    self._read_be()
 
-            def _read_le(self):
-                self.raw_val = self._io.read_u4le()
+            _ = self.translations
+            if hasattr(self, '_m_translations'):
+                pass
+                for i in range(len(self._m_translations)):
+                    pass
+                    self._m_translations[i]._fetch_instances()
 
-            def _read_be(self):
-                self.raw_val = self._io.read_u4be()
-
-            @property
-            def mask(self):
-                if hasattr(self, '_m_mask'):
-                    return self._m_mask
-
-                self._m_mask = 2147483648
-                return getattr(self, '_m_mask', None)
-
-            @property
-            def val_1(self):
-                if hasattr(self, '_m_val_1'):
-                    return self._m_val_1
-
-                if self.raw_val != 0:
-                    self._m_val_1 = (self.raw_val - 1)
-
-                return getattr(self, '_m_val_1', None)
-
-            @property
-            def is_system_dependent(self):
-                if hasattr(self, '_m_is_system_dependent'):
-                    return self._m_is_system_dependent
-
-                if self.raw_val != 0:
-                    self._m_is_system_dependent = (self.val_1 & self.mask) == 1
-
-                return getattr(self, '_m_is_system_dependent', None)
-
-            @property
-            def val(self):
-                if hasattr(self, '_m_val'):
-                    return self._m_val
-
-                if self.raw_val != 0:
-                    self._m_val = (self.val_1 & ~(self.mask))
-
-                return getattr(self, '_m_val', None)
 
 
         class Descriptor(KaitaiStruct):
             def __init__(self, _io, _parent=None, _root=None, _is_le=None):
-                self._io = _io
+                super(GettextMo.Mo.Descriptor, self).__init__(_io)
                 self._parent = _parent
-                self._root = _root if _root else self
+                self._root = _root
                 self._is_le = _is_le
                 self._read()
 
@@ -343,6 +313,14 @@ class GettextMo(KaitaiStruct):
                 self.len_str = self._io.read_u4be()
                 self.ofs_str = self._io.read_u4be()
 
+
+            def _fetch_instances(self):
+                pass
+                _ = self.str
+                if hasattr(self, '_m_str'):
+                    pass
+
+
             @property
             def str(self):
                 if hasattr(self, '_m_str'):
@@ -358,6 +336,141 @@ class GettextMo(KaitaiStruct):
                 io.seek(_pos)
                 return getattr(self, '_m_str', None)
 
+
+        class HashtableItem(KaitaiStruct):
+            def __init__(self, _io, _parent=None, _root=None, _is_le=None):
+                super(GettextMo.Mo.HashtableItem, self).__init__(_io)
+                self._parent = _parent
+                self._root = _root
+                self._is_le = _is_le
+                self._read()
+
+            def _read(self):
+                if not hasattr(self, '_is_le'):
+                    raise kaitaistruct.UndecidedEndiannessError("/types/mo/types/hashtable_item")
+                elif self._is_le == True:
+                    self._read_le()
+                elif self._is_le == False:
+                    self._read_be()
+
+            def _read_le(self):
+                self.raw_val = self._io.read_u4le()
+
+            def _read_be(self):
+                self.raw_val = self._io.read_u4be()
+
+
+            def _fetch_instances(self):
+                pass
+
+            @property
+            def is_system_dependent(self):
+                if hasattr(self, '_m_is_system_dependent'):
+                    return self._m_is_system_dependent
+
+                if self.raw_val != 0:
+                    pass
+                    self._m_is_system_dependent = self.val_1 & self.mask == 1
+
+                return getattr(self, '_m_is_system_dependent', None)
+
+            @property
+            def mask(self):
+                if hasattr(self, '_m_mask'):
+                    return self._m_mask
+
+                self._m_mask = 2147483648
+                return getattr(self, '_m_mask', None)
+
+            @property
+            def val(self):
+                if hasattr(self, '_m_val'):
+                    return self._m_val
+
+                if self.raw_val != 0:
+                    pass
+                    self._m_val = self.val_1 & ~(self.mask)
+
+                return getattr(self, '_m_val', None)
+
+            @property
+            def val_1(self):
+                if hasattr(self, '_m_val_1'):
+                    return self._m_val_1
+
+                if self.raw_val != 0:
+                    pass
+                    self._m_val_1 = self.raw_val - 1
+
+                return getattr(self, '_m_val_1', None)
+
+
+        class Version(KaitaiStruct):
+            def __init__(self, _io, _parent=None, _root=None, _is_le=None):
+                super(GettextMo.Mo.Version, self).__init__(_io)
+                self._parent = _parent
+                self._root = _root
+                self._is_le = _is_le
+                self._read()
+
+            def _read(self):
+                if not hasattr(self, '_is_le'):
+                    raise kaitaistruct.UndecidedEndiannessError("/types/mo/types/version")
+                elif self._is_le == True:
+                    self._read_le()
+                elif self._is_le == False:
+                    self._read_be()
+
+            def _read_le(self):
+                self.version_raw = self._io.read_u4le()
+
+            def _read_be(self):
+                self.version_raw = self._io.read_u4be()
+
+
+            def _fetch_instances(self):
+                pass
+
+            @property
+            def major(self):
+                if hasattr(self, '_m_major'):
+                    return self._m_major
+
+                self._m_major = self.version_raw >> 16
+                return getattr(self, '_m_major', None)
+
+            @property
+            def minor(self):
+                if hasattr(self, '_m_minor'):
+                    return self._m_minor
+
+                self._m_minor = self.version_raw & 65535
+                return getattr(self, '_m_minor', None)
+
+
+        @property
+        def hashtable_items(self):
+            if hasattr(self, '_m_hashtable_items'):
+                return self._m_hashtable_items
+
+            if self.ofs_hashtable_items != 0:
+                pass
+                io = self._root._io
+                _pos = io.pos()
+                io.seek(self.ofs_hashtable_items)
+                if self._is_le:
+                    self._m_hashtable_items = []
+                    for i in range(self.num_hashtable_items):
+                        self._m_hashtable_items.append(GettextMo.Mo.HashtableItem(io, self, self._root, self._is_le))
+
+                else:
+                    self._m_hashtable_items = []
+                    for i in range(self.num_hashtable_items):
+                        self._m_hashtable_items.append(GettextMo.Mo.HashtableItem(io, self, self._root, self._is_le))
+
+                io.seek(_pos)
+
+            return getattr(self, '_m_hashtable_items', None)
 
         @property
         def originals(self):
@@ -400,29 +513,6 @@ class GettextMo(KaitaiStruct):
 
             io.seek(_pos)
             return getattr(self, '_m_translations', None)
-
-        @property
-        def hashtable_items(self):
-            if hasattr(self, '_m_hashtable_items'):
-                return self._m_hashtable_items
-
-            if self.ofs_hashtable_items != 0:
-                io = self._root._io
-                _pos = io.pos()
-                io.seek(self.ofs_hashtable_items)
-                if self._is_le:
-                    self._m_hashtable_items = []
-                    for i in range(self.num_hashtable_items):
-                        self._m_hashtable_items.append(GettextMo.Mo.HashtableItem(io, self, self._root, self._is_le))
-
-                else:
-                    self._m_hashtable_items = []
-                    for i in range(self.num_hashtable_items):
-                        self._m_hashtable_items.append(GettextMo.Mo.HashtableItem(io, self, self._root, self._is_le))
-
-                io.seek(_pos)
-
-            return getattr(self, '_m_hashtable_items', None)
 
 
 

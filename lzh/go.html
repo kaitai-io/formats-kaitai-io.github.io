@@ -210,6 +210,11 @@ records.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title=".lzh file format of LHA (AKA LHarc) by Yoshizaki Haruyasu parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title=".lzh file format of LHA (AKA LHarc) by Yoshizaki Haruyasu parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -240,7 +245,17 @@ records.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title=".lzh file format of LHA (AKA LHarc) by Yoshizaki Haruyasu parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title=".lzh file format of LHA (AKA LHarc) by Yoshizaki Haruyasu parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title=".lzh file format of LHA (AKA LHarc) by Yoshizaki Haruyasu parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -291,19 +306,23 @@ records.</p>
 <span class="w">	</span><span class="nx">Entries</span><span class="w"> </span><span class="p">[]</span><span class="o">*</span><span class="nx">Lzh_Record</span>
 <span class="w">	</span><span class="nx">_io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
 <span class="w">	</span><span class="nx">_root</span><span class="w"> </span><span class="o">*</span><span class="nx">Lzh</span>
-<span class="w">	</span><span class="nx">_parent</span><span class="w"> </span><span class="kd">interface</span><span class="p">{}</span>
+<span class="w">	</span><span class="nx">_parent</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Struct</span>
 <span class="p">}</span>
 <span class="kd">func</span><span class="w"> </span><span class="nx">NewLzh</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">Lzh</span><span class="w"> </span><span class="p">{</span>
 <span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">Lzh</span><span class="p">{</span>
 <span class="w">	</span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Lzh</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="kd">interface</span><span class="p">{},</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">Lzh</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="nx">Lzh</span><span class="p">)</span><span class="w"> </span><span class="nx">IO_</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Lzh</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Struct</span><span class="p">,</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">Lzh</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">io</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">parent</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">root</span>
 
-<span class="w">	</span><span class="k">for</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="mi">1</span><span class="p">;;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">for</span><span class="w"> </span><span class="nx">i</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="mi">0</span><span class="p">;;</span><span class="w"> </span><span class="nx">i</span><span class="o">++</span><span class="w"> </span><span class="p">{</span>
 <span class="w">		</span><span class="nx">tmp1</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">EOF</span><span class="p">()</span>
 <span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
@@ -317,38 +336,6 @@ records.</p>
 <span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">		</span><span class="p">}</span>
 <span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">Entries</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">append</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Entries</span><span class="p">,</span><span class="w"> </span><span class="nx">tmp2</span><span class="p">)</span>
-<span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
-<span class="p">}</span>
-<span class="kd">type</span><span class="w"> </span><span class="nx">Lzh_Record</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
-<span class="w">	</span><span class="nx">HeaderLen</span><span class="w"> </span><span class="kt">uint8</span>
-<span class="w">	</span><span class="nx">FileRecord</span><span class="w"> </span><span class="o">*</span><span class="nx">Lzh_FileRecord</span>
-<span class="w">	</span><span class="nx">_io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
-<span class="w">	</span><span class="nx">_root</span><span class="w"> </span><span class="o">*</span><span class="nx">Lzh</span>
-<span class="w">	</span><span class="nx">_parent</span><span class="w"> </span><span class="o">*</span><span class="nx">Lzh</span>
-<span class="p">}</span>
-<span class="kd">func</span><span class="w"> </span><span class="nx">NewLzh_Record</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">Lzh_Record</span><span class="w"> </span><span class="p">{</span>
-<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">Lzh_Record</span><span class="p">{</span>
-<span class="w">	</span><span class="p">}</span>
-<span class="p">}</span>
-
-<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Lzh_Record</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="o">*</span><span class="nx">Lzh</span><span class="p">,</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">Lzh</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">io</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">parent</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">root</span>
-
-<span class="w">	</span><span class="nx">tmp3</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
-<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
-<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
-<span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">HeaderLen</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp3</span>
-<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">HeaderLen</span><span class="w"> </span><span class="p">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">		</span><span class="nx">tmp4</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewLzh_FileRecord</span><span class="p">()</span>
-<span class="w">		</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp4</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
-<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
-<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
-<span class="w">		</span><span class="p">}</span>
-<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">FileRecord</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp4</span>
 <span class="w">	</span><span class="p">}</span>
 <span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="p">}</span>
@@ -366,37 +353,41 @@ records.</p>
 <span class="w">	</span><span class="p">}</span>
 <span class="p">}</span>
 
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="nx">Lzh_FileRecord</span><span class="p">)</span><span class="w"> </span><span class="nx">IO_</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span>
+<span class="p">}</span>
+
 <span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Lzh_FileRecord</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="o">*</span><span class="nx">Lzh_Record</span><span class="p">,</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">Lzh</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">io</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">parent</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">root</span>
 
-<span class="w">	</span><span class="nx">tmp5</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">((</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">HeaderLen</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)))</span>
+<span class="w">	</span><span class="nx">tmp3</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">HeaderLen</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">tmp5</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp5</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Header</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp5</span>
+<span class="w">	</span><span class="nx">tmp3</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp3</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Header</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp3</span>
 <span class="w">	</span><span class="nx">_io__raw_Header</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_Header</span><span class="p">))</span>
-<span class="w">	</span><span class="nx">tmp6</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewLzh_Header</span><span class="p">()</span>
-<span class="w">	</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp6</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_Header</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+<span class="w">	</span><span class="nx">tmp4</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewLzh_Header</span><span class="p">()</span>
+<span class="w">	</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp4</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_Header</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Header</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp6</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Header</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp4</span>
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Header</span><span class="p">.</span><span class="nx">Header1</span><span class="p">.</span><span class="nx">LhaLevel</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">		</span><span class="nx">tmp7</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+<span class="w">		</span><span class="nx">tmp5</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
 <span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">		</span><span class="p">}</span>
-<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">FileUncomprCrc16</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp7</span><span class="p">)</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">FileUncomprCrc16</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp5</span><span class="p">)</span>
 <span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">tmp8</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Header</span><span class="p">.</span><span class="nx">Header1</span><span class="p">.</span><span class="nx">FileSizeCompr</span><span class="p">))</span>
+<span class="w">	</span><span class="nx">tmp6</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Header</span><span class="p">.</span><span class="nx">Header1</span><span class="p">.</span><span class="nx">FileSizeCompr</span><span class="p">))</span>
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">tmp8</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp8</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Body</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp8</span>
+<span class="w">	</span><span class="nx">tmp6</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp6</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Body</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp6</span>
 <span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="p">}</span>
 <span class="kd">type</span><span class="w"> </span><span class="nx">Lzh_Header</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
@@ -415,52 +406,56 @@ records.</p>
 <span class="w">	</span><span class="p">}</span>
 <span class="p">}</span>
 
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="nx">Lzh_Header</span><span class="p">)</span><span class="w"> </span><span class="nx">IO_</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span>
+<span class="p">}</span>
+
 <span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Lzh_Header</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="o">*</span><span class="nx">Lzh_FileRecord</span><span class="p">,</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">Lzh</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">io</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">parent</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">root</span>
 
-<span class="w">	</span><span class="nx">tmp9</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewLzh_Header1</span><span class="p">()</span>
-<span class="w">	</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp9</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+<span class="w">	</span><span class="nx">tmp7</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewLzh_Header1</span><span class="p">()</span>
+<span class="w">	</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp7</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Header1</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp9</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Header1</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp7</span>
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Header1</span><span class="p">.</span><span class="nx">LhaLevel</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">		</span><span class="nx">tmp10</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+<span class="w">		</span><span class="nx">tmp8</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
 <span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">		</span><span class="p">}</span>
-<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">FilenameLen</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp10</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">FilenameLen</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp8</span>
 <span class="w">	</span><span class="p">}</span>
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Header1</span><span class="p">.</span><span class="nx">LhaLevel</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">		</span><span class="nx">tmp11</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">FilenameLen</span><span class="p">))</span>
+<span class="w">		</span><span class="nx">tmp9</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">FilenameLen</span><span class="p">))</span>
 <span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">		</span><span class="p">}</span>
-<span class="w">		</span><span class="nx">tmp11</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp11</span>
-<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">Filename</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">string</span><span class="p">(</span><span class="nx">tmp11</span><span class="p">)</span>
+<span class="w">		</span><span class="nx">tmp9</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp9</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">Filename</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">string</span><span class="p">(</span><span class="nx">tmp9</span><span class="p">)</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Header1</span><span class="p">.</span><span class="nx">LhaLevel</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp10</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">FileUncomprCrc16</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp10</span><span class="p">)</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Header1</span><span class="p">.</span><span class="nx">LhaLevel</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp11</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">Os</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp11</span>
 <span class="w">	</span><span class="p">}</span>
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Header1</span><span class="p">.</span><span class="nx">LhaLevel</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">		</span><span class="nx">tmp12</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
 <span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">		</span><span class="p">}</span>
-<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">FileUncomprCrc16</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp12</span><span class="p">)</span>
-<span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Header1</span><span class="p">.</span><span class="nx">LhaLevel</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">		</span><span class="nx">tmp13</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
-<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
-<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
-<span class="w">		</span><span class="p">}</span>
-<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">Os</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp13</span>
-<span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Header1</span><span class="p">.</span><span class="nx">LhaLevel</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">		</span><span class="nx">tmp14</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
-<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
-<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
-<span class="w">		</span><span class="p">}</span>
-<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">ExtHeaderSize</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp14</span><span class="p">)</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">ExtHeaderSize</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp12</span><span class="p">)</span>
 <span class="w">	</span><span class="p">}</span>
 <span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="p">}</span>
@@ -486,55 +481,59 @@ records.</p>
 <span class="w">	</span><span class="p">}</span>
 <span class="p">}</span>
 
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="nx">Lzh_Header1</span><span class="p">)</span><span class="w"> </span><span class="nx">IO_</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span>
+<span class="p">}</span>
+
 <span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Lzh_Header1</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="o">*</span><span class="nx">Lzh_Header</span><span class="p">,</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">Lzh</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">io</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">parent</span>
 <span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">root</span>
 
-<span class="w">	</span><span class="nx">tmp15</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+<span class="w">	</span><span class="nx">tmp13</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">HeaderChecksum</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp15</span>
-<span class="w">	</span><span class="nx">tmp16</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">HeaderChecksum</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp13</span>
+<span class="w">	</span><span class="nx">tmp14</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">tmp16</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp16</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">MethodId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">string</span><span class="p">(</span><span class="nx">tmp16</span><span class="p">)</span>
-<span class="w">	</span><span class="nx">tmp17</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+<span class="w">	</span><span class="nx">tmp14</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp14</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">MethodId</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">string</span><span class="p">(</span><span class="nx">tmp14</span><span class="p">)</span>
+<span class="w">	</span><span class="nx">tmp15</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">FileSizeCompr</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp17</span><span class="p">)</span>
-<span class="w">	</span><span class="nx">tmp18</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">FileSizeCompr</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp15</span><span class="p">)</span>
+<span class="w">	</span><span class="nx">tmp16</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">FileSizeUncompr</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp18</span><span class="p">)</span>
-<span class="w">	</span><span class="nx">tmp19</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">FileSizeUncompr</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp16</span><span class="p">)</span>
+<span class="w">	</span><span class="nx">tmp17</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">tmp19</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp19</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_FileTimestamp</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp19</span>
+<span class="w">	</span><span class="nx">tmp17</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp17</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_FileTimestamp</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp17</span>
 <span class="w">	</span><span class="nx">_io__raw_FileTimestamp</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_FileTimestamp</span><span class="p">))</span>
-<span class="w">	</span><span class="nx">tmp20</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewDosDatetime</span><span class="p">()</span>
-<span class="w">	</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp20</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_FileTimestamp</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="p">)</span>
+<span class="w">	</span><span class="nx">tmp18</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewDosDatetime</span><span class="p">()</span>
+<span class="w">	</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp18</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_FileTimestamp</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="p">,</span><span class="w"> </span><span class="kc">nil</span><span class="p">)</span>
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">FileTimestamp</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp20</span>
-<span class="w">	</span><span class="nx">tmp21</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">FileTimestamp</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp18</span>
+<span class="w">	</span><span class="nx">tmp19</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Attr</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp21</span>
-<span class="w">	</span><span class="nx">tmp22</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">Attr</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp19</span>
+<span class="w">	</span><span class="nx">tmp20</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
 <span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
 <span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="w">	</span><span class="p">}</span>
-<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">LhaLevel</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp22</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">LhaLevel</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp20</span>
 <span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
 <span class="p">}</span>
 
@@ -553,6 +552,42 @@ records.</p>
 <span class="cm">/**</span>
 <span class="cm"> * File or directory attribute</span>
 <span class="cm"> */</span>
+<span class="kd">type</span><span class="w"> </span><span class="nx">Lzh_Record</span><span class="w"> </span><span class="kd">struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">HeaderLen</span><span class="w"> </span><span class="kt">uint8</span>
+<span class="w">	</span><span class="nx">FileRecord</span><span class="w"> </span><span class="o">*</span><span class="nx">Lzh_FileRecord</span>
+<span class="w">	</span><span class="nx">_io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+<span class="w">	</span><span class="nx">_root</span><span class="w"> </span><span class="o">*</span><span class="nx">Lzh</span>
+<span class="w">	</span><span class="nx">_parent</span><span class="w"> </span><span class="o">*</span><span class="nx">Lzh</span>
+<span class="p">}</span>
+<span class="kd">func</span><span class="w"> </span><span class="nx">NewLzh_Record</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">Lzh_Record</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="o">&amp;</span><span class="nx">Lzh_Record</span><span class="p">{</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="nx">Lzh_Record</span><span class="p">)</span><span class="w"> </span><span class="nx">IO_</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span>
+<span class="p">}</span>
+
+<span class="kd">func</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="w"> </span><span class="o">*</span><span class="nx">Lzh_Record</span><span class="p">)</span><span class="w"> </span><span class="nx">Read</span><span class="p">(</span><span class="nx">io</span><span class="w"> </span><span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span><span class="w"> </span><span class="nx">parent</span><span class="w"> </span><span class="o">*</span><span class="nx">Lzh</span><span class="p">,</span><span class="w"> </span><span class="nx">root</span><span class="w"> </span><span class="o">*</span><span class="nx">Lzh</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="w"> </span><span class="kt">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">io</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">parent</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">root</span>
+
+<span class="w">	</span><span class="nx">tmp21</span><span class="p">,</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="nx">this</span><span class="p">.</span><span class="nx">HeaderLen</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp21</span>
+<span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">HeaderLen</span><span class="w"> </span><span class="p">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nx">tmp22</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">NewLzh_FileRecord</span><span class="p">()</span>
+<span class="w">		</span><span class="nx">err</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp22</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">,</span><span class="w"> </span><span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">		</span><span class="nx">this</span><span class="p">.</span><span class="nx">FileRecord</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nx">tmp22</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nx">err</span>
+<span class="p">}</span>
 </pre></div>
 
         </div>

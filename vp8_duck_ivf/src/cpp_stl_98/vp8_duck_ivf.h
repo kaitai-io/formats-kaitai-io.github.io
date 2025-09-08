@@ -3,12 +3,14 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class vp8_duck_ivf_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -23,8 +25,8 @@
 class vp8_duck_ivf_t : public kaitai::kstruct {
 
 public:
-    class blocks_t;
     class block_t;
+    class blocks_t;
 
     vp8_duck_ivf_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, vp8_duck_ivf_t* p__root = 0);
 
@@ -34,30 +36,6 @@ private:
 
 public:
     ~vp8_duck_ivf_t();
-
-    class blocks_t : public kaitai::kstruct {
-
-    public:
-
-        blocks_t(kaitai::kstream* p__io, vp8_duck_ivf_t* p__parent = 0, vp8_duck_ivf_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~blocks_t();
-
-    private:
-        block_t* m_entries;
-        vp8_duck_ivf_t* m__root;
-        vp8_duck_ivf_t* m__parent;
-
-    public:
-        block_t* entries() const { return m_entries; }
-        vp8_duck_ivf_t* _root() const { return m__root; }
-        vp8_duck_ivf_t* _parent() const { return m__parent; }
-    };
 
     class block_t : public kaitai::kstruct {
 
@@ -89,6 +67,30 @@ public:
         std::string framedata() const { return m_framedata; }
         vp8_duck_ivf_t* _root() const { return m__root; }
         vp8_duck_ivf_t::blocks_t* _parent() const { return m__parent; }
+    };
+
+    class blocks_t : public kaitai::kstruct {
+
+    public:
+
+        blocks_t(kaitai::kstream* p__io, vp8_duck_ivf_t* p__parent = 0, vp8_duck_ivf_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~blocks_t();
+
+    private:
+        block_t* m_entries;
+        vp8_duck_ivf_t* m__root;
+        vp8_duck_ivf_t* m__parent;
+
+    public:
+        block_t* entries() const { return m_entries; }
+        vp8_duck_ivf_t* _root() const { return m__root; }
+        vp8_duck_ivf_t* _parent() const { return m__parent; }
     };
 
 private:

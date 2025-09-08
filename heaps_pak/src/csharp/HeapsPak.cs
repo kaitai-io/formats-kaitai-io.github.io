@@ -41,21 +41,52 @@ namespace Kaitai
             private void _read()
             {
                 _magic1 = m_io.ReadBytes(3);
-                if (!((KaitaiStream.ByteArrayCompare(Magic1, new byte[] { 80, 65, 75 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_magic1, new byte[] { 80, 65, 75 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 80, 65, 75 }, Magic1, M_Io, "/types/header/seq/0");
+                    throw new ValidationNotEqualError(new byte[] { 80, 65, 75 }, _magic1, m_io, "/types/header/seq/0");
                 }
                 _version = m_io.ReadU1();
                 _lenHeader = m_io.ReadU4le();
                 _lenData = m_io.ReadU4le();
-                __raw_rootEntry = m_io.ReadBytes((LenHeader - 16));
+                __raw_rootEntry = m_io.ReadBytes(LenHeader - 16);
                 var io___raw_rootEntry = new KaitaiStream(__raw_rootEntry);
                 _rootEntry = new Entry(io___raw_rootEntry, this, m_root);
                 _magic2 = m_io.ReadBytes(4);
-                if (!((KaitaiStream.ByteArrayCompare(Magic2, new byte[] { 68, 65, 84, 65 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_magic2, new byte[] { 68, 65, 84, 65 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 68, 65, 84, 65 }, Magic2, M_Io, "/types/header/seq/5");
+                    throw new ValidationNotEqualError(new byte[] { 68, 65, 84, 65 }, _magic2, m_io, "/types/header/seq/5");
                 }
+            }
+            public partial class Dir : KaitaiStruct
+            {
+                public static Dir FromFile(string fileName)
+                {
+                    return new Dir(new KaitaiStream(fileName));
+                }
+
+                public Dir(KaitaiStream p__io, HeapsPak.Header.Entry p__parent = null, HeapsPak p__root = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    _read();
+                }
+                private void _read()
+                {
+                    _numEntries = m_io.ReadU4le();
+                    _entries = new List<Entry>();
+                    for (var i = 0; i < NumEntries; i++)
+                    {
+                        _entries.Add(new Entry(m_io, this, m_root));
+                    }
+                }
+                private uint _numEntries;
+                private List<Entry> _entries;
+                private HeapsPak m_root;
+                private HeapsPak.Header.Entry m_parent;
+                public uint NumEntries { get { return _numEntries; } }
+                public List<Entry> Entries { get { return _entries; } }
+                public HeapsPak M_Root { get { return m_root; } }
+                public HeapsPak.Header.Entry M_Parent { get { return m_parent; } }
             }
 
             /// <remarks>
@@ -81,13 +112,13 @@ namespace Kaitai
                     _flags = new Flags(m_io, this, m_root);
                     {
                         bool on = Flags.IsDir;
-                        if (on == true)
-                        {
-                            _body = new Dir(m_io, this, m_root);
-                        }
-                        else if (on == false)
+                        if (on == false)
                         {
                             _body = new File(m_io, this, m_root);
+                        }
+                        else if (on == true)
+                        {
+                            _body = new Dir(m_io, this, m_root);
                         }
                     }
                 }
@@ -159,12 +190,12 @@ namespace Kaitai
                     {
                         if (f_data)
                             return _data;
+                        f_data = true;
                         KaitaiStream io = M_Root.M_Io;
                         long _pos = io.Pos;
-                        io.Seek((M_Root.Header.LenHeader + OfsData));
+                        io.Seek(M_Root.Header.LenHeader + OfsData);
                         _data = io.ReadBytes(LenData);
                         io.Seek(_pos);
-                        f_data = true;
                         return _data;
                     }
                 }
@@ -176,37 +207,6 @@ namespace Kaitai
                 public uint OfsData { get { return _ofsData; } }
                 public uint LenData { get { return _lenData; } }
                 public byte[] Checksum { get { return _checksum; } }
-                public HeapsPak M_Root { get { return m_root; } }
-                public HeapsPak.Header.Entry M_Parent { get { return m_parent; } }
-            }
-            public partial class Dir : KaitaiStruct
-            {
-                public static Dir FromFile(string fileName)
-                {
-                    return new Dir(new KaitaiStream(fileName));
-                }
-
-                public Dir(KaitaiStream p__io, HeapsPak.Header.Entry p__parent = null, HeapsPak p__root = null) : base(p__io)
-                {
-                    m_parent = p__parent;
-                    m_root = p__root;
-                    _read();
-                }
-                private void _read()
-                {
-                    _numEntries = m_io.ReadU4le();
-                    _entries = new List<Entry>();
-                    for (var i = 0; i < NumEntries; i++)
-                    {
-                        _entries.Add(new Entry(m_io, this, m_root));
-                    }
-                }
-                private uint _numEntries;
-                private List<Entry> _entries;
-                private HeapsPak m_root;
-                private HeapsPak.Header.Entry m_parent;
-                public uint NumEntries { get { return _numEntries; } }
-                public List<Entry> Entries { get { return _entries; } }
                 public HeapsPak M_Root { get { return m_root; } }
                 public HeapsPak.Header.Entry M_Parent { get { return m_parent; } }
             }

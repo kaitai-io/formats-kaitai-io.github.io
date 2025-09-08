@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream', './BytesWithIo'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'), require('./BytesWithIo'));
   } else {
-    root.Dcmp2 = factory(root.KaitaiStream);
+    factory(root.Dcmp2 || (root.Dcmp2 = {}), root.KaitaiStream, root.BytesWithIo || (root.BytesWithIo = {}));
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Dcmp2_, KaitaiStream, BytesWithIo_) {
 /**
  * Compressed resource data in `'dcmp' (2)` format,
  * as stored in compressed resources with header type `9` and decompressor ID `2`.
@@ -51,12 +51,12 @@ var Dcmp2 = (function() {
     }
     switch (this.headerParameters.flags.tagged) {
     case true:
-      this._raw_data = this._io.readBytes(((this._io.size - this._io.pos) - (this.isLenDecompressedOdd ? 1 : 0)));
+      this._raw_data = this._io.readBytes((this._io.size - this._io.pos) - (this.isLenDecompressedOdd ? 1 : 0));
       var _io__raw_data = new KaitaiStream(this._raw_data);
       this.data = new TaggedData(_io__raw_data, this, this._root);
       break;
     default:
-      this._raw_data = this._io.readBytes(((this._io.size - this._io.pos) - (this.isLenDecompressedOdd ? 1 : 0)));
+      this._raw_data = this._io.readBytes((this._io.size - this._io.pos) - (this.isLenDecompressedOdd ? 1 : 0));
       var _io__raw_data = new KaitaiStream(this._raw_data);
       this.data = new UntaggedData(_io__raw_data, this, this._root);
       break;
@@ -75,7 +75,7 @@ var Dcmp2 = (function() {
     function HeaderParameters(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -94,7 +94,7 @@ var Dcmp2 = (function() {
       function Flags(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -146,7 +146,7 @@ var Dcmp2 = (function() {
         if (this._m_numCustomLookupTableEntries !== undefined)
           return this._m_numCustomLookupTableEntries;
         if (this.flags.hasCustomLookupTable) {
-          this._m_numCustomLookupTableEntries = (this.numCustomLookupTableEntriesM1 + 1);
+          this._m_numCustomLookupTableEntries = this.numCustomLookupTableEntriesM1 + 1;
         }
         return this._m_numCustomLookupTableEntries;
       }
@@ -178,35 +178,6 @@ var Dcmp2 = (function() {
   })();
 
   /**
-   * Compressed data in the "untagged" variant of the format.
-   */
-
-  var UntaggedData = Dcmp2.UntaggedData = (function() {
-    function UntaggedData(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    UntaggedData.prototype._read = function() {
-      this.tableReferences = [];
-      var i = 0;
-      while (!this._io.isEof()) {
-        this.tableReferences.push(this._io.readU1());
-        i++;
-      }
-    }
-
-    /**
-     * References into the lookup table.
-     * Each reference is an integer that is expanded to two bytes by looking it up in the table.
-     */
-
-    return UntaggedData;
-  })();
-
-  /**
    * Compressed data in the "tagged" variant of the format.
    */
 
@@ -214,7 +185,7 @@ var Dcmp2 = (function() {
     function TaggedData(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -241,7 +212,7 @@ var Dcmp2 = (function() {
       function Chunk(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -251,7 +222,6 @@ var Dcmp2 = (function() {
           this.tag.push(this._io.readBitsIntBe(1) != 0);
         }
         this._io.alignToByte();
-        this._raw_units = [];
         this.units = [];
         var i = 0;
         do {
@@ -296,6 +266,48 @@ var Dcmp2 = (function() {
   })();
 
   /**
+   * Compressed data in the "untagged" variant of the format.
+   */
+
+  var UntaggedData = Dcmp2.UntaggedData = (function() {
+    function UntaggedData(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    UntaggedData.prototype._read = function() {
+      this.tableReferences = [];
+      var i = 0;
+      while (!this._io.isEof()) {
+        this.tableReferences.push(this._io.readU1());
+        i++;
+      }
+    }
+
+    /**
+     * References into the lookup table.
+     * Each reference is an integer that is expanded to two bytes by looking it up in the table.
+     */
+
+    return UntaggedData;
+  })();
+
+  /**
+   * The default lookup table,
+   * which is used if no custom lookup table is included with the compressed data.
+   */
+  Object.defineProperty(Dcmp2.prototype, 'defaultLookupTable', {
+    get: function() {
+      if (this._m_defaultLookupTable !== undefined)
+        return this._m_defaultLookupTable;
+      this._m_defaultLookupTable = [new Uint8Array([0, 0]), new Uint8Array([0, 8]), new Uint8Array([78, 186]), new Uint8Array([32, 110]), new Uint8Array([78, 117]), new Uint8Array([0, 12]), new Uint8Array([0, 4]), new Uint8Array([112, 0]), new Uint8Array([0, 16]), new Uint8Array([0, 2]), new Uint8Array([72, 110]), new Uint8Array([255, 252]), new Uint8Array([96, 0]), new Uint8Array([0, 1]), new Uint8Array([72, 231]), new Uint8Array([47, 46]), new Uint8Array([78, 86]), new Uint8Array([0, 6]), new Uint8Array([78, 94]), new Uint8Array([47, 0]), new Uint8Array([97, 0]), new Uint8Array([255, 248]), new Uint8Array([47, 11]), new Uint8Array([255, 255]), new Uint8Array([0, 20]), new Uint8Array([0, 10]), new Uint8Array([0, 24]), new Uint8Array([32, 95]), new Uint8Array([0, 14]), new Uint8Array([32, 80]), new Uint8Array([63, 60]), new Uint8Array([255, 244]), new Uint8Array([76, 238]), new Uint8Array([48, 46]), new Uint8Array([103, 0]), new Uint8Array([76, 223]), new Uint8Array([38, 110]), new Uint8Array([0, 18]), new Uint8Array([0, 28]), new Uint8Array([66, 103]), new Uint8Array([255, 240]), new Uint8Array([48, 60]), new Uint8Array([47, 12]), new Uint8Array([0, 3]), new Uint8Array([78, 208]), new Uint8Array([0, 32]), new Uint8Array([112, 1]), new Uint8Array([0, 22]), new Uint8Array([45, 64]), new Uint8Array([72, 192]), new Uint8Array([32, 120]), new Uint8Array([114, 0]), new Uint8Array([88, 143]), new Uint8Array([102, 0]), new Uint8Array([79, 239]), new Uint8Array([66, 167]), new Uint8Array([103, 6]), new Uint8Array([255, 250]), new Uint8Array([85, 143]), new Uint8Array([40, 110]), new Uint8Array([63, 0]), new Uint8Array([255, 254]), new Uint8Array([47, 60]), new Uint8Array([103, 4]), new Uint8Array([89, 143]), new Uint8Array([32, 107]), new Uint8Array([0, 36]), new Uint8Array([32, 31]), new Uint8Array([65, 250]), new Uint8Array([129, 225]), new Uint8Array([102, 4]), new Uint8Array([103, 8]), new Uint8Array([0, 26]), new Uint8Array([78, 185]), new Uint8Array([80, 143]), new Uint8Array([32, 46]), new Uint8Array([0, 7]), new Uint8Array([78, 176]), new Uint8Array([255, 242]), new Uint8Array([61, 64]), new Uint8Array([0, 30]), new Uint8Array([32, 104]), new Uint8Array([102, 6]), new Uint8Array([255, 246]), new Uint8Array([78, 249]), new Uint8Array([8, 0]), new Uint8Array([12, 64]), new Uint8Array([61, 124]), new Uint8Array([255, 236]), new Uint8Array([0, 5]), new Uint8Array([32, 60]), new Uint8Array([255, 232]), new Uint8Array([222, 252]), new Uint8Array([74, 46]), new Uint8Array([0, 48]), new Uint8Array([0, 40]), new Uint8Array([47, 8]), new Uint8Array([32, 11]), new Uint8Array([96, 2]), new Uint8Array([66, 110]), new Uint8Array([45, 72]), new Uint8Array([32, 83]), new Uint8Array([32, 64]), new Uint8Array([24, 0]), new Uint8Array([96, 4]), new Uint8Array([65, 238]), new Uint8Array([47, 40]), new Uint8Array([47, 1]), new Uint8Array([103, 10]), new Uint8Array([72, 64]), new Uint8Array([32, 7]), new Uint8Array([102, 8]), new Uint8Array([1, 24]), new Uint8Array([47, 7]), new Uint8Array([48, 40]), new Uint8Array([63, 46]), new Uint8Array([48, 43]), new Uint8Array([34, 110]), new Uint8Array([47, 43]), new Uint8Array([0, 44]), new Uint8Array([103, 12]), new Uint8Array([34, 95]), new Uint8Array([96, 6]), new Uint8Array([0, 255]), new Uint8Array([48, 7]), new Uint8Array([255, 238]), new Uint8Array([83, 64]), new Uint8Array([0, 64]), new Uint8Array([255, 228]), new Uint8Array([74, 64]), new Uint8Array([102, 10]), new Uint8Array([0, 15]), new Uint8Array([78, 173]), new Uint8Array([112, 255]), new Uint8Array([34, 216]), new Uint8Array([72, 107]), new Uint8Array([0, 34]), new Uint8Array([32, 75]), new Uint8Array([103, 14]), new Uint8Array([74, 174]), new Uint8Array([78, 144]), new Uint8Array([255, 224]), new Uint8Array([255, 192]), new Uint8Array([0, 42]), new Uint8Array([39, 64]), new Uint8Array([103, 2]), new Uint8Array([81, 200]), new Uint8Array([2, 182]), new Uint8Array([72, 122]), new Uint8Array([34, 120]), new Uint8Array([176, 110]), new Uint8Array([255, 230]), new Uint8Array([0, 9]), new Uint8Array([50, 46]), new Uint8Array([62, 0]), new Uint8Array([72, 65]), new Uint8Array([255, 234]), new Uint8Array([67, 238]), new Uint8Array([78, 113]), new Uint8Array([116, 0]), new Uint8Array([47, 44]), new Uint8Array([32, 108]), new Uint8Array([0, 60]), new Uint8Array([0, 38]), new Uint8Array([0, 80]), new Uint8Array([24, 128]), new Uint8Array([48, 31]), new Uint8Array([34, 0]), new Uint8Array([102, 12]), new Uint8Array([255, 218]), new Uint8Array([0, 56]), new Uint8Array([102, 2]), new Uint8Array([48, 44]), new Uint8Array([32, 12]), new Uint8Array([45, 110]), new Uint8Array([66, 64]), new Uint8Array([255, 226]), new Uint8Array([169, 240]), new Uint8Array([255, 0]), new Uint8Array([55, 124]), new Uint8Array([229, 128]), new Uint8Array([255, 220]), new Uint8Array([72, 104]), new Uint8Array([89, 79]), new Uint8Array([0, 52]), new Uint8Array([62, 31]), new Uint8Array([96, 8]), new Uint8Array([47, 6]), new Uint8Array([255, 222]), new Uint8Array([96, 10]), new Uint8Array([112, 2]), new Uint8Array([0, 50]), new Uint8Array([255, 204]), new Uint8Array([0, 128]), new Uint8Array([34, 81]), new Uint8Array([16, 31]), new Uint8Array([49, 124]), new Uint8Array([160, 41]), new Uint8Array([255, 216]), new Uint8Array([82, 64]), new Uint8Array([1, 0]), new Uint8Array([103, 16]), new Uint8Array([160, 35]), new Uint8Array([255, 206]), new Uint8Array([255, 212]), new Uint8Array([32, 6]), new Uint8Array([72, 120]), new Uint8Array([0, 46]), new Uint8Array([80, 79]), new Uint8Array([67, 250]), new Uint8Array([103, 18]), new Uint8Array([118, 0]), new Uint8Array([65, 232]), new Uint8Array([74, 110]), new Uint8Array([32, 217]), new Uint8Array([0, 90]), new Uint8Array([127, 255]), new Uint8Array([81, 202]), new Uint8Array([0, 92]), new Uint8Array([46, 0]), new Uint8Array([2, 64]), new Uint8Array([72, 199]), new Uint8Array([103, 20]), new Uint8Array([12, 128]), new Uint8Array([46, 159]), new Uint8Array([255, 214]), new Uint8Array([128, 0]), new Uint8Array([16, 0]), new Uint8Array([72, 66]), new Uint8Array([74, 107]), new Uint8Array([255, 210]), new Uint8Array([0, 72]), new Uint8Array([74, 71]), new Uint8Array([78, 209]), new Uint8Array([32, 111]), new Uint8Array([0, 65]), new Uint8Array([96, 12]), new Uint8Array([42, 120]), new Uint8Array([66, 46]), new Uint8Array([50, 0]), new Uint8Array([101, 116]), new Uint8Array([103, 22]), new Uint8Array([0, 68]), new Uint8Array([72, 109]), new Uint8Array([32, 8]), new Uint8Array([72, 108]), new Uint8Array([11, 124]), new Uint8Array([38, 64]), new Uint8Array([4, 0]), new Uint8Array([0, 104]), new Uint8Array([32, 109]), new Uint8Array([0, 13]), new Uint8Array([42, 64]), new Uint8Array([0, 11]), new Uint8Array([0, 62]), new Uint8Array([2, 32])];
+      return this._m_defaultLookupTable;
+    }
+  });
+
+  /**
    * The parsed decompressor-specific parameters from the compressed resource header.
    */
   Object.defineProperty(Dcmp2.prototype, 'headerParameters', {
@@ -321,19 +333,6 @@ var Dcmp2 = (function() {
         return this._m_isLenDecompressedOdd;
       this._m_isLenDecompressedOdd = KaitaiStream.mod(this.lenDecompressed, 2) != 0;
       return this._m_isLenDecompressedOdd;
-    }
-  });
-
-  /**
-   * The default lookup table,
-   * which is used if no custom lookup table is included with the compressed data.
-   */
-  Object.defineProperty(Dcmp2.prototype, 'defaultLookupTable', {
-    get: function() {
-      if (this._m_defaultLookupTable !== undefined)
-        return this._m_defaultLookupTable;
-      this._m_defaultLookupTable = [[0, 0], [0, 8], [78, 186], [32, 110], [78, 117], [0, 12], [0, 4], [112, 0], [0, 16], [0, 2], [72, 110], [255, 252], [96, 0], [0, 1], [72, 231], [47, 46], [78, 86], [0, 6], [78, 94], [47, 0], [97, 0], [255, 248], [47, 11], [255, 255], [0, 20], [0, 10], [0, 24], [32, 95], [0, 14], [32, 80], [63, 60], [255, 244], [76, 238], [48, 46], [103, 0], [76, 223], [38, 110], [0, 18], [0, 28], [66, 103], [255, 240], [48, 60], [47, 12], [0, 3], [78, 208], [0, 32], [112, 1], [0, 22], [45, 64], [72, 192], [32, 120], [114, 0], [88, 143], [102, 0], [79, 239], [66, 167], [103, 6], [255, 250], [85, 143], [40, 110], [63, 0], [255, 254], [47, 60], [103, 4], [89, 143], [32, 107], [0, 36], [32, 31], [65, 250], [129, 225], [102, 4], [103, 8], [0, 26], [78, 185], [80, 143], [32, 46], [0, 7], [78, 176], [255, 242], [61, 64], [0, 30], [32, 104], [102, 6], [255, 246], [78, 249], [8, 0], [12, 64], [61, 124], [255, 236], [0, 5], [32, 60], [255, 232], [222, 252], [74, 46], [0, 48], [0, 40], [47, 8], [32, 11], [96, 2], [66, 110], [45, 72], [32, 83], [32, 64], [24, 0], [96, 4], [65, 238], [47, 40], [47, 1], [103, 10], [72, 64], [32, 7], [102, 8], [1, 24], [47, 7], [48, 40], [63, 46], [48, 43], [34, 110], [47, 43], [0, 44], [103, 12], [34, 95], [96, 6], [0, 255], [48, 7], [255, 238], [83, 64], [0, 64], [255, 228], [74, 64], [102, 10], [0, 15], [78, 173], [112, 255], [34, 216], [72, 107], [0, 34], [32, 75], [103, 14], [74, 174], [78, 144], [255, 224], [255, 192], [0, 42], [39, 64], [103, 2], [81, 200], [2, 182], [72, 122], [34, 120], [176, 110], [255, 230], [0, 9], [50, 46], [62, 0], [72, 65], [255, 234], [67, 238], [78, 113], [116, 0], [47, 44], [32, 108], [0, 60], [0, 38], [0, 80], [24, 128], [48, 31], [34, 0], [102, 12], [255, 218], [0, 56], [102, 2], [48, 44], [32, 12], [45, 110], [66, 64], [255, 226], [169, 240], [255, 0], [55, 124], [229, 128], [255, 220], [72, 104], [89, 79], [0, 52], [62, 31], [96, 8], [47, 6], [255, 222], [96, 10], [112, 2], [0, 50], [255, 204], [0, 128], [34, 81], [16, 31], [49, 124], [160, 41], [255, 216], [82, 64], [1, 0], [103, 16], [160, 35], [255, 206], [255, 212], [32, 6], [72, 120], [0, 46], [80, 79], [67, 250], [103, 18], [118, 0], [65, 232], [74, 110], [32, 217], [0, 90], [127, 255], [81, 202], [0, 92], [46, 0], [2, 64], [72, 199], [103, 20], [12, 128], [46, 159], [255, 214], [128, 0], [16, 0], [72, 66], [74, 107], [255, 210], [0, 72], [74, 71], [78, 209], [32, 111], [0, 65], [96, 12], [42, 120], [66, 46], [50, 0], [101, 116], [103, 22], [0, 68], [72, 109], [32, 8], [72, 108], [11, 124], [38, 64], [4, 0], [0, 104], [32, 109], [0, 13], [42, 64], [0, 11], [0, 62], [2, 32]];
-      return this._m_defaultLookupTable;
     }
   });
 
@@ -380,5 +379,5 @@ var Dcmp2 = (function() {
 
   return Dcmp2;
 })();
-return Dcmp2;
-}));
+Dcmp2_.Dcmp2 = Dcmp2;
+});

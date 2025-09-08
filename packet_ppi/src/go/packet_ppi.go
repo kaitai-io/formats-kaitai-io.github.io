@@ -17,16 +17,6 @@ import (
  * @see <a href="https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 3</a>
  */
 
-type PacketPpi_PfhType int
-const (
-	PacketPpi_PfhType__Radio80211Common PacketPpi_PfhType = 2
-	PacketPpi_PfhType__Radio80211nMacExt PacketPpi_PfhType = 3
-	PacketPpi_PfhType__Radio80211nMacPhyExt PacketPpi_PfhType = 4
-	PacketPpi_PfhType__SpectrumMap PacketPpi_PfhType = 5
-	PacketPpi_PfhType__ProcessInfo PacketPpi_PfhType = 6
-	PacketPpi_PfhType__CaptureInfo PacketPpi_PfhType = 7
-)
-
 type PacketPpi_Linktype int
 const (
 	PacketPpi_Linktype__NullLinktype PacketPpi_Linktype = 0
@@ -134,13 +124,33 @@ const (
 	PacketPpi_Linktype__WattstopperDlm PacketPpi_Linktype = 263
 	PacketPpi_Linktype__Iso14443 PacketPpi_Linktype = 264
 )
+var values_PacketPpi_Linktype = map[PacketPpi_Linktype]struct{}{0: {}, 1: {}, 3: {}, 6: {}, 7: {}, 8: {}, 9: {}, 10: {}, 50: {}, 51: {}, 100: {}, 101: {}, 104: {}, 105: {}, 107: {}, 108: {}, 113: {}, 114: {}, 117: {}, 119: {}, 122: {}, 123: {}, 127: {}, 129: {}, 138: {}, 139: {}, 140: {}, 141: {}, 142: {}, 143: {}, 144: {}, 147: {}, 148: {}, 149: {}, 150: {}, 151: {}, 152: {}, 153: {}, 154: {}, 155: {}, 156: {}, 157: {}, 158: {}, 159: {}, 160: {}, 161: {}, 162: {}, 163: {}, 165: {}, 166: {}, 169: {}, 170: {}, 171: {}, 177: {}, 187: {}, 189: {}, 192: {}, 195: {}, 196: {}, 197: {}, 201: {}, 202: {}, 203: {}, 204: {}, 205: {}, 206: {}, 209: {}, 215: {}, 220: {}, 224: {}, 225: {}, 226: {}, 227: {}, 228: {}, 229: {}, 230: {}, 231: {}, 235: {}, 236: {}, 237: {}, 239: {}, 240: {}, 241: {}, 242: {}, 243: {}, 244: {}, 245: {}, 247: {}, 248: {}, 249: {}, 250: {}, 251: {}, 253: {}, 254: {}, 255: {}, 256: {}, 257: {}, 258: {}, 259: {}, 260: {}, 261: {}, 262: {}, 263: {}, 264: {}}
+func (v PacketPpi_Linktype) isDefined() bool {
+	_, ok := values_PacketPpi_Linktype[v]
+	return ok
+}
+
+type PacketPpi_PfhType int
+const (
+	PacketPpi_PfhType__Radio80211Common PacketPpi_PfhType = 2
+	PacketPpi_PfhType__Radio80211nMacExt PacketPpi_PfhType = 3
+	PacketPpi_PfhType__Radio80211nMacPhyExt PacketPpi_PfhType = 4
+	PacketPpi_PfhType__SpectrumMap PacketPpi_PfhType = 5
+	PacketPpi_PfhType__ProcessInfo PacketPpi_PfhType = 6
+	PacketPpi_PfhType__CaptureInfo PacketPpi_PfhType = 7
+)
+var values_PacketPpi_PfhType = map[PacketPpi_PfhType]struct{}{2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}}
+func (v PacketPpi_PfhType) isDefined() bool {
+	_, ok := values_PacketPpi_PfhType[v]
+	return ok
+}
 type PacketPpi struct {
 	Header *PacketPpi_PacketPpiHeader
 	Fields *PacketPpi_PacketPpiFields
 	Body interface{}
 	_io *kaitai.Stream
 	_root *PacketPpi
-	_parent interface{}
+	_parent kaitai.Struct
 	_raw_Fields []byte
 	_raw_Body []byte
 }
@@ -149,7 +159,11 @@ func NewPacketPpi() *PacketPpi {
 	}
 }
 
-func (this *PacketPpi) Read(io *kaitai.Stream, parent interface{}, root *PacketPpi) (err error) {
+func (this PacketPpi) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PacketPpi) Read(io *kaitai.Stream, parent kaitai.Struct, root *PacketPpi) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -160,7 +174,7 @@ func (this *PacketPpi) Read(io *kaitai.Stream, parent interface{}, root *PacketP
 		return err
 	}
 	this.Header = tmp1
-	tmp2, err := this._io.ReadBytes(int((this.Header.PphLen - 8)))
+	tmp2, err := this._io.ReadBytes(int(this.Header.PphLen - 8))
 	if err != nil {
 		return err
 	}
@@ -174,7 +188,7 @@ func (this *PacketPpi) Read(io *kaitai.Stream, parent interface{}, root *PacketP
 	}
 	this.Fields = tmp3
 	switch (this.Header.PphDlt) {
-	case PacketPpi_Linktype__Ppi:
+	case PacketPpi_Linktype__Ethernet:
 		tmp4, err := this._io.ReadBytesFull()
 		if err != nil {
 			return err
@@ -182,13 +196,13 @@ func (this *PacketPpi) Read(io *kaitai.Stream, parent interface{}, root *PacketP
 		tmp4 = tmp4
 		this._raw_Body = tmp4
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp5 := NewPacketPpi()
-		err = tmp5.Read(_io__raw_Body, this, nil)
+		tmp5 := NewEthernetFrame()
+		err = tmp5.Read(_io__raw_Body, nil, nil)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp5
-	case PacketPpi_Linktype__Ethernet:
+	case PacketPpi_Linktype__Ppi:
 		tmp6, err := this._io.ReadBytesFull()
 		if err != nil {
 			return err
@@ -196,8 +210,8 @@ func (this *PacketPpi) Read(io *kaitai.Stream, parent interface{}, root *PacketP
 		tmp6 = tmp6
 		this._raw_Body = tmp6
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp7 := NewEthernetFrame()
-		err = tmp7.Read(_io__raw_Body, this, nil)
+		tmp7 := NewPacketPpi()
+		err = tmp7.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
@@ -212,86 +226,6 @@ func (this *PacketPpi) Read(io *kaitai.Stream, parent interface{}, root *PacketP
 	}
 	return err
 }
-type PacketPpi_PacketPpiFields struct {
-	Entries []*PacketPpi_PacketPpiField
-	_io *kaitai.Stream
-	_root *PacketPpi
-	_parent *PacketPpi
-}
-func NewPacketPpi_PacketPpiFields() *PacketPpi_PacketPpiFields {
-	return &PacketPpi_PacketPpiFields{
-	}
-}
-
-func (this *PacketPpi_PacketPpiFields) Read(io *kaitai.Stream, parent *PacketPpi, root *PacketPpi) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	for i := 1;; i++ {
-		tmp9, err := this._io.EOF()
-		if err != nil {
-			return err
-		}
-		if tmp9 {
-			break
-		}
-		tmp10 := NewPacketPpi_PacketPpiField()
-		err = tmp10.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Entries = append(this.Entries, tmp10)
-	}
-	return err
-}
-
-/**
- * @see <a href="https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 4.1.3</a>
- */
-type PacketPpi_Radio80211nMacExtBody struct {
-	Flags *PacketPpi_MacFlags
-	AMpduId uint32
-	NumDelimiters uint8
-	Reserved []byte
-	_io *kaitai.Stream
-	_root *PacketPpi
-	_parent *PacketPpi_PacketPpiField
-}
-func NewPacketPpi_Radio80211nMacExtBody() *PacketPpi_Radio80211nMacExtBody {
-	return &PacketPpi_Radio80211nMacExtBody{
-	}
-}
-
-func (this *PacketPpi_Radio80211nMacExtBody) Read(io *kaitai.Stream, parent *PacketPpi_PacketPpiField, root *PacketPpi) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp11 := NewPacketPpi_MacFlags()
-	err = tmp11.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Flags = tmp11
-	tmp12, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.AMpduId = uint32(tmp12)
-	tmp13, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.NumDelimiters = tmp13
-	tmp14, err := this._io.ReadBytes(int(3))
-	if err != nil {
-		return err
-	}
-	tmp14 = tmp14
-	this.Reserved = tmp14
-	return err
-}
 type PacketPpi_MacFlags struct {
 	Unused1 bool
 	AggregateDelimiter bool
@@ -304,65 +238,69 @@ type PacketPpi_MacFlags struct {
 	Unused2 []byte
 	_io *kaitai.Stream
 	_root *PacketPpi
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewPacketPpi_MacFlags() *PacketPpi_MacFlags {
 	return &PacketPpi_MacFlags{
 	}
 }
 
-func (this *PacketPpi_MacFlags) Read(io *kaitai.Stream, parent interface{}, root *PacketPpi) (err error) {
+func (this PacketPpi_MacFlags) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PacketPpi_MacFlags) Read(io *kaitai.Stream, parent kaitai.Struct, root *PacketPpi) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
+	tmp9, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Unused1 = tmp9 != 0
+	tmp10, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.AggregateDelimiter = tmp10 != 0
+	tmp11, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.MoreAggregates = tmp11 != 0
+	tmp12, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Aggregate = tmp12 != 0
+	tmp13, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.DupRx = tmp13 != 0
+	tmp14, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.RxShortGuard = tmp14 != 0
 	tmp15, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Unused1 = tmp15 != 0
+	this.IsHt40 = tmp15 != 0
 	tmp16, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.AggregateDelimiter = tmp16 != 0
-	tmp17, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.MoreAggregates = tmp17 != 0
-	tmp18, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Aggregate = tmp18 != 0
-	tmp19, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.DupRx = tmp19 != 0
-	tmp20, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.RxShortGuard = tmp20 != 0
-	tmp21, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.IsHt40 = tmp21 != 0
-	tmp22, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Greenfield = tmp22 != 0
+	this.Greenfield = tmp16 != 0
 	this._io.AlignToByte()
-	tmp23, err := this._io.ReadBytes(int(3))
+	tmp17, err := this._io.ReadBytes(int(3))
 	if err != nil {
 		return err
 	}
-	tmp23 = tmp23
-	this.Unused2 = tmp23
+	tmp17 = tmp17
+	this.Unused2 = tmp17
 	return err
 }
 
@@ -397,6 +335,133 @@ func (this *PacketPpi_MacFlags) Read(io *kaitai.Stream, parent interface{}, root
 /**
  * @see <a href="https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 3.1</a>
  */
+type PacketPpi_PacketPpiField struct {
+	PfhType PacketPpi_PfhType
+	PfhDatalen uint16
+	Body interface{}
+	_io *kaitai.Stream
+	_root *PacketPpi
+	_parent *PacketPpi_PacketPpiFields
+	_raw_Body []byte
+}
+func NewPacketPpi_PacketPpiField() *PacketPpi_PacketPpiField {
+	return &PacketPpi_PacketPpiField{
+	}
+}
+
+func (this PacketPpi_PacketPpiField) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PacketPpi_PacketPpiField) Read(io *kaitai.Stream, parent *PacketPpi_PacketPpiFields, root *PacketPpi) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp18, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.PfhType = PacketPpi_PfhType(tmp18)
+	tmp19, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.PfhDatalen = uint16(tmp19)
+	switch (this.PfhType) {
+	case PacketPpi_PfhType__Radio80211Common:
+		tmp20, err := this._io.ReadBytes(int(this.PfhDatalen))
+		if err != nil {
+			return err
+		}
+		tmp20 = tmp20
+		this._raw_Body = tmp20
+		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+		tmp21 := NewPacketPpi_Radio80211CommonBody()
+		err = tmp21.Read(_io__raw_Body, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp21
+	case PacketPpi_PfhType__Radio80211nMacExt:
+		tmp22, err := this._io.ReadBytes(int(this.PfhDatalen))
+		if err != nil {
+			return err
+		}
+		tmp22 = tmp22
+		this._raw_Body = tmp22
+		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+		tmp23 := NewPacketPpi_Radio80211nMacExtBody()
+		err = tmp23.Read(_io__raw_Body, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp23
+	case PacketPpi_PfhType__Radio80211nMacPhyExt:
+		tmp24, err := this._io.ReadBytes(int(this.PfhDatalen))
+		if err != nil {
+			return err
+		}
+		tmp24 = tmp24
+		this._raw_Body = tmp24
+		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+		tmp25 := NewPacketPpi_Radio80211nMacPhyExtBody()
+		err = tmp25.Read(_io__raw_Body, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp25
+	default:
+		tmp26, err := this._io.ReadBytes(int(this.PfhDatalen))
+		if err != nil {
+			return err
+		}
+		tmp26 = tmp26
+		this._raw_Body = tmp26
+	}
+	return err
+}
+type PacketPpi_PacketPpiFields struct {
+	Entries []*PacketPpi_PacketPpiField
+	_io *kaitai.Stream
+	_root *PacketPpi
+	_parent *PacketPpi
+}
+func NewPacketPpi_PacketPpiFields() *PacketPpi_PacketPpiFields {
+	return &PacketPpi_PacketPpiFields{
+	}
+}
+
+func (this PacketPpi_PacketPpiFields) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PacketPpi_PacketPpiFields) Read(io *kaitai.Stream, parent *PacketPpi, root *PacketPpi) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	for i := 0;; i++ {
+		tmp27, err := this._io.EOF()
+		if err != nil {
+			return err
+		}
+		if tmp27 {
+			break
+		}
+		tmp28 := NewPacketPpi_PacketPpiField()
+		err = tmp28.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Entries = append(this.Entries, tmp28)
+	}
+	return err
+}
+
+/**
+ * @see <a href="https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 3.1</a>
+ */
 type PacketPpi_PacketPpiHeader struct {
 	PphVersion uint8
 	PphFlags uint8
@@ -411,31 +476,35 @@ func NewPacketPpi_PacketPpiHeader() *PacketPpi_PacketPpiHeader {
 	}
 }
 
+func (this PacketPpi_PacketPpiHeader) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *PacketPpi_PacketPpiHeader) Read(io *kaitai.Stream, parent *PacketPpi, root *PacketPpi) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp24, err := this._io.ReadU1()
+	tmp29, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.PphVersion = tmp24
-	tmp25, err := this._io.ReadU1()
+	this.PphVersion = tmp29
+	tmp30, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.PphFlags = tmp25
-	tmp26, err := this._io.ReadU2le()
+	this.PphFlags = tmp30
+	tmp31, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.PphLen = uint16(tmp26)
-	tmp27, err := this._io.ReadU4le()
+	this.PphLen = uint16(tmp31)
+	tmp32, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.PphDlt = PacketPpi_Linktype(tmp27)
+	this.PphDlt = PacketPpi_Linktype(tmp32)
 	return err
 }
 
@@ -461,142 +530,111 @@ func NewPacketPpi_Radio80211CommonBody() *PacketPpi_Radio80211CommonBody {
 	}
 }
 
+func (this PacketPpi_Radio80211CommonBody) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *PacketPpi_Radio80211CommonBody) Read(io *kaitai.Stream, parent *PacketPpi_PacketPpiField, root *PacketPpi) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp28, err := this._io.ReadU8le()
+	tmp33, err := this._io.ReadU8le()
 	if err != nil {
 		return err
 	}
-	this.TsfTimer = uint64(tmp28)
-	tmp29, err := this._io.ReadU2le()
+	this.TsfTimer = uint64(tmp33)
+	tmp34, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.Flags = uint16(tmp29)
-	tmp30, err := this._io.ReadU2le()
+	this.Flags = uint16(tmp34)
+	tmp35, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.Rate = uint16(tmp30)
-	tmp31, err := this._io.ReadU2le()
+	this.Rate = uint16(tmp35)
+	tmp36, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.ChannelFreq = uint16(tmp31)
-	tmp32, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.ChannelFlags = uint16(tmp32)
-	tmp33, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.FhssHopset = tmp33
-	tmp34, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.FhssPattern = tmp34
-	tmp35, err := this._io.ReadS1()
-	if err != nil {
-		return err
-	}
-	this.DbmAntsignal = tmp35
-	tmp36, err := this._io.ReadS1()
-	if err != nil {
-		return err
-	}
-	this.DbmAntnoise = tmp36
-	return err
-}
-
-/**
- * @see <a href="https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 3.1</a>
- */
-type PacketPpi_PacketPpiField struct {
-	PfhType PacketPpi_PfhType
-	PfhDatalen uint16
-	Body interface{}
-	_io *kaitai.Stream
-	_root *PacketPpi
-	_parent *PacketPpi_PacketPpiFields
-	_raw_Body []byte
-}
-func NewPacketPpi_PacketPpiField() *PacketPpi_PacketPpiField {
-	return &PacketPpi_PacketPpiField{
-	}
-}
-
-func (this *PacketPpi_PacketPpiField) Read(io *kaitai.Stream, parent *PacketPpi_PacketPpiFields, root *PacketPpi) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
+	this.ChannelFreq = uint16(tmp36)
 	tmp37, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.PfhType = PacketPpi_PfhType(tmp37)
-	tmp38, err := this._io.ReadU2le()
+	this.ChannelFlags = uint16(tmp37)
+	tmp38, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.PfhDatalen = uint16(tmp38)
-	switch (this.PfhType) {
-	case PacketPpi_PfhType__Radio80211Common:
-		tmp39, err := this._io.ReadBytes(int(this.PfhDatalen))
-		if err != nil {
-			return err
-		}
-		tmp39 = tmp39
-		this._raw_Body = tmp39
-		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp40 := NewPacketPpi_Radio80211CommonBody()
-		err = tmp40.Read(_io__raw_Body, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp40
-	case PacketPpi_PfhType__Radio80211nMacExt:
-		tmp41, err := this._io.ReadBytes(int(this.PfhDatalen))
-		if err != nil {
-			return err
-		}
-		tmp41 = tmp41
-		this._raw_Body = tmp41
-		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp42 := NewPacketPpi_Radio80211nMacExtBody()
-		err = tmp42.Read(_io__raw_Body, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp42
-	case PacketPpi_PfhType__Radio80211nMacPhyExt:
-		tmp43, err := this._io.ReadBytes(int(this.PfhDatalen))
-		if err != nil {
-			return err
-		}
-		tmp43 = tmp43
-		this._raw_Body = tmp43
-		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp44 := NewPacketPpi_Radio80211nMacPhyExtBody()
-		err = tmp44.Read(_io__raw_Body, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp44
-	default:
-		tmp45, err := this._io.ReadBytes(int(this.PfhDatalen))
-		if err != nil {
-			return err
-		}
-		tmp45 = tmp45
-		this._raw_Body = tmp45
+	this.FhssHopset = tmp38
+	tmp39, err := this._io.ReadU1()
+	if err != nil {
+		return err
 	}
+	this.FhssPattern = tmp39
+	tmp40, err := this._io.ReadS1()
+	if err != nil {
+		return err
+	}
+	this.DbmAntsignal = tmp40
+	tmp41, err := this._io.ReadS1()
+	if err != nil {
+		return err
+	}
+	this.DbmAntnoise = tmp41
+	return err
+}
+
+/**
+ * @see <a href="https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 4.1.3</a>
+ */
+type PacketPpi_Radio80211nMacExtBody struct {
+	Flags *PacketPpi_MacFlags
+	AMpduId uint32
+	NumDelimiters uint8
+	Reserved []byte
+	_io *kaitai.Stream
+	_root *PacketPpi
+	_parent *PacketPpi_PacketPpiField
+}
+func NewPacketPpi_Radio80211nMacExtBody() *PacketPpi_Radio80211nMacExtBody {
+	return &PacketPpi_Radio80211nMacExtBody{
+	}
+}
+
+func (this PacketPpi_Radio80211nMacExtBody) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PacketPpi_Radio80211nMacExtBody) Read(io *kaitai.Stream, parent *PacketPpi_PacketPpiField, root *PacketPpi) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp42 := NewPacketPpi_MacFlags()
+	err = tmp42.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Flags = tmp42
+	tmp43, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.AMpduId = uint32(tmp43)
+	tmp44, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.NumDelimiters = tmp44
+	tmp45, err := this._io.ReadBytes(int(3))
+	if err != nil {
+		return err
+	}
+	tmp45 = tmp45
+	this.Reserved = tmp45
 	return err
 }
 
@@ -623,6 +661,10 @@ type PacketPpi_Radio80211nMacPhyExtBody struct {
 func NewPacketPpi_Radio80211nMacPhyExtBody() *PacketPpi_Radio80211nMacPhyExtBody {
 	return &PacketPpi_Radio80211nMacPhyExtBody{
 	}
+}
+
+func (this PacketPpi_Radio80211nMacPhyExtBody) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *PacketPpi_Radio80211nMacPhyExtBody) Read(io *kaitai.Stream, parent *PacketPpi_PacketPpiField, root *PacketPpi) (err error) {
@@ -762,6 +804,10 @@ func NewPacketPpi_Radio80211nMacPhyExtBody_ChannelFlags() *PacketPpi_Radio80211n
 	}
 }
 
+func (this PacketPpi_Radio80211nMacPhyExtBody_ChannelFlags) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *PacketPpi_Radio80211nMacPhyExtBody_ChannelFlags) Read(io *kaitai.Stream, parent *PacketPpi_Radio80211nMacPhyExtBody, root *PacketPpi) (err error) {
 	this._io = io
 	this._parent = parent
@@ -856,6 +902,10 @@ type PacketPpi_Radio80211nMacPhyExtBody_SignalNoise struct {
 func NewPacketPpi_Radio80211nMacPhyExtBody_SignalNoise() *PacketPpi_Radio80211nMacPhyExtBody_SignalNoise {
 	return &PacketPpi_Radio80211nMacPhyExtBody_SignalNoise{
 	}
+}
+
+func (this PacketPpi_Radio80211nMacPhyExtBody_SignalNoise) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *PacketPpi_Radio80211nMacPhyExtBody_SignalNoise) Read(io *kaitai.Stream, parent *PacketPpi_Radio80211nMacPhyExtBody, root *PacketPpi) (err error) {

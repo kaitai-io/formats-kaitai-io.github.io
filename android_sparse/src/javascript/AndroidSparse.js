@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.AndroidSparse = factory(root.KaitaiStream);
+    factory(root.AndroidSparse || (root.AndroidSparse = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (AndroidSparse_, KaitaiStream) {
 /**
  * The Android sparse format is a format to more efficiently store files
  * for for example firmware updates to save on bandwidth. Files in sparse
@@ -45,7 +45,7 @@ var AndroidSparse = (function() {
   }
   AndroidSparse.prototype._read = function() {
     this.headerPrefix = new FileHeaderPrefix(this._io, this, this._root);
-    this._raw_header = this._io.readBytes((this.headerPrefix.lenHeader - 10));
+    this._raw_header = this._io.readBytes(this.headerPrefix.lenHeader - 10);
     var _io__raw_header = new KaitaiStream(this._raw_header);
     this.header = new FileHeader(_io__raw_header, this, this._root);
     this.chunks = [];
@@ -54,39 +54,88 @@ var AndroidSparse = (function() {
     }
   }
 
-  var FileHeaderPrefix = AndroidSparse.FileHeaderPrefix = (function() {
-    function FileHeaderPrefix(_io, _parent, _root) {
+  var Chunk = AndroidSparse.Chunk = (function() {
+    function Chunk(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    FileHeaderPrefix.prototype._read = function() {
-      this.magic = this._io.readBytes(4);
-      if (!((KaitaiStream.byteArrayCompare(this.magic, [58, 255, 38, 237]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([58, 255, 38, 237], this.magic, this._io, "/types/file_header_prefix/seq/0");
+    Chunk.prototype._read = function() {
+      this._raw_header = this._io.readBytes(this._root.header.lenChunkHeader);
+      var _io__raw_header = new KaitaiStream(this._raw_header);
+      this.header = new ChunkHeader(_io__raw_header, this, this._root);
+      switch (this.header.chunkType) {
+      case AndroidSparse.ChunkTypes.CRC32:
+        this.body = this._io.readU4le();
+        break;
+      default:
+        this.body = this._io.readBytes(this.header.lenBody);
+        break;
       }
-      this.version = new Version(this._io, this, this._root);
-      this.lenHeader = this._io.readU2le();
     }
 
-    /**
-     * internal; access `_root.header.version` instead
-     */
+    var ChunkHeader = Chunk.ChunkHeader = (function() {
+      function ChunkHeader(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
 
-    /**
-     * internal; access `_root.header.len_header` instead
-     */
+        this._read();
+      }
+      ChunkHeader.prototype._read = function() {
+        this.chunkType = this._io.readU2le();
+        this.reserved1 = this._io.readU2le();
+        this.numBodyBlocks = this._io.readU4le();
+        this.lenChunk = this._io.readU4le();
+        if (!(this.lenChunk == (this.lenBodyExpected != -1 ? this._root.header.lenChunkHeader + this.lenBodyExpected : this.lenChunk))) {
+          throw new KaitaiStream.ValidationNotEqualError((this.lenBodyExpected != -1 ? this._root.header.lenChunkHeader + this.lenBodyExpected : this.lenChunk), this.lenChunk, this._io, "/types/chunk/types/chunk_header/seq/3");
+        }
+      }
+      Object.defineProperty(ChunkHeader.prototype, 'lenBody', {
+        get: function() {
+          if (this._m_lenBody !== undefined)
+            return this._m_lenBody;
+          this._m_lenBody = this.lenChunk - this._root.header.lenChunkHeader;
+          return this._m_lenBody;
+        }
+      });
 
-    return FileHeaderPrefix;
+      /**
+       * @see {@link https://android.googlesource.com/platform/system/core/+/e8d02c50d7/libsparse/sparse_read.cpp#184|Source}
+       * @see {@link https://android.googlesource.com/platform/system/core/+/e8d02c50d7/libsparse/sparse_read.cpp#215|Source}
+       * @see {@link https://android.googlesource.com/platform/system/core/+/e8d02c50d7/libsparse/sparse_read.cpp#249|Source}
+       * @see {@link https://android.googlesource.com/platform/system/core/+/e8d02c50d7/libsparse/sparse_read.cpp#270|Source}
+       */
+      Object.defineProperty(ChunkHeader.prototype, 'lenBodyExpected', {
+        get: function() {
+          if (this._m_lenBodyExpected !== undefined)
+            return this._m_lenBodyExpected;
+          this._m_lenBodyExpected = (this.chunkType == AndroidSparse.ChunkTypes.RAW ? this._root.header.blockSize * this.numBodyBlocks : (this.chunkType == AndroidSparse.ChunkTypes.FILL ? 4 : (this.chunkType == AndroidSparse.ChunkTypes.DONT_CARE ? 0 : (this.chunkType == AndroidSparse.ChunkTypes.CRC32 ? 4 : -1))));
+          return this._m_lenBodyExpected;
+        }
+      });
+
+      /**
+       * size of the chunk body in blocks in output image
+       */
+
+      /**
+       * in bytes of chunk input file including chunk header and data
+       */
+
+      return ChunkHeader;
+    })();
+
+    return Chunk;
   })();
 
   var FileHeader = AndroidSparse.FileHeader = (function() {
     function FileHeader(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -101,14 +150,6 @@ var AndroidSparse = (function() {
       this.numChunks = this._io.readU4le();
       this.checksum = this._io.readU4le();
     }
-    Object.defineProperty(FileHeader.prototype, 'version', {
-      get: function() {
-        if (this._m_version !== undefined)
-          return this._m_version;
-        this._m_version = this._root.headerPrefix.version;
-        return this._m_version;
-      }
-    });
 
     /**
      * size of file header, should be 28
@@ -119,6 +160,14 @@ var AndroidSparse = (function() {
           return this._m_lenHeader;
         this._m_lenHeader = this._root.headerPrefix.lenHeader;
         return this._m_lenHeader;
+      }
+    });
+    Object.defineProperty(FileHeader.prototype, 'version', {
+      get: function() {
+        if (this._m_version !== undefined)
+          return this._m_version;
+        this._m_version = this._root.headerPrefix.version;
+        return this._m_version;
       }
     });
 
@@ -146,88 +195,39 @@ var AndroidSparse = (function() {
     return FileHeader;
   })();
 
-  var Chunk = AndroidSparse.Chunk = (function() {
-    function Chunk(_io, _parent, _root) {
+  var FileHeaderPrefix = AndroidSparse.FileHeaderPrefix = (function() {
+    function FileHeaderPrefix(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    Chunk.prototype._read = function() {
-      this._raw_header = this._io.readBytes(this._root.header.lenChunkHeader);
-      var _io__raw_header = new KaitaiStream(this._raw_header);
-      this.header = new ChunkHeader(_io__raw_header, this, this._root);
-      switch (this.header.chunkType) {
-      case AndroidSparse.ChunkTypes.CRC32:
-        this.body = this._io.readU4le();
-        break;
-      default:
-        this.body = this._io.readBytes(this.header.lenBody);
-        break;
+    FileHeaderPrefix.prototype._read = function() {
+      this.magic = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([58, 255, 38, 237])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([58, 255, 38, 237]), this.magic, this._io, "/types/file_header_prefix/seq/0");
       }
+      this.version = new Version(this._io, this, this._root);
+      this.lenHeader = this._io.readU2le();
     }
 
-    var ChunkHeader = Chunk.ChunkHeader = (function() {
-      function ChunkHeader(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
+    /**
+     * internal; access `_root.header.version` instead
+     */
 
-        this._read();
-      }
-      ChunkHeader.prototype._read = function() {
-        this.chunkType = this._io.readU2le();
-        this.reserved1 = this._io.readU2le();
-        this.numBodyBlocks = this._io.readU4le();
-        this.lenChunk = this._io.readU4le();
-        if (!(this.lenChunk == (this.lenBodyExpected != -1 ? (this._root.header.lenChunkHeader + this.lenBodyExpected) : this.lenChunk))) {
-          throw new KaitaiStream.ValidationNotEqualError((this.lenBodyExpected != -1 ? (this._root.header.lenChunkHeader + this.lenBodyExpected) : this.lenChunk), this.lenChunk, this._io, "/types/chunk/types/chunk_header/seq/3");
-        }
-      }
-      Object.defineProperty(ChunkHeader.prototype, 'lenBody', {
-        get: function() {
-          if (this._m_lenBody !== undefined)
-            return this._m_lenBody;
-          this._m_lenBody = (this.lenChunk - this._root.header.lenChunkHeader);
-          return this._m_lenBody;
-        }
-      });
+    /**
+     * internal; access `_root.header.len_header` instead
+     */
 
-      /**
-       * @see {@link https://android.googlesource.com/platform/system/core/+/e8d02c50d7/libsparse/sparse_read.cpp#184|Source}
-       * @see {@link https://android.googlesource.com/platform/system/core/+/e8d02c50d7/libsparse/sparse_read.cpp#215|Source}
-       * @see {@link https://android.googlesource.com/platform/system/core/+/e8d02c50d7/libsparse/sparse_read.cpp#249|Source}
-       * @see {@link https://android.googlesource.com/platform/system/core/+/e8d02c50d7/libsparse/sparse_read.cpp#270|Source}
-       */
-      Object.defineProperty(ChunkHeader.prototype, 'lenBodyExpected', {
-        get: function() {
-          if (this._m_lenBodyExpected !== undefined)
-            return this._m_lenBodyExpected;
-          this._m_lenBodyExpected = (this.chunkType == AndroidSparse.ChunkTypes.RAW ? (this._root.header.blockSize * this.numBodyBlocks) : (this.chunkType == AndroidSparse.ChunkTypes.FILL ? 4 : (this.chunkType == AndroidSparse.ChunkTypes.DONT_CARE ? 0 : (this.chunkType == AndroidSparse.ChunkTypes.CRC32 ? 4 : -1))));
-          return this._m_lenBodyExpected;
-        }
-      });
-
-      /**
-       * size of the chunk body in blocks in output image
-       */
-
-      /**
-       * in bytes of chunk input file including chunk header and data
-       */
-
-      return ChunkHeader;
-    })();
-
-    return Chunk;
+    return FileHeaderPrefix;
   })();
 
   var Version = AndroidSparse.Version = (function() {
     function Version(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -248,5 +248,5 @@ var AndroidSparse = (function() {
 
   return AndroidSparse;
 })();
-return AndroidSparse;
-}));
+AndroidSparse_.AndroidSparse = AndroidSparse;
+});

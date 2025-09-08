@@ -17,7 +17,7 @@ type AndroidOpenglShadersCache struct {
 	Contents *AndroidOpenglShadersCache_Cache
 	_io *kaitai.Stream
 	_root *AndroidOpenglShadersCache
-	_parent interface{}
+	_parent kaitai.Struct
 	_raw_Contents []byte
 }
 func NewAndroidOpenglShadersCache() *AndroidOpenglShadersCache {
@@ -25,7 +25,11 @@ func NewAndroidOpenglShadersCache() *AndroidOpenglShadersCache {
 	}
 }
 
-func (this *AndroidOpenglShadersCache) Read(io *kaitai.Stream, parent interface{}, root *AndroidOpenglShadersCache) (err error) {
+func (this AndroidOpenglShadersCache) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *AndroidOpenglShadersCache) Read(io *kaitai.Stream, parent kaitai.Struct, root *AndroidOpenglShadersCache) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -67,14 +71,18 @@ type AndroidOpenglShadersCache_Alignment struct {
 	Alignment []byte
 	_io *kaitai.Stream
 	_root *AndroidOpenglShadersCache
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewAndroidOpenglShadersCache_Alignment() *AndroidOpenglShadersCache_Alignment {
 	return &AndroidOpenglShadersCache_Alignment{
 	}
 }
 
-func (this *AndroidOpenglShadersCache_Alignment) Read(io *kaitai.Stream, parent interface{}, root *AndroidOpenglShadersCache) (err error) {
+func (this AndroidOpenglShadersCache_Alignment) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *AndroidOpenglShadersCache_Alignment) Read(io *kaitai.Stream, parent kaitai.Struct, root *AndroidOpenglShadersCache) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -87,7 +95,7 @@ func (this *AndroidOpenglShadersCache_Alignment) Read(io *kaitai.Stream, parent 
 	if err != nil {
 		return err
 	}
-	tmp7, err := this._io.ReadBytes(int(((tmp5 + 3) & (^3 - tmp6))))
+	tmp7, err := this._io.ReadBytes(int((tmp5 + 3) & (^3 - tmp6)))
 	if err != nil {
 		return err
 	}
@@ -99,43 +107,6 @@ func (this *AndroidOpenglShadersCache_Alignment) Read(io *kaitai.Stream, parent 
 /**
  * garbage from memory
  */
-type AndroidOpenglShadersCache_PrefixedString struct {
-	LenStr uint32
-	Str string
-	Alignment *AndroidOpenglShadersCache_Alignment
-	_io *kaitai.Stream
-	_root *AndroidOpenglShadersCache
-	_parent *AndroidOpenglShadersCache_Cache
-}
-func NewAndroidOpenglShadersCache_PrefixedString() *AndroidOpenglShadersCache_PrefixedString {
-	return &AndroidOpenglShadersCache_PrefixedString{
-	}
-}
-
-func (this *AndroidOpenglShadersCache_PrefixedString) Read(io *kaitai.Stream, parent *AndroidOpenglShadersCache_Cache, root *AndroidOpenglShadersCache) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp8, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.LenStr = uint32(tmp8)
-	tmp9, err := this._io.ReadBytes(int(this.LenStr))
-	if err != nil {
-		return err
-	}
-	tmp9 = kaitai.BytesTerminate(tmp9, 0, false)
-	this.Str = string(tmp9)
-	tmp10 := NewAndroidOpenglShadersCache_Alignment()
-	err = tmp10.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Alignment = tmp10
-	return err
-}
 
 /**
  * @see <a href="https://android.googlesource.com/platform/frameworks/native/+/master/opengl/libs/EGL/BlobCache.cpp">Source</a>
@@ -156,51 +127,55 @@ func NewAndroidOpenglShadersCache_Cache() *AndroidOpenglShadersCache_Cache {
 	}
 }
 
+func (this AndroidOpenglShadersCache_Cache) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *AndroidOpenglShadersCache_Cache) Read(io *kaitai.Stream, parent *AndroidOpenglShadersCache, root *AndroidOpenglShadersCache) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp11, err := this._io.ReadBytes(int(4))
+	tmp8, err := this._io.ReadBytes(int(4))
 	if err != nil {
 		return err
 	}
-	tmp11 = tmp11
-	this.Magic = tmp11
+	tmp8 = tmp8
+	this.Magic = tmp8
 	if !(bytes.Equal(this.Magic, []uint8{36, 98, 66, 95})) {
 		return kaitai.NewValidationNotEqualError([]uint8{36, 98, 66, 95}, this.Magic, this._io, "/types/cache/seq/0")
 	}
-	tmp12, err := this._io.ReadU4le()
+	tmp9, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Version = uint32(tmp12)
-	tmp13, err := this._io.ReadU4le()
+	this.Version = uint32(tmp9)
+	tmp10, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.DeviceVersion = uint32(tmp13)
-	tmp14, err := this._io.ReadU4le()
+	this.DeviceVersion = uint32(tmp10)
+	tmp11, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.NumEntries = uint32(tmp14)
+	this.NumEntries = uint32(tmp11)
 	if (this.Version >= 3) {
-		tmp15 := NewAndroidOpenglShadersCache_PrefixedString()
-		err = tmp15.Read(this._io, this, this._root)
+		tmp12 := NewAndroidOpenglShadersCache_PrefixedString()
+		err = tmp12.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.BuildId = tmp15
+		this.BuildId = tmp12
 	}
 	for i := 0; i < int(this.NumEntries); i++ {
 		_ = i
-		tmp16 := NewAndroidOpenglShadersCache_Cache_Entry()
-		err = tmp16.Read(this._io, this, this._root)
+		tmp13 := NewAndroidOpenglShadersCache_Cache_Entry()
+		err = tmp13.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Entries = append(this.Entries, tmp16)
+		this.Entries = append(this.Entries, tmp13)
 	}
 	return err
 }
@@ -219,33 +194,78 @@ func NewAndroidOpenglShadersCache_Cache_Entry() *AndroidOpenglShadersCache_Cache
 	}
 }
 
+func (this AndroidOpenglShadersCache_Cache_Entry) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *AndroidOpenglShadersCache_Cache_Entry) Read(io *kaitai.Stream, parent *AndroidOpenglShadersCache_Cache, root *AndroidOpenglShadersCache) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp17, err := this._io.ReadU4le()
+	tmp14, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.LenKey = uint32(tmp17)
-	tmp18, err := this._io.ReadU4le()
+	this.LenKey = uint32(tmp14)
+	tmp15, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.LenValue = uint32(tmp18)
-	tmp19, err := this._io.ReadBytes(int(this.LenKey))
+	this.LenValue = uint32(tmp15)
+	tmp16, err := this._io.ReadBytes(int(this.LenKey))
 	if err != nil {
 		return err
 	}
-	tmp19 = tmp19
-	this.Key = tmp19
-	tmp20, err := this._io.ReadBytes(int(this.LenValue))
+	tmp16 = tmp16
+	this.Key = tmp16
+	tmp17, err := this._io.ReadBytes(int(this.LenValue))
 	if err != nil {
 		return err
 	}
-	tmp20 = tmp20
-	this.Value = tmp20
+	tmp17 = tmp17
+	this.Value = tmp17
+	tmp18 := NewAndroidOpenglShadersCache_Alignment()
+	err = tmp18.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Alignment = tmp18
+	return err
+}
+type AndroidOpenglShadersCache_PrefixedString struct {
+	LenStr uint32
+	Str string
+	Alignment *AndroidOpenglShadersCache_Alignment
+	_io *kaitai.Stream
+	_root *AndroidOpenglShadersCache
+	_parent *AndroidOpenglShadersCache_Cache
+}
+func NewAndroidOpenglShadersCache_PrefixedString() *AndroidOpenglShadersCache_PrefixedString {
+	return &AndroidOpenglShadersCache_PrefixedString{
+	}
+}
+
+func (this AndroidOpenglShadersCache_PrefixedString) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *AndroidOpenglShadersCache_PrefixedString) Read(io *kaitai.Stream, parent *AndroidOpenglShadersCache_Cache, root *AndroidOpenglShadersCache) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp19, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.LenStr = uint32(tmp19)
+	tmp20, err := this._io.ReadBytes(int(this.LenStr))
+	if err != nil {
+		return err
+	}
+	tmp20 = kaitai.BytesTerminate(tmp20, 0, false)
+	this.Str = string(tmp20)
 	tmp21 := NewAndroidOpenglShadersCache_Alignment()
 	err = tmp21.Read(this._io, this, this._root)
 	if err != nil {

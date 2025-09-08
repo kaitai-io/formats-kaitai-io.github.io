@@ -5,8 +5,8 @@
 local class = require("class")
 require("kaitaistruct")
 local enum = require("enum")
-local str_decode = require("string_decode")
 local utils = require("utils")
+local str_decode = require("string_decode")
 
 -- 
 -- Ruby's Marshal module allows serialization and deserialization of
@@ -58,27 +58,9 @@ end
 function RubyMarshal:_read()
   self.version = self._io:read_bytes(2)
   if not(self.version == "\004\008") then
-    error("not equal, expected " ..  "\004\008" .. ", but got " .. self.version)
+    error("not equal, expected " .. "\004\008" .. ", but got " .. self.version)
   end
   self.records = RubyMarshal.Record(self._io, self, self._root)
-end
-
-
-RubyMarshal.RubyArray = class.class(KaitaiStruct)
-
-function RubyMarshal.RubyArray:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function RubyMarshal.RubyArray:_read()
-  self.num_elements = RubyMarshal.PackedInt(self._io, self, self._root)
-  self.elements = {}
-  for i = 0, self.num_elements.value - 1 do
-    self.elements[i + 1] = RubyMarshal.Record(self._io, self, self._root)
-  end
 end
 
 
@@ -89,14 +71,14 @@ RubyMarshal.Bignum = class.class(KaitaiStruct)
 function RubyMarshal.Bignum:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function RubyMarshal.Bignum:_read()
   self.sign = self._io:read_u1()
   self.len_div_2 = RubyMarshal.PackedInt(self._io, self, self._root)
-  self.body = self._io:read_bytes((self.len_div_2.value * 2))
+  self.body = self._io:read_bytes(self.len_div_2.value * 2)
 end
 
 -- 
@@ -107,44 +89,23 @@ end
 -- Bytes that represent the number, see ruby-lang.org docs for reconstruction algorithm.
 
 -- 
--- See also: Source (https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Struct)
-RubyMarshal.RubyStruct = class.class(KaitaiStruct)
+-- See also: Source (https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Instance+Variables)
+RubyMarshal.InstanceVar = class.class(KaitaiStruct)
 
-function RubyMarshal.RubyStruct:_init(io, parent, root)
+function RubyMarshal.InstanceVar:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function RubyMarshal.RubyStruct:_read()
-  self.name = RubyMarshal.Record(self._io, self, self._root)
-  self.num_members = RubyMarshal.PackedInt(self._io, self, self._root)
-  self.members = {}
-  for i = 0, self.num_members.value - 1 do
-    self.members[i + 1] = RubyMarshal.Pair(self._io, self, self._root)
+function RubyMarshal.InstanceVar:_read()
+  self.obj = RubyMarshal.Record(self._io, self, self._root)
+  self.num_vars = RubyMarshal.PackedInt(self._io, self, self._root)
+  self.vars = {}
+  for i = 0, self.num_vars.value - 1 do
+    self.vars[i + 1] = RubyMarshal.Pair(self._io, self, self._root)
   end
-end
-
--- 
--- Symbol containing the name of the struct.
--- 
--- Number of members in a struct.
-
--- 
--- See also: Source (https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Symbols+and+Byte+Sequence)
-RubyMarshal.RubySymbol = class.class(KaitaiStruct)
-
-function RubyMarshal.RubySymbol:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function RubyMarshal.RubySymbol:_read()
-  self.len = RubyMarshal.PackedInt(self._io, self, self._root)
-  self.name = str_decode.decode(self._io:read_bytes(self.len.value), "UTF-8")
 end
 
 
@@ -180,34 +141,34 @@ RubyMarshal.PackedInt = class.class(KaitaiStruct)
 function RubyMarshal.PackedInt:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function RubyMarshal.PackedInt:_read()
   self.code = self._io:read_u1()
   local _on = self.code
-  if _on == 4 then
-    self.encoded = self._io:read_u4le()
-  elseif _on == 1 then
+  if _on == 1 then
     self.encoded = self._io:read_u1()
+  elseif _on == 2 then
+    self.encoded = self._io:read_u2le()
   elseif _on == 252 then
     self.encoded = self._io:read_u4le()
   elseif _on == 253 then
     self.encoded = self._io:read_u2le()
-  elseif _on == 3 then
-    self.encoded = self._io:read_u2le()
-  elseif _on == 2 then
+  elseif _on == 254 then
     self.encoded = self._io:read_u2le()
   elseif _on == 255 then
     self.encoded = self._io:read_u1()
-  elseif _on == 254 then
+  elseif _on == 3 then
     self.encoded = self._io:read_u2le()
+  elseif _on == 4 then
+    self.encoded = self._io:read_u4le()
   end
   local _on = self.code
-  if _on == 3 then
+  if _on == 253 then
     self.encoded2 = self._io:read_u1()
-  elseif _on == 253 then
+  elseif _on == 3 then
     self.encoded2 = self._io:read_u1()
   end
 end
@@ -228,7 +189,7 @@ function RubyMarshal.PackedInt.property.value:get()
     return self._m_value
   end
 
-  self._m_value = utils.box_unwrap((self.is_immediate) and utils.box_wrap(utils.box_unwrap((self.code < 128) and utils.box_wrap((self.code - 5)) or ((4 - (~(self.code) & 127))))) or (utils.box_unwrap((self.code == 0) and utils.box_wrap(0) or (utils.box_unwrap((self.code == 255) and utils.box_wrap((self.encoded - 256)) or (utils.box_unwrap((self.code == 254) and utils.box_wrap((self.encoded - 65536)) or (utils.box_unwrap((self.code == 253) and utils.box_wrap((((self.encoded2 << 16) | self.encoded) - 16777216)) or (utils.box_unwrap((self.code == 3) and utils.box_wrap(((self.encoded2 << 16) | self.encoded)) or (self.encoded))))))))))))
+  self._m_value = utils.box_unwrap((self.is_immediate) and utils.box_wrap(utils.box_unwrap((self.code < 128) and utils.box_wrap(self.code - 5) or (4 - (~(self.code) & 127)))) or (utils.box_unwrap((self.code == 0) and utils.box_wrap(0) or (utils.box_unwrap((self.code == 255) and utils.box_wrap(self.encoded - 256) or (utils.box_unwrap((self.code == 254) and utils.box_wrap(self.encoded - 65536) or (utils.box_unwrap((self.code == 253) and utils.box_wrap((self.encoded2 << 16 | self.encoded) - 16777216) or (utils.box_unwrap((self.code == 3) and utils.box_wrap(self.encoded2 << 16 | self.encoded) or (self.encoded))))))))))))
   return self._m_value
 end
 
@@ -241,34 +202,13 @@ RubyMarshal.Pair = class.class(KaitaiStruct)
 function RubyMarshal.Pair:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function RubyMarshal.Pair:_read()
   self.key = RubyMarshal.Record(self._io, self, self._root)
   self.value = RubyMarshal.Record(self._io, self, self._root)
-end
-
-
--- 
--- See also: Source (https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Instance+Variables)
-RubyMarshal.InstanceVar = class.class(KaitaiStruct)
-
-function RubyMarshal.InstanceVar:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function RubyMarshal.InstanceVar:_read()
-  self.obj = RubyMarshal.Record(self._io, self, self._root)
-  self.num_vars = RubyMarshal.PackedInt(self._io, self, self._root)
-  self.vars = {}
-  for i = 0, self.num_vars.value - 1 do
-    self.vars[i + 1] = RubyMarshal.Pair(self._io, self, self._root)
-  end
 end
 
 
@@ -281,33 +221,51 @@ RubyMarshal.Record = class.class(KaitaiStruct)
 function RubyMarshal.Record:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function RubyMarshal.Record:_read()
   self.code = RubyMarshal.Codes(self._io:read_u1())
   local _on = self.code
-  if _on == RubyMarshal.Codes.packed_int then
-    self.body = RubyMarshal.PackedInt(self._io, self, self._root)
-  elseif _on == RubyMarshal.Codes.bignum then
+  if _on == RubyMarshal.Codes.bignum then
     self.body = RubyMarshal.Bignum(self._io, self, self._root)
-  elseif _on == RubyMarshal.Codes.ruby_array then
-    self.body = RubyMarshal.RubyArray(self._io, self, self._root)
-  elseif _on == RubyMarshal.Codes.ruby_symbol_link then
-    self.body = RubyMarshal.PackedInt(self._io, self, self._root)
-  elseif _on == RubyMarshal.Codes.ruby_struct then
-    self.body = RubyMarshal.RubyStruct(self._io, self, self._root)
-  elseif _on == RubyMarshal.Codes.ruby_string then
-    self.body = RubyMarshal.RubyString(self._io, self, self._root)
   elseif _on == RubyMarshal.Codes.instance_var then
     self.body = RubyMarshal.InstanceVar(self._io, self, self._root)
+  elseif _on == RubyMarshal.Codes.packed_int then
+    self.body = RubyMarshal.PackedInt(self._io, self, self._root)
+  elseif _on == RubyMarshal.Codes.ruby_array then
+    self.body = RubyMarshal.RubyArray(self._io, self, self._root)
   elseif _on == RubyMarshal.Codes.ruby_hash then
     self.body = RubyMarshal.RubyHash(self._io, self, self._root)
-  elseif _on == RubyMarshal.Codes.ruby_symbol then
-    self.body = RubyMarshal.RubySymbol(self._io, self, self._root)
   elseif _on == RubyMarshal.Codes.ruby_object_link then
     self.body = RubyMarshal.PackedInt(self._io, self, self._root)
+  elseif _on == RubyMarshal.Codes.ruby_string then
+    self.body = RubyMarshal.RubyString(self._io, self, self._root)
+  elseif _on == RubyMarshal.Codes.ruby_struct then
+    self.body = RubyMarshal.RubyStruct(self._io, self, self._root)
+  elseif _on == RubyMarshal.Codes.ruby_symbol then
+    self.body = RubyMarshal.RubySymbol(self._io, self, self._root)
+  elseif _on == RubyMarshal.Codes.ruby_symbol_link then
+    self.body = RubyMarshal.PackedInt(self._io, self, self._root)
+  end
+end
+
+
+RubyMarshal.RubyArray = class.class(KaitaiStruct)
+
+function RubyMarshal.RubyArray:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function RubyMarshal.RubyArray:_read()
+  self.num_elements = RubyMarshal.PackedInt(self._io, self, self._root)
+  self.elements = {}
+  for i = 0, self.num_elements.value - 1 do
+    self.elements[i + 1] = RubyMarshal.Record(self._io, self, self._root)
   end
 end
 
@@ -319,7 +277,7 @@ RubyMarshal.RubyHash = class.class(KaitaiStruct)
 function RubyMarshal.RubyHash:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -339,13 +297,55 @@ RubyMarshal.RubyString = class.class(KaitaiStruct)
 function RubyMarshal.RubyString:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function RubyMarshal.RubyString:_read()
   self.len = RubyMarshal.PackedInt(self._io, self, self._root)
   self.body = self._io:read_bytes(self.len.value)
+end
+
+
+-- 
+-- See also: Source (https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Struct)
+RubyMarshal.RubyStruct = class.class(KaitaiStruct)
+
+function RubyMarshal.RubyStruct:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function RubyMarshal.RubyStruct:_read()
+  self.name = RubyMarshal.Record(self._io, self, self._root)
+  self.num_members = RubyMarshal.PackedInt(self._io, self, self._root)
+  self.members = {}
+  for i = 0, self.num_members.value - 1 do
+    self.members[i + 1] = RubyMarshal.Pair(self._io, self, self._root)
+  end
+end
+
+-- 
+-- Symbol containing the name of the struct.
+-- 
+-- Number of members in a struct.
+
+-- 
+-- See also: Source (https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Symbols+and+Byte+Sequence)
+RubyMarshal.RubySymbol = class.class(KaitaiStruct)
+
+function RubyMarshal.RubySymbol:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function RubyMarshal.RubySymbol:_read()
+  self.len = RubyMarshal.PackedInt(self._io, self, self._root)
+  self.name = str_decode.decode(self._io:read_bytes(self.len.value), "UTF-8")
 end
 
 

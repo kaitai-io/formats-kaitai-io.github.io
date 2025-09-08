@@ -52,6 +52,128 @@ namespace Kaitai
                 _sections.Add(new Section(m_io, this, m_root));
             }
         }
+        public partial class DataDir : KaitaiStruct
+        {
+            public static DataDir FromFile(string fileName)
+            {
+                return new DataDir(new KaitaiStream(fileName));
+            }
+
+            public DataDir(KaitaiStream p__io, UefiTe.HeaderDataDirs p__parent = null, UefiTe p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _virtualAddress = m_io.ReadU4le();
+                _size = m_io.ReadU4le();
+            }
+            private uint _virtualAddress;
+            private uint _size;
+            private UefiTe m_root;
+            private UefiTe.HeaderDataDirs m_parent;
+            public uint VirtualAddress { get { return _virtualAddress; } }
+            public uint Size { get { return _size; } }
+            public UefiTe M_Root { get { return m_root; } }
+            public UefiTe.HeaderDataDirs M_Parent { get { return m_parent; } }
+        }
+        public partial class HeaderDataDirs : KaitaiStruct
+        {
+            public static HeaderDataDirs FromFile(string fileName)
+            {
+                return new HeaderDataDirs(new KaitaiStream(fileName));
+            }
+
+            public HeaderDataDirs(KaitaiStream p__io, UefiTe.TeHeader p__parent = null, UefiTe p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _baseRelocationTable = new DataDir(m_io, this, m_root);
+                _debug = new DataDir(m_io, this, m_root);
+            }
+            private DataDir _baseRelocationTable;
+            private DataDir _debug;
+            private UefiTe m_root;
+            private UefiTe.TeHeader m_parent;
+            public DataDir BaseRelocationTable { get { return _baseRelocationTable; } }
+            public DataDir Debug { get { return _debug; } }
+            public UefiTe M_Root { get { return m_root; } }
+            public UefiTe.TeHeader M_Parent { get { return m_parent; } }
+        }
+        public partial class Section : KaitaiStruct
+        {
+            public static Section FromFile(string fileName)
+            {
+                return new Section(new KaitaiStream(fileName));
+            }
+
+            public Section(KaitaiStream p__io, UefiTe p__parent = null, UefiTe p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_body = false;
+                _read();
+            }
+            private void _read()
+            {
+                _name = System.Text.Encoding.GetEncoding("UTF-8").GetString(KaitaiStream.BytesStripRight(m_io.ReadBytes(8), 0));
+                _virtualSize = m_io.ReadU4le();
+                _virtualAddress = m_io.ReadU4le();
+                _sizeOfRawData = m_io.ReadU4le();
+                _pointerToRawData = m_io.ReadU4le();
+                _pointerToRelocations = m_io.ReadU4le();
+                _pointerToLinenumbers = m_io.ReadU4le();
+                _numRelocations = m_io.ReadU2le();
+                _numLinenumbers = m_io.ReadU2le();
+                _characteristics = m_io.ReadU4le();
+            }
+            private bool f_body;
+            private byte[] _body;
+            public byte[] Body
+            {
+                get
+                {
+                    if (f_body)
+                        return _body;
+                    f_body = true;
+                    long _pos = m_io.Pos;
+                    m_io.Seek((PointerToRawData - M_Root.TeHdr.StrippedSize) + M_Root.TeHdr.M_Io.Size);
+                    _body = m_io.ReadBytes(SizeOfRawData);
+                    m_io.Seek(_pos);
+                    return _body;
+                }
+            }
+            private string _name;
+            private uint _virtualSize;
+            private uint _virtualAddress;
+            private uint _sizeOfRawData;
+            private uint _pointerToRawData;
+            private uint _pointerToRelocations;
+            private uint _pointerToLinenumbers;
+            private ushort _numRelocations;
+            private ushort _numLinenumbers;
+            private uint _characteristics;
+            private UefiTe m_root;
+            private UefiTe m_parent;
+            public string Name { get { return _name; } }
+            public uint VirtualSize { get { return _virtualSize; } }
+            public uint VirtualAddress { get { return _virtualAddress; } }
+            public uint SizeOfRawData { get { return _sizeOfRawData; } }
+            public uint PointerToRawData { get { return _pointerToRawData; } }
+            public uint PointerToRelocations { get { return _pointerToRelocations; } }
+            public uint PointerToLinenumbers { get { return _pointerToLinenumbers; } }
+            public ushort NumRelocations { get { return _numRelocations; } }
+            public ushort NumLinenumbers { get { return _numLinenumbers; } }
+            public uint Characteristics { get { return _characteristics; } }
+            public UefiTe M_Root { get { return m_root; } }
+            public UefiTe M_Parent { get { return m_parent; } }
+        }
         public partial class TeHeader : KaitaiStruct
         {
             public static TeHeader FromFile(string fileName)
@@ -117,9 +239,9 @@ namespace Kaitai
             private void _read()
             {
                 _magic = m_io.ReadBytes(2);
-                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 86, 90 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 86, 90 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 86, 90 }, Magic, M_Io, "/types/te_header/seq/0");
+                    throw new ValidationNotEqualError(new byte[] { 86, 90 }, _magic, m_io, "/types/te_header/seq/0");
                 }
                 _machine = ((MachineType) m_io.ReadU2le());
                 _numSections = m_io.ReadU1();
@@ -150,128 +272,6 @@ namespace Kaitai
             public uint BaseOfCode { get { return _baseOfCode; } }
             public ulong ImageBase { get { return _imageBase; } }
             public HeaderDataDirs DataDirs { get { return _dataDirs; } }
-            public UefiTe M_Root { get { return m_root; } }
-            public UefiTe M_Parent { get { return m_parent; } }
-        }
-        public partial class HeaderDataDirs : KaitaiStruct
-        {
-            public static HeaderDataDirs FromFile(string fileName)
-            {
-                return new HeaderDataDirs(new KaitaiStream(fileName));
-            }
-
-            public HeaderDataDirs(KaitaiStream p__io, UefiTe.TeHeader p__parent = null, UefiTe p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _baseRelocationTable = new DataDir(m_io, this, m_root);
-                _debug = new DataDir(m_io, this, m_root);
-            }
-            private DataDir _baseRelocationTable;
-            private DataDir _debug;
-            private UefiTe m_root;
-            private UefiTe.TeHeader m_parent;
-            public DataDir BaseRelocationTable { get { return _baseRelocationTable; } }
-            public DataDir Debug { get { return _debug; } }
-            public UefiTe M_Root { get { return m_root; } }
-            public UefiTe.TeHeader M_Parent { get { return m_parent; } }
-        }
-        public partial class DataDir : KaitaiStruct
-        {
-            public static DataDir FromFile(string fileName)
-            {
-                return new DataDir(new KaitaiStream(fileName));
-            }
-
-            public DataDir(KaitaiStream p__io, UefiTe.HeaderDataDirs p__parent = null, UefiTe p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _virtualAddress = m_io.ReadU4le();
-                _size = m_io.ReadU4le();
-            }
-            private uint _virtualAddress;
-            private uint _size;
-            private UefiTe m_root;
-            private UefiTe.HeaderDataDirs m_parent;
-            public uint VirtualAddress { get { return _virtualAddress; } }
-            public uint Size { get { return _size; } }
-            public UefiTe M_Root { get { return m_root; } }
-            public UefiTe.HeaderDataDirs M_Parent { get { return m_parent; } }
-        }
-        public partial class Section : KaitaiStruct
-        {
-            public static Section FromFile(string fileName)
-            {
-                return new Section(new KaitaiStream(fileName));
-            }
-
-            public Section(KaitaiStream p__io, UefiTe p__parent = null, UefiTe p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_body = false;
-                _read();
-            }
-            private void _read()
-            {
-                _name = System.Text.Encoding.GetEncoding("UTF-8").GetString(KaitaiStream.BytesStripRight(m_io.ReadBytes(8), 0));
-                _virtualSize = m_io.ReadU4le();
-                _virtualAddress = m_io.ReadU4le();
-                _sizeOfRawData = m_io.ReadU4le();
-                _pointerToRawData = m_io.ReadU4le();
-                _pointerToRelocations = m_io.ReadU4le();
-                _pointerToLinenumbers = m_io.ReadU4le();
-                _numRelocations = m_io.ReadU2le();
-                _numLinenumbers = m_io.ReadU2le();
-                _characteristics = m_io.ReadU4le();
-            }
-            private bool f_body;
-            private byte[] _body;
-            public byte[] Body
-            {
-                get
-                {
-                    if (f_body)
-                        return _body;
-                    long _pos = m_io.Pos;
-                    m_io.Seek(((PointerToRawData - M_Root.TeHdr.StrippedSize) + M_Root.TeHdr.M_Io.Size));
-                    _body = m_io.ReadBytes(SizeOfRawData);
-                    m_io.Seek(_pos);
-                    f_body = true;
-                    return _body;
-                }
-            }
-            private string _name;
-            private uint _virtualSize;
-            private uint _virtualAddress;
-            private uint _sizeOfRawData;
-            private uint _pointerToRawData;
-            private uint _pointerToRelocations;
-            private uint _pointerToLinenumbers;
-            private ushort _numRelocations;
-            private ushort _numLinenumbers;
-            private uint _characteristics;
-            private UefiTe m_root;
-            private UefiTe m_parent;
-            public string Name { get { return _name; } }
-            public uint VirtualSize { get { return _virtualSize; } }
-            public uint VirtualAddress { get { return _virtualAddress; } }
-            public uint SizeOfRawData { get { return _sizeOfRawData; } }
-            public uint PointerToRawData { get { return _pointerToRawData; } }
-            public uint PointerToRelocations { get { return _pointerToRelocations; } }
-            public uint PointerToLinenumbers { get { return _pointerToLinenumbers; } }
-            public ushort NumRelocations { get { return _numRelocations; } }
-            public ushort NumLinenumbers { get { return _numLinenumbers; } }
-            public uint Characteristics { get { return _characteristics; } }
             public UefiTe M_Root { get { return m_root; } }
             public UefiTe M_Parent { get { return m_parent; } }
         }

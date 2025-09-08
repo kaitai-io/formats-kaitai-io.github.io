@@ -63,128 +63,6 @@ namespace Kaitai
                 _reservedExtensionSegments.Add(new ReservedExtensionSegment(i, m_io, this, m_root));
             }
         }
-        public partial class ReservedExtensionSegment : KaitaiStruct
-        {
-            public ReservedExtensionSegment(ushort p_idx, KaitaiStream p__io, Nitf p__parent = null, Nitf p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _idx = p_idx;
-                _read();
-            }
-            private void _read()
-            {
-                __raw_reservedSubHeader = m_io.ReadBytes(Convert.ToInt64(M_Parent.Header.Lrnfo[Idx].LengthReservedExtensionSubheader, 10));
-                var io___raw_reservedSubHeader = new KaitaiStream(__raw_reservedSubHeader);
-                _reservedSubHeader = new ReservedSubHeader(io___raw_reservedSubHeader, this, m_root);
-                _reservedDataField = m_io.ReadBytes(Convert.ToInt64(M_Parent.Header.Lrnfo[Idx].LengthReservedExtensionSegment, 10));
-            }
-            private ReservedSubHeader _reservedSubHeader;
-            private byte[] _reservedDataField;
-            private ushort _idx;
-            private Nitf m_root;
-            private Nitf m_parent;
-            private byte[] __raw_reservedSubHeader;
-            public ReservedSubHeader ReservedSubHeader { get { return _reservedSubHeader; } }
-            public byte[] ReservedDataField { get { return _reservedDataField; } }
-            public ushort Idx { get { return _idx; } }
-            public Nitf M_Root { get { return m_root; } }
-            public Nitf M_Parent { get { return m_parent; } }
-            public byte[] M_RawReservedSubHeader { get { return __raw_reservedSubHeader; } }
-        }
-        public partial class ImageComment : KaitaiStruct
-        {
-            public static ImageComment FromFile(string fileName)
-            {
-                return new ImageComment(new KaitaiStream(fileName));
-            }
-
-            public ImageComment(KaitaiStream p__io, Nitf.ImageSubHeader p__parent = null, Nitf p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                __unnamed0 = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(80));
-            }
-            private string __unnamed0;
-            private Nitf m_root;
-            private Nitf.ImageSubHeader m_parent;
-            public string Unnamed_0 { get { return __unnamed0; } }
-            public Nitf M_Root { get { return m_root; } }
-            public Nitf.ImageSubHeader M_Parent { get { return m_parent; } }
-        }
-        public partial class LengthReservedInfo : KaitaiStruct
-        {
-            public static LengthReservedInfo FromFile(string fileName)
-            {
-                return new LengthReservedInfo(new KaitaiStream(fileName));
-            }
-
-            public LengthReservedInfo(KaitaiStream p__io, Nitf.Header p__parent = null, Nitf p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _lengthReservedExtensionSubheader = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(4));
-                _lengthReservedExtensionSegment = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(7));
-            }
-            private string _lengthReservedExtensionSubheader;
-            private string _lengthReservedExtensionSegment;
-            private Nitf m_root;
-            private Nitf.Header m_parent;
-            public string LengthReservedExtensionSubheader { get { return _lengthReservedExtensionSubheader; } }
-            public string LengthReservedExtensionSegment { get { return _lengthReservedExtensionSegment; } }
-            public Nitf M_Root { get { return m_root; } }
-            public Nitf.Header M_Parent { get { return m_parent; } }
-        }
-        public partial class Tre : KaitaiStruct
-        {
-            public static Tre FromFile(string fileName)
-            {
-                return new Tre(new KaitaiStream(fileName));
-            }
-
-            public Tre(KaitaiStream p__io, KaitaiStruct p__parent = null, Nitf p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _extensionTypeId = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(6));
-                _edataLength = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(5));
-                _edata = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(Convert.ToInt64(EdataLength, 10)));
-            }
-            private string _extensionTypeId;
-            private string _edataLength;
-            private string _edata;
-            private Nitf m_root;
-            private KaitaiStruct m_parent;
-
-            /// <summary>
-            /// RETAG or CETAG
-            /// </summary>
-            public string ExtensionTypeId { get { return _extensionTypeId; } }
-
-            /// <summary>
-            /// REL or CEL
-            /// </summary>
-            public string EdataLength { get { return _edataLength; } }
-
-            /// <summary>
-            /// REDATA or CEDATA
-            /// </summary>
-            public string Edata { get { return _edata; } }
-            public Nitf M_Root { get { return m_root; } }
-            public KaitaiStruct M_Parent { get { return m_parent; } }
-        }
         public partial class BandInfo : KaitaiStruct
         {
             public static BandInfo FromFile(string fileName)
@@ -203,9 +81,9 @@ namespace Kaitai
                 _representation = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(2));
                 _subcategory = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(6));
                 _imgFilterCondition = m_io.ReadBytes(1);
-                if (!((KaitaiStream.ByteArrayCompare(ImgFilterCondition, new byte[] { 78 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_imgFilterCondition, new byte[] { 78 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 78 }, ImgFilterCondition, M_Io, "/types/band_info/seq/2");
+                    throw new ValidationNotEqualError(new byte[] { 78 }, _imgFilterCondition, m_io, "/types/band_info/seq/2");
                 }
                 _imgFilterCode = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(3));
                 _numLuts = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(1));
@@ -248,159 +126,6 @@ namespace Kaitai
             public List<byte[]> Luts { get { return _luts; } }
             public Nitf M_Root { get { return m_root; } }
             public Nitf.ImageSubHeader M_Parent { get { return m_parent; } }
-        }
-        public partial class ImageSegment : KaitaiStruct
-        {
-            public ImageSegment(ushort p_idx, KaitaiStream p__io, Nitf p__parent = null, Nitf p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _idx = p_idx;
-                f_hasMask = false;
-                _read();
-            }
-            private void _read()
-            {
-                _imageSubHeader = new ImageSubHeader(m_io, this, m_root);
-                if (HasMask) {
-                    _imageDataMask = new ImageDataMask(m_io, this, m_root);
-                }
-                if (HasMask) {
-                    _imageDataField = m_io.ReadBytes((Convert.ToInt64(M_Parent.Header.Linfo[Idx].LengthImageSegment, 10) - ImageDataMask.TotalSize));
-                }
-            }
-            private bool f_hasMask;
-            private bool _hasMask;
-            public bool HasMask
-            {
-                get
-                {
-                    if (f_hasMask)
-                        return _hasMask;
-                    _hasMask = (bool) (ImageSubHeader.ImgCompression.Substring(0, 2 - 0) == "MM");
-                    f_hasMask = true;
-                    return _hasMask;
-                }
-            }
-            private ImageSubHeader _imageSubHeader;
-            private ImageDataMask _imageDataMask;
-            private byte[] _imageDataField;
-            private ushort _idx;
-            private Nitf m_root;
-            private Nitf m_parent;
-            public ImageSubHeader ImageSubHeader { get { return _imageSubHeader; } }
-            public ImageDataMask ImageDataMask { get { return _imageDataMask; } }
-            public byte[] ImageDataField { get { return _imageDataField; } }
-            public ushort Idx { get { return _idx; } }
-            public Nitf M_Root { get { return m_root; } }
-            public Nitf M_Parent { get { return m_parent; } }
-        }
-        public partial class TextSegment : KaitaiStruct
-        {
-            public TextSegment(ushort p_idx, KaitaiStream p__io, Nitf p__parent = null, Nitf p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _idx = p_idx;
-                _read();
-            }
-            private void _read()
-            {
-                _textSubHeader = m_io.ReadBytes(1);
-                _textDataField = m_io.ReadBytes(Convert.ToInt64(M_Parent.Header.Ltnfo[Idx].LengthTextSegment, 10));
-            }
-            private byte[] _textSubHeader;
-            private byte[] _textDataField;
-            private ushort _idx;
-            private Nitf m_root;
-            private Nitf m_parent;
-            public byte[] TextSubHeader { get { return _textSubHeader; } }
-            public byte[] TextDataField { get { return _textDataField; } }
-            public ushort Idx { get { return _idx; } }
-            public Nitf M_Root { get { return m_root; } }
-            public Nitf M_Parent { get { return m_parent; } }
-        }
-        public partial class GraphicSubHeader : KaitaiStruct
-        {
-            public static GraphicSubHeader FromFile(string fileName)
-            {
-                return new GraphicSubHeader(new KaitaiStream(fileName));
-            }
-
-            public GraphicSubHeader(KaitaiStream p__io, Nitf.GraphicsSegment p__parent = null, Nitf p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _filePartTypeSy = m_io.ReadBytes(2);
-                if (!((KaitaiStream.ByteArrayCompare(FilePartTypeSy, new byte[] { 83, 89 }) == 0)))
-                {
-                    throw new ValidationNotEqualError(new byte[] { 83, 89 }, FilePartTypeSy, M_Io, "/types/graphic_sub_header/seq/0");
-                }
-                _graphicId = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(10));
-                _graphicName = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(20));
-                _graphicClassification = new Clasnfo(m_io, this, m_root);
-                _encryption = new Encrypt(m_io, this, m_root);
-                _graphicType = m_io.ReadBytes(1);
-                if (!((KaitaiStream.ByteArrayCompare(GraphicType, new byte[] { 67 }) == 0)))
-                {
-                    throw new ValidationNotEqualError(new byte[] { 67 }, GraphicType, M_Io, "/types/graphic_sub_header/seq/5");
-                }
-                _reserved1 = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(13));
-                _graphicDisplayLevel = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(3));
-                _graphicAttachmentLevel = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(3));
-                _graphicLocation = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(10));
-                _firstGraphicBoundLoc = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(10));
-                _graphicColor = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(1));
-                _secondGraphicBoundLoc = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(10));
-                _reserved2 = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(2));
-                _graphicsExtendedSubHeader = new TreHeader(m_io, this, m_root);
-            }
-            private byte[] _filePartTypeSy;
-            private string _graphicId;
-            private string _graphicName;
-            private Clasnfo _graphicClassification;
-            private Encrypt _encryption;
-            private byte[] _graphicType;
-            private string _reserved1;
-            private string _graphicDisplayLevel;
-            private string _graphicAttachmentLevel;
-            private string _graphicLocation;
-            private string _firstGraphicBoundLoc;
-            private string _graphicColor;
-            private string _secondGraphicBoundLoc;
-            private string _reserved2;
-            private TreHeader _graphicsExtendedSubHeader;
-            private Nitf m_root;
-            private Nitf.GraphicsSegment m_parent;
-            public byte[] FilePartTypeSy { get { return _filePartTypeSy; } }
-            public string GraphicId { get { return _graphicId; } }
-            public string GraphicName { get { return _graphicName; } }
-            public Clasnfo GraphicClassification { get { return _graphicClassification; } }
-            public Encrypt Encryption { get { return _encryption; } }
-            public byte[] GraphicType { get { return _graphicType; } }
-
-            /// <summary>
-            /// Reserved
-            /// </summary>
-            public string Reserved1 { get { return _reserved1; } }
-            public string GraphicDisplayLevel { get { return _graphicDisplayLevel; } }
-            public string GraphicAttachmentLevel { get { return _graphicAttachmentLevel; } }
-            public string GraphicLocation { get { return _graphicLocation; } }
-            public string FirstGraphicBoundLoc { get { return _firstGraphicBoundLoc; } }
-            public string GraphicColor { get { return _graphicColor; } }
-            public string SecondGraphicBoundLoc { get { return _secondGraphicBoundLoc; } }
-
-            /// <summary>
-            /// Reserved
-            /// </summary>
-            public string Reserved2 { get { return _reserved2; } }
-            public TreHeader GraphicsExtendedSubHeader { get { return _graphicsExtendedSubHeader; } }
-            public Nitf M_Root { get { return m_root; } }
-            public Nitf.GraphicsSegment M_Parent { get { return m_parent; } }
         }
         public partial class Clasnfo : KaitaiStruct
         {
@@ -471,236 +196,9 @@ namespace Kaitai
             public Nitf M_Root { get { return m_root; } }
             public KaitaiStruct M_Parent { get { return m_parent; } }
         }
-        public partial class LengthGraphicInfo : KaitaiStruct
+        public partial class DataExtensionSegment : KaitaiStruct
         {
-            public static LengthGraphicInfo FromFile(string fileName)
-            {
-                return new LengthGraphicInfo(new KaitaiStream(fileName));
-            }
-
-            public LengthGraphicInfo(KaitaiStream p__io, Nitf.Header p__parent = null, Nitf p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _lengthGraphicSubheader = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(4));
-                _lengthGraphicSegment = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(6));
-            }
-            private string _lengthGraphicSubheader;
-            private string _lengthGraphicSegment;
-            private Nitf m_root;
-            private Nitf.Header m_parent;
-            public string LengthGraphicSubheader { get { return _lengthGraphicSubheader; } }
-            public string LengthGraphicSegment { get { return _lengthGraphicSegment; } }
-            public Nitf M_Root { get { return m_root; } }
-            public Nitf.Header M_Parent { get { return m_parent; } }
-        }
-        public partial class Encrypt : KaitaiStruct
-        {
-            public static Encrypt FromFile(string fileName)
-            {
-                return new Encrypt(new KaitaiStream(fileName));
-            }
-
-            public Encrypt(KaitaiStream p__io, KaitaiStruct p__parent = null, Nitf p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                __unnamed0 = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(1));
-            }
-            private string __unnamed0;
-            private Nitf m_root;
-            private KaitaiStruct m_parent;
-            public string Unnamed_0 { get { return __unnamed0; } }
-            public Nitf M_Root { get { return m_root; } }
-            public KaitaiStruct M_Parent { get { return m_parent; } }
-        }
-        public partial class ImageDataMask : KaitaiStruct
-        {
-            public static ImageDataMask FromFile(string fileName)
-            {
-                return new ImageDataMask(new KaitaiStream(fileName));
-            }
-
-            public ImageDataMask(KaitaiStream p__io, Nitf.ImageSegment p__parent = null, Nitf p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_hasBmr = false;
-                f_hasTmr = false;
-                f_tmrbndSize = false;
-                f_tpxcdSize = false;
-                f_totalSize = false;
-                f_bmrbndSize = false;
-                f_bmrtmrCount = false;
-                _read();
-            }
-            private void _read()
-            {
-                _blockedImgDataOffset = m_io.ReadU4be();
-                _bmrlnth = m_io.ReadU2be();
-                _tmrlnth = m_io.ReadU2be();
-                _tpxcdlnth = m_io.ReadU2be();
-                _tpxcd = m_io.ReadBytes(TpxcdSize);
-                if (HasBmr) {
-                    _bmrbnd = new List<uint>();
-                    for (var i = 0; i < BmrtmrCount; i++)
-                    {
-                        _bmrbnd.Add(m_io.ReadU4be());
-                    }
-                }
-                if (HasTmr) {
-                    _tmrbnd = new List<uint>();
-                    for (var i = 0; i < BmrtmrCount; i++)
-                    {
-                        _tmrbnd.Add(m_io.ReadU4be());
-                    }
-                }
-            }
-            private bool f_hasBmr;
-            private bool _hasBmr;
-            public bool HasBmr
-            {
-                get
-                {
-                    if (f_hasBmr)
-                        return _hasBmr;
-                    _hasBmr = (bool) (Bmrlnth != 0);
-                    f_hasBmr = true;
-                    return _hasBmr;
-                }
-            }
-            private bool f_hasTmr;
-            private bool _hasTmr;
-            public bool HasTmr
-            {
-                get
-                {
-                    if (f_hasTmr)
-                        return _hasTmr;
-                    _hasTmr = (bool) (Tmrlnth != 0);
-                    f_hasTmr = true;
-                    return _hasTmr;
-                }
-            }
-            private bool f_tmrbndSize;
-            private int _tmrbndSize;
-            public int TmrbndSize
-            {
-                get
-                {
-                    if (f_tmrbndSize)
-                        return _tmrbndSize;
-                    _tmrbndSize = (int) ((HasTmr ? (BmrtmrCount * 4) : 0));
-                    f_tmrbndSize = true;
-                    return _tmrbndSize;
-                }
-            }
-            private bool f_tpxcdSize;
-            private int _tpxcdSize;
-            public int TpxcdSize
-            {
-                get
-                {
-                    if (f_tpxcdSize)
-                        return _tpxcdSize;
-                    _tpxcdSize = (int) (((KaitaiStream.Mod(Tpxcdlnth, 8) == 0 ? Tpxcdlnth : (Tpxcdlnth + (8 - KaitaiStream.Mod(Tpxcdlnth, 8)))) / 8));
-                    f_tpxcdSize = true;
-                    return _tpxcdSize;
-                }
-            }
-            private bool f_totalSize;
-            private int _totalSize;
-            public int TotalSize
-            {
-                get
-                {
-                    if (f_totalSize)
-                        return _totalSize;
-                    _totalSize = (int) (((((((4 + 2) + 2) + 2) + TpxcdSize) + BmrbndSize) + TmrbndSize));
-                    f_totalSize = true;
-                    return _totalSize;
-                }
-            }
-            private bool f_bmrbndSize;
-            private int _bmrbndSize;
-            public int BmrbndSize
-            {
-                get
-                {
-                    if (f_bmrbndSize)
-                        return _bmrbndSize;
-                    _bmrbndSize = (int) ((HasBmr ? (BmrtmrCount * 4) : 0));
-                    f_bmrbndSize = true;
-                    return _bmrbndSize;
-                }
-            }
-            private bool f_bmrtmrCount;
-            private int _bmrtmrCount;
-            public int BmrtmrCount
-            {
-                get
-                {
-                    if (f_bmrtmrCount)
-                        return _bmrtmrCount;
-                    _bmrtmrCount = (int) (((Convert.ToInt64(M_Parent.ImageSubHeader.NumBlocksPerRow, 10) * Convert.ToInt64(M_Parent.ImageSubHeader.NumBlocksPerCol, 10)) * (M_Parent.ImageSubHeader.ImgMode != "S" ? 1 : (Convert.ToInt64(M_Parent.ImageSubHeader.NumBands, 10) != 0 ? Convert.ToInt64(M_Parent.ImageSubHeader.NumBands, 10) : Convert.ToInt64(M_Parent.ImageSubHeader.NumMultispectralBands, 10)))));
-                    f_bmrtmrCount = true;
-                    return _bmrtmrCount;
-                }
-            }
-            private uint _blockedImgDataOffset;
-            private ushort _bmrlnth;
-            private ushort _tmrlnth;
-            private ushort _tpxcdlnth;
-            private byte[] _tpxcd;
-            private List<uint> _bmrbnd;
-            private List<uint> _tmrbnd;
-            private Nitf m_root;
-            private Nitf.ImageSegment m_parent;
-            public uint BlockedImgDataOffset { get { return _blockedImgDataOffset; } }
-
-            /// <summary>
-            /// Block Mask Record Length
-            /// </summary>
-            public ushort Bmrlnth { get { return _bmrlnth; } }
-
-            /// <summary>
-            /// Pad Pixel Mask Record Length
-            /// </summary>
-            public ushort Tmrlnth { get { return _tmrlnth; } }
-
-            /// <summary>
-            /// Pad Output Pixel Code Length
-            /// </summary>
-            public ushort Tpxcdlnth { get { return _tpxcdlnth; } }
-
-            /// <summary>
-            /// Pad Output Pixel Code
-            /// </summary>
-            public byte[] Tpxcd { get { return _tpxcd; } }
-
-            /// <summary>
-            /// Block n, Band m Offset
-            /// </summary>
-            public List<uint> Bmrbnd { get { return _bmrbnd; } }
-
-            /// <summary>
-            /// Pad Pixel n, Band m
-            /// </summary>
-            public List<uint> Tmrbnd { get { return _tmrbnd; } }
-            public Nitf M_Root { get { return m_root; } }
-            public Nitf.ImageSegment M_Parent { get { return m_parent; } }
-        }
-        public partial class GraphicsSegment : KaitaiStruct
-        {
-            public GraphicsSegment(ushort p_idx, KaitaiStream p__io, Nitf p__parent = null, Nitf p__root = null) : base(p__io)
+            public DataExtensionSegment(ushort p_idx, KaitaiStream p__io, Nitf p__parent = null, Nitf p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -709,19 +207,23 @@ namespace Kaitai
             }
             private void _read()
             {
-                _graphicSubHeader = new GraphicSubHeader(m_io, this, m_root);
-                _graphicDataField = m_io.ReadBytes(Convert.ToInt64(M_Parent.Header.Lnnfo[Idx].LengthGraphicSegment, 10));
+                __raw_dataSubHeader = m_io.ReadBytes(Convert.ToInt64(M_Parent.Header.Ldnfo[Idx].LengthDataExtensionSubheader, 10));
+                var io___raw_dataSubHeader = new KaitaiStream(__raw_dataSubHeader);
+                _dataSubHeader = new DataSubHeader(io___raw_dataSubHeader, this, m_root);
+                _dataDataField = m_io.ReadBytes(Convert.ToInt64(M_Parent.Header.Ldnfo[Idx].LengthDataExtensionSegment, 10));
             }
-            private GraphicSubHeader _graphicSubHeader;
-            private byte[] _graphicDataField;
+            private DataSubHeader _dataSubHeader;
+            private byte[] _dataDataField;
             private ushort _idx;
             private Nitf m_root;
             private Nitf m_parent;
-            public GraphicSubHeader GraphicSubHeader { get { return _graphicSubHeader; } }
-            public byte[] GraphicDataField { get { return _graphicDataField; } }
+            private byte[] __raw_dataSubHeader;
+            public DataSubHeader DataSubHeader { get { return _dataSubHeader; } }
+            public byte[] DataDataField { get { return _dataDataField; } }
             public ushort Idx { get { return _idx; } }
             public Nitf M_Root { get { return m_root; } }
             public Nitf M_Parent { get { return m_parent; } }
+            public byte[] M_RawDataSubHeader { get { return __raw_dataSubHeader; } }
         }
         public partial class DataSubHeader : KaitaiStruct
         {
@@ -758,8 +260,8 @@ namespace Kaitai
                 {
                     if (f_treOfl)
                         return _treOfl;
-                    _treOfl = (bool) (DesBase.Desid == "TRE_OVERFLOW");
                     f_treOfl = true;
+                    _treOfl = (bool) (DesBase.Desid == "TRE_OVERFLOW");
                     return _treOfl;
                 }
             }
@@ -780,34 +282,112 @@ namespace Kaitai
             public Nitf M_Root { get { return m_root; } }
             public Nitf.DataExtensionSegment M_Parent { get { return m_parent; } }
         }
-        public partial class DataExtensionSegment : KaitaiStruct
+        public partial class DataSubHeaderBase : KaitaiStruct
         {
-            public DataExtensionSegment(ushort p_idx, KaitaiStream p__io, Nitf p__parent = null, Nitf p__root = null) : base(p__io)
+            public static DataSubHeaderBase FromFile(string fileName)
+            {
+                return new DataSubHeaderBase(new KaitaiStream(fileName));
+            }
+
+            public DataSubHeaderBase(KaitaiStream p__io, KaitaiStruct p__parent = null, Nitf p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
-                _idx = p_idx;
                 _read();
             }
             private void _read()
             {
-                __raw_dataSubHeader = m_io.ReadBytes(Convert.ToInt64(M_Parent.Header.Ldnfo[Idx].LengthDataExtensionSubheader, 10));
-                var io___raw_dataSubHeader = new KaitaiStream(__raw_dataSubHeader);
-                _dataSubHeader = new DataSubHeader(io___raw_dataSubHeader, this, m_root);
-                _dataDataField = m_io.ReadBytes(Convert.ToInt64(M_Parent.Header.Ldnfo[Idx].LengthDataExtensionSegment, 10));
+                _filePartTypeDe = m_io.ReadBytes(2);
+                if (!((KaitaiStream.ByteArrayCompare(_filePartTypeDe, new byte[] { 68, 69 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 68, 69 }, _filePartTypeDe, m_io, "/types/data_sub_header_base/seq/0");
+                }
+                _desid = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(25));
+                _dataDefinitionVersion = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(2));
+                _declasnfo = new Clasnfo(m_io, this, m_root);
             }
-            private DataSubHeader _dataSubHeader;
-            private byte[] _dataDataField;
-            private ushort _idx;
+            private byte[] _filePartTypeDe;
+            private string _desid;
+            private string _dataDefinitionVersion;
+            private Clasnfo _declasnfo;
             private Nitf m_root;
-            private Nitf m_parent;
-            private byte[] __raw_dataSubHeader;
-            public DataSubHeader DataSubHeader { get { return _dataSubHeader; } }
-            public byte[] DataDataField { get { return _dataDataField; } }
-            public ushort Idx { get { return _idx; } }
+            private KaitaiStruct m_parent;
+
+            /// <summary>
+            /// File Part Type desigantor for Data Extension
+            /// </summary>
+            public byte[] FilePartTypeDe { get { return _filePartTypeDe; } }
+            public string Desid { get { return _desid; } }
+            public string DataDefinitionVersion { get { return _dataDefinitionVersion; } }
+            public Clasnfo Declasnfo { get { return _declasnfo; } }
             public Nitf M_Root { get { return m_root; } }
-            public Nitf M_Parent { get { return m_parent; } }
-            public byte[] M_RawDataSubHeader { get { return __raw_dataSubHeader; } }
+            public KaitaiStruct M_Parent { get { return m_parent; } }
+        }
+
+        /// <summary>
+        /// Streaming file Header Data Extension Segment Subheader
+        /// </summary>
+        public partial class DataSubHeaderStreaming : KaitaiStruct
+        {
+            public static DataSubHeaderStreaming FromFile(string fileName)
+            {
+                return new DataSubHeaderStreaming(new KaitaiStream(fileName));
+            }
+
+            public DataSubHeaderStreaming(KaitaiStream p__io, KaitaiStruct p__parent = null, Nitf p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _desBase = new DataSubHeaderBase(m_io, this, m_root);
+                _desDefinedSubheaderFieldsLen = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(4));
+                _sfhL1 = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(7));
+                _sfhDelim1 = m_io.ReadU4be();
+                _sfhDr = new List<byte>();
+                for (var i = 0; i < Convert.ToInt64(SfhL1, 10); i++)
+                {
+                    _sfhDr.Add(m_io.ReadU1());
+                }
+                _sfhDelim2 = m_io.ReadU4be();
+                _sfhL2 = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(7));
+            }
+            private DataSubHeaderBase _desBase;
+            private string _desDefinedSubheaderFieldsLen;
+            private string _sfhL1;
+            private uint _sfhDelim1;
+            private List<byte> _sfhDr;
+            private uint _sfhDelim2;
+            private string _sfhL2;
+            private Nitf m_root;
+            private KaitaiStruct m_parent;
+            public DataSubHeaderBase DesBase { get { return _desBase; } }
+            public string DesDefinedSubheaderFieldsLen { get { return _desDefinedSubheaderFieldsLen; } }
+
+            /// <summary>
+            /// SFH Length 1: number of bytes in sfh_dr field
+            /// </summary>
+            public string SfhL1 { get { return _sfhL1; } }
+
+            /// <summary>
+            /// Shall contain the value 0x0A6E1D97.
+            /// </summary>
+            public uint SfhDelim1 { get { return _sfhDelim1; } }
+            public List<byte> SfhDr { get { return _sfhDr; } }
+
+            /// <summary>
+            /// Shall contain the value 0x0ECA14BF.
+            /// </summary>
+            public uint SfhDelim2 { get { return _sfhDelim2; } }
+
+            /// <summary>
+            /// A repeat of sfh_l1.
+            /// </summary>
+            public string SfhL2 { get { return _sfhL2; } }
+            public Nitf M_Root { get { return m_root; } }
+            public KaitaiStruct M_Parent { get { return m_parent; } }
         }
         public partial class DataSubHeaderTre : KaitaiStruct
         {
@@ -849,316 +429,6 @@ namespace Kaitai
             public Nitf M_Root { get { return m_root; } }
             public KaitaiStruct M_Parent { get { return m_parent; } }
         }
-        public partial class ImageSubHeader : KaitaiStruct
-        {
-            public static ImageSubHeader FromFile(string fileName)
-            {
-                return new ImageSubHeader(new KaitaiStream(fileName));
-            }
-
-            public ImageSubHeader(KaitaiStream p__io, Nitf.ImageSegment p__parent = null, Nitf p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _filePartType = m_io.ReadBytes(2);
-                if (!((KaitaiStream.ByteArrayCompare(FilePartType, new byte[] { 73, 77 }) == 0)))
-                {
-                    throw new ValidationNotEqualError(new byte[] { 73, 77 }, FilePartType, M_Io, "/types/image_sub_header/seq/0");
-                }
-                _imageId1 = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(10));
-                _imageDateTime = new DateTime(m_io, this, m_root);
-                _targetId = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(17));
-                _imageId2 = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(80));
-                _imageSecurityClassification = new Clasnfo(m_io, this, m_root);
-                _encryption = new Encrypt(m_io, this, m_root);
-                _imageSource = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(42));
-                _numSigRows = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(8));
-                _numSigCols = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(8));
-                _pixelValueType = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(3));
-                _imageRepresentation = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(8));
-                _imageCategory = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(8));
-                _actualBitsPerPixelPerBand = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(2));
-                _pixelJustification = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(1));
-                _imageCoordinateRep = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(1));
-                _imageGeoLoc = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(60));
-                _numImgComments = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(1));
-                _imgComments = new List<ImageComment>();
-                for (var i = 0; i < Convert.ToInt64(NumImgComments, 10); i++)
-                {
-                    _imgComments.Add(new ImageComment(m_io, this, m_root));
-                }
-                _imgCompression = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(2));
-                _compressionRateCode = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(4));
-                _numBands = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(1));
-                if (Convert.ToInt64(NumBands, 10) == 0) {
-                    _numMultispectralBands = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(5));
-                }
-                _bands = new List<BandInfo>();
-                for (var i = 0; i < (Convert.ToInt64(NumBands, 10) != 0 ? Convert.ToInt64(NumBands, 10) : Convert.ToInt64(NumMultispectralBands, 10)); i++)
-                {
-                    _bands.Add(new BandInfo(m_io, this, m_root));
-                }
-                _imgSyncCode = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(1));
-                _imgMode = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(1));
-                _numBlocksPerRow = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(4));
-                _numBlocksPerCol = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(4));
-                _numPixelsPerBlockHorz = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(4));
-                _numPixelsPerBlockVert = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(4));
-                _numPixelsPerBand = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(2));
-                _imgDisplayLevel = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(3));
-                _attachmentLevel = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(3));
-                _imgLocation = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(10));
-                _imgMagnification = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(4));
-                _userDefImgDataLen = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(5));
-                if (Convert.ToInt64(UserDefImgDataLen, 10) != 0) {
-                    _userDefOverflow = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(3));
-                }
-                if (Convert.ToInt64(UserDefImgDataLen, 10) > 2) {
-                    _userDefImgData = new List<byte>();
-                    for (var i = 0; i < (Convert.ToInt64(UserDefImgDataLen, 10) - 3); i++)
-                    {
-                        _userDefImgData.Add(m_io.ReadU1());
-                    }
-                }
-                _imageExtendedSubHeader = new TreHeader(m_io, this, m_root);
-            }
-            private byte[] _filePartType;
-            private string _imageId1;
-            private DateTime _imageDateTime;
-            private string _targetId;
-            private string _imageId2;
-            private Clasnfo _imageSecurityClassification;
-            private Encrypt _encryption;
-            private string _imageSource;
-            private string _numSigRows;
-            private string _numSigCols;
-            private string _pixelValueType;
-            private string _imageRepresentation;
-            private string _imageCategory;
-            private string _actualBitsPerPixelPerBand;
-            private string _pixelJustification;
-            private string _imageCoordinateRep;
-            private string _imageGeoLoc;
-            private string _numImgComments;
-            private List<ImageComment> _imgComments;
-            private string _imgCompression;
-            private string _compressionRateCode;
-            private string _numBands;
-            private string _numMultispectralBands;
-            private List<BandInfo> _bands;
-            private string _imgSyncCode;
-            private string _imgMode;
-            private string _numBlocksPerRow;
-            private string _numBlocksPerCol;
-            private string _numPixelsPerBlockHorz;
-            private string _numPixelsPerBlockVert;
-            private string _numPixelsPerBand;
-            private string _imgDisplayLevel;
-            private string _attachmentLevel;
-            private string _imgLocation;
-            private string _imgMagnification;
-            private string _userDefImgDataLen;
-            private string _userDefOverflow;
-            private List<byte> _userDefImgData;
-            private TreHeader _imageExtendedSubHeader;
-            private Nitf m_root;
-            private Nitf.ImageSegment m_parent;
-            public byte[] FilePartType { get { return _filePartType; } }
-            public string ImageId1 { get { return _imageId1; } }
-            public DateTime ImageDateTime { get { return _imageDateTime; } }
-            public string TargetId { get { return _targetId; } }
-            public string ImageId2 { get { return _imageId2; } }
-            public Clasnfo ImageSecurityClassification { get { return _imageSecurityClassification; } }
-            public Encrypt Encryption { get { return _encryption; } }
-            public string ImageSource { get { return _imageSource; } }
-
-            /// <summary>
-            /// Total number of rows of significant pixels in the image; only rows indexed 0 to (NROWS - 1) of the image contain significant data.
-            /// </summary>
-            public string NumSigRows { get { return _numSigRows; } }
-            public string NumSigCols { get { return _numSigCols; } }
-            public string PixelValueType { get { return _pixelValueType; } }
-
-            /// <summary>
-            /// MONO, RGB, RGB/LUT, MULTI, NODISPLY, NVECTOR, POLAR, VPH, YCbCr601
-            /// </summary>
-            public string ImageRepresentation { get { return _imageRepresentation; } }
-
-            /// <summary>
-            /// VIS, SL, TI, FL, RD, EO, OP, HR, HS,CP, BP, SAR, SARIQ, IR, MAP, MS, FP, MRI, XRAY, CAT, VD, PAT, LEG, DTEM, MATR, LOCG, BARO, CURRENT, DEPTH, WIND
-            /// </summary>
-            public string ImageCategory { get { return _imageCategory; } }
-            public string ActualBitsPerPixelPerBand { get { return _actualBitsPerPixelPerBand; } }
-            public string PixelJustification { get { return _pixelJustification; } }
-            public string ImageCoordinateRep { get { return _imageCoordinateRep; } }
-            public string ImageGeoLoc { get { return _imageGeoLoc; } }
-            public string NumImgComments { get { return _numImgComments; } }
-            public List<ImageComment> ImgComments { get { return _imgComments; } }
-            public string ImgCompression { get { return _imgCompression; } }
-            public string CompressionRateCode { get { return _compressionRateCode; } }
-            public string NumBands { get { return _numBands; } }
-            public string NumMultispectralBands { get { return _numMultispectralBands; } }
-            public List<BandInfo> Bands { get { return _bands; } }
-
-            /// <summary>
-            /// Reserved for future use.
-            /// </summary>
-            public string ImgSyncCode { get { return _imgSyncCode; } }
-
-            /// <summary>
-            /// B = Band Interleaved by Block, P = Band Interleaved by Pixel, R = Band Interleaved by Row, S = Band Sequential
-            /// </summary>
-            public string ImgMode { get { return _imgMode; } }
-            public string NumBlocksPerRow { get { return _numBlocksPerRow; } }
-            public string NumBlocksPerCol { get { return _numBlocksPerCol; } }
-            public string NumPixelsPerBlockHorz { get { return _numPixelsPerBlockHorz; } }
-            public string NumPixelsPerBlockVert { get { return _numPixelsPerBlockVert; } }
-            public string NumPixelsPerBand { get { return _numPixelsPerBand; } }
-            public string ImgDisplayLevel { get { return _imgDisplayLevel; } }
-            public string AttachmentLevel { get { return _attachmentLevel; } }
-            public string ImgLocation { get { return _imgLocation; } }
-            public string ImgMagnification { get { return _imgMagnification; } }
-            public string UserDefImgDataLen { get { return _userDefImgDataLen; } }
-            public string UserDefOverflow { get { return _userDefOverflow; } }
-            public List<byte> UserDefImgData { get { return _userDefImgData; } }
-            public TreHeader ImageExtendedSubHeader { get { return _imageExtendedSubHeader; } }
-            public Nitf M_Root { get { return m_root; } }
-            public Nitf.ImageSegment M_Parent { get { return m_parent; } }
-        }
-        public partial class ReservedSubHeader : KaitaiStruct
-        {
-            public static ReservedSubHeader FromFile(string fileName)
-            {
-                return new ReservedSubHeader(new KaitaiStream(fileName));
-            }
-
-            public ReservedSubHeader(KaitaiStream p__io, Nitf.ReservedExtensionSegment p__parent = null, Nitf p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _filePartTypeRe = m_io.ReadBytes(2);
-                if (!((KaitaiStream.ByteArrayCompare(FilePartTypeRe, new byte[] { 82, 69 }) == 0)))
-                {
-                    throw new ValidationNotEqualError(new byte[] { 82, 69 }, FilePartTypeRe, M_Io, "/types/reserved_sub_header/seq/0");
-                }
-                _resTypeId = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(25));
-                _resVersion = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(2));
-                _reclasnfo = new Clasnfo(m_io, this, m_root);
-                _resUserDefinedSubheaderLength = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(4));
-                _resUserDefinedSubheaderFields = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(Convert.ToInt64(ResUserDefinedSubheaderLength, 10)));
-                _resUserDefinedData = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytesFull());
-            }
-            private byte[] _filePartTypeRe;
-            private string _resTypeId;
-            private string _resVersion;
-            private Clasnfo _reclasnfo;
-            private string _resUserDefinedSubheaderLength;
-            private string _resUserDefinedSubheaderFields;
-            private string _resUserDefinedData;
-            private Nitf m_root;
-            private Nitf.ReservedExtensionSegment m_parent;
-            public byte[] FilePartTypeRe { get { return _filePartTypeRe; } }
-            public string ResTypeId { get { return _resTypeId; } }
-            public string ResVersion { get { return _resVersion; } }
-            public Clasnfo Reclasnfo { get { return _reclasnfo; } }
-            public string ResUserDefinedSubheaderLength { get { return _resUserDefinedSubheaderLength; } }
-            public string ResUserDefinedSubheaderFields { get { return _resUserDefinedSubheaderFields; } }
-            public string ResUserDefinedData { get { return _resUserDefinedData; } }
-            public Nitf M_Root { get { return m_root; } }
-            public Nitf.ReservedExtensionSegment M_Parent { get { return m_parent; } }
-        }
-        public partial class DataSubHeaderBase : KaitaiStruct
-        {
-            public static DataSubHeaderBase FromFile(string fileName)
-            {
-                return new DataSubHeaderBase(new KaitaiStream(fileName));
-            }
-
-            public DataSubHeaderBase(KaitaiStream p__io, Nitf.DataSubHeader p__parent = null, Nitf p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _filePartTypeDe = m_io.ReadBytes(2);
-                if (!((KaitaiStream.ByteArrayCompare(FilePartTypeDe, new byte[] { 68, 69 }) == 0)))
-                {
-                    throw new ValidationNotEqualError(new byte[] { 68, 69 }, FilePartTypeDe, M_Io, "/types/data_sub_header_base/seq/0");
-                }
-                _desid = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(25));
-                _dataDefinitionVersion = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(2));
-                _declasnfo = new Clasnfo(m_io, this, m_root);
-            }
-            private byte[] _filePartTypeDe;
-            private string _desid;
-            private string _dataDefinitionVersion;
-            private Clasnfo _declasnfo;
-            private Nitf m_root;
-            private Nitf.DataSubHeader m_parent;
-
-            /// <summary>
-            /// File Part Type desigantor for Data Extension
-            /// </summary>
-            public byte[] FilePartTypeDe { get { return _filePartTypeDe; } }
-            public string Desid { get { return _desid; } }
-            public string DataDefinitionVersion { get { return _dataDefinitionVersion; } }
-            public Clasnfo Declasnfo { get { return _declasnfo; } }
-            public Nitf M_Root { get { return m_root; } }
-            public Nitf.DataSubHeader M_Parent { get { return m_parent; } }
-        }
-        public partial class TextSubHeader : KaitaiStruct
-        {
-            public static TextSubHeader FromFile(string fileName)
-            {
-                return new TextSubHeader(new KaitaiStream(fileName));
-            }
-
-            public TextSubHeader(KaitaiStream p__io, KaitaiStruct p__parent = null, Nitf p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _textDateTime = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(14));
-                _textTitle = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(80));
-                _textSecurityClass = new Clasnfo(m_io, this, m_root);
-                _encryp = new Encrypt(m_io, this, m_root);
-                _textFormat = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(3));
-                _textExtendedSubHeader = new TreHeader(m_io, this, m_root);
-            }
-            private string _textDateTime;
-            private string _textTitle;
-            private Clasnfo _textSecurityClass;
-            private Encrypt _encryp;
-            private string _textFormat;
-            private TreHeader _textExtendedSubHeader;
-            private Nitf m_root;
-            private KaitaiStruct m_parent;
-            public string TextDateTime { get { return _textDateTime; } }
-            public string TextTitle { get { return _textTitle; } }
-            public Clasnfo TextSecurityClass { get { return _textSecurityClass; } }
-            public Encrypt Encryp { get { return _encryp; } }
-
-            /// <summary>
-            /// MTF (USMTF see MIL-STD-6040), STA (indicates BCS), UT1 (indicates ECS), U8S
-            /// </summary>
-            public string TextFormat { get { return _textFormat; } }
-            public TreHeader TextExtendedSubHeader { get { return _textExtendedSubHeader; } }
-            public Nitf M_Root { get { return m_root; } }
-            public KaitaiStruct M_Parent { get { return m_parent; } }
-        }
         public partial class DateTime : KaitaiStruct
         {
             public static DateTime FromFile(string fileName)
@@ -1187,6 +457,137 @@ namespace Kaitai
             public Nitf M_Root { get { return m_root; } }
             public KaitaiStruct M_Parent { get { return m_parent; } }
         }
+        public partial class Encrypt : KaitaiStruct
+        {
+            public static Encrypt FromFile(string fileName)
+            {
+                return new Encrypt(new KaitaiStream(fileName));
+            }
+
+            public Encrypt(KaitaiStream p__io, KaitaiStruct p__parent = null, Nitf p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                __unnamed0 = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(1));
+            }
+            private string __unnamed0;
+            private Nitf m_root;
+            private KaitaiStruct m_parent;
+            public string Unnamed_0 { get { return __unnamed0; } }
+            public Nitf M_Root { get { return m_root; } }
+            public KaitaiStruct M_Parent { get { return m_parent; } }
+        }
+        public partial class GraphicSubHeader : KaitaiStruct
+        {
+            public static GraphicSubHeader FromFile(string fileName)
+            {
+                return new GraphicSubHeader(new KaitaiStream(fileName));
+            }
+
+            public GraphicSubHeader(KaitaiStream p__io, Nitf.GraphicsSegment p__parent = null, Nitf p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _filePartTypeSy = m_io.ReadBytes(2);
+                if (!((KaitaiStream.ByteArrayCompare(_filePartTypeSy, new byte[] { 83, 89 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 83, 89 }, _filePartTypeSy, m_io, "/types/graphic_sub_header/seq/0");
+                }
+                _graphicId = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(10));
+                _graphicName = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(20));
+                _graphicClassification = new Clasnfo(m_io, this, m_root);
+                _encryption = new Encrypt(m_io, this, m_root);
+                _graphicType = m_io.ReadBytes(1);
+                if (!((KaitaiStream.ByteArrayCompare(_graphicType, new byte[] { 67 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 67 }, _graphicType, m_io, "/types/graphic_sub_header/seq/5");
+                }
+                _reserved1 = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(13));
+                _graphicDisplayLevel = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(3));
+                _graphicAttachmentLevel = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(3));
+                _graphicLocation = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(10));
+                _firstGraphicBoundLoc = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(10));
+                _graphicColor = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(1));
+                _secondGraphicBoundLoc = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(10));
+                _reserved2 = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(2));
+                _graphicsExtendedSubHeader = new TreHeader(m_io, this, m_root);
+            }
+            private byte[] _filePartTypeSy;
+            private string _graphicId;
+            private string _graphicName;
+            private Clasnfo _graphicClassification;
+            private Encrypt _encryption;
+            private byte[] _graphicType;
+            private string _reserved1;
+            private string _graphicDisplayLevel;
+            private string _graphicAttachmentLevel;
+            private string _graphicLocation;
+            private string _firstGraphicBoundLoc;
+            private string _graphicColor;
+            private string _secondGraphicBoundLoc;
+            private string _reserved2;
+            private TreHeader _graphicsExtendedSubHeader;
+            private Nitf m_root;
+            private Nitf.GraphicsSegment m_parent;
+            public byte[] FilePartTypeSy { get { return _filePartTypeSy; } }
+            public string GraphicId { get { return _graphicId; } }
+            public string GraphicName { get { return _graphicName; } }
+            public Clasnfo GraphicClassification { get { return _graphicClassification; } }
+            public Encrypt Encryption { get { return _encryption; } }
+            public byte[] GraphicType { get { return _graphicType; } }
+
+            /// <summary>
+            /// Reserved
+            /// </summary>
+            public string Reserved1 { get { return _reserved1; } }
+            public string GraphicDisplayLevel { get { return _graphicDisplayLevel; } }
+            public string GraphicAttachmentLevel { get { return _graphicAttachmentLevel; } }
+            public string GraphicLocation { get { return _graphicLocation; } }
+            public string FirstGraphicBoundLoc { get { return _firstGraphicBoundLoc; } }
+            public string GraphicColor { get { return _graphicColor; } }
+            public string SecondGraphicBoundLoc { get { return _secondGraphicBoundLoc; } }
+
+            /// <summary>
+            /// Reserved
+            /// </summary>
+            public string Reserved2 { get { return _reserved2; } }
+            public TreHeader GraphicsExtendedSubHeader { get { return _graphicsExtendedSubHeader; } }
+            public Nitf M_Root { get { return m_root; } }
+            public Nitf.GraphicsSegment M_Parent { get { return m_parent; } }
+        }
+        public partial class GraphicsSegment : KaitaiStruct
+        {
+            public GraphicsSegment(ushort p_idx, KaitaiStream p__io, Nitf p__parent = null, Nitf p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _idx = p_idx;
+                _read();
+            }
+            private void _read()
+            {
+                _graphicSubHeader = new GraphicSubHeader(m_io, this, m_root);
+                _graphicDataField = m_io.ReadBytes(Convert.ToInt64(M_Parent.Header.Lnnfo[Idx].LengthGraphicSegment, 10));
+            }
+            private GraphicSubHeader _graphicSubHeader;
+            private byte[] _graphicDataField;
+            private ushort _idx;
+            private Nitf m_root;
+            private Nitf m_parent;
+            public GraphicSubHeader GraphicSubHeader { get { return _graphicSubHeader; } }
+            public byte[] GraphicDataField { get { return _graphicDataField; } }
+            public ushort Idx { get { return _idx; } }
+            public Nitf M_Root { get { return m_root; } }
+            public Nitf M_Parent { get { return m_parent; } }
+        }
         public partial class Header : KaitaiStruct
         {
             public static Header FromFile(string fileName)
@@ -1203,20 +604,20 @@ namespace Kaitai
             private void _read()
             {
                 _fileProfileName = m_io.ReadBytes(4);
-                if (!((KaitaiStream.ByteArrayCompare(FileProfileName, new byte[] { 78, 73, 84, 70 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_fileProfileName, new byte[] { 78, 73, 84, 70 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 78, 73, 84, 70 }, FileProfileName, M_Io, "/types/header/seq/0");
+                    throw new ValidationNotEqualError(new byte[] { 78, 73, 84, 70 }, _fileProfileName, m_io, "/types/header/seq/0");
                 }
                 _fileVersion = m_io.ReadBytes(5);
-                if (!((KaitaiStream.ByteArrayCompare(FileVersion, new byte[] { 48, 50, 46, 49, 48 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_fileVersion, new byte[] { 48, 50, 46, 49, 48 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 48, 50, 46, 49, 48 }, FileVersion, M_Io, "/types/header/seq/1");
+                    throw new ValidationNotEqualError(new byte[] { 48, 50, 46, 49, 48 }, _fileVersion, m_io, "/types/header/seq/1");
                 }
                 _complexityLevel = m_io.ReadBytes(2);
                 _standardType = m_io.ReadBytes(4);
-                if (!((KaitaiStream.ByteArrayCompare(StandardType, new byte[] { 66, 70, 48, 49 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_standardType, new byte[] { 66, 70, 48, 49 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 66, 70, 48, 49 }, StandardType, M_Io, "/types/header/seq/3");
+                    throw new ValidationNotEqualError(new byte[] { 66, 70, 48, 49 }, _standardType, m_io, "/types/header/seq/3");
                 }
                 _originatingStationId = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(10));
                 _fileDateTime = new DateTime(m_io, this, m_root);
@@ -1331,18 +732,14 @@ namespace Kaitai
             public Nitf M_Root { get { return m_root; } }
             public Nitf M_Parent { get { return m_parent; } }
         }
-
-        /// <summary>
-        /// Streaming file Header Data Extension Segment Subheader
-        /// </summary>
-        public partial class DataSubHeaderStreaming : KaitaiStruct
+        public partial class ImageComment : KaitaiStruct
         {
-            public static DataSubHeaderStreaming FromFile(string fileName)
+            public static ImageComment FromFile(string fileName)
             {
-                return new DataSubHeaderStreaming(new KaitaiStream(fileName));
+                return new ImageComment(new KaitaiStream(fileName));
             }
 
-            public DataSubHeaderStreaming(KaitaiStream p__io, KaitaiStruct p__parent = null, Nitf p__root = null) : base(p__io)
+            public ImageComment(KaitaiStream p__io, Nitf.ImageSubHeader p__parent = null, Nitf p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -1350,90 +747,470 @@ namespace Kaitai
             }
             private void _read()
             {
-                _desBase = new DataSubHeaderBase(m_io, this, m_root);
-                _desDefinedSubheaderFieldsLen = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(4));
-                _sfhL1 = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(7));
-                _sfhDelim1 = m_io.ReadU4be();
-                _sfhDr = new List<byte>();
-                for (var i = 0; i < Convert.ToInt64(SfhL1, 10); i++)
-                {
-                    _sfhDr.Add(m_io.ReadU1());
-                }
-                _sfhDelim2 = m_io.ReadU4be();
-                _sfhL2 = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(7));
+                __unnamed0 = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(80));
             }
-            private DataSubHeaderBase _desBase;
-            private string _desDefinedSubheaderFieldsLen;
-            private string _sfhL1;
-            private uint _sfhDelim1;
-            private List<byte> _sfhDr;
-            private uint _sfhDelim2;
-            private string _sfhL2;
+            private string __unnamed0;
             private Nitf m_root;
-            private KaitaiStruct m_parent;
-            public DataSubHeaderBase DesBase { get { return _desBase; } }
-            public string DesDefinedSubheaderFieldsLen { get { return _desDefinedSubheaderFieldsLen; } }
-
-            /// <summary>
-            /// SFH Length 1: number of bytes in sfh_dr field
-            /// </summary>
-            public string SfhL1 { get { return _sfhL1; } }
-
-            /// <summary>
-            /// Shall contain the value 0x0A6E1D97.
-            /// </summary>
-            public uint SfhDelim1 { get { return _sfhDelim1; } }
-            public List<byte> SfhDr { get { return _sfhDr; } }
-
-            /// <summary>
-            /// Shall contain the value 0x0ECA14BF.
-            /// </summary>
-            public uint SfhDelim2 { get { return _sfhDelim2; } }
-
-            /// <summary>
-            /// A repeat of sfh_l1.
-            /// </summary>
-            public string SfhL2 { get { return _sfhL2; } }
+            private Nitf.ImageSubHeader m_parent;
+            public string Unnamed_0 { get { return __unnamed0; } }
             public Nitf M_Root { get { return m_root; } }
-            public KaitaiStruct M_Parent { get { return m_parent; } }
+            public Nitf.ImageSubHeader M_Parent { get { return m_parent; } }
         }
-        public partial class TreHeader : KaitaiStruct
+        public partial class ImageDataMask : KaitaiStruct
         {
-            public static TreHeader FromFile(string fileName)
+            public static ImageDataMask FromFile(string fileName)
             {
-                return new TreHeader(new KaitaiStream(fileName));
+                return new ImageDataMask(new KaitaiStream(fileName));
             }
 
-            public TreHeader(KaitaiStream p__io, KaitaiStruct p__parent = null, Nitf p__root = null) : base(p__io)
+            public ImageDataMask(KaitaiStream p__io, Nitf.ImageSegment p__parent = null, Nitf p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
+                f_bmrbndSize = false;
+                f_bmrtmrCount = false;
+                f_hasBmr = false;
+                f_hasTmr = false;
+                f_tmrbndSize = false;
+                f_totalSize = false;
+                f_tpxcdSize = false;
                 _read();
             }
             private void _read()
             {
-                _headerDataLength = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(5));
-                if (Convert.ToInt64(HeaderDataLength, 10) != 0) {
-                    _headerOverflow = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(3));
-                }
-                if (Convert.ToInt64(HeaderDataLength, 10) > 2) {
-                    _headerData = new List<byte>();
-                    for (var i = 0; i < (Convert.ToInt64(HeaderDataLength, 10) - 3); i++)
+                _blockedImgDataOffset = m_io.ReadU4be();
+                _bmrlnth = m_io.ReadU2be();
+                _tmrlnth = m_io.ReadU2be();
+                _tpxcdlnth = m_io.ReadU2be();
+                _tpxcd = m_io.ReadBytes(TpxcdSize);
+                if (HasBmr) {
+                    _bmrbnd = new List<uint>();
+                    for (var i = 0; i < BmrtmrCount; i++)
                     {
-                        _headerData.Add(m_io.ReadU1());
+                        _bmrbnd.Add(m_io.ReadU4be());
+                    }
+                }
+                if (HasTmr) {
+                    _tmrbnd = new List<uint>();
+                    for (var i = 0; i < BmrtmrCount; i++)
+                    {
+                        _tmrbnd.Add(m_io.ReadU4be());
                     }
                 }
             }
-            private string _headerDataLength;
-            private string _headerOverflow;
-            private List<byte> _headerData;
+            private bool f_bmrbndSize;
+            private int _bmrbndSize;
+            public int BmrbndSize
+            {
+                get
+                {
+                    if (f_bmrbndSize)
+                        return _bmrbndSize;
+                    f_bmrbndSize = true;
+                    _bmrbndSize = (int) ((HasBmr ? BmrtmrCount * 4 : 0));
+                    return _bmrbndSize;
+                }
+            }
+            private bool f_bmrtmrCount;
+            private int _bmrtmrCount;
+            public int BmrtmrCount
+            {
+                get
+                {
+                    if (f_bmrtmrCount)
+                        return _bmrtmrCount;
+                    f_bmrtmrCount = true;
+                    _bmrtmrCount = (int) ((Convert.ToInt64(M_Parent.ImageSubHeader.NumBlocksPerRow, 10) * Convert.ToInt64(M_Parent.ImageSubHeader.NumBlocksPerCol, 10)) * (M_Parent.ImageSubHeader.ImgMode != "S" ? 1 : (Convert.ToInt64(M_Parent.ImageSubHeader.NumBands, 10) != 0 ? Convert.ToInt64(M_Parent.ImageSubHeader.NumBands, 10) : Convert.ToInt64(M_Parent.ImageSubHeader.NumMultispectralBands, 10))));
+                    return _bmrtmrCount;
+                }
+            }
+            private bool f_hasBmr;
+            private bool _hasBmr;
+            public bool HasBmr
+            {
+                get
+                {
+                    if (f_hasBmr)
+                        return _hasBmr;
+                    f_hasBmr = true;
+                    _hasBmr = (bool) (Bmrlnth != 0);
+                    return _hasBmr;
+                }
+            }
+            private bool f_hasTmr;
+            private bool _hasTmr;
+            public bool HasTmr
+            {
+                get
+                {
+                    if (f_hasTmr)
+                        return _hasTmr;
+                    f_hasTmr = true;
+                    _hasTmr = (bool) (Tmrlnth != 0);
+                    return _hasTmr;
+                }
+            }
+            private bool f_tmrbndSize;
+            private int _tmrbndSize;
+            public int TmrbndSize
+            {
+                get
+                {
+                    if (f_tmrbndSize)
+                        return _tmrbndSize;
+                    f_tmrbndSize = true;
+                    _tmrbndSize = (int) ((HasTmr ? BmrtmrCount * 4 : 0));
+                    return _tmrbndSize;
+                }
+            }
+            private bool f_totalSize;
+            private int _totalSize;
+            public int TotalSize
+            {
+                get
+                {
+                    if (f_totalSize)
+                        return _totalSize;
+                    f_totalSize = true;
+                    _totalSize = (int) ((((((4 + 2) + 2) + 2) + TpxcdSize) + BmrbndSize) + TmrbndSize);
+                    return _totalSize;
+                }
+            }
+            private bool f_tpxcdSize;
+            private int _tpxcdSize;
+            public int TpxcdSize
+            {
+                get
+                {
+                    if (f_tpxcdSize)
+                        return _tpxcdSize;
+                    f_tpxcdSize = true;
+                    _tpxcdSize = (int) ((KaitaiStream.Mod(Tpxcdlnth, 8) == 0 ? Tpxcdlnth : Tpxcdlnth + (8 - KaitaiStream.Mod(Tpxcdlnth, 8))) / 8);
+                    return _tpxcdSize;
+                }
+            }
+            private uint _blockedImgDataOffset;
+            private ushort _bmrlnth;
+            private ushort _tmrlnth;
+            private ushort _tpxcdlnth;
+            private byte[] _tpxcd;
+            private List<uint> _bmrbnd;
+            private List<uint> _tmrbnd;
             private Nitf m_root;
-            private KaitaiStruct m_parent;
-            public string HeaderDataLength { get { return _headerDataLength; } }
-            public string HeaderOverflow { get { return _headerOverflow; } }
-            public List<byte> HeaderData { get { return _headerData; } }
+            private Nitf.ImageSegment m_parent;
+            public uint BlockedImgDataOffset { get { return _blockedImgDataOffset; } }
+
+            /// <summary>
+            /// Block Mask Record Length
+            /// </summary>
+            public ushort Bmrlnth { get { return _bmrlnth; } }
+
+            /// <summary>
+            /// Pad Pixel Mask Record Length
+            /// </summary>
+            public ushort Tmrlnth { get { return _tmrlnth; } }
+
+            /// <summary>
+            /// Pad Output Pixel Code Length
+            /// </summary>
+            public ushort Tpxcdlnth { get { return _tpxcdlnth; } }
+
+            /// <summary>
+            /// Pad Output Pixel Code
+            /// </summary>
+            public byte[] Tpxcd { get { return _tpxcd; } }
+
+            /// <summary>
+            /// Block n, Band m Offset
+            /// </summary>
+            public List<uint> Bmrbnd { get { return _bmrbnd; } }
+
+            /// <summary>
+            /// Pad Pixel n, Band m
+            /// </summary>
+            public List<uint> Tmrbnd { get { return _tmrbnd; } }
             public Nitf M_Root { get { return m_root; } }
-            public KaitaiStruct M_Parent { get { return m_parent; } }
+            public Nitf.ImageSegment M_Parent { get { return m_parent; } }
+        }
+        public partial class ImageSegment : KaitaiStruct
+        {
+            public ImageSegment(ushort p_idx, KaitaiStream p__io, Nitf p__parent = null, Nitf p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _idx = p_idx;
+                f_hasMask = false;
+                _read();
+            }
+            private void _read()
+            {
+                _imageSubHeader = new ImageSubHeader(m_io, this, m_root);
+                if (HasMask) {
+                    _imageDataMask = new ImageDataMask(m_io, this, m_root);
+                }
+                if (HasMask) {
+                    _imageDataField = m_io.ReadBytes(Convert.ToInt64(M_Parent.Header.Linfo[Idx].LengthImageSegment, 10) - ImageDataMask.TotalSize);
+                }
+            }
+            private bool f_hasMask;
+            private bool _hasMask;
+            public bool HasMask
+            {
+                get
+                {
+                    if (f_hasMask)
+                        return _hasMask;
+                    f_hasMask = true;
+                    _hasMask = (bool) (ImageSubHeader.ImgCompression.Substring(0, 2 - 0) == "MM");
+                    return _hasMask;
+                }
+            }
+            private ImageSubHeader _imageSubHeader;
+            private ImageDataMask _imageDataMask;
+            private byte[] _imageDataField;
+            private ushort _idx;
+            private Nitf m_root;
+            private Nitf m_parent;
+            public ImageSubHeader ImageSubHeader { get { return _imageSubHeader; } }
+            public ImageDataMask ImageDataMask { get { return _imageDataMask; } }
+            public byte[] ImageDataField { get { return _imageDataField; } }
+            public ushort Idx { get { return _idx; } }
+            public Nitf M_Root { get { return m_root; } }
+            public Nitf M_Parent { get { return m_parent; } }
+        }
+        public partial class ImageSubHeader : KaitaiStruct
+        {
+            public static ImageSubHeader FromFile(string fileName)
+            {
+                return new ImageSubHeader(new KaitaiStream(fileName));
+            }
+
+            public ImageSubHeader(KaitaiStream p__io, Nitf.ImageSegment p__parent = null, Nitf p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _filePartType = m_io.ReadBytes(2);
+                if (!((KaitaiStream.ByteArrayCompare(_filePartType, new byte[] { 73, 77 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 73, 77 }, _filePartType, m_io, "/types/image_sub_header/seq/0");
+                }
+                _imageId1 = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(10));
+                _imageDateTime = new DateTime(m_io, this, m_root);
+                _targetId = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(17));
+                _imageId2 = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(80));
+                _imageSecurityClassification = new Clasnfo(m_io, this, m_root);
+                _encryption = new Encrypt(m_io, this, m_root);
+                _imageSource = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(42));
+                _numSigRows = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(8));
+                _numSigCols = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(8));
+                _pixelValueType = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(3));
+                _imageRepresentation = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(8));
+                _imageCategory = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(8));
+                _actualBitsPerPixelPerBand = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(2));
+                _pixelJustification = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(1));
+                _imageCoordinateRep = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(1));
+                _imageGeoLoc = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(60));
+                _numImgComments = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(1));
+                _imgComments = new List<ImageComment>();
+                for (var i = 0; i < Convert.ToInt64(NumImgComments, 10); i++)
+                {
+                    _imgComments.Add(new ImageComment(m_io, this, m_root));
+                }
+                _imgCompression = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(2));
+                _compressionRateCode = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(4));
+                _numBands = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(1));
+                if (Convert.ToInt64(NumBands, 10) == 0) {
+                    _numMultispectralBands = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(5));
+                }
+                _bands = new List<BandInfo>();
+                for (var i = 0; i < (Convert.ToInt64(NumBands, 10) != 0 ? Convert.ToInt64(NumBands, 10) : Convert.ToInt64(NumMultispectralBands, 10)); i++)
+                {
+                    _bands.Add(new BandInfo(m_io, this, m_root));
+                }
+                _imgSyncCode = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(1));
+                _imgMode = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(1));
+                _numBlocksPerRow = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(4));
+                _numBlocksPerCol = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(4));
+                _numPixelsPerBlockHorz = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(4));
+                _numPixelsPerBlockVert = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(4));
+                _numPixelsPerBand = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(2));
+                _imgDisplayLevel = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(3));
+                _attachmentLevel = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(3));
+                _imgLocation = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(10));
+                _imgMagnification = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(4));
+                _userDefImgDataLen = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(5));
+                if (Convert.ToInt64(UserDefImgDataLen, 10) != 0) {
+                    _userDefOverflow = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(3));
+                }
+                if (Convert.ToInt64(UserDefImgDataLen, 10) > 2) {
+                    _userDefImgData = new List<byte>();
+                    for (var i = 0; i < Convert.ToInt64(UserDefImgDataLen, 10) - 3; i++)
+                    {
+                        _userDefImgData.Add(m_io.ReadU1());
+                    }
+                }
+                _imageExtendedSubHeader = new TreHeader(m_io, this, m_root);
+            }
+            private byte[] _filePartType;
+            private string _imageId1;
+            private DateTime _imageDateTime;
+            private string _targetId;
+            private string _imageId2;
+            private Clasnfo _imageSecurityClassification;
+            private Encrypt _encryption;
+            private string _imageSource;
+            private string _numSigRows;
+            private string _numSigCols;
+            private string _pixelValueType;
+            private string _imageRepresentation;
+            private string _imageCategory;
+            private string _actualBitsPerPixelPerBand;
+            private string _pixelJustification;
+            private string _imageCoordinateRep;
+            private string _imageGeoLoc;
+            private string _numImgComments;
+            private List<ImageComment> _imgComments;
+            private string _imgCompression;
+            private string _compressionRateCode;
+            private string _numBands;
+            private string _numMultispectralBands;
+            private List<BandInfo> _bands;
+            private string _imgSyncCode;
+            private string _imgMode;
+            private string _numBlocksPerRow;
+            private string _numBlocksPerCol;
+            private string _numPixelsPerBlockHorz;
+            private string _numPixelsPerBlockVert;
+            private string _numPixelsPerBand;
+            private string _imgDisplayLevel;
+            private string _attachmentLevel;
+            private string _imgLocation;
+            private string _imgMagnification;
+            private string _userDefImgDataLen;
+            private string _userDefOverflow;
+            private List<byte> _userDefImgData;
+            private TreHeader _imageExtendedSubHeader;
+            private Nitf m_root;
+            private Nitf.ImageSegment m_parent;
+            public byte[] FilePartType { get { return _filePartType; } }
+            public string ImageId1 { get { return _imageId1; } }
+            public DateTime ImageDateTime { get { return _imageDateTime; } }
+            public string TargetId { get { return _targetId; } }
+            public string ImageId2 { get { return _imageId2; } }
+            public Clasnfo ImageSecurityClassification { get { return _imageSecurityClassification; } }
+            public Encrypt Encryption { get { return _encryption; } }
+            public string ImageSource { get { return _imageSource; } }
+
+            /// <summary>
+            /// Total number of rows of significant pixels in the image; only rows indexed 0 to (NROWS - 1) of the image contain significant data.
+            /// </summary>
+            public string NumSigRows { get { return _numSigRows; } }
+            public string NumSigCols { get { return _numSigCols; } }
+            public string PixelValueType { get { return _pixelValueType; } }
+
+            /// <summary>
+            /// MONO, RGB, RGB/LUT, MULTI, NODISPLY, NVECTOR, POLAR, VPH, YCbCr601
+            /// </summary>
+            public string ImageRepresentation { get { return _imageRepresentation; } }
+
+            /// <summary>
+            /// VIS, SL, TI, FL, RD, EO, OP, HR, HS,CP, BP, SAR, SARIQ, IR, MAP, MS, FP, MRI, XRAY, CAT, VD, PAT, LEG, DTEM, MATR, LOCG, BARO, CURRENT, DEPTH, WIND
+            /// </summary>
+            public string ImageCategory { get { return _imageCategory; } }
+            public string ActualBitsPerPixelPerBand { get { return _actualBitsPerPixelPerBand; } }
+            public string PixelJustification { get { return _pixelJustification; } }
+            public string ImageCoordinateRep { get { return _imageCoordinateRep; } }
+            public string ImageGeoLoc { get { return _imageGeoLoc; } }
+            public string NumImgComments { get { return _numImgComments; } }
+            public List<ImageComment> ImgComments { get { return _imgComments; } }
+            public string ImgCompression { get { return _imgCompression; } }
+            public string CompressionRateCode { get { return _compressionRateCode; } }
+            public string NumBands { get { return _numBands; } }
+            public string NumMultispectralBands { get { return _numMultispectralBands; } }
+            public List<BandInfo> Bands { get { return _bands; } }
+
+            /// <summary>
+            /// Reserved for future use.
+            /// </summary>
+            public string ImgSyncCode { get { return _imgSyncCode; } }
+
+            /// <summary>
+            /// B = Band Interleaved by Block, P = Band Interleaved by Pixel, R = Band Interleaved by Row, S = Band Sequential
+            /// </summary>
+            public string ImgMode { get { return _imgMode; } }
+            public string NumBlocksPerRow { get { return _numBlocksPerRow; } }
+            public string NumBlocksPerCol { get { return _numBlocksPerCol; } }
+            public string NumPixelsPerBlockHorz { get { return _numPixelsPerBlockHorz; } }
+            public string NumPixelsPerBlockVert { get { return _numPixelsPerBlockVert; } }
+            public string NumPixelsPerBand { get { return _numPixelsPerBand; } }
+            public string ImgDisplayLevel { get { return _imgDisplayLevel; } }
+            public string AttachmentLevel { get { return _attachmentLevel; } }
+            public string ImgLocation { get { return _imgLocation; } }
+            public string ImgMagnification { get { return _imgMagnification; } }
+            public string UserDefImgDataLen { get { return _userDefImgDataLen; } }
+            public string UserDefOverflow { get { return _userDefOverflow; } }
+            public List<byte> UserDefImgData { get { return _userDefImgData; } }
+            public TreHeader ImageExtendedSubHeader { get { return _imageExtendedSubHeader; } }
+            public Nitf M_Root { get { return m_root; } }
+            public Nitf.ImageSegment M_Parent { get { return m_parent; } }
+        }
+        public partial class LengthDataInfo : KaitaiStruct
+        {
+            public static LengthDataInfo FromFile(string fileName)
+            {
+                return new LengthDataInfo(new KaitaiStream(fileName));
+            }
+
+            public LengthDataInfo(KaitaiStream p__io, Nitf.Header p__parent = null, Nitf p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _lengthDataExtensionSubheader = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(4));
+                _lengthDataExtensionSegment = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(9));
+            }
+            private string _lengthDataExtensionSubheader;
+            private string _lengthDataExtensionSegment;
+            private Nitf m_root;
+            private Nitf.Header m_parent;
+            public string LengthDataExtensionSubheader { get { return _lengthDataExtensionSubheader; } }
+            public string LengthDataExtensionSegment { get { return _lengthDataExtensionSegment; } }
+            public Nitf M_Root { get { return m_root; } }
+            public Nitf.Header M_Parent { get { return m_parent; } }
+        }
+        public partial class LengthGraphicInfo : KaitaiStruct
+        {
+            public static LengthGraphicInfo FromFile(string fileName)
+            {
+                return new LengthGraphicInfo(new KaitaiStream(fileName));
+            }
+
+            public LengthGraphicInfo(KaitaiStream p__io, Nitf.Header p__parent = null, Nitf p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _lengthGraphicSubheader = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(4));
+                _lengthGraphicSegment = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(6));
+            }
+            private string _lengthGraphicSubheader;
+            private string _lengthGraphicSegment;
+            private Nitf m_root;
+            private Nitf.Header m_parent;
+            public string LengthGraphicSubheader { get { return _lengthGraphicSubheader; } }
+            public string LengthGraphicSegment { get { return _lengthGraphicSegment; } }
+            public Nitf M_Root { get { return m_root; } }
+            public Nitf.Header M_Parent { get { return m_parent; } }
         }
         public partial class LengthImageInfo : KaitaiStruct
         {
@@ -1462,14 +1239,14 @@ namespace Kaitai
             public Nitf M_Root { get { return m_root; } }
             public Nitf.Header M_Parent { get { return m_parent; } }
         }
-        public partial class LengthDataInfo : KaitaiStruct
+        public partial class LengthReservedInfo : KaitaiStruct
         {
-            public static LengthDataInfo FromFile(string fileName)
+            public static LengthReservedInfo FromFile(string fileName)
             {
-                return new LengthDataInfo(new KaitaiStream(fileName));
+                return new LengthReservedInfo(new KaitaiStream(fileName));
             }
 
-            public LengthDataInfo(KaitaiStream p__io, Nitf.Header p__parent = null, Nitf p__root = null) : base(p__io)
+            public LengthReservedInfo(KaitaiStream p__io, Nitf.Header p__parent = null, Nitf p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -1477,15 +1254,15 @@ namespace Kaitai
             }
             private void _read()
             {
-                _lengthDataExtensionSubheader = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(4));
-                _lengthDataExtensionSegment = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(9));
+                _lengthReservedExtensionSubheader = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(4));
+                _lengthReservedExtensionSegment = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(7));
             }
-            private string _lengthDataExtensionSubheader;
-            private string _lengthDataExtensionSegment;
+            private string _lengthReservedExtensionSubheader;
+            private string _lengthReservedExtensionSegment;
             private Nitf m_root;
             private Nitf.Header m_parent;
-            public string LengthDataExtensionSubheader { get { return _lengthDataExtensionSubheader; } }
-            public string LengthDataExtensionSegment { get { return _lengthDataExtensionSegment; } }
+            public string LengthReservedExtensionSubheader { get { return _lengthReservedExtensionSubheader; } }
+            public string LengthReservedExtensionSegment { get { return _lengthReservedExtensionSegment; } }
             public Nitf M_Root { get { return m_root; } }
             public Nitf.Header M_Parent { get { return m_parent; } }
         }
@@ -1515,6 +1292,229 @@ namespace Kaitai
             public string LengthTextSegment { get { return _lengthTextSegment; } }
             public Nitf M_Root { get { return m_root; } }
             public Nitf.Header M_Parent { get { return m_parent; } }
+        }
+        public partial class ReservedExtensionSegment : KaitaiStruct
+        {
+            public ReservedExtensionSegment(ushort p_idx, KaitaiStream p__io, Nitf p__parent = null, Nitf p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _idx = p_idx;
+                _read();
+            }
+            private void _read()
+            {
+                __raw_reservedSubHeader = m_io.ReadBytes(Convert.ToInt64(M_Parent.Header.Lrnfo[Idx].LengthReservedExtensionSubheader, 10));
+                var io___raw_reservedSubHeader = new KaitaiStream(__raw_reservedSubHeader);
+                _reservedSubHeader = new ReservedSubHeader(io___raw_reservedSubHeader, this, m_root);
+                _reservedDataField = m_io.ReadBytes(Convert.ToInt64(M_Parent.Header.Lrnfo[Idx].LengthReservedExtensionSegment, 10));
+            }
+            private ReservedSubHeader _reservedSubHeader;
+            private byte[] _reservedDataField;
+            private ushort _idx;
+            private Nitf m_root;
+            private Nitf m_parent;
+            private byte[] __raw_reservedSubHeader;
+            public ReservedSubHeader ReservedSubHeader { get { return _reservedSubHeader; } }
+            public byte[] ReservedDataField { get { return _reservedDataField; } }
+            public ushort Idx { get { return _idx; } }
+            public Nitf M_Root { get { return m_root; } }
+            public Nitf M_Parent { get { return m_parent; } }
+            public byte[] M_RawReservedSubHeader { get { return __raw_reservedSubHeader; } }
+        }
+        public partial class ReservedSubHeader : KaitaiStruct
+        {
+            public static ReservedSubHeader FromFile(string fileName)
+            {
+                return new ReservedSubHeader(new KaitaiStream(fileName));
+            }
+
+            public ReservedSubHeader(KaitaiStream p__io, Nitf.ReservedExtensionSegment p__parent = null, Nitf p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _filePartTypeRe = m_io.ReadBytes(2);
+                if (!((KaitaiStream.ByteArrayCompare(_filePartTypeRe, new byte[] { 82, 69 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 82, 69 }, _filePartTypeRe, m_io, "/types/reserved_sub_header/seq/0");
+                }
+                _resTypeId = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(25));
+                _resVersion = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(2));
+                _reclasnfo = new Clasnfo(m_io, this, m_root);
+                _resUserDefinedSubheaderLength = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(4));
+                _resUserDefinedSubheaderFields = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(Convert.ToInt64(ResUserDefinedSubheaderLength, 10)));
+                _resUserDefinedData = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytesFull());
+            }
+            private byte[] _filePartTypeRe;
+            private string _resTypeId;
+            private string _resVersion;
+            private Clasnfo _reclasnfo;
+            private string _resUserDefinedSubheaderLength;
+            private string _resUserDefinedSubheaderFields;
+            private string _resUserDefinedData;
+            private Nitf m_root;
+            private Nitf.ReservedExtensionSegment m_parent;
+            public byte[] FilePartTypeRe { get { return _filePartTypeRe; } }
+            public string ResTypeId { get { return _resTypeId; } }
+            public string ResVersion { get { return _resVersion; } }
+            public Clasnfo Reclasnfo { get { return _reclasnfo; } }
+            public string ResUserDefinedSubheaderLength { get { return _resUserDefinedSubheaderLength; } }
+            public string ResUserDefinedSubheaderFields { get { return _resUserDefinedSubheaderFields; } }
+            public string ResUserDefinedData { get { return _resUserDefinedData; } }
+            public Nitf M_Root { get { return m_root; } }
+            public Nitf.ReservedExtensionSegment M_Parent { get { return m_parent; } }
+        }
+        public partial class TextSegment : KaitaiStruct
+        {
+            public TextSegment(ushort p_idx, KaitaiStream p__io, Nitf p__parent = null, Nitf p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _idx = p_idx;
+                _read();
+            }
+            private void _read()
+            {
+                _textSubHeader = m_io.ReadBytes(1);
+                _textDataField = m_io.ReadBytes(Convert.ToInt64(M_Parent.Header.Ltnfo[Idx].LengthTextSegment, 10));
+            }
+            private byte[] _textSubHeader;
+            private byte[] _textDataField;
+            private ushort _idx;
+            private Nitf m_root;
+            private Nitf m_parent;
+            public byte[] TextSubHeader { get { return _textSubHeader; } }
+            public byte[] TextDataField { get { return _textDataField; } }
+            public ushort Idx { get { return _idx; } }
+            public Nitf M_Root { get { return m_root; } }
+            public Nitf M_Parent { get { return m_parent; } }
+        }
+        public partial class TextSubHeader : KaitaiStruct
+        {
+            public static TextSubHeader FromFile(string fileName)
+            {
+                return new TextSubHeader(new KaitaiStream(fileName));
+            }
+
+            public TextSubHeader(KaitaiStream p__io, KaitaiStruct p__parent = null, Nitf p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _textDateTime = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(14));
+                _textTitle = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(80));
+                _textSecurityClass = new Clasnfo(m_io, this, m_root);
+                _encryp = new Encrypt(m_io, this, m_root);
+                _textFormat = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(3));
+                _textExtendedSubHeader = new TreHeader(m_io, this, m_root);
+            }
+            private string _textDateTime;
+            private string _textTitle;
+            private Clasnfo _textSecurityClass;
+            private Encrypt _encryp;
+            private string _textFormat;
+            private TreHeader _textExtendedSubHeader;
+            private Nitf m_root;
+            private KaitaiStruct m_parent;
+            public string TextDateTime { get { return _textDateTime; } }
+            public string TextTitle { get { return _textTitle; } }
+            public Clasnfo TextSecurityClass { get { return _textSecurityClass; } }
+            public Encrypt Encryp { get { return _encryp; } }
+
+            /// <summary>
+            /// MTF (USMTF see MIL-STD-6040), STA (indicates BCS), UT1 (indicates ECS), U8S
+            /// </summary>
+            public string TextFormat { get { return _textFormat; } }
+            public TreHeader TextExtendedSubHeader { get { return _textExtendedSubHeader; } }
+            public Nitf M_Root { get { return m_root; } }
+            public KaitaiStruct M_Parent { get { return m_parent; } }
+        }
+        public partial class Tre : KaitaiStruct
+        {
+            public static Tre FromFile(string fileName)
+            {
+                return new Tre(new KaitaiStream(fileName));
+            }
+
+            public Tre(KaitaiStream p__io, KaitaiStruct p__parent = null, Nitf p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _extensionTypeId = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(6));
+                _edataLength = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(5));
+                _edata = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(Convert.ToInt64(EdataLength, 10)));
+            }
+            private string _extensionTypeId;
+            private string _edataLength;
+            private string _edata;
+            private Nitf m_root;
+            private KaitaiStruct m_parent;
+
+            /// <summary>
+            /// RETAG or CETAG
+            /// </summary>
+            public string ExtensionTypeId { get { return _extensionTypeId; } }
+
+            /// <summary>
+            /// REL or CEL
+            /// </summary>
+            public string EdataLength { get { return _edataLength; } }
+
+            /// <summary>
+            /// REDATA or CEDATA
+            /// </summary>
+            public string Edata { get { return _edata; } }
+            public Nitf M_Root { get { return m_root; } }
+            public KaitaiStruct M_Parent { get { return m_parent; } }
+        }
+        public partial class TreHeader : KaitaiStruct
+        {
+            public static TreHeader FromFile(string fileName)
+            {
+                return new TreHeader(new KaitaiStream(fileName));
+            }
+
+            public TreHeader(KaitaiStream p__io, KaitaiStruct p__parent = null, Nitf p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _headerDataLength = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(5));
+                if (Convert.ToInt64(HeaderDataLength, 10) != 0) {
+                    _headerOverflow = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(3));
+                }
+                if (Convert.ToInt64(HeaderDataLength, 10) > 2) {
+                    _headerData = new List<byte>();
+                    for (var i = 0; i < Convert.ToInt64(HeaderDataLength, 10) - 3; i++)
+                    {
+                        _headerData.Add(m_io.ReadU1());
+                    }
+                }
+            }
+            private string _headerDataLength;
+            private string _headerOverflow;
+            private List<byte> _headerData;
+            private Nitf m_root;
+            private KaitaiStruct m_parent;
+            public string HeaderDataLength { get { return _headerDataLength; } }
+            public string HeaderOverflow { get { return _headerOverflow; } }
+            public List<byte> HeaderData { get { return _headerData; } }
+            public Nitf M_Root { get { return m_root; } }
+            public KaitaiStruct M_Parent { get { return m_parent; } }
         }
         private Header _header;
         private List<ImageSegment> _imageSegments;

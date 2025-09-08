@@ -90,9 +90,9 @@ namespace Kaitai
                     private void _read()
                     {
                         _signature = m_io.ReadBytes(8);
-                        if (!((KaitaiStream.ByteArrayCompare(Signature, new byte[] { 76, 65, 66, 69, 76, 79, 78, 69 }) == 0)))
+                        if (!((KaitaiStream.ByteArrayCompare(_signature, new byte[] { 76, 65, 66, 69, 76, 79, 78, 69 }) == 0)))
                         {
-                            throw new ValidationNotEqualError(new byte[] { 76, 65, 66, 69, 76, 79, 78, 69 }, Signature, M_Io, "/types/physical_volume/types/label/types/label_header/seq/0");
+                            throw new ValidationNotEqualError(new byte[] { 76, 65, 66, 69, 76, 79, 78, 69 }, _signature, m_io, "/types/physical_volume/types/label/types/label_header/seq/0");
                         }
                         _sectorNumber = m_io.ReadU8le();
                         _checksum = m_io.ReadU4le();
@@ -115,9 +115,9 @@ namespace Kaitai
                         {
                             _dataOffset = m_io.ReadU4le();
                             _typeIndicator = m_io.ReadBytes(8);
-                            if (!((KaitaiStream.ByteArrayCompare(TypeIndicator, new byte[] { 76, 86, 77, 50, 32, 48, 48, 49 }) == 0)))
+                            if (!((KaitaiStream.ByteArrayCompare(_typeIndicator, new byte[] { 76, 86, 77, 50, 32, 48, 48, 49 }) == 0)))
                             {
-                                throw new ValidationNotEqualError(new byte[] { 76, 86, 77, 50, 32, 48, 48, 49 }, TypeIndicator, M_Io, "/types/physical_volume/types/label/types/label_header/types/label_header_/seq/1");
+                                throw new ValidationNotEqualError(new byte[] { 76, 86, 77, 50, 32, 48, 48, 49 }, _typeIndicator, m_io, "/types/physical_volume/types/label/types/label_header/types/label_header_/seq/1");
                             }
                         }
                         private uint _dataOffset;
@@ -169,7 +169,7 @@ namespace Kaitai
                     }
                     private void _read()
                     {
-                        _id = System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytes(32));
+                        _id = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(32));
                         _size = m_io.ReadU8le();
                         _dataAreaDescriptors = new List<DataAreaDescriptor>();
                         {
@@ -219,12 +219,12 @@ namespace Kaitai
                             {
                                 if (f_data)
                                     return _data;
+                                f_data = true;
                                 if (Size != 0) {
                                     long _pos = m_io.Pos;
                                     m_io.Seek(Offset);
-                                    _data = System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytes(Size));
+                                    _data = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(Size));
                                     m_io.Seek(_pos);
-                                    f_data = true;
                                 }
                                 return _data;
                             }
@@ -245,64 +245,6 @@ namespace Kaitai
                         public ulong Size { get { return _size; } }
                         public Lvm2 M_Root { get { return m_root; } }
                         public Lvm2.PhysicalVolume.Label.VolumeHeader M_Parent { get { return m_parent; } }
-                    }
-                    public partial class MetadataAreaDescriptor : KaitaiStruct
-                    {
-                        public static MetadataAreaDescriptor FromFile(string fileName)
-                        {
-                            return new MetadataAreaDescriptor(new KaitaiStream(fileName));
-                        }
-
-                        public MetadataAreaDescriptor(KaitaiStream p__io, Lvm2.PhysicalVolume.Label.VolumeHeader p__parent = null, Lvm2 p__root = null) : base(p__io)
-                        {
-                            m_parent = p__parent;
-                            m_root = p__root;
-                            f_data = false;
-                            _read();
-                        }
-                        private void _read()
-                        {
-                            _offset = m_io.ReadU8le();
-                            _size = m_io.ReadU8le();
-                        }
-                        private bool f_data;
-                        private MetadataArea _data;
-                        public MetadataArea Data
-                        {
-                            get
-                            {
-                                if (f_data)
-                                    return _data;
-                                if (Size != 0) {
-                                    long _pos = m_io.Pos;
-                                    m_io.Seek(Offset);
-                                    __raw_data = m_io.ReadBytes(Size);
-                                    var io___raw_data = new KaitaiStream(__raw_data);
-                                    _data = new MetadataArea(io___raw_data, this, m_root);
-                                    m_io.Seek(_pos);
-                                    f_data = true;
-                                }
-                                return _data;
-                            }
-                        }
-                        private ulong _offset;
-                        private ulong _size;
-                        private Lvm2 m_root;
-                        private Lvm2.PhysicalVolume.Label.VolumeHeader m_parent;
-                        private byte[] __raw_data;
-
-                        /// <summary>
-                        /// The offset, in bytes, relative from the start of the physical volume
-                        /// </summary>
-                        public ulong Offset { get { return _offset; } }
-
-                        /// <summary>
-                        /// Value in bytes
-                        /// </summary>
-                        public ulong Size { get { return _size; } }
-                        public Lvm2 M_Root { get { return m_root; } }
-                        public Lvm2.PhysicalVolume.Label.VolumeHeader M_Parent { get { return m_parent; } }
-                        public byte[] M_RawData { get { return __raw_data; } }
                     }
 
                     /// <summary>
@@ -343,9 +285,9 @@ namespace Kaitai
                             {
                                 _checksum = new MetadataAreaHeader(m_io, this, m_root);
                                 _signature = m_io.ReadBytes(16);
-                                if (!((KaitaiStream.ByteArrayCompare(Signature, new byte[] { 32, 76, 86, 77, 50, 32, 120, 91, 53, 65, 37, 114, 48, 78, 42, 62 }) == 0)))
+                                if (!((KaitaiStream.ByteArrayCompare(_signature, new byte[] { 32, 76, 86, 77, 50, 32, 120, 91, 53, 65, 37, 114, 48, 78, 42, 62 }) == 0)))
                                 {
-                                    throw new ValidationNotEqualError(new byte[] { 32, 76, 86, 77, 50, 32, 120, 91, 53, 65, 37, 114, 48, 78, 42, 62 }, Signature, M_Io, "/types/physical_volume/types/label/types/volume_header/types/metadata_area/types/metadata_area_header/seq/1");
+                                    throw new ValidationNotEqualError(new byte[] { 32, 76, 86, 77, 50, 32, 120, 91, 53, 65, 37, 114, 48, 78, 42, 62 }, _signature, m_io, "/types/physical_volume/types/label/types/volume_header/types/metadata_area/types/metadata_area_header/seq/1");
                                 }
                                 _version = m_io.ReadU4le();
                                 _metadataAreaOffset = m_io.ReadU8le();
@@ -423,11 +365,11 @@ namespace Kaitai
                                 {
                                     if (f_metadata)
                                         return _metadata;
+                                    f_metadata = true;
                                     long _pos = m_io.Pos;
                                     m_io.Seek(MetadataAreaOffset);
                                     _metadata = m_io.ReadBytes(MetadataAreaSize);
                                     m_io.Seek(_pos);
-                                    f_metadata = true;
                                     return _metadata;
                                 }
                             }
@@ -466,6 +408,64 @@ namespace Kaitai
                         public MetadataAreaHeader Header { get { return _header; } }
                         public Lvm2 M_Root { get { return m_root; } }
                         public Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataAreaDescriptor M_Parent { get { return m_parent; } }
+                    }
+                    public partial class MetadataAreaDescriptor : KaitaiStruct
+                    {
+                        public static MetadataAreaDescriptor FromFile(string fileName)
+                        {
+                            return new MetadataAreaDescriptor(new KaitaiStream(fileName));
+                        }
+
+                        public MetadataAreaDescriptor(KaitaiStream p__io, Lvm2.PhysicalVolume.Label.VolumeHeader p__parent = null, Lvm2 p__root = null) : base(p__io)
+                        {
+                            m_parent = p__parent;
+                            m_root = p__root;
+                            f_data = false;
+                            _read();
+                        }
+                        private void _read()
+                        {
+                            _offset = m_io.ReadU8le();
+                            _size = m_io.ReadU8le();
+                        }
+                        private bool f_data;
+                        private MetadataArea _data;
+                        public MetadataArea Data
+                        {
+                            get
+                            {
+                                if (f_data)
+                                    return _data;
+                                f_data = true;
+                                if (Size != 0) {
+                                    long _pos = m_io.Pos;
+                                    m_io.Seek(Offset);
+                                    __raw_data = m_io.ReadBytes(Size);
+                                    var io___raw_data = new KaitaiStream(__raw_data);
+                                    _data = new MetadataArea(io___raw_data, this, m_root);
+                                    m_io.Seek(_pos);
+                                }
+                                return _data;
+                            }
+                        }
+                        private ulong _offset;
+                        private ulong _size;
+                        private Lvm2 m_root;
+                        private Lvm2.PhysicalVolume.Label.VolumeHeader m_parent;
+                        private byte[] __raw_data;
+
+                        /// <summary>
+                        /// The offset, in bytes, relative from the start of the physical volume
+                        /// </summary>
+                        public ulong Offset { get { return _offset; } }
+
+                        /// <summary>
+                        /// Value in bytes
+                        /// </summary>
+                        public ulong Size { get { return _size; } }
+                        public Lvm2 M_Root { get { return m_root; } }
+                        public Lvm2.PhysicalVolume.Label.VolumeHeader M_Parent { get { return m_parent; } }
+                        public byte[] M_RawData { get { return __raw_data; } }
                     }
                     private string _id;
                     private ulong _size;
@@ -518,8 +518,8 @@ namespace Kaitai
             {
                 if (f_sectorSize)
                     return _sectorSize;
-                _sectorSize = (int) (512);
                 f_sectorSize = true;
+                _sectorSize = (int) (512);
                 return _sectorSize;
             }
         }

@@ -13,19 +13,23 @@ type SomeIpSdEntries struct {
 	Entries []*SomeIpSdEntries_SdEntry
 	_io *kaitai.Stream
 	_root *SomeIpSdEntries
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewSomeIpSdEntries() *SomeIpSdEntries {
 	return &SomeIpSdEntries{
 	}
 }
 
-func (this *SomeIpSdEntries) Read(io *kaitai.Stream, parent interface{}, root *SomeIpSdEntries) (err error) {
+func (this SomeIpSdEntries) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *SomeIpSdEntries) Read(io *kaitai.Stream, parent kaitai.Struct, root *SomeIpSdEntries) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	for i := 1;; i++ {
+	for i := 0;; i++ {
 		tmp1, err := this._io.EOF()
 		if err != nil {
 			return err
@@ -50,9 +54,14 @@ const (
 	SomeIpSdEntries_SdEntry_EntryTypes__Subscribe SomeIpSdEntries_SdEntry_EntryTypes = 6
 	SomeIpSdEntries_SdEntry_EntryTypes__SubscribeAck SomeIpSdEntries_SdEntry_EntryTypes = 7
 )
+var values_SomeIpSdEntries_SdEntry_EntryTypes = map[SomeIpSdEntries_SdEntry_EntryTypes]struct{}{0: {}, 1: {}, 6: {}, 7: {}}
+func (v SomeIpSdEntries_SdEntry_EntryTypes) isDefined() bool {
+	_, ok := values_SomeIpSdEntries_SdEntry_EntryTypes[v]
+	return ok
+}
 type SomeIpSdEntries_SdEntry struct {
 	Header *SomeIpSdEntries_SdEntry_SdEntryHeader
-	Content interface{}
+	Content kaitai.Struct
 	_io *kaitai.Stream
 	_root *SomeIpSdEntries
 	_parent *SomeIpSdEntries
@@ -60,6 +69,10 @@ type SomeIpSdEntries_SdEntry struct {
 func NewSomeIpSdEntries_SdEntry() *SomeIpSdEntries_SdEntry {
 	return &SomeIpSdEntries_SdEntry{
 	}
+}
+
+func (this SomeIpSdEntries_SdEntry) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *SomeIpSdEntries_SdEntry) Read(io *kaitai.Stream, parent *SomeIpSdEntries, root *SomeIpSdEntries) (err error) {
@@ -124,6 +137,10 @@ func NewSomeIpSdEntries_SdEntry_SdEntryHeader() *SomeIpSdEntries_SdEntry_SdEntry
 	}
 }
 
+func (this SomeIpSdEntries_SdEntry_SdEntryHeader) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *SomeIpSdEntries_SdEntry_SdEntryHeader) Read(io *kaitai.Stream, parent *SomeIpSdEntries_SdEntry, root *SomeIpSdEntries) (err error) {
 	this._io = io
 	this._parent = parent
@@ -177,29 +194,6 @@ func (this *SomeIpSdEntries_SdEntry_SdEntryHeader) Read(io *kaitai.Stream, paren
 	this.Ttl = tmp16
 	return err
 }
-type SomeIpSdEntries_SdEntry_SdServiceEntry struct {
-	MinorVersion uint32
-	_io *kaitai.Stream
-	_root *SomeIpSdEntries
-	_parent *SomeIpSdEntries_SdEntry
-}
-func NewSomeIpSdEntries_SdEntry_SdServiceEntry() *SomeIpSdEntries_SdEntry_SdServiceEntry {
-	return &SomeIpSdEntries_SdEntry_SdServiceEntry{
-	}
-}
-
-func (this *SomeIpSdEntries_SdEntry_SdServiceEntry) Read(io *kaitai.Stream, parent *SomeIpSdEntries_SdEntry, root *SomeIpSdEntries) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp17, err := this._io.ReadU4be()
-	if err != nil {
-		return err
-	}
-	this.MinorVersion = uint32(tmp17)
-	return err
-}
 type SomeIpSdEntries_SdEntry_SdEventgroupEntry struct {
 	Reserved uint8
 	InitialDataRequested bool
@@ -215,36 +209,67 @@ func NewSomeIpSdEntries_SdEntry_SdEventgroupEntry() *SomeIpSdEntries_SdEntry_SdE
 	}
 }
 
+func (this SomeIpSdEntries_SdEntry_SdEventgroupEntry) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *SomeIpSdEntries_SdEntry_SdEventgroupEntry) Read(io *kaitai.Stream, parent *SomeIpSdEntries_SdEntry, root *SomeIpSdEntries) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp18, err := this._io.ReadU1()
+	tmp17, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Reserved = tmp18
-	tmp19, err := this._io.ReadBitsIntBe(1)
+	this.Reserved = tmp17
+	tmp18, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.InitialDataRequested = tmp19 != 0
-	tmp20, err := this._io.ReadBitsIntBe(3)
+	this.InitialDataRequested = tmp18 != 0
+	tmp19, err := this._io.ReadBitsIntBe(3)
 	if err != nil {
 		return err
 	}
-	this.Reserved2 = tmp20
-	tmp21, err := this._io.ReadBitsIntBe(4)
+	this.Reserved2 = tmp19
+	tmp20, err := this._io.ReadBitsIntBe(4)
 	if err != nil {
 		return err
 	}
-	this.Counter = tmp21
+	this.Counter = tmp20
 	this._io.AlignToByte()
-	tmp22, err := this._io.ReadU2be()
+	tmp21, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.EventGroupId = uint16(tmp22)
+	this.EventGroupId = uint16(tmp21)
+	return err
+}
+type SomeIpSdEntries_SdEntry_SdServiceEntry struct {
+	MinorVersion uint32
+	_io *kaitai.Stream
+	_root *SomeIpSdEntries
+	_parent *SomeIpSdEntries_SdEntry
+}
+func NewSomeIpSdEntries_SdEntry_SdServiceEntry() *SomeIpSdEntries_SdEntry_SdServiceEntry {
+	return &SomeIpSdEntries_SdEntry_SdServiceEntry{
+	}
+}
+
+func (this SomeIpSdEntries_SdEntry_SdServiceEntry) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *SomeIpSdEntries_SdEntry_SdServiceEntry) Read(io *kaitai.Stream, parent *SomeIpSdEntries_SdEntry, root *SomeIpSdEntries) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp22, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.MinorVersion = uint32(tmp22)
 	return err
 }

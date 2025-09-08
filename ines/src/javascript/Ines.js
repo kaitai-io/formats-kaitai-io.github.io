@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.Ines = factory(root.KaitaiStream);
+    factory(root.Ines || (root.Ines = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Ines_, KaitaiStream) {
 /**
  * @see {@link https://www.nesdev.org/wiki/INES|Source}
  */
@@ -28,8 +28,8 @@ var Ines = (function() {
     if (this.header.f6.trainer) {
       this.trainer = this._io.readBytes(512);
     }
-    this.prgRom = this._io.readBytes((this.header.lenPrgRom * 16384));
-    this.chrRom = this._io.readBytes((this.header.lenChrRom * 8192));
+    this.prgRom = this._io.readBytes(this.header.lenPrgRom * 16384);
+    this.chrRom = this._io.readBytes(this.header.lenChrRom * 8192);
     if (this.header.f7.playchoice10) {
       this.playchoice10 = new Playchoice10(this._io, this, this._root);
     }
@@ -42,14 +42,14 @@ var Ines = (function() {
     function Header(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     Header.prototype._read = function() {
       this.magic = this._io.readBytes(4);
-      if (!((KaitaiStream.byteArrayCompare(this.magic, [78, 69, 83, 26]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([78, 69, 83, 26], this.magic, this._io, "/types/header/seq/0");
+      if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([78, 69, 83, 26])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([78, 69, 83, 26]), this.magic, this._io, "/types/header/seq/0");
       }
       this.lenPrgRom = this._io.readU1();
       this.lenChrRom = this._io.readU1();
@@ -67,10 +67,57 @@ var Ines = (function() {
       var _io__raw_f10 = new KaitaiStream(this._raw_f10);
       this.f10 = new F10(_io__raw_f10, this, this._root);
       this.reserved = this._io.readBytes(5);
-      if (!((KaitaiStream.byteArrayCompare(this.reserved, [0, 0, 0, 0, 0]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([0, 0, 0, 0, 0], this.reserved, this._io, "/types/header/seq/8");
+      if (!((KaitaiStream.byteArrayCompare(this.reserved, new Uint8Array([0, 0, 0, 0, 0])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([0, 0, 0, 0, 0]), this.reserved, this._io, "/types/header/seq/8");
       }
     }
+
+    /**
+     * @see {@link https://www.nesdev.org/wiki/INES#Flags_10|Source}
+     */
+
+    var F10 = Header.F10 = (function() {
+      F10.TvSystem = Object.freeze({
+        NTSC: 0,
+        DUAL1: 1,
+        PAL: 2,
+        DUAL2: 3,
+
+        0: "NTSC",
+        1: "DUAL1",
+        2: "PAL",
+        3: "DUAL2",
+      });
+
+      function F10(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+
+        this._read();
+      }
+      F10.prototype._read = function() {
+        this.reserved1 = this._io.readBitsIntBe(2);
+        this.busConflict = this._io.readBitsIntBe(1) != 0;
+        this.prgRam = this._io.readBitsIntBe(1) != 0;
+        this.reserved2 = this._io.readBitsIntBe(2);
+        this.tvSystem = this._io.readBitsIntBe(2);
+      }
+
+      /**
+       * If 0, no bus conflicts. If 1, bus conflicts.
+       */
+
+      /**
+       * If 0, PRG ram is present. If 1, not present.
+       */
+
+      /**
+       * if 0, NTSC. If 2, PAL. If 1 or 3, dual compatible.
+       */
+
+      return F10;
+    })();
 
     /**
      * @see {@link https://www.nesdev.org/wiki/INES#Flags_6|Source}
@@ -88,7 +135,7 @@ var Ines = (function() {
       function F6(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -131,7 +178,7 @@ var Ines = (function() {
       function F7(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -177,7 +224,7 @@ var Ines = (function() {
       function F9(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -194,60 +241,13 @@ var Ines = (function() {
     })();
 
     /**
-     * @see {@link https://www.nesdev.org/wiki/INES#Flags_10|Source}
-     */
-
-    var F10 = Header.F10 = (function() {
-      F10.TvSystem = Object.freeze({
-        NTSC: 0,
-        DUAL1: 1,
-        PAL: 2,
-        DUAL2: 3,
-
-        0: "NTSC",
-        1: "DUAL1",
-        2: "PAL",
-        3: "DUAL2",
-      });
-
-      function F10(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      F10.prototype._read = function() {
-        this.reserved1 = this._io.readBitsIntBe(2);
-        this.busConflict = this._io.readBitsIntBe(1) != 0;
-        this.prgRam = this._io.readBitsIntBe(1) != 0;
-        this.reserved2 = this._io.readBitsIntBe(2);
-        this.tvSystem = this._io.readBitsIntBe(2);
-      }
-
-      /**
-       * If 0, no bus conflicts. If 1, bus conflicts.
-       */
-
-      /**
-       * If 0, PRG ram is present. If 1, not present.
-       */
-
-      /**
-       * if 0, NTSC. If 2, PAL. If 1 or 3, dual compatible.
-       */
-
-      return F10;
-    })();
-
-    /**
      * @see {@link https://www.nesdev.org/wiki/Mapper|Source}
      */
     Object.defineProperty(Header.prototype, 'mapper', {
       get: function() {
         if (this._m_mapper !== undefined)
           return this._m_mapper;
-        this._m_mapper = (this.f6.lowerMapper | (this.f7.upperMapper << 4));
+        this._m_mapper = this.f6.lowerMapper | this.f7.upperMapper << 4;
         return this._m_mapper;
       }
     });
@@ -279,7 +279,7 @@ var Ines = (function() {
     function Playchoice10(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -292,7 +292,7 @@ var Ines = (function() {
       function Prom(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -309,5 +309,5 @@ var Ines = (function() {
 
   return Ines;
 })();
-return Ines;
-}));
+Ines_.Ines = Ines;
+});

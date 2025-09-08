@@ -18,6 +18,11 @@ local utils = require("utils")
 -- See also: Source (https://github.com/gfcwfzkm/PIF-Image-Format/blob/4ec261b/C%20Library/pifdec.c#L300)
 Pif = class.class(KaitaiStruct)
 
+Pif.CompressionType = enum.Enum {
+  none = 0,
+  rle = 32222,
+}
+
 Pif.ImageType = enum.Enum {
   rgb332 = 7763,
   rgb888 = 17212,
@@ -27,11 +32,6 @@ Pif.ImageType = enum.Enum {
   black_white = 32170,
   rgb16c = 47253,
   rgb565 = 58821,
-}
-
-Pif.CompressionType = enum.Enum {
-  none = 0,
-  rle = 32222,
 }
 
 function Pif:_init(io, parent, root)
@@ -65,41 +65,29 @@ function Pif.property.image_data:get()
 end
 
 
-Pif.PifHeader = class.class(KaitaiStruct)
+Pif.ColorTableData = class.class(KaitaiStruct)
 
-function Pif.PifHeader:_init(io, parent, root)
+function Pif.ColorTableData:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function Pif.PifHeader:_read()
-  self.magic = self._io:read_bytes(4)
-  if not(self.magic == "\080\073\070\000") then
-    error("not equal, expected " ..  "\080\073\070\000" .. ", but got " .. self.magic)
+function Pif.ColorTableData:_read()
+  self.entries = {}
+  local i = 0
+  while not self._io:is_eof() do
+    local _on = self._root.info_header.image_type
+    if _on == Pif.ImageType.indexed_rgb332 then
+      self.entries[i + 1] = self._io:read_bits_int_le(8)
+    elseif _on == Pif.ImageType.indexed_rgb565 then
+      self.entries[i + 1] = self._io:read_bits_int_le(16)
+    elseif _on == Pif.ImageType.indexed_rgb888 then
+      self.entries[i + 1] = self._io:read_bits_int_le(24)
+    end
+    i = i + 1
   end
-  self.len_file = self._io:read_u4le()
-  if not(self.len_file >= self.ofs_image_data_min) then
-    error("ValidationLessThanError")
-  end
-  self.ofs_image_data = self._io:read_u4le()
-  if not(self.ofs_image_data >= self.ofs_image_data_min) then
-    error("ValidationLessThanError")
-  end
-  if not(self.ofs_image_data <= self.len_file) then
-    error("ValidationGreaterThanError")
-  end
-end
-
-Pif.PifHeader.property.ofs_image_data_min = {}
-function Pif.PifHeader.property.ofs_image_data_min:get()
-  if self._m_ofs_image_data_min ~= nil then
-    return self._m_ofs_image_data_min
-  end
-
-  self._m_ofs_image_data_min = (12 + 16)
-  return self._m_ofs_image_data_min
 end
 
 
@@ -108,7 +96,7 @@ Pif.InformationHeader = class.class(KaitaiStruct)
 function Pif.InformationHeader:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -125,11 +113,11 @@ function Pif.InformationHeader:_read()
   self.width = self._io:read_u2le()
   self.height = self._io:read_u2le()
   self.len_image_data = self._io:read_u4le()
-  if not(self.len_image_data <= (self._root.file_header.len_file - self._root.file_header.ofs_image_data)) then
+  if not(self.len_image_data <= self._root.file_header.len_file - self._root.file_header.ofs_image_data) then
     error("ValidationGreaterThanError")
   end
   self.len_color_table = self._io:read_u2le()
-  if not(self.len_color_table >= utils.box_unwrap((self.uses_indexed_mode) and utils.box_wrap((self.len_color_table_entry * 1)) or (0))) then
+  if not(self.len_color_table >= utils.box_unwrap((self.uses_indexed_mode) and utils.box_wrap(self.len_color_table_entry * 1) or (0))) then
     error("ValidationLessThanError")
   end
   if not(self.len_color_table <= utils.box_unwrap((self.uses_indexed_mode) and utils.box_wrap(utils.box_unwrap((self.len_color_table_max < self.len_color_table_full) and utils.box_wrap(self.len_color_table_max) or (self.len_color_table_full))) or (0))) then
@@ -157,7 +145,7 @@ function Pif.InformationHeader.property.len_color_table_full:get()
     return self._m_len_color_table_full
   end
 
-  self._m_len_color_table_full = (self.len_color_table_entry * (1 << self.bits_per_pixel))
+  self._m_len_color_table_full = self.len_color_table_entry * (1 << self.bits_per_pixel)
   return self._m_len_color_table_full
 end
 
@@ -167,7 +155,7 @@ function Pif.InformationHeader.property.len_color_table_max:get()
     return self._m_len_color_table_max
   end
 
-  self._m_len_color_table_max = (self._root.file_header.ofs_image_data - self._root.file_header.ofs_image_data_min)
+  self._m_len_color_table_max = self._root.file_header.ofs_image_data - self._root.file_header.ofs_image_data_min
   return self._m_len_color_table_max
 end
 
@@ -199,29 +187,41 @@ end
 -- > (...) The amount of Colors has to be same or less than [Bits per
 -- > Pixel] allow, otherwise the image is invalid.
 
-Pif.ColorTableData = class.class(KaitaiStruct)
+Pif.PifHeader = class.class(KaitaiStruct)
 
-function Pif.ColorTableData:_init(io, parent, root)
+function Pif.PifHeader:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function Pif.ColorTableData:_read()
-  self.entries = {}
-  local i = 0
-  while not self._io:is_eof() do
-    local _on = self._root.info_header.image_type
-    if _on == Pif.ImageType.indexed_rgb888 then
-      self.entries[i + 1] = self._io:read_bits_int_le(24)
-    elseif _on == Pif.ImageType.indexed_rgb565 then
-      self.entries[i + 1] = self._io:read_bits_int_le(16)
-    elseif _on == Pif.ImageType.indexed_rgb332 then
-      self.entries[i + 1] = self._io:read_bits_int_le(8)
-    end
-    i = i + 1
+function Pif.PifHeader:_read()
+  self.magic = self._io:read_bytes(4)
+  if not(self.magic == "\080\073\070\000") then
+    error("not equal, expected " .. "\080\073\070\000" .. ", but got " .. self.magic)
   end
+  self.len_file = self._io:read_u4le()
+  if not(self.len_file >= self.ofs_image_data_min) then
+    error("ValidationLessThanError")
+  end
+  self.ofs_image_data = self._io:read_u4le()
+  if not(self.ofs_image_data >= self.ofs_image_data_min) then
+    error("ValidationLessThanError")
+  end
+  if not(self.ofs_image_data <= self.len_file) then
+    error("ValidationGreaterThanError")
+  end
+end
+
+Pif.PifHeader.property.ofs_image_data_min = {}
+function Pif.PifHeader.property.ofs_image_data_min:get()
+  if self._m_ofs_image_data_min ~= nil then
+    return self._m_ofs_image_data_min
+  end
+
+  self._m_ofs_image_data_min = 12 + 16
+  return self._m_ofs_image_data_min
 end
 
 

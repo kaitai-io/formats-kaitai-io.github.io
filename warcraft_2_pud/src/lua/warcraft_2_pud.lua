@@ -160,12 +160,123 @@ function Warcraft2Pud:_read()
 end
 
 
+Warcraft2Pud.Section = class.class(KaitaiStruct)
+
+function Warcraft2Pud.Section:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Warcraft2Pud.Section:_read()
+  self.name = str_decode.decode(self._io:read_bytes(4), "ASCII")
+  self.size = self._io:read_u4le()
+  local _on = self.name
+  if _on == "DIM " then
+    self._raw_body = self._io:read_bytes(self.size)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = Warcraft2Pud.SectionDim(_io, self, self._root)
+  elseif _on == "ERA " then
+    self._raw_body = self._io:read_bytes(self.size)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = Warcraft2Pud.SectionEra(_io, self, self._root)
+  elseif _on == "ERAX" then
+    self._raw_body = self._io:read_bytes(self.size)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = Warcraft2Pud.SectionEra(_io, self, self._root)
+  elseif _on == "OWNR" then
+    self._raw_body = self._io:read_bytes(self.size)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = Warcraft2Pud.SectionOwnr(_io, self, self._root)
+  elseif _on == "SGLD" then
+    self._raw_body = self._io:read_bytes(self.size)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = Warcraft2Pud.SectionStartingResource(_io, self, self._root)
+  elseif _on == "SLBR" then
+    self._raw_body = self._io:read_bytes(self.size)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = Warcraft2Pud.SectionStartingResource(_io, self, self._root)
+  elseif _on == "SOIL" then
+    self._raw_body = self._io:read_bytes(self.size)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = Warcraft2Pud.SectionStartingResource(_io, self, self._root)
+  elseif _on == "TYPE" then
+    self._raw_body = self._io:read_bytes(self.size)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = Warcraft2Pud.SectionType(_io, self, self._root)
+  elseif _on == "UNIT" then
+    self._raw_body = self._io:read_bytes(self.size)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = Warcraft2Pud.SectionUnit(_io, self, self._root)
+  elseif _on == "VER " then
+    self._raw_body = self._io:read_bytes(self.size)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = Warcraft2Pud.SectionVer(_io, self, self._root)
+  else
+    self.body = self._io:read_bytes(self.size)
+  end
+end
+
+
+Warcraft2Pud.SectionDim = class.class(KaitaiStruct)
+
+function Warcraft2Pud.SectionDim:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Warcraft2Pud.SectionDim:_read()
+  self.x = self._io:read_u2le()
+  self.y = self._io:read_u2le()
+end
+
+
+-- 
+-- Section that specifies terrain type for this map.
+Warcraft2Pud.SectionEra = class.class(KaitaiStruct)
+
+function Warcraft2Pud.SectionEra:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Warcraft2Pud.SectionEra:_read()
+  self.terrain = Warcraft2Pud.TerrainType(self._io:read_u2le())
+end
+
+
+-- 
+-- Section that specifies who controls each player.
+Warcraft2Pud.SectionOwnr = class.class(KaitaiStruct)
+
+function Warcraft2Pud.SectionOwnr:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Warcraft2Pud.SectionOwnr:_read()
+  self.controller_by_player = {}
+  local i = 0
+  while not self._io:is_eof() do
+    self.controller_by_player[i + 1] = Warcraft2Pud.Controller(self._io:read_u1())
+    i = i + 1
+  end
+end
+
+
 Warcraft2Pud.SectionStartingResource = class.class(KaitaiStruct)
 
 function Warcraft2Pud.SectionStartingResource:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -180,53 +291,6 @@ end
 
 
 -- 
--- Section that specifies terrain type for this map.
-Warcraft2Pud.SectionEra = class.class(KaitaiStruct)
-
-function Warcraft2Pud.SectionEra:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Warcraft2Pud.SectionEra:_read()
-  self.terrain = Warcraft2Pud.TerrainType(self._io:read_u2le())
-end
-
-
--- 
--- Section that specifies format version.
-Warcraft2Pud.SectionVer = class.class(KaitaiStruct)
-
-function Warcraft2Pud.SectionVer:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Warcraft2Pud.SectionVer:_read()
-  self.version = self._io:read_u2le()
-end
-
-
-Warcraft2Pud.SectionDim = class.class(KaitaiStruct)
-
-function Warcraft2Pud.SectionDim:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Warcraft2Pud.SectionDim:_read()
-  self.x = self._io:read_u2le()
-  self.y = self._io:read_u2le()
-end
-
-
--- 
 -- Section that confirms that this file is a "map file" by certain
 -- magic string and supplies a tag that could be used in
 -- multiplayer to check that all player use the same version of the
@@ -236,14 +300,14 @@ Warcraft2Pud.SectionType = class.class(KaitaiStruct)
 function Warcraft2Pud.SectionType:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function Warcraft2Pud.SectionType:_read()
   self.magic = self._io:read_bytes(10)
   if not(self.magic == "\087\065\082\050\032\077\065\080\000\000") then
-    error("not equal, expected " ..  "\087\065\082\050\032\077\065\080\000\000" .. ", but got " .. self.magic)
+    error("not equal, expected " .. "\087\065\082\050\032\077\065\080\000\000" .. ", but got " .. self.magic)
   end
   self.unused = self._io:read_bytes(2)
   self.id_tag = self._io:read_u4le()
@@ -259,7 +323,7 @@ Warcraft2Pud.SectionUnit = class.class(KaitaiStruct)
 function Warcraft2Pud.SectionUnit:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -273,83 +337,19 @@ function Warcraft2Pud.SectionUnit:_read()
 end
 
 
-Warcraft2Pud.Section = class.class(KaitaiStruct)
-
-function Warcraft2Pud.Section:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Warcraft2Pud.Section:_read()
-  self.name = str_decode.decode(self._io:read_bytes(4), "ASCII")
-  self.size = self._io:read_u4le()
-  local _on = self.name
-  if _on == "SLBR" then
-    self._raw_body = self._io:read_bytes(self.size)
-    local _io = KaitaiStream(stringstream(self._raw_body))
-    self.body = Warcraft2Pud.SectionStartingResource(_io, self, self._root)
-  elseif _on == "ERAX" then
-    self._raw_body = self._io:read_bytes(self.size)
-    local _io = KaitaiStream(stringstream(self._raw_body))
-    self.body = Warcraft2Pud.SectionEra(_io, self, self._root)
-  elseif _on == "OWNR" then
-    self._raw_body = self._io:read_bytes(self.size)
-    local _io = KaitaiStream(stringstream(self._raw_body))
-    self.body = Warcraft2Pud.SectionOwnr(_io, self, self._root)
-  elseif _on == "ERA " then
-    self._raw_body = self._io:read_bytes(self.size)
-    local _io = KaitaiStream(stringstream(self._raw_body))
-    self.body = Warcraft2Pud.SectionEra(_io, self, self._root)
-  elseif _on == "SGLD" then
-    self._raw_body = self._io:read_bytes(self.size)
-    local _io = KaitaiStream(stringstream(self._raw_body))
-    self.body = Warcraft2Pud.SectionStartingResource(_io, self, self._root)
-  elseif _on == "VER " then
-    self._raw_body = self._io:read_bytes(self.size)
-    local _io = KaitaiStream(stringstream(self._raw_body))
-    self.body = Warcraft2Pud.SectionVer(_io, self, self._root)
-  elseif _on == "SOIL" then
-    self._raw_body = self._io:read_bytes(self.size)
-    local _io = KaitaiStream(stringstream(self._raw_body))
-    self.body = Warcraft2Pud.SectionStartingResource(_io, self, self._root)
-  elseif _on == "UNIT" then
-    self._raw_body = self._io:read_bytes(self.size)
-    local _io = KaitaiStream(stringstream(self._raw_body))
-    self.body = Warcraft2Pud.SectionUnit(_io, self, self._root)
-  elseif _on == "DIM " then
-    self._raw_body = self._io:read_bytes(self.size)
-    local _io = KaitaiStream(stringstream(self._raw_body))
-    self.body = Warcraft2Pud.SectionDim(_io, self, self._root)
-  elseif _on == "TYPE" then
-    self._raw_body = self._io:read_bytes(self.size)
-    local _io = KaitaiStream(stringstream(self._raw_body))
-    self.body = Warcraft2Pud.SectionType(_io, self, self._root)
-  else
-    self.body = self._io:read_bytes(self.size)
-  end
-end
-
-
 -- 
--- Section that specifies who controls each player.
-Warcraft2Pud.SectionOwnr = class.class(KaitaiStruct)
+-- Section that specifies format version.
+Warcraft2Pud.SectionVer = class.class(KaitaiStruct)
 
-function Warcraft2Pud.SectionOwnr:_init(io, parent, root)
+function Warcraft2Pud.SectionVer:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function Warcraft2Pud.SectionOwnr:_read()
-  self.controller_by_player = {}
-  local i = 0
-  while not self._io:is_eof() do
-    self.controller_by_player[i + 1] = Warcraft2Pud.Controller(self._io:read_u1())
-    i = i + 1
-  end
+function Warcraft2Pud.SectionVer:_read()
+  self.version = self._io:read_u2le()
 end
 
 
@@ -358,7 +358,7 @@ Warcraft2Pud.Unit = class.class(KaitaiStruct)
 function Warcraft2Pud.Unit:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -377,7 +377,7 @@ function Warcraft2Pud.Unit.property.resource:get()
   end
 
   if  ((self.u_type == Warcraft2Pud.UnitType.gold_mine) or (self.u_type == Warcraft2Pud.UnitType.human_oil_well) or (self.u_type == Warcraft2Pud.UnitType.orc_oil_well) or (self.u_type == Warcraft2Pud.UnitType.oil_patch))  then
-    self._m_resource = (self.options * 2500)
+    self._m_resource = self.options * 2500
   end
   return self._m_resource
 end

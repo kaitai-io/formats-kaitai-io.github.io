@@ -4,6 +4,7 @@
 
 local class = require("class")
 require("kaitaistruct")
+require("bytes_with_io")
 local utils = require("utils")
 local stringstream = require("string_stream")
 
@@ -48,17 +49,30 @@ function Dcmp2:_read()
   end
   local _on = self.header_parameters.flags.tagged
   if _on == true then
-    self._raw_data = self._io:read_bytes(((self._io:size() - self._io:pos()) - utils.box_unwrap((self.is_len_decompressed_odd) and utils.box_wrap(1) or (0))))
+    self._raw_data = self._io:read_bytes((self._io:size() - self._io:pos()) - utils.box_unwrap((self.is_len_decompressed_odd) and utils.box_wrap(1) or (0)))
     local _io = KaitaiStream(stringstream(self._raw_data))
     self.data = Dcmp2.TaggedData(_io, self, self._root)
   else
-    self._raw_data = self._io:read_bytes(((self._io:size() - self._io:pos()) - utils.box_unwrap((self.is_len_decompressed_odd) and utils.box_wrap(1) or (0))))
+    self._raw_data = self._io:read_bytes((self._io:size() - self._io:pos()) - utils.box_unwrap((self.is_len_decompressed_odd) and utils.box_wrap(1) or (0)))
     local _io = KaitaiStream(stringstream(self._raw_data))
     self.data = Dcmp2.UntaggedData(_io, self, self._root)
   end
   if self.is_len_decompressed_odd then
     self.last_byte = self._io:read_bytes(1)
   end
+end
+
+-- 
+-- The default lookup table,
+-- which is used if no custom lookup table is included with the compressed data.
+Dcmp2.property.default_lookup_table = {}
+function Dcmp2.property.default_lookup_table:get()
+  if self._m_default_lookup_table ~= nil then
+    return self._m_default_lookup_table
+  end
+
+  self._m_default_lookup_table = {"\000\000", "\000\008", "\078\186", "\032\110", "\078\117", "\000\012", "\000\004", "\112\000", "\000\016", "\000\002", "\072\110", "\255\252", "\096\000", "\000\001", "\072\231", "\047\046", "\078\086", "\000\006", "\078\094", "\047\000", "\097\000", "\255\248", "\047\011", "\255\255", "\000\020", "\000\010", "\000\024", "\032\095", "\000\014", "\032\080", "\063\060", "\255\244", "\076\238", "\048\046", "\103\000", "\076\223", "\038\110", "\000\018", "\000\028", "\066\103", "\255\240", "\048\060", "\047\012", "\000\003", "\078\208", "\000\032", "\112\001", "\000\022", "\045\064", "\072\192", "\032\120", "\114\000", "\088\143", "\102\000", "\079\239", "\066\167", "\103\006", "\255\250", "\085\143", "\040\110", "\063\000", "\255\254", "\047\060", "\103\004", "\089\143", "\032\107", "\000\036", "\032\031", "\065\250", "\129\225", "\102\004", "\103\008", "\000\026", "\078\185", "\080\143", "\032\046", "\000\007", "\078\176", "\255\242", "\061\064", "\000\030", "\032\104", "\102\006", "\255\246", "\078\249", "\008\000", "\012\064", "\061\124", "\255\236", "\000\005", "\032\060", "\255\232", "\222\252", "\074\046", "\000\048", "\000\040", "\047\008", "\032\011", "\096\002", "\066\110", "\045\072", "\032\083", "\032\064", "\024\000", "\096\004", "\065\238", "\047\040", "\047\001", "\103\010", "\072\064", "\032\007", "\102\008", "\001\024", "\047\007", "\048\040", "\063\046", "\048\043", "\034\110", "\047\043", "\000\044", "\103\012", "\034\095", "\096\006", "\000\255", "\048\007", "\255\238", "\083\064", "\000\064", "\255\228", "\074\064", "\102\010", "\000\015", "\078\173", "\112\255", "\034\216", "\072\107", "\000\034", "\032\075", "\103\014", "\074\174", "\078\144", "\255\224", "\255\192", "\000\042", "\039\064", "\103\002", "\081\200", "\002\182", "\072\122", "\034\120", "\176\110", "\255\230", "\000\009", "\050\046", "\062\000", "\072\065", "\255\234", "\067\238", "\078\113", "\116\000", "\047\044", "\032\108", "\000\060", "\000\038", "\000\080", "\024\128", "\048\031", "\034\000", "\102\012", "\255\218", "\000\056", "\102\002", "\048\044", "\032\012", "\045\110", "\066\064", "\255\226", "\169\240", "\255\000", "\055\124", "\229\128", "\255\220", "\072\104", "\089\079", "\000\052", "\062\031", "\096\008", "\047\006", "\255\222", "\096\010", "\112\002", "\000\050", "\255\204", "\000\128", "\034\081", "\016\031", "\049\124", "\160\041", "\255\216", "\082\064", "\001\000", "\103\016", "\160\035", "\255\206", "\255\212", "\032\006", "\072\120", "\000\046", "\080\079", "\067\250", "\103\018", "\118\000", "\065\232", "\074\110", "\032\217", "\000\090", "\127\255", "\081\202", "\000\092", "\046\000", "\002\064", "\072\199", "\103\020", "\012\128", "\046\159", "\255\214", "\128\000", "\016\000", "\072\066", "\074\107", "\255\210", "\000\072", "\074\071", "\078\209", "\032\111", "\000\065", "\096\012", "\042\120", "\066\046", "\050\000", "\101\116", "\103\022", "\000\068", "\072\109", "\032\008", "\072\108", "\011\124", "\038\064", "\004\000", "\000\104", "\032\109", "\000\013", "\042\064", "\000\011", "\000\062", "\002\032"}
+  return self._m_default_lookup_table
 end
 
 -- 
@@ -86,21 +100,8 @@ function Dcmp2.property.is_len_decompressed_odd:get()
     return self._m_is_len_decompressed_odd
   end
 
-  self._m_is_len_decompressed_odd = (self.len_decompressed % 2) ~= 0
+  self._m_is_len_decompressed_odd = self.len_decompressed % 2 ~= 0
   return self._m_is_len_decompressed_odd
-end
-
--- 
--- The default lookup table,
--- which is used if no custom lookup table is included with the compressed data.
-Dcmp2.property.default_lookup_table = {}
-function Dcmp2.property.default_lookup_table:get()
-  if self._m_default_lookup_table ~= nil then
-    return self._m_default_lookup_table
-  end
-
-  self._m_default_lookup_table = {"\000\000", "\000\008", "\078\186", "\032\110", "\078\117", "\000\012", "\000\004", "\112\000", "\000\016", "\000\002", "\072\110", "\255\252", "\096\000", "\000\001", "\072\231", "\047\046", "\078\086", "\000\006", "\078\094", "\047\000", "\097\000", "\255\248", "\047\011", "\255\255", "\000\020", "\000\010", "\000\024", "\032\095", "\000\014", "\032\080", "\063\060", "\255\244", "\076\238", "\048\046", "\103\000", "\076\223", "\038\110", "\000\018", "\000\028", "\066\103", "\255\240", "\048\060", "\047\012", "\000\003", "\078\208", "\000\032", "\112\001", "\000\022", "\045\064", "\072\192", "\032\120", "\114\000", "\088\143", "\102\000", "\079\239", "\066\167", "\103\006", "\255\250", "\085\143", "\040\110", "\063\000", "\255\254", "\047\060", "\103\004", "\089\143", "\032\107", "\000\036", "\032\031", "\065\250", "\129\225", "\102\004", "\103\008", "\000\026", "\078\185", "\080\143", "\032\046", "\000\007", "\078\176", "\255\242", "\061\064", "\000\030", "\032\104", "\102\006", "\255\246", "\078\249", "\008\000", "\012\064", "\061\124", "\255\236", "\000\005", "\032\060", "\255\232", "\222\252", "\074\046", "\000\048", "\000\040", "\047\008", "\032\011", "\096\002", "\066\110", "\045\072", "\032\083", "\032\064", "\024\000", "\096\004", "\065\238", "\047\040", "\047\001", "\103\010", "\072\064", "\032\007", "\102\008", "\001\024", "\047\007", "\048\040", "\063\046", "\048\043", "\034\110", "\047\043", "\000\044", "\103\012", "\034\095", "\096\006", "\000\255", "\048\007", "\255\238", "\083\064", "\000\064", "\255\228", "\074\064", "\102\010", "\000\015", "\078\173", "\112\255", "\034\216", "\072\107", "\000\034", "\032\075", "\103\014", "\074\174", "\078\144", "\255\224", "\255\192", "\000\042", "\039\064", "\103\002", "\081\200", "\002\182", "\072\122", "\034\120", "\176\110", "\255\230", "\000\009", "\050\046", "\062\000", "\072\065", "\255\234", "\067\238", "\078\113", "\116\000", "\047\044", "\032\108", "\000\060", "\000\038", "\000\080", "\024\128", "\048\031", "\034\000", "\102\012", "\255\218", "\000\056", "\102\002", "\048\044", "\032\012", "\045\110", "\066\064", "\255\226", "\169\240", "\255\000", "\055\124", "\229\128", "\255\220", "\072\104", "\089\079", "\000\052", "\062\031", "\096\008", "\047\006", "\255\222", "\096\010", "\112\002", "\000\050", "\255\204", "\000\128", "\034\081", "\016\031", "\049\124", "\160\041", "\255\216", "\082\064", "\001\000", "\103\016", "\160\035", "\255\206", "\255\212", "\032\006", "\072\120", "\000\046", "\080\079", "\067\250", "\103\018", "\118\000", "\065\232", "\074\110", "\032\217", "\000\090", "\127\255", "\081\202", "\000\092", "\046\000", "\002\064", "\072\199", "\103\020", "\012\128", "\046\159", "\255\214", "\128\000", "\016\000", "\072\066", "\074\107", "\255\210", "\000\072", "\074\071", "\078\209", "\032\111", "\000\065", "\096\012", "\042\120", "\066\046", "\050\000", "\101\116", "\103\022", "\000\068", "\072\109", "\032\008", "\072\108", "\011\124", "\038\064", "\004\000", "\000\104", "\032\109", "\000\013", "\042\064", "\000\011", "\000\062", "\002\032"}
-  return self._m_default_lookup_table
 end
 
 -- 
@@ -143,7 +144,7 @@ Dcmp2.HeaderParameters = class.class(KaitaiStruct)
 function Dcmp2.HeaderParameters:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -163,7 +164,7 @@ function Dcmp2.HeaderParameters.property.num_custom_lookup_table_entries:get()
   end
 
   if self.flags.has_custom_lookup_table then
-    self._m_num_custom_lookup_table_entries = (self.num_custom_lookup_table_entries_m1 + 1)
+    self._m_num_custom_lookup_table_entries = self.num_custom_lookup_table_entries_m1 + 1
   end
   return self._m_num_custom_lookup_table_entries
 end
@@ -193,7 +194,7 @@ Dcmp2.HeaderParameters.Flags = class.class(KaitaiStruct)
 function Dcmp2.HeaderParameters.Flags:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -229,37 +230,13 @@ end
 -- which should be used instead of the default hardcoded lookup table.
 
 -- 
--- Compressed data in the "untagged" variant of the format.
-Dcmp2.UntaggedData = class.class(KaitaiStruct)
-
-function Dcmp2.UntaggedData:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Dcmp2.UntaggedData:_read()
-  self.table_references = {}
-  local i = 0
-  while not self._io:is_eof() do
-    self.table_references[i + 1] = self._io:read_u1()
-    i = i + 1
-  end
-end
-
--- 
--- References into the lookup table.
--- Each reference is an integer that is expanded to two bytes by looking it up in the table.
-
--- 
 -- Compressed data in the "tagged" variant of the format.
 Dcmp2.TaggedData = class.class(KaitaiStruct)
 
 function Dcmp2.TaggedData:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -288,7 +265,7 @@ Dcmp2.TaggedData.Chunk = class.class(KaitaiStruct)
 function Dcmp2.TaggedData.Chunk:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -298,7 +275,6 @@ function Dcmp2.TaggedData.Chunk:_read()
     self.tag[i + 1] = self._io:read_bits_int_be(1) ~= 0
   end
   self._io:align_to_byte()
-  self._raw_units = {}
   self.units = {}
   local i = 0
   while true do
@@ -329,4 +305,28 @@ end
 -- If the bit is 1 (true),
 -- the unit is a reference into the lookup table,
 -- an integer which is expanded to two bytes by looking it up in the table.
+
+-- 
+-- Compressed data in the "untagged" variant of the format.
+Dcmp2.UntaggedData = class.class(KaitaiStruct)
+
+function Dcmp2.UntaggedData:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Dcmp2.UntaggedData:_read()
+  self.table_references = {}
+  local i = 0
+  while not self._io:is_eof() do
+    self.table_references[i + 1] = self._io:read_u1()
+    i = i + 1
+  end
+end
+
+-- 
+-- References into the lookup table.
+-- Each reference is an integer that is expanded to two bytes by looking it up in the table.
 

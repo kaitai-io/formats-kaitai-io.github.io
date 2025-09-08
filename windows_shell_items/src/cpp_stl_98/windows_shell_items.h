@@ -3,12 +3,14 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class windows_shell_items_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -29,11 +31,11 @@
 class windows_shell_items_t : public kaitai::kstruct {
 
 public:
-    class shell_item_data_t;
-    class shell_item_t;
-    class root_folder_body_t;
-    class volume_body_t;
     class file_entry_body_t;
+    class root_folder_body_t;
+    class shell_item_t;
+    class shell_item_data_t;
+    class volume_body_t;
 
     windows_shell_items_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, windows_shell_items_t* p__root = 0);
 
@@ -44,44 +46,82 @@ private:
 public:
     ~windows_shell_items_t();
 
-    class shell_item_data_t : public kaitai::kstruct {
+    /**
+     * \sa https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#34-file-entry-shell-item Source
+     */
+
+    class file_entry_body_t : public kaitai::kstruct {
 
     public:
 
-        shell_item_data_t(kaitai::kstream* p__io, windows_shell_items_t::shell_item_t* p__parent = 0, windows_shell_items_t* p__root = 0);
+        file_entry_body_t(kaitai::kstream* p__io, windows_shell_items_t::shell_item_data_t* p__parent = 0, windows_shell_items_t* p__root = 0);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~shell_item_data_t();
+        ~file_entry_body_t();
 
     private:
-        uint8_t m_code;
-        root_folder_body_t* m_body1;
-        bool n_body1;
+        bool f_is_dir;
+        bool m_is_dir;
 
     public:
-        bool _is_null_body1() { body1(); return n_body1; };
+        bool is_dir();
 
     private:
-        kaitai::kstruct* m_body2;
-        bool n_body2;
+        bool f_is_file;
+        bool m_is_file;
 
     public:
-        bool _is_null_body2() { body2(); return n_body2; };
+        bool is_file();
 
     private:
+        uint8_t m__unnamed0;
+        uint32_t m_file_size;
+        uint32_t m_last_mod_time;
+        uint16_t m_file_attrs;
         windows_shell_items_t* m__root;
-        windows_shell_items_t::shell_item_t* m__parent;
+        windows_shell_items_t::shell_item_data_t* m__parent;
 
     public:
-        uint8_t code() const { return m_code; }
-        root_folder_body_t* body1() const { return m_body1; }
-        kaitai::kstruct* body2() const { return m_body2; }
+        uint8_t _unnamed0() const { return m__unnamed0; }
+        uint32_t file_size() const { return m_file_size; }
+        uint32_t last_mod_time() const { return m_last_mod_time; }
+        uint16_t file_attrs() const { return m_file_attrs; }
         windows_shell_items_t* _root() const { return m__root; }
-        windows_shell_items_t::shell_item_t* _parent() const { return m__parent; }
+        windows_shell_items_t::shell_item_data_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * \sa https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#32-root-folder-shell-item Source
+     */
+
+    class root_folder_body_t : public kaitai::kstruct {
+
+    public:
+
+        root_folder_body_t(kaitai::kstream* p__io, windows_shell_items_t::shell_item_data_t* p__parent = 0, windows_shell_items_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~root_folder_body_t();
+
+    private:
+        uint8_t m_sort_index;
+        std::string m_shell_folder_id;
+        windows_shell_items_t* m__root;
+        windows_shell_items_t::shell_item_data_t* m__parent;
+
+    public:
+        uint8_t sort_index() const { return m_sort_index; }
+        std::string shell_folder_id() const { return m_shell_folder_id; }
+        windows_shell_items_t* _root() const { return m__root; }
+        windows_shell_items_t::shell_item_data_t* _parent() const { return m__parent; }
     };
 
     /**
@@ -130,34 +170,44 @@ public:
         kaitai::kstream* _io__raw_data() const { return m__io__raw_data; }
     };
 
-    /**
-     * \sa https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#32-root-folder-shell-item Source
-     */
-
-    class root_folder_body_t : public kaitai::kstruct {
+    class shell_item_data_t : public kaitai::kstruct {
 
     public:
 
-        root_folder_body_t(kaitai::kstream* p__io, windows_shell_items_t::shell_item_data_t* p__parent = 0, windows_shell_items_t* p__root = 0);
+        shell_item_data_t(kaitai::kstream* p__io, windows_shell_items_t::shell_item_t* p__parent = 0, windows_shell_items_t* p__root = 0);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~root_folder_body_t();
+        ~shell_item_data_t();
 
     private:
-        uint8_t m_sort_index;
-        std::string m_shell_folder_id;
-        windows_shell_items_t* m__root;
-        windows_shell_items_t::shell_item_data_t* m__parent;
+        uint8_t m_code;
+        root_folder_body_t* m_body1;
+        bool n_body1;
 
     public:
-        uint8_t sort_index() const { return m_sort_index; }
-        std::string shell_folder_id() const { return m_shell_folder_id; }
+        bool _is_null_body1() { body1(); return n_body1; };
+
+    private:
+        kaitai::kstruct* m_body2;
+        bool n_body2;
+
+    public:
+        bool _is_null_body2() { body2(); return n_body2; };
+
+    private:
+        windows_shell_items_t* m__root;
+        windows_shell_items_t::shell_item_t* m__parent;
+
+    public:
+        uint8_t code() const { return m_code; }
+        root_folder_body_t* body1() const { return m_body1; }
+        kaitai::kstruct* body2() const { return m_body2; }
         windows_shell_items_t* _root() const { return m__root; }
-        windows_shell_items_t::shell_item_data_t* _parent() const { return m__parent; }
+        windows_shell_items_t::shell_item_t* _parent() const { return m__parent; }
     };
 
     /**
@@ -184,54 +234,6 @@ public:
 
     public:
         uint8_t flags() const { return m_flags; }
-        windows_shell_items_t* _root() const { return m__root; }
-        windows_shell_items_t::shell_item_data_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * \sa https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#34-file-entry-shell-item Source
-     */
-
-    class file_entry_body_t : public kaitai::kstruct {
-
-    public:
-
-        file_entry_body_t(kaitai::kstream* p__io, windows_shell_items_t::shell_item_data_t* p__parent = 0, windows_shell_items_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~file_entry_body_t();
-
-    private:
-        bool f_is_dir;
-        bool m_is_dir;
-
-    public:
-        bool is_dir();
-
-    private:
-        bool f_is_file;
-        bool m_is_file;
-
-    public:
-        bool is_file();
-
-    private:
-        uint8_t m__unnamed0;
-        uint32_t m_file_size;
-        uint32_t m_last_mod_time;
-        uint16_t m_file_attrs;
-        windows_shell_items_t* m__root;
-        windows_shell_items_t::shell_item_data_t* m__parent;
-
-    public:
-        uint8_t _unnamed0() const { return m__unnamed0; }
-        uint32_t file_size() const { return m_file_size; }
-        uint32_t last_mod_time() const { return m_last_mod_time; }
-        uint16_t file_attrs() const { return m_file_attrs; }
         windows_shell_items_t* _root() const { return m__root; }
         windows_shell_items_t::shell_item_data_t* _parent() const { return m__parent; }
     };

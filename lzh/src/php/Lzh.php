@@ -13,8 +13,8 @@
 
 namespace {
     class Lzh extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Lzh $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Lzh $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -32,34 +32,14 @@ namespace {
 }
 
 namespace Lzh {
-    class Record extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Lzh $_parent = null, \Lzh $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_headerLen = $this->_io->readU1();
-            if ($this->headerLen() > 0) {
-                $this->_m_fileRecord = new \Lzh\FileRecord($this->_io, $this, $this->_root);
-            }
-        }
-        protected $_m_headerLen;
-        protected $_m_fileRecord;
-        public function headerLen() { return $this->_m_headerLen; }
-        public function fileRecord() { return $this->_m_fileRecord; }
-    }
-}
-
-namespace Lzh {
     class FileRecord extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Lzh\Record $_parent = null, \Lzh $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Lzh\Record $_parent = null, ?\Lzh $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m__raw_header = $this->_io->readBytes(($this->_parent()->headerLen() - 1));
+            $this->_m__raw_header = $this->_io->readBytes($this->_parent()->headerLen() - 1);
             $_io__raw_header = new \Kaitai\Struct\Stream($this->_m__raw_header);
             $this->_m_header = new \Lzh\Header($_io__raw_header, $this, $this->_root);
             if ($this->header()->header1()->lhaLevel() == 0) {
@@ -80,7 +60,7 @@ namespace Lzh {
 
 namespace Lzh {
     class Header extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Lzh\FileRecord $_parent = null, \Lzh $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Lzh\FileRecord $_parent = null, ?\Lzh $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -124,7 +104,7 @@ namespace Lzh {
 
 namespace Lzh {
     class Header1 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Lzh\Header $_parent = null, \Lzh $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Lzh\Header $_parent = null, ?\Lzh $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -172,5 +152,25 @@ namespace Lzh {
         public function attr() { return $this->_m_attr; }
         public function lhaLevel() { return $this->_m_lhaLevel; }
         public function _raw_fileTimestamp() { return $this->_m__raw_fileTimestamp; }
+    }
+}
+
+namespace Lzh {
+    class Record extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Lzh $_parent = null, ?\Lzh $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_headerLen = $this->_io->readU1();
+            if ($this->headerLen() > 0) {
+                $this->_m_fileRecord = new \Lzh\FileRecord($this->_io, $this, $this->_root);
+            }
+        }
+        protected $_m_headerLen;
+        protected $_m_fileRecord;
+        public function headerLen() { return $this->_m_headerLen; }
+        public function fileRecord() { return $this->_m_fileRecord; }
     }
 }

@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Encode;
 
 ########################################################################
@@ -36,7 +36,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -46,8 +46,8 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{_raw_records} = ();
-    $self->{records} = ();
+    $self->{_raw_records} = [];
+    $self->{records} = [];
     while (!$self->{_io}->is_eof()) {
         push @{$self->{_raw_records}}, $self->{_io}->read_bytes(384);
         my $io__raw_records = IO::KaitaiStruct::Stream->new($self->{_raw_records}[-1]);
@@ -85,7 +85,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -183,7 +183,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 

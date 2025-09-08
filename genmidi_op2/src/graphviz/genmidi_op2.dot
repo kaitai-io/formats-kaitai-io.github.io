@@ -7,25 +7,12 @@ digraph {
 
 		genmidi_op2__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-			<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">8</TD><TD></TD><TD PORT="magic_type">magic</TD></TR>
+			<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">8</TD><TD>23 4F 50 4C 5F 49 49 23</TD><TD PORT="magic_type">magic</TD></TR>
 			<TR><TD PORT="instruments_pos">8</TD><TD PORT="instruments_size">36</TD><TD>InstrumentEntry</TD><TD PORT="instruments_type">instruments</TD></TR>
 			<TR><TD COLSPAN="4" PORT="instruments__repeat">repeat 175 times</TD></TR>
 			<TR><TD PORT="instrument_names_pos">6308</TD><TD PORT="instrument_names_size">32</TD><TD>str(ASCII)</TD><TD PORT="instrument_names_type">instrument_names</TD></TR>
 			<TR><TD COLSPAN="4" PORT="instrument_names__repeat">repeat 175 times</TD></TR>
 		</TABLE>>];
-		subgraph cluster__instrument_entry {
-			label="GenmidiOp2::InstrumentEntry";
-			graph[style=dotted];
-
-			instrument_entry__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="flags_pos">0</TD><TD PORT="flags_size">2</TD><TD>u2le</TD><TD PORT="flags_type">flags</TD></TR>
-				<TR><TD PORT="finetune_pos">2</TD><TD PORT="finetune_size">1</TD><TD>u1</TD><TD PORT="finetune_type">finetune</TD></TR>
-				<TR><TD PORT="note_pos">3</TD><TD PORT="note_size">1</TD><TD>u1</TD><TD PORT="note_type">note</TD></TR>
-				<TR><TD PORT="instruments_pos">4</TD><TD PORT="instruments_size">16</TD><TD>Instrument</TD><TD PORT="instruments_type">instruments</TD></TR>
-				<TR><TD COLSPAN="4" PORT="instruments__repeat">repeat 2 times</TD></TR>
-			</TABLE>>];
-		}
 		subgraph cluster__instrument {
 			label="GenmidiOp2::Instrument";
 			graph[style=dotted];
@@ -37,6 +24,19 @@ digraph {
 				<TR><TD PORT="op2_pos">7</TD><TD PORT="op2_size">6</TD><TD>OpSettings</TD><TD PORT="op2_type">op2</TD></TR>
 				<TR><TD PORT="unused_pos">13</TD><TD PORT="unused_size">1</TD><TD>u1</TD><TD PORT="unused_type">unused</TD></TR>
 				<TR><TD PORT="base_note_pos">14</TD><TD PORT="base_note_size">2</TD><TD>s2le</TD><TD PORT="base_note_type">base_note</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__instrument_entry {
+			label="GenmidiOp2::InstrumentEntry";
+			graph[style=dotted];
+
+			instrument_entry__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="flags_pos">0</TD><TD PORT="flags_size">2</TD><TD>u2le</TD><TD PORT="flags_type">flags</TD></TR>
+				<TR><TD PORT="finetune_pos">2</TD><TD PORT="finetune_size">1</TD><TD>u1</TD><TD PORT="finetune_type">finetune</TD></TR>
+				<TR><TD PORT="note_pos">3</TD><TD PORT="note_size">1</TD><TD>u1</TD><TD PORT="note_type">note</TD></TR>
+				<TR><TD PORT="instruments_pos">4</TD><TD PORT="instruments_size">16</TD><TD>Instrument</TD><TD PORT="instruments_type">instruments</TD></TR>
+				<TR><TD COLSPAN="4" PORT="instruments__repeat">repeat 2 times</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__op_settings {
@@ -55,7 +55,7 @@ digraph {
 		}
 	}
 	genmidi_op2__seq:instruments_type -> instrument_entry__seq [style=bold];
-	instrument_entry__seq:instruments_type -> instrument__seq [style=bold];
 	instrument__seq:op1_type -> op_settings__seq [style=bold];
 	instrument__seq:op2_type -> op_settings__seq [style=bold];
+	instrument_entry__seq:instruments_type -> instrument__seq [style=bold];
 }

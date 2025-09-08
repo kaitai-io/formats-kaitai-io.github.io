@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -21,14 +21,14 @@ class ChromePak < Kaitai::Struct::Struct
     2 => :encodings_utf16,
   }
   I__ENCODINGS = ENCODINGS.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
     @version = @_io.read_u4le
-    raise Kaitai::Struct::ValidationNotAnyOfError.new(version, _io, "/seq/0") if not  ((version == 4) || (version == 5)) 
+    raise Kaitai::Struct::ValidationNotAnyOfError.new(@version, @_io, "/seq/0") if not  ((@version == 4) || (@version == 5)) 
     if version == 4
       @num_resources_v4 = @_io.read_u4le
     end
@@ -37,7 +37,7 @@ class ChromePak < Kaitai::Struct::Struct
       @v5_part = HeaderV5Part.new(@_io, self, @_root)
     end
     @resources = []
-    ((num_resources + 1)).times { |i|
+    (num_resources + 1).times { |i|
       @resources << Resource.new(@_io, self, @_root, i, i < num_resources)
     }
     @aliases = []
@@ -46,8 +46,28 @@ class ChromePak < Kaitai::Struct::Struct
     }
     self
   end
+  class Alias < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @id = @_io.read_u2le
+      @resource_idx = @_io.read_u2le
+      raise Kaitai::Struct::ValidationGreaterThanError.new(_parent.num_resources - 1, @resource_idx, @_io, "/types/alias/seq/1") if not @resource_idx <= _parent.num_resources - 1
+      self
+    end
+    def resource
+      return @resource unless @resource.nil?
+      @resource = _parent.resources[resource_idx]
+      @resource
+    end
+    attr_reader :id
+    attr_reader :resource_idx
+  end
   class HeaderV5Part < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -63,7 +83,7 @@ class ChromePak < Kaitai::Struct::Struct
     attr_reader :num_aliases
   end
   class Resource < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self, idx, has_body)
+    def initialize(_io, _parent = nil, _root = nil, idx, has_body)
       super(_io, _parent, _root)
       @idx = idx
       @has_body = has_body
@@ -78,16 +98,6 @@ class ChromePak < Kaitai::Struct::Struct
 
     ##
     # MUST NOT be accessed until the next `resource` is parsed
-    def len_body
-      return @len_body unless @len_body.nil?
-      if has_body
-        @len_body = (_parent.resources[(idx + 1)].ofs_body - ofs_body)
-      end
-      @len_body
-    end
-
-    ##
-    # MUST NOT be accessed until the next `resource` is parsed
     def body
       return @body unless @body.nil?
       if has_body
@@ -98,40 +108,30 @@ class ChromePak < Kaitai::Struct::Struct
       end
       @body
     end
+
+    ##
+    # MUST NOT be accessed until the next `resource` is parsed
+    def len_body
+      return @len_body unless @len_body.nil?
+      if has_body
+        @len_body = _parent.resources[idx + 1].ofs_body - ofs_body
+      end
+      @len_body
+    end
     attr_reader :id
     attr_reader :ofs_body
     attr_reader :idx
     attr_reader :has_body
   end
-  class Alias < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @id = @_io.read_u2le
-      @resource_idx = @_io.read_u2le
-      raise Kaitai::Struct::ValidationGreaterThanError.new((_parent.num_resources - 1), resource_idx, _io, "/types/alias/seq/1") if not resource_idx <= (_parent.num_resources - 1)
-      self
-    end
-    def resource
-      return @resource unless @resource.nil?
-      @resource = _parent.resources[resource_idx]
-      @resource
-    end
-    attr_reader :id
-    attr_reader :resource_idx
+  def num_aliases
+    return @num_aliases unless @num_aliases.nil?
+    @num_aliases = (version == 5 ? v5_part.num_aliases : 0)
+    @num_aliases
   end
   def num_resources
     return @num_resources unless @num_resources.nil?
     @num_resources = (version == 5 ? v5_part.num_resources : num_resources_v4)
     @num_resources
-  end
-  def num_aliases
-    return @num_aliases unless @num_aliases.nil?
-    @num_aliases = (version == 5 ? v5_part.num_aliases : 0)
-    @num_aliases
   end
 
   ##

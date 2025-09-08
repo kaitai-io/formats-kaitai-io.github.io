@@ -6,8 +6,8 @@ local class = require("class")
 require("kaitaistruct")
 local enum = require("enum")
 local utils = require("utils")
-local str_decode = require("string_decode")
 local stringstream = require("string_stream")
+local str_decode = require("string_decode")
 
 -- 
 -- This parser is for the RPM version 3 file format which is the current version
@@ -21,50 +21,31 @@ local stringstream = require("string_stream")
 -- See also: Source (http://ftp.rpm.org/max-rpm/)
 Rpm = class.class(KaitaiStruct)
 
-Rpm.OperatingSystems = enum.Enum {
-  linux = 1,
-  irix = 2,
-  no_os = 255,
-}
-
-Rpm.SignatureTags = enum.Enum {
-  signatures = 62,
-  header_immutable = 63,
-  i18n_table = 100,
-  bad_sha1_1_obsolete = 264,
-  bad_sha1_2_obsolete = 265,
-  dsa = 267,
-  rsa = 268,
-  sha1 = 269,
-  long_size = 270,
-  long_archive_size = 271,
-  sha256 = 273,
-  file_signatures = 274,
-  file_signature_length = 275,
-  verity_signatures = 276,
-  verity_signature_algo = 277,
-  size = 1000,
-  le_md5_1_obsolete = 1001,
-  pgp = 1002,
-  le_md5_2_obsolete = 1003,
-  md5 = 1004,
-  gpg = 1005,
-  pgp5_obsolete = 1006,
-  payload_size = 1007,
-  reserved_space = 1008,
-}
-
-Rpm.RecordTypes = enum.Enum {
-  not_implemented = 0,
-  char = 1,
-  uint8 = 2,
-  uint16 = 3,
-  uint32 = 4,
-  uint64 = 5,
-  string = 6,
-  bin = 7,
-  string_array = 8,
-  i18n_string = 9,
+Rpm.Architectures = enum.Enum {
+  x86 = 1,
+  alpha = 2,
+  sparc = 3,
+  mips = 4,
+  ppc = 5,
+  m68k = 6,
+  sgi = 7,
+  rs6000 = 8,
+  ia64 = 9,
+  sparc64 = 10,
+  mips64 = 11,
+  arm = 12,
+  m68k_mint = 13,
+  s390 = 14,
+  s390x = 15,
+  ppc64 = 16,
+  sh = 17,
+  xtensa = 18,
+  aarch64 = 19,
+  mips_r6 = 20,
+  mips64_r6 = 21,
+  riscv = 22,
+  loongarch64 = 23,
+  no_arch = 255,
 }
 
 Rpm.HeaderTags = enum.Enum {
@@ -370,36 +351,55 @@ Rpm.HeaderTags = enum.Enum {
   sys_users = 5109,
 }
 
+Rpm.OperatingSystems = enum.Enum {
+  linux = 1,
+  irix = 2,
+  no_os = 255,
+}
+
+Rpm.RecordTypes = enum.Enum {
+  not_implemented = 0,
+  char = 1,
+  uint8 = 2,
+  uint16 = 3,
+  uint32 = 4,
+  uint64 = 5,
+  string = 6,
+  bin = 7,
+  string_array = 8,
+  i18n_string = 9,
+}
+
 Rpm.RpmTypes = enum.Enum {
   binary = 0,
   source = 1,
 }
 
-Rpm.Architectures = enum.Enum {
-  x86 = 1,
-  alpha = 2,
-  sparc = 3,
-  mips = 4,
-  ppc = 5,
-  m68k = 6,
-  sgi = 7,
-  rs6000 = 8,
-  ia64 = 9,
-  sparc64 = 10,
-  mips64 = 11,
-  arm = 12,
-  m68k_mint = 13,
-  s390 = 14,
-  s390x = 15,
-  ppc64 = 16,
-  sh = 17,
-  xtensa = 18,
-  aarch64 = 19,
-  mips_r6 = 20,
-  mips64_r6 = 21,
-  riscv = 22,
-  loongarch64 = 23,
-  no_arch = 255,
+Rpm.SignatureTags = enum.Enum {
+  signatures = 62,
+  header_immutable = 63,
+  i18n_table = 100,
+  bad_sha1_1_obsolete = 264,
+  bad_sha1_2_obsolete = 265,
+  dsa = 267,
+  rsa = 268,
+  sha1 = 269,
+  long_size = 270,
+  long_archive_size = 271,
+  sha256 = 273,
+  file_signatures = 274,
+  file_signature_length = 275,
+  verity_signatures = 276,
+  verity_signature_algo = 277,
+  size = 1000,
+  le_md5_1_obsolete = 1001,
+  pgp = 1002,
+  le_md5_2_obsolete = 1003,
+  md5 = 1004,
+  gpg = 1005,
+  pgp5_obsolete = 1006,
+  payload_size = 1007,
+  reserved_space = 1008,
 }
 
 function Rpm:_init(io, parent, root)
@@ -412,7 +412,7 @@ end
 function Rpm:_read()
   self.lead = Rpm.Lead(self._io, self, self._root)
   self.signature = Rpm.Header(true, self._io, self, self._root)
-  self.signature_padding = self._io:read_bytes((-(self._io:pos()) % 8))
+  self.signature_padding = self._io:read_bytes(-(self._io:pos()) % 8)
   if self.ofs_header < 0 then
     self._unnamed3 = self._io:read_bytes(0)
   end
@@ -436,16 +436,14 @@ function Rpm.property.has_signature_size_tag:get()
   return self._m_has_signature_size_tag
 end
 
-Rpm.property.signature_size_tag = {}
-function Rpm.property.signature_size_tag:get()
-  if self._m_signature_size_tag ~= nil then
-    return self._m_signature_size_tag
+Rpm.property.len_header = {}
+function Rpm.property.len_header:get()
+  if self._m_len_header ~= nil then
+    return self._m_len_header
   end
 
-  if self.has_signature_size_tag then
-    self._m_signature_size_tag = self.signature.index_records[self.signature_tags_steps[#self.signature_tags_steps].size_tag_idx + 1]
-  end
-  return self._m_signature_size_tag
+  self._m_len_header = self.ofs_payload - self.ofs_header
+  return self._m_len_header
 end
 
 Rpm.property.len_payload = {}
@@ -455,34 +453,9 @@ function Rpm.property.len_payload:get()
   end
 
   if self.has_signature_size_tag then
-    self._m_len_payload = (self.signature_size_tag.body.values[0 + 1] - self.len_header)
+    self._m_len_payload = self.signature_size_tag.body.values[0 + 1] - self.len_header
   end
   return self._m_len_payload
-end
-
-Rpm.property.payload = {}
-function Rpm.property.payload:get()
-  if self._m_payload ~= nil then
-    return self._m_payload
-  end
-
-  if self.has_signature_size_tag then
-    local _pos = self._io:pos()
-    self._io:seek(self.ofs_payload)
-    self._m_payload = self._io:read_bytes(self.len_payload)
-    self._io:seek(_pos)
-  end
-  return self._m_payload
-end
-
-Rpm.property.len_header = {}
-function Rpm.property.len_header:get()
-  if self._m_len_header ~= nil then
-    return self._m_len_header
-  end
-
-  self._m_len_header = (self.ofs_payload - self.ofs_header)
-  return self._m_len_header
 end
 
 Rpm.property.ofs_header = {}
@@ -505,364 +478,46 @@ function Rpm.property.ofs_payload:get()
   return self._m_ofs_payload
 end
 
-
-Rpm.RecordTypeStringArray = class.class(KaitaiStruct)
-
-function Rpm.RecordTypeStringArray:_init(num_values, io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self.num_values = num_values
-  self:_read()
-end
-
-function Rpm.RecordTypeStringArray:_read()
-  self.values = {}
-  for i = 0, self.num_values - 1 do
-    self.values[i + 1] = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "UTF-8")
-  end
-end
-
-
--- 
--- In 2021, Panu Matilainen (a RPM developer) [described this
--- structure](https://github.com/kaitai-io/kaitai_struct_formats/pull/469#discussion_r718288192)
--- as follows:
--- 
--- > The lead as a structure is 25 years obsolete, the data there is
--- > meaningless. Seriously. Except to check for the magic to detect that
--- > it's an rpm file in the first place, just ignore everything in it.
--- > Literally everything.
--- 
--- The fields with `valid` constraints are important, because these are the
--- same validations that RPM does (which means that any valid `.rpm` file
--- must pass them), but otherwise you should not make decisions based on the
--- values given here.
-Rpm.Lead = class.class(KaitaiStruct)
-
-function Rpm.Lead:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Rpm.Lead:_read()
-  self.magic = self._io:read_bytes(4)
-  if not(self.magic == "\237\171\238\219") then
-    error("not equal, expected " ..  "\237\171\238\219" .. ", but got " .. self.magic)
-  end
-  self.version = Rpm.RpmVersion(self._io, self, self._root)
-  self.type = Rpm.RpmTypes(self._io:read_u2be())
-  self.architecture = Rpm.Architectures(self._io:read_u2be())
-  self.package_name = str_decode.decode(KaitaiStream.bytes_terminate(self._io:read_bytes(66), 0, false), "UTF-8")
-  self.os = Rpm.OperatingSystems(self._io:read_u2be())
-  self.signature_type = self._io:read_u2be()
-  if not(self.signature_type == 5) then
-    error("not equal, expected " ..  5 .. ", but got " .. self.signature_type)
-  end
-  self.reserved = self._io:read_bytes(16)
-end
-
-
-Rpm.RecordTypeString = class.class(KaitaiStruct)
-
-function Rpm.RecordTypeString:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Rpm.RecordTypeString:_read()
-  self.values = {}
-  for i = 0, 1 - 1 do
-    self.values[i + 1] = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "UTF-8")
-  end
-end
-
-
-Rpm.SignatureTagsStep = class.class(KaitaiStruct)
-
-function Rpm.SignatureTagsStep:_init(idx, prev_size_tag_idx, io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self.idx = idx
-  self.prev_size_tag_idx = prev_size_tag_idx
-  self:_read()
-end
-
-function Rpm.SignatureTagsStep:_read()
-end
-
-Rpm.SignatureTagsStep.property.size_tag_idx = {}
-function Rpm.SignatureTagsStep.property.size_tag_idx:get()
-  if self._m_size_tag_idx ~= nil then
-    return self._m_size_tag_idx
+Rpm.property.payload = {}
+function Rpm.property.payload:get()
+  if self._m_payload ~= nil then
+    return self._m_payload
   end
 
-  self._m_size_tag_idx = utils.box_unwrap((self.prev_size_tag_idx ~= -1) and utils.box_wrap(self.prev_size_tag_idx) or (utils.box_unwrap(( ((self._parent.signature.index_records[self.idx + 1].signature_tag == Rpm.SignatureTags.size) and (self._parent.signature.index_records[self.idx + 1].record_type == Rpm.RecordTypes.uint32) and (self._parent.signature.index_records[self.idx + 1].num_values >= 1)) ) and utils.box_wrap(self.idx) or (-1))))
-  return self._m_size_tag_idx
+  if self.has_signature_size_tag then
+    local _pos = self._io:pos()
+    self._io:seek(self.ofs_payload)
+    self._m_payload = self._io:read_bytes(self.len_payload)
+    self._io:seek(_pos)
+  end
+  return self._m_payload
 end
 
+Rpm.property.signature_size_tag = {}
+function Rpm.property.signature_size_tag:get()
+  if self._m_signature_size_tag ~= nil then
+    return self._m_signature_size_tag
+  end
 
-Rpm.RecordTypeUint32 = class.class(KaitaiStruct)
-
-function Rpm.RecordTypeUint32:_init(num_values, io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self.num_values = num_values
-  self:_read()
+  if self.has_signature_size_tag then
+    self._m_signature_size_tag = self.signature.index_records[self.signature_tags_steps[#self.signature_tags_steps].size_tag_idx + 1]
+  end
+  return self._m_signature_size_tag
 end
 
-function Rpm.RecordTypeUint32:_read()
-  self.values = {}
-  for i = 0, self.num_values - 1 do
-    self.values[i + 1] = self._io:read_u4be()
-  end
-end
-
-
-Rpm.RecordTypeUint16 = class.class(KaitaiStruct)
-
-function Rpm.RecordTypeUint16:_init(num_values, io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self.num_values = num_values
-  self:_read()
-end
-
-function Rpm.RecordTypeUint16:_read()
-  self.values = {}
-  for i = 0, self.num_values - 1 do
-    self.values[i + 1] = self._io:read_u2be()
-  end
-end
-
-
-Rpm.HeaderIndexRecord = class.class(KaitaiStruct)
-
-function Rpm.HeaderIndexRecord:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Rpm.HeaderIndexRecord:_read()
-  self.tag_raw = self._io:read_u4be()
-  self.record_type = Rpm.RecordTypes(self._io:read_u4be())
-  self.ofs_body = self._io:read_u4be()
-  self.count = self._io:read_u4be()
-end
-
-Rpm.HeaderIndexRecord.property.num_values = {}
-function Rpm.HeaderIndexRecord.property.num_values:get()
-  if self._m_num_values ~= nil then
-    return self._m_num_values
-  end
-
-  if self.record_type ~= Rpm.RecordTypes.bin then
-    self._m_num_values = self.count
-  end
-  return self._m_num_values
-end
-
-Rpm.HeaderIndexRecord.property.body = {}
-function Rpm.HeaderIndexRecord.property.body:get()
-  if self._m_body ~= nil then
-    return self._m_body
-  end
-
-  local _io = self._parent.storage_section._io
-  local _pos = _io:pos()
-  _io:seek(self.ofs_body)
-  local _on = self.record_type
-  if _on == Rpm.RecordTypes.uint32 then
-    self._m_body = Rpm.RecordTypeUint32(self.num_values, _io, self, self._root)
-  elseif _on == Rpm.RecordTypes.uint64 then
-    self._m_body = Rpm.RecordTypeUint64(self.num_values, _io, self, self._root)
-  elseif _on == Rpm.RecordTypes.bin then
-    self._m_body = Rpm.RecordTypeBin(self.len_value, _io, self, self._root)
-  elseif _on == Rpm.RecordTypes.string then
-    self._m_body = Rpm.RecordTypeString(_io, self, self._root)
-  elseif _on == Rpm.RecordTypes.uint8 then
-    self._m_body = Rpm.RecordTypeUint8(self.num_values, _io, self, self._root)
-  elseif _on == Rpm.RecordTypes.i18n_string then
-    self._m_body = Rpm.RecordTypeStringArray(self.num_values, _io, self, self._root)
-  elseif _on == Rpm.RecordTypes.uint16 then
-    self._m_body = Rpm.RecordTypeUint16(self.num_values, _io, self, self._root)
-  elseif _on == Rpm.RecordTypes.char then
-    self._m_body = Rpm.RecordTypeUint8(self.num_values, _io, self, self._root)
-  elseif _on == Rpm.RecordTypes.string_array then
-    self._m_body = Rpm.RecordTypeStringArray(self.num_values, _io, self, self._root)
-  end
-  _io:seek(_pos)
-  return self._m_body
-end
-
-Rpm.HeaderIndexRecord.property.signature_tag = {}
-function Rpm.HeaderIndexRecord.property.signature_tag:get()
-  if self._m_signature_tag ~= nil then
-    return self._m_signature_tag
-  end
-
-  if self._parent.is_signature then
-    self._m_signature_tag = Rpm.SignatureTags(self.tag_raw)
-  end
-  return self._m_signature_tag
-end
-
-Rpm.HeaderIndexRecord.property.len_value = {}
-function Rpm.HeaderIndexRecord.property.len_value:get()
-  if self._m_len_value ~= nil then
-    return self._m_len_value
-  end
-
-  if self.record_type == Rpm.RecordTypes.bin then
-    self._m_len_value = self.count
-  end
-  return self._m_len_value
-end
-
-Rpm.HeaderIndexRecord.property.header_tag = {}
-function Rpm.HeaderIndexRecord.property.header_tag:get()
-  if self._m_header_tag ~= nil then
-    return self._m_header_tag
-  end
-
-  if self._parent.is_header then
-    self._m_header_tag = Rpm.HeaderTags(self.tag_raw)
-  end
-  return self._m_header_tag
-end
-
--- 
--- prefer to access `signature_tag` and `header_tag` instead.
--- 
--- internal; access `num_values` and `len_value` instead.
-
-Rpm.RpmVersion = class.class(KaitaiStruct)
-
-function Rpm.RpmVersion:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Rpm.RpmVersion:_read()
-  self.major = self._io:read_u1()
-  if not(self.major >= 3) then
-    error("ValidationLessThanError")
-  end
-  if not(self.major <= 4) then
-    error("ValidationGreaterThanError")
-  end
-  self.minor = self._io:read_u1()
-end
-
--- 
--- See also: Source (https://github.com/rpm-software-management/rpm/blob/afad3167/lib/rpmlead.c#L102)
 
 Rpm.Dummy = class.class(KaitaiStruct)
 
 function Rpm.Dummy:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function Rpm.Dummy:_read()
 end
 
-
-Rpm.RecordTypeUint8 = class.class(KaitaiStruct)
-
-function Rpm.RecordTypeUint8:_init(num_values, io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self.num_values = num_values
-  self:_read()
-end
-
-function Rpm.RecordTypeUint8:_read()
-  self.values = {}
-  for i = 0, self.num_values - 1 do
-    self.values[i + 1] = self._io:read_u1()
-  end
-end
-
-
-Rpm.RecordTypeUint64 = class.class(KaitaiStruct)
-
-function Rpm.RecordTypeUint64:_init(num_values, io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self.num_values = num_values
-  self:_read()
-end
-
-function Rpm.RecordTypeUint64:_read()
-  self.values = {}
-  for i = 0, self.num_values - 1 do
-    self.values[i + 1] = self._io:read_u8be()
-  end
-end
-
-
-Rpm.RecordTypeBin = class.class(KaitaiStruct)
-
-function Rpm.RecordTypeBin:_init(len_value, io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self.len_value = len_value
-  self:_read()
-end
-
-function Rpm.RecordTypeBin:_read()
-  self.values = {}
-  for i = 0, 1 - 1 do
-    self.values[i + 1] = self._io:read_bytes(self.len_value)
-  end
-end
-
-
-Rpm.HeaderRecord = class.class(KaitaiStruct)
-
-function Rpm.HeaderRecord:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Rpm.HeaderRecord:_read()
-  self.magic = self._io:read_bytes(4)
-  if not(self.magic == "\142\173\232\001") then
-    error("not equal, expected " ..  "\142\173\232\001" .. ", but got " .. self.magic)
-  end
-  self.reserved = self._io:read_bytes(4)
-  if not(self.reserved == "\000\000\000\000") then
-    error("not equal, expected " ..  "\000\000\000\000" .. ", but got " .. self.reserved)
-  end
-  self.num_index_records = self._io:read_u4be()
-  if not(self.num_index_records >= 1) then
-    error("ValidationLessThanError")
-  end
-  self.len_storage_section = self._io:read_u4be()
-end
-
--- 
--- Size of the storage area for the data
--- pointed to by the Index Records.
 
 -- 
 -- header structure used for both the "header" and "signature", but some tag
@@ -873,7 +528,7 @@ Rpm.Header = class.class(KaitaiStruct)
 function Rpm.Header:_init(is_signature, io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self.is_signature = is_signature
   self:_read()
 end
@@ -897,6 +552,351 @@ function Rpm.Header.property.is_header:get()
 
   self._m_is_header = not(self.is_signature)
   return self._m_is_header
+end
+
+
+Rpm.HeaderIndexRecord = class.class(KaitaiStruct)
+
+function Rpm.HeaderIndexRecord:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Rpm.HeaderIndexRecord:_read()
+  self.tag_raw = self._io:read_u4be()
+  self.record_type = Rpm.RecordTypes(self._io:read_u4be())
+  self.ofs_body = self._io:read_u4be()
+  self.count = self._io:read_u4be()
+end
+
+Rpm.HeaderIndexRecord.property.body = {}
+function Rpm.HeaderIndexRecord.property.body:get()
+  if self._m_body ~= nil then
+    return self._m_body
+  end
+
+  local _io = self._parent.storage_section._io
+  local _pos = _io:pos()
+  _io:seek(self.ofs_body)
+  local _on = self.record_type
+  if _on == Rpm.RecordTypes.bin then
+    self._m_body = Rpm.RecordTypeBin(self.len_value, _io, self, self._root)
+  elseif _on == Rpm.RecordTypes.char then
+    self._m_body = Rpm.RecordTypeUint8(self.num_values, _io, self, self._root)
+  elseif _on == Rpm.RecordTypes.i18n_string then
+    self._m_body = Rpm.RecordTypeStringArray(self.num_values, _io, self, self._root)
+  elseif _on == Rpm.RecordTypes.string then
+    self._m_body = Rpm.RecordTypeString(_io, self, self._root)
+  elseif _on == Rpm.RecordTypes.string_array then
+    self._m_body = Rpm.RecordTypeStringArray(self.num_values, _io, self, self._root)
+  elseif _on == Rpm.RecordTypes.uint16 then
+    self._m_body = Rpm.RecordTypeUint16(self.num_values, _io, self, self._root)
+  elseif _on == Rpm.RecordTypes.uint32 then
+    self._m_body = Rpm.RecordTypeUint32(self.num_values, _io, self, self._root)
+  elseif _on == Rpm.RecordTypes.uint64 then
+    self._m_body = Rpm.RecordTypeUint64(self.num_values, _io, self, self._root)
+  elseif _on == Rpm.RecordTypes.uint8 then
+    self._m_body = Rpm.RecordTypeUint8(self.num_values, _io, self, self._root)
+  end
+  _io:seek(_pos)
+  return self._m_body
+end
+
+Rpm.HeaderIndexRecord.property.header_tag = {}
+function Rpm.HeaderIndexRecord.property.header_tag:get()
+  if self._m_header_tag ~= nil then
+    return self._m_header_tag
+  end
+
+  if self._parent.is_header then
+    self._m_header_tag = Rpm.HeaderTags(self.tag_raw)
+  end
+  return self._m_header_tag
+end
+
+Rpm.HeaderIndexRecord.property.len_value = {}
+function Rpm.HeaderIndexRecord.property.len_value:get()
+  if self._m_len_value ~= nil then
+    return self._m_len_value
+  end
+
+  if self.record_type == Rpm.RecordTypes.bin then
+    self._m_len_value = self.count
+  end
+  return self._m_len_value
+end
+
+Rpm.HeaderIndexRecord.property.num_values = {}
+function Rpm.HeaderIndexRecord.property.num_values:get()
+  if self._m_num_values ~= nil then
+    return self._m_num_values
+  end
+
+  if self.record_type ~= Rpm.RecordTypes.bin then
+    self._m_num_values = self.count
+  end
+  return self._m_num_values
+end
+
+Rpm.HeaderIndexRecord.property.signature_tag = {}
+function Rpm.HeaderIndexRecord.property.signature_tag:get()
+  if self._m_signature_tag ~= nil then
+    return self._m_signature_tag
+  end
+
+  if self._parent.is_signature then
+    self._m_signature_tag = Rpm.SignatureTags(self.tag_raw)
+  end
+  return self._m_signature_tag
+end
+
+-- 
+-- prefer to access `signature_tag` and `header_tag` instead.
+-- 
+-- internal; access `num_values` and `len_value` instead.
+
+Rpm.HeaderRecord = class.class(KaitaiStruct)
+
+function Rpm.HeaderRecord:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Rpm.HeaderRecord:_read()
+  self.magic = self._io:read_bytes(4)
+  if not(self.magic == "\142\173\232\001") then
+    error("not equal, expected " .. "\142\173\232\001" .. ", but got " .. self.magic)
+  end
+  self.reserved = self._io:read_bytes(4)
+  if not(self.reserved == "\000\000\000\000") then
+    error("not equal, expected " .. "\000\000\000\000" .. ", but got " .. self.reserved)
+  end
+  self.num_index_records = self._io:read_u4be()
+  if not(self.num_index_records >= 1) then
+    error("ValidationLessThanError")
+  end
+  self.len_storage_section = self._io:read_u4be()
+end
+
+-- 
+-- Size of the storage area for the data
+-- pointed to by the Index Records.
+
+-- 
+-- In 2021, Panu Matilainen (a RPM developer) [described this
+-- structure](https://github.com/kaitai-io/kaitai_struct_formats/pull/469#discussion_r718288192)
+-- as follows:
+-- 
+-- > The lead as a structure is 25 years obsolete, the data there is
+-- > meaningless. Seriously. Except to check for the magic to detect that
+-- > it's an rpm file in the first place, just ignore everything in it.
+-- > Literally everything.
+-- 
+-- The fields with `valid` constraints are important, because these are the
+-- same validations that RPM does (which means that any valid `.rpm` file
+-- must pass them), but otherwise you should not make decisions based on the
+-- values given here.
+Rpm.Lead = class.class(KaitaiStruct)
+
+function Rpm.Lead:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Rpm.Lead:_read()
+  self.magic = self._io:read_bytes(4)
+  if not(self.magic == "\237\171\238\219") then
+    error("not equal, expected " .. "\237\171\238\219" .. ", but got " .. self.magic)
+  end
+  self.version = Rpm.RpmVersion(self._io, self, self._root)
+  self.type = Rpm.RpmTypes(self._io:read_u2be())
+  self.architecture = Rpm.Architectures(self._io:read_u2be())
+  self.package_name = str_decode.decode(KaitaiStream.bytes_terminate(self._io:read_bytes(66), 0, false), "UTF-8")
+  self.os = Rpm.OperatingSystems(self._io:read_u2be())
+  self.signature_type = self._io:read_u2be()
+  if not(self.signature_type == 5) then
+    error("not equal, expected " .. 5 .. ", but got " .. self.signature_type)
+  end
+  self.reserved = self._io:read_bytes(16)
+end
+
+
+Rpm.RecordTypeBin = class.class(KaitaiStruct)
+
+function Rpm.RecordTypeBin:_init(len_value, io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self.len_value = len_value
+  self:_read()
+end
+
+function Rpm.RecordTypeBin:_read()
+  self.values = {}
+  for i = 0, 1 - 1 do
+    self.values[i + 1] = self._io:read_bytes(self.len_value)
+  end
+end
+
+
+Rpm.RecordTypeString = class.class(KaitaiStruct)
+
+function Rpm.RecordTypeString:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Rpm.RecordTypeString:_read()
+  self.values = {}
+  for i = 0, 1 - 1 do
+    self.values[i + 1] = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "UTF-8")
+  end
+end
+
+
+Rpm.RecordTypeStringArray = class.class(KaitaiStruct)
+
+function Rpm.RecordTypeStringArray:_init(num_values, io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self.num_values = num_values
+  self:_read()
+end
+
+function Rpm.RecordTypeStringArray:_read()
+  self.values = {}
+  for i = 0, self.num_values - 1 do
+    self.values[i + 1] = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "UTF-8")
+  end
+end
+
+
+Rpm.RecordTypeUint16 = class.class(KaitaiStruct)
+
+function Rpm.RecordTypeUint16:_init(num_values, io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self.num_values = num_values
+  self:_read()
+end
+
+function Rpm.RecordTypeUint16:_read()
+  self.values = {}
+  for i = 0, self.num_values - 1 do
+    self.values[i + 1] = self._io:read_u2be()
+  end
+end
+
+
+Rpm.RecordTypeUint32 = class.class(KaitaiStruct)
+
+function Rpm.RecordTypeUint32:_init(num_values, io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self.num_values = num_values
+  self:_read()
+end
+
+function Rpm.RecordTypeUint32:_read()
+  self.values = {}
+  for i = 0, self.num_values - 1 do
+    self.values[i + 1] = self._io:read_u4be()
+  end
+end
+
+
+Rpm.RecordTypeUint64 = class.class(KaitaiStruct)
+
+function Rpm.RecordTypeUint64:_init(num_values, io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self.num_values = num_values
+  self:_read()
+end
+
+function Rpm.RecordTypeUint64:_read()
+  self.values = {}
+  for i = 0, self.num_values - 1 do
+    self.values[i + 1] = self._io:read_u8be()
+  end
+end
+
+
+Rpm.RecordTypeUint8 = class.class(KaitaiStruct)
+
+function Rpm.RecordTypeUint8:_init(num_values, io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self.num_values = num_values
+  self:_read()
+end
+
+function Rpm.RecordTypeUint8:_read()
+  self.values = {}
+  for i = 0, self.num_values - 1 do
+    self.values[i + 1] = self._io:read_u1()
+  end
+end
+
+
+Rpm.RpmVersion = class.class(KaitaiStruct)
+
+function Rpm.RpmVersion:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Rpm.RpmVersion:_read()
+  self.major = self._io:read_u1()
+  if not(self.major >= 3) then
+    error("ValidationLessThanError")
+  end
+  if not(self.major <= 4) then
+    error("ValidationGreaterThanError")
+  end
+  self.minor = self._io:read_u1()
+end
+
+-- 
+-- See also: Source (https://github.com/rpm-software-management/rpm/blob/afad3167/lib/rpmlead.c#L102)
+
+Rpm.SignatureTagsStep = class.class(KaitaiStruct)
+
+function Rpm.SignatureTagsStep:_init(idx, prev_size_tag_idx, io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self.idx = idx
+  self.prev_size_tag_idx = prev_size_tag_idx
+  self:_read()
+end
+
+function Rpm.SignatureTagsStep:_read()
+end
+
+Rpm.SignatureTagsStep.property.size_tag_idx = {}
+function Rpm.SignatureTagsStep.property.size_tag_idx:get()
+  if self._m_size_tag_idx ~= nil then
+    return self._m_size_tag_idx
+  end
+
+  self._m_size_tag_idx = utils.box_unwrap((self.prev_size_tag_idx ~= -1) and utils.box_wrap(self.prev_size_tag_idx) or (utils.box_unwrap(( ((self._parent.signature.index_records[self.idx + 1].signature_tag == Rpm.SignatureTags.size) and (self._parent.signature.index_records[self.idx + 1].record_type == Rpm.RecordTypes.uint32) and (self._parent.signature.index_records[self.idx + 1].num_values >= 1)) ) and utils.box_wrap(self.idx) or (-1))))
+  return self._m_size_tag_idx
 end
 
 

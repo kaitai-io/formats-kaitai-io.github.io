@@ -10,8 +10,8 @@
 
 namespace {
     class Hccap extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Hccap $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Hccap $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -29,8 +29,20 @@ namespace {
 }
 
 namespace Hccap {
+    class EapolDummy extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Hccap\HccapRecord $_parent = null, ?\Hccap $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+        }
+    }
+}
+
+namespace Hccap {
     class HccapRecord extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Hccap $_parent = null, \Hccap $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Hccap $_parent = null, ?\Hccap $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -113,17 +125,5 @@ namespace Hccap {
          */
         public function keymic() { return $this->_m_keymic; }
         public function _raw_eapolBuffer() { return $this->_m__raw_eapolBuffer; }
-    }
-}
-
-namespace Hccap {
-    class EapolDummy extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Hccap\HccapRecord $_parent = null, \Hccap $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-        }
     }
 }

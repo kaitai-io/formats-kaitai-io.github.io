@@ -109,15 +109,15 @@
 
 namespace {
     class AndroidBootldrQcom extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \AndroidBootldrQcom $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\AndroidBootldrQcom $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic = $this->_io->readBytes(8);
-            if (!($this->magic() == "\x42\x4F\x4F\x54\x4C\x44\x52\x21")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x42\x4F\x4F\x54\x4C\x44\x52\x21", $this->magic(), $this->_io(), "/seq/0");
+            if (!($this->_m_magic == "\x42\x4F\x4F\x54\x4C\x44\x52\x21")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x42\x4F\x4F\x54\x4C\x44\x52\x21", $this->_m_magic, $this->_io, "/seq/0");
             }
             $this->_m_numImages = $this->_io->readU4le();
             $this->_m_ofsImgBodies = $this->_io->readU4le();
@@ -179,26 +179,8 @@ namespace {
 }
 
 namespace AndroidBootldrQcom {
-    class ImgHeader extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \AndroidBootldrQcom $_parent = null, \AndroidBootldrQcom $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_name = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($this->_io->readBytes(64), 0, false), "ASCII");
-            $this->_m_lenBody = $this->_io->readU4le();
-        }
-        protected $_m_name;
-        protected $_m_lenBody;
-        public function name() { return $this->_m_name; }
-        public function lenBody() { return $this->_m_lenBody; }
-    }
-}
-
-namespace AndroidBootldrQcom {
     class ImgBody extends \Kaitai\Struct\Struct {
-        public function __construct(int $idx, \Kaitai\Struct\Stream $_io, \AndroidBootldrQcom $_parent = null, \AndroidBootldrQcom $_root = null) {
+        public function __construct(int $idx, \Kaitai\Struct\Stream $_io, ?\AndroidBootldrQcom $_parent = null, ?\AndroidBootldrQcom $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_m_idx = $idx;
             $this->_read();
@@ -218,5 +200,23 @@ namespace AndroidBootldrQcom {
         protected $_m_idx;
         public function body() { return $this->_m_body; }
         public function idx() { return $this->_m_idx; }
+    }
+}
+
+namespace AndroidBootldrQcom {
+    class ImgHeader extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\AndroidBootldrQcom $_parent = null, ?\AndroidBootldrQcom $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_name = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($this->_io->readBytes(64), 0, false), "ASCII");
+            $this->_m_lenBody = $this->_io->readU4le();
+        }
+        protected $_m_name;
+        protected $_m_lenBody;
+        public function name() { return $this->_m_name; }
+        public function lenBody() { return $this->_m_lenBody; }
     }
 }

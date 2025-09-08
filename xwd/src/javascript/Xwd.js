@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.Xwd = factory(root.KaitaiStream);
+    factory(root.Xwd || (root.Xwd = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Xwd_, KaitaiStream) {
 /**
  * xwd is a file format written by eponymous X11 screen capture
  * application (xwd stands for "X Window Dump"). Typically, an average
@@ -22,6 +22,14 @@
  */
 
 var Xwd = (function() {
+  Xwd.ByteOrder = Object.freeze({
+    LE: 0,
+    BE: 1,
+
+    0: "LE",
+    1: "BE",
+  });
+
   Xwd.PixmapFormat = Object.freeze({
     X_Y_BITMAP: 0,
     X_Y_PIXMAP: 1,
@@ -30,14 +38,6 @@ var Xwd = (function() {
     0: "X_Y_BITMAP",
     1: "X_Y_PIXMAP",
     2: "Z_PIXMAP",
-  });
-
-  Xwd.ByteOrder = Object.freeze({
-    LE: 0,
-    BE: 1,
-
-    0: "LE",
-    1: "BE",
   });
 
   Xwd.VisualClass = Object.freeze({
@@ -65,7 +65,7 @@ var Xwd = (function() {
   }
   Xwd.prototype._read = function() {
     this.lenHeader = this._io.readU4be();
-    this._raw_hdr = this._io.readBytes((this.lenHeader - 4));
+    this._raw_hdr = this._io.readBytes(this.lenHeader - 4);
     var _io__raw_hdr = new KaitaiStream(this._raw_hdr);
     this.hdr = new Header(_io__raw_hdr, this, this._root);
     this._raw_colorMap = [];
@@ -77,11 +77,35 @@ var Xwd = (function() {
     }
   }
 
+  var ColorMapEntry = Xwd.ColorMapEntry = (function() {
+    function ColorMapEntry(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    ColorMapEntry.prototype._read = function() {
+      this.entryNumber = this._io.readU4be();
+      this.red = this._io.readU2be();
+      this.green = this._io.readU2be();
+      this.blue = this._io.readU2be();
+      this.flags = this._io.readU1();
+      this.padding = this._io.readU1();
+    }
+
+    /**
+     * Number of the color map entry
+     */
+
+    return ColorMapEntry;
+  })();
+
   var Header = Xwd.Header = (function() {
     function Header(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -216,35 +240,11 @@ var Xwd = (function() {
     return Header;
   })();
 
-  var ColorMapEntry = Xwd.ColorMapEntry = (function() {
-    function ColorMapEntry(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    ColorMapEntry.prototype._read = function() {
-      this.entryNumber = this._io.readU4be();
-      this.red = this._io.readU2be();
-      this.green = this._io.readU2be();
-      this.blue = this._io.readU2be();
-      this.flags = this._io.readU1();
-      this.padding = this._io.readU1();
-    }
-
-    /**
-     * Number of the color map entry
-     */
-
-    return ColorMapEntry;
-  })();
-
   /**
    * Size of the header in bytes
    */
 
   return Xwd;
 })();
-return Xwd;
-}));
+Xwd_.Xwd = Xwd;
+});

@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Encode;
 
 ########################################################################
@@ -25,7 +25,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -70,7 +70,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -114,7 +114,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -158,7 +158,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -214,7 +214,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -258,7 +258,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -268,18 +268,24 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{id} = Encode::decode("ascii", $self->{_io}->read_bytes(32));
+    $self->{id} = Encode::decode("ASCII", $self->{_io}->read_bytes(32));
     $self->{size} = $self->{_io}->read_u8le();
-    $self->{data_area_descriptors} = ();
-    do {
-        $_ = Lvm2::PhysicalVolume::Label::VolumeHeader::DataAreaDescriptor->new($self->{_io}, $self, $self->{_root});
-        push @{$self->{data_area_descriptors}}, $_;
-    } until ( (($_->size() != 0) && ($_->offset() != 0)) );
-    $self->{metadata_area_descriptors} = ();
-    do {
-        $_ = Lvm2::PhysicalVolume::Label::VolumeHeader::MetadataAreaDescriptor->new($self->{_io}, $self, $self->{_root});
-        push @{$self->{metadata_area_descriptors}}, $_;
-    } until ( (($_->size() != 0) && ($_->offset() != 0)) );
+    $self->{data_area_descriptors} = [];
+    {
+        my $_it;
+        do {
+            $_it = Lvm2::PhysicalVolume::Label::VolumeHeader::DataAreaDescriptor->new($self->{_io}, $self, $self->{_root});
+            push @{$self->{data_area_descriptors}}, $_it;
+        } until ( (($_it->size() != 0) && ($_it->offset() != 0)) );
+    }
+    $self->{metadata_area_descriptors} = [];
+    {
+        my $_it;
+        do {
+            $_it = Lvm2::PhysicalVolume::Label::VolumeHeader::MetadataAreaDescriptor->new($self->{_io}, $self, $self->{_root});
+            push @{$self->{metadata_area_descriptors}}, $_it;
+        } until ( (($_it->size() != 0) && ($_it->offset() != 0)) );
+    }
 }
 
 sub id {
@@ -322,7 +328,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -342,7 +348,7 @@ sub data {
     if ($self->size() != 0) {
         my $_pos = $self->{_io}->pos();
         $self->{_io}->seek($self->offset());
-        $self->{data} = Encode::decode("ascii", $self->{_io}->read_bytes($self->size()));
+        $self->{data} = Encode::decode("ASCII", $self->{_io}->read_bytes($self->size()));
         $self->{_io}->seek($_pos);
     }
     return $self->{data};
@@ -356,69 +362,6 @@ sub offset {
 sub size {
     my ($self) = @_;
     return $self->{size};
-}
-
-########################################################################
-package Lvm2::PhysicalVolume::Label::VolumeHeader::MetadataAreaDescriptor;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{offset} = $self->{_io}->read_u8le();
-    $self->{size} = $self->{_io}->read_u8le();
-}
-
-sub data {
-    my ($self) = @_;
-    return $self->{data} if ($self->{data});
-    if ($self->size() != 0) {
-        my $_pos = $self->{_io}->pos();
-        $self->{_io}->seek($self->offset());
-        $self->{_raw_data} = $self->{_io}->read_bytes($self->size());
-        my $io__raw_data = IO::KaitaiStruct::Stream->new($self->{_raw_data});
-        $self->{data} = Lvm2::PhysicalVolume::Label::VolumeHeader::MetadataArea->new($io__raw_data, $self, $self->{_root});
-        $self->{_io}->seek($_pos);
-    }
-    return $self->{data};
-}
-
-sub offset {
-    my ($self) = @_;
-    return $self->{offset};
-}
-
-sub size {
-    my ($self) = @_;
-    return $self->{size};
-}
-
-sub _raw_data {
-    my ($self) = @_;
-    return $self->{_raw_data};
 }
 
 ########################################################################
@@ -441,7 +384,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -479,7 +422,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -494,11 +437,14 @@ sub _read {
     $self->{version} = $self->{_io}->read_u4le();
     $self->{metadata_area_offset} = $self->{_io}->read_u8le();
     $self->{metadata_area_size} = $self->{_io}->read_u8le();
-    $self->{raw_location_descriptors} = ();
-    do {
-        $_ = Lvm2::PhysicalVolume::Label::VolumeHeader::MetadataArea::MetadataAreaHeader::RawLocationDescriptor->new($self->{_io}, $self, $self->{_root});
-        push @{$self->{raw_location_descriptors}}, $_;
-    } until ( (($_->offset() != 0) && ($_->size() != 0) && ($_->checksum() != 0)) );
+    $self->{raw_location_descriptors} = [];
+    {
+        my $_it;
+        do {
+            $_it = Lvm2::PhysicalVolume::Label::VolumeHeader::MetadataArea::MetadataAreaHeader::RawLocationDescriptor->new($self->{_io}, $self, $self->{_root});
+            push @{$self->{raw_location_descriptors}}, $_it;
+        } until ( (($_it->offset() != 0) && ($_it->size() != 0) && ($_it->checksum() != 0)) );
+    }
 }
 
 sub metadata {
@@ -563,7 +509,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -597,6 +543,69 @@ sub checksum {
 sub flags {
     my ($self) = @_;
     return $self->{flags};
+}
+
+########################################################################
+package Lvm2::PhysicalVolume::Label::VolumeHeader::MetadataAreaDescriptor;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{offset} = $self->{_io}->read_u8le();
+    $self->{size} = $self->{_io}->read_u8le();
+}
+
+sub data {
+    my ($self) = @_;
+    return $self->{data} if ($self->{data});
+    if ($self->size() != 0) {
+        my $_pos = $self->{_io}->pos();
+        $self->{_io}->seek($self->offset());
+        $self->{_raw_data} = $self->{_io}->read_bytes($self->size());
+        my $io__raw_data = IO::KaitaiStruct::Stream->new($self->{_raw_data});
+        $self->{data} = Lvm2::PhysicalVolume::Label::VolumeHeader::MetadataArea->new($io__raw_data, $self, $self->{_root});
+        $self->{_io}->seek($_pos);
+    }
+    return $self->{data};
+}
+
+sub offset {
+    my ($self) = @_;
+    return $self->{offset};
+}
+
+sub size {
+    my ($self) = @_;
+    return $self->{size};
+}
+
+sub _raw_data {
+    my ($self) = @_;
+    return $self->{_raw_data};
 }
 
 1;

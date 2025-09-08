@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
 
 
 /**
@@ -42,6 +43,12 @@ public class SomeIpSdEntries extends KaitaiStruct {
                 this.entries.add(new SdEntry(this._io, this, _root));
                 i++;
             }
+        }
+    }
+
+    public void _fetchInstances() {
+        for (int i = 0; i < this.entries.size(); i++) {
+            this.entries.get(((Number) (i)).intValue())._fetchInstances();
         }
     }
     public static class SdEntry extends KaitaiStruct {
@@ -106,6 +113,33 @@ public class SomeIpSdEntries extends KaitaiStruct {
                 }
             }
         }
+
+        public void _fetchInstances() {
+            this.header._fetchInstances();
+            {
+                EntryTypes on = header().type();
+                if (on != null) {
+                    switch (header().type()) {
+                    case FIND: {
+                        ((SdServiceEntry) (this.content))._fetchInstances();
+                        break;
+                    }
+                    case OFFER: {
+                        ((SdServiceEntry) (this.content))._fetchInstances();
+                        break;
+                    }
+                    case SUBSCRIBE: {
+                        ((SdEventgroupEntry) (this.content))._fetchInstances();
+                        break;
+                    }
+                    case SUBSCRIBE_ACK: {
+                        ((SdEventgroupEntry) (this.content))._fetchInstances();
+                        break;
+                    }
+                    }
+                }
+            }
+        }
         public static class SdEntryHeader extends KaitaiStruct {
             public static SdEntryHeader fromFile(String fileName) throws IOException {
                 return new SdEntryHeader(new ByteBufferKaitaiStream(fileName));
@@ -131,11 +165,13 @@ public class SomeIpSdEntries extends KaitaiStruct {
                 this.indexSecondOptions = this._io.readU1();
                 this.numberFirstOptions = this._io.readBitsIntBe(4);
                 this.numberSecondOptions = this._io.readBitsIntBe(4);
-                this._io.alignToByte();
                 this.serviceId = this._io.readU2be();
                 this.instanceId = this._io.readU2be();
                 this.majorVersion = this._io.readU1();
                 this.ttl = this._io.readBitsIntBe(24);
+            }
+
+            public void _fetchInstances() {
             }
             private EntryTypes type;
             private int indexFirstOptions;
@@ -157,35 +193,6 @@ public class SomeIpSdEntries extends KaitaiStruct {
             public int instanceId() { return instanceId; }
             public int majorVersion() { return majorVersion; }
             public long ttl() { return ttl; }
-            public SomeIpSdEntries _root() { return _root; }
-            public SomeIpSdEntries.SdEntry _parent() { return _parent; }
-        }
-        public static class SdServiceEntry extends KaitaiStruct {
-            public static SdServiceEntry fromFile(String fileName) throws IOException {
-                return new SdServiceEntry(new ByteBufferKaitaiStream(fileName));
-            }
-
-            public SdServiceEntry(KaitaiStream _io) {
-                this(_io, null, null);
-            }
-
-            public SdServiceEntry(KaitaiStream _io, SomeIpSdEntries.SdEntry _parent) {
-                this(_io, _parent, null);
-            }
-
-            public SdServiceEntry(KaitaiStream _io, SomeIpSdEntries.SdEntry _parent, SomeIpSdEntries _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.minorVersion = this._io.readU4be();
-            }
-            private long minorVersion;
-            private SomeIpSdEntries _root;
-            private SomeIpSdEntries.SdEntry _parent;
-            public long minorVersion() { return minorVersion; }
             public SomeIpSdEntries _root() { return _root; }
             public SomeIpSdEntries.SdEntry _parent() { return _parent; }
         }
@@ -213,8 +220,10 @@ public class SomeIpSdEntries extends KaitaiStruct {
                 this.initialDataRequested = this._io.readBitsIntBe(1) != 0;
                 this.reserved2 = this._io.readBitsIntBe(3);
                 this.counter = this._io.readBitsIntBe(4);
-                this._io.alignToByte();
                 this.eventGroupId = this._io.readU2be();
+            }
+
+            public void _fetchInstances() {
             }
             private int reserved;
             private boolean initialDataRequested;
@@ -231,6 +240,38 @@ public class SomeIpSdEntries extends KaitaiStruct {
             public SomeIpSdEntries _root() { return _root; }
             public SomeIpSdEntries.SdEntry _parent() { return _parent; }
         }
+        public static class SdServiceEntry extends KaitaiStruct {
+            public static SdServiceEntry fromFile(String fileName) throws IOException {
+                return new SdServiceEntry(new ByteBufferKaitaiStream(fileName));
+            }
+
+            public SdServiceEntry(KaitaiStream _io) {
+                this(_io, null, null);
+            }
+
+            public SdServiceEntry(KaitaiStream _io, SomeIpSdEntries.SdEntry _parent) {
+                this(_io, _parent, null);
+            }
+
+            public SdServiceEntry(KaitaiStream _io, SomeIpSdEntries.SdEntry _parent, SomeIpSdEntries _root) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                _read();
+            }
+            private void _read() {
+                this.minorVersion = this._io.readU4be();
+            }
+
+            public void _fetchInstances() {
+            }
+            private long minorVersion;
+            private SomeIpSdEntries _root;
+            private SomeIpSdEntries.SdEntry _parent;
+            public long minorVersion() { return minorVersion; }
+            public SomeIpSdEntries _root() { return _root; }
+            public SomeIpSdEntries.SdEntry _parent() { return _parent; }
+        }
         private SdEntryHeader header;
         private KaitaiStruct content;
         private SomeIpSdEntries _root;
@@ -240,10 +281,10 @@ public class SomeIpSdEntries extends KaitaiStruct {
         public SomeIpSdEntries _root() { return _root; }
         public SomeIpSdEntries _parent() { return _parent; }
     }
-    private ArrayList<SdEntry> entries;
+    private List<SdEntry> entries;
     private SomeIpSdEntries _root;
     private KaitaiStruct _parent;
-    public ArrayList<SdEntry> entries() { return entries; }
+    public List<SdEntry> entries() { return entries; }
     public SomeIpSdEntries _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

@@ -27,9 +27,9 @@ namespace Kaitai
         private void _read()
         {
             _magic = m_io.ReadBytes(4);
-            if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 177, 104, 222, 58 }) == 0)))
+            if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 177, 104, 222, 58 }) == 0)))
             {
-                throw new ValidationNotEqualError(new byte[] { 177, 104, 222, 58 }, Magic, M_Io, "/seq/0");
+                throw new ValidationNotEqualError(new byte[] { 177, 104, 222, 58 }, _magic, m_io, "/seq/0");
             }
             _files = new List<PcxOffset>();
             {
@@ -68,12 +68,12 @@ namespace Kaitai
                 {
                     if (f_body)
                         return _body;
+                    f_body = true;
                     if (OfsBody != 0) {
                         long _pos = m_io.Pos;
                         m_io.Seek(OfsBody);
                         _body = new Pcx(m_io);
                         m_io.Seek(_pos);
-                        f_body = true;
                     }
                     return _body;
                 }

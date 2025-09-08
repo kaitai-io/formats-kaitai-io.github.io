@@ -15,14 +15,18 @@ type Ipv6Packet struct {
 	Rest []byte
 	_io *kaitai.Stream
 	_root *Ipv6Packet
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewIpv6Packet() *Ipv6Packet {
 	return &Ipv6Packet{
 	}
 }
 
-func (this *Ipv6Packet) Read(io *kaitai.Stream, parent interface{}, root *Ipv6Packet) (err error) {
+func (this Ipv6Packet) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Ipv6Packet) Read(io *kaitai.Stream, parent kaitai.Struct, root *Ipv6Packet) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -71,7 +75,7 @@ func (this *Ipv6Packet) Read(io *kaitai.Stream, parent interface{}, root *Ipv6Pa
 	tmp8 = tmp8
 	this.DstIpv6Addr = tmp8
 	tmp9 := NewProtocolBody(this.NextHeaderType)
-	err = tmp9.Read(this._io, this, nil)
+	err = tmp9.Read(this._io, nil, nil)
 	if err != nil {
 		return err
 	}

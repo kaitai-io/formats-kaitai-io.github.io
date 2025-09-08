@@ -29,14 +29,14 @@ Respack.Header = class.class(KaitaiStruct)
 function Respack.Header:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function Respack.Header:_read()
   self.magic = self._io:read_bytes(2)
   if not(self.magic == "\082\083") then
-    error("not equal, expected " ..  "\082\083" .. ", but got " .. self.magic)
+    error("not equal, expected " .. "\082\083" .. ", but got " .. self.magic)
   end
   self.unknown = self._io:read_bytes(8)
   self.len_json = self._io:read_u4le()

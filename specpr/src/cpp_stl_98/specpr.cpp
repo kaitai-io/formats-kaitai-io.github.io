@@ -1,10 +1,22 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 #include "specpr.h"
+std::set<specpr_t::record_type_t> specpr_t::_build_values_record_type_t() {
+    std::set<specpr_t::record_type_t> _t;
+    _t.insert(specpr_t::RECORD_TYPE_DATA_INITIAL);
+    _t.insert(specpr_t::RECORD_TYPE_TEXT_INITIAL);
+    _t.insert(specpr_t::RECORD_TYPE_DATA_CONTINUATION);
+    _t.insert(specpr_t::RECORD_TYPE_TEXT_CONTINUATION);
+    return _t;
+}
+const std::set<specpr_t::record_type_t> specpr_t::_values_record_type_t = specpr_t::_build_values_record_type_t();
+bool specpr_t::_is_defined_record_type_t(specpr_t::record_type_t v) {
+    return specpr_t::_values_record_type_t.find(v) != specpr_t::_values_record_type_t.end();
+}
 
 specpr_t::specpr_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, specpr_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     m_records = 0;
 
     try {
@@ -36,6 +48,69 @@ void specpr_t::_clean_up() {
             delete *it;
         }
         delete m_records; m_records = 0;
+    }
+}
+
+specpr_t::coarse_timestamp_t::coarse_timestamp_t(kaitai::kstream* p__io, specpr_t::data_initial_t* p__parent, specpr_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    f_seconds = false;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void specpr_t::coarse_timestamp_t::_read() {
+    m_scaled_seconds = m__io->read_s4be();
+}
+
+specpr_t::coarse_timestamp_t::~coarse_timestamp_t() {
+    _clean_up();
+}
+
+void specpr_t::coarse_timestamp_t::_clean_up() {
+}
+
+double specpr_t::coarse_timestamp_t::seconds() {
+    if (f_seconds)
+        return m_seconds;
+    f_seconds = true;
+    m_seconds = scaled_seconds() * 24000;
+    return m_seconds;
+}
+
+specpr_t::data_continuation_t::data_continuation_t(kaitai::kstream* p__io, specpr_t::record_t* p__parent, specpr_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_cdata = 0;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void specpr_t::data_continuation_t::_read() {
+    m_cdata = new std::vector<float>();
+    const int l_cdata = 383;
+    for (int i = 0; i < l_cdata; i++) {
+        m_cdata->push_back(m__io->read_f4be());
+    }
+}
+
+specpr_t::data_continuation_t::~data_continuation_t() {
+    _clean_up();
+}
+
+void specpr_t::data_continuation_t::_clean_up() {
+    if (m_cdata) {
+        delete m_cdata; m_cdata = 0;
     }
 }
 
@@ -82,11 +157,11 @@ void specpr_t::data_initial_t::_read() {
     m_irespt = m__io->read_s4be();
     m_irecno = m__io->read_s4be();
     m_itpntr = m__io->read_s4be();
-    m_ihist = kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_strip_right(m__io->read_bytes(60), 32), std::string("ascii"));
+    m_ihist = kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_strip_right(m__io->read_bytes(60), 32), "ASCII");
     m_mhist = new std::vector<std::string>();
     const int l_mhist = 4;
     for (int i = 0; i < l_mhist; i++) {
-        m_mhist->push_back(kaitai::kstream::bytes_to_str(m__io->read_bytes(74), std::string("ascii")));
+        m_mhist->push_back(kaitai::kstream::bytes_to_str(m__io->read_bytes(74), "ASCII"));
     }
     m_nruns = m__io->read_s4be();
     m_siangl = new illum_angle_t(m__io, this, m__root);
@@ -142,41 +217,9 @@ void specpr_t::data_initial_t::_clean_up() {
 double specpr_t::data_initial_t::phase_angle_arcsec() {
     if (f_phase_angle_arcsec)
         return m_phase_angle_arcsec;
-    m_phase_angle_arcsec = (sphase() / 1500);
     f_phase_angle_arcsec = true;
+    m_phase_angle_arcsec = sphase() / 1500;
     return m_phase_angle_arcsec;
-}
-
-specpr_t::coarse_timestamp_t::coarse_timestamp_t(kaitai::kstream* p__io, specpr_t::data_initial_t* p__parent, specpr_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    f_seconds = false;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void specpr_t::coarse_timestamp_t::_read() {
-    m_scaled_seconds = m__io->read_s4be();
-}
-
-specpr_t::coarse_timestamp_t::~coarse_timestamp_t() {
-    _clean_up();
-}
-
-void specpr_t::coarse_timestamp_t::_clean_up() {
-}
-
-double specpr_t::coarse_timestamp_t::seconds() {
-    if (f_seconds)
-        return m_seconds;
-    m_seconds = (scaled_seconds() * 24000);
-    f_seconds = true;
-    return m_seconds;
 }
 
 specpr_t::icflag_t::icflag_t(kaitai::kstream* p__io, specpr_t::record_t* p__parent, specpr_t* p__root) : kaitai::kstruct(p__io) {
@@ -212,40 +255,9 @@ void specpr_t::icflag_t::_clean_up() {
 specpr_t::record_type_t specpr_t::icflag_t::type() {
     if (f_type)
         return m_type;
-    m_type = static_cast<specpr_t::record_type_t>(((((text()) ? 1 : 0) * 1) + (((continuation()) ? 1 : 0) * 2)));
     f_type = true;
+    m_type = static_cast<specpr_t::record_type_t>(((text()) ? 1 : 0) * 1 + ((continuation()) ? 1 : 0) * 2);
     return m_type;
-}
-
-specpr_t::data_continuation_t::data_continuation_t(kaitai::kstream* p__io, specpr_t::record_t* p__parent, specpr_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    m_cdata = 0;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void specpr_t::data_continuation_t::_read() {
-    m_cdata = new std::vector<float>();
-    const int l_cdata = 383;
-    for (int i = 0; i < l_cdata; i++) {
-        m_cdata->push_back(m__io->read_f4be());
-    }
-}
-
-specpr_t::data_continuation_t::~data_continuation_t() {
-    _clean_up();
-}
-
-void specpr_t::data_continuation_t::_clean_up() {
-    if (m_cdata) {
-        delete m_cdata; m_cdata = 0;
-    }
 }
 
 specpr_t::identifiers_t::identifiers_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, specpr_t* p__root) : kaitai::kstruct(p__io) {
@@ -261,8 +273,8 @@ specpr_t::identifiers_t::identifiers_t(kaitai::kstream* p__io, kaitai::kstruct* 
 }
 
 void specpr_t::identifiers_t::_read() {
-    m_ititle = kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_strip_right(m__io->read_bytes(40), 32), std::string("ascii"));
-    m_usernm = kaitai::kstream::bytes_to_str(m__io->read_bytes(8), std::string("ascii"));
+    m_ititle = kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_strip_right(m__io->read_bytes(40), 32), "ASCII");
+    m_usernm = kaitai::kstream::bytes_to_str(m__io->read_bytes(8), "ASCII");
 }
 
 specpr_t::identifiers_t::~identifiers_t() {
@@ -275,9 +287,9 @@ void specpr_t::identifiers_t::_clean_up() {
 specpr_t::illum_angle_t::illum_angle_t(kaitai::kstream* p__io, specpr_t::data_initial_t* p__parent, specpr_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
-    f_seconds_total = false;
-    f_minutes_total = false;
     f_degrees_total = false;
+    f_minutes_total = false;
+    f_seconds_total = false;
 
     try {
         _read();
@@ -298,58 +310,28 @@ specpr_t::illum_angle_t::~illum_angle_t() {
 void specpr_t::illum_angle_t::_clean_up() {
 }
 
-int32_t specpr_t::illum_angle_t::seconds_total() {
-    if (f_seconds_total)
-        return m_seconds_total;
-    m_seconds_total = (angl() / 6000);
-    f_seconds_total = true;
-    return m_seconds_total;
+int32_t specpr_t::illum_angle_t::degrees_total() {
+    if (f_degrees_total)
+        return m_degrees_total;
+    f_degrees_total = true;
+    m_degrees_total = minutes_total() / 60;
+    return m_degrees_total;
 }
 
 int32_t specpr_t::illum_angle_t::minutes_total() {
     if (f_minutes_total)
         return m_minutes_total;
-    m_minutes_total = (seconds_total() / 60);
     f_minutes_total = true;
+    m_minutes_total = seconds_total() / 60;
     return m_minutes_total;
 }
 
-int32_t specpr_t::illum_angle_t::degrees_total() {
-    if (f_degrees_total)
-        return m_degrees_total;
-    m_degrees_total = (minutes_total() / 60);
-    f_degrees_total = true;
-    return m_degrees_total;
-}
-
-specpr_t::text_initial_t::text_initial_t(kaitai::kstream* p__io, specpr_t::record_t* p__parent, specpr_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    m_ids = 0;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void specpr_t::text_initial_t::_read() {
-    m_ids = new identifiers_t(m__io, this, m__root);
-    m_itxtpt = m__io->read_u4be();
-    m_itxtch = m__io->read_s4be();
-    m_itext = kaitai::kstream::bytes_to_str(m__io->read_bytes(1476), std::string("ascii"));
-}
-
-specpr_t::text_initial_t::~text_initial_t() {
-    _clean_up();
-}
-
-void specpr_t::text_initial_t::_clean_up() {
-    if (m_ids) {
-        delete m_ids; m_ids = 0;
-    }
+int32_t specpr_t::illum_angle_t::seconds_total() {
+    if (f_seconds_total)
+        return m_seconds_total;
+    f_seconds_total = true;
+    m_seconds_total = angl() / 6000;
+    return m_seconds_total;
 }
 
 specpr_t::record_t::record_t(kaitai::kstream* p__io, specpr_t* p__parent, specpr_t* p__root) : kaitai::kstruct(p__io) {
@@ -370,36 +352,36 @@ void specpr_t::record_t::_read() {
     m_icflag = new icflag_t(m__io, this, m__root);
     n_content = true;
     switch (icflag()->type()) {
-    case specpr_t::RECORD_TYPE_DATA_INITIAL: {
-        n_content = false;
-        m__raw_content = m__io->read_bytes((1536 - 4));
-        m__io__raw_content = new kaitai::kstream(m__raw_content);
-        m_content = new data_initial_t(m__io__raw_content, this, m__root);
-        break;
-    }
     case specpr_t::RECORD_TYPE_DATA_CONTINUATION: {
         n_content = false;
-        m__raw_content = m__io->read_bytes((1536 - 4));
+        m__raw_content = m__io->read_bytes(1536 - 4);
         m__io__raw_content = new kaitai::kstream(m__raw_content);
         m_content = new data_continuation_t(m__io__raw_content, this, m__root);
         break;
     }
+    case specpr_t::RECORD_TYPE_DATA_INITIAL: {
+        n_content = false;
+        m__raw_content = m__io->read_bytes(1536 - 4);
+        m__io__raw_content = new kaitai::kstream(m__raw_content);
+        m_content = new data_initial_t(m__io__raw_content, this, m__root);
+        break;
+    }
     case specpr_t::RECORD_TYPE_TEXT_CONTINUATION: {
         n_content = false;
-        m__raw_content = m__io->read_bytes((1536 - 4));
+        m__raw_content = m__io->read_bytes(1536 - 4);
         m__io__raw_content = new kaitai::kstream(m__raw_content);
         m_content = new text_continuation_t(m__io__raw_content, this, m__root);
         break;
     }
     case specpr_t::RECORD_TYPE_TEXT_INITIAL: {
         n_content = false;
-        m__raw_content = m__io->read_bytes((1536 - 4));
+        m__raw_content = m__io->read_bytes(1536 - 4);
         m__io__raw_content = new kaitai::kstream(m__raw_content);
         m_content = new text_initial_t(m__io__raw_content, this, m__root);
         break;
     }
     default: {
-        m__raw_content = m__io->read_bytes((1536 - 4));
+        m__raw_content = m__io->read_bytes(1536 - 4);
         break;
     }
     }
@@ -436,7 +418,7 @@ specpr_t::text_continuation_t::text_continuation_t(kaitai::kstream* p__io, specp
 }
 
 void specpr_t::text_continuation_t::_read() {
-    m_tdata = kaitai::kstream::bytes_to_str(m__io->read_bytes(1532), std::string("ascii"));
+    m_tdata = kaitai::kstream::bytes_to_str(m__io->read_bytes(1532), "ASCII");
 }
 
 specpr_t::text_continuation_t::~text_continuation_t() {
@@ -444,4 +426,34 @@ specpr_t::text_continuation_t::~text_continuation_t() {
 }
 
 void specpr_t::text_continuation_t::_clean_up() {
+}
+
+specpr_t::text_initial_t::text_initial_t(kaitai::kstream* p__io, specpr_t::record_t* p__parent, specpr_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_ids = 0;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void specpr_t::text_initial_t::_read() {
+    m_ids = new identifiers_t(m__io, this, m__root);
+    m_itxtpt = m__io->read_u4be();
+    m_itxtch = m__io->read_s4be();
+    m_itext = kaitai::kstream::bytes_to_str(m__io->read_bytes(1476), "ASCII");
+}
+
+specpr_t::text_initial_t::~text_initial_t() {
+    _clean_up();
+}
+
+void specpr_t::text_initial_t::_clean_up() {
+    if (m_ids) {
+        delete m_ids; m_ids = 0;
+    }
 }

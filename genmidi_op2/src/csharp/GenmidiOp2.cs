@@ -41,9 +41,9 @@ namespace Kaitai
         private void _read()
         {
             _magic = m_io.ReadBytes(8);
-            if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 35, 79, 80, 76, 95, 73, 73, 35 }) == 0)))
+            if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 35, 79, 80, 76, 95, 73, 73, 35 }) == 0)))
             {
-                throw new ValidationNotEqualError(new byte[] { 35, 79, 80, 76, 95, 73, 73, 35 }, Magic, M_Io, "/seq/0");
+                throw new ValidationNotEqualError(new byte[] { 35, 79, 80, 76, 95, 73, 73, 35 }, _magic, m_io, "/seq/0");
             }
             _instruments = new List<InstrumentEntry>();
             for (var i = 0; i < 175; i++)
@@ -55,47 +55,6 @@ namespace Kaitai
             {
                 _instrumentNames.Add(System.Text.Encoding.GetEncoding("ASCII").GetString(KaitaiStream.BytesTerminate(KaitaiStream.BytesStripRight(m_io.ReadBytes(32), 0), 0, false)));
             }
-        }
-        public partial class InstrumentEntry : KaitaiStruct
-        {
-            public static InstrumentEntry FromFile(string fileName)
-            {
-                return new InstrumentEntry(new KaitaiStream(fileName));
-            }
-
-            public InstrumentEntry(KaitaiStream p__io, GenmidiOp2 p__parent = null, GenmidiOp2 p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _flags = m_io.ReadU2le();
-                _finetune = m_io.ReadU1();
-                _note = m_io.ReadU1();
-                _instruments = new List<Instrument>();
-                for (var i = 0; i < 2; i++)
-                {
-                    _instruments.Add(new Instrument(m_io, this, m_root));
-                }
-            }
-            private ushort _flags;
-            private byte _finetune;
-            private byte _note;
-            private List<Instrument> _instruments;
-            private GenmidiOp2 m_root;
-            private GenmidiOp2 m_parent;
-            public ushort Flags { get { return _flags; } }
-            public byte Finetune { get { return _finetune; } }
-
-            /// <summary>
-            /// MIDI note for fixed instruments, 0 otherwise
-            /// </summary>
-            public byte Note { get { return _note; } }
-            public List<Instrument> Instruments { get { return _instruments; } }
-            public GenmidiOp2 M_Root { get { return m_root; } }
-            public GenmidiOp2 M_Parent { get { return m_parent; } }
         }
         public partial class Instrument : KaitaiStruct
         {
@@ -140,6 +99,47 @@ namespace Kaitai
             public short BaseNote { get { return _baseNote; } }
             public GenmidiOp2 M_Root { get { return m_root; } }
             public GenmidiOp2.InstrumentEntry M_Parent { get { return m_parent; } }
+        }
+        public partial class InstrumentEntry : KaitaiStruct
+        {
+            public static InstrumentEntry FromFile(string fileName)
+            {
+                return new InstrumentEntry(new KaitaiStream(fileName));
+            }
+
+            public InstrumentEntry(KaitaiStream p__io, GenmidiOp2 p__parent = null, GenmidiOp2 p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _flags = m_io.ReadU2le();
+                _finetune = m_io.ReadU1();
+                _note = m_io.ReadU1();
+                _instruments = new List<Instrument>();
+                for (var i = 0; i < 2; i++)
+                {
+                    _instruments.Add(new Instrument(m_io, this, m_root));
+                }
+            }
+            private ushort _flags;
+            private byte _finetune;
+            private byte _note;
+            private List<Instrument> _instruments;
+            private GenmidiOp2 m_root;
+            private GenmidiOp2 m_parent;
+            public ushort Flags { get { return _flags; } }
+            public byte Finetune { get { return _finetune; } }
+
+            /// <summary>
+            /// MIDI note for fixed instruments, 0 otherwise
+            /// </summary>
+            public byte Note { get { return _note; } }
+            public List<Instrument> Instruments { get { return _instruments; } }
+            public GenmidiOp2 M_Root { get { return m_root; } }
+            public GenmidiOp2 M_Parent { get { return m_parent; } }
         }
 
         /// <summary>

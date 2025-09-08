@@ -3,12 +3,14 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class grub2_font_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -19,17 +21,17 @@
 class grub2_font_t : public kaitai::kstruct {
 
 public:
-    class ptsz_section_t;
-    class fami_section_t;
-    class weig_section_t;
-    class maxw_section_t;
-    class desc_section_t;
-    class section_t;
     class asce_section_t;
     class chix_section_t;
+    class desc_section_t;
+    class fami_section_t;
     class maxh_section_t;
+    class maxw_section_t;
     class name_section_t;
+    class ptsz_section_t;
+    class section_t;
     class slan_section_t;
+    class weig_section_t;
 
     grub2_font_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, grub2_font_t* p__root = 0);
 
@@ -39,174 +41,6 @@ private:
 
 public:
     ~grub2_font_t();
-
-    class ptsz_section_t : public kaitai::kstruct {
-
-    public:
-
-        ptsz_section_t(kaitai::kstream* p__io, grub2_font_t::section_t* p__parent = 0, grub2_font_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~ptsz_section_t();
-
-    private:
-        uint16_t m_font_point_size;
-        grub2_font_t* m__root;
-        grub2_font_t::section_t* m__parent;
-
-    public:
-        uint16_t font_point_size() const { return m_font_point_size; }
-        grub2_font_t* _root() const { return m__root; }
-        grub2_font_t::section_t* _parent() const { return m__parent; }
-    };
-
-    class fami_section_t : public kaitai::kstruct {
-
-    public:
-
-        fami_section_t(kaitai::kstream* p__io, grub2_font_t::section_t* p__parent = 0, grub2_font_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~fami_section_t();
-
-    private:
-        std::string m_font_family_name;
-        grub2_font_t* m__root;
-        grub2_font_t::section_t* m__parent;
-
-    public:
-        std::string font_family_name() const { return m_font_family_name; }
-        grub2_font_t* _root() const { return m__root; }
-        grub2_font_t::section_t* _parent() const { return m__parent; }
-    };
-
-    class weig_section_t : public kaitai::kstruct {
-
-    public:
-
-        weig_section_t(kaitai::kstream* p__io, grub2_font_t::section_t* p__parent = 0, grub2_font_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~weig_section_t();
-
-    private:
-        std::string m_font_weight;
-        grub2_font_t* m__root;
-        grub2_font_t::section_t* m__parent;
-
-    public:
-        std::string font_weight() const { return m_font_weight; }
-        grub2_font_t* _root() const { return m__root; }
-        grub2_font_t::section_t* _parent() const { return m__parent; }
-    };
-
-    class maxw_section_t : public kaitai::kstruct {
-
-    public:
-
-        maxw_section_t(kaitai::kstream* p__io, grub2_font_t::section_t* p__parent = 0, grub2_font_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~maxw_section_t();
-
-    private:
-        uint16_t m_maximum_character_width;
-        grub2_font_t* m__root;
-        grub2_font_t::section_t* m__parent;
-
-    public:
-        uint16_t maximum_character_width() const { return m_maximum_character_width; }
-        grub2_font_t* _root() const { return m__root; }
-        grub2_font_t::section_t* _parent() const { return m__parent; }
-    };
-
-    class desc_section_t : public kaitai::kstruct {
-
-    public:
-
-        desc_section_t(kaitai::kstream* p__io, grub2_font_t::section_t* p__parent = 0, grub2_font_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~desc_section_t();
-
-    private:
-        uint16_t m_descent_in_pixels;
-        grub2_font_t* m__root;
-        grub2_font_t::section_t* m__parent;
-
-    public:
-        uint16_t descent_in_pixels() const { return m_descent_in_pixels; }
-        grub2_font_t* _root() const { return m__root; }
-        grub2_font_t::section_t* _parent() const { return m__parent; }
-    };
-
-    class section_t : public kaitai::kstruct {
-
-    public:
-
-        section_t(kaitai::kstream* p__io, grub2_font_t* p__parent = 0, grub2_font_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~section_t();
-
-    private:
-        std::string m_section_type;
-        uint32_t m_len_body;
-        kaitai::kstruct* m_body;
-        bool n_body;
-
-    public:
-        bool _is_null_body() { body(); return n_body; };
-
-    private:
-        grub2_font_t* m__root;
-        grub2_font_t* m__parent;
-        std::string m__raw_body;
-        bool n__raw_body;
-
-    public:
-        bool _is_null__raw_body() { _raw_body(); return n__raw_body; };
-
-    private:
-        kaitai::kstream* m__io__raw_body;
-
-    public:
-        std::string section_type() const { return m_section_type; }
-
-        /**
-         * Should be set to `0xFFFF_FFFF` for `section_type != "DATA"`
-         */
-        uint32_t len_body() const { return m_len_body; }
-        kaitai::kstruct* body() const { return m_body; }
-        grub2_font_t* _root() const { return m__root; }
-        grub2_font_t* _parent() const { return m__parent; }
-        std::string _raw_body() const { return m__raw_body; }
-        kaitai::kstream* _io__raw_body() const { return m__io__raw_body; }
-    };
 
     class asce_section_t : public kaitai::kstruct {
 
@@ -346,6 +180,54 @@ public:
         grub2_font_t::section_t* _parent() const { return m__parent; }
     };
 
+    class desc_section_t : public kaitai::kstruct {
+
+    public:
+
+        desc_section_t(kaitai::kstream* p__io, grub2_font_t::section_t* p__parent = 0, grub2_font_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~desc_section_t();
+
+    private:
+        uint16_t m_descent_in_pixels;
+        grub2_font_t* m__root;
+        grub2_font_t::section_t* m__parent;
+
+    public:
+        uint16_t descent_in_pixels() const { return m_descent_in_pixels; }
+        grub2_font_t* _root() const { return m__root; }
+        grub2_font_t::section_t* _parent() const { return m__parent; }
+    };
+
+    class fami_section_t : public kaitai::kstruct {
+
+    public:
+
+        fami_section_t(kaitai::kstream* p__io, grub2_font_t::section_t* p__parent = 0, grub2_font_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~fami_section_t();
+
+    private:
+        std::string m_font_family_name;
+        grub2_font_t* m__root;
+        grub2_font_t::section_t* m__parent;
+
+    public:
+        std::string font_family_name() const { return m_font_family_name; }
+        grub2_font_t* _root() const { return m__root; }
+        grub2_font_t::section_t* _parent() const { return m__parent; }
+    };
+
     class maxh_section_t : public kaitai::kstruct {
 
     public:
@@ -366,6 +248,30 @@ public:
 
     public:
         uint16_t maximum_character_height() const { return m_maximum_character_height; }
+        grub2_font_t* _root() const { return m__root; }
+        grub2_font_t::section_t* _parent() const { return m__parent; }
+    };
+
+    class maxw_section_t : public kaitai::kstruct {
+
+    public:
+
+        maxw_section_t(kaitai::kstream* p__io, grub2_font_t::section_t* p__parent = 0, grub2_font_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~maxw_section_t();
+
+    private:
+        uint16_t m_maximum_character_width;
+        grub2_font_t* m__root;
+        grub2_font_t::section_t* m__parent;
+
+    public:
+        uint16_t maximum_character_width() const { return m_maximum_character_width; }
         grub2_font_t* _root() const { return m__root; }
         grub2_font_t::section_t* _parent() const { return m__parent; }
     };
@@ -394,6 +300,78 @@ public:
         grub2_font_t::section_t* _parent() const { return m__parent; }
     };
 
+    class ptsz_section_t : public kaitai::kstruct {
+
+    public:
+
+        ptsz_section_t(kaitai::kstream* p__io, grub2_font_t::section_t* p__parent = 0, grub2_font_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~ptsz_section_t();
+
+    private:
+        uint16_t m_font_point_size;
+        grub2_font_t* m__root;
+        grub2_font_t::section_t* m__parent;
+
+    public:
+        uint16_t font_point_size() const { return m_font_point_size; }
+        grub2_font_t* _root() const { return m__root; }
+        grub2_font_t::section_t* _parent() const { return m__parent; }
+    };
+
+    class section_t : public kaitai::kstruct {
+
+    public:
+
+        section_t(kaitai::kstream* p__io, grub2_font_t* p__parent = 0, grub2_font_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~section_t();
+
+    private:
+        std::string m_section_type;
+        uint32_t m_len_body;
+        kaitai::kstruct* m_body;
+        bool n_body;
+
+    public:
+        bool _is_null_body() { body(); return n_body; };
+
+    private:
+        grub2_font_t* m__root;
+        grub2_font_t* m__parent;
+        std::string m__raw_body;
+        bool n__raw_body;
+
+    public:
+        bool _is_null__raw_body() { _raw_body(); return n__raw_body; };
+
+    private:
+        kaitai::kstream* m__io__raw_body;
+
+    public:
+        std::string section_type() const { return m_section_type; }
+
+        /**
+         * Should be set to `0xFFFF_FFFF` for `section_type != "DATA"`
+         */
+        uint32_t len_body() const { return m_len_body; }
+        kaitai::kstruct* body() const { return m_body; }
+        grub2_font_t* _root() const { return m__root; }
+        grub2_font_t* _parent() const { return m__parent; }
+        std::string _raw_body() const { return m__raw_body; }
+        kaitai::kstream* _io__raw_body() const { return m__io__raw_body; }
+    };
+
     class slan_section_t : public kaitai::kstruct {
 
     public:
@@ -414,6 +392,30 @@ public:
 
     public:
         std::string font_slant() const { return m_font_slant; }
+        grub2_font_t* _root() const { return m__root; }
+        grub2_font_t::section_t* _parent() const { return m__parent; }
+    };
+
+    class weig_section_t : public kaitai::kstruct {
+
+    public:
+
+        weig_section_t(kaitai::kstream* p__io, grub2_font_t::section_t* p__parent = 0, grub2_font_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~weig_section_t();
+
+    private:
+        std::string m_font_weight;
+        grub2_font_t* m__root;
+        grub2_font_t::section_t* m__parent;
+
+    public:
+        std::string font_weight() const { return m_font_weight; }
         grub2_font_t* _root() const { return m__root; }
         grub2_font_t::section_t* _parent() const { return m__parent; }
     };

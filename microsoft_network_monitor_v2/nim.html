@@ -215,6 +215,11 @@ v2. Netmon v3 seems to use the same file format as v1.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title=".cap file format of Microsoft Network Monitor, v2.x parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title=".cap file format of Microsoft Network Monitor, v2.x parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -245,7 +250,17 @@ v2. Netmon v3 seems to use the same file format as v1.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title=".cap file format of Microsoft Network Monitor, v2.x parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title=".cap file format of Microsoft Network Monitor, v2.x parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title=".cap file format of Microsoft Network Monitor, v2.x parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -277,11 +292,9 @@ v2. Netmon v3 seems to use the same file format as v1.</p>
         <div class="row">
             <div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="n">kaitai_struct_nim_runtime</span>
 <span class="kn">import</span><span class="w"> </span><span class="n">options</span>
-<span class="kn">import</span><span class="w"> </span><span class="o">/</span><span class="n">network</span><span class="o">/</span><span class="n">ethernet_frame</span>
-<span class="kn">import</span><span class="w"> </span><span class="o">/</span><span class="n">windows</span><span class="o">/</span><span class="n">windows_systemtime</span>
+<span class="kn">import</span><span class="w"> </span><span class="n">windows_systemtime</span>
+<span class="kn">import</span><span class="w"> </span><span class="n">ethernet_frame</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="s">&quot;windows_systemtime&quot;</span>
-<span class="kn">import</span><span class="w"> </span><span class="s">&quot;ethernet_frame&quot;</span>
 <span class="k">type</span>
 <span class="w">  </span><span class="n">MicrosoftNetworkMonitorV2</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
 <span class="w">    </span><span class="p">`</span><span class="n">signature</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
@@ -410,6 +423,13 @@ v2. Netmon v3 seems to use the same file format as v1.</p>
 <span class="w">    </span><span class="n">zwave_r3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">262</span>
 <span class="w">    </span><span class="n">wattstopper_dlm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">263</span>
 <span class="w">    </span><span class="n">iso_14443</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">264</span>
+<span class="w">  </span><span class="n">MicrosoftNetworkMonitorV2_Frame</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">tsDelta</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint64</span>
+<span class="w">    </span><span class="p">`</span><span class="n">origLen</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">incLen</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">body</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">MicrosoftNetworkMonitorV2_FrameIndexEntry</span>
+<span class="w">    </span><span class="p">`</span><span class="n">rawBody</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
 <span class="w">  </span><span class="n">MicrosoftNetworkMonitorV2_FrameIndex</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
 <span class="w">    </span><span class="p">`</span><span class="n">entries</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">MicrosoftNetworkMonitorV2_FrameIndexEntry</span><span class="o">]</span>
 <span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">MicrosoftNetworkMonitorV2</span>
@@ -418,18 +438,11 @@ v2. Netmon v3 seems to use the same file format as v1.</p>
 <span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">MicrosoftNetworkMonitorV2_FrameIndex</span>
 <span class="w">    </span><span class="p">`</span><span class="n">bodyInst</span><span class="p">`:</span><span class="w"> </span><span class="n">MicrosoftNetworkMonitorV2_Frame</span>
 <span class="w">    </span><span class="p">`</span><span class="n">bodyInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
-<span class="w">  </span><span class="n">MicrosoftNetworkMonitorV2_Frame</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
-<span class="w">    </span><span class="p">`</span><span class="n">tsDelta</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint64</span>
-<span class="w">    </span><span class="p">`</span><span class="n">origLen</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
-<span class="w">    </span><span class="p">`</span><span class="n">incLen</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
-<span class="w">    </span><span class="p">`</span><span class="n">body</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">KaitaiStruct</span>
-<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">MicrosoftNetworkMonitorV2_FrameIndexEntry</span>
-<span class="w">    </span><span class="p">`</span><span class="n">rawBody</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
 
 <span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MicrosoftNetworkMonitorV2], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MicrosoftNetworkMonitorV2</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MicrosoftNetworkMonitorV2_Frame], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftNetworkMonitorV2_FrameIndexEntry): MicrosoftNetworkMonitorV2_Frame</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MicrosoftNetworkMonitorV2_FrameIndex], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftNetworkMonitorV2): MicrosoftNetworkMonitorV2_FrameIndex</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MicrosoftNetworkMonitorV2_FrameIndexEntry], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftNetworkMonitorV2_FrameIndex): MicrosoftNetworkMonitorV2_FrameIndexEntry</span>
-<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MicrosoftNetworkMonitorV2_Frame], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftNetworkMonitorV2_FrameIndexEntry): MicrosoftNetworkMonitorV2_Frame</span>
 
 <span class="k">proc</span><span class="w"> </span><span class="nf">frameTable</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">MicrosoftNetworkMonitorV2</span><span class="p">):</span><span class="w"> </span><span class="n">MicrosoftNetworkMonitorV2_FrameIndex</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">body</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">MicrosoftNetworkMonitorV2_FrameIndexEntry</span><span class="p">):</span><span class="w"> </span><span class="n">MicrosoftNetworkMonitorV2_Frame</span>
@@ -479,7 +492,7 @@ v2. Netmon v3 seems to use the same file format as v1.</p>
 <span class="w">  </span><span class="sd">##[</span>
 <span class="sd">  Timestamp of capture start</span>
 <span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">timeCaptureStartExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">WindowsSystemtime</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">timeCaptureStartExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">WindowsSystemtime</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">timeCaptureStart</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">timeCaptureStartExpr</span>
 <span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">frameTableOfsExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">frameTableOfs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">frameTableOfsExpr</span>
@@ -526,6 +539,59 @@ v2. Netmon v3 seems to use the same file format as v1.</p>
 
 <span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MicrosoftNetworkMonitorV2], filename: string): MicrosoftNetworkMonitorV2 =</span>
 <span class="w">  </span><span class="n">MicrosoftNetworkMonitorV2</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="sd">A container for actually captured network data. Allow to</span>
+<span class="sd">timestamp individual frames and designates how much data from</span>
+<span class="sd">the original packet was actually written into the file.</span>
+
+<span class="sd">@see &lt;a href=&quot;https://learn.microsoft.com/en-us/windows/win32/netmon2/frame&quot;&gt;Source&lt;/a&gt;</span>
+<span class="sd">]##</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MicrosoftNetworkMonitorV2_Frame], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftNetworkMonitorV2_FrameIndexEntry): MicrosoftNetworkMonitorV2_Frame =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">MicrosoftNetworkMonitorV2_Frame</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">MicrosoftNetworkMonitorV2</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">MicrosoftNetworkMonitorV2</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
+
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Time stamp - usecs since start of capture</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">tsDeltaExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU8le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">tsDelta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tsDeltaExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Actual length of packet</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">origLenExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">origLen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">origLenExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Number of octets captured in file</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">incLenExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">incLen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">incLenExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Actual packet captured from the network</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">block</span><span class="p">:</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MicrosoftNetworkMonitorV2</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">macType</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">microsoft_network_monitor_v2</span><span class="p">.</span><span class="n">ethernet</span><span class="p">:</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">rawBodyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">incLen</span><span class="p">))</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">rawBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rawBodyExpr</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">rawBodyIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyExpr</span><span class="p">)</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">bodyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">EthernetFrame</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyIo</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bodyExpr</span>
+<span class="w">    </span><span class="k">else</span><span class="p">:</span>
+<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">bodyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">incLen</span><span class="p">))</span>
+<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bodyExpr</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MicrosoftNetworkMonitorV2_Frame], filename: string): MicrosoftNetworkMonitorV2_Frame =</span>
+<span class="w">  </span><span class="n">MicrosoftNetworkMonitorV2_Frame</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 
 <span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MicrosoftNetworkMonitorV2_FrameIndex], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftNetworkMonitorV2): MicrosoftNetworkMonitorV2_FrameIndex =</span>
 <span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
@@ -584,59 +650,6 @@ v2. Netmon v3 seems to use the same file format as v1.</p>
 
 <span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MicrosoftNetworkMonitorV2_FrameIndexEntry], filename: string): MicrosoftNetworkMonitorV2_FrameIndexEntry =</span>
 <span class="w">  </span><span class="n">MicrosoftNetworkMonitorV2_FrameIndexEntry</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
-
-
-<span class="sd">##[</span>
-<span class="sd">A container for actually captured network data. Allow to</span>
-<span class="sd">timestamp individual frames and designates how much data from</span>
-<span class="sd">the original packet was actually written into the file.</span>
-
-<span class="sd">@see &lt;a href=&quot;https://learn.microsoft.com/en-us/windows/win32/netmon2/frame&quot;&gt;Source&lt;/a&gt;</span>
-<span class="sd">]##</span>
-<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MicrosoftNetworkMonitorV2_Frame], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftNetworkMonitorV2_FrameIndexEntry): MicrosoftNetworkMonitorV2_Frame =</span>
-<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
-<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">MicrosoftNetworkMonitorV2_Frame</span><span class="p">)</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">MicrosoftNetworkMonitorV2</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">MicrosoftNetworkMonitorV2</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
-
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  Time stamp - usecs since start of capture</span>
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">tsDeltaExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU8le</span><span class="p">()</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">tsDelta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tsDeltaExpr</span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  Actual length of packet</span>
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">origLenExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">origLen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">origLenExpr</span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  Number of octets captured in file</span>
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">incLenExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">incLen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">incLenExpr</span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  Actual packet captured from the network</span>
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">block</span><span class="p">:</span>
-<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MicrosoftNetworkMonitorV2</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">macType</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">microsoft_network_monitor_v2</span><span class="p">.</span><span class="n">ethernet</span><span class="p">:</span>
-<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">rawBodyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">incLen</span><span class="p">))</span>
-<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">rawBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rawBodyExpr</span>
-<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">rawBodyIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyExpr</span><span class="p">)</span>
-<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">bodyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">EthernetFrame</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyIo</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
-<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bodyExpr</span>
-<span class="w">    </span><span class="k">else</span><span class="p">:</span>
-<span class="w">      </span><span class="k">let</span><span class="w"> </span><span class="n">bodyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">incLen</span><span class="p">))</span>
-<span class="w">      </span><span class="n">this</span><span class="p">.</span><span class="n">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bodyExpr</span>
-
-<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[MicrosoftNetworkMonitorV2_Frame], filename: string): MicrosoftNetworkMonitorV2_Frame =</span>
-<span class="w">  </span><span class="n">MicrosoftNetworkMonitorV2_Frame</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 </pre></div>
 
         </div>

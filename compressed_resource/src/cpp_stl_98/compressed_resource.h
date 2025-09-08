@@ -3,14 +3,15 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class compressed_resource_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include "bytes_with_io.h"
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
-class bytes_with_io_t;
 
 /**
  * Compressed Macintosh resource data,
@@ -265,18 +266,6 @@ public:
         };
 
     private:
-        bool f_type_specific_part_raw;
-        std::string m_type_specific_part_raw;
-
-    public:
-
-        /**
-         * The type-specific part of the header,
-         * as a raw byte array.
-         */
-        std::string type_specific_part_raw();
-
-    private:
         bool f_type_specific_part;
         kaitai::kstruct* m_type_specific_part;
         bool n_type_specific_part;
@@ -293,6 +282,18 @@ public:
          * parsed according to the type from the common part.
          */
         kaitai::kstruct* type_specific_part();
+
+    private:
+        bool f_type_specific_part_raw;
+        std::string m_type_specific_part_raw;
+
+    public:
+
+        /**
+         * The type-specific part of the header,
+         * as a raw byte array.
+         */
+        std::string type_specific_part_raw();
 
     private:
         common_part_t* m_common_part;

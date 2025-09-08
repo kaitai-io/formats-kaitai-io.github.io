@@ -13,8 +13,53 @@ digraph {
 		</TABLE>>];
 		blender_blend__inst__sdna_structs [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-			<TR><TD>sdna_structs</TD><TD>blocks[(blocks.length - 2)].body.structs</TD></TR>
+			<TR><TD>sdna_structs</TD><TD>blocks[blocks.length - 2].body.structs</TD></TR>
 		</TABLE>>];
+		subgraph cluster__dna1_body {
+			label="BlenderBlend::Dna1Body";
+			graph[style=dotted];
+
+			dna1_body__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="id_pos">0</TD><TD PORT="id_size">4</TD><TD>53 44 4E 41</TD><TD PORT="id_type">id</TD></TR>
+				<TR><TD PORT="name_magic_pos">4</TD><TD PORT="name_magic_size">4</TD><TD>4E 41 4D 45</TD><TD PORT="name_magic_type">name_magic</TD></TR>
+				<TR><TD PORT="num_names_pos">8</TD><TD PORT="num_names_size">4</TD><TD>u4le</TD><TD PORT="num_names_type">num_names</TD></TR>
+				<TR><TD PORT="names_pos">12</TD><TD PORT="names_size">...</TD><TD>str(term=0, UTF-8)</TD><TD PORT="names_type">names</TD></TR>
+				<TR><TD COLSPAN="4" PORT="names__repeat">repeat num_names times</TD></TR>
+				<TR><TD PORT="padding_1_pos">...</TD><TD PORT="padding_1_size">(4 - _io.pos) % 4</TD><TD></TD><TD PORT="padding_1_type">padding_1</TD></TR>
+				<TR><TD PORT="type_magic_pos">...</TD><TD PORT="type_magic_size">4</TD><TD>54 59 50 45</TD><TD PORT="type_magic_type">type_magic</TD></TR>
+				<TR><TD PORT="num_types_pos">...</TD><TD PORT="num_types_size">4</TD><TD>u4le</TD><TD PORT="num_types_type">num_types</TD></TR>
+				<TR><TD PORT="types_pos">...</TD><TD PORT="types_size">...</TD><TD>str(term=0, UTF-8)</TD><TD PORT="types_type">types</TD></TR>
+				<TR><TD COLSPAN="4" PORT="types__repeat">repeat num_types times</TD></TR>
+				<TR><TD PORT="padding_2_pos">...</TD><TD PORT="padding_2_size">(4 - _io.pos) % 4</TD><TD></TD><TD PORT="padding_2_type">padding_2</TD></TR>
+				<TR><TD PORT="tlen_magic_pos">...</TD><TD PORT="tlen_magic_size">4</TD><TD>54 4C 45 4E</TD><TD PORT="tlen_magic_type">tlen_magic</TD></TR>
+				<TR><TD PORT="lengths_pos">...</TD><TD PORT="lengths_size">2</TD><TD>u2le</TD><TD PORT="lengths_type">lengths</TD></TR>
+				<TR><TD COLSPAN="4" PORT="lengths__repeat">repeat num_types times</TD></TR>
+				<TR><TD PORT="padding_3_pos">...</TD><TD PORT="padding_3_size">(4 - _io.pos) % 4</TD><TD></TD><TD PORT="padding_3_type">padding_3</TD></TR>
+				<TR><TD PORT="strc_magic_pos">...</TD><TD PORT="strc_magic_size">4</TD><TD>53 54 52 43</TD><TD PORT="strc_magic_type">strc_magic</TD></TR>
+				<TR><TD PORT="num_structs_pos">...</TD><TD PORT="num_structs_size">4</TD><TD>u4le</TD><TD PORT="num_structs_type">num_structs</TD></TR>
+				<TR><TD PORT="structs_pos">...</TD><TD PORT="structs_size">...</TD><TD>DnaStruct</TD><TD PORT="structs_type">structs</TD></TR>
+				<TR><TD COLSPAN="4" PORT="structs__repeat">repeat num_structs times</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__dna_field {
+			label="BlenderBlend::DnaField";
+			graph[style=dotted];
+
+			dna_field__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="idx_type_pos">0</TD><TD PORT="idx_type_size">2</TD><TD>u2le</TD><TD PORT="idx_type_type">idx_type</TD></TR>
+				<TR><TD PORT="idx_name_pos">2</TD><TD PORT="idx_name_size">2</TD><TD>u2le</TD><TD PORT="idx_name_type">idx_name</TD></TR>
+			</TABLE>>];
+			dna_field__inst__name [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>name</TD><TD>_parent._parent.names[idx_name]</TD></TR>
+			</TABLE>>];
+			dna_field__inst__type [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>type</TD><TD>_parent._parent.types[idx_type]</TD></TR>
+			</TABLE>>];
+		}
 		subgraph cluster__dna_struct {
 			label="BlenderBlend::DnaStruct";
 			graph[style=dotted];
@@ -53,40 +98,13 @@ file_block__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING
 	<TR><TD>&quot;DNA1&quot;</TD><TD PORT="case0">Dna1Body</TD></TR>
 </TABLE>>];
 		}
-		subgraph cluster__dna1_body {
-			label="BlenderBlend::Dna1Body";
-			graph[style=dotted];
-
-			dna1_body__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="id_pos">0</TD><TD PORT="id_size">4</TD><TD></TD><TD PORT="id_type">id</TD></TR>
-				<TR><TD PORT="name_magic_pos">4</TD><TD PORT="name_magic_size">4</TD><TD></TD><TD PORT="name_magic_type">name_magic</TD></TR>
-				<TR><TD PORT="num_names_pos">8</TD><TD PORT="num_names_size">4</TD><TD>u4le</TD><TD PORT="num_names_type">num_names</TD></TR>
-				<TR><TD PORT="names_pos">12</TD><TD PORT="names_size">...</TD><TD>str(UTF-8)</TD><TD PORT="names_type">names</TD></TR>
-				<TR><TD COLSPAN="4" PORT="names__repeat">repeat num_names times</TD></TR>
-				<TR><TD PORT="padding_1_pos">...</TD><TD PORT="padding_1_size">((4 - _io.pos) % 4)</TD><TD></TD><TD PORT="padding_1_type">padding_1</TD></TR>
-				<TR><TD PORT="type_magic_pos">...</TD><TD PORT="type_magic_size">4</TD><TD></TD><TD PORT="type_magic_type">type_magic</TD></TR>
-				<TR><TD PORT="num_types_pos">...</TD><TD PORT="num_types_size">4</TD><TD>u4le</TD><TD PORT="num_types_type">num_types</TD></TR>
-				<TR><TD PORT="types_pos">...</TD><TD PORT="types_size">...</TD><TD>str(UTF-8)</TD><TD PORT="types_type">types</TD></TR>
-				<TR><TD COLSPAN="4" PORT="types__repeat">repeat num_types times</TD></TR>
-				<TR><TD PORT="padding_2_pos">...</TD><TD PORT="padding_2_size">((4 - _io.pos) % 4)</TD><TD></TD><TD PORT="padding_2_type">padding_2</TD></TR>
-				<TR><TD PORT="tlen_magic_pos">...</TD><TD PORT="tlen_magic_size">4</TD><TD></TD><TD PORT="tlen_magic_type">tlen_magic</TD></TR>
-				<TR><TD PORT="lengths_pos">...</TD><TD PORT="lengths_size">2</TD><TD>u2le</TD><TD PORT="lengths_type">lengths</TD></TR>
-				<TR><TD COLSPAN="4" PORT="lengths__repeat">repeat num_types times</TD></TR>
-				<TR><TD PORT="padding_3_pos">...</TD><TD PORT="padding_3_size">((4 - _io.pos) % 4)</TD><TD></TD><TD PORT="padding_3_type">padding_3</TD></TR>
-				<TR><TD PORT="strc_magic_pos">...</TD><TD PORT="strc_magic_size">4</TD><TD></TD><TD PORT="strc_magic_type">strc_magic</TD></TR>
-				<TR><TD PORT="num_structs_pos">...</TD><TD PORT="num_structs_size">4</TD><TD>u4le</TD><TD PORT="num_structs_type">num_structs</TD></TR>
-				<TR><TD PORT="structs_pos">...</TD><TD PORT="structs_size">...</TD><TD>DnaStruct</TD><TD PORT="structs_type">structs</TD></TR>
-				<TR><TD COLSPAN="4" PORT="structs__repeat">repeat num_structs times</TD></TR>
-			</TABLE>>];
-		}
 		subgraph cluster__header {
 			label="BlenderBlend::Header";
 			graph[style=dotted];
 
 			header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">7</TD><TD></TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">7</TD><TD>42 4C 45 4E 44 45 52</TD><TD PORT="magic_type">magic</TD></TR>
 				<TR><TD PORT="ptr_size_id_pos">7</TD><TD PORT="ptr_size_id_size">1</TD><TD>u1→PtrSize</TD><TD PORT="ptr_size_id_type">ptr_size_id</TD></TR>
 				<TR><TD PORT="endian_pos">8</TD><TD PORT="endian_size">1</TD><TD>u1→Endian</TD><TD PORT="endian_type">endian</TD></TR>
 				<TR><TD PORT="version_pos">9</TD><TD PORT="version_size">3</TD><TD>str(ASCII)</TD><TD PORT="version_type">version</TD></TR>
@@ -96,28 +114,19 @@ file_block__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING
 				<TR><TD>psize</TD><TD>(ptr_size_id == :ptr_size_bits_64 ? 8 : 4)</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__dna_field {
-			label="BlenderBlend::DnaField";
-			graph[style=dotted];
-
-			dna_field__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="idx_type_pos">0</TD><TD PORT="idx_type_size">2</TD><TD>u2le</TD><TD PORT="idx_type_type">idx_type</TD></TR>
-				<TR><TD PORT="idx_name_pos">2</TD><TD PORT="idx_name_size">2</TD><TD>u2le</TD><TD PORT="idx_name_type">idx_name</TD></TR>
-			</TABLE>>];
-			dna_field__inst__type [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>type</TD><TD>_parent._parent.types[idx_type]</TD></TR>
-			</TABLE>>];
-			dna_field__inst__name [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>name</TD><TD>_parent._parent.names[idx_name]</TD></TR>
-			</TABLE>>];
-		}
 	}
 	blender_blend__seq:hdr_type -> header__seq [style=bold];
 	blender_blend__seq:blocks_type -> file_block__seq [style=bold];
 	dna1_body__seq:structs_type -> blender_blend__inst__sdna_structs [color="#404040"];
+	dna1_body__seq:num_names_type -> dna1_body__seq:names__repeat [color="#404040"];
+	dna1_body__seq:num_types_type -> dna1_body__seq:types__repeat [color="#404040"];
+	dna1_body__seq:num_types_type -> dna1_body__seq:lengths__repeat [color="#404040"];
+	dna1_body__seq:structs_type -> dna_struct__seq [style=bold];
+	dna1_body__seq:num_structs_type -> dna1_body__seq:structs__repeat [color="#404040"];
+	dna1_body__seq:names_type -> dna_field__inst__name [color="#404040"];
+	dna_field__seq:idx_name_type -> dna_field__inst__name [color="#404040"];
+	dna1_body__seq:types_type -> dna_field__inst__type [color="#404040"];
+	dna_field__seq:idx_type_type -> dna_field__inst__type [color="#404040"];
 	dna_struct__seq:fields_type -> dna_field__seq [style=bold];
 	dna_struct__seq:num_fields_type -> dna_struct__seq:fields__repeat [color="#404040"];
 	dna1_body__seq:types_type -> dna_struct__inst__type [color="#404040"];
@@ -128,14 +137,5 @@ file_block__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING
 	file_block__seq:code_type -> file_block__seq:body_type [color="#404040"];
 	blender_blend__inst__sdna_structs:sdna_structs_type -> file_block__inst__sdna_struct [color="#404040"];
 	file_block__seq:sdna_index_type -> file_block__inst__sdna_struct [color="#404040"];
-	dna1_body__seq:num_names_type -> dna1_body__seq:names__repeat [color="#404040"];
-	dna1_body__seq:num_types_type -> dna1_body__seq:types__repeat [color="#404040"];
-	dna1_body__seq:num_types_type -> dna1_body__seq:lengths__repeat [color="#404040"];
-	dna1_body__seq:structs_type -> dna_struct__seq [style=bold];
-	dna1_body__seq:num_structs_type -> dna1_body__seq:structs__repeat [color="#404040"];
 	header__seq:ptr_size_id_type -> header__inst__psize [color="#404040"];
-	dna1_body__seq:types_type -> dna_field__inst__type [color="#404040"];
-	dna_field__seq:idx_type_type -> dna_field__inst__type [color="#404040"];
-	dna1_body__seq:names_type -> dna_field__inst__name [color="#404040"];
-	dna_field__seq:idx_name_type -> dna_field__inst__name [color="#404040"];
 }

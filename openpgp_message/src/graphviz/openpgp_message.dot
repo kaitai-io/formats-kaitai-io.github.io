@@ -10,114 +10,49 @@ digraph {
 			<TR><TD PORT="packets_pos">0</TD><TD PORT="packets_size">...</TD><TD>Packet</TD><TD PORT="packets_type">packets</TD></TR>
 			<TR><TD COLSPAN="4" PORT="packets__repeat">repeat to end of stream</TD></TR>
 		</TABLE>>];
-		subgraph cluster__preferred_hash_algorithms {
-			label="OpenpgpMessage::PreferredHashAlgorithms";
+		subgraph cluster__embedded_signature {
+			label="OpenpgpMessage::EmbeddedSignature";
 			graph[style=dotted];
 
-			preferred_hash_algorithms__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			embedded_signature__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="algorithm_pos">0</TD><TD PORT="algorithm_size">1</TD><TD>u1→HashAlgorithms</TD><TD PORT="algorithm_type">algorithm</TD></TR>
-				<TR><TD COLSPAN="4" PORT="algorithm__repeat">repeat to end of stream</TD></TR>
+				<TR><TD PORT="signature_packet_pos">0</TD><TD PORT="signature_packet_size">...</TD><TD>SignaturePacket</TD><TD PORT="signature_packet_type">signature_packet</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__preferred_compression_algorithms {
-			label="OpenpgpMessage::PreferredCompressionAlgorithms";
+		subgraph cluster__exportable_certification {
+			label="OpenpgpMessage::ExportableCertification";
 			graph[style=dotted];
 
-			preferred_compression_algorithms__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			exportable_certification__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="algorithm_pos">0</TD><TD PORT="algorithm_size">1</TD><TD>u1→CompressionAlgorithms</TD><TD PORT="algorithm_type">algorithm</TD></TR>
-				<TR><TD COLSPAN="4" PORT="algorithm__repeat">repeat to end of stream</TD></TR>
+				<TR><TD PORT="exportable_pos">0</TD><TD PORT="exportable_size">1</TD><TD>u1</TD><TD PORT="exportable_type">exportable</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__signers_user_id {
-			label="OpenpgpMessage::SignersUserId";
+		subgraph cluster__features {
+			label="OpenpgpMessage::Features";
 			graph[style=dotted];
 
-			signers_user_id__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			features__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="user_id_pos">0</TD><TD PORT="user_id_size">⇲</TD><TD>str(UTF-8)</TD><TD PORT="user_id_type">user_id</TD></TR>
+				<TR><TD PORT="flags_pos">0</TD><TD PORT="flags_size">⇲</TD><TD></TD><TD PORT="flags_type">flags</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__secret_key_packet {
-			label="OpenpgpMessage::SecretKeyPacket";
+		subgraph cluster__issuer {
+			label="OpenpgpMessage::Issuer";
 			graph[style=dotted];
 
-			secret_key_packet__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			issuer__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="public_key_pos">0</TD><TD PORT="public_key_size">...</TD><TD>PublicKeyPacket</TD><TD PORT="public_key_type">public_key</TD></TR>
-				<TR><TD PORT="string_to_key_pos">...</TD><TD PORT="string_to_key_size">1</TD><TD>u1</TD><TD PORT="string_to_key_type">string_to_key</TD></TR>
-				<TR><TD PORT="symmetric_encryption_algorithm_pos">...</TD><TD PORT="symmetric_encryption_algorithm_size">1</TD><TD>u1→SymmetricKeyAlgorithm</TD><TD PORT="symmetric_encryption_algorithm_type">symmetric_encryption_algorithm</TD></TR>
-				<TR><TD PORT="secret_key_pos">...</TD><TD PORT="secret_key_size">⇲</TD><TD></TD><TD PORT="secret_key_type">secret_key</TD></TR>
+				<TR><TD PORT="keyid_pos">0</TD><TD PORT="keyid_size">8</TD><TD>u8be</TD><TD PORT="keyid_type">keyid</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__key_server_preferences {
-			label="OpenpgpMessage::KeyServerPreferences";
+		subgraph cluster__key_expiration_time {
+			label="OpenpgpMessage::KeyExpirationTime";
 			graph[style=dotted];
 
-			key_server_preferences__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			key_expiration_time__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="flag_pos">0</TD><TD PORT="flag_size">1</TD><TD>u1→ServerFlags</TD><TD PORT="flag_type">flag</TD></TR>
-				<TR><TD COLSPAN="4" PORT="flag__repeat">repeat to end of stream</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__regular_expression {
-			label="OpenpgpMessage::RegularExpression";
-			graph[style=dotted];
-
-			regular_expression__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="regex_pos">0</TD><TD PORT="regex_size">...</TD><TD>str(UTF-8)</TD><TD PORT="regex_type">regex</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__subpackets {
-			label="OpenpgpMessage::Subpackets";
-			graph[style=dotted];
-
-			subpackets__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="subpacketss_pos">0</TD><TD PORT="subpacketss_size">...</TD><TD>Subpacket</TD><TD PORT="subpacketss_type">subpacketss</TD></TR>
-				<TR><TD COLSPAN="4" PORT="subpacketss__repeat">repeat to end of stream</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__revocation_key {
-			label="OpenpgpMessage::RevocationKey";
-			graph[style=dotted];
-
-			revocation_key__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="class_pos">0</TD><TD PORT="class_size">1</TD><TD>u1</TD><TD PORT="class_type">class</TD></TR>
-				<TR><TD PORT="public_key_algorithm_pos">1</TD><TD PORT="public_key_algorithm_size">1</TD><TD>u1→PublicKeyAlgorithms</TD><TD PORT="public_key_algorithm_type">public_key_algorithm</TD></TR>
-				<TR><TD PORT="fingerprint_pos">2</TD><TD PORT="fingerprint_size">20</TD><TD></TD><TD PORT="fingerprint_type">fingerprint</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__user_id_packet {
-			label="OpenpgpMessage::UserIdPacket";
-			graph[style=dotted];
-
-			user_id_packet__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="user_id_pos">0</TD><TD PORT="user_id_size">⇲</TD><TD>str(UTF-8)</TD><TD PORT="user_id_type">user_id</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__policy_uri {
-			label="OpenpgpMessage::PolicyUri";
-			graph[style=dotted];
-
-			policy_uri__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="uri_pos">0</TD><TD PORT="uri_size">⇲</TD><TD>str(UTF-8)</TD><TD PORT="uri_type">uri</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__signature_target {
-			label="OpenpgpMessage::SignatureTarget";
-			graph[style=dotted];
-
-			signature_target__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="public_key_algorithm_pos">0</TD><TD PORT="public_key_algorithm_size">1</TD><TD>u1→PublicKeyAlgorithms</TD><TD PORT="public_key_algorithm_type">public_key_algorithm</TD></TR>
-				<TR><TD PORT="hash_algorithm_pos">1</TD><TD PORT="hash_algorithm_size">1</TD><TD>u1→HashAlgorithms</TD><TD PORT="hash_algorithm_type">hash_algorithm</TD></TR>
-				<TR><TD PORT="hash_pos">2</TD><TD PORT="hash_size">⇲</TD><TD></TD><TD PORT="hash_type">hash</TD></TR>
+				<TR><TD PORT="time_pos">0</TD><TD PORT="time_size">4</TD><TD>u4be</TD><TD PORT="time_type">time</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__key_flags {
@@ -130,59 +65,45 @@ digraph {
 				<TR><TD COLSPAN="4" PORT="flag__repeat">repeat to end of stream</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__features {
-			label="OpenpgpMessage::Features";
+		subgraph cluster__key_server_preferences {
+			label="OpenpgpMessage::KeyServerPreferences";
 			graph[style=dotted];
 
-			features__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			key_server_preferences__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="flags_pos">0</TD><TD PORT="flags_size">⇲</TD><TD></TD><TD PORT="flags_type">flags</TD></TR>
+				<TR><TD PORT="flag_pos">0</TD><TD PORT="flag_size">1</TD><TD>u1→ServerFlags</TD><TD PORT="flag_type">flag</TD></TR>
+				<TR><TD COLSPAN="4" PORT="flag__repeat">repeat to end of stream</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__primary_user_id {
-			label="OpenpgpMessage::PrimaryUserId";
+		subgraph cluster__len_subpacket {
+			label="OpenpgpMessage::LenSubpacket";
 			graph[style=dotted];
 
-			primary_user_id__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			len_subpacket__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="user_id_pos">0</TD><TD PORT="user_id_size">1</TD><TD>u1</TD><TD PORT="user_id_type">user_id</TD></TR>
+				<TR><TD PORT="first_octet_pos">0</TD><TD PORT="first_octet_size">1</TD><TD>u1</TD><TD PORT="first_octet_type">first_octet</TD></TR>
+				<TR><TD PORT="second_octet_pos">1</TD><TD PORT="second_octet_size">1</TD><TD>u1</TD><TD PORT="second_octet_type">second_octet</TD></TR>
+				<TR><TD COLSPAN="4" PORT="second_octet__if">if  ((first_octet &gt;= 192) &amp;&amp; (first_octet &lt; 255)) </TD></TR>
+				<TR><TD PORT="scalar_pos">2</TD><TD PORT="scalar_size">4</TD><TD>u4be</TD><TD PORT="scalar_type">scalar</TD></TR>
+				<TR><TD COLSPAN="4" PORT="scalar__if">if first_octet == 255</TD></TR>
+			</TABLE>>];
+			len_subpacket__inst__len [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>len</TD><TD>(first_octet &lt; 192 ? first_octet : ( ((first_octet &gt;= 192) &amp;&amp; (first_octet &lt; 255))  ? ((first_octet - 192 &lt;&lt; 8) + second_octet) + 192 : scalar))</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__subpacket {
-			label="OpenpgpMessage::Subpacket";
+		subgraph cluster__notation_data {
+			label="OpenpgpMessage::NotationData";
 			graph[style=dotted];
 
-			subpacket__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			notation_data__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="len_pos">0</TD><TD PORT="len_size">6</TD><TD>LenSubpacket</TD><TD PORT="len_type">len</TD></TR>
-				<TR><TD PORT="subpacket_type_pos">6</TD><TD PORT="subpacket_type_size">1</TD><TD>u1→SubpacketTypes</TD><TD PORT="subpacket_type_type">subpacket_type</TD></TR>
-				<TR><TD PORT="content_pos">7</TD><TD PORT="content_size">...</TD><TD>switch (subpacket_type)</TD><TD PORT="content_type">content</TD></TR>
+				<TR><TD PORT="flags_pos">0</TD><TD PORT="flags_size">4</TD><TD></TD><TD PORT="flags_type">flags</TD></TR>
+				<TR><TD PORT="len_name_pos">4</TD><TD PORT="len_name_size">2</TD><TD>u2be</TD><TD PORT="len_name_type">len_name</TD></TR>
+				<TR><TD PORT="len_value_pos">6</TD><TD PORT="len_value_size">2</TD><TD>u2be</TD><TD PORT="len_value_type">len_value</TD></TR>
+				<TR><TD PORT="name_pos">8</TD><TD PORT="name_size">len_name</TD><TD></TD><TD PORT="name_type">name</TD></TR>
+				<TR><TD PORT="value_pos">...</TD><TD PORT="value_size">len_value</TD><TD></TD><TD PORT="value_type">value</TD></TR>
 			</TABLE>>];
-subpacket__seq_content_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
-	<TR><TD>:subpacket_types_preferred_key_server</TD><TD PORT="case0">PreferredKeyServer</TD></TR>
-	<TR><TD>:subpacket_types_issuer</TD><TD PORT="case1">Issuer</TD></TR>
-	<TR><TD>:subpacket_types_revocable</TD><TD PORT="case2">Revocable</TD></TR>
-	<TR><TD>:subpacket_types_signature_target</TD><TD PORT="case3">SignatureTarget</TD></TR>
-	<TR><TD>:subpacket_types_regular_expression</TD><TD PORT="case4">RegularExpression</TD></TR>
-	<TR><TD>:subpacket_types_exportable_certification</TD><TD PORT="case5">ExportableCertification</TD></TR>
-	<TR><TD>:subpacket_types_reason_for_revocation</TD><TD PORT="case6">ReasonForRevocation</TD></TR>
-	<TR><TD>:subpacket_types_key_server_preferences</TD><TD PORT="case7">KeyServerPreferences</TD></TR>
-	<TR><TD>:subpacket_types_signature_creation_time</TD><TD PORT="case8">SignatureCreationTime</TD></TR>
-	<TR><TD>:subpacket_types_preferred_hash_algorithms</TD><TD PORT="case9">PreferredHashAlgorithms</TD></TR>
-	<TR><TD>:subpacket_types_trust_signature</TD><TD PORT="case10">TrustSignature</TD></TR>
-	<TR><TD>:subpacket_types_key_expiration_time</TD><TD PORT="case11">KeyExpirationTime</TD></TR>
-	<TR><TD>:subpacket_types_key_flags</TD><TD PORT="case12">KeyFlags</TD></TR>
-	<TR><TD>:subpacket_types_signature_expiration_time</TD><TD PORT="case13">SignatureExpirationTime</TD></TR>
-	<TR><TD>:subpacket_types_features</TD><TD PORT="case14">Features</TD></TR>
-	<TR><TD>:subpacket_types_signers_user_id</TD><TD PORT="case15">SignersUserId</TD></TR>
-	<TR><TD>:subpacket_types_notation_data</TD><TD PORT="case16">NotationData</TD></TR>
-	<TR><TD>:subpacket_types_revocation_key</TD><TD PORT="case17">RevocationKey</TD></TR>
-	<TR><TD>:subpacket_types_preferred_compression_algorithms</TD><TD PORT="case18">PreferredCompressionAlgorithms</TD></TR>
-	<TR><TD>:subpacket_types_policy_uri</TD><TD PORT="case19">PolicyUri</TD></TR>
-	<TR><TD>:subpacket_types_primary_user_id</TD><TD PORT="case20">PrimaryUserId</TD></TR>
-	<TR><TD>:subpacket_types_embedded_signature</TD><TD PORT="case21">EmbeddedSignature</TD></TR>
-</TABLE>>];
 		}
 		subgraph cluster__old_packet {
 			label="OpenpgpMessage::OldPacket";
@@ -200,37 +121,145 @@ old_packet__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
 	<TR><TD>:packet_tags_public_key_packet</TD><TD PORT="case0">PublicKeyPacket</TD></TR>
 	<TR><TD>:packet_tags_public_subkey_packet</TD><TD PORT="case1">PublicKeyPacket</TD></TR>
-	<TR><TD>:packet_tags_user_id_packet</TD><TD PORT="case2">UserIdPacket</TD></TR>
-	<TR><TD>:packet_tags_signature_packet</TD><TD PORT="case3">SignaturePacket</TD></TR>
-	<TR><TD>:packet_tags_secret_subkey_packet</TD><TD PORT="case4">PublicKeyPacket</TD></TR>
-	<TR><TD>:packet_tags_secret_key_packet</TD><TD PORT="case5">SecretKeyPacket</TD></TR>
+	<TR><TD>:packet_tags_secret_key_packet</TD><TD PORT="case2">SecretKeyPacket</TD></TR>
+	<TR><TD>:packet_tags_secret_subkey_packet</TD><TD PORT="case3">PublicKeyPacket</TD></TR>
+	<TR><TD>:packet_tags_signature_packet</TD><TD PORT="case4">SignaturePacket</TD></TR>
+	<TR><TD>:packet_tags_user_id_packet</TD><TD PORT="case5">UserIdPacket</TD></TR>
 </TABLE>>];
 		}
-		subgraph cluster__issuer {
-			label="OpenpgpMessage::Issuer";
+		subgraph cluster__packet {
+			label="OpenpgpMessage::Packet";
 			graph[style=dotted];
 
-			issuer__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			packet__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="keyid_pos">0</TD><TD PORT="keyid_size">8</TD><TD>u8be</TD><TD PORT="keyid_type">keyid</TD></TR>
+				<TR><TD PORT="one_pos">0</TD><TD PORT="one_size">1b</TD><TD>b1be→bool</TD><TD PORT="one_type">one</TD></TR>
+				<TR><TD PORT="new_packet_format_pos">0:1</TD><TD PORT="new_packet_format_size">1b</TD><TD>b1be→bool</TD><TD PORT="new_packet_format_type">new_packet_format</TD></TR>
+				<TR><TD PORT="packet_type_new_pos">0:2</TD><TD PORT="packet_type_new_size">6b</TD><TD>b6be→PacketTags</TD><TD PORT="packet_type_new_type">packet_type_new</TD></TR>
+				<TR><TD COLSPAN="4" PORT="packet_type_new__if">if new_packet_format</TD></TR>
+				<TR><TD PORT="packet_type_old_pos">1</TD><TD PORT="packet_type_old_size">4b</TD><TD>b4be→PacketTags</TD><TD PORT="packet_type_old_type">packet_type_old</TD></TR>
+				<TR><TD COLSPAN="4" PORT="packet_type_old__if">if !(new_packet_format)</TD></TR>
+				<TR><TD PORT="len_type_pos">1:4</TD><TD PORT="len_type_size">2b</TD><TD>b2be</TD><TD PORT="len_type_type">len_type</TD></TR>
+				<TR><TD COLSPAN="4" PORT="len_type__if">if !(new_packet_format)</TD></TR>
+				<TR><TD PORT="body_pos">1:6</TD><TD PORT="body_size">...</TD><TD>switch (new_packet_format)</TD><TD PORT="body_type">body</TD></TR>
+			</TABLE>>];
+packet__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>false</TD><TD PORT="case0">OldPacket</TD></TR>
+</TABLE>>];
+		}
+		subgraph cluster__policy_uri {
+			label="OpenpgpMessage::PolicyUri";
+			graph[style=dotted];
+
+			policy_uri__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="uri_pos">0</TD><TD PORT="uri_size">⇲</TD><TD>str(UTF-8)</TD><TD PORT="uri_type">uri</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__exportable_certification {
-			label="OpenpgpMessage::ExportableCertification";
+		subgraph cluster__preferred_compression_algorithms {
+			label="OpenpgpMessage::PreferredCompressionAlgorithms";
 			graph[style=dotted];
 
-			exportable_certification__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			preferred_compression_algorithms__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="exportable_pos">0</TD><TD PORT="exportable_size">1</TD><TD>u1</TD><TD PORT="exportable_type">exportable</TD></TR>
+				<TR><TD PORT="algorithm_pos">0</TD><TD PORT="algorithm_size">1</TD><TD>u1→CompressionAlgorithms</TD><TD PORT="algorithm_type">algorithm</TD></TR>
+				<TR><TD COLSPAN="4" PORT="algorithm__repeat">repeat to end of stream</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__signature_expiration_time {
-			label="OpenpgpMessage::SignatureExpirationTime";
+		subgraph cluster__preferred_hash_algorithms {
+			label="OpenpgpMessage::PreferredHashAlgorithms";
 			graph[style=dotted];
 
-			signature_expiration_time__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			preferred_hash_algorithms__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="time_pos">0</TD><TD PORT="time_size">4</TD><TD>u4be</TD><TD PORT="time_type">time</TD></TR>
+				<TR><TD PORT="algorithm_pos">0</TD><TD PORT="algorithm_size">1</TD><TD>u1→HashAlgorithms</TD><TD PORT="algorithm_type">algorithm</TD></TR>
+				<TR><TD COLSPAN="4" PORT="algorithm__repeat">repeat to end of stream</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__preferred_key_server {
+			label="OpenpgpMessage::PreferredKeyServer";
+			graph[style=dotted];
+
+			preferred_key_server__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="uri_pos">0</TD><TD PORT="uri_size">⇲</TD><TD>str(UTF-8)</TD><TD PORT="uri_type">uri</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__primary_user_id {
+			label="OpenpgpMessage::PrimaryUserId";
+			graph[style=dotted];
+
+			primary_user_id__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="user_id_pos">0</TD><TD PORT="user_id_size">1</TD><TD>u1</TD><TD PORT="user_id_type">user_id</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__public_key_packet {
+			label="OpenpgpMessage::PublicKeyPacket";
+			graph[style=dotted];
+
+			public_key_packet__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="version_pos">0</TD><TD PORT="version_size">1</TD><TD>u1</TD><TD PORT="version_type">version</TD></TR>
+				<TR><TD PORT="timestamp_pos">1</TD><TD PORT="timestamp_size">4</TD><TD>u4be</TD><TD PORT="timestamp_type">timestamp</TD></TR>
+				<TR><TD PORT="public_key_algorithm_pos">5</TD><TD PORT="public_key_algorithm_size">1</TD><TD>u1→PublicKeyAlgorithms</TD><TD PORT="public_key_algorithm_type">public_key_algorithm</TD></TR>
+				<TR><TD PORT="len_alg_pos">6</TD><TD PORT="len_alg_size">2</TD><TD>u2be</TD><TD PORT="len_alg_type">len_alg</TD></TR>
+				<TR><TD PORT="rsa_n_pos">8</TD><TD PORT="rsa_n_size">len_alg / 8</TD><TD></TD><TD PORT="rsa_n_type">rsa_n</TD></TR>
+				<TR><TD PORT="padding_pos">...</TD><TD PORT="padding_size">2</TD><TD>u2be</TD><TD PORT="padding_type">padding</TD></TR>
+				<TR><TD PORT="rsa_e_pos">...</TD><TD PORT="rsa_e_size">3</TD><TD></TD><TD PORT="rsa_e_type">rsa_e</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__reason_for_revocation {
+			label="OpenpgpMessage::ReasonForRevocation";
+			graph[style=dotted];
+
+			reason_for_revocation__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="revocation_code_pos">0</TD><TD PORT="revocation_code_size">1</TD><TD>u1→RevocationCodes</TD><TD PORT="revocation_code_type">revocation_code</TD></TR>
+				<TR><TD PORT="reason_pos">1</TD><TD PORT="reason_size">⇲</TD><TD>str(UTF-8)</TD><TD PORT="reason_type">reason</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__regular_expression {
+			label="OpenpgpMessage::RegularExpression";
+			graph[style=dotted];
+
+			regular_expression__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="regex_pos">0</TD><TD PORT="regex_size">...</TD><TD>str(term=0, UTF-8)</TD><TD PORT="regex_type">regex</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__revocable {
+			label="OpenpgpMessage::Revocable";
+			graph[style=dotted];
+
+			revocable__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="revocable_pos">0</TD><TD PORT="revocable_size">1</TD><TD>u1</TD><TD PORT="revocable_type">revocable</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__revocation_key {
+			label="OpenpgpMessage::RevocationKey";
+			graph[style=dotted];
+
+			revocation_key__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="class_pos">0</TD><TD PORT="class_size">1</TD><TD>u1</TD><TD PORT="class_type">class</TD></TR>
+				<TR><TD PORT="public_key_algorithm_pos">1</TD><TD PORT="public_key_algorithm_size">1</TD><TD>u1→PublicKeyAlgorithms</TD><TD PORT="public_key_algorithm_type">public_key_algorithm</TD></TR>
+				<TR><TD PORT="fingerprint_pos">2</TD><TD PORT="fingerprint_size">20</TD><TD></TD><TD PORT="fingerprint_type">fingerprint</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__secret_key_packet {
+			label="OpenpgpMessage::SecretKeyPacket";
+			graph[style=dotted];
+
+			secret_key_packet__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="public_key_pos">0</TD><TD PORT="public_key_size">...</TD><TD>PublicKeyPacket</TD><TD PORT="public_key_type">public_key</TD></TR>
+				<TR><TD PORT="string_to_key_pos">...</TD><TD PORT="string_to_key_size">1</TD><TD>u1</TD><TD PORT="string_to_key_type">string_to_key</TD></TR>
+				<TR><TD PORT="symmetric_encryption_algorithm_pos">...</TD><TD PORT="symmetric_encryption_algorithm_size">1</TD><TD>u1→SymmetricKeyAlgorithm</TD><TD PORT="symmetric_encryption_algorithm_type">symmetric_encryption_algorithm</TD></TR>
+				<TR><TD COLSPAN="4" PORT="symmetric_encryption_algorithm__if">if string_to_key &gt;= 254</TD></TR>
+				<TR><TD PORT="secret_key_pos">...</TD><TD PORT="secret_key_size">⇲</TD><TD></TD><TD PORT="secret_key_type">secret_key</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__signature_creation_time {
@@ -238,6 +267,15 @@ old_packet__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING
 			graph[style=dotted];
 
 			signature_creation_time__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="time_pos">0</TD><TD PORT="time_size">4</TD><TD>u4be</TD><TD PORT="time_type">time</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__signature_expiration_time {
+			label="OpenpgpMessage::SignatureExpirationTime";
+			graph[style=dotted];
+
+			signature_expiration_time__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="time_pos">0</TD><TD PORT="time_size">4</TD><TD>u4be</TD><TD PORT="time_type">time</TD></TR>
 			</TABLE>>];
@@ -261,112 +299,71 @@ old_packet__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING
 				<TR><TD PORT="signature_pos">...</TD><TD PORT="signature_size">⇲</TD><TD></TD><TD PORT="signature_type">signature</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__revocable {
-			label="OpenpgpMessage::Revocable";
+		subgraph cluster__signature_target {
+			label="OpenpgpMessage::SignatureTarget";
 			graph[style=dotted];
 
-			revocable__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			signature_target__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="revocable_pos">0</TD><TD PORT="revocable_size">1</TD><TD>u1</TD><TD PORT="revocable_type">revocable</TD></TR>
+				<TR><TD PORT="public_key_algorithm_pos">0</TD><TD PORT="public_key_algorithm_size">1</TD><TD>u1→PublicKeyAlgorithms</TD><TD PORT="public_key_algorithm_type">public_key_algorithm</TD></TR>
+				<TR><TD PORT="hash_algorithm_pos">1</TD><TD PORT="hash_algorithm_size">1</TD><TD>u1→HashAlgorithms</TD><TD PORT="hash_algorithm_type">hash_algorithm</TD></TR>
+				<TR><TD PORT="hash_pos">2</TD><TD PORT="hash_size">⇲</TD><TD></TD><TD PORT="hash_type">hash</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__embedded_signature {
-			label="OpenpgpMessage::EmbeddedSignature";
+		subgraph cluster__signers_user_id {
+			label="OpenpgpMessage::SignersUserId";
 			graph[style=dotted];
 
-			embedded_signature__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			signers_user_id__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="signature_packet_pos">0</TD><TD PORT="signature_packet_size">...</TD><TD>SignaturePacket</TD><TD PORT="signature_packet_type">signature_packet</TD></TR>
+				<TR><TD PORT="user_id_pos">0</TD><TD PORT="user_id_size">⇲</TD><TD>str(UTF-8)</TD><TD PORT="user_id_type">user_id</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__preferred_key_server {
-			label="OpenpgpMessage::PreferredKeyServer";
+		subgraph cluster__subpacket {
+			label="OpenpgpMessage::Subpacket";
 			graph[style=dotted];
 
-			preferred_key_server__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			subpacket__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="uri_pos">0</TD><TD PORT="uri_size">⇲</TD><TD>str(UTF-8)</TD><TD PORT="uri_type">uri</TD></TR>
+				<TR><TD PORT="len_pos">0</TD><TD PORT="len_size">6</TD><TD>LenSubpacket</TD><TD PORT="len_type">len</TD></TR>
+				<TR><TD PORT="subpacket_type_pos">6</TD><TD PORT="subpacket_type_size">1</TD><TD>u1→SubpacketTypes</TD><TD PORT="subpacket_type_type">subpacket_type</TD></TR>
+				<TR><TD PORT="content_pos">7</TD><TD PORT="content_size">...</TD><TD>switch (subpacket_type)</TD><TD PORT="content_type">content</TD></TR>
 			</TABLE>>];
-		}
-		subgraph cluster__reason_for_revocation {
-			label="OpenpgpMessage::ReasonForRevocation";
-			graph[style=dotted];
-
-			reason_for_revocation__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="revocation_code_pos">0</TD><TD PORT="revocation_code_size">1</TD><TD>u1→RevocationCodes</TD><TD PORT="revocation_code_type">revocation_code</TD></TR>
-				<TR><TD PORT="reason_pos">1</TD><TD PORT="reason_size">⇲</TD><TD>str(UTF-8)</TD><TD PORT="reason_type">reason</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__len_subpacket {
-			label="OpenpgpMessage::LenSubpacket";
-			graph[style=dotted];
-
-			len_subpacket__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="first_octet_pos">0</TD><TD PORT="first_octet_size">1</TD><TD>u1</TD><TD PORT="first_octet_type">first_octet</TD></TR>
-				<TR><TD PORT="second_octet_pos">1</TD><TD PORT="second_octet_size">1</TD><TD>u1</TD><TD PORT="second_octet_type">second_octet</TD></TR>
-				<TR><TD PORT="scalar_pos">2</TD><TD PORT="scalar_size">4</TD><TD>u4be</TD><TD PORT="scalar_type">scalar</TD></TR>
-			</TABLE>>];
-			len_subpacket__inst__len [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>len</TD><TD>(first_octet &lt; 192 ? first_octet : ( ((first_octet &gt;= 192) &amp;&amp; (first_octet &lt; 255))  ? ((((first_octet - 192) &lt;&lt; 8) + second_octet) + 192) : scalar))</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__notation_data {
-			label="OpenpgpMessage::NotationData";
-			graph[style=dotted];
-
-			notation_data__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="flags_pos">0</TD><TD PORT="flags_size">4</TD><TD></TD><TD PORT="flags_type">flags</TD></TR>
-				<TR><TD PORT="len_name_pos">4</TD><TD PORT="len_name_size">2</TD><TD>u2be</TD><TD PORT="len_name_type">len_name</TD></TR>
-				<TR><TD PORT="len_value_pos">6</TD><TD PORT="len_value_size">2</TD><TD>u2be</TD><TD PORT="len_value_type">len_value</TD></TR>
-				<TR><TD PORT="name_pos">8</TD><TD PORT="name_size">len_name</TD><TD></TD><TD PORT="name_type">name</TD></TR>
-				<TR><TD PORT="value_pos">...</TD><TD PORT="value_size">len_value</TD><TD></TD><TD PORT="value_type">value</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__public_key_packet {
-			label="OpenpgpMessage::PublicKeyPacket";
-			graph[style=dotted];
-
-			public_key_packet__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="version_pos">0</TD><TD PORT="version_size">1</TD><TD>u1</TD><TD PORT="version_type">version</TD></TR>
-				<TR><TD PORT="timestamp_pos">1</TD><TD PORT="timestamp_size">4</TD><TD>u4be</TD><TD PORT="timestamp_type">timestamp</TD></TR>
-				<TR><TD PORT="public_key_algorithm_pos">5</TD><TD PORT="public_key_algorithm_size">1</TD><TD>u1→PublicKeyAlgorithms</TD><TD PORT="public_key_algorithm_type">public_key_algorithm</TD></TR>
-				<TR><TD PORT="len_alg_pos">6</TD><TD PORT="len_alg_size">2</TD><TD>u2be</TD><TD PORT="len_alg_type">len_alg</TD></TR>
-				<TR><TD PORT="rsa_n_pos">8</TD><TD PORT="rsa_n_size">(len_alg / 8)</TD><TD></TD><TD PORT="rsa_n_type">rsa_n</TD></TR>
-				<TR><TD PORT="padding_pos">...</TD><TD PORT="padding_size">2</TD><TD>u2be</TD><TD PORT="padding_type">padding</TD></TR>
-				<TR><TD PORT="rsa_e_pos">...</TD><TD PORT="rsa_e_size">3</TD><TD></TD><TD PORT="rsa_e_type">rsa_e</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__key_expiration_time {
-			label="OpenpgpMessage::KeyExpirationTime";
-			graph[style=dotted];
-
-			key_expiration_time__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="time_pos">0</TD><TD PORT="time_size">4</TD><TD>u4be</TD><TD PORT="time_type">time</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__packet {
-			label="OpenpgpMessage::Packet";
-			graph[style=dotted];
-
-			packet__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="one_pos">0</TD><TD PORT="one_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="one_type">one</TD></TR>
-				<TR><TD PORT="new_packet_format_pos">0:1</TD><TD PORT="new_packet_format_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="new_packet_format_type">new_packet_format</TD></TR>
-				<TR><TD PORT="packet_type_new_pos">0:2</TD><TD PORT="packet_type_new_size">6b</TD><TD>b6→PacketTags</TD><TD PORT="packet_type_new_type">packet_type_new</TD></TR>
-				<TR><TD PORT="packet_type_old_pos">1</TD><TD PORT="packet_type_old_size">4b</TD><TD>b4→PacketTags</TD><TD PORT="packet_type_old_type">packet_type_old</TD></TR>
-				<TR><TD PORT="len_type_pos">1:4</TD><TD PORT="len_type_size">2b</TD><TD>b2</TD><TD PORT="len_type_type">len_type</TD></TR>
-				<TR><TD PORT="body_pos">1:6</TD><TD PORT="body_size">...</TD><TD>switch (new_packet_format)</TD><TD PORT="body_type">body</TD></TR>
-			</TABLE>>];
-packet__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+subpacket__seq_content_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
-	<TR><TD>false</TD><TD PORT="case0">OldPacket</TD></TR>
+	<TR><TD>:subpacket_types_embedded_signature</TD><TD PORT="case0">EmbeddedSignature</TD></TR>
+	<TR><TD>:subpacket_types_exportable_certification</TD><TD PORT="case1">ExportableCertification</TD></TR>
+	<TR><TD>:subpacket_types_features</TD><TD PORT="case2">Features</TD></TR>
+	<TR><TD>:subpacket_types_issuer</TD><TD PORT="case3">Issuer</TD></TR>
+	<TR><TD>:subpacket_types_key_expiration_time</TD><TD PORT="case4">KeyExpirationTime</TD></TR>
+	<TR><TD>:subpacket_types_key_flags</TD><TD PORT="case5">KeyFlags</TD></TR>
+	<TR><TD>:subpacket_types_key_server_preferences</TD><TD PORT="case6">KeyServerPreferences</TD></TR>
+	<TR><TD>:subpacket_types_notation_data</TD><TD PORT="case7">NotationData</TD></TR>
+	<TR><TD>:subpacket_types_policy_uri</TD><TD PORT="case8">PolicyUri</TD></TR>
+	<TR><TD>:subpacket_types_preferred_compression_algorithms</TD><TD PORT="case9">PreferredCompressionAlgorithms</TD></TR>
+	<TR><TD>:subpacket_types_preferred_hash_algorithms</TD><TD PORT="case10">PreferredHashAlgorithms</TD></TR>
+	<TR><TD>:subpacket_types_preferred_key_server</TD><TD PORT="case11">PreferredKeyServer</TD></TR>
+	<TR><TD>:subpacket_types_primary_user_id</TD><TD PORT="case12">PrimaryUserId</TD></TR>
+	<TR><TD>:subpacket_types_reason_for_revocation</TD><TD PORT="case13">ReasonForRevocation</TD></TR>
+	<TR><TD>:subpacket_types_regular_expression</TD><TD PORT="case14">RegularExpression</TD></TR>
+	<TR><TD>:subpacket_types_revocable</TD><TD PORT="case15">Revocable</TD></TR>
+	<TR><TD>:subpacket_types_revocation_key</TD><TD PORT="case16">RevocationKey</TD></TR>
+	<TR><TD>:subpacket_types_signature_creation_time</TD><TD PORT="case17">SignatureCreationTime</TD></TR>
+	<TR><TD>:subpacket_types_signature_expiration_time</TD><TD PORT="case18">SignatureExpirationTime</TD></TR>
+	<TR><TD>:subpacket_types_signature_target</TD><TD PORT="case19">SignatureTarget</TD></TR>
+	<TR><TD>:subpacket_types_signers_user_id</TD><TD PORT="case20">SignersUserId</TD></TR>
+	<TR><TD>:subpacket_types_trust_signature</TD><TD PORT="case21">TrustSignature</TD></TR>
 </TABLE>>];
+		}
+		subgraph cluster__subpackets {
+			label="OpenpgpMessage::Subpackets";
+			graph[style=dotted];
+
+			subpackets__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="subpacketss_pos">0</TD><TD PORT="subpacketss_size">...</TD><TD>Subpacket</TD><TD PORT="subpacketss_type">subpacketss</TD></TR>
+				<TR><TD COLSPAN="4" PORT="subpacketss__repeat">repeat to end of stream</TD></TR>
+			</TABLE>>];
 		}
 		subgraph cluster__trust_signature {
 			label="OpenpgpMessage::TrustSignature";
@@ -378,61 +375,72 @@ packet__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0"
 				<TR><TD PORT="amount_pos">1</TD><TD PORT="amount_size">1</TD><TD>u1</TD><TD PORT="amount_type">amount</TD></TR>
 			</TABLE>>];
 		}
+		subgraph cluster__user_id_packet {
+			label="OpenpgpMessage::UserIdPacket";
+			graph[style=dotted];
+
+			user_id_packet__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="user_id_pos">0</TD><TD PORT="user_id_size">⇲</TD><TD>str(UTF-8)</TD><TD PORT="user_id_type">user_id</TD></TR>
+			</TABLE>>];
+		}
 	}
 	openpgp_message__seq:packets_type -> packet__seq [style=bold];
-	secret_key_packet__seq:public_key_type -> public_key_packet__seq [style=bold];
-	subpackets__seq:subpacketss_type -> subpacket__seq [style=bold];
-	subpacket__seq:len_type -> len_subpacket__seq [style=bold];
-	subpacket__seq:content_type -> subpacket__seq_content_switch [style=bold];
-	subpacket__seq_content_switch:case0 -> preferred_key_server__seq [style=bold];
-	subpacket__seq_content_switch:case1 -> issuer__seq [style=bold];
-	subpacket__seq_content_switch:case2 -> revocable__seq [style=bold];
-	subpacket__seq_content_switch:case3 -> signature_target__seq [style=bold];
-	subpacket__seq_content_switch:case4 -> regular_expression__seq [style=bold];
-	subpacket__seq_content_switch:case5 -> exportable_certification__seq [style=bold];
-	subpacket__seq_content_switch:case6 -> reason_for_revocation__seq [style=bold];
-	subpacket__seq_content_switch:case7 -> key_server_preferences__seq [style=bold];
-	subpacket__seq_content_switch:case8 -> signature_creation_time__seq [style=bold];
-	subpacket__seq_content_switch:case9 -> preferred_hash_algorithms__seq [style=bold];
-	subpacket__seq_content_switch:case10 -> trust_signature__seq [style=bold];
-	subpacket__seq_content_switch:case11 -> key_expiration_time__seq [style=bold];
-	subpacket__seq_content_switch:case12 -> key_flags__seq [style=bold];
-	subpacket__seq_content_switch:case13 -> signature_expiration_time__seq [style=bold];
-	subpacket__seq_content_switch:case14 -> features__seq [style=bold];
-	subpacket__seq_content_switch:case15 -> signers_user_id__seq [style=bold];
-	subpacket__seq_content_switch:case16 -> notation_data__seq [style=bold];
-	subpacket__seq_content_switch:case17 -> revocation_key__seq [style=bold];
-	subpacket__seq_content_switch:case18 -> preferred_compression_algorithms__seq [style=bold];
-	subpacket__seq_content_switch:case19 -> policy_uri__seq [style=bold];
-	subpacket__seq_content_switch:case20 -> primary_user_id__seq [style=bold];
-	subpacket__seq_content_switch:case21 -> embedded_signature__seq [style=bold];
-	subpacket__seq:subpacket_type_type -> subpacket__seq:content_type [color="#404040"];
-	old_packet__seq:len_type -> old_packet__seq_len_switch [style=bold];
-	packet__seq:len_type_type -> old_packet__seq:len_type [color="#404040"];
-	old_packet__seq:body_type -> old_packet__seq_body_switch [style=bold];
-	old_packet__seq_body_switch:case0 -> public_key_packet__seq [style=bold];
-	old_packet__seq_body_switch:case1 -> public_key_packet__seq [style=bold];
-	old_packet__seq_body_switch:case2 -> user_id_packet__seq [style=bold];
-	old_packet__seq_body_switch:case3 -> signature_packet__seq [style=bold];
-	old_packet__seq_body_switch:case4 -> public_key_packet__seq [style=bold];
-	old_packet__seq_body_switch:case5 -> secret_key_packet__seq [style=bold];
-	packet__seq:packet_type_old_type -> old_packet__seq:body_type [color="#404040"];
-	signature_packet__seq:len_hashed_subpacket_type -> signature_packet__seq:hashed_subpackets_size [color="#404040"];
-	signature_packet__seq:hashed_subpackets_type -> subpackets__seq [style=bold];
-	signature_packet__seq:len_unhashed_subpacket_type -> signature_packet__seq:unhashed_subpackets_size [color="#404040"];
-	signature_packet__seq:unhashed_subpackets_type -> subpackets__seq [style=bold];
 	embedded_signature__seq:signature_packet_type -> signature_packet__seq [style=bold];
-	len_subpacket__seq:first_octet_type -> len_subpacket__inst__len [color="#404040"];
-	len_subpacket__seq:first_octet_type -> len_subpacket__inst__len [color="#404040"];
-	len_subpacket__seq:first_octet_type -> len_subpacket__inst__len [color="#404040"];
-	len_subpacket__seq:first_octet_type -> len_subpacket__inst__len [color="#404040"];
+	len_subpacket__seq:first_octet_type -> len_subpacket__seq:second_octet__if [color="#404040"];
+	len_subpacket__seq:first_octet_type -> len_subpacket__seq:scalar__if [color="#404040"];
 	len_subpacket__seq:first_octet_type -> len_subpacket__inst__len [color="#404040"];
 	len_subpacket__seq:second_octet_type -> len_subpacket__inst__len [color="#404040"];
 	len_subpacket__seq:scalar_type -> len_subpacket__inst__len [color="#404040"];
 	notation_data__seq:len_name_type -> notation_data__seq:name_size [color="#404040"];
 	notation_data__seq:len_value_type -> notation_data__seq:value_size [color="#404040"];
-	public_key_packet__seq:len_alg_type -> public_key_packet__seq:rsa_n_size [color="#404040"];
+	old_packet__seq:len_type -> old_packet__seq_len_switch [style=bold];
+	packet__seq:len_type_type -> old_packet__seq:len_type [color="#404040"];
+	old_packet__seq:body_type -> old_packet__seq_body_switch [style=bold];
+	old_packet__seq_body_switch:case0 -> public_key_packet__seq [style=bold];
+	old_packet__seq_body_switch:case1 -> public_key_packet__seq [style=bold];
+	old_packet__seq_body_switch:case2 -> secret_key_packet__seq [style=bold];
+	old_packet__seq_body_switch:case3 -> public_key_packet__seq [style=bold];
+	old_packet__seq_body_switch:case4 -> signature_packet__seq [style=bold];
+	old_packet__seq_body_switch:case5 -> user_id_packet__seq [style=bold];
+	packet__seq:packet_type_old_type -> old_packet__seq:body_type [color="#404040"];
+	packet__seq:new_packet_format_type -> packet__seq:packet_type_new__if [color="#404040"];
+	packet__seq:new_packet_format_type -> packet__seq:packet_type_old__if [color="#404040"];
+	packet__seq:new_packet_format_type -> packet__seq:len_type__if [color="#404040"];
 	packet__seq:body_type -> packet__seq_body_switch [style=bold];
 	packet__seq_body_switch:case0 -> old_packet__seq [style=bold];
 	packet__seq:new_packet_format_type -> packet__seq:body_type [color="#404040"];
+	public_key_packet__seq:len_alg_type -> public_key_packet__seq:rsa_n_size [color="#404040"];
+	secret_key_packet__seq:public_key_type -> public_key_packet__seq [style=bold];
+	secret_key_packet__seq:string_to_key_type -> secret_key_packet__seq:symmetric_encryption_algorithm__if [color="#404040"];
+	signature_packet__seq:len_hashed_subpacket_type -> signature_packet__seq:hashed_subpackets_size [color="#404040"];
+	signature_packet__seq:hashed_subpackets_type -> subpackets__seq [style=bold];
+	signature_packet__seq:len_unhashed_subpacket_type -> signature_packet__seq:unhashed_subpackets_size [color="#404040"];
+	signature_packet__seq:unhashed_subpackets_type -> subpackets__seq [style=bold];
+	subpacket__seq:len_type -> len_subpacket__seq [style=bold];
+	subpacket__seq:content_type -> subpacket__seq_content_switch [style=bold];
+	subpacket__seq_content_switch:case0 -> embedded_signature__seq [style=bold];
+	subpacket__seq_content_switch:case1 -> exportable_certification__seq [style=bold];
+	subpacket__seq_content_switch:case2 -> features__seq [style=bold];
+	subpacket__seq_content_switch:case3 -> issuer__seq [style=bold];
+	subpacket__seq_content_switch:case4 -> key_expiration_time__seq [style=bold];
+	subpacket__seq_content_switch:case5 -> key_flags__seq [style=bold];
+	subpacket__seq_content_switch:case6 -> key_server_preferences__seq [style=bold];
+	subpacket__seq_content_switch:case7 -> notation_data__seq [style=bold];
+	subpacket__seq_content_switch:case8 -> policy_uri__seq [style=bold];
+	subpacket__seq_content_switch:case9 -> preferred_compression_algorithms__seq [style=bold];
+	subpacket__seq_content_switch:case10 -> preferred_hash_algorithms__seq [style=bold];
+	subpacket__seq_content_switch:case11 -> preferred_key_server__seq [style=bold];
+	subpacket__seq_content_switch:case12 -> primary_user_id__seq [style=bold];
+	subpacket__seq_content_switch:case13 -> reason_for_revocation__seq [style=bold];
+	subpacket__seq_content_switch:case14 -> regular_expression__seq [style=bold];
+	subpacket__seq_content_switch:case15 -> revocable__seq [style=bold];
+	subpacket__seq_content_switch:case16 -> revocation_key__seq [style=bold];
+	subpacket__seq_content_switch:case17 -> signature_creation_time__seq [style=bold];
+	subpacket__seq_content_switch:case18 -> signature_expiration_time__seq [style=bold];
+	subpacket__seq_content_switch:case19 -> signature_target__seq [style=bold];
+	subpacket__seq_content_switch:case20 -> signers_user_id__seq [style=bold];
+	subpacket__seq_content_switch:case21 -> trust_signature__seq [style=bold];
+	subpacket__seq:subpacket_type_type -> subpacket__seq:content_type [color="#404040"];
+	subpackets__seq:subpacketss_type -> subpacket__seq [style=bold];
 }

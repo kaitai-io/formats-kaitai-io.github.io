@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.TrDosImage = factory(root.KaitaiStream);
+    factory(root.TrDosImage || (root.TrDosImage = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (TrDosImage_, KaitaiStream) {
 /**
  * .trd file is a raw dump of TR-DOS (ZX-Spectrum) floppy. .trd files are
  * headerless and contain consequent "logical tracks", each logical track
@@ -60,92 +60,73 @@ var TrDosImage = (function() {
     } while (!(_.isTerminator));
   }
 
-  var VolumeInfo = TrDosImage.VolumeInfo = (function() {
-    function VolumeInfo(_io, _parent, _root) {
+  var File = TrDosImage.File = (function() {
+    function File(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    VolumeInfo.prototype._read = function() {
-      this.catalogEnd = this._io.readBytes(1);
-      if (!((KaitaiStream.byteArrayCompare(this.catalogEnd, [0]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([0], this.catalogEnd, this._io, "/types/volume_info/seq/0");
+    File.prototype._read = function() {
+      this._raw_name = this._io.readBytes(8);
+      var _io__raw_name = new KaitaiStream(this._raw_name);
+      this.name = new Filename(_io__raw_name, this, this._root);
+      this.extension = this._io.readU1();
+      switch (this.extension) {
+      case 35:
+        this.positionAndLength = new PositionAndLengthPrint(this._io, this, this._root);
+        break;
+      case 66:
+        this.positionAndLength = new PositionAndLengthBasic(this._io, this, this._root);
+        break;
+      case 67:
+        this.positionAndLength = new PositionAndLengthCode(this._io, this, this._root);
+        break;
+      default:
+        this.positionAndLength = new PositionAndLengthGeneric(this._io, this, this._root);
+        break;
       }
-      this.unused = this._io.readBytes(224);
-      this.firstFreeSectorSector = this._io.readU1();
-      this.firstFreeSectorTrack = this._io.readU1();
-      this.diskType = this._io.readU1();
-      this.numFiles = this._io.readU1();
-      this.numFreeSectors = this._io.readU2le();
-      this.trDosId = this._io.readBytes(1);
-      if (!((KaitaiStream.byteArrayCompare(this.trDosId, [16]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([16], this.trDosId, this._io, "/types/volume_info/seq/7");
-      }
-      this.unused2 = this._io.readBytes(2);
-      this.password = this._io.readBytes(9);
-      this.unused3 = this._io.readBytes(1);
-      this.numDeletedFiles = this._io.readU1();
-      this.label = this._io.readBytes(8);
-      this.unused4 = this._io.readBytes(3);
+      this.lengthSectors = this._io.readU1();
+      this.startingSector = this._io.readU1();
+      this.startingTrack = this._io.readU1();
     }
-    Object.defineProperty(VolumeInfo.prototype, 'numTracks', {
+    Object.defineProperty(File.prototype, 'contents', {
       get: function() {
-        if (this._m_numTracks !== undefined)
-          return this._m_numTracks;
-        this._m_numTracks = ((this.diskType & 1) != 0 ? 40 : 80);
-        return this._m_numTracks;
+        if (this._m_contents !== undefined)
+          return this._m_contents;
+        var _pos = this._io.pos;
+        this._io.seek((this.startingTrack * 256) * 16 + this.startingSector * 256);
+        this._m_contents = this._io.readBytes(this.lengthSectors * 256);
+        this._io.seek(_pos);
+        return this._m_contents;
       }
     });
-    Object.defineProperty(VolumeInfo.prototype, 'numSides', {
+    Object.defineProperty(File.prototype, 'isDeleted', {
       get: function() {
-        if (this._m_numSides !== undefined)
-          return this._m_numSides;
-        this._m_numSides = ((this.diskType & 8) != 0 ? 1 : 2);
-        return this._m_numSides;
+        if (this._m_isDeleted !== undefined)
+          return this._m_isDeleted;
+        this._m_isDeleted = this.name.firstByte == 1;
+        return this._m_isDeleted;
+      }
+    });
+    Object.defineProperty(File.prototype, 'isTerminator', {
+      get: function() {
+        if (this._m_isTerminator !== undefined)
+          return this._m_isTerminator;
+        this._m_isTerminator = this.name.firstByte == 0;
+        return this._m_isTerminator;
       }
     });
 
-    /**
-     * track number is logical, for double-sided disks it's
-     * (physical_track << 1) | side, the same way that tracks are stored
-     * sequentially in .trd file
-     */
-
-    /**
-     * Number of non-deleted files. Directory can have more than
-     * number_of_files entries due to deleted files
-     */
-
-    return VolumeInfo;
-  })();
-
-  var PositionAndLengthCode = TrDosImage.PositionAndLengthCode = (function() {
-    function PositionAndLengthCode(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    PositionAndLengthCode.prototype._read = function() {
-      this.startAddress = this._io.readU2le();
-      this.length = this._io.readU2le();
-    }
-
-    /**
-     * Default memory address to load this byte array into
-     */
-
-    return PositionAndLengthCode;
+    return File;
   })();
 
   var Filename = TrDosImage.Filename = (function() {
     function Filename(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -167,11 +148,63 @@ var TrDosImage = (function() {
     return Filename;
   })();
 
+  var PositionAndLengthBasic = TrDosImage.PositionAndLengthBasic = (function() {
+    function PositionAndLengthBasic(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    PositionAndLengthBasic.prototype._read = function() {
+      this.programAndDataLength = this._io.readU2le();
+      this.programLength = this._io.readU2le();
+    }
+
+    return PositionAndLengthBasic;
+  })();
+
+  var PositionAndLengthCode = TrDosImage.PositionAndLengthCode = (function() {
+    function PositionAndLengthCode(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    PositionAndLengthCode.prototype._read = function() {
+      this.startAddress = this._io.readU2le();
+      this.length = this._io.readU2le();
+    }
+
+    /**
+     * Default memory address to load this byte array into
+     */
+
+    return PositionAndLengthCode;
+  })();
+
+  var PositionAndLengthGeneric = TrDosImage.PositionAndLengthGeneric = (function() {
+    function PositionAndLengthGeneric(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    PositionAndLengthGeneric.prototype._read = function() {
+      this.reserved = this._io.readU2le();
+      this.length = this._io.readU2le();
+    }
+
+    return PositionAndLengthGeneric;
+  })();
+
   var PositionAndLengthPrint = TrDosImage.PositionAndLengthPrint = (function() {
     function PositionAndLengthPrint(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -184,98 +217,65 @@ var TrDosImage = (function() {
     return PositionAndLengthPrint;
   })();
 
-  var PositionAndLengthGeneric = TrDosImage.PositionAndLengthGeneric = (function() {
-    function PositionAndLengthGeneric(_io, _parent, _root) {
+  var VolumeInfo = TrDosImage.VolumeInfo = (function() {
+    function VolumeInfo(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    PositionAndLengthGeneric.prototype._read = function() {
-      this.reserved = this._io.readU2le();
-      this.length = this._io.readU2le();
-    }
-
-    return PositionAndLengthGeneric;
-  })();
-
-  var PositionAndLengthBasic = TrDosImage.PositionAndLengthBasic = (function() {
-    function PositionAndLengthBasic(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    PositionAndLengthBasic.prototype._read = function() {
-      this.programAndDataLength = this._io.readU2le();
-      this.programLength = this._io.readU2le();
-    }
-
-    return PositionAndLengthBasic;
-  })();
-
-  var File = TrDosImage.File = (function() {
-    function File(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    File.prototype._read = function() {
-      this._raw_name = this._io.readBytes(8);
-      var _io__raw_name = new KaitaiStream(this._raw_name);
-      this.name = new Filename(_io__raw_name, this, this._root);
-      this.extension = this._io.readU1();
-      switch (this.extension) {
-      case 66:
-        this.positionAndLength = new PositionAndLengthBasic(this._io, this, this._root);
-        break;
-      case 67:
-        this.positionAndLength = new PositionAndLengthCode(this._io, this, this._root);
-        break;
-      case 35:
-        this.positionAndLength = new PositionAndLengthPrint(this._io, this, this._root);
-        break;
-      default:
-        this.positionAndLength = new PositionAndLengthGeneric(this._io, this, this._root);
-        break;
+    VolumeInfo.prototype._read = function() {
+      this.catalogEnd = this._io.readBytes(1);
+      if (!((KaitaiStream.byteArrayCompare(this.catalogEnd, new Uint8Array([0])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([0]), this.catalogEnd, this._io, "/types/volume_info/seq/0");
       }
-      this.lengthSectors = this._io.readU1();
-      this.startingSector = this._io.readU1();
-      this.startingTrack = this._io.readU1();
+      this.unused = this._io.readBytes(224);
+      this.firstFreeSectorSector = this._io.readU1();
+      this.firstFreeSectorTrack = this._io.readU1();
+      this.diskType = this._io.readU1();
+      this.numFiles = this._io.readU1();
+      this.numFreeSectors = this._io.readU2le();
+      this.trDosId = this._io.readBytes(1);
+      if (!((KaitaiStream.byteArrayCompare(this.trDosId, new Uint8Array([16])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([16]), this.trDosId, this._io, "/types/volume_info/seq/7");
+      }
+      this.unused2 = this._io.readBytes(2);
+      this.password = this._io.readBytes(9);
+      this.unused3 = this._io.readBytes(1);
+      this.numDeletedFiles = this._io.readU1();
+      this.label = this._io.readBytes(8);
+      this.unused4 = this._io.readBytes(3);
     }
-    Object.defineProperty(File.prototype, 'isDeleted', {
+    Object.defineProperty(VolumeInfo.prototype, 'numSides', {
       get: function() {
-        if (this._m_isDeleted !== undefined)
-          return this._m_isDeleted;
-        this._m_isDeleted = this.name.firstByte == 1;
-        return this._m_isDeleted;
+        if (this._m_numSides !== undefined)
+          return this._m_numSides;
+        this._m_numSides = ((this.diskType & 8) != 0 ? 1 : 2);
+        return this._m_numSides;
       }
     });
-    Object.defineProperty(File.prototype, 'isTerminator', {
+    Object.defineProperty(VolumeInfo.prototype, 'numTracks', {
       get: function() {
-        if (this._m_isTerminator !== undefined)
-          return this._m_isTerminator;
-        this._m_isTerminator = this.name.firstByte == 0;
-        return this._m_isTerminator;
-      }
-    });
-    Object.defineProperty(File.prototype, 'contents', {
-      get: function() {
-        if (this._m_contents !== undefined)
-          return this._m_contents;
-        var _pos = this._io.pos;
-        this._io.seek((((this.startingTrack * 256) * 16) + (this.startingSector * 256)));
-        this._m_contents = this._io.readBytes((this.lengthSectors * 256));
-        this._io.seek(_pos);
-        return this._m_contents;
+        if (this._m_numTracks !== undefined)
+          return this._m_numTracks;
+        this._m_numTracks = ((this.diskType & 1) != 0 ? 40 : 80);
+        return this._m_numTracks;
       }
     });
 
-    return File;
+    /**
+     * track number is logical, for double-sided disks it's
+     * (physical_track << 1) | side, the same way that tracks are stored
+     * sequentially in .trd file
+     */
+
+    /**
+     * Number of non-deleted files. Directory can have more than
+     * number_of_files entries due to deleted files
+     */
+
+    return VolumeInfo;
   })();
   Object.defineProperty(TrDosImage.prototype, 'volumeInfo', {
     get: function() {
@@ -291,5 +291,5 @@ var TrDosImage = (function() {
 
   return TrDosImage;
 })();
-return TrDosImage;
-}));
+TrDosImage_.TrDosImage = TrDosImage;
+});

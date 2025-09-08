@@ -1,10 +1,23 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 #include "dime_message.h"
+std::set<dime_message_t::type_formats_t> dime_message_t::_build_values_type_formats_t() {
+    std::set<dime_message_t::type_formats_t> _t;
+    _t.insert(dime_message_t::TYPE_FORMATS_UNCHANGED);
+    _t.insert(dime_message_t::TYPE_FORMATS_MEDIA_TYPE);
+    _t.insert(dime_message_t::TYPE_FORMATS_ABSOLUTE_URI);
+    _t.insert(dime_message_t::TYPE_FORMATS_UNKNOWN);
+    _t.insert(dime_message_t::TYPE_FORMATS_NONE);
+    return _t;
+}
+const std::set<dime_message_t::type_formats_t> dime_message_t::_values_type_formats_t = dime_message_t::_build_values_type_formats_t();
+bool dime_message_t::_is_defined_type_formats_t(dime_message_t::type_formats_t v) {
+    return dime_message_t::_values_type_formats_t.find(v) != dime_message_t::_values_type_formats_t.end();
+}
 
 dime_message_t::dime_message_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, dime_message_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     m_records = 0;
 
     try {
@@ -39,7 +52,7 @@ void dime_message_t::_clean_up() {
     }
 }
 
-dime_message_t::padding_t::padding_t(kaitai::kstream* p__io, dime_message_t::record_t* p__parent, dime_message_t* p__root) : kaitai::kstruct(p__io) {
+dime_message_t::option_element_t::option_element_t(kaitai::kstream* p__io, dime_message_t::option_field_t* p__parent, dime_message_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
 
@@ -51,15 +64,17 @@ dime_message_t::padding_t::padding_t(kaitai::kstream* p__io, dime_message_t::rec
     }
 }
 
-void dime_message_t::padding_t::_read() {
-    m_boundary_padding = m__io->read_bytes(kaitai::kstream::mod(-(_io()->pos()), 4));
+void dime_message_t::option_element_t::_read() {
+    m_element_format = m__io->read_u2be();
+    m_len_element = m__io->read_u2be();
+    m_element_data = m__io->read_bytes(len_element());
 }
 
-dime_message_t::padding_t::~padding_t() {
+dime_message_t::option_element_t::~option_element_t() {
     _clean_up();
 }
 
-void dime_message_t::padding_t::_clean_up() {
+void dime_message_t::option_element_t::_clean_up() {
 }
 
 dime_message_t::option_field_t::option_field_t(kaitai::kstream* p__io, dime_message_t::record_t* p__parent, dime_message_t* p__root) : kaitai::kstruct(p__io) {
@@ -99,7 +114,7 @@ void dime_message_t::option_field_t::_clean_up() {
     }
 }
 
-dime_message_t::option_element_t::option_element_t(kaitai::kstream* p__io, dime_message_t::option_field_t* p__parent, dime_message_t* p__root) : kaitai::kstruct(p__io) {
+dime_message_t::padding_t::padding_t(kaitai::kstream* p__io, dime_message_t::record_t* p__parent, dime_message_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
 
@@ -111,17 +126,15 @@ dime_message_t::option_element_t::option_element_t(kaitai::kstream* p__io, dime_
     }
 }
 
-void dime_message_t::option_element_t::_read() {
-    m_element_format = m__io->read_u2be();
-    m_len_element = m__io->read_u2be();
-    m_element_data = m__io->read_bytes(len_element());
+void dime_message_t::padding_t::_read() {
+    m_boundary_padding = m__io->read_bytes(kaitai::kstream::mod(-(_io()->pos()), 4));
 }
 
-dime_message_t::option_element_t::~option_element_t() {
+dime_message_t::padding_t::~padding_t() {
     _clean_up();
 }
 
-void dime_message_t::option_element_t::_clean_up() {
+void dime_message_t::padding_t::_clean_up() {
 }
 
 dime_message_t::record_t::record_t(kaitai::kstream* p__io, dime_message_t* p__parent, dime_message_t* p__root) : kaitai::kstruct(p__io) {
@@ -158,9 +171,9 @@ void dime_message_t::record_t::_read() {
     m__io__raw_options = new kaitai::kstream(m__raw_options);
     m_options = new option_field_t(m__io__raw_options, this, m__root);
     m_options_padding = new padding_t(m__io, this, m__root);
-    m_id = kaitai::kstream::bytes_to_str(m__io->read_bytes(len_id()), std::string("ASCII"));
+    m_id = kaitai::kstream::bytes_to_str(m__io->read_bytes(len_id()), "ASCII");
     m_id_padding = new padding_t(m__io, this, m__root);
-    m_type = kaitai::kstream::bytes_to_str(m__io->read_bytes(len_type()), std::string("ASCII"));
+    m_type = kaitai::kstream::bytes_to_str(m__io->read_bytes(len_type()), "ASCII");
     m_type_padding = new padding_t(m__io, this, m__root);
     m_data = m__io->read_bytes(len_data());
     m_data_padding = new padding_t(m__io, this, m__root);

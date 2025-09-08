@@ -29,9 +29,9 @@ namespace Kaitai
         private void _read()
         {
             _magic = m_io.ReadBytes(4);
-            if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 202, 254, 186, 190 }) == 0)))
+            if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 202, 254, 186, 190 }) == 0)))
             {
-                throw new ValidationNotEqualError(new byte[] { 202, 254, 186, 190 }, Magic, M_Io, "/seq/0");
+                throw new ValidationNotEqualError(new byte[] { 202, 254, 186, 190 }, _magic, m_io, "/seq/0");
             }
             _numFatArch = m_io.ReadU4be();
             _fatArchs = new List<FatArch>();
@@ -70,13 +70,13 @@ namespace Kaitai
                 {
                     if (f_object)
                         return _object;
+                    f_object = true;
                     long _pos = m_io.Pos;
                     m_io.Seek(OfsObject);
                     __raw_object = m_io.ReadBytes(LenObject);
                     var io___raw_object = new KaitaiStream(__raw_object);
                     _object = new MachO(io___raw_object);
                     m_io.Seek(_pos);
-                    f_object = true;
                     return _object;
                 }
             }

@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -21,50 +21,26 @@ end
 # @see https://doom.fandom.com/wiki/GENMIDI Source
 # @see https://moddingwiki.shikadi.net/wiki/OP2_Bank_Format Source
 class GenmidiOp2 < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
     @magic = @_io.read_bytes(8)
-    raise Kaitai::Struct::ValidationNotEqualError.new([35, 79, 80, 76, 95, 73, 73, 35].pack('C*'), magic, _io, "/seq/0") if not magic == [35, 79, 80, 76, 95, 73, 73, 35].pack('C*')
+    raise Kaitai::Struct::ValidationNotEqualError.new([35, 79, 80, 76, 95, 73, 73, 35].pack('C*'), @magic, @_io, "/seq/0") if not @magic == [35, 79, 80, 76, 95, 73, 73, 35].pack('C*')
     @instruments = []
     (175).times { |i|
       @instruments << InstrumentEntry.new(@_io, self, @_root)
     }
     @instrument_names = []
     (175).times { |i|
-      @instrument_names << (Kaitai::Struct::Stream::bytes_terminate(Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(32), 0), 0, false)).force_encoding("ASCII")
+      @instrument_names << (Kaitai::Struct::Stream::bytes_terminate(Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(32), 0), 0, false)).force_encoding("ASCII").encode('UTF-8')
     }
     self
   end
-  class InstrumentEntry < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @flags = @_io.read_u2le
-      @finetune = @_io.read_u1
-      @note = @_io.read_u1
-      @instruments = []
-      (2).times { |i|
-        @instruments << Instrument.new(@_io, self, @_root)
-      }
-      self
-    end
-    attr_reader :flags
-    attr_reader :finetune
-
-    ##
-    # MIDI note for fixed instruments, 0 otherwise
-    attr_reader :note
-    attr_reader :instruments
-  end
   class Instrument < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -89,11 +65,35 @@ class GenmidiOp2 < Kaitai::Struct::Struct
     # Base note offset
     attr_reader :base_note
   end
+  class InstrumentEntry < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @flags = @_io.read_u2le
+      @finetune = @_io.read_u1
+      @note = @_io.read_u1
+      @instruments = []
+      (2).times { |i|
+        @instruments << Instrument.new(@_io, self, @_root)
+      }
+      self
+    end
+    attr_reader :flags
+    attr_reader :finetune
+
+    ##
+    # MIDI note for fixed instruments, 0 otherwise
+    attr_reader :note
+    attr_reader :instruments
+  end
 
   ##
   # OPL2 settings for one operator (carrier or modulator)
   class OpSettings < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end

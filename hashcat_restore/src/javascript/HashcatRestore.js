@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.HashcatRestore = factory(root.KaitaiStream);
+    factory(root.HashcatRestore || (root.HashcatRestore = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (HashcatRestore_, KaitaiStream) {
 /**
  * @see {@link https://hashcat.net/wiki/doku.php?id=restore|Source}
  */
@@ -38,5 +38,5 @@ var HashcatRestore = (function() {
 
   return HashcatRestore;
 })();
-return HashcatRestore;
-}));
+HashcatRestore_.HashcatRestore = HashcatRestore;
+});

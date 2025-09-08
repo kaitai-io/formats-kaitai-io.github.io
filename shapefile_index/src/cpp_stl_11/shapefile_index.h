@@ -2,22 +2,25 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class shapefile_index_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 class shapefile_index_t : public kaitai::kstruct {
 
 public:
-    class file_header_t;
-    class record_t;
     class bounding_box_x_y_z_m_t;
     class bounds_min_max_t;
+    class file_header_t;
+    class record_t;
 
     enum shape_type_t {
         SHAPE_TYPE_NULL_SHAPE = 0,
@@ -35,6 +38,12 @@ public:
         SHAPE_TYPE_MULTI_POINT_M = 28,
         SHAPE_TYPE_MULTI_PATCH = 31
     };
+    static bool _is_defined_shape_type_t(shape_type_t v);
+
+private:
+    static const std::set<shape_type_t> _values_shape_type_t;
+
+public:
 
     shapefile_index_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, shapefile_index_t* p__root = nullptr);
 
@@ -44,6 +53,62 @@ private:
 
 public:
     ~shapefile_index_t();
+
+    class bounding_box_x_y_z_m_t : public kaitai::kstruct {
+
+    public:
+
+        bounding_box_x_y_z_m_t(kaitai::kstream* p__io, shapefile_index_t::file_header_t* p__parent = nullptr, shapefile_index_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~bounding_box_x_y_z_m_t();
+
+    private:
+        std::unique_ptr<bounds_min_max_t> m_x;
+        std::unique_ptr<bounds_min_max_t> m_y;
+        std::unique_ptr<bounds_min_max_t> m_z;
+        std::unique_ptr<bounds_min_max_t> m_m;
+        shapefile_index_t* m__root;
+        shapefile_index_t::file_header_t* m__parent;
+
+    public:
+        bounds_min_max_t* x() const { return m_x.get(); }
+        bounds_min_max_t* y() const { return m_y.get(); }
+        bounds_min_max_t* z() const { return m_z.get(); }
+        bounds_min_max_t* m() const { return m_m.get(); }
+        shapefile_index_t* _root() const { return m__root; }
+        shapefile_index_t::file_header_t* _parent() const { return m__parent; }
+    };
+
+    class bounds_min_max_t : public kaitai::kstruct {
+
+    public:
+
+        bounds_min_max_t(kaitai::kstream* p__io, shapefile_index_t::bounding_box_x_y_z_m_t* p__parent = nullptr, shapefile_index_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~bounds_min_max_t();
+
+    private:
+        double m_min;
+        double m_max;
+        shapefile_index_t* m__root;
+        shapefile_index_t::bounding_box_x_y_z_m_t* m__parent;
+
+    public:
+        double min() const { return m_min; }
+        double max() const { return m_max; }
+        shapefile_index_t* _root() const { return m__root; }
+        shapefile_index_t::bounding_box_x_y_z_m_t* _parent() const { return m__parent; }
+    };
 
     class file_header_t : public kaitai::kstruct {
 
@@ -119,62 +184,6 @@ public:
         int32_t content_length() const { return m_content_length; }
         shapefile_index_t* _root() const { return m__root; }
         shapefile_index_t* _parent() const { return m__parent; }
-    };
-
-    class bounding_box_x_y_z_m_t : public kaitai::kstruct {
-
-    public:
-
-        bounding_box_x_y_z_m_t(kaitai::kstream* p__io, shapefile_index_t::file_header_t* p__parent = nullptr, shapefile_index_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~bounding_box_x_y_z_m_t();
-
-    private:
-        std::unique_ptr<bounds_min_max_t> m_x;
-        std::unique_ptr<bounds_min_max_t> m_y;
-        std::unique_ptr<bounds_min_max_t> m_z;
-        std::unique_ptr<bounds_min_max_t> m_m;
-        shapefile_index_t* m__root;
-        shapefile_index_t::file_header_t* m__parent;
-
-    public:
-        bounds_min_max_t* x() const { return m_x.get(); }
-        bounds_min_max_t* y() const { return m_y.get(); }
-        bounds_min_max_t* z() const { return m_z.get(); }
-        bounds_min_max_t* m() const { return m_m.get(); }
-        shapefile_index_t* _root() const { return m__root; }
-        shapefile_index_t::file_header_t* _parent() const { return m__parent; }
-    };
-
-    class bounds_min_max_t : public kaitai::kstruct {
-
-    public:
-
-        bounds_min_max_t(kaitai::kstream* p__io, shapefile_index_t::bounding_box_x_y_z_m_t* p__parent = nullptr, shapefile_index_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~bounds_min_max_t();
-
-    private:
-        double m_min;
-        double m_max;
-        shapefile_index_t* m__root;
-        shapefile_index_t::bounding_box_x_y_z_m_t* m__parent;
-
-    public:
-        double min() const { return m_min; }
-        double max() const { return m_max; }
-        shapefile_index_t* _root() const { return m__root; }
-        shapefile_index_t::bounding_box_x_y_z_m_t* _parent() const { return m__parent; }
     };
 
 private:

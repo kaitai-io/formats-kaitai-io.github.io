@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.Bcd = factory(root.KaitaiStream);
+    factory(root.Bcd || (root.Bcd = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Bcd_, KaitaiStream) {
 /**
  * BCD (Binary Coded Decimals) is a common way to encode integer
  * numbers in a way that makes human-readable output somewhat
@@ -77,13 +77,25 @@ var Bcd = (function() {
   });
 
   /**
+   * Value of this BCD number as integer (treating digit order as big-endian).
+   */
+  Object.defineProperty(Bcd.prototype, 'asIntBe', {
+    get: function() {
+      if (this._m_asIntBe !== undefined)
+        return this._m_asIntBe;
+      this._m_asIntBe = this.digits[this.lastIdx] + (this.numDigits < 2 ? 0 : this.digits[this.lastIdx - 1] * 10 + (this.numDigits < 3 ? 0 : this.digits[this.lastIdx - 2] * 100 + (this.numDigits < 4 ? 0 : this.digits[this.lastIdx - 3] * 1000 + (this.numDigits < 5 ? 0 : this.digits[this.lastIdx - 4] * 10000 + (this.numDigits < 6 ? 0 : this.digits[this.lastIdx - 5] * 100000 + (this.numDigits < 7 ? 0 : this.digits[this.lastIdx - 6] * 1000000 + (this.numDigits < 8 ? 0 : this.digits[this.lastIdx - 7] * 10000000)))))));
+      return this._m_asIntBe;
+    }
+  });
+
+  /**
    * Value of this BCD number as integer (treating digit order as little-endian).
    */
   Object.defineProperty(Bcd.prototype, 'asIntLe', {
     get: function() {
       if (this._m_asIntLe !== undefined)
         return this._m_asIntLe;
-      this._m_asIntLe = (this.digits[0] + (this.numDigits < 2 ? 0 : ((this.digits[1] * 10) + (this.numDigits < 3 ? 0 : ((this.digits[2] * 100) + (this.numDigits < 4 ? 0 : ((this.digits[3] * 1000) + (this.numDigits < 5 ? 0 : ((this.digits[4] * 10000) + (this.numDigits < 6 ? 0 : ((this.digits[5] * 100000) + (this.numDigits < 7 ? 0 : ((this.digits[6] * 1000000) + (this.numDigits < 8 ? 0 : (this.digits[7] * 10000000)))))))))))))));
+      this._m_asIntLe = this.digits[0] + (this.numDigits < 2 ? 0 : this.digits[1] * 10 + (this.numDigits < 3 ? 0 : this.digits[2] * 100 + (this.numDigits < 4 ? 0 : this.digits[3] * 1000 + (this.numDigits < 5 ? 0 : this.digits[4] * 10000 + (this.numDigits < 6 ? 0 : this.digits[5] * 100000 + (this.numDigits < 7 ? 0 : this.digits[6] * 1000000 + (this.numDigits < 8 ? 0 : this.digits[7] * 10000000)))))));
       return this._m_asIntLe;
     }
   });
@@ -95,20 +107,8 @@ var Bcd = (function() {
     get: function() {
       if (this._m_lastIdx !== undefined)
         return this._m_lastIdx;
-      this._m_lastIdx = (this.numDigits - 1);
+      this._m_lastIdx = this.numDigits - 1;
       return this._m_lastIdx;
-    }
-  });
-
-  /**
-   * Value of this BCD number as integer (treating digit order as big-endian).
-   */
-  Object.defineProperty(Bcd.prototype, 'asIntBe', {
-    get: function() {
-      if (this._m_asIntBe !== undefined)
-        return this._m_asIntBe;
-      this._m_asIntBe = (this.digits[this.lastIdx] + (this.numDigits < 2 ? 0 : ((this.digits[(this.lastIdx - 1)] * 10) + (this.numDigits < 3 ? 0 : ((this.digits[(this.lastIdx - 2)] * 100) + (this.numDigits < 4 ? 0 : ((this.digits[(this.lastIdx - 3)] * 1000) + (this.numDigits < 5 ? 0 : ((this.digits[(this.lastIdx - 4)] * 10000) + (this.numDigits < 6 ? 0 : ((this.digits[(this.lastIdx - 5)] * 100000) + (this.numDigits < 7 ? 0 : ((this.digits[(this.lastIdx - 6)] * 1000000) + (this.numDigits < 8 ? 0 : (this.digits[(this.lastIdx - 7)] * 10000000)))))))))))))));
-      return this._m_asIntBe;
     }
   });
 
@@ -126,5 +126,5 @@ var Bcd = (function() {
 
   return Bcd;
 })();
-return Bcd;
-}));
+Bcd_.Bcd = Bcd;
+});

@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 
 ########################################################################
 package MagicavoxelVox;
@@ -45,7 +45,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -95,7 +95,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -110,37 +110,37 @@ sub _read {
     $self->{num_bytes_of_children_chunks} = $self->{_io}->read_u4le();
     if ($self->num_bytes_of_chunk_content() != 0) {
         my $_on = $self->chunk_id();
-        if ($_on == $MagicavoxelVox::CHUNK_TYPE_SIZE) {
-            $self->{_raw_chunk_content} = $self->{_io}->read_bytes($self->num_bytes_of_chunk_content());
-            my $io__raw_chunk_content = IO::KaitaiStruct::Stream->new($self->{_raw_chunk_content});
-            $self->{chunk_content} = MagicavoxelVox::Size->new($io__raw_chunk_content, $self, $self->{_root});
-        }
-        elsif ($_on == $MagicavoxelVox::CHUNK_TYPE_MATT) {
+        if ($_on == $MagicavoxelVox::CHUNK_TYPE_MATT) {
             $self->{_raw_chunk_content} = $self->{_io}->read_bytes($self->num_bytes_of_chunk_content());
             my $io__raw_chunk_content = IO::KaitaiStruct::Stream->new($self->{_raw_chunk_content});
             $self->{chunk_content} = MagicavoxelVox::Matt->new($io__raw_chunk_content, $self, $self->{_root});
-        }
-        elsif ($_on == $MagicavoxelVox::CHUNK_TYPE_RGBA) {
-            $self->{_raw_chunk_content} = $self->{_io}->read_bytes($self->num_bytes_of_chunk_content());
-            my $io__raw_chunk_content = IO::KaitaiStruct::Stream->new($self->{_raw_chunk_content});
-            $self->{chunk_content} = MagicavoxelVox::Rgba->new($io__raw_chunk_content, $self, $self->{_root});
-        }
-        elsif ($_on == $MagicavoxelVox::CHUNK_TYPE_XYZI) {
-            $self->{_raw_chunk_content} = $self->{_io}->read_bytes($self->num_bytes_of_chunk_content());
-            my $io__raw_chunk_content = IO::KaitaiStruct::Stream->new($self->{_raw_chunk_content});
-            $self->{chunk_content} = MagicavoxelVox::Xyzi->new($io__raw_chunk_content, $self, $self->{_root});
         }
         elsif ($_on == $MagicavoxelVox::CHUNK_TYPE_PACK) {
             $self->{_raw_chunk_content} = $self->{_io}->read_bytes($self->num_bytes_of_chunk_content());
             my $io__raw_chunk_content = IO::KaitaiStruct::Stream->new($self->{_raw_chunk_content});
             $self->{chunk_content} = MagicavoxelVox::Pack->new($io__raw_chunk_content, $self, $self->{_root});
         }
+        elsif ($_on == $MagicavoxelVox::CHUNK_TYPE_RGBA) {
+            $self->{_raw_chunk_content} = $self->{_io}->read_bytes($self->num_bytes_of_chunk_content());
+            my $io__raw_chunk_content = IO::KaitaiStruct::Stream->new($self->{_raw_chunk_content});
+            $self->{chunk_content} = MagicavoxelVox::Rgba->new($io__raw_chunk_content, $self, $self->{_root});
+        }
+        elsif ($_on == $MagicavoxelVox::CHUNK_TYPE_SIZE) {
+            $self->{_raw_chunk_content} = $self->{_io}->read_bytes($self->num_bytes_of_chunk_content());
+            my $io__raw_chunk_content = IO::KaitaiStruct::Stream->new($self->{_raw_chunk_content});
+            $self->{chunk_content} = MagicavoxelVox::Size->new($io__raw_chunk_content, $self, $self->{_root});
+        }
+        elsif ($_on == $MagicavoxelVox::CHUNK_TYPE_XYZI) {
+            $self->{_raw_chunk_content} = $self->{_io}->read_bytes($self->num_bytes_of_chunk_content());
+            my $io__raw_chunk_content = IO::KaitaiStruct::Stream->new($self->{_raw_chunk_content});
+            $self->{chunk_content} = MagicavoxelVox::Xyzi->new($io__raw_chunk_content, $self, $self->{_root});
+        }
         else {
             $self->{chunk_content} = $self->{_io}->read_bytes($self->num_bytes_of_chunk_content());
         }
     }
     if ($self->num_bytes_of_children_chunks() != 0) {
-        $self->{children_chunks} = ();
+        $self->{children_chunks} = [];
         while (!$self->{_io}->is_eof()) {
             push @{$self->{children_chunks}}, MagicavoxelVox::Chunk->new($self->{_io}, $self, $self->{_root});
         }
@@ -178,7 +178,7 @@ sub _raw_chunk_content {
 }
 
 ########################################################################
-package MagicavoxelVox::Size;
+package MagicavoxelVox::Color;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -197,7 +197,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -207,104 +207,30 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{size_x} = $self->{_io}->read_u4le();
-    $self->{size_y} = $self->{_io}->read_u4le();
-    $self->{size_z} = $self->{_io}->read_u4le();
+    $self->{r} = $self->{_io}->read_u1();
+    $self->{g} = $self->{_io}->read_u1();
+    $self->{b} = $self->{_io}->read_u1();
+    $self->{a} = $self->{_io}->read_u1();
 }
 
-sub size_x {
+sub r {
     my ($self) = @_;
-    return $self->{size_x};
+    return $self->{r};
 }
 
-sub size_y {
+sub g {
     my ($self) = @_;
-    return $self->{size_y};
+    return $self->{g};
 }
 
-sub size_z {
+sub b {
     my ($self) = @_;
-    return $self->{size_z};
+    return $self->{b};
 }
 
-########################################################################
-package MagicavoxelVox::Rgba;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
+sub a {
     my ($self) = @_;
-
-    $self->{colors} = ();
-    my $n_colors = 256;
-    for (my $i = 0; $i < $n_colors; $i++) {
-        push @{$self->{colors}}, MagicavoxelVox::Color->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub colors {
-    my ($self) = @_;
-    return $self->{colors};
-}
-
-########################################################################
-package MagicavoxelVox::Pack;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{num_models} = $self->{_io}->read_u4le();
-}
-
-sub num_models {
-    my ($self) = @_;
-    return $self->{num_models};
+    return $self->{a};
 }
 
 ########################################################################
@@ -327,7 +253,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -367,6 +293,27 @@ sub _read {
     }
 }
 
+sub has_attenuation {
+    my ($self) = @_;
+    return $self->{has_attenuation} if ($self->{has_attenuation});
+    $self->{has_attenuation} = ($self->property_bits() & 16) != 0;
+    return $self->{has_attenuation};
+}
+
+sub has_glow {
+    my ($self) = @_;
+    return $self->{has_glow} if ($self->{has_glow});
+    $self->{has_glow} = ($self->property_bits() & 64) != 0;
+    return $self->{has_glow};
+}
+
+sub has_ior {
+    my ($self) = @_;
+    return $self->{has_ior} if ($self->{has_ior});
+    $self->{has_ior} = ($self->property_bits() & 8) != 0;
+    return $self->{has_ior};
+}
+
 sub has_is_total_power {
     my ($self) = @_;
     return $self->{has_is_total_power} if ($self->{has_is_total_power});
@@ -379,13 +326,6 @@ sub has_plastic {
     return $self->{has_plastic} if ($self->{has_plastic});
     $self->{has_plastic} = ($self->property_bits() & 1) != 0;
     return $self->{has_plastic};
-}
-
-sub has_attenuation {
-    my ($self) = @_;
-    return $self->{has_attenuation} if ($self->{has_attenuation});
-    $self->{has_attenuation} = ($self->property_bits() & 16) != 0;
-    return $self->{has_attenuation};
 }
 
 sub has_power {
@@ -407,20 +347,6 @@ sub has_specular {
     return $self->{has_specular} if ($self->{has_specular});
     $self->{has_specular} = ($self->property_bits() & 4) != 0;
     return $self->{has_specular};
-}
-
-sub has_ior {
-    my ($self) = @_;
-    return $self->{has_ior} if ($self->{has_ior});
-    $self->{has_ior} = ($self->property_bits() & 8) != 0;
-    return $self->{has_ior};
-}
-
-sub has_glow {
-    my ($self) = @_;
-    return $self->{has_glow} if ($self->{has_glow});
-    $self->{has_glow} = ($self->property_bits() & 64) != 0;
-    return $self->{has_glow};
 }
 
 sub id {
@@ -484,7 +410,7 @@ sub is_total_power {
 }
 
 ########################################################################
-package MagicavoxelVox::Xyzi;
+package MagicavoxelVox::Pack;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -503,7 +429,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -513,26 +439,16 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{num_voxels} = $self->{_io}->read_u4le();
-    $self->{voxels} = ();
-    my $n_voxels = $self->num_voxels();
-    for (my $i = 0; $i < $n_voxels; $i++) {
-        push @{$self->{voxels}}, MagicavoxelVox::Voxel->new($self->{_io}, $self, $self->{_root});
-    }
+    $self->{num_models} = $self->{_io}->read_u4le();
 }
 
-sub num_voxels {
+sub num_models {
     my ($self) = @_;
-    return $self->{num_voxels};
-}
-
-sub voxels {
-    my ($self) = @_;
-    return $self->{voxels};
+    return $self->{num_models};
 }
 
 ########################################################################
-package MagicavoxelVox::Color;
+package MagicavoxelVox::Rgba;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -551,7 +467,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -561,30 +477,66 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{r} = $self->{_io}->read_u1();
-    $self->{g} = $self->{_io}->read_u1();
-    $self->{b} = $self->{_io}->read_u1();
-    $self->{a} = $self->{_io}->read_u1();
+    $self->{colors} = [];
+    my $n_colors = 256;
+    for (my $i = 0; $i < $n_colors; $i++) {
+        push @{$self->{colors}}, MagicavoxelVox::Color->new($self->{_io}, $self, $self->{_root});
+    }
 }
 
-sub r {
+sub colors {
     my ($self) = @_;
-    return $self->{r};
+    return $self->{colors};
 }
 
-sub g {
-    my ($self) = @_;
-    return $self->{g};
+########################################################################
+package MagicavoxelVox::Size;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
 }
 
-sub b {
-    my ($self) = @_;
-    return $self->{b};
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
 }
 
-sub a {
+sub _read {
     my ($self) = @_;
-    return $self->{a};
+
+    $self->{size_x} = $self->{_io}->read_u4le();
+    $self->{size_y} = $self->{_io}->read_u4le();
+    $self->{size_z} = $self->{_io}->read_u4le();
+}
+
+sub size_x {
+    my ($self) = @_;
+    return $self->{size_x};
+}
+
+sub size_y {
+    my ($self) = @_;
+    return $self->{size_y};
+}
+
+sub size_z {
+    my ($self) = @_;
+    return $self->{size_z};
 }
 
 ########################################################################
@@ -607,7 +559,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -641,6 +593,54 @@ sub z {
 sub color_index {
     my ($self) = @_;
     return $self->{color_index};
+}
+
+########################################################################
+package MagicavoxelVox::Xyzi;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{num_voxels} = $self->{_io}->read_u4le();
+    $self->{voxels} = [];
+    my $n_voxels = $self->num_voxels();
+    for (my $i = 0; $i < $n_voxels; $i++) {
+        push @{$self->{voxels}}, MagicavoxelVox::Voxel->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub num_voxels {
+    my ($self) = @_;
+    return $self->{num_voxels};
+}
+
+sub voxels {
+    my ($self) = @_;
+    return $self->{voxels};
 }
 
 1;

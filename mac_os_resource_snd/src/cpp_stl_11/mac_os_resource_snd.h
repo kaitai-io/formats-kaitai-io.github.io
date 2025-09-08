@@ -2,13 +2,16 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class mac_os_resource_snd_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -21,13 +24,13 @@
 class mac_os_resource_snd_t : public kaitai::kstruct {
 
 public:
+    class compressed_t;
+    class data_format_t;
     class extended_t;
+    class extended_or_compressed_t;
+    class sound_command_t;
     class sound_header_t;
     class unsigned_fixed_point_t;
-    class sound_command_t;
-    class compressed_t;
-    class extended_or_compressed_t;
-    class data_format_t;
 
     enum cmd_type_t {
         CMD_TYPE_NULL_CMD = 0,
@@ -59,25 +62,40 @@ public:
         CMD_TYPE_RATE_CMD = 82,
         CMD_TYPE_GET_RATE_CMD = 85
     };
+    static bool _is_defined_cmd_type_t(cmd_type_t v);
 
-    enum sound_header_type_t {
-        SOUND_HEADER_TYPE_STANDARD = 0,
-        SOUND_HEADER_TYPE_COMPRESSED = 254,
-        SOUND_HEADER_TYPE_EXTENDED = 255
+private:
+    static const std::set<cmd_type_t> _values_cmd_type_t;
+
+public:
+
+    enum compression_type_enum_t {
+        COMPRESSION_TYPE_ENUM_VARIABLE_COMPRESSION = -2,
+        COMPRESSION_TYPE_ENUM_FIXED_COMPRESSION = -1,
+        COMPRESSION_TYPE_ENUM_NOT_COMPRESSED = 0,
+        COMPRESSION_TYPE_ENUM_TWO_TO_ONE = 1,
+        COMPRESSION_TYPE_ENUM_EIGHT_TO_THREE = 2,
+        COMPRESSION_TYPE_ENUM_THREE_TO_ONE = 3,
+        COMPRESSION_TYPE_ENUM_SIX_TO_ONE = 4
     };
+    static bool _is_defined_compression_type_enum_t(compression_type_enum_t v);
+
+private:
+    static const std::set<compression_type_enum_t> _values_compression_type_enum_t;
+
+public:
 
     enum data_type_t {
         DATA_TYPE_SQUARE_WAVE_SYNTH = 1,
         DATA_TYPE_WAVE_TABLE_SYNTH = 3,
         DATA_TYPE_SAMPLED_SYNTH = 5
     };
+    static bool _is_defined_data_type_t(data_type_t v);
 
-    enum wave_init_option_t {
-        WAVE_INIT_OPTION_CHANNEL0 = 4,
-        WAVE_INIT_OPTION_CHANNEL1 = 5,
-        WAVE_INIT_OPTION_CHANNEL2 = 6,
-        WAVE_INIT_OPTION_CHANNEL3 = 7
-    };
+private:
+    static const std::set<data_type_t> _values_data_type_t;
+
+public:
 
     enum init_option_t {
         INIT_OPTION_CHAN_LEFT = 2,
@@ -89,16 +107,37 @@ public:
         INIT_OPTION_MACE3 = 768,
         INIT_OPTION_MACE6 = 1024
     };
+    static bool _is_defined_init_option_t(init_option_t v);
 
-    enum compression_type_enum_t {
-        COMPRESSION_TYPE_ENUM_VARIABLE_COMPRESSION = -2,
-        COMPRESSION_TYPE_ENUM_FIXED_COMPRESSION = -1,
-        COMPRESSION_TYPE_ENUM_NOT_COMPRESSED = 0,
-        COMPRESSION_TYPE_ENUM_TWO_TO_ONE = 1,
-        COMPRESSION_TYPE_ENUM_EIGHT_TO_THREE = 2,
-        COMPRESSION_TYPE_ENUM_THREE_TO_ONE = 3,
-        COMPRESSION_TYPE_ENUM_SIX_TO_ONE = 4
+private:
+    static const std::set<init_option_t> _values_init_option_t;
+
+public:
+
+    enum sound_header_type_t {
+        SOUND_HEADER_TYPE_STANDARD = 0,
+        SOUND_HEADER_TYPE_COMPRESSED = 254,
+        SOUND_HEADER_TYPE_EXTENDED = 255
     };
+    static bool _is_defined_sound_header_type_t(sound_header_type_t v);
+
+private:
+    static const std::set<sound_header_type_t> _values_sound_header_type_t;
+
+public:
+
+    enum wave_init_option_t {
+        WAVE_INIT_OPTION_CHANNEL0 = 4,
+        WAVE_INIT_OPTION_CHANNEL1 = 5,
+        WAVE_INIT_OPTION_CHANNEL2 = 6,
+        WAVE_INIT_OPTION_CHANNEL3 = 7
+    };
+    static bool _is_defined_wave_init_option_t(wave_init_option_t v);
+
+private:
+    static const std::set<wave_init_option_t> _values_wave_init_option_t;
+
+public:
 
     mac_os_resource_snd_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, mac_os_resource_snd_t* p__root = nullptr);
 
@@ -108,6 +147,185 @@ private:
 
 public:
     ~mac_os_resource_snd_t();
+
+    class compressed_t : public kaitai::kstruct {
+
+    public:
+
+        compressed_t(kaitai::kstream* p__io, mac_os_resource_snd_t::extended_or_compressed_t* p__parent = nullptr, mac_os_resource_snd_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~compressed_t();
+
+    private:
+        bool f_compression_type;
+        compression_type_enum_t m_compression_type;
+
+    public:
+        compression_type_enum_t compression_type();
+
+    private:
+        std::string m_format;
+        std::string m_reserved;
+        uint32_t m_state_vars_ptr;
+        uint32_t m_left_over_samples_ptr;
+        int16_t m_compression_id;
+        uint16_t m_packet_size;
+        uint16_t m_synthesizer_id;
+        mac_os_resource_snd_t* m__root;
+        mac_os_resource_snd_t::extended_or_compressed_t* m__parent;
+
+    public:
+
+        /**
+         * data format type
+         */
+        std::string format() const { return m_format; }
+        std::string reserved() const { return m_reserved; }
+
+        /**
+         * pointer to StateBlock
+         */
+        uint32_t state_vars_ptr() const { return m_state_vars_ptr; }
+
+        /**
+         * pointer to LeftOverBlock
+         */
+        uint32_t left_over_samples_ptr() const { return m_left_over_samples_ptr; }
+
+        /**
+         * ID of compression algorithm
+         */
+        int16_t compression_id() const { return m_compression_id; }
+
+        /**
+         * number of bits per packet
+         */
+        uint16_t packet_size() const { return m_packet_size; }
+
+        /**
+         * Latest Sound Manager documentation specifies this field as:
+         * This field is unused. You should set it to 0.
+         * Inside Macintosh (Volume VI, 1991) specifies it as:
+         * Indicates the resource ID number of the 'snth' resource that was used to compress the packets contained in the compressed sound header.
+         * \sa https://vintageapple.org/inside_o/pdf/Inside_Macintosh_Volume_VI_1991.pdf Page 22-49, absolute page number 1169 in the PDF
+         */
+        uint16_t synthesizer_id() const { return m_synthesizer_id; }
+        mac_os_resource_snd_t* _root() const { return m__root; }
+        mac_os_resource_snd_t::extended_or_compressed_t* _parent() const { return m__parent; }
+    };
+
+    class data_format_t : public kaitai::kstruct {
+
+    public:
+
+        data_format_t(kaitai::kstream* p__io, mac_os_resource_snd_t* p__parent = nullptr, mac_os_resource_snd_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~data_format_t();
+
+    private:
+        bool f_comp_init;
+        init_option_t m_comp_init;
+
+    public:
+        init_option_t comp_init();
+
+    private:
+        bool f_init_comp_mask;
+        int32_t m_init_comp_mask;
+
+    public:
+
+        /**
+         * mask for compression IDs
+         */
+        int32_t init_comp_mask();
+
+    private:
+        bool f_init_pan_mask;
+        int8_t m_init_pan_mask;
+
+    public:
+
+        /**
+         * mask for right/left pan values
+         */
+        int8_t init_pan_mask();
+
+    private:
+        bool f_init_stereo_mask;
+        uint8_t m_init_stereo_mask;
+
+    public:
+
+        /**
+         * mask for mono/stereo values
+         */
+        uint8_t init_stereo_mask();
+
+    private:
+        bool f_pan_init;
+        init_option_t m_pan_init;
+
+    public:
+        init_option_t pan_init();
+
+    private:
+        bool f_stereo_init;
+        init_option_t m_stereo_init;
+
+    public:
+        init_option_t stereo_init();
+
+    private:
+        bool f_wave_init;
+        wave_init_option_t m_wave_init;
+        bool n_wave_init;
+
+    public:
+        bool _is_null_wave_init() { wave_init(); return n_wave_init; };
+
+    private:
+
+    public:
+        wave_init_option_t wave_init();
+
+    private:
+        bool f_wave_init_channel_mask;
+        int8_t m_wave_init_channel_mask;
+
+    public:
+
+        /**
+         * wave table only, Sound Manager 2.0 and earlier
+         */
+        int8_t wave_init_channel_mask();
+
+    private:
+        data_type_t m_id;
+        uint32_t m_options;
+        mac_os_resource_snd_t* m__root;
+        mac_os_resource_snd_t* m__parent;
+
+    public:
+        data_type_t id() const { return m_id; }
+
+        /**
+         * contains initialisation options for the SndNewChannel function
+         */
+        uint32_t options() const { return m_options; }
+        mac_os_resource_snd_t* _root() const { return m__root; }
+        mac_os_resource_snd_t* _parent() const { return m__parent; }
+    };
 
     class extended_t : public kaitai::kstruct {
 
@@ -143,6 +361,119 @@ public:
         mac_os_resource_snd_t::extended_or_compressed_t* _parent() const { return m__parent; }
     };
 
+    class extended_or_compressed_t : public kaitai::kstruct {
+
+    public:
+
+        extended_or_compressed_t(kaitai::kstream* p__io, mac_os_resource_snd_t::sound_header_t* p__parent = nullptr, mac_os_resource_snd_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~extended_or_compressed_t();
+
+    private:
+        uint32_t m_num_frames;
+        std::string m_aiff_sample_rate;
+        uint32_t m_marker_chunk;
+        std::unique_ptr<extended_t> m_extended;
+        bool n_extended;
+
+    public:
+        bool _is_null_extended() { extended(); return n_extended; };
+
+    private:
+        std::unique_ptr<compressed_t> m_compressed;
+        bool n_compressed;
+
+    public:
+        bool _is_null_compressed() { compressed(); return n_compressed; };
+
+    private:
+        uint16_t m_bits_per_sample;
+        std::string m_reserved;
+        bool n_reserved;
+
+    public:
+        bool _is_null_reserved() { reserved(); return n_reserved; };
+
+    private:
+        mac_os_resource_snd_t* m__root;
+        mac_os_resource_snd_t::sound_header_t* m__parent;
+
+    public:
+        uint32_t num_frames() const { return m_num_frames; }
+
+        /**
+         * rate of original sample (Extended80)
+         */
+        std::string aiff_sample_rate() const { return m_aiff_sample_rate; }
+
+        /**
+         * reserved
+         */
+        uint32_t marker_chunk() const { return m_marker_chunk; }
+        extended_t* extended() const { return m_extended.get(); }
+        compressed_t* compressed() const { return m_compressed.get(); }
+
+        /**
+         * number of bits per sample
+         */
+        uint16_t bits_per_sample() const { return m_bits_per_sample; }
+
+        /**
+         * reserved
+         */
+        std::string reserved() const { return m_reserved; }
+        mac_os_resource_snd_t* _root() const { return m__root; }
+        mac_os_resource_snd_t::sound_header_t* _parent() const { return m__parent; }
+    };
+
+    class sound_command_t : public kaitai::kstruct {
+
+    public:
+
+        sound_command_t(kaitai::kstream* p__io, mac_os_resource_snd_t* p__parent = nullptr, mac_os_resource_snd_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~sound_command_t();
+
+    private:
+        bool f_sound_header;
+        std::unique_ptr<sound_header_t> m_sound_header;
+        bool n_sound_header;
+
+    public:
+        bool _is_null_sound_header() { sound_header(); return n_sound_header; };
+
+    private:
+
+    public:
+        sound_header_t* sound_header();
+
+    private:
+        bool m_is_data_offset;
+        cmd_type_t m_cmd;
+        uint16_t m_param1;
+        uint32_t m_param2;
+        mac_os_resource_snd_t* m__root;
+        mac_os_resource_snd_t* m__parent;
+
+    public:
+        bool is_data_offset() const { return m_is_data_offset; }
+        cmd_type_t cmd() const { return m_cmd; }
+        uint16_t param1() const { return m_param1; }
+        uint32_t param2() const { return m_param2; }
+        mac_os_resource_snd_t* _root() const { return m__root; }
+        mac_os_resource_snd_t* _parent() const { return m__parent; }
+    };
+
     class sound_header_t : public kaitai::kstruct {
 
     public:
@@ -155,13 +486,6 @@ public:
 
     public:
         ~sound_header_t();
-
-    private:
-        bool f_start_ofs;
-        int32_t m_start_ofs;
-
-    public:
-        int32_t start_ofs();
 
     private:
         bool f_base_freqeuncy;
@@ -188,6 +512,13 @@ public:
 
     public:
         sound_header_type_t sound_header_type();
+
+    private:
+        bool f_start_ofs;
+        int32_t m_start_ofs;
+
+    public:
+        int32_t start_ofs();
 
     private:
         std::string m__unnamed0;
@@ -317,298 +648,6 @@ public:
         uint16_t fraction_part() const { return m_fraction_part; }
         mac_os_resource_snd_t* _root() const { return m__root; }
         mac_os_resource_snd_t::sound_header_t* _parent() const { return m__parent; }
-    };
-
-    class sound_command_t : public kaitai::kstruct {
-
-    public:
-
-        sound_command_t(kaitai::kstream* p__io, mac_os_resource_snd_t* p__parent = nullptr, mac_os_resource_snd_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~sound_command_t();
-
-    private:
-        bool f_sound_header;
-        std::unique_ptr<sound_header_t> m_sound_header;
-        bool n_sound_header;
-
-    public:
-        bool _is_null_sound_header() { sound_header(); return n_sound_header; };
-
-    private:
-
-    public:
-        sound_header_t* sound_header();
-
-    private:
-        bool m_is_data_offset;
-        cmd_type_t m_cmd;
-        uint16_t m_param1;
-        uint32_t m_param2;
-        mac_os_resource_snd_t* m__root;
-        mac_os_resource_snd_t* m__parent;
-
-    public:
-        bool is_data_offset() const { return m_is_data_offset; }
-        cmd_type_t cmd() const { return m_cmd; }
-        uint16_t param1() const { return m_param1; }
-        uint32_t param2() const { return m_param2; }
-        mac_os_resource_snd_t* _root() const { return m__root; }
-        mac_os_resource_snd_t* _parent() const { return m__parent; }
-    };
-
-    class compressed_t : public kaitai::kstruct {
-
-    public:
-
-        compressed_t(kaitai::kstream* p__io, mac_os_resource_snd_t::extended_or_compressed_t* p__parent = nullptr, mac_os_resource_snd_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~compressed_t();
-
-    private:
-        bool f_compression_type;
-        compression_type_enum_t m_compression_type;
-
-    public:
-        compression_type_enum_t compression_type();
-
-    private:
-        std::string m_format;
-        std::string m_reserved;
-        uint32_t m_state_vars_ptr;
-        uint32_t m_left_over_samples_ptr;
-        int16_t m_compression_id;
-        uint16_t m_packet_size;
-        uint16_t m_synthesizer_id;
-        mac_os_resource_snd_t* m__root;
-        mac_os_resource_snd_t::extended_or_compressed_t* m__parent;
-
-    public:
-
-        /**
-         * data format type
-         */
-        std::string format() const { return m_format; }
-        std::string reserved() const { return m_reserved; }
-
-        /**
-         * pointer to StateBlock
-         */
-        uint32_t state_vars_ptr() const { return m_state_vars_ptr; }
-
-        /**
-         * pointer to LeftOverBlock
-         */
-        uint32_t left_over_samples_ptr() const { return m_left_over_samples_ptr; }
-
-        /**
-         * ID of compression algorithm
-         */
-        int16_t compression_id() const { return m_compression_id; }
-
-        /**
-         * number of bits per packet
-         */
-        uint16_t packet_size() const { return m_packet_size; }
-
-        /**
-         * Latest Sound Manager documentation specifies this field as:
-         * This field is unused. You should set it to 0.
-         * Inside Macintosh (Volume VI, 1991) specifies it as:
-         * Indicates the resource ID number of the 'snth' resource that was used to compress the packets contained in the compressed sound header.
-         * \sa https://vintageapple.org/inside_o/pdf/Inside_Macintosh_Volume_VI_1991.pdf Page 22-49, absolute page number 1169 in the PDF
-         */
-        uint16_t synthesizer_id() const { return m_synthesizer_id; }
-        mac_os_resource_snd_t* _root() const { return m__root; }
-        mac_os_resource_snd_t::extended_or_compressed_t* _parent() const { return m__parent; }
-    };
-
-    class extended_or_compressed_t : public kaitai::kstruct {
-
-    public:
-
-        extended_or_compressed_t(kaitai::kstream* p__io, mac_os_resource_snd_t::sound_header_t* p__parent = nullptr, mac_os_resource_snd_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~extended_or_compressed_t();
-
-    private:
-        uint32_t m_num_frames;
-        std::string m_aiff_sample_rate;
-        uint32_t m_marker_chunk;
-        std::unique_ptr<extended_t> m_extended;
-        bool n_extended;
-
-    public:
-        bool _is_null_extended() { extended(); return n_extended; };
-
-    private:
-        std::unique_ptr<compressed_t> m_compressed;
-        bool n_compressed;
-
-    public:
-        bool _is_null_compressed() { compressed(); return n_compressed; };
-
-    private:
-        uint16_t m_bits_per_sample;
-        std::string m_reserved;
-        bool n_reserved;
-
-    public:
-        bool _is_null_reserved() { reserved(); return n_reserved; };
-
-    private:
-        mac_os_resource_snd_t* m__root;
-        mac_os_resource_snd_t::sound_header_t* m__parent;
-
-    public:
-        uint32_t num_frames() const { return m_num_frames; }
-
-        /**
-         * rate of original sample (Extended80)
-         */
-        std::string aiff_sample_rate() const { return m_aiff_sample_rate; }
-
-        /**
-         * reserved
-         */
-        uint32_t marker_chunk() const { return m_marker_chunk; }
-        extended_t* extended() const { return m_extended.get(); }
-        compressed_t* compressed() const { return m_compressed.get(); }
-
-        /**
-         * number of bits per sample
-         */
-        uint16_t bits_per_sample() const { return m_bits_per_sample; }
-
-        /**
-         * reserved
-         */
-        std::string reserved() const { return m_reserved; }
-        mac_os_resource_snd_t* _root() const { return m__root; }
-        mac_os_resource_snd_t::sound_header_t* _parent() const { return m__parent; }
-    };
-
-    class data_format_t : public kaitai::kstruct {
-
-    public:
-
-        data_format_t(kaitai::kstream* p__io, mac_os_resource_snd_t* p__parent = nullptr, mac_os_resource_snd_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~data_format_t();
-
-    private:
-        bool f_init_pan_mask;
-        int8_t m_init_pan_mask;
-
-    public:
-
-        /**
-         * mask for right/left pan values
-         */
-        int8_t init_pan_mask();
-
-    private:
-        bool f_wave_init_channel_mask;
-        int8_t m_wave_init_channel_mask;
-
-    public:
-
-        /**
-         * wave table only, Sound Manager 2.0 and earlier
-         */
-        int8_t wave_init_channel_mask();
-
-    private:
-        bool f_init_stereo_mask;
-        uint8_t m_init_stereo_mask;
-
-    public:
-
-        /**
-         * mask for mono/stereo values
-         */
-        uint8_t init_stereo_mask();
-
-    private:
-        bool f_wave_init;
-        wave_init_option_t m_wave_init;
-        bool n_wave_init;
-
-    public:
-        bool _is_null_wave_init() { wave_init(); return n_wave_init; };
-
-    private:
-
-    public:
-        wave_init_option_t wave_init();
-
-    private:
-        bool f_pan_init;
-        init_option_t m_pan_init;
-
-    public:
-        init_option_t pan_init();
-
-    private:
-        bool f_init_comp_mask;
-        int32_t m_init_comp_mask;
-
-    public:
-
-        /**
-         * mask for compression IDs
-         */
-        int32_t init_comp_mask();
-
-    private:
-        bool f_stereo_init;
-        init_option_t m_stereo_init;
-
-    public:
-        init_option_t stereo_init();
-
-    private:
-        bool f_comp_init;
-        init_option_t m_comp_init;
-
-    public:
-        init_option_t comp_init();
-
-    private:
-        data_type_t m_id;
-        uint32_t m_options;
-        mac_os_resource_snd_t* m__root;
-        mac_os_resource_snd_t* m__parent;
-
-    public:
-        data_type_t id() const { return m_id; }
-
-        /**
-         * contains initialisation options for the SndNewChannel function
-         */
-        uint32_t options() const { return m_options; }
-        mac_os_resource_snd_t* _root() const { return m__root; }
-        mac_os_resource_snd_t* _parent() const { return m__parent; }
     };
 
 private:

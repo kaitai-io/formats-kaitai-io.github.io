@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -42,23 +43,6 @@ public class Avi extends KaitaiStruct {
         public static ChunkType byId(long id) { return byId.get(id); }
     }
 
-    public enum StreamType {
-        MIDS(1935960429),
-        VIDS(1935960438),
-        AUDS(1935963489),
-        TXTS(1937012852);
-
-        private final long id;
-        StreamType(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map<Long, StreamType> byId = new HashMap<Long, StreamType>(4);
-        static {
-            for (StreamType e : StreamType.values())
-                byId.put(e.id(), e);
-        }
-        public static StreamType byId(long id) { return byId.get(id); }
-    }
-
     public enum HandlerType {
         MP3(85),
         AC3(8192),
@@ -77,6 +61,23 @@ public class Avi extends KaitaiStruct {
         public static HandlerType byId(long id) { return byId.get(id); }
     }
 
+    public enum StreamType {
+        MIDS(1935960429),
+        VIDS(1935960438),
+        AUDS(1935963489),
+        TXTS(1937012852);
+
+        private final long id;
+        StreamType(long id) { this.id = id; }
+        public long id() { return id; }
+        private static final Map<Long, StreamType> byId = new HashMap<Long, StreamType>(4);
+        static {
+            for (StreamType e : StreamType.values())
+                byId.put(e.id(), e);
+        }
+        public static StreamType byId(long id) { return byId.get(id); }
+    }
+
     public Avi(KaitaiStream _io) {
         this(_io, null, null);
     }
@@ -93,123 +94,20 @@ public class Avi extends KaitaiStruct {
     }
     private void _read() {
         this.magic1 = this._io.readBytes(4);
-        if (!(Arrays.equals(magic1(), new byte[] { 82, 73, 70, 70 }))) {
-            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 82, 73, 70, 70 }, magic1(), _io(), "/seq/0");
+        if (!(Arrays.equals(this.magic1, new byte[] { 82, 73, 70, 70 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 82, 73, 70, 70 }, this.magic1, this._io, "/seq/0");
         }
         this.fileSize = this._io.readU4le();
         this.magic2 = this._io.readBytes(4);
-        if (!(Arrays.equals(magic2(), new byte[] { 65, 86, 73, 32 }))) {
-            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 65, 86, 73, 32 }, magic2(), _io(), "/seq/2");
+        if (!(Arrays.equals(this.magic2, new byte[] { 65, 86, 73, 32 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 65, 86, 73, 32 }, this.magic2, this._io, "/seq/2");
         }
-        this._raw_data = this._io.readBytes((fileSize() - 4));
-        KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
-        this.data = new Blocks(_io__raw_data, this, _root);
+        KaitaiStream _io_data = this._io.substream(fileSize() - 4);
+        this.data = new Blocks(_io_data, this, _root);
     }
-    public static class ListBody extends KaitaiStruct {
-        public static ListBody fromFile(String fileName) throws IOException {
-            return new ListBody(new ByteBufferKaitaiStream(fileName));
-        }
 
-        public ListBody(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public ListBody(KaitaiStream _io, Avi.Block _parent) {
-            this(_io, _parent, null);
-        }
-
-        public ListBody(KaitaiStream _io, Avi.Block _parent, Avi _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.listType = Avi.ChunkType.byId(this._io.readU4le());
-            this.data = new Blocks(this._io, this, _root);
-        }
-        private ChunkType listType;
-        private Blocks data;
-        private Avi _root;
-        private Avi.Block _parent;
-        public ChunkType listType() { return listType; }
-        public Blocks data() { return data; }
-        public Avi _root() { return _root; }
-        public Avi.Block _parent() { return _parent; }
-    }
-    public static class Rect extends KaitaiStruct {
-        public static Rect fromFile(String fileName) throws IOException {
-            return new Rect(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Rect(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Rect(KaitaiStream _io, Avi.StrhBody _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Rect(KaitaiStream _io, Avi.StrhBody _parent, Avi _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.left = this._io.readS2le();
-            this.top = this._io.readS2le();
-            this.right = this._io.readS2le();
-            this.bottom = this._io.readS2le();
-        }
-        private short left;
-        private short top;
-        private short right;
-        private short bottom;
-        private Avi _root;
-        private Avi.StrhBody _parent;
-        public short left() { return left; }
-        public short top() { return top; }
-        public short right() { return right; }
-        public short bottom() { return bottom; }
-        public Avi _root() { return _root; }
-        public Avi.StrhBody _parent() { return _parent; }
-    }
-    public static class Blocks extends KaitaiStruct {
-        public static Blocks fromFile(String fileName) throws IOException {
-            return new Blocks(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Blocks(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Blocks(KaitaiStream _io, KaitaiStruct _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Blocks(KaitaiStream _io, KaitaiStruct _parent, Avi _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.entries = new ArrayList<Block>();
-            {
-                int i = 0;
-                while (!this._io.isEof()) {
-                    this.entries.add(new Block(this._io, this, _root));
-                    i++;
-                }
-            }
-        }
-        private ArrayList<Block> entries;
-        private Avi _root;
-        private KaitaiStruct _parent;
-        public ArrayList<Block> entries() { return entries; }
-        public Avi _root() { return _root; }
-        public KaitaiStruct _parent() { return _parent; }
+    public void _fetchInstances() {
+        this.data._fetchInstances();
     }
 
     /**
@@ -247,6 +145,9 @@ public class Avi extends KaitaiStruct {
             this.width = this._io.readU4le();
             this.height = this._io.readU4le();
             this.reserved = this._io.readBytes(16);
+        }
+
+        public void _fetchInstances() {
         }
         private long microSecPerFrame;
         private long maxBytesPerSec;
@@ -301,22 +202,19 @@ public class Avi extends KaitaiStruct {
                 ChunkType on = fourCc();
                 if (on != null) {
                     switch (fourCc()) {
-                    case LIST: {
-                        this._raw_data = this._io.readBytes(blockSize());
-                        KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
-                        this.data = new ListBody(_io__raw_data, this, _root);
+                    case AVIH: {
+                        KaitaiStream _io_data = this._io.substream(blockSize());
+                        this.data = new AvihBody(_io_data, this, _root);
                         break;
                     }
-                    case AVIH: {
-                        this._raw_data = this._io.readBytes(blockSize());
-                        KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
-                        this.data = new AvihBody(_io__raw_data, this, _root);
+                    case LIST: {
+                        KaitaiStream _io_data = this._io.substream(blockSize());
+                        this.data = new ListBody(_io_data, this, _root);
                         break;
                     }
                     case STRH: {
-                        this._raw_data = this._io.readBytes(blockSize());
-                        KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
-                        this.data = new StrhBody(_io__raw_data, this, _root);
+                        KaitaiStream _io_data = this._io.substream(blockSize());
+                        this.data = new StrhBody(_io_data, this, _root);
                         break;
                     }
                     default: {
@@ -329,18 +227,194 @@ public class Avi extends KaitaiStruct {
                 }
             }
         }
+
+        public void _fetchInstances() {
+            {
+                ChunkType on = fourCc();
+                if (on != null) {
+                    switch (fourCc()) {
+                    case AVIH: {
+                        ((AvihBody) (this.data))._fetchInstances();
+                        break;
+                    }
+                    case LIST: {
+                        ((ListBody) (this.data))._fetchInstances();
+                        break;
+                    }
+                    case STRH: {
+                        ((StrhBody) (this.data))._fetchInstances();
+                        break;
+                    }
+                    default: {
+                        break;
+                    }
+                    }
+                } else {
+                }
+            }
+        }
         private ChunkType fourCc;
         private long blockSize;
         private Object data;
         private Avi _root;
         private Avi.Blocks _parent;
-        private byte[] _raw_data;
         public ChunkType fourCc() { return fourCc; }
         public long blockSize() { return blockSize; }
         public Object data() { return data; }
         public Avi _root() { return _root; }
         public Avi.Blocks _parent() { return _parent; }
-        public byte[] _raw_data() { return _raw_data; }
+    }
+    public static class Blocks extends KaitaiStruct {
+        public static Blocks fromFile(String fileName) throws IOException {
+            return new Blocks(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Blocks(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Blocks(KaitaiStream _io, KaitaiStruct _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Blocks(KaitaiStream _io, KaitaiStruct _parent, Avi _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.entries = new ArrayList<Block>();
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.entries.add(new Block(this._io, this, _root));
+                    i++;
+                }
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.entries.size(); i++) {
+                this.entries.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private List<Block> entries;
+        private Avi _root;
+        private KaitaiStruct _parent;
+        public List<Block> entries() { return entries; }
+        public Avi _root() { return _root; }
+        public KaitaiStruct _parent() { return _parent; }
+    }
+    public static class ListBody extends KaitaiStruct {
+        public static ListBody fromFile(String fileName) throws IOException {
+            return new ListBody(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public ListBody(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public ListBody(KaitaiStream _io, Avi.Block _parent) {
+            this(_io, _parent, null);
+        }
+
+        public ListBody(KaitaiStream _io, Avi.Block _parent, Avi _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.listType = Avi.ChunkType.byId(this._io.readU4le());
+            this.data = new Blocks(this._io, this, _root);
+        }
+
+        public void _fetchInstances() {
+            this.data._fetchInstances();
+        }
+        private ChunkType listType;
+        private Blocks data;
+        private Avi _root;
+        private Avi.Block _parent;
+        public ChunkType listType() { return listType; }
+        public Blocks data() { return data; }
+        public Avi _root() { return _root; }
+        public Avi.Block _parent() { return _parent; }
+    }
+    public static class Rect extends KaitaiStruct {
+        public static Rect fromFile(String fileName) throws IOException {
+            return new Rect(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Rect(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Rect(KaitaiStream _io, Avi.StrhBody _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Rect(KaitaiStream _io, Avi.StrhBody _parent, Avi _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.left = this._io.readS2le();
+            this.top = this._io.readS2le();
+            this.right = this._io.readS2le();
+            this.bottom = this._io.readS2le();
+        }
+
+        public void _fetchInstances() {
+        }
+        private short left;
+        private short top;
+        private short right;
+        private short bottom;
+        private Avi _root;
+        private Avi.StrhBody _parent;
+        public short left() { return left; }
+        public short top() { return top; }
+        public short right() { return right; }
+        public short bottom() { return bottom; }
+        public Avi _root() { return _root; }
+        public Avi.StrhBody _parent() { return _parent; }
+    }
+
+    /**
+     * Stream format description
+     */
+    public static class StrfBody extends KaitaiStruct {
+        public static StrfBody fromFile(String fileName) throws IOException {
+            return new StrfBody(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public StrfBody(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public StrfBody(KaitaiStream _io, KaitaiStruct _parent) {
+            this(_io, _parent, null);
+        }
+
+        public StrfBody(KaitaiStream _io, KaitaiStruct _parent, Avi _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+        }
+
+        public void _fetchInstances() {
+        }
+        private Avi _root;
+        private KaitaiStruct _parent;
+        public Avi _root() { return _root; }
+        public KaitaiStruct _parent() { return _parent; }
     }
 
     /**
@@ -381,6 +455,10 @@ public class Avi extends KaitaiStruct {
             this.quality = this._io.readU4le();
             this.sampleSize = this._io.readU4le();
             this.frame = new Rect(this._io, this, _root);
+        }
+
+        public void _fetchInstances() {
+            this.frame._fetchInstances();
         }
         private StreamType fccType;
         private HandlerType fccHandler;
@@ -423,48 +501,16 @@ public class Avi extends KaitaiStruct {
         public Avi _root() { return _root; }
         public Avi.Block _parent() { return _parent; }
     }
-
-    /**
-     * Stream format description
-     */
-    public static class StrfBody extends KaitaiStruct {
-        public static StrfBody fromFile(String fileName) throws IOException {
-            return new StrfBody(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public StrfBody(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public StrfBody(KaitaiStream _io, KaitaiStruct _parent) {
-            this(_io, _parent, null);
-        }
-
-        public StrfBody(KaitaiStream _io, KaitaiStruct _parent, Avi _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-        }
-        private Avi _root;
-        private KaitaiStruct _parent;
-        public Avi _root() { return _root; }
-        public KaitaiStruct _parent() { return _parent; }
-    }
     private byte[] magic1;
     private long fileSize;
     private byte[] magic2;
     private Blocks data;
     private Avi _root;
     private KaitaiStruct _parent;
-    private byte[] _raw_data;
     public byte[] magic1() { return magic1; }
     public long fileSize() { return fileSize; }
     public byte[] magic2() { return magic2; }
     public Blocks data() { return data; }
     public Avi _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
-    public byte[] _raw_data() { return _raw_data; }
 }

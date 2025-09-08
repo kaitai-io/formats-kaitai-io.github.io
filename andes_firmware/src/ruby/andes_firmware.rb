@@ -2,29 +2,28 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
 ##
 # Firmware image found with MediaTek MT76xx wifi chipsets.
 class AndesFirmware < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
-    @_raw_image_header = @_io.read_bytes(32)
-    _io__raw_image_header = Kaitai::Struct::Stream.new(@_raw_image_header)
-    @image_header = ImageHeader.new(_io__raw_image_header, self, @_root)
+    _io_image_header = @_io.substream(32)
+    @image_header = ImageHeader.new(_io_image_header, self, @_root)
     @ilm = @_io.read_bytes(image_header.ilm_len)
     @dlm = @_io.read_bytes(image_header.dlm_len)
     self
   end
   class ImageHeader < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end

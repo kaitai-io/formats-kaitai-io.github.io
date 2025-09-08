@@ -42,18 +42,18 @@ Ogg.Page = class.class(KaitaiStruct)
 function Ogg.Page:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function Ogg.Page:_read()
   self.sync_code = self._io:read_bytes(4)
   if not(self.sync_code == "\079\103\103\083") then
-    error("not equal, expected " ..  "\079\103\103\083" .. ", but got " .. self.sync_code)
+    error("not equal, expected " .. "\079\103\103\083" .. ", but got " .. self.sync_code)
   end
   self.version = self._io:read_bytes(1)
   if not(self.version == "\000") then
-    error("not equal, expected " ..  "\000" .. ", but got " .. self.version)
+    error("not equal, expected " .. "\000" .. ", but got " .. self.version)
   end
   self.reserved1 = self._io:read_bits_int_be(5)
   self.is_end_of_stream = self._io:read_bits_int_be(1) ~= 0

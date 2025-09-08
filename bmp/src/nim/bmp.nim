@@ -9,30 +9,12 @@ type
     `parent`*: KaitaiStruct
     `rawDibInfo`*: seq[byte]
     `rawBitmap`*: seq[byte]
-  Bmp_Intent* = enum
-    business = 1
-    graphics = 2
-    images = 4
-    abs_colorimetric = 8
   Bmp_ColorSpace* = enum
     calibrated_rgb = 0
     profile_linked = 1279872587
     profile_embedded = 1296188740
     windows = 1466527264
     s_rgb = 1934772034
-  Bmp_Os2Rendering* = enum
-    no_halftoning = 0
-    error_diffusion = 1
-    panda = 2
-    super_circle = 3
-  Bmp_HeaderType* = enum
-    bitmap_core_header = 12
-    bitmap_info_header = 40
-    bitmap_v2_info_header = 52
-    bitmap_v3_info_header = 56
-    os2_2x_bitmap_header = 64
-    bitmap_v4_header = 108
-    bitmap_v5_header = 124
   Bmp_Compressions* = enum
     rgb = 0
     rle8 = 1
@@ -41,64 +23,30 @@ type
     jpeg = 4
     png = 5
     alpha_bitfields = 6
+  Bmp_HeaderType* = enum
+    bitmap_core_header = 12
+    bitmap_info_header = 40
+    bitmap_v2_info_header = 52
+    bitmap_v3_info_header = 56
+    os2_2x_bitmap_header = 64
+    bitmap_v4_header = 108
+    bitmap_v5_header = 124
+  Bmp_Intent* = enum
+    business = 1
+    graphics = 2
+    images = 4
+    abs_colorimetric = 8
   Bmp_Os2Compressions* = enum
     rgb = 0
     rle8 = 1
     rle4 = 2
     huffman_1d = 3
     rle24 = 4
-  Bmp_CieXyz* = ref object of KaitaiStruct
-    `x`*: Bmp_FixedPoint2Dot30
-    `y`*: Bmp_FixedPoint2Dot30
-    `z`*: Bmp_FixedPoint2Dot30
-    `parent`*: Bmp_BitmapV4Extension
-  Bmp_RgbRecord* = ref object of KaitaiStruct
-    `blue`*: uint8
-    `green`*: uint8
-    `red`*: uint8
-    `reserved`*: uint8
-    `hasReservedField`*: bool
-    `parent`*: Bmp_ColorTable
-  Bmp_BitmapV5Extension* = ref object of KaitaiStruct
-    `intent`*: Bmp_Intent
-    `ofsProfile`*: uint32
-    `lenProfile`*: uint32
-    `reserved`*: uint32
-    `parent`*: Bmp_BitmapHeader
-    `hasProfileInst`: bool
-    `hasProfileInstFlag`: bool
-    `profileDataInst`: KaitaiStruct
-    `profileDataInstFlag`: bool
-  Bmp_ColorMask* = ref object of KaitaiStruct
-    `redMask`*: uint32
-    `greenMask`*: uint32
-    `blueMask`*: uint32
-    `alphaMask`*: uint32
-    `hasAlphaMask`*: bool
-    `parent`*: KaitaiStruct
-  Bmp_BitmapV4Extension* = ref object of KaitaiStruct
-    `colorSpaceType`*: Bmp_ColorSpace
-    `endpointRed`*: Bmp_CieXyz
-    `endpointGreen`*: Bmp_CieXyz
-    `endpointBlue`*: Bmp_CieXyz
-    `gammaRed`*: Bmp_FixedPoint16Dot16
-    `gammaBlue`*: Bmp_FixedPoint16Dot16
-    `gammaGreen`*: Bmp_FixedPoint16Dot16
-    `parent`*: Bmp_BitmapHeader
-  Bmp_BitmapInfoExtension* = ref object of KaitaiStruct
-    `compression`*: Bmp_Compressions
-    `os2Compression`*: Bmp_Os2Compressions
-    `lenImage`*: uint32
-    `xResolution`*: uint32
-    `yResolution`*: uint32
-    `numColorsUsed`*: uint32
-    `numColorsImportant`*: uint32
-    `parent`*: Bmp_BitmapHeader
-  Bmp_FixedPoint2Dot30* = ref object of KaitaiStruct
-    `raw`*: uint32
-    `parent`*: Bmp_CieXyz
-    `valueInst`: float64
-    `valueInstFlag`: bool
+  Bmp_Os2Rendering* = enum
+    no_halftoning = 0
+    error_diffusion = 1
+    panda = 2
+    super_circle = 3
   Bmp_Bitmap* = ref object of KaitaiStruct
     `parent`*: Bmp
   Bmp_BitmapHeader* = ref object of KaitaiStruct
@@ -113,39 +61,86 @@ type
     `bitmapV5Ext`*: Bmp_BitmapV5Extension
     `lenHeader`*: uint32
     `parent`*: Bmp_BitmapInfo
-    `extendsBitmapV4Inst`: bool
-    `extendsBitmapV4InstFlag`: bool
-    `extendsOs22xBitmapInst`: bool
-    `extendsOs22xBitmapInstFlag`: bool
-    `usesFixedPaletteInst`: bool
-    `usesFixedPaletteInstFlag`: bool
-    `extendsBitmapInfoInst`: bool
-    `extendsBitmapInfoInstFlag`: bool
-    `imageHeightInst`: int
-    `imageHeightInstFlag`: bool
-    `isCoreHeaderInst`: bool
-    `isCoreHeaderInstFlag`: bool
-    `extendsBitmapV5Inst`: bool
-    `extendsBitmapV5InstFlag`: bool
-    `isColorMaskHereInst`: bool
-    `isColorMaskHereInstFlag`: bool
     `bottomUpInst`: bool
     `bottomUpInstFlag`: bool
-  Bmp_Os22xBitmapExtension* = ref object of KaitaiStruct
-    `units`*: uint16
-    `reserved`*: uint16
-    `recording`*: uint16
-    `rendering`*: Bmp_Os2Rendering
-    `size1`*: uint32
-    `size2`*: uint32
-    `colorEncoding`*: uint32
-    `identifier`*: uint32
+    `extendsBitmapInfoInst`: bool
+    `extendsBitmapInfoInstFlag`: bool
+    `extendsBitmapV4Inst`: bool
+    `extendsBitmapV4InstFlag`: bool
+    `extendsBitmapV5Inst`: bool
+    `extendsBitmapV5InstFlag`: bool
+    `extendsOs22xBitmapInst`: bool
+    `extendsOs22xBitmapInstFlag`: bool
+    `imageHeightInst`: int
+    `imageHeightInstFlag`: bool
+    `isColorMaskHereInst`: bool
+    `isColorMaskHereInstFlag`: bool
+    `isCoreHeaderInst`: bool
+    `isCoreHeaderInstFlag`: bool
+    `usesFixedPaletteInst`: bool
+    `usesFixedPaletteInstFlag`: bool
+  Bmp_BitmapInfo* = ref object of KaitaiStruct
+    `lenHeader`*: uint32
+    `header`*: Bmp_BitmapHeader
+    `colorMask`*: Bmp_ColorMask
+    `colorTable`*: Bmp_ColorTable
+    `parent`*: Bmp
+    `rawHeader`*: seq[byte]
+    `rawColorTable`*: seq[byte]
+    `colorMaskAlphaInst`: uint32
+    `colorMaskAlphaInstFlag`: bool
+    `colorMaskBlueInst`: uint32
+    `colorMaskBlueInstFlag`: bool
+    `colorMaskGivenInst`: Bmp_ColorMask
+    `colorMaskGivenInstFlag`: bool
+    `colorMaskGreenInst`: int
+    `colorMaskGreenInstFlag`: bool
+    `colorMaskRedInst`: int
+    `colorMaskRedInstFlag`: bool
+    `isColorMaskGivenInst`: bool
+    `isColorMaskGivenInstFlag`: bool
+    `isColorMaskHereInst`: bool
+    `isColorMaskHereInstFlag`: bool
+  Bmp_BitmapInfoExtension* = ref object of KaitaiStruct
+    `compression`*: Bmp_Compressions
+    `os2Compression`*: Bmp_Os2Compressions
+    `lenImage`*: uint32
+    `xResolution`*: uint32
+    `yResolution`*: uint32
+    `numColorsUsed`*: uint32
+    `numColorsImportant`*: uint32
     `parent`*: Bmp_BitmapHeader
-  Bmp_FixedPoint16Dot16* = ref object of KaitaiStruct
-    `raw`*: uint32
+  Bmp_BitmapV4Extension* = ref object of KaitaiStruct
+    `colorSpaceType`*: Bmp_ColorSpace
+    `endpointRed`*: Bmp_CieXyz
+    `endpointGreen`*: Bmp_CieXyz
+    `endpointBlue`*: Bmp_CieXyz
+    `gammaRed`*: Bmp_FixedPoint16Dot16
+    `gammaBlue`*: Bmp_FixedPoint16Dot16
+    `gammaGreen`*: Bmp_FixedPoint16Dot16
+    `parent`*: Bmp_BitmapHeader
+  Bmp_BitmapV5Extension* = ref object of KaitaiStruct
+    `intent`*: Bmp_Intent
+    `ofsProfile`*: uint32
+    `lenProfile`*: uint32
+    `reserved`*: uint32
+    `parent`*: Bmp_BitmapHeader
+    `hasProfileInst`: bool
+    `hasProfileInstFlag`: bool
+    `profileDataInst`: KaitaiStruct
+    `profileDataInstFlag`: bool
+  Bmp_CieXyz* = ref object of KaitaiStruct
+    `x`*: Bmp_FixedPoint2Dot30
+    `y`*: Bmp_FixedPoint2Dot30
+    `z`*: Bmp_FixedPoint2Dot30
     `parent`*: Bmp_BitmapV4Extension
-    `valueInst`: float64
-    `valueInstFlag`: bool
+  Bmp_ColorMask* = ref object of KaitaiStruct
+    `redMask`*: uint32
+    `greenMask`*: uint32
+    `blueMask`*: uint32
+    `alphaMask`*: uint32
+    `hasAlphaMask`*: bool
+    `parent`*: KaitaiStruct
   Bmp_ColorTable* = ref object of KaitaiStruct
     `colors`*: seq[Bmp_RgbRecord]
     `hasReservedField`*: bool
@@ -160,66 +155,71 @@ type
     `reserved2`*: uint16
     `ofsBitmap`*: int32
     `parent`*: Bmp
-  Bmp_BitmapInfo* = ref object of KaitaiStruct
-    `lenHeader`*: uint32
-    `header`*: Bmp_BitmapHeader
-    `colorMask`*: Bmp_ColorMask
-    `colorTable`*: Bmp_ColorTable
-    `parent`*: Bmp
-    `rawHeader`*: seq[byte]
-    `rawColorTable`*: seq[byte]
-    `isColorMaskGivenInst`: bool
-    `isColorMaskGivenInstFlag`: bool
-    `colorMaskGivenInst`: Bmp_ColorMask
-    `colorMaskGivenInstFlag`: bool
-    `colorMaskBlueInst`: uint32
-    `colorMaskBlueInstFlag`: bool
-    `colorMaskAlphaInst`: uint32
-    `colorMaskAlphaInstFlag`: bool
-    `colorMaskGreenInst`: int
-    `colorMaskGreenInstFlag`: bool
-    `isColorMaskHereInst`: bool
-    `isColorMaskHereInstFlag`: bool
-    `colorMaskRedInst`: int
-    `colorMaskRedInstFlag`: bool
+  Bmp_FixedPoint16Dot16* = ref object of KaitaiStruct
+    `raw`*: uint32
+    `parent`*: Bmp_BitmapV4Extension
+    `valueInst`: float64
+    `valueInstFlag`: bool
+  Bmp_FixedPoint2Dot30* = ref object of KaitaiStruct
+    `raw`*: uint32
+    `parent`*: Bmp_CieXyz
+    `valueInst`: float64
+    `valueInstFlag`: bool
+  Bmp_Os22xBitmapExtension* = ref object of KaitaiStruct
+    `units`*: uint16
+    `reserved`*: uint16
+    `recording`*: uint16
+    `rendering`*: Bmp_Os2Rendering
+    `size1`*: uint32
+    `size2`*: uint32
+    `colorEncoding`*: uint32
+    `identifier`*: uint32
+    `parent`*: Bmp_BitmapHeader
+  Bmp_RgbRecord* = ref object of KaitaiStruct
+    `blue`*: uint8
+    `green`*: uint8
+    `red`*: uint8
+    `reserved`*: uint8
+    `hasReservedField`*: bool
+    `parent`*: Bmp_ColorTable
 
 proc read*(_: typedesc[Bmp], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Bmp
-proc read*(_: typedesc[Bmp_CieXyz], io: KaitaiStream, root: KaitaiStruct, parent: Bmp_BitmapV4Extension): Bmp_CieXyz
-proc read*(_: typedesc[Bmp_RgbRecord], io: KaitaiStream, root: KaitaiStruct, parent: Bmp_ColorTable, hasReservedField: any): Bmp_RgbRecord
-proc read*(_: typedesc[Bmp_BitmapV5Extension], io: KaitaiStream, root: KaitaiStruct, parent: Bmp_BitmapHeader): Bmp_BitmapV5Extension
-proc read*(_: typedesc[Bmp_ColorMask], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct, hasAlphaMask: any): Bmp_ColorMask
-proc read*(_: typedesc[Bmp_BitmapV4Extension], io: KaitaiStream, root: KaitaiStruct, parent: Bmp_BitmapHeader): Bmp_BitmapV4Extension
-proc read*(_: typedesc[Bmp_BitmapInfoExtension], io: KaitaiStream, root: KaitaiStruct, parent: Bmp_BitmapHeader): Bmp_BitmapInfoExtension
-proc read*(_: typedesc[Bmp_FixedPoint2Dot30], io: KaitaiStream, root: KaitaiStruct, parent: Bmp_CieXyz): Bmp_FixedPoint2Dot30
 proc read*(_: typedesc[Bmp_Bitmap], io: KaitaiStream, root: KaitaiStruct, parent: Bmp): Bmp_Bitmap
 proc read*(_: typedesc[Bmp_BitmapHeader], io: KaitaiStream, root: KaitaiStruct, parent: Bmp_BitmapInfo, lenHeader: any): Bmp_BitmapHeader
-proc read*(_: typedesc[Bmp_Os22xBitmapExtension], io: KaitaiStream, root: KaitaiStruct, parent: Bmp_BitmapHeader): Bmp_Os22xBitmapExtension
-proc read*(_: typedesc[Bmp_FixedPoint16Dot16], io: KaitaiStream, root: KaitaiStruct, parent: Bmp_BitmapV4Extension): Bmp_FixedPoint16Dot16
+proc read*(_: typedesc[Bmp_BitmapInfo], io: KaitaiStream, root: KaitaiStruct, parent: Bmp): Bmp_BitmapInfo
+proc read*(_: typedesc[Bmp_BitmapInfoExtension], io: KaitaiStream, root: KaitaiStruct, parent: Bmp_BitmapHeader): Bmp_BitmapInfoExtension
+proc read*(_: typedesc[Bmp_BitmapV4Extension], io: KaitaiStream, root: KaitaiStruct, parent: Bmp_BitmapHeader): Bmp_BitmapV4Extension
+proc read*(_: typedesc[Bmp_BitmapV5Extension], io: KaitaiStream, root: KaitaiStruct, parent: Bmp_BitmapHeader): Bmp_BitmapV5Extension
+proc read*(_: typedesc[Bmp_CieXyz], io: KaitaiStream, root: KaitaiStruct, parent: Bmp_BitmapV4Extension): Bmp_CieXyz
+proc read*(_: typedesc[Bmp_ColorMask], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct, hasAlphaMask: any): Bmp_ColorMask
 proc read*(_: typedesc[Bmp_ColorTable], io: KaitaiStream, root: KaitaiStruct, parent: Bmp_BitmapInfo, hasReservedField: any, numColors: any): Bmp_ColorTable
 proc read*(_: typedesc[Bmp_FileHeader], io: KaitaiStream, root: KaitaiStruct, parent: Bmp): Bmp_FileHeader
-proc read*(_: typedesc[Bmp_BitmapInfo], io: KaitaiStream, root: KaitaiStruct, parent: Bmp): Bmp_BitmapInfo
+proc read*(_: typedesc[Bmp_FixedPoint16Dot16], io: KaitaiStream, root: KaitaiStruct, parent: Bmp_BitmapV4Extension): Bmp_FixedPoint16Dot16
+proc read*(_: typedesc[Bmp_FixedPoint2Dot30], io: KaitaiStream, root: KaitaiStruct, parent: Bmp_CieXyz): Bmp_FixedPoint2Dot30
+proc read*(_: typedesc[Bmp_Os22xBitmapExtension], io: KaitaiStream, root: KaitaiStruct, parent: Bmp_BitmapHeader): Bmp_Os22xBitmapExtension
+proc read*(_: typedesc[Bmp_RgbRecord], io: KaitaiStream, root: KaitaiStruct, parent: Bmp_ColorTable, hasReservedField: any): Bmp_RgbRecord
 
+proc bottomUp*(this: Bmp_BitmapHeader): bool
+proc extendsBitmapInfo*(this: Bmp_BitmapHeader): bool
+proc extendsBitmapV4*(this: Bmp_BitmapHeader): bool
+proc extendsBitmapV5*(this: Bmp_BitmapHeader): bool
+proc extendsOs22xBitmap*(this: Bmp_BitmapHeader): bool
+proc imageHeight*(this: Bmp_BitmapHeader): int
+proc isColorMaskHere*(this: Bmp_BitmapHeader): bool
+proc isCoreHeader*(this: Bmp_BitmapHeader): bool
+proc usesFixedPalette*(this: Bmp_BitmapHeader): bool
+proc colorMaskAlpha*(this: Bmp_BitmapInfo): uint32
+proc colorMaskBlue*(this: Bmp_BitmapInfo): uint32
+proc colorMaskGiven*(this: Bmp_BitmapInfo): Bmp_ColorMask
+proc colorMaskGreen*(this: Bmp_BitmapInfo): int
+proc colorMaskRed*(this: Bmp_BitmapInfo): int
+proc isColorMaskGiven*(this: Bmp_BitmapInfo): bool
+proc isColorMaskHere*(this: Bmp_BitmapInfo): bool
 proc hasProfile*(this: Bmp_BitmapV5Extension): bool
 proc profileData*(this: Bmp_BitmapV5Extension): KaitaiStruct
-proc value*(this: Bmp_FixedPoint2Dot30): float64
-proc extendsBitmapV4*(this: Bmp_BitmapHeader): bool
-proc extendsOs22xBitmap*(this: Bmp_BitmapHeader): bool
-proc usesFixedPalette*(this: Bmp_BitmapHeader): bool
-proc extendsBitmapInfo*(this: Bmp_BitmapHeader): bool
-proc imageHeight*(this: Bmp_BitmapHeader): int
-proc isCoreHeader*(this: Bmp_BitmapHeader): bool
-proc extendsBitmapV5*(this: Bmp_BitmapHeader): bool
-proc isColorMaskHere*(this: Bmp_BitmapHeader): bool
-proc bottomUp*(this: Bmp_BitmapHeader): bool
-proc value*(this: Bmp_FixedPoint16Dot16): float64
 proc numColorsPresent*(this: Bmp_ColorTable): int
-proc isColorMaskGiven*(this: Bmp_BitmapInfo): bool
-proc colorMaskGiven*(this: Bmp_BitmapInfo): Bmp_ColorMask
-proc colorMaskBlue*(this: Bmp_BitmapInfo): uint32
-proc colorMaskAlpha*(this: Bmp_BitmapInfo): uint32
-proc colorMaskGreen*(this: Bmp_BitmapInfo): int
-proc isColorMaskHere*(this: Bmp_BitmapInfo): bool
-proc colorMaskRed*(this: Bmp_BitmapInfo): int
+proc value*(this: Bmp_FixedPoint16Dot16): float64
+proc value*(this: Bmp_FixedPoint2Dot30): float64
 
 
 ##[
@@ -306,7 +306,7 @@ proc read*(_: typedesc[Bmp], io: KaitaiStream, root: KaitaiStruct, parent: Kaita
 
   let fileHdrExpr = Bmp_FileHeader.read(this.io, this.root, this)
   this.fileHdr = fileHdrExpr
-  let rawDibInfoExpr = this.io.readBytes(int((this.fileHdr.ofsBitmap - 14)))
+  let rawDibInfoExpr = this.io.readBytes(int(this.fileHdr.ofsBitmap - 14))
   this.rawDibInfo = rawDibInfoExpr
   let rawDibInfoIo = newKaitaiStream(rawDibInfoExpr)
   let dibInfoExpr = Bmp_BitmapInfo.read(rawDibInfoIo, this.root, this)
@@ -319,223 +319,6 @@ proc read*(_: typedesc[Bmp], io: KaitaiStream, root: KaitaiStruct, parent: Kaita
 
 proc fromFile*(_: typedesc[Bmp], filename: string): Bmp =
   Bmp.read(newKaitaiFileStream(filename), nil, nil)
-
-
-##[
-@see <a href="https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-ciexyz">Source</a>
-]##
-proc read*(_: typedesc[Bmp_CieXyz], io: KaitaiStream, root: KaitaiStruct, parent: Bmp_BitmapV4Extension): Bmp_CieXyz =
-  template this: untyped = result
-  this = new(Bmp_CieXyz)
-  let root = if root == nil: cast[Bmp](this) else: cast[Bmp](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let xExpr = Bmp_FixedPoint2Dot30.read(this.io, this.root, this)
-  this.x = xExpr
-  let yExpr = Bmp_FixedPoint2Dot30.read(this.io, this.root, this)
-  this.y = yExpr
-  let zExpr = Bmp_FixedPoint2Dot30.read(this.io, this.root, this)
-  this.z = zExpr
-
-proc fromFile*(_: typedesc[Bmp_CieXyz], filename: string): Bmp_CieXyz =
-  Bmp_CieXyz.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Bmp_RgbRecord], io: KaitaiStream, root: KaitaiStruct, parent: Bmp_ColorTable, hasReservedField: any): Bmp_RgbRecord =
-  template this: untyped = result
-  this = new(Bmp_RgbRecord)
-  let root = if root == nil: cast[Bmp](this) else: cast[Bmp](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-  let hasReservedFieldExpr = bool(hasReservedField)
-  this.hasReservedField = hasReservedFieldExpr
-
-  let blueExpr = this.io.readU1()
-  this.blue = blueExpr
-  let greenExpr = this.io.readU1()
-  this.green = greenExpr
-  let redExpr = this.io.readU1()
-  this.red = redExpr
-  if this.hasReservedField:
-    let reservedExpr = this.io.readU1()
-    this.reserved = reservedExpr
-
-proc fromFile*(_: typedesc[Bmp_RgbRecord], filename: string): Bmp_RgbRecord =
-  Bmp_RgbRecord.read(newKaitaiFileStream(filename), nil, nil)
-
-
-##[
-@see <a href="https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv5header">Source</a>
-]##
-proc read*(_: typedesc[Bmp_BitmapV5Extension], io: KaitaiStream, root: KaitaiStruct, parent: Bmp_BitmapHeader): Bmp_BitmapV5Extension =
-  template this: untyped = result
-  this = new(Bmp_BitmapV5Extension)
-  let root = if root == nil: cast[Bmp](this) else: cast[Bmp](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let intentExpr = Bmp_Intent(this.io.readU4le())
-  this.intent = intentExpr
-
-  ##[
-  The offset, in bytes, from the beginning of the BITMAPV5HEADER structure to the start of the profile data.
-  ]##
-  let ofsProfileExpr = this.io.readU4le()
-  this.ofsProfile = ofsProfileExpr
-  let lenProfileExpr = this.io.readU4le()
-  this.lenProfile = lenProfileExpr
-  let reservedExpr = this.io.readU4le()
-  this.reserved = reservedExpr
-
-proc hasProfile(this: Bmp_BitmapV5Extension): bool = 
-  if this.hasProfileInstFlag:
-    return this.hasProfileInst
-  let hasProfileInstExpr = bool( ((this.parent.bitmapV4Ext.colorSpaceType == bmp.profile_linked) or (this.parent.bitmapV4Ext.colorSpaceType == bmp.profile_embedded)) )
-  this.hasProfileInst = hasProfileInstExpr
-  this.hasProfileInstFlag = true
-  return this.hasProfileInst
-
-proc profileData(this: Bmp_BitmapV5Extension): KaitaiStruct = 
-
-  ##[
-  @see <a href="https://learn.microsoft.com/en-us/windows/win32/wcs/using-structures-in-wcs-1-0">"If the profile is embedded, profile data is the actual profile, and if it is linked, the profile data is the null-terminated file name of the profile. This cannot be a Unicode string. It must be composed exclusively of characters from the Windows character set (code page 1252)."</a>
-  ]##
-  if this.profileDataInstFlag:
-    return this.profileDataInst
-  if this.hasProfile:
-    let io = Bmp(this.root).io
-    let pos = io.pos()
-    io.seek(int((14 + this.ofsProfile)))
-    block:
-      let on = this.parent.bitmapV4Ext.colorSpaceType == bmp.profile_linked
-      if on == true:
-        let profileDataInstExpr = encode(io.readBytes(int(this.lenProfile)).bytesTerminate(0, false), "windows-1252")
-        this.profileDataInst = profileDataInstExpr
-      else:
-        let profileDataInstExpr = io.readBytes(int(this.lenProfile))
-        this.profileDataInst = profileDataInstExpr
-    io.seek(pos)
-  this.profileDataInstFlag = true
-  return this.profileDataInst
-
-proc fromFile*(_: typedesc[Bmp_BitmapV5Extension], filename: string): Bmp_BitmapV5Extension =
-  Bmp_BitmapV5Extension.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Bmp_ColorMask], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct, hasAlphaMask: any): Bmp_ColorMask =
-  template this: untyped = result
-  this = new(Bmp_ColorMask)
-  let root = if root == nil: cast[Bmp](this) else: cast[Bmp](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-  let hasAlphaMaskExpr = bool(hasAlphaMask)
-  this.hasAlphaMask = hasAlphaMaskExpr
-
-  let redMaskExpr = this.io.readU4le()
-  this.redMask = redMaskExpr
-  let greenMaskExpr = this.io.readU4le()
-  this.greenMask = greenMaskExpr
-  let blueMaskExpr = this.io.readU4le()
-  this.blueMask = blueMaskExpr
-  if this.hasAlphaMask:
-    let alphaMaskExpr = this.io.readU4le()
-    this.alphaMask = alphaMaskExpr
-
-proc fromFile*(_: typedesc[Bmp_ColorMask], filename: string): Bmp_ColorMask =
-  Bmp_ColorMask.read(newKaitaiFileStream(filename), nil, nil)
-
-
-##[
-@see <a href="https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv4header">Source</a>
-]##
-proc read*(_: typedesc[Bmp_BitmapV4Extension], io: KaitaiStream, root: KaitaiStruct, parent: Bmp_BitmapHeader): Bmp_BitmapV4Extension =
-  template this: untyped = result
-  this = new(Bmp_BitmapV4Extension)
-  let root = if root == nil: cast[Bmp](this) else: cast[Bmp](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let colorSpaceTypeExpr = Bmp_ColorSpace(this.io.readU4le())
-  this.colorSpaceType = colorSpaceTypeExpr
-  let endpointRedExpr = Bmp_CieXyz.read(this.io, this.root, this)
-  this.endpointRed = endpointRedExpr
-  let endpointGreenExpr = Bmp_CieXyz.read(this.io, this.root, this)
-  this.endpointGreen = endpointGreenExpr
-  let endpointBlueExpr = Bmp_CieXyz.read(this.io, this.root, this)
-  this.endpointBlue = endpointBlueExpr
-  let gammaRedExpr = Bmp_FixedPoint16Dot16.read(this.io, this.root, this)
-  this.gammaRed = gammaRedExpr
-  let gammaBlueExpr = Bmp_FixedPoint16Dot16.read(this.io, this.root, this)
-  this.gammaBlue = gammaBlueExpr
-  let gammaGreenExpr = Bmp_FixedPoint16Dot16.read(this.io, this.root, this)
-  this.gammaGreen = gammaGreenExpr
-
-proc fromFile*(_: typedesc[Bmp_BitmapV4Extension], filename: string): Bmp_BitmapV4Extension =
-  Bmp_BitmapV4Extension.read(newKaitaiFileStream(filename), nil, nil)
-
-
-##[
-@see <a href="https://learn.microsoft.com/en-us/previous-versions/dd183376(v=vs.85)">Source</a>
-]##
-proc read*(_: typedesc[Bmp_BitmapInfoExtension], io: KaitaiStream, root: KaitaiStruct, parent: Bmp_BitmapHeader): Bmp_BitmapInfoExtension =
-  template this: untyped = result
-  this = new(Bmp_BitmapInfoExtension)
-  let root = if root == nil: cast[Bmp](this) else: cast[Bmp](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  if not(this.parent.extendsOs22xBitmap):
-    let compressionExpr = Bmp_Compressions(this.io.readU4le())
-    this.compression = compressionExpr
-  if this.parent.extendsOs22xBitmap:
-    let os2CompressionExpr = Bmp_Os2Compressions(this.io.readU4le())
-    this.os2Compression = os2CompressionExpr
-
-  ##[
-  If biCompression is BI_JPEG or BI_PNG, indicates the size of the JPEG or PNG image buffer.
-This may be set to zero for BI_RGB bitmaps.
-
-  ]##
-  let lenImageExpr = this.io.readU4le()
-  this.lenImage = lenImageExpr
-  let xResolutionExpr = this.io.readU4le()
-  this.xResolution = xResolutionExpr
-  let yResolutionExpr = this.io.readU4le()
-  this.yResolution = yResolutionExpr
-  let numColorsUsedExpr = this.io.readU4le()
-  this.numColorsUsed = numColorsUsedExpr
-  let numColorsImportantExpr = this.io.readU4le()
-  this.numColorsImportant = numColorsImportantExpr
-
-proc fromFile*(_: typedesc[Bmp_BitmapInfoExtension], filename: string): Bmp_BitmapInfoExtension =
-  Bmp_BitmapInfoExtension.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Bmp_FixedPoint2Dot30], io: KaitaiStream, root: KaitaiStruct, parent: Bmp_CieXyz): Bmp_FixedPoint2Dot30 =
-  template this: untyped = result
-  this = new(Bmp_FixedPoint2Dot30)
-  let root = if root == nil: cast[Bmp](this) else: cast[Bmp](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let rawExpr = this.io.readU4le()
-  this.raw = rawExpr
-
-proc value(this: Bmp_FixedPoint2Dot30): float64 = 
-  if this.valueInstFlag:
-    return this.valueInst
-  let valueInstExpr = float64(((this.raw + 0.0) div (1 shl 30)))
-  this.valueInst = valueInstExpr
-  this.valueInstFlag = true
-  return this.valueInst
-
-proc fromFile*(_: typedesc[Bmp_FixedPoint2Dot30], filename: string): Bmp_FixedPoint2Dot30 =
-  Bmp_FixedPoint2Dot30.read(newKaitaiFileStream(filename), nil, nil)
 
 
 ##[
@@ -580,11 +363,11 @@ proc read*(_: typedesc[Bmp_BitmapHeader], io: KaitaiStream, root: KaitaiStruct, 
   ]##
   block:
     let on = this.isCoreHeader
-    if on == true:
-      let imageWidthExpr = uint32(this.io.readU2le())
-      this.imageWidth = imageWidthExpr
-    elif on == false:
+    if on == false:
       let imageWidthExpr = this.io.readU4le()
+      this.imageWidth = imageWidthExpr
+    elif on == true:
+      let imageWidthExpr = uint32(this.io.readU2le())
       this.imageWidth = imageWidthExpr
 
   ##[
@@ -592,11 +375,11 @@ proc read*(_: typedesc[Bmp_BitmapHeader], io: KaitaiStream, root: KaitaiStruct, 
   ]##
   block:
     let on = this.isCoreHeader
-    if on == true:
-      let imageHeightRawExpr = int32(this.io.readS2le())
-      this.imageHeightRaw = imageHeightRawExpr
-    elif on == false:
+    if on == false:
       let imageHeightRawExpr = this.io.readS4le()
+      this.imageHeightRaw = imageHeightRawExpr
+    elif on == true:
+      let imageHeightRawExpr = int32(this.io.readS2le())
       this.imageHeightRaw = imageHeightRawExpr
 
   ##[
@@ -626,29 +409,13 @@ proc read*(_: typedesc[Bmp_BitmapHeader], io: KaitaiStream, root: KaitaiStruct, 
     let bitmapV5ExtExpr = Bmp_BitmapV5Extension.read(this.io, this.root, this)
     this.bitmapV5Ext = bitmapV5ExtExpr
 
-proc extendsBitmapV4(this: Bmp_BitmapHeader): bool = 
-  if this.extendsBitmapV4InstFlag:
-    return this.extendsBitmapV4Inst
-  let extendsBitmapV4InstExpr = bool(this.lenHeader >= ord(bmp.bitmap_v4_header))
-  this.extendsBitmapV4Inst = extendsBitmapV4InstExpr
-  this.extendsBitmapV4InstFlag = true
-  return this.extendsBitmapV4Inst
-
-proc extendsOs22xBitmap(this: Bmp_BitmapHeader): bool = 
-  if this.extendsOs22xBitmapInstFlag:
-    return this.extendsOs22xBitmapInst
-  let extendsOs22xBitmapInstExpr = bool(this.lenHeader == ord(bmp.os2_2x_bitmap_header))
-  this.extendsOs22xBitmapInst = extendsOs22xBitmapInstExpr
-  this.extendsOs22xBitmapInstFlag = true
-  return this.extendsOs22xBitmapInst
-
-proc usesFixedPalette(this: Bmp_BitmapHeader): bool = 
-  if this.usesFixedPaletteInstFlag:
-    return this.usesFixedPaletteInst
-  let usesFixedPaletteInstExpr = bool( ((not( ((this.bitsPerPixel == 16) or (this.bitsPerPixel == 24) or (this.bitsPerPixel == 32)) )) and (not( ((this.extendsBitmapInfo) and (not(this.extendsOs22xBitmap)) and ( ((this.bitmapInfoExt.compression == bmp.jpeg) or (this.bitmapInfoExt.compression == bmp.png)) )) ))) )
-  this.usesFixedPaletteInst = usesFixedPaletteInstExpr
-  this.usesFixedPaletteInstFlag = true
-  return this.usesFixedPaletteInst
+proc bottomUp(this: Bmp_BitmapHeader): bool = 
+  if this.bottomUpInstFlag:
+    return this.bottomUpInst
+  let bottomUpInstExpr = bool(this.imageHeightRaw > 0)
+  this.bottomUpInst = bottomUpInstExpr
+  this.bottomUpInstFlag = true
+  return this.bottomUpInst
 
 proc extendsBitmapInfo(this: Bmp_BitmapHeader): bool = 
   if this.extendsBitmapInfoInstFlag:
@@ -658,21 +425,13 @@ proc extendsBitmapInfo(this: Bmp_BitmapHeader): bool =
   this.extendsBitmapInfoInstFlag = true
   return this.extendsBitmapInfoInst
 
-proc imageHeight(this: Bmp_BitmapHeader): int = 
-  if this.imageHeightInstFlag:
-    return this.imageHeightInst
-  let imageHeightInstExpr = int((if this.imageHeightRaw < 0: -(this.imageHeightRaw) else: this.imageHeightRaw))
-  this.imageHeightInst = imageHeightInstExpr
-  this.imageHeightInstFlag = true
-  return this.imageHeightInst
-
-proc isCoreHeader(this: Bmp_BitmapHeader): bool = 
-  if this.isCoreHeaderInstFlag:
-    return this.isCoreHeaderInst
-  let isCoreHeaderInstExpr = bool(this.lenHeader == ord(bmp.bitmap_core_header))
-  this.isCoreHeaderInst = isCoreHeaderInstExpr
-  this.isCoreHeaderInstFlag = true
-  return this.isCoreHeaderInst
+proc extendsBitmapV4(this: Bmp_BitmapHeader): bool = 
+  if this.extendsBitmapV4InstFlag:
+    return this.extendsBitmapV4Inst
+  let extendsBitmapV4InstExpr = bool(this.lenHeader >= ord(bmp.bitmap_v4_header))
+  this.extendsBitmapV4Inst = extendsBitmapV4InstExpr
+  this.extendsBitmapV4InstFlag = true
+  return this.extendsBitmapV4Inst
 
 proc extendsBitmapV5(this: Bmp_BitmapHeader): bool = 
   if this.extendsBitmapV5InstFlag:
@@ -682,6 +441,22 @@ proc extendsBitmapV5(this: Bmp_BitmapHeader): bool =
   this.extendsBitmapV5InstFlag = true
   return this.extendsBitmapV5Inst
 
+proc extendsOs22xBitmap(this: Bmp_BitmapHeader): bool = 
+  if this.extendsOs22xBitmapInstFlag:
+    return this.extendsOs22xBitmapInst
+  let extendsOs22xBitmapInstExpr = bool(this.lenHeader == ord(bmp.os2_2x_bitmap_header))
+  this.extendsOs22xBitmapInst = extendsOs22xBitmapInstExpr
+  this.extendsOs22xBitmapInstFlag = true
+  return this.extendsOs22xBitmapInst
+
+proc imageHeight(this: Bmp_BitmapHeader): int = 
+  if this.imageHeightInstFlag:
+    return this.imageHeightInst
+  let imageHeightInstExpr = int((if this.imageHeightRaw < 0: -(this.imageHeightRaw) else: this.imageHeightRaw))
+  this.imageHeightInst = imageHeightInstExpr
+  this.imageHeightInstFlag = true
+  return this.imageHeightInst
+
 proc isColorMaskHere(this: Bmp_BitmapHeader): bool = 
   if this.isColorMaskHereInstFlag:
     return this.isColorMaskHereInst
@@ -690,16 +465,394 @@ proc isColorMaskHere(this: Bmp_BitmapHeader): bool =
   this.isColorMaskHereInstFlag = true
   return this.isColorMaskHereInst
 
-proc bottomUp(this: Bmp_BitmapHeader): bool = 
-  if this.bottomUpInstFlag:
-    return this.bottomUpInst
-  let bottomUpInstExpr = bool(this.imageHeightRaw > 0)
-  this.bottomUpInst = bottomUpInstExpr
-  this.bottomUpInstFlag = true
-  return this.bottomUpInst
+proc isCoreHeader(this: Bmp_BitmapHeader): bool = 
+  if this.isCoreHeaderInstFlag:
+    return this.isCoreHeaderInst
+  let isCoreHeaderInstExpr = bool(this.lenHeader == ord(bmp.bitmap_core_header))
+  this.isCoreHeaderInst = isCoreHeaderInstExpr
+  this.isCoreHeaderInstFlag = true
+  return this.isCoreHeaderInst
+
+proc usesFixedPalette(this: Bmp_BitmapHeader): bool = 
+  if this.usesFixedPaletteInstFlag:
+    return this.usesFixedPaletteInst
+  let usesFixedPaletteInstExpr = bool( ((not( ((this.bitsPerPixel == 16) or (this.bitsPerPixel == 24) or (this.bitsPerPixel == 32)) )) and (not( ((this.extendsBitmapInfo) and (not(this.extendsOs22xBitmap)) and ( ((this.bitmapInfoExt.compression == bmp.jpeg) or (this.bitmapInfoExt.compression == bmp.png)) )) ))) )
+  this.usesFixedPaletteInst = usesFixedPaletteInstExpr
+  this.usesFixedPaletteInstFlag = true
+  return this.usesFixedPaletteInst
 
 proc fromFile*(_: typedesc[Bmp_BitmapHeader], filename: string): Bmp_BitmapHeader =
   Bmp_BitmapHeader.read(newKaitaiFileStream(filename), nil, nil)
+
+
+##[
+@see <a href="https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfo">Source</a>
+]##
+proc read*(_: typedesc[Bmp_BitmapInfo], io: KaitaiStream, root: KaitaiStruct, parent: Bmp): Bmp_BitmapInfo =
+  template this: untyped = result
+  this = new(Bmp_BitmapInfo)
+  let root = if root == nil: cast[Bmp](this) else: cast[Bmp](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let lenHeaderExpr = this.io.readU4le()
+  this.lenHeader = lenHeaderExpr
+  let rawHeaderExpr = this.io.readBytes(int(this.lenHeader - 4))
+  this.rawHeader = rawHeaderExpr
+  let rawHeaderIo = newKaitaiStream(rawHeaderExpr)
+  let headerExpr = Bmp_BitmapHeader.read(rawHeaderIo, this.root, this, this.lenHeader)
+  this.header = headerExpr
+
+  ##[
+  Valid only for BITMAPINFOHEADER, in all headers extending it the masks are contained in the header itself.
+  ]##
+  if this.isColorMaskHere:
+    let colorMaskExpr = Bmp_ColorMask.read(this.io, this.root, this, this.header.bitmapInfoExt.compression == bmp.alpha_bitfields)
+    this.colorMask = colorMaskExpr
+  if not(this.io.isEof):
+    let rawColorTableExpr = this.io.readBytesFull()
+    this.rawColorTable = rawColorTableExpr
+    let rawColorTableIo = newKaitaiStream(rawColorTableExpr)
+    let colorTableExpr = Bmp_ColorTable.read(rawColorTableIo, this.root, this, not(this.header.isCoreHeader), (if this.header.extendsBitmapInfo: this.header.bitmapInfoExt.numColorsUsed else: 0))
+    this.colorTable = colorTableExpr
+
+proc colorMaskAlpha(this: Bmp_BitmapInfo): uint32 = 
+  if this.colorMaskAlphaInstFlag:
+    return this.colorMaskAlphaInst
+  let colorMaskAlphaInstExpr = uint32((if  ((this.isColorMaskGiven) and (this.colorMaskGiven.hasAlphaMask)) : this.colorMaskGiven.alphaMask else: 0))
+  this.colorMaskAlphaInst = colorMaskAlphaInstExpr
+  this.colorMaskAlphaInstFlag = true
+  return this.colorMaskAlphaInst
+
+proc colorMaskBlue(this: Bmp_BitmapInfo): uint32 = 
+  if this.colorMaskBlueInstFlag:
+    return this.colorMaskBlueInst
+  let colorMaskBlueInstExpr = uint32((if this.isColorMaskGiven: this.colorMaskGiven.blueMask else: (if this.header.bitsPerPixel == 16: 31 else: (if  ((this.header.bitsPerPixel == 24) or (this.header.bitsPerPixel == 32)) : 255 else: 0))))
+  this.colorMaskBlueInst = colorMaskBlueInstExpr
+  this.colorMaskBlueInstFlag = true
+  return this.colorMaskBlueInst
+
+proc colorMaskGiven(this: Bmp_BitmapInfo): Bmp_ColorMask = 
+  if this.colorMaskGivenInstFlag:
+    return this.colorMaskGivenInst
+  if this.isColorMaskGiven:
+    let colorMaskGivenInstExpr = Bmp_ColorMask((if this.isColorMaskHere: this.colorMask else: this.header.colorMask))
+    this.colorMaskGivenInst = colorMaskGivenInstExpr
+  this.colorMaskGivenInstFlag = true
+  return this.colorMaskGivenInst
+
+proc colorMaskGreen(this: Bmp_BitmapInfo): int = 
+  if this.colorMaskGreenInstFlag:
+    return this.colorMaskGreenInst
+  let colorMaskGreenInstExpr = int((if this.isColorMaskGiven: this.colorMaskGiven.greenMask else: (if this.header.bitsPerPixel == 16: 992 else: (if  ((this.header.bitsPerPixel == 24) or (this.header.bitsPerPixel == 32)) : 65280 else: 0))))
+  this.colorMaskGreenInst = colorMaskGreenInstExpr
+  this.colorMaskGreenInstFlag = true
+  return this.colorMaskGreenInst
+
+proc colorMaskRed(this: Bmp_BitmapInfo): int = 
+  if this.colorMaskRedInstFlag:
+    return this.colorMaskRedInst
+  let colorMaskRedInstExpr = int((if this.isColorMaskGiven: this.colorMaskGiven.redMask else: (if this.header.bitsPerPixel == 16: 31744 else: (if  ((this.header.bitsPerPixel == 24) or (this.header.bitsPerPixel == 32)) : 16711680 else: 0))))
+  this.colorMaskRedInst = colorMaskRedInstExpr
+  this.colorMaskRedInstFlag = true
+  return this.colorMaskRedInst
+
+proc isColorMaskGiven(this: Bmp_BitmapInfo): bool = 
+  if this.isColorMaskGivenInstFlag:
+    return this.isColorMaskGivenInst
+  let isColorMaskGivenInstExpr = bool( ((this.header.extendsBitmapInfo) and ( ((this.header.bitmapInfoExt.compression == bmp.bitfields) or (this.header.bitmapInfoExt.compression == bmp.alpha_bitfields)) ) and ( ((this.isColorMaskHere) or (this.header.isColorMaskHere)) )) )
+  this.isColorMaskGivenInst = isColorMaskGivenInstExpr
+  this.isColorMaskGivenInstFlag = true
+  return this.isColorMaskGivenInst
+
+proc isColorMaskHere(this: Bmp_BitmapInfo): bool = 
+  if this.isColorMaskHereInstFlag:
+    return this.isColorMaskHereInst
+  let isColorMaskHereInstExpr = bool( ((not(this.io.isEof)) and (this.header.lenHeader == ord(bmp.bitmap_info_header)) and ( ((this.header.bitmapInfoExt.compression == bmp.bitfields) or (this.header.bitmapInfoExt.compression == bmp.alpha_bitfields)) )) )
+  this.isColorMaskHereInst = isColorMaskHereInstExpr
+  this.isColorMaskHereInstFlag = true
+  return this.isColorMaskHereInst
+
+proc fromFile*(_: typedesc[Bmp_BitmapInfo], filename: string): Bmp_BitmapInfo =
+  Bmp_BitmapInfo.read(newKaitaiFileStream(filename), nil, nil)
+
+
+##[
+@see <a href="https://learn.microsoft.com/en-us/previous-versions/dd183376(v=vs.85)">Source</a>
+]##
+proc read*(_: typedesc[Bmp_BitmapInfoExtension], io: KaitaiStream, root: KaitaiStruct, parent: Bmp_BitmapHeader): Bmp_BitmapInfoExtension =
+  template this: untyped = result
+  this = new(Bmp_BitmapInfoExtension)
+  let root = if root == nil: cast[Bmp](this) else: cast[Bmp](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  if not(this.parent.extendsOs22xBitmap):
+    let compressionExpr = Bmp_Compressions(this.io.readU4le())
+    this.compression = compressionExpr
+  if this.parent.extendsOs22xBitmap:
+    let os2CompressionExpr = Bmp_Os2Compressions(this.io.readU4le())
+    this.os2Compression = os2CompressionExpr
+
+  ##[
+  If biCompression is BI_JPEG or BI_PNG, indicates the size of the JPEG or PNG image buffer.
+This may be set to zero for BI_RGB bitmaps.
+
+  ]##
+  let lenImageExpr = this.io.readU4le()
+  this.lenImage = lenImageExpr
+  let xResolutionExpr = this.io.readU4le()
+  this.xResolution = xResolutionExpr
+  let yResolutionExpr = this.io.readU4le()
+  this.yResolution = yResolutionExpr
+  let numColorsUsedExpr = this.io.readU4le()
+  this.numColorsUsed = numColorsUsedExpr
+  let numColorsImportantExpr = this.io.readU4le()
+  this.numColorsImportant = numColorsImportantExpr
+
+proc fromFile*(_: typedesc[Bmp_BitmapInfoExtension], filename: string): Bmp_BitmapInfoExtension =
+  Bmp_BitmapInfoExtension.read(newKaitaiFileStream(filename), nil, nil)
+
+
+##[
+@see <a href="https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv4header">Source</a>
+]##
+proc read*(_: typedesc[Bmp_BitmapV4Extension], io: KaitaiStream, root: KaitaiStruct, parent: Bmp_BitmapHeader): Bmp_BitmapV4Extension =
+  template this: untyped = result
+  this = new(Bmp_BitmapV4Extension)
+  let root = if root == nil: cast[Bmp](this) else: cast[Bmp](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let colorSpaceTypeExpr = Bmp_ColorSpace(this.io.readU4le())
+  this.colorSpaceType = colorSpaceTypeExpr
+  let endpointRedExpr = Bmp_CieXyz.read(this.io, this.root, this)
+  this.endpointRed = endpointRedExpr
+  let endpointGreenExpr = Bmp_CieXyz.read(this.io, this.root, this)
+  this.endpointGreen = endpointGreenExpr
+  let endpointBlueExpr = Bmp_CieXyz.read(this.io, this.root, this)
+  this.endpointBlue = endpointBlueExpr
+  let gammaRedExpr = Bmp_FixedPoint16Dot16.read(this.io, this.root, this)
+  this.gammaRed = gammaRedExpr
+  let gammaBlueExpr = Bmp_FixedPoint16Dot16.read(this.io, this.root, this)
+  this.gammaBlue = gammaBlueExpr
+  let gammaGreenExpr = Bmp_FixedPoint16Dot16.read(this.io, this.root, this)
+  this.gammaGreen = gammaGreenExpr
+
+proc fromFile*(_: typedesc[Bmp_BitmapV4Extension], filename: string): Bmp_BitmapV4Extension =
+  Bmp_BitmapV4Extension.read(newKaitaiFileStream(filename), nil, nil)
+
+
+##[
+@see <a href="https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv5header">Source</a>
+]##
+proc read*(_: typedesc[Bmp_BitmapV5Extension], io: KaitaiStream, root: KaitaiStruct, parent: Bmp_BitmapHeader): Bmp_BitmapV5Extension =
+  template this: untyped = result
+  this = new(Bmp_BitmapV5Extension)
+  let root = if root == nil: cast[Bmp](this) else: cast[Bmp](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let intentExpr = Bmp_Intent(this.io.readU4le())
+  this.intent = intentExpr
+
+  ##[
+  The offset, in bytes, from the beginning of the BITMAPV5HEADER structure to the start of the profile data.
+  ]##
+  let ofsProfileExpr = this.io.readU4le()
+  this.ofsProfile = ofsProfileExpr
+  let lenProfileExpr = this.io.readU4le()
+  this.lenProfile = lenProfileExpr
+  let reservedExpr = this.io.readU4le()
+  this.reserved = reservedExpr
+
+proc hasProfile(this: Bmp_BitmapV5Extension): bool = 
+  if this.hasProfileInstFlag:
+    return this.hasProfileInst
+  let hasProfileInstExpr = bool( ((this.parent.bitmapV4Ext.colorSpaceType == bmp.profile_linked) or (this.parent.bitmapV4Ext.colorSpaceType == bmp.profile_embedded)) )
+  this.hasProfileInst = hasProfileInstExpr
+  this.hasProfileInstFlag = true
+  return this.hasProfileInst
+
+proc profileData(this: Bmp_BitmapV5Extension): KaitaiStruct = 
+
+  ##[
+  @see <a href="https://learn.microsoft.com/en-us/windows/win32/wcs/using-structures-in-wcs-1-0">"If the profile is embedded, profile data is the actual profile, and if it is linked, the profile data is the null-terminated file name of the profile. This cannot be a Unicode string. It must be composed exclusively of characters from the Windows character set (code page 1252)."</a>
+  ]##
+  if this.profileDataInstFlag:
+    return this.profileDataInst
+  if this.hasProfile:
+    let io = Bmp(this.root).io
+    let pos = io.pos()
+    io.seek(int(14 + this.ofsProfile))
+    block:
+      let on = this.parent.bitmapV4Ext.colorSpaceType == bmp.profile_linked
+      if on == true:
+        let profileDataInstExpr = encode(io.readBytes(int(this.lenProfile)).bytesTerminate(0, false), "windows-1252")
+        this.profileDataInst = profileDataInstExpr
+      else:
+        let profileDataInstExpr = io.readBytes(int(this.lenProfile))
+        this.profileDataInst = profileDataInstExpr
+    io.seek(pos)
+  this.profileDataInstFlag = true
+  return this.profileDataInst
+
+proc fromFile*(_: typedesc[Bmp_BitmapV5Extension], filename: string): Bmp_BitmapV5Extension =
+  Bmp_BitmapV5Extension.read(newKaitaiFileStream(filename), nil, nil)
+
+
+##[
+@see <a href="https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-ciexyz">Source</a>
+]##
+proc read*(_: typedesc[Bmp_CieXyz], io: KaitaiStream, root: KaitaiStruct, parent: Bmp_BitmapV4Extension): Bmp_CieXyz =
+  template this: untyped = result
+  this = new(Bmp_CieXyz)
+  let root = if root == nil: cast[Bmp](this) else: cast[Bmp](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let xExpr = Bmp_FixedPoint2Dot30.read(this.io, this.root, this)
+  this.x = xExpr
+  let yExpr = Bmp_FixedPoint2Dot30.read(this.io, this.root, this)
+  this.y = yExpr
+  let zExpr = Bmp_FixedPoint2Dot30.read(this.io, this.root, this)
+  this.z = zExpr
+
+proc fromFile*(_: typedesc[Bmp_CieXyz], filename: string): Bmp_CieXyz =
+  Bmp_CieXyz.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Bmp_ColorMask], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct, hasAlphaMask: any): Bmp_ColorMask =
+  template this: untyped = result
+  this = new(Bmp_ColorMask)
+  let root = if root == nil: cast[Bmp](this) else: cast[Bmp](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+  let hasAlphaMaskExpr = bool(hasAlphaMask)
+  this.hasAlphaMask = hasAlphaMaskExpr
+
+  let redMaskExpr = this.io.readU4le()
+  this.redMask = redMaskExpr
+  let greenMaskExpr = this.io.readU4le()
+  this.greenMask = greenMaskExpr
+  let blueMaskExpr = this.io.readU4le()
+  this.blueMask = blueMaskExpr
+  if this.hasAlphaMask:
+    let alphaMaskExpr = this.io.readU4le()
+    this.alphaMask = alphaMaskExpr
+
+proc fromFile*(_: typedesc[Bmp_ColorMask], filename: string): Bmp_ColorMask =
+  Bmp_ColorMask.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Bmp_ColorTable], io: KaitaiStream, root: KaitaiStruct, parent: Bmp_BitmapInfo, hasReservedField: any, numColors: any): Bmp_ColorTable =
+  template this: untyped = result
+  this = new(Bmp_ColorTable)
+  let root = if root == nil: cast[Bmp](this) else: cast[Bmp](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+  let hasReservedFieldExpr = bool(hasReservedField)
+  this.hasReservedField = hasReservedFieldExpr
+  let numColorsExpr = uint32(numColors)
+  this.numColors = numColorsExpr
+
+  for i in 0 ..< int((if  ((this.numColors > 0) and (this.numColors < this.numColorsPresent)) : this.numColors else: this.numColorsPresent)):
+    let it = Bmp_RgbRecord.read(this.io, this.root, this, this.hasReservedField)
+    this.colors.add(it)
+
+proc numColorsPresent(this: Bmp_ColorTable): int = 
+  if this.numColorsPresentInstFlag:
+    return this.numColorsPresentInst
+  let numColorsPresentInstExpr = int(this.io.size div (if this.hasReservedField: 4 else: 3))
+  this.numColorsPresentInst = numColorsPresentInstExpr
+  this.numColorsPresentInstFlag = true
+  return this.numColorsPresentInst
+
+proc fromFile*(_: typedesc[Bmp_ColorTable], filename: string): Bmp_ColorTable =
+  Bmp_ColorTable.read(newKaitaiFileStream(filename), nil, nil)
+
+
+##[
+@see <a href="https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapfileheader">Source</a>
+]##
+proc read*(_: typedesc[Bmp_FileHeader], io: KaitaiStream, root: KaitaiStruct, parent: Bmp): Bmp_FileHeader =
+  template this: untyped = result
+  this = new(Bmp_FileHeader)
+  let root = if root == nil: cast[Bmp](this) else: cast[Bmp](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let fileTypeExpr = this.io.readBytes(int(2))
+  this.fileType = fileTypeExpr
+
+  ##[
+  not reliable, mostly ignored by BMP decoders
+  ]##
+  let lenFileExpr = this.io.readU4le()
+  this.lenFile = lenFileExpr
+  let reserved1Expr = this.io.readU2le()
+  this.reserved1 = reserved1Expr
+  let reserved2Expr = this.io.readU2le()
+  this.reserved2 = reserved2Expr
+
+  ##[
+  Offset to actual raw pixel data of the image
+  ]##
+  let ofsBitmapExpr = this.io.readS4le()
+  this.ofsBitmap = ofsBitmapExpr
+
+proc fromFile*(_: typedesc[Bmp_FileHeader], filename: string): Bmp_FileHeader =
+  Bmp_FileHeader.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Bmp_FixedPoint16Dot16], io: KaitaiStream, root: KaitaiStruct, parent: Bmp_BitmapV4Extension): Bmp_FixedPoint16Dot16 =
+  template this: untyped = result
+  this = new(Bmp_FixedPoint16Dot16)
+  let root = if root == nil: cast[Bmp](this) else: cast[Bmp](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let rawExpr = this.io.readU4le()
+  this.raw = rawExpr
+
+proc value(this: Bmp_FixedPoint16Dot16): float64 = 
+  if this.valueInstFlag:
+    return this.valueInst
+  let valueInstExpr = float64((this.raw + 0.0) div (1 shl 16))
+  this.valueInst = valueInstExpr
+  this.valueInstFlag = true
+  return this.valueInst
+
+proc fromFile*(_: typedesc[Bmp_FixedPoint16Dot16], filename: string): Bmp_FixedPoint16Dot16 =
+  Bmp_FixedPoint16Dot16.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Bmp_FixedPoint2Dot30], io: KaitaiStream, root: KaitaiStruct, parent: Bmp_CieXyz): Bmp_FixedPoint2Dot30 =
+  template this: untyped = result
+  this = new(Bmp_FixedPoint2Dot30)
+  let root = if root == nil: cast[Bmp](this) else: cast[Bmp](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let rawExpr = this.io.readU4le()
+  this.raw = rawExpr
+
+proc value(this: Bmp_FixedPoint2Dot30): float64 = 
+  if this.valueInstFlag:
+    return this.valueInst
+  let valueInstExpr = float64((this.raw + 0.0) div (1 shl 30))
+  this.valueInst = valueInstExpr
+  this.valueInstFlag = true
+  return this.valueInst
+
+proc fromFile*(_: typedesc[Bmp_FixedPoint2Dot30], filename: string): Bmp_FixedPoint2Dot30 =
+  Bmp_FixedPoint2Dot30.read(newKaitaiFileStream(filename), nil, nil)
 
 
 ##[
@@ -770,179 +923,26 @@ The only valid value is 0, indicating the RGB encoding scheme.
 proc fromFile*(_: typedesc[Bmp_Os22xBitmapExtension], filename: string): Bmp_Os22xBitmapExtension =
   Bmp_Os22xBitmapExtension.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[Bmp_FixedPoint16Dot16], io: KaitaiStream, root: KaitaiStruct, parent: Bmp_BitmapV4Extension): Bmp_FixedPoint16Dot16 =
+proc read*(_: typedesc[Bmp_RgbRecord], io: KaitaiStream, root: KaitaiStruct, parent: Bmp_ColorTable, hasReservedField: any): Bmp_RgbRecord =
   template this: untyped = result
-  this = new(Bmp_FixedPoint16Dot16)
-  let root = if root == nil: cast[Bmp](this) else: cast[Bmp](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let rawExpr = this.io.readU4le()
-  this.raw = rawExpr
-
-proc value(this: Bmp_FixedPoint16Dot16): float64 = 
-  if this.valueInstFlag:
-    return this.valueInst
-  let valueInstExpr = float64(((this.raw + 0.0) div (1 shl 16)))
-  this.valueInst = valueInstExpr
-  this.valueInstFlag = true
-  return this.valueInst
-
-proc fromFile*(_: typedesc[Bmp_FixedPoint16Dot16], filename: string): Bmp_FixedPoint16Dot16 =
-  Bmp_FixedPoint16Dot16.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Bmp_ColorTable], io: KaitaiStream, root: KaitaiStruct, parent: Bmp_BitmapInfo, hasReservedField: any, numColors: any): Bmp_ColorTable =
-  template this: untyped = result
-  this = new(Bmp_ColorTable)
+  this = new(Bmp_RgbRecord)
   let root = if root == nil: cast[Bmp](this) else: cast[Bmp](root)
   this.io = io
   this.root = root
   this.parent = parent
   let hasReservedFieldExpr = bool(hasReservedField)
   this.hasReservedField = hasReservedFieldExpr
-  let numColorsExpr = uint32(numColors)
-  this.numColors = numColorsExpr
 
-  for i in 0 ..< int((if  ((this.numColors > 0) and (this.numColors < this.numColorsPresent)) : this.numColors else: this.numColorsPresent)):
-    let it = Bmp_RgbRecord.read(this.io, this.root, this, this.hasReservedField)
-    this.colors.add(it)
+  let blueExpr = this.io.readU1()
+  this.blue = blueExpr
+  let greenExpr = this.io.readU1()
+  this.green = greenExpr
+  let redExpr = this.io.readU1()
+  this.red = redExpr
+  if this.hasReservedField:
+    let reservedExpr = this.io.readU1()
+    this.reserved = reservedExpr
 
-proc numColorsPresent(this: Bmp_ColorTable): int = 
-  if this.numColorsPresentInstFlag:
-    return this.numColorsPresentInst
-  let numColorsPresentInstExpr = int((this.io.size div (if this.hasReservedField: 4 else: 3)))
-  this.numColorsPresentInst = numColorsPresentInstExpr
-  this.numColorsPresentInstFlag = true
-  return this.numColorsPresentInst
-
-proc fromFile*(_: typedesc[Bmp_ColorTable], filename: string): Bmp_ColorTable =
-  Bmp_ColorTable.read(newKaitaiFileStream(filename), nil, nil)
-
-
-##[
-@see <a href="https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapfileheader">Source</a>
-]##
-proc read*(_: typedesc[Bmp_FileHeader], io: KaitaiStream, root: KaitaiStruct, parent: Bmp): Bmp_FileHeader =
-  template this: untyped = result
-  this = new(Bmp_FileHeader)
-  let root = if root == nil: cast[Bmp](this) else: cast[Bmp](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let fileTypeExpr = this.io.readBytes(int(2))
-  this.fileType = fileTypeExpr
-
-  ##[
-  not reliable, mostly ignored by BMP decoders
-  ]##
-  let lenFileExpr = this.io.readU4le()
-  this.lenFile = lenFileExpr
-  let reserved1Expr = this.io.readU2le()
-  this.reserved1 = reserved1Expr
-  let reserved2Expr = this.io.readU2le()
-  this.reserved2 = reserved2Expr
-
-  ##[
-  Offset to actual raw pixel data of the image
-  ]##
-  let ofsBitmapExpr = this.io.readS4le()
-  this.ofsBitmap = ofsBitmapExpr
-
-proc fromFile*(_: typedesc[Bmp_FileHeader], filename: string): Bmp_FileHeader =
-  Bmp_FileHeader.read(newKaitaiFileStream(filename), nil, nil)
-
-
-##[
-@see <a href="https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfo">Source</a>
-]##
-proc read*(_: typedesc[Bmp_BitmapInfo], io: KaitaiStream, root: KaitaiStruct, parent: Bmp): Bmp_BitmapInfo =
-  template this: untyped = result
-  this = new(Bmp_BitmapInfo)
-  let root = if root == nil: cast[Bmp](this) else: cast[Bmp](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let lenHeaderExpr = this.io.readU4le()
-  this.lenHeader = lenHeaderExpr
-  let rawHeaderExpr = this.io.readBytes(int((this.lenHeader - 4)))
-  this.rawHeader = rawHeaderExpr
-  let rawHeaderIo = newKaitaiStream(rawHeaderExpr)
-  let headerExpr = Bmp_BitmapHeader.read(rawHeaderIo, this.root, this, this.lenHeader)
-  this.header = headerExpr
-
-  ##[
-  Valid only for BITMAPINFOHEADER, in all headers extending it the masks are contained in the header itself.
-  ]##
-  if this.isColorMaskHere:
-    let colorMaskExpr = Bmp_ColorMask.read(this.io, this.root, this, this.header.bitmapInfoExt.compression == bmp.alpha_bitfields)
-    this.colorMask = colorMaskExpr
-  if not(this.io.isEof):
-    let rawColorTableExpr = this.io.readBytesFull()
-    this.rawColorTable = rawColorTableExpr
-    let rawColorTableIo = newKaitaiStream(rawColorTableExpr)
-    let colorTableExpr = Bmp_ColorTable.read(rawColorTableIo, this.root, this, not(this.header.isCoreHeader), (if this.header.extendsBitmapInfo: this.header.bitmapInfoExt.numColorsUsed else: 0))
-    this.colorTable = colorTableExpr
-
-proc isColorMaskGiven(this: Bmp_BitmapInfo): bool = 
-  if this.isColorMaskGivenInstFlag:
-    return this.isColorMaskGivenInst
-  let isColorMaskGivenInstExpr = bool( ((this.header.extendsBitmapInfo) and ( ((this.header.bitmapInfoExt.compression == bmp.bitfields) or (this.header.bitmapInfoExt.compression == bmp.alpha_bitfields)) ) and ( ((this.isColorMaskHere) or (this.header.isColorMaskHere)) )) )
-  this.isColorMaskGivenInst = isColorMaskGivenInstExpr
-  this.isColorMaskGivenInstFlag = true
-  return this.isColorMaskGivenInst
-
-proc colorMaskGiven(this: Bmp_BitmapInfo): Bmp_ColorMask = 
-  if this.colorMaskGivenInstFlag:
-    return this.colorMaskGivenInst
-  if this.isColorMaskGiven:
-    let colorMaskGivenInstExpr = Bmp_ColorMask((if this.isColorMaskHere: this.colorMask else: this.header.colorMask))
-    this.colorMaskGivenInst = colorMaskGivenInstExpr
-  this.colorMaskGivenInstFlag = true
-  return this.colorMaskGivenInst
-
-proc colorMaskBlue(this: Bmp_BitmapInfo): uint32 = 
-  if this.colorMaskBlueInstFlag:
-    return this.colorMaskBlueInst
-  let colorMaskBlueInstExpr = uint32((if this.isColorMaskGiven: this.colorMaskGiven.blueMask else: (if this.header.bitsPerPixel == 16: 31 else: (if  ((this.header.bitsPerPixel == 24) or (this.header.bitsPerPixel == 32)) : 255 else: 0))))
-  this.colorMaskBlueInst = colorMaskBlueInstExpr
-  this.colorMaskBlueInstFlag = true
-  return this.colorMaskBlueInst
-
-proc colorMaskAlpha(this: Bmp_BitmapInfo): uint32 = 
-  if this.colorMaskAlphaInstFlag:
-    return this.colorMaskAlphaInst
-  let colorMaskAlphaInstExpr = uint32((if  ((this.isColorMaskGiven) and (this.colorMaskGiven.hasAlphaMask)) : this.colorMaskGiven.alphaMask else: 0))
-  this.colorMaskAlphaInst = colorMaskAlphaInstExpr
-  this.colorMaskAlphaInstFlag = true
-  return this.colorMaskAlphaInst
-
-proc colorMaskGreen(this: Bmp_BitmapInfo): int = 
-  if this.colorMaskGreenInstFlag:
-    return this.colorMaskGreenInst
-  let colorMaskGreenInstExpr = int((if this.isColorMaskGiven: this.colorMaskGiven.greenMask else: (if this.header.bitsPerPixel == 16: 992 else: (if  ((this.header.bitsPerPixel == 24) or (this.header.bitsPerPixel == 32)) : 65280 else: 0))))
-  this.colorMaskGreenInst = colorMaskGreenInstExpr
-  this.colorMaskGreenInstFlag = true
-  return this.colorMaskGreenInst
-
-proc isColorMaskHere(this: Bmp_BitmapInfo): bool = 
-  if this.isColorMaskHereInstFlag:
-    return this.isColorMaskHereInst
-  let isColorMaskHereInstExpr = bool( ((not(this.io.isEof)) and (this.header.lenHeader == ord(bmp.bitmap_info_header)) and ( ((this.header.bitmapInfoExt.compression == bmp.bitfields) or (this.header.bitmapInfoExt.compression == bmp.alpha_bitfields)) )) )
-  this.isColorMaskHereInst = isColorMaskHereInstExpr
-  this.isColorMaskHereInstFlag = true
-  return this.isColorMaskHereInst
-
-proc colorMaskRed(this: Bmp_BitmapInfo): int = 
-  if this.colorMaskRedInstFlag:
-    return this.colorMaskRedInst
-  let colorMaskRedInstExpr = int((if this.isColorMaskGiven: this.colorMaskGiven.redMask else: (if this.header.bitsPerPixel == 16: 31744 else: (if  ((this.header.bitsPerPixel == 24) or (this.header.bitsPerPixel == 32)) : 16711680 else: 0))))
-  this.colorMaskRedInst = colorMaskRedInstExpr
-  this.colorMaskRedInstFlag = true
-  return this.colorMaskRedInst
-
-proc fromFile*(_: typedesc[Bmp_BitmapInfo], filename: string): Bmp_BitmapInfo =
-  Bmp_BitmapInfo.read(newKaitaiFileStream(filename), nil, nil)
+proc fromFile*(_: typedesc[Bmp_RgbRecord], filename: string): Bmp_RgbRecord =
+  Bmp_RgbRecord.read(newKaitaiFileStream(filename), nil, nil)
 

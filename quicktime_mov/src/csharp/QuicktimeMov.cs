@@ -318,6 +318,262 @@ namespace Kaitai
         {
             _atoms = new AtomList(m_io, this, m_root);
         }
+        public partial class Atom : KaitaiStruct
+        {
+            public static Atom FromFile(string fileName)
+            {
+                return new Atom(new KaitaiStream(fileName));
+            }
+
+            public Atom(KaitaiStream p__io, QuicktimeMov.AtomList p__parent = null, QuicktimeMov p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_len = false;
+                _read();
+            }
+            private void _read()
+            {
+                _len32 = m_io.ReadU4be();
+                _atomType = ((QuicktimeMov.AtomType) m_io.ReadU4be());
+                if (Len32 == 1) {
+                    _len64 = m_io.ReadU8be();
+                }
+                switch (AtomType) {
+                case QuicktimeMov.AtomType.Dinf: {
+                    __raw_body = m_io.ReadBytes(Len);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new AtomList(io___raw_body, this, m_root);
+                    break;
+                }
+                case QuicktimeMov.AtomType.Ftyp: {
+                    __raw_body = m_io.ReadBytes(Len);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new FtypBody(io___raw_body, this, m_root);
+                    break;
+                }
+                case QuicktimeMov.AtomType.Mdia: {
+                    __raw_body = m_io.ReadBytes(Len);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new AtomList(io___raw_body, this, m_root);
+                    break;
+                }
+                case QuicktimeMov.AtomType.Minf: {
+                    __raw_body = m_io.ReadBytes(Len);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new AtomList(io___raw_body, this, m_root);
+                    break;
+                }
+                case QuicktimeMov.AtomType.Moof: {
+                    __raw_body = m_io.ReadBytes(Len);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new AtomList(io___raw_body, this, m_root);
+                    break;
+                }
+                case QuicktimeMov.AtomType.Moov: {
+                    __raw_body = m_io.ReadBytes(Len);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new AtomList(io___raw_body, this, m_root);
+                    break;
+                }
+                case QuicktimeMov.AtomType.Mvhd: {
+                    __raw_body = m_io.ReadBytes(Len);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new MvhdBody(io___raw_body, this, m_root);
+                    break;
+                }
+                case QuicktimeMov.AtomType.Stbl: {
+                    __raw_body = m_io.ReadBytes(Len);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new AtomList(io___raw_body, this, m_root);
+                    break;
+                }
+                case QuicktimeMov.AtomType.Tkhd: {
+                    __raw_body = m_io.ReadBytes(Len);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new TkhdBody(io___raw_body, this, m_root);
+                    break;
+                }
+                case QuicktimeMov.AtomType.Traf: {
+                    __raw_body = m_io.ReadBytes(Len);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new AtomList(io___raw_body, this, m_root);
+                    break;
+                }
+                case QuicktimeMov.AtomType.Trak: {
+                    __raw_body = m_io.ReadBytes(Len);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new AtomList(io___raw_body, this, m_root);
+                    break;
+                }
+                default: {
+                    _body = m_io.ReadBytes(Len);
+                    break;
+                }
+                }
+            }
+            private bool f_len;
+            private int _len;
+            public int Len
+            {
+                get
+                {
+                    if (f_len)
+                        return _len;
+                    f_len = true;
+                    _len = (int) ((Len32 == 0 ? M_Io.Size - 8 : (Len32 == 1 ? Len64 - 16 : Len32 - 8)));
+                    return _len;
+                }
+            }
+            private uint _len32;
+            private AtomType _atomType;
+            private ulong? _len64;
+            private object _body;
+            private QuicktimeMov m_root;
+            private QuicktimeMov.AtomList m_parent;
+            private byte[] __raw_body;
+            public uint Len32 { get { return _len32; } }
+            public AtomType AtomType { get { return _atomType; } }
+            public ulong? Len64 { get { return _len64; } }
+            public object Body { get { return _body; } }
+            public QuicktimeMov M_Root { get { return m_root; } }
+            public QuicktimeMov.AtomList M_Parent { get { return m_parent; } }
+            public byte[] M_RawBody { get { return __raw_body; } }
+        }
+        public partial class AtomList : KaitaiStruct
+        {
+            public static AtomList FromFile(string fileName)
+            {
+                return new AtomList(new KaitaiStream(fileName));
+            }
+
+            public AtomList(KaitaiStream p__io, KaitaiStruct p__parent = null, QuicktimeMov p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _items = new List<Atom>();
+                {
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _items.Add(new Atom(m_io, this, m_root));
+                        i++;
+                    }
+                }
+            }
+            private List<Atom> _items;
+            private QuicktimeMov m_root;
+            private KaitaiStruct m_parent;
+            public List<Atom> Items { get { return _items; } }
+            public QuicktimeMov M_Root { get { return m_root; } }
+            public KaitaiStruct M_Parent { get { return m_parent; } }
+        }
+
+        /// <summary>
+        /// Fixed-point 16-bit number.
+        /// </summary>
+        public partial class Fixed16 : KaitaiStruct
+        {
+            public static Fixed16 FromFile(string fileName)
+            {
+                return new Fixed16(new KaitaiStream(fileName));
+            }
+
+            public Fixed16(KaitaiStream p__io, QuicktimeMov.MvhdBody p__parent = null, QuicktimeMov p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _intPart = m_io.ReadS1();
+                _fracPart = m_io.ReadU1();
+            }
+            private sbyte _intPart;
+            private byte _fracPart;
+            private QuicktimeMov m_root;
+            private QuicktimeMov.MvhdBody m_parent;
+            public sbyte IntPart { get { return _intPart; } }
+            public byte FracPart { get { return _fracPart; } }
+            public QuicktimeMov M_Root { get { return m_root; } }
+            public QuicktimeMov.MvhdBody M_Parent { get { return m_parent; } }
+        }
+
+        /// <summary>
+        /// Fixed-point 32-bit number.
+        /// </summary>
+        public partial class Fixed32 : KaitaiStruct
+        {
+            public static Fixed32 FromFile(string fileName)
+            {
+                return new Fixed32(new KaitaiStream(fileName));
+            }
+
+            public Fixed32(KaitaiStream p__io, KaitaiStruct p__parent = null, QuicktimeMov p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _intPart = m_io.ReadS2be();
+                _fracPart = m_io.ReadU2be();
+            }
+            private short _intPart;
+            private ushort _fracPart;
+            private QuicktimeMov m_root;
+            private KaitaiStruct m_parent;
+            public short IntPart { get { return _intPart; } }
+            public ushort FracPart { get { return _fracPart; } }
+            public QuicktimeMov M_Root { get { return m_root; } }
+            public KaitaiStruct M_Parent { get { return m_parent; } }
+        }
+
+        /// <remarks>
+        /// Reference: <a href="https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-CJBCBIFF">Source</a>
+        /// </remarks>
+        public partial class FtypBody : KaitaiStruct
+        {
+            public static FtypBody FromFile(string fileName)
+            {
+                return new FtypBody(new KaitaiStream(fileName));
+            }
+
+            public FtypBody(KaitaiStream p__io, QuicktimeMov.Atom p__parent = null, QuicktimeMov p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _majorBrand = ((QuicktimeMov.Brand) m_io.ReadU4be());
+                _minorVersion = m_io.ReadBytes(4);
+                _compatibleBrands = new List<Brand>();
+                {
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _compatibleBrands.Add(((QuicktimeMov.Brand) m_io.ReadU4be()));
+                        i++;
+                    }
+                }
+            }
+            private Brand _majorBrand;
+            private byte[] _minorVersion;
+            private List<Brand> _compatibleBrands;
+            private QuicktimeMov m_root;
+            private QuicktimeMov.Atom m_parent;
+            public Brand MajorBrand { get { return _majorBrand; } }
+            public byte[] MinorVersion { get { return _minorVersion; } }
+            public List<Brand> CompatibleBrands { get { return _compatibleBrands; } }
+            public QuicktimeMov M_Root { get { return m_root; } }
+            public QuicktimeMov.Atom M_Parent { get { return m_parent; } }
+        }
 
         /// <remarks>
         /// Reference: <a href="https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-BBCGFGJG">Source</a>
@@ -457,231 +713,6 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-CJBCBIFF">Source</a>
-        /// </remarks>
-        public partial class FtypBody : KaitaiStruct
-        {
-            public static FtypBody FromFile(string fileName)
-            {
-                return new FtypBody(new KaitaiStream(fileName));
-            }
-
-            public FtypBody(KaitaiStream p__io, QuicktimeMov.Atom p__parent = null, QuicktimeMov p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _majorBrand = ((QuicktimeMov.Brand) m_io.ReadU4be());
-                _minorVersion = m_io.ReadBytes(4);
-                _compatibleBrands = new List<Brand>();
-                {
-                    var i = 0;
-                    while (!m_io.IsEof) {
-                        _compatibleBrands.Add(((QuicktimeMov.Brand) m_io.ReadU4be()));
-                        i++;
-                    }
-                }
-            }
-            private Brand _majorBrand;
-            private byte[] _minorVersion;
-            private List<Brand> _compatibleBrands;
-            private QuicktimeMov m_root;
-            private QuicktimeMov.Atom m_parent;
-            public Brand MajorBrand { get { return _majorBrand; } }
-            public byte[] MinorVersion { get { return _minorVersion; } }
-            public List<Brand> CompatibleBrands { get { return _compatibleBrands; } }
-            public QuicktimeMov M_Root { get { return m_root; } }
-            public QuicktimeMov.Atom M_Parent { get { return m_parent; } }
-        }
-
-        /// <summary>
-        /// Fixed-point 32-bit number.
-        /// </summary>
-        public partial class Fixed32 : KaitaiStruct
-        {
-            public static Fixed32 FromFile(string fileName)
-            {
-                return new Fixed32(new KaitaiStream(fileName));
-            }
-
-            public Fixed32(KaitaiStream p__io, KaitaiStruct p__parent = null, QuicktimeMov p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _intPart = m_io.ReadS2be();
-                _fracPart = m_io.ReadU2be();
-            }
-            private short _intPart;
-            private ushort _fracPart;
-            private QuicktimeMov m_root;
-            private KaitaiStruct m_parent;
-            public short IntPart { get { return _intPart; } }
-            public ushort FracPart { get { return _fracPart; } }
-            public QuicktimeMov M_Root { get { return m_root; } }
-            public KaitaiStruct M_Parent { get { return m_parent; } }
-        }
-
-        /// <summary>
-        /// Fixed-point 16-bit number.
-        /// </summary>
-        public partial class Fixed16 : KaitaiStruct
-        {
-            public static Fixed16 FromFile(string fileName)
-            {
-                return new Fixed16(new KaitaiStream(fileName));
-            }
-
-            public Fixed16(KaitaiStream p__io, QuicktimeMov.MvhdBody p__parent = null, QuicktimeMov p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _intPart = m_io.ReadS1();
-                _fracPart = m_io.ReadU1();
-            }
-            private sbyte _intPart;
-            private byte _fracPart;
-            private QuicktimeMov m_root;
-            private QuicktimeMov.MvhdBody m_parent;
-            public sbyte IntPart { get { return _intPart; } }
-            public byte FracPart { get { return _fracPart; } }
-            public QuicktimeMov M_Root { get { return m_root; } }
-            public QuicktimeMov.MvhdBody M_Parent { get { return m_parent; } }
-        }
-        public partial class Atom : KaitaiStruct
-        {
-            public static Atom FromFile(string fileName)
-            {
-                return new Atom(new KaitaiStream(fileName));
-            }
-
-            public Atom(KaitaiStream p__io, QuicktimeMov.AtomList p__parent = null, QuicktimeMov p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_len = false;
-                _read();
-            }
-            private void _read()
-            {
-                _len32 = m_io.ReadU4be();
-                _atomType = ((QuicktimeMov.AtomType) m_io.ReadU4be());
-                if (Len32 == 1) {
-                    _len64 = m_io.ReadU8be();
-                }
-                switch (AtomType) {
-                case QuicktimeMov.AtomType.Moof: {
-                    __raw_body = m_io.ReadBytes(Len);
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new AtomList(io___raw_body, this, m_root);
-                    break;
-                }
-                case QuicktimeMov.AtomType.Tkhd: {
-                    __raw_body = m_io.ReadBytes(Len);
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new TkhdBody(io___raw_body, this, m_root);
-                    break;
-                }
-                case QuicktimeMov.AtomType.Stbl: {
-                    __raw_body = m_io.ReadBytes(Len);
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new AtomList(io___raw_body, this, m_root);
-                    break;
-                }
-                case QuicktimeMov.AtomType.Traf: {
-                    __raw_body = m_io.ReadBytes(Len);
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new AtomList(io___raw_body, this, m_root);
-                    break;
-                }
-                case QuicktimeMov.AtomType.Minf: {
-                    __raw_body = m_io.ReadBytes(Len);
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new AtomList(io___raw_body, this, m_root);
-                    break;
-                }
-                case QuicktimeMov.AtomType.Trak: {
-                    __raw_body = m_io.ReadBytes(Len);
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new AtomList(io___raw_body, this, m_root);
-                    break;
-                }
-                case QuicktimeMov.AtomType.Moov: {
-                    __raw_body = m_io.ReadBytes(Len);
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new AtomList(io___raw_body, this, m_root);
-                    break;
-                }
-                case QuicktimeMov.AtomType.Mdia: {
-                    __raw_body = m_io.ReadBytes(Len);
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new AtomList(io___raw_body, this, m_root);
-                    break;
-                }
-                case QuicktimeMov.AtomType.Dinf: {
-                    __raw_body = m_io.ReadBytes(Len);
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new AtomList(io___raw_body, this, m_root);
-                    break;
-                }
-                case QuicktimeMov.AtomType.Mvhd: {
-                    __raw_body = m_io.ReadBytes(Len);
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new MvhdBody(io___raw_body, this, m_root);
-                    break;
-                }
-                case QuicktimeMov.AtomType.Ftyp: {
-                    __raw_body = m_io.ReadBytes(Len);
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new FtypBody(io___raw_body, this, m_root);
-                    break;
-                }
-                default: {
-                    _body = m_io.ReadBytes(Len);
-                    break;
-                }
-                }
-            }
-            private bool f_len;
-            private int _len;
-            public int Len
-            {
-                get
-                {
-                    if (f_len)
-                        return _len;
-                    _len = (int) ((Len32 == 0 ? (M_Io.Size - 8) : (Len32 == 1 ? (Len64 - 16) : (Len32 - 8))));
-                    f_len = true;
-                    return _len;
-                }
-            }
-            private uint _len32;
-            private AtomType _atomType;
-            private ulong? _len64;
-            private object _body;
-            private QuicktimeMov m_root;
-            private QuicktimeMov.AtomList m_parent;
-            private byte[] __raw_body;
-            public uint Len32 { get { return _len32; } }
-            public AtomType AtomType { get { return _atomType; } }
-            public ulong? Len64 { get { return _len64; } }
-            public object Body { get { return _body; } }
-            public QuicktimeMov M_Root { get { return m_root; } }
-            public QuicktimeMov.AtomList M_Parent { get { return m_parent; } }
-            public byte[] M_RawBody { get { return __raw_body; } }
-        }
-
-        /// <remarks>
         /// Reference: <a href="https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-25550">Source</a>
         /// </remarks>
         public partial class TkhdBody : KaitaiStruct
@@ -753,37 +784,6 @@ namespace Kaitai
             public Fixed32 Height { get { return _height; } }
             public QuicktimeMov M_Root { get { return m_root; } }
             public QuicktimeMov.Atom M_Parent { get { return m_parent; } }
-        }
-        public partial class AtomList : KaitaiStruct
-        {
-            public static AtomList FromFile(string fileName)
-            {
-                return new AtomList(new KaitaiStream(fileName));
-            }
-
-            public AtomList(KaitaiStream p__io, KaitaiStruct p__parent = null, QuicktimeMov p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _items = new List<Atom>();
-                {
-                    var i = 0;
-                    while (!m_io.IsEof) {
-                        _items.Add(new Atom(m_io, this, m_root));
-                        i++;
-                    }
-                }
-            }
-            private List<Atom> _items;
-            private QuicktimeMov m_root;
-            private KaitaiStruct m_parent;
-            public List<Atom> Items { get { return _items; } }
-            public QuicktimeMov M_Root { get { return m_root; } }
-            public KaitaiStruct M_Parent { get { return m_parent; } }
         }
         private AtomList _atoms;
         private QuicktimeMov m_root;

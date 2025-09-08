@@ -29,7 +29,7 @@ type DcmpVariableLengthInteger struct {
 	More int32
 	_io *kaitai.Stream
 	_root *DcmpVariableLengthInteger
-	_parent interface{}
+	_parent kaitai.Struct
 	_f_value bool
 	value int
 }
@@ -38,7 +38,11 @@ func NewDcmpVariableLengthInteger() *DcmpVariableLengthInteger {
 	}
 }
 
-func (this *DcmpVariableLengthInteger) Read(io *kaitai.Stream, parent interface{}, root *DcmpVariableLengthInteger) (err error) {
+func (this DcmpVariableLengthInteger) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *DcmpVariableLengthInteger) Read(io *kaitai.Stream, parent kaitai.Struct, root *DcmpVariableLengthInteger) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -74,20 +78,20 @@ func (this *DcmpVariableLengthInteger) Value() (v int, err error) {
 	if (this._f_value) {
 		return this.value, nil
 	}
+	this._f_value = true
 	var tmp4 int32;
 	if (this.First == 255) {
 		tmp4 = this.More
 	} else {
 		var tmp5 int;
 		if (this.First >= 128) {
-			tmp5 = (((this.First << 8) | this.More) - 49152)
+			tmp5 = (this.First << 8 | this.More) - 49152
 		} else {
 			tmp5 = this.First
 		}
 		tmp4 = tmp5
 	}
 	this.value = int(tmp4)
-	this._f_value = true
 	return this.value, nil
 }
 

@@ -24,13 +24,13 @@ end
 function Vp8DuckIvf:_read()
   self.magic1 = self._io:read_bytes(4)
   if not(self.magic1 == "\068\075\073\070") then
-    error("not equal, expected " ..  "\068\075\073\070" .. ", but got " .. self.magic1)
+    error("not equal, expected " .. "\068\075\073\070" .. ", but got " .. self.magic1)
   end
   self.version = self._io:read_u2le()
   self.len_header = self._io:read_u2le()
   self.codec = self._io:read_bytes(4)
   if not(self.codec == "\086\080\056\048") then
-    error("not equal, expected " ..  "\086\080\056\048" .. ", but got " .. self.codec)
+    error("not equal, expected " .. "\086\080\056\048" .. ", but got " .. self.codec)
   end
   self.width = self._io:read_u2le()
   self.height = self._io:read_u2le()
@@ -63,26 +63,12 @@ end
 -- 
 -- the number of frames (if not a camera stream).
 
-Vp8DuckIvf.Blocks = class.class(KaitaiStruct)
-
-function Vp8DuckIvf.Blocks:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Vp8DuckIvf.Blocks:_read()
-  self.entries = Vp8DuckIvf.Block(self._io, self, self._root)
-end
-
-
 Vp8DuckIvf.Block = class.class(KaitaiStruct)
 
 function Vp8DuckIvf.Block:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -94,4 +80,18 @@ end
 
 -- 
 -- size of the frame data.
+
+Vp8DuckIvf.Blocks = class.class(KaitaiStruct)
+
+function Vp8DuckIvf.Blocks:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Vp8DuckIvf.Blocks:_read()
+  self.entries = Vp8DuckIvf.Block(self._io, self, self._root)
+end
+
 

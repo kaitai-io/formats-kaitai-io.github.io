@@ -27,16 +27,16 @@ namespace Kaitai
         }
 
 
-        public enum PtrSize
-        {
-            Bits64 = 45,
-            Bits32 = 95,
-        }
-
         public enum Endian
         {
             Be = 86,
             Le = 118,
+        }
+
+        public enum PtrSize
+        {
+            Bits64 = 45,
+            Bits32 = 95,
         }
         public BlenderBlend(KaitaiStream p__io, KaitaiStruct p__parent = null, BlenderBlend p__root = null) : base(p__io)
         {
@@ -56,6 +56,180 @@ namespace Kaitai
                     i++;
                 }
             }
+        }
+
+        /// <summary>
+        /// DNA1, also known as &quot;Structure DNA&quot;, is a special block in
+        /// .blend file, which contains machine-readable specifications of
+        /// all other structures used in this .blend file.
+        /// 
+        /// Effectively, this block contains:
+        /// 
+        /// * a sequence of &quot;names&quot; (strings which represent field names)
+        /// * a sequence of &quot;types&quot; (strings which represent type name)
+        /// * a sequence of &quot;type lengths&quot;
+        /// * a sequence of &quot;structs&quot; (which describe contents of every
+        ///   structure, referring to types and names by index)
+        /// </summary>
+        /// <remarks>
+        /// Reference: <a href="https://archive.blender.org/wiki/index.php/Dev:Source/Architecture/File_Format/#Structure_DNA">Source</a>
+        /// </remarks>
+        public partial class Dna1Body : KaitaiStruct
+        {
+            public static Dna1Body FromFile(string fileName)
+            {
+                return new Dna1Body(new KaitaiStream(fileName));
+            }
+
+            public Dna1Body(KaitaiStream p__io, BlenderBlend.FileBlock p__parent = null, BlenderBlend p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _id = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(_id, new byte[] { 83, 68, 78, 65 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 83, 68, 78, 65 }, _id, m_io, "/types/dna1_body/seq/0");
+                }
+                _nameMagic = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(_nameMagic, new byte[] { 78, 65, 77, 69 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 78, 65, 77, 69 }, _nameMagic, m_io, "/types/dna1_body/seq/1");
+                }
+                _numNames = m_io.ReadU4le();
+                _names = new List<string>();
+                for (var i = 0; i < NumNames; i++)
+                {
+                    _names.Add(System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytesTerm(0, false, true, true)));
+                }
+                _padding1 = m_io.ReadBytes(KaitaiStream.Mod(4 - M_Io.Pos, 4));
+                _typeMagic = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(_typeMagic, new byte[] { 84, 89, 80, 69 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 84, 89, 80, 69 }, _typeMagic, m_io, "/types/dna1_body/seq/5");
+                }
+                _numTypes = m_io.ReadU4le();
+                _types = new List<string>();
+                for (var i = 0; i < NumTypes; i++)
+                {
+                    _types.Add(System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytesTerm(0, false, true, true)));
+                }
+                _padding2 = m_io.ReadBytes(KaitaiStream.Mod(4 - M_Io.Pos, 4));
+                _tlenMagic = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(_tlenMagic, new byte[] { 84, 76, 69, 78 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 84, 76, 69, 78 }, _tlenMagic, m_io, "/types/dna1_body/seq/9");
+                }
+                _lengths = new List<ushort>();
+                for (var i = 0; i < NumTypes; i++)
+                {
+                    _lengths.Add(m_io.ReadU2le());
+                }
+                _padding3 = m_io.ReadBytes(KaitaiStream.Mod(4 - M_Io.Pos, 4));
+                _strcMagic = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(_strcMagic, new byte[] { 83, 84, 82, 67 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 83, 84, 82, 67 }, _strcMagic, m_io, "/types/dna1_body/seq/12");
+                }
+                _numStructs = m_io.ReadU4le();
+                _structs = new List<DnaStruct>();
+                for (var i = 0; i < NumStructs; i++)
+                {
+                    _structs.Add(new DnaStruct(m_io, this, m_root));
+                }
+            }
+            private byte[] _id;
+            private byte[] _nameMagic;
+            private uint _numNames;
+            private List<string> _names;
+            private byte[] _padding1;
+            private byte[] _typeMagic;
+            private uint _numTypes;
+            private List<string> _types;
+            private byte[] _padding2;
+            private byte[] _tlenMagic;
+            private List<ushort> _lengths;
+            private byte[] _padding3;
+            private byte[] _strcMagic;
+            private uint _numStructs;
+            private List<DnaStruct> _structs;
+            private BlenderBlend m_root;
+            private BlenderBlend.FileBlock m_parent;
+            public byte[] Id { get { return _id; } }
+            public byte[] NameMagic { get { return _nameMagic; } }
+            public uint NumNames { get { return _numNames; } }
+            public List<string> Names { get { return _names; } }
+            public byte[] Padding1 { get { return _padding1; } }
+            public byte[] TypeMagic { get { return _typeMagic; } }
+            public uint NumTypes { get { return _numTypes; } }
+            public List<string> Types { get { return _types; } }
+            public byte[] Padding2 { get { return _padding2; } }
+            public byte[] TlenMagic { get { return _tlenMagic; } }
+            public List<ushort> Lengths { get { return _lengths; } }
+            public byte[] Padding3 { get { return _padding3; } }
+            public byte[] StrcMagic { get { return _strcMagic; } }
+            public uint NumStructs { get { return _numStructs; } }
+            public List<DnaStruct> Structs { get { return _structs; } }
+            public BlenderBlend M_Root { get { return m_root; } }
+            public BlenderBlend.FileBlock M_Parent { get { return m_parent; } }
+        }
+        public partial class DnaField : KaitaiStruct
+        {
+            public static DnaField FromFile(string fileName)
+            {
+                return new DnaField(new KaitaiStream(fileName));
+            }
+
+            public DnaField(KaitaiStream p__io, BlenderBlend.DnaStruct p__parent = null, BlenderBlend p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_name = false;
+                f_type = false;
+                _read();
+            }
+            private void _read()
+            {
+                _idxType = m_io.ReadU2le();
+                _idxName = m_io.ReadU2le();
+            }
+            private bool f_name;
+            private string _name;
+            public string Name
+            {
+                get
+                {
+                    if (f_name)
+                        return _name;
+                    f_name = true;
+                    _name = (string) (M_Parent.M_Parent.Names[IdxName]);
+                    return _name;
+                }
+            }
+            private bool f_type;
+            private string _type;
+            public string Type
+            {
+                get
+                {
+                    if (f_type)
+                        return _type;
+                    f_type = true;
+                    _type = (string) (M_Parent.M_Parent.Types[IdxType]);
+                    return _type;
+                }
+            }
+            private ushort _idxType;
+            private ushort _idxName;
+            private BlenderBlend m_root;
+            private BlenderBlend.DnaStruct m_parent;
+            public ushort IdxType { get { return _idxType; } }
+            public ushort IdxName { get { return _idxName; } }
+            public BlenderBlend M_Root { get { return m_root; } }
+            public BlenderBlend.DnaStruct M_Parent { get { return m_parent; } }
         }
 
         /// <summary>
@@ -94,8 +268,8 @@ namespace Kaitai
                 {
                     if (f_type)
                         return _type;
-                    _type = (string) (M_Parent.Types[IdxType]);
                     f_type = true;
+                    _type = (string) (M_Parent.Types[IdxType]);
                     return _type;
                 }
             }
@@ -152,10 +326,10 @@ namespace Kaitai
                 {
                     if (f_sdnaStruct)
                         return _sdnaStruct;
+                    f_sdnaStruct = true;
                     if (SdnaIndex != 0) {
                         _sdnaStruct = (DnaStruct) (M_Root.SdnaStructs[SdnaIndex]);
                     }
-                    f_sdnaStruct = true;
                     return _sdnaStruct;
                 }
             }
@@ -198,125 +372,6 @@ namespace Kaitai
             public BlenderBlend M_Parent { get { return m_parent; } }
             public byte[] M_RawBody { get { return __raw_body; } }
         }
-
-        /// <summary>
-        /// DNA1, also known as &quot;Structure DNA&quot;, is a special block in
-        /// .blend file, which contains machine-readable specifications of
-        /// all other structures used in this .blend file.
-        /// 
-        /// Effectively, this block contains:
-        /// 
-        /// * a sequence of &quot;names&quot; (strings which represent field names)
-        /// * a sequence of &quot;types&quot; (strings which represent type name)
-        /// * a sequence of &quot;type lengths&quot;
-        /// * a sequence of &quot;structs&quot; (which describe contents of every
-        ///   structure, referring to types and names by index)
-        /// </summary>
-        /// <remarks>
-        /// Reference: <a href="https://archive.blender.org/wiki/index.php/Dev:Source/Architecture/File_Format/#Structure_DNA">Source</a>
-        /// </remarks>
-        public partial class Dna1Body : KaitaiStruct
-        {
-            public static Dna1Body FromFile(string fileName)
-            {
-                return new Dna1Body(new KaitaiStream(fileName));
-            }
-
-            public Dna1Body(KaitaiStream p__io, BlenderBlend.FileBlock p__parent = null, BlenderBlend p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _id = m_io.ReadBytes(4);
-                if (!((KaitaiStream.ByteArrayCompare(Id, new byte[] { 83, 68, 78, 65 }) == 0)))
-                {
-                    throw new ValidationNotEqualError(new byte[] { 83, 68, 78, 65 }, Id, M_Io, "/types/dna1_body/seq/0");
-                }
-                _nameMagic = m_io.ReadBytes(4);
-                if (!((KaitaiStream.ByteArrayCompare(NameMagic, new byte[] { 78, 65, 77, 69 }) == 0)))
-                {
-                    throw new ValidationNotEqualError(new byte[] { 78, 65, 77, 69 }, NameMagic, M_Io, "/types/dna1_body/seq/1");
-                }
-                _numNames = m_io.ReadU4le();
-                _names = new List<string>();
-                for (var i = 0; i < NumNames; i++)
-                {
-                    _names.Add(System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytesTerm(0, false, true, true)));
-                }
-                _padding1 = m_io.ReadBytes(KaitaiStream.Mod((4 - M_Io.Pos), 4));
-                _typeMagic = m_io.ReadBytes(4);
-                if (!((KaitaiStream.ByteArrayCompare(TypeMagic, new byte[] { 84, 89, 80, 69 }) == 0)))
-                {
-                    throw new ValidationNotEqualError(new byte[] { 84, 89, 80, 69 }, TypeMagic, M_Io, "/types/dna1_body/seq/5");
-                }
-                _numTypes = m_io.ReadU4le();
-                _types = new List<string>();
-                for (var i = 0; i < NumTypes; i++)
-                {
-                    _types.Add(System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytesTerm(0, false, true, true)));
-                }
-                _padding2 = m_io.ReadBytes(KaitaiStream.Mod((4 - M_Io.Pos), 4));
-                _tlenMagic = m_io.ReadBytes(4);
-                if (!((KaitaiStream.ByteArrayCompare(TlenMagic, new byte[] { 84, 76, 69, 78 }) == 0)))
-                {
-                    throw new ValidationNotEqualError(new byte[] { 84, 76, 69, 78 }, TlenMagic, M_Io, "/types/dna1_body/seq/9");
-                }
-                _lengths = new List<ushort>();
-                for (var i = 0; i < NumTypes; i++)
-                {
-                    _lengths.Add(m_io.ReadU2le());
-                }
-                _padding3 = m_io.ReadBytes(KaitaiStream.Mod((4 - M_Io.Pos), 4));
-                _strcMagic = m_io.ReadBytes(4);
-                if (!((KaitaiStream.ByteArrayCompare(StrcMagic, new byte[] { 83, 84, 82, 67 }) == 0)))
-                {
-                    throw new ValidationNotEqualError(new byte[] { 83, 84, 82, 67 }, StrcMagic, M_Io, "/types/dna1_body/seq/12");
-                }
-                _numStructs = m_io.ReadU4le();
-                _structs = new List<DnaStruct>();
-                for (var i = 0; i < NumStructs; i++)
-                {
-                    _structs.Add(new DnaStruct(m_io, this, m_root));
-                }
-            }
-            private byte[] _id;
-            private byte[] _nameMagic;
-            private uint _numNames;
-            private List<string> _names;
-            private byte[] _padding1;
-            private byte[] _typeMagic;
-            private uint _numTypes;
-            private List<string> _types;
-            private byte[] _padding2;
-            private byte[] _tlenMagic;
-            private List<ushort> _lengths;
-            private byte[] _padding3;
-            private byte[] _strcMagic;
-            private uint _numStructs;
-            private List<DnaStruct> _structs;
-            private BlenderBlend m_root;
-            private BlenderBlend.FileBlock m_parent;
-            public byte[] Id { get { return _id; } }
-            public byte[] NameMagic { get { return _nameMagic; } }
-            public uint NumNames { get { return _numNames; } }
-            public List<string> Names { get { return _names; } }
-            public byte[] Padding1 { get { return _padding1; } }
-            public byte[] TypeMagic { get { return _typeMagic; } }
-            public uint NumTypes { get { return _numTypes; } }
-            public List<string> Types { get { return _types; } }
-            public byte[] Padding2 { get { return _padding2; } }
-            public byte[] TlenMagic { get { return _tlenMagic; } }
-            public List<ushort> Lengths { get { return _lengths; } }
-            public byte[] Padding3 { get { return _padding3; } }
-            public byte[] StrcMagic { get { return _strcMagic; } }
-            public uint NumStructs { get { return _numStructs; } }
-            public List<DnaStruct> Structs { get { return _structs; } }
-            public BlenderBlend M_Root { get { return m_root; } }
-            public BlenderBlend.FileBlock M_Parent { get { return m_parent; } }
-        }
         public partial class Header : KaitaiStruct
         {
             public static Header FromFile(string fileName)
@@ -334,9 +389,9 @@ namespace Kaitai
             private void _read()
             {
                 _magic = m_io.ReadBytes(7);
-                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 66, 76, 69, 78, 68, 69, 82 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 66, 76, 69, 78, 68, 69, 82 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 66, 76, 69, 78, 68, 69, 82 }, Magic, M_Io, "/types/header/seq/0");
+                    throw new ValidationNotEqualError(new byte[] { 66, 76, 69, 78, 68, 69, 82 }, _magic, m_io, "/types/header/seq/0");
                 }
                 _ptrSizeId = ((BlenderBlend.PtrSize) m_io.ReadU1());
                 _endian = ((BlenderBlend.Endian) m_io.ReadU1());
@@ -354,8 +409,8 @@ namespace Kaitai
                 {
                     if (f_psize)
                         return _psize;
-                    _psize = (sbyte) ((PtrSizeId == BlenderBlend.PtrSize.Bits64 ? 8 : 4));
                     f_psize = true;
+                    _psize = (sbyte) ((PtrSizeId == BlenderBlend.PtrSize.Bits64 ? 8 : 4));
                     return _psize;
                 }
             }
@@ -384,61 +439,6 @@ namespace Kaitai
             public BlenderBlend M_Root { get { return m_root; } }
             public BlenderBlend M_Parent { get { return m_parent; } }
         }
-        public partial class DnaField : KaitaiStruct
-        {
-            public static DnaField FromFile(string fileName)
-            {
-                return new DnaField(new KaitaiStream(fileName));
-            }
-
-            public DnaField(KaitaiStream p__io, BlenderBlend.DnaStruct p__parent = null, BlenderBlend p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_type = false;
-                f_name = false;
-                _read();
-            }
-            private void _read()
-            {
-                _idxType = m_io.ReadU2le();
-                _idxName = m_io.ReadU2le();
-            }
-            private bool f_type;
-            private string _type;
-            public string Type
-            {
-                get
-                {
-                    if (f_type)
-                        return _type;
-                    _type = (string) (M_Parent.M_Parent.Types[IdxType]);
-                    f_type = true;
-                    return _type;
-                }
-            }
-            private bool f_name;
-            private string _name;
-            public string Name
-            {
-                get
-                {
-                    if (f_name)
-                        return _name;
-                    _name = (string) (M_Parent.M_Parent.Names[IdxName]);
-                    f_name = true;
-                    return _name;
-                }
-            }
-            private ushort _idxType;
-            private ushort _idxName;
-            private BlenderBlend m_root;
-            private BlenderBlend.DnaStruct m_parent;
-            public ushort IdxType { get { return _idxType; } }
-            public ushort IdxName { get { return _idxName; } }
-            public BlenderBlend M_Root { get { return m_root; } }
-            public BlenderBlend.DnaStruct M_Parent { get { return m_parent; } }
-        }
         private bool f_sdnaStructs;
         private List<DnaStruct> _sdnaStructs;
         public List<DnaStruct> SdnaStructs
@@ -447,8 +447,8 @@ namespace Kaitai
             {
                 if (f_sdnaStructs)
                     return _sdnaStructs;
-                _sdnaStructs = (List<DnaStruct>) (((BlenderBlend.Dna1Body) (Blocks[(Blocks.Count - 2)].Body)).Structs);
                 f_sdnaStructs = true;
+                _sdnaStructs = (List<DnaStruct>) (((BlenderBlend.Dna1Body) (Blocks[Blocks.Count - 2].Body)).Structs);
                 return _sdnaStructs;
             }
         }

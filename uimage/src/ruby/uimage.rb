@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -13,39 +13,6 @@ end
 # with sha1 and md5 checksums.
 # @see https://source.denx.de/u-boot/u-boot/-/raw/e4dba4ba6f/include/image.h Source
 class Uimage < Kaitai::Struct::Struct
-
-  UIMAGE_OS = {
-    0 => :uimage_os_invalid,
-    1 => :uimage_os_openbsd,
-    2 => :uimage_os_netbsd,
-    3 => :uimage_os_freebsd,
-    4 => :uimage_os_bsd4_4,
-    5 => :uimage_os_linux,
-    6 => :uimage_os_svr4,
-    7 => :uimage_os_esix,
-    8 => :uimage_os_solaris,
-    9 => :uimage_os_irix,
-    10 => :uimage_os_sco,
-    11 => :uimage_os_dell,
-    12 => :uimage_os_ncr,
-    13 => :uimage_os_lynxos,
-    14 => :uimage_os_vxworks,
-    15 => :uimage_os_psos,
-    16 => :uimage_os_qnx,
-    17 => :uimage_os_u_boot,
-    18 => :uimage_os_rtems,
-    19 => :uimage_os_artos,
-    20 => :uimage_os_unity,
-    21 => :uimage_os_integrity,
-    22 => :uimage_os_ose,
-    23 => :uimage_os_plan9,
-    24 => :uimage_os_openrtos,
-    25 => :uimage_os_arm_trusted_firmware,
-    26 => :uimage_os_tee,
-    27 => :uimage_os_opensbi,
-    28 => :uimage_os_efi,
-  }
-  I__UIMAGE_OS = UIMAGE_OS.invert
 
   UIMAGE_ARCH = {
     0 => :uimage_arch_invalid,
@@ -88,6 +55,39 @@ class Uimage < Kaitai::Struct::Struct
     6 => :uimage_comp_zstd,
   }
   I__UIMAGE_COMP = UIMAGE_COMP.invert
+
+  UIMAGE_OS = {
+    0 => :uimage_os_invalid,
+    1 => :uimage_os_openbsd,
+    2 => :uimage_os_netbsd,
+    3 => :uimage_os_freebsd,
+    4 => :uimage_os_bsd4_4,
+    5 => :uimage_os_linux,
+    6 => :uimage_os_svr4,
+    7 => :uimage_os_esix,
+    8 => :uimage_os_solaris,
+    9 => :uimage_os_irix,
+    10 => :uimage_os_sco,
+    11 => :uimage_os_dell,
+    12 => :uimage_os_ncr,
+    13 => :uimage_os_lynxos,
+    14 => :uimage_os_vxworks,
+    15 => :uimage_os_psos,
+    16 => :uimage_os_qnx,
+    17 => :uimage_os_u_boot,
+    18 => :uimage_os_rtems,
+    19 => :uimage_os_artos,
+    20 => :uimage_os_unity,
+    21 => :uimage_os_integrity,
+    22 => :uimage_os_ose,
+    23 => :uimage_os_plan9,
+    24 => :uimage_os_openrtos,
+    25 => :uimage_os_arm_trusted_firmware,
+    26 => :uimage_os_tee,
+    27 => :uimage_os_opensbi,
+    28 => :uimage_os_efi,
+  }
+  I__UIMAGE_OS = UIMAGE_OS.invert
 
   UIMAGE_TYPE = {
     0 => :uimage_type_invalid,
@@ -133,8 +133,8 @@ class Uimage < Kaitai::Struct::Struct
     40 => :uimage_type_sunxi_egon,
   }
   I__UIMAGE_TYPE = UIMAGE_TYPE.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -144,14 +144,14 @@ class Uimage < Kaitai::Struct::Struct
     self
   end
   class Uheader < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
       @magic = @_io.read_bytes(4)
-      raise Kaitai::Struct::ValidationNotEqualError.new([39, 5, 25, 86].pack('C*'), magic, _io, "/types/uheader/seq/0") if not magic == [39, 5, 25, 86].pack('C*')
+      raise Kaitai::Struct::ValidationNotEqualError.new([39, 5, 25, 86].pack('C*'), @magic, @_io, "/types/uheader/seq/0") if not @magic == [39, 5, 25, 86].pack('C*')
       @header_crc = @_io.read_u4be
       @timestamp = @_io.read_u4be
       @len_image = @_io.read_u4be

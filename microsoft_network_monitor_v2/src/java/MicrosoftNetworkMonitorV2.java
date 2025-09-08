@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -159,8 +160,8 @@ public class MicrosoftNetworkMonitorV2 extends KaitaiStruct {
     }
     private void _read() {
         this.signature = this._io.readBytes(4);
-        if (!(Arrays.equals(signature(), new byte[] { 71, 77, 66, 85 }))) {
-            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 71, 77, 66, 85 }, signature(), _io(), "/seq/0");
+        if (!(Arrays.equals(this.signature, new byte[] { 71, 77, 66, 85 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 71, 77, 66, 85 }, this.signature, this._io, "/seq/0");
         }
         this.versionMinor = this._io.readU1();
         this.versionMajor = this._io.readU1();
@@ -179,94 +180,13 @@ public class MicrosoftNetworkMonitorV2 extends KaitaiStruct {
         this.conversationStatsOfs = this._io.readU4le();
         this.conversationStatsLen = this._io.readU4le();
     }
-    public static class FrameIndex extends KaitaiStruct {
-        public static FrameIndex fromFile(String fileName) throws IOException {
-            return new FrameIndex(new ByteBufferKaitaiStream(fileName));
-        }
 
-        public FrameIndex(KaitaiStream _io) {
-            this(_io, null, null);
+    public void _fetchInstances() {
+        this.timeCaptureStart._fetchInstances();
+        frameTable();
+        if (this.frameTable != null) {
+            this.frameTable._fetchInstances();
         }
-
-        public FrameIndex(KaitaiStream _io, MicrosoftNetworkMonitorV2 _parent) {
-            this(_io, _parent, null);
-        }
-
-        public FrameIndex(KaitaiStream _io, MicrosoftNetworkMonitorV2 _parent, MicrosoftNetworkMonitorV2 _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.entries = new ArrayList<FrameIndexEntry>();
-            {
-                int i = 0;
-                while (!this._io.isEof()) {
-                    this.entries.add(new FrameIndexEntry(this._io, this, _root));
-                    i++;
-                }
-            }
-        }
-        private ArrayList<FrameIndexEntry> entries;
-        private MicrosoftNetworkMonitorV2 _root;
-        private MicrosoftNetworkMonitorV2 _parent;
-        public ArrayList<FrameIndexEntry> entries() { return entries; }
-        public MicrosoftNetworkMonitorV2 _root() { return _root; }
-        public MicrosoftNetworkMonitorV2 _parent() { return _parent; }
-    }
-
-    /**
-     * Each index entry is just a pointer to where the frame data is
-     * stored in the file.
-     */
-    public static class FrameIndexEntry extends KaitaiStruct {
-        public static FrameIndexEntry fromFile(String fileName) throws IOException {
-            return new FrameIndexEntry(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public FrameIndexEntry(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public FrameIndexEntry(KaitaiStream _io, MicrosoftNetworkMonitorV2.FrameIndex _parent) {
-            this(_io, _parent, null);
-        }
-
-        public FrameIndexEntry(KaitaiStream _io, MicrosoftNetworkMonitorV2.FrameIndex _parent, MicrosoftNetworkMonitorV2 _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.ofs = this._io.readU4le();
-        }
-        private Frame body;
-
-        /**
-         * Frame body itself
-         */
-        public Frame body() {
-            if (this.body != null)
-                return this.body;
-            KaitaiStream io = _root()._io();
-            long _pos = io.pos();
-            io.seek(ofs());
-            this.body = new Frame(io, this, _root);
-            io.seek(_pos);
-            return this.body;
-        }
-        private long ofs;
-        private MicrosoftNetworkMonitorV2 _root;
-        private MicrosoftNetworkMonitorV2.FrameIndex _parent;
-
-        /**
-         * Absolute pointer to frame data in the file
-         */
-        public long ofs() { return ofs; }
-        public MicrosoftNetworkMonitorV2 _root() { return _root; }
-        public MicrosoftNetworkMonitorV2.FrameIndex _parent() { return _parent; }
     }
 
     /**
@@ -303,9 +223,8 @@ public class MicrosoftNetworkMonitorV2 extends KaitaiStruct {
                 if (on != null) {
                     switch (_root().macType()) {
                     case ETHERNET: {
-                        this._raw_body = this._io.readBytes(incLen());
-                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                        this.body = new EthernetFrame(_io__raw_body);
+                        KaitaiStream _io_body = this._io.substream(incLen());
+                        this.body = new EthernetFrame(_io_body);
                         break;
                     }
                     default: {
@@ -318,13 +237,30 @@ public class MicrosoftNetworkMonitorV2 extends KaitaiStruct {
                 }
             }
         }
+
+        public void _fetchInstances() {
+            {
+                Linktype on = _root().macType();
+                if (on != null) {
+                    switch (_root().macType()) {
+                    case ETHERNET: {
+                        ((EthernetFrame) (this.body))._fetchInstances();
+                        break;
+                    }
+                    default: {
+                        break;
+                    }
+                    }
+                } else {
+                }
+            }
+        }
         private long tsDelta;
         private long origLen;
         private long incLen;
         private Object body;
         private MicrosoftNetworkMonitorV2 _root;
         private MicrosoftNetworkMonitorV2.FrameIndexEntry _parent;
-        private byte[] _raw_body;
 
         /**
          * Time stamp - usecs since start of capture
@@ -347,7 +283,108 @@ public class MicrosoftNetworkMonitorV2 extends KaitaiStruct {
         public Object body() { return body; }
         public MicrosoftNetworkMonitorV2 _root() { return _root; }
         public MicrosoftNetworkMonitorV2.FrameIndexEntry _parent() { return _parent; }
-        public byte[] _raw_body() { return _raw_body; }
+    }
+    public static class FrameIndex extends KaitaiStruct {
+        public static FrameIndex fromFile(String fileName) throws IOException {
+            return new FrameIndex(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public FrameIndex(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public FrameIndex(KaitaiStream _io, MicrosoftNetworkMonitorV2 _parent) {
+            this(_io, _parent, null);
+        }
+
+        public FrameIndex(KaitaiStream _io, MicrosoftNetworkMonitorV2 _parent, MicrosoftNetworkMonitorV2 _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.entries = new ArrayList<FrameIndexEntry>();
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.entries.add(new FrameIndexEntry(this._io, this, _root));
+                    i++;
+                }
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.entries.size(); i++) {
+                this.entries.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private List<FrameIndexEntry> entries;
+        private MicrosoftNetworkMonitorV2 _root;
+        private MicrosoftNetworkMonitorV2 _parent;
+        public List<FrameIndexEntry> entries() { return entries; }
+        public MicrosoftNetworkMonitorV2 _root() { return _root; }
+        public MicrosoftNetworkMonitorV2 _parent() { return _parent; }
+    }
+
+    /**
+     * Each index entry is just a pointer to where the frame data is
+     * stored in the file.
+     */
+    public static class FrameIndexEntry extends KaitaiStruct {
+        public static FrameIndexEntry fromFile(String fileName) throws IOException {
+            return new FrameIndexEntry(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public FrameIndexEntry(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public FrameIndexEntry(KaitaiStream _io, MicrosoftNetworkMonitorV2.FrameIndex _parent) {
+            this(_io, _parent, null);
+        }
+
+        public FrameIndexEntry(KaitaiStream _io, MicrosoftNetworkMonitorV2.FrameIndex _parent, MicrosoftNetworkMonitorV2 _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.ofs = this._io.readU4le();
+        }
+
+        public void _fetchInstances() {
+            body();
+            if (this.body != null) {
+                this.body._fetchInstances();
+            }
+        }
+        private Frame body;
+
+        /**
+         * Frame body itself
+         */
+        public Frame body() {
+            if (this.body != null)
+                return this.body;
+            KaitaiStream io = _root()._io();
+            long _pos = io.pos();
+            io.seek(ofs());
+            this.body = new Frame(io, this, _root);
+            io.seek(_pos);
+            return this.body;
+        }
+        private long ofs;
+        private MicrosoftNetworkMonitorV2 _root;
+        private MicrosoftNetworkMonitorV2.FrameIndex _parent;
+
+        /**
+         * Absolute pointer to frame data in the file
+         */
+        public long ofs() { return ofs; }
+        public MicrosoftNetworkMonitorV2 _root() { return _root; }
+        public MicrosoftNetworkMonitorV2.FrameIndex _parent() { return _parent; }
     }
     private FrameIndex frameTable;
 
@@ -359,9 +396,8 @@ public class MicrosoftNetworkMonitorV2 extends KaitaiStruct {
             return this.frameTable;
         long _pos = this._io.pos();
         this._io.seek(frameTableOfs());
-        this._raw_frameTable = this._io.readBytes(frameTableLen());
-        KaitaiStream _io__raw_frameTable = new ByteBufferKaitaiStream(_raw_frameTable);
-        this.frameTable = new FrameIndex(_io__raw_frameTable, this, _root);
+        KaitaiStream _io_frameTable = this._io.substream(frameTableLen());
+        this.frameTable = new FrameIndex(_io_frameTable, this, _root);
         this._io.seek(_pos);
         return this.frameTable;
     }
@@ -384,7 +420,6 @@ public class MicrosoftNetworkMonitorV2 extends KaitaiStruct {
     private long conversationStatsLen;
     private MicrosoftNetworkMonitorV2 _root;
     private KaitaiStruct _parent;
-    private byte[] _raw_frameTable;
     public byte[] signature() { return signature; }
 
     /**
@@ -420,5 +455,4 @@ public class MicrosoftNetworkMonitorV2 extends KaitaiStruct {
     public long conversationStatsLen() { return conversationStatsLen; }
     public MicrosoftNetworkMonitorV2 _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
-    public byte[] _raw_frameTable() { return _raw_frameTable; }
 }

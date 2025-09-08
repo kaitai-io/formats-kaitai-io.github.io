@@ -17,6 +17,31 @@ import (
  * @see <a href="https://www.loc.gov/preservation/digital/formats/digformatspecs/WindowsMetafileFormat(wmf)Specification.pdf">Source</a>
  */
 
+type Wmf_BinRasterOp int
+const (
+	Wmf_BinRasterOp__Black Wmf_BinRasterOp = 1
+	Wmf_BinRasterOp__Notmergepen Wmf_BinRasterOp = 2
+	Wmf_BinRasterOp__Masknotpen Wmf_BinRasterOp = 3
+	Wmf_BinRasterOp__Notcopypen Wmf_BinRasterOp = 4
+	Wmf_BinRasterOp__Maskpennot Wmf_BinRasterOp = 5
+	Wmf_BinRasterOp__Not Wmf_BinRasterOp = 6
+	Wmf_BinRasterOp__Xorpen Wmf_BinRasterOp = 7
+	Wmf_BinRasterOp__Notmaskpen Wmf_BinRasterOp = 8
+	Wmf_BinRasterOp__Maskpen Wmf_BinRasterOp = 9
+	Wmf_BinRasterOp__Notxorpen Wmf_BinRasterOp = 10
+	Wmf_BinRasterOp__Nop Wmf_BinRasterOp = 11
+	Wmf_BinRasterOp__Mergenotpen Wmf_BinRasterOp = 12
+	Wmf_BinRasterOp__Copypen Wmf_BinRasterOp = 13
+	Wmf_BinRasterOp__Mergepennot Wmf_BinRasterOp = 14
+	Wmf_BinRasterOp__Mergepen Wmf_BinRasterOp = 15
+	Wmf_BinRasterOp__White Wmf_BinRasterOp = 16
+)
+var values_Wmf_BinRasterOp = map[Wmf_BinRasterOp]struct{}{1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}, 10: {}, 11: {}, 12: {}, 13: {}, 14: {}, 15: {}, 16: {}}
+func (v Wmf_BinRasterOp) isDefined() bool {
+	_, ok := values_Wmf_BinRasterOp[v]
+	return ok
+}
+
 type Wmf_Func int
 const (
 	Wmf_Func__Eof Wmf_Func = 0
@@ -90,52 +115,51 @@ const (
 	Wmf_Func__Setdibtodev Wmf_Func = 3379
 	Wmf_Func__Stretchdib Wmf_Func = 3907
 )
-
-type Wmf_BinRasterOp int
-const (
-	Wmf_BinRasterOp__Black Wmf_BinRasterOp = 1
-	Wmf_BinRasterOp__Notmergepen Wmf_BinRasterOp = 2
-	Wmf_BinRasterOp__Masknotpen Wmf_BinRasterOp = 3
-	Wmf_BinRasterOp__Notcopypen Wmf_BinRasterOp = 4
-	Wmf_BinRasterOp__Maskpennot Wmf_BinRasterOp = 5
-	Wmf_BinRasterOp__Not Wmf_BinRasterOp = 6
-	Wmf_BinRasterOp__Xorpen Wmf_BinRasterOp = 7
-	Wmf_BinRasterOp__Notmaskpen Wmf_BinRasterOp = 8
-	Wmf_BinRasterOp__Maskpen Wmf_BinRasterOp = 9
-	Wmf_BinRasterOp__Notxorpen Wmf_BinRasterOp = 10
-	Wmf_BinRasterOp__Nop Wmf_BinRasterOp = 11
-	Wmf_BinRasterOp__Mergenotpen Wmf_BinRasterOp = 12
-	Wmf_BinRasterOp__Copypen Wmf_BinRasterOp = 13
-	Wmf_BinRasterOp__Mergepennot Wmf_BinRasterOp = 14
-	Wmf_BinRasterOp__Mergepen Wmf_BinRasterOp = 15
-	Wmf_BinRasterOp__White Wmf_BinRasterOp = 16
-)
+var values_Wmf_Func = map[Wmf_Func]struct{}{0: {}, 30: {}, 53: {}, 55: {}, 247: {}, 258: {}, 259: {}, 260: {}, 261: {}, 262: {}, 263: {}, 264: {}, 295: {}, 298: {}, 299: {}, 300: {}, 301: {}, 302: {}, 313: {}, 322: {}, 329: {}, 496: {}, 505: {}, 513: {}, 521: {}, 522: {}, 523: {}, 524: {}, 525: {}, 526: {}, 527: {}, 529: {}, 531: {}, 532: {}, 544: {}, 552: {}, 561: {}, 564: {}, 762: {}, 763: {}, 764: {}, 804: {}, 805: {}, 1040: {}, 1042: {}, 1045: {}, 1046: {}, 1048: {}, 1049: {}, 1051: {}, 1055: {}, 1065: {}, 1078: {}, 1313: {}, 1336: {}, 1352: {}, 1564: {}, 1565: {}, 1574: {}, 1791: {}, 2071: {}, 2074: {}, 2096: {}, 2338: {}, 2368: {}, 2610: {}, 2851: {}, 2881: {}, 3379: {}, 3907: {}}
+func (v Wmf_Func) isDefined() bool {
+	_, ok := values_Wmf_Func[v]
+	return ok
+}
 
 type Wmf_MixMode int
 const (
 	Wmf_MixMode__Transparent Wmf_MixMode = 1
 	Wmf_MixMode__Opaque Wmf_MixMode = 2
 )
+var values_Wmf_MixMode = map[Wmf_MixMode]struct{}{1: {}, 2: {}}
+func (v Wmf_MixMode) isDefined() bool {
+	_, ok := values_Wmf_MixMode[v]
+	return ok
+}
 
 type Wmf_PolyFillMode int
 const (
 	Wmf_PolyFillMode__Alternate Wmf_PolyFillMode = 1
 	Wmf_PolyFillMode__Winding Wmf_PolyFillMode = 2
 )
+var values_Wmf_PolyFillMode = map[Wmf_PolyFillMode]struct{}{1: {}, 2: {}}
+func (v Wmf_PolyFillMode) isDefined() bool {
+	_, ok := values_Wmf_PolyFillMode[v]
+	return ok
+}
 type Wmf struct {
 	SpecialHeader *Wmf_SpecialHeader
 	Header *Wmf_Header
 	Records []*Wmf_Record
 	_io *kaitai.Stream
 	_root *Wmf
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewWmf() *Wmf {
 	return &Wmf{
 	}
 }
 
-func (this *Wmf) Read(io *kaitai.Stream, parent interface{}, root *Wmf) (err error) {
+func (this Wmf) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Wmf) Read(io *kaitai.Stream, parent kaitai.Struct, root *Wmf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -168,193 +192,51 @@ func (this *Wmf) Read(io *kaitai.Stream, parent interface{}, root *Wmf) (err err
 }
 
 /**
- * @see "section 2.3.5.31"
+ * @see "section 2.2.1.7"
  */
-type Wmf_ParamsSetwindoworg struct {
-	Y int16
-	X int16
+type Wmf_ColorRef struct {
+	Red uint8
+	Green uint8
+	Blue uint8
+	Reserved uint8
 	_io *kaitai.Stream
 	_root *Wmf
 	_parent *Wmf_Record
 }
-func NewWmf_ParamsSetwindoworg() *Wmf_ParamsSetwindoworg {
-	return &Wmf_ParamsSetwindoworg{
+func NewWmf_ColorRef() *Wmf_ColorRef {
+	return &Wmf_ColorRef{
 	}
 }
 
-func (this *Wmf_ParamsSetwindoworg) Read(io *kaitai.Stream, parent *Wmf_Record, root *Wmf) (err error) {
+func (this Wmf_ColorRef) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Wmf_ColorRef) Read(io *kaitai.Stream, parent *Wmf_Record, root *Wmf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp4, err := this._io.ReadS2le()
+	tmp4, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Y = int16(tmp4)
-	tmp5, err := this._io.ReadS2le()
+	this.Red = tmp4
+	tmp5, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.X = int16(tmp5)
-	return err
-}
-
-/**
- * Y coordinate of the window origin, in logical units.
- */
-
-/**
- * X coordinate of the window origin, in logical units.
- */
-
-/**
- * @see "section 2.3.5.15"
- */
-type Wmf_ParamsSetbkmode struct {
-	BkMode Wmf_MixMode
-	_io *kaitai.Stream
-	_root *Wmf
-	_parent *Wmf_Record
-}
-func NewWmf_ParamsSetbkmode() *Wmf_ParamsSetbkmode {
-	return &Wmf_ParamsSetbkmode{
-	}
-}
-
-func (this *Wmf_ParamsSetbkmode) Read(io *kaitai.Stream, parent *Wmf_Record, root *Wmf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp6, err := this._io.ReadU2le()
+	this.Green = tmp5
+	tmp6, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.BkMode = Wmf_MixMode(tmp6)
-	return err
-}
-
-/**
- * Defines current graphic context background mix mode.
- */
-
-/**
- * @see "section 2.2.1.12"
- */
-type Wmf_PointS struct {
-	X int16
-	Y int16
-	_io *kaitai.Stream
-	_root *Wmf
-	_parent interface{}
-}
-func NewWmf_PointS() *Wmf_PointS {
-	return &Wmf_PointS{
-	}
-}
-
-func (this *Wmf_PointS) Read(io *kaitai.Stream, parent interface{}, root *Wmf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp7, err := this._io.ReadS2le()
+	this.Blue = tmp6
+	tmp7, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.X = int16(tmp7)
-	tmp8, err := this._io.ReadS2le()
-	if err != nil {
-		return err
-	}
-	this.Y = int16(tmp8)
-	return err
-}
-
-/**
- * X coordinate of the point, in logical units.
- */
-
-/**
- * Y coordinate of the point, in logical units.
- */
-
-/**
- * @see "section 2.3.5.30"
- */
-type Wmf_ParamsSetwindowext struct {
-	Y int16
-	X int16
-	_io *kaitai.Stream
-	_root *Wmf
-	_parent *Wmf_Record
-}
-func NewWmf_ParamsSetwindowext() *Wmf_ParamsSetwindowext {
-	return &Wmf_ParamsSetwindowext{
-	}
-}
-
-func (this *Wmf_ParamsSetwindowext) Read(io *kaitai.Stream, parent *Wmf_Record, root *Wmf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp9, err := this._io.ReadS2le()
-	if err != nil {
-		return err
-	}
-	this.Y = int16(tmp9)
-	tmp10, err := this._io.ReadS2le()
-	if err != nil {
-		return err
-	}
-	this.X = int16(tmp10)
-	return err
-}
-
-/**
- * Vertical extent of the window in logical units.
- */
-
-/**
- * Horizontal extent of the window in logical units.
- */
-
-/**
- * @see "section 2.3.3.15 = params_polyline"
- */
-type Wmf_ParamsPolygon struct {
-	NumPoints int16
-	Points []*Wmf_PointS
-	_io *kaitai.Stream
-	_root *Wmf
-	_parent *Wmf_Record
-}
-func NewWmf_ParamsPolygon() *Wmf_ParamsPolygon {
-	return &Wmf_ParamsPolygon{
-	}
-}
-
-func (this *Wmf_ParamsPolygon) Read(io *kaitai.Stream, parent *Wmf_Record, root *Wmf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp11, err := this._io.ReadS2le()
-	if err != nil {
-		return err
-	}
-	this.NumPoints = int16(tmp11)
-	for i := 0; i < int(this.NumPoints); i++ {
-		_ = i
-		tmp12 := NewWmf_PointS()
-		err = tmp12.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Points = append(this.Points, tmp12)
-	}
+	this.Reserved = tmp7
 	return err
 }
 
@@ -363,6 +245,11 @@ const (
 	Wmf_Header_MetafileType__MemoryMetafile Wmf_Header_MetafileType = 1
 	Wmf_Header_MetafileType__DiskMetafile Wmf_Header_MetafileType = 2
 )
+var values_Wmf_Header_MetafileType = map[Wmf_Header_MetafileType]struct{}{1: {}, 2: {}}
+func (v Wmf_Header_MetafileType) isDefined() bool {
+	_, ok := values_Wmf_Header_MetafileType[v]
+	return ok
+}
 type Wmf_Header struct {
 	MetafileType Wmf_Header_MetafileType
 	HeaderSize uint16
@@ -380,155 +267,93 @@ func NewWmf_Header() *Wmf_Header {
 	}
 }
 
+func (this Wmf_Header) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Wmf_Header) Read(io *kaitai.Stream, parent *Wmf, root *Wmf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp13, err := this._io.ReadU2le()
+	tmp8, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.MetafileType = Wmf_Header_MetafileType(tmp13)
+	this.MetafileType = Wmf_Header_MetafileType(tmp8)
+	tmp9, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.HeaderSize = uint16(tmp9)
+	tmp10, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.Version = uint16(tmp10)
+	tmp11, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Size = uint32(tmp11)
+	tmp12, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.NumberOfObjects = uint16(tmp12)
+	tmp13, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.MaxRecord = uint32(tmp13)
 	tmp14, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.HeaderSize = uint16(tmp14)
-	tmp15, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.Version = uint16(tmp15)
-	tmp16, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Size = uint32(tmp16)
-	tmp17, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.NumberOfObjects = uint16(tmp17)
-	tmp18, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.MaxRecord = uint32(tmp18)
-	tmp19, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.NumberOfMembers = uint16(tmp19)
+	this.NumberOfMembers = uint16(tmp14)
 	return err
 }
 
 /**
- * @see "section 2.2.1.7"
+ * @see "section 2.3.3.15 = params_polyline"
  */
-type Wmf_ColorRef struct {
-	Red uint8
-	Green uint8
-	Blue uint8
-	Reserved uint8
+type Wmf_ParamsPolygon struct {
+	NumPoints int16
+	Points []*Wmf_PointS
 	_io *kaitai.Stream
 	_root *Wmf
 	_parent *Wmf_Record
 }
-func NewWmf_ColorRef() *Wmf_ColorRef {
-	return &Wmf_ColorRef{
+func NewWmf_ParamsPolygon() *Wmf_ParamsPolygon {
+	return &Wmf_ParamsPolygon{
 	}
 }
 
-func (this *Wmf_ColorRef) Read(io *kaitai.Stream, parent *Wmf_Record, root *Wmf) (err error) {
+func (this Wmf_ParamsPolygon) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Wmf_ParamsPolygon) Read(io *kaitai.Stream, parent *Wmf_Record, root *Wmf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp20, err := this._io.ReadU1()
+	tmp15, err := this._io.ReadS2le()
 	if err != nil {
 		return err
 	}
-	this.Red = tmp20
-	tmp21, err := this._io.ReadU1()
-	if err != nil {
-		return err
+	this.NumPoints = int16(tmp15)
+	for i := 0; i < int(this.NumPoints); i++ {
+		_ = i
+		tmp16 := NewWmf_PointS()
+		err = tmp16.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Points = append(this.Points, tmp16)
 	}
-	this.Green = tmp21
-	tmp22, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Blue = tmp22
-	tmp23, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Reserved = tmp23
 	return err
 }
-
-/**
- * @see "section 2.3.5.22"
- */
-type Wmf_ParamsSetrop2 struct {
-	DrawMode Wmf_BinRasterOp
-	_io *kaitai.Stream
-	_root *Wmf
-	_parent *Wmf_Record
-}
-func NewWmf_ParamsSetrop2() *Wmf_ParamsSetrop2 {
-	return &Wmf_ParamsSetrop2{
-	}
-}
-
-func (this *Wmf_ParamsSetrop2) Read(io *kaitai.Stream, parent *Wmf_Record, root *Wmf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp24, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.DrawMode = Wmf_BinRasterOp(tmp24)
-	return err
-}
-
-/**
- * Defines current foreground binary raster operation mixing mode.
- */
-
-/**
- * @see "section 2.3.5.20"
- */
-type Wmf_ParamsSetpolyfillmode struct {
-	PolyFillMode Wmf_PolyFillMode
-	_io *kaitai.Stream
-	_root *Wmf
-	_parent *Wmf_Record
-}
-func NewWmf_ParamsSetpolyfillmode() *Wmf_ParamsSetpolyfillmode {
-	return &Wmf_ParamsSetpolyfillmode{
-	}
-}
-
-func (this *Wmf_ParamsSetpolyfillmode) Read(io *kaitai.Stream, parent *Wmf_Record, root *Wmf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp25, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.PolyFillMode = Wmf_PolyFillMode(tmp25)
-	return err
-}
-
-/**
- * Defines current polygon fill mode.
- */
 
 /**
  * @see "section 2.3.3.14"
@@ -545,7 +370,247 @@ func NewWmf_ParamsPolyline() *Wmf_ParamsPolyline {
 	}
 }
 
+func (this Wmf_ParamsPolyline) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Wmf_ParamsPolyline) Read(io *kaitai.Stream, parent *Wmf_Record, root *Wmf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp17, err := this._io.ReadS2le()
+	if err != nil {
+		return err
+	}
+	this.NumPoints = int16(tmp17)
+	for i := 0; i < int(this.NumPoints); i++ {
+		_ = i
+		tmp18 := NewWmf_PointS()
+		err = tmp18.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Points = append(this.Points, tmp18)
+	}
+	return err
+}
+
+/**
+ * @see "section 2.3.5.15"
+ */
+type Wmf_ParamsSetbkmode struct {
+	BkMode Wmf_MixMode
+	_io *kaitai.Stream
+	_root *Wmf
+	_parent *Wmf_Record
+}
+func NewWmf_ParamsSetbkmode() *Wmf_ParamsSetbkmode {
+	return &Wmf_ParamsSetbkmode{
+	}
+}
+
+func (this Wmf_ParamsSetbkmode) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Wmf_ParamsSetbkmode) Read(io *kaitai.Stream, parent *Wmf_Record, root *Wmf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp19, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.BkMode = Wmf_MixMode(tmp19)
+	return err
+}
+
+/**
+ * Defines current graphic context background mix mode.
+ */
+
+/**
+ * @see "section 2.3.5.20"
+ */
+type Wmf_ParamsSetpolyfillmode struct {
+	PolyFillMode Wmf_PolyFillMode
+	_io *kaitai.Stream
+	_root *Wmf
+	_parent *Wmf_Record
+}
+func NewWmf_ParamsSetpolyfillmode() *Wmf_ParamsSetpolyfillmode {
+	return &Wmf_ParamsSetpolyfillmode{
+	}
+}
+
+func (this Wmf_ParamsSetpolyfillmode) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Wmf_ParamsSetpolyfillmode) Read(io *kaitai.Stream, parent *Wmf_Record, root *Wmf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp20, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.PolyFillMode = Wmf_PolyFillMode(tmp20)
+	return err
+}
+
+/**
+ * Defines current polygon fill mode.
+ */
+
+/**
+ * @see "section 2.3.5.22"
+ */
+type Wmf_ParamsSetrop2 struct {
+	DrawMode Wmf_BinRasterOp
+	_io *kaitai.Stream
+	_root *Wmf
+	_parent *Wmf_Record
+}
+func NewWmf_ParamsSetrop2() *Wmf_ParamsSetrop2 {
+	return &Wmf_ParamsSetrop2{
+	}
+}
+
+func (this Wmf_ParamsSetrop2) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Wmf_ParamsSetrop2) Read(io *kaitai.Stream, parent *Wmf_Record, root *Wmf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp21, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.DrawMode = Wmf_BinRasterOp(tmp21)
+	return err
+}
+
+/**
+ * Defines current foreground binary raster operation mixing mode.
+ */
+
+/**
+ * @see "section 2.3.5.30"
+ */
+type Wmf_ParamsSetwindowext struct {
+	Y int16
+	X int16
+	_io *kaitai.Stream
+	_root *Wmf
+	_parent *Wmf_Record
+}
+func NewWmf_ParamsSetwindowext() *Wmf_ParamsSetwindowext {
+	return &Wmf_ParamsSetwindowext{
+	}
+}
+
+func (this Wmf_ParamsSetwindowext) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Wmf_ParamsSetwindowext) Read(io *kaitai.Stream, parent *Wmf_Record, root *Wmf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp22, err := this._io.ReadS2le()
+	if err != nil {
+		return err
+	}
+	this.Y = int16(tmp22)
+	tmp23, err := this._io.ReadS2le()
+	if err != nil {
+		return err
+	}
+	this.X = int16(tmp23)
+	return err
+}
+
+/**
+ * Vertical extent of the window in logical units.
+ */
+
+/**
+ * Horizontal extent of the window in logical units.
+ */
+
+/**
+ * @see "section 2.3.5.31"
+ */
+type Wmf_ParamsSetwindoworg struct {
+	Y int16
+	X int16
+	_io *kaitai.Stream
+	_root *Wmf
+	_parent *Wmf_Record
+}
+func NewWmf_ParamsSetwindoworg() *Wmf_ParamsSetwindoworg {
+	return &Wmf_ParamsSetwindoworg{
+	}
+}
+
+func (this Wmf_ParamsSetwindoworg) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Wmf_ParamsSetwindoworg) Read(io *kaitai.Stream, parent *Wmf_Record, root *Wmf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp24, err := this._io.ReadS2le()
+	if err != nil {
+		return err
+	}
+	this.Y = int16(tmp24)
+	tmp25, err := this._io.ReadS2le()
+	if err != nil {
+		return err
+	}
+	this.X = int16(tmp25)
+	return err
+}
+
+/**
+ * Y coordinate of the window origin, in logical units.
+ */
+
+/**
+ * X coordinate of the window origin, in logical units.
+ */
+
+/**
+ * @see "section 2.2.1.12"
+ */
+type Wmf_PointS struct {
+	X int16
+	Y int16
+	_io *kaitai.Stream
+	_root *Wmf
+	_parent kaitai.Struct
+}
+func NewWmf_PointS() *Wmf_PointS {
+	return &Wmf_PointS{
+	}
+}
+
+func (this Wmf_PointS) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Wmf_PointS) Read(io *kaitai.Stream, parent kaitai.Struct, root *Wmf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -554,15 +619,175 @@ func (this *Wmf_ParamsPolyline) Read(io *kaitai.Stream, parent *Wmf_Record, root
 	if err != nil {
 		return err
 	}
-	this.NumPoints = int16(tmp26)
-	for i := 0; i < int(this.NumPoints); i++ {
-		_ = i
-		tmp27 := NewWmf_PointS()
-		err = tmp27.Read(this._io, this, this._root)
+	this.X = int16(tmp26)
+	tmp27, err := this._io.ReadS2le()
+	if err != nil {
+		return err
+	}
+	this.Y = int16(tmp27)
+	return err
+}
+
+/**
+ * X coordinate of the point, in logical units.
+ */
+
+/**
+ * Y coordinate of the point, in logical units.
+ */
+type Wmf_Record struct {
+	Size uint32
+	Function Wmf_Func
+	Params interface{}
+	_io *kaitai.Stream
+	_root *Wmf
+	_parent *Wmf
+	_raw_Params []byte
+}
+func NewWmf_Record() *Wmf_Record {
+	return &Wmf_Record{
+	}
+}
+
+func (this Wmf_Record) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Wmf_Record) Read(io *kaitai.Stream, parent *Wmf, root *Wmf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp28, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Size = uint32(tmp28)
+	tmp29, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.Function = Wmf_Func(tmp29)
+	switch (this.Function) {
+	case Wmf_Func__Polygon:
+		tmp30, err := this._io.ReadBytes(int((this.Size - 3) * 2))
 		if err != nil {
 			return err
 		}
-		this.Points = append(this.Points, tmp27)
+		tmp30 = tmp30
+		this._raw_Params = tmp30
+		_io__raw_Params := kaitai.NewStream(bytes.NewReader(this._raw_Params))
+		tmp31 := NewWmf_ParamsPolygon()
+		err = tmp31.Read(_io__raw_Params, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Params = tmp31
+	case Wmf_Func__Polyline:
+		tmp32, err := this._io.ReadBytes(int((this.Size - 3) * 2))
+		if err != nil {
+			return err
+		}
+		tmp32 = tmp32
+		this._raw_Params = tmp32
+		_io__raw_Params := kaitai.NewStream(bytes.NewReader(this._raw_Params))
+		tmp33 := NewWmf_ParamsPolyline()
+		err = tmp33.Read(_io__raw_Params, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Params = tmp33
+	case Wmf_Func__Setbkcolor:
+		tmp34, err := this._io.ReadBytes(int((this.Size - 3) * 2))
+		if err != nil {
+			return err
+		}
+		tmp34 = tmp34
+		this._raw_Params = tmp34
+		_io__raw_Params := kaitai.NewStream(bytes.NewReader(this._raw_Params))
+		tmp35 := NewWmf_ColorRef()
+		err = tmp35.Read(_io__raw_Params, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Params = tmp35
+	case Wmf_Func__Setbkmode:
+		tmp36, err := this._io.ReadBytes(int((this.Size - 3) * 2))
+		if err != nil {
+			return err
+		}
+		tmp36 = tmp36
+		this._raw_Params = tmp36
+		_io__raw_Params := kaitai.NewStream(bytes.NewReader(this._raw_Params))
+		tmp37 := NewWmf_ParamsSetbkmode()
+		err = tmp37.Read(_io__raw_Params, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Params = tmp37
+	case Wmf_Func__Setpolyfillmode:
+		tmp38, err := this._io.ReadBytes(int((this.Size - 3) * 2))
+		if err != nil {
+			return err
+		}
+		tmp38 = tmp38
+		this._raw_Params = tmp38
+		_io__raw_Params := kaitai.NewStream(bytes.NewReader(this._raw_Params))
+		tmp39 := NewWmf_ParamsSetpolyfillmode()
+		err = tmp39.Read(_io__raw_Params, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Params = tmp39
+	case Wmf_Func__Setrop2:
+		tmp40, err := this._io.ReadBytes(int((this.Size - 3) * 2))
+		if err != nil {
+			return err
+		}
+		tmp40 = tmp40
+		this._raw_Params = tmp40
+		_io__raw_Params := kaitai.NewStream(bytes.NewReader(this._raw_Params))
+		tmp41 := NewWmf_ParamsSetrop2()
+		err = tmp41.Read(_io__raw_Params, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Params = tmp41
+	case Wmf_Func__Setwindowext:
+		tmp42, err := this._io.ReadBytes(int((this.Size - 3) * 2))
+		if err != nil {
+			return err
+		}
+		tmp42 = tmp42
+		this._raw_Params = tmp42
+		_io__raw_Params := kaitai.NewStream(bytes.NewReader(this._raw_Params))
+		tmp43 := NewWmf_ParamsSetwindowext()
+		err = tmp43.Read(_io__raw_Params, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Params = tmp43
+	case Wmf_Func__Setwindoworg:
+		tmp44, err := this._io.ReadBytes(int((this.Size - 3) * 2))
+		if err != nil {
+			return err
+		}
+		tmp44 = tmp44
+		this._raw_Params = tmp44
+		_io__raw_Params := kaitai.NewStream(bytes.NewReader(this._raw_Params))
+		tmp45 := NewWmf_ParamsSetwindoworg()
+		err = tmp45.Read(_io__raw_Params, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Params = tmp45
+	default:
+		tmp46, err := this._io.ReadBytes(int((this.Size - 3) * 2))
+		if err != nil {
+			return err
+		}
+		tmp46 = tmp46
+		this._raw_Params = tmp46
 	}
 	return err
 }
@@ -585,219 +810,71 @@ func NewWmf_SpecialHeader() *Wmf_SpecialHeader {
 	}
 }
 
+func (this Wmf_SpecialHeader) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Wmf_SpecialHeader) Read(io *kaitai.Stream, parent *Wmf, root *Wmf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp28, err := this._io.ReadBytes(int(4))
+	tmp47, err := this._io.ReadBytes(int(4))
 	if err != nil {
 		return err
 	}
-	tmp28 = tmp28
-	this.Magic = tmp28
+	tmp47 = tmp47
+	this.Magic = tmp47
 	if !(bytes.Equal(this.Magic, []uint8{215, 205, 198, 154})) {
 		return kaitai.NewValidationNotEqualError([]uint8{215, 205, 198, 154}, this.Magic, this._io, "/types/special_header/seq/0")
 	}
-	tmp29, err := this._io.ReadBytes(int(2))
+	tmp48, err := this._io.ReadBytes(int(2))
 	if err != nil {
 		return err
 	}
-	tmp29 = tmp29
-	this.Handle = tmp29
+	tmp48 = tmp48
+	this.Handle = tmp48
 	if !(bytes.Equal(this.Handle, []uint8{0, 0})) {
 		return kaitai.NewValidationNotEqualError([]uint8{0, 0}, this.Handle, this._io, "/types/special_header/seq/1")
 	}
-	tmp30, err := this._io.ReadS2le()
+	tmp49, err := this._io.ReadS2le()
 	if err != nil {
 		return err
 	}
-	this.Left = int16(tmp30)
-	tmp31, err := this._io.ReadS2le()
+	this.Left = int16(tmp49)
+	tmp50, err := this._io.ReadS2le()
 	if err != nil {
 		return err
 	}
-	this.Top = int16(tmp31)
-	tmp32, err := this._io.ReadS2le()
+	this.Top = int16(tmp50)
+	tmp51, err := this._io.ReadS2le()
 	if err != nil {
 		return err
 	}
-	this.Right = int16(tmp32)
-	tmp33, err := this._io.ReadS2le()
+	this.Right = int16(tmp51)
+	tmp52, err := this._io.ReadS2le()
 	if err != nil {
 		return err
 	}
-	this.Bottom = int16(tmp33)
-	tmp34, err := this._io.ReadU2le()
+	this.Bottom = int16(tmp52)
+	tmp53, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.Inch = uint16(tmp34)
-	tmp35, err := this._io.ReadBytes(int(4))
+	this.Inch = uint16(tmp53)
+	tmp54, err := this._io.ReadBytes(int(4))
 	if err != nil {
 		return err
 	}
-	tmp35 = tmp35
-	this.Reserved = tmp35
+	tmp54 = tmp54
+	this.Reserved = tmp54
 	if !(bytes.Equal(this.Reserved, []uint8{0, 0, 0, 0})) {
 		return kaitai.NewValidationNotEqualError([]uint8{0, 0, 0, 0}, this.Reserved, this._io, "/types/special_header/seq/7")
 	}
-	tmp36, err := this._io.ReadU2le()
+	tmp55, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.Checksum = uint16(tmp36)
-	return err
-}
-type Wmf_Record struct {
-	Size uint32
-	Function Wmf_Func
-	Params interface{}
-	_io *kaitai.Stream
-	_root *Wmf
-	_parent *Wmf
-	_raw_Params []byte
-}
-func NewWmf_Record() *Wmf_Record {
-	return &Wmf_Record{
-	}
-}
-
-func (this *Wmf_Record) Read(io *kaitai.Stream, parent *Wmf, root *Wmf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp37, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Size = uint32(tmp37)
-	tmp38, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.Function = Wmf_Func(tmp38)
-	switch (this.Function) {
-	case Wmf_Func__Setbkmode:
-		tmp39, err := this._io.ReadBytes(int(((this.Size - 3) * 2)))
-		if err != nil {
-			return err
-		}
-		tmp39 = tmp39
-		this._raw_Params = tmp39
-		_io__raw_Params := kaitai.NewStream(bytes.NewReader(this._raw_Params))
-		tmp40 := NewWmf_ParamsSetbkmode()
-		err = tmp40.Read(_io__raw_Params, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Params = tmp40
-	case Wmf_Func__Polygon:
-		tmp41, err := this._io.ReadBytes(int(((this.Size - 3) * 2)))
-		if err != nil {
-			return err
-		}
-		tmp41 = tmp41
-		this._raw_Params = tmp41
-		_io__raw_Params := kaitai.NewStream(bytes.NewReader(this._raw_Params))
-		tmp42 := NewWmf_ParamsPolygon()
-		err = tmp42.Read(_io__raw_Params, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Params = tmp42
-	case Wmf_Func__Setbkcolor:
-		tmp43, err := this._io.ReadBytes(int(((this.Size - 3) * 2)))
-		if err != nil {
-			return err
-		}
-		tmp43 = tmp43
-		this._raw_Params = tmp43
-		_io__raw_Params := kaitai.NewStream(bytes.NewReader(this._raw_Params))
-		tmp44 := NewWmf_ColorRef()
-		err = tmp44.Read(_io__raw_Params, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Params = tmp44
-	case Wmf_Func__Setpolyfillmode:
-		tmp45, err := this._io.ReadBytes(int(((this.Size - 3) * 2)))
-		if err != nil {
-			return err
-		}
-		tmp45 = tmp45
-		this._raw_Params = tmp45
-		_io__raw_Params := kaitai.NewStream(bytes.NewReader(this._raw_Params))
-		tmp46 := NewWmf_ParamsSetpolyfillmode()
-		err = tmp46.Read(_io__raw_Params, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Params = tmp46
-	case Wmf_Func__Setwindoworg:
-		tmp47, err := this._io.ReadBytes(int(((this.Size - 3) * 2)))
-		if err != nil {
-			return err
-		}
-		tmp47 = tmp47
-		this._raw_Params = tmp47
-		_io__raw_Params := kaitai.NewStream(bytes.NewReader(this._raw_Params))
-		tmp48 := NewWmf_ParamsSetwindoworg()
-		err = tmp48.Read(_io__raw_Params, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Params = tmp48
-	case Wmf_Func__Setrop2:
-		tmp49, err := this._io.ReadBytes(int(((this.Size - 3) * 2)))
-		if err != nil {
-			return err
-		}
-		tmp49 = tmp49
-		this._raw_Params = tmp49
-		_io__raw_Params := kaitai.NewStream(bytes.NewReader(this._raw_Params))
-		tmp50 := NewWmf_ParamsSetrop2()
-		err = tmp50.Read(_io__raw_Params, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Params = tmp50
-	case Wmf_Func__Setwindowext:
-		tmp51, err := this._io.ReadBytes(int(((this.Size - 3) * 2)))
-		if err != nil {
-			return err
-		}
-		tmp51 = tmp51
-		this._raw_Params = tmp51
-		_io__raw_Params := kaitai.NewStream(bytes.NewReader(this._raw_Params))
-		tmp52 := NewWmf_ParamsSetwindowext()
-		err = tmp52.Read(_io__raw_Params, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Params = tmp52
-	case Wmf_Func__Polyline:
-		tmp53, err := this._io.ReadBytes(int(((this.Size - 3) * 2)))
-		if err != nil {
-			return err
-		}
-		tmp53 = tmp53
-		this._raw_Params = tmp53
-		_io__raw_Params := kaitai.NewStream(bytes.NewReader(this._raw_Params))
-		tmp54 := NewWmf_ParamsPolyline()
-		err = tmp54.Read(_io__raw_Params, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Params = tmp54
-	default:
-		tmp55, err := this._io.ReadBytes(int(((this.Size - 3) * 2)))
-		if err != nil {
-			return err
-		}
-		tmp55 = tmp55
-		this._raw_Params = tmp55
-	}
+	this.Checksum = uint16(tmp55)
 	return err
 }

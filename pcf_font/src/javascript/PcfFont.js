@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream', './BytesWithIo'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./BytesWithIo'));
+    define(['exports', 'kaitai-struct/KaitaiStream', './BytesWithIo'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'), require('./BytesWithIo'));
   } else {
-    root.PcfFont = factory(root.KaitaiStream, root.BytesWithIo);
+    factory(root.PcfFont || (root.PcfFont = {}), root.KaitaiStream, root.BytesWithIo || (root.BytesWithIo = {}));
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, BytesWithIo) {
+})(typeof self !== 'undefined' ? self : this, function (PcfFont_, KaitaiStream, BytesWithIo_) {
 /**
  * Portable Compiled Format (PCF) font is a bitmap font format
  * originating from X11 Window System. It matches BDF format (which is
@@ -57,8 +57,8 @@ var PcfFont = (function() {
   }
   PcfFont.prototype._read = function() {
     this.magic = this._io.readBytes(4);
-    if (!((KaitaiStream.byteArrayCompare(this.magic, [1, 102, 99, 112]) == 0))) {
-      throw new KaitaiStream.ValidationNotEqualError([1, 102, 99, 112], this.magic, this._io, "/seq/0");
+    if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([1, 102, 99, 112])) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([1, 102, 99, 112]), this.magic, this._io, "/seq/0");
     }
     this.numTables = this._io.readU4le();
     this.tables = [];
@@ -66,6 +66,43 @@ var PcfFont = (function() {
       this.tables.push(new Table(this._io, this, this._root));
     }
   }
+
+  /**
+   * Table format specifier, always 4 bytes. Original implementation treats
+   * it as always little-endian and makes liberal use of bitmasking to parse
+   * various parts of it.
+   * 
+   * TODO: this format specification recognizes endianness and bit
+   * order format bits, but it does not really takes any parsing
+   * decisions based on them.
+   * @see {@link https://fontforge.org/docs/techref/pcf-format.html#file-header|Source}
+   */
+
+  var Format = PcfFont.Format = (function() {
+    function Format(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Format.prototype._read = function() {
+      this.padding1 = this._io.readBitsIntBe(2);
+      this.scanUnitMask = this._io.readBitsIntBe(2);
+      this.isMostSignificantBitFirst = this._io.readBitsIntBe(1) != 0;
+      this.isBigEndian = this._io.readBitsIntBe(1) != 0;
+      this.glyphPadMask = this._io.readBitsIntBe(2);
+      this._io.alignToByte();
+      this.format = this._io.readU1();
+      this.padding = this._io.readU2le();
+    }
+
+    /**
+     * If set, then all integers in the table are treated as big-endian
+     */
+
+    return Format;
+  })();
 
   /**
    * Table offers a offset + length pointer to a particular
@@ -77,7 +114,7 @@ var PcfFont = (function() {
     function Table(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -89,33 +126,132 @@ var PcfFont = (function() {
     }
 
     /**
-     * Table containing scalable widths of characters.
-     * @see {@link https://fontforge.org/docs/techref/pcf-format.html#the-scalable-widths-table|Source}
+     * Table that allows mapping of character codes to glyphs present in the
+     * font. Supports 1-byte and 2-byte character codes.
+     * 
+     * Note that this mapping is agnostic to character encoding itself - it
+     * can represent ASCII, Unicode (ISO/IEC 10646), various single-byte
+     * national encodings, etc. If application cares about it, normally
+     * encoding will be specified in `properties` table, in the properties named
+     * `CHARSET_REGISTRY` / `CHARSET_ENCODING`.
+     * @see {@link https://fontforge.org/docs/techref/pcf-format.html#the-encoding-table|Source}
      */
 
-    var Swidths = Table.Swidths = (function() {
-      function Swidths(_io, _parent, _root) {
+    var BdfEncodings = Table.BdfEncodings = (function() {
+      function BdfEncodings(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
-      Swidths.prototype._read = function() {
+      BdfEncodings.prototype._read = function() {
         this.format = new Format(this._io, this, this._root);
-        this.numGlyphs = this._io.readU4le();
-        this.swidths = [];
-        for (var i = 0; i < this.numGlyphs; i++) {
-          this.swidths.push(this._io.readU4le());
+        this.minCharOrByte2 = this._io.readU2le();
+        this.maxCharOrByte2 = this._io.readU2le();
+        this.minByte1 = this._io.readU2le();
+        this.maxByte1 = this._io.readU2le();
+        this.defaultChar = this._io.readU2le();
+        this.glyphIndexes = [];
+        for (var i = 0; i < ((this.maxCharOrByte2 - this.minCharOrByte2) + 1) * ((this.maxByte1 - this.minByte1) + 1); i++) {
+          this.glyphIndexes.push(this._io.readU2le());
         }
       }
 
+      return BdfEncodings;
+    })();
+
+    /**
+     * Table containing uncompressed glyph bitmaps.
+     * @see {@link https://fontforge.org/docs/techref/pcf-format.html#the-bitmap-table|Source}
+     */
+
+    var Bitmaps = Table.Bitmaps = (function() {
+      function Bitmaps(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+
+        this._read();
+      }
+      Bitmaps.prototype._read = function() {
+        this.format = new Format(this._io, this, this._root);
+        this.numGlyphs = this._io.readU4le();
+        this.offsets = [];
+        for (var i = 0; i < this.numGlyphs; i++) {
+          this.offsets.push(this._io.readU4le());
+        }
+        this.bitmapSizes = [];
+        for (var i = 0; i < 4; i++) {
+          this.bitmapSizes.push(this._io.readU4le());
+        }
+      }
+
+      return Bitmaps;
+    })();
+
+    /**
+     * Table containing character names for every glyph.
+     * @see {@link https://fontforge.org/docs/techref/pcf-format.html#the-glyph-names-table|Source}
+     */
+
+    var GlyphNames = Table.GlyphNames = (function() {
+      function GlyphNames(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+
+        this._read();
+      }
+      GlyphNames.prototype._read = function() {
+        this.format = new Format(this._io, this, this._root);
+        this.numGlyphs = this._io.readU4le();
+        this.names = [];
+        for (var i = 0; i < this.numGlyphs; i++) {
+          this.names.push(new StringRef(this._io, this, this._root));
+        }
+        this.lenStrings = this._io.readU4le();
+        this._raw_strings = this._io.readBytes(this.lenStrings);
+        var _io__raw_strings = new KaitaiStream(this._raw_strings);
+        this.strings = new BytesWithIo_.BytesWithIo(_io__raw_strings, null, null);
+      }
+
+      var StringRef = GlyphNames.StringRef = (function() {
+        function StringRef(_io, _parent, _root) {
+          this._io = _io;
+          this._parent = _parent;
+          this._root = _root;
+
+          this._read();
+        }
+        StringRef.prototype._read = function() {
+          this.ofsString = this._io.readU4le();
+        }
+        Object.defineProperty(StringRef.prototype, 'value', {
+          get: function() {
+            if (this._m_value !== undefined)
+              return this._m_value;
+            var io = this._parent.strings._io;
+            var _pos = io.pos;
+            io.seek(this.ofsString);
+            this._m_value = KaitaiStream.bytesToStr(io.readBytesTerm(0, false, true, true), "UTF-8");
+            io.seek(_pos);
+            return this._m_value;
+          }
+        });
+
+        return StringRef;
+      })();
+
       /**
-       * The scalable width of a character is the width of the corresponding
-       * PostScript character in em-units (1/1000ths of an em).
+       * Glyph names are represented as string references in strings buffer.
        */
 
-      return Swidths;
+      /**
+       * Strings buffer which contains all glyph names.
+       */
+
+      return GlyphNames;
     })();
 
     /**
@@ -128,7 +264,7 @@ var PcfFont = (function() {
       function Properties(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -139,11 +275,11 @@ var PcfFont = (function() {
         for (var i = 0; i < this.numProps; i++) {
           this.props.push(new Prop(this._io, this, this._root));
         }
-        this.padding = this._io.readBytes(((this.numProps & 3) == 0 ? 0 : (4 - (this.numProps & 3))));
+        this.padding = this._io.readBytes(((this.numProps & 3) == 0 ? 0 : 4 - (this.numProps & 3)));
         this.lenStrings = this._io.readU4le();
         this._raw_strings = this._io.readBytes(this.lenStrings);
         var _io__raw_strings = new KaitaiStream(this._raw_strings);
-        this.strings = new BytesWithIo(_io__raw_strings, this, null);
+        this.strings = new BytesWithIo_.BytesWithIo(_io__raw_strings, null, null);
       }
 
       /**
@@ -160,7 +296,7 @@ var PcfFont = (function() {
         function Prop(_io, _parent, _root) {
           this._io = _io;
           this._parent = _parent;
-          this._root = _root || this;
+          this._root = _root;
 
           this._read();
         }
@@ -169,6 +305,20 @@ var PcfFont = (function() {
           this.isString = this._io.readU1();
           this.valueOrOfsValue = this._io.readU4le();
         }
+
+        /**
+         * Value of the property, if this is an integer value.
+         */
+        Object.defineProperty(Prop.prototype, 'intValue', {
+          get: function() {
+            if (this._m_intValue !== undefined)
+              return this._m_intValue;
+            if (this.isString == 0) {
+              this._m_intValue = this.valueOrOfsValue;
+            }
+            return this._m_intValue;
+          }
+        });
 
         /**
          * Name of the property addressed in the strings buffer.
@@ -206,20 +356,6 @@ var PcfFont = (function() {
         });
 
         /**
-         * Value of the property, if this is an integer value.
-         */
-        Object.defineProperty(Prop.prototype, 'intValue', {
-          get: function() {
-            if (this._m_intValue !== undefined)
-              return this._m_intValue;
-            if (this.isString == 0) {
-              this._m_intValue = this.valueOrOfsValue;
-            }
-            return this._m_intValue;
-          }
-        });
-
-        /**
          * Offset to name in the strings buffer.
          */
 
@@ -246,132 +382,33 @@ var PcfFont = (function() {
     })();
 
     /**
-     * Table that allows mapping of character codes to glyphs present in the
-     * font. Supports 1-byte and 2-byte character codes.
-     * 
-     * Note that this mapping is agnostic to character encoding itself - it
-     * can represent ASCII, Unicode (ISO/IEC 10646), various single-byte
-     * national encodings, etc. If application cares about it, normally
-     * encoding will be specified in `properties` table, in the properties named
-     * `CHARSET_REGISTRY` / `CHARSET_ENCODING`.
-     * @see {@link https://fontforge.org/docs/techref/pcf-format.html#the-encoding-table|Source}
+     * Table containing scalable widths of characters.
+     * @see {@link https://fontforge.org/docs/techref/pcf-format.html#the-scalable-widths-table|Source}
      */
 
-    var BdfEncodings = Table.BdfEncodings = (function() {
-      function BdfEncodings(_io, _parent, _root) {
+    var Swidths = Table.Swidths = (function() {
+      function Swidths(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
-      BdfEncodings.prototype._read = function() {
-        this.format = new Format(this._io, this, this._root);
-        this.minCharOrByte2 = this._io.readU2le();
-        this.maxCharOrByte2 = this._io.readU2le();
-        this.minByte1 = this._io.readU2le();
-        this.maxByte1 = this._io.readU2le();
-        this.defaultChar = this._io.readU2le();
-        this.glyphIndexes = [];
-        for (var i = 0; i < (((this.maxCharOrByte2 - this.minCharOrByte2) + 1) * ((this.maxByte1 - this.minByte1) + 1)); i++) {
-          this.glyphIndexes.push(this._io.readU2le());
-        }
-      }
-
-      return BdfEncodings;
-    })();
-
-    /**
-     * Table containing character names for every glyph.
-     * @see {@link https://fontforge.org/docs/techref/pcf-format.html#the-glyph-names-table|Source}
-     */
-
-    var GlyphNames = Table.GlyphNames = (function() {
-      function GlyphNames(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      GlyphNames.prototype._read = function() {
+      Swidths.prototype._read = function() {
         this.format = new Format(this._io, this, this._root);
         this.numGlyphs = this._io.readU4le();
-        this.names = [];
+        this.swidths = [];
         for (var i = 0; i < this.numGlyphs; i++) {
-          this.names.push(new StringRef(this._io, this, this._root));
+          this.swidths.push(this._io.readU4le());
         }
-        this.lenStrings = this._io.readU4le();
-        this._raw_strings = this._io.readBytes(this.lenStrings);
-        var _io__raw_strings = new KaitaiStream(this._raw_strings);
-        this.strings = new BytesWithIo(_io__raw_strings, this, null);
       }
-
-      var StringRef = GlyphNames.StringRef = (function() {
-        function StringRef(_io, _parent, _root) {
-          this._io = _io;
-          this._parent = _parent;
-          this._root = _root || this;
-
-          this._read();
-        }
-        StringRef.prototype._read = function() {
-          this.ofsString = this._io.readU4le();
-        }
-        Object.defineProperty(StringRef.prototype, 'value', {
-          get: function() {
-            if (this._m_value !== undefined)
-              return this._m_value;
-            var io = this._parent.strings._io;
-            var _pos = io.pos;
-            io.seek(this.ofsString);
-            this._m_value = KaitaiStream.bytesToStr(io.readBytesTerm(0, false, true, true), "UTF-8");
-            io.seek(_pos);
-            return this._m_value;
-          }
-        });
-
-        return StringRef;
-      })();
 
       /**
-       * Glyph names are represented as string references in strings buffer.
+       * The scalable width of a character is the width of the corresponding
+       * PostScript character in em-units (1/1000ths of an em).
        */
 
-      /**
-       * Strings buffer which contains all glyph names.
-       */
-
-      return GlyphNames;
-    })();
-
-    /**
-     * Table containing uncompressed glyph bitmaps.
-     * @see {@link https://fontforge.org/docs/techref/pcf-format.html#the-bitmap-table|Source}
-     */
-
-    var Bitmaps = Table.Bitmaps = (function() {
-      function Bitmaps(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      Bitmaps.prototype._read = function() {
-        this.format = new Format(this._io, this, this._root);
-        this.numGlyphs = this._io.readU4le();
-        this.offsets = [];
-        for (var i = 0; i < this.numGlyphs; i++) {
-          this.offsets.push(this._io.readU4le());
-        }
-        this.bitmapSizes = [];
-        for (var i = 0; i < 4; i++) {
-          this.bitmapSizes.push(this._io.readU4le());
-        }
-      }
-
-      return Bitmaps;
+      return Swidths;
     })();
     Object.defineProperty(Table.prototype, 'body', {
       get: function() {
@@ -380,30 +417,30 @@ var PcfFont = (function() {
         var _pos = this._io.pos;
         this._io.seek(this.ofsBody);
         switch (this.type) {
-        case PcfFont.Types.PROPERTIES:
-          this._raw__m_body = this._io.readBytes(this.lenBody);
-          var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
-          this._m_body = new Properties(_io__raw__m_body, this, this._root);
-          break;
         case PcfFont.Types.BDF_ENCODINGS:
           this._raw__m_body = this._io.readBytes(this.lenBody);
           var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
           this._m_body = new BdfEncodings(_io__raw__m_body, this, this._root);
           break;
-        case PcfFont.Types.SWIDTHS:
+        case PcfFont.Types.BITMAPS:
           this._raw__m_body = this._io.readBytes(this.lenBody);
           var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
-          this._m_body = new Swidths(_io__raw__m_body, this, this._root);
+          this._m_body = new Bitmaps(_io__raw__m_body, this, this._root);
           break;
         case PcfFont.Types.GLYPH_NAMES:
           this._raw__m_body = this._io.readBytes(this.lenBody);
           var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
           this._m_body = new GlyphNames(_io__raw__m_body, this, this._root);
           break;
-        case PcfFont.Types.BITMAPS:
+        case PcfFont.Types.PROPERTIES:
           this._raw__m_body = this._io.readBytes(this.lenBody);
           var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
-          this._m_body = new Bitmaps(_io__raw__m_body, this, this._root);
+          this._m_body = new Properties(_io__raw__m_body, this, this._root);
+          break;
+        case PcfFont.Types.SWIDTHS:
+          this._raw__m_body = this._io.readBytes(this.lenBody);
+          var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+          this._m_body = new Swidths(_io__raw__m_body, this, this._root);
           break;
         default:
           this._m_body = this._io.readBytes(this.lenBody);
@@ -417,44 +454,7 @@ var PcfFont = (function() {
     return Table;
   })();
 
-  /**
-   * Table format specifier, always 4 bytes. Original implementation treats
-   * it as always little-endian and makes liberal use of bitmasking to parse
-   * various parts of it.
-   * 
-   * TODO: this format specification recognizes endianness and bit
-   * order format bits, but it does not really takes any parsing
-   * decisions based on them.
-   * @see {@link https://fontforge.org/docs/techref/pcf-format.html#file-header|Source}
-   */
-
-  var Format = PcfFont.Format = (function() {
-    function Format(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Format.prototype._read = function() {
-      this.padding1 = this._io.readBitsIntBe(2);
-      this.scanUnitMask = this._io.readBitsIntBe(2);
-      this.isMostSignificantBitFirst = this._io.readBitsIntBe(1) != 0;
-      this.isBigEndian = this._io.readBitsIntBe(1) != 0;
-      this.glyphPadMask = this._io.readBitsIntBe(2);
-      this._io.alignToByte();
-      this.format = this._io.readU1();
-      this.padding = this._io.readU2le();
-    }
-
-    /**
-     * If set, then all integers in the table are treated as big-endian
-     */
-
-    return Format;
-  })();
-
   return PcfFont;
 })();
-return PcfFont;
-}));
+PcfFont_.PcfFont = PcfFont;
+});

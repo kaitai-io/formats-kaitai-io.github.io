@@ -2,16 +2,24 @@
 
 #include "systemd_journal.h"
 #include "kaitai/exceptions.h"
+const std::set<systemd_journal_t::state_t> systemd_journal_t::_values_state_t{
+    systemd_journal_t::STATE_OFFLINE,
+    systemd_journal_t::STATE_ONLINE,
+    systemd_journal_t::STATE_ARCHIVED,
+};
+bool systemd_journal_t::_is_defined_state_t(systemd_journal_t::state_t v) {
+    return systemd_journal_t::_values_state_t.find(v) != systemd_journal_t::_values_state_t.end();
+}
 
 systemd_journal_t::systemd_journal_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, systemd_journal_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     m_header = nullptr;
     m__io__raw_header = nullptr;
     m_objects = nullptr;
-    f_len_header = false;
     f_data_hash_table = false;
     f_field_hash_table = false;
+    f_len_header = false;
     _read();
 }
 
@@ -31,12 +39,115 @@ systemd_journal_t::~systemd_journal_t() {
 }
 
 void systemd_journal_t::_clean_up() {
-    if (f_len_header) {
-    }
     if (f_data_hash_table) {
     }
     if (f_field_hash_table) {
     }
+    if (f_len_header) {
+    }
+}
+
+systemd_journal_t::data_object_t::data_object_t(kaitai::kstream* p__io, systemd_journal_t::journal_object_t* p__parent, systemd_journal_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_entry = nullptr;
+    m_entry_array = nullptr;
+    m_head_field = nullptr;
+    m_next_hash = nullptr;
+    f_entry = false;
+    f_entry_array = false;
+    f_head_field = false;
+    f_next_hash = false;
+    _read();
+}
+
+void systemd_journal_t::data_object_t::_read() {
+    m_hash = m__io->read_u8le();
+    m_ofs_next_hash = m__io->read_u8le();
+    m_ofs_head_field = m__io->read_u8le();
+    m_ofs_entry = m__io->read_u8le();
+    m_ofs_entry_array = m__io->read_u8le();
+    m_num_entries = m__io->read_u8le();
+    m_payload = m__io->read_bytes_full();
+}
+
+systemd_journal_t::data_object_t::~data_object_t() {
+    _clean_up();
+}
+
+void systemd_journal_t::data_object_t::_clean_up() {
+    if (f_entry && !n_entry) {
+    }
+    if (f_entry_array && !n_entry_array) {
+    }
+    if (f_head_field && !n_head_field) {
+    }
+    if (f_next_hash && !n_next_hash) {
+    }
+}
+
+systemd_journal_t::journal_object_t* systemd_journal_t::data_object_t::entry() {
+    if (f_entry)
+        return m_entry.get();
+    f_entry = true;
+    n_entry = true;
+    if (ofs_entry() != 0) {
+        n_entry = false;
+        kaitai::kstream *io = _root()->_io();
+        std::streampos _pos = io->pos();
+        io->seek(ofs_entry());
+        m_entry = std::unique_ptr<journal_object_t>(new journal_object_t(io, this, m__root));
+        io->seek(_pos);
+    }
+    return m_entry.get();
+}
+
+systemd_journal_t::journal_object_t* systemd_journal_t::data_object_t::entry_array() {
+    if (f_entry_array)
+        return m_entry_array.get();
+    f_entry_array = true;
+    n_entry_array = true;
+    if (ofs_entry_array() != 0) {
+        n_entry_array = false;
+        kaitai::kstream *io = _root()->_io();
+        std::streampos _pos = io->pos();
+        io->seek(ofs_entry_array());
+        m_entry_array = std::unique_ptr<journal_object_t>(new journal_object_t(io, this, m__root));
+        io->seek(_pos);
+    }
+    return m_entry_array.get();
+}
+
+systemd_journal_t::journal_object_t* systemd_journal_t::data_object_t::head_field() {
+    if (f_head_field)
+        return m_head_field.get();
+    f_head_field = true;
+    n_head_field = true;
+    if (ofs_head_field() != 0) {
+        n_head_field = false;
+        kaitai::kstream *io = _root()->_io();
+        std::streampos _pos = io->pos();
+        io->seek(ofs_head_field());
+        m_head_field = std::unique_ptr<journal_object_t>(new journal_object_t(io, this, m__root));
+        io->seek(_pos);
+    }
+    return m_head_field.get();
+}
+
+systemd_journal_t::journal_object_t* systemd_journal_t::data_object_t::next_hash() {
+    if (f_next_hash)
+        return m_next_hash.get();
+    f_next_hash = true;
+    n_next_hash = true;
+    if (ofs_next_hash() != 0) {
+        n_next_hash = false;
+        kaitai::kstream *io = _root()->_io();
+        std::streampos _pos = io->pos();
+        io->seek(ofs_next_hash());
+        m_next_hash = std::unique_ptr<journal_object_t>(new journal_object_t(io, this, m__root));
+        io->seek(_pos);
+    }
+    return m_next_hash.get();
 }
 
 systemd_journal_t::header_t::header_t(kaitai::kstream* p__io, systemd_journal_t* p__parent, systemd_journal_t* p__root) : kaitai::kstruct(p__io) {
@@ -47,8 +158,8 @@ systemd_journal_t::header_t::header_t(kaitai::kstream* p__io, systemd_journal_t*
 
 void systemd_journal_t::header_t::_read() {
     m_signature = m__io->read_bytes(8);
-    if (!(signature() == std::string("\x4C\x50\x4B\x53\x48\x48\x52\x48", 8))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\x4C\x50\x4B\x53\x48\x48\x52\x48", 8), signature(), _io(), std::string("/types/header/seq/0"));
+    if (!(m_signature == std::string("\x4C\x50\x4B\x53\x48\x48\x52\x48", 8))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\x4C\x50\x4B\x53\x48\x48\x52\x48", 8), m_signature, m__io, std::string("/types/header/seq/0"));
     }
     m_compatible_flags = m__io->read_u4le();
     m_incompatible_flags = m__io->read_u4le();
@@ -109,6 +220,19 @@ void systemd_journal_t::header_t::_clean_up() {
     if (!n_num_entry_arrays) {
     }
 }
+const std::set<systemd_journal_t::journal_object_t::object_types_t> systemd_journal_t::journal_object_t::_values_object_types_t{
+    systemd_journal_t::journal_object_t::OBJECT_TYPES_UNUSED,
+    systemd_journal_t::journal_object_t::OBJECT_TYPES_DATA,
+    systemd_journal_t::journal_object_t::OBJECT_TYPES_FIELD,
+    systemd_journal_t::journal_object_t::OBJECT_TYPES_ENTRY,
+    systemd_journal_t::journal_object_t::OBJECT_TYPES_DATA_HASH_TABLE,
+    systemd_journal_t::journal_object_t::OBJECT_TYPES_FIELD_HASH_TABLE,
+    systemd_journal_t::journal_object_t::OBJECT_TYPES_ENTRY_ARRAY,
+    systemd_journal_t::journal_object_t::OBJECT_TYPES_TAG,
+};
+bool systemd_journal_t::journal_object_t::_is_defined_object_types_t(systemd_journal_t::journal_object_t::object_types_t v) {
+    return systemd_journal_t::journal_object_t::_values_object_types_t.find(v) != systemd_journal_t::journal_object_t::_values_object_types_t.end();
+}
 
 systemd_journal_t::journal_object_t::journal_object_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, systemd_journal_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
@@ -118,7 +242,7 @@ systemd_journal_t::journal_object_t::journal_object_t(kaitai::kstream* p__io, ka
 }
 
 void systemd_journal_t::journal_object_t::_read() {
-    m_padding = m__io->read_bytes(kaitai::kstream::mod((8 - _io()->pos()), 8));
+    m_padding = m__io->read_bytes(kaitai::kstream::mod(8 - _io()->pos(), 8));
     m_object_type = static_cast<systemd_journal_t::journal_object_t::object_types_t>(m__io->read_u1());
     m_flags = m__io->read_u1();
     m_reserved = m__io->read_bytes(6);
@@ -127,13 +251,13 @@ void systemd_journal_t::journal_object_t::_read() {
     switch (object_type()) {
     case systemd_journal_t::journal_object_t::OBJECT_TYPES_DATA: {
         n_payload = false;
-        m__raw_payload = m__io->read_bytes((len_object() - 16));
+        m__raw_payload = m__io->read_bytes(len_object() - 16);
         m__io__raw_payload = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_payload));
         m_payload = std::unique_ptr<data_object_t>(new data_object_t(m__io__raw_payload.get(), this, m__root));
         break;
     }
     default: {
-        m__raw_payload = m__io->read_bytes((len_object() - 16));
+        m__raw_payload = m__io->read_bytes(len_object() - 16);
         break;
     }
     }
@@ -148,138 +272,35 @@ void systemd_journal_t::journal_object_t::_clean_up() {
     }
 }
 
-systemd_journal_t::data_object_t::data_object_t(kaitai::kstream* p__io, systemd_journal_t::journal_object_t* p__parent, systemd_journal_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    m_next_hash = nullptr;
-    m_head_field = nullptr;
-    m_entry = nullptr;
-    m_entry_array = nullptr;
-    f_next_hash = false;
-    f_head_field = false;
-    f_entry = false;
-    f_entry_array = false;
-    _read();
-}
-
-void systemd_journal_t::data_object_t::_read() {
-    m_hash = m__io->read_u8le();
-    m_ofs_next_hash = m__io->read_u8le();
-    m_ofs_head_field = m__io->read_u8le();
-    m_ofs_entry = m__io->read_u8le();
-    m_ofs_entry_array = m__io->read_u8le();
-    m_num_entries = m__io->read_u8le();
-    m_payload = m__io->read_bytes_full();
-}
-
-systemd_journal_t::data_object_t::~data_object_t() {
-    _clean_up();
-}
-
-void systemd_journal_t::data_object_t::_clean_up() {
-    if (f_next_hash && !n_next_hash) {
-    }
-    if (f_head_field && !n_head_field) {
-    }
-    if (f_entry && !n_entry) {
-    }
-    if (f_entry_array && !n_entry_array) {
-    }
-}
-
-systemd_journal_t::journal_object_t* systemd_journal_t::data_object_t::next_hash() {
-    if (f_next_hash)
-        return m_next_hash.get();
-    n_next_hash = true;
-    if (ofs_next_hash() != 0) {
-        n_next_hash = false;
-        kaitai::kstream *io = _root()->_io();
-        std::streampos _pos = io->pos();
-        io->seek(ofs_next_hash());
-        m_next_hash = std::unique_ptr<journal_object_t>(new journal_object_t(io, this, m__root));
-        io->seek(_pos);
-        f_next_hash = true;
-    }
-    return m_next_hash.get();
-}
-
-systemd_journal_t::journal_object_t* systemd_journal_t::data_object_t::head_field() {
-    if (f_head_field)
-        return m_head_field.get();
-    n_head_field = true;
-    if (ofs_head_field() != 0) {
-        n_head_field = false;
-        kaitai::kstream *io = _root()->_io();
-        std::streampos _pos = io->pos();
-        io->seek(ofs_head_field());
-        m_head_field = std::unique_ptr<journal_object_t>(new journal_object_t(io, this, m__root));
-        io->seek(_pos);
-        f_head_field = true;
-    }
-    return m_head_field.get();
-}
-
-systemd_journal_t::journal_object_t* systemd_journal_t::data_object_t::entry() {
-    if (f_entry)
-        return m_entry.get();
-    n_entry = true;
-    if (ofs_entry() != 0) {
-        n_entry = false;
-        kaitai::kstream *io = _root()->_io();
-        std::streampos _pos = io->pos();
-        io->seek(ofs_entry());
-        m_entry = std::unique_ptr<journal_object_t>(new journal_object_t(io, this, m__root));
-        io->seek(_pos);
-        f_entry = true;
-    }
-    return m_entry.get();
-}
-
-systemd_journal_t::journal_object_t* systemd_journal_t::data_object_t::entry_array() {
-    if (f_entry_array)
-        return m_entry_array.get();
-    n_entry_array = true;
-    if (ofs_entry_array() != 0) {
-        n_entry_array = false;
-        kaitai::kstream *io = _root()->_io();
-        std::streampos _pos = io->pos();
-        io->seek(ofs_entry_array());
-        m_entry_array = std::unique_ptr<journal_object_t>(new journal_object_t(io, this, m__root));
-        io->seek(_pos);
-        f_entry_array = true;
-    }
-    return m_entry_array.get();
-}
-
-uint64_t systemd_journal_t::len_header() {
-    if (f_len_header)
-        return m_len_header;
-    std::streampos _pos = m__io->pos();
-    m__io->seek(88);
-    m_len_header = m__io->read_u8le();
-    m__io->seek(_pos);
-    f_len_header = true;
-    return m_len_header;
-}
-
 std::string systemd_journal_t::data_hash_table() {
     if (f_data_hash_table)
         return m_data_hash_table;
+    f_data_hash_table = true;
     std::streampos _pos = m__io->pos();
     m__io->seek(header()->ofs_data_hash_table());
     m_data_hash_table = m__io->read_bytes(header()->len_data_hash_table());
     m__io->seek(_pos);
-    f_data_hash_table = true;
     return m_data_hash_table;
 }
 
 std::string systemd_journal_t::field_hash_table() {
     if (f_field_hash_table)
         return m_field_hash_table;
+    f_field_hash_table = true;
     std::streampos _pos = m__io->pos();
     m__io->seek(header()->ofs_field_hash_table());
     m_field_hash_table = m__io->read_bytes(header()->len_field_hash_table());
     m__io->seek(_pos);
-    f_field_hash_table = true;
     return m_field_hash_table;
+}
+
+uint64_t systemd_journal_t::len_header() {
+    if (f_len_header)
+        return m_len_header;
+    f_len_header = true;
+    std::streampos _pos = m__io->pos();
+    m__io->seek(88);
+    m_len_header = m__io->read_u8le();
+    m__io->seek(_pos);
+    return m_len_header;
 }

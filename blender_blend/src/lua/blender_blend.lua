@@ -24,14 +24,14 @@ local utils = require("utils")
 -- a machine-readable schema of all other structures used in this file.
 BlenderBlend = class.class(KaitaiStruct)
 
-BlenderBlend.PtrSize = enum.Enum {
-  bits_64 = 45,
-  bits_32 = 95,
-}
-
 BlenderBlend.Endian = enum.Enum {
   be = 86,
   le = 118,
+}
+
+BlenderBlend.PtrSize = enum.Enum {
+  bits_64 = 45,
+  bits_32 = 95,
 }
 
 function BlenderBlend:_init(io, parent, root)
@@ -63,6 +63,109 @@ end
 
 
 -- 
+-- DNA1, also known as "Structure DNA", is a special block in
+-- .blend file, which contains machine-readable specifications of
+-- all other structures used in this .blend file.
+-- 
+-- Effectively, this block contains:
+-- 
+-- * a sequence of "names" (strings which represent field names)
+-- * a sequence of "types" (strings which represent type name)
+-- * a sequence of "type lengths"
+-- * a sequence of "structs" (which describe contents of every
+--   structure, referring to types and names by index)
+-- See also: Source (https://archive.blender.org/wiki/index.php/Dev:Source/Architecture/File_Format/#Structure_DNA)
+BlenderBlend.Dna1Body = class.class(KaitaiStruct)
+
+function BlenderBlend.Dna1Body:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function BlenderBlend.Dna1Body:_read()
+  self.id = self._io:read_bytes(4)
+  if not(self.id == "\083\068\078\065") then
+    error("not equal, expected " .. "\083\068\078\065" .. ", but got " .. self.id)
+  end
+  self.name_magic = self._io:read_bytes(4)
+  if not(self.name_magic == "\078\065\077\069") then
+    error("not equal, expected " .. "\078\065\077\069" .. ", but got " .. self.name_magic)
+  end
+  self.num_names = self._io:read_u4le()
+  self.names = {}
+  for i = 0, self.num_names - 1 do
+    self.names[i + 1] = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "UTF-8")
+  end
+  self.padding_1 = self._io:read_bytes((4 - self._io:pos()) % 4)
+  self.type_magic = self._io:read_bytes(4)
+  if not(self.type_magic == "\084\089\080\069") then
+    error("not equal, expected " .. "\084\089\080\069" .. ", but got " .. self.type_magic)
+  end
+  self.num_types = self._io:read_u4le()
+  self.types = {}
+  for i = 0, self.num_types - 1 do
+    self.types[i + 1] = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "UTF-8")
+  end
+  self.padding_2 = self._io:read_bytes((4 - self._io:pos()) % 4)
+  self.tlen_magic = self._io:read_bytes(4)
+  if not(self.tlen_magic == "\084\076\069\078") then
+    error("not equal, expected " .. "\084\076\069\078" .. ", but got " .. self.tlen_magic)
+  end
+  self.lengths = {}
+  for i = 0, self.num_types - 1 do
+    self.lengths[i + 1] = self._io:read_u2le()
+  end
+  self.padding_3 = self._io:read_bytes((4 - self._io:pos()) % 4)
+  self.strc_magic = self._io:read_bytes(4)
+  if not(self.strc_magic == "\083\084\082\067") then
+    error("not equal, expected " .. "\083\084\082\067" .. ", but got " .. self.strc_magic)
+  end
+  self.num_structs = self._io:read_u4le()
+  self.structs = {}
+  for i = 0, self.num_structs - 1 do
+    self.structs[i + 1] = BlenderBlend.DnaStruct(self._io, self, self._root)
+  end
+end
+
+
+BlenderBlend.DnaField = class.class(KaitaiStruct)
+
+function BlenderBlend.DnaField:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function BlenderBlend.DnaField:_read()
+  self.idx_type = self._io:read_u2le()
+  self.idx_name = self._io:read_u2le()
+end
+
+BlenderBlend.DnaField.property.name = {}
+function BlenderBlend.DnaField.property.name:get()
+  if self._m_name ~= nil then
+    return self._m_name
+  end
+
+  self._m_name = self._parent._parent.names[self.idx_name + 1]
+  return self._m_name
+end
+
+BlenderBlend.DnaField.property.type = {}
+function BlenderBlend.DnaField.property.type:get()
+  if self._m_type ~= nil then
+    return self._m_type
+  end
+
+  self._m_type = self._parent._parent.types[self.idx_type + 1]
+  return self._m_type
+end
+
+
+-- 
 -- DNA struct contains a `type` (type name), which is specified as
 -- an index in types table, and sequence of fields.
 BlenderBlend.DnaStruct = class.class(KaitaiStruct)
@@ -70,7 +173,7 @@ BlenderBlend.DnaStruct = class.class(KaitaiStruct)
 function BlenderBlend.DnaStruct:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -99,7 +202,7 @@ BlenderBlend.FileBlock = class.class(KaitaiStruct)
 function BlenderBlend.FileBlock:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -142,87 +245,19 @@ end
 -- 
 -- Number of structure located in this file-block.
 
--- 
--- DNA1, also known as "Structure DNA", is a special block in
--- .blend file, which contains machine-readable specifications of
--- all other structures used in this .blend file.
--- 
--- Effectively, this block contains:
--- 
--- * a sequence of "names" (strings which represent field names)
--- * a sequence of "types" (strings which represent type name)
--- * a sequence of "type lengths"
--- * a sequence of "structs" (which describe contents of every
---   structure, referring to types and names by index)
--- See also: Source (https://archive.blender.org/wiki/index.php/Dev:Source/Architecture/File_Format/#Structure_DNA)
-BlenderBlend.Dna1Body = class.class(KaitaiStruct)
-
-function BlenderBlend.Dna1Body:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function BlenderBlend.Dna1Body:_read()
-  self.id = self._io:read_bytes(4)
-  if not(self.id == "\083\068\078\065") then
-    error("not equal, expected " ..  "\083\068\078\065" .. ", but got " .. self.id)
-  end
-  self.name_magic = self._io:read_bytes(4)
-  if not(self.name_magic == "\078\065\077\069") then
-    error("not equal, expected " ..  "\078\065\077\069" .. ", but got " .. self.name_magic)
-  end
-  self.num_names = self._io:read_u4le()
-  self.names = {}
-  for i = 0, self.num_names - 1 do
-    self.names[i + 1] = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "UTF-8")
-  end
-  self.padding_1 = self._io:read_bytes(((4 - self._io:pos()) % 4))
-  self.type_magic = self._io:read_bytes(4)
-  if not(self.type_magic == "\084\089\080\069") then
-    error("not equal, expected " ..  "\084\089\080\069" .. ", but got " .. self.type_magic)
-  end
-  self.num_types = self._io:read_u4le()
-  self.types = {}
-  for i = 0, self.num_types - 1 do
-    self.types[i + 1] = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "UTF-8")
-  end
-  self.padding_2 = self._io:read_bytes(((4 - self._io:pos()) % 4))
-  self.tlen_magic = self._io:read_bytes(4)
-  if not(self.tlen_magic == "\084\076\069\078") then
-    error("not equal, expected " ..  "\084\076\069\078" .. ", but got " .. self.tlen_magic)
-  end
-  self.lengths = {}
-  for i = 0, self.num_types - 1 do
-    self.lengths[i + 1] = self._io:read_u2le()
-  end
-  self.padding_3 = self._io:read_bytes(((4 - self._io:pos()) % 4))
-  self.strc_magic = self._io:read_bytes(4)
-  if not(self.strc_magic == "\083\084\082\067") then
-    error("not equal, expected " ..  "\083\084\082\067" .. ", but got " .. self.strc_magic)
-  end
-  self.num_structs = self._io:read_u4le()
-  self.structs = {}
-  for i = 0, self.num_structs - 1 do
-    self.structs[i + 1] = BlenderBlend.DnaStruct(self._io, self, self._root)
-  end
-end
-
-
 BlenderBlend.Header = class.class(KaitaiStruct)
 
 function BlenderBlend.Header:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function BlenderBlend.Header:_read()
   self.magic = self._io:read_bytes(7)
   if not(self.magic == "\066\076\069\078\068\069\082") then
-    error("not equal, expected " ..  "\066\076\069\078\068\069\082" .. ", but got " .. self.magic)
+    error("not equal, expected " .. "\066\076\069\078\068\069\082" .. ", but got " .. self.magic)
   end
   self.ptr_size_id = BlenderBlend.PtrSize(self._io:read_u1())
   self.endian = BlenderBlend.Endian(self._io:read_u1())
@@ -247,39 +282,4 @@ end
 -- Type of byte ordering used.
 -- 
 -- Blender version used to save this file.
-
-BlenderBlend.DnaField = class.class(KaitaiStruct)
-
-function BlenderBlend.DnaField:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function BlenderBlend.DnaField:_read()
-  self.idx_type = self._io:read_u2le()
-  self.idx_name = self._io:read_u2le()
-end
-
-BlenderBlend.DnaField.property.type = {}
-function BlenderBlend.DnaField.property.type:get()
-  if self._m_type ~= nil then
-    return self._m_type
-  end
-
-  self._m_type = self._parent._parent.types[self.idx_type + 1]
-  return self._m_type
-end
-
-BlenderBlend.DnaField.property.name = {}
-function BlenderBlend.DnaField.property.name:get()
-  if self._m_name ~= nil then
-    return self._m_name
-  end
-
-  self._m_name = self._parent._parent.names[self.idx_name + 1]
-  return self._m_name
-end
-
 

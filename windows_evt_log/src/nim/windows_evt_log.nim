@@ -6,6 +6,13 @@ type
     `header`*: WindowsEvtLog_Header
     `records`*: seq[WindowsEvtLog_Record]
     `parent`*: KaitaiStruct
+  WindowsEvtLog_CursorRecordBody* = ref object of KaitaiStruct
+    `magic`*: seq[byte]
+    `ofsFirstRecord`*: uint32
+    `ofsNextRecord`*: uint32
+    `idxNextRecord`*: uint32
+    `idxFirstRecord`*: uint32
+    `parent`*: WindowsEvtLog_Record
   WindowsEvtLog_Header* = ref object of KaitaiStruct
     `lenHeader`*: uint32
     `magic`*: seq[byte]
@@ -49,33 +56,26 @@ type
     `lenData`*: uint32
     `ofsData`*: uint32
     `parent`*: WindowsEvtLog_Record
-    `userSidInst`: seq[byte]
-    `userSidInstFlag`: bool
     `dataInst`: seq[byte]
     `dataInstFlag`: bool
+    `userSidInst`: seq[byte]
+    `userSidInstFlag`: bool
   WindowsEvtLog_RecordBody_EventTypes* = enum
     error = 1
     audit_failure = 2
     audit_success = 3
     info = 4
     warning = 5
-  WindowsEvtLog_CursorRecordBody* = ref object of KaitaiStruct
-    `magic`*: seq[byte]
-    `ofsFirstRecord`*: uint32
-    `ofsNextRecord`*: uint32
-    `idxNextRecord`*: uint32
-    `idxFirstRecord`*: uint32
-    `parent`*: WindowsEvtLog_Record
 
 proc read*(_: typedesc[WindowsEvtLog], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): WindowsEvtLog
+proc read*(_: typedesc[WindowsEvtLog_CursorRecordBody], io: KaitaiStream, root: KaitaiStruct, parent: WindowsEvtLog_Record): WindowsEvtLog_CursorRecordBody
 proc read*(_: typedesc[WindowsEvtLog_Header], io: KaitaiStream, root: KaitaiStruct, parent: WindowsEvtLog): WindowsEvtLog_Header
 proc read*(_: typedesc[WindowsEvtLog_Header_Flags], io: KaitaiStream, root: KaitaiStruct, parent: WindowsEvtLog_Header): WindowsEvtLog_Header_Flags
 proc read*(_: typedesc[WindowsEvtLog_Record], io: KaitaiStream, root: KaitaiStruct, parent: WindowsEvtLog): WindowsEvtLog_Record
 proc read*(_: typedesc[WindowsEvtLog_RecordBody], io: KaitaiStream, root: KaitaiStruct, parent: WindowsEvtLog_Record): WindowsEvtLog_RecordBody
-proc read*(_: typedesc[WindowsEvtLog_CursorRecordBody], io: KaitaiStream, root: KaitaiStruct, parent: WindowsEvtLog_Record): WindowsEvtLog_CursorRecordBody
 
-proc userSid*(this: WindowsEvtLog_RecordBody): seq[byte]
 proc data*(this: WindowsEvtLog_RecordBody): seq[byte]
+proc userSid*(this: WindowsEvtLog_RecordBody): seq[byte]
 
 
 ##[
@@ -122,6 +122,32 @@ proc read*(_: typedesc[WindowsEvtLog], io: KaitaiStream, root: KaitaiStruct, par
 
 proc fromFile*(_: typedesc[WindowsEvtLog], filename: string): WindowsEvtLog =
   WindowsEvtLog.read(newKaitaiFileStream(filename), nil, nil)
+
+
+##[
+@see <a href="https://forensics.wiki/windows_event_log_(evt)/#cursor-record">Source</a>
+]##
+proc read*(_: typedesc[WindowsEvtLog_CursorRecordBody], io: KaitaiStream, root: KaitaiStruct, parent: WindowsEvtLog_Record): WindowsEvtLog_CursorRecordBody =
+  template this: untyped = result
+  this = new(WindowsEvtLog_CursorRecordBody)
+  let root = if root == nil: cast[WindowsEvtLog](this) else: cast[WindowsEvtLog](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let magicExpr = this.io.readBytes(int(12))
+  this.magic = magicExpr
+  let ofsFirstRecordExpr = this.io.readU4le()
+  this.ofsFirstRecord = ofsFirstRecordExpr
+  let ofsNextRecordExpr = this.io.readU4le()
+  this.ofsNextRecord = ofsNextRecordExpr
+  let idxNextRecordExpr = this.io.readU4le()
+  this.idxNextRecord = idxNextRecordExpr
+  let idxFirstRecordExpr = this.io.readU4le()
+  this.idxFirstRecord = idxFirstRecordExpr
+
+proc fromFile*(_: typedesc[WindowsEvtLog_CursorRecordBody], filename: string): WindowsEvtLog_CursorRecordBody =
+  WindowsEvtLog_CursorRecordBody.read(newKaitaiFileStream(filename), nil, nil)
 
 
 ##[
@@ -270,19 +296,19 @@ size is specified in a way that it won't include a 8-byte
   block:
     let on = this.type
     if on == 1699505740:
-      let rawBodyExpr = this.io.readBytes(int((this.lenRecord - 12)))
+      let rawBodyExpr = this.io.readBytes(int(this.lenRecord - 12))
       this.rawBody = rawBodyExpr
       let rawBodyIo = newKaitaiStream(rawBodyExpr)
       let bodyExpr = WindowsEvtLog_RecordBody.read(rawBodyIo, this.root, this)
       this.body = bodyExpr
     elif on == 286331153:
-      let rawBodyExpr = this.io.readBytes(int((this.lenRecord - 12)))
+      let rawBodyExpr = this.io.readBytes(int(this.lenRecord - 12))
       this.rawBody = rawBodyExpr
       let rawBodyIo = newKaitaiStream(rawBodyExpr)
       let bodyExpr = WindowsEvtLog_CursorRecordBody.read(rawBodyIo, this.root, this)
       this.body = bodyExpr
     else:
-      let bodyExpr = this.io.readBytes(int((this.lenRecord - 12)))
+      let bodyExpr = this.io.readBytes(int(this.lenRecord - 12))
       this.body = bodyExpr
 
   ##[
@@ -368,54 +394,28 @@ source of events / event type.
   let ofsDataExpr = this.io.readU4le()
   this.ofsData = ofsDataExpr
 
-proc userSid(this: WindowsEvtLog_RecordBody): seq[byte] = 
-  if this.userSidInstFlag:
-    return this.userSidInst
-  let pos = this.io.pos()
-  this.io.seek(int((this.ofsUserSid - 8)))
-  let userSidInstExpr = this.io.readBytes(int(this.lenUserSid))
-  this.userSidInst = userSidInstExpr
-  this.io.seek(pos)
-  this.userSidInstFlag = true
-  return this.userSidInst
-
 proc data(this: WindowsEvtLog_RecordBody): seq[byte] = 
   if this.dataInstFlag:
     return this.dataInst
   let pos = this.io.pos()
-  this.io.seek(int((this.ofsData - 8)))
+  this.io.seek(int(this.ofsData - 8))
   let dataInstExpr = this.io.readBytes(int(this.lenData))
   this.dataInst = dataInstExpr
   this.io.seek(pos)
   this.dataInstFlag = true
   return this.dataInst
 
+proc userSid(this: WindowsEvtLog_RecordBody): seq[byte] = 
+  if this.userSidInstFlag:
+    return this.userSidInst
+  let pos = this.io.pos()
+  this.io.seek(int(this.ofsUserSid - 8))
+  let userSidInstExpr = this.io.readBytes(int(this.lenUserSid))
+  this.userSidInst = userSidInstExpr
+  this.io.seek(pos)
+  this.userSidInstFlag = true
+  return this.userSidInst
+
 proc fromFile*(_: typedesc[WindowsEvtLog_RecordBody], filename: string): WindowsEvtLog_RecordBody =
   WindowsEvtLog_RecordBody.read(newKaitaiFileStream(filename), nil, nil)
-
-
-##[
-@see <a href="https://forensics.wiki/windows_event_log_(evt)/#cursor-record">Source</a>
-]##
-proc read*(_: typedesc[WindowsEvtLog_CursorRecordBody], io: KaitaiStream, root: KaitaiStruct, parent: WindowsEvtLog_Record): WindowsEvtLog_CursorRecordBody =
-  template this: untyped = result
-  this = new(WindowsEvtLog_CursorRecordBody)
-  let root = if root == nil: cast[WindowsEvtLog](this) else: cast[WindowsEvtLog](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let magicExpr = this.io.readBytes(int(12))
-  this.magic = magicExpr
-  let ofsFirstRecordExpr = this.io.readU4le()
-  this.ofsFirstRecord = ofsFirstRecordExpr
-  let ofsNextRecordExpr = this.io.readU4le()
-  this.ofsNextRecord = ofsNextRecordExpr
-  let idxNextRecordExpr = this.io.readU4le()
-  this.idxNextRecord = idxNextRecordExpr
-  let idxFirstRecordExpr = this.io.readU4le()
-  this.idxFirstRecord = idxFirstRecordExpr
-
-proc fromFile*(_: typedesc[WindowsEvtLog_CursorRecordBody], filename: string): WindowsEvtLog_CursorRecordBody =
-  WindowsEvtLog_CursorRecordBody.read(newKaitaiFileStream(filename), nil, nil)
 

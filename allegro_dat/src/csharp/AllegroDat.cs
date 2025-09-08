@@ -43,9 +43,9 @@ namespace Kaitai
         {
             _packMagic = ((PackEnum) m_io.ReadU4be());
             _datMagic = m_io.ReadBytes(4);
-            if (!((KaitaiStream.ByteArrayCompare(DatMagic, new byte[] { 65, 76, 76, 46 }) == 0)))
+            if (!((KaitaiStream.ByteArrayCompare(_datMagic, new byte[] { 65, 76, 76, 46 }) == 0)))
             {
-                throw new ValidationNotEqualError(new byte[] { 65, 76, 76, 46 }, DatMagic, M_Io, "/seq/1");
+                throw new ValidationNotEqualError(new byte[] { 65, 76, 76, 46 }, _datMagic, m_io, "/seq/1");
             }
             _numObjects = m_io.ReadU4be();
             _objects = new List<DatObject>();
@@ -53,39 +53,6 @@ namespace Kaitai
             {
                 _objects.Add(new DatObject(m_io, this, m_root));
             }
-        }
-
-        /// <summary>
-        /// Simple monochrome monospaced font, 95 characters, 8x16 px
-        /// characters.
-        /// </summary>
-        public partial class DatFont16 : KaitaiStruct
-        {
-            public static DatFont16 FromFile(string fileName)
-            {
-                return new DatFont16(new KaitaiStream(fileName));
-            }
-
-            public DatFont16(KaitaiStream p__io, AllegroDat.DatFont p__parent = null, AllegroDat p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _chars = new List<byte[]>();
-                for (var i = 0; i < 95; i++)
-                {
-                    _chars.Add(m_io.ReadBytes(16));
-                }
-            }
-            private List<byte[]> _chars;
-            private AllegroDat m_root;
-            private AllegroDat.DatFont m_parent;
-            public List<byte[]> Chars { get { return _chars; } }
-            public AllegroDat M_Root { get { return m_root; } }
-            public AllegroDat.DatFont M_Parent { get { return m_parent; } }
         }
         public partial class DatBitmap : KaitaiStruct
         {
@@ -137,16 +104,16 @@ namespace Kaitai
             {
                 _fontSize = m_io.ReadS2be();
                 switch (FontSize) {
-                case 8: {
-                    _body = new DatFont8(m_io, this, m_root);
+                case 0: {
+                    _body = new DatFont39(m_io, this, m_root);
                     break;
                 }
                 case 16: {
                     _body = new DatFont16(m_io, this, m_root);
                     break;
                 }
-                case 0: {
-                    _body = new DatFont39(m_io, this, m_root);
+                case 8: {
+                    _body = new DatFont8(m_io, this, m_root);
                     break;
                 }
                 }
@@ -159,6 +126,151 @@ namespace Kaitai
             public KaitaiStruct Body { get { return _body; } }
             public AllegroDat M_Root { get { return m_root; } }
             public AllegroDat.DatObject M_Parent { get { return m_parent; } }
+        }
+
+        /// <summary>
+        /// Simple monochrome monospaced font, 95 characters, 8x16 px
+        /// characters.
+        /// </summary>
+        public partial class DatFont16 : KaitaiStruct
+        {
+            public static DatFont16 FromFile(string fileName)
+            {
+                return new DatFont16(new KaitaiStream(fileName));
+            }
+
+            public DatFont16(KaitaiStream p__io, AllegroDat.DatFont p__parent = null, AllegroDat p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _chars = new List<byte[]>();
+                for (var i = 0; i < 95; i++)
+                {
+                    _chars.Add(m_io.ReadBytes(16));
+                }
+            }
+            private List<byte[]> _chars;
+            private AllegroDat m_root;
+            private AllegroDat.DatFont m_parent;
+            public List<byte[]> Chars { get { return _chars; } }
+            public AllegroDat M_Root { get { return m_root; } }
+            public AllegroDat.DatFont M_Parent { get { return m_parent; } }
+        }
+
+        /// <summary>
+        /// New bitmap font format introduced since Allegro 3.9: allows
+        /// flexible designation of character ranges, 8-bit colored
+        /// characters, etc.
+        /// </summary>
+        public partial class DatFont39 : KaitaiStruct
+        {
+            public static DatFont39 FromFile(string fileName)
+            {
+                return new DatFont39(new KaitaiStream(fileName));
+            }
+
+            public DatFont39(KaitaiStream p__io, AllegroDat.DatFont p__parent = null, AllegroDat p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _numRanges = m_io.ReadS2be();
+                _ranges = new List<Range>();
+                for (var i = 0; i < NumRanges; i++)
+                {
+                    _ranges.Add(new Range(m_io, this, m_root));
+                }
+            }
+            public partial class FontChar : KaitaiStruct
+            {
+                public static FontChar FromFile(string fileName)
+                {
+                    return new FontChar(new KaitaiStream(fileName));
+                }
+
+                public FontChar(KaitaiStream p__io, AllegroDat.DatFont39.Range p__parent = null, AllegroDat p__root = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    _read();
+                }
+                private void _read()
+                {
+                    _width = m_io.ReadU2be();
+                    _height = m_io.ReadU2be();
+                    _body = m_io.ReadBytes(Width * Height);
+                }
+                private ushort _width;
+                private ushort _height;
+                private byte[] _body;
+                private AllegroDat m_root;
+                private AllegroDat.DatFont39.Range m_parent;
+                public ushort Width { get { return _width; } }
+                public ushort Height { get { return _height; } }
+                public byte[] Body { get { return _body; } }
+                public AllegroDat M_Root { get { return m_root; } }
+                public AllegroDat.DatFont39.Range M_Parent { get { return m_parent; } }
+            }
+            public partial class Range : KaitaiStruct
+            {
+                public static Range FromFile(string fileName)
+                {
+                    return new Range(new KaitaiStream(fileName));
+                }
+
+                public Range(KaitaiStream p__io, AllegroDat.DatFont39 p__parent = null, AllegroDat p__root = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    _read();
+                }
+                private void _read()
+                {
+                    _mono = m_io.ReadU1();
+                    _startChar = m_io.ReadU4be();
+                    _endChar = m_io.ReadU4be();
+                    _chars = new List<FontChar>();
+                    for (var i = 0; i < (EndChar - StartChar) + 1; i++)
+                    {
+                        _chars.Add(new FontChar(m_io, this, m_root));
+                    }
+                }
+                private byte _mono;
+                private uint _startChar;
+                private uint _endChar;
+                private List<FontChar> _chars;
+                private AllegroDat m_root;
+                private AllegroDat.DatFont39 m_parent;
+                public byte Mono { get { return _mono; } }
+
+                /// <summary>
+                /// First character in range
+                /// </summary>
+                public uint StartChar { get { return _startChar; } }
+
+                /// <summary>
+                /// Last character in range (inclusive)
+                /// </summary>
+                public uint EndChar { get { return _endChar; } }
+                public List<FontChar> Chars { get { return _chars; } }
+                public AllegroDat M_Root { get { return m_root; } }
+                public AllegroDat.DatFont39 M_Parent { get { return m_parent; } }
+            }
+            private short _numRanges;
+            private List<Range> _ranges;
+            private AllegroDat m_root;
+            private AllegroDat.DatFont m_parent;
+            public short NumRanges { get { return _numRanges; } }
+            public List<Range> Ranges { get { return _ranges; } }
+            public AllegroDat M_Root { get { return m_root; } }
+            public AllegroDat.DatFont M_Parent { get { return m_parent; } }
         }
 
         /// <summary>
@@ -228,16 +340,16 @@ namespace Kaitai
                     _body = new DatBitmap(io___raw_body, this, m_root);
                     break;
                 }
-                case "RLE ": {
-                    __raw_body = m_io.ReadBytes(LenCompressed);
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new DatRleSprite(io___raw_body, this, m_root);
-                    break;
-                }
                 case "FONT": {
                     __raw_body = m_io.ReadBytes(LenCompressed);
                     var io___raw_body = new KaitaiStream(__raw_body);
                     _body = new DatFont(io___raw_body, this, m_root);
+                    break;
+                }
+                case "RLE ": {
+                    __raw_body = m_io.ReadBytes(LenCompressed);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new DatRleSprite(io___raw_body, this, m_root);
                     break;
                 }
                 default: {
@@ -254,8 +366,8 @@ namespace Kaitai
                 {
                     if (f_type)
                         return _type;
-                    _type = (string) (Properties[Properties.Count - 1].Magic);
                     f_type = true;
+                    _type = (string) (Properties[Properties.Count - 1].Magic);
                     return _type;
                 }
             }
@@ -274,20 +386,14 @@ namespace Kaitai
             public AllegroDat M_Parent { get { return m_parent; } }
             public byte[] M_RawBody { get { return __raw_body; } }
         }
-
-        /// <summary>
-        /// New bitmap font format introduced since Allegro 3.9: allows
-        /// flexible designation of character ranges, 8-bit colored
-        /// characters, etc.
-        /// </summary>
-        public partial class DatFont39 : KaitaiStruct
+        public partial class DatRleSprite : KaitaiStruct
         {
-            public static DatFont39 FromFile(string fileName)
+            public static DatRleSprite FromFile(string fileName)
             {
-                return new DatFont39(new KaitaiStream(fileName));
+                return new DatRleSprite(new KaitaiStream(fileName));
             }
 
-            public DatFont39(KaitaiStream p__io, AllegroDat.DatFont p__parent = null, AllegroDat p__root = null) : base(p__io)
+            public DatRleSprite(KaitaiStream p__io, AllegroDat.DatObject p__parent = null, AllegroDat p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -295,96 +401,26 @@ namespace Kaitai
             }
             private void _read()
             {
-                _numRanges = m_io.ReadS2be();
-                _ranges = new List<Range>();
-                for (var i = 0; i < NumRanges; i++)
-                {
-                    _ranges.Add(new Range(m_io, this, m_root));
-                }
+                _bitsPerPixel = m_io.ReadS2be();
+                _width = m_io.ReadU2be();
+                _height = m_io.ReadU2be();
+                _lenImage = m_io.ReadU4be();
+                _image = m_io.ReadBytesFull();
             }
-            public partial class Range : KaitaiStruct
-            {
-                public static Range FromFile(string fileName)
-                {
-                    return new Range(new KaitaiStream(fileName));
-                }
-
-                public Range(KaitaiStream p__io, AllegroDat.DatFont39 p__parent = null, AllegroDat p__root = null) : base(p__io)
-                {
-                    m_parent = p__parent;
-                    m_root = p__root;
-                    _read();
-                }
-                private void _read()
-                {
-                    _mono = m_io.ReadU1();
-                    _startChar = m_io.ReadU4be();
-                    _endChar = m_io.ReadU4be();
-                    _chars = new List<FontChar>();
-                    for (var i = 0; i < ((EndChar - StartChar) + 1); i++)
-                    {
-                        _chars.Add(new FontChar(m_io, this, m_root));
-                    }
-                }
-                private byte _mono;
-                private uint _startChar;
-                private uint _endChar;
-                private List<FontChar> _chars;
-                private AllegroDat m_root;
-                private AllegroDat.DatFont39 m_parent;
-                public byte Mono { get { return _mono; } }
-
-                /// <summary>
-                /// First character in range
-                /// </summary>
-                public uint StartChar { get { return _startChar; } }
-
-                /// <summary>
-                /// Last character in range (inclusive)
-                /// </summary>
-                public uint EndChar { get { return _endChar; } }
-                public List<FontChar> Chars { get { return _chars; } }
-                public AllegroDat M_Root { get { return m_root; } }
-                public AllegroDat.DatFont39 M_Parent { get { return m_parent; } }
-            }
-            public partial class FontChar : KaitaiStruct
-            {
-                public static FontChar FromFile(string fileName)
-                {
-                    return new FontChar(new KaitaiStream(fileName));
-                }
-
-                public FontChar(KaitaiStream p__io, AllegroDat.DatFont39.Range p__parent = null, AllegroDat p__root = null) : base(p__io)
-                {
-                    m_parent = p__parent;
-                    m_root = p__root;
-                    _read();
-                }
-                private void _read()
-                {
-                    _width = m_io.ReadU2be();
-                    _height = m_io.ReadU2be();
-                    _body = m_io.ReadBytes((Width * Height));
-                }
-                private ushort _width;
-                private ushort _height;
-                private byte[] _body;
-                private AllegroDat m_root;
-                private AllegroDat.DatFont39.Range m_parent;
-                public ushort Width { get { return _width; } }
-                public ushort Height { get { return _height; } }
-                public byte[] Body { get { return _body; } }
-                public AllegroDat M_Root { get { return m_root; } }
-                public AllegroDat.DatFont39.Range M_Parent { get { return m_parent; } }
-            }
-            private short _numRanges;
-            private List<Range> _ranges;
+            private short _bitsPerPixel;
+            private ushort _width;
+            private ushort _height;
+            private uint _lenImage;
+            private byte[] _image;
             private AllegroDat m_root;
-            private AllegroDat.DatFont m_parent;
-            public short NumRanges { get { return _numRanges; } }
-            public List<Range> Ranges { get { return _ranges; } }
+            private AllegroDat.DatObject m_parent;
+            public short BitsPerPixel { get { return _bitsPerPixel; } }
+            public ushort Width { get { return _width; } }
+            public ushort Height { get { return _height; } }
+            public uint LenImage { get { return _lenImage; } }
+            public byte[] Image { get { return _image; } }
             public AllegroDat M_Root { get { return m_root; } }
-            public AllegroDat.DatFont M_Parent { get { return m_parent; } }
+            public AllegroDat.DatObject M_Parent { get { return m_parent; } }
         }
         public partial class Property : KaitaiStruct
         {
@@ -421,8 +457,8 @@ namespace Kaitai
                 {
                     if (f_isValid)
                         return _isValid;
-                    _isValid = (bool) (Magic == "prop");
                     f_isValid = true;
+                    _isValid = (bool) (Magic == "prop");
                     return _isValid;
                 }
             }
@@ -436,42 +472,6 @@ namespace Kaitai
             public string Type { get { return _type; } }
             public uint? LenBody { get { return _lenBody; } }
             public string Body { get { return _body; } }
-            public AllegroDat M_Root { get { return m_root; } }
-            public AllegroDat.DatObject M_Parent { get { return m_parent; } }
-        }
-        public partial class DatRleSprite : KaitaiStruct
-        {
-            public static DatRleSprite FromFile(string fileName)
-            {
-                return new DatRleSprite(new KaitaiStream(fileName));
-            }
-
-            public DatRleSprite(KaitaiStream p__io, AllegroDat.DatObject p__parent = null, AllegroDat p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _bitsPerPixel = m_io.ReadS2be();
-                _width = m_io.ReadU2be();
-                _height = m_io.ReadU2be();
-                _lenImage = m_io.ReadU4be();
-                _image = m_io.ReadBytesFull();
-            }
-            private short _bitsPerPixel;
-            private ushort _width;
-            private ushort _height;
-            private uint _lenImage;
-            private byte[] _image;
-            private AllegroDat m_root;
-            private AllegroDat.DatObject m_parent;
-            public short BitsPerPixel { get { return _bitsPerPixel; } }
-            public ushort Width { get { return _width; } }
-            public ushort Height { get { return _height; } }
-            public uint LenImage { get { return _lenImage; } }
-            public byte[] Image { get { return _image; } }
             public AllegroDat M_Root { get { return m_root; } }
             public AllegroDat.DatObject M_Parent { get { return m_parent; } }
         }

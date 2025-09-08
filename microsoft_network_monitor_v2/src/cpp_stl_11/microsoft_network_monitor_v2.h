@@ -2,18 +2,19 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class microsoft_network_monitor_v2_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
 #include "windows_systemtime.h"
 #include "ethernet_frame.h"
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
-class windows_systemtime_t;
-class ethernet_frame_t;
 
 /**
  * Microsoft Network Monitor (AKA Netmon) is a proprietary Microsoft's
@@ -30,9 +31,9 @@ class ethernet_frame_t;
 class microsoft_network_monitor_v2_t : public kaitai::kstruct {
 
 public:
+    class frame_t;
     class frame_index_t;
     class frame_index_entry_t;
-    class frame_t;
 
     enum linktype_t {
         LINKTYPE_NULL_LINKTYPE = 0,
@@ -140,6 +141,12 @@ public:
         LINKTYPE_WATTSTOPPER_DLM = 263,
         LINKTYPE_ISO_14443 = 264
     };
+    static bool _is_defined_linktype_t(linktype_t v);
+
+private:
+    static const std::set<linktype_t> _values_linktype_t;
+
+public:
 
     microsoft_network_monitor_v2_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, microsoft_network_monitor_v2_t* p__root = nullptr);
 
@@ -149,6 +156,69 @@ private:
 
 public:
     ~microsoft_network_monitor_v2_t();
+
+    /**
+     * A container for actually captured network data. Allow to
+     * timestamp individual frames and designates how much data from
+     * the original packet was actually written into the file.
+     * \sa https://learn.microsoft.com/en-us/windows/win32/netmon2/frame Source
+     */
+
+    class frame_t : public kaitai::kstruct {
+
+    public:
+
+        frame_t(kaitai::kstream* p__io, microsoft_network_monitor_v2_t::frame_index_entry_t* p__parent = nullptr, microsoft_network_monitor_v2_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~frame_t();
+
+    private:
+        uint64_t m_ts_delta;
+        uint32_t m_orig_len;
+        uint32_t m_inc_len;
+        std::unique_ptr<ethernet_frame_t> m_body;
+        bool n_body;
+
+    public:
+        bool _is_null_body() { body(); return n_body; };
+
+    private:
+        microsoft_network_monitor_v2_t* m__root;
+        microsoft_network_monitor_v2_t::frame_index_entry_t* m__parent;
+        std::string m__raw_body;
+        std::unique_ptr<kaitai::kstream> m__io__raw_body;
+
+    public:
+
+        /**
+         * Time stamp - usecs since start of capture
+         */
+        uint64_t ts_delta() const { return m_ts_delta; }
+
+        /**
+         * Actual length of packet
+         */
+        uint32_t orig_len() const { return m_orig_len; }
+
+        /**
+         * Number of octets captured in file
+         */
+        uint32_t inc_len() const { return m_inc_len; }
+
+        /**
+         * Actual packet captured from the network
+         */
+        ethernet_frame_t* body() const { return m_body.get(); }
+        microsoft_network_monitor_v2_t* _root() const { return m__root; }
+        microsoft_network_monitor_v2_t::frame_index_entry_t* _parent() const { return m__parent; }
+        std::string _raw_body() const { return m__raw_body; }
+        kaitai::kstream* _io__raw_body() const { return m__io__raw_body.get(); }
+    };
 
     class frame_index_t : public kaitai::kstruct {
 
@@ -216,69 +286,6 @@ public:
         uint32_t ofs() const { return m_ofs; }
         microsoft_network_monitor_v2_t* _root() const { return m__root; }
         microsoft_network_monitor_v2_t::frame_index_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * A container for actually captured network data. Allow to
-     * timestamp individual frames and designates how much data from
-     * the original packet was actually written into the file.
-     * \sa https://learn.microsoft.com/en-us/windows/win32/netmon2/frame Source
-     */
-
-    class frame_t : public kaitai::kstruct {
-
-    public:
-
-        frame_t(kaitai::kstream* p__io, microsoft_network_monitor_v2_t::frame_index_entry_t* p__parent = nullptr, microsoft_network_monitor_v2_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~frame_t();
-
-    private:
-        uint64_t m_ts_delta;
-        uint32_t m_orig_len;
-        uint32_t m_inc_len;
-        std::unique_ptr<ethernet_frame_t> m_body;
-        bool n_body;
-
-    public:
-        bool _is_null_body() { body(); return n_body; };
-
-    private:
-        microsoft_network_monitor_v2_t* m__root;
-        microsoft_network_monitor_v2_t::frame_index_entry_t* m__parent;
-        std::string m__raw_body;
-        std::unique_ptr<kaitai::kstream> m__io__raw_body;
-
-    public:
-
-        /**
-         * Time stamp - usecs since start of capture
-         */
-        uint64_t ts_delta() const { return m_ts_delta; }
-
-        /**
-         * Actual length of packet
-         */
-        uint32_t orig_len() const { return m_orig_len; }
-
-        /**
-         * Number of octets captured in file
-         */
-        uint32_t inc_len() const { return m_inc_len; }
-
-        /**
-         * Actual packet captured from the network
-         */
-        ethernet_frame_t* body() const { return m_body.get(); }
-        microsoft_network_monitor_v2_t* _root() const { return m__root; }
-        microsoft_network_monitor_v2_t::frame_index_entry_t* _parent() const { return m__parent; }
-        std::string _raw_body() const { return m__raw_body; }
-        kaitai::kstream* _io__raw_body() const { return m__io__raw_body.get(); }
     };
 
 private:

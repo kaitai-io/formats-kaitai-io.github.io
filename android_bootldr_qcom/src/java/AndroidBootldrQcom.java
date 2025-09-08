@@ -6,7 +6,8 @@ import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.ArrayList;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 
 /**
@@ -136,8 +137,8 @@ public class AndroidBootldrQcom extends KaitaiStruct {
     }
     private void _read() {
         this.magic = this._io.readBytes(8);
-        if (!(Arrays.equals(magic(), new byte[] { 66, 79, 79, 84, 76, 68, 82, 33 }))) {
-            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 66, 79, 79, 84, 76, 68, 82, 33 }, magic(), _io(), "/seq/0");
+        if (!(Arrays.equals(this.magic, new byte[] { 66, 79, 79, 84, 76, 68, 82, 33 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 66, 79, 79, 84, 76, 68, 82, 33 }, this.magic, this._io, "/seq/0");
         }
         this.numImages = this._io.readU4le();
         this.ofsImgBodies = this._io.readU4le();
@@ -147,37 +148,17 @@ public class AndroidBootldrQcom extends KaitaiStruct {
             this.imgHeaders.add(new ImgHeader(this._io, this, _root));
         }
     }
-    public static class ImgHeader extends KaitaiStruct {
-        public static ImgHeader fromFile(String fileName) throws IOException {
-            return new ImgHeader(new ByteBufferKaitaiStream(fileName));
-        }
 
-        public ImgHeader(KaitaiStream _io) {
-            this(_io, null, null);
+    public void _fetchInstances() {
+        for (int i = 0; i < this.imgHeaders.size(); i++) {
+            this.imgHeaders.get(((Number) (i)).intValue())._fetchInstances();
         }
-
-        public ImgHeader(KaitaiStream _io, AndroidBootldrQcom _parent) {
-            this(_io, _parent, null);
+        imgBodies();
+        if (this.imgBodies != null) {
+            for (int i = 0; i < this.imgBodies.size(); i++) {
+                this.imgBodies.get(((Number) (i)).intValue())._fetchInstances();
+            }
         }
-
-        public ImgHeader(KaitaiStream _io, AndroidBootldrQcom _parent, AndroidBootldrQcom _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.name = new String(KaitaiStream.bytesTerminate(this._io.readBytes(64), (byte) 0, false), Charset.forName("ASCII"));
-            this.lenBody = this._io.readU4le();
-        }
-        private String name;
-        private long lenBody;
-        private AndroidBootldrQcom _root;
-        private AndroidBootldrQcom _parent;
-        public String name() { return name; }
-        public long lenBody() { return lenBody; }
-        public AndroidBootldrQcom _root() { return _root; }
-        public AndroidBootldrQcom _parent() { return _parent; }
     }
     public static class ImgBody extends KaitaiStruct {
 
@@ -199,11 +180,14 @@ public class AndroidBootldrQcom extends KaitaiStruct {
         private void _read() {
             this.body = this._io.readBytes(imgHeader().lenBody());
         }
+
+        public void _fetchInstances() {
+        }
         private ImgHeader imgHeader;
         public ImgHeader imgHeader() {
             if (this.imgHeader != null)
                 return this.imgHeader;
-            this.imgHeader = _root().imgHeaders().get((int) idx());
+            this.imgHeader = _root().imgHeaders().get(((Number) (idx())).intValue());
             return this.imgHeader;
         }
         private byte[] body;
@@ -215,8 +199,43 @@ public class AndroidBootldrQcom extends KaitaiStruct {
         public AndroidBootldrQcom _root() { return _root; }
         public AndroidBootldrQcom _parent() { return _parent; }
     }
-    private ArrayList<ImgBody> imgBodies;
-    public ArrayList<ImgBody> imgBodies() {
+    public static class ImgHeader extends KaitaiStruct {
+        public static ImgHeader fromFile(String fileName) throws IOException {
+            return new ImgHeader(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public ImgHeader(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public ImgHeader(KaitaiStream _io, AndroidBootldrQcom _parent) {
+            this(_io, _parent, null);
+        }
+
+        public ImgHeader(KaitaiStream _io, AndroidBootldrQcom _parent, AndroidBootldrQcom _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.name = new String(KaitaiStream.bytesTerminate(this._io.readBytes(64), (byte) 0, false), StandardCharsets.US_ASCII);
+            this.lenBody = this._io.readU4le();
+        }
+
+        public void _fetchInstances() {
+        }
+        private String name;
+        private long lenBody;
+        private AndroidBootldrQcom _root;
+        private AndroidBootldrQcom _parent;
+        public String name() { return name; }
+        public long lenBody() { return lenBody; }
+        public AndroidBootldrQcom _root() { return _root; }
+        public AndroidBootldrQcom _parent() { return _parent; }
+    }
+    private List<ImgBody> imgBodies;
+    public List<ImgBody> imgBodies() {
         if (this.imgBodies != null)
             return this.imgBodies;
         long _pos = this._io.pos();
@@ -232,7 +251,7 @@ public class AndroidBootldrQcom extends KaitaiStruct {
     private long numImages;
     private long ofsImgBodies;
     private long bootloaderSize;
-    private ArrayList<ImgHeader> imgHeaders;
+    private List<ImgHeader> imgHeaders;
     private AndroidBootldrQcom _root;
     private KaitaiStruct _parent;
     public byte[] magic() { return magic; }
@@ -262,7 +281,7 @@ public class AndroidBootldrQcom extends KaitaiStruct {
      * your application code.
      */
     public long bootloaderSize() { return bootloaderSize; }
-    public ArrayList<ImgHeader> imgHeaders() { return imgHeaders; }
+    public List<ImgHeader> imgHeaders() { return imgHeaders; }
     public AndroidBootldrQcom _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

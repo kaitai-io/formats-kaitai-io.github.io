@@ -42,13 +42,36 @@ GettextMo.HashLookupIteration = class.class(KaitaiStruct)
 function GettextMo.HashLookupIteration:_init(idx, collision_step, io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self.idx = idx
   self.collision_step = collision_step
   self:_read()
 end
 
 function GettextMo.HashLookupIteration:_read()
+end
+
+GettextMo.HashLookupIteration.property.next = {}
+function GettextMo.HashLookupIteration.property.next:get()
+  if self._m_next ~= nil then
+    return self._m_next
+  end
+
+  local _pos = self._io:pos()
+  self._io:seek(0)
+  self._m_next = GettextMo.HashLookupIteration(self._root.mo.hashtable_items[self.next_idx + 1].val, self.collision_step, self._io, self, self._root)
+  self._io:seek(_pos)
+  return self._m_next
+end
+
+GettextMo.HashLookupIteration.property.next_idx = {}
+function GettextMo.HashLookupIteration.property.next_idx:get()
+  if self._m_next_idx ~= nil then
+    return self._m_next_idx
+  end
+
+  self._m_next_idx = (self.idx + self.collision_step) - utils.box_unwrap((self.idx >= self._root.mo.num_hashtable_items - self.collision_step) and utils.box_wrap(self._root.mo.num_hashtable_items) or (0))
+  return self._m_next_idx
 end
 
 GettextMo.HashLookupIteration.property.original = {}
@@ -71,36 +94,100 @@ function GettextMo.HashLookupIteration.property.translation:get()
   return self._m_translation
 end
 
-GettextMo.HashLookupIteration.property.next_idx = {}
-function GettextMo.HashLookupIteration.property.next_idx:get()
-  if self._m_next_idx ~= nil then
-    return self._m_next_idx
-  end
 
-  self._m_next_idx = ((self.idx + self.collision_step) - utils.box_unwrap((self.idx >= (self._root.mo.num_hashtable_items - self.collision_step)) and utils.box_wrap(self._root.mo.num_hashtable_items) or (0)))
-  return self._m_next_idx
+-- 
+-- def lookup(s:str, t:gettext_mo.GettextMo):
+--   try:
+--     l=gettext_mo.GettextMo.HashtableLookup(s, string_hash(s), t._io, _parent=t, _root=t)
+--     e=l.entry
+--     while(not e.found):
+--       e=e.next
+--     return e.current
+--   except:
+--     raise Exception("Not found "+s+" in the hashtable!")
+-- 
+-- lookup(t.mo.originals[145].str, t)
+-- See also: Source (https://gitlab.com/worr/libintl/raw/master/src/lib/libintl/gettext.c)
+GettextMo.HashtableLookup = class.class(KaitaiStruct)
+
+function GettextMo.HashtableLookup:_init(query, hash, io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self.query = query
+  self.hash = hash
+  self:_read()
 end
 
-GettextMo.HashLookupIteration.property.next = {}
-function GettextMo.HashLookupIteration.property.next:get()
-  if self._m_next ~= nil then
-    return self._m_next
+function GettextMo.HashtableLookup:_read()
+end
+
+GettextMo.HashtableLookup.property.collision_step = {}
+function GettextMo.HashtableLookup.property.collision_step:get()
+  if self._m_collision_step ~= nil then
+    return self._m_collision_step
+  end
+
+  self._m_collision_step = self.hash % (self._root.mo.num_hashtable_items - 2) + 1
+  return self._m_collision_step
+end
+
+GettextMo.HashtableLookup.property.entry = {}
+function GettextMo.HashtableLookup.property.entry:get()
+  if self._m_entry ~= nil then
+    return self._m_entry
   end
 
   local _pos = self._io:pos()
   self._io:seek(0)
-  self._m_next = GettextMo.HashLookupIteration(self._root.mo.hashtable_items[self.next_idx + 1].val, self.collision_step, self._io, self, self._root)
+  self._m_entry = GettextMo.LookupIteration(self.hash_lookup_iteration, self.query, self._io, self, self._root)
   self._io:seek(_pos)
-  return self._m_next
+  return self._m_entry
 end
 
+GettextMo.HashtableLookup.property.hash_lookup_iteration = {}
+function GettextMo.HashtableLookup.property.hash_lookup_iteration:get()
+  if self._m_hash_lookup_iteration ~= nil then
+    return self._m_hash_lookup_iteration
+  end
+
+  local _pos = self._io:pos()
+  self._io:seek(0)
+  self._m_hash_lookup_iteration = GettextMo.HashLookupIteration(self._root.mo.hashtable_items[self.idx + 1].val, self.collision_step, self._io, self, self._root)
+  self._io:seek(_pos)
+  return self._m_hash_lookup_iteration
+end
+
+GettextMo.HashtableLookup.property.idx = {}
+function GettextMo.HashtableLookup.property.idx:get()
+  if self._m_idx ~= nil then
+    return self._m_idx
+  end
+
+  self._m_idx = self.hash % self._root.mo.num_hashtable_items
+  return self._m_idx
+end
+
+-- 
+-- def string_hash(s):
+--   s=s.encode("utf-8")
+--   h = 0
+--   for i in range(len(s)):
+--     h = h << 4
+--     h += s[i]
+--     tmp = h & 0xF0000000
+--     if tmp != 0:
+--       h ^= tmp
+--       h ^= tmp >> 24
+--   return h
+-- See also: Source (https://gitlab.com/worr/libintl/raw/master/src/lib/libintl/strhash.c)
 
 GettextMo.LookupIteration = class.class(KaitaiStruct)
 
 function GettextMo.LookupIteration:_init(current, query, io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self.current = current
   self.query = query
   self:_read()
@@ -135,99 +222,12 @@ function GettextMo.LookupIteration.property.next:get()
 end
 
 
--- 
--- def lookup(s:str, t:gettext_mo.GettextMo):
---   try:
---     l=gettext_mo.GettextMo.HashtableLookup(s, string_hash(s), t._io, _parent=t, _root=t)
---     e=l.entry
---     while(not e.found):
---       e=e.next
---     return e.current
---   except:
---     raise Exception("Not found "+s+" in the hashtable!")
--- 
--- lookup(t.mo.originals[145].str, t)
--- See also: Source (https://gitlab.com/worr/libintl/raw/master/src/lib/libintl/gettext.c)
-GettextMo.HashtableLookup = class.class(KaitaiStruct)
-
-function GettextMo.HashtableLookup:_init(query, hash, io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self.query = query
-  self.hash = hash
-  self:_read()
-end
-
-function GettextMo.HashtableLookup:_read()
-end
-
-GettextMo.HashtableLookup.property.collision_step = {}
-function GettextMo.HashtableLookup.property.collision_step:get()
-  if self._m_collision_step ~= nil then
-    return self._m_collision_step
-  end
-
-  self._m_collision_step = ((self.hash % (self._root.mo.num_hashtable_items - 2)) + 1)
-  return self._m_collision_step
-end
-
-GettextMo.HashtableLookup.property.idx = {}
-function GettextMo.HashtableLookup.property.idx:get()
-  if self._m_idx ~= nil then
-    return self._m_idx
-  end
-
-  self._m_idx = (self.hash % self._root.mo.num_hashtable_items)
-  return self._m_idx
-end
-
-GettextMo.HashtableLookup.property.hash_lookup_iteration = {}
-function GettextMo.HashtableLookup.property.hash_lookup_iteration:get()
-  if self._m_hash_lookup_iteration ~= nil then
-    return self._m_hash_lookup_iteration
-  end
-
-  local _pos = self._io:pos()
-  self._io:seek(0)
-  self._m_hash_lookup_iteration = GettextMo.HashLookupIteration(self._root.mo.hashtable_items[self.idx + 1].val, self.collision_step, self._io, self, self._root)
-  self._io:seek(_pos)
-  return self._m_hash_lookup_iteration
-end
-
-GettextMo.HashtableLookup.property.entry = {}
-function GettextMo.HashtableLookup.property.entry:get()
-  if self._m_entry ~= nil then
-    return self._m_entry
-  end
-
-  local _pos = self._io:pos()
-  self._io:seek(0)
-  self._m_entry = GettextMo.LookupIteration(self.hash_lookup_iteration, self.query, self._io, self, self._root)
-  self._io:seek(_pos)
-  return self._m_entry
-end
-
--- 
--- def string_hash(s):
---   s=s.encode("utf-8")
---   h = 0
---   for i in range(len(s)):
---     h = h << 4
---     h += s[i]
---     tmp = h & 0xF0000000
---     if tmp != 0:
---       h ^= tmp
---       h ^= tmp >> 24
---   return h
--- See also: Source (https://gitlab.com/worr/libintl/raw/master/src/lib/libintl/strhash.c)
-
 GettextMo.Mo = class.class(KaitaiStruct)
 
 function GettextMo.Mo:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -264,6 +264,32 @@ function GettextMo.Mo:_read_be()
   self.ofs_translations = self._io:read_u4be()
   self.num_hashtable_items = self._io:read_u4be()
   self.ofs_hashtable_items = self._io:read_u4be()
+end
+
+GettextMo.Mo.property.hashtable_items = {}
+function GettextMo.Mo.property.hashtable_items:get()
+  if self._m_hashtable_items ~= nil then
+    return self._m_hashtable_items
+  end
+
+  if self.ofs_hashtable_items ~= 0 then
+    local _io = self._root._io
+    local _pos = _io:pos()
+    _io:seek(self.ofs_hashtable_items)
+    if self._is_le then
+      self._m_hashtable_items = {}
+      for i = 0, self.num_hashtable_items - 1 do
+        self._m_hashtable_items[i + 1] = GettextMo.Mo.HashtableItem(_io, self, self._root, self._is_le)
+      end
+    else
+      self._m_hashtable_items = {}
+      for i = 0, self.num_hashtable_items - 1 do
+        self._m_hashtable_items[i + 1] = GettextMo.Mo.HashtableItem(_io, self, self._root, self._is_le)
+      end
+    end
+    _io:seek(_pos)
+  end
+  return self._m_hashtable_items
 end
 
 GettextMo.Mo.property.originals = {}
@@ -314,165 +340,13 @@ function GettextMo.Mo.property.translations:get()
   return self._m_translations
 end
 
-GettextMo.Mo.property.hashtable_items = {}
-function GettextMo.Mo.property.hashtable_items:get()
-  if self._m_hashtable_items ~= nil then
-    return self._m_hashtable_items
-  end
-
-  if self.ofs_hashtable_items ~= 0 then
-    local _io = self._root._io
-    local _pos = _io:pos()
-    _io:seek(self.ofs_hashtable_items)
-    if self._is_le then
-      self._m_hashtable_items = {}
-      for i = 0, self.num_hashtable_items - 1 do
-        self._m_hashtable_items[i + 1] = GettextMo.Mo.HashtableItem(_io, self, self._root, self._is_le)
-      end
-    else
-      self._m_hashtable_items = {}
-      for i = 0, self.num_hashtable_items - 1 do
-        self._m_hashtable_items[i + 1] = GettextMo.Mo.HashtableItem(_io, self, self._root, self._is_le)
-      end
-    end
-    _io:seek(_pos)
-  end
-  return self._m_hashtable_items
-end
-
-
-GettextMo.Mo.Version = class.class(KaitaiStruct)
-
-function GettextMo.Mo.Version:_init(io, parent, root, is_le)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self._is_le = is_le
-  self:_read()
-end
-
-function GettextMo.Mo.Version:_read()
-
-  if self._is_le == true then
-    self:_read_le()
-  elseif self._is_le == false then
-    self:_read_be()
-  else
-    error("unable to decide endianness")
-  end
-end
-
-function GettextMo.Mo.Version:_read_le()
-  self.version_raw = self._io:read_u4le()
-end
-
-function GettextMo.Mo.Version:_read_be()
-  self.version_raw = self._io:read_u4be()
-end
-
-GettextMo.Mo.Version.property.major = {}
-function GettextMo.Mo.Version.property.major:get()
-  if self._m_major ~= nil then
-    return self._m_major
-  end
-
-  self._m_major = (self.version_raw >> 16)
-  return self._m_major
-end
-
-GettextMo.Mo.Version.property.minor = {}
-function GettextMo.Mo.Version.property.minor:get()
-  if self._m_minor ~= nil then
-    return self._m_minor
-  end
-
-  self._m_minor = (self.version_raw & 65535)
-  return self._m_minor
-end
-
-
-GettextMo.Mo.HashtableItem = class.class(KaitaiStruct)
-
-function GettextMo.Mo.HashtableItem:_init(io, parent, root, is_le)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self._is_le = is_le
-  self:_read()
-end
-
-function GettextMo.Mo.HashtableItem:_read()
-
-  if self._is_le == true then
-    self:_read_le()
-  elseif self._is_le == false then
-    self:_read_be()
-  else
-    error("unable to decide endianness")
-  end
-end
-
-function GettextMo.Mo.HashtableItem:_read_le()
-  self.raw_val = self._io:read_u4le()
-end
-
-function GettextMo.Mo.HashtableItem:_read_be()
-  self.raw_val = self._io:read_u4be()
-end
-
-GettextMo.Mo.HashtableItem.property.mask = {}
-function GettextMo.Mo.HashtableItem.property.mask:get()
-  if self._m_mask ~= nil then
-    return self._m_mask
-  end
-
-  self._m_mask = 2147483648
-  return self._m_mask
-end
-
-GettextMo.Mo.HashtableItem.property.val_1 = {}
-function GettextMo.Mo.HashtableItem.property.val_1:get()
-  if self._m_val_1 ~= nil then
-    return self._m_val_1
-  end
-
-  if self.raw_val ~= 0 then
-    self._m_val_1 = (self.raw_val - 1)
-  end
-  return self._m_val_1
-end
-
-GettextMo.Mo.HashtableItem.property.is_system_dependent = {}
-function GettextMo.Mo.HashtableItem.property.is_system_dependent:get()
-  if self._m_is_system_dependent ~= nil then
-    return self._m_is_system_dependent
-  end
-
-  if self.raw_val ~= 0 then
-    self._m_is_system_dependent = (self.val_1 & self.mask) == 1
-  end
-  return self._m_is_system_dependent
-end
-
-GettextMo.Mo.HashtableItem.property.val = {}
-function GettextMo.Mo.HashtableItem.property.val:get()
-  if self._m_val ~= nil then
-    return self._m_val
-  end
-
-  if self.raw_val ~= 0 then
-    self._m_val = (self.val_1 & ~(self.mask))
-  end
-  return self._m_val
-end
-
 
 GettextMo.Mo.Descriptor = class.class(KaitaiStruct)
 
 function GettextMo.Mo.Descriptor:_init(io, parent, root, is_le)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self._is_le = is_le
   self:_read()
 end
@@ -514,6 +388,132 @@ function GettextMo.Mo.Descriptor.property.str:get()
   end
   _io:seek(_pos)
   return self._m_str
+end
+
+
+GettextMo.Mo.HashtableItem = class.class(KaitaiStruct)
+
+function GettextMo.Mo.HashtableItem:_init(io, parent, root, is_le)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self._is_le = is_le
+  self:_read()
+end
+
+function GettextMo.Mo.HashtableItem:_read()
+
+  if self._is_le == true then
+    self:_read_le()
+  elseif self._is_le == false then
+    self:_read_be()
+  else
+    error("unable to decide endianness")
+  end
+end
+
+function GettextMo.Mo.HashtableItem:_read_le()
+  self.raw_val = self._io:read_u4le()
+end
+
+function GettextMo.Mo.HashtableItem:_read_be()
+  self.raw_val = self._io:read_u4be()
+end
+
+GettextMo.Mo.HashtableItem.property.is_system_dependent = {}
+function GettextMo.Mo.HashtableItem.property.is_system_dependent:get()
+  if self._m_is_system_dependent ~= nil then
+    return self._m_is_system_dependent
+  end
+
+  if self.raw_val ~= 0 then
+    self._m_is_system_dependent = self.val_1 & self.mask == 1
+  end
+  return self._m_is_system_dependent
+end
+
+GettextMo.Mo.HashtableItem.property.mask = {}
+function GettextMo.Mo.HashtableItem.property.mask:get()
+  if self._m_mask ~= nil then
+    return self._m_mask
+  end
+
+  self._m_mask = 2147483648
+  return self._m_mask
+end
+
+GettextMo.Mo.HashtableItem.property.val = {}
+function GettextMo.Mo.HashtableItem.property.val:get()
+  if self._m_val ~= nil then
+    return self._m_val
+  end
+
+  if self.raw_val ~= 0 then
+    self._m_val = self.val_1 & ~(self.mask)
+  end
+  return self._m_val
+end
+
+GettextMo.Mo.HashtableItem.property.val_1 = {}
+function GettextMo.Mo.HashtableItem.property.val_1:get()
+  if self._m_val_1 ~= nil then
+    return self._m_val_1
+  end
+
+  if self.raw_val ~= 0 then
+    self._m_val_1 = self.raw_val - 1
+  end
+  return self._m_val_1
+end
+
+
+GettextMo.Mo.Version = class.class(KaitaiStruct)
+
+function GettextMo.Mo.Version:_init(io, parent, root, is_le)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self._is_le = is_le
+  self:_read()
+end
+
+function GettextMo.Mo.Version:_read()
+
+  if self._is_le == true then
+    self:_read_le()
+  elseif self._is_le == false then
+    self:_read_be()
+  else
+    error("unable to decide endianness")
+  end
+end
+
+function GettextMo.Mo.Version:_read_le()
+  self.version_raw = self._io:read_u4le()
+end
+
+function GettextMo.Mo.Version:_read_be()
+  self.version_raw = self._io:read_u4be()
+end
+
+GettextMo.Mo.Version.property.major = {}
+function GettextMo.Mo.Version.property.major:get()
+  if self._m_major ~= nil then
+    return self._m_major
+  end
+
+  self._m_major = self.version_raw >> 16
+  return self._m_major
+end
+
+GettextMo.Mo.Version.property.minor = {}
+function GettextMo.Mo.Version.property.minor:get()
+  if self._m_minor ~= nil then
+    return self._m_minor
+  end
+
+  self._m_minor = self.version_raw & 65535
+  return self._m_minor
 end
 
 

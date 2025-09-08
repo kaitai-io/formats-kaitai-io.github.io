@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use DosDatetime;
 
 ########################################################################
@@ -30,13 +30,6 @@ our $BLOCK_TYPES_OLD_STYLE_AUTHENTICITY_INFO_79 = 121;
 our $BLOCK_TYPES_SUBBLOCK = 122;
 our $BLOCK_TYPES_TERMINATOR = 123;
 
-our $OSES_MS_DOS = 0;
-our $OSES_OS_2 = 1;
-our $OSES_WINDOWS = 2;
-our $OSES_UNIX = 3;
-our $OSES_MAC_OS = 4;
-our $OSES_BEOS = 5;
-
 our $METHODS_STORE = 48;
 our $METHODS_FASTEST = 49;
 our $METHODS_FAST = 50;
@@ -44,13 +37,20 @@ our $METHODS_NORMAL = 51;
 our $METHODS_GOOD = 52;
 our $METHODS_BEST = 53;
 
+our $OSES_MS_DOS = 0;
+our $OSES_OS_2 = 1;
+our $OSES_WINDOWS = 2;
+our $OSES_UNIX = 3;
+our $OSES_MAC_OS = 4;
+our $OSES_BEOS = 5;
+
 sub new {
     my ($class, $_io, $_parent, $_root) = @_;
     my $self = IO::KaitaiStruct::Struct->new($_io);
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -61,7 +61,7 @@ sub _read {
     my ($self) = @_;
 
     $self->{magic} = Rar::MagicSignature->new($self->{_io}, $self, $self->{_root});
-    $self->{blocks} = ();
+    $self->{blocks} = [];
     while (!$self->{_io}->is_eof()) {
         my $_on = $self->magic()->version();
         if ($_on == 0) {
@@ -84,58 +84,6 @@ sub blocks {
 }
 
 ########################################################################
-package Rar::MagicSignature;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{magic1} = $self->{_io}->read_bytes(6);
-    $self->{version} = $self->{_io}->read_u1();
-    if ($self->version() == 1) {
-        $self->{magic3} = $self->{_io}->read_bytes(1);
-    }
-}
-
-sub magic1 {
-    my ($self) = @_;
-    return $self->{magic1};
-}
-
-sub version {
-    my ($self) = @_;
-    return $self->{version};
-}
-
-sub magic3 {
-    my ($self) = @_;
-    return $self->{magic3};
-}
-
-########################################################################
 package Rar::Block;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -155,7 +103,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -186,6 +134,13 @@ sub _read {
     }
 }
 
+sub body_size {
+    my ($self) = @_;
+    return $self->{body_size} if ($self->{body_size});
+    $self->{body_size} = $self->block_size() - $self->header_size();
+    return $self->{body_size};
+}
+
 sub has_add {
     my ($self) = @_;
     return $self->{has_add} if ($self->{has_add});
@@ -198,13 +153,6 @@ sub header_size {
     return $self->{header_size} if ($self->{header_size});
     $self->{header_size} = ($self->has_add() ? 11 : 7);
     return $self->{header_size};
-}
-
-sub body_size {
-    my ($self) = @_;
-    return $self->{body_size} if ($self->{body_size});
-    $self->{body_size} = ($self->block_size() - $self->header_size());
-    return $self->{body_size};
 }
 
 sub crc16 {
@@ -267,7 +215,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -376,7 +324,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -386,6 +334,58 @@ sub new {
 sub _read {
     my ($self) = @_;
 
+}
+
+########################################################################
+package Rar::MagicSignature;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{magic1} = $self->{_io}->read_bytes(6);
+    $self->{version} = $self->{_io}->read_u1();
+    if ($self->version() == 1) {
+        $self->{magic3} = $self->{_io}->read_bytes(1);
+    }
+}
+
+sub magic1 {
+    my ($self) = @_;
+    return $self->{magic1};
+}
+
+sub version {
+    my ($self) = @_;
+    return $self->{version};
+}
+
+sub magic3 {
+    my ($self) = @_;
+    return $self->{magic3};
 }
 
 1;

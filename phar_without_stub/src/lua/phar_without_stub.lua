@@ -4,10 +4,10 @@
 
 local class = require("class")
 require("kaitaistruct")
+require("php_serialized_value")
 local enum = require("enum")
 local stringstream = require("string_stream")
 
-require("php_serialized_value")
 -- 
 -- A phar (PHP archive) file. The phar format is a custom archive format
 -- from the PHP ecosystem that is used to package a complete PHP library
@@ -98,113 +98,6 @@ end
 -- been tampered with. Only the OpenSSL signature type is a true
 -- cryptographic signature.
 
-PharWithoutStub.SerializedValue = class.class(KaitaiStruct)
-
-function PharWithoutStub.SerializedValue:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function PharWithoutStub.SerializedValue:_read()
-  self.raw = self._io:read_bytes_full()
-end
-
--- 
--- The serialized value, parsed as a structure.
-PharWithoutStub.SerializedValue.property.parsed = {}
-function PharWithoutStub.SerializedValue.property.parsed:get()
-  if self._m_parsed ~= nil then
-    return self._m_parsed
-  end
-
-  local _pos = self._io:pos()
-  self._io:seek(0)
-  self._m_parsed = PhpSerializedValue(self._io)
-  self._io:seek(_pos)
-  return self._m_parsed
-end
-
--- 
--- The serialized value, as a raw byte array.
-
-PharWithoutStub.Signature = class.class(KaitaiStruct)
-
-function PharWithoutStub.Signature:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function PharWithoutStub.Signature:_read()
-  self.data = self._io:read_bytes(((self._io:size() - self._io:pos()) - 8))
-  self.type = PharWithoutStub.SignatureType(self._io:read_u4le())
-  self.magic = self._io:read_bytes(4)
-  if not(self.magic == "\071\066\077\066") then
-    error("not equal, expected " ..  "\071\066\077\066" .. ", but got " .. self.magic)
-  end
-end
-
--- 
--- The signature data. The size and contents depend on the
--- signature type.
--- 
--- The signature type.
-
-PharWithoutStub.FileFlags = class.class(KaitaiStruct)
-
-function PharWithoutStub.FileFlags:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function PharWithoutStub.FileFlags:_read()
-  self.value = self._io:read_u4le()
-end
-
--- 
--- The file's permission bits.
-PharWithoutStub.FileFlags.property.permissions = {}
-function PharWithoutStub.FileFlags.property.permissions:get()
-  if self._m_permissions ~= nil then
-    return self._m_permissions
-  end
-
-  self._m_permissions = (self.value & 511)
-  return self._m_permissions
-end
-
--- 
--- Whether this file's data is stored using zlib compression.
-PharWithoutStub.FileFlags.property.zlib_compressed = {}
-function PharWithoutStub.FileFlags.property.zlib_compressed:get()
-  if self._m_zlib_compressed ~= nil then
-    return self._m_zlib_compressed
-  end
-
-  self._m_zlib_compressed = (self.value & 4096) ~= 0
-  return self._m_zlib_compressed
-end
-
--- 
--- Whether this file's data is stored using bzip2 compression.
-PharWithoutStub.FileFlags.property.bzip2_compressed = {}
-function PharWithoutStub.FileFlags.property.bzip2_compressed:get()
-  if self._m_bzip2_compressed ~= nil then
-    return self._m_bzip2_compressed
-  end
-
-  self._m_bzip2_compressed = (self.value & 8192) ~= 0
-  return self._m_bzip2_compressed
-end
-
--- 
--- The unparsed flag bits.
-
 -- 
 -- A phar API version number. This version number is meant to indicate
 -- which features are used in a specific phar, so that tools reading
@@ -243,7 +136,7 @@ PharWithoutStub.ApiVersion = class.class(KaitaiStruct)
 function PharWithoutStub.ApiVersion:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -255,30 +148,121 @@ function PharWithoutStub.ApiVersion:_read()
 end
 
 
+PharWithoutStub.FileEntry = class.class(KaitaiStruct)
+
+function PharWithoutStub.FileEntry:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function PharWithoutStub.FileEntry:_read()
+  self.len_filename = self._io:read_u4le()
+  self.filename = self._io:read_bytes(self.len_filename)
+  self.len_data_uncompressed = self._io:read_u4le()
+  self.timestamp = self._io:read_u4le()
+  self.len_data_compressed = self._io:read_u4le()
+  self.crc32 = self._io:read_u4le()
+  self.flags = PharWithoutStub.FileFlags(self._io, self, self._root)
+  self.len_metadata = self._io:read_u4le()
+  if self.len_metadata ~= 0 then
+    self._raw_metadata = self._io:read_bytes(self.len_metadata)
+    local _io = KaitaiStream(stringstream(self._raw_metadata))
+    self.metadata = PharWithoutStub.SerializedValue(_io, self, self._root)
+  end
+end
+
+-- 
+-- The length of the file name, in bytes.
+-- 
+-- The name of this file. If the name ends with a slash, this entry
+-- represents a directory, otherwise a regular file. Directory entries
+-- are supported since phar API version 1.1.1.
+-- (Explicit directory entries are only needed for empty directories.
+-- Non-empty directories are implied by the files located inside them.)
+-- 
+-- The length of the file's data when uncompressed, in bytes.
+-- 
+-- The time at which the file was added or last updated, as a
+-- Unix timestamp.
+-- 
+-- The length of the file's data when compressed, in bytes.
+-- 
+-- The CRC32 checksum of the file's uncompressed data.
+-- 
+-- Flags for this file.
+-- 
+-- The length of the metadata, in bytes, or 0 if there is none.
+-- 
+-- Metadata for this file, in the format used by PHP's
+-- `serialize` function. The meaning of the serialized data is not
+-- specified further, it may be used to store arbitrary custom data
+-- about the file.
+
+PharWithoutStub.FileFlags = class.class(KaitaiStruct)
+
+function PharWithoutStub.FileFlags:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function PharWithoutStub.FileFlags:_read()
+  self.value = self._io:read_u4le()
+end
+
+-- 
+-- Whether this file's data is stored using bzip2 compression.
+PharWithoutStub.FileFlags.property.bzip2_compressed = {}
+function PharWithoutStub.FileFlags.property.bzip2_compressed:get()
+  if self._m_bzip2_compressed ~= nil then
+    return self._m_bzip2_compressed
+  end
+
+  self._m_bzip2_compressed = self.value & 8192 ~= 0
+  return self._m_bzip2_compressed
+end
+
+-- 
+-- The file's permission bits.
+PharWithoutStub.FileFlags.property.permissions = {}
+function PharWithoutStub.FileFlags.property.permissions:get()
+  if self._m_permissions ~= nil then
+    return self._m_permissions
+  end
+
+  self._m_permissions = self.value & 511
+  return self._m_permissions
+end
+
+-- 
+-- Whether this file's data is stored using zlib compression.
+PharWithoutStub.FileFlags.property.zlib_compressed = {}
+function PharWithoutStub.FileFlags.property.zlib_compressed:get()
+  if self._m_zlib_compressed ~= nil then
+    return self._m_zlib_compressed
+  end
+
+  self._m_zlib_compressed = self.value & 4096 ~= 0
+  return self._m_zlib_compressed
+end
+
+-- 
+-- The unparsed flag bits.
+
 PharWithoutStub.GlobalFlags = class.class(KaitaiStruct)
 
 function PharWithoutStub.GlobalFlags:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function PharWithoutStub.GlobalFlags:_read()
   self.value = self._io:read_u4le()
-end
-
--- 
--- Whether any of the files in this phar are stored using
--- zlib compression.
-PharWithoutStub.GlobalFlags.property.any_zlib_compressed = {}
-function PharWithoutStub.GlobalFlags.property.any_zlib_compressed:get()
-  if self._m_any_zlib_compressed ~= nil then
-    return self._m_any_zlib_compressed
-  end
-
-  self._m_any_zlib_compressed = (self.value & 4096) ~= 0
-  return self._m_any_zlib_compressed
 end
 
 -- 
@@ -290,8 +274,21 @@ function PharWithoutStub.GlobalFlags.property.any_bzip2_compressed:get()
     return self._m_any_bzip2_compressed
   end
 
-  self._m_any_bzip2_compressed = (self.value & 8192) ~= 0
+  self._m_any_bzip2_compressed = self.value & 8192 ~= 0
   return self._m_any_bzip2_compressed
+end
+
+-- 
+-- Whether any of the files in this phar are stored using
+-- zlib compression.
+PharWithoutStub.GlobalFlags.property.any_zlib_compressed = {}
+function PharWithoutStub.GlobalFlags.property.any_zlib_compressed:get()
+  if self._m_any_zlib_compressed ~= nil then
+    return self._m_any_zlib_compressed
+  end
+
+  self._m_any_zlib_compressed = self.value & 4096 ~= 0
+  return self._m_any_zlib_compressed
 end
 
 -- 
@@ -302,7 +299,7 @@ function PharWithoutStub.GlobalFlags.property.has_signature:get()
     return self._m_has_signature
   end
 
-  self._m_has_signature = (self.value & 65536) ~= 0
+  self._m_has_signature = self.value & 65536 ~= 0
   return self._m_has_signature
 end
 
@@ -314,7 +311,7 @@ PharWithoutStub.Manifest = class.class(KaitaiStruct)
 function PharWithoutStub.Manifest:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -362,55 +359,58 @@ end
 -- 
 -- Manifest entries for the files contained in this phar.
 
-PharWithoutStub.FileEntry = class.class(KaitaiStruct)
+PharWithoutStub.SerializedValue = class.class(KaitaiStruct)
 
-function PharWithoutStub.FileEntry:_init(io, parent, root)
+function PharWithoutStub.SerializedValue:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function PharWithoutStub.FileEntry:_read()
-  self.len_filename = self._io:read_u4le()
-  self.filename = self._io:read_bytes(self.len_filename)
-  self.len_data_uncompressed = self._io:read_u4le()
-  self.timestamp = self._io:read_u4le()
-  self.len_data_compressed = self._io:read_u4le()
-  self.crc32 = self._io:read_u4le()
-  self.flags = PharWithoutStub.FileFlags(self._io, self, self._root)
-  self.len_metadata = self._io:read_u4le()
-  if self.len_metadata ~= 0 then
-    self._raw_metadata = self._io:read_bytes(self.len_metadata)
-    local _io = KaitaiStream(stringstream(self._raw_metadata))
-    self.metadata = PharWithoutStub.SerializedValue(_io, self, self._root)
+function PharWithoutStub.SerializedValue:_read()
+  self.raw = self._io:read_bytes_full()
+end
+
+-- 
+-- The serialized value, parsed as a structure.
+PharWithoutStub.SerializedValue.property.parsed = {}
+function PharWithoutStub.SerializedValue.property.parsed:get()
+  if self._m_parsed ~= nil then
+    return self._m_parsed
+  end
+
+  local _pos = self._io:pos()
+  self._io:seek(0)
+  self._m_parsed = PhpSerializedValue(self._io)
+  self._io:seek(_pos)
+  return self._m_parsed
+end
+
+-- 
+-- The serialized value, as a raw byte array.
+
+PharWithoutStub.Signature = class.class(KaitaiStruct)
+
+function PharWithoutStub.Signature:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function PharWithoutStub.Signature:_read()
+  self.data = self._io:read_bytes((self._io:size() - self._io:pos()) - 8)
+  self.type = PharWithoutStub.SignatureType(self._io:read_u4le())
+  self.magic = self._io:read_bytes(4)
+  if not(self.magic == "\071\066\077\066") then
+    error("not equal, expected " .. "\071\066\077\066" .. ", but got " .. self.magic)
   end
 end
 
 -- 
--- The length of the file name, in bytes.
+-- The signature data. The size and contents depend on the
+-- signature type.
 -- 
--- The name of this file. If the name ends with a slash, this entry
--- represents a directory, otherwise a regular file. Directory entries
--- are supported since phar API version 1.1.1.
--- (Explicit directory entries are only needed for empty directories.
--- Non-empty directories are implied by the files located inside them.)
--- 
--- The length of the file's data when uncompressed, in bytes.
--- 
--- The time at which the file was added or last updated, as a
--- Unix timestamp.
--- 
--- The length of the file's data when compressed, in bytes.
--- 
--- The CRC32 checksum of the file's uncompressed data.
--- 
--- Flags for this file.
--- 
--- The length of the metadata, in bytes, or 0 if there is none.
--- 
--- Metadata for this file, in the format used by PHP's
--- `serialize` function. The meaning of the serialized data is not
--- specified further, it may be used to store arbitrary custom data
--- about the file.
+-- The signature type.
 

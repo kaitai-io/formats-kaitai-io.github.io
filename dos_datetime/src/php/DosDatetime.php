@@ -34,8 +34,8 @@
 
 namespace {
     class DosDatetime extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \DosDatetime $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\DosDatetime $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -51,94 +51,25 @@ namespace {
 }
 
 namespace DosDatetime {
-    class Time extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \DosDatetime $_parent = null, \DosDatetime $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_secondDiv2 = $this->_io->readBitsIntLe(5);
-            if (!($this->secondDiv2() <= 29)) {
-                throw new \Kaitai\Struct\Error\ValidationGreaterThanError(29, $this->secondDiv2(), $this->_io(), "/types/time/seq/0");
-            }
-            $this->_m_minute = $this->_io->readBitsIntLe(6);
-            if (!($this->minute() <= 59)) {
-                throw new \Kaitai\Struct\Error\ValidationGreaterThanError(59, $this->minute(), $this->_io(), "/types/time/seq/1");
-            }
-            $this->_m_hour = $this->_io->readBitsIntLe(5);
-            if (!($this->hour() <= 23)) {
-                throw new \Kaitai\Struct\Error\ValidationGreaterThanError(23, $this->hour(), $this->_io(), "/types/time/seq/2");
-            }
-        }
-        protected $_m_second;
-        public function second() {
-            if ($this->_m_second !== null)
-                return $this->_m_second;
-            $this->_m_second = (2 * $this->secondDiv2());
-            return $this->_m_second;
-        }
-        protected $_m_paddedSecond;
-        public function paddedSecond() {
-            if ($this->_m_paddedSecond !== null)
-                return $this->_m_paddedSecond;
-            $this->_m_paddedSecond = ($this->second() <= 9 ? "0" : "") . strval($this->second());
-            return $this->_m_paddedSecond;
-        }
-        protected $_m_paddedMinute;
-        public function paddedMinute() {
-            if ($this->_m_paddedMinute !== null)
-                return $this->_m_paddedMinute;
-            $this->_m_paddedMinute = ($this->minute() <= 9 ? "0" : "") . strval($this->minute());
-            return $this->_m_paddedMinute;
-        }
-        protected $_m_paddedHour;
-        public function paddedHour() {
-            if ($this->_m_paddedHour !== null)
-                return $this->_m_paddedHour;
-            $this->_m_paddedHour = ($this->hour() <= 9 ? "0" : "") . strval($this->hour());
-            return $this->_m_paddedHour;
-        }
-        protected $_m_secondDiv2;
-        protected $_m_minute;
-        protected $_m_hour;
-        public function secondDiv2() { return $this->_m_secondDiv2; }
-        public function minute() { return $this->_m_minute; }
-        public function hour() { return $this->_m_hour; }
-    }
-}
-
-namespace DosDatetime {
     class Date extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \DosDatetime $_parent = null, \DosDatetime $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\DosDatetime $_parent = null, ?\DosDatetime $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_day = $this->_io->readBitsIntLe(5);
-            if (!($this->day() >= 1)) {
-                throw new \Kaitai\Struct\Error\ValidationLessThanError(1, $this->day(), $this->_io(), "/types/date/seq/0");
+            if (!($this->_m_day >= 1)) {
+                throw new \Kaitai\Struct\Error\ValidationLessThanError(1, $this->_m_day, $this->_io, "/types/date/seq/0");
             }
             $this->_m_month = $this->_io->readBitsIntLe(4);
-            if (!($this->month() >= 1)) {
-                throw new \Kaitai\Struct\Error\ValidationLessThanError(1, $this->month(), $this->_io(), "/types/date/seq/1");
+            if (!($this->_m_month >= 1)) {
+                throw new \Kaitai\Struct\Error\ValidationLessThanError(1, $this->_m_month, $this->_io, "/types/date/seq/1");
             }
-            if (!($this->month() <= 12)) {
-                throw new \Kaitai\Struct\Error\ValidationGreaterThanError(12, $this->month(), $this->_io(), "/types/date/seq/1");
+            if (!($this->_m_month <= 12)) {
+                throw new \Kaitai\Struct\Error\ValidationGreaterThanError(12, $this->_m_month, $this->_io, "/types/date/seq/1");
             }
             $this->_m_yearMinus1980 = $this->_io->readBitsIntLe(7);
-        }
-        protected $_m_year;
-
-        /**
-         * only years from 1980 to 2107 (1980 + 127) can be represented
-         */
-        public function year() {
-            if ($this->_m_year !== null)
-                return $this->_m_year;
-            $this->_m_year = (1980 + $this->yearMinus1980());
-            return $this->_m_year;
         }
         protected $_m_paddedDay;
         public function paddedDay() {
@@ -161,11 +92,80 @@ namespace DosDatetime {
             $this->_m_paddedYear = ($this->year() <= 999 ? "0" . ($this->year() <= 99 ? "0" . ($this->year() <= 9 ? "0" : "") : "") : "") . strval($this->year());
             return $this->_m_paddedYear;
         }
+        protected $_m_year;
+
+        /**
+         * only years from 1980 to 2107 (1980 + 127) can be represented
+         */
+        public function year() {
+            if ($this->_m_year !== null)
+                return $this->_m_year;
+            $this->_m_year = 1980 + $this->yearMinus1980();
+            return $this->_m_year;
+        }
         protected $_m_day;
         protected $_m_month;
         protected $_m_yearMinus1980;
         public function day() { return $this->_m_day; }
         public function month() { return $this->_m_month; }
         public function yearMinus1980() { return $this->_m_yearMinus1980; }
+    }
+}
+
+namespace DosDatetime {
+    class Time extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\DosDatetime $_parent = null, ?\DosDatetime $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_secondDiv2 = $this->_io->readBitsIntLe(5);
+            if (!($this->_m_secondDiv2 <= 29)) {
+                throw new \Kaitai\Struct\Error\ValidationGreaterThanError(29, $this->_m_secondDiv2, $this->_io, "/types/time/seq/0");
+            }
+            $this->_m_minute = $this->_io->readBitsIntLe(6);
+            if (!($this->_m_minute <= 59)) {
+                throw new \Kaitai\Struct\Error\ValidationGreaterThanError(59, $this->_m_minute, $this->_io, "/types/time/seq/1");
+            }
+            $this->_m_hour = $this->_io->readBitsIntLe(5);
+            if (!($this->_m_hour <= 23)) {
+                throw new \Kaitai\Struct\Error\ValidationGreaterThanError(23, $this->_m_hour, $this->_io, "/types/time/seq/2");
+            }
+        }
+        protected $_m_paddedHour;
+        public function paddedHour() {
+            if ($this->_m_paddedHour !== null)
+                return $this->_m_paddedHour;
+            $this->_m_paddedHour = ($this->hour() <= 9 ? "0" : "") . strval($this->hour());
+            return $this->_m_paddedHour;
+        }
+        protected $_m_paddedMinute;
+        public function paddedMinute() {
+            if ($this->_m_paddedMinute !== null)
+                return $this->_m_paddedMinute;
+            $this->_m_paddedMinute = ($this->minute() <= 9 ? "0" : "") . strval($this->minute());
+            return $this->_m_paddedMinute;
+        }
+        protected $_m_paddedSecond;
+        public function paddedSecond() {
+            if ($this->_m_paddedSecond !== null)
+                return $this->_m_paddedSecond;
+            $this->_m_paddedSecond = ($this->second() <= 9 ? "0" : "") . strval($this->second());
+            return $this->_m_paddedSecond;
+        }
+        protected $_m_second;
+        public function second() {
+            if ($this->_m_second !== null)
+                return $this->_m_second;
+            $this->_m_second = 2 * $this->secondDiv2();
+            return $this->_m_second;
+        }
+        protected $_m_secondDiv2;
+        protected $_m_minute;
+        protected $_m_hour;
+        public function secondDiv2() { return $this->_m_secondDiv2; }
+        public function minute() { return $this->_m_minute; }
+        public function hour() { return $this->_m_hour; }
     }
 }

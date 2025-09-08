@@ -7,7 +7,8 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
-import java.nio.charset.Charset;
+import java.util.List;
+import java.nio.charset.StandardCharsets;
 
 public class FalloutDat extends KaitaiStruct {
     public static FalloutDat fromFile(String fileName) throws IOException {
@@ -57,37 +58,73 @@ public class FalloutDat extends KaitaiStruct {
             this.folders.add(new Folder(this._io, this, _root));
         }
     }
-    public static class Pstr extends KaitaiStruct {
-        public static Pstr fromFile(String fileName) throws IOException {
-            return new Pstr(new ByteBufferKaitaiStream(fileName));
+
+    public void _fetchInstances() {
+        for (int i = 0; i < this.folderNames.size(); i++) {
+            this.folderNames.get(((Number) (i)).intValue())._fetchInstances();
+        }
+        for (int i = 0; i < this.folders.size(); i++) {
+            this.folders.get(((Number) (i)).intValue())._fetchInstances();
+        }
+    }
+    public static class File extends KaitaiStruct {
+        public static File fromFile(String fileName) throws IOException {
+            return new File(new ByteBufferKaitaiStream(fileName));
         }
 
-        public Pstr(KaitaiStream _io) {
+        public File(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public Pstr(KaitaiStream _io, KaitaiStruct _parent) {
+        public File(KaitaiStream _io, FalloutDat.Folder _parent) {
             this(_io, _parent, null);
         }
 
-        public Pstr(KaitaiStream _io, KaitaiStruct _parent, FalloutDat _root) {
+        public File(KaitaiStream _io, FalloutDat.Folder _parent, FalloutDat _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.size = this._io.readU1();
-            this.str = new String(this._io.readBytes(size()), Charset.forName("ASCII"));
+            this.name = new Pstr(this._io, this, _root);
+            this.flags = FalloutDat.Compression.byId(this._io.readU4be());
+            this.offset = this._io.readU4be();
+            this.sizeUnpacked = this._io.readU4be();
+            this.sizePacked = this._io.readU4be();
         }
-        private int size;
-        private String str;
+
+        public void _fetchInstances() {
+            this.name._fetchInstances();
+            contents();
+            if (this.contents != null) {
+            }
+        }
+        private byte[] contents;
+        public byte[] contents() {
+            if (this.contents != null)
+                return this.contents;
+            KaitaiStream io = _root()._io();
+            long _pos = io.pos();
+            io.seek(offset());
+            this.contents = io.readBytes((flags() == FalloutDat.Compression.NONE ? sizeUnpacked() : sizePacked()));
+            io.seek(_pos);
+            return this.contents;
+        }
+        private Pstr name;
+        private Compression flags;
+        private long offset;
+        private long sizeUnpacked;
+        private long sizePacked;
         private FalloutDat _root;
-        private KaitaiStruct _parent;
-        public int size() { return size; }
-        public String str() { return str; }
+        private FalloutDat.Folder _parent;
+        public Pstr name() { return name; }
+        public Compression flags() { return flags; }
+        public long offset() { return offset; }
+        public long sizeUnpacked() { return sizeUnpacked; }
+        public long sizePacked() { return sizePacked; }
         public FalloutDat _root() { return _root; }
-        public KaitaiStruct _parent() { return _parent; }
+        public FalloutDat.Folder _parent() { return _parent; }
     }
     public static class Folder extends KaitaiStruct {
         public static Folder fromFile(String fileName) throws IOException {
@@ -118,87 +155,76 @@ public class FalloutDat extends KaitaiStruct {
                 this.files.add(new File(this._io, this, _root));
             }
         }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.files.size(); i++) {
+                this.files.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
         private long fileCount;
         private long unknown;
         private long flags;
         private long timestamp;
-        private ArrayList<File> files;
+        private List<File> files;
         private FalloutDat _root;
         private FalloutDat _parent;
         public long fileCount() { return fileCount; }
         public long unknown() { return unknown; }
         public long flags() { return flags; }
         public long timestamp() { return timestamp; }
-        public ArrayList<File> files() { return files; }
+        public List<File> files() { return files; }
         public FalloutDat _root() { return _root; }
         public FalloutDat _parent() { return _parent; }
     }
-    public static class File extends KaitaiStruct {
-        public static File fromFile(String fileName) throws IOException {
-            return new File(new ByteBufferKaitaiStream(fileName));
+    public static class Pstr extends KaitaiStruct {
+        public static Pstr fromFile(String fileName) throws IOException {
+            return new Pstr(new ByteBufferKaitaiStream(fileName));
         }
 
-        public File(KaitaiStream _io) {
+        public Pstr(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public File(KaitaiStream _io, FalloutDat.Folder _parent) {
+        public Pstr(KaitaiStream _io, KaitaiStruct _parent) {
             this(_io, _parent, null);
         }
 
-        public File(KaitaiStream _io, FalloutDat.Folder _parent, FalloutDat _root) {
+        public Pstr(KaitaiStream _io, KaitaiStruct _parent, FalloutDat _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.name = new Pstr(this._io, this, _root);
-            this.flags = FalloutDat.Compression.byId(this._io.readU4be());
-            this.offset = this._io.readU4be();
-            this.sizeUnpacked = this._io.readU4be();
-            this.sizePacked = this._io.readU4be();
+            this.size = this._io.readU1();
+            this.str = new String(this._io.readBytes(size()), StandardCharsets.US_ASCII);
         }
-        private byte[] contents;
-        public byte[] contents() {
-            if (this.contents != null)
-                return this.contents;
-            KaitaiStream io = _root()._io();
-            long _pos = io.pos();
-            io.seek(offset());
-            this.contents = io.readBytes((flags() == FalloutDat.Compression.NONE ? sizeUnpacked() : sizePacked()));
-            io.seek(_pos);
-            return this.contents;
+
+        public void _fetchInstances() {
         }
-        private Pstr name;
-        private Compression flags;
-        private long offset;
-        private long sizeUnpacked;
-        private long sizePacked;
+        private int size;
+        private String str;
         private FalloutDat _root;
-        private FalloutDat.Folder _parent;
-        public Pstr name() { return name; }
-        public Compression flags() { return flags; }
-        public long offset() { return offset; }
-        public long sizeUnpacked() { return sizeUnpacked; }
-        public long sizePacked() { return sizePacked; }
+        private KaitaiStruct _parent;
+        public int size() { return size; }
+        public String str() { return str; }
         public FalloutDat _root() { return _root; }
-        public FalloutDat.Folder _parent() { return _parent; }
+        public KaitaiStruct _parent() { return _parent; }
     }
     private long folderCount;
     private long unknown1;
     private long unknown2;
     private long timestamp;
-    private ArrayList<Pstr> folderNames;
-    private ArrayList<Folder> folders;
+    private List<Pstr> folderNames;
+    private List<Folder> folders;
     private FalloutDat _root;
     private KaitaiStruct _parent;
     public long folderCount() { return folderCount; }
     public long unknown1() { return unknown1; }
     public long unknown2() { return unknown2; }
     public long timestamp() { return timestamp; }
-    public ArrayList<Pstr> folderNames() { return folderNames; }
-    public ArrayList<Folder> folders() { return folders; }
+    public List<Pstr> folderNames() { return folderNames; }
+    public List<Folder> folders() { return folders; }
     public FalloutDat _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

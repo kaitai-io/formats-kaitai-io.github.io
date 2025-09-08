@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -81,16 +81,16 @@ class Quake2Md2 < Kaitai::Struct::Struct
     1 => :gl_primitive_triangle_fan,
   }
   I__GL_PRIMITIVE = GL_PRIMITIVE.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
     @magic = @_io.read_bytes(4)
-    raise Kaitai::Struct::ValidationNotEqualError.new([73, 68, 80, 50].pack('C*'), magic, _io, "/seq/0") if not magic == [73, 68, 80, 50].pack('C*')
+    raise Kaitai::Struct::ValidationNotEqualError.new([73, 68, 80, 50].pack('C*'), @magic, @_io, "/seq/0") if not @magic == [73, 68, 80, 50].pack('C*')
     @version = @_io.read_u4le
-    raise Kaitai::Struct::ValidationNotEqualError.new(8, version, _io, "/seq/1") if not version == 8
+    raise Kaitai::Struct::ValidationNotEqualError.new(8, @version, @_io, "/seq/1") if not @version == 8
     @skin_width_px = @_io.read_u4le
     @skin_height_px = @_io.read_u4le
     @bytes_per_frame = @_io.read_u4le
@@ -108,27 +108,8 @@ class Quake2Md2 < Kaitai::Struct::Struct
     @ofs_eof = @_io.read_u4le
     self
   end
-  class Vertex < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @position = CompressedVec.new(@_io, self, @_root)
-      @normal_index = @_io.read_u1
-      self
-    end
-    def normal
-      return @normal unless @normal.nil?
-      @normal = _root.anorms_table[normal_index]
-      @normal
-    end
-    attr_reader :position
-    attr_reader :normal_index
-  end
   class CompressedVec < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -141,51 +122,25 @@ class Quake2Md2 < Kaitai::Struct::Struct
     end
     def x
       return @x unless @x.nil?
-      @x = ((x_compressed * _parent._parent.scale.x) + _parent._parent.translate.x)
+      @x = x_compressed * _parent._parent.scale.x + _parent._parent.translate.x
       @x
     end
     def y
       return @y unless @y.nil?
-      @y = ((y_compressed * _parent._parent.scale.y) + _parent._parent.translate.y)
+      @y = y_compressed * _parent._parent.scale.y + _parent._parent.translate.y
       @y
     end
     def z
       return @z unless @z.nil?
-      @z = ((z_compressed * _parent._parent.scale.z) + _parent._parent.translate.z)
+      @z = z_compressed * _parent._parent.scale.z + _parent._parent.translate.z
       @z
     end
     attr_reader :x_compressed
     attr_reader :y_compressed
     attr_reader :z_compressed
   end
-  class Triangle < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @vertex_indices = []
-      (3).times { |i|
-        @vertex_indices << @_io.read_u2le
-      }
-      @tex_point_indices = []
-      (3).times { |i|
-        @tex_point_indices << @_io.read_u2le
-      }
-      self
-    end
-
-    ##
-    # indices to `_root.frames[i].vertices` (for each frame with index `i`)
-    attr_reader :vertex_indices
-
-    ##
-    # indices to `_root.tex_coords`
-    attr_reader :tex_point_indices
-  end
   class Frame < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -193,7 +148,7 @@ class Quake2Md2 < Kaitai::Struct::Struct
     def _read
       @scale = Vec3f.new(@_io, self, @_root)
       @translate = Vec3f.new(@_io, self, @_root)
-      @name = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(16), 0, false)).force_encoding("ascii")
+      @name = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(16), 0, false)).force_encoding("ASCII").encode('UTF-8')
       @vertices = []
       (_root.vertices_per_frame).times { |i|
         @vertices << Vertex.new(@_io, self, @_root)
@@ -205,88 +160,8 @@ class Quake2Md2 < Kaitai::Struct::Struct
     attr_reader :name
     attr_reader :vertices
   end
-  class GlCmdsList < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      if !(_io.eof?)
-        @items = []
-        i = 0
-        begin
-          _ = GlCmd.new(@_io, self, @_root)
-          @items << _
-          i += 1
-        end until _.cmd_num_vertices == 0
-      end
-      self
-    end
-    attr_reader :items
-  end
-  class TexPoint < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @s_px = @_io.read_u2le
-      @t_px = @_io.read_u2le
-      self
-    end
-    def s_normalized
-      return @s_normalized unless @s_normalized.nil?
-      @s_normalized = ((s_px + 0.0) / _root.skin_width_px)
-      @s_normalized
-    end
-    def t_normalized
-      return @t_normalized unless @t_normalized.nil?
-      @t_normalized = ((t_px + 0.0) / _root.skin_height_px)
-      @t_normalized
-    end
-    attr_reader :s_px
-    attr_reader :t_px
-  end
-  class Vec3f < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @x = @_io.read_f4le
-      @y = @_io.read_f4le
-      @z = @_io.read_f4le
-      self
-    end
-    attr_reader :x
-    attr_reader :y
-    attr_reader :z
-  end
-  class GlVertex < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @tex_coords_normalized = []
-      (2).times { |i|
-        @tex_coords_normalized << @_io.read_f4le
-      }
-      @vertex_index = @_io.read_u4le
-      self
-    end
-    attr_reader :tex_coords_normalized
-
-    ##
-    # index to `_root.frames[i].vertices` (for each frame with index `i`)
-    attr_reader :vertex_index
-  end
   class GlCmd < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -312,10 +187,145 @@ class Quake2Md2 < Kaitai::Struct::Struct
     attr_reader :cmd_num_vertices
     attr_reader :vertices
   end
+  class GlCmdsList < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      if !(_io.eof?)
+        @items = []
+        i = 0
+        begin
+          _ = GlCmd.new(@_io, self, @_root)
+          @items << _
+          i += 1
+        end until _.cmd_num_vertices == 0
+      end
+      self
+    end
+    attr_reader :items
+  end
+  class GlVertex < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @tex_coords_normalized = []
+      (2).times { |i|
+        @tex_coords_normalized << @_io.read_f4le
+      }
+      @vertex_index = @_io.read_u4le
+      self
+    end
+    attr_reader :tex_coords_normalized
+
+    ##
+    # index to `_root.frames[i].vertices` (for each frame with index `i`)
+    attr_reader :vertex_index
+  end
+  class TexPoint < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @s_px = @_io.read_u2le
+      @t_px = @_io.read_u2le
+      self
+    end
+    def s_normalized
+      return @s_normalized unless @s_normalized.nil?
+      @s_normalized = (s_px + 0.0) / _root.skin_width_px
+      @s_normalized
+    end
+    def t_normalized
+      return @t_normalized unless @t_normalized.nil?
+      @t_normalized = (t_px + 0.0) / _root.skin_height_px
+      @t_normalized
+    end
+    attr_reader :s_px
+    attr_reader :t_px
+  end
+  class Triangle < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @vertex_indices = []
+      (3).times { |i|
+        @vertex_indices << @_io.read_u2le
+      }
+      @tex_point_indices = []
+      (3).times { |i|
+        @tex_point_indices << @_io.read_u2le
+      }
+      self
+    end
+
+    ##
+    # indices to `_root.frames[i].vertices` (for each frame with index `i`)
+    attr_reader :vertex_indices
+
+    ##
+    # indices to `_root.tex_coords`
+    attr_reader :tex_point_indices
+  end
+  class Vec3f < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @x = @_io.read_f4le
+      @y = @_io.read_f4le
+      @z = @_io.read_f4le
+      self
+    end
+    attr_reader :x
+    attr_reader :y
+    attr_reader :z
+  end
+  class Vertex < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @position = CompressedVec.new(@_io, self, @_root)
+      @normal_index = @_io.read_u1
+      self
+    end
+    def normal
+      return @normal unless @normal.nil?
+      @normal = _root.anorms_table[normal_index]
+      @normal
+    end
+    attr_reader :position
+    attr_reader :normal_index
+  end
+  def anim_names
+    return @anim_names unless @anim_names.nil?
+    @anim_names = ["stand", "run", "attack", "pain1", "pain2", "pain3", "jump", "flip", "salute", "taunt", "wave", "point", "crstnd", "crwalk", "crattak", "crpain", "crdeath", "death1", "death2", "death3"]
+    @anim_names
+  end
   def anim_num_frames
     return @anim_num_frames unless @anim_num_frames.nil?
     @anim_num_frames = [40, 6, 8, 4, 4, 4, 6, 12, 11, 17, 11, 12, 19, 6, 9, 4, 5, 6, 6, 8].pack('C*')
     @anim_num_frames
+  end
+  def anim_start_indices
+    return @anim_start_indices unless @anim_start_indices.nil?
+    @anim_start_indices = [0, 40, 46, 54, 58, 62, 66, 72, 84, 95, 112, 123, 135, 154, 160, 169, 173, 178, 184, 190].pack('C*')
+    @anim_start_indices
   end
 
   ##
@@ -325,6 +335,39 @@ class Quake2Md2 < Kaitai::Struct::Struct
     return @anorms_table unless @anorms_table.nil?
     @anorms_table = [[-0.525731, 0.000000, 0.850651], [-0.442863, 0.238856, 0.864188], [-0.295242, 0.000000, 0.955423], [-0.309017, 0.500000, 0.809017], [-0.162460, 0.262866, 0.951056], [0.000000, 0.000000, 1.000000], [0.000000, 0.850651, 0.525731], [-0.147621, 0.716567, 0.681718], [0.147621, 0.716567, 0.681718], [0.000000, 0.525731, 0.850651], [0.309017, 0.500000, 0.809017], [0.525731, 0.000000, 0.850651], [0.295242, 0.000000, 0.955423], [0.442863, 0.238856, 0.864188], [0.162460, 0.262866, 0.951056], [-0.681718, 0.147621, 0.716567], [-0.809017, 0.309017, 0.500000], [-0.587785, 0.425325, 0.688191], [-0.850651, 0.525731, 0.000000], [-0.864188, 0.442863, 0.238856], [-0.716567, 0.681718, 0.147621], [-0.688191, 0.587785, 0.425325], [-0.500000, 0.809017, 0.309017], [-0.238856, 0.864188, 0.442863], [-0.425325, 0.688191, 0.587785], [-0.716567, 0.681718, -0.147621], [-0.500000, 0.809017, -0.309017], [-0.525731, 0.850651, 0.000000], [0.000000, 0.850651, -0.525731], [-0.238856, 0.864188, -0.442863], [0.000000, 0.955423, -0.295242], [-0.262866, 0.951056, -0.162460], [0.000000, 1.000000, 0.000000], [0.000000, 0.955423, 0.295242], [-0.262866, 0.951056, 0.162460], [0.238856, 0.864188, 0.442863], [0.262866, 0.951056, 0.162460], [0.500000, 0.809017, 0.309017], [0.238856, 0.864188, -0.442863], [0.262866, 0.951056, -0.162460], [0.500000, 0.809017, -0.309017], [0.850651, 0.525731, 0.000000], [0.716567, 0.681718, 0.147621], [0.716567, 0.681718, -0.147621], [0.525731, 0.850651, 0.000000], [0.425325, 0.688191, 0.587785], [0.864188, 0.442863, 0.238856], [0.688191, 0.587785, 0.425325], [0.809017, 0.309017, 0.500000], [0.681718, 0.147621, 0.716567], [0.587785, 0.425325, 0.688191], [0.955423, 0.295242, 0.000000], [1.000000, 0.000000, 0.000000], [0.951056, 0.162460, 0.262866], [0.850651, -0.525731, 0.000000], [0.955423, -0.295242, 0.000000], [0.864188, -0.442863, 0.238856], [0.951056, -0.162460, 0.262866], [0.809017, -0.309017, 0.500000], [0.681718, -0.147621, 0.716567], [0.850651, 0.000000, 0.525731], [0.864188, 0.442863, -0.238856], [0.809017, 0.309017, -0.500000], [0.951056, 0.162460, -0.262866], [0.525731, 0.000000, -0.850651], [0.681718, 0.147621, -0.716567], [0.681718, -0.147621, -0.716567], [0.850651, 0.000000, -0.525731], [0.809017, -0.309017, -0.500000], [0.864188, -0.442863, -0.238856], [0.951056, -0.162460, -0.262866], [0.147621, 0.716567, -0.681718], [0.309017, 0.500000, -0.809017], [0.425325, 0.688191, -0.587785], [0.442863, 0.238856, -0.864188], [0.587785, 0.425325, -0.688191], [0.688191, 0.587785, -0.425325], [-0.147621, 0.716567, -0.681718], [-0.309017, 0.500000, -0.809017], [0.000000, 0.525731, -0.850651], [-0.525731, 0.000000, -0.850651], [-0.442863, 0.238856, -0.864188], [-0.295242, 0.000000, -0.955423], [-0.162460, 0.262866, -0.951056], [0.000000, 0.000000, -1.000000], [0.295242, 0.000000, -0.955423], [0.162460, 0.262866, -0.951056], [-0.442863, -0.238856, -0.864188], [-0.309017, -0.500000, -0.809017], [-0.162460, -0.262866, -0.951056], [0.000000, -0.850651, -0.525731], [-0.147621, -0.716567, -0.681718], [0.147621, -0.716567, -0.681718], [0.000000, -0.525731, -0.850651], [0.309017, -0.500000, -0.809017], [0.442863, -0.238856, -0.864188], [0.162460, -0.262866, -0.951056], [0.238856, -0.864188, -0.442863], [0.500000, -0.809017, -0.309017], [0.425325, -0.688191, -0.587785], [0.716567, -0.681718, -0.147621], [0.688191, -0.587785, -0.425325], [0.587785, -0.425325, -0.688191], [0.000000, -0.955423, -0.295242], [0.000000, -1.000000, 0.000000], [0.262866, -0.951056, -0.162460], [0.000000, -0.850651, 0.525731], [0.000000, -0.955423, 0.295242], [0.238856, -0.864188, 0.442863], [0.262866, -0.951056, 0.162460], [0.500000, -0.809017, 0.309017], [0.716567, -0.681718, 0.147621], [0.525731, -0.850651, 0.000000], [-0.238856, -0.864188, -0.442863], [-0.500000, -0.809017, -0.309017], [-0.262866, -0.951056, -0.162460], [-0.850651, -0.525731, 0.000000], [-0.716567, -0.681718, -0.147621], [-0.716567, -0.681718, 0.147621], [-0.525731, -0.850651, 0.000000], [-0.500000, -0.809017, 0.309017], [-0.238856, -0.864188, 0.442863], [-0.262866, -0.951056, 0.162460], [-0.864188, -0.442863, 0.238856], [-0.809017, -0.309017, 0.500000], [-0.688191, -0.587785, 0.425325], [-0.681718, -0.147621, 0.716567], [-0.442863, -0.238856, 0.864188], [-0.587785, -0.425325, 0.688191], [-0.309017, -0.500000, 0.809017], [-0.147621, -0.716567, 0.681718], [-0.425325, -0.688191, 0.587785], [-0.162460, -0.262866, 0.951056], [0.442863, -0.238856, 0.864188], [0.162460, -0.262866, 0.951056], [0.309017, -0.500000, 0.809017], [0.147621, -0.716567, 0.681718], [0.000000, -0.525731, 0.850651], [0.425325, -0.688191, 0.587785], [0.587785, -0.425325, 0.688191], [0.688191, -0.587785, 0.425325], [-0.955423, 0.295242, 0.000000], [-0.951056, 0.162460, 0.262866], [-1.000000, 0.000000, 0.000000], [-0.850651, 0.000000, 0.525731], [-0.955423, -0.295242, 0.000000], [-0.951056, -0.162460, 0.262866], [-0.864188, 0.442863, -0.238856], [-0.951056, 0.162460, -0.262866], [-0.809017, 0.309017, -0.500000], [-0.864188, -0.442863, -0.238856], [-0.951056, -0.162460, -0.262866], [-0.809017, -0.309017, -0.500000], [-0.681718, 0.147621, -0.716567], [-0.681718, -0.147621, -0.716567], [-0.850651, 0.000000, -0.525731], [-0.688191, 0.587785, -0.425325], [-0.587785, 0.425325, -0.688191], [-0.425325, 0.688191, -0.587785], [-0.425325, -0.688191, -0.587785], [-0.587785, -0.425325, -0.688191], [-0.688191, -0.587785, -0.425325]]
     @anorms_table
+  end
+  def frames
+    return @frames unless @frames.nil?
+    _pos = @_io.pos
+    @_io.seek(ofs_frames)
+    @_raw_frames = []
+    @frames = []
+    (num_frames).times { |i|
+      _io_frames = @_io.substream(bytes_per_frame)
+      @frames << Frame.new(_io_frames, self, @_root)
+    }
+    @_io.seek(_pos)
+    @frames
+  end
+  def gl_cmds
+    return @gl_cmds unless @gl_cmds.nil?
+    _pos = @_io.pos
+    @_io.seek(ofs_gl_cmds)
+    _io_gl_cmds = @_io.substream(4 * num_gl_cmds)
+    @gl_cmds = GlCmdsList.new(_io_gl_cmds, self, @_root)
+    @_io.seek(_pos)
+    @gl_cmds
+  end
+  def skins
+    return @skins unless @skins.nil?
+    _pos = @_io.pos
+    @_io.seek(ofs_skins)
+    @skins = []
+    (num_skins).times { |i|
+      @skins << (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(64), 0, false)).force_encoding("ASCII").encode('UTF-8')
+    }
+    @_io.seek(_pos)
+    @skins
   end
   def tex_coords
     return @tex_coords unless @tex_coords.nil?
@@ -347,51 +390,6 @@ class Quake2Md2 < Kaitai::Struct::Struct
     }
     @_io.seek(_pos)
     @triangles
-  end
-  def frames
-    return @frames unless @frames.nil?
-    _pos = @_io.pos
-    @_io.seek(ofs_frames)
-    @_raw_frames = []
-    @frames = []
-    (num_frames).times { |i|
-      @_raw_frames << @_io.read_bytes(bytes_per_frame)
-      _io__raw_frames = Kaitai::Struct::Stream.new(@_raw_frames[i])
-      @frames << Frame.new(_io__raw_frames, self, @_root)
-    }
-    @_io.seek(_pos)
-    @frames
-  end
-  def anim_names
-    return @anim_names unless @anim_names.nil?
-    @anim_names = ["stand", "run", "attack", "pain1", "pain2", "pain3", "jump", "flip", "salute", "taunt", "wave", "point", "crstnd", "crwalk", "crattak", "crpain", "crdeath", "death1", "death2", "death3"]
-    @anim_names
-  end
-  def gl_cmds
-    return @gl_cmds unless @gl_cmds.nil?
-    _pos = @_io.pos
-    @_io.seek(ofs_gl_cmds)
-    @_raw_gl_cmds = @_io.read_bytes((4 * num_gl_cmds))
-    _io__raw_gl_cmds = Kaitai::Struct::Stream.new(@_raw_gl_cmds)
-    @gl_cmds = GlCmdsList.new(_io__raw_gl_cmds, self, @_root)
-    @_io.seek(_pos)
-    @gl_cmds
-  end
-  def skins
-    return @skins unless @skins.nil?
-    _pos = @_io.pos
-    @_io.seek(ofs_skins)
-    @skins = []
-    (num_skins).times { |i|
-      @skins << (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(64), 0, false)).force_encoding("ascii")
-    }
-    @_io.seek(_pos)
-    @skins
-  end
-  def anim_start_indices
-    return @anim_start_indices unless @anim_start_indices.nil?
-    @anim_start_indices = [0, 40, 46, 54, 58, 62, 66, 72, 84, 95, 112, 123, 135, 154, 160, 169, 173, 178, 184, 190].pack('C*')
-    @anim_start_indices
   end
   attr_reader :magic
   attr_reader :version

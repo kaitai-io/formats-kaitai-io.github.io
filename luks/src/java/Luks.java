@@ -5,10 +5,11 @@ import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.Arrays;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
 
 
 /**
@@ -38,6 +39,13 @@ public class Luks extends KaitaiStruct {
     private void _read() {
         this.partitionHeader = new PartitionHeader(this._io, this, _root);
     }
+
+    public void _fetchInstances() {
+        this.partitionHeader._fetchInstances();
+        payload();
+        if (this.payload != null) {
+        }
+    }
     public static class PartitionHeader extends KaitaiStruct {
         public static PartitionHeader fromFile(String fileName) throws IOException {
             return new PartitionHeader(new ByteBufferKaitaiStream(fileName));
@@ -59,25 +67,31 @@ public class Luks extends KaitaiStruct {
         }
         private void _read() {
             this.magic = this._io.readBytes(6);
-            if (!(Arrays.equals(magic(), new byte[] { 76, 85, 75, 83, -70, -66 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 76, 85, 75, 83, -70, -66 }, magic(), _io(), "/types/partition_header/seq/0");
+            if (!(Arrays.equals(this.magic, new byte[] { 76, 85, 75, 83, -70, -66 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 76, 85, 75, 83, -70, -66 }, this.magic, this._io, "/types/partition_header/seq/0");
             }
             this.version = this._io.readBytes(2);
-            if (!(Arrays.equals(version(), new byte[] { 0, 1 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 1 }, version(), _io(), "/types/partition_header/seq/1");
+            if (!(Arrays.equals(this.version, new byte[] { 0, 1 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 1 }, this.version, this._io, "/types/partition_header/seq/1");
             }
-            this.cipherNameSpecification = new String(this._io.readBytes(32), Charset.forName("ASCII"));
-            this.cipherModeSpecification = new String(this._io.readBytes(32), Charset.forName("ASCII"));
-            this.hashSpecification = new String(this._io.readBytes(32), Charset.forName("ASCII"));
+            this.cipherNameSpecification = new String(this._io.readBytes(32), StandardCharsets.US_ASCII);
+            this.cipherModeSpecification = new String(this._io.readBytes(32), StandardCharsets.US_ASCII);
+            this.hashSpecification = new String(this._io.readBytes(32), StandardCharsets.US_ASCII);
             this.payloadOffset = this._io.readU4be();
             this.numberOfKeyBytes = this._io.readU4be();
             this.masterKeyChecksum = this._io.readBytes(20);
             this.masterKeySaltParameter = this._io.readBytes(32);
             this.masterKeyIterationsParameter = this._io.readU4be();
-            this.uuid = new String(this._io.readBytes(40), Charset.forName("ASCII"));
+            this.uuid = new String(this._io.readBytes(40), StandardCharsets.US_ASCII);
             this.keySlots = new ArrayList<KeySlot>();
             for (int i = 0; i < 8; i++) {
                 this.keySlots.add(new KeySlot(this._io, this, _root));
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.keySlots.size(); i++) {
+                this.keySlots.get(((Number) (i)).intValue())._fetchInstances();
             }
         }
         public static class KeySlot extends KaitaiStruct {
@@ -121,13 +135,19 @@ public class Luks extends KaitaiStruct {
                 this.startSectorOfKeyMaterial = this._io.readU4be();
                 this.numberOfAntiForensicStripes = this._io.readU4be();
             }
+
+            public void _fetchInstances() {
+                keyMaterial();
+                if (this.keyMaterial != null) {
+                }
+            }
             private byte[] keyMaterial;
             public byte[] keyMaterial() {
                 if (this.keyMaterial != null)
                     return this.keyMaterial;
                 long _pos = this._io.pos();
-                this._io.seek((startSectorOfKeyMaterial() * 512));
-                this.keyMaterial = this._io.readBytes((_parent().numberOfKeyBytes() * numberOfAntiForensicStripes()));
+                this._io.seek(startSectorOfKeyMaterial() * 512);
+                this.keyMaterial = this._io.readBytes(_parent().numberOfKeyBytes() * numberOfAntiForensicStripes());
                 this._io.seek(_pos);
                 return this.keyMaterial;
             }
@@ -157,7 +177,7 @@ public class Luks extends KaitaiStruct {
         private byte[] masterKeySaltParameter;
         private long masterKeyIterationsParameter;
         private String uuid;
-        private ArrayList<KeySlot> keySlots;
+        private List<KeySlot> keySlots;
         private Luks _root;
         private Luks _parent;
         public byte[] magic() { return magic; }
@@ -171,7 +191,7 @@ public class Luks extends KaitaiStruct {
         public byte[] masterKeySaltParameter() { return masterKeySaltParameter; }
         public long masterKeyIterationsParameter() { return masterKeyIterationsParameter; }
         public String uuid() { return uuid; }
-        public ArrayList<KeySlot> keySlots() { return keySlots; }
+        public List<KeySlot> keySlots() { return keySlots; }
         public Luks _root() { return _root; }
         public Luks _parent() { return _parent; }
     }
@@ -180,7 +200,7 @@ public class Luks extends KaitaiStruct {
         if (this.payload != null)
             return this.payload;
         long _pos = this._io.pos();
-        this._io.seek((partitionHeader().payloadOffset() * 512));
+        this._io.seek(partitionHeader().payloadOffset() * 512);
         this.payload = this._io.readBytesFull();
         this._io.seek(_pos);
         return this.payload;

@@ -33,16 +33,16 @@ namespace Kaitai
         {
             m_parent = p__parent;
             m_root = p__root ?? this;
-            f_hasClut = false;
             f_bpp = false;
+            f_hasClut = false;
             _read();
         }
         private void _read()
         {
             _magic = m_io.ReadBytes(4);
-            if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 16, 0, 0, 0 }) == 0)))
+            if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 16, 0, 0, 0 }) == 0)))
             {
-                throw new ValidationNotEqualError(new byte[] { 16, 0, 0, 0 }, Magic, M_Io, "/seq/0");
+                throw new ValidationNotEqualError(new byte[] { 16, 0, 0, 0 }, _magic, m_io, "/seq/0");
             }
             _flags = m_io.ReadU4le();
             if (HasClut) {
@@ -70,7 +70,7 @@ namespace Kaitai
                 _originY = m_io.ReadU2le();
                 _width = m_io.ReadU2le();
                 _height = m_io.ReadU2le();
-                _body = m_io.ReadBytes((Len - 12));
+                _body = m_io.ReadBytes(Len - 12);
             }
             private uint _len;
             private ushort _originX;
@@ -89,19 +89,6 @@ namespace Kaitai
             public PsxTim M_Root { get { return m_root; } }
             public PsxTim M_Parent { get { return m_parent; } }
         }
-        private bool f_hasClut;
-        private bool _hasClut;
-        public bool HasClut
-        {
-            get
-            {
-                if (f_hasClut)
-                    return _hasClut;
-                _hasClut = (bool) ((Flags & 8) != 0);
-                f_hasClut = true;
-                return _hasClut;
-            }
-        }
         private bool f_bpp;
         private int _bpp;
         public int Bpp
@@ -110,9 +97,22 @@ namespace Kaitai
             {
                 if (f_bpp)
                     return _bpp;
-                _bpp = (int) ((Flags & 3));
                 f_bpp = true;
+                _bpp = (int) (Flags & 3);
                 return _bpp;
+            }
+        }
+        private bool f_hasClut;
+        private bool _hasClut;
+        public bool HasClut
+        {
+            get
+            {
+                if (f_hasClut)
+                    return _hasClut;
+                f_hasClut = true;
+                _hasClut = (bool) ((Flags & 8) != 0);
+                return _hasClut;
             }
         }
         private byte[] _magic;

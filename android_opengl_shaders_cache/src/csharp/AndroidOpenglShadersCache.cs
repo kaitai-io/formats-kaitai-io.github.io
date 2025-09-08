@@ -28,9 +28,9 @@ namespace Kaitai
         private void _read()
         {
             _magic = m_io.ReadBytes(4);
-            if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 69, 71, 76, 36 }) == 0)))
+            if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 69, 71, 76, 36 }) == 0)))
             {
-                throw new ValidationNotEqualError(new byte[] { 69, 71, 76, 36 }, Magic, M_Io, "/seq/0");
+                throw new ValidationNotEqualError(new byte[] { 69, 71, 76, 36 }, _magic, m_io, "/seq/0");
             }
             _crc32 = m_io.ReadU4le();
             __raw_contents = m_io.ReadBytesFull();
@@ -52,7 +52,7 @@ namespace Kaitai
             }
             private void _read()
             {
-                _alignment = m_io.ReadBytes(((M_Io.Pos + 3) & (~3 - M_Io.Pos)));
+                _alignment = m_io.ReadBytes(M_Io.Pos + 3 & ~3 - M_Io.Pos);
             }
             private byte[] _alignment;
             private AndroidOpenglShadersCache m_root;
@@ -64,36 +64,6 @@ namespace Kaitai
             public byte[] Alignment { get { return _alignment; } }
             public AndroidOpenglShadersCache M_Root { get { return m_root; } }
             public KaitaiStruct M_Parent { get { return m_parent; } }
-        }
-        public partial class PrefixedString : KaitaiStruct
-        {
-            public static PrefixedString FromFile(string fileName)
-            {
-                return new PrefixedString(new KaitaiStream(fileName));
-            }
-
-            public PrefixedString(KaitaiStream p__io, AndroidOpenglShadersCache.Cache p__parent = null, AndroidOpenglShadersCache p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _lenStr = m_io.ReadU4le();
-                _str = System.Text.Encoding.GetEncoding("ascii").GetString(KaitaiStream.BytesTerminate(m_io.ReadBytes(LenStr), 0, false));
-                _alignment = new Alignment(m_io, this, m_root);
-            }
-            private uint _lenStr;
-            private string _str;
-            private Alignment _alignment;
-            private AndroidOpenglShadersCache m_root;
-            private AndroidOpenglShadersCache.Cache m_parent;
-            public uint LenStr { get { return _lenStr; } }
-            public string Str { get { return _str; } }
-            public Alignment Alignment { get { return _alignment; } }
-            public AndroidOpenglShadersCache M_Root { get { return m_root; } }
-            public AndroidOpenglShadersCache.Cache M_Parent { get { return m_parent; } }
         }
 
         /// <remarks>
@@ -115,9 +85,9 @@ namespace Kaitai
             private void _read()
             {
                 _magic = m_io.ReadBytes(4);
-                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 36, 98, 66, 95 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 36, 98, 66, 95 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 36, 98, 66, 95 }, Magic, M_Io, "/types/cache/seq/0");
+                    throw new ValidationNotEqualError(new byte[] { 36, 98, 66, 95 }, _magic, m_io, "/types/cache/seq/0");
                 }
                 _version = m_io.ReadU4le();
                 _deviceVersion = m_io.ReadU4le();
@@ -183,6 +153,36 @@ namespace Kaitai
             public List<Entry> Entries { get { return _entries; } }
             public AndroidOpenglShadersCache M_Root { get { return m_root; } }
             public AndroidOpenglShadersCache M_Parent { get { return m_parent; } }
+        }
+        public partial class PrefixedString : KaitaiStruct
+        {
+            public static PrefixedString FromFile(string fileName)
+            {
+                return new PrefixedString(new KaitaiStream(fileName));
+            }
+
+            public PrefixedString(KaitaiStream p__io, AndroidOpenglShadersCache.Cache p__parent = null, AndroidOpenglShadersCache p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _lenStr = m_io.ReadU4le();
+                _str = System.Text.Encoding.GetEncoding("ASCII").GetString(KaitaiStream.BytesTerminate(m_io.ReadBytes(LenStr), 0, false));
+                _alignment = new Alignment(m_io, this, m_root);
+            }
+            private uint _lenStr;
+            private string _str;
+            private Alignment _alignment;
+            private AndroidOpenglShadersCache m_root;
+            private AndroidOpenglShadersCache.Cache m_parent;
+            public uint LenStr { get { return _lenStr; } }
+            public string Str { get { return _str; } }
+            public Alignment Alignment { get { return _alignment; } }
+            public AndroidOpenglShadersCache M_Root { get { return m_root; } }
+            public AndroidOpenglShadersCache.Cache M_Parent { get { return m_parent; } }
         }
         private byte[] _magic;
         private uint _crc32;

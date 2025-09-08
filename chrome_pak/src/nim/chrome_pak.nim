@@ -10,14 +10,20 @@ type
     `resources`*: seq[ChromePak_Resource]
     `aliases`*: seq[ChromePak_Alias]
     `parent`*: KaitaiStruct
-    `numResourcesInst`: uint32
-    `numResourcesInstFlag`: bool
     `numAliasesInst`: uint16
     `numAliasesInstFlag`: bool
+    `numResourcesInst`: uint32
+    `numResourcesInstFlag`: bool
   ChromePak_Encodings* = enum
     binary = 0
     utf8 = 1
     utf16 = 2
+  ChromePak_Alias* = ref object of KaitaiStruct
+    `id`*: uint16
+    `resourceIdx`*: uint16
+    `parent`*: ChromePak
+    `resourceInst`: ChromePak_Resource
+    `resourceInstFlag`: bool
   ChromePak_HeaderV5Part* = ref object of KaitaiStruct
     `encodingPadding`*: seq[byte]
     `numResources`*: uint16
@@ -29,27 +35,21 @@ type
     `idx`*: int32
     `hasBody`*: bool
     `parent`*: ChromePak
-    `lenBodyInst`: int
-    `lenBodyInstFlag`: bool
     `bodyInst`: seq[byte]
     `bodyInstFlag`: bool
-  ChromePak_Alias* = ref object of KaitaiStruct
-    `id`*: uint16
-    `resourceIdx`*: uint16
-    `parent`*: ChromePak
-    `resourceInst`: ChromePak_Resource
-    `resourceInstFlag`: bool
+    `lenBodyInst`: int
+    `lenBodyInstFlag`: bool
 
 proc read*(_: typedesc[ChromePak], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): ChromePak
+proc read*(_: typedesc[ChromePak_Alias], io: KaitaiStream, root: KaitaiStruct, parent: ChromePak): ChromePak_Alias
 proc read*(_: typedesc[ChromePak_HeaderV5Part], io: KaitaiStream, root: KaitaiStruct, parent: ChromePak): ChromePak_HeaderV5Part
 proc read*(_: typedesc[ChromePak_Resource], io: KaitaiStream, root: KaitaiStruct, parent: ChromePak, idx: any, hasBody: any): ChromePak_Resource
-proc read*(_: typedesc[ChromePak_Alias], io: KaitaiStream, root: KaitaiStruct, parent: ChromePak): ChromePak_Alias
 
-proc numResources*(this: ChromePak): uint32
 proc numAliases*(this: ChromePak): uint16
-proc lenBody*(this: ChromePak_Resource): int
-proc body*(this: ChromePak_Resource): seq[byte]
+proc numResources*(this: ChromePak): uint32
 proc resource*(this: ChromePak_Alias): ChromePak_Resource
+proc body*(this: ChromePak_Resource): seq[byte]
+proc lenBody*(this: ChromePak_Resource): int
 
 
 ##[
@@ -102,20 +102,12 @@ the next item, so an extra entry is stored with id 0
 and offset pointing to the end of the resources.
 
   ]##
-  for i in 0 ..< int((this.numResources + 1)):
+  for i in 0 ..< int(this.numResources + 1):
     let it = ChromePak_Resource.read(this.io, this.root, this, i, i < this.numResources)
     this.resources.add(it)
   for i in 0 ..< int(this.numAliases):
     let it = ChromePak_Alias.read(this.io, this.root, this)
     this.aliases.add(it)
-
-proc numResources(this: ChromePak): uint32 = 
-  if this.numResourcesInstFlag:
-    return this.numResourcesInst
-  let numResourcesInstExpr = uint32((if this.version == 5: this.v5Part.numResources else: this.numResourcesV4))
-  this.numResourcesInst = numResourcesInstExpr
-  this.numResourcesInstFlag = true
-  return this.numResourcesInst
 
 proc numAliases(this: ChromePak): uint16 = 
   if this.numAliasesInstFlag:
@@ -125,8 +117,40 @@ proc numAliases(this: ChromePak): uint16 =
   this.numAliasesInstFlag = true
   return this.numAliasesInst
 
+proc numResources(this: ChromePak): uint32 = 
+  if this.numResourcesInstFlag:
+    return this.numResourcesInst
+  let numResourcesInstExpr = uint32((if this.version == 5: this.v5Part.numResources else: this.numResourcesV4))
+  this.numResourcesInst = numResourcesInstExpr
+  this.numResourcesInstFlag = true
+  return this.numResourcesInst
+
 proc fromFile*(_: typedesc[ChromePak], filename: string): ChromePak =
   ChromePak.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[ChromePak_Alias], io: KaitaiStream, root: KaitaiStruct, parent: ChromePak): ChromePak_Alias =
+  template this: untyped = result
+  this = new(ChromePak_Alias)
+  let root = if root == nil: cast[ChromePak](this) else: cast[ChromePak](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let idExpr = this.io.readU2le()
+  this.id = idExpr
+  let resourceIdxExpr = this.io.readU2le()
+  this.resourceIdx = resourceIdxExpr
+
+proc resource(this: ChromePak_Alias): ChromePak_Resource = 
+  if this.resourceInstFlag:
+    return this.resourceInst
+  let resourceInstExpr = ChromePak_Resource(this.parent.resources[this.resourceIdx])
+  this.resourceInst = resourceInstExpr
+  this.resourceInstFlag = true
+  return this.resourceInst
+
+proc fromFile*(_: typedesc[ChromePak_Alias], filename: string): ChromePak_Alias =
+  ChromePak_Alias.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[ChromePak_HeaderV5Part], io: KaitaiStream, root: KaitaiStruct, parent: ChromePak): ChromePak_HeaderV5Part =
   template this: untyped = result
@@ -163,19 +187,6 @@ proc read*(_: typedesc[ChromePak_Resource], io: KaitaiStream, root: KaitaiStruct
   let ofsBodyExpr = this.io.readU4le()
   this.ofsBody = ofsBodyExpr
 
-proc lenBody(this: ChromePak_Resource): int = 
-
-  ##[
-  MUST NOT be accessed until the next `resource` is parsed
-  ]##
-  if this.lenBodyInstFlag:
-    return this.lenBodyInst
-  if this.hasBody:
-    let lenBodyInstExpr = int((this.parent.resources[(this.idx + 1)].ofsBody - this.ofsBody))
-    this.lenBodyInst = lenBodyInstExpr
-  this.lenBodyInstFlag = true
-  return this.lenBodyInst
-
 proc body(this: ChromePak_Resource): seq[byte] = 
 
   ##[
@@ -192,30 +203,19 @@ proc body(this: ChromePak_Resource): seq[byte] =
   this.bodyInstFlag = true
   return this.bodyInst
 
+proc lenBody(this: ChromePak_Resource): int = 
+
+  ##[
+  MUST NOT be accessed until the next `resource` is parsed
+  ]##
+  if this.lenBodyInstFlag:
+    return this.lenBodyInst
+  if this.hasBody:
+    let lenBodyInstExpr = int(this.parent.resources[this.idx + 1].ofsBody - this.ofsBody)
+    this.lenBodyInst = lenBodyInstExpr
+  this.lenBodyInstFlag = true
+  return this.lenBodyInst
+
 proc fromFile*(_: typedesc[ChromePak_Resource], filename: string): ChromePak_Resource =
   ChromePak_Resource.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[ChromePak_Alias], io: KaitaiStream, root: KaitaiStruct, parent: ChromePak): ChromePak_Alias =
-  template this: untyped = result
-  this = new(ChromePak_Alias)
-  let root = if root == nil: cast[ChromePak](this) else: cast[ChromePak](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let idExpr = this.io.readU2le()
-  this.id = idExpr
-  let resourceIdxExpr = this.io.readU2le()
-  this.resourceIdx = resourceIdxExpr
-
-proc resource(this: ChromePak_Alias): ChromePak_Resource = 
-  if this.resourceInstFlag:
-    return this.resourceInst
-  let resourceInstExpr = ChromePak_Resource(this.parent.resources[this.resourceIdx])
-  this.resourceInst = resourceInstExpr
-  this.resourceInstFlag = true
-  return this.resourceInst
-
-proc fromFile*(_: typedesc[ChromePak_Alias], filename: string): ChromePak_Alias =
-  ChromePak_Alias.read(newKaitaiFileStream(filename), nil, nil)
 

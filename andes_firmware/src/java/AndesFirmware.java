@@ -4,7 +4,7 @@ import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 
 /**
@@ -30,11 +30,14 @@ public class AndesFirmware extends KaitaiStruct {
         _read();
     }
     private void _read() {
-        this._raw_imageHeader = this._io.readBytes(32);
-        KaitaiStream _io__raw_imageHeader = new ByteBufferKaitaiStream(_raw_imageHeader);
-        this.imageHeader = new ImageHeader(_io__raw_imageHeader, this, _root);
+        KaitaiStream _io_imageHeader = this._io.substream(32);
+        this.imageHeader = new ImageHeader(_io_imageHeader, this, _root);
         this.ilm = this._io.readBytes(imageHeader().ilmLen());
         this.dlm = this._io.readBytes(imageHeader().dlmLen());
+    }
+
+    public void _fetchInstances() {
+        this.imageHeader._fetchInstances();
     }
     public static class ImageHeader extends KaitaiStruct {
         public static ImageHeader fromFile(String fileName) throws IOException {
@@ -61,7 +64,10 @@ public class AndesFirmware extends KaitaiStruct {
             this.fwVer = this._io.readU2le();
             this.buildVer = this._io.readU2le();
             this.extra = this._io.readU4le();
-            this.buildTime = new String(this._io.readBytes(16), Charset.forName("UTF-8"));
+            this.buildTime = new String(this._io.readBytes(16), StandardCharsets.UTF_8);
+        }
+
+        public void _fetchInstances() {
         }
         private long ilmLen;
         private long dlmLen;
@@ -85,11 +91,9 @@ public class AndesFirmware extends KaitaiStruct {
     private byte[] dlm;
     private AndesFirmware _root;
     private KaitaiStruct _parent;
-    private byte[] _raw_imageHeader;
     public ImageHeader imageHeader() { return imageHeader; }
     public byte[] ilm() { return ilm; }
     public byte[] dlm() { return dlm; }
     public AndesFirmware _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
-    public byte[] _raw_imageHeader() { return _raw_imageHeader; }
 }

@@ -55,7 +55,20 @@ public class DcmpVariableLengthInteger extends KaitaiStruct {
                 break;
             }
             default: {
-                this.more = (int) (this._io.readU1());
+                this.more = ((Number) (this._io.readU1())).intValue();
+                break;
+            }
+            }
+        }
+    }
+
+    public void _fetchInstances() {
+        if (first() >= 128) {
+            switch (first()) {
+            case 255: {
+                break;
+            }
+            default: {
                 break;
             }
             }
@@ -69,8 +82,7 @@ public class DcmpVariableLengthInteger extends KaitaiStruct {
     public Integer value() {
         if (this.value != null)
             return this.value;
-        int _tmp = (int) ((first() == 255 ? more() : (first() >= 128 ? (((first() << 8) | more()) - 49152) : first())));
-        this.value = _tmp;
+        this.value = ((Number) ((first() == 255 ? more() : (first() >= 128 ? (first() << 8 | more()) - 49152 : first())))).intValue();
         return this.value;
     }
     private int first;

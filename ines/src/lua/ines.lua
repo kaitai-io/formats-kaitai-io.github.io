@@ -26,8 +26,8 @@ function Ines:_read()
   if self.header.f6.trainer then
     self.trainer = self._io:read_bytes(512)
   end
-  self.prg_rom = self._io:read_bytes((self.header.len_prg_rom * 16384))
-  self.chr_rom = self._io:read_bytes((self.header.len_chr_rom * 8192))
+  self.prg_rom = self._io:read_bytes(self.header.len_prg_rom * 16384)
+  self.chr_rom = self._io:read_bytes(self.header.len_chr_rom * 8192)
   if self.header.f7.playchoice10 then
     self.playchoice10 = Ines.Playchoice10(self._io, self, self._root)
   end
@@ -42,14 +42,14 @@ Ines.Header = class.class(KaitaiStruct)
 function Ines.Header:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function Ines.Header:_read()
   self.magic = self._io:read_bytes(4)
   if not(self.magic == "\078\069\083\026") then
-    error("not equal, expected " ..  "\078\069\083\026" .. ", but got " .. self.magic)
+    error("not equal, expected " .. "\078\069\083\026" .. ", but got " .. self.magic)
   end
   self.len_prg_rom = self._io:read_u1()
   self.len_chr_rom = self._io:read_u1()
@@ -68,7 +68,7 @@ function Ines.Header:_read()
   self.f10 = Ines.Header.F10(_io, self, self._root)
   self.reserved = self._io:read_bytes(5)
   if not(self.reserved == "\000\000\000\000\000") then
-    error("not equal, expected " ..  "\000\000\000\000\000" .. ", but got " .. self.reserved)
+    error("not equal, expected " .. "\000\000\000\000\000" .. ", but got " .. self.reserved)
   end
 end
 
@@ -80,7 +80,7 @@ function Ines.Header.property.mapper:get()
     return self._m_mapper
   end
 
-  self._m_mapper = (self.f6.lower_mapper | (self.f7.upper_mapper << 4))
+  self._m_mapper = self.f6.lower_mapper | self.f7.upper_mapper << 4
   return self._m_mapper
 end
 
@@ -94,6 +94,39 @@ end
 -- this one is unofficial.
 
 -- 
+-- See also: Source (https://www.nesdev.org/wiki/INES#Flags_10)
+Ines.Header.F10 = class.class(KaitaiStruct)
+
+Ines.Header.F10.TvSystem = enum.Enum {
+  ntsc = 0,
+  dual1 = 1,
+  pal = 2,
+  dual2 = 3,
+}
+
+function Ines.Header.F10:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Ines.Header.F10:_read()
+  self.reserved1 = self._io:read_bits_int_be(2)
+  self.bus_conflict = self._io:read_bits_int_be(1) ~= 0
+  self.prg_ram = self._io:read_bits_int_be(1) ~= 0
+  self.reserved2 = self._io:read_bits_int_be(2)
+  self.tv_system = Ines.Header.F10.TvSystem(self._io:read_bits_int_be(2))
+end
+
+-- 
+-- If 0, no bus conflicts. If 1, bus conflicts.
+-- 
+-- If 0, PRG ram is present. If 1, not present.
+-- 
+-- if 0, NTSC. If 2, PAL. If 1 or 3, dual compatible.
+
+-- 
 -- See also: Source (https://www.nesdev.org/wiki/INES#Flags_6)
 Ines.Header.F6 = class.class(KaitaiStruct)
 
@@ -105,7 +138,7 @@ Ines.Header.F6.Mirroring = enum.Enum {
 function Ines.Header.F6:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -135,7 +168,7 @@ Ines.Header.F7 = class.class(KaitaiStruct)
 function Ines.Header.F7:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -167,7 +200,7 @@ Ines.Header.F9.TvSystem = enum.Enum {
 function Ines.Header.F9:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -180,46 +213,13 @@ end
 -- if 0, NTSC. If 1, PAL.
 
 -- 
--- See also: Source (https://www.nesdev.org/wiki/INES#Flags_10)
-Ines.Header.F10 = class.class(KaitaiStruct)
-
-Ines.Header.F10.TvSystem = enum.Enum {
-  ntsc = 0,
-  dual1 = 1,
-  pal = 2,
-  dual2 = 3,
-}
-
-function Ines.Header.F10:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Ines.Header.F10:_read()
-  self.reserved1 = self._io:read_bits_int_be(2)
-  self.bus_conflict = self._io:read_bits_int_be(1) ~= 0
-  self.prg_ram = self._io:read_bits_int_be(1) ~= 0
-  self.reserved2 = self._io:read_bits_int_be(2)
-  self.tv_system = Ines.Header.F10.TvSystem(self._io:read_bits_int_be(2))
-end
-
--- 
--- If 0, no bus conflicts. If 1, bus conflicts.
--- 
--- If 0, PRG ram is present. If 1, not present.
--- 
--- if 0, NTSC. If 2, PAL. If 1 or 3, dual compatible.
-
--- 
 -- See also: Source (https://www.nesdev.org/wiki/PC10_ROM-Images)
 Ines.Playchoice10 = class.class(KaitaiStruct)
 
 function Ines.Playchoice10:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -234,7 +234,7 @@ Ines.Playchoice10.Prom = class.class(KaitaiStruct)
 function Ines.Playchoice10.Prom:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 

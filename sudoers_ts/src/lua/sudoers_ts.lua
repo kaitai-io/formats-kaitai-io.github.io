@@ -37,12 +37,81 @@ function SudoersTs:_read()
 end
 
 
+SudoersTs.Record = class.class(KaitaiStruct)
+
+function SudoersTs.Record:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function SudoersTs.Record:_read()
+  self.version = self._io:read_u2le()
+  self.len_record = self._io:read_u2le()
+  local _on = self.version
+  if _on == 1 then
+    self._raw_payload = self._io:read_bytes(self.len_record - 4)
+    local _io = KaitaiStream(stringstream(self._raw_payload))
+    self.payload = SudoersTs.RecordV1(_io, self, self._root)
+  elseif _on == 2 then
+    self._raw_payload = self._io:read_bytes(self.len_record - 4)
+    local _io = KaitaiStream(stringstream(self._raw_payload))
+    self.payload = SudoersTs.RecordV2(_io, self, self._root)
+  else
+    self.payload = self._io:read_bytes(self.len_record - 4)
+  end
+end
+
+-- 
+-- version number of the timestamp_entry struct.
+-- 
+-- size of the record in bytes.
+
+SudoersTs.RecordV1 = class.class(KaitaiStruct)
+
+function SudoersTs.RecordV1:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function SudoersTs.RecordV1:_read()
+  self.type = SudoersTs.TsType(self._io:read_u2le())
+  self.flags = SudoersTs.TsFlag(self._io, self, self._root)
+  self.auth_uid = self._io:read_u4le()
+  self.sid = self._io:read_u4le()
+  self.ts = SudoersTs.Timespec(self._io, self, self._root)
+  if self.type == SudoersTs.TsType.tty then
+    self.ttydev = self._io:read_u4le()
+  end
+  if self.type == SudoersTs.TsType.ppid then
+    self.ppid = self._io:read_u4le()
+  end
+end
+
+-- 
+-- record type.
+-- 
+-- record flags.
+-- 
+-- user ID that was used for authentication.
+-- 
+-- session ID associated with tty/ppid.
+-- 
+-- time stamp, from a monotonic time source.
+-- 
+-- device number of the terminal associated with the session.
+-- 
+-- ID of the parent process.
+
 SudoersTs.RecordV2 = class.class(KaitaiStruct)
 
 function SudoersTs.RecordV2:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -78,12 +147,31 @@ end
 -- 
 -- ID of the parent process.
 
+SudoersTs.Timespec = class.class(KaitaiStruct)
+
+function SudoersTs.Timespec:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function SudoersTs.Timespec:_read()
+  self.sec = self._io:read_s8le()
+  self.nsec = self._io:read_s8le()
+end
+
+-- 
+-- seconds.
+-- 
+-- nanoseconds.
+
 SudoersTs.TsFlag = class.class(KaitaiStruct)
 
 function SudoersTs.TsFlag:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -102,92 +190,4 @@ end
 -- entry disabled.
 -- 
 -- Reserved (unused) bits.
-
-SudoersTs.RecordV1 = class.class(KaitaiStruct)
-
-function SudoersTs.RecordV1:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function SudoersTs.RecordV1:_read()
-  self.type = SudoersTs.TsType(self._io:read_u2le())
-  self.flags = SudoersTs.TsFlag(self._io, self, self._root)
-  self.auth_uid = self._io:read_u4le()
-  self.sid = self._io:read_u4le()
-  self.ts = SudoersTs.Timespec(self._io, self, self._root)
-  if self.type == SudoersTs.TsType.tty then
-    self.ttydev = self._io:read_u4le()
-  end
-  if self.type == SudoersTs.TsType.ppid then
-    self.ppid = self._io:read_u4le()
-  end
-end
-
--- 
--- record type.
--- 
--- record flags.
--- 
--- user ID that was used for authentication.
--- 
--- session ID associated with tty/ppid.
--- 
--- time stamp, from a monotonic time source.
--- 
--- device number of the terminal associated with the session.
--- 
--- ID of the parent process.
-
-SudoersTs.Timespec = class.class(KaitaiStruct)
-
-function SudoersTs.Timespec:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function SudoersTs.Timespec:_read()
-  self.sec = self._io:read_s8le()
-  self.nsec = self._io:read_s8le()
-end
-
--- 
--- seconds.
--- 
--- nanoseconds.
-
-SudoersTs.Record = class.class(KaitaiStruct)
-
-function SudoersTs.Record:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function SudoersTs.Record:_read()
-  self.version = self._io:read_u2le()
-  self.len_record = self._io:read_u2le()
-  local _on = self.version
-  if _on == 1 then
-    self._raw_payload = self._io:read_bytes((self.len_record - 4))
-    local _io = KaitaiStream(stringstream(self._raw_payload))
-    self.payload = SudoersTs.RecordV1(_io, self, self._root)
-  elseif _on == 2 then
-    self._raw_payload = self._io:read_bytes((self.len_record - 4))
-    local _io = KaitaiStream(stringstream(self._raw_payload))
-    self.payload = SudoersTs.RecordV2(_io, self, self._root)
-  else
-    self.payload = self._io:read_bytes((self.len_record - 4))
-  end
-end
-
--- 
--- version number of the timestamp_entry struct.
--- 
--- size of the record in bytes.
 

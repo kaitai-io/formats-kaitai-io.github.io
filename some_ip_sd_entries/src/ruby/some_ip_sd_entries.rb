@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -13,8 +13,8 @@ end
 # @see https://www.autosar.org/fileadmin/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf
 #   - section 4.1.2.3  Entry Format
 class SomeIpSdEntries < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -36,7 +36,7 @@ class SomeIpSdEntries < Kaitai::Struct::Struct
       7 => :entry_types_subscribe_ack,
     }
     I__ENTRY_TYPES = ENTRY_TYPES.invert
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -56,7 +56,7 @@ class SomeIpSdEntries < Kaitai::Struct::Struct
       self
     end
     class SdEntryHeader < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
@@ -84,20 +84,8 @@ class SomeIpSdEntries < Kaitai::Struct::Struct
       attr_reader :major_version
       attr_reader :ttl
     end
-    class SdServiceEntry < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
-
-      def _read
-        @minor_version = @_io.read_u4be
-        self
-      end
-      attr_reader :minor_version
-    end
     class SdEventgroupEntry < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
@@ -116,6 +104,18 @@ class SomeIpSdEntries < Kaitai::Struct::Struct
       attr_reader :reserved2
       attr_reader :counter
       attr_reader :event_group_id
+    end
+    class SdServiceEntry < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = nil)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        @minor_version = @_io.read_u4be
+        self
+      end
+      attr_reader :minor_version
     end
     attr_reader :header
     attr_reader :content

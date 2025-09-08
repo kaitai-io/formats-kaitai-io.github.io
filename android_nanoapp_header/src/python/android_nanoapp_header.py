@@ -1,11 +1,12 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class AndroidNanoappHeader(KaitaiStruct):
     """
@@ -13,9 +14,9 @@ class AndroidNanoappHeader(KaitaiStruct):
        Source - https://android.googlesource.com/platform/system/chre/+/a7ff61b9/build/build_template.mk#130
     """
     def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
+        super(AndroidNanoappHeader, self).__init__(_io)
         self._parent = _parent
-        self._root = _root if _root else self
+        self._root = _root or self
         self._read()
 
     def _read(self):
@@ -35,28 +36,32 @@ class AndroidNanoappHeader(KaitaiStruct):
         if not self.reserved == b"\x00\x00\x00\x00\x00\x00":
             raise kaitaistruct.ValidationNotEqualError(b"\x00\x00\x00\x00\x00\x00", self.reserved, self._io, u"/seq/8")
 
-    @property
-    def is_signed(self):
-        if hasattr(self, '_m_is_signed'):
-            return self._m_is_signed
 
-        self._m_is_signed = (self.flags & 1) != 0
-        return getattr(self, '_m_is_signed', None)
+    def _fetch_instances(self):
+        pass
 
     @property
     def is_encrypted(self):
         if hasattr(self, '_m_is_encrypted'):
             return self._m_is_encrypted
 
-        self._m_is_encrypted = (self.flags & 2) != 0
+        self._m_is_encrypted = self.flags & 2 != 0
         return getattr(self, '_m_is_encrypted', None)
+
+    @property
+    def is_signed(self):
+        if hasattr(self, '_m_is_signed'):
+            return self._m_is_signed
+
+        self._m_is_signed = self.flags & 1 != 0
+        return getattr(self, '_m_is_signed', None)
 
     @property
     def is_tcm_capable(self):
         if hasattr(self, '_m_is_tcm_capable'):
             return self._m_is_tcm_capable
 
-        self._m_is_tcm_capable = (self.flags & 4) != 0
+        self._m_is_tcm_capable = self.flags & 4 != 0
         return getattr(self, '_m_is_tcm_capable', None)
 
 

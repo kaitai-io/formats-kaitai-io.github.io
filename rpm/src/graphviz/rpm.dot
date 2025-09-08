@@ -9,10 +9,12 @@ digraph {
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 			<TR><TD PORT="lead_pos">0</TD><TD PORT="lead_size">96</TD><TD>Lead</TD><TD PORT="lead_type">lead</TD></TR>
 			<TR><TD PORT="signature_pos">96</TD><TD PORT="signature_size">...</TD><TD>Header</TD><TD PORT="signature_type">signature</TD></TR>
-			<TR><TD PORT="signature_padding_pos">...</TD><TD PORT="signature_padding_size">(-(_io.pos) % 8)</TD><TD></TD><TD PORT="signature_padding_type">signature_padding</TD></TR>
+			<TR><TD PORT="signature_padding_pos">...</TD><TD PORT="signature_padding_size">-(_io.pos) % 8</TD><TD></TD><TD PORT="signature_padding_type">signature_padding</TD></TR>
 			<TR><TD PORT="_unnamed3_pos">...</TD><TD PORT="_unnamed3_size">0</TD><TD></TD><TD PORT="_unnamed3_type">_unnamed3</TD></TR>
+			<TR><TD COLSPAN="4" PORT="_unnamed3__if">if ofs_header &lt; 0</TD></TR>
 			<TR><TD PORT="header_pos">...</TD><TD PORT="header_size">...</TD><TD>Header</TD><TD PORT="header_type">header</TD></TR>
 			<TR><TD PORT="_unnamed5_pos">...</TD><TD PORT="_unnamed5_size">0</TD><TD></TD><TD PORT="_unnamed5_type">_unnamed5</TD></TR>
+			<TR><TD COLSPAN="4" PORT="_unnamed5__if">if ofs_payload &lt; 0</TD></TR>
 			<TR><TD PORT="signature_tags_steps_pos">...</TD><TD PORT="signature_tags_steps_size">0</TD><TD>SignatureTagsStep</TD><TD PORT="signature_tags_steps_type">signature_tags_steps</TD></TR>
 			<TR><TD COLSPAN="4" PORT="signature_tags_steps__repeat">repeat signature.header_record.num_index_records times</TD></TR>
 		</TABLE>>];
@@ -20,21 +22,13 @@ digraph {
 			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
 			<TR><TD>has_signature_size_tag</TD><TD>signature_tags_steps.last.size_tag_idx != -1</TD></TR>
 		</TABLE>>];
-		rpm__inst__signature_size_tag [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+		rpm__inst__len_header [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-			<TR><TD>signature_size_tag</TD><TD>signature.index_records[signature_tags_steps.last.size_tag_idx]</TD></TR>
+			<TR><TD>len_header</TD><TD>ofs_payload - ofs_header</TD></TR>
 		</TABLE>>];
 		rpm__inst__len_payload [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-			<TR><TD>len_payload</TD><TD>(signature_size_tag.body.values[0] - len_header)</TD></TR>
-		</TABLE>>];
-		rpm__inst__payload [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-			<TR><TD PORT="payload_pos">ofs_payload</TD><TD PORT="payload_size">len_payload</TD><TD></TD><TD PORT="payload_type">payload</TD></TR>
-		</TABLE>>];
-		rpm__inst__len_header [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-			<TR><TD>len_header</TD><TD>(ofs_payload - ofs_header)</TD></TR>
+			<TR><TD>len_payload</TD><TD>signature_size_tag.body.values[0] - len_header</TD></TR>
 		</TABLE>>];
 		rpm__inst__ofs_header [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
@@ -44,176 +38,21 @@ digraph {
 			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
 			<TR><TD>ofs_payload</TD><TD>_io.pos</TD></TR>
 		</TABLE>>];
-		subgraph cluster__record_type_string_array {
-			label="Rpm::RecordTypeStringArray";
-			graph[style=dotted];
-
-			record_type_string_array__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="values_pos">0</TD><TD PORT="values_size">...</TD><TD>str(UTF-8)</TD><TD PORT="values_type">values</TD></TR>
-				<TR><TD COLSPAN="4" PORT="values__repeat">repeat num_values times</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__lead {
-			label="Rpm::Lead";
-			graph[style=dotted];
-
-			lead__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD></TD><TD PORT="magic_type">magic</TD></TR>
-				<TR><TD PORT="version_pos">4</TD><TD PORT="version_size">2</TD><TD>RpmVersion</TD><TD PORT="version_type">version</TD></TR>
-				<TR><TD PORT="type_pos">6</TD><TD PORT="type_size">2</TD><TD>u2be→RpmTypes</TD><TD PORT="type_type">type</TD></TR>
-				<TR><TD PORT="architecture_pos">8</TD><TD PORT="architecture_size">2</TD><TD>u2be→Architectures</TD><TD PORT="architecture_type">architecture</TD></TR>
-				<TR><TD PORT="package_name_pos">10</TD><TD PORT="package_name_size">66</TD><TD>str(UTF-8)</TD><TD PORT="package_name_type">package_name</TD></TR>
-				<TR><TD PORT="os_pos">76</TD><TD PORT="os_size">2</TD><TD>u2be→OperatingSystems</TD><TD PORT="os_type">os</TD></TR>
-				<TR><TD PORT="signature_type_pos">78</TD><TD PORT="signature_type_size">2</TD><TD>u2be</TD><TD PORT="signature_type_type">signature_type</TD></TR>
-				<TR><TD PORT="reserved_pos">80</TD><TD PORT="reserved_size">16</TD><TD></TD><TD PORT="reserved_type">reserved</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__record_type_string {
-			label="Rpm::RecordTypeString";
-			graph[style=dotted];
-
-			record_type_string__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="values_pos">0</TD><TD PORT="values_size">...</TD><TD>str(UTF-8)</TD><TD PORT="values_type">values</TD></TR>
-				<TR><TD COLSPAN="4" PORT="values__repeat">repeat 1 times</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__signature_tags_step {
-			label="Rpm::SignatureTagsStep";
-			graph[style=dotted];
-
-			signature_tags_step__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-			</TABLE>>];
-			signature_tags_step__inst__size_tag_idx [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>size_tag_idx</TD><TD>(prev_size_tag_idx != -1 ? prev_size_tag_idx : ( ((_parent.signature.index_records[idx].signature_tag == :signature_tags_size) &amp;&amp; (_parent.signature.index_records[idx].record_type == :record_types_uint32) &amp;&amp; (_parent.signature.index_records[idx].num_values &gt;= 1))  ? idx : -1))</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__record_type_uint32 {
-			label="Rpm::RecordTypeUint32";
-			graph[style=dotted];
-
-			record_type_uint32__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="values_pos">0</TD><TD PORT="values_size">4</TD><TD>u4be</TD><TD PORT="values_type">values</TD></TR>
-				<TR><TD COLSPAN="4" PORT="values__repeat">repeat num_values times</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__record_type_uint16 {
-			label="Rpm::RecordTypeUint16";
-			graph[style=dotted];
-
-			record_type_uint16__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="values_pos">0</TD><TD PORT="values_size">2</TD><TD>u2be</TD><TD PORT="values_type">values</TD></TR>
-				<TR><TD COLSPAN="4" PORT="values__repeat">repeat num_values times</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__header_index_record {
-			label="Rpm::HeaderIndexRecord";
-			graph[style=dotted];
-
-			header_index_record__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="tag_raw_pos">0</TD><TD PORT="tag_raw_size">4</TD><TD>u4be</TD><TD PORT="tag_raw_type">tag_raw</TD></TR>
-				<TR><TD PORT="record_type_pos">4</TD><TD PORT="record_type_size">4</TD><TD>u4be→RecordTypes</TD><TD PORT="record_type_type">record_type</TD></TR>
-				<TR><TD PORT="ofs_body_pos">8</TD><TD PORT="ofs_body_size">4</TD><TD>u4be</TD><TD PORT="ofs_body_type">ofs_body</TD></TR>
-				<TR><TD PORT="count_pos">12</TD><TD PORT="count_size">4</TD><TD>u4be</TD><TD PORT="count_type">count</TD></TR>
-			</TABLE>>];
-			header_index_record__inst__num_values [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>num_values</TD><TD>count</TD></TR>
-			</TABLE>>];
-			header_index_record__inst__body [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="body_pos">ofs_body</TD><TD PORT="body_size">...</TD><TD>switch (record_type)</TD><TD PORT="body_type">body</TD></TR>
-			</TABLE>>];
-			header_index_record__inst__signature_tag [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>signature_tag</TD><TD>Kaitai::Struct::Stream::resolve_enum(Rpm::SIGNATURE_TAGS, tag_raw)</TD></TR>
-			</TABLE>>];
-			header_index_record__inst__len_value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>len_value</TD><TD>count</TD></TR>
-			</TABLE>>];
-			header_index_record__inst__header_tag [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>header_tag</TD><TD>Kaitai::Struct::Stream::resolve_enum(Rpm::HEADER_TAGS, tag_raw)</TD></TR>
-			</TABLE>>];
-header_index_record__inst__body_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
-	<TR><TD>:record_types_uint32</TD><TD PORT="case0">RecordTypeUint32</TD></TR>
-	<TR><TD>:record_types_uint64</TD><TD PORT="case1">RecordTypeUint64</TD></TR>
-	<TR><TD>:record_types_bin</TD><TD PORT="case2">RecordTypeBin</TD></TR>
-	<TR><TD>:record_types_string</TD><TD PORT="case3">RecordTypeString</TD></TR>
-	<TR><TD>:record_types_uint8</TD><TD PORT="case4">RecordTypeUint8</TD></TR>
-	<TR><TD>:record_types_i18n_string</TD><TD PORT="case5">RecordTypeStringArray</TD></TR>
-	<TR><TD>:record_types_uint16</TD><TD PORT="case6">RecordTypeUint16</TD></TR>
-	<TR><TD>:record_types_char</TD><TD PORT="case7">RecordTypeUint8</TD></TR>
-	<TR><TD>:record_types_string_array</TD><TD PORT="case8">RecordTypeStringArray</TD></TR>
-</TABLE>>];
-		}
-		subgraph cluster__rpm_version {
-			label="Rpm::RpmVersion";
-			graph[style=dotted];
-
-			rpm_version__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="major_pos">0</TD><TD PORT="major_size">1</TD><TD>u1</TD><TD PORT="major_type">major</TD></TR>
-				<TR><TD PORT="minor_pos">1</TD><TD PORT="minor_size">1</TD><TD>u1</TD><TD PORT="minor_type">minor</TD></TR>
-			</TABLE>>];
-		}
+		rpm__inst__payload [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="payload_pos">ofs_payload</TD><TD PORT="payload_size">len_payload</TD><TD></TD><TD PORT="payload_type">payload</TD></TR>
+			<TR><TD COLSPAN="4" PORT="payload__if">if has_signature_size_tag</TD></TR>
+		</TABLE>>];
+		rpm__inst__signature_size_tag [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>signature_size_tag</TD><TD>signature.index_records[signature_tags_steps.last.size_tag_idx]</TD></TR>
+		</TABLE>>];
 		subgraph cluster__dummy {
 			label="Rpm::Dummy";
 			graph[style=dotted];
 
 			dummy__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__record_type_uint8 {
-			label="Rpm::RecordTypeUint8";
-			graph[style=dotted];
-
-			record_type_uint8__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="values_pos">0</TD><TD PORT="values_size">1</TD><TD>u1</TD><TD PORT="values_type">values</TD></TR>
-				<TR><TD COLSPAN="4" PORT="values__repeat">repeat num_values times</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__record_type_uint64 {
-			label="Rpm::RecordTypeUint64";
-			graph[style=dotted];
-
-			record_type_uint64__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="values_pos">0</TD><TD PORT="values_size">8</TD><TD>u8be</TD><TD PORT="values_type">values</TD></TR>
-				<TR><TD COLSPAN="4" PORT="values__repeat">repeat num_values times</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__record_type_bin {
-			label="Rpm::RecordTypeBin";
-			graph[style=dotted];
-
-			record_type_bin__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="values_pos">0</TD><TD PORT="values_size">len_value</TD><TD></TD><TD PORT="values_type">values</TD></TR>
-				<TR><TD COLSPAN="4" PORT="values__repeat">repeat 1 times</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__header_record {
-			label="Rpm::HeaderRecord";
-			graph[style=dotted];
-
-			header_record__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD></TD><TD PORT="magic_type">magic</TD></TR>
-				<TR><TD PORT="reserved_pos">4</TD><TD PORT="reserved_size">4</TD><TD></TD><TD PORT="reserved_type">reserved</TD></TR>
-				<TR><TD PORT="num_index_records_pos">8</TD><TD PORT="num_index_records_size">4</TD><TD>u4be</TD><TD PORT="num_index_records_type">num_index_records</TD></TR>
-				<TR><TD PORT="len_storage_section_pos">12</TD><TD PORT="len_storage_section_size">4</TD><TD>u4be</TD><TD PORT="len_storage_section_type">len_storage_section</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__header {
@@ -232,54 +71,223 @@ header_index_record__inst__body_body_switch [label=<<TABLE BORDER="0" CELLBORDER
 				<TR><TD>is_header</TD><TD>!(is_signature)</TD></TR>
 			</TABLE>>];
 		}
+		subgraph cluster__header_index_record {
+			label="Rpm::HeaderIndexRecord";
+			graph[style=dotted];
+
+			header_index_record__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="tag_raw_pos">0</TD><TD PORT="tag_raw_size">4</TD><TD>u4be</TD><TD PORT="tag_raw_type">tag_raw</TD></TR>
+				<TR><TD PORT="record_type_pos">4</TD><TD PORT="record_type_size">4</TD><TD>u4be→RecordTypes</TD><TD PORT="record_type_type">record_type</TD></TR>
+				<TR><TD PORT="ofs_body_pos">8</TD><TD PORT="ofs_body_size">4</TD><TD>u4be</TD><TD PORT="ofs_body_type">ofs_body</TD></TR>
+				<TR><TD PORT="count_pos">12</TD><TD PORT="count_size">4</TD><TD>u4be</TD><TD PORT="count_type">count</TD></TR>
+			</TABLE>>];
+			header_index_record__inst__body [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="body_pos">ofs_body</TD><TD PORT="body_size">...</TD><TD>switch (record_type)</TD><TD PORT="body_type">body</TD></TR>
+			</TABLE>>];
+			header_index_record__inst__header_tag [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>header_tag</TD><TD>Kaitai::Struct::Stream::resolve_enum(Rpm::HEADER_TAGS, tag_raw)</TD></TR>
+			</TABLE>>];
+			header_index_record__inst__len_value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>len_value</TD><TD>count</TD></TR>
+			</TABLE>>];
+			header_index_record__inst__num_values [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>num_values</TD><TD>count</TD></TR>
+			</TABLE>>];
+			header_index_record__inst__signature_tag [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>signature_tag</TD><TD>Kaitai::Struct::Stream::resolve_enum(Rpm::SIGNATURE_TAGS, tag_raw)</TD></TR>
+			</TABLE>>];
+header_index_record__inst__body_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>:record_types_bin</TD><TD PORT="case0">RecordTypeBin</TD></TR>
+	<TR><TD>:record_types_char</TD><TD PORT="case1">RecordTypeUint8</TD></TR>
+	<TR><TD>:record_types_i18n_string</TD><TD PORT="case2">RecordTypeStringArray</TD></TR>
+	<TR><TD>:record_types_string</TD><TD PORT="case3">RecordTypeString</TD></TR>
+	<TR><TD>:record_types_string_array</TD><TD PORT="case4">RecordTypeStringArray</TD></TR>
+	<TR><TD>:record_types_uint16</TD><TD PORT="case5">RecordTypeUint16</TD></TR>
+	<TR><TD>:record_types_uint32</TD><TD PORT="case6">RecordTypeUint32</TD></TR>
+	<TR><TD>:record_types_uint64</TD><TD PORT="case7">RecordTypeUint64</TD></TR>
+	<TR><TD>:record_types_uint8</TD><TD PORT="case8">RecordTypeUint8</TD></TR>
+</TABLE>>];
+		}
+		subgraph cluster__header_record {
+			label="Rpm::HeaderRecord";
+			graph[style=dotted];
+
+			header_record__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD>8E AD E8 01</TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD PORT="reserved_pos">4</TD><TD PORT="reserved_size">4</TD><TD>00 00 00 00</TD><TD PORT="reserved_type">reserved</TD></TR>
+				<TR><TD PORT="num_index_records_pos">8</TD><TD PORT="num_index_records_size">4</TD><TD>u4be</TD><TD PORT="num_index_records_type">num_index_records</TD></TR>
+				<TR><TD COLSPAN="4" PORT="num_index_records__valid">must be at least 1</TD></TR>
+				<TR><TD PORT="len_storage_section_pos">12</TD><TD PORT="len_storage_section_size">4</TD><TD>u4be</TD><TD PORT="len_storage_section_type">len_storage_section</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__lead {
+			label="Rpm::Lead";
+			graph[style=dotted];
+
+			lead__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD>ED AB EE DB</TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD PORT="version_pos">4</TD><TD PORT="version_size">2</TD><TD>RpmVersion</TD><TD PORT="version_type">version</TD></TR>
+				<TR><TD PORT="type_pos">6</TD><TD PORT="type_size">2</TD><TD>u2be→RpmTypes</TD><TD PORT="type_type">type</TD></TR>
+				<TR><TD PORT="architecture_pos">8</TD><TD PORT="architecture_size">2</TD><TD>u2be→Architectures</TD><TD PORT="architecture_type">architecture</TD></TR>
+				<TR><TD PORT="package_name_pos">10</TD><TD PORT="package_name_size">66</TD><TD>str(UTF-8)</TD><TD PORT="package_name_type">package_name</TD></TR>
+				<TR><TD PORT="os_pos">76</TD><TD PORT="os_size">2</TD><TD>u2be→OperatingSystems</TD><TD PORT="os_type">os</TD></TR>
+				<TR><TD PORT="signature_type_pos">78</TD><TD PORT="signature_type_size">2</TD><TD>u2be</TD><TD PORT="signature_type_type">signature_type</TD></TR>
+				<TR><TD COLSPAN="4" PORT="signature_type__valid">must be equal to 5</TD></TR>
+				<TR><TD PORT="reserved_pos">80</TD><TD PORT="reserved_size">16</TD><TD></TD><TD PORT="reserved_type">reserved</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__record_type_bin {
+			label="Rpm::RecordTypeBin";
+			graph[style=dotted];
+
+			record_type_bin__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="values_pos">0</TD><TD PORT="values_size">len_value</TD><TD></TD><TD PORT="values_type">values</TD></TR>
+				<TR><TD COLSPAN="4" PORT="values__repeat">repeat 1 times</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__record_type_string {
+			label="Rpm::RecordTypeString";
+			graph[style=dotted];
+
+			record_type_string__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="values_pos">0</TD><TD PORT="values_size">...</TD><TD>str(term=0, UTF-8)</TD><TD PORT="values_type">values</TD></TR>
+				<TR><TD COLSPAN="4" PORT="values__repeat">repeat 1 times</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__record_type_string_array {
+			label="Rpm::RecordTypeStringArray";
+			graph[style=dotted];
+
+			record_type_string_array__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="values_pos">0</TD><TD PORT="values_size">...</TD><TD>str(term=0, UTF-8)</TD><TD PORT="values_type">values</TD></TR>
+				<TR><TD COLSPAN="4" PORT="values__repeat">repeat num_values times</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__record_type_uint16 {
+			label="Rpm::RecordTypeUint16";
+			graph[style=dotted];
+
+			record_type_uint16__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="values_pos">0</TD><TD PORT="values_size">2</TD><TD>u2be</TD><TD PORT="values_type">values</TD></TR>
+				<TR><TD COLSPAN="4" PORT="values__repeat">repeat num_values times</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__record_type_uint32 {
+			label="Rpm::RecordTypeUint32";
+			graph[style=dotted];
+
+			record_type_uint32__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="values_pos">0</TD><TD PORT="values_size">4</TD><TD>u4be</TD><TD PORT="values_type">values</TD></TR>
+				<TR><TD COLSPAN="4" PORT="values__repeat">repeat num_values times</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__record_type_uint64 {
+			label="Rpm::RecordTypeUint64";
+			graph[style=dotted];
+
+			record_type_uint64__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="values_pos">0</TD><TD PORT="values_size">8</TD><TD>u8be</TD><TD PORT="values_type">values</TD></TR>
+				<TR><TD COLSPAN="4" PORT="values__repeat">repeat num_values times</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__record_type_uint8 {
+			label="Rpm::RecordTypeUint8";
+			graph[style=dotted];
+
+			record_type_uint8__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="values_pos">0</TD><TD PORT="values_size">1</TD><TD>u1</TD><TD PORT="values_type">values</TD></TR>
+				<TR><TD COLSPAN="4" PORT="values__repeat">repeat num_values times</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__rpm_version {
+			label="Rpm::RpmVersion";
+			graph[style=dotted];
+
+			rpm_version__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="major_pos">0</TD><TD PORT="major_size">1</TD><TD>u1</TD><TD PORT="major_type">major</TD></TR>
+				<TR><TD COLSPAN="4" PORT="major__valid">must be between 3 and 4</TD></TR>
+				<TR><TD PORT="minor_pos">1</TD><TD PORT="minor_size">1</TD><TD>u1</TD><TD PORT="minor_type">minor</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__signature_tags_step {
+			label="Rpm::SignatureTagsStep";
+			graph[style=dotted];
+
+			signature_tags_step__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			</TABLE>>];
+			signature_tags_step__inst__size_tag_idx [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>size_tag_idx</TD><TD>(prev_size_tag_idx != -1 ? prev_size_tag_idx : ( ((_parent.signature.index_records[idx].signature_tag == :signature_tags_size) &amp;&amp; (_parent.signature.index_records[idx].record_type == :record_types_uint32) &amp;&amp; (_parent.signature.index_records[idx].num_values &gt;= 1))  ? idx : -1))</TD></TR>
+			</TABLE>>];
+		}
 	}
 	rpm__seq:lead_type -> lead__seq [style=bold];
 	rpm__seq:signature_type -> header__seq [style=bold];
+	rpm__inst__ofs_header:ofs_header_type -> rpm__seq:_unnamed3__if [color="#404040"];
 	rpm__seq:header_type -> header__seq [style=bold];
+	rpm__inst__ofs_payload:ofs_payload_type -> rpm__seq:_unnamed5__if [color="#404040"];
 	rpm__seq:signature_tags_steps_type -> signature_tags_step__seq [style=bold];
 	header_record__seq:num_index_records_type -> rpm__seq:signature_tags_steps__repeat [color="#404040"];
 	signature_tags_step__inst__size_tag_idx:size_tag_idx_type -> rpm__inst__has_signature_size_tag [color="#404040"];
-	header__seq:index_records_type -> rpm__inst__signature_size_tag [color="#404040"];
-	signature_tags_step__inst__size_tag_idx:size_tag_idx_type -> rpm__inst__signature_size_tag [color="#404040"];
+	rpm__inst__ofs_payload:ofs_payload_type -> rpm__inst__len_header [color="#404040"];
+	rpm__inst__ofs_header:ofs_header_type -> rpm__inst__len_header [color="#404040"];
 	record_type_uint32__seq:values_type -> rpm__inst__len_payload [color="#404040"];
 	rpm__inst__len_header:len_header_type -> rpm__inst__len_payload [color="#404040"];
 	rpm__inst__ofs_payload:ofs_payload_type -> rpm__inst__payload:payload_pos [color="#404040"];
 	rpm__inst__len_payload:len_payload_type -> rpm__inst__payload:payload_size [color="#404040"];
-	rpm__inst__ofs_payload:ofs_payload_type -> rpm__inst__len_header [color="#404040"];
-	rpm__inst__ofs_header:ofs_header_type -> rpm__inst__len_header [color="#404040"];
-	record_type_string_array__params:num_values_type -> record_type_string_array__seq:values__repeat [color="#404040"];
-	lead__seq:version_type -> rpm_version__seq [style=bold];
-	signature_tags_step__params:prev_size_tag_idx_type -> signature_tags_step__inst__size_tag_idx [color="#404040"];
-	signature_tags_step__params:prev_size_tag_idx_type -> signature_tags_step__inst__size_tag_idx [color="#404040"];
-	header_index_record__inst__signature_tag:signature_tag_type -> signature_tags_step__inst__size_tag_idx [color="#404040"];
-	header_index_record__seq:record_type_type -> signature_tags_step__inst__size_tag_idx [color="#404040"];
-	header_index_record__inst__num_values:num_values_type -> signature_tags_step__inst__size_tag_idx [color="#404040"];
-	signature_tags_step__params:idx_type -> signature_tags_step__inst__size_tag_idx [color="#404040"];
-	record_type_uint32__params:num_values_type -> record_type_uint32__seq:values__repeat [color="#404040"];
-	record_type_uint16__params:num_values_type -> record_type_uint16__seq:values__repeat [color="#404040"];
-	header_index_record__seq:count_type -> header_index_record__inst__num_values [color="#404040"];
-	header_index_record__seq:ofs_body_type -> header_index_record__inst__body:body_pos [color="#404040"];
-	header_index_record__inst__body:body_type -> header_index_record__inst__body_body_switch [style=bold];
-	header_index_record__inst__body_body_switch:case0 -> record_type_uint32__seq [style=bold];
-	header_index_record__inst__body_body_switch:case1 -> record_type_uint64__seq [style=bold];
-	header_index_record__inst__body_body_switch:case2 -> record_type_bin__seq [style=bold];
-	header_index_record__inst__body_body_switch:case3 -> record_type_string__seq [style=bold];
-	header_index_record__inst__body_body_switch:case4 -> record_type_uint8__seq [style=bold];
-	header_index_record__inst__body_body_switch:case5 -> record_type_string_array__seq [style=bold];
-	header_index_record__inst__body_body_switch:case6 -> record_type_uint16__seq [style=bold];
-	header_index_record__inst__body_body_switch:case7 -> record_type_uint8__seq [style=bold];
-	header_index_record__inst__body_body_switch:case8 -> record_type_string_array__seq [style=bold];
-	header_index_record__seq:record_type_type -> header_index_record__inst__body:body_type [color="#404040"];
-	header_index_record__seq:tag_raw_type -> header_index_record__inst__signature_tag [color="#404040"];
-	header_index_record__seq:count_type -> header_index_record__inst__len_value [color="#404040"];
-	header_index_record__seq:tag_raw_type -> header_index_record__inst__header_tag [color="#404040"];
-	record_type_uint8__params:num_values_type -> record_type_uint8__seq:values__repeat [color="#404040"];
-	record_type_uint64__params:num_values_type -> record_type_uint64__seq:values__repeat [color="#404040"];
-	record_type_bin__params:len_value_type -> record_type_bin__seq:values_size [color="#404040"];
+	rpm__inst__has_signature_size_tag:has_signature_size_tag_type -> rpm__inst__payload:payload__if [color="#404040"];
+	header__seq:index_records_type -> rpm__inst__signature_size_tag [color="#404040"];
+	signature_tags_step__inst__size_tag_idx:size_tag_idx_type -> rpm__inst__signature_size_tag [color="#404040"];
 	header__seq:header_record_type -> header_record__seq [style=bold];
 	header__seq:index_records_type -> header_index_record__seq [style=bold];
 	header_record__seq:num_index_records_type -> header__seq:index_records__repeat [color="#404040"];
 	header_record__seq:len_storage_section_type -> header__seq:storage_section_size [color="#404040"];
 	header__seq:storage_section_type -> dummy__seq [style=bold];
 	header__params:is_signature_type -> header__inst__is_header [color="#404040"];
+	header_index_record__seq:ofs_body_type -> header_index_record__inst__body:body_pos [color="#404040"];
+	header_index_record__inst__body:body_type -> header_index_record__inst__body_body_switch [style=bold];
+	header_index_record__inst__body_body_switch:case0 -> record_type_bin__seq [style=bold];
+	header_index_record__inst__body_body_switch:case1 -> record_type_uint8__seq [style=bold];
+	header_index_record__inst__body_body_switch:case2 -> record_type_string_array__seq [style=bold];
+	header_index_record__inst__body_body_switch:case3 -> record_type_string__seq [style=bold];
+	header_index_record__inst__body_body_switch:case4 -> record_type_string_array__seq [style=bold];
+	header_index_record__inst__body_body_switch:case5 -> record_type_uint16__seq [style=bold];
+	header_index_record__inst__body_body_switch:case6 -> record_type_uint32__seq [style=bold];
+	header_index_record__inst__body_body_switch:case7 -> record_type_uint64__seq [style=bold];
+	header_index_record__inst__body_body_switch:case8 -> record_type_uint8__seq [style=bold];
+	header_index_record__seq:record_type_type -> header_index_record__inst__body:body_type [color="#404040"];
+	header_index_record__seq:tag_raw_type -> header_index_record__inst__header_tag [color="#404040"];
+	header_index_record__seq:count_type -> header_index_record__inst__len_value [color="#404040"];
+	header_index_record__seq:count_type -> header_index_record__inst__num_values [color="#404040"];
+	header_index_record__seq:tag_raw_type -> header_index_record__inst__signature_tag [color="#404040"];
+	lead__seq:version_type -> rpm_version__seq [style=bold];
+	record_type_bin__params:len_value_type -> record_type_bin__seq:values_size [color="#404040"];
+	record_type_string_array__params:num_values_type -> record_type_string_array__seq:values__repeat [color="#404040"];
+	record_type_uint16__params:num_values_type -> record_type_uint16__seq:values__repeat [color="#404040"];
+	record_type_uint32__params:num_values_type -> record_type_uint32__seq:values__repeat [color="#404040"];
+	record_type_uint64__params:num_values_type -> record_type_uint64__seq:values__repeat [color="#404040"];
+	record_type_uint8__params:num_values_type -> record_type_uint8__seq:values__repeat [color="#404040"];
+	signature_tags_step__params:prev_size_tag_idx_type -> signature_tags_step__inst__size_tag_idx [color="#404040"];
+	header_index_record__inst__signature_tag:signature_tag_type -> signature_tags_step__inst__size_tag_idx [color="#404040"];
+	header_index_record__seq:record_type_type -> signature_tags_step__inst__size_tag_idx [color="#404040"];
+	header_index_record__inst__num_values:num_values_type -> signature_tags_step__inst__size_tag_idx [color="#404040"];
+	signature_tags_step__params:idx_type -> signature_tags_step__inst__size_tag_idx [color="#404040"];
 }

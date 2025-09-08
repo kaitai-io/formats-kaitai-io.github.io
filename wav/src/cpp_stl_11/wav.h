@@ -2,13 +2,17 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class wav_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
+#include "riff.h"
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -34,24 +38,52 @@
 class wav_t : public kaitai::kstruct {
 
 public:
-    class sample_type_t;
-    class format_chunk_type_t;
-    class pmx_chunk_type_t;
-    class fact_chunk_type_t;
-    class guid_type_t;
-    class ixml_chunk_type_t;
-    class info_chunk_type_t;
-    class cue_point_type_t;
-    class data_chunk_type_t;
-    class samples_type_t;
-    class channel_mask_and_subformat_type_t;
-    class cue_chunk_type_t;
-    class list_chunk_type_t;
-    class channel_mask_type_t;
     class afsp_chunk_type_t;
     class axml_chunk_type_t;
-    class chunk_type_t;
     class bext_chunk_type_t;
+    class channel_mask_and_subformat_type_t;
+    class channel_mask_type_t;
+    class chunk_type_t;
+    class cue_chunk_type_t;
+    class cue_point_type_t;
+    class data_chunk_type_t;
+    class fact_chunk_type_t;
+    class format_chunk_type_t;
+    class guid_type_t;
+    class info_chunk_type_t;
+    class ixml_chunk_type_t;
+    class list_chunk_type_t;
+    class pmx_chunk_type_t;
+    class sample_type_t;
+    class samples_type_t;
+
+    enum fourcc_t {
+        FOURCC_ID3 = 540238953,
+        FOURCC_CUE = 543520099,
+        FOURCC_FMT = 544501094,
+        FOURCC_WAVE = 1163280727,
+        FOURCC_RIFF = 1179011410,
+        FOURCC_PEAK = 1262568784,
+        FOURCC_IXML = 1280137321,
+        FOURCC_INFO = 1330007625,
+        FOURCC_LIST = 1414744396,
+        FOURCC_PMX = 1481461855,
+        FOURCC_CHNA = 1634625635,
+        FOURCC_DATA = 1635017060,
+        FOURCC_UMID = 1684630901,
+        FOURCC_MINF = 1718511981,
+        FOURCC_AXML = 1819113569,
+        FOURCC_REGN = 1852269938,
+        FOURCC_AFSP = 1886611041,
+        FOURCC_FACT = 1952670054,
+        FOURCC_BEXT = 1954047330
+    };
+    static bool _is_defined_fourcc_t(fourcc_t v);
+
+private:
+    static const std::set<fourcc_t> _values_fourcc_t;
+
+public:
 
     enum w_format_tag_type_t {
         W_FORMAT_TAG_TYPE_UNKNOWN = 0,
@@ -320,28 +352,12 @@ public:
         W_FORMAT_TAG_TYPE_EXTENSIBLE = 65534,
         W_FORMAT_TAG_TYPE_DEVELOPMENT = 65535
     };
+    static bool _is_defined_w_format_tag_type_t(w_format_tag_type_t v);
 
-    enum fourcc_t {
-        FOURCC_ID3 = 540238953,
-        FOURCC_CUE = 543520099,
-        FOURCC_FMT = 544501094,
-        FOURCC_WAVE = 1163280727,
-        FOURCC_RIFF = 1179011410,
-        FOURCC_PEAK = 1262568784,
-        FOURCC_IXML = 1280137321,
-        FOURCC_INFO = 1330007625,
-        FOURCC_LIST = 1414744396,
-        FOURCC_PMX = 1481461855,
-        FOURCC_CHNA = 1634625635,
-        FOURCC_DATA = 1635017060,
-        FOURCC_UMID = 1684630901,
-        FOURCC_MINF = 1718511981,
-        FOURCC_AXML = 1819113569,
-        FOURCC_REGN = 1852269938,
-        FOURCC_AFSP = 1886611041,
-        FOURCC_FACT = 1952670054,
-        FOURCC_BEXT = 1954047330
-    };
+private:
+    static const std::set<w_format_tag_type_t> _values_w_format_tag_type_t;
+
+public:
 
     wav_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, wav_t* p__root = nullptr);
 
@@ -351,500 +367,6 @@ private:
 
 public:
     ~wav_t();
-
-    class sample_type_t : public kaitai::kstruct {
-
-    public:
-
-        sample_type_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, wav_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~sample_type_t();
-
-    private:
-        uint16_t m_sample;
-        wav_t* m__root;
-        kaitai::kstruct* m__parent;
-
-    public:
-        uint16_t sample() const { return m_sample; }
-        wav_t* _root() const { return m__root; }
-        kaitai::kstruct* _parent() const { return m__parent; }
-    };
-
-    class format_chunk_type_t : public kaitai::kstruct {
-
-    public:
-
-        format_chunk_type_t(kaitai::kstream* p__io, wav_t::chunk_type_t* p__parent = nullptr, wav_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~format_chunk_type_t();
-
-    private:
-        bool f_is_extensible;
-        bool m_is_extensible;
-
-    public:
-        bool is_extensible();
-
-    private:
-        bool f_is_basic_pcm;
-        bool m_is_basic_pcm;
-
-    public:
-        bool is_basic_pcm();
-
-    private:
-        bool f_is_basic_float;
-        bool m_is_basic_float;
-
-    public:
-        bool is_basic_float();
-
-    private:
-        bool f_is_cb_size_meaningful;
-        bool m_is_cb_size_meaningful;
-
-    public:
-        bool is_cb_size_meaningful();
-
-    private:
-        w_format_tag_type_t m_w_format_tag;
-        uint16_t m_n_channels;
-        uint32_t m_n_samples_per_sec;
-        uint32_t m_n_avg_bytes_per_sec;
-        uint16_t m_n_block_align;
-        uint16_t m_w_bits_per_sample;
-        uint16_t m_cb_size;
-        bool n_cb_size;
-
-    public:
-        bool _is_null_cb_size() { cb_size(); return n_cb_size; };
-
-    private:
-        uint16_t m_w_valid_bits_per_sample;
-        bool n_w_valid_bits_per_sample;
-
-    public:
-        bool _is_null_w_valid_bits_per_sample() { w_valid_bits_per_sample(); return n_w_valid_bits_per_sample; };
-
-    private:
-        std::unique_ptr<channel_mask_and_subformat_type_t> m_channel_mask_and_subformat;
-        bool n_channel_mask_and_subformat;
-
-    public:
-        bool _is_null_channel_mask_and_subformat() { channel_mask_and_subformat(); return n_channel_mask_and_subformat; };
-
-    private:
-        wav_t* m__root;
-        wav_t::chunk_type_t* m__parent;
-
-    public:
-        w_format_tag_type_t w_format_tag() const { return m_w_format_tag; }
-        uint16_t n_channels() const { return m_n_channels; }
-        uint32_t n_samples_per_sec() const { return m_n_samples_per_sec; }
-        uint32_t n_avg_bytes_per_sec() const { return m_n_avg_bytes_per_sec; }
-        uint16_t n_block_align() const { return m_n_block_align; }
-        uint16_t w_bits_per_sample() const { return m_w_bits_per_sample; }
-        uint16_t cb_size() const { return m_cb_size; }
-        uint16_t w_valid_bits_per_sample() const { return m_w_valid_bits_per_sample; }
-        channel_mask_and_subformat_type_t* channel_mask_and_subformat() const { return m_channel_mask_and_subformat.get(); }
-        wav_t* _root() const { return m__root; }
-        wav_t::chunk_type_t* _parent() const { return m__parent; }
-    };
-
-    class pmx_chunk_type_t : public kaitai::kstruct {
-
-    public:
-
-        pmx_chunk_type_t(kaitai::kstream* p__io, wav_t::chunk_type_t* p__parent = nullptr, wav_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~pmx_chunk_type_t();
-
-    private:
-        std::string m_data;
-        wav_t* m__root;
-        wav_t::chunk_type_t* m__parent;
-
-    public:
-
-        /**
-         * XMP data
-         * \sa https://github.com/adobe/XMP-Toolkit-SDK/blob/v2022.06/docs/XMPSpecificationPart3.pdf Source
-         */
-        std::string data() const { return m_data; }
-        wav_t* _root() const { return m__root; }
-        wav_t::chunk_type_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * required for all non-PCM formats
-     * (`w_format_tag != w_format_tag_type::pcm` or `not is_basic_pcm` in
-     * `format_chunk_type` context)
-     */
-
-    class fact_chunk_type_t : public kaitai::kstruct {
-
-    public:
-
-        fact_chunk_type_t(kaitai::kstream* p__io, wav_t::chunk_type_t* p__parent = nullptr, wav_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~fact_chunk_type_t();
-
-    private:
-        uint32_t m_num_samples_per_channel;
-        wav_t* m__root;
-        wav_t::chunk_type_t* m__parent;
-
-    public:
-        uint32_t num_samples_per_channel() const { return m_num_samples_per_channel; }
-        wav_t* _root() const { return m__root; }
-        wav_t::chunk_type_t* _parent() const { return m__parent; }
-    };
-
-    class guid_type_t : public kaitai::kstruct {
-
-    public:
-
-        guid_type_t(kaitai::kstream* p__io, wav_t::channel_mask_and_subformat_type_t* p__parent = nullptr, wav_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~guid_type_t();
-
-    private:
-        uint32_t m_data1;
-        uint16_t m_data2;
-        uint16_t m_data3;
-        uint32_t m_data4;
-        uint32_t m_data4a;
-        wav_t* m__root;
-        wav_t::channel_mask_and_subformat_type_t* m__parent;
-
-    public:
-        uint32_t data1() const { return m_data1; }
-        uint16_t data2() const { return m_data2; }
-        uint16_t data3() const { return m_data3; }
-        uint32_t data4() const { return m_data4; }
-        uint32_t data4a() const { return m_data4a; }
-        wav_t* _root() const { return m__root; }
-        wav_t::channel_mask_and_subformat_type_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * \sa https://en.wikipedia.org/wiki/IXML Source
-     */
-
-    class ixml_chunk_type_t : public kaitai::kstruct {
-
-    public:
-
-        ixml_chunk_type_t(kaitai::kstream* p__io, wav_t::chunk_type_t* p__parent = nullptr, wav_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~ixml_chunk_type_t();
-
-    private:
-        std::string m_data;
-        wav_t* m__root;
-        wav_t::chunk_type_t* m__parent;
-
-    public:
-        std::string data() const { return m_data; }
-        wav_t* _root() const { return m__root; }
-        wav_t::chunk_type_t* _parent() const { return m__parent; }
-    };
-
-    class info_chunk_type_t : public kaitai::kstruct {
-
-    public:
-
-        info_chunk_type_t(kaitai::kstream* p__io, wav_t::list_chunk_type_t* p__parent = nullptr, wav_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~info_chunk_type_t();
-
-    private:
-        bool f_chunk_data;
-        std::string m_chunk_data;
-
-    public:
-        std::string chunk_data();
-
-    private:
-        std::unique_ptr<riff_t::chunk_t> m_chunk;
-        wav_t* m__root;
-        wav_t::list_chunk_type_t* m__parent;
-
-    public:
-        riff_t::chunk_t* chunk() const { return m_chunk.get(); }
-        wav_t* _root() const { return m__root; }
-        wav_t::list_chunk_type_t* _parent() const { return m__parent; }
-    };
-
-    class cue_point_type_t : public kaitai::kstruct {
-
-    public:
-
-        cue_point_type_t(kaitai::kstream* p__io, wav_t::cue_chunk_type_t* p__parent = nullptr, wav_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~cue_point_type_t();
-
-    private:
-        uint32_t m_dw_name;
-        uint32_t m_dw_position;
-        uint32_t m_fcc_chunk;
-        uint32_t m_dw_chunk_start;
-        uint32_t m_dw_block_start;
-        uint32_t m_dw_sample_offset;
-        wav_t* m__root;
-        wav_t::cue_chunk_type_t* m__parent;
-
-    public:
-        uint32_t dw_name() const { return m_dw_name; }
-        uint32_t dw_position() const { return m_dw_position; }
-        uint32_t fcc_chunk() const { return m_fcc_chunk; }
-        uint32_t dw_chunk_start() const { return m_dw_chunk_start; }
-        uint32_t dw_block_start() const { return m_dw_block_start; }
-        uint32_t dw_sample_offset() const { return m_dw_sample_offset; }
-        wav_t* _root() const { return m__root; }
-        wav_t::cue_chunk_type_t* _parent() const { return m__parent; }
-    };
-
-    class data_chunk_type_t : public kaitai::kstruct {
-
-    public:
-
-        data_chunk_type_t(kaitai::kstream* p__io, wav_t::chunk_type_t* p__parent = nullptr, wav_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~data_chunk_type_t();
-
-    private:
-        std::string m_data;
-        wav_t* m__root;
-        wav_t::chunk_type_t* m__parent;
-
-    public:
-        std::string data() const { return m_data; }
-        wav_t* _root() const { return m__root; }
-        wav_t::chunk_type_t* _parent() const { return m__parent; }
-    };
-
-    class samples_type_t : public kaitai::kstruct {
-
-    public:
-
-        samples_type_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, wav_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~samples_type_t();
-
-    private:
-        uint32_t m_samples;
-        wav_t* m__root;
-        kaitai::kstruct* m__parent;
-
-    public:
-        uint32_t samples() const { return m_samples; }
-        wav_t* _root() const { return m__root; }
-        kaitai::kstruct* _parent() const { return m__parent; }
-    };
-
-    class channel_mask_and_subformat_type_t : public kaitai::kstruct {
-
-    public:
-
-        channel_mask_and_subformat_type_t(kaitai::kstream* p__io, wav_t::format_chunk_type_t* p__parent = nullptr, wav_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~channel_mask_and_subformat_type_t();
-
-    private:
-        std::unique_ptr<channel_mask_type_t> m_dw_channel_mask;
-        std::unique_ptr<guid_type_t> m_subformat;
-        wav_t* m__root;
-        wav_t::format_chunk_type_t* m__parent;
-
-    public:
-        channel_mask_type_t* dw_channel_mask() const { return m_dw_channel_mask.get(); }
-        guid_type_t* subformat() const { return m_subformat.get(); }
-        wav_t* _root() const { return m__root; }
-        wav_t::format_chunk_type_t* _parent() const { return m__parent; }
-    };
-
-    class cue_chunk_type_t : public kaitai::kstruct {
-
-    public:
-
-        cue_chunk_type_t(kaitai::kstream* p__io, wav_t::chunk_type_t* p__parent = nullptr, wav_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~cue_chunk_type_t();
-
-    private:
-        uint32_t m_dw_cue_points;
-        std::unique_ptr<std::vector<std::unique_ptr<cue_point_type_t>>> m_cue_points;
-        wav_t* m__root;
-        wav_t::chunk_type_t* m__parent;
-
-    public:
-        uint32_t dw_cue_points() const { return m_dw_cue_points; }
-        std::vector<std::unique_ptr<cue_point_type_t>>* cue_points() const { return m_cue_points.get(); }
-        wav_t* _root() const { return m__root; }
-        wav_t::chunk_type_t* _parent() const { return m__parent; }
-    };
-
-    class list_chunk_type_t : public kaitai::kstruct {
-
-    public:
-
-        list_chunk_type_t(kaitai::kstream* p__io, wav_t::chunk_type_t* p__parent = nullptr, wav_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~list_chunk_type_t();
-
-    private:
-        bool f_form_type;
-        fourcc_t m_form_type;
-
-    public:
-        fourcc_t form_type();
-
-    private:
-        bool f_subchunks;
-        std::unique_ptr<std::vector<std::unique_ptr<info_chunk_type_t>>> m_subchunks;
-
-    public:
-        std::vector<std::unique_ptr<info_chunk_type_t>>* subchunks();
-
-    private:
-        std::unique_ptr<riff_t::parent_chunk_data_t> m_parent_chunk_data;
-        wav_t* m__root;
-        wav_t::chunk_type_t* m__parent;
-
-    public:
-        riff_t::parent_chunk_data_t* parent_chunk_data() const { return m_parent_chunk_data.get(); }
-        wav_t* _root() const { return m__root; }
-        wav_t::chunk_type_t* _parent() const { return m__parent; }
-    };
-
-    class channel_mask_type_t : public kaitai::kstruct {
-
-    public:
-
-        channel_mask_type_t(kaitai::kstream* p__io, wav_t::channel_mask_and_subformat_type_t* p__parent = nullptr, wav_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~channel_mask_type_t();
-
-    private:
-        bool m_front_right_of_center;
-        bool m_front_left_of_center;
-        bool m_back_right;
-        bool m_back_left;
-        bool m_low_frequency;
-        bool m_front_center;
-        bool m_front_right;
-        bool m_front_left;
-        bool m_top_center;
-        bool m_side_right;
-        bool m_side_left;
-        bool m_back_center;
-        bool m_top_back_left;
-        bool m_top_front_right;
-        bool m_top_front_center;
-        bool m_top_front_left;
-        uint64_t m_unused1;
-        bool m_top_back_right;
-        bool m_top_back_center;
-        uint64_t m_unused2;
-        wav_t* m__root;
-        wav_t::channel_mask_and_subformat_type_t* m__parent;
-
-    public:
-        bool front_right_of_center() const { return m_front_right_of_center; }
-        bool front_left_of_center() const { return m_front_left_of_center; }
-        bool back_right() const { return m_back_right; }
-        bool back_left() const { return m_back_left; }
-        bool low_frequency() const { return m_low_frequency; }
-        bool front_center() const { return m_front_center; }
-        bool front_right() const { return m_front_right; }
-        bool front_left() const { return m_front_left; }
-        bool top_center() const { return m_top_center; }
-        bool side_right() const { return m_side_right; }
-        bool side_left() const { return m_side_left; }
-        bool back_center() const { return m_back_center; }
-        bool top_back_left() const { return m_top_back_left; }
-        bool top_front_right() const { return m_top_front_right; }
-        bool top_front_center() const { return m_top_front_center; }
-        bool top_front_left() const { return m_top_front_left; }
-        uint64_t unused1() const { return m_unused1; }
-        bool top_back_right() const { return m_top_back_right; }
-        bool top_back_center() const { return m_top_back_center; }
-        uint64_t unused2() const { return m_unused2; }
-        wav_t* _root() const { return m__root; }
-        wav_t::channel_mask_and_subformat_type_t* _parent() const { return m__parent; }
-    };
 
     /**
      * \sa https://www.mmsp.ece.mcgill.ca/Documents/Downloads/AFsp/ Source
@@ -912,50 +434,6 @@ public:
         wav_t::chunk_type_t* _parent() const { return m__parent; }
     };
 
-    class chunk_type_t : public kaitai::kstruct {
-
-    public:
-
-        chunk_type_t(kaitai::kstream* p__io, wav_t* p__parent = nullptr, wav_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~chunk_type_t();
-
-    private:
-        bool f_chunk_id;
-        fourcc_t m_chunk_id;
-
-    public:
-        fourcc_t chunk_id();
-
-    private:
-        bool f_chunk_data;
-        std::unique_ptr<kaitai::kstruct> m_chunk_data;
-        bool n_chunk_data;
-
-    public:
-        bool _is_null_chunk_data() { chunk_data(); return n_chunk_data; };
-
-    private:
-
-    public:
-        kaitai::kstruct* chunk_data();
-
-    private:
-        std::unique_ptr<riff_t::chunk_t> m_chunk;
-        wav_t* m__root;
-        wav_t* m__parent;
-
-    public:
-        riff_t::chunk_t* chunk() const { return m_chunk.get(); }
-        wav_t* _root() const { return m__root; }
-        wav_t* _parent() const { return m__parent; }
-    };
-
     /**
      * \sa https://en.wikipedia.org/wiki/Broadcast_Wave_Format Source
      */
@@ -1010,31 +488,557 @@ public:
         wav_t::chunk_type_t* _parent() const { return m__parent; }
     };
 
+    class channel_mask_and_subformat_type_t : public kaitai::kstruct {
+
+    public:
+
+        channel_mask_and_subformat_type_t(kaitai::kstream* p__io, wav_t::format_chunk_type_t* p__parent = nullptr, wav_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~channel_mask_and_subformat_type_t();
+
+    private:
+        std::unique_ptr<channel_mask_type_t> m_dw_channel_mask;
+        std::unique_ptr<guid_type_t> m_subformat;
+        wav_t* m__root;
+        wav_t::format_chunk_type_t* m__parent;
+
+    public:
+        channel_mask_type_t* dw_channel_mask() const { return m_dw_channel_mask.get(); }
+        guid_type_t* subformat() const { return m_subformat.get(); }
+        wav_t* _root() const { return m__root; }
+        wav_t::format_chunk_type_t* _parent() const { return m__parent; }
+    };
+
+    class channel_mask_type_t : public kaitai::kstruct {
+
+    public:
+
+        channel_mask_type_t(kaitai::kstream* p__io, wav_t::channel_mask_and_subformat_type_t* p__parent = nullptr, wav_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~channel_mask_type_t();
+
+    private:
+        bool m_front_right_of_center;
+        bool m_front_left_of_center;
+        bool m_back_right;
+        bool m_back_left;
+        bool m_low_frequency;
+        bool m_front_center;
+        bool m_front_right;
+        bool m_front_left;
+        bool m_top_center;
+        bool m_side_right;
+        bool m_side_left;
+        bool m_back_center;
+        bool m_top_back_left;
+        bool m_top_front_right;
+        bool m_top_front_center;
+        bool m_top_front_left;
+        uint64_t m_unused1;
+        bool m_top_back_right;
+        bool m_top_back_center;
+        uint64_t m_unused2;
+        wav_t* m__root;
+        wav_t::channel_mask_and_subformat_type_t* m__parent;
+
+    public:
+        bool front_right_of_center() const { return m_front_right_of_center; }
+        bool front_left_of_center() const { return m_front_left_of_center; }
+        bool back_right() const { return m_back_right; }
+        bool back_left() const { return m_back_left; }
+        bool low_frequency() const { return m_low_frequency; }
+        bool front_center() const { return m_front_center; }
+        bool front_right() const { return m_front_right; }
+        bool front_left() const { return m_front_left; }
+        bool top_center() const { return m_top_center; }
+        bool side_right() const { return m_side_right; }
+        bool side_left() const { return m_side_left; }
+        bool back_center() const { return m_back_center; }
+        bool top_back_left() const { return m_top_back_left; }
+        bool top_front_right() const { return m_top_front_right; }
+        bool top_front_center() const { return m_top_front_center; }
+        bool top_front_left() const { return m_top_front_left; }
+        uint64_t unused1() const { return m_unused1; }
+        bool top_back_right() const { return m_top_back_right; }
+        bool top_back_center() const { return m_top_back_center; }
+        uint64_t unused2() const { return m_unused2; }
+        wav_t* _root() const { return m__root; }
+        wav_t::channel_mask_and_subformat_type_t* _parent() const { return m__parent; }
+    };
+
+    class chunk_type_t : public kaitai::kstruct {
+
+    public:
+
+        chunk_type_t(kaitai::kstream* p__io, wav_t* p__parent = nullptr, wav_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~chunk_type_t();
+
+    private:
+        bool f_chunk_data;
+        std::unique_ptr<kaitai::kstruct> m_chunk_data;
+        bool n_chunk_data;
+
+    public:
+        bool _is_null_chunk_data() { chunk_data(); return n_chunk_data; };
+
+    private:
+
+    public:
+        kaitai::kstruct* chunk_data();
+
+    private:
+        bool f_chunk_id;
+        fourcc_t m_chunk_id;
+
+    public:
+        fourcc_t chunk_id();
+
+    private:
+        std::unique_ptr<riff_t::chunk_t> m_chunk;
+        wav_t* m__root;
+        wav_t* m__parent;
+
+    public:
+        riff_t::chunk_t* chunk() const { return m_chunk.get(); }
+        wav_t* _root() const { return m__root; }
+        wav_t* _parent() const { return m__parent; }
+    };
+
+    class cue_chunk_type_t : public kaitai::kstruct {
+
+    public:
+
+        cue_chunk_type_t(kaitai::kstream* p__io, wav_t::chunk_type_t* p__parent = nullptr, wav_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~cue_chunk_type_t();
+
+    private:
+        uint32_t m_dw_cue_points;
+        std::unique_ptr<std::vector<std::unique_ptr<cue_point_type_t>>> m_cue_points;
+        wav_t* m__root;
+        wav_t::chunk_type_t* m__parent;
+
+    public:
+        uint32_t dw_cue_points() const { return m_dw_cue_points; }
+        std::vector<std::unique_ptr<cue_point_type_t>>* cue_points() const { return m_cue_points.get(); }
+        wav_t* _root() const { return m__root; }
+        wav_t::chunk_type_t* _parent() const { return m__parent; }
+    };
+
+    class cue_point_type_t : public kaitai::kstruct {
+
+    public:
+
+        cue_point_type_t(kaitai::kstream* p__io, wav_t::cue_chunk_type_t* p__parent = nullptr, wav_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~cue_point_type_t();
+
+    private:
+        uint32_t m_dw_name;
+        uint32_t m_dw_position;
+        uint32_t m_fcc_chunk;
+        uint32_t m_dw_chunk_start;
+        uint32_t m_dw_block_start;
+        uint32_t m_dw_sample_offset;
+        wav_t* m__root;
+        wav_t::cue_chunk_type_t* m__parent;
+
+    public:
+        uint32_t dw_name() const { return m_dw_name; }
+        uint32_t dw_position() const { return m_dw_position; }
+        uint32_t fcc_chunk() const { return m_fcc_chunk; }
+        uint32_t dw_chunk_start() const { return m_dw_chunk_start; }
+        uint32_t dw_block_start() const { return m_dw_block_start; }
+        uint32_t dw_sample_offset() const { return m_dw_sample_offset; }
+        wav_t* _root() const { return m__root; }
+        wav_t::cue_chunk_type_t* _parent() const { return m__parent; }
+    };
+
+    class data_chunk_type_t : public kaitai::kstruct {
+
+    public:
+
+        data_chunk_type_t(kaitai::kstream* p__io, wav_t::chunk_type_t* p__parent = nullptr, wav_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~data_chunk_type_t();
+
+    private:
+        std::string m_data;
+        wav_t* m__root;
+        wav_t::chunk_type_t* m__parent;
+
+    public:
+        std::string data() const { return m_data; }
+        wav_t* _root() const { return m__root; }
+        wav_t::chunk_type_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * required for all non-PCM formats
+     * (`w_format_tag != w_format_tag_type::pcm` or `not is_basic_pcm` in
+     * `format_chunk_type` context)
+     */
+
+    class fact_chunk_type_t : public kaitai::kstruct {
+
+    public:
+
+        fact_chunk_type_t(kaitai::kstream* p__io, wav_t::chunk_type_t* p__parent = nullptr, wav_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~fact_chunk_type_t();
+
+    private:
+        uint32_t m_num_samples_per_channel;
+        wav_t* m__root;
+        wav_t::chunk_type_t* m__parent;
+
+    public:
+        uint32_t num_samples_per_channel() const { return m_num_samples_per_channel; }
+        wav_t* _root() const { return m__root; }
+        wav_t::chunk_type_t* _parent() const { return m__parent; }
+    };
+
+    class format_chunk_type_t : public kaitai::kstruct {
+
+    public:
+
+        format_chunk_type_t(kaitai::kstream* p__io, wav_t::chunk_type_t* p__parent = nullptr, wav_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~format_chunk_type_t();
+
+    private:
+        bool f_is_basic_float;
+        bool m_is_basic_float;
+
+    public:
+        bool is_basic_float();
+
+    private:
+        bool f_is_basic_pcm;
+        bool m_is_basic_pcm;
+
+    public:
+        bool is_basic_pcm();
+
+    private:
+        bool f_is_cb_size_meaningful;
+        bool m_is_cb_size_meaningful;
+
+    public:
+        bool is_cb_size_meaningful();
+
+    private:
+        bool f_is_extensible;
+        bool m_is_extensible;
+
+    public:
+        bool is_extensible();
+
+    private:
+        w_format_tag_type_t m_w_format_tag;
+        uint16_t m_n_channels;
+        uint32_t m_n_samples_per_sec;
+        uint32_t m_n_avg_bytes_per_sec;
+        uint16_t m_n_block_align;
+        uint16_t m_w_bits_per_sample;
+        uint16_t m_cb_size;
+        bool n_cb_size;
+
+    public:
+        bool _is_null_cb_size() { cb_size(); return n_cb_size; };
+
+    private:
+        uint16_t m_w_valid_bits_per_sample;
+        bool n_w_valid_bits_per_sample;
+
+    public:
+        bool _is_null_w_valid_bits_per_sample() { w_valid_bits_per_sample(); return n_w_valid_bits_per_sample; };
+
+    private:
+        std::unique_ptr<channel_mask_and_subformat_type_t> m_channel_mask_and_subformat;
+        bool n_channel_mask_and_subformat;
+
+    public:
+        bool _is_null_channel_mask_and_subformat() { channel_mask_and_subformat(); return n_channel_mask_and_subformat; };
+
+    private:
+        wav_t* m__root;
+        wav_t::chunk_type_t* m__parent;
+
+    public:
+        w_format_tag_type_t w_format_tag() const { return m_w_format_tag; }
+        uint16_t n_channels() const { return m_n_channels; }
+        uint32_t n_samples_per_sec() const { return m_n_samples_per_sec; }
+        uint32_t n_avg_bytes_per_sec() const { return m_n_avg_bytes_per_sec; }
+        uint16_t n_block_align() const { return m_n_block_align; }
+        uint16_t w_bits_per_sample() const { return m_w_bits_per_sample; }
+        uint16_t cb_size() const { return m_cb_size; }
+        uint16_t w_valid_bits_per_sample() const { return m_w_valid_bits_per_sample; }
+        channel_mask_and_subformat_type_t* channel_mask_and_subformat() const { return m_channel_mask_and_subformat.get(); }
+        wav_t* _root() const { return m__root; }
+        wav_t::chunk_type_t* _parent() const { return m__parent; }
+    };
+
+    class guid_type_t : public kaitai::kstruct {
+
+    public:
+
+        guid_type_t(kaitai::kstream* p__io, wav_t::channel_mask_and_subformat_type_t* p__parent = nullptr, wav_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~guid_type_t();
+
+    private:
+        uint32_t m_data1;
+        uint16_t m_data2;
+        uint16_t m_data3;
+        uint32_t m_data4;
+        uint32_t m_data4a;
+        wav_t* m__root;
+        wav_t::channel_mask_and_subformat_type_t* m__parent;
+
+    public:
+        uint32_t data1() const { return m_data1; }
+        uint16_t data2() const { return m_data2; }
+        uint16_t data3() const { return m_data3; }
+        uint32_t data4() const { return m_data4; }
+        uint32_t data4a() const { return m_data4a; }
+        wav_t* _root() const { return m__root; }
+        wav_t::channel_mask_and_subformat_type_t* _parent() const { return m__parent; }
+    };
+
+    class info_chunk_type_t : public kaitai::kstruct {
+
+    public:
+
+        info_chunk_type_t(kaitai::kstream* p__io, wav_t::list_chunk_type_t* p__parent = nullptr, wav_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~info_chunk_type_t();
+
+    private:
+        bool f_chunk_data;
+        std::string m_chunk_data;
+
+    public:
+        std::string chunk_data();
+
+    private:
+        std::unique_ptr<riff_t::chunk_t> m_chunk;
+        wav_t* m__root;
+        wav_t::list_chunk_type_t* m__parent;
+
+    public:
+        riff_t::chunk_t* chunk() const { return m_chunk.get(); }
+        wav_t* _root() const { return m__root; }
+        wav_t::list_chunk_type_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * \sa https://en.wikipedia.org/wiki/IXML Source
+     */
+
+    class ixml_chunk_type_t : public kaitai::kstruct {
+
+    public:
+
+        ixml_chunk_type_t(kaitai::kstream* p__io, wav_t::chunk_type_t* p__parent = nullptr, wav_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~ixml_chunk_type_t();
+
+    private:
+        std::string m_data;
+        wav_t* m__root;
+        wav_t::chunk_type_t* m__parent;
+
+    public:
+        std::string data() const { return m_data; }
+        wav_t* _root() const { return m__root; }
+        wav_t::chunk_type_t* _parent() const { return m__parent; }
+    };
+
+    class list_chunk_type_t : public kaitai::kstruct {
+
+    public:
+
+        list_chunk_type_t(kaitai::kstream* p__io, wav_t::chunk_type_t* p__parent = nullptr, wav_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~list_chunk_type_t();
+
+    private:
+        bool f_form_type;
+        fourcc_t m_form_type;
+
+    public:
+        fourcc_t form_type();
+
+    private:
+        bool f_subchunks;
+        std::unique_ptr<std::vector<std::unique_ptr<info_chunk_type_t>>> m_subchunks;
+
+    public:
+        std::vector<std::unique_ptr<info_chunk_type_t>>* subchunks();
+
+    private:
+        std::unique_ptr<riff_t::parent_chunk_data_t> m_parent_chunk_data;
+        wav_t* m__root;
+        wav_t::chunk_type_t* m__parent;
+
+    public:
+        riff_t::parent_chunk_data_t* parent_chunk_data() const { return m_parent_chunk_data.get(); }
+        wav_t* _root() const { return m__root; }
+        wav_t::chunk_type_t* _parent() const { return m__parent; }
+    };
+
+    class pmx_chunk_type_t : public kaitai::kstruct {
+
+    public:
+
+        pmx_chunk_type_t(kaitai::kstream* p__io, wav_t::chunk_type_t* p__parent = nullptr, wav_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~pmx_chunk_type_t();
+
+    private:
+        std::string m_data;
+        wav_t* m__root;
+        wav_t::chunk_type_t* m__parent;
+
+    public:
+
+        /**
+         * XMP data
+         * \sa https://github.com/adobe/XMP-Toolkit-SDK/blob/v2022.06/docs/XMPSpecificationPart3.pdf Source
+         */
+        std::string data() const { return m_data; }
+        wav_t* _root() const { return m__root; }
+        wav_t::chunk_type_t* _parent() const { return m__parent; }
+    };
+
+    class sample_type_t : public kaitai::kstruct {
+
+    public:
+
+        sample_type_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, wav_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~sample_type_t();
+
+    private:
+        uint16_t m_sample;
+        wav_t* m__root;
+        kaitai::kstruct* m__parent;
+
+    public:
+        uint16_t sample() const { return m_sample; }
+        wav_t* _root() const { return m__root; }
+        kaitai::kstruct* _parent() const { return m__parent; }
+    };
+
+    class samples_type_t : public kaitai::kstruct {
+
+    public:
+
+        samples_type_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, wav_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~samples_type_t();
+
+    private:
+        uint32_t m_samples;
+        wav_t* m__root;
+        kaitai::kstruct* m__parent;
+
+    public:
+        uint32_t samples() const { return m_samples; }
+        wav_t* _root() const { return m__root; }
+        kaitai::kstruct* _parent() const { return m__parent; }
+    };
+
 private:
-    bool f_subchunks;
-    std::unique_ptr<std::vector<std::unique_ptr<chunk_type_t>>> m_subchunks;
-    bool n_subchunks;
+    bool f_chunk_id;
+    fourcc_t m_chunk_id;
 
 public:
-    bool _is_null_subchunks() { subchunks(); return n_subchunks; };
+    fourcc_t chunk_id();
 
 private:
+    bool f_form_type;
+    fourcc_t m_form_type;
 
 public:
-    std::vector<std::unique_ptr<chunk_type_t>>* subchunks();
-
-private:
-    bool f_parent_chunk_data;
-    std::unique_ptr<riff_t::parent_chunk_data_t> m_parent_chunk_data;
-    bool n_parent_chunk_data;
-
-public:
-    bool _is_null_parent_chunk_data() { parent_chunk_data(); return n_parent_chunk_data; };
-
-private:
-
-public:
-    riff_t::parent_chunk_data_t* parent_chunk_data();
+    fourcc_t form_type();
 
 private:
     bool f_is_form_type_wave;
@@ -1051,18 +1055,30 @@ public:
     bool is_riff_chunk();
 
 private:
-    bool f_chunk_id;
-    fourcc_t m_chunk_id;
+    bool f_parent_chunk_data;
+    std::unique_ptr<riff_t::parent_chunk_data_t> m_parent_chunk_data;
+    bool n_parent_chunk_data;
 
 public:
-    fourcc_t chunk_id();
+    bool _is_null_parent_chunk_data() { parent_chunk_data(); return n_parent_chunk_data; };
 
 private:
-    bool f_form_type;
-    fourcc_t m_form_type;
 
 public:
-    fourcc_t form_type();
+    riff_t::parent_chunk_data_t* parent_chunk_data();
+
+private:
+    bool f_subchunks;
+    std::unique_ptr<std::vector<std::unique_ptr<chunk_type_t>>> m_subchunks;
+    bool n_subchunks;
+
+public:
+    bool _is_null_subchunks() { subchunks(); return n_subchunks; };
+
+private:
+
+public:
+    std::vector<std::unique_ptr<chunk_type_t>>* subchunks();
 
 private:
     std::unique_ptr<riff_t::chunk_t> m_chunk;

@@ -84,12 +84,12 @@ namespace Kaitai
         private void _read()
         {
             _magic = m_io.ReadBytes(4);
-            if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 46, 115, 110, 100 }) == 0)))
+            if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 46, 115, 110, 100 }) == 0)))
             {
-                throw new ValidationNotEqualError(new byte[] { 46, 115, 110, 100 }, Magic, M_Io, "/seq/0");
+                throw new ValidationNotEqualError(new byte[] { 46, 115, 110, 100 }, _magic, m_io, "/seq/0");
             }
             _ofsData = m_io.ReadU4be();
-            __raw_header = m_io.ReadBytes(((OfsData - 4) - 4));
+            __raw_header = m_io.ReadBytes((OfsData - 4) - 4);
             var io___raw_header = new KaitaiStream(__raw_header);
             _header = new Header(io___raw_header, this, m_root);
         }
@@ -112,9 +112,9 @@ namespace Kaitai
                 _encoding = ((Au.Encodings) m_io.ReadU4be());
                 _sampleRate = m_io.ReadU4be();
                 _numChannels = m_io.ReadU4be();
-                if (!(NumChannels >= 1))
+                if (!(_numChannels >= 1))
                 {
-                    throw new ValidationLessThanError(1, NumChannels, M_Io, "/types/header/seq/3");
+                    throw new ValidationLessThanError(1, _numChannels, m_io, "/types/header/seq/3");
                 }
                 _comment = System.Text.Encoding.GetEncoding("ASCII").GetString(KaitaiStream.BytesTerminate(m_io.ReadBytesFull(), 0, false));
             }
@@ -169,8 +169,8 @@ namespace Kaitai
             {
                 if (f_lenData)
                     return _lenData;
-                _lenData = (int) ((Header.DataSize == 4294967295 ? (M_Io.Size - OfsData) : Header.DataSize));
                 f_lenData = true;
+                _lenData = (int) ((Header.DataSize == 4294967295 ? M_Io.Size - OfsData : Header.DataSize));
                 return _lenData;
             }
         }

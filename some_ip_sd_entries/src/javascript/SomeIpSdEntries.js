@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.SomeIpSdEntries = factory(root.KaitaiStream);
+    factory(root.SomeIpSdEntries || (root.SomeIpSdEntries = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (SomeIpSdEntries_, KaitaiStream) {
 /**
  * The entries are used to synchronize the state of services instances and the
  * Publish/-Subscribe handling.
@@ -49,7 +49,7 @@ var SomeIpSdEntries = (function() {
     function SdEntry(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -75,7 +75,7 @@ var SomeIpSdEntries = (function() {
       function SdEntryHeader(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -95,26 +95,11 @@ var SomeIpSdEntries = (function() {
       return SdEntryHeader;
     })();
 
-    var SdServiceEntry = SdEntry.SdServiceEntry = (function() {
-      function SdServiceEntry(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      SdServiceEntry.prototype._read = function() {
-        this.minorVersion = this._io.readU4be();
-      }
-
-      return SdServiceEntry;
-    })();
-
     var SdEventgroupEntry = SdEntry.SdEventgroupEntry = (function() {
       function SdEventgroupEntry(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -130,10 +115,25 @@ var SomeIpSdEntries = (function() {
       return SdEventgroupEntry;
     })();
 
+    var SdServiceEntry = SdEntry.SdServiceEntry = (function() {
+      function SdServiceEntry(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+
+        this._read();
+      }
+      SdServiceEntry.prototype._read = function() {
+        this.minorVersion = this._io.readU4be();
+      }
+
+      return SdServiceEntry;
+    })();
+
     return SdEntry;
   })();
 
   return SomeIpSdEntries;
 })();
-return SomeIpSdEntries;
-}));
+SomeIpSdEntries_.SomeIpSdEntries = SomeIpSdEntries;
+});

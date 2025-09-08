@@ -1,11 +1,12 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Ogg(KaitaiStruct):
     """Ogg is a popular media container format, which provides basic
@@ -19,9 +20,9 @@ class Ogg(KaitaiStruct):
     decoding the stream contents from that one.
     """
     def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
+        super(Ogg, self).__init__(_io)
         self._parent = _parent
-        self._root = _root if _root else self
+        self._root = _root or self
         self._read()
 
     def _read(self):
@@ -32,14 +33,22 @@ class Ogg(KaitaiStruct):
             i += 1
 
 
+
+    def _fetch_instances(self):
+        pass
+        for i in range(len(self.pages)):
+            pass
+            self.pages[i]._fetch_instances()
+
+
     class Page(KaitaiStruct):
         """Ogg page is a basic unit of data in an Ogg bitstream, usually
         it's around 4-8 KB, with a maximum size of 65307 bytes.
         """
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(Ogg.Page, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -53,7 +62,6 @@ class Ogg(KaitaiStruct):
             self.is_end_of_stream = self._io.read_bits_int_be(1) != 0
             self.is_beginning_of_stream = self._io.read_bits_int_be(1) != 0
             self.is_continuation = self._io.read_bits_int_be(1) != 0
-            self._io.align_to_byte()
             self.granule_pos = self._io.read_u8le()
             self.bitstream_serial = self._io.read_u4le()
             self.page_seq_num = self._io.read_u4le()
@@ -66,6 +74,16 @@ class Ogg(KaitaiStruct):
             self.segments = []
             for i in range(self.num_segments):
                 self.segments.append(self._io.read_bytes(self.len_segments[i]))
+
+
+
+        def _fetch_instances(self):
+            pass
+            for i in range(len(self.len_segments)):
+                pass
+
+            for i in range(len(self.segments)):
+                pass
 
 
 

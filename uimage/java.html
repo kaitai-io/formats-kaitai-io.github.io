@@ -169,6 +169,11 @@ with sha1 and md5 checksums.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="U-Boot Image wrapper parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="U-Boot Image wrapper parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -199,7 +204,17 @@ with sha1 and md5 checksums.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="U-Boot Image wrapper parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="U-Boot Image wrapper parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="U-Boot Image wrapper parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -282,7 +297,7 @@ for instructions how to add it into your project with the build tool that you us
 <span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Map</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">java.util.HashMap</span><span class="p">;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Arrays</span><span class="p">;</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">java.nio.charset.Charset</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.nio.charset.StandardCharsets</span><span class="p">;</span>
 
 
 <span class="cm">/**</span>
@@ -294,48 +309,6 @@ for instructions how to add it into your project with the build tool that you us
 <span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Uimage</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">Uimage</span><span class="w"> </span><span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">IOException</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Uimage</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-<span class="w">    </span><span class="p">}</span>
-
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">enum</span><span class="w"> </span><span class="n">UimageOs</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">INVALID</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
-<span class="w">        </span><span class="n">OPENBSD</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
-<span class="w">        </span><span class="n">NETBSD</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
-<span class="w">        </span><span class="n">FREEBSD</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
-<span class="w">        </span><span class="n">BSD4_4</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span>
-<span class="w">        </span><span class="n">LINUX</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span>
-<span class="w">        </span><span class="n">SVR4</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span>
-<span class="w">        </span><span class="n">ESIX</span><span class="p">(</span><span class="mi">7</span><span class="p">),</span>
-<span class="w">        </span><span class="n">SOLARIS</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span>
-<span class="w">        </span><span class="n">IRIX</span><span class="p">(</span><span class="mi">9</span><span class="p">),</span>
-<span class="w">        </span><span class="n">SCO</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span>
-<span class="w">        </span><span class="n">DELL</span><span class="p">(</span><span class="mi">11</span><span class="p">),</span>
-<span class="w">        </span><span class="n">NCR</span><span class="p">(</span><span class="mi">12</span><span class="p">),</span>
-<span class="w">        </span><span class="n">LYNXOS</span><span class="p">(</span><span class="mi">13</span><span class="p">),</span>
-<span class="w">        </span><span class="n">VXWORKS</span><span class="p">(</span><span class="mi">14</span><span class="p">),</span>
-<span class="w">        </span><span class="n">PSOS</span><span class="p">(</span><span class="mi">15</span><span class="p">),</span>
-<span class="w">        </span><span class="n">QNX</span><span class="p">(</span><span class="mi">16</span><span class="p">),</span>
-<span class="w">        </span><span class="n">U_BOOT</span><span class="p">(</span><span class="mi">17</span><span class="p">),</span>
-<span class="w">        </span><span class="n">RTEMS</span><span class="p">(</span><span class="mi">18</span><span class="p">),</span>
-<span class="w">        </span><span class="n">ARTOS</span><span class="p">(</span><span class="mi">19</span><span class="p">),</span>
-<span class="w">        </span><span class="n">UNITY</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span>
-<span class="w">        </span><span class="n">INTEGRITY</span><span class="p">(</span><span class="mi">21</span><span class="p">),</span>
-<span class="w">        </span><span class="n">OSE</span><span class="p">(</span><span class="mi">22</span><span class="p">),</span>
-<span class="w">        </span><span class="n">PLAN9</span><span class="p">(</span><span class="mi">23</span><span class="p">),</span>
-<span class="w">        </span><span class="n">OPENRTOS</span><span class="p">(</span><span class="mi">24</span><span class="p">),</span>
-<span class="w">        </span><span class="n">ARM_TRUSTED_FIRMWARE</span><span class="p">(</span><span class="mi">25</span><span class="p">),</span>
-<span class="w">        </span><span class="n">TEE</span><span class="p">(</span><span class="mi">26</span><span class="p">),</span>
-<span class="w">        </span><span class="n">OPENSBI</span><span class="p">(</span><span class="mi">27</span><span class="p">),</span>
-<span class="w">        </span><span class="n">EFI</span><span class="p">(</span><span class="mi">28</span><span class="p">);</span>
-
-<span class="w">        </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
-<span class="w">        </span><span class="n">UimageOs</span><span class="p">(</span><span class="kt">long</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">id</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="nf">id</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">id</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span><span class="w"> </span><span class="n">UimageOs</span><span class="o">&gt;</span><span class="w"> </span><span class="n">byId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span><span class="w"> </span><span class="n">UimageOs</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">29</span><span class="p">);</span>
-<span class="w">        </span><span class="kd">static</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">UimageOs</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">UimageOs</span><span class="p">.</span><span class="na">values</span><span class="p">())</span>
-<span class="w">                </span><span class="n">byId</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">id</span><span class="p">(),</span><span class="w"> </span><span class="n">e</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">UimageOs</span><span class="w"> </span><span class="nf">byId</span><span class="p">(</span><span class="kt">long</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">byId</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">id</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">enum</span><span class="w"> </span><span class="n">UimageArch</span><span class="w"> </span><span class="p">{</span>
@@ -396,6 +369,48 @@ for instructions how to add it into your project with the build tool that you us
 <span class="w">                </span><span class="n">byId</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">id</span><span class="p">(),</span><span class="w"> </span><span class="n">e</span><span class="p">);</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">UimageComp</span><span class="w"> </span><span class="nf">byId</span><span class="p">(</span><span class="kt">long</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">byId</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">id</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">enum</span><span class="w"> </span><span class="n">UimageOs</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">INVALID</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+<span class="w">        </span><span class="n">OPENBSD</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+<span class="w">        </span><span class="n">NETBSD</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
+<span class="w">        </span><span class="n">FREEBSD</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
+<span class="w">        </span><span class="n">BSD4_4</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span>
+<span class="w">        </span><span class="n">LINUX</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span>
+<span class="w">        </span><span class="n">SVR4</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span>
+<span class="w">        </span><span class="n">ESIX</span><span class="p">(</span><span class="mi">7</span><span class="p">),</span>
+<span class="w">        </span><span class="n">SOLARIS</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span>
+<span class="w">        </span><span class="n">IRIX</span><span class="p">(</span><span class="mi">9</span><span class="p">),</span>
+<span class="w">        </span><span class="n">SCO</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span>
+<span class="w">        </span><span class="n">DELL</span><span class="p">(</span><span class="mi">11</span><span class="p">),</span>
+<span class="w">        </span><span class="n">NCR</span><span class="p">(</span><span class="mi">12</span><span class="p">),</span>
+<span class="w">        </span><span class="n">LYNXOS</span><span class="p">(</span><span class="mi">13</span><span class="p">),</span>
+<span class="w">        </span><span class="n">VXWORKS</span><span class="p">(</span><span class="mi">14</span><span class="p">),</span>
+<span class="w">        </span><span class="n">PSOS</span><span class="p">(</span><span class="mi">15</span><span class="p">),</span>
+<span class="w">        </span><span class="n">QNX</span><span class="p">(</span><span class="mi">16</span><span class="p">),</span>
+<span class="w">        </span><span class="n">U_BOOT</span><span class="p">(</span><span class="mi">17</span><span class="p">),</span>
+<span class="w">        </span><span class="n">RTEMS</span><span class="p">(</span><span class="mi">18</span><span class="p">),</span>
+<span class="w">        </span><span class="n">ARTOS</span><span class="p">(</span><span class="mi">19</span><span class="p">),</span>
+<span class="w">        </span><span class="n">UNITY</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span>
+<span class="w">        </span><span class="n">INTEGRITY</span><span class="p">(</span><span class="mi">21</span><span class="p">),</span>
+<span class="w">        </span><span class="n">OSE</span><span class="p">(</span><span class="mi">22</span><span class="p">),</span>
+<span class="w">        </span><span class="n">PLAN9</span><span class="p">(</span><span class="mi">23</span><span class="p">),</span>
+<span class="w">        </span><span class="n">OPENRTOS</span><span class="p">(</span><span class="mi">24</span><span class="p">),</span>
+<span class="w">        </span><span class="n">ARM_TRUSTED_FIRMWARE</span><span class="p">(</span><span class="mi">25</span><span class="p">),</span>
+<span class="w">        </span><span class="n">TEE</span><span class="p">(</span><span class="mi">26</span><span class="p">),</span>
+<span class="w">        </span><span class="n">OPENSBI</span><span class="p">(</span><span class="mi">27</span><span class="p">),</span>
+<span class="w">        </span><span class="n">EFI</span><span class="p">(</span><span class="mi">28</span><span class="p">);</span>
+
+<span class="w">        </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+<span class="w">        </span><span class="n">UimageOs</span><span class="p">(</span><span class="kt">long</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">id</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="nf">id</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">id</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span><span class="w"> </span><span class="n">UimageOs</span><span class="o">&gt;</span><span class="w"> </span><span class="n">byId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span><span class="w"> </span><span class="n">UimageOs</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">29</span><span class="p">);</span>
+<span class="w">        </span><span class="kd">static</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">UimageOs</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">UimageOs</span><span class="p">.</span><span class="na">values</span><span class="p">())</span>
+<span class="w">                </span><span class="n">byId</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">id</span><span class="p">(),</span><span class="w"> </span><span class="n">e</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">UimageOs</span><span class="w"> </span><span class="nf">byId</span><span class="p">(</span><span class="kt">long</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">byId</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">id</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">enum</span><span class="w"> </span><span class="n">UimageType</span><span class="w"> </span><span class="p">{</span>
@@ -470,6 +485,10 @@ for instructions how to add it into your project with the build tool that you us
 <span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Uheader</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">);</span>
 <span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">header</span><span class="p">().</span><span class="na">lenImage</span><span class="p">());</span>
 <span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">_fetchInstances</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">header</span><span class="p">.</span><span class="na">_fetchInstances</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Uheader</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">KaitaiStruct</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">Uheader</span><span class="w"> </span><span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">fileName</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">IOException</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Uheader</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
@@ -491,8 +510,8 @@ for instructions how to add it into your project with the build tool that you us
 <span class="w">        </span><span class="p">}</span>
 <span class="w">        </span><span class="kd">private</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="k">this</span><span class="p">.</span><span class="na">magic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
-<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">Arrays</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="n">magic</span><span class="p">(),</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="mi">39</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span><span class="w"> </span><span class="mi">86</span><span class="w"> </span><span class="p">})))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">                </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">.</span><span class="na">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="mi">39</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span><span class="w"> </span><span class="mi">86</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="n">magic</span><span class="p">(),</span><span class="w"> </span><span class="n">_io</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;/types/uheader/seq/0&quot;</span><span class="p">);</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">Arrays</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">magic</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="mi">39</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span><span class="w"> </span><span class="mi">86</span><span class="w"> </span><span class="p">})))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">KaitaiStream</span><span class="p">.</span><span class="na">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="mi">39</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span><span class="w"> </span><span class="mi">86</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">magic</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/types/uheader/seq/0&quot;</span><span class="p">);</span>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">            </span><span class="k">this</span><span class="p">.</span><span class="na">headerCrc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">();</span>
 <span class="w">            </span><span class="k">this</span><span class="p">.</span><span class="na">timestamp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">();</span>
@@ -504,7 +523,10 @@ for instructions how to add it into your project with the build tool that you us
 <span class="w">            </span><span class="k">this</span><span class="p">.</span><span class="na">architecture</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Uimage</span><span class="p">.</span><span class="na">UimageArch</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">());</span>
 <span class="w">            </span><span class="k">this</span><span class="p">.</span><span class="na">imageType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Uimage</span><span class="p">.</span><span class="na">UimageType</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">());</span>
 <span class="w">            </span><span class="k">this</span><span class="p">.</span><span class="na">compressionType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Uimage</span><span class="p">.</span><span class="na">UimageComp</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">());</span>
-<span class="w">            </span><span class="k">this</span><span class="p">.</span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">String</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="na">bytesTerminate</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="kt">byte</span><span class="p">)</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">),</span><span class="w"> </span><span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">));</span>
+<span class="w">            </span><span class="k">this</span><span class="p">.</span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">String</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="na">bytesTerminate</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="kt">byte</span><span class="p">)</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="p">),</span><span class="w"> </span><span class="n">StandardCharsets</span><span class="p">.</span><span class="na">UTF_8</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">_fetchInstances</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">        </span><span class="kd">private</span><span class="w"> </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">magic</span><span class="p">;</span>
 <span class="w">        </span><span class="kd">private</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">headerCrc</span><span class="p">;</span>

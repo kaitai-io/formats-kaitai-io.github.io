@@ -4,9 +4,9 @@
 
 local class = require("class")
 require("kaitaistruct")
+require("bytes_with_io")
 local stringstream = require("string_stream")
 
-require("bytes_with_io")
 -- 
 -- Compressed Macintosh resource data,
 -- as stored in resources with the "compressed" attribute.
@@ -61,28 +61,15 @@ CompressedResource.Header = class.class(KaitaiStruct)
 function CompressedResource.Header:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function CompressedResource.Header:_read()
   self.common_part = CompressedResource.Header.CommonPart(self._io, self, self._root)
-  self._raw_type_specific_part_raw_with_io = self._io:read_bytes((self.common_part.len_header - 12))
+  self._raw_type_specific_part_raw_with_io = self._io:read_bytes(self.common_part.len_header - 12)
   local _io = KaitaiStream(stringstream(self._raw_type_specific_part_raw_with_io))
   self.type_specific_part_raw_with_io = BytesWithIo(_io)
-end
-
--- 
--- The type-specific part of the header,
--- as a raw byte array.
-CompressedResource.Header.property.type_specific_part_raw = {}
-function CompressedResource.Header.property.type_specific_part_raw:get()
-  if self._m_type_specific_part_raw ~= nil then
-    return self._m_type_specific_part_raw
-  end
-
-  self._m_type_specific_part_raw = self.type_specific_part_raw_with_io.data
-  return self._m_type_specific_part_raw
 end
 
 -- 
@@ -108,6 +95,19 @@ function CompressedResource.Header.property.type_specific_part:get()
 end
 
 -- 
+-- The type-specific part of the header,
+-- as a raw byte array.
+CompressedResource.Header.property.type_specific_part_raw = {}
+function CompressedResource.Header.property.type_specific_part_raw:get()
+  if self._m_type_specific_part_raw ~= nil then
+    return self._m_type_specific_part_raw
+  end
+
+  self._m_type_specific_part_raw = self.type_specific_part_raw_with_io.data
+  return self._m_type_specific_part_raw
+end
+
+-- 
 -- The common part of the header.
 -- Among other things,
 -- this part contains the header type,
@@ -124,23 +124,23 @@ CompressedResource.Header.CommonPart = class.class(KaitaiStruct)
 function CompressedResource.Header.CommonPart:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function CompressedResource.Header.CommonPart:_read()
   self.magic = self._io:read_bytes(4)
   if not(self.magic == "\168\159\101\114") then
-    error("not equal, expected " ..  "\168\159\101\114" .. ", but got " .. self.magic)
+    error("not equal, expected " .. "\168\159\101\114" .. ", but got " .. self.magic)
   end
   self.len_header = self._io:read_u2be()
   if not(self.len_header == 18) then
-    error("not equal, expected " ..  18 .. ", but got " .. self.len_header)
+    error("not equal, expected " .. 18 .. ", but got " .. self.len_header)
   end
   self.header_type = self._io:read_u1()
   self.unknown = self._io:read_u1()
   if not(self.unknown == 1) then
-    error("not equal, expected " ..  1 .. ", but got " .. self.unknown)
+    error("not equal, expected " .. 1 .. ", but got " .. self.unknown)
   end
   self.len_decompressed = self._io:read_u4be()
 end
@@ -177,7 +177,7 @@ CompressedResource.Header.TypeSpecificPartType8 = class.class(KaitaiStruct)
 function CompressedResource.Header.TypeSpecificPartType8:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -187,7 +187,7 @@ function CompressedResource.Header.TypeSpecificPartType8:_read()
   self.decompressor_id = self._io:read_s2be()
   self.reserved = self._io:read_u2be()
   if not(self.reserved == 0) then
-    error("not equal, expected " ..  0 .. ", but got " .. self.reserved)
+    error("not equal, expected " .. 0 .. ", but got " .. self.reserved)
   end
 end
 
@@ -220,7 +220,7 @@ CompressedResource.Header.TypeSpecificPartType9 = class.class(KaitaiStruct)
 function CompressedResource.Header.TypeSpecificPartType9:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 

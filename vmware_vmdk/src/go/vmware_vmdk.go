@@ -16,6 +16,11 @@ const (
 	VmwareVmdk_CompressionMethods__None VmwareVmdk_CompressionMethods = 0
 	VmwareVmdk_CompressionMethods__Deflate VmwareVmdk_CompressionMethods = 1
 )
+var values_VmwareVmdk_CompressionMethods = map[VmwareVmdk_CompressionMethods]struct{}{0: {}, 1: {}}
+func (v VmwareVmdk_CompressionMethods) isDefined() bool {
+	_, ok := values_VmwareVmdk_CompressionMethods[v]
+	return ok
+}
 type VmwareVmdk struct {
 	Magic []byte
 	Version int32
@@ -33,22 +38,26 @@ type VmwareVmdk struct {
 	CompressionMethod VmwareVmdk_CompressionMethods
 	_io *kaitai.Stream
 	_root *VmwareVmdk
-	_parent interface{}
-	_f_lenSector bool
-	lenSector int
+	_parent kaitai.Struct
 	_f_descriptor bool
 	descriptor []byte
 	_f_grainPrimary bool
 	grainPrimary []byte
 	_f_grainSecondary bool
 	grainSecondary []byte
+	_f_lenSector bool
+	lenSector int
 }
 func NewVmwareVmdk() *VmwareVmdk {
 	return &VmwareVmdk{
 	}
 }
 
-func (this *VmwareVmdk) Read(io *kaitai.Stream, parent interface{}, root *VmwareVmdk) (err error) {
+func (this VmwareVmdk) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *VmwareVmdk) Read(io *kaitai.Stream, parent kaitai.Struct, root *VmwareVmdk) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -131,18 +140,11 @@ func (this *VmwareVmdk) Read(io *kaitai.Stream, parent interface{}, root *Vmware
 	this.CompressionMethod = VmwareVmdk_CompressionMethods(tmp14)
 	return err
 }
-func (this *VmwareVmdk) LenSector() (v int, err error) {
-	if (this._f_lenSector) {
-		return this.lenSector, nil
-	}
-	this.lenSector = int(512)
-	this._f_lenSector = true
-	return this.lenSector, nil
-}
 func (this *VmwareVmdk) Descriptor() (v []byte, err error) {
 	if (this._f_descriptor) {
 		return this.descriptor, nil
 	}
+	this._f_descriptor = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
@@ -151,7 +153,7 @@ func (this *VmwareVmdk) Descriptor() (v []byte, err error) {
 	if err != nil {
 		return nil, err
 	}
-	_, err = this._io.Seek(int64((this.StartDescriptor * tmp15)), io.SeekStart)
+	_, err = this._io.Seek(int64(this.StartDescriptor * tmp15), io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
@@ -159,7 +161,7 @@ func (this *VmwareVmdk) Descriptor() (v []byte, err error) {
 	if err != nil {
 		return nil, err
 	}
-	tmp17, err := this._io.ReadBytes(int((this.SizeDescriptor * tmp16)))
+	tmp17, err := this._io.ReadBytes(int(this.SizeDescriptor * tmp16))
 	if err != nil {
 		return nil, err
 	}
@@ -169,14 +171,13 @@ func (this *VmwareVmdk) Descriptor() (v []byte, err error) {
 	if err != nil {
 		return nil, err
 	}
-	this._f_descriptor = true
-	this._f_descriptor = true
 	return this.descriptor, nil
 }
 func (this *VmwareVmdk) GrainPrimary() (v []byte, err error) {
 	if (this._f_grainPrimary) {
 		return this.grainPrimary, nil
 	}
+	this._f_grainPrimary = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
@@ -185,7 +186,7 @@ func (this *VmwareVmdk) GrainPrimary() (v []byte, err error) {
 	if err != nil {
 		return nil, err
 	}
-	_, err = this._io.Seek(int64((this.StartPrimaryGrain * tmp18)), io.SeekStart)
+	_, err = this._io.Seek(int64(this.StartPrimaryGrain * tmp18), io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
@@ -193,7 +194,7 @@ func (this *VmwareVmdk) GrainPrimary() (v []byte, err error) {
 	if err != nil {
 		return nil, err
 	}
-	tmp20, err := this._io.ReadBytes(int((this.SizeGrain * tmp19)))
+	tmp20, err := this._io.ReadBytes(int(this.SizeGrain * tmp19))
 	if err != nil {
 		return nil, err
 	}
@@ -203,14 +204,13 @@ func (this *VmwareVmdk) GrainPrimary() (v []byte, err error) {
 	if err != nil {
 		return nil, err
 	}
-	this._f_grainPrimary = true
-	this._f_grainPrimary = true
 	return this.grainPrimary, nil
 }
 func (this *VmwareVmdk) GrainSecondary() (v []byte, err error) {
 	if (this._f_grainSecondary) {
 		return this.grainSecondary, nil
 	}
+	this._f_grainSecondary = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
@@ -219,7 +219,7 @@ func (this *VmwareVmdk) GrainSecondary() (v []byte, err error) {
 	if err != nil {
 		return nil, err
 	}
-	_, err = this._io.Seek(int64((this.StartSecondaryGrain * tmp21)), io.SeekStart)
+	_, err = this._io.Seek(int64(this.StartSecondaryGrain * tmp21), io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
@@ -227,7 +227,7 @@ func (this *VmwareVmdk) GrainSecondary() (v []byte, err error) {
 	if err != nil {
 		return nil, err
 	}
-	tmp23, err := this._io.ReadBytes(int((this.SizeGrain * tmp22)))
+	tmp23, err := this._io.ReadBytes(int(this.SizeGrain * tmp22))
 	if err != nil {
 		return nil, err
 	}
@@ -237,9 +237,15 @@ func (this *VmwareVmdk) GrainSecondary() (v []byte, err error) {
 	if err != nil {
 		return nil, err
 	}
-	this._f_grainSecondary = true
-	this._f_grainSecondary = true
 	return this.grainSecondary, nil
+}
+func (this *VmwareVmdk) LenSector() (v int, err error) {
+	if (this._f_lenSector) {
+		return this.lenSector, nil
+	}
+	this._f_lenSector = true
+	this.lenSector = int(512)
+	return this.lenSector, nil
 }
 
 /**
@@ -286,6 +292,10 @@ type VmwareVmdk_HeaderFlags struct {
 func NewVmwareVmdk_HeaderFlags() *VmwareVmdk_HeaderFlags {
 	return &VmwareVmdk_HeaderFlags{
 	}
+}
+
+func (this VmwareVmdk_HeaderFlags) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *VmwareVmdk_HeaderFlags) Read(io *kaitai.Stream, parent *VmwareVmdk, root *VmwareVmdk) (err error) {

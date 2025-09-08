@@ -2,10 +2,31 @@
 
 #include "sqlite3.h"
 #include "kaitai/exceptions.h"
+std::set<sqlite3_t::encodings_t> sqlite3_t::_build_values_encodings_t() {
+    std::set<sqlite3_t::encodings_t> _t;
+    _t.insert(sqlite3_t::ENCODINGS_UTF_8);
+    _t.insert(sqlite3_t::ENCODINGS_UTF_16LE);
+    _t.insert(sqlite3_t::ENCODINGS_UTF_16BE);
+    return _t;
+}
+const std::set<sqlite3_t::encodings_t> sqlite3_t::_values_encodings_t = sqlite3_t::_build_values_encodings_t();
+bool sqlite3_t::_is_defined_encodings_t(sqlite3_t::encodings_t v) {
+    return sqlite3_t::_values_encodings_t.find(v) != sqlite3_t::_values_encodings_t.end();
+}
+std::set<sqlite3_t::versions_t> sqlite3_t::_build_values_versions_t() {
+    std::set<sqlite3_t::versions_t> _t;
+    _t.insert(sqlite3_t::VERSIONS_LEGACY);
+    _t.insert(sqlite3_t::VERSIONS_WAL);
+    return _t;
+}
+const std::set<sqlite3_t::versions_t> sqlite3_t::_values_versions_t = sqlite3_t::_build_values_versions_t();
+bool sqlite3_t::_is_defined_versions_t(sqlite3_t::versions_t v) {
+    return sqlite3_t::_values_versions_t.find(v) != sqlite3_t::_values_versions_t.end();
+}
 
 sqlite3_t::sqlite3_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, sqlite3_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     m_root_page = 0;
     f_len_page = false;
 
@@ -19,8 +40,8 @@ sqlite3_t::sqlite3_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, sqlite3
 
 void sqlite3_t::_read() {
     m_magic = m__io->read_bytes(16);
-    if (!(magic() == std::string("\x53\x51\x4C\x69\x74\x65\x20\x66\x6F\x72\x6D\x61\x74\x20\x33\x00", 16))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\x53\x51\x4C\x69\x74\x65\x20\x66\x6F\x72\x6D\x61\x74\x20\x33\x00", 16), magic(), _io(), std::string("/seq/0"));
+    if (!(m_magic == std::string("\x53\x51\x4C\x69\x74\x65\x20\x66\x6F\x72\x6D\x61\x74\x20\x33\x00", 16))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\x53\x51\x4C\x69\x74\x65\x20\x66\x6F\x72\x6D\x61\x74\x20\x33\x00", 16), m_magic, m__io, std::string("/seq/0"));
     }
     m_len_page_mod = m__io->read_u2be();
     m_write_version = static_cast<sqlite3_t::versions_t>(m__io->read_u1());
@@ -55,64 +76,6 @@ void sqlite3_t::_clean_up() {
     if (m_root_page) {
         delete m_root_page; m_root_page = 0;
     }
-}
-
-sqlite3_t::serial_t::serial_t(kaitai::kstream* p__io, sqlite3_t::serials_t* p__parent, sqlite3_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    m_code = 0;
-    f_is_blob = false;
-    f_is_string = false;
-    f_len_content = false;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void sqlite3_t::serial_t::_read() {
-    m_code = new vlq_base128_be_t(m__io);
-}
-
-sqlite3_t::serial_t::~serial_t() {
-    _clean_up();
-}
-
-void sqlite3_t::serial_t::_clean_up() {
-    if (m_code) {
-        delete m_code; m_code = 0;
-    }
-}
-
-bool sqlite3_t::serial_t::is_blob() {
-    if (f_is_blob)
-        return m_is_blob;
-    m_is_blob =  ((code()->value() >= 12) && (kaitai::kstream::mod(code()->value(), 2) == 0)) ;
-    f_is_blob = true;
-    return m_is_blob;
-}
-
-bool sqlite3_t::serial_t::is_string() {
-    if (f_is_string)
-        return m_is_string;
-    m_is_string =  ((code()->value() >= 13) && (kaitai::kstream::mod(code()->value(), 2) == 1)) ;
-    f_is_string = true;
-    return m_is_string;
-}
-
-int32_t sqlite3_t::serial_t::len_content() {
-    if (f_len_content)
-        return m_len_content;
-    n_len_content = true;
-    if (code()->value() >= 12) {
-        n_len_content = false;
-        m_len_content = ((code()->value() - 12) / 2);
-    }
-    f_len_content = true;
-    return m_len_content;
 }
 
 sqlite3_t::btree_page_t::btree_page_t(kaitai::kstream* p__io, sqlite3_t* p__parent, sqlite3_t* p__root) : kaitai::kstruct(p__io) {
@@ -161,6 +124,45 @@ void sqlite3_t::btree_page_t::_clean_up() {
     }
 }
 
+sqlite3_t::cell_index_interior_t::cell_index_interior_t(kaitai::kstream* p__io, sqlite3_t::ref_cell_t* p__parent, sqlite3_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_len_payload = 0;
+    m_payload = 0;
+    m__io__raw_payload = 0;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void sqlite3_t::cell_index_interior_t::_read() {
+    m_left_child_page = m__io->read_u4be();
+    m_len_payload = new vlq_base128_be_t(m__io);
+    m__raw_payload = m__io->read_bytes(len_payload()->value());
+    m__io__raw_payload = new kaitai::kstream(m__raw_payload);
+    m_payload = new cell_payload_t(m__io__raw_payload, this, m__root);
+}
+
+sqlite3_t::cell_index_interior_t::~cell_index_interior_t() {
+    _clean_up();
+}
+
+void sqlite3_t::cell_index_interior_t::_clean_up() {
+    if (m_len_payload) {
+        delete m_len_payload; m_len_payload = 0;
+    }
+    if (m__io__raw_payload) {
+        delete m__io__raw_payload; m__io__raw_payload = 0;
+    }
+    if (m_payload) {
+        delete m_payload; m_payload = 0;
+    }
+}
+
 sqlite3_t::cell_index_leaf_t::cell_index_leaf_t(kaitai::kstream* p__io, sqlite3_t::ref_cell_t* p__parent, sqlite3_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
@@ -199,86 +201,6 @@ void sqlite3_t::cell_index_leaf_t::_clean_up() {
     }
 }
 
-sqlite3_t::serials_t::serials_t(kaitai::kstream* p__io, sqlite3_t::cell_payload_t* p__parent, sqlite3_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    m_entries = 0;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void sqlite3_t::serials_t::_read() {
-    m_entries = new std::vector<serial_t*>();
-    {
-        int i = 0;
-        while (!m__io->is_eof()) {
-            m_entries->push_back(new serial_t(m__io, this, m__root));
-            i++;
-        }
-    }
-}
-
-sqlite3_t::serials_t::~serials_t() {
-    _clean_up();
-}
-
-void sqlite3_t::serials_t::_clean_up() {
-    if (m_entries) {
-        for (std::vector<serial_t*>::iterator it = m_entries->begin(); it != m_entries->end(); ++it) {
-            delete *it;
-        }
-        delete m_entries; m_entries = 0;
-    }
-}
-
-sqlite3_t::cell_table_leaf_t::cell_table_leaf_t(kaitai::kstream* p__io, sqlite3_t::ref_cell_t* p__parent, sqlite3_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    m_len_payload = 0;
-    m_row_id = 0;
-    m_payload = 0;
-    m__io__raw_payload = 0;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void sqlite3_t::cell_table_leaf_t::_read() {
-    m_len_payload = new vlq_base128_be_t(m__io);
-    m_row_id = new vlq_base128_be_t(m__io);
-    m__raw_payload = m__io->read_bytes(len_payload()->value());
-    m__io__raw_payload = new kaitai::kstream(m__raw_payload);
-    m_payload = new cell_payload_t(m__io__raw_payload, this, m__root);
-}
-
-sqlite3_t::cell_table_leaf_t::~cell_table_leaf_t() {
-    _clean_up();
-}
-
-void sqlite3_t::cell_table_leaf_t::_clean_up() {
-    if (m_len_payload) {
-        delete m_len_payload; m_len_payload = 0;
-    }
-    if (m_row_id) {
-        delete m_row_id; m_row_id = 0;
-    }
-    if (m__io__raw_payload) {
-        delete m__io__raw_payload; m__io__raw_payload = 0;
-    }
-    if (m_payload) {
-        delete m_payload; m_payload = 0;
-    }
-}
-
 sqlite3_t::cell_payload_t::cell_payload_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, sqlite3_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
@@ -297,7 +219,7 @@ sqlite3_t::cell_payload_t::cell_payload_t(kaitai::kstream* p__io, kaitai::kstruc
 
 void sqlite3_t::cell_payload_t::_read() {
     m_len_header_and_len = new vlq_base128_be_t(m__io);
-    m__raw_column_serials = m__io->read_bytes((len_header_and_len()->value() - 1));
+    m__raw_column_serials = m__io->read_bytes(len_header_and_len()->value() - 1);
     m__io__raw_column_serials = new kaitai::kstream(m__raw_column_serials);
     m_column_serials = new serials_t(m__io__raw_column_serials, this, m__root);
     m_column_contents = new std::vector<column_content_t*>();
@@ -357,10 +279,11 @@ void sqlite3_t::cell_table_interior_t::_clean_up() {
     }
 }
 
-sqlite3_t::cell_index_interior_t::cell_index_interior_t(kaitai::kstream* p__io, sqlite3_t::ref_cell_t* p__parent, sqlite3_t* p__root) : kaitai::kstruct(p__io) {
+sqlite3_t::cell_table_leaf_t::cell_table_leaf_t(kaitai::kstream* p__io, sqlite3_t::ref_cell_t* p__parent, sqlite3_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
     m_len_payload = 0;
+    m_row_id = 0;
     m_payload = 0;
     m__io__raw_payload = 0;
 
@@ -372,21 +295,24 @@ sqlite3_t::cell_index_interior_t::cell_index_interior_t(kaitai::kstream* p__io, 
     }
 }
 
-void sqlite3_t::cell_index_interior_t::_read() {
-    m_left_child_page = m__io->read_u4be();
+void sqlite3_t::cell_table_leaf_t::_read() {
     m_len_payload = new vlq_base128_be_t(m__io);
+    m_row_id = new vlq_base128_be_t(m__io);
     m__raw_payload = m__io->read_bytes(len_payload()->value());
     m__io__raw_payload = new kaitai::kstream(m__raw_payload);
     m_payload = new cell_payload_t(m__io__raw_payload, this, m__root);
 }
 
-sqlite3_t::cell_index_interior_t::~cell_index_interior_t() {
+sqlite3_t::cell_table_leaf_t::~cell_table_leaf_t() {
     _clean_up();
 }
 
-void sqlite3_t::cell_index_interior_t::_clean_up() {
+void sqlite3_t::cell_table_leaf_t::_clean_up() {
     if (m_len_payload) {
         delete m_len_payload; m_len_payload = 0;
+    }
+    if (m_row_id) {
+        delete m_row_id; m_row_id = 0;
     }
     if (m__io__raw_payload) {
         delete m__io__raw_payload; m__io__raw_payload = 0;
@@ -415,19 +341,14 @@ void sqlite3_t::column_content_t::_read() {
         n_as_int = false;
         n_as_int = true;
         switch (serial_type()->code()->value()) {
-        case 4: {
-            n_as_int = false;
-            m_as_int = m__io->read_u4be();
-            break;
-        }
-        case 6: {
-            n_as_int = false;
-            m_as_int = m__io->read_u8be();
-            break;
-        }
         case 1: {
             n_as_int = false;
             m_as_int = m__io->read_u1();
+            break;
+        }
+        case 2: {
+            n_as_int = false;
+            m_as_int = m__io->read_u2be();
             break;
         }
         case 3: {
@@ -435,14 +356,19 @@ void sqlite3_t::column_content_t::_read() {
             m_as_int = m__io->read_bits_int_be(24);
             break;
         }
+        case 4: {
+            n_as_int = false;
+            m_as_int = m__io->read_u4be();
+            break;
+        }
         case 5: {
             n_as_int = false;
             m_as_int = m__io->read_bits_int_be(48);
             break;
         }
-        case 2: {
+        case 6: {
             n_as_int = false;
-            m_as_int = m__io->read_u2be();
+            m_as_int = m__io->read_u8be();
             break;
         }
         }
@@ -457,7 +383,7 @@ void sqlite3_t::column_content_t::_read() {
         n_as_blob = false;
         m_as_blob = m__io->read_bytes(serial_type()->len_content());
     }
-    m_as_str = kaitai::kstream::bytes_to_str(m__io->read_bytes(serial_type()->len_content()), std::string("UTF-8"));
+    m_as_str = kaitai::kstream::bytes_to_str(m__io->read_bytes(serial_type()->len_content()), "UTF-8");
 }
 
 sqlite3_t::column_content_t::~column_content_t() {
@@ -505,23 +431,19 @@ void sqlite3_t::ref_cell_t::_clean_up() {
 kaitai::kstruct* sqlite3_t::ref_cell_t::body() {
     if (f_body)
         return m_body;
+    f_body = true;
     std::streampos _pos = m__io->pos();
     m__io->seek(ofs_body());
     n_body = true;
     switch (_parent()->page_type()) {
-    case 13: {
-        n_body = false;
-        m_body = new cell_table_leaf_t(m__io, this, m__root);
-        break;
-    }
-    case 5: {
-        n_body = false;
-        m_body = new cell_table_interior_t(m__io, this, m__root);
-        break;
-    }
     case 10: {
         n_body = false;
         m_body = new cell_index_leaf_t(m__io, this, m__root);
+        break;
+    }
+    case 13: {
+        n_body = false;
+        m_body = new cell_table_leaf_t(m__io, this, m__root);
         break;
     }
     case 2: {
@@ -529,16 +451,115 @@ kaitai::kstruct* sqlite3_t::ref_cell_t::body() {
         m_body = new cell_index_interior_t(m__io, this, m__root);
         break;
     }
+    case 5: {
+        n_body = false;
+        m_body = new cell_table_interior_t(m__io, this, m__root);
+        break;
+    }
     }
     m__io->seek(_pos);
-    f_body = true;
     return m_body;
+}
+
+sqlite3_t::serial_t::serial_t(kaitai::kstream* p__io, sqlite3_t::serials_t* p__parent, sqlite3_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_code = 0;
+    f_is_blob = false;
+    f_is_string = false;
+    f_len_content = false;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void sqlite3_t::serial_t::_read() {
+    m_code = new vlq_base128_be_t(m__io);
+}
+
+sqlite3_t::serial_t::~serial_t() {
+    _clean_up();
+}
+
+void sqlite3_t::serial_t::_clean_up() {
+    if (m_code) {
+        delete m_code; m_code = 0;
+    }
+}
+
+bool sqlite3_t::serial_t::is_blob() {
+    if (f_is_blob)
+        return m_is_blob;
+    f_is_blob = true;
+    m_is_blob =  ((code()->value() >= 12) && (kaitai::kstream::mod(code()->value(), 2) == 0)) ;
+    return m_is_blob;
+}
+
+bool sqlite3_t::serial_t::is_string() {
+    if (f_is_string)
+        return m_is_string;
+    f_is_string = true;
+    m_is_string =  ((code()->value() >= 13) && (kaitai::kstream::mod(code()->value(), 2) == 1)) ;
+    return m_is_string;
+}
+
+int32_t sqlite3_t::serial_t::len_content() {
+    if (f_len_content)
+        return m_len_content;
+    f_len_content = true;
+    n_len_content = true;
+    if (code()->value() >= 12) {
+        n_len_content = false;
+        m_len_content = (code()->value() - 12) / 2;
+    }
+    return m_len_content;
+}
+
+sqlite3_t::serials_t::serials_t(kaitai::kstream* p__io, sqlite3_t::cell_payload_t* p__parent, sqlite3_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_entries = 0;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void sqlite3_t::serials_t::_read() {
+    m_entries = new std::vector<serial_t*>();
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_entries->push_back(new serial_t(m__io, this, m__root));
+            i++;
+        }
+    }
+}
+
+sqlite3_t::serials_t::~serials_t() {
+    _clean_up();
+}
+
+void sqlite3_t::serials_t::_clean_up() {
+    if (m_entries) {
+        for (std::vector<serial_t*>::iterator it = m_entries->begin(); it != m_entries->end(); ++it) {
+            delete *it;
+        }
+        delete m_entries; m_entries = 0;
+    }
 }
 
 int32_t sqlite3_t::len_page() {
     if (f_len_page)
         return m_len_page;
-    m_len_page = ((len_page_mod() == 1) ? (65536) : (len_page_mod()));
     f_len_page = true;
+    m_len_page = ((len_page_mod() == 1) ? (65536) : (len_page_mod()));
     return m_len_page;
 }

@@ -13,28 +13,20 @@ type
     `parent`*: KaitaiStruct
     `indexInst`: MozillaMar_MarIndex
     `indexInstFlag`: bool
+  MozillaMar_BlockIdentifiers* = enum
+    product_information = 1
   MozillaMar_SignatureAlgorithms* = enum
     rsa_pkcs1_sha1 = 1
     rsa_pkcs1_sha384 = 2
-  MozillaMar_BlockIdentifiers* = enum
-    product_information = 1
-  MozillaMar_MarIndex* = ref object of KaitaiStruct
-    `lenIndex`*: uint32
-    `indexEntries`*: MozillaMar_IndexEntries
+  MozillaMar_AdditionalSection* = ref object of KaitaiStruct
+    `lenBlock`*: uint32
+    `blockIdentifier`*: MozillaMar_BlockIdentifiers
+    `bytes`*: KaitaiStruct
     `parent`*: MozillaMar
-    `rawIndexEntries`*: seq[byte]
+    `rawBytes`*: seq[byte]
   MozillaMar_IndexEntries* = ref object of KaitaiStruct
     `indexEntry`*: seq[MozillaMar_IndexEntry]
     `parent`*: MozillaMar_MarIndex
-  MozillaMar_Signature* = ref object of KaitaiStruct
-    `algorithm`*: MozillaMar_SignatureAlgorithms
-    `lenSignature`*: uint32
-    `signature`*: seq[byte]
-    `parent`*: MozillaMar
-  MozillaMar_ProductInformationBlock* = ref object of KaitaiStruct
-    `marChannelName`*: string
-    `productVersion`*: string
-    `parent`*: MozillaMar_AdditionalSection
   MozillaMar_IndexEntry* = ref object of KaitaiStruct
     `ofsContent`*: uint32
     `lenContent`*: uint32
@@ -43,20 +35,28 @@ type
     `parent`*: MozillaMar_IndexEntries
     `bodyInst`: seq[byte]
     `bodyInstFlag`: bool
-  MozillaMar_AdditionalSection* = ref object of KaitaiStruct
-    `lenBlock`*: uint32
-    `blockIdentifier`*: MozillaMar_BlockIdentifiers
-    `bytes`*: KaitaiStruct
+  MozillaMar_MarIndex* = ref object of KaitaiStruct
+    `lenIndex`*: uint32
+    `indexEntries`*: MozillaMar_IndexEntries
     `parent`*: MozillaMar
-    `rawBytes`*: seq[byte]
+    `rawIndexEntries`*: seq[byte]
+  MozillaMar_ProductInformationBlock* = ref object of KaitaiStruct
+    `marChannelName`*: string
+    `productVersion`*: string
+    `parent`*: MozillaMar_AdditionalSection
+  MozillaMar_Signature* = ref object of KaitaiStruct
+    `algorithm`*: MozillaMar_SignatureAlgorithms
+    `lenSignature`*: uint32
+    `signature`*: seq[byte]
+    `parent`*: MozillaMar
 
 proc read*(_: typedesc[MozillaMar], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MozillaMar
-proc read*(_: typedesc[MozillaMar_MarIndex], io: KaitaiStream, root: KaitaiStruct, parent: MozillaMar): MozillaMar_MarIndex
-proc read*(_: typedesc[MozillaMar_IndexEntries], io: KaitaiStream, root: KaitaiStruct, parent: MozillaMar_MarIndex): MozillaMar_IndexEntries
-proc read*(_: typedesc[MozillaMar_Signature], io: KaitaiStream, root: KaitaiStruct, parent: MozillaMar): MozillaMar_Signature
-proc read*(_: typedesc[MozillaMar_ProductInformationBlock], io: KaitaiStream, root: KaitaiStruct, parent: MozillaMar_AdditionalSection): MozillaMar_ProductInformationBlock
-proc read*(_: typedesc[MozillaMar_IndexEntry], io: KaitaiStream, root: KaitaiStruct, parent: MozillaMar_IndexEntries): MozillaMar_IndexEntry
 proc read*(_: typedesc[MozillaMar_AdditionalSection], io: KaitaiStream, root: KaitaiStruct, parent: MozillaMar): MozillaMar_AdditionalSection
+proc read*(_: typedesc[MozillaMar_IndexEntries], io: KaitaiStream, root: KaitaiStruct, parent: MozillaMar_MarIndex): MozillaMar_IndexEntries
+proc read*(_: typedesc[MozillaMar_IndexEntry], io: KaitaiStream, root: KaitaiStruct, parent: MozillaMar_IndexEntries): MozillaMar_IndexEntry
+proc read*(_: typedesc[MozillaMar_MarIndex], io: KaitaiStream, root: KaitaiStruct, parent: MozillaMar): MozillaMar_MarIndex
+proc read*(_: typedesc[MozillaMar_ProductInformationBlock], io: KaitaiStream, root: KaitaiStruct, parent: MozillaMar_AdditionalSection): MozillaMar_ProductInformationBlock
+proc read*(_: typedesc[MozillaMar_Signature], io: KaitaiStream, root: KaitaiStruct, parent: MozillaMar): MozillaMar_Signature
 
 proc index*(this: MozillaMar): MozillaMar_MarIndex
 proc body*(this: MozillaMar_IndexEntry): seq[byte]
@@ -109,24 +109,32 @@ proc index(this: MozillaMar): MozillaMar_MarIndex =
 proc fromFile*(_: typedesc[MozillaMar], filename: string): MozillaMar =
   MozillaMar.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[MozillaMar_MarIndex], io: KaitaiStream, root: KaitaiStruct, parent: MozillaMar): MozillaMar_MarIndex =
+proc read*(_: typedesc[MozillaMar_AdditionalSection], io: KaitaiStream, root: KaitaiStruct, parent: MozillaMar): MozillaMar_AdditionalSection =
   template this: untyped = result
-  this = new(MozillaMar_MarIndex)
+  this = new(MozillaMar_AdditionalSection)
   let root = if root == nil: cast[MozillaMar](this) else: cast[MozillaMar](root)
   this.io = io
   this.root = root
   this.parent = parent
 
-  let lenIndexExpr = this.io.readU4be()
-  this.lenIndex = lenIndexExpr
-  let rawIndexEntriesExpr = this.io.readBytes(int(this.lenIndex))
-  this.rawIndexEntries = rawIndexEntriesExpr
-  let rawIndexEntriesIo = newKaitaiStream(rawIndexEntriesExpr)
-  let indexEntriesExpr = MozillaMar_IndexEntries.read(rawIndexEntriesIo, this.root, this)
-  this.indexEntries = indexEntriesExpr
+  let lenBlockExpr = this.io.readU4be()
+  this.lenBlock = lenBlockExpr
+  let blockIdentifierExpr = MozillaMar_BlockIdentifiers(this.io.readU4be())
+  this.blockIdentifier = blockIdentifierExpr
+  block:
+    let on = this.blockIdentifier
+    if on == mozilla_mar.product_information:
+      let rawBytesExpr = this.io.readBytes(int((this.lenBlock - 4) - 4))
+      this.rawBytes = rawBytesExpr
+      let rawBytesIo = newKaitaiStream(rawBytesExpr)
+      let bytesExpr = MozillaMar_ProductInformationBlock.read(rawBytesIo, this.root, this)
+      this.bytes = bytesExpr
+    else:
+      let bytesExpr = this.io.readBytes(int((this.lenBlock - 4) - 4))
+      this.bytes = bytesExpr
 
-proc fromFile*(_: typedesc[MozillaMar_MarIndex], filename: string): MozillaMar_MarIndex =
-  MozillaMar_MarIndex.read(newKaitaiFileStream(filename), nil, nil)
+proc fromFile*(_: typedesc[MozillaMar_AdditionalSection], filename: string): MozillaMar_AdditionalSection =
+  MozillaMar_AdditionalSection.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[MozillaMar_IndexEntries], io: KaitaiStream, root: KaitaiStruct, parent: MozillaMar_MarIndex): MozillaMar_IndexEntries =
   template this: untyped = result
@@ -145,40 +153,6 @@ proc read*(_: typedesc[MozillaMar_IndexEntries], io: KaitaiStream, root: KaitaiS
 
 proc fromFile*(_: typedesc[MozillaMar_IndexEntries], filename: string): MozillaMar_IndexEntries =
   MozillaMar_IndexEntries.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[MozillaMar_Signature], io: KaitaiStream, root: KaitaiStruct, parent: MozillaMar): MozillaMar_Signature =
-  template this: untyped = result
-  this = new(MozillaMar_Signature)
-  let root = if root == nil: cast[MozillaMar](this) else: cast[MozillaMar](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let algorithmExpr = MozillaMar_SignatureAlgorithms(this.io.readU4be())
-  this.algorithm = algorithmExpr
-  let lenSignatureExpr = this.io.readU4be()
-  this.lenSignature = lenSignatureExpr
-  let signatureExpr = this.io.readBytes(int(this.lenSignature))
-  this.signature = signatureExpr
-
-proc fromFile*(_: typedesc[MozillaMar_Signature], filename: string): MozillaMar_Signature =
-  MozillaMar_Signature.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[MozillaMar_ProductInformationBlock], io: KaitaiStream, root: KaitaiStruct, parent: MozillaMar_AdditionalSection): MozillaMar_ProductInformationBlock =
-  template this: untyped = result
-  this = new(MozillaMar_ProductInformationBlock)
-  let root = if root == nil: cast[MozillaMar](this) else: cast[MozillaMar](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let marChannelNameExpr = encode(this.io.readBytes(int(64)).bytesTerminate(0, false), "UTF-8")
-  this.marChannelName = marChannelNameExpr
-  let productVersionExpr = encode(this.io.readBytes(int(32)).bytesTerminate(0, false), "UTF-8")
-  this.productVersion = productVersionExpr
-
-proc fromFile*(_: typedesc[MozillaMar_ProductInformationBlock], filename: string): MozillaMar_ProductInformationBlock =
-  MozillaMar_ProductInformationBlock.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[MozillaMar_IndexEntry], io: KaitaiStream, root: KaitaiStruct, parent: MozillaMar_IndexEntries): MozillaMar_IndexEntry =
   template this: untyped = result
@@ -216,30 +190,56 @@ proc body(this: MozillaMar_IndexEntry): seq[byte] =
 proc fromFile*(_: typedesc[MozillaMar_IndexEntry], filename: string): MozillaMar_IndexEntry =
   MozillaMar_IndexEntry.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[MozillaMar_AdditionalSection], io: KaitaiStream, root: KaitaiStruct, parent: MozillaMar): MozillaMar_AdditionalSection =
+proc read*(_: typedesc[MozillaMar_MarIndex], io: KaitaiStream, root: KaitaiStruct, parent: MozillaMar): MozillaMar_MarIndex =
   template this: untyped = result
-  this = new(MozillaMar_AdditionalSection)
+  this = new(MozillaMar_MarIndex)
   let root = if root == nil: cast[MozillaMar](this) else: cast[MozillaMar](root)
   this.io = io
   this.root = root
   this.parent = parent
 
-  let lenBlockExpr = this.io.readU4be()
-  this.lenBlock = lenBlockExpr
-  let blockIdentifierExpr = MozillaMar_BlockIdentifiers(this.io.readU4be())
-  this.blockIdentifier = blockIdentifierExpr
-  block:
-    let on = this.blockIdentifier
-    if on == mozilla_mar.product_information:
-      let rawBytesExpr = this.io.readBytes(int(((this.lenBlock - 4) - 4)))
-      this.rawBytes = rawBytesExpr
-      let rawBytesIo = newKaitaiStream(rawBytesExpr)
-      let bytesExpr = MozillaMar_ProductInformationBlock.read(rawBytesIo, this.root, this)
-      this.bytes = bytesExpr
-    else:
-      let bytesExpr = this.io.readBytes(int(((this.lenBlock - 4) - 4)))
-      this.bytes = bytesExpr
+  let lenIndexExpr = this.io.readU4be()
+  this.lenIndex = lenIndexExpr
+  let rawIndexEntriesExpr = this.io.readBytes(int(this.lenIndex))
+  this.rawIndexEntries = rawIndexEntriesExpr
+  let rawIndexEntriesIo = newKaitaiStream(rawIndexEntriesExpr)
+  let indexEntriesExpr = MozillaMar_IndexEntries.read(rawIndexEntriesIo, this.root, this)
+  this.indexEntries = indexEntriesExpr
 
-proc fromFile*(_: typedesc[MozillaMar_AdditionalSection], filename: string): MozillaMar_AdditionalSection =
-  MozillaMar_AdditionalSection.read(newKaitaiFileStream(filename), nil, nil)
+proc fromFile*(_: typedesc[MozillaMar_MarIndex], filename: string): MozillaMar_MarIndex =
+  MozillaMar_MarIndex.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[MozillaMar_ProductInformationBlock], io: KaitaiStream, root: KaitaiStruct, parent: MozillaMar_AdditionalSection): MozillaMar_ProductInformationBlock =
+  template this: untyped = result
+  this = new(MozillaMar_ProductInformationBlock)
+  let root = if root == nil: cast[MozillaMar](this) else: cast[MozillaMar](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let marChannelNameExpr = encode(this.io.readBytes(int(64)).bytesTerminate(0, false), "UTF-8")
+  this.marChannelName = marChannelNameExpr
+  let productVersionExpr = encode(this.io.readBytes(int(32)).bytesTerminate(0, false), "UTF-8")
+  this.productVersion = productVersionExpr
+
+proc fromFile*(_: typedesc[MozillaMar_ProductInformationBlock], filename: string): MozillaMar_ProductInformationBlock =
+  MozillaMar_ProductInformationBlock.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[MozillaMar_Signature], io: KaitaiStream, root: KaitaiStruct, parent: MozillaMar): MozillaMar_Signature =
+  template this: untyped = result
+  this = new(MozillaMar_Signature)
+  let root = if root == nil: cast[MozillaMar](this) else: cast[MozillaMar](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let algorithmExpr = MozillaMar_SignatureAlgorithms(this.io.readU4be())
+  this.algorithm = algorithmExpr
+  let lenSignatureExpr = this.io.readU4be()
+  this.lenSignature = lenSignatureExpr
+  let signatureExpr = this.io.readBytes(int(this.lenSignature))
+  this.signature = signatureExpr
+
+proc fromFile*(_: typedesc[MozillaMar_Signature], filename: string): MozillaMar_Signature =
+  MozillaMar_Signature.read(newKaitaiFileStream(filename), nil, nil)
 

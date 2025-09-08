@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.UdpDatagram = factory(root.KaitaiStream);
+    factory(root.UdpDatagram || (root.UdpDatagram = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (UdpDatagram_, KaitaiStream) {
 /**
  * UDP is a simple stateless transport layer (AKA OSI layer 4)
  * protocol, one of the core Internet protocols. It provides source and
@@ -29,10 +29,10 @@ var UdpDatagram = (function() {
     this.dstPort = this._io.readU2be();
     this.length = this._io.readU2be();
     this.checksum = this._io.readU2be();
-    this.body = this._io.readBytes((this.length - 8));
+    this.body = this._io.readBytes(this.length - 8);
   }
 
   return UdpDatagram;
 })();
-return UdpDatagram;
-}));
+UdpDatagram_.UdpDatagram = UdpDatagram;
+});

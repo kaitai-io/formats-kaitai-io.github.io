@@ -2,11 +2,21 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 class ShapefileMain < Kaitai::Struct::Struct
+
+  PART_TYPE = {
+    0 => :part_type_triangle_strip,
+    1 => :part_type_triangle_fan,
+    2 => :part_type_outer_ring,
+    3 => :part_type_inner_ring,
+    4 => :part_type_first_ring,
+    5 => :part_type_ring,
+  }
+  I__PART_TYPE = PART_TYPE.invert
 
   SHAPE_TYPE = {
     0 => :shape_type_null_shape,
@@ -25,18 +35,8 @@ class ShapefileMain < Kaitai::Struct::Struct
     31 => :shape_type_multi_patch,
   }
   I__SHAPE_TYPE = SHAPE_TYPE.invert
-
-  PART_TYPE = {
-    0 => :part_type_triangle_strip,
-    1 => :part_type_triangle_fan,
-    2 => :part_type_outer_ring,
-    3 => :part_type_inner_ring,
-    4 => :part_type_first_ring,
-    5 => :part_type_ring,
-  }
-  I__PART_TYPE = PART_TYPE.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -50,34 +50,22 @@ class ShapefileMain < Kaitai::Struct::Struct
     end
     self
   end
-  class MultiPointM < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  class BoundingBoxXY < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @bounding_box = BoundingBoxXY.new(@_io, self, @_root)
-      @number_of_points = @_io.read_s4le
-      @points = []
-      (number_of_points).times { |i|
-        @points << Point.new(@_io, self, @_root)
-      }
-      @m_range = BoundsMinMax.new(@_io, self, @_root)
-      @m_values = []
-      (number_of_points).times { |i|
-        @m_values << @_io.read_f8le
-      }
+      @x = BoundsMinMax.new(@_io, self, @_root)
+      @y = BoundsMinMax.new(@_io, self, @_root)
       self
     end
-    attr_reader :bounding_box
-    attr_reader :number_of_points
-    attr_reader :points
-    attr_reader :m_range
-    attr_reader :m_values
+    attr_reader :x
+    attr_reader :y
   end
   class BoundingBoxXYZM < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -94,48 +82,8 @@ class ShapefileMain < Kaitai::Struct::Struct
     attr_reader :z
     attr_reader :m
   end
-  class Point < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @x = @_io.read_f8le
-      @y = @_io.read_f8le
-      self
-    end
-    attr_reader :x
-    attr_reader :y
-  end
-  class Polygon < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @bounding_box = BoundingBoxXY.new(@_io, self, @_root)
-      @number_of_parts = @_io.read_s4le
-      @number_of_points = @_io.read_s4le
-      @parts = []
-      (number_of_parts).times { |i|
-        @parts << @_io.read_s4le
-      }
-      @points = []
-      (number_of_points).times { |i|
-        @points << Point.new(@_io, self, @_root)
-      }
-      self
-    end
-    attr_reader :bounding_box
-    attr_reader :number_of_parts
-    attr_reader :number_of_points
-    attr_reader :parts
-    attr_reader :points
-  end
   class BoundsMinMax < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -148,263 +96,28 @@ class ShapefileMain < Kaitai::Struct::Struct
     attr_reader :min
     attr_reader :max
   end
-  class PolyLine < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @bounding_box = BoundingBoxXY.new(@_io, self, @_root)
-      @number_of_parts = @_io.read_s4le
-      @number_of_points = @_io.read_s4le
-      @parts = []
-      (number_of_parts).times { |i|
-        @parts << @_io.read_s4le
-      }
-      @points = []
-      (number_of_points).times { |i|
-        @points << Point.new(@_io, self, @_root)
-      }
-      self
-    end
-    attr_reader :bounding_box
-    attr_reader :number_of_parts
-    attr_reader :number_of_points
-    attr_reader :parts
-    attr_reader :points
-  end
-  class MultiPointZ < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @bounding_box = BoundingBoxXY.new(@_io, self, @_root)
-      @number_of_points = @_io.read_s4le
-      @points = []
-      (number_of_points).times { |i|
-        @points << Point.new(@_io, self, @_root)
-      }
-      @z_range = BoundsMinMax.new(@_io, self, @_root)
-      @z_values = []
-      (number_of_points).times { |i|
-        @z_values << @_io.read_f8le
-      }
-      @m_range = BoundsMinMax.new(@_io, self, @_root)
-      @m_values = []
-      (number_of_points).times { |i|
-        @m_values << @_io.read_f8le
-      }
-      self
-    end
-    attr_reader :bounding_box
-    attr_reader :number_of_points
-    attr_reader :points
-    attr_reader :z_range
-    attr_reader :z_values
-    attr_reader :m_range
-    attr_reader :m_values
-  end
-  class PolyLineZ < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @bounding_box = BoundingBoxXY.new(@_io, self, @_root)
-      @number_of_parts = @_io.read_s4le
-      @number_of_points = @_io.read_s4le
-      @parts = []
-      (number_of_parts).times { |i|
-        @parts << @_io.read_s4le
-      }
-      @points = []
-      (number_of_points).times { |i|
-        @points << Point.new(@_io, self, @_root)
-      }
-      @z_range = BoundsMinMax.new(@_io, self, @_root)
-      @z_values = []
-      (number_of_points).times { |i|
-        @z_values << @_io.read_f8le
-      }
-      @m_range = BoundsMinMax.new(@_io, self, @_root)
-      @m_values = []
-      (number_of_points).times { |i|
-        @m_values << @_io.read_f8le
-      }
-      self
-    end
-    attr_reader :bounding_box
-    attr_reader :number_of_parts
-    attr_reader :number_of_points
-    attr_reader :parts
-    attr_reader :points
-    attr_reader :z_range
-    attr_reader :z_values
-    attr_reader :m_range
-    attr_reader :m_values
-  end
-  class PolygonZ < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @bounding_box = BoundingBoxXY.new(@_io, self, @_root)
-      @number_of_parts = @_io.read_s4le
-      @number_of_points = @_io.read_s4le
-      @parts = []
-      (number_of_parts).times { |i|
-        @parts << @_io.read_s4le
-      }
-      @points = []
-      (number_of_points).times { |i|
-        @points << Point.new(@_io, self, @_root)
-      }
-      @z_range = BoundsMinMax.new(@_io, self, @_root)
-      @z_values = []
-      (number_of_points).times { |i|
-        @z_values << @_io.read_f8le
-      }
-      @m_range = BoundsMinMax.new(@_io, self, @_root)
-      @m_values = []
-      (number_of_points).times { |i|
-        @m_values << @_io.read_f8le
-      }
-      self
-    end
-    attr_reader :bounding_box
-    attr_reader :number_of_parts
-    attr_reader :number_of_points
-    attr_reader :parts
-    attr_reader :points
-    attr_reader :z_range
-    attr_reader :z_values
-    attr_reader :m_range
-    attr_reader :m_values
-  end
-  class BoundingBoxXY < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @x = BoundsMinMax.new(@_io, self, @_root)
-      @y = BoundsMinMax.new(@_io, self, @_root)
-      self
-    end
-    attr_reader :x
-    attr_reader :y
-  end
-  class PointM < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @x = @_io.read_f8le
-      @y = @_io.read_f8le
-      @m = @_io.read_f8le
-      self
-    end
-    attr_reader :x
-    attr_reader :y
-    attr_reader :m
-  end
-  class PolygonM < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @bounding_box = BoundingBoxXY.new(@_io, self, @_root)
-      @number_of_parts = @_io.read_s4le
-      @number_of_points = @_io.read_s4le
-      @parts = []
-      (number_of_parts).times { |i|
-        @parts << @_io.read_s4le
-      }
-      @points = []
-      (number_of_points).times { |i|
-        @points << Point.new(@_io, self, @_root)
-      }
-      @m_range = BoundsMinMax.new(@_io, self, @_root)
-      @m_values = []
-      (number_of_points).times { |i|
-        @m_values << @_io.read_f8le
-      }
-      self
-    end
-    attr_reader :bounding_box
-    attr_reader :number_of_parts
-    attr_reader :number_of_points
-    attr_reader :parts
-    attr_reader :points
-    attr_reader :m_range
-    attr_reader :m_values
-  end
-  class RecordHeader < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @record_number = @_io.read_s4be
-      @content_length = @_io.read_s4be
-      self
-    end
-    attr_reader :record_number
-    attr_reader :content_length
-  end
-  class MultiPoint < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @bounding_box = BoundingBoxXY.new(@_io, self, @_root)
-      @number_of_points = @_io.read_s4le
-      @points = []
-      (number_of_points).times { |i|
-        @points << Point.new(@_io, self, @_root)
-      }
-      self
-    end
-    attr_reader :bounding_box
-    attr_reader :number_of_points
-    attr_reader :points
-  end
   class FileHeader < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
       @file_code = @_io.read_bytes(4)
-      raise Kaitai::Struct::ValidationNotEqualError.new([0, 0, 39, 10].pack('C*'), file_code, _io, "/types/file_header/seq/0") if not file_code == [0, 0, 39, 10].pack('C*')
+      raise Kaitai::Struct::ValidationNotEqualError.new([0, 0, 39, 10].pack('C*'), @file_code, @_io, "/types/file_header/seq/0") if not @file_code == [0, 0, 39, 10].pack('C*')
       @unused_field_1 = @_io.read_bytes(4)
-      raise Kaitai::Struct::ValidationNotEqualError.new([0, 0, 0, 0].pack('C*'), unused_field_1, _io, "/types/file_header/seq/1") if not unused_field_1 == [0, 0, 0, 0].pack('C*')
+      raise Kaitai::Struct::ValidationNotEqualError.new([0, 0, 0, 0].pack('C*'), @unused_field_1, @_io, "/types/file_header/seq/1") if not @unused_field_1 == [0, 0, 0, 0].pack('C*')
       @unused_field_2 = @_io.read_bytes(4)
-      raise Kaitai::Struct::ValidationNotEqualError.new([0, 0, 0, 0].pack('C*'), unused_field_2, _io, "/types/file_header/seq/2") if not unused_field_2 == [0, 0, 0, 0].pack('C*')
+      raise Kaitai::Struct::ValidationNotEqualError.new([0, 0, 0, 0].pack('C*'), @unused_field_2, @_io, "/types/file_header/seq/2") if not @unused_field_2 == [0, 0, 0, 0].pack('C*')
       @unused_field_3 = @_io.read_bytes(4)
-      raise Kaitai::Struct::ValidationNotEqualError.new([0, 0, 0, 0].pack('C*'), unused_field_3, _io, "/types/file_header/seq/3") if not unused_field_3 == [0, 0, 0, 0].pack('C*')
+      raise Kaitai::Struct::ValidationNotEqualError.new([0, 0, 0, 0].pack('C*'), @unused_field_3, @_io, "/types/file_header/seq/3") if not @unused_field_3 == [0, 0, 0, 0].pack('C*')
       @unused_field_4 = @_io.read_bytes(4)
-      raise Kaitai::Struct::ValidationNotEqualError.new([0, 0, 0, 0].pack('C*'), unused_field_4, _io, "/types/file_header/seq/4") if not unused_field_4 == [0, 0, 0, 0].pack('C*')
+      raise Kaitai::Struct::ValidationNotEqualError.new([0, 0, 0, 0].pack('C*'), @unused_field_4, @_io, "/types/file_header/seq/4") if not @unused_field_4 == [0, 0, 0, 0].pack('C*')
       @unused_field_5 = @_io.read_bytes(4)
-      raise Kaitai::Struct::ValidationNotEqualError.new([0, 0, 0, 0].pack('C*'), unused_field_5, _io, "/types/file_header/seq/5") if not unused_field_5 == [0, 0, 0, 0].pack('C*')
+      raise Kaitai::Struct::ValidationNotEqualError.new([0, 0, 0, 0].pack('C*'), @unused_field_5, @_io, "/types/file_header/seq/5") if not @unused_field_5 == [0, 0, 0, 0].pack('C*')
       @file_length = @_io.read_s4be
       @version = @_io.read_bytes(4)
-      raise Kaitai::Struct::ValidationNotEqualError.new([232, 3, 0, 0].pack('C*'), version, _io, "/types/file_header/seq/7") if not version == [232, 3, 0, 0].pack('C*')
+      raise Kaitai::Struct::ValidationNotEqualError.new([232, 3, 0, 0].pack('C*'), @version, @_io, "/types/file_header/seq/7") if not @version == [232, 3, 0, 0].pack('C*')
       @shape_type = Kaitai::Struct::Stream::resolve_enum(ShapefileMain::SHAPE_TYPE, @_io.read_s4le)
       @bounding_box = BoundingBoxXYZM.new(@_io, self, @_root)
       self
@@ -426,86 +139,8 @@ class ShapefileMain < Kaitai::Struct::Struct
     attr_reader :shape_type
     attr_reader :bounding_box
   end
-  class PointZ < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @x = @_io.read_f8le
-      @y = @_io.read_f8le
-      @z = @_io.read_f8le
-      @m = @_io.read_f8le
-      self
-    end
-    attr_reader :x
-    attr_reader :y
-    attr_reader :z
-    attr_reader :m
-  end
-  class Record < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @header = RecordHeader.new(@_io, self, @_root)
-      @contents = RecordContents.new(@_io, self, @_root)
-      self
-    end
-    attr_reader :header
-
-    ##
-    # the size of this contents section in bytes must equal header.content_length * 2
-    attr_reader :contents
-  end
-  class RecordContents < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @shape_type = Kaitai::Struct::Stream::resolve_enum(ShapefileMain::SHAPE_TYPE, @_io.read_s4le)
-      if shape_type != :shape_type_null_shape
-        case shape_type
-        when :shape_type_poly_line_z
-          @shape_parameters = PolyLineZ.new(@_io, self, @_root)
-        when :shape_type_multi_patch
-          @shape_parameters = MultiPatch.new(@_io, self, @_root)
-        when :shape_type_poly_line_m
-          @shape_parameters = PolyLineM.new(@_io, self, @_root)
-        when :shape_type_polygon
-          @shape_parameters = Polygon.new(@_io, self, @_root)
-        when :shape_type_polygon_z
-          @shape_parameters = PolygonZ.new(@_io, self, @_root)
-        when :shape_type_point_z
-          @shape_parameters = PointZ.new(@_io, self, @_root)
-        when :shape_type_poly_line
-          @shape_parameters = PolyLine.new(@_io, self, @_root)
-        when :shape_type_point_m
-          @shape_parameters = PointM.new(@_io, self, @_root)
-        when :shape_type_polygon_m
-          @shape_parameters = PolygonM.new(@_io, self, @_root)
-        when :shape_type_multi_point
-          @shape_parameters = MultiPoint.new(@_io, self, @_root)
-        when :shape_type_point
-          @shape_parameters = Point.new(@_io, self, @_root)
-        when :shape_type_multi_point_m
-          @shape_parameters = MultiPointM.new(@_io, self, @_root)
-        when :shape_type_multi_point_z
-          @shape_parameters = MultiPointZ.new(@_io, self, @_root)
-        end
-      end
-      self
-    end
-    attr_reader :shape_type
-    attr_reader :shape_parameters
-  end
   class MultiPatch < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -549,8 +184,160 @@ class ShapefileMain < Kaitai::Struct::Struct
     attr_reader :m_range
     attr_reader :m_values
   end
+  class MultiPoint < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @bounding_box = BoundingBoxXY.new(@_io, self, @_root)
+      @number_of_points = @_io.read_s4le
+      @points = []
+      (number_of_points).times { |i|
+        @points << Point.new(@_io, self, @_root)
+      }
+      self
+    end
+    attr_reader :bounding_box
+    attr_reader :number_of_points
+    attr_reader :points
+  end
+  class MultiPointM < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @bounding_box = BoundingBoxXY.new(@_io, self, @_root)
+      @number_of_points = @_io.read_s4le
+      @points = []
+      (number_of_points).times { |i|
+        @points << Point.new(@_io, self, @_root)
+      }
+      @m_range = BoundsMinMax.new(@_io, self, @_root)
+      @m_values = []
+      (number_of_points).times { |i|
+        @m_values << @_io.read_f8le
+      }
+      self
+    end
+    attr_reader :bounding_box
+    attr_reader :number_of_points
+    attr_reader :points
+    attr_reader :m_range
+    attr_reader :m_values
+  end
+  class MultiPointZ < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @bounding_box = BoundingBoxXY.new(@_io, self, @_root)
+      @number_of_points = @_io.read_s4le
+      @points = []
+      (number_of_points).times { |i|
+        @points << Point.new(@_io, self, @_root)
+      }
+      @z_range = BoundsMinMax.new(@_io, self, @_root)
+      @z_values = []
+      (number_of_points).times { |i|
+        @z_values << @_io.read_f8le
+      }
+      @m_range = BoundsMinMax.new(@_io, self, @_root)
+      @m_values = []
+      (number_of_points).times { |i|
+        @m_values << @_io.read_f8le
+      }
+      self
+    end
+    attr_reader :bounding_box
+    attr_reader :number_of_points
+    attr_reader :points
+    attr_reader :z_range
+    attr_reader :z_values
+    attr_reader :m_range
+    attr_reader :m_values
+  end
+  class Point < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @x = @_io.read_f8le
+      @y = @_io.read_f8le
+      self
+    end
+    attr_reader :x
+    attr_reader :y
+  end
+  class PointM < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @x = @_io.read_f8le
+      @y = @_io.read_f8le
+      @m = @_io.read_f8le
+      self
+    end
+    attr_reader :x
+    attr_reader :y
+    attr_reader :m
+  end
+  class PointZ < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @x = @_io.read_f8le
+      @y = @_io.read_f8le
+      @z = @_io.read_f8le
+      @m = @_io.read_f8le
+      self
+    end
+    attr_reader :x
+    attr_reader :y
+    attr_reader :z
+    attr_reader :m
+  end
+  class PolyLine < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @bounding_box = BoundingBoxXY.new(@_io, self, @_root)
+      @number_of_parts = @_io.read_s4le
+      @number_of_points = @_io.read_s4le
+      @parts = []
+      (number_of_parts).times { |i|
+        @parts << @_io.read_s4le
+      }
+      @points = []
+      (number_of_points).times { |i|
+        @points << Point.new(@_io, self, @_root)
+      }
+      self
+    end
+    attr_reader :bounding_box
+    attr_reader :number_of_parts
+    attr_reader :number_of_points
+    attr_reader :parts
+    attr_reader :points
+  end
   class PolyLineM < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -581,6 +368,219 @@ class ShapefileMain < Kaitai::Struct::Struct
     attr_reader :points
     attr_reader :m_range
     attr_reader :m_values
+  end
+  class PolyLineZ < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @bounding_box = BoundingBoxXY.new(@_io, self, @_root)
+      @number_of_parts = @_io.read_s4le
+      @number_of_points = @_io.read_s4le
+      @parts = []
+      (number_of_parts).times { |i|
+        @parts << @_io.read_s4le
+      }
+      @points = []
+      (number_of_points).times { |i|
+        @points << Point.new(@_io, self, @_root)
+      }
+      @z_range = BoundsMinMax.new(@_io, self, @_root)
+      @z_values = []
+      (number_of_points).times { |i|
+        @z_values << @_io.read_f8le
+      }
+      @m_range = BoundsMinMax.new(@_io, self, @_root)
+      @m_values = []
+      (number_of_points).times { |i|
+        @m_values << @_io.read_f8le
+      }
+      self
+    end
+    attr_reader :bounding_box
+    attr_reader :number_of_parts
+    attr_reader :number_of_points
+    attr_reader :parts
+    attr_reader :points
+    attr_reader :z_range
+    attr_reader :z_values
+    attr_reader :m_range
+    attr_reader :m_values
+  end
+  class Polygon < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @bounding_box = BoundingBoxXY.new(@_io, self, @_root)
+      @number_of_parts = @_io.read_s4le
+      @number_of_points = @_io.read_s4le
+      @parts = []
+      (number_of_parts).times { |i|
+        @parts << @_io.read_s4le
+      }
+      @points = []
+      (number_of_points).times { |i|
+        @points << Point.new(@_io, self, @_root)
+      }
+      self
+    end
+    attr_reader :bounding_box
+    attr_reader :number_of_parts
+    attr_reader :number_of_points
+    attr_reader :parts
+    attr_reader :points
+  end
+  class PolygonM < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @bounding_box = BoundingBoxXY.new(@_io, self, @_root)
+      @number_of_parts = @_io.read_s4le
+      @number_of_points = @_io.read_s4le
+      @parts = []
+      (number_of_parts).times { |i|
+        @parts << @_io.read_s4le
+      }
+      @points = []
+      (number_of_points).times { |i|
+        @points << Point.new(@_io, self, @_root)
+      }
+      @m_range = BoundsMinMax.new(@_io, self, @_root)
+      @m_values = []
+      (number_of_points).times { |i|
+        @m_values << @_io.read_f8le
+      }
+      self
+    end
+    attr_reader :bounding_box
+    attr_reader :number_of_parts
+    attr_reader :number_of_points
+    attr_reader :parts
+    attr_reader :points
+    attr_reader :m_range
+    attr_reader :m_values
+  end
+  class PolygonZ < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @bounding_box = BoundingBoxXY.new(@_io, self, @_root)
+      @number_of_parts = @_io.read_s4le
+      @number_of_points = @_io.read_s4le
+      @parts = []
+      (number_of_parts).times { |i|
+        @parts << @_io.read_s4le
+      }
+      @points = []
+      (number_of_points).times { |i|
+        @points << Point.new(@_io, self, @_root)
+      }
+      @z_range = BoundsMinMax.new(@_io, self, @_root)
+      @z_values = []
+      (number_of_points).times { |i|
+        @z_values << @_io.read_f8le
+      }
+      @m_range = BoundsMinMax.new(@_io, self, @_root)
+      @m_values = []
+      (number_of_points).times { |i|
+        @m_values << @_io.read_f8le
+      }
+      self
+    end
+    attr_reader :bounding_box
+    attr_reader :number_of_parts
+    attr_reader :number_of_points
+    attr_reader :parts
+    attr_reader :points
+    attr_reader :z_range
+    attr_reader :z_values
+    attr_reader :m_range
+    attr_reader :m_values
+  end
+  class Record < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @header = RecordHeader.new(@_io, self, @_root)
+      @contents = RecordContents.new(@_io, self, @_root)
+      self
+    end
+    attr_reader :header
+
+    ##
+    # the size of this contents section in bytes must equal header.content_length * 2
+    attr_reader :contents
+  end
+  class RecordContents < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @shape_type = Kaitai::Struct::Stream::resolve_enum(ShapefileMain::SHAPE_TYPE, @_io.read_s4le)
+      if shape_type != :shape_type_null_shape
+        case shape_type
+        when :shape_type_multi_patch
+          @shape_parameters = MultiPatch.new(@_io, self, @_root)
+        when :shape_type_multi_point
+          @shape_parameters = MultiPoint.new(@_io, self, @_root)
+        when :shape_type_multi_point_m
+          @shape_parameters = MultiPointM.new(@_io, self, @_root)
+        when :shape_type_multi_point_z
+          @shape_parameters = MultiPointZ.new(@_io, self, @_root)
+        when :shape_type_point
+          @shape_parameters = Point.new(@_io, self, @_root)
+        when :shape_type_point_m
+          @shape_parameters = PointM.new(@_io, self, @_root)
+        when :shape_type_point_z
+          @shape_parameters = PointZ.new(@_io, self, @_root)
+        when :shape_type_poly_line
+          @shape_parameters = PolyLine.new(@_io, self, @_root)
+        when :shape_type_poly_line_m
+          @shape_parameters = PolyLineM.new(@_io, self, @_root)
+        when :shape_type_poly_line_z
+          @shape_parameters = PolyLineZ.new(@_io, self, @_root)
+        when :shape_type_polygon
+          @shape_parameters = Polygon.new(@_io, self, @_root)
+        when :shape_type_polygon_m
+          @shape_parameters = PolygonM.new(@_io, self, @_root)
+        when :shape_type_polygon_z
+          @shape_parameters = PolygonZ.new(@_io, self, @_root)
+        end
+      end
+      self
+    end
+    attr_reader :shape_type
+    attr_reader :shape_parameters
+  end
+  class RecordHeader < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @record_number = @_io.read_s4be
+      @content_length = @_io.read_s4be
+      self
+    end
+    attr_reader :record_number
+    attr_reader :content_length
   end
   attr_reader :header
 

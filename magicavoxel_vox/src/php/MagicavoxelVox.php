@@ -3,15 +3,15 @@
 
 namespace {
     class MagicavoxelVox extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \MagicavoxelVox $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\MagicavoxelVox $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic = $this->_io->readBytes(4);
-            if (!($this->magic() == "\x56\x4F\x58\x20")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x56\x4F\x58\x20", $this->magic(), $this->_io(), "/seq/0");
+            if (!($this->_m_magic == "\x56\x4F\x58\x20")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x56\x4F\x58\x20", $this->_m_magic, $this->_io, "/seq/0");
             }
             $this->_m_version = $this->_io->readU4le();
             $this->_m_main = new \MagicavoxelVox\Chunk($this->_io, $this, $this->_root);
@@ -31,7 +31,7 @@ namespace {
 
 namespace MagicavoxelVox {
     class Chunk extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \MagicavoxelVox $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\MagicavoxelVox $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -42,30 +42,30 @@ namespace MagicavoxelVox {
             $this->_m_numBytesOfChildrenChunks = $this->_io->readU4le();
             if ($this->numBytesOfChunkContent() != 0) {
                 switch ($this->chunkId()) {
-                    case \MagicavoxelVox\ChunkType::SIZE:
-                        $this->_m__raw_chunkContent = $this->_io->readBytes($this->numBytesOfChunkContent());
-                        $_io__raw_chunkContent = new \Kaitai\Struct\Stream($this->_m__raw_chunkContent);
-                        $this->_m_chunkContent = new \MagicavoxelVox\Size($_io__raw_chunkContent, $this, $this->_root);
-                        break;
                     case \MagicavoxelVox\ChunkType::MATT:
                         $this->_m__raw_chunkContent = $this->_io->readBytes($this->numBytesOfChunkContent());
                         $_io__raw_chunkContent = new \Kaitai\Struct\Stream($this->_m__raw_chunkContent);
                         $this->_m_chunkContent = new \MagicavoxelVox\Matt($_io__raw_chunkContent, $this, $this->_root);
+                        break;
+                    case \MagicavoxelVox\ChunkType::PACK:
+                        $this->_m__raw_chunkContent = $this->_io->readBytes($this->numBytesOfChunkContent());
+                        $_io__raw_chunkContent = new \Kaitai\Struct\Stream($this->_m__raw_chunkContent);
+                        $this->_m_chunkContent = new \MagicavoxelVox\Pack($_io__raw_chunkContent, $this, $this->_root);
                         break;
                     case \MagicavoxelVox\ChunkType::RGBA:
                         $this->_m__raw_chunkContent = $this->_io->readBytes($this->numBytesOfChunkContent());
                         $_io__raw_chunkContent = new \Kaitai\Struct\Stream($this->_m__raw_chunkContent);
                         $this->_m_chunkContent = new \MagicavoxelVox\Rgba($_io__raw_chunkContent, $this, $this->_root);
                         break;
+                    case \MagicavoxelVox\ChunkType::SIZE:
+                        $this->_m__raw_chunkContent = $this->_io->readBytes($this->numBytesOfChunkContent());
+                        $_io__raw_chunkContent = new \Kaitai\Struct\Stream($this->_m__raw_chunkContent);
+                        $this->_m_chunkContent = new \MagicavoxelVox\Size($_io__raw_chunkContent, $this, $this->_root);
+                        break;
                     case \MagicavoxelVox\ChunkType::XYZI:
                         $this->_m__raw_chunkContent = $this->_io->readBytes($this->numBytesOfChunkContent());
                         $_io__raw_chunkContent = new \Kaitai\Struct\Stream($this->_m__raw_chunkContent);
                         $this->_m_chunkContent = new \MagicavoxelVox\Xyzi($_io__raw_chunkContent, $this, $this->_root);
-                        break;
-                    case \MagicavoxelVox\ChunkType::PACK:
-                        $this->_m__raw_chunkContent = $this->_io->readBytes($this->numBytesOfChunkContent());
-                        $_io__raw_chunkContent = new \Kaitai\Struct\Stream($this->_m__raw_chunkContent);
-                        $this->_m_chunkContent = new \MagicavoxelVox\Pack($_io__raw_chunkContent, $this, $this->_root);
                         break;
                     default:
                         $this->_m_chunkContent = $this->_io->readBytes($this->numBytesOfChunkContent());
@@ -97,63 +97,32 @@ namespace MagicavoxelVox {
 }
 
 namespace MagicavoxelVox {
-    class Size extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \MagicavoxelVox\Chunk $_parent = null, \MagicavoxelVox $_root = null) {
+    class Color extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\MagicavoxelVox\Rgba $_parent = null, ?\MagicavoxelVox $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_sizeX = $this->_io->readU4le();
-            $this->_m_sizeY = $this->_io->readU4le();
-            $this->_m_sizeZ = $this->_io->readU4le();
+            $this->_m_r = $this->_io->readU1();
+            $this->_m_g = $this->_io->readU1();
+            $this->_m_b = $this->_io->readU1();
+            $this->_m_a = $this->_io->readU1();
         }
-        protected $_m_sizeX;
-        protected $_m_sizeY;
-        protected $_m_sizeZ;
-        public function sizeX() { return $this->_m_sizeX; }
-        public function sizeY() { return $this->_m_sizeY; }
-        public function sizeZ() { return $this->_m_sizeZ; }
-    }
-}
-
-namespace MagicavoxelVox {
-    class Rgba extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \MagicavoxelVox\Chunk $_parent = null, \MagicavoxelVox $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_colors = [];
-            $n = 256;
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_colors[] = new \MagicavoxelVox\Color($this->_io, $this, $this->_root);
-            }
-        }
-        protected $_m_colors;
-        public function colors() { return $this->_m_colors; }
-    }
-}
-
-namespace MagicavoxelVox {
-    class Pack extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \MagicavoxelVox\Chunk $_parent = null, \MagicavoxelVox $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_numModels = $this->_io->readU4le();
-        }
-        protected $_m_numModels;
-        public function numModels() { return $this->_m_numModels; }
+        protected $_m_r;
+        protected $_m_g;
+        protected $_m_b;
+        protected $_m_a;
+        public function r() { return $this->_m_r; }
+        public function g() { return $this->_m_g; }
+        public function b() { return $this->_m_b; }
+        public function a() { return $this->_m_a; }
     }
 }
 
 namespace MagicavoxelVox {
     class Matt extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \MagicavoxelVox\Chunk $_parent = null, \MagicavoxelVox $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\MagicavoxelVox\Chunk $_parent = null, ?\MagicavoxelVox $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -188,6 +157,27 @@ namespace MagicavoxelVox {
                 $this->_m_isTotalPower = $this->_io->readF4le();
             }
         }
+        protected $_m_hasAttenuation;
+        public function hasAttenuation() {
+            if ($this->_m_hasAttenuation !== null)
+                return $this->_m_hasAttenuation;
+            $this->_m_hasAttenuation = ($this->propertyBits() & 16) != 0;
+            return $this->_m_hasAttenuation;
+        }
+        protected $_m_hasGlow;
+        public function hasGlow() {
+            if ($this->_m_hasGlow !== null)
+                return $this->_m_hasGlow;
+            $this->_m_hasGlow = ($this->propertyBits() & 64) != 0;
+            return $this->_m_hasGlow;
+        }
+        protected $_m_hasIor;
+        public function hasIor() {
+            if ($this->_m_hasIor !== null)
+                return $this->_m_hasIor;
+            $this->_m_hasIor = ($this->propertyBits() & 8) != 0;
+            return $this->_m_hasIor;
+        }
         protected $_m_hasIsTotalPower;
         public function hasIsTotalPower() {
             if ($this->_m_hasIsTotalPower !== null)
@@ -201,13 +191,6 @@ namespace MagicavoxelVox {
                 return $this->_m_hasPlastic;
             $this->_m_hasPlastic = ($this->propertyBits() & 1) != 0;
             return $this->_m_hasPlastic;
-        }
-        protected $_m_hasAttenuation;
-        public function hasAttenuation() {
-            if ($this->_m_hasAttenuation !== null)
-                return $this->_m_hasAttenuation;
-            $this->_m_hasAttenuation = ($this->propertyBits() & 16) != 0;
-            return $this->_m_hasAttenuation;
         }
         protected $_m_hasPower;
         public function hasPower() {
@@ -229,20 +212,6 @@ namespace MagicavoxelVox {
                 return $this->_m_hasSpecular;
             $this->_m_hasSpecular = ($this->propertyBits() & 4) != 0;
             return $this->_m_hasSpecular;
-        }
-        protected $_m_hasIor;
-        public function hasIor() {
-            if ($this->_m_hasIor !== null)
-                return $this->_m_hasIor;
-            $this->_m_hasIor = ($this->propertyBits() & 8) != 0;
-            return $this->_m_hasIor;
-        }
-        protected $_m_hasGlow;
-        public function hasGlow() {
-            if ($this->_m_hasGlow !== null)
-                return $this->_m_hasGlow;
-            $this->_m_hasGlow = ($this->propertyBits() & 64) != 0;
-            return $this->_m_hasGlow;
         }
         protected $_m_id;
         protected $_m_materialType;
@@ -272,54 +241,63 @@ namespace MagicavoxelVox {
 }
 
 namespace MagicavoxelVox {
-    class Xyzi extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \MagicavoxelVox\Chunk $_parent = null, \MagicavoxelVox $_root = null) {
+    class Pack extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\MagicavoxelVox\Chunk $_parent = null, ?\MagicavoxelVox $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_numVoxels = $this->_io->readU4le();
-            $this->_m_voxels = [];
-            $n = $this->numVoxels();
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_voxels[] = new \MagicavoxelVox\Voxel($this->_io, $this, $this->_root);
-            }
+            $this->_m_numModels = $this->_io->readU4le();
         }
-        protected $_m_numVoxels;
-        protected $_m_voxels;
-        public function numVoxels() { return $this->_m_numVoxels; }
-        public function voxels() { return $this->_m_voxels; }
+        protected $_m_numModels;
+        public function numModels() { return $this->_m_numModels; }
     }
 }
 
 namespace MagicavoxelVox {
-    class Color extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \MagicavoxelVox\Rgba $_parent = null, \MagicavoxelVox $_root = null) {
+    class Rgba extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\MagicavoxelVox\Chunk $_parent = null, ?\MagicavoxelVox $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_r = $this->_io->readU1();
-            $this->_m_g = $this->_io->readU1();
-            $this->_m_b = $this->_io->readU1();
-            $this->_m_a = $this->_io->readU1();
+            $this->_m_colors = [];
+            $n = 256;
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_colors[] = new \MagicavoxelVox\Color($this->_io, $this, $this->_root);
+            }
         }
-        protected $_m_r;
-        protected $_m_g;
-        protected $_m_b;
-        protected $_m_a;
-        public function r() { return $this->_m_r; }
-        public function g() { return $this->_m_g; }
-        public function b() { return $this->_m_b; }
-        public function a() { return $this->_m_a; }
+        protected $_m_colors;
+        public function colors() { return $this->_m_colors; }
+    }
+}
+
+namespace MagicavoxelVox {
+    class Size extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\MagicavoxelVox\Chunk $_parent = null, ?\MagicavoxelVox $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_sizeX = $this->_io->readU4le();
+            $this->_m_sizeY = $this->_io->readU4le();
+            $this->_m_sizeZ = $this->_io->readU4le();
+        }
+        protected $_m_sizeX;
+        protected $_m_sizeY;
+        protected $_m_sizeZ;
+        public function sizeX() { return $this->_m_sizeX; }
+        public function sizeY() { return $this->_m_sizeY; }
+        public function sizeZ() { return $this->_m_sizeZ; }
     }
 }
 
 namespace MagicavoxelVox {
     class Voxel extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \MagicavoxelVox\Xyzi $_parent = null, \MagicavoxelVox $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\MagicavoxelVox\Xyzi $_parent = null, ?\MagicavoxelVox $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -342,6 +320,28 @@ namespace MagicavoxelVox {
 }
 
 namespace MagicavoxelVox {
+    class Xyzi extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\MagicavoxelVox\Chunk $_parent = null, ?\MagicavoxelVox $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_numVoxels = $this->_io->readU4le();
+            $this->_m_voxels = [];
+            $n = $this->numVoxels();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_voxels[] = new \MagicavoxelVox\Voxel($this->_io, $this, $this->_root);
+            }
+        }
+        protected $_m_numVoxels;
+        protected $_m_voxels;
+        public function numVoxels() { return $this->_m_numVoxels; }
+        public function voxels() { return $this->_m_voxels; }
+    }
+}
+
+namespace MagicavoxelVox {
     class ChunkType {
         const MAIN = 1296124238;
         const MATT = 1296127060;
@@ -349,6 +349,12 @@ namespace MagicavoxelVox {
         const RGBA = 1380401729;
         const SIZE = 1397316165;
         const XYZI = 1482250825;
+
+        private const _VALUES = [1296124238 => true, 1296127060 => true, 1346454347 => true, 1380401729 => true, 1397316165 => true, 1482250825 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
@@ -358,6 +364,12 @@ namespace MagicavoxelVox {
         const METAL = 1;
         const GLASS = 2;
         const EMISSIVE = 3;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
@@ -371,5 +383,11 @@ namespace MagicavoxelVox {
         const POWER = 32;
         const GLOW = 64;
         const IS_TOTAL_POWER = 128;
+
+        private const _VALUES = [1 => true, 2 => true, 4 => true, 8 => true, 16 => true, 32 => true, 64 => true, 128 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

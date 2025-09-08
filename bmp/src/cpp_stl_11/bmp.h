@@ -2,13 +2,16 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class bmp_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -88,27 +91,20 @@
 class bmp_t : public kaitai::kstruct {
 
 public:
-    class cie_xyz_t;
-    class rgb_record_t;
-    class bitmap_v5_extension_t;
-    class color_mask_t;
-    class bitmap_v4_extension_t;
-    class bitmap_info_extension_t;
-    class fixed_point_2_dot_30_t;
     class bitmap_t;
     class bitmap_header_t;
-    class os2_2x_bitmap_extension_t;
-    class fixed_point_16_dot_16_t;
+    class bitmap_info_t;
+    class bitmap_info_extension_t;
+    class bitmap_v4_extension_t;
+    class bitmap_v5_extension_t;
+    class cie_xyz_t;
+    class color_mask_t;
     class color_table_t;
     class file_header_t;
-    class bitmap_info_t;
-
-    enum intent_t {
-        INTENT_BUSINESS = 1,
-        INTENT_GRAPHICS = 2,
-        INTENT_IMAGES = 4,
-        INTENT_ABS_COLORIMETRIC = 8
-    };
+    class fixed_point_16_dot_16_t;
+    class fixed_point_2_dot_30_t;
+    class os2_2x_bitmap_extension_t;
+    class rgb_record_t;
 
     enum color_space_t {
         COLOR_SPACE_CALIBRATED_RGB = 0,
@@ -117,23 +113,12 @@ public:
         COLOR_SPACE_WINDOWS = 1466527264,
         COLOR_SPACE_S_RGB = 1934772034
     };
+    static bool _is_defined_color_space_t(color_space_t v);
 
-    enum os2_rendering_t {
-        OS2_RENDERING_NO_HALFTONING = 0,
-        OS2_RENDERING_ERROR_DIFFUSION = 1,
-        OS2_RENDERING_PANDA = 2,
-        OS2_RENDERING_SUPER_CIRCLE = 3
-    };
+private:
+    static const std::set<color_space_t> _values_color_space_t;
 
-    enum header_type_t {
-        HEADER_TYPE_BITMAP_CORE_HEADER = 12,
-        HEADER_TYPE_BITMAP_INFO_HEADER = 40,
-        HEADER_TYPE_BITMAP_V2_INFO_HEADER = 52,
-        HEADER_TYPE_BITMAP_V3_INFO_HEADER = 56,
-        HEADER_TYPE_OS2_2X_BITMAP_HEADER = 64,
-        HEADER_TYPE_BITMAP_V4_HEADER = 108,
-        HEADER_TYPE_BITMAP_V5_HEADER = 124
-    };
+public:
 
     enum compressions_t {
         COMPRESSIONS_RGB = 0,
@@ -144,6 +129,41 @@ public:
         COMPRESSIONS_PNG = 5,
         COMPRESSIONS_ALPHA_BITFIELDS = 6
     };
+    static bool _is_defined_compressions_t(compressions_t v);
+
+private:
+    static const std::set<compressions_t> _values_compressions_t;
+
+public:
+
+    enum header_type_t {
+        HEADER_TYPE_BITMAP_CORE_HEADER = 12,
+        HEADER_TYPE_BITMAP_INFO_HEADER = 40,
+        HEADER_TYPE_BITMAP_V2_INFO_HEADER = 52,
+        HEADER_TYPE_BITMAP_V3_INFO_HEADER = 56,
+        HEADER_TYPE_OS2_2X_BITMAP_HEADER = 64,
+        HEADER_TYPE_BITMAP_V4_HEADER = 108,
+        HEADER_TYPE_BITMAP_V5_HEADER = 124
+    };
+    static bool _is_defined_header_type_t(header_type_t v);
+
+private:
+    static const std::set<header_type_t> _values_header_type_t;
+
+public:
+
+    enum intent_t {
+        INTENT_BUSINESS = 1,
+        INTENT_GRAPHICS = 2,
+        INTENT_IMAGES = 4,
+        INTENT_ABS_COLORIMETRIC = 8
+    };
+    static bool _is_defined_intent_t(intent_t v);
+
+private:
+    static const std::set<intent_t> _values_intent_t;
+
+public:
 
     enum os2_compressions_t {
         OS2_COMPRESSIONS_RGB = 0,
@@ -152,6 +172,25 @@ public:
         OS2_COMPRESSIONS_HUFFMAN_1D = 3,
         OS2_COMPRESSIONS_RLE24 = 4
     };
+    static bool _is_defined_os2_compressions_t(os2_compressions_t v);
+
+private:
+    static const std::set<os2_compressions_t> _values_os2_compressions_t;
+
+public:
+
+    enum os2_rendering_t {
+        OS2_RENDERING_NO_HALFTONING = 0,
+        OS2_RENDERING_ERROR_DIFFUSION = 1,
+        OS2_RENDERING_PANDA = 2,
+        OS2_RENDERING_SUPER_CIRCLE = 3
+    };
+    static bool _is_defined_os2_rendering_t(os2_rendering_t v);
+
+private:
+    static const std::set<os2_rendering_t> _values_os2_rendering_t;
+
+public:
 
     bmp_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, bmp_t* p__root = nullptr);
 
@@ -161,304 +200,6 @@ private:
 
 public:
     ~bmp_t();
-
-    /**
-     * \sa https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-ciexyz Source
-     */
-
-    class cie_xyz_t : public kaitai::kstruct {
-
-    public:
-
-        cie_xyz_t(kaitai::kstream* p__io, bmp_t::bitmap_v4_extension_t* p__parent = nullptr, bmp_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~cie_xyz_t();
-
-    private:
-        std::unique_ptr<fixed_point_2_dot_30_t> m_x;
-        std::unique_ptr<fixed_point_2_dot_30_t> m_y;
-        std::unique_ptr<fixed_point_2_dot_30_t> m_z;
-        bmp_t* m__root;
-        bmp_t::bitmap_v4_extension_t* m__parent;
-
-    public:
-        fixed_point_2_dot_30_t* x() const { return m_x.get(); }
-        fixed_point_2_dot_30_t* y() const { return m_y.get(); }
-        fixed_point_2_dot_30_t* z() const { return m_z.get(); }
-        bmp_t* _root() const { return m__root; }
-        bmp_t::bitmap_v4_extension_t* _parent() const { return m__parent; }
-    };
-
-    class rgb_record_t : public kaitai::kstruct {
-
-    public:
-
-        rgb_record_t(bool p_has_reserved_field, kaitai::kstream* p__io, bmp_t::color_table_t* p__parent = nullptr, bmp_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~rgb_record_t();
-
-    private:
-        uint8_t m_blue;
-        uint8_t m_green;
-        uint8_t m_red;
-        uint8_t m_reserved;
-        bool n_reserved;
-
-    public:
-        bool _is_null_reserved() { reserved(); return n_reserved; };
-
-    private:
-        bool m_has_reserved_field;
-        bmp_t* m__root;
-        bmp_t::color_table_t* m__parent;
-
-    public:
-        uint8_t blue() const { return m_blue; }
-        uint8_t green() const { return m_green; }
-        uint8_t red() const { return m_red; }
-        uint8_t reserved() const { return m_reserved; }
-        bool has_reserved_field() const { return m_has_reserved_field; }
-        bmp_t* _root() const { return m__root; }
-        bmp_t::color_table_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * \sa https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv5header Source
-     */
-
-    class bitmap_v5_extension_t : public kaitai::kstruct {
-
-    public:
-
-        bitmap_v5_extension_t(kaitai::kstream* p__io, bmp_t::bitmap_header_t* p__parent = nullptr, bmp_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~bitmap_v5_extension_t();
-
-    private:
-        bool f_has_profile;
-        bool m_has_profile;
-
-    public:
-        bool has_profile();
-
-    private:
-        bool f_profile_data;
-        std::string m_profile_data;
-        bool n_profile_data;
-
-    public:
-        bool _is_null_profile_data() { profile_data(); return n_profile_data; };
-
-    private:
-
-    public:
-
-        /**
-         * \sa https://learn.microsoft.com/en-us/windows/win32/wcs/using-structures-in-wcs-1-0 "If the profile is embedded, profile data is the actual profile, and if it is linked, the profile data is the null-terminated file name of the profile. This cannot be a Unicode string. It must be composed exclusively of characters from the Windows character set (code page 1252)."
-         */
-        std::string profile_data();
-
-    private:
-        intent_t m_intent;
-        uint32_t m_ofs_profile;
-        uint32_t m_len_profile;
-        uint32_t m_reserved;
-        bmp_t* m__root;
-        bmp_t::bitmap_header_t* m__parent;
-
-    public:
-        intent_t intent() const { return m_intent; }
-
-        /**
-         * The offset, in bytes, from the beginning of the BITMAPV5HEADER structure to the start of the profile data.
-         */
-        uint32_t ofs_profile() const { return m_ofs_profile; }
-        uint32_t len_profile() const { return m_len_profile; }
-        uint32_t reserved() const { return m_reserved; }
-        bmp_t* _root() const { return m__root; }
-        bmp_t::bitmap_header_t* _parent() const { return m__parent; }
-    };
-
-    class color_mask_t : public kaitai::kstruct {
-
-    public:
-
-        color_mask_t(bool p_has_alpha_mask, kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, bmp_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~color_mask_t();
-
-    private:
-        uint32_t m_red_mask;
-        uint32_t m_green_mask;
-        uint32_t m_blue_mask;
-        uint32_t m_alpha_mask;
-        bool n_alpha_mask;
-
-    public:
-        bool _is_null_alpha_mask() { alpha_mask(); return n_alpha_mask; };
-
-    private:
-        bool m_has_alpha_mask;
-        bmp_t* m__root;
-        kaitai::kstruct* m__parent;
-
-    public:
-        uint32_t red_mask() const { return m_red_mask; }
-        uint32_t green_mask() const { return m_green_mask; }
-        uint32_t blue_mask() const { return m_blue_mask; }
-        uint32_t alpha_mask() const { return m_alpha_mask; }
-        bool has_alpha_mask() const { return m_has_alpha_mask; }
-        bmp_t* _root() const { return m__root; }
-        kaitai::kstruct* _parent() const { return m__parent; }
-    };
-
-    /**
-     * \sa https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv4header Source
-     */
-
-    class bitmap_v4_extension_t : public kaitai::kstruct {
-
-    public:
-
-        bitmap_v4_extension_t(kaitai::kstream* p__io, bmp_t::bitmap_header_t* p__parent = nullptr, bmp_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~bitmap_v4_extension_t();
-
-    private:
-        color_space_t m_color_space_type;
-        std::unique_ptr<cie_xyz_t> m_endpoint_red;
-        std::unique_ptr<cie_xyz_t> m_endpoint_green;
-        std::unique_ptr<cie_xyz_t> m_endpoint_blue;
-        std::unique_ptr<fixed_point_16_dot_16_t> m_gamma_red;
-        std::unique_ptr<fixed_point_16_dot_16_t> m_gamma_blue;
-        std::unique_ptr<fixed_point_16_dot_16_t> m_gamma_green;
-        bmp_t* m__root;
-        bmp_t::bitmap_header_t* m__parent;
-
-    public:
-        color_space_t color_space_type() const { return m_color_space_type; }
-        cie_xyz_t* endpoint_red() const { return m_endpoint_red.get(); }
-        cie_xyz_t* endpoint_green() const { return m_endpoint_green.get(); }
-        cie_xyz_t* endpoint_blue() const { return m_endpoint_blue.get(); }
-        fixed_point_16_dot_16_t* gamma_red() const { return m_gamma_red.get(); }
-        fixed_point_16_dot_16_t* gamma_blue() const { return m_gamma_blue.get(); }
-        fixed_point_16_dot_16_t* gamma_green() const { return m_gamma_green.get(); }
-        bmp_t* _root() const { return m__root; }
-        bmp_t::bitmap_header_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * \sa https://learn.microsoft.com/en-us/previous-versions/dd183376(v=vs.85) Source
-     */
-
-    class bitmap_info_extension_t : public kaitai::kstruct {
-
-    public:
-
-        bitmap_info_extension_t(kaitai::kstream* p__io, bmp_t::bitmap_header_t* p__parent = nullptr, bmp_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~bitmap_info_extension_t();
-
-    private:
-        compressions_t m_compression;
-        bool n_compression;
-
-    public:
-        bool _is_null_compression() { compression(); return n_compression; };
-
-    private:
-        os2_compressions_t m_os2_compression;
-        bool n_os2_compression;
-
-    public:
-        bool _is_null_os2_compression() { os2_compression(); return n_os2_compression; };
-
-    private:
-        uint32_t m_len_image;
-        uint32_t m_x_resolution;
-        uint32_t m_y_resolution;
-        uint32_t m_num_colors_used;
-        uint32_t m_num_colors_important;
-        bmp_t* m__root;
-        bmp_t::bitmap_header_t* m__parent;
-
-    public:
-        compressions_t compression() const { return m_compression; }
-        os2_compressions_t os2_compression() const { return m_os2_compression; }
-
-        /**
-         * If biCompression is BI_JPEG or BI_PNG, indicates the size of the JPEG or PNG image buffer.
-         * This may be set to zero for BI_RGB bitmaps.
-         */
-        uint32_t len_image() const { return m_len_image; }
-        uint32_t x_resolution() const { return m_x_resolution; }
-        uint32_t y_resolution() const { return m_y_resolution; }
-        uint32_t num_colors_used() const { return m_num_colors_used; }
-        uint32_t num_colors_important() const { return m_num_colors_important; }
-        bmp_t* _root() const { return m__root; }
-        bmp_t::bitmap_header_t* _parent() const { return m__parent; }
-    };
-
-    class fixed_point_2_dot_30_t : public kaitai::kstruct {
-
-    public:
-
-        fixed_point_2_dot_30_t(kaitai::kstream* p__io, bmp_t::cie_xyz_t* p__parent = nullptr, bmp_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~fixed_point_2_dot_30_t();
-
-    private:
-        bool f_value;
-        double m_value;
-
-    public:
-        double value();
-
-    private:
-        uint32_t m_raw;
-        bmp_t* m__root;
-        bmp_t::cie_xyz_t* m__parent;
-
-    public:
-        uint32_t raw() const { return m_raw; }
-        bmp_t* _root() const { return m__root; }
-        bmp_t::cie_xyz_t* _parent() const { return m__parent; }
-    };
 
     /**
      * Replace with an opaque type if you care about the pixels. You can look at
@@ -510,25 +251,11 @@ public:
         ~bitmap_header_t();
 
     private:
-        bool f_extends_bitmap_v4;
-        bool m_extends_bitmap_v4;
+        bool f_bottom_up;
+        bool m_bottom_up;
 
     public:
-        bool extends_bitmap_v4();
-
-    private:
-        bool f_extends_os2_2x_bitmap;
-        bool m_extends_os2_2x_bitmap;
-
-    public:
-        bool extends_os2_2x_bitmap();
-
-    private:
-        bool f_uses_fixed_palette;
-        bool m_uses_fixed_palette;
-
-    public:
-        bool uses_fixed_palette();
+        bool bottom_up();
 
     private:
         bool f_extends_bitmap_info;
@@ -538,18 +265,11 @@ public:
         bool extends_bitmap_info();
 
     private:
-        bool f_image_height;
-        int32_t m_image_height;
+        bool f_extends_bitmap_v4;
+        bool m_extends_bitmap_v4;
 
     public:
-        int32_t image_height();
-
-    private:
-        bool f_is_core_header;
-        bool m_is_core_header;
-
-    public:
-        bool is_core_header();
+        bool extends_bitmap_v4();
 
     private:
         bool f_extends_bitmap_v5;
@@ -559,6 +279,20 @@ public:
         bool extends_bitmap_v5();
 
     private:
+        bool f_extends_os2_2x_bitmap;
+        bool m_extends_os2_2x_bitmap;
+
+    public:
+        bool extends_os2_2x_bitmap();
+
+    private:
+        bool f_image_height;
+        int32_t m_image_height;
+
+    public:
+        int32_t image_height();
+
+    private:
         bool f_is_color_mask_here;
         bool m_is_color_mask_here;
 
@@ -566,11 +300,18 @@ public:
         bool is_color_mask_here();
 
     private:
-        bool f_bottom_up;
-        bool m_bottom_up;
+        bool f_is_core_header;
+        bool m_is_core_header;
 
     public:
-        bool bottom_up();
+        bool is_core_header();
+
+    private:
+        bool f_uses_fixed_palette;
+        bool m_uses_fixed_palette;
+
+    public:
+        bool uses_fixed_palette();
 
     private:
         uint32_t m_image_width;
@@ -660,109 +401,351 @@ public:
     };
 
     /**
-     * \sa https://www.fileformat.info/format/os2bmp/egff.htm#OS2BMP-DMYID.3.2 Source
+     * \sa https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfo Source
      */
 
-    class os2_2x_bitmap_extension_t : public kaitai::kstruct {
+    class bitmap_info_t : public kaitai::kstruct {
 
     public:
 
-        os2_2x_bitmap_extension_t(kaitai::kstream* p__io, bmp_t::bitmap_header_t* p__parent = nullptr, bmp_t* p__root = nullptr);
+        bitmap_info_t(kaitai::kstream* p__io, bmp_t* p__parent = nullptr, bmp_t* p__root = nullptr);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~os2_2x_bitmap_extension_t();
+        ~bitmap_info_t();
 
     private:
-        uint16_t m_units;
-        uint16_t m_reserved;
-        uint16_t m_recording;
-        os2_rendering_t m_rendering;
-        uint32_t m_size1;
-        uint32_t m_size2;
-        uint32_t m_color_encoding;
-        uint32_t m_identifier;
+        bool f_color_mask_alpha;
+        uint32_t m_color_mask_alpha;
+
+    public:
+        uint32_t color_mask_alpha();
+
+    private:
+        bool f_color_mask_blue;
+        uint32_t m_color_mask_blue;
+
+    public:
+        uint32_t color_mask_blue();
+
+    private:
+        bool f_color_mask_given;
+        color_mask_t* m_color_mask_given;
+        bool n_color_mask_given;
+
+    public:
+        bool _is_null_color_mask_given() { color_mask_given(); return n_color_mask_given; };
+
+    private:
+
+    public:
+        color_mask_t* color_mask_given();
+
+    private:
+        bool f_color_mask_green;
+        int32_t m_color_mask_green;
+
+    public:
+        int32_t color_mask_green();
+
+    private:
+        bool f_color_mask_red;
+        int32_t m_color_mask_red;
+
+    public:
+        int32_t color_mask_red();
+
+    private:
+        bool f_is_color_mask_given;
+        bool m_is_color_mask_given;
+
+    public:
+        bool is_color_mask_given();
+
+    private:
+        bool f_is_color_mask_here;
+        bool m_is_color_mask_here;
+
+    public:
+        bool is_color_mask_here();
+
+    private:
+        uint32_t m_len_header;
+        std::unique_ptr<bitmap_header_t> m_header;
+        std::unique_ptr<color_mask_t> m_color_mask;
+        bool n_color_mask;
+
+    public:
+        bool _is_null_color_mask() { color_mask(); return n_color_mask; };
+
+    private:
+        std::unique_ptr<color_table_t> m_color_table;
+        bool n_color_table;
+
+    public:
+        bool _is_null_color_table() { color_table(); return n_color_table; };
+
+    private:
+        bmp_t* m__root;
+        bmp_t* m__parent;
+        std::string m__raw_header;
+        std::unique_ptr<kaitai::kstream> m__io__raw_header;
+        std::string m__raw_color_table;
+        bool n__raw_color_table;
+
+    public:
+        bool _is_null__raw_color_table() { _raw_color_table(); return n__raw_color_table; };
+
+    private:
+        std::unique_ptr<kaitai::kstream> m__io__raw_color_table;
+
+    public:
+        uint32_t len_header() const { return m_len_header; }
+        bitmap_header_t* header() const { return m_header.get(); }
+
+        /**
+         * Valid only for BITMAPINFOHEADER, in all headers extending it the masks are contained in the header itself.
+         */
+        color_mask_t* color_mask() const { return m_color_mask.get(); }
+        color_table_t* color_table() const { return m_color_table.get(); }
+        bmp_t* _root() const { return m__root; }
+        bmp_t* _parent() const { return m__parent; }
+        std::string _raw_header() const { return m__raw_header; }
+        kaitai::kstream* _io__raw_header() const { return m__io__raw_header.get(); }
+        std::string _raw_color_table() const { return m__raw_color_table; }
+        kaitai::kstream* _io__raw_color_table() const { return m__io__raw_color_table.get(); }
+    };
+
+    /**
+     * \sa https://learn.microsoft.com/en-us/previous-versions/dd183376(v=vs.85) Source
+     */
+
+    class bitmap_info_extension_t : public kaitai::kstruct {
+
+    public:
+
+        bitmap_info_extension_t(kaitai::kstream* p__io, bmp_t::bitmap_header_t* p__parent = nullptr, bmp_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~bitmap_info_extension_t();
+
+    private:
+        compressions_t m_compression;
+        bool n_compression;
+
+    public:
+        bool _is_null_compression() { compression(); return n_compression; };
+
+    private:
+        os2_compressions_t m_os2_compression;
+        bool n_os2_compression;
+
+    public:
+        bool _is_null_os2_compression() { os2_compression(); return n_os2_compression; };
+
+    private:
+        uint32_t m_len_image;
+        uint32_t m_x_resolution;
+        uint32_t m_y_resolution;
+        uint32_t m_num_colors_used;
+        uint32_t m_num_colors_important;
         bmp_t* m__root;
         bmp_t::bitmap_header_t* m__parent;
 
     public:
-        uint16_t units() const { return m_units; }
-        uint16_t reserved() const { return m_reserved; }
+        compressions_t compression() const { return m_compression; }
+        os2_compressions_t os2_compression() const { return m_os2_compression; }
 
         /**
-         * Specifies how the bitmap scan lines are stored.
-         * The only valid value for this field is 0, indicating that the bitmap is
-         * stored from left to right and from the bottom up.
+         * If biCompression is BI_JPEG or BI_PNG, indicates the size of the JPEG or PNG image buffer.
+         * This may be set to zero for BI_RGB bitmaps.
          */
-        uint16_t recording() const { return m_recording; }
-
-        /**
-         * Specifies the halftoning algorithm used on the bitmap data.
-         */
-        os2_rendering_t rendering() const { return m_rendering; }
-
-        /**
-         * rendering == os2_rendering::error_diffusion
-         *   => error damping as a percentage in the range 0 through 100
-         * rendering == os2_rendering::panda or rendering == os2_rendering::super_circle
-         *   => X dimension of the pattern used in pixels
-         */
-        uint32_t size1() const { return m_size1; }
-
-        /**
-         * rendering == os2_rendering::error_diffusion
-         *   => not used
-         * rendering == os2_rendering::panda or rendering == os2_rendering::super_circle
-         *   => Y dimension of the pattern used in pixels
-         */
-        uint32_t size2() const { return m_size2; }
-
-        /**
-         * Specifies the color model used to describe the bitmap data.
-         * The only valid value is 0, indicating the RGB encoding scheme.
-         */
-        uint32_t color_encoding() const { return m_color_encoding; }
-
-        /**
-         * Application-specific value
-         */
-        uint32_t identifier() const { return m_identifier; }
+        uint32_t len_image() const { return m_len_image; }
+        uint32_t x_resolution() const { return m_x_resolution; }
+        uint32_t y_resolution() const { return m_y_resolution; }
+        uint32_t num_colors_used() const { return m_num_colors_used; }
+        uint32_t num_colors_important() const { return m_num_colors_important; }
         bmp_t* _root() const { return m__root; }
         bmp_t::bitmap_header_t* _parent() const { return m__parent; }
     };
 
-    class fixed_point_16_dot_16_t : public kaitai::kstruct {
+    /**
+     * \sa https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv4header Source
+     */
+
+    class bitmap_v4_extension_t : public kaitai::kstruct {
 
     public:
 
-        fixed_point_16_dot_16_t(kaitai::kstream* p__io, bmp_t::bitmap_v4_extension_t* p__parent = nullptr, bmp_t* p__root = nullptr);
+        bitmap_v4_extension_t(kaitai::kstream* p__io, bmp_t::bitmap_header_t* p__parent = nullptr, bmp_t* p__root = nullptr);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~fixed_point_16_dot_16_t();
+        ~bitmap_v4_extension_t();
 
     private:
-        bool f_value;
-        double m_value;
+        color_space_t m_color_space_type;
+        std::unique_ptr<cie_xyz_t> m_endpoint_red;
+        std::unique_ptr<cie_xyz_t> m_endpoint_green;
+        std::unique_ptr<cie_xyz_t> m_endpoint_blue;
+        std::unique_ptr<fixed_point_16_dot_16_t> m_gamma_red;
+        std::unique_ptr<fixed_point_16_dot_16_t> m_gamma_blue;
+        std::unique_ptr<fixed_point_16_dot_16_t> m_gamma_green;
+        bmp_t* m__root;
+        bmp_t::bitmap_header_t* m__parent;
 
     public:
-        double value();
+        color_space_t color_space_type() const { return m_color_space_type; }
+        cie_xyz_t* endpoint_red() const { return m_endpoint_red.get(); }
+        cie_xyz_t* endpoint_green() const { return m_endpoint_green.get(); }
+        cie_xyz_t* endpoint_blue() const { return m_endpoint_blue.get(); }
+        fixed_point_16_dot_16_t* gamma_red() const { return m_gamma_red.get(); }
+        fixed_point_16_dot_16_t* gamma_blue() const { return m_gamma_blue.get(); }
+        fixed_point_16_dot_16_t* gamma_green() const { return m_gamma_green.get(); }
+        bmp_t* _root() const { return m__root; }
+        bmp_t::bitmap_header_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * \sa https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapv5header Source
+     */
+
+    class bitmap_v5_extension_t : public kaitai::kstruct {
+
+    public:
+
+        bitmap_v5_extension_t(kaitai::kstream* p__io, bmp_t::bitmap_header_t* p__parent = nullptr, bmp_t* p__root = nullptr);
 
     private:
-        uint32_t m_raw;
+        void _read();
+        void _clean_up();
+
+    public:
+        ~bitmap_v5_extension_t();
+
+    private:
+        bool f_has_profile;
+        bool m_has_profile;
+
+    public:
+        bool has_profile();
+
+    private:
+        bool f_profile_data;
+        std::string m_profile_data;
+        bool n_profile_data;
+
+    public:
+        bool _is_null_profile_data() { profile_data(); return n_profile_data; };
+
+    private:
+
+    public:
+
+        /**
+         * \sa https://learn.microsoft.com/en-us/windows/win32/wcs/using-structures-in-wcs-1-0 "If the profile is embedded, profile data is the actual profile, and if it is linked, the profile data is the null-terminated file name of the profile. This cannot be a Unicode string. It must be composed exclusively of characters from the Windows character set (code page 1252)."
+         */
+        std::string profile_data();
+
+    private:
+        intent_t m_intent;
+        uint32_t m_ofs_profile;
+        uint32_t m_len_profile;
+        uint32_t m_reserved;
+        bmp_t* m__root;
+        bmp_t::bitmap_header_t* m__parent;
+
+    public:
+        intent_t intent() const { return m_intent; }
+
+        /**
+         * The offset, in bytes, from the beginning of the BITMAPV5HEADER structure to the start of the profile data.
+         */
+        uint32_t ofs_profile() const { return m_ofs_profile; }
+        uint32_t len_profile() const { return m_len_profile; }
+        uint32_t reserved() const { return m_reserved; }
+        bmp_t* _root() const { return m__root; }
+        bmp_t::bitmap_header_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * \sa https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-ciexyz Source
+     */
+
+    class cie_xyz_t : public kaitai::kstruct {
+
+    public:
+
+        cie_xyz_t(kaitai::kstream* p__io, bmp_t::bitmap_v4_extension_t* p__parent = nullptr, bmp_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~cie_xyz_t();
+
+    private:
+        std::unique_ptr<fixed_point_2_dot_30_t> m_x;
+        std::unique_ptr<fixed_point_2_dot_30_t> m_y;
+        std::unique_ptr<fixed_point_2_dot_30_t> m_z;
         bmp_t* m__root;
         bmp_t::bitmap_v4_extension_t* m__parent;
 
     public:
-        uint32_t raw() const { return m_raw; }
+        fixed_point_2_dot_30_t* x() const { return m_x.get(); }
+        fixed_point_2_dot_30_t* y() const { return m_y.get(); }
+        fixed_point_2_dot_30_t* z() const { return m_z.get(); }
         bmp_t* _root() const { return m__root; }
         bmp_t::bitmap_v4_extension_t* _parent() const { return m__parent; }
+    };
+
+    class color_mask_t : public kaitai::kstruct {
+
+    public:
+
+        color_mask_t(bool p_has_alpha_mask, kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, bmp_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~color_mask_t();
+
+    private:
+        uint32_t m_red_mask;
+        uint32_t m_green_mask;
+        uint32_t m_blue_mask;
+        uint32_t m_alpha_mask;
+        bool n_alpha_mask;
+
+    public:
+        bool _is_null_alpha_mask() { alpha_mask(); return n_alpha_mask; };
+
+    private:
+        bool m_has_alpha_mask;
+        bmp_t* m__root;
+        kaitai::kstruct* m__parent;
+
+    public:
+        uint32_t red_mask() const { return m_red_mask; }
+        uint32_t green_mask() const { return m_green_mask; }
+        uint32_t blue_mask() const { return m_blue_mask; }
+        uint32_t alpha_mask() const { return m_alpha_mask; }
+        bool has_alpha_mask() const { return m_has_alpha_mask; }
+        bmp_t* _root() const { return m__root; }
+        kaitai::kstruct* _parent() const { return m__parent; }
     };
 
     class color_table_t : public kaitai::kstruct {
@@ -851,123 +834,179 @@ public:
         bmp_t* _parent() const { return m__parent; }
     };
 
-    /**
-     * \sa https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfo Source
-     */
-
-    class bitmap_info_t : public kaitai::kstruct {
+    class fixed_point_16_dot_16_t : public kaitai::kstruct {
 
     public:
 
-        bitmap_info_t(kaitai::kstream* p__io, bmp_t* p__parent = nullptr, bmp_t* p__root = nullptr);
+        fixed_point_16_dot_16_t(kaitai::kstream* p__io, bmp_t::bitmap_v4_extension_t* p__parent = nullptr, bmp_t* p__root = nullptr);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~bitmap_info_t();
+        ~fixed_point_16_dot_16_t();
 
     private:
-        bool f_is_color_mask_given;
-        bool m_is_color_mask_given;
+        bool f_value;
+        double m_value;
 
     public:
-        bool is_color_mask_given();
+        double value();
 
     private:
-        bool f_color_mask_given;
-        color_mask_t* m_color_mask_given;
-        bool n_color_mask_given;
-
-    public:
-        bool _is_null_color_mask_given() { color_mask_given(); return n_color_mask_given; };
-
-    private:
-
-    public:
-        color_mask_t* color_mask_given();
-
-    private:
-        bool f_color_mask_blue;
-        uint32_t m_color_mask_blue;
-
-    public:
-        uint32_t color_mask_blue();
-
-    private:
-        bool f_color_mask_alpha;
-        uint32_t m_color_mask_alpha;
-
-    public:
-        uint32_t color_mask_alpha();
-
-    private:
-        bool f_color_mask_green;
-        int32_t m_color_mask_green;
-
-    public:
-        int32_t color_mask_green();
-
-    private:
-        bool f_is_color_mask_here;
-        bool m_is_color_mask_here;
-
-    public:
-        bool is_color_mask_here();
-
-    private:
-        bool f_color_mask_red;
-        int32_t m_color_mask_red;
-
-    public:
-        int32_t color_mask_red();
-
-    private:
-        uint32_t m_len_header;
-        std::unique_ptr<bitmap_header_t> m_header;
-        std::unique_ptr<color_mask_t> m_color_mask;
-        bool n_color_mask;
-
-    public:
-        bool _is_null_color_mask() { color_mask(); return n_color_mask; };
-
-    private:
-        std::unique_ptr<color_table_t> m_color_table;
-        bool n_color_table;
-
-    public:
-        bool _is_null_color_table() { color_table(); return n_color_table; };
-
-    private:
+        uint32_t m_raw;
         bmp_t* m__root;
-        bmp_t* m__parent;
-        std::string m__raw_header;
-        std::unique_ptr<kaitai::kstream> m__io__raw_header;
-        std::string m__raw_color_table;
-        bool n__raw_color_table;
+        bmp_t::bitmap_v4_extension_t* m__parent;
 
     public:
-        bool _is_null__raw_color_table() { _raw_color_table(); return n__raw_color_table; };
+        uint32_t raw() const { return m_raw; }
+        bmp_t* _root() const { return m__root; }
+        bmp_t::bitmap_v4_extension_t* _parent() const { return m__parent; }
+    };
+
+    class fixed_point_2_dot_30_t : public kaitai::kstruct {
+
+    public:
+
+        fixed_point_2_dot_30_t(kaitai::kstream* p__io, bmp_t::cie_xyz_t* p__parent = nullptr, bmp_t* p__root = nullptr);
 
     private:
-        std::unique_ptr<kaitai::kstream> m__io__raw_color_table;
+        void _read();
+        void _clean_up();
 
     public:
-        uint32_t len_header() const { return m_len_header; }
-        bitmap_header_t* header() const { return m_header.get(); }
+        ~fixed_point_2_dot_30_t();
+
+    private:
+        bool f_value;
+        double m_value;
+
+    public:
+        double value();
+
+    private:
+        uint32_t m_raw;
+        bmp_t* m__root;
+        bmp_t::cie_xyz_t* m__parent;
+
+    public:
+        uint32_t raw() const { return m_raw; }
+        bmp_t* _root() const { return m__root; }
+        bmp_t::cie_xyz_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * \sa https://www.fileformat.info/format/os2bmp/egff.htm#OS2BMP-DMYID.3.2 Source
+     */
+
+    class os2_2x_bitmap_extension_t : public kaitai::kstruct {
+
+    public:
+
+        os2_2x_bitmap_extension_t(kaitai::kstream* p__io, bmp_t::bitmap_header_t* p__parent = nullptr, bmp_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~os2_2x_bitmap_extension_t();
+
+    private:
+        uint16_t m_units;
+        uint16_t m_reserved;
+        uint16_t m_recording;
+        os2_rendering_t m_rendering;
+        uint32_t m_size1;
+        uint32_t m_size2;
+        uint32_t m_color_encoding;
+        uint32_t m_identifier;
+        bmp_t* m__root;
+        bmp_t::bitmap_header_t* m__parent;
+
+    public:
+        uint16_t units() const { return m_units; }
+        uint16_t reserved() const { return m_reserved; }
 
         /**
-         * Valid only for BITMAPINFOHEADER, in all headers extending it the masks are contained in the header itself.
+         * Specifies how the bitmap scan lines are stored.
+         * The only valid value for this field is 0, indicating that the bitmap is
+         * stored from left to right and from the bottom up.
          */
-        color_mask_t* color_mask() const { return m_color_mask.get(); }
-        color_table_t* color_table() const { return m_color_table.get(); }
+        uint16_t recording() const { return m_recording; }
+
+        /**
+         * Specifies the halftoning algorithm used on the bitmap data.
+         */
+        os2_rendering_t rendering() const { return m_rendering; }
+
+        /**
+         * rendering == os2_rendering::error_diffusion
+         *   => error damping as a percentage in the range 0 through 100
+         * rendering == os2_rendering::panda or rendering == os2_rendering::super_circle
+         *   => X dimension of the pattern used in pixels
+         */
+        uint32_t size1() const { return m_size1; }
+
+        /**
+         * rendering == os2_rendering::error_diffusion
+         *   => not used
+         * rendering == os2_rendering::panda or rendering == os2_rendering::super_circle
+         *   => Y dimension of the pattern used in pixels
+         */
+        uint32_t size2() const { return m_size2; }
+
+        /**
+         * Specifies the color model used to describe the bitmap data.
+         * The only valid value is 0, indicating the RGB encoding scheme.
+         */
+        uint32_t color_encoding() const { return m_color_encoding; }
+
+        /**
+         * Application-specific value
+         */
+        uint32_t identifier() const { return m_identifier; }
         bmp_t* _root() const { return m__root; }
-        bmp_t* _parent() const { return m__parent; }
-        std::string _raw_header() const { return m__raw_header; }
-        kaitai::kstream* _io__raw_header() const { return m__io__raw_header.get(); }
-        std::string _raw_color_table() const { return m__raw_color_table; }
-        kaitai::kstream* _io__raw_color_table() const { return m__io__raw_color_table.get(); }
+        bmp_t::bitmap_header_t* _parent() const { return m__parent; }
+    };
+
+    class rgb_record_t : public kaitai::kstruct {
+
+    public:
+
+        rgb_record_t(bool p_has_reserved_field, kaitai::kstream* p__io, bmp_t::color_table_t* p__parent = nullptr, bmp_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~rgb_record_t();
+
+    private:
+        uint8_t m_blue;
+        uint8_t m_green;
+        uint8_t m_red;
+        uint8_t m_reserved;
+        bool n_reserved;
+
+    public:
+        bool _is_null_reserved() { reserved(); return n_reserved; };
+
+    private:
+        bool m_has_reserved_field;
+        bmp_t* m__root;
+        bmp_t::color_table_t* m__parent;
+
+    public:
+        uint8_t blue() const { return m_blue; }
+        uint8_t green() const { return m_green; }
+        uint8_t red() const { return m_red; }
+        uint8_t reserved() const { return m_reserved; }
+        bool has_reserved_field() const { return m_has_reserved_field; }
+        bmp_t* _root() const { return m__root; }
+        bmp_t::color_table_t* _parent() const { return m__parent; }
     };
 
 private:

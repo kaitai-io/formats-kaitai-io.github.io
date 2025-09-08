@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
-from enum import Enum
+from enum import IntEnum
 
 
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Asn1Der(KaitaiStruct):
     """ASN.1 (Abstract Syntax Notation One) DER (Distinguished Encoding
@@ -37,7 +38,7 @@ class Asn1Der(KaitaiStruct):
        Source - https://www.itu.int/itu-t/recommendations/rec.aspx?rec=12483&lang=en
     """
 
-    class TypeTag(Enum):
+    class TypeTag(IntEnum):
         end_of_content = 0
         boolean = 1
         integer = 2
@@ -58,68 +59,74 @@ class Asn1Der(KaitaiStruct):
         sequence_30 = 48
         set = 49
     def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
+        super(Asn1Der, self).__init__(_io)
         self._parent = _parent
-        self._root = _root if _root else self
+        self._root = _root or self
         self._read()
 
     def _read(self):
         self.type_tag = KaitaiStream.resolve_enum(Asn1Der.TypeTag, self._io.read_u1())
         self.len = Asn1Der.LenEncoded(self._io, self, self._root)
         _on = self.type_tag
-        if _on == Asn1Der.TypeTag.printable_string:
+        if _on == Asn1Der.TypeTag.object_id:
+            pass
+            self._raw_body = self._io.read_bytes(self.len.result)
+            _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+            self.body = Asn1Der.BodyObjectId(_io__raw_body, self, self._root)
+        elif _on == Asn1Der.TypeTag.printable_string:
+            pass
             self._raw_body = self._io.read_bytes(self.len.result)
             _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
             self.body = Asn1Der.BodyPrintableString(_io__raw_body, self, self._root)
         elif _on == Asn1Der.TypeTag.sequence_10:
-            self._raw_body = self._io.read_bytes(self.len.result)
-            _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
-            self.body = Asn1Der.BodySequence(_io__raw_body, self, self._root)
-        elif _on == Asn1Der.TypeTag.set:
+            pass
             self._raw_body = self._io.read_bytes(self.len.result)
             _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
             self.body = Asn1Der.BodySequence(_io__raw_body, self, self._root)
         elif _on == Asn1Der.TypeTag.sequence_30:
+            pass
+            self._raw_body = self._io.read_bytes(self.len.result)
+            _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+            self.body = Asn1Der.BodySequence(_io__raw_body, self, self._root)
+        elif _on == Asn1Der.TypeTag.set:
+            pass
             self._raw_body = self._io.read_bytes(self.len.result)
             _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
             self.body = Asn1Der.BodySequence(_io__raw_body, self, self._root)
         elif _on == Asn1Der.TypeTag.utf8string:
+            pass
             self._raw_body = self._io.read_bytes(self.len.result)
             _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
             self.body = Asn1Der.BodyUtf8string(_io__raw_body, self, self._root)
-        elif _on == Asn1Der.TypeTag.object_id:
-            self._raw_body = self._io.read_bytes(self.len.result)
-            _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
-            self.body = Asn1Der.BodyObjectId(_io__raw_body, self, self._root)
         else:
+            pass
             self.body = self._io.read_bytes(self.len.result)
 
-    class BodySequence(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
 
-        def _read(self):
-            self.entries = []
-            i = 0
-            while not self._io.is_eof():
-                self.entries.append(Asn1Der(self._io))
-                i += 1
-
-
-
-    class BodyUtf8string(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.str = (self._io.read_bytes_full()).decode(u"UTF-8")
-
+    def _fetch_instances(self):
+        pass
+        self.len._fetch_instances()
+        _on = self.type_tag
+        if _on == Asn1Der.TypeTag.object_id:
+            pass
+            self.body._fetch_instances()
+        elif _on == Asn1Der.TypeTag.printable_string:
+            pass
+            self.body._fetch_instances()
+        elif _on == Asn1Der.TypeTag.sequence_10:
+            pass
+            self.body._fetch_instances()
+        elif _on == Asn1Der.TypeTag.sequence_30:
+            pass
+            self.body._fetch_instances()
+        elif _on == Asn1Der.TypeTag.set:
+            pass
+            self.body._fetch_instances()
+        elif _on == Asn1Der.TypeTag.utf8string:
+            pass
+            self.body._fetch_instances()
+        else:
+            pass
 
     class BodyObjectId(KaitaiStruct):
         """
@@ -127,14 +134,18 @@ class Asn1Der(KaitaiStruct):
            Source - https://learn.microsoft.com/en-us/windows/win32/seccertenroll/about-object-identifier
         """
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(Asn1Der.BodyObjectId, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
             self.first_and_second = self._io.read_u1()
             self.rest = self._io.read_bytes_full()
+
+
+        def _fetch_instances(self):
+            pass
 
         @property
         def first(self):
@@ -149,24 +160,90 @@ class Asn1Der(KaitaiStruct):
             if hasattr(self, '_m_second'):
                 return self._m_second
 
-            self._m_second = (self.first_and_second % 40)
+            self._m_second = self.first_and_second % 40
             return getattr(self, '_m_second', None)
+
+
+    class BodyPrintableString(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(Asn1Der.BodyPrintableString, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.str = (self._io.read_bytes_full()).decode(u"ASCII")
+
+
+        def _fetch_instances(self):
+            pass
+
+
+    class BodySequence(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(Asn1Der.BodySequence, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.entries = []
+            i = 0
+            while not self._io.is_eof():
+                self.entries.append(Asn1Der(self._io, self, self._root))
+                i += 1
+
+
+
+        def _fetch_instances(self):
+            pass
+            for i in range(len(self.entries)):
+                pass
+                self.entries[i]._fetch_instances()
+
+
+
+    class BodyUtf8string(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(Asn1Der.BodyUtf8string, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.str = (self._io.read_bytes_full()).decode(u"UTF-8")
+
+
+        def _fetch_instances(self):
+            pass
 
 
     class LenEncoded(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(Asn1Der.LenEncoded, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
             self.b1 = self._io.read_u1()
             if self.b1 == 130:
+                pass
                 self.int2 = self._io.read_u2be()
 
             if self.b1 == 129:
+                pass
                 self.int1 = self._io.read_u1()
+
+
+
+        def _fetch_instances(self):
+            pass
+            if self.b1 == 130:
+                pass
+
+            if self.b1 == 129:
+                pass
 
 
         @property
@@ -176,17 +253,6 @@ class Asn1Der(KaitaiStruct):
 
             self._m_result = (self.int1 if self.b1 == 129 else (self.int2 if self.b1 == 130 else self.b1))
             return getattr(self, '_m_result', None)
-
-
-    class BodyPrintableString(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.str = (self._io.read_bytes_full()).decode(u"ASCII")
 
 
 

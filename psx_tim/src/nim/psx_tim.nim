@@ -8,10 +8,10 @@ type
     `clut`*: PsxTim_Bitmap
     `img`*: PsxTim_Bitmap
     `parent`*: KaitaiStruct
-    `hasClutInst`: bool
-    `hasClutInstFlag`: bool
     `bppInst`: int
     `bppInstFlag`: bool
+    `hasClutInst`: bool
+    `hasClutInstFlag`: bool
   PsxTim_BppType* = enum
     bpp_4 = 0
     bpp_8 = 1
@@ -29,8 +29,8 @@ type
 proc read*(_: typedesc[PsxTim], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): PsxTim
 proc read*(_: typedesc[PsxTim_Bitmap], io: KaitaiStream, root: KaitaiStruct, parent: PsxTim): PsxTim_Bitmap
 
-proc hasClut*(this: PsxTim): bool
 proc bpp*(this: PsxTim): int
+proc hasClut*(this: PsxTim): bool
 
 
 ##[
@@ -64,6 +64,14 @@ proc read*(_: typedesc[PsxTim], io: KaitaiStream, root: KaitaiStruct, parent: Ka
   let imgExpr = PsxTim_Bitmap.read(this.io, this.root, this)
   this.img = imgExpr
 
+proc bpp(this: PsxTim): int = 
+  if this.bppInstFlag:
+    return this.bppInst
+  let bppInstExpr = int(this.flags and 3)
+  this.bppInst = bppInstExpr
+  this.bppInstFlag = true
+  return this.bppInst
+
 proc hasClut(this: PsxTim): bool = 
   if this.hasClutInstFlag:
     return this.hasClutInst
@@ -71,14 +79,6 @@ proc hasClut(this: PsxTim): bool =
   this.hasClutInst = hasClutInstExpr
   this.hasClutInstFlag = true
   return this.hasClutInst
-
-proc bpp(this: PsxTim): int = 
-  if this.bppInstFlag:
-    return this.bppInst
-  let bppInstExpr = int((this.flags and 3))
-  this.bppInst = bppInstExpr
-  this.bppInstFlag = true
-  return this.bppInst
 
 proc fromFile*(_: typedesc[PsxTim], filename: string): PsxTim =
   PsxTim.read(newKaitaiFileStream(filename), nil, nil)
@@ -101,7 +101,7 @@ proc read*(_: typedesc[PsxTim_Bitmap], io: KaitaiStream, root: KaitaiStruct, par
   this.width = widthExpr
   let heightExpr = this.io.readU2le()
   this.height = heightExpr
-  let bodyExpr = this.io.readBytes(int((this.len - 12)))
+  let bodyExpr = this.io.readBytes(int(this.len - 12))
   this.body = bodyExpr
 
 proc fromFile*(_: typedesc[PsxTim_Bitmap], filename: string): PsxTim_Bitmap =

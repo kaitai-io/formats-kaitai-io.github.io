@@ -28,7 +28,10 @@ public class HeroesOfMightAndMagicBmp extends KaitaiStruct {
         this.magic = this._io.readU2le();
         this.width = this._io.readU2le();
         this.height = this._io.readU2le();
-        this.data = this._io.readBytes((width() * height()));
+        this.data = this._io.readBytes(width() * height());
+    }
+
+    public void _fetchInstances() {
     }
     private int magic;
     private int width;

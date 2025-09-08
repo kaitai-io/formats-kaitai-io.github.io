@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -12,8 +12,8 @@ end
 #   https://en.bitcoin.it/wiki/Transaction
 #    Source
 class BitcoinTransaction < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -33,7 +33,7 @@ class BitcoinTransaction < Kaitai::Struct::Struct
     self
   end
   class Vin < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -42,11 +42,10 @@ class BitcoinTransaction < Kaitai::Struct::Struct
       @txid = @_io.read_bytes(32)
       @output_id = @_io.read_u4le
       @len_script = @_io.read_u1
-      @_raw_script_sig = @_io.read_bytes(len_script)
-      _io__raw_script_sig = Kaitai::Struct::Stream.new(@_raw_script_sig)
-      @script_sig = ScriptSignature.new(_io__raw_script_sig, self, @_root)
+      _io_script_sig = @_io.substream(len_script)
+      @script_sig = ScriptSignature.new(_io_script_sig, self, @_root)
       @end_of_vin = @_io.read_bytes(4)
-      raise Kaitai::Struct::ValidationNotEqualError.new([255, 255, 255, 255].pack('C*'), end_of_vin, _io, "/types/vin/seq/4") if not end_of_vin == [255, 255, 255, 255].pack('C*')
+      raise Kaitai::Struct::ValidationNotEqualError.new([255, 255, 255, 255].pack('C*'), @end_of_vin, @_io, "/types/vin/seq/4") if not @end_of_vin == [255, 255, 255, 255].pack('C*')
       self
     end
     class ScriptSignature < Kaitai::Struct::Struct
@@ -58,7 +57,7 @@ class BitcoinTransaction < Kaitai::Struct::Struct
         80 => :sighash_type_sighash_anyonecanpay,
       }
       I__SIGHASH_TYPE = SIGHASH_TYPE.invert
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
@@ -72,21 +71,21 @@ class BitcoinTransaction < Kaitai::Struct::Struct
         self
       end
       class DerSignature < Kaitai::Struct::Struct
-        def initialize(_io, _parent = nil, _root = self)
+        def initialize(_io, _parent = nil, _root = nil)
           super(_io, _parent, _root)
           _read
         end
 
         def _read
           @sequence = @_io.read_bytes(1)
-          raise Kaitai::Struct::ValidationNotEqualError.new([48].pack('C*'), sequence, _io, "/types/vin/types/script_signature/types/der_signature/seq/0") if not sequence == [48].pack('C*')
+          raise Kaitai::Struct::ValidationNotEqualError.new([48].pack('C*'), @sequence, @_io, "/types/vin/types/script_signature/types/der_signature/seq/0") if not @sequence == [48].pack('C*')
           @len_sig = @_io.read_u1
           @sep_1 = @_io.read_bytes(1)
-          raise Kaitai::Struct::ValidationNotEqualError.new([2].pack('C*'), sep_1, _io, "/types/vin/types/script_signature/types/der_signature/seq/2") if not sep_1 == [2].pack('C*')
+          raise Kaitai::Struct::ValidationNotEqualError.new([2].pack('C*'), @sep_1, @_io, "/types/vin/types/script_signature/types/der_signature/seq/2") if not @sep_1 == [2].pack('C*')
           @len_sig_r = @_io.read_u1
           @sig_r = @_io.read_bytes(len_sig_r)
           @sep_2 = @_io.read_bytes(1)
-          raise Kaitai::Struct::ValidationNotEqualError.new([2].pack('C*'), sep_2, _io, "/types/vin/types/script_signature/types/der_signature/seq/5") if not sep_2 == [2].pack('C*')
+          raise Kaitai::Struct::ValidationNotEqualError.new([2].pack('C*'), @sep_2, @_io, "/types/vin/types/script_signature/types/der_signature/seq/5") if not @sep_2 == [2].pack('C*')
           @len_sig_s = @_io.read_u1
           @sig_s = @_io.read_bytes(len_sig_s)
           self
@@ -115,7 +114,7 @@ class BitcoinTransaction < Kaitai::Struct::Struct
         attr_reader :sig_s
       end
       class PublicKey < Kaitai::Struct::Struct
-        def initialize(_io, _parent = nil, _root = self)
+        def initialize(_io, _parent = nil, _root = nil)
           super(_io, _parent, _root)
           _read
         end
@@ -181,7 +180,7 @@ class BitcoinTransaction < Kaitai::Struct::Struct
     attr_reader :_raw_script_sig
   end
   class Vout < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end

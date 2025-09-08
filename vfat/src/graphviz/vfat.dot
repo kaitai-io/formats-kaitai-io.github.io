@@ -18,71 +18,6 @@ digraph {
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 			<TR><TD PORT="root_dir_pos">boot_sector.pos_root_dir</TD><TD PORT="root_dir_size">boot_sector.size_root_dir</TD><TD>RootDirectory</TD><TD PORT="root_dir_type">root_dir</TD></TR>
 		</TABLE>>];
-		subgraph cluster__ext_bios_param_block_fat32 {
-			label="Vfat::ExtBiosParamBlockFat32";
-			graph[style=dotted];
-
-			ext_bios_param_block_fat32__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="ls_per_fat_pos">0</TD><TD PORT="ls_per_fat_size">4</TD><TD>u4le</TD><TD PORT="ls_per_fat_type">ls_per_fat</TD></TR>
-				<TR><TD PORT="has_active_fat_pos">4</TD><TD PORT="has_active_fat_size">1b</TD><TD>BitsType1(LittleBitEndian)</TD><TD PORT="has_active_fat_type">has_active_fat</TD></TR>
-				<TR><TD PORT="reserved1_pos">4:1</TD><TD PORT="reserved1_size">3b</TD><TD>b3</TD><TD PORT="reserved1_type">reserved1</TD></TR>
-				<TR><TD PORT="active_fat_id_pos">4:4</TD><TD PORT="active_fat_id_size">4b</TD><TD>b4</TD><TD PORT="active_fat_id_type">active_fat_id</TD></TR>
-				<TR><TD PORT="reserved2_pos">5</TD><TD PORT="reserved2_size">1</TD><TD></TD><TD PORT="reserved2_type">reserved2</TD></TR>
-				<TR><TD PORT="fat_version_pos">6</TD><TD PORT="fat_version_size">2</TD><TD>u2le</TD><TD PORT="fat_version_type">fat_version</TD></TR>
-				<TR><TD PORT="root_dir_start_clus_pos">8</TD><TD PORT="root_dir_start_clus_size">4</TD><TD>u4le</TD><TD PORT="root_dir_start_clus_type">root_dir_start_clus</TD></TR>
-				<TR><TD PORT="ls_fs_info_pos">12</TD><TD PORT="ls_fs_info_size">2</TD><TD>u2le</TD><TD PORT="ls_fs_info_type">ls_fs_info</TD></TR>
-				<TR><TD PORT="boot_sectors_copy_start_ls_pos">14</TD><TD PORT="boot_sectors_copy_start_ls_size">2</TD><TD>u2le</TD><TD PORT="boot_sectors_copy_start_ls_type">boot_sectors_copy_start_ls</TD></TR>
-				<TR><TD PORT="reserved3_pos">16</TD><TD PORT="reserved3_size">12</TD><TD></TD><TD PORT="reserved3_type">reserved3</TD></TR>
-				<TR><TD PORT="phys_drive_num_pos">28</TD><TD PORT="phys_drive_num_size">1</TD><TD>u1</TD><TD PORT="phys_drive_num_type">phys_drive_num</TD></TR>
-				<TR><TD PORT="reserved4_pos">29</TD><TD PORT="reserved4_size">1</TD><TD>u1</TD><TD PORT="reserved4_type">reserved4</TD></TR>
-				<TR><TD PORT="ext_boot_sign_pos">30</TD><TD PORT="ext_boot_sign_size">1</TD><TD>u1</TD><TD PORT="ext_boot_sign_type">ext_boot_sign</TD></TR>
-				<TR><TD PORT="volume_id_pos">31</TD><TD PORT="volume_id_size">4</TD><TD></TD><TD PORT="volume_id_type">volume_id</TD></TR>
-				<TR><TD PORT="partition_volume_label_pos">35</TD><TD PORT="partition_volume_label_size">11</TD><TD>str(ASCII)</TD><TD PORT="partition_volume_label_type">partition_volume_label</TD></TR>
-				<TR><TD PORT="fs_type_str_pos">46</TD><TD PORT="fs_type_str_size">8</TD><TD>str(ASCII)</TD><TD PORT="fs_type_str_type">fs_type_str</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__boot_sector {
-			label="Vfat::BootSector";
-			graph[style=dotted];
-
-			boot_sector__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="jmp_instruction_pos">0</TD><TD PORT="jmp_instruction_size">3</TD><TD></TD><TD PORT="jmp_instruction_type">jmp_instruction</TD></TR>
-				<TR><TD PORT="oem_name_pos">3</TD><TD PORT="oem_name_size">8</TD><TD>str(ASCII)</TD><TD PORT="oem_name_type">oem_name</TD></TR>
-				<TR><TD PORT="bpb_pos">11</TD><TD PORT="bpb_size">25</TD><TD>BiosParamBlock</TD><TD PORT="bpb_type">bpb</TD></TR>
-				<TR><TD PORT="ebpb_fat16_pos">36</TD><TD PORT="ebpb_fat16_size">26</TD><TD>ExtBiosParamBlockFat16</TD><TD PORT="ebpb_fat16_type">ebpb_fat16</TD></TR>
-				<TR><TD PORT="ebpb_fat32_pos">62</TD><TD PORT="ebpb_fat32_size">54</TD><TD>ExtBiosParamBlockFat32</TD><TD PORT="ebpb_fat32_type">ebpb_fat32</TD></TR>
-			</TABLE>>];
-			boot_sector__inst__pos_fats [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>pos_fats</TD><TD>(bpb.bytes_per_ls * bpb.num_reserved_ls)</TD></TR>
-			</TABLE>>];
-			boot_sector__inst__ls_per_fat [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>ls_per_fat</TD><TD>(is_fat32 ? ebpb_fat32.ls_per_fat : bpb.ls_per_fat)</TD></TR>
-			</TABLE>>];
-			boot_sector__inst__ls_per_root_dir [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>ls_per_root_dir</TD><TD>((((bpb.max_root_dir_rec * 32) + bpb.bytes_per_ls) - 1) / bpb.bytes_per_ls)</TD></TR>
-			</TABLE>>];
-			boot_sector__inst__is_fat32 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>is_fat32</TD><TD>bpb.max_root_dir_rec == 0</TD></TR>
-			</TABLE>>];
-			boot_sector__inst__size_fat [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>size_fat</TD><TD>(bpb.bytes_per_ls * ls_per_fat)</TD></TR>
-			</TABLE>>];
-			boot_sector__inst__pos_root_dir [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>pos_root_dir</TD><TD>(bpb.bytes_per_ls * (bpb.num_reserved_ls + (ls_per_fat * bpb.num_fats)))</TD></TR>
-			</TABLE>>];
-			boot_sector__inst__size_root_dir [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>size_root_dir</TD><TD>(ls_per_root_dir * bpb.bytes_per_ls)</TD></TR>
-			</TABLE>>];
-		}
 		subgraph cluster__bios_param_block {
 			label="Vfat::BiosParamBlock";
 			graph[style=dotted];
@@ -101,6 +36,97 @@ digraph {
 				<TR><TD PORT="num_heads_pos">15</TD><TD PORT="num_heads_size">2</TD><TD>u2le</TD><TD PORT="num_heads_type">num_heads</TD></TR>
 				<TR><TD PORT="num_hidden_sectors_pos">17</TD><TD PORT="num_hidden_sectors_size">4</TD><TD>u4le</TD><TD PORT="num_hidden_sectors_type">num_hidden_sectors</TD></TR>
 				<TR><TD PORT="total_ls_4_pos">21</TD><TD PORT="total_ls_4_size">4</TD><TD>u4le</TD><TD PORT="total_ls_4_type">total_ls_4</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__boot_sector {
+			label="Vfat::BootSector";
+			graph[style=dotted];
+
+			boot_sector__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="jmp_instruction_pos">0</TD><TD PORT="jmp_instruction_size">3</TD><TD></TD><TD PORT="jmp_instruction_type">jmp_instruction</TD></TR>
+				<TR><TD PORT="oem_name_pos">3</TD><TD PORT="oem_name_size">8</TD><TD>str(ASCII)</TD><TD PORT="oem_name_type">oem_name</TD></TR>
+				<TR><TD PORT="bpb_pos">11</TD><TD PORT="bpb_size">25</TD><TD>BiosParamBlock</TD><TD PORT="bpb_type">bpb</TD></TR>
+				<TR><TD PORT="ebpb_fat16_pos">36</TD><TD PORT="ebpb_fat16_size">26</TD><TD>ExtBiosParamBlockFat16</TD><TD PORT="ebpb_fat16_type">ebpb_fat16</TD></TR>
+				<TR><TD COLSPAN="4" PORT="ebpb_fat16__if">if !(is_fat32)</TD></TR>
+				<TR><TD PORT="ebpb_fat32_pos">62</TD><TD PORT="ebpb_fat32_size">54</TD><TD>ExtBiosParamBlockFat32</TD><TD PORT="ebpb_fat32_type">ebpb_fat32</TD></TR>
+				<TR><TD COLSPAN="4" PORT="ebpb_fat32__if">if is_fat32</TD></TR>
+			</TABLE>>];
+			boot_sector__inst__is_fat32 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_fat32</TD><TD>bpb.max_root_dir_rec == 0</TD></TR>
+			</TABLE>>];
+			boot_sector__inst__ls_per_fat [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>ls_per_fat</TD><TD>(is_fat32 ? ebpb_fat32.ls_per_fat : bpb.ls_per_fat)</TD></TR>
+			</TABLE>>];
+			boot_sector__inst__ls_per_root_dir [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>ls_per_root_dir</TD><TD>((bpb.max_root_dir_rec * 32 + bpb.bytes_per_ls) - 1) / bpb.bytes_per_ls</TD></TR>
+			</TABLE>>];
+			boot_sector__inst__pos_fats [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>pos_fats</TD><TD>bpb.bytes_per_ls * bpb.num_reserved_ls</TD></TR>
+			</TABLE>>];
+			boot_sector__inst__pos_root_dir [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>pos_root_dir</TD><TD>bpb.bytes_per_ls * (bpb.num_reserved_ls + ls_per_fat * bpb.num_fats)</TD></TR>
+			</TABLE>>];
+			boot_sector__inst__size_fat [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>size_fat</TD><TD>bpb.bytes_per_ls * ls_per_fat</TD></TR>
+			</TABLE>>];
+			boot_sector__inst__size_root_dir [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>size_root_dir</TD><TD>ls_per_root_dir * bpb.bytes_per_ls</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__ext_bios_param_block_fat16 {
+			label="Vfat::ExtBiosParamBlockFat16";
+			graph[style=dotted];
+
+			ext_bios_param_block_fat16__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="phys_drive_num_pos">0</TD><TD PORT="phys_drive_num_size">1</TD><TD>u1</TD><TD PORT="phys_drive_num_type">phys_drive_num</TD></TR>
+				<TR><TD PORT="reserved1_pos">1</TD><TD PORT="reserved1_size">1</TD><TD>u1</TD><TD PORT="reserved1_type">reserved1</TD></TR>
+				<TR><TD PORT="ext_boot_sign_pos">2</TD><TD PORT="ext_boot_sign_size">1</TD><TD>u1</TD><TD PORT="ext_boot_sign_type">ext_boot_sign</TD></TR>
+				<TR><TD PORT="volume_id_pos">3</TD><TD PORT="volume_id_size">4</TD><TD></TD><TD PORT="volume_id_type">volume_id</TD></TR>
+				<TR><TD PORT="partition_volume_label_pos">7</TD><TD PORT="partition_volume_label_size">11</TD><TD>str(ASCII)</TD><TD PORT="partition_volume_label_type">partition_volume_label</TD></TR>
+				<TR><TD PORT="fs_type_str_pos">18</TD><TD PORT="fs_type_str_size">8</TD><TD>str(ASCII)</TD><TD PORT="fs_type_str_type">fs_type_str</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__ext_bios_param_block_fat32 {
+			label="Vfat::ExtBiosParamBlockFat32";
+			graph[style=dotted];
+
+			ext_bios_param_block_fat32__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="ls_per_fat_pos">0</TD><TD PORT="ls_per_fat_size">4</TD><TD>u4le</TD><TD PORT="ls_per_fat_type">ls_per_fat</TD></TR>
+				<TR><TD PORT="has_active_fat_pos">4</TD><TD PORT="has_active_fat_size">1b</TD><TD>b1le→bool</TD><TD PORT="has_active_fat_type">has_active_fat</TD></TR>
+				<TR><TD PORT="reserved1_pos">4:1</TD><TD PORT="reserved1_size">3b</TD><TD>b3le</TD><TD PORT="reserved1_type">reserved1</TD></TR>
+				<TR><TD PORT="active_fat_id_pos">4:4</TD><TD PORT="active_fat_id_size">4b</TD><TD>b4le</TD><TD PORT="active_fat_id_type">active_fat_id</TD></TR>
+				<TR><TD PORT="reserved2_pos">5</TD><TD PORT="reserved2_size">1</TD><TD>00</TD><TD PORT="reserved2_type">reserved2</TD></TR>
+				<TR><TD PORT="fat_version_pos">6</TD><TD PORT="fat_version_size">2</TD><TD>u2le</TD><TD PORT="fat_version_type">fat_version</TD></TR>
+				<TR><TD PORT="root_dir_start_clus_pos">8</TD><TD PORT="root_dir_start_clus_size">4</TD><TD>u4le</TD><TD PORT="root_dir_start_clus_type">root_dir_start_clus</TD></TR>
+				<TR><TD PORT="ls_fs_info_pos">12</TD><TD PORT="ls_fs_info_size">2</TD><TD>u2le</TD><TD PORT="ls_fs_info_type">ls_fs_info</TD></TR>
+				<TR><TD PORT="boot_sectors_copy_start_ls_pos">14</TD><TD PORT="boot_sectors_copy_start_ls_size">2</TD><TD>u2le</TD><TD PORT="boot_sectors_copy_start_ls_type">boot_sectors_copy_start_ls</TD></TR>
+				<TR><TD PORT="reserved3_pos">16</TD><TD PORT="reserved3_size">12</TD><TD></TD><TD PORT="reserved3_type">reserved3</TD></TR>
+				<TR><TD PORT="phys_drive_num_pos">28</TD><TD PORT="phys_drive_num_size">1</TD><TD>u1</TD><TD PORT="phys_drive_num_type">phys_drive_num</TD></TR>
+				<TR><TD PORT="reserved4_pos">29</TD><TD PORT="reserved4_size">1</TD><TD>u1</TD><TD PORT="reserved4_type">reserved4</TD></TR>
+				<TR><TD PORT="ext_boot_sign_pos">30</TD><TD PORT="ext_boot_sign_size">1</TD><TD>u1</TD><TD PORT="ext_boot_sign_type">ext_boot_sign</TD></TR>
+				<TR><TD PORT="volume_id_pos">31</TD><TD PORT="volume_id_size">4</TD><TD></TD><TD PORT="volume_id_type">volume_id</TD></TR>
+				<TR><TD PORT="partition_volume_label_pos">35</TD><TD PORT="partition_volume_label_size">11</TD><TD>str(ASCII)</TD><TD PORT="partition_volume_label_type">partition_volume_label</TD></TR>
+				<TR><TD PORT="fs_type_str_pos">46</TD><TD PORT="fs_type_str_size">8</TD><TD>str(ASCII)</TD><TD PORT="fs_type_str_type">fs_type_str</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__root_directory {
+			label="Vfat::RootDirectory";
+			graph[style=dotted];
+
+			root_directory__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="records_pos">0</TD><TD PORT="records_size">32</TD><TD>RootDirectoryRec</TD><TD PORT="records_type">records</TD></TR>
+				<TR><TD COLSPAN="4" PORT="records__repeat">repeat _root.boot_sector.bpb.max_root_dir_rec times</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__root_directory_rec {
@@ -122,43 +148,19 @@ digraph {
 
 				attr_flags__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="read_only_pos">0</TD><TD PORT="read_only_size">1b</TD><TD>BitsType1(LittleBitEndian)</TD><TD PORT="read_only_type">read_only</TD></TR>
-					<TR><TD PORT="hidden_pos">0:1</TD><TD PORT="hidden_size">1b</TD><TD>BitsType1(LittleBitEndian)</TD><TD PORT="hidden_type">hidden</TD></TR>
-					<TR><TD PORT="system_pos">0:2</TD><TD PORT="system_size">1b</TD><TD>BitsType1(LittleBitEndian)</TD><TD PORT="system_type">system</TD></TR>
-					<TR><TD PORT="volume_id_pos">0:3</TD><TD PORT="volume_id_size">1b</TD><TD>BitsType1(LittleBitEndian)</TD><TD PORT="volume_id_type">volume_id</TD></TR>
-					<TR><TD PORT="is_directory_pos">0:4</TD><TD PORT="is_directory_size">1b</TD><TD>BitsType1(LittleBitEndian)</TD><TD PORT="is_directory_type">is_directory</TD></TR>
-					<TR><TD PORT="archive_pos">0:5</TD><TD PORT="archive_size">1b</TD><TD>BitsType1(LittleBitEndian)</TD><TD PORT="archive_type">archive</TD></TR>
-					<TR><TD PORT="reserved_pos">0:6</TD><TD PORT="reserved_size">2b</TD><TD>b2</TD><TD PORT="reserved_type">reserved</TD></TR>
+					<TR><TD PORT="read_only_pos">0</TD><TD PORT="read_only_size">1b</TD><TD>b1le→bool</TD><TD PORT="read_only_type">read_only</TD></TR>
+					<TR><TD PORT="hidden_pos">0:1</TD><TD PORT="hidden_size">1b</TD><TD>b1le→bool</TD><TD PORT="hidden_type">hidden</TD></TR>
+					<TR><TD PORT="system_pos">0:2</TD><TD PORT="system_size">1b</TD><TD>b1le→bool</TD><TD PORT="system_type">system</TD></TR>
+					<TR><TD PORT="volume_id_pos">0:3</TD><TD PORT="volume_id_size">1b</TD><TD>b1le→bool</TD><TD PORT="volume_id_type">volume_id</TD></TR>
+					<TR><TD PORT="is_directory_pos">0:4</TD><TD PORT="is_directory_size">1b</TD><TD>b1le→bool</TD><TD PORT="is_directory_type">is_directory</TD></TR>
+					<TR><TD PORT="archive_pos">0:5</TD><TD PORT="archive_size">1b</TD><TD>b1le→bool</TD><TD PORT="archive_type">archive</TD></TR>
+					<TR><TD PORT="reserved_pos">0:6</TD><TD PORT="reserved_size">2b</TD><TD>b2le</TD><TD PORT="reserved_type">reserved</TD></TR>
 				</TABLE>>];
 				attr_flags__inst__long_name [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
 					<TR><TD>long_name</TD><TD> ((read_only) &amp;&amp; (hidden) &amp;&amp; (system) &amp;&amp; (volume_id)) </TD></TR>
 				</TABLE>>];
 			}
-		}
-		subgraph cluster__root_directory {
-			label="Vfat::RootDirectory";
-			graph[style=dotted];
-
-			root_directory__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="records_pos">0</TD><TD PORT="records_size">32</TD><TD>RootDirectoryRec</TD><TD PORT="records_type">records</TD></TR>
-				<TR><TD COLSPAN="4" PORT="records__repeat">repeat _root.boot_sector.bpb.max_root_dir_rec times</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__ext_bios_param_block_fat16 {
-			label="Vfat::ExtBiosParamBlockFat16";
-			graph[style=dotted];
-
-			ext_bios_param_block_fat16__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="phys_drive_num_pos">0</TD><TD PORT="phys_drive_num_size">1</TD><TD>u1</TD><TD PORT="phys_drive_num_type">phys_drive_num</TD></TR>
-				<TR><TD PORT="reserved1_pos">1</TD><TD PORT="reserved1_size">1</TD><TD>u1</TD><TD PORT="reserved1_type">reserved1</TD></TR>
-				<TR><TD PORT="ext_boot_sign_pos">2</TD><TD PORT="ext_boot_sign_size">1</TD><TD>u1</TD><TD PORT="ext_boot_sign_type">ext_boot_sign</TD></TR>
-				<TR><TD PORT="volume_id_pos">3</TD><TD PORT="volume_id_size">4</TD><TD></TD><TD PORT="volume_id_type">volume_id</TD></TR>
-				<TR><TD PORT="partition_volume_label_pos">7</TD><TD PORT="partition_volume_label_size">11</TD><TD>str(ASCII)</TD><TD PORT="partition_volume_label_type">partition_volume_label</TD></TR>
-				<TR><TD PORT="fs_type_str_pos">18</TD><TD PORT="fs_type_str_size">8</TD><TD>str(ASCII)</TD><TD PORT="fs_type_str_type">fs_type_str</TD></TR>
-			</TABLE>>];
 		}
 	}
 	vfat__seq:boot_sector_type -> boot_sector__seq [style=bold];
@@ -170,30 +172,31 @@ digraph {
 	vfat__inst__root_dir:root_dir_type -> root_directory__seq [style=bold];
 	boot_sector__seq:bpb_type -> bios_param_block__seq [style=bold];
 	boot_sector__seq:ebpb_fat16_type -> ext_bios_param_block_fat16__seq [style=bold];
+	boot_sector__inst__is_fat32:is_fat32_type -> boot_sector__seq:ebpb_fat16__if [color="#404040"];
 	boot_sector__seq:ebpb_fat32_type -> ext_bios_param_block_fat32__seq [style=bold];
-	bios_param_block__seq:bytes_per_ls_type -> boot_sector__inst__pos_fats [color="#404040"];
-	bios_param_block__seq:num_reserved_ls_type -> boot_sector__inst__pos_fats [color="#404040"];
+	boot_sector__inst__is_fat32:is_fat32_type -> boot_sector__seq:ebpb_fat32__if [color="#404040"];
+	bios_param_block__seq:max_root_dir_rec_type -> boot_sector__inst__is_fat32 [color="#404040"];
 	boot_sector__inst__is_fat32:is_fat32_type -> boot_sector__inst__ls_per_fat [color="#404040"];
 	ext_bios_param_block_fat32__seq:ls_per_fat_type -> boot_sector__inst__ls_per_fat [color="#404040"];
 	bios_param_block__seq:ls_per_fat_type -> boot_sector__inst__ls_per_fat [color="#404040"];
 	bios_param_block__seq:max_root_dir_rec_type -> boot_sector__inst__ls_per_root_dir [color="#404040"];
 	bios_param_block__seq:bytes_per_ls_type -> boot_sector__inst__ls_per_root_dir [color="#404040"];
-	bios_param_block__seq:bytes_per_ls_type -> boot_sector__inst__ls_per_root_dir [color="#404040"];
-	bios_param_block__seq:max_root_dir_rec_type -> boot_sector__inst__is_fat32 [color="#404040"];
-	bios_param_block__seq:bytes_per_ls_type -> boot_sector__inst__size_fat [color="#404040"];
-	boot_sector__inst__ls_per_fat:ls_per_fat_type -> boot_sector__inst__size_fat [color="#404040"];
+	bios_param_block__seq:bytes_per_ls_type -> boot_sector__inst__pos_fats [color="#404040"];
+	bios_param_block__seq:num_reserved_ls_type -> boot_sector__inst__pos_fats [color="#404040"];
 	bios_param_block__seq:bytes_per_ls_type -> boot_sector__inst__pos_root_dir [color="#404040"];
 	bios_param_block__seq:num_reserved_ls_type -> boot_sector__inst__pos_root_dir [color="#404040"];
 	boot_sector__inst__ls_per_fat:ls_per_fat_type -> boot_sector__inst__pos_root_dir [color="#404040"];
 	bios_param_block__seq:num_fats_type -> boot_sector__inst__pos_root_dir [color="#404040"];
+	bios_param_block__seq:bytes_per_ls_type -> boot_sector__inst__size_fat [color="#404040"];
+	boot_sector__inst__ls_per_fat:ls_per_fat_type -> boot_sector__inst__size_fat [color="#404040"];
 	boot_sector__inst__ls_per_root_dir:ls_per_root_dir_type -> boot_sector__inst__size_root_dir [color="#404040"];
 	bios_param_block__seq:bytes_per_ls_type -> boot_sector__inst__size_root_dir [color="#404040"];
+	root_directory__seq:records_type -> root_directory_rec__seq [style=bold];
+	bios_param_block__seq:max_root_dir_rec_type -> root_directory__seq:records__repeat [color="#404040"];
 	root_directory_rec__seq:attrs_type -> attr_flags__seq [style=bold];
 	root_directory_rec__seq:last_write_time_type -> dos_datetime__seq [style=bold];
 	attr_flags__seq:read_only_type -> attr_flags__inst__long_name [color="#404040"];
 	attr_flags__seq:hidden_type -> attr_flags__inst__long_name [color="#404040"];
 	attr_flags__seq:system_type -> attr_flags__inst__long_name [color="#404040"];
 	attr_flags__seq:volume_id_type -> attr_flags__inst__long_name [color="#404040"];
-	root_directory__seq:records_type -> root_directory_rec__seq [style=bold];
-	bios_param_block__seq:max_root_dir_rec_type -> root_directory__seq:records__repeat [color="#404040"];
 }

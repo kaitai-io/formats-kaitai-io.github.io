@@ -143,9 +143,9 @@ namespace Kaitai
         private void _read()
         {
             _signature = m_io.ReadBytes(4);
-            if (!((KaitaiStream.ByteArrayCompare(Signature, new byte[] { 71, 77, 66, 85 }) == 0)))
+            if (!((KaitaiStream.ByteArrayCompare(_signature, new byte[] { 71, 77, 66, 85 }) == 0)))
             {
-                throw new ValidationNotEqualError(new byte[] { 71, 77, 66, 85 }, Signature, M_Io, "/seq/0");
+                throw new ValidationNotEqualError(new byte[] { 71, 77, 66, 85 }, _signature, m_io, "/seq/0");
             }
             _versionMinor = m_io.ReadU1();
             _versionMajor = m_io.ReadU1();
@@ -163,92 +163,6 @@ namespace Kaitai
             _networkInfoLen = m_io.ReadU4le();
             _conversationStatsOfs = m_io.ReadU4le();
             _conversationStatsLen = m_io.ReadU4le();
-        }
-        public partial class FrameIndex : KaitaiStruct
-        {
-            public static FrameIndex FromFile(string fileName)
-            {
-                return new FrameIndex(new KaitaiStream(fileName));
-            }
-
-            public FrameIndex(KaitaiStream p__io, MicrosoftNetworkMonitorV2 p__parent = null, MicrosoftNetworkMonitorV2 p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _entries = new List<FrameIndexEntry>();
-                {
-                    var i = 0;
-                    while (!m_io.IsEof) {
-                        _entries.Add(new FrameIndexEntry(m_io, this, m_root));
-                        i++;
-                    }
-                }
-            }
-            private List<FrameIndexEntry> _entries;
-            private MicrosoftNetworkMonitorV2 m_root;
-            private MicrosoftNetworkMonitorV2 m_parent;
-            public List<FrameIndexEntry> Entries { get { return _entries; } }
-            public MicrosoftNetworkMonitorV2 M_Root { get { return m_root; } }
-            public MicrosoftNetworkMonitorV2 M_Parent { get { return m_parent; } }
-        }
-
-        /// <summary>
-        /// Each index entry is just a pointer to where the frame data is
-        /// stored in the file.
-        /// </summary>
-        public partial class FrameIndexEntry : KaitaiStruct
-        {
-            public static FrameIndexEntry FromFile(string fileName)
-            {
-                return new FrameIndexEntry(new KaitaiStream(fileName));
-            }
-
-            public FrameIndexEntry(KaitaiStream p__io, MicrosoftNetworkMonitorV2.FrameIndex p__parent = null, MicrosoftNetworkMonitorV2 p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_body = false;
-                _read();
-            }
-            private void _read()
-            {
-                _ofs = m_io.ReadU4le();
-            }
-            private bool f_body;
-            private Frame _body;
-
-            /// <summary>
-            /// Frame body itself
-            /// </summary>
-            public Frame Body
-            {
-                get
-                {
-                    if (f_body)
-                        return _body;
-                    KaitaiStream io = M_Root.M_Io;
-                    long _pos = io.Pos;
-                    io.Seek(Ofs);
-                    _body = new Frame(io, this, m_root);
-                    io.Seek(_pos);
-                    f_body = true;
-                    return _body;
-                }
-            }
-            private uint _ofs;
-            private MicrosoftNetworkMonitorV2 m_root;
-            private MicrosoftNetworkMonitorV2.FrameIndex m_parent;
-
-            /// <summary>
-            /// Absolute pointer to frame data in the file
-            /// </summary>
-            public uint Ofs { get { return _ofs; } }
-            public MicrosoftNetworkMonitorV2 M_Root { get { return m_root; } }
-            public MicrosoftNetworkMonitorV2.FrameIndex M_Parent { get { return m_parent; } }
         }
 
         /// <summary>
@@ -321,6 +235,92 @@ namespace Kaitai
             public MicrosoftNetworkMonitorV2.FrameIndexEntry M_Parent { get { return m_parent; } }
             public byte[] M_RawBody { get { return __raw_body; } }
         }
+        public partial class FrameIndex : KaitaiStruct
+        {
+            public static FrameIndex FromFile(string fileName)
+            {
+                return new FrameIndex(new KaitaiStream(fileName));
+            }
+
+            public FrameIndex(KaitaiStream p__io, MicrosoftNetworkMonitorV2 p__parent = null, MicrosoftNetworkMonitorV2 p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _entries = new List<FrameIndexEntry>();
+                {
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _entries.Add(new FrameIndexEntry(m_io, this, m_root));
+                        i++;
+                    }
+                }
+            }
+            private List<FrameIndexEntry> _entries;
+            private MicrosoftNetworkMonitorV2 m_root;
+            private MicrosoftNetworkMonitorV2 m_parent;
+            public List<FrameIndexEntry> Entries { get { return _entries; } }
+            public MicrosoftNetworkMonitorV2 M_Root { get { return m_root; } }
+            public MicrosoftNetworkMonitorV2 M_Parent { get { return m_parent; } }
+        }
+
+        /// <summary>
+        /// Each index entry is just a pointer to where the frame data is
+        /// stored in the file.
+        /// </summary>
+        public partial class FrameIndexEntry : KaitaiStruct
+        {
+            public static FrameIndexEntry FromFile(string fileName)
+            {
+                return new FrameIndexEntry(new KaitaiStream(fileName));
+            }
+
+            public FrameIndexEntry(KaitaiStream p__io, MicrosoftNetworkMonitorV2.FrameIndex p__parent = null, MicrosoftNetworkMonitorV2 p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_body = false;
+                _read();
+            }
+            private void _read()
+            {
+                _ofs = m_io.ReadU4le();
+            }
+            private bool f_body;
+            private Frame _body;
+
+            /// <summary>
+            /// Frame body itself
+            /// </summary>
+            public Frame Body
+            {
+                get
+                {
+                    if (f_body)
+                        return _body;
+                    f_body = true;
+                    KaitaiStream io = M_Root.M_Io;
+                    long _pos = io.Pos;
+                    io.Seek(Ofs);
+                    _body = new Frame(io, this, m_root);
+                    io.Seek(_pos);
+                    return _body;
+                }
+            }
+            private uint _ofs;
+            private MicrosoftNetworkMonitorV2 m_root;
+            private MicrosoftNetworkMonitorV2.FrameIndex m_parent;
+
+            /// <summary>
+            /// Absolute pointer to frame data in the file
+            /// </summary>
+            public uint Ofs { get { return _ofs; } }
+            public MicrosoftNetworkMonitorV2 M_Root { get { return m_root; } }
+            public MicrosoftNetworkMonitorV2.FrameIndex M_Parent { get { return m_parent; } }
+        }
         private bool f_frameTable;
         private FrameIndex _frameTable;
 
@@ -333,13 +333,13 @@ namespace Kaitai
             {
                 if (f_frameTable)
                     return _frameTable;
+                f_frameTable = true;
                 long _pos = m_io.Pos;
                 m_io.Seek(FrameTableOfs);
                 __raw_frameTable = m_io.ReadBytes(FrameTableLen);
                 var io___raw_frameTable = new KaitaiStream(__raw_frameTable);
                 _frameTable = new FrameIndex(io___raw_frameTable, this, m_root);
                 m_io.Seek(_pos);
-                f_frameTable = true;
                 return _frameTable;
             }
         }

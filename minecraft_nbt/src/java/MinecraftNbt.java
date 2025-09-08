@@ -7,7 +7,8 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
-import java.nio.charset.Charset;
+import java.util.List;
+import java.nio.charset.StandardCharsets;
 
 
 /**
@@ -134,45 +135,169 @@ public class MinecraftNbt extends KaitaiStruct {
         }
         this.root = new NamedTag(this._io, this, _root);
     }
-    public static class TagLongArray extends KaitaiStruct {
-        public static TagLongArray fromFile(String fileName) throws IOException {
-            return new TagLongArray(new ByteBufferKaitaiStream(fileName));
+
+    public void _fetchInstances() {
+        if ( ((rootType() == Tag.END) && (false)) ) {
+        }
+        this.root._fetchInstances();
+        rootType();
+        if (this.rootType != null) {
+        }
+    }
+    public static class NamedTag extends KaitaiStruct {
+        public static NamedTag fromFile(String fileName) throws IOException {
+            return new NamedTag(new ByteBufferKaitaiStream(fileName));
         }
 
-        public TagLongArray(KaitaiStream _io) {
+        public NamedTag(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public TagLongArray(KaitaiStream _io, KaitaiStruct _parent) {
+        public NamedTag(KaitaiStream _io, KaitaiStruct _parent) {
             this(_io, _parent, null);
         }
 
-        public TagLongArray(KaitaiStream _io, KaitaiStruct _parent, MinecraftNbt _root) {
+        public NamedTag(KaitaiStream _io, KaitaiStruct _parent, MinecraftNbt _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.numTags = this._io.readS4be();
-            this.tags = new ArrayList<Long>();
-            for (int i = 0; i < numTags(); i++) {
-                this.tags.add(this._io.readS8be());
+            this.type = MinecraftNbt.Tag.byId(this._io.readU1());
+            if (!(isTagEnd())) {
+                this.name = new TagString(this._io, this, _root);
+            }
+            if (!(isTagEnd())) {
+                {
+                    Tag on = type();
+                    if (on != null) {
+                        switch (type()) {
+                        case BYTE: {
+                            this.payload = ((Object) (this._io.readS1()));
+                            break;
+                        }
+                        case BYTE_ARRAY: {
+                            this.payload = new TagByteArray(this._io, this, _root);
+                            break;
+                        }
+                        case COMPOUND: {
+                            this.payload = new TagCompound(this._io, this, _root);
+                            break;
+                        }
+                        case DOUBLE: {
+                            this.payload = ((Object) (this._io.readF8be()));
+                            break;
+                        }
+                        case FLOAT: {
+                            this.payload = ((Object) (this._io.readF4be()));
+                            break;
+                        }
+                        case INT: {
+                            this.payload = ((Object) (this._io.readS4be()));
+                            break;
+                        }
+                        case INT_ARRAY: {
+                            this.payload = new TagIntArray(this._io, this, _root);
+                            break;
+                        }
+                        case LIST: {
+                            this.payload = new TagList(this._io, this, _root);
+                            break;
+                        }
+                        case LONG: {
+                            this.payload = ((Object) (this._io.readS8be()));
+                            break;
+                        }
+                        case LONG_ARRAY: {
+                            this.payload = new TagLongArray(this._io, this, _root);
+                            break;
+                        }
+                        case SHORT: {
+                            this.payload = ((Object) (this._io.readS2be()));
+                            break;
+                        }
+                        case STRING: {
+                            this.payload = new TagString(this._io, this, _root);
+                            break;
+                        }
+                        }
+                    }
+                }
             }
         }
-        private Tag tagsType;
-        public Tag tagsType() {
-            if (this.tagsType != null)
-                return this.tagsType;
-            this.tagsType = MinecraftNbt.Tag.LONG;
-            return this.tagsType;
+
+        public void _fetchInstances() {
+            if (!(isTagEnd())) {
+                this.name._fetchInstances();
+            }
+            if (!(isTagEnd())) {
+                {
+                    Tag on = type();
+                    if (on != null) {
+                        switch (type()) {
+                        case BYTE: {
+                            break;
+                        }
+                        case BYTE_ARRAY: {
+                            ((TagByteArray) (this.payload))._fetchInstances();
+                            break;
+                        }
+                        case COMPOUND: {
+                            ((TagCompound) (this.payload))._fetchInstances();
+                            break;
+                        }
+                        case DOUBLE: {
+                            break;
+                        }
+                        case FLOAT: {
+                            break;
+                        }
+                        case INT: {
+                            break;
+                        }
+                        case INT_ARRAY: {
+                            ((TagIntArray) (this.payload))._fetchInstances();
+                            break;
+                        }
+                        case LIST: {
+                            ((TagList) (this.payload))._fetchInstances();
+                            break;
+                        }
+                        case LONG: {
+                            break;
+                        }
+                        case LONG_ARRAY: {
+                            ((TagLongArray) (this.payload))._fetchInstances();
+                            break;
+                        }
+                        case SHORT: {
+                            break;
+                        }
+                        case STRING: {
+                            ((TagString) (this.payload))._fetchInstances();
+                            break;
+                        }
+                        }
+                    }
+                }
+            }
         }
-        private int numTags;
-        private ArrayList<Long> tags;
+        private Boolean isTagEnd;
+        public Boolean isTagEnd() {
+            if (this.isTagEnd != null)
+                return this.isTagEnd;
+            this.isTagEnd = type() == MinecraftNbt.Tag.END;
+            return this.isTagEnd;
+        }
+        private Tag type;
+        private TagString name;
+        private Object payload;
         private MinecraftNbt _root;
         private KaitaiStruct _parent;
-        public int numTags() { return numTags; }
-        public ArrayList<Long> tags() { return tags; }
+        public Tag type() { return type; }
+        public TagString name() { return name; }
+        public Object payload() { return payload; }
         public MinecraftNbt _root() { return _root; }
         public KaitaiStruct _parent() { return _parent; }
     }
@@ -199,182 +324,15 @@ public class MinecraftNbt extends KaitaiStruct {
             this.lenData = this._io.readS4be();
             this.data = this._io.readBytes(lenData());
         }
+
+        public void _fetchInstances() {
+        }
         private int lenData;
         private byte[] data;
         private MinecraftNbt _root;
         private KaitaiStruct _parent;
         public int lenData() { return lenData; }
         public byte[] data() { return data; }
-        public MinecraftNbt _root() { return _root; }
-        public KaitaiStruct _parent() { return _parent; }
-    }
-    public static class TagIntArray extends KaitaiStruct {
-        public static TagIntArray fromFile(String fileName) throws IOException {
-            return new TagIntArray(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public TagIntArray(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public TagIntArray(KaitaiStream _io, KaitaiStruct _parent) {
-            this(_io, _parent, null);
-        }
-
-        public TagIntArray(KaitaiStream _io, KaitaiStruct _parent, MinecraftNbt _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.numTags = this._io.readS4be();
-            this.tags = new ArrayList<Integer>();
-            for (int i = 0; i < numTags(); i++) {
-                this.tags.add(this._io.readS4be());
-            }
-        }
-        private Tag tagsType;
-        public Tag tagsType() {
-            if (this.tagsType != null)
-                return this.tagsType;
-            this.tagsType = MinecraftNbt.Tag.INT;
-            return this.tagsType;
-        }
-        private int numTags;
-        private ArrayList<Integer> tags;
-        private MinecraftNbt _root;
-        private KaitaiStruct _parent;
-        public int numTags() { return numTags; }
-        public ArrayList<Integer> tags() { return tags; }
-        public MinecraftNbt _root() { return _root; }
-        public KaitaiStruct _parent() { return _parent; }
-    }
-    public static class TagList extends KaitaiStruct {
-        public static TagList fromFile(String fileName) throws IOException {
-            return new TagList(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public TagList(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public TagList(KaitaiStream _io, KaitaiStruct _parent) {
-            this(_io, _parent, null);
-        }
-
-        public TagList(KaitaiStream _io, KaitaiStruct _parent, MinecraftNbt _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.tagsType = MinecraftNbt.Tag.byId(this._io.readU1());
-            this.numTags = this._io.readS4be();
-            this.tags = new ArrayList<Object>();
-            for (int i = 0; i < numTags(); i++) {
-                {
-                    Tag on = tagsType();
-                    if (on != null) {
-                        switch (tagsType()) {
-                        case LONG_ARRAY: {
-                            this.tags.add(new TagLongArray(this._io, this, _root));
-                            break;
-                        }
-                        case COMPOUND: {
-                            this.tags.add(new TagCompound(this._io, this, _root));
-                            break;
-                        }
-                        case DOUBLE: {
-                            this.tags.add((Object) (this._io.readF8be()));
-                            break;
-                        }
-                        case LIST: {
-                            this.tags.add(new TagList(this._io, this, _root));
-                            break;
-                        }
-                        case FLOAT: {
-                            this.tags.add((Object) (this._io.readF4be()));
-                            break;
-                        }
-                        case SHORT: {
-                            this.tags.add((Object) (this._io.readS2be()));
-                            break;
-                        }
-                        case INT: {
-                            this.tags.add((Object) (this._io.readS4be()));
-                            break;
-                        }
-                        case BYTE_ARRAY: {
-                            this.tags.add(new TagByteArray(this._io, this, _root));
-                            break;
-                        }
-                        case BYTE: {
-                            this.tags.add((Object) (this._io.readS1()));
-                            break;
-                        }
-                        case INT_ARRAY: {
-                            this.tags.add(new TagIntArray(this._io, this, _root));
-                            break;
-                        }
-                        case STRING: {
-                            this.tags.add(new TagString(this._io, this, _root));
-                            break;
-                        }
-                        case LONG: {
-                            this.tags.add((Object) (this._io.readS8be()));
-                            break;
-                        }
-                        }
-                    }
-                }
-            }
-        }
-        private Tag tagsType;
-        private int numTags;
-        private ArrayList<Object> tags;
-        private MinecraftNbt _root;
-        private KaitaiStruct _parent;
-        public Tag tagsType() { return tagsType; }
-        public int numTags() { return numTags; }
-        public ArrayList<Object> tags() { return tags; }
-        public MinecraftNbt _root() { return _root; }
-        public KaitaiStruct _parent() { return _parent; }
-    }
-    public static class TagString extends KaitaiStruct {
-        public static TagString fromFile(String fileName) throws IOException {
-            return new TagString(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public TagString(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public TagString(KaitaiStream _io, KaitaiStruct _parent) {
-            this(_io, _parent, null);
-        }
-
-        public TagString(KaitaiStream _io, KaitaiStruct _parent, MinecraftNbt _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.lenData = this._io.readU2be();
-            this.data = new String(this._io.readBytes(lenData()), Charset.forName("utf-8"));
-        }
-        private int lenData;
-        private String data;
-        private MinecraftNbt _root;
-        private KaitaiStruct _parent;
-
-        /**
-         * unsigned according to <https://wiki.vg/NBT#Specification>
-         */
-        public int lenData() { return lenData; }
-        public String data() { return data; }
         public MinecraftNbt _root() { return _root; }
         public KaitaiStruct _parent() { return _parent; }
     }
@@ -409,96 +367,147 @@ public class MinecraftNbt extends KaitaiStruct {
                 } while (!(_it.isTagEnd()));
             }
         }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.tags.size(); i++) {
+                this.tags.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
         private Integer dumpNumTags;
         public Integer dumpNumTags() {
             if (this.dumpNumTags != null)
                 return this.dumpNumTags;
-            int _tmp = (int) ((tags().size() - ( ((tags().size() >= 1) && (tags().get(tags().size() - 1).isTagEnd()))  ? 1 : 0)));
-            this.dumpNumTags = _tmp;
+            this.dumpNumTags = ((Number) (tags().size() - ( ((tags().size() >= 1) && (tags().get(tags().size() - 1).isTagEnd()))  ? 1 : 0))).intValue();
             return this.dumpNumTags;
         }
-        private ArrayList<NamedTag> tags;
+        private List<NamedTag> tags;
         private MinecraftNbt _root;
         private KaitaiStruct _parent;
-        public ArrayList<NamedTag> tags() { return tags; }
+        public List<NamedTag> tags() { return tags; }
         public MinecraftNbt _root() { return _root; }
         public KaitaiStruct _parent() { return _parent; }
     }
-    public static class NamedTag extends KaitaiStruct {
-        public static NamedTag fromFile(String fileName) throws IOException {
-            return new NamedTag(new ByteBufferKaitaiStream(fileName));
+    public static class TagIntArray extends KaitaiStruct {
+        public static TagIntArray fromFile(String fileName) throws IOException {
+            return new TagIntArray(new ByteBufferKaitaiStream(fileName));
         }
 
-        public NamedTag(KaitaiStream _io) {
+        public TagIntArray(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public NamedTag(KaitaiStream _io, KaitaiStruct _parent) {
+        public TagIntArray(KaitaiStream _io, KaitaiStruct _parent) {
             this(_io, _parent, null);
         }
 
-        public NamedTag(KaitaiStream _io, KaitaiStruct _parent, MinecraftNbt _root) {
+        public TagIntArray(KaitaiStream _io, KaitaiStruct _parent, MinecraftNbt _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.type = MinecraftNbt.Tag.byId(this._io.readU1());
-            if (!(isTagEnd())) {
-                this.name = new TagString(this._io, this, _root);
+            this.numTags = this._io.readS4be();
+            this.tags = new ArrayList<Integer>();
+            for (int i = 0; i < numTags(); i++) {
+                this.tags.add(this._io.readS4be());
             }
-            if (!(isTagEnd())) {
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.tags.size(); i++) {
+            }
+        }
+        private Tag tagsType;
+        public Tag tagsType() {
+            if (this.tagsType != null)
+                return this.tagsType;
+            this.tagsType = MinecraftNbt.Tag.INT;
+            return this.tagsType;
+        }
+        private int numTags;
+        private List<Integer> tags;
+        private MinecraftNbt _root;
+        private KaitaiStruct _parent;
+        public int numTags() { return numTags; }
+        public List<Integer> tags() { return tags; }
+        public MinecraftNbt _root() { return _root; }
+        public KaitaiStruct _parent() { return _parent; }
+    }
+    public static class TagList extends KaitaiStruct {
+        public static TagList fromFile(String fileName) throws IOException {
+            return new TagList(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public TagList(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public TagList(KaitaiStream _io, KaitaiStruct _parent) {
+            this(_io, _parent, null);
+        }
+
+        public TagList(KaitaiStream _io, KaitaiStruct _parent, MinecraftNbt _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.tagsType = MinecraftNbt.Tag.byId(this._io.readU1());
+            this.numTags = this._io.readS4be();
+            this.tags = new ArrayList<Object>();
+            for (int i = 0; i < numTags(); i++) {
                 {
-                    Tag on = type();
+                    Tag on = tagsType();
                     if (on != null) {
-                        switch (type()) {
-                        case LONG_ARRAY: {
-                            this.payload = new TagLongArray(this._io, this, _root);
-                            break;
-                        }
-                        case COMPOUND: {
-                            this.payload = new TagCompound(this._io, this, _root);
-                            break;
-                        }
-                        case DOUBLE: {
-                            this.payload = (Object) (this._io.readF8be());
-                            break;
-                        }
-                        case LIST: {
-                            this.payload = new TagList(this._io, this, _root);
-                            break;
-                        }
-                        case FLOAT: {
-                            this.payload = (Object) (this._io.readF4be());
-                            break;
-                        }
-                        case SHORT: {
-                            this.payload = (Object) (this._io.readS2be());
-                            break;
-                        }
-                        case INT: {
-                            this.payload = (Object) (this._io.readS4be());
+                        switch (tagsType()) {
+                        case BYTE: {
+                            this.tags.add(((Object) (this._io.readS1())));
                             break;
                         }
                         case BYTE_ARRAY: {
-                            this.payload = new TagByteArray(this._io, this, _root);
+                            this.tags.add(new TagByteArray(this._io, this, _root));
                             break;
                         }
-                        case BYTE: {
-                            this.payload = (Object) (this._io.readS1());
+                        case COMPOUND: {
+                            this.tags.add(new TagCompound(this._io, this, _root));
+                            break;
+                        }
+                        case DOUBLE: {
+                            this.tags.add(((Object) (this._io.readF8be())));
+                            break;
+                        }
+                        case FLOAT: {
+                            this.tags.add(((Object) (this._io.readF4be())));
+                            break;
+                        }
+                        case INT: {
+                            this.tags.add(((Object) (this._io.readS4be())));
                             break;
                         }
                         case INT_ARRAY: {
-                            this.payload = new TagIntArray(this._io, this, _root);
+                            this.tags.add(new TagIntArray(this._io, this, _root));
                             break;
                         }
-                        case STRING: {
-                            this.payload = new TagString(this._io, this, _root);
+                        case LIST: {
+                            this.tags.add(new TagList(this._io, this, _root));
                             break;
                         }
                         case LONG: {
-                            this.payload = (Object) (this._io.readS8be());
+                            this.tags.add(((Object) (this._io.readS8be())));
+                            break;
+                        }
+                        case LONG_ARRAY: {
+                            this.tags.add(new TagLongArray(this._io, this, _root));
+                            break;
+                        }
+                        case SHORT: {
+                            this.tags.add(((Object) (this._io.readS2be())));
+                            break;
+                        }
+                        case STRING: {
+                            this.tags.add(new TagString(this._io, this, _root));
                             break;
                         }
                         }
@@ -506,22 +515,154 @@ public class MinecraftNbt extends KaitaiStruct {
                 }
             }
         }
-        private Boolean isTagEnd;
-        public Boolean isTagEnd() {
-            if (this.isTagEnd != null)
-                return this.isTagEnd;
-            boolean _tmp = (boolean) (type() == MinecraftNbt.Tag.END);
-            this.isTagEnd = _tmp;
-            return this.isTagEnd;
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.tags.size(); i++) {
+                {
+                    Tag on = tagsType();
+                    if (on != null) {
+                        switch (tagsType()) {
+                        case BYTE: {
+                            break;
+                        }
+                        case BYTE_ARRAY: {
+                            ((TagByteArray) (this.tags.get(((Number) (i)).intValue())))._fetchInstances();
+                            break;
+                        }
+                        case COMPOUND: {
+                            ((TagCompound) (this.tags.get(((Number) (i)).intValue())))._fetchInstances();
+                            break;
+                        }
+                        case DOUBLE: {
+                            break;
+                        }
+                        case FLOAT: {
+                            break;
+                        }
+                        case INT: {
+                            break;
+                        }
+                        case INT_ARRAY: {
+                            ((TagIntArray) (this.tags.get(((Number) (i)).intValue())))._fetchInstances();
+                            break;
+                        }
+                        case LIST: {
+                            ((TagList) (this.tags.get(((Number) (i)).intValue())))._fetchInstances();
+                            break;
+                        }
+                        case LONG: {
+                            break;
+                        }
+                        case LONG_ARRAY: {
+                            ((TagLongArray) (this.tags.get(((Number) (i)).intValue())))._fetchInstances();
+                            break;
+                        }
+                        case SHORT: {
+                            break;
+                        }
+                        case STRING: {
+                            ((TagString) (this.tags.get(((Number) (i)).intValue())))._fetchInstances();
+                            break;
+                        }
+                        }
+                    }
+                }
+            }
         }
-        private Tag type;
-        private TagString name;
-        private Object payload;
+        private Tag tagsType;
+        private int numTags;
+        private List<Object> tags;
         private MinecraftNbt _root;
         private KaitaiStruct _parent;
-        public Tag type() { return type; }
-        public TagString name() { return name; }
-        public Object payload() { return payload; }
+        public Tag tagsType() { return tagsType; }
+        public int numTags() { return numTags; }
+        public List<Object> tags() { return tags; }
+        public MinecraftNbt _root() { return _root; }
+        public KaitaiStruct _parent() { return _parent; }
+    }
+    public static class TagLongArray extends KaitaiStruct {
+        public static TagLongArray fromFile(String fileName) throws IOException {
+            return new TagLongArray(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public TagLongArray(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public TagLongArray(KaitaiStream _io, KaitaiStruct _parent) {
+            this(_io, _parent, null);
+        }
+
+        public TagLongArray(KaitaiStream _io, KaitaiStruct _parent, MinecraftNbt _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.numTags = this._io.readS4be();
+            this.tags = new ArrayList<Long>();
+            for (int i = 0; i < numTags(); i++) {
+                this.tags.add(this._io.readS8be());
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.tags.size(); i++) {
+            }
+        }
+        private Tag tagsType;
+        public Tag tagsType() {
+            if (this.tagsType != null)
+                return this.tagsType;
+            this.tagsType = MinecraftNbt.Tag.LONG;
+            return this.tagsType;
+        }
+        private int numTags;
+        private List<Long> tags;
+        private MinecraftNbt _root;
+        private KaitaiStruct _parent;
+        public int numTags() { return numTags; }
+        public List<Long> tags() { return tags; }
+        public MinecraftNbt _root() { return _root; }
+        public KaitaiStruct _parent() { return _parent; }
+    }
+    public static class TagString extends KaitaiStruct {
+        public static TagString fromFile(String fileName) throws IOException {
+            return new TagString(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public TagString(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public TagString(KaitaiStream _io, KaitaiStruct _parent) {
+            this(_io, _parent, null);
+        }
+
+        public TagString(KaitaiStream _io, KaitaiStruct _parent, MinecraftNbt _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.lenData = this._io.readU2be();
+            this.data = new String(this._io.readBytes(lenData()), StandardCharsets.UTF_8);
+        }
+
+        public void _fetchInstances() {
+        }
+        private int lenData;
+        private String data;
+        private MinecraftNbt _root;
+        private KaitaiStruct _parent;
+
+        /**
+         * unsigned according to <https://wiki.vg/NBT#Specification>
+         */
+        public int lenData() { return lenData; }
+        public String data() { return data; }
         public MinecraftNbt _root() { return _root; }
         public KaitaiStruct _parent() { return _parent; }
     }
@@ -532,10 +673,10 @@ public class MinecraftNbt extends KaitaiStruct {
         long _pos = this._io.pos();
         this._io.seek(0);
         this.rootType = Tag.byId(this._io.readU1());
-        this._io.seek(_pos);
-        if (!(rootType() == Tag.COMPOUND)) {
-            throw new KaitaiStream.ValidationNotEqualError(Tag.COMPOUND, rootType(), _io(), "/instances/root_type");
+        if (!(this.rootType == Tag.COMPOUND)) {
+            throw new KaitaiStream.ValidationNotEqualError(Tag.COMPOUND, this.rootType, this._io, "/instances/root_type");
         }
+        this._io.seek(_pos);
         return this.rootType;
     }
     private byte[] rootCheck;

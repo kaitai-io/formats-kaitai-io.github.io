@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Google Protocol Buffers (protobuf): Python (read-write) parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="/pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li><a href="//kaitai.io/news/">News</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../">Format Gallery</a></li>
+        <li>Serialization Protocols</li>
+        <li class="active">Google Protocol Buffers (protobuf)</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Google Protocol Buffers (protobuf):
+            
+            Python (read-write) parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>Google Protocol Buffers (AKA protobuf) is a popular data
+serialization scheme used for communication protocols, data storage,
+etc. There are implementations are available for almost every
+popular language. The focus points of this scheme are brevity (data
+is encoded in a very size-efficient manner) and extensibility (one
+can add keys to the structure, while keeping it readable in previous
+version of software).</p>
+<p>Protobuf uses semi-self-describing encoding scheme for its
+messages. It means that it is possible to parse overall structure of
+the message (skipping over fields one can't understand), but to
+fully understand the message, one needs a protocol definition file
+(<code>.proto</code>). To be specific:</p>
+<ul>
+<li>&quot;Keys&quot; in key-value pairs provided in the message are identified
+only with an integer &quot;field tag&quot;. <code>.proto</code> file provides info on
+which symbolic field names these field tags map to.</li>
+<li>&quot;Keys&quot; also provide something called &quot;wire type&quot;. It's not a data
+type in its common sense (i.e. you can't, for example, distinguish
+<code>sint32</code> vs <code>uint32</code> vs some enum, or <code>string</code> from <code>bytes</code>), but
+it's enough information to determine how many bytes to
+parse. Interpretation of the value should be done according to the
+type specified in <code>.proto</code> file.</li>
+<li>There's no direct information on which fields are optional /
+required, which fields may be repeated or constitute a map, what
+restrictions are placed on fields usage in a single message, what
+are the fields' default values, etc, etc.</li>
+</ul>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/MIT.html">MIT</a>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.7
+                    </div>
+                    
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="https://www.wikidata.org/wiki/Q1645574">Wikidata Q1645574</a></li>
+                            
+                            
+                            
+                            <li><a href="http://fileformats.archiveteam.org/wiki/Protobuf">Protobuf in Just Solve the File Format Problem</a></li>
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Google Protocol Buffers (protobuf)
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="Google Protocol Buffers (protobuf) parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="Google Protocol Buffers (protobuf) parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="Google Protocol Buffers (protobuf) parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Google Protocol Buffers (protobuf) parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="Google Protocol Buffers (protobuf) parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="java-write.html" title="Google Protocol Buffers (protobuf) parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="Google Protocol Buffers (protobuf) parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="Google Protocol Buffers (protobuf) parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="Google Protocol Buffers (protobuf) parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="Google Protocol Buffers (protobuf) parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="Google Protocol Buffers (protobuf) parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="Google Protocol Buffers (protobuf) parsing Python library">Python</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="python-write.html" title="Google Protocol Buffers (protobuf) parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="Google Protocol Buffers (protobuf) parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="Google Protocol Buffers (protobuf) parsing Rust library">Rust</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Python (read-write) source code to parse Google Protocol Buffers (protobuf)
+            
+        </h2>
+
+        
+
+        <h3>google_protobuf.py</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/python-write/google_protobuf.py" download="google_protobuf.py" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+<span class="c1"># type: ignore</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">kaitaistruct</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">kaitaistruct</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReadWriteKaitaiStruct</span><span class="p">,</span> <span class="n">KaitaiStream</span><span class="p">,</span> <span class="n">BytesIO</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">vlq_base128_le</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">IntEnum</span>
+
+
+<span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">kaitaistruct</span><span class="p">,</span> <span class="s1">&#39;API_VERSION&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">kaitaistruct</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">GoogleProtobuf</span><span class="p">(</span><span class="n">ReadWriteKaitaiStruct</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Google Protocol Buffers (AKA protobuf) is a popular data</span>
+<span class="sd">    serialization scheme used for communication protocols, data storage,</span>
+<span class="sd">    etc. There are implementations are available for almost every</span>
+<span class="sd">    popular language. The focus points of this scheme are brevity (data</span>
+<span class="sd">    is encoded in a very size-efficient manner) and extensibility (one</span>
+<span class="sd">    can add keys to the structure, while keeping it readable in previous</span>
+<span class="sd">    version of software).</span>
+<span class="sd">    </span>
+<span class="sd">    Protobuf uses semi-self-describing encoding scheme for its</span>
+<span class="sd">    messages. It means that it is possible to parse overall structure of</span>
+<span class="sd">    the message (skipping over fields one can&#39;t understand), but to</span>
+<span class="sd">    fully understand the message, one needs a protocol definition file</span>
+<span class="sd">    (`.proto`). To be specific:</span>
+<span class="sd">    </span>
+<span class="sd">    * &quot;Keys&quot; in key-value pairs provided in the message are identified</span>
+<span class="sd">      only with an integer &quot;field tag&quot;. `.proto` file provides info on</span>
+<span class="sd">      which symbolic field names these field tags map to.</span>
+<span class="sd">    * &quot;Keys&quot; also provide something called &quot;wire type&quot;. It&#39;s not a data</span>
+<span class="sd">      type in its common sense (i.e. you can&#39;t, for example, distinguish</span>
+<span class="sd">      `sint32` vs `uint32` vs some enum, or `string` from `bytes`), but</span>
+<span class="sd">      it&#39;s enough information to determine how many bytes to</span>
+<span class="sd">      parse. Interpretation of the value should be done according to the</span>
+<span class="sd">      type specified in `.proto` file.</span>
+<span class="sd">    * There&#39;s no direct information on which fields are optional /</span>
+<span class="sd">      required, which fields may be repeated or constitute a map, what</span>
+<span class="sd">      restrictions are placed on fields usage in a single message, what</span>
+<span class="sd">      are the fields&#39; default values, etc, etc.</span>
+<span class="sd">    </span>
+<span class="sd">    .. seealso::</span>
+<span class="sd">       Source - https://protobuf.dev/programming-guides/encoding/</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">GoogleProtobuf</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="ow">or</span> <span class="bp">self</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pairs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">is_eof</span><span class="p">():</span>
+            <span class="n">_t_pairs</span> <span class="o">=</span> <span class="n">GoogleProtobuf</span><span class="o">.</span><span class="n">Pair</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">_t_pairs</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+            <span class="k">finally</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">pairs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_t_pairs</span><span class="p">)</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dirty</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pairs</span><span class="p">)):</span>
+            <span class="k">pass</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pairs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_write__seq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">io</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">GoogleProtobuf</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_write__seq</span><span class="p">(</span><span class="n">io</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pairs</span><span class="p">)):</span>
+            <span class="k">pass</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">is_eof</span><span class="p">():</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ConsistencyError</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;pairs&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">pos</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pairs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">_write__seq</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">is_eof</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ConsistencyError</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;pairs&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">pos</span><span class="p">())</span>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pairs</span><span class="p">)):</span>
+            <span class="k">pass</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pairs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">_root</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ConsistencyError</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;pairs&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pairs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pairs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">_parent</span> <span class="o">!=</span> <span class="bp">self</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ConsistencyError</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;pairs&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pairs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">_parent</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dirty</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">DelimitedBytes</span><span class="p">(</span><span class="n">ReadWriteKaitaiStruct</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">GoogleProtobuf</span><span class="o">.</span><span class="n">DelimitedBytes</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">len</span> <span class="o">=</span> <span class="n">vlq_base128_le</span><span class="o">.</span><span class="n">VlqBase128Le</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">len</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_dirty</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">len</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_write__seq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">io</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">GoogleProtobuf</span><span class="o">.</span><span class="n">DelimitedBytes</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_write__seq</span><span class="p">(</span><span class="n">io</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">len</span><span class="o">.</span><span class="n">_write__seq</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">write_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">len</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ConsistencyError</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;body&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">len</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_dirty</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">Pair</span><span class="p">(</span><span class="n">ReadWriteKaitaiStruct</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Key-value pair.&quot;&quot;&quot;</span>
+
+        <span class="k">class</span><span class="w"> </span><span class="nc">WireTypes</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+            <span class="n">varint</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">bit_64</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">len_delimited</span> <span class="o">=</span> <span class="mi">2</span>
+            <span class="n">group_start</span> <span class="o">=</span> <span class="mi">3</span>
+            <span class="n">group_end</span> <span class="o">=</span> <span class="mi">4</span>
+            <span class="n">bit_32</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">GoogleProtobuf</span><span class="o">.</span><span class="n">Pair</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">vlq_base128_le</span><span class="o">.</span><span class="n">VlqBase128Le</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+            <span class="n">_on</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wire_type</span>
+            <span class="k">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">GoogleProtobuf</span><span class="o">.</span><span class="n">Pair</span><span class="o">.</span><span class="n">WireTypes</span><span class="o">.</span><span class="n">bit_32</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">GoogleProtobuf</span><span class="o">.</span><span class="n">Pair</span><span class="o">.</span><span class="n">WireTypes</span><span class="o">.</span><span class="n">bit_64</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u8le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">GoogleProtobuf</span><span class="o">.</span><span class="n">Pair</span><span class="o">.</span><span class="n">WireTypes</span><span class="o">.</span><span class="n">len_delimited</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">GoogleProtobuf</span><span class="o">.</span><span class="n">DelimitedBytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">GoogleProtobuf</span><span class="o">.</span><span class="n">Pair</span><span class="o">.</span><span class="n">WireTypes</span><span class="o">.</span><span class="n">varint</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">vlq_base128_le</span><span class="o">.</span><span class="n">VlqBase128Le</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_dirty</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+            <span class="n">_on</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wire_type</span>
+            <span class="k">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">GoogleProtobuf</span><span class="o">.</span><span class="n">Pair</span><span class="o">.</span><span class="n">WireTypes</span><span class="o">.</span><span class="n">bit_32</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">GoogleProtobuf</span><span class="o">.</span><span class="n">Pair</span><span class="o">.</span><span class="n">WireTypes</span><span class="o">.</span><span class="n">bit_64</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">GoogleProtobuf</span><span class="o">.</span><span class="n">Pair</span><span class="o">.</span><span class="n">WireTypes</span><span class="o">.</span><span class="n">len_delimited</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">GoogleProtobuf</span><span class="o">.</span><span class="n">Pair</span><span class="o">.</span><span class="n">WireTypes</span><span class="o">.</span><span class="n">varint</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_write__seq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">io</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">GoogleProtobuf</span><span class="o">.</span><span class="n">Pair</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_write__seq</span><span class="p">(</span><span class="n">io</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="o">.</span><span class="n">_write__seq</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">)</span>
+            <span class="n">_on</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wire_type</span>
+            <span class="k">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">GoogleProtobuf</span><span class="o">.</span><span class="n">Pair</span><span class="o">.</span><span class="n">WireTypes</span><span class="o">.</span><span class="n">bit_32</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">write_u4le</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">GoogleProtobuf</span><span class="o">.</span><span class="n">Pair</span><span class="o">.</span><span class="n">WireTypes</span><span class="o">.</span><span class="n">bit_64</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">write_u8le</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">GoogleProtobuf</span><span class="o">.</span><span class="n">Pair</span><span class="o">.</span><span class="n">WireTypes</span><span class="o">.</span><span class="n">len_delimited</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">_write__seq</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">GoogleProtobuf</span><span class="o">.</span><span class="n">Pair</span><span class="o">.</span><span class="n">WireTypes</span><span class="o">.</span><span class="n">varint</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">_write__seq</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">)</span>
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="n">_on</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wire_type</span>
+            <span class="k">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">GoogleProtobuf</span><span class="o">.</span><span class="n">Pair</span><span class="o">.</span><span class="n">WireTypes</span><span class="o">.</span><span class="n">bit_32</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">GoogleProtobuf</span><span class="o">.</span><span class="n">Pair</span><span class="o">.</span><span class="n">WireTypes</span><span class="o">.</span><span class="n">bit_64</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">GoogleProtobuf</span><span class="o">.</span><span class="n">Pair</span><span class="o">.</span><span class="n">WireTypes</span><span class="o">.</span><span class="n">len_delimited</span><span class="p">:</span>
+                <span class="k">pass</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">_root</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ConsistencyError</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">_parent</span> <span class="o">!=</span> <span class="bp">self</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ConsistencyError</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">_parent</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">GoogleProtobuf</span><span class="o">.</span><span class="n">Pair</span><span class="o">.</span><span class="n">WireTypes</span><span class="o">.</span><span class="n">varint</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_dirty</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">field_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Identifies a field of protocol. One can look up symbolic</span>
+<span class="sd">            field name in a `.proto` file by this field tag.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_field_tag&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_field_tag</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_field_tag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="o">.</span><span class="n">value</span> <span class="o">&gt;&gt;</span> <span class="mi">3</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_field_tag&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_invalidate_field_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_field_tag</span>
+        <span class="nd">@property</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">wire_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;&quot;Wire type&quot; is a part of the &quot;key&quot; that carries enough</span>
+<span class="sd">            information to parse value from the wire, i.e. read correct</span>
+<span class="sd">            amount of bytes, but there&#39;s not enough informaton to</span>
+<span class="sd">            interprete in unambiguously. For example, one can&#39;t clearly</span>
+<span class="sd">            distinguish 64-bit fixed-sized integers from 64-bit floats,</span>
+<span class="sd">            signed zigzag-encoded varints from regular unsigned varints,</span>
+<span class="sd">            arbitrary bytes from UTF-8 encoded strings, etc.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_wire_type&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_wire_type</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_wire_type</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="o">.</span><span class="n">resolve_enum</span><span class="p">(</span><span class="n">GoogleProtobuf</span><span class="o">.</span><span class="n">Pair</span><span class="o">.</span><span class="n">WireTypes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">7</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_wire_type&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_invalidate_wire_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_wire_type</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015&ndash;2025 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">format repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -2,19 +2,19 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 class Edid < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
     @magic = @_io.read_bytes(8)
-    raise Kaitai::Struct::ValidationNotEqualError.new([0, 255, 255, 255, 255, 255, 255, 0].pack('C*'), magic, _io, "/seq/0") if not magic == [0, 255, 255, 255, 255, 255, 255, 0].pack('C*')
+    raise Kaitai::Struct::ValidationNotEqualError.new([0, 255, 255, 255, 255, 255, 255, 0].pack('C*'), @magic, @_io, "/seq/0") if not @magic == [0, 255, 255, 255, 255, 255, 255, 0].pack('C*')
     @mfg_bytes = @_io.read_u2be
     @product_code = @_io.read_u2le
     @serial = @_io.read_u4le
@@ -32,9 +32,8 @@ class Edid < Kaitai::Struct::Struct
     @_raw_std_timings = []
     @std_timings = []
     (8).times { |i|
-      @_raw_std_timings << @_io.read_bytes(2)
-      _io__raw_std_timings = Kaitai::Struct::Stream.new(@_raw_std_timings[i])
-      @std_timings << StdTiming.new(_io__raw_std_timings, self, @_root)
+      _io_std_timings = @_io.substream(2)
+      @std_timings << StdTiming.new(_io_std_timings, self, @_root)
     }
     self
   end
@@ -44,7 +43,7 @@ class Edid < Kaitai::Struct::Struct
   # coordinates. All coordinates are stored as fixed precision
   # 10-bit numbers, bits are shuffled for compactness.
   class ChromacityInfo < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -69,87 +68,17 @@ class Edid < Kaitai::Struct::Struct
       @white_y_9_2 = @_io.read_u1
       self
     end
-    def green_x_int
-      return @green_x_int unless @green_x_int.nil?
-      @green_x_int = ((green_x_9_2 << 2) | green_x_1_0)
-      @green_x_int
-    end
-
-    ##
-    # Red Y coordinate
-    def red_y
-      return @red_y unless @red_y.nil?
-      @red_y = (red_y_int / 1024.0)
-      @red_y
-    end
-    def green_y_int
-      return @green_y_int unless @green_y_int.nil?
-      @green_y_int = ((green_y_9_2 << 2) | green_y_1_0)
-      @green_y_int
-    end
-
-    ##
-    # White Y coordinate
-    def white_y
-      return @white_y unless @white_y.nil?
-      @white_y = (white_y_int / 1024.0)
-      @white_y
-    end
-
-    ##
-    # Red X coordinate
-    def red_x
-      return @red_x unless @red_x.nil?
-      @red_x = (red_x_int / 1024.0)
-      @red_x
-    end
-
-    ##
-    # White X coordinate
-    def white_x
-      return @white_x unless @white_x.nil?
-      @white_x = (white_x_int / 1024.0)
-      @white_x
-    end
 
     ##
     # Blue X coordinate
     def blue_x
       return @blue_x unless @blue_x.nil?
-      @blue_x = (blue_x_int / 1024.0)
+      @blue_x = blue_x_int / 1024.0
       @blue_x
-    end
-    def white_x_int
-      return @white_x_int unless @white_x_int.nil?
-      @white_x_int = ((white_x_9_2 << 2) | white_x_1_0)
-      @white_x_int
-    end
-    def white_y_int
-      return @white_y_int unless @white_y_int.nil?
-      @white_y_int = ((white_y_9_2 << 2) | white_y_1_0)
-      @white_y_int
-    end
-
-    ##
-    # Green X coordinate
-    def green_x
-      return @green_x unless @green_x.nil?
-      @green_x = (green_x_int / 1024.0)
-      @green_x
-    end
-    def red_x_int
-      return @red_x_int unless @red_x_int.nil?
-      @red_x_int = ((red_x_9_2 << 2) | red_x_1_0)
-      @red_x_int
-    end
-    def red_y_int
-      return @red_y_int unless @red_y_int.nil?
-      @red_y_int = ((red_y_9_2 << 2) | red_y_1_0)
-      @red_y_int
     end
     def blue_x_int
       return @blue_x_int unless @blue_x_int.nil?
-      @blue_x_int = ((blue_x_9_2 << 2) | blue_x_1_0)
+      @blue_x_int = blue_x_9_2 << 2 | blue_x_1_0
       @blue_x_int
     end
 
@@ -157,21 +86,91 @@ class Edid < Kaitai::Struct::Struct
     # Blue Y coordinate
     def blue_y
       return @blue_y unless @blue_y.nil?
-      @blue_y = (blue_y_int / 1024.0)
+      @blue_y = blue_y_int / 1024.0
       @blue_y
+    end
+    def blue_y_int
+      return @blue_y_int unless @blue_y_int.nil?
+      @blue_y_int = blue_y_9_2 << 2 | blue_y_1_0
+      @blue_y_int
+    end
+
+    ##
+    # Green X coordinate
+    def green_x
+      return @green_x unless @green_x.nil?
+      @green_x = green_x_int / 1024.0
+      @green_x
+    end
+    def green_x_int
+      return @green_x_int unless @green_x_int.nil?
+      @green_x_int = green_x_9_2 << 2 | green_x_1_0
+      @green_x_int
     end
 
     ##
     # Green Y coordinate
     def green_y
       return @green_y unless @green_y.nil?
-      @green_y = (green_y_int / 1024.0)
+      @green_y = green_y_int / 1024.0
       @green_y
     end
-    def blue_y_int
-      return @blue_y_int unless @blue_y_int.nil?
-      @blue_y_int = ((blue_y_9_2 << 2) | blue_y_1_0)
-      @blue_y_int
+    def green_y_int
+      return @green_y_int unless @green_y_int.nil?
+      @green_y_int = green_y_9_2 << 2 | green_y_1_0
+      @green_y_int
+    end
+
+    ##
+    # Red X coordinate
+    def red_x
+      return @red_x unless @red_x.nil?
+      @red_x = red_x_int / 1024.0
+      @red_x
+    end
+    def red_x_int
+      return @red_x_int unless @red_x_int.nil?
+      @red_x_int = red_x_9_2 << 2 | red_x_1_0
+      @red_x_int
+    end
+
+    ##
+    # Red Y coordinate
+    def red_y
+      return @red_y unless @red_y.nil?
+      @red_y = red_y_int / 1024.0
+      @red_y
+    end
+    def red_y_int
+      return @red_y_int unless @red_y_int.nil?
+      @red_y_int = red_y_9_2 << 2 | red_y_1_0
+      @red_y_int
+    end
+
+    ##
+    # White X coordinate
+    def white_x
+      return @white_x unless @white_x.nil?
+      @white_x = white_x_int / 1024.0
+      @white_x
+    end
+    def white_x_int
+      return @white_x_int unless @white_x_int.nil?
+      @white_x_int = white_x_9_2 << 2 | white_x_1_0
+      @white_x_int
+    end
+
+    ##
+    # White Y coordinate
+    def white_y
+      return @white_y unless @white_y.nil?
+      @white_y = white_y_int / 1024.0
+      @white_y
+    end
+    def white_y_int
+      return @white_y_int unless @white_y_int.nil?
+      @white_y_int = white_y_9_2 << 2 | white_y_1_0
+      @white_y_int
     end
 
     ##
@@ -239,7 +238,7 @@ class Edid < Kaitai::Struct::Struct
     attr_reader :white_y_9_2
   end
   class EstTimingsInfo < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -344,7 +343,7 @@ class Edid < Kaitai::Struct::Struct
       3 => :aspect_ratios_ratio_16_9,
     }
     I__ASPECT_RATIOS = ASPECT_RATIOS.invert
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -363,6 +362,16 @@ class Edid < Kaitai::Struct::Struct
       @_io.seek(_pos)
       @bytes_lookahead
     end
+
+    ##
+    # Range of horizontal active pixels.
+    def horiz_active_pixels
+      return @horiz_active_pixels unless @horiz_active_pixels.nil?
+      if is_used
+        @horiz_active_pixels = (horiz_active_pixels_mod + 31) * 8
+      end
+      @horiz_active_pixels
+    end
     def is_used
       return @is_used unless @is_used.nil?
       @is_used = bytes_lookahead != [1, 1].pack('C*')
@@ -370,21 +379,11 @@ class Edid < Kaitai::Struct::Struct
     end
 
     ##
-    # Range of horizontal active pixels.
-    def horiz_active_pixels
-      return @horiz_active_pixels unless @horiz_active_pixels.nil?
-      if is_used
-        @horiz_active_pixels = ((horiz_active_pixels_mod + 31) * 8)
-      end
-      @horiz_active_pixels
-    end
-
-    ##
     # Vertical refresh rate, Hz.
     def refresh_rate
       return @refresh_rate unless @refresh_rate.nil?
       if is_used
-        @refresh_rate = (refresh_rate_mod + 60)
+        @refresh_rate = refresh_rate_mod + 60
       end
       @refresh_rate
     end
@@ -405,37 +404,37 @@ class Edid < Kaitai::Struct::Struct
     # - 60`. This yields an effective range of 60..123 Hz.
     attr_reader :refresh_rate_mod
   end
-  def mfg_year
-    return @mfg_year unless @mfg_year.nil?
-    @mfg_year = (mfg_year_mod + 1990)
-    @mfg_year
-  end
-  def mfg_id_ch1
-    return @mfg_id_ch1 unless @mfg_id_ch1.nil?
-    @mfg_id_ch1 = ((mfg_bytes & 31744) >> 10)
-    @mfg_id_ch1
-  end
-  def mfg_id_ch3
-    return @mfg_id_ch3 unless @mfg_id_ch3.nil?
-    @mfg_id_ch3 = (mfg_bytes & 31)
-    @mfg_id_ch3
-  end
   def gamma
     return @gamma unless @gamma.nil?
     if gamma_mod != 255
-      @gamma = ((gamma_mod + 100) / 100.0)
+      @gamma = (gamma_mod + 100) / 100.0
     end
     @gamma
   end
-  def mfg_str
-    return @mfg_str unless @mfg_str.nil?
-    @mfg_str = ([(mfg_id_ch1 + 64), (mfg_id_ch2 + 64), (mfg_id_ch3 + 64)].pack('C*')).force_encoding("ASCII")
-    @mfg_str
+  def mfg_id_ch1
+    return @mfg_id_ch1 unless @mfg_id_ch1.nil?
+    @mfg_id_ch1 = (mfg_bytes & 31744) >> 10
+    @mfg_id_ch1
   end
   def mfg_id_ch2
     return @mfg_id_ch2 unless @mfg_id_ch2.nil?
-    @mfg_id_ch2 = ((mfg_bytes & 992) >> 5)
+    @mfg_id_ch2 = (mfg_bytes & 992) >> 5
     @mfg_id_ch2
+  end
+  def mfg_id_ch3
+    return @mfg_id_ch3 unless @mfg_id_ch3.nil?
+    @mfg_id_ch3 = mfg_bytes & 31
+    @mfg_id_ch3
+  end
+  def mfg_str
+    return @mfg_str unless @mfg_str.nil?
+    @mfg_str = ([mfg_id_ch1 + 64, mfg_id_ch2 + 64, mfg_id_ch3 + 64].pack('C*')).force_encoding("ASCII").encode('UTF-8')
+    @mfg_str
+  end
+  def mfg_year
+    return @mfg_year unless @mfg_year.nil?
+    @mfg_year = mfg_year_mod + 1990
+    @mfg_year
   end
   attr_reader :magic
   attr_reader :mfg_bytes

@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.Vp8DuckIvf = factory(root.KaitaiStream);
+    factory(root.Vp8DuckIvf || (root.Vp8DuckIvf = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Vp8DuckIvf_, KaitaiStream) {
 /**
  * Duck IVF is a simple container format for raw VP8 data, which is an open and
  * royalty-free video compression format, currently developed by Google.
@@ -28,14 +28,14 @@ var Vp8DuckIvf = (function() {
   }
   Vp8DuckIvf.prototype._read = function() {
     this.magic1 = this._io.readBytes(4);
-    if (!((KaitaiStream.byteArrayCompare(this.magic1, [68, 75, 73, 70]) == 0))) {
-      throw new KaitaiStream.ValidationNotEqualError([68, 75, 73, 70], this.magic1, this._io, "/seq/0");
+    if (!((KaitaiStream.byteArrayCompare(this.magic1, new Uint8Array([68, 75, 73, 70])) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([68, 75, 73, 70]), this.magic1, this._io, "/seq/0");
     }
     this.version = this._io.readU2le();
     this.lenHeader = this._io.readU2le();
     this.codec = this._io.readBytes(4);
-    if (!((KaitaiStream.byteArrayCompare(this.codec, [86, 80, 56, 48]) == 0))) {
-      throw new KaitaiStream.ValidationNotEqualError([86, 80, 56, 48], this.codec, this._io, "/seq/3");
+    if (!((KaitaiStream.byteArrayCompare(this.codec, new Uint8Array([86, 80, 56, 48])) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([86, 80, 56, 48]), this.codec, this._io, "/seq/3");
     }
     this.width = this._io.readU2le();
     this.height = this._io.readU2le();
@@ -49,26 +49,11 @@ var Vp8DuckIvf = (function() {
     }
   }
 
-  var Blocks = Vp8DuckIvf.Blocks = (function() {
-    function Blocks(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Blocks.prototype._read = function() {
-      this.entries = new Block(this._io, this, this._root);
-    }
-
-    return Blocks;
-  })();
-
   var Block = Vp8DuckIvf.Block = (function() {
     function Block(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -83,6 +68,21 @@ var Vp8DuckIvf = (function() {
      */
 
     return Block;
+  })();
+
+  var Blocks = Vp8DuckIvf.Blocks = (function() {
+    function Blocks(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Blocks.prototype._read = function() {
+      this.entries = new Block(this._io, this, this._root);
+    }
+
+    return Blocks;
   })();
 
   /**
@@ -123,5 +123,5 @@ var Vp8DuckIvf = (function() {
 
   return Vp8DuckIvf;
 })();
-return Vp8DuckIvf;
-}));
+Vp8DuckIvf_.Vp8DuckIvf = Vp8DuckIvf;
+});

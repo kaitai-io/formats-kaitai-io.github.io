@@ -2,13 +2,16 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class quake2_md2_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -83,20 +86,26 @@
 class quake2_md2_t : public kaitai::kstruct {
 
 public:
-    class vertex_t;
     class compressed_vec_t;
-    class triangle_t;
     class frame_t;
-    class gl_cmds_list_t;
-    class tex_point_t;
-    class vec3f_t;
-    class gl_vertex_t;
     class gl_cmd_t;
+    class gl_cmds_list_t;
+    class gl_vertex_t;
+    class tex_point_t;
+    class triangle_t;
+    class vec3f_t;
+    class vertex_t;
 
     enum gl_primitive_t {
         GL_PRIMITIVE_TRIANGLE_STRIP = 0,
         GL_PRIMITIVE_TRIANGLE_FAN = 1
     };
+    static bool _is_defined_gl_primitive_t(gl_primitive_t v);
+
+private:
+    static const std::set<gl_primitive_t> _values_gl_primitive_t;
+
+public:
 
     quake2_md2_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, quake2_md2_t* p__root = nullptr);
 
@@ -106,39 +115,6 @@ private:
 
 public:
     ~quake2_md2_t();
-
-    class vertex_t : public kaitai::kstruct {
-
-    public:
-
-        vertex_t(kaitai::kstream* p__io, quake2_md2_t::frame_t* p__parent = nullptr, quake2_md2_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~vertex_t();
-
-    private:
-        bool f_normal;
-        std::vector<double>* m_normal;
-
-    public:
-        std::vector<double>* normal();
-
-    private:
-        std::unique_ptr<compressed_vec_t> m_position;
-        uint8_t m_normal_index;
-        quake2_md2_t* m__root;
-        quake2_md2_t::frame_t* m__parent;
-
-    public:
-        compressed_vec_t* position() const { return m_position.get(); }
-        uint8_t normal_index() const { return m_normal_index; }
-        quake2_md2_t* _root() const { return m__root; }
-        quake2_md2_t::frame_t* _parent() const { return m__parent; }
-    };
 
     class compressed_vec_t : public kaitai::kstruct {
 
@@ -189,40 +165,6 @@ public:
         quake2_md2_t::vertex_t* _parent() const { return m__parent; }
     };
 
-    class triangle_t : public kaitai::kstruct {
-
-    public:
-
-        triangle_t(kaitai::kstream* p__io, quake2_md2_t* p__parent = nullptr, quake2_md2_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~triangle_t();
-
-    private:
-        std::unique_ptr<std::vector<uint16_t>> m_vertex_indices;
-        std::unique_ptr<std::vector<uint16_t>> m_tex_point_indices;
-        quake2_md2_t* m__root;
-        quake2_md2_t* m__parent;
-
-    public:
-
-        /**
-         * indices to `_root.frames[i].vertices` (for each frame with index `i`)
-         */
-        std::vector<uint16_t>* vertex_indices() const { return m_vertex_indices.get(); }
-
-        /**
-         * indices to `_root.tex_coords`
-         */
-        std::vector<uint16_t>* tex_point_indices() const { return m_tex_point_indices.get(); }
-        quake2_md2_t* _root() const { return m__root; }
-        quake2_md2_t* _parent() const { return m__parent; }
-    };
-
     class frame_t : public kaitai::kstruct {
 
     public:
@@ -251,134 +193,6 @@ public:
         std::vector<std::unique_ptr<vertex_t>>* vertices() const { return m_vertices.get(); }
         quake2_md2_t* _root() const { return m__root; }
         quake2_md2_t* _parent() const { return m__parent; }
-    };
-
-    class gl_cmds_list_t : public kaitai::kstruct {
-
-    public:
-
-        gl_cmds_list_t(kaitai::kstream* p__io, quake2_md2_t* p__parent = nullptr, quake2_md2_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~gl_cmds_list_t();
-
-    private:
-        std::unique_ptr<std::vector<std::unique_ptr<gl_cmd_t>>> m_items;
-        bool n_items;
-
-    public:
-        bool _is_null_items() { items(); return n_items; };
-
-    private:
-        quake2_md2_t* m__root;
-        quake2_md2_t* m__parent;
-
-    public:
-        std::vector<std::unique_ptr<gl_cmd_t>>* items() const { return m_items.get(); }
-        quake2_md2_t* _root() const { return m__root; }
-        quake2_md2_t* _parent() const { return m__parent; }
-    };
-
-    class tex_point_t : public kaitai::kstruct {
-
-    public:
-
-        tex_point_t(kaitai::kstream* p__io, quake2_md2_t* p__parent = nullptr, quake2_md2_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~tex_point_t();
-
-    private:
-        bool f_s_normalized;
-        double m_s_normalized;
-
-    public:
-        double s_normalized();
-
-    private:
-        bool f_t_normalized;
-        double m_t_normalized;
-
-    public:
-        double t_normalized();
-
-    private:
-        uint16_t m_s_px;
-        uint16_t m_t_px;
-        quake2_md2_t* m__root;
-        quake2_md2_t* m__parent;
-
-    public:
-        uint16_t s_px() const { return m_s_px; }
-        uint16_t t_px() const { return m_t_px; }
-        quake2_md2_t* _root() const { return m__root; }
-        quake2_md2_t* _parent() const { return m__parent; }
-    };
-
-    class vec3f_t : public kaitai::kstruct {
-
-    public:
-
-        vec3f_t(kaitai::kstream* p__io, quake2_md2_t::frame_t* p__parent = nullptr, quake2_md2_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~vec3f_t();
-
-    private:
-        float m_x;
-        float m_y;
-        float m_z;
-        quake2_md2_t* m__root;
-        quake2_md2_t::frame_t* m__parent;
-
-    public:
-        float x() const { return m_x; }
-        float y() const { return m_y; }
-        float z() const { return m_z; }
-        quake2_md2_t* _root() const { return m__root; }
-        quake2_md2_t::frame_t* _parent() const { return m__parent; }
-    };
-
-    class gl_vertex_t : public kaitai::kstruct {
-
-    public:
-
-        gl_vertex_t(kaitai::kstream* p__io, quake2_md2_t::gl_cmd_t* p__parent = nullptr, quake2_md2_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~gl_vertex_t();
-
-    private:
-        std::unique_ptr<std::vector<float>> m_tex_coords_normalized;
-        uint32_t m_vertex_index;
-        quake2_md2_t* m__root;
-        quake2_md2_t::gl_cmd_t* m__parent;
-
-    public:
-        std::vector<float>* tex_coords_normalized() const { return m_tex_coords_normalized.get(); }
-
-        /**
-         * index to `_root.frames[i].vertices` (for each frame with index `i`)
-         */
-        uint32_t vertex_index() const { return m_vertex_index; }
-        quake2_md2_t* _root() const { return m__root; }
-        quake2_md2_t::gl_cmd_t* _parent() const { return m__parent; }
     };
 
     class gl_cmd_t : public kaitai::kstruct {
@@ -421,12 +235,221 @@ public:
         quake2_md2_t::gl_cmds_list_t* _parent() const { return m__parent; }
     };
 
+    class gl_cmds_list_t : public kaitai::kstruct {
+
+    public:
+
+        gl_cmds_list_t(kaitai::kstream* p__io, quake2_md2_t* p__parent = nullptr, quake2_md2_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~gl_cmds_list_t();
+
+    private:
+        std::unique_ptr<std::vector<std::unique_ptr<gl_cmd_t>>> m_items;
+        bool n_items;
+
+    public:
+        bool _is_null_items() { items(); return n_items; };
+
+    private:
+        quake2_md2_t* m__root;
+        quake2_md2_t* m__parent;
+
+    public:
+        std::vector<std::unique_ptr<gl_cmd_t>>* items() const { return m_items.get(); }
+        quake2_md2_t* _root() const { return m__root; }
+        quake2_md2_t* _parent() const { return m__parent; }
+    };
+
+    class gl_vertex_t : public kaitai::kstruct {
+
+    public:
+
+        gl_vertex_t(kaitai::kstream* p__io, quake2_md2_t::gl_cmd_t* p__parent = nullptr, quake2_md2_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~gl_vertex_t();
+
+    private:
+        std::unique_ptr<std::vector<float>> m_tex_coords_normalized;
+        uint32_t m_vertex_index;
+        quake2_md2_t* m__root;
+        quake2_md2_t::gl_cmd_t* m__parent;
+
+    public:
+        std::vector<float>* tex_coords_normalized() const { return m_tex_coords_normalized.get(); }
+
+        /**
+         * index to `_root.frames[i].vertices` (for each frame with index `i`)
+         */
+        uint32_t vertex_index() const { return m_vertex_index; }
+        quake2_md2_t* _root() const { return m__root; }
+        quake2_md2_t::gl_cmd_t* _parent() const { return m__parent; }
+    };
+
+    class tex_point_t : public kaitai::kstruct {
+
+    public:
+
+        tex_point_t(kaitai::kstream* p__io, quake2_md2_t* p__parent = nullptr, quake2_md2_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~tex_point_t();
+
+    private:
+        bool f_s_normalized;
+        double m_s_normalized;
+
+    public:
+        double s_normalized();
+
+    private:
+        bool f_t_normalized;
+        double m_t_normalized;
+
+    public:
+        double t_normalized();
+
+    private:
+        uint16_t m_s_px;
+        uint16_t m_t_px;
+        quake2_md2_t* m__root;
+        quake2_md2_t* m__parent;
+
+    public:
+        uint16_t s_px() const { return m_s_px; }
+        uint16_t t_px() const { return m_t_px; }
+        quake2_md2_t* _root() const { return m__root; }
+        quake2_md2_t* _parent() const { return m__parent; }
+    };
+
+    class triangle_t : public kaitai::kstruct {
+
+    public:
+
+        triangle_t(kaitai::kstream* p__io, quake2_md2_t* p__parent = nullptr, quake2_md2_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~triangle_t();
+
+    private:
+        std::unique_ptr<std::vector<uint16_t>> m_vertex_indices;
+        std::unique_ptr<std::vector<uint16_t>> m_tex_point_indices;
+        quake2_md2_t* m__root;
+        quake2_md2_t* m__parent;
+
+    public:
+
+        /**
+         * indices to `_root.frames[i].vertices` (for each frame with index `i`)
+         */
+        std::vector<uint16_t>* vertex_indices() const { return m_vertex_indices.get(); }
+
+        /**
+         * indices to `_root.tex_coords`
+         */
+        std::vector<uint16_t>* tex_point_indices() const { return m_tex_point_indices.get(); }
+        quake2_md2_t* _root() const { return m__root; }
+        quake2_md2_t* _parent() const { return m__parent; }
+    };
+
+    class vec3f_t : public kaitai::kstruct {
+
+    public:
+
+        vec3f_t(kaitai::kstream* p__io, quake2_md2_t::frame_t* p__parent = nullptr, quake2_md2_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~vec3f_t();
+
+    private:
+        float m_x;
+        float m_y;
+        float m_z;
+        quake2_md2_t* m__root;
+        quake2_md2_t::frame_t* m__parent;
+
+    public:
+        float x() const { return m_x; }
+        float y() const { return m_y; }
+        float z() const { return m_z; }
+        quake2_md2_t* _root() const { return m__root; }
+        quake2_md2_t::frame_t* _parent() const { return m__parent; }
+    };
+
+    class vertex_t : public kaitai::kstruct {
+
+    public:
+
+        vertex_t(kaitai::kstream* p__io, quake2_md2_t::frame_t* p__parent = nullptr, quake2_md2_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~vertex_t();
+
+    private:
+        bool f_normal;
+        std::vector<double>* m_normal;
+
+    public:
+        std::vector<double>* normal();
+
+    private:
+        std::unique_ptr<compressed_vec_t> m_position;
+        uint8_t m_normal_index;
+        quake2_md2_t* m__root;
+        quake2_md2_t::frame_t* m__parent;
+
+    public:
+        compressed_vec_t* position() const { return m_position.get(); }
+        uint8_t normal_index() const { return m_normal_index; }
+        quake2_md2_t* _root() const { return m__root; }
+        quake2_md2_t::frame_t* _parent() const { return m__parent; }
+    };
+
+private:
+    bool f_anim_names;
+    std::unique_ptr<std::vector<std::string>> m_anim_names;
+
+public:
+    std::vector<std::string>* anim_names();
+
 private:
     bool f_anim_num_frames;
     std::string m_anim_num_frames;
 
 public:
     std::string anim_num_frames();
+
+private:
+    bool f_anim_start_indices;
+    std::string m_anim_start_indices;
+
+public:
+    std::string anim_start_indices();
 
 private:
     bool f_anorms_table;
@@ -441,32 +464,11 @@ public:
     std::vector<std::unique_ptr<std::vector<double>>>* anorms_table();
 
 private:
-    bool f_tex_coords;
-    std::unique_ptr<std::vector<std::unique_ptr<tex_point_t>>> m_tex_coords;
-
-public:
-    std::vector<std::unique_ptr<tex_point_t>>* tex_coords();
-
-private:
-    bool f_triangles;
-    std::unique_ptr<std::vector<std::unique_ptr<triangle_t>>> m_triangles;
-
-public:
-    std::vector<std::unique_ptr<triangle_t>>* triangles();
-
-private:
     bool f_frames;
     std::unique_ptr<std::vector<std::unique_ptr<frame_t>>> m_frames;
 
 public:
     std::vector<std::unique_ptr<frame_t>>* frames();
-
-private:
-    bool f_anim_names;
-    std::unique_ptr<std::vector<std::string>> m_anim_names;
-
-public:
-    std::vector<std::string>* anim_names();
 
 private:
     bool f_gl_cmds;
@@ -483,11 +485,18 @@ public:
     std::vector<std::string>* skins();
 
 private:
-    bool f_anim_start_indices;
-    std::string m_anim_start_indices;
+    bool f_tex_coords;
+    std::unique_ptr<std::vector<std::unique_ptr<tex_point_t>>> m_tex_coords;
 
 public:
-    std::string anim_start_indices();
+    std::vector<std::unique_ptr<tex_point_t>>* tex_coords();
+
+private:
+    bool f_triangles;
+    std::unique_ptr<std::vector<std::unique_ptr<triangle_t>>> m_triangles;
+
+public:
+    std::vector<std::unique_ptr<triangle_t>>* triangles();
 
 private:
     std::string m_magic;

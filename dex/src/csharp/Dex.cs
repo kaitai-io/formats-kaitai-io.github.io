@@ -42,20 +42,785 @@ namespace Kaitai
         {
             m_parent = p__parent;
             m_root = p__root ?? this;
-            f_stringIds = false;
-            f_methodIds = false;
-            f_linkData = false;
-            f_map = false;
             f_classDefs = false;
             f_data = false;
-            f_typeIds = false;
-            f_protoIds = false;
             f_fieldIds = false;
+            f_linkData = false;
+            f_map = false;
+            f_methodIds = false;
+            f_protoIds = false;
+            f_stringIds = false;
+            f_typeIds = false;
             _read();
         }
         private void _read()
         {
             _header = new HeaderItem(m_io, this, m_root);
+        }
+        public partial class AnnotationElement : KaitaiStruct
+        {
+            public static AnnotationElement FromFile(string fileName)
+            {
+                return new AnnotationElement(new KaitaiStream(fileName));
+            }
+
+            public AnnotationElement(KaitaiStream p__io, Dex.EncodedAnnotation p__parent = null, Dex p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _nameIdx = new VlqBase128Le(m_io);
+                _value = new EncodedValue(m_io, this, m_root);
+            }
+            private VlqBase128Le _nameIdx;
+            private EncodedValue _value;
+            private Dex m_root;
+            private Dex.EncodedAnnotation m_parent;
+
+            /// <summary>
+            /// element name, represented as an index into the string_ids section.
+            /// 
+            /// The string must conform to the syntax for MemberName, defined above.
+            /// </summary>
+            public VlqBase128Le NameIdx { get { return _nameIdx; } }
+
+            /// <summary>
+            /// element value
+            /// </summary>
+            public EncodedValue Value { get { return _value; } }
+            public Dex M_Root { get { return m_root; } }
+            public Dex.EncodedAnnotation M_Parent { get { return m_parent; } }
+        }
+        public partial class CallSiteIdItem : KaitaiStruct
+        {
+            public static CallSiteIdItem FromFile(string fileName)
+            {
+                return new CallSiteIdItem(new KaitaiStream(fileName));
+            }
+
+            public CallSiteIdItem(KaitaiStream p__io, KaitaiStruct p__parent = null, Dex p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _callSiteOff = m_io.ReadU4le();
+            }
+            private uint _callSiteOff;
+            private Dex m_root;
+            private KaitaiStruct m_parent;
+
+            /// <summary>
+            /// offset from the start of the file to call site definition.
+            /// 
+            /// The offset should be in the data section, and the data there should
+            /// be in the format specified by &quot;call_site_item&quot; below.
+            /// </summary>
+            public uint CallSiteOff { get { return _callSiteOff; } }
+            public Dex M_Root { get { return m_root; } }
+            public KaitaiStruct M_Parent { get { return m_parent; } }
+        }
+        public partial class ClassDataItem : KaitaiStruct
+        {
+            public static ClassDataItem FromFile(string fileName)
+            {
+                return new ClassDataItem(new KaitaiStream(fileName));
+            }
+
+            public ClassDataItem(KaitaiStream p__io, Dex.ClassDefItem p__parent = null, Dex p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _staticFieldsSize = new VlqBase128Le(m_io);
+                _instanceFieldsSize = new VlqBase128Le(m_io);
+                _directMethodsSize = new VlqBase128Le(m_io);
+                _virtualMethodsSize = new VlqBase128Le(m_io);
+                _staticFields = new List<EncodedField>();
+                for (var i = 0; i < StaticFieldsSize.Value; i++)
+                {
+                    _staticFields.Add(new EncodedField(m_io, this, m_root));
+                }
+                _instanceFields = new List<EncodedField>();
+                for (var i = 0; i < InstanceFieldsSize.Value; i++)
+                {
+                    _instanceFields.Add(new EncodedField(m_io, this, m_root));
+                }
+                _directMethods = new List<EncodedMethod>();
+                for (var i = 0; i < DirectMethodsSize.Value; i++)
+                {
+                    _directMethods.Add(new EncodedMethod(m_io, this, m_root));
+                }
+                _virtualMethods = new List<EncodedMethod>();
+                for (var i = 0; i < VirtualMethodsSize.Value; i++)
+                {
+                    _virtualMethods.Add(new EncodedMethod(m_io, this, m_root));
+                }
+            }
+            private VlqBase128Le _staticFieldsSize;
+            private VlqBase128Le _instanceFieldsSize;
+            private VlqBase128Le _directMethodsSize;
+            private VlqBase128Le _virtualMethodsSize;
+            private List<EncodedField> _staticFields;
+            private List<EncodedField> _instanceFields;
+            private List<EncodedMethod> _directMethods;
+            private List<EncodedMethod> _virtualMethods;
+            private Dex m_root;
+            private Dex.ClassDefItem m_parent;
+
+            /// <summary>
+            /// the number of static fields defined in this item
+            /// </summary>
+            public VlqBase128Le StaticFieldsSize { get { return _staticFieldsSize; } }
+
+            /// <summary>
+            /// the number of instance fields defined in this item
+            /// </summary>
+            public VlqBase128Le InstanceFieldsSize { get { return _instanceFieldsSize; } }
+
+            /// <summary>
+            /// the number of direct methods defined in this item
+            /// </summary>
+            public VlqBase128Le DirectMethodsSize { get { return _directMethodsSize; } }
+
+            /// <summary>
+            /// the number of virtual methods defined in this item
+            /// </summary>
+            public VlqBase128Le VirtualMethodsSize { get { return _virtualMethodsSize; } }
+
+            /// <summary>
+            /// the defined static fields, represented as a sequence of encoded elements.
+            /// 
+            /// The fields must be sorted by field_idx in increasing order.
+            /// </summary>
+            public List<EncodedField> StaticFields { get { return _staticFields; } }
+
+            /// <summary>
+            /// the defined instance fields, represented as a sequence of encoded elements.
+            /// 
+            /// The fields must be sorted by field_idx in increasing order.
+            /// </summary>
+            public List<EncodedField> InstanceFields { get { return _instanceFields; } }
+
+            /// <summary>
+            /// the defined direct (any of static, private, or constructor) methods,
+            /// represented as a sequence of encoded elements.
+            /// 
+            /// The methods must be sorted by method_idx in increasing order.
+            /// </summary>
+            public List<EncodedMethod> DirectMethods { get { return _directMethods; } }
+
+            /// <summary>
+            /// the defined virtual (none of static, private, or constructor) methods,
+            /// represented as a sequence of encoded elements.
+            /// 
+            /// This list should not include inherited methods unless overridden by
+            /// the class that this item represents.
+            /// 
+            /// The methods must be sorted by method_idx in increasing order.
+            /// 
+            /// The method_idx of a virtual method must not be the same as any direct method.
+            /// </summary>
+            public List<EncodedMethod> VirtualMethods { get { return _virtualMethods; } }
+            public Dex M_Root { get { return m_root; } }
+            public Dex.ClassDefItem M_Parent { get { return m_parent; } }
+        }
+        public partial class ClassDefItem : KaitaiStruct
+        {
+            public static ClassDefItem FromFile(string fileName)
+            {
+                return new ClassDefItem(new KaitaiStream(fileName));
+            }
+
+            public ClassDefItem(KaitaiStream p__io, Dex p__parent = null, Dex p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_classData = false;
+                f_staticValues = false;
+                f_typeName = false;
+                _read();
+            }
+            private void _read()
+            {
+                _classIdx = m_io.ReadU4le();
+                _accessFlags = ((Dex.ClassAccessFlags) m_io.ReadU4le());
+                _superclassIdx = m_io.ReadU4le();
+                _interfacesOff = m_io.ReadU4le();
+                _sourceFileIdx = m_io.ReadU4le();
+                _annotationsOff = m_io.ReadU4le();
+                _classDataOff = m_io.ReadU4le();
+                _staticValuesOff = m_io.ReadU4le();
+            }
+            private bool f_classData;
+            private ClassDataItem _classData;
+            public ClassDataItem ClassData
+            {
+                get
+                {
+                    if (f_classData)
+                        return _classData;
+                    f_classData = true;
+                    if (ClassDataOff != 0) {
+                        long _pos = m_io.Pos;
+                        m_io.Seek(ClassDataOff);
+                        _classData = new ClassDataItem(m_io, this, m_root);
+                        m_io.Seek(_pos);
+                    }
+                    return _classData;
+                }
+            }
+            private bool f_staticValues;
+            private EncodedArrayItem _staticValues;
+            public EncodedArrayItem StaticValues
+            {
+                get
+                {
+                    if (f_staticValues)
+                        return _staticValues;
+                    f_staticValues = true;
+                    if (StaticValuesOff != 0) {
+                        long _pos = m_io.Pos;
+                        m_io.Seek(StaticValuesOff);
+                        _staticValues = new EncodedArrayItem(m_io, this, m_root);
+                        m_io.Seek(_pos);
+                    }
+                    return _staticValues;
+                }
+            }
+            private bool f_typeName;
+            private string _typeName;
+            public string TypeName
+            {
+                get
+                {
+                    if (f_typeName)
+                        return _typeName;
+                    f_typeName = true;
+                    _typeName = (string) (M_Root.TypeIds[ClassIdx].TypeName);
+                    return _typeName;
+                }
+            }
+            private uint _classIdx;
+            private ClassAccessFlags _accessFlags;
+            private uint _superclassIdx;
+            private uint _interfacesOff;
+            private uint _sourceFileIdx;
+            private uint _annotationsOff;
+            private uint _classDataOff;
+            private uint _staticValuesOff;
+            private Dex m_root;
+            private Dex m_parent;
+
+            /// <summary>
+            /// index into the type_ids list for this class.
+            /// 
+            /// This must be a class type, and not an array or primitive type.
+            /// </summary>
+            public uint ClassIdx { get { return _classIdx; } }
+
+            /// <summary>
+            /// access flags for the class (public, final, etc.).
+            /// 
+            /// See &quot;access_flags Definitions&quot; for details.
+            /// </summary>
+            public ClassAccessFlags AccessFlags { get { return _accessFlags; } }
+
+            /// <summary>
+            /// index into the type_ids list for the superclass,
+            /// or the constant value NO_INDEX if this class has no superclass
+            /// (i.e., it is a root class such as Object).
+            /// 
+            /// If present, this must be a class type, and not an array or primitive type.
+            /// </summary>
+            public uint SuperclassIdx { get { return _superclassIdx; } }
+
+            /// <summary>
+            /// offset from the start of the file to the list of interfaces, or 0 if there are none.
+            /// 
+            /// This offset should be in the data section, and the data there should
+            /// be in the format specified by &quot;type_list&quot; below. Each of the elements
+            /// of the list must be a class type (not an array or primitive type),
+            /// and there must not be any duplicates.
+            /// </summary>
+            public uint InterfacesOff { get { return _interfacesOff; } }
+
+            /// <summary>
+            /// index into the string_ids list for the name of the file containing
+            /// the original source for (at least most of) this class, or the
+            /// special value NO_INDEX to represent a lack of this information.
+            /// 
+            /// The debug_info_item of any given method may override this source file,
+            /// but the expectation is that most classes will only come from one source file.
+            /// </summary>
+            public uint SourceFileIdx { get { return _sourceFileIdx; } }
+
+            /// <summary>
+            /// offset from the start of the file to the annotations structure for
+            /// this class, or 0 if there are no annotations on this class.
+            /// 
+            /// This offset, if non-zero, should be in the data section, and the data
+            /// there should be in the format specified by &quot;annotations_directory_item&quot;
+            /// below,with all items referring to this class as the definer.
+            /// </summary>
+            public uint AnnotationsOff { get { return _annotationsOff; } }
+
+            /// <summary>
+            /// offset from the start of the file to the associated class data for this
+            /// item, or 0 if there is no class data for this class.
+            /// 
+            /// (This may be the case, for example, if this class is a marker interface.)
+            /// 
+            /// The offset, if non-zero, should be in the data section, and the data
+            /// there should be in the format specified by &quot;class_data_item&quot; below,
+            /// with all items referring to this class as the definer.
+            /// </summary>
+            public uint ClassDataOff { get { return _classDataOff; } }
+
+            /// <summary>
+            /// offset from the start of the file to the list of initial values for
+            /// static fields, or 0 if there are none (and all static fields are to be
+            /// initialized with 0 or null).
+            /// 
+            /// This offset should be in the data section, and the data there should
+            /// be in the format specified by &quot;encoded_array_item&quot; below.
+            /// 
+            /// The size of the array must be no larger than the number of static fields
+            /// declared by this class, and the elements correspond to the static fields
+            /// in the same order as declared in the corresponding field_list.
+            /// 
+            /// The type of each array element must match the declared type of its
+            /// corresponding field.
+            /// 
+            /// If there are fewer elements in the array than there are static fields,
+            /// then the leftover fields are initialized with a type-appropriate 0 or null.
+            /// </summary>
+            public uint StaticValuesOff { get { return _staticValuesOff; } }
+            public Dex M_Root { get { return m_root; } }
+            public Dex M_Parent { get { return m_parent; } }
+        }
+        public partial class EncodedAnnotation : KaitaiStruct
+        {
+            public static EncodedAnnotation FromFile(string fileName)
+            {
+                return new EncodedAnnotation(new KaitaiStream(fileName));
+            }
+
+            public EncodedAnnotation(KaitaiStream p__io, Dex.EncodedValue p__parent = null, Dex p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _typeIdx = new VlqBase128Le(m_io);
+                _size = new VlqBase128Le(m_io);
+                _elements = new List<AnnotationElement>();
+                for (var i = 0; i < Size.Value; i++)
+                {
+                    _elements.Add(new AnnotationElement(m_io, this, m_root));
+                }
+            }
+            private VlqBase128Le _typeIdx;
+            private VlqBase128Le _size;
+            private List<AnnotationElement> _elements;
+            private Dex m_root;
+            private Dex.EncodedValue m_parent;
+
+            /// <summary>
+            /// type of the annotation.
+            /// 
+            /// This must be a class (not array or primitive) type.
+            /// </summary>
+            public VlqBase128Le TypeIdx { get { return _typeIdx; } }
+
+            /// <summary>
+            /// number of name-value mappings in this annotation
+            /// </summary>
+            public VlqBase128Le Size { get { return _size; } }
+
+            /// <summary>
+            /// elements of the annotation, represented directly in-line (not as offsets).
+            /// 
+            /// Elements must be sorted in increasing order by string_id index.
+            /// </summary>
+            public List<AnnotationElement> Elements { get { return _elements; } }
+            public Dex M_Root { get { return m_root; } }
+            public Dex.EncodedValue M_Parent { get { return m_parent; } }
+        }
+        public partial class EncodedArray : KaitaiStruct
+        {
+            public static EncodedArray FromFile(string fileName)
+            {
+                return new EncodedArray(new KaitaiStream(fileName));
+            }
+
+            public EncodedArray(KaitaiStream p__io, KaitaiStruct p__parent = null, Dex p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _size = new VlqBase128Le(m_io);
+                _values = new List<EncodedValue>();
+                for (var i = 0; i < Size.Value; i++)
+                {
+                    _values.Add(new EncodedValue(m_io, this, m_root));
+                }
+            }
+            private VlqBase128Le _size;
+            private List<EncodedValue> _values;
+            private Dex m_root;
+            private KaitaiStruct m_parent;
+            public VlqBase128Le Size { get { return _size; } }
+            public List<EncodedValue> Values { get { return _values; } }
+            public Dex M_Root { get { return m_root; } }
+            public KaitaiStruct M_Parent { get { return m_parent; } }
+        }
+        public partial class EncodedArrayItem : KaitaiStruct
+        {
+            public static EncodedArrayItem FromFile(string fileName)
+            {
+                return new EncodedArrayItem(new KaitaiStream(fileName));
+            }
+
+            public EncodedArrayItem(KaitaiStream p__io, Dex.ClassDefItem p__parent = null, Dex p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _value = new EncodedArray(m_io, this, m_root);
+            }
+            private EncodedArray _value;
+            private Dex m_root;
+            private Dex.ClassDefItem m_parent;
+            public EncodedArray Value { get { return _value; } }
+            public Dex M_Root { get { return m_root; } }
+            public Dex.ClassDefItem M_Parent { get { return m_parent; } }
+        }
+        public partial class EncodedField : KaitaiStruct
+        {
+            public static EncodedField FromFile(string fileName)
+            {
+                return new EncodedField(new KaitaiStream(fileName));
+            }
+
+            public EncodedField(KaitaiStream p__io, Dex.ClassDataItem p__parent = null, Dex p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _fieldIdxDiff = new VlqBase128Le(m_io);
+                _accessFlags = new VlqBase128Le(m_io);
+            }
+            private VlqBase128Le _fieldIdxDiff;
+            private VlqBase128Le _accessFlags;
+            private Dex m_root;
+            private Dex.ClassDataItem m_parent;
+
+            /// <summary>
+            /// index into the field_ids list for the identity of this field
+            /// (includes the name and descriptor), represented as a difference
+            /// from the index of previous element in the list.
+            /// 
+            /// The index of the first element in a list is represented directly.
+            /// </summary>
+            public VlqBase128Le FieldIdxDiff { get { return _fieldIdxDiff; } }
+
+            /// <summary>
+            /// access flags for the field (public, final, etc.).
+            /// 
+            /// See &quot;access_flags Definitions&quot; for details.
+            /// </summary>
+            public VlqBase128Le AccessFlags { get { return _accessFlags; } }
+            public Dex M_Root { get { return m_root; } }
+            public Dex.ClassDataItem M_Parent { get { return m_parent; } }
+        }
+        public partial class EncodedMethod : KaitaiStruct
+        {
+            public static EncodedMethod FromFile(string fileName)
+            {
+                return new EncodedMethod(new KaitaiStream(fileName));
+            }
+
+            public EncodedMethod(KaitaiStream p__io, Dex.ClassDataItem p__parent = null, Dex p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _methodIdxDiff = new VlqBase128Le(m_io);
+                _accessFlags = new VlqBase128Le(m_io);
+                _codeOff = new VlqBase128Le(m_io);
+            }
+            private VlqBase128Le _methodIdxDiff;
+            private VlqBase128Le _accessFlags;
+            private VlqBase128Le _codeOff;
+            private Dex m_root;
+            private Dex.ClassDataItem m_parent;
+
+            /// <summary>
+            /// index into the method_ids list for the identity of this method
+            /// (includes the name and descriptor), represented as a difference
+            /// from the index of previous element in the list.
+            /// 
+            /// The index of the first element in a list is represented directly.
+            /// </summary>
+            public VlqBase128Le MethodIdxDiff { get { return _methodIdxDiff; } }
+
+            /// <summary>
+            /// access flags for the field (public, final, etc.).
+            /// 
+            /// See &quot;access_flags Definitions&quot; for details.
+            /// </summary>
+            public VlqBase128Le AccessFlags { get { return _accessFlags; } }
+
+            /// <summary>
+            /// offset from the start of the file to the code structure for this method,
+            /// or 0 if this method is either abstract or native.
+            /// 
+            /// The offset should be to a location in the data section.
+            /// 
+            /// The format of the data is specified by &quot;code_item&quot; below.
+            /// </summary>
+            public VlqBase128Le CodeOff { get { return _codeOff; } }
+            public Dex M_Root { get { return m_root; } }
+            public Dex.ClassDataItem M_Parent { get { return m_parent; } }
+        }
+        public partial class EncodedValue : KaitaiStruct
+        {
+            public static EncodedValue FromFile(string fileName)
+            {
+                return new EncodedValue(new KaitaiStream(fileName));
+            }
+
+
+            public enum ValueTypeEnum
+            {
+                Byte = 0,
+                Short = 2,
+                Char = 3,
+                Int = 4,
+                Long = 6,
+                Float = 16,
+                Double = 17,
+                MethodType = 21,
+                MethodHandle = 22,
+                String = 23,
+                Type = 24,
+                Field = 25,
+                Method = 26,
+                Enum = 27,
+                Array = 28,
+                Annotation = 29,
+                Null = 30,
+                Boolean = 31,
+            }
+            public EncodedValue(KaitaiStream p__io, KaitaiStruct p__parent = null, Dex p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _valueArg = m_io.ReadBitsIntBe(3);
+                _valueType = ((ValueTypeEnum) m_io.ReadBitsIntBe(5));
+                m_io.AlignToByte();
+                switch (ValueType) {
+                case ValueTypeEnum.Annotation: {
+                    _value = new EncodedAnnotation(m_io, this, m_root);
+                    break;
+                }
+                case ValueTypeEnum.Array: {
+                    _value = new EncodedArray(m_io, this, m_root);
+                    break;
+                }
+                case ValueTypeEnum.Byte: {
+                    _value = m_io.ReadS1();
+                    break;
+                }
+                case ValueTypeEnum.Char: {
+                    _value = m_io.ReadU2le();
+                    break;
+                }
+                case ValueTypeEnum.Double: {
+                    _value = m_io.ReadF8le();
+                    break;
+                }
+                case ValueTypeEnum.Enum: {
+                    _value = m_io.ReadU4le();
+                    break;
+                }
+                case ValueTypeEnum.Field: {
+                    _value = m_io.ReadU4le();
+                    break;
+                }
+                case ValueTypeEnum.Float: {
+                    _value = m_io.ReadF4le();
+                    break;
+                }
+                case ValueTypeEnum.Int: {
+                    _value = m_io.ReadS4le();
+                    break;
+                }
+                case ValueTypeEnum.Long: {
+                    _value = m_io.ReadS8le();
+                    break;
+                }
+                case ValueTypeEnum.Method: {
+                    _value = m_io.ReadU4le();
+                    break;
+                }
+                case ValueTypeEnum.MethodHandle: {
+                    _value = m_io.ReadU4le();
+                    break;
+                }
+                case ValueTypeEnum.MethodType: {
+                    _value = m_io.ReadU4le();
+                    break;
+                }
+                case ValueTypeEnum.Short: {
+                    _value = m_io.ReadS2le();
+                    break;
+                }
+                case ValueTypeEnum.String: {
+                    _value = m_io.ReadU4le();
+                    break;
+                }
+                case ValueTypeEnum.Type: {
+                    _value = m_io.ReadU4le();
+                    break;
+                }
+                }
+            }
+            private ulong _valueArg;
+            private ValueTypeEnum _valueType;
+            private object _value;
+            private Dex m_root;
+            private KaitaiStruct m_parent;
+            public ulong ValueArg { get { return _valueArg; } }
+            public ValueTypeEnum ValueType { get { return _valueType; } }
+            public object Value { get { return _value; } }
+            public Dex M_Root { get { return m_root; } }
+            public KaitaiStruct M_Parent { get { return m_parent; } }
+        }
+        public partial class FieldIdItem : KaitaiStruct
+        {
+            public static FieldIdItem FromFile(string fileName)
+            {
+                return new FieldIdItem(new KaitaiStream(fileName));
+            }
+
+            public FieldIdItem(KaitaiStream p__io, Dex p__parent = null, Dex p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_className = false;
+                f_fieldName = false;
+                f_typeName = false;
+                _read();
+            }
+            private void _read()
+            {
+                _classIdx = m_io.ReadU2le();
+                _typeIdx = m_io.ReadU2le();
+                _nameIdx = m_io.ReadU4le();
+            }
+            private bool f_className;
+            private string _className;
+
+            /// <summary>
+            /// the definer of this field
+            /// </summary>
+            public string ClassName
+            {
+                get
+                {
+                    if (f_className)
+                        return _className;
+                    f_className = true;
+                    _className = (string) (M_Root.TypeIds[ClassIdx].TypeName);
+                    return _className;
+                }
+            }
+            private bool f_fieldName;
+            private string _fieldName;
+
+            /// <summary>
+            /// the name of this field
+            /// </summary>
+            public string FieldName
+            {
+                get
+                {
+                    if (f_fieldName)
+                        return _fieldName;
+                    f_fieldName = true;
+                    _fieldName = (string) (M_Root.StringIds[NameIdx].Value.Data);
+                    return _fieldName;
+                }
+            }
+            private bool f_typeName;
+            private string _typeName;
+
+            /// <summary>
+            /// the type of this field
+            /// </summary>
+            public string TypeName
+            {
+                get
+                {
+                    if (f_typeName)
+                        return _typeName;
+                    f_typeName = true;
+                    _typeName = (string) (M_Root.TypeIds[TypeIdx].TypeName);
+                    return _typeName;
+                }
+            }
+            private ushort _classIdx;
+            private ushort _typeIdx;
+            private uint _nameIdx;
+            private Dex m_root;
+            private Dex m_parent;
+
+            /// <summary>
+            /// index into the type_ids list for the definer of this field.
+            /// This must be a class type, and not an array or primitive type.
+            /// </summary>
+            public ushort ClassIdx { get { return _classIdx; } }
+
+            /// <summary>
+            /// index into the type_ids list for the type of this field
+            /// </summary>
+            public ushort TypeIdx { get { return _typeIdx; } }
+
+            /// <summary>
+            /// index into the string_ids list for the name of this field.
+            /// The string must conform to the syntax for MemberName, defined above.
+            /// </summary>
+            public uint NameIdx { get { return _nameIdx; } }
+            public Dex M_Root { get { return m_root; } }
+            public Dex M_Parent { get { return m_parent; } }
         }
         public partial class HeaderItem : KaitaiStruct
         {
@@ -79,11 +844,11 @@ namespace Kaitai
             private void _read()
             {
                 _magic = m_io.ReadBytes(4);
-                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 100, 101, 120, 10 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 100, 101, 120, 10 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 100, 101, 120, 10 }, Magic, M_Io, "/types/header_item/seq/0");
+                    throw new ValidationNotEqualError(new byte[] { 100, 101, 120, 10 }, _magic, m_io, "/types/header_item/seq/0");
                 }
-                _versionStr = System.Text.Encoding.GetEncoding("ascii").GetString(KaitaiStream.BytesTerminate(m_io.ReadBytes(4), 0, false));
+                _versionStr = System.Text.Encoding.GetEncoding("ASCII").GetString(KaitaiStream.BytesTerminate(m_io.ReadBytes(4), 0, false));
                 _checksum = m_io.ReadU4le();
                 _signature = m_io.ReadBytes(20);
                 _fileSize = m_io.ReadU4le();
@@ -265,1164 +1030,6 @@ namespace Kaitai
             public Dex M_Root { get { return m_root; } }
             public Dex M_Parent { get { return m_parent; } }
         }
-        public partial class MapList : KaitaiStruct
-        {
-            public static MapList FromFile(string fileName)
-            {
-                return new MapList(new KaitaiStream(fileName));
-            }
-
-            public MapList(KaitaiStream p__io, Dex p__parent = null, Dex p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _size = m_io.ReadU4le();
-                _list = new List<MapItem>();
-                for (var i = 0; i < Size; i++)
-                {
-                    _list.Add(new MapItem(m_io, this, m_root));
-                }
-            }
-            private uint _size;
-            private List<MapItem> _list;
-            private Dex m_root;
-            private Dex m_parent;
-            public uint Size { get { return _size; } }
-            public List<MapItem> List { get { return _list; } }
-            public Dex M_Root { get { return m_root; } }
-            public Dex M_Parent { get { return m_parent; } }
-        }
-        public partial class EncodedValue : KaitaiStruct
-        {
-            public static EncodedValue FromFile(string fileName)
-            {
-                return new EncodedValue(new KaitaiStream(fileName));
-            }
-
-
-            public enum ValueTypeEnum
-            {
-                Byte = 0,
-                Short = 2,
-                Char = 3,
-                Int = 4,
-                Long = 6,
-                Float = 16,
-                Double = 17,
-                MethodType = 21,
-                MethodHandle = 22,
-                String = 23,
-                Type = 24,
-                Field = 25,
-                Method = 26,
-                Enum = 27,
-                Array = 28,
-                Annotation = 29,
-                Null = 30,
-                Boolean = 31,
-            }
-            public EncodedValue(KaitaiStream p__io, KaitaiStruct p__parent = null, Dex p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _valueArg = m_io.ReadBitsIntBe(3);
-                _valueType = ((ValueTypeEnum) m_io.ReadBitsIntBe(5));
-                m_io.AlignToByte();
-                switch (ValueType) {
-                case ValueTypeEnum.Int: {
-                    _value = m_io.ReadS4le();
-                    break;
-                }
-                case ValueTypeEnum.Annotation: {
-                    _value = new EncodedAnnotation(m_io, this, m_root);
-                    break;
-                }
-                case ValueTypeEnum.Long: {
-                    _value = m_io.ReadS8le();
-                    break;
-                }
-                case ValueTypeEnum.MethodHandle: {
-                    _value = m_io.ReadU4le();
-                    break;
-                }
-                case ValueTypeEnum.Byte: {
-                    _value = m_io.ReadS1();
-                    break;
-                }
-                case ValueTypeEnum.Array: {
-                    _value = new EncodedArray(m_io, this, m_root);
-                    break;
-                }
-                case ValueTypeEnum.MethodType: {
-                    _value = m_io.ReadU4le();
-                    break;
-                }
-                case ValueTypeEnum.Short: {
-                    _value = m_io.ReadS2le();
-                    break;
-                }
-                case ValueTypeEnum.Method: {
-                    _value = m_io.ReadU4le();
-                    break;
-                }
-                case ValueTypeEnum.Double: {
-                    _value = m_io.ReadF8le();
-                    break;
-                }
-                case ValueTypeEnum.Float: {
-                    _value = m_io.ReadF4le();
-                    break;
-                }
-                case ValueTypeEnum.Type: {
-                    _value = m_io.ReadU4le();
-                    break;
-                }
-                case ValueTypeEnum.Enum: {
-                    _value = m_io.ReadU4le();
-                    break;
-                }
-                case ValueTypeEnum.Field: {
-                    _value = m_io.ReadU4le();
-                    break;
-                }
-                case ValueTypeEnum.String: {
-                    _value = m_io.ReadU4le();
-                    break;
-                }
-                case ValueTypeEnum.Char: {
-                    _value = m_io.ReadU2le();
-                    break;
-                }
-                }
-            }
-            private ulong _valueArg;
-            private ValueTypeEnum _valueType;
-            private object _value;
-            private Dex m_root;
-            private KaitaiStruct m_parent;
-            public ulong ValueArg { get { return _valueArg; } }
-            public ValueTypeEnum ValueType { get { return _valueType; } }
-            public object Value { get { return _value; } }
-            public Dex M_Root { get { return m_root; } }
-            public KaitaiStruct M_Parent { get { return m_parent; } }
-        }
-        public partial class CallSiteIdItem : KaitaiStruct
-        {
-            public static CallSiteIdItem FromFile(string fileName)
-            {
-                return new CallSiteIdItem(new KaitaiStream(fileName));
-            }
-
-            public CallSiteIdItem(KaitaiStream p__io, KaitaiStruct p__parent = null, Dex p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _callSiteOff = m_io.ReadU4le();
-            }
-            private uint _callSiteOff;
-            private Dex m_root;
-            private KaitaiStruct m_parent;
-
-            /// <summary>
-            /// offset from the start of the file to call site definition.
-            /// 
-            /// The offset should be in the data section, and the data there should
-            /// be in the format specified by &quot;call_site_item&quot; below.
-            /// </summary>
-            public uint CallSiteOff { get { return _callSiteOff; } }
-            public Dex M_Root { get { return m_root; } }
-            public KaitaiStruct M_Parent { get { return m_parent; } }
-        }
-        public partial class MethodIdItem : KaitaiStruct
-        {
-            public static MethodIdItem FromFile(string fileName)
-            {
-                return new MethodIdItem(new KaitaiStream(fileName));
-            }
-
-            public MethodIdItem(KaitaiStream p__io, Dex p__parent = null, Dex p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_className = false;
-                f_protoDesc = false;
-                f_methodName = false;
-                _read();
-            }
-            private void _read()
-            {
-                _classIdx = m_io.ReadU2le();
-                _protoIdx = m_io.ReadU2le();
-                _nameIdx = m_io.ReadU4le();
-            }
-            private bool f_className;
-            private string _className;
-
-            /// <summary>
-            /// the definer of this method
-            /// </summary>
-            public string ClassName
-            {
-                get
-                {
-                    if (f_className)
-                        return _className;
-                    _className = (string) (M_Root.TypeIds[ClassIdx].TypeName);
-                    f_className = true;
-                    return _className;
-                }
-            }
-            private bool f_protoDesc;
-            private string _protoDesc;
-
-            /// <summary>
-            /// the short-form descriptor of the prototype of this method
-            /// </summary>
-            public string ProtoDesc
-            {
-                get
-                {
-                    if (f_protoDesc)
-                        return _protoDesc;
-                    _protoDesc = (string) (M_Root.ProtoIds[ProtoIdx].ShortyDesc);
-                    f_protoDesc = true;
-                    return _protoDesc;
-                }
-            }
-            private bool f_methodName;
-            private string _methodName;
-
-            /// <summary>
-            /// the name of this method
-            /// </summary>
-            public string MethodName
-            {
-                get
-                {
-                    if (f_methodName)
-                        return _methodName;
-                    _methodName = (string) (M_Root.StringIds[NameIdx].Value.Data);
-                    f_methodName = true;
-                    return _methodName;
-                }
-            }
-            private ushort _classIdx;
-            private ushort _protoIdx;
-            private uint _nameIdx;
-            private Dex m_root;
-            private Dex m_parent;
-
-            /// <summary>
-            /// index into the type_ids list for the definer of this method.
-            /// This must be a class or array type, and not a primitive type.
-            /// </summary>
-            public ushort ClassIdx { get { return _classIdx; } }
-
-            /// <summary>
-            /// index into the proto_ids list for the prototype of this method
-            /// </summary>
-            public ushort ProtoIdx { get { return _protoIdx; } }
-
-            /// <summary>
-            /// index into the string_ids list for the name of this method.
-            /// The string must conform to the syntax for MemberName, defined above.
-            /// </summary>
-            public uint NameIdx { get { return _nameIdx; } }
-            public Dex M_Root { get { return m_root; } }
-            public Dex M_Parent { get { return m_parent; } }
-        }
-        public partial class TypeItem : KaitaiStruct
-        {
-            public static TypeItem FromFile(string fileName)
-            {
-                return new TypeItem(new KaitaiStream(fileName));
-            }
-
-            public TypeItem(KaitaiStream p__io, Dex.TypeList p__parent = null, Dex p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_value = false;
-                _read();
-            }
-            private void _read()
-            {
-                _typeIdx = m_io.ReadU2le();
-            }
-            private bool f_value;
-            private string _value;
-            public string Value
-            {
-                get
-                {
-                    if (f_value)
-                        return _value;
-                    _value = (string) (M_Root.TypeIds[TypeIdx].TypeName);
-                    f_value = true;
-                    return _value;
-                }
-            }
-            private ushort _typeIdx;
-            private Dex m_root;
-            private Dex.TypeList m_parent;
-            public ushort TypeIdx { get { return _typeIdx; } }
-            public Dex M_Root { get { return m_root; } }
-            public Dex.TypeList M_Parent { get { return m_parent; } }
-        }
-        public partial class TypeIdItem : KaitaiStruct
-        {
-            public static TypeIdItem FromFile(string fileName)
-            {
-                return new TypeIdItem(new KaitaiStream(fileName));
-            }
-
-            public TypeIdItem(KaitaiStream p__io, Dex p__parent = null, Dex p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_typeName = false;
-                _read();
-            }
-            private void _read()
-            {
-                _descriptorIdx = m_io.ReadU4le();
-            }
-            private bool f_typeName;
-            private string _typeName;
-            public string TypeName
-            {
-                get
-                {
-                    if (f_typeName)
-                        return _typeName;
-                    _typeName = (string) (M_Root.StringIds[DescriptorIdx].Value.Data);
-                    f_typeName = true;
-                    return _typeName;
-                }
-            }
-            private uint _descriptorIdx;
-            private Dex m_root;
-            private Dex m_parent;
-
-            /// <summary>
-            /// index into the string_ids list for the descriptor string of this type.
-            /// The string must conform to the syntax for TypeDescriptor, defined above.
-            /// </summary>
-            public uint DescriptorIdx { get { return _descriptorIdx; } }
-            public Dex M_Root { get { return m_root; } }
-            public Dex M_Parent { get { return m_parent; } }
-        }
-        public partial class AnnotationElement : KaitaiStruct
-        {
-            public static AnnotationElement FromFile(string fileName)
-            {
-                return new AnnotationElement(new KaitaiStream(fileName));
-            }
-
-            public AnnotationElement(KaitaiStream p__io, Dex.EncodedAnnotation p__parent = null, Dex p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _nameIdx = new VlqBase128Le(m_io);
-                _value = new EncodedValue(m_io, this, m_root);
-            }
-            private VlqBase128Le _nameIdx;
-            private EncodedValue _value;
-            private Dex m_root;
-            private Dex.EncodedAnnotation m_parent;
-
-            /// <summary>
-            /// element name, represented as an index into the string_ids section.
-            /// 
-            /// The string must conform to the syntax for MemberName, defined above.
-            /// </summary>
-            public VlqBase128Le NameIdx { get { return _nameIdx; } }
-
-            /// <summary>
-            /// element value
-            /// </summary>
-            public EncodedValue Value { get { return _value; } }
-            public Dex M_Root { get { return m_root; } }
-            public Dex.EncodedAnnotation M_Parent { get { return m_parent; } }
-        }
-        public partial class EncodedField : KaitaiStruct
-        {
-            public static EncodedField FromFile(string fileName)
-            {
-                return new EncodedField(new KaitaiStream(fileName));
-            }
-
-            public EncodedField(KaitaiStream p__io, Dex.ClassDataItem p__parent = null, Dex p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _fieldIdxDiff = new VlqBase128Le(m_io);
-                _accessFlags = new VlqBase128Le(m_io);
-            }
-            private VlqBase128Le _fieldIdxDiff;
-            private VlqBase128Le _accessFlags;
-            private Dex m_root;
-            private Dex.ClassDataItem m_parent;
-
-            /// <summary>
-            /// index into the field_ids list for the identity of this field
-            /// (includes the name and descriptor), represented as a difference
-            /// from the index of previous element in the list.
-            /// 
-            /// The index of the first element in a list is represented directly.
-            /// </summary>
-            public VlqBase128Le FieldIdxDiff { get { return _fieldIdxDiff; } }
-
-            /// <summary>
-            /// access flags for the field (public, final, etc.).
-            /// 
-            /// See &quot;access_flags Definitions&quot; for details.
-            /// </summary>
-            public VlqBase128Le AccessFlags { get { return _accessFlags; } }
-            public Dex M_Root { get { return m_root; } }
-            public Dex.ClassDataItem M_Parent { get { return m_parent; } }
-        }
-        public partial class EncodedArrayItem : KaitaiStruct
-        {
-            public static EncodedArrayItem FromFile(string fileName)
-            {
-                return new EncodedArrayItem(new KaitaiStream(fileName));
-            }
-
-            public EncodedArrayItem(KaitaiStream p__io, Dex.ClassDefItem p__parent = null, Dex p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _value = new EncodedArray(m_io, this, m_root);
-            }
-            private EncodedArray _value;
-            private Dex m_root;
-            private Dex.ClassDefItem m_parent;
-            public EncodedArray Value { get { return _value; } }
-            public Dex M_Root { get { return m_root; } }
-            public Dex.ClassDefItem M_Parent { get { return m_parent; } }
-        }
-        public partial class ClassDataItem : KaitaiStruct
-        {
-            public static ClassDataItem FromFile(string fileName)
-            {
-                return new ClassDataItem(new KaitaiStream(fileName));
-            }
-
-            public ClassDataItem(KaitaiStream p__io, Dex.ClassDefItem p__parent = null, Dex p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _staticFieldsSize = new VlqBase128Le(m_io);
-                _instanceFieldsSize = new VlqBase128Le(m_io);
-                _directMethodsSize = new VlqBase128Le(m_io);
-                _virtualMethodsSize = new VlqBase128Le(m_io);
-                _staticFields = new List<EncodedField>();
-                for (var i = 0; i < StaticFieldsSize.Value; i++)
-                {
-                    _staticFields.Add(new EncodedField(m_io, this, m_root));
-                }
-                _instanceFields = new List<EncodedField>();
-                for (var i = 0; i < InstanceFieldsSize.Value; i++)
-                {
-                    _instanceFields.Add(new EncodedField(m_io, this, m_root));
-                }
-                _directMethods = new List<EncodedMethod>();
-                for (var i = 0; i < DirectMethodsSize.Value; i++)
-                {
-                    _directMethods.Add(new EncodedMethod(m_io, this, m_root));
-                }
-                _virtualMethods = new List<EncodedMethod>();
-                for (var i = 0; i < VirtualMethodsSize.Value; i++)
-                {
-                    _virtualMethods.Add(new EncodedMethod(m_io, this, m_root));
-                }
-            }
-            private VlqBase128Le _staticFieldsSize;
-            private VlqBase128Le _instanceFieldsSize;
-            private VlqBase128Le _directMethodsSize;
-            private VlqBase128Le _virtualMethodsSize;
-            private List<EncodedField> _staticFields;
-            private List<EncodedField> _instanceFields;
-            private List<EncodedMethod> _directMethods;
-            private List<EncodedMethod> _virtualMethods;
-            private Dex m_root;
-            private Dex.ClassDefItem m_parent;
-
-            /// <summary>
-            /// the number of static fields defined in this item
-            /// </summary>
-            public VlqBase128Le StaticFieldsSize { get { return _staticFieldsSize; } }
-
-            /// <summary>
-            /// the number of instance fields defined in this item
-            /// </summary>
-            public VlqBase128Le InstanceFieldsSize { get { return _instanceFieldsSize; } }
-
-            /// <summary>
-            /// the number of direct methods defined in this item
-            /// </summary>
-            public VlqBase128Le DirectMethodsSize { get { return _directMethodsSize; } }
-
-            /// <summary>
-            /// the number of virtual methods defined in this item
-            /// </summary>
-            public VlqBase128Le VirtualMethodsSize { get { return _virtualMethodsSize; } }
-
-            /// <summary>
-            /// the defined static fields, represented as a sequence of encoded elements.
-            /// 
-            /// The fields must be sorted by field_idx in increasing order.
-            /// </summary>
-            public List<EncodedField> StaticFields { get { return _staticFields; } }
-
-            /// <summary>
-            /// the defined instance fields, represented as a sequence of encoded elements.
-            /// 
-            /// The fields must be sorted by field_idx in increasing order.
-            /// </summary>
-            public List<EncodedField> InstanceFields { get { return _instanceFields; } }
-
-            /// <summary>
-            /// the defined direct (any of static, private, or constructor) methods,
-            /// represented as a sequence of encoded elements.
-            /// 
-            /// The methods must be sorted by method_idx in increasing order.
-            /// </summary>
-            public List<EncodedMethod> DirectMethods { get { return _directMethods; } }
-
-            /// <summary>
-            /// the defined virtual (none of static, private, or constructor) methods,
-            /// represented as a sequence of encoded elements.
-            /// 
-            /// This list should not include inherited methods unless overridden by
-            /// the class that this item represents.
-            /// 
-            /// The methods must be sorted by method_idx in increasing order.
-            /// 
-            /// The method_idx of a virtual method must not be the same as any direct method.
-            /// </summary>
-            public List<EncodedMethod> VirtualMethods { get { return _virtualMethods; } }
-            public Dex M_Root { get { return m_root; } }
-            public Dex.ClassDefItem M_Parent { get { return m_parent; } }
-        }
-        public partial class FieldIdItem : KaitaiStruct
-        {
-            public static FieldIdItem FromFile(string fileName)
-            {
-                return new FieldIdItem(new KaitaiStream(fileName));
-            }
-
-            public FieldIdItem(KaitaiStream p__io, Dex p__parent = null, Dex p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_className = false;
-                f_typeName = false;
-                f_fieldName = false;
-                _read();
-            }
-            private void _read()
-            {
-                _classIdx = m_io.ReadU2le();
-                _typeIdx = m_io.ReadU2le();
-                _nameIdx = m_io.ReadU4le();
-            }
-            private bool f_className;
-            private string _className;
-
-            /// <summary>
-            /// the definer of this field
-            /// </summary>
-            public string ClassName
-            {
-                get
-                {
-                    if (f_className)
-                        return _className;
-                    _className = (string) (M_Root.TypeIds[ClassIdx].TypeName);
-                    f_className = true;
-                    return _className;
-                }
-            }
-            private bool f_typeName;
-            private string _typeName;
-
-            /// <summary>
-            /// the type of this field
-            /// </summary>
-            public string TypeName
-            {
-                get
-                {
-                    if (f_typeName)
-                        return _typeName;
-                    _typeName = (string) (M_Root.TypeIds[TypeIdx].TypeName);
-                    f_typeName = true;
-                    return _typeName;
-                }
-            }
-            private bool f_fieldName;
-            private string _fieldName;
-
-            /// <summary>
-            /// the name of this field
-            /// </summary>
-            public string FieldName
-            {
-                get
-                {
-                    if (f_fieldName)
-                        return _fieldName;
-                    _fieldName = (string) (M_Root.StringIds[NameIdx].Value.Data);
-                    f_fieldName = true;
-                    return _fieldName;
-                }
-            }
-            private ushort _classIdx;
-            private ushort _typeIdx;
-            private uint _nameIdx;
-            private Dex m_root;
-            private Dex m_parent;
-
-            /// <summary>
-            /// index into the type_ids list for the definer of this field.
-            /// This must be a class type, and not an array or primitive type.
-            /// </summary>
-            public ushort ClassIdx { get { return _classIdx; } }
-
-            /// <summary>
-            /// index into the type_ids list for the type of this field
-            /// </summary>
-            public ushort TypeIdx { get { return _typeIdx; } }
-
-            /// <summary>
-            /// index into the string_ids list for the name of this field.
-            /// The string must conform to the syntax for MemberName, defined above.
-            /// </summary>
-            public uint NameIdx { get { return _nameIdx; } }
-            public Dex M_Root { get { return m_root; } }
-            public Dex M_Parent { get { return m_parent; } }
-        }
-        public partial class EncodedAnnotation : KaitaiStruct
-        {
-            public static EncodedAnnotation FromFile(string fileName)
-            {
-                return new EncodedAnnotation(new KaitaiStream(fileName));
-            }
-
-            public EncodedAnnotation(KaitaiStream p__io, Dex.EncodedValue p__parent = null, Dex p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _typeIdx = new VlqBase128Le(m_io);
-                _size = new VlqBase128Le(m_io);
-                _elements = new List<AnnotationElement>();
-                for (var i = 0; i < Size.Value; i++)
-                {
-                    _elements.Add(new AnnotationElement(m_io, this, m_root));
-                }
-            }
-            private VlqBase128Le _typeIdx;
-            private VlqBase128Le _size;
-            private List<AnnotationElement> _elements;
-            private Dex m_root;
-            private Dex.EncodedValue m_parent;
-
-            /// <summary>
-            /// type of the annotation.
-            /// 
-            /// This must be a class (not array or primitive) type.
-            /// </summary>
-            public VlqBase128Le TypeIdx { get { return _typeIdx; } }
-
-            /// <summary>
-            /// number of name-value mappings in this annotation
-            /// </summary>
-            public VlqBase128Le Size { get { return _size; } }
-
-            /// <summary>
-            /// elements of the annotation, represented directly in-line (not as offsets).
-            /// 
-            /// Elements must be sorted in increasing order by string_id index.
-            /// </summary>
-            public List<AnnotationElement> Elements { get { return _elements; } }
-            public Dex M_Root { get { return m_root; } }
-            public Dex.EncodedValue M_Parent { get { return m_parent; } }
-        }
-        public partial class ClassDefItem : KaitaiStruct
-        {
-            public static ClassDefItem FromFile(string fileName)
-            {
-                return new ClassDefItem(new KaitaiStream(fileName));
-            }
-
-            public ClassDefItem(KaitaiStream p__io, Dex p__parent = null, Dex p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_typeName = false;
-                f_classData = false;
-                f_staticValues = false;
-                _read();
-            }
-            private void _read()
-            {
-                _classIdx = m_io.ReadU4le();
-                _accessFlags = ((Dex.ClassAccessFlags) m_io.ReadU4le());
-                _superclassIdx = m_io.ReadU4le();
-                _interfacesOff = m_io.ReadU4le();
-                _sourceFileIdx = m_io.ReadU4le();
-                _annotationsOff = m_io.ReadU4le();
-                _classDataOff = m_io.ReadU4le();
-                _staticValuesOff = m_io.ReadU4le();
-            }
-            private bool f_typeName;
-            private string _typeName;
-            public string TypeName
-            {
-                get
-                {
-                    if (f_typeName)
-                        return _typeName;
-                    _typeName = (string) (M_Root.TypeIds[ClassIdx].TypeName);
-                    f_typeName = true;
-                    return _typeName;
-                }
-            }
-            private bool f_classData;
-            private ClassDataItem _classData;
-            public ClassDataItem ClassData
-            {
-                get
-                {
-                    if (f_classData)
-                        return _classData;
-                    if (ClassDataOff != 0) {
-                        long _pos = m_io.Pos;
-                        m_io.Seek(ClassDataOff);
-                        _classData = new ClassDataItem(m_io, this, m_root);
-                        m_io.Seek(_pos);
-                        f_classData = true;
-                    }
-                    return _classData;
-                }
-            }
-            private bool f_staticValues;
-            private EncodedArrayItem _staticValues;
-            public EncodedArrayItem StaticValues
-            {
-                get
-                {
-                    if (f_staticValues)
-                        return _staticValues;
-                    if (StaticValuesOff != 0) {
-                        long _pos = m_io.Pos;
-                        m_io.Seek(StaticValuesOff);
-                        _staticValues = new EncodedArrayItem(m_io, this, m_root);
-                        m_io.Seek(_pos);
-                        f_staticValues = true;
-                    }
-                    return _staticValues;
-                }
-            }
-            private uint _classIdx;
-            private ClassAccessFlags _accessFlags;
-            private uint _superclassIdx;
-            private uint _interfacesOff;
-            private uint _sourceFileIdx;
-            private uint _annotationsOff;
-            private uint _classDataOff;
-            private uint _staticValuesOff;
-            private Dex m_root;
-            private Dex m_parent;
-
-            /// <summary>
-            /// index into the type_ids list for this class.
-            /// 
-            /// This must be a class type, and not an array or primitive type.
-            /// </summary>
-            public uint ClassIdx { get { return _classIdx; } }
-
-            /// <summary>
-            /// access flags for the class (public, final, etc.).
-            /// 
-            /// See &quot;access_flags Definitions&quot; for details.
-            /// </summary>
-            public ClassAccessFlags AccessFlags { get { return _accessFlags; } }
-
-            /// <summary>
-            /// index into the type_ids list for the superclass,
-            /// or the constant value NO_INDEX if this class has no superclass
-            /// (i.e., it is a root class such as Object).
-            /// 
-            /// If present, this must be a class type, and not an array or primitive type.
-            /// </summary>
-            public uint SuperclassIdx { get { return _superclassIdx; } }
-
-            /// <summary>
-            /// offset from the start of the file to the list of interfaces, or 0 if there are none.
-            /// 
-            /// This offset should be in the data section, and the data there should
-            /// be in the format specified by &quot;type_list&quot; below. Each of the elements
-            /// of the list must be a class type (not an array or primitive type),
-            /// and there must not be any duplicates.
-            /// </summary>
-            public uint InterfacesOff { get { return _interfacesOff; } }
-
-            /// <summary>
-            /// index into the string_ids list for the name of the file containing
-            /// the original source for (at least most of) this class, or the
-            /// special value NO_INDEX to represent a lack of this information.
-            /// 
-            /// The debug_info_item of any given method may override this source file,
-            /// but the expectation is that most classes will only come from one source file.
-            /// </summary>
-            public uint SourceFileIdx { get { return _sourceFileIdx; } }
-
-            /// <summary>
-            /// offset from the start of the file to the annotations structure for
-            /// this class, or 0 if there are no annotations on this class.
-            /// 
-            /// This offset, if non-zero, should be in the data section, and the data
-            /// there should be in the format specified by &quot;annotations_directory_item&quot;
-            /// below,with all items referring to this class as the definer.
-            /// </summary>
-            public uint AnnotationsOff { get { return _annotationsOff; } }
-
-            /// <summary>
-            /// offset from the start of the file to the associated class data for this
-            /// item, or 0 if there is no class data for this class.
-            /// 
-            /// (This may be the case, for example, if this class is a marker interface.)
-            /// 
-            /// The offset, if non-zero, should be in the data section, and the data
-            /// there should be in the format specified by &quot;class_data_item&quot; below,
-            /// with all items referring to this class as the definer.
-            /// </summary>
-            public uint ClassDataOff { get { return _classDataOff; } }
-
-            /// <summary>
-            /// offset from the start of the file to the list of initial values for
-            /// static fields, or 0 if there are none (and all static fields are to be
-            /// initialized with 0 or null).
-            /// 
-            /// This offset should be in the data section, and the data there should
-            /// be in the format specified by &quot;encoded_array_item&quot; below.
-            /// 
-            /// The size of the array must be no larger than the number of static fields
-            /// declared by this class, and the elements correspond to the static fields
-            /// in the same order as declared in the corresponding field_list.
-            /// 
-            /// The type of each array element must match the declared type of its
-            /// corresponding field.
-            /// 
-            /// If there are fewer elements in the array than there are static fields,
-            /// then the leftover fields are initialized with a type-appropriate 0 or null.
-            /// </summary>
-            public uint StaticValuesOff { get { return _staticValuesOff; } }
-            public Dex M_Root { get { return m_root; } }
-            public Dex M_Parent { get { return m_parent; } }
-        }
-        public partial class TypeList : KaitaiStruct
-        {
-            public static TypeList FromFile(string fileName)
-            {
-                return new TypeList(new KaitaiStream(fileName));
-            }
-
-            public TypeList(KaitaiStream p__io, Dex.ProtoIdItem p__parent = null, Dex p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _size = m_io.ReadU4le();
-                _list = new List<TypeItem>();
-                for (var i = 0; i < Size; i++)
-                {
-                    _list.Add(new TypeItem(m_io, this, m_root));
-                }
-            }
-            private uint _size;
-            private List<TypeItem> _list;
-            private Dex m_root;
-            private Dex.ProtoIdItem m_parent;
-            public uint Size { get { return _size; } }
-            public List<TypeItem> List { get { return _list; } }
-            public Dex M_Root { get { return m_root; } }
-            public Dex.ProtoIdItem M_Parent { get { return m_parent; } }
-        }
-        public partial class StringIdItem : KaitaiStruct
-        {
-            public static StringIdItem FromFile(string fileName)
-            {
-                return new StringIdItem(new KaitaiStream(fileName));
-            }
-
-            public StringIdItem(KaitaiStream p__io, Dex p__parent = null, Dex p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_value = false;
-                _read();
-            }
-            private void _read()
-            {
-                _stringDataOff = m_io.ReadU4le();
-            }
-            public partial class StringDataItem : KaitaiStruct
-            {
-                public static StringDataItem FromFile(string fileName)
-                {
-                    return new StringDataItem(new KaitaiStream(fileName));
-                }
-
-                public StringDataItem(KaitaiStream p__io, Dex.StringIdItem p__parent = null, Dex p__root = null) : base(p__io)
-                {
-                    m_parent = p__parent;
-                    m_root = p__root;
-                    _read();
-                }
-                private void _read()
-                {
-                    _utf16Size = new VlqBase128Le(m_io);
-                    _data = System.Text.Encoding.GetEncoding("ascii").GetString(m_io.ReadBytes(Utf16Size.Value));
-                }
-                private VlqBase128Le _utf16Size;
-                private string _data;
-                private Dex m_root;
-                private Dex.StringIdItem m_parent;
-                public VlqBase128Le Utf16Size { get { return _utf16Size; } }
-                public string Data { get { return _data; } }
-                public Dex M_Root { get { return m_root; } }
-                public Dex.StringIdItem M_Parent { get { return m_parent; } }
-            }
-            private bool f_value;
-            private StringDataItem _value;
-            public StringDataItem Value
-            {
-                get
-                {
-                    if (f_value)
-                        return _value;
-                    long _pos = m_io.Pos;
-                    m_io.Seek(StringDataOff);
-                    _value = new StringDataItem(m_io, this, m_root);
-                    m_io.Seek(_pos);
-                    f_value = true;
-                    return _value;
-                }
-            }
-            private uint _stringDataOff;
-            private Dex m_root;
-            private Dex m_parent;
-
-            /// <summary>
-            /// offset from the start of the file to the string data for this item.
-            /// The offset should be to a location in the data section, and the data
-            /// should be in the format specified by &quot;string_data_item&quot; below.
-            /// There is no alignment requirement for the offset.
-            /// </summary>
-            public uint StringDataOff { get { return _stringDataOff; } }
-            public Dex M_Root { get { return m_root; } }
-            public Dex M_Parent { get { return m_parent; } }
-        }
-        public partial class ProtoIdItem : KaitaiStruct
-        {
-            public static ProtoIdItem FromFile(string fileName)
-            {
-                return new ProtoIdItem(new KaitaiStream(fileName));
-            }
-
-            public ProtoIdItem(KaitaiStream p__io, Dex p__parent = null, Dex p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_shortyDesc = false;
-                f_paramsTypes = false;
-                f_returnType = false;
-                _read();
-            }
-            private void _read()
-            {
-                _shortyIdx = m_io.ReadU4le();
-                _returnTypeIdx = m_io.ReadU4le();
-                _parametersOff = m_io.ReadU4le();
-            }
-            private bool f_shortyDesc;
-            private string _shortyDesc;
-
-            /// <summary>
-            /// short-form descriptor string of this prototype, as pointed to by shorty_idx
-            /// </summary>
-            public string ShortyDesc
-            {
-                get
-                {
-                    if (f_shortyDesc)
-                        return _shortyDesc;
-                    _shortyDesc = (string) (M_Root.StringIds[ShortyIdx].Value.Data);
-                    f_shortyDesc = true;
-                    return _shortyDesc;
-                }
-            }
-            private bool f_paramsTypes;
-            private TypeList _paramsTypes;
-
-            /// <summary>
-            /// list of parameter types for this prototype
-            /// </summary>
-            public TypeList ParamsTypes
-            {
-                get
-                {
-                    if (f_paramsTypes)
-                        return _paramsTypes;
-                    if (ParametersOff != 0) {
-                        KaitaiStream io = M_Root.M_Io;
-                        long _pos = io.Pos;
-                        io.Seek(ParametersOff);
-                        _paramsTypes = new TypeList(io, this, m_root);
-                        io.Seek(_pos);
-                        f_paramsTypes = true;
-                    }
-                    return _paramsTypes;
-                }
-            }
-            private bool f_returnType;
-            private string _returnType;
-
-            /// <summary>
-            /// return type of this prototype
-            /// </summary>
-            public string ReturnType
-            {
-                get
-                {
-                    if (f_returnType)
-                        return _returnType;
-                    _returnType = (string) (M_Root.TypeIds[ReturnTypeIdx].TypeName);
-                    f_returnType = true;
-                    return _returnType;
-                }
-            }
-            private uint _shortyIdx;
-            private uint _returnTypeIdx;
-            private uint _parametersOff;
-            private Dex m_root;
-            private Dex m_parent;
-
-            /// <summary>
-            /// index into the string_ids list for the short-form descriptor string of this prototype.
-            /// The string must conform to the syntax for ShortyDescriptor, defined above,
-            /// and must correspond to the return type and parameters of this item.
-            /// </summary>
-            public uint ShortyIdx { get { return _shortyIdx; } }
-
-            /// <summary>
-            /// index into the type_ids list for the return type of this prototype
-            /// </summary>
-            public uint ReturnTypeIdx { get { return _returnTypeIdx; } }
-
-            /// <summary>
-            /// offset from the start of the file to the list of parameter types for this prototype,
-            /// or 0 if this prototype has no parameters.
-            /// This offset, if non-zero, should be in the data section, and the data
-            /// there should be in the format specified by &quot;type_list&quot; below.
-            /// Additionally, there should be no reference to the type void in the list.
-            /// </summary>
-            public uint ParametersOff { get { return _parametersOff; } }
-            public Dex M_Root { get { return m_root; } }
-            public Dex M_Parent { get { return m_parent; } }
-        }
-        public partial class EncodedMethod : KaitaiStruct
-        {
-            public static EncodedMethod FromFile(string fileName)
-            {
-                return new EncodedMethod(new KaitaiStream(fileName));
-            }
-
-            public EncodedMethod(KaitaiStream p__io, Dex.ClassDataItem p__parent = null, Dex p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _methodIdxDiff = new VlqBase128Le(m_io);
-                _accessFlags = new VlqBase128Le(m_io);
-                _codeOff = new VlqBase128Le(m_io);
-            }
-            private VlqBase128Le _methodIdxDiff;
-            private VlqBase128Le _accessFlags;
-            private VlqBase128Le _codeOff;
-            private Dex m_root;
-            private Dex.ClassDataItem m_parent;
-
-            /// <summary>
-            /// index into the method_ids list for the identity of this method
-            /// (includes the name and descriptor), represented as a difference
-            /// from the index of previous element in the list.
-            /// 
-            /// The index of the first element in a list is represented directly.
-            /// </summary>
-            public VlqBase128Le MethodIdxDiff { get { return _methodIdxDiff; } }
-
-            /// <summary>
-            /// access flags for the field (public, final, etc.).
-            /// 
-            /// See &quot;access_flags Definitions&quot; for details.
-            /// </summary>
-            public VlqBase128Le AccessFlags { get { return _accessFlags; } }
-
-            /// <summary>
-            /// offset from the start of the file to the code structure for this method,
-            /// or 0 if this method is either abstract or native.
-            /// 
-            /// The offset should be to a location in the data section.
-            /// 
-            /// The format of the data is specified by &quot;code_item&quot; below.
-            /// </summary>
-            public VlqBase128Le CodeOff { get { return _codeOff; } }
-            public Dex M_Root { get { return m_root; } }
-            public Dex.ClassDataItem M_Parent { get { return m_parent; } }
-        }
         public partial class MapItem : KaitaiStruct
         {
             public static MapItem FromFile(string fileName)
@@ -1496,14 +1103,14 @@ namespace Kaitai
             public Dex M_Root { get { return m_root; } }
             public Dex.MapList M_Parent { get { return m_parent; } }
         }
-        public partial class EncodedArray : KaitaiStruct
+        public partial class MapList : KaitaiStruct
         {
-            public static EncodedArray FromFile(string fileName)
+            public static MapList FromFile(string fileName)
             {
-                return new EncodedArray(new KaitaiStream(fileName));
+                return new MapList(new KaitaiStream(fileName));
             }
 
-            public EncodedArray(KaitaiStream p__io, KaitaiStruct p__parent = null, Dex p__root = null) : base(p__io)
+            public MapList(KaitaiStream p__io, Dex p__parent = null, Dex p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -1511,50 +1118,539 @@ namespace Kaitai
             }
             private void _read()
             {
-                _size = new VlqBase128Le(m_io);
-                _values = new List<EncodedValue>();
-                for (var i = 0; i < Size.Value; i++)
+                _size = m_io.ReadU4le();
+                _list = new List<MapItem>();
+                for (var i = 0; i < Size; i++)
                 {
-                    _values.Add(new EncodedValue(m_io, this, m_root));
+                    _list.Add(new MapItem(m_io, this, m_root));
                 }
             }
-            private VlqBase128Le _size;
-            private List<EncodedValue> _values;
+            private uint _size;
+            private List<MapItem> _list;
             private Dex m_root;
-            private KaitaiStruct m_parent;
-            public VlqBase128Le Size { get { return _size; } }
-            public List<EncodedValue> Values { get { return _values; } }
+            private Dex m_parent;
+            public uint Size { get { return _size; } }
+            public List<MapItem> List { get { return _list; } }
             public Dex M_Root { get { return m_root; } }
-            public KaitaiStruct M_Parent { get { return m_parent; } }
+            public Dex M_Parent { get { return m_parent; } }
         }
-        private bool f_stringIds;
-        private List<StringIdItem> _stringIds;
+        public partial class MethodIdItem : KaitaiStruct
+        {
+            public static MethodIdItem FromFile(string fileName)
+            {
+                return new MethodIdItem(new KaitaiStream(fileName));
+            }
+
+            public MethodIdItem(KaitaiStream p__io, Dex p__parent = null, Dex p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_className = false;
+                f_methodName = false;
+                f_protoDesc = false;
+                _read();
+            }
+            private void _read()
+            {
+                _classIdx = m_io.ReadU2le();
+                _protoIdx = m_io.ReadU2le();
+                _nameIdx = m_io.ReadU4le();
+            }
+            private bool f_className;
+            private string _className;
+
+            /// <summary>
+            /// the definer of this method
+            /// </summary>
+            public string ClassName
+            {
+                get
+                {
+                    if (f_className)
+                        return _className;
+                    f_className = true;
+                    _className = (string) (M_Root.TypeIds[ClassIdx].TypeName);
+                    return _className;
+                }
+            }
+            private bool f_methodName;
+            private string _methodName;
+
+            /// <summary>
+            /// the name of this method
+            /// </summary>
+            public string MethodName
+            {
+                get
+                {
+                    if (f_methodName)
+                        return _methodName;
+                    f_methodName = true;
+                    _methodName = (string) (M_Root.StringIds[NameIdx].Value.Data);
+                    return _methodName;
+                }
+            }
+            private bool f_protoDesc;
+            private string _protoDesc;
+
+            /// <summary>
+            /// the short-form descriptor of the prototype of this method
+            /// </summary>
+            public string ProtoDesc
+            {
+                get
+                {
+                    if (f_protoDesc)
+                        return _protoDesc;
+                    f_protoDesc = true;
+                    _protoDesc = (string) (M_Root.ProtoIds[ProtoIdx].ShortyDesc);
+                    return _protoDesc;
+                }
+            }
+            private ushort _classIdx;
+            private ushort _protoIdx;
+            private uint _nameIdx;
+            private Dex m_root;
+            private Dex m_parent;
+
+            /// <summary>
+            /// index into the type_ids list for the definer of this method.
+            /// This must be a class or array type, and not a primitive type.
+            /// </summary>
+            public ushort ClassIdx { get { return _classIdx; } }
+
+            /// <summary>
+            /// index into the proto_ids list for the prototype of this method
+            /// </summary>
+            public ushort ProtoIdx { get { return _protoIdx; } }
+
+            /// <summary>
+            /// index into the string_ids list for the name of this method.
+            /// The string must conform to the syntax for MemberName, defined above.
+            /// </summary>
+            public uint NameIdx { get { return _nameIdx; } }
+            public Dex M_Root { get { return m_root; } }
+            public Dex M_Parent { get { return m_parent; } }
+        }
+        public partial class ProtoIdItem : KaitaiStruct
+        {
+            public static ProtoIdItem FromFile(string fileName)
+            {
+                return new ProtoIdItem(new KaitaiStream(fileName));
+            }
+
+            public ProtoIdItem(KaitaiStream p__io, Dex p__parent = null, Dex p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_paramsTypes = false;
+                f_returnType = false;
+                f_shortyDesc = false;
+                _read();
+            }
+            private void _read()
+            {
+                _shortyIdx = m_io.ReadU4le();
+                _returnTypeIdx = m_io.ReadU4le();
+                _parametersOff = m_io.ReadU4le();
+            }
+            private bool f_paramsTypes;
+            private TypeList _paramsTypes;
+
+            /// <summary>
+            /// list of parameter types for this prototype
+            /// </summary>
+            public TypeList ParamsTypes
+            {
+                get
+                {
+                    if (f_paramsTypes)
+                        return _paramsTypes;
+                    f_paramsTypes = true;
+                    if (ParametersOff != 0) {
+                        KaitaiStream io = M_Root.M_Io;
+                        long _pos = io.Pos;
+                        io.Seek(ParametersOff);
+                        _paramsTypes = new TypeList(io, this, m_root);
+                        io.Seek(_pos);
+                    }
+                    return _paramsTypes;
+                }
+            }
+            private bool f_returnType;
+            private string _returnType;
+
+            /// <summary>
+            /// return type of this prototype
+            /// </summary>
+            public string ReturnType
+            {
+                get
+                {
+                    if (f_returnType)
+                        return _returnType;
+                    f_returnType = true;
+                    _returnType = (string) (M_Root.TypeIds[ReturnTypeIdx].TypeName);
+                    return _returnType;
+                }
+            }
+            private bool f_shortyDesc;
+            private string _shortyDesc;
+
+            /// <summary>
+            /// short-form descriptor string of this prototype, as pointed to by shorty_idx
+            /// </summary>
+            public string ShortyDesc
+            {
+                get
+                {
+                    if (f_shortyDesc)
+                        return _shortyDesc;
+                    f_shortyDesc = true;
+                    _shortyDesc = (string) (M_Root.StringIds[ShortyIdx].Value.Data);
+                    return _shortyDesc;
+                }
+            }
+            private uint _shortyIdx;
+            private uint _returnTypeIdx;
+            private uint _parametersOff;
+            private Dex m_root;
+            private Dex m_parent;
+
+            /// <summary>
+            /// index into the string_ids list for the short-form descriptor string of this prototype.
+            /// The string must conform to the syntax for ShortyDescriptor, defined above,
+            /// and must correspond to the return type and parameters of this item.
+            /// </summary>
+            public uint ShortyIdx { get { return _shortyIdx; } }
+
+            /// <summary>
+            /// index into the type_ids list for the return type of this prototype
+            /// </summary>
+            public uint ReturnTypeIdx { get { return _returnTypeIdx; } }
+
+            /// <summary>
+            /// offset from the start of the file to the list of parameter types for this prototype,
+            /// or 0 if this prototype has no parameters.
+            /// This offset, if non-zero, should be in the data section, and the data
+            /// there should be in the format specified by &quot;type_list&quot; below.
+            /// Additionally, there should be no reference to the type void in the list.
+            /// </summary>
+            public uint ParametersOff { get { return _parametersOff; } }
+            public Dex M_Root { get { return m_root; } }
+            public Dex M_Parent { get { return m_parent; } }
+        }
+        public partial class StringIdItem : KaitaiStruct
+        {
+            public static StringIdItem FromFile(string fileName)
+            {
+                return new StringIdItem(new KaitaiStream(fileName));
+            }
+
+            public StringIdItem(KaitaiStream p__io, Dex p__parent = null, Dex p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_value = false;
+                _read();
+            }
+            private void _read()
+            {
+                _stringDataOff = m_io.ReadU4le();
+            }
+            public partial class StringDataItem : KaitaiStruct
+            {
+                public static StringDataItem FromFile(string fileName)
+                {
+                    return new StringDataItem(new KaitaiStream(fileName));
+                }
+
+                public StringDataItem(KaitaiStream p__io, Dex.StringIdItem p__parent = null, Dex p__root = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    _read();
+                }
+                private void _read()
+                {
+                    _utf16Size = new VlqBase128Le(m_io);
+                    _data = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(Utf16Size.Value));
+                }
+                private VlqBase128Le _utf16Size;
+                private string _data;
+                private Dex m_root;
+                private Dex.StringIdItem m_parent;
+                public VlqBase128Le Utf16Size { get { return _utf16Size; } }
+                public string Data { get { return _data; } }
+                public Dex M_Root { get { return m_root; } }
+                public Dex.StringIdItem M_Parent { get { return m_parent; } }
+            }
+            private bool f_value;
+            private StringDataItem _value;
+            public StringDataItem Value
+            {
+                get
+                {
+                    if (f_value)
+                        return _value;
+                    f_value = true;
+                    long _pos = m_io.Pos;
+                    m_io.Seek(StringDataOff);
+                    _value = new StringDataItem(m_io, this, m_root);
+                    m_io.Seek(_pos);
+                    return _value;
+                }
+            }
+            private uint _stringDataOff;
+            private Dex m_root;
+            private Dex m_parent;
+
+            /// <summary>
+            /// offset from the start of the file to the string data for this item.
+            /// The offset should be to a location in the data section, and the data
+            /// should be in the format specified by &quot;string_data_item&quot; below.
+            /// There is no alignment requirement for the offset.
+            /// </summary>
+            public uint StringDataOff { get { return _stringDataOff; } }
+            public Dex M_Root { get { return m_root; } }
+            public Dex M_Parent { get { return m_parent; } }
+        }
+        public partial class TypeIdItem : KaitaiStruct
+        {
+            public static TypeIdItem FromFile(string fileName)
+            {
+                return new TypeIdItem(new KaitaiStream(fileName));
+            }
+
+            public TypeIdItem(KaitaiStream p__io, Dex p__parent = null, Dex p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_typeName = false;
+                _read();
+            }
+            private void _read()
+            {
+                _descriptorIdx = m_io.ReadU4le();
+            }
+            private bool f_typeName;
+            private string _typeName;
+            public string TypeName
+            {
+                get
+                {
+                    if (f_typeName)
+                        return _typeName;
+                    f_typeName = true;
+                    _typeName = (string) (M_Root.StringIds[DescriptorIdx].Value.Data);
+                    return _typeName;
+                }
+            }
+            private uint _descriptorIdx;
+            private Dex m_root;
+            private Dex m_parent;
+
+            /// <summary>
+            /// index into the string_ids list for the descriptor string of this type.
+            /// The string must conform to the syntax for TypeDescriptor, defined above.
+            /// </summary>
+            public uint DescriptorIdx { get { return _descriptorIdx; } }
+            public Dex M_Root { get { return m_root; } }
+            public Dex M_Parent { get { return m_parent; } }
+        }
+        public partial class TypeItem : KaitaiStruct
+        {
+            public static TypeItem FromFile(string fileName)
+            {
+                return new TypeItem(new KaitaiStream(fileName));
+            }
+
+            public TypeItem(KaitaiStream p__io, Dex.TypeList p__parent = null, Dex p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_value = false;
+                _read();
+            }
+            private void _read()
+            {
+                _typeIdx = m_io.ReadU2le();
+            }
+            private bool f_value;
+            private string _value;
+            public string Value
+            {
+                get
+                {
+                    if (f_value)
+                        return _value;
+                    f_value = true;
+                    _value = (string) (M_Root.TypeIds[TypeIdx].TypeName);
+                    return _value;
+                }
+            }
+            private ushort _typeIdx;
+            private Dex m_root;
+            private Dex.TypeList m_parent;
+            public ushort TypeIdx { get { return _typeIdx; } }
+            public Dex M_Root { get { return m_root; } }
+            public Dex.TypeList M_Parent { get { return m_parent; } }
+        }
+        public partial class TypeList : KaitaiStruct
+        {
+            public static TypeList FromFile(string fileName)
+            {
+                return new TypeList(new KaitaiStream(fileName));
+            }
+
+            public TypeList(KaitaiStream p__io, Dex.ProtoIdItem p__parent = null, Dex p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _size = m_io.ReadU4le();
+                _list = new List<TypeItem>();
+                for (var i = 0; i < Size; i++)
+                {
+                    _list.Add(new TypeItem(m_io, this, m_root));
+                }
+            }
+            private uint _size;
+            private List<TypeItem> _list;
+            private Dex m_root;
+            private Dex.ProtoIdItem m_parent;
+            public uint Size { get { return _size; } }
+            public List<TypeItem> List { get { return _list; } }
+            public Dex M_Root { get { return m_root; } }
+            public Dex.ProtoIdItem M_Parent { get { return m_parent; } }
+        }
+        private bool f_classDefs;
+        private List<ClassDefItem> _classDefs;
 
         /// <summary>
-        /// string identifiers list.
+        /// class definitions list.
         /// 
-        /// These are identifiers for all the strings used by this file, either for
-        /// internal naming (e.g., type descriptors) or as constant objects referred to by code.
+        /// The classes must be ordered such that a given class's superclass and
+        /// implemented interfaces appear in the list earlier than the referring class.
         /// 
-        /// This list must be sorted by string contents, using UTF-16 code point values
-        /// (not in a locale-sensitive manner), and it must not contain any duplicate entries.
+        /// Furthermore, it is invalid for a definition for the same-named class to
+        /// appear more than once in the list.
         /// </summary>
-        public List<StringIdItem> StringIds
+        public List<ClassDefItem> ClassDefs
         {
             get
             {
-                if (f_stringIds)
-                    return _stringIds;
+                if (f_classDefs)
+                    return _classDefs;
+                f_classDefs = true;
                 long _pos = m_io.Pos;
-                m_io.Seek(Header.StringIdsOff);
-                _stringIds = new List<StringIdItem>();
-                for (var i = 0; i < Header.StringIdsSize; i++)
+                m_io.Seek(Header.ClassDefsOff);
+                _classDefs = new List<ClassDefItem>();
+                for (var i = 0; i < Header.ClassDefsSize; i++)
                 {
-                    _stringIds.Add(new StringIdItem(m_io, this, m_root));
+                    _classDefs.Add(new ClassDefItem(m_io, this, m_root));
                 }
                 m_io.Seek(_pos);
-                f_stringIds = true;
-                return _stringIds;
+                return _classDefs;
+            }
+        }
+        private bool f_data;
+        private byte[] _data;
+
+        /// <summary>
+        /// data area, containing all the support data for the tables listed above.
+        /// 
+        /// Different items have different alignment requirements, and padding bytes
+        /// are inserted before each item if necessary to achieve proper alignment.
+        /// </summary>
+        public byte[] Data
+        {
+            get
+            {
+                if (f_data)
+                    return _data;
+                f_data = true;
+                long _pos = m_io.Pos;
+                m_io.Seek(Header.DataOff);
+                _data = m_io.ReadBytes(Header.DataSize);
+                m_io.Seek(_pos);
+                return _data;
+            }
+        }
+        private bool f_fieldIds;
+        private List<FieldIdItem> _fieldIds;
+
+        /// <summary>
+        /// field identifiers list.
+        /// 
+        /// These are identifiers for all fields referred to by this file, whether defined in the file or not.
+        /// 
+        /// This list must be sorted, where the defining type (by type_id index)
+        /// is the major order, field name (by string_id index) is the intermediate
+        /// order, and type (by type_id index) is the minor order.
+        /// 
+        /// The list must not contain any duplicate entries.
+        /// </summary>
+        public List<FieldIdItem> FieldIds
+        {
+            get
+            {
+                if (f_fieldIds)
+                    return _fieldIds;
+                f_fieldIds = true;
+                long _pos = m_io.Pos;
+                m_io.Seek(Header.FieldIdsOff);
+                _fieldIds = new List<FieldIdItem>();
+                for (var i = 0; i < Header.FieldIdsSize; i++)
+                {
+                    _fieldIds.Add(new FieldIdItem(m_io, this, m_root));
+                }
+                m_io.Seek(_pos);
+                return _fieldIds;
+            }
+        }
+        private bool f_linkData;
+        private byte[] _linkData;
+
+        /// <summary>
+        /// data used in statically linked files.
+        /// 
+        /// The format of the data in this section is left unspecified by this document.
+        /// 
+        /// This section is empty in unlinked files, and runtime implementations may
+        /// use it as they see fit.
+        /// </summary>
+        public byte[] LinkData
+        {
+            get
+            {
+                if (f_linkData)
+                    return _linkData;
+                f_linkData = true;
+                long _pos = m_io.Pos;
+                m_io.Seek(Header.LinkOff);
+                _linkData = m_io.ReadBytes(Header.LinkSize);
+                m_io.Seek(_pos);
+                return _linkData;
+            }
+        }
+        private bool f_map;
+        private MapList _map;
+        public MapList Map
+        {
+            get
+            {
+                if (f_map)
+                    return _map;
+                f_map = true;
+                long _pos = m_io.Pos;
+                m_io.Seek(Header.MapOff);
+                _map = new MapList(m_io, this, m_root);
+                m_io.Seek(_pos);
+                return _map;
             }
         }
         private bool f_methodIds;
@@ -1578,6 +1674,7 @@ namespace Kaitai
             {
                 if (f_methodIds)
                     return _methodIds;
+                f_methodIds = true;
                 long _pos = m_io.Pos;
                 m_io.Seek(Header.MethodIdsOff);
                 _methodIds = new List<MethodIdItem>();
@@ -1586,131 +1683,7 @@ namespace Kaitai
                     _methodIds.Add(new MethodIdItem(m_io, this, m_root));
                 }
                 m_io.Seek(_pos);
-                f_methodIds = true;
                 return _methodIds;
-            }
-        }
-        private bool f_linkData;
-        private byte[] _linkData;
-
-        /// <summary>
-        /// data used in statically linked files.
-        /// 
-        /// The format of the data in this section is left unspecified by this document.
-        /// 
-        /// This section is empty in unlinked files, and runtime implementations may
-        /// use it as they see fit.
-        /// </summary>
-        public byte[] LinkData
-        {
-            get
-            {
-                if (f_linkData)
-                    return _linkData;
-                long _pos = m_io.Pos;
-                m_io.Seek(Header.LinkOff);
-                _linkData = m_io.ReadBytes(Header.LinkSize);
-                m_io.Seek(_pos);
-                f_linkData = true;
-                return _linkData;
-            }
-        }
-        private bool f_map;
-        private MapList _map;
-        public MapList Map
-        {
-            get
-            {
-                if (f_map)
-                    return _map;
-                long _pos = m_io.Pos;
-                m_io.Seek(Header.MapOff);
-                _map = new MapList(m_io, this, m_root);
-                m_io.Seek(_pos);
-                f_map = true;
-                return _map;
-            }
-        }
-        private bool f_classDefs;
-        private List<ClassDefItem> _classDefs;
-
-        /// <summary>
-        /// class definitions list.
-        /// 
-        /// The classes must be ordered such that a given class's superclass and
-        /// implemented interfaces appear in the list earlier than the referring class.
-        /// 
-        /// Furthermore, it is invalid for a definition for the same-named class to
-        /// appear more than once in the list.
-        /// </summary>
-        public List<ClassDefItem> ClassDefs
-        {
-            get
-            {
-                if (f_classDefs)
-                    return _classDefs;
-                long _pos = m_io.Pos;
-                m_io.Seek(Header.ClassDefsOff);
-                _classDefs = new List<ClassDefItem>();
-                for (var i = 0; i < Header.ClassDefsSize; i++)
-                {
-                    _classDefs.Add(new ClassDefItem(m_io, this, m_root));
-                }
-                m_io.Seek(_pos);
-                f_classDefs = true;
-                return _classDefs;
-            }
-        }
-        private bool f_data;
-        private byte[] _data;
-
-        /// <summary>
-        /// data area, containing all the support data for the tables listed above.
-        /// 
-        /// Different items have different alignment requirements, and padding bytes
-        /// are inserted before each item if necessary to achieve proper alignment.
-        /// </summary>
-        public byte[] Data
-        {
-            get
-            {
-                if (f_data)
-                    return _data;
-                long _pos = m_io.Pos;
-                m_io.Seek(Header.DataOff);
-                _data = m_io.ReadBytes(Header.DataSize);
-                m_io.Seek(_pos);
-                f_data = true;
-                return _data;
-            }
-        }
-        private bool f_typeIds;
-        private List<TypeIdItem> _typeIds;
-
-        /// <summary>
-        /// type identifiers list.
-        /// 
-        /// These are identifiers for all types (classes, arrays, or primitive types)
-        /// referred to by this file, whether defined in the file or not.
-        /// 
-        /// This list must be sorted by string_id index, and it must not contain any duplicate entries.
-        /// </summary>
-        public List<TypeIdItem> TypeIds
-        {
-            get
-            {
-                if (f_typeIds)
-                    return _typeIds;
-                long _pos = m_io.Pos;
-                m_io.Seek(Header.TypeIdsOff);
-                _typeIds = new List<TypeIdItem>();
-                for (var i = 0; i < Header.TypeIdsSize; i++)
-                {
-                    _typeIds.Add(new TypeIdItem(m_io, this, m_root));
-                }
-                m_io.Seek(_pos);
-                f_typeIds = true;
-                return _typeIds;
             }
         }
         private bool f_protoIds;
@@ -1731,6 +1704,7 @@ namespace Kaitai
             {
                 if (f_protoIds)
                     return _protoIds;
+                f_protoIds = true;
                 long _pos = m_io.Pos;
                 m_io.Seek(Header.ProtoIdsOff);
                 _protoIds = new List<ProtoIdItem>();
@@ -1739,40 +1713,66 @@ namespace Kaitai
                     _protoIds.Add(new ProtoIdItem(m_io, this, m_root));
                 }
                 m_io.Seek(_pos);
-                f_protoIds = true;
                 return _protoIds;
             }
         }
-        private bool f_fieldIds;
-        private List<FieldIdItem> _fieldIds;
+        private bool f_stringIds;
+        private List<StringIdItem> _stringIds;
 
         /// <summary>
-        /// field identifiers list.
+        /// string identifiers list.
         /// 
-        /// These are identifiers for all fields referred to by this file, whether defined in the file or not.
+        /// These are identifiers for all the strings used by this file, either for
+        /// internal naming (e.g., type descriptors) or as constant objects referred to by code.
         /// 
-        /// This list must be sorted, where the defining type (by type_id index)
-        /// is the major order, field name (by string_id index) is the intermediate
-        /// order, and type (by type_id index) is the minor order.
-        /// 
-        /// The list must not contain any duplicate entries.
+        /// This list must be sorted by string contents, using UTF-16 code point values
+        /// (not in a locale-sensitive manner), and it must not contain any duplicate entries.
         /// </summary>
-        public List<FieldIdItem> FieldIds
+        public List<StringIdItem> StringIds
         {
             get
             {
-                if (f_fieldIds)
-                    return _fieldIds;
+                if (f_stringIds)
+                    return _stringIds;
+                f_stringIds = true;
                 long _pos = m_io.Pos;
-                m_io.Seek(Header.FieldIdsOff);
-                _fieldIds = new List<FieldIdItem>();
-                for (var i = 0; i < Header.FieldIdsSize; i++)
+                m_io.Seek(Header.StringIdsOff);
+                _stringIds = new List<StringIdItem>();
+                for (var i = 0; i < Header.StringIdsSize; i++)
                 {
-                    _fieldIds.Add(new FieldIdItem(m_io, this, m_root));
+                    _stringIds.Add(new StringIdItem(m_io, this, m_root));
                 }
                 m_io.Seek(_pos);
-                f_fieldIds = true;
-                return _fieldIds;
+                return _stringIds;
+            }
+        }
+        private bool f_typeIds;
+        private List<TypeIdItem> _typeIds;
+
+        /// <summary>
+        /// type identifiers list.
+        /// 
+        /// These are identifiers for all types (classes, arrays, or primitive types)
+        /// referred to by this file, whether defined in the file or not.
+        /// 
+        /// This list must be sorted by string_id index, and it must not contain any duplicate entries.
+        /// </summary>
+        public List<TypeIdItem> TypeIds
+        {
+            get
+            {
+                if (f_typeIds)
+                    return _typeIds;
+                f_typeIds = true;
+                long _pos = m_io.Pos;
+                m_io.Seek(Header.TypeIdsOff);
+                _typeIds = new List<TypeIdItem>();
+                for (var i = 0; i < Header.TypeIdsSize; i++)
+                {
+                    _typeIds.Add(new TypeIdItem(m_io, this, m_root));
+                }
+                m_io.Seek(_pos);
+                return _typeIds;
             }
         }
         private HeaderItem _header;

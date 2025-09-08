@@ -3,15 +3,15 @@
 
 namespace {
     class PsxTim extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \PsxTim $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\PsxTim $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic = $this->_io->readBytes(4);
-            if (!($this->magic() == "\x10\x00\x00\x00")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x10\x00\x00\x00", $this->magic(), $this->_io(), "/seq/0");
+            if (!($this->_m_magic == "\x10\x00\x00\x00")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x10\x00\x00\x00", $this->_m_magic, $this->_io, "/seq/0");
             }
             $this->_m_flags = $this->_io->readU4le();
             if ($this->hasClut()) {
@@ -19,19 +19,19 @@ namespace {
             }
             $this->_m_img = new \PsxTim\Bitmap($this->_io, $this, $this->_root);
         }
+        protected $_m_bpp;
+        public function bpp() {
+            if ($this->_m_bpp !== null)
+                return $this->_m_bpp;
+            $this->_m_bpp = $this->flags() & 3;
+            return $this->_m_bpp;
+        }
         protected $_m_hasClut;
         public function hasClut() {
             if ($this->_m_hasClut !== null)
                 return $this->_m_hasClut;
             $this->_m_hasClut = ($this->flags() & 8) != 0;
             return $this->_m_hasClut;
-        }
-        protected $_m_bpp;
-        public function bpp() {
-            if ($this->_m_bpp !== null)
-                return $this->_m_bpp;
-            $this->_m_bpp = ($this->flags() & 3);
-            return $this->_m_bpp;
         }
         protected $_m_magic;
         protected $_m_flags;
@@ -54,7 +54,7 @@ namespace {
 
 namespace PsxTim {
     class Bitmap extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PsxTim $_parent = null, \PsxTim $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PsxTim $_parent = null, ?\PsxTim $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -65,7 +65,7 @@ namespace PsxTim {
             $this->_m_originY = $this->_io->readU2le();
             $this->_m_width = $this->_io->readU2le();
             $this->_m_height = $this->_io->readU2le();
-            $this->_m_body = $this->_io->readBytes(($this->len() - 12));
+            $this->_m_body = $this->_io->readBytes($this->len() - 12);
         }
         protected $_m_len;
         protected $_m_originX;
@@ -88,5 +88,11 @@ namespace PsxTim {
         const BPP_8 = 1;
         const BPP_16 = 2;
         const BPP_24 = 3;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

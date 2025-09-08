@@ -1,11 +1,12 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class QuakeMdl(KaitaiStruct):
     """Quake 1 model format is used to store 3D models completely with
@@ -45,9 +46,9 @@ class QuakeMdl(KaitaiStruct):
     `texmap` utility in the same development utilities toolkit.
     """
     def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
+        super(QuakeMdl, self).__init__(_io)
         self._parent = _parent
-        self._root = _root if _root else self
+        self._root = _root or self
         self._read()
 
     def _read(self):
@@ -69,40 +70,85 @@ class QuakeMdl(KaitaiStruct):
             self.frames.append(QuakeMdl.MdlFrame(self._io, self, self._root))
 
 
-    class MdlVertex(KaitaiStruct):
+
+    def _fetch_instances(self):
+        pass
+        self.header._fetch_instances()
+        for i in range(len(self.skins)):
+            pass
+            self.skins[i]._fetch_instances()
+
+        for i in range(len(self.texture_coordinates)):
+            pass
+            self.texture_coordinates[i]._fetch_instances()
+
+        for i in range(len(self.triangles)):
+            pass
+            self.triangles[i]._fetch_instances()
+
+        for i in range(len(self.frames)):
+            pass
+            self.frames[i]._fetch_instances()
+
+
+    class MdlFrame(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(QuakeMdl.MdlFrame, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
-            self.values = []
-            for i in range(3):
-                self.values.append(self._io.read_u1())
+            self.type = self._io.read_s4le()
+            if self.type != 0:
+                pass
+                self.min = QuakeMdl.MdlVertex(self._io, self, self._root)
 
-            self.normal_index = self._io.read_u1()
+            if self.type != 0:
+                pass
+                self.max = QuakeMdl.MdlVertex(self._io, self, self._root)
+
+            if self.type != 0:
+                pass
+                self.time = []
+                for i in range(self.type):
+                    self.time.append(self._io.read_f4le())
 
 
-    class MdlTexcoord(KaitaiStruct):
-        """
-        .. seealso::
-           Source - https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L79-L83
-        
-        
-        .. seealso::
-           Source - https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD2
-        """
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
+            self.frames = []
+            for i in range(self.num_simple_frames):
+                self.frames.append(QuakeMdl.MdlSimpleFrame(self._io, self, self._root))
 
-        def _read(self):
-            self.on_seam = self._io.read_s4le()
-            self.s = self._io.read_s4le()
-            self.t = self._io.read_s4le()
+
+
+        def _fetch_instances(self):
+            pass
+            if self.type != 0:
+                pass
+                self.min._fetch_instances()
+
+            if self.type != 0:
+                pass
+                self.max._fetch_instances()
+
+            if self.type != 0:
+                pass
+                for i in range(len(self.time)):
+                    pass
+
+
+            for i in range(len(self.frames)):
+                pass
+                self.frames[i]._fetch_instances()
+
+
+        @property
+        def num_simple_frames(self):
+            if hasattr(self, '_m_num_simple_frames'):
+                return self._m_num_simple_frames
+
+            self._m_num_simple_frames = (1 if self.type == 0 else self.type)
+            return getattr(self, '_m_num_simple_frames', None)
 
 
     class MdlHeader(KaitaiStruct):
@@ -115,9 +161,9 @@ class QuakeMdl(KaitaiStruct):
            Source - https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD0
         """
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(QuakeMdl.MdlHeader, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -141,6 +187,13 @@ class QuakeMdl(KaitaiStruct):
             self.flags = self._io.read_s4le()
             self.size = self._io.read_f4le()
 
+
+        def _fetch_instances(self):
+            pass
+            self.scale._fetch_instances()
+            self.origin._fetch_instances()
+            self.eye_position._fetch_instances()
+
         @property
         def skin_size(self):
             """Skin size in pixels.
@@ -148,32 +201,63 @@ class QuakeMdl(KaitaiStruct):
             if hasattr(self, '_m_skin_size'):
                 return self._m_skin_size
 
-            self._m_skin_size = (self.skin_width * self.skin_height)
+            self._m_skin_size = self.skin_width * self.skin_height
             return getattr(self, '_m_skin_size', None)
+
+
+    class MdlSimpleFrame(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(QuakeMdl.MdlSimpleFrame, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.bbox_min = QuakeMdl.MdlVertex(self._io, self, self._root)
+            self.bbox_max = QuakeMdl.MdlVertex(self._io, self, self._root)
+            self.name = (KaitaiStream.bytes_terminate(self._io.read_bytes(16), 0, False)).decode(u"ASCII")
+            self.vertices = []
+            for i in range(self._root.header.num_verts):
+                self.vertices.append(QuakeMdl.MdlVertex(self._io, self, self._root))
+
+
+
+        def _fetch_instances(self):
+            pass
+            self.bbox_min._fetch_instances()
+            self.bbox_max._fetch_instances()
+            for i in range(len(self.vertices)):
+                pass
+                self.vertices[i]._fetch_instances()
+
 
 
     class MdlSkin(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(QuakeMdl.MdlSkin, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
             self.group = self._io.read_s4le()
             if self.group == 0:
+                pass
                 self.single_texture_data = self._io.read_bytes(self._root.header.skin_size)
 
             if self.group != 0:
+                pass
                 self.num_frames = self._io.read_u4le()
 
             if self.group != 0:
+                pass
                 self.frame_times = []
                 for i in range(self.num_frames):
                     self.frame_times.append(self._io.read_f4le())
 
 
             if self.group != 0:
+                pass
                 self.group_texture_data = []
                 for i in range(self.num_frames):
                     self.group_texture_data.append(self._io.read_bytes(self._root.header.skin_size))
@@ -181,56 +265,51 @@ class QuakeMdl(KaitaiStruct):
 
 
 
-    class MdlFrame(KaitaiStruct):
+        def _fetch_instances(self):
+            pass
+            if self.group == 0:
+                pass
+
+            if self.group != 0:
+                pass
+
+            if self.group != 0:
+                pass
+                for i in range(len(self.frame_times)):
+                    pass
+
+
+            if self.group != 0:
+                pass
+                for i in range(len(self.group_texture_data)):
+                    pass
+
+
+
+
+    class MdlTexcoord(KaitaiStruct):
+        """
+        .. seealso::
+           Source - https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L79-L83
+        
+        
+        .. seealso::
+           Source - https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD2
+        """
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(QuakeMdl.MdlTexcoord, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
-            self.type = self._io.read_s4le()
-            if self.type != 0:
-                self.min = QuakeMdl.MdlVertex(self._io, self, self._root)
-
-            if self.type != 0:
-                self.max = QuakeMdl.MdlVertex(self._io, self, self._root)
-
-            if self.type != 0:
-                self.time = []
-                for i in range(self.type):
-                    self.time.append(self._io.read_f4le())
+            self.on_seam = self._io.read_s4le()
+            self.s = self._io.read_s4le()
+            self.t = self._io.read_s4le()
 
 
-            self.frames = []
-            for i in range(self.num_simple_frames):
-                self.frames.append(QuakeMdl.MdlSimpleFrame(self._io, self, self._root))
-
-
-        @property
-        def num_simple_frames(self):
-            if hasattr(self, '_m_num_simple_frames'):
-                return self._m_num_simple_frames
-
-            self._m_num_simple_frames = (1 if self.type == 0 else self.type)
-            return getattr(self, '_m_num_simple_frames', None)
-
-
-    class MdlSimpleFrame(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.bbox_min = QuakeMdl.MdlVertex(self._io, self, self._root)
-            self.bbox_max = QuakeMdl.MdlVertex(self._io, self, self._root)
-            self.name = (KaitaiStream.bytes_terminate(KaitaiStream.bytes_strip_right(self._io.read_bytes(16), 0), 0, False)).decode(u"ASCII")
-            self.vertices = []
-            for i in range(self._root.header.num_verts):
-                self.vertices.append(QuakeMdl.MdlVertex(self._io, self, self._root))
-
+        def _fetch_instances(self):
+            pass
 
 
     class MdlTriangle(KaitaiStruct):
@@ -245,9 +324,9 @@ class QuakeMdl(KaitaiStruct):
            Source - https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD3
         """
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(QuakeMdl.MdlTriangle, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -258,21 +337,54 @@ class QuakeMdl(KaitaiStruct):
 
 
 
+        def _fetch_instances(self):
+            pass
+            for i in range(len(self.vertices)):
+                pass
+
+
+
+    class MdlVertex(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(QuakeMdl.MdlVertex, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.values = []
+            for i in range(3):
+                self.values.append(self._io.read_u1())
+
+            self.normal_index = self._io.read_u1()
+
+
+        def _fetch_instances(self):
+            pass
+            for i in range(len(self.values)):
+                pass
+
+
+
     class Vec3(KaitaiStruct):
         """Basic 3D vector (x, y, z) using single-precision floating point
         coordnates. Can be used to specify a point in 3D space,
         direction, scaling factor, etc.
         """
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(QuakeMdl.Vec3, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
             self.x = self._io.read_f4le()
             self.y = self._io.read_f4le()
             self.z = self._io.read_f4le()
+
+
+        def _fetch_instances(self):
+            pass
 
 
 

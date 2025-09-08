@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Encode;
 
 ########################################################################
@@ -25,7 +25,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -37,11 +37,22 @@ sub _read {
 
 }
 
-sub sector_size {
+sub partition_entries {
     my ($self) = @_;
-    return $self->{sector_size} if ($self->{sector_size});
-    $self->{sector_size} = 512;
-    return $self->{sector_size};
+    return $self->{partition_entries} if ($self->{partition_entries});
+    my $io = $self->_root()->_io();
+    my $_pos = $io->pos();
+    $io->seek($self->_root()->sector_size());
+    $self->{_raw_partition_entries} = [];
+    $self->{partition_entries} = [];
+    my $n_partition_entries = $self->_root()->partition_lookup()->number_of_partitions();
+    for (my $i = 0; $i < $n_partition_entries; $i++) {
+        push @{$self->{_raw_partition_entries}}, $io->read_bytes($self->sector_size());
+        my $io__raw_partition_entries = IO::KaitaiStruct::Stream->new($self->{_raw_partition_entries}[$i]);
+        push @{$self->{partition_entries}}, ApmPartitionTable::PartitionEntry->new($io__raw_partition_entries, $self, $self->{_root});
+    }
+    $io->seek($_pos);
+    return $self->{partition_entries};
 }
 
 sub partition_lookup {
@@ -57,32 +68,21 @@ sub partition_lookup {
     return $self->{partition_lookup};
 }
 
-sub partition_entries {
+sub sector_size {
     my ($self) = @_;
-    return $self->{partition_entries} if ($self->{partition_entries});
-    my $io = $self->_root()->_io();
-    my $_pos = $io->pos();
-    $io->seek($self->_root()->sector_size());
-    $self->{_raw_partition_entries} = ();
-    $self->{partition_entries} = ();
-    my $n_partition_entries = $self->_root()->partition_lookup()->number_of_partitions();
-    for (my $i = 0; $i < $n_partition_entries; $i++) {
-        push @{$self->{_raw_partition_entries}}, $io->read_bytes($self->sector_size());
-        my $io__raw_partition_entries = IO::KaitaiStruct::Stream->new($self->{_raw_partition_entries}[$i]);
-        push @{$self->{partition_entries}}, ApmPartitionTable::PartitionEntry->new($io__raw_partition_entries, $self, $self->{_root});
-    }
-    $io->seek($_pos);
-    return $self->{partition_entries};
-}
-
-sub _raw_partition_lookup {
-    my ($self) = @_;
-    return $self->{_raw_partition_lookup};
+    return $self->{sector_size} if ($self->{sector_size});
+    $self->{sector_size} = 512;
+    return $self->{sector_size};
 }
 
 sub _raw_partition_entries {
     my ($self) = @_;
     return $self->{_raw_partition_entries};
+}
+
+sub _raw_partition_lookup {
+    my ($self) = @_;
+    return $self->{_raw_partition_lookup};
 }
 
 ########################################################################
@@ -105,7 +105,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -120,8 +120,8 @@ sub _read {
     $self->{number_of_partitions} = $self->{_io}->read_u4be();
     $self->{partition_start} = $self->{_io}->read_u4be();
     $self->{partition_size} = $self->{_io}->read_u4be();
-    $self->{partition_name} = Encode::decode("ascii", IO::KaitaiStruct::Stream::bytes_terminate($self->{_io}->read_bytes(32), 0, 0));
-    $self->{partition_type} = Encode::decode("ascii", IO::KaitaiStruct::Stream::bytes_terminate($self->{_io}->read_bytes(32), 0, 0));
+    $self->{partition_name} = Encode::decode("ASCII", IO::KaitaiStruct::Stream::bytes_terminate($self->{_io}->read_bytes(32), 0, 0));
+    $self->{partition_type} = Encode::decode("ASCII", IO::KaitaiStruct::Stream::bytes_terminate($self->{_io}->read_bytes(32), 0, 0));
     $self->{data_start} = $self->{_io}->read_u4be();
     $self->{data_size} = $self->{_io}->read_u4be();
     $self->{partition_status} = $self->{_io}->read_u4be();
@@ -132,7 +132,29 @@ sub _read {
     $self->{boot_code_entry} = $self->{_io}->read_u4be();
     $self->{reserved_3} = $self->{_io}->read_bytes(4);
     $self->{boot_code_cksum} = $self->{_io}->read_u4be();
-    $self->{processor_type} = Encode::decode("ascii", IO::KaitaiStruct::Stream::bytes_terminate($self->{_io}->read_bytes(16), 0, 0));
+    $self->{processor_type} = Encode::decode("ASCII", IO::KaitaiStruct::Stream::bytes_terminate($self->{_io}->read_bytes(16), 0, 0));
+}
+
+sub boot_code {
+    my ($self) = @_;
+    return $self->{boot_code} if ($self->{boot_code});
+    my $io = $self->_root()->_io();
+    my $_pos = $io->pos();
+    $io->seek($self->boot_code_start() * $self->_root()->sector_size());
+    $self->{boot_code} = $io->read_bytes($self->boot_code_size());
+    $io->seek($_pos);
+    return $self->{boot_code};
+}
+
+sub data {
+    my ($self) = @_;
+    return $self->{data} if ($self->{data});
+    my $io = $self->_root()->_io();
+    my $_pos = $io->pos();
+    $io->seek($self->data_start() * $self->_root()->sector_size());
+    $self->{data} = $io->read_bytes($self->data_size() * $self->_root()->sector_size());
+    $io->seek($_pos);
+    return $self->{data};
 }
 
 sub partition {
@@ -141,33 +163,11 @@ sub partition {
     if (($self->partition_status() & 1) != 0) {
         my $io = $self->_root()->_io();
         my $_pos = $io->pos();
-        $io->seek(($self->partition_start() * $self->_root()->sector_size()));
-        $self->{partition} = $io->read_bytes(($self->partition_size() * $self->_root()->sector_size()));
+        $io->seek($self->partition_start() * $self->_root()->sector_size());
+        $self->{partition} = $io->read_bytes($self->partition_size() * $self->_root()->sector_size());
         $io->seek($_pos);
     }
     return $self->{partition};
-}
-
-sub data {
-    my ($self) = @_;
-    return $self->{data} if ($self->{data});
-    my $io = $self->_root()->_io();
-    my $_pos = $io->pos();
-    $io->seek(($self->data_start() * $self->_root()->sector_size()));
-    $self->{data} = $io->read_bytes(($self->data_size() * $self->_root()->sector_size()));
-    $io->seek($_pos);
-    return $self->{data};
-}
-
-sub boot_code {
-    my ($self) = @_;
-    return $self->{boot_code} if ($self->{boot_code});
-    my $io = $self->_root()->_io();
-    my $_pos = $io->pos();
-    $io->seek(($self->boot_code_start() * $self->_root()->sector_size()));
-    $self->{boot_code} = $io->read_bytes($self->boot_code_size());
-    $io->seek($_pos);
-    return $self->{boot_code};
 }
 
 sub magic {

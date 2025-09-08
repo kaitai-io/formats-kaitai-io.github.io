@@ -5,6 +5,7 @@ import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -31,6 +32,10 @@ public class Exif extends KaitaiStruct {
         this.endianness = this._io.readU2le();
         this.body = new ExifBody(this._io, this, _root);
     }
+
+    public void _fetchInstances() {
+        this.body._fetchInstances();
+    }
     public static class ExifBody extends KaitaiStruct {
         public static ExifBody fromFile(String fileName) throws IOException {
             return new ExifBody(new ByteBufferKaitaiStream(fileName));
@@ -54,13 +59,11 @@ public class Exif extends KaitaiStruct {
         private void _read() {
             switch (_root().endianness()) {
             case 18761: {
-                boolean _tmp = (boolean) (true);
-                this._is_le = _tmp;
+                this._is_le = true;
                 break;
             }
             case 19789: {
-                boolean _tmp = (boolean) (false);
-                this._is_le = _tmp;
+                this._is_le = false;
                 break;
             }
             }
@@ -80,6 +83,13 @@ public class Exif extends KaitaiStruct {
         private void _readBE() {
             this.version = this._io.readU2be();
             this.ifd0Ofs = this._io.readU4be();
+        }
+
+        public void _fetchInstances() {
+            ifd0();
+            if (this.ifd0 != null) {
+                this.ifd0._fetchInstances();
+            }
         }
         public static class Ifd extends KaitaiStruct {
             private Boolean _is_le;
@@ -117,6 +127,16 @@ public class Exif extends KaitaiStruct {
                 }
                 this.nextIfdOfs = this._io.readU4be();
             }
+
+            public void _fetchInstances() {
+                for (int i = 0; i < this.fields.size(); i++) {
+                    this.fields.get(((Number) (i)).intValue())._fetchInstances();
+                }
+                nextIfd();
+                if (this.nextIfd != null) {
+                    this.nextIfd._fetchInstances();
+                }
+            }
             private Ifd nextIfd;
             public Ifd nextIfd() {
                 if (this.nextIfd != null)
@@ -134,12 +154,12 @@ public class Exif extends KaitaiStruct {
                 return this.nextIfd;
             }
             private int numFields;
-            private ArrayList<IfdField> fields;
+            private List<IfdField> fields;
             private long nextIfdOfs;
             private Exif _root;
             private KaitaiStruct _parent;
             public int numFields() { return numFields; }
-            public ArrayList<IfdField> fields() { return fields; }
+            public List<IfdField> fields() { return fields; }
             public long nextIfdOfs() { return nextIfdOfs; }
             public Exif _root() { return _root; }
             public KaitaiStruct _parent() { return _parent; }
@@ -668,29 +688,18 @@ public class Exif extends KaitaiStruct {
                 this.length = this._io.readU4be();
                 this.ofsOrData = this._io.readU4be();
             }
-            private Byte typeByteLength;
-            public Byte typeByteLength() {
-                if (this.typeByteLength != null)
-                    return this.typeByteLength;
-                byte _tmp = (byte) ((fieldType() == FieldTypeEnum.WORD ? 2 : (fieldType() == FieldTypeEnum.DWORD ? 4 : 1)));
-                this.typeByteLength = _tmp;
-                return this.typeByteLength;
+
+            public void _fetchInstances() {
+                data();
+                if (this.data != null) {
+                }
             }
             private Integer byteLength;
             public Integer byteLength() {
                 if (this.byteLength != null)
                     return this.byteLength;
-                int _tmp = (int) ((length() * typeByteLength()));
-                this.byteLength = _tmp;
+                this.byteLength = ((Number) (length() * typeByteLength())).intValue();
                 return this.byteLength;
-            }
-            private Boolean isImmediateData;
-            public Boolean isImmediateData() {
-                if (this.isImmediateData != null)
-                    return this.isImmediateData;
-                boolean _tmp = (boolean) (byteLength() <= 4);
-                this.isImmediateData = _tmp;
-                return this.isImmediateData;
             }
             private byte[] data;
             public byte[] data() {
@@ -708,6 +717,20 @@ public class Exif extends KaitaiStruct {
                     io.seek(_pos);
                 }
                 return this.data;
+            }
+            private Boolean isImmediateData;
+            public Boolean isImmediateData() {
+                if (this.isImmediateData != null)
+                    return this.isImmediateData;
+                this.isImmediateData = byteLength() <= 4;
+                return this.isImmediateData;
+            }
+            private Byte typeByteLength;
+            public Byte typeByteLength() {
+                if (this.typeByteLength != null)
+                    return this.typeByteLength;
+                this.typeByteLength = ((Number) ((fieldType() == FieldTypeEnum.WORD ? 2 : (fieldType() == FieldTypeEnum.DWORD ? 4 : 1)))).byteValue();
+                return this.typeByteLength;
             }
             private TagEnum tag;
             private FieldTypeEnum fieldType;

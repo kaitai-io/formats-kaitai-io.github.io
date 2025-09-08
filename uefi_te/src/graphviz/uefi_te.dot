@@ -1,0 +1,84 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__uefi_te {
+		label="UefiTe";
+		graph[style=dotted];
+
+		uefi_te__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="te_hdr_pos">0</TD><TD PORT="te_hdr_size">40</TD><TD>TeHeader</TD><TD PORT="te_hdr_type">te_hdr</TD></TR>
+			<TR><TD PORT="sections_pos">40</TD><TD PORT="sections_size">40</TD><TD>Section</TD><TD PORT="sections_type">sections</TD></TR>
+			<TR><TD COLSPAN="4" PORT="sections__repeat">repeat te_hdr.num_sections times</TD></TR>
+		</TABLE>>];
+		subgraph cluster__data_dir {
+			label="UefiTe::DataDir";
+			graph[style=dotted];
+
+			data_dir__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="virtual_address_pos">0</TD><TD PORT="virtual_address_size">4</TD><TD>u4le</TD><TD PORT="virtual_address_type">virtual_address</TD></TR>
+				<TR><TD PORT="size_pos">4</TD><TD PORT="size_size">4</TD><TD>u4le</TD><TD PORT="size_type">size</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__header_data_dirs {
+			label="UefiTe::HeaderDataDirs";
+			graph[style=dotted];
+
+			header_data_dirs__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="base_relocation_table_pos">0</TD><TD PORT="base_relocation_table_size">8</TD><TD>DataDir</TD><TD PORT="base_relocation_table_type">base_relocation_table</TD></TR>
+				<TR><TD PORT="debug_pos">8</TD><TD PORT="debug_size">8</TD><TD>DataDir</TD><TD PORT="debug_type">debug</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__section {
+			label="UefiTe::Section";
+			graph[style=dotted];
+
+			section__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="name_pos">0</TD><TD PORT="name_size">8</TD><TD>str(UTF-8)</TD><TD PORT="name_type">name</TD></TR>
+				<TR><TD PORT="virtual_size_pos">8</TD><TD PORT="virtual_size_size">4</TD><TD>u4le</TD><TD PORT="virtual_size_type">virtual_size</TD></TR>
+				<TR><TD PORT="virtual_address_pos">12</TD><TD PORT="virtual_address_size">4</TD><TD>u4le</TD><TD PORT="virtual_address_type">virtual_address</TD></TR>
+				<TR><TD PORT="size_of_raw_data_pos">16</TD><TD PORT="size_of_raw_data_size">4</TD><TD>u4le</TD><TD PORT="size_of_raw_data_type">size_of_raw_data</TD></TR>
+				<TR><TD PORT="pointer_to_raw_data_pos">20</TD><TD PORT="pointer_to_raw_data_size">4</TD><TD>u4le</TD><TD PORT="pointer_to_raw_data_type">pointer_to_raw_data</TD></TR>
+				<TR><TD PORT="pointer_to_relocations_pos">24</TD><TD PORT="pointer_to_relocations_size">4</TD><TD>u4le</TD><TD PORT="pointer_to_relocations_type">pointer_to_relocations</TD></TR>
+				<TR><TD PORT="pointer_to_linenumbers_pos">28</TD><TD PORT="pointer_to_linenumbers_size">4</TD><TD>u4le</TD><TD PORT="pointer_to_linenumbers_type">pointer_to_linenumbers</TD></TR>
+				<TR><TD PORT="num_relocations_pos">32</TD><TD PORT="num_relocations_size">2</TD><TD>u2le</TD><TD PORT="num_relocations_type">num_relocations</TD></TR>
+				<TR><TD PORT="num_linenumbers_pos">34</TD><TD PORT="num_linenumbers_size">2</TD><TD>u2le</TD><TD PORT="num_linenumbers_type">num_linenumbers</TD></TR>
+				<TR><TD PORT="characteristics_pos">36</TD><TD PORT="characteristics_size">4</TD><TD>u4le</TD><TD PORT="characteristics_type">characteristics</TD></TR>
+			</TABLE>>];
+			section__inst__body [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="body_pos">(pointer_to_raw_data - _root.te_hdr.stripped_size) + _root.te_hdr._io.size</TD><TD PORT="body_size">size_of_raw_data</TD><TD></TD><TD PORT="body_type">body</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__te_header {
+			label="UefiTe::TeHeader";
+			graph[style=dotted];
+
+			te_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">2</TD><TD>56 5A</TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD PORT="machine_pos">2</TD><TD PORT="machine_size">2</TD><TD>u2le→MachineType</TD><TD PORT="machine_type">machine</TD></TR>
+				<TR><TD PORT="num_sections_pos">4</TD><TD PORT="num_sections_size">1</TD><TD>u1</TD><TD PORT="num_sections_type">num_sections</TD></TR>
+				<TR><TD PORT="subsystem_pos">5</TD><TD PORT="subsystem_size">1</TD><TD>u1→SubsystemEnum</TD><TD PORT="subsystem_type">subsystem</TD></TR>
+				<TR><TD PORT="stripped_size_pos">6</TD><TD PORT="stripped_size_size">2</TD><TD>u2le</TD><TD PORT="stripped_size_type">stripped_size</TD></TR>
+				<TR><TD PORT="entry_point_addr_pos">8</TD><TD PORT="entry_point_addr_size">4</TD><TD>u4le</TD><TD PORT="entry_point_addr_type">entry_point_addr</TD></TR>
+				<TR><TD PORT="base_of_code_pos">12</TD><TD PORT="base_of_code_size">4</TD><TD>u4le</TD><TD PORT="base_of_code_type">base_of_code</TD></TR>
+				<TR><TD PORT="image_base_pos">16</TD><TD PORT="image_base_size">8</TD><TD>u8le</TD><TD PORT="image_base_type">image_base</TD></TR>
+				<TR><TD PORT="data_dirs_pos">24</TD><TD PORT="data_dirs_size">16</TD><TD>HeaderDataDirs</TD><TD PORT="data_dirs_type">data_dirs</TD></TR>
+			</TABLE>>];
+		}
+	}
+	uefi_te__seq:te_hdr_type -> te_header__seq [style=bold];
+	uefi_te__seq:sections_type -> section__seq [style=bold];
+	te_header__seq:num_sections_type -> uefi_te__seq:sections__repeat [color="#404040"];
+	header_data_dirs__seq:base_relocation_table_type -> data_dir__seq [style=bold];
+	header_data_dirs__seq:debug_type -> data_dir__seq [style=bold];
+	section__seq:pointer_to_raw_data_type -> section__inst__body:body_pos [color="#404040"];
+	te_header__seq:stripped_size_type -> section__inst__body:body_pos [color="#404040"];
+	uefi_te__seq:te_hdr_type -> section__inst__body:body_pos [color="#404040"];
+	section__seq:size_of_raw_data_type -> section__inst__body:body_size [color="#404040"];
+	te_header__seq:data_dirs_type -> header_data_dirs__seq [style=bold];
+}

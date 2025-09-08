@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -26,14 +26,6 @@ class Avi < Kaitai::Struct::Struct
   }
   I__CHUNK_TYPE = CHUNK_TYPE.invert
 
-  STREAM_TYPE = {
-    1935960429 => :stream_type_mids,
-    1935960438 => :stream_type_vids,
-    1935963489 => :stream_type_auds,
-    1937012852 => :stream_type_txts,
-  }
-  I__STREAM_TYPE = STREAM_TYPE.invert
-
   HANDLER_TYPE = {
     85 => :handler_type_mp3,
     8192 => :handler_type_ac3,
@@ -42,77 +34,35 @@ class Avi < Kaitai::Struct::Struct
     1684633208 => :handler_type_xvid,
   }
   I__HANDLER_TYPE = HANDLER_TYPE.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+
+  STREAM_TYPE = {
+    1935960429 => :stream_type_mids,
+    1935960438 => :stream_type_vids,
+    1935963489 => :stream_type_auds,
+    1937012852 => :stream_type_txts,
+  }
+  I__STREAM_TYPE = STREAM_TYPE.invert
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
     @magic1 = @_io.read_bytes(4)
-    raise Kaitai::Struct::ValidationNotEqualError.new([82, 73, 70, 70].pack('C*'), magic1, _io, "/seq/0") if not magic1 == [82, 73, 70, 70].pack('C*')
+    raise Kaitai::Struct::ValidationNotEqualError.new([82, 73, 70, 70].pack('C*'), @magic1, @_io, "/seq/0") if not @magic1 == [82, 73, 70, 70].pack('C*')
     @file_size = @_io.read_u4le
     @magic2 = @_io.read_bytes(4)
-    raise Kaitai::Struct::ValidationNotEqualError.new([65, 86, 73, 32].pack('C*'), magic2, _io, "/seq/2") if not magic2 == [65, 86, 73, 32].pack('C*')
-    @_raw_data = @_io.read_bytes((file_size - 4))
-    _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
-    @data = Blocks.new(_io__raw_data, self, @_root)
+    raise Kaitai::Struct::ValidationNotEqualError.new([65, 86, 73, 32].pack('C*'), @magic2, @_io, "/seq/2") if not @magic2 == [65, 86, 73, 32].pack('C*')
+    _io_data = @_io.substream(file_size - 4)
+    @data = Blocks.new(_io_data, self, @_root)
     self
-  end
-  class ListBody < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @list_type = Kaitai::Struct::Stream::resolve_enum(Avi::CHUNK_TYPE, @_io.read_u4le)
-      @data = Blocks.new(@_io, self, @_root)
-      self
-    end
-    attr_reader :list_type
-    attr_reader :data
-  end
-  class Rect < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @left = @_io.read_s2le
-      @top = @_io.read_s2le
-      @right = @_io.read_s2le
-      @bottom = @_io.read_s2le
-      self
-    end
-    attr_reader :left
-    attr_reader :top
-    attr_reader :right
-    attr_reader :bottom
-  end
-  class Blocks < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @entries = []
-      i = 0
-      while not @_io.eof?
-        @entries << Block.new(@_io, self, @_root)
-        i += 1
-      end
-      self
-    end
-    attr_reader :entries
   end
 
   ##
   # Main header of an AVI file, defined as AVIMAINHEADER structure
   # @see https://learn.microsoft.com/en-us/previous-versions/ms779632(v=vs.85) Source
   class AvihBody < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -144,7 +94,7 @@ class Avi < Kaitai::Struct::Struct
     attr_reader :reserved
   end
   class Block < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -153,18 +103,15 @@ class Avi < Kaitai::Struct::Struct
       @four_cc = Kaitai::Struct::Stream::resolve_enum(Avi::CHUNK_TYPE, @_io.read_u4le)
       @block_size = @_io.read_u4le
       case four_cc
-      when :chunk_type_list
-        @_raw_data = @_io.read_bytes(block_size)
-        _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = ListBody.new(_io__raw_data, self, @_root)
       when :chunk_type_avih
-        @_raw_data = @_io.read_bytes(block_size)
-        _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = AvihBody.new(_io__raw_data, self, @_root)
+        _io_data = @_io.substream(block_size)
+        @data = AvihBody.new(_io_data, self, @_root)
+      when :chunk_type_list
+        _io_data = @_io.substream(block_size)
+        @data = ListBody.new(_io_data, self, @_root)
       when :chunk_type_strh
-        @_raw_data = @_io.read_bytes(block_size)
-        _io__raw_data = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = StrhBody.new(_io__raw_data, self, @_root)
+        _io_data = @_io.substream(block_size)
+        @data = StrhBody.new(_io_data, self, @_root)
       else
         @data = @_io.read_bytes(block_size)
       end
@@ -175,12 +122,74 @@ class Avi < Kaitai::Struct::Struct
     attr_reader :data
     attr_reader :_raw_data
   end
+  class Blocks < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @entries = []
+      i = 0
+      while not @_io.eof?
+        @entries << Block.new(@_io, self, @_root)
+        i += 1
+      end
+      self
+    end
+    attr_reader :entries
+  end
+  class ListBody < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @list_type = Kaitai::Struct::Stream::resolve_enum(Avi::CHUNK_TYPE, @_io.read_u4le)
+      @data = Blocks.new(@_io, self, @_root)
+      self
+    end
+    attr_reader :list_type
+    attr_reader :data
+  end
+  class Rect < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @left = @_io.read_s2le
+      @top = @_io.read_s2le
+      @right = @_io.read_s2le
+      @bottom = @_io.read_s2le
+      self
+    end
+    attr_reader :left
+    attr_reader :top
+    attr_reader :right
+    attr_reader :bottom
+  end
+
+  ##
+  # Stream format description
+  class StrfBody < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      self
+    end
+  end
 
   ##
   # Stream header (one header per stream), defined as AVISTREAMHEADER structure
   # @see https://learn.microsoft.com/en-us/previous-versions/ms779638(v=vs.85) Source
   class StrhBody < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -222,19 +231,6 @@ class Avi < Kaitai::Struct::Struct
     attr_reader :quality
     attr_reader :sample_size
     attr_reader :frame
-  end
-
-  ##
-  # Stream format description
-  class StrfBody < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      self
-    end
   end
   attr_reader :magic1
   attr_reader :file_size

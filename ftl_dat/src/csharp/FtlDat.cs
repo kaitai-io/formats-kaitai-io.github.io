@@ -52,12 +52,12 @@ namespace Kaitai
                 {
                     if (f_meta)
                         return _meta;
+                    f_meta = true;
                     if (OfsMeta != 0) {
                         long _pos = m_io.Pos;
                         m_io.Seek(OfsMeta);
                         _meta = new Meta(m_io, this, m_root);
                         m_io.Seek(_pos);
-                        f_meta = true;
                     }
                     return _meta;
                 }

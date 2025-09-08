@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -16,14 +16,14 @@ class VmwareVmdk < Kaitai::Struct::Struct
     1 => :compression_methods_deflate,
   }
   I__COMPRESSION_METHODS = COMPRESSION_METHODS.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
     @magic = @_io.read_bytes(4)
-    raise Kaitai::Struct::ValidationNotEqualError.new([75, 68, 77, 86].pack('C*'), magic, _io, "/seq/0") if not magic == [75, 68, 77, 86].pack('C*')
+    raise Kaitai::Struct::ValidationNotEqualError.new([75, 68, 77, 86].pack('C*'), @magic, @_io, "/seq/0") if not @magic == [75, 68, 77, 86].pack('C*')
     @version = @_io.read_s4le
     @flags = HeaderFlags.new(@_io, self, @_root)
     @size_max = @_io.read_s8le
@@ -43,7 +43,7 @@ class VmwareVmdk < Kaitai::Struct::Struct
   ##
   # @see https://github.com/libyal/libvmdk/blob/main/documentation/VMWare%20Virtual%20Disk%20Format%20(VMDK).asciidoc#411-flags Source
   class HeaderFlags < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -72,34 +72,34 @@ class VmwareVmdk < Kaitai::Struct::Struct
     attr_reader :has_compressed_grain
     attr_reader :reserved4
   end
-  def len_sector
-    return @len_sector unless @len_sector.nil?
-    @len_sector = 512
-    @len_sector
-  end
   def descriptor
     return @descriptor unless @descriptor.nil?
     _pos = @_io.pos
-    @_io.seek((start_descriptor * _root.len_sector))
-    @descriptor = @_io.read_bytes((size_descriptor * _root.len_sector))
+    @_io.seek(start_descriptor * _root.len_sector)
+    @descriptor = @_io.read_bytes(size_descriptor * _root.len_sector)
     @_io.seek(_pos)
     @descriptor
   end
   def grain_primary
     return @grain_primary unless @grain_primary.nil?
     _pos = @_io.pos
-    @_io.seek((start_primary_grain * _root.len_sector))
-    @grain_primary = @_io.read_bytes((size_grain * _root.len_sector))
+    @_io.seek(start_primary_grain * _root.len_sector)
+    @grain_primary = @_io.read_bytes(size_grain * _root.len_sector)
     @_io.seek(_pos)
     @grain_primary
   end
   def grain_secondary
     return @grain_secondary unless @grain_secondary.nil?
     _pos = @_io.pos
-    @_io.seek((start_secondary_grain * _root.len_sector))
-    @grain_secondary = @_io.read_bytes((size_grain * _root.len_sector))
+    @_io.seek(start_secondary_grain * _root.len_sector)
+    @grain_secondary = @_io.read_bytes(size_grain * _root.len_sector)
     @_io.seek(_pos)
     @grain_secondary
+  end
+  def len_sector
+    return @len_sector unless @len_sector.nil?
+    @len_sector = 512
+    @len_sector
   end
   attr_reader :magic
   attr_reader :version

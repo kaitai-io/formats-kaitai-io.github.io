@@ -6,6 +6,21 @@ import (
 )
 
 
+type ShapefileMain_PartType int
+const (
+	ShapefileMain_PartType__TriangleStrip ShapefileMain_PartType = 0
+	ShapefileMain_PartType__TriangleFan ShapefileMain_PartType = 1
+	ShapefileMain_PartType__OuterRing ShapefileMain_PartType = 2
+	ShapefileMain_PartType__InnerRing ShapefileMain_PartType = 3
+	ShapefileMain_PartType__FirstRing ShapefileMain_PartType = 4
+	ShapefileMain_PartType__Ring ShapefileMain_PartType = 5
+)
+var values_ShapefileMain_PartType = map[ShapefileMain_PartType]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}}
+func (v ShapefileMain_PartType) isDefined() bool {
+	_, ok := values_ShapefileMain_PartType[v]
+	return ok
+}
+
 type ShapefileMain_ShapeType int
 const (
 	ShapefileMain_ShapeType__NullShape ShapefileMain_ShapeType = 0
@@ -23,29 +38,28 @@ const (
 	ShapefileMain_ShapeType__MultiPointM ShapefileMain_ShapeType = 28
 	ShapefileMain_ShapeType__MultiPatch ShapefileMain_ShapeType = 31
 )
-
-type ShapefileMain_PartType int
-const (
-	ShapefileMain_PartType__TriangleStrip ShapefileMain_PartType = 0
-	ShapefileMain_PartType__TriangleFan ShapefileMain_PartType = 1
-	ShapefileMain_PartType__OuterRing ShapefileMain_PartType = 2
-	ShapefileMain_PartType__InnerRing ShapefileMain_PartType = 3
-	ShapefileMain_PartType__FirstRing ShapefileMain_PartType = 4
-	ShapefileMain_PartType__Ring ShapefileMain_PartType = 5
-)
+var values_ShapefileMain_ShapeType = map[ShapefileMain_ShapeType]struct{}{0: {}, 1: {}, 3: {}, 5: {}, 8: {}, 11: {}, 13: {}, 15: {}, 18: {}, 21: {}, 23: {}, 25: {}, 28: {}, 31: {}}
+func (v ShapefileMain_ShapeType) isDefined() bool {
+	_, ok := values_ShapefileMain_ShapeType[v]
+	return ok
+}
 type ShapefileMain struct {
 	Header *ShapefileMain_FileHeader
 	Records []*ShapefileMain_Record
 	_io *kaitai.Stream
 	_root *ShapefileMain
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewShapefileMain() *ShapefileMain {
 	return &ShapefileMain{
 	}
 }
 
-func (this *ShapefileMain) Read(io *kaitai.Stream, parent interface{}, root *ShapefileMain) (err error) {
+func (this ShapefileMain) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *ShapefileMain) Read(io *kaitai.Stream, parent kaitai.Struct, root *ShapefileMain) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -56,7 +70,7 @@ func (this *ShapefileMain) Read(io *kaitai.Stream, parent interface{}, root *Sha
 		return err
 	}
 	this.Header = tmp1
-	for i := 1;; i++ {
+	for i := 0;; i++ {
 		tmp2, err := this._io.EOF()
 		if err != nil {
 			return err
@@ -77,60 +91,39 @@ func (this *ShapefileMain) Read(io *kaitai.Stream, parent interface{}, root *Sha
 /**
  * the size of this section of the file in bytes must equal (header.file_length * 2) - 100
  */
-type ShapefileMain_MultiPointM struct {
-	BoundingBox *ShapefileMain_BoundingBoxXY
-	NumberOfPoints int32
-	Points []*ShapefileMain_Point
-	MRange *ShapefileMain_BoundsMinMax
-	MValues []float64
+type ShapefileMain_BoundingBoxXY struct {
+	X *ShapefileMain_BoundsMinMax
+	Y *ShapefileMain_BoundsMinMax
 	_io *kaitai.Stream
 	_root *ShapefileMain
-	_parent *ShapefileMain_RecordContents
+	_parent kaitai.Struct
 }
-func NewShapefileMain_MultiPointM() *ShapefileMain_MultiPointM {
-	return &ShapefileMain_MultiPointM{
+func NewShapefileMain_BoundingBoxXY() *ShapefileMain_BoundingBoxXY {
+	return &ShapefileMain_BoundingBoxXY{
 	}
 }
 
-func (this *ShapefileMain_MultiPointM) Read(io *kaitai.Stream, parent *ShapefileMain_RecordContents, root *ShapefileMain) (err error) {
+func (this ShapefileMain_BoundingBoxXY) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *ShapefileMain_BoundingBoxXY) Read(io *kaitai.Stream, parent kaitai.Struct, root *ShapefileMain) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp4 := NewShapefileMain_BoundingBoxXY()
+	tmp4 := NewShapefileMain_BoundsMinMax()
 	err = tmp4.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.BoundingBox = tmp4
-	tmp5, err := this._io.ReadS4le()
+	this.X = tmp4
+	tmp5 := NewShapefileMain_BoundsMinMax()
+	err = tmp5.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.NumberOfPoints = int32(tmp5)
-	for i := 0; i < int(this.NumberOfPoints); i++ {
-		_ = i
-		tmp6 := NewShapefileMain_Point()
-		err = tmp6.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Points = append(this.Points, tmp6)
-	}
-	tmp7 := NewShapefileMain_BoundsMinMax()
-	err = tmp7.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.MRange = tmp7
-	for i := 0; i < int(this.NumberOfPoints); i++ {
-		_ = i
-		tmp8, err := this._io.ReadF8le()
-		if err != nil {
-			return err
-		}
-		this.MValues = append(this.MValues, tmp8)
-	}
+	this.Y = tmp5
 	return err
 }
 type ShapefileMain_BoundingBoxXYZM struct {
@@ -147,119 +140,39 @@ func NewShapefileMain_BoundingBoxXYZM() *ShapefileMain_BoundingBoxXYZM {
 	}
 }
 
+func (this ShapefileMain_BoundingBoxXYZM) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *ShapefileMain_BoundingBoxXYZM) Read(io *kaitai.Stream, parent *ShapefileMain_FileHeader, root *ShapefileMain) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
+	tmp6 := NewShapefileMain_BoundsMinMax()
+	err = tmp6.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.X = tmp6
+	tmp7 := NewShapefileMain_BoundsMinMax()
+	err = tmp7.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Y = tmp7
+	tmp8 := NewShapefileMain_BoundsMinMax()
+	err = tmp8.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Z = tmp8
 	tmp9 := NewShapefileMain_BoundsMinMax()
 	err = tmp9.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.X = tmp9
-	tmp10 := NewShapefileMain_BoundsMinMax()
-	err = tmp10.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Y = tmp10
-	tmp11 := NewShapefileMain_BoundsMinMax()
-	err = tmp11.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Z = tmp11
-	tmp12 := NewShapefileMain_BoundsMinMax()
-	err = tmp12.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.M = tmp12
-	return err
-}
-type ShapefileMain_Point struct {
-	X float64
-	Y float64
-	_io *kaitai.Stream
-	_root *ShapefileMain
-	_parent interface{}
-}
-func NewShapefileMain_Point() *ShapefileMain_Point {
-	return &ShapefileMain_Point{
-	}
-}
-
-func (this *ShapefileMain_Point) Read(io *kaitai.Stream, parent interface{}, root *ShapefileMain) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp13, err := this._io.ReadF8le()
-	if err != nil {
-		return err
-	}
-	this.X = float64(tmp13)
-	tmp14, err := this._io.ReadF8le()
-	if err != nil {
-		return err
-	}
-	this.Y = float64(tmp14)
-	return err
-}
-type ShapefileMain_Polygon struct {
-	BoundingBox *ShapefileMain_BoundingBoxXY
-	NumberOfParts int32
-	NumberOfPoints int32
-	Parts []int32
-	Points []*ShapefileMain_Point
-	_io *kaitai.Stream
-	_root *ShapefileMain
-	_parent *ShapefileMain_RecordContents
-}
-func NewShapefileMain_Polygon() *ShapefileMain_Polygon {
-	return &ShapefileMain_Polygon{
-	}
-}
-
-func (this *ShapefileMain_Polygon) Read(io *kaitai.Stream, parent *ShapefileMain_RecordContents, root *ShapefileMain) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp15 := NewShapefileMain_BoundingBoxXY()
-	err = tmp15.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.BoundingBox = tmp15
-	tmp16, err := this._io.ReadS4le()
-	if err != nil {
-		return err
-	}
-	this.NumberOfParts = int32(tmp16)
-	tmp17, err := this._io.ReadS4le()
-	if err != nil {
-		return err
-	}
-	this.NumberOfPoints = int32(tmp17)
-	for i := 0; i < int(this.NumberOfParts); i++ {
-		_ = i
-		tmp18, err := this._io.ReadS4le()
-		if err != nil {
-			return err
-		}
-		this.Parts = append(this.Parts, tmp18)
-	}
-	for i := 0; i < int(this.NumberOfPoints); i++ {
-		_ = i
-		tmp19 := NewShapefileMain_Point()
-		err = tmp19.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Points = append(this.Points, tmp19)
-	}
+	this.M = tmp9
 	return err
 }
 type ShapefileMain_BoundsMinMax struct {
@@ -267,46 +180,177 @@ type ShapefileMain_BoundsMinMax struct {
 	Max float64
 	_io *kaitai.Stream
 	_root *ShapefileMain
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewShapefileMain_BoundsMinMax() *ShapefileMain_BoundsMinMax {
 	return &ShapefileMain_BoundsMinMax{
 	}
 }
 
-func (this *ShapefileMain_BoundsMinMax) Read(io *kaitai.Stream, parent interface{}, root *ShapefileMain) (err error) {
+func (this ShapefileMain_BoundsMinMax) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *ShapefileMain_BoundsMinMax) Read(io *kaitai.Stream, parent kaitai.Struct, root *ShapefileMain) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp20, err := this._io.ReadF8le()
+	tmp10, err := this._io.ReadF8le()
 	if err != nil {
 		return err
 	}
-	this.Min = float64(tmp20)
-	tmp21, err := this._io.ReadF8le()
+	this.Min = float64(tmp10)
+	tmp11, err := this._io.ReadF8le()
 	if err != nil {
 		return err
 	}
-	this.Max = float64(tmp21)
+	this.Max = float64(tmp11)
 	return err
 }
-type ShapefileMain_PolyLine struct {
+type ShapefileMain_FileHeader struct {
+	FileCode []byte
+	UnusedField1 []byte
+	UnusedField2 []byte
+	UnusedField3 []byte
+	UnusedField4 []byte
+	UnusedField5 []byte
+	FileLength int32
+	Version []byte
+	ShapeType ShapefileMain_ShapeType
+	BoundingBox *ShapefileMain_BoundingBoxXYZM
+	_io *kaitai.Stream
+	_root *ShapefileMain
+	_parent *ShapefileMain
+}
+func NewShapefileMain_FileHeader() *ShapefileMain_FileHeader {
+	return &ShapefileMain_FileHeader{
+	}
+}
+
+func (this ShapefileMain_FileHeader) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *ShapefileMain_FileHeader) Read(io *kaitai.Stream, parent *ShapefileMain, root *ShapefileMain) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp12, err := this._io.ReadBytes(int(4))
+	if err != nil {
+		return err
+	}
+	tmp12 = tmp12
+	this.FileCode = tmp12
+	if !(bytes.Equal(this.FileCode, []uint8{0, 0, 39, 10})) {
+		return kaitai.NewValidationNotEqualError([]uint8{0, 0, 39, 10}, this.FileCode, this._io, "/types/file_header/seq/0")
+	}
+	tmp13, err := this._io.ReadBytes(int(4))
+	if err != nil {
+		return err
+	}
+	tmp13 = tmp13
+	this.UnusedField1 = tmp13
+	if !(bytes.Equal(this.UnusedField1, []uint8{0, 0, 0, 0})) {
+		return kaitai.NewValidationNotEqualError([]uint8{0, 0, 0, 0}, this.UnusedField1, this._io, "/types/file_header/seq/1")
+	}
+	tmp14, err := this._io.ReadBytes(int(4))
+	if err != nil {
+		return err
+	}
+	tmp14 = tmp14
+	this.UnusedField2 = tmp14
+	if !(bytes.Equal(this.UnusedField2, []uint8{0, 0, 0, 0})) {
+		return kaitai.NewValidationNotEqualError([]uint8{0, 0, 0, 0}, this.UnusedField2, this._io, "/types/file_header/seq/2")
+	}
+	tmp15, err := this._io.ReadBytes(int(4))
+	if err != nil {
+		return err
+	}
+	tmp15 = tmp15
+	this.UnusedField3 = tmp15
+	if !(bytes.Equal(this.UnusedField3, []uint8{0, 0, 0, 0})) {
+		return kaitai.NewValidationNotEqualError([]uint8{0, 0, 0, 0}, this.UnusedField3, this._io, "/types/file_header/seq/3")
+	}
+	tmp16, err := this._io.ReadBytes(int(4))
+	if err != nil {
+		return err
+	}
+	tmp16 = tmp16
+	this.UnusedField4 = tmp16
+	if !(bytes.Equal(this.UnusedField4, []uint8{0, 0, 0, 0})) {
+		return kaitai.NewValidationNotEqualError([]uint8{0, 0, 0, 0}, this.UnusedField4, this._io, "/types/file_header/seq/4")
+	}
+	tmp17, err := this._io.ReadBytes(int(4))
+	if err != nil {
+		return err
+	}
+	tmp17 = tmp17
+	this.UnusedField5 = tmp17
+	if !(bytes.Equal(this.UnusedField5, []uint8{0, 0, 0, 0})) {
+		return kaitai.NewValidationNotEqualError([]uint8{0, 0, 0, 0}, this.UnusedField5, this._io, "/types/file_header/seq/5")
+	}
+	tmp18, err := this._io.ReadS4be()
+	if err != nil {
+		return err
+	}
+	this.FileLength = int32(tmp18)
+	tmp19, err := this._io.ReadBytes(int(4))
+	if err != nil {
+		return err
+	}
+	tmp19 = tmp19
+	this.Version = tmp19
+	if !(bytes.Equal(this.Version, []uint8{232, 3, 0, 0})) {
+		return kaitai.NewValidationNotEqualError([]uint8{232, 3, 0, 0}, this.Version, this._io, "/types/file_header/seq/7")
+	}
+	tmp20, err := this._io.ReadS4le()
+	if err != nil {
+		return err
+	}
+	this.ShapeType = ShapefileMain_ShapeType(tmp20)
+	tmp21 := NewShapefileMain_BoundingBoxXYZM()
+	err = tmp21.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.BoundingBox = tmp21
+	return err
+}
+
+/**
+ * corresponds to s4be value of 9994
+ */
+
+/**
+ * corresponds to s4le value of 1000
+ */
+type ShapefileMain_MultiPatch struct {
 	BoundingBox *ShapefileMain_BoundingBoxXY
 	NumberOfParts int32
 	NumberOfPoints int32
 	Parts []int32
+	PartTypes []ShapefileMain_PartType
 	Points []*ShapefileMain_Point
+	ZRange *ShapefileMain_BoundsMinMax
+	ZValues []float64
+	MRange *ShapefileMain_BoundsMinMax
+	MValues []float64
 	_io *kaitai.Stream
 	_root *ShapefileMain
 	_parent *ShapefileMain_RecordContents
 }
-func NewShapefileMain_PolyLine() *ShapefileMain_PolyLine {
-	return &ShapefileMain_PolyLine{
+func NewShapefileMain_MultiPatch() *ShapefileMain_MultiPatch {
+	return &ShapefileMain_MultiPatch{
 	}
 }
 
-func (this *ShapefileMain_PolyLine) Read(io *kaitai.Stream, parent *ShapefileMain_RecordContents, root *ShapefileMain) (err error) {
+func (this ShapefileMain_MultiPatch) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *ShapefileMain_MultiPatch) Read(io *kaitai.Stream, parent *ShapefileMain_RecordContents, root *ShapefileMain) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -335,14 +379,154 @@ func (this *ShapefileMain_PolyLine) Read(io *kaitai.Stream, parent *ShapefileMai
 		}
 		this.Parts = append(this.Parts, tmp25)
 	}
-	for i := 0; i < int(this.NumberOfPoints); i++ {
+	for i := 0; i < int(this.NumberOfParts); i++ {
 		_ = i
-		tmp26 := NewShapefileMain_Point()
-		err = tmp26.Read(this._io, this, this._root)
+		tmp26, err := this._io.ReadS4le()
 		if err != nil {
 			return err
 		}
-		this.Points = append(this.Points, tmp26)
+		this.PartTypes = append(this.PartTypes, ShapefileMain_PartType(tmp26))
+	}
+	for i := 0; i < int(this.NumberOfPoints); i++ {
+		_ = i
+		tmp27 := NewShapefileMain_Point()
+		err = tmp27.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Points = append(this.Points, tmp27)
+	}
+	tmp28 := NewShapefileMain_BoundsMinMax()
+	err = tmp28.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.ZRange = tmp28
+	for i := 0; i < int(this.NumberOfPoints); i++ {
+		_ = i
+		tmp29, err := this._io.ReadF8le()
+		if err != nil {
+			return err
+		}
+		this.ZValues = append(this.ZValues, tmp29)
+	}
+	tmp30 := NewShapefileMain_BoundsMinMax()
+	err = tmp30.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.MRange = tmp30
+	for i := 0; i < int(this.NumberOfPoints); i++ {
+		_ = i
+		tmp31, err := this._io.ReadF8le()
+		if err != nil {
+			return err
+		}
+		this.MValues = append(this.MValues, tmp31)
+	}
+	return err
+}
+type ShapefileMain_MultiPoint struct {
+	BoundingBox *ShapefileMain_BoundingBoxXY
+	NumberOfPoints int32
+	Points []*ShapefileMain_Point
+	_io *kaitai.Stream
+	_root *ShapefileMain
+	_parent *ShapefileMain_RecordContents
+}
+func NewShapefileMain_MultiPoint() *ShapefileMain_MultiPoint {
+	return &ShapefileMain_MultiPoint{
+	}
+}
+
+func (this ShapefileMain_MultiPoint) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *ShapefileMain_MultiPoint) Read(io *kaitai.Stream, parent *ShapefileMain_RecordContents, root *ShapefileMain) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp32 := NewShapefileMain_BoundingBoxXY()
+	err = tmp32.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.BoundingBox = tmp32
+	tmp33, err := this._io.ReadS4le()
+	if err != nil {
+		return err
+	}
+	this.NumberOfPoints = int32(tmp33)
+	for i := 0; i < int(this.NumberOfPoints); i++ {
+		_ = i
+		tmp34 := NewShapefileMain_Point()
+		err = tmp34.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Points = append(this.Points, tmp34)
+	}
+	return err
+}
+type ShapefileMain_MultiPointM struct {
+	BoundingBox *ShapefileMain_BoundingBoxXY
+	NumberOfPoints int32
+	Points []*ShapefileMain_Point
+	MRange *ShapefileMain_BoundsMinMax
+	MValues []float64
+	_io *kaitai.Stream
+	_root *ShapefileMain
+	_parent *ShapefileMain_RecordContents
+}
+func NewShapefileMain_MultiPointM() *ShapefileMain_MultiPointM {
+	return &ShapefileMain_MultiPointM{
+	}
+}
+
+func (this ShapefileMain_MultiPointM) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *ShapefileMain_MultiPointM) Read(io *kaitai.Stream, parent *ShapefileMain_RecordContents, root *ShapefileMain) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp35 := NewShapefileMain_BoundingBoxXY()
+	err = tmp35.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.BoundingBox = tmp35
+	tmp36, err := this._io.ReadS4le()
+	if err != nil {
+		return err
+	}
+	this.NumberOfPoints = int32(tmp36)
+	for i := 0; i < int(this.NumberOfPoints); i++ {
+		_ = i
+		tmp37 := NewShapefileMain_Point()
+		err = tmp37.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Points = append(this.Points, tmp37)
+	}
+	tmp38 := NewShapefileMain_BoundsMinMax()
+	err = tmp38.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.MRange = tmp38
+	for i := 0; i < int(this.NumberOfPoints); i++ {
+		_ = i
+		tmp39, err := this._io.ReadF8le()
+		if err != nil {
+			return err
+		}
+		this.MValues = append(this.MValues, tmp39)
 	}
 	return err
 }
@@ -363,58 +547,313 @@ func NewShapefileMain_MultiPointZ() *ShapefileMain_MultiPointZ {
 	}
 }
 
+func (this ShapefileMain_MultiPointZ) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *ShapefileMain_MultiPointZ) Read(io *kaitai.Stream, parent *ShapefileMain_RecordContents, root *ShapefileMain) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp27 := NewShapefileMain_BoundingBoxXY()
-	err = tmp27.Read(this._io, this, this._root)
+	tmp40 := NewShapefileMain_BoundingBoxXY()
+	err = tmp40.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.BoundingBox = tmp27
-	tmp28, err := this._io.ReadS4le()
+	this.BoundingBox = tmp40
+	tmp41, err := this._io.ReadS4le()
 	if err != nil {
 		return err
 	}
-	this.NumberOfPoints = int32(tmp28)
+	this.NumberOfPoints = int32(tmp41)
 	for i := 0; i < int(this.NumberOfPoints); i++ {
 		_ = i
-		tmp29 := NewShapefileMain_Point()
-		err = tmp29.Read(this._io, this, this._root)
+		tmp42 := NewShapefileMain_Point()
+		err = tmp42.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Points = append(this.Points, tmp29)
+		this.Points = append(this.Points, tmp42)
 	}
-	tmp30 := NewShapefileMain_BoundsMinMax()
-	err = tmp30.Read(this._io, this, this._root)
+	tmp43 := NewShapefileMain_BoundsMinMax()
+	err = tmp43.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.ZRange = tmp30
+	this.ZRange = tmp43
 	for i := 0; i < int(this.NumberOfPoints); i++ {
 		_ = i
-		tmp31, err := this._io.ReadF8le()
+		tmp44, err := this._io.ReadF8le()
 		if err != nil {
 			return err
 		}
-		this.ZValues = append(this.ZValues, tmp31)
+		this.ZValues = append(this.ZValues, tmp44)
 	}
-	tmp32 := NewShapefileMain_BoundsMinMax()
-	err = tmp32.Read(this._io, this, this._root)
+	tmp45 := NewShapefileMain_BoundsMinMax()
+	err = tmp45.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.MRange = tmp32
+	this.MRange = tmp45
 	for i := 0; i < int(this.NumberOfPoints); i++ {
 		_ = i
-		tmp33, err := this._io.ReadF8le()
+		tmp46, err := this._io.ReadF8le()
 		if err != nil {
 			return err
 		}
-		this.MValues = append(this.MValues, tmp33)
+		this.MValues = append(this.MValues, tmp46)
+	}
+	return err
+}
+type ShapefileMain_Point struct {
+	X float64
+	Y float64
+	_io *kaitai.Stream
+	_root *ShapefileMain
+	_parent kaitai.Struct
+}
+func NewShapefileMain_Point() *ShapefileMain_Point {
+	return &ShapefileMain_Point{
+	}
+}
+
+func (this ShapefileMain_Point) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *ShapefileMain_Point) Read(io *kaitai.Stream, parent kaitai.Struct, root *ShapefileMain) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp47, err := this._io.ReadF8le()
+	if err != nil {
+		return err
+	}
+	this.X = float64(tmp47)
+	tmp48, err := this._io.ReadF8le()
+	if err != nil {
+		return err
+	}
+	this.Y = float64(tmp48)
+	return err
+}
+type ShapefileMain_PointM struct {
+	X float64
+	Y float64
+	M float64
+	_io *kaitai.Stream
+	_root *ShapefileMain
+	_parent *ShapefileMain_RecordContents
+}
+func NewShapefileMain_PointM() *ShapefileMain_PointM {
+	return &ShapefileMain_PointM{
+	}
+}
+
+func (this ShapefileMain_PointM) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *ShapefileMain_PointM) Read(io *kaitai.Stream, parent *ShapefileMain_RecordContents, root *ShapefileMain) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp49, err := this._io.ReadF8le()
+	if err != nil {
+		return err
+	}
+	this.X = float64(tmp49)
+	tmp50, err := this._io.ReadF8le()
+	if err != nil {
+		return err
+	}
+	this.Y = float64(tmp50)
+	tmp51, err := this._io.ReadF8le()
+	if err != nil {
+		return err
+	}
+	this.M = float64(tmp51)
+	return err
+}
+type ShapefileMain_PointZ struct {
+	X float64
+	Y float64
+	Z float64
+	M float64
+	_io *kaitai.Stream
+	_root *ShapefileMain
+	_parent *ShapefileMain_RecordContents
+}
+func NewShapefileMain_PointZ() *ShapefileMain_PointZ {
+	return &ShapefileMain_PointZ{
+	}
+}
+
+func (this ShapefileMain_PointZ) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *ShapefileMain_PointZ) Read(io *kaitai.Stream, parent *ShapefileMain_RecordContents, root *ShapefileMain) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp52, err := this._io.ReadF8le()
+	if err != nil {
+		return err
+	}
+	this.X = float64(tmp52)
+	tmp53, err := this._io.ReadF8le()
+	if err != nil {
+		return err
+	}
+	this.Y = float64(tmp53)
+	tmp54, err := this._io.ReadF8le()
+	if err != nil {
+		return err
+	}
+	this.Z = float64(tmp54)
+	tmp55, err := this._io.ReadF8le()
+	if err != nil {
+		return err
+	}
+	this.M = float64(tmp55)
+	return err
+}
+type ShapefileMain_PolyLine struct {
+	BoundingBox *ShapefileMain_BoundingBoxXY
+	NumberOfParts int32
+	NumberOfPoints int32
+	Parts []int32
+	Points []*ShapefileMain_Point
+	_io *kaitai.Stream
+	_root *ShapefileMain
+	_parent *ShapefileMain_RecordContents
+}
+func NewShapefileMain_PolyLine() *ShapefileMain_PolyLine {
+	return &ShapefileMain_PolyLine{
+	}
+}
+
+func (this ShapefileMain_PolyLine) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *ShapefileMain_PolyLine) Read(io *kaitai.Stream, parent *ShapefileMain_RecordContents, root *ShapefileMain) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp56 := NewShapefileMain_BoundingBoxXY()
+	err = tmp56.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.BoundingBox = tmp56
+	tmp57, err := this._io.ReadS4le()
+	if err != nil {
+		return err
+	}
+	this.NumberOfParts = int32(tmp57)
+	tmp58, err := this._io.ReadS4le()
+	if err != nil {
+		return err
+	}
+	this.NumberOfPoints = int32(tmp58)
+	for i := 0; i < int(this.NumberOfParts); i++ {
+		_ = i
+		tmp59, err := this._io.ReadS4le()
+		if err != nil {
+			return err
+		}
+		this.Parts = append(this.Parts, tmp59)
+	}
+	for i := 0; i < int(this.NumberOfPoints); i++ {
+		_ = i
+		tmp60 := NewShapefileMain_Point()
+		err = tmp60.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Points = append(this.Points, tmp60)
+	}
+	return err
+}
+type ShapefileMain_PolyLineM struct {
+	BoundingBox *ShapefileMain_BoundingBoxXY
+	NumberOfParts int32
+	NumberOfPoints int32
+	Parts []int32
+	Points []*ShapefileMain_Point
+	MRange *ShapefileMain_BoundsMinMax
+	MValues []float64
+	_io *kaitai.Stream
+	_root *ShapefileMain
+	_parent *ShapefileMain_RecordContents
+}
+func NewShapefileMain_PolyLineM() *ShapefileMain_PolyLineM {
+	return &ShapefileMain_PolyLineM{
+	}
+}
+
+func (this ShapefileMain_PolyLineM) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *ShapefileMain_PolyLineM) Read(io *kaitai.Stream, parent *ShapefileMain_RecordContents, root *ShapefileMain) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp61 := NewShapefileMain_BoundingBoxXY()
+	err = tmp61.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.BoundingBox = tmp61
+	tmp62, err := this._io.ReadS4le()
+	if err != nil {
+		return err
+	}
+	this.NumberOfParts = int32(tmp62)
+	tmp63, err := this._io.ReadS4le()
+	if err != nil {
+		return err
+	}
+	this.NumberOfPoints = int32(tmp63)
+	for i := 0; i < int(this.NumberOfParts); i++ {
+		_ = i
+		tmp64, err := this._io.ReadS4le()
+		if err != nil {
+			return err
+		}
+		this.Parts = append(this.Parts, tmp64)
+	}
+	for i := 0; i < int(this.NumberOfPoints); i++ {
+		_ = i
+		tmp65 := NewShapefileMain_Point()
+		err = tmp65.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Points = append(this.Points, tmp65)
+	}
+	tmp66 := NewShapefileMain_BoundsMinMax()
+	err = tmp66.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.MRange = tmp66
+	for i := 0; i < int(this.NumberOfPoints); i++ {
+		_ = i
+		tmp67, err := this._io.ReadF8le()
+		if err != nil {
+			return err
+		}
+		this.MValues = append(this.MValues, tmp67)
 	}
 	return err
 }
@@ -437,71 +876,209 @@ func NewShapefileMain_PolyLineZ() *ShapefileMain_PolyLineZ {
 	}
 }
 
+func (this ShapefileMain_PolyLineZ) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *ShapefileMain_PolyLineZ) Read(io *kaitai.Stream, parent *ShapefileMain_RecordContents, root *ShapefileMain) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp34 := NewShapefileMain_BoundingBoxXY()
-	err = tmp34.Read(this._io, this, this._root)
+	tmp68 := NewShapefileMain_BoundingBoxXY()
+	err = tmp68.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.BoundingBox = tmp34
-	tmp35, err := this._io.ReadS4le()
+	this.BoundingBox = tmp68
+	tmp69, err := this._io.ReadS4le()
 	if err != nil {
 		return err
 	}
-	this.NumberOfParts = int32(tmp35)
-	tmp36, err := this._io.ReadS4le()
+	this.NumberOfParts = int32(tmp69)
+	tmp70, err := this._io.ReadS4le()
 	if err != nil {
 		return err
 	}
-	this.NumberOfPoints = int32(tmp36)
+	this.NumberOfPoints = int32(tmp70)
 	for i := 0; i < int(this.NumberOfParts); i++ {
 		_ = i
-		tmp37, err := this._io.ReadS4le()
+		tmp71, err := this._io.ReadS4le()
 		if err != nil {
 			return err
 		}
-		this.Parts = append(this.Parts, tmp37)
+		this.Parts = append(this.Parts, tmp71)
 	}
 	for i := 0; i < int(this.NumberOfPoints); i++ {
 		_ = i
-		tmp38 := NewShapefileMain_Point()
-		err = tmp38.Read(this._io, this, this._root)
+		tmp72 := NewShapefileMain_Point()
+		err = tmp72.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Points = append(this.Points, tmp38)
+		this.Points = append(this.Points, tmp72)
 	}
-	tmp39 := NewShapefileMain_BoundsMinMax()
-	err = tmp39.Read(this._io, this, this._root)
+	tmp73 := NewShapefileMain_BoundsMinMax()
+	err = tmp73.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.ZRange = tmp39
+	this.ZRange = tmp73
 	for i := 0; i < int(this.NumberOfPoints); i++ {
 		_ = i
-		tmp40, err := this._io.ReadF8le()
+		tmp74, err := this._io.ReadF8le()
 		if err != nil {
 			return err
 		}
-		this.ZValues = append(this.ZValues, tmp40)
+		this.ZValues = append(this.ZValues, tmp74)
 	}
-	tmp41 := NewShapefileMain_BoundsMinMax()
-	err = tmp41.Read(this._io, this, this._root)
+	tmp75 := NewShapefileMain_BoundsMinMax()
+	err = tmp75.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.MRange = tmp41
+	this.MRange = tmp75
 	for i := 0; i < int(this.NumberOfPoints); i++ {
 		_ = i
-		tmp42, err := this._io.ReadF8le()
+		tmp76, err := this._io.ReadF8le()
 		if err != nil {
 			return err
 		}
-		this.MValues = append(this.MValues, tmp42)
+		this.MValues = append(this.MValues, tmp76)
+	}
+	return err
+}
+type ShapefileMain_Polygon struct {
+	BoundingBox *ShapefileMain_BoundingBoxXY
+	NumberOfParts int32
+	NumberOfPoints int32
+	Parts []int32
+	Points []*ShapefileMain_Point
+	_io *kaitai.Stream
+	_root *ShapefileMain
+	_parent *ShapefileMain_RecordContents
+}
+func NewShapefileMain_Polygon() *ShapefileMain_Polygon {
+	return &ShapefileMain_Polygon{
+	}
+}
+
+func (this ShapefileMain_Polygon) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *ShapefileMain_Polygon) Read(io *kaitai.Stream, parent *ShapefileMain_RecordContents, root *ShapefileMain) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp77 := NewShapefileMain_BoundingBoxXY()
+	err = tmp77.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.BoundingBox = tmp77
+	tmp78, err := this._io.ReadS4le()
+	if err != nil {
+		return err
+	}
+	this.NumberOfParts = int32(tmp78)
+	tmp79, err := this._io.ReadS4le()
+	if err != nil {
+		return err
+	}
+	this.NumberOfPoints = int32(tmp79)
+	for i := 0; i < int(this.NumberOfParts); i++ {
+		_ = i
+		tmp80, err := this._io.ReadS4le()
+		if err != nil {
+			return err
+		}
+		this.Parts = append(this.Parts, tmp80)
+	}
+	for i := 0; i < int(this.NumberOfPoints); i++ {
+		_ = i
+		tmp81 := NewShapefileMain_Point()
+		err = tmp81.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Points = append(this.Points, tmp81)
+	}
+	return err
+}
+type ShapefileMain_PolygonM struct {
+	BoundingBox *ShapefileMain_BoundingBoxXY
+	NumberOfParts int32
+	NumberOfPoints int32
+	Parts []int32
+	Points []*ShapefileMain_Point
+	MRange *ShapefileMain_BoundsMinMax
+	MValues []float64
+	_io *kaitai.Stream
+	_root *ShapefileMain
+	_parent *ShapefileMain_RecordContents
+}
+func NewShapefileMain_PolygonM() *ShapefileMain_PolygonM {
+	return &ShapefileMain_PolygonM{
+	}
+}
+
+func (this ShapefileMain_PolygonM) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *ShapefileMain_PolygonM) Read(io *kaitai.Stream, parent *ShapefileMain_RecordContents, root *ShapefileMain) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp82 := NewShapefileMain_BoundingBoxXY()
+	err = tmp82.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.BoundingBox = tmp82
+	tmp83, err := this._io.ReadS4le()
+	if err != nil {
+		return err
+	}
+	this.NumberOfParts = int32(tmp83)
+	tmp84, err := this._io.ReadS4le()
+	if err != nil {
+		return err
+	}
+	this.NumberOfPoints = int32(tmp84)
+	for i := 0; i < int(this.NumberOfParts); i++ {
+		_ = i
+		tmp85, err := this._io.ReadS4le()
+		if err != nil {
+			return err
+		}
+		this.Parts = append(this.Parts, tmp85)
+	}
+	for i := 0; i < int(this.NumberOfPoints); i++ {
+		_ = i
+		tmp86 := NewShapefileMain_Point()
+		err = tmp86.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Points = append(this.Points, tmp86)
+	}
+	tmp87 := NewShapefileMain_BoundsMinMax()
+	err = tmp87.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.MRange = tmp87
+	for i := 0; i < int(this.NumberOfPoints); i++ {
+		_ = i
+		tmp88, err := this._io.ReadF8le()
+		if err != nil {
+			return err
+		}
+		this.MValues = append(this.MValues, tmp88)
 	}
 	return err
 }
@@ -524,208 +1101,237 @@ func NewShapefileMain_PolygonZ() *ShapefileMain_PolygonZ {
 	}
 }
 
+func (this ShapefileMain_PolygonZ) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *ShapefileMain_PolygonZ) Read(io *kaitai.Stream, parent *ShapefileMain_RecordContents, root *ShapefileMain) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp43 := NewShapefileMain_BoundingBoxXY()
-	err = tmp43.Read(this._io, this, this._root)
+	tmp89 := NewShapefileMain_BoundingBoxXY()
+	err = tmp89.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.BoundingBox = tmp43
-	tmp44, err := this._io.ReadS4le()
+	this.BoundingBox = tmp89
+	tmp90, err := this._io.ReadS4le()
 	if err != nil {
 		return err
 	}
-	this.NumberOfParts = int32(tmp44)
-	tmp45, err := this._io.ReadS4le()
+	this.NumberOfParts = int32(tmp90)
+	tmp91, err := this._io.ReadS4le()
 	if err != nil {
 		return err
 	}
-	this.NumberOfPoints = int32(tmp45)
+	this.NumberOfPoints = int32(tmp91)
 	for i := 0; i < int(this.NumberOfParts); i++ {
 		_ = i
-		tmp46, err := this._io.ReadS4le()
+		tmp92, err := this._io.ReadS4le()
 		if err != nil {
 			return err
 		}
-		this.Parts = append(this.Parts, tmp46)
+		this.Parts = append(this.Parts, tmp92)
 	}
 	for i := 0; i < int(this.NumberOfPoints); i++ {
 		_ = i
-		tmp47 := NewShapefileMain_Point()
-		err = tmp47.Read(this._io, this, this._root)
+		tmp93 := NewShapefileMain_Point()
+		err = tmp93.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Points = append(this.Points, tmp47)
+		this.Points = append(this.Points, tmp93)
 	}
-	tmp48 := NewShapefileMain_BoundsMinMax()
-	err = tmp48.Read(this._io, this, this._root)
+	tmp94 := NewShapefileMain_BoundsMinMax()
+	err = tmp94.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.ZRange = tmp48
+	this.ZRange = tmp94
 	for i := 0; i < int(this.NumberOfPoints); i++ {
 		_ = i
-		tmp49, err := this._io.ReadF8le()
+		tmp95, err := this._io.ReadF8le()
 		if err != nil {
 			return err
 		}
-		this.ZValues = append(this.ZValues, tmp49)
+		this.ZValues = append(this.ZValues, tmp95)
 	}
-	tmp50 := NewShapefileMain_BoundsMinMax()
-	err = tmp50.Read(this._io, this, this._root)
+	tmp96 := NewShapefileMain_BoundsMinMax()
+	err = tmp96.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.MRange = tmp50
+	this.MRange = tmp96
 	for i := 0; i < int(this.NumberOfPoints); i++ {
 		_ = i
-		tmp51, err := this._io.ReadF8le()
+		tmp97, err := this._io.ReadF8le()
 		if err != nil {
 			return err
 		}
-		this.MValues = append(this.MValues, tmp51)
+		this.MValues = append(this.MValues, tmp97)
 	}
 	return err
 }
-type ShapefileMain_BoundingBoxXY struct {
-	X *ShapefileMain_BoundsMinMax
-	Y *ShapefileMain_BoundsMinMax
+type ShapefileMain_Record struct {
+	Header *ShapefileMain_RecordHeader
+	Contents *ShapefileMain_RecordContents
 	_io *kaitai.Stream
 	_root *ShapefileMain
-	_parent interface{}
+	_parent *ShapefileMain
 }
-func NewShapefileMain_BoundingBoxXY() *ShapefileMain_BoundingBoxXY {
-	return &ShapefileMain_BoundingBoxXY{
+func NewShapefileMain_Record() *ShapefileMain_Record {
+	return &ShapefileMain_Record{
 	}
 }
 
-func (this *ShapefileMain_BoundingBoxXY) Read(io *kaitai.Stream, parent interface{}, root *ShapefileMain) (err error) {
+func (this ShapefileMain_Record) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *ShapefileMain_Record) Read(io *kaitai.Stream, parent *ShapefileMain, root *ShapefileMain) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp52 := NewShapefileMain_BoundsMinMax()
-	err = tmp52.Read(this._io, this, this._root)
+	tmp98 := NewShapefileMain_RecordHeader()
+	err = tmp98.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.X = tmp52
-	tmp53 := NewShapefileMain_BoundsMinMax()
-	err = tmp53.Read(this._io, this, this._root)
+	this.Header = tmp98
+	tmp99 := NewShapefileMain_RecordContents()
+	err = tmp99.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Y = tmp53
+	this.Contents = tmp99
 	return err
 }
-type ShapefileMain_PointM struct {
-	X float64
-	Y float64
-	M float64
+
+/**
+ * the size of this contents section in bytes must equal header.content_length * 2
+ */
+type ShapefileMain_RecordContents struct {
+	ShapeType ShapefileMain_ShapeType
+	ShapeParameters kaitai.Struct
 	_io *kaitai.Stream
 	_root *ShapefileMain
-	_parent *ShapefileMain_RecordContents
+	_parent *ShapefileMain_Record
 }
-func NewShapefileMain_PointM() *ShapefileMain_PointM {
-	return &ShapefileMain_PointM{
+func NewShapefileMain_RecordContents() *ShapefileMain_RecordContents {
+	return &ShapefileMain_RecordContents{
 	}
 }
 
-func (this *ShapefileMain_PointM) Read(io *kaitai.Stream, parent *ShapefileMain_RecordContents, root *ShapefileMain) (err error) {
+func (this ShapefileMain_RecordContents) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *ShapefileMain_RecordContents) Read(io *kaitai.Stream, parent *ShapefileMain_Record, root *ShapefileMain) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp54, err := this._io.ReadF8le()
+	tmp100, err := this._io.ReadS4le()
 	if err != nil {
 		return err
 	}
-	this.X = float64(tmp54)
-	tmp55, err := this._io.ReadF8le()
-	if err != nil {
-		return err
-	}
-	this.Y = float64(tmp55)
-	tmp56, err := this._io.ReadF8le()
-	if err != nil {
-		return err
-	}
-	this.M = float64(tmp56)
-	return err
-}
-type ShapefileMain_PolygonM struct {
-	BoundingBox *ShapefileMain_BoundingBoxXY
-	NumberOfParts int32
-	NumberOfPoints int32
-	Parts []int32
-	Points []*ShapefileMain_Point
-	MRange *ShapefileMain_BoundsMinMax
-	MValues []float64
-	_io *kaitai.Stream
-	_root *ShapefileMain
-	_parent *ShapefileMain_RecordContents
-}
-func NewShapefileMain_PolygonM() *ShapefileMain_PolygonM {
-	return &ShapefileMain_PolygonM{
-	}
-}
-
-func (this *ShapefileMain_PolygonM) Read(io *kaitai.Stream, parent *ShapefileMain_RecordContents, root *ShapefileMain) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp57 := NewShapefileMain_BoundingBoxXY()
-	err = tmp57.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.BoundingBox = tmp57
-	tmp58, err := this._io.ReadS4le()
-	if err != nil {
-		return err
-	}
-	this.NumberOfParts = int32(tmp58)
-	tmp59, err := this._io.ReadS4le()
-	if err != nil {
-		return err
-	}
-	this.NumberOfPoints = int32(tmp59)
-	for i := 0; i < int(this.NumberOfParts); i++ {
-		_ = i
-		tmp60, err := this._io.ReadS4le()
-		if err != nil {
-			return err
+	this.ShapeType = ShapefileMain_ShapeType(tmp100)
+	if (this.ShapeType != ShapefileMain_ShapeType__NullShape) {
+		switch (this.ShapeType) {
+		case ShapefileMain_ShapeType__MultiPatch:
+			tmp101 := NewShapefileMain_MultiPatch()
+			err = tmp101.Read(this._io, this, this._root)
+			if err != nil {
+				return err
+			}
+			this.ShapeParameters = tmp101
+		case ShapefileMain_ShapeType__MultiPoint:
+			tmp102 := NewShapefileMain_MultiPoint()
+			err = tmp102.Read(this._io, this, this._root)
+			if err != nil {
+				return err
+			}
+			this.ShapeParameters = tmp102
+		case ShapefileMain_ShapeType__MultiPointM:
+			tmp103 := NewShapefileMain_MultiPointM()
+			err = tmp103.Read(this._io, this, this._root)
+			if err != nil {
+				return err
+			}
+			this.ShapeParameters = tmp103
+		case ShapefileMain_ShapeType__MultiPointZ:
+			tmp104 := NewShapefileMain_MultiPointZ()
+			err = tmp104.Read(this._io, this, this._root)
+			if err != nil {
+				return err
+			}
+			this.ShapeParameters = tmp104
+		case ShapefileMain_ShapeType__Point:
+			tmp105 := NewShapefileMain_Point()
+			err = tmp105.Read(this._io, this, this._root)
+			if err != nil {
+				return err
+			}
+			this.ShapeParameters = tmp105
+		case ShapefileMain_ShapeType__PointM:
+			tmp106 := NewShapefileMain_PointM()
+			err = tmp106.Read(this._io, this, this._root)
+			if err != nil {
+				return err
+			}
+			this.ShapeParameters = tmp106
+		case ShapefileMain_ShapeType__PointZ:
+			tmp107 := NewShapefileMain_PointZ()
+			err = tmp107.Read(this._io, this, this._root)
+			if err != nil {
+				return err
+			}
+			this.ShapeParameters = tmp107
+		case ShapefileMain_ShapeType__PolyLine:
+			tmp108 := NewShapefileMain_PolyLine()
+			err = tmp108.Read(this._io, this, this._root)
+			if err != nil {
+				return err
+			}
+			this.ShapeParameters = tmp108
+		case ShapefileMain_ShapeType__PolyLineM:
+			tmp109 := NewShapefileMain_PolyLineM()
+			err = tmp109.Read(this._io, this, this._root)
+			if err != nil {
+				return err
+			}
+			this.ShapeParameters = tmp109
+		case ShapefileMain_ShapeType__PolyLineZ:
+			tmp110 := NewShapefileMain_PolyLineZ()
+			err = tmp110.Read(this._io, this, this._root)
+			if err != nil {
+				return err
+			}
+			this.ShapeParameters = tmp110
+		case ShapefileMain_ShapeType__Polygon:
+			tmp111 := NewShapefileMain_Polygon()
+			err = tmp111.Read(this._io, this, this._root)
+			if err != nil {
+				return err
+			}
+			this.ShapeParameters = tmp111
+		case ShapefileMain_ShapeType__PolygonM:
+			tmp112 := NewShapefileMain_PolygonM()
+			err = tmp112.Read(this._io, this, this._root)
+			if err != nil {
+				return err
+			}
+			this.ShapeParameters = tmp112
+		case ShapefileMain_ShapeType__PolygonZ:
+			tmp113 := NewShapefileMain_PolygonZ()
+			err = tmp113.Read(this._io, this, this._root)
+			if err != nil {
+				return err
+			}
+			this.ShapeParameters = tmp113
 		}
-		this.Parts = append(this.Parts, tmp60)
-	}
-	for i := 0; i < int(this.NumberOfPoints); i++ {
-		_ = i
-		tmp61 := NewShapefileMain_Point()
-		err = tmp61.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Points = append(this.Points, tmp61)
-	}
-	tmp62 := NewShapefileMain_BoundsMinMax()
-	err = tmp62.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.MRange = tmp62
-	for i := 0; i < int(this.NumberOfPoints); i++ {
-		_ = i
-		tmp63, err := this._io.ReadF8le()
-		if err != nil {
-			return err
-		}
-		this.MValues = append(this.MValues, tmp63)
 	}
 	return err
 }
@@ -741,536 +1347,24 @@ func NewShapefileMain_RecordHeader() *ShapefileMain_RecordHeader {
 	}
 }
 
+func (this ShapefileMain_RecordHeader) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *ShapefileMain_RecordHeader) Read(io *kaitai.Stream, parent *ShapefileMain_Record, root *ShapefileMain) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp64, err := this._io.ReadS4be()
+	tmp114, err := this._io.ReadS4be()
 	if err != nil {
 		return err
 	}
-	this.RecordNumber = int32(tmp64)
-	tmp65, err := this._io.ReadS4be()
+	this.RecordNumber = int32(tmp114)
+	tmp115, err := this._io.ReadS4be()
 	if err != nil {
 		return err
 	}
-	this.ContentLength = int32(tmp65)
-	return err
-}
-type ShapefileMain_MultiPoint struct {
-	BoundingBox *ShapefileMain_BoundingBoxXY
-	NumberOfPoints int32
-	Points []*ShapefileMain_Point
-	_io *kaitai.Stream
-	_root *ShapefileMain
-	_parent *ShapefileMain_RecordContents
-}
-func NewShapefileMain_MultiPoint() *ShapefileMain_MultiPoint {
-	return &ShapefileMain_MultiPoint{
-	}
-}
-
-func (this *ShapefileMain_MultiPoint) Read(io *kaitai.Stream, parent *ShapefileMain_RecordContents, root *ShapefileMain) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp66 := NewShapefileMain_BoundingBoxXY()
-	err = tmp66.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.BoundingBox = tmp66
-	tmp67, err := this._io.ReadS4le()
-	if err != nil {
-		return err
-	}
-	this.NumberOfPoints = int32(tmp67)
-	for i := 0; i < int(this.NumberOfPoints); i++ {
-		_ = i
-		tmp68 := NewShapefileMain_Point()
-		err = tmp68.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Points = append(this.Points, tmp68)
-	}
-	return err
-}
-type ShapefileMain_FileHeader struct {
-	FileCode []byte
-	UnusedField1 []byte
-	UnusedField2 []byte
-	UnusedField3 []byte
-	UnusedField4 []byte
-	UnusedField5 []byte
-	FileLength int32
-	Version []byte
-	ShapeType ShapefileMain_ShapeType
-	BoundingBox *ShapefileMain_BoundingBoxXYZM
-	_io *kaitai.Stream
-	_root *ShapefileMain
-	_parent *ShapefileMain
-}
-func NewShapefileMain_FileHeader() *ShapefileMain_FileHeader {
-	return &ShapefileMain_FileHeader{
-	}
-}
-
-func (this *ShapefileMain_FileHeader) Read(io *kaitai.Stream, parent *ShapefileMain, root *ShapefileMain) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp69, err := this._io.ReadBytes(int(4))
-	if err != nil {
-		return err
-	}
-	tmp69 = tmp69
-	this.FileCode = tmp69
-	if !(bytes.Equal(this.FileCode, []uint8{0, 0, 39, 10})) {
-		return kaitai.NewValidationNotEqualError([]uint8{0, 0, 39, 10}, this.FileCode, this._io, "/types/file_header/seq/0")
-	}
-	tmp70, err := this._io.ReadBytes(int(4))
-	if err != nil {
-		return err
-	}
-	tmp70 = tmp70
-	this.UnusedField1 = tmp70
-	if !(bytes.Equal(this.UnusedField1, []uint8{0, 0, 0, 0})) {
-		return kaitai.NewValidationNotEqualError([]uint8{0, 0, 0, 0}, this.UnusedField1, this._io, "/types/file_header/seq/1")
-	}
-	tmp71, err := this._io.ReadBytes(int(4))
-	if err != nil {
-		return err
-	}
-	tmp71 = tmp71
-	this.UnusedField2 = tmp71
-	if !(bytes.Equal(this.UnusedField2, []uint8{0, 0, 0, 0})) {
-		return kaitai.NewValidationNotEqualError([]uint8{0, 0, 0, 0}, this.UnusedField2, this._io, "/types/file_header/seq/2")
-	}
-	tmp72, err := this._io.ReadBytes(int(4))
-	if err != nil {
-		return err
-	}
-	tmp72 = tmp72
-	this.UnusedField3 = tmp72
-	if !(bytes.Equal(this.UnusedField3, []uint8{0, 0, 0, 0})) {
-		return kaitai.NewValidationNotEqualError([]uint8{0, 0, 0, 0}, this.UnusedField3, this._io, "/types/file_header/seq/3")
-	}
-	tmp73, err := this._io.ReadBytes(int(4))
-	if err != nil {
-		return err
-	}
-	tmp73 = tmp73
-	this.UnusedField4 = tmp73
-	if !(bytes.Equal(this.UnusedField4, []uint8{0, 0, 0, 0})) {
-		return kaitai.NewValidationNotEqualError([]uint8{0, 0, 0, 0}, this.UnusedField4, this._io, "/types/file_header/seq/4")
-	}
-	tmp74, err := this._io.ReadBytes(int(4))
-	if err != nil {
-		return err
-	}
-	tmp74 = tmp74
-	this.UnusedField5 = tmp74
-	if !(bytes.Equal(this.UnusedField5, []uint8{0, 0, 0, 0})) {
-		return kaitai.NewValidationNotEqualError([]uint8{0, 0, 0, 0}, this.UnusedField5, this._io, "/types/file_header/seq/5")
-	}
-	tmp75, err := this._io.ReadS4be()
-	if err != nil {
-		return err
-	}
-	this.FileLength = int32(tmp75)
-	tmp76, err := this._io.ReadBytes(int(4))
-	if err != nil {
-		return err
-	}
-	tmp76 = tmp76
-	this.Version = tmp76
-	if !(bytes.Equal(this.Version, []uint8{232, 3, 0, 0})) {
-		return kaitai.NewValidationNotEqualError([]uint8{232, 3, 0, 0}, this.Version, this._io, "/types/file_header/seq/7")
-	}
-	tmp77, err := this._io.ReadS4le()
-	if err != nil {
-		return err
-	}
-	this.ShapeType = ShapefileMain_ShapeType(tmp77)
-	tmp78 := NewShapefileMain_BoundingBoxXYZM()
-	err = tmp78.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.BoundingBox = tmp78
-	return err
-}
-
-/**
- * corresponds to s4be value of 9994
- */
-
-/**
- * corresponds to s4le value of 1000
- */
-type ShapefileMain_PointZ struct {
-	X float64
-	Y float64
-	Z float64
-	M float64
-	_io *kaitai.Stream
-	_root *ShapefileMain
-	_parent *ShapefileMain_RecordContents
-}
-func NewShapefileMain_PointZ() *ShapefileMain_PointZ {
-	return &ShapefileMain_PointZ{
-	}
-}
-
-func (this *ShapefileMain_PointZ) Read(io *kaitai.Stream, parent *ShapefileMain_RecordContents, root *ShapefileMain) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp79, err := this._io.ReadF8le()
-	if err != nil {
-		return err
-	}
-	this.X = float64(tmp79)
-	tmp80, err := this._io.ReadF8le()
-	if err != nil {
-		return err
-	}
-	this.Y = float64(tmp80)
-	tmp81, err := this._io.ReadF8le()
-	if err != nil {
-		return err
-	}
-	this.Z = float64(tmp81)
-	tmp82, err := this._io.ReadF8le()
-	if err != nil {
-		return err
-	}
-	this.M = float64(tmp82)
-	return err
-}
-type ShapefileMain_Record struct {
-	Header *ShapefileMain_RecordHeader
-	Contents *ShapefileMain_RecordContents
-	_io *kaitai.Stream
-	_root *ShapefileMain
-	_parent *ShapefileMain
-}
-func NewShapefileMain_Record() *ShapefileMain_Record {
-	return &ShapefileMain_Record{
-	}
-}
-
-func (this *ShapefileMain_Record) Read(io *kaitai.Stream, parent *ShapefileMain, root *ShapefileMain) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp83 := NewShapefileMain_RecordHeader()
-	err = tmp83.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Header = tmp83
-	tmp84 := NewShapefileMain_RecordContents()
-	err = tmp84.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Contents = tmp84
-	return err
-}
-
-/**
- * the size of this contents section in bytes must equal header.content_length * 2
- */
-type ShapefileMain_RecordContents struct {
-	ShapeType ShapefileMain_ShapeType
-	ShapeParameters interface{}
-	_io *kaitai.Stream
-	_root *ShapefileMain
-	_parent *ShapefileMain_Record
-}
-func NewShapefileMain_RecordContents() *ShapefileMain_RecordContents {
-	return &ShapefileMain_RecordContents{
-	}
-}
-
-func (this *ShapefileMain_RecordContents) Read(io *kaitai.Stream, parent *ShapefileMain_Record, root *ShapefileMain) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp85, err := this._io.ReadS4le()
-	if err != nil {
-		return err
-	}
-	this.ShapeType = ShapefileMain_ShapeType(tmp85)
-	if (this.ShapeType != ShapefileMain_ShapeType__NullShape) {
-		switch (this.ShapeType) {
-		case ShapefileMain_ShapeType__PolyLineZ:
-			tmp86 := NewShapefileMain_PolyLineZ()
-			err = tmp86.Read(this._io, this, this._root)
-			if err != nil {
-				return err
-			}
-			this.ShapeParameters = tmp86
-		case ShapefileMain_ShapeType__MultiPatch:
-			tmp87 := NewShapefileMain_MultiPatch()
-			err = tmp87.Read(this._io, this, this._root)
-			if err != nil {
-				return err
-			}
-			this.ShapeParameters = tmp87
-		case ShapefileMain_ShapeType__PolyLineM:
-			tmp88 := NewShapefileMain_PolyLineM()
-			err = tmp88.Read(this._io, this, this._root)
-			if err != nil {
-				return err
-			}
-			this.ShapeParameters = tmp88
-		case ShapefileMain_ShapeType__Polygon:
-			tmp89 := NewShapefileMain_Polygon()
-			err = tmp89.Read(this._io, this, this._root)
-			if err != nil {
-				return err
-			}
-			this.ShapeParameters = tmp89
-		case ShapefileMain_ShapeType__PolygonZ:
-			tmp90 := NewShapefileMain_PolygonZ()
-			err = tmp90.Read(this._io, this, this._root)
-			if err != nil {
-				return err
-			}
-			this.ShapeParameters = tmp90
-		case ShapefileMain_ShapeType__PointZ:
-			tmp91 := NewShapefileMain_PointZ()
-			err = tmp91.Read(this._io, this, this._root)
-			if err != nil {
-				return err
-			}
-			this.ShapeParameters = tmp91
-		case ShapefileMain_ShapeType__PolyLine:
-			tmp92 := NewShapefileMain_PolyLine()
-			err = tmp92.Read(this._io, this, this._root)
-			if err != nil {
-				return err
-			}
-			this.ShapeParameters = tmp92
-		case ShapefileMain_ShapeType__PointM:
-			tmp93 := NewShapefileMain_PointM()
-			err = tmp93.Read(this._io, this, this._root)
-			if err != nil {
-				return err
-			}
-			this.ShapeParameters = tmp93
-		case ShapefileMain_ShapeType__PolygonM:
-			tmp94 := NewShapefileMain_PolygonM()
-			err = tmp94.Read(this._io, this, this._root)
-			if err != nil {
-				return err
-			}
-			this.ShapeParameters = tmp94
-		case ShapefileMain_ShapeType__MultiPoint:
-			tmp95 := NewShapefileMain_MultiPoint()
-			err = tmp95.Read(this._io, this, this._root)
-			if err != nil {
-				return err
-			}
-			this.ShapeParameters = tmp95
-		case ShapefileMain_ShapeType__Point:
-			tmp96 := NewShapefileMain_Point()
-			err = tmp96.Read(this._io, this, this._root)
-			if err != nil {
-				return err
-			}
-			this.ShapeParameters = tmp96
-		case ShapefileMain_ShapeType__MultiPointM:
-			tmp97 := NewShapefileMain_MultiPointM()
-			err = tmp97.Read(this._io, this, this._root)
-			if err != nil {
-				return err
-			}
-			this.ShapeParameters = tmp97
-		case ShapefileMain_ShapeType__MultiPointZ:
-			tmp98 := NewShapefileMain_MultiPointZ()
-			err = tmp98.Read(this._io, this, this._root)
-			if err != nil {
-				return err
-			}
-			this.ShapeParameters = tmp98
-		}
-	}
-	return err
-}
-type ShapefileMain_MultiPatch struct {
-	BoundingBox *ShapefileMain_BoundingBoxXY
-	NumberOfParts int32
-	NumberOfPoints int32
-	Parts []int32
-	PartTypes []ShapefileMain_PartType
-	Points []*ShapefileMain_Point
-	ZRange *ShapefileMain_BoundsMinMax
-	ZValues []float64
-	MRange *ShapefileMain_BoundsMinMax
-	MValues []float64
-	_io *kaitai.Stream
-	_root *ShapefileMain
-	_parent *ShapefileMain_RecordContents
-}
-func NewShapefileMain_MultiPatch() *ShapefileMain_MultiPatch {
-	return &ShapefileMain_MultiPatch{
-	}
-}
-
-func (this *ShapefileMain_MultiPatch) Read(io *kaitai.Stream, parent *ShapefileMain_RecordContents, root *ShapefileMain) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp99 := NewShapefileMain_BoundingBoxXY()
-	err = tmp99.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.BoundingBox = tmp99
-	tmp100, err := this._io.ReadS4le()
-	if err != nil {
-		return err
-	}
-	this.NumberOfParts = int32(tmp100)
-	tmp101, err := this._io.ReadS4le()
-	if err != nil {
-		return err
-	}
-	this.NumberOfPoints = int32(tmp101)
-	for i := 0; i < int(this.NumberOfParts); i++ {
-		_ = i
-		tmp102, err := this._io.ReadS4le()
-		if err != nil {
-			return err
-		}
-		this.Parts = append(this.Parts, tmp102)
-	}
-	for i := 0; i < int(this.NumberOfParts); i++ {
-		_ = i
-		tmp103, err := this._io.ReadS4le()
-		if err != nil {
-			return err
-		}
-		this.PartTypes = append(this.PartTypes, ShapefileMain_PartType(tmp103))
-	}
-	for i := 0; i < int(this.NumberOfPoints); i++ {
-		_ = i
-		tmp104 := NewShapefileMain_Point()
-		err = tmp104.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Points = append(this.Points, tmp104)
-	}
-	tmp105 := NewShapefileMain_BoundsMinMax()
-	err = tmp105.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.ZRange = tmp105
-	for i := 0; i < int(this.NumberOfPoints); i++ {
-		_ = i
-		tmp106, err := this._io.ReadF8le()
-		if err != nil {
-			return err
-		}
-		this.ZValues = append(this.ZValues, tmp106)
-	}
-	tmp107 := NewShapefileMain_BoundsMinMax()
-	err = tmp107.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.MRange = tmp107
-	for i := 0; i < int(this.NumberOfPoints); i++ {
-		_ = i
-		tmp108, err := this._io.ReadF8le()
-		if err != nil {
-			return err
-		}
-		this.MValues = append(this.MValues, tmp108)
-	}
-	return err
-}
-type ShapefileMain_PolyLineM struct {
-	BoundingBox *ShapefileMain_BoundingBoxXY
-	NumberOfParts int32
-	NumberOfPoints int32
-	Parts []int32
-	Points []*ShapefileMain_Point
-	MRange *ShapefileMain_BoundsMinMax
-	MValues []float64
-	_io *kaitai.Stream
-	_root *ShapefileMain
-	_parent *ShapefileMain_RecordContents
-}
-func NewShapefileMain_PolyLineM() *ShapefileMain_PolyLineM {
-	return &ShapefileMain_PolyLineM{
-	}
-}
-
-func (this *ShapefileMain_PolyLineM) Read(io *kaitai.Stream, parent *ShapefileMain_RecordContents, root *ShapefileMain) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp109 := NewShapefileMain_BoundingBoxXY()
-	err = tmp109.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.BoundingBox = tmp109
-	tmp110, err := this._io.ReadS4le()
-	if err != nil {
-		return err
-	}
-	this.NumberOfParts = int32(tmp110)
-	tmp111, err := this._io.ReadS4le()
-	if err != nil {
-		return err
-	}
-	this.NumberOfPoints = int32(tmp111)
-	for i := 0; i < int(this.NumberOfParts); i++ {
-		_ = i
-		tmp112, err := this._io.ReadS4le()
-		if err != nil {
-			return err
-		}
-		this.Parts = append(this.Parts, tmp112)
-	}
-	for i := 0; i < int(this.NumberOfPoints); i++ {
-		_ = i
-		tmp113 := NewShapefileMain_Point()
-		err = tmp113.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Points = append(this.Points, tmp113)
-	}
-	tmp114 := NewShapefileMain_BoundsMinMax()
-	err = tmp114.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.MRange = tmp114
-	for i := 0; i < int(this.NumberOfPoints); i++ {
-		_ = i
-		tmp115, err := this._io.ReadF8le()
-		if err != nil {
-			return err
-		}
-		this.MValues = append(this.MValues, tmp115)
-	}
+	this.ContentLength = int32(tmp115)
 	return err
 }

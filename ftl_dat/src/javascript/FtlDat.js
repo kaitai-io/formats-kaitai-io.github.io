@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.FtlDat = factory(root.KaitaiStream);
+    factory(root.FtlDat || (root.FtlDat = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (FtlDat_, KaitaiStream) {
 var FtlDat = (function() {
   function FtlDat(_io, _parent, _root) {
     this._io = _io;
@@ -29,7 +29,7 @@ var FtlDat = (function() {
     function File(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -57,7 +57,7 @@ var FtlDat = (function() {
     function Meta(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -77,5 +77,5 @@ var FtlDat = (function() {
 
   return FtlDat;
 })();
-return FtlDat;
-}));
+FtlDat_.FtlDat = FtlDat;
+});

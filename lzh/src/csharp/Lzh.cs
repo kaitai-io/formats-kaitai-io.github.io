@@ -38,35 +38,6 @@ namespace Kaitai
                 }
             }
         }
-        public partial class Record : KaitaiStruct
-        {
-            public static Record FromFile(string fileName)
-            {
-                return new Record(new KaitaiStream(fileName));
-            }
-
-            public Record(KaitaiStream p__io, Lzh p__parent = null, Lzh p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _headerLen = m_io.ReadU1();
-                if (HeaderLen > 0) {
-                    _fileRecord = new FileRecord(m_io, this, m_root);
-                }
-            }
-            private byte _headerLen;
-            private FileRecord _fileRecord;
-            private Lzh m_root;
-            private Lzh m_parent;
-            public byte HeaderLen { get { return _headerLen; } }
-            public FileRecord FileRecord { get { return _fileRecord; } }
-            public Lzh M_Root { get { return m_root; } }
-            public Lzh M_Parent { get { return m_parent; } }
-        }
         public partial class FileRecord : KaitaiStruct
         {
             public static FileRecord FromFile(string fileName)
@@ -82,7 +53,7 @@ namespace Kaitai
             }
             private void _read()
             {
-                __raw_header = m_io.ReadBytes((M_Parent.HeaderLen - 1));
+                __raw_header = m_io.ReadBytes(M_Parent.HeaderLen - 1);
                 var io___raw_header = new KaitaiStream(__raw_header);
                 _header = new Header(io___raw_header, this, m_root);
                 if (Header.Header1.LhaLevel == 0) {
@@ -217,6 +188,35 @@ namespace Kaitai
             public Lzh M_Root { get { return m_root; } }
             public Lzh.Header M_Parent { get { return m_parent; } }
             public byte[] M_RawFileTimestamp { get { return __raw_fileTimestamp; } }
+        }
+        public partial class Record : KaitaiStruct
+        {
+            public static Record FromFile(string fileName)
+            {
+                return new Record(new KaitaiStream(fileName));
+            }
+
+            public Record(KaitaiStream p__io, Lzh p__parent = null, Lzh p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _headerLen = m_io.ReadU1();
+                if (HeaderLen > 0) {
+                    _fileRecord = new FileRecord(m_io, this, m_root);
+                }
+            }
+            private byte _headerLen;
+            private FileRecord _fileRecord;
+            private Lzh m_root;
+            private Lzh m_parent;
+            public byte HeaderLen { get { return _headerLen; } }
+            public FileRecord FileRecord { get { return _fileRecord; } }
+            public Lzh M_Root { get { return m_root; } }
+            public Lzh M_Parent { get { return m_parent; } }
         }
         private List<Record> _entries;
         private Lzh m_root;

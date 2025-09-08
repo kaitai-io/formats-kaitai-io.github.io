@@ -61,121 +61,6 @@ namespace Kaitai
                 }
             }
         }
-
-        /// <summary>
-        /// Key-value pair
-        /// </summary>
-        public partial class Pair : KaitaiStruct
-        {
-            public static Pair FromFile(string fileName)
-            {
-                return new Pair(new KaitaiStream(fileName));
-            }
-
-
-            public enum WireTypes
-            {
-                Varint = 0,
-                Bit64 = 1,
-                LenDelimited = 2,
-                GroupStart = 3,
-                GroupEnd = 4,
-                Bit32 = 5,
-            }
-            public Pair(KaitaiStream p__io, GoogleProtobuf p__parent = null, GoogleProtobuf p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_wireType = false;
-                f_fieldTag = false;
-                _read();
-            }
-            private void _read()
-            {
-                _key = new VlqBase128Le(m_io);
-                switch (WireType) {
-                case WireTypes.Varint: {
-                    _value = new VlqBase128Le(m_io);
-                    break;
-                }
-                case WireTypes.LenDelimited: {
-                    _value = new DelimitedBytes(m_io, this, m_root);
-                    break;
-                }
-                case WireTypes.Bit64: {
-                    _value = m_io.ReadU8le();
-                    break;
-                }
-                case WireTypes.Bit32: {
-                    _value = m_io.ReadU4le();
-                    break;
-                }
-                }
-            }
-            private bool f_wireType;
-            private WireTypes _wireType;
-
-            /// <summary>
-            /// &quot;Wire type&quot; is a part of the &quot;key&quot; that carries enough
-            /// information to parse value from the wire, i.e. read correct
-            /// amount of bytes, but there's not enough informaton to
-            /// interprete in unambiguously. For example, one can't clearly
-            /// distinguish 64-bit fixed-sized integers from 64-bit floats,
-            /// signed zigzag-encoded varints from regular unsigned varints,
-            /// arbitrary bytes from UTF-8 encoded strings, etc.
-            /// </summary>
-            public WireTypes WireType
-            {
-                get
-                {
-                    if (f_wireType)
-                        return _wireType;
-                    _wireType = (WireTypes) (((WireTypes) (Key.Value & 7)));
-                    f_wireType = true;
-                    return _wireType;
-                }
-            }
-            private bool f_fieldTag;
-            private int _fieldTag;
-
-            /// <summary>
-            /// Identifies a field of protocol. One can look up symbolic
-            /// field name in a `.proto` file by this field tag.
-            /// </summary>
-            public int FieldTag
-            {
-                get
-                {
-                    if (f_fieldTag)
-                        return _fieldTag;
-                    _fieldTag = (int) ((Key.Value >> 3));
-                    f_fieldTag = true;
-                    return _fieldTag;
-                }
-            }
-            private VlqBase128Le _key;
-            private object _value;
-            private GoogleProtobuf m_root;
-            private GoogleProtobuf m_parent;
-
-            /// <summary>
-            /// Key is a bit-mapped variable-length integer: lower 3 bits
-            /// are used for &quot;wire type&quot;, and everything higher designates
-            /// an integer &quot;field tag&quot;.
-            /// </summary>
-            public VlqBase128Le Key { get { return _key; } }
-
-            /// <summary>
-            /// Value that corresponds to field identified by
-            /// `field_tag`. Type is determined approximately: there is
-            /// enough information to parse it unambiguously from a stream,
-            /// but further infromation from `.proto` file is required to
-            /// interprete it properly.
-            /// </summary>
-            public object Value { get { return _value; } }
-            public GoogleProtobuf M_Root { get { return m_root; } }
-            public GoogleProtobuf M_Parent { get { return m_parent; } }
-        }
         public partial class DelimitedBytes : KaitaiStruct
         {
             public static DelimitedBytes FromFile(string fileName)
@@ -202,6 +87,121 @@ namespace Kaitai
             public byte[] Body { get { return _body; } }
             public GoogleProtobuf M_Root { get { return m_root; } }
             public GoogleProtobuf.Pair M_Parent { get { return m_parent; } }
+        }
+
+        /// <summary>
+        /// Key-value pair
+        /// </summary>
+        public partial class Pair : KaitaiStruct
+        {
+            public static Pair FromFile(string fileName)
+            {
+                return new Pair(new KaitaiStream(fileName));
+            }
+
+
+            public enum WireTypes
+            {
+                Varint = 0,
+                Bit64 = 1,
+                LenDelimited = 2,
+                GroupStart = 3,
+                GroupEnd = 4,
+                Bit32 = 5,
+            }
+            public Pair(KaitaiStream p__io, GoogleProtobuf p__parent = null, GoogleProtobuf p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_fieldTag = false;
+                f_wireType = false;
+                _read();
+            }
+            private void _read()
+            {
+                _key = new VlqBase128Le(m_io);
+                switch (WireType) {
+                case WireTypes.Bit32: {
+                    _value = m_io.ReadU4le();
+                    break;
+                }
+                case WireTypes.Bit64: {
+                    _value = m_io.ReadU8le();
+                    break;
+                }
+                case WireTypes.LenDelimited: {
+                    _value = new DelimitedBytes(m_io, this, m_root);
+                    break;
+                }
+                case WireTypes.Varint: {
+                    _value = new VlqBase128Le(m_io);
+                    break;
+                }
+                }
+            }
+            private bool f_fieldTag;
+            private int _fieldTag;
+
+            /// <summary>
+            /// Identifies a field of protocol. One can look up symbolic
+            /// field name in a `.proto` file by this field tag.
+            /// </summary>
+            public int FieldTag
+            {
+                get
+                {
+                    if (f_fieldTag)
+                        return _fieldTag;
+                    f_fieldTag = true;
+                    _fieldTag = (int) (Key.Value >> 3);
+                    return _fieldTag;
+                }
+            }
+            private bool f_wireType;
+            private WireTypes _wireType;
+
+            /// <summary>
+            /// &quot;Wire type&quot; is a part of the &quot;key&quot; that carries enough
+            /// information to parse value from the wire, i.e. read correct
+            /// amount of bytes, but there's not enough informaton to
+            /// interprete in unambiguously. For example, one can't clearly
+            /// distinguish 64-bit fixed-sized integers from 64-bit floats,
+            /// signed zigzag-encoded varints from regular unsigned varints,
+            /// arbitrary bytes from UTF-8 encoded strings, etc.
+            /// </summary>
+            public WireTypes WireType
+            {
+                get
+                {
+                    if (f_wireType)
+                        return _wireType;
+                    f_wireType = true;
+                    _wireType = (WireTypes) (((WireTypes) Key.Value & 7));
+                    return _wireType;
+                }
+            }
+            private VlqBase128Le _key;
+            private object _value;
+            private GoogleProtobuf m_root;
+            private GoogleProtobuf m_parent;
+
+            /// <summary>
+            /// Key is a bit-mapped variable-length integer: lower 3 bits
+            /// are used for &quot;wire type&quot;, and everything higher designates
+            /// an integer &quot;field tag&quot;.
+            /// </summary>
+            public VlqBase128Le Key { get { return _key; } }
+
+            /// <summary>
+            /// Value that corresponds to field identified by
+            /// `field_tag`. Type is determined approximately: there is
+            /// enough information to parse it unambiguously from a stream,
+            /// but further infromation from `.proto` file is required to
+            /// interprete it properly.
+            /// </summary>
+            public object Value { get { return _value; } }
+            public GoogleProtobuf M_Root { get { return m_root; } }
+            public GoogleProtobuf M_Parent { get { return m_parent; } }
         }
         private List<Pair> _pairs;
         private GoogleProtobuf m_root;

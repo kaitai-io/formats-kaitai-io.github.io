@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.Respack = factory(root.KaitaiStream);
+    factory(root.Respack || (root.Respack = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Respack_, KaitaiStream) {
 /**
  * Resource file found in CPB firmware archives, mostly used on older CoolPad
  * phones and/or tablets. The only observed files are called "ResPack.cfg".
@@ -31,14 +31,14 @@ var Respack = (function() {
     function Header(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     Header.prototype._read = function() {
       this.magic = this._io.readBytes(2);
-      if (!((KaitaiStream.byteArrayCompare(this.magic, [82, 83]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([82, 83], this.magic, this._io, "/types/header/seq/0");
+      if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([82, 83])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([82, 83]), this.magic, this._io, "/types/header/seq/0");
       }
       this.unknown = this._io.readBytes(8);
       this.lenJson = this._io.readU4le();
@@ -54,5 +54,5 @@ var Respack = (function() {
 
   return Respack;
 })();
-return Respack;
-}));
+Respack_.Respack = Respack;
+});

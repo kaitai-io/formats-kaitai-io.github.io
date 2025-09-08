@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.MagicavoxelVox = factory(root.KaitaiStream);
+    factory(root.MagicavoxelVox || (root.MagicavoxelVox = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (MagicavoxelVox_, KaitaiStream) {
 /**
  * @see {@link https://ephtracy.github.io/|MagicaVoxel Homepage}
  * @see {@link https://github.com/ephtracy/voxel-model/blob/master/MagicaVoxel-file-format-vox.txt|Format Description}
@@ -72,8 +72,8 @@ var MagicavoxelVox = (function() {
   }
   MagicavoxelVox.prototype._read = function() {
     this.magic = this._io.readBytes(4);
-    if (!((KaitaiStream.byteArrayCompare(this.magic, [86, 79, 88, 32]) == 0))) {
-      throw new KaitaiStream.ValidationNotEqualError([86, 79, 88, 32], this.magic, this._io, "/seq/0");
+    if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([86, 79, 88, 32])) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([86, 79, 88, 32]), this.magic, this._io, "/seq/0");
     }
     this.version = this._io.readU4le();
     this.main = new Chunk(this._io, this, this._root);
@@ -83,7 +83,7 @@ var MagicavoxelVox = (function() {
     function Chunk(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -93,30 +93,30 @@ var MagicavoxelVox = (function() {
       this.numBytesOfChildrenChunks = this._io.readU4le();
       if (this.numBytesOfChunkContent != 0) {
         switch (this.chunkId) {
-        case MagicavoxelVox.ChunkType.SIZE:
-          this._raw_chunkContent = this._io.readBytes(this.numBytesOfChunkContent);
-          var _io__raw_chunkContent = new KaitaiStream(this._raw_chunkContent);
-          this.chunkContent = new Size(_io__raw_chunkContent, this, this._root);
-          break;
         case MagicavoxelVox.ChunkType.MATT:
           this._raw_chunkContent = this._io.readBytes(this.numBytesOfChunkContent);
           var _io__raw_chunkContent = new KaitaiStream(this._raw_chunkContent);
           this.chunkContent = new Matt(_io__raw_chunkContent, this, this._root);
+          break;
+        case MagicavoxelVox.ChunkType.PACK:
+          this._raw_chunkContent = this._io.readBytes(this.numBytesOfChunkContent);
+          var _io__raw_chunkContent = new KaitaiStream(this._raw_chunkContent);
+          this.chunkContent = new Pack(_io__raw_chunkContent, this, this._root);
           break;
         case MagicavoxelVox.ChunkType.RGBA:
           this._raw_chunkContent = this._io.readBytes(this.numBytesOfChunkContent);
           var _io__raw_chunkContent = new KaitaiStream(this._raw_chunkContent);
           this.chunkContent = new Rgba(_io__raw_chunkContent, this, this._root);
           break;
+        case MagicavoxelVox.ChunkType.SIZE:
+          this._raw_chunkContent = this._io.readBytes(this.numBytesOfChunkContent);
+          var _io__raw_chunkContent = new KaitaiStream(this._raw_chunkContent);
+          this.chunkContent = new Size(_io__raw_chunkContent, this, this._root);
+          break;
         case MagicavoxelVox.ChunkType.XYZI:
           this._raw_chunkContent = this._io.readBytes(this.numBytesOfChunkContent);
           var _io__raw_chunkContent = new KaitaiStream(this._raw_chunkContent);
           this.chunkContent = new Xyzi(_io__raw_chunkContent, this, this._root);
-          break;
-        case MagicavoxelVox.ChunkType.PACK:
-          this._raw_chunkContent = this._io.readBytes(this.numBytesOfChunkContent);
-          var _io__raw_chunkContent = new KaitaiStream(this._raw_chunkContent);
-          this.chunkContent = new Pack(_io__raw_chunkContent, this, this._root);
           break;
         default:
           this.chunkContent = this._io.readBytes(this.numBytesOfChunkContent);
@@ -136,61 +136,29 @@ var MagicavoxelVox = (function() {
     return Chunk;
   })();
 
-  var Size = MagicavoxelVox.Size = (function() {
-    function Size(_io, _parent, _root) {
+  var Color = MagicavoxelVox.Color = (function() {
+    function Color(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    Size.prototype._read = function() {
-      this.sizeX = this._io.readU4le();
-      this.sizeY = this._io.readU4le();
-      this.sizeZ = this._io.readU4le();
+    Color.prototype._read = function() {
+      this.r = this._io.readU1();
+      this.g = this._io.readU1();
+      this.b = this._io.readU1();
+      this.a = this._io.readU1();
     }
 
-    return Size;
-  })();
-
-  var Rgba = MagicavoxelVox.Rgba = (function() {
-    function Rgba(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Rgba.prototype._read = function() {
-      this.colors = [];
-      for (var i = 0; i < 256; i++) {
-        this.colors.push(new Color(this._io, this, this._root));
-      }
-    }
-
-    return Rgba;
-  })();
-
-  var Pack = MagicavoxelVox.Pack = (function() {
-    function Pack(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Pack.prototype._read = function() {
-      this.numModels = this._io.readU4le();
-    }
-
-    return Pack;
+    return Color;
   })();
 
   var Matt = MagicavoxelVox.Matt = (function() {
     function Matt(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -224,6 +192,30 @@ var MagicavoxelVox = (function() {
         this.isTotalPower = this._io.readF4le();
       }
     }
+    Object.defineProperty(Matt.prototype, 'hasAttenuation', {
+      get: function() {
+        if (this._m_hasAttenuation !== undefined)
+          return this._m_hasAttenuation;
+        this._m_hasAttenuation = (this.propertyBits & 16) != 0;
+        return this._m_hasAttenuation;
+      }
+    });
+    Object.defineProperty(Matt.prototype, 'hasGlow', {
+      get: function() {
+        if (this._m_hasGlow !== undefined)
+          return this._m_hasGlow;
+        this._m_hasGlow = (this.propertyBits & 64) != 0;
+        return this._m_hasGlow;
+      }
+    });
+    Object.defineProperty(Matt.prototype, 'hasIor', {
+      get: function() {
+        if (this._m_hasIor !== undefined)
+          return this._m_hasIor;
+        this._m_hasIor = (this.propertyBits & 8) != 0;
+        return this._m_hasIor;
+      }
+    });
     Object.defineProperty(Matt.prototype, 'hasIsTotalPower', {
       get: function() {
         if (this._m_hasIsTotalPower !== undefined)
@@ -238,14 +230,6 @@ var MagicavoxelVox = (function() {
           return this._m_hasPlastic;
         this._m_hasPlastic = (this.propertyBits & 1) != 0;
         return this._m_hasPlastic;
-      }
-    });
-    Object.defineProperty(Matt.prototype, 'hasAttenuation', {
-      get: function() {
-        if (this._m_hasAttenuation !== undefined)
-          return this._m_hasAttenuation;
-        this._m_hasAttenuation = (this.propertyBits & 16) != 0;
-        return this._m_hasAttenuation;
       }
     });
     Object.defineProperty(Matt.prototype, 'hasPower', {
@@ -272,31 +256,83 @@ var MagicavoxelVox = (function() {
         return this._m_hasSpecular;
       }
     });
-    Object.defineProperty(Matt.prototype, 'hasIor', {
-      get: function() {
-        if (this._m_hasIor !== undefined)
-          return this._m_hasIor;
-        this._m_hasIor = (this.propertyBits & 8) != 0;
-        return this._m_hasIor;
-      }
-    });
-    Object.defineProperty(Matt.prototype, 'hasGlow', {
-      get: function() {
-        if (this._m_hasGlow !== undefined)
-          return this._m_hasGlow;
-        this._m_hasGlow = (this.propertyBits & 64) != 0;
-        return this._m_hasGlow;
-      }
-    });
 
     return Matt;
+  })();
+
+  var Pack = MagicavoxelVox.Pack = (function() {
+    function Pack(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Pack.prototype._read = function() {
+      this.numModels = this._io.readU4le();
+    }
+
+    return Pack;
+  })();
+
+  var Rgba = MagicavoxelVox.Rgba = (function() {
+    function Rgba(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Rgba.prototype._read = function() {
+      this.colors = [];
+      for (var i = 0; i < 256; i++) {
+        this.colors.push(new Color(this._io, this, this._root));
+      }
+    }
+
+    return Rgba;
+  })();
+
+  var Size = MagicavoxelVox.Size = (function() {
+    function Size(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Size.prototype._read = function() {
+      this.sizeX = this._io.readU4le();
+      this.sizeY = this._io.readU4le();
+      this.sizeZ = this._io.readU4le();
+    }
+
+    return Size;
+  })();
+
+  var Voxel = MagicavoxelVox.Voxel = (function() {
+    function Voxel(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Voxel.prototype._read = function() {
+      this.x = this._io.readU1();
+      this.y = this._io.readU1();
+      this.z = this._io.readU1();
+      this.colorIndex = this._io.readU1();
+    }
+
+    return Voxel;
   })();
 
   var Xyzi = MagicavoxelVox.Xyzi = (function() {
     function Xyzi(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -311,47 +347,11 @@ var MagicavoxelVox = (function() {
     return Xyzi;
   })();
 
-  var Color = MagicavoxelVox.Color = (function() {
-    function Color(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Color.prototype._read = function() {
-      this.r = this._io.readU1();
-      this.g = this._io.readU1();
-      this.b = this._io.readU1();
-      this.a = this._io.readU1();
-    }
-
-    return Color;
-  })();
-
-  var Voxel = MagicavoxelVox.Voxel = (function() {
-    function Voxel(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Voxel.prototype._read = function() {
-      this.x = this._io.readU1();
-      this.y = this._io.readU1();
-      this.z = this._io.readU1();
-      this.colorIndex = this._io.readU1();
-    }
-
-    return Voxel;
-  })();
-
   /**
    * 150 expected
    */
 
   return MagicavoxelVox;
 })();
-return MagicavoxelVox;
-}));
+MagicavoxelVox_.MagicavoxelVox = MagicavoxelVox;
+});

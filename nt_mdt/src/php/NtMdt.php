@@ -17,15 +17,15 @@
 
 namespace {
     class NtMdt extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \NtMdt $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\NtMdt $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_signature = $this->_io->readBytes(4);
-            if (!($this->signature() == "\x01\xB0\x93\xFF")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x01\xB0\x93\xFF", $this->signature(), $this->_io(), "/seq/0");
+            if (!($this->_m_signature == "\x01\xB0\x93\xFF")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x01\xB0\x93\xFF", $this->_m_signature, $this->_io, "/seq/0");
             }
             $this->_m_size = $this->_io->readU4le();
             $this->_m_reserved0 = $this->_io->readBytes(4);
@@ -64,53 +64,15 @@ namespace {
 }
 
 namespace NtMdt {
-    class Uuid extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \NtMdt\Frame\FdMetaData $_parent = null, \NtMdt $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_data = [];
-            $n = 16;
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_data[] = $this->_io->readU1();
-            }
-        }
-        protected $_m_data;
-        public function data() { return $this->_m_data; }
-    }
-}
-
-namespace NtMdt {
-    class Framez extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \NtMdt $_parent = null, \NtMdt $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_frames = [];
-            $n = ($this->_root()->lastFrame() + 1);
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_frames[] = new \NtMdt\Frame($this->_io, $this, $this->_root);
-            }
-        }
-        protected $_m_frames;
-        public function frames() { return $this->_m_frames; }
-    }
-}
-
-namespace NtMdt {
     class Frame extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \NtMdt\Framez $_parent = null, \NtMdt $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\NtMdt\Framez $_parent = null, ?\NtMdt $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_size = $this->_io->readU4le();
-            $this->_m__raw_main = $this->_io->readBytes(($this->size() - 4));
+            $this->_m__raw_main = $this->_io->readBytes($this->size() - 4);
             $_io__raw_main = new \Kaitai\Struct\Stream($this->_m__raw_main);
             $this->_m_main = new \NtMdt\Frame\FrameMain($_io__raw_main, $this, $this->_root);
         }
@@ -128,8 +90,128 @@ namespace NtMdt {
 }
 
 namespace NtMdt\Frame {
+    class AxisScale extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\NtMdt $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_offset = $this->_io->readF4le();
+            $this->_m_step = $this->_io->readF4le();
+            $this->_m_unit = $this->_io->readS2le();
+        }
+        protected $_m_offset;
+        protected $_m_step;
+        protected $_m_unit;
+
+        /**
+         * x_scale->offset = gwy_get_gfloat_le(&p);# r0 (physical units)
+         */
+        public function offset() { return $this->_m_offset; }
+
+        /**
+         * x_scale->step = gwy_get_gfloat_le(&p); r (physical units) x_scale->step = fabs(x_scale->step); if (!x_scale->step) {
+         *   g_warning("x_scale.step == 0, changing to 1");
+         *   x_scale->step = 1.0;
+         * }
+         */
+        public function step() { return $this->_m_step; }
+
+        /**
+         * U
+         */
+        public function unit() { return $this->_m_unit; }
+    }
+}
+
+namespace NtMdt\Frame {
+    class DateTime extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\NtMdt\Frame\FrameMain $_parent = null, ?\NtMdt $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_date = new \NtMdt\Frame\DateTime\Date($this->_io, $this, $this->_root);
+            $this->_m_time = new \NtMdt\Frame\DateTime\Time($this->_io, $this, $this->_root);
+        }
+        protected $_m_date;
+        protected $_m_time;
+        public function date() { return $this->_m_date; }
+        public function time() { return $this->_m_time; }
+    }
+}
+
+namespace NtMdt\Frame\DateTime {
+    class Date extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\NtMdt\Frame\DateTime $_parent = null, ?\NtMdt $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_year = $this->_io->readU2le();
+            $this->_m_month = $this->_io->readU2le();
+            $this->_m_day = $this->_io->readU2le();
+        }
+        protected $_m_year;
+        protected $_m_month;
+        protected $_m_day;
+
+        /**
+         * h_yea
+         */
+        public function year() { return $this->_m_year; }
+
+        /**
+         * h_mon
+         */
+        public function month() { return $this->_m_month; }
+
+        /**
+         * h_day
+         */
+        public function day() { return $this->_m_day; }
+    }
+}
+
+namespace NtMdt\Frame\DateTime {
+    class Time extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\NtMdt\Frame\DateTime $_parent = null, ?\NtMdt $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_hour = $this->_io->readU2le();
+            $this->_m_min = $this->_io->readU2le();
+            $this->_m_sec = $this->_io->readU2le();
+        }
+        protected $_m_hour;
+        protected $_m_min;
+        protected $_m_sec;
+
+        /**
+         * h_h
+         */
+        public function hour() { return $this->_m_hour; }
+
+        /**
+         * h_m
+         */
+        public function min() { return $this->_m_min; }
+
+        /**
+         * h_s
+         */
+        public function sec() { return $this->_m_sec; }
+    }
+}
+
+namespace NtMdt\Frame {
     class Dots extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \NtMdt $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\NtMdt $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -162,75 +244,8 @@ namespace NtMdt\Frame {
 }
 
 namespace NtMdt\Frame\Dots {
-    class DotsHeader extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \NtMdt\Frame\Dots $_parent = null, \NtMdt $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_headerSize = $this->_io->readS4le();
-            $this->_m__raw_header = $this->_io->readBytes($this->headerSize());
-            $_io__raw_header = new \Kaitai\Struct\Stream($this->_m__raw_header);
-            $this->_m_header = new \NtMdt\Frame\Dots\DotsHeader\Header($_io__raw_header, $this, $this->_root);
-        }
-        protected $_m_headerSize;
-        protected $_m_header;
-        protected $_m__raw_header;
-        public function headerSize() { return $this->_m_headerSize; }
-        public function header() { return $this->_m_header; }
-        public function _raw_header() { return $this->_m__raw_header; }
-    }
-}
-
-namespace NtMdt\Frame\Dots\DotsHeader {
-    class Header extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \NtMdt\Frame\Dots\DotsHeader $_parent = null, \NtMdt $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_coordSize = $this->_io->readS4le();
-            $this->_m_version = $this->_io->readS4le();
-            $this->_m_xyunits = $this->_io->readS2le();
-        }
-        protected $_m_coordSize;
-        protected $_m_version;
-        protected $_m_xyunits;
-        public function coordSize() { return $this->_m_coordSize; }
-        public function version() { return $this->_m_version; }
-        public function xyunits() { return $this->_m_xyunits; }
-    }
-}
-
-namespace NtMdt\Frame\Dots {
-    class DotsData extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \NtMdt\Frame\Dots $_parent = null, \NtMdt $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_coordX = $this->_io->readF4le();
-            $this->_m_coordY = $this->_io->readF4le();
-            $this->_m_forwardSize = $this->_io->readS4le();
-            $this->_m_backwardSize = $this->_io->readS4le();
-        }
-        protected $_m_coordX;
-        protected $_m_coordY;
-        protected $_m_forwardSize;
-        protected $_m_backwardSize;
-        public function coordX() { return $this->_m_coordX; }
-        public function coordY() { return $this->_m_coordY; }
-        public function forwardSize() { return $this->_m_forwardSize; }
-        public function backwardSize() { return $this->_m_backwardSize; }
-    }
-}
-
-namespace NtMdt\Frame\Dots {
     class DataLinez extends \Kaitai\Struct\Struct {
-        public function __construct(int $index, \Kaitai\Struct\Stream $_io, \NtMdt\Frame\Dots $_parent = null, \NtMdt $_root = null) {
+        public function __construct(int $index, \Kaitai\Struct\Stream $_io, ?\NtMdt\Frame\Dots $_parent = null, ?\NtMdt $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_m_index = $index;
             $this->_read();
@@ -257,79 +272,76 @@ namespace NtMdt\Frame\Dots {
     }
 }
 
-namespace NtMdt\Frame {
-    class FrameMain extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \NtMdt\Frame $_parent = null, \NtMdt $_root = null) {
+namespace NtMdt\Frame\Dots {
+    class DotsData extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\NtMdt\Frame\Dots $_parent = null, ?\NtMdt $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_type = $this->_io->readU2le();
-            $this->_m_version = new \NtMdt\Version($this->_io, $this, $this->_root);
-            $this->_m_dateTime = new \NtMdt\Frame\DateTime($this->_io, $this, $this->_root);
-            $this->_m_varSize = $this->_io->readU2le();
-            switch ($this->type()) {
-                case \NtMdt\Frame\FrameType::MDA:
-                    $this->_m__raw_frameData = $this->_io->readBytesFull();
-                    $_io__raw_frameData = new \Kaitai\Struct\Stream($this->_m__raw_frameData);
-                    $this->_m_frameData = new \NtMdt\Frame\FdMetaData($_io__raw_frameData, $this, $this->_root);
-                    break;
-                case \NtMdt\Frame\FrameType::CURVES_NEW:
-                    $this->_m__raw_frameData = $this->_io->readBytesFull();
-                    $_io__raw_frameData = new \Kaitai\Struct\Stream($this->_m__raw_frameData);
-                    $this->_m_frameData = new \NtMdt\Frame\FdCurvesNew($_io__raw_frameData, $this, $this->_root);
-                    break;
-                case \NtMdt\Frame\FrameType::CURVES:
-                    $this->_m__raw_frameData = $this->_io->readBytesFull();
-                    $_io__raw_frameData = new \Kaitai\Struct\Stream($this->_m__raw_frameData);
-                    $this->_m_frameData = new \NtMdt\Frame\FdSpectroscopy($_io__raw_frameData, $this, $this->_root);
-                    break;
-                case \NtMdt\Frame\FrameType::SPECTROSCOPY:
-                    $this->_m__raw_frameData = $this->_io->readBytesFull();
-                    $_io__raw_frameData = new \Kaitai\Struct\Stream($this->_m__raw_frameData);
-                    $this->_m_frameData = new \NtMdt\Frame\FdSpectroscopy($_io__raw_frameData, $this, $this->_root);
-                    break;
-                case \NtMdt\Frame\FrameType::SCANNED:
-                    $this->_m__raw_frameData = $this->_io->readBytesFull();
-                    $_io__raw_frameData = new \Kaitai\Struct\Stream($this->_m__raw_frameData);
-                    $this->_m_frameData = new \NtMdt\Frame\FdScanned($_io__raw_frameData, $this, $this->_root);
-                    break;
-                default:
-                    $this->_m_frameData = $this->_io->readBytesFull();
-                    break;
-            }
+            $this->_m_coordX = $this->_io->readF4le();
+            $this->_m_coordY = $this->_io->readF4le();
+            $this->_m_forwardSize = $this->_io->readS4le();
+            $this->_m_backwardSize = $this->_io->readS4le();
         }
-        protected $_m_type;
+        protected $_m_coordX;
+        protected $_m_coordY;
+        protected $_m_forwardSize;
+        protected $_m_backwardSize;
+        public function coordX() { return $this->_m_coordX; }
+        public function coordY() { return $this->_m_coordY; }
+        public function forwardSize() { return $this->_m_forwardSize; }
+        public function backwardSize() { return $this->_m_backwardSize; }
+    }
+}
+
+namespace NtMdt\Frame\Dots {
+    class DotsHeader extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\NtMdt\Frame\Dots $_parent = null, ?\NtMdt $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_headerSize = $this->_io->readS4le();
+            $this->_m__raw_header = $this->_io->readBytes($this->headerSize());
+            $_io__raw_header = new \Kaitai\Struct\Stream($this->_m__raw_header);
+            $this->_m_header = new \NtMdt\Frame\Dots\DotsHeader\Header($_io__raw_header, $this, $this->_root);
+        }
+        protected $_m_headerSize;
+        protected $_m_header;
+        protected $_m__raw_header;
+        public function headerSize() { return $this->_m_headerSize; }
+        public function header() { return $this->_m_header; }
+        public function _raw_header() { return $this->_m__raw_header; }
+    }
+}
+
+namespace NtMdt\Frame\Dots\DotsHeader {
+    class Header extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\NtMdt\Frame\Dots\DotsHeader $_parent = null, ?\NtMdt $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_coordSize = $this->_io->readS4le();
+            $this->_m_version = $this->_io->readS4le();
+            $this->_m_xyunits = $this->_io->readS2le();
+        }
+        protected $_m_coordSize;
         protected $_m_version;
-        protected $_m_dateTime;
-        protected $_m_varSize;
-        protected $_m_frameData;
-        protected $_m__raw_frameData;
-
-        /**
-         * h_what
-         */
-        public function type() { return $this->_m_type; }
+        protected $_m_xyunits;
+        public function coordSize() { return $this->_m_coordSize; }
         public function version() { return $this->_m_version; }
-        public function dateTime() { return $this->_m_dateTime; }
-
-        /**
-         * h_am, v6 and older only
-         */
-        public function varSize() { return $this->_m_varSize; }
-
-        /**
-         * 
-         */
-        public function frameData() { return $this->_m_frameData; }
-        public function _raw_frameData() { return $this->_m__raw_frameData; }
+        public function xyunits() { return $this->_m_xyunits; }
     }
 }
 
 namespace NtMdt\Frame {
     class FdCurvesNew extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \NtMdt\Frame\FrameMain $_parent = null, \NtMdt $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\NtMdt\Frame\FrameMain $_parent = null, ?\NtMdt $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -365,7 +377,7 @@ namespace NtMdt\Frame {
 
 namespace NtMdt\Frame\FdCurvesNew {
     class BlockDescr extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \NtMdt\Frame\FdCurvesNew $_parent = null, \NtMdt $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\NtMdt\Frame\FdCurvesNew $_parent = null, ?\NtMdt $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -383,7 +395,7 @@ namespace NtMdt\Frame\FdCurvesNew {
 
 namespace NtMdt\Frame {
     class FdMetaData extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \NtMdt\Frame\FrameMain $_parent = null, \NtMdt $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\NtMdt\Frame\FrameMain $_parent = null, ?\NtMdt $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -483,78 +495,8 @@ namespace NtMdt\Frame {
 }
 
 namespace NtMdt\Frame\FdMetaData {
-    class Image extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \NtMdt\Frame\FdMetaData $_parent = null, \NtMdt $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_image = [];
-            $i = 0;
-            while (!$this->_io->isEof()) {
-                $this->_m_image[] = new \NtMdt\Frame\FdMetaData\Image\Vec($this->_io, $this, $this->_root);
-                $i++;
-            }
-        }
-        protected $_m_image;
-        public function image() { return $this->_m_image; }
-    }
-}
-
-namespace NtMdt\Frame\FdMetaData\Image {
-    class Vec extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \NtMdt\Frame\FdMetaData\Image $_parent = null, \NtMdt $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_items = [];
-            $n = $this->_parent()->_parent()->nMesurands();
-            for ($i = 0; $i < $n; $i++) {
-                switch ($this->_parent()->_parent()->mesurands()[$i]->dataType()) {
-                    case \NtMdt\DataType::UINT64:
-                        $this->_m_items[] = $this->_io->readU8le();
-                        break;
-                    case \NtMdt\DataType::UINT8:
-                        $this->_m_items[] = $this->_io->readU1();
-                        break;
-                    case \NtMdt\DataType::FLOAT32:
-                        $this->_m_items[] = $this->_io->readF4le();
-                        break;
-                    case \NtMdt\DataType::INT8:
-                        $this->_m_items[] = $this->_io->readS1();
-                        break;
-                    case \NtMdt\DataType::UINT16:
-                        $this->_m_items[] = $this->_io->readU2le();
-                        break;
-                    case \NtMdt\DataType::INT64:
-                        $this->_m_items[] = $this->_io->readS8le();
-                        break;
-                    case \NtMdt\DataType::UINT32:
-                        $this->_m_items[] = $this->_io->readU4le();
-                        break;
-                    case \NtMdt\DataType::FLOAT64:
-                        $this->_m_items[] = $this->_io->readF8le();
-                        break;
-                    case \NtMdt\DataType::INT16:
-                        $this->_m_items[] = $this->_io->readS2le();
-                        break;
-                    case \NtMdt\DataType::INT32:
-                        $this->_m_items[] = $this->_io->readS4le();
-                        break;
-                }
-            }
-        }
-        protected $_m_items;
-        public function items() { return $this->_m_items; }
-    }
-}
-
-namespace NtMdt\Frame\FdMetaData {
     class Calibration extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \NtMdt\Frame\FdMetaData $_parent = null, \NtMdt $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\NtMdt\Frame\FdMetaData $_parent = null, ?\NtMdt $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -574,16 +516,16 @@ namespace NtMdt\Frame\FdMetaData {
             $this->_m_maxIndex = $this->_io->readU8le();
             $this->_m_dataType = $this->_io->readS4le();
             $this->_m_lenAuthor = $this->_io->readU4le();
-            $this->_m_name = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->lenName()), "utf-8");
-            $this->_m_comment = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->lenComment()), "utf-8");
-            $this->_m_unit = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->lenUnit()), "utf-8");
-            $this->_m_author = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->lenAuthor()), "utf-8");
+            $this->_m_name = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->lenName()), "UTF-8");
+            $this->_m_comment = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->lenComment()), "UTF-8");
+            $this->_m_unit = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->lenUnit()), "UTF-8");
+            $this->_m_author = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->lenAuthor()), "UTF-8");
         }
         protected $_m_count;
         public function count() {
             if ($this->_m_count !== null)
                 return $this->_m_count;
-            $this->_m_count = (($this->maxIndex() - $this->minIndex()) + 1);
+            $this->_m_count = ($this->maxIndex() - $this->minIndex()) + 1;
             return $this->_m_count;
         }
         protected $_m_lenTot;
@@ -625,245 +567,79 @@ namespace NtMdt\Frame\FdMetaData {
     }
 }
 
-namespace NtMdt\Frame {
-    class FdSpectroscopy extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \NtMdt\Frame\FrameMain $_parent = null, \NtMdt $_root = null) {
+namespace NtMdt\Frame\FdMetaData {
+    class Image extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\NtMdt\Frame\FdMetaData $_parent = null, ?\NtMdt $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m__raw_vars = $this->_io->readBytes($this->_parent()->varSize());
-            $_io__raw_vars = new \Kaitai\Struct\Stream($this->_m__raw_vars);
-            $this->_m_vars = new \NtMdt\Frame\FdSpectroscopy\Vars($_io__raw_vars, $this, $this->_root);
-            $this->_m_fmMode = $this->_io->readU2le();
-            $this->_m_fmXres = $this->_io->readU2le();
-            $this->_m_fmYres = $this->_io->readU2le();
-            $this->_m_dots = new \NtMdt\Frame\Dots($this->_io, $this, $this->_root);
-            $this->_m_data = [];
-            $n = ($this->fmXres() * $this->fmYres());
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_data[] = $this->_io->readS2le();
+            $this->_m_image = [];
+            $i = 0;
+            while (!$this->_io->isEof()) {
+                $this->_m_image[] = new \NtMdt\Frame\FdMetaData\Image\Vec($this->_io, $this, $this->_root);
+                $i++;
             }
-            $this->_m_title = new \NtMdt\Title($this->_io, $this, $this->_root);
-            $this->_m_xml = new \NtMdt\Xml($this->_io, $this, $this->_root);
         }
-        protected $_m_vars;
-        protected $_m_fmMode;
-        protected $_m_fmXres;
-        protected $_m_fmYres;
-        protected $_m_dots;
-        protected $_m_data;
-        protected $_m_title;
-        protected $_m_xml;
-        protected $_m__raw_vars;
-        public function vars() { return $this->_m_vars; }
-        public function fmMode() { return $this->_m_fmMode; }
-        public function fmXres() { return $this->_m_fmXres; }
-        public function fmYres() { return $this->_m_fmYres; }
-        public function dots() { return $this->_m_dots; }
-        public function data() { return $this->_m_data; }
-        public function title() { return $this->_m_title; }
-        public function xml() { return $this->_m_xml; }
-        public function _raw_vars() { return $this->_m__raw_vars; }
+        protected $_m_image;
+        public function image() { return $this->_m_image; }
     }
 }
 
-namespace NtMdt\Frame\FdSpectroscopy {
-    class Vars extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \NtMdt\Frame\FdSpectroscopy $_parent = null, \NtMdt $_root = null) {
+namespace NtMdt\Frame\FdMetaData\Image {
+    class Vec extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\NtMdt\Frame\FdMetaData\Image $_parent = null, ?\NtMdt $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_xScale = new \NtMdt\Frame\AxisScale($this->_io, $this, $this->_root);
-            $this->_m_yScale = new \NtMdt\Frame\AxisScale($this->_io, $this, $this->_root);
-            $this->_m_zScale = new \NtMdt\Frame\AxisScale($this->_io, $this, $this->_root);
-            $this->_m_spMode = $this->_io->readU2le();
-            $this->_m_spFilter = $this->_io->readU2le();
-            $this->_m_uBegin = $this->_io->readF4le();
-            $this->_m_uEnd = $this->_io->readF4le();
-            $this->_m_zUp = $this->_io->readS2le();
-            $this->_m_zDown = $this->_io->readS2le();
-            $this->_m_spAveraging = $this->_io->readU2le();
-            $this->_m_spRepeat = $this->_io->readU1();
-            $this->_m_spBack = $this->_io->readU1();
-            $this->_m_sp4nx = $this->_io->readS2le();
-            $this->_m_spOsc = $this->_io->readU1();
-            $this->_m_spN4 = $this->_io->readU1();
-            $this->_m_sp4x0 = $this->_io->readF4le();
-            $this->_m_sp4xr = $this->_io->readF4le();
-            $this->_m_sp4u = $this->_io->readS2le();
-            $this->_m_sp4i = $this->_io->readS2le();
-            $this->_m_spNx = $this->_io->readS2le();
+            $this->_m_items = [];
+            $n = $this->_parent()->_parent()->nMesurands();
+            for ($i = 0; $i < $n; $i++) {
+                switch ($this->_parent()->_parent()->mesurands()[$i]->dataType()) {
+                    case \NtMdt\DataType::FLOAT32:
+                        $this->_m_items[] = $this->_io->readF4le();
+                        break;
+                    case \NtMdt\DataType::FLOAT64:
+                        $this->_m_items[] = $this->_io->readF8le();
+                        break;
+                    case \NtMdt\DataType::INT16:
+                        $this->_m_items[] = $this->_io->readS2le();
+                        break;
+                    case \NtMdt\DataType::INT32:
+                        $this->_m_items[] = $this->_io->readS4le();
+                        break;
+                    case \NtMdt\DataType::INT64:
+                        $this->_m_items[] = $this->_io->readS8le();
+                        break;
+                    case \NtMdt\DataType::INT8:
+                        $this->_m_items[] = $this->_io->readS1();
+                        break;
+                    case \NtMdt\DataType::UINT16:
+                        $this->_m_items[] = $this->_io->readU2le();
+                        break;
+                    case \NtMdt\DataType::UINT32:
+                        $this->_m_items[] = $this->_io->readU4le();
+                        break;
+                    case \NtMdt\DataType::UINT64:
+                        $this->_m_items[] = $this->_io->readU8le();
+                        break;
+                    case \NtMdt\DataType::UINT8:
+                        $this->_m_items[] = $this->_io->readU1();
+                        break;
+                }
+            }
         }
-        protected $_m_xScale;
-        protected $_m_yScale;
-        protected $_m_zScale;
-        protected $_m_spMode;
-        protected $_m_spFilter;
-        protected $_m_uBegin;
-        protected $_m_uEnd;
-        protected $_m_zUp;
-        protected $_m_zDown;
-        protected $_m_spAveraging;
-        protected $_m_spRepeat;
-        protected $_m_spBack;
-        protected $_m_sp4nx;
-        protected $_m_spOsc;
-        protected $_m_spN4;
-        protected $_m_sp4x0;
-        protected $_m_sp4xr;
-        protected $_m_sp4u;
-        protected $_m_sp4i;
-        protected $_m_spNx;
-        public function xScale() { return $this->_m_xScale; }
-        public function yScale() { return $this->_m_yScale; }
-        public function zScale() { return $this->_m_zScale; }
-        public function spMode() { return $this->_m_spMode; }
-        public function spFilter() { return $this->_m_spFilter; }
-        public function uBegin() { return $this->_m_uBegin; }
-        public function uEnd() { return $this->_m_uEnd; }
-        public function zUp() { return $this->_m_zUp; }
-        public function zDown() { return $this->_m_zDown; }
-        public function spAveraging() { return $this->_m_spAveraging; }
-        public function spRepeat() { return $this->_m_spRepeat; }
-        public function spBack() { return $this->_m_spBack; }
-        public function sp4nx() { return $this->_m_sp4nx; }
-        public function spOsc() { return $this->_m_spOsc; }
-        public function spN4() { return $this->_m_spN4; }
-        public function sp4x0() { return $this->_m_sp4x0; }
-        public function sp4xr() { return $this->_m_sp4xr; }
-        public function sp4u() { return $this->_m_sp4u; }
-        public function sp4i() { return $this->_m_sp4i; }
-        public function spNx() { return $this->_m_spNx; }
-    }
-}
-
-namespace NtMdt\Frame {
-    class DateTime extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \NtMdt\Frame\FrameMain $_parent = null, \NtMdt $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_date = new \NtMdt\Frame\DateTime\Date($this->_io, $this, $this->_root);
-            $this->_m_time = new \NtMdt\Frame\DateTime\Time($this->_io, $this, $this->_root);
-        }
-        protected $_m_date;
-        protected $_m_time;
-        public function date() { return $this->_m_date; }
-        public function time() { return $this->_m_time; }
-    }
-}
-
-namespace NtMdt\Frame\DateTime {
-    class Date extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \NtMdt\Frame\DateTime $_parent = null, \NtMdt $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_year = $this->_io->readU2le();
-            $this->_m_month = $this->_io->readU2le();
-            $this->_m_day = $this->_io->readU2le();
-        }
-        protected $_m_year;
-        protected $_m_month;
-        protected $_m_day;
-
-        /**
-         * h_yea
-         */
-        public function year() { return $this->_m_year; }
-
-        /**
-         * h_mon
-         */
-        public function month() { return $this->_m_month; }
-
-        /**
-         * h_day
-         */
-        public function day() { return $this->_m_day; }
-    }
-}
-
-namespace NtMdt\Frame\DateTime {
-    class Time extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \NtMdt\Frame\DateTime $_parent = null, \NtMdt $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_hour = $this->_io->readU2le();
-            $this->_m_min = $this->_io->readU2le();
-            $this->_m_sec = $this->_io->readU2le();
-        }
-        protected $_m_hour;
-        protected $_m_min;
-        protected $_m_sec;
-
-        /**
-         * h_h
-         */
-        public function hour() { return $this->_m_hour; }
-
-        /**
-         * h_m
-         */
-        public function min() { return $this->_m_min; }
-
-        /**
-         * h_s
-         */
-        public function sec() { return $this->_m_sec; }
-    }
-}
-
-namespace NtMdt\Frame {
-    class AxisScale extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \NtMdt $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_offset = $this->_io->readF4le();
-            $this->_m_step = $this->_io->readF4le();
-            $this->_m_unit = $this->_io->readS2le();
-        }
-        protected $_m_offset;
-        protected $_m_step;
-        protected $_m_unit;
-
-        /**
-         * x_scale->offset = gwy_get_gfloat_le(&p);# r0 (physical units)
-         */
-        public function offset() { return $this->_m_offset; }
-
-        /**
-         * x_scale->step = gwy_get_gfloat_le(&p); r (physical units) x_scale->step = fabs(x_scale->step); if (!x_scale->step) {
-         *   g_warning("x_scale.step == 0, changing to 1");
-         *   x_scale->step = 1.0;
-         * }
-         */
-        public function step() { return $this->_m_step; }
-
-        /**
-         * U
-         */
-        public function unit() { return $this->_m_unit; }
+        protected $_m_items;
+        public function items() { return $this->_m_items; }
     }
 }
 
 namespace NtMdt\Frame {
     class FdScanned extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \NtMdt\Frame\FrameMain $_parent = null, \NtMdt $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\NtMdt\Frame\FrameMain $_parent = null, ?\NtMdt $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -892,7 +668,7 @@ namespace NtMdt\Frame {
             $this->_m_fmYres = $this->_io->readU2le();
             $this->_m_dots = new \NtMdt\Frame\Dots($this->_io, $this, $this->_root);
             $this->_m_image = [];
-            $n = ($this->fmXres() * $this->fmYres());
+            $n = $this->fmXres() * $this->fmYres();
             for ($i = 0; $i < $n; $i++) {
                 $this->_m_image[] = $this->_io->readS2le();
             }
@@ -963,8 +739,65 @@ namespace NtMdt\Frame {
 }
 
 namespace NtMdt\Frame\FdScanned {
+    class Dot extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\NtMdt $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_x = $this->_io->readS2le();
+            $this->_m_y = $this->_io->readS2le();
+        }
+        protected $_m_x;
+        protected $_m_y;
+        public function x() { return $this->_m_x; }
+        public function y() { return $this->_m_y; }
+    }
+}
+
+namespace NtMdt\Frame\FdScanned {
+    class ScanDir extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\NtMdt\Frame\FdScanned\Vars $_parent = null, ?\NtMdt $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_unkn = $this->_io->readBitsIntBe(4);
+            $this->_m_doublePass = $this->_io->readBitsIntBe(1) != 0;
+            $this->_m_bottom = $this->_io->readBitsIntBe(1) != 0;
+            $this->_m_left = $this->_io->readBitsIntBe(1) != 0;
+            $this->_m_horizontal = $this->_io->readBitsIntBe(1) != 0;
+        }
+        protected $_m_unkn;
+        protected $_m_doublePass;
+        protected $_m_bottom;
+        protected $_m_left;
+        protected $_m_horizontal;
+        public function unkn() { return $this->_m_unkn; }
+        public function doublePass() { return $this->_m_doublePass; }
+
+        /**
+         * Bottom - 1 Top - 0
+         */
+        public function bottom() { return $this->_m_bottom; }
+
+        /**
+         * Left - 1 Right - 0
+         */
+        public function left() { return $this->_m_left; }
+
+        /**
+         * Horizontal - 1 Vertical - 0
+         */
+        public function horizontal() { return $this->_m_horizontal; }
+    }
+}
+
+namespace NtMdt\Frame\FdScanned {
     class Vars extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \NtMdt\Frame\FdScanned $_parent = null, \NtMdt $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\NtMdt\Frame\FdScanned $_parent = null, ?\NtMdt $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -1127,59 +960,30 @@ namespace NtMdt\Frame\FdScanned {
 }
 
 namespace NtMdt\Frame\FdScanned {
-    class Dot extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \NtMdt $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
+    class InputSignal {
+        const EXTENSION_SLOT = 0;
+        const BIAS_V = 1;
+        const GROUND = 2;
 
-        private function _read() {
-            $this->_m_x = $this->_io->readS2le();
-            $this->_m_y = $this->_io->readS2le();
+        private const _VALUES = [0 => true, 1 => true, 2 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
         }
-        protected $_m_x;
-        protected $_m_y;
-        public function x() { return $this->_m_x; }
-        public function y() { return $this->_m_y; }
     }
 }
 
 namespace NtMdt\Frame\FdScanned {
-    class ScanDir extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \NtMdt\Frame\FdScanned\Vars $_parent = null, \NtMdt $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
+    class LiftMode {
+        const STEP = 0;
+        const FINE = 1;
+        const SLOPE = 2;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
         }
-
-        private function _read() {
-            $this->_m_unkn = $this->_io->readBitsIntBe(4);
-            $this->_m_doublePass = $this->_io->readBitsIntBe(1) != 0;
-            $this->_m_bottom = $this->_io->readBitsIntBe(1) != 0;
-            $this->_m_left = $this->_io->readBitsIntBe(1) != 0;
-            $this->_m_horizontal = $this->_io->readBitsIntBe(1) != 0;
-        }
-        protected $_m_unkn;
-        protected $_m_doublePass;
-        protected $_m_bottom;
-        protected $_m_left;
-        protected $_m_horizontal;
-        public function unkn() { return $this->_m_unkn; }
-        public function doublePass() { return $this->_m_doublePass; }
-
-        /**
-         * Bottom - 1 Top - 0
-         */
-        public function bottom() { return $this->_m_bottom; }
-
-        /**
-         * Left - 1 Right - 0
-         */
-        public function left() { return $this->_m_left; }
-
-        /**
-         * Horizontal - 1 Vertical - 0
-         */
-        public function horizontal() { return $this->_m_horizontal; }
     }
 }
 
@@ -1190,22 +994,198 @@ namespace NtMdt\Frame\FdScanned {
         const UNKNOWN2 = 2;
         const UNKNOWN3 = 3;
         const UNKNOWN4 = 4;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
-namespace NtMdt\Frame\FdScanned {
-    class InputSignal {
-        const EXTENSION_SLOT = 0;
-        const BIAS_V = 1;
-        const GROUND = 2;
+namespace NtMdt\Frame {
+    class FdSpectroscopy extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\NtMdt\Frame\FrameMain $_parent = null, ?\NtMdt $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m__raw_vars = $this->_io->readBytes($this->_parent()->varSize());
+            $_io__raw_vars = new \Kaitai\Struct\Stream($this->_m__raw_vars);
+            $this->_m_vars = new \NtMdt\Frame\FdSpectroscopy\Vars($_io__raw_vars, $this, $this->_root);
+            $this->_m_fmMode = $this->_io->readU2le();
+            $this->_m_fmXres = $this->_io->readU2le();
+            $this->_m_fmYres = $this->_io->readU2le();
+            $this->_m_dots = new \NtMdt\Frame\Dots($this->_io, $this, $this->_root);
+            $this->_m_data = [];
+            $n = $this->fmXres() * $this->fmYres();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_data[] = $this->_io->readS2le();
+            }
+            $this->_m_title = new \NtMdt\Title($this->_io, $this, $this->_root);
+            $this->_m_xml = new \NtMdt\Xml($this->_io, $this, $this->_root);
+        }
+        protected $_m_vars;
+        protected $_m_fmMode;
+        protected $_m_fmXres;
+        protected $_m_fmYres;
+        protected $_m_dots;
+        protected $_m_data;
+        protected $_m_title;
+        protected $_m_xml;
+        protected $_m__raw_vars;
+        public function vars() { return $this->_m_vars; }
+        public function fmMode() { return $this->_m_fmMode; }
+        public function fmXres() { return $this->_m_fmXres; }
+        public function fmYres() { return $this->_m_fmYres; }
+        public function dots() { return $this->_m_dots; }
+        public function data() { return $this->_m_data; }
+        public function title() { return $this->_m_title; }
+        public function xml() { return $this->_m_xml; }
+        public function _raw_vars() { return $this->_m__raw_vars; }
     }
 }
 
-namespace NtMdt\Frame\FdScanned {
-    class LiftMode {
-        const STEP = 0;
-        const FINE = 1;
-        const SLOPE = 2;
+namespace NtMdt\Frame\FdSpectroscopy {
+    class Vars extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\NtMdt\Frame\FdSpectroscopy $_parent = null, ?\NtMdt $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_xScale = new \NtMdt\Frame\AxisScale($this->_io, $this, $this->_root);
+            $this->_m_yScale = new \NtMdt\Frame\AxisScale($this->_io, $this, $this->_root);
+            $this->_m_zScale = new \NtMdt\Frame\AxisScale($this->_io, $this, $this->_root);
+            $this->_m_spMode = $this->_io->readU2le();
+            $this->_m_spFilter = $this->_io->readU2le();
+            $this->_m_uBegin = $this->_io->readF4le();
+            $this->_m_uEnd = $this->_io->readF4le();
+            $this->_m_zUp = $this->_io->readS2le();
+            $this->_m_zDown = $this->_io->readS2le();
+            $this->_m_spAveraging = $this->_io->readU2le();
+            $this->_m_spRepeat = $this->_io->readU1();
+            $this->_m_spBack = $this->_io->readU1();
+            $this->_m_sp4nx = $this->_io->readS2le();
+            $this->_m_spOsc = $this->_io->readU1();
+            $this->_m_spN4 = $this->_io->readU1();
+            $this->_m_sp4x0 = $this->_io->readF4le();
+            $this->_m_sp4xr = $this->_io->readF4le();
+            $this->_m_sp4u = $this->_io->readS2le();
+            $this->_m_sp4i = $this->_io->readS2le();
+            $this->_m_spNx = $this->_io->readS2le();
+        }
+        protected $_m_xScale;
+        protected $_m_yScale;
+        protected $_m_zScale;
+        protected $_m_spMode;
+        protected $_m_spFilter;
+        protected $_m_uBegin;
+        protected $_m_uEnd;
+        protected $_m_zUp;
+        protected $_m_zDown;
+        protected $_m_spAveraging;
+        protected $_m_spRepeat;
+        protected $_m_spBack;
+        protected $_m_sp4nx;
+        protected $_m_spOsc;
+        protected $_m_spN4;
+        protected $_m_sp4x0;
+        protected $_m_sp4xr;
+        protected $_m_sp4u;
+        protected $_m_sp4i;
+        protected $_m_spNx;
+        public function xScale() { return $this->_m_xScale; }
+        public function yScale() { return $this->_m_yScale; }
+        public function zScale() { return $this->_m_zScale; }
+        public function spMode() { return $this->_m_spMode; }
+        public function spFilter() { return $this->_m_spFilter; }
+        public function uBegin() { return $this->_m_uBegin; }
+        public function uEnd() { return $this->_m_uEnd; }
+        public function zUp() { return $this->_m_zUp; }
+        public function zDown() { return $this->_m_zDown; }
+        public function spAveraging() { return $this->_m_spAveraging; }
+        public function spRepeat() { return $this->_m_spRepeat; }
+        public function spBack() { return $this->_m_spBack; }
+        public function sp4nx() { return $this->_m_sp4nx; }
+        public function spOsc() { return $this->_m_spOsc; }
+        public function spN4() { return $this->_m_spN4; }
+        public function sp4x0() { return $this->_m_sp4x0; }
+        public function sp4xr() { return $this->_m_sp4xr; }
+        public function sp4u() { return $this->_m_sp4u; }
+        public function sp4i() { return $this->_m_sp4i; }
+        public function spNx() { return $this->_m_spNx; }
+    }
+}
+
+namespace NtMdt\Frame {
+    class FrameMain extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\NtMdt\Frame $_parent = null, ?\NtMdt $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_type = $this->_io->readU2le();
+            $this->_m_version = new \NtMdt\Version($this->_io, $this, $this->_root);
+            $this->_m_dateTime = new \NtMdt\Frame\DateTime($this->_io, $this, $this->_root);
+            $this->_m_varSize = $this->_io->readU2le();
+            switch ($this->type()) {
+                case \NtMdt\Frame\FrameType::CURVES:
+                    $this->_m__raw_frameData = $this->_io->readBytesFull();
+                    $_io__raw_frameData = new \Kaitai\Struct\Stream($this->_m__raw_frameData);
+                    $this->_m_frameData = new \NtMdt\Frame\FdSpectroscopy($_io__raw_frameData, $this, $this->_root);
+                    break;
+                case \NtMdt\Frame\FrameType::CURVES_NEW:
+                    $this->_m__raw_frameData = $this->_io->readBytesFull();
+                    $_io__raw_frameData = new \Kaitai\Struct\Stream($this->_m__raw_frameData);
+                    $this->_m_frameData = new \NtMdt\Frame\FdCurvesNew($_io__raw_frameData, $this, $this->_root);
+                    break;
+                case \NtMdt\Frame\FrameType::MDA:
+                    $this->_m__raw_frameData = $this->_io->readBytesFull();
+                    $_io__raw_frameData = new \Kaitai\Struct\Stream($this->_m__raw_frameData);
+                    $this->_m_frameData = new \NtMdt\Frame\FdMetaData($_io__raw_frameData, $this, $this->_root);
+                    break;
+                case \NtMdt\Frame\FrameType::SCANNED:
+                    $this->_m__raw_frameData = $this->_io->readBytesFull();
+                    $_io__raw_frameData = new \Kaitai\Struct\Stream($this->_m__raw_frameData);
+                    $this->_m_frameData = new \NtMdt\Frame\FdScanned($_io__raw_frameData, $this, $this->_root);
+                    break;
+                case \NtMdt\Frame\FrameType::SPECTROSCOPY:
+                    $this->_m__raw_frameData = $this->_io->readBytesFull();
+                    $_io__raw_frameData = new \Kaitai\Struct\Stream($this->_m__raw_frameData);
+                    $this->_m_frameData = new \NtMdt\Frame\FdSpectroscopy($_io__raw_frameData, $this, $this->_root);
+                    break;
+                default:
+                    $this->_m_frameData = $this->_io->readBytesFull();
+                    break;
+            }
+        }
+        protected $_m_type;
+        protected $_m_version;
+        protected $_m_dateTime;
+        protected $_m_varSize;
+        protected $_m_frameData;
+        protected $_m__raw_frameData;
+
+        /**
+         * h_what
+         */
+        public function type() { return $this->_m_type; }
+        public function version() { return $this->_m_version; }
+        public function dateTime() { return $this->_m_dateTime; }
+
+        /**
+         * h_am, v6 and older only
+         */
+        public function varSize() { return $this->_m_varSize; }
+
+        /**
+         * 
+         */
+        public function frameData() { return $this->_m_frameData; }
+        public function _raw_frameData() { return $this->_m__raw_frameData; }
     }
 }
 
@@ -1219,12 +1199,74 @@ namespace NtMdt\Frame {
         const PALETTE = 107;
         const CURVES_NEW = 190;
         const CURVES = 201;
+
+        private const _VALUES = [0 => true, 1 => true, 3 => true, 105 => true, 106 => true, 107 => true, 190 => true, 201 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
+    }
+}
+
+namespace NtMdt {
+    class Framez extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\NtMdt $_parent = null, ?\NtMdt $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_frames = [];
+            $n = $this->_root()->lastFrame() + 1;
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_frames[] = new \NtMdt\Frame($this->_io, $this, $this->_root);
+            }
+        }
+        protected $_m_frames;
+        public function frames() { return $this->_m_frames; }
+    }
+}
+
+namespace NtMdt {
+    class Title extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\NtMdt $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_titleLen = $this->_io->readU4le();
+            $this->_m_title = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->titleLen()), "windows-1251");
+        }
+        protected $_m_titleLen;
+        protected $_m_title;
+        public function titleLen() { return $this->_m_titleLen; }
+        public function title() { return $this->_m_title; }
+    }
+}
+
+namespace NtMdt {
+    class Uuid extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\NtMdt\Frame\FdMetaData $_parent = null, ?\NtMdt $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_data = [];
+            $n = 16;
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_data[] = $this->_io->readU1();
+            }
+        }
+        protected $_m_data;
+        public function data() { return $this->_m_data; }
     }
 }
 
 namespace NtMdt {
     class Version extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \NtMdt\Frame\FrameMain $_parent = null, \NtMdt $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\NtMdt\Frame\FrameMain $_parent = null, ?\NtMdt $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -1242,7 +1284,7 @@ namespace NtMdt {
 
 namespace NtMdt {
     class Xml extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \NtMdt $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\NtMdt $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -1255,24 +1297,6 @@ namespace NtMdt {
         protected $_m_xml;
         public function xmlLen() { return $this->_m_xmlLen; }
         public function xml() { return $this->_m_xml; }
-    }
-}
-
-namespace NtMdt {
-    class Title extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \NtMdt $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_titleLen = $this->_io->readU4le();
-            $this->_m_title = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->titleLen()), "cp1251");
-        }
-        protected $_m_titleLen;
-        protected $_m_title;
-        public function titleLen() { return $this->_m_titleLen; }
-        public function title() { return $this->_m_title; }
     }
 }
 
@@ -1298,19 +1322,29 @@ namespace NtMdt {
         const HV_Y = 17;
         const SNAP_BACK = 18;
         const FALSE = 255;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 7 => true, 8 => true, 9 => true, 10 => true, 11 => true, 12 => true, 13 => true, 14 => true, 15 => true, 16 => true, 17 => true, 18 => true, 255 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
 namespace NtMdt {
-    class XmlScanLocation {
-        const HLT = 0;
-        const HLB = 1;
-        const HRT = 2;
-        const HRB = 3;
-        const VLT = 4;
-        const VLB = 5;
-        const VRT = 6;
-        const VRB = 7;
+    class Consts {
+        const FRAME_MODE_SIZE = 8;
+        const FRAME_HEADER_SIZE = 22;
+        const AXIS_SCALES_SIZE = 30;
+        const FILE_HEADER_SIZE = 32;
+        const SPECTRO_VARS_MIN_SIZE = 38;
+        const SCAN_VARS_MIN_SIZE = 77;
+
+        private const _VALUES = [8 => true, 22 => true, 30 => true, 32 => true, 38 => true, 77 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
@@ -1330,15 +1364,12 @@ namespace NtMdt {
         const UINT16 = 2;
         const UINT32 = 4;
         const UINT64 = 8;
-    }
-}
 
-namespace NtMdt {
-    class XmlParamType {
-        const NONE = 0;
-        const LASER_WAVELENGTH = 1;
-        const UNITS = 2;
-        const DATA_ARRAY = 255;
+        private const _VALUES = [-65544 => true, -16138 => true, -13320 => true, -9990 => true, -5892 => true, -8 => true, -4 => true, -2 => true, -1 => true, 0 => true, 1 => true, 2 => true, 4 => true, 8 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
@@ -1370,6 +1401,27 @@ namespace NtMdt {
         const SNOM_REFLECTION = 23;
         const SNOM_ALL = 24;
         const SNOM = 25;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 7 => true, 8 => true, 9 => true, 10 => true, 11 => true, 12 => true, 13 => true, 14 => true, 15 => true, 16 => true, 17 => true, 18 => true, 19 => true, 20 => true, 21 => true, 22 => true, 23 => true, 24 => true, 25 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
+    }
+}
+
+namespace NtMdt {
+    class SpmTechnique {
+        const CONTACT_MODE = 0;
+        const SEMICONTACT_MODE = 1;
+        const TUNNEL_CURRENT = 2;
+        const SNOM = 3;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
@@ -1425,25 +1477,45 @@ namespace NtMdt {
         const RESERVED_DOS2 = 37;
         const RESERVED_DOS3 = 38;
         const RESERVED_DOS4 = 39;
+
+        private const _VALUES = [-10 => true, -9 => true, -8 => true, -7 => true, -6 => true, -5 => true, -4 => true, -3 => true, -2 => true, -1 => true, 0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 7 => true, 8 => true, 9 => true, 10 => true, 11 => true, 12 => true, 13 => true, 14 => true, 15 => true, 16 => true, 17 => true, 18 => true, 19 => true, 20 => true, 21 => true, 22 => true, 23 => true, 24 => true, 25 => true, 26 => true, 27 => true, 28 => true, 29 => true, 30 => true, 31 => true, 32 => true, 33 => true, 34 => true, 35 => true, 36 => true, 37 => true, 38 => true, 39 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
 namespace NtMdt {
-    class SpmTechnique {
-        const CONTACT_MODE = 0;
-        const SEMICONTACT_MODE = 1;
-        const TUNNEL_CURRENT = 2;
-        const SNOM = 3;
+    class XmlParamType {
+        const NONE = 0;
+        const LASER_WAVELENGTH = 1;
+        const UNITS = 2;
+        const DATA_ARRAY = 255;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 255 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
 namespace NtMdt {
-    class Consts {
-        const FRAME_MODE_SIZE = 8;
-        const FRAME_HEADER_SIZE = 22;
-        const AXIS_SCALES_SIZE = 30;
-        const FILE_HEADER_SIZE = 32;
-        const SPECTRO_VARS_MIN_SIZE = 38;
-        const SCAN_VARS_MIN_SIZE = 77;
+    class XmlScanLocation {
+        const HLT = 0;
+        const HLB = 1;
+        const HRT = 2;
+        const HRB = 3;
+        const VLT = 4;
+        const VLB = 5;
+        const VRT = 6;
+        const VRB = 7;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 7 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

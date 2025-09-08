@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Encode;
 
 ########################################################################
@@ -25,7 +25,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -50,500 +50,6 @@ sub tag_table {
 }
 
 ########################################################################
-package Icc4::U8Fixed8Number;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{number} = $self->{_io}->read_bytes(2);
-}
-
-sub number {
-    my ($self) = @_;
-    return $self->{number};
-}
-
-########################################################################
-package Icc4::U16Fixed16Number;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{number} = $self->{_io}->read_bytes(4);
-}
-
-sub number {
-    my ($self) = @_;
-    return $self->{number};
-}
-
-########################################################################
-package Icc4::StandardIlluminantEncoding;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-our $STANDARD_ILLUMINANT_ENCODINGS_UNKNOWN = 0;
-our $STANDARD_ILLUMINANT_ENCODINGS_D50 = 1;
-our $STANDARD_ILLUMINANT_ENCODINGS_D65 = 2;
-our $STANDARD_ILLUMINANT_ENCODINGS_D93 = 3;
-our $STANDARD_ILLUMINANT_ENCODINGS_F2 = 4;
-our $STANDARD_ILLUMINANT_ENCODINGS_D55 = 5;
-our $STANDARD_ILLUMINANT_ENCODINGS_A = 6;
-our $STANDARD_ILLUMINANT_ENCODINGS_EQUI_POWER = 7;
-our $STANDARD_ILLUMINANT_ENCODINGS_F8 = 8;
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{standard_illuminant_encoding} = $self->{_io}->read_u4be();
-}
-
-sub standard_illuminant_encoding {
-    my ($self) = @_;
-    return $self->{standard_illuminant_encoding};
-}
-
-########################################################################
-package Icc4::ProfileHeader;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-our $CMM_SIGNATURES_THE_IMAGING_FACTORY_CMM = 858931796;
-our $CMM_SIGNATURES_AGFA_CMM = 1094929747;
-our $CMM_SIGNATURES_ADOBE_CMM = 1094992453;
-our $CMM_SIGNATURES_COLOR_GEAR_CMM = 1128484179;
-our $CMM_SIGNATURES_DEMOICCMAX_CMM = 1145654616;
-our $CMM_SIGNATURES_LOGOSYNC_CMM = 1147629395;
-our $CMM_SIGNATURES_EFI_CMM = 1162234144;
-our $CMM_SIGNATURES_EXACT_SCAN_CMM = 1163411779;
-our $CMM_SIGNATURES_FUJI_FILM_CMM = 1179000864;
-our $CMM_SIGNATURES_HARLEQUIN_RIP_CMM = 1212370253;
-our $CMM_SIGNATURES_HEIDELBERG_CMM = 1212435744;
-our $CMM_SIGNATURES_KODAK_CMM = 1262701907;
-our $CMM_SIGNATURES_KONICA_MINOLTA_CMM = 1296256324;
-our $CMM_SIGNATURES_ONYX_GRAPHICS_CMM = 1330534744;
-our $CMM_SIGNATURES_DEVICE_LINK_CMM = 1380404563;
-our $CMM_SIGNATURES_REFICCMAX_CMM = 1380535640;
-our $CMM_SIGNATURES_SAMPLE_ICC_CMM = 1397310275;
-our $CMM_SIGNATURES_MUTOH_CMM = 1397311310;
-our $CMM_SIGNATURES_TOSHIBA_CMM = 1413696845;
-our $CMM_SIGNATURES_COLOR_GEAR_CMM_LITE = 1430471501;
-our $CMM_SIGNATURES_COLOR_GEAR_CMM_C = 1430474067;
-our $CMM_SIGNATURES_WINDOWS_COLOR_SYSTEM_CMM = 1464029984;
-our $CMM_SIGNATURES_WARE_TO_GO_CMM = 1465141024;
-our $CMM_SIGNATURES_APPLE_CMM = 1634758764;
-our $CMM_SIGNATURES_ARGYLL_CMS_CMM = 1634887532;
-our $CMM_SIGNATURES_LITTLE_CMS_CMM = 1818455411;
-our $CMM_SIGNATURES_VIVO_CMM = 1986623087;
-our $CMM_SIGNATURES_ZORAN_CMM = 2053320752;
-
-our $PRIMARY_PLATFORMS_APPLE_COMPUTER_INC = 1095782476;
-our $PRIMARY_PLATFORMS_MICROSOFT_CORPORATION = 1297303124;
-our $PRIMARY_PLATFORMS_SILICON_GRAPHICS_INC = 1397180704;
-our $PRIMARY_PLATFORMS_SUN_MICROSYSTEMS = 1398099543;
-
-our $PROFILE_CLASSES_ABSTRACT_PROFILE = 1633842036;
-our $PROFILE_CLASSES_DEVICE_LINK_PROFILE = 1818848875;
-our $PROFILE_CLASSES_DISPLAY_DEVICE_PROFILE = 1835955314;
-our $PROFILE_CLASSES_NAMED_COLOR_PROFILE = 1852662636;
-our $PROFILE_CLASSES_OUTPUT_DEVICE_PROFILE = 1886549106;
-our $PROFILE_CLASSES_INPUT_DEVICE_PROFILE = 1935896178;
-our $PROFILE_CLASSES_COLOR_SPACE_PROFILE = 1936744803;
-
-our $RENDERING_INTENTS_PERCEPTUAL = 0;
-our $RENDERING_INTENTS_MEDIA_RELATIVE_COLORIMETRIC = 1;
-our $RENDERING_INTENTS_SATURATION = 2;
-our $RENDERING_INTENTS_ICC_ABSOLUTE_COLORIMETRIC = 3;
-
-our $DATA_COLOUR_SPACES_TWO_COLOUR = 843271250;
-our $DATA_COLOUR_SPACES_THREE_COLOUR = 860048466;
-our $DATA_COLOUR_SPACES_FOUR_COLOUR = 876825682;
-our $DATA_COLOUR_SPACES_FIVE_COLOUR = 893602898;
-our $DATA_COLOUR_SPACES_SIX_COLOUR = 910380114;
-our $DATA_COLOUR_SPACES_SEVEN_COLOUR = 927157330;
-our $DATA_COLOUR_SPACES_EIGHT_COLOUR = 943934546;
-our $DATA_COLOUR_SPACES_NINE_COLOUR = 960711762;
-our $DATA_COLOUR_SPACES_TEN_COLOUR = 1094929490;
-our $DATA_COLOUR_SPACES_ELEVEN_COLOUR = 1111706706;
-our $DATA_COLOUR_SPACES_TWELVE_COLOUR = 1128483922;
-our $DATA_COLOUR_SPACES_CMY = 1129142560;
-our $DATA_COLOUR_SPACES_CMYK = 1129142603;
-our $DATA_COLOUR_SPACES_THIRTEEN_COLOUR = 1145261138;
-our $DATA_COLOUR_SPACES_FOURTEEN_COLOUR = 1162038354;
-our $DATA_COLOUR_SPACES_FIFTEEN_COLOUR = 1178815570;
-our $DATA_COLOUR_SPACES_GRAY = 1196573017;
-our $DATA_COLOUR_SPACES_HLS = 1212961568;
-our $DATA_COLOUR_SPACES_HSV = 1213421088;
-our $DATA_COLOUR_SPACES_CIELAB_OR_PCSLAB = 1281450528;
-our $DATA_COLOUR_SPACES_CIELUV = 1282766368;
-our $DATA_COLOUR_SPACES_RGB = 1380401696;
-our $DATA_COLOUR_SPACES_NCIEXYZ_OR_PCSXYZ = 1482250784;
-our $DATA_COLOUR_SPACES_YCBCR = 1497588338;
-our $DATA_COLOUR_SPACES_CIEYXY = 1501067552;
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{size} = $self->{_io}->read_u4be();
-    $self->{preferred_cmm_type} = $self->{_io}->read_u4be();
-    $self->{version} = Icc4::ProfileHeader::VersionField->new($self->{_io}, $self, $self->{_root});
-    $self->{device_class} = $self->{_io}->read_u4be();
-    $self->{color_space} = $self->{_io}->read_u4be();
-    $self->{pcs} = Encode::decode("ASCII", $self->{_io}->read_bytes(4));
-    $self->{creation_date_time} = Icc4::DateTimeNumber->new($self->{_io}, $self, $self->{_root});
-    $self->{file_signature} = $self->{_io}->read_bytes(4);
-    $self->{primary_platform} = $self->{_io}->read_u4be();
-    $self->{profile_flags} = Icc4::ProfileHeader::ProfileFlags->new($self->{_io}, $self, $self->{_root});
-    $self->{device_manufacturer} = Icc4::DeviceManufacturer->new($self->{_io}, $self, $self->{_root});
-    $self->{device_model} = Encode::decode("ASCII", $self->{_io}->read_bytes(4));
-    $self->{device_attributes} = Icc4::DeviceAttributes->new($self->{_io}, $self, $self->{_root});
-    $self->{rendering_intent} = $self->{_io}->read_u4be();
-    $self->{nciexyz_values_of_illuminant_of_pcs} = Icc4::XyzNumber->new($self->{_io}, $self, $self->{_root});
-    $self->{creator} = Icc4::DeviceManufacturer->new($self->{_io}, $self, $self->{_root});
-    $self->{identifier} = $self->{_io}->read_bytes(16);
-    $self->{reserved_data} = $self->{_io}->read_bytes(28);
-}
-
-sub size {
-    my ($self) = @_;
-    return $self->{size};
-}
-
-sub preferred_cmm_type {
-    my ($self) = @_;
-    return $self->{preferred_cmm_type};
-}
-
-sub version {
-    my ($self) = @_;
-    return $self->{version};
-}
-
-sub device_class {
-    my ($self) = @_;
-    return $self->{device_class};
-}
-
-sub color_space {
-    my ($self) = @_;
-    return $self->{color_space};
-}
-
-sub pcs {
-    my ($self) = @_;
-    return $self->{pcs};
-}
-
-sub creation_date_time {
-    my ($self) = @_;
-    return $self->{creation_date_time};
-}
-
-sub file_signature {
-    my ($self) = @_;
-    return $self->{file_signature};
-}
-
-sub primary_platform {
-    my ($self) = @_;
-    return $self->{primary_platform};
-}
-
-sub profile_flags {
-    my ($self) = @_;
-    return $self->{profile_flags};
-}
-
-sub device_manufacturer {
-    my ($self) = @_;
-    return $self->{device_manufacturer};
-}
-
-sub device_model {
-    my ($self) = @_;
-    return $self->{device_model};
-}
-
-sub device_attributes {
-    my ($self) = @_;
-    return $self->{device_attributes};
-}
-
-sub rendering_intent {
-    my ($self) = @_;
-    return $self->{rendering_intent};
-}
-
-sub nciexyz_values_of_illuminant_of_pcs {
-    my ($self) = @_;
-    return $self->{nciexyz_values_of_illuminant_of_pcs};
-}
-
-sub creator {
-    my ($self) = @_;
-    return $self->{creator};
-}
-
-sub identifier {
-    my ($self) = @_;
-    return $self->{identifier};
-}
-
-sub reserved_data {
-    my ($self) = @_;
-    return $self->{reserved_data};
-}
-
-########################################################################
-package Icc4::ProfileHeader::VersionField;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{major} = $self->{_io}->read_bytes(1);
-    $self->{minor} = $self->{_io}->read_bits_int_be(4);
-    $self->{bug_fix_level} = $self->{_io}->read_bits_int_be(4);
-    $self->{_io}->align_to_byte();
-    $self->{reserved} = $self->{_io}->read_bytes(2);
-}
-
-sub major {
-    my ($self) = @_;
-    return $self->{major};
-}
-
-sub minor {
-    my ($self) = @_;
-    return $self->{minor};
-}
-
-sub bug_fix_level {
-    my ($self) = @_;
-    return $self->{bug_fix_level};
-}
-
-sub reserved {
-    my ($self) = @_;
-    return $self->{reserved};
-}
-
-########################################################################
-package Icc4::ProfileHeader::ProfileFlags;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{embedded_profile} = $self->{_io}->read_bits_int_be(1);
-    $self->{profile_can_be_used_independently_of_embedded_colour_data} = $self->{_io}->read_bits_int_be(1);
-    $self->{other_flags} = $self->{_io}->read_bits_int_be(30);
-}
-
-sub embedded_profile {
-    my ($self) = @_;
-    return $self->{embedded_profile};
-}
-
-sub profile_can_be_used_independently_of_embedded_colour_data {
-    my ($self) = @_;
-    return $self->{profile_can_be_used_independently_of_embedded_colour_data};
-}
-
-sub other_flags {
-    my ($self) = @_;
-    return $self->{other_flags};
-}
-
-########################################################################
-package Icc4::XyzNumber;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{x} = $self->{_io}->read_bytes(4);
-    $self->{y} = $self->{_io}->read_bytes(4);
-    $self->{z} = $self->{_io}->read_bytes(4);
-}
-
-sub x {
-    my ($self) = @_;
-    return $self->{x};
-}
-
-sub y {
-    my ($self) = @_;
-    return $self->{y};
-}
-
-sub z {
-    my ($self) = @_;
-    return $self->{z};
-}
-
-########################################################################
 package Icc4::DateTimeNumber;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -563,7 +69,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -612,5297 +118,6 @@ sub second {
 }
 
 ########################################################################
-package Icc4::Response16Number;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{number} = $self->{_io}->read_u4be();
-    $self->{reserved} = $self->{_io}->read_bytes(2);
-    $self->{measurement_value} = Icc4::S15Fixed16Number->new($self->{_io}, $self, $self->{_root});
-}
-
-sub number {
-    my ($self) = @_;
-    return $self->{number};
-}
-
-sub reserved {
-    my ($self) = @_;
-    return $self->{reserved};
-}
-
-sub measurement_value {
-    my ($self) = @_;
-    return $self->{measurement_value};
-}
-
-########################################################################
-package Icc4::U1Fixed15Number;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{number} = $self->{_io}->read_bytes(2);
-}
-
-sub number {
-    my ($self) = @_;
-    return $self->{number};
-}
-
-########################################################################
-package Icc4::TagTable;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_count} = $self->{_io}->read_u4be();
-    $self->{tags} = ();
-    my $n_tags = $self->tag_count();
-    for (my $i = 0; $i < $n_tags; $i++) {
-        push @{$self->{tags}}, Icc4::TagTable::TagDefinition->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_count {
-    my ($self) = @_;
-    return $self->{tag_count};
-}
-
-sub tags {
-    my ($self) = @_;
-    return $self->{tags};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-our $TAG_SIGNATURES_A_TO_B_0 = 1093812784;
-our $TAG_SIGNATURES_A_TO_B_1 = 1093812785;
-our $TAG_SIGNATURES_A_TO_B_2 = 1093812786;
-our $TAG_SIGNATURES_B_TO_A_0 = 1110589744;
-our $TAG_SIGNATURES_B_TO_A_1 = 1110589745;
-our $TAG_SIGNATURES_B_TO_A_2 = 1110589746;
-our $TAG_SIGNATURES_B_TO_D_0 = 1110590512;
-our $TAG_SIGNATURES_B_TO_D_1 = 1110590513;
-our $TAG_SIGNATURES_B_TO_D_2 = 1110590514;
-our $TAG_SIGNATURES_B_TO_D_3 = 1110590515;
-our $TAG_SIGNATURES_D_TO_B_0 = 1144144432;
-our $TAG_SIGNATURES_D_TO_B_1 = 1144144433;
-our $TAG_SIGNATURES_D_TO_B_2 = 1144144434;
-our $TAG_SIGNATURES_D_TO_B_3 = 1144144435;
-our $TAG_SIGNATURES_BLUE_TRC = 1649693251;
-our $TAG_SIGNATURES_BLUE_MATRIX_COLUMN = 1649957210;
-our $TAG_SIGNATURES_CALIBRATION_DATE_TIME = 1667329140;
-our $TAG_SIGNATURES_CHROMATIC_ADAPTATION = 1667785060;
-our $TAG_SIGNATURES_CHROMATICITY = 1667789421;
-our $TAG_SIGNATURES_COLORIMETRIC_INTENT_IMAGE_STATE = 1667852659;
-our $TAG_SIGNATURES_COLORANT_TABLE_OUT = 1668050804;
-our $TAG_SIGNATURES_COLORANT_ORDER = 1668051567;
-our $TAG_SIGNATURES_COLORANT_TABLE = 1668051572;
-our $TAG_SIGNATURES_COPYRIGHT = 1668313716;
-our $TAG_SIGNATURES_PROFILE_DESCRIPTION = 1684370275;
-our $TAG_SIGNATURES_DEVICE_MODEL_DESC = 1684890724;
-our $TAG_SIGNATURES_DEVICE_MFG_DESC = 1684893284;
-our $TAG_SIGNATURES_GREEN_TRC = 1733579331;
-our $TAG_SIGNATURES_GREEN_MATRIX_COLUMN = 1733843290;
-our $TAG_SIGNATURES_GAMUT = 1734438260;
-our $TAG_SIGNATURES_GRAY_TRC = 1800688195;
-our $TAG_SIGNATURES_LUMINANCE = 1819635049;
-our $TAG_SIGNATURES_MEASUREMENT = 1835360627;
-our $TAG_SIGNATURES_NAMED_COLOR_2 = 1852009522;
-our $TAG_SIGNATURES_PREVIEW_0 = 1886545200;
-our $TAG_SIGNATURES_PREVIEW_1 = 1886545201;
-our $TAG_SIGNATURES_PREVIEW_2 = 1886545202;
-our $TAG_SIGNATURES_PROFILE_SEQUENCE = 1886610801;
-our $TAG_SIGNATURES_PROFILE_SEQUENCE_IDENTIFIER = 1886611812;
-our $TAG_SIGNATURES_RED_TRC = 1918128707;
-our $TAG_SIGNATURES_RED_MATRIX_COLUMN = 1918392666;
-our $TAG_SIGNATURES_OUTPUT_RESPONSE = 1919251312;
-our $TAG_SIGNATURES_PERCEPTUAL_RENDERING_INTENT_GAMUT = 1919510320;
-our $TAG_SIGNATURES_SATURATION_RENDERING_INTENT_GAMUT = 1919510322;
-our $TAG_SIGNATURES_CHAR_TARGET = 1952543335;
-our $TAG_SIGNATURES_TECHNOLOGY = 1952801640;
-our $TAG_SIGNATURES_VIEWING_CONDITIONS = 1986618743;
-our $TAG_SIGNATURES_VIEWING_COND_DESC = 1987405156;
-our $TAG_SIGNATURES_MEDIA_WHITE_POINT = 2004119668;
-
-our $TAG_TYPE_SIGNATURES_XYZ_TYPE = 1482250784;
-our $TAG_TYPE_SIGNATURES_CHROMATICITY_TYPE = 1667789421;
-our $TAG_TYPE_SIGNATURES_COLORANT_ORDER_TYPE = 1668051567;
-our $TAG_TYPE_SIGNATURES_COLORANT_TABLE_TYPE = 1668051572;
-our $TAG_TYPE_SIGNATURES_CURVE_TYPE = 1668641398;
-our $TAG_TYPE_SIGNATURES_DATA_TYPE = 1684108385;
-our $TAG_TYPE_SIGNATURES_DATE_TIME_TYPE = 1685350765;
-our $TAG_TYPE_SIGNATURES_MULTI_FUNCTION_A_TO_B_TABLE_TYPE = 1832993312;
-our $TAG_TYPE_SIGNATURES_MULTI_FUNCTION_B_TO_A_TABLE_TYPE = 1833058592;
-our $TAG_TYPE_SIGNATURES_MEASUREMENT_TYPE = 1835360627;
-our $TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE = 1835430961;
-our $TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE = 1835430962;
-our $TAG_TYPE_SIGNATURES_MULTI_LOCALIZED_UNICODE_TYPE = 1835824483;
-our $TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE = 1836082548;
-our $TAG_TYPE_SIGNATURES_NAMED_COLOR_2_TYPE = 1852009522;
-our $TAG_TYPE_SIGNATURES_PARAMETRIC_CURVE_TYPE = 1885434465;
-our $TAG_TYPE_SIGNATURES_PROFILE_SEQUENCE_DESC_TYPE = 1886610801;
-our $TAG_TYPE_SIGNATURES_PROFILE_SEQUENCE_IDENTIFIER_TYPE = 1886611812;
-our $TAG_TYPE_SIGNATURES_RESPONSE_CURVE_SET_16_TYPE = 1919120178;
-our $TAG_TYPE_SIGNATURES_S_15_FIXED_16_ARRAY_TYPE = 1936077618;
-our $TAG_TYPE_SIGNATURES_SIGNATURE_TYPE = 1936287520;
-our $TAG_TYPE_SIGNATURES_TEXT_TYPE = 1952807028;
-our $TAG_TYPE_SIGNATURES_U_16_FIXED_16_ARRAY_TYPE = 1969632050;
-our $TAG_TYPE_SIGNATURES_U_INT_8_ARRAY_TYPE = 1969827896;
-our $TAG_TYPE_SIGNATURES_U_INT_16_ARRAY_TYPE = 1969828150;
-our $TAG_TYPE_SIGNATURES_U_INT_32_ARRAY_TYPE = 1969828658;
-our $TAG_TYPE_SIGNATURES_U_INT_64_ARRAY_TYPE = 1969829428;
-our $TAG_TYPE_SIGNATURES_VIEWING_CONDITIONS_TYPE = 1986618743;
-
-our $MULTI_PROCESS_ELEMENTS_TYPES_BACS_ELEMENT_TYPE = 1648444243;
-our $MULTI_PROCESS_ELEMENTS_TYPES_CLUT_ELEMENT_TYPE = 1668052340;
-our $MULTI_PROCESS_ELEMENTS_TYPES_ONE_DIMENSIONAL_CURVES_TYPE = 1668641382;
-our $MULTI_PROCESS_ELEMENTS_TYPES_EACS_ELEMENT_TYPE = 1698775891;
-our $MULTI_PROCESS_ELEMENTS_TYPES_MATRIX_ELEMENT_TYPE = 1835103334;
-our $MULTI_PROCESS_ELEMENTS_TYPES_CURVE_SET_ELEMENT_TABLE_TYPE = 1835428980;
-our $MULTI_PROCESS_ELEMENTS_TYPES_FORMULA_CURVE_SEGMENTS_TYPE = 1885434470;
-our $MULTI_PROCESS_ELEMENTS_TYPES_SAMPLED_CURVE_SEGMENT_TYPE = 1935764838;
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_signature} = $self->{_io}->read_u4be();
-    $self->{offset_to_data_element} = $self->{_io}->read_u4be();
-    $self->{size_of_data_element} = $self->{_io}->read_u4be();
-}
-
-sub tag_data_element {
-    my ($self) = @_;
-    return $self->{tag_data_element} if ($self->{tag_data_element});
-    my $_pos = $self->{_io}->pos();
-    $self->{_io}->seek($self->offset_to_data_element());
-    my $_on = $self->tag_signature();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_COLORANT_ORDER) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::ColorantOrderTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_B_TO_A_2) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::BToA2Tag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_MEDIA_WHITE_POINT) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::MediaWhitePointTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_B_TO_D_3) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::BToD3Tag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_COLORIMETRIC_INTENT_IMAGE_STATE) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::ColorimetricIntentImageStateTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_VIEWING_COND_DESC) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::ViewingCondDescTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_PREVIEW_1) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::Preview1Tag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_DEVICE_MODEL_DESC) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::DeviceModelDescTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_CHROMATICITY) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::ChromaticityTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_PREVIEW_0) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::Preview0Tag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_D_TO_B_1) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::DToB1Tag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_SATURATION_RENDERING_INTENT_GAMUT) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::SaturationRenderingIntentGamutTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_B_TO_A_0) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::BToA0Tag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_GREEN_MATRIX_COLUMN) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::GreenMatrixColumnTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_COPYRIGHT) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::CopyrightTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_BLUE_MATRIX_COLUMN) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::BlueMatrixColumnTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_CHROMATIC_ADAPTATION) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::ChromaticAdaptationTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_A_TO_B_1) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::AToB1Tag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_OUTPUT_RESPONSE) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::OutputResponseTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_PROFILE_SEQUENCE) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::ProfileSequenceTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_CHAR_TARGET) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::CharTargetTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_RED_TRC) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::RedTrcTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_GAMUT) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::GamutTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_DEVICE_MFG_DESC) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::DeviceMfgDescTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_MEASUREMENT) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::MeasurementTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_GREEN_TRC) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::GreenTrcTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_D_TO_B_3) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::DToB3Tag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_COLORANT_TABLE) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::ColorantTableTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_D_TO_B_2) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::DToB2Tag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_PROFILE_DESCRIPTION) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::ProfileDescriptionTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_PROFILE_SEQUENCE_IDENTIFIER) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::ProfileSequenceIdentifierTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_GRAY_TRC) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::GrayTrcTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_PERCEPTUAL_RENDERING_INTENT_GAMUT) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::PerceptualRenderingIntentGamutTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_BLUE_TRC) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::BlueTrcTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_D_TO_B_0) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::DToB0Tag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_A_TO_B_2) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::AToB2Tag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_CALIBRATION_DATE_TIME) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::CalibrationDateTimeTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_COLORANT_TABLE_OUT) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::ColorantTableOutTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_RED_MATRIX_COLUMN) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::RedMatrixColumnTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_PREVIEW_2) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::Preview2Tag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_A_TO_B_0) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::AToB0Tag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_LUMINANCE) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::LuminanceTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_NAMED_COLOR_2) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::NamedColor2Tag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_B_TO_D_2) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::BToD2Tag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_B_TO_D_0) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::BToD0Tag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_B_TO_A_1) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::BToA1Tag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_B_TO_D_1) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::BToD1Tag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_VIEWING_CONDITIONS) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::ViewingConditionsTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_TECHNOLOGY) {
-        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
-        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::TechnologyTag->new($io__raw_tag_data_element, $self, $self->{_root});
-    }
-    else {
-        $self->{tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
-    }
-    $self->{_io}->seek($_pos);
-    return $self->{tag_data_element};
-}
-
-sub tag_signature {
-    my ($self) = @_;
-    return $self->{tag_signature};
-}
-
-sub offset_to_data_element {
-    my ($self) = @_;
-    return $self->{offset_to_data_element};
-}
-
-sub size_of_data_element {
-    my ($self) = @_;
-    return $self->{size_of_data_element};
-}
-
-sub _raw_tag_data_element {
-    my ($self) = @_;
-    return $self->{_raw_tag_data_element};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::BlueMatrixColumnTag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_XYZ_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::XyzType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::DeviceMfgDescTag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_LOCALIZED_UNICODE_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::MultiLocalizedUnicodeType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::NamedColor2Type;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{reserved} = $self->{_io}->read_bytes(4);
-    $self->{vendor_specific_flag} = $self->{_io}->read_u4be();
-    $self->{count_of_named_colours} = $self->{_io}->read_u4be();
-    $self->{number_of_device_coordinates_for_each_named_colour} = $self->{_io}->read_u4be();
-    $self->{prefix_for_each_colour_name} = Encode::decode("ASCII", $self->{_io}->read_bytes_term(0, 0, 1, 1));
-    $self->{prefix_for_each_colour_name_padding} = ();
-    my $n_prefix_for_each_colour_name_padding = (32 - length($self->prefix_for_each_colour_name()));
-    for (my $i = 0; $i < $n_prefix_for_each_colour_name_padding; $i++) {
-        push @{$self->{prefix_for_each_colour_name_padding}}, $self->{_io}->read_bytes(1);
-    }
-    $self->{suffix_for_each_colour_name} = Encode::decode("ASCII", $self->{_io}->read_bytes_term(0, 0, 1, 1));
-    $self->{suffix_for_each_colour_name_padding} = ();
-    my $n_suffix_for_each_colour_name_padding = (32 - length($self->suffix_for_each_colour_name()));
-    for (my $i = 0; $i < $n_suffix_for_each_colour_name_padding; $i++) {
-        push @{$self->{suffix_for_each_colour_name_padding}}, $self->{_io}->read_bytes(1);
-    }
-    $self->{named_colour_definitions} = ();
-    my $n_named_colour_definitions = $self->count_of_named_colours();
-    for (my $i = 0; $i < $n_named_colour_definitions; $i++) {
-        push @{$self->{named_colour_definitions}}, Icc4::TagTable::TagDefinition::NamedColor2Type::NamedColourDefinition->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub reserved {
-    my ($self) = @_;
-    return $self->{reserved};
-}
-
-sub vendor_specific_flag {
-    my ($self) = @_;
-    return $self->{vendor_specific_flag};
-}
-
-sub count_of_named_colours {
-    my ($self) = @_;
-    return $self->{count_of_named_colours};
-}
-
-sub number_of_device_coordinates_for_each_named_colour {
-    my ($self) = @_;
-    return $self->{number_of_device_coordinates_for_each_named_colour};
-}
-
-sub prefix_for_each_colour_name {
-    my ($self) = @_;
-    return $self->{prefix_for_each_colour_name};
-}
-
-sub prefix_for_each_colour_name_padding {
-    my ($self) = @_;
-    return $self->{prefix_for_each_colour_name_padding};
-}
-
-sub suffix_for_each_colour_name {
-    my ($self) = @_;
-    return $self->{suffix_for_each_colour_name};
-}
-
-sub suffix_for_each_colour_name_padding {
-    my ($self) = @_;
-    return $self->{suffix_for_each_colour_name_padding};
-}
-
-sub named_colour_definitions {
-    my ($self) = @_;
-    return $self->{named_colour_definitions};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::NamedColor2Type::NamedColourDefinition;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{root_name} = Encode::decode("ASCII", $self->{_io}->read_bytes_term(0, 0, 1, 1));
-    $self->{root_name_padding} = ();
-    my $n_root_name_padding = (32 - length($self->root_name()));
-    for (my $i = 0; $i < $n_root_name_padding; $i++) {
-        push @{$self->{root_name_padding}}, $self->{_io}->read_bytes(1);
-    }
-    $self->{pcs_coordinates} = $self->{_io}->read_bytes(6);
-    if ($self->_parent()->number_of_device_coordinates_for_each_named_colour() > 0) {
-        $self->{device_coordinates} = ();
-        my $n_device_coordinates = $self->_parent()->number_of_device_coordinates_for_each_named_colour();
-        for (my $i = 0; $i < $n_device_coordinates; $i++) {
-            push @{$self->{device_coordinates}}, $self->{_io}->read_u2be();
-        }
-    }
-}
-
-sub root_name {
-    my ($self) = @_;
-    return $self->{root_name};
-}
-
-sub root_name_padding {
-    my ($self) = @_;
-    return $self->{root_name_padding};
-}
-
-sub pcs_coordinates {
-    my ($self) = @_;
-    return $self->{pcs_coordinates};
-}
-
-sub device_coordinates {
-    my ($self) = @_;
-    return $self->{device_coordinates};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::ViewingConditionsTag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_VIEWING_CONDITIONS_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::ViewingConditionsType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::BlueTrcTag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_CURVE_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::CurveType->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_PARAMETRIC_CURVE_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::ParametricCurveType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::ResponseCurveSet16Type;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{reserved} = $self->{_io}->read_bytes(4);
-    $self->{number_of_channels} = $self->{_io}->read_u2be();
-    $self->{count_of_measurement_types} = $self->{_io}->read_u2be();
-    $self->{response_curve_structure_offsets} = ();
-    my $n_response_curve_structure_offsets = $self->count_of_measurement_types();
-    for (my $i = 0; $i < $n_response_curve_structure_offsets; $i++) {
-        push @{$self->{response_curve_structure_offsets}}, $self->{_io}->read_u4be();
-    }
-    $self->{response_curve_structures} = $self->{_io}->read_bytes_full();
-}
-
-sub reserved {
-    my ($self) = @_;
-    return $self->{reserved};
-}
-
-sub number_of_channels {
-    my ($self) = @_;
-    return $self->{number_of_channels};
-}
-
-sub count_of_measurement_types {
-    my ($self) = @_;
-    return $self->{count_of_measurement_types};
-}
-
-sub response_curve_structure_offsets {
-    my ($self) = @_;
-    return $self->{response_curve_structure_offsets};
-}
-
-sub response_curve_structures {
-    my ($self) = @_;
-    return $self->{response_curve_structures};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::CurveType;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{reserved} = $self->{_io}->read_bytes(4);
-    $self->{number_of_entries} = $self->{_io}->read_u4be();
-    if ($self->number_of_entries() > 1) {
-        $self->{curve_values} = ();
-        my $n_curve_values = $self->number_of_entries();
-        for (my $i = 0; $i < $n_curve_values; $i++) {
-            push @{$self->{curve_values}}, $self->{_io}->read_u2be();
-        }
-    }
-    if ($self->number_of_entries() == 1) {
-        $self->{curve_value} = $self->{_io}->read_u1();
-    }
-}
-
-sub reserved {
-    my ($self) = @_;
-    return $self->{reserved};
-}
-
-sub number_of_entries {
-    my ($self) = @_;
-    return $self->{number_of_entries};
-}
-
-sub curve_values {
-    my ($self) = @_;
-    return $self->{curve_values};
-}
-
-sub curve_value {
-    my ($self) = @_;
-    return $self->{curve_value};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::SaturationRenderingIntentGamutTag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_SIGNATURE_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::SignatureType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::XyzType;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{reserved} = $self->{_io}->read_bytes(4);
-    $self->{values} = ();
-    while (!$self->{_io}->is_eof()) {
-        push @{$self->{values}}, Icc4::XyzNumber->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub reserved {
-    my ($self) = @_;
-    return $self->{reserved};
-}
-
-sub values {
-    my ($self) = @_;
-    return $self->{values};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::Lut8Type;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{reserved} = $self->{_io}->read_bytes(4);
-    $self->{number_of_input_channels} = $self->{_io}->read_u1();
-    $self->{number_of_output_channels} = $self->{_io}->read_u1();
-    $self->{number_of_clut_grid_points} = $self->{_io}->read_u1();
-    $self->{padding} = $self->{_io}->read_bytes(1);
-    $self->{encoded_e_parameters} = ();
-    my $n_encoded_e_parameters = 9;
-    for (my $i = 0; $i < $n_encoded_e_parameters; $i++) {
-        push @{$self->{encoded_e_parameters}}, $self->{_io}->read_s4be();
-    }
-    $self->{number_of_input_table_entries} = $self->{_io}->read_u4be();
-    $self->{number_of_output_table_entries} = $self->{_io}->read_u4be();
-    $self->{input_tables} = $self->{_io}->read_bytes((256 * $self->number_of_input_channels()));
-    $self->{clut_values} = $self->{_io}->read_bytes((($self->number_of_clut_grid_points() ^ $self->number_of_input_channels()) * $self->number_of_output_channels()));
-    $self->{output_tables} = $self->{_io}->read_bytes((256 * $self->number_of_output_channels()));
-}
-
-sub reserved {
-    my ($self) = @_;
-    return $self->{reserved};
-}
-
-sub number_of_input_channels {
-    my ($self) = @_;
-    return $self->{number_of_input_channels};
-}
-
-sub number_of_output_channels {
-    my ($self) = @_;
-    return $self->{number_of_output_channels};
-}
-
-sub number_of_clut_grid_points {
-    my ($self) = @_;
-    return $self->{number_of_clut_grid_points};
-}
-
-sub padding {
-    my ($self) = @_;
-    return $self->{padding};
-}
-
-sub encoded_e_parameters {
-    my ($self) = @_;
-    return $self->{encoded_e_parameters};
-}
-
-sub number_of_input_table_entries {
-    my ($self) = @_;
-    return $self->{number_of_input_table_entries};
-}
-
-sub number_of_output_table_entries {
-    my ($self) = @_;
-    return $self->{number_of_output_table_entries};
-}
-
-sub input_tables {
-    my ($self) = @_;
-    return $self->{input_tables};
-}
-
-sub clut_values {
-    my ($self) = @_;
-    return $self->{clut_values};
-}
-
-sub output_tables {
-    my ($self) = @_;
-    return $self->{output_tables};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::BToA2Tag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut8Type->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut16Type->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_B_TO_A_TABLE_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::LutBToAType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::LutAToBType;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{reserved} = $self->{_io}->read_bytes(4);
-    $self->{number_of_input_channels} = $self->{_io}->read_u1();
-    $self->{number_of_output_channels} = $self->{_io}->read_u1();
-    $self->{padding} = $self->{_io}->read_bytes(2);
-    $self->{offset_to_first_b_curve} = $self->{_io}->read_u4be();
-    $self->{offset_to_matrix} = $self->{_io}->read_u4be();
-    $self->{offset_to_first_m_curve} = $self->{_io}->read_u4be();
-    $self->{offset_to_clut} = $self->{_io}->read_u4be();
-    $self->{offset_to_first_a_curve} = $self->{_io}->read_u4be();
-    $self->{data} = $self->{_io}->read_bytes_full();
-}
-
-sub reserved {
-    my ($self) = @_;
-    return $self->{reserved};
-}
-
-sub number_of_input_channels {
-    my ($self) = @_;
-    return $self->{number_of_input_channels};
-}
-
-sub number_of_output_channels {
-    my ($self) = @_;
-    return $self->{number_of_output_channels};
-}
-
-sub padding {
-    my ($self) = @_;
-    return $self->{padding};
-}
-
-sub offset_to_first_b_curve {
-    my ($self) = @_;
-    return $self->{offset_to_first_b_curve};
-}
-
-sub offset_to_matrix {
-    my ($self) = @_;
-    return $self->{offset_to_matrix};
-}
-
-sub offset_to_first_m_curve {
-    my ($self) = @_;
-    return $self->{offset_to_first_m_curve};
-}
-
-sub offset_to_clut {
-    my ($self) = @_;
-    return $self->{offset_to_clut};
-}
-
-sub offset_to_first_a_curve {
-    my ($self) = @_;
-    return $self->{offset_to_first_a_curve};
-}
-
-sub data {
-    my ($self) = @_;
-    return $self->{data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::BToA0Tag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut8Type->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut16Type->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_B_TO_A_TABLE_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::LutBToAType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::MediaWhitePointTag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_XYZ_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::XyzType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::Lut16Type;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{reserved} = $self->{_io}->read_bytes(4);
-    $self->{number_of_input_channels} = $self->{_io}->read_u1();
-    $self->{number_of_output_channels} = $self->{_io}->read_u1();
-    $self->{number_of_clut_grid_points} = $self->{_io}->read_u1();
-    $self->{padding} = $self->{_io}->read_bytes(1);
-    $self->{encoded_e_parameters} = ();
-    my $n_encoded_e_parameters = 9;
-    for (my $i = 0; $i < $n_encoded_e_parameters; $i++) {
-        push @{$self->{encoded_e_parameters}}, $self->{_io}->read_s4be();
-    }
-    $self->{number_of_input_table_entries} = $self->{_io}->read_u2be();
-    $self->{number_of_output_table_entries} = $self->{_io}->read_u2be();
-    $self->{input_tables} = $self->{_io}->read_bytes(((2 * $self->number_of_input_channels()) * $self->number_of_input_table_entries()));
-    $self->{clut_values} = $self->{_io}->read_bytes(((2 * ($self->number_of_clut_grid_points() ^ $self->number_of_input_channels())) * $self->number_of_output_channels()));
-    $self->{output_tables} = $self->{_io}->read_bytes(((2 * $self->number_of_output_channels()) * $self->number_of_output_table_entries()));
-}
-
-sub reserved {
-    my ($self) = @_;
-    return $self->{reserved};
-}
-
-sub number_of_input_channels {
-    my ($self) = @_;
-    return $self->{number_of_input_channels};
-}
-
-sub number_of_output_channels {
-    my ($self) = @_;
-    return $self->{number_of_output_channels};
-}
-
-sub number_of_clut_grid_points {
-    my ($self) = @_;
-    return $self->{number_of_clut_grid_points};
-}
-
-sub padding {
-    my ($self) = @_;
-    return $self->{padding};
-}
-
-sub encoded_e_parameters {
-    my ($self) = @_;
-    return $self->{encoded_e_parameters};
-}
-
-sub number_of_input_table_entries {
-    my ($self) = @_;
-    return $self->{number_of_input_table_entries};
-}
-
-sub number_of_output_table_entries {
-    my ($self) = @_;
-    return $self->{number_of_output_table_entries};
-}
-
-sub input_tables {
-    my ($self) = @_;
-    return $self->{input_tables};
-}
-
-sub clut_values {
-    my ($self) = @_;
-    return $self->{clut_values};
-}
-
-sub output_tables {
-    my ($self) = @_;
-    return $self->{output_tables};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::PerceptualRenderingIntentGamutTag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_SIGNATURE_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::SignatureType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::U16Fixed16ArrayType;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{reserved} = $self->{_io}->read_bytes(4);
-    $self->{values} = ();
-    while (!$self->{_io}->is_eof()) {
-        push @{$self->{values}}, Icc4::U16Fixed16Number->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub reserved {
-    my ($self) = @_;
-    return $self->{reserved};
-}
-
-sub values {
-    my ($self) = @_;
-    return $self->{values};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::ColorantTableOutTag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_COLORANT_TABLE_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::ColorantTableType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::MeasurementTag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MEASUREMENT_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::MeasurementType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::ProfileSequenceTag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_PROFILE_SEQUENCE_DESC_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::ProfileSequenceDescType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::TechnologyTag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_SIGNATURE_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::SignatureType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::AToB0Tag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut8Type->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut16Type->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_A_TO_B_TABLE_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::LutAToBType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::DToB0Tag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::MultiProcessElementsType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::OutputResponseTag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_RESPONSE_CURVE_SET_16_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::ResponseCurveSet16Type->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::GreenMatrixColumnTag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_XYZ_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::XyzType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::ProfileDescriptionTag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_LOCALIZED_UNICODE_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::MultiLocalizedUnicodeType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::Preview1Tag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut8Type->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut16Type->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_B_TO_A_TABLE_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::LutBToAType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::RedTrcTag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_CURVE_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::CurveType->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_PARAMETRIC_CURVE_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::ParametricCurveType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::BToD0Tag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::MultiProcessElementsType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::DToB1Tag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::MultiProcessElementsType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::BToA1Tag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut8Type->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut16Type->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_B_TO_A_TABLE_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::LutBToAType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::ParametricCurveType;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-our $PARAMETRIC_CURVE_TYPE_FUNCTIONS_Y_EQUALS_X_TO_POWER_OF_G = 0;
-our $PARAMETRIC_CURVE_TYPE_FUNCTIONS_CIE_122_1996 = 1;
-our $PARAMETRIC_CURVE_TYPE_FUNCTIONS_IEC_61966_3 = 2;
-our $PARAMETRIC_CURVE_TYPE_FUNCTIONS_IEC_61966_2_1 = 3;
-our $PARAMETRIC_CURVE_TYPE_FUNCTIONS_Y_EQUALS_OB_AX_PLUS_B_CB_TO_POWER_OF_G_PLUS_C = 4;
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{reserved} = $self->{_io}->read_bytes(4);
-    $self->{function_type} = $self->{_io}->read_u2be();
-    $self->{reserved_2} = $self->{_io}->read_bytes(2);
-    my $_on = $self->function_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::ParametricCurveType::PARAMETRIC_CURVE_TYPE_FUNCTIONS_CIE_122_1996) {
-        $self->{parameters} = Icc4::TagTable::TagDefinition::ParametricCurveType::ParamsCie1221996->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::ParametricCurveType::PARAMETRIC_CURVE_TYPE_FUNCTIONS_IEC_61966_3) {
-        $self->{parameters} = Icc4::TagTable::TagDefinition::ParametricCurveType::ParamsIec619663->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::ParametricCurveType::PARAMETRIC_CURVE_TYPE_FUNCTIONS_IEC_61966_2_1) {
-        $self->{parameters} = Icc4::TagTable::TagDefinition::ParametricCurveType::ParamsIec6196621->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::ParametricCurveType::PARAMETRIC_CURVE_TYPE_FUNCTIONS_Y_EQUALS_OB_AX_PLUS_B_CB_TO_POWER_OF_G_PLUS_C) {
-        $self->{parameters} = Icc4::TagTable::TagDefinition::ParametricCurveType::ParamsYEqualsObAxPlusBCbToPowerOfGPlusC->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::ParametricCurveType::PARAMETRIC_CURVE_TYPE_FUNCTIONS_Y_EQUALS_X_TO_POWER_OF_G) {
-        $self->{parameters} = Icc4::TagTable::TagDefinition::ParametricCurveType::ParamsYEqualsXToPowerOfG->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub reserved {
-    my ($self) = @_;
-    return $self->{reserved};
-}
-
-sub function_type {
-    my ($self) = @_;
-    return $self->{function_type};
-}
-
-sub reserved_2 {
-    my ($self) = @_;
-    return $self->{reserved_2};
-}
-
-sub parameters {
-    my ($self) = @_;
-    return $self->{parameters};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::ParametricCurveType::ParamsIec619663;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{g} = $self->{_io}->read_s4be();
-    $self->{a} = $self->{_io}->read_s4be();
-    $self->{b} = $self->{_io}->read_s4be();
-    $self->{c} = $self->{_io}->read_s4be();
-}
-
-sub g {
-    my ($self) = @_;
-    return $self->{g};
-}
-
-sub a {
-    my ($self) = @_;
-    return $self->{a};
-}
-
-sub b {
-    my ($self) = @_;
-    return $self->{b};
-}
-
-sub c {
-    my ($self) = @_;
-    return $self->{c};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::ParametricCurveType::ParamsIec6196621;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{g} = $self->{_io}->read_s4be();
-    $self->{a} = $self->{_io}->read_s4be();
-    $self->{b} = $self->{_io}->read_s4be();
-    $self->{c} = $self->{_io}->read_s4be();
-    $self->{d} = $self->{_io}->read_s4be();
-}
-
-sub g {
-    my ($self) = @_;
-    return $self->{g};
-}
-
-sub a {
-    my ($self) = @_;
-    return $self->{a};
-}
-
-sub b {
-    my ($self) = @_;
-    return $self->{b};
-}
-
-sub c {
-    my ($self) = @_;
-    return $self->{c};
-}
-
-sub d {
-    my ($self) = @_;
-    return $self->{d};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::ParametricCurveType::ParamsYEqualsXToPowerOfG;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{g} = $self->{_io}->read_s4be();
-}
-
-sub g {
-    my ($self) = @_;
-    return $self->{g};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::ParametricCurveType::ParamsYEqualsObAxPlusBCbToPowerOfGPlusC;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{g} = $self->{_io}->read_s4be();
-    $self->{a} = $self->{_io}->read_s4be();
-    $self->{b} = $self->{_io}->read_s4be();
-    $self->{c} = $self->{_io}->read_s4be();
-    $self->{d} = $self->{_io}->read_s4be();
-    $self->{e} = $self->{_io}->read_s4be();
-    $self->{f} = $self->{_io}->read_s4be();
-}
-
-sub g {
-    my ($self) = @_;
-    return $self->{g};
-}
-
-sub a {
-    my ($self) = @_;
-    return $self->{a};
-}
-
-sub b {
-    my ($self) = @_;
-    return $self->{b};
-}
-
-sub c {
-    my ($self) = @_;
-    return $self->{c};
-}
-
-sub d {
-    my ($self) = @_;
-    return $self->{d};
-}
-
-sub e {
-    my ($self) = @_;
-    return $self->{e};
-}
-
-sub f {
-    my ($self) = @_;
-    return $self->{f};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::ParametricCurveType::ParamsCie1221996;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{g} = $self->{_io}->read_s4be();
-    $self->{a} = $self->{_io}->read_s4be();
-    $self->{b} = $self->{_io}->read_s4be();
-}
-
-sub g {
-    my ($self) = @_;
-    return $self->{g};
-}
-
-sub a {
-    my ($self) = @_;
-    return $self->{a};
-}
-
-sub b {
-    my ($self) = @_;
-    return $self->{b};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::ChromaticityTag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_CHROMATICITY_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::ChromaticityType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::ChromaticAdaptationTag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_S_15_FIXED_16_ARRAY_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::S15Fixed16ArrayType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::MeasurementType;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-our $STANDARD_OBSERVER_ENCODINGS_UNKNOWN = 0;
-our $STANDARD_OBSERVER_ENCODINGS_CIE_1931_STANDARD_COLORIMETRIC_OBSERVER = 1;
-our $STANDARD_OBSERVER_ENCODINGS_CIE_1964_STANDARD_COLORIMETRIC_OBSERVER = 2;
-
-our $MEASUREMENT_GEOMETRY_ENCODINGS_UNKNOWN = 0;
-our $MEASUREMENT_GEOMETRY_ENCODINGS_ZERO_DEGREES_TO_45_DEGREES_OR_45_DEGREES_TO_ZERO_DEGREES = 1;
-our $MEASUREMENT_GEOMETRY_ENCODINGS_ZERO_DEGREES_TO_D_DEGREES_OR_D_DEGREES_TO_ZERO_DEGREES = 2;
-
-our $MEASUREMENT_FLARE_ENCODINGS_ZERO_PERCENT = 0;
-our $MEASUREMENT_FLARE_ENCODINGS_ONE_HUNDRED_PERCENT = 65536;
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{reserved} = $self->{_io}->read_bytes(4);
-    $self->{standard_observer_encoding} = $self->{_io}->read_u4be();
-    $self->{nciexyz_tristimulus_values_for_measurement_backing} = Icc4::XyzNumber->new($self->{_io}, $self, $self->{_root});
-    $self->{measurement_geometry_encoding} = $self->{_io}->read_u4be();
-    $self->{measurement_flare_encoding} = $self->{_io}->read_u4be();
-    $self->{standard_illuminant_encoding} = Icc4::StandardIlluminantEncoding->new($self->{_io}, $self, $self->{_root});
-}
-
-sub reserved {
-    my ($self) = @_;
-    return $self->{reserved};
-}
-
-sub standard_observer_encoding {
-    my ($self) = @_;
-    return $self->{standard_observer_encoding};
-}
-
-sub nciexyz_tristimulus_values_for_measurement_backing {
-    my ($self) = @_;
-    return $self->{nciexyz_tristimulus_values_for_measurement_backing};
-}
-
-sub measurement_geometry_encoding {
-    my ($self) = @_;
-    return $self->{measurement_geometry_encoding};
-}
-
-sub measurement_flare_encoding {
-    my ($self) = @_;
-    return $self->{measurement_flare_encoding};
-}
-
-sub standard_illuminant_encoding {
-    my ($self) = @_;
-    return $self->{standard_illuminant_encoding};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::TextType;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{reserved} = $self->{_io}->read_bytes(4);
-    $self->{value} = Encode::decode("ASCII", IO::KaitaiStruct::Stream::bytes_terminate($self->{_io}->read_bytes_full(), 0, 0));
-}
-
-sub reserved {
-    my ($self) = @_;
-    return $self->{reserved};
-}
-
-sub value {
-    my ($self) = @_;
-    return $self->{value};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::ProfileSequenceIdentifierType;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{reserved} = $self->{_io}->read_bytes(4);
-    $self->{number_of_structures} = $self->{_io}->read_u4be();
-    $self->{positions_table} = ();
-    my $n_positions_table = $self->number_of_structures();
-    for (my $i = 0; $i < $n_positions_table; $i++) {
-        push @{$self->{positions_table}}, Icc4::PositionNumber->new($self->{_io}, $self, $self->{_root});
-    }
-    $self->{profile_identifiers} = ();
-    my $n_profile_identifiers = $self->number_of_structures();
-    for (my $i = 0; $i < $n_profile_identifiers; $i++) {
-        push @{$self->{profile_identifiers}}, Icc4::TagTable::TagDefinition::ProfileSequenceIdentifierType::ProfileIdentifier->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub reserved {
-    my ($self) = @_;
-    return $self->{reserved};
-}
-
-sub number_of_structures {
-    my ($self) = @_;
-    return $self->{number_of_structures};
-}
-
-sub positions_table {
-    my ($self) = @_;
-    return $self->{positions_table};
-}
-
-sub profile_identifiers {
-    my ($self) = @_;
-    return $self->{profile_identifiers};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::ProfileSequenceIdentifierType::ProfileIdentifier;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{profile_id} = $self->{_io}->read_bytes(16);
-    $self->{profile_description} = Icc4::TagTable::TagDefinition::MultiLocalizedUnicodeType->new($self->{_io}, $self, $self->{_root});
-}
-
-sub profile_id {
-    my ($self) = @_;
-    return $self->{profile_id};
-}
-
-sub profile_description {
-    my ($self) = @_;
-    return $self->{profile_description};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::ColorantTableType;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{reserved} = $self->{_io}->read_bytes(4);
-    $self->{count_of_colorants} = $self->{_io}->read_u4be();
-    $self->{colorants} = ();
-    my $n_colorants = $self->count_of_colorants();
-    for (my $i = 0; $i < $n_colorants; $i++) {
-        push @{$self->{colorants}}, Icc4::TagTable::TagDefinition::ColorantTableType::Colorant->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub reserved {
-    my ($self) = @_;
-    return $self->{reserved};
-}
-
-sub count_of_colorants {
-    my ($self) = @_;
-    return $self->{count_of_colorants};
-}
-
-sub colorants {
-    my ($self) = @_;
-    return $self->{colorants};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::ColorantTableType::Colorant;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{name} = Encode::decode("ASCII", $self->{_io}->read_bytes_term(0, 0, 1, 1));
-    $self->{padding} = ();
-    my $n_padding = (32 - length($self->name()));
-    for (my $i = 0; $i < $n_padding; $i++) {
-        push @{$self->{padding}}, $self->{_io}->read_bytes(1);
-    }
-    $self->{pcs_values} = $self->{_io}->read_bytes(6);
-}
-
-sub name {
-    my ($self) = @_;
-    return $self->{name};
-}
-
-sub padding {
-    my ($self) = @_;
-    return $self->{padding};
-}
-
-sub pcs_values {
-    my ($self) = @_;
-    return $self->{pcs_values};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::SignatureType;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{reserved} = $self->{_io}->read_bytes(4);
-    $self->{signature} = Encode::decode("ASCII", $self->{_io}->read_bytes(4));
-}
-
-sub reserved {
-    my ($self) = @_;
-    return $self->{reserved};
-}
-
-sub signature {
-    my ($self) = @_;
-    return $self->{signature};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::CopyrightTag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_LOCALIZED_UNICODE_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::MultiLocalizedUnicodeType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::Preview0Tag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut8Type->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut16Type->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_A_TO_B_TABLE_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::LutAToBType->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_B_TO_A_TABLE_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::LutBToAType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::DateTimeType;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{reserved} = $self->{_io}->read_bytes(4);
-    $self->{date_and_time} = Icc4::DateTimeNumber->new($self->{_io}, $self, $self->{_root});
-}
-
-sub reserved {
-    my ($self) = @_;
-    return $self->{reserved};
-}
-
-sub date_and_time {
-    my ($self) = @_;
-    return $self->{date_and_time};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::DToB3Tag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::MultiProcessElementsType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::Preview2Tag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut8Type->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut16Type->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_B_TO_A_TABLE_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::LutBToAType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::DeviceModelDescTag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_LOCALIZED_UNICODE_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::MultiLocalizedUnicodeType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::MultiProcessElementsType;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{reserved} = $self->{_io}->read_bytes(4);
-    $self->{number_of_input_channels} = $self->{_io}->read_u2be();
-    $self->{number_of_output_channels} = $self->{_io}->read_u2be();
-    $self->{number_of_processing_elements} = $self->{_io}->read_u4be();
-    $self->{process_element_positions_table} = ();
-    my $n_process_element_positions_table = $self->number_of_processing_elements();
-    for (my $i = 0; $i < $n_process_element_positions_table; $i++) {
-        push @{$self->{process_element_positions_table}}, Icc4::PositionNumber->new($self->{_io}, $self, $self->{_root});
-    }
-    $self->{data} = $self->{_io}->read_bytes_full();
-}
-
-sub reserved {
-    my ($self) = @_;
-    return $self->{reserved};
-}
-
-sub number_of_input_channels {
-    my ($self) = @_;
-    return $self->{number_of_input_channels};
-}
-
-sub number_of_output_channels {
-    my ($self) = @_;
-    return $self->{number_of_output_channels};
-}
-
-sub number_of_processing_elements {
-    my ($self) = @_;
-    return $self->{number_of_processing_elements};
-}
-
-sub process_element_positions_table {
-    my ($self) = @_;
-    return $self->{process_element_positions_table};
-}
-
-sub data {
-    my ($self) = @_;
-    return $self->{data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::UInt16ArrayType;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{reserved} = $self->{_io}->read_bytes(4);
-    $self->{values} = ();
-    while (!$self->{_io}->is_eof()) {
-        push @{$self->{values}}, $self->{_io}->read_u2be();
-    }
-}
-
-sub reserved {
-    my ($self) = @_;
-    return $self->{reserved};
-}
-
-sub values {
-    my ($self) = @_;
-    return $self->{values};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::ColorantOrderTag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_COLORANT_ORDER_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::ColorantOrderType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::DataType;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-our $DATA_TYPES_ASCII_DATA = 0;
-our $DATA_TYPES_BINARY_DATA = 1;
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{data_flag} = $self->{_io}->read_u4be();
-}
-
-sub data_flag {
-    my ($self) = @_;
-    return $self->{data_flag};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::ChromaticityType;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-our $COLORANT_AND_PHOSPHOR_ENCODINGS_UNKNOWN = 0;
-our $COLORANT_AND_PHOSPHOR_ENCODINGS_ITU_R_BT_709_2 = 1;
-our $COLORANT_AND_PHOSPHOR_ENCODINGS_SMPTE_RP145 = 2;
-our $COLORANT_AND_PHOSPHOR_ENCODINGS_EBU_TECH_3213_E = 3;
-our $COLORANT_AND_PHOSPHOR_ENCODINGS_P22 = 4;
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{reserved} = $self->{_io}->read_bytes(4);
-    $self->{number_of_device_channels} = $self->{_io}->read_u2be();
-    $self->{colorant_and_phosphor_encoding} = $self->{_io}->read_u2be();
-    $self->{ciexy_coordinates_per_channel} = ();
-    my $n_ciexy_coordinates_per_channel = $self->number_of_device_channels();
-    for (my $i = 0; $i < $n_ciexy_coordinates_per_channel; $i++) {
-        push @{$self->{ciexy_coordinates_per_channel}}, Icc4::TagTable::TagDefinition::ChromaticityType::CiexyCoordinateValues->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub reserved {
-    my ($self) = @_;
-    return $self->{reserved};
-}
-
-sub number_of_device_channels {
-    my ($self) = @_;
-    return $self->{number_of_device_channels};
-}
-
-sub colorant_and_phosphor_encoding {
-    my ($self) = @_;
-    return $self->{colorant_and_phosphor_encoding};
-}
-
-sub ciexy_coordinates_per_channel {
-    my ($self) = @_;
-    return $self->{ciexy_coordinates_per_channel};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::ChromaticityType::CiexyCoordinateValues;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{x_coordinate} = $self->{_io}->read_u2be();
-    $self->{y_coordinate} = $self->{_io}->read_u2be();
-}
-
-sub x_coordinate {
-    my ($self) = @_;
-    return $self->{x_coordinate};
-}
-
-sub y_coordinate {
-    my ($self) = @_;
-    return $self->{y_coordinate};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::LuminanceTag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_XYZ_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::XyzType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::S15Fixed16ArrayType;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{reserved} = $self->{_io}->read_bytes(4);
-    $self->{values} = ();
-    while (!$self->{_io}->is_eof()) {
-        push @{$self->{values}}, Icc4::S15Fixed16Number->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub reserved {
-    my ($self) = @_;
-    return $self->{reserved};
-}
-
-sub values {
-    my ($self) = @_;
-    return $self->{values};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::MultiLocalizedUnicodeType;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{reserved} = $self->{_io}->read_bytes(4);
-    $self->{number_of_records} = $self->{_io}->read_u4be();
-    $self->{record_size} = $self->{_io}->read_u4be();
-    $self->{records} = ();
-    my $n_records = $self->number_of_records();
-    for (my $i = 0; $i < $n_records; $i++) {
-        push @{$self->{records}}, Icc4::TagTable::TagDefinition::MultiLocalizedUnicodeType::Record->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub reserved {
-    my ($self) = @_;
-    return $self->{reserved};
-}
-
-sub number_of_records {
-    my ($self) = @_;
-    return $self->{number_of_records};
-}
-
-sub record_size {
-    my ($self) = @_;
-    return $self->{record_size};
-}
-
-sub records {
-    my ($self) = @_;
-    return $self->{records};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::MultiLocalizedUnicodeType::Record;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{language_code} = $self->{_io}->read_u2be();
-    $self->{country_code} = $self->{_io}->read_u2be();
-    $self->{string_length} = $self->{_io}->read_u4be();
-    $self->{string_offset} = $self->{_io}->read_u4be();
-}
-
-sub string_data {
-    my ($self) = @_;
-    return $self->{string_data} if ($self->{string_data});
-    my $_pos = $self->{_io}->pos();
-    $self->{_io}->seek($self->string_offset());
-    $self->{string_data} = Encode::decode("UTF-16BE", $self->{_io}->read_bytes($self->string_length()));
-    $self->{_io}->seek($_pos);
-    return $self->{string_data};
-}
-
-sub language_code {
-    my ($self) = @_;
-    return $self->{language_code};
-}
-
-sub country_code {
-    my ($self) = @_;
-    return $self->{country_code};
-}
-
-sub string_length {
-    my ($self) = @_;
-    return $self->{string_length};
-}
-
-sub string_offset {
-    my ($self) = @_;
-    return $self->{string_offset};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::AToB2Tag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut8Type->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut16Type->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_A_TO_B_TABLE_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::LutAToBType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::AToB1Tag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut8Type->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut16Type->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_A_TO_B_TABLE_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::LutAToBType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::ColorimetricIntentImageStateTag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_SIGNATURE_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::SignatureType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::CharTargetTag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_TEXT_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::TextType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::ColorantTableTag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_COLORANT_TABLE_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::ColorantTableType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::CalibrationDateTimeTag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_DATE_TIME_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::DateTimeType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::NamedColor2Tag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_NAMED_COLOR_2_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::NamedColor2Type->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::ViewingCondDescTag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_LOCALIZED_UNICODE_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::MultiLocalizedUnicodeType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::BToD3Tag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::MultiProcessElementsType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::ProfileSequenceDescType;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{reserved} = $self->{_io}->read_bytes(4);
-    $self->{number_of_description_structures} = $self->{_io}->read_u4be();
-    $self->{profile_descriptions} = ();
-    my $n_profile_descriptions = $self->number_of_description_structures();
-    for (my $i = 0; $i < $n_profile_descriptions; $i++) {
-        push @{$self->{profile_descriptions}}, Icc4::TagTable::TagDefinition::ProfileSequenceDescType::ProfileDescription->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub reserved {
-    my ($self) = @_;
-    return $self->{reserved};
-}
-
-sub number_of_description_structures {
-    my ($self) = @_;
-    return $self->{number_of_description_structures};
-}
-
-sub profile_descriptions {
-    my ($self) = @_;
-    return $self->{profile_descriptions};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::ProfileSequenceDescType::ProfileDescription;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{device_manufacturer} = Icc4::DeviceManufacturer->new($self->{_io}, $self, $self->{_root});
-    $self->{device_model} = Encode::decode("ASCII", $self->{_io}->read_bytes(4));
-    $self->{device_attributes} = Icc4::DeviceAttributes->new($self->{_io}, $self, $self->{_root});
-    $self->{device_technology} = Icc4::TagTable::TagDefinition::TechnologyTag->new($self->{_io}, $self, $self->{_root});
-    $self->{description_of_device_manufacturer} = Icc4::TagTable::TagDefinition::DeviceMfgDescTag->new($self->{_io}, $self, $self->{_root});
-    $self->{description_of_device_model} = Icc4::TagTable::TagDefinition::DeviceModelDescTag->new($self->{_io}, $self, $self->{_root});
-}
-
-sub device_manufacturer {
-    my ($self) = @_;
-    return $self->{device_manufacturer};
-}
-
-sub device_model {
-    my ($self) = @_;
-    return $self->{device_model};
-}
-
-sub device_attributes {
-    my ($self) = @_;
-    return $self->{device_attributes};
-}
-
-sub device_technology {
-    my ($self) = @_;
-    return $self->{device_technology};
-}
-
-sub description_of_device_manufacturer {
-    my ($self) = @_;
-    return $self->{description_of_device_manufacturer};
-}
-
-sub description_of_device_model {
-    my ($self) = @_;
-    return $self->{description_of_device_model};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::ProfileSequenceIdentifierTag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_PROFILE_SEQUENCE_IDENTIFIER_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::ProfileSequenceIdentifierType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::BToD1Tag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::MultiProcessElementsType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::ColorantOrderType;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{reserved} = $self->{_io}->read_bytes(4);
-    $self->{count_of_colorants} = $self->{_io}->read_u4be();
-    $self->{numbers_of_colorants_in_order_of_printing} = ();
-    my $n_numbers_of_colorants_in_order_of_printing = $self->count_of_colorants();
-    for (my $i = 0; $i < $n_numbers_of_colorants_in_order_of_printing; $i++) {
-        push @{$self->{numbers_of_colorants_in_order_of_printing}}, $self->{_io}->read_u1();
-    }
-}
-
-sub reserved {
-    my ($self) = @_;
-    return $self->{reserved};
-}
-
-sub count_of_colorants {
-    my ($self) = @_;
-    return $self->{count_of_colorants};
-}
-
-sub numbers_of_colorants_in_order_of_printing {
-    my ($self) = @_;
-    return $self->{numbers_of_colorants_in_order_of_printing};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::DToB2Tag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::MultiProcessElementsType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::GrayTrcTag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_CURVE_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::CurveType->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_PARAMETRIC_CURVE_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::ParametricCurveType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::ViewingConditionsType;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{reserved} = $self->{_io}->read_bytes(4);
-    $self->{un_normalized_ciexyz_values_for_illuminant} = Icc4::XyzNumber->new($self->{_io}, $self, $self->{_root});
-    $self->{un_normalized_ciexyz_values_for_surround} = Icc4::XyzNumber->new($self->{_io}, $self, $self->{_root});
-    $self->{illuminant_type} = Icc4::StandardIlluminantEncoding->new($self->{_io}, $self, $self->{_root});
-}
-
-sub reserved {
-    my ($self) = @_;
-    return $self->{reserved};
-}
-
-sub un_normalized_ciexyz_values_for_illuminant {
-    my ($self) = @_;
-    return $self->{un_normalized_ciexyz_values_for_illuminant};
-}
-
-sub un_normalized_ciexyz_values_for_surround {
-    my ($self) = @_;
-    return $self->{un_normalized_ciexyz_values_for_surround};
-}
-
-sub illuminant_type {
-    my ($self) = @_;
-    return $self->{illuminant_type};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::LutBToAType;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{reserved} = $self->{_io}->read_bytes(4);
-    $self->{number_of_input_channels} = $self->{_io}->read_u1();
-    $self->{number_of_output_channels} = $self->{_io}->read_u1();
-    $self->{padding} = $self->{_io}->read_bytes(2);
-    $self->{offset_to_first_b_curve} = $self->{_io}->read_u4be();
-    $self->{offset_to_matrix} = $self->{_io}->read_u4be();
-    $self->{offset_to_first_m_curve} = $self->{_io}->read_u4be();
-    $self->{offset_to_clut} = $self->{_io}->read_u4be();
-    $self->{offset_to_first_a_curve} = $self->{_io}->read_u4be();
-    $self->{data} = $self->{_io}->read_bytes_full();
-}
-
-sub reserved {
-    my ($self) = @_;
-    return $self->{reserved};
-}
-
-sub number_of_input_channels {
-    my ($self) = @_;
-    return $self->{number_of_input_channels};
-}
-
-sub number_of_output_channels {
-    my ($self) = @_;
-    return $self->{number_of_output_channels};
-}
-
-sub padding {
-    my ($self) = @_;
-    return $self->{padding};
-}
-
-sub offset_to_first_b_curve {
-    my ($self) = @_;
-    return $self->{offset_to_first_b_curve};
-}
-
-sub offset_to_matrix {
-    my ($self) = @_;
-    return $self->{offset_to_matrix};
-}
-
-sub offset_to_first_m_curve {
-    my ($self) = @_;
-    return $self->{offset_to_first_m_curve};
-}
-
-sub offset_to_clut {
-    my ($self) = @_;
-    return $self->{offset_to_clut};
-}
-
-sub offset_to_first_a_curve {
-    my ($self) = @_;
-    return $self->{offset_to_first_a_curve};
-}
-
-sub data {
-    my ($self) = @_;
-    return $self->{data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::GreenTrcTag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_CURVE_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::CurveType->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_PARAMETRIC_CURVE_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::ParametricCurveType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::UInt32ArrayType;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{reserved} = $self->{_io}->read_bytes(4);
-    $self->{values} = ();
-    while (!$self->{_io}->is_eof()) {
-        push @{$self->{values}}, $self->{_io}->read_u4be();
-    }
-}
-
-sub reserved {
-    my ($self) = @_;
-    return $self->{reserved};
-}
-
-sub values {
-    my ($self) = @_;
-    return $self->{values};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::GamutTag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut8Type->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut16Type->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_B_TO_A_TABLE_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::LutBToAType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::UInt8ArrayType;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{reserved} = $self->{_io}->read_bytes(4);
-    $self->{values} = ();
-    while (!$self->{_io}->is_eof()) {
-        push @{$self->{values}}, $self->{_io}->read_u1();
-    }
-}
-
-sub reserved {
-    my ($self) = @_;
-    return $self->{reserved};
-}
-
-sub values {
-    my ($self) = @_;
-    return $self->{values};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::RedMatrixColumnTag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_XYZ_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::XyzType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::UInt64ArrayType;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{reserved} = $self->{_io}->read_bytes(4);
-    $self->{values} = ();
-    while (!$self->{_io}->is_eof()) {
-        push @{$self->{values}}, $self->{_io}->read_u8be();
-    }
-}
-
-sub reserved {
-    my ($self) = @_;
-    return $self->{reserved};
-}
-
-sub values {
-    my ($self) = @_;
-    return $self->{values};
-}
-
-########################################################################
-package Icc4::TagTable::TagDefinition::BToD2Tag;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tag_type} = $self->{_io}->read_u4be();
-    my $_on = $self->tag_type();
-    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE) {
-        $self->{tag_data} = Icc4::TagTable::TagDefinition::MultiProcessElementsType->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tag_type {
-    my ($self) = @_;
-    return $self->{tag_type};
-}
-
-sub tag_data {
-    my ($self) = @_;
-    return $self->{tag_data};
-}
-
-########################################################################
 package Icc4::DeviceAttributes;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -5916,8 +131,8 @@ sub from_file {
     return new($class, IO::KaitaiStruct::Stream->new($fd));
 }
 
-our $DEVICE_ATTRIBUTES_REFLECTIVE_OR_TRANSPARENCY_REFLECTIVE = 0;
-our $DEVICE_ATTRIBUTES_REFLECTIVE_OR_TRANSPARENCY_TRANSPARENCY = 1;
+our $DEVICE_ATTRIBUTES_COLOUR_OR_BLACK_AND_WHITE_MEDIA_COLOUR_MEDIA = 0;
+our $DEVICE_ATTRIBUTES_COLOUR_OR_BLACK_AND_WHITE_MEDIA_BLACK_AND_WHITE_MEDIA = 1;
 
 our $DEVICE_ATTRIBUTES_GLOSSY_OR_MATTE_GLOSSY = 0;
 our $DEVICE_ATTRIBUTES_GLOSSY_OR_MATTE_MATTE = 1;
@@ -5925,8 +140,8 @@ our $DEVICE_ATTRIBUTES_GLOSSY_OR_MATTE_MATTE = 1;
 our $DEVICE_ATTRIBUTES_POSITIVE_OR_NEGATIVE_MEDIA_POLARITY_POSITIVE_MEDIA_POLARITY = 0;
 our $DEVICE_ATTRIBUTES_POSITIVE_OR_NEGATIVE_MEDIA_POLARITY_NEGATIVE_MEDIA_POLARITY = 1;
 
-our $DEVICE_ATTRIBUTES_COLOUR_OR_BLACK_AND_WHITE_MEDIA_COLOUR_MEDIA = 0;
-our $DEVICE_ATTRIBUTES_COLOUR_OR_BLACK_AND_WHITE_MEDIA_BLACK_AND_WHITE_MEDIA = 1;
+our $DEVICE_ATTRIBUTES_REFLECTIVE_OR_TRANSPARENCY_REFLECTIVE = 0;
+our $DEVICE_ATTRIBUTES_REFLECTIVE_OR_TRANSPARENCY_TRANSPARENCY = 1;
 
 sub new {
     my ($class, $_io, $_parent, $_root) = @_;
@@ -5934,7 +149,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -6266,7 +481,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -6282,44 +497,6 @@ sub _read {
 sub device_manufacturer {
     my ($self) = @_;
     return $self->{device_manufacturer};
-}
-
-########################################################################
-package Icc4::S15Fixed16Number;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{number} = $self->{_io}->read_bytes(4);
-}
-
-sub number {
-    my ($self) = @_;
-    return $self->{number};
 }
 
 ########################################################################
@@ -6342,7 +519,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -6364,6 +541,5829 @@ sub offset_to_data_element {
 sub size_of_data_element {
     my ($self) = @_;
     return $self->{size_of_data_element};
+}
+
+########################################################################
+package Icc4::ProfileHeader;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+our $CMM_SIGNATURES_THE_IMAGING_FACTORY_CMM = 858931796;
+our $CMM_SIGNATURES_AGFA_CMM = 1094929747;
+our $CMM_SIGNATURES_ADOBE_CMM = 1094992453;
+our $CMM_SIGNATURES_COLOR_GEAR_CMM = 1128484179;
+our $CMM_SIGNATURES_DEMOICCMAX_CMM = 1145654616;
+our $CMM_SIGNATURES_LOGOSYNC_CMM = 1147629395;
+our $CMM_SIGNATURES_EFI_CMM = 1162234144;
+our $CMM_SIGNATURES_EXACT_SCAN_CMM = 1163411779;
+our $CMM_SIGNATURES_FUJI_FILM_CMM = 1179000864;
+our $CMM_SIGNATURES_HARLEQUIN_RIP_CMM = 1212370253;
+our $CMM_SIGNATURES_HEIDELBERG_CMM = 1212435744;
+our $CMM_SIGNATURES_KODAK_CMM = 1262701907;
+our $CMM_SIGNATURES_KONICA_MINOLTA_CMM = 1296256324;
+our $CMM_SIGNATURES_ONYX_GRAPHICS_CMM = 1330534744;
+our $CMM_SIGNATURES_DEVICE_LINK_CMM = 1380404563;
+our $CMM_SIGNATURES_REFICCMAX_CMM = 1380535640;
+our $CMM_SIGNATURES_SAMPLE_ICC_CMM = 1397310275;
+our $CMM_SIGNATURES_MUTOH_CMM = 1397311310;
+our $CMM_SIGNATURES_TOSHIBA_CMM = 1413696845;
+our $CMM_SIGNATURES_COLOR_GEAR_CMM_LITE = 1430471501;
+our $CMM_SIGNATURES_COLOR_GEAR_CMM_C = 1430474067;
+our $CMM_SIGNATURES_WINDOWS_COLOR_SYSTEM_CMM = 1464029984;
+our $CMM_SIGNATURES_WARE_TO_GO_CMM = 1465141024;
+our $CMM_SIGNATURES_APPLE_CMM = 1634758764;
+our $CMM_SIGNATURES_ARGYLL_CMS_CMM = 1634887532;
+our $CMM_SIGNATURES_LITTLE_CMS_CMM = 1818455411;
+our $CMM_SIGNATURES_VIVO_CMM = 1986623087;
+our $CMM_SIGNATURES_ZORAN_CMM = 2053320752;
+
+our $DATA_COLOUR_SPACES_TWO_COLOUR = 843271250;
+our $DATA_COLOUR_SPACES_THREE_COLOUR = 860048466;
+our $DATA_COLOUR_SPACES_FOUR_COLOUR = 876825682;
+our $DATA_COLOUR_SPACES_FIVE_COLOUR = 893602898;
+our $DATA_COLOUR_SPACES_SIX_COLOUR = 910380114;
+our $DATA_COLOUR_SPACES_SEVEN_COLOUR = 927157330;
+our $DATA_COLOUR_SPACES_EIGHT_COLOUR = 943934546;
+our $DATA_COLOUR_SPACES_NINE_COLOUR = 960711762;
+our $DATA_COLOUR_SPACES_TEN_COLOUR = 1094929490;
+our $DATA_COLOUR_SPACES_ELEVEN_COLOUR = 1111706706;
+our $DATA_COLOUR_SPACES_TWELVE_COLOUR = 1128483922;
+our $DATA_COLOUR_SPACES_CMY = 1129142560;
+our $DATA_COLOUR_SPACES_CMYK = 1129142603;
+our $DATA_COLOUR_SPACES_THIRTEEN_COLOUR = 1145261138;
+our $DATA_COLOUR_SPACES_FOURTEEN_COLOUR = 1162038354;
+our $DATA_COLOUR_SPACES_FIFTEEN_COLOUR = 1178815570;
+our $DATA_COLOUR_SPACES_GRAY = 1196573017;
+our $DATA_COLOUR_SPACES_HLS = 1212961568;
+our $DATA_COLOUR_SPACES_HSV = 1213421088;
+our $DATA_COLOUR_SPACES_CIELAB_OR_PCSLAB = 1281450528;
+our $DATA_COLOUR_SPACES_CIELUV = 1282766368;
+our $DATA_COLOUR_SPACES_RGB = 1380401696;
+our $DATA_COLOUR_SPACES_NCIEXYZ_OR_PCSXYZ = 1482250784;
+our $DATA_COLOUR_SPACES_YCBCR = 1497588338;
+our $DATA_COLOUR_SPACES_CIEYXY = 1501067552;
+
+our $PRIMARY_PLATFORMS_APPLE_COMPUTER_INC = 1095782476;
+our $PRIMARY_PLATFORMS_MICROSOFT_CORPORATION = 1297303124;
+our $PRIMARY_PLATFORMS_SILICON_GRAPHICS_INC = 1397180704;
+our $PRIMARY_PLATFORMS_SUN_MICROSYSTEMS = 1398099543;
+
+our $PROFILE_CLASSES_ABSTRACT_PROFILE = 1633842036;
+our $PROFILE_CLASSES_DEVICE_LINK_PROFILE = 1818848875;
+our $PROFILE_CLASSES_DISPLAY_DEVICE_PROFILE = 1835955314;
+our $PROFILE_CLASSES_NAMED_COLOR_PROFILE = 1852662636;
+our $PROFILE_CLASSES_OUTPUT_DEVICE_PROFILE = 1886549106;
+our $PROFILE_CLASSES_INPUT_DEVICE_PROFILE = 1935896178;
+our $PROFILE_CLASSES_COLOR_SPACE_PROFILE = 1936744803;
+
+our $RENDERING_INTENTS_PERCEPTUAL = 0;
+our $RENDERING_INTENTS_MEDIA_RELATIVE_COLORIMETRIC = 1;
+our $RENDERING_INTENTS_SATURATION = 2;
+our $RENDERING_INTENTS_ICC_ABSOLUTE_COLORIMETRIC = 3;
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{size} = $self->{_io}->read_u4be();
+    $self->{preferred_cmm_type} = $self->{_io}->read_u4be();
+    $self->{version} = Icc4::ProfileHeader::VersionField->new($self->{_io}, $self, $self->{_root});
+    $self->{device_class} = $self->{_io}->read_u4be();
+    $self->{color_space} = $self->{_io}->read_u4be();
+    $self->{pcs} = Encode::decode("ASCII", $self->{_io}->read_bytes(4));
+    $self->{creation_date_time} = Icc4::DateTimeNumber->new($self->{_io}, $self, $self->{_root});
+    $self->{file_signature} = $self->{_io}->read_bytes(4);
+    $self->{primary_platform} = $self->{_io}->read_u4be();
+    $self->{profile_flags} = Icc4::ProfileHeader::ProfileFlags->new($self->{_io}, $self, $self->{_root});
+    $self->{device_manufacturer} = Icc4::DeviceManufacturer->new($self->{_io}, $self, $self->{_root});
+    $self->{device_model} = Encode::decode("ASCII", $self->{_io}->read_bytes(4));
+    $self->{device_attributes} = Icc4::DeviceAttributes->new($self->{_io}, $self, $self->{_root});
+    $self->{rendering_intent} = $self->{_io}->read_u4be();
+    $self->{nciexyz_values_of_illuminant_of_pcs} = Icc4::XyzNumber->new($self->{_io}, $self, $self->{_root});
+    $self->{creator} = Icc4::DeviceManufacturer->new($self->{_io}, $self, $self->{_root});
+    $self->{identifier} = $self->{_io}->read_bytes(16);
+    $self->{reserved_data} = $self->{_io}->read_bytes(28);
+}
+
+sub size {
+    my ($self) = @_;
+    return $self->{size};
+}
+
+sub preferred_cmm_type {
+    my ($self) = @_;
+    return $self->{preferred_cmm_type};
+}
+
+sub version {
+    my ($self) = @_;
+    return $self->{version};
+}
+
+sub device_class {
+    my ($self) = @_;
+    return $self->{device_class};
+}
+
+sub color_space {
+    my ($self) = @_;
+    return $self->{color_space};
+}
+
+sub pcs {
+    my ($self) = @_;
+    return $self->{pcs};
+}
+
+sub creation_date_time {
+    my ($self) = @_;
+    return $self->{creation_date_time};
+}
+
+sub file_signature {
+    my ($self) = @_;
+    return $self->{file_signature};
+}
+
+sub primary_platform {
+    my ($self) = @_;
+    return $self->{primary_platform};
+}
+
+sub profile_flags {
+    my ($self) = @_;
+    return $self->{profile_flags};
+}
+
+sub device_manufacturer {
+    my ($self) = @_;
+    return $self->{device_manufacturer};
+}
+
+sub device_model {
+    my ($self) = @_;
+    return $self->{device_model};
+}
+
+sub device_attributes {
+    my ($self) = @_;
+    return $self->{device_attributes};
+}
+
+sub rendering_intent {
+    my ($self) = @_;
+    return $self->{rendering_intent};
+}
+
+sub nciexyz_values_of_illuminant_of_pcs {
+    my ($self) = @_;
+    return $self->{nciexyz_values_of_illuminant_of_pcs};
+}
+
+sub creator {
+    my ($self) = @_;
+    return $self->{creator};
+}
+
+sub identifier {
+    my ($self) = @_;
+    return $self->{identifier};
+}
+
+sub reserved_data {
+    my ($self) = @_;
+    return $self->{reserved_data};
+}
+
+########################################################################
+package Icc4::ProfileHeader::ProfileFlags;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{embedded_profile} = $self->{_io}->read_bits_int_be(1);
+    $self->{profile_can_be_used_independently_of_embedded_colour_data} = $self->{_io}->read_bits_int_be(1);
+    $self->{other_flags} = $self->{_io}->read_bits_int_be(30);
+}
+
+sub embedded_profile {
+    my ($self) = @_;
+    return $self->{embedded_profile};
+}
+
+sub profile_can_be_used_independently_of_embedded_colour_data {
+    my ($self) = @_;
+    return $self->{profile_can_be_used_independently_of_embedded_colour_data};
+}
+
+sub other_flags {
+    my ($self) = @_;
+    return $self->{other_flags};
+}
+
+########################################################################
+package Icc4::ProfileHeader::VersionField;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{major} = $self->{_io}->read_bytes(1);
+    $self->{minor} = $self->{_io}->read_bits_int_be(4);
+    $self->{bug_fix_level} = $self->{_io}->read_bits_int_be(4);
+    $self->{_io}->align_to_byte();
+    $self->{reserved} = $self->{_io}->read_bytes(2);
+}
+
+sub major {
+    my ($self) = @_;
+    return $self->{major};
+}
+
+sub minor {
+    my ($self) = @_;
+    return $self->{minor};
+}
+
+sub bug_fix_level {
+    my ($self) = @_;
+    return $self->{bug_fix_level};
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self->{reserved};
+}
+
+########################################################################
+package Icc4::Response16Number;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{number} = $self->{_io}->read_u4be();
+    $self->{reserved} = $self->{_io}->read_bytes(2);
+    $self->{measurement_value} = Icc4::S15Fixed16Number->new($self->{_io}, $self, $self->{_root});
+}
+
+sub number {
+    my ($self) = @_;
+    return $self->{number};
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self->{reserved};
+}
+
+sub measurement_value {
+    my ($self) = @_;
+    return $self->{measurement_value};
+}
+
+########################################################################
+package Icc4::S15Fixed16Number;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{number} = $self->{_io}->read_bytes(4);
+}
+
+sub number {
+    my ($self) = @_;
+    return $self->{number};
+}
+
+########################################################################
+package Icc4::StandardIlluminantEncoding;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+our $STANDARD_ILLUMINANT_ENCODINGS_UNKNOWN = 0;
+our $STANDARD_ILLUMINANT_ENCODINGS_D50 = 1;
+our $STANDARD_ILLUMINANT_ENCODINGS_D65 = 2;
+our $STANDARD_ILLUMINANT_ENCODINGS_D93 = 3;
+our $STANDARD_ILLUMINANT_ENCODINGS_F2 = 4;
+our $STANDARD_ILLUMINANT_ENCODINGS_D55 = 5;
+our $STANDARD_ILLUMINANT_ENCODINGS_A = 6;
+our $STANDARD_ILLUMINANT_ENCODINGS_EQUI_POWER = 7;
+our $STANDARD_ILLUMINANT_ENCODINGS_F8 = 8;
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{standard_illuminant_encoding} = $self->{_io}->read_u4be();
+}
+
+sub standard_illuminant_encoding {
+    my ($self) = @_;
+    return $self->{standard_illuminant_encoding};
+}
+
+########################################################################
+package Icc4::TagTable;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_count} = $self->{_io}->read_u4be();
+    $self->{tags} = [];
+    my $n_tags = $self->tag_count();
+    for (my $i = 0; $i < $n_tags; $i++) {
+        push @{$self->{tags}}, Icc4::TagTable::TagDefinition->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_count {
+    my ($self) = @_;
+    return $self->{tag_count};
+}
+
+sub tags {
+    my ($self) = @_;
+    return $self->{tags};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+our $MULTI_PROCESS_ELEMENTS_TYPES_BACS_ELEMENT_TYPE = 1648444243;
+our $MULTI_PROCESS_ELEMENTS_TYPES_CLUT_ELEMENT_TYPE = 1668052340;
+our $MULTI_PROCESS_ELEMENTS_TYPES_ONE_DIMENSIONAL_CURVES_TYPE = 1668641382;
+our $MULTI_PROCESS_ELEMENTS_TYPES_EACS_ELEMENT_TYPE = 1698775891;
+our $MULTI_PROCESS_ELEMENTS_TYPES_MATRIX_ELEMENT_TYPE = 1835103334;
+our $MULTI_PROCESS_ELEMENTS_TYPES_CURVE_SET_ELEMENT_TABLE_TYPE = 1835428980;
+our $MULTI_PROCESS_ELEMENTS_TYPES_FORMULA_CURVE_SEGMENTS_TYPE = 1885434470;
+our $MULTI_PROCESS_ELEMENTS_TYPES_SAMPLED_CURVE_SEGMENT_TYPE = 1935764838;
+
+our $TAG_SIGNATURES_A_TO_B_0 = 1093812784;
+our $TAG_SIGNATURES_A_TO_B_1 = 1093812785;
+our $TAG_SIGNATURES_A_TO_B_2 = 1093812786;
+our $TAG_SIGNATURES_B_TO_A_0 = 1110589744;
+our $TAG_SIGNATURES_B_TO_A_1 = 1110589745;
+our $TAG_SIGNATURES_B_TO_A_2 = 1110589746;
+our $TAG_SIGNATURES_B_TO_D_0 = 1110590512;
+our $TAG_SIGNATURES_B_TO_D_1 = 1110590513;
+our $TAG_SIGNATURES_B_TO_D_2 = 1110590514;
+our $TAG_SIGNATURES_B_TO_D_3 = 1110590515;
+our $TAG_SIGNATURES_D_TO_B_0 = 1144144432;
+our $TAG_SIGNATURES_D_TO_B_1 = 1144144433;
+our $TAG_SIGNATURES_D_TO_B_2 = 1144144434;
+our $TAG_SIGNATURES_D_TO_B_3 = 1144144435;
+our $TAG_SIGNATURES_BLUE_TRC = 1649693251;
+our $TAG_SIGNATURES_BLUE_MATRIX_COLUMN = 1649957210;
+our $TAG_SIGNATURES_CALIBRATION_DATE_TIME = 1667329140;
+our $TAG_SIGNATURES_CHROMATIC_ADAPTATION = 1667785060;
+our $TAG_SIGNATURES_CHROMATICITY = 1667789421;
+our $TAG_SIGNATURES_COLORIMETRIC_INTENT_IMAGE_STATE = 1667852659;
+our $TAG_SIGNATURES_COLORANT_TABLE_OUT = 1668050804;
+our $TAG_SIGNATURES_COLORANT_ORDER = 1668051567;
+our $TAG_SIGNATURES_COLORANT_TABLE = 1668051572;
+our $TAG_SIGNATURES_COPYRIGHT = 1668313716;
+our $TAG_SIGNATURES_PROFILE_DESCRIPTION = 1684370275;
+our $TAG_SIGNATURES_DEVICE_MODEL_DESC = 1684890724;
+our $TAG_SIGNATURES_DEVICE_MFG_DESC = 1684893284;
+our $TAG_SIGNATURES_GREEN_TRC = 1733579331;
+our $TAG_SIGNATURES_GREEN_MATRIX_COLUMN = 1733843290;
+our $TAG_SIGNATURES_GAMUT = 1734438260;
+our $TAG_SIGNATURES_GRAY_TRC = 1800688195;
+our $TAG_SIGNATURES_LUMINANCE = 1819635049;
+our $TAG_SIGNATURES_MEASUREMENT = 1835360627;
+our $TAG_SIGNATURES_NAMED_COLOR_2 = 1852009522;
+our $TAG_SIGNATURES_PREVIEW_0 = 1886545200;
+our $TAG_SIGNATURES_PREVIEW_1 = 1886545201;
+our $TAG_SIGNATURES_PREVIEW_2 = 1886545202;
+our $TAG_SIGNATURES_PROFILE_SEQUENCE = 1886610801;
+our $TAG_SIGNATURES_PROFILE_SEQUENCE_IDENTIFIER = 1886611812;
+our $TAG_SIGNATURES_RED_TRC = 1918128707;
+our $TAG_SIGNATURES_RED_MATRIX_COLUMN = 1918392666;
+our $TAG_SIGNATURES_OUTPUT_RESPONSE = 1919251312;
+our $TAG_SIGNATURES_PERCEPTUAL_RENDERING_INTENT_GAMUT = 1919510320;
+our $TAG_SIGNATURES_SATURATION_RENDERING_INTENT_GAMUT = 1919510322;
+our $TAG_SIGNATURES_CHAR_TARGET = 1952543335;
+our $TAG_SIGNATURES_TECHNOLOGY = 1952801640;
+our $TAG_SIGNATURES_VIEWING_CONDITIONS = 1986618743;
+our $TAG_SIGNATURES_VIEWING_COND_DESC = 1987405156;
+our $TAG_SIGNATURES_MEDIA_WHITE_POINT = 2004119668;
+
+our $TAG_TYPE_SIGNATURES_XYZ_TYPE = 1482250784;
+our $TAG_TYPE_SIGNATURES_CHROMATICITY_TYPE = 1667789421;
+our $TAG_TYPE_SIGNATURES_COLORANT_ORDER_TYPE = 1668051567;
+our $TAG_TYPE_SIGNATURES_COLORANT_TABLE_TYPE = 1668051572;
+our $TAG_TYPE_SIGNATURES_CURVE_TYPE = 1668641398;
+our $TAG_TYPE_SIGNATURES_DATA_TYPE = 1684108385;
+our $TAG_TYPE_SIGNATURES_DATE_TIME_TYPE = 1685350765;
+our $TAG_TYPE_SIGNATURES_MULTI_FUNCTION_A_TO_B_TABLE_TYPE = 1832993312;
+our $TAG_TYPE_SIGNATURES_MULTI_FUNCTION_B_TO_A_TABLE_TYPE = 1833058592;
+our $TAG_TYPE_SIGNATURES_MEASUREMENT_TYPE = 1835360627;
+our $TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE = 1835430961;
+our $TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE = 1835430962;
+our $TAG_TYPE_SIGNATURES_MULTI_LOCALIZED_UNICODE_TYPE = 1835824483;
+our $TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE = 1836082548;
+our $TAG_TYPE_SIGNATURES_NAMED_COLOR_2_TYPE = 1852009522;
+our $TAG_TYPE_SIGNATURES_PARAMETRIC_CURVE_TYPE = 1885434465;
+our $TAG_TYPE_SIGNATURES_PROFILE_SEQUENCE_DESC_TYPE = 1886610801;
+our $TAG_TYPE_SIGNATURES_PROFILE_SEQUENCE_IDENTIFIER_TYPE = 1886611812;
+our $TAG_TYPE_SIGNATURES_RESPONSE_CURVE_SET_16_TYPE = 1919120178;
+our $TAG_TYPE_SIGNATURES_S_15_FIXED_16_ARRAY_TYPE = 1936077618;
+our $TAG_TYPE_SIGNATURES_SIGNATURE_TYPE = 1936287520;
+our $TAG_TYPE_SIGNATURES_TEXT_TYPE = 1952807028;
+our $TAG_TYPE_SIGNATURES_U_16_FIXED_16_ARRAY_TYPE = 1969632050;
+our $TAG_TYPE_SIGNATURES_U_INT_8_ARRAY_TYPE = 1969827896;
+our $TAG_TYPE_SIGNATURES_U_INT_16_ARRAY_TYPE = 1969828150;
+our $TAG_TYPE_SIGNATURES_U_INT_32_ARRAY_TYPE = 1969828658;
+our $TAG_TYPE_SIGNATURES_U_INT_64_ARRAY_TYPE = 1969829428;
+our $TAG_TYPE_SIGNATURES_VIEWING_CONDITIONS_TYPE = 1986618743;
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_signature} = $self->{_io}->read_u4be();
+    $self->{offset_to_data_element} = $self->{_io}->read_u4be();
+    $self->{size_of_data_element} = $self->{_io}->read_u4be();
+}
+
+sub tag_data_element {
+    my ($self) = @_;
+    return $self->{tag_data_element} if ($self->{tag_data_element});
+    my $_pos = $self->{_io}->pos();
+    $self->{_io}->seek($self->offset_to_data_element());
+    my $_on = $self->tag_signature();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_A_TO_B_0) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::AToB0Tag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_A_TO_B_1) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::AToB1Tag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_A_TO_B_2) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::AToB2Tag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_B_TO_A_0) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::BToA0Tag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_B_TO_A_1) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::BToA1Tag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_B_TO_A_2) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::BToA2Tag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_B_TO_D_0) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::BToD0Tag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_B_TO_D_1) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::BToD1Tag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_B_TO_D_2) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::BToD2Tag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_B_TO_D_3) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::BToD3Tag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_BLUE_MATRIX_COLUMN) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::BlueMatrixColumnTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_BLUE_TRC) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::BlueTrcTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_CALIBRATION_DATE_TIME) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::CalibrationDateTimeTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_CHAR_TARGET) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::CharTargetTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_CHROMATIC_ADAPTATION) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::ChromaticAdaptationTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_CHROMATICITY) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::ChromaticityTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_COLORANT_ORDER) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::ColorantOrderTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_COLORANT_TABLE) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::ColorantTableTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_COLORANT_TABLE_OUT) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::ColorantTableOutTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_COLORIMETRIC_INTENT_IMAGE_STATE) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::ColorimetricIntentImageStateTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_COPYRIGHT) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::CopyrightTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_D_TO_B_0) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::DToB0Tag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_D_TO_B_1) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::DToB1Tag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_D_TO_B_2) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::DToB2Tag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_D_TO_B_3) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::DToB3Tag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_DEVICE_MFG_DESC) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::DeviceMfgDescTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_DEVICE_MODEL_DESC) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::DeviceModelDescTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_GAMUT) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::GamutTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_GRAY_TRC) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::GrayTrcTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_GREEN_MATRIX_COLUMN) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::GreenMatrixColumnTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_GREEN_TRC) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::GreenTrcTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_LUMINANCE) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::LuminanceTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_MEASUREMENT) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::MeasurementTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_MEDIA_WHITE_POINT) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::MediaWhitePointTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_NAMED_COLOR_2) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::NamedColor2Tag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_OUTPUT_RESPONSE) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::OutputResponseTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_PERCEPTUAL_RENDERING_INTENT_GAMUT) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::PerceptualRenderingIntentGamutTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_PREVIEW_0) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::Preview0Tag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_PREVIEW_1) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::Preview1Tag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_PREVIEW_2) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::Preview2Tag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_PROFILE_DESCRIPTION) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::ProfileDescriptionTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_PROFILE_SEQUENCE) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::ProfileSequenceTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_PROFILE_SEQUENCE_IDENTIFIER) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::ProfileSequenceIdentifierTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_RED_MATRIX_COLUMN) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::RedMatrixColumnTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_RED_TRC) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::RedTrcTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_SATURATION_RENDERING_INTENT_GAMUT) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::SaturationRenderingIntentGamutTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_TECHNOLOGY) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::TechnologyTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_VIEWING_COND_DESC) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::ViewingCondDescTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_SIGNATURES_VIEWING_CONDITIONS) {
+        $self->{_raw_tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+        my $io__raw_tag_data_element = IO::KaitaiStruct::Stream->new($self->{_raw_tag_data_element});
+        $self->{tag_data_element} = Icc4::TagTable::TagDefinition::ViewingConditionsTag->new($io__raw_tag_data_element, $self, $self->{_root});
+    }
+    else {
+        $self->{tag_data_element} = $self->{_io}->read_bytes($self->size_of_data_element());
+    }
+    $self->{_io}->seek($_pos);
+    return $self->{tag_data_element};
+}
+
+sub tag_signature {
+    my ($self) = @_;
+    return $self->{tag_signature};
+}
+
+sub offset_to_data_element {
+    my ($self) = @_;
+    return $self->{offset_to_data_element};
+}
+
+sub size_of_data_element {
+    my ($self) = @_;
+    return $self->{size_of_data_element};
+}
+
+sub _raw_tag_data_element {
+    my ($self) = @_;
+    return $self->{_raw_tag_data_element};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::AToB0Tag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_A_TO_B_TABLE_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::LutAToBType->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut8Type->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut16Type->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::AToB1Tag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_A_TO_B_TABLE_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::LutAToBType->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut8Type->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut16Type->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::AToB2Tag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_A_TO_B_TABLE_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::LutAToBType->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut8Type->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut16Type->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::BToA0Tag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_B_TO_A_TABLE_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::LutBToAType->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut8Type->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut16Type->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::BToA1Tag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_B_TO_A_TABLE_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::LutBToAType->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut8Type->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut16Type->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::BToA2Tag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_B_TO_A_TABLE_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::LutBToAType->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut8Type->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut16Type->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::BToD0Tag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::MultiProcessElementsType->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::BToD1Tag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::MultiProcessElementsType->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::BToD2Tag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::MultiProcessElementsType->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::BToD3Tag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::MultiProcessElementsType->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::BlueMatrixColumnTag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_XYZ_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::XyzType->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::BlueTrcTag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_CURVE_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::CurveType->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_PARAMETRIC_CURVE_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::ParametricCurveType->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::CalibrationDateTimeTag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_DATE_TIME_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::DateTimeType->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::CharTargetTag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_TEXT_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::TextType->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::ChromaticAdaptationTag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_S_15_FIXED_16_ARRAY_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::S15Fixed16ArrayType->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::ChromaticityTag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_CHROMATICITY_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::ChromaticityType->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::ChromaticityType;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+our $COLORANT_AND_PHOSPHOR_ENCODINGS_UNKNOWN = 0;
+our $COLORANT_AND_PHOSPHOR_ENCODINGS_ITU_R_BT_709_2 = 1;
+our $COLORANT_AND_PHOSPHOR_ENCODINGS_SMPTE_RP145 = 2;
+our $COLORANT_AND_PHOSPHOR_ENCODINGS_EBU_TECH_3213_E = 3;
+our $COLORANT_AND_PHOSPHOR_ENCODINGS_P22 = 4;
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{reserved} = $self->{_io}->read_bytes(4);
+    $self->{number_of_device_channels} = $self->{_io}->read_u2be();
+    $self->{colorant_and_phosphor_encoding} = $self->{_io}->read_u2be();
+    $self->{ciexy_coordinates_per_channel} = [];
+    my $n_ciexy_coordinates_per_channel = $self->number_of_device_channels();
+    for (my $i = 0; $i < $n_ciexy_coordinates_per_channel; $i++) {
+        push @{$self->{ciexy_coordinates_per_channel}}, Icc4::TagTable::TagDefinition::ChromaticityType::CiexyCoordinateValues->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self->{reserved};
+}
+
+sub number_of_device_channels {
+    my ($self) = @_;
+    return $self->{number_of_device_channels};
+}
+
+sub colorant_and_phosphor_encoding {
+    my ($self) = @_;
+    return $self->{colorant_and_phosphor_encoding};
+}
+
+sub ciexy_coordinates_per_channel {
+    my ($self) = @_;
+    return $self->{ciexy_coordinates_per_channel};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::ChromaticityType::CiexyCoordinateValues;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{x_coordinate} = $self->{_io}->read_u2be();
+    $self->{y_coordinate} = $self->{_io}->read_u2be();
+}
+
+sub x_coordinate {
+    my ($self) = @_;
+    return $self->{x_coordinate};
+}
+
+sub y_coordinate {
+    my ($self) = @_;
+    return $self->{y_coordinate};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::ColorantOrderTag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_COLORANT_ORDER_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::ColorantOrderType->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::ColorantOrderType;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{reserved} = $self->{_io}->read_bytes(4);
+    $self->{count_of_colorants} = $self->{_io}->read_u4be();
+    $self->{numbers_of_colorants_in_order_of_printing} = [];
+    my $n_numbers_of_colorants_in_order_of_printing = $self->count_of_colorants();
+    for (my $i = 0; $i < $n_numbers_of_colorants_in_order_of_printing; $i++) {
+        push @{$self->{numbers_of_colorants_in_order_of_printing}}, $self->{_io}->read_u1();
+    }
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self->{reserved};
+}
+
+sub count_of_colorants {
+    my ($self) = @_;
+    return $self->{count_of_colorants};
+}
+
+sub numbers_of_colorants_in_order_of_printing {
+    my ($self) = @_;
+    return $self->{numbers_of_colorants_in_order_of_printing};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::ColorantTableOutTag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_COLORANT_TABLE_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::ColorantTableType->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::ColorantTableTag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_COLORANT_TABLE_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::ColorantTableType->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::ColorantTableType;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{reserved} = $self->{_io}->read_bytes(4);
+    $self->{count_of_colorants} = $self->{_io}->read_u4be();
+    $self->{colorants} = [];
+    my $n_colorants = $self->count_of_colorants();
+    for (my $i = 0; $i < $n_colorants; $i++) {
+        push @{$self->{colorants}}, Icc4::TagTable::TagDefinition::ColorantTableType::Colorant->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self->{reserved};
+}
+
+sub count_of_colorants {
+    my ($self) = @_;
+    return $self->{count_of_colorants};
+}
+
+sub colorants {
+    my ($self) = @_;
+    return $self->{colorants};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::ColorantTableType::Colorant;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{name} = Encode::decode("ASCII", $self->{_io}->read_bytes_term(0, 0, 1, 1));
+    $self->{padding} = [];
+    my $n_padding = 32 - length($self->name());
+    for (my $i = 0; $i < $n_padding; $i++) {
+        push @{$self->{padding}}, $self->{_io}->read_bytes(1);
+    }
+    $self->{pcs_values} = $self->{_io}->read_bytes(6);
+}
+
+sub name {
+    my ($self) = @_;
+    return $self->{name};
+}
+
+sub padding {
+    my ($self) = @_;
+    return $self->{padding};
+}
+
+sub pcs_values {
+    my ($self) = @_;
+    return $self->{pcs_values};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::ColorimetricIntentImageStateTag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_SIGNATURE_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::SignatureType->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::CopyrightTag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_LOCALIZED_UNICODE_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::MultiLocalizedUnicodeType->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::CurveType;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{reserved} = $self->{_io}->read_bytes(4);
+    $self->{number_of_entries} = $self->{_io}->read_u4be();
+    if ($self->number_of_entries() > 1) {
+        $self->{curve_values} = [];
+        my $n_curve_values = $self->number_of_entries();
+        for (my $i = 0; $i < $n_curve_values; $i++) {
+            push @{$self->{curve_values}}, $self->{_io}->read_u2be();
+        }
+    }
+    if ($self->number_of_entries() == 1) {
+        $self->{curve_value} = $self->{_io}->read_u1();
+    }
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self->{reserved};
+}
+
+sub number_of_entries {
+    my ($self) = @_;
+    return $self->{number_of_entries};
+}
+
+sub curve_values {
+    my ($self) = @_;
+    return $self->{curve_values};
+}
+
+sub curve_value {
+    my ($self) = @_;
+    return $self->{curve_value};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::DToB0Tag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::MultiProcessElementsType->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::DToB1Tag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::MultiProcessElementsType->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::DToB2Tag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::MultiProcessElementsType->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::DToB3Tag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_PROCESS_ELEMENTS_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::MultiProcessElementsType->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::DataType;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+our $DATA_TYPES_ASCII_DATA = 0;
+our $DATA_TYPES_BINARY_DATA = 1;
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{data_flag} = $self->{_io}->read_u4be();
+}
+
+sub data_flag {
+    my ($self) = @_;
+    return $self->{data_flag};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::DateTimeType;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{reserved} = $self->{_io}->read_bytes(4);
+    $self->{date_and_time} = Icc4::DateTimeNumber->new($self->{_io}, $self, $self->{_root});
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self->{reserved};
+}
+
+sub date_and_time {
+    my ($self) = @_;
+    return $self->{date_and_time};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::DeviceMfgDescTag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_LOCALIZED_UNICODE_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::MultiLocalizedUnicodeType->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::DeviceModelDescTag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_LOCALIZED_UNICODE_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::MultiLocalizedUnicodeType->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::GamutTag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_B_TO_A_TABLE_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::LutBToAType->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut8Type->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut16Type->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::GrayTrcTag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_CURVE_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::CurveType->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_PARAMETRIC_CURVE_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::ParametricCurveType->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::GreenMatrixColumnTag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_XYZ_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::XyzType->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::GreenTrcTag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_CURVE_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::CurveType->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_PARAMETRIC_CURVE_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::ParametricCurveType->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::LuminanceTag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_XYZ_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::XyzType->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::Lut16Type;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{reserved} = $self->{_io}->read_bytes(4);
+    $self->{number_of_input_channels} = $self->{_io}->read_u1();
+    $self->{number_of_output_channels} = $self->{_io}->read_u1();
+    $self->{number_of_clut_grid_points} = $self->{_io}->read_u1();
+    $self->{padding} = $self->{_io}->read_bytes(1);
+    $self->{encoded_e_parameters} = [];
+    my $n_encoded_e_parameters = 9;
+    for (my $i = 0; $i < $n_encoded_e_parameters; $i++) {
+        push @{$self->{encoded_e_parameters}}, $self->{_io}->read_s4be();
+    }
+    $self->{number_of_input_table_entries} = $self->{_io}->read_u2be();
+    $self->{number_of_output_table_entries} = $self->{_io}->read_u2be();
+    $self->{input_tables} = $self->{_io}->read_bytes((2 * $self->number_of_input_channels()) * $self->number_of_input_table_entries());
+    $self->{clut_values} = $self->{_io}->read_bytes((2 * ($self->number_of_clut_grid_points() ^ $self->number_of_input_channels())) * $self->number_of_output_channels());
+    $self->{output_tables} = $self->{_io}->read_bytes((2 * $self->number_of_output_channels()) * $self->number_of_output_table_entries());
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self->{reserved};
+}
+
+sub number_of_input_channels {
+    my ($self) = @_;
+    return $self->{number_of_input_channels};
+}
+
+sub number_of_output_channels {
+    my ($self) = @_;
+    return $self->{number_of_output_channels};
+}
+
+sub number_of_clut_grid_points {
+    my ($self) = @_;
+    return $self->{number_of_clut_grid_points};
+}
+
+sub padding {
+    my ($self) = @_;
+    return $self->{padding};
+}
+
+sub encoded_e_parameters {
+    my ($self) = @_;
+    return $self->{encoded_e_parameters};
+}
+
+sub number_of_input_table_entries {
+    my ($self) = @_;
+    return $self->{number_of_input_table_entries};
+}
+
+sub number_of_output_table_entries {
+    my ($self) = @_;
+    return $self->{number_of_output_table_entries};
+}
+
+sub input_tables {
+    my ($self) = @_;
+    return $self->{input_tables};
+}
+
+sub clut_values {
+    my ($self) = @_;
+    return $self->{clut_values};
+}
+
+sub output_tables {
+    my ($self) = @_;
+    return $self->{output_tables};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::Lut8Type;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{reserved} = $self->{_io}->read_bytes(4);
+    $self->{number_of_input_channels} = $self->{_io}->read_u1();
+    $self->{number_of_output_channels} = $self->{_io}->read_u1();
+    $self->{number_of_clut_grid_points} = $self->{_io}->read_u1();
+    $self->{padding} = $self->{_io}->read_bytes(1);
+    $self->{encoded_e_parameters} = [];
+    my $n_encoded_e_parameters = 9;
+    for (my $i = 0; $i < $n_encoded_e_parameters; $i++) {
+        push @{$self->{encoded_e_parameters}}, $self->{_io}->read_s4be();
+    }
+    $self->{number_of_input_table_entries} = $self->{_io}->read_u4be();
+    $self->{number_of_output_table_entries} = $self->{_io}->read_u4be();
+    $self->{input_tables} = $self->{_io}->read_bytes(256 * $self->number_of_input_channels());
+    $self->{clut_values} = $self->{_io}->read_bytes(($self->number_of_clut_grid_points() ^ $self->number_of_input_channels()) * $self->number_of_output_channels());
+    $self->{output_tables} = $self->{_io}->read_bytes(256 * $self->number_of_output_channels());
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self->{reserved};
+}
+
+sub number_of_input_channels {
+    my ($self) = @_;
+    return $self->{number_of_input_channels};
+}
+
+sub number_of_output_channels {
+    my ($self) = @_;
+    return $self->{number_of_output_channels};
+}
+
+sub number_of_clut_grid_points {
+    my ($self) = @_;
+    return $self->{number_of_clut_grid_points};
+}
+
+sub padding {
+    my ($self) = @_;
+    return $self->{padding};
+}
+
+sub encoded_e_parameters {
+    my ($self) = @_;
+    return $self->{encoded_e_parameters};
+}
+
+sub number_of_input_table_entries {
+    my ($self) = @_;
+    return $self->{number_of_input_table_entries};
+}
+
+sub number_of_output_table_entries {
+    my ($self) = @_;
+    return $self->{number_of_output_table_entries};
+}
+
+sub input_tables {
+    my ($self) = @_;
+    return $self->{input_tables};
+}
+
+sub clut_values {
+    my ($self) = @_;
+    return $self->{clut_values};
+}
+
+sub output_tables {
+    my ($self) = @_;
+    return $self->{output_tables};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::LutAToBType;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{reserved} = $self->{_io}->read_bytes(4);
+    $self->{number_of_input_channels} = $self->{_io}->read_u1();
+    $self->{number_of_output_channels} = $self->{_io}->read_u1();
+    $self->{padding} = $self->{_io}->read_bytes(2);
+    $self->{offset_to_first_b_curve} = $self->{_io}->read_u4be();
+    $self->{offset_to_matrix} = $self->{_io}->read_u4be();
+    $self->{offset_to_first_m_curve} = $self->{_io}->read_u4be();
+    $self->{offset_to_clut} = $self->{_io}->read_u4be();
+    $self->{offset_to_first_a_curve} = $self->{_io}->read_u4be();
+    $self->{data} = $self->{_io}->read_bytes_full();
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self->{reserved};
+}
+
+sub number_of_input_channels {
+    my ($self) = @_;
+    return $self->{number_of_input_channels};
+}
+
+sub number_of_output_channels {
+    my ($self) = @_;
+    return $self->{number_of_output_channels};
+}
+
+sub padding {
+    my ($self) = @_;
+    return $self->{padding};
+}
+
+sub offset_to_first_b_curve {
+    my ($self) = @_;
+    return $self->{offset_to_first_b_curve};
+}
+
+sub offset_to_matrix {
+    my ($self) = @_;
+    return $self->{offset_to_matrix};
+}
+
+sub offset_to_first_m_curve {
+    my ($self) = @_;
+    return $self->{offset_to_first_m_curve};
+}
+
+sub offset_to_clut {
+    my ($self) = @_;
+    return $self->{offset_to_clut};
+}
+
+sub offset_to_first_a_curve {
+    my ($self) = @_;
+    return $self->{offset_to_first_a_curve};
+}
+
+sub data {
+    my ($self) = @_;
+    return $self->{data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::LutBToAType;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{reserved} = $self->{_io}->read_bytes(4);
+    $self->{number_of_input_channels} = $self->{_io}->read_u1();
+    $self->{number_of_output_channels} = $self->{_io}->read_u1();
+    $self->{padding} = $self->{_io}->read_bytes(2);
+    $self->{offset_to_first_b_curve} = $self->{_io}->read_u4be();
+    $self->{offset_to_matrix} = $self->{_io}->read_u4be();
+    $self->{offset_to_first_m_curve} = $self->{_io}->read_u4be();
+    $self->{offset_to_clut} = $self->{_io}->read_u4be();
+    $self->{offset_to_first_a_curve} = $self->{_io}->read_u4be();
+    $self->{data} = $self->{_io}->read_bytes_full();
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self->{reserved};
+}
+
+sub number_of_input_channels {
+    my ($self) = @_;
+    return $self->{number_of_input_channels};
+}
+
+sub number_of_output_channels {
+    my ($self) = @_;
+    return $self->{number_of_output_channels};
+}
+
+sub padding {
+    my ($self) = @_;
+    return $self->{padding};
+}
+
+sub offset_to_first_b_curve {
+    my ($self) = @_;
+    return $self->{offset_to_first_b_curve};
+}
+
+sub offset_to_matrix {
+    my ($self) = @_;
+    return $self->{offset_to_matrix};
+}
+
+sub offset_to_first_m_curve {
+    my ($self) = @_;
+    return $self->{offset_to_first_m_curve};
+}
+
+sub offset_to_clut {
+    my ($self) = @_;
+    return $self->{offset_to_clut};
+}
+
+sub offset_to_first_a_curve {
+    my ($self) = @_;
+    return $self->{offset_to_first_a_curve};
+}
+
+sub data {
+    my ($self) = @_;
+    return $self->{data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::MeasurementTag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MEASUREMENT_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::MeasurementType->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::MeasurementType;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+our $MEASUREMENT_FLARE_ENCODINGS_ZERO_PERCENT = 0;
+our $MEASUREMENT_FLARE_ENCODINGS_ONE_HUNDRED_PERCENT = 65536;
+
+our $MEASUREMENT_GEOMETRY_ENCODINGS_UNKNOWN = 0;
+our $MEASUREMENT_GEOMETRY_ENCODINGS_ZERO_DEGREES_TO_45_DEGREES_OR_45_DEGREES_TO_ZERO_DEGREES = 1;
+our $MEASUREMENT_GEOMETRY_ENCODINGS_ZERO_DEGREES_TO_D_DEGREES_OR_D_DEGREES_TO_ZERO_DEGREES = 2;
+
+our $STANDARD_OBSERVER_ENCODINGS_UNKNOWN = 0;
+our $STANDARD_OBSERVER_ENCODINGS_CIE_1931_STANDARD_COLORIMETRIC_OBSERVER = 1;
+our $STANDARD_OBSERVER_ENCODINGS_CIE_1964_STANDARD_COLORIMETRIC_OBSERVER = 2;
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{reserved} = $self->{_io}->read_bytes(4);
+    $self->{standard_observer_encoding} = $self->{_io}->read_u4be();
+    $self->{nciexyz_tristimulus_values_for_measurement_backing} = Icc4::XyzNumber->new($self->{_io}, $self, $self->{_root});
+    $self->{measurement_geometry_encoding} = $self->{_io}->read_u4be();
+    $self->{measurement_flare_encoding} = $self->{_io}->read_u4be();
+    $self->{standard_illuminant_encoding} = Icc4::StandardIlluminantEncoding->new($self->{_io}, $self, $self->{_root});
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self->{reserved};
+}
+
+sub standard_observer_encoding {
+    my ($self) = @_;
+    return $self->{standard_observer_encoding};
+}
+
+sub nciexyz_tristimulus_values_for_measurement_backing {
+    my ($self) = @_;
+    return $self->{nciexyz_tristimulus_values_for_measurement_backing};
+}
+
+sub measurement_geometry_encoding {
+    my ($self) = @_;
+    return $self->{measurement_geometry_encoding};
+}
+
+sub measurement_flare_encoding {
+    my ($self) = @_;
+    return $self->{measurement_flare_encoding};
+}
+
+sub standard_illuminant_encoding {
+    my ($self) = @_;
+    return $self->{standard_illuminant_encoding};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::MediaWhitePointTag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_XYZ_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::XyzType->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::MultiLocalizedUnicodeType;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{reserved} = $self->{_io}->read_bytes(4);
+    $self->{number_of_records} = $self->{_io}->read_u4be();
+    $self->{record_size} = $self->{_io}->read_u4be();
+    $self->{records} = [];
+    my $n_records = $self->number_of_records();
+    for (my $i = 0; $i < $n_records; $i++) {
+        push @{$self->{records}}, Icc4::TagTable::TagDefinition::MultiLocalizedUnicodeType::Record->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self->{reserved};
+}
+
+sub number_of_records {
+    my ($self) = @_;
+    return $self->{number_of_records};
+}
+
+sub record_size {
+    my ($self) = @_;
+    return $self->{record_size};
+}
+
+sub records {
+    my ($self) = @_;
+    return $self->{records};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::MultiLocalizedUnicodeType::Record;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{language_code} = $self->{_io}->read_u2be();
+    $self->{country_code} = $self->{_io}->read_u2be();
+    $self->{string_length} = $self->{_io}->read_u4be();
+    $self->{string_offset} = $self->{_io}->read_u4be();
+}
+
+sub string_data {
+    my ($self) = @_;
+    return $self->{string_data} if ($self->{string_data});
+    my $_pos = $self->{_io}->pos();
+    $self->{_io}->seek($self->string_offset());
+    $self->{string_data} = Encode::decode("UTF-16BE", $self->{_io}->read_bytes($self->string_length()));
+    $self->{_io}->seek($_pos);
+    return $self->{string_data};
+}
+
+sub language_code {
+    my ($self) = @_;
+    return $self->{language_code};
+}
+
+sub country_code {
+    my ($self) = @_;
+    return $self->{country_code};
+}
+
+sub string_length {
+    my ($self) = @_;
+    return $self->{string_length};
+}
+
+sub string_offset {
+    my ($self) = @_;
+    return $self->{string_offset};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::MultiProcessElementsType;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{reserved} = $self->{_io}->read_bytes(4);
+    $self->{number_of_input_channels} = $self->{_io}->read_u2be();
+    $self->{number_of_output_channels} = $self->{_io}->read_u2be();
+    $self->{number_of_processing_elements} = $self->{_io}->read_u4be();
+    $self->{process_element_positions_table} = [];
+    my $n_process_element_positions_table = $self->number_of_processing_elements();
+    for (my $i = 0; $i < $n_process_element_positions_table; $i++) {
+        push @{$self->{process_element_positions_table}}, Icc4::PositionNumber->new($self->{_io}, $self, $self->{_root});
+    }
+    $self->{data} = $self->{_io}->read_bytes_full();
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self->{reserved};
+}
+
+sub number_of_input_channels {
+    my ($self) = @_;
+    return $self->{number_of_input_channels};
+}
+
+sub number_of_output_channels {
+    my ($self) = @_;
+    return $self->{number_of_output_channels};
+}
+
+sub number_of_processing_elements {
+    my ($self) = @_;
+    return $self->{number_of_processing_elements};
+}
+
+sub process_element_positions_table {
+    my ($self) = @_;
+    return $self->{process_element_positions_table};
+}
+
+sub data {
+    my ($self) = @_;
+    return $self->{data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::NamedColor2Tag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_NAMED_COLOR_2_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::NamedColor2Type->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::NamedColor2Type;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{reserved} = $self->{_io}->read_bytes(4);
+    $self->{vendor_specific_flag} = $self->{_io}->read_u4be();
+    $self->{count_of_named_colours} = $self->{_io}->read_u4be();
+    $self->{number_of_device_coordinates_for_each_named_colour} = $self->{_io}->read_u4be();
+    $self->{prefix_for_each_colour_name} = Encode::decode("ASCII", $self->{_io}->read_bytes_term(0, 0, 1, 1));
+    $self->{prefix_for_each_colour_name_padding} = [];
+    my $n_prefix_for_each_colour_name_padding = 32 - length($self->prefix_for_each_colour_name());
+    for (my $i = 0; $i < $n_prefix_for_each_colour_name_padding; $i++) {
+        push @{$self->{prefix_for_each_colour_name_padding}}, $self->{_io}->read_bytes(1);
+    }
+    $self->{suffix_for_each_colour_name} = Encode::decode("ASCII", $self->{_io}->read_bytes_term(0, 0, 1, 1));
+    $self->{suffix_for_each_colour_name_padding} = [];
+    my $n_suffix_for_each_colour_name_padding = 32 - length($self->suffix_for_each_colour_name());
+    for (my $i = 0; $i < $n_suffix_for_each_colour_name_padding; $i++) {
+        push @{$self->{suffix_for_each_colour_name_padding}}, $self->{_io}->read_bytes(1);
+    }
+    $self->{named_colour_definitions} = [];
+    my $n_named_colour_definitions = $self->count_of_named_colours();
+    for (my $i = 0; $i < $n_named_colour_definitions; $i++) {
+        push @{$self->{named_colour_definitions}}, Icc4::TagTable::TagDefinition::NamedColor2Type::NamedColourDefinition->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self->{reserved};
+}
+
+sub vendor_specific_flag {
+    my ($self) = @_;
+    return $self->{vendor_specific_flag};
+}
+
+sub count_of_named_colours {
+    my ($self) = @_;
+    return $self->{count_of_named_colours};
+}
+
+sub number_of_device_coordinates_for_each_named_colour {
+    my ($self) = @_;
+    return $self->{number_of_device_coordinates_for_each_named_colour};
+}
+
+sub prefix_for_each_colour_name {
+    my ($self) = @_;
+    return $self->{prefix_for_each_colour_name};
+}
+
+sub prefix_for_each_colour_name_padding {
+    my ($self) = @_;
+    return $self->{prefix_for_each_colour_name_padding};
+}
+
+sub suffix_for_each_colour_name {
+    my ($self) = @_;
+    return $self->{suffix_for_each_colour_name};
+}
+
+sub suffix_for_each_colour_name_padding {
+    my ($self) = @_;
+    return $self->{suffix_for_each_colour_name_padding};
+}
+
+sub named_colour_definitions {
+    my ($self) = @_;
+    return $self->{named_colour_definitions};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::NamedColor2Type::NamedColourDefinition;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{root_name} = Encode::decode("ASCII", $self->{_io}->read_bytes_term(0, 0, 1, 1));
+    $self->{root_name_padding} = [];
+    my $n_root_name_padding = 32 - length($self->root_name());
+    for (my $i = 0; $i < $n_root_name_padding; $i++) {
+        push @{$self->{root_name_padding}}, $self->{_io}->read_bytes(1);
+    }
+    $self->{pcs_coordinates} = $self->{_io}->read_bytes(6);
+    if ($self->_parent()->number_of_device_coordinates_for_each_named_colour() > 0) {
+        $self->{device_coordinates} = [];
+        my $n_device_coordinates = $self->_parent()->number_of_device_coordinates_for_each_named_colour();
+        for (my $i = 0; $i < $n_device_coordinates; $i++) {
+            push @{$self->{device_coordinates}}, $self->{_io}->read_u2be();
+        }
+    }
+}
+
+sub root_name {
+    my ($self) = @_;
+    return $self->{root_name};
+}
+
+sub root_name_padding {
+    my ($self) = @_;
+    return $self->{root_name_padding};
+}
+
+sub pcs_coordinates {
+    my ($self) = @_;
+    return $self->{pcs_coordinates};
+}
+
+sub device_coordinates {
+    my ($self) = @_;
+    return $self->{device_coordinates};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::OutputResponseTag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_RESPONSE_CURVE_SET_16_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::ResponseCurveSet16Type->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::ParametricCurveType;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+our $PARAMETRIC_CURVE_TYPE_FUNCTIONS_Y_EQUALS_X_TO_POWER_OF_G = 0;
+our $PARAMETRIC_CURVE_TYPE_FUNCTIONS_CIE_122_1996 = 1;
+our $PARAMETRIC_CURVE_TYPE_FUNCTIONS_IEC_61966_3 = 2;
+our $PARAMETRIC_CURVE_TYPE_FUNCTIONS_IEC_61966_2_1 = 3;
+our $PARAMETRIC_CURVE_TYPE_FUNCTIONS_Y_EQUALS_OB_AX_PLUS_B_CB_TO_POWER_OF_G_PLUS_C = 4;
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{reserved} = $self->{_io}->read_bytes(4);
+    $self->{function_type} = $self->{_io}->read_u2be();
+    $self->{reserved_2} = $self->{_io}->read_bytes(2);
+    my $_on = $self->function_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::ParametricCurveType::PARAMETRIC_CURVE_TYPE_FUNCTIONS_CIE_122_1996) {
+        $self->{parameters} = Icc4::TagTable::TagDefinition::ParametricCurveType::ParamsCie1221996->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::ParametricCurveType::PARAMETRIC_CURVE_TYPE_FUNCTIONS_IEC_61966_2_1) {
+        $self->{parameters} = Icc4::TagTable::TagDefinition::ParametricCurveType::ParamsIec6196621->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::ParametricCurveType::PARAMETRIC_CURVE_TYPE_FUNCTIONS_IEC_61966_3) {
+        $self->{parameters} = Icc4::TagTable::TagDefinition::ParametricCurveType::ParamsIec619663->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::ParametricCurveType::PARAMETRIC_CURVE_TYPE_FUNCTIONS_Y_EQUALS_OB_AX_PLUS_B_CB_TO_POWER_OF_G_PLUS_C) {
+        $self->{parameters} = Icc4::TagTable::TagDefinition::ParametricCurveType::ParamsYEqualsObAxPlusBCbToPowerOfGPlusC->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::ParametricCurveType::PARAMETRIC_CURVE_TYPE_FUNCTIONS_Y_EQUALS_X_TO_POWER_OF_G) {
+        $self->{parameters} = Icc4::TagTable::TagDefinition::ParametricCurveType::ParamsYEqualsXToPowerOfG->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self->{reserved};
+}
+
+sub function_type {
+    my ($self) = @_;
+    return $self->{function_type};
+}
+
+sub reserved_2 {
+    my ($self) = @_;
+    return $self->{reserved_2};
+}
+
+sub parameters {
+    my ($self) = @_;
+    return $self->{parameters};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::ParametricCurveType::ParamsCie1221996;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{g} = $self->{_io}->read_s4be();
+    $self->{a} = $self->{_io}->read_s4be();
+    $self->{b} = $self->{_io}->read_s4be();
+}
+
+sub g {
+    my ($self) = @_;
+    return $self->{g};
+}
+
+sub a {
+    my ($self) = @_;
+    return $self->{a};
+}
+
+sub b {
+    my ($self) = @_;
+    return $self->{b};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::ParametricCurveType::ParamsIec6196621;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{g} = $self->{_io}->read_s4be();
+    $self->{a} = $self->{_io}->read_s4be();
+    $self->{b} = $self->{_io}->read_s4be();
+    $self->{c} = $self->{_io}->read_s4be();
+    $self->{d} = $self->{_io}->read_s4be();
+}
+
+sub g {
+    my ($self) = @_;
+    return $self->{g};
+}
+
+sub a {
+    my ($self) = @_;
+    return $self->{a};
+}
+
+sub b {
+    my ($self) = @_;
+    return $self->{b};
+}
+
+sub c {
+    my ($self) = @_;
+    return $self->{c};
+}
+
+sub d {
+    my ($self) = @_;
+    return $self->{d};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::ParametricCurveType::ParamsIec619663;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{g} = $self->{_io}->read_s4be();
+    $self->{a} = $self->{_io}->read_s4be();
+    $self->{b} = $self->{_io}->read_s4be();
+    $self->{c} = $self->{_io}->read_s4be();
+}
+
+sub g {
+    my ($self) = @_;
+    return $self->{g};
+}
+
+sub a {
+    my ($self) = @_;
+    return $self->{a};
+}
+
+sub b {
+    my ($self) = @_;
+    return $self->{b};
+}
+
+sub c {
+    my ($self) = @_;
+    return $self->{c};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::ParametricCurveType::ParamsYEqualsObAxPlusBCbToPowerOfGPlusC;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{g} = $self->{_io}->read_s4be();
+    $self->{a} = $self->{_io}->read_s4be();
+    $self->{b} = $self->{_io}->read_s4be();
+    $self->{c} = $self->{_io}->read_s4be();
+    $self->{d} = $self->{_io}->read_s4be();
+    $self->{e} = $self->{_io}->read_s4be();
+    $self->{f} = $self->{_io}->read_s4be();
+}
+
+sub g {
+    my ($self) = @_;
+    return $self->{g};
+}
+
+sub a {
+    my ($self) = @_;
+    return $self->{a};
+}
+
+sub b {
+    my ($self) = @_;
+    return $self->{b};
+}
+
+sub c {
+    my ($self) = @_;
+    return $self->{c};
+}
+
+sub d {
+    my ($self) = @_;
+    return $self->{d};
+}
+
+sub e {
+    my ($self) = @_;
+    return $self->{e};
+}
+
+sub f {
+    my ($self) = @_;
+    return $self->{f};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::ParametricCurveType::ParamsYEqualsXToPowerOfG;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{g} = $self->{_io}->read_s4be();
+}
+
+sub g {
+    my ($self) = @_;
+    return $self->{g};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::PerceptualRenderingIntentGamutTag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_SIGNATURE_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::SignatureType->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::Preview0Tag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_A_TO_B_TABLE_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::LutAToBType->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_B_TO_A_TABLE_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::LutBToAType->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut8Type->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut16Type->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::Preview1Tag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_B_TO_A_TABLE_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::LutBToAType->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut8Type->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut16Type->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::Preview2Tag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_B_TO_A_TABLE_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::LutBToAType->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_ONE_BYTE_PRECISION_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut8Type->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_FUNCTION_TABLE_WITH_TWO_BYTE_PRECISION_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::Lut16Type->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::ProfileDescriptionTag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_LOCALIZED_UNICODE_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::MultiLocalizedUnicodeType->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::ProfileSequenceDescType;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{reserved} = $self->{_io}->read_bytes(4);
+    $self->{number_of_description_structures} = $self->{_io}->read_u4be();
+    $self->{profile_descriptions} = [];
+    my $n_profile_descriptions = $self->number_of_description_structures();
+    for (my $i = 0; $i < $n_profile_descriptions; $i++) {
+        push @{$self->{profile_descriptions}}, Icc4::TagTable::TagDefinition::ProfileSequenceDescType::ProfileDescription->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self->{reserved};
+}
+
+sub number_of_description_structures {
+    my ($self) = @_;
+    return $self->{number_of_description_structures};
+}
+
+sub profile_descriptions {
+    my ($self) = @_;
+    return $self->{profile_descriptions};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::ProfileSequenceDescType::ProfileDescription;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{device_manufacturer} = Icc4::DeviceManufacturer->new($self->{_io}, $self, $self->{_root});
+    $self->{device_model} = Encode::decode("ASCII", $self->{_io}->read_bytes(4));
+    $self->{device_attributes} = Icc4::DeviceAttributes->new($self->{_io}, $self, $self->{_root});
+    $self->{device_technology} = Icc4::TagTable::TagDefinition::TechnologyTag->new($self->{_io}, $self, $self->{_root});
+    $self->{description_of_device_manufacturer} = Icc4::TagTable::TagDefinition::DeviceMfgDescTag->new($self->{_io}, $self, $self->{_root});
+    $self->{description_of_device_model} = Icc4::TagTable::TagDefinition::DeviceModelDescTag->new($self->{_io}, $self, $self->{_root});
+}
+
+sub device_manufacturer {
+    my ($self) = @_;
+    return $self->{device_manufacturer};
+}
+
+sub device_model {
+    my ($self) = @_;
+    return $self->{device_model};
+}
+
+sub device_attributes {
+    my ($self) = @_;
+    return $self->{device_attributes};
+}
+
+sub device_technology {
+    my ($self) = @_;
+    return $self->{device_technology};
+}
+
+sub description_of_device_manufacturer {
+    my ($self) = @_;
+    return $self->{description_of_device_manufacturer};
+}
+
+sub description_of_device_model {
+    my ($self) = @_;
+    return $self->{description_of_device_model};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::ProfileSequenceIdentifierTag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_PROFILE_SEQUENCE_IDENTIFIER_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::ProfileSequenceIdentifierType->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::ProfileSequenceIdentifierType;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{reserved} = $self->{_io}->read_bytes(4);
+    $self->{number_of_structures} = $self->{_io}->read_u4be();
+    $self->{positions_table} = [];
+    my $n_positions_table = $self->number_of_structures();
+    for (my $i = 0; $i < $n_positions_table; $i++) {
+        push @{$self->{positions_table}}, Icc4::PositionNumber->new($self->{_io}, $self, $self->{_root});
+    }
+    $self->{profile_identifiers} = [];
+    my $n_profile_identifiers = $self->number_of_structures();
+    for (my $i = 0; $i < $n_profile_identifiers; $i++) {
+        push @{$self->{profile_identifiers}}, Icc4::TagTable::TagDefinition::ProfileSequenceIdentifierType::ProfileIdentifier->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self->{reserved};
+}
+
+sub number_of_structures {
+    my ($self) = @_;
+    return $self->{number_of_structures};
+}
+
+sub positions_table {
+    my ($self) = @_;
+    return $self->{positions_table};
+}
+
+sub profile_identifiers {
+    my ($self) = @_;
+    return $self->{profile_identifiers};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::ProfileSequenceIdentifierType::ProfileIdentifier;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{profile_id} = $self->{_io}->read_bytes(16);
+    $self->{profile_description} = Icc4::TagTable::TagDefinition::MultiLocalizedUnicodeType->new($self->{_io}, $self, $self->{_root});
+}
+
+sub profile_id {
+    my ($self) = @_;
+    return $self->{profile_id};
+}
+
+sub profile_description {
+    my ($self) = @_;
+    return $self->{profile_description};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::ProfileSequenceTag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_PROFILE_SEQUENCE_DESC_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::ProfileSequenceDescType->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::RedMatrixColumnTag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_XYZ_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::XyzType->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::RedTrcTag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_CURVE_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::CurveType->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_PARAMETRIC_CURVE_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::ParametricCurveType->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::ResponseCurveSet16Type;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{reserved} = $self->{_io}->read_bytes(4);
+    $self->{number_of_channels} = $self->{_io}->read_u2be();
+    $self->{count_of_measurement_types} = $self->{_io}->read_u2be();
+    $self->{response_curve_structure_offsets} = [];
+    my $n_response_curve_structure_offsets = $self->count_of_measurement_types();
+    for (my $i = 0; $i < $n_response_curve_structure_offsets; $i++) {
+        push @{$self->{response_curve_structure_offsets}}, $self->{_io}->read_u4be();
+    }
+    $self->{response_curve_structures} = $self->{_io}->read_bytes_full();
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self->{reserved};
+}
+
+sub number_of_channels {
+    my ($self) = @_;
+    return $self->{number_of_channels};
+}
+
+sub count_of_measurement_types {
+    my ($self) = @_;
+    return $self->{count_of_measurement_types};
+}
+
+sub response_curve_structure_offsets {
+    my ($self) = @_;
+    return $self->{response_curve_structure_offsets};
+}
+
+sub response_curve_structures {
+    my ($self) = @_;
+    return $self->{response_curve_structures};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::S15Fixed16ArrayType;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{reserved} = $self->{_io}->read_bytes(4);
+    $self->{values} = [];
+    while (!$self->{_io}->is_eof()) {
+        push @{$self->{values}}, Icc4::S15Fixed16Number->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self->{reserved};
+}
+
+sub values {
+    my ($self) = @_;
+    return $self->{values};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::SaturationRenderingIntentGamutTag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_SIGNATURE_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::SignatureType->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::SignatureType;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{reserved} = $self->{_io}->read_bytes(4);
+    $self->{signature} = Encode::decode("ASCII", $self->{_io}->read_bytes(4));
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self->{reserved};
+}
+
+sub signature {
+    my ($self) = @_;
+    return $self->{signature};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::TechnologyTag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_SIGNATURE_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::SignatureType->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::TextType;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{reserved} = $self->{_io}->read_bytes(4);
+    $self->{value} = Encode::decode("ASCII", IO::KaitaiStruct::Stream::bytes_terminate($self->{_io}->read_bytes_full(), 0, 0));
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self->{reserved};
+}
+
+sub value {
+    my ($self) = @_;
+    return $self->{value};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::U16Fixed16ArrayType;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{reserved} = $self->{_io}->read_bytes(4);
+    $self->{values} = [];
+    while (!$self->{_io}->is_eof()) {
+        push @{$self->{values}}, Icc4::U16Fixed16Number->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self->{reserved};
+}
+
+sub values {
+    my ($self) = @_;
+    return $self->{values};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::UInt16ArrayType;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{reserved} = $self->{_io}->read_bytes(4);
+    $self->{values} = [];
+    while (!$self->{_io}->is_eof()) {
+        push @{$self->{values}}, $self->{_io}->read_u2be();
+    }
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self->{reserved};
+}
+
+sub values {
+    my ($self) = @_;
+    return $self->{values};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::UInt32ArrayType;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{reserved} = $self->{_io}->read_bytes(4);
+    $self->{values} = [];
+    while (!$self->{_io}->is_eof()) {
+        push @{$self->{values}}, $self->{_io}->read_u4be();
+    }
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self->{reserved};
+}
+
+sub values {
+    my ($self) = @_;
+    return $self->{values};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::UInt64ArrayType;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{reserved} = $self->{_io}->read_bytes(4);
+    $self->{values} = [];
+    while (!$self->{_io}->is_eof()) {
+        push @{$self->{values}}, $self->{_io}->read_u8be();
+    }
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self->{reserved};
+}
+
+sub values {
+    my ($self) = @_;
+    return $self->{values};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::UInt8ArrayType;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{reserved} = $self->{_io}->read_bytes(4);
+    $self->{values} = [];
+    while (!$self->{_io}->is_eof()) {
+        push @{$self->{values}}, $self->{_io}->read_u1();
+    }
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self->{reserved};
+}
+
+sub values {
+    my ($self) = @_;
+    return $self->{values};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::ViewingCondDescTag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_MULTI_LOCALIZED_UNICODE_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::MultiLocalizedUnicodeType->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::ViewingConditionsTag;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tag_type} = $self->{_io}->read_u4be();
+    my $_on = $self->tag_type();
+    if ($_on == $Icc4::TagTable::TagDefinition::TAG_TYPE_SIGNATURES_VIEWING_CONDITIONS_TYPE) {
+        $self->{tag_data} = Icc4::TagTable::TagDefinition::ViewingConditionsType->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tag_type {
+    my ($self) = @_;
+    return $self->{tag_type};
+}
+
+sub tag_data {
+    my ($self) = @_;
+    return $self->{tag_data};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::ViewingConditionsType;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{reserved} = $self->{_io}->read_bytes(4);
+    $self->{un_normalized_ciexyz_values_for_illuminant} = Icc4::XyzNumber->new($self->{_io}, $self, $self->{_root});
+    $self->{un_normalized_ciexyz_values_for_surround} = Icc4::XyzNumber->new($self->{_io}, $self, $self->{_root});
+    $self->{illuminant_type} = Icc4::StandardIlluminantEncoding->new($self->{_io}, $self, $self->{_root});
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self->{reserved};
+}
+
+sub un_normalized_ciexyz_values_for_illuminant {
+    my ($self) = @_;
+    return $self->{un_normalized_ciexyz_values_for_illuminant};
+}
+
+sub un_normalized_ciexyz_values_for_surround {
+    my ($self) = @_;
+    return $self->{un_normalized_ciexyz_values_for_surround};
+}
+
+sub illuminant_type {
+    my ($self) = @_;
+    return $self->{illuminant_type};
+}
+
+########################################################################
+package Icc4::TagTable::TagDefinition::XyzType;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{reserved} = $self->{_io}->read_bytes(4);
+    $self->{values} = [];
+    while (!$self->{_io}->is_eof()) {
+        push @{$self->{values}}, Icc4::XyzNumber->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub reserved {
+    my ($self) = @_;
+    return $self->{reserved};
+}
+
+sub values {
+    my ($self) = @_;
+    return $self->{values};
+}
+
+########################################################################
+package Icc4::U16Fixed16Number;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{number} = $self->{_io}->read_bytes(4);
+}
+
+sub number {
+    my ($self) = @_;
+    return $self->{number};
+}
+
+########################################################################
+package Icc4::U1Fixed15Number;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{number} = $self->{_io}->read_bytes(2);
+}
+
+sub number {
+    my ($self) = @_;
+    return $self->{number};
+}
+
+########################################################################
+package Icc4::U8Fixed8Number;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{number} = $self->{_io}->read_bytes(2);
+}
+
+sub number {
+    my ($self) = @_;
+    return $self->{number};
+}
+
+########################################################################
+package Icc4::XyzNumber;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{x} = $self->{_io}->read_bytes(4);
+    $self->{y} = $self->{_io}->read_bytes(4);
+    $self->{z} = $self->{_io}->read_bytes(4);
+}
+
+sub x {
+    my ($self) = @_;
+    return $self->{x};
+}
+
+sub y {
+    my ($self) = @_;
+    return $self->{y};
+}
+
+sub z {
+    my ($self) = @_;
+    return $self->{z};
 }
 
 1;

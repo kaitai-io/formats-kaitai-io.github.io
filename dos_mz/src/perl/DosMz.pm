@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Encode;
 
 ########################################################################
@@ -25,7 +25,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -46,7 +46,7 @@ sub relocations {
         my $io = $self->header()->_io();
         my $_pos = $io->pos();
         $io->seek($self->header()->mz()->ofs_relocations());
-        $self->{relocations} = ();
+        $self->{relocations} = [];
         my $n_relocations = $self->header()->mz()->num_relocations();
         for (my $i = 0; $i < $n_relocations; $i++) {
             push @{$self->{relocations}}, DosMz::Relocation->new($io, $self, $self->{_root});
@@ -86,7 +86,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -97,13 +97,13 @@ sub _read {
     my ($self) = @_;
 
     $self->{mz} = DosMz::MzHeader->new($self->{_io}, $self, $self->{_root});
-    $self->{rest_of_header} = $self->{_io}->read_bytes(($self->mz()->len_header() - 28));
+    $self->{rest_of_header} = $self->{_io}->read_bytes($self->mz()->len_header() - 28);
 }
 
 sub len_body {
     my ($self) = @_;
     return $self->{len_body} if ($self->{len_body});
-    $self->{len_body} = (($self->mz()->last_page_extra_bytes() == 0 ? ($self->mz()->num_pages() * 512) : ((($self->mz()->num_pages() - 1) * 512) + $self->mz()->last_page_extra_bytes())) - $self->mz()->len_header());
+    $self->{len_body} = ($self->mz()->last_page_extra_bytes() == 0 ? $self->mz()->num_pages() * 512 : ($self->mz()->num_pages() - 1) * 512 + $self->mz()->last_page_extra_bytes()) - $self->mz()->len_header();
     return $self->{len_body};
 }
 
@@ -137,7 +137,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -166,7 +166,7 @@ sub _read {
 sub len_header {
     my ($self) = @_;
     return $self->{len_header} if ($self->{len_header});
-    $self->{len_header} = ($self->header_size() * 16);
+    $self->{len_header} = $self->header_size() * 16;
     return $self->{len_header};
 }
 
@@ -260,7 +260,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 

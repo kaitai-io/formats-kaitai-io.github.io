@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.S3m = factory(root.KaitaiStream);
+    factory(root.S3m || (root.S3m = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (S3m_, KaitaiStream) {
 /**
  * Scream Tracker 3 module is a tracker music file format that, as all
  * tracker music, bundles both sound samples and instructions on which
@@ -39,8 +39,8 @@ var S3m = (function() {
   S3m.prototype._read = function() {
     this.songName = KaitaiStream.bytesTerminate(this._io.readBytes(28), 0, false);
     this.magic1 = this._io.readBytes(1);
-    if (!((KaitaiStream.byteArrayCompare(this.magic1, [26]) == 0))) {
-      throw new KaitaiStream.ValidationNotEqualError([26], this.magic1, this._io, "/seq/1");
+    if (!((KaitaiStream.byteArrayCompare(this.magic1, new Uint8Array([26])) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([26]), this.magic1, this._io, "/seq/1");
     }
     this.fileType = this._io.readU1();
     this.reserved1 = this._io.readBytes(2);
@@ -51,8 +51,8 @@ var S3m = (function() {
     this.version = this._io.readU2le();
     this.samplesFormat = this._io.readU2le();
     this.magic2 = this._io.readBytes(4);
-    if (!((KaitaiStream.byteArrayCompare(this.magic2, [83, 67, 82, 77]) == 0))) {
-      throw new KaitaiStream.ValidationNotEqualError([83, 67, 82, 77], this.magic2, this._io, "/seq/10");
+    if (!((KaitaiStream.byteArrayCompare(this.magic2, new Uint8Array([83, 67, 82, 77])) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([83, 67, 82, 77]), this.magic2, this._io, "/seq/10");
     }
     this.globalVolume = this._io.readU1();
     this.initialSpeed = this._io.readU1();
@@ -85,11 +85,31 @@ var S3m = (function() {
     }
   }
 
+  var Channel = S3m.Channel = (function() {
+    function Channel(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Channel.prototype._read = function() {
+      this.isDisabled = this._io.readBitsIntBe(1) != 0;
+      this.chType = this._io.readBitsIntBe(7);
+    }
+
+    /**
+     * Channel type (0..7 = left sample channels, 8..15 = right sample channels, 16..31 = AdLib synth channels)
+     */
+
+    return Channel;
+  })();
+
   var ChannelPan = S3m.ChannelPan = (function() {
     function ChannelPan(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -109,11 +129,164 @@ var S3m = (function() {
     return ChannelPan;
   })();
 
+  var Instrument = S3m.Instrument = (function() {
+    Instrument.InstTypes = Object.freeze({
+      SAMPLE: 1,
+      MELODIC: 2,
+      BASS_DRUM: 3,
+      SNARE_DRUM: 4,
+      TOM: 5,
+      CYMBAL: 6,
+      HIHAT: 7,
+
+      1: "SAMPLE",
+      2: "MELODIC",
+      3: "BASS_DRUM",
+      4: "SNARE_DRUM",
+      5: "TOM",
+      6: "CYMBAL",
+      7: "HIHAT",
+    });
+
+    function Instrument(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Instrument.prototype._read = function() {
+      this.type = this._io.readU1();
+      this.filename = KaitaiStream.bytesTerminate(this._io.readBytes(12), 0, false);
+      switch (this.type) {
+      case S3m.Instrument.InstTypes.SAMPLE:
+        this.body = new Sampled(this._io, this, this._root);
+        break;
+      default:
+        this.body = new Adlib(this._io, this, this._root);
+        break;
+      }
+      this.tuningHz = this._io.readU4le();
+      this.reserved2 = this._io.readBytes(12);
+      this.sampleName = KaitaiStream.bytesTerminate(this._io.readBytes(28), 0, false);
+      this.magic = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([83, 67, 82, 83])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([83, 67, 82, 83]), this.magic, this._io, "/types/instrument/seq/6");
+      }
+    }
+
+    var Adlib = Instrument.Adlib = (function() {
+      function Adlib(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+
+        this._read();
+      }
+      Adlib.prototype._read = function() {
+        this.reserved1 = this._io.readBytes(3);
+        if (!((KaitaiStream.byteArrayCompare(this.reserved1, new Uint8Array([0, 0, 0])) == 0))) {
+          throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([0, 0, 0]), this.reserved1, this._io, "/types/instrument/types/adlib/seq/0");
+        }
+        this._unnamed1 = this._io.readBytes(16);
+      }
+
+      return Adlib;
+    })();
+
+    var Sampled = Instrument.Sampled = (function() {
+      function Sampled(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+
+        this._read();
+      }
+      Sampled.prototype._read = function() {
+        this.paraptrSample = new SwappedU3(this._io, this, this._root);
+        this.lenSample = this._io.readU4le();
+        this.loopBegin = this._io.readU4le();
+        this.loopEnd = this._io.readU4le();
+        this.defaultVolume = this._io.readU1();
+        this.reserved1 = this._io.readU1();
+        this.isPacked = this._io.readU1();
+        this.flags = this._io.readU1();
+      }
+      Object.defineProperty(Sampled.prototype, 'sample', {
+        get: function() {
+          if (this._m_sample !== undefined)
+            return this._m_sample;
+          var _pos = this._io.pos;
+          this._io.seek(this.paraptrSample.value * 16);
+          this._m_sample = this._io.readBytes(this.lenSample);
+          this._io.seek(_pos);
+          return this._m_sample;
+        }
+      });
+
+      /**
+       * Default volume
+       */
+
+      /**
+       * 0 = unpacked, 1 = DP30ADPCM packing
+       */
+
+      return Sampled;
+    })();
+
+    return Instrument;
+  })();
+
+  var InstrumentPtr = S3m.InstrumentPtr = (function() {
+    function InstrumentPtr(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    InstrumentPtr.prototype._read = function() {
+      this.paraptr = this._io.readU2le();
+    }
+    Object.defineProperty(InstrumentPtr.prototype, 'body', {
+      get: function() {
+        if (this._m_body !== undefined)
+          return this._m_body;
+        var _pos = this._io.pos;
+        this._io.seek(this.paraptr * 16);
+        this._m_body = new Instrument(this._io, this, this._root);
+        this._io.seek(_pos);
+        return this._m_body;
+      }
+    });
+
+    return InstrumentPtr;
+  })();
+
+  var Pattern = S3m.Pattern = (function() {
+    function Pattern(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Pattern.prototype._read = function() {
+      this.size = this._io.readU2le();
+      this._raw_body = this._io.readBytes(this.size - 2);
+      var _io__raw_body = new KaitaiStream(this._raw_body);
+      this.body = new PatternCells(_io__raw_body, this, this._root);
+    }
+
+    return Pattern;
+  })();
+
   var PatternCell = S3m.PatternCell = (function() {
     function PatternCell(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -147,7 +320,7 @@ var S3m = (function() {
     function PatternCells(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -163,77 +336,11 @@ var S3m = (function() {
     return PatternCells;
   })();
 
-  var Channel = S3m.Channel = (function() {
-    function Channel(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Channel.prototype._read = function() {
-      this.isDisabled = this._io.readBitsIntBe(1) != 0;
-      this.chType = this._io.readBitsIntBe(7);
-    }
-
-    /**
-     * Channel type (0..7 = left sample channels, 8..15 = right sample channels, 16..31 = AdLib synth channels)
-     */
-
-    return Channel;
-  })();
-
-  /**
-   * Custom 3-byte integer, stored in mixed endian manner.
-   */
-
-  var SwappedU3 = S3m.SwappedU3 = (function() {
-    function SwappedU3(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    SwappedU3.prototype._read = function() {
-      this.hi = this._io.readU1();
-      this.lo = this._io.readU2le();
-    }
-    Object.defineProperty(SwappedU3.prototype, 'value', {
-      get: function() {
-        if (this._m_value !== undefined)
-          return this._m_value;
-        this._m_value = (this.lo | (this.hi << 16));
-        return this._m_value;
-      }
-    });
-
-    return SwappedU3;
-  })();
-
-  var Pattern = S3m.Pattern = (function() {
-    function Pattern(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Pattern.prototype._read = function() {
-      this.size = this._io.readU2le();
-      this._raw_body = this._io.readBytes((this.size - 2));
-      var _io__raw_body = new KaitaiStream(this._raw_body);
-      this.body = new PatternCells(_io__raw_body, this, this._root);
-    }
-
-    return Pattern;
-  })();
-
   var PatternPtr = S3m.PatternPtr = (function() {
     function PatternPtr(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -245,7 +352,7 @@ var S3m = (function() {
         if (this._m_body !== undefined)
           return this._m_body;
         var _pos = this._io.pos;
-        this._io.seek((this.paraptr * 16));
+        this._io.seek(this.paraptr * 16);
         this._m_body = new Pattern(this._io, this, this._root);
         this._io.seek(_pos);
         return this._m_body;
@@ -255,139 +362,32 @@ var S3m = (function() {
     return PatternPtr;
   })();
 
-  var InstrumentPtr = S3m.InstrumentPtr = (function() {
-    function InstrumentPtr(_io, _parent, _root) {
+  /**
+   * Custom 3-byte integer, stored in mixed endian manner.
+   */
+
+  var SwappedU3 = S3m.SwappedU3 = (function() {
+    function SwappedU3(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    InstrumentPtr.prototype._read = function() {
-      this.paraptr = this._io.readU2le();
+    SwappedU3.prototype._read = function() {
+      this.hi = this._io.readU1();
+      this.lo = this._io.readU2le();
     }
-    Object.defineProperty(InstrumentPtr.prototype, 'body', {
+    Object.defineProperty(SwappedU3.prototype, 'value', {
       get: function() {
-        if (this._m_body !== undefined)
-          return this._m_body;
-        var _pos = this._io.pos;
-        this._io.seek((this.paraptr * 16));
-        this._m_body = new Instrument(this._io, this, this._root);
-        this._io.seek(_pos);
-        return this._m_body;
+        if (this._m_value !== undefined)
+          return this._m_value;
+        this._m_value = this.lo | this.hi << 16;
+        return this._m_value;
       }
     });
 
-    return InstrumentPtr;
-  })();
-
-  var Instrument = S3m.Instrument = (function() {
-    Instrument.InstTypes = Object.freeze({
-      SAMPLE: 1,
-      MELODIC: 2,
-      BASS_DRUM: 3,
-      SNARE_DRUM: 4,
-      TOM: 5,
-      CYMBAL: 6,
-      HIHAT: 7,
-
-      1: "SAMPLE",
-      2: "MELODIC",
-      3: "BASS_DRUM",
-      4: "SNARE_DRUM",
-      5: "TOM",
-      6: "CYMBAL",
-      7: "HIHAT",
-    });
-
-    function Instrument(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Instrument.prototype._read = function() {
-      this.type = this._io.readU1();
-      this.filename = KaitaiStream.bytesTerminate(this._io.readBytes(12), 0, false);
-      switch (this.type) {
-      case S3m.Instrument.InstTypes.SAMPLE:
-        this.body = new Sampled(this._io, this, this._root);
-        break;
-      default:
-        this.body = new Adlib(this._io, this, this._root);
-        break;
-      }
-      this.tuningHz = this._io.readU4le();
-      this.reserved2 = this._io.readBytes(12);
-      this.sampleName = KaitaiStream.bytesTerminate(this._io.readBytes(28), 0, false);
-      this.magic = this._io.readBytes(4);
-      if (!((KaitaiStream.byteArrayCompare(this.magic, [83, 67, 82, 83]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([83, 67, 82, 83], this.magic, this._io, "/types/instrument/seq/6");
-      }
-    }
-
-    var Sampled = Instrument.Sampled = (function() {
-      function Sampled(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      Sampled.prototype._read = function() {
-        this.paraptrSample = new SwappedU3(this._io, this, this._root);
-        this.lenSample = this._io.readU4le();
-        this.loopBegin = this._io.readU4le();
-        this.loopEnd = this._io.readU4le();
-        this.defaultVolume = this._io.readU1();
-        this.reserved1 = this._io.readU1();
-        this.isPacked = this._io.readU1();
-        this.flags = this._io.readU1();
-      }
-      Object.defineProperty(Sampled.prototype, 'sample', {
-        get: function() {
-          if (this._m_sample !== undefined)
-            return this._m_sample;
-          var _pos = this._io.pos;
-          this._io.seek((this.paraptrSample.value * 16));
-          this._m_sample = this._io.readBytes(this.lenSample);
-          this._io.seek(_pos);
-          return this._m_sample;
-        }
-      });
-
-      /**
-       * Default volume
-       */
-
-      /**
-       * 0 = unpacked, 1 = DP30ADPCM packing
-       */
-
-      return Sampled;
-    })();
-
-    var Adlib = Instrument.Adlib = (function() {
-      function Adlib(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      Adlib.prototype._read = function() {
-        this.reserved1 = this._io.readBytes(3);
-        if (!((KaitaiStream.byteArrayCompare(this.reserved1, [0, 0, 0]) == 0))) {
-          throw new KaitaiStream.ValidationNotEqualError([0, 0, 0], this.reserved1, this._io, "/types/instrument/types/adlib/seq/0");
-        }
-        this._unnamed1 = this._io.readBytes(16);
-      }
-
-      return Adlib;
-    })();
-
-    return Instrument;
+    return SwappedU3;
   })();
 
   /**
@@ -416,5 +416,5 @@ var S3m = (function() {
 
   return S3m;
 })();
-return S3m;
-}));
+S3m_.S3m = S3m;
+});

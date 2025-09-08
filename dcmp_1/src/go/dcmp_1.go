@@ -33,14 +33,18 @@ type Dcmp1 struct {
 	Chunks []*Dcmp1_Chunk
 	_io *kaitai.Stream
 	_root *Dcmp1
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewDcmp1() *Dcmp1 {
 	return &Dcmp1{
 	}
 }
 
-func (this *Dcmp1) Read(io *kaitai.Stream, parent interface{}, root *Dcmp1) (err error) {
+func (this Dcmp1) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Dcmp1) Read(io *kaitai.Stream, parent kaitai.Struct, root *Dcmp1) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -86,9 +90,14 @@ const (
 	Dcmp1_Chunk_TagKind__Extended Dcmp1_Chunk_TagKind = 3
 	Dcmp1_Chunk_TagKind__End Dcmp1_Chunk_TagKind = 4
 )
+var values_Dcmp1_Chunk_TagKind = map[Dcmp1_Chunk_TagKind]struct{}{-1: {}, 0: {}, 1: {}, 2: {}, 3: {}, 4: {}}
+func (v Dcmp1_Chunk_TagKind) isDefined() bool {
+	_, ok := values_Dcmp1_Chunk_TagKind[v]
+	return ok
+}
 type Dcmp1_Chunk struct {
 	Tag uint8
-	Body interface{}
+	Body kaitai.Struct
 	_io *kaitai.Stream
 	_root *Dcmp1
 	_parent *Dcmp1
@@ -96,6 +105,10 @@ type Dcmp1_Chunk struct {
 func NewDcmp1_Chunk() *Dcmp1_Chunk {
 	return &Dcmp1_Chunk{
 	}
+}
+
+func (this Dcmp1_Chunk) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Dcmp1_Chunk) Read(io *kaitai.Stream, parent *Dcmp1, root *Dcmp1) (err error) {
@@ -151,36 +164,36 @@ func (this *Dcmp1_Chunk) Read(io *kaitai.Stream, parent *Dcmp1, root *Dcmp1) (er
 		tmp3 = tmp4
 	}
 	switch (tmp3) {
-	case Dcmp1_Chunk_TagKind__Extended:
-		tmp10 := NewDcmp1_Chunk_ExtendedBody()
+	case Dcmp1_Chunk_TagKind__Backreference:
+		tmp10 := NewDcmp1_Chunk_BackreferenceBody(this.Tag)
 		err = tmp10.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp10
-	case Dcmp1_Chunk_TagKind__Literal:
-		tmp11 := NewDcmp1_Chunk_LiteralBody(this.Tag)
+	case Dcmp1_Chunk_TagKind__End:
+		tmp11 := NewDcmp1_Chunk_EndBody()
 		err = tmp11.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp11
-	case Dcmp1_Chunk_TagKind__End:
-		tmp12 := NewDcmp1_Chunk_EndBody()
+	case Dcmp1_Chunk_TagKind__Extended:
+		tmp12 := NewDcmp1_Chunk_ExtendedBody()
 		err = tmp12.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp12
-	case Dcmp1_Chunk_TagKind__TableLookup:
-		tmp13 := NewDcmp1_Chunk_TableLookupBody(this.Tag)
+	case Dcmp1_Chunk_TagKind__Literal:
+		tmp13 := NewDcmp1_Chunk_LiteralBody(this.Tag)
 		err = tmp13.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp13
-	case Dcmp1_Chunk_TagKind__Backreference:
-		tmp14 := NewDcmp1_Chunk_BackreferenceBody(this.Tag)
+	case Dcmp1_Chunk_TagKind__TableLookup:
+		tmp14 := NewDcmp1_Chunk_TableLookupBody(this.Tag)
 		err = tmp14.Read(this._io, this, this._root)
 		if err != nil {
 			return err
@@ -204,168 +217,6 @@ func (this *Dcmp1_Chunk) Read(io *kaitai.Stream, parent *Dcmp1, root *Dcmp1) (er
  */
 
 /**
- * The body of a literal data chunk.
- * 
- * The data that this chunk expands to is stored literally in the body (`literal`).
- * Optionally,
- * the literal data may also be stored for use by future backreference chunks (`do_store`).
- */
-type Dcmp1_Chunk_LiteralBody struct {
-	LenLiteralSeparate uint8
-	Literal []byte
-	Tag uint8
-	_io *kaitai.Stream
-	_root *Dcmp1
-	_parent *Dcmp1_Chunk
-	_f_doStore bool
-	doStore bool
-	_f_lenLiteralM1InTag bool
-	lenLiteralM1InTag int
-	_f_isLenLiteralSeparate bool
-	isLenLiteralSeparate bool
-	_f_lenLiteral bool
-	lenLiteral int
-}
-func NewDcmp1_Chunk_LiteralBody(tag uint8) *Dcmp1_Chunk_LiteralBody {
-	return &Dcmp1_Chunk_LiteralBody{
-		Tag: tag,
-	}
-}
-
-func (this *Dcmp1_Chunk_LiteralBody) Read(io *kaitai.Stream, parent *Dcmp1_Chunk, root *Dcmp1) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp15, err := this.IsLenLiteralSeparate()
-	if err != nil {
-		return err
-	}
-	if (tmp15) {
-		tmp16, err := this._io.ReadU1()
-		if err != nil {
-			return err
-		}
-		this.LenLiteralSeparate = tmp16
-	}
-	tmp17, err := this.LenLiteral()
-	if err != nil {
-		return err
-	}
-	tmp18, err := this._io.ReadBytes(int(tmp17))
-	if err != nil {
-		return err
-	}
-	tmp18 = tmp18
-	this.Literal = tmp18
-	return err
-}
-
-/**
- * Whether this literal should be stored for use by future backreference chunks.
- * 
- * See the documentation of the `backreference_body` type for details about backreference chunks.
- */
-func (this *Dcmp1_Chunk_LiteralBody) DoStore() (v bool, err error) {
-	if (this._f_doStore) {
-		return this.doStore, nil
-	}
-	var tmp19 bool;
-	tmp20, err := this.IsLenLiteralSeparate()
-	if err != nil {
-		return false, err
-	}
-	if (tmp20) {
-		tmp19 = this.Tag == 209
-	} else {
-		tmp19 = (this.Tag & 16) != 0
-	}
-	this.doStore = bool(tmp19)
-	this._f_doStore = true
-	return this.doStore, nil
-}
-
-/**
- * The part of the tag byte that indicates the length of the literal data,
- * in bytes,
- * minus one.
- * 
- * If the tag byte is 0xd0 or 0xd1,
- * the length is stored in a separate byte after the tag byte and before the literal data.
- */
-func (this *Dcmp1_Chunk_LiteralBody) LenLiteralM1InTag() (v int, err error) {
-	if (this._f_lenLiteralM1InTag) {
-		return this.lenLiteralM1InTag, nil
-	}
-	tmp21, err := this.IsLenLiteralSeparate()
-	if err != nil {
-		return 0, err
-	}
-	if (!(tmp21)) {
-		this.lenLiteralM1InTag = int((this.Tag & 15))
-	}
-	this._f_lenLiteralM1InTag = true
-	return this.lenLiteralM1InTag, nil
-}
-
-/**
- * Whether the length of the literal is stored separately from the tag.
- */
-func (this *Dcmp1_Chunk_LiteralBody) IsLenLiteralSeparate() (v bool, err error) {
-	if (this._f_isLenLiteralSeparate) {
-		return this.isLenLiteralSeparate, nil
-	}
-	this.isLenLiteralSeparate = bool(this.Tag >= 208)
-	this._f_isLenLiteralSeparate = true
-	return this.isLenLiteralSeparate, nil
-}
-
-/**
- * The length of the literal data,
- * in bytes.
- * 
- * In practice,
- * this value is always greater than zero,
- * as there is no use in storing a zero-length literal.
- */
-func (this *Dcmp1_Chunk_LiteralBody) LenLiteral() (v int, err error) {
-	if (this._f_lenLiteral) {
-		return this.lenLiteral, nil
-	}
-	var tmp22 uint8;
-	tmp23, err := this.IsLenLiteralSeparate()
-	if err != nil {
-		return 0, err
-	}
-	if (tmp23) {
-		tmp22 = this.LenLiteralSeparate
-	} else {
-		tmp24, err := this.LenLiteralM1InTag()
-		if err != nil {
-			return 0, err
-		}
-		tmp22 = (tmp24 + 1)
-	}
-	this.lenLiteral = int(tmp22)
-	this._f_lenLiteral = true
-	return this.lenLiteral, nil
-}
-
-/**
- * The length of the literal data,
- * in bytes.
- * 
- * This field is only present if the tag byte is 0xd0 or 0xd1.
- * In practice,
- * this only happens if the length is 0x11 or greater,
- * because smaller lengths can be encoded into the tag byte.
- */
-
-/**
- * The literal data.
- */
-
-/**
  * The body of a backreference chunk.
  * 
  * This chunk expands to the data stored in a preceding literal chunk,
@@ -377,14 +228,14 @@ type Dcmp1_Chunk_BackreferenceBody struct {
 	_io *kaitai.Stream
 	_root *Dcmp1
 	_parent *Dcmp1_Chunk
-	_f_isIndexSeparate bool
-	isIndexSeparate bool
+	_f_index bool
+	index int
 	_f_indexInTag bool
 	indexInTag int
 	_f_indexSeparate bool
 	indexSeparate int
-	_f_index bool
-	index int
+	_f_isIndexSeparate bool
+	isIndexSeparate bool
 }
 func NewDcmp1_Chunk_BackreferenceBody(tag uint8) *Dcmp1_Chunk_BackreferenceBody {
 	return &Dcmp1_Chunk_BackreferenceBody{
@@ -392,68 +243,27 @@ func NewDcmp1_Chunk_BackreferenceBody(tag uint8) *Dcmp1_Chunk_BackreferenceBody 
 	}
 }
 
+func (this Dcmp1_Chunk_BackreferenceBody) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Dcmp1_Chunk_BackreferenceBody) Read(io *kaitai.Stream, parent *Dcmp1_Chunk, root *Dcmp1) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp25, err := this.IsIndexSeparate()
+	tmp15, err := this.IsIndexSeparate()
 	if err != nil {
 		return err
 	}
-	if (tmp25) {
-		tmp26, err := this._io.ReadU1()
+	if (tmp15) {
+		tmp16, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
-		this.IndexSeparateMinus = tmp26
+		this.IndexSeparateMinus = tmp16
 	}
 	return err
-}
-
-/**
- * Whether the index is stored separately from the tag.
- */
-func (this *Dcmp1_Chunk_BackreferenceBody) IsIndexSeparate() (v bool, err error) {
-	if (this._f_isIndexSeparate) {
-		return this.isIndexSeparate, nil
-	}
-	this.isIndexSeparate = bool(this.Tag == 210)
-	this._f_isIndexSeparate = true
-	return this.isIndexSeparate, nil
-}
-
-/**
- * The index of the referenced literal chunk,
- * as stored in the tag byte.
- */
-func (this *Dcmp1_Chunk_BackreferenceBody) IndexInTag() (v int, err error) {
-	if (this._f_indexInTag) {
-		return this.indexInTag, nil
-	}
-	this.indexInTag = int((this.Tag - 32))
-	this._f_indexInTag = true
-	return this.indexInTag, nil
-}
-
-/**
- * The index of the referenced literal chunk,
- * as stored separately from the tag byte,
- * with the implicit offset corrected for.
- */
-func (this *Dcmp1_Chunk_BackreferenceBody) IndexSeparate() (v int, err error) {
-	if (this._f_indexSeparate) {
-		return this.indexSeparate, nil
-	}
-	tmp27, err := this.IsIndexSeparate()
-	if err != nil {
-		return 0, err
-	}
-	if (tmp27) {
-		this.indexSeparate = int((this.IndexSeparateMinus + 176))
-	}
-	this._f_indexSeparate = true
-	return this.indexSeparate, nil
 }
 
 /**
@@ -473,27 +283,72 @@ func (this *Dcmp1_Chunk_BackreferenceBody) Index() (v int, err error) {
 	if (this._f_index) {
 		return this.index, nil
 	}
-	var tmp28 int;
-	tmp29, err := this.IsIndexSeparate()
+	this._f_index = true
+	var tmp17 int;
+	tmp18, err := this.IsIndexSeparate()
 	if err != nil {
 		return 0, err
 	}
-	if (tmp29) {
-		tmp30, err := this.IndexSeparate()
+	if (tmp18) {
+		tmp19, err := this.IndexSeparate()
 		if err != nil {
 			return 0, err
 		}
-		tmp28 = tmp30
+		tmp17 = tmp19
 	} else {
-		tmp31, err := this.IndexInTag()
+		tmp20, err := this.IndexInTag()
 		if err != nil {
 			return 0, err
 		}
-		tmp28 = tmp31
+		tmp17 = tmp20
 	}
-	this.index = int(tmp28)
-	this._f_index = true
+	this.index = int(tmp17)
 	return this.index, nil
+}
+
+/**
+ * The index of the referenced literal chunk,
+ * as stored in the tag byte.
+ */
+func (this *Dcmp1_Chunk_BackreferenceBody) IndexInTag() (v int, err error) {
+	if (this._f_indexInTag) {
+		return this.indexInTag, nil
+	}
+	this._f_indexInTag = true
+	this.indexInTag = int(this.Tag - 32)
+	return this.indexInTag, nil
+}
+
+/**
+ * The index of the referenced literal chunk,
+ * as stored separately from the tag byte,
+ * with the implicit offset corrected for.
+ */
+func (this *Dcmp1_Chunk_BackreferenceBody) IndexSeparate() (v int, err error) {
+	if (this._f_indexSeparate) {
+		return this.indexSeparate, nil
+	}
+	this._f_indexSeparate = true
+	tmp21, err := this.IsIndexSeparate()
+	if err != nil {
+		return 0, err
+	}
+	if (tmp21) {
+		this.indexSeparate = int(this.IndexSeparateMinus + 176)
+	}
+	return this.indexSeparate, nil
+}
+
+/**
+ * Whether the index is stored separately from the tag.
+ */
+func (this *Dcmp1_Chunk_BackreferenceBody) IsIndexSeparate() (v bool, err error) {
+	if (this._f_isIndexSeparate) {
+		return this.isIndexSeparate, nil
+	}
+	this._f_isIndexSeparate = true
+	this.isIndexSeparate = bool(this.Tag == 210)
+	return this.isIndexSeparate, nil
 }
 
 /**
@@ -507,70 +362,6 @@ func (this *Dcmp1_Chunk_BackreferenceBody) Index() (v int, err error) {
  * Values smaller than 0xb0 cannot be stored in this field,
  * they must always be encoded in the tag byte.
  */
-
-/**
- * The body of a table lookup chunk.
- * This body is always empty.
- * 
- * This chunk always expands to two bytes (`value`),
- * determined from the tag byte using a fixed lookup table (`lookup_table`).
- * This lookup table is hardcoded in the decompressor and always the same for all compressed data.
- */
-type Dcmp1_Chunk_TableLookupBody struct {
-	Tag uint8
-	_io *kaitai.Stream
-	_root *Dcmp1
-	_parent *Dcmp1_Chunk
-	_f_lookupTable bool
-	lookupTable [][]byte
-	_f_value bool
-	value []byte
-}
-func NewDcmp1_Chunk_TableLookupBody(tag uint8) *Dcmp1_Chunk_TableLookupBody {
-	return &Dcmp1_Chunk_TableLookupBody{
-		Tag: tag,
-	}
-}
-
-func (this *Dcmp1_Chunk_TableLookupBody) Read(io *kaitai.Stream, parent *Dcmp1_Chunk, root *Dcmp1) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	return err
-}
-
-/**
- * Fixed lookup table that maps tag byte numbers to two bytes each.
- * 
- * The entries in the lookup table are offset -
- * index 0 stands for tag 0xd5, 1 for 0xd6, etc.
- */
-func (this *Dcmp1_Chunk_TableLookupBody) LookupTable() (v [][]byte, err error) {
-	if (this._f_lookupTable) {
-		return this.lookupTable, nil
-	}
-	this.lookupTable = [][]byte([][]byte{[]uint8{0, 0}, []uint8{0, 1}, []uint8{0, 2}, []uint8{0, 3}, []uint8{46, 1}, []uint8{62, 1}, []uint8{1, 1}, []uint8{30, 1}, []uint8{255, 255}, []uint8{14, 1}, []uint8{49, 0}, []uint8{17, 18}, []uint8{1, 7}, []uint8{51, 50}, []uint8{18, 57}, []uint8{237, 16}, []uint8{1, 39}, []uint8{35, 34}, []uint8{1, 55}, []uint8{7, 6}, []uint8{1, 23}, []uint8{1, 35}, []uint8{0, 255}, []uint8{0, 47}, []uint8{7, 14}, []uint8{253, 60}, []uint8{1, 53}, []uint8{1, 21}, []uint8{1, 2}, []uint8{0, 7}, []uint8{0, 62}, []uint8{5, 213}, []uint8{2, 1}, []uint8{6, 7}, []uint8{7, 8}, []uint8{48, 1}, []uint8{1, 51}, []uint8{0, 16}, []uint8{23, 22}, []uint8{55, 62}, []uint8{54, 55}})
-	this._f_lookupTable = true
-	return this.lookupTable, nil
-}
-
-/**
- * The two bytes that the tag byte expands to,
- * based on the fixed lookup table.
- */
-func (this *Dcmp1_Chunk_TableLookupBody) Value() (v []byte, err error) {
-	if (this._f_value) {
-		return this.value, nil
-	}
-	tmp32, err := this.LookupTable()
-	if err != nil {
-		return nil, err
-	}
-	this.value = []byte(tmp32[(this.Tag - 213)])
-	this._f_value = true
-	return this.value, nil
-}
 
 /**
  * The body of an end chunk.
@@ -587,6 +378,10 @@ type Dcmp1_Chunk_EndBody struct {
 func NewDcmp1_Chunk_EndBody() *Dcmp1_Chunk_EndBody {
 	return &Dcmp1_Chunk_EndBody{
 	}
+}
+
+func (this Dcmp1_Chunk_EndBody) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Dcmp1_Chunk_EndBody) Read(io *kaitai.Stream, parent *Dcmp1_Chunk, root *Dcmp1) (err error) {
@@ -613,24 +408,28 @@ func NewDcmp1_Chunk_ExtendedBody() *Dcmp1_Chunk_ExtendedBody {
 	}
 }
 
+func (this Dcmp1_Chunk_ExtendedBody) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Dcmp1_Chunk_ExtendedBody) Read(io *kaitai.Stream, parent *Dcmp1_Chunk, root *Dcmp1) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp33, err := this._io.ReadU1()
+	tmp22, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Tag = tmp33
+	this.Tag = tmp22
 	switch (this.Tag) {
 	case 2:
-		tmp34 := NewDcmp1_Chunk_ExtendedBody_RepeatBody()
-		err = tmp34.Read(this._io, this, this._root)
+		tmp23 := NewDcmp1_Chunk_ExtendedBody_RepeatBody()
+		err = tmp23.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Body = tmp34
+		this.Body = tmp23
 	}
 	return err
 }
@@ -656,16 +455,20 @@ type Dcmp1_Chunk_ExtendedBody_RepeatBody struct {
 	_io *kaitai.Stream
 	_root *Dcmp1
 	_parent *Dcmp1_Chunk_ExtendedBody
-	_f_toRepeat bool
-	toRepeat int
-	_f_repeatCountM1 bool
-	repeatCountM1 int
 	_f_repeatCount bool
 	repeatCount int
+	_f_repeatCountM1 bool
+	repeatCountM1 int
+	_f_toRepeat bool
+	toRepeat int
 }
 func NewDcmp1_Chunk_ExtendedBody_RepeatBody() *Dcmp1_Chunk_ExtendedBody_RepeatBody {
 	return &Dcmp1_Chunk_ExtendedBody_RepeatBody{
 	}
+}
+
+func (this Dcmp1_Chunk_ExtendedBody_RepeatBody) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Dcmp1_Chunk_ExtendedBody_RepeatBody) Read(io *kaitai.Stream, parent *Dcmp1_Chunk_ExtendedBody, root *Dcmp1) (err error) {
@@ -673,38 +476,37 @@ func (this *Dcmp1_Chunk_ExtendedBody_RepeatBody) Read(io *kaitai.Stream, parent 
 	this._parent = parent
 	this._root = root
 
-	tmp35 := NewDcmpVariableLengthInteger()
-	err = tmp35.Read(this._io, this, nil)
+	tmp24 := NewDcmpVariableLengthInteger()
+	err = tmp24.Read(this._io, nil, nil)
 	if err != nil {
 		return err
 	}
-	this.ToRepeatRaw = tmp35
-	tmp36 := NewDcmpVariableLengthInteger()
-	err = tmp36.Read(this._io, this, nil)
+	this.ToRepeatRaw = tmp24
+	tmp25 := NewDcmpVariableLengthInteger()
+	err = tmp25.Read(this._io, nil, nil)
 	if err != nil {
 		return err
 	}
-	this.RepeatCountM1Raw = tmp36
+	this.RepeatCountM1Raw = tmp25
 	return err
 }
 
 /**
- * The value to repeat.
+ * The number of times to repeat the value.
  * 
- * Although it is stored as a variable-length integer,
- * this value must fit into an unsigned 8-bit integer.
+ * This value must be positive.
  */
-func (this *Dcmp1_Chunk_ExtendedBody_RepeatBody) ToRepeat() (v int, err error) {
-	if (this._f_toRepeat) {
-		return this.toRepeat, nil
+func (this *Dcmp1_Chunk_ExtendedBody_RepeatBody) RepeatCount() (v int, err error) {
+	if (this._f_repeatCount) {
+		return this.repeatCount, nil
 	}
-	tmp37, err := this.ToRepeatRaw.Value()
+	this._f_repeatCount = true
+	tmp26, err := this.RepeatCountM1()
 	if err != nil {
 		return 0, err
 	}
-	this.toRepeat = int(tmp37)
-	this._f_toRepeat = true
-	return this.toRepeat, nil
+	this.repeatCount = int(tmp26 + 1)
+	return this.repeatCount, nil
 }
 
 /**
@@ -717,31 +519,32 @@ func (this *Dcmp1_Chunk_ExtendedBody_RepeatBody) RepeatCountM1() (v int, err err
 	if (this._f_repeatCountM1) {
 		return this.repeatCountM1, nil
 	}
-	tmp38, err := this.RepeatCountM1Raw.Value()
+	this._f_repeatCountM1 = true
+	tmp27, err := this.RepeatCountM1Raw.Value()
 	if err != nil {
 		return 0, err
 	}
-	this.repeatCountM1 = int(tmp38)
-	this._f_repeatCountM1 = true
+	this.repeatCountM1 = int(tmp27)
 	return this.repeatCountM1, nil
 }
 
 /**
- * The number of times to repeat the value.
+ * The value to repeat.
  * 
- * This value must be positive.
+ * Although it is stored as a variable-length integer,
+ * this value must fit into an unsigned 8-bit integer.
  */
-func (this *Dcmp1_Chunk_ExtendedBody_RepeatBody) RepeatCount() (v int, err error) {
-	if (this._f_repeatCount) {
-		return this.repeatCount, nil
+func (this *Dcmp1_Chunk_ExtendedBody_RepeatBody) ToRepeat() (v int, err error) {
+	if (this._f_toRepeat) {
+		return this.toRepeat, nil
 	}
-	tmp39, err := this.RepeatCountM1()
+	this._f_toRepeat = true
+	tmp28, err := this.ToRepeatRaw.Value()
 	if err != nil {
 		return 0, err
 	}
-	this.repeatCount = int((tmp39 + 1))
-	this._f_repeatCount = true
-	return this.repeatCount, nil
+	this.toRepeat = int(tmp28)
+	return this.toRepeat, nil
 }
 
 /**
@@ -751,3 +554,237 @@ func (this *Dcmp1_Chunk_ExtendedBody_RepeatBody) RepeatCount() (v int, err error
 /**
  * Raw variable-length integer representation of `repeat_count_m1`.
  */
+
+/**
+ * The body of a literal data chunk.
+ * 
+ * The data that this chunk expands to is stored literally in the body (`literal`).
+ * Optionally,
+ * the literal data may also be stored for use by future backreference chunks (`do_store`).
+ */
+type Dcmp1_Chunk_LiteralBody struct {
+	LenLiteralSeparate uint8
+	Literal []byte
+	Tag uint8
+	_io *kaitai.Stream
+	_root *Dcmp1
+	_parent *Dcmp1_Chunk
+	_f_doStore bool
+	doStore bool
+	_f_isLenLiteralSeparate bool
+	isLenLiteralSeparate bool
+	_f_lenLiteral bool
+	lenLiteral int
+	_f_lenLiteralM1InTag bool
+	lenLiteralM1InTag int
+}
+func NewDcmp1_Chunk_LiteralBody(tag uint8) *Dcmp1_Chunk_LiteralBody {
+	return &Dcmp1_Chunk_LiteralBody{
+		Tag: tag,
+	}
+}
+
+func (this Dcmp1_Chunk_LiteralBody) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Dcmp1_Chunk_LiteralBody) Read(io *kaitai.Stream, parent *Dcmp1_Chunk, root *Dcmp1) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp29, err := this.IsLenLiteralSeparate()
+	if err != nil {
+		return err
+	}
+	if (tmp29) {
+		tmp30, err := this._io.ReadU1()
+		if err != nil {
+			return err
+		}
+		this.LenLiteralSeparate = tmp30
+	}
+	tmp31, err := this.LenLiteral()
+	if err != nil {
+		return err
+	}
+	tmp32, err := this._io.ReadBytes(int(tmp31))
+	if err != nil {
+		return err
+	}
+	tmp32 = tmp32
+	this.Literal = tmp32
+	return err
+}
+
+/**
+ * Whether this literal should be stored for use by future backreference chunks.
+ * 
+ * See the documentation of the `backreference_body` type for details about backreference chunks.
+ */
+func (this *Dcmp1_Chunk_LiteralBody) DoStore() (v bool, err error) {
+	if (this._f_doStore) {
+		return this.doStore, nil
+	}
+	this._f_doStore = true
+	var tmp33 bool;
+	tmp34, err := this.IsLenLiteralSeparate()
+	if err != nil {
+		return false, err
+	}
+	if (tmp34) {
+		tmp33 = this.Tag == 209
+	} else {
+		tmp33 = this.Tag & 16 != 0
+	}
+	this.doStore = bool(tmp33)
+	return this.doStore, nil
+}
+
+/**
+ * Whether the length of the literal is stored separately from the tag.
+ */
+func (this *Dcmp1_Chunk_LiteralBody) IsLenLiteralSeparate() (v bool, err error) {
+	if (this._f_isLenLiteralSeparate) {
+		return this.isLenLiteralSeparate, nil
+	}
+	this._f_isLenLiteralSeparate = true
+	this.isLenLiteralSeparate = bool(this.Tag >= 208)
+	return this.isLenLiteralSeparate, nil
+}
+
+/**
+ * The length of the literal data,
+ * in bytes.
+ * 
+ * In practice,
+ * this value is always greater than zero,
+ * as there is no use in storing a zero-length literal.
+ */
+func (this *Dcmp1_Chunk_LiteralBody) LenLiteral() (v int, err error) {
+	if (this._f_lenLiteral) {
+		return this.lenLiteral, nil
+	}
+	this._f_lenLiteral = true
+	var tmp35 uint8;
+	tmp36, err := this.IsLenLiteralSeparate()
+	if err != nil {
+		return 0, err
+	}
+	if (tmp36) {
+		tmp35 = this.LenLiteralSeparate
+	} else {
+		tmp37, err := this.LenLiteralM1InTag()
+		if err != nil {
+			return 0, err
+		}
+		tmp35 = tmp37 + 1
+	}
+	this.lenLiteral = int(tmp35)
+	return this.lenLiteral, nil
+}
+
+/**
+ * The part of the tag byte that indicates the length of the literal data,
+ * in bytes,
+ * minus one.
+ * 
+ * If the tag byte is 0xd0 or 0xd1,
+ * the length is stored in a separate byte after the tag byte and before the literal data.
+ */
+func (this *Dcmp1_Chunk_LiteralBody) LenLiteralM1InTag() (v int, err error) {
+	if (this._f_lenLiteralM1InTag) {
+		return this.lenLiteralM1InTag, nil
+	}
+	this._f_lenLiteralM1InTag = true
+	tmp38, err := this.IsLenLiteralSeparate()
+	if err != nil {
+		return 0, err
+	}
+	if (!(tmp38)) {
+		this.lenLiteralM1InTag = int(this.Tag & 15)
+	}
+	return this.lenLiteralM1InTag, nil
+}
+
+/**
+ * The length of the literal data,
+ * in bytes.
+ * 
+ * This field is only present if the tag byte is 0xd0 or 0xd1.
+ * In practice,
+ * this only happens if the length is 0x11 or greater,
+ * because smaller lengths can be encoded into the tag byte.
+ */
+
+/**
+ * The literal data.
+ */
+
+/**
+ * The body of a table lookup chunk.
+ * This body is always empty.
+ * 
+ * This chunk always expands to two bytes (`value`),
+ * determined from the tag byte using a fixed lookup table (`lookup_table`).
+ * This lookup table is hardcoded in the decompressor and always the same for all compressed data.
+ */
+type Dcmp1_Chunk_TableLookupBody struct {
+	Tag uint8
+	_io *kaitai.Stream
+	_root *Dcmp1
+	_parent *Dcmp1_Chunk
+	_f_lookupTable bool
+	lookupTable [][]byte
+	_f_value bool
+	value []byte
+}
+func NewDcmp1_Chunk_TableLookupBody(tag uint8) *Dcmp1_Chunk_TableLookupBody {
+	return &Dcmp1_Chunk_TableLookupBody{
+		Tag: tag,
+	}
+}
+
+func (this Dcmp1_Chunk_TableLookupBody) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Dcmp1_Chunk_TableLookupBody) Read(io *kaitai.Stream, parent *Dcmp1_Chunk, root *Dcmp1) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	return err
+}
+
+/**
+ * Fixed lookup table that maps tag byte numbers to two bytes each.
+ * 
+ * The entries in the lookup table are offset -
+ * index 0 stands for tag 0xd5, 1 for 0xd6, etc.
+ */
+func (this *Dcmp1_Chunk_TableLookupBody) LookupTable() (v [][]byte, err error) {
+	if (this._f_lookupTable) {
+		return this.lookupTable, nil
+	}
+	this._f_lookupTable = true
+	this.lookupTable = [][]byte([][]byte{[]uint8{0, 0}, []uint8{0, 1}, []uint8{0, 2}, []uint8{0, 3}, []uint8{46, 1}, []uint8{62, 1}, []uint8{1, 1}, []uint8{30, 1}, []uint8{255, 255}, []uint8{14, 1}, []uint8{49, 0}, []uint8{17, 18}, []uint8{1, 7}, []uint8{51, 50}, []uint8{18, 57}, []uint8{237, 16}, []uint8{1, 39}, []uint8{35, 34}, []uint8{1, 55}, []uint8{7, 6}, []uint8{1, 23}, []uint8{1, 35}, []uint8{0, 255}, []uint8{0, 47}, []uint8{7, 14}, []uint8{253, 60}, []uint8{1, 53}, []uint8{1, 21}, []uint8{1, 2}, []uint8{0, 7}, []uint8{0, 62}, []uint8{5, 213}, []uint8{2, 1}, []uint8{6, 7}, []uint8{7, 8}, []uint8{48, 1}, []uint8{1, 51}, []uint8{0, 16}, []uint8{23, 22}, []uint8{55, 62}, []uint8{54, 55}})
+	return this.lookupTable, nil
+}
+
+/**
+ * The two bytes that the tag byte expands to,
+ * based on the fixed lookup table.
+ */
+func (this *Dcmp1_Chunk_TableLookupBody) Value() (v []byte, err error) {
+	if (this._f_value) {
+		return this.value, nil
+	}
+	this._f_value = true
+	tmp39, err := this.LookupTable()
+	if err != nil {
+		return nil, err
+	}
+	this.value = []byte(tmp39[this.Tag - 213])
+	return this.value, nil
+}

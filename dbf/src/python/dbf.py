@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
-from enum import Enum
+from enum import IntEnum
 
 
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Dbf(KaitaiStruct):
     """.dbf is a relational database format introduced in DOS database
@@ -19,18 +20,18 @@ class Dbf(KaitaiStruct):
        Source - http://www.dbase.com/Knowledgebase/INT/db7_file_fmt.htm
     """
 
-    class DeleteState(Enum):
+    class DeleteState(IntEnum):
         false = 32
         true = 42
     def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
+        super(Dbf, self).__init__(_io)
         self._parent = _parent
-        self._root = _root if _root else self
+        self._root = _root or self
         self._read()
 
     def _read(self):
         self.header1 = Dbf.Header1(self._io, self, self._root)
-        self._raw_header2 = self._io.read_bytes(((self.header1.len_header - 12) - 1))
+        self._raw_header2 = self._io.read_bytes((self.header1.len_header - 12) - 1)
         _io__raw_header2 = KaitaiStream(BytesIO(self._raw_header2))
         self.header2 = Dbf.Header2(_io__raw_header2, self, self._root)
         self.header_terminator = self._io.read_bytes(1)
@@ -44,33 +45,21 @@ class Dbf(KaitaiStruct):
             self.records.append(Dbf.Record(_io__raw_records, self, self._root))
 
 
-    class Header2(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
 
-        def _read(self):
-            if self._root.header1.dbase_level == 3:
-                self.header_dbase_3 = Dbf.HeaderDbase3(self._io, self, self._root)
-
-            if self._root.header1.dbase_level == 7:
-                self.header_dbase_7 = Dbf.HeaderDbase7(self._io, self, self._root)
-
-            self.fields = []
-            i = 0
-            while not self._io.is_eof():
-                self.fields.append(Dbf.Field(self._io, self, self._root))
-                i += 1
-
+    def _fetch_instances(self):
+        pass
+        self.header1._fetch_instances()
+        self.header2._fetch_instances()
+        for i in range(len(self.records)):
+            pass
+            self.records[i]._fetch_instances()
 
 
     class Field(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(Dbf.Field, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -86,15 +75,19 @@ class Dbf(KaitaiStruct):
             self.reserved3 = self._io.read_bytes(8)
 
 
+        def _fetch_instances(self):
+            pass
+
+
     class Header1(KaitaiStruct):
         """
         .. seealso::
            - section 1.1 - http://www.dbase.com/Knowledgebase/INT/db7_file_fmt.htm
         """
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(Dbf.Header1, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -106,20 +99,64 @@ class Dbf(KaitaiStruct):
             self.len_header = self._io.read_u2le()
             self.len_record = self._io.read_u2le()
 
+
+        def _fetch_instances(self):
+            pass
+
         @property
         def dbase_level(self):
             if hasattr(self, '_m_dbase_level'):
                 return self._m_dbase_level
 
-            self._m_dbase_level = (self.version & 7)
+            self._m_dbase_level = self.version & 7
             return getattr(self, '_m_dbase_level', None)
+
+
+    class Header2(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(Dbf.Header2, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            if self._root.header1.dbase_level == 3:
+                pass
+                self.header_dbase_3 = Dbf.HeaderDbase3(self._io, self, self._root)
+
+            if self._root.header1.dbase_level == 7:
+                pass
+                self.header_dbase_7 = Dbf.HeaderDbase7(self._io, self, self._root)
+
+            self.fields = []
+            i = 0
+            while not self._io.is_eof():
+                self.fields.append(Dbf.Field(self._io, self, self._root))
+                i += 1
+
+
+
+        def _fetch_instances(self):
+            pass
+            if self._root.header1.dbase_level == 3:
+                pass
+                self.header_dbase_3._fetch_instances()
+
+            if self._root.header1.dbase_level == 7:
+                pass
+                self.header_dbase_7._fetch_instances()
+
+            for i in range(len(self.fields)):
+                pass
+                self.fields[i]._fetch_instances()
+
 
 
     class HeaderDbase3(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(Dbf.HeaderDbase3, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -128,11 +165,15 @@ class Dbf(KaitaiStruct):
             self.reserved3 = self._io.read_bytes(4)
 
 
+        def _fetch_instances(self):
+            pass
+
+
     class HeaderDbase7(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(Dbf.HeaderDbase7, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -151,11 +192,15 @@ class Dbf(KaitaiStruct):
             self.reserved4 = self._io.read_bytes(4)
 
 
+        def _fetch_instances(self):
+            pass
+
+
     class Record(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(Dbf.Record, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -163,6 +208,13 @@ class Dbf(KaitaiStruct):
             self.record_fields = []
             for i in range(len(self._root.header2.fields)):
                 self.record_fields.append(self._io.read_bytes(self._root.header2.fields[i].length))
+
+
+
+        def _fetch_instances(self):
+            pass
+            for i in range(len(self.record_fields)):
+                pass
 
 
 

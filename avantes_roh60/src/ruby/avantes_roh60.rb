@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -35,8 +35,8 @@ end
 # 
 # Written and tested by Filip Dominec, 2017-2018
 class AvantesRoh60 < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -58,7 +58,7 @@ class AvantesRoh60 < Kaitai::Struct::Struct
       @unknown3 << @_io.read_f4le
     }
     @spectrum = []
-    ((((ipixlast).to_i - (ipixfirst).to_i) - 1)).times { |i|
+    ((ipixlast.to_i - ipixfirst.to_i) - 1).times { |i|
       @spectrum << @_io.read_f4le
     }
     @integration_ms = @_io.read_f4le

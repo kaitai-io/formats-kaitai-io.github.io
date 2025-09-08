@@ -7,8 +7,9 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Arrays;
-import java.nio.charset.Charset;
 
 
 /**
@@ -26,42 +27,6 @@ import java.nio.charset.Charset;
 public class BtrfsStream extends KaitaiStruct {
     public static BtrfsStream fromFile(String fileName) throws IOException {
         return new BtrfsStream(new ByteBufferKaitaiStream(fileName));
-    }
-
-    public enum Command {
-        UNSPEC(0),
-        SUBVOL(1),
-        SNAPSHOT(2),
-        MKFILE(3),
-        MKDIR(4),
-        MKNOD(5),
-        MKFIFO(6),
-        MKSOCK(7),
-        SYMLINK(8),
-        RENAME(9),
-        LINK(10),
-        UNLINK(11),
-        RMDIR(12),
-        SET_XATTR(13),
-        REMOVE_XATTR(14),
-        WRITE(15),
-        CLONE(16),
-        TRUNCATE(17),
-        CHMOD(18),
-        CHOWN(19),
-        UTIMES(20),
-        END(21),
-        UPDATE_EXTENT(22);
-
-        private final long id;
-        Command(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map<Long, Command> byId = new HashMap<Long, Command>(23);
-        static {
-            for (Command e : Command.values())
-                byId.put(e.id(), e);
-        }
-        public static Command byId(long id) { return byId.get(id); }
     }
 
     public enum Attribute {
@@ -102,6 +67,42 @@ public class BtrfsStream extends KaitaiStruct {
         public static Attribute byId(long id) { return byId.get(id); }
     }
 
+    public enum Command {
+        UNSPEC(0),
+        SUBVOL(1),
+        SNAPSHOT(2),
+        MKFILE(3),
+        MKDIR(4),
+        MKNOD(5),
+        MKFIFO(6),
+        MKSOCK(7),
+        SYMLINK(8),
+        RENAME(9),
+        LINK(10),
+        UNLINK(11),
+        RMDIR(12),
+        SET_XATTR(13),
+        REMOVE_XATTR(14),
+        WRITE(15),
+        CLONE(16),
+        TRUNCATE(17),
+        CHMOD(18),
+        CHOWN(19),
+        UTIMES(20),
+        END(21),
+        UPDATE_EXTENT(22);
+
+        private final long id;
+        Command(long id) { this.id = id; }
+        public long id() { return id; }
+        private static final Map<Long, Command> byId = new HashMap<Long, Command>(23);
+        static {
+            for (Command e : Command.values())
+                byId.put(e.id(), e);
+        }
+        public static Command byId(long id) { return byId.get(id); }
+    }
+
     public BtrfsStream(KaitaiStream _io) {
         this(_io, null, null);
     }
@@ -127,40 +128,12 @@ public class BtrfsStream extends KaitaiStruct {
             }
         }
     }
-    public static class SendStreamHeader extends KaitaiStruct {
-        public static SendStreamHeader fromFile(String fileName) throws IOException {
-            return new SendStreamHeader(new ByteBufferKaitaiStream(fileName));
-        }
 
-        public SendStreamHeader(KaitaiStream _io) {
-            this(_io, null, null);
+    public void _fetchInstances() {
+        this.header._fetchInstances();
+        for (int i = 0; i < this.commands.size(); i++) {
+            this.commands.get(((Number) (i)).intValue())._fetchInstances();
         }
-
-        public SendStreamHeader(KaitaiStream _io, BtrfsStream _parent) {
-            this(_io, _parent, null);
-        }
-
-        public SendStreamHeader(KaitaiStream _io, BtrfsStream _parent, BtrfsStream _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.magic = this._io.readBytes(13);
-            if (!(Arrays.equals(magic(), new byte[] { 98, 116, 114, 102, 115, 45, 115, 116, 114, 101, 97, 109, 0 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 98, 116, 114, 102, 115, 45, 115, 116, 114, 101, 97, 109, 0 }, magic(), _io(), "/types/send_stream_header/seq/0");
-            }
-            this.version = this._io.readU4le();
-        }
-        private byte[] magic;
-        private long version;
-        private BtrfsStream _root;
-        private BtrfsStream _parent;
-        public byte[] magic() { return magic; }
-        public long version() { return version; }
-        public BtrfsStream _root() { return _root; }
-        public BtrfsStream _parent() { return _parent; }
     }
     public static class SendCommand extends KaitaiStruct {
         public static SendCommand fromFile(String fileName) throws IOException {
@@ -185,229 +158,12 @@ public class BtrfsStream extends KaitaiStruct {
             this.lenData = this._io.readU4le();
             this.type = BtrfsStream.Command.byId(this._io.readU2le());
             this.checksum = this._io.readBytes(4);
-            this._raw_data = this._io.readBytes(lenData());
-            KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
-            this.data = new Tlvs(_io__raw_data, this, _root);
+            KaitaiStream _io_data = this._io.substream(lenData());
+            this.data = new Tlvs(_io_data, this, _root);
         }
-        public static class Tlv extends KaitaiStruct {
-            public static Tlv fromFile(String fileName) throws IOException {
-                return new Tlv(new ByteBufferKaitaiStream(fileName));
-            }
 
-            public Tlv(KaitaiStream _io) {
-                this(_io, null, null);
-            }
-
-            public Tlv(KaitaiStream _io, BtrfsStream.SendCommand.Tlvs _parent) {
-                this(_io, _parent, null);
-            }
-
-            public Tlv(KaitaiStream _io, BtrfsStream.SendCommand.Tlvs _parent, BtrfsStream _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.type = BtrfsStream.Attribute.byId(this._io.readU2le());
-                this.length = this._io.readU2le();
-                {
-                    Attribute on = type();
-                    if (on != null) {
-                        switch (type()) {
-                        case CTRANSID: {
-                            this.value = (Object) (this._io.readU8le());
-                            break;
-                        }
-                        case SIZE: {
-                            this.value = (Object) (this._io.readU8le());
-                            break;
-                        }
-                        case CLONE_UUID: {
-                            this._raw_value = this._io.readBytes(length());
-                            KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                            this.value = new Uuid(_io__raw_value, this, _root);
-                            break;
-                        }
-                        case FILE_OFFSET: {
-                            this.value = (Object) (this._io.readU8le());
-                            break;
-                        }
-                        case OTIME: {
-                            this._raw_value = this._io.readBytes(length());
-                            KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                            this.value = new Timespec(_io__raw_value, this, _root);
-                            break;
-                        }
-                        case UID: {
-                            this.value = (Object) (this._io.readU8le());
-                            break;
-                        }
-                        case ATIME: {
-                            this._raw_value = this._io.readBytes(length());
-                            KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                            this.value = new Timespec(_io__raw_value, this, _root);
-                            break;
-                        }
-                        case CTIME: {
-                            this._raw_value = this._io.readBytes(length());
-                            KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                            this.value = new Timespec(_io__raw_value, this, _root);
-                            break;
-                        }
-                        case UUID: {
-                            this._raw_value = this._io.readBytes(length());
-                            KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                            this.value = new Uuid(_io__raw_value, this, _root);
-                            break;
-                        }
-                        case CLONE_LEN: {
-                            this.value = (Object) (this._io.readU8le());
-                            break;
-                        }
-                        case XATTR_NAME: {
-                            this._raw_value = this._io.readBytes(length());
-                            KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                            this.value = new String(_io__raw_value, this, _root);
-                            break;
-                        }
-                        case CLONE_CTRANSID: {
-                            this.value = (Object) (this._io.readU8le());
-                            break;
-                        }
-                        case MODE: {
-                            this.value = (Object) (this._io.readU8le());
-                            break;
-                        }
-                        case MTIME: {
-                            this._raw_value = this._io.readBytes(length());
-                            KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                            this.value = new Timespec(_io__raw_value, this, _root);
-                            break;
-                        }
-                        case PATH_LINK: {
-                            this._raw_value = this._io.readBytes(length());
-                            KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                            this.value = new String(_io__raw_value, this, _root);
-                            break;
-                        }
-                        case RDEV: {
-                            this.value = (Object) (this._io.readU8le());
-                            break;
-                        }
-                        case PATH_TO: {
-                            this._raw_value = this._io.readBytes(length());
-                            KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                            this.value = new String(_io__raw_value, this, _root);
-                            break;
-                        }
-                        case PATH: {
-                            this._raw_value = this._io.readBytes(length());
-                            KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                            this.value = new String(_io__raw_value, this, _root);
-                            break;
-                        }
-                        case CLONE_OFFSET: {
-                            this.value = (Object) (this._io.readU8le());
-                            break;
-                        }
-                        case GID: {
-                            this.value = (Object) (this._io.readU8le());
-                            break;
-                        }
-                        case CLONE_PATH: {
-                            this._raw_value = this._io.readBytes(length());
-                            KaitaiStream _io__raw_value = new ByteBufferKaitaiStream(_raw_value);
-                            this.value = new String(_io__raw_value, this, _root);
-                            break;
-                        }
-                        default: {
-                            this.value = this._io.readBytes(length());
-                            break;
-                        }
-                        }
-                    } else {
-                        this.value = this._io.readBytes(length());
-                    }
-                }
-            }
-            private Attribute type;
-            private int length;
-            private Object value;
-            private BtrfsStream _root;
-            private BtrfsStream.SendCommand.Tlvs _parent;
-            private byte[] _raw_value;
-            public Attribute type() { return type; }
-            public int length() { return length; }
-            public Object value() { return value; }
-            public BtrfsStream _root() { return _root; }
-            public BtrfsStream.SendCommand.Tlvs _parent() { return _parent; }
-            public byte[] _raw_value() { return _raw_value; }
-        }
-        public static class Uuid extends KaitaiStruct {
-            public static Uuid fromFile(String fileName) throws IOException {
-                return new Uuid(new ByteBufferKaitaiStream(fileName));
-            }
-
-            public Uuid(KaitaiStream _io) {
-                this(_io, null, null);
-            }
-
-            public Uuid(KaitaiStream _io, BtrfsStream.SendCommand.Tlv _parent) {
-                this(_io, _parent, null);
-            }
-
-            public Uuid(KaitaiStream _io, BtrfsStream.SendCommand.Tlv _parent, BtrfsStream _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.uuid = this._io.readBytes(16);
-            }
-            private byte[] uuid;
-            private BtrfsStream _root;
-            private BtrfsStream.SendCommand.Tlv _parent;
-            public byte[] uuid() { return uuid; }
-            public BtrfsStream _root() { return _root; }
-            public BtrfsStream.SendCommand.Tlv _parent() { return _parent; }
-        }
-        public static class Tlvs extends KaitaiStruct {
-            public static Tlvs fromFile(String fileName) throws IOException {
-                return new Tlvs(new ByteBufferKaitaiStream(fileName));
-            }
-
-            public Tlvs(KaitaiStream _io) {
-                this(_io, null, null);
-            }
-
-            public Tlvs(KaitaiStream _io, BtrfsStream.SendCommand _parent) {
-                this(_io, _parent, null);
-            }
-
-            public Tlvs(KaitaiStream _io, BtrfsStream.SendCommand _parent, BtrfsStream _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.tlv = new ArrayList<Tlv>();
-                {
-                    int i = 0;
-                    while (!this._io.isEof()) {
-                        this.tlv.add(new Tlv(this._io, this, _root));
-                        i++;
-                    }
-                }
-            }
-            private ArrayList<Tlv> tlv;
-            private BtrfsStream _root;
-            private BtrfsStream.SendCommand _parent;
-            public ArrayList<Tlv> tlv() { return tlv; }
-            public BtrfsStream _root() { return _root; }
-            public BtrfsStream.SendCommand _parent() { return _parent; }
+        public void _fetchInstances() {
+            this.data._fetchInstances();
         }
         public static class String extends KaitaiStruct {
             public static String fromFile(String fileName) throws IOException {
@@ -429,7 +185,10 @@ public class BtrfsStream extends KaitaiStruct {
                 _read();
             }
             private void _read() {
-                this.string = new String(this._io.readBytesFull(), Charset.forName("UTF-8"));
+                this.string = new String(this._io.readBytesFull(), StandardCharsets.UTF_8);
+            }
+
+            public void _fetchInstances() {
             }
             private String string;
             private BtrfsStream _root;
@@ -461,6 +220,9 @@ public class BtrfsStream extends KaitaiStruct {
                 this.tsSec = this._io.readS8le();
                 this.tsNsec = this._io.readS4le();
             }
+
+            public void _fetchInstances() {
+            }
             private long tsSec;
             private int tsNsec;
             private BtrfsStream _root;
@@ -470,13 +232,316 @@ public class BtrfsStream extends KaitaiStruct {
             public BtrfsStream _root() { return _root; }
             public BtrfsStream.SendCommand.Tlv _parent() { return _parent; }
         }
+        public static class Tlv extends KaitaiStruct {
+            public static Tlv fromFile(String fileName) throws IOException {
+                return new Tlv(new ByteBufferKaitaiStream(fileName));
+            }
+
+            public Tlv(KaitaiStream _io) {
+                this(_io, null, null);
+            }
+
+            public Tlv(KaitaiStream _io, BtrfsStream.SendCommand.Tlvs _parent) {
+                this(_io, _parent, null);
+            }
+
+            public Tlv(KaitaiStream _io, BtrfsStream.SendCommand.Tlvs _parent, BtrfsStream _root) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                _read();
+            }
+            private void _read() {
+                this.type = BtrfsStream.Attribute.byId(this._io.readU2le());
+                this.length = this._io.readU2le();
+                {
+                    Attribute on = type();
+                    if (on != null) {
+                        switch (type()) {
+                        case ATIME: {
+                            KaitaiStream _io_value = this._io.substream(length());
+                            this.value = new Timespec(_io_value, this, _root);
+                            break;
+                        }
+                        case CLONE_CTRANSID: {
+                            this.value = ((Object) (this._io.readU8le()));
+                            break;
+                        }
+                        case CLONE_LEN: {
+                            this.value = ((Object) (this._io.readU8le()));
+                            break;
+                        }
+                        case CLONE_OFFSET: {
+                            this.value = ((Object) (this._io.readU8le()));
+                            break;
+                        }
+                        case CLONE_PATH: {
+                            KaitaiStream _io_value = this._io.substream(length());
+                            this.value = new String(_io_value, this, _root);
+                            break;
+                        }
+                        case CLONE_UUID: {
+                            KaitaiStream _io_value = this._io.substream(length());
+                            this.value = new Uuid(_io_value, this, _root);
+                            break;
+                        }
+                        case CTIME: {
+                            KaitaiStream _io_value = this._io.substream(length());
+                            this.value = new Timespec(_io_value, this, _root);
+                            break;
+                        }
+                        case CTRANSID: {
+                            this.value = ((Object) (this._io.readU8le()));
+                            break;
+                        }
+                        case FILE_OFFSET: {
+                            this.value = ((Object) (this._io.readU8le()));
+                            break;
+                        }
+                        case GID: {
+                            this.value = ((Object) (this._io.readU8le()));
+                            break;
+                        }
+                        case MODE: {
+                            this.value = ((Object) (this._io.readU8le()));
+                            break;
+                        }
+                        case MTIME: {
+                            KaitaiStream _io_value = this._io.substream(length());
+                            this.value = new Timespec(_io_value, this, _root);
+                            break;
+                        }
+                        case OTIME: {
+                            KaitaiStream _io_value = this._io.substream(length());
+                            this.value = new Timespec(_io_value, this, _root);
+                            break;
+                        }
+                        case PATH: {
+                            KaitaiStream _io_value = this._io.substream(length());
+                            this.value = new String(_io_value, this, _root);
+                            break;
+                        }
+                        case PATH_LINK: {
+                            KaitaiStream _io_value = this._io.substream(length());
+                            this.value = new String(_io_value, this, _root);
+                            break;
+                        }
+                        case PATH_TO: {
+                            KaitaiStream _io_value = this._io.substream(length());
+                            this.value = new String(_io_value, this, _root);
+                            break;
+                        }
+                        case RDEV: {
+                            this.value = ((Object) (this._io.readU8le()));
+                            break;
+                        }
+                        case SIZE: {
+                            this.value = ((Object) (this._io.readU8le()));
+                            break;
+                        }
+                        case UID: {
+                            this.value = ((Object) (this._io.readU8le()));
+                            break;
+                        }
+                        case UUID: {
+                            KaitaiStream _io_value = this._io.substream(length());
+                            this.value = new Uuid(_io_value, this, _root);
+                            break;
+                        }
+                        case XATTR_NAME: {
+                            KaitaiStream _io_value = this._io.substream(length());
+                            this.value = new String(_io_value, this, _root);
+                            break;
+                        }
+                        default: {
+                            this.value = this._io.readBytes(length());
+                            break;
+                        }
+                        }
+                    } else {
+                        this.value = this._io.readBytes(length());
+                    }
+                }
+            }
+
+            public void _fetchInstances() {
+                {
+                    Attribute on = type();
+                    if (on != null) {
+                        switch (type()) {
+                        case ATIME: {
+                            ((Timespec) (this.value))._fetchInstances();
+                            break;
+                        }
+                        case CLONE_CTRANSID: {
+                            break;
+                        }
+                        case CLONE_LEN: {
+                            break;
+                        }
+                        case CLONE_OFFSET: {
+                            break;
+                        }
+                        case CLONE_PATH: {
+                            ((String) (this.value))._fetchInstances();
+                            break;
+                        }
+                        case CLONE_UUID: {
+                            ((Uuid) (this.value))._fetchInstances();
+                            break;
+                        }
+                        case CTIME: {
+                            ((Timespec) (this.value))._fetchInstances();
+                            break;
+                        }
+                        case CTRANSID: {
+                            break;
+                        }
+                        case FILE_OFFSET: {
+                            break;
+                        }
+                        case GID: {
+                            break;
+                        }
+                        case MODE: {
+                            break;
+                        }
+                        case MTIME: {
+                            ((Timespec) (this.value))._fetchInstances();
+                            break;
+                        }
+                        case OTIME: {
+                            ((Timespec) (this.value))._fetchInstances();
+                            break;
+                        }
+                        case PATH: {
+                            ((String) (this.value))._fetchInstances();
+                            break;
+                        }
+                        case PATH_LINK: {
+                            ((String) (this.value))._fetchInstances();
+                            break;
+                        }
+                        case PATH_TO: {
+                            ((String) (this.value))._fetchInstances();
+                            break;
+                        }
+                        case RDEV: {
+                            break;
+                        }
+                        case SIZE: {
+                            break;
+                        }
+                        case UID: {
+                            break;
+                        }
+                        case UUID: {
+                            ((Uuid) (this.value))._fetchInstances();
+                            break;
+                        }
+                        case XATTR_NAME: {
+                            ((String) (this.value))._fetchInstances();
+                            break;
+                        }
+                        default: {
+                            break;
+                        }
+                        }
+                    } else {
+                    }
+                }
+            }
+            private Attribute type;
+            private int length;
+            private Object value;
+            private BtrfsStream _root;
+            private BtrfsStream.SendCommand.Tlvs _parent;
+            public Attribute type() { return type; }
+            public int length() { return length; }
+            public Object value() { return value; }
+            public BtrfsStream _root() { return _root; }
+            public BtrfsStream.SendCommand.Tlvs _parent() { return _parent; }
+        }
+        public static class Tlvs extends KaitaiStruct {
+            public static Tlvs fromFile(String fileName) throws IOException {
+                return new Tlvs(new ByteBufferKaitaiStream(fileName));
+            }
+
+            public Tlvs(KaitaiStream _io) {
+                this(_io, null, null);
+            }
+
+            public Tlvs(KaitaiStream _io, BtrfsStream.SendCommand _parent) {
+                this(_io, _parent, null);
+            }
+
+            public Tlvs(KaitaiStream _io, BtrfsStream.SendCommand _parent, BtrfsStream _root) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                _read();
+            }
+            private void _read() {
+                this.tlv = new ArrayList<Tlv>();
+                {
+                    int i = 0;
+                    while (!this._io.isEof()) {
+                        this.tlv.add(new Tlv(this._io, this, _root));
+                        i++;
+                    }
+                }
+            }
+
+            public void _fetchInstances() {
+                for (int i = 0; i < this.tlv.size(); i++) {
+                    this.tlv.get(((Number) (i)).intValue())._fetchInstances();
+                }
+            }
+            private List<Tlv> tlv;
+            private BtrfsStream _root;
+            private BtrfsStream.SendCommand _parent;
+            public List<Tlv> tlv() { return tlv; }
+            public BtrfsStream _root() { return _root; }
+            public BtrfsStream.SendCommand _parent() { return _parent; }
+        }
+        public static class Uuid extends KaitaiStruct {
+            public static Uuid fromFile(String fileName) throws IOException {
+                return new Uuid(new ByteBufferKaitaiStream(fileName));
+            }
+
+            public Uuid(KaitaiStream _io) {
+                this(_io, null, null);
+            }
+
+            public Uuid(KaitaiStream _io, BtrfsStream.SendCommand.Tlv _parent) {
+                this(_io, _parent, null);
+            }
+
+            public Uuid(KaitaiStream _io, BtrfsStream.SendCommand.Tlv _parent, BtrfsStream _root) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                _read();
+            }
+            private void _read() {
+                this.uuid = this._io.readBytes(16);
+            }
+
+            public void _fetchInstances() {
+            }
+            private byte[] uuid;
+            private BtrfsStream _root;
+            private BtrfsStream.SendCommand.Tlv _parent;
+            public byte[] uuid() { return uuid; }
+            public BtrfsStream _root() { return _root; }
+            public BtrfsStream.SendCommand.Tlv _parent() { return _parent; }
+        }
         private long lenData;
         private Command type;
         private byte[] checksum;
         private Tlvs data;
         private BtrfsStream _root;
         private BtrfsStream _parent;
-        private byte[] _raw_data;
         public long lenData() { return lenData; }
         public Command type() { return type; }
 
@@ -487,14 +552,51 @@ public class BtrfsStream extends KaitaiStruct {
         public Tlvs data() { return data; }
         public BtrfsStream _root() { return _root; }
         public BtrfsStream _parent() { return _parent; }
-        public byte[] _raw_data() { return _raw_data; }
+    }
+    public static class SendStreamHeader extends KaitaiStruct {
+        public static SendStreamHeader fromFile(String fileName) throws IOException {
+            return new SendStreamHeader(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public SendStreamHeader(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public SendStreamHeader(KaitaiStream _io, BtrfsStream _parent) {
+            this(_io, _parent, null);
+        }
+
+        public SendStreamHeader(KaitaiStream _io, BtrfsStream _parent, BtrfsStream _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.magic = this._io.readBytes(13);
+            if (!(Arrays.equals(this.magic, new byte[] { 98, 116, 114, 102, 115, 45, 115, 116, 114, 101, 97, 109, 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 98, 116, 114, 102, 115, 45, 115, 116, 114, 101, 97, 109, 0 }, this.magic, this._io, "/types/send_stream_header/seq/0");
+            }
+            this.version = this._io.readU4le();
+        }
+
+        public void _fetchInstances() {
+        }
+        private byte[] magic;
+        private long version;
+        private BtrfsStream _root;
+        private BtrfsStream _parent;
+        public byte[] magic() { return magic; }
+        public long version() { return version; }
+        public BtrfsStream _root() { return _root; }
+        public BtrfsStream _parent() { return _parent; }
     }
     private SendStreamHeader header;
-    private ArrayList<SendCommand> commands;
+    private List<SendCommand> commands;
     private BtrfsStream _root;
     private KaitaiStruct _parent;
     public SendStreamHeader header() { return header; }
-    public ArrayList<SendCommand> commands() { return commands; }
+    public List<SendCommand> commands() { return commands; }
     public BtrfsStream _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

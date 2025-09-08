@@ -4,12 +4,12 @@ import options
 type
   GptPartitionTable* = ref object of KaitaiStruct
     `parent`*: KaitaiStruct
-    `sectorSizeInst`: int
-    `sectorSizeInstFlag`: bool
-    `primaryInst`: GptPartitionTable_PartitionHeader
-    `primaryInstFlag`: bool
     `backupInst`: GptPartitionTable_PartitionHeader
     `backupInstFlag`: bool
+    `primaryInst`: GptPartitionTable_PartitionHeader
+    `primaryInstFlag`: bool
+    `sectorSizeInst`: int
+    `sectorSizeInstFlag`: bool
   GptPartitionTable_PartitionEntry* = ref object of KaitaiStruct
     `typeGuid`*: seq[byte]
     `guid`*: seq[byte]
@@ -42,9 +42,9 @@ proc read*(_: typedesc[GptPartitionTable], io: KaitaiStream, root: KaitaiStruct,
 proc read*(_: typedesc[GptPartitionTable_PartitionEntry], io: KaitaiStream, root: KaitaiStruct, parent: GptPartitionTable_PartitionHeader): GptPartitionTable_PartitionEntry
 proc read*(_: typedesc[GptPartitionTable_PartitionHeader], io: KaitaiStream, root: KaitaiStruct, parent: GptPartitionTable): GptPartitionTable_PartitionHeader
 
-proc sectorSize*(this: GptPartitionTable): int
-proc primary*(this: GptPartitionTable): GptPartitionTable_PartitionHeader
 proc backup*(this: GptPartitionTable): GptPartitionTable_PartitionHeader
+proc primary*(this: GptPartitionTable): GptPartitionTable_PartitionHeader
+proc sectorSize*(this: GptPartitionTable): int
 proc entries*(this: GptPartitionTable_PartitionHeader): seq[GptPartitionTable_PartitionEntry]
 
 
@@ -60,13 +60,17 @@ proc read*(_: typedesc[GptPartitionTable], io: KaitaiStream, root: KaitaiStruct,
   this.parent = parent
 
 
-proc sectorSize(this: GptPartitionTable): int = 
-  if this.sectorSizeInstFlag:
-    return this.sectorSizeInst
-  let sectorSizeInstExpr = int(512)
-  this.sectorSizeInst = sectorSizeInstExpr
-  this.sectorSizeInstFlag = true
-  return this.sectorSizeInst
+proc backup(this: GptPartitionTable): GptPartitionTable_PartitionHeader = 
+  if this.backupInstFlag:
+    return this.backupInst
+  let io = GptPartitionTable(this.root).io
+  let pos = io.pos()
+  io.seek(int(this.io.size - GptPartitionTable(this.root).sectorSize))
+  let backupInstExpr = GptPartitionTable_PartitionHeader.read(io, this.root, this)
+  this.backupInst = backupInstExpr
+  io.seek(pos)
+  this.backupInstFlag = true
+  return this.backupInst
 
 proc primary(this: GptPartitionTable): GptPartitionTable_PartitionHeader = 
   if this.primaryInstFlag:
@@ -80,17 +84,13 @@ proc primary(this: GptPartitionTable): GptPartitionTable_PartitionHeader =
   this.primaryInstFlag = true
   return this.primaryInst
 
-proc backup(this: GptPartitionTable): GptPartitionTable_PartitionHeader = 
-  if this.backupInstFlag:
-    return this.backupInst
-  let io = GptPartitionTable(this.root).io
-  let pos = io.pos()
-  io.seek(int((this.io.size - GptPartitionTable(this.root).sectorSize)))
-  let backupInstExpr = GptPartitionTable_PartitionHeader.read(io, this.root, this)
-  this.backupInst = backupInstExpr
-  io.seek(pos)
-  this.backupInstFlag = true
-  return this.backupInst
+proc sectorSize(this: GptPartitionTable): int = 
+  if this.sectorSizeInstFlag:
+    return this.sectorSizeInst
+  let sectorSizeInstExpr = int(512)
+  this.sectorSizeInst = sectorSizeInstExpr
+  this.sectorSizeInstFlag = true
+  return this.sectorSizeInst
 
 proc fromFile*(_: typedesc[GptPartitionTable], filename: string): GptPartitionTable =
   GptPartitionTable.read(newKaitaiFileStream(filename), nil, nil)
@@ -161,7 +161,7 @@ proc entries(this: GptPartitionTable_PartitionHeader): seq[GptPartitionTable_Par
     return this.entriesInst
   let io = GptPartitionTable(this.root).io
   let pos = io.pos()
-  io.seek(int((this.entriesStart * GptPartitionTable(this.root).sectorSize)))
+  io.seek(int(this.entriesStart * GptPartitionTable(this.root).sectorSize))
   for i in 0 ..< int(this.entriesCount):
     let buf = io.readBytes(int(this.entriesSize))
     this.rawEntriesInst.add(buf)

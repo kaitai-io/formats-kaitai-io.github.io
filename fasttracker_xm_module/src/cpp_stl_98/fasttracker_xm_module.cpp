@@ -5,7 +5,7 @@
 
 fasttracker_xm_module_t::fasttracker_xm_module_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, fasttracker_xm_module_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     m_preheader = 0;
     m_header = 0;
     m__io__raw_header = 0;
@@ -22,7 +22,7 @@ fasttracker_xm_module_t::fasttracker_xm_module_t(kaitai::kstream* p__io, kaitai:
 
 void fasttracker_xm_module_t::_read() {
     m_preheader = new preheader_t(m__io, this, m__root);
-    m__raw_header = m__io->read_bytes((preheader()->header_size() - 4));
+    m__raw_header = m__io->read_bytes(preheader()->header_size() - 4);
     m__io__raw_header = new kaitai::kstream(m__raw_header);
     m_header = new header_t(m__io__raw_header, this, m__root);
     m_patterns = new std::vector<pattern_t*>();
@@ -63,182 +63,6 @@ void fasttracker_xm_module_t::_clean_up() {
         }
         delete m_instruments; m_instruments = 0;
     }
-}
-
-fasttracker_xm_module_t::preheader_t::preheader_t(kaitai::kstream* p__io, fasttracker_xm_module_t* p__parent, fasttracker_xm_module_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    m_version_number = 0;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void fasttracker_xm_module_t::preheader_t::_read() {
-    m_signature0 = m__io->read_bytes(17);
-    if (!(signature0() == std::string("\x45\x78\x74\x65\x6E\x64\x65\x64\x20\x4D\x6F\x64\x75\x6C\x65\x3A\x20", 17))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\x45\x78\x74\x65\x6E\x64\x65\x64\x20\x4D\x6F\x64\x75\x6C\x65\x3A\x20", 17), signature0(), _io(), std::string("/types/preheader/seq/0"));
-    }
-    m_module_name = kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_terminate(m__io->read_bytes(20), 0, false), std::string("utf-8"));
-    m_signature1 = m__io->read_bytes(1);
-    if (!(signature1() == std::string("\x1A", 1))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\x1A", 1), signature1(), _io(), std::string("/types/preheader/seq/2"));
-    }
-    m_tracker_name = kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_terminate(m__io->read_bytes(20), 0, false), std::string("utf-8"));
-    m_version_number = new version_t(m__io, this, m__root);
-    m_header_size = m__io->read_u4le();
-}
-
-fasttracker_xm_module_t::preheader_t::~preheader_t() {
-    _clean_up();
-}
-
-void fasttracker_xm_module_t::preheader_t::_clean_up() {
-    if (m_version_number) {
-        delete m_version_number; m_version_number = 0;
-    }
-}
-
-fasttracker_xm_module_t::preheader_t::version_t::version_t(kaitai::kstream* p__io, fasttracker_xm_module_t::preheader_t* p__parent, fasttracker_xm_module_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    f_value = false;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void fasttracker_xm_module_t::preheader_t::version_t::_read() {
-    m_minor = m__io->read_u1();
-    m_major = m__io->read_u1();
-}
-
-fasttracker_xm_module_t::preheader_t::version_t::~version_t() {
-    _clean_up();
-}
-
-void fasttracker_xm_module_t::preheader_t::version_t::_clean_up() {
-}
-
-int32_t fasttracker_xm_module_t::preheader_t::version_t::value() {
-    if (f_value)
-        return m_value;
-    m_value = ((major() << 8) | minor());
-    f_value = true;
-    return m_value;
-}
-
-fasttracker_xm_module_t::pattern_t::pattern_t(kaitai::kstream* p__io, fasttracker_xm_module_t* p__parent, fasttracker_xm_module_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    m_header = 0;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void fasttracker_xm_module_t::pattern_t::_read() {
-    m_header = new header_t(m__io, this, m__root);
-    m_packed_data = m__io->read_bytes(header()->main()->len_packed_pattern());
-}
-
-fasttracker_xm_module_t::pattern_t::~pattern_t() {
-    _clean_up();
-}
-
-void fasttracker_xm_module_t::pattern_t::_clean_up() {
-    if (m_header) {
-        delete m_header; m_header = 0;
-    }
-}
-
-fasttracker_xm_module_t::pattern_t::header_t::header_t(kaitai::kstream* p__io, fasttracker_xm_module_t::pattern_t* p__parent, fasttracker_xm_module_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    m_main = 0;
-    m__io__raw_main = 0;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void fasttracker_xm_module_t::pattern_t::header_t::_read() {
-    m_header_length = m__io->read_u4le();
-    m__raw_main = m__io->read_bytes((header_length() - 4));
-    m__io__raw_main = new kaitai::kstream(m__raw_main);
-    m_main = new header_main_t(m__io__raw_main, this, m__root);
-}
-
-fasttracker_xm_module_t::pattern_t::header_t::~header_t() {
-    _clean_up();
-}
-
-void fasttracker_xm_module_t::pattern_t::header_t::_clean_up() {
-    if (m__io__raw_main) {
-        delete m__io__raw_main; m__io__raw_main = 0;
-    }
-    if (m_main) {
-        delete m_main; m_main = 0;
-    }
-}
-
-fasttracker_xm_module_t::pattern_t::header_t::header_main_t::header_main_t(kaitai::kstream* p__io, fasttracker_xm_module_t::pattern_t::header_t* p__parent, fasttracker_xm_module_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    f_num_rows = false;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void fasttracker_xm_module_t::pattern_t::header_t::header_main_t::_read() {
-    m_packing_type = m__io->read_u1();
-    switch (_root()->preheader()->version_number()->value()) {
-    case 258: {
-        m_num_rows_raw = m__io->read_u1();
-        break;
-    }
-    default: {
-        m_num_rows_raw = m__io->read_u2le();
-        break;
-    }
-    }
-    m_len_packed_pattern = m__io->read_u2le();
-}
-
-fasttracker_xm_module_t::pattern_t::header_t::header_main_t::~header_main_t() {
-    _clean_up();
-}
-
-void fasttracker_xm_module_t::pattern_t::header_t::header_main_t::_clean_up() {
-}
-
-int32_t fasttracker_xm_module_t::pattern_t::header_t::header_main_t::num_rows() {
-    if (f_num_rows)
-        return m_num_rows;
-    m_num_rows = (num_rows_raw() + ((_root()->preheader()->version_number()->value() == 258) ? (1) : (0)));
-    f_num_rows = true;
-    return m_num_rows;
 }
 
 fasttracker_xm_module_t::flags_t::flags_t(kaitai::kstream* p__io, fasttracker_xm_module_t::header_t* p__parent, fasttracker_xm_module_t* p__root) : kaitai::kstruct(p__io) {
@@ -326,7 +150,7 @@ fasttracker_xm_module_t::instrument_t::instrument_t(kaitai::kstream* p__io, fast
 
 void fasttracker_xm_module_t::instrument_t::_read() {
     m_header_size = m__io->read_u4le();
-    m__raw_header = m__io->read_bytes((header_size() - 4));
+    m__raw_header = m__io->read_bytes(header_size() - 4);
     m__io__raw_header = new kaitai::kstream(m__raw_header);
     m_header = new header_t(m__io__raw_header, this, m__root);
     m_samples_headers = new std::vector<sample_header_t*>();
@@ -365,41 +189,16 @@ void fasttracker_xm_module_t::instrument_t::_clean_up() {
         delete m_samples; m_samples = 0;
     }
 }
-
-fasttracker_xm_module_t::instrument_t::header_t::header_t(kaitai::kstream* p__io, fasttracker_xm_module_t::instrument_t* p__parent, fasttracker_xm_module_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    m_extra_header = 0;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
+std::set<fasttracker_xm_module_t::instrument_t::extra_header_t::type_t> fasttracker_xm_module_t::instrument_t::extra_header_t::_build_values_type_t() {
+    std::set<fasttracker_xm_module_t::instrument_t::extra_header_t::type_t> _t;
+    _t.insert(fasttracker_xm_module_t::instrument_t::extra_header_t::TYPE_TRUE);
+    _t.insert(fasttracker_xm_module_t::instrument_t::extra_header_t::TYPE_SUSTAIN);
+    _t.insert(fasttracker_xm_module_t::instrument_t::extra_header_t::TYPE_LOOP);
+    return _t;
 }
-
-void fasttracker_xm_module_t::instrument_t::header_t::_read() {
-    m_name = kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_terminate(m__io->read_bytes(22), 0, false), std::string("utf-8"));
-    m_type = m__io->read_u1();
-    m_num_samples = m__io->read_u2le();
-    n_extra_header = true;
-    if (num_samples() > 0) {
-        n_extra_header = false;
-        m_extra_header = new extra_header_t(m__io, this, m__root);
-    }
-}
-
-fasttracker_xm_module_t::instrument_t::header_t::~header_t() {
-    _clean_up();
-}
-
-void fasttracker_xm_module_t::instrument_t::header_t::_clean_up() {
-    if (!n_extra_header) {
-        if (m_extra_header) {
-            delete m_extra_header; m_extra_header = 0;
-        }
-    }
+const std::set<fasttracker_xm_module_t::instrument_t::extra_header_t::type_t> fasttracker_xm_module_t::instrument_t::extra_header_t::_values_type_t = fasttracker_xm_module_t::instrument_t::extra_header_t::_build_values_type_t();
+bool fasttracker_xm_module_t::instrument_t::extra_header_t::_is_defined_type_t(fasttracker_xm_module_t::instrument_t::extra_header_t::type_t v) {
+    return fasttracker_xm_module_t::instrument_t::extra_header_t::_values_type_t.find(v) != fasttracker_xm_module_t::instrument_t::extra_header_t::_values_type_t.end();
 }
 
 fasttracker_xm_module_t::instrument_t::extra_header_t::extra_header_t(kaitai::kstream* p__io, fasttracker_xm_module_t::instrument_t::header_t* p__parent, fasttracker_xm_module_t* p__root) : kaitai::kstruct(p__io) {
@@ -498,10 +297,10 @@ fasttracker_xm_module_t::instrument_t::extra_header_t::envelope_point_t::~envelo
 void fasttracker_xm_module_t::instrument_t::extra_header_t::envelope_point_t::_clean_up() {
 }
 
-fasttracker_xm_module_t::instrument_t::samples_data_t::samples_data_t(sample_header_t* p_header, kaitai::kstream* p__io, fasttracker_xm_module_t::instrument_t* p__parent, fasttracker_xm_module_t* p__root) : kaitai::kstruct(p__io) {
+fasttracker_xm_module_t::instrument_t::header_t::header_t(kaitai::kstream* p__io, fasttracker_xm_module_t::instrument_t* p__parent, fasttracker_xm_module_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
-    m_header = p_header;
+    m_extra_header = 0;
 
     try {
         _read();
@@ -511,15 +310,27 @@ fasttracker_xm_module_t::instrument_t::samples_data_t::samples_data_t(sample_hea
     }
 }
 
-void fasttracker_xm_module_t::instrument_t::samples_data_t::_read() {
-    m_data = m__io->read_bytes((header()->sample_length() * ((header()->type()->is_sample_data_16_bit()) ? (2) : (1))));
+void fasttracker_xm_module_t::instrument_t::header_t::_read() {
+    m_name = kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_terminate(m__io->read_bytes(22), 0, false), "UTF-8");
+    m_type = m__io->read_u1();
+    m_num_samples = m__io->read_u2le();
+    n_extra_header = true;
+    if (num_samples() > 0) {
+        n_extra_header = false;
+        m_extra_header = new extra_header_t(m__io, this, m__root);
+    }
 }
 
-fasttracker_xm_module_t::instrument_t::samples_data_t::~samples_data_t() {
+fasttracker_xm_module_t::instrument_t::header_t::~header_t() {
     _clean_up();
 }
 
-void fasttracker_xm_module_t::instrument_t::samples_data_t::_clean_up() {
+void fasttracker_xm_module_t::instrument_t::header_t::_clean_up() {
+    if (!n_extra_header) {
+        if (m_extra_header) {
+            delete m_extra_header; m_extra_header = 0;
+        }
+    }
 }
 
 fasttracker_xm_module_t::instrument_t::sample_header_t::sample_header_t(kaitai::kstream* p__io, fasttracker_xm_module_t::instrument_t* p__parent, fasttracker_xm_module_t* p__root) : kaitai::kstruct(p__io) {
@@ -545,7 +356,7 @@ void fasttracker_xm_module_t::instrument_t::sample_header_t::_read() {
     m_panning = m__io->read_u1();
     m_relative_note_number = m__io->read_s1();
     m_reserved = m__io->read_u1();
-    m_name = kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_terminate(m__io->read_bytes(22), 0, false), std::string("utf-8"));
+    m_name = kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_terminate(m__io->read_bytes(22), 0, false), "UTF-8");
 }
 
 fasttracker_xm_module_t::instrument_t::sample_header_t::~sample_header_t() {
@@ -556,6 +367,17 @@ void fasttracker_xm_module_t::instrument_t::sample_header_t::_clean_up() {
     if (m_type) {
         delete m_type; m_type = 0;
     }
+}
+std::set<fasttracker_xm_module_t::instrument_t::sample_header_t::loop_type_t::loop_type_t> fasttracker_xm_module_t::instrument_t::sample_header_t::loop_type_t::_build_values_loop_type_t() {
+    std::set<fasttracker_xm_module_t::instrument_t::sample_header_t::loop_type_t::loop_type_t> _t;
+    _t.insert(fasttracker_xm_module_t::instrument_t::sample_header_t::loop_type_t::LOOP_TYPE_NONE);
+    _t.insert(fasttracker_xm_module_t::instrument_t::sample_header_t::loop_type_t::LOOP_TYPE_FORWARD);
+    _t.insert(fasttracker_xm_module_t::instrument_t::sample_header_t::loop_type_t::LOOP_TYPE_PING_PONG);
+    return _t;
+}
+const std::set<fasttracker_xm_module_t::instrument_t::sample_header_t::loop_type_t::loop_type_t> fasttracker_xm_module_t::instrument_t::sample_header_t::loop_type_t::_values_loop_type_t = fasttracker_xm_module_t::instrument_t::sample_header_t::loop_type_t::_build_values_loop_type_t();
+bool fasttracker_xm_module_t::instrument_t::sample_header_t::loop_type_t::_is_defined_loop_type_t(fasttracker_xm_module_t::instrument_t::sample_header_t::loop_type_t::loop_type_t v) {
+    return fasttracker_xm_module_t::instrument_t::sample_header_t::loop_type_t::_values_loop_type_t.find(v) != fasttracker_xm_module_t::instrument_t::sample_header_t::loop_type_t::_values_loop_type_t.end();
 }
 
 fasttracker_xm_module_t::instrument_t::sample_header_t::loop_type_t::loop_type_t(kaitai::kstream* p__io, fasttracker_xm_module_t::instrument_t::sample_header_t* p__parent, fasttracker_xm_module_t* p__root) : kaitai::kstruct(p__io) {
@@ -582,4 +404,204 @@ fasttracker_xm_module_t::instrument_t::sample_header_t::loop_type_t::~loop_type_
 }
 
 void fasttracker_xm_module_t::instrument_t::sample_header_t::loop_type_t::_clean_up() {
+}
+
+fasttracker_xm_module_t::instrument_t::samples_data_t::samples_data_t(sample_header_t* p_header, kaitai::kstream* p__io, fasttracker_xm_module_t::instrument_t* p__parent, fasttracker_xm_module_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_header = p_header;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void fasttracker_xm_module_t::instrument_t::samples_data_t::_read() {
+    m_data = m__io->read_bytes(header()->sample_length() * ((header()->type()->is_sample_data_16_bit()) ? (2) : (1)));
+}
+
+fasttracker_xm_module_t::instrument_t::samples_data_t::~samples_data_t() {
+    _clean_up();
+}
+
+void fasttracker_xm_module_t::instrument_t::samples_data_t::_clean_up() {
+}
+
+fasttracker_xm_module_t::pattern_t::pattern_t(kaitai::kstream* p__io, fasttracker_xm_module_t* p__parent, fasttracker_xm_module_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_header = 0;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void fasttracker_xm_module_t::pattern_t::_read() {
+    m_header = new header_t(m__io, this, m__root);
+    m_packed_data = m__io->read_bytes(header()->main()->len_packed_pattern());
+}
+
+fasttracker_xm_module_t::pattern_t::~pattern_t() {
+    _clean_up();
+}
+
+void fasttracker_xm_module_t::pattern_t::_clean_up() {
+    if (m_header) {
+        delete m_header; m_header = 0;
+    }
+}
+
+fasttracker_xm_module_t::pattern_t::header_t::header_t(kaitai::kstream* p__io, fasttracker_xm_module_t::pattern_t* p__parent, fasttracker_xm_module_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_main = 0;
+    m__io__raw_main = 0;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void fasttracker_xm_module_t::pattern_t::header_t::_read() {
+    m_header_length = m__io->read_u4le();
+    m__raw_main = m__io->read_bytes(header_length() - 4);
+    m__io__raw_main = new kaitai::kstream(m__raw_main);
+    m_main = new header_main_t(m__io__raw_main, this, m__root);
+}
+
+fasttracker_xm_module_t::pattern_t::header_t::~header_t() {
+    _clean_up();
+}
+
+void fasttracker_xm_module_t::pattern_t::header_t::_clean_up() {
+    if (m__io__raw_main) {
+        delete m__io__raw_main; m__io__raw_main = 0;
+    }
+    if (m_main) {
+        delete m_main; m_main = 0;
+    }
+}
+
+fasttracker_xm_module_t::pattern_t::header_t::header_main_t::header_main_t(kaitai::kstream* p__io, fasttracker_xm_module_t::pattern_t::header_t* p__parent, fasttracker_xm_module_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    f_num_rows = false;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void fasttracker_xm_module_t::pattern_t::header_t::header_main_t::_read() {
+    m_packing_type = m__io->read_u1();
+    switch (_root()->preheader()->version_number()->value()) {
+    case 258: {
+        m_num_rows_raw = m__io->read_u1();
+        break;
+    }
+    default: {
+        m_num_rows_raw = m__io->read_u2le();
+        break;
+    }
+    }
+    m_len_packed_pattern = m__io->read_u2le();
+}
+
+fasttracker_xm_module_t::pattern_t::header_t::header_main_t::~header_main_t() {
+    _clean_up();
+}
+
+void fasttracker_xm_module_t::pattern_t::header_t::header_main_t::_clean_up() {
+}
+
+int32_t fasttracker_xm_module_t::pattern_t::header_t::header_main_t::num_rows() {
+    if (f_num_rows)
+        return m_num_rows;
+    f_num_rows = true;
+    m_num_rows = num_rows_raw() + ((_root()->preheader()->version_number()->value() == 258) ? (1) : (0));
+    return m_num_rows;
+}
+
+fasttracker_xm_module_t::preheader_t::preheader_t(kaitai::kstream* p__io, fasttracker_xm_module_t* p__parent, fasttracker_xm_module_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_version_number = 0;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void fasttracker_xm_module_t::preheader_t::_read() {
+    m_signature0 = m__io->read_bytes(17);
+    if (!(m_signature0 == std::string("\x45\x78\x74\x65\x6E\x64\x65\x64\x20\x4D\x6F\x64\x75\x6C\x65\x3A\x20", 17))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\x45\x78\x74\x65\x6E\x64\x65\x64\x20\x4D\x6F\x64\x75\x6C\x65\x3A\x20", 17), m_signature0, m__io, std::string("/types/preheader/seq/0"));
+    }
+    m_module_name = kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_terminate(m__io->read_bytes(20), 0, false), "UTF-8");
+    m_signature1 = m__io->read_bytes(1);
+    if (!(m_signature1 == std::string("\x1A", 1))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\x1A", 1), m_signature1, m__io, std::string("/types/preheader/seq/2"));
+    }
+    m_tracker_name = kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_terminate(m__io->read_bytes(20), 0, false), "UTF-8");
+    m_version_number = new version_t(m__io, this, m__root);
+    m_header_size = m__io->read_u4le();
+}
+
+fasttracker_xm_module_t::preheader_t::~preheader_t() {
+    _clean_up();
+}
+
+void fasttracker_xm_module_t::preheader_t::_clean_up() {
+    if (m_version_number) {
+        delete m_version_number; m_version_number = 0;
+    }
+}
+
+fasttracker_xm_module_t::preheader_t::version_t::version_t(kaitai::kstream* p__io, fasttracker_xm_module_t::preheader_t* p__parent, fasttracker_xm_module_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    f_value = false;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void fasttracker_xm_module_t::preheader_t::version_t::_read() {
+    m_minor = m__io->read_u1();
+    m_major = m__io->read_u1();
+}
+
+fasttracker_xm_module_t::preheader_t::version_t::~version_t() {
+    _clean_up();
+}
+
+void fasttracker_xm_module_t::preheader_t::version_t::_clean_up() {
+}
+
+int32_t fasttracker_xm_module_t::preheader_t::version_t::value() {
+    if (f_value)
+        return m_value;
+    f_value = true;
+    m_value = major() << 8 | minor();
+    return m_value;
 }

@@ -11,8 +11,8 @@
 
 namespace {
     class AndroidSuper extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \AndroidSuper $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\AndroidSuper $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -32,66 +32,16 @@ namespace {
 }
 
 namespace AndroidSuper {
-    class Root extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \AndroidSuper $_parent = null, \AndroidSuper $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m__raw_primaryGeometry = $this->_io->readBytes(4096);
-            $_io__raw_primaryGeometry = new \Kaitai\Struct\Stream($this->_m__raw_primaryGeometry);
-            $this->_m_primaryGeometry = new \AndroidSuper\Geometry($_io__raw_primaryGeometry, $this, $this->_root);
-            $this->_m__raw_backupGeometry = $this->_io->readBytes(4096);
-            $_io__raw_backupGeometry = new \Kaitai\Struct\Stream($this->_m__raw_backupGeometry);
-            $this->_m_backupGeometry = new \AndroidSuper\Geometry($_io__raw_backupGeometry, $this, $this->_root);
-            $this->_m__raw_primaryMetadata = [];
-            $this->_m_primaryMetadata = [];
-            $n = $this->primaryGeometry()->metadataSlotCount();
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m__raw_primaryMetadata[] = $this->_io->readBytes($this->primaryGeometry()->metadataMaxSize());
-                $_io__raw_primaryMetadata = new \Kaitai\Struct\Stream(end($this->_m__raw_primaryMetadata));
-                $this->_m_primaryMetadata[] = new \AndroidSuper\Metadata($_io__raw_primaryMetadata, $this, $this->_root);
-            }
-            $this->_m__raw_backupMetadata = [];
-            $this->_m_backupMetadata = [];
-            $n = $this->primaryGeometry()->metadataSlotCount();
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m__raw_backupMetadata[] = $this->_io->readBytes($this->primaryGeometry()->metadataMaxSize());
-                $_io__raw_backupMetadata = new \Kaitai\Struct\Stream(end($this->_m__raw_backupMetadata));
-                $this->_m_backupMetadata[] = new \AndroidSuper\Metadata($_io__raw_backupMetadata, $this, $this->_root);
-            }
-        }
-        protected $_m_primaryGeometry;
-        protected $_m_backupGeometry;
-        protected $_m_primaryMetadata;
-        protected $_m_backupMetadata;
-        protected $_m__raw_primaryGeometry;
-        protected $_m__raw_backupGeometry;
-        protected $_m__raw_primaryMetadata;
-        protected $_m__raw_backupMetadata;
-        public function primaryGeometry() { return $this->_m_primaryGeometry; }
-        public function backupGeometry() { return $this->_m_backupGeometry; }
-        public function primaryMetadata() { return $this->_m_primaryMetadata; }
-        public function backupMetadata() { return $this->_m_backupMetadata; }
-        public function _raw_primaryGeometry() { return $this->_m__raw_primaryGeometry; }
-        public function _raw_backupGeometry() { return $this->_m__raw_backupGeometry; }
-        public function _raw_primaryMetadata() { return $this->_m__raw_primaryMetadata; }
-        public function _raw_backupMetadata() { return $this->_m__raw_backupMetadata; }
-    }
-}
-
-namespace AndroidSuper {
     class Geometry extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \AndroidSuper\Root $_parent = null, \AndroidSuper $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\AndroidSuper\Root $_parent = null, ?\AndroidSuper $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic = $this->_io->readBytes(4);
-            if (!($this->magic() == "\x67\x44\x6C\x61")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x67\x44\x6C\x61", $this->magic(), $this->_io(), "/types/geometry/seq/0");
+            if (!($this->_m_magic == "\x67\x44\x6C\x61")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x67\x44\x6C\x61", $this->_m_magic, $this->_io, "/types/geometry/seq/0");
             }
             $this->_m_structSize = $this->_io->readU4le();
             $this->_m_checksum = $this->_io->readBytes(32);
@@ -121,15 +71,15 @@ namespace AndroidSuper {
 
 namespace AndroidSuper {
     class Metadata extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \AndroidSuper\Root $_parent = null, \AndroidSuper $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\AndroidSuper\Root $_parent = null, ?\AndroidSuper $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic = $this->_io->readBytes(4);
-            if (!($this->magic() == "\x30\x50\x4C\x41")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x30\x50\x4C\x41", $this->magic(), $this->_io(), "/types/metadata/seq/0");
+            if (!($this->_m_magic == "\x30\x50\x4C\x41")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x30\x50\x4C\x41", $this->_m_magic, $this->_io, "/types/metadata/seq/0");
             }
             $this->_m_majorVersion = $this->_io->readU2le();
             $this->_m_minorVersion = $this->_io->readU2le();
@@ -178,7 +128,7 @@ namespace AndroidSuper {
 
 namespace AndroidSuper\Metadata {
     class BlockDevice extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \AndroidSuper\Metadata\TableDescriptor $_parent = null, \AndroidSuper $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\AndroidSuper\Metadata\TableDescriptor $_parent = null, ?\AndroidSuper $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -211,7 +161,7 @@ namespace AndroidSuper\Metadata {
 
 namespace AndroidSuper\Metadata {
     class Extent extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \AndroidSuper\Metadata\TableDescriptor $_parent = null, \AndroidSuper $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\AndroidSuper\Metadata\TableDescriptor $_parent = null, ?\AndroidSuper $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -237,77 +187,43 @@ namespace AndroidSuper\Metadata\Extent {
     class TargetType {
         const LINEAR = 0;
         const ZERO = 1;
+
+        private const _VALUES = [0 => true, 1 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
 namespace AndroidSuper\Metadata {
-    class TableDescriptor extends \Kaitai\Struct\Struct {
-        public function __construct(int $kind, \Kaitai\Struct\Stream $_io, \AndroidSuper\Metadata $_parent = null, \AndroidSuper $_root = null) {
+    class Group extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\AndroidSuper\Metadata\TableDescriptor $_parent = null, ?\AndroidSuper $_root = null) {
             parent::__construct($_io, $_parent, $_root);
-            $this->_m_kind = $kind;
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_offset = $this->_io->readU4le();
-            $this->_m_numEntries = $this->_io->readU4le();
-            $this->_m_entrySize = $this->_io->readU4le();
+            $this->_m_name = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($this->_io->readBytes(36), 0, false), "UTF-8");
+            $this->_m_flagSlotSuffixed = $this->_io->readBitsIntLe(1) != 0;
+            $this->_m_flagsReserved = $this->_io->readBitsIntLe(31);
+            $this->_io->alignToByte();
+            $this->_m_maximumSize = $this->_io->readU8le();
         }
-        protected $_m_table;
-        public function table() {
-            if ($this->_m_table !== null)
-                return $this->_m_table;
-            $_pos = $this->_io->pos();
-            $this->_io->seek(($this->_parent()->headerSize() + $this->offset()));
-            $this->_m__raw_table = [];
-            $this->_m_table = [];
-            $n = $this->numEntries();
-            for ($i = 0; $i < $n; $i++) {
-                switch ($this->kind()) {
-                    case \AndroidSuper\Metadata\TableKind::PARTITIONS:
-                        $this->_m__raw_table[] = $this->_io->readBytes($this->entrySize());
-                        $_io__raw_table = new \Kaitai\Struct\Stream(end($this->_m__raw_table));
-                        $this->_m_table[] = new \AndroidSuper\Metadata\Partition($_io__raw_table, $this, $this->_root);
-                        break;
-                    case \AndroidSuper\Metadata\TableKind::EXTENTS:
-                        $this->_m__raw_table[] = $this->_io->readBytes($this->entrySize());
-                        $_io__raw_table = new \Kaitai\Struct\Stream(end($this->_m__raw_table));
-                        $this->_m_table[] = new \AndroidSuper\Metadata\Extent($_io__raw_table, $this, $this->_root);
-                        break;
-                    case \AndroidSuper\Metadata\TableKind::GROUPS:
-                        $this->_m__raw_table[] = $this->_io->readBytes($this->entrySize());
-                        $_io__raw_table = new \Kaitai\Struct\Stream(end($this->_m__raw_table));
-                        $this->_m_table[] = new \AndroidSuper\Metadata\Group($_io__raw_table, $this, $this->_root);
-                        break;
-                    case \AndroidSuper\Metadata\TableKind::BLOCK_DEVICES:
-                        $this->_m__raw_table[] = $this->_io->readBytes($this->entrySize());
-                        $_io__raw_table = new \Kaitai\Struct\Stream(end($this->_m__raw_table));
-                        $this->_m_table[] = new \AndroidSuper\Metadata\BlockDevice($_io__raw_table, $this, $this->_root);
-                        break;
-                    default:
-                        $this->_m_table[] = $this->_io->readBytes($this->entrySize());
-                        break;
-                }
-            }
-            $this->_io->seek($_pos);
-            return $this->_m_table;
-        }
-        protected $_m_offset;
-        protected $_m_numEntries;
-        protected $_m_entrySize;
-        protected $_m_kind;
-        protected $_m__raw_table;
-        public function offset() { return $this->_m_offset; }
-        public function numEntries() { return $this->_m_numEntries; }
-        public function entrySize() { return $this->_m_entrySize; }
-        public function kind() { return $this->_m_kind; }
-        public function _raw_table() { return $this->_m__raw_table; }
+        protected $_m_name;
+        protected $_m_flagSlotSuffixed;
+        protected $_m_flagsReserved;
+        protected $_m_maximumSize;
+        public function name() { return $this->_m_name; }
+        public function flagSlotSuffixed() { return $this->_m_flagSlotSuffixed; }
+        public function flagsReserved() { return $this->_m_flagsReserved; }
+        public function maximumSize() { return $this->_m_maximumSize; }
     }
 }
 
 namespace AndroidSuper\Metadata {
     class Partition extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \AndroidSuper\Metadata\TableDescriptor $_parent = null, \AndroidSuper $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\AndroidSuper\Metadata\TableDescriptor $_parent = null, ?\AndroidSuper $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -346,27 +262,67 @@ namespace AndroidSuper\Metadata {
 }
 
 namespace AndroidSuper\Metadata {
-    class Group extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \AndroidSuper\Metadata\TableDescriptor $_parent = null, \AndroidSuper $_root = null) {
+    class TableDescriptor extends \Kaitai\Struct\Struct {
+        public function __construct(int $kind, \Kaitai\Struct\Stream $_io, ?\AndroidSuper\Metadata $_parent = null, ?\AndroidSuper $_root = null) {
             parent::__construct($_io, $_parent, $_root);
+            $this->_m_kind = $kind;
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_name = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($this->_io->readBytes(36), 0, false), "UTF-8");
-            $this->_m_flagSlotSuffixed = $this->_io->readBitsIntLe(1) != 0;
-            $this->_m_flagsReserved = $this->_io->readBitsIntLe(31);
-            $this->_io->alignToByte();
-            $this->_m_maximumSize = $this->_io->readU8le();
+            $this->_m_offset = $this->_io->readU4le();
+            $this->_m_numEntries = $this->_io->readU4le();
+            $this->_m_entrySize = $this->_io->readU4le();
         }
-        protected $_m_name;
-        protected $_m_flagSlotSuffixed;
-        protected $_m_flagsReserved;
-        protected $_m_maximumSize;
-        public function name() { return $this->_m_name; }
-        public function flagSlotSuffixed() { return $this->_m_flagSlotSuffixed; }
-        public function flagsReserved() { return $this->_m_flagsReserved; }
-        public function maximumSize() { return $this->_m_maximumSize; }
+        protected $_m_table;
+        public function table() {
+            if ($this->_m_table !== null)
+                return $this->_m_table;
+            $_pos = $this->_io->pos();
+            $this->_io->seek($this->_parent()->headerSize() + $this->offset());
+            $this->_m__raw_table = [];
+            $this->_m_table = [];
+            $n = $this->numEntries();
+            for ($i = 0; $i < $n; $i++) {
+                switch ($this->kind()) {
+                    case \AndroidSuper\Metadata\TableKind::BLOCK_DEVICES:
+                        $this->_m__raw_table[] = $this->_io->readBytes($this->entrySize());
+                        $_io__raw_table = new \Kaitai\Struct\Stream(end($this->_m__raw_table));
+                        $this->_m_table[] = new \AndroidSuper\Metadata\BlockDevice($_io__raw_table, $this, $this->_root);
+                        break;
+                    case \AndroidSuper\Metadata\TableKind::EXTENTS:
+                        $this->_m__raw_table[] = $this->_io->readBytes($this->entrySize());
+                        $_io__raw_table = new \Kaitai\Struct\Stream(end($this->_m__raw_table));
+                        $this->_m_table[] = new \AndroidSuper\Metadata\Extent($_io__raw_table, $this, $this->_root);
+                        break;
+                    case \AndroidSuper\Metadata\TableKind::GROUPS:
+                        $this->_m__raw_table[] = $this->_io->readBytes($this->entrySize());
+                        $_io__raw_table = new \Kaitai\Struct\Stream(end($this->_m__raw_table));
+                        $this->_m_table[] = new \AndroidSuper\Metadata\Group($_io__raw_table, $this, $this->_root);
+                        break;
+                    case \AndroidSuper\Metadata\TableKind::PARTITIONS:
+                        $this->_m__raw_table[] = $this->_io->readBytes($this->entrySize());
+                        $_io__raw_table = new \Kaitai\Struct\Stream(end($this->_m__raw_table));
+                        $this->_m_table[] = new \AndroidSuper\Metadata\Partition($_io__raw_table, $this, $this->_root);
+                        break;
+                    default:
+                        $this->_m_table[] = $this->_io->readBytes($this->entrySize());
+                        break;
+                }
+            }
+            $this->_io->seek($_pos);
+            return $this->_m_table;
+        }
+        protected $_m_offset;
+        protected $_m_numEntries;
+        protected $_m_entrySize;
+        protected $_m_kind;
+        protected $_m__raw_table;
+        public function offset() { return $this->_m_offset; }
+        public function numEntries() { return $this->_m_numEntries; }
+        public function entrySize() { return $this->_m_entrySize; }
+        public function kind() { return $this->_m_kind; }
+        public function _raw_table() { return $this->_m__raw_table; }
     }
 }
 
@@ -376,5 +332,61 @@ namespace AndroidSuper\Metadata {
         const EXTENTS = 1;
         const GROUPS = 2;
         const BLOCK_DEVICES = 3;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
+    }
+}
+
+namespace AndroidSuper {
+    class Root extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\AndroidSuper $_parent = null, ?\AndroidSuper $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m__raw_primaryGeometry = $this->_io->readBytes(4096);
+            $_io__raw_primaryGeometry = new \Kaitai\Struct\Stream($this->_m__raw_primaryGeometry);
+            $this->_m_primaryGeometry = new \AndroidSuper\Geometry($_io__raw_primaryGeometry, $this, $this->_root);
+            $this->_m__raw_backupGeometry = $this->_io->readBytes(4096);
+            $_io__raw_backupGeometry = new \Kaitai\Struct\Stream($this->_m__raw_backupGeometry);
+            $this->_m_backupGeometry = new \AndroidSuper\Geometry($_io__raw_backupGeometry, $this, $this->_root);
+            $this->_m__raw_primaryMetadata = [];
+            $this->_m_primaryMetadata = [];
+            $n = $this->primaryGeometry()->metadataSlotCount();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m__raw_primaryMetadata[] = $this->_io->readBytes($this->primaryGeometry()->metadataMaxSize());
+                $_io__raw_primaryMetadata = new \Kaitai\Struct\Stream(end($this->_m__raw_primaryMetadata));
+                $this->_m_primaryMetadata[] = new \AndroidSuper\Metadata($_io__raw_primaryMetadata, $this, $this->_root);
+            }
+            $this->_m__raw_backupMetadata = [];
+            $this->_m_backupMetadata = [];
+            $n = $this->primaryGeometry()->metadataSlotCount();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m__raw_backupMetadata[] = $this->_io->readBytes($this->primaryGeometry()->metadataMaxSize());
+                $_io__raw_backupMetadata = new \Kaitai\Struct\Stream(end($this->_m__raw_backupMetadata));
+                $this->_m_backupMetadata[] = new \AndroidSuper\Metadata($_io__raw_backupMetadata, $this, $this->_root);
+            }
+        }
+        protected $_m_primaryGeometry;
+        protected $_m_backupGeometry;
+        protected $_m_primaryMetadata;
+        protected $_m_backupMetadata;
+        protected $_m__raw_primaryGeometry;
+        protected $_m__raw_backupGeometry;
+        protected $_m__raw_primaryMetadata;
+        protected $_m__raw_backupMetadata;
+        public function primaryGeometry() { return $this->_m_primaryGeometry; }
+        public function backupGeometry() { return $this->_m_backupGeometry; }
+        public function primaryMetadata() { return $this->_m_primaryMetadata; }
+        public function backupMetadata() { return $this->_m_backupMetadata; }
+        public function _raw_primaryGeometry() { return $this->_m__raw_primaryGeometry; }
+        public function _raw_backupGeometry() { return $this->_m__raw_backupGeometry; }
+        public function _raw_primaryMetadata() { return $this->_m__raw_primaryMetadata; }
+        public function _raw_backupMetadata() { return $this->_m__raw_backupMetadata; }
     }
 }

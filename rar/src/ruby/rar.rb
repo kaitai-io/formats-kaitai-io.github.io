@@ -1,9 +1,10 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 require 'kaitai/struct/struct'
+require_relative 'dos_datetime'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -33,16 +34,6 @@ class Rar < Kaitai::Struct::Struct
   }
   I__BLOCK_TYPES = BLOCK_TYPES.invert
 
-  OSES = {
-    0 => :oses_ms_dos,
-    1 => :oses_os_2,
-    2 => :oses_windows,
-    3 => :oses_unix,
-    4 => :oses_mac_os,
-    5 => :oses_beos,
-  }
-  I__OSES = OSES.invert
-
   METHODS = {
     48 => :methods_store,
     49 => :methods_fastest,
@@ -52,8 +43,18 @@ class Rar < Kaitai::Struct::Struct
     53 => :methods_best,
   }
   I__METHODS = METHODS.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+
+  OSES = {
+    0 => :oses_ms_dos,
+    1 => :oses_os_2,
+    2 => :oses_windows,
+    3 => :oses_unix,
+    4 => :oses_mac_os,
+    5 => :oses_beos,
+  }
+  I__OSES = OSES.invert
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -74,50 +75,11 @@ class Rar < Kaitai::Struct::Struct
   end
 
   ##
-  # RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and
-  # 8-byte magic (and pretty different block format) for v5+. This
-  # type would parse and validate both versions of signature. Note
-  # that actually this signature is a valid RAR "block": in theory,
-  # one can omit signature reading at all, and read this normally,
-  # as a block, if exact RAR version is known (and thus it's
-  # possible to choose correct block format).
-  class MagicSignature < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @magic1 = @_io.read_bytes(6)
-      raise Kaitai::Struct::ValidationNotEqualError.new([82, 97, 114, 33, 26, 7].pack('C*'), magic1, _io, "/types/magic_signature/seq/0") if not magic1 == [82, 97, 114, 33, 26, 7].pack('C*')
-      @version = @_io.read_u1
-      if version == 1
-        @magic3 = @_io.read_bytes(1)
-        raise Kaitai::Struct::ValidationNotEqualError.new([0].pack('C*'), magic3, _io, "/types/magic_signature/seq/2") if not magic3 == [0].pack('C*')
-      end
-      self
-    end
-
-    ##
-    # Fixed part of file's magic signature that doesn't change with RAR version
-    attr_reader :magic1
-
-    ##
-    # Variable part of magic signature: 0 means old (RAR 1.5-4.0)
-    # format, 1 means new (RAR 5+) format
-    attr_reader :version
-
-    ##
-    # New format (RAR 5+) magic contains extra byte
-    attr_reader :magic3
-  end
-
-  ##
   # Basic block that RAR files consist of. There are several block
   # types (see `block_type`), which have different `body` and
   # `add_body`.
   class Block < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -132,9 +94,8 @@ class Rar < Kaitai::Struct::Struct
       end
       case block_type
       when :block_types_file_header
-        @_raw_body = @_io.read_bytes(body_size)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = BlockFileHeader.new(_io__raw_body, self, @_root)
+        _io_body = @_io.substream(body_size)
+        @body = BlockFileHeader.new(_io_body, self, @_root)
       else
         @body = @_io.read_bytes(body_size)
       end
@@ -143,23 +104,23 @@ class Rar < Kaitai::Struct::Struct
       end
       self
     end
+    def body_size
+      return @body_size unless @body_size.nil?
+      @body_size = block_size - header_size
+      @body_size
+    end
 
     ##
     # True if block has additional content attached to it
     def has_add
       return @has_add unless @has_add.nil?
-      @has_add = (flags & 32768) != 0
+      @has_add = flags & 32768 != 0
       @has_add
     end
     def header_size
       return @header_size unless @header_size.nil?
       @header_size = (has_add ? 11 : 7)
       @header_size
-    end
-    def body_size
-      return @body_size unless @body_size.nil?
-      @body_size = (block_size - header_size)
-      @body_size
     end
 
     ##
@@ -183,7 +144,7 @@ class Rar < Kaitai::Struct::Struct
     attr_reader :_raw_body
   end
   class BlockFileHeader < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -192,18 +153,17 @@ class Rar < Kaitai::Struct::Struct
       @low_unp_size = @_io.read_u4le
       @host_os = Kaitai::Struct::Stream::resolve_enum(Rar::OSES, @_io.read_u1)
       @file_crc32 = @_io.read_u4le
-      @_raw_file_time = @_io.read_bytes(4)
-      _io__raw_file_time = Kaitai::Struct::Stream.new(@_raw_file_time)
-      @file_time = DosDatetime.new(_io__raw_file_time)
+      _io_file_time = @_io.substream(4)
+      @file_time = DosDatetime.new(_io_file_time)
       @rar_version = @_io.read_u1
       @method = Kaitai::Struct::Stream::resolve_enum(Rar::METHODS, @_io.read_u1)
       @name_size = @_io.read_u2le
       @attr = @_io.read_u4le
-      if (_parent.flags & 256) != 0
+      if _parent.flags & 256 != 0
         @high_pack_size = @_io.read_u4le
       end
       @file_name = @_io.read_bytes(name_size)
-      if (_parent.flags & 1024) != 0
+      if _parent.flags & 1024 != 0
         @salt = @_io.read_u8le
       end
       self
@@ -246,7 +206,7 @@ class Rar < Kaitai::Struct::Struct
     attr_reader :_raw_file_time
   end
   class BlockV5 < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -254,6 +214,45 @@ class Rar < Kaitai::Struct::Struct
     def _read
       self
     end
+  end
+
+  ##
+  # RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and
+  # 8-byte magic (and pretty different block format) for v5+. This
+  # type would parse and validate both versions of signature. Note
+  # that actually this signature is a valid RAR "block": in theory,
+  # one can omit signature reading at all, and read this normally,
+  # as a block, if exact RAR version is known (and thus it's
+  # possible to choose correct block format).
+  class MagicSignature < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @magic1 = @_io.read_bytes(6)
+      raise Kaitai::Struct::ValidationNotEqualError.new([82, 97, 114, 33, 26, 7].pack('C*'), @magic1, @_io, "/types/magic_signature/seq/0") if not @magic1 == [82, 97, 114, 33, 26, 7].pack('C*')
+      @version = @_io.read_u1
+      if version == 1
+        @magic3 = @_io.read_bytes(1)
+        raise Kaitai::Struct::ValidationNotEqualError.new([0].pack('C*'), @magic3, @_io, "/types/magic_signature/seq/2") if not @magic3 == [0].pack('C*')
+      end
+      self
+    end
+
+    ##
+    # Fixed part of file's magic signature that doesn't change with RAR version
+    attr_reader :magic1
+
+    ##
+    # Variable part of magic signature: 0 means old (RAR 1.5-4.0)
+    # format, 1 means new (RAR 5+) format
+    attr_reader :version
+
+    ##
+    # New format (RAR 5+) magic contains extra byte
+    attr_reader :magic3
   end
 
   ##

@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.Exif = factory(root.KaitaiStream);
+    factory(root.Exif || (root.Exif = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Exif_, KaitaiStream) {
 var Exif = (function() {
   function Exif(_io, _parent, _root) {
     this._io = _io;
@@ -26,7 +26,7 @@ var Exif = (function() {
     function ExifBody(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -61,7 +61,7 @@ var Exif = (function() {
       function Ifd(_io, _parent, _root, _is_le) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
         this._is_le = _is_le;
 
         this._read();
@@ -1057,7 +1057,7 @@ var Exif = (function() {
       function IfdField(_io, _parent, _root, _is_le) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
         this._is_le = _is_le;
 
         this._read();
@@ -1084,28 +1084,12 @@ var Exif = (function() {
         this.length = this._io.readU4be();
         this.ofsOrData = this._io.readU4be();
       }
-      Object.defineProperty(IfdField.prototype, 'typeByteLength', {
-        get: function() {
-          if (this._m_typeByteLength !== undefined)
-            return this._m_typeByteLength;
-          this._m_typeByteLength = (this.fieldType == Exif.ExifBody.IfdField.FieldTypeEnum.WORD ? 2 : (this.fieldType == Exif.ExifBody.IfdField.FieldTypeEnum.DWORD ? 4 : 1));
-          return this._m_typeByteLength;
-        }
-      });
       Object.defineProperty(IfdField.prototype, 'byteLength', {
         get: function() {
           if (this._m_byteLength !== undefined)
             return this._m_byteLength;
-          this._m_byteLength = (this.length * this.typeByteLength);
+          this._m_byteLength = this.length * this.typeByteLength;
           return this._m_byteLength;
-        }
-      });
-      Object.defineProperty(IfdField.prototype, 'isImmediateData', {
-        get: function() {
-          if (this._m_isImmediateData !== undefined)
-            return this._m_isImmediateData;
-          this._m_isImmediateData = this.byteLength <= 4;
-          return this._m_isImmediateData;
         }
       });
       Object.defineProperty(IfdField.prototype, 'data', {
@@ -1124,6 +1108,22 @@ var Exif = (function() {
             io.seek(_pos);
           }
           return this._m_data;
+        }
+      });
+      Object.defineProperty(IfdField.prototype, 'isImmediateData', {
+        get: function() {
+          if (this._m_isImmediateData !== undefined)
+            return this._m_isImmediateData;
+          this._m_isImmediateData = this.byteLength <= 4;
+          return this._m_isImmediateData;
+        }
+      });
+      Object.defineProperty(IfdField.prototype, 'typeByteLength', {
+        get: function() {
+          if (this._m_typeByteLength !== undefined)
+            return this._m_typeByteLength;
+          this._m_typeByteLength = (this.fieldType == Exif.ExifBody.IfdField.FieldTypeEnum.WORD ? 2 : (this.fieldType == Exif.ExifBody.IfdField.FieldTypeEnum.DWORD ? 4 : 1));
+          return this._m_typeByteLength;
         }
       });
 
@@ -1150,5 +1150,5 @@ var Exif = (function() {
 
   return Exif;
 })();
-return Exif;
-}));
+Exif_.Exif = Exif;
+});

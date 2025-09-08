@@ -4,10 +4,10 @@
 
 local class = require("class")
 require("kaitaistruct")
+require("ethernet_frame")
 local enum = require("enum")
 local stringstream = require("string_stream")
 
-require("ethernet_frame")
 -- 
 -- PPI is a standard for link layer packet encapsulation, proposed as
 -- generic extensible container to store both captured in-band data and
@@ -18,15 +18,6 @@ require("ethernet_frame")
 -- <https://wiki.wireshark.org/uploads/27707187aeb30df68e70c8fb9d614981/http.cap>
 -- See also: PPI header format spec, section 3 (https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf)
 PacketPpi = class.class(KaitaiStruct)
-
-PacketPpi.PfhType = enum.Enum {
-  radio_802_11_common = 2,
-  radio_802_11n_mac_ext = 3,
-  radio_802_11n_mac_phy_ext = 4,
-  spectrum_map = 5,
-  process_info = 6,
-  capture_info = 7,
-}
 
 PacketPpi.Linktype = enum.Enum {
   null_linktype = 0,
@@ -135,6 +126,15 @@ PacketPpi.Linktype = enum.Enum {
   iso_14443 = 264,
 }
 
+PacketPpi.PfhType = enum.Enum {
+  radio_802_11_common = 2,
+  radio_802_11n_mac_ext = 3,
+  radio_802_11n_mac_phy_ext = 4,
+  spectrum_map = 5,
+  process_info = 6,
+  capture_info = 7,
+}
+
 function PacketPpi:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
@@ -144,59 +144,21 @@ end
 
 function PacketPpi:_read()
   self.header = PacketPpi.PacketPpiHeader(self._io, self, self._root)
-  self._raw_fields = self._io:read_bytes((self.header.pph_len - 8))
+  self._raw_fields = self._io:read_bytes(self.header.pph_len - 8)
   local _io = KaitaiStream(stringstream(self._raw_fields))
   self.fields = PacketPpi.PacketPpiFields(_io, self, self._root)
   local _on = self.header.pph_dlt
-  if _on == PacketPpi.Linktype.ppi then
-    self._raw_body = self._io:read_bytes_full()
-    local _io = KaitaiStream(stringstream(self._raw_body))
-    self.body = PacketPpi(_io)
-  elseif _on == PacketPpi.Linktype.ethernet then
+  if _on == PacketPpi.Linktype.ethernet then
     self._raw_body = self._io:read_bytes_full()
     local _io = KaitaiStream(stringstream(self._raw_body))
     self.body = EthernetFrame(_io)
+  elseif _on == PacketPpi.Linktype.ppi then
+    self._raw_body = self._io:read_bytes_full()
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = PacketPpi(_io, self, self._root)
   else
     self.body = self._io:read_bytes_full()
   end
-end
-
-
-PacketPpi.PacketPpiFields = class.class(KaitaiStruct)
-
-function PacketPpi.PacketPpiFields:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function PacketPpi.PacketPpiFields:_read()
-  self.entries = {}
-  local i = 0
-  while not self._io:is_eof() do
-    self.entries[i + 1] = PacketPpi.PacketPpiField(self._io, self, self._root)
-    i = i + 1
-  end
-end
-
-
--- 
--- See also: PPI header format spec, section 4.1.3 (https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf)
-PacketPpi.Radio80211nMacExtBody = class.class(KaitaiStruct)
-
-function PacketPpi.Radio80211nMacExtBody:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function PacketPpi.Radio80211nMacExtBody:_read()
-  self.flags = PacketPpi.MacFlags(self._io, self, self._root)
-  self.a_mpdu_id = self._io:read_u4le()
-  self.num_delimiters = self._io:read_u1()
-  self.reserved = self._io:read_bytes(3)
 end
 
 
@@ -205,7 +167,7 @@ PacketPpi.MacFlags = class.class(KaitaiStruct)
 function PacketPpi.MacFlags:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -239,55 +201,12 @@ end
 
 -- 
 -- See also: PPI header format spec, section 3.1 (https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf)
-PacketPpi.PacketPpiHeader = class.class(KaitaiStruct)
-
-function PacketPpi.PacketPpiHeader:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function PacketPpi.PacketPpiHeader:_read()
-  self.pph_version = self._io:read_u1()
-  self.pph_flags = self._io:read_u1()
-  self.pph_len = self._io:read_u2le()
-  self.pph_dlt = PacketPpi.Linktype(self._io:read_u4le())
-end
-
-
--- 
--- See also: PPI header format spec, section 4.1.2 (https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf)
-PacketPpi.Radio80211CommonBody = class.class(KaitaiStruct)
-
-function PacketPpi.Radio80211CommonBody:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function PacketPpi.Radio80211CommonBody:_read()
-  self.tsf_timer = self._io:read_u8le()
-  self.flags = self._io:read_u2le()
-  self.rate = self._io:read_u2le()
-  self.channel_freq = self._io:read_u2le()
-  self.channel_flags = self._io:read_u2le()
-  self.fhss_hopset = self._io:read_u1()
-  self.fhss_pattern = self._io:read_u1()
-  self.dbm_antsignal = self._io:read_s1()
-  self.dbm_antnoise = self._io:read_s1()
-end
-
-
--- 
--- See also: PPI header format spec, section 3.1 (https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf)
 PacketPpi.PacketPpiField = class.class(KaitaiStruct)
 
 function PacketPpi.PacketPpiField:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -313,6 +232,87 @@ function PacketPpi.PacketPpiField:_read()
 end
 
 
+PacketPpi.PacketPpiFields = class.class(KaitaiStruct)
+
+function PacketPpi.PacketPpiFields:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function PacketPpi.PacketPpiFields:_read()
+  self.entries = {}
+  local i = 0
+  while not self._io:is_eof() do
+    self.entries[i + 1] = PacketPpi.PacketPpiField(self._io, self, self._root)
+    i = i + 1
+  end
+end
+
+
+-- 
+-- See also: PPI header format spec, section 3.1 (https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf)
+PacketPpi.PacketPpiHeader = class.class(KaitaiStruct)
+
+function PacketPpi.PacketPpiHeader:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function PacketPpi.PacketPpiHeader:_read()
+  self.pph_version = self._io:read_u1()
+  self.pph_flags = self._io:read_u1()
+  self.pph_len = self._io:read_u2le()
+  self.pph_dlt = PacketPpi.Linktype(self._io:read_u4le())
+end
+
+
+-- 
+-- See also: PPI header format spec, section 4.1.2 (https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf)
+PacketPpi.Radio80211CommonBody = class.class(KaitaiStruct)
+
+function PacketPpi.Radio80211CommonBody:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function PacketPpi.Radio80211CommonBody:_read()
+  self.tsf_timer = self._io:read_u8le()
+  self.flags = self._io:read_u2le()
+  self.rate = self._io:read_u2le()
+  self.channel_freq = self._io:read_u2le()
+  self.channel_flags = self._io:read_u2le()
+  self.fhss_hopset = self._io:read_u1()
+  self.fhss_pattern = self._io:read_u1()
+  self.dbm_antsignal = self._io:read_s1()
+  self.dbm_antnoise = self._io:read_s1()
+end
+
+
+-- 
+-- See also: PPI header format spec, section 4.1.3 (https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf)
+PacketPpi.Radio80211nMacExtBody = class.class(KaitaiStruct)
+
+function PacketPpi.Radio80211nMacExtBody:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function PacketPpi.Radio80211nMacExtBody:_read()
+  self.flags = PacketPpi.MacFlags(self._io, self, self._root)
+  self.a_mpdu_id = self._io:read_u4le()
+  self.num_delimiters = self._io:read_u1()
+  self.reserved = self._io:read_bytes(3)
+end
+
+
 -- 
 -- See also: PPI header format spec, section 4.1.4 (https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf)
 PacketPpi.Radio80211nMacPhyExtBody = class.class(KaitaiStruct)
@@ -320,7 +320,7 @@ PacketPpi.Radio80211nMacPhyExtBody = class.class(KaitaiStruct)
 function PacketPpi.Radio80211nMacPhyExtBody:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -375,7 +375,7 @@ PacketPpi.Radio80211nMacPhyExtBody.ChannelFlags = class.class(KaitaiStruct)
 function PacketPpi.Radio80211nMacPhyExtBody.ChannelFlags:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -413,7 +413,7 @@ PacketPpi.Radio80211nMacPhyExtBody.SignalNoise = class.class(KaitaiStruct)
 function PacketPpi.Radio80211nMacPhyExtBody.SignalNoise:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 

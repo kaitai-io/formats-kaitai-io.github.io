@@ -5,6 +5,7 @@ import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Arrays;
 
 
@@ -58,18 +59,38 @@ public class Dcmp2 extends KaitaiStruct {
         {
             boolean on = headerParameters().flags().tagged();
             if (on == true) {
-                this._raw_data = this._io.readBytes(((_io().size() - _io().pos()) - (isLenDecompressedOdd() ? 1 : 0)));
-                KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
-                this.data = new TaggedData(_io__raw_data, this, _root);
+                KaitaiStream _io_data = this._io.substream((_io().size() - _io().pos()) - (isLenDecompressedOdd() ? 1 : 0));
+                this.data = new TaggedData(_io_data, this, _root);
             }
             else {
-                this._raw_data = this._io.readBytes(((_io().size() - _io().pos()) - (isLenDecompressedOdd() ? 1 : 0)));
-                KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
-                this.data = new UntaggedData(_io__raw_data, this, _root);
+                KaitaiStream _io_data = this._io.substream((_io().size() - _io().pos()) - (isLenDecompressedOdd() ? 1 : 0));
+                this.data = new UntaggedData(_io_data, this, _root);
             }
         }
         if (isLenDecompressedOdd()) {
             this.lastByte = this._io.readBytes(1);
+        }
+    }
+
+    public void _fetchInstances() {
+        if (headerParameters().flags().hasCustomLookupTable()) {
+            for (int i = 0; i < this.customLookupTable.size(); i++) {
+            }
+        }
+        {
+            boolean on = headerParameters().flags().tagged();
+            if (on == true) {
+                ((TaggedData) (this.data))._fetchInstances();
+            }
+            else {
+                ((UntaggedData) (this.data))._fetchInstances();
+            }
+        }
+        if (isLenDecompressedOdd()) {
+        }
+        headerParameters();
+        if (this.headerParameters != null) {
+            this.headerParameters._fetchInstances();
         }
     }
 
@@ -102,6 +123,10 @@ public class Dcmp2 extends KaitaiStruct {
             this.flags = new Flags(this._io, this, _root);
         }
 
+        public void _fetchInstances() {
+            this.flags._fetchInstances();
+        }
+
         /**
          * Flags for the decompressor,
          * as stored in the decompressor-specific parameters.
@@ -129,6 +154,12 @@ public class Dcmp2 extends KaitaiStruct {
                 this.reserved = this._io.readBitsIntBe(6);
                 this.tagged = this._io.readBitsIntBe(1) != 0;
                 this.hasCustomLookupTable = this._io.readBitsIntBe(1) != 0;
+            }
+
+            public void _fetchInstances() {
+                asInt();
+                if (this.asInt != null) {
+                }
             }
             private Integer asInt;
 
@@ -180,8 +211,7 @@ public class Dcmp2 extends KaitaiStruct {
             if (this.numCustomLookupTableEntries != null)
                 return this.numCustomLookupTableEntries;
             if (flags().hasCustomLookupTable()) {
-                int _tmp = (int) ((numCustomLookupTableEntriesM1() + 1));
-                this.numCustomLookupTableEntries = _tmp;
+                this.numCustomLookupTableEntries = ((Number) (numCustomLookupTableEntriesM1() + 1)).intValue();
             }
             return this.numCustomLookupTableEntries;
         }
@@ -220,51 +250,6 @@ public class Dcmp2 extends KaitaiStruct {
     }
 
     /**
-     * Compressed data in the "untagged" variant of the format.
-     */
-    public static class UntaggedData extends KaitaiStruct {
-        public static UntaggedData fromFile(String fileName) throws IOException {
-            return new UntaggedData(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public UntaggedData(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public UntaggedData(KaitaiStream _io, Dcmp2 _parent) {
-            this(_io, _parent, null);
-        }
-
-        public UntaggedData(KaitaiStream _io, Dcmp2 _parent, Dcmp2 _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.tableReferences = new ArrayList<Integer>();
-            {
-                int i = 0;
-                while (!this._io.isEof()) {
-                    this.tableReferences.add(this._io.readU1());
-                    i++;
-                }
-            }
-        }
-        private ArrayList<Integer> tableReferences;
-        private Dcmp2 _root;
-        private Dcmp2 _parent;
-
-        /**
-         * References into the lookup table.
-         * Each reference is an integer that is expanded to two bytes by looking it up in the table.
-         */
-        public ArrayList<Integer> tableReferences() { return tableReferences; }
-        public Dcmp2 _root() { return _root; }
-        public Dcmp2 _parent() { return _parent; }
-    }
-
-    /**
      * Compressed data in the "tagged" variant of the format.
      */
     public static class TaggedData extends KaitaiStruct {
@@ -294,6 +279,12 @@ public class Dcmp2 extends KaitaiStruct {
                     this.chunks.add(new Chunk(this._io, this, _root));
                     i++;
                 }
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.chunks.size(); i++) {
+                this.chunks.get(((Number) (i)).intValue())._fetchInstances();
             }
         }
 
@@ -330,21 +321,19 @@ public class Dcmp2 extends KaitaiStruct {
                 for (int i = 0; i < 8; i++) {
                     this.tag.add(this._io.readBitsIntBe(1) != 0);
                 }
-                this._io.alignToByte();
-                this._raw_units = new ArrayList<byte[]>();
                 this.units = new ArrayList<Object>();
                 {
                     Object _it;
                     int i = 0;
                     do {
                         {
-                            boolean on = tag().get((int) i);
+                            boolean on = tag().get(((Number) (i)).intValue());
                             if (on == true) {
-                                _it = (Object) (this._io.readU1());
+                                _it = ((Object) (this._io.readU1()));
                                 this.units.add(_it);
                             }
                             else {
-                                _it = this._io.readBytes((tag().get((int) i) ? 1 : 2));
+                                _it = this._io.readBytes((tag().get(((Number) (i)).intValue()) ? 1 : 2));
                                 this.units.add(_it);
                             }
                         }
@@ -352,15 +341,29 @@ public class Dcmp2 extends KaitaiStruct {
                     } while (!( ((i >= 7) || (_io().isEof())) ));
                 }
             }
-            private ArrayList<Boolean> tag;
-            private ArrayList<Object> units;
+
+            public void _fetchInstances() {
+                for (int i = 0; i < this.tag.size(); i++) {
+                }
+                for (int i = 0; i < this.units.size(); i++) {
+                    {
+                        boolean on = tag().get(((Number) (i)).intValue());
+                        if (on == true) {
+                        }
+                        else {
+                        }
+                    }
+                }
+            }
+            private List<Boolean> tag;
+            private List<Object> units;
             private Dcmp2 _root;
             private Dcmp2.TaggedData _parent;
 
             /**
              * The bits of the tag byte control the format and meaning of the 8 compressed data units that follow the tag byte.
              */
-            public ArrayList<Boolean> tag() { return tag; }
+            public List<Boolean> tag() { return tag; }
 
             /**
              * The compressed data units in this chunk.
@@ -373,20 +376,82 @@ public class Dcmp2 extends KaitaiStruct {
              * the unit is a reference into the lookup table,
              * an integer which is expanded to two bytes by looking it up in the table.
              */
-            public ArrayList<Object> units() { return units; }
+            public List<Object> units() { return units; }
             public Dcmp2 _root() { return _root; }
             public Dcmp2.TaggedData _parent() { return _parent; }
         }
-        private ArrayList<Chunk> chunks;
+        private List<Chunk> chunks;
         private Dcmp2 _root;
         private Dcmp2 _parent;
 
         /**
          * The tagged chunks that make up the compressed data.
          */
-        public ArrayList<Chunk> chunks() { return chunks; }
+        public List<Chunk> chunks() { return chunks; }
         public Dcmp2 _root() { return _root; }
         public Dcmp2 _parent() { return _parent; }
+    }
+
+    /**
+     * Compressed data in the "untagged" variant of the format.
+     */
+    public static class UntaggedData extends KaitaiStruct {
+        public static UntaggedData fromFile(String fileName) throws IOException {
+            return new UntaggedData(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public UntaggedData(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public UntaggedData(KaitaiStream _io, Dcmp2 _parent) {
+            this(_io, _parent, null);
+        }
+
+        public UntaggedData(KaitaiStream _io, Dcmp2 _parent, Dcmp2 _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.tableReferences = new ArrayList<Integer>();
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.tableReferences.add(this._io.readU1());
+                    i++;
+                }
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.tableReferences.size(); i++) {
+            }
+        }
+        private List<Integer> tableReferences;
+        private Dcmp2 _root;
+        private Dcmp2 _parent;
+
+        /**
+         * References into the lookup table.
+         * Each reference is an integer that is expanded to two bytes by looking it up in the table.
+         */
+        public List<Integer> tableReferences() { return tableReferences; }
+        public Dcmp2 _root() { return _root; }
+        public Dcmp2 _parent() { return _parent; }
+    }
+    private List<byte[]> defaultLookupTable;
+
+    /**
+     * The default lookup table,
+     * which is used if no custom lookup table is included with the compressed data.
+     */
+    public List<byte[]> defaultLookupTable() {
+        if (this.defaultLookupTable != null)
+            return this.defaultLookupTable;
+        this.defaultLookupTable = new ArrayList<byte[]>(Arrays.asList(new byte[] { 0, 0 }, new byte[] { 0, 8 }, new byte[] { 78, -70 }, new byte[] { 32, 110 }, new byte[] { 78, 117 }, new byte[] { 0, 12 }, new byte[] { 0, 4 }, new byte[] { 112, 0 }, new byte[] { 0, 16 }, new byte[] { 0, 2 }, new byte[] { 72, 110 }, new byte[] { -1, -4 }, new byte[] { 96, 0 }, new byte[] { 0, 1 }, new byte[] { 72, -25 }, new byte[] { 47, 46 }, new byte[] { 78, 86 }, new byte[] { 0, 6 }, new byte[] { 78, 94 }, new byte[] { 47, 0 }, new byte[] { 97, 0 }, new byte[] { -1, -8 }, new byte[] { 47, 11 }, new byte[] { -1, -1 }, new byte[] { 0, 20 }, new byte[] { 0, 10 }, new byte[] { 0, 24 }, new byte[] { 32, 95 }, new byte[] { 0, 14 }, new byte[] { 32, 80 }, new byte[] { 63, 60 }, new byte[] { -1, -12 }, new byte[] { 76, -18 }, new byte[] { 48, 46 }, new byte[] { 103, 0 }, new byte[] { 76, -33 }, new byte[] { 38, 110 }, new byte[] { 0, 18 }, new byte[] { 0, 28 }, new byte[] { 66, 103 }, new byte[] { -1, -16 }, new byte[] { 48, 60 }, new byte[] { 47, 12 }, new byte[] { 0, 3 }, new byte[] { 78, -48 }, new byte[] { 0, 32 }, new byte[] { 112, 1 }, new byte[] { 0, 22 }, new byte[] { 45, 64 }, new byte[] { 72, -64 }, new byte[] { 32, 120 }, new byte[] { 114, 0 }, new byte[] { 88, -113 }, new byte[] { 102, 0 }, new byte[] { 79, -17 }, new byte[] { 66, -89 }, new byte[] { 103, 6 }, new byte[] { -1, -6 }, new byte[] { 85, -113 }, new byte[] { 40, 110 }, new byte[] { 63, 0 }, new byte[] { -1, -2 }, new byte[] { 47, 60 }, new byte[] { 103, 4 }, new byte[] { 89, -113 }, new byte[] { 32, 107 }, new byte[] { 0, 36 }, new byte[] { 32, 31 }, new byte[] { 65, -6 }, new byte[] { -127, -31 }, new byte[] { 102, 4 }, new byte[] { 103, 8 }, new byte[] { 0, 26 }, new byte[] { 78, -71 }, new byte[] { 80, -113 }, new byte[] { 32, 46 }, new byte[] { 0, 7 }, new byte[] { 78, -80 }, new byte[] { -1, -14 }, new byte[] { 61, 64 }, new byte[] { 0, 30 }, new byte[] { 32, 104 }, new byte[] { 102, 6 }, new byte[] { -1, -10 }, new byte[] { 78, -7 }, new byte[] { 8, 0 }, new byte[] { 12, 64 }, new byte[] { 61, 124 }, new byte[] { -1, -20 }, new byte[] { 0, 5 }, new byte[] { 32, 60 }, new byte[] { -1, -24 }, new byte[] { -34, -4 }, new byte[] { 74, 46 }, new byte[] { 0, 48 }, new byte[] { 0, 40 }, new byte[] { 47, 8 }, new byte[] { 32, 11 }, new byte[] { 96, 2 }, new byte[] { 66, 110 }, new byte[] { 45, 72 }, new byte[] { 32, 83 }, new byte[] { 32, 64 }, new byte[] { 24, 0 }, new byte[] { 96, 4 }, new byte[] { 65, -18 }, new byte[] { 47, 40 }, new byte[] { 47, 1 }, new byte[] { 103, 10 }, new byte[] { 72, 64 }, new byte[] { 32, 7 }, new byte[] { 102, 8 }, new byte[] { 1, 24 }, new byte[] { 47, 7 }, new byte[] { 48, 40 }, new byte[] { 63, 46 }, new byte[] { 48, 43 }, new byte[] { 34, 110 }, new byte[] { 47, 43 }, new byte[] { 0, 44 }, new byte[] { 103, 12 }, new byte[] { 34, 95 }, new byte[] { 96, 6 }, new byte[] { 0, -1 }, new byte[] { 48, 7 }, new byte[] { -1, -18 }, new byte[] { 83, 64 }, new byte[] { 0, 64 }, new byte[] { -1, -28 }, new byte[] { 74, 64 }, new byte[] { 102, 10 }, new byte[] { 0, 15 }, new byte[] { 78, -83 }, new byte[] { 112, -1 }, new byte[] { 34, -40 }, new byte[] { 72, 107 }, new byte[] { 0, 34 }, new byte[] { 32, 75 }, new byte[] { 103, 14 }, new byte[] { 74, -82 }, new byte[] { 78, -112 }, new byte[] { -1, -32 }, new byte[] { -1, -64 }, new byte[] { 0, 42 }, new byte[] { 39, 64 }, new byte[] { 103, 2 }, new byte[] { 81, -56 }, new byte[] { 2, -74 }, new byte[] { 72, 122 }, new byte[] { 34, 120 }, new byte[] { -80, 110 }, new byte[] { -1, -26 }, new byte[] { 0, 9 }, new byte[] { 50, 46 }, new byte[] { 62, 0 }, new byte[] { 72, 65 }, new byte[] { -1, -22 }, new byte[] { 67, -18 }, new byte[] { 78, 113 }, new byte[] { 116, 0 }, new byte[] { 47, 44 }, new byte[] { 32, 108 }, new byte[] { 0, 60 }, new byte[] { 0, 38 }, new byte[] { 0, 80 }, new byte[] { 24, -128 }, new byte[] { 48, 31 }, new byte[] { 34, 0 }, new byte[] { 102, 12 }, new byte[] { -1, -38 }, new byte[] { 0, 56 }, new byte[] { 102, 2 }, new byte[] { 48, 44 }, new byte[] { 32, 12 }, new byte[] { 45, 110 }, new byte[] { 66, 64 }, new byte[] { -1, -30 }, new byte[] { -87, -16 }, new byte[] { -1, 0 }, new byte[] { 55, 124 }, new byte[] { -27, -128 }, new byte[] { -1, -36 }, new byte[] { 72, 104 }, new byte[] { 89, 79 }, new byte[] { 0, 52 }, new byte[] { 62, 31 }, new byte[] { 96, 8 }, new byte[] { 47, 6 }, new byte[] { -1, -34 }, new byte[] { 96, 10 }, new byte[] { 112, 2 }, new byte[] { 0, 50 }, new byte[] { -1, -52 }, new byte[] { 0, -128 }, new byte[] { 34, 81 }, new byte[] { 16, 31 }, new byte[] { 49, 124 }, new byte[] { -96, 41 }, new byte[] { -1, -40 }, new byte[] { 82, 64 }, new byte[] { 1, 0 }, new byte[] { 103, 16 }, new byte[] { -96, 35 }, new byte[] { -1, -50 }, new byte[] { -1, -44 }, new byte[] { 32, 6 }, new byte[] { 72, 120 }, new byte[] { 0, 46 }, new byte[] { 80, 79 }, new byte[] { 67, -6 }, new byte[] { 103, 18 }, new byte[] { 118, 0 }, new byte[] { 65, -24 }, new byte[] { 74, 110 }, new byte[] { 32, -39 }, new byte[] { 0, 90 }, new byte[] { 127, -1 }, new byte[] { 81, -54 }, new byte[] { 0, 92 }, new byte[] { 46, 0 }, new byte[] { 2, 64 }, new byte[] { 72, -57 }, new byte[] { 103, 20 }, new byte[] { 12, -128 }, new byte[] { 46, -97 }, new byte[] { -1, -42 }, new byte[] { -128, 0 }, new byte[] { 16, 0 }, new byte[] { 72, 66 }, new byte[] { 74, 107 }, new byte[] { -1, -46 }, new byte[] { 0, 72 }, new byte[] { 74, 71 }, new byte[] { 78, -47 }, new byte[] { 32, 111 }, new byte[] { 0, 65 }, new byte[] { 96, 12 }, new byte[] { 42, 120 }, new byte[] { 66, 46 }, new byte[] { 50, 0 }, new byte[] { 101, 116 }, new byte[] { 103, 22 }, new byte[] { 0, 68 }, new byte[] { 72, 109 }, new byte[] { 32, 8 }, new byte[] { 72, 108 }, new byte[] { 11, 124 }, new byte[] { 38, 64 }, new byte[] { 4, 0 }, new byte[] { 0, 104 }, new byte[] { 32, 109 }, new byte[] { 0, 13 }, new byte[] { 42, 64 }, new byte[] { 0, 11 }, new byte[] { 0, 62 }, new byte[] { 2, 32 }));
+        return this.defaultLookupTable;
     }
     private HeaderParameters headerParameters;
 
@@ -412,46 +477,32 @@ public class Dcmp2 extends KaitaiStruct {
     public Boolean isLenDecompressedOdd() {
         if (this.isLenDecompressedOdd != null)
             return this.isLenDecompressedOdd;
-        boolean _tmp = (boolean) (KaitaiStream.mod(lenDecompressed(), 2) != 0);
-        this.isLenDecompressedOdd = _tmp;
+        this.isLenDecompressedOdd = KaitaiStream.mod(lenDecompressed(), 2) != 0;
         return this.isLenDecompressedOdd;
     }
-    private ArrayList<byte[]> defaultLookupTable;
-
-    /**
-     * The default lookup table,
-     * which is used if no custom lookup table is included with the compressed data.
-     */
-    public ArrayList<byte[]> defaultLookupTable() {
-        if (this.defaultLookupTable != null)
-            return this.defaultLookupTable;
-        this.defaultLookupTable = new ArrayList<byte[]>(Arrays.asList(new byte[] { 0, 0 }, new byte[] { 0, 8 }, new byte[] { 78, -70 }, new byte[] { 32, 110 }, new byte[] { 78, 117 }, new byte[] { 0, 12 }, new byte[] { 0, 4 }, new byte[] { 112, 0 }, new byte[] { 0, 16 }, new byte[] { 0, 2 }, new byte[] { 72, 110 }, new byte[] { -1, -4 }, new byte[] { 96, 0 }, new byte[] { 0, 1 }, new byte[] { 72, -25 }, new byte[] { 47, 46 }, new byte[] { 78, 86 }, new byte[] { 0, 6 }, new byte[] { 78, 94 }, new byte[] { 47, 0 }, new byte[] { 97, 0 }, new byte[] { -1, -8 }, new byte[] { 47, 11 }, new byte[] { -1, -1 }, new byte[] { 0, 20 }, new byte[] { 0, 10 }, new byte[] { 0, 24 }, new byte[] { 32, 95 }, new byte[] { 0, 14 }, new byte[] { 32, 80 }, new byte[] { 63, 60 }, new byte[] { -1, -12 }, new byte[] { 76, -18 }, new byte[] { 48, 46 }, new byte[] { 103, 0 }, new byte[] { 76, -33 }, new byte[] { 38, 110 }, new byte[] { 0, 18 }, new byte[] { 0, 28 }, new byte[] { 66, 103 }, new byte[] { -1, -16 }, new byte[] { 48, 60 }, new byte[] { 47, 12 }, new byte[] { 0, 3 }, new byte[] { 78, -48 }, new byte[] { 0, 32 }, new byte[] { 112, 1 }, new byte[] { 0, 22 }, new byte[] { 45, 64 }, new byte[] { 72, -64 }, new byte[] { 32, 120 }, new byte[] { 114, 0 }, new byte[] { 88, -113 }, new byte[] { 102, 0 }, new byte[] { 79, -17 }, new byte[] { 66, -89 }, new byte[] { 103, 6 }, new byte[] { -1, -6 }, new byte[] { 85, -113 }, new byte[] { 40, 110 }, new byte[] { 63, 0 }, new byte[] { -1, -2 }, new byte[] { 47, 60 }, new byte[] { 103, 4 }, new byte[] { 89, -113 }, new byte[] { 32, 107 }, new byte[] { 0, 36 }, new byte[] { 32, 31 }, new byte[] { 65, -6 }, new byte[] { -127, -31 }, new byte[] { 102, 4 }, new byte[] { 103, 8 }, new byte[] { 0, 26 }, new byte[] { 78, -71 }, new byte[] { 80, -113 }, new byte[] { 32, 46 }, new byte[] { 0, 7 }, new byte[] { 78, -80 }, new byte[] { -1, -14 }, new byte[] { 61, 64 }, new byte[] { 0, 30 }, new byte[] { 32, 104 }, new byte[] { 102, 6 }, new byte[] { -1, -10 }, new byte[] { 78, -7 }, new byte[] { 8, 0 }, new byte[] { 12, 64 }, new byte[] { 61, 124 }, new byte[] { -1, -20 }, new byte[] { 0, 5 }, new byte[] { 32, 60 }, new byte[] { -1, -24 }, new byte[] { -34, -4 }, new byte[] { 74, 46 }, new byte[] { 0, 48 }, new byte[] { 0, 40 }, new byte[] { 47, 8 }, new byte[] { 32, 11 }, new byte[] { 96, 2 }, new byte[] { 66, 110 }, new byte[] { 45, 72 }, new byte[] { 32, 83 }, new byte[] { 32, 64 }, new byte[] { 24, 0 }, new byte[] { 96, 4 }, new byte[] { 65, -18 }, new byte[] { 47, 40 }, new byte[] { 47, 1 }, new byte[] { 103, 10 }, new byte[] { 72, 64 }, new byte[] { 32, 7 }, new byte[] { 102, 8 }, new byte[] { 1, 24 }, new byte[] { 47, 7 }, new byte[] { 48, 40 }, new byte[] { 63, 46 }, new byte[] { 48, 43 }, new byte[] { 34, 110 }, new byte[] { 47, 43 }, new byte[] { 0, 44 }, new byte[] { 103, 12 }, new byte[] { 34, 95 }, new byte[] { 96, 6 }, new byte[] { 0, -1 }, new byte[] { 48, 7 }, new byte[] { -1, -18 }, new byte[] { 83, 64 }, new byte[] { 0, 64 }, new byte[] { -1, -28 }, new byte[] { 74, 64 }, new byte[] { 102, 10 }, new byte[] { 0, 15 }, new byte[] { 78, -83 }, new byte[] { 112, -1 }, new byte[] { 34, -40 }, new byte[] { 72, 107 }, new byte[] { 0, 34 }, new byte[] { 32, 75 }, new byte[] { 103, 14 }, new byte[] { 74, -82 }, new byte[] { 78, -112 }, new byte[] { -1, -32 }, new byte[] { -1, -64 }, new byte[] { 0, 42 }, new byte[] { 39, 64 }, new byte[] { 103, 2 }, new byte[] { 81, -56 }, new byte[] { 2, -74 }, new byte[] { 72, 122 }, new byte[] { 34, 120 }, new byte[] { -80, 110 }, new byte[] { -1, -26 }, new byte[] { 0, 9 }, new byte[] { 50, 46 }, new byte[] { 62, 0 }, new byte[] { 72, 65 }, new byte[] { -1, -22 }, new byte[] { 67, -18 }, new byte[] { 78, 113 }, new byte[] { 116, 0 }, new byte[] { 47, 44 }, new byte[] { 32, 108 }, new byte[] { 0, 60 }, new byte[] { 0, 38 }, new byte[] { 0, 80 }, new byte[] { 24, -128 }, new byte[] { 48, 31 }, new byte[] { 34, 0 }, new byte[] { 102, 12 }, new byte[] { -1, -38 }, new byte[] { 0, 56 }, new byte[] { 102, 2 }, new byte[] { 48, 44 }, new byte[] { 32, 12 }, new byte[] { 45, 110 }, new byte[] { 66, 64 }, new byte[] { -1, -30 }, new byte[] { -87, -16 }, new byte[] { -1, 0 }, new byte[] { 55, 124 }, new byte[] { -27, -128 }, new byte[] { -1, -36 }, new byte[] { 72, 104 }, new byte[] { 89, 79 }, new byte[] { 0, 52 }, new byte[] { 62, 31 }, new byte[] { 96, 8 }, new byte[] { 47, 6 }, new byte[] { -1, -34 }, new byte[] { 96, 10 }, new byte[] { 112, 2 }, new byte[] { 0, 50 }, new byte[] { -1, -52 }, new byte[] { 0, -128 }, new byte[] { 34, 81 }, new byte[] { 16, 31 }, new byte[] { 49, 124 }, new byte[] { -96, 41 }, new byte[] { -1, -40 }, new byte[] { 82, 64 }, new byte[] { 1, 0 }, new byte[] { 103, 16 }, new byte[] { -96, 35 }, new byte[] { -1, -50 }, new byte[] { -1, -44 }, new byte[] { 32, 6 }, new byte[] { 72, 120 }, new byte[] { 0, 46 }, new byte[] { 80, 79 }, new byte[] { 67, -6 }, new byte[] { 103, 18 }, new byte[] { 118, 0 }, new byte[] { 65, -24 }, new byte[] { 74, 110 }, new byte[] { 32, -39 }, new byte[] { 0, 90 }, new byte[] { 127, -1 }, new byte[] { 81, -54 }, new byte[] { 0, 92 }, new byte[] { 46, 0 }, new byte[] { 2, 64 }, new byte[] { 72, -57 }, new byte[] { 103, 20 }, new byte[] { 12, -128 }, new byte[] { 46, -97 }, new byte[] { -1, -42 }, new byte[] { -128, 0 }, new byte[] { 16, 0 }, new byte[] { 72, 66 }, new byte[] { 74, 107 }, new byte[] { -1, -46 }, new byte[] { 0, 72 }, new byte[] { 74, 71 }, new byte[] { 78, -47 }, new byte[] { 32, 111 }, new byte[] { 0, 65 }, new byte[] { 96, 12 }, new byte[] { 42, 120 }, new byte[] { 66, 46 }, new byte[] { 50, 0 }, new byte[] { 101, 116 }, new byte[] { 103, 22 }, new byte[] { 0, 68 }, new byte[] { 72, 109 }, new byte[] { 32, 8 }, new byte[] { 72, 108 }, new byte[] { 11, 124 }, new byte[] { 38, 64 }, new byte[] { 4, 0 }, new byte[] { 0, 104 }, new byte[] { 32, 109 }, new byte[] { 0, 13 }, new byte[] { 42, 64 }, new byte[] { 0, 11 }, new byte[] { 0, 62 }, new byte[] { 2, 32 }));
-        return this.defaultLookupTable;
-    }
-    private ArrayList<byte[]> lookupTable;
+    private List<byte[]> lookupTable;
 
     /**
      * The lookup table to be used for this compressed data.
      */
-    public ArrayList<byte[]> lookupTable() {
+    public List<byte[]> lookupTable() {
         if (this.lookupTable != null)
             return this.lookupTable;
         this.lookupTable = (headerParameters().flags().hasCustomLookupTable() ? customLookupTable() : defaultLookupTable());
         return this.lookupTable;
     }
-    private ArrayList<byte[]> customLookupTable;
+    private List<byte[]> customLookupTable;
     private KaitaiStruct data;
     private byte[] lastByte;
     private long lenDecompressed;
     private BytesWithIo headerParametersWithIo;
     private Dcmp2 _root;
     private KaitaiStruct _parent;
-    private byte[] _raw_data;
 
     /**
      * The custom lookup table to be used instead of the default lookup table.
      */
-    public ArrayList<byte[]> customLookupTable() { return customLookupTable; }
+    public List<byte[]> customLookupTable() { return customLookupTable; }
 
     /**
      * The compressed data.
@@ -483,5 +534,4 @@ public class Dcmp2 extends KaitaiStruct {
     public BytesWithIo headerParametersWithIo() { return headerParametersWithIo; }
     public Dcmp2 _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
-    public byte[] _raw_data() { return _raw_data; }
 }

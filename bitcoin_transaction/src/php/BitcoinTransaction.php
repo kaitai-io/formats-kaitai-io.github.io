@@ -3,8 +3,8 @@
 
 namespace {
     class BitcoinTransaction extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \BitcoinTransaction $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\BitcoinTransaction $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -62,7 +62,7 @@ namespace {
 
 namespace BitcoinTransaction {
     class Vin extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \BitcoinTransaction $_parent = null, \BitcoinTransaction $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\BitcoinTransaction $_parent = null, ?\BitcoinTransaction $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -75,8 +75,8 @@ namespace BitcoinTransaction {
             $_io__raw_scriptSig = new \Kaitai\Struct\Stream($this->_m__raw_scriptSig);
             $this->_m_scriptSig = new \BitcoinTransaction\Vin\ScriptSignature($_io__raw_scriptSig, $this, $this->_root);
             $this->_m_endOfVin = $this->_io->readBytes(4);
-            if (!($this->endOfVin() == "\xFF\xFF\xFF\xFF")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\xFF\xFF\xFF\xFF", $this->endOfVin(), $this->_io(), "/types/vin/seq/4");
+            if (!($this->_m_endOfVin == "\xFF\xFF\xFF\xFF")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\xFF\xFF\xFF\xFF", $this->_m_endOfVin, $this->_io, "/types/vin/seq/4");
             }
         }
         protected $_m_txid;
@@ -117,7 +117,7 @@ namespace BitcoinTransaction {
 
 namespace BitcoinTransaction\Vin {
     class ScriptSignature extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \BitcoinTransaction\Vin $_parent = null, \BitcoinTransaction $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\BitcoinTransaction\Vin $_parent = null, ?\BitcoinTransaction $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -156,26 +156,26 @@ namespace BitcoinTransaction\Vin {
 
 namespace BitcoinTransaction\Vin\ScriptSignature {
     class DerSignature extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \BitcoinTransaction\Vin\ScriptSignature $_parent = null, \BitcoinTransaction $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\BitcoinTransaction\Vin\ScriptSignature $_parent = null, ?\BitcoinTransaction $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_sequence = $this->_io->readBytes(1);
-            if (!($this->sequence() == "\x30")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x30", $this->sequence(), $this->_io(), "/types/vin/types/script_signature/types/der_signature/seq/0");
+            if (!($this->_m_sequence == "\x30")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x30", $this->_m_sequence, $this->_io, "/types/vin/types/script_signature/types/der_signature/seq/0");
             }
             $this->_m_lenSig = $this->_io->readU1();
             $this->_m_sep1 = $this->_io->readBytes(1);
-            if (!($this->sep1() == "\x02")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x02", $this->sep1(), $this->_io(), "/types/vin/types/script_signature/types/der_signature/seq/2");
+            if (!($this->_m_sep1 == "\x02")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x02", $this->_m_sep1, $this->_io, "/types/vin/types/script_signature/types/der_signature/seq/2");
             }
             $this->_m_lenSigR = $this->_io->readU1();
             $this->_m_sigR = $this->_io->readBytes($this->lenSigR());
             $this->_m_sep2 = $this->_io->readBytes(1);
-            if (!($this->sep2() == "\x02")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x02", $this->sep2(), $this->_io(), "/types/vin/types/script_signature/types/der_signature/seq/5");
+            if (!($this->_m_sep2 == "\x02")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x02", $this->_m_sep2, $this->_io, "/types/vin/types/script_signature/types/der_signature/seq/5");
             }
             $this->_m_lenSigS = $this->_io->readU1();
             $this->_m_sigS = $this->_io->readBytes($this->lenSigS());
@@ -217,7 +217,7 @@ namespace BitcoinTransaction\Vin\ScriptSignature {
 
 namespace BitcoinTransaction\Vin\ScriptSignature {
     class PublicKey extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \BitcoinTransaction\Vin\ScriptSignature $_parent = null, \BitcoinTransaction $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\BitcoinTransaction\Vin\ScriptSignature $_parent = null, ?\BitcoinTransaction $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -250,12 +250,18 @@ namespace BitcoinTransaction\Vin\ScriptSignature {
         const SIGHASH_NONE = 2;
         const SIGHASH_SINGLE = 3;
         const SIGHASH_ANYONECANPAY = 80;
+
+        private const _VALUES = [1 => true, 2 => true, 3 => true, 80 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
 namespace BitcoinTransaction {
     class Vout extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \BitcoinTransaction $_parent = null, \BitcoinTransaction $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\BitcoinTransaction $_parent = null, ?\BitcoinTransaction $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }

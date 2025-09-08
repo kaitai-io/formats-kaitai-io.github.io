@@ -1,10 +1,34 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 #include "websocket.h"
+std::set<websocket_t::opcode_t> websocket_t::_build_values_opcode_t() {
+    std::set<websocket_t::opcode_t> _t;
+    _t.insert(websocket_t::OPCODE_CONTINUATION);
+    _t.insert(websocket_t::OPCODE_TEXT);
+    _t.insert(websocket_t::OPCODE_BINARY);
+    _t.insert(websocket_t::OPCODE_RESERVED_3);
+    _t.insert(websocket_t::OPCODE_RESERVED_4);
+    _t.insert(websocket_t::OPCODE_RESERVED_5);
+    _t.insert(websocket_t::OPCODE_RESERVED_6);
+    _t.insert(websocket_t::OPCODE_RESERVED_7);
+    _t.insert(websocket_t::OPCODE_CLOSE);
+    _t.insert(websocket_t::OPCODE_PING);
+    _t.insert(websocket_t::OPCODE_PONG);
+    _t.insert(websocket_t::OPCODE_RESERVED_CONTROL_B);
+    _t.insert(websocket_t::OPCODE_RESERVED_CONTROL_C);
+    _t.insert(websocket_t::OPCODE_RESERVED_CONTROL_D);
+    _t.insert(websocket_t::OPCODE_RESERVED_CONTROL_E);
+    _t.insert(websocket_t::OPCODE_RESERVED_CONTROL_F);
+    return _t;
+}
+const std::set<websocket_t::opcode_t> websocket_t::_values_opcode_t = websocket_t::_build_values_opcode_t();
+bool websocket_t::_is_defined_opcode_t(websocket_t::opcode_t v) {
+    return websocket_t::_values_opcode_t.find(v) != websocket_t::_values_opcode_t.end();
+}
 
 websocket_t::websocket_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, websocket_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     m_initial_frame = 0;
     m_trailing_frames = 0;
 
@@ -49,6 +73,47 @@ void websocket_t::_clean_up() {
             }
             delete m_trailing_frames; m_trailing_frames = 0;
         }
+    }
+}
+
+websocket_t::dataframe_t::dataframe_t(kaitai::kstream* p__io, websocket_t* p__parent, websocket_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_header = 0;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void websocket_t::dataframe_t::_read() {
+    m_header = new frame_header_t(m__io, this, m__root);
+    n_payload_bytes = true;
+    if (_root()->initial_frame()->header()->opcode() != websocket_t::OPCODE_TEXT) {
+        n_payload_bytes = false;
+        m_payload_bytes = m__io->read_bytes(header()->len_payload());
+    }
+    n_payload_text = true;
+    if (_root()->initial_frame()->header()->opcode() == websocket_t::OPCODE_TEXT) {
+        n_payload_text = false;
+        m_payload_text = kaitai::kstream::bytes_to_str(m__io->read_bytes(header()->len_payload()), "UTF-8");
+    }
+}
+
+websocket_t::dataframe_t::~dataframe_t() {
+    _clean_up();
+}
+
+void websocket_t::dataframe_t::_clean_up() {
+    if (m_header) {
+        delete m_header; m_header = 0;
+    }
+    if (!n_payload_bytes) {
+    }
+    if (!n_payload_text) {
     }
 }
 
@@ -105,8 +170,8 @@ void websocket_t::frame_header_t::_clean_up() {
 int32_t websocket_t::frame_header_t::len_payload() {
     if (f_len_payload)
         return m_len_payload;
-    m_len_payload = ((len_payload_primary() <= 125) ? (len_payload_primary()) : (((len_payload_primary() == 126) ? (len_payload_extended_1()) : (len_payload_extended_2()))));
     f_len_payload = true;
+    m_len_payload = ((len_payload_primary() <= 125) ? (len_payload_primary()) : (((len_payload_primary() == 126) ? (len_payload_extended_1()) : (len_payload_extended_2()))));
     return m_len_payload;
 }
 
@@ -133,7 +198,7 @@ void websocket_t::initial_frame_t::_read() {
     n_payload_text = true;
     if (header()->opcode() == websocket_t::OPCODE_TEXT) {
         n_payload_text = false;
-        m_payload_text = kaitai::kstream::bytes_to_str(m__io->read_bytes(header()->len_payload()), std::string("UTF-8"));
+        m_payload_text = kaitai::kstream::bytes_to_str(m__io->read_bytes(header()->len_payload()), "UTF-8");
     }
 }
 
@@ -142,47 +207,6 @@ websocket_t::initial_frame_t::~initial_frame_t() {
 }
 
 void websocket_t::initial_frame_t::_clean_up() {
-    if (m_header) {
-        delete m_header; m_header = 0;
-    }
-    if (!n_payload_bytes) {
-    }
-    if (!n_payload_text) {
-    }
-}
-
-websocket_t::dataframe_t::dataframe_t(kaitai::kstream* p__io, websocket_t* p__parent, websocket_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    m_header = 0;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void websocket_t::dataframe_t::_read() {
-    m_header = new frame_header_t(m__io, this, m__root);
-    n_payload_bytes = true;
-    if (_root()->initial_frame()->header()->opcode() != websocket_t::OPCODE_TEXT) {
-        n_payload_bytes = false;
-        m_payload_bytes = m__io->read_bytes(header()->len_payload());
-    }
-    n_payload_text = true;
-    if (_root()->initial_frame()->header()->opcode() == websocket_t::OPCODE_TEXT) {
-        n_payload_text = false;
-        m_payload_text = kaitai::kstream::bytes_to_str(m__io->read_bytes(header()->len_payload()), std::string("UTF-8"));
-    }
-}
-
-websocket_t::dataframe_t::~dataframe_t() {
-    _clean_up();
-}
-
-void websocket_t::dataframe_t::_clean_up() {
     if (m_header) {
         delete m_header; m_header = 0;
     }

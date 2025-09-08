@@ -1,8 +1,7 @@
 import kaitai_struct_nim_runtime
 import options
-import /network/ethernet_frame
+import ethernet_frame
 
-import "ethernet_frame"
 type
   PacketPpi* = ref object of KaitaiStruct
     `header`*: PacketPpi_PacketPpiHeader
@@ -11,13 +10,6 @@ type
     `parent`*: KaitaiStruct
     `rawFields`*: seq[byte]
     `rawBody`*: seq[byte]
-  PacketPpi_PfhType* = enum
-    radio_802_11_common = 2
-    radio_802_11n_mac_ext = 3
-    radio_802_11n_mac_phy_ext = 4
-    spectrum_map = 5
-    process_info = 6
-    capture_info = 7
   PacketPpi_Linktype* = enum
     null_linktype = 0
     ethernet = 1
@@ -123,15 +115,13 @@ type
     zwave_r3 = 262
     wattstopper_dlm = 263
     iso_14443 = 264
-  PacketPpi_PacketPpiFields* = ref object of KaitaiStruct
-    `entries`*: seq[PacketPpi_PacketPpiField]
-    `parent`*: PacketPpi
-  PacketPpi_Radio80211nMacExtBody* = ref object of KaitaiStruct
-    `flags`*: PacketPpi_MacFlags
-    `aMpduId`*: uint32
-    `numDelimiters`*: uint8
-    `reserved`*: seq[byte]
-    `parent`*: PacketPpi_PacketPpiField
+  PacketPpi_PfhType* = enum
+    radio_802_11_common = 2
+    radio_802_11n_mac_ext = 3
+    radio_802_11n_mac_phy_ext = 4
+    spectrum_map = 5
+    process_info = 6
+    capture_info = 7
   PacketPpi_MacFlags* = ref object of KaitaiStruct
     `unused1`*: bool
     `aggregateDelimiter`*: bool
@@ -143,6 +133,15 @@ type
     `greenfield`*: bool
     `unused2`*: seq[byte]
     `parent`*: KaitaiStruct
+  PacketPpi_PacketPpiField* = ref object of KaitaiStruct
+    `pfhType`*: PacketPpi_PfhType
+    `pfhDatalen`*: uint16
+    `body`*: KaitaiStruct
+    `parent`*: PacketPpi_PacketPpiFields
+    `rawBody`*: seq[byte]
+  PacketPpi_PacketPpiFields* = ref object of KaitaiStruct
+    `entries`*: seq[PacketPpi_PacketPpiField]
+    `parent`*: PacketPpi
   PacketPpi_PacketPpiHeader* = ref object of KaitaiStruct
     `pphVersion`*: uint8
     `pphFlags`*: uint8
@@ -160,12 +159,12 @@ type
     `dbmAntsignal`*: int8
     `dbmAntnoise`*: int8
     `parent`*: PacketPpi_PacketPpiField
-  PacketPpi_PacketPpiField* = ref object of KaitaiStruct
-    `pfhType`*: PacketPpi_PfhType
-    `pfhDatalen`*: uint16
-    `body`*: KaitaiStruct
-    `parent`*: PacketPpi_PacketPpiFields
-    `rawBody`*: seq[byte]
+  PacketPpi_Radio80211nMacExtBody* = ref object of KaitaiStruct
+    `flags`*: PacketPpi_MacFlags
+    `aMpduId`*: uint32
+    `numDelimiters`*: uint8
+    `reserved`*: seq[byte]
+    `parent`*: PacketPpi_PacketPpiField
   PacketPpi_Radio80211nMacPhyExtBody* = ref object of KaitaiStruct
     `flags`*: PacketPpi_MacFlags
     `aMpduId`*: uint32
@@ -197,12 +196,12 @@ type
     `parent`*: PacketPpi_Radio80211nMacPhyExtBody
 
 proc read*(_: typedesc[PacketPpi], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): PacketPpi
-proc read*(_: typedesc[PacketPpi_PacketPpiFields], io: KaitaiStream, root: KaitaiStruct, parent: PacketPpi): PacketPpi_PacketPpiFields
-proc read*(_: typedesc[PacketPpi_Radio80211nMacExtBody], io: KaitaiStream, root: KaitaiStruct, parent: PacketPpi_PacketPpiField): PacketPpi_Radio80211nMacExtBody
 proc read*(_: typedesc[PacketPpi_MacFlags], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): PacketPpi_MacFlags
+proc read*(_: typedesc[PacketPpi_PacketPpiField], io: KaitaiStream, root: KaitaiStruct, parent: PacketPpi_PacketPpiFields): PacketPpi_PacketPpiField
+proc read*(_: typedesc[PacketPpi_PacketPpiFields], io: KaitaiStream, root: KaitaiStruct, parent: PacketPpi): PacketPpi_PacketPpiFields
 proc read*(_: typedesc[PacketPpi_PacketPpiHeader], io: KaitaiStream, root: KaitaiStruct, parent: PacketPpi): PacketPpi_PacketPpiHeader
 proc read*(_: typedesc[PacketPpi_Radio80211CommonBody], io: KaitaiStream, root: KaitaiStruct, parent: PacketPpi_PacketPpiField): PacketPpi_Radio80211CommonBody
-proc read*(_: typedesc[PacketPpi_PacketPpiField], io: KaitaiStream, root: KaitaiStruct, parent: PacketPpi_PacketPpiFields): PacketPpi_PacketPpiField
+proc read*(_: typedesc[PacketPpi_Radio80211nMacExtBody], io: KaitaiStream, root: KaitaiStruct, parent: PacketPpi_PacketPpiField): PacketPpi_Radio80211nMacExtBody
 proc read*(_: typedesc[PacketPpi_Radio80211nMacPhyExtBody], io: KaitaiStream, root: KaitaiStruct, parent: PacketPpi_PacketPpiField): PacketPpi_Radio80211nMacPhyExtBody
 proc read*(_: typedesc[PacketPpi_Radio80211nMacPhyExtBody_ChannelFlags], io: KaitaiStream, root: KaitaiStruct, parent: PacketPpi_Radio80211nMacPhyExtBody): PacketPpi_Radio80211nMacPhyExtBody_ChannelFlags
 proc read*(_: typedesc[PacketPpi_Radio80211nMacPhyExtBody_SignalNoise], io: KaitaiStream, root: KaitaiStruct, parent: PacketPpi_Radio80211nMacPhyExtBody): PacketPpi_Radio80211nMacPhyExtBody_SignalNoise
@@ -230,24 +229,24 @@ proc read*(_: typedesc[PacketPpi], io: KaitaiStream, root: KaitaiStruct, parent:
 
   let headerExpr = PacketPpi_PacketPpiHeader.read(this.io, this.root, this)
   this.header = headerExpr
-  let rawFieldsExpr = this.io.readBytes(int((this.header.pphLen - 8)))
+  let rawFieldsExpr = this.io.readBytes(int(this.header.pphLen - 8))
   this.rawFields = rawFieldsExpr
   let rawFieldsIo = newKaitaiStream(rawFieldsExpr)
   let fieldsExpr = PacketPpi_PacketPpiFields.read(rawFieldsIo, this.root, this)
   this.fields = fieldsExpr
   block:
     let on = this.header.pphDlt
-    if on == packet_ppi.ppi:
+    if on == packet_ppi.ethernet:
+      let rawBodyExpr = this.io.readBytesFull()
+      this.rawBody = rawBodyExpr
+      let rawBodyIo = newKaitaiStream(rawBodyExpr)
+      let bodyExpr = EthernetFrame.read(rawBodyIo, nil, nil)
+      this.body = bodyExpr
+    elif on == packet_ppi.ppi:
       let rawBodyExpr = this.io.readBytesFull()
       this.rawBody = rawBodyExpr
       let rawBodyIo = newKaitaiStream(rawBodyExpr)
       let bodyExpr = PacketPpi.read(rawBodyIo, this.root, this)
-      this.body = bodyExpr
-    elif on == packet_ppi.ethernet:
-      let rawBodyExpr = this.io.readBytesFull()
-      this.rawBody = rawBodyExpr
-      let rawBodyIo = newKaitaiStream(rawBodyExpr)
-      let bodyExpr = EthernetFrame.read(rawBodyIo, this.root, this)
       this.body = bodyExpr
     else:
       let bodyExpr = this.io.readBytesFull()
@@ -255,48 +254,6 @@ proc read*(_: typedesc[PacketPpi], io: KaitaiStream, root: KaitaiStruct, parent:
 
 proc fromFile*(_: typedesc[PacketPpi], filename: string): PacketPpi =
   PacketPpi.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[PacketPpi_PacketPpiFields], io: KaitaiStream, root: KaitaiStruct, parent: PacketPpi): PacketPpi_PacketPpiFields =
-  template this: untyped = result
-  this = new(PacketPpi_PacketPpiFields)
-  let root = if root == nil: cast[PacketPpi](this) else: cast[PacketPpi](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  block:
-    var i: int
-    while not this.io.isEof:
-      let it = PacketPpi_PacketPpiField.read(this.io, this.root, this)
-      this.entries.add(it)
-      inc i
-
-proc fromFile*(_: typedesc[PacketPpi_PacketPpiFields], filename: string): PacketPpi_PacketPpiFields =
-  PacketPpi_PacketPpiFields.read(newKaitaiFileStream(filename), nil, nil)
-
-
-##[
-@see <a href="https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 4.1.3</a>
-]##
-proc read*(_: typedesc[PacketPpi_Radio80211nMacExtBody], io: KaitaiStream, root: KaitaiStruct, parent: PacketPpi_PacketPpiField): PacketPpi_Radio80211nMacExtBody =
-  template this: untyped = result
-  this = new(PacketPpi_Radio80211nMacExtBody)
-  let root = if root == nil: cast[PacketPpi](this) else: cast[PacketPpi](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let flagsExpr = PacketPpi_MacFlags.read(this.io, this.root, this)
-  this.flags = flagsExpr
-  let aMpduIdExpr = this.io.readU4le()
-  this.aMpduId = aMpduIdExpr
-  let numDelimitersExpr = this.io.readU1()
-  this.numDelimiters = numDelimitersExpr
-  let reservedExpr = this.io.readBytes(int(3))
-  this.reserved = reservedExpr
-
-proc fromFile*(_: typedesc[PacketPpi_Radio80211nMacExtBody], filename: string): PacketPpi_Radio80211nMacExtBody =
-  PacketPpi_Radio80211nMacExtBody.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[PacketPpi_MacFlags], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): PacketPpi_MacFlags =
   template this: untyped = result
@@ -361,6 +318,67 @@ proc fromFile*(_: typedesc[PacketPpi_MacFlags], filename: string): PacketPpi_Mac
 ##[
 @see <a href="https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 3.1</a>
 ]##
+proc read*(_: typedesc[PacketPpi_PacketPpiField], io: KaitaiStream, root: KaitaiStruct, parent: PacketPpi_PacketPpiFields): PacketPpi_PacketPpiField =
+  template this: untyped = result
+  this = new(PacketPpi_PacketPpiField)
+  let root = if root == nil: cast[PacketPpi](this) else: cast[PacketPpi](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let pfhTypeExpr = PacketPpi_PfhType(this.io.readU2le())
+  this.pfhType = pfhTypeExpr
+  let pfhDatalenExpr = this.io.readU2le()
+  this.pfhDatalen = pfhDatalenExpr
+  block:
+    let on = this.pfhType
+    if on == packet_ppi.radio_802_11_common:
+      let rawBodyExpr = this.io.readBytes(int(this.pfhDatalen))
+      this.rawBody = rawBodyExpr
+      let rawBodyIo = newKaitaiStream(rawBodyExpr)
+      let bodyExpr = PacketPpi_Radio80211CommonBody.read(rawBodyIo, this.root, this)
+      this.body = bodyExpr
+    elif on == packet_ppi.radio_802_11n_mac_ext:
+      let rawBodyExpr = this.io.readBytes(int(this.pfhDatalen))
+      this.rawBody = rawBodyExpr
+      let rawBodyIo = newKaitaiStream(rawBodyExpr)
+      let bodyExpr = PacketPpi_Radio80211nMacExtBody.read(rawBodyIo, this.root, this)
+      this.body = bodyExpr
+    elif on == packet_ppi.radio_802_11n_mac_phy_ext:
+      let rawBodyExpr = this.io.readBytes(int(this.pfhDatalen))
+      this.rawBody = rawBodyExpr
+      let rawBodyIo = newKaitaiStream(rawBodyExpr)
+      let bodyExpr = PacketPpi_Radio80211nMacPhyExtBody.read(rawBodyIo, this.root, this)
+      this.body = bodyExpr
+    else:
+      let bodyExpr = this.io.readBytes(int(this.pfhDatalen))
+      this.body = bodyExpr
+
+proc fromFile*(_: typedesc[PacketPpi_PacketPpiField], filename: string): PacketPpi_PacketPpiField =
+  PacketPpi_PacketPpiField.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[PacketPpi_PacketPpiFields], io: KaitaiStream, root: KaitaiStruct, parent: PacketPpi): PacketPpi_PacketPpiFields =
+  template this: untyped = result
+  this = new(PacketPpi_PacketPpiFields)
+  let root = if root == nil: cast[PacketPpi](this) else: cast[PacketPpi](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  block:
+    var i: int
+    while not this.io.isEof:
+      let it = PacketPpi_PacketPpiField.read(this.io, this.root, this)
+      this.entries.add(it)
+      inc i
+
+proc fromFile*(_: typedesc[PacketPpi_PacketPpiFields], filename: string): PacketPpi_PacketPpiFields =
+  PacketPpi_PacketPpiFields.read(newKaitaiFileStream(filename), nil, nil)
+
+
+##[
+@see <a href="https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 3.1</a>
+]##
 proc read*(_: typedesc[PacketPpi_PacketPpiHeader], io: KaitaiStream, root: KaitaiStruct, parent: PacketPpi): PacketPpi_PacketPpiHeader =
   template this: untyped = result
   this = new(PacketPpi_PacketPpiHeader)
@@ -417,46 +435,27 @@ proc fromFile*(_: typedesc[PacketPpi_Radio80211CommonBody], filename: string): P
 
 
 ##[
-@see <a href="https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 3.1</a>
+@see <a href="https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 4.1.3</a>
 ]##
-proc read*(_: typedesc[PacketPpi_PacketPpiField], io: KaitaiStream, root: KaitaiStruct, parent: PacketPpi_PacketPpiFields): PacketPpi_PacketPpiField =
+proc read*(_: typedesc[PacketPpi_Radio80211nMacExtBody], io: KaitaiStream, root: KaitaiStruct, parent: PacketPpi_PacketPpiField): PacketPpi_Radio80211nMacExtBody =
   template this: untyped = result
-  this = new(PacketPpi_PacketPpiField)
+  this = new(PacketPpi_Radio80211nMacExtBody)
   let root = if root == nil: cast[PacketPpi](this) else: cast[PacketPpi](root)
   this.io = io
   this.root = root
   this.parent = parent
 
-  let pfhTypeExpr = PacketPpi_PfhType(this.io.readU2le())
-  this.pfhType = pfhTypeExpr
-  let pfhDatalenExpr = this.io.readU2le()
-  this.pfhDatalen = pfhDatalenExpr
-  block:
-    let on = this.pfhType
-    if on == packet_ppi.radio_802_11_common:
-      let rawBodyExpr = this.io.readBytes(int(this.pfhDatalen))
-      this.rawBody = rawBodyExpr
-      let rawBodyIo = newKaitaiStream(rawBodyExpr)
-      let bodyExpr = PacketPpi_Radio80211CommonBody.read(rawBodyIo, this.root, this)
-      this.body = bodyExpr
-    elif on == packet_ppi.radio_802_11n_mac_ext:
-      let rawBodyExpr = this.io.readBytes(int(this.pfhDatalen))
-      this.rawBody = rawBodyExpr
-      let rawBodyIo = newKaitaiStream(rawBodyExpr)
-      let bodyExpr = PacketPpi_Radio80211nMacExtBody.read(rawBodyIo, this.root, this)
-      this.body = bodyExpr
-    elif on == packet_ppi.radio_802_11n_mac_phy_ext:
-      let rawBodyExpr = this.io.readBytes(int(this.pfhDatalen))
-      this.rawBody = rawBodyExpr
-      let rawBodyIo = newKaitaiStream(rawBodyExpr)
-      let bodyExpr = PacketPpi_Radio80211nMacPhyExtBody.read(rawBodyIo, this.root, this)
-      this.body = bodyExpr
-    else:
-      let bodyExpr = this.io.readBytes(int(this.pfhDatalen))
-      this.body = bodyExpr
+  let flagsExpr = PacketPpi_MacFlags.read(this.io, this.root, this)
+  this.flags = flagsExpr
+  let aMpduIdExpr = this.io.readU4le()
+  this.aMpduId = aMpduIdExpr
+  let numDelimitersExpr = this.io.readU1()
+  this.numDelimiters = numDelimitersExpr
+  let reservedExpr = this.io.readBytes(int(3))
+  this.reserved = reservedExpr
 
-proc fromFile*(_: typedesc[PacketPpi_PacketPpiField], filename: string): PacketPpi_PacketPpiField =
-  PacketPpi_PacketPpiField.read(newKaitaiFileStream(filename), nil, nil)
+proc fromFile*(_: typedesc[PacketPpi_Radio80211nMacExtBody], filename: string): PacketPpi_Radio80211nMacExtBody =
+  PacketPpi_Radio80211nMacExtBody.read(newKaitaiFileStream(filename), nil, nil)
 
 
 ##[

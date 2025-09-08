@@ -175,6 +175,11 @@ rtp data from network capture.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="Rtpdump (rtptools) parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="Rtpdump (rtptools) parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -205,7 +210,17 @@ rtp data from network capture.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="Rtpdump (rtptools) parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="Rtpdump (rtptools) parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="Rtpdump (rtptools) parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -237,9 +252,8 @@ rtp data from network capture.</p>
         <div class="row">
             <div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="n">kaitai_struct_nim_runtime</span>
 <span class="kn">import</span><span class="w"> </span><span class="n">options</span>
-<span class="kn">import</span><span class="w"> </span><span class="o">/</span><span class="n">network</span><span class="o">/</span><span class="n">rtp_packet</span>
+<span class="kn">import</span><span class="w"> </span><span class="n">rtp_packet</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="s">&quot;rtp_packet&quot;</span>
 <span class="k">type</span>
 <span class="w">  </span><span class="n">Rtpdump</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
 <span class="w">    </span><span class="p">`</span><span class="n">fileHeader</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Rtpdump_HeaderT</span>
@@ -308,9 +322,9 @@ rtp data from network capture.</p>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">shebang</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">shebangExpr</span>
 <span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">spaceExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">space</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spaceExpr</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">ipExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesTerm</span><span class="p">(</span><span class="mi">47</span><span class="p">,</span><span class="w"> </span><span class="kp">false</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;ascii&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">ipExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesTerm</span><span class="p">(</span><span class="mi">47</span><span class="p">,</span><span class="w"> </span><span class="kp">false</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;ASCII&quot;</span><span class="p">)</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">ip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ipExpr</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">portExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesTerm</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="kp">false</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;ascii&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">portExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesTerm</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="kp">false</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">,</span><span class="w"> </span><span class="kp">true</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;ASCII&quot;</span><span class="p">)</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">portExpr</span>
 
 <span class="w">  </span><span class="sd">##[</span>
@@ -383,7 +397,7 @@ rtp data from network capture.</p>
 <span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">rawBodyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenBody</span><span class="p">))</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">rawBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rawBodyExpr</span>
 <span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">rawBodyIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyExpr</span><span class="p">)</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">bodyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RtpPacket</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyIo</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">bodyExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RtpPacket</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyIo</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bodyExpr</span>
 
 <span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Rtpdump_PacketT], filename: string): Rtpdump_PacketT =</span>

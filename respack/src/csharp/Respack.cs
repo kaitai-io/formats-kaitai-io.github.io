@@ -43,9 +43,9 @@ namespace Kaitai
             private void _read()
             {
                 _magic = m_io.ReadBytes(2);
-                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 82, 83 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 82, 83 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 82, 83 }, Magic, M_Io, "/types/header/seq/0");
+                    throw new ValidationNotEqualError(new byte[] { 82, 83 }, _magic, m_io, "/types/header/seq/0");
                 }
                 _unknown = m_io.ReadBytes(8);
                 _lenJson = m_io.ReadU4le();

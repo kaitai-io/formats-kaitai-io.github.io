@@ -204,308 +204,134 @@ proc read*(_: typedesc[Code6502_Operation], io: KaitaiStream, root: KaitaiStruct
   this.code = codeExpr
   block:
     let on = this.code
-    if on == code_6502.bcc_rel:
-      let argsExpr = uint16(this.io.readS1())
-      this.args = argsExpr
-    elif on == code_6502.ora_ind_y:
-      let argsExpr = uint16(this.io.readU1())
-      this.args = argsExpr
-    elif on == code_6502.lda_ind_y:
-      let argsExpr = uint16(this.io.readU1())
-      this.args = argsExpr
-    elif on == code_6502.cpx_zpg:
-      let argsExpr = uint16(this.io.readU1())
-      this.args = argsExpr
-    elif on == code_6502.sta_zpg_x:
-      let argsExpr = uint16(this.io.readU1())
-      this.args = argsExpr
-    elif on == code_6502.sta_zpg:
-      let argsExpr = uint16(this.io.readU1())
-      this.args = argsExpr
-    elif on == code_6502.bcs_rel:
-      let argsExpr = uint16(this.io.readS1())
-      this.args = argsExpr
-    elif on == code_6502.ldy_zpg_x:
-      let argsExpr = uint16(this.io.readU1())
-      this.args = argsExpr
-    elif on == code_6502.lsr_abs_x:
-      let argsExpr = this.io.readU2le()
-      this.args = argsExpr
-    elif on == code_6502.and_abs_x:
-      let argsExpr = this.io.readU2le()
-      this.args = argsExpr
-    elif on == code_6502.adc_abs:
-      let argsExpr = this.io.readU2le()
-      this.args = argsExpr
-    elif on == code_6502.sta_abs:
-      let argsExpr = this.io.readU2le()
-      this.args = argsExpr
-    elif on == code_6502.bne_rel:
-      let argsExpr = uint16(this.io.readS1())
-      this.args = argsExpr
-    elif on == code_6502.lda_imm:
-      let argsExpr = uint16(this.io.readU1())
-      this.args = argsExpr
-    elif on == code_6502.adc_imm:
-      let argsExpr = uint16(this.io.readU1())
-      this.args = argsExpr
-    elif on == code_6502.lsr_abs:
+    if on == code_6502.adc_abs:
       let argsExpr = this.io.readU2le()
       this.args = argsExpr
     elif on == code_6502.adc_abs_x:
       let argsExpr = this.io.readU2le()
       this.args = argsExpr
-    elif on == code_6502.sta_abs_x:
+    elif on == code_6502.adc_abs_y:
       let argsExpr = this.io.readU2le()
       this.args = argsExpr
-    elif on == code_6502.cpx_imm:
+    elif on == code_6502.adc_imm:
       let argsExpr = uint16(this.io.readU1())
-      this.args = argsExpr
-    elif on == code_6502.jmp_ind:
-      let argsExpr = this.io.readU2le()
-      this.args = argsExpr
-    elif on == code_6502.adc_zpg:
-      let argsExpr = uint16(this.io.readU1())
-      this.args = argsExpr
-    elif on == code_6502.eor_imm:
-      let argsExpr = uint16(this.io.readU1())
-      this.args = argsExpr
-    elif on == code_6502.eor_abs_x:
-      let argsExpr = this.io.readU2le()
-      this.args = argsExpr
-    elif on == code_6502.sta_x_ind:
-      let argsExpr = uint16(this.io.readU1())
-      this.args = argsExpr
-    elif on == code_6502.sbc_imm:
-      let argsExpr = uint16(this.io.readU1())
-      this.args = argsExpr
-    elif on == code_6502.cpy_abs:
-      let argsExpr = this.io.readU2le()
-      this.args = argsExpr
-    elif on == code_6502.ldx_abs_y:
-      let argsExpr = this.io.readU2le()
-      this.args = argsExpr
-    elif on == code_6502.adc_zpg_x:
-      let argsExpr = uint16(this.io.readU1())
-      this.args = argsExpr
-    elif on == code_6502.bpl_rel:
-      let argsExpr = uint16(this.io.readS1())
-      this.args = argsExpr
-    elif on == code_6502.ora_imm:
-      let argsExpr = uint16(this.io.readU1())
-      this.args = argsExpr
-    elif on == code_6502.ror_abs_x:
-      let argsExpr = this.io.readU2le()
       this.args = argsExpr
     elif on == code_6502.adc_ind_y:
-      let argsExpr = uint16(this.io.readU1())
-      this.args = argsExpr
-    elif on == code_6502.eor_ind_y:
-      let argsExpr = uint16(this.io.readU1())
-      this.args = argsExpr
-    elif on == code_6502.lda_abs:
-      let argsExpr = this.io.readU2le()
-      this.args = argsExpr
-    elif on == code_6502.bit_zpg:
-      let argsExpr = uint16(this.io.readU1())
-      this.args = argsExpr
-    elif on == code_6502.rol_zpg:
-      let argsExpr = uint16(this.io.readU1())
-      this.args = argsExpr
-    elif on == code_6502.sty_zpg:
-      let argsExpr = uint16(this.io.readU1())
-      this.args = argsExpr
-    elif on == code_6502.jsr_abs:
-      let argsExpr = this.io.readU2le()
-      this.args = argsExpr
-    elif on == code_6502.eor_zpg:
-      let argsExpr = uint16(this.io.readU1())
-      this.args = argsExpr
-    elif on == code_6502.eor_abs:
-      let argsExpr = this.io.readU2le()
-      this.args = argsExpr
-    elif on == code_6502.lda_abs_y:
-      let argsExpr = this.io.readU2le()
-      this.args = argsExpr
-    elif on == code_6502.lda_zpg_x:
-      let argsExpr = uint16(this.io.readU1())
-      this.args = argsExpr
-    elif on == code_6502.bmi_rel:
-      let argsExpr = uint16(this.io.readS1())
-      this.args = argsExpr
-    elif on == code_6502.sty_zpg_x:
       let argsExpr = uint16(this.io.readU1())
       this.args = argsExpr
     elif on == code_6502.adc_x_ind:
       let argsExpr = uint16(this.io.readU1())
       this.args = argsExpr
-    elif on == code_6502.rol_abs_x:
+    elif on == code_6502.adc_zpg:
+      let argsExpr = uint16(this.io.readU1())
+      this.args = argsExpr
+    elif on == code_6502.adc_zpg_x:
+      let argsExpr = uint16(this.io.readU1())
+      this.args = argsExpr
+    elif on == code_6502.and_abs:
       let argsExpr = this.io.readU2le()
       this.args = argsExpr
-    elif on == code_6502.stx_zpg:
-      let argsExpr = uint16(this.io.readU1())
-      this.args = argsExpr
-    elif on == code_6502.asl_abs_x:
+    elif on == code_6502.and_abs_x:
       let argsExpr = this.io.readU2le()
-      this.args = argsExpr
-    elif on == code_6502.lsr_zpg_x:
-      let argsExpr = uint16(this.io.readU1())
-      this.args = argsExpr
-    elif on == code_6502.ora_zpg_x:
-      let argsExpr = uint16(this.io.readU1())
-      this.args = argsExpr
-    elif on == code_6502.adc_abs_y:
-      let argsExpr = this.io.readU2le()
-      this.args = argsExpr
-    elif on == code_6502.ldy_abs:
-      let argsExpr = this.io.readU2le()
-      this.args = argsExpr
-    elif on == code_6502.cmp_abs_x:
-      let argsExpr = this.io.readU2le()
-      this.args = argsExpr
-    elif on == code_6502.lda_abs_x:
-      let argsExpr = this.io.readU2le()
-      this.args = argsExpr
-    elif on == code_6502.bvs_rel:
-      let argsExpr = uint16(this.io.readS1())
-      this.args = argsExpr
-    elif on == code_6502.lda_x_ind:
-      let argsExpr = uint16(this.io.readU1())
-      this.args = argsExpr
-    elif on == code_6502.cmp_imm:
-      let argsExpr = uint16(this.io.readU1())
-      this.args = argsExpr
-    elif on == code_6502.inc_zpg_x:
-      let argsExpr = uint16(this.io.readU1())
-      this.args = argsExpr
-    elif on == code_6502.asl_zpg:
-      let argsExpr = uint16(this.io.readU1())
       this.args = argsExpr
     elif on == code_6502.and_abs_y:
       let argsExpr = this.io.readU2le()
       this.args = argsExpr
-    elif on == code_6502.ldx_imm:
+    elif on == code_6502.and_imm:
+      let argsExpr = uint16(this.io.readU1())
+      this.args = argsExpr
+    elif on == code_6502.and_ind_y:
+      let argsExpr = uint16(this.io.readU1())
+      this.args = argsExpr
+    elif on == code_6502.and_x_ind:
       let argsExpr = uint16(this.io.readU1())
       this.args = argsExpr
     elif on == code_6502.and_zpg:
       let argsExpr = uint16(this.io.readU1())
       this.args = argsExpr
-    elif on == code_6502.cpx_abs:
-      let argsExpr = this.io.readU2le()
-      this.args = argsExpr
-    elif on == code_6502.dec_zpg:
+    elif on == code_6502.and_zpg_x:
       let argsExpr = uint16(this.io.readU1())
-      this.args = argsExpr
-    elif on == code_6502.ror_zpg_x:
-      let argsExpr = uint16(this.io.readU1())
-      this.args = argsExpr
-    elif on == code_6502.ldx_zpg:
-      let argsExpr = uint16(this.io.readU1())
-      this.args = argsExpr
-    elif on == code_6502.dec_zpg_x:
-      let argsExpr = uint16(this.io.readU1())
-      this.args = argsExpr
-    elif on == code_6502.sbc_zpg:
-      let argsExpr = uint16(this.io.readU1())
-      this.args = argsExpr
-    elif on == code_6502.cmp_abs:
-      let argsExpr = this.io.readU2le()
-      this.args = argsExpr
-    elif on == code_6502.ror_zpg:
-      let argsExpr = uint16(this.io.readU1())
-      this.args = argsExpr
-    elif on == code_6502.inc_abs:
-      let argsExpr = this.io.readU2le()
-      this.args = argsExpr
-    elif on == code_6502.and_x_ind:
-      let argsExpr = uint16(this.io.readU1())
-      this.args = argsExpr
-    elif on == code_6502.sbc_abs_x:
-      let argsExpr = this.io.readU2le()
       this.args = argsExpr
     elif on == code_6502.asl_abs:
       let argsExpr = this.io.readU2le()
       this.args = argsExpr
-    elif on == code_6502.eor_x_ind:
-      let argsExpr = uint16(this.io.readU1())
-      this.args = argsExpr
-    elif on == code_6502.ora_abs_x:
+    elif on == code_6502.asl_abs_x:
       let argsExpr = this.io.readU2le()
       this.args = argsExpr
-    elif on == code_6502.ldy_abs_x:
-      let argsExpr = this.io.readU2le()
-      this.args = argsExpr
-    elif on == code_6502.sbc_x_ind:
+    elif on == code_6502.asl_zpg:
       let argsExpr = uint16(this.io.readU1())
       this.args = argsExpr
     elif on == code_6502.asl_zpg_x:
       let argsExpr = uint16(this.io.readU1())
       this.args = argsExpr
-    elif on == code_6502.sbc_abs_y:
-      let argsExpr = this.io.readU2le()
+    elif on == code_6502.bcc_rel:
+      let argsExpr = uint16(this.io.readS1())
       this.args = argsExpr
-    elif on == code_6502.rol_abs:
-      let argsExpr = this.io.readU2le()
-      this.args = argsExpr
-    elif on == code_6502.lsr_zpg:
-      let argsExpr = uint16(this.io.readU1())
-      this.args = argsExpr
-    elif on == code_6502.stx_zpg_y:
-      let argsExpr = uint16(this.io.readU1())
-      this.args = argsExpr
-    elif on == code_6502.ora_abs_y:
-      let argsExpr = this.io.readU2le()
-      this.args = argsExpr
-    elif on == code_6502.eor_abs_y:
-      let argsExpr = this.io.readU2le()
-      this.args = argsExpr
-    elif on == code_6502.bit_abs:
-      let argsExpr = this.io.readU2le()
-      this.args = argsExpr
-    elif on == code_6502.ldx_abs:
-      let argsExpr = this.io.readU2le()
-      this.args = argsExpr
-    elif on == code_6502.ldy_imm:
-      let argsExpr = uint16(this.io.readU1())
-      this.args = argsExpr
-    elif on == code_6502.jmp_abs:
-      let argsExpr = this.io.readU2le()
+    elif on == code_6502.bcs_rel:
+      let argsExpr = uint16(this.io.readS1())
       this.args = argsExpr
     elif on == code_6502.beq_rel:
       let argsExpr = uint16(this.io.readS1())
       this.args = argsExpr
-    elif on == code_6502.dec_abs_x:
+    elif on == code_6502.bit_abs:
       let argsExpr = this.io.readU2le()
       this.args = argsExpr
-    elif on == code_6502.and_ind_y:
+    elif on == code_6502.bit_zpg:
       let argsExpr = uint16(this.io.readU1())
       this.args = argsExpr
-    elif on == code_6502.and_zpg_x:
-      let argsExpr = uint16(this.io.readU1())
+    elif on == code_6502.bmi_rel:
+      let argsExpr = uint16(this.io.readS1())
       this.args = argsExpr
-    elif on == code_6502.cmp_zpg_x:
-      let argsExpr = uint16(this.io.readU1())
+    elif on == code_6502.bne_rel:
+      let argsExpr = uint16(this.io.readS1())
       this.args = argsExpr
-    elif on == code_6502.eor_zpg_x:
-      let argsExpr = uint16(this.io.readU1())
+    elif on == code_6502.bpl_rel:
+      let argsExpr = uint16(this.io.readS1())
       this.args = argsExpr
-    elif on == code_6502.sbc_abs:
+    elif on == code_6502.bvc_rel:
+      let argsExpr = uint16(this.io.readS1())
+      this.args = argsExpr
+    elif on == code_6502.bvs_rel:
+      let argsExpr = uint16(this.io.readS1())
+      this.args = argsExpr
+    elif on == code_6502.cmp_abs:
+      let argsExpr = this.io.readU2le()
+      this.args = argsExpr
+    elif on == code_6502.cmp_abs_x:
       let argsExpr = this.io.readU2le()
       this.args = argsExpr
     elif on == code_6502.cmp_abs_y:
       let argsExpr = this.io.readU2le()
       this.args = argsExpr
-    elif on == code_6502.sbc_ind_y:
+    elif on == code_6502.cmp_imm:
+      let argsExpr = uint16(this.io.readU1())
+      this.args = argsExpr
+    elif on == code_6502.cmp_ind_y:
+      let argsExpr = uint16(this.io.readU1())
+      this.args = argsExpr
+    elif on == code_6502.cmp_x_ind:
       let argsExpr = uint16(this.io.readU1())
       this.args = argsExpr
     elif on == code_6502.cmp_zpg:
       let argsExpr = uint16(this.io.readU1())
       this.args = argsExpr
-    elif on == code_6502.stx_abs:
+    elif on == code_6502.cmp_zpg_x:
+      let argsExpr = uint16(this.io.readU1())
+      this.args = argsExpr
+    elif on == code_6502.cpx_abs:
       let argsExpr = this.io.readU2le()
       this.args = argsExpr
-    elif on == code_6502.sty_abs:
+    elif on == code_6502.cpx_imm:
+      let argsExpr = uint16(this.io.readU1())
+      this.args = argsExpr
+    elif on == code_6502.cpx_zpg:
+      let argsExpr = uint16(this.io.readU1())
+      this.args = argsExpr
+    elif on == code_6502.cpy_abs:
       let argsExpr = this.io.readU2le()
+      this.args = argsExpr
+    elif on == code_6502.cpy_imm:
+      let argsExpr = uint16(this.io.readU1())
       this.args = argsExpr
     elif on == code_6502.cpy_zpg:
       let argsExpr = uint16(this.io.readU1())
@@ -513,61 +339,235 @@ proc read*(_: typedesc[Code6502_Operation], io: KaitaiStream, root: KaitaiStruct
     elif on == code_6502.dec_abs:
       let argsExpr = this.io.readU2le()
       this.args = argsExpr
-    elif on == code_6502.ror_abs:
+    elif on == code_6502.dec_abs_x:
       let argsExpr = this.io.readU2le()
       this.args = argsExpr
-    elif on == code_6502.sta_abs_y:
+    elif on == code_6502.dec_zpg:
+      let argsExpr = uint16(this.io.readU1())
+      this.args = argsExpr
+    elif on == code_6502.dec_zpg_x:
+      let argsExpr = uint16(this.io.readU1())
+      this.args = argsExpr
+    elif on == code_6502.eor_abs:
+      let argsExpr = this.io.readU2le()
+      this.args = argsExpr
+    elif on == code_6502.eor_abs_x:
+      let argsExpr = this.io.readU2le()
+      this.args = argsExpr
+    elif on == code_6502.eor_abs_y:
+      let argsExpr = this.io.readU2le()
+      this.args = argsExpr
+    elif on == code_6502.eor_imm:
+      let argsExpr = uint16(this.io.readU1())
+      this.args = argsExpr
+    elif on == code_6502.eor_ind_y:
+      let argsExpr = uint16(this.io.readU1())
+      this.args = argsExpr
+    elif on == code_6502.eor_x_ind:
+      let argsExpr = uint16(this.io.readU1())
+      this.args = argsExpr
+    elif on == code_6502.eor_zpg:
+      let argsExpr = uint16(this.io.readU1())
+      this.args = argsExpr
+    elif on == code_6502.eor_zpg_x:
+      let argsExpr = uint16(this.io.readU1())
+      this.args = argsExpr
+    elif on == code_6502.inc_abs:
       let argsExpr = this.io.readU2le()
       this.args = argsExpr
     elif on == code_6502.inc_abs_x:
       let argsExpr = this.io.readU2le()
       this.args = argsExpr
+    elif on == code_6502.inc_zpg:
+      let argsExpr = uint16(this.io.readU1())
+      this.args = argsExpr
+    elif on == code_6502.inc_zpg_x:
+      let argsExpr = uint16(this.io.readU1())
+      this.args = argsExpr
+    elif on == code_6502.jmp_abs:
+      let argsExpr = this.io.readU2le()
+      this.args = argsExpr
+    elif on == code_6502.jmp_ind:
+      let argsExpr = this.io.readU2le()
+      this.args = argsExpr
+    elif on == code_6502.jsr_abs:
+      let argsExpr = this.io.readU2le()
+      this.args = argsExpr
+    elif on == code_6502.lda_abs:
+      let argsExpr = this.io.readU2le()
+      this.args = argsExpr
+    elif on == code_6502.lda_abs_x:
+      let argsExpr = this.io.readU2le()
+      this.args = argsExpr
+    elif on == code_6502.lda_abs_y:
+      let argsExpr = this.io.readU2le()
+      this.args = argsExpr
+    elif on == code_6502.lda_imm:
+      let argsExpr = uint16(this.io.readU1())
+      this.args = argsExpr
+    elif on == code_6502.lda_ind_y:
+      let argsExpr = uint16(this.io.readU1())
+      this.args = argsExpr
+    elif on == code_6502.lda_x_ind:
+      let argsExpr = uint16(this.io.readU1())
+      this.args = argsExpr
     elif on == code_6502.lda_zpg:
       let argsExpr = uint16(this.io.readU1())
       this.args = argsExpr
-    elif on == code_6502.cmp_ind_y:
+    elif on == code_6502.lda_zpg_x:
       let argsExpr = uint16(this.io.readU1())
       this.args = argsExpr
-    elif on == code_6502.cpy_imm:
+    elif on == code_6502.ldx_abs:
+      let argsExpr = this.io.readU2le()
+      this.args = argsExpr
+    elif on == code_6502.ldx_abs_y:
+      let argsExpr = this.io.readU2le()
+      this.args = argsExpr
+    elif on == code_6502.ldx_imm:
+      let argsExpr = uint16(this.io.readU1())
+      this.args = argsExpr
+    elif on == code_6502.ldx_zpg:
       let argsExpr = uint16(this.io.readU1())
       this.args = argsExpr
     elif on == code_6502.ldx_zpg_y:
       let argsExpr = uint16(this.io.readU1())
       this.args = argsExpr
-    elif on == code_6502.sbc_zpg_x:
-      let argsExpr = uint16(this.io.readU1())
-      this.args = argsExpr
-    elif on == code_6502.ora_x_ind:
-      let argsExpr = uint16(this.io.readU1())
-      this.args = argsExpr
-    elif on == code_6502.rol_zpg_x:
-      let argsExpr = uint16(this.io.readU1())
-      this.args = argsExpr
-    elif on == code_6502.ora_abs:
+    elif on == code_6502.ldy_abs:
       let argsExpr = this.io.readU2le()
       this.args = argsExpr
-    elif on == code_6502.sta_ind_y:
-      let argsExpr = uint16(this.io.readU1())
-      this.args = argsExpr
-    elif on == code_6502.and_abs:
+    elif on == code_6502.ldy_abs_x:
       let argsExpr = this.io.readU2le()
       this.args = argsExpr
-    elif on == code_6502.and_imm:
-      let argsExpr = uint16(this.io.readU1())
-      this.args = argsExpr
-    elif on == code_6502.cmp_x_ind:
+    elif on == code_6502.ldy_imm:
       let argsExpr = uint16(this.io.readU1())
       this.args = argsExpr
     elif on == code_6502.ldy_zpg:
       let argsExpr = uint16(this.io.readU1())
       this.args = argsExpr
-    elif on == code_6502.inc_zpg:
+    elif on == code_6502.ldy_zpg_x:
       let argsExpr = uint16(this.io.readU1())
       this.args = argsExpr
-    elif on == code_6502.bvc_rel:
-      let argsExpr = uint16(this.io.readS1())
+    elif on == code_6502.lsr_abs:
+      let argsExpr = this.io.readU2le()
+      this.args = argsExpr
+    elif on == code_6502.lsr_abs_x:
+      let argsExpr = this.io.readU2le()
+      this.args = argsExpr
+    elif on == code_6502.lsr_zpg:
+      let argsExpr = uint16(this.io.readU1())
+      this.args = argsExpr
+    elif on == code_6502.lsr_zpg_x:
+      let argsExpr = uint16(this.io.readU1())
+      this.args = argsExpr
+    elif on == code_6502.ora_abs:
+      let argsExpr = this.io.readU2le()
+      this.args = argsExpr
+    elif on == code_6502.ora_abs_x:
+      let argsExpr = this.io.readU2le()
+      this.args = argsExpr
+    elif on == code_6502.ora_abs_y:
+      let argsExpr = this.io.readU2le()
+      this.args = argsExpr
+    elif on == code_6502.ora_imm:
+      let argsExpr = uint16(this.io.readU1())
+      this.args = argsExpr
+    elif on == code_6502.ora_ind_y:
+      let argsExpr = uint16(this.io.readU1())
+      this.args = argsExpr
+    elif on == code_6502.ora_x_ind:
+      let argsExpr = uint16(this.io.readU1())
       this.args = argsExpr
     elif on == code_6502.ora_zpg:
+      let argsExpr = uint16(this.io.readU1())
+      this.args = argsExpr
+    elif on == code_6502.ora_zpg_x:
+      let argsExpr = uint16(this.io.readU1())
+      this.args = argsExpr
+    elif on == code_6502.rol_abs:
+      let argsExpr = this.io.readU2le()
+      this.args = argsExpr
+    elif on == code_6502.rol_abs_x:
+      let argsExpr = this.io.readU2le()
+      this.args = argsExpr
+    elif on == code_6502.rol_zpg:
+      let argsExpr = uint16(this.io.readU1())
+      this.args = argsExpr
+    elif on == code_6502.rol_zpg_x:
+      let argsExpr = uint16(this.io.readU1())
+      this.args = argsExpr
+    elif on == code_6502.ror_abs:
+      let argsExpr = this.io.readU2le()
+      this.args = argsExpr
+    elif on == code_6502.ror_abs_x:
+      let argsExpr = this.io.readU2le()
+      this.args = argsExpr
+    elif on == code_6502.ror_zpg:
+      let argsExpr = uint16(this.io.readU1())
+      this.args = argsExpr
+    elif on == code_6502.ror_zpg_x:
+      let argsExpr = uint16(this.io.readU1())
+      this.args = argsExpr
+    elif on == code_6502.sbc_abs:
+      let argsExpr = this.io.readU2le()
+      this.args = argsExpr
+    elif on == code_6502.sbc_abs_x:
+      let argsExpr = this.io.readU2le()
+      this.args = argsExpr
+    elif on == code_6502.sbc_abs_y:
+      let argsExpr = this.io.readU2le()
+      this.args = argsExpr
+    elif on == code_6502.sbc_imm:
+      let argsExpr = uint16(this.io.readU1())
+      this.args = argsExpr
+    elif on == code_6502.sbc_ind_y:
+      let argsExpr = uint16(this.io.readU1())
+      this.args = argsExpr
+    elif on == code_6502.sbc_x_ind:
+      let argsExpr = uint16(this.io.readU1())
+      this.args = argsExpr
+    elif on == code_6502.sbc_zpg:
+      let argsExpr = uint16(this.io.readU1())
+      this.args = argsExpr
+    elif on == code_6502.sbc_zpg_x:
+      let argsExpr = uint16(this.io.readU1())
+      this.args = argsExpr
+    elif on == code_6502.sta_abs:
+      let argsExpr = this.io.readU2le()
+      this.args = argsExpr
+    elif on == code_6502.sta_abs_x:
+      let argsExpr = this.io.readU2le()
+      this.args = argsExpr
+    elif on == code_6502.sta_abs_y:
+      let argsExpr = this.io.readU2le()
+      this.args = argsExpr
+    elif on == code_6502.sta_ind_y:
+      let argsExpr = uint16(this.io.readU1())
+      this.args = argsExpr
+    elif on == code_6502.sta_x_ind:
+      let argsExpr = uint16(this.io.readU1())
+      this.args = argsExpr
+    elif on == code_6502.sta_zpg:
+      let argsExpr = uint16(this.io.readU1())
+      this.args = argsExpr
+    elif on == code_6502.sta_zpg_x:
+      let argsExpr = uint16(this.io.readU1())
+      this.args = argsExpr
+    elif on == code_6502.stx_abs:
+      let argsExpr = this.io.readU2le()
+      this.args = argsExpr
+    elif on == code_6502.stx_zpg:
+      let argsExpr = uint16(this.io.readU1())
+      this.args = argsExpr
+    elif on == code_6502.stx_zpg_y:
+      let argsExpr = uint16(this.io.readU1())
+      this.args = argsExpr
+    elif on == code_6502.sty_abs:
+      let argsExpr = this.io.readU2le()
+      this.args = argsExpr
+    elif on == code_6502.sty_zpg:
+      let argsExpr = uint16(this.io.readU1())
+      this.args = argsExpr
+    elif on == code_6502.sty_zpg_x:
       let argsExpr = uint16(this.io.readU1())
       this.args = argsExpr
 

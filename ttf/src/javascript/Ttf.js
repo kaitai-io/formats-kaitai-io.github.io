@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.Ttf = factory(root.KaitaiStream);
+    factory(root.Ttf || (root.Ttf = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Ttf_, KaitaiStream) {
 /**
  * A TrueType font file contains data, in table format, that comprises
  * an outline font.
@@ -31,74 +31,756 @@ var Ttf = (function() {
     }
   }
 
-  var Post = Ttf.Post = (function() {
-    function Post(_io, _parent, _root) {
+  /**
+   * cmap - Character To Glyph Index Mapping Table This table defines the mapping of character codes to the glyph index values used in the font.
+   */
+
+  var Cmap = Ttf.Cmap = (function() {
+    function Cmap(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    Post.prototype._read = function() {
-      this.format = new Fixed(this._io, this, this._root);
-      this.italicAngle = new Fixed(this._io, this, this._root);
-      this.underlinePosition = this._io.readS2be();
-      this.underlineThichness = this._io.readS2be();
-      this.isFixedPitch = this._io.readU4be();
-      this.minMemType42 = this._io.readU4be();
-      this.maxMemType42 = this._io.readU4be();
-      this.minMemType1 = this._io.readU4be();
-      this.maxMemType1 = this._io.readU4be();
-      if ( ((this.format.major == 2) && (this.format.minor == 0)) ) {
-        this.format20 = new Format20(this._io, this, this._root);
+    Cmap.prototype._read = function() {
+      this.versionNumber = this._io.readU2be();
+      this.numberOfEncodingTables = this._io.readU2be();
+      this.tables = [];
+      for (var i = 0; i < this.numberOfEncodingTables; i++) {
+        this.tables.push(new SubtableHeader(this._io, this, this._root));
       }
     }
 
-    var Format20 = Post.Format20 = (function() {
-      function Format20(_io, _parent, _root) {
+    var Subtable = Cmap.Subtable = (function() {
+      Subtable.SubtableFormat = Object.freeze({
+        BYTE_ENCODING_TABLE: 0,
+        HIGH_BYTE_MAPPING_THROUGH_TABLE: 2,
+        SEGMENT_MAPPING_TO_DELTA_VALUES: 4,
+        TRIMMED_TABLE_MAPPING: 6,
+
+        0: "BYTE_ENCODING_TABLE",
+        2: "HIGH_BYTE_MAPPING_THROUGH_TABLE",
+        4: "SEGMENT_MAPPING_TO_DELTA_VALUES",
+        6: "TRIMMED_TABLE_MAPPING",
+      });
+
+      function Subtable(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
-      Format20.prototype._read = function() {
-        this.numberOfGlyphs = this._io.readU2be();
-        this.glyphNameIndex = [];
-        for (var i = 0; i < this.numberOfGlyphs; i++) {
-          this.glyphNameIndex.push(this._io.readU2be());
+      Subtable.prototype._read = function() {
+        this.format = this._io.readU2be();
+        this.length = this._io.readU2be();
+        this.version = this._io.readU2be();
+        switch (this.format) {
+        case Ttf.Cmap.Subtable.SubtableFormat.BYTE_ENCODING_TABLE:
+          this._raw_value = this._io.readBytes(this.length - 6);
+          var _io__raw_value = new KaitaiStream(this._raw_value);
+          this.value = new ByteEncodingTable(_io__raw_value, this, this._root);
+          break;
+        case Ttf.Cmap.Subtable.SubtableFormat.HIGH_BYTE_MAPPING_THROUGH_TABLE:
+          this._raw_value = this._io.readBytes(this.length - 6);
+          var _io__raw_value = new KaitaiStream(this._raw_value);
+          this.value = new HighByteMappingThroughTable(_io__raw_value, this, this._root);
+          break;
+        case Ttf.Cmap.Subtable.SubtableFormat.SEGMENT_MAPPING_TO_DELTA_VALUES:
+          this._raw_value = this._io.readBytes(this.length - 6);
+          var _io__raw_value = new KaitaiStream(this._raw_value);
+          this.value = new SegmentMappingToDeltaValues(_io__raw_value, this, this._root);
+          break;
+        case Ttf.Cmap.Subtable.SubtableFormat.TRIMMED_TABLE_MAPPING:
+          this._raw_value = this._io.readBytes(this.length - 6);
+          var _io__raw_value = new KaitaiStream(this._raw_value);
+          this.value = new TrimmedTableMapping(_io__raw_value, this, this._root);
+          break;
+        default:
+          this.value = this._io.readBytes(this.length - 6);
+          break;
         }
-        this.glyphNames = [];
-        var i = 0;
-        do {
-          var _ = new PascalString(this._io, this, this._root);
-          this.glyphNames.push(_);
-          i++;
-        } while (!( ((_.length == 0) || (this._io.isEof())) ));
       }
 
-      var PascalString = Format20.PascalString = (function() {
-        function PascalString(_io, _parent, _root) {
+      var ByteEncodingTable = Subtable.ByteEncodingTable = (function() {
+        function ByteEncodingTable(_io, _parent, _root) {
           this._io = _io;
           this._parent = _parent;
-          this._root = _root || this;
+          this._root = _root;
 
           this._read();
         }
-        PascalString.prototype._read = function() {
-          this.length = this._io.readU1();
-          if (this.length != 0) {
-            this.value = KaitaiStream.bytesToStr(this._io.readBytes(this.length), "ascii");
+        ByteEncodingTable.prototype._read = function() {
+          this.glyphIdArray = this._io.readBytes(256);
+        }
+
+        return ByteEncodingTable;
+      })();
+
+      var HighByteMappingThroughTable = Subtable.HighByteMappingThroughTable = (function() {
+        function HighByteMappingThroughTable(_io, _parent, _root) {
+          this._io = _io;
+          this._parent = _parent;
+          this._root = _root;
+
+          this._read();
+        }
+        HighByteMappingThroughTable.prototype._read = function() {
+          this.subHeaderKeys = [];
+          for (var i = 0; i < 256; i++) {
+            this.subHeaderKeys.push(this._io.readU2be());
           }
         }
 
-        return PascalString;
+        return HighByteMappingThroughTable;
       })();
 
-      return Format20;
+      var SegmentMappingToDeltaValues = Subtable.SegmentMappingToDeltaValues = (function() {
+        function SegmentMappingToDeltaValues(_io, _parent, _root) {
+          this._io = _io;
+          this._parent = _parent;
+          this._root = _root;
+
+          this._read();
+        }
+        SegmentMappingToDeltaValues.prototype._read = function() {
+          this.segCountX2 = this._io.readU2be();
+          this.searchRange = this._io.readU2be();
+          this.entrySelector = this._io.readU2be();
+          this.rangeShift = this._io.readU2be();
+          this.endCount = [];
+          for (var i = 0; i < this.segCount; i++) {
+            this.endCount.push(this._io.readU2be());
+          }
+          this.reservedPad = this._io.readU2be();
+          this.startCount = [];
+          for (var i = 0; i < this.segCount; i++) {
+            this.startCount.push(this._io.readU2be());
+          }
+          this.idDelta = [];
+          for (var i = 0; i < this.segCount; i++) {
+            this.idDelta.push(this._io.readU2be());
+          }
+          this.idRangeOffset = [];
+          for (var i = 0; i < this.segCount; i++) {
+            this.idRangeOffset.push(this._io.readU2be());
+          }
+          this.glyphIdArray = [];
+          var i = 0;
+          while (!this._io.isEof()) {
+            this.glyphIdArray.push(this._io.readU2be());
+            i++;
+          }
+        }
+        Object.defineProperty(SegmentMappingToDeltaValues.prototype, 'segCount', {
+          get: function() {
+            if (this._m_segCount !== undefined)
+              return this._m_segCount;
+            this._m_segCount = Math.floor(this.segCountX2 / 2);
+            return this._m_segCount;
+          }
+        });
+
+        return SegmentMappingToDeltaValues;
+      })();
+
+      var TrimmedTableMapping = Subtable.TrimmedTableMapping = (function() {
+        function TrimmedTableMapping(_io, _parent, _root) {
+          this._io = _io;
+          this._parent = _parent;
+          this._root = _root;
+
+          this._read();
+        }
+        TrimmedTableMapping.prototype._read = function() {
+          this.firstCode = this._io.readU2be();
+          this.entryCount = this._io.readU2be();
+          this.glyphIdArray = [];
+          for (var i = 0; i < this.entryCount; i++) {
+            this.glyphIdArray.push(this._io.readU2be());
+          }
+        }
+
+        return TrimmedTableMapping;
+      })();
+
+      return Subtable;
     })();
 
-    return Post;
+    var SubtableHeader = Cmap.SubtableHeader = (function() {
+      function SubtableHeader(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+
+        this._read();
+      }
+      SubtableHeader.prototype._read = function() {
+        this.platformId = this._io.readU2be();
+        this.encodingId = this._io.readU2be();
+        this.subtableOffset = this._io.readU4be();
+      }
+      Object.defineProperty(SubtableHeader.prototype, 'table', {
+        get: function() {
+          if (this._m_table !== undefined)
+            return this._m_table;
+          var io = this._parent._io;
+          var _pos = io.pos;
+          io.seek(this.subtableOffset);
+          this._m_table = new Subtable(io, this, this._root);
+          io.seek(_pos);
+          return this._m_table;
+        }
+      });
+
+      return SubtableHeader;
+    })();
+
+    return Cmap;
+  })();
+
+  /**
+   * cvt  - Control Value Table This table contains a list of values that can be referenced by instructions. They can be used, among other things, to control characteristics for different glyphs.
+   */
+
+  var Cvt = Ttf.Cvt = (function() {
+    function Cvt(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Cvt.prototype._read = function() {
+      this.fwords = [];
+      var i = 0;
+      while (!this._io.isEof()) {
+        this.fwords.push(this._io.readS2be());
+        i++;
+      }
+    }
+
+    return Cvt;
+  })();
+
+  var DirTableEntry = Ttf.DirTableEntry = (function() {
+    function DirTableEntry(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    DirTableEntry.prototype._read = function() {
+      this.tag = KaitaiStream.bytesToStr(this._io.readBytes(4), "ASCII");
+      this.checksum = this._io.readU4be();
+      this.offset = this._io.readU4be();
+      this.length = this._io.readU4be();
+    }
+    Object.defineProperty(DirTableEntry.prototype, 'value', {
+      get: function() {
+        if (this._m_value !== undefined)
+          return this._m_value;
+        var io = this._root._io;
+        var _pos = io.pos;
+        io.seek(this.offset);
+        switch (this.tag) {
+        case "OS/2":
+          this._raw__m_value = io.readBytes(this.length);
+          var _io__raw__m_value = new KaitaiStream(this._raw__m_value);
+          this._m_value = new Os2(_io__raw__m_value, this, this._root);
+          break;
+        case "cmap":
+          this._raw__m_value = io.readBytes(this.length);
+          var _io__raw__m_value = new KaitaiStream(this._raw__m_value);
+          this._m_value = new Cmap(_io__raw__m_value, this, this._root);
+          break;
+        case "cvt ":
+          this._raw__m_value = io.readBytes(this.length);
+          var _io__raw__m_value = new KaitaiStream(this._raw__m_value);
+          this._m_value = new Cvt(_io__raw__m_value, this, this._root);
+          break;
+        case "fpgm":
+          this._raw__m_value = io.readBytes(this.length);
+          var _io__raw__m_value = new KaitaiStream(this._raw__m_value);
+          this._m_value = new Fpgm(_io__raw__m_value, this, this._root);
+          break;
+        case "glyf":
+          this._raw__m_value = io.readBytes(this.length);
+          var _io__raw__m_value = new KaitaiStream(this._raw__m_value);
+          this._m_value = new Glyf(_io__raw__m_value, this, this._root);
+          break;
+        case "head":
+          this._raw__m_value = io.readBytes(this.length);
+          var _io__raw__m_value = new KaitaiStream(this._raw__m_value);
+          this._m_value = new Head(_io__raw__m_value, this, this._root);
+          break;
+        case "hhea":
+          this._raw__m_value = io.readBytes(this.length);
+          var _io__raw__m_value = new KaitaiStream(this._raw__m_value);
+          this._m_value = new Hhea(_io__raw__m_value, this, this._root);
+          break;
+        case "kern":
+          this._raw__m_value = io.readBytes(this.length);
+          var _io__raw__m_value = new KaitaiStream(this._raw__m_value);
+          this._m_value = new Kern(_io__raw__m_value, this, this._root);
+          break;
+        case "maxp":
+          this._raw__m_value = io.readBytes(this.length);
+          var _io__raw__m_value = new KaitaiStream(this._raw__m_value);
+          this._m_value = new Maxp(_io__raw__m_value, this, this._root);
+          break;
+        case "name":
+          this._raw__m_value = io.readBytes(this.length);
+          var _io__raw__m_value = new KaitaiStream(this._raw__m_value);
+          this._m_value = new Name(_io__raw__m_value, this, this._root);
+          break;
+        case "post":
+          this._raw__m_value = io.readBytes(this.length);
+          var _io__raw__m_value = new KaitaiStream(this._raw__m_value);
+          this._m_value = new Post(_io__raw__m_value, this, this._root);
+          break;
+        case "prep":
+          this._raw__m_value = io.readBytes(this.length);
+          var _io__raw__m_value = new KaitaiStream(this._raw__m_value);
+          this._m_value = new Prep(_io__raw__m_value, this, this._root);
+          break;
+        default:
+          this._m_value = io.readBytes(this.length);
+          break;
+        }
+        io.seek(_pos);
+        return this._m_value;
+      }
+    });
+
+    return DirTableEntry;
+  })();
+
+  var Fixed = Ttf.Fixed = (function() {
+    function Fixed(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Fixed.prototype._read = function() {
+      this.major = this._io.readU2be();
+      this.minor = this._io.readU2be();
+    }
+
+    return Fixed;
+  })();
+
+  var Fpgm = Ttf.Fpgm = (function() {
+    function Fpgm(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Fpgm.prototype._read = function() {
+      this.instructions = this._io.readBytesFull();
+    }
+
+    return Fpgm;
+  })();
+
+  var Glyf = Ttf.Glyf = (function() {
+    function Glyf(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Glyf.prototype._read = function() {
+      this.numberOfContours = this._io.readS2be();
+      this.xMin = this._io.readS2be();
+      this.yMin = this._io.readS2be();
+      this.xMax = this._io.readS2be();
+      this.yMax = this._io.readS2be();
+      if (this.numberOfContours > 0) {
+        this.value = new SimpleGlyph(this._io, this, this._root);
+      }
+    }
+
+    var SimpleGlyph = Glyf.SimpleGlyph = (function() {
+      function SimpleGlyph(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+
+        this._read();
+      }
+      SimpleGlyph.prototype._read = function() {
+        this.endPtsOfContours = [];
+        for (var i = 0; i < this._parent.numberOfContours; i++) {
+          this.endPtsOfContours.push(this._io.readU2be());
+        }
+        this.instructionLength = this._io.readU2be();
+        this.instructions = this._io.readBytes(this.instructionLength);
+        this.flags = [];
+        for (var i = 0; i < this.pointCount; i++) {
+          this.flags.push(new Flag(this._io, this, this._root));
+        }
+      }
+
+      var Flag = SimpleGlyph.Flag = (function() {
+        function Flag(_io, _parent, _root) {
+          this._io = _io;
+          this._parent = _parent;
+          this._root = _root;
+
+          this._read();
+        }
+        Flag.prototype._read = function() {
+          this.reserved = this._io.readBitsIntBe(2);
+          this.yIsSame = this._io.readBitsIntBe(1) != 0;
+          this.xIsSame = this._io.readBitsIntBe(1) != 0;
+          this.repeat = this._io.readBitsIntBe(1) != 0;
+          this.yShortVector = this._io.readBitsIntBe(1) != 0;
+          this.xShortVector = this._io.readBitsIntBe(1) != 0;
+          this.onCurve = this._io.readBitsIntBe(1) != 0;
+          this._io.alignToByte();
+          if (this.repeat) {
+            this.repeatValue = this._io.readU1();
+          }
+        }
+
+        return Flag;
+      })();
+      Object.defineProperty(SimpleGlyph.prototype, 'pointCount', {
+        get: function() {
+          if (this._m_pointCount !== undefined)
+            return this._m_pointCount;
+          this._m_pointCount = KaitaiStream.arrayMax(this.endPtsOfContours) + 1;
+          return this._m_pointCount;
+        }
+      });
+
+      return SimpleGlyph;
+    })();
+
+    return Glyf;
+  })();
+
+  var Head = Ttf.Head = (function() {
+    Head.Flags = Object.freeze({
+      BASELINE_AT_Y0: 1,
+      LEFT_SIDEBEARING_AT_X0: 2,
+      FLAG_DEPEND_ON_POINT_SIZE: 4,
+      FLAG_FORCE_PPEM: 8,
+      FLAG_MAY_ADVANCE_WIDTH: 16,
+
+      1: "BASELINE_AT_Y0",
+      2: "LEFT_SIDEBEARING_AT_X0",
+      4: "FLAG_DEPEND_ON_POINT_SIZE",
+      8: "FLAG_FORCE_PPEM",
+      16: "FLAG_MAY_ADVANCE_WIDTH",
+    });
+
+    Head.FontDirectionHint = Object.freeze({
+      FULLY_MIXED_DIRECTIONAL_GLYPHS: 0,
+      ONLY_STRONGLY_LEFT_TO_RIGHT: 1,
+      STRONGLY_LEFT_TO_RIGHT_AND_NEUTRALS: 2,
+
+      0: "FULLY_MIXED_DIRECTIONAL_GLYPHS",
+      1: "ONLY_STRONGLY_LEFT_TO_RIGHT",
+      2: "STRONGLY_LEFT_TO_RIGHT_AND_NEUTRALS",
+    });
+
+    function Head(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Head.prototype._read = function() {
+      this.version = new Fixed(this._io, this, this._root);
+      this.fontRevision = new Fixed(this._io, this, this._root);
+      this.checksumAdjustment = this._io.readU4be();
+      this.magicNumber = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.magicNumber, new Uint8Array([95, 15, 60, 245])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([95, 15, 60, 245]), this.magicNumber, this._io, "/types/head/seq/3");
+      }
+      this.flags = this._io.readU2be();
+      this.unitsPerEm = this._io.readU2be();
+      this.created = this._io.readU8be();
+      this.modified = this._io.readU8be();
+      this.xMin = this._io.readS2be();
+      this.yMin = this._io.readS2be();
+      this.xMax = this._io.readS2be();
+      this.yMax = this._io.readS2be();
+      this.macStyle = this._io.readU2be();
+      this.lowestRecPpem = this._io.readU2be();
+      this.fontDirectionHint = this._io.readS2be();
+      this.indexToLocFormat = this._io.readS2be();
+      this.glyphDataFormat = this._io.readS2be();
+    }
+
+    return Head;
+  })();
+
+  var Hhea = Ttf.Hhea = (function() {
+    function Hhea(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Hhea.prototype._read = function() {
+      this.version = new Fixed(this._io, this, this._root);
+      this.ascender = this._io.readS2be();
+      this.descender = this._io.readS2be();
+      this.lineGap = this._io.readS2be();
+      this.advanceWidthMax = this._io.readU2be();
+      this.minLeftSideBearing = this._io.readS2be();
+      this.minRightSideBearing = this._io.readS2be();
+      this.xMaxExtend = this._io.readS2be();
+      this.caretSlopeRise = this._io.readS2be();
+      this.caretSlopeRun = this._io.readS2be();
+      this.reserved = this._io.readBytes(10);
+      if (!((KaitaiStream.byteArrayCompare(this.reserved, new Uint8Array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), this.reserved, this._io, "/types/hhea/seq/10");
+      }
+      this.metricDataFormat = this._io.readS2be();
+      this.numberOfHmetrics = this._io.readU2be();
+    }
+
+    /**
+     * Typographic ascent
+     */
+
+    /**
+     * Typographic descent
+     */
+
+    /**
+     * Typographic line gap. Negative LineGap values are treated as zero in Windows 3.1, System 6, and System 7.
+     */
+
+    /**
+     * Maximum advance width value in `hmtx` table.
+     */
+
+    /**
+     * Minimum left sidebearing value in `hmtx` table.
+     */
+
+    /**
+     * Minimum right sidebearing value; calculated as Min(aw - lsb - (xMax - xMin)).
+     */
+
+    /**
+     * Max(lsb + (xMax - xMin)).
+     */
+
+    return Hhea;
+  })();
+
+  var Kern = Ttf.Kern = (function() {
+    function Kern(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Kern.prototype._read = function() {
+      this.version = this._io.readU2be();
+      this.subtableCount = this._io.readU2be();
+      this.subtables = [];
+      for (var i = 0; i < this.subtableCount; i++) {
+        this.subtables.push(new Subtable(this._io, this, this._root));
+      }
+    }
+
+    var Subtable = Kern.Subtable = (function() {
+      function Subtable(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+
+        this._read();
+      }
+      Subtable.prototype._read = function() {
+        this.version = this._io.readU2be();
+        this.length = this._io.readU2be();
+        this.format = this._io.readU1();
+        this.reserved = this._io.readBitsIntBe(4);
+        this.isOverride = this._io.readBitsIntBe(1) != 0;
+        this.isCrossStream = this._io.readBitsIntBe(1) != 0;
+        this.isMinimum = this._io.readBitsIntBe(1) != 0;
+        this.isHorizontal = this._io.readBitsIntBe(1) != 0;
+        this._io.alignToByte();
+        if (this.format == 0) {
+          this.format0 = new Format0(this._io, this, this._root);
+        }
+      }
+
+      var Format0 = Subtable.Format0 = (function() {
+        function Format0(_io, _parent, _root) {
+          this._io = _io;
+          this._parent = _parent;
+          this._root = _root;
+
+          this._read();
+        }
+        Format0.prototype._read = function() {
+          this.pairCount = this._io.readU2be();
+          this.searchRange = this._io.readU2be();
+          this.entrySelector = this._io.readU2be();
+          this.rangeShift = this._io.readU2be();
+          this.kerningPairs = [];
+          for (var i = 0; i < this.pairCount; i++) {
+            this.kerningPairs.push(new KerningPair(this._io, this, this._root));
+          }
+        }
+
+        var KerningPair = Format0.KerningPair = (function() {
+          function KerningPair(_io, _parent, _root) {
+            this._io = _io;
+            this._parent = _parent;
+            this._root = _root;
+
+            this._read();
+          }
+          KerningPair.prototype._read = function() {
+            this.left = this._io.readU2be();
+            this.right = this._io.readU2be();
+            this.value = this._io.readS2be();
+          }
+
+          return KerningPair;
+        })();
+
+        return Format0;
+      })();
+
+      return Subtable;
+    })();
+
+    return Kern;
+  })();
+
+  var Maxp = Ttf.Maxp = (function() {
+    function Maxp(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Maxp.prototype._read = function() {
+      this.tableVersionNumber = new Fixed(this._io, this, this._root);
+      this.numGlyphs = this._io.readU2be();
+      if (this.isVersion10) {
+        this.version10Body = new MaxpVersion10Body(this._io, this, this._root);
+      }
+    }
+    Object.defineProperty(Maxp.prototype, 'isVersion10', {
+      get: function() {
+        if (this._m_isVersion10 !== undefined)
+          return this._m_isVersion10;
+        this._m_isVersion10 =  ((this.tableVersionNumber.major == 1) && (this.tableVersionNumber.minor == 0)) ;
+        return this._m_isVersion10;
+      }
+    });
+
+    /**
+     * 0x00010000 for version 1.0.
+     */
+
+    /**
+     * The number of glyphs in the font.
+     */
+
+    return Maxp;
+  })();
+
+  var MaxpVersion10Body = Ttf.MaxpVersion10Body = (function() {
+    function MaxpVersion10Body(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    MaxpVersion10Body.prototype._read = function() {
+      this.maxPoints = this._io.readU2be();
+      this.maxContours = this._io.readU2be();
+      this.maxCompositePoints = this._io.readU2be();
+      this.maxCompositeContours = this._io.readU2be();
+      this.maxZones = this._io.readU2be();
+      this.maxTwilightPoints = this._io.readU2be();
+      this.maxStorage = this._io.readU2be();
+      this.maxFunctionDefs = this._io.readU2be();
+      this.maxInstructionDefs = this._io.readU2be();
+      this.maxStackElements = this._io.readU2be();
+      this.maxSizeOfInstructions = this._io.readU2be();
+      this.maxComponentElements = this._io.readU2be();
+      this.maxComponentDepth = this._io.readU2be();
+    }
+
+    /**
+     * Maximum points in a non-composite glyph.
+     */
+
+    /**
+     * Maximum contours in a non-composite glyph.
+     */
+
+    /**
+     * Maximum points in a composite glyph.
+     */
+
+    /**
+     * Maximum contours in a composite glyph.
+     */
+
+    /**
+     * 1 if instructions do not use the twilight zone (Z0), or 2 if instructions do use Z0; should be set to 2 in most cases.
+     */
+
+    /**
+     * Maximum points used in Z0.
+     */
+
+    /**
+     * Number of Storage Area locations.
+     */
+
+    /**
+     * Number of FDEFs.
+     */
+
+    /**
+     * Number of IDEFs.
+     */
+
+    /**
+     * Maximum stack depth.
+     */
+
+    /**
+     * Maximum byte count for glyph instructions.
+     */
+
+    /**
+     * Maximum number of components referenced at "top level" for any composite glyph.
+     */
+
+    /**
+     * Maximum levels of recursion; 1 for simple components.
+     */
+
+    return MaxpVersion10Body;
   })();
 
   /**
@@ -112,18 +794,6 @@ var Ttf = (function() {
    */
 
   var Name = Ttf.Name = (function() {
-    Name.Platforms = Object.freeze({
-      UNICODE: 0,
-      MACINTOSH: 1,
-      RESERVED_2: 2,
-      MICROSOFT: 3,
-
-      0: "UNICODE",
-      1: "MACINTOSH",
-      2: "RESERVED_2",
-      3: "MICROSOFT",
-    });
-
     Name.Names = Object.freeze({
       COPYRIGHT: 0,
       FONT_FAMILY: 1,
@@ -168,10 +838,22 @@ var Ttf = (function() {
       19: "SAMPLE_TEXT",
     });
 
+    Name.Platforms = Object.freeze({
+      UNICODE: 0,
+      MACINTOSH: 1,
+      RESERVED_2: 2,
+      MICROSOFT: 3,
+
+      0: "UNICODE",
+      1: "MACINTOSH",
+      2: "RESERVED_2",
+      3: "MICROSOFT",
+    });
+
     function Name(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -189,7 +871,7 @@ var Ttf = (function() {
       function NameRecord(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -207,8 +889,8 @@ var Ttf = (function() {
             return this._m_asciiValue;
           var io = this._parent._io;
           var _pos = io.pos;
-          io.seek((this._parent.ofsStrings + this.ofsStr));
-          this._m_asciiValue = KaitaiStream.bytesToStr(io.readBytes(this.lenStr), "ascii");
+          io.seek(this._parent.ofsStrings + this.ofsStr);
+          this._m_asciiValue = KaitaiStream.bytesToStr(io.readBytes(this.lenStr), "ASCII");
           io.seek(_pos);
           return this._m_asciiValue;
         }
@@ -219,8 +901,8 @@ var Ttf = (function() {
             return this._m_unicodeValue;
           var io = this._parent._io;
           var _pos = io.pos;
-          io.seek((this._parent.ofsStrings + this.ofsStr));
-          this._m_unicodeValue = KaitaiStream.bytesToStr(io.readBytes(this.lenStr), "utf-16be");
+          io.seek(this._parent.ofsStrings + this.ofsStr);
+          this._m_unicodeValue = KaitaiStream.bytesToStr(io.readBytes(this.lenStr), "UTF-16BE");
           io.seek(_pos);
           return this._m_unicodeValue;
         }
@@ -232,329 +914,23 @@ var Ttf = (function() {
     return Name;
   })();
 
-  var Head = Ttf.Head = (function() {
-    Head.Flags = Object.freeze({
-      BASELINE_AT_Y0: 1,
-      LEFT_SIDEBEARING_AT_X0: 2,
-      FLAG_DEPEND_ON_POINT_SIZE: 4,
-      FLAG_FORCE_PPEM: 8,
-      FLAG_MAY_ADVANCE_WIDTH: 16,
-
-      1: "BASELINE_AT_Y0",
-      2: "LEFT_SIDEBEARING_AT_X0",
-      4: "FLAG_DEPEND_ON_POINT_SIZE",
-      8: "FLAG_FORCE_PPEM",
-      16: "FLAG_MAY_ADVANCE_WIDTH",
-    });
-
-    Head.FontDirectionHint = Object.freeze({
-      FULLY_MIXED_DIRECTIONAL_GLYPHS: 0,
-      ONLY_STRONGLY_LEFT_TO_RIGHT: 1,
-      STRONGLY_LEFT_TO_RIGHT_AND_NEUTRALS: 2,
-
-      0: "FULLY_MIXED_DIRECTIONAL_GLYPHS",
-      1: "ONLY_STRONGLY_LEFT_TO_RIGHT",
-      2: "STRONGLY_LEFT_TO_RIGHT_AND_NEUTRALS",
-    });
-
-    function Head(_io, _parent, _root) {
+  var OffsetTable = Ttf.OffsetTable = (function() {
+    function OffsetTable(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    Head.prototype._read = function() {
-      this.version = new Fixed(this._io, this, this._root);
-      this.fontRevision = new Fixed(this._io, this, this._root);
-      this.checksumAdjustment = this._io.readU4be();
-      this.magicNumber = this._io.readBytes(4);
-      if (!((KaitaiStream.byteArrayCompare(this.magicNumber, [95, 15, 60, 245]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([95, 15, 60, 245], this.magicNumber, this._io, "/types/head/seq/3");
-      }
-      this.flags = this._io.readU2be();
-      this.unitsPerEm = this._io.readU2be();
-      this.created = this._io.readU8be();
-      this.modified = this._io.readU8be();
-      this.xMin = this._io.readS2be();
-      this.yMin = this._io.readS2be();
-      this.xMax = this._io.readS2be();
-      this.yMax = this._io.readS2be();
-      this.macStyle = this._io.readU2be();
-      this.lowestRecPpem = this._io.readU2be();
-      this.fontDirectionHint = this._io.readS2be();
-      this.indexToLocFormat = this._io.readS2be();
-      this.glyphDataFormat = this._io.readS2be();
+    OffsetTable.prototype._read = function() {
+      this.sfntVersion = new Fixed(this._io, this, this._root);
+      this.numTables = this._io.readU2be();
+      this.searchRange = this._io.readU2be();
+      this.entrySelector = this._io.readU2be();
+      this.rangeShift = this._io.readU2be();
     }
 
-    return Head;
-  })();
-
-  var Prep = Ttf.Prep = (function() {
-    function Prep(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Prep.prototype._read = function() {
-      this.instructions = this._io.readBytesFull();
-    }
-
-    return Prep;
-  })();
-
-  var Hhea = Ttf.Hhea = (function() {
-    function Hhea(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Hhea.prototype._read = function() {
-      this.version = new Fixed(this._io, this, this._root);
-      this.ascender = this._io.readS2be();
-      this.descender = this._io.readS2be();
-      this.lineGap = this._io.readS2be();
-      this.advanceWidthMax = this._io.readU2be();
-      this.minLeftSideBearing = this._io.readS2be();
-      this.minRightSideBearing = this._io.readS2be();
-      this.xMaxExtend = this._io.readS2be();
-      this.caretSlopeRise = this._io.readS2be();
-      this.caretSlopeRun = this._io.readS2be();
-      this.reserved = this._io.readBytes(10);
-      if (!((KaitaiStream.byteArrayCompare(this.reserved, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([0, 0, 0, 0, 0, 0, 0, 0, 0, 0], this.reserved, this._io, "/types/hhea/seq/10");
-      }
-      this.metricDataFormat = this._io.readS2be();
-      this.numberOfHmetrics = this._io.readU2be();
-    }
-
-    /**
-     * Typographic ascent
-     */
-
-    /**
-     * Typographic descent
-     */
-
-    /**
-     * Typographic line gap. Negative LineGap values are treated as zero in Windows 3.1, System 6, and System 7.
-     */
-
-    /**
-     * Maximum advance width value in `hmtx` table.
-     */
-
-    /**
-     * Minimum left sidebearing value in `hmtx` table.
-     */
-
-    /**
-     * Minimum right sidebearing value; calculated as Min(aw - lsb - (xMax - xMin)).
-     */
-
-    /**
-     * Max(lsb + (xMax - xMin)).
-     */
-
-    return Hhea;
-  })();
-
-  var Fpgm = Ttf.Fpgm = (function() {
-    function Fpgm(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Fpgm.prototype._read = function() {
-      this.instructions = this._io.readBytesFull();
-    }
-
-    return Fpgm;
-  })();
-
-  var Kern = Ttf.Kern = (function() {
-    function Kern(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Kern.prototype._read = function() {
-      this.version = this._io.readU2be();
-      this.subtableCount = this._io.readU2be();
-      this.subtables = [];
-      for (var i = 0; i < this.subtableCount; i++) {
-        this.subtables.push(new Subtable(this._io, this, this._root));
-      }
-    }
-
-    var Subtable = Kern.Subtable = (function() {
-      function Subtable(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      Subtable.prototype._read = function() {
-        this.version = this._io.readU2be();
-        this.length = this._io.readU2be();
-        this.format = this._io.readU1();
-        this.reserved = this._io.readBitsIntBe(4);
-        this.isOverride = this._io.readBitsIntBe(1) != 0;
-        this.isCrossStream = this._io.readBitsIntBe(1) != 0;
-        this.isMinimum = this._io.readBitsIntBe(1) != 0;
-        this.isHorizontal = this._io.readBitsIntBe(1) != 0;
-        this._io.alignToByte();
-        if (this.format == 0) {
-          this.format0 = new Format0(this._io, this, this._root);
-        }
-      }
-
-      var Format0 = Subtable.Format0 = (function() {
-        function Format0(_io, _parent, _root) {
-          this._io = _io;
-          this._parent = _parent;
-          this._root = _root || this;
-
-          this._read();
-        }
-        Format0.prototype._read = function() {
-          this.pairCount = this._io.readU2be();
-          this.searchRange = this._io.readU2be();
-          this.entrySelector = this._io.readU2be();
-          this.rangeShift = this._io.readU2be();
-          this.kerningPairs = [];
-          for (var i = 0; i < this.pairCount; i++) {
-            this.kerningPairs.push(new KerningPair(this._io, this, this._root));
-          }
-        }
-
-        var KerningPair = Format0.KerningPair = (function() {
-          function KerningPair(_io, _parent, _root) {
-            this._io = _io;
-            this._parent = _parent;
-            this._root = _root || this;
-
-            this._read();
-          }
-          KerningPair.prototype._read = function() {
-            this.left = this._io.readU2be();
-            this.right = this._io.readU2be();
-            this.value = this._io.readS2be();
-          }
-
-          return KerningPair;
-        })();
-
-        return Format0;
-      })();
-
-      return Subtable;
-    })();
-
-    return Kern;
-  })();
-
-  var DirTableEntry = Ttf.DirTableEntry = (function() {
-    function DirTableEntry(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    DirTableEntry.prototype._read = function() {
-      this.tag = KaitaiStream.bytesToStr(this._io.readBytes(4), "ascii");
-      this.checksum = this._io.readU4be();
-      this.offset = this._io.readU4be();
-      this.length = this._io.readU4be();
-    }
-    Object.defineProperty(DirTableEntry.prototype, 'value', {
-      get: function() {
-        if (this._m_value !== undefined)
-          return this._m_value;
-        var io = this._root._io;
-        var _pos = io.pos;
-        io.seek(this.offset);
-        switch (this.tag) {
-        case "head":
-          this._raw__m_value = io.readBytes(this.length);
-          var _io__raw__m_value = new KaitaiStream(this._raw__m_value);
-          this._m_value = new Head(_io__raw__m_value, this, this._root);
-          break;
-        case "cvt ":
-          this._raw__m_value = io.readBytes(this.length);
-          var _io__raw__m_value = new KaitaiStream(this._raw__m_value);
-          this._m_value = new Cvt(_io__raw__m_value, this, this._root);
-          break;
-        case "prep":
-          this._raw__m_value = io.readBytes(this.length);
-          var _io__raw__m_value = new KaitaiStream(this._raw__m_value);
-          this._m_value = new Prep(_io__raw__m_value, this, this._root);
-          break;
-        case "kern":
-          this._raw__m_value = io.readBytes(this.length);
-          var _io__raw__m_value = new KaitaiStream(this._raw__m_value);
-          this._m_value = new Kern(_io__raw__m_value, this, this._root);
-          break;
-        case "hhea":
-          this._raw__m_value = io.readBytes(this.length);
-          var _io__raw__m_value = new KaitaiStream(this._raw__m_value);
-          this._m_value = new Hhea(_io__raw__m_value, this, this._root);
-          break;
-        case "post":
-          this._raw__m_value = io.readBytes(this.length);
-          var _io__raw__m_value = new KaitaiStream(this._raw__m_value);
-          this._m_value = new Post(_io__raw__m_value, this, this._root);
-          break;
-        case "OS/2":
-          this._raw__m_value = io.readBytes(this.length);
-          var _io__raw__m_value = new KaitaiStream(this._raw__m_value);
-          this._m_value = new Os2(_io__raw__m_value, this, this._root);
-          break;
-        case "name":
-          this._raw__m_value = io.readBytes(this.length);
-          var _io__raw__m_value = new KaitaiStream(this._raw__m_value);
-          this._m_value = new Name(_io__raw__m_value, this, this._root);
-          break;
-        case "maxp":
-          this._raw__m_value = io.readBytes(this.length);
-          var _io__raw__m_value = new KaitaiStream(this._raw__m_value);
-          this._m_value = new Maxp(_io__raw__m_value, this, this._root);
-          break;
-        case "glyf":
-          this._raw__m_value = io.readBytes(this.length);
-          var _io__raw__m_value = new KaitaiStream(this._raw__m_value);
-          this._m_value = new Glyf(_io__raw__m_value, this, this._root);
-          break;
-        case "fpgm":
-          this._raw__m_value = io.readBytes(this.length);
-          var _io__raw__m_value = new KaitaiStream(this._raw__m_value);
-          this._m_value = new Fpgm(_io__raw__m_value, this, this._root);
-          break;
-        case "cmap":
-          this._raw__m_value = io.readBytes(this.length);
-          var _io__raw__m_value = new KaitaiStream(this._raw__m_value);
-          this._m_value = new Cmap(_io__raw__m_value, this, this._root);
-          break;
-        default:
-          this._m_value = io.readBytes(this.length);
-          break;
-        }
-        io.seek(_pos);
-        return this._m_value;
-      }
-    });
-
-    return DirTableEntry;
+    return OffsetTable;
   })();
 
   /**
@@ -562,6 +938,34 @@ var Ttf = (function() {
    */
 
   var Os2 = Ttf.Os2 = (function() {
+    Os2.FsSelection = Object.freeze({
+      ITALIC: 1,
+      UNDERSCORE: 2,
+      NEGATIVE: 4,
+      OUTLINED: 8,
+      STRIKEOUT: 16,
+      BOLD: 32,
+      REGULAR: 64,
+
+      1: "ITALIC",
+      2: "UNDERSCORE",
+      4: "NEGATIVE",
+      8: "OUTLINED",
+      16: "STRIKEOUT",
+      32: "BOLD",
+      64: "REGULAR",
+    });
+
+    Os2.FsType = Object.freeze({
+      RESTRICTED_LICENSE_EMBEDDING: 2,
+      PREVIEW_AND_PRINT_EMBEDDING: 4,
+      EDITABLE_EMBEDDING: 8,
+
+      2: "RESTRICTED_LICENSE_EMBEDDING",
+      4: "PREVIEW_AND_PRINT_EMBEDDING",
+      8: "EDITABLE_EMBEDDING",
+    });
+
     Os2.WeightClass = Object.freeze({
       THIN: 100,
       EXTRA_LIGHT: 200,
@@ -606,38 +1010,10 @@ var Ttf = (function() {
       9: "ULTRA_EXPANDED",
     });
 
-    Os2.FsType = Object.freeze({
-      RESTRICTED_LICENSE_EMBEDDING: 2,
-      PREVIEW_AND_PRINT_EMBEDDING: 4,
-      EDITABLE_EMBEDDING: 8,
-
-      2: "RESTRICTED_LICENSE_EMBEDDING",
-      4: "PREVIEW_AND_PRINT_EMBEDDING",
-      8: "EDITABLE_EMBEDDING",
-    });
-
-    Os2.FsSelection = Object.freeze({
-      ITALIC: 1,
-      UNDERSCORE: 2,
-      NEGATIVE: 4,
-      OUTLINED: 8,
-      STRIKEOUT: 16,
-      BOLD: 32,
-      REGULAR: 64,
-
-      1: "ITALIC",
-      2: "UNDERSCORE",
-      4: "NEGATIVE",
-      8: "OUTLINED",
-      16: "STRIKEOUT",
-      32: "BOLD",
-      64: "REGULAR",
-    });
-
     function Os2(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -660,7 +1036,7 @@ var Ttf = (function() {
       this.sFamilyClass = this._io.readS2be();
       this.panose = new Panose(this._io, this, this._root);
       this.unicodeRange = new UnicodeRange(this._io, this, this._root);
-      this.achVendId = KaitaiStream.bytesToStr(this._io.readBytes(4), "ascii");
+      this.achVendId = KaitaiStream.bytesToStr(this._io.readBytes(4), "ASCII");
       this.selection = this._io.readU2be();
       this.firstCharIndex = this._io.readU2be();
       this.lastCharIndex = this._io.readU2be();
@@ -672,57 +1048,107 @@ var Ttf = (function() {
       this.codePageRange = new CodePageRange(this._io, this, this._root);
     }
 
+    var CodePageRange = Os2.CodePageRange = (function() {
+      function CodePageRange(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+
+        this._read();
+      }
+      CodePageRange.prototype._read = function() {
+        this.symbolCharacterSet = this._io.readBitsIntBe(1) != 0;
+        this.oemCharacterSet = this._io.readBitsIntBe(1) != 0;
+        this.macintoshCharacterSet = this._io.readBitsIntBe(1) != 0;
+        this.reservedForAlternateAnsiOem = this._io.readBitsIntBe(7);
+        this.cp1361KoreanJohab = this._io.readBitsIntBe(1) != 0;
+        this.cp950ChineseTraditionalCharsTaiwanAndHongKong = this._io.readBitsIntBe(1) != 0;
+        this.cp949KoreanWansung = this._io.readBitsIntBe(1) != 0;
+        this.cp936ChineseSimplifiedCharsPrcAndSingapore = this._io.readBitsIntBe(1) != 0;
+        this.cp932JisJapan = this._io.readBitsIntBe(1) != 0;
+        this.cp874Thai = this._io.readBitsIntBe(1) != 0;
+        this.reservedForAlternateAnsi = this._io.readBitsIntBe(8);
+        this.cp1257WindowsBaltic = this._io.readBitsIntBe(1) != 0;
+        this.cp1256Arabic = this._io.readBitsIntBe(1) != 0;
+        this.cp1255Hebrew = this._io.readBitsIntBe(1) != 0;
+        this.cp1254Turkish = this._io.readBitsIntBe(1) != 0;
+        this.cp1253Greek = this._io.readBitsIntBe(1) != 0;
+        this.cp1251Cyrillic = this._io.readBitsIntBe(1) != 0;
+        this.cp1250Latin2EasternEurope = this._io.readBitsIntBe(1) != 0;
+        this.cp1252Latin1 = this._io.readBitsIntBe(1) != 0;
+        this.cp437Us = this._io.readBitsIntBe(1) != 0;
+        this.cp850WeLatin1 = this._io.readBitsIntBe(1) != 0;
+        this.cp708ArabicAsmo708 = this._io.readBitsIntBe(1) != 0;
+        this.cp737GreekFormer437G = this._io.readBitsIntBe(1) != 0;
+        this.cp775MsDosBaltic = this._io.readBitsIntBe(1) != 0;
+        this.cp852Latin2 = this._io.readBitsIntBe(1) != 0;
+        this.cp855IbmCyrillicPrimarilyRussian = this._io.readBitsIntBe(1) != 0;
+        this.cp857IbmTurkish = this._io.readBitsIntBe(1) != 0;
+        this.cp860MsDosPortuguese = this._io.readBitsIntBe(1) != 0;
+        this.cp861MsDosIcelandic = this._io.readBitsIntBe(1) != 0;
+        this.cp862Hebrew = this._io.readBitsIntBe(1) != 0;
+        this.cp863MsDosCanadianFrench = this._io.readBitsIntBe(1) != 0;
+        this.cp864Arabic = this._io.readBitsIntBe(1) != 0;
+        this.cp865MsDosNordic = this._io.readBitsIntBe(1) != 0;
+        this.cp866MsDosRussian = this._io.readBitsIntBe(1) != 0;
+        this.cp869IbmGreek = this._io.readBitsIntBe(1) != 0;
+        this.reservedForOem = this._io.readBitsIntBe(16);
+      }
+
+      return CodePageRange;
+    })();
+
     var Panose = Os2.Panose = (function() {
-      Panose.Weight = Object.freeze({
+      Panose.ArmStyle = Object.freeze({
         ANY: 0,
         NO_FIT: 1,
-        VERY_LIGHT: 2,
-        LIGHT: 3,
-        THIN: 4,
-        BOOK: 5,
-        MEDIUM: 6,
-        DEMI: 7,
-        BOLD: 8,
-        HEAVY: 9,
-        BLACK: 10,
-        NORD: 11,
+        STRAIGHT_ARMS_HORIZONTAL: 2,
+        STRAIGHT_ARMS_WEDGE: 3,
+        STRAIGHT_ARMS_VERTICAL: 4,
+        STRAIGHT_ARMS_SINGLE_SERIF: 5,
+        STRAIGHT_ARMS_DOUBLE_SERIF: 6,
+        NON_STRAIGHT_ARMS_HORIZONTAL: 7,
+        NON_STRAIGHT_ARMS_WEDGE: 8,
+        NON_STRAIGHT_ARMS_VERTICAL: 9,
+        NON_STRAIGHT_ARMS_SINGLE_SERIF: 10,
+        NON_STRAIGHT_ARMS_DOUBLE_SERIF: 11,
 
         0: "ANY",
         1: "NO_FIT",
-        2: "VERY_LIGHT",
-        3: "LIGHT",
-        4: "THIN",
-        5: "BOOK",
-        6: "MEDIUM",
-        7: "DEMI",
-        8: "BOLD",
-        9: "HEAVY",
-        10: "BLACK",
-        11: "NORD",
+        2: "STRAIGHT_ARMS_HORIZONTAL",
+        3: "STRAIGHT_ARMS_WEDGE",
+        4: "STRAIGHT_ARMS_VERTICAL",
+        5: "STRAIGHT_ARMS_SINGLE_SERIF",
+        6: "STRAIGHT_ARMS_DOUBLE_SERIF",
+        7: "NON_STRAIGHT_ARMS_HORIZONTAL",
+        8: "NON_STRAIGHT_ARMS_WEDGE",
+        9: "NON_STRAIGHT_ARMS_VERTICAL",
+        10: "NON_STRAIGHT_ARMS_SINGLE_SERIF",
+        11: "NON_STRAIGHT_ARMS_DOUBLE_SERIF",
       });
 
-      Panose.Proportion = Object.freeze({
+      Panose.Contrast = Object.freeze({
         ANY: 0,
         NO_FIT: 1,
-        OLD_STYLE: 2,
-        MODERN: 3,
-        EVEN_WIDTH: 4,
-        EXPANDED: 5,
-        CONDENSED: 6,
-        VERY_EXPANDED: 7,
-        VERY_CONDENSED: 8,
-        MONOSPACED: 9,
+        NONE: 2,
+        VERY_LOW: 3,
+        LOW: 4,
+        MEDIUM_LOW: 5,
+        MEDIUM: 6,
+        MEDIUM_HIGH: 7,
+        HIGH: 8,
+        VERY_HIGH: 9,
 
         0: "ANY",
         1: "NO_FIT",
-        2: "OLD_STYLE",
-        3: "MODERN",
-        4: "EVEN_WIDTH",
-        5: "EXPANDED",
-        6: "CONDENSED",
-        7: "VERY_EXPANDED",
-        8: "VERY_CONDENSED",
-        9: "MONOSPACED",
+        2: "NONE",
+        3: "VERY_LOW",
+        4: "LOW",
+        5: "MEDIUM_LOW",
+        6: "MEDIUM",
+        7: "MEDIUM_HIGH",
+        8: "HIGH",
+        9: "VERY_HIGH",
       });
 
       Panose.FamilyKind = Object.freeze({
@@ -777,6 +1203,62 @@ var Ttf = (function() {
         15: "OBLIQUE_SQUARE",
       });
 
+      Panose.Midline = Object.freeze({
+        ANY: 0,
+        NO_FIT: 1,
+        STANDARD_TRIMMED: 2,
+        STANDARD_POINTED: 3,
+        STANDARD_SERIFED: 4,
+        HIGH_TRIMMED: 5,
+        HIGH_POINTED: 6,
+        HIGH_SERIFED: 7,
+        CONSTANT_TRIMMED: 8,
+        CONSTANT_POINTED: 9,
+        CONSTANT_SERIFED: 10,
+        LOW_TRIMMED: 11,
+        LOW_POINTED: 12,
+        LOW_SERIFED: 13,
+
+        0: "ANY",
+        1: "NO_FIT",
+        2: "STANDARD_TRIMMED",
+        3: "STANDARD_POINTED",
+        4: "STANDARD_SERIFED",
+        5: "HIGH_TRIMMED",
+        6: "HIGH_POINTED",
+        7: "HIGH_SERIFED",
+        8: "CONSTANT_TRIMMED",
+        9: "CONSTANT_POINTED",
+        10: "CONSTANT_SERIFED",
+        11: "LOW_TRIMMED",
+        12: "LOW_POINTED",
+        13: "LOW_SERIFED",
+      });
+
+      Panose.Proportion = Object.freeze({
+        ANY: 0,
+        NO_FIT: 1,
+        OLD_STYLE: 2,
+        MODERN: 3,
+        EVEN_WIDTH: 4,
+        EXPANDED: 5,
+        CONDENSED: 6,
+        VERY_EXPANDED: 7,
+        VERY_CONDENSED: 8,
+        MONOSPACED: 9,
+
+        0: "ANY",
+        1: "NO_FIT",
+        2: "OLD_STYLE",
+        3: "MODERN",
+        4: "EVEN_WIDTH",
+        5: "EXPANDED",
+        6: "CONDENSED",
+        7: "VERY_EXPANDED",
+        8: "VERY_CONDENSED",
+        9: "MONOSPACED",
+      });
+
       Panose.SerifStyle = Object.freeze({
         ANY: 0,
         NO_FIT: 1,
@@ -813,54 +1295,6 @@ var Ttf = (function() {
         15: "ROUNDED",
       });
 
-      Panose.XHeight = Object.freeze({
-        ANY: 0,
-        NO_FIT: 1,
-        CONSTANT_SMALL: 2,
-        CONSTANT_STANDARD: 3,
-        CONSTANT_LARGE: 4,
-        DUCKING_SMALL: 5,
-        DUCKING_STANDARD: 6,
-        DUCKING_LARGE: 7,
-
-        0: "ANY",
-        1: "NO_FIT",
-        2: "CONSTANT_SMALL",
-        3: "CONSTANT_STANDARD",
-        4: "CONSTANT_LARGE",
-        5: "DUCKING_SMALL",
-        6: "DUCKING_STANDARD",
-        7: "DUCKING_LARGE",
-      });
-
-      Panose.ArmStyle = Object.freeze({
-        ANY: 0,
-        NO_FIT: 1,
-        STRAIGHT_ARMS_HORIZONTAL: 2,
-        STRAIGHT_ARMS_WEDGE: 3,
-        STRAIGHT_ARMS_VERTICAL: 4,
-        STRAIGHT_ARMS_SINGLE_SERIF: 5,
-        STRAIGHT_ARMS_DOUBLE_SERIF: 6,
-        NON_STRAIGHT_ARMS_HORIZONTAL: 7,
-        NON_STRAIGHT_ARMS_WEDGE: 8,
-        NON_STRAIGHT_ARMS_VERTICAL: 9,
-        NON_STRAIGHT_ARMS_SINGLE_SERIF: 10,
-        NON_STRAIGHT_ARMS_DOUBLE_SERIF: 11,
-
-        0: "ANY",
-        1: "NO_FIT",
-        2: "STRAIGHT_ARMS_HORIZONTAL",
-        3: "STRAIGHT_ARMS_WEDGE",
-        4: "STRAIGHT_ARMS_VERTICAL",
-        5: "STRAIGHT_ARMS_SINGLE_SERIF",
-        6: "STRAIGHT_ARMS_DOUBLE_SERIF",
-        7: "NON_STRAIGHT_ARMS_HORIZONTAL",
-        8: "NON_STRAIGHT_ARMS_WEDGE",
-        9: "NON_STRAIGHT_ARMS_VERTICAL",
-        10: "NON_STRAIGHT_ARMS_SINGLE_SERIF",
-        11: "NON_STRAIGHT_ARMS_DOUBLE_SERIF",
-      });
-
       Panose.StrokeVariation = Object.freeze({
         ANY: 0,
         NO_FIT: 1,
@@ -883,66 +1317,58 @@ var Ttf = (function() {
         8: "INSTANT_VERTICAL",
       });
 
-      Panose.Contrast = Object.freeze({
+      Panose.Weight = Object.freeze({
         ANY: 0,
         NO_FIT: 1,
-        NONE: 2,
-        VERY_LOW: 3,
-        LOW: 4,
-        MEDIUM_LOW: 5,
+        VERY_LIGHT: 2,
+        LIGHT: 3,
+        THIN: 4,
+        BOOK: 5,
         MEDIUM: 6,
-        MEDIUM_HIGH: 7,
-        HIGH: 8,
-        VERY_HIGH: 9,
+        DEMI: 7,
+        BOLD: 8,
+        HEAVY: 9,
+        BLACK: 10,
+        NORD: 11,
 
         0: "ANY",
         1: "NO_FIT",
-        2: "NONE",
-        3: "VERY_LOW",
-        4: "LOW",
-        5: "MEDIUM_LOW",
+        2: "VERY_LIGHT",
+        3: "LIGHT",
+        4: "THIN",
+        5: "BOOK",
         6: "MEDIUM",
-        7: "MEDIUM_HIGH",
-        8: "HIGH",
-        9: "VERY_HIGH",
+        7: "DEMI",
+        8: "BOLD",
+        9: "HEAVY",
+        10: "BLACK",
+        11: "NORD",
       });
 
-      Panose.Midline = Object.freeze({
+      Panose.XHeight = Object.freeze({
         ANY: 0,
         NO_FIT: 1,
-        STANDARD_TRIMMED: 2,
-        STANDARD_POINTED: 3,
-        STANDARD_SERIFED: 4,
-        HIGH_TRIMMED: 5,
-        HIGH_POINTED: 6,
-        HIGH_SERIFED: 7,
-        CONSTANT_TRIMMED: 8,
-        CONSTANT_POINTED: 9,
-        CONSTANT_SERIFED: 10,
-        LOW_TRIMMED: 11,
-        LOW_POINTED: 12,
-        LOW_SERIFED: 13,
+        CONSTANT_SMALL: 2,
+        CONSTANT_STANDARD: 3,
+        CONSTANT_LARGE: 4,
+        DUCKING_SMALL: 5,
+        DUCKING_STANDARD: 6,
+        DUCKING_LARGE: 7,
 
         0: "ANY",
         1: "NO_FIT",
-        2: "STANDARD_TRIMMED",
-        3: "STANDARD_POINTED",
-        4: "STANDARD_SERIFED",
-        5: "HIGH_TRIMMED",
-        6: "HIGH_POINTED",
-        7: "HIGH_SERIFED",
-        8: "CONSTANT_TRIMMED",
-        9: "CONSTANT_POINTED",
-        10: "CONSTANT_SERIFED",
-        11: "LOW_TRIMMED",
-        12: "LOW_POINTED",
-        13: "LOW_SERIFED",
+        2: "CONSTANT_SMALL",
+        3: "CONSTANT_STANDARD",
+        4: "CONSTANT_LARGE",
+        5: "DUCKING_SMALL",
+        6: "DUCKING_STANDARD",
+        7: "DUCKING_LARGE",
       });
 
       function Panose(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -966,7 +1392,7 @@ var Ttf = (function() {
       function UnicodeRange(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -1046,56 +1472,6 @@ var Ttf = (function() {
       }
 
       return UnicodeRange;
-    })();
-
-    var CodePageRange = Os2.CodePageRange = (function() {
-      function CodePageRange(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      CodePageRange.prototype._read = function() {
-        this.symbolCharacterSet = this._io.readBitsIntBe(1) != 0;
-        this.oemCharacterSet = this._io.readBitsIntBe(1) != 0;
-        this.macintoshCharacterSet = this._io.readBitsIntBe(1) != 0;
-        this.reservedForAlternateAnsiOem = this._io.readBitsIntBe(7);
-        this.cp1361KoreanJohab = this._io.readBitsIntBe(1) != 0;
-        this.cp950ChineseTraditionalCharsTaiwanAndHongKong = this._io.readBitsIntBe(1) != 0;
-        this.cp949KoreanWansung = this._io.readBitsIntBe(1) != 0;
-        this.cp936ChineseSimplifiedCharsPrcAndSingapore = this._io.readBitsIntBe(1) != 0;
-        this.cp932JisJapan = this._io.readBitsIntBe(1) != 0;
-        this.cp874Thai = this._io.readBitsIntBe(1) != 0;
-        this.reservedForAlternateAnsi = this._io.readBitsIntBe(8);
-        this.cp1257WindowsBaltic = this._io.readBitsIntBe(1) != 0;
-        this.cp1256Arabic = this._io.readBitsIntBe(1) != 0;
-        this.cp1255Hebrew = this._io.readBitsIntBe(1) != 0;
-        this.cp1254Turkish = this._io.readBitsIntBe(1) != 0;
-        this.cp1253Greek = this._io.readBitsIntBe(1) != 0;
-        this.cp1251Cyrillic = this._io.readBitsIntBe(1) != 0;
-        this.cp1250Latin2EasternEurope = this._io.readBitsIntBe(1) != 0;
-        this.cp1252Latin1 = this._io.readBitsIntBe(1) != 0;
-        this.cp437Us = this._io.readBitsIntBe(1) != 0;
-        this.cp850WeLatin1 = this._io.readBitsIntBe(1) != 0;
-        this.cp708ArabicAsmo708 = this._io.readBitsIntBe(1) != 0;
-        this.cp737GreekFormer437G = this._io.readBitsIntBe(1) != 0;
-        this.cp775MsDosBaltic = this._io.readBitsIntBe(1) != 0;
-        this.cp852Latin2 = this._io.readBitsIntBe(1) != 0;
-        this.cp855IbmCyrillicPrimarilyRussian = this._io.readBitsIntBe(1) != 0;
-        this.cp857IbmTurkish = this._io.readBitsIntBe(1) != 0;
-        this.cp860MsDosPortuguese = this._io.readBitsIntBe(1) != 0;
-        this.cp861MsDosIcelandic = this._io.readBitsIntBe(1) != 0;
-        this.cp862Hebrew = this._io.readBitsIntBe(1) != 0;
-        this.cp863MsDosCanadianFrench = this._io.readBitsIntBe(1) != 0;
-        this.cp864Arabic = this._io.readBitsIntBe(1) != 0;
-        this.cp865MsDosNordic = this._io.readBitsIntBe(1) != 0;
-        this.cp866MsDosRussian = this._io.readBitsIntBe(1) != 0;
-        this.cp869IbmGreek = this._io.readBitsIntBe(1) != 0;
-        this.reservedForOem = this._io.readBitsIntBe(16);
-      }
-
-      return CodePageRange;
     })();
 
     /**
@@ -1205,468 +1581,92 @@ var Ttf = (function() {
     return Os2;
   })();
 
-  var Fixed = Ttf.Fixed = (function() {
-    function Fixed(_io, _parent, _root) {
+  var Post = Ttf.Post = (function() {
+    function Post(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    Fixed.prototype._read = function() {
-      this.major = this._io.readU2be();
-      this.minor = this._io.readU2be();
-    }
-
-    return Fixed;
-  })();
-
-  var Glyf = Ttf.Glyf = (function() {
-    function Glyf(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Glyf.prototype._read = function() {
-      this.numberOfContours = this._io.readS2be();
-      this.xMin = this._io.readS2be();
-      this.yMin = this._io.readS2be();
-      this.xMax = this._io.readS2be();
-      this.yMax = this._io.readS2be();
-      if (this.numberOfContours > 0) {
-        this.value = new SimpleGlyph(this._io, this, this._root);
+    Post.prototype._read = function() {
+      this.format = new Fixed(this._io, this, this._root);
+      this.italicAngle = new Fixed(this._io, this, this._root);
+      this.underlinePosition = this._io.readS2be();
+      this.underlineThichness = this._io.readS2be();
+      this.isFixedPitch = this._io.readU4be();
+      this.minMemType42 = this._io.readU4be();
+      this.maxMemType42 = this._io.readU4be();
+      this.minMemType1 = this._io.readU4be();
+      this.maxMemType1 = this._io.readU4be();
+      if ( ((this.format.major == 2) && (this.format.minor == 0)) ) {
+        this.format20 = new Format20(this._io, this, this._root);
       }
     }
 
-    var SimpleGlyph = Glyf.SimpleGlyph = (function() {
-      function SimpleGlyph(_io, _parent, _root) {
+    var Format20 = Post.Format20 = (function() {
+      function Format20(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
-      SimpleGlyph.prototype._read = function() {
-        this.endPtsOfContours = [];
-        for (var i = 0; i < this._parent.numberOfContours; i++) {
-          this.endPtsOfContours.push(this._io.readU2be());
+      Format20.prototype._read = function() {
+        this.numberOfGlyphs = this._io.readU2be();
+        this.glyphNameIndex = [];
+        for (var i = 0; i < this.numberOfGlyphs; i++) {
+          this.glyphNameIndex.push(this._io.readU2be());
         }
-        this.instructionLength = this._io.readU2be();
-        this.instructions = this._io.readBytes(this.instructionLength);
-        this.flags = [];
-        for (var i = 0; i < this.pointCount; i++) {
-          this.flags.push(new Flag(this._io, this, this._root));
-        }
+        this.glyphNames = [];
+        var i = 0;
+        do {
+          var _ = new PascalString(this._io, this, this._root);
+          this.glyphNames.push(_);
+          i++;
+        } while (!( ((_.length == 0) || (this._io.isEof())) ));
       }
 
-      var Flag = SimpleGlyph.Flag = (function() {
-        function Flag(_io, _parent, _root) {
+      var PascalString = Format20.PascalString = (function() {
+        function PascalString(_io, _parent, _root) {
           this._io = _io;
           this._parent = _parent;
-          this._root = _root || this;
+          this._root = _root;
 
           this._read();
         }
-        Flag.prototype._read = function() {
-          this.reserved = this._io.readBitsIntBe(2);
-          this.yIsSame = this._io.readBitsIntBe(1) != 0;
-          this.xIsSame = this._io.readBitsIntBe(1) != 0;
-          this.repeat = this._io.readBitsIntBe(1) != 0;
-          this.yShortVector = this._io.readBitsIntBe(1) != 0;
-          this.xShortVector = this._io.readBitsIntBe(1) != 0;
-          this.onCurve = this._io.readBitsIntBe(1) != 0;
-          this._io.alignToByte();
-          if (this.repeat) {
-            this.repeatValue = this._io.readU1();
+        PascalString.prototype._read = function() {
+          this.length = this._io.readU1();
+          if (this.length != 0) {
+            this.value = KaitaiStream.bytesToStr(this._io.readBytes(this.length), "ASCII");
           }
         }
 
-        return Flag;
+        return PascalString;
       })();
-      Object.defineProperty(SimpleGlyph.prototype, 'pointCount', {
-        get: function() {
-          if (this._m_pointCount !== undefined)
-            return this._m_pointCount;
-          this._m_pointCount = (KaitaiStream.arrayMax(this.endPtsOfContours) + 1);
-          return this._m_pointCount;
-        }
-      });
 
-      return SimpleGlyph;
+      return Format20;
     })();
 
-    return Glyf;
+    return Post;
   })();
 
-  /**
-   * cvt  - Control Value Table This table contains a list of values that can be referenced by instructions. They can be used, among other things, to control characteristics for different glyphs.
-   */
-
-  var Cvt = Ttf.Cvt = (function() {
-    function Cvt(_io, _parent, _root) {
+  var Prep = Ttf.Prep = (function() {
+    function Prep(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    Cvt.prototype._read = function() {
-      this.fwords = [];
-      var i = 0;
-      while (!this._io.isEof()) {
-        this.fwords.push(this._io.readS2be());
-        i++;
-      }
+    Prep.prototype._read = function() {
+      this.instructions = this._io.readBytesFull();
     }
 
-    return Cvt;
-  })();
-
-  var Maxp = Ttf.Maxp = (function() {
-    function Maxp(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Maxp.prototype._read = function() {
-      this.tableVersionNumber = new Fixed(this._io, this, this._root);
-      this.numGlyphs = this._io.readU2be();
-      if (this.isVersion10) {
-        this.version10Body = new MaxpVersion10Body(this._io, this, this._root);
-      }
-    }
-    Object.defineProperty(Maxp.prototype, 'isVersion10', {
-      get: function() {
-        if (this._m_isVersion10 !== undefined)
-          return this._m_isVersion10;
-        this._m_isVersion10 =  ((this.tableVersionNumber.major == 1) && (this.tableVersionNumber.minor == 0)) ;
-        return this._m_isVersion10;
-      }
-    });
-
-    /**
-     * 0x00010000 for version 1.0.
-     */
-
-    /**
-     * The number of glyphs in the font.
-     */
-
-    return Maxp;
-  })();
-
-  var MaxpVersion10Body = Ttf.MaxpVersion10Body = (function() {
-    function MaxpVersion10Body(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    MaxpVersion10Body.prototype._read = function() {
-      this.maxPoints = this._io.readU2be();
-      this.maxContours = this._io.readU2be();
-      this.maxCompositePoints = this._io.readU2be();
-      this.maxCompositeContours = this._io.readU2be();
-      this.maxZones = this._io.readU2be();
-      this.maxTwilightPoints = this._io.readU2be();
-      this.maxStorage = this._io.readU2be();
-      this.maxFunctionDefs = this._io.readU2be();
-      this.maxInstructionDefs = this._io.readU2be();
-      this.maxStackElements = this._io.readU2be();
-      this.maxSizeOfInstructions = this._io.readU2be();
-      this.maxComponentElements = this._io.readU2be();
-      this.maxComponentDepth = this._io.readU2be();
-    }
-
-    /**
-     * Maximum points in a non-composite glyph.
-     */
-
-    /**
-     * Maximum contours in a non-composite glyph.
-     */
-
-    /**
-     * Maximum points in a composite glyph.
-     */
-
-    /**
-     * Maximum contours in a composite glyph.
-     */
-
-    /**
-     * 1 if instructions do not use the twilight zone (Z0), or 2 if instructions do use Z0; should be set to 2 in most cases.
-     */
-
-    /**
-     * Maximum points used in Z0.
-     */
-
-    /**
-     * Number of Storage Area locations.
-     */
-
-    /**
-     * Number of FDEFs.
-     */
-
-    /**
-     * Number of IDEFs.
-     */
-
-    /**
-     * Maximum stack depth.
-     */
-
-    /**
-     * Maximum byte count for glyph instructions.
-     */
-
-    /**
-     * Maximum number of components referenced at "top level" for any composite glyph.
-     */
-
-    /**
-     * Maximum levels of recursion; 1 for simple components.
-     */
-
-    return MaxpVersion10Body;
-  })();
-
-  var OffsetTable = Ttf.OffsetTable = (function() {
-    function OffsetTable(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    OffsetTable.prototype._read = function() {
-      this.sfntVersion = new Fixed(this._io, this, this._root);
-      this.numTables = this._io.readU2be();
-      this.searchRange = this._io.readU2be();
-      this.entrySelector = this._io.readU2be();
-      this.rangeShift = this._io.readU2be();
-    }
-
-    return OffsetTable;
-  })();
-
-  /**
-   * cmap - Character To Glyph Index Mapping Table This table defines the mapping of character codes to the glyph index values used in the font.
-   */
-
-  var Cmap = Ttf.Cmap = (function() {
-    function Cmap(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Cmap.prototype._read = function() {
-      this.versionNumber = this._io.readU2be();
-      this.numberOfEncodingTables = this._io.readU2be();
-      this.tables = [];
-      for (var i = 0; i < this.numberOfEncodingTables; i++) {
-        this.tables.push(new SubtableHeader(this._io, this, this._root));
-      }
-    }
-
-    var SubtableHeader = Cmap.SubtableHeader = (function() {
-      function SubtableHeader(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      SubtableHeader.prototype._read = function() {
-        this.platformId = this._io.readU2be();
-        this.encodingId = this._io.readU2be();
-        this.subtableOffset = this._io.readU4be();
-      }
-      Object.defineProperty(SubtableHeader.prototype, 'table', {
-        get: function() {
-          if (this._m_table !== undefined)
-            return this._m_table;
-          var io = this._parent._io;
-          var _pos = io.pos;
-          io.seek(this.subtableOffset);
-          this._m_table = new Subtable(io, this, this._root);
-          io.seek(_pos);
-          return this._m_table;
-        }
-      });
-
-      return SubtableHeader;
-    })();
-
-    var Subtable = Cmap.Subtable = (function() {
-      Subtable.SubtableFormat = Object.freeze({
-        BYTE_ENCODING_TABLE: 0,
-        HIGH_BYTE_MAPPING_THROUGH_TABLE: 2,
-        SEGMENT_MAPPING_TO_DELTA_VALUES: 4,
-        TRIMMED_TABLE_MAPPING: 6,
-
-        0: "BYTE_ENCODING_TABLE",
-        2: "HIGH_BYTE_MAPPING_THROUGH_TABLE",
-        4: "SEGMENT_MAPPING_TO_DELTA_VALUES",
-        6: "TRIMMED_TABLE_MAPPING",
-      });
-
-      function Subtable(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      Subtable.prototype._read = function() {
-        this.format = this._io.readU2be();
-        this.length = this._io.readU2be();
-        this.version = this._io.readU2be();
-        switch (this.format) {
-        case Ttf.Cmap.Subtable.SubtableFormat.BYTE_ENCODING_TABLE:
-          this._raw_value = this._io.readBytes((this.length - 6));
-          var _io__raw_value = new KaitaiStream(this._raw_value);
-          this.value = new ByteEncodingTable(_io__raw_value, this, this._root);
-          break;
-        case Ttf.Cmap.Subtable.SubtableFormat.SEGMENT_MAPPING_TO_DELTA_VALUES:
-          this._raw_value = this._io.readBytes((this.length - 6));
-          var _io__raw_value = new KaitaiStream(this._raw_value);
-          this.value = new SegmentMappingToDeltaValues(_io__raw_value, this, this._root);
-          break;
-        case Ttf.Cmap.Subtable.SubtableFormat.HIGH_BYTE_MAPPING_THROUGH_TABLE:
-          this._raw_value = this._io.readBytes((this.length - 6));
-          var _io__raw_value = new KaitaiStream(this._raw_value);
-          this.value = new HighByteMappingThroughTable(_io__raw_value, this, this._root);
-          break;
-        case Ttf.Cmap.Subtable.SubtableFormat.TRIMMED_TABLE_MAPPING:
-          this._raw_value = this._io.readBytes((this.length - 6));
-          var _io__raw_value = new KaitaiStream(this._raw_value);
-          this.value = new TrimmedTableMapping(_io__raw_value, this, this._root);
-          break;
-        default:
-          this.value = this._io.readBytes((this.length - 6));
-          break;
-        }
-      }
-
-      var ByteEncodingTable = Subtable.ByteEncodingTable = (function() {
-        function ByteEncodingTable(_io, _parent, _root) {
-          this._io = _io;
-          this._parent = _parent;
-          this._root = _root || this;
-
-          this._read();
-        }
-        ByteEncodingTable.prototype._read = function() {
-          this.glyphIdArray = this._io.readBytes(256);
-        }
-
-        return ByteEncodingTable;
-      })();
-
-      var HighByteMappingThroughTable = Subtable.HighByteMappingThroughTable = (function() {
-        function HighByteMappingThroughTable(_io, _parent, _root) {
-          this._io = _io;
-          this._parent = _parent;
-          this._root = _root || this;
-
-          this._read();
-        }
-        HighByteMappingThroughTable.prototype._read = function() {
-          this.subHeaderKeys = [];
-          for (var i = 0; i < 256; i++) {
-            this.subHeaderKeys.push(this._io.readU2be());
-          }
-        }
-
-        return HighByteMappingThroughTable;
-      })();
-
-      var SegmentMappingToDeltaValues = Subtable.SegmentMappingToDeltaValues = (function() {
-        function SegmentMappingToDeltaValues(_io, _parent, _root) {
-          this._io = _io;
-          this._parent = _parent;
-          this._root = _root || this;
-
-          this._read();
-        }
-        SegmentMappingToDeltaValues.prototype._read = function() {
-          this.segCountX2 = this._io.readU2be();
-          this.searchRange = this._io.readU2be();
-          this.entrySelector = this._io.readU2be();
-          this.rangeShift = this._io.readU2be();
-          this.endCount = [];
-          for (var i = 0; i < this.segCount; i++) {
-            this.endCount.push(this._io.readU2be());
-          }
-          this.reservedPad = this._io.readU2be();
-          this.startCount = [];
-          for (var i = 0; i < this.segCount; i++) {
-            this.startCount.push(this._io.readU2be());
-          }
-          this.idDelta = [];
-          for (var i = 0; i < this.segCount; i++) {
-            this.idDelta.push(this._io.readU2be());
-          }
-          this.idRangeOffset = [];
-          for (var i = 0; i < this.segCount; i++) {
-            this.idRangeOffset.push(this._io.readU2be());
-          }
-          this.glyphIdArray = [];
-          var i = 0;
-          while (!this._io.isEof()) {
-            this.glyphIdArray.push(this._io.readU2be());
-            i++;
-          }
-        }
-        Object.defineProperty(SegmentMappingToDeltaValues.prototype, 'segCount', {
-          get: function() {
-            if (this._m_segCount !== undefined)
-              return this._m_segCount;
-            this._m_segCount = Math.floor(this.segCountX2 / 2);
-            return this._m_segCount;
-          }
-        });
-
-        return SegmentMappingToDeltaValues;
-      })();
-
-      var TrimmedTableMapping = Subtable.TrimmedTableMapping = (function() {
-        function TrimmedTableMapping(_io, _parent, _root) {
-          this._io = _io;
-          this._parent = _parent;
-          this._root = _root || this;
-
-          this._read();
-        }
-        TrimmedTableMapping.prototype._read = function() {
-          this.firstCode = this._io.readU2be();
-          this.entryCount = this._io.readU2be();
-          this.glyphIdArray = [];
-          for (var i = 0; i < this.entryCount; i++) {
-            this.glyphIdArray.push(this._io.readU2be());
-          }
-        }
-
-        return TrimmedTableMapping;
-      })();
-
-      return Subtable;
-    })();
-
-    return Cmap;
+    return Prep;
   })();
 
   return Ttf;
 })();
-return Ttf;
-}));
+Ttf_.Ttf = Ttf;
+});

@@ -109,14 +109,14 @@ namespace Kaitai
                 _headerSize = m_io.ReadU4le();
                 _type = new UnicodeOrId(m_io, this, m_root);
                 _name = new UnicodeOrId(m_io, this, m_root);
-                _padding1 = m_io.ReadBytes(KaitaiStream.Mod((4 - M_Io.Pos), 4));
+                _padding1 = m_io.ReadBytes(KaitaiStream.Mod(4 - M_Io.Pos, 4));
                 _formatVersion = m_io.ReadU4le();
                 _flags = m_io.ReadU2le();
                 _language = m_io.ReadU2le();
                 _valueVersion = m_io.ReadU4le();
                 _characteristics = m_io.ReadU4le();
                 _value = m_io.ReadBytes(ValueSize);
-                _padding2 = m_io.ReadBytes(KaitaiStream.Mod((4 - M_Io.Pos), 4));
+                _padding2 = m_io.ReadBytes(KaitaiStream.Mod(4 - M_Io.Pos, 4));
             }
             private bool f_typeAsPredef;
             private PredefTypes _typeAsPredef;
@@ -133,10 +133,10 @@ namespace Kaitai
                 {
                     if (f_typeAsPredef)
                         return _typeAsPredef;
+                    f_typeAsPredef = true;
                     if ( ((!(Type.IsString)) && (Type.AsNumeric <= 255)) ) {
                         _typeAsPredef = (PredefTypes) (((PredefTypes) Type.AsNumeric));
                     }
-                    f_typeAsPredef = true;
                     return _typeAsPredef;
                 }
             }
@@ -205,10 +205,10 @@ namespace Kaitai
             {
                 m_parent = p__parent;
                 m_root = p__root;
+                f_asString = false;
+                f_isString = false;
                 f_savePos1 = false;
                 f_savePos2 = false;
-                f_isString = false;
-                f_asString = false;
                 _read();
             }
             private void _read()
@@ -235,6 +235,37 @@ namespace Kaitai
                     _noop = m_io.ReadBytes(0);
                 }
             }
+            private bool f_asString;
+            private string _asString;
+            public string AsString
+            {
+                get
+                {
+                    if (f_asString)
+                        return _asString;
+                    f_asString = true;
+                    if (IsString) {
+                        long _pos = m_io.Pos;
+                        m_io.Seek(SavePos1);
+                        _asString = System.Text.Encoding.GetEncoding("UTF-16LE").GetString(m_io.ReadBytes((SavePos2 - SavePos1) - 2));
+                        m_io.Seek(_pos);
+                    }
+                    return _asString;
+                }
+            }
+            private bool f_isString;
+            private bool _isString;
+            public bool IsString
+            {
+                get
+                {
+                    if (f_isString)
+                        return _isString;
+                    f_isString = true;
+                    _isString = (bool) (First != 65535);
+                    return _isString;
+                }
+            }
             private bool f_savePos1;
             private int _savePos1;
             public int SavePos1
@@ -243,8 +274,8 @@ namespace Kaitai
                 {
                     if (f_savePos1)
                         return _savePos1;
-                    _savePos1 = (int) (M_Io.Pos);
                     f_savePos1 = true;
+                    _savePos1 = (int) (M_Io.Pos);
                     return _savePos1;
                 }
             }
@@ -256,40 +287,9 @@ namespace Kaitai
                 {
                     if (f_savePos2)
                         return _savePos2;
-                    _savePos2 = (int) (M_Io.Pos);
                     f_savePos2 = true;
+                    _savePos2 = (int) (M_Io.Pos);
                     return _savePos2;
-                }
-            }
-            private bool f_isString;
-            private bool _isString;
-            public bool IsString
-            {
-                get
-                {
-                    if (f_isString)
-                        return _isString;
-                    _isString = (bool) (First != 65535);
-                    f_isString = true;
-                    return _isString;
-                }
-            }
-            private bool f_asString;
-            private string _asString;
-            public string AsString
-            {
-                get
-                {
-                    if (f_asString)
-                        return _asString;
-                    if (IsString) {
-                        long _pos = m_io.Pos;
-                        m_io.Seek(SavePos1);
-                        _asString = System.Text.Encoding.GetEncoding("UTF-16LE").GetString(m_io.ReadBytes(((SavePos2 - SavePos1) - 2)));
-                        m_io.Seek(_pos);
-                        f_asString = true;
-                    }
-                    return _asString;
                 }
             }
             private ushort? _first;

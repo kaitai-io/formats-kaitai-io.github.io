@@ -292,6 +292,31 @@ type
     vvoi = 1987473257
     vwpt = 1987539060
     yt4 = 2037658656
+  QuicktimeMov_Atom* = ref object of KaitaiStruct
+    `len32`*: uint32
+    `atomType`*: QuicktimeMov_AtomType
+    `len64`*: uint64
+    `body`*: KaitaiStruct
+    `parent`*: QuicktimeMov_AtomList
+    `rawBody`*: seq[byte]
+    `lenInst`: int
+    `lenInstFlag`: bool
+  QuicktimeMov_AtomList* = ref object of KaitaiStruct
+    `items`*: seq[QuicktimeMov_Atom]
+    `parent`*: KaitaiStruct
+  QuicktimeMov_Fixed16* = ref object of KaitaiStruct
+    `intPart`*: int8
+    `fracPart`*: uint8
+    `parent`*: QuicktimeMov_MvhdBody
+  QuicktimeMov_Fixed32* = ref object of KaitaiStruct
+    `intPart`*: int16
+    `fracPart`*: uint16
+    `parent`*: KaitaiStruct
+  QuicktimeMov_FtypBody* = ref object of KaitaiStruct
+    `majorBrand`*: QuicktimeMov_Brand
+    `minorVersion`*: seq[byte]
+    `compatibleBrands`*: seq[QuicktimeMov_Brand]
+    `parent`*: QuicktimeMov_Atom
   QuicktimeMov_MvhdBody* = ref object of KaitaiStruct
     `version`*: uint8
     `flags`*: seq[byte]
@@ -311,28 +336,6 @@ type
     `currentTime`*: uint32
     `nextTrackId`*: uint32
     `parent`*: QuicktimeMov_Atom
-  QuicktimeMov_FtypBody* = ref object of KaitaiStruct
-    `majorBrand`*: QuicktimeMov_Brand
-    `minorVersion`*: seq[byte]
-    `compatibleBrands`*: seq[QuicktimeMov_Brand]
-    `parent`*: QuicktimeMov_Atom
-  QuicktimeMov_Fixed32* = ref object of KaitaiStruct
-    `intPart`*: int16
-    `fracPart`*: uint16
-    `parent`*: KaitaiStruct
-  QuicktimeMov_Fixed16* = ref object of KaitaiStruct
-    `intPart`*: int8
-    `fracPart`*: uint8
-    `parent`*: QuicktimeMov_MvhdBody
-  QuicktimeMov_Atom* = ref object of KaitaiStruct
-    `len32`*: uint32
-    `atomType`*: QuicktimeMov_AtomType
-    `len64`*: uint64
-    `body`*: KaitaiStruct
-    `parent`*: QuicktimeMov_AtomList
-    `rawBody`*: seq[byte]
-    `lenInst`: int
-    `lenInstFlag`: bool
   QuicktimeMov_TkhdBody* = ref object of KaitaiStruct
     `version`*: uint8
     `flags`*: seq[byte]
@@ -350,18 +353,15 @@ type
     `width`*: QuicktimeMov_Fixed32
     `height`*: QuicktimeMov_Fixed32
     `parent`*: QuicktimeMov_Atom
-  QuicktimeMov_AtomList* = ref object of KaitaiStruct
-    `items`*: seq[QuicktimeMov_Atom]
-    `parent`*: KaitaiStruct
 
 proc read*(_: typedesc[QuicktimeMov], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): QuicktimeMov
-proc read*(_: typedesc[QuicktimeMov_MvhdBody], io: KaitaiStream, root: KaitaiStruct, parent: QuicktimeMov_Atom): QuicktimeMov_MvhdBody
-proc read*(_: typedesc[QuicktimeMov_FtypBody], io: KaitaiStream, root: KaitaiStruct, parent: QuicktimeMov_Atom): QuicktimeMov_FtypBody
-proc read*(_: typedesc[QuicktimeMov_Fixed32], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): QuicktimeMov_Fixed32
-proc read*(_: typedesc[QuicktimeMov_Fixed16], io: KaitaiStream, root: KaitaiStruct, parent: QuicktimeMov_MvhdBody): QuicktimeMov_Fixed16
 proc read*(_: typedesc[QuicktimeMov_Atom], io: KaitaiStream, root: KaitaiStruct, parent: QuicktimeMov_AtomList): QuicktimeMov_Atom
-proc read*(_: typedesc[QuicktimeMov_TkhdBody], io: KaitaiStream, root: KaitaiStruct, parent: QuicktimeMov_Atom): QuicktimeMov_TkhdBody
 proc read*(_: typedesc[QuicktimeMov_AtomList], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): QuicktimeMov_AtomList
+proc read*(_: typedesc[QuicktimeMov_Fixed16], io: KaitaiStream, root: KaitaiStruct, parent: QuicktimeMov_MvhdBody): QuicktimeMov_Fixed16
+proc read*(_: typedesc[QuicktimeMov_Fixed32], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): QuicktimeMov_Fixed32
+proc read*(_: typedesc[QuicktimeMov_FtypBody], io: KaitaiStream, root: KaitaiStruct, parent: QuicktimeMov_Atom): QuicktimeMov_FtypBody
+proc read*(_: typedesc[QuicktimeMov_MvhdBody], io: KaitaiStream, root: KaitaiStruct, parent: QuicktimeMov_Atom): QuicktimeMov_MvhdBody
+proc read*(_: typedesc[QuicktimeMov_TkhdBody], io: KaitaiStream, root: KaitaiStruct, parent: QuicktimeMov_Atom): QuicktimeMov_TkhdBody
 
 proc len*(this: QuicktimeMov_Atom): int
 
@@ -382,6 +382,188 @@ proc read*(_: typedesc[QuicktimeMov], io: KaitaiStream, root: KaitaiStruct, pare
 
 proc fromFile*(_: typedesc[QuicktimeMov], filename: string): QuicktimeMov =
   QuicktimeMov.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[QuicktimeMov_Atom], io: KaitaiStream, root: KaitaiStruct, parent: QuicktimeMov_AtomList): QuicktimeMov_Atom =
+  template this: untyped = result
+  this = new(QuicktimeMov_Atom)
+  let root = if root == nil: cast[QuicktimeMov](this) else: cast[QuicktimeMov](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let len32Expr = this.io.readU4be()
+  this.len32 = len32Expr
+  let atomTypeExpr = QuicktimeMov_AtomType(this.io.readU4be())
+  this.atomType = atomTypeExpr
+  if this.len32 == 1:
+    let len64Expr = this.io.readU8be()
+    this.len64 = len64Expr
+  block:
+    let on = this.atomType
+    if on == quicktime_mov.dinf:
+      let rawBodyExpr = this.io.readBytes(int(this.len))
+      this.rawBody = rawBodyExpr
+      let rawBodyIo = newKaitaiStream(rawBodyExpr)
+      let bodyExpr = QuicktimeMov_AtomList.read(rawBodyIo, this.root, this)
+      this.body = bodyExpr
+    elif on == quicktime_mov.ftyp:
+      let rawBodyExpr = this.io.readBytes(int(this.len))
+      this.rawBody = rawBodyExpr
+      let rawBodyIo = newKaitaiStream(rawBodyExpr)
+      let bodyExpr = QuicktimeMov_FtypBody.read(rawBodyIo, this.root, this)
+      this.body = bodyExpr
+    elif on == quicktime_mov.mdia:
+      let rawBodyExpr = this.io.readBytes(int(this.len))
+      this.rawBody = rawBodyExpr
+      let rawBodyIo = newKaitaiStream(rawBodyExpr)
+      let bodyExpr = QuicktimeMov_AtomList.read(rawBodyIo, this.root, this)
+      this.body = bodyExpr
+    elif on == quicktime_mov.minf:
+      let rawBodyExpr = this.io.readBytes(int(this.len))
+      this.rawBody = rawBodyExpr
+      let rawBodyIo = newKaitaiStream(rawBodyExpr)
+      let bodyExpr = QuicktimeMov_AtomList.read(rawBodyIo, this.root, this)
+      this.body = bodyExpr
+    elif on == quicktime_mov.moof:
+      let rawBodyExpr = this.io.readBytes(int(this.len))
+      this.rawBody = rawBodyExpr
+      let rawBodyIo = newKaitaiStream(rawBodyExpr)
+      let bodyExpr = QuicktimeMov_AtomList.read(rawBodyIo, this.root, this)
+      this.body = bodyExpr
+    elif on == quicktime_mov.moov:
+      let rawBodyExpr = this.io.readBytes(int(this.len))
+      this.rawBody = rawBodyExpr
+      let rawBodyIo = newKaitaiStream(rawBodyExpr)
+      let bodyExpr = QuicktimeMov_AtomList.read(rawBodyIo, this.root, this)
+      this.body = bodyExpr
+    elif on == quicktime_mov.mvhd:
+      let rawBodyExpr = this.io.readBytes(int(this.len))
+      this.rawBody = rawBodyExpr
+      let rawBodyIo = newKaitaiStream(rawBodyExpr)
+      let bodyExpr = QuicktimeMov_MvhdBody.read(rawBodyIo, this.root, this)
+      this.body = bodyExpr
+    elif on == quicktime_mov.stbl:
+      let rawBodyExpr = this.io.readBytes(int(this.len))
+      this.rawBody = rawBodyExpr
+      let rawBodyIo = newKaitaiStream(rawBodyExpr)
+      let bodyExpr = QuicktimeMov_AtomList.read(rawBodyIo, this.root, this)
+      this.body = bodyExpr
+    elif on == quicktime_mov.tkhd:
+      let rawBodyExpr = this.io.readBytes(int(this.len))
+      this.rawBody = rawBodyExpr
+      let rawBodyIo = newKaitaiStream(rawBodyExpr)
+      let bodyExpr = QuicktimeMov_TkhdBody.read(rawBodyIo, this.root, this)
+      this.body = bodyExpr
+    elif on == quicktime_mov.traf:
+      let rawBodyExpr = this.io.readBytes(int(this.len))
+      this.rawBody = rawBodyExpr
+      let rawBodyIo = newKaitaiStream(rawBodyExpr)
+      let bodyExpr = QuicktimeMov_AtomList.read(rawBodyIo, this.root, this)
+      this.body = bodyExpr
+    elif on == quicktime_mov.trak:
+      let rawBodyExpr = this.io.readBytes(int(this.len))
+      this.rawBody = rawBodyExpr
+      let rawBodyIo = newKaitaiStream(rawBodyExpr)
+      let bodyExpr = QuicktimeMov_AtomList.read(rawBodyIo, this.root, this)
+      this.body = bodyExpr
+    else:
+      let bodyExpr = this.io.readBytes(int(this.len))
+      this.body = bodyExpr
+
+proc len(this: QuicktimeMov_Atom): int = 
+  if this.lenInstFlag:
+    return this.lenInst
+  let lenInstExpr = int((if this.len32 == 0: this.io.size - 8 else: (if this.len32 == 1: this.len64 - 16 else: this.len32 - 8)))
+  this.lenInst = lenInstExpr
+  this.lenInstFlag = true
+  return this.lenInst
+
+proc fromFile*(_: typedesc[QuicktimeMov_Atom], filename: string): QuicktimeMov_Atom =
+  QuicktimeMov_Atom.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[QuicktimeMov_AtomList], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): QuicktimeMov_AtomList =
+  template this: untyped = result
+  this = new(QuicktimeMov_AtomList)
+  let root = if root == nil: cast[QuicktimeMov](this) else: cast[QuicktimeMov](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  block:
+    var i: int
+    while not this.io.isEof:
+      let it = QuicktimeMov_Atom.read(this.io, this.root, this)
+      this.items.add(it)
+      inc i
+
+proc fromFile*(_: typedesc[QuicktimeMov_AtomList], filename: string): QuicktimeMov_AtomList =
+  QuicktimeMov_AtomList.read(newKaitaiFileStream(filename), nil, nil)
+
+
+##[
+Fixed-point 16-bit number.
+]##
+proc read*(_: typedesc[QuicktimeMov_Fixed16], io: KaitaiStream, root: KaitaiStruct, parent: QuicktimeMov_MvhdBody): QuicktimeMov_Fixed16 =
+  template this: untyped = result
+  this = new(QuicktimeMov_Fixed16)
+  let root = if root == nil: cast[QuicktimeMov](this) else: cast[QuicktimeMov](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let intPartExpr = this.io.readS1()
+  this.intPart = intPartExpr
+  let fracPartExpr = this.io.readU1()
+  this.fracPart = fracPartExpr
+
+proc fromFile*(_: typedesc[QuicktimeMov_Fixed16], filename: string): QuicktimeMov_Fixed16 =
+  QuicktimeMov_Fixed16.read(newKaitaiFileStream(filename), nil, nil)
+
+
+##[
+Fixed-point 32-bit number.
+]##
+proc read*(_: typedesc[QuicktimeMov_Fixed32], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): QuicktimeMov_Fixed32 =
+  template this: untyped = result
+  this = new(QuicktimeMov_Fixed32)
+  let root = if root == nil: cast[QuicktimeMov](this) else: cast[QuicktimeMov](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let intPartExpr = this.io.readS2be()
+  this.intPart = intPartExpr
+  let fracPartExpr = this.io.readU2be()
+  this.fracPart = fracPartExpr
+
+proc fromFile*(_: typedesc[QuicktimeMov_Fixed32], filename: string): QuicktimeMov_Fixed32 =
+  QuicktimeMov_Fixed32.read(newKaitaiFileStream(filename), nil, nil)
+
+
+##[
+@see <a href="https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-CJBCBIFF">Source</a>
+]##
+proc read*(_: typedesc[QuicktimeMov_FtypBody], io: KaitaiStream, root: KaitaiStruct, parent: QuicktimeMov_Atom): QuicktimeMov_FtypBody =
+  template this: untyped = result
+  this = new(QuicktimeMov_FtypBody)
+  let root = if root == nil: cast[QuicktimeMov](this) else: cast[QuicktimeMov](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let majorBrandExpr = QuicktimeMov_Brand(this.io.readU4be())
+  this.majorBrand = majorBrandExpr
+  let minorVersionExpr = this.io.readBytes(int(4))
+  this.minorVersion = minorVersionExpr
+  block:
+    var i: int
+    while not this.io.isEof:
+      let it = QuicktimeMov_Brand(this.io.readU4be())
+      this.compatibleBrands.add(it)
+      inc i
+
+proc fromFile*(_: typedesc[QuicktimeMov_FtypBody], filename: string): QuicktimeMov_FtypBody =
+  QuicktimeMov_FtypBody.read(newKaitaiFileStream(filename), nil, nil)
 
 
 ##[
@@ -499,170 +681,6 @@ proc fromFile*(_: typedesc[QuicktimeMov_MvhdBody], filename: string): QuicktimeM
 
 
 ##[
-@see <a href="https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-CJBCBIFF">Source</a>
-]##
-proc read*(_: typedesc[QuicktimeMov_FtypBody], io: KaitaiStream, root: KaitaiStruct, parent: QuicktimeMov_Atom): QuicktimeMov_FtypBody =
-  template this: untyped = result
-  this = new(QuicktimeMov_FtypBody)
-  let root = if root == nil: cast[QuicktimeMov](this) else: cast[QuicktimeMov](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let majorBrandExpr = QuicktimeMov_Brand(this.io.readU4be())
-  this.majorBrand = majorBrandExpr
-  let minorVersionExpr = this.io.readBytes(int(4))
-  this.minorVersion = minorVersionExpr
-  block:
-    var i: int
-    while not this.io.isEof:
-      let it = QuicktimeMov_Brand(this.io.readU4be())
-      this.compatibleBrands.add(it)
-      inc i
-
-proc fromFile*(_: typedesc[QuicktimeMov_FtypBody], filename: string): QuicktimeMov_FtypBody =
-  QuicktimeMov_FtypBody.read(newKaitaiFileStream(filename), nil, nil)
-
-
-##[
-Fixed-point 32-bit number.
-]##
-proc read*(_: typedesc[QuicktimeMov_Fixed32], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): QuicktimeMov_Fixed32 =
-  template this: untyped = result
-  this = new(QuicktimeMov_Fixed32)
-  let root = if root == nil: cast[QuicktimeMov](this) else: cast[QuicktimeMov](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let intPartExpr = this.io.readS2be()
-  this.intPart = intPartExpr
-  let fracPartExpr = this.io.readU2be()
-  this.fracPart = fracPartExpr
-
-proc fromFile*(_: typedesc[QuicktimeMov_Fixed32], filename: string): QuicktimeMov_Fixed32 =
-  QuicktimeMov_Fixed32.read(newKaitaiFileStream(filename), nil, nil)
-
-
-##[
-Fixed-point 16-bit number.
-]##
-proc read*(_: typedesc[QuicktimeMov_Fixed16], io: KaitaiStream, root: KaitaiStruct, parent: QuicktimeMov_MvhdBody): QuicktimeMov_Fixed16 =
-  template this: untyped = result
-  this = new(QuicktimeMov_Fixed16)
-  let root = if root == nil: cast[QuicktimeMov](this) else: cast[QuicktimeMov](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let intPartExpr = this.io.readS1()
-  this.intPart = intPartExpr
-  let fracPartExpr = this.io.readU1()
-  this.fracPart = fracPartExpr
-
-proc fromFile*(_: typedesc[QuicktimeMov_Fixed16], filename: string): QuicktimeMov_Fixed16 =
-  QuicktimeMov_Fixed16.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[QuicktimeMov_Atom], io: KaitaiStream, root: KaitaiStruct, parent: QuicktimeMov_AtomList): QuicktimeMov_Atom =
-  template this: untyped = result
-  this = new(QuicktimeMov_Atom)
-  let root = if root == nil: cast[QuicktimeMov](this) else: cast[QuicktimeMov](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let len32Expr = this.io.readU4be()
-  this.len32 = len32Expr
-  let atomTypeExpr = QuicktimeMov_AtomType(this.io.readU4be())
-  this.atomType = atomTypeExpr
-  if this.len32 == 1:
-    let len64Expr = this.io.readU8be()
-    this.len64 = len64Expr
-  block:
-    let on = this.atomType
-    if on == quicktime_mov.moof:
-      let rawBodyExpr = this.io.readBytes(int(this.len))
-      this.rawBody = rawBodyExpr
-      let rawBodyIo = newKaitaiStream(rawBodyExpr)
-      let bodyExpr = QuicktimeMov_AtomList.read(rawBodyIo, this.root, this)
-      this.body = bodyExpr
-    elif on == quicktime_mov.tkhd:
-      let rawBodyExpr = this.io.readBytes(int(this.len))
-      this.rawBody = rawBodyExpr
-      let rawBodyIo = newKaitaiStream(rawBodyExpr)
-      let bodyExpr = QuicktimeMov_TkhdBody.read(rawBodyIo, this.root, this)
-      this.body = bodyExpr
-    elif on == quicktime_mov.stbl:
-      let rawBodyExpr = this.io.readBytes(int(this.len))
-      this.rawBody = rawBodyExpr
-      let rawBodyIo = newKaitaiStream(rawBodyExpr)
-      let bodyExpr = QuicktimeMov_AtomList.read(rawBodyIo, this.root, this)
-      this.body = bodyExpr
-    elif on == quicktime_mov.traf:
-      let rawBodyExpr = this.io.readBytes(int(this.len))
-      this.rawBody = rawBodyExpr
-      let rawBodyIo = newKaitaiStream(rawBodyExpr)
-      let bodyExpr = QuicktimeMov_AtomList.read(rawBodyIo, this.root, this)
-      this.body = bodyExpr
-    elif on == quicktime_mov.minf:
-      let rawBodyExpr = this.io.readBytes(int(this.len))
-      this.rawBody = rawBodyExpr
-      let rawBodyIo = newKaitaiStream(rawBodyExpr)
-      let bodyExpr = QuicktimeMov_AtomList.read(rawBodyIo, this.root, this)
-      this.body = bodyExpr
-    elif on == quicktime_mov.trak:
-      let rawBodyExpr = this.io.readBytes(int(this.len))
-      this.rawBody = rawBodyExpr
-      let rawBodyIo = newKaitaiStream(rawBodyExpr)
-      let bodyExpr = QuicktimeMov_AtomList.read(rawBodyIo, this.root, this)
-      this.body = bodyExpr
-    elif on == quicktime_mov.moov:
-      let rawBodyExpr = this.io.readBytes(int(this.len))
-      this.rawBody = rawBodyExpr
-      let rawBodyIo = newKaitaiStream(rawBodyExpr)
-      let bodyExpr = QuicktimeMov_AtomList.read(rawBodyIo, this.root, this)
-      this.body = bodyExpr
-    elif on == quicktime_mov.mdia:
-      let rawBodyExpr = this.io.readBytes(int(this.len))
-      this.rawBody = rawBodyExpr
-      let rawBodyIo = newKaitaiStream(rawBodyExpr)
-      let bodyExpr = QuicktimeMov_AtomList.read(rawBodyIo, this.root, this)
-      this.body = bodyExpr
-    elif on == quicktime_mov.dinf:
-      let rawBodyExpr = this.io.readBytes(int(this.len))
-      this.rawBody = rawBodyExpr
-      let rawBodyIo = newKaitaiStream(rawBodyExpr)
-      let bodyExpr = QuicktimeMov_AtomList.read(rawBodyIo, this.root, this)
-      this.body = bodyExpr
-    elif on == quicktime_mov.mvhd:
-      let rawBodyExpr = this.io.readBytes(int(this.len))
-      this.rawBody = rawBodyExpr
-      let rawBodyIo = newKaitaiStream(rawBodyExpr)
-      let bodyExpr = QuicktimeMov_MvhdBody.read(rawBodyIo, this.root, this)
-      this.body = bodyExpr
-    elif on == quicktime_mov.ftyp:
-      let rawBodyExpr = this.io.readBytes(int(this.len))
-      this.rawBody = rawBodyExpr
-      let rawBodyIo = newKaitaiStream(rawBodyExpr)
-      let bodyExpr = QuicktimeMov_FtypBody.read(rawBodyIo, this.root, this)
-      this.body = bodyExpr
-    else:
-      let bodyExpr = this.io.readBytes(int(this.len))
-      this.body = bodyExpr
-
-proc len(this: QuicktimeMov_Atom): int = 
-  if this.lenInstFlag:
-    return this.lenInst
-  let lenInstExpr = int((if this.len32 == 0: (this.io.size - 8) else: (if this.len32 == 1: (this.len64 - 16) else: (this.len32 - 8))))
-  this.lenInst = lenInstExpr
-  this.lenInstFlag = true
-  return this.lenInst
-
-proc fromFile*(_: typedesc[QuicktimeMov_Atom], filename: string): QuicktimeMov_Atom =
-  QuicktimeMov_Atom.read(newKaitaiFileStream(filename), nil, nil)
-
-
-##[
 @see <a href="https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-25550">Source</a>
 ]##
 proc read*(_: typedesc[QuicktimeMov_TkhdBody], io: KaitaiStream, root: KaitaiStruct, parent: QuicktimeMov_Atom): QuicktimeMov_TkhdBody =
@@ -710,22 +728,4 @@ proc read*(_: typedesc[QuicktimeMov_TkhdBody], io: KaitaiStream, root: KaitaiStr
 
 proc fromFile*(_: typedesc[QuicktimeMov_TkhdBody], filename: string): QuicktimeMov_TkhdBody =
   QuicktimeMov_TkhdBody.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[QuicktimeMov_AtomList], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): QuicktimeMov_AtomList =
-  template this: untyped = result
-  this = new(QuicktimeMov_AtomList)
-  let root = if root == nil: cast[QuicktimeMov](this) else: cast[QuicktimeMov](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  block:
-    var i: int
-    while not this.io.isEof:
-      let it = QuicktimeMov_Atom.read(this.io, this.root, this)
-      this.items.add(it)
-      inc i
-
-proc fromFile*(_: typedesc[QuicktimeMov_AtomList], filename: string): QuicktimeMov_AtomList =
-  QuicktimeMov_AtomList.read(newKaitaiFileStream(filename), nil, nil)
 

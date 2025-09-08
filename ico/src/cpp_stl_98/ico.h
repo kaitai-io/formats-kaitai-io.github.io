@@ -3,12 +3,14 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class ico_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -60,6 +62,17 @@ public:
         std::string img();
 
     private:
+        bool f_is_png;
+        bool m_is_png;
+
+    public:
+
+        /**
+         * True if this image is in PNG format.
+         */
+        bool is_png();
+
+    private:
         bool f_png_header;
         std::string m_png_header;
 
@@ -70,17 +83,6 @@ public:
          * embedded PNG file.
          */
         std::string png_header();
-
-    private:
-        bool f_is_png;
-        bool m_is_png;
-
-    public:
-
-        /**
-         * True if this image is in PNG format.
-         */
-        bool is_png();
 
     private:
         uint8_t m_width;

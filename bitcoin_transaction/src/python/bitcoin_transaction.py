@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
-from enum import Enum
+from enum import IntEnum
 
 
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class BitcoinTransaction(KaitaiStruct):
     """
@@ -15,9 +16,9 @@ class BitcoinTransaction(KaitaiStruct):
        https://en.bitcoin.it/wiki/Transaction
     """
     def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
+        super(BitcoinTransaction, self).__init__(_io)
         self._parent = _parent
-        self._root = _root if _root else self
+        self._root = _root or self
         self._read()
 
     def _read(self):
@@ -34,11 +35,23 @@ class BitcoinTransaction(KaitaiStruct):
 
         self.locktime = self._io.read_u4le()
 
+
+    def _fetch_instances(self):
+        pass
+        for i in range(len(self.vins)):
+            pass
+            self.vins[i]._fetch_instances()
+
+        for i in range(len(self.vouts)):
+            pass
+            self.vouts[i]._fetch_instances()
+
+
     class Vin(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(BitcoinTransaction.Vin, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -52,17 +65,22 @@ class BitcoinTransaction(KaitaiStruct):
             if not self.end_of_vin == b"\xFF\xFF\xFF\xFF":
                 raise kaitaistruct.ValidationNotEqualError(b"\xFF\xFF\xFF\xFF", self.end_of_vin, self._io, u"/types/vin/seq/4")
 
+
+        def _fetch_instances(self):
+            pass
+            self.script_sig._fetch_instances()
+
         class ScriptSignature(KaitaiStruct):
 
-            class SighashType(Enum):
+            class SighashType(IntEnum):
                 sighash_all = 1
                 sighash_none = 2
                 sighash_single = 3
                 sighash_anyonecanpay = 80
             def __init__(self, _io, _parent=None, _root=None):
-                self._io = _io
+                super(BitcoinTransaction.Vin.ScriptSignature, self).__init__(_io)
                 self._parent = _parent
-                self._root = _root if _root else self
+                self._root = _root
                 self._read()
 
             def _read(self):
@@ -72,11 +90,17 @@ class BitcoinTransaction(KaitaiStruct):
                 self.len_pubkey_stack = self._io.read_u1()
                 self.pubkey = BitcoinTransaction.Vin.ScriptSignature.PublicKey(self._io, self, self._root)
 
+
+            def _fetch_instances(self):
+                pass
+                self.der_sig._fetch_instances()
+                self.pubkey._fetch_instances()
+
             class DerSignature(KaitaiStruct):
                 def __init__(self, _io, _parent=None, _root=None):
-                    self._io = _io
+                    super(BitcoinTransaction.Vin.ScriptSignature.DerSignature, self).__init__(_io)
                     self._parent = _parent
-                    self._root = _root if _root else self
+                    self._root = _root
                     self._read()
 
                 def _read(self):
@@ -96,11 +120,15 @@ class BitcoinTransaction(KaitaiStruct):
                     self.sig_s = self._io.read_bytes(self.len_sig_s)
 
 
+                def _fetch_instances(self):
+                    pass
+
+
             class PublicKey(KaitaiStruct):
                 def __init__(self, _io, _parent=None, _root=None):
-                    self._io = _io
+                    super(BitcoinTransaction.Vin.ScriptSignature.PublicKey, self).__init__(_io)
                     self._parent = _parent
-                    self._root = _root if _root else self
+                    self._root = _root
                     self._read()
 
                 def _read(self):
@@ -109,19 +137,27 @@ class BitcoinTransaction(KaitaiStruct):
                     self.y = self._io.read_bytes(32)
 
 
+                def _fetch_instances(self):
+                    pass
+
+
 
 
     class Vout(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(BitcoinTransaction.Vout, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
             self.amount = self._io.read_u8le()
             self.len_script = self._io.read_u1()
             self.script_pub_key = self._io.read_bytes(self.len_script)
+
+
+        def _fetch_instances(self):
+            pass
 
 
 

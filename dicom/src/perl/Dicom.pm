@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Encode;
 
 ########################################################################
@@ -4049,7 +4049,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -4060,7 +4060,7 @@ sub _read {
     my ($self) = @_;
 
     $self->{file_header} = Dicom::TFileHeader->new($self->{_io}, $self, $self->{_root});
-    $self->{elements} = ();
+    $self->{elements} = [];
     while (!$self->{_io}->is_eof()) {
         push @{$self->{elements}}, Dicom::TDataElementImplicit->new($self->{_io}, $self, $self->{_root});
     }
@@ -4077,7 +4077,7 @@ sub elements {
 }
 
 ########################################################################
-package Dicom::TFileHeader;
+package Dicom::SeqItem;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -4096,7 +4096,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -4106,18 +4106,47 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{preamble} = $self->{_io}->read_bytes(128);
-    $self->{magic} = $self->{_io}->read_bytes(4);
+    $self->{tag_group} = $self->{_io}->read_bytes(2);
+    $self->{tag_elem} = $self->{_io}->read_u2le();
+    $self->{value_len} = $self->{_io}->read_u4le();
+    if ($self->value_len() != 4294967295) {
+        $self->{value} = $self->{_io}->read_bytes($self->value_len());
+    }
+    if ($self->value_len() == 4294967295) {
+        $self->{items} = [];
+        {
+            my $_it;
+            do {
+                $_it = Dicom::TDataElementExplicit->new($self->{_io}, $self, $self->{_root});
+                push @{$self->{items}}, $_it;
+            } until ( (($_it->tag_group() == 65534) && ($_it->tag_elem() == 57357)) );
+        }
+    }
 }
 
-sub preamble {
+sub tag_group {
     my ($self) = @_;
-    return $self->{preamble};
+    return $self->{tag_group};
 }
 
-sub magic {
+sub tag_elem {
     my ($self) = @_;
-    return $self->{magic};
+    return $self->{tag_elem};
+}
+
+sub value_len {
+    my ($self) = @_;
+    return $self->{value_len};
+}
+
+sub value {
+    my ($self) = @_;
+    return $self->{value};
+}
+
+sub items {
+    my ($self) = @_;
+    return $self->{items};
 }
 
 ########################################################################
@@ -4140,7 +4169,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -4169,14 +4198,17 @@ sub _read {
         $self->{value} = $self->{_io}->read_bytes($self->value_len());
     }
     if ( (($self->vr() eq "SQ") && ($self->value_len() == 4294967295)) ) {
-        $self->{items} = ();
-        do {
-            $_ = Dicom::SeqItem->new($self->{_io}, $self, $self->{_root});
-            push @{$self->{items}}, $_;
-        } until ($_->tag_elem() == 57565);
+        $self->{items} = [];
+        {
+            my $_it;
+            do {
+                $_it = Dicom::SeqItem->new($self->{_io}, $self, $self->{_root});
+                push @{$self->{items}}, $_it;
+            } until ($_it->tag_elem() == 57565);
+        }
     }
     if ($self->is_transfer_syntax_change_implicit()) {
-        $self->{elements_implicit} = ();
+        $self->{elements_implicit} = [];
         while (!$self->{_io}->is_eof()) {
             push @{$self->{elements_implicit}}, Dicom::TDataElementImplicit->new($self->{_io}, $self, $self->{_root});
         }
@@ -4207,7 +4239,7 @@ sub is_transfer_syntax_change_implicit {
 sub tag {
     my ($self) = @_;
     return $self->{tag} if ($self->{tag});
-    $self->{tag} = (($self->tag_group() << 16) | $self->tag_elem());
+    $self->{tag} = $self->tag_group() << 16 | $self->tag_elem();
     return $self->{tag};
 }
 
@@ -4271,7 +4303,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -4300,32 +4332,28 @@ sub _read {
         $self->{value} = $self->{_io}->read_bytes($self->value_len());
     }
     if ( (($self->vr() eq "SQ") && ($self->value_len() == 4294967295)) ) {
-        $self->{items} = ();
-        do {
-            $_ = Dicom::SeqItem->new($self->{_io}, $self, $self->{_root});
-            push @{$self->{items}}, $_;
-        } until ($_->tag_elem() == 57565);
+        $self->{items} = [];
+        {
+            my $_it;
+            do {
+                $_it = Dicom::SeqItem->new($self->{_io}, $self, $self->{_root});
+                push @{$self->{items}}, $_it;
+            } until ($_it->tag_elem() == 57565);
+        }
     }
     if ($self->is_transfer_syntax_change_explicit()) {
-        $self->{elements} = ();
+        $self->{elements} = [];
         while (!$self->{_io}->is_eof()) {
             push @{$self->{elements}}, Dicom::TDataElementExplicit->new($self->{_io}, $self, $self->{_root});
         }
     }
 }
 
-sub tag {
+sub is_forced_explicit {
     my ($self) = @_;
-    return $self->{tag} if ($self->{tag});
-    $self->{tag} = (($self->tag_group() << 16) | $self->tag_elem());
-    return $self->{tag};
-}
-
-sub is_transfer_syntax_change_explicit {
-    my ($self) = @_;
-    return $self->{is_transfer_syntax_change_explicit} if ($self->{is_transfer_syntax_change_explicit});
-    $self->{is_transfer_syntax_change_explicit} = $self->p_is_transfer_syntax_change_explicit();
-    return $self->{is_transfer_syntax_change_explicit};
+    return $self->{is_forced_explicit} if ($self->{is_forced_explicit});
+    $self->{is_forced_explicit} = $self->tag_group() == 2;
+    return $self->{is_forced_explicit};
 }
 
 sub is_long_len {
@@ -4335,6 +4363,13 @@ sub is_long_len {
     return $self->{is_long_len};
 }
 
+sub is_transfer_syntax_change_explicit {
+    my ($self) = @_;
+    return $self->{is_transfer_syntax_change_explicit} if ($self->{is_transfer_syntax_change_explicit});
+    $self->{is_transfer_syntax_change_explicit} = $self->p_is_transfer_syntax_change_explicit();
+    return $self->{is_transfer_syntax_change_explicit};
+}
+
 sub p_is_transfer_syntax_change_explicit {
     my ($self) = @_;
     return $self->{p_is_transfer_syntax_change_explicit} if ($self->{p_is_transfer_syntax_change_explicit});
@@ -4342,11 +4377,11 @@ sub p_is_transfer_syntax_change_explicit {
     return $self->{p_is_transfer_syntax_change_explicit};
 }
 
-sub is_forced_explicit {
+sub tag {
     my ($self) = @_;
-    return $self->{is_forced_explicit} if ($self->{is_forced_explicit});
-    $self->{is_forced_explicit} = $self->tag_group() == 2;
-    return $self->{is_forced_explicit};
+    return $self->{tag} if ($self->{tag});
+    $self->{tag} = $self->tag_group() << 16 | $self->tag_elem();
+    return $self->{tag};
 }
 
 sub tag_group {
@@ -4390,7 +4425,7 @@ sub elements {
 }
 
 ########################################################################
-package Dicom::SeqItem;
+package Dicom::TFileHeader;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -4409,7 +4444,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -4419,44 +4454,18 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{tag_group} = $self->{_io}->read_bytes(2);
-    $self->{tag_elem} = $self->{_io}->read_u2le();
-    $self->{value_len} = $self->{_io}->read_u4le();
-    if ($self->value_len() != 4294967295) {
-        $self->{value} = $self->{_io}->read_bytes($self->value_len());
-    }
-    if ($self->value_len() == 4294967295) {
-        $self->{items} = ();
-        do {
-            $_ = Dicom::TDataElementExplicit->new($self->{_io}, $self, $self->{_root});
-            push @{$self->{items}}, $_;
-        } until ( (($_->tag_group() == 65534) && ($_->tag_elem() == 57357)) );
-    }
+    $self->{preamble} = $self->{_io}->read_bytes(128);
+    $self->{magic} = $self->{_io}->read_bytes(4);
 }
 
-sub tag_group {
+sub preamble {
     my ($self) = @_;
-    return $self->{tag_group};
+    return $self->{preamble};
 }
 
-sub tag_elem {
+sub magic {
     my ($self) = @_;
-    return $self->{tag_elem};
-}
-
-sub value_len {
-    my ($self) = @_;
-    return $self->{value_len};
-}
-
-sub value {
-    my ($self) = @_;
-    return $self->{value};
-}
-
-sub items {
-    my ($self) = @_;
-    return $self->{items};
+    return $self->{magic};
 }
 
 1;

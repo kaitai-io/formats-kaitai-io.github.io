@@ -3,8 +3,8 @@
 
 namespace {
     class IcmpPacket extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \IcmpPacket $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\IcmpPacket $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -33,7 +33,7 @@ namespace {
 
 namespace IcmpPacket {
     class DestinationUnreachableMsg extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \IcmpPacket $_parent = null, \IcmpPacket $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\IcmpPacket $_parent = null, ?\IcmpPacket $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -67,45 +67,26 @@ namespace IcmpPacket\DestinationUnreachableMsg {
         const COMMUNICATION_PROHIBITED_BY_ADMIN = 13;
         const HOST_PRECEDENCE_VIOLATION = 14;
         const PRECEDENCE_CUTTOFF_IN_EFFECT = 15;
-    }
-}
 
-namespace IcmpPacket {
-    class TimeExceededMsg extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \IcmpPacket $_parent = null, \IcmpPacket $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 7 => true, 8 => true, 9 => true, 10 => true, 11 => true, 12 => true, 13 => true, 14 => true, 15 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
         }
-
-        private function _read() {
-            $this->_m_code = $this->_io->readU1();
-            $this->_m_checksum = $this->_io->readU2be();
-        }
-        protected $_m_code;
-        protected $_m_checksum;
-        public function code() { return $this->_m_code; }
-        public function checksum() { return $this->_m_checksum; }
-    }
-}
-
-namespace IcmpPacket\TimeExceededMsg {
-    class TimeExceededCode {
-        const TIME_TO_LIVE_EXCEEDED_IN_TRANSIT = 0;
-        const FRAGMENT_REASSEMBLY_TIME_EXCEEDED = 1;
     }
 }
 
 namespace IcmpPacket {
     class EchoMsg extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \IcmpPacket $_parent = null, \IcmpPacket $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\IcmpPacket $_parent = null, ?\IcmpPacket $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_code = $this->_io->readBytes(1);
-            if (!($this->code() == "\x00")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00", $this->code(), $this->_io(), "/types/echo_msg/seq/0");
+            if (!($this->_m_code == "\x00")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00", $this->_m_code, $this->_io, "/types/echo_msg/seq/0");
             }
             $this->_m_checksum = $this->_io->readU2be();
             $this->_m_identifier = $this->_io->readU2be();
@@ -126,6 +107,37 @@ namespace IcmpPacket {
 }
 
 namespace IcmpPacket {
+    class TimeExceededMsg extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\IcmpPacket $_parent = null, ?\IcmpPacket $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_code = $this->_io->readU1();
+            $this->_m_checksum = $this->_io->readU2be();
+        }
+        protected $_m_code;
+        protected $_m_checksum;
+        public function code() { return $this->_m_code; }
+        public function checksum() { return $this->_m_checksum; }
+    }
+}
+
+namespace IcmpPacket\TimeExceededMsg {
+    class TimeExceededCode {
+        const TIME_TO_LIVE_EXCEEDED_IN_TRANSIT = 0;
+        const FRAGMENT_REASSEMBLY_TIME_EXCEEDED = 1;
+
+        private const _VALUES = [0 => true, 1 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
+    }
+}
+
+namespace IcmpPacket {
     class IcmpTypeEnum {
         const ECHO_REPLY = 0;
         const DESTINATION_UNREACHABLE = 3;
@@ -133,5 +145,11 @@ namespace IcmpPacket {
         const REDIRECT = 5;
         const ECHO = 8;
         const TIME_EXCEEDED = 11;
+
+        private const _VALUES = [0 => true, 3 => true, 4 => true, 5 => true, 8 => true, 11 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

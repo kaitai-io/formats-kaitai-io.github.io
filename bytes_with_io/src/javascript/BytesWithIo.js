@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.BytesWithIo = factory(root.KaitaiStream);
+    factory(root.BytesWithIo || (root.BytesWithIo = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (BytesWithIo_, KaitaiStream) {
 /**
  * Helper type to work around Kaitai Struct not providing an `_io` member for plain byte arrays.
  */
@@ -31,5 +31,5 @@ var BytesWithIo = (function() {
 
   return BytesWithIo;
 })();
-return BytesWithIo;
-}));
+BytesWithIo_.BytesWithIo = BytesWithIo;
+});

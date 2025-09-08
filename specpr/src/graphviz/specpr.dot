@@ -10,6 +10,29 @@ digraph {
 			<TR><TD PORT="records_pos">0</TD><TD PORT="records_size">...</TD><TD>Record</TD><TD PORT="records_type">records</TD></TR>
 			<TR><TD COLSPAN="4" PORT="records__repeat">repeat to end of stream</TD></TR>
 		</TABLE>>];
+		subgraph cluster__coarse_timestamp {
+			label="Specpr::CoarseTimestamp";
+			graph[style=dotted];
+
+			coarse_timestamp__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="scaled_seconds_pos">0</TD><TD PORT="scaled_seconds_size">4</TD><TD>s4be</TD><TD PORT="scaled_seconds_type">scaled_seconds</TD></TR>
+			</TABLE>>];
+			coarse_timestamp__inst__seconds [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>seconds</TD><TD>scaled_seconds * 24000</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__data_continuation {
+			label="Specpr::DataContinuation";
+			graph[style=dotted];
+
+			data_continuation__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="cdata_pos">0</TD><TD PORT="cdata_size">4</TD><TD>f4be</TD><TD PORT="cdata_type">cdata</TD></TR>
+				<TR><TD COLSPAN="4" PORT="cdata__repeat">repeat 383 times</TD></TR>
+			</TABLE>>];
+		}
 		subgraph cluster__data_initial {
 			label="Specpr::DataInitial";
 			graph[style=dotted];
@@ -33,8 +56,8 @@ digraph {
 				<TR><TD PORT="irespt_pos">100</TD><TD PORT="irespt_size">4</TD><TD>s4be</TD><TD PORT="irespt_type">irespt</TD></TR>
 				<TR><TD PORT="irecno_pos">104</TD><TD PORT="irecno_size">4</TD><TD>s4be</TD><TD PORT="irecno_type">irecno</TD></TR>
 				<TR><TD PORT="itpntr_pos">108</TD><TD PORT="itpntr_size">4</TD><TD>s4be</TD><TD PORT="itpntr_type">itpntr</TD></TR>
-				<TR><TD PORT="ihist_pos">112</TD><TD PORT="ihist_size">60</TD><TD>str(ascii)</TD><TD PORT="ihist_type">ihist</TD></TR>
-				<TR><TD PORT="mhist_pos">172</TD><TD PORT="mhist_size">74</TD><TD>str(ascii)</TD><TD PORT="mhist_type">mhist</TD></TR>
+				<TR><TD PORT="ihist_pos">112</TD><TD PORT="ihist_size">60</TD><TD>str(ASCII)</TD><TD PORT="ihist_type">ihist</TD></TR>
+				<TR><TD PORT="mhist_pos">172</TD><TD PORT="mhist_size">74</TD><TD>str(ASCII)</TD><TD PORT="mhist_type">mhist</TD></TR>
 				<TR><TD COLSPAN="4" PORT="mhist__repeat">repeat 4 times</TD></TR>
 				<TR><TD PORT="nruns_pos">468</TD><TD PORT="nruns_size">4</TD><TD>s4be</TD><TD PORT="nruns_type">nruns</TD></TR>
 				<TR><TD PORT="siangl_pos">472</TD><TD PORT="siangl_size">4</TD><TD>IllumAngle</TD><TD PORT="siangl_type">siangl</TD></TR>
@@ -51,20 +74,7 @@ digraph {
 			</TABLE>>];
 			data_initial__inst__phase_angle_arcsec [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>phase_angle_arcsec</TD><TD>(sphase / 1500)</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__coarse_timestamp {
-			label="Specpr::CoarseTimestamp";
-			graph[style=dotted];
-
-			coarse_timestamp__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="scaled_seconds_pos">0</TD><TD PORT="scaled_seconds_size">4</TD><TD>s4be</TD><TD PORT="scaled_seconds_type">scaled_seconds</TD></TR>
-			</TABLE>>];
-			coarse_timestamp__inst__seconds [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>seconds</TD><TD>(scaled_seconds * 24000)</TD></TR>
+				<TR><TD>phase_angle_arcsec</TD><TD>sphase / 1500</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__icflag {
@@ -73,27 +83,17 @@ digraph {
 
 			icflag__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="reserved_pos">0</TD><TD PORT="reserved_size">26b</TD><TD>b26</TD><TD PORT="reserved_type">reserved</TD></TR>
-				<TR><TD PORT="isctb_type_pos">3:2</TD><TD PORT="isctb_type_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="isctb_type_type">isctb_type</TD></TR>
-				<TR><TD PORT="iscta_type_pos">3:3</TD><TD PORT="iscta_type_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="iscta_type_type">iscta_type</TD></TR>
-				<TR><TD PORT="coordinate_mode_pos">3:4</TD><TD PORT="coordinate_mode_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="coordinate_mode_type">coordinate_mode</TD></TR>
-				<TR><TD PORT="errors_pos">3:5</TD><TD PORT="errors_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="errors_type">errors</TD></TR>
-				<TR><TD PORT="text_pos">3:6</TD><TD PORT="text_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="text_type">text</TD></TR>
-				<TR><TD PORT="continuation_pos">3:7</TD><TD PORT="continuation_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="continuation_type">continuation</TD></TR>
+				<TR><TD PORT="reserved_pos">0</TD><TD PORT="reserved_size">26b</TD><TD>b26be</TD><TD PORT="reserved_type">reserved</TD></TR>
+				<TR><TD PORT="isctb_type_pos">3:2</TD><TD PORT="isctb_type_size">1b</TD><TD>b1be→bool</TD><TD PORT="isctb_type_type">isctb_type</TD></TR>
+				<TR><TD PORT="iscta_type_pos">3:3</TD><TD PORT="iscta_type_size">1b</TD><TD>b1be→bool</TD><TD PORT="iscta_type_type">iscta_type</TD></TR>
+				<TR><TD PORT="coordinate_mode_pos">3:4</TD><TD PORT="coordinate_mode_size">1b</TD><TD>b1be→bool</TD><TD PORT="coordinate_mode_type">coordinate_mode</TD></TR>
+				<TR><TD PORT="errors_pos">3:5</TD><TD PORT="errors_size">1b</TD><TD>b1be→bool</TD><TD PORT="errors_type">errors</TD></TR>
+				<TR><TD PORT="text_pos">3:6</TD><TD PORT="text_size">1b</TD><TD>b1be→bool</TD><TD PORT="text_type">text</TD></TR>
+				<TR><TD PORT="continuation_pos">3:7</TD><TD PORT="continuation_size">1b</TD><TD>b1be→bool</TD><TD PORT="continuation_type">continuation</TD></TR>
 			</TABLE>>];
 			icflag__inst__type [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>type</TD><TD>Kaitai::Struct::Stream::resolve_enum(Specpr::RECORD_TYPE, (((text ? 1 : 0) * 1) + ((continuation ? 1 : 0) * 2)))</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__data_continuation {
-			label="Specpr::DataContinuation";
-			graph[style=dotted];
-
-			data_continuation__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="cdata_pos">0</TD><TD PORT="cdata_size">4</TD><TD>f4be</TD><TD PORT="cdata_type">cdata</TD></TR>
-				<TR><TD COLSPAN="4" PORT="cdata__repeat">repeat 383 times</TD></TR>
+				<TR><TD>type</TD><TD>Kaitai::Struct::Stream::resolve_enum(Specpr::RECORD_TYPE, (text ? 1 : 0) * 1 + (continuation ? 1 : 0) * 2)</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__identifiers {
@@ -102,8 +102,8 @@ digraph {
 
 			identifiers__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="ititle_pos">0</TD><TD PORT="ititle_size">40</TD><TD>str(ascii)</TD><TD PORT="ititle_type">ititle</TD></TR>
-				<TR><TD PORT="usernm_pos">40</TD><TD PORT="usernm_size">8</TD><TD>str(ascii)</TD><TD PORT="usernm_type">usernm</TD></TR>
+				<TR><TD PORT="ititle_pos">0</TD><TD PORT="ititle_size">40</TD><TD>str(ASCII)</TD><TD PORT="ititle_type">ititle</TD></TR>
+				<TR><TD PORT="usernm_pos">40</TD><TD PORT="usernm_size">8</TD><TD>str(ASCII)</TD><TD PORT="usernm_type">usernm</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__illum_angle {
@@ -114,29 +114,17 @@ digraph {
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="angl_pos">0</TD><TD PORT="angl_size">4</TD><TD>s4be</TD><TD PORT="angl_type">angl</TD></TR>
 			</TABLE>>];
-			illum_angle__inst__seconds_total [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			illum_angle__inst__degrees_total [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>seconds_total</TD><TD>(angl / 6000)</TD></TR>
+				<TR><TD>degrees_total</TD><TD>minutes_total / 60</TD></TR>
 			</TABLE>>];
 			illum_angle__inst__minutes_total [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>minutes_total</TD><TD>(seconds_total / 60)</TD></TR>
+				<TR><TD>minutes_total</TD><TD>seconds_total / 60</TD></TR>
 			</TABLE>>];
-			illum_angle__inst__degrees_total [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			illum_angle__inst__seconds_total [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>degrees_total</TD><TD>(minutes_total / 60)</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__text_initial {
-			label="Specpr::TextInitial";
-			graph[style=dotted];
-
-			text_initial__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="ids_pos">0</TD><TD PORT="ids_size">48</TD><TD>Identifiers</TD><TD PORT="ids_type">ids</TD></TR>
-				<TR><TD PORT="itxtpt_pos">48</TD><TD PORT="itxtpt_size">4</TD><TD>u4be</TD><TD PORT="itxtpt_type">itxtpt</TD></TR>
-				<TR><TD PORT="itxtch_pos">52</TD><TD PORT="itxtch_size">4</TD><TD>s4be</TD><TD PORT="itxtch_type">itxtch</TD></TR>
-				<TR><TD PORT="itext_pos">56</TD><TD PORT="itext_size">1476</TD><TD>str(ascii)</TD><TD PORT="itext_type">itext</TD></TR>
+				<TR><TD>seconds_total</TD><TD>angl / 6000</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__record {
@@ -150,8 +138,8 @@ digraph {
 			</TABLE>>];
 record__seq_content_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
-	<TR><TD>:record_type_data_initial</TD><TD PORT="case0">DataInitial</TD></TR>
-	<TR><TD>:record_type_data_continuation</TD><TD PORT="case1">DataContinuation</TD></TR>
+	<TR><TD>:record_type_data_continuation</TD><TD PORT="case0">DataContinuation</TD></TR>
+	<TR><TD>:record_type_data_initial</TD><TD PORT="case1">DataInitial</TD></TR>
 	<TR><TD>:record_type_text_continuation</TD><TD PORT="case2">TextContinuation</TD></TR>
 	<TR><TD>:record_type_text_initial</TD><TD PORT="case3">TextInitial</TD></TR>
 </TABLE>>];
@@ -162,11 +150,24 @@ record__seq_content_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING=
 
 			text_continuation__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="tdata_pos">0</TD><TD PORT="tdata_size">1532</TD><TD>str(ascii)</TD><TD PORT="tdata_type">tdata</TD></TR>
+				<TR><TD PORT="tdata_pos">0</TD><TD PORT="tdata_size">1532</TD><TD>str(ASCII)</TD><TD PORT="tdata_type">tdata</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__text_initial {
+			label="Specpr::TextInitial";
+			graph[style=dotted];
+
+			text_initial__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="ids_pos">0</TD><TD PORT="ids_size">48</TD><TD>Identifiers</TD><TD PORT="ids_type">ids</TD></TR>
+				<TR><TD PORT="itxtpt_pos">48</TD><TD PORT="itxtpt_size">4</TD><TD>u4be</TD><TD PORT="itxtpt_type">itxtpt</TD></TR>
+				<TR><TD PORT="itxtch_pos">52</TD><TD PORT="itxtch_size">4</TD><TD>s4be</TD><TD PORT="itxtch_type">itxtch</TD></TR>
+				<TR><TD PORT="itext_pos">56</TD><TD PORT="itext_size">1476</TD><TD>str(ASCII)</TD><TD PORT="itext_type">itext</TD></TR>
 			</TABLE>>];
 		}
 	}
 	specpr__seq:records_type -> record__seq [style=bold];
+	coarse_timestamp__seq:scaled_seconds_type -> coarse_timestamp__inst__seconds [color="#404040"];
 	data_initial__seq:ids_type -> identifiers__seq [style=bold];
 	data_initial__seq:iscta_type -> coarse_timestamp__seq [style=bold];
 	data_initial__seq:isctb_type -> coarse_timestamp__seq [style=bold];
@@ -174,18 +175,17 @@ record__seq_content_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING=
 	data_initial__seq:siangl_type -> illum_angle__seq [style=bold];
 	data_initial__seq:seangl_type -> illum_angle__seq [style=bold];
 	data_initial__seq:sphase_type -> data_initial__inst__phase_angle_arcsec [color="#404040"];
-	coarse_timestamp__seq:scaled_seconds_type -> coarse_timestamp__inst__seconds [color="#404040"];
 	icflag__seq:text_type -> icflag__inst__type [color="#404040"];
 	icflag__seq:continuation_type -> icflag__inst__type [color="#404040"];
-	illum_angle__seq:angl_type -> illum_angle__inst__seconds_total [color="#404040"];
-	illum_angle__inst__seconds_total:seconds_total_type -> illum_angle__inst__minutes_total [color="#404040"];
 	illum_angle__inst__minutes_total:minutes_total_type -> illum_angle__inst__degrees_total [color="#404040"];
-	text_initial__seq:ids_type -> identifiers__seq [style=bold];
+	illum_angle__inst__seconds_total:seconds_total_type -> illum_angle__inst__minutes_total [color="#404040"];
+	illum_angle__seq:angl_type -> illum_angle__inst__seconds_total [color="#404040"];
 	record__seq:icflag_type -> icflag__seq [style=bold];
 	record__seq:content_type -> record__seq_content_switch [style=bold];
-	record__seq_content_switch:case0 -> data_initial__seq [style=bold];
-	record__seq_content_switch:case1 -> data_continuation__seq [style=bold];
+	record__seq_content_switch:case0 -> data_continuation__seq [style=bold];
+	record__seq_content_switch:case1 -> data_initial__seq [style=bold];
 	record__seq_content_switch:case2 -> text_continuation__seq [style=bold];
 	record__seq_content_switch:case3 -> text_initial__seq [style=bold];
 	icflag__inst__type:type_type -> record__seq:content_type [color="#404040"];
+	text_initial__seq:ids_type -> identifiers__seq [style=bold];
 }

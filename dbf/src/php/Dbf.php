@@ -11,19 +11,19 @@
 
 namespace {
     class Dbf extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Dbf $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Dbf $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_header1 = new \Dbf\Header1($this->_io, $this, $this->_root);
-            $this->_m__raw_header2 = $this->_io->readBytes((($this->header1()->lenHeader() - 12) - 1));
+            $this->_m__raw_header2 = $this->_io->readBytes(($this->header1()->lenHeader() - 12) - 1);
             $_io__raw_header2 = new \Kaitai\Struct\Stream($this->_m__raw_header2);
             $this->_m_header2 = new \Dbf\Header2($_io__raw_header2, $this, $this->_root);
             $this->_m_headerTerminator = $this->_io->readBytes(1);
-            if (!($this->headerTerminator() == "\x0D")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x0D", $this->headerTerminator(), $this->_io(), "/seq/2");
+            if (!($this->_m_headerTerminator == "\x0D")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x0D", $this->_m_headerTerminator, $this->_io, "/seq/2");
             }
             $this->_m__raw_records = [];
             $this->_m_records = [];
@@ -50,38 +50,8 @@ namespace {
 }
 
 namespace Dbf {
-    class Header2 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Dbf $_parent = null, \Dbf $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            if ($this->_root()->header1()->dbaseLevel() == 3) {
-                $this->_m_headerDbase3 = new \Dbf\HeaderDbase3($this->_io, $this, $this->_root);
-            }
-            if ($this->_root()->header1()->dbaseLevel() == 7) {
-                $this->_m_headerDbase7 = new \Dbf\HeaderDbase7($this->_io, $this, $this->_root);
-            }
-            $this->_m_fields = [];
-            $i = 0;
-            while (!$this->_io->isEof()) {
-                $this->_m_fields[] = new \Dbf\Field($this->_io, $this, $this->_root);
-                $i++;
-            }
-        }
-        protected $_m_headerDbase3;
-        protected $_m_headerDbase7;
-        protected $_m_fields;
-        public function headerDbase3() { return $this->_m_headerDbase3; }
-        public function headerDbase7() { return $this->_m_headerDbase7; }
-        public function fields() { return $this->_m_fields; }
-    }
-}
-
-namespace Dbf {
     class Field extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Dbf\Header2 $_parent = null, \Dbf $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Dbf\Header2 $_parent = null, ?\Dbf $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -123,7 +93,7 @@ namespace Dbf {
 
 namespace Dbf {
     class Header1 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Dbf $_parent = null, \Dbf $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Dbf $_parent = null, ?\Dbf $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -141,7 +111,7 @@ namespace Dbf {
         public function dbaseLevel() {
             if ($this->_m_dbaseLevel !== null)
                 return $this->_m_dbaseLevel;
-            $this->_m_dbaseLevel = ($this->version() & 7);
+            $this->_m_dbaseLevel = $this->version() & 7;
             return $this->_m_dbaseLevel;
         }
         protected $_m_version;
@@ -162,8 +132,38 @@ namespace Dbf {
 }
 
 namespace Dbf {
+    class Header2 extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Dbf $_parent = null, ?\Dbf $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            if ($this->_root()->header1()->dbaseLevel() == 3) {
+                $this->_m_headerDbase3 = new \Dbf\HeaderDbase3($this->_io, $this, $this->_root);
+            }
+            if ($this->_root()->header1()->dbaseLevel() == 7) {
+                $this->_m_headerDbase7 = new \Dbf\HeaderDbase7($this->_io, $this, $this->_root);
+            }
+            $this->_m_fields = [];
+            $i = 0;
+            while (!$this->_io->isEof()) {
+                $this->_m_fields[] = new \Dbf\Field($this->_io, $this, $this->_root);
+                $i++;
+            }
+        }
+        protected $_m_headerDbase3;
+        protected $_m_headerDbase7;
+        protected $_m_fields;
+        public function headerDbase3() { return $this->_m_headerDbase3; }
+        public function headerDbase7() { return $this->_m_headerDbase7; }
+        public function fields() { return $this->_m_fields; }
+    }
+}
+
+namespace Dbf {
     class HeaderDbase3 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Dbf\Header2 $_parent = null, \Dbf $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Dbf\Header2 $_parent = null, ?\Dbf $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -184,15 +184,15 @@ namespace Dbf {
 
 namespace Dbf {
     class HeaderDbase7 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Dbf\Header2 $_parent = null, \Dbf $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Dbf\Header2 $_parent = null, ?\Dbf $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_reserved1 = $this->_io->readBytes(2);
-            if (!($this->reserved1() == "\x00\x00")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00\x00", $this->reserved1(), $this->_io(), "/types/header_dbase_7/seq/0");
+            if (!($this->_m_reserved1 == "\x00\x00")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00\x00", $this->_m_reserved1, $this->_io, "/types/header_dbase_7/seq/0");
             }
             $this->_m_hasIncompleteTransaction = $this->_io->readU1();
             $this->_m_dbaseIvEncryption = $this->_io->readU1();
@@ -200,8 +200,8 @@ namespace Dbf {
             $this->_m_productionMdx = $this->_io->readU1();
             $this->_m_languageDriverId = $this->_io->readU1();
             $this->_m_reserved3 = $this->_io->readBytes(2);
-            if (!($this->reserved3() == "\x00\x00")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00\x00", $this->reserved3(), $this->_io(), "/types/header_dbase_7/seq/6");
+            if (!($this->_m_reserved3 == "\x00\x00")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00\x00", $this->_m_reserved3, $this->_io, "/types/header_dbase_7/seq/6");
             }
             $this->_m_languageDriverName = $this->_io->readBytes(32);
             $this->_m_reserved4 = $this->_io->readBytes(4);
@@ -229,7 +229,7 @@ namespace Dbf {
 
 namespace Dbf {
     class Record extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Dbf $_parent = null, \Dbf $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Dbf $_parent = null, ?\Dbf $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -253,5 +253,11 @@ namespace Dbf {
     class DeleteState {
         const FALSE = 32;
         const TRUE = 42;
+
+        private const _VALUES = [32 => true, 42 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

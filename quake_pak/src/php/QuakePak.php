@@ -3,15 +3,15 @@
 
 namespace {
     class QuakePak extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \QuakePak $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\QuakePak $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic = $this->_io->readBytes(4);
-            if (!($this->magic() == "\x50\x41\x43\x4B")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x50\x41\x43\x4B", $this->magic(), $this->_io(), "/seq/0");
+            if (!($this->_m_magic == "\x50\x41\x43\x4B")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x50\x41\x43\x4B", $this->_m_magic, $this->_io, "/seq/0");
             }
             $this->_m_ofsIndex = $this->_io->readU4le();
             $this->_m_lenIndex = $this->_io->readU4le();
@@ -40,28 +40,8 @@ namespace {
 }
 
 namespace QuakePak {
-    class IndexStruct extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \QuakePak $_parent = null, \QuakePak $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_entries = [];
-            $i = 0;
-            while (!$this->_io->isEof()) {
-                $this->_m_entries[] = new \QuakePak\IndexEntry($this->_io, $this, $this->_root);
-                $i++;
-            }
-        }
-        protected $_m_entries;
-        public function entries() { return $this->_m_entries; }
-    }
-}
-
-namespace QuakePak {
     class IndexEntry extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \QuakePak\IndexStruct $_parent = null, \QuakePak $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\QuakePak\IndexStruct $_parent = null, ?\QuakePak $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -88,5 +68,25 @@ namespace QuakePak {
         public function name() { return $this->_m_name; }
         public function ofs() { return $this->_m_ofs; }
         public function size() { return $this->_m_size; }
+    }
+}
+
+namespace QuakePak {
+    class IndexStruct extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\QuakePak $_parent = null, ?\QuakePak $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_entries = [];
+            $i = 0;
+            while (!$this->_io->isEof()) {
+                $this->_m_entries[] = new \QuakePak\IndexEntry($this->_io, $this, $this->_root);
+                $i++;
+            }
+        }
+        protected $_m_entries;
+        public function entries() { return $this->_m_entries; }
     }
 }

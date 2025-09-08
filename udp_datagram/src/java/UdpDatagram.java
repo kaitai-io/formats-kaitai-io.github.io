@@ -36,7 +36,10 @@ public class UdpDatagram extends KaitaiStruct {
         this.dstPort = this._io.readU2be();
         this.length = this._io.readU2be();
         this.checksum = this._io.readU2be();
-        this.body = this._io.readBytes((length() - 8));
+        this.body = this._io.readBytes(length() - 8);
+    }
+
+    public void _fetchInstances() {
     }
     private int srcPort;
     private int dstPort;

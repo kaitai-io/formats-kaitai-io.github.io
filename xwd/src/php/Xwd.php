@@ -15,14 +15,14 @@
 
 namespace {
     class Xwd extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Xwd $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Xwd $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_lenHeader = $this->_io->readU4be();
-            $this->_m__raw_hdr = $this->_io->readBytes(($this->lenHeader() - 4));
+            $this->_m__raw_hdr = $this->_io->readBytes($this->lenHeader() - 4);
             $_io__raw_hdr = new \Kaitai\Struct\Stream($this->_m__raw_hdr);
             $this->_m_hdr = new \Xwd\Header($_io__raw_hdr, $this, $this->_root);
             $this->_m__raw_colorMap = [];
@@ -52,8 +52,42 @@ namespace {
 }
 
 namespace Xwd {
+    class ColorMapEntry extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Xwd $_parent = null, ?\Xwd $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_entryNumber = $this->_io->readU4be();
+            $this->_m_red = $this->_io->readU2be();
+            $this->_m_green = $this->_io->readU2be();
+            $this->_m_blue = $this->_io->readU2be();
+            $this->_m_flags = $this->_io->readU1();
+            $this->_m_padding = $this->_io->readU1();
+        }
+        protected $_m_entryNumber;
+        protected $_m_red;
+        protected $_m_green;
+        protected $_m_blue;
+        protected $_m_flags;
+        protected $_m_padding;
+
+        /**
+         * Number of the color map entry
+         */
+        public function entryNumber() { return $this->_m_entryNumber; }
+        public function red() { return $this->_m_red; }
+        public function green() { return $this->_m_green; }
+        public function blue() { return $this->_m_blue; }
+        public function flags() { return $this->_m_flags; }
+        public function padding() { return $this->_m_padding; }
+    }
+}
+
+namespace Xwd {
     class Header extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Xwd $_parent = null, \Xwd $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Xwd $_parent = null, ?\Xwd $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -239,36 +273,15 @@ namespace Xwd {
 }
 
 namespace Xwd {
-    class ColorMapEntry extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Xwd $_parent = null, \Xwd $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
+    class ByteOrder {
+        const LE = 0;
+        const BE = 1;
 
-        private function _read() {
-            $this->_m_entryNumber = $this->_io->readU4be();
-            $this->_m_red = $this->_io->readU2be();
-            $this->_m_green = $this->_io->readU2be();
-            $this->_m_blue = $this->_io->readU2be();
-            $this->_m_flags = $this->_io->readU1();
-            $this->_m_padding = $this->_io->readU1();
-        }
-        protected $_m_entryNumber;
-        protected $_m_red;
-        protected $_m_green;
-        protected $_m_blue;
-        protected $_m_flags;
-        protected $_m_padding;
+        private const _VALUES = [0 => true, 1 => true];
 
-        /**
-         * Number of the color map entry
-         */
-        public function entryNumber() { return $this->_m_entryNumber; }
-        public function red() { return $this->_m_red; }
-        public function green() { return $this->_m_green; }
-        public function blue() { return $this->_m_blue; }
-        public function flags() { return $this->_m_flags; }
-        public function padding() { return $this->_m_padding; }
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
@@ -277,13 +290,12 @@ namespace Xwd {
         const X_Y_BITMAP = 0;
         const X_Y_PIXMAP = 1;
         const Z_PIXMAP = 2;
-    }
-}
 
-namespace Xwd {
-    class ByteOrder {
-        const LE = 0;
-        const BE = 1;
+        private const _VALUES = [0 => true, 1 => true, 2 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
@@ -295,5 +307,11 @@ namespace Xwd {
         const PSEUDO_COLOR = 3;
         const TRUE_COLOR = 4;
         const DIRECT_COLOR = 5;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 5 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

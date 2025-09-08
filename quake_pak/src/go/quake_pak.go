@@ -16,7 +16,7 @@ type QuakePak struct {
 	LenIndex uint32
 	_io *kaitai.Stream
 	_root *QuakePak
-	_parent interface{}
+	_parent kaitai.Struct
 	_raw_index []byte
 	_f_index bool
 	index *QuakePak_IndexStruct
@@ -26,7 +26,11 @@ func NewQuakePak() *QuakePak {
 	}
 }
 
-func (this *QuakePak) Read(io *kaitai.Stream, parent interface{}, root *QuakePak) (err error) {
+func (this QuakePak) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *QuakePak) Read(io *kaitai.Stream, parent kaitai.Struct, root *QuakePak) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -56,6 +60,7 @@ func (this *QuakePak) Index() (v *QuakePak_IndexStruct, err error) {
 	if (this._f_index) {
 		return this.index, nil
 	}
+	this._f_index = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
@@ -81,42 +86,7 @@ func (this *QuakePak) Index() (v *QuakePak_IndexStruct, err error) {
 	if err != nil {
 		return nil, err
 	}
-	this._f_index = true
-	this._f_index = true
 	return this.index, nil
-}
-type QuakePak_IndexStruct struct {
-	Entries []*QuakePak_IndexEntry
-	_io *kaitai.Stream
-	_root *QuakePak
-	_parent *QuakePak
-}
-func NewQuakePak_IndexStruct() *QuakePak_IndexStruct {
-	return &QuakePak_IndexStruct{
-	}
-}
-
-func (this *QuakePak_IndexStruct) Read(io *kaitai.Stream, parent *QuakePak, root *QuakePak) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	for i := 1;; i++ {
-		tmp6, err := this._io.EOF()
-		if err != nil {
-			return err
-		}
-		if tmp6 {
-			break
-		}
-		tmp7 := NewQuakePak_IndexEntry()
-		err = tmp7.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Entries = append(this.Entries, tmp7)
-	}
-	return err
 }
 type QuakePak_IndexEntry struct {
 	Name string
@@ -133,33 +103,38 @@ func NewQuakePak_IndexEntry() *QuakePak_IndexEntry {
 	}
 }
 
+func (this QuakePak_IndexEntry) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *QuakePak_IndexEntry) Read(io *kaitai.Stream, parent *QuakePak_IndexStruct, root *QuakePak) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp8, err := this._io.ReadBytes(int(56))
+	tmp6, err := this._io.ReadBytes(int(56))
 	if err != nil {
 		return err
 	}
-	tmp8 = kaitai.BytesTerminate(kaitai.BytesStripRight(tmp8, 0), 0, false)
-	this.Name = string(tmp8)
-	tmp9, err := this._io.ReadU4le()
+	tmp6 = kaitai.BytesTerminate(kaitai.BytesStripRight(tmp6, 0), 0, false)
+	this.Name = string(tmp6)
+	tmp7, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Ofs = uint32(tmp9)
-	tmp10, err := this._io.ReadU4le()
+	this.Ofs = uint32(tmp7)
+	tmp8, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Size = uint32(tmp10)
+	this.Size = uint32(tmp8)
 	return err
 }
 func (this *QuakePak_IndexEntry) Body() (v []byte, err error) {
 	if (this._f_body) {
 		return this.body, nil
 	}
+	this._f_body = true
 	thisIo := this._root._io
 	_pos, err := thisIo.Pos()
 	if err != nil {
@@ -169,17 +144,52 @@ func (this *QuakePak_IndexEntry) Body() (v []byte, err error) {
 	if err != nil {
 		return nil, err
 	}
-	tmp11, err := thisIo.ReadBytes(int(this.Size))
+	tmp9, err := thisIo.ReadBytes(int(this.Size))
 	if err != nil {
 		return nil, err
 	}
-	tmp11 = tmp11
-	this.body = tmp11
+	tmp9 = tmp9
+	this.body = tmp9
 	_, err = thisIo.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
-	this._f_body = true
-	this._f_body = true
 	return this.body, nil
+}
+type QuakePak_IndexStruct struct {
+	Entries []*QuakePak_IndexEntry
+	_io *kaitai.Stream
+	_root *QuakePak
+	_parent *QuakePak
+}
+func NewQuakePak_IndexStruct() *QuakePak_IndexStruct {
+	return &QuakePak_IndexStruct{
+	}
+}
+
+func (this QuakePak_IndexStruct) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *QuakePak_IndexStruct) Read(io *kaitai.Stream, parent *QuakePak, root *QuakePak) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	for i := 0;; i++ {
+		tmp10, err := this._io.EOF()
+		if err != nil {
+			return err
+		}
+		if tmp10 {
+			break
+		}
+		tmp11 := NewQuakePak_IndexEntry()
+		err = tmp11.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Entries = append(this.Entries, tmp11)
+	}
+	return err
 }

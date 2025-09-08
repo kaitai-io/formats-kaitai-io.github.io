@@ -7,10 +7,10 @@ digraph {
 
 		vp8_duck_ivf__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-			<TR><TD PORT="magic1_pos">0</TD><TD PORT="magic1_size">4</TD><TD></TD><TD PORT="magic1_type">magic1</TD></TR>
+			<TR><TD PORT="magic1_pos">0</TD><TD PORT="magic1_size">4</TD><TD>44 4B 49 46</TD><TD PORT="magic1_type">magic1</TD></TR>
 			<TR><TD PORT="version_pos">4</TD><TD PORT="version_size">2</TD><TD>u2le</TD><TD PORT="version_type">version</TD></TR>
 			<TR><TD PORT="len_header_pos">6</TD><TD PORT="len_header_size">2</TD><TD>u2le</TD><TD PORT="len_header_type">len_header</TD></TR>
-			<TR><TD PORT="codec_pos">8</TD><TD PORT="codec_size">4</TD><TD></TD><TD PORT="codec_type">codec</TD></TR>
+			<TR><TD PORT="codec_pos">8</TD><TD PORT="codec_size">4</TD><TD>56 50 38 30</TD><TD PORT="codec_type">codec</TD></TR>
 			<TR><TD PORT="width_pos">12</TD><TD PORT="width_size">2</TD><TD>u2le</TD><TD PORT="width_type">width</TD></TR>
 			<TR><TD PORT="height_pos">14</TD><TD PORT="height_size">2</TD><TD>u2le</TD><TD PORT="height_type">height</TD></TR>
 			<TR><TD PORT="framerate_pos">16</TD><TD PORT="framerate_size">4</TD><TD>u4le</TD><TD PORT="framerate_type">framerate</TD></TR>
@@ -20,15 +20,6 @@ digraph {
 			<TR><TD PORT="image_data_pos">32</TD><TD PORT="image_data_size">...</TD><TD>Blocks</TD><TD PORT="image_data_type">image_data</TD></TR>
 			<TR><TD COLSPAN="4" PORT="image_data__repeat">repeat num_frames times</TD></TR>
 		</TABLE>>];
-		subgraph cluster__blocks {
-			label="Vp8DuckIvf::Blocks";
-			graph[style=dotted];
-
-			blocks__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="entries_pos">0</TD><TD PORT="entries_size">...</TD><TD>Block</TD><TD PORT="entries_type">entries</TD></TR>
-			</TABLE>>];
-		}
 		subgraph cluster__block {
 			label="Vp8DuckIvf::Block";
 			graph[style=dotted];
@@ -40,9 +31,18 @@ digraph {
 				<TR><TD PORT="framedata_pos">12</TD><TD PORT="framedata_size">len_frame</TD><TD></TD><TD PORT="framedata_type">framedata</TD></TR>
 			</TABLE>>];
 		}
+		subgraph cluster__blocks {
+			label="Vp8DuckIvf::Blocks";
+			graph[style=dotted];
+
+			blocks__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="entries_pos">0</TD><TD PORT="entries_size">...</TD><TD>Block</TD><TD PORT="entries_type">entries</TD></TR>
+			</TABLE>>];
+		}
 	}
 	vp8_duck_ivf__seq:image_data_type -> blocks__seq [style=bold];
 	vp8_duck_ivf__seq:num_frames_type -> vp8_duck_ivf__seq:image_data__repeat [color="#404040"];
-	blocks__seq:entries_type -> block__seq [style=bold];
 	block__seq:len_frame_type -> block__seq:framedata_size [color="#404040"];
+	blocks__seq:entries_type -> block__seq [style=bold];
 }

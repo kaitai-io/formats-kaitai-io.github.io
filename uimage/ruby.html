@@ -169,6 +169,11 @@ with sha1 and md5 checksums.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="U-Boot Image wrapper parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="U-Boot Image wrapper parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -197,9 +202,19 @@ with sha1 and md5 checksums.</p>
                 <a href="python.html" title="U-Boot Image wrapper parsing Python library">Python</a></li>
                 
                 
+                <li>
+                
+                <a href="python-write.html" title="U-Boot Image wrapper parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
                 <li class="active">
                 
                 <a href="ruby.html" title="U-Boot Image wrapper parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="U-Boot Image wrapper parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -275,8 +290,8 @@ with sha1 and md5 checksums.</p>
 
 <span class="nb">require</span><span class="w"> </span><span class="s1">&#39;kaitai/struct/struct&#39;</span>
 
-<span class="k">unless</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.9&#39;</span><span class="p">)</span>
-<span class="w">  </span><span class="k">raise</span><span class="w"> </span><span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">unless</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.11&#39;</span><span class="p">)</span>
+<span class="w">  </span><span class="k">raise</span><span class="w"> </span><span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
 <span class="k">end</span>
 
 
@@ -286,39 +301,6 @@ with sha1 and md5 checksums.</p>
 <span class="c1"># with sha1 and md5 checksums.</span>
 <span class="c1"># @see https://source.denx.de/u-boot/u-boot/-/raw/e4dba4ba6f/include/image.h Source</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Uimage</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-
-<span class="w">  </span><span class="no">UIMAGE_OS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="mi">0</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_invalid</span><span class="p">,</span>
-<span class="w">    </span><span class="mi">1</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_openbsd</span><span class="p">,</span>
-<span class="w">    </span><span class="mi">2</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_netbsd</span><span class="p">,</span>
-<span class="w">    </span><span class="mi">3</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_freebsd</span><span class="p">,</span>
-<span class="w">    </span><span class="mi">4</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_bsd4_4</span><span class="p">,</span>
-<span class="w">    </span><span class="mi">5</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_linux</span><span class="p">,</span>
-<span class="w">    </span><span class="mi">6</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_svr4</span><span class="p">,</span>
-<span class="w">    </span><span class="mi">7</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_esix</span><span class="p">,</span>
-<span class="w">    </span><span class="mi">8</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_solaris</span><span class="p">,</span>
-<span class="w">    </span><span class="mi">9</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_irix</span><span class="p">,</span>
-<span class="w">    </span><span class="mi">10</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_sco</span><span class="p">,</span>
-<span class="w">    </span><span class="mi">11</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_dell</span><span class="p">,</span>
-<span class="w">    </span><span class="mi">12</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_ncr</span><span class="p">,</span>
-<span class="w">    </span><span class="mi">13</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_lynxos</span><span class="p">,</span>
-<span class="w">    </span><span class="mi">14</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_vxworks</span><span class="p">,</span>
-<span class="w">    </span><span class="mi">15</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_psos</span><span class="p">,</span>
-<span class="w">    </span><span class="mi">16</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_qnx</span><span class="p">,</span>
-<span class="w">    </span><span class="mi">17</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_u_boot</span><span class="p">,</span>
-<span class="w">    </span><span class="mi">18</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_rtems</span><span class="p">,</span>
-<span class="w">    </span><span class="mi">19</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_artos</span><span class="p">,</span>
-<span class="w">    </span><span class="mi">20</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_unity</span><span class="p">,</span>
-<span class="w">    </span><span class="mi">21</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_integrity</span><span class="p">,</span>
-<span class="w">    </span><span class="mi">22</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_ose</span><span class="p">,</span>
-<span class="w">    </span><span class="mi">23</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_plan9</span><span class="p">,</span>
-<span class="w">    </span><span class="mi">24</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_openrtos</span><span class="p">,</span>
-<span class="w">    </span><span class="mi">25</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_arm_trusted_firmware</span><span class="p">,</span>
-<span class="w">    </span><span class="mi">26</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_tee</span><span class="p">,</span>
-<span class="w">    </span><span class="mi">27</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_opensbi</span><span class="p">,</span>
-<span class="w">    </span><span class="mi">28</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_efi</span><span class="p">,</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="w">  </span><span class="no">I__UIMAGE_OS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">UIMAGE_OS</span><span class="o">.</span><span class="n">invert</span>
 
 <span class="w">  </span><span class="no">UIMAGE_ARCH</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="mi">0</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_arch_invalid</span><span class="p">,</span>
@@ -361,6 +343,39 @@ with sha1 and md5 checksums.</p>
 <span class="w">    </span><span class="mi">6</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_comp_zstd</span><span class="p">,</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="w">  </span><span class="no">I__UIMAGE_COMP</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">UIMAGE_COMP</span><span class="o">.</span><span class="n">invert</span>
+
+<span class="w">  </span><span class="no">UIMAGE_OS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="mi">0</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_invalid</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">1</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_openbsd</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">2</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_netbsd</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">3</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_freebsd</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">4</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_bsd4_4</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">5</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_linux</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">6</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_svr4</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">7</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_esix</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">8</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_solaris</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">9</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_irix</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">10</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_sco</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">11</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_dell</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">12</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_ncr</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">13</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_lynxos</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">14</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_vxworks</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">15</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_psos</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">16</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_qnx</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">17</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_u_boot</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">18</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_rtems</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">19</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_artos</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">20</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_unity</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">21</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_integrity</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">22</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_ose</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">23</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_plan9</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">24</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_openrtos</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">25</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_arm_trusted_firmware</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">26</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_tee</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">27</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_opensbi</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">28</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_os_efi</span><span class="p">,</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="no">I__UIMAGE_OS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">UIMAGE_OS</span><span class="o">.</span><span class="n">invert</span>
 
 <span class="w">  </span><span class="no">UIMAGE_TYPE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="mi">0</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_type_invalid</span><span class="p">,</span>
@@ -406,8 +421,8 @@ with sha1 and md5 checksums.</p>
 <span class="w">    </span><span class="mi">40</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:uimage_type_sunxi_egon</span><span class="p">,</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="w">  </span><span class="no">I__UIMAGE_TYPE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">UIMAGE_TYPE</span><span class="o">.</span><span class="n">invert</span>
-<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
-<span class="w">    </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">    </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
 <span class="w">    </span><span class="n">_read</span>
 <span class="w">  </span><span class="k">end</span>
 
@@ -417,14 +432,14 @@ with sha1 and md5 checksums.</p>
 <span class="w">    </span><span class="nb">self</span>
 <span class="w">  </span><span class="k">end</span>
 <span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">Uheader</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 <span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
 <span class="w">      </span><span class="n">_read</span>
 <span class="w">    </span><span class="k">end</span>
 
 <span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
 <span class="w">      </span><span class="vi">@magic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">39</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span><span class="w"> </span><span class="mi">86</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span><span class="w"> </span><span class="n">magic</span><span class="p">,</span><span class="w"> </span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/uheader/seq/0&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="n">magic</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">39</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span><span class="w"> </span><span class="mi">86</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
+<span class="w">      </span><span class="k">raise</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">39</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span><span class="w"> </span><span class="mi">86</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span><span class="w"> </span><span class="vi">@magic</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/types/uheader/seq/0&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="vi">@magic</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">[</span><span class="mi">39</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span><span class="w"> </span><span class="mi">86</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
 <span class="w">      </span><span class="vi">@header_crc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
 <span class="w">      </span><span class="vi">@timestamp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
 <span class="w">      </span><span class="vi">@len_image</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>

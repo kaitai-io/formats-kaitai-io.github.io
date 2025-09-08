@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Encode;
 
 ########################################################################
@@ -19,10 +19,10 @@ sub from_file {
     return new($class, IO::KaitaiStruct::Stream->new($fd));
 }
 
+our $BLOCK_IDENTIFIERS_PRODUCT_INFORMATION = 1;
+
 our $SIGNATURE_ALGORITHMS_RSA_PKCS1_SHA1 = 1;
 our $SIGNATURE_ALGORITHMS_RSA_PKCS1_SHA384 = 2;
-
-our $BLOCK_IDENTIFIERS_PRODUCT_INFORMATION = 1;
 
 sub new {
     my ($class, $_io, $_parent, $_root) = @_;
@@ -30,7 +30,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -44,13 +44,13 @@ sub _read {
     $self->{ofs_index} = $self->{_io}->read_u4be();
     $self->{file_size} = $self->{_io}->read_u8be();
     $self->{len_signatures} = $self->{_io}->read_u4be();
-    $self->{signatures} = ();
+    $self->{signatures} = [];
     my $n_signatures = $self->len_signatures();
     for (my $i = 0; $i < $n_signatures; $i++) {
         push @{$self->{signatures}}, MozillaMar::Signature->new($self->{_io}, $self, $self->{_root});
     }
     $self->{len_additional_sections} = $self->{_io}->read_u4be();
-    $self->{additional_sections} = ();
+    $self->{additional_sections} = [];
     my $n_additional_sections = $self->len_additional_sections();
     for (my $i = 0; $i < $n_additional_sections; $i++) {
         push @{$self->{additional_sections}}, MozillaMar::AdditionalSection->new($self->{_io}, $self, $self->{_root});
@@ -103,7 +103,7 @@ sub additional_sections {
 }
 
 ########################################################################
-package MozillaMar::MarIndex;
+package MozillaMar::AdditionalSection;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -122,7 +122,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -132,25 +132,37 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{len_index} = $self->{_io}->read_u4be();
-    $self->{_raw_index_entries} = $self->{_io}->read_bytes($self->len_index());
-    my $io__raw_index_entries = IO::KaitaiStruct::Stream->new($self->{_raw_index_entries});
-    $self->{index_entries} = MozillaMar::IndexEntries->new($io__raw_index_entries, $self, $self->{_root});
+    $self->{len_block} = $self->{_io}->read_u4be();
+    $self->{block_identifier} = $self->{_io}->read_u4be();
+    my $_on = $self->block_identifier();
+    if ($_on == $MozillaMar::BLOCK_IDENTIFIERS_PRODUCT_INFORMATION) {
+        $self->{_raw_bytes} = $self->{_io}->read_bytes(($self->len_block() - 4) - 4);
+        my $io__raw_bytes = IO::KaitaiStruct::Stream->new($self->{_raw_bytes});
+        $self->{bytes} = MozillaMar::ProductInformationBlock->new($io__raw_bytes, $self, $self->{_root});
+    }
+    else {
+        $self->{bytes} = $self->{_io}->read_bytes(($self->len_block() - 4) - 4);
+    }
 }
 
-sub len_index {
+sub len_block {
     my ($self) = @_;
-    return $self->{len_index};
+    return $self->{len_block};
 }
 
-sub index_entries {
+sub block_identifier {
     my ($self) = @_;
-    return $self->{index_entries};
+    return $self->{block_identifier};
 }
 
-sub _raw_index_entries {
+sub bytes {
     my ($self) = @_;
-    return $self->{_raw_index_entries};
+    return $self->{bytes};
+}
+
+sub _raw_bytes {
+    my ($self) = @_;
+    return $self->{_raw_bytes};
 }
 
 ########################################################################
@@ -173,7 +185,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -183,7 +195,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{index_entry} = ();
+    $self->{index_entry} = [];
     while (!$self->{_io}->is_eof()) {
         push @{$self->{index_entry}}, MozillaMar::IndexEntry->new($self->{_io}, $self, $self->{_root});
     }
@@ -192,100 +204,6 @@ sub _read {
 sub index_entry {
     my ($self) = @_;
     return $self->{index_entry};
-}
-
-########################################################################
-package MozillaMar::Signature;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{algorithm} = $self->{_io}->read_u4be();
-    $self->{len_signature} = $self->{_io}->read_u4be();
-    $self->{signature} = $self->{_io}->read_bytes($self->len_signature());
-}
-
-sub algorithm {
-    my ($self) = @_;
-    return $self->{algorithm};
-}
-
-sub len_signature {
-    my ($self) = @_;
-    return $self->{len_signature};
-}
-
-sub signature {
-    my ($self) = @_;
-    return $self->{signature};
-}
-
-########################################################################
-package MozillaMar::ProductInformationBlock;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{mar_channel_name} = Encode::decode("UTF-8", IO::KaitaiStruct::Stream::bytes_terminate($self->{_io}->read_bytes(64), 0, 0));
-    $self->{product_version} = Encode::decode("UTF-8", IO::KaitaiStruct::Stream::bytes_terminate($self->{_io}->read_bytes(32), 0, 0));
-}
-
-sub mar_channel_name {
-    my ($self) = @_;
-    return $self->{mar_channel_name};
-}
-
-sub product_version {
-    my ($self) = @_;
-    return $self->{product_version};
 }
 
 ########################################################################
@@ -308,7 +226,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -356,7 +274,7 @@ sub file_name {
 }
 
 ########################################################################
-package MozillaMar::AdditionalSection;
+package MozillaMar::MarIndex;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -375,7 +293,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -385,37 +303,119 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{len_block} = $self->{_io}->read_u4be();
-    $self->{block_identifier} = $self->{_io}->read_u4be();
-    my $_on = $self->block_identifier();
-    if ($_on == $MozillaMar::BLOCK_IDENTIFIERS_PRODUCT_INFORMATION) {
-        $self->{_raw_bytes} = $self->{_io}->read_bytes((($self->len_block() - 4) - 4));
-        my $io__raw_bytes = IO::KaitaiStruct::Stream->new($self->{_raw_bytes});
-        $self->{bytes} = MozillaMar::ProductInformationBlock->new($io__raw_bytes, $self, $self->{_root});
-    }
-    else {
-        $self->{bytes} = $self->{_io}->read_bytes((($self->len_block() - 4) - 4));
-    }
+    $self->{len_index} = $self->{_io}->read_u4be();
+    $self->{_raw_index_entries} = $self->{_io}->read_bytes($self->len_index());
+    my $io__raw_index_entries = IO::KaitaiStruct::Stream->new($self->{_raw_index_entries});
+    $self->{index_entries} = MozillaMar::IndexEntries->new($io__raw_index_entries, $self, $self->{_root});
 }
 
-sub len_block {
+sub len_index {
     my ($self) = @_;
-    return $self->{len_block};
+    return $self->{len_index};
 }
 
-sub block_identifier {
+sub index_entries {
     my ($self) = @_;
-    return $self->{block_identifier};
+    return $self->{index_entries};
 }
 
-sub bytes {
+sub _raw_index_entries {
     my ($self) = @_;
-    return $self->{bytes};
+    return $self->{_raw_index_entries};
 }
 
-sub _raw_bytes {
+########################################################################
+package MozillaMar::ProductInformationBlock;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
     my ($self) = @_;
-    return $self->{_raw_bytes};
+
+    $self->{mar_channel_name} = Encode::decode("UTF-8", IO::KaitaiStruct::Stream::bytes_terminate($self->{_io}->read_bytes(64), 0, 0));
+    $self->{product_version} = Encode::decode("UTF-8", IO::KaitaiStruct::Stream::bytes_terminate($self->{_io}->read_bytes(32), 0, 0));
+}
+
+sub mar_channel_name {
+    my ($self) = @_;
+    return $self->{mar_channel_name};
+}
+
+sub product_version {
+    my ($self) = @_;
+    return $self->{product_version};
+}
+
+########################################################################
+package MozillaMar::Signature;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{algorithm} = $self->{_io}->read_u4be();
+    $self->{len_signature} = $self->{_io}->read_u4be();
+    $self->{signature} = $self->{_io}->read_bytes($self->len_signature());
+}
+
+sub algorithm {
+    my ($self) = @_;
+    return $self->{algorithm};
+}
+
+sub len_signature {
+    my ($self) = @_;
+    return $self->{len_signature};
+}
+
+sub signature {
+    my ($self) = @_;
+    return $self->{signature};
 }
 
 1;

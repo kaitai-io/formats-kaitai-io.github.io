@@ -3,15 +3,16 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class rtpdump_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include "rtp_packet.h"
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
-class rtp_packet_t;
 
 /**
  * rtpdump is a format used by rtptools to record and replay

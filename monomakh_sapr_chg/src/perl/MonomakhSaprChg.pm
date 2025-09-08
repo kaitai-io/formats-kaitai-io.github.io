@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Encode;
 
 ########################################################################
@@ -25,7 +25,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -35,8 +35,8 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{title} = Encode::decode("ascii", $self->{_io}->read_bytes(10));
-    $self->{ent} = ();
+    $self->{title} = Encode::decode("ASCII", $self->{_io}->read_bytes(10));
+    $self->{ent} = [];
     while (!$self->{_io}->is_eof()) {
         push @{$self->{ent}}, MonomakhSaprChg::Block->new($self->{_io}, $self, $self->{_root});
     }
@@ -72,7 +72,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -82,7 +82,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{header} = Encode::decode("ascii", $self->{_io}->read_bytes(13));
+    $self->{header} = Encode::decode("ASCII", $self->{_io}->read_bytes(13));
     $self->{file_size} = $self->{_io}->read_u8le();
     $self->{file} = $self->{_io}->read_bytes($self->file_size());
 }

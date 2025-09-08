@@ -5,7 +5,7 @@
 
 luks_t::luks_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, luks_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     m_partition_header = nullptr;
     f_payload = false;
     _read();
@@ -33,22 +33,22 @@ luks_t::partition_header_t::partition_header_t(kaitai::kstream* p__io, luks_t* p
 
 void luks_t::partition_header_t::_read() {
     m_magic = m__io->read_bytes(6);
-    if (!(magic() == std::string("\x4C\x55\x4B\x53\xBA\xBE", 6))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\x4C\x55\x4B\x53\xBA\xBE", 6), magic(), _io(), std::string("/types/partition_header/seq/0"));
+    if (!(m_magic == std::string("\x4C\x55\x4B\x53\xBA\xBE", 6))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\x4C\x55\x4B\x53\xBA\xBE", 6), m_magic, m__io, std::string("/types/partition_header/seq/0"));
     }
     m_version = m__io->read_bytes(2);
-    if (!(version() == std::string("\x00\x01", 2))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\x00\x01", 2), version(), _io(), std::string("/types/partition_header/seq/1"));
+    if (!(m_version == std::string("\x00\x01", 2))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\x00\x01", 2), m_version, m__io, std::string("/types/partition_header/seq/1"));
     }
-    m_cipher_name_specification = kaitai::kstream::bytes_to_str(m__io->read_bytes(32), std::string("ASCII"));
-    m_cipher_mode_specification = kaitai::kstream::bytes_to_str(m__io->read_bytes(32), std::string("ASCII"));
-    m_hash_specification = kaitai::kstream::bytes_to_str(m__io->read_bytes(32), std::string("ASCII"));
+    m_cipher_name_specification = kaitai::kstream::bytes_to_str(m__io->read_bytes(32), "ASCII");
+    m_cipher_mode_specification = kaitai::kstream::bytes_to_str(m__io->read_bytes(32), "ASCII");
+    m_hash_specification = kaitai::kstream::bytes_to_str(m__io->read_bytes(32), "ASCII");
     m_payload_offset = m__io->read_u4be();
     m_number_of_key_bytes = m__io->read_u4be();
     m_master_key_checksum = m__io->read_bytes(20);
     m_master_key_salt_parameter = m__io->read_bytes(32);
     m_master_key_iterations_parameter = m__io->read_u4be();
-    m_uuid = kaitai::kstream::bytes_to_str(m__io->read_bytes(40), std::string("ASCII"));
+    m_uuid = kaitai::kstream::bytes_to_str(m__io->read_bytes(40), "ASCII");
     m_key_slots = std::unique_ptr<std::vector<std::unique_ptr<key_slot_t>>>(new std::vector<std::unique_ptr<key_slot_t>>());
     const int l_key_slots = 8;
     for (int i = 0; i < l_key_slots; i++) {
@@ -61,6 +61,13 @@ luks_t::partition_header_t::~partition_header_t() {
 }
 
 void luks_t::partition_header_t::_clean_up() {
+}
+const std::set<luks_t::partition_header_t::key_slot_t::key_slot_states_t> luks_t::partition_header_t::key_slot_t::_values_key_slot_states_t{
+    luks_t::partition_header_t::key_slot_t::KEY_SLOT_STATES_DISABLED_KEY_SLOT,
+    luks_t::partition_header_t::key_slot_t::KEY_SLOT_STATES_ENABLED_KEY_SLOT,
+};
+bool luks_t::partition_header_t::key_slot_t::_is_defined_key_slot_states_t(luks_t::partition_header_t::key_slot_t::key_slot_states_t v) {
+    return luks_t::partition_header_t::key_slot_t::_values_key_slot_states_t.find(v) != luks_t::partition_header_t::key_slot_t::_values_key_slot_states_t.end();
 }
 
 luks_t::partition_header_t::key_slot_t::key_slot_t(kaitai::kstream* p__io, luks_t::partition_header_t* p__parent, luks_t* p__root) : kaitai::kstruct(p__io) {
@@ -90,21 +97,21 @@ void luks_t::partition_header_t::key_slot_t::_clean_up() {
 std::string luks_t::partition_header_t::key_slot_t::key_material() {
     if (f_key_material)
         return m_key_material;
-    std::streampos _pos = m__io->pos();
-    m__io->seek((start_sector_of_key_material() * 512));
-    m_key_material = m__io->read_bytes((_parent()->number_of_key_bytes() * number_of_anti_forensic_stripes()));
-    m__io->seek(_pos);
     f_key_material = true;
+    std::streampos _pos = m__io->pos();
+    m__io->seek(start_sector_of_key_material() * 512);
+    m_key_material = m__io->read_bytes(_parent()->number_of_key_bytes() * number_of_anti_forensic_stripes());
+    m__io->seek(_pos);
     return m_key_material;
 }
 
 std::string luks_t::payload() {
     if (f_payload)
         return m_payload;
+    f_payload = true;
     std::streampos _pos = m__io->pos();
-    m__io->seek((partition_header()->payload_offset() * 512));
+    m__io->seek(partition_header()->payload_offset() * 512);
     m_payload = m__io->read_bytes_full();
     m__io->seek(_pos);
-    f_payload = true;
     return m_payload;
 }

@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -11,8 +11,8 @@ end
 # Resource file found in CPB firmware archives, mostly used on older CoolPad
 # phones and/or tablets. The only observed files are called "ResPack.cfg".
 class Respack < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -22,14 +22,14 @@ class Respack < Kaitai::Struct::Struct
     self
   end
   class Header < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
       @magic = @_io.read_bytes(2)
-      raise Kaitai::Struct::ValidationNotEqualError.new([82, 83].pack('C*'), magic, _io, "/types/header/seq/0") if not magic == [82, 83].pack('C*')
+      raise Kaitai::Struct::ValidationNotEqualError.new([82, 83].pack('C*'), @magic, @_io, "/types/header/seq/0") if not @magic == [82, 83].pack('C*')
       @unknown = @_io.read_bytes(8)
       @len_json = @_io.read_u4le
       @md5 = (@_io.read_bytes(32)).force_encoding("UTF-8")

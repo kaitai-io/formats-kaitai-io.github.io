@@ -11,10 +11,6 @@ digraph {
 			<TR><TD PORT="objects_pos">...</TD><TD PORT="objects_size">...</TD><TD>JournalObject</TD><TD PORT="objects_type">objects</TD></TR>
 			<TR><TD COLSPAN="4" PORT="objects__repeat">repeat header.num_objects times</TD></TR>
 		</TABLE>>];
-		systemd_journal__inst__len_header [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-			<TR><TD PORT="len_header_pos">88</TD><TD PORT="len_header_size">8</TD><TD>u8le</TD><TD PORT="len_header_type">len_header</TD></TR>
-		</TABLE>>];
 		systemd_journal__inst__data_hash_table [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 			<TR><TD PORT="data_hash_table_pos">header.ofs_data_hash_table</TD><TD PORT="data_hash_table_size">header.len_data_hash_table</TD><TD></TD><TD PORT="data_hash_table_type">data_hash_table</TD></TR>
@@ -23,13 +19,52 @@ digraph {
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 			<TR><TD PORT="field_hash_table_pos">header.ofs_field_hash_table</TD><TD PORT="field_hash_table_size">header.len_field_hash_table</TD><TD></TD><TD PORT="field_hash_table_type">field_hash_table</TD></TR>
 		</TABLE>>];
+		systemd_journal__inst__len_header [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="len_header_pos">88</TD><TD PORT="len_header_size">8</TD><TD>u8le</TD><TD PORT="len_header_type">len_header</TD></TR>
+		</TABLE>>];
+		subgraph cluster__data_object {
+			label="SystemdJournal::DataObject";
+			graph[style=dotted];
+
+			data_object__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="hash_pos">0</TD><TD PORT="hash_size">8</TD><TD>u8le</TD><TD PORT="hash_type">hash</TD></TR>
+				<TR><TD PORT="ofs_next_hash_pos">8</TD><TD PORT="ofs_next_hash_size">8</TD><TD>u8le</TD><TD PORT="ofs_next_hash_type">ofs_next_hash</TD></TR>
+				<TR><TD PORT="ofs_head_field_pos">16</TD><TD PORT="ofs_head_field_size">8</TD><TD>u8le</TD><TD PORT="ofs_head_field_type">ofs_head_field</TD></TR>
+				<TR><TD PORT="ofs_entry_pos">24</TD><TD PORT="ofs_entry_size">8</TD><TD>u8le</TD><TD PORT="ofs_entry_type">ofs_entry</TD></TR>
+				<TR><TD PORT="ofs_entry_array_pos">32</TD><TD PORT="ofs_entry_array_size">8</TD><TD>u8le</TD><TD PORT="ofs_entry_array_type">ofs_entry_array</TD></TR>
+				<TR><TD PORT="num_entries_pos">40</TD><TD PORT="num_entries_size">8</TD><TD>u8le</TD><TD PORT="num_entries_type">num_entries</TD></TR>
+				<TR><TD PORT="payload_pos">48</TD><TD PORT="payload_size">⇲</TD><TD></TD><TD PORT="payload_type">payload</TD></TR>
+			</TABLE>>];
+			data_object__inst__entry [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="entry_pos">ofs_entry</TD><TD PORT="entry_size">...</TD><TD>JournalObject</TD><TD PORT="entry_type">entry</TD></TR>
+				<TR><TD COLSPAN="4" PORT="entry__if">if ofs_entry != 0</TD></TR>
+			</TABLE>>];
+			data_object__inst__entry_array [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="entry_array_pos">ofs_entry_array</TD><TD PORT="entry_array_size">...</TD><TD>JournalObject</TD><TD PORT="entry_array_type">entry_array</TD></TR>
+				<TR><TD COLSPAN="4" PORT="entry_array__if">if ofs_entry_array != 0</TD></TR>
+			</TABLE>>];
+			data_object__inst__head_field [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="head_field_pos">ofs_head_field</TD><TD PORT="head_field_size">...</TD><TD>JournalObject</TD><TD PORT="head_field_type">head_field</TD></TR>
+				<TR><TD COLSPAN="4" PORT="head_field__if">if ofs_head_field != 0</TD></TR>
+			</TABLE>>];
+			data_object__inst__next_hash [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="next_hash_pos">ofs_next_hash</TD><TD PORT="next_hash_size">...</TD><TD>JournalObject</TD><TD PORT="next_hash_type">next_hash</TD></TR>
+				<TR><TD COLSPAN="4" PORT="next_hash__if">if ofs_next_hash != 0</TD></TR>
+			</TABLE>>];
+		}
 		subgraph cluster__header {
 			label="SystemdJournal::Header";
 			graph[style=dotted];
 
 			header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="signature_pos">0</TD><TD PORT="signature_size">8</TD><TD></TD><TD PORT="signature_type">signature</TD></TR>
+				<TR><TD PORT="signature_pos">0</TD><TD PORT="signature_size">8</TD><TD>4C 50 4B 53 48 48 52 48</TD><TD PORT="signature_type">signature</TD></TR>
 				<TR><TD PORT="compatible_flags_pos">8</TD><TD PORT="compatible_flags_size">4</TD><TD>u4le</TD><TD PORT="compatible_flags_type">compatible_flags</TD></TR>
 				<TR><TD PORT="incompatible_flags_pos">12</TD><TD PORT="incompatible_flags_size">4</TD><TD>u4le</TD><TD PORT="incompatible_flags_type">incompatible_flags</TD></TR>
 				<TR><TD PORT="state_pos">16</TD><TD PORT="state_size">1</TD><TD>u1→State</TD><TD PORT="state_type">state</TD></TR>
@@ -54,9 +89,13 @@ digraph {
 				<TR><TD PORT="tail_entry_realtime_pos">192</TD><TD PORT="tail_entry_realtime_size">8</TD><TD>u8le</TD><TD PORT="tail_entry_realtime_type">tail_entry_realtime</TD></TR>
 				<TR><TD PORT="tail_entry_monotonic_pos">200</TD><TD PORT="tail_entry_monotonic_size">8</TD><TD>u8le</TD><TD PORT="tail_entry_monotonic_type">tail_entry_monotonic</TD></TR>
 				<TR><TD PORT="num_data_pos">208</TD><TD PORT="num_data_size">8</TD><TD>u8le</TD><TD PORT="num_data_type">num_data</TD></TR>
+				<TR><TD COLSPAN="4" PORT="num_data__if">if !(_io.eof?)</TD></TR>
 				<TR><TD PORT="num_fields_pos">216</TD><TD PORT="num_fields_size">8</TD><TD>u8le</TD><TD PORT="num_fields_type">num_fields</TD></TR>
+				<TR><TD COLSPAN="4" PORT="num_fields__if">if !(_io.eof?)</TD></TR>
 				<TR><TD PORT="num_tags_pos">224</TD><TD PORT="num_tags_size">8</TD><TD>u8le</TD><TD PORT="num_tags_type">num_tags</TD></TR>
+				<TR><TD COLSPAN="4" PORT="num_tags__if">if !(_io.eof?)</TD></TR>
 				<TR><TD PORT="num_entry_arrays_pos">232</TD><TD PORT="num_entry_arrays_size">8</TD><TD>u8le</TD><TD PORT="num_entry_arrays_type">num_entry_arrays</TD></TR>
+				<TR><TD COLSPAN="4" PORT="num_entry_arrays__if">if !(_io.eof?)</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__journal_object {
@@ -65,7 +104,7 @@ digraph {
 
 			journal_object__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="padding_pos">0</TD><TD PORT="padding_size">((8 - _io.pos) % 8)</TD><TD></TD><TD PORT="padding_type">padding</TD></TR>
+				<TR><TD PORT="padding_pos">0</TD><TD PORT="padding_size">(8 - _io.pos) % 8</TD><TD></TD><TD PORT="padding_type">padding</TD></TR>
 				<TR><TD PORT="object_type_pos">...</TD><TD PORT="object_type_size">1</TD><TD>u1→ObjectTypes</TD><TD PORT="object_type_type">object_type</TD></TR>
 				<TR><TD PORT="flags_pos">...</TD><TD PORT="flags_size">1</TD><TD>u1</TD><TD PORT="flags_type">flags</TD></TR>
 				<TR><TD PORT="reserved_pos">...</TD><TD PORT="reserved_size">6</TD><TD></TD><TD PORT="reserved_type">reserved</TD></TR>
@@ -77,37 +116,6 @@ journal_object__seq_payload_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELL
 	<TR><TD>:object_types_data</TD><TD PORT="case0">DataObject</TD></TR>
 </TABLE>>];
 		}
-		subgraph cluster__data_object {
-			label="SystemdJournal::DataObject";
-			graph[style=dotted];
-
-			data_object__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="hash_pos">0</TD><TD PORT="hash_size">8</TD><TD>u8le</TD><TD PORT="hash_type">hash</TD></TR>
-				<TR><TD PORT="ofs_next_hash_pos">8</TD><TD PORT="ofs_next_hash_size">8</TD><TD>u8le</TD><TD PORT="ofs_next_hash_type">ofs_next_hash</TD></TR>
-				<TR><TD PORT="ofs_head_field_pos">16</TD><TD PORT="ofs_head_field_size">8</TD><TD>u8le</TD><TD PORT="ofs_head_field_type">ofs_head_field</TD></TR>
-				<TR><TD PORT="ofs_entry_pos">24</TD><TD PORT="ofs_entry_size">8</TD><TD>u8le</TD><TD PORT="ofs_entry_type">ofs_entry</TD></TR>
-				<TR><TD PORT="ofs_entry_array_pos">32</TD><TD PORT="ofs_entry_array_size">8</TD><TD>u8le</TD><TD PORT="ofs_entry_array_type">ofs_entry_array</TD></TR>
-				<TR><TD PORT="num_entries_pos">40</TD><TD PORT="num_entries_size">8</TD><TD>u8le</TD><TD PORT="num_entries_type">num_entries</TD></TR>
-				<TR><TD PORT="payload_pos">48</TD><TD PORT="payload_size">⇲</TD><TD></TD><TD PORT="payload_type">payload</TD></TR>
-			</TABLE>>];
-			data_object__inst__next_hash [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="next_hash_pos">ofs_next_hash</TD><TD PORT="next_hash_size">...</TD><TD>JournalObject</TD><TD PORT="next_hash_type">next_hash</TD></TR>
-			</TABLE>>];
-			data_object__inst__head_field [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="head_field_pos">ofs_head_field</TD><TD PORT="head_field_size">...</TD><TD>JournalObject</TD><TD PORT="head_field_type">head_field</TD></TR>
-			</TABLE>>];
-			data_object__inst__entry [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="entry_pos">ofs_entry</TD><TD PORT="entry_size">...</TD><TD>JournalObject</TD><TD PORT="entry_type">entry</TD></TR>
-			</TABLE>>];
-			data_object__inst__entry_array [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="entry_array_pos">ofs_entry_array</TD><TD PORT="entry_array_size">...</TD><TD>JournalObject</TD><TD PORT="entry_array_type">entry_array</TD></TR>
-			</TABLE>>];
-		}
 	}
 	systemd_journal__inst__len_header:len_header_type -> systemd_journal__seq:header_size [color="#404040"];
 	systemd_journal__seq:header_type -> header__seq [style=bold];
@@ -117,15 +125,19 @@ journal_object__seq_payload_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELL
 	header__seq:len_data_hash_table_type -> systemd_journal__inst__data_hash_table:data_hash_table_size [color="#404040"];
 	header__seq:ofs_field_hash_table_type -> systemd_journal__inst__field_hash_table:field_hash_table_pos [color="#404040"];
 	header__seq:len_field_hash_table_type -> systemd_journal__inst__field_hash_table:field_hash_table_size [color="#404040"];
+	data_object__seq:ofs_entry_type -> data_object__inst__entry:entry_pos [color="#404040"];
+	data_object__inst__entry:entry_type -> journal_object__seq [style=bold];
+	data_object__seq:ofs_entry_type -> data_object__inst__entry:entry__if [color="#404040"];
+	data_object__seq:ofs_entry_array_type -> data_object__inst__entry_array:entry_array_pos [color="#404040"];
+	data_object__inst__entry_array:entry_array_type -> journal_object__seq [style=bold];
+	data_object__seq:ofs_entry_array_type -> data_object__inst__entry_array:entry_array__if [color="#404040"];
+	data_object__seq:ofs_head_field_type -> data_object__inst__head_field:head_field_pos [color="#404040"];
+	data_object__inst__head_field:head_field_type -> journal_object__seq [style=bold];
+	data_object__seq:ofs_head_field_type -> data_object__inst__head_field:head_field__if [color="#404040"];
+	data_object__seq:ofs_next_hash_type -> data_object__inst__next_hash:next_hash_pos [color="#404040"];
+	data_object__inst__next_hash:next_hash_type -> journal_object__seq [style=bold];
+	data_object__seq:ofs_next_hash_type -> data_object__inst__next_hash:next_hash__if [color="#404040"];
 	journal_object__seq:payload_type -> journal_object__seq_payload_switch [style=bold];
 	journal_object__seq_payload_switch:case0 -> data_object__seq [style=bold];
 	journal_object__seq:object_type_type -> journal_object__seq:payload_type [color="#404040"];
-	data_object__seq:ofs_next_hash_type -> data_object__inst__next_hash:next_hash_pos [color="#404040"];
-	data_object__inst__next_hash:next_hash_type -> journal_object__seq [style=bold];
-	data_object__seq:ofs_head_field_type -> data_object__inst__head_field:head_field_pos [color="#404040"];
-	data_object__inst__head_field:head_field_type -> journal_object__seq [style=bold];
-	data_object__seq:ofs_entry_type -> data_object__inst__entry:entry_pos [color="#404040"];
-	data_object__inst__entry:entry_type -> journal_object__seq [style=bold];
-	data_object__seq:ofs_entry_array_type -> data_object__inst__entry_array:entry_array_pos [color="#404040"];
-	data_object__inst__entry_array:entry_array_type -> journal_object__seq [style=bold];
 }

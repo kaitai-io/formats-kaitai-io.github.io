@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -30,8 +30,8 @@ class ZxSpectrumTap < Kaitai::Struct::Struct
     3 => :header_type_enum_bytes,
   }
   I__HEADER_TYPE_ENUM = HEADER_TYPE_ENUM.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -44,8 +44,28 @@ class ZxSpectrumTap < Kaitai::Struct::Struct
     end
     self
   end
+  class ArrayParams < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @reserved = @_io.read_u1
+      @var_name = @_io.read_u1
+      @reserved1 = @_io.read_bytes(2)
+      raise Kaitai::Struct::ValidationNotEqualError.new([0, 128].pack('C*'), @reserved1, @_io, "/types/array_params/seq/2") if not @reserved1 == [0, 128].pack('C*')
+      self
+    end
+    attr_reader :reserved
+
+    ##
+    # Variable name (1..26 meaning A$..Z$ +192)
+    attr_reader :var_name
+    attr_reader :reserved1
+  end
   class Block < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -57,10 +77,10 @@ class ZxSpectrumTap < Kaitai::Struct::Struct
         @header = Header.new(@_io, self, @_root)
       end
       if len_block == 19
-        @data = @_io.read_bytes((header.len_data + 4))
+        @data = @_io.read_bytes(header.len_data + 4)
       end
       if flag == :flag_enum_data
-        @headerless_data = @_io.read_bytes((len_block - 1))
+        @headerless_data = @_io.read_bytes(len_block - 1)
       end
       self
     end
@@ -70,22 +90,8 @@ class ZxSpectrumTap < Kaitai::Struct::Struct
     attr_reader :data
     attr_reader :headerless_data
   end
-  class ProgramParams < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @autostart_line = @_io.read_u2le
-      @len_program = @_io.read_u2le
-      self
-    end
-    attr_reader :autostart_line
-    attr_reader :len_program
-  end
   class BytesParams < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -99,7 +105,7 @@ class ZxSpectrumTap < Kaitai::Struct::Struct
     attr_reader :reserved
   end
   class Header < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -109,14 +115,14 @@ class ZxSpectrumTap < Kaitai::Struct::Struct
       @filename = Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(10), 32)
       @len_data = @_io.read_u2le
       case header_type
-      when :header_type_enum_program
-        @params = ProgramParams.new(@_io, self, @_root)
-      when :header_type_enum_num_array
-        @params = ArrayParams.new(@_io, self, @_root)
-      when :header_type_enum_char_array
-        @params = ArrayParams.new(@_io, self, @_root)
       when :header_type_enum_bytes
         @params = BytesParams.new(@_io, self, @_root)
+      when :header_type_enum_char_array
+        @params = ArrayParams.new(@_io, self, @_root)
+      when :header_type_enum_num_array
+        @params = ArrayParams.new(@_io, self, @_root)
+      when :header_type_enum_program
+        @params = ProgramParams.new(@_io, self, @_root)
       end
       @checksum = @_io.read_u1
       self
@@ -130,25 +136,19 @@ class ZxSpectrumTap < Kaitai::Struct::Struct
     # Bitwise XOR of all bytes including the flag byte
     attr_reader :checksum
   end
-  class ArrayParams < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  class ProgramParams < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @reserved = @_io.read_u1
-      @var_name = @_io.read_u1
-      @reserved1 = @_io.read_bytes(2)
-      raise Kaitai::Struct::ValidationNotEqualError.new([0, 128].pack('C*'), reserved1, _io, "/types/array_params/seq/2") if not reserved1 == [0, 128].pack('C*')
+      @autostart_line = @_io.read_u2le
+      @len_program = @_io.read_u2le
       self
     end
-    attr_reader :reserved
-
-    ##
-    # Variable name (1..26 meaning A$..Z$ +192)
-    attr_reader :var_name
-    attr_reader :reserved1
+    attr_reader :autostart_line
+    attr_reader :len_program
   end
   attr_reader :blocks
 end

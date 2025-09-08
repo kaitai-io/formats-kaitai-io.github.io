@@ -25,6 +25,16 @@ import (
  * @see <a href="https://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt">Source</a>
  */
 
+type Pcx_Encodings int
+const (
+	Pcx_Encodings__Rle Pcx_Encodings = 1
+)
+var values_Pcx_Encodings = map[Pcx_Encodings]struct{}{1: {}}
+func (v Pcx_Encodings) isDefined() bool {
+	_, ok := values_Pcx_Encodings[v]
+	return ok
+}
+
 type Pcx_Versions int
 const (
 	Pcx_Versions__V25 Pcx_Versions = 0
@@ -33,16 +43,16 @@ const (
 	Pcx_Versions__PaintbrushForWindows Pcx_Versions = 4
 	Pcx_Versions__V30 Pcx_Versions = 5
 )
-
-type Pcx_Encodings int
-const (
-	Pcx_Encodings__Rle Pcx_Encodings = 1
-)
+var values_Pcx_Versions = map[Pcx_Versions]struct{}{0: {}, 2: {}, 3: {}, 4: {}, 5: {}}
+func (v Pcx_Versions) isDefined() bool {
+	_, ok := values_Pcx_Versions[v]
+	return ok
+}
 type Pcx struct {
 	Hdr *Pcx_Header
 	_io *kaitai.Stream
 	_root *Pcx
-	_parent interface{}
+	_parent kaitai.Struct
 	_raw_Hdr []byte
 	_f_palette256 bool
 	palette256 *Pcx_TPalette256
@@ -52,7 +62,11 @@ func NewPcx() *Pcx {
 	}
 }
 
-func (this *Pcx) Read(io *kaitai.Stream, parent interface{}, root *Pcx) (err error) {
+func (this Pcx) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Pcx) Read(io *kaitai.Stream, parent kaitai.Struct, root *Pcx) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -80,6 +94,7 @@ func (this *Pcx) Palette256() (v *Pcx_TPalette256, err error) {
 	if (this._f_palette256) {
 		return this.palette256, nil
 	}
+	this._f_palette256 = true
 	if ( ((this.Hdr.Version == Pcx_Versions__V30) && (this.Hdr.BitsPerPixel == 8) && (this.Hdr.NumPlanes == 1)) ) {
 		_pos, err := this._io.Pos()
 		if err != nil {
@@ -89,7 +104,7 @@ func (this *Pcx) Palette256() (v *Pcx_TPalette256, err error) {
 		if err != nil {
 			return nil, err
 		}
-		_, err = this._io.Seek(int64((tmp3 - 769)), io.SeekStart)
+		_, err = this._io.Seek(int64(tmp3 - 769), io.SeekStart)
 		if err != nil {
 			return nil, err
 		}
@@ -103,9 +118,7 @@ func (this *Pcx) Palette256() (v *Pcx_TPalette256, err error) {
 		if err != nil {
 			return nil, err
 		}
-		this._f_palette256 = true
 	}
-	this._f_palette256 = true
 	return this.palette256, nil
 }
 
@@ -137,6 +150,10 @@ type Pcx_Header struct {
 func NewPcx_Header() *Pcx_Header {
 	return &Pcx_Header{
 	}
+}
+
+func (this Pcx_Header) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Pcx_Header) Read(io *kaitai.Stream, parent *Pcx, root *Pcx) (err error) {
@@ -248,43 +265,6 @@ func (this *Pcx_Header) Read(io *kaitai.Stream, parent *Pcx, root *Pcx) (err err
  * up writing a 0x0a into this field, so that's what majority
  * of modern software expects to have in this attribute.
  */
-type Pcx_TPalette256 struct {
-	Magic []byte
-	Colors []*Pcx_Rgb
-	_io *kaitai.Stream
-	_root *Pcx
-	_parent *Pcx
-}
-func NewPcx_TPalette256() *Pcx_TPalette256 {
-	return &Pcx_TPalette256{
-	}
-}
-
-func (this *Pcx_TPalette256) Read(io *kaitai.Stream, parent *Pcx, root *Pcx) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp22, err := this._io.ReadBytes(int(1))
-	if err != nil {
-		return err
-	}
-	tmp22 = tmp22
-	this.Magic = tmp22
-	if !(bytes.Equal(this.Magic, []uint8{12})) {
-		return kaitai.NewValidationNotEqualError([]uint8{12}, this.Magic, this._io, "/types/t_palette_256/seq/0")
-	}
-	for i := 0; i < int(256); i++ {
-		_ = i
-		tmp23 := NewPcx_Rgb()
-		err = tmp23.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Colors = append(this.Colors, tmp23)
-	}
-	return err
-}
 type Pcx_Rgb struct {
 	R uint8
 	G uint8
@@ -298,25 +278,70 @@ func NewPcx_Rgb() *Pcx_Rgb {
 	}
 }
 
+func (this Pcx_Rgb) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Pcx_Rgb) Read(io *kaitai.Stream, parent *Pcx_TPalette256, root *Pcx) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
+	tmp22, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.R = tmp22
+	tmp23, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.G = tmp23
 	tmp24, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.R = tmp24
-	tmp25, err := this._io.ReadU1()
+	this.B = tmp24
+	return err
+}
+type Pcx_TPalette256 struct {
+	Magic []byte
+	Colors []*Pcx_Rgb
+	_io *kaitai.Stream
+	_root *Pcx
+	_parent *Pcx
+}
+func NewPcx_TPalette256() *Pcx_TPalette256 {
+	return &Pcx_TPalette256{
+	}
+}
+
+func (this Pcx_TPalette256) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Pcx_TPalette256) Read(io *kaitai.Stream, parent *Pcx, root *Pcx) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp25, err := this._io.ReadBytes(int(1))
 	if err != nil {
 		return err
 	}
-	this.G = tmp25
-	tmp26, err := this._io.ReadU1()
-	if err != nil {
-		return err
+	tmp25 = tmp25
+	this.Magic = tmp25
+	if !(bytes.Equal(this.Magic, []uint8{12})) {
+		return kaitai.NewValidationNotEqualError([]uint8{12}, this.Magic, this._io, "/types/t_palette_256/seq/0")
 	}
-	this.B = tmp26
+	for i := 0; i < int(256); i++ {
+		_ = i
+		tmp26 := NewPcx_Rgb()
+		err = tmp26.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Colors = append(this.Colors, tmp26)
+	}
 	return err
 }

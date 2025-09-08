@@ -32,7 +32,7 @@ end
 function AmlogicEmmcPartitions:_read()
   self.magic = self._io:read_bytes(4)
   if not(self.magic == "\077\080\084\000") then
-    error("not equal, expected " ..  "\077\080\084\000" .. ", but got " .. self.magic)
+    error("not equal, expected " .. "\077\080\084\000" .. ", but got " .. self.magic)
   end
   self.version = str_decode.decode(KaitaiStream.bytes_terminate(self._io:read_bytes(12), 0, false), "UTF-8")
   self.num_partitions = self._io:read_s4le()
@@ -63,7 +63,7 @@ AmlogicEmmcPartitions.Partition = class.class(KaitaiStruct)
 function AmlogicEmmcPartitions.Partition:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -85,7 +85,7 @@ AmlogicEmmcPartitions.Partition.PartFlags = class.class(KaitaiStruct)
 function AmlogicEmmcPartitions.Partition.PartFlags:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 

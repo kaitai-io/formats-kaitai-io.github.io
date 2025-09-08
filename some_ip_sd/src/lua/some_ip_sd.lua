@@ -4,10 +4,10 @@
 
 local class = require("class")
 require("kaitaistruct")
+require("some_ip_sd_options")
+require("some_ip_sd_entries")
 local stringstream = require("string_stream")
 
-require("some_ip_sd_entries")
-require("some_ip_sd_options")
 -- 
 -- The main tasks of the Service Discovery Protocol are communicating the
 -- availability of functional entities called services in the in-vehicle
@@ -48,7 +48,7 @@ SomeIpSd.SdFlags = class.class(KaitaiStruct)
 function SomeIpSd.SdFlags:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 

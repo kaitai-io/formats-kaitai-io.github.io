@@ -58,9 +58,9 @@ namespace Kaitai
         private void _read()
         {
             _magic = m_io.ReadBytes(2);
-            if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 31, 139 }) == 0)))
+            if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 31, 139 }) == 0)))
             {
-                throw new ValidationNotEqualError(new byte[] { 31, 139 }, Magic, M_Io, "/seq/0");
+                throw new ValidationNotEqualError(new byte[] { 31, 139 }, _magic, m_io, "/seq/0");
             }
             _compressionMethod = ((CompressionMethods) m_io.ReadU1());
             _flags = new Flags(m_io, this, m_root);
@@ -84,9 +84,70 @@ namespace Kaitai
             if (Flags.HasHeaderCrc) {
                 _headerCrc16 = m_io.ReadU2le();
             }
-            _body = m_io.ReadBytes(((M_Io.Size - M_Io.Pos) - 8));
+            _body = m_io.ReadBytes((M_Io.Size - M_Io.Pos) - 8);
             _bodyCrc32 = m_io.ReadU4le();
             _lenUncompressed = m_io.ReadU4le();
+        }
+        public partial class ExtraFlagsDeflate : KaitaiStruct
+        {
+            public static ExtraFlagsDeflate FromFile(string fileName)
+            {
+                return new ExtraFlagsDeflate(new KaitaiStream(fileName));
+            }
+
+
+            public enum CompressionStrengths
+            {
+                Best = 2,
+                Fast = 4,
+            }
+            public ExtraFlagsDeflate(KaitaiStream p__io, Gzip p__parent = null, Gzip p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _compressionStrength = ((CompressionStrengths) m_io.ReadU1());
+            }
+            private CompressionStrengths _compressionStrength;
+            private Gzip m_root;
+            private Gzip m_parent;
+            public CompressionStrengths CompressionStrength { get { return _compressionStrength; } }
+            public Gzip M_Root { get { return m_root; } }
+            public Gzip M_Parent { get { return m_parent; } }
+        }
+        public partial class Extras : KaitaiStruct
+        {
+            public static Extras FromFile(string fileName)
+            {
+                return new Extras(new KaitaiStream(fileName));
+            }
+
+            public Extras(KaitaiStream p__io, Gzip p__parent = null, Gzip p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _lenSubfields = m_io.ReadU2le();
+                __raw_subfields = m_io.ReadBytes(LenSubfields);
+                var io___raw_subfields = new KaitaiStream(__raw_subfields);
+                _subfields = new Subfields(io___raw_subfields, this, m_root);
+            }
+            private ushort _lenSubfields;
+            private Subfields _subfields;
+            private Gzip m_root;
+            private Gzip m_parent;
+            private byte[] __raw_subfields;
+            public ushort LenSubfields { get { return _lenSubfields; } }
+            public Subfields Subfields { get { return _subfields; } }
+            public Gzip M_Root { get { return m_root; } }
+            public Gzip M_Parent { get { return m_parent; } }
+            public byte[] M_RawSubfields { get { return __raw_subfields; } }
         }
         public partial class Flags : KaitaiStruct
         {
@@ -140,71 +201,6 @@ namespace Kaitai
             public Gzip M_Root { get { return m_root; } }
             public Gzip M_Parent { get { return m_parent; } }
         }
-        public partial class ExtraFlagsDeflate : KaitaiStruct
-        {
-            public static ExtraFlagsDeflate FromFile(string fileName)
-            {
-                return new ExtraFlagsDeflate(new KaitaiStream(fileName));
-            }
-
-
-            public enum CompressionStrengths
-            {
-                Best = 2,
-                Fast = 4,
-            }
-            public ExtraFlagsDeflate(KaitaiStream p__io, Gzip p__parent = null, Gzip p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _compressionStrength = ((CompressionStrengths) m_io.ReadU1());
-            }
-            private CompressionStrengths _compressionStrength;
-            private Gzip m_root;
-            private Gzip m_parent;
-            public CompressionStrengths CompressionStrength { get { return _compressionStrength; } }
-            public Gzip M_Root { get { return m_root; } }
-            public Gzip M_Parent { get { return m_parent; } }
-        }
-
-        /// <summary>
-        /// Container for many subfields, constrained by size of stream.
-        /// </summary>
-        public partial class Subfields : KaitaiStruct
-        {
-            public static Subfields FromFile(string fileName)
-            {
-                return new Subfields(new KaitaiStream(fileName));
-            }
-
-            public Subfields(KaitaiStream p__io, Gzip.Extras p__parent = null, Gzip p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _entries = new List<Subfield>();
-                {
-                    var i = 0;
-                    while (!m_io.IsEof) {
-                        _entries.Add(new Subfield(m_io, this, m_root));
-                        i++;
-                    }
-                }
-            }
-            private List<Subfield> _entries;
-            private Gzip m_root;
-            private Gzip.Extras m_parent;
-            public List<Subfield> Entries { get { return _entries; } }
-            public Gzip M_Root { get { return m_root; } }
-            public Gzip.Extras M_Parent { get { return m_parent; } }
-        }
 
         /// <summary>
         /// Every subfield follows typical [TLV scheme](https://en.wikipedia.org/wiki/Type-length-value):
@@ -250,14 +246,18 @@ namespace Kaitai
             public Gzip M_Root { get { return m_root; } }
             public Gzip.Subfields M_Parent { get { return m_parent; } }
         }
-        public partial class Extras : KaitaiStruct
+
+        /// <summary>
+        /// Container for many subfields, constrained by size of stream.
+        /// </summary>
+        public partial class Subfields : KaitaiStruct
         {
-            public static Extras FromFile(string fileName)
+            public static Subfields FromFile(string fileName)
             {
-                return new Extras(new KaitaiStream(fileName));
+                return new Subfields(new KaitaiStream(fileName));
             }
 
-            public Extras(KaitaiStream p__io, Gzip p__parent = null, Gzip p__root = null) : base(p__io)
+            public Subfields(KaitaiStream p__io, Gzip.Extras p__parent = null, Gzip p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -265,21 +265,21 @@ namespace Kaitai
             }
             private void _read()
             {
-                _lenSubfields = m_io.ReadU2le();
-                __raw_subfields = m_io.ReadBytes(LenSubfields);
-                var io___raw_subfields = new KaitaiStream(__raw_subfields);
-                _subfields = new Subfields(io___raw_subfields, this, m_root);
+                _entries = new List<Subfield>();
+                {
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _entries.Add(new Subfield(m_io, this, m_root));
+                        i++;
+                    }
+                }
             }
-            private ushort _lenSubfields;
-            private Subfields _subfields;
+            private List<Subfield> _entries;
             private Gzip m_root;
-            private Gzip m_parent;
-            private byte[] __raw_subfields;
-            public ushort LenSubfields { get { return _lenSubfields; } }
-            public Subfields Subfields { get { return _subfields; } }
+            private Gzip.Extras m_parent;
+            public List<Subfield> Entries { get { return _entries; } }
             public Gzip M_Root { get { return m_root; } }
-            public Gzip M_Parent { get { return m_parent; } }
-            public byte[] M_RawSubfields { get { return __raw_subfields; } }
+            public Gzip.Extras M_Parent { get { return m_parent; } }
         }
         private byte[] _magic;
         private CompressionMethods _compressionMethod;

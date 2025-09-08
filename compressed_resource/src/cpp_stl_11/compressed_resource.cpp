@@ -5,7 +5,7 @@
 
 compressed_resource_t::compressed_resource_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, compressed_resource_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     m_header = nullptr;
     _read();
 }
@@ -28,14 +28,14 @@ compressed_resource_t::header_t::header_t(kaitai::kstream* p__io, compressed_res
     m_common_part = nullptr;
     m_type_specific_part_raw_with_io = nullptr;
     m__io__raw_type_specific_part_raw_with_io = nullptr;
-    f_type_specific_part_raw = false;
     f_type_specific_part = false;
+    f_type_specific_part_raw = false;
     _read();
 }
 
 void compressed_resource_t::header_t::_read() {
     m_common_part = std::unique_ptr<common_part_t>(new common_part_t(m__io, this, m__root));
-    m__raw_type_specific_part_raw_with_io = m__io->read_bytes((common_part()->len_header() - 12));
+    m__raw_type_specific_part_raw_with_io = m__io->read_bytes(common_part()->len_header() - 12);
     m__io__raw_type_specific_part_raw_with_io = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_type_specific_part_raw_with_io));
     m_type_specific_part_raw_with_io = std::unique_ptr<bytes_with_io_t>(new bytes_with_io_t(m__io__raw_type_specific_part_raw_with_io.get()));
 }
@@ -57,17 +57,17 @@ compressed_resource_t::header_t::common_part_t::common_part_t(kaitai::kstream* p
 
 void compressed_resource_t::header_t::common_part_t::_read() {
     m_magic = m__io->read_bytes(4);
-    if (!(magic() == std::string("\xA8\x9F\x65\x72", 4))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\xA8\x9F\x65\x72", 4), magic(), _io(), std::string("/types/header/types/common_part/seq/0"));
+    if (!(m_magic == std::string("\xA8\x9F\x65\x72", 4))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\xA8\x9F\x65\x72", 4), m_magic, m__io, std::string("/types/header/types/common_part/seq/0"));
     }
     m_len_header = m__io->read_u2be();
-    if (!(len_header() == 18)) {
-        throw kaitai::validation_not_equal_error<uint16_t>(18, len_header(), _io(), std::string("/types/header/types/common_part/seq/1"));
+    if (!(m_len_header == 18)) {
+        throw kaitai::validation_not_equal_error<uint16_t>(18, m_len_header, m__io, std::string("/types/header/types/common_part/seq/1"));
     }
     m_header_type = m__io->read_u1();
     m_unknown = m__io->read_u1();
-    if (!(unknown() == 1)) {
-        throw kaitai::validation_not_equal_error<uint8_t>(1, unknown(), _io(), std::string("/types/header/types/common_part/seq/3"));
+    if (!(m_unknown == 1)) {
+        throw kaitai::validation_not_equal_error<uint8_t>(1, m_unknown, m__io, std::string("/types/header/types/common_part/seq/3"));
     }
     m_len_decompressed = m__io->read_u4be();
 }
@@ -90,8 +90,8 @@ void compressed_resource_t::header_t::type_specific_part_type_8_t::_read() {
     m_expansion_buffer_size = m__io->read_u1();
     m_decompressor_id = m__io->read_s2be();
     m_reserved = m__io->read_u2be();
-    if (!(reserved() == 0)) {
-        throw kaitai::validation_not_equal_error<uint16_t>(0, reserved(), _io(), std::string("/types/header/types/type_specific_part_type_8/seq/3"));
+    if (!(m_reserved == 0)) {
+        throw kaitai::validation_not_equal_error<uint16_t>(0, m_reserved, m__io, std::string("/types/header/types/type_specific_part_type_8/seq/3"));
     }
 }
 
@@ -128,22 +128,15 @@ void compressed_resource_t::header_t::type_specific_part_type_9_t::_clean_up() {
 std::string compressed_resource_t::header_t::type_specific_part_type_9_t::decompressor_specific_parameters() {
     if (f_decompressor_specific_parameters)
         return m_decompressor_specific_parameters;
-    m_decompressor_specific_parameters = decompressor_specific_parameters_with_io()->data();
     f_decompressor_specific_parameters = true;
+    m_decompressor_specific_parameters = decompressor_specific_parameters_with_io()->data();
     return m_decompressor_specific_parameters;
-}
-
-std::string compressed_resource_t::header_t::type_specific_part_raw() {
-    if (f_type_specific_part_raw)
-        return m_type_specific_part_raw;
-    m_type_specific_part_raw = type_specific_part_raw_with_io()->data();
-    f_type_specific_part_raw = true;
-    return m_type_specific_part_raw;
 }
 
 kaitai::kstruct* compressed_resource_t::header_t::type_specific_part() {
     if (f_type_specific_part)
         return m_type_specific_part.get();
+    f_type_specific_part = true;
     kaitai::kstream *io = type_specific_part_raw_with_io()->_io();
     std::streampos _pos = io->pos();
     io->seek(0);
@@ -161,6 +154,13 @@ kaitai::kstruct* compressed_resource_t::header_t::type_specific_part() {
     }
     }
     io->seek(_pos);
-    f_type_specific_part = true;
     return m_type_specific_part.get();
+}
+
+std::string compressed_resource_t::header_t::type_specific_part_raw() {
+    if (f_type_specific_part_raw)
+        return m_type_specific_part_raw;
+    f_type_specific_part_raw = true;
+    m_type_specific_part_raw = type_specific_part_raw_with_io()->data();
+    return m_type_specific_part_raw;
 }

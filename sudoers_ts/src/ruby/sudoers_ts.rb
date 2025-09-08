@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -20,8 +20,8 @@ class SudoersTs < Kaitai::Struct::Struct
     4 => :ts_type_lockexcl,
   }
   I__TS_TYPE = TS_TYPE.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -34,8 +34,89 @@ class SudoersTs < Kaitai::Struct::Struct
     end
     self
   end
+  class Record < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @version = @_io.read_u2le
+      @len_record = @_io.read_u2le
+      case version
+      when 1
+        _io_payload = @_io.substream(len_record - 4)
+        @payload = RecordV1.new(_io_payload, self, @_root)
+      when 2
+        _io_payload = @_io.substream(len_record - 4)
+        @payload = RecordV2.new(_io_payload, self, @_root)
+      else
+        @payload = @_io.read_bytes(len_record - 4)
+      end
+      self
+    end
+
+    ##
+    # version number of the timestamp_entry struct
+    attr_reader :version
+
+    ##
+    # size of the record in bytes
+    attr_reader :len_record
+    attr_reader :payload
+    attr_reader :_raw_payload
+  end
+  class RecordV1 < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @type = Kaitai::Struct::Stream::resolve_enum(SudoersTs::TS_TYPE, @_io.read_u2le)
+      @flags = TsFlag.new(@_io, self, @_root)
+      @auth_uid = @_io.read_u4le
+      @sid = @_io.read_u4le
+      @ts = Timespec.new(@_io, self, @_root)
+      if type == :ts_type_tty
+        @ttydev = @_io.read_u4le
+      end
+      if type == :ts_type_ppid
+        @ppid = @_io.read_u4le
+      end
+      self
+    end
+
+    ##
+    # record type
+    attr_reader :type
+
+    ##
+    # record flags
+    attr_reader :flags
+
+    ##
+    # user ID that was used for authentication
+    attr_reader :auth_uid
+
+    ##
+    # session ID associated with tty/ppid
+    attr_reader :sid
+
+    ##
+    # time stamp, from a monotonic time source
+    attr_reader :ts
+
+    ##
+    # device number of the terminal associated with the session
+    attr_reader :ttydev
+
+    ##
+    # ID of the parent process
+    attr_reader :ppid
+  end
   class RecordV2 < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -88,8 +169,28 @@ class SudoersTs < Kaitai::Struct::Struct
     # ID of the parent process
     attr_reader :ppid
   end
+  class Timespec < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @sec = @_io.read_s8le
+      @nsec = @_io.read_s8le
+      self
+    end
+
+    ##
+    # seconds
+    attr_reader :sec
+
+    ##
+    # nanoseconds
+    attr_reader :nsec
+  end
   class TsFlag < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -117,109 +218,6 @@ class SudoersTs < Kaitai::Struct::Struct
     ##
     # Reserved (unused) bits
     attr_reader :reserved1
-  end
-  class RecordV1 < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @type = Kaitai::Struct::Stream::resolve_enum(SudoersTs::TS_TYPE, @_io.read_u2le)
-      @flags = TsFlag.new(@_io, self, @_root)
-      @auth_uid = @_io.read_u4le
-      @sid = @_io.read_u4le
-      @ts = Timespec.new(@_io, self, @_root)
-      if type == :ts_type_tty
-        @ttydev = @_io.read_u4le
-      end
-      if type == :ts_type_ppid
-        @ppid = @_io.read_u4le
-      end
-      self
-    end
-
-    ##
-    # record type
-    attr_reader :type
-
-    ##
-    # record flags
-    attr_reader :flags
-
-    ##
-    # user ID that was used for authentication
-    attr_reader :auth_uid
-
-    ##
-    # session ID associated with tty/ppid
-    attr_reader :sid
-
-    ##
-    # time stamp, from a monotonic time source
-    attr_reader :ts
-
-    ##
-    # device number of the terminal associated with the session
-    attr_reader :ttydev
-
-    ##
-    # ID of the parent process
-    attr_reader :ppid
-  end
-  class Timespec < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @sec = @_io.read_s8le
-      @nsec = @_io.read_s8le
-      self
-    end
-
-    ##
-    # seconds
-    attr_reader :sec
-
-    ##
-    # nanoseconds
-    attr_reader :nsec
-  end
-  class Record < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @version = @_io.read_u2le
-      @len_record = @_io.read_u2le
-      case version
-      when 1
-        @_raw_payload = @_io.read_bytes((len_record - 4))
-        _io__raw_payload = Kaitai::Struct::Stream.new(@_raw_payload)
-        @payload = RecordV1.new(_io__raw_payload, self, @_root)
-      when 2
-        @_raw_payload = @_io.read_bytes((len_record - 4))
-        _io__raw_payload = Kaitai::Struct::Stream.new(@_raw_payload)
-        @payload = RecordV2.new(_io__raw_payload, self, @_root)
-      else
-        @payload = @_io.read_bytes((len_record - 4))
-      end
-      self
-    end
-
-    ##
-    # version number of the timestamp_entry struct
-    attr_reader :version
-
-    ##
-    # size of the record in bytes
-    attr_reader :len_record
-    attr_reader :payload
-    attr_reader :_raw_payload
   end
   attr_reader :records
 end

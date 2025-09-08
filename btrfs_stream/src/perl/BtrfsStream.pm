@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Encode;
 
 ########################################################################
@@ -18,30 +18,6 @@ sub from_file {
     binmode($fd);
     return new($class, IO::KaitaiStruct::Stream->new($fd));
 }
-
-our $COMMAND_UNSPEC = 0;
-our $COMMAND_SUBVOL = 1;
-our $COMMAND_SNAPSHOT = 2;
-our $COMMAND_MKFILE = 3;
-our $COMMAND_MKDIR = 4;
-our $COMMAND_MKNOD = 5;
-our $COMMAND_MKFIFO = 6;
-our $COMMAND_MKSOCK = 7;
-our $COMMAND_SYMLINK = 8;
-our $COMMAND_RENAME = 9;
-our $COMMAND_LINK = 10;
-our $COMMAND_UNLINK = 11;
-our $COMMAND_RMDIR = 12;
-our $COMMAND_SET_XATTR = 13;
-our $COMMAND_REMOVE_XATTR = 14;
-our $COMMAND_WRITE = 15;
-our $COMMAND_CLONE = 16;
-our $COMMAND_TRUNCATE = 17;
-our $COMMAND_CHMOD = 18;
-our $COMMAND_CHOWN = 19;
-our $COMMAND_UTIMES = 20;
-our $COMMAND_END = 21;
-our $COMMAND_UPDATE_EXTENT = 22;
 
 our $ATTRIBUTE_UNSPEC = 0;
 our $ATTRIBUTE_UUID = 1;
@@ -69,13 +45,37 @@ our $ATTRIBUTE_CLONE_PATH = 22;
 our $ATTRIBUTE_CLONE_OFFSET = 23;
 our $ATTRIBUTE_CLONE_LEN = 24;
 
+our $COMMAND_UNSPEC = 0;
+our $COMMAND_SUBVOL = 1;
+our $COMMAND_SNAPSHOT = 2;
+our $COMMAND_MKFILE = 3;
+our $COMMAND_MKDIR = 4;
+our $COMMAND_MKNOD = 5;
+our $COMMAND_MKFIFO = 6;
+our $COMMAND_MKSOCK = 7;
+our $COMMAND_SYMLINK = 8;
+our $COMMAND_RENAME = 9;
+our $COMMAND_LINK = 10;
+our $COMMAND_UNLINK = 11;
+our $COMMAND_RMDIR = 12;
+our $COMMAND_SET_XATTR = 13;
+our $COMMAND_REMOVE_XATTR = 14;
+our $COMMAND_WRITE = 15;
+our $COMMAND_CLONE = 16;
+our $COMMAND_TRUNCATE = 17;
+our $COMMAND_CHMOD = 18;
+our $COMMAND_CHOWN = 19;
+our $COMMAND_UTIMES = 20;
+our $COMMAND_END = 21;
+our $COMMAND_UPDATE_EXTENT = 22;
+
 sub new {
     my ($class, $_io, $_parent, $_root) = @_;
     my $self = IO::KaitaiStruct::Struct->new($_io);
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -86,7 +86,7 @@ sub _read {
     my ($self) = @_;
 
     $self->{header} = BtrfsStream::SendStreamHeader->new($self->{_io}, $self, $self->{_root});
-    $self->{commands} = ();
+    $self->{commands} = [];
     while (!$self->{_io}->is_eof()) {
         push @{$self->{commands}}, BtrfsStream::SendCommand->new($self->{_io}, $self, $self->{_root});
     }
@@ -100,50 +100,6 @@ sub header {
 sub commands {
     my ($self) = @_;
     return $self->{commands};
-}
-
-########################################################################
-package BtrfsStream::SendStreamHeader;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{magic} = $self->{_io}->read_bytes(13);
-    $self->{version} = $self->{_io}->read_u4le();
-}
-
-sub magic {
-    my ($self) = @_;
-    return $self->{magic};
-}
-
-sub version {
-    my ($self) = @_;
-    return $self->{version};
 }
 
 ########################################################################
@@ -166,7 +122,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -210,228 +166,6 @@ sub _raw_data {
 }
 
 ########################################################################
-package BtrfsStream::SendCommand::Tlv;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{type} = $self->{_io}->read_u2le();
-    $self->{length} = $self->{_io}->read_u2le();
-    my $_on = $self->type();
-    if ($_on == $BtrfsStream::ATTRIBUTE_CTRANSID) {
-        $self->{value} = $self->{_io}->read_u8le();
-    }
-    elsif ($_on == $BtrfsStream::ATTRIBUTE_SIZE) {
-        $self->{value} = $self->{_io}->read_u8le();
-    }
-    elsif ($_on == $BtrfsStream::ATTRIBUTE_CLONE_UUID) {
-        $self->{_raw_value} = $self->{_io}->read_bytes($self->length());
-        my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
-        $self->{value} = BtrfsStream::SendCommand::Uuid->new($io__raw_value, $self, $self->{_root});
-    }
-    elsif ($_on == $BtrfsStream::ATTRIBUTE_FILE_OFFSET) {
-        $self->{value} = $self->{_io}->read_u8le();
-    }
-    elsif ($_on == $BtrfsStream::ATTRIBUTE_OTIME) {
-        $self->{_raw_value} = $self->{_io}->read_bytes($self->length());
-        my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
-        $self->{value} = BtrfsStream::SendCommand::Timespec->new($io__raw_value, $self, $self->{_root});
-    }
-    elsif ($_on == $BtrfsStream::ATTRIBUTE_UID) {
-        $self->{value} = $self->{_io}->read_u8le();
-    }
-    elsif ($_on == $BtrfsStream::ATTRIBUTE_ATIME) {
-        $self->{_raw_value} = $self->{_io}->read_bytes($self->length());
-        my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
-        $self->{value} = BtrfsStream::SendCommand::Timespec->new($io__raw_value, $self, $self->{_root});
-    }
-    elsif ($_on == $BtrfsStream::ATTRIBUTE_CTIME) {
-        $self->{_raw_value} = $self->{_io}->read_bytes($self->length());
-        my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
-        $self->{value} = BtrfsStream::SendCommand::Timespec->new($io__raw_value, $self, $self->{_root});
-    }
-    elsif ($_on == $BtrfsStream::ATTRIBUTE_UUID) {
-        $self->{_raw_value} = $self->{_io}->read_bytes($self->length());
-        my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
-        $self->{value} = BtrfsStream::SendCommand::Uuid->new($io__raw_value, $self, $self->{_root});
-    }
-    elsif ($_on == $BtrfsStream::ATTRIBUTE_CLONE_LEN) {
-        $self->{value} = $self->{_io}->read_u8le();
-    }
-    elsif ($_on == $BtrfsStream::ATTRIBUTE_XATTR_NAME) {
-        $self->{_raw_value} = $self->{_io}->read_bytes($self->length());
-        my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
-        $self->{value} = BtrfsStream::SendCommand::String->new($io__raw_value, $self, $self->{_root});
-    }
-    elsif ($_on == $BtrfsStream::ATTRIBUTE_CLONE_CTRANSID) {
-        $self->{value} = $self->{_io}->read_u8le();
-    }
-    elsif ($_on == $BtrfsStream::ATTRIBUTE_MODE) {
-        $self->{value} = $self->{_io}->read_u8le();
-    }
-    elsif ($_on == $BtrfsStream::ATTRIBUTE_MTIME) {
-        $self->{_raw_value} = $self->{_io}->read_bytes($self->length());
-        my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
-        $self->{value} = BtrfsStream::SendCommand::Timespec->new($io__raw_value, $self, $self->{_root});
-    }
-    elsif ($_on == $BtrfsStream::ATTRIBUTE_PATH_LINK) {
-        $self->{_raw_value} = $self->{_io}->read_bytes($self->length());
-        my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
-        $self->{value} = BtrfsStream::SendCommand::String->new($io__raw_value, $self, $self->{_root});
-    }
-    elsif ($_on == $BtrfsStream::ATTRIBUTE_RDEV) {
-        $self->{value} = $self->{_io}->read_u8le();
-    }
-    elsif ($_on == $BtrfsStream::ATTRIBUTE_PATH_TO) {
-        $self->{_raw_value} = $self->{_io}->read_bytes($self->length());
-        my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
-        $self->{value} = BtrfsStream::SendCommand::String->new($io__raw_value, $self, $self->{_root});
-    }
-    elsif ($_on == $BtrfsStream::ATTRIBUTE_PATH) {
-        $self->{_raw_value} = $self->{_io}->read_bytes($self->length());
-        my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
-        $self->{value} = BtrfsStream::SendCommand::String->new($io__raw_value, $self, $self->{_root});
-    }
-    elsif ($_on == $BtrfsStream::ATTRIBUTE_CLONE_OFFSET) {
-        $self->{value} = $self->{_io}->read_u8le();
-    }
-    elsif ($_on == $BtrfsStream::ATTRIBUTE_GID) {
-        $self->{value} = $self->{_io}->read_u8le();
-    }
-    elsif ($_on == $BtrfsStream::ATTRIBUTE_CLONE_PATH) {
-        $self->{_raw_value} = $self->{_io}->read_bytes($self->length());
-        my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
-        $self->{value} = BtrfsStream::SendCommand::String->new($io__raw_value, $self, $self->{_root});
-    }
-    else {
-        $self->{value} = $self->{_io}->read_bytes($self->length());
-    }
-}
-
-sub type {
-    my ($self) = @_;
-    return $self->{type};
-}
-
-sub length {
-    my ($self) = @_;
-    return $self->{length};
-}
-
-sub value {
-    my ($self) = @_;
-    return $self->{value};
-}
-
-sub _raw_value {
-    my ($self) = @_;
-    return $self->{_raw_value};
-}
-
-########################################################################
-package BtrfsStream::SendCommand::Uuid;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{uuid} = $self->{_io}->read_bytes(16);
-}
-
-sub uuid {
-    my ($self) = @_;
-    return $self->{uuid};
-}
-
-########################################################################
-package BtrfsStream::SendCommand::Tlvs;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{tlv} = ();
-    while (!$self->{_io}->is_eof()) {
-        push @{$self->{tlv}}, BtrfsStream::SendCommand::Tlv->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub tlv {
-    my ($self) = @_;
-    return $self->{tlv};
-}
-
-########################################################################
 package BtrfsStream::SendCommand::String;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -451,7 +185,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -489,7 +223,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -511,6 +245,272 @@ sub ts_sec {
 sub ts_nsec {
     my ($self) = @_;
     return $self->{ts_nsec};
+}
+
+########################################################################
+package BtrfsStream::SendCommand::Tlv;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{type} = $self->{_io}->read_u2le();
+    $self->{length} = $self->{_io}->read_u2le();
+    my $_on = $self->type();
+    if ($_on == $BtrfsStream::ATTRIBUTE_ATIME) {
+        $self->{_raw_value} = $self->{_io}->read_bytes($self->length());
+        my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
+        $self->{value} = BtrfsStream::SendCommand::Timespec->new($io__raw_value, $self, $self->{_root});
+    }
+    elsif ($_on == $BtrfsStream::ATTRIBUTE_CLONE_CTRANSID) {
+        $self->{value} = $self->{_io}->read_u8le();
+    }
+    elsif ($_on == $BtrfsStream::ATTRIBUTE_CLONE_LEN) {
+        $self->{value} = $self->{_io}->read_u8le();
+    }
+    elsif ($_on == $BtrfsStream::ATTRIBUTE_CLONE_OFFSET) {
+        $self->{value} = $self->{_io}->read_u8le();
+    }
+    elsif ($_on == $BtrfsStream::ATTRIBUTE_CLONE_PATH) {
+        $self->{_raw_value} = $self->{_io}->read_bytes($self->length());
+        my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
+        $self->{value} = BtrfsStream::SendCommand::String->new($io__raw_value, $self, $self->{_root});
+    }
+    elsif ($_on == $BtrfsStream::ATTRIBUTE_CLONE_UUID) {
+        $self->{_raw_value} = $self->{_io}->read_bytes($self->length());
+        my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
+        $self->{value} = BtrfsStream::SendCommand::Uuid->new($io__raw_value, $self, $self->{_root});
+    }
+    elsif ($_on == $BtrfsStream::ATTRIBUTE_CTIME) {
+        $self->{_raw_value} = $self->{_io}->read_bytes($self->length());
+        my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
+        $self->{value} = BtrfsStream::SendCommand::Timespec->new($io__raw_value, $self, $self->{_root});
+    }
+    elsif ($_on == $BtrfsStream::ATTRIBUTE_CTRANSID) {
+        $self->{value} = $self->{_io}->read_u8le();
+    }
+    elsif ($_on == $BtrfsStream::ATTRIBUTE_FILE_OFFSET) {
+        $self->{value} = $self->{_io}->read_u8le();
+    }
+    elsif ($_on == $BtrfsStream::ATTRIBUTE_GID) {
+        $self->{value} = $self->{_io}->read_u8le();
+    }
+    elsif ($_on == $BtrfsStream::ATTRIBUTE_MODE) {
+        $self->{value} = $self->{_io}->read_u8le();
+    }
+    elsif ($_on == $BtrfsStream::ATTRIBUTE_MTIME) {
+        $self->{_raw_value} = $self->{_io}->read_bytes($self->length());
+        my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
+        $self->{value} = BtrfsStream::SendCommand::Timespec->new($io__raw_value, $self, $self->{_root});
+    }
+    elsif ($_on == $BtrfsStream::ATTRIBUTE_OTIME) {
+        $self->{_raw_value} = $self->{_io}->read_bytes($self->length());
+        my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
+        $self->{value} = BtrfsStream::SendCommand::Timespec->new($io__raw_value, $self, $self->{_root});
+    }
+    elsif ($_on == $BtrfsStream::ATTRIBUTE_PATH) {
+        $self->{_raw_value} = $self->{_io}->read_bytes($self->length());
+        my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
+        $self->{value} = BtrfsStream::SendCommand::String->new($io__raw_value, $self, $self->{_root});
+    }
+    elsif ($_on == $BtrfsStream::ATTRIBUTE_PATH_LINK) {
+        $self->{_raw_value} = $self->{_io}->read_bytes($self->length());
+        my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
+        $self->{value} = BtrfsStream::SendCommand::String->new($io__raw_value, $self, $self->{_root});
+    }
+    elsif ($_on == $BtrfsStream::ATTRIBUTE_PATH_TO) {
+        $self->{_raw_value} = $self->{_io}->read_bytes($self->length());
+        my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
+        $self->{value} = BtrfsStream::SendCommand::String->new($io__raw_value, $self, $self->{_root});
+    }
+    elsif ($_on == $BtrfsStream::ATTRIBUTE_RDEV) {
+        $self->{value} = $self->{_io}->read_u8le();
+    }
+    elsif ($_on == $BtrfsStream::ATTRIBUTE_SIZE) {
+        $self->{value} = $self->{_io}->read_u8le();
+    }
+    elsif ($_on == $BtrfsStream::ATTRIBUTE_UID) {
+        $self->{value} = $self->{_io}->read_u8le();
+    }
+    elsif ($_on == $BtrfsStream::ATTRIBUTE_UUID) {
+        $self->{_raw_value} = $self->{_io}->read_bytes($self->length());
+        my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
+        $self->{value} = BtrfsStream::SendCommand::Uuid->new($io__raw_value, $self, $self->{_root});
+    }
+    elsif ($_on == $BtrfsStream::ATTRIBUTE_XATTR_NAME) {
+        $self->{_raw_value} = $self->{_io}->read_bytes($self->length());
+        my $io__raw_value = IO::KaitaiStruct::Stream->new($self->{_raw_value});
+        $self->{value} = BtrfsStream::SendCommand::String->new($io__raw_value, $self, $self->{_root});
+    }
+    else {
+        $self->{value} = $self->{_io}->read_bytes($self->length());
+    }
+}
+
+sub type {
+    my ($self) = @_;
+    return $self->{type};
+}
+
+sub length {
+    my ($self) = @_;
+    return $self->{length};
+}
+
+sub value {
+    my ($self) = @_;
+    return $self->{value};
+}
+
+sub _raw_value {
+    my ($self) = @_;
+    return $self->{_raw_value};
+}
+
+########################################################################
+package BtrfsStream::SendCommand::Tlvs;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{tlv} = [];
+    while (!$self->{_io}->is_eof()) {
+        push @{$self->{tlv}}, BtrfsStream::SendCommand::Tlv->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub tlv {
+    my ($self) = @_;
+    return $self->{tlv};
+}
+
+########################################################################
+package BtrfsStream::SendCommand::Uuid;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{uuid} = $self->{_io}->read_bytes(16);
+}
+
+sub uuid {
+    my ($self) = @_;
+    return $self->{uuid};
+}
+
+########################################################################
+package BtrfsStream::SendStreamHeader;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{magic} = $self->{_io}->read_bytes(13);
+    $self->{version} = $self->{_io}->read_u4le();
+}
+
+sub magic {
+    my ($self) = @_;
+    return $self->{magic};
+}
+
+sub version {
+    my ($self) = @_;
+    return $self->{version};
 }
 
 1;

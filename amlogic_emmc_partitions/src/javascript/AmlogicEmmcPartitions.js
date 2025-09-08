@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.AmlogicEmmcPartitions = factory(root.KaitaiStream);
+    factory(root.AmlogicEmmcPartitions || (root.AmlogicEmmcPartitions = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (AmlogicEmmcPartitions_, KaitaiStream) {
 /**
  * This is an unnamed and undocumented partition table format implemented by
  * the bootloader and kernel that Amlogic provides for their Linux SoCs (Meson
@@ -34,8 +34,8 @@ var AmlogicEmmcPartitions = (function() {
   }
   AmlogicEmmcPartitions.prototype._read = function() {
     this.magic = this._io.readBytes(4);
-    if (!((KaitaiStream.byteArrayCompare(this.magic, [77, 80, 84, 0]) == 0))) {
-      throw new KaitaiStream.ValidationNotEqualError([77, 80, 84, 0], this.magic, this._io, "/seq/0");
+    if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([77, 80, 84, 0])) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([77, 80, 84, 0]), this.magic, this._io, "/seq/0");
     }
     this.version = KaitaiStream.bytesToStr(KaitaiStream.bytesTerminate(this._io.readBytes(12), 0, false), "UTF-8");
     this.numPartitions = this._io.readS4le();
@@ -56,7 +56,7 @@ var AmlogicEmmcPartitions = (function() {
     function Partition(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -74,7 +74,7 @@ var AmlogicEmmcPartitions = (function() {
       function PartFlags(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -106,5 +106,5 @@ var AmlogicEmmcPartitions = (function() {
 
   return AmlogicEmmcPartitions;
 })();
-return AmlogicEmmcPartitions;
-}));
+AmlogicEmmcPartitions_.AmlogicEmmcPartitions = AmlogicEmmcPartitions;
+});

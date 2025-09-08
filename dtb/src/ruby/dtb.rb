@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -41,45 +41,42 @@ class Dtb < Kaitai::Struct::Struct
     9 => :fdt_end,
   }
   I__FDT = FDT.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
     @magic = @_io.read_bytes(4)
-    raise Kaitai::Struct::ValidationNotEqualError.new([208, 13, 254, 237].pack('C*'), magic, _io, "/seq/0") if not magic == [208, 13, 254, 237].pack('C*')
+    raise Kaitai::Struct::ValidationNotEqualError.new([208, 13, 254, 237].pack('C*'), @magic, @_io, "/seq/0") if not @magic == [208, 13, 254, 237].pack('C*')
     @total_size = @_io.read_u4be
     @ofs_structure_block = @_io.read_u4be
     @ofs_strings_block = @_io.read_u4be
     @ofs_memory_reservation_block = @_io.read_u4be
     @version = @_io.read_u4be
     @min_compatible_version = @_io.read_u4be
-    raise Kaitai::Struct::ValidationGreaterThanError.new(version, min_compatible_version, _io, "/seq/6") if not min_compatible_version <= version
+    raise Kaitai::Struct::ValidationGreaterThanError.new(version, @min_compatible_version, @_io, "/seq/6") if not @min_compatible_version <= version
     @boot_cpuid_phys = @_io.read_u4be
     @len_strings_block = @_io.read_u4be
     @len_structure_block = @_io.read_u4be
     self
   end
-  class MemoryBlock < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  class FdtBeginNode < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @entries = []
-      i = 0
-      while not @_io.eof?
-        @entries << MemoryBlockEntry.new(@_io, self, @_root)
-        i += 1
-      end
+      @name = (@_io.read_bytes_term(0, false, true, true)).force_encoding("ASCII").encode('UTF-8')
+      @padding = @_io.read_bytes(-(_io.pos) % 4)
       self
     end
-    attr_reader :entries
+    attr_reader :name
+    attr_reader :padding
   end
   class FdtBlock < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -96,8 +93,71 @@ class Dtb < Kaitai::Struct::Struct
     end
     attr_reader :nodes
   end
+  class FdtNode < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @type = Kaitai::Struct::Stream::resolve_enum(Dtb::FDT, @_io.read_u4be)
+      case type
+      when :fdt_begin_node
+        @body = FdtBeginNode.new(@_io, self, @_root)
+      when :fdt_prop
+        @body = FdtProp.new(@_io, self, @_root)
+      end
+      self
+    end
+    attr_reader :type
+    attr_reader :body
+  end
+  class FdtProp < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @len_property = @_io.read_u4be
+      @ofs_name = @_io.read_u4be
+      @property = @_io.read_bytes(len_property)
+      @padding = @_io.read_bytes(-(_io.pos) % 4)
+      self
+    end
+    def name
+      return @name unless @name.nil?
+      io = _root.strings_block._io
+      _pos = io.pos
+      io.seek(ofs_name)
+      @name = (io.read_bytes_term(0, false, true, true)).force_encoding("ASCII").encode('UTF-8')
+      io.seek(_pos)
+      @name
+    end
+    attr_reader :len_property
+    attr_reader :ofs_name
+    attr_reader :property
+    attr_reader :padding
+  end
+  class MemoryBlock < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @entries = []
+      i = 0
+      while not @_io.eof?
+        @entries << MemoryBlockEntry.new(@_io, self, @_root)
+        i += 1
+      end
+      self
+    end
+    attr_reader :entries
+  end
   class MemoryBlockEntry < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -117,7 +177,7 @@ class Dtb < Kaitai::Struct::Struct
     attr_reader :size
   end
   class Strings < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -126,102 +186,39 @@ class Dtb < Kaitai::Struct::Struct
       @strings = []
       i = 0
       while not @_io.eof?
-        @strings << (@_io.read_bytes_term(0, false, true, true)).force_encoding("ASCII")
+        @strings << (@_io.read_bytes_term(0, false, true, true)).force_encoding("ASCII").encode('UTF-8')
         i += 1
       end
       self
     end
     attr_reader :strings
   end
-  class FdtProp < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @len_property = @_io.read_u4be
-      @ofs_name = @_io.read_u4be
-      @property = @_io.read_bytes(len_property)
-      @padding = @_io.read_bytes((-(_io.pos) % 4))
-      self
-    end
-    def name
-      return @name unless @name.nil?
-      io = _root.strings_block._io
-      _pos = io.pos
-      io.seek(ofs_name)
-      @name = (io.read_bytes_term(0, false, true, true)).force_encoding("ASCII")
-      io.seek(_pos)
-      @name
-    end
-    attr_reader :len_property
-    attr_reader :ofs_name
-    attr_reader :property
-    attr_reader :padding
-  end
-  class FdtNode < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @type = Kaitai::Struct::Stream::resolve_enum(Dtb::FDT, @_io.read_u4be)
-      case type
-      when :fdt_begin_node
-        @body = FdtBeginNode.new(@_io, self, @_root)
-      when :fdt_prop
-        @body = FdtProp.new(@_io, self, @_root)
-      end
-      self
-    end
-    attr_reader :type
-    attr_reader :body
-  end
-  class FdtBeginNode < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @name = (@_io.read_bytes_term(0, false, true, true)).force_encoding("ASCII")
-      @padding = @_io.read_bytes((-(_io.pos) % 4))
-      self
-    end
-    attr_reader :name
-    attr_reader :padding
-  end
   def memory_reservation_block
     return @memory_reservation_block unless @memory_reservation_block.nil?
     _pos = @_io.pos
     @_io.seek(ofs_memory_reservation_block)
-    @_raw_memory_reservation_block = @_io.read_bytes((ofs_structure_block - ofs_memory_reservation_block))
-    _io__raw_memory_reservation_block = Kaitai::Struct::Stream.new(@_raw_memory_reservation_block)
-    @memory_reservation_block = MemoryBlock.new(_io__raw_memory_reservation_block, self, @_root)
+    _io_memory_reservation_block = @_io.substream(ofs_structure_block - ofs_memory_reservation_block)
+    @memory_reservation_block = MemoryBlock.new(_io_memory_reservation_block, self, @_root)
     @_io.seek(_pos)
     @memory_reservation_block
-  end
-  def structure_block
-    return @structure_block unless @structure_block.nil?
-    _pos = @_io.pos
-    @_io.seek(ofs_structure_block)
-    @_raw_structure_block = @_io.read_bytes(len_structure_block)
-    _io__raw_structure_block = Kaitai::Struct::Stream.new(@_raw_structure_block)
-    @structure_block = FdtBlock.new(_io__raw_structure_block, self, @_root)
-    @_io.seek(_pos)
-    @structure_block
   end
   def strings_block
     return @strings_block unless @strings_block.nil?
     _pos = @_io.pos
     @_io.seek(ofs_strings_block)
-    @_raw_strings_block = @_io.read_bytes(len_strings_block)
-    _io__raw_strings_block = Kaitai::Struct::Stream.new(@_raw_strings_block)
-    @strings_block = Strings.new(_io__raw_strings_block, self, @_root)
+    _io_strings_block = @_io.substream(len_strings_block)
+    @strings_block = Strings.new(_io_strings_block, self, @_root)
     @_io.seek(_pos)
     @strings_block
+  end
+  def structure_block
+    return @structure_block unless @structure_block.nil?
+    _pos = @_io.pos
+    @_io.seek(ofs_structure_block)
+    _io_structure_block = @_io.substream(len_structure_block)
+    @structure_block = FdtBlock.new(_io_structure_block, self, @_root)
+    @_io.seek(_pos)
+    @structure_block
   end
   attr_reader :magic
   attr_reader :total_size
@@ -234,6 +231,6 @@ class Dtb < Kaitai::Struct::Struct
   attr_reader :len_strings_block
   attr_reader :len_structure_block
   attr_reader :_raw_memory_reservation_block
-  attr_reader :_raw_structure_block
   attr_reader :_raw_strings_block
+  attr_reader :_raw_structure_block
 end

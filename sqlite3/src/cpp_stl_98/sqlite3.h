@@ -3,15 +3,17 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class sqlite3_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include "vlq_base128_be.h"
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
-class vlq_base128_be_t;
 
 /**
  * SQLite3 is a popular serverless SQL engine, implemented as a library
@@ -33,27 +35,41 @@ class vlq_base128_be_t;
 class sqlite3_t : public kaitai::kstruct {
 
 public:
-    class serial_t;
     class btree_page_t;
+    class cell_index_interior_t;
     class cell_index_leaf_t;
-    class serials_t;
-    class cell_table_leaf_t;
     class cell_payload_t;
     class cell_table_interior_t;
-    class cell_index_interior_t;
+    class cell_table_leaf_t;
     class column_content_t;
     class ref_cell_t;
-
-    enum versions_t {
-        VERSIONS_LEGACY = 1,
-        VERSIONS_WAL = 2
-    };
+    class serial_t;
+    class serials_t;
 
     enum encodings_t {
         ENCODINGS_UTF_8 = 1,
         ENCODINGS_UTF_16LE = 2,
         ENCODINGS_UTF_16BE = 3
     };
+    static bool _is_defined_encodings_t(encodings_t v);
+
+private:
+    static const std::set<encodings_t> _values_encodings_t;
+    static std::set<encodings_t> _build_values_encodings_t();
+
+public:
+
+    enum versions_t {
+        VERSIONS_LEGACY = 1,
+        VERSIONS_WAL = 2
+    };
+    static bool _is_defined_versions_t(versions_t v);
+
+private:
+    static const std::set<versions_t> _values_versions_t;
+    static std::set<versions_t> _build_values_versions_t();
+
+public:
 
     sqlite3_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, sqlite3_t* p__root = 0);
 
@@ -63,57 +79,6 @@ private:
 
 public:
     ~sqlite3_t();
-
-    class serial_t : public kaitai::kstruct {
-
-    public:
-
-        serial_t(kaitai::kstream* p__io, sqlite3_t::serials_t* p__parent = 0, sqlite3_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~serial_t();
-
-    private:
-        bool f_is_blob;
-        bool m_is_blob;
-
-    public:
-        bool is_blob();
-
-    private:
-        bool f_is_string;
-        bool m_is_string;
-
-    public:
-        bool is_string();
-
-    private:
-        bool f_len_content;
-        int32_t m_len_content;
-        bool n_len_content;
-
-    public:
-        bool _is_null_len_content() { len_content(); return n_len_content; };
-
-    private:
-
-    public:
-        int32_t len_content();
-
-    private:
-        vlq_base128_be_t* m_code;
-        sqlite3_t* m__root;
-        sqlite3_t::serials_t* m__parent;
-
-    public:
-        vlq_base128_be_t* code() const { return m_code; }
-        sqlite3_t* _root() const { return m__root; }
-        sqlite3_t::serials_t* _parent() const { return m__parent; }
-    };
 
     class btree_page_t : public kaitai::kstruct {
 
@@ -161,6 +126,42 @@ public:
      * \sa https://www.sqlite.org/fileformat.html#b_tree_pages Source
      */
 
+    class cell_index_interior_t : public kaitai::kstruct {
+
+    public:
+
+        cell_index_interior_t(kaitai::kstream* p__io, sqlite3_t::ref_cell_t* p__parent = 0, sqlite3_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~cell_index_interior_t();
+
+    private:
+        uint32_t m_left_child_page;
+        vlq_base128_be_t* m_len_payload;
+        cell_payload_t* m_payload;
+        sqlite3_t* m__root;
+        sqlite3_t::ref_cell_t* m__parent;
+        std::string m__raw_payload;
+        kaitai::kstream* m__io__raw_payload;
+
+    public:
+        uint32_t left_child_page() const { return m_left_child_page; }
+        vlq_base128_be_t* len_payload() const { return m_len_payload; }
+        cell_payload_t* payload() const { return m_payload; }
+        sqlite3_t* _root() const { return m__root; }
+        sqlite3_t::ref_cell_t* _parent() const { return m__parent; }
+        std::string _raw_payload() const { return m__raw_payload; }
+        kaitai::kstream* _io__raw_payload() const { return m__io__raw_payload; }
+    };
+
+    /**
+     * \sa https://www.sqlite.org/fileformat.html#b_tree_pages Source
+     */
+
     class cell_index_leaf_t : public kaitai::kstruct {
 
     public:
@@ -184,66 +185,6 @@ public:
 
     public:
         vlq_base128_be_t* len_payload() const { return m_len_payload; }
-        cell_payload_t* payload() const { return m_payload; }
-        sqlite3_t* _root() const { return m__root; }
-        sqlite3_t::ref_cell_t* _parent() const { return m__parent; }
-        std::string _raw_payload() const { return m__raw_payload; }
-        kaitai::kstream* _io__raw_payload() const { return m__io__raw_payload; }
-    };
-
-    class serials_t : public kaitai::kstruct {
-
-    public:
-
-        serials_t(kaitai::kstream* p__io, sqlite3_t::cell_payload_t* p__parent = 0, sqlite3_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~serials_t();
-
-    private:
-        std::vector<serial_t*>* m_entries;
-        sqlite3_t* m__root;
-        sqlite3_t::cell_payload_t* m__parent;
-
-    public:
-        std::vector<serial_t*>* entries() const { return m_entries; }
-        sqlite3_t* _root() const { return m__root; }
-        sqlite3_t::cell_payload_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * \sa https://www.sqlite.org/fileformat.html#b_tree_pages Source
-     */
-
-    class cell_table_leaf_t : public kaitai::kstruct {
-
-    public:
-
-        cell_table_leaf_t(kaitai::kstream* p__io, sqlite3_t::ref_cell_t* p__parent = 0, sqlite3_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~cell_table_leaf_t();
-
-    private:
-        vlq_base128_be_t* m_len_payload;
-        vlq_base128_be_t* m_row_id;
-        cell_payload_t* m_payload;
-        sqlite3_t* m__root;
-        sqlite3_t::ref_cell_t* m__parent;
-        std::string m__raw_payload;
-        kaitai::kstream* m__io__raw_payload;
-
-    public:
-        vlq_base128_be_t* len_payload() const { return m_len_payload; }
-        vlq_base128_be_t* row_id() const { return m_row_id; }
         cell_payload_t* payload() const { return m_payload; }
         sqlite3_t* _root() const { return m__root; }
         sqlite3_t::ref_cell_t* _parent() const { return m__parent; }
@@ -321,22 +262,22 @@ public:
      * \sa https://www.sqlite.org/fileformat.html#b_tree_pages Source
      */
 
-    class cell_index_interior_t : public kaitai::kstruct {
+    class cell_table_leaf_t : public kaitai::kstruct {
 
     public:
 
-        cell_index_interior_t(kaitai::kstream* p__io, sqlite3_t::ref_cell_t* p__parent = 0, sqlite3_t* p__root = 0);
+        cell_table_leaf_t(kaitai::kstream* p__io, sqlite3_t::ref_cell_t* p__parent = 0, sqlite3_t* p__root = 0);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~cell_index_interior_t();
+        ~cell_table_leaf_t();
 
     private:
-        uint32_t m_left_child_page;
         vlq_base128_be_t* m_len_payload;
+        vlq_base128_be_t* m_row_id;
         cell_payload_t* m_payload;
         sqlite3_t* m__root;
         sqlite3_t::ref_cell_t* m__parent;
@@ -344,8 +285,8 @@ public:
         kaitai::kstream* m__io__raw_payload;
 
     public:
-        uint32_t left_child_page() const { return m_left_child_page; }
         vlq_base128_be_t* len_payload() const { return m_len_payload; }
+        vlq_base128_be_t* row_id() const { return m_row_id; }
         cell_payload_t* payload() const { return m_payload; }
         sqlite3_t* _root() const { return m__root; }
         sqlite3_t::ref_cell_t* _parent() const { return m__parent; }
@@ -438,6 +379,81 @@ public:
         uint16_t ofs_body() const { return m_ofs_body; }
         sqlite3_t* _root() const { return m__root; }
         sqlite3_t::btree_page_t* _parent() const { return m__parent; }
+    };
+
+    class serial_t : public kaitai::kstruct {
+
+    public:
+
+        serial_t(kaitai::kstream* p__io, sqlite3_t::serials_t* p__parent = 0, sqlite3_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~serial_t();
+
+    private:
+        bool f_is_blob;
+        bool m_is_blob;
+
+    public:
+        bool is_blob();
+
+    private:
+        bool f_is_string;
+        bool m_is_string;
+
+    public:
+        bool is_string();
+
+    private:
+        bool f_len_content;
+        int32_t m_len_content;
+        bool n_len_content;
+
+    public:
+        bool _is_null_len_content() { len_content(); return n_len_content; };
+
+    private:
+
+    public:
+        int32_t len_content();
+
+    private:
+        vlq_base128_be_t* m_code;
+        sqlite3_t* m__root;
+        sqlite3_t::serials_t* m__parent;
+
+    public:
+        vlq_base128_be_t* code() const { return m_code; }
+        sqlite3_t* _root() const { return m__root; }
+        sqlite3_t::serials_t* _parent() const { return m__parent; }
+    };
+
+    class serials_t : public kaitai::kstruct {
+
+    public:
+
+        serials_t(kaitai::kstream* p__io, sqlite3_t::cell_payload_t* p__parent = 0, sqlite3_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~serials_t();
+
+    private:
+        std::vector<serial_t*>* m_entries;
+        sqlite3_t* m__root;
+        sqlite3_t::cell_payload_t* m__parent;
+
+    public:
+        std::vector<serial_t*>* entries() const { return m_entries; }
+        sqlite3_t* _root() const { return m__root; }
+        sqlite3_t::cell_payload_t* _parent() const { return m__parent; }
     };
 
 private:

@@ -60,11 +60,11 @@ namespace Kaitai
                 {
                     if (f_body)
                         return _body;
+                    f_body = true;
                     long _pos = m_io.Pos;
                     m_io.Seek(Offset);
                     _body = m_io.ReadBytes(Size);
                     m_io.Seek(_pos);
-                    f_body = true;
                     return _body;
                 }
             }
@@ -113,8 +113,9 @@ namespace Kaitai
             {
                 if (f_filenames)
                     return _filenames;
+                f_filenames = true;
                 long _pos = m_io.Pos;
-                m_io.Seek((Entries[Entries.Count - 1].Offset + Entries[Entries.Count - 1].Size));
+                m_io.Seek(Entries[Entries.Count - 1].Offset + Entries[Entries.Count - 1].Size);
                 __raw_filenames = new List<byte[]>();
                 _filenames = new List<Filename>();
                 for (var i = 0; i < NumFiles; i++)
@@ -124,7 +125,6 @@ namespace Kaitai
                     _filenames.Add(new Filename(io___raw_filenames, this, m_root));
                 }
                 m_io.Seek(_pos);
-                f_filenames = true;
                 return _filenames;
             }
         }

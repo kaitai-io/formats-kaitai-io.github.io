@@ -19,6 +19,11 @@ const (
 	PsxTim_BppType__Bpp16 PsxTim_BppType = 2
 	PsxTim_BppType__Bpp24 PsxTim_BppType = 3
 )
+var values_PsxTim_BppType = map[PsxTim_BppType]struct{}{0: {}, 1: {}, 2: {}, 3: {}}
+func (v PsxTim_BppType) isDefined() bool {
+	_, ok := values_PsxTim_BppType[v]
+	return ok
+}
 type PsxTim struct {
 	Magic []byte
 	Flags uint32
@@ -26,18 +31,22 @@ type PsxTim struct {
 	Img *PsxTim_Bitmap
 	_io *kaitai.Stream
 	_root *PsxTim
-	_parent interface{}
-	_f_hasClut bool
-	hasClut bool
+	_parent kaitai.Struct
 	_f_bpp bool
 	bpp int
+	_f_hasClut bool
+	hasClut bool
 }
 func NewPsxTim() *PsxTim {
 	return &PsxTim{
 	}
 }
 
-func (this *PsxTim) Read(io *kaitai.Stream, parent interface{}, root *PsxTim) (err error) {
+func (this PsxTim) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PsxTim) Read(io *kaitai.Stream, parent kaitai.Struct, root *PsxTim) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -76,21 +85,21 @@ func (this *PsxTim) Read(io *kaitai.Stream, parent interface{}, root *PsxTim) (e
 	this.Img = tmp5
 	return err
 }
-func (this *PsxTim) HasClut() (v bool, err error) {
-	if (this._f_hasClut) {
-		return this.hasClut, nil
-	}
-	this.hasClut = bool((this.Flags & 8) != 0)
-	this._f_hasClut = true
-	return this.hasClut, nil
-}
 func (this *PsxTim) Bpp() (v int, err error) {
 	if (this._f_bpp) {
 		return this.bpp, nil
 	}
-	this.bpp = int((this.Flags & 3))
 	this._f_bpp = true
+	this.bpp = int(this.Flags & 3)
 	return this.bpp, nil
+}
+func (this *PsxTim) HasClut() (v bool, err error) {
+	if (this._f_hasClut) {
+		return this.hasClut, nil
+	}
+	this._f_hasClut = true
+	this.hasClut = bool(this.Flags & 8 != 0)
+	return this.hasClut, nil
 }
 
 /**
@@ -114,6 +123,10 @@ type PsxTim_Bitmap struct {
 func NewPsxTim_Bitmap() *PsxTim_Bitmap {
 	return &PsxTim_Bitmap{
 	}
+}
+
+func (this PsxTim_Bitmap) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *PsxTim_Bitmap) Read(io *kaitai.Stream, parent *PsxTim, root *PsxTim) (err error) {
@@ -146,7 +159,7 @@ func (this *PsxTim_Bitmap) Read(io *kaitai.Stream, parent *PsxTim, root *PsxTim)
 		return err
 	}
 	this.Height = uint16(tmp10)
-	tmp11, err := this._io.ReadBytes(int((this.Len - 12)))
+	tmp11, err := this._io.ReadBytes(int(this.Len - 12))
 	if err != nil {
 		return err
 	}

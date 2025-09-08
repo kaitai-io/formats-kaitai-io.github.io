@@ -62,13 +62,34 @@ IcmpPacket.DestinationUnreachableMsg.DestinationUnreachableCode = enum.Enum {
 function IcmpPacket.DestinationUnreachableMsg:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function IcmpPacket.DestinationUnreachableMsg:_read()
   self.code = IcmpPacket.DestinationUnreachableMsg.DestinationUnreachableCode(self._io:read_u1())
   self.checksum = self._io:read_u2be()
+end
+
+
+IcmpPacket.EchoMsg = class.class(KaitaiStruct)
+
+function IcmpPacket.EchoMsg:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function IcmpPacket.EchoMsg:_read()
+  self.code = self._io:read_bytes(1)
+  if not(self.code == "\000") then
+    error("not equal, expected " .. "\000" .. ", but got " .. self.code)
+  end
+  self.checksum = self._io:read_u2be()
+  self.identifier = self._io:read_u2be()
+  self.seq_num = self._io:read_u2be()
+  self.data = self._io:read_bytes_full()
 end
 
 
@@ -82,34 +103,13 @@ IcmpPacket.TimeExceededMsg.TimeExceededCode = enum.Enum {
 function IcmpPacket.TimeExceededMsg:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function IcmpPacket.TimeExceededMsg:_read()
   self.code = IcmpPacket.TimeExceededMsg.TimeExceededCode(self._io:read_u1())
   self.checksum = self._io:read_u2be()
-end
-
-
-IcmpPacket.EchoMsg = class.class(KaitaiStruct)
-
-function IcmpPacket.EchoMsg:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function IcmpPacket.EchoMsg:_read()
-  self.code = self._io:read_bytes(1)
-  if not(self.code == "\000") then
-    error("not equal, expected " ..  "\000" .. ", but got " .. self.code)
-  end
-  self.checksum = self._io:read_u2be()
-  self.identifier = self._io:read_u2be()
-  self.seq_num = self._io:read_u2be()
-  self.data = self._io:read_bytes_full()
 end
 
 

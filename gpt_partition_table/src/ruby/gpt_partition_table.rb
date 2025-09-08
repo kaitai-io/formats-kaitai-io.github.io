@@ -2,16 +2,16 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
 ##
 # @see https://en.wikipedia.org/wiki/GUID_Partition_Table Source
 class GptPartitionTable < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -19,7 +19,7 @@ class GptPartitionTable < Kaitai::Struct::Struct
     self
   end
   class PartitionEntry < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -30,7 +30,7 @@ class GptPartitionTable < Kaitai::Struct::Struct
       @first_lba = @_io.read_u8le
       @last_lba = @_io.read_u8le
       @attributes = @_io.read_u8le
-      @name = (@_io.read_bytes(72)).force_encoding("UTF-16LE")
+      @name = (@_io.read_bytes(72)).force_encoding("UTF-16LE").encode('UTF-8')
       self
     end
     attr_reader :type_guid
@@ -41,14 +41,14 @@ class GptPartitionTable < Kaitai::Struct::Struct
     attr_reader :name
   end
   class PartitionHeader < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
       @signature = @_io.read_bytes(8)
-      raise Kaitai::Struct::ValidationNotEqualError.new([69, 70, 73, 32, 80, 65, 82, 84].pack('C*'), signature, _io, "/types/partition_header/seq/0") if not signature == [69, 70, 73, 32, 80, 65, 82, 84].pack('C*')
+      raise Kaitai::Struct::ValidationNotEqualError.new([69, 70, 73, 32, 80, 65, 82, 84].pack('C*'), @signature, @_io, "/types/partition_header/seq/0") if not @signature == [69, 70, 73, 32, 80, 65, 82, 84].pack('C*')
       @revision = @_io.read_u4le
       @header_size = @_io.read_u4le
       @crc32_header = @_io.read_u4le
@@ -68,13 +68,12 @@ class GptPartitionTable < Kaitai::Struct::Struct
       return @entries unless @entries.nil?
       io = _root._io
       _pos = io.pos
-      io.seek((entries_start * _root.sector_size))
+      io.seek(entries_start * _root.sector_size)
       @_raw_entries = []
       @entries = []
       (entries_count).times { |i|
-        @_raw_entries << io.read_bytes(entries_size)
-        _io__raw_entries = Kaitai::Struct::Stream.new(@_raw_entries[i])
-        @entries << PartitionEntry.new(_io__raw_entries, self, @_root)
+        _io_entries = io.substream(entries_size)
+        @entries << PartitionEntry.new(_io_entries, self, @_root)
       }
       io.seek(_pos)
       @entries
@@ -95,10 +94,14 @@ class GptPartitionTable < Kaitai::Struct::Struct
     attr_reader :crc32_array
     attr_reader :_raw_entries
   end
-  def sector_size
-    return @sector_size unless @sector_size.nil?
-    @sector_size = 512
-    @sector_size
+  def backup
+    return @backup unless @backup.nil?
+    io = _root._io
+    _pos = io.pos
+    io.seek(_io.size - _root.sector_size)
+    @backup = PartitionHeader.new(io, self, @_root)
+    io.seek(_pos)
+    @backup
   end
   def primary
     return @primary unless @primary.nil?
@@ -109,13 +112,9 @@ class GptPartitionTable < Kaitai::Struct::Struct
     io.seek(_pos)
     @primary
   end
-  def backup
-    return @backup unless @backup.nil?
-    io = _root._io
-    _pos = io.pos
-    io.seek((_io.size - _root.sector_size))
-    @backup = PartitionHeader.new(io, self, @_root)
-    io.seek(_pos)
-    @backup
+  def sector_size
+    return @sector_size unless @sector_size.nil?
+    @sector_size = 512
+    @sector_size
   end
 end

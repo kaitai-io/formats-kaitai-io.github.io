@@ -8,7 +8,8 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Arrays;
 import java.util.ArrayList;
-import java.nio.charset.Charset;
+import java.util.List;
+import java.nio.charset.StandardCharsets;
 
 
 /**
@@ -61,8 +62,8 @@ public class AllegroDat extends KaitaiStruct {
     private void _read() {
         this.packMagic = PackEnum.byId(this._io.readU4be());
         this.datMagic = this._io.readBytes(4);
-        if (!(Arrays.equals(datMagic(), new byte[] { 65, 76, 76, 46 }))) {
-            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 65, 76, 76, 46 }, datMagic(), _io(), "/seq/1");
+        if (!(Arrays.equals(this.datMagic, new byte[] { 65, 76, 76, 46 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 65, 76, 76, 46 }, this.datMagic, this._io, "/seq/1");
         }
         this.numObjects = this._io.readU4be();
         this.objects = new ArrayList<DatObject>();
@@ -71,41 +72,10 @@ public class AllegroDat extends KaitaiStruct {
         }
     }
 
-    /**
-     * Simple monochrome monospaced font, 95 characters, 8x16 px
-     * characters.
-     */
-    public static class DatFont16 extends KaitaiStruct {
-        public static DatFont16 fromFile(String fileName) throws IOException {
-            return new DatFont16(new ByteBufferKaitaiStream(fileName));
+    public void _fetchInstances() {
+        for (int i = 0; i < this.objects.size(); i++) {
+            this.objects.get(((Number) (i)).intValue())._fetchInstances();
         }
-
-        public DatFont16(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public DatFont16(KaitaiStream _io, AllegroDat.DatFont _parent) {
-            this(_io, _parent, null);
-        }
-
-        public DatFont16(KaitaiStream _io, AllegroDat.DatFont _parent, AllegroDat _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.chars = new ArrayList<byte[]>();
-            for (int i = 0; i < 95; i++) {
-                this.chars.add(this._io.readBytes(16));
-            }
-        }
-        private ArrayList<byte[]> chars;
-        private AllegroDat _root;
-        private AllegroDat.DatFont _parent;
-        public ArrayList<byte[]> chars() { return chars; }
-        public AllegroDat _root() { return _root; }
-        public AllegroDat.DatFont _parent() { return _parent; }
     }
     public static class DatBitmap extends KaitaiStruct {
         public static DatBitmap fromFile(String fileName) throws IOException {
@@ -131,6 +101,9 @@ public class AllegroDat extends KaitaiStruct {
             this.width = this._io.readU2be();
             this.height = this._io.readU2be();
             this.image = this._io.readBytesFull();
+        }
+
+        public void _fetchInstances() {
         }
         private short bitsPerPixel;
         private int width;
@@ -167,16 +140,33 @@ public class AllegroDat extends KaitaiStruct {
         private void _read() {
             this.fontSize = this._io.readS2be();
             switch (fontSize()) {
-            case 8: {
-                this.body = new DatFont8(this._io, this, _root);
+            case 0: {
+                this.body = new DatFont39(this._io, this, _root);
                 break;
             }
             case 16: {
                 this.body = new DatFont16(this._io, this, _root);
                 break;
             }
+            case 8: {
+                this.body = new DatFont8(this._io, this, _root);
+                break;
+            }
+            }
+        }
+
+        public void _fetchInstances() {
+            switch (fontSize()) {
             case 0: {
-                this.body = new DatFont39(this._io, this, _root);
+                ((DatFont39) (this.body))._fetchInstances();
+                break;
+            }
+            case 16: {
+                ((DatFont16) (this.body))._fetchInstances();
+                break;
+            }
+            case 8: {
+                ((DatFont8) (this.body))._fetchInstances();
                 break;
             }
             }
@@ -189,6 +179,188 @@ public class AllegroDat extends KaitaiStruct {
         public KaitaiStruct body() { return body; }
         public AllegroDat _root() { return _root; }
         public AllegroDat.DatObject _parent() { return _parent; }
+    }
+
+    /**
+     * Simple monochrome monospaced font, 95 characters, 8x16 px
+     * characters.
+     */
+    public static class DatFont16 extends KaitaiStruct {
+        public static DatFont16 fromFile(String fileName) throws IOException {
+            return new DatFont16(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public DatFont16(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public DatFont16(KaitaiStream _io, AllegroDat.DatFont _parent) {
+            this(_io, _parent, null);
+        }
+
+        public DatFont16(KaitaiStream _io, AllegroDat.DatFont _parent, AllegroDat _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.chars = new ArrayList<byte[]>();
+            for (int i = 0; i < 95; i++) {
+                this.chars.add(this._io.readBytes(16));
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.chars.size(); i++) {
+            }
+        }
+        private List<byte[]> chars;
+        private AllegroDat _root;
+        private AllegroDat.DatFont _parent;
+        public List<byte[]> chars() { return chars; }
+        public AllegroDat _root() { return _root; }
+        public AllegroDat.DatFont _parent() { return _parent; }
+    }
+
+    /**
+     * New bitmap font format introduced since Allegro 3.9: allows
+     * flexible designation of character ranges, 8-bit colored
+     * characters, etc.
+     */
+    public static class DatFont39 extends KaitaiStruct {
+        public static DatFont39 fromFile(String fileName) throws IOException {
+            return new DatFont39(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public DatFont39(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public DatFont39(KaitaiStream _io, AllegroDat.DatFont _parent) {
+            this(_io, _parent, null);
+        }
+
+        public DatFont39(KaitaiStream _io, AllegroDat.DatFont _parent, AllegroDat _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.numRanges = this._io.readS2be();
+            this.ranges = new ArrayList<Range>();
+            for (int i = 0; i < numRanges(); i++) {
+                this.ranges.add(new Range(this._io, this, _root));
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.ranges.size(); i++) {
+                this.ranges.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        public static class FontChar extends KaitaiStruct {
+            public static FontChar fromFile(String fileName) throws IOException {
+                return new FontChar(new ByteBufferKaitaiStream(fileName));
+            }
+
+            public FontChar(KaitaiStream _io) {
+                this(_io, null, null);
+            }
+
+            public FontChar(KaitaiStream _io, AllegroDat.DatFont39.Range _parent) {
+                this(_io, _parent, null);
+            }
+
+            public FontChar(KaitaiStream _io, AllegroDat.DatFont39.Range _parent, AllegroDat _root) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                _read();
+            }
+            private void _read() {
+                this.width = this._io.readU2be();
+                this.height = this._io.readU2be();
+                this.body = this._io.readBytes(width() * height());
+            }
+
+            public void _fetchInstances() {
+            }
+            private int width;
+            private int height;
+            private byte[] body;
+            private AllegroDat _root;
+            private AllegroDat.DatFont39.Range _parent;
+            public int width() { return width; }
+            public int height() { return height; }
+            public byte[] body() { return body; }
+            public AllegroDat _root() { return _root; }
+            public AllegroDat.DatFont39.Range _parent() { return _parent; }
+        }
+        public static class Range extends KaitaiStruct {
+            public static Range fromFile(String fileName) throws IOException {
+                return new Range(new ByteBufferKaitaiStream(fileName));
+            }
+
+            public Range(KaitaiStream _io) {
+                this(_io, null, null);
+            }
+
+            public Range(KaitaiStream _io, AllegroDat.DatFont39 _parent) {
+                this(_io, _parent, null);
+            }
+
+            public Range(KaitaiStream _io, AllegroDat.DatFont39 _parent, AllegroDat _root) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                _read();
+            }
+            private void _read() {
+                this.mono = this._io.readU1();
+                this.startChar = this._io.readU4be();
+                this.endChar = this._io.readU4be();
+                this.chars = new ArrayList<FontChar>();
+                for (int i = 0; i < (endChar() - startChar()) + 1; i++) {
+                    this.chars.add(new FontChar(this._io, this, _root));
+                }
+            }
+
+            public void _fetchInstances() {
+                for (int i = 0; i < this.chars.size(); i++) {
+                    this.chars.get(((Number) (i)).intValue())._fetchInstances();
+                }
+            }
+            private int mono;
+            private long startChar;
+            private long endChar;
+            private List<FontChar> chars;
+            private AllegroDat _root;
+            private AllegroDat.DatFont39 _parent;
+            public int mono() { return mono; }
+
+            /**
+             * First character in range
+             */
+            public long startChar() { return startChar; }
+
+            /**
+             * Last character in range (inclusive)
+             */
+            public long endChar() { return endChar; }
+            public List<FontChar> chars() { return chars; }
+            public AllegroDat _root() { return _root; }
+            public AllegroDat.DatFont39 _parent() { return _parent; }
+        }
+        private short numRanges;
+        private List<Range> ranges;
+        private AllegroDat _root;
+        private AllegroDat.DatFont _parent;
+        public short numRanges() { return numRanges; }
+        public List<Range> ranges() { return ranges; }
+        public AllegroDat _root() { return _root; }
+        public AllegroDat.DatFont _parent() { return _parent; }
     }
 
     /**
@@ -220,10 +392,15 @@ public class AllegroDat extends KaitaiStruct {
                 this.chars.add(this._io.readBytes(8));
             }
         }
-        private ArrayList<byte[]> chars;
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.chars.size(); i++) {
+            }
+        }
+        private List<byte[]> chars;
         private AllegroDat _root;
         private AllegroDat.DatFont _parent;
-        public ArrayList<byte[]> chars() { return chars; }
+        public List<byte[]> chars() { return chars; }
         public AllegroDat _root() { return _root; }
         public AllegroDat.DatFont _parent() { return _parent; }
     }
@@ -261,25 +438,45 @@ public class AllegroDat extends KaitaiStruct {
             this.lenUncompressed = this._io.readS4be();
             switch (type()) {
             case "BMP ": {
-                this._raw_body = this._io.readBytes(lenCompressed());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new DatBitmap(_io__raw_body, this, _root);
-                break;
-            }
-            case "RLE ": {
-                this._raw_body = this._io.readBytes(lenCompressed());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new DatRleSprite(_io__raw_body, this, _root);
+                KaitaiStream _io_body = this._io.substream(lenCompressed());
+                this.body = new DatBitmap(_io_body, this, _root);
                 break;
             }
             case "FONT": {
-                this._raw_body = this._io.readBytes(lenCompressed());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new DatFont(_io__raw_body, this, _root);
+                KaitaiStream _io_body = this._io.substream(lenCompressed());
+                this.body = new DatFont(_io_body, this, _root);
+                break;
+            }
+            case "RLE ": {
+                KaitaiStream _io_body = this._io.substream(lenCompressed());
+                this.body = new DatRleSprite(_io_body, this, _root);
                 break;
             }
             default: {
                 this.body = this._io.readBytes(lenCompressed());
+                break;
+            }
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.properties.size(); i++) {
+                this.properties.get(((Number) (i)).intValue())._fetchInstances();
+            }
+            switch (type()) {
+            case "BMP ": {
+                ((DatBitmap) (this.body))._fetchInstances();
+                break;
+            }
+            case "FONT": {
+                ((DatFont) (this.body))._fetchInstances();
+                break;
+            }
+            case "RLE ": {
+                ((DatRleSprite) (this.body))._fetchInstances();
+                break;
+            }
+            default: {
                 break;
             }
             }
@@ -291,197 +488,18 @@ public class AllegroDat extends KaitaiStruct {
             this.type = properties().get(properties().size() - 1).magic();
             return this.type;
         }
-        private ArrayList<Property> properties;
+        private List<Property> properties;
         private int lenCompressed;
         private int lenUncompressed;
         private Object body;
         private AllegroDat _root;
         private AllegroDat _parent;
-        private byte[] _raw_body;
-        public ArrayList<Property> properties() { return properties; }
+        public List<Property> properties() { return properties; }
         public int lenCompressed() { return lenCompressed; }
         public int lenUncompressed() { return lenUncompressed; }
         public Object body() { return body; }
         public AllegroDat _root() { return _root; }
         public AllegroDat _parent() { return _parent; }
-        public byte[] _raw_body() { return _raw_body; }
-    }
-
-    /**
-     * New bitmap font format introduced since Allegro 3.9: allows
-     * flexible designation of character ranges, 8-bit colored
-     * characters, etc.
-     */
-    public static class DatFont39 extends KaitaiStruct {
-        public static DatFont39 fromFile(String fileName) throws IOException {
-            return new DatFont39(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public DatFont39(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public DatFont39(KaitaiStream _io, AllegroDat.DatFont _parent) {
-            this(_io, _parent, null);
-        }
-
-        public DatFont39(KaitaiStream _io, AllegroDat.DatFont _parent, AllegroDat _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.numRanges = this._io.readS2be();
-            this.ranges = new ArrayList<Range>();
-            for (int i = 0; i < numRanges(); i++) {
-                this.ranges.add(new Range(this._io, this, _root));
-            }
-        }
-        public static class Range extends KaitaiStruct {
-            public static Range fromFile(String fileName) throws IOException {
-                return new Range(new ByteBufferKaitaiStream(fileName));
-            }
-
-            public Range(KaitaiStream _io) {
-                this(_io, null, null);
-            }
-
-            public Range(KaitaiStream _io, AllegroDat.DatFont39 _parent) {
-                this(_io, _parent, null);
-            }
-
-            public Range(KaitaiStream _io, AllegroDat.DatFont39 _parent, AllegroDat _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.mono = this._io.readU1();
-                this.startChar = this._io.readU4be();
-                this.endChar = this._io.readU4be();
-                this.chars = new ArrayList<FontChar>();
-                for (int i = 0; i < ((endChar() - startChar()) + 1); i++) {
-                    this.chars.add(new FontChar(this._io, this, _root));
-                }
-            }
-            private int mono;
-            private long startChar;
-            private long endChar;
-            private ArrayList<FontChar> chars;
-            private AllegroDat _root;
-            private AllegroDat.DatFont39 _parent;
-            public int mono() { return mono; }
-
-            /**
-             * First character in range
-             */
-            public long startChar() { return startChar; }
-
-            /**
-             * Last character in range (inclusive)
-             */
-            public long endChar() { return endChar; }
-            public ArrayList<FontChar> chars() { return chars; }
-            public AllegroDat _root() { return _root; }
-            public AllegroDat.DatFont39 _parent() { return _parent; }
-        }
-        public static class FontChar extends KaitaiStruct {
-            public static FontChar fromFile(String fileName) throws IOException {
-                return new FontChar(new ByteBufferKaitaiStream(fileName));
-            }
-
-            public FontChar(KaitaiStream _io) {
-                this(_io, null, null);
-            }
-
-            public FontChar(KaitaiStream _io, AllegroDat.DatFont39.Range _parent) {
-                this(_io, _parent, null);
-            }
-
-            public FontChar(KaitaiStream _io, AllegroDat.DatFont39.Range _parent, AllegroDat _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.width = this._io.readU2be();
-                this.height = this._io.readU2be();
-                this.body = this._io.readBytes((width() * height()));
-            }
-            private int width;
-            private int height;
-            private byte[] body;
-            private AllegroDat _root;
-            private AllegroDat.DatFont39.Range _parent;
-            public int width() { return width; }
-            public int height() { return height; }
-            public byte[] body() { return body; }
-            public AllegroDat _root() { return _root; }
-            public AllegroDat.DatFont39.Range _parent() { return _parent; }
-        }
-        private short numRanges;
-        private ArrayList<Range> ranges;
-        private AllegroDat _root;
-        private AllegroDat.DatFont _parent;
-        public short numRanges() { return numRanges; }
-        public ArrayList<Range> ranges() { return ranges; }
-        public AllegroDat _root() { return _root; }
-        public AllegroDat.DatFont _parent() { return _parent; }
-    }
-    public static class Property extends KaitaiStruct {
-        public static Property fromFile(String fileName) throws IOException {
-            return new Property(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Property(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Property(KaitaiStream _io, AllegroDat.DatObject _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Property(KaitaiStream _io, AllegroDat.DatObject _parent, AllegroDat _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.magic = new String(this._io.readBytes(4), Charset.forName("UTF-8"));
-            if (isValid()) {
-                this.type = new String(this._io.readBytes(4), Charset.forName("UTF-8"));
-            }
-            if (isValid()) {
-                this.lenBody = this._io.readU4be();
-            }
-            if (isValid()) {
-                this.body = new String(this._io.readBytes(lenBody()), Charset.forName("UTF-8"));
-            }
-        }
-        private Boolean isValid;
-        public Boolean isValid() {
-            if (this.isValid != null)
-                return this.isValid;
-            boolean _tmp = (boolean) (magic().equals("prop"));
-            this.isValid = _tmp;
-            return this.isValid;
-        }
-        private String magic;
-        private String type;
-        private Long lenBody;
-        private String body;
-        private AllegroDat _root;
-        private AllegroDat.DatObject _parent;
-        public String magic() { return magic; }
-        public String type() { return type; }
-        public Long lenBody() { return lenBody; }
-        public String body() { return body; }
-        public AllegroDat _root() { return _root; }
-        public AllegroDat.DatObject _parent() { return _parent; }
     }
     public static class DatRleSprite extends KaitaiStruct {
         public static DatRleSprite fromFile(String fileName) throws IOException {
@@ -509,6 +527,9 @@ public class AllegroDat extends KaitaiStruct {
             this.lenImage = this._io.readU4be();
             this.image = this._io.readBytesFull();
         }
+
+        public void _fetchInstances() {
+        }
         private short bitsPerPixel;
         private int width;
         private int height;
@@ -524,16 +545,76 @@ public class AllegroDat extends KaitaiStruct {
         public AllegroDat _root() { return _root; }
         public AllegroDat.DatObject _parent() { return _parent; }
     }
+    public static class Property extends KaitaiStruct {
+        public static Property fromFile(String fileName) throws IOException {
+            return new Property(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Property(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Property(KaitaiStream _io, AllegroDat.DatObject _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Property(KaitaiStream _io, AllegroDat.DatObject _parent, AllegroDat _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.magic = new String(this._io.readBytes(4), StandardCharsets.UTF_8);
+            if (isValid()) {
+                this.type = new String(this._io.readBytes(4), StandardCharsets.UTF_8);
+            }
+            if (isValid()) {
+                this.lenBody = this._io.readU4be();
+            }
+            if (isValid()) {
+                this.body = new String(this._io.readBytes(lenBody()), StandardCharsets.UTF_8);
+            }
+        }
+
+        public void _fetchInstances() {
+            if (isValid()) {
+            }
+            if (isValid()) {
+            }
+            if (isValid()) {
+            }
+        }
+        private Boolean isValid;
+        public Boolean isValid() {
+            if (this.isValid != null)
+                return this.isValid;
+            this.isValid = magic().equals("prop");
+            return this.isValid;
+        }
+        private String magic;
+        private String type;
+        private Long lenBody;
+        private String body;
+        private AllegroDat _root;
+        private AllegroDat.DatObject _parent;
+        public String magic() { return magic; }
+        public String type() { return type; }
+        public Long lenBody() { return lenBody; }
+        public String body() { return body; }
+        public AllegroDat _root() { return _root; }
+        public AllegroDat.DatObject _parent() { return _parent; }
+    }
     private PackEnum packMagic;
     private byte[] datMagic;
     private long numObjects;
-    private ArrayList<DatObject> objects;
+    private List<DatObject> objects;
     private AllegroDat _root;
     private KaitaiStruct _parent;
     public PackEnum packMagic() { return packMagic; }
     public byte[] datMagic() { return datMagic; }
     public long numObjects() { return numObjects; }
-    public ArrayList<DatObject> objects() { return objects; }
+    public List<DatObject> objects() { return objects; }
     public AllegroDat _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

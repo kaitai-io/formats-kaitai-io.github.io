@@ -9,6 +9,13 @@ type
   MifareClassic_Key* = ref object of KaitaiStruct
     `key`*: seq[byte]
     `parent`*: MifareClassic_Trailer
+  MifareClassic_Manufacturer* = ref object of KaitaiStruct
+    `nuid`*: uint32
+    `bcc`*: uint8
+    `sak`*: uint8
+    `atqa`*: uint16
+    `manufacturer`*: seq[byte]
+    `parent`*: MifareClassic_Sector
   MifareClassic_Sector* = ref object of KaitaiStruct
     `manufacturer`*: MifareClassic_Manufacturer
     `dataFiller`*: MifareClassic_Sector_Filler
@@ -18,12 +25,15 @@ type
     `rawDataFiller`*: seq[byte]
     `blockSizeInst`: int8
     `blockSizeInstFlag`: bool
-    `dataInst`: seq[byte]
-    `dataInstFlag`: bool
     `blocksInst`: seq[seq[byte]]
     `blocksInstFlag`: bool
+    `dataInst`: seq[byte]
+    `dataInstFlag`: bool
     `valuesInst`: MifareClassic_Sector_Values
     `valuesInstFlag`: bool
+  MifareClassic_Sector_Filler* = ref object of KaitaiStruct
+    `data`*: seq[byte]
+    `parent`*: MifareClassic_Sector
   MifareClassic_Sector_Values* = ref object of KaitaiStruct
     `values`*: seq[MifareClassic_Sector_Values_ValueBlock]
     `parent`*: MifareClassic_Sector
@@ -37,20 +47,10 @@ type
     `addrValidInstFlag`: bool
     `validInst`: bool
     `validInstFlag`: bool
-    `valueValidInst`: bool
-    `valueValidInstFlag`: bool
     `valueInst`: uint32
     `valueInstFlag`: bool
-  MifareClassic_Sector_Filler* = ref object of KaitaiStruct
-    `data`*: seq[byte]
-    `parent`*: MifareClassic_Sector
-  MifareClassic_Manufacturer* = ref object of KaitaiStruct
-    `nuid`*: uint32
-    `bcc`*: uint8
-    `sak`*: uint8
-    `atqa`*: uint16
-    `manufacturer`*: seq[byte]
-    `parent`*: MifareClassic_Sector
+    `valueValidInst`: bool
+    `valueValidInstFlag`: bool
   MifareClassic_Trailer* = ref object of KaitaiStruct
     `keyA`*: MifareClassic_Key
     `accessBits`*: MifareClassic_Trailer_AccessConditions
@@ -60,75 +60,75 @@ type
     `rawAccessBits`*: seq[byte]
     `acBitsInst`: int8
     `acBitsInstFlag`: bool
-    `acsInSectorInst`: int8
-    `acsInSectorInstFlag`: bool
     `acCountOfChunksInst`: int
     `acCountOfChunksInstFlag`: bool
+    `acsInSectorInst`: int8
+    `acsInSectorInstFlag`: bool
   MifareClassic_Trailer_AccessConditions* = ref object of KaitaiStruct
     `rawChunks`*: seq[uint64]
     `parent`*: MifareClassic_Trailer
+    `acsRawInst`: seq[MifareClassic_Trailer_AccessConditions_Ac]
+    `acsRawInstFlag`: bool
+    `chunksInst`: seq[MifareClassic_Trailer_AccessConditions_ValidChunk]
+    `chunksInstFlag`: bool
     `dataAcsInst`: seq[MifareClassic_Trailer_AccessConditions_DataAc]
     `dataAcsInstFlag`: bool
     `remapsInst`: seq[MifareClassic_Trailer_AccessConditions_ChunkBitRemap]
     `remapsInstFlag`: bool
-    `acsRawInst`: seq[MifareClassic_Trailer_AccessConditions_Ac]
-    `acsRawInstFlag`: bool
     `trailerAcInst`: MifareClassic_Trailer_AccessConditions_TrailerAc
     `trailerAcInstFlag`: bool
-    `chunksInst`: seq[MifareClassic_Trailer_AccessConditions_ValidChunk]
-    `chunksInstFlag`: bool
-  MifareClassic_Trailer_AccessConditions_TrailerAc* = ref object of KaitaiStruct
-    `ac`*: MifareClassic_Trailer_AccessConditions_Ac
-    `parent`*: MifareClassic_Trailer_AccessConditions
-    `canReadKeyBInst`: bool
-    `canReadKeyBInstFlag`: bool
-    `canWriteKeysInst`: bool
-    `canWriteKeysInstFlag`: bool
-    `canWriteAccessBitsInst`: bool
-    `canWriteAccessBitsInstFlag`: bool
-    `keyBControlsWriteInst`: bool
-    `keyBControlsWriteInstFlag`: bool
-  MifareClassic_Trailer_AccessConditions_ChunkBitRemap* = ref object of KaitaiStruct
-    `bitNo`*: uint8
-    `parent`*: MifareClassic_Trailer_AccessConditions
-    `shiftValueInst`: int
-    `shiftValueInstFlag`: bool
-    `chunkNoInst`: int
-    `chunkNoInstFlag`: bool
-    `invChunkNoInst`: int
-    `invChunkNoInstFlag`: bool
-  MifareClassic_Trailer_AccessConditions_DataAc* = ref object of KaitaiStruct
-    `ac`*: MifareClassic_Trailer_AccessConditions_Ac
-    `parent`*: MifareClassic_Trailer_AccessConditions
-    `readKeyARequiredInst`: bool
-    `readKeyARequiredInstFlag`: bool
-    `writeKeyBRequiredInst`: bool
-    `writeKeyBRequiredInstFlag`: bool
-    `writeKeyARequiredInst`: bool
-    `writeKeyARequiredInstFlag`: bool
-    `readKeyBRequiredInst`: bool
-    `readKeyBRequiredInstFlag`: bool
-    `decrementAvailableInst`: bool
-    `decrementAvailableInstFlag`: bool
-    `incrementAvailableInst`: bool
-    `incrementAvailableInstFlag`: bool
   MifareClassic_Trailer_AccessConditions_Ac* = ref object of KaitaiStruct
     `index`*: uint8
     `parent`*: MifareClassic_Trailer_AccessConditions
     `bitsInst`: seq[MifareClassic_Trailer_AccessConditions_Ac_AcBit]
     `bitsInstFlag`: bool
-    `valInst`: int
-    `valInstFlag`: bool
     `invShiftValInst`: int
     `invShiftValInstFlag`: bool
+    `valInst`: int
+    `valInstFlag`: bool
   MifareClassic_Trailer_AccessConditions_Ac_AcBit* = ref object of KaitaiStruct
     `i`*: uint8
     `chunk`*: uint8
     `parent`*: MifareClassic_Trailer_AccessConditions_Ac
-    `nInst`: int
-    `nInstFlag`: bool
     `bInst`: bool
     `bInstFlag`: bool
+    `nInst`: int
+    `nInstFlag`: bool
+  MifareClassic_Trailer_AccessConditions_ChunkBitRemap* = ref object of KaitaiStruct
+    `bitNo`*: uint8
+    `parent`*: MifareClassic_Trailer_AccessConditions
+    `chunkNoInst`: int
+    `chunkNoInstFlag`: bool
+    `invChunkNoInst`: int
+    `invChunkNoInstFlag`: bool
+    `shiftValueInst`: int
+    `shiftValueInstFlag`: bool
+  MifareClassic_Trailer_AccessConditions_DataAc* = ref object of KaitaiStruct
+    `ac`*: MifareClassic_Trailer_AccessConditions_Ac
+    `parent`*: MifareClassic_Trailer_AccessConditions
+    `decrementAvailableInst`: bool
+    `decrementAvailableInstFlag`: bool
+    `incrementAvailableInst`: bool
+    `incrementAvailableInstFlag`: bool
+    `readKeyARequiredInst`: bool
+    `readKeyARequiredInstFlag`: bool
+    `readKeyBRequiredInst`: bool
+    `readKeyBRequiredInstFlag`: bool
+    `writeKeyARequiredInst`: bool
+    `writeKeyARequiredInstFlag`: bool
+    `writeKeyBRequiredInst`: bool
+    `writeKeyBRequiredInstFlag`: bool
+  MifareClassic_Trailer_AccessConditions_TrailerAc* = ref object of KaitaiStruct
+    `ac`*: MifareClassic_Trailer_AccessConditions_Ac
+    `parent`*: MifareClassic_Trailer_AccessConditions
+    `canReadKeyBInst`: bool
+    `canReadKeyBInstFlag`: bool
+    `canWriteAccessBitsInst`: bool
+    `canWriteAccessBitsInstFlag`: bool
+    `canWriteKeysInst`: bool
+    `canWriteKeysInstFlag`: bool
+    `keyBControlsWriteInst`: bool
+    `keyBControlsWriteInstFlag`: bool
   MifareClassic_Trailer_AccessConditions_ValidChunk* = ref object of KaitaiStruct
     `invChunk`*: uint8
     `chunk`*: uint8
@@ -138,55 +138,55 @@ type
 
 proc read*(_: typedesc[MifareClassic], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MifareClassic
 proc read*(_: typedesc[MifareClassic_Key], io: KaitaiStream, root: KaitaiStruct, parent: MifareClassic_Trailer): MifareClassic_Key
+proc read*(_: typedesc[MifareClassic_Manufacturer], io: KaitaiStream, root: KaitaiStruct, parent: MifareClassic_Sector): MifareClassic_Manufacturer
 proc read*(_: typedesc[MifareClassic_Sector], io: KaitaiStream, root: KaitaiStruct, parent: MifareClassic, hasManufacturer: any): MifareClassic_Sector
+proc read*(_: typedesc[MifareClassic_Sector_Filler], io: KaitaiStream, root: KaitaiStruct, parent: MifareClassic_Sector): MifareClassic_Sector_Filler
 proc read*(_: typedesc[MifareClassic_Sector_Values], io: KaitaiStream, root: KaitaiStruct, parent: MifareClassic_Sector): MifareClassic_Sector_Values
 proc read*(_: typedesc[MifareClassic_Sector_Values_ValueBlock], io: KaitaiStream, root: KaitaiStruct, parent: MifareClassic_Sector_Values): MifareClassic_Sector_Values_ValueBlock
-proc read*(_: typedesc[MifareClassic_Sector_Filler], io: KaitaiStream, root: KaitaiStruct, parent: MifareClassic_Sector): MifareClassic_Sector_Filler
-proc read*(_: typedesc[MifareClassic_Manufacturer], io: KaitaiStream, root: KaitaiStruct, parent: MifareClassic_Sector): MifareClassic_Manufacturer
 proc read*(_: typedesc[MifareClassic_Trailer], io: KaitaiStream, root: KaitaiStruct, parent: MifareClassic_Sector): MifareClassic_Trailer
 proc read*(_: typedesc[MifareClassic_Trailer_AccessConditions], io: KaitaiStream, root: KaitaiStruct, parent: MifareClassic_Trailer): MifareClassic_Trailer_AccessConditions
-proc read*(_: typedesc[MifareClassic_Trailer_AccessConditions_TrailerAc], io: KaitaiStream, root: KaitaiStruct, parent: MifareClassic_Trailer_AccessConditions, ac: any): MifareClassic_Trailer_AccessConditions_TrailerAc
-proc read*(_: typedesc[MifareClassic_Trailer_AccessConditions_ChunkBitRemap], io: KaitaiStream, root: KaitaiStruct, parent: MifareClassic_Trailer_AccessConditions, bitNo: any): MifareClassic_Trailer_AccessConditions_ChunkBitRemap
-proc read*(_: typedesc[MifareClassic_Trailer_AccessConditions_DataAc], io: KaitaiStream, root: KaitaiStruct, parent: MifareClassic_Trailer_AccessConditions, ac: any): MifareClassic_Trailer_AccessConditions_DataAc
 proc read*(_: typedesc[MifareClassic_Trailer_AccessConditions_Ac], io: KaitaiStream, root: KaitaiStruct, parent: MifareClassic_Trailer_AccessConditions, index: any): MifareClassic_Trailer_AccessConditions_Ac
 proc read*(_: typedesc[MifareClassic_Trailer_AccessConditions_Ac_AcBit], io: KaitaiStream, root: KaitaiStruct, parent: MifareClassic_Trailer_AccessConditions_Ac, i: any, chunk: any): MifareClassic_Trailer_AccessConditions_Ac_AcBit
+proc read*(_: typedesc[MifareClassic_Trailer_AccessConditions_ChunkBitRemap], io: KaitaiStream, root: KaitaiStruct, parent: MifareClassic_Trailer_AccessConditions, bitNo: any): MifareClassic_Trailer_AccessConditions_ChunkBitRemap
+proc read*(_: typedesc[MifareClassic_Trailer_AccessConditions_DataAc], io: KaitaiStream, root: KaitaiStruct, parent: MifareClassic_Trailer_AccessConditions, ac: any): MifareClassic_Trailer_AccessConditions_DataAc
+proc read*(_: typedesc[MifareClassic_Trailer_AccessConditions_TrailerAc], io: KaitaiStream, root: KaitaiStruct, parent: MifareClassic_Trailer_AccessConditions, ac: any): MifareClassic_Trailer_AccessConditions_TrailerAc
 proc read*(_: typedesc[MifareClassic_Trailer_AccessConditions_ValidChunk], io: KaitaiStream, root: KaitaiStruct, parent: MifareClassic_Trailer_AccessConditions, invChunk: any, chunk: any): MifareClassic_Trailer_AccessConditions_ValidChunk
 
 proc blockSize*(this: MifareClassic_Sector): int8
-proc data*(this: MifareClassic_Sector): seq[byte]
 proc blocks*(this: MifareClassic_Sector): seq[seq[byte]]
+proc data*(this: MifareClassic_Sector): seq[byte]
 proc values*(this: MifareClassic_Sector): MifareClassic_Sector_Values
 proc addr*(this: MifareClassic_Sector_Values_ValueBlock): uint8
 proc addrValid*(this: MifareClassic_Sector_Values_ValueBlock): bool
 proc valid*(this: MifareClassic_Sector_Values_ValueBlock): bool
-proc valueValid*(this: MifareClassic_Sector_Values_ValueBlock): bool
 proc value*(this: MifareClassic_Sector_Values_ValueBlock): uint32
+proc valueValid*(this: MifareClassic_Sector_Values_ValueBlock): bool
 proc acBits*(this: MifareClassic_Trailer): int8
-proc acsInSector*(this: MifareClassic_Trailer): int8
 proc acCountOfChunks*(this: MifareClassic_Trailer): int
+proc acsInSector*(this: MifareClassic_Trailer): int8
+proc acsRaw*(this: MifareClassic_Trailer_AccessConditions): seq[MifareClassic_Trailer_AccessConditions_Ac]
+proc chunks*(this: MifareClassic_Trailer_AccessConditions): seq[MifareClassic_Trailer_AccessConditions_ValidChunk]
 proc dataAcs*(this: MifareClassic_Trailer_AccessConditions): seq[MifareClassic_Trailer_AccessConditions_DataAc]
 proc remaps*(this: MifareClassic_Trailer_AccessConditions): seq[MifareClassic_Trailer_AccessConditions_ChunkBitRemap]
-proc acsRaw*(this: MifareClassic_Trailer_AccessConditions): seq[MifareClassic_Trailer_AccessConditions_Ac]
 proc trailerAc*(this: MifareClassic_Trailer_AccessConditions): MifareClassic_Trailer_AccessConditions_TrailerAc
-proc chunks*(this: MifareClassic_Trailer_AccessConditions): seq[MifareClassic_Trailer_AccessConditions_ValidChunk]
-proc canReadKeyB*(this: MifareClassic_Trailer_AccessConditions_TrailerAc): bool
-proc canWriteKeys*(this: MifareClassic_Trailer_AccessConditions_TrailerAc): bool
-proc canWriteAccessBits*(this: MifareClassic_Trailer_AccessConditions_TrailerAc): bool
-proc keyBControlsWrite*(this: MifareClassic_Trailer_AccessConditions_TrailerAc): bool
-proc shiftValue*(this: MifareClassic_Trailer_AccessConditions_ChunkBitRemap): int
+proc bits*(this: MifareClassic_Trailer_AccessConditions_Ac): seq[MifareClassic_Trailer_AccessConditions_Ac_AcBit]
+proc invShiftVal*(this: MifareClassic_Trailer_AccessConditions_Ac): int
+proc val*(this: MifareClassic_Trailer_AccessConditions_Ac): int
+proc b*(this: MifareClassic_Trailer_AccessConditions_Ac_AcBit): bool
+proc n*(this: MifareClassic_Trailer_AccessConditions_Ac_AcBit): int
 proc chunkNo*(this: MifareClassic_Trailer_AccessConditions_ChunkBitRemap): int
 proc invChunkNo*(this: MifareClassic_Trailer_AccessConditions_ChunkBitRemap): int
-proc readKeyARequired*(this: MifareClassic_Trailer_AccessConditions_DataAc): bool
-proc writeKeyBRequired*(this: MifareClassic_Trailer_AccessConditions_DataAc): bool
-proc writeKeyARequired*(this: MifareClassic_Trailer_AccessConditions_DataAc): bool
-proc readKeyBRequired*(this: MifareClassic_Trailer_AccessConditions_DataAc): bool
+proc shiftValue*(this: MifareClassic_Trailer_AccessConditions_ChunkBitRemap): int
 proc decrementAvailable*(this: MifareClassic_Trailer_AccessConditions_DataAc): bool
 proc incrementAvailable*(this: MifareClassic_Trailer_AccessConditions_DataAc): bool
-proc bits*(this: MifareClassic_Trailer_AccessConditions_Ac): seq[MifareClassic_Trailer_AccessConditions_Ac_AcBit]
-proc val*(this: MifareClassic_Trailer_AccessConditions_Ac): int
-proc invShiftVal*(this: MifareClassic_Trailer_AccessConditions_Ac): int
-proc n*(this: MifareClassic_Trailer_AccessConditions_Ac_AcBit): int
-proc b*(this: MifareClassic_Trailer_AccessConditions_Ac_AcBit): bool
+proc readKeyARequired*(this: MifareClassic_Trailer_AccessConditions_DataAc): bool
+proc readKeyBRequired*(this: MifareClassic_Trailer_AccessConditions_DataAc): bool
+proc writeKeyARequired*(this: MifareClassic_Trailer_AccessConditions_DataAc): bool
+proc writeKeyBRequired*(this: MifareClassic_Trailer_AccessConditions_DataAc): bool
+proc canReadKeyB*(this: MifareClassic_Trailer_AccessConditions_TrailerAc): bool
+proc canWriteAccessBits*(this: MifareClassic_Trailer_AccessConditions_TrailerAc): bool
+proc canWriteKeys*(this: MifareClassic_Trailer_AccessConditions_TrailerAc): bool
+proc keyBControlsWrite*(this: MifareClassic_Trailer_AccessConditions_TrailerAc): bool
 proc valid*(this: MifareClassic_Trailer_AccessConditions_ValidChunk): bool
 
 
@@ -209,7 +209,7 @@ proc read*(_: typedesc[MifareClassic], io: KaitaiStream, root: KaitaiStruct, par
   block:
     var i: int
     while not this.io.isEof:
-      let buf = this.io.readBytes(int((((if i >= 32: 4 else: 1) * 4) * 16)))
+      let buf = this.io.readBytes(int(((if i >= 32: 4 else: 1) * 4) * 16))
       this.rawSectors.add(buf)
       let rawSectorsIo = newKaitaiStream(buf)
       let it = MifareClassic_Sector.read(rawSectorsIo, this.root, this, i == 0)
@@ -233,6 +233,36 @@ proc read*(_: typedesc[MifareClassic_Key], io: KaitaiStream, root: KaitaiStruct,
 proc fromFile*(_: typedesc[MifareClassic_Key], filename: string): MifareClassic_Key =
   MifareClassic_Key.read(newKaitaiFileStream(filename), nil, nil)
 
+proc read*(_: typedesc[MifareClassic_Manufacturer], io: KaitaiStream, root: KaitaiStruct, parent: MifareClassic_Sector): MifareClassic_Manufacturer =
+  template this: untyped = result
+  this = new(MifareClassic_Manufacturer)
+  let root = if root == nil: cast[MifareClassic](this) else: cast[MifareClassic](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+
+  ##[
+  beware for 7bytes UID it goes over next fields
+  ]##
+  let nuidExpr = this.io.readU4le()
+  this.nuid = nuidExpr
+  let bccExpr = this.io.readU1()
+  this.bcc = bccExpr
+  let sakExpr = this.io.readU1()
+  this.sak = sakExpr
+  let atqaExpr = this.io.readU2le()
+  this.atqa = atqaExpr
+
+  ##[
+  may contain manufacture date as BCD
+  ]##
+  let manufacturerExpr = this.io.readBytes(int(8))
+  this.manufacturer = manufacturerExpr
+
+proc fromFile*(_: typedesc[MifareClassic_Manufacturer], filename: string): MifareClassic_Manufacturer =
+  MifareClassic_Manufacturer.read(newKaitaiFileStream(filename), nil, nil)
+
 proc read*(_: typedesc[MifareClassic_Sector], io: KaitaiStream, root: KaitaiStruct, parent: MifareClassic, hasManufacturer: any): MifareClassic_Sector =
   template this: untyped = result
   this = new(MifareClassic_Sector)
@@ -246,7 +276,7 @@ proc read*(_: typedesc[MifareClassic_Sector], io: KaitaiStream, root: KaitaiStru
   if this.hasManufacturer:
     let manufacturerExpr = MifareClassic_Manufacturer.read(this.io, this.root, this)
     this.manufacturer = manufacturerExpr
-  let rawDataFillerExpr = this.io.readBytes(int(((this.io.size - this.io.pos) - 16)))
+  let rawDataFillerExpr = this.io.readBytes(int((this.io.size - this.io.pos) - 16))
   this.rawDataFiller = rawDataFillerExpr
   let rawDataFillerIo = newKaitaiStream(rawDataFillerExpr)
   let dataFillerExpr = MifareClassic_Sector_Filler.read(rawDataFillerIo, this.root, this)
@@ -261,14 +291,6 @@ proc blockSize(this: MifareClassic_Sector): int8 =
   this.blockSizeInst = blockSizeInstExpr
   this.blockSizeInstFlag = true
   return this.blockSizeInst
-
-proc data(this: MifareClassic_Sector): seq[byte] = 
-  if this.dataInstFlag:
-    return this.dataInst
-  let dataInstExpr = seq[byte](this.dataFiller.data)
-  this.dataInst = dataInstExpr
-  this.dataInstFlag = true
-  return this.dataInst
 
 proc blocks(this: MifareClassic_Sector): seq[seq[byte]] = 
   if this.blocksInstFlag:
@@ -286,6 +308,14 @@ proc blocks(this: MifareClassic_Sector): seq[seq[byte]] =
   this.blocksInstFlag = true
   return this.blocksInst
 
+proc data(this: MifareClassic_Sector): seq[byte] = 
+  if this.dataInstFlag:
+    return this.dataInst
+  let dataInstExpr = seq[byte](this.dataFiller.data)
+  this.dataInst = dataInstExpr
+  this.dataInstFlag = true
+  return this.dataInst
+
 proc values(this: MifareClassic_Sector): MifareClassic_Sector_Values = 
   if this.valuesInstFlag:
     return this.valuesInst
@@ -300,6 +330,24 @@ proc values(this: MifareClassic_Sector): MifareClassic_Sector_Values =
 
 proc fromFile*(_: typedesc[MifareClassic_Sector], filename: string): MifareClassic_Sector =
   MifareClassic_Sector.read(newKaitaiFileStream(filename), nil, nil)
+
+
+##[
+only to create _io
+]##
+proc read*(_: typedesc[MifareClassic_Sector_Filler], io: KaitaiStream, root: KaitaiStruct, parent: MifareClassic_Sector): MifareClassic_Sector_Filler =
+  template this: untyped = result
+  this = new(MifareClassic_Sector_Filler)
+  let root = if root == nil: cast[MifareClassic](this) else: cast[MifareClassic](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let dataExpr = this.io.readBytes(int(this.io.size))
+  this.data = dataExpr
+
+proc fromFile*(_: typedesc[MifareClassic_Sector_Filler], filename: string): MifareClassic_Sector_Filler =
+  MifareClassic_Sector_Filler.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[MifareClassic_Sector_Values], io: KaitaiStream, root: KaitaiStruct, parent: MifareClassic_Sector): MifareClassic_Sector_Values =
   template this: untyped = result
@@ -359,14 +407,6 @@ proc valid(this: MifareClassic_Sector_Values_ValueBlock): bool =
   this.validInstFlag = true
   return this.validInst
 
-proc valueValid(this: MifareClassic_Sector_Values_ValueBlock): bool = 
-  if this.valueValidInstFlag:
-    return this.valueValidInst
-  let valueValidInstExpr = bool( ((this.valuez[0] == not(this.valuez[1])) and (this.valuez[0] == this.valuez[2])) )
-  this.valueValidInst = valueValidInstExpr
-  this.valueValidInstFlag = true
-  return this.valueValidInst
-
 proc value(this: MifareClassic_Sector_Values_ValueBlock): uint32 = 
   if this.valueInstFlag:
     return this.valueInst
@@ -376,56 +416,16 @@ proc value(this: MifareClassic_Sector_Values_ValueBlock): uint32 =
   this.valueInstFlag = true
   return this.valueInst
 
+proc valueValid(this: MifareClassic_Sector_Values_ValueBlock): bool = 
+  if this.valueValidInstFlag:
+    return this.valueValidInst
+  let valueValidInstExpr = bool( ((this.valuez[0] == not(this.valuez[1])) and (this.valuez[0] == this.valuez[2])) )
+  this.valueValidInst = valueValidInstExpr
+  this.valueValidInstFlag = true
+  return this.valueValidInst
+
 proc fromFile*(_: typedesc[MifareClassic_Sector_Values_ValueBlock], filename: string): MifareClassic_Sector_Values_ValueBlock =
   MifareClassic_Sector_Values_ValueBlock.read(newKaitaiFileStream(filename), nil, nil)
-
-
-##[
-only to create _io
-]##
-proc read*(_: typedesc[MifareClassic_Sector_Filler], io: KaitaiStream, root: KaitaiStruct, parent: MifareClassic_Sector): MifareClassic_Sector_Filler =
-  template this: untyped = result
-  this = new(MifareClassic_Sector_Filler)
-  let root = if root == nil: cast[MifareClassic](this) else: cast[MifareClassic](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let dataExpr = this.io.readBytes(int(this.io.size))
-  this.data = dataExpr
-
-proc fromFile*(_: typedesc[MifareClassic_Sector_Filler], filename: string): MifareClassic_Sector_Filler =
-  MifareClassic_Sector_Filler.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[MifareClassic_Manufacturer], io: KaitaiStream, root: KaitaiStruct, parent: MifareClassic_Sector): MifareClassic_Manufacturer =
-  template this: untyped = result
-  this = new(MifareClassic_Manufacturer)
-  let root = if root == nil: cast[MifareClassic](this) else: cast[MifareClassic](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-
-  ##[
-  beware for 7bytes UID it goes over next fields
-  ]##
-  let nuidExpr = this.io.readU4le()
-  this.nuid = nuidExpr
-  let bccExpr = this.io.readU1()
-  this.bcc = bccExpr
-  let sakExpr = this.io.readU1()
-  this.sak = sakExpr
-  let atqaExpr = this.io.readU2le()
-  this.atqa = atqaExpr
-
-  ##[
-  may contain manufacture date as BCD
-  ]##
-  let manufacturerExpr = this.io.readBytes(int(8))
-  this.manufacturer = manufacturerExpr
-
-proc fromFile*(_: typedesc[MifareClassic_Manufacturer], filename: string): MifareClassic_Manufacturer =
-  MifareClassic_Manufacturer.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[MifareClassic_Trailer], io: KaitaiStream, root: KaitaiStruct, parent: MifareClassic_Sector): MifareClassic_Trailer =
   template this: untyped = result
@@ -455,6 +455,14 @@ proc acBits(this: MifareClassic_Trailer): int8 =
   this.acBitsInstFlag = true
   return this.acBitsInst
 
+proc acCountOfChunks(this: MifareClassic_Trailer): int = 
+  if this.acCountOfChunksInstFlag:
+    return this.acCountOfChunksInst
+  let acCountOfChunksInstExpr = int(this.acBits * 2)
+  this.acCountOfChunksInst = acCountOfChunksInstExpr
+  this.acCountOfChunksInstFlag = true
+  return this.acCountOfChunksInst
+
 proc acsInSector(this: MifareClassic_Trailer): int8 = 
   if this.acsInSectorInstFlag:
     return this.acsInSectorInst
@@ -462,14 +470,6 @@ proc acsInSector(this: MifareClassic_Trailer): int8 =
   this.acsInSectorInst = acsInSectorInstExpr
   this.acsInSectorInstFlag = true
   return this.acsInSectorInst
-
-proc acCountOfChunks(this: MifareClassic_Trailer): int = 
-  if this.acCountOfChunksInstFlag:
-    return this.acCountOfChunksInst
-  let acCountOfChunksInstExpr = int((this.acBits * 2))
-  this.acCountOfChunksInst = acCountOfChunksInstExpr
-  this.acCountOfChunksInstFlag = true
-  return this.acCountOfChunksInst
 
 proc fromFile*(_: typedesc[MifareClassic_Trailer], filename: string): MifareClassic_Trailer =
   MifareClassic_Trailer.read(newKaitaiFileStream(filename), nil, nil)
@@ -486,12 +486,36 @@ proc read*(_: typedesc[MifareClassic_Trailer_AccessConditions], io: KaitaiStream
     let it = this.io.readBitsIntBe(4)
     this.rawChunks.add(it)
 
+proc acsRaw(this: MifareClassic_Trailer_AccessConditions): seq[MifareClassic_Trailer_AccessConditions_Ac] = 
+  if this.acsRawInstFlag:
+    return this.acsRawInst
+  let pos = this.io.pos()
+  this.io.seek(int(0))
+  for i in 0 ..< int(this.parent.acsInSector):
+    let it = MifareClassic_Trailer_AccessConditions_Ac.read(this.io, this.root, this, i)
+    this.acsRawInst.add(it)
+  this.io.seek(pos)
+  this.acsRawInstFlag = true
+  return this.acsRawInst
+
+proc chunks(this: MifareClassic_Trailer_AccessConditions): seq[MifareClassic_Trailer_AccessConditions_ValidChunk] = 
+  if this.chunksInstFlag:
+    return this.chunksInst
+  let pos = this.io.pos()
+  this.io.seek(int(0))
+  for i in 0 ..< int(this.parent.acBits):
+    let it = MifareClassic_Trailer_AccessConditions_ValidChunk.read(this.io, this.root, this, this.rawChunks[this.remaps[i].invChunkNo], this.rawChunks[this.remaps[i].chunkNo])
+    this.chunksInst.add(it)
+  this.io.seek(pos)
+  this.chunksInstFlag = true
+  return this.chunksInst
+
 proc dataAcs(this: MifareClassic_Trailer_AccessConditions): seq[MifareClassic_Trailer_AccessConditions_DataAc] = 
   if this.dataAcsInstFlag:
     return this.dataAcsInst
   let pos = this.io.pos()
   this.io.seek(int(0))
-  for i in 0 ..< int((this.parent.acsInSector - 1)):
+  for i in 0 ..< int(this.parent.acsInSector - 1):
     let it = MifareClassic_Trailer_AccessConditions_DataAc.read(this.io, this.root, this, this.acsRaw[i])
     this.dataAcsInst.add(it)
   this.io.seek(pos)
@@ -510,193 +534,19 @@ proc remaps(this: MifareClassic_Trailer_AccessConditions): seq[MifareClassic_Tra
   this.remapsInstFlag = true
   return this.remapsInst
 
-proc acsRaw(this: MifareClassic_Trailer_AccessConditions): seq[MifareClassic_Trailer_AccessConditions_Ac] = 
-  if this.acsRawInstFlag:
-    return this.acsRawInst
-  let pos = this.io.pos()
-  this.io.seek(int(0))
-  for i in 0 ..< int(this.parent.acsInSector):
-    let it = MifareClassic_Trailer_AccessConditions_Ac.read(this.io, this.root, this, i)
-    this.acsRawInst.add(it)
-  this.io.seek(pos)
-  this.acsRawInstFlag = true
-  return this.acsRawInst
-
 proc trailerAc(this: MifareClassic_Trailer_AccessConditions): MifareClassic_Trailer_AccessConditions_TrailerAc = 
   if this.trailerAcInstFlag:
     return this.trailerAcInst
   let pos = this.io.pos()
   this.io.seek(int(0))
-  let trailerAcInstExpr = MifareClassic_Trailer_AccessConditions_TrailerAc.read(this.io, this.root, this, this.acsRaw[(this.parent.acsInSector - 1)])
+  let trailerAcInstExpr = MifareClassic_Trailer_AccessConditions_TrailerAc.read(this.io, this.root, this, this.acsRaw[this.parent.acsInSector - 1])
   this.trailerAcInst = trailerAcInstExpr
   this.io.seek(pos)
   this.trailerAcInstFlag = true
   return this.trailerAcInst
 
-proc chunks(this: MifareClassic_Trailer_AccessConditions): seq[MifareClassic_Trailer_AccessConditions_ValidChunk] = 
-  if this.chunksInstFlag:
-    return this.chunksInst
-  let pos = this.io.pos()
-  this.io.seek(int(0))
-  for i in 0 ..< int(this.parent.acBits):
-    let it = MifareClassic_Trailer_AccessConditions_ValidChunk.read(this.io, this.root, this, this.rawChunks[this.remaps[i].invChunkNo], this.rawChunks[this.remaps[i].chunkNo])
-    this.chunksInst.add(it)
-  this.io.seek(pos)
-  this.chunksInstFlag = true
-  return this.chunksInst
-
 proc fromFile*(_: typedesc[MifareClassic_Trailer_AccessConditions], filename: string): MifareClassic_Trailer_AccessConditions =
   MifareClassic_Trailer_AccessConditions.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[MifareClassic_Trailer_AccessConditions_TrailerAc], io: KaitaiStream, root: KaitaiStruct, parent: MifareClassic_Trailer_AccessConditions, ac: any): MifareClassic_Trailer_AccessConditions_TrailerAc =
-  template this: untyped = result
-  this = new(MifareClassic_Trailer_AccessConditions_TrailerAc)
-  let root = if root == nil: cast[MifareClassic](this) else: cast[MifareClassic](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-  let acExpr = MifareClassic_Trailer_AccessConditions_Ac(ac)
-  this.ac = acExpr
-
-
-proc canReadKeyB(this: MifareClassic_Trailer_AccessConditions_TrailerAc): bool = 
-
-  ##[
-  key A is required
-  ]##
-  if this.canReadKeyBInstFlag:
-    return this.canReadKeyBInst
-  let canReadKeyBInstExpr = bool(this.ac.invShiftVal <= 2)
-  this.canReadKeyBInst = canReadKeyBInstExpr
-  this.canReadKeyBInstFlag = true
-  return this.canReadKeyBInst
-
-proc canWriteKeys(this: MifareClassic_Trailer_AccessConditions_TrailerAc): bool = 
-  if this.canWriteKeysInstFlag:
-    return this.canWriteKeysInst
-  let canWriteKeysInstExpr = bool( ((((this.ac.invShiftVal + 1) %%% 3) != 0) and (this.ac.invShiftVal < 6)) )
-  this.canWriteKeysInst = canWriteKeysInstExpr
-  this.canWriteKeysInstFlag = true
-  return this.canWriteKeysInst
-
-proc canWriteAccessBits(this: MifareClassic_Trailer_AccessConditions_TrailerAc): bool = 
-  if this.canWriteAccessBitsInstFlag:
-    return this.canWriteAccessBitsInst
-  let canWriteAccessBitsInstExpr = bool(this.ac.bits[2].b)
-  this.canWriteAccessBitsInst = canWriteAccessBitsInstExpr
-  this.canWriteAccessBitsInstFlag = true
-  return this.canWriteAccessBitsInst
-
-proc keyBControlsWrite(this: MifareClassic_Trailer_AccessConditions_TrailerAc): bool = 
-  if this.keyBControlsWriteInstFlag:
-    return this.keyBControlsWriteInst
-  let keyBControlsWriteInstExpr = bool(not(this.canReadKeyB))
-  this.keyBControlsWriteInst = keyBControlsWriteInstExpr
-  this.keyBControlsWriteInstFlag = true
-  return this.keyBControlsWriteInst
-
-proc fromFile*(_: typedesc[MifareClassic_Trailer_AccessConditions_TrailerAc], filename: string): MifareClassic_Trailer_AccessConditions_TrailerAc =
-  MifareClassic_Trailer_AccessConditions_TrailerAc.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[MifareClassic_Trailer_AccessConditions_ChunkBitRemap], io: KaitaiStream, root: KaitaiStruct, parent: MifareClassic_Trailer_AccessConditions, bitNo: any): MifareClassic_Trailer_AccessConditions_ChunkBitRemap =
-  template this: untyped = result
-  this = new(MifareClassic_Trailer_AccessConditions_ChunkBitRemap)
-  let root = if root == nil: cast[MifareClassic](this) else: cast[MifareClassic](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-  let bitNoExpr = uint8(bitNo)
-  this.bitNo = bitNoExpr
-
-
-proc shiftValue(this: MifareClassic_Trailer_AccessConditions_ChunkBitRemap): int = 
-  if this.shiftValueInstFlag:
-    return this.shiftValueInst
-  let shiftValueInstExpr = int((if this.bitNo == 1: -1 else: 1))
-  this.shiftValueInst = shiftValueInstExpr
-  this.shiftValueInstFlag = true
-  return this.shiftValueInst
-
-proc chunkNo(this: MifareClassic_Trailer_AccessConditions_ChunkBitRemap): int = 
-  if this.chunkNoInstFlag:
-    return this.chunkNoInst
-  let chunkNoInstExpr = int((((this.invChunkNo + this.shiftValue) + this.parent.parent.acCountOfChunks) %%% this.parent.parent.acCountOfChunks))
-  this.chunkNoInst = chunkNoInstExpr
-  this.chunkNoInstFlag = true
-  return this.chunkNoInst
-
-proc invChunkNo(this: MifareClassic_Trailer_AccessConditions_ChunkBitRemap): int = 
-  if this.invChunkNoInstFlag:
-    return this.invChunkNoInst
-  let invChunkNoInstExpr = int((this.bitNo + this.shiftValue))
-  this.invChunkNoInst = invChunkNoInstExpr
-  this.invChunkNoInstFlag = true
-  return this.invChunkNoInst
-
-proc fromFile*(_: typedesc[MifareClassic_Trailer_AccessConditions_ChunkBitRemap], filename: string): MifareClassic_Trailer_AccessConditions_ChunkBitRemap =
-  MifareClassic_Trailer_AccessConditions_ChunkBitRemap.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[MifareClassic_Trailer_AccessConditions_DataAc], io: KaitaiStream, root: KaitaiStruct, parent: MifareClassic_Trailer_AccessConditions, ac: any): MifareClassic_Trailer_AccessConditions_DataAc =
-  template this: untyped = result
-  this = new(MifareClassic_Trailer_AccessConditions_DataAc)
-  let root = if root == nil: cast[MifareClassic](this) else: cast[MifareClassic](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-  let acExpr = MifareClassic_Trailer_AccessConditions_Ac(ac)
-  this.ac = acExpr
-
-
-proc readKeyARequired(this: MifareClassic_Trailer_AccessConditions_DataAc): bool = 
-  if this.readKeyARequiredInstFlag:
-    return this.readKeyARequiredInst
-  let readKeyARequiredInstExpr = bool(this.ac.val <= 4)
-  this.readKeyARequiredInst = readKeyARequiredInstExpr
-  this.readKeyARequiredInstFlag = true
-  return this.readKeyARequiredInst
-
-proc writeKeyBRequired(this: MifareClassic_Trailer_AccessConditions_DataAc): bool = 
-  if this.writeKeyBRequiredInstFlag:
-    return this.writeKeyBRequiredInst
-  let writeKeyBRequiredInstExpr = bool( (( ((not(this.readKeyARequired)) or (this.readKeyBRequired)) ) and (not(this.ac.bits[0].b))) )
-  this.writeKeyBRequiredInst = writeKeyBRequiredInstExpr
-  this.writeKeyBRequiredInstFlag = true
-  return this.writeKeyBRequiredInst
-
-proc writeKeyARequired(this: MifareClassic_Trailer_AccessConditions_DataAc): bool = 
-  if this.writeKeyARequiredInstFlag:
-    return this.writeKeyARequiredInst
-  let writeKeyARequiredInstExpr = bool(this.ac.val == 0)
-  this.writeKeyARequiredInst = writeKeyARequiredInstExpr
-  this.writeKeyARequiredInstFlag = true
-  return this.writeKeyARequiredInst
-
-proc readKeyBRequired(this: MifareClassic_Trailer_AccessConditions_DataAc): bool = 
-  if this.readKeyBRequiredInstFlag:
-    return this.readKeyBRequiredInst
-  let readKeyBRequiredInstExpr = bool(this.ac.val <= 6)
-  this.readKeyBRequiredInst = readKeyBRequiredInstExpr
-  this.readKeyBRequiredInstFlag = true
-  return this.readKeyBRequiredInst
-
-proc decrementAvailable(this: MifareClassic_Trailer_AccessConditions_DataAc): bool = 
-  if this.decrementAvailableInstFlag:
-    return this.decrementAvailableInst
-  let decrementAvailableInstExpr = bool( (( ((this.ac.bits[1].b) or (not(this.ac.bits[0].b))) ) and (not(this.ac.bits[2].b))) )
-  this.decrementAvailableInst = decrementAvailableInstExpr
-  this.decrementAvailableInstFlag = true
-  return this.decrementAvailableInst
-
-proc incrementAvailable(this: MifareClassic_Trailer_AccessConditions_DataAc): bool = 
-  if this.incrementAvailableInstFlag:
-    return this.incrementAvailableInst
-  let incrementAvailableInstExpr = bool( (( ((not(this.ac.bits[0].b)) and (not(this.readKeyARequired)) and (not(this.readKeyBRequired))) ) or ( ((not(this.ac.bits[0].b)) and (this.readKeyARequired) and (this.readKeyBRequired)) )) )
-  this.incrementAvailableInst = incrementAvailableInstExpr
-  this.incrementAvailableInstFlag = true
-  return this.incrementAvailableInst
-
-proc fromFile*(_: typedesc[MifareClassic_Trailer_AccessConditions_DataAc], filename: string): MifareClassic_Trailer_AccessConditions_DataAc =
-  MifareClassic_Trailer_AccessConditions_DataAc.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[MifareClassic_Trailer_AccessConditions_Ac], io: KaitaiStream, root: KaitaiStruct, parent: MifareClassic_Trailer_AccessConditions, index: any): MifareClassic_Trailer_AccessConditions_Ac =
   template this: untyped = result
@@ -721,6 +571,14 @@ proc bits(this: MifareClassic_Trailer_AccessConditions_Ac): seq[MifareClassic_Tr
   this.bitsInstFlag = true
   return this.bitsInst
 
+proc invShiftVal(this: MifareClassic_Trailer_AccessConditions_Ac): int = 
+  if this.invShiftValInstFlag:
+    return this.invShiftValInst
+  let invShiftValInstExpr = int((this.bits[0].n shl 2 or this.bits[1].n shl 1) or this.bits[2].n)
+  this.invShiftValInst = invShiftValInstExpr
+  this.invShiftValInstFlag = true
+  return this.invShiftValInst
+
 proc val(this: MifareClassic_Trailer_AccessConditions_Ac): int = 
 
   ##[
@@ -728,18 +586,10 @@ proc val(this: MifareClassic_Trailer_AccessConditions_Ac): int =
   ]##
   if this.valInstFlag:
     return this.valInst
-  let valInstExpr = int((((this.bits[2].n shl 2) or (this.bits[1].n shl 1)) or this.bits[0].n))
+  let valInstExpr = int((this.bits[2].n shl 2 or this.bits[1].n shl 1) or this.bits[0].n)
   this.valInst = valInstExpr
   this.valInstFlag = true
   return this.valInst
-
-proc invShiftVal(this: MifareClassic_Trailer_AccessConditions_Ac): int = 
-  if this.invShiftValInstFlag:
-    return this.invShiftValInst
-  let invShiftValInstExpr = int((((this.bits[0].n shl 2) or (this.bits[1].n shl 1)) or this.bits[2].n))
-  this.invShiftValInst = invShiftValInstExpr
-  this.invShiftValInstFlag = true
-  return this.invShiftValInst
 
 proc fromFile*(_: typedesc[MifareClassic_Trailer_AccessConditions_Ac], filename: string): MifareClassic_Trailer_AccessConditions_Ac =
   MifareClassic_Trailer_AccessConditions_Ac.read(newKaitaiFileStream(filename), nil, nil)
@@ -757,14 +607,6 @@ proc read*(_: typedesc[MifareClassic_Trailer_AccessConditions_Ac_AcBit], io: Kai
   this.chunk = chunkExpr
 
 
-proc n(this: MifareClassic_Trailer_AccessConditions_Ac_AcBit): int = 
-  if this.nInstFlag:
-    return this.nInst
-  let nInstExpr = int(((this.chunk shr this.i) and 1))
-  this.nInst = nInstExpr
-  this.nInstFlag = true
-  return this.nInst
-
 proc b(this: MifareClassic_Trailer_AccessConditions_Ac_AcBit): bool = 
   if this.bInstFlag:
     return this.bInst
@@ -773,8 +615,166 @@ proc b(this: MifareClassic_Trailer_AccessConditions_Ac_AcBit): bool =
   this.bInstFlag = true
   return this.bInst
 
+proc n(this: MifareClassic_Trailer_AccessConditions_Ac_AcBit): int = 
+  if this.nInstFlag:
+    return this.nInst
+  let nInstExpr = int(this.chunk shr this.i and 1)
+  this.nInst = nInstExpr
+  this.nInstFlag = true
+  return this.nInst
+
 proc fromFile*(_: typedesc[MifareClassic_Trailer_AccessConditions_Ac_AcBit], filename: string): MifareClassic_Trailer_AccessConditions_Ac_AcBit =
   MifareClassic_Trailer_AccessConditions_Ac_AcBit.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[MifareClassic_Trailer_AccessConditions_ChunkBitRemap], io: KaitaiStream, root: KaitaiStruct, parent: MifareClassic_Trailer_AccessConditions, bitNo: any): MifareClassic_Trailer_AccessConditions_ChunkBitRemap =
+  template this: untyped = result
+  this = new(MifareClassic_Trailer_AccessConditions_ChunkBitRemap)
+  let root = if root == nil: cast[MifareClassic](this) else: cast[MifareClassic](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+  let bitNoExpr = uint8(bitNo)
+  this.bitNo = bitNoExpr
+
+
+proc chunkNo(this: MifareClassic_Trailer_AccessConditions_ChunkBitRemap): int = 
+  if this.chunkNoInstFlag:
+    return this.chunkNoInst
+  let chunkNoInstExpr = int(((this.invChunkNo + this.shiftValue) + this.parent.parent.acCountOfChunks) %%% this.parent.parent.acCountOfChunks)
+  this.chunkNoInst = chunkNoInstExpr
+  this.chunkNoInstFlag = true
+  return this.chunkNoInst
+
+proc invChunkNo(this: MifareClassic_Trailer_AccessConditions_ChunkBitRemap): int = 
+  if this.invChunkNoInstFlag:
+    return this.invChunkNoInst
+  let invChunkNoInstExpr = int(this.bitNo + this.shiftValue)
+  this.invChunkNoInst = invChunkNoInstExpr
+  this.invChunkNoInstFlag = true
+  return this.invChunkNoInst
+
+proc shiftValue(this: MifareClassic_Trailer_AccessConditions_ChunkBitRemap): int = 
+  if this.shiftValueInstFlag:
+    return this.shiftValueInst
+  let shiftValueInstExpr = int((if this.bitNo == 1: -1 else: 1))
+  this.shiftValueInst = shiftValueInstExpr
+  this.shiftValueInstFlag = true
+  return this.shiftValueInst
+
+proc fromFile*(_: typedesc[MifareClassic_Trailer_AccessConditions_ChunkBitRemap], filename: string): MifareClassic_Trailer_AccessConditions_ChunkBitRemap =
+  MifareClassic_Trailer_AccessConditions_ChunkBitRemap.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[MifareClassic_Trailer_AccessConditions_DataAc], io: KaitaiStream, root: KaitaiStruct, parent: MifareClassic_Trailer_AccessConditions, ac: any): MifareClassic_Trailer_AccessConditions_DataAc =
+  template this: untyped = result
+  this = new(MifareClassic_Trailer_AccessConditions_DataAc)
+  let root = if root == nil: cast[MifareClassic](this) else: cast[MifareClassic](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+  let acExpr = MifareClassic_Trailer_AccessConditions_Ac(ac)
+  this.ac = acExpr
+
+
+proc decrementAvailable(this: MifareClassic_Trailer_AccessConditions_DataAc): bool = 
+  if this.decrementAvailableInstFlag:
+    return this.decrementAvailableInst
+  let decrementAvailableInstExpr = bool( (( ((this.ac.bits[1].b) or (not(this.ac.bits[0].b))) ) and (not(this.ac.bits[2].b))) )
+  this.decrementAvailableInst = decrementAvailableInstExpr
+  this.decrementAvailableInstFlag = true
+  return this.decrementAvailableInst
+
+proc incrementAvailable(this: MifareClassic_Trailer_AccessConditions_DataAc): bool = 
+  if this.incrementAvailableInstFlag:
+    return this.incrementAvailableInst
+  let incrementAvailableInstExpr = bool( (( ((not(this.ac.bits[0].b)) and (not(this.readKeyARequired)) and (not(this.readKeyBRequired))) ) or ( ((not(this.ac.bits[0].b)) and (this.readKeyARequired) and (this.readKeyBRequired)) )) )
+  this.incrementAvailableInst = incrementAvailableInstExpr
+  this.incrementAvailableInstFlag = true
+  return this.incrementAvailableInst
+
+proc readKeyARequired(this: MifareClassic_Trailer_AccessConditions_DataAc): bool = 
+  if this.readKeyARequiredInstFlag:
+    return this.readKeyARequiredInst
+  let readKeyARequiredInstExpr = bool(this.ac.val <= 4)
+  this.readKeyARequiredInst = readKeyARequiredInstExpr
+  this.readKeyARequiredInstFlag = true
+  return this.readKeyARequiredInst
+
+proc readKeyBRequired(this: MifareClassic_Trailer_AccessConditions_DataAc): bool = 
+  if this.readKeyBRequiredInstFlag:
+    return this.readKeyBRequiredInst
+  let readKeyBRequiredInstExpr = bool(this.ac.val <= 6)
+  this.readKeyBRequiredInst = readKeyBRequiredInstExpr
+  this.readKeyBRequiredInstFlag = true
+  return this.readKeyBRequiredInst
+
+proc writeKeyARequired(this: MifareClassic_Trailer_AccessConditions_DataAc): bool = 
+  if this.writeKeyARequiredInstFlag:
+    return this.writeKeyARequiredInst
+  let writeKeyARequiredInstExpr = bool(this.ac.val == 0)
+  this.writeKeyARequiredInst = writeKeyARequiredInstExpr
+  this.writeKeyARequiredInstFlag = true
+  return this.writeKeyARequiredInst
+
+proc writeKeyBRequired(this: MifareClassic_Trailer_AccessConditions_DataAc): bool = 
+  if this.writeKeyBRequiredInstFlag:
+    return this.writeKeyBRequiredInst
+  let writeKeyBRequiredInstExpr = bool( (( ((not(this.readKeyARequired)) or (this.readKeyBRequired)) ) and (not(this.ac.bits[0].b))) )
+  this.writeKeyBRequiredInst = writeKeyBRequiredInstExpr
+  this.writeKeyBRequiredInstFlag = true
+  return this.writeKeyBRequiredInst
+
+proc fromFile*(_: typedesc[MifareClassic_Trailer_AccessConditions_DataAc], filename: string): MifareClassic_Trailer_AccessConditions_DataAc =
+  MifareClassic_Trailer_AccessConditions_DataAc.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[MifareClassic_Trailer_AccessConditions_TrailerAc], io: KaitaiStream, root: KaitaiStruct, parent: MifareClassic_Trailer_AccessConditions, ac: any): MifareClassic_Trailer_AccessConditions_TrailerAc =
+  template this: untyped = result
+  this = new(MifareClassic_Trailer_AccessConditions_TrailerAc)
+  let root = if root == nil: cast[MifareClassic](this) else: cast[MifareClassic](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+  let acExpr = MifareClassic_Trailer_AccessConditions_Ac(ac)
+  this.ac = acExpr
+
+
+proc canReadKeyB(this: MifareClassic_Trailer_AccessConditions_TrailerAc): bool = 
+
+  ##[
+  key A is required
+  ]##
+  if this.canReadKeyBInstFlag:
+    return this.canReadKeyBInst
+  let canReadKeyBInstExpr = bool(this.ac.invShiftVal <= 2)
+  this.canReadKeyBInst = canReadKeyBInstExpr
+  this.canReadKeyBInstFlag = true
+  return this.canReadKeyBInst
+
+proc canWriteAccessBits(this: MifareClassic_Trailer_AccessConditions_TrailerAc): bool = 
+  if this.canWriteAccessBitsInstFlag:
+    return this.canWriteAccessBitsInst
+  let canWriteAccessBitsInstExpr = bool(this.ac.bits[2].b)
+  this.canWriteAccessBitsInst = canWriteAccessBitsInstExpr
+  this.canWriteAccessBitsInstFlag = true
+  return this.canWriteAccessBitsInst
+
+proc canWriteKeys(this: MifareClassic_Trailer_AccessConditions_TrailerAc): bool = 
+  if this.canWriteKeysInstFlag:
+    return this.canWriteKeysInst
+  let canWriteKeysInstExpr = bool( (((this.ac.invShiftVal + 1) %%% 3 != 0) and (this.ac.invShiftVal < 6)) )
+  this.canWriteKeysInst = canWriteKeysInstExpr
+  this.canWriteKeysInstFlag = true
+  return this.canWriteKeysInst
+
+proc keyBControlsWrite(this: MifareClassic_Trailer_AccessConditions_TrailerAc): bool = 
+  if this.keyBControlsWriteInstFlag:
+    return this.keyBControlsWriteInst
+  let keyBControlsWriteInstExpr = bool(not(this.canReadKeyB))
+  this.keyBControlsWriteInst = keyBControlsWriteInstExpr
+  this.keyBControlsWriteInstFlag = true
+  return this.keyBControlsWriteInst
+
+proc fromFile*(_: typedesc[MifareClassic_Trailer_AccessConditions_TrailerAc], filename: string): MifareClassic_Trailer_AccessConditions_TrailerAc =
+  MifareClassic_Trailer_AccessConditions_TrailerAc.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[MifareClassic_Trailer_AccessConditions_ValidChunk], io: KaitaiStream, root: KaitaiStruct, parent: MifareClassic_Trailer_AccessConditions, invChunk: any, chunk: any): MifareClassic_Trailer_AccessConditions_ValidChunk =
   template this: untyped = result

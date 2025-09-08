@@ -2,9 +2,9 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
-use PacketPpi;
+use IO::KaitaiStruct 0.011_000;
 use EthernetFrame;
+use PacketPpi;
 
 ########################################################################
 package Pcap;
@@ -236,7 +236,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -247,7 +247,7 @@ sub _read {
     my ($self) = @_;
 
     $self->{hdr} = Pcap::Header->new($self->{_io}, $self, $self->{_root});
-    $self->{packets} = ();
+    $self->{packets} = [];
     while (!$self->{_io}->is_eof()) {
         push @{$self->{packets}}, Pcap::Packet->new($self->{_io}, $self, $self->{_root});
     }
@@ -283,7 +283,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -357,7 +357,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -372,15 +372,15 @@ sub _read {
     $self->{incl_len} = $self->{_io}->read_u4le();
     $self->{orig_len} = $self->{_io}->read_u4le();
     my $_on = $self->_root()->hdr()->network();
-    if ($_on == $Pcap::LINKTYPE_PPI) {
-        $self->{_raw_body} = $self->{_io}->read_bytes(($self->incl_len() < $self->_root()->hdr()->snaplen() ? $self->incl_len() : $self->_root()->hdr()->snaplen()));
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = PacketPpi->new($io__raw_body);
-    }
-    elsif ($_on == $Pcap::LINKTYPE_ETHERNET) {
+    if ($_on == $Pcap::LINKTYPE_ETHERNET) {
         $self->{_raw_body} = $self->{_io}->read_bytes(($self->incl_len() < $self->_root()->hdr()->snaplen() ? $self->incl_len() : $self->_root()->hdr()->snaplen()));
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = EthernetFrame->new($io__raw_body);
+    }
+    elsif ($_on == $Pcap::LINKTYPE_PPI) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->incl_len() < $self->_root()->hdr()->snaplen() ? $self->incl_len() : $self->_root()->hdr()->snaplen()));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = PacketPpi->new($io__raw_body);
     }
     else {
         $self->{body} = $self->{_io}->read_bytes(($self->incl_len() < $self->_root()->hdr()->snaplen() ? $self->incl_len() : $self->_root()->hdr()->snaplen()));

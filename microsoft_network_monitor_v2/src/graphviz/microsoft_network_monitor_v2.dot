@@ -7,7 +7,7 @@ digraph {
 
 		microsoft_network_monitor_v2__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-			<TR><TD PORT="signature_pos">0</TD><TD PORT="signature_size">4</TD><TD></TD><TD PORT="signature_type">signature</TD></TR>
+			<TR><TD PORT="signature_pos">0</TD><TD PORT="signature_size">4</TD><TD>47 4D 42 55</TD><TD PORT="signature_type">signature</TD></TR>
 			<TR><TD PORT="version_minor_pos">4</TD><TD PORT="version_minor_size">1</TD><TD>u1</TD><TD PORT="version_minor_type">version_minor</TD></TR>
 			<TR><TD PORT="version_major_pos">5</TD><TD PORT="version_major_size">1</TD><TD>u1</TD><TD PORT="version_major_type">version_major</TD></TR>
 			<TR><TD PORT="mac_type_pos">6</TD><TD PORT="mac_type_size">2</TD><TD>u2le→Linktype</TD><TD PORT="mac_type_type">mac_type</TD></TR>
@@ -29,6 +29,22 @@ digraph {
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 			<TR><TD PORT="frame_table_pos">frame_table_ofs</TD><TD PORT="frame_table_size">frame_table_len</TD><TD>FrameIndex</TD><TD PORT="frame_table_type">frame_table</TD></TR>
 		</TABLE>>];
+		subgraph cluster__frame {
+			label="MicrosoftNetworkMonitorV2::Frame";
+			graph[style=dotted];
+
+			frame__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="ts_delta_pos">0</TD><TD PORT="ts_delta_size">8</TD><TD>u8le</TD><TD PORT="ts_delta_type">ts_delta</TD></TR>
+				<TR><TD PORT="orig_len_pos">8</TD><TD PORT="orig_len_size">4</TD><TD>u4le</TD><TD PORT="orig_len_type">orig_len</TD></TR>
+				<TR><TD PORT="inc_len_pos">12</TD><TD PORT="inc_len_size">4</TD><TD>u4le</TD><TD PORT="inc_len_type">inc_len</TD></TR>
+				<TR><TD PORT="body_pos">16</TD><TD PORT="body_size">...</TD><TD>switch (_root.mac_type)</TD><TD PORT="body_type">body</TD></TR>
+			</TABLE>>];
+frame__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>:linktype_ethernet</TD><TD PORT="case0">EthernetFrame</TD></TR>
+</TABLE>>];
+		}
 		subgraph cluster__frame_index {
 			label="MicrosoftNetworkMonitorV2::FrameIndex";
 			graph[style=dotted];
@@ -52,31 +68,15 @@ digraph {
 				<TR><TD PORT="body_pos">ofs</TD><TD PORT="body_size">...</TD><TD>Frame</TD><TD PORT="body_type">body</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__frame {
-			label="MicrosoftNetworkMonitorV2::Frame";
-			graph[style=dotted];
-
-			frame__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="ts_delta_pos">0</TD><TD PORT="ts_delta_size">8</TD><TD>u8le</TD><TD PORT="ts_delta_type">ts_delta</TD></TR>
-				<TR><TD PORT="orig_len_pos">8</TD><TD PORT="orig_len_size">4</TD><TD>u4le</TD><TD PORT="orig_len_type">orig_len</TD></TR>
-				<TR><TD PORT="inc_len_pos">12</TD><TD PORT="inc_len_size">4</TD><TD>u4le</TD><TD PORT="inc_len_type">inc_len</TD></TR>
-				<TR><TD PORT="body_pos">16</TD><TD PORT="body_size">...</TD><TD>switch (_root.mac_type)</TD><TD PORT="body_type">body</TD></TR>
-			</TABLE>>];
-frame__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
-	<TR><TD>:linktype_ethernet</TD><TD PORT="case0">EthernetFrame</TD></TR>
-</TABLE>>];
-		}
 	}
 	microsoft_network_monitor_v2__seq:time_capture_start_type -> windows_systemtime__seq [style=bold];
 	microsoft_network_monitor_v2__seq:frame_table_ofs_type -> microsoft_network_monitor_v2__inst__frame_table:frame_table_pos [color="#404040"];
 	microsoft_network_monitor_v2__seq:frame_table_len_type -> microsoft_network_monitor_v2__inst__frame_table:frame_table_size [color="#404040"];
 	microsoft_network_monitor_v2__inst__frame_table:frame_table_type -> frame_index__seq [style=bold];
-	frame_index__seq:entries_type -> frame_index_entry__seq [style=bold];
-	frame_index_entry__seq:ofs_type -> frame_index_entry__inst__body:body_pos [color="#404040"];
-	frame_index_entry__inst__body:body_type -> frame__seq [style=bold];
 	frame__seq:body_type -> frame__seq_body_switch [style=bold];
 	frame__seq_body_switch:case0 -> ethernet_frame__seq [style=bold];
 	microsoft_network_monitor_v2__seq:mac_type_type -> frame__seq:body_type [color="#404040"];
+	frame_index__seq:entries_type -> frame_index_entry__seq [style=bold];
+	frame_index_entry__seq:ofs_type -> frame_index_entry__inst__body:body_pos [color="#404040"];
+	frame_index_entry__inst__body:body_type -> frame__seq [style=bold];
 }

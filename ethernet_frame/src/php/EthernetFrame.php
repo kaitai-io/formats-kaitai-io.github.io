@@ -9,8 +9,8 @@
 
 namespace {
     class EthernetFrame extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \EthernetFrame $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\EthernetFrame $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -90,7 +90,7 @@ namespace {
 
 namespace EthernetFrame {
     class TagControlInfo extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \EthernetFrame $_parent = null, \EthernetFrame $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\EthernetFrame $_parent = null, ?\EthernetFrame $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -136,5 +136,11 @@ namespace EthernetFrame {
         const ARP = 2054;
         const IEEE_802_1Q_TPID = 33024;
         const IPV6 = 34525;
+
+        private const _VALUES = [2048 => true, 2049 => true, 2050 => true, 2051 => true, 2052 => true, 2053 => true, 2054 => true, 33024 => true, 34525 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

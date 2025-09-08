@@ -1,9 +1,10 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 require 'kaitai/struct/struct'
+require_relative 'vlq_base128_le'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -31,14 +32,497 @@ class Dex < Kaitai::Struct::Struct
     16384 => :class_access_flags_enum,
   }
   I__CLASS_ACCESS_FLAGS = CLASS_ACCESS_FLAGS.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
     @header = HeaderItem.new(@_io, self, @_root)
     self
+  end
+  class AnnotationElement < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @name_idx = VlqBase128Le.new(@_io)
+      @value = EncodedValue.new(@_io, self, @_root)
+      self
+    end
+
+    ##
+    # element name, represented as an index into the string_ids section.
+    # 
+    # The string must conform to the syntax for MemberName, defined above.
+    attr_reader :name_idx
+
+    ##
+    # element value
+    attr_reader :value
+  end
+  class CallSiteIdItem < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @call_site_off = @_io.read_u4le
+      self
+    end
+
+    ##
+    # offset from the start of the file to call site definition.
+    # 
+    # The offset should be in the data section, and the data there should
+    # be in the format specified by "call_site_item" below.
+    attr_reader :call_site_off
+  end
+  class ClassDataItem < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @static_fields_size = VlqBase128Le.new(@_io)
+      @instance_fields_size = VlqBase128Le.new(@_io)
+      @direct_methods_size = VlqBase128Le.new(@_io)
+      @virtual_methods_size = VlqBase128Le.new(@_io)
+      @static_fields = []
+      (static_fields_size.value).times { |i|
+        @static_fields << EncodedField.new(@_io, self, @_root)
+      }
+      @instance_fields = []
+      (instance_fields_size.value).times { |i|
+        @instance_fields << EncodedField.new(@_io, self, @_root)
+      }
+      @direct_methods = []
+      (direct_methods_size.value).times { |i|
+        @direct_methods << EncodedMethod.new(@_io, self, @_root)
+      }
+      @virtual_methods = []
+      (virtual_methods_size.value).times { |i|
+        @virtual_methods << EncodedMethod.new(@_io, self, @_root)
+      }
+      self
+    end
+
+    ##
+    # the number of static fields defined in this item
+    attr_reader :static_fields_size
+
+    ##
+    # the number of instance fields defined in this item
+    attr_reader :instance_fields_size
+
+    ##
+    # the number of direct methods defined in this item
+    attr_reader :direct_methods_size
+
+    ##
+    # the number of virtual methods defined in this item
+    attr_reader :virtual_methods_size
+
+    ##
+    # the defined static fields, represented as a sequence of encoded elements.
+    # 
+    # The fields must be sorted by field_idx in increasing order.
+    attr_reader :static_fields
+
+    ##
+    # the defined instance fields, represented as a sequence of encoded elements.
+    # 
+    # The fields must be sorted by field_idx in increasing order.
+    attr_reader :instance_fields
+
+    ##
+    # the defined direct (any of static, private, or constructor) methods,
+    # represented as a sequence of encoded elements.
+    # 
+    # The methods must be sorted by method_idx in increasing order.
+    attr_reader :direct_methods
+
+    ##
+    # the defined virtual (none of static, private, or constructor) methods,
+    # represented as a sequence of encoded elements.
+    # 
+    # This list should not include inherited methods unless overridden by
+    # the class that this item represents.
+    # 
+    # The methods must be sorted by method_idx in increasing order.
+    # 
+    # The method_idx of a virtual method must not be the same as any direct method.
+    attr_reader :virtual_methods
+  end
+  class ClassDefItem < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @class_idx = @_io.read_u4le
+      @access_flags = Kaitai::Struct::Stream::resolve_enum(Dex::CLASS_ACCESS_FLAGS, @_io.read_u4le)
+      @superclass_idx = @_io.read_u4le
+      @interfaces_off = @_io.read_u4le
+      @source_file_idx = @_io.read_u4le
+      @annotations_off = @_io.read_u4le
+      @class_data_off = @_io.read_u4le
+      @static_values_off = @_io.read_u4le
+      self
+    end
+    def class_data
+      return @class_data unless @class_data.nil?
+      if class_data_off != 0
+        _pos = @_io.pos
+        @_io.seek(class_data_off)
+        @class_data = ClassDataItem.new(@_io, self, @_root)
+        @_io.seek(_pos)
+      end
+      @class_data
+    end
+    def static_values
+      return @static_values unless @static_values.nil?
+      if static_values_off != 0
+        _pos = @_io.pos
+        @_io.seek(static_values_off)
+        @static_values = EncodedArrayItem.new(@_io, self, @_root)
+        @_io.seek(_pos)
+      end
+      @static_values
+    end
+    def type_name
+      return @type_name unless @type_name.nil?
+      @type_name = _root.type_ids[class_idx].type_name
+      @type_name
+    end
+
+    ##
+    # index into the type_ids list for this class.
+    # 
+    # This must be a class type, and not an array or primitive type.
+    attr_reader :class_idx
+
+    ##
+    # access flags for the class (public, final, etc.).
+    # 
+    # See "access_flags Definitions" for details.
+    attr_reader :access_flags
+
+    ##
+    # index into the type_ids list for the superclass,
+    # or the constant value NO_INDEX if this class has no superclass
+    # (i.e., it is a root class such as Object).
+    # 
+    # If present, this must be a class type, and not an array or primitive type.
+    attr_reader :superclass_idx
+
+    ##
+    # offset from the start of the file to the list of interfaces, or 0 if there are none.
+    # 
+    # This offset should be in the data section, and the data there should
+    # be in the format specified by "type_list" below. Each of the elements
+    # of the list must be a class type (not an array or primitive type),
+    # and there must not be any duplicates.
+    attr_reader :interfaces_off
+
+    ##
+    # index into the string_ids list for the name of the file containing
+    # the original source for (at least most of) this class, or the
+    # special value NO_INDEX to represent a lack of this information.
+    # 
+    # The debug_info_item of any given method may override this source file,
+    # but the expectation is that most classes will only come from one source file.
+    attr_reader :source_file_idx
+
+    ##
+    # offset from the start of the file to the annotations structure for
+    # this class, or 0 if there are no annotations on this class.
+    # 
+    # This offset, if non-zero, should be in the data section, and the data
+    # there should be in the format specified by "annotations_directory_item"
+    # below,with all items referring to this class as the definer.
+    attr_reader :annotations_off
+
+    ##
+    # offset from the start of the file to the associated class data for this
+    # item, or 0 if there is no class data for this class.
+    # 
+    # (This may be the case, for example, if this class is a marker interface.)
+    # 
+    # The offset, if non-zero, should be in the data section, and the data
+    # there should be in the format specified by "class_data_item" below,
+    # with all items referring to this class as the definer.
+    attr_reader :class_data_off
+
+    ##
+    # offset from the start of the file to the list of initial values for
+    # static fields, or 0 if there are none (and all static fields are to be
+    # initialized with 0 or null).
+    # 
+    # This offset should be in the data section, and the data there should
+    # be in the format specified by "encoded_array_item" below.
+    # 
+    # The size of the array must be no larger than the number of static fields
+    # declared by this class, and the elements correspond to the static fields
+    # in the same order as declared in the corresponding field_list.
+    # 
+    # The type of each array element must match the declared type of its
+    # corresponding field.
+    # 
+    # If there are fewer elements in the array than there are static fields,
+    # then the leftover fields are initialized with a type-appropriate 0 or null.
+    attr_reader :static_values_off
+  end
+  class EncodedAnnotation < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @type_idx = VlqBase128Le.new(@_io)
+      @size = VlqBase128Le.new(@_io)
+      @elements = []
+      (size.value).times { |i|
+        @elements << AnnotationElement.new(@_io, self, @_root)
+      }
+      self
+    end
+
+    ##
+    # type of the annotation.
+    # 
+    # This must be a class (not array or primitive) type.
+    attr_reader :type_idx
+
+    ##
+    # number of name-value mappings in this annotation
+    attr_reader :size
+
+    ##
+    # elements of the annotation, represented directly in-line (not as offsets).
+    # 
+    # Elements must be sorted in increasing order by string_id index.
+    attr_reader :elements
+  end
+  class EncodedArray < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @size = VlqBase128Le.new(@_io)
+      @values = []
+      (size.value).times { |i|
+        @values << EncodedValue.new(@_io, self, @_root)
+      }
+      self
+    end
+    attr_reader :size
+    attr_reader :values
+  end
+  class EncodedArrayItem < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @value = EncodedArray.new(@_io, self, @_root)
+      self
+    end
+    attr_reader :value
+  end
+  class EncodedField < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @field_idx_diff = VlqBase128Le.new(@_io)
+      @access_flags = VlqBase128Le.new(@_io)
+      self
+    end
+
+    ##
+    # index into the field_ids list for the identity of this field
+    # (includes the name and descriptor), represented as a difference
+    # from the index of previous element in the list.
+    # 
+    # The index of the first element in a list is represented directly.
+    attr_reader :field_idx_diff
+
+    ##
+    # access flags for the field (public, final, etc.).
+    # 
+    # See "access_flags Definitions" for details.
+    attr_reader :access_flags
+  end
+  class EncodedMethod < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @method_idx_diff = VlqBase128Le.new(@_io)
+      @access_flags = VlqBase128Le.new(@_io)
+      @code_off = VlqBase128Le.new(@_io)
+      self
+    end
+
+    ##
+    # index into the method_ids list for the identity of this method
+    # (includes the name and descriptor), represented as a difference
+    # from the index of previous element in the list.
+    # 
+    # The index of the first element in a list is represented directly.
+    attr_reader :method_idx_diff
+
+    ##
+    # access flags for the field (public, final, etc.).
+    # 
+    # See "access_flags Definitions" for details.
+    attr_reader :access_flags
+
+    ##
+    # offset from the start of the file to the code structure for this method,
+    # or 0 if this method is either abstract or native.
+    # 
+    # The offset should be to a location in the data section.
+    # 
+    # The format of the data is specified by "code_item" below.
+    attr_reader :code_off
+  end
+  class EncodedValue < Kaitai::Struct::Struct
+
+    VALUE_TYPE_ENUM = {
+      0 => :value_type_enum_byte,
+      2 => :value_type_enum_short,
+      3 => :value_type_enum_char,
+      4 => :value_type_enum_int,
+      6 => :value_type_enum_long,
+      16 => :value_type_enum_float,
+      17 => :value_type_enum_double,
+      21 => :value_type_enum_method_type,
+      22 => :value_type_enum_method_handle,
+      23 => :value_type_enum_string,
+      24 => :value_type_enum_type,
+      25 => :value_type_enum_field,
+      26 => :value_type_enum_method,
+      27 => :value_type_enum_enum,
+      28 => :value_type_enum_array,
+      29 => :value_type_enum_annotation,
+      30 => :value_type_enum_null,
+      31 => :value_type_enum_boolean,
+    }
+    I__VALUE_TYPE_ENUM = VALUE_TYPE_ENUM.invert
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @value_arg = @_io.read_bits_int_be(3)
+      @value_type = Kaitai::Struct::Stream::resolve_enum(VALUE_TYPE_ENUM, @_io.read_bits_int_be(5))
+      @_io.align_to_byte
+      case value_type
+      when :value_type_enum_annotation
+        @value = EncodedAnnotation.new(@_io, self, @_root)
+      when :value_type_enum_array
+        @value = EncodedArray.new(@_io, self, @_root)
+      when :value_type_enum_byte
+        @value = @_io.read_s1
+      when :value_type_enum_char
+        @value = @_io.read_u2le
+      when :value_type_enum_double
+        @value = @_io.read_f8le
+      when :value_type_enum_enum
+        @value = @_io.read_u4le
+      when :value_type_enum_field
+        @value = @_io.read_u4le
+      when :value_type_enum_float
+        @value = @_io.read_f4le
+      when :value_type_enum_int
+        @value = @_io.read_s4le
+      when :value_type_enum_long
+        @value = @_io.read_s8le
+      when :value_type_enum_method
+        @value = @_io.read_u4le
+      when :value_type_enum_method_handle
+        @value = @_io.read_u4le
+      when :value_type_enum_method_type
+        @value = @_io.read_u4le
+      when :value_type_enum_short
+        @value = @_io.read_s2le
+      when :value_type_enum_string
+        @value = @_io.read_u4le
+      when :value_type_enum_type
+        @value = @_io.read_u4le
+      end
+      self
+    end
+    attr_reader :value_arg
+    attr_reader :value_type
+    attr_reader :value
+  end
+  class FieldIdItem < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @class_idx = @_io.read_u2le
+      @type_idx = @_io.read_u2le
+      @name_idx = @_io.read_u4le
+      self
+    end
+
+    ##
+    # the definer of this field
+    def class_name
+      return @class_name unless @class_name.nil?
+      @class_name = _root.type_ids[class_idx].type_name
+      @class_name
+    end
+
+    ##
+    # the name of this field
+    def field_name
+      return @field_name unless @field_name.nil?
+      @field_name = _root.string_ids[name_idx].value.data
+      @field_name
+    end
+
+    ##
+    # the type of this field
+    def type_name
+      return @type_name unless @type_name.nil?
+      @type_name = _root.type_ids[type_idx].type_name
+      @type_name
+    end
+
+    ##
+    # index into the type_ids list for the definer of this field.
+    # This must be a class type, and not an array or primitive type.
+    attr_reader :class_idx
+
+    ##
+    # index into the type_ids list for the type of this field
+    attr_reader :type_idx
+
+    ##
+    # index into the string_ids list for the name of this field.
+    # The string must conform to the syntax for MemberName, defined above.
+    attr_reader :name_idx
   end
   class HeaderItem < Kaitai::Struct::Struct
 
@@ -47,15 +531,15 @@ class Dex < Kaitai::Struct::Struct
       2018915346 => :endian_constant_reverse_endian_constant,
     }
     I__ENDIAN_CONSTANT = ENDIAN_CONSTANT.invert
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
       @magic = @_io.read_bytes(4)
-      raise Kaitai::Struct::ValidationNotEqualError.new([100, 101, 120, 10].pack('C*'), magic, _io, "/types/header_item/seq/0") if not magic == [100, 101, 120, 10].pack('C*')
-      @version_str = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(4), 0, false)).force_encoding("ascii")
+      raise Kaitai::Struct::ValidationNotEqualError.new([100, 101, 120, 10].pack('C*'), @magic, @_io, "/types/header_item/seq/0") if not @magic == [100, 101, 120, 10].pack('C*')
+      @version_str = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(4), 0, false)).force_encoding("ASCII").encode('UTF-8')
       @checksum = @_io.read_u4le
       @signature = @_io.read_bytes(20)
       @file_size = @_io.read_u4le
@@ -189,696 +673,6 @@ class Dex < Kaitai::Struct::Struct
     # offset from the start of the file to the start of the data section.
     attr_reader :data_off
   end
-  class MapList < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @size = @_io.read_u4le
-      @list = []
-      (size).times { |i|
-        @list << MapItem.new(@_io, self, @_root)
-      }
-      self
-    end
-    attr_reader :size
-    attr_reader :list
-  end
-  class EncodedValue < Kaitai::Struct::Struct
-
-    VALUE_TYPE_ENUM = {
-      0 => :value_type_enum_byte,
-      2 => :value_type_enum_short,
-      3 => :value_type_enum_char,
-      4 => :value_type_enum_int,
-      6 => :value_type_enum_long,
-      16 => :value_type_enum_float,
-      17 => :value_type_enum_double,
-      21 => :value_type_enum_method_type,
-      22 => :value_type_enum_method_handle,
-      23 => :value_type_enum_string,
-      24 => :value_type_enum_type,
-      25 => :value_type_enum_field,
-      26 => :value_type_enum_method,
-      27 => :value_type_enum_enum,
-      28 => :value_type_enum_array,
-      29 => :value_type_enum_annotation,
-      30 => :value_type_enum_null,
-      31 => :value_type_enum_boolean,
-    }
-    I__VALUE_TYPE_ENUM = VALUE_TYPE_ENUM.invert
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @value_arg = @_io.read_bits_int_be(3)
-      @value_type = Kaitai::Struct::Stream::resolve_enum(VALUE_TYPE_ENUM, @_io.read_bits_int_be(5))
-      @_io.align_to_byte
-      case value_type
-      when :value_type_enum_int
-        @value = @_io.read_s4le
-      when :value_type_enum_annotation
-        @value = EncodedAnnotation.new(@_io, self, @_root)
-      when :value_type_enum_long
-        @value = @_io.read_s8le
-      when :value_type_enum_method_handle
-        @value = @_io.read_u4le
-      when :value_type_enum_byte
-        @value = @_io.read_s1
-      when :value_type_enum_array
-        @value = EncodedArray.new(@_io, self, @_root)
-      when :value_type_enum_method_type
-        @value = @_io.read_u4le
-      when :value_type_enum_short
-        @value = @_io.read_s2le
-      when :value_type_enum_method
-        @value = @_io.read_u4le
-      when :value_type_enum_double
-        @value = @_io.read_f8le
-      when :value_type_enum_float
-        @value = @_io.read_f4le
-      when :value_type_enum_type
-        @value = @_io.read_u4le
-      when :value_type_enum_enum
-        @value = @_io.read_u4le
-      when :value_type_enum_field
-        @value = @_io.read_u4le
-      when :value_type_enum_string
-        @value = @_io.read_u4le
-      when :value_type_enum_char
-        @value = @_io.read_u2le
-      end
-      self
-    end
-    attr_reader :value_arg
-    attr_reader :value_type
-    attr_reader :value
-  end
-  class CallSiteIdItem < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @call_site_off = @_io.read_u4le
-      self
-    end
-
-    ##
-    # offset from the start of the file to call site definition.
-    # 
-    # The offset should be in the data section, and the data there should
-    # be in the format specified by "call_site_item" below.
-    attr_reader :call_site_off
-  end
-  class MethodIdItem < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @class_idx = @_io.read_u2le
-      @proto_idx = @_io.read_u2le
-      @name_idx = @_io.read_u4le
-      self
-    end
-
-    ##
-    # the definer of this method
-    def class_name
-      return @class_name unless @class_name.nil?
-      @class_name = _root.type_ids[class_idx].type_name
-      @class_name
-    end
-
-    ##
-    # the short-form descriptor of the prototype of this method
-    def proto_desc
-      return @proto_desc unless @proto_desc.nil?
-      @proto_desc = _root.proto_ids[proto_idx].shorty_desc
-      @proto_desc
-    end
-
-    ##
-    # the name of this method
-    def method_name
-      return @method_name unless @method_name.nil?
-      @method_name = _root.string_ids[name_idx].value.data
-      @method_name
-    end
-
-    ##
-    # index into the type_ids list for the definer of this method.
-    # This must be a class or array type, and not a primitive type.
-    attr_reader :class_idx
-
-    ##
-    # index into the proto_ids list for the prototype of this method
-    attr_reader :proto_idx
-
-    ##
-    # index into the string_ids list for the name of this method.
-    # The string must conform to the syntax for MemberName, defined above.
-    attr_reader :name_idx
-  end
-  class TypeItem < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @type_idx = @_io.read_u2le
-      self
-    end
-    def value
-      return @value unless @value.nil?
-      @value = _root.type_ids[type_idx].type_name
-      @value
-    end
-    attr_reader :type_idx
-  end
-  class TypeIdItem < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @descriptor_idx = @_io.read_u4le
-      self
-    end
-    def type_name
-      return @type_name unless @type_name.nil?
-      @type_name = _root.string_ids[descriptor_idx].value.data
-      @type_name
-    end
-
-    ##
-    # index into the string_ids list for the descriptor string of this type.
-    # The string must conform to the syntax for TypeDescriptor, defined above.
-    attr_reader :descriptor_idx
-  end
-  class AnnotationElement < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @name_idx = VlqBase128Le.new(@_io)
-      @value = EncodedValue.new(@_io, self, @_root)
-      self
-    end
-
-    ##
-    # element name, represented as an index into the string_ids section.
-    # 
-    # The string must conform to the syntax for MemberName, defined above.
-    attr_reader :name_idx
-
-    ##
-    # element value
-    attr_reader :value
-  end
-  class EncodedField < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @field_idx_diff = VlqBase128Le.new(@_io)
-      @access_flags = VlqBase128Le.new(@_io)
-      self
-    end
-
-    ##
-    # index into the field_ids list for the identity of this field
-    # (includes the name and descriptor), represented as a difference
-    # from the index of previous element in the list.
-    # 
-    # The index of the first element in a list is represented directly.
-    attr_reader :field_idx_diff
-
-    ##
-    # access flags for the field (public, final, etc.).
-    # 
-    # See "access_flags Definitions" for details.
-    attr_reader :access_flags
-  end
-  class EncodedArrayItem < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @value = EncodedArray.new(@_io, self, @_root)
-      self
-    end
-    attr_reader :value
-  end
-  class ClassDataItem < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @static_fields_size = VlqBase128Le.new(@_io)
-      @instance_fields_size = VlqBase128Le.new(@_io)
-      @direct_methods_size = VlqBase128Le.new(@_io)
-      @virtual_methods_size = VlqBase128Le.new(@_io)
-      @static_fields = []
-      (static_fields_size.value).times { |i|
-        @static_fields << EncodedField.new(@_io, self, @_root)
-      }
-      @instance_fields = []
-      (instance_fields_size.value).times { |i|
-        @instance_fields << EncodedField.new(@_io, self, @_root)
-      }
-      @direct_methods = []
-      (direct_methods_size.value).times { |i|
-        @direct_methods << EncodedMethod.new(@_io, self, @_root)
-      }
-      @virtual_methods = []
-      (virtual_methods_size.value).times { |i|
-        @virtual_methods << EncodedMethod.new(@_io, self, @_root)
-      }
-      self
-    end
-
-    ##
-    # the number of static fields defined in this item
-    attr_reader :static_fields_size
-
-    ##
-    # the number of instance fields defined in this item
-    attr_reader :instance_fields_size
-
-    ##
-    # the number of direct methods defined in this item
-    attr_reader :direct_methods_size
-
-    ##
-    # the number of virtual methods defined in this item
-    attr_reader :virtual_methods_size
-
-    ##
-    # the defined static fields, represented as a sequence of encoded elements.
-    # 
-    # The fields must be sorted by field_idx in increasing order.
-    attr_reader :static_fields
-
-    ##
-    # the defined instance fields, represented as a sequence of encoded elements.
-    # 
-    # The fields must be sorted by field_idx in increasing order.
-    attr_reader :instance_fields
-
-    ##
-    # the defined direct (any of static, private, or constructor) methods,
-    # represented as a sequence of encoded elements.
-    # 
-    # The methods must be sorted by method_idx in increasing order.
-    attr_reader :direct_methods
-
-    ##
-    # the defined virtual (none of static, private, or constructor) methods,
-    # represented as a sequence of encoded elements.
-    # 
-    # This list should not include inherited methods unless overridden by
-    # the class that this item represents.
-    # 
-    # The methods must be sorted by method_idx in increasing order.
-    # 
-    # The method_idx of a virtual method must not be the same as any direct method.
-    attr_reader :virtual_methods
-  end
-  class FieldIdItem < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @class_idx = @_io.read_u2le
-      @type_idx = @_io.read_u2le
-      @name_idx = @_io.read_u4le
-      self
-    end
-
-    ##
-    # the definer of this field
-    def class_name
-      return @class_name unless @class_name.nil?
-      @class_name = _root.type_ids[class_idx].type_name
-      @class_name
-    end
-
-    ##
-    # the type of this field
-    def type_name
-      return @type_name unless @type_name.nil?
-      @type_name = _root.type_ids[type_idx].type_name
-      @type_name
-    end
-
-    ##
-    # the name of this field
-    def field_name
-      return @field_name unless @field_name.nil?
-      @field_name = _root.string_ids[name_idx].value.data
-      @field_name
-    end
-
-    ##
-    # index into the type_ids list for the definer of this field.
-    # This must be a class type, and not an array or primitive type.
-    attr_reader :class_idx
-
-    ##
-    # index into the type_ids list for the type of this field
-    attr_reader :type_idx
-
-    ##
-    # index into the string_ids list for the name of this field.
-    # The string must conform to the syntax for MemberName, defined above.
-    attr_reader :name_idx
-  end
-  class EncodedAnnotation < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @type_idx = VlqBase128Le.new(@_io)
-      @size = VlqBase128Le.new(@_io)
-      @elements = []
-      (size.value).times { |i|
-        @elements << AnnotationElement.new(@_io, self, @_root)
-      }
-      self
-    end
-
-    ##
-    # type of the annotation.
-    # 
-    # This must be a class (not array or primitive) type.
-    attr_reader :type_idx
-
-    ##
-    # number of name-value mappings in this annotation
-    attr_reader :size
-
-    ##
-    # elements of the annotation, represented directly in-line (not as offsets).
-    # 
-    # Elements must be sorted in increasing order by string_id index.
-    attr_reader :elements
-  end
-  class ClassDefItem < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @class_idx = @_io.read_u4le
-      @access_flags = Kaitai::Struct::Stream::resolve_enum(Dex::CLASS_ACCESS_FLAGS, @_io.read_u4le)
-      @superclass_idx = @_io.read_u4le
-      @interfaces_off = @_io.read_u4le
-      @source_file_idx = @_io.read_u4le
-      @annotations_off = @_io.read_u4le
-      @class_data_off = @_io.read_u4le
-      @static_values_off = @_io.read_u4le
-      self
-    end
-    def type_name
-      return @type_name unless @type_name.nil?
-      @type_name = _root.type_ids[class_idx].type_name
-      @type_name
-    end
-    def class_data
-      return @class_data unless @class_data.nil?
-      if class_data_off != 0
-        _pos = @_io.pos
-        @_io.seek(class_data_off)
-        @class_data = ClassDataItem.new(@_io, self, @_root)
-        @_io.seek(_pos)
-      end
-      @class_data
-    end
-    def static_values
-      return @static_values unless @static_values.nil?
-      if static_values_off != 0
-        _pos = @_io.pos
-        @_io.seek(static_values_off)
-        @static_values = EncodedArrayItem.new(@_io, self, @_root)
-        @_io.seek(_pos)
-      end
-      @static_values
-    end
-
-    ##
-    # index into the type_ids list for this class.
-    # 
-    # This must be a class type, and not an array or primitive type.
-    attr_reader :class_idx
-
-    ##
-    # access flags for the class (public, final, etc.).
-    # 
-    # See "access_flags Definitions" for details.
-    attr_reader :access_flags
-
-    ##
-    # index into the type_ids list for the superclass,
-    # or the constant value NO_INDEX if this class has no superclass
-    # (i.e., it is a root class such as Object).
-    # 
-    # If present, this must be a class type, and not an array or primitive type.
-    attr_reader :superclass_idx
-
-    ##
-    # offset from the start of the file to the list of interfaces, or 0 if there are none.
-    # 
-    # This offset should be in the data section, and the data there should
-    # be in the format specified by "type_list" below. Each of the elements
-    # of the list must be a class type (not an array or primitive type),
-    # and there must not be any duplicates.
-    attr_reader :interfaces_off
-
-    ##
-    # index into the string_ids list for the name of the file containing
-    # the original source for (at least most of) this class, or the
-    # special value NO_INDEX to represent a lack of this information.
-    # 
-    # The debug_info_item of any given method may override this source file,
-    # but the expectation is that most classes will only come from one source file.
-    attr_reader :source_file_idx
-
-    ##
-    # offset from the start of the file to the annotations structure for
-    # this class, or 0 if there are no annotations on this class.
-    # 
-    # This offset, if non-zero, should be in the data section, and the data
-    # there should be in the format specified by "annotations_directory_item"
-    # below,with all items referring to this class as the definer.
-    attr_reader :annotations_off
-
-    ##
-    # offset from the start of the file to the associated class data for this
-    # item, or 0 if there is no class data for this class.
-    # 
-    # (This may be the case, for example, if this class is a marker interface.)
-    # 
-    # The offset, if non-zero, should be in the data section, and the data
-    # there should be in the format specified by "class_data_item" below,
-    # with all items referring to this class as the definer.
-    attr_reader :class_data_off
-
-    ##
-    # offset from the start of the file to the list of initial values for
-    # static fields, or 0 if there are none (and all static fields are to be
-    # initialized with 0 or null).
-    # 
-    # This offset should be in the data section, and the data there should
-    # be in the format specified by "encoded_array_item" below.
-    # 
-    # The size of the array must be no larger than the number of static fields
-    # declared by this class, and the elements correspond to the static fields
-    # in the same order as declared in the corresponding field_list.
-    # 
-    # The type of each array element must match the declared type of its
-    # corresponding field.
-    # 
-    # If there are fewer elements in the array than there are static fields,
-    # then the leftover fields are initialized with a type-appropriate 0 or null.
-    attr_reader :static_values_off
-  end
-  class TypeList < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @size = @_io.read_u4le
-      @list = []
-      (size).times { |i|
-        @list << TypeItem.new(@_io, self, @_root)
-      }
-      self
-    end
-    attr_reader :size
-    attr_reader :list
-  end
-  class StringIdItem < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @string_data_off = @_io.read_u4le
-      self
-    end
-    class StringDataItem < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
-
-      def _read
-        @utf16_size = VlqBase128Le.new(@_io)
-        @data = (@_io.read_bytes(utf16_size.value)).force_encoding("ascii")
-        self
-      end
-      attr_reader :utf16_size
-      attr_reader :data
-    end
-    def value
-      return @value unless @value.nil?
-      _pos = @_io.pos
-      @_io.seek(string_data_off)
-      @value = StringDataItem.new(@_io, self, @_root)
-      @_io.seek(_pos)
-      @value
-    end
-
-    ##
-    # offset from the start of the file to the string data for this item.
-    # The offset should be to a location in the data section, and the data
-    # should be in the format specified by "string_data_item" below.
-    # There is no alignment requirement for the offset.
-    attr_reader :string_data_off
-  end
-  class ProtoIdItem < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @shorty_idx = @_io.read_u4le
-      @return_type_idx = @_io.read_u4le
-      @parameters_off = @_io.read_u4le
-      self
-    end
-
-    ##
-    # short-form descriptor string of this prototype, as pointed to by shorty_idx
-    def shorty_desc
-      return @shorty_desc unless @shorty_desc.nil?
-      @shorty_desc = _root.string_ids[shorty_idx].value.data
-      @shorty_desc
-    end
-
-    ##
-    # list of parameter types for this prototype
-    def params_types
-      return @params_types unless @params_types.nil?
-      if parameters_off != 0
-        io = _root._io
-        _pos = io.pos
-        io.seek(parameters_off)
-        @params_types = TypeList.new(io, self, @_root)
-        io.seek(_pos)
-      end
-      @params_types
-    end
-
-    ##
-    # return type of this prototype
-    def return_type
-      return @return_type unless @return_type.nil?
-      @return_type = _root.type_ids[return_type_idx].type_name
-      @return_type
-    end
-
-    ##
-    # index into the string_ids list for the short-form descriptor string of this prototype.
-    # The string must conform to the syntax for ShortyDescriptor, defined above,
-    # and must correspond to the return type and parameters of this item.
-    attr_reader :shorty_idx
-
-    ##
-    # index into the type_ids list for the return type of this prototype
-    attr_reader :return_type_idx
-
-    ##
-    # offset from the start of the file to the list of parameter types for this prototype,
-    # or 0 if this prototype has no parameters.
-    # This offset, if non-zero, should be in the data section, and the data
-    # there should be in the format specified by "type_list" below.
-    # Additionally, there should be no reference to the type void in the list.
-    attr_reader :parameters_off
-  end
-  class EncodedMethod < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @method_idx_diff = VlqBase128Le.new(@_io)
-      @access_flags = VlqBase128Le.new(@_io)
-      @code_off = VlqBase128Le.new(@_io)
-      self
-    end
-
-    ##
-    # index into the method_ids list for the identity of this method
-    # (includes the name and descriptor), represented as a difference
-    # from the index of previous element in the list.
-    # 
-    # The index of the first element in a list is represented directly.
-    attr_reader :method_idx_diff
-
-    ##
-    # access flags for the field (public, final, etc.).
-    # 
-    # See "access_flags Definitions" for details.
-    attr_reader :access_flags
-
-    ##
-    # offset from the start of the file to the code structure for this method,
-    # or 0 if this method is either abstract or native.
-    # 
-    # The offset should be to a location in the data section.
-    # 
-    # The format of the data is specified by "code_item" below.
-    attr_reader :code_off
-  end
   class MapItem < Kaitai::Struct::Struct
 
     MAP_ITEM_TYPE = {
@@ -904,7 +698,7 @@ class Dex < Kaitai::Struct::Struct
       8198 => :map_item_type_annotations_directory_item,
     }
     I__MAP_ITEM_TYPE = MAP_ITEM_TYPE.invert
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -933,89 +727,229 @@ class Dex < Kaitai::Struct::Struct
     # offset from the start of the file to the items in question
     attr_reader :offset
   end
-  class EncodedArray < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  class MapList < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @size = VlqBase128Le.new(@_io)
-      @values = []
-      (size.value).times { |i|
-        @values << EncodedValue.new(@_io, self, @_root)
+      @size = @_io.read_u4le
+      @list = []
+      (size).times { |i|
+        @list << MapItem.new(@_io, self, @_root)
       }
       self
     end
     attr_reader :size
-    attr_reader :values
+    attr_reader :list
   end
+  class MethodIdItem < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
 
-  ##
-  # string identifiers list.
-  # 
-  # These are identifiers for all the strings used by this file, either for
-  # internal naming (e.g., type descriptors) or as constant objects referred to by code.
-  # 
-  # This list must be sorted by string contents, using UTF-16 code point values
-  # (not in a locale-sensitive manner), and it must not contain any duplicate entries.
-  def string_ids
-    return @string_ids unless @string_ids.nil?
-    _pos = @_io.pos
-    @_io.seek(header.string_ids_off)
-    @string_ids = []
-    (header.string_ids_size).times { |i|
-      @string_ids << StringIdItem.new(@_io, self, @_root)
-    }
-    @_io.seek(_pos)
-    @string_ids
-  end
+    def _read
+      @class_idx = @_io.read_u2le
+      @proto_idx = @_io.read_u2le
+      @name_idx = @_io.read_u4le
+      self
+    end
 
-  ##
-  # method identifiers list.
-  # 
-  # These are identifiers for all methods referred to by this file,
-  # whether defined in the file or not.
-  # 
-  # This list must be sorted, where the defining type (by type_id index
-  # is the major order, method name (by string_id index) is the intermediate
-  # order, and method prototype (by proto_id index) is the minor order.
-  # 
-  # The list must not contain any duplicate entries.
-  def method_ids
-    return @method_ids unless @method_ids.nil?
-    _pos = @_io.pos
-    @_io.seek(header.method_ids_off)
-    @method_ids = []
-    (header.method_ids_size).times { |i|
-      @method_ids << MethodIdItem.new(@_io, self, @_root)
-    }
-    @_io.seek(_pos)
-    @method_ids
-  end
+    ##
+    # the definer of this method
+    def class_name
+      return @class_name unless @class_name.nil?
+      @class_name = _root.type_ids[class_idx].type_name
+      @class_name
+    end
 
-  ##
-  # data used in statically linked files.
-  # 
-  # The format of the data in this section is left unspecified by this document.
-  # 
-  # This section is empty in unlinked files, and runtime implementations may
-  # use it as they see fit.
-  def link_data
-    return @link_data unless @link_data.nil?
-    _pos = @_io.pos
-    @_io.seek(header.link_off)
-    @link_data = @_io.read_bytes(header.link_size)
-    @_io.seek(_pos)
-    @link_data
+    ##
+    # the name of this method
+    def method_name
+      return @method_name unless @method_name.nil?
+      @method_name = _root.string_ids[name_idx].value.data
+      @method_name
+    end
+
+    ##
+    # the short-form descriptor of the prototype of this method
+    def proto_desc
+      return @proto_desc unless @proto_desc.nil?
+      @proto_desc = _root.proto_ids[proto_idx].shorty_desc
+      @proto_desc
+    end
+
+    ##
+    # index into the type_ids list for the definer of this method.
+    # This must be a class or array type, and not a primitive type.
+    attr_reader :class_idx
+
+    ##
+    # index into the proto_ids list for the prototype of this method
+    attr_reader :proto_idx
+
+    ##
+    # index into the string_ids list for the name of this method.
+    # The string must conform to the syntax for MemberName, defined above.
+    attr_reader :name_idx
   end
-  def map
-    return @map unless @map.nil?
-    _pos = @_io.pos
-    @_io.seek(header.map_off)
-    @map = MapList.new(@_io, self, @_root)
-    @_io.seek(_pos)
-    @map
+  class ProtoIdItem < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @shorty_idx = @_io.read_u4le
+      @return_type_idx = @_io.read_u4le
+      @parameters_off = @_io.read_u4le
+      self
+    end
+
+    ##
+    # list of parameter types for this prototype
+    def params_types
+      return @params_types unless @params_types.nil?
+      if parameters_off != 0
+        io = _root._io
+        _pos = io.pos
+        io.seek(parameters_off)
+        @params_types = TypeList.new(io, self, @_root)
+        io.seek(_pos)
+      end
+      @params_types
+    end
+
+    ##
+    # return type of this prototype
+    def return_type
+      return @return_type unless @return_type.nil?
+      @return_type = _root.type_ids[return_type_idx].type_name
+      @return_type
+    end
+
+    ##
+    # short-form descriptor string of this prototype, as pointed to by shorty_idx
+    def shorty_desc
+      return @shorty_desc unless @shorty_desc.nil?
+      @shorty_desc = _root.string_ids[shorty_idx].value.data
+      @shorty_desc
+    end
+
+    ##
+    # index into the string_ids list for the short-form descriptor string of this prototype.
+    # The string must conform to the syntax for ShortyDescriptor, defined above,
+    # and must correspond to the return type and parameters of this item.
+    attr_reader :shorty_idx
+
+    ##
+    # index into the type_ids list for the return type of this prototype
+    attr_reader :return_type_idx
+
+    ##
+    # offset from the start of the file to the list of parameter types for this prototype,
+    # or 0 if this prototype has no parameters.
+    # This offset, if non-zero, should be in the data section, and the data
+    # there should be in the format specified by "type_list" below.
+    # Additionally, there should be no reference to the type void in the list.
+    attr_reader :parameters_off
+  end
+  class StringIdItem < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @string_data_off = @_io.read_u4le
+      self
+    end
+    class StringDataItem < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = nil)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        @utf16_size = VlqBase128Le.new(@_io)
+        @data = (@_io.read_bytes(utf16_size.value)).force_encoding("ASCII").encode('UTF-8')
+        self
+      end
+      attr_reader :utf16_size
+      attr_reader :data
+    end
+    def value
+      return @value unless @value.nil?
+      _pos = @_io.pos
+      @_io.seek(string_data_off)
+      @value = StringDataItem.new(@_io, self, @_root)
+      @_io.seek(_pos)
+      @value
+    end
+
+    ##
+    # offset from the start of the file to the string data for this item.
+    # The offset should be to a location in the data section, and the data
+    # should be in the format specified by "string_data_item" below.
+    # There is no alignment requirement for the offset.
+    attr_reader :string_data_off
+  end
+  class TypeIdItem < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @descriptor_idx = @_io.read_u4le
+      self
+    end
+    def type_name
+      return @type_name unless @type_name.nil?
+      @type_name = _root.string_ids[descriptor_idx].value.data
+      @type_name
+    end
+
+    ##
+    # index into the string_ids list for the descriptor string of this type.
+    # The string must conform to the syntax for TypeDescriptor, defined above.
+    attr_reader :descriptor_idx
+  end
+  class TypeItem < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @type_idx = @_io.read_u2le
+      self
+    end
+    def value
+      return @value unless @value.nil?
+      @value = _root.type_ids[type_idx].type_name
+      @value
+    end
+    attr_reader :type_idx
+  end
+  class TypeList < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @size = @_io.read_u4le
+      @list = []
+      (size).times { |i|
+        @list << TypeItem.new(@_io, self, @_root)
+      }
+      self
+    end
+    attr_reader :size
+    attr_reader :list
   end
 
   ##
@@ -1053,22 +987,72 @@ class Dex < Kaitai::Struct::Struct
   end
 
   ##
-  # type identifiers list.
+  # field identifiers list.
   # 
-  # These are identifiers for all types (classes, arrays, or primitive types)
-  # referred to by this file, whether defined in the file or not.
+  # These are identifiers for all fields referred to by this file, whether defined in the file or not.
   # 
-  # This list must be sorted by string_id index, and it must not contain any duplicate entries.
-  def type_ids
-    return @type_ids unless @type_ids.nil?
+  # This list must be sorted, where the defining type (by type_id index)
+  # is the major order, field name (by string_id index) is the intermediate
+  # order, and type (by type_id index) is the minor order.
+  # 
+  # The list must not contain any duplicate entries.
+  def field_ids
+    return @field_ids unless @field_ids.nil?
     _pos = @_io.pos
-    @_io.seek(header.type_ids_off)
-    @type_ids = []
-    (header.type_ids_size).times { |i|
-      @type_ids << TypeIdItem.new(@_io, self, @_root)
+    @_io.seek(header.field_ids_off)
+    @field_ids = []
+    (header.field_ids_size).times { |i|
+      @field_ids << FieldIdItem.new(@_io, self, @_root)
     }
     @_io.seek(_pos)
-    @type_ids
+    @field_ids
+  end
+
+  ##
+  # data used in statically linked files.
+  # 
+  # The format of the data in this section is left unspecified by this document.
+  # 
+  # This section is empty in unlinked files, and runtime implementations may
+  # use it as they see fit.
+  def link_data
+    return @link_data unless @link_data.nil?
+    _pos = @_io.pos
+    @_io.seek(header.link_off)
+    @link_data = @_io.read_bytes(header.link_size)
+    @_io.seek(_pos)
+    @link_data
+  end
+  def map
+    return @map unless @map.nil?
+    _pos = @_io.pos
+    @_io.seek(header.map_off)
+    @map = MapList.new(@_io, self, @_root)
+    @_io.seek(_pos)
+    @map
+  end
+
+  ##
+  # method identifiers list.
+  # 
+  # These are identifiers for all methods referred to by this file,
+  # whether defined in the file or not.
+  # 
+  # This list must be sorted, where the defining type (by type_id index
+  # is the major order, method name (by string_id index) is the intermediate
+  # order, and method prototype (by proto_id index) is the minor order.
+  # 
+  # The list must not contain any duplicate entries.
+  def method_ids
+    return @method_ids unless @method_ids.nil?
+    _pos = @_io.pos
+    @_io.seek(header.method_ids_off)
+    @method_ids = []
+    (header.method_ids_size).times { |i|
+      @method_ids << MethodIdItem.new(@_io, self, @_root)
+    }
+    @_io.seek(_pos)
+    @method_ids
   end
 
   ##
@@ -1092,25 +1076,42 @@ class Dex < Kaitai::Struct::Struct
   end
 
   ##
-  # field identifiers list.
+  # string identifiers list.
   # 
-  # These are identifiers for all fields referred to by this file, whether defined in the file or not.
+  # These are identifiers for all the strings used by this file, either for
+  # internal naming (e.g., type descriptors) or as constant objects referred to by code.
   # 
-  # This list must be sorted, where the defining type (by type_id index)
-  # is the major order, field name (by string_id index) is the intermediate
-  # order, and type (by type_id index) is the minor order.
-  # 
-  # The list must not contain any duplicate entries.
-  def field_ids
-    return @field_ids unless @field_ids.nil?
+  # This list must be sorted by string contents, using UTF-16 code point values
+  # (not in a locale-sensitive manner), and it must not contain any duplicate entries.
+  def string_ids
+    return @string_ids unless @string_ids.nil?
     _pos = @_io.pos
-    @_io.seek(header.field_ids_off)
-    @field_ids = []
-    (header.field_ids_size).times { |i|
-      @field_ids << FieldIdItem.new(@_io, self, @_root)
+    @_io.seek(header.string_ids_off)
+    @string_ids = []
+    (header.string_ids_size).times { |i|
+      @string_ids << StringIdItem.new(@_io, self, @_root)
     }
     @_io.seek(_pos)
-    @field_ids
+    @string_ids
+  end
+
+  ##
+  # type identifiers list.
+  # 
+  # These are identifiers for all types (classes, arrays, or primitive types)
+  # referred to by this file, whether defined in the file or not.
+  # 
+  # This list must be sorted by string_id index, and it must not contain any duplicate entries.
+  def type_ids
+    return @type_ids unless @type_ids.nil?
+    _pos = @_io.pos
+    @_io.seek(header.type_ids_off)
+    @type_ids = []
+    (header.type_ids_size).times { |i|
+      @type_ids << TypeIdItem.new(@_io, self, @_root)
+    }
+    @_io.seek(_pos)
+    @type_ids
   end
   attr_reader :header
 end

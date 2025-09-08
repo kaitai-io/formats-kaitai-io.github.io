@@ -48,8 +48,8 @@ namespace Kaitai
             m_parent = p__parent;
             m_root = p__root ?? this;
             f_len = false;
-            f_value = false;
             f_signBit = false;
+            f_value = false;
             f_valueSigned = false;
             _read();
         }
@@ -60,7 +60,7 @@ namespace Kaitai
                 var i = 0;
                 Group M_;
                 do {
-                    M_ = new Group(i, (i != 0 ? Groups[(i - 1)].IntermValue : 0), (i != 0 ? (i == 9 ? 9223372036854775808 : (Groups[(i - 1)].Multiplier * 128)) : 1), m_io, this, m_root);
+                    M_ = new Group(i, (i != 0 ? Groups[i - 1].IntermValue : 0), (i != 0 ? (i == 9 ? 9223372036854775808 : Groups[i - 1].Multiplier * 128) : 1), m_io, this, m_root);
                     _groups.Add(M_);
                     i++;
                 } while (!(!(M_.HasNext)));
@@ -85,14 +85,14 @@ namespace Kaitai
             private void _read()
             {
                 _hasNext = m_io.ReadBitsIntBe(1) != 0;
-                if (!(HasNext == (Idx == 9 ? false : HasNext)))
+                if (!(_hasNext == (Idx == 9 ? false : HasNext)))
                 {
-                    throw new ValidationNotEqualError((Idx == 9 ? false : HasNext), HasNext, M_Io, "/types/group/seq/0");
+                    throw new ValidationNotEqualError((Idx == 9 ? false : HasNext), _hasNext, m_io, "/types/group/seq/0");
                 }
                 _value = m_io.ReadBitsIntBe(7);
-                if (!(Value <= ((ulong) ((Idx == 9 ? 1 : 127)))))
+                if (!(_value <= ((ulong) ((Idx == 9 ? 1 : 127)))))
                 {
-                    throw new ValidationGreaterThanError(((ulong) ((Idx == 9 ? 1 : 127))), Value, M_Io, "/types/group/seq/1");
+                    throw new ValidationGreaterThanError(((ulong) ((Idx == 9 ? 1 : 127))), _value, m_io, "/types/group/seq/1");
                 }
             }
             private bool f_intermValue;
@@ -103,8 +103,8 @@ namespace Kaitai
                 {
                     if (f_intermValue)
                         return _intermValue;
-                    _intermValue = (ulong) (((ulong) ((PrevIntermValue + (Value * Multiplier)))));
                     f_intermValue = true;
+                    _intermValue = (ulong) (((ulong) (PrevIntermValue + Value * Multiplier)));
                     return _intermValue;
                 }
             }
@@ -147,9 +147,22 @@ namespace Kaitai
             {
                 if (f_len)
                     return _len;
-                _len = (int) (Groups.Count);
                 f_len = true;
+                _len = (int) (Groups.Count);
                 return _len;
+            }
+        }
+        private bool f_signBit;
+        private ulong _signBit;
+        public ulong SignBit
+        {
+            get
+            {
+                if (f_signBit)
+                    return _signBit;
+                f_signBit = true;
+                _signBit = (ulong) (((ulong) ((Len == 10 ? 9223372036854775808 : Groups[Groups.Count - 1].Multiplier * 64))));
+                return _signBit;
             }
         }
         private bool f_value;
@@ -164,22 +177,9 @@ namespace Kaitai
             {
                 if (f_value)
                     return _value;
-                _value = (ulong) (Groups[Groups.Count - 1].IntermValue);
                 f_value = true;
+                _value = (ulong) (Groups[Groups.Count - 1].IntermValue);
                 return _value;
-            }
-        }
-        private bool f_signBit;
-        private ulong _signBit;
-        public ulong SignBit
-        {
-            get
-            {
-                if (f_signBit)
-                    return _signBit;
-                _signBit = (ulong) (((ulong) ((Len == 10 ? 9223372036854775808 : (Groups[Groups.Count - 1].Multiplier * 64)))));
-                f_signBit = true;
-                return _signBit;
             }
         }
         private bool f_valueSigned;
@@ -190,8 +190,8 @@ namespace Kaitai
             {
                 if (f_valueSigned)
                     return _valueSigned;
-                _valueSigned = (long) (( ((SignBit > 0) && (Value >= SignBit))  ? -(((long) ((SignBit - (Value - SignBit))))) : ((long) (Value))));
                 f_valueSigned = true;
+                _valueSigned = (long) (( ((SignBit > 0) && (Value >= SignBit))  ? -(((long) (SignBit - (Value - SignBit)))) : ((long) (Value))));
                 return _valueSigned;
             }
         }

@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream', './SomeIp'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./SomeIp'));
+    define(['exports', 'kaitai-struct/KaitaiStream', './SomeIp'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'), require('./SomeIp'));
   } else {
-    root.SomeIpContainer = factory(root.KaitaiStream, root.SomeIp);
+    factory(root.SomeIpContainer || (root.SomeIpContainer = {}), root.KaitaiStream, root.SomeIp || (root.SomeIp = {}));
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, SomeIp) {
+})(typeof self !== 'undefined' ? self : this, function (SomeIpContainer_, KaitaiStream, SomeIp_) {
 var SomeIpContainer = (function() {
   function SomeIpContainer(_io, _parent, _root) {
     this._io = _io;
@@ -21,12 +21,12 @@ var SomeIpContainer = (function() {
     this.someIpPackages = [];
     var i = 0;
     while (!this._io.isEof()) {
-      this.someIpPackages.push(new SomeIp(this._io, this, null));
+      this.someIpPackages.push(new SomeIp_.SomeIp(this._io, null, null));
       i++;
     }
   }
 
   return SomeIpContainer;
 })();
-return SomeIpContainer;
-}));
+SomeIpContainer_.SomeIpContainer = SomeIpContainer;
+});

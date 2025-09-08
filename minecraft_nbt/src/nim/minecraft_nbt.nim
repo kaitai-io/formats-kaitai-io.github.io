@@ -22,16 +22,22 @@ type
     compound = 10
     int_array = 11
     long_array = 12
-  MinecraftNbt_TagLongArray* = ref object of KaitaiStruct
-    `numTags`*: int32
-    `tags`*: seq[int64]
+  MinecraftNbt_NamedTag* = ref object of KaitaiStruct
+    `type`*: MinecraftNbt_Tag
+    `name`*: MinecraftNbt_TagString
+    `payload`*: KaitaiStruct
     `parent`*: KaitaiStruct
-    `tagsTypeInst`: MinecraftNbt_Tag
-    `tagsTypeInstFlag`: bool
+    `isTagEndInst`: bool
+    `isTagEndInstFlag`: bool
   MinecraftNbt_TagByteArray* = ref object of KaitaiStruct
     `lenData`*: int32
     `data`*: seq[byte]
     `parent`*: KaitaiStruct
+  MinecraftNbt_TagCompound* = ref object of KaitaiStruct
+    `tags`*: seq[MinecraftNbt_NamedTag]
+    `parent`*: KaitaiStruct
+    `dumpNumTagsInst`: int
+    `dumpNumTagsInstFlag`: bool
   MinecraftNbt_TagIntArray* = ref object of KaitaiStruct
     `numTags`*: int32
     `tags`*: seq[int32]
@@ -43,37 +49,31 @@ type
     `numTags`*: int32
     `tags`*: seq[KaitaiStruct]
     `parent`*: KaitaiStruct
+  MinecraftNbt_TagLongArray* = ref object of KaitaiStruct
+    `numTags`*: int32
+    `tags`*: seq[int64]
+    `parent`*: KaitaiStruct
+    `tagsTypeInst`: MinecraftNbt_Tag
+    `tagsTypeInstFlag`: bool
   MinecraftNbt_TagString* = ref object of KaitaiStruct
     `lenData`*: uint16
     `data`*: string
     `parent`*: KaitaiStruct
-  MinecraftNbt_TagCompound* = ref object of KaitaiStruct
-    `tags`*: seq[MinecraftNbt_NamedTag]
-    `parent`*: KaitaiStruct
-    `dumpNumTagsInst`: int
-    `dumpNumTagsInstFlag`: bool
-  MinecraftNbt_NamedTag* = ref object of KaitaiStruct
-    `type`*: MinecraftNbt_Tag
-    `name`*: MinecraftNbt_TagString
-    `payload`*: KaitaiStruct
-    `parent`*: KaitaiStruct
-    `isTagEndInst`: bool
-    `isTagEndInstFlag`: bool
 
 proc read*(_: typedesc[MinecraftNbt], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MinecraftNbt
-proc read*(_: typedesc[MinecraftNbt_TagLongArray], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MinecraftNbt_TagLongArray
+proc read*(_: typedesc[MinecraftNbt_NamedTag], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MinecraftNbt_NamedTag
 proc read*(_: typedesc[MinecraftNbt_TagByteArray], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MinecraftNbt_TagByteArray
+proc read*(_: typedesc[MinecraftNbt_TagCompound], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MinecraftNbt_TagCompound
 proc read*(_: typedesc[MinecraftNbt_TagIntArray], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MinecraftNbt_TagIntArray
 proc read*(_: typedesc[MinecraftNbt_TagList], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MinecraftNbt_TagList
+proc read*(_: typedesc[MinecraftNbt_TagLongArray], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MinecraftNbt_TagLongArray
 proc read*(_: typedesc[MinecraftNbt_TagString], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MinecraftNbt_TagString
-proc read*(_: typedesc[MinecraftNbt_TagCompound], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MinecraftNbt_TagCompound
-proc read*(_: typedesc[MinecraftNbt_NamedTag], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MinecraftNbt_NamedTag
 
 proc rootType*(this: MinecraftNbt): MinecraftNbt_Tag
-proc tagsType*(this: MinecraftNbt_TagLongArray): MinecraftNbt_Tag
-proc tagsType*(this: MinecraftNbt_TagIntArray): MinecraftNbt_Tag
-proc dumpNumTags*(this: MinecraftNbt_TagCompound): int
 proc isTagEnd*(this: MinecraftNbt_NamedTag): bool
+proc dumpNumTags*(this: MinecraftNbt_TagCompound): int
+proc tagsType*(this: MinecraftNbt_TagIntArray): MinecraftNbt_Tag
+proc tagsType*(this: MinecraftNbt_TagLongArray): MinecraftNbt_Tag
 
 
 ##[
@@ -178,30 +178,69 @@ proc rootType(this: MinecraftNbt): MinecraftNbt_Tag =
 proc fromFile*(_: typedesc[MinecraftNbt], filename: string): MinecraftNbt =
   MinecraftNbt.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[MinecraftNbt_TagLongArray], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MinecraftNbt_TagLongArray =
+proc read*(_: typedesc[MinecraftNbt_NamedTag], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MinecraftNbt_NamedTag =
   template this: untyped = result
-  this = new(MinecraftNbt_TagLongArray)
+  this = new(MinecraftNbt_NamedTag)
   let root = if root == nil: cast[MinecraftNbt](this) else: cast[MinecraftNbt](root)
   this.io = io
   this.root = root
   this.parent = parent
 
-  let numTagsExpr = this.io.readS4be()
-  this.numTags = numTagsExpr
-  for i in 0 ..< int(this.numTags):
-    let it = this.io.readS8be()
-    this.tags.add(it)
+  let typeExpr = MinecraftNbt_Tag(this.io.readU1())
+  this.type = typeExpr
+  if not(this.isTagEnd):
+    let nameExpr = MinecraftNbt_TagString.read(this.io, this.root, this)
+    this.name = nameExpr
+  if not(this.isTagEnd):
+    block:
+      let on = this.type
+      if on == minecraft_nbt.byte:
+        let payloadExpr = KaitaiStruct(this.io.readS1())
+        this.payload = payloadExpr
+      elif on == minecraft_nbt.byte_array:
+        let payloadExpr = MinecraftNbt_TagByteArray.read(this.io, this.root, this)
+        this.payload = payloadExpr
+      elif on == minecraft_nbt.compound:
+        let payloadExpr = MinecraftNbt_TagCompound.read(this.io, this.root, this)
+        this.payload = payloadExpr
+      elif on == minecraft_nbt.double:
+        let payloadExpr = KaitaiStruct(this.io.readF8be())
+        this.payload = payloadExpr
+      elif on == minecraft_nbt.float:
+        let payloadExpr = KaitaiStruct(this.io.readF4be())
+        this.payload = payloadExpr
+      elif on == minecraft_nbt.int:
+        let payloadExpr = KaitaiStruct(this.io.readS4be())
+        this.payload = payloadExpr
+      elif on == minecraft_nbt.int_array:
+        let payloadExpr = MinecraftNbt_TagIntArray.read(this.io, this.root, this)
+        this.payload = payloadExpr
+      elif on == minecraft_nbt.list:
+        let payloadExpr = MinecraftNbt_TagList.read(this.io, this.root, this)
+        this.payload = payloadExpr
+      elif on == minecraft_nbt.long:
+        let payloadExpr = KaitaiStruct(this.io.readS8be())
+        this.payload = payloadExpr
+      elif on == minecraft_nbt.long_array:
+        let payloadExpr = MinecraftNbt_TagLongArray.read(this.io, this.root, this)
+        this.payload = payloadExpr
+      elif on == minecraft_nbt.short:
+        let payloadExpr = KaitaiStruct(this.io.readS2be())
+        this.payload = payloadExpr
+      elif on == minecraft_nbt.string:
+        let payloadExpr = MinecraftNbt_TagString.read(this.io, this.root, this)
+        this.payload = payloadExpr
 
-proc tagsType(this: MinecraftNbt_TagLongArray): MinecraftNbt_Tag = 
-  if this.tagsTypeInstFlag:
-    return this.tagsTypeInst
-  let tagsTypeInstExpr = MinecraftNbt_Tag(minecraft_nbt.long)
-  this.tagsTypeInst = tagsTypeInstExpr
-  this.tagsTypeInstFlag = true
-  return this.tagsTypeInst
+proc isTagEnd(this: MinecraftNbt_NamedTag): bool = 
+  if this.isTagEndInstFlag:
+    return this.isTagEndInst
+  let isTagEndInstExpr = bool(this.type == minecraft_nbt.end)
+  this.isTagEndInst = isTagEndInstExpr
+  this.isTagEndInstFlag = true
+  return this.isTagEndInst
 
-proc fromFile*(_: typedesc[MinecraftNbt_TagLongArray], filename: string): MinecraftNbt_TagLongArray =
-  MinecraftNbt_TagLongArray.read(newKaitaiFileStream(filename), nil, nil)
+proc fromFile*(_: typedesc[MinecraftNbt_NamedTag], filename: string): MinecraftNbt_NamedTag =
+  MinecraftNbt_NamedTag.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[MinecraftNbt_TagByteArray], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MinecraftNbt_TagByteArray =
   template this: untyped = result
@@ -218,6 +257,34 @@ proc read*(_: typedesc[MinecraftNbt_TagByteArray], io: KaitaiStream, root: Kaita
 
 proc fromFile*(_: typedesc[MinecraftNbt_TagByteArray], filename: string): MinecraftNbt_TagByteArray =
   MinecraftNbt_TagByteArray.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[MinecraftNbt_TagCompound], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MinecraftNbt_TagCompound =
+  template this: untyped = result
+  this = new(MinecraftNbt_TagCompound)
+  let root = if root == nil: cast[MinecraftNbt](this) else: cast[MinecraftNbt](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  block:
+    var i: int
+    while true:
+      let it = MinecraftNbt_NamedTag.read(this.io, this.root, this)
+      this.tags.add(it)
+      if it.isTagEnd:
+        break
+      inc i
+
+proc dumpNumTags(this: MinecraftNbt_TagCompound): int = 
+  if this.dumpNumTagsInstFlag:
+    return this.dumpNumTagsInst
+  let dumpNumTagsInstExpr = int(len(this.tags) - (if  ((len(this.tags) >= 1) and (this.tags[^1].isTagEnd)) : 1 else: 0))
+  this.dumpNumTagsInst = dumpNumTagsInstExpr
+  this.dumpNumTagsInstFlag = true
+  return this.dumpNumTagsInst
+
+proc fromFile*(_: typedesc[MinecraftNbt_TagCompound], filename: string): MinecraftNbt_TagCompound =
+  MinecraftNbt_TagCompound.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[MinecraftNbt_TagIntArray], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MinecraftNbt_TagIntArray =
   template this: untyped = result
@@ -259,8 +326,11 @@ proc read*(_: typedesc[MinecraftNbt_TagList], io: KaitaiStream, root: KaitaiStru
   for i in 0 ..< int(this.numTags):
     block:
       let on = this.tagsType
-      if on == minecraft_nbt.long_array:
-        let it = MinecraftNbt_TagLongArray.read(this.io, this.root, this)
+      if on == minecraft_nbt.byte:
+        let it = KaitaiStruct(this.io.readS1())
+        this.tags.add(it)
+      elif on == minecraft_nbt.byte_array:
+        let it = MinecraftNbt_TagByteArray.read(this.io, this.root, this)
         this.tags.add(it)
       elif on == minecraft_nbt.compound:
         let it = MinecraftNbt_TagCompound.read(this.io, this.root, this)
@@ -268,36 +338,58 @@ proc read*(_: typedesc[MinecraftNbt_TagList], io: KaitaiStream, root: KaitaiStru
       elif on == minecraft_nbt.double:
         let it = KaitaiStruct(this.io.readF8be())
         this.tags.add(it)
-      elif on == minecraft_nbt.list:
-        let it = MinecraftNbt_TagList.read(this.io, this.root, this)
-        this.tags.add(it)
       elif on == minecraft_nbt.float:
         let it = KaitaiStruct(this.io.readF4be())
-        this.tags.add(it)
-      elif on == minecraft_nbt.short:
-        let it = KaitaiStruct(this.io.readS2be())
         this.tags.add(it)
       elif on == minecraft_nbt.int:
         let it = KaitaiStruct(this.io.readS4be())
         this.tags.add(it)
-      elif on == minecraft_nbt.byte_array:
-        let it = MinecraftNbt_TagByteArray.read(this.io, this.root, this)
-        this.tags.add(it)
-      elif on == minecraft_nbt.byte:
-        let it = KaitaiStruct(this.io.readS1())
-        this.tags.add(it)
       elif on == minecraft_nbt.int_array:
         let it = MinecraftNbt_TagIntArray.read(this.io, this.root, this)
         this.tags.add(it)
-      elif on == minecraft_nbt.string:
-        let it = MinecraftNbt_TagString.read(this.io, this.root, this)
+      elif on == minecraft_nbt.list:
+        let it = MinecraftNbt_TagList.read(this.io, this.root, this)
         this.tags.add(it)
       elif on == minecraft_nbt.long:
         let it = KaitaiStruct(this.io.readS8be())
         this.tags.add(it)
+      elif on == minecraft_nbt.long_array:
+        let it = MinecraftNbt_TagLongArray.read(this.io, this.root, this)
+        this.tags.add(it)
+      elif on == minecraft_nbt.short:
+        let it = KaitaiStruct(this.io.readS2be())
+        this.tags.add(it)
+      elif on == minecraft_nbt.string:
+        let it = MinecraftNbt_TagString.read(this.io, this.root, this)
+        this.tags.add(it)
 
 proc fromFile*(_: typedesc[MinecraftNbt_TagList], filename: string): MinecraftNbt_TagList =
   MinecraftNbt_TagList.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[MinecraftNbt_TagLongArray], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MinecraftNbt_TagLongArray =
+  template this: untyped = result
+  this = new(MinecraftNbt_TagLongArray)
+  let root = if root == nil: cast[MinecraftNbt](this) else: cast[MinecraftNbt](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let numTagsExpr = this.io.readS4be()
+  this.numTags = numTagsExpr
+  for i in 0 ..< int(this.numTags):
+    let it = this.io.readS8be()
+    this.tags.add(it)
+
+proc tagsType(this: MinecraftNbt_TagLongArray): MinecraftNbt_Tag = 
+  if this.tagsTypeInstFlag:
+    return this.tagsTypeInst
+  let tagsTypeInstExpr = MinecraftNbt_Tag(minecraft_nbt.long)
+  this.tagsTypeInst = tagsTypeInstExpr
+  this.tagsTypeInstFlag = true
+  return this.tagsTypeInst
+
+proc fromFile*(_: typedesc[MinecraftNbt_TagLongArray], filename: string): MinecraftNbt_TagLongArray =
+  MinecraftNbt_TagLongArray.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[MinecraftNbt_TagString], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MinecraftNbt_TagString =
   template this: untyped = result
@@ -313,101 +405,9 @@ proc read*(_: typedesc[MinecraftNbt_TagString], io: KaitaiStream, root: KaitaiSt
   ]##
   let lenDataExpr = this.io.readU2be()
   this.lenData = lenDataExpr
-  let dataExpr = encode(this.io.readBytes(int(this.lenData)), "utf-8")
+  let dataExpr = encode(this.io.readBytes(int(this.lenData)), "UTF-8")
   this.data = dataExpr
 
 proc fromFile*(_: typedesc[MinecraftNbt_TagString], filename: string): MinecraftNbt_TagString =
   MinecraftNbt_TagString.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[MinecraftNbt_TagCompound], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MinecraftNbt_TagCompound =
-  template this: untyped = result
-  this = new(MinecraftNbt_TagCompound)
-  let root = if root == nil: cast[MinecraftNbt](this) else: cast[MinecraftNbt](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  block:
-    var i: int
-    while true:
-      let it = MinecraftNbt_NamedTag.read(this.io, this.root, this)
-      this.tags.add(it)
-      if it.isTagEnd:
-        break
-      inc i
-
-proc dumpNumTags(this: MinecraftNbt_TagCompound): int = 
-  if this.dumpNumTagsInstFlag:
-    return this.dumpNumTagsInst
-  let dumpNumTagsInstExpr = int((len(this.tags) - (if  ((len(this.tags) >= 1) and (this.tags[^1].isTagEnd)) : 1 else: 0)))
-  this.dumpNumTagsInst = dumpNumTagsInstExpr
-  this.dumpNumTagsInstFlag = true
-  return this.dumpNumTagsInst
-
-proc fromFile*(_: typedesc[MinecraftNbt_TagCompound], filename: string): MinecraftNbt_TagCompound =
-  MinecraftNbt_TagCompound.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[MinecraftNbt_NamedTag], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MinecraftNbt_NamedTag =
-  template this: untyped = result
-  this = new(MinecraftNbt_NamedTag)
-  let root = if root == nil: cast[MinecraftNbt](this) else: cast[MinecraftNbt](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let typeExpr = MinecraftNbt_Tag(this.io.readU1())
-  this.type = typeExpr
-  if not(this.isTagEnd):
-    let nameExpr = MinecraftNbt_TagString.read(this.io, this.root, this)
-    this.name = nameExpr
-  if not(this.isTagEnd):
-    block:
-      let on = this.type
-      if on == minecraft_nbt.long_array:
-        let payloadExpr = MinecraftNbt_TagLongArray.read(this.io, this.root, this)
-        this.payload = payloadExpr
-      elif on == minecraft_nbt.compound:
-        let payloadExpr = MinecraftNbt_TagCompound.read(this.io, this.root, this)
-        this.payload = payloadExpr
-      elif on == minecraft_nbt.double:
-        let payloadExpr = KaitaiStruct(this.io.readF8be())
-        this.payload = payloadExpr
-      elif on == minecraft_nbt.list:
-        let payloadExpr = MinecraftNbt_TagList.read(this.io, this.root, this)
-        this.payload = payloadExpr
-      elif on == minecraft_nbt.float:
-        let payloadExpr = KaitaiStruct(this.io.readF4be())
-        this.payload = payloadExpr
-      elif on == minecraft_nbt.short:
-        let payloadExpr = KaitaiStruct(this.io.readS2be())
-        this.payload = payloadExpr
-      elif on == minecraft_nbt.int:
-        let payloadExpr = KaitaiStruct(this.io.readS4be())
-        this.payload = payloadExpr
-      elif on == minecraft_nbt.byte_array:
-        let payloadExpr = MinecraftNbt_TagByteArray.read(this.io, this.root, this)
-        this.payload = payloadExpr
-      elif on == minecraft_nbt.byte:
-        let payloadExpr = KaitaiStruct(this.io.readS1())
-        this.payload = payloadExpr
-      elif on == minecraft_nbt.int_array:
-        let payloadExpr = MinecraftNbt_TagIntArray.read(this.io, this.root, this)
-        this.payload = payloadExpr
-      elif on == minecraft_nbt.string:
-        let payloadExpr = MinecraftNbt_TagString.read(this.io, this.root, this)
-        this.payload = payloadExpr
-      elif on == minecraft_nbt.long:
-        let payloadExpr = KaitaiStruct(this.io.readS8be())
-        this.payload = payloadExpr
-
-proc isTagEnd(this: MinecraftNbt_NamedTag): bool = 
-  if this.isTagEndInstFlag:
-    return this.isTagEndInst
-  let isTagEndInstExpr = bool(this.type == minecraft_nbt.end)
-  this.isTagEndInst = isTagEndInstExpr
-  this.isTagEndInstFlag = true
-  return this.isTagEndInst
-
-proc fromFile*(_: typedesc[MinecraftNbt_NamedTag], filename: string): MinecraftNbt_NamedTag =
-  MinecraftNbt_NamedTag.read(newKaitaiFileStream(filename), nil, nil)
 

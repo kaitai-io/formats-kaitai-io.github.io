@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.AndroidDto = factory(root.KaitaiStream);
+    factory(root.AndroidDto || (root.AndroidDto = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (AndroidDto_, KaitaiStream) {
 /**
  * Format for Android DTB/DTBO partitions. It's kind of archive with
  * dtb/dtbo files. Used only when there is a separate unique partition
@@ -37,64 +37,11 @@ var AndroidDto = (function() {
     }
   }
 
-  var DtTableHeader = AndroidDto.DtTableHeader = (function() {
-    function DtTableHeader(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    DtTableHeader.prototype._read = function() {
-      this.magic = this._io.readBytes(4);
-      if (!((KaitaiStream.byteArrayCompare(this.magic, [215, 183, 171, 30]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([215, 183, 171, 30], this.magic, this._io, "/types/dt_table_header/seq/0");
-      }
-      this.totalSize = this._io.readU4be();
-      this.headerSize = this._io.readU4be();
-      this.dtEntrySize = this._io.readU4be();
-      this.dtEntryCount = this._io.readU4be();
-      this.dtEntriesOffset = this._io.readU4be();
-      this.pageSize = this._io.readU4be();
-      this.version = this._io.readU4be();
-    }
-
-    /**
-     * includes dt_table_header + all dt_table_entry and all dtb/dtbo
-     */
-
-    /**
-     * sizeof(dt_table_header)
-     */
-
-    /**
-     * sizeof(dt_table_entry)
-     */
-
-    /**
-     * number of dt_table_entry
-     */
-
-    /**
-     * offset to the first dt_table_entry from head of dt_table_header
-     */
-
-    /**
-     * flash page size
-     */
-
-    /**
-     * DTBO image version
-     */
-
-    return DtTableHeader;
-  })();
-
   var DtTableEntry = AndroidDto.DtTableEntry = (function() {
     function DtTableEntry(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -148,7 +95,60 @@ var AndroidDto = (function() {
     return DtTableEntry;
   })();
 
+  var DtTableHeader = AndroidDto.DtTableHeader = (function() {
+    function DtTableHeader(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    DtTableHeader.prototype._read = function() {
+      this.magic = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([215, 183, 171, 30])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([215, 183, 171, 30]), this.magic, this._io, "/types/dt_table_header/seq/0");
+      }
+      this.totalSize = this._io.readU4be();
+      this.headerSize = this._io.readU4be();
+      this.dtEntrySize = this._io.readU4be();
+      this.dtEntryCount = this._io.readU4be();
+      this.dtEntriesOffset = this._io.readU4be();
+      this.pageSize = this._io.readU4be();
+      this.version = this._io.readU4be();
+    }
+
+    /**
+     * includes dt_table_header + all dt_table_entry and all dtb/dtbo
+     */
+
+    /**
+     * sizeof(dt_table_header)
+     */
+
+    /**
+     * sizeof(dt_table_entry)
+     */
+
+    /**
+     * number of dt_table_entry
+     */
+
+    /**
+     * offset to the first dt_table_entry from head of dt_table_header
+     */
+
+    /**
+     * flash page size
+     */
+
+    /**
+     * DTBO image version
+     */
+
+    return DtTableHeader;
+  })();
+
   return AndroidDto;
 })();
-return AndroidDto;
-}));
+AndroidDto_.AndroidDto = AndroidDto;
+});

@@ -3,11 +3,14 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class id3v1_1_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
+#include <set>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -178,6 +181,13 @@ public:
             GENRE_ENUM_EURO_HOUSE = 124,
             GENRE_ENUM_DANCE_HALL = 125
         };
+        static bool _is_defined_genre_enum_t(genre_enum_t v);
+
+    private:
+        static const std::set<genre_enum_t> _values_genre_enum_t;
+        static std::set<genre_enum_t> _build_values_genre_enum_t();
+
+    public:
 
         id3_v1_1_tag_t(kaitai::kstream* p__io, id3v1_1_t* p__parent = 0, id3v1_1_t* p__root = 0);
 

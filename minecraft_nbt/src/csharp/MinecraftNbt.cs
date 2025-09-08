@@ -122,48 +122,100 @@ namespace Kaitai
             }
             _root = new NamedTag(m_io, this, m_root);
         }
-        public partial class TagLongArray : KaitaiStruct
+        public partial class NamedTag : KaitaiStruct
         {
-            public static TagLongArray FromFile(string fileName)
+            public static NamedTag FromFile(string fileName)
             {
-                return new TagLongArray(new KaitaiStream(fileName));
+                return new NamedTag(new KaitaiStream(fileName));
             }
 
-            public TagLongArray(KaitaiStream p__io, KaitaiStruct p__parent = null, MinecraftNbt p__root = null) : base(p__io)
+            public NamedTag(KaitaiStream p__io, KaitaiStruct p__parent = null, MinecraftNbt p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
-                f_tagsType = false;
+                f_isTagEnd = false;
                 _read();
             }
             private void _read()
             {
-                _numTags = m_io.ReadS4be();
-                _tags = new List<long>();
-                for (var i = 0; i < NumTags; i++)
-                {
-                    _tags.Add(m_io.ReadS8be());
+                _type = ((MinecraftNbt.Tag) m_io.ReadU1());
+                if (!(IsTagEnd)) {
+                    _name = new TagString(m_io, this, m_root);
+                }
+                if (!(IsTagEnd)) {
+                    switch (Type) {
+                    case MinecraftNbt.Tag.Byte: {
+                        _payload = m_io.ReadS1();
+                        break;
+                    }
+                    case MinecraftNbt.Tag.ByteArray: {
+                        _payload = new TagByteArray(m_io, this, m_root);
+                        break;
+                    }
+                    case MinecraftNbt.Tag.Compound: {
+                        _payload = new TagCompound(m_io, this, m_root);
+                        break;
+                    }
+                    case MinecraftNbt.Tag.Double: {
+                        _payload = m_io.ReadF8be();
+                        break;
+                    }
+                    case MinecraftNbt.Tag.Float: {
+                        _payload = m_io.ReadF4be();
+                        break;
+                    }
+                    case MinecraftNbt.Tag.Int: {
+                        _payload = m_io.ReadS4be();
+                        break;
+                    }
+                    case MinecraftNbt.Tag.IntArray: {
+                        _payload = new TagIntArray(m_io, this, m_root);
+                        break;
+                    }
+                    case MinecraftNbt.Tag.List: {
+                        _payload = new TagList(m_io, this, m_root);
+                        break;
+                    }
+                    case MinecraftNbt.Tag.Long: {
+                        _payload = m_io.ReadS8be();
+                        break;
+                    }
+                    case MinecraftNbt.Tag.LongArray: {
+                        _payload = new TagLongArray(m_io, this, m_root);
+                        break;
+                    }
+                    case MinecraftNbt.Tag.Short: {
+                        _payload = m_io.ReadS2be();
+                        break;
+                    }
+                    case MinecraftNbt.Tag.String: {
+                        _payload = new TagString(m_io, this, m_root);
+                        break;
+                    }
+                    }
                 }
             }
-            private bool f_tagsType;
-            private Tag _tagsType;
-            public Tag TagsType
+            private bool f_isTagEnd;
+            private bool _isTagEnd;
+            public bool IsTagEnd
             {
                 get
                 {
-                    if (f_tagsType)
-                        return _tagsType;
-                    _tagsType = (Tag) (MinecraftNbt.Tag.Long);
-                    f_tagsType = true;
-                    return _tagsType;
+                    if (f_isTagEnd)
+                        return _isTagEnd;
+                    f_isTagEnd = true;
+                    _isTagEnd = (bool) (Type == MinecraftNbt.Tag.End);
+                    return _isTagEnd;
                 }
             }
-            private int _numTags;
-            private List<long> _tags;
+            private Tag _type;
+            private TagString _name;
+            private object _payload;
             private MinecraftNbt m_root;
             private KaitaiStruct m_parent;
-            public int NumTags { get { return _numTags; } }
-            public List<long> Tags { get { return _tags; } }
+            public Tag Type { get { return _type; } }
+            public TagString Name { get { return _name; } }
+            public object Payload { get { return _payload; } }
             public MinecraftNbt M_Root { get { return m_root; } }
             public KaitaiStruct M_Parent { get { return m_parent; } }
         }
@@ -191,165 +243,6 @@ namespace Kaitai
             private KaitaiStruct m_parent;
             public int LenData { get { return _lenData; } }
             public byte[] Data { get { return _data; } }
-            public MinecraftNbt M_Root { get { return m_root; } }
-            public KaitaiStruct M_Parent { get { return m_parent; } }
-        }
-        public partial class TagIntArray : KaitaiStruct
-        {
-            public static TagIntArray FromFile(string fileName)
-            {
-                return new TagIntArray(new KaitaiStream(fileName));
-            }
-
-            public TagIntArray(KaitaiStream p__io, KaitaiStruct p__parent = null, MinecraftNbt p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_tagsType = false;
-                _read();
-            }
-            private void _read()
-            {
-                _numTags = m_io.ReadS4be();
-                _tags = new List<int>();
-                for (var i = 0; i < NumTags; i++)
-                {
-                    _tags.Add(m_io.ReadS4be());
-                }
-            }
-            private bool f_tagsType;
-            private Tag _tagsType;
-            public Tag TagsType
-            {
-                get
-                {
-                    if (f_tagsType)
-                        return _tagsType;
-                    _tagsType = (Tag) (MinecraftNbt.Tag.Int);
-                    f_tagsType = true;
-                    return _tagsType;
-                }
-            }
-            private int _numTags;
-            private List<int> _tags;
-            private MinecraftNbt m_root;
-            private KaitaiStruct m_parent;
-            public int NumTags { get { return _numTags; } }
-            public List<int> Tags { get { return _tags; } }
-            public MinecraftNbt M_Root { get { return m_root; } }
-            public KaitaiStruct M_Parent { get { return m_parent; } }
-        }
-        public partial class TagList : KaitaiStruct
-        {
-            public static TagList FromFile(string fileName)
-            {
-                return new TagList(new KaitaiStream(fileName));
-            }
-
-            public TagList(KaitaiStream p__io, KaitaiStruct p__parent = null, MinecraftNbt p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _tagsType = ((MinecraftNbt.Tag) m_io.ReadU1());
-                _numTags = m_io.ReadS4be();
-                _tags = new List<object>();
-                for (var i = 0; i < NumTags; i++)
-                {
-                    switch (TagsType) {
-                    case MinecraftNbt.Tag.LongArray: {
-                        _tags.Add(new TagLongArray(m_io, this, m_root));
-                        break;
-                    }
-                    case MinecraftNbt.Tag.Compound: {
-                        _tags.Add(new TagCompound(m_io, this, m_root));
-                        break;
-                    }
-                    case MinecraftNbt.Tag.Double: {
-                        _tags.Add(m_io.ReadF8be());
-                        break;
-                    }
-                    case MinecraftNbt.Tag.List: {
-                        _tags.Add(new TagList(m_io, this, m_root));
-                        break;
-                    }
-                    case MinecraftNbt.Tag.Float: {
-                        _tags.Add(m_io.ReadF4be());
-                        break;
-                    }
-                    case MinecraftNbt.Tag.Short: {
-                        _tags.Add(m_io.ReadS2be());
-                        break;
-                    }
-                    case MinecraftNbt.Tag.Int: {
-                        _tags.Add(m_io.ReadS4be());
-                        break;
-                    }
-                    case MinecraftNbt.Tag.ByteArray: {
-                        _tags.Add(new TagByteArray(m_io, this, m_root));
-                        break;
-                    }
-                    case MinecraftNbt.Tag.Byte: {
-                        _tags.Add(m_io.ReadS1());
-                        break;
-                    }
-                    case MinecraftNbt.Tag.IntArray: {
-                        _tags.Add(new TagIntArray(m_io, this, m_root));
-                        break;
-                    }
-                    case MinecraftNbt.Tag.String: {
-                        _tags.Add(new TagString(m_io, this, m_root));
-                        break;
-                    }
-                    case MinecraftNbt.Tag.Long: {
-                        _tags.Add(m_io.ReadS8be());
-                        break;
-                    }
-                    }
-                }
-            }
-            private Tag _tagsType;
-            private int _numTags;
-            private List<object> _tags;
-            private MinecraftNbt m_root;
-            private KaitaiStruct m_parent;
-            public Tag TagsType { get { return _tagsType; } }
-            public int NumTags { get { return _numTags; } }
-            public List<object> Tags { get { return _tags; } }
-            public MinecraftNbt M_Root { get { return m_root; } }
-            public KaitaiStruct M_Parent { get { return m_parent; } }
-        }
-        public partial class TagString : KaitaiStruct
-        {
-            public static TagString FromFile(string fileName)
-            {
-                return new TagString(new KaitaiStream(fileName));
-            }
-
-            public TagString(KaitaiStream p__io, KaitaiStruct p__parent = null, MinecraftNbt p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _lenData = m_io.ReadU2be();
-                _data = System.Text.Encoding.GetEncoding("utf-8").GetString(m_io.ReadBytes(LenData));
-            }
-            private ushort _lenData;
-            private string _data;
-            private MinecraftNbt m_root;
-            private KaitaiStruct m_parent;
-
-            /// <summary>
-            /// unsigned according to &lt;https://wiki.vg/NBT#Specification&gt;
-            /// </summary>
-            public ushort LenData { get { return _lenData; } }
-            public string Data { get { return _data; } }
             public MinecraftNbt M_Root { get { return m_root; } }
             public KaitaiStruct M_Parent { get { return m_parent; } }
         }
@@ -388,8 +281,8 @@ namespace Kaitai
                 {
                     if (f_dumpNumTags)
                         return _dumpNumTags;
-                    _dumpNumTags = (int) ((Tags.Count - ( ((Tags.Count >= 1) && (Tags[Tags.Count - 1].IsTagEnd))  ? 1 : 0)));
                     f_dumpNumTags = true;
+                    _dumpNumTags = (int) (Tags.Count - ( ((Tags.Count >= 1) && (Tags[Tags.Count - 1].IsTagEnd))  ? 1 : 0));
                     return _dumpNumTags;
                 }
             }
@@ -400,100 +293,207 @@ namespace Kaitai
             public MinecraftNbt M_Root { get { return m_root; } }
             public KaitaiStruct M_Parent { get { return m_parent; } }
         }
-        public partial class NamedTag : KaitaiStruct
+        public partial class TagIntArray : KaitaiStruct
         {
-            public static NamedTag FromFile(string fileName)
+            public static TagIntArray FromFile(string fileName)
             {
-                return new NamedTag(new KaitaiStream(fileName));
+                return new TagIntArray(new KaitaiStream(fileName));
             }
 
-            public NamedTag(KaitaiStream p__io, KaitaiStruct p__parent = null, MinecraftNbt p__root = null) : base(p__io)
+            public TagIntArray(KaitaiStream p__io, KaitaiStruct p__parent = null, MinecraftNbt p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
-                f_isTagEnd = false;
+                f_tagsType = false;
                 _read();
             }
             private void _read()
             {
-                _type = ((MinecraftNbt.Tag) m_io.ReadU1());
-                if (!(IsTagEnd)) {
-                    _name = new TagString(m_io, this, m_root);
-                }
-                if (!(IsTagEnd)) {
-                    switch (Type) {
-                    case MinecraftNbt.Tag.LongArray: {
-                        _payload = new TagLongArray(m_io, this, m_root);
-                        break;
-                    }
-                    case MinecraftNbt.Tag.Compound: {
-                        _payload = new TagCompound(m_io, this, m_root);
-                        break;
-                    }
-                    case MinecraftNbt.Tag.Double: {
-                        _payload = m_io.ReadF8be();
-                        break;
-                    }
-                    case MinecraftNbt.Tag.List: {
-                        _payload = new TagList(m_io, this, m_root);
-                        break;
-                    }
-                    case MinecraftNbt.Tag.Float: {
-                        _payload = m_io.ReadF4be();
-                        break;
-                    }
-                    case MinecraftNbt.Tag.Short: {
-                        _payload = m_io.ReadS2be();
-                        break;
-                    }
-                    case MinecraftNbt.Tag.Int: {
-                        _payload = m_io.ReadS4be();
-                        break;
-                    }
-                    case MinecraftNbt.Tag.ByteArray: {
-                        _payload = new TagByteArray(m_io, this, m_root);
-                        break;
-                    }
-                    case MinecraftNbt.Tag.Byte: {
-                        _payload = m_io.ReadS1();
-                        break;
-                    }
-                    case MinecraftNbt.Tag.IntArray: {
-                        _payload = new TagIntArray(m_io, this, m_root);
-                        break;
-                    }
-                    case MinecraftNbt.Tag.String: {
-                        _payload = new TagString(m_io, this, m_root);
-                        break;
-                    }
-                    case MinecraftNbt.Tag.Long: {
-                        _payload = m_io.ReadS8be();
-                        break;
-                    }
-                    }
+                _numTags = m_io.ReadS4be();
+                _tags = new List<int>();
+                for (var i = 0; i < NumTags; i++)
+                {
+                    _tags.Add(m_io.ReadS4be());
                 }
             }
-            private bool f_isTagEnd;
-            private bool _isTagEnd;
-            public bool IsTagEnd
+            private bool f_tagsType;
+            private Tag _tagsType;
+            public Tag TagsType
             {
                 get
                 {
-                    if (f_isTagEnd)
-                        return _isTagEnd;
-                    _isTagEnd = (bool) (Type == MinecraftNbt.Tag.End);
-                    f_isTagEnd = true;
-                    return _isTagEnd;
+                    if (f_tagsType)
+                        return _tagsType;
+                    f_tagsType = true;
+                    _tagsType = (Tag) (MinecraftNbt.Tag.Int);
+                    return _tagsType;
                 }
             }
-            private Tag _type;
-            private TagString _name;
-            private object _payload;
+            private int _numTags;
+            private List<int> _tags;
             private MinecraftNbt m_root;
             private KaitaiStruct m_parent;
-            public Tag Type { get { return _type; } }
-            public TagString Name { get { return _name; } }
-            public object Payload { get { return _payload; } }
+            public int NumTags { get { return _numTags; } }
+            public List<int> Tags { get { return _tags; } }
+            public MinecraftNbt M_Root { get { return m_root; } }
+            public KaitaiStruct M_Parent { get { return m_parent; } }
+        }
+        public partial class TagList : KaitaiStruct
+        {
+            public static TagList FromFile(string fileName)
+            {
+                return new TagList(new KaitaiStream(fileName));
+            }
+
+            public TagList(KaitaiStream p__io, KaitaiStruct p__parent = null, MinecraftNbt p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _tagsType = ((MinecraftNbt.Tag) m_io.ReadU1());
+                _numTags = m_io.ReadS4be();
+                _tags = new List<object>();
+                for (var i = 0; i < NumTags; i++)
+                {
+                    switch (TagsType) {
+                    case MinecraftNbt.Tag.Byte: {
+                        _tags.Add(m_io.ReadS1());
+                        break;
+                    }
+                    case MinecraftNbt.Tag.ByteArray: {
+                        _tags.Add(new TagByteArray(m_io, this, m_root));
+                        break;
+                    }
+                    case MinecraftNbt.Tag.Compound: {
+                        _tags.Add(new TagCompound(m_io, this, m_root));
+                        break;
+                    }
+                    case MinecraftNbt.Tag.Double: {
+                        _tags.Add(m_io.ReadF8be());
+                        break;
+                    }
+                    case MinecraftNbt.Tag.Float: {
+                        _tags.Add(m_io.ReadF4be());
+                        break;
+                    }
+                    case MinecraftNbt.Tag.Int: {
+                        _tags.Add(m_io.ReadS4be());
+                        break;
+                    }
+                    case MinecraftNbt.Tag.IntArray: {
+                        _tags.Add(new TagIntArray(m_io, this, m_root));
+                        break;
+                    }
+                    case MinecraftNbt.Tag.List: {
+                        _tags.Add(new TagList(m_io, this, m_root));
+                        break;
+                    }
+                    case MinecraftNbt.Tag.Long: {
+                        _tags.Add(m_io.ReadS8be());
+                        break;
+                    }
+                    case MinecraftNbt.Tag.LongArray: {
+                        _tags.Add(new TagLongArray(m_io, this, m_root));
+                        break;
+                    }
+                    case MinecraftNbt.Tag.Short: {
+                        _tags.Add(m_io.ReadS2be());
+                        break;
+                    }
+                    case MinecraftNbt.Tag.String: {
+                        _tags.Add(new TagString(m_io, this, m_root));
+                        break;
+                    }
+                    }
+                }
+            }
+            private Tag _tagsType;
+            private int _numTags;
+            private List<object> _tags;
+            private MinecraftNbt m_root;
+            private KaitaiStruct m_parent;
+            public Tag TagsType { get { return _tagsType; } }
+            public int NumTags { get { return _numTags; } }
+            public List<object> Tags { get { return _tags; } }
+            public MinecraftNbt M_Root { get { return m_root; } }
+            public KaitaiStruct M_Parent { get { return m_parent; } }
+        }
+        public partial class TagLongArray : KaitaiStruct
+        {
+            public static TagLongArray FromFile(string fileName)
+            {
+                return new TagLongArray(new KaitaiStream(fileName));
+            }
+
+            public TagLongArray(KaitaiStream p__io, KaitaiStruct p__parent = null, MinecraftNbt p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_tagsType = false;
+                _read();
+            }
+            private void _read()
+            {
+                _numTags = m_io.ReadS4be();
+                _tags = new List<long>();
+                for (var i = 0; i < NumTags; i++)
+                {
+                    _tags.Add(m_io.ReadS8be());
+                }
+            }
+            private bool f_tagsType;
+            private Tag _tagsType;
+            public Tag TagsType
+            {
+                get
+                {
+                    if (f_tagsType)
+                        return _tagsType;
+                    f_tagsType = true;
+                    _tagsType = (Tag) (MinecraftNbt.Tag.Long);
+                    return _tagsType;
+                }
+            }
+            private int _numTags;
+            private List<long> _tags;
+            private MinecraftNbt m_root;
+            private KaitaiStruct m_parent;
+            public int NumTags { get { return _numTags; } }
+            public List<long> Tags { get { return _tags; } }
+            public MinecraftNbt M_Root { get { return m_root; } }
+            public KaitaiStruct M_Parent { get { return m_parent; } }
+        }
+        public partial class TagString : KaitaiStruct
+        {
+            public static TagString FromFile(string fileName)
+            {
+                return new TagString(new KaitaiStream(fileName));
+            }
+
+            public TagString(KaitaiStream p__io, KaitaiStruct p__parent = null, MinecraftNbt p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _lenData = m_io.ReadU2be();
+                _data = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(LenData));
+            }
+            private ushort _lenData;
+            private string _data;
+            private MinecraftNbt m_root;
+            private KaitaiStruct m_parent;
+
+            /// <summary>
+            /// unsigned according to &lt;https://wiki.vg/NBT#Specification&gt;
+            /// </summary>
+            public ushort LenData { get { return _lenData; } }
+            public string Data { get { return _data; } }
             public MinecraftNbt M_Root { get { return m_root; } }
             public KaitaiStruct M_Parent { get { return m_parent; } }
         }
@@ -505,15 +505,15 @@ namespace Kaitai
             {
                 if (f_rootType)
                     return _rootType;
+                f_rootType = true;
                 long _pos = m_io.Pos;
                 m_io.Seek(0);
                 _rootType = ((Tag) m_io.ReadU1());
-                m_io.Seek(_pos);
-                f_rootType = true;
-                if (!(RootType == Tag.Compound))
+                if (!(_rootType == Tag.Compound))
                 {
-                    throw new ValidationNotEqualError(Tag.Compound, RootType, M_Io, "/instances/root_type");
+                    throw new ValidationNotEqualError(Tag.Compound, _rootType, m_io, "/instances/root_type");
                 }
+                m_io.Seek(_pos);
                 return _rootType;
             }
         }

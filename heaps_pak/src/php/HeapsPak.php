@@ -3,8 +3,8 @@
 
 namespace {
     class HeapsPak extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \HeapsPak $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\HeapsPak $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -18,25 +18,25 @@ namespace {
 
 namespace HeapsPak {
     class Header extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \HeapsPak $_parent = null, \HeapsPak $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\HeapsPak $_parent = null, ?\HeapsPak $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic1 = $this->_io->readBytes(3);
-            if (!($this->magic1() == "\x50\x41\x4B")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x50\x41\x4B", $this->magic1(), $this->_io(), "/types/header/seq/0");
+            if (!($this->_m_magic1 == "\x50\x41\x4B")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x50\x41\x4B", $this->_m_magic1, $this->_io, "/types/header/seq/0");
             }
             $this->_m_version = $this->_io->readU1();
             $this->_m_lenHeader = $this->_io->readU4le();
             $this->_m_lenData = $this->_io->readU4le();
-            $this->_m__raw_rootEntry = $this->_io->readBytes(($this->lenHeader() - 16));
+            $this->_m__raw_rootEntry = $this->_io->readBytes($this->lenHeader() - 16);
             $_io__raw_rootEntry = new \Kaitai\Struct\Stream($this->_m__raw_rootEntry);
             $this->_m_rootEntry = new \HeapsPak\Header\Entry($_io__raw_rootEntry, $this, $this->_root);
             $this->_m_magic2 = $this->_io->readBytes(4);
-            if (!($this->magic2() == "\x44\x41\x54\x41")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x44\x41\x54\x41", $this->magic2(), $this->_io(), "/types/header/seq/5");
+            if (!($this->_m_magic2 == "\x44\x41\x54\x41")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x44\x41\x54\x41", $this->_m_magic2, $this->_io, "/types/header/seq/5");
             }
         }
         protected $_m_magic1;
@@ -57,8 +57,30 @@ namespace HeapsPak {
 }
 
 namespace HeapsPak\Header {
+    class Dir extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\HeapsPak\Header\Entry $_parent = null, ?\HeapsPak $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_numEntries = $this->_io->readU4le();
+            $this->_m_entries = [];
+            $n = $this->numEntries();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_entries[] = new \HeapsPak\Header\Entry($this->_io, $this, $this->_root);
+            }
+        }
+        protected $_m_numEntries;
+        protected $_m_entries;
+        public function numEntries() { return $this->_m_numEntries; }
+        public function entries() { return $this->_m_entries; }
+    }
+}
+
+namespace HeapsPak\Header {
     class Entry extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \HeapsPak $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\HeapsPak $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -68,11 +90,11 @@ namespace HeapsPak\Header {
             $this->_m_name = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->lenName()), "UTF-8");
             $this->_m_flags = new \HeapsPak\Header\Entry\Flags($this->_io, $this, $this->_root);
             switch ($this->flags()->isDir()) {
-                case true:
-                    $this->_m_body = new \HeapsPak\Header\Dir($this->_io, $this, $this->_root);
-                    break;
                 case false:
                     $this->_m_body = new \HeapsPak\Header\File($this->_io, $this, $this->_root);
+                    break;
+                case true:
+                    $this->_m_body = new \HeapsPak\Header\Dir($this->_io, $this, $this->_root);
                     break;
             }
         }
@@ -89,7 +111,7 @@ namespace HeapsPak\Header {
 
 namespace HeapsPak\Header\Entry {
     class Flags extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \HeapsPak\Header\Entry $_parent = null, \HeapsPak $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\HeapsPak\Header\Entry $_parent = null, ?\HeapsPak $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -107,7 +129,7 @@ namespace HeapsPak\Header\Entry {
 
 namespace HeapsPak\Header {
     class File extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \HeapsPak\Header\Entry $_parent = null, \HeapsPak $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\HeapsPak\Header\Entry $_parent = null, ?\HeapsPak $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -123,7 +145,7 @@ namespace HeapsPak\Header {
                 return $this->_m_data;
             $io = $this->_root()->_io();
             $_pos = $io->pos();
-            $io->seek(($this->_root()->header()->lenHeader() + $this->ofsData()));
+            $io->seek($this->_root()->header()->lenHeader() + $this->ofsData());
             $this->_m_data = $io->readBytes($this->lenData());
             $io->seek($_pos);
             return $this->_m_data;
@@ -134,27 +156,5 @@ namespace HeapsPak\Header {
         public function ofsData() { return $this->_m_ofsData; }
         public function lenData() { return $this->_m_lenData; }
         public function checksum() { return $this->_m_checksum; }
-    }
-}
-
-namespace HeapsPak\Header {
-    class Dir extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \HeapsPak\Header\Entry $_parent = null, \HeapsPak $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_numEntries = $this->_io->readU4le();
-            $this->_m_entries = [];
-            $n = $this->numEntries();
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_entries[] = new \HeapsPak\Header\Entry($this->_io, $this, $this->_root);
-            }
-        }
-        protected $_m_numEntries;
-        protected $_m_entries;
-        public function numEntries() { return $this->_m_numEntries; }
-        public function entries() { return $this->_m_entries; }
     }
 }

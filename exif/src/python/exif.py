@@ -1,36 +1,44 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
-from enum import Enum
+from enum import IntEnum
 
 
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Exif(KaitaiStruct):
     def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
+        super(Exif, self).__init__(_io)
         self._parent = _parent
-        self._root = _root if _root else self
+        self._root = _root or self
         self._read()
 
     def _read(self):
         self.endianness = self._io.read_u2le()
         self.body = Exif.ExifBody(self._io, self, self._root)
 
+
+    def _fetch_instances(self):
+        pass
+        self.body._fetch_instances()
+
     class ExifBody(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(Exif.ExifBody, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
             _on = self._root.endianness
             if _on == 18761:
+                pass
                 self._is_le = True
             elif _on == 19789:
+                pass
                 self._is_le = False
             if not hasattr(self, '_is_le'):
                 raise kaitaistruct.UndecidedEndiannessError("/types/exif_body")
@@ -47,11 +55,20 @@ class Exif(KaitaiStruct):
             self.version = self._io.read_u2be()
             self.ifd0_ofs = self._io.read_u4be()
 
+
+        def _fetch_instances(self):
+            pass
+            _ = self.ifd0
+            if hasattr(self, '_m_ifd0'):
+                pass
+                self._m_ifd0._fetch_instances()
+
+
         class Ifd(KaitaiStruct):
             def __init__(self, _io, _parent=None, _root=None, _is_le=None):
-                self._io = _io
+                super(Exif.ExifBody.Ifd, self).__init__(_io)
                 self._parent = _parent
-                self._root = _root if _root else self
+                self._root = _root
                 self._is_le = _is_le
                 self._read()
 
@@ -79,12 +96,26 @@ class Exif(KaitaiStruct):
 
                 self.next_ifd_ofs = self._io.read_u4be()
 
+
+            def _fetch_instances(self):
+                pass
+                for i in range(len(self.fields)):
+                    pass
+                    self.fields[i]._fetch_instances()
+
+                _ = self.next_ifd
+                if hasattr(self, '_m_next_ifd'):
+                    pass
+                    self._m_next_ifd._fetch_instances()
+
+
             @property
             def next_ifd(self):
                 if hasattr(self, '_m_next_ifd'):
                     return self._m_next_ifd
 
                 if self.next_ifd_ofs != 0:
+                    pass
                     _pos = self._io.pos()
                     self._io.seek(self.next_ifd_ofs)
                     if self._is_le:
@@ -98,7 +129,7 @@ class Exif(KaitaiStruct):
 
         class IfdField(KaitaiStruct):
 
-            class FieldTypeEnum(Enum):
+            class FieldTypeEnum(IntEnum):
                 byte = 1
                 ascii_string = 2
                 word = 3
@@ -108,7 +139,7 @@ class Exif(KaitaiStruct):
                 slong = 9
                 srational = 10
 
-            class TagEnum(Enum):
+            class TagEnum(IntEnum):
                 image_width = 256
                 image_height = 257
                 bits_per_sample = 258
@@ -568,9 +599,9 @@ class Exif(KaitaiStruct):
                 smoothness = 65111
                 moire_filter = 65112
             def __init__(self, _io, _parent=None, _root=None, _is_le=None):
-                self._io = _io
+                super(Exif.ExifBody.IfdField, self).__init__(_io)
                 self._parent = _parent
-                self._root = _root if _root else self
+                self._root = _root
                 self._is_le = _is_le
                 self._read()
 
@@ -594,36 +625,29 @@ class Exif(KaitaiStruct):
                 self.length = self._io.read_u4be()
                 self.ofs_or_data = self._io.read_u4be()
 
-            @property
-            def type_byte_length(self):
-                if hasattr(self, '_m_type_byte_length'):
-                    return self._m_type_byte_length
 
-                self._m_type_byte_length = (2 if self.field_type == Exif.ExifBody.IfdField.FieldTypeEnum.word else (4 if self.field_type == Exif.ExifBody.IfdField.FieldTypeEnum.dword else 1))
-                return getattr(self, '_m_type_byte_length', None)
+            def _fetch_instances(self):
+                pass
+                _ = self.data
+                if hasattr(self, '_m_data'):
+                    pass
+
 
             @property
             def byte_length(self):
                 if hasattr(self, '_m_byte_length'):
                     return self._m_byte_length
 
-                self._m_byte_length = (self.length * self.type_byte_length)
+                self._m_byte_length = self.length * self.type_byte_length
                 return getattr(self, '_m_byte_length', None)
-
-            @property
-            def is_immediate_data(self):
-                if hasattr(self, '_m_is_immediate_data'):
-                    return self._m_is_immediate_data
-
-                self._m_is_immediate_data = self.byte_length <= 4
-                return getattr(self, '_m_is_immediate_data', None)
 
             @property
             def data(self):
                 if hasattr(self, '_m_data'):
                     return self._m_data
 
-                if not (self.is_immediate_data):
+                if (not (self.is_immediate_data)):
+                    pass
                     io = self._root._io
                     _pos = io.pos()
                     io.seek(self.ofs_or_data)
@@ -634,6 +658,22 @@ class Exif(KaitaiStruct):
                     io.seek(_pos)
 
                 return getattr(self, '_m_data', None)
+
+            @property
+            def is_immediate_data(self):
+                if hasattr(self, '_m_is_immediate_data'):
+                    return self._m_is_immediate_data
+
+                self._m_is_immediate_data = self.byte_length <= 4
+                return getattr(self, '_m_is_immediate_data', None)
+
+            @property
+            def type_byte_length(self):
+                if hasattr(self, '_m_type_byte_length'):
+                    return self._m_type_byte_length
+
+                self._m_type_byte_length = (2 if self.field_type == Exif.ExifBody.IfdField.FieldTypeEnum.word else (4 if self.field_type == Exif.ExifBody.IfdField.FieldTypeEnum.dword else 1))
+                return getattr(self, '_m_type_byte_length', None)
 
 
         @property

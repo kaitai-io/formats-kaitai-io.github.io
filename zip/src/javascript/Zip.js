@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream', './DosDatetime'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./DosDatetime'));
+    define(['exports', 'kaitai-struct/KaitaiStream', './DosDatetime'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'), require('./DosDatetime'));
   } else {
-    root.Zip = factory(root.KaitaiStream, root.DosDatetime);
+    factory(root.Zip || (root.Zip = {}), root.KaitaiStream, root.DosDatetime || (root.DosDatetime = {}));
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, DosDatetime) {
+})(typeof self !== 'undefined' ? self : this, function (Zip_, KaitaiStream, DosDatetime_) {
 /**
  * ZIP is a popular archive file format, introduced in 1989 by Phil Katz
  * and originally implemented in PKZIP utility by PKWARE.
@@ -143,27 +143,62 @@ var Zip = (function() {
     }
   }
 
-  var LocalFile = Zip.LocalFile = (function() {
-    function LocalFile(_io, _parent, _root) {
+  /**
+   * @see {@link https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT|- 4.3.12}
+   */
+
+  var CentralDirEntry = Zip.CentralDirEntry = (function() {
+    function CentralDirEntry(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    LocalFile.prototype._read = function() {
-      this.header = new LocalFileHeader(this._io, this, this._root);
-      this.body = this._io.readBytes(this.header.lenBodyCompressed);
+    CentralDirEntry.prototype._read = function() {
+      this.versionMadeBy = this._io.readU2le();
+      this.versionNeededToExtract = this._io.readU2le();
+      this.flags = this._io.readU2le();
+      this.compressionMethod = this._io.readU2le();
+      this._raw_fileModTime = this._io.readBytes(4);
+      var _io__raw_fileModTime = new KaitaiStream(this._raw_fileModTime);
+      this.fileModTime = new DosDatetime_.DosDatetime(_io__raw_fileModTime, null, null);
+      this.crc32 = this._io.readU4le();
+      this.lenBodyCompressed = this._io.readU4le();
+      this.lenBodyUncompressed = this._io.readU4le();
+      this.lenFileName = this._io.readU2le();
+      this.lenExtra = this._io.readU2le();
+      this.lenComment = this._io.readU2le();
+      this.diskNumberStart = this._io.readU2le();
+      this.intFileAttr = this._io.readU2le();
+      this.extFileAttr = this._io.readU4le();
+      this.ofsLocalHeader = this._io.readS4le();
+      this.fileName = KaitaiStream.bytesToStr(this._io.readBytes(this.lenFileName), "UTF-8");
+      this._raw_extra = this._io.readBytes(this.lenExtra);
+      var _io__raw_extra = new KaitaiStream(this._raw_extra);
+      this.extra = new Extras(_io__raw_extra, this, this._root);
+      this.comment = KaitaiStream.bytesToStr(this._io.readBytes(this.lenComment), "UTF-8");
     }
+    Object.defineProperty(CentralDirEntry.prototype, 'localHeader', {
+      get: function() {
+        if (this._m_localHeader !== undefined)
+          return this._m_localHeader;
+        var _pos = this._io.pos;
+        this._io.seek(this.ofsLocalHeader);
+        this._m_localHeader = new PkSection(this._io, this, this._root);
+        this._io.seek(_pos);
+        return this._m_localHeader;
+      }
+    });
 
-    return LocalFile;
+    return CentralDirEntry;
   })();
 
   var DataDescriptor = Zip.DataDescriptor = (function() {
     function DataDescriptor(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -176,11 +211,33 @@ var Zip = (function() {
     return DataDescriptor;
   })();
 
+  var EndOfCentralDir = Zip.EndOfCentralDir = (function() {
+    function EndOfCentralDir(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    EndOfCentralDir.prototype._read = function() {
+      this.diskOfEndOfCentralDir = this._io.readU2le();
+      this.diskOfCentralDir = this._io.readU2le();
+      this.numCentralDirEntriesOnDisk = this._io.readU2le();
+      this.numCentralDirEntriesTotal = this._io.readU2le();
+      this.lenCentralDir = this._io.readU4le();
+      this.ofsCentralDir = this._io.readU4le();
+      this.lenComment = this._io.readU2le();
+      this.comment = KaitaiStream.bytesToStr(this._io.readBytes(this.lenComment), "UTF-8");
+    }
+
+    return EndOfCentralDir;
+  })();
+
   var ExtraField = Zip.ExtraField = (function() {
     function ExtraField(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -188,11 +245,6 @@ var Zip = (function() {
       this.code = this._io.readU2le();
       this.lenBody = this._io.readU2le();
       switch (this.code) {
-      case Zip.ExtraCodes.NTFS:
-        this._raw_body = this._io.readBytes(this.lenBody);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new Ntfs(_io__raw_body, this, this._root);
-        break;
       case Zip.ExtraCodes.EXTENDED_TIMESTAMP:
         this._raw_body = this._io.readBytes(this.lenBody);
         var _io__raw_body = new KaitaiStream(this._raw_body);
@@ -203,79 +255,16 @@ var Zip = (function() {
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new InfozipUnixVarSize(_io__raw_body, this, this._root);
         break;
+      case Zip.ExtraCodes.NTFS:
+        this._raw_body = this._io.readBytes(this.lenBody);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new Ntfs(_io__raw_body, this, this._root);
+        break;
       default:
         this.body = this._io.readBytes(this.lenBody);
         break;
       }
     }
-
-    /**
-     * @see {@link https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L191|Source}
-     */
-
-    var Ntfs = ExtraField.Ntfs = (function() {
-      function Ntfs(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      Ntfs.prototype._read = function() {
-        this.reserved = this._io.readU4le();
-        this.attributes = [];
-        var i = 0;
-        while (!this._io.isEof()) {
-          this.attributes.push(new Attribute(this._io, this, this._root));
-          i++;
-        }
-      }
-
-      var Attribute = Ntfs.Attribute = (function() {
-        function Attribute(_io, _parent, _root) {
-          this._io = _io;
-          this._parent = _parent;
-          this._root = _root || this;
-
-          this._read();
-        }
-        Attribute.prototype._read = function() {
-          this.tag = this._io.readU2le();
-          this.lenBody = this._io.readU2le();
-          switch (this.tag) {
-          case 1:
-            this._raw_body = this._io.readBytes(this.lenBody);
-            var _io__raw_body = new KaitaiStream(this._raw_body);
-            this.body = new Attribute1(_io__raw_body, this, this._root);
-            break;
-          default:
-            this.body = this._io.readBytes(this.lenBody);
-            break;
-          }
-        }
-
-        return Attribute;
-      })();
-
-      var Attribute1 = Ntfs.Attribute1 = (function() {
-        function Attribute1(_io, _parent, _root) {
-          this._io = _io;
-          this._parent = _parent;
-          this._root = _root || this;
-
-          this._read();
-        }
-        Attribute1.prototype._read = function() {
-          this.lastModTime = this._io.readU8le();
-          this.lastAccessTime = this._io.readU8le();
-          this.creationTime = this._io.readU8le();
-        }
-
-        return Attribute1;
-      })();
-
-      return Ntfs;
-    })();
 
     /**
      * @see {@link https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L817|Source}
@@ -285,7 +274,7 @@ var Zip = (function() {
       function ExtendedTimestamp(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -308,7 +297,7 @@ var Zip = (function() {
         function InfoFlags(_io, _parent, _root) {
           this._io = _io;
           this._parent = _parent;
-          this._root = _root || this;
+          this._root = _root;
 
           this._read();
         }
@@ -345,7 +334,7 @@ var Zip = (function() {
       function InfozipUnixVarSize(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -380,98 +369,82 @@ var Zip = (function() {
       return InfozipUnixVarSize;
     })();
 
+    /**
+     * @see {@link https://github.com/LuaDist/zip/blob/b710806/proginfo/extrafld.txt#L191|Source}
+     */
+
+    var Ntfs = ExtraField.Ntfs = (function() {
+      function Ntfs(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+
+        this._read();
+      }
+      Ntfs.prototype._read = function() {
+        this.reserved = this._io.readU4le();
+        this.attributes = [];
+        var i = 0;
+        while (!this._io.isEof()) {
+          this.attributes.push(new Attribute(this._io, this, this._root));
+          i++;
+        }
+      }
+
+      var Attribute = Ntfs.Attribute = (function() {
+        function Attribute(_io, _parent, _root) {
+          this._io = _io;
+          this._parent = _parent;
+          this._root = _root;
+
+          this._read();
+        }
+        Attribute.prototype._read = function() {
+          this.tag = this._io.readU2le();
+          this.lenBody = this._io.readU2le();
+          switch (this.tag) {
+          case 1:
+            this._raw_body = this._io.readBytes(this.lenBody);
+            var _io__raw_body = new KaitaiStream(this._raw_body);
+            this.body = new Attribute1(_io__raw_body, this, this._root);
+            break;
+          default:
+            this.body = this._io.readBytes(this.lenBody);
+            break;
+          }
+        }
+
+        return Attribute;
+      })();
+
+      var Attribute1 = Ntfs.Attribute1 = (function() {
+        function Attribute1(_io, _parent, _root) {
+          this._io = _io;
+          this._parent = _parent;
+          this._root = _root;
+
+          this._read();
+        }
+        Attribute1.prototype._read = function() {
+          this.lastModTime = this._io.readU8le();
+          this.lastAccessTime = this._io.readU8le();
+          this.creationTime = this._io.readU8le();
+        }
+
+        return Attribute1;
+      })();
+
+      return Ntfs;
+    })();
+
     return ExtraField;
-  })();
-
-  /**
-   * @see {@link https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT|- 4.3.12}
-   */
-
-  var CentralDirEntry = Zip.CentralDirEntry = (function() {
-    function CentralDirEntry(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    CentralDirEntry.prototype._read = function() {
-      this.versionMadeBy = this._io.readU2le();
-      this.versionNeededToExtract = this._io.readU2le();
-      this.flags = this._io.readU2le();
-      this.compressionMethod = this._io.readU2le();
-      this._raw_fileModTime = this._io.readBytes(4);
-      var _io__raw_fileModTime = new KaitaiStream(this._raw_fileModTime);
-      this.fileModTime = new DosDatetime(_io__raw_fileModTime, this, null);
-      this.crc32 = this._io.readU4le();
-      this.lenBodyCompressed = this._io.readU4le();
-      this.lenBodyUncompressed = this._io.readU4le();
-      this.lenFileName = this._io.readU2le();
-      this.lenExtra = this._io.readU2le();
-      this.lenComment = this._io.readU2le();
-      this.diskNumberStart = this._io.readU2le();
-      this.intFileAttr = this._io.readU2le();
-      this.extFileAttr = this._io.readU4le();
-      this.ofsLocalHeader = this._io.readS4le();
-      this.fileName = KaitaiStream.bytesToStr(this._io.readBytes(this.lenFileName), "UTF-8");
-      this._raw_extra = this._io.readBytes(this.lenExtra);
-      var _io__raw_extra = new KaitaiStream(this._raw_extra);
-      this.extra = new Extras(_io__raw_extra, this, this._root);
-      this.comment = KaitaiStream.bytesToStr(this._io.readBytes(this.lenComment), "UTF-8");
-    }
-    Object.defineProperty(CentralDirEntry.prototype, 'localHeader', {
-      get: function() {
-        if (this._m_localHeader !== undefined)
-          return this._m_localHeader;
-        var _pos = this._io.pos;
-        this._io.seek(this.ofsLocalHeader);
-        this._m_localHeader = new PkSection(this._io, this, this._root);
-        this._io.seek(_pos);
-        return this._m_localHeader;
-      }
-    });
-
-    return CentralDirEntry;
-  })();
-
-  var PkSection = Zip.PkSection = (function() {
-    function PkSection(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    PkSection.prototype._read = function() {
-      this.magic = this._io.readBytes(2);
-      if (!((KaitaiStream.byteArrayCompare(this.magic, [80, 75]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([80, 75], this.magic, this._io, "/types/pk_section/seq/0");
-      }
-      this.sectionType = this._io.readU2le();
-      switch (this.sectionType) {
-      case 513:
-        this.body = new CentralDirEntry(this._io, this, this._root);
-        break;
-      case 1027:
-        this.body = new LocalFile(this._io, this, this._root);
-        break;
-      case 1541:
-        this.body = new EndOfCentralDir(this._io, this, this._root);
-        break;
-      case 2055:
-        this.body = new DataDescriptor(this._io, this, this._root);
-        break;
-      }
-    }
-
-    return PkSection;
   })();
 
   var Extras = Zip.Extras = (function() {
     function Extras(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -487,11 +460,27 @@ var Zip = (function() {
     return Extras;
   })();
 
+  var LocalFile = Zip.LocalFile = (function() {
+    function LocalFile(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    LocalFile.prototype._read = function() {
+      this.header = new LocalFileHeader(this._io, this, this._root);
+      this.body = this._io.readBytes(this.header.lenBodyCompressed);
+    }
+
+    return LocalFile;
+  })();
+
   var LocalFileHeader = Zip.LocalFileHeader = (function() {
     function LocalFileHeader(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -503,7 +492,7 @@ var Zip = (function() {
       this.compressionMethod = this._io.readU2le();
       this._raw_fileModTime = this._io.readBytes(4);
       var _io__raw_fileModTime = new KaitaiStream(this._raw_fileModTime);
-      this.fileModTime = new DosDatetime(_io__raw_fileModTime, this, null);
+      this.fileModTime = new DosDatetime_.DosDatetime(_io__raw_fileModTime, null, null);
       this.crc32 = this._io.readU4le();
       this.lenBodyCompressed = this._io.readU4le();
       this.lenBodyUncompressed = this._io.readU4le();
@@ -536,7 +525,7 @@ var Zip = (function() {
       function GpFlags(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -572,7 +561,7 @@ var Zip = (function() {
           if (this._m_implodedDictByteSize !== undefined)
             return this._m_implodedDictByteSize;
           if (this._parent.compressionMethod == Zip.Compression.IMPLODED) {
-            this._m_implodedDictByteSize = (((this.compOptionsRaw & 1) != 0 ? 8 : 4) * 1024);
+            this._m_implodedDictByteSize = ((this.compOptionsRaw & 1) != 0 ? 8 : 4) * 1024;
           }
           return this._m_implodedDictByteSize;
         }
@@ -608,29 +597,40 @@ var Zip = (function() {
     return LocalFileHeader;
   })();
 
-  var EndOfCentralDir = Zip.EndOfCentralDir = (function() {
-    function EndOfCentralDir(_io, _parent, _root) {
+  var PkSection = Zip.PkSection = (function() {
+    function PkSection(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    EndOfCentralDir.prototype._read = function() {
-      this.diskOfEndOfCentralDir = this._io.readU2le();
-      this.diskOfCentralDir = this._io.readU2le();
-      this.numCentralDirEntriesOnDisk = this._io.readU2le();
-      this.numCentralDirEntriesTotal = this._io.readU2le();
-      this.lenCentralDir = this._io.readU4le();
-      this.ofsCentralDir = this._io.readU4le();
-      this.lenComment = this._io.readU2le();
-      this.comment = KaitaiStream.bytesToStr(this._io.readBytes(this.lenComment), "UTF-8");
+    PkSection.prototype._read = function() {
+      this.magic = this._io.readBytes(2);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([80, 75])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([80, 75]), this.magic, this._io, "/types/pk_section/seq/0");
+      }
+      this.sectionType = this._io.readU2le();
+      switch (this.sectionType) {
+      case 1027:
+        this.body = new LocalFile(this._io, this, this._root);
+        break;
+      case 1541:
+        this.body = new EndOfCentralDir(this._io, this, this._root);
+        break;
+      case 2055:
+        this.body = new DataDescriptor(this._io, this, this._root);
+        break;
+      case 513:
+        this.body = new CentralDirEntry(this._io, this, this._root);
+        break;
+      }
     }
 
-    return EndOfCentralDir;
+    return PkSection;
   })();
 
   return Zip;
 })();
-return Zip;
-}));
+Zip_.Zip = Zip;
+});

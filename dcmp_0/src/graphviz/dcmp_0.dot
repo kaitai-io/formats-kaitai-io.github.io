@@ -21,42 +21,12 @@ digraph {
 			</TABLE>>];
 chunk__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
-	<TR><TD>:tag_kind_extended</TD><TD PORT="case0">ExtendedBody</TD></TR>
-	<TR><TD>:tag_kind_literal</TD><TD PORT="case1">LiteralBody</TD></TR>
-	<TR><TD>:tag_kind_end</TD><TD PORT="case2">EndBody</TD></TR>
-	<TR><TD>:tag_kind_table_lookup</TD><TD PORT="case3">TableLookupBody</TD></TR>
-	<TR><TD>:tag_kind_backreference</TD><TD PORT="case4">BackreferenceBody</TD></TR>
+	<TR><TD>:tag_kind_backreference</TD><TD PORT="case0">BackreferenceBody</TD></TR>
+	<TR><TD>:tag_kind_end</TD><TD PORT="case1">EndBody</TD></TR>
+	<TR><TD>:tag_kind_extended</TD><TD PORT="case2">ExtendedBody</TD></TR>
+	<TR><TD>:tag_kind_literal</TD><TD PORT="case3">LiteralBody</TD></TR>
+	<TR><TD>:tag_kind_table_lookup</TD><TD PORT="case4">TableLookupBody</TD></TR>
 </TABLE>>];
-			subgraph cluster__literal_body {
-				label="Dcmp0::Chunk::LiteralBody";
-				graph[style=dotted];
-
-				literal_body__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="len_literal_div2_separate_pos">0</TD><TD PORT="len_literal_div2_separate_size">1</TD><TD>u1</TD><TD PORT="len_literal_div2_separate_type">len_literal_div2_separate</TD></TR>
-					<TR><TD PORT="literal_pos">1</TD><TD PORT="literal_size">len_literal</TD><TD></TD><TD PORT="literal_type">literal</TD></TR>
-				</TABLE>>];
-				literal_body__inst__do_store [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-					<TR><TD>do_store</TD><TD>(tag &amp; 16) != 0</TD></TR>
-				</TABLE>>];
-				literal_body__inst__len_literal_div2 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-					<TR><TD>len_literal_div2</TD><TD>(is_len_literal_div2_separate ? len_literal_div2_separate : len_literal_div2_in_tag)</TD></TR>
-				</TABLE>>];
-				literal_body__inst__len_literal [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-					<TR><TD>len_literal</TD><TD>(len_literal_div2 * 2)</TD></TR>
-				</TABLE>>];
-				literal_body__inst__len_literal_div2_in_tag [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-					<TR><TD>len_literal_div2_in_tag</TD><TD>(tag &amp; 15)</TD></TR>
-				</TABLE>>];
-				literal_body__inst__is_len_literal_div2_separate [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-					<TR><TD>is_len_literal_div2_separate</TD><TD>len_literal_div2_in_tag == 0</TD></TR>
-				</TABLE>>];
-			}
 			subgraph cluster__backreference_body {
 				label="Dcmp0::Chunk::BackreferenceBody";
 				graph[style=dotted];
@@ -64,42 +34,27 @@ chunk__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				backreference_body__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 					<TR><TD PORT="index_separate_minus_pos">0</TD><TD PORT="index_separate_minus_size">...</TD><TD>switch (tag)</TD><TD PORT="index_separate_minus_type">index_separate_minus</TD></TR>
-				</TABLE>>];
-				backreference_body__inst__is_index_separate [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-					<TR><TD>is_index_separate</TD><TD> ((tag &gt;= 32) &amp;&amp; (tag &lt;= 34)) </TD></TR>
-				</TABLE>>];
-				backreference_body__inst__index_in_tag [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-					<TR><TD>index_in_tag</TD><TD>(tag - 35)</TD></TR>
-				</TABLE>>];
-				backreference_body__inst__index_separate [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-					<TR><TD>index_separate</TD><TD>((index_separate_minus + 40) + (tag == 33 ? 256 : 0))</TD></TR>
+					<TR><TD COLSPAN="4" PORT="index_separate_minus__if">if is_index_separate</TD></TR>
 				</TABLE>>];
 				backreference_body__inst__index [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
 					<TR><TD>index</TD><TD>(is_index_separate ? index_separate : index_in_tag)</TD></TR>
 				</TABLE>>];
+				backreference_body__inst__index_in_tag [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>index_in_tag</TD><TD>tag - 35</TD></TR>
+				</TABLE>>];
+				backreference_body__inst__index_separate [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>index_separate</TD><TD>(index_separate_minus + 40) + (tag == 33 ? 256 : 0)</TD></TR>
+				</TABLE>>];
+				backreference_body__inst__is_index_separate [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>is_index_separate</TD><TD> ((tag &gt;= 32) &amp;&amp; (tag &lt;= 34)) </TD></TR>
+				</TABLE>>];
 backreference_body__seq_index_separate_minus_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
 </TABLE>>];
-			}
-			subgraph cluster__table_lookup_body {
-				label="Dcmp0::Chunk::TableLookupBody";
-				graph[style=dotted];
-
-				table_lookup_body__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				</TABLE>>];
-				table_lookup_body__inst__lookup_table [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-					<TR><TD>lookup_table</TD><TD>[[0, 0].pack('C*'), [78, 186].pack('C*'), [0, 8].pack('C*'), [78, 117].pack('C*'), [0, 12].pack('C*'), [78, 173].pack('C*'), [32, 83].pack('C*'), [47, 11].pack('C*'), [97, 0].pack('C*'), [0, 16].pack('C*'), [112, 0].pack('C*'), [47, 0].pack('C*'), [72, 110].pack('C*'), [32, 80].pack('C*'), [32, 110].pack('C*'), [47, 46].pack('C*'), [255, 252].pack('C*'), [72, 231].pack('C*'), [63, 60].pack('C*'), [0, 4].pack('C*'), [255, 248].pack('C*'), [47, 12].pack('C*'), [32, 6].pack('C*'), [78, 237].pack('C*'), [78, 86].pack('C*'), [32, 104].pack('C*'), [78, 94].pack('C*'), [0, 1].pack('C*'), [88, 143].pack('C*'), [79, 239].pack('C*'), [0, 2].pack('C*'), [0, 24].pack('C*'), [96, 0].pack('C*'), [255, 255].pack('C*'), [80, 143].pack('C*'), [78, 144].pack('C*'), [0, 6].pack('C*'), [38, 110].pack('C*'), [0, 20].pack('C*'), [255, 244].pack('C*'), [76, 238].pack('C*'), [0, 10].pack('C*'), [0, 14].pack('C*'), [65, 238].pack('C*'), [76, 223].pack('C*'), [72, 192].pack('C*'), [255, 240].pack('C*'), [45, 64].pack('C*'), [0, 18].pack('C*'), [48, 46].pack('C*'), [112, 1].pack('C*'), [47, 40].pack('C*'), [32, 84].pack('C*'), [103, 0].pack('C*'), [0, 32].pack('C*'), [0, 28].pack('C*'), [32, 95].pack('C*'), [24, 0].pack('C*'), [38, 111].pack('C*'), [72, 120].pack('C*'), [0, 22].pack('C*'), [65, 250].pack('C*'), [48, 60].pack('C*'), [40, 64].pack('C*'), [114, 0].pack('C*'), [40, 110].pack('C*'), [32, 12].pack('C*'), [102, 0].pack('C*'), [32, 107].pack('C*'), [47, 7].pack('C*'), [85, 143].pack('C*'), [0, 40].pack('C*'), [255, 254].pack('C*'), [255, 236].pack('C*'), [34, 216].pack('C*'), [32, 11].pack('C*'), [0, 15].pack('C*'), [89, 143].pack('C*'), [47, 60].pack('C*'), [255, 0].pack('C*'), [1, 24].pack('C*'), [129, 225].pack('C*'), [74, 0].pack('C*'), [78, 176].pack('C*'), [255, 232].pack('C*'), [72, 199].pack('C*'), [0, 3].pack('C*'), [0, 34].pack('C*'), [0, 7].pack('C*'), [0, 26].pack('C*'), [103, 6].pack('C*'), [103, 8].pack('C*'), [78, 249].pack('C*'), [0, 36].pack('C*'), [32, 120].pack('C*'), [8, 0].pack('C*'), [102, 4].pack('C*'), [0, 42].pack('C*'), [78, 208].pack('C*'), [48, 40].pack('C*'), [38, 95].pack('C*'), [103, 4].pack('C*'), [0, 48].pack('C*'), [67, 238].pack('C*'), [63, 0].pack('C*'), [32, 31].pack('C*'), [0, 30].pack('C*'), [255, 246].pack('C*'), [32, 46].pack('C*'), [66, 167].pack('C*'), [32, 7].pack('C*'), [255, 250].pack('C*'), [96, 2].pack('C*'), [61, 64].pack('C*'), [12, 64].pack('C*'), [102, 6].pack('C*'), [0, 38].pack('C*'), [45, 72].pack('C*'), [47, 1].pack('C*'), [112, 255].pack('C*'), [96, 4].pack('C*'), [24, 128].pack('C*'), [74, 64].pack('C*'), [0, 64].pack('C*'), [0, 44].pack('C*'), [47, 8].pack('C*'), [0, 17].pack('C*'), [255, 228].pack('C*'), [33, 64].pack('C*'), [38, 64].pack('C*'), [255, 242].pack('C*'), [66, 110].pack('C*'), [78, 185].pack('C*'), [61, 124].pack('C*'), [0, 56].pack('C*'), [0, 13].pack('C*'), [96, 6].pack('C*'), [66, 46].pack('C*'), [32, 60].pack('C*'), [103, 12].pack('C*'), [45, 104].pack('C*'), [102, 8].pack('C*'), [74, 46].pack('C*'), [74, 174].pack('C*'), [0, 46].pack('C*'), [72, 64].pack('C*'), [34, 95].pack('C*'), [34, 0].pack('C*'), [103, 10].pack('C*'), [48, 7].pack('C*'), [66, 103].pack('C*'), [0, 50].pack('C*'), [32, 40].pack('C*'), [0, 9].pack('C*'), [72, 122].pack('C*'), [2, 0].pack('C*'), [47, 43].pack('C*'), [0, 5].pack('C*'), [34, 110].pack('C*'), [102, 2].pack('C*'), [229, 128].pack('C*'), [103, 14].pack('C*'), [102, 10].pack('C*'), [0, 80].pack('C*'), [62, 0].pack('C*'), [102, 12].pack('C*'), [46, 0].pack('C*'), [255, 238].pack('C*'), [32, 109].pack('C*'), [32, 64].pack('C*'), [255, 224].pack('C*'), [83, 64].pack('C*'), [96, 8].pack('C*'), [4, 128].pack('C*'), [0, 104].pack('C*'), [11, 124].pack('C*'), [68, 0].pack('C*'), [65, 232].pack('C*'), [72, 65].pack('C*')]</TD></TR>
-				</TABLE>>];
-				table_lookup_body__inst__value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-					<TR><TD>value</TD><TD>lookup_table[(tag - 75)]</TD></TR>
-				</TABLE>>];
 			}
 			subgraph cluster__end_body {
 				label="Dcmp0::Chunk::EndBody";
@@ -121,57 +76,11 @@ backreference_body__seq_index_separate_minus_switch [label=<<TABLE BORDER="0" CE
 extended_body__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
 	<TR><TD>0</TD><TD PORT="case0">JumpTableBody</TD></TR>
-	<TR><TD>4</TD><TD PORT="case1">DeltaEncoding16BitBody</TD></TR>
-	<TR><TD>6</TD><TD PORT="case2">DeltaEncoding32BitBody</TD></TR>
-	<TR><TD>3</TD><TD PORT="case3">RepeatBody</TD></TR>
-	<TR><TD>2</TD><TD PORT="case4">RepeatBody</TD></TR>
+	<TR><TD>2</TD><TD PORT="case1">RepeatBody</TD></TR>
+	<TR><TD>3</TD><TD PORT="case2">RepeatBody</TD></TR>
+	<TR><TD>4</TD><TD PORT="case3">DeltaEncoding16BitBody</TD></TR>
+	<TR><TD>6</TD><TD PORT="case4">DeltaEncoding32BitBody</TD></TR>
 </TABLE>>];
-				subgraph cluster__jump_table_body {
-					label="Dcmp0::Chunk::ExtendedBody::JumpTableBody";
-					graph[style=dotted];
-
-					jump_table_body__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-						<TR><TD PORT="segment_number_raw_pos">0</TD><TD PORT="segment_number_raw_size">...</TD><TD>DcmpVariableLengthInteger</TD><TD PORT="segment_number_raw_type">segment_number_raw</TD></TR>
-						<TR><TD PORT="num_addresses_raw_pos">...</TD><TD PORT="num_addresses_raw_size">...</TD><TD>DcmpVariableLengthInteger</TD><TD PORT="num_addresses_raw_type">num_addresses_raw</TD></TR>
-						<TR><TD PORT="addresses_raw_pos">...</TD><TD PORT="addresses_raw_size">...</TD><TD>DcmpVariableLengthInteger</TD><TD PORT="addresses_raw_type">addresses_raw</TD></TR>
-						<TR><TD COLSPAN="4" PORT="addresses_raw__repeat">repeat num_addresses times</TD></TR>
-					</TABLE>>];
-					jump_table_body__inst__segment_number [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-						<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-						<TR><TD>segment_number</TD><TD>segment_number_raw.value</TD></TR>
-					</TABLE>>];
-					jump_table_body__inst__num_addresses [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-						<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-						<TR><TD>num_addresses</TD><TD>num_addresses_raw.value</TD></TR>
-					</TABLE>>];
-				}
-				subgraph cluster__repeat_body {
-					label="Dcmp0::Chunk::ExtendedBody::RepeatBody";
-					graph[style=dotted];
-
-					repeat_body__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-						<TR><TD PORT="to_repeat_raw_pos">0</TD><TD PORT="to_repeat_raw_size">...</TD><TD>DcmpVariableLengthInteger</TD><TD PORT="to_repeat_raw_type">to_repeat_raw</TD></TR>
-						<TR><TD PORT="repeat_count_m1_raw_pos">...</TD><TD PORT="repeat_count_m1_raw_size">...</TD><TD>DcmpVariableLengthInteger</TD><TD PORT="repeat_count_m1_raw_type">repeat_count_m1_raw</TD></TR>
-					</TABLE>>];
-					repeat_body__inst__byte_count [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-						<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-						<TR><TD>byte_count</TD><TD>(tag == 2 ? 1 : (tag == 3 ? 2 : -1))</TD></TR>
-					</TABLE>>];
-					repeat_body__inst__to_repeat [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-						<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-						<TR><TD>to_repeat</TD><TD>to_repeat_raw.value</TD></TR>
-					</TABLE>>];
-					repeat_body__inst__repeat_count_m1 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-						<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-						<TR><TD>repeat_count_m1</TD><TD>repeat_count_m1_raw.value</TD></TR>
-					</TABLE>>];
-					repeat_body__inst__repeat_count [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-						<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-						<TR><TD>repeat_count</TD><TD>(repeat_count_m1 + 1)</TD></TR>
-					</TABLE>>];
-				}
 				subgraph cluster__delta_encoding_16_bit_body {
 					label="Dcmp0::Chunk::ExtendedBody::DeltaEncoding16BitBody";
 					graph[style=dotted];
@@ -212,65 +121,128 @@ extended_body__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPAC
 						<TR><TD>num_deltas</TD><TD>num_deltas_raw.value</TD></TR>
 					</TABLE>>];
 				}
+				subgraph cluster__jump_table_body {
+					label="Dcmp0::Chunk::ExtendedBody::JumpTableBody";
+					graph[style=dotted];
+
+					jump_table_body__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="segment_number_raw_pos">0</TD><TD PORT="segment_number_raw_size">...</TD><TD>DcmpVariableLengthInteger</TD><TD PORT="segment_number_raw_type">segment_number_raw</TD></TR>
+						<TR><TD PORT="num_addresses_raw_pos">...</TD><TD PORT="num_addresses_raw_size">...</TD><TD>DcmpVariableLengthInteger</TD><TD PORT="num_addresses_raw_type">num_addresses_raw</TD></TR>
+						<TR><TD PORT="addresses_raw_pos">...</TD><TD PORT="addresses_raw_size">...</TD><TD>DcmpVariableLengthInteger</TD><TD PORT="addresses_raw_type">addresses_raw</TD></TR>
+						<TR><TD COLSPAN="4" PORT="addresses_raw__repeat">repeat num_addresses times</TD></TR>
+					</TABLE>>];
+					jump_table_body__inst__num_addresses [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+						<TR><TD>num_addresses</TD><TD>num_addresses_raw.value</TD></TR>
+					</TABLE>>];
+					jump_table_body__inst__segment_number [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+						<TR><TD>segment_number</TD><TD>segment_number_raw.value</TD></TR>
+					</TABLE>>];
+				}
+				subgraph cluster__repeat_body {
+					label="Dcmp0::Chunk::ExtendedBody::RepeatBody";
+					graph[style=dotted];
+
+					repeat_body__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="to_repeat_raw_pos">0</TD><TD PORT="to_repeat_raw_size">...</TD><TD>DcmpVariableLengthInteger</TD><TD PORT="to_repeat_raw_type">to_repeat_raw</TD></TR>
+						<TR><TD PORT="repeat_count_m1_raw_pos">...</TD><TD PORT="repeat_count_m1_raw_size">...</TD><TD>DcmpVariableLengthInteger</TD><TD PORT="repeat_count_m1_raw_type">repeat_count_m1_raw</TD></TR>
+					</TABLE>>];
+					repeat_body__inst__byte_count [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+						<TR><TD>byte_count</TD><TD>(tag == 2 ? 1 : (tag == 3 ? 2 : -1))</TD></TR>
+					</TABLE>>];
+					repeat_body__inst__repeat_count [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+						<TR><TD>repeat_count</TD><TD>repeat_count_m1 + 1</TD></TR>
+					</TABLE>>];
+					repeat_body__inst__repeat_count_m1 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+						<TR><TD>repeat_count_m1</TD><TD>repeat_count_m1_raw.value</TD></TR>
+					</TABLE>>];
+					repeat_body__inst__to_repeat [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+						<TR><TD>to_repeat</TD><TD>to_repeat_raw.value</TD></TR>
+					</TABLE>>];
+				}
+			}
+			subgraph cluster__literal_body {
+				label="Dcmp0::Chunk::LiteralBody";
+				graph[style=dotted];
+
+				literal_body__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="len_literal_div2_separate_pos">0</TD><TD PORT="len_literal_div2_separate_size">1</TD><TD>u1</TD><TD PORT="len_literal_div2_separate_type">len_literal_div2_separate</TD></TR>
+					<TR><TD COLSPAN="4" PORT="len_literal_div2_separate__if">if is_len_literal_div2_separate</TD></TR>
+					<TR><TD PORT="literal_pos">1</TD><TD PORT="literal_size">len_literal</TD><TD></TD><TD PORT="literal_type">literal</TD></TR>
+				</TABLE>>];
+				literal_body__inst__do_store [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>do_store</TD><TD>tag &amp; 16 != 0</TD></TR>
+				</TABLE>>];
+				literal_body__inst__is_len_literal_div2_separate [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>is_len_literal_div2_separate</TD><TD>len_literal_div2_in_tag == 0</TD></TR>
+				</TABLE>>];
+				literal_body__inst__len_literal [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>len_literal</TD><TD>len_literal_div2 * 2</TD></TR>
+				</TABLE>>];
+				literal_body__inst__len_literal_div2 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>len_literal_div2</TD><TD>(is_len_literal_div2_separate ? len_literal_div2_separate : len_literal_div2_in_tag)</TD></TR>
+				</TABLE>>];
+				literal_body__inst__len_literal_div2_in_tag [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>len_literal_div2_in_tag</TD><TD>tag &amp; 15</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__table_lookup_body {
+				label="Dcmp0::Chunk::TableLookupBody";
+				graph[style=dotted];
+
+				table_lookup_body__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				</TABLE>>];
+				table_lookup_body__inst__lookup_table [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>lookup_table</TD><TD>[[0, 0].pack('C*'), [78, 186].pack('C*'), [0, 8].pack('C*'), [78, 117].pack('C*'), [0, 12].pack('C*'), [78, 173].pack('C*'), [32, 83].pack('C*'), [47, 11].pack('C*'), [97, 0].pack('C*'), [0, 16].pack('C*'), [112, 0].pack('C*'), [47, 0].pack('C*'), [72, 110].pack('C*'), [32, 80].pack('C*'), [32, 110].pack('C*'), [47, 46].pack('C*'), [255, 252].pack('C*'), [72, 231].pack('C*'), [63, 60].pack('C*'), [0, 4].pack('C*'), [255, 248].pack('C*'), [47, 12].pack('C*'), [32, 6].pack('C*'), [78, 237].pack('C*'), [78, 86].pack('C*'), [32, 104].pack('C*'), [78, 94].pack('C*'), [0, 1].pack('C*'), [88, 143].pack('C*'), [79, 239].pack('C*'), [0, 2].pack('C*'), [0, 24].pack('C*'), [96, 0].pack('C*'), [255, 255].pack('C*'), [80, 143].pack('C*'), [78, 144].pack('C*'), [0, 6].pack('C*'), [38, 110].pack('C*'), [0, 20].pack('C*'), [255, 244].pack('C*'), [76, 238].pack('C*'), [0, 10].pack('C*'), [0, 14].pack('C*'), [65, 238].pack('C*'), [76, 223].pack('C*'), [72, 192].pack('C*'), [255, 240].pack('C*'), [45, 64].pack('C*'), [0, 18].pack('C*'), [48, 46].pack('C*'), [112, 1].pack('C*'), [47, 40].pack('C*'), [32, 84].pack('C*'), [103, 0].pack('C*'), [0, 32].pack('C*'), [0, 28].pack('C*'), [32, 95].pack('C*'), [24, 0].pack('C*'), [38, 111].pack('C*'), [72, 120].pack('C*'), [0, 22].pack('C*'), [65, 250].pack('C*'), [48, 60].pack('C*'), [40, 64].pack('C*'), [114, 0].pack('C*'), [40, 110].pack('C*'), [32, 12].pack('C*'), [102, 0].pack('C*'), [32, 107].pack('C*'), [47, 7].pack('C*'), [85, 143].pack('C*'), [0, 40].pack('C*'), [255, 254].pack('C*'), [255, 236].pack('C*'), [34, 216].pack('C*'), [32, 11].pack('C*'), [0, 15].pack('C*'), [89, 143].pack('C*'), [47, 60].pack('C*'), [255, 0].pack('C*'), [1, 24].pack('C*'), [129, 225].pack('C*'), [74, 0].pack('C*'), [78, 176].pack('C*'), [255, 232].pack('C*'), [72, 199].pack('C*'), [0, 3].pack('C*'), [0, 34].pack('C*'), [0, 7].pack('C*'), [0, 26].pack('C*'), [103, 6].pack('C*'), [103, 8].pack('C*'), [78, 249].pack('C*'), [0, 36].pack('C*'), [32, 120].pack('C*'), [8, 0].pack('C*'), [102, 4].pack('C*'), [0, 42].pack('C*'), [78, 208].pack('C*'), [48, 40].pack('C*'), [38, 95].pack('C*'), [103, 4].pack('C*'), [0, 48].pack('C*'), [67, 238].pack('C*'), [63, 0].pack('C*'), [32, 31].pack('C*'), [0, 30].pack('C*'), [255, 246].pack('C*'), [32, 46].pack('C*'), [66, 167].pack('C*'), [32, 7].pack('C*'), [255, 250].pack('C*'), [96, 2].pack('C*'), [61, 64].pack('C*'), [12, 64].pack('C*'), [102, 6].pack('C*'), [0, 38].pack('C*'), [45, 72].pack('C*'), [47, 1].pack('C*'), [112, 255].pack('C*'), [96, 4].pack('C*'), [24, 128].pack('C*'), [74, 64].pack('C*'), [0, 64].pack('C*'), [0, 44].pack('C*'), [47, 8].pack('C*'), [0, 17].pack('C*'), [255, 228].pack('C*'), [33, 64].pack('C*'), [38, 64].pack('C*'), [255, 242].pack('C*'), [66, 110].pack('C*'), [78, 185].pack('C*'), [61, 124].pack('C*'), [0, 56].pack('C*'), [0, 13].pack('C*'), [96, 6].pack('C*'), [66, 46].pack('C*'), [32, 60].pack('C*'), [103, 12].pack('C*'), [45, 104].pack('C*'), [102, 8].pack('C*'), [74, 46].pack('C*'), [74, 174].pack('C*'), [0, 46].pack('C*'), [72, 64].pack('C*'), [34, 95].pack('C*'), [34, 0].pack('C*'), [103, 10].pack('C*'), [48, 7].pack('C*'), [66, 103].pack('C*'), [0, 50].pack('C*'), [32, 40].pack('C*'), [0, 9].pack('C*'), [72, 122].pack('C*'), [2, 0].pack('C*'), [47, 43].pack('C*'), [0, 5].pack('C*'), [34, 110].pack('C*'), [102, 2].pack('C*'), [229, 128].pack('C*'), [103, 14].pack('C*'), [102, 10].pack('C*'), [0, 80].pack('C*'), [62, 0].pack('C*'), [102, 12].pack('C*'), [46, 0].pack('C*'), [255, 238].pack('C*'), [32, 109].pack('C*'), [32, 64].pack('C*'), [255, 224].pack('C*'), [83, 64].pack('C*'), [96, 8].pack('C*'), [4, 128].pack('C*'), [0, 104].pack('C*'), [11, 124].pack('C*'), [68, 0].pack('C*'), [65, 232].pack('C*'), [72, 65].pack('C*')]</TD></TR>
+				</TABLE>>];
+				table_lookup_body__inst__value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>value</TD><TD>lookup_table[tag - 75]</TD></TR>
+				</TABLE>>];
 			}
 		}
 	}
 	dcmp_0__seq:chunks_type -> chunk__seq [style=bold];
 	chunk__seq:tag_type -> dcmp_0__seq:chunks__repeat [color="#404040"];
 	chunk__seq:body_type -> chunk__seq_body_switch [style=bold];
-	chunk__seq_body_switch:case0 -> extended_body__seq [style=bold];
-	chunk__seq_body_switch:case1 -> literal_body__seq [style=bold];
-	chunk__seq_body_switch:case2 -> end_body__seq [style=bold];
-	chunk__seq_body_switch:case3 -> table_lookup_body__seq [style=bold];
-	chunk__seq_body_switch:case4 -> backreference_body__seq [style=bold];
+	chunk__seq_body_switch:case0 -> backreference_body__seq [style=bold];
+	chunk__seq_body_switch:case1 -> end_body__seq [style=bold];
+	chunk__seq_body_switch:case2 -> extended_body__seq [style=bold];
+	chunk__seq_body_switch:case3 -> literal_body__seq [style=bold];
+	chunk__seq_body_switch:case4 -> table_lookup_body__seq [style=bold];
 	chunk__seq:tag_type -> chunk__seq:body_type [color="#404040"];
-	chunk__seq:tag_type -> chunk__seq:body_type [color="#404040"];
-	chunk__seq:tag_type -> chunk__seq:body_type [color="#404040"];
-	chunk__seq:tag_type -> chunk__seq:body_type [color="#404040"];
-	chunk__seq:tag_type -> chunk__seq:body_type [color="#404040"];
-	chunk__seq:tag_type -> chunk__seq:body_type [color="#404040"];
-	chunk__seq:tag_type -> chunk__seq:body_type [color="#404040"];
-	chunk__seq:tag_type -> chunk__seq:body_type [color="#404040"];
-	literal_body__inst__len_literal:len_literal_type -> literal_body__seq:literal_size [color="#404040"];
-	literal_body__params:tag_type -> literal_body__inst__do_store [color="#404040"];
-	literal_body__inst__is_len_literal_div2_separate:is_len_literal_div2_separate_type -> literal_body__inst__len_literal_div2 [color="#404040"];
-	literal_body__seq:len_literal_div2_separate_type -> literal_body__inst__len_literal_div2 [color="#404040"];
-	literal_body__inst__len_literal_div2_in_tag:len_literal_div2_in_tag_type -> literal_body__inst__len_literal_div2 [color="#404040"];
-	literal_body__inst__len_literal_div2:len_literal_div2_type -> literal_body__inst__len_literal [color="#404040"];
-	literal_body__params:tag_type -> literal_body__inst__len_literal_div2_in_tag [color="#404040"];
-	literal_body__inst__len_literal_div2_in_tag:len_literal_div2_in_tag_type -> literal_body__inst__is_len_literal_div2_separate [color="#404040"];
 	backreference_body__seq:index_separate_minus_type -> backreference_body__seq_index_separate_minus_switch [style=bold];
 	backreference_body__params:tag_type -> backreference_body__seq:index_separate_minus_type [color="#404040"];
-	backreference_body__params:tag_type -> backreference_body__inst__is_index_separate [color="#404040"];
-	backreference_body__params:tag_type -> backreference_body__inst__is_index_separate [color="#404040"];
-	backreference_body__params:tag_type -> backreference_body__inst__index_in_tag [color="#404040"];
-	backreference_body__seq:index_separate_minus_type -> backreference_body__inst__index_separate [color="#404040"];
-	backreference_body__params:tag_type -> backreference_body__inst__index_separate [color="#404040"];
+	backreference_body__inst__is_index_separate:is_index_separate_type -> backreference_body__seq:index_separate_minus__if [color="#404040"];
 	backreference_body__inst__is_index_separate:is_index_separate_type -> backreference_body__inst__index [color="#404040"];
 	backreference_body__inst__index_separate:index_separate_type -> backreference_body__inst__index [color="#404040"];
 	backreference_body__inst__index_in_tag:index_in_tag_type -> backreference_body__inst__index [color="#404040"];
-	table_lookup_body__inst__lookup_table:lookup_table_type -> table_lookup_body__inst__value [color="#404040"];
-	table_lookup_body__params:tag_type -> table_lookup_body__inst__value [color="#404040"];
+	backreference_body__params:tag_type -> backreference_body__inst__index_in_tag [color="#404040"];
+	backreference_body__seq:index_separate_minus_type -> backreference_body__inst__index_separate [color="#404040"];
+	backreference_body__params:tag_type -> backreference_body__inst__index_separate [color="#404040"];
+	backreference_body__params:tag_type -> backreference_body__inst__is_index_separate [color="#404040"];
 	extended_body__seq:body_type -> extended_body__seq_body_switch [style=bold];
 	extended_body__seq_body_switch:case0 -> jump_table_body__seq [style=bold];
-	extended_body__seq_body_switch:case1 -> delta_encoding_16_bit_body__seq [style=bold];
-	extended_body__seq_body_switch:case2 -> delta_encoding_32_bit_body__seq [style=bold];
-	extended_body__seq_body_switch:case3 -> repeat_body__seq [style=bold];
-	extended_body__seq_body_switch:case4 -> repeat_body__seq [style=bold];
+	extended_body__seq_body_switch:case1 -> repeat_body__seq [style=bold];
+	extended_body__seq_body_switch:case2 -> repeat_body__seq [style=bold];
+	extended_body__seq_body_switch:case3 -> delta_encoding_16_bit_body__seq [style=bold];
+	extended_body__seq_body_switch:case4 -> delta_encoding_32_bit_body__seq [style=bold];
 	extended_body__seq:tag_type -> extended_body__seq:body_type [color="#404040"];
-	jump_table_body__seq:segment_number_raw_type -> dcmp_variable_length_integer__seq [style=bold];
-	jump_table_body__seq:num_addresses_raw_type -> dcmp_variable_length_integer__seq [style=bold];
-	jump_table_body__seq:addresses_raw_type -> dcmp_variable_length_integer__seq [style=bold];
-	jump_table_body__inst__num_addresses:num_addresses_type -> jump_table_body__seq:addresses_raw__repeat [color="#404040"];
-	dcmp_variable_length_integer__inst__value:value_type -> jump_table_body__inst__segment_number [color="#404040"];
-	dcmp_variable_length_integer__inst__value:value_type -> jump_table_body__inst__num_addresses [color="#404040"];
-	repeat_body__seq:to_repeat_raw_type -> dcmp_variable_length_integer__seq [style=bold];
-	repeat_body__seq:repeat_count_m1_raw_type -> dcmp_variable_length_integer__seq [style=bold];
-	repeat_body__params:tag_type -> repeat_body__inst__byte_count [color="#404040"];
-	repeat_body__params:tag_type -> repeat_body__inst__byte_count [color="#404040"];
-	dcmp_variable_length_integer__inst__value:value_type -> repeat_body__inst__to_repeat [color="#404040"];
-	dcmp_variable_length_integer__inst__value:value_type -> repeat_body__inst__repeat_count_m1 [color="#404040"];
-	repeat_body__inst__repeat_count_m1:repeat_count_m1_type -> repeat_body__inst__repeat_count [color="#404040"];
 	delta_encoding_16_bit_body__seq:first_value_raw_type -> dcmp_variable_length_integer__seq [style=bold];
 	delta_encoding_16_bit_body__seq:num_deltas_raw_type -> dcmp_variable_length_integer__seq [style=bold];
 	delta_encoding_16_bit_body__inst__num_deltas:num_deltas_type -> delta_encoding_16_bit_body__seq:deltas__repeat [color="#404040"];
@@ -282,4 +254,27 @@ extended_body__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPAC
 	delta_encoding_32_bit_body__inst__num_deltas:num_deltas_type -> delta_encoding_32_bit_body__seq:deltas_raw__repeat [color="#404040"];
 	dcmp_variable_length_integer__inst__value:value_type -> delta_encoding_32_bit_body__inst__first_value [color="#404040"];
 	dcmp_variable_length_integer__inst__value:value_type -> delta_encoding_32_bit_body__inst__num_deltas [color="#404040"];
+	jump_table_body__seq:segment_number_raw_type -> dcmp_variable_length_integer__seq [style=bold];
+	jump_table_body__seq:num_addresses_raw_type -> dcmp_variable_length_integer__seq [style=bold];
+	jump_table_body__seq:addresses_raw_type -> dcmp_variable_length_integer__seq [style=bold];
+	jump_table_body__inst__num_addresses:num_addresses_type -> jump_table_body__seq:addresses_raw__repeat [color="#404040"];
+	dcmp_variable_length_integer__inst__value:value_type -> jump_table_body__inst__num_addresses [color="#404040"];
+	dcmp_variable_length_integer__inst__value:value_type -> jump_table_body__inst__segment_number [color="#404040"];
+	repeat_body__seq:to_repeat_raw_type -> dcmp_variable_length_integer__seq [style=bold];
+	repeat_body__seq:repeat_count_m1_raw_type -> dcmp_variable_length_integer__seq [style=bold];
+	repeat_body__params:tag_type -> repeat_body__inst__byte_count [color="#404040"];
+	repeat_body__inst__repeat_count_m1:repeat_count_m1_type -> repeat_body__inst__repeat_count [color="#404040"];
+	dcmp_variable_length_integer__inst__value:value_type -> repeat_body__inst__repeat_count_m1 [color="#404040"];
+	dcmp_variable_length_integer__inst__value:value_type -> repeat_body__inst__to_repeat [color="#404040"];
+	literal_body__inst__is_len_literal_div2_separate:is_len_literal_div2_separate_type -> literal_body__seq:len_literal_div2_separate__if [color="#404040"];
+	literal_body__inst__len_literal:len_literal_type -> literal_body__seq:literal_size [color="#404040"];
+	literal_body__params:tag_type -> literal_body__inst__do_store [color="#404040"];
+	literal_body__inst__len_literal_div2_in_tag:len_literal_div2_in_tag_type -> literal_body__inst__is_len_literal_div2_separate [color="#404040"];
+	literal_body__inst__len_literal_div2:len_literal_div2_type -> literal_body__inst__len_literal [color="#404040"];
+	literal_body__inst__is_len_literal_div2_separate:is_len_literal_div2_separate_type -> literal_body__inst__len_literal_div2 [color="#404040"];
+	literal_body__seq:len_literal_div2_separate_type -> literal_body__inst__len_literal_div2 [color="#404040"];
+	literal_body__inst__len_literal_div2_in_tag:len_literal_div2_in_tag_type -> literal_body__inst__len_literal_div2 [color="#404040"];
+	literal_body__params:tag_type -> literal_body__inst__len_literal_div2_in_tag [color="#404040"];
+	table_lookup_body__inst__lookup_table:lookup_table_type -> table_lookup_body__inst__value [color="#404040"];
+	table_lookup_body__params:tag_type -> table_lookup_body__inst__value [color="#404040"];
 }

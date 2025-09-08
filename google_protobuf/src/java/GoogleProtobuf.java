@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
 
 
 /**
@@ -69,6 +70,48 @@ public class GoogleProtobuf extends KaitaiStruct {
         }
     }
 
+    public void _fetchInstances() {
+        for (int i = 0; i < this.pairs.size(); i++) {
+            this.pairs.get(((Number) (i)).intValue())._fetchInstances();
+        }
+    }
+    public static class DelimitedBytes extends KaitaiStruct {
+        public static DelimitedBytes fromFile(String fileName) throws IOException {
+            return new DelimitedBytes(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public DelimitedBytes(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public DelimitedBytes(KaitaiStream _io, GoogleProtobuf.Pair _parent) {
+            this(_io, _parent, null);
+        }
+
+        public DelimitedBytes(KaitaiStream _io, GoogleProtobuf.Pair _parent, GoogleProtobuf _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.len = new VlqBase128Le(this._io);
+            this.body = this._io.readBytes(len().value());
+        }
+
+        public void _fetchInstances() {
+            this.len._fetchInstances();
+        }
+        private VlqBase128Le len;
+        private byte[] body;
+        private GoogleProtobuf _root;
+        private GoogleProtobuf.Pair _parent;
+        public VlqBase128Le len() { return len; }
+        public byte[] body() { return body; }
+        public GoogleProtobuf _root() { return _root; }
+        public GoogleProtobuf.Pair _parent() { return _parent; }
+    }
+
     /**
      * Key-value pair
      */
@@ -116,25 +159,62 @@ public class GoogleProtobuf extends KaitaiStruct {
                 WireTypes on = wireType();
                 if (on != null) {
                     switch (wireType()) {
-                    case VARINT: {
-                        this.value = new VlqBase128Le(this._io);
+                    case BIT_32: {
+                        this.value = ((Object) (this._io.readU4le()));
+                        break;
+                    }
+                    case BIT_64: {
+                        this.value = ((Object) (this._io.readU8le()));
                         break;
                     }
                     case LEN_DELIMITED: {
                         this.value = new DelimitedBytes(this._io, this, _root);
                         break;
                     }
-                    case BIT_64: {
-                        this.value = (Object) (this._io.readU8le());
-                        break;
-                    }
-                    case BIT_32: {
-                        this.value = (Object) (this._io.readU4le());
+                    case VARINT: {
+                        this.value = new VlqBase128Le(this._io);
                         break;
                     }
                     }
                 }
             }
+        }
+
+        public void _fetchInstances() {
+            this.key._fetchInstances();
+            {
+                WireTypes on = wireType();
+                if (on != null) {
+                    switch (wireType()) {
+                    case BIT_32: {
+                        break;
+                    }
+                    case BIT_64: {
+                        break;
+                    }
+                    case LEN_DELIMITED: {
+                        ((DelimitedBytes) (this.value))._fetchInstances();
+                        break;
+                    }
+                    case VARINT: {
+                        ((VlqBase128Le) (this.value))._fetchInstances();
+                        break;
+                    }
+                    }
+                }
+            }
+        }
+        private Integer fieldTag;
+
+        /**
+         * Identifies a field of protocol. One can look up symbolic
+         * field name in a `.proto` file by this field tag.
+         */
+        public Integer fieldTag() {
+            if (this.fieldTag != null)
+                return this.fieldTag;
+            this.fieldTag = ((Number) (key().value() >> 3)).intValue();
+            return this.fieldTag;
         }
         private WireTypes wireType;
 
@@ -150,21 +230,8 @@ public class GoogleProtobuf extends KaitaiStruct {
         public WireTypes wireType() {
             if (this.wireType != null)
                 return this.wireType;
-            this.wireType = WireTypes.byId((key().value() & 7));
+            this.wireType = WireTypes.byId(key().value() & 7);
             return this.wireType;
-        }
-        private Integer fieldTag;
-
-        /**
-         * Identifies a field of protocol. One can look up symbolic
-         * field name in a `.proto` file by this field tag.
-         */
-        public Integer fieldTag() {
-            if (this.fieldTag != null)
-                return this.fieldTag;
-            int _tmp = (int) ((key().value() >> 3));
-            this.fieldTag = _tmp;
-            return this.fieldTag;
         }
         private VlqBase128Le key;
         private Object value;
@@ -189,46 +256,14 @@ public class GoogleProtobuf extends KaitaiStruct {
         public GoogleProtobuf _root() { return _root; }
         public GoogleProtobuf _parent() { return _parent; }
     }
-    public static class DelimitedBytes extends KaitaiStruct {
-        public static DelimitedBytes fromFile(String fileName) throws IOException {
-            return new DelimitedBytes(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public DelimitedBytes(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public DelimitedBytes(KaitaiStream _io, GoogleProtobuf.Pair _parent) {
-            this(_io, _parent, null);
-        }
-
-        public DelimitedBytes(KaitaiStream _io, GoogleProtobuf.Pair _parent, GoogleProtobuf _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.len = new VlqBase128Le(this._io);
-            this.body = this._io.readBytes(len().value());
-        }
-        private VlqBase128Le len;
-        private byte[] body;
-        private GoogleProtobuf _root;
-        private GoogleProtobuf.Pair _parent;
-        public VlqBase128Le len() { return len; }
-        public byte[] body() { return body; }
-        public GoogleProtobuf _root() { return _root; }
-        public GoogleProtobuf.Pair _parent() { return _parent; }
-    }
-    private ArrayList<Pair> pairs;
+    private List<Pair> pairs;
     private GoogleProtobuf _root;
     private KaitaiStruct _parent;
 
     /**
      * Key-value pairs which constitute a message
      */
-    public ArrayList<Pair> pairs() { return pairs; }
+    public List<Pair> pairs() { return pairs; }
     public GoogleProtobuf _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

@@ -56,32 +56,33 @@ namespace Kaitai
                 m_parent = p__parent;
                 m_root = p__root;
                 _ofs = p_ofs;
-                f_raw1 = false;
+                f_byte0 = false;
                 f_lenBytes = false;
+                f_raw0 = false;
+                f_raw1 = false;
+                f_raw2 = false;
                 f_raw3 = false;
                 f_valueAsInt = false;
-                f_raw0 = false;
-                f_byte0 = false;
-                f_raw2 = false;
                 _read();
             }
             private void _read()
             {
                 _bytes = m_io.ReadBytes(LenBytes);
             }
-            private bool f_raw1;
-            private int? _raw1;
-            public int? Raw1
+            private bool f_byte0;
+            private byte _byte0;
+            public byte Byte0
             {
                 get
                 {
-                    if (f_raw1)
-                        return _raw1;
-                    if (LenBytes >= 2) {
-                        _raw1 = (int) ((Bytes[1] & 63));
-                    }
-                    f_raw1 = true;
-                    return _raw1;
+                    if (f_byte0)
+                        return _byte0;
+                    f_byte0 = true;
+                    long _pos = m_io.Pos;
+                    m_io.Seek(Ofs);
+                    _byte0 = m_io.ReadU1();
+                    m_io.Seek(_pos);
+                    return _byte0;
                 }
             }
             private bool f_lenBytes;
@@ -92,9 +93,52 @@ namespace Kaitai
                 {
                     if (f_lenBytes)
                         return _lenBytes;
-                    _lenBytes = (int) (((Byte0 & 128) == 0 ? 1 : ((Byte0 & 224) == 192 ? 2 : ((Byte0 & 240) == 224 ? 3 : ((Byte0 & 248) == 240 ? 4 : -1)))));
                     f_lenBytes = true;
+                    _lenBytes = (int) (((Byte0 & 128) == 0 ? 1 : ((Byte0 & 224) == 192 ? 2 : ((Byte0 & 240) == 224 ? 3 : ((Byte0 & 248) == 240 ? 4 : -1)))));
                     return _lenBytes;
+                }
+            }
+            private bool f_raw0;
+            private int _raw0;
+            public int Raw0
+            {
+                get
+                {
+                    if (f_raw0)
+                        return _raw0;
+                    f_raw0 = true;
+                    _raw0 = (int) (Bytes[0] & (LenBytes == 1 ? 127 : (LenBytes == 2 ? 31 : (LenBytes == 3 ? 15 : (LenBytes == 4 ? 7 : 0)))));
+                    return _raw0;
+                }
+            }
+            private bool f_raw1;
+            private int? _raw1;
+            public int? Raw1
+            {
+                get
+                {
+                    if (f_raw1)
+                        return _raw1;
+                    f_raw1 = true;
+                    if (LenBytes >= 2) {
+                        _raw1 = (int) (Bytes[1] & 63);
+                    }
+                    return _raw1;
+                }
+            }
+            private bool f_raw2;
+            private int? _raw2;
+            public int? Raw2
+            {
+                get
+                {
+                    if (f_raw2)
+                        return _raw2;
+                    f_raw2 = true;
+                    if (LenBytes >= 3) {
+                        _raw2 = (int) (Bytes[2] & 63);
+                    }
+                    return _raw2;
                 }
             }
             private bool f_raw3;
@@ -105,10 +149,10 @@ namespace Kaitai
                 {
                     if (f_raw3)
                         return _raw3;
-                    if (LenBytes >= 4) {
-                        _raw3 = (int) ((Bytes[3] & 63));
-                    }
                     f_raw3 = true;
+                    if (LenBytes >= 4) {
+                        _raw3 = (int) (Bytes[3] & 63);
+                    }
                     return _raw3;
                 }
             }
@@ -120,53 +164,9 @@ namespace Kaitai
                 {
                     if (f_valueAsInt)
                         return _valueAsInt;
-                    _valueAsInt = (int) ((LenBytes == 1 ? Raw0 : (LenBytes == 2 ? ((Raw0 << 6) | Raw1) : (LenBytes == 3 ? (((Raw0 << 12) | (Raw1 << 6)) | Raw2) : (LenBytes == 4 ? ((((Raw0 << 18) | (Raw1 << 12)) | (Raw2 << 6)) | Raw3) : -1)))));
                     f_valueAsInt = true;
+                    _valueAsInt = (int) ((LenBytes == 1 ? Raw0 : (LenBytes == 2 ? Raw0 << 6 | Raw1 : (LenBytes == 3 ? (Raw0 << 12 | Raw1 << 6) | Raw2 : (LenBytes == 4 ? ((Raw0 << 18 | Raw1 << 12) | Raw2 << 6) | Raw3 : -1)))));
                     return _valueAsInt;
-                }
-            }
-            private bool f_raw0;
-            private int _raw0;
-            public int Raw0
-            {
-                get
-                {
-                    if (f_raw0)
-                        return _raw0;
-                    _raw0 = (int) ((Bytes[0] & (LenBytes == 1 ? 127 : (LenBytes == 2 ? 31 : (LenBytes == 3 ? 15 : (LenBytes == 4 ? 7 : 0))))));
-                    f_raw0 = true;
-                    return _raw0;
-                }
-            }
-            private bool f_byte0;
-            private byte _byte0;
-            public byte Byte0
-            {
-                get
-                {
-                    if (f_byte0)
-                        return _byte0;
-                    long _pos = m_io.Pos;
-                    m_io.Seek(Ofs);
-                    _byte0 = m_io.ReadU1();
-                    m_io.Seek(_pos);
-                    f_byte0 = true;
-                    return _byte0;
-                }
-            }
-            private bool f_raw2;
-            private int? _raw2;
-            public int? Raw2
-            {
-                get
-                {
-                    if (f_raw2)
-                        return _raw2;
-                    if (LenBytes >= 3) {
-                        _raw2 = (int) ((Bytes[2] & 63));
-                    }
-                    f_raw2 = true;
-                    return _raw2;
                 }
             }
             private byte[] _bytes;

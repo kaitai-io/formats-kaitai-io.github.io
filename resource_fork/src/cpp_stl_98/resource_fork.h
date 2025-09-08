@@ -3,15 +3,16 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class resource_fork_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include "bytes_with_io.h"
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
-class bytes_with_io_t;
 
 /**
  * The data format of Macintosh resource forks,
@@ -57,8 +58,8 @@ class bytes_with_io_t;
 class resource_fork_t : public kaitai::kstruct {
 
 public:
-    class file_header_t;
     class data_block_t;
+    class file_header_t;
     class resource_map_t;
 
     resource_fork_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, resource_fork_t* p__root = 0);
@@ -69,6 +70,48 @@ private:
 
 public:
     ~resource_fork_t();
+
+    /**
+     * A resource data block,
+     * as stored in the resource data area.
+     * 
+     * Each data block stores the data contained in a resource,
+     * along with its length.
+     */
+
+    class data_block_t : public kaitai::kstruct {
+
+    public:
+
+        data_block_t(kaitai::kstream* p__io, resource_fork_t::resource_map_t::type_list_and_reference_lists_t::reference_list_t::reference_t* p__parent = 0, resource_fork_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~data_block_t();
+
+    private:
+        uint32_t m_len_data;
+        std::string m_data;
+        resource_fork_t* m__root;
+        resource_fork_t::resource_map_t::type_list_and_reference_lists_t::reference_list_t::reference_t* m__parent;
+
+    public:
+
+        /**
+         * The length of the resource data stored in this block.
+         */
+        uint32_t len_data() const { return m_len_data; }
+
+        /**
+         * The data stored in this block.
+         */
+        std::string data() const { return m_data; }
+        resource_fork_t* _root() const { return m__root; }
+        resource_fork_t::resource_map_t::type_list_and_reference_lists_t::reference_list_t::reference_t* _parent() const { return m__parent; }
+    };
 
     /**
      * Resource file header,
@@ -136,48 +179,6 @@ public:
     };
 
     /**
-     * A resource data block,
-     * as stored in the resource data area.
-     * 
-     * Each data block stores the data contained in a resource,
-     * along with its length.
-     */
-
-    class data_block_t : public kaitai::kstruct {
-
-    public:
-
-        data_block_t(kaitai::kstream* p__io, resource_fork_t::resource_map_t::type_list_and_reference_lists_t::reference_list_t::reference_t* p__parent = 0, resource_fork_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~data_block_t();
-
-    private:
-        uint32_t m_len_data;
-        std::string m_data;
-        resource_fork_t* m__root;
-        resource_fork_t::resource_map_t::type_list_and_reference_lists_t::reference_list_t::reference_t* m__parent;
-
-    public:
-
-        /**
-         * The length of the resource data stored in this block.
-         */
-        uint32_t len_data() const { return m_len_data; }
-
-        /**
-         * The data stored in this block.
-         */
-        std::string data() const { return m_data; }
-        resource_fork_t* _root() const { return m__root; }
-        resource_fork_t::resource_map_t::type_list_and_reference_lists_t::reference_list_t::reference_t* _parent() const { return m__parent; }
-    };
-
-    /**
      * Resource map,
      * containing information about the resources in the file and where they are located in the data area.
      */
@@ -186,8 +187,8 @@ public:
 
     public:
         class file_attributes_t;
-        class type_list_and_reference_lists_t;
         class name_t;
+        class type_list_and_reference_lists_t;
 
         resource_map_t(kaitai::kstream* p__io, resource_fork_t* p__parent = 0, resource_fork_t* p__root = 0);
 
@@ -308,6 +309,73 @@ public:
         };
 
         /**
+         * A resource name,
+         * as stored in the resource name storage area in the resource map.
+         * 
+         * The resource names are not required to appear in any particular order.
+         * There may be unused space between and around resource names,
+         * but in practice they are often contiguous.
+         */
+
+        class name_t : public kaitai::kstruct {
+
+        public:
+
+            name_t(kaitai::kstream* p__io, resource_fork_t::resource_map_t::type_list_and_reference_lists_t::reference_list_t::reference_t* p__parent = 0, resource_fork_t* p__root = 0);
+
+        private:
+            void _read();
+            void _clean_up();
+
+        public:
+            ~name_t();
+
+        private:
+            uint8_t m_len_value;
+            std::string m_value;
+            resource_fork_t* m__root;
+            resource_fork_t::resource_map_t::type_list_and_reference_lists_t::reference_list_t::reference_t* m__parent;
+
+        public:
+
+            /**
+             * The length of the resource name, in bytes.
+             */
+            uint8_t len_value() const { return m_len_value; }
+
+            /**
+             * The resource name.
+             * 
+             * This field is exposed as a byte array,
+             * because there is no universal encoding for resource names.
+             * Most Classic Mac software does not deal with encodings explicitly and instead assumes that all strings,
+             * including resource names,
+             * use the system encoding,
+             * which varies depending on the system language.
+             * This means that resource names can use different encodings depending on what system language they were created with.
+             * 
+             * Many resource names are plain ASCII,
+             * meaning that the encoding often does not matter
+             * (because all Mac OS encodings are ASCII-compatible).
+             * For non-ASCII resource names,
+             * the most common encoding is perhaps MacRoman
+             * (used for English and other Western languages),
+             * but other encodings are also sometimes used,
+             * especially for software in non-Western languages.
+             * 
+             * There is no requirement that all names in a single resource file use the same encoding.
+             * For example,
+             * localized software may have some (but not all) of its resource names translated.
+             * For non-Western languages,
+             * this can lead to some resource names using MacRoman,
+             * and others using a different encoding.
+             */
+            std::string value() const { return m_value; }
+            resource_fork_t* _root() const { return m__root; }
+            resource_fork_t::resource_map_t::type_list_and_reference_lists_t::reference_list_t::reference_t* _parent() const { return m__parent; }
+        };
+
+        /**
          * Resource type list and storage area for resource reference lists in the resource map.
          * 
          * The two parts are combined into a single type here for technical reasons:
@@ -319,8 +387,8 @@ public:
         class type_list_and_reference_lists_t : public kaitai::kstruct {
 
         public:
-            class type_list_t;
             class reference_list_t;
+            class type_list_t;
 
             type_list_and_reference_lists_t(kaitai::kstream* p__io, resource_fork_t::resource_map_t* p__parent = 0, resource_fork_t* p__root = 0);
 
@@ -330,139 +398,6 @@ public:
 
         public:
             ~type_list_and_reference_lists_t();
-
-            /**
-             * Resource type list in the resource map.
-             */
-
-            class type_list_t : public kaitai::kstruct {
-
-            public:
-                class type_list_entry_t;
-
-                type_list_t(kaitai::kstream* p__io, resource_fork_t::resource_map_t::type_list_and_reference_lists_t* p__parent = 0, resource_fork_t* p__root = 0);
-
-            private:
-                void _read();
-                void _clean_up();
-
-            public:
-                ~type_list_t();
-
-                /**
-                 * A single entry in the resource type list.
-                 * 
-                 * Each entry corresponds to exactly one resource reference list.
-                 */
-
-                class type_list_entry_t : public kaitai::kstruct {
-
-                public:
-
-                    type_list_entry_t(kaitai::kstream* p__io, resource_fork_t::resource_map_t::type_list_and_reference_lists_t::type_list_t* p__parent = 0, resource_fork_t* p__root = 0);
-
-                private:
-                    void _read();
-                    void _clean_up();
-
-                public:
-                    ~type_list_entry_t();
-
-                private:
-                    bool f_num_references;
-                    int32_t m_num_references;
-
-                public:
-
-                    /**
-                     * The number of resources in the reference list for this type.
-                     */
-                    int32_t num_references();
-
-                private:
-                    bool f_reference_list;
-                    reference_list_t* m_reference_list;
-
-                public:
-
-                    /**
-                     * The resource reference list for this resource type.
-                     */
-                    reference_list_t* reference_list();
-
-                private:
-                    std::string m_type;
-                    uint16_t m_num_references_m1;
-                    uint16_t m_ofs_reference_list;
-                    resource_fork_t* m__root;
-                    resource_fork_t::resource_map_t::type_list_and_reference_lists_t::type_list_t* m__parent;
-
-                public:
-
-                    /**
-                     * The four-character type code of the resources in the reference list.
-                     */
-                    std::string type() const { return m_type; }
-
-                    /**
-                     * The number of resources in the reference list for this type,
-                     * minus one.
-                     * 
-                     * Empty reference lists should never exist.
-                     */
-                    uint16_t num_references_m1() const { return m_num_references_m1; }
-
-                    /**
-                     * Offset of the resource reference list for this resource type,
-                     * from the start of the resource type list.
-                     * 
-                     * Although the offset is relative to the start of the type list,
-                     * it should never point into the type list itself,
-                     * but into the reference list storage area that directly follows it.
-                     * That is,
-                     * it should always be at least `_parent._sizeof`.
-                     */
-                    uint16_t ofs_reference_list() const { return m_ofs_reference_list; }
-                    resource_fork_t* _root() const { return m__root; }
-                    resource_fork_t::resource_map_t::type_list_and_reference_lists_t::type_list_t* _parent() const { return m__parent; }
-                };
-
-            private:
-                bool f_num_types;
-                int32_t m_num_types;
-
-            public:
-
-                /**
-                 * The number of resource types in this list.
-                 */
-                int32_t num_types();
-
-            private:
-                uint16_t m_num_types_m1;
-                std::vector<type_list_entry_t*>* m_entries;
-                resource_fork_t* m__root;
-                resource_fork_t::resource_map_t::type_list_and_reference_lists_t* m__parent;
-
-            public:
-
-                /**
-                 * The number of resource types in this list,
-                 * minus one.
-                 * 
-                 * If the resource list is empty,
-                 * the value of this field is `0xffff`,
-                 * i. e. `-1` truncated to a 16-bit unsigned integer.
-                 */
-                uint16_t num_types_m1() const { return m_num_types_m1; }
-
-                /**
-                 * Entries in the resource type list.
-                 */
-                std::vector<type_list_entry_t*>* entries() const { return m_entries; }
-                resource_fork_t* _root() const { return m__root; }
-                resource_fork_t::resource_map_t::type_list_and_reference_lists_t* _parent() const { return m__parent; }
-            };
 
             /**
              * A resource reference list,
@@ -658,6 +593,17 @@ public:
                     };
 
                 private:
+                    bool f_data_block;
+                    data_block_t* m_data_block;
+
+                public:
+
+                    /**
+                     * The data block containing the data for the resource described by this reference.
+                     */
+                    data_block_t* data_block();
+
+                private:
                     bool f_name;
                     name_t* m_name;
                     bool n_name;
@@ -673,17 +619,6 @@ public:
                      * The name (if any) of the resource described by this reference.
                      */
                     name_t* name();
-
-                private:
-                    bool f_data_block;
-                    data_block_t* m_data_block;
-
-                public:
-
-                    /**
-                     * The data block containing the data for the resource described by this reference.
-                     */
-                    data_block_t* data_block();
 
                 private:
                     int16_t m_id;
@@ -759,6 +694,139 @@ public:
                 resource_fork_t::resource_map_t::type_list_and_reference_lists_t::type_list_t::type_list_entry_t* _parent() const { return m__parent; }
             };
 
+            /**
+             * Resource type list in the resource map.
+             */
+
+            class type_list_t : public kaitai::kstruct {
+
+            public:
+                class type_list_entry_t;
+
+                type_list_t(kaitai::kstream* p__io, resource_fork_t::resource_map_t::type_list_and_reference_lists_t* p__parent = 0, resource_fork_t* p__root = 0);
+
+            private:
+                void _read();
+                void _clean_up();
+
+            public:
+                ~type_list_t();
+
+                /**
+                 * A single entry in the resource type list.
+                 * 
+                 * Each entry corresponds to exactly one resource reference list.
+                 */
+
+                class type_list_entry_t : public kaitai::kstruct {
+
+                public:
+
+                    type_list_entry_t(kaitai::kstream* p__io, resource_fork_t::resource_map_t::type_list_and_reference_lists_t::type_list_t* p__parent = 0, resource_fork_t* p__root = 0);
+
+                private:
+                    void _read();
+                    void _clean_up();
+
+                public:
+                    ~type_list_entry_t();
+
+                private:
+                    bool f_num_references;
+                    int32_t m_num_references;
+
+                public:
+
+                    /**
+                     * The number of resources in the reference list for this type.
+                     */
+                    int32_t num_references();
+
+                private:
+                    bool f_reference_list;
+                    reference_list_t* m_reference_list;
+
+                public:
+
+                    /**
+                     * The resource reference list for this resource type.
+                     */
+                    reference_list_t* reference_list();
+
+                private:
+                    std::string m_type;
+                    uint16_t m_num_references_m1;
+                    uint16_t m_ofs_reference_list;
+                    resource_fork_t* m__root;
+                    resource_fork_t::resource_map_t::type_list_and_reference_lists_t::type_list_t* m__parent;
+
+                public:
+
+                    /**
+                     * The four-character type code of the resources in the reference list.
+                     */
+                    std::string type() const { return m_type; }
+
+                    /**
+                     * The number of resources in the reference list for this type,
+                     * minus one.
+                     * 
+                     * Empty reference lists should never exist.
+                     */
+                    uint16_t num_references_m1() const { return m_num_references_m1; }
+
+                    /**
+                     * Offset of the resource reference list for this resource type,
+                     * from the start of the resource type list.
+                     * 
+                     * Although the offset is relative to the start of the type list,
+                     * it should never point into the type list itself,
+                     * but into the reference list storage area that directly follows it.
+                     * That is,
+                     * it should always be at least `_parent._sizeof`.
+                     */
+                    uint16_t ofs_reference_list() const { return m_ofs_reference_list; }
+                    resource_fork_t* _root() const { return m__root; }
+                    resource_fork_t::resource_map_t::type_list_and_reference_lists_t::type_list_t* _parent() const { return m__parent; }
+                };
+
+            private:
+                bool f_num_types;
+                int32_t m_num_types;
+
+            public:
+
+                /**
+                 * The number of resource types in this list.
+                 */
+                int32_t num_types();
+
+            private:
+                uint16_t m_num_types_m1;
+                std::vector<type_list_entry_t*>* m_entries;
+                resource_fork_t* m__root;
+                resource_fork_t::resource_map_t::type_list_and_reference_lists_t* m__parent;
+
+            public:
+
+                /**
+                 * The number of resource types in this list,
+                 * minus one.
+                 * 
+                 * If the resource list is empty,
+                 * the value of this field is `0xffff`,
+                 * i. e. `-1` truncated to a 16-bit unsigned integer.
+                 */
+                uint16_t num_types_m1() const { return m_num_types_m1; }
+
+                /**
+                 * Entries in the resource type list.
+                 */
+                std::vector<type_list_entry_t*>* entries() const { return m_entries; }
+                resource_fork_t* _root() const { return m__root; }
+                resource_fork_t::resource_map_t::type_list_and_reference_lists_t* _parent() const { return m__parent; }
+            };
+
         private:
             type_list_t* m_type_list;
             std::string m_reference_lists;
@@ -784,83 +852,16 @@ public:
             resource_fork_t::resource_map_t* _parent() const { return m__parent; }
         };
 
-        /**
-         * A resource name,
-         * as stored in the resource name storage area in the resource map.
-         * 
-         * The resource names are not required to appear in any particular order.
-         * There may be unused space between and around resource names,
-         * but in practice they are often contiguous.
-         */
-
-        class name_t : public kaitai::kstruct {
-
-        public:
-
-            name_t(kaitai::kstream* p__io, resource_fork_t::resource_map_t::type_list_and_reference_lists_t::reference_list_t::reference_t* p__parent = 0, resource_fork_t* p__root = 0);
-
-        private:
-            void _read();
-            void _clean_up();
-
-        public:
-            ~name_t();
-
-        private:
-            uint8_t m_len_value;
-            std::string m_value;
-            resource_fork_t* m__root;
-            resource_fork_t::resource_map_t::type_list_and_reference_lists_t::reference_list_t::reference_t* m__parent;
-
-        public:
-
-            /**
-             * The length of the resource name, in bytes.
-             */
-            uint8_t len_value() const { return m_len_value; }
-
-            /**
-             * The resource name.
-             * 
-             * This field is exposed as a byte array,
-             * because there is no universal encoding for resource names.
-             * Most Classic Mac software does not deal with encodings explicitly and instead assumes that all strings,
-             * including resource names,
-             * use the system encoding,
-             * which varies depending on the system language.
-             * This means that resource names can use different encodings depending on what system language they were created with.
-             * 
-             * Many resource names are plain ASCII,
-             * meaning that the encoding often does not matter
-             * (because all Mac OS encodings are ASCII-compatible).
-             * For non-ASCII resource names,
-             * the most common encoding is perhaps MacRoman
-             * (used for English and other Western languages),
-             * but other encodings are also sometimes used,
-             * especially for software in non-Western languages.
-             * 
-             * There is no requirement that all names in a single resource file use the same encoding.
-             * For example,
-             * localized software may have some (but not all) of its resource names translated.
-             * For non-Western languages,
-             * this can lead to some resource names using MacRoman,
-             * and others using a different encoding.
-             */
-            std::string value() const { return m_value; }
-            resource_fork_t* _root() const { return m__root; }
-            resource_fork_t::resource_map_t::type_list_and_reference_lists_t::reference_list_t::reference_t* _parent() const { return m__parent; }
-        };
-
     private:
-        bool f_type_list_and_reference_lists;
-        type_list_and_reference_lists_t* m_type_list_and_reference_lists;
+        bool f_names;
+        std::string m_names;
 
     public:
 
         /**
-         * The resource map's resource type list, followed by the resource reference list area.
+         * Storage area for the names of all resources.
          */
-        type_list_and_reference_lists_t* type_list_and_reference_lists();
+        std::string names();
 
     private:
         bool f_names_with_io;
@@ -875,15 +876,15 @@ public:
         bytes_with_io_t* names_with_io();
 
     private:
-        bool f_names;
-        std::string m_names;
+        bool f_type_list_and_reference_lists;
+        type_list_and_reference_lists_t* m_type_list_and_reference_lists;
 
     public:
 
         /**
-         * Storage area for the names of all resources.
+         * The resource map's resource type list, followed by the resource reference list area.
          */
-        std::string names();
+        type_list_and_reference_lists_t* type_list_and_reference_lists();
 
     private:
         file_header_t* m_reserved_file_header_copy;
@@ -896,10 +897,10 @@ public:
         resource_fork_t* m__parent;
         std::string m__raw_file_attributes;
         kaitai::kstream* m__io__raw_file_attributes;
-        std::string m__raw_type_list_and_reference_lists;
-        kaitai::kstream* m__io__raw_type_list_and_reference_lists;
         std::string m__raw_names_with_io;
         kaitai::kstream* m__io__raw_names_with_io;
+        std::string m__raw_type_list_and_reference_lists;
+        kaitai::kstream* m__io__raw_type_list_and_reference_lists;
 
     public:
 
@@ -942,23 +943,11 @@ public:
         resource_fork_t* _parent() const { return m__parent; }
         std::string _raw_file_attributes() const { return m__raw_file_attributes; }
         kaitai::kstream* _io__raw_file_attributes() const { return m__io__raw_file_attributes; }
-        std::string _raw_type_list_and_reference_lists() const { return m__raw_type_list_and_reference_lists; }
-        kaitai::kstream* _io__raw_type_list_and_reference_lists() const { return m__io__raw_type_list_and_reference_lists; }
         std::string _raw_names_with_io() const { return m__raw_names_with_io; }
         kaitai::kstream* _io__raw_names_with_io() const { return m__io__raw_names_with_io; }
+        std::string _raw_type_list_and_reference_lists() const { return m__raw_type_list_and_reference_lists; }
+        kaitai::kstream* _io__raw_type_list_and_reference_lists() const { return m__io__raw_type_list_and_reference_lists; }
     };
-
-private:
-    bool f_data_blocks_with_io;
-    bytes_with_io_t* m_data_blocks_with_io;
-
-public:
-
-    /**
-     * Use `data_blocks` instead,
-     * unless you need access to this instance's `_io`.
-     */
-    bytes_with_io_t* data_blocks_with_io();
 
 private:
     bool f_data_blocks;
@@ -982,6 +971,18 @@ public:
      * or when resources are added or grown so that more space is needed in the data area.
      */
     std::string data_blocks();
+
+private:
+    bool f_data_blocks_with_io;
+    bytes_with_io_t* m_data_blocks_with_io;
+
+public:
+
+    /**
+     * Use `data_blocks` instead,
+     * unless you need access to this instance's `_io`.
+     */
+    bytes_with_io_t* data_blocks_with_io();
 
 private:
     bool f_resource_map;

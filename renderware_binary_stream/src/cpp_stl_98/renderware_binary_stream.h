@@ -3,12 +3,15 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class renderware_binary_stream_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -18,24 +21,24 @@
 class renderware_binary_stream_t : public kaitai::kstruct {
 
 public:
-    class struct_clump_t;
-    class struct_geometry_t;
+    class frame_t;
     class geometry_non_native_t;
-    class struct_geometry_list_t;
+    class list_with_header_t;
+    class matrix_t;
+    class morph_target_t;
     class rgba_t;
     class sphere_t;
-    class morph_target_t;
     class struct_atomic_t;
-    class surface_properties_t;
+    class struct_clump_t;
     class struct_frame_list_t;
-    class matrix_t;
-    class vector_3d_t;
-    class list_with_header_t;
-    class triangle_t;
-    class frame_t;
-    class tex_coord_t;
-    class uv_layer_t;
+    class struct_geometry_t;
+    class struct_geometry_list_t;
     class struct_texture_dictionary_t;
+    class surface_properties_t;
+    class tex_coord_t;
+    class triangle_t;
+    class uv_layer_t;
+    class vector_3d_t;
 
     enum sections_t {
         SECTIONS_STRUCT = 1,
@@ -206,6 +209,13 @@ public:
         SECTIONS_FRAME = 39056126,
         SECTIONS_UNUSED_16 = 39056127
     };
+    static bool _is_defined_sections_t(sections_t v);
+
+private:
+    static const std::set<sections_t> _values_sections_t;
+    static std::set<sections_t> _build_values_sections_t();
+
+public:
 
     renderware_binary_stream_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, renderware_binary_stream_t* p__root = 0);
 
@@ -217,141 +227,37 @@ public:
     ~renderware_binary_stream_t();
 
     /**
-     * \sa https://gtamods.com/wiki/RpClump Source
+     * \sa https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure Source
      */
 
-    class struct_clump_t : public kaitai::kstruct {
+    class frame_t : public kaitai::kstruct {
 
     public:
 
-        struct_clump_t(kaitai::kstream* p__io, renderware_binary_stream_t::list_with_header_t* p__parent = 0, renderware_binary_stream_t* p__root = 0);
+        frame_t(kaitai::kstream* p__io, renderware_binary_stream_t::struct_frame_list_t* p__parent = 0, renderware_binary_stream_t* p__root = 0);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~struct_clump_t();
+        ~frame_t();
 
     private:
-        uint32_t m_num_atomics;
-        uint32_t m_num_lights;
-        bool n_num_lights;
-
-    public:
-        bool _is_null_num_lights() { num_lights(); return n_num_lights; };
-
-    private:
-        uint32_t m_num_cameras;
-        bool n_num_cameras;
-
-    public:
-        bool _is_null_num_cameras() { num_cameras(); return n_num_cameras; };
-
-    private:
+        matrix_t* m_rotation_matrix;
+        vector_3d_t* m_position;
+        int32_t m_cur_frame_idx;
+        uint32_t m_matrix_creation_flags;
         renderware_binary_stream_t* m__root;
-        renderware_binary_stream_t::list_with_header_t* m__parent;
+        renderware_binary_stream_t::struct_frame_list_t* m__parent;
 
     public:
-        uint32_t num_atomics() const { return m_num_atomics; }
-        uint32_t num_lights() const { return m_num_lights; }
-        uint32_t num_cameras() const { return m_num_cameras; }
+        matrix_t* rotation_matrix() const { return m_rotation_matrix; }
+        vector_3d_t* position() const { return m_position; }
+        int32_t cur_frame_idx() const { return m_cur_frame_idx; }
+        uint32_t matrix_creation_flags() const { return m_matrix_creation_flags; }
         renderware_binary_stream_t* _root() const { return m__root; }
-        renderware_binary_stream_t::list_with_header_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * \sa https://gtamods.com/wiki/RpGeometry Source
-     */
-
-    class struct_geometry_t : public kaitai::kstruct {
-
-    public:
-
-        struct_geometry_t(kaitai::kstream* p__io, renderware_binary_stream_t::list_with_header_t* p__parent = 0, renderware_binary_stream_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~struct_geometry_t();
-
-    private:
-        bool f_num_uv_layers_raw;
-        int32_t m_num_uv_layers_raw;
-
-    public:
-        int32_t num_uv_layers_raw();
-
-    private:
-        bool f_is_textured;
-        bool m_is_textured;
-
-    public:
-        bool is_textured();
-
-    private:
-        bool f_is_native;
-        bool m_is_native;
-
-    public:
-        bool is_native();
-
-    private:
-        bool f_num_uv_layers;
-        int32_t m_num_uv_layers;
-
-    public:
-        int32_t num_uv_layers();
-
-    private:
-        bool f_is_textured2;
-        bool m_is_textured2;
-
-    public:
-        bool is_textured2();
-
-    private:
-        bool f_is_prelit;
-        bool m_is_prelit;
-
-    public:
-        bool is_prelit();
-
-    private:
-        uint32_t m_format;
-        uint32_t m_num_triangles;
-        uint32_t m_num_vertices;
-        uint32_t m_num_morph_targets;
-        surface_properties_t* m_surf_prop;
-        bool n_surf_prop;
-
-    public:
-        bool _is_null_surf_prop() { surf_prop(); return n_surf_prop; };
-
-    private:
-        geometry_non_native_t* m_geometry;
-        bool n_geometry;
-
-    public:
-        bool _is_null_geometry() { geometry(); return n_geometry; };
-
-    private:
-        std::vector<morph_target_t*>* m_morph_targets;
-        renderware_binary_stream_t* m__root;
-        renderware_binary_stream_t::list_with_header_t* m__parent;
-
-    public:
-        uint32_t format() const { return m_format; }
-        uint32_t num_triangles() const { return m_num_triangles; }
-        uint32_t num_vertices() const { return m_num_vertices; }
-        uint32_t num_morph_targets() const { return m_num_morph_targets; }
-        surface_properties_t* surf_prop() const { return m_surf_prop; }
-        geometry_non_native_t* geometry() const { return m_geometry; }
-        std::vector<morph_target_t*>* morph_targets() const { return m_morph_targets; }
-        renderware_binary_stream_t* _root() const { return m__root; }
-        renderware_binary_stream_t::list_with_header_t* _parent() const { return m__parent; }
+        renderware_binary_stream_t::struct_frame_list_t* _parent() const { return m__parent; }
     };
 
     class geometry_non_native_t : public kaitai::kstruct {
@@ -389,31 +295,133 @@ public:
     };
 
     /**
-     * \sa https://gtamods.com/wiki/Geometry_List_(RW_Section)#Structure Source
+     * Typical structure used by many data types in RenderWare binary
+     * stream. Substream contains a list of binary stream entries,
+     * first entry always has type "struct" and carries some specific
+     * binary data it in, determined by the type of parent. All other
+     * entries, beside the first one, are normal, self-describing
+     * records.
      */
 
-    class struct_geometry_list_t : public kaitai::kstruct {
+    class list_with_header_t : public kaitai::kstruct {
 
     public:
 
-        struct_geometry_list_t(kaitai::kstream* p__io, renderware_binary_stream_t::list_with_header_t* p__parent = 0, renderware_binary_stream_t* p__root = 0);
+        list_with_header_t(kaitai::kstream* p__io, renderware_binary_stream_t* p__parent = 0, renderware_binary_stream_t* p__root = 0);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~struct_geometry_list_t();
+        ~list_with_header_t();
 
     private:
-        uint32_t m_num_geometries;
-        renderware_binary_stream_t* m__root;
-        renderware_binary_stream_t::list_with_header_t* m__parent;
+        bool f_version;
+        int32_t m_version;
 
     public:
-        uint32_t num_geometries() const { return m_num_geometries; }
+        int32_t version();
+
+    private:
+        std::string m_code;
+        uint32_t m_header_size;
+        uint32_t m_library_id_stamp;
+        kaitai::kstruct* m_header;
+        bool n_header;
+
+    public:
+        bool _is_null_header() { header(); return n_header; };
+
+    private:
+        std::vector<renderware_binary_stream_t*>* m_entries;
+        renderware_binary_stream_t* m__root;
+        renderware_binary_stream_t* m__parent;
+        std::string m__raw_header;
+        kaitai::kstream* m__io__raw_header;
+
+    public:
+        std::string code() const { return m_code; }
+        uint32_t header_size() const { return m_header_size; }
+        uint32_t library_id_stamp() const { return m_library_id_stamp; }
+        kaitai::kstruct* header() const { return m_header; }
+        std::vector<renderware_binary_stream_t*>* entries() const { return m_entries; }
         renderware_binary_stream_t* _root() const { return m__root; }
-        renderware_binary_stream_t::list_with_header_t* _parent() const { return m__parent; }
+        renderware_binary_stream_t* _parent() const { return m__parent; }
+        std::string _raw_header() const { return m__raw_header; }
+        kaitai::kstream* _io__raw_header() const { return m__io__raw_header; }
+    };
+
+    /**
+     * \sa https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure Source
+     */
+
+    class matrix_t : public kaitai::kstruct {
+
+    public:
+
+        matrix_t(kaitai::kstream* p__io, renderware_binary_stream_t::frame_t* p__parent = 0, renderware_binary_stream_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~matrix_t();
+
+    private:
+        std::vector<vector_3d_t*>* m_entries;
+        renderware_binary_stream_t* m__root;
+        renderware_binary_stream_t::frame_t* m__parent;
+
+    public:
+        std::vector<vector_3d_t*>* entries() const { return m_entries; }
+        renderware_binary_stream_t* _root() const { return m__root; }
+        renderware_binary_stream_t::frame_t* _parent() const { return m__parent; }
+    };
+
+    class morph_target_t : public kaitai::kstruct {
+
+    public:
+
+        morph_target_t(kaitai::kstream* p__io, renderware_binary_stream_t::struct_geometry_t* p__parent = 0, renderware_binary_stream_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~morph_target_t();
+
+    private:
+        sphere_t* m_bounding_sphere;
+        uint32_t m_has_vertices;
+        uint32_t m_has_normals;
+        std::vector<vector_3d_t*>* m_vertices;
+        bool n_vertices;
+
+    public:
+        bool _is_null_vertices() { vertices(); return n_vertices; };
+
+    private:
+        std::vector<vector_3d_t*>* m_normals;
+        bool n_normals;
+
+    public:
+        bool _is_null_normals() { normals(); return n_normals; };
+
+    private:
+        renderware_binary_stream_t* m__root;
+        renderware_binary_stream_t::struct_geometry_t* m__parent;
+
+    public:
+        sphere_t* bounding_sphere() const { return m_bounding_sphere; }
+        uint32_t has_vertices() const { return m_has_vertices; }
+        uint32_t has_normals() const { return m_has_normals; }
+        std::vector<vector_3d_t*>* vertices() const { return m_vertices; }
+        std::vector<vector_3d_t*>* normals() const { return m_normals; }
+        renderware_binary_stream_t* _root() const { return m__root; }
+        renderware_binary_stream_t::struct_geometry_t* _parent() const { return m__parent; }
     };
 
     class rgba_t : public kaitai::kstruct {
@@ -476,50 +484,6 @@ public:
         renderware_binary_stream_t::morph_target_t* _parent() const { return m__parent; }
     };
 
-    class morph_target_t : public kaitai::kstruct {
-
-    public:
-
-        morph_target_t(kaitai::kstream* p__io, renderware_binary_stream_t::struct_geometry_t* p__parent = 0, renderware_binary_stream_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~morph_target_t();
-
-    private:
-        sphere_t* m_bounding_sphere;
-        uint32_t m_has_vertices;
-        uint32_t m_has_normals;
-        std::vector<vector_3d_t*>* m_vertices;
-        bool n_vertices;
-
-    public:
-        bool _is_null_vertices() { vertices(); return n_vertices; };
-
-    private:
-        std::vector<vector_3d_t*>* m_normals;
-        bool n_normals;
-
-    public:
-        bool _is_null_normals() { normals(); return n_normals; };
-
-    private:
-        renderware_binary_stream_t* m__root;
-        renderware_binary_stream_t::struct_geometry_t* m__parent;
-
-    public:
-        sphere_t* bounding_sphere() const { return m_bounding_sphere; }
-        uint32_t has_vertices() const { return m_has_vertices; }
-        uint32_t has_normals() const { return m_has_normals; }
-        std::vector<vector_3d_t*>* vertices() const { return m_vertices; }
-        std::vector<vector_3d_t*>* normals() const { return m_normals; }
-        renderware_binary_stream_t* _root() const { return m__root; }
-        renderware_binary_stream_t::struct_geometry_t* _parent() const { return m__parent; }
-    };
-
     /**
      * \sa https://gtamods.com/wiki/Atomic_(RW_Section)#Structure Source
      */
@@ -561,35 +525,47 @@ public:
     };
 
     /**
-     * \sa https://gtamods.com/wiki/RpGeometry Source
+     * \sa https://gtamods.com/wiki/RpClump Source
      */
 
-    class surface_properties_t : public kaitai::kstruct {
+    class struct_clump_t : public kaitai::kstruct {
 
     public:
 
-        surface_properties_t(kaitai::kstream* p__io, renderware_binary_stream_t::struct_geometry_t* p__parent = 0, renderware_binary_stream_t* p__root = 0);
+        struct_clump_t(kaitai::kstream* p__io, renderware_binary_stream_t::list_with_header_t* p__parent = 0, renderware_binary_stream_t* p__root = 0);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~surface_properties_t();
+        ~struct_clump_t();
 
     private:
-        float m_ambient;
-        float m_specular;
-        float m_diffuse;
-        renderware_binary_stream_t* m__root;
-        renderware_binary_stream_t::struct_geometry_t* m__parent;
+        uint32_t m_num_atomics;
+        uint32_t m_num_lights;
+        bool n_num_lights;
 
     public:
-        float ambient() const { return m_ambient; }
-        float specular() const { return m_specular; }
-        float diffuse() const { return m_diffuse; }
+        bool _is_null_num_lights() { num_lights(); return n_num_lights; };
+
+    private:
+        uint32_t m_num_cameras;
+        bool n_num_cameras;
+
+    public:
+        bool _is_null_num_cameras() { num_cameras(); return n_num_cameras; };
+
+    private:
+        renderware_binary_stream_t* m__root;
+        renderware_binary_stream_t::list_with_header_t* m__parent;
+
+    public:
+        uint32_t num_atomics() const { return m_num_atomics; }
+        uint32_t num_lights() const { return m_num_lights; }
+        uint32_t num_cameras() const { return m_num_cameras; }
         renderware_binary_stream_t* _root() const { return m__root; }
-        renderware_binary_stream_t::struct_geometry_t* _parent() const { return m__parent; }
+        renderware_binary_stream_t::list_with_header_t* _parent() const { return m__parent; }
     };
 
     /**
@@ -623,121 +599,207 @@ public:
     };
 
     /**
-     * \sa https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure Source
+     * \sa https://gtamods.com/wiki/RpGeometry Source
      */
 
-    class matrix_t : public kaitai::kstruct {
+    class struct_geometry_t : public kaitai::kstruct {
 
     public:
 
-        matrix_t(kaitai::kstream* p__io, renderware_binary_stream_t::frame_t* p__parent = 0, renderware_binary_stream_t* p__root = 0);
+        struct_geometry_t(kaitai::kstream* p__io, renderware_binary_stream_t::list_with_header_t* p__parent = 0, renderware_binary_stream_t* p__root = 0);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~matrix_t();
+        ~struct_geometry_t();
 
     private:
-        std::vector<vector_3d_t*>* m_entries;
-        renderware_binary_stream_t* m__root;
-        renderware_binary_stream_t::frame_t* m__parent;
+        bool f_is_native;
+        bool m_is_native;
 
     public:
-        std::vector<vector_3d_t*>* entries() const { return m_entries; }
+        bool is_native();
+
+    private:
+        bool f_is_prelit;
+        bool m_is_prelit;
+
+    public:
+        bool is_prelit();
+
+    private:
+        bool f_is_textured;
+        bool m_is_textured;
+
+    public:
+        bool is_textured();
+
+    private:
+        bool f_is_textured2;
+        bool m_is_textured2;
+
+    public:
+        bool is_textured2();
+
+    private:
+        bool f_num_uv_layers;
+        int32_t m_num_uv_layers;
+
+    public:
+        int32_t num_uv_layers();
+
+    private:
+        bool f_num_uv_layers_raw;
+        int32_t m_num_uv_layers_raw;
+
+    public:
+        int32_t num_uv_layers_raw();
+
+    private:
+        uint32_t m_format;
+        uint32_t m_num_triangles;
+        uint32_t m_num_vertices;
+        uint32_t m_num_morph_targets;
+        surface_properties_t* m_surf_prop;
+        bool n_surf_prop;
+
+    public:
+        bool _is_null_surf_prop() { surf_prop(); return n_surf_prop; };
+
+    private:
+        geometry_non_native_t* m_geometry;
+        bool n_geometry;
+
+    public:
+        bool _is_null_geometry() { geometry(); return n_geometry; };
+
+    private:
+        std::vector<morph_target_t*>* m_morph_targets;
+        renderware_binary_stream_t* m__root;
+        renderware_binary_stream_t::list_with_header_t* m__parent;
+
+    public:
+        uint32_t format() const { return m_format; }
+        uint32_t num_triangles() const { return m_num_triangles; }
+        uint32_t num_vertices() const { return m_num_vertices; }
+        uint32_t num_morph_targets() const { return m_num_morph_targets; }
+        surface_properties_t* surf_prop() const { return m_surf_prop; }
+        geometry_non_native_t* geometry() const { return m_geometry; }
+        std::vector<morph_target_t*>* morph_targets() const { return m_morph_targets; }
         renderware_binary_stream_t* _root() const { return m__root; }
-        renderware_binary_stream_t::frame_t* _parent() const { return m__parent; }
+        renderware_binary_stream_t::list_with_header_t* _parent() const { return m__parent; }
     };
 
     /**
-     * \sa https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure Source
+     * \sa https://gtamods.com/wiki/Geometry_List_(RW_Section)#Structure Source
      */
 
-    class vector_3d_t : public kaitai::kstruct {
+    class struct_geometry_list_t : public kaitai::kstruct {
 
     public:
 
-        vector_3d_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, renderware_binary_stream_t* p__root = 0);
+        struct_geometry_list_t(kaitai::kstream* p__io, renderware_binary_stream_t::list_with_header_t* p__parent = 0, renderware_binary_stream_t* p__root = 0);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~vector_3d_t();
+        ~struct_geometry_list_t();
 
     private:
-        float m_x;
-        float m_y;
-        float m_z;
+        uint32_t m_num_geometries;
         renderware_binary_stream_t* m__root;
-        kaitai::kstruct* m__parent;
+        renderware_binary_stream_t::list_with_header_t* m__parent;
 
     public:
-        float x() const { return m_x; }
-        float y() const { return m_y; }
-        float z() const { return m_z; }
+        uint32_t num_geometries() const { return m_num_geometries; }
         renderware_binary_stream_t* _root() const { return m__root; }
-        kaitai::kstruct* _parent() const { return m__parent; }
+        renderware_binary_stream_t::list_with_header_t* _parent() const { return m__parent; }
+    };
+
+    class struct_texture_dictionary_t : public kaitai::kstruct {
+
+    public:
+
+        struct_texture_dictionary_t(kaitai::kstream* p__io, renderware_binary_stream_t::list_with_header_t* p__parent = 0, renderware_binary_stream_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~struct_texture_dictionary_t();
+
+    private:
+        uint32_t m_num_textures;
+        renderware_binary_stream_t* m__root;
+        renderware_binary_stream_t::list_with_header_t* m__parent;
+
+    public:
+        uint32_t num_textures() const { return m_num_textures; }
+        renderware_binary_stream_t* _root() const { return m__root; }
+        renderware_binary_stream_t::list_with_header_t* _parent() const { return m__parent; }
     };
 
     /**
-     * Typical structure used by many data types in RenderWare binary
-     * stream. Substream contains a list of binary stream entries,
-     * first entry always has type "struct" and carries some specific
-     * binary data it in, determined by the type of parent. All other
-     * entries, beside the first one, are normal, self-describing
-     * records.
+     * \sa https://gtamods.com/wiki/RpGeometry Source
      */
 
-    class list_with_header_t : public kaitai::kstruct {
+    class surface_properties_t : public kaitai::kstruct {
 
     public:
 
-        list_with_header_t(kaitai::kstream* p__io, renderware_binary_stream_t* p__parent = 0, renderware_binary_stream_t* p__root = 0);
+        surface_properties_t(kaitai::kstream* p__io, renderware_binary_stream_t::struct_geometry_t* p__parent = 0, renderware_binary_stream_t* p__root = 0);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~list_with_header_t();
+        ~surface_properties_t();
 
     private:
-        bool f_version;
-        int32_t m_version;
-
-    public:
-        int32_t version();
-
-    private:
-        std::string m_code;
-        uint32_t m_header_size;
-        uint32_t m_library_id_stamp;
-        kaitai::kstruct* m_header;
-        bool n_header;
-
-    public:
-        bool _is_null_header() { header(); return n_header; };
-
-    private:
-        std::vector<renderware_binary_stream_t*>* m_entries;
+        float m_ambient;
+        float m_specular;
+        float m_diffuse;
         renderware_binary_stream_t* m__root;
-        renderware_binary_stream_t* m__parent;
-        std::string m__raw_header;
-        kaitai::kstream* m__io__raw_header;
+        renderware_binary_stream_t::struct_geometry_t* m__parent;
 
     public:
-        std::string code() const { return m_code; }
-        uint32_t header_size() const { return m_header_size; }
-        uint32_t library_id_stamp() const { return m_library_id_stamp; }
-        kaitai::kstruct* header() const { return m_header; }
-        std::vector<renderware_binary_stream_t*>* entries() const { return m_entries; }
+        float ambient() const { return m_ambient; }
+        float specular() const { return m_specular; }
+        float diffuse() const { return m_diffuse; }
         renderware_binary_stream_t* _root() const { return m__root; }
-        renderware_binary_stream_t* _parent() const { return m__parent; }
-        std::string _raw_header() const { return m__raw_header; }
-        kaitai::kstream* _io__raw_header() const { return m__io__raw_header; }
+        renderware_binary_stream_t::struct_geometry_t* _parent() const { return m__parent; }
+    };
+
+    class tex_coord_t : public kaitai::kstruct {
+
+    public:
+
+        tex_coord_t(kaitai::kstream* p__io, renderware_binary_stream_t::uv_layer_t* p__parent = 0, renderware_binary_stream_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~tex_coord_t();
+
+    private:
+        float m_u;
+        float m_v;
+        renderware_binary_stream_t* m__root;
+        renderware_binary_stream_t::uv_layer_t* m__parent;
+
+    public:
+        float u() const { return m_u; }
+        float v() const { return m_v; }
+        renderware_binary_stream_t* _root() const { return m__root; }
+        renderware_binary_stream_t::uv_layer_t* _parent() const { return m__parent; }
     };
 
     class triangle_t : public kaitai::kstruct {
@@ -770,66 +832,6 @@ public:
         renderware_binary_stream_t::geometry_non_native_t* _parent() const { return m__parent; }
     };
 
-    /**
-     * \sa https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure Source
-     */
-
-    class frame_t : public kaitai::kstruct {
-
-    public:
-
-        frame_t(kaitai::kstream* p__io, renderware_binary_stream_t::struct_frame_list_t* p__parent = 0, renderware_binary_stream_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~frame_t();
-
-    private:
-        matrix_t* m_rotation_matrix;
-        vector_3d_t* m_position;
-        int32_t m_cur_frame_idx;
-        uint32_t m_matrix_creation_flags;
-        renderware_binary_stream_t* m__root;
-        renderware_binary_stream_t::struct_frame_list_t* m__parent;
-
-    public:
-        matrix_t* rotation_matrix() const { return m_rotation_matrix; }
-        vector_3d_t* position() const { return m_position; }
-        int32_t cur_frame_idx() const { return m_cur_frame_idx; }
-        uint32_t matrix_creation_flags() const { return m_matrix_creation_flags; }
-        renderware_binary_stream_t* _root() const { return m__root; }
-        renderware_binary_stream_t::struct_frame_list_t* _parent() const { return m__parent; }
-    };
-
-    class tex_coord_t : public kaitai::kstruct {
-
-    public:
-
-        tex_coord_t(kaitai::kstream* p__io, renderware_binary_stream_t::uv_layer_t* p__parent = 0, renderware_binary_stream_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~tex_coord_t();
-
-    private:
-        float m_u;
-        float m_v;
-        renderware_binary_stream_t* m__root;
-        renderware_binary_stream_t::uv_layer_t* m__parent;
-
-    public:
-        float u() const { return m_u; }
-        float v() const { return m_v; }
-        renderware_binary_stream_t* _root() const { return m__root; }
-        renderware_binary_stream_t::uv_layer_t* _parent() const { return m__parent; }
-    };
-
     class uv_layer_t : public kaitai::kstruct {
 
     public:
@@ -856,28 +858,36 @@ public:
         renderware_binary_stream_t::geometry_non_native_t* _parent() const { return m__parent; }
     };
 
-    class struct_texture_dictionary_t : public kaitai::kstruct {
+    /**
+     * \sa https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure Source
+     */
+
+    class vector_3d_t : public kaitai::kstruct {
 
     public:
 
-        struct_texture_dictionary_t(kaitai::kstream* p__io, renderware_binary_stream_t::list_with_header_t* p__parent = 0, renderware_binary_stream_t* p__root = 0);
+        vector_3d_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, renderware_binary_stream_t* p__root = 0);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~struct_texture_dictionary_t();
+        ~vector_3d_t();
 
     private:
-        uint32_t m_num_textures;
+        float m_x;
+        float m_y;
+        float m_z;
         renderware_binary_stream_t* m__root;
-        renderware_binary_stream_t::list_with_header_t* m__parent;
+        kaitai::kstruct* m__parent;
 
     public:
-        uint32_t num_textures() const { return m_num_textures; }
+        float x() const { return m_x; }
+        float y() const { return m_y; }
+        float z() const { return m_z; }
         renderware_binary_stream_t* _root() const { return m__root; }
-        renderware_binary_stream_t::list_with_header_t* _parent() const { return m__parent; }
+        kaitai::kstruct* _parent() const { return m__parent; }
     };
 
 private:

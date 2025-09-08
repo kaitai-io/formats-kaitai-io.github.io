@@ -30,8 +30,8 @@
 
 namespace {
     class WindowsResourceFile extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \WindowsResourceFile $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\WindowsResourceFile $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -56,7 +56,7 @@ namespace {
 
 namespace WindowsResourceFile {
     class Resource extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \WindowsResourceFile $_parent = null, \WindowsResourceFile $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\WindowsResourceFile $_parent = null, ?\WindowsResourceFile $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -66,14 +66,14 @@ namespace WindowsResourceFile {
             $this->_m_headerSize = $this->_io->readU4le();
             $this->_m_type = new \WindowsResourceFile\UnicodeOrId($this->_io, $this, $this->_root);
             $this->_m_name = new \WindowsResourceFile\UnicodeOrId($this->_io, $this, $this->_root);
-            $this->_m_padding1 = $this->_io->readBytes(\Kaitai\Struct\Stream::mod((4 - $this->_io()->pos()), 4));
+            $this->_m_padding1 = $this->_io->readBytes(\Kaitai\Struct\Stream::mod(4 - $this->_io()->pos(), 4));
             $this->_m_formatVersion = $this->_io->readU4le();
             $this->_m_flags = $this->_io->readU2le();
             $this->_m_language = $this->_io->readU2le();
             $this->_m_valueVersion = $this->_io->readU4le();
             $this->_m_characteristics = $this->_io->readU4le();
             $this->_m_value = $this->_io->readBytes($this->valueSize());
-            $this->_m_padding2 = $this->_io->readBytes(\Kaitai\Struct\Stream::mod((4 - $this->_io()->pos()), 4));
+            $this->_m_padding2 = $this->_io->readBytes(\Kaitai\Struct\Stream::mod(4 - $this->_io()->pos(), 4));
         }
         protected $_m_typeAsPredef;
 
@@ -158,6 +158,12 @@ namespace WindowsResourceFile\Resource {
         const ANIICON = 22;
         const HTML = 23;
         const MANIFEST = 24;
+
+        private const _VALUES = [1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 7 => true, 8 => true, 9 => true, 10 => true, 11 => true, 12 => true, 14 => true, 16 => true, 17 => true, 19 => true, 20 => true, 21 => true, 22 => true, 23 => true, 24 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
@@ -171,7 +177,7 @@ namespace WindowsResourceFile\Resource {
 
 namespace WindowsResourceFile {
     class UnicodeOrId extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \WindowsResourceFile\Resource $_parent = null, \WindowsResourceFile $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\WindowsResourceFile\Resource $_parent = null, ?\WindowsResourceFile $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -196,6 +202,25 @@ namespace WindowsResourceFile {
                 $this->_m_noop = $this->_io->readBytes(0);
             }
         }
+        protected $_m_asString;
+        public function asString() {
+            if ($this->_m_asString !== null)
+                return $this->_m_asString;
+            if ($this->isString()) {
+                $_pos = $this->_io->pos();
+                $this->_io->seek($this->savePos1());
+                $this->_m_asString = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(($this->savePos2() - $this->savePos1()) - 2), "UTF-16LE");
+                $this->_io->seek($_pos);
+            }
+            return $this->_m_asString;
+        }
+        protected $_m_isString;
+        public function isString() {
+            if ($this->_m_isString !== null)
+                return $this->_m_isString;
+            $this->_m_isString = $this->first() != 65535;
+            return $this->_m_isString;
+        }
         protected $_m_savePos1;
         public function savePos1() {
             if ($this->_m_savePos1 !== null)
@@ -209,25 +234,6 @@ namespace WindowsResourceFile {
                 return $this->_m_savePos2;
             $this->_m_savePos2 = $this->_io()->pos();
             return $this->_m_savePos2;
-        }
-        protected $_m_isString;
-        public function isString() {
-            if ($this->_m_isString !== null)
-                return $this->_m_isString;
-            $this->_m_isString = $this->first() != 65535;
-            return $this->_m_isString;
-        }
-        protected $_m_asString;
-        public function asString() {
-            if ($this->_m_asString !== null)
-                return $this->_m_asString;
-            if ($this->isString()) {
-                $_pos = $this->_io->pos();
-                $this->_io->seek($this->savePos1());
-                $this->_m_asString = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes((($this->savePos2() - $this->savePos1()) - 2)), "UTF-16LE");
-                $this->_io->seek($_pos);
-            }
-            return $this->_m_asString;
         }
         protected $_m_first;
         protected $_m_asNumeric;

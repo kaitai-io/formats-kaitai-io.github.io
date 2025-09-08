@@ -1,14 +1,15 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
-from enum import Enum
-
-
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
-
 import vlq_base128_le
+from enum import IntEnum
+
+
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
+
 class GoogleProtobuf(KaitaiStruct):
     """Google Protocol Buffers (AKA protobuf) is a popular data
     serialization scheme used for communication protocols, data storage,
@@ -42,9 +43,9 @@ class GoogleProtobuf(KaitaiStruct):
        Source - https://protobuf.dev/programming-guides/encoding/
     """
     def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
+        super(GoogleProtobuf, self).__init__(_io)
         self._parent = _parent
-        self._root = _root if _root else self
+        self._root = _root or self
         self._read()
 
     def _read(self):
@@ -55,10 +56,35 @@ class GoogleProtobuf(KaitaiStruct):
             i += 1
 
 
+
+    def _fetch_instances(self):
+        pass
+        for i in range(len(self.pairs)):
+            pass
+            self.pairs[i]._fetch_instances()
+
+
+    class DelimitedBytes(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(GoogleProtobuf.DelimitedBytes, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.len = vlq_base128_le.VlqBase128Le(self._io)
+            self.body = self._io.read_bytes(self.len.value)
+
+
+        def _fetch_instances(self):
+            pass
+            self.len._fetch_instances()
+
+
     class Pair(KaitaiStruct):
         """Key-value pair."""
 
-        class WireTypes(Enum):
+        class WireTypes(IntEnum):
             varint = 0
             bit_64 = 1
             len_delimited = 2
@@ -66,22 +92,53 @@ class GoogleProtobuf(KaitaiStruct):
             group_end = 4
             bit_32 = 5
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(GoogleProtobuf.Pair, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
             self.key = vlq_base128_le.VlqBase128Le(self._io)
             _on = self.wire_type
-            if _on == GoogleProtobuf.Pair.WireTypes.varint:
-                self.value = vlq_base128_le.VlqBase128Le(self._io)
-            elif _on == GoogleProtobuf.Pair.WireTypes.len_delimited:
-                self.value = GoogleProtobuf.DelimitedBytes(self._io, self, self._root)
-            elif _on == GoogleProtobuf.Pair.WireTypes.bit_64:
-                self.value = self._io.read_u8le()
-            elif _on == GoogleProtobuf.Pair.WireTypes.bit_32:
+            if _on == GoogleProtobuf.Pair.WireTypes.bit_32:
+                pass
                 self.value = self._io.read_u4le()
+            elif _on == GoogleProtobuf.Pair.WireTypes.bit_64:
+                pass
+                self.value = self._io.read_u8le()
+            elif _on == GoogleProtobuf.Pair.WireTypes.len_delimited:
+                pass
+                self.value = GoogleProtobuf.DelimitedBytes(self._io, self, self._root)
+            elif _on == GoogleProtobuf.Pair.WireTypes.varint:
+                pass
+                self.value = vlq_base128_le.VlqBase128Le(self._io)
+
+
+        def _fetch_instances(self):
+            pass
+            self.key._fetch_instances()
+            _on = self.wire_type
+            if _on == GoogleProtobuf.Pair.WireTypes.bit_32:
+                pass
+            elif _on == GoogleProtobuf.Pair.WireTypes.bit_64:
+                pass
+            elif _on == GoogleProtobuf.Pair.WireTypes.len_delimited:
+                pass
+                self.value._fetch_instances()
+            elif _on == GoogleProtobuf.Pair.WireTypes.varint:
+                pass
+                self.value._fetch_instances()
+
+        @property
+        def field_tag(self):
+            """Identifies a field of protocol. One can look up symbolic
+            field name in a `.proto` file by this field tag.
+            """
+            if hasattr(self, '_m_field_tag'):
+                return self._m_field_tag
+
+            self._m_field_tag = self.key.value >> 3
+            return getattr(self, '_m_field_tag', None)
 
         @property
         def wire_type(self):
@@ -96,31 +153,8 @@ class GoogleProtobuf(KaitaiStruct):
             if hasattr(self, '_m_wire_type'):
                 return self._m_wire_type
 
-            self._m_wire_type = KaitaiStream.resolve_enum(GoogleProtobuf.Pair.WireTypes, (self.key.value & 7))
+            self._m_wire_type = KaitaiStream.resolve_enum(GoogleProtobuf.Pair.WireTypes, self.key.value & 7)
             return getattr(self, '_m_wire_type', None)
-
-        @property
-        def field_tag(self):
-            """Identifies a field of protocol. One can look up symbolic
-            field name in a `.proto` file by this field tag.
-            """
-            if hasattr(self, '_m_field_tag'):
-                return self._m_field_tag
-
-            self._m_field_tag = (self.key.value >> 3)
-            return getattr(self, '_m_field_tag', None)
-
-
-    class DelimitedBytes(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.len = vlq_base128_le.VlqBase128Le(self._io)
-            self.body = self._io.read_bytes(self.len.value)
 
 
 

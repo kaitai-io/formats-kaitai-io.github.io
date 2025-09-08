@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.MacOsResourceSnd = factory(root.KaitaiStream);
+    factory(root.MacOsResourceSnd || (root.MacOsResourceSnd = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (MacOsResourceSnd_, KaitaiStream) {
 /**
  * Sound resources were introduced in Classic MacOS with the Sound Manager program.
  * They can contain sound commands to generate sounds with given frequencies as well as sampled sound data.
@@ -77,14 +77,22 @@ var MacOsResourceSnd = (function() {
     85: "GET_RATE_CMD",
   });
 
-  MacOsResourceSnd.SoundHeaderType = Object.freeze({
-    STANDARD: 0,
-    COMPRESSED: 254,
-    EXTENDED: 255,
+  MacOsResourceSnd.CompressionTypeEnum = Object.freeze({
+    VARIABLE_COMPRESSION: -2,
+    FIXED_COMPRESSION: -1,
+    NOT_COMPRESSED: 0,
+    TWO_TO_ONE: 1,
+    EIGHT_TO_THREE: 2,
+    THREE_TO_ONE: 3,
+    SIX_TO_ONE: 4,
 
-    0: "STANDARD",
-    254: "COMPRESSED",
-    255: "EXTENDED",
+    "-2": "VARIABLE_COMPRESSION",
+    "-1": "FIXED_COMPRESSION",
+    0: "NOT_COMPRESSED",
+    1: "TWO_TO_ONE",
+    2: "EIGHT_TO_THREE",
+    3: "THREE_TO_ONE",
+    4: "SIX_TO_ONE",
   });
 
   MacOsResourceSnd.DataType = Object.freeze({
@@ -95,18 +103,6 @@ var MacOsResourceSnd = (function() {
     1: "SQUARE_WAVE_SYNTH",
     3: "WAVE_TABLE_SYNTH",
     5: "SAMPLED_SYNTH",
-  });
-
-  MacOsResourceSnd.WaveInitOption = Object.freeze({
-    CHANNEL0: 4,
-    CHANNEL1: 5,
-    CHANNEL2: 6,
-    CHANNEL3: 7,
-
-    4: "CHANNEL0",
-    5: "CHANNEL1",
-    6: "CHANNEL2",
-    7: "CHANNEL3",
   });
 
   MacOsResourceSnd.InitOption = Object.freeze({
@@ -129,22 +125,26 @@ var MacOsResourceSnd = (function() {
     1024: "MACE6",
   });
 
-  MacOsResourceSnd.CompressionTypeEnum = Object.freeze({
-    VARIABLE_COMPRESSION: -2,
-    FIXED_COMPRESSION: -1,
-    NOT_COMPRESSED: 0,
-    TWO_TO_ONE: 1,
-    EIGHT_TO_THREE: 2,
-    THREE_TO_ONE: 3,
-    SIX_TO_ONE: 4,
+  MacOsResourceSnd.SoundHeaderType = Object.freeze({
+    STANDARD: 0,
+    COMPRESSED: 254,
+    EXTENDED: 255,
 
-    "-2": "VARIABLE_COMPRESSION",
-    "-1": "FIXED_COMPRESSION",
-    0: "NOT_COMPRESSED",
-    1: "TWO_TO_ONE",
-    2: "EIGHT_TO_THREE",
-    3: "THREE_TO_ONE",
-    4: "SIX_TO_ONE",
+    0: "STANDARD",
+    254: "COMPRESSED",
+    255: "EXTENDED",
+  });
+
+  MacOsResourceSnd.WaveInitOption = Object.freeze({
+    CHANNEL0: 4,
+    CHANNEL1: 5,
+    CHANNEL2: 6,
+    CHANNEL3: 7,
+
+    4: "CHANNEL0",
+    5: "CHANNEL1",
+    6: "CHANNEL2",
+    7: "CHANNEL3",
   });
 
   function MacOsResourceSnd(_io, _parent, _root) {
@@ -175,197 +175,11 @@ var MacOsResourceSnd = (function() {
     }
   }
 
-  var Extended = MacOsResourceSnd.Extended = (function() {
-    function Extended(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Extended.prototype._read = function() {
-      this.instrumentChunkPtr = this._io.readU4be();
-      this.aesRecordingPtr = this._io.readU4be();
-    }
-
-    /**
-     * pointer to instrument info
-     */
-
-    /**
-     * pointer to audio info
-     */
-
-    return Extended;
-  })();
-
-  var SoundHeader = MacOsResourceSnd.SoundHeader = (function() {
-    function SoundHeader(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    SoundHeader.prototype._read = function() {
-      if (this.startOfs < 0) {
-        this._unnamed0 = this._io.readBytes(0);
-      }
-      this.samplePtr = this._io.readU4be();
-      if (this.soundHeaderType == MacOsResourceSnd.SoundHeaderType.STANDARD) {
-        this.numSamples = this._io.readU4be();
-      }
-      if ( ((this.soundHeaderType == MacOsResourceSnd.SoundHeaderType.EXTENDED) || (this.soundHeaderType == MacOsResourceSnd.SoundHeaderType.COMPRESSED)) ) {
-        this.numChannels = this._io.readU4be();
-      }
-      this.sampleRate = new UnsignedFixedPoint(this._io, this, this._root);
-      this.loopStart = this._io.readU4be();
-      this.loopEnd = this._io.readU4be();
-      this.encode = this._io.readU1();
-      this.midiNote = this._io.readU1();
-      if ( ((this.soundHeaderType == MacOsResourceSnd.SoundHeaderType.EXTENDED) || (this.soundHeaderType == MacOsResourceSnd.SoundHeaderType.COMPRESSED)) ) {
-        this.extendedOrCompressed = new ExtendedOrCompressed(this._io, this, this._root);
-      }
-      if (this.samplePtr == 0) {
-        this.sampleArea = this._io.readBytes((this.soundHeaderType == MacOsResourceSnd.SoundHeaderType.STANDARD ? this.numSamples : (this.soundHeaderType == MacOsResourceSnd.SoundHeaderType.EXTENDED ? Math.floor(((this.extendedOrCompressed.numFrames * this.numChannels) * this.extendedOrCompressed.bitsPerSample) / 8) : (this._io.size - this._io.pos))));
-      }
-    }
-    Object.defineProperty(SoundHeader.prototype, 'startOfs', {
-      get: function() {
-        if (this._m_startOfs !== undefined)
-          return this._m_startOfs;
-        this._m_startOfs = this._io.pos;
-        return this._m_startOfs;
-      }
-    });
-
-    /**
-     * base frequency of sample in Hz
-     * Calculated with the formula (2 ** ((midi_note - 69) / 12)) * 440
-     * @see {@link https://en.wikipedia.org/wiki/MIDI_tuning_standard|Source}
-     */
-    Object.defineProperty(SoundHeader.prototype, 'baseFreqeuncy', {
-      get: function() {
-        if (this._m_baseFreqeuncy !== undefined)
-          return this._m_baseFreqeuncy;
-        if ( ((this.midiNote >= 0) && (this.midiNote < 128)) ) {
-          this._m_baseFreqeuncy = this._root.midiNoteToFrequency[this.midiNote];
-        }
-        return this._m_baseFreqeuncy;
-      }
-    });
-    Object.defineProperty(SoundHeader.prototype, 'soundHeaderType', {
-      get: function() {
-        if (this._m_soundHeaderType !== undefined)
-          return this._m_soundHeaderType;
-        var _pos = this._io.pos;
-        this._io.seek((this.startOfs + 20));
-        this._m_soundHeaderType = this._io.readU1();
-        this._io.seek(_pos);
-        return this._m_soundHeaderType;
-      }
-    });
-
-    /**
-     * pointer to samples (or 0 if samples follow data structure)
-     */
-
-    /**
-     * number of samples
-     */
-
-    /**
-     * number of channels in sample
-     */
-
-    /**
-     * The rate at which the sample was originally recorded.
-     */
-
-    /**
-     * loop point beginning
-     */
-
-    /**
-     * loop point ending
-     */
-
-    /**
-     * sample's encoding option
-     */
-
-    /**
-     * base frequency of sample, expressed as MIDI note values, 60 is middle C
-     */
-
-    /**
-     * sampled-sound data
-     */
-
-    return SoundHeader;
-  })();
-
-  var UnsignedFixedPoint = MacOsResourceSnd.UnsignedFixedPoint = (function() {
-    function UnsignedFixedPoint(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    UnsignedFixedPoint.prototype._read = function() {
-      this.integerPart = this._io.readU2be();
-      this.fractionPart = this._io.readU2be();
-    }
-    Object.defineProperty(UnsignedFixedPoint.prototype, 'value', {
-      get: function() {
-        if (this._m_value !== undefined)
-          return this._m_value;
-        this._m_value = (this.integerPart + (this.fractionPart / 65535.0));
-        return this._m_value;
-      }
-    });
-
-    return UnsignedFixedPoint;
-  })();
-
-  var SoundCommand = MacOsResourceSnd.SoundCommand = (function() {
-    function SoundCommand(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    SoundCommand.prototype._read = function() {
-      this.isDataOffset = this._io.readBitsIntBe(1) != 0;
-      this.cmd = this._io.readBitsIntBe(15);
-      this._io.alignToByte();
-      this.param1 = this._io.readU2be();
-      this.param2 = this._io.readU4be();
-    }
-    Object.defineProperty(SoundCommand.prototype, 'soundHeader', {
-      get: function() {
-        if (this._m_soundHeader !== undefined)
-          return this._m_soundHeader;
-        if ( ((this.isDataOffset) && (this.cmd == MacOsResourceSnd.CmdType.BUFFER_CMD)) ) {
-          var _pos = this._io.pos;
-          this._io.seek(this.param2);
-          this._m_soundHeader = new SoundHeader(this._io, this, this._root);
-          this._io.seek(_pos);
-        }
-        return this._m_soundHeader;
-      }
-    });
-
-    return SoundCommand;
-  })();
-
   var Compressed = MacOsResourceSnd.Compressed = (function() {
     function Compressed(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -418,11 +232,137 @@ var MacOsResourceSnd = (function() {
     return Compressed;
   })();
 
+  var DataFormat = MacOsResourceSnd.DataFormat = (function() {
+    function DataFormat(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    DataFormat.prototype._read = function() {
+      this.id = this._io.readU2be();
+      this.options = this._io.readU4be();
+    }
+    Object.defineProperty(DataFormat.prototype, 'compInit', {
+      get: function() {
+        if (this._m_compInit !== undefined)
+          return this._m_compInit;
+        this._m_compInit = this.options & this.initCompMask;
+        return this._m_compInit;
+      }
+    });
+
+    /**
+     * mask for compression IDs
+     */
+    Object.defineProperty(DataFormat.prototype, 'initCompMask', {
+      get: function() {
+        if (this._m_initCompMask !== undefined)
+          return this._m_initCompMask;
+        this._m_initCompMask = 65280;
+        return this._m_initCompMask;
+      }
+    });
+
+    /**
+     * mask for right/left pan values
+     */
+    Object.defineProperty(DataFormat.prototype, 'initPanMask', {
+      get: function() {
+        if (this._m_initPanMask !== undefined)
+          return this._m_initPanMask;
+        this._m_initPanMask = 3;
+        return this._m_initPanMask;
+      }
+    });
+
+    /**
+     * mask for mono/stereo values
+     */
+    Object.defineProperty(DataFormat.prototype, 'initStereoMask', {
+      get: function() {
+        if (this._m_initStereoMask !== undefined)
+          return this._m_initStereoMask;
+        this._m_initStereoMask = 192;
+        return this._m_initStereoMask;
+      }
+    });
+    Object.defineProperty(DataFormat.prototype, 'panInit', {
+      get: function() {
+        if (this._m_panInit !== undefined)
+          return this._m_panInit;
+        this._m_panInit = this.options & this.initPanMask;
+        return this._m_panInit;
+      }
+    });
+    Object.defineProperty(DataFormat.prototype, 'stereoInit', {
+      get: function() {
+        if (this._m_stereoInit !== undefined)
+          return this._m_stereoInit;
+        this._m_stereoInit = this.options & this.initStereoMask;
+        return this._m_stereoInit;
+      }
+    });
+    Object.defineProperty(DataFormat.prototype, 'waveInit', {
+      get: function() {
+        if (this._m_waveInit !== undefined)
+          return this._m_waveInit;
+        if (this.id == MacOsResourceSnd.DataType.WAVE_TABLE_SYNTH) {
+          this._m_waveInit = this.options & this.waveInitChannelMask;
+        }
+        return this._m_waveInit;
+      }
+    });
+
+    /**
+     * wave table only, Sound Manager 2.0 and earlier
+     */
+    Object.defineProperty(DataFormat.prototype, 'waveInitChannelMask', {
+      get: function() {
+        if (this._m_waveInitChannelMask !== undefined)
+          return this._m_waveInitChannelMask;
+        this._m_waveInitChannelMask = 7;
+        return this._m_waveInitChannelMask;
+      }
+    });
+
+    /**
+     * contains initialisation options for the SndNewChannel function
+     */
+
+    return DataFormat;
+  })();
+
+  var Extended = MacOsResourceSnd.Extended = (function() {
+    function Extended(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Extended.prototype._read = function() {
+      this.instrumentChunkPtr = this._io.readU4be();
+      this.aesRecordingPtr = this._io.readU4be();
+    }
+
+    /**
+     * pointer to instrument info
+     */
+
+    /**
+     * pointer to audio info
+     */
+
+    return Extended;
+  })();
+
   var ExtendedOrCompressed = MacOsResourceSnd.ExtendedOrCompressed = (function() {
     function ExtendedOrCompressed(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -461,106 +401,166 @@ var MacOsResourceSnd = (function() {
     return ExtendedOrCompressed;
   })();
 
-  var DataFormat = MacOsResourceSnd.DataFormat = (function() {
-    function DataFormat(_io, _parent, _root) {
+  var SoundCommand = MacOsResourceSnd.SoundCommand = (function() {
+    function SoundCommand(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    DataFormat.prototype._read = function() {
-      this.id = this._io.readU2be();
-      this.options = this._io.readU4be();
+    SoundCommand.prototype._read = function() {
+      this.isDataOffset = this._io.readBitsIntBe(1) != 0;
+      this.cmd = this._io.readBitsIntBe(15);
+      this._io.alignToByte();
+      this.param1 = this._io.readU2be();
+      this.param2 = this._io.readU4be();
+    }
+    Object.defineProperty(SoundCommand.prototype, 'soundHeader', {
+      get: function() {
+        if (this._m_soundHeader !== undefined)
+          return this._m_soundHeader;
+        if ( ((this.isDataOffset) && (this.cmd == MacOsResourceSnd.CmdType.BUFFER_CMD)) ) {
+          var _pos = this._io.pos;
+          this._io.seek(this.param2);
+          this._m_soundHeader = new SoundHeader(this._io, this, this._root);
+          this._io.seek(_pos);
+        }
+        return this._m_soundHeader;
+      }
+    });
+
+    return SoundCommand;
+  })();
+
+  var SoundHeader = MacOsResourceSnd.SoundHeader = (function() {
+    function SoundHeader(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    SoundHeader.prototype._read = function() {
+      if (this.startOfs < 0) {
+        this._unnamed0 = this._io.readBytes(0);
+      }
+      this.samplePtr = this._io.readU4be();
+      if (this.soundHeaderType == MacOsResourceSnd.SoundHeaderType.STANDARD) {
+        this.numSamples = this._io.readU4be();
+      }
+      if ( ((this.soundHeaderType == MacOsResourceSnd.SoundHeaderType.EXTENDED) || (this.soundHeaderType == MacOsResourceSnd.SoundHeaderType.COMPRESSED)) ) {
+        this.numChannels = this._io.readU4be();
+      }
+      this.sampleRate = new UnsignedFixedPoint(this._io, this, this._root);
+      this.loopStart = this._io.readU4be();
+      this.loopEnd = this._io.readU4be();
+      this.encode = this._io.readU1();
+      this.midiNote = this._io.readU1();
+      if ( ((this.soundHeaderType == MacOsResourceSnd.SoundHeaderType.EXTENDED) || (this.soundHeaderType == MacOsResourceSnd.SoundHeaderType.COMPRESSED)) ) {
+        this.extendedOrCompressed = new ExtendedOrCompressed(this._io, this, this._root);
+      }
+      if (this.samplePtr == 0) {
+        this.sampleArea = this._io.readBytes((this.soundHeaderType == MacOsResourceSnd.SoundHeaderType.STANDARD ? this.numSamples : (this.soundHeaderType == MacOsResourceSnd.SoundHeaderType.EXTENDED ? Math.floor(((this.extendedOrCompressed.numFrames * this.numChannels) * this.extendedOrCompressed.bitsPerSample) / 8) : this._io.size - this._io.pos)));
+      }
     }
 
     /**
-     * mask for right/left pan values
+     * base frequency of sample in Hz
+     * Calculated with the formula (2 ** ((midi_note - 69) / 12)) * 440
+     * @see {@link https://en.wikipedia.org/wiki/MIDI_tuning_standard|Source}
      */
-    Object.defineProperty(DataFormat.prototype, 'initPanMask', {
+    Object.defineProperty(SoundHeader.prototype, 'baseFreqeuncy', {
       get: function() {
-        if (this._m_initPanMask !== undefined)
-          return this._m_initPanMask;
-        this._m_initPanMask = 3;
-        return this._m_initPanMask;
-      }
-    });
-
-    /**
-     * wave table only, Sound Manager 2.0 and earlier
-     */
-    Object.defineProperty(DataFormat.prototype, 'waveInitChannelMask', {
-      get: function() {
-        if (this._m_waveInitChannelMask !== undefined)
-          return this._m_waveInitChannelMask;
-        this._m_waveInitChannelMask = 7;
-        return this._m_waveInitChannelMask;
-      }
-    });
-
-    /**
-     * mask for mono/stereo values
-     */
-    Object.defineProperty(DataFormat.prototype, 'initStereoMask', {
-      get: function() {
-        if (this._m_initStereoMask !== undefined)
-          return this._m_initStereoMask;
-        this._m_initStereoMask = 192;
-        return this._m_initStereoMask;
-      }
-    });
-    Object.defineProperty(DataFormat.prototype, 'waveInit', {
-      get: function() {
-        if (this._m_waveInit !== undefined)
-          return this._m_waveInit;
-        if (this.id == MacOsResourceSnd.DataType.WAVE_TABLE_SYNTH) {
-          this._m_waveInit = (this.options & this.waveInitChannelMask);
+        if (this._m_baseFreqeuncy !== undefined)
+          return this._m_baseFreqeuncy;
+        if ( ((this.midiNote >= 0) && (this.midiNote < 128)) ) {
+          this._m_baseFreqeuncy = this._root.midiNoteToFrequency[this.midiNote];
         }
-        return this._m_waveInit;
+        return this._m_baseFreqeuncy;
       }
     });
-    Object.defineProperty(DataFormat.prototype, 'panInit', {
+    Object.defineProperty(SoundHeader.prototype, 'soundHeaderType', {
       get: function() {
-        if (this._m_panInit !== undefined)
-          return this._m_panInit;
-        this._m_panInit = (this.options & this.initPanMask);
-        return this._m_panInit;
+        if (this._m_soundHeaderType !== undefined)
+          return this._m_soundHeaderType;
+        var _pos = this._io.pos;
+        this._io.seek(this.startOfs + 20);
+        this._m_soundHeaderType = this._io.readU1();
+        this._io.seek(_pos);
+        return this._m_soundHeaderType;
+      }
+    });
+    Object.defineProperty(SoundHeader.prototype, 'startOfs', {
+      get: function() {
+        if (this._m_startOfs !== undefined)
+          return this._m_startOfs;
+        this._m_startOfs = this._io.pos;
+        return this._m_startOfs;
       }
     });
 
     /**
-     * mask for compression IDs
+     * pointer to samples (or 0 if samples follow data structure)
      */
-    Object.defineProperty(DataFormat.prototype, 'initCompMask', {
-      get: function() {
-        if (this._m_initCompMask !== undefined)
-          return this._m_initCompMask;
-        this._m_initCompMask = 65280;
-        return this._m_initCompMask;
-      }
-    });
-    Object.defineProperty(DataFormat.prototype, 'stereoInit', {
-      get: function() {
-        if (this._m_stereoInit !== undefined)
-          return this._m_stereoInit;
-        this._m_stereoInit = (this.options & this.initStereoMask);
-        return this._m_stereoInit;
-      }
-    });
-    Object.defineProperty(DataFormat.prototype, 'compInit', {
-      get: function() {
-        if (this._m_compInit !== undefined)
-          return this._m_compInit;
-        this._m_compInit = (this.options & this.initCompMask);
-        return this._m_compInit;
-      }
-    });
 
     /**
-     * contains initialisation options for the SndNewChannel function
+     * number of samples
      */
 
-    return DataFormat;
+    /**
+     * number of channels in sample
+     */
+
+    /**
+     * The rate at which the sample was originally recorded.
+     */
+
+    /**
+     * loop point beginning
+     */
+
+    /**
+     * loop point ending
+     */
+
+    /**
+     * sample's encoding option
+     */
+
+    /**
+     * base frequency of sample, expressed as MIDI note values, 60 is middle C
+     */
+
+    /**
+     * sampled-sound data
+     */
+
+    return SoundHeader;
+  })();
+
+  var UnsignedFixedPoint = MacOsResourceSnd.UnsignedFixedPoint = (function() {
+    function UnsignedFixedPoint(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    UnsignedFixedPoint.prototype._read = function() {
+      this.integerPart = this._io.readU2be();
+      this.fractionPart = this._io.readU2be();
+    }
+    Object.defineProperty(UnsignedFixedPoint.prototype, 'value', {
+      get: function() {
+        if (this._m_value !== undefined)
+          return this._m_value;
+        this._m_value = this.integerPart + this.fractionPart / 65535.0;
+        return this._m_value;
+      }
+    });
+
+    return UnsignedFixedPoint;
   })();
 
   /**
@@ -579,5 +579,5 @@ var MacOsResourceSnd = (function() {
 
   return MacOsResourceSnd;
 })();
-return MacOsResourceSnd;
-}));
+MacOsResourceSnd_.MacOsResourceSnd = MacOsResourceSnd;
+});

@@ -1,9 +1,10 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 require 'kaitai/struct/struct'
+require_relative 'bytes_with_io'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -47,8 +48,8 @@ end
 # @see https://github.com/kreativekorp/ksfl/wiki/Macintosh-Resource-File-Format Source
 # @see https://github.com/dgelessus/mac_file_format_docs/blob/master/README.md#resource-forks Source
 class ResourceFork < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -60,10 +61,37 @@ class ResourceFork < Kaitai::Struct::Struct
   end
 
   ##
+  # A resource data block,
+  # as stored in the resource data area.
+  # 
+  # Each data block stores the data contained in a resource,
+  # along with its length.
+  class DataBlock < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @len_data = @_io.read_u4be
+      @data = @_io.read_bytes(len_data)
+      self
+    end
+
+    ##
+    # The length of the resource data stored in this block.
+    attr_reader :len_data
+
+    ##
+    # The data stored in this block.
+    attr_reader :data
+  end
+
+  ##
   # Resource file header,
   # containing the offsets and lengths of the resource data area and resource map.
   class FileHeader < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -108,37 +136,10 @@ class ResourceFork < Kaitai::Struct::Struct
   end
 
   ##
-  # A resource data block,
-  # as stored in the resource data area.
-  # 
-  # Each data block stores the data contained in a resource,
-  # along with its length.
-  class DataBlock < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @len_data = @_io.read_u4be
-      @data = @_io.read_bytes(len_data)
-      self
-    end
-
-    ##
-    # The length of the resource data stored in this block.
-    attr_reader :len_data
-
-    ##
-    # The data stored in this block.
-    attr_reader :data
-  end
-
-  ##
   # Resource map,
   # containing information about the resources in the file and where they are located in the data area.
   class ResourceMap < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -147,9 +148,8 @@ class ResourceFork < Kaitai::Struct::Struct
       @reserved_file_header_copy = FileHeader.new(@_io, self, @_root)
       @reserved_next_resource_map_handle = @_io.read_u4be
       @reserved_file_reference_number = @_io.read_u2be
-      @_raw_file_attributes = @_io.read_bytes(2)
-      _io__raw_file_attributes = Kaitai::Struct::Stream.new(@_raw_file_attributes)
-      @file_attributes = FileAttributes.new(_io__raw_file_attributes, self, @_root)
+      _io_file_attributes = @_io.substream(2)
+      @file_attributes = FileAttributes.new(_io_file_attributes, self, @_root)
       @ofs_type_list = @_io.read_u2be
       @ofs_names = @_io.read_u2be
       self
@@ -162,7 +162,7 @@ class ResourceFork < Kaitai::Struct::Struct
     # These attributes are sometimes also referred to as resource map attributes,
     # because of where they are stored in the file.
     class FileAttributes < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
@@ -245,6 +245,58 @@ class ResourceFork < Kaitai::Struct::Struct
     end
 
     ##
+    # A resource name,
+    # as stored in the resource name storage area in the resource map.
+    # 
+    # The resource names are not required to appear in any particular order.
+    # There may be unused space between and around resource names,
+    # but in practice they are often contiguous.
+    class Name < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = nil)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        @len_value = @_io.read_u1
+        @value = @_io.read_bytes(len_value)
+        self
+      end
+
+      ##
+      # The length of the resource name, in bytes.
+      attr_reader :len_value
+
+      ##
+      # The resource name.
+      # 
+      # This field is exposed as a byte array,
+      # because there is no universal encoding for resource names.
+      # Most Classic Mac software does not deal with encodings explicitly and instead assumes that all strings,
+      # including resource names,
+      # use the system encoding,
+      # which varies depending on the system language.
+      # This means that resource names can use different encodings depending on what system language they were created with.
+      # 
+      # Many resource names are plain ASCII,
+      # meaning that the encoding often does not matter
+      # (because all Mac OS encodings are ASCII-compatible).
+      # For non-ASCII resource names,
+      # the most common encoding is perhaps MacRoman
+      # (used for English and other Western languages),
+      # but other encodings are also sometimes used,
+      # especially for software in non-Western languages.
+      # 
+      # There is no requirement that all names in a single resource file use the same encoding.
+      # For example,
+      # localized software may have some (but not all) of its resource names translated.
+      # For non-Western languages,
+      # this can lead to some resource names using MacRoman,
+      # and others using a different encoding.
+      attr_reader :value
+    end
+
+    ##
     # Resource type list and storage area for resource reference lists in the resource map.
     # 
     # The two parts are combined into a single type here for technical reasons:
@@ -252,7 +304,7 @@ class ResourceFork < Kaitai::Struct::Struct
     # instead it always starts directly after the resource type list.
     # The simplest way to implement this is by placing both types into a single `seq`.
     class TypeListAndReferenceLists < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
@@ -264,112 +316,13 @@ class ResourceFork < Kaitai::Struct::Struct
       end
 
       ##
-      # Resource type list in the resource map.
-      class TypeList < Kaitai::Struct::Struct
-        def initialize(_io, _parent = nil, _root = self)
-          super(_io, _parent, _root)
-          _read
-        end
-
-        def _read
-          @num_types_m1 = @_io.read_u2be
-          @entries = []
-          (num_types).times { |i|
-            @entries << TypeListEntry.new(@_io, self, @_root)
-          }
-          self
-        end
-
-        ##
-        # A single entry in the resource type list.
-        # 
-        # Each entry corresponds to exactly one resource reference list.
-        class TypeListEntry < Kaitai::Struct::Struct
-          def initialize(_io, _parent = nil, _root = self)
-            super(_io, _parent, _root)
-            _read
-          end
-
-          def _read
-            @type = @_io.read_bytes(4)
-            @num_references_m1 = @_io.read_u2be
-            @ofs_reference_list = @_io.read_u2be
-            self
-          end
-
-          ##
-          # The number of resources in the reference list for this type.
-          def num_references
-            return @num_references unless @num_references.nil?
-            @num_references = ((num_references_m1 + 1) % 65536)
-            @num_references
-          end
-
-          ##
-          # The resource reference list for this resource type.
-          def reference_list
-            return @reference_list unless @reference_list.nil?
-            io = _parent._parent._io
-            _pos = io.pos
-            io.seek(ofs_reference_list)
-            @reference_list = ReferenceList.new(io, self, @_root, num_references)
-            io.seek(_pos)
-            @reference_list
-          end
-
-          ##
-          # The four-character type code of the resources in the reference list.
-          attr_reader :type
-
-          ##
-          # The number of resources in the reference list for this type,
-          # minus one.
-          # 
-          # Empty reference lists should never exist.
-          attr_reader :num_references_m1
-
-          ##
-          # Offset of the resource reference list for this resource type,
-          # from the start of the resource type list.
-          # 
-          # Although the offset is relative to the start of the type list,
-          # it should never point into the type list itself,
-          # but into the reference list storage area that directly follows it.
-          # That is,
-          # it should always be at least `_parent._sizeof`.
-          attr_reader :ofs_reference_list
-        end
-
-        ##
-        # The number of resource types in this list.
-        def num_types
-          return @num_types unless @num_types.nil?
-          @num_types = ((num_types_m1 + 1) % 65536)
-          @num_types
-        end
-
-        ##
-        # The number of resource types in this list,
-        # minus one.
-        # 
-        # If the resource list is empty,
-        # the value of this field is `0xffff`,
-        # i. e. `-1` truncated to a 16-bit unsigned integer.
-        attr_reader :num_types_m1
-
-        ##
-        # Entries in the resource type list.
-        attr_reader :entries
-      end
-
-      ##
       # A resource reference list,
       # as stored in the reference list area.
       # 
       # Each reference list has exactly one matching entry in the resource type list,
       # and describes all resources of a single type in the file.
       class ReferenceList < Kaitai::Struct::Struct
-        def initialize(_io, _parent = nil, _root = self, num_references)
+        def initialize(_io, _parent = nil, _root = nil, num_references)
           super(_io, _parent, _root)
           @num_references = num_references
           _read
@@ -386,7 +339,7 @@ class ResourceFork < Kaitai::Struct::Struct
         ##
         # A single resource reference in a resource reference list.
         class Reference < Kaitai::Struct::Struct
-          def initialize(_io, _parent = nil, _root = self)
+          def initialize(_io, _parent = nil, _root = nil)
             super(_io, _parent, _root)
             _read
           end
@@ -394,9 +347,8 @@ class ResourceFork < Kaitai::Struct::Struct
           def _read
             @id = @_io.read_s2be
             @ofs_name = @_io.read_u2be
-            @_raw_attributes = @_io.read_bytes(1)
-            _io__raw_attributes = Kaitai::Struct::Stream.new(@_raw_attributes)
-            @attributes = Attributes.new(_io__raw_attributes, self, @_root)
+            _io_attributes = @_io.substream(1)
+            @attributes = Attributes.new(_io_attributes, self, @_root)
             @ofs_data_block = @_io.read_bits_int_be(24)
             @_io.align_to_byte
             @reserved_handle = @_io.read_u4be
@@ -407,7 +359,7 @@ class ResourceFork < Kaitai::Struct::Struct
           # A resource's attributes,
           # as stored in a resource reference.
           class Attributes < Kaitai::Struct::Struct
-            def initialize(_io, _parent = nil, _root = self)
+            def initialize(_io, _parent = nil, _root = nil)
               super(_io, _parent, _root)
               _read
             end
@@ -536,6 +488,18 @@ class ResourceFork < Kaitai::Struct::Struct
           end
 
           ##
+          # The data block containing the data for the resource described by this reference.
+          def data_block
+            return @data_block unless @data_block.nil?
+            io = _root.data_blocks_with_io._io
+            _pos = io.pos
+            io.seek(ofs_data_block)
+            @data_block = DataBlock.new(io, self, @_root)
+            io.seek(_pos)
+            @data_block
+          end
+
+          ##
           # The name (if any) of the resource described by this reference.
           def name
             return @name unless @name.nil?
@@ -547,18 +511,6 @@ class ResourceFork < Kaitai::Struct::Struct
               io.seek(_pos)
             end
             @name
-          end
-
-          ##
-          # The data block containing the data for the resource described by this reference.
-          def data_block
-            return @data_block unless @data_block.nil?
-            io = _root.data_blocks_with_io._io
-            _pos = io.pos
-            io.seek(ofs_data_block)
-            @data_block = DataBlock.new(io, self, @_root)
-            io.seek(_pos)
-            @data_block
           end
 
           ##
@@ -603,6 +555,105 @@ class ResourceFork < Kaitai::Struct::Struct
       end
 
       ##
+      # Resource type list in the resource map.
+      class TypeList < Kaitai::Struct::Struct
+        def initialize(_io, _parent = nil, _root = nil)
+          super(_io, _parent, _root)
+          _read
+        end
+
+        def _read
+          @num_types_m1 = @_io.read_u2be
+          @entries = []
+          (num_types).times { |i|
+            @entries << TypeListEntry.new(@_io, self, @_root)
+          }
+          self
+        end
+
+        ##
+        # A single entry in the resource type list.
+        # 
+        # Each entry corresponds to exactly one resource reference list.
+        class TypeListEntry < Kaitai::Struct::Struct
+          def initialize(_io, _parent = nil, _root = nil)
+            super(_io, _parent, _root)
+            _read
+          end
+
+          def _read
+            @type = @_io.read_bytes(4)
+            @num_references_m1 = @_io.read_u2be
+            @ofs_reference_list = @_io.read_u2be
+            self
+          end
+
+          ##
+          # The number of resources in the reference list for this type.
+          def num_references
+            return @num_references unless @num_references.nil?
+            @num_references = (num_references_m1 + 1) % 65536
+            @num_references
+          end
+
+          ##
+          # The resource reference list for this resource type.
+          def reference_list
+            return @reference_list unless @reference_list.nil?
+            io = _parent._parent._io
+            _pos = io.pos
+            io.seek(ofs_reference_list)
+            @reference_list = ReferenceList.new(io, self, @_root, num_references)
+            io.seek(_pos)
+            @reference_list
+          end
+
+          ##
+          # The four-character type code of the resources in the reference list.
+          attr_reader :type
+
+          ##
+          # The number of resources in the reference list for this type,
+          # minus one.
+          # 
+          # Empty reference lists should never exist.
+          attr_reader :num_references_m1
+
+          ##
+          # Offset of the resource reference list for this resource type,
+          # from the start of the resource type list.
+          # 
+          # Although the offset is relative to the start of the type list,
+          # it should never point into the type list itself,
+          # but into the reference list storage area that directly follows it.
+          # That is,
+          # it should always be at least `_parent._sizeof`.
+          attr_reader :ofs_reference_list
+        end
+
+        ##
+        # The number of resource types in this list.
+        def num_types
+          return @num_types unless @num_types.nil?
+          @num_types = (num_types_m1 + 1) % 65536
+          @num_types
+        end
+
+        ##
+        # The number of resource types in this list,
+        # minus one.
+        # 
+        # If the resource list is empty,
+        # the value of this field is `0xffff`,
+        # i. e. `-1` truncated to a 16-bit unsigned integer.
+        attr_reader :num_types_m1
+
+        ##
+        # Entries in the resource type list.
+        attr_reader :entries
+      end
+
+      ##
       # The resource map's resource type list.
       attr_reader :type_list
 
@@ -616,68 +667,11 @@ class ResourceFork < Kaitai::Struct::Struct
     end
 
     ##
-    # A resource name,
-    # as stored in the resource name storage area in the resource map.
-    # 
-    # The resource names are not required to appear in any particular order.
-    # There may be unused space between and around resource names,
-    # but in practice they are often contiguous.
-    class Name < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
-
-      def _read
-        @len_value = @_io.read_u1
-        @value = @_io.read_bytes(len_value)
-        self
-      end
-
-      ##
-      # The length of the resource name, in bytes.
-      attr_reader :len_value
-
-      ##
-      # The resource name.
-      # 
-      # This field is exposed as a byte array,
-      # because there is no universal encoding for resource names.
-      # Most Classic Mac software does not deal with encodings explicitly and instead assumes that all strings,
-      # including resource names,
-      # use the system encoding,
-      # which varies depending on the system language.
-      # This means that resource names can use different encodings depending on what system language they were created with.
-      # 
-      # Many resource names are plain ASCII,
-      # meaning that the encoding often does not matter
-      # (because all Mac OS encodings are ASCII-compatible).
-      # For non-ASCII resource names,
-      # the most common encoding is perhaps MacRoman
-      # (used for English and other Western languages),
-      # but other encodings are also sometimes used,
-      # especially for software in non-Western languages.
-      # 
-      # There is no requirement that all names in a single resource file use the same encoding.
-      # For example,
-      # localized software may have some (but not all) of its resource names translated.
-      # For non-Western languages,
-      # this can lead to some resource names using MacRoman,
-      # and others using a different encoding.
-      attr_reader :value
-    end
-
-    ##
-    # The resource map's resource type list, followed by the resource reference list area.
-    def type_list_and_reference_lists
-      return @type_list_and_reference_lists unless @type_list_and_reference_lists.nil?
-      _pos = @_io.pos
-      @_io.seek(ofs_type_list)
-      @_raw_type_list_and_reference_lists = @_io.read_bytes((ofs_names - ofs_type_list))
-      _io__raw_type_list_and_reference_lists = Kaitai::Struct::Stream.new(@_raw_type_list_and_reference_lists)
-      @type_list_and_reference_lists = TypeListAndReferenceLists.new(_io__raw_type_list_and_reference_lists, self, @_root)
-      @_io.seek(_pos)
-      @type_list_and_reference_lists
+    # Storage area for the names of all resources.
+    def names
+      return @names unless @names.nil?
+      @names = names_with_io.data
+      @names
     end
 
     ##
@@ -695,11 +689,15 @@ class ResourceFork < Kaitai::Struct::Struct
     end
 
     ##
-    # Storage area for the names of all resources.
-    def names
-      return @names unless @names.nil?
-      @names = names_with_io.data
-      @names
+    # The resource map's resource type list, followed by the resource reference list area.
+    def type_list_and_reference_lists
+      return @type_list_and_reference_lists unless @type_list_and_reference_lists.nil?
+      _pos = @_io.pos
+      @_io.seek(ofs_type_list)
+      _io_type_list_and_reference_lists = @_io.substream(ofs_names - ofs_type_list)
+      @type_list_and_reference_lists = TypeListAndReferenceLists.new(_io_type_list_and_reference_lists, self, @_root)
+      @_io.seek(_pos)
+      @type_list_and_reference_lists
     end
 
     ##
@@ -732,22 +730,8 @@ class ResourceFork < Kaitai::Struct::Struct
     # from the start of the resource map.
     attr_reader :ofs_names
     attr_reader :_raw_file_attributes
-    attr_reader :_raw_type_list_and_reference_lists
     attr_reader :_raw_names_with_io
-  end
-
-  ##
-  # Use `data_blocks` instead,
-  # unless you need access to this instance's `_io`.
-  def data_blocks_with_io
-    return @data_blocks_with_io unless @data_blocks_with_io.nil?
-    _pos = @_io.pos
-    @_io.seek(header.ofs_data_blocks)
-    @_raw_data_blocks_with_io = @_io.read_bytes(header.len_data_blocks)
-    _io__raw_data_blocks_with_io = Kaitai::Struct::Stream.new(@_raw_data_blocks_with_io)
-    @data_blocks_with_io = BytesWithIo.new(_io__raw_data_blocks_with_io)
-    @_io.seek(_pos)
-    @data_blocks_with_io
+    attr_reader :_raw_type_list_and_reference_lists
   end
 
   ##
@@ -771,14 +755,26 @@ class ResourceFork < Kaitai::Struct::Struct
   end
 
   ##
+  # Use `data_blocks` instead,
+  # unless you need access to this instance's `_io`.
+  def data_blocks_with_io
+    return @data_blocks_with_io unless @data_blocks_with_io.nil?
+    _pos = @_io.pos
+    @_io.seek(header.ofs_data_blocks)
+    _io_data_blocks_with_io = @_io.substream(header.len_data_blocks)
+    @data_blocks_with_io = BytesWithIo.new(_io_data_blocks_with_io)
+    @_io.seek(_pos)
+    @data_blocks_with_io
+  end
+
+  ##
   # The resource file's resource map.
   def resource_map
     return @resource_map unless @resource_map.nil?
     _pos = @_io.pos
     @_io.seek(header.ofs_resource_map)
-    @_raw_resource_map = @_io.read_bytes(header.len_resource_map)
-    _io__raw_resource_map = Kaitai::Struct::Stream.new(@_raw_resource_map)
-    @resource_map = ResourceMap.new(_io__raw_resource_map, self, @_root)
+    _io_resource_map = @_io.substream(header.len_resource_map)
+    @resource_map = ResourceMap.new(_io_resource_map, self, @_root)
     @_io.seek(_pos)
     @resource_map
   end

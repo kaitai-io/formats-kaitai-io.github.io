@@ -19,7 +19,7 @@ import (
 type Id3v11 struct {
 	_io *kaitai.Stream
 	_root *Id3v11
-	_parent interface{}
+	_parent kaitai.Struct
 	_f_id3v1Tag bool
 	id3v1Tag *Id3v11_Id3V11Tag
 }
@@ -28,7 +28,11 @@ func NewId3v11() *Id3v11 {
 	}
 }
 
-func (this *Id3v11) Read(io *kaitai.Stream, parent interface{}, root *Id3v11) (err error) {
+func (this Id3v11) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Id3v11) Read(io *kaitai.Stream, parent kaitai.Struct, root *Id3v11) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -39,6 +43,7 @@ func (this *Id3v11) Id3v1Tag() (v *Id3v11_Id3V11Tag, err error) {
 	if (this._f_id3v1Tag) {
 		return this.id3v1Tag, nil
 	}
+	this._f_id3v1Tag = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
@@ -47,7 +52,7 @@ func (this *Id3v11) Id3v1Tag() (v *Id3v11_Id3V11Tag, err error) {
 	if err != nil {
 		return nil, err
 	}
-	_, err = this._io.Seek(int64((tmp1 - 128)), io.SeekStart)
+	_, err = this._io.Seek(int64(tmp1 - 128), io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
@@ -61,8 +66,6 @@ func (this *Id3v11) Id3v1Tag() (v *Id3v11_Id3V11Tag, err error) {
 	if err != nil {
 		return nil, err
 	}
-	this._f_id3v1Tag = true
-	this._f_id3v1Tag = true
 	return this.id3v1Tag, nil
 }
 
@@ -207,6 +210,11 @@ const (
 	Id3v11_Id3V11Tag_GenreEnum__EuroHouse Id3v11_Id3V11Tag_GenreEnum = 124
 	Id3v11_Id3V11Tag_GenreEnum__DanceHall Id3v11_Id3V11Tag_GenreEnum = 125
 )
+var values_Id3v11_Id3V11Tag_GenreEnum = map[Id3v11_Id3V11Tag_GenreEnum]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}, 10: {}, 11: {}, 12: {}, 13: {}, 14: {}, 15: {}, 16: {}, 17: {}, 18: {}, 19: {}, 20: {}, 21: {}, 22: {}, 23: {}, 24: {}, 25: {}, 26: {}, 27: {}, 28: {}, 29: {}, 30: {}, 31: {}, 32: {}, 33: {}, 34: {}, 35: {}, 36: {}, 37: {}, 38: {}, 39: {}, 40: {}, 41: {}, 42: {}, 43: {}, 44: {}, 45: {}, 46: {}, 47: {}, 48: {}, 49: {}, 50: {}, 51: {}, 52: {}, 53: {}, 54: {}, 55: {}, 56: {}, 57: {}, 58: {}, 59: {}, 60: {}, 61: {}, 62: {}, 63: {}, 64: {}, 65: {}, 66: {}, 67: {}, 68: {}, 69: {}, 70: {}, 71: {}, 72: {}, 73: {}, 74: {}, 75: {}, 76: {}, 77: {}, 78: {}, 79: {}, 80: {}, 81: {}, 82: {}, 83: {}, 84: {}, 85: {}, 86: {}, 87: {}, 88: {}, 89: {}, 90: {}, 91: {}, 92: {}, 93: {}, 94: {}, 95: {}, 96: {}, 97: {}, 98: {}, 99: {}, 100: {}, 101: {}, 102: {}, 103: {}, 104: {}, 105: {}, 106: {}, 107: {}, 108: {}, 109: {}, 110: {}, 111: {}, 112: {}, 113: {}, 114: {}, 115: {}, 116: {}, 117: {}, 118: {}, 119: {}, 120: {}, 121: {}, 122: {}, 123: {}, 124: {}, 125: {}}
+func (v Id3v11_Id3V11Tag_GenreEnum) isDefined() bool {
+	_, ok := values_Id3v11_Id3V11Tag_GenreEnum[v]
+	return ok
+}
 type Id3v11_Id3V11Tag struct {
 	Magic []byte
 	Title []byte
@@ -222,6 +230,10 @@ type Id3v11_Id3V11Tag struct {
 func NewId3v11_Id3V11Tag() *Id3v11_Id3V11Tag {
 	return &Id3v11_Id3V11Tag{
 	}
+}
+
+func (this Id3v11_Id3V11Tag) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Id3v11_Id3V11Tag) Read(io *kaitai.Stream, parent *Id3v11, root *Id3v11) (err error) {

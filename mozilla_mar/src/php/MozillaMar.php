@@ -10,15 +10,15 @@
 
 namespace {
     class MozillaMar extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \MozillaMar $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\MozillaMar $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic = $this->_io->readBytes(4);
-            if (!($this->magic() == "\x4D\x41\x52\x31")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x4D\x41\x52\x31", $this->magic(), $this->_io(), "/seq/0");
+            if (!($this->_m_magic == "\x4D\x41\x52\x31")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x4D\x41\x52\x31", $this->_m_magic, $this->_io, "/seq/0");
             }
             $this->_m_ofsIndex = $this->_io->readU4be();
             $this->_m_fileSize = $this->_io->readU8be();
@@ -63,30 +63,40 @@ namespace {
 }
 
 namespace MozillaMar {
-    class MarIndex extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \MozillaMar $_parent = null, \MozillaMar $_root = null) {
+    class AdditionalSection extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\MozillaMar $_parent = null, ?\MozillaMar $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_lenIndex = $this->_io->readU4be();
-            $this->_m__raw_indexEntries = $this->_io->readBytes($this->lenIndex());
-            $_io__raw_indexEntries = new \Kaitai\Struct\Stream($this->_m__raw_indexEntries);
-            $this->_m_indexEntries = new \MozillaMar\IndexEntries($_io__raw_indexEntries, $this, $this->_root);
+            $this->_m_lenBlock = $this->_io->readU4be();
+            $this->_m_blockIdentifier = $this->_io->readU4be();
+            switch ($this->blockIdentifier()) {
+                case \MozillaMar\BlockIdentifiers::PRODUCT_INFORMATION:
+                    $this->_m__raw_bytes = $this->_io->readBytes(($this->lenBlock() - 4) - 4);
+                    $_io__raw_bytes = new \Kaitai\Struct\Stream($this->_m__raw_bytes);
+                    $this->_m_bytes = new \MozillaMar\ProductInformationBlock($_io__raw_bytes, $this, $this->_root);
+                    break;
+                default:
+                    $this->_m_bytes = $this->_io->readBytes(($this->lenBlock() - 4) - 4);
+                    break;
+            }
         }
-        protected $_m_lenIndex;
-        protected $_m_indexEntries;
-        protected $_m__raw_indexEntries;
-        public function lenIndex() { return $this->_m_lenIndex; }
-        public function indexEntries() { return $this->_m_indexEntries; }
-        public function _raw_indexEntries() { return $this->_m__raw_indexEntries; }
+        protected $_m_lenBlock;
+        protected $_m_blockIdentifier;
+        protected $_m_bytes;
+        protected $_m__raw_bytes;
+        public function lenBlock() { return $this->_m_lenBlock; }
+        public function blockIdentifier() { return $this->_m_blockIdentifier; }
+        public function bytes() { return $this->_m_bytes; }
+        public function _raw_bytes() { return $this->_m__raw_bytes; }
     }
 }
 
 namespace MozillaMar {
     class IndexEntries extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \MozillaMar\MarIndex $_parent = null, \MozillaMar $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\MozillaMar\MarIndex $_parent = null, ?\MozillaMar $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -105,47 +115,8 @@ namespace MozillaMar {
 }
 
 namespace MozillaMar {
-    class Signature extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \MozillaMar $_parent = null, \MozillaMar $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_algorithm = $this->_io->readU4be();
-            $this->_m_lenSignature = $this->_io->readU4be();
-            $this->_m_signature = $this->_io->readBytes($this->lenSignature());
-        }
-        protected $_m_algorithm;
-        protected $_m_lenSignature;
-        protected $_m_signature;
-        public function algorithm() { return $this->_m_algorithm; }
-        public function lenSignature() { return $this->_m_lenSignature; }
-        public function signature() { return $this->_m_signature; }
-    }
-}
-
-namespace MozillaMar {
-    class ProductInformationBlock extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \MozillaMar\AdditionalSection $_parent = null, \MozillaMar $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_marChannelName = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($this->_io->readBytes(64), 0, false), "UTF-8");
-            $this->_m_productVersion = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($this->_io->readBytes(32), 0, false), "UTF-8");
-        }
-        protected $_m_marChannelName;
-        protected $_m_productVersion;
-        public function marChannelName() { return $this->_m_marChannelName; }
-        public function productVersion() { return $this->_m_productVersion; }
-    }
-}
-
-namespace MozillaMar {
     class IndexEntry extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \MozillaMar\IndexEntries $_parent = null, \MozillaMar $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\MozillaMar\IndexEntries $_parent = null, ?\MozillaMar $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -183,34 +154,75 @@ namespace MozillaMar {
 }
 
 namespace MozillaMar {
-    class AdditionalSection extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \MozillaMar $_parent = null, \MozillaMar $_root = null) {
+    class MarIndex extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\MozillaMar $_parent = null, ?\MozillaMar $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_lenBlock = $this->_io->readU4be();
-            $this->_m_blockIdentifier = $this->_io->readU4be();
-            switch ($this->blockIdentifier()) {
-                case \MozillaMar\BlockIdentifiers::PRODUCT_INFORMATION:
-                    $this->_m__raw_bytes = $this->_io->readBytes((($this->lenBlock() - 4) - 4));
-                    $_io__raw_bytes = new \Kaitai\Struct\Stream($this->_m__raw_bytes);
-                    $this->_m_bytes = new \MozillaMar\ProductInformationBlock($_io__raw_bytes, $this, $this->_root);
-                    break;
-                default:
-                    $this->_m_bytes = $this->_io->readBytes((($this->lenBlock() - 4) - 4));
-                    break;
-            }
+            $this->_m_lenIndex = $this->_io->readU4be();
+            $this->_m__raw_indexEntries = $this->_io->readBytes($this->lenIndex());
+            $_io__raw_indexEntries = new \Kaitai\Struct\Stream($this->_m__raw_indexEntries);
+            $this->_m_indexEntries = new \MozillaMar\IndexEntries($_io__raw_indexEntries, $this, $this->_root);
         }
-        protected $_m_lenBlock;
-        protected $_m_blockIdentifier;
-        protected $_m_bytes;
-        protected $_m__raw_bytes;
-        public function lenBlock() { return $this->_m_lenBlock; }
-        public function blockIdentifier() { return $this->_m_blockIdentifier; }
-        public function bytes() { return $this->_m_bytes; }
-        public function _raw_bytes() { return $this->_m__raw_bytes; }
+        protected $_m_lenIndex;
+        protected $_m_indexEntries;
+        protected $_m__raw_indexEntries;
+        public function lenIndex() { return $this->_m_lenIndex; }
+        public function indexEntries() { return $this->_m_indexEntries; }
+        public function _raw_indexEntries() { return $this->_m__raw_indexEntries; }
+    }
+}
+
+namespace MozillaMar {
+    class ProductInformationBlock extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\MozillaMar\AdditionalSection $_parent = null, ?\MozillaMar $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_marChannelName = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($this->_io->readBytes(64), 0, false), "UTF-8");
+            $this->_m_productVersion = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($this->_io->readBytes(32), 0, false), "UTF-8");
+        }
+        protected $_m_marChannelName;
+        protected $_m_productVersion;
+        public function marChannelName() { return $this->_m_marChannelName; }
+        public function productVersion() { return $this->_m_productVersion; }
+    }
+}
+
+namespace MozillaMar {
+    class Signature extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\MozillaMar $_parent = null, ?\MozillaMar $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_algorithm = $this->_io->readU4be();
+            $this->_m_lenSignature = $this->_io->readU4be();
+            $this->_m_signature = $this->_io->readBytes($this->lenSignature());
+        }
+        protected $_m_algorithm;
+        protected $_m_lenSignature;
+        protected $_m_signature;
+        public function algorithm() { return $this->_m_algorithm; }
+        public function lenSignature() { return $this->_m_lenSignature; }
+        public function signature() { return $this->_m_signature; }
+    }
+}
+
+namespace MozillaMar {
+    class BlockIdentifiers {
+        const PRODUCT_INFORMATION = 1;
+
+        private const _VALUES = [1 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
@@ -218,11 +230,11 @@ namespace MozillaMar {
     class SignatureAlgorithms {
         const RSA_PKCS1_SHA1 = 1;
         const RSA_PKCS1_SHA384 = 2;
-    }
-}
 
-namespace MozillaMar {
-    class BlockIdentifiers {
-        const PRODUCT_INFORMATION = 1;
+        private const _VALUES = [1 => true, 2 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

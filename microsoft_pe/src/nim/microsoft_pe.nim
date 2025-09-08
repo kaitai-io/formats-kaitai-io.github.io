@@ -11,6 +11,18 @@ type
     rom_image = 263
     pe32 = 267
     pe32_plus = 523
+  MicrosoftPe_Annoyingstring* = ref object of KaitaiStruct
+    `parent`*: MicrosoftPe_CoffSymbol
+    `nameInst`: string
+    `nameInstFlag`: bool
+    `nameFromOffsetInst`: string
+    `nameFromOffsetInstFlag`: bool
+    `nameFromShortInst`: string
+    `nameFromShortInstFlag`: bool
+    `nameOffsetInst`: uint32
+    `nameOffsetInstFlag`: bool
+    `nameZeroesInst`: uint32
+    `nameZeroesInstFlag`: bool
   MicrosoftPe_CertificateEntry* = ref object of KaitaiStruct
     `length`*: uint32
     `revision`*: MicrosoftPe_CertificateEntry_CertificateRevision
@@ -25,6 +37,111 @@ type
     pkcs_signed_data = 2
     reserved_1 = 3
     ts_stack_signed = 4
+  MicrosoftPe_CertificateTable* = ref object of KaitaiStruct
+    `items`*: seq[MicrosoftPe_CertificateEntry]
+    `parent`*: MicrosoftPe_PeHeader
+  MicrosoftPe_CoffHeader* = ref object of KaitaiStruct
+    `machine`*: MicrosoftPe_CoffHeader_MachineType
+    `numberOfSections`*: uint16
+    `timeDateStamp`*: uint32
+    `pointerToSymbolTable`*: uint32
+    `numberOfSymbols`*: uint32
+    `sizeOfOptionalHeader`*: uint16
+    `characteristics`*: uint16
+    `parent`*: MicrosoftPe_PeHeader
+    `symbolNameTableOffsetInst`: int
+    `symbolNameTableOffsetInstFlag`: bool
+    `symbolNameTableSizeInst`: uint32
+    `symbolNameTableSizeInstFlag`: bool
+    `symbolTableInst`: seq[MicrosoftPe_CoffSymbol]
+    `symbolTableInstFlag`: bool
+    `symbolTableSizeInst`: int
+    `symbolTableSizeInstFlag`: bool
+  MicrosoftPe_CoffHeader_MachineType* = enum
+    unknown = 0
+    i386 = 332
+    r4000 = 358
+    wce_mips_v2 = 361
+    alpha = 388
+    sh3 = 418
+    sh3_dsp = 419
+    sh4 = 422
+    sh5 = 424
+    arm = 448
+    thumb = 450
+    arm_nt = 452
+    am33 = 467
+    powerpc = 496
+    powerpc_fp = 497
+    ia64 = 512
+    mips16 = 614
+    alpha64_or_axp64 = 644
+    mips_fpu = 870
+    mips16_fpu = 1126
+    ebc = 3772
+    riscv32 = 20530
+    riscv64 = 20580
+    riscv128 = 20776
+    loongarch32 = 25138
+    loongarch64 = 25188
+    amd64 = 34404
+    m32r = 36929
+    arm64 = 43620
+  MicrosoftPe_CoffSymbol* = ref object of KaitaiStruct
+    `nameAnnoying`*: MicrosoftPe_Annoyingstring
+    `value`*: uint32
+    `sectionNumber`*: uint16
+    `type`*: uint16
+    `storageClass`*: uint8
+    `numberOfAuxSymbols`*: uint8
+    `parent`*: MicrosoftPe_CoffHeader
+    `rawNameAnnoying`*: seq[byte]
+    `dataInst`: seq[byte]
+    `dataInstFlag`: bool
+    `sectionInst`: MicrosoftPe_Section
+    `sectionInstFlag`: bool
+  MicrosoftPe_DataDir* = ref object of KaitaiStruct
+    `virtualAddress`*: uint32
+    `size`*: uint32
+    `parent`*: MicrosoftPe_OptionalHeaderDataDirs
+  MicrosoftPe_MzPlaceholder* = ref object of KaitaiStruct
+    `magic`*: seq[byte]
+    `data1`*: seq[byte]
+    `ofsPe`*: uint32
+    `parent`*: MicrosoftPe
+  MicrosoftPe_OptionalHeader* = ref object of KaitaiStruct
+    `std`*: MicrosoftPe_OptionalHeaderStd
+    `windows`*: MicrosoftPe_OptionalHeaderWindows
+    `dataDirs`*: MicrosoftPe_OptionalHeaderDataDirs
+    `parent`*: MicrosoftPe_PeHeader
+  MicrosoftPe_OptionalHeaderDataDirs* = ref object of KaitaiStruct
+    `exportTable`*: MicrosoftPe_DataDir
+    `importTable`*: MicrosoftPe_DataDir
+    `resourceTable`*: MicrosoftPe_DataDir
+    `exceptionTable`*: MicrosoftPe_DataDir
+    `certificateTable`*: MicrosoftPe_DataDir
+    `baseRelocationTable`*: MicrosoftPe_DataDir
+    `debug`*: MicrosoftPe_DataDir
+    `architecture`*: MicrosoftPe_DataDir
+    `globalPtr`*: MicrosoftPe_DataDir
+    `tlsTable`*: MicrosoftPe_DataDir
+    `loadConfigTable`*: MicrosoftPe_DataDir
+    `boundImport`*: MicrosoftPe_DataDir
+    `iat`*: MicrosoftPe_DataDir
+    `delayImportDescriptor`*: MicrosoftPe_DataDir
+    `clrRuntimeHeader`*: MicrosoftPe_DataDir
+    `parent`*: MicrosoftPe_OptionalHeader
+  MicrosoftPe_OptionalHeaderStd* = ref object of KaitaiStruct
+    `format`*: MicrosoftPe_PeFormat
+    `majorLinkerVersion`*: uint8
+    `minorLinkerVersion`*: uint8
+    `sizeOfCode`*: uint32
+    `sizeOfInitializedData`*: uint32
+    `sizeOfUninitializedData`*: uint32
+    `addressOfEntryPoint`*: uint32
+    `baseOfCode`*: uint32
+    `baseOfData`*: uint32
+    `parent`*: MicrosoftPe_OptionalHeader
   MicrosoftPe_OptionalHeaderWindows* = ref object of KaitaiStruct
     `imageBase32`*: uint32
     `imageBase64`*: uint64
@@ -66,40 +183,6 @@ type
     efi_rom = 13
     xbox = 14
     windows_boot_application = 16
-  MicrosoftPe_OptionalHeaderDataDirs* = ref object of KaitaiStruct
-    `exportTable`*: MicrosoftPe_DataDir
-    `importTable`*: MicrosoftPe_DataDir
-    `resourceTable`*: MicrosoftPe_DataDir
-    `exceptionTable`*: MicrosoftPe_DataDir
-    `certificateTable`*: MicrosoftPe_DataDir
-    `baseRelocationTable`*: MicrosoftPe_DataDir
-    `debug`*: MicrosoftPe_DataDir
-    `architecture`*: MicrosoftPe_DataDir
-    `globalPtr`*: MicrosoftPe_DataDir
-    `tlsTable`*: MicrosoftPe_DataDir
-    `loadConfigTable`*: MicrosoftPe_DataDir
-    `boundImport`*: MicrosoftPe_DataDir
-    `iat`*: MicrosoftPe_DataDir
-    `delayImportDescriptor`*: MicrosoftPe_DataDir
-    `clrRuntimeHeader`*: MicrosoftPe_DataDir
-    `parent`*: MicrosoftPe_OptionalHeader
-  MicrosoftPe_DataDir* = ref object of KaitaiStruct
-    `virtualAddress`*: uint32
-    `size`*: uint32
-    `parent`*: MicrosoftPe_OptionalHeaderDataDirs
-  MicrosoftPe_CoffSymbol* = ref object of KaitaiStruct
-    `nameAnnoying`*: MicrosoftPe_Annoyingstring
-    `value`*: uint32
-    `sectionNumber`*: uint16
-    `type`*: uint16
-    `storageClass`*: uint8
-    `numberOfAuxSymbols`*: uint8
-    `parent`*: MicrosoftPe_CoffHeader
-    `rawNameAnnoying`*: seq[byte]
-    `sectionInst`: MicrosoftPe_Section
-    `sectionInstFlag`: bool
-    `dataInst`: seq[byte]
-    `dataInstFlag`: bool
   MicrosoftPe_PeHeader* = ref object of KaitaiStruct
     `peSignature`*: seq[byte]
     `coffHdr`*: MicrosoftPe_CoffHeader
@@ -110,11 +193,6 @@ type
     `rawCertificateTableInst`*: seq[byte]
     `certificateTableInst`: MicrosoftPe_CertificateTable
     `certificateTableInstFlag`: bool
-  MicrosoftPe_OptionalHeader* = ref object of KaitaiStruct
-    `std`*: MicrosoftPe_OptionalHeaderStd
-    `windows`*: MicrosoftPe_OptionalHeaderWindows
-    `dataDirs`*: MicrosoftPe_OptionalHeaderDataDirs
-    `parent`*: MicrosoftPe_PeHeader
   MicrosoftPe_Section* = ref object of KaitaiStruct
     `name`*: string
     `virtualSize`*: uint32
@@ -129,114 +207,36 @@ type
     `parent`*: MicrosoftPe_PeHeader
     `bodyInst`: seq[byte]
     `bodyInstFlag`: bool
-  MicrosoftPe_CertificateTable* = ref object of KaitaiStruct
-    `items`*: seq[MicrosoftPe_CertificateEntry]
-    `parent`*: MicrosoftPe_PeHeader
-  MicrosoftPe_MzPlaceholder* = ref object of KaitaiStruct
-    `magic`*: seq[byte]
-    `data1`*: seq[byte]
-    `ofsPe`*: uint32
-    `parent`*: MicrosoftPe
-  MicrosoftPe_OptionalHeaderStd* = ref object of KaitaiStruct
-    `format`*: MicrosoftPe_PeFormat
-    `majorLinkerVersion`*: uint8
-    `minorLinkerVersion`*: uint8
-    `sizeOfCode`*: uint32
-    `sizeOfInitializedData`*: uint32
-    `sizeOfUninitializedData`*: uint32
-    `addressOfEntryPoint`*: uint32
-    `baseOfCode`*: uint32
-    `baseOfData`*: uint32
-    `parent`*: MicrosoftPe_OptionalHeader
-  MicrosoftPe_CoffHeader* = ref object of KaitaiStruct
-    `machine`*: MicrosoftPe_CoffHeader_MachineType
-    `numberOfSections`*: uint16
-    `timeDateStamp`*: uint32
-    `pointerToSymbolTable`*: uint32
-    `numberOfSymbols`*: uint32
-    `sizeOfOptionalHeader`*: uint16
-    `characteristics`*: uint16
-    `parent`*: MicrosoftPe_PeHeader
-    `symbolTableSizeInst`: int
-    `symbolTableSizeInstFlag`: bool
-    `symbolNameTableOffsetInst`: int
-    `symbolNameTableOffsetInstFlag`: bool
-    `symbolNameTableSizeInst`: uint32
-    `symbolNameTableSizeInstFlag`: bool
-    `symbolTableInst`: seq[MicrosoftPe_CoffSymbol]
-    `symbolTableInstFlag`: bool
-  MicrosoftPe_CoffHeader_MachineType* = enum
-    unknown = 0
-    i386 = 332
-    r4000 = 358
-    wce_mips_v2 = 361
-    alpha = 388
-    sh3 = 418
-    sh3_dsp = 419
-    sh4 = 422
-    sh5 = 424
-    arm = 448
-    thumb = 450
-    arm_nt = 452
-    am33 = 467
-    powerpc = 496
-    powerpc_fp = 497
-    ia64 = 512
-    mips16 = 614
-    alpha64_or_axp64 = 644
-    mips_fpu = 870
-    mips16_fpu = 1126
-    ebc = 3772
-    riscv32 = 20530
-    riscv64 = 20580
-    riscv128 = 20776
-    loongarch32 = 25138
-    loongarch64 = 25188
-    amd64 = 34404
-    m32r = 36929
-    arm64 = 43620
-  MicrosoftPe_Annoyingstring* = ref object of KaitaiStruct
-    `parent`*: MicrosoftPe_CoffSymbol
-    `nameFromOffsetInst`: string
-    `nameFromOffsetInstFlag`: bool
-    `nameOffsetInst`: uint32
-    `nameOffsetInstFlag`: bool
-    `nameInst`: string
-    `nameInstFlag`: bool
-    `nameZeroesInst`: uint32
-    `nameZeroesInstFlag`: bool
-    `nameFromShortInst`: string
-    `nameFromShortInstFlag`: bool
 
 proc read*(_: typedesc[MicrosoftPe], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MicrosoftPe
-proc read*(_: typedesc[MicrosoftPe_CertificateEntry], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe_CertificateTable): MicrosoftPe_CertificateEntry
-proc read*(_: typedesc[MicrosoftPe_OptionalHeaderWindows], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe_OptionalHeader): MicrosoftPe_OptionalHeaderWindows
-proc read*(_: typedesc[MicrosoftPe_OptionalHeaderDataDirs], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe_OptionalHeader): MicrosoftPe_OptionalHeaderDataDirs
-proc read*(_: typedesc[MicrosoftPe_DataDir], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe_OptionalHeaderDataDirs): MicrosoftPe_DataDir
-proc read*(_: typedesc[MicrosoftPe_CoffSymbol], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe_CoffHeader): MicrosoftPe_CoffSymbol
-proc read*(_: typedesc[MicrosoftPe_PeHeader], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe): MicrosoftPe_PeHeader
-proc read*(_: typedesc[MicrosoftPe_OptionalHeader], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe_PeHeader): MicrosoftPe_OptionalHeader
-proc read*(_: typedesc[MicrosoftPe_Section], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe_PeHeader): MicrosoftPe_Section
-proc read*(_: typedesc[MicrosoftPe_CertificateTable], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe_PeHeader): MicrosoftPe_CertificateTable
-proc read*(_: typedesc[MicrosoftPe_MzPlaceholder], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe): MicrosoftPe_MzPlaceholder
-proc read*(_: typedesc[MicrosoftPe_OptionalHeaderStd], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe_OptionalHeader): MicrosoftPe_OptionalHeaderStd
-proc read*(_: typedesc[MicrosoftPe_CoffHeader], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe_PeHeader): MicrosoftPe_CoffHeader
 proc read*(_: typedesc[MicrosoftPe_Annoyingstring], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe_CoffSymbol): MicrosoftPe_Annoyingstring
+proc read*(_: typedesc[MicrosoftPe_CertificateEntry], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe_CertificateTable): MicrosoftPe_CertificateEntry
+proc read*(_: typedesc[MicrosoftPe_CertificateTable], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe_PeHeader): MicrosoftPe_CertificateTable
+proc read*(_: typedesc[MicrosoftPe_CoffHeader], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe_PeHeader): MicrosoftPe_CoffHeader
+proc read*(_: typedesc[MicrosoftPe_CoffSymbol], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe_CoffHeader): MicrosoftPe_CoffSymbol
+proc read*(_: typedesc[MicrosoftPe_DataDir], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe_OptionalHeaderDataDirs): MicrosoftPe_DataDir
+proc read*(_: typedesc[MicrosoftPe_MzPlaceholder], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe): MicrosoftPe_MzPlaceholder
+proc read*(_: typedesc[MicrosoftPe_OptionalHeader], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe_PeHeader): MicrosoftPe_OptionalHeader
+proc read*(_: typedesc[MicrosoftPe_OptionalHeaderDataDirs], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe_OptionalHeader): MicrosoftPe_OptionalHeaderDataDirs
+proc read*(_: typedesc[MicrosoftPe_OptionalHeaderStd], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe_OptionalHeader): MicrosoftPe_OptionalHeaderStd
+proc read*(_: typedesc[MicrosoftPe_OptionalHeaderWindows], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe_OptionalHeader): MicrosoftPe_OptionalHeaderWindows
+proc read*(_: typedesc[MicrosoftPe_PeHeader], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe): MicrosoftPe_PeHeader
+proc read*(_: typedesc[MicrosoftPe_Section], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe_PeHeader): MicrosoftPe_Section
 
 proc pe*(this: MicrosoftPe): MicrosoftPe_PeHeader
-proc section*(this: MicrosoftPe_CoffSymbol): MicrosoftPe_Section
-proc data*(this: MicrosoftPe_CoffSymbol): seq[byte]
-proc certificateTable*(this: MicrosoftPe_PeHeader): MicrosoftPe_CertificateTable
-proc body*(this: MicrosoftPe_Section): seq[byte]
-proc symbolTableSize*(this: MicrosoftPe_CoffHeader): int
+proc name*(this: MicrosoftPe_Annoyingstring): string
+proc nameFromOffset*(this: MicrosoftPe_Annoyingstring): string
+proc nameFromShort*(this: MicrosoftPe_Annoyingstring): string
+proc nameOffset*(this: MicrosoftPe_Annoyingstring): uint32
+proc nameZeroes*(this: MicrosoftPe_Annoyingstring): uint32
 proc symbolNameTableOffset*(this: MicrosoftPe_CoffHeader): int
 proc symbolNameTableSize*(this: MicrosoftPe_CoffHeader): uint32
 proc symbolTable*(this: MicrosoftPe_CoffHeader): seq[MicrosoftPe_CoffSymbol]
-proc nameFromOffset*(this: MicrosoftPe_Annoyingstring): string
-proc nameOffset*(this: MicrosoftPe_Annoyingstring): uint32
-proc name*(this: MicrosoftPe_Annoyingstring): string
-proc nameZeroes*(this: MicrosoftPe_Annoyingstring): uint32
-proc nameFromShort*(this: MicrosoftPe_Annoyingstring): string
+proc symbolTableSize*(this: MicrosoftPe_CoffHeader): int
+proc data*(this: MicrosoftPe_CoffSymbol): seq[byte]
+proc section*(this: MicrosoftPe_CoffSymbol): MicrosoftPe_Section
+proc certificateTable*(this: MicrosoftPe_PeHeader): MicrosoftPe_CertificateTable
+proc body*(this: MicrosoftPe_Section): seq[byte]
 
 
 ##[
@@ -266,6 +266,73 @@ proc pe(this: MicrosoftPe): MicrosoftPe_PeHeader =
 
 proc fromFile*(_: typedesc[MicrosoftPe], filename: string): MicrosoftPe =
   MicrosoftPe.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[MicrosoftPe_Annoyingstring], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe_CoffSymbol): MicrosoftPe_Annoyingstring =
+  template this: untyped = result
+  this = new(MicrosoftPe_Annoyingstring)
+  let root = if root == nil: cast[MicrosoftPe](this) else: cast[MicrosoftPe](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+
+proc name(this: MicrosoftPe_Annoyingstring): string = 
+  if this.nameInstFlag:
+    return this.nameInst
+  let nameInstExpr = string((if this.nameZeroes == 0: this.nameFromOffset else: this.nameFromShort))
+  this.nameInst = nameInstExpr
+  this.nameInstFlag = true
+  return this.nameInst
+
+proc nameFromOffset(this: MicrosoftPe_Annoyingstring): string = 
+  if this.nameFromOffsetInstFlag:
+    return this.nameFromOffsetInst
+  if this.nameZeroes == 0:
+    let io = MicrosoftPe(this.root).io
+    let pos = io.pos()
+    io.seek(int((if this.nameZeroes == 0: this.parent.parent.symbolNameTableOffset + this.nameOffset else: 0)))
+    let nameFromOffsetInstExpr = encode(io.readBytesTerm(0, false, true, false), "ASCII")
+    this.nameFromOffsetInst = nameFromOffsetInstExpr
+    io.seek(pos)
+  this.nameFromOffsetInstFlag = true
+  return this.nameFromOffsetInst
+
+proc nameFromShort(this: MicrosoftPe_Annoyingstring): string = 
+  if this.nameFromShortInstFlag:
+    return this.nameFromShortInst
+  if this.nameZeroes != 0:
+    let pos = this.io.pos()
+    this.io.seek(int(0))
+    let nameFromShortInstExpr = encode(this.io.readBytesTerm(0, false, true, false), "ASCII")
+    this.nameFromShortInst = nameFromShortInstExpr
+    this.io.seek(pos)
+  this.nameFromShortInstFlag = true
+  return this.nameFromShortInst
+
+proc nameOffset(this: MicrosoftPe_Annoyingstring): uint32 = 
+  if this.nameOffsetInstFlag:
+    return this.nameOffsetInst
+  let pos = this.io.pos()
+  this.io.seek(int(4))
+  let nameOffsetInstExpr = this.io.readU4le()
+  this.nameOffsetInst = nameOffsetInstExpr
+  this.io.seek(pos)
+  this.nameOffsetInstFlag = true
+  return this.nameOffsetInst
+
+proc nameZeroes(this: MicrosoftPe_Annoyingstring): uint32 = 
+  if this.nameZeroesInstFlag:
+    return this.nameZeroesInst
+  let pos = this.io.pos()
+  this.io.seek(int(0))
+  let nameZeroesInstExpr = this.io.readU4le()
+  this.nameZeroesInst = nameZeroesInstExpr
+  this.io.seek(pos)
+  this.nameZeroesInstFlag = true
+  return this.nameZeroesInst
+
+proc fromFile*(_: typedesc[MicrosoftPe_Annoyingstring], filename: string): MicrosoftPe_Annoyingstring =
+  MicrosoftPe_Annoyingstring.read(newKaitaiFileStream(filename), nil, nil)
 
 
 ##[
@@ -301,11 +368,273 @@ proc read*(_: typedesc[MicrosoftPe_CertificateEntry], io: KaitaiStream, root: Ka
   ##[
   Contains a certificate, such as an Authenticode signature.
   ]##
-  let certificateBytesExpr = this.io.readBytes(int((this.length - 8)))
+  let certificateBytesExpr = this.io.readBytes(int(this.length - 8))
   this.certificateBytes = certificateBytesExpr
 
 proc fromFile*(_: typedesc[MicrosoftPe_CertificateEntry], filename: string): MicrosoftPe_CertificateEntry =
   MicrosoftPe_CertificateEntry.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[MicrosoftPe_CertificateTable], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe_PeHeader): MicrosoftPe_CertificateTable =
+  template this: untyped = result
+  this = new(MicrosoftPe_CertificateTable)
+  let root = if root == nil: cast[MicrosoftPe](this) else: cast[MicrosoftPe](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  block:
+    var i: int
+    while not this.io.isEof:
+      let it = MicrosoftPe_CertificateEntry.read(this.io, this.root, this)
+      this.items.add(it)
+      inc i
+
+proc fromFile*(_: typedesc[MicrosoftPe_CertificateTable], filename: string): MicrosoftPe_CertificateTable =
+  MicrosoftPe_CertificateTable.read(newKaitaiFileStream(filename), nil, nil)
+
+
+##[
+@see "3.3. COFF File Header (Object and Image)"
+]##
+proc read*(_: typedesc[MicrosoftPe_CoffHeader], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe_PeHeader): MicrosoftPe_CoffHeader =
+  template this: untyped = result
+  this = new(MicrosoftPe_CoffHeader)
+  let root = if root == nil: cast[MicrosoftPe](this) else: cast[MicrosoftPe](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let machineExpr = MicrosoftPe_CoffHeader_MachineType(this.io.readU2le())
+  this.machine = machineExpr
+  let numberOfSectionsExpr = this.io.readU2le()
+  this.numberOfSections = numberOfSectionsExpr
+  let timeDateStampExpr = this.io.readU4le()
+  this.timeDateStamp = timeDateStampExpr
+  let pointerToSymbolTableExpr = this.io.readU4le()
+  this.pointerToSymbolTable = pointerToSymbolTableExpr
+  let numberOfSymbolsExpr = this.io.readU4le()
+  this.numberOfSymbols = numberOfSymbolsExpr
+  let sizeOfOptionalHeaderExpr = this.io.readU2le()
+  this.sizeOfOptionalHeader = sizeOfOptionalHeaderExpr
+  let characteristicsExpr = this.io.readU2le()
+  this.characteristics = characteristicsExpr
+
+proc symbolNameTableOffset(this: MicrosoftPe_CoffHeader): int = 
+  if this.symbolNameTableOffsetInstFlag:
+    return this.symbolNameTableOffsetInst
+  let symbolNameTableOffsetInstExpr = int(this.pointerToSymbolTable + this.symbolTableSize)
+  this.symbolNameTableOffsetInst = symbolNameTableOffsetInstExpr
+  this.symbolNameTableOffsetInstFlag = true
+  return this.symbolNameTableOffsetInst
+
+proc symbolNameTableSize(this: MicrosoftPe_CoffHeader): uint32 = 
+  if this.symbolNameTableSizeInstFlag:
+    return this.symbolNameTableSizeInst
+  let pos = this.io.pos()
+  this.io.seek(int(this.symbolNameTableOffset))
+  let symbolNameTableSizeInstExpr = this.io.readU4le()
+  this.symbolNameTableSizeInst = symbolNameTableSizeInstExpr
+  this.io.seek(pos)
+  this.symbolNameTableSizeInstFlag = true
+  return this.symbolNameTableSizeInst
+
+proc symbolTable(this: MicrosoftPe_CoffHeader): seq[MicrosoftPe_CoffSymbol] = 
+  if this.symbolTableInstFlag:
+    return this.symbolTableInst
+  let pos = this.io.pos()
+  this.io.seek(int(this.pointerToSymbolTable))
+  for i in 0 ..< int(this.numberOfSymbols):
+    let it = MicrosoftPe_CoffSymbol.read(this.io, this.root, this)
+    this.symbolTableInst.add(it)
+  this.io.seek(pos)
+  this.symbolTableInstFlag = true
+  return this.symbolTableInst
+
+proc symbolTableSize(this: MicrosoftPe_CoffHeader): int = 
+  if this.symbolTableSizeInstFlag:
+    return this.symbolTableSizeInst
+  let symbolTableSizeInstExpr = int(this.numberOfSymbols * 18)
+  this.symbolTableSizeInst = symbolTableSizeInstExpr
+  this.symbolTableSizeInstFlag = true
+  return this.symbolTableSizeInst
+
+proc fromFile*(_: typedesc[MicrosoftPe_CoffHeader], filename: string): MicrosoftPe_CoffHeader =
+  MicrosoftPe_CoffHeader.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[MicrosoftPe_CoffSymbol], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe_CoffHeader): MicrosoftPe_CoffSymbol =
+  template this: untyped = result
+  this = new(MicrosoftPe_CoffSymbol)
+  let root = if root == nil: cast[MicrosoftPe](this) else: cast[MicrosoftPe](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let rawNameAnnoyingExpr = this.io.readBytes(int(8))
+  this.rawNameAnnoying = rawNameAnnoyingExpr
+  let rawNameAnnoyingIo = newKaitaiStream(rawNameAnnoyingExpr)
+  let nameAnnoyingExpr = MicrosoftPe_Annoyingstring.read(rawNameAnnoyingIo, this.root, this)
+  this.nameAnnoying = nameAnnoyingExpr
+  let valueExpr = this.io.readU4le()
+  this.value = valueExpr
+  let sectionNumberExpr = this.io.readU2le()
+  this.sectionNumber = sectionNumberExpr
+  let typeExpr = this.io.readU2le()
+  this.type = typeExpr
+  let storageClassExpr = this.io.readU1()
+  this.storageClass = storageClassExpr
+  let numberOfAuxSymbolsExpr = this.io.readU1()
+  this.numberOfAuxSymbols = numberOfAuxSymbolsExpr
+
+proc data(this: MicrosoftPe_CoffSymbol): seq[byte] = 
+  if this.dataInstFlag:
+    return this.dataInst
+  let pos = this.io.pos()
+  this.io.seek(int(this.section.pointerToRawData + this.value))
+  let dataInstExpr = this.io.readBytes(int(1))
+  this.dataInst = dataInstExpr
+  this.io.seek(pos)
+  this.dataInstFlag = true
+  return this.dataInst
+
+proc section(this: MicrosoftPe_CoffSymbol): MicrosoftPe_Section = 
+  if this.sectionInstFlag:
+    return this.sectionInst
+  let sectionInstExpr = MicrosoftPe_Section(MicrosoftPe(this.root).pe.sections[this.sectionNumber - 1])
+  this.sectionInst = sectionInstExpr
+  this.sectionInstFlag = true
+  return this.sectionInst
+
+proc fromFile*(_: typedesc[MicrosoftPe_CoffSymbol], filename: string): MicrosoftPe_CoffSymbol =
+  MicrosoftPe_CoffSymbol.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[MicrosoftPe_DataDir], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe_OptionalHeaderDataDirs): MicrosoftPe_DataDir =
+  template this: untyped = result
+  this = new(MicrosoftPe_DataDir)
+  let root = if root == nil: cast[MicrosoftPe](this) else: cast[MicrosoftPe](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let virtualAddressExpr = this.io.readU4le()
+  this.virtualAddress = virtualAddressExpr
+  let sizeExpr = this.io.readU4le()
+  this.size = sizeExpr
+
+proc fromFile*(_: typedesc[MicrosoftPe_DataDir], filename: string): MicrosoftPe_DataDir =
+  MicrosoftPe_DataDir.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[MicrosoftPe_MzPlaceholder], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe): MicrosoftPe_MzPlaceholder =
+  template this: untyped = result
+  this = new(MicrosoftPe_MzPlaceholder)
+  let root = if root == nil: cast[MicrosoftPe](this) else: cast[MicrosoftPe](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let magicExpr = this.io.readBytes(int(2))
+  this.magic = magicExpr
+  let data1Expr = this.io.readBytes(int(58))
+  this.data1 = data1Expr
+
+  ##[
+  In PE file, an offset to PE header
+  ]##
+  let ofsPeExpr = this.io.readU4le()
+  this.ofsPe = ofsPeExpr
+
+proc fromFile*(_: typedesc[MicrosoftPe_MzPlaceholder], filename: string): MicrosoftPe_MzPlaceholder =
+  MicrosoftPe_MzPlaceholder.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[MicrosoftPe_OptionalHeader], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe_PeHeader): MicrosoftPe_OptionalHeader =
+  template this: untyped = result
+  this = new(MicrosoftPe_OptionalHeader)
+  let root = if root == nil: cast[MicrosoftPe](this) else: cast[MicrosoftPe](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let stdExpr = MicrosoftPe_OptionalHeaderStd.read(this.io, this.root, this)
+  this.std = stdExpr
+  let windowsExpr = MicrosoftPe_OptionalHeaderWindows.read(this.io, this.root, this)
+  this.windows = windowsExpr
+  let dataDirsExpr = MicrosoftPe_OptionalHeaderDataDirs.read(this.io, this.root, this)
+  this.dataDirs = dataDirsExpr
+
+proc fromFile*(_: typedesc[MicrosoftPe_OptionalHeader], filename: string): MicrosoftPe_OptionalHeader =
+  MicrosoftPe_OptionalHeader.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[MicrosoftPe_OptionalHeaderDataDirs], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe_OptionalHeader): MicrosoftPe_OptionalHeaderDataDirs =
+  template this: untyped = result
+  this = new(MicrosoftPe_OptionalHeaderDataDirs)
+  let root = if root == nil: cast[MicrosoftPe](this) else: cast[MicrosoftPe](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let exportTableExpr = MicrosoftPe_DataDir.read(this.io, this.root, this)
+  this.exportTable = exportTableExpr
+  let importTableExpr = MicrosoftPe_DataDir.read(this.io, this.root, this)
+  this.importTable = importTableExpr
+  let resourceTableExpr = MicrosoftPe_DataDir.read(this.io, this.root, this)
+  this.resourceTable = resourceTableExpr
+  let exceptionTableExpr = MicrosoftPe_DataDir.read(this.io, this.root, this)
+  this.exceptionTable = exceptionTableExpr
+  let certificateTableExpr = MicrosoftPe_DataDir.read(this.io, this.root, this)
+  this.certificateTable = certificateTableExpr
+  let baseRelocationTableExpr = MicrosoftPe_DataDir.read(this.io, this.root, this)
+  this.baseRelocationTable = baseRelocationTableExpr
+  let debugExpr = MicrosoftPe_DataDir.read(this.io, this.root, this)
+  this.debug = debugExpr
+  let architectureExpr = MicrosoftPe_DataDir.read(this.io, this.root, this)
+  this.architecture = architectureExpr
+  let globalPtrExpr = MicrosoftPe_DataDir.read(this.io, this.root, this)
+  this.globalPtr = globalPtrExpr
+  let tlsTableExpr = MicrosoftPe_DataDir.read(this.io, this.root, this)
+  this.tlsTable = tlsTableExpr
+  let loadConfigTableExpr = MicrosoftPe_DataDir.read(this.io, this.root, this)
+  this.loadConfigTable = loadConfigTableExpr
+  let boundImportExpr = MicrosoftPe_DataDir.read(this.io, this.root, this)
+  this.boundImport = boundImportExpr
+  let iatExpr = MicrosoftPe_DataDir.read(this.io, this.root, this)
+  this.iat = iatExpr
+  let delayImportDescriptorExpr = MicrosoftPe_DataDir.read(this.io, this.root, this)
+  this.delayImportDescriptor = delayImportDescriptorExpr
+  let clrRuntimeHeaderExpr = MicrosoftPe_DataDir.read(this.io, this.root, this)
+  this.clrRuntimeHeader = clrRuntimeHeaderExpr
+
+proc fromFile*(_: typedesc[MicrosoftPe_OptionalHeaderDataDirs], filename: string): MicrosoftPe_OptionalHeaderDataDirs =
+  MicrosoftPe_OptionalHeaderDataDirs.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[MicrosoftPe_OptionalHeaderStd], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe_OptionalHeader): MicrosoftPe_OptionalHeaderStd =
+  template this: untyped = result
+  this = new(MicrosoftPe_OptionalHeaderStd)
+  let root = if root == nil: cast[MicrosoftPe](this) else: cast[MicrosoftPe](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let formatExpr = MicrosoftPe_PeFormat(this.io.readU2le())
+  this.format = formatExpr
+  let majorLinkerVersionExpr = this.io.readU1()
+  this.majorLinkerVersion = majorLinkerVersionExpr
+  let minorLinkerVersionExpr = this.io.readU1()
+  this.minorLinkerVersion = minorLinkerVersionExpr
+  let sizeOfCodeExpr = this.io.readU4le()
+  this.sizeOfCode = sizeOfCodeExpr
+  let sizeOfInitializedDataExpr = this.io.readU4le()
+  this.sizeOfInitializedData = sizeOfInitializedDataExpr
+  let sizeOfUninitializedDataExpr = this.io.readU4le()
+  this.sizeOfUninitializedData = sizeOfUninitializedDataExpr
+  let addressOfEntryPointExpr = this.io.readU4le()
+  this.addressOfEntryPoint = addressOfEntryPointExpr
+  let baseOfCodeExpr = this.io.readU4le()
+  this.baseOfCode = baseOfCodeExpr
+  if this.format == microsoft_pe.pe32:
+    let baseOfDataExpr = this.io.readU4le()
+    this.baseOfData = baseOfDataExpr
+
+proc fromFile*(_: typedesc[MicrosoftPe_OptionalHeaderStd], filename: string): MicrosoftPe_OptionalHeaderStd =
+  MicrosoftPe_OptionalHeaderStd.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[MicrosoftPe_OptionalHeaderWindows], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe_OptionalHeader): MicrosoftPe_OptionalHeaderWindows =
   template this: untyped = result
@@ -381,110 +710,6 @@ proc read*(_: typedesc[MicrosoftPe_OptionalHeaderWindows], io: KaitaiStream, roo
 proc fromFile*(_: typedesc[MicrosoftPe_OptionalHeaderWindows], filename: string): MicrosoftPe_OptionalHeaderWindows =
   MicrosoftPe_OptionalHeaderWindows.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[MicrosoftPe_OptionalHeaderDataDirs], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe_OptionalHeader): MicrosoftPe_OptionalHeaderDataDirs =
-  template this: untyped = result
-  this = new(MicrosoftPe_OptionalHeaderDataDirs)
-  let root = if root == nil: cast[MicrosoftPe](this) else: cast[MicrosoftPe](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let exportTableExpr = MicrosoftPe_DataDir.read(this.io, this.root, this)
-  this.exportTable = exportTableExpr
-  let importTableExpr = MicrosoftPe_DataDir.read(this.io, this.root, this)
-  this.importTable = importTableExpr
-  let resourceTableExpr = MicrosoftPe_DataDir.read(this.io, this.root, this)
-  this.resourceTable = resourceTableExpr
-  let exceptionTableExpr = MicrosoftPe_DataDir.read(this.io, this.root, this)
-  this.exceptionTable = exceptionTableExpr
-  let certificateTableExpr = MicrosoftPe_DataDir.read(this.io, this.root, this)
-  this.certificateTable = certificateTableExpr
-  let baseRelocationTableExpr = MicrosoftPe_DataDir.read(this.io, this.root, this)
-  this.baseRelocationTable = baseRelocationTableExpr
-  let debugExpr = MicrosoftPe_DataDir.read(this.io, this.root, this)
-  this.debug = debugExpr
-  let architectureExpr = MicrosoftPe_DataDir.read(this.io, this.root, this)
-  this.architecture = architectureExpr
-  let globalPtrExpr = MicrosoftPe_DataDir.read(this.io, this.root, this)
-  this.globalPtr = globalPtrExpr
-  let tlsTableExpr = MicrosoftPe_DataDir.read(this.io, this.root, this)
-  this.tlsTable = tlsTableExpr
-  let loadConfigTableExpr = MicrosoftPe_DataDir.read(this.io, this.root, this)
-  this.loadConfigTable = loadConfigTableExpr
-  let boundImportExpr = MicrosoftPe_DataDir.read(this.io, this.root, this)
-  this.boundImport = boundImportExpr
-  let iatExpr = MicrosoftPe_DataDir.read(this.io, this.root, this)
-  this.iat = iatExpr
-  let delayImportDescriptorExpr = MicrosoftPe_DataDir.read(this.io, this.root, this)
-  this.delayImportDescriptor = delayImportDescriptorExpr
-  let clrRuntimeHeaderExpr = MicrosoftPe_DataDir.read(this.io, this.root, this)
-  this.clrRuntimeHeader = clrRuntimeHeaderExpr
-
-proc fromFile*(_: typedesc[MicrosoftPe_OptionalHeaderDataDirs], filename: string): MicrosoftPe_OptionalHeaderDataDirs =
-  MicrosoftPe_OptionalHeaderDataDirs.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[MicrosoftPe_DataDir], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe_OptionalHeaderDataDirs): MicrosoftPe_DataDir =
-  template this: untyped = result
-  this = new(MicrosoftPe_DataDir)
-  let root = if root == nil: cast[MicrosoftPe](this) else: cast[MicrosoftPe](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let virtualAddressExpr = this.io.readU4le()
-  this.virtualAddress = virtualAddressExpr
-  let sizeExpr = this.io.readU4le()
-  this.size = sizeExpr
-
-proc fromFile*(_: typedesc[MicrosoftPe_DataDir], filename: string): MicrosoftPe_DataDir =
-  MicrosoftPe_DataDir.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[MicrosoftPe_CoffSymbol], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe_CoffHeader): MicrosoftPe_CoffSymbol =
-  template this: untyped = result
-  this = new(MicrosoftPe_CoffSymbol)
-  let root = if root == nil: cast[MicrosoftPe](this) else: cast[MicrosoftPe](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let rawNameAnnoyingExpr = this.io.readBytes(int(8))
-  this.rawNameAnnoying = rawNameAnnoyingExpr
-  let rawNameAnnoyingIo = newKaitaiStream(rawNameAnnoyingExpr)
-  let nameAnnoyingExpr = MicrosoftPe_Annoyingstring.read(rawNameAnnoyingIo, this.root, this)
-  this.nameAnnoying = nameAnnoyingExpr
-  let valueExpr = this.io.readU4le()
-  this.value = valueExpr
-  let sectionNumberExpr = this.io.readU2le()
-  this.sectionNumber = sectionNumberExpr
-  let typeExpr = this.io.readU2le()
-  this.type = typeExpr
-  let storageClassExpr = this.io.readU1()
-  this.storageClass = storageClassExpr
-  let numberOfAuxSymbolsExpr = this.io.readU1()
-  this.numberOfAuxSymbols = numberOfAuxSymbolsExpr
-
-proc section(this: MicrosoftPe_CoffSymbol): MicrosoftPe_Section = 
-  if this.sectionInstFlag:
-    return this.sectionInst
-  let sectionInstExpr = MicrosoftPe_Section(MicrosoftPe(this.root).pe.sections[(this.sectionNumber - 1)])
-  this.sectionInst = sectionInstExpr
-  this.sectionInstFlag = true
-  return this.sectionInst
-
-proc data(this: MicrosoftPe_CoffSymbol): seq[byte] = 
-  if this.dataInstFlag:
-    return this.dataInst
-  let pos = this.io.pos()
-  this.io.seek(int((this.section.pointerToRawData + this.value)))
-  let dataInstExpr = this.io.readBytes(int(1))
-  this.dataInst = dataInstExpr
-  this.io.seek(pos)
-  this.dataInstFlag = true
-  return this.dataInst
-
-proc fromFile*(_: typedesc[MicrosoftPe_CoffSymbol], filename: string): MicrosoftPe_CoffSymbol =
-  MicrosoftPe_CoffSymbol.read(newKaitaiFileStream(filename), nil, nil)
-
 proc read*(_: typedesc[MicrosoftPe_PeHeader], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe): MicrosoftPe_PeHeader =
   template this: untyped = result
   this = new(MicrosoftPe_PeHeader)
@@ -523,24 +748,6 @@ proc certificateTable(this: MicrosoftPe_PeHeader): MicrosoftPe_CertificateTable 
 
 proc fromFile*(_: typedesc[MicrosoftPe_PeHeader], filename: string): MicrosoftPe_PeHeader =
   MicrosoftPe_PeHeader.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[MicrosoftPe_OptionalHeader], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe_PeHeader): MicrosoftPe_OptionalHeader =
-  template this: untyped = result
-  this = new(MicrosoftPe_OptionalHeader)
-  let root = if root == nil: cast[MicrosoftPe](this) else: cast[MicrosoftPe](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let stdExpr = MicrosoftPe_OptionalHeaderStd.read(this.io, this.root, this)
-  this.std = stdExpr
-  let windowsExpr = MicrosoftPe_OptionalHeaderWindows.read(this.io, this.root, this)
-  this.windows = windowsExpr
-  let dataDirsExpr = MicrosoftPe_OptionalHeaderDataDirs.read(this.io, this.root, this)
-  this.dataDirs = dataDirsExpr
-
-proc fromFile*(_: typedesc[MicrosoftPe_OptionalHeader], filename: string): MicrosoftPe_OptionalHeader =
-  MicrosoftPe_OptionalHeader.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[MicrosoftPe_Section], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe_PeHeader): MicrosoftPe_Section =
   template this: untyped = result
@@ -584,211 +791,4 @@ proc body(this: MicrosoftPe_Section): seq[byte] =
 
 proc fromFile*(_: typedesc[MicrosoftPe_Section], filename: string): MicrosoftPe_Section =
   MicrosoftPe_Section.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[MicrosoftPe_CertificateTable], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe_PeHeader): MicrosoftPe_CertificateTable =
-  template this: untyped = result
-  this = new(MicrosoftPe_CertificateTable)
-  let root = if root == nil: cast[MicrosoftPe](this) else: cast[MicrosoftPe](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  block:
-    var i: int
-    while not this.io.isEof:
-      let it = MicrosoftPe_CertificateEntry.read(this.io, this.root, this)
-      this.items.add(it)
-      inc i
-
-proc fromFile*(_: typedesc[MicrosoftPe_CertificateTable], filename: string): MicrosoftPe_CertificateTable =
-  MicrosoftPe_CertificateTable.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[MicrosoftPe_MzPlaceholder], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe): MicrosoftPe_MzPlaceholder =
-  template this: untyped = result
-  this = new(MicrosoftPe_MzPlaceholder)
-  let root = if root == nil: cast[MicrosoftPe](this) else: cast[MicrosoftPe](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let magicExpr = this.io.readBytes(int(2))
-  this.magic = magicExpr
-  let data1Expr = this.io.readBytes(int(58))
-  this.data1 = data1Expr
-
-  ##[
-  In PE file, an offset to PE header
-  ]##
-  let ofsPeExpr = this.io.readU4le()
-  this.ofsPe = ofsPeExpr
-
-proc fromFile*(_: typedesc[MicrosoftPe_MzPlaceholder], filename: string): MicrosoftPe_MzPlaceholder =
-  MicrosoftPe_MzPlaceholder.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[MicrosoftPe_OptionalHeaderStd], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe_OptionalHeader): MicrosoftPe_OptionalHeaderStd =
-  template this: untyped = result
-  this = new(MicrosoftPe_OptionalHeaderStd)
-  let root = if root == nil: cast[MicrosoftPe](this) else: cast[MicrosoftPe](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let formatExpr = MicrosoftPe_PeFormat(this.io.readU2le())
-  this.format = formatExpr
-  let majorLinkerVersionExpr = this.io.readU1()
-  this.majorLinkerVersion = majorLinkerVersionExpr
-  let minorLinkerVersionExpr = this.io.readU1()
-  this.minorLinkerVersion = minorLinkerVersionExpr
-  let sizeOfCodeExpr = this.io.readU4le()
-  this.sizeOfCode = sizeOfCodeExpr
-  let sizeOfInitializedDataExpr = this.io.readU4le()
-  this.sizeOfInitializedData = sizeOfInitializedDataExpr
-  let sizeOfUninitializedDataExpr = this.io.readU4le()
-  this.sizeOfUninitializedData = sizeOfUninitializedDataExpr
-  let addressOfEntryPointExpr = this.io.readU4le()
-  this.addressOfEntryPoint = addressOfEntryPointExpr
-  let baseOfCodeExpr = this.io.readU4le()
-  this.baseOfCode = baseOfCodeExpr
-  if this.format == microsoft_pe.pe32:
-    let baseOfDataExpr = this.io.readU4le()
-    this.baseOfData = baseOfDataExpr
-
-proc fromFile*(_: typedesc[MicrosoftPe_OptionalHeaderStd], filename: string): MicrosoftPe_OptionalHeaderStd =
-  MicrosoftPe_OptionalHeaderStd.read(newKaitaiFileStream(filename), nil, nil)
-
-
-##[
-@see "3.3. COFF File Header (Object and Image)"
-]##
-proc read*(_: typedesc[MicrosoftPe_CoffHeader], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe_PeHeader): MicrosoftPe_CoffHeader =
-  template this: untyped = result
-  this = new(MicrosoftPe_CoffHeader)
-  let root = if root == nil: cast[MicrosoftPe](this) else: cast[MicrosoftPe](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let machineExpr = MicrosoftPe_CoffHeader_MachineType(this.io.readU2le())
-  this.machine = machineExpr
-  let numberOfSectionsExpr = this.io.readU2le()
-  this.numberOfSections = numberOfSectionsExpr
-  let timeDateStampExpr = this.io.readU4le()
-  this.timeDateStamp = timeDateStampExpr
-  let pointerToSymbolTableExpr = this.io.readU4le()
-  this.pointerToSymbolTable = pointerToSymbolTableExpr
-  let numberOfSymbolsExpr = this.io.readU4le()
-  this.numberOfSymbols = numberOfSymbolsExpr
-  let sizeOfOptionalHeaderExpr = this.io.readU2le()
-  this.sizeOfOptionalHeader = sizeOfOptionalHeaderExpr
-  let characteristicsExpr = this.io.readU2le()
-  this.characteristics = characteristicsExpr
-
-proc symbolTableSize(this: MicrosoftPe_CoffHeader): int = 
-  if this.symbolTableSizeInstFlag:
-    return this.symbolTableSizeInst
-  let symbolTableSizeInstExpr = int((this.numberOfSymbols * 18))
-  this.symbolTableSizeInst = symbolTableSizeInstExpr
-  this.symbolTableSizeInstFlag = true
-  return this.symbolTableSizeInst
-
-proc symbolNameTableOffset(this: MicrosoftPe_CoffHeader): int = 
-  if this.symbolNameTableOffsetInstFlag:
-    return this.symbolNameTableOffsetInst
-  let symbolNameTableOffsetInstExpr = int((this.pointerToSymbolTable + this.symbolTableSize))
-  this.symbolNameTableOffsetInst = symbolNameTableOffsetInstExpr
-  this.symbolNameTableOffsetInstFlag = true
-  return this.symbolNameTableOffsetInst
-
-proc symbolNameTableSize(this: MicrosoftPe_CoffHeader): uint32 = 
-  if this.symbolNameTableSizeInstFlag:
-    return this.symbolNameTableSizeInst
-  let pos = this.io.pos()
-  this.io.seek(int(this.symbolNameTableOffset))
-  let symbolNameTableSizeInstExpr = this.io.readU4le()
-  this.symbolNameTableSizeInst = symbolNameTableSizeInstExpr
-  this.io.seek(pos)
-  this.symbolNameTableSizeInstFlag = true
-  return this.symbolNameTableSizeInst
-
-proc symbolTable(this: MicrosoftPe_CoffHeader): seq[MicrosoftPe_CoffSymbol] = 
-  if this.symbolTableInstFlag:
-    return this.symbolTableInst
-  let pos = this.io.pos()
-  this.io.seek(int(this.pointerToSymbolTable))
-  for i in 0 ..< int(this.numberOfSymbols):
-    let it = MicrosoftPe_CoffSymbol.read(this.io, this.root, this)
-    this.symbolTableInst.add(it)
-  this.io.seek(pos)
-  this.symbolTableInstFlag = true
-  return this.symbolTableInst
-
-proc fromFile*(_: typedesc[MicrosoftPe_CoffHeader], filename: string): MicrosoftPe_CoffHeader =
-  MicrosoftPe_CoffHeader.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[MicrosoftPe_Annoyingstring], io: KaitaiStream, root: KaitaiStruct, parent: MicrosoftPe_CoffSymbol): MicrosoftPe_Annoyingstring =
-  template this: untyped = result
-  this = new(MicrosoftPe_Annoyingstring)
-  let root = if root == nil: cast[MicrosoftPe](this) else: cast[MicrosoftPe](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-
-proc nameFromOffset(this: MicrosoftPe_Annoyingstring): string = 
-  if this.nameFromOffsetInstFlag:
-    return this.nameFromOffsetInst
-  if this.nameZeroes == 0:
-    let io = MicrosoftPe(this.root).io
-    let pos = io.pos()
-    io.seek(int((if this.nameZeroes == 0: (this.parent.parent.symbolNameTableOffset + this.nameOffset) else: 0)))
-    let nameFromOffsetInstExpr = encode(io.readBytesTerm(0, false, true, false), "ascii")
-    this.nameFromOffsetInst = nameFromOffsetInstExpr
-    io.seek(pos)
-  this.nameFromOffsetInstFlag = true
-  return this.nameFromOffsetInst
-
-proc nameOffset(this: MicrosoftPe_Annoyingstring): uint32 = 
-  if this.nameOffsetInstFlag:
-    return this.nameOffsetInst
-  let pos = this.io.pos()
-  this.io.seek(int(4))
-  let nameOffsetInstExpr = this.io.readU4le()
-  this.nameOffsetInst = nameOffsetInstExpr
-  this.io.seek(pos)
-  this.nameOffsetInstFlag = true
-  return this.nameOffsetInst
-
-proc name(this: MicrosoftPe_Annoyingstring): string = 
-  if this.nameInstFlag:
-    return this.nameInst
-  let nameInstExpr = string((if this.nameZeroes == 0: this.nameFromOffset else: this.nameFromShort))
-  this.nameInst = nameInstExpr
-  this.nameInstFlag = true
-  return this.nameInst
-
-proc nameZeroes(this: MicrosoftPe_Annoyingstring): uint32 = 
-  if this.nameZeroesInstFlag:
-    return this.nameZeroesInst
-  let pos = this.io.pos()
-  this.io.seek(int(0))
-  let nameZeroesInstExpr = this.io.readU4le()
-  this.nameZeroesInst = nameZeroesInstExpr
-  this.io.seek(pos)
-  this.nameZeroesInstFlag = true
-  return this.nameZeroesInst
-
-proc nameFromShort(this: MicrosoftPe_Annoyingstring): string = 
-  if this.nameFromShortInstFlag:
-    return this.nameFromShortInst
-  if this.nameZeroes != 0:
-    let pos = this.io.pos()
-    this.io.seek(int(0))
-    let nameFromShortInstExpr = encode(this.io.readBytesTerm(0, false, true, false), "ascii")
-    this.nameFromShortInst = nameFromShortInstExpr
-    this.io.seek(pos)
-  this.nameFromShortInstFlag = true
-  return this.nameFromShortInst
-
-proc fromFile*(_: typedesc[MicrosoftPe_Annoyingstring], filename: string): MicrosoftPe_Annoyingstring =
-  MicrosoftPe_Annoyingstring.read(newKaitaiFileStream(filename), nil, nil)
 

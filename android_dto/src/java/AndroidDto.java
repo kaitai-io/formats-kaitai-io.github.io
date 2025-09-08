@@ -5,6 +5,7 @@ import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Arrays;
 
 
@@ -45,6 +46,100 @@ public class AndroidDto extends KaitaiStruct {
             this.entries.add(new DtTableEntry(this._io, this, _root));
         }
     }
+
+    public void _fetchInstances() {
+        this.header._fetchInstances();
+        for (int i = 0; i < this.entries.size(); i++) {
+            this.entries.get(((Number) (i)).intValue())._fetchInstances();
+        }
+    }
+    public static class DtTableEntry extends KaitaiStruct {
+        public static DtTableEntry fromFile(String fileName) throws IOException {
+            return new DtTableEntry(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public DtTableEntry(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public DtTableEntry(KaitaiStream _io, AndroidDto _parent) {
+            this(_io, _parent, null);
+        }
+
+        public DtTableEntry(KaitaiStream _io, AndroidDto _parent, AndroidDto _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.dtSize = this._io.readU4be();
+            this.dtOffset = this._io.readU4be();
+            this.id = this._io.readU4be();
+            this.rev = this._io.readU4be();
+            this.custom = new ArrayList<Long>();
+            for (int i = 0; i < 4; i++) {
+                this.custom.add(this._io.readU4be());
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.custom.size(); i++) {
+            }
+            body();
+            if (this.body != null) {
+            }
+        }
+        private byte[] body;
+
+        /**
+         * DTB/DTBO file
+         */
+        public byte[] body() {
+            if (this.body != null)
+                return this.body;
+            KaitaiStream io = _root()._io();
+            long _pos = io.pos();
+            io.seek(dtOffset());
+            this.body = io.readBytes(dtSize());
+            io.seek(_pos);
+            return this.body;
+        }
+        private long dtSize;
+        private long dtOffset;
+        private long id;
+        private long rev;
+        private List<Long> custom;
+        private AndroidDto _root;
+        private AndroidDto _parent;
+
+        /**
+         * size of this entry
+         */
+        public long dtSize() { return dtSize; }
+
+        /**
+         * offset from head of dt_table_header
+         */
+        public long dtOffset() { return dtOffset; }
+
+        /**
+         * optional, must be zero if unused
+         */
+        public long id() { return id; }
+
+        /**
+         * optional, must be zero if unused
+         */
+        public long rev() { return rev; }
+
+        /**
+         * optional, must be zero if unused
+         */
+        public List<Long> custom() { return custom; }
+        public AndroidDto _root() { return _root; }
+        public AndroidDto _parent() { return _parent; }
+    }
     public static class DtTableHeader extends KaitaiStruct {
         public static DtTableHeader fromFile(String fileName) throws IOException {
             return new DtTableHeader(new ByteBufferKaitaiStream(fileName));
@@ -66,8 +161,8 @@ public class AndroidDto extends KaitaiStruct {
         }
         private void _read() {
             this.magic = this._io.readBytes(4);
-            if (!(Arrays.equals(magic(), new byte[] { -41, -73, -85, 30 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { -41, -73, -85, 30 }, magic(), _io(), "/types/dt_table_header/seq/0");
+            if (!(Arrays.equals(this.magic, new byte[] { -41, -73, -85, 30 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { -41, -73, -85, 30 }, this.magic, this._io, "/types/dt_table_header/seq/0");
             }
             this.totalSize = this._io.readU4be();
             this.headerSize = this._io.readU4be();
@@ -76,6 +171,9 @@ public class AndroidDto extends KaitaiStruct {
             this.dtEntriesOffset = this._io.readU4be();
             this.pageSize = this._io.readU4be();
             this.version = this._io.readU4be();
+        }
+
+        public void _fetchInstances() {
         }
         private byte[] magic;
         private long totalSize;
@@ -126,91 +224,12 @@ public class AndroidDto extends KaitaiStruct {
         public AndroidDto _root() { return _root; }
         public AndroidDto _parent() { return _parent; }
     }
-    public static class DtTableEntry extends KaitaiStruct {
-        public static DtTableEntry fromFile(String fileName) throws IOException {
-            return new DtTableEntry(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public DtTableEntry(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public DtTableEntry(KaitaiStream _io, AndroidDto _parent) {
-            this(_io, _parent, null);
-        }
-
-        public DtTableEntry(KaitaiStream _io, AndroidDto _parent, AndroidDto _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.dtSize = this._io.readU4be();
-            this.dtOffset = this._io.readU4be();
-            this.id = this._io.readU4be();
-            this.rev = this._io.readU4be();
-            this.custom = new ArrayList<Long>();
-            for (int i = 0; i < 4; i++) {
-                this.custom.add(this._io.readU4be());
-            }
-        }
-        private byte[] body;
-
-        /**
-         * DTB/DTBO file
-         */
-        public byte[] body() {
-            if (this.body != null)
-                return this.body;
-            KaitaiStream io = _root()._io();
-            long _pos = io.pos();
-            io.seek(dtOffset());
-            this.body = io.readBytes(dtSize());
-            io.seek(_pos);
-            return this.body;
-        }
-        private long dtSize;
-        private long dtOffset;
-        private long id;
-        private long rev;
-        private ArrayList<Long> custom;
-        private AndroidDto _root;
-        private AndroidDto _parent;
-
-        /**
-         * size of this entry
-         */
-        public long dtSize() { return dtSize; }
-
-        /**
-         * offset from head of dt_table_header
-         */
-        public long dtOffset() { return dtOffset; }
-
-        /**
-         * optional, must be zero if unused
-         */
-        public long id() { return id; }
-
-        /**
-         * optional, must be zero if unused
-         */
-        public long rev() { return rev; }
-
-        /**
-         * optional, must be zero if unused
-         */
-        public ArrayList<Long> custom() { return custom; }
-        public AndroidDto _root() { return _root; }
-        public AndroidDto _parent() { return _parent; }
-    }
     private DtTableHeader header;
-    private ArrayList<DtTableEntry> entries;
+    private List<DtTableEntry> entries;
     private AndroidDto _root;
     private KaitaiStruct _parent;
     public DtTableHeader header() { return header; }
-    public ArrayList<DtTableEntry> entries() { return entries; }
+    public List<DtTableEntry> entries() { return entries; }
     public AndroidDto _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

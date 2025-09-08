@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -45,8 +45,8 @@ class PythonPyc27 < Kaitai::Struct::Struct
     62211 => :version_v27_a0e,
   }
   I__VERSION = VERSION.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -57,6 +57,25 @@ class PythonPyc27 < Kaitai::Struct::Struct
     @body = PyObject.new(@_io, self, @_root)
     self
   end
+  class Assembly < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @string_magic = @_io.read_bytes(1)
+      raise Kaitai::Struct::ValidationNotEqualError.new([115].pack('C*'), @string_magic, @_io, "/types/assembly/seq/0") if not @string_magic == [115].pack('C*')
+      @length = @_io.read_u4le
+      _io_items = @_io.substream(length)
+      @items = OpArgs.new(_io_items, self, @_root)
+      self
+    end
+    attr_reader :string_magic
+    attr_reader :length
+    attr_reader :items
+    attr_reader :_raw_items
+  end
   class CodeObject < Kaitai::Struct::Struct
 
     FLAGS_ENUM = {
@@ -65,7 +84,7 @@ class PythonPyc27 < Kaitai::Struct::Struct
       32 => :flags_enum_generator,
     }
     I__FLAGS_ENUM = FLAGS_ENUM.invert
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -101,26 +120,6 @@ class PythonPyc27 < Kaitai::Struct::Struct
     attr_reader :name
     attr_reader :first_line_no
     attr_reader :lnotab
-  end
-  class Assembly < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @string_magic = @_io.read_bytes(1)
-      raise Kaitai::Struct::ValidationNotEqualError.new([115].pack('C*'), string_magic, _io, "/types/assembly/seq/0") if not string_magic == [115].pack('C*')
-      @length = @_io.read_u4le
-      @_raw_items = @_io.read_bytes(length)
-      _io__raw_items = Kaitai::Struct::Stream.new(@_raw_items)
-      @items = OpArgs.new(_io__raw_items, self, @_root)
-      self
-    end
-    attr_reader :string_magic
-    attr_reader :length
-    attr_reader :items
-    attr_reader :_raw_items
   end
   class OpArg < Kaitai::Struct::Struct
 
@@ -246,20 +245,37 @@ class PythonPyc27 < Kaitai::Struct::Struct
       147 => :op_code_enum_map_add,
     }
     I__OP_CODE_ENUM = OP_CODE_ENUM.invert
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
       @op_code = Kaitai::Struct::Stream::resolve_enum(OP_CODE_ENUM, @_io.read_u1)
-      if I__OP_CODE_ENUM[op_code] >= I__OP_CODE_ENUM[:op_code_enum_store_name]
+      if (I__OP_CODE_ENUM[op_code] || op_code) >= (I__OP_CODE_ENUM[:op_code_enum_store_name] || :op_code_enum_store_name)
         @arg = @_io.read_u2le
       end
       self
     end
     attr_reader :op_code
     attr_reader :arg
+  end
+  class OpArgs < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @items = []
+      i = 0
+      while not @_io.eof?
+        @items << OpArg.new(@_io, self, @_root)
+        i += 1
+      end
+      self
+    end
+    attr_reader :items
   end
   class PyObject < Kaitai::Struct::Struct
 
@@ -276,7 +292,7 @@ class PythonPyc27 < Kaitai::Struct::Struct
       117 => :object_type_unicode_string,
     }
     I__OBJECT_TYPE = OBJECT_TYPE.invert
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -284,29 +300,43 @@ class PythonPyc27 < Kaitai::Struct::Struct
     def _read
       @type = Kaitai::Struct::Stream::resolve_enum(OBJECT_TYPE, @_io.read_u1)
       case type
-      when :object_type_string
-        @value = PyString.new(@_io, self, @_root)
-      when :object_type_tuple
-        @value = Tuple.new(@_io, self, @_root)
-      when :object_type_int
-        @value = @_io.read_u4le
-      when :object_type_py_true
-        @value = PyTrue.new(@_io, self, @_root)
-      when :object_type_py_false
-        @value = PyFalse.new(@_io, self, @_root)
-      when :object_type_none
-        @value = PyNone.new(@_io, self, @_root)
-      when :object_type_string_ref
-        @value = StringRef.new(@_io, self, @_root)
       when :object_type_code_object
         @value = CodeObject.new(@_io, self, @_root)
+      when :object_type_int
+        @value = @_io.read_u4le
       when :object_type_interned
         @value = InternedString.new(@_io, self, @_root)
+      when :object_type_none
+        @value = PyNone.new(@_io, self, @_root)
+      when :object_type_py_false
+        @value = PyFalse.new(@_io, self, @_root)
+      when :object_type_py_true
+        @value = PyTrue.new(@_io, self, @_root)
+      when :object_type_string
+        @value = PyString.new(@_io, self, @_root)
+      when :object_type_string_ref
+        @value = StringRef.new(@_io, self, @_root)
+      when :object_type_tuple
+        @value = Tuple.new(@_io, self, @_root)
       end
       self
     end
-    class PyNone < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
+    class InternedString < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = nil)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        @length = @_io.read_u4le
+        @data = (@_io.read_bytes(length)).force_encoding("UTF-8")
+        self
+      end
+      attr_reader :length
+      attr_reader :data
+    end
+    class PyFalse < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
@@ -315,8 +345,32 @@ class PythonPyc27 < Kaitai::Struct::Struct
         self
       end
     end
-    class PyFalse < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
+    class PyNone < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = nil)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        self
+      end
+    end
+    class PyString < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = nil)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        @length = @_io.read_u4le
+        @data = @_io.read_bytes(length)
+        self
+      end
+      attr_reader :length
+      attr_reader :data
+    end
+    class PyTrue < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
@@ -326,7 +380,7 @@ class PythonPyc27 < Kaitai::Struct::Struct
       end
     end
     class StringRef < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
@@ -337,18 +391,8 @@ class PythonPyc27 < Kaitai::Struct::Struct
       end
       attr_reader :interned_list_index
     end
-    class PyTrue < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
-
-      def _read
-        self
-      end
-    end
     class Tuple < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
@@ -365,42 +409,14 @@ class PythonPyc27 < Kaitai::Struct::Struct
       attr_reader :items
     end
     class UnicodeString < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
 
       def _read
         @length = @_io.read_u4le
-        @data = (@_io.read_bytes(length)).force_encoding("utf-8")
-        self
-      end
-      attr_reader :length
-      attr_reader :data
-    end
-    class InternedString < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
-
-      def _read
-        @length = @_io.read_u4le
-        @data = (@_io.read_bytes(length)).force_encoding("utf-8")
-        self
-      end
-      attr_reader :length
-      attr_reader :data
-    end
-    class PyString < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
-
-      def _read
-        @length = @_io.read_u4le
-        @data = @_io.read_bytes(length)
+        @data = (@_io.read_bytes(length)).force_encoding("UTF-8")
         self
       end
       attr_reader :length
@@ -408,23 +424,6 @@ class PythonPyc27 < Kaitai::Struct::Struct
     end
     attr_reader :type
     attr_reader :value
-  end
-  class OpArgs < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @items = []
-      i = 0
-      while not @_io.eof?
-        @items << OpArg.new(@_io, self, @_root)
-        i += 1
-      end
-      self
-    end
-    attr_reader :items
   end
   attr_reader :version_magic
   attr_reader :crlf

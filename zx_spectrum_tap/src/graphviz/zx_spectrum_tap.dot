@@ -10,6 +10,17 @@ digraph {
 			<TR><TD PORT="blocks_pos">0</TD><TD PORT="blocks_size">...</TD><TD>Block</TD><TD PORT="blocks_type">blocks</TD></TR>
 			<TR><TD COLSPAN="4" PORT="blocks__repeat">repeat to end of stream</TD></TR>
 		</TABLE>>];
+		subgraph cluster__array_params {
+			label="ZxSpectrumTap::ArrayParams";
+			graph[style=dotted];
+
+			array_params__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="reserved_pos">0</TD><TD PORT="reserved_size">1</TD><TD>u1</TD><TD PORT="reserved_type">reserved</TD></TR>
+				<TR><TD PORT="var_name_pos">1</TD><TD PORT="var_name_size">1</TD><TD>u1</TD><TD PORT="var_name_type">var_name</TD></TR>
+				<TR><TD PORT="reserved1_pos">2</TD><TD PORT="reserved1_size">2</TD><TD>00 80</TD><TD PORT="reserved1_type">reserved1</TD></TR>
+			</TABLE>>];
+		}
 		subgraph cluster__block {
 			label="ZxSpectrumTap::Block";
 			graph[style=dotted];
@@ -19,18 +30,11 @@ digraph {
 				<TR><TD PORT="len_block_pos">0</TD><TD PORT="len_block_size">2</TD><TD>u2le</TD><TD PORT="len_block_type">len_block</TD></TR>
 				<TR><TD PORT="flag_pos">2</TD><TD PORT="flag_size">1</TD><TD>u1→FlagEnum</TD><TD PORT="flag_type">flag</TD></TR>
 				<TR><TD PORT="header_pos">3</TD><TD PORT="header_size">...</TD><TD>Header</TD><TD PORT="header_type">header</TD></TR>
-				<TR><TD PORT="data_pos">...</TD><TD PORT="data_size">(header.len_data + 4)</TD><TD></TD><TD PORT="data_type">data</TD></TR>
-				<TR><TD PORT="headerless_data_pos">...</TD><TD PORT="headerless_data_size">(len_block - 1)</TD><TD></TD><TD PORT="headerless_data_type">headerless_data</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__program_params {
-			label="ZxSpectrumTap::ProgramParams";
-			graph[style=dotted];
-
-			program_params__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="autostart_line_pos">0</TD><TD PORT="autostart_line_size">2</TD><TD>u2le</TD><TD PORT="autostart_line_type">autostart_line</TD></TR>
-				<TR><TD PORT="len_program_pos">2</TD><TD PORT="len_program_size">2</TD><TD>u2le</TD><TD PORT="len_program_type">len_program</TD></TR>
+				<TR><TD COLSPAN="4" PORT="header__if">if  ((len_block == 19) &amp;&amp; (flag == :flag_enum_header)) </TD></TR>
+				<TR><TD PORT="data_pos">...</TD><TD PORT="data_size">header.len_data + 4</TD><TD></TD><TD PORT="data_type">data</TD></TR>
+				<TR><TD COLSPAN="4" PORT="data__if">if len_block == 19</TD></TR>
+				<TR><TD PORT="headerless_data_pos">...</TD><TD PORT="headerless_data_size">len_block - 1</TD><TD></TD><TD PORT="headerless_data_type">headerless_data</TD></TR>
+				<TR><TD COLSPAN="4" PORT="headerless_data__if">if flag == :flag_enum_data</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__bytes_params {
@@ -57,32 +61,35 @@ digraph {
 			</TABLE>>];
 header__seq_params_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
-	<TR><TD>:header_type_enum_program</TD><TD PORT="case0">ProgramParams</TD></TR>
-	<TR><TD>:header_type_enum_num_array</TD><TD PORT="case1">ArrayParams</TD></TR>
-	<TR><TD>:header_type_enum_char_array</TD><TD PORT="case2">ArrayParams</TD></TR>
-	<TR><TD>:header_type_enum_bytes</TD><TD PORT="case3">BytesParams</TD></TR>
+	<TR><TD>:header_type_enum_bytes</TD><TD PORT="case0">BytesParams</TD></TR>
+	<TR><TD>:header_type_enum_char_array</TD><TD PORT="case1">ArrayParams</TD></TR>
+	<TR><TD>:header_type_enum_num_array</TD><TD PORT="case2">ArrayParams</TD></TR>
+	<TR><TD>:header_type_enum_program</TD><TD PORT="case3">ProgramParams</TD></TR>
 </TABLE>>];
 		}
-		subgraph cluster__array_params {
-			label="ZxSpectrumTap::ArrayParams";
+		subgraph cluster__program_params {
+			label="ZxSpectrumTap::ProgramParams";
 			graph[style=dotted];
 
-			array_params__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			program_params__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="reserved_pos">0</TD><TD PORT="reserved_size">1</TD><TD>u1</TD><TD PORT="reserved_type">reserved</TD></TR>
-				<TR><TD PORT="var_name_pos">1</TD><TD PORT="var_name_size">1</TD><TD>u1</TD><TD PORT="var_name_type">var_name</TD></TR>
-				<TR><TD PORT="reserved1_pos">2</TD><TD PORT="reserved1_size">2</TD><TD></TD><TD PORT="reserved1_type">reserved1</TD></TR>
+				<TR><TD PORT="autostart_line_pos">0</TD><TD PORT="autostart_line_size">2</TD><TD>u2le</TD><TD PORT="autostart_line_type">autostart_line</TD></TR>
+				<TR><TD PORT="len_program_pos">2</TD><TD PORT="len_program_size">2</TD><TD>u2le</TD><TD PORT="len_program_type">len_program</TD></TR>
 			</TABLE>>];
 		}
 	}
 	zx_spectrum_tap__seq:blocks_type -> block__seq [style=bold];
 	block__seq:header_type -> header__seq [style=bold];
+	block__seq:len_block_type -> block__seq:header__if [color="#404040"];
+	block__seq:flag_type -> block__seq:header__if [color="#404040"];
 	header__seq:len_data_type -> block__seq:data_size [color="#404040"];
+	block__seq:len_block_type -> block__seq:data__if [color="#404040"];
 	block__seq:len_block_type -> block__seq:headerless_data_size [color="#404040"];
+	block__seq:flag_type -> block__seq:headerless_data__if [color="#404040"];
 	header__seq:params_type -> header__seq_params_switch [style=bold];
-	header__seq_params_switch:case0 -> program_params__seq [style=bold];
+	header__seq_params_switch:case0 -> bytes_params__seq [style=bold];
 	header__seq_params_switch:case1 -> array_params__seq [style=bold];
 	header__seq_params_switch:case2 -> array_params__seq [style=bold];
-	header__seq_params_switch:case3 -> bytes_params__seq [style=bold];
+	header__seq_params_switch:case3 -> program_params__seq [style=bold];
 	header__seq:header_type_type -> header__seq:params_type [color="#404040"];
 }

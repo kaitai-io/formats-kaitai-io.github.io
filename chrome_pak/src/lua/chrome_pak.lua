@@ -41,23 +41,13 @@ function ChromePak:_read()
     self.v5_part = ChromePak.HeaderV5Part(self._io, self, self._root)
   end
   self.resources = {}
-  for i = 0, (self.num_resources + 1) - 1 do
+  for i = 0, self.num_resources + 1 - 1 do
     self.resources[i + 1] = ChromePak.Resource(i, i < self.num_resources, self._io, self, self._root)
   end
   self.aliases = {}
   for i = 0, self.num_aliases - 1 do
     self.aliases[i + 1] = ChromePak.Alias(self._io, self, self._root)
   end
-end
-
-ChromePak.property.num_resources = {}
-function ChromePak.property.num_resources:get()
-  if self._m_num_resources ~= nil then
-    return self._m_num_resources
-  end
-
-  self._m_num_resources = utils.box_unwrap((self.version == 5) and utils.box_wrap(self.v5_part.num_resources) or (self.num_resources_v4))
-  return self._m_num_resources
 end
 
 ChromePak.property.num_aliases = {}
@@ -68,6 +58,16 @@ function ChromePak.property.num_aliases:get()
 
   self._m_num_aliases = utils.box_unwrap((self.version == 5) and utils.box_wrap(self.v5_part.num_aliases) or (0))
   return self._m_num_aliases
+end
+
+ChromePak.property.num_resources = {}
+function ChromePak.property.num_resources:get()
+  if self._m_num_resources ~= nil then
+    return self._m_num_resources
+  end
+
+  self._m_num_resources = utils.box_unwrap((self.version == 5) and utils.box_wrap(self.v5_part.num_resources) or (self.num_resources_v4))
+  return self._m_num_resources
 end
 
 -- 
@@ -87,12 +87,40 @@ end
 -- the next item, so an extra entry is stored with id 0
 -- and offset pointing to the end of the resources.
 
+ChromePak.Alias = class.class(KaitaiStruct)
+
+function ChromePak.Alias:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function ChromePak.Alias:_read()
+  self.id = self._io:read_u2le()
+  self.resource_idx = self._io:read_u2le()
+  if not(self.resource_idx <= self._parent.num_resources - 1) then
+    error("ValidationGreaterThanError")
+  end
+end
+
+ChromePak.Alias.property.resource = {}
+function ChromePak.Alias.property.resource:get()
+  if self._m_resource ~= nil then
+    return self._m_resource
+  end
+
+  self._m_resource = self._parent.resources[self.resource_idx + 1]
+  return self._m_resource
+end
+
+
 ChromePak.HeaderV5Part = class.class(KaitaiStruct)
 
 function ChromePak.HeaderV5Part:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -108,7 +136,7 @@ ChromePak.Resource = class.class(KaitaiStruct)
 function ChromePak.Resource:_init(idx, has_body, io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self.idx = idx
   self.has_body = has_body
   self:_read()
@@ -117,20 +145,6 @@ end
 function ChromePak.Resource:_read()
   self.id = self._io:read_u2le()
   self.ofs_body = self._io:read_u4le()
-end
-
--- 
--- MUST NOT be accessed until the next `resource` is parsed.
-ChromePak.Resource.property.len_body = {}
-function ChromePak.Resource.property.len_body:get()
-  if self._m_len_body ~= nil then
-    return self._m_len_body
-  end
-
-  if self.has_body then
-    self._m_len_body = (self._parent.resources[(self.idx + 1) + 1].ofs_body - self.ofs_body)
-  end
-  return self._m_len_body
 end
 
 -- 
@@ -150,32 +164,18 @@ function ChromePak.Resource.property.body:get()
   return self._m_body
 end
 
-
-ChromePak.Alias = class.class(KaitaiStruct)
-
-function ChromePak.Alias:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function ChromePak.Alias:_read()
-  self.id = self._io:read_u2le()
-  self.resource_idx = self._io:read_u2le()
-  if not(self.resource_idx <= (self._parent.num_resources - 1)) then
-    error("ValidationGreaterThanError")
-  end
-end
-
-ChromePak.Alias.property.resource = {}
-function ChromePak.Alias.property.resource:get()
-  if self._m_resource ~= nil then
-    return self._m_resource
+-- 
+-- MUST NOT be accessed until the next `resource` is parsed.
+ChromePak.Resource.property.len_body = {}
+function ChromePak.Resource.property.len_body:get()
+  if self._m_len_body ~= nil then
+    return self._m_len_body
   end
 
-  self._m_resource = self._parent.resources[self.resource_idx + 1]
-  return self._m_resource
+  if self.has_body then
+    self._m_len_body = self._parent.resources[(self.idx + 1) + 1].ofs_body - self.ofs_body
+  end
+  return self._m_len_body
 end
 
 

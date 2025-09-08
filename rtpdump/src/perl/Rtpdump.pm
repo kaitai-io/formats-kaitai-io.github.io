@@ -2,9 +2,9 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
-use Encode;
+use IO::KaitaiStruct 0.011_000;
 use RtpPacket;
+use Encode;
 
 ########################################################################
 package Rtpdump;
@@ -26,7 +26,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -37,7 +37,7 @@ sub _read {
     my ($self) = @_;
 
     $self->{file_header} = Rtpdump::HeaderT->new($self->{_io}, $self, $self->{_root});
-    $self->{packets} = ();
+    $self->{packets} = [];
     while (!$self->{_io}->is_eof()) {
         push @{$self->{packets}}, Rtpdump::PacketT->new($self->{_io}, $self, $self->{_root});
     }
@@ -73,7 +73,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -85,8 +85,8 @@ sub _read {
 
     $self->{shebang} = $self->{_io}->read_bytes(12);
     $self->{space} = $self->{_io}->read_bytes(1);
-    $self->{ip} = Encode::decode("ascii", $self->{_io}->read_bytes_term(47, 0, 1, 1));
-    $self->{port} = Encode::decode("ascii", $self->{_io}->read_bytes_term(10, 0, 1, 1));
+    $self->{ip} = Encode::decode("ASCII", $self->{_io}->read_bytes_term(47, 0, 1, 1));
+    $self->{port} = Encode::decode("ASCII", $self->{_io}->read_bytes_term(10, 0, 1, 1));
     $self->{start_sec} = $self->{_io}->read_u4be();
     $self->{start_usec} = $self->{_io}->read_u4be();
     $self->{ip2} = $self->{_io}->read_u4be();
@@ -159,7 +159,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 

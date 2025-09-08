@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.Code6502 = factory(root.KaitaiStream);
+    factory(root.Code6502 || (root.Code6502 = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Code6502_, KaitaiStream) {
 /**
  * This spec can be used to disassemble raw stream of 6502 CPU machine
  * code into individual operations. Each operation includes an opcode
@@ -343,315 +343,141 @@ var Code6502 = (function() {
     function Operation(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     Operation.prototype._read = function() {
       this.code = this._io.readU1();
       switch (this.code) {
-      case Code6502.Opcode.BCC_REL:
-        this.args = this._io.readS1();
-        break;
-      case Code6502.Opcode.ORA_IND_Y:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.LDA_IND_Y:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.CPX_ZPG:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.STA_ZPG_X:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.STA_ZPG:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.BCS_REL:
-        this.args = this._io.readS1();
-        break;
-      case Code6502.Opcode.LDY_ZPG_X:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.LSR_ABS_X:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.AND_ABS_X:
-        this.args = this._io.readU2le();
-        break;
       case Code6502.Opcode.ADC_ABS:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.STA_ABS:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.BNE_REL:
-        this.args = this._io.readS1();
-        break;
-      case Code6502.Opcode.LDA_IMM:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.ADC_IMM:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.LSR_ABS:
         this.args = this._io.readU2le();
         break;
       case Code6502.Opcode.ADC_ABS_X:
         this.args = this._io.readU2le();
         break;
-      case Code6502.Opcode.STA_ABS_X:
+      case Code6502.Opcode.ADC_ABS_Y:
         this.args = this._io.readU2le();
         break;
-      case Code6502.Opcode.CPX_IMM:
+      case Code6502.Opcode.ADC_IMM:
         this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.JMP_IND:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.ADC_ZPG:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.EOR_IMM:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.EOR_ABS_X:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.STA_X_IND:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.SBC_IMM:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.CPY_ABS:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.LDX_ABS_Y:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.ADC_ZPG_X:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.BPL_REL:
-        this.args = this._io.readS1();
-        break;
-      case Code6502.Opcode.ORA_IMM:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.ROR_ABS_X:
-        this.args = this._io.readU2le();
         break;
       case Code6502.Opcode.ADC_IND_Y:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.EOR_IND_Y:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.LDA_ABS:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.BIT_ZPG:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.ROL_ZPG:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.STY_ZPG:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.JSR_ABS:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.EOR_ZPG:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.EOR_ABS:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.LDA_ABS_Y:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.LDA_ZPG_X:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.BMI_REL:
-        this.args = this._io.readS1();
-        break;
-      case Code6502.Opcode.STY_ZPG_X:
         this.args = this._io.readU1();
         break;
       case Code6502.Opcode.ADC_X_IND:
         this.args = this._io.readU1();
         break;
-      case Code6502.Opcode.ROL_ABS_X:
+      case Code6502.Opcode.ADC_ZPG:
+        this.args = this._io.readU1();
+        break;
+      case Code6502.Opcode.ADC_ZPG_X:
+        this.args = this._io.readU1();
+        break;
+      case Code6502.Opcode.AND_ABS:
         this.args = this._io.readU2le();
         break;
-      case Code6502.Opcode.STX_ZPG:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.ASL_ABS_X:
+      case Code6502.Opcode.AND_ABS_X:
         this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.LSR_ZPG_X:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.ORA_ZPG_X:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.ADC_ABS_Y:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.LDY_ABS:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.CMP_ABS_X:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.LDA_ABS_X:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.BVS_REL:
-        this.args = this._io.readS1();
-        break;
-      case Code6502.Opcode.LDA_X_IND:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.CMP_IMM:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.INC_ZPG_X:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.ASL_ZPG:
-        this.args = this._io.readU1();
         break;
       case Code6502.Opcode.AND_ABS_Y:
         this.args = this._io.readU2le();
         break;
-      case Code6502.Opcode.LDX_IMM:
+      case Code6502.Opcode.AND_IMM:
+        this.args = this._io.readU1();
+        break;
+      case Code6502.Opcode.AND_IND_Y:
+        this.args = this._io.readU1();
+        break;
+      case Code6502.Opcode.AND_X_IND:
         this.args = this._io.readU1();
         break;
       case Code6502.Opcode.AND_ZPG:
         this.args = this._io.readU1();
         break;
-      case Code6502.Opcode.CPX_ABS:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.DEC_ZPG:
+      case Code6502.Opcode.AND_ZPG_X:
         this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.ROR_ZPG_X:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.LDX_ZPG:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.DEC_ZPG_X:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.SBC_ZPG:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.CMP_ABS:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.ROR_ZPG:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.INC_ABS:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.AND_X_IND:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.SBC_ABS_X:
-        this.args = this._io.readU2le();
         break;
       case Code6502.Opcode.ASL_ABS:
         this.args = this._io.readU2le();
         break;
-      case Code6502.Opcode.EOR_X_IND:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.ORA_ABS_X:
+      case Code6502.Opcode.ASL_ABS_X:
         this.args = this._io.readU2le();
         break;
-      case Code6502.Opcode.LDY_ABS_X:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.SBC_X_IND:
+      case Code6502.Opcode.ASL_ZPG:
         this.args = this._io.readU1();
         break;
       case Code6502.Opcode.ASL_ZPG_X:
         this.args = this._io.readU1();
         break;
-      case Code6502.Opcode.SBC_ABS_Y:
-        this.args = this._io.readU2le();
+      case Code6502.Opcode.BCC_REL:
+        this.args = this._io.readS1();
         break;
-      case Code6502.Opcode.ROL_ABS:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.LSR_ZPG:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.STX_ZPG_Y:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.ORA_ABS_Y:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.EOR_ABS_Y:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.BIT_ABS:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.LDX_ABS:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.LDY_IMM:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.JMP_ABS:
-        this.args = this._io.readU2le();
+      case Code6502.Opcode.BCS_REL:
+        this.args = this._io.readS1();
         break;
       case Code6502.Opcode.BEQ_REL:
         this.args = this._io.readS1();
         break;
-      case Code6502.Opcode.DEC_ABS_X:
+      case Code6502.Opcode.BIT_ABS:
         this.args = this._io.readU2le();
         break;
-      case Code6502.Opcode.AND_IND_Y:
+      case Code6502.Opcode.BIT_ZPG:
         this.args = this._io.readU1();
         break;
-      case Code6502.Opcode.AND_ZPG_X:
-        this.args = this._io.readU1();
+      case Code6502.Opcode.BMI_REL:
+        this.args = this._io.readS1();
         break;
-      case Code6502.Opcode.CMP_ZPG_X:
-        this.args = this._io.readU1();
+      case Code6502.Opcode.BNE_REL:
+        this.args = this._io.readS1();
         break;
-      case Code6502.Opcode.EOR_ZPG_X:
-        this.args = this._io.readU1();
+      case Code6502.Opcode.BPL_REL:
+        this.args = this._io.readS1();
         break;
-      case Code6502.Opcode.SBC_ABS:
+      case Code6502.Opcode.BVC_REL:
+        this.args = this._io.readS1();
+        break;
+      case Code6502.Opcode.BVS_REL:
+        this.args = this._io.readS1();
+        break;
+      case Code6502.Opcode.CMP_ABS:
+        this.args = this._io.readU2le();
+        break;
+      case Code6502.Opcode.CMP_ABS_X:
         this.args = this._io.readU2le();
         break;
       case Code6502.Opcode.CMP_ABS_Y:
         this.args = this._io.readU2le();
         break;
-      case Code6502.Opcode.SBC_IND_Y:
+      case Code6502.Opcode.CMP_IMM:
+        this.args = this._io.readU1();
+        break;
+      case Code6502.Opcode.CMP_IND_Y:
+        this.args = this._io.readU1();
+        break;
+      case Code6502.Opcode.CMP_X_IND:
         this.args = this._io.readU1();
         break;
       case Code6502.Opcode.CMP_ZPG:
         this.args = this._io.readU1();
         break;
-      case Code6502.Opcode.STX_ABS:
+      case Code6502.Opcode.CMP_ZPG_X:
+        this.args = this._io.readU1();
+        break;
+      case Code6502.Opcode.CPX_ABS:
         this.args = this._io.readU2le();
         break;
-      case Code6502.Opcode.STY_ABS:
+      case Code6502.Opcode.CPX_IMM:
+        this.args = this._io.readU1();
+        break;
+      case Code6502.Opcode.CPX_ZPG:
+        this.args = this._io.readU1();
+        break;
+      case Code6502.Opcode.CPY_ABS:
         this.args = this._io.readU2le();
+        break;
+      case Code6502.Opcode.CPY_IMM:
+        this.args = this._io.readU1();
         break;
       case Code6502.Opcode.CPY_ZPG:
         this.args = this._io.readU1();
@@ -659,61 +485,235 @@ var Code6502 = (function() {
       case Code6502.Opcode.DEC_ABS:
         this.args = this._io.readU2le();
         break;
-      case Code6502.Opcode.ROR_ABS:
+      case Code6502.Opcode.DEC_ABS_X:
         this.args = this._io.readU2le();
         break;
-      case Code6502.Opcode.STA_ABS_Y:
+      case Code6502.Opcode.DEC_ZPG:
+        this.args = this._io.readU1();
+        break;
+      case Code6502.Opcode.DEC_ZPG_X:
+        this.args = this._io.readU1();
+        break;
+      case Code6502.Opcode.EOR_ABS:
+        this.args = this._io.readU2le();
+        break;
+      case Code6502.Opcode.EOR_ABS_X:
+        this.args = this._io.readU2le();
+        break;
+      case Code6502.Opcode.EOR_ABS_Y:
+        this.args = this._io.readU2le();
+        break;
+      case Code6502.Opcode.EOR_IMM:
+        this.args = this._io.readU1();
+        break;
+      case Code6502.Opcode.EOR_IND_Y:
+        this.args = this._io.readU1();
+        break;
+      case Code6502.Opcode.EOR_X_IND:
+        this.args = this._io.readU1();
+        break;
+      case Code6502.Opcode.EOR_ZPG:
+        this.args = this._io.readU1();
+        break;
+      case Code6502.Opcode.EOR_ZPG_X:
+        this.args = this._io.readU1();
+        break;
+      case Code6502.Opcode.INC_ABS:
         this.args = this._io.readU2le();
         break;
       case Code6502.Opcode.INC_ABS_X:
         this.args = this._io.readU2le();
         break;
+      case Code6502.Opcode.INC_ZPG:
+        this.args = this._io.readU1();
+        break;
+      case Code6502.Opcode.INC_ZPG_X:
+        this.args = this._io.readU1();
+        break;
+      case Code6502.Opcode.JMP_ABS:
+        this.args = this._io.readU2le();
+        break;
+      case Code6502.Opcode.JMP_IND:
+        this.args = this._io.readU2le();
+        break;
+      case Code6502.Opcode.JSR_ABS:
+        this.args = this._io.readU2le();
+        break;
+      case Code6502.Opcode.LDA_ABS:
+        this.args = this._io.readU2le();
+        break;
+      case Code6502.Opcode.LDA_ABS_X:
+        this.args = this._io.readU2le();
+        break;
+      case Code6502.Opcode.LDA_ABS_Y:
+        this.args = this._io.readU2le();
+        break;
+      case Code6502.Opcode.LDA_IMM:
+        this.args = this._io.readU1();
+        break;
+      case Code6502.Opcode.LDA_IND_Y:
+        this.args = this._io.readU1();
+        break;
+      case Code6502.Opcode.LDA_X_IND:
+        this.args = this._io.readU1();
+        break;
       case Code6502.Opcode.LDA_ZPG:
         this.args = this._io.readU1();
         break;
-      case Code6502.Opcode.CMP_IND_Y:
+      case Code6502.Opcode.LDA_ZPG_X:
         this.args = this._io.readU1();
         break;
-      case Code6502.Opcode.CPY_IMM:
+      case Code6502.Opcode.LDX_ABS:
+        this.args = this._io.readU2le();
+        break;
+      case Code6502.Opcode.LDX_ABS_Y:
+        this.args = this._io.readU2le();
+        break;
+      case Code6502.Opcode.LDX_IMM:
+        this.args = this._io.readU1();
+        break;
+      case Code6502.Opcode.LDX_ZPG:
         this.args = this._io.readU1();
         break;
       case Code6502.Opcode.LDX_ZPG_Y:
         this.args = this._io.readU1();
         break;
-      case Code6502.Opcode.SBC_ZPG_X:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.ORA_X_IND:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.ROL_ZPG_X:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.ORA_ABS:
+      case Code6502.Opcode.LDY_ABS:
         this.args = this._io.readU2le();
         break;
-      case Code6502.Opcode.STA_IND_Y:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.AND_ABS:
+      case Code6502.Opcode.LDY_ABS_X:
         this.args = this._io.readU2le();
         break;
-      case Code6502.Opcode.AND_IMM:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.CMP_X_IND:
+      case Code6502.Opcode.LDY_IMM:
         this.args = this._io.readU1();
         break;
       case Code6502.Opcode.LDY_ZPG:
         this.args = this._io.readU1();
         break;
-      case Code6502.Opcode.INC_ZPG:
+      case Code6502.Opcode.LDY_ZPG_X:
         this.args = this._io.readU1();
         break;
-      case Code6502.Opcode.BVC_REL:
-        this.args = this._io.readS1();
+      case Code6502.Opcode.LSR_ABS:
+        this.args = this._io.readU2le();
+        break;
+      case Code6502.Opcode.LSR_ABS_X:
+        this.args = this._io.readU2le();
+        break;
+      case Code6502.Opcode.LSR_ZPG:
+        this.args = this._io.readU1();
+        break;
+      case Code6502.Opcode.LSR_ZPG_X:
+        this.args = this._io.readU1();
+        break;
+      case Code6502.Opcode.ORA_ABS:
+        this.args = this._io.readU2le();
+        break;
+      case Code6502.Opcode.ORA_ABS_X:
+        this.args = this._io.readU2le();
+        break;
+      case Code6502.Opcode.ORA_ABS_Y:
+        this.args = this._io.readU2le();
+        break;
+      case Code6502.Opcode.ORA_IMM:
+        this.args = this._io.readU1();
+        break;
+      case Code6502.Opcode.ORA_IND_Y:
+        this.args = this._io.readU1();
+        break;
+      case Code6502.Opcode.ORA_X_IND:
+        this.args = this._io.readU1();
         break;
       case Code6502.Opcode.ORA_ZPG:
+        this.args = this._io.readU1();
+        break;
+      case Code6502.Opcode.ORA_ZPG_X:
+        this.args = this._io.readU1();
+        break;
+      case Code6502.Opcode.ROL_ABS:
+        this.args = this._io.readU2le();
+        break;
+      case Code6502.Opcode.ROL_ABS_X:
+        this.args = this._io.readU2le();
+        break;
+      case Code6502.Opcode.ROL_ZPG:
+        this.args = this._io.readU1();
+        break;
+      case Code6502.Opcode.ROL_ZPG_X:
+        this.args = this._io.readU1();
+        break;
+      case Code6502.Opcode.ROR_ABS:
+        this.args = this._io.readU2le();
+        break;
+      case Code6502.Opcode.ROR_ABS_X:
+        this.args = this._io.readU2le();
+        break;
+      case Code6502.Opcode.ROR_ZPG:
+        this.args = this._io.readU1();
+        break;
+      case Code6502.Opcode.ROR_ZPG_X:
+        this.args = this._io.readU1();
+        break;
+      case Code6502.Opcode.SBC_ABS:
+        this.args = this._io.readU2le();
+        break;
+      case Code6502.Opcode.SBC_ABS_X:
+        this.args = this._io.readU2le();
+        break;
+      case Code6502.Opcode.SBC_ABS_Y:
+        this.args = this._io.readU2le();
+        break;
+      case Code6502.Opcode.SBC_IMM:
+        this.args = this._io.readU1();
+        break;
+      case Code6502.Opcode.SBC_IND_Y:
+        this.args = this._io.readU1();
+        break;
+      case Code6502.Opcode.SBC_X_IND:
+        this.args = this._io.readU1();
+        break;
+      case Code6502.Opcode.SBC_ZPG:
+        this.args = this._io.readU1();
+        break;
+      case Code6502.Opcode.SBC_ZPG_X:
+        this.args = this._io.readU1();
+        break;
+      case Code6502.Opcode.STA_ABS:
+        this.args = this._io.readU2le();
+        break;
+      case Code6502.Opcode.STA_ABS_X:
+        this.args = this._io.readU2le();
+        break;
+      case Code6502.Opcode.STA_ABS_Y:
+        this.args = this._io.readU2le();
+        break;
+      case Code6502.Opcode.STA_IND_Y:
+        this.args = this._io.readU1();
+        break;
+      case Code6502.Opcode.STA_X_IND:
+        this.args = this._io.readU1();
+        break;
+      case Code6502.Opcode.STA_ZPG:
+        this.args = this._io.readU1();
+        break;
+      case Code6502.Opcode.STA_ZPG_X:
+        this.args = this._io.readU1();
+        break;
+      case Code6502.Opcode.STX_ABS:
+        this.args = this._io.readU2le();
+        break;
+      case Code6502.Opcode.STX_ZPG:
+        this.args = this._io.readU1();
+        break;
+      case Code6502.Opcode.STX_ZPG_Y:
+        this.args = this._io.readU1();
+        break;
+      case Code6502.Opcode.STY_ABS:
+        this.args = this._io.readU2le();
+        break;
+      case Code6502.Opcode.STY_ZPG:
+        this.args = this._io.readU1();
+        break;
+      case Code6502.Opcode.STY_ZPG_X:
         this.args = this._io.readU1();
         break;
       }
@@ -724,5 +724,5 @@ var Code6502 = (function() {
 
   return Code6502;
 })();
-return Code6502;
-}));
+Code6502_.Code6502 = Code6502;
+});

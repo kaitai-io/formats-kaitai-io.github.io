@@ -31,7 +31,7 @@ function Luks.property.payload:get()
   end
 
   local _pos = self._io:pos()
-  self._io:seek((self.partition_header.payload_offset * 512))
+  self._io:seek(self.partition_header.payload_offset * 512)
   self._m_payload = self._io:read_bytes_full()
   self._io:seek(_pos)
   return self._m_payload
@@ -43,18 +43,18 @@ Luks.PartitionHeader = class.class(KaitaiStruct)
 function Luks.PartitionHeader:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function Luks.PartitionHeader:_read()
   self.magic = self._io:read_bytes(6)
   if not(self.magic == "\076\085\075\083\186\190") then
-    error("not equal, expected " ..  "\076\085\075\083\186\190" .. ", but got " .. self.magic)
+    error("not equal, expected " .. "\076\085\075\083\186\190" .. ", but got " .. self.magic)
   end
   self.version = self._io:read_bytes(2)
   if not(self.version == "\000\001") then
-    error("not equal, expected " ..  "\000\001" .. ", but got " .. self.version)
+    error("not equal, expected " .. "\000\001" .. ", but got " .. self.version)
   end
   self.cipher_name_specification = str_decode.decode(self._io:read_bytes(32), "ASCII")
   self.cipher_mode_specification = str_decode.decode(self._io:read_bytes(32), "ASCII")
@@ -82,7 +82,7 @@ Luks.PartitionHeader.KeySlot.KeySlotStates = enum.Enum {
 function Luks.PartitionHeader.KeySlot:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -101,8 +101,8 @@ function Luks.PartitionHeader.KeySlot.property.key_material:get()
   end
 
   local _pos = self._io:pos()
-  self._io:seek((self.start_sector_of_key_material * 512))
-  self._m_key_material = self._io:read_bytes((self._parent.number_of_key_bytes * self.number_of_anti_forensic_stripes))
+  self._io:seek(self.start_sector_of_key_material * 512)
+  self._m_key_material = self._io:read_bytes(self._parent.number_of_key_bytes * self.number_of_anti_forensic_stripes)
   self._io:seek(_pos)
   return self._m_key_material
 end

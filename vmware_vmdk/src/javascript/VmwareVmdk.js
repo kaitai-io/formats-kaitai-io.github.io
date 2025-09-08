@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.VmwareVmdk = factory(root.KaitaiStream);
+    factory(root.VmwareVmdk || (root.VmwareVmdk = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (VmwareVmdk_, KaitaiStream) {
 /**
  * @see {@link https://github.com/libyal/libvmdk/blob/main/documentation/VMWare%20Virtual%20Disk%20Format%20(VMDK).asciidoc#41-file-header|Source}
  */
@@ -31,8 +31,8 @@ var VmwareVmdk = (function() {
   }
   VmwareVmdk.prototype._read = function() {
     this.magic = this._io.readBytes(4);
-    if (!((KaitaiStream.byteArrayCompare(this.magic, [75, 68, 77, 86]) == 0))) {
-      throw new KaitaiStream.ValidationNotEqualError([75, 68, 77, 86], this.magic, this._io, "/seq/0");
+    if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([75, 68, 77, 86])) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([75, 68, 77, 86]), this.magic, this._io, "/seq/0");
     }
     this.version = this._io.readS4le();
     this.flags = new HeaderFlags(this._io, this, this._root);
@@ -57,7 +57,7 @@ var VmwareVmdk = (function() {
     function HeaderFlags(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -77,21 +77,13 @@ var VmwareVmdk = (function() {
 
     return HeaderFlags;
   })();
-  Object.defineProperty(VmwareVmdk.prototype, 'lenSector', {
-    get: function() {
-      if (this._m_lenSector !== undefined)
-        return this._m_lenSector;
-      this._m_lenSector = 512;
-      return this._m_lenSector;
-    }
-  });
   Object.defineProperty(VmwareVmdk.prototype, 'descriptor', {
     get: function() {
       if (this._m_descriptor !== undefined)
         return this._m_descriptor;
       var _pos = this._io.pos;
-      this._io.seek((this.startDescriptor * this._root.lenSector));
-      this._m_descriptor = this._io.readBytes((this.sizeDescriptor * this._root.lenSector));
+      this._io.seek(this.startDescriptor * this._root.lenSector);
+      this._m_descriptor = this._io.readBytes(this.sizeDescriptor * this._root.lenSector);
       this._io.seek(_pos);
       return this._m_descriptor;
     }
@@ -101,8 +93,8 @@ var VmwareVmdk = (function() {
       if (this._m_grainPrimary !== undefined)
         return this._m_grainPrimary;
       var _pos = this._io.pos;
-      this._io.seek((this.startPrimaryGrain * this._root.lenSector));
-      this._m_grainPrimary = this._io.readBytes((this.sizeGrain * this._root.lenSector));
+      this._io.seek(this.startPrimaryGrain * this._root.lenSector);
+      this._m_grainPrimary = this._io.readBytes(this.sizeGrain * this._root.lenSector);
       this._io.seek(_pos);
       return this._m_grainPrimary;
     }
@@ -112,10 +104,18 @@ var VmwareVmdk = (function() {
       if (this._m_grainSecondary !== undefined)
         return this._m_grainSecondary;
       var _pos = this._io.pos;
-      this._io.seek((this.startSecondaryGrain * this._root.lenSector));
-      this._m_grainSecondary = this._io.readBytes((this.sizeGrain * this._root.lenSector));
+      this._io.seek(this.startSecondaryGrain * this._root.lenSector);
+      this._m_grainSecondary = this._io.readBytes(this.sizeGrain * this._root.lenSector);
       this._io.seek(_pos);
       return this._m_grainSecondary;
+    }
+  });
+  Object.defineProperty(VmwareVmdk.prototype, 'lenSector', {
+    get: function() {
+      if (this._m_lenSector !== undefined)
+        return this._m_lenSector;
+      this._m_lenSector = 512;
+      return this._m_lenSector;
     }
   });
 
@@ -145,5 +145,5 @@ var VmwareVmdk = (function() {
 
   return VmwareVmdk;
 })();
-return VmwareVmdk;
-}));
+VmwareVmdk_.VmwareVmdk = VmwareVmdk;
+});

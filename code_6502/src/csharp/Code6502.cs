@@ -207,67 +207,7 @@ namespace Kaitai
             {
                 _code = ((Code6502.Opcode) m_io.ReadU1());
                 switch (Code) {
-                case Code6502.Opcode.BccRel: {
-                    _args = m_io.ReadS1();
-                    break;
-                }
-                case Code6502.Opcode.OraIndY: {
-                    _args = m_io.ReadU1();
-                    break;
-                }
-                case Code6502.Opcode.LdaIndY: {
-                    _args = m_io.ReadU1();
-                    break;
-                }
-                case Code6502.Opcode.CpxZpg: {
-                    _args = m_io.ReadU1();
-                    break;
-                }
-                case Code6502.Opcode.StaZpgX: {
-                    _args = m_io.ReadU1();
-                    break;
-                }
-                case Code6502.Opcode.StaZpg: {
-                    _args = m_io.ReadU1();
-                    break;
-                }
-                case Code6502.Opcode.BcsRel: {
-                    _args = m_io.ReadS1();
-                    break;
-                }
-                case Code6502.Opcode.LdyZpgX: {
-                    _args = m_io.ReadU1();
-                    break;
-                }
-                case Code6502.Opcode.LsrAbsX: {
-                    _args = m_io.ReadU2le();
-                    break;
-                }
-                case Code6502.Opcode.AndAbsX: {
-                    _args = m_io.ReadU2le();
-                    break;
-                }
                 case Code6502.Opcode.AdcAbs: {
-                    _args = m_io.ReadU2le();
-                    break;
-                }
-                case Code6502.Opcode.StaAbs: {
-                    _args = m_io.ReadU2le();
-                    break;
-                }
-                case Code6502.Opcode.BneRel: {
-                    _args = m_io.ReadS1();
-                    break;
-                }
-                case Code6502.Opcode.LdaImm: {
-                    _args = m_io.ReadU1();
-                    break;
-                }
-                case Code6502.Opcode.AdcImm: {
-                    _args = m_io.ReadU1();
-                    break;
-                }
-                case Code6502.Opcode.LsrAbs: {
                     _args = m_io.ReadU2le();
                     break;
                 }
@@ -275,111 +215,15 @@ namespace Kaitai
                     _args = m_io.ReadU2le();
                     break;
                 }
-                case Code6502.Opcode.StaAbsX: {
+                case Code6502.Opcode.AdcAbsY: {
                     _args = m_io.ReadU2le();
                     break;
                 }
-                case Code6502.Opcode.CpxImm: {
+                case Code6502.Opcode.AdcImm: {
                     _args = m_io.ReadU1();
-                    break;
-                }
-                case Code6502.Opcode.JmpInd: {
-                    _args = m_io.ReadU2le();
-                    break;
-                }
-                case Code6502.Opcode.AdcZpg: {
-                    _args = m_io.ReadU1();
-                    break;
-                }
-                case Code6502.Opcode.EorImm: {
-                    _args = m_io.ReadU1();
-                    break;
-                }
-                case Code6502.Opcode.EorAbsX: {
-                    _args = m_io.ReadU2le();
-                    break;
-                }
-                case Code6502.Opcode.StaXInd: {
-                    _args = m_io.ReadU1();
-                    break;
-                }
-                case Code6502.Opcode.SbcImm: {
-                    _args = m_io.ReadU1();
-                    break;
-                }
-                case Code6502.Opcode.CpyAbs: {
-                    _args = m_io.ReadU2le();
-                    break;
-                }
-                case Code6502.Opcode.LdxAbsY: {
-                    _args = m_io.ReadU2le();
-                    break;
-                }
-                case Code6502.Opcode.AdcZpgX: {
-                    _args = m_io.ReadU1();
-                    break;
-                }
-                case Code6502.Opcode.BplRel: {
-                    _args = m_io.ReadS1();
-                    break;
-                }
-                case Code6502.Opcode.OraImm: {
-                    _args = m_io.ReadU1();
-                    break;
-                }
-                case Code6502.Opcode.RorAbsX: {
-                    _args = m_io.ReadU2le();
                     break;
                 }
                 case Code6502.Opcode.AdcIndY: {
-                    _args = m_io.ReadU1();
-                    break;
-                }
-                case Code6502.Opcode.EorIndY: {
-                    _args = m_io.ReadU1();
-                    break;
-                }
-                case Code6502.Opcode.LdaAbs: {
-                    _args = m_io.ReadU2le();
-                    break;
-                }
-                case Code6502.Opcode.BitZpg: {
-                    _args = m_io.ReadU1();
-                    break;
-                }
-                case Code6502.Opcode.RolZpg: {
-                    _args = m_io.ReadU1();
-                    break;
-                }
-                case Code6502.Opcode.StyZpg: {
-                    _args = m_io.ReadU1();
-                    break;
-                }
-                case Code6502.Opcode.JsrAbs: {
-                    _args = m_io.ReadU2le();
-                    break;
-                }
-                case Code6502.Opcode.EorZpg: {
-                    _args = m_io.ReadU1();
-                    break;
-                }
-                case Code6502.Opcode.EorAbs: {
-                    _args = m_io.ReadU2le();
-                    break;
-                }
-                case Code6502.Opcode.LdaAbsY: {
-                    _args = m_io.ReadU2le();
-                    break;
-                }
-                case Code6502.Opcode.LdaZpgX: {
-                    _args = m_io.ReadU1();
-                    break;
-                }
-                case Code6502.Opcode.BmiRel: {
-                    _args = m_io.ReadS1();
-                    break;
-                }
-                case Code6502.Opcode.StyZpgX: {
                     _args = m_io.ReadU1();
                     break;
                 }
@@ -387,67 +231,35 @@ namespace Kaitai
                     _args = m_io.ReadU1();
                     break;
                 }
-                case Code6502.Opcode.RolAbsX: {
+                case Code6502.Opcode.AdcZpg: {
+                    _args = m_io.ReadU1();
+                    break;
+                }
+                case Code6502.Opcode.AdcZpgX: {
+                    _args = m_io.ReadU1();
+                    break;
+                }
+                case Code6502.Opcode.AndAbs: {
                     _args = m_io.ReadU2le();
                     break;
                 }
-                case Code6502.Opcode.StxZpg: {
-                    _args = m_io.ReadU1();
-                    break;
-                }
-                case Code6502.Opcode.AslAbsX: {
+                case Code6502.Opcode.AndAbsX: {
                     _args = m_io.ReadU2le();
-                    break;
-                }
-                case Code6502.Opcode.LsrZpgX: {
-                    _args = m_io.ReadU1();
-                    break;
-                }
-                case Code6502.Opcode.OraZpgX: {
-                    _args = m_io.ReadU1();
-                    break;
-                }
-                case Code6502.Opcode.AdcAbsY: {
-                    _args = m_io.ReadU2le();
-                    break;
-                }
-                case Code6502.Opcode.LdyAbs: {
-                    _args = m_io.ReadU2le();
-                    break;
-                }
-                case Code6502.Opcode.CmpAbsX: {
-                    _args = m_io.ReadU2le();
-                    break;
-                }
-                case Code6502.Opcode.LdaAbsX: {
-                    _args = m_io.ReadU2le();
-                    break;
-                }
-                case Code6502.Opcode.BvsRel: {
-                    _args = m_io.ReadS1();
-                    break;
-                }
-                case Code6502.Opcode.LdaXInd: {
-                    _args = m_io.ReadU1();
-                    break;
-                }
-                case Code6502.Opcode.CmpImm: {
-                    _args = m_io.ReadU1();
-                    break;
-                }
-                case Code6502.Opcode.IncZpgX: {
-                    _args = m_io.ReadU1();
-                    break;
-                }
-                case Code6502.Opcode.AslZpg: {
-                    _args = m_io.ReadU1();
                     break;
                 }
                 case Code6502.Opcode.AndAbsY: {
                     _args = m_io.ReadU2le();
                     break;
                 }
-                case Code6502.Opcode.LdxImm: {
+                case Code6502.Opcode.AndImm: {
+                    _args = m_io.ReadU1();
+                    break;
+                }
+                case Code6502.Opcode.AndIndY: {
+                    _args = m_io.ReadU1();
+                    break;
+                }
+                case Code6502.Opcode.AndXInd: {
                     _args = m_io.ReadU1();
                     break;
                 }
@@ -455,67 +267,19 @@ namespace Kaitai
                     _args = m_io.ReadU1();
                     break;
                 }
-                case Code6502.Opcode.CpxAbs: {
-                    _args = m_io.ReadU2le();
-                    break;
-                }
-                case Code6502.Opcode.DecZpg: {
+                case Code6502.Opcode.AndZpgX: {
                     _args = m_io.ReadU1();
-                    break;
-                }
-                case Code6502.Opcode.RorZpgX: {
-                    _args = m_io.ReadU1();
-                    break;
-                }
-                case Code6502.Opcode.LdxZpg: {
-                    _args = m_io.ReadU1();
-                    break;
-                }
-                case Code6502.Opcode.DecZpgX: {
-                    _args = m_io.ReadU1();
-                    break;
-                }
-                case Code6502.Opcode.SbcZpg: {
-                    _args = m_io.ReadU1();
-                    break;
-                }
-                case Code6502.Opcode.CmpAbs: {
-                    _args = m_io.ReadU2le();
-                    break;
-                }
-                case Code6502.Opcode.RorZpg: {
-                    _args = m_io.ReadU1();
-                    break;
-                }
-                case Code6502.Opcode.IncAbs: {
-                    _args = m_io.ReadU2le();
-                    break;
-                }
-                case Code6502.Opcode.AndXInd: {
-                    _args = m_io.ReadU1();
-                    break;
-                }
-                case Code6502.Opcode.SbcAbsX: {
-                    _args = m_io.ReadU2le();
                     break;
                 }
                 case Code6502.Opcode.AslAbs: {
                     _args = m_io.ReadU2le();
                     break;
                 }
-                case Code6502.Opcode.EorXInd: {
-                    _args = m_io.ReadU1();
-                    break;
-                }
-                case Code6502.Opcode.OraAbsX: {
+                case Code6502.Opcode.AslAbsX: {
                     _args = m_io.ReadU2le();
                     break;
                 }
-                case Code6502.Opcode.LdyAbsX: {
-                    _args = m_io.ReadU2le();
-                    break;
-                }
-                case Code6502.Opcode.SbcXInd: {
+                case Code6502.Opcode.AslZpg: {
                     _args = m_io.ReadU1();
                     break;
                 }
@@ -523,71 +287,51 @@ namespace Kaitai
                     _args = m_io.ReadU1();
                     break;
                 }
-                case Code6502.Opcode.SbcAbsY: {
-                    _args = m_io.ReadU2le();
+                case Code6502.Opcode.BccRel: {
+                    _args = m_io.ReadS1();
                     break;
                 }
-                case Code6502.Opcode.RolAbs: {
-                    _args = m_io.ReadU2le();
-                    break;
-                }
-                case Code6502.Opcode.LsrZpg: {
-                    _args = m_io.ReadU1();
-                    break;
-                }
-                case Code6502.Opcode.StxZpgY: {
-                    _args = m_io.ReadU1();
-                    break;
-                }
-                case Code6502.Opcode.OraAbsY: {
-                    _args = m_io.ReadU2le();
-                    break;
-                }
-                case Code6502.Opcode.EorAbsY: {
-                    _args = m_io.ReadU2le();
-                    break;
-                }
-                case Code6502.Opcode.BitAbs: {
-                    _args = m_io.ReadU2le();
-                    break;
-                }
-                case Code6502.Opcode.LdxAbs: {
-                    _args = m_io.ReadU2le();
-                    break;
-                }
-                case Code6502.Opcode.LdyImm: {
-                    _args = m_io.ReadU1();
-                    break;
-                }
-                case Code6502.Opcode.JmpAbs: {
-                    _args = m_io.ReadU2le();
+                case Code6502.Opcode.BcsRel: {
+                    _args = m_io.ReadS1();
                     break;
                 }
                 case Code6502.Opcode.BeqRel: {
                     _args = m_io.ReadS1();
                     break;
                 }
-                case Code6502.Opcode.DecAbsX: {
+                case Code6502.Opcode.BitAbs: {
                     _args = m_io.ReadU2le();
                     break;
                 }
-                case Code6502.Opcode.AndIndY: {
+                case Code6502.Opcode.BitZpg: {
                     _args = m_io.ReadU1();
                     break;
                 }
-                case Code6502.Opcode.AndZpgX: {
-                    _args = m_io.ReadU1();
+                case Code6502.Opcode.BmiRel: {
+                    _args = m_io.ReadS1();
                     break;
                 }
-                case Code6502.Opcode.CmpZpgX: {
-                    _args = m_io.ReadU1();
+                case Code6502.Opcode.BneRel: {
+                    _args = m_io.ReadS1();
                     break;
                 }
-                case Code6502.Opcode.EorZpgX: {
-                    _args = m_io.ReadU1();
+                case Code6502.Opcode.BplRel: {
+                    _args = m_io.ReadS1();
                     break;
                 }
-                case Code6502.Opcode.SbcAbs: {
+                case Code6502.Opcode.BvcRel: {
+                    _args = m_io.ReadS1();
+                    break;
+                }
+                case Code6502.Opcode.BvsRel: {
+                    _args = m_io.ReadS1();
+                    break;
+                }
+                case Code6502.Opcode.CmpAbs: {
+                    _args = m_io.ReadU2le();
+                    break;
+                }
+                case Code6502.Opcode.CmpAbsX: {
                     _args = m_io.ReadU2le();
                     break;
                 }
@@ -595,7 +339,15 @@ namespace Kaitai
                     _args = m_io.ReadU2le();
                     break;
                 }
-                case Code6502.Opcode.SbcIndY: {
+                case Code6502.Opcode.CmpImm: {
+                    _args = m_io.ReadU1();
+                    break;
+                }
+                case Code6502.Opcode.CmpIndY: {
+                    _args = m_io.ReadU1();
+                    break;
+                }
+                case Code6502.Opcode.CmpXInd: {
                     _args = m_io.ReadU1();
                     break;
                 }
@@ -603,12 +355,28 @@ namespace Kaitai
                     _args = m_io.ReadU1();
                     break;
                 }
-                case Code6502.Opcode.StxAbs: {
+                case Code6502.Opcode.CmpZpgX: {
+                    _args = m_io.ReadU1();
+                    break;
+                }
+                case Code6502.Opcode.CpxAbs: {
                     _args = m_io.ReadU2le();
                     break;
                 }
-                case Code6502.Opcode.StyAbs: {
+                case Code6502.Opcode.CpxImm: {
+                    _args = m_io.ReadU1();
+                    break;
+                }
+                case Code6502.Opcode.CpxZpg: {
+                    _args = m_io.ReadU1();
+                    break;
+                }
+                case Code6502.Opcode.CpyAbs: {
                     _args = m_io.ReadU2le();
+                    break;
+                }
+                case Code6502.Opcode.CpyImm: {
+                    _args = m_io.ReadU1();
                     break;
                 }
                 case Code6502.Opcode.CpyZpg: {
@@ -619,11 +387,51 @@ namespace Kaitai
                     _args = m_io.ReadU2le();
                     break;
                 }
-                case Code6502.Opcode.RorAbs: {
+                case Code6502.Opcode.DecAbsX: {
                     _args = m_io.ReadU2le();
                     break;
                 }
-                case Code6502.Opcode.StaAbsY: {
+                case Code6502.Opcode.DecZpg: {
+                    _args = m_io.ReadU1();
+                    break;
+                }
+                case Code6502.Opcode.DecZpgX: {
+                    _args = m_io.ReadU1();
+                    break;
+                }
+                case Code6502.Opcode.EorAbs: {
+                    _args = m_io.ReadU2le();
+                    break;
+                }
+                case Code6502.Opcode.EorAbsX: {
+                    _args = m_io.ReadU2le();
+                    break;
+                }
+                case Code6502.Opcode.EorAbsY: {
+                    _args = m_io.ReadU2le();
+                    break;
+                }
+                case Code6502.Opcode.EorImm: {
+                    _args = m_io.ReadU1();
+                    break;
+                }
+                case Code6502.Opcode.EorIndY: {
+                    _args = m_io.ReadU1();
+                    break;
+                }
+                case Code6502.Opcode.EorXInd: {
+                    _args = m_io.ReadU1();
+                    break;
+                }
+                case Code6502.Opcode.EorZpg: {
+                    _args = m_io.ReadU1();
+                    break;
+                }
+                case Code6502.Opcode.EorZpgX: {
+                    _args = m_io.ReadU1();
+                    break;
+                }
+                case Code6502.Opcode.IncAbs: {
                     _args = m_io.ReadU2le();
                     break;
                 }
@@ -631,15 +439,71 @@ namespace Kaitai
                     _args = m_io.ReadU2le();
                     break;
                 }
+                case Code6502.Opcode.IncZpg: {
+                    _args = m_io.ReadU1();
+                    break;
+                }
+                case Code6502.Opcode.IncZpgX: {
+                    _args = m_io.ReadU1();
+                    break;
+                }
+                case Code6502.Opcode.JmpAbs: {
+                    _args = m_io.ReadU2le();
+                    break;
+                }
+                case Code6502.Opcode.JmpInd: {
+                    _args = m_io.ReadU2le();
+                    break;
+                }
+                case Code6502.Opcode.JsrAbs: {
+                    _args = m_io.ReadU2le();
+                    break;
+                }
+                case Code6502.Opcode.LdaAbs: {
+                    _args = m_io.ReadU2le();
+                    break;
+                }
+                case Code6502.Opcode.LdaAbsX: {
+                    _args = m_io.ReadU2le();
+                    break;
+                }
+                case Code6502.Opcode.LdaAbsY: {
+                    _args = m_io.ReadU2le();
+                    break;
+                }
+                case Code6502.Opcode.LdaImm: {
+                    _args = m_io.ReadU1();
+                    break;
+                }
+                case Code6502.Opcode.LdaIndY: {
+                    _args = m_io.ReadU1();
+                    break;
+                }
+                case Code6502.Opcode.LdaXInd: {
+                    _args = m_io.ReadU1();
+                    break;
+                }
                 case Code6502.Opcode.LdaZpg: {
                     _args = m_io.ReadU1();
                     break;
                 }
-                case Code6502.Opcode.CmpIndY: {
+                case Code6502.Opcode.LdaZpgX: {
                     _args = m_io.ReadU1();
                     break;
                 }
-                case Code6502.Opcode.CpyImm: {
+                case Code6502.Opcode.LdxAbs: {
+                    _args = m_io.ReadU2le();
+                    break;
+                }
+                case Code6502.Opcode.LdxAbsY: {
+                    _args = m_io.ReadU2le();
+                    break;
+                }
+                case Code6502.Opcode.LdxImm: {
+                    _args = m_io.ReadU1();
+                    break;
+                }
+                case Code6502.Opcode.LdxZpg: {
                     _args = m_io.ReadU1();
                     break;
                 }
@@ -647,35 +511,15 @@ namespace Kaitai
                     _args = m_io.ReadU1();
                     break;
                 }
-                case Code6502.Opcode.SbcZpgX: {
-                    _args = m_io.ReadU1();
-                    break;
-                }
-                case Code6502.Opcode.OraXInd: {
-                    _args = m_io.ReadU1();
-                    break;
-                }
-                case Code6502.Opcode.RolZpgX: {
-                    _args = m_io.ReadU1();
-                    break;
-                }
-                case Code6502.Opcode.OraAbs: {
+                case Code6502.Opcode.LdyAbs: {
                     _args = m_io.ReadU2le();
                     break;
                 }
-                case Code6502.Opcode.StaIndY: {
-                    _args = m_io.ReadU1();
-                    break;
-                }
-                case Code6502.Opcode.AndAbs: {
+                case Code6502.Opcode.LdyAbsX: {
                     _args = m_io.ReadU2le();
                     break;
                 }
-                case Code6502.Opcode.AndImm: {
-                    _args = m_io.ReadU1();
-                    break;
-                }
-                case Code6502.Opcode.CmpXInd: {
+                case Code6502.Opcode.LdyImm: {
                     _args = m_io.ReadU1();
                     break;
                 }
@@ -683,15 +527,171 @@ namespace Kaitai
                     _args = m_io.ReadU1();
                     break;
                 }
-                case Code6502.Opcode.IncZpg: {
+                case Code6502.Opcode.LdyZpgX: {
                     _args = m_io.ReadU1();
                     break;
                 }
-                case Code6502.Opcode.BvcRel: {
-                    _args = m_io.ReadS1();
+                case Code6502.Opcode.LsrAbs: {
+                    _args = m_io.ReadU2le();
+                    break;
+                }
+                case Code6502.Opcode.LsrAbsX: {
+                    _args = m_io.ReadU2le();
+                    break;
+                }
+                case Code6502.Opcode.LsrZpg: {
+                    _args = m_io.ReadU1();
+                    break;
+                }
+                case Code6502.Opcode.LsrZpgX: {
+                    _args = m_io.ReadU1();
+                    break;
+                }
+                case Code6502.Opcode.OraAbs: {
+                    _args = m_io.ReadU2le();
+                    break;
+                }
+                case Code6502.Opcode.OraAbsX: {
+                    _args = m_io.ReadU2le();
+                    break;
+                }
+                case Code6502.Opcode.OraAbsY: {
+                    _args = m_io.ReadU2le();
+                    break;
+                }
+                case Code6502.Opcode.OraImm: {
+                    _args = m_io.ReadU1();
+                    break;
+                }
+                case Code6502.Opcode.OraIndY: {
+                    _args = m_io.ReadU1();
+                    break;
+                }
+                case Code6502.Opcode.OraXInd: {
+                    _args = m_io.ReadU1();
                     break;
                 }
                 case Code6502.Opcode.OraZpg: {
+                    _args = m_io.ReadU1();
+                    break;
+                }
+                case Code6502.Opcode.OraZpgX: {
+                    _args = m_io.ReadU1();
+                    break;
+                }
+                case Code6502.Opcode.RolAbs: {
+                    _args = m_io.ReadU2le();
+                    break;
+                }
+                case Code6502.Opcode.RolAbsX: {
+                    _args = m_io.ReadU2le();
+                    break;
+                }
+                case Code6502.Opcode.RolZpg: {
+                    _args = m_io.ReadU1();
+                    break;
+                }
+                case Code6502.Opcode.RolZpgX: {
+                    _args = m_io.ReadU1();
+                    break;
+                }
+                case Code6502.Opcode.RorAbs: {
+                    _args = m_io.ReadU2le();
+                    break;
+                }
+                case Code6502.Opcode.RorAbsX: {
+                    _args = m_io.ReadU2le();
+                    break;
+                }
+                case Code6502.Opcode.RorZpg: {
+                    _args = m_io.ReadU1();
+                    break;
+                }
+                case Code6502.Opcode.RorZpgX: {
+                    _args = m_io.ReadU1();
+                    break;
+                }
+                case Code6502.Opcode.SbcAbs: {
+                    _args = m_io.ReadU2le();
+                    break;
+                }
+                case Code6502.Opcode.SbcAbsX: {
+                    _args = m_io.ReadU2le();
+                    break;
+                }
+                case Code6502.Opcode.SbcAbsY: {
+                    _args = m_io.ReadU2le();
+                    break;
+                }
+                case Code6502.Opcode.SbcImm: {
+                    _args = m_io.ReadU1();
+                    break;
+                }
+                case Code6502.Opcode.SbcIndY: {
+                    _args = m_io.ReadU1();
+                    break;
+                }
+                case Code6502.Opcode.SbcXInd: {
+                    _args = m_io.ReadU1();
+                    break;
+                }
+                case Code6502.Opcode.SbcZpg: {
+                    _args = m_io.ReadU1();
+                    break;
+                }
+                case Code6502.Opcode.SbcZpgX: {
+                    _args = m_io.ReadU1();
+                    break;
+                }
+                case Code6502.Opcode.StaAbs: {
+                    _args = m_io.ReadU2le();
+                    break;
+                }
+                case Code6502.Opcode.StaAbsX: {
+                    _args = m_io.ReadU2le();
+                    break;
+                }
+                case Code6502.Opcode.StaAbsY: {
+                    _args = m_io.ReadU2le();
+                    break;
+                }
+                case Code6502.Opcode.StaIndY: {
+                    _args = m_io.ReadU1();
+                    break;
+                }
+                case Code6502.Opcode.StaXInd: {
+                    _args = m_io.ReadU1();
+                    break;
+                }
+                case Code6502.Opcode.StaZpg: {
+                    _args = m_io.ReadU1();
+                    break;
+                }
+                case Code6502.Opcode.StaZpgX: {
+                    _args = m_io.ReadU1();
+                    break;
+                }
+                case Code6502.Opcode.StxAbs: {
+                    _args = m_io.ReadU2le();
+                    break;
+                }
+                case Code6502.Opcode.StxZpg: {
+                    _args = m_io.ReadU1();
+                    break;
+                }
+                case Code6502.Opcode.StxZpgY: {
+                    _args = m_io.ReadU1();
+                    break;
+                }
+                case Code6502.Opcode.StyAbs: {
+                    _args = m_io.ReadU2le();
+                    break;
+                }
+                case Code6502.Opcode.StyZpg: {
+                    _args = m_io.ReadU1();
+                    break;
+                }
+                case Code6502.Opcode.StyZpgX: {
                     _args = m_io.ReadU1();
                     break;
                 }

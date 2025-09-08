@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Arrays;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 
 /**
@@ -88,13 +88,16 @@ public class Au extends KaitaiStruct {
     }
     private void _read() {
         this.magic = this._io.readBytes(4);
-        if (!(Arrays.equals(magic(), new byte[] { 46, 115, 110, 100 }))) {
-            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 46, 115, 110, 100 }, magic(), _io(), "/seq/0");
+        if (!(Arrays.equals(this.magic, new byte[] { 46, 115, 110, 100 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 46, 115, 110, 100 }, this.magic, this._io, "/seq/0");
         }
         this.ofsData = this._io.readU4be();
-        this._raw_header = this._io.readBytes(((ofsData() - 4) - 4));
-        KaitaiStream _io__raw_header = new ByteBufferKaitaiStream(_raw_header);
-        this.header = new Header(_io__raw_header, this, _root);
+        KaitaiStream _io_header = this._io.substream((ofsData() - 4) - 4);
+        this.header = new Header(_io_header, this, _root);
+    }
+
+    public void _fetchInstances() {
+        this.header._fetchInstances();
     }
     public static class Header extends KaitaiStruct {
         public static Header fromFile(String fileName) throws IOException {
@@ -120,10 +123,13 @@ public class Au extends KaitaiStruct {
             this.encoding = Au.Encodings.byId(this._io.readU4be());
             this.sampleRate = this._io.readU4be();
             this.numChannels = this._io.readU4be();
-            if (!(numChannels() >= 1)) {
-                throw new KaitaiStream.ValidationLessThanError(1, numChannels(), _io(), "/types/header/seq/3");
+            if (!(this.numChannels >= 1)) {
+                throw new KaitaiStream.ValidationLessThanError(1, this.numChannels, this._io, "/types/header/seq/3");
             }
-            this.comment = new String(KaitaiStream.bytesTerminate(this._io.readBytesFull(), (byte) 0, false), Charset.forName("ASCII"));
+            this.comment = new String(KaitaiStream.bytesTerminate(this._io.readBytesFull(), (byte) 0, false), StandardCharsets.US_ASCII);
+        }
+
+        public void _fetchInstances() {
         }
         private long dataSize;
         private Encodings encoding;
@@ -172,8 +178,7 @@ public class Au extends KaitaiStruct {
     public Integer lenData() {
         if (this.lenData != null)
             return this.lenData;
-        int _tmp = (int) ((header().dataSize() == 4294967295L ? (_io().size() - ofsData()) : header().dataSize()));
-        this.lenData = _tmp;
+        this.lenData = ((Number) ((header().dataSize() == 4294967295L ? _io().size() - ofsData() : header().dataSize()))).intValue();
         return this.lenData;
     }
     private byte[] magic;
@@ -181,11 +186,9 @@ public class Au extends KaitaiStruct {
     private Header header;
     private Au _root;
     private KaitaiStruct _parent;
-    private byte[] _raw_header;
     public byte[] magic() { return magic; }
     public long ofsData() { return ofsData; }
     public Header header() { return header; }
     public Au _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
-    public byte[] _raw_header() { return _raw_header; }
 }

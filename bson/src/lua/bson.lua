@@ -24,34 +24,17 @@ end
 
 function Bson:_read()
   self.len = self._io:read_s4le()
-  self._raw_fields = self._io:read_bytes((self.len - 5))
+  self._raw_fields = self._io:read_bytes(self.len - 5)
   local _io = KaitaiStream(stringstream(self._raw_fields))
   self.fields = Bson.ElementsList(_io, self, self._root)
   self.terminator = self._io:read_bytes(1)
   if not(self.terminator == "\000") then
-    error("not equal, expected " ..  "\000" .. ", but got " .. self.terminator)
+    error("not equal, expected " .. "\000" .. ", but got " .. self.terminator)
   end
 end
 
 -- 
 -- Total number of bytes comprising the document.
-
--- 
--- Special internal type used by MongoDB replication and sharding. First 4 bytes are an increment, second 4 are a timestamp.
-Bson.Timestamp = class.class(KaitaiStruct)
-
-function Bson.Timestamp:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Bson.Timestamp:_read()
-  self.increment = self._io:read_u4le()
-  self.timestamp = self._io:read_u4le()
-end
-
 
 -- 
 -- The BSON "binary" or "BinData" datatype is used to represent arrays of bytes. It is somewhat analogous to the Java notion of a ByteArray. BSON binary values have a subtype. This is used to indicate what kind of data is in the byte array. Subtypes from zero to 127 are predefined or reserved. Subtypes from 128-255 are user-defined.
@@ -70,7 +53,7 @@ Bson.BinData.Subtype = enum.Enum {
 function Bson.BinData:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -95,7 +78,7 @@ Bson.BinData.ByteArrayDeprecated = class.class(KaitaiStruct)
 function Bson.BinData.ByteArrayDeprecated:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -105,31 +88,30 @@ function Bson.BinData.ByteArrayDeprecated:_read()
 end
 
 
-Bson.ElementsList = class.class(KaitaiStruct)
+Bson.CodeWithScope = class.class(KaitaiStruct)
 
-function Bson.ElementsList:_init(io, parent, root)
+function Bson.CodeWithScope:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function Bson.ElementsList:_read()
-  self.elements = {}
-  local i = 0
-  while not self._io:is_eof() do
-    self.elements[i + 1] = Bson.Element(self._io, self, self._root)
-    i = i + 1
-  end
+function Bson.CodeWithScope:_read()
+  self.id = self._io:read_s4le()
+  self.source = Bson.String(self._io, self, self._root)
+  self.scope = Bson(self._io, self, self._root)
 end
 
+-- 
+-- mapping from identifiers to values, representing the scope in which the string should be evaluated.
 
 Bson.Cstring = class.class(KaitaiStruct)
 
 function Bson.Cstring:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -140,22 +122,18 @@ end
 -- 
 -- MUST NOT contain '\x00', hence it is not full UTF-8.
 
-Bson.String = class.class(KaitaiStruct)
+Bson.DbPointer = class.class(KaitaiStruct)
 
-function Bson.String:_init(io, parent, root)
+function Bson.DbPointer:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function Bson.String:_read()
-  self.len = self._io:read_s4le()
-  self.str = str_decode.decode(self._io:read_bytes((self.len - 1)), "UTF-8")
-  self.terminator = self._io:read_bytes(1)
-  if not(self.terminator == "\000") then
-    error("not equal, expected " ..  "\000" .. ", but got " .. self.terminator)
-  end
+function Bson.DbPointer:_read()
+  self.namespace = Bson.String(self._io, self, self._root)
+  self.id = Bson.ObjectId(self._io, self, self._root)
 end
 
 
@@ -189,7 +167,7 @@ Bson.Element.BsonType = enum.Enum {
 function Bson.Element:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -197,104 +175,62 @@ function Bson.Element:_read()
   self.type_byte = Bson.Element.BsonType(self._io:read_u1())
   self.name = Bson.Cstring(self._io, self, self._root)
   local _on = self.type_byte
-  if _on == Bson.Element.BsonType.code_with_scope then
+  if _on == Bson.Element.BsonType.array then
+    self.content = Bson(self._io, self, self._root)
+  elseif _on == Bson.Element.BsonType.bin_data then
+    self.content = Bson.BinData(self._io, self, self._root)
+  elseif _on == Bson.Element.BsonType.boolean then
+    self.content = self._io:read_u1()
+  elseif _on == Bson.Element.BsonType.code_with_scope then
     self.content = Bson.CodeWithScope(self._io, self, self._root)
-  elseif _on == Bson.Element.BsonType.reg_ex then
-    self.content = Bson.RegEx(self._io, self, self._root)
+  elseif _on == Bson.Element.BsonType.db_pointer then
+    self.content = Bson.DbPointer(self._io, self, self._root)
+  elseif _on == Bson.Element.BsonType.document then
+    self.content = Bson(self._io, self, self._root)
+  elseif _on == Bson.Element.BsonType.javascript then
+    self.content = Bson.String(self._io, self, self._root)
+  elseif _on == Bson.Element.BsonType.number_decimal then
+    self.content = Bson.F16(self._io, self, self._root)
   elseif _on == Bson.Element.BsonType.number_double then
     self.content = self._io:read_f8le()
+  elseif _on == Bson.Element.BsonType.number_int then
+    self.content = self._io:read_s4le()
+  elseif _on == Bson.Element.BsonType.number_long then
+    self.content = self._io:read_s8le()
+  elseif _on == Bson.Element.BsonType.object_id then
+    self.content = Bson.ObjectId(self._io, self, self._root)
+  elseif _on == Bson.Element.BsonType.reg_ex then
+    self.content = Bson.RegEx(self._io, self, self._root)
+  elseif _on == Bson.Element.BsonType.string then
+    self.content = Bson.String(self._io, self, self._root)
   elseif _on == Bson.Element.BsonType.symbol then
     self.content = Bson.String(self._io, self, self._root)
   elseif _on == Bson.Element.BsonType.timestamp then
     self.content = Bson.Timestamp(self._io, self, self._root)
-  elseif _on == Bson.Element.BsonType.number_int then
-    self.content = self._io:read_s4le()
-  elseif _on == Bson.Element.BsonType.document then
-    self.content = Bson(self._io)
-  elseif _on == Bson.Element.BsonType.object_id then
-    self.content = Bson.ObjectId(self._io, self, self._root)
-  elseif _on == Bson.Element.BsonType.javascript then
-    self.content = Bson.String(self._io, self, self._root)
   elseif _on == Bson.Element.BsonType.utc_datetime then
     self.content = self._io:read_s8le()
-  elseif _on == Bson.Element.BsonType.boolean then
-    self.content = self._io:read_u1()
-  elseif _on == Bson.Element.BsonType.number_long then
-    self.content = self._io:read_s8le()
-  elseif _on == Bson.Element.BsonType.bin_data then
-    self.content = Bson.BinData(self._io, self, self._root)
-  elseif _on == Bson.Element.BsonType.string then
-    self.content = Bson.String(self._io, self, self._root)
-  elseif _on == Bson.Element.BsonType.db_pointer then
-    self.content = Bson.DbPointer(self._io, self, self._root)
-  elseif _on == Bson.Element.BsonType.array then
-    self.content = Bson(self._io)
-  elseif _on == Bson.Element.BsonType.number_decimal then
-    self.content = Bson.F16(self._io, self, self._root)
   end
 end
 
 
-Bson.DbPointer = class.class(KaitaiStruct)
+Bson.ElementsList = class.class(KaitaiStruct)
 
-function Bson.DbPointer:_init(io, parent, root)
+function Bson.ElementsList:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function Bson.DbPointer:_read()
-  self.namespace = Bson.String(self._io, self, self._root)
-  self.id = Bson.ObjectId(self._io, self, self._root)
-end
-
-
--- 
--- Implements unsigned 24-bit (3 byte) integer.
-Bson.U3 = class.class(KaitaiStruct)
-
-function Bson.U3:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Bson.U3:_read()
-  self.b1 = self._io:read_u1()
-  self.b2 = self._io:read_u1()
-  self.b3 = self._io:read_u1()
-end
-
-Bson.U3.property.value = {}
-function Bson.U3.property.value:get()
-  if self._m_value ~= nil then
-    return self._m_value
+function Bson.ElementsList:_read()
+  self.elements = {}
+  local i = 0
+  while not self._io:is_eof() do
+    self.elements[i + 1] = Bson.Element(self._io, self, self._root)
+    i = i + 1
   end
-
-  self._m_value = ((self.b1 | (self.b2 << 8)) | (self.b3 << 16))
-  return self._m_value
 end
 
-
-Bson.CodeWithScope = class.class(KaitaiStruct)
-
-function Bson.CodeWithScope:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Bson.CodeWithScope:_read()
-  self.id = self._io:read_s4le()
-  self.source = Bson.String(self._io, self, self._root)
-  self.scope = Bson(self._io)
-end
-
--- 
--- mapping from identifiers to values, representing the scope in which the string should be evaluated.
 
 -- 
 -- 128-bit IEEE 754-2008 decimal floating point.
@@ -303,7 +239,7 @@ Bson.F16 = class.class(KaitaiStruct)
 function Bson.F16:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -323,7 +259,7 @@ Bson.ObjectId = class.class(KaitaiStruct)
 function Bson.ObjectId:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -344,13 +280,77 @@ Bson.RegEx = class.class(KaitaiStruct)
 function Bson.RegEx:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function Bson.RegEx:_read()
   self.pattern = Bson.Cstring(self._io, self, self._root)
   self.options = Bson.Cstring(self._io, self, self._root)
+end
+
+
+Bson.String = class.class(KaitaiStruct)
+
+function Bson.String:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Bson.String:_read()
+  self.len = self._io:read_s4le()
+  self.str = str_decode.decode(self._io:read_bytes(self.len - 1), "UTF-8")
+  self.terminator = self._io:read_bytes(1)
+  if not(self.terminator == "\000") then
+    error("not equal, expected " .. "\000" .. ", but got " .. self.terminator)
+  end
+end
+
+
+-- 
+-- Special internal type used by MongoDB replication and sharding. First 4 bytes are an increment, second 4 are a timestamp.
+Bson.Timestamp = class.class(KaitaiStruct)
+
+function Bson.Timestamp:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Bson.Timestamp:_read()
+  self.increment = self._io:read_u4le()
+  self.timestamp = self._io:read_u4le()
+end
+
+
+-- 
+-- Implements unsigned 24-bit (3 byte) integer.
+Bson.U3 = class.class(KaitaiStruct)
+
+function Bson.U3:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Bson.U3:_read()
+  self.b1 = self._io:read_u1()
+  self.b2 = self._io:read_u1()
+  self.b3 = self._io:read_u1()
+end
+
+Bson.U3.property.value = {}
+function Bson.U3.property.value:get()
+  if self._m_value ~= nil then
+    return self._m_value
+  end
+
+  self._m_value = (self.b1 | self.b2 << 8) | self.b3 << 16
+  return self._m_value
 end
 
 

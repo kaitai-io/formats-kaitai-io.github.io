@@ -4,7 +4,8 @@ import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.ArrayList;
 
 
@@ -42,6 +43,16 @@ public class DosMz extends KaitaiStruct {
         this.header = new ExeHeader(this._io, this, _root);
         this.body = this._io.readBytes(header().lenBody());
     }
+
+    public void _fetchInstances() {
+        this.header._fetchInstances();
+        relocations();
+        if (this.relocations != null) {
+            for (int i = 0; i < this.relocations.size(); i++) {
+                this.relocations.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+    }
     public static class ExeHeader extends KaitaiStruct {
         public static ExeHeader fromFile(String fileName) throws IOException {
             return new ExeHeader(new ByteBufferKaitaiStream(fileName));
@@ -63,14 +74,17 @@ public class DosMz extends KaitaiStruct {
         }
         private void _read() {
             this.mz = new MzHeader(this._io, this, _root);
-            this.restOfHeader = this._io.readBytes((mz().lenHeader() - 28));
+            this.restOfHeader = this._io.readBytes(mz().lenHeader() - 28);
+        }
+
+        public void _fetchInstances() {
+            this.mz._fetchInstances();
         }
         private Integer lenBody;
         public Integer lenBody() {
             if (this.lenBody != null)
                 return this.lenBody;
-            int _tmp = (int) (((mz().lastPageExtraBytes() == 0 ? (mz().numPages() * 512) : (((mz().numPages() - 1) * 512) + mz().lastPageExtraBytes())) - mz().lenHeader()));
-            this.lenBody = _tmp;
+            this.lenBody = ((Number) ((mz().lastPageExtraBytes() == 0 ? mz().numPages() * 512 : (mz().numPages() - 1) * 512 + mz().lastPageExtraBytes()) - mz().lenHeader())).intValue();
             return this.lenBody;
         }
         private MzHeader mz;
@@ -102,9 +116,9 @@ public class DosMz extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.magic = new String(this._io.readBytes(2), Charset.forName("ASCII"));
-            if (!( ((magic().equals("MZ")) || (magic().equals("ZM"))) )) {
-                throw new KaitaiStream.ValidationNotAnyOfError(magic(), _io(), "/types/mz_header/seq/0");
+            this.magic = new String(this._io.readBytes(2), StandardCharsets.US_ASCII);
+            if (!( ((this.magic.equals("MZ")) || (this.magic.equals("ZM"))) )) {
+                throw new KaitaiStream.ValidationNotAnyOfError(this.magic, this._io, "/types/mz_header/seq/0");
             }
             this.lastPageExtraBytes = this._io.readU2le();
             this.numPages = this._io.readU2le();
@@ -120,12 +134,14 @@ public class DosMz extends KaitaiStruct {
             this.ofsRelocations = this._io.readU2le();
             this.overlayId = this._io.readU2le();
         }
+
+        public void _fetchInstances() {
+        }
         private Integer lenHeader;
         public Integer lenHeader() {
             if (this.lenHeader != null)
                 return this.lenHeader;
-            int _tmp = (int) ((headerSize() * 16));
-            this.lenHeader = _tmp;
+            this.lenHeader = ((Number) (headerSize() * 16)).intValue();
             return this.lenHeader;
         }
         private String magic;
@@ -184,6 +200,9 @@ public class DosMz extends KaitaiStruct {
             this.ofs = this._io.readU2le();
             this.seg = this._io.readU2le();
         }
+
+        public void _fetchInstances() {
+        }
         private int ofs;
         private int seg;
         private DosMz _root;
@@ -193,8 +212,8 @@ public class DosMz extends KaitaiStruct {
         public DosMz _root() { return _root; }
         public DosMz _parent() { return _parent; }
     }
-    private ArrayList<Relocation> relocations;
-    public ArrayList<Relocation> relocations() {
+    private List<Relocation> relocations;
+    public List<Relocation> relocations() {
         if (this.relocations != null)
             return this.relocations;
         if (header().mz().ofsRelocations() != 0) {

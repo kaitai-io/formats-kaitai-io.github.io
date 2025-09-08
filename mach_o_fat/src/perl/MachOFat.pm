@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use MachO;
 
 ########################################################################
@@ -25,7 +25,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -37,7 +37,7 @@ sub _read {
 
     $self->{magic} = $self->{_io}->read_bytes(4);
     $self->{num_fat_arch} = $self->{_io}->read_u4be();
-    $self->{fat_archs} = ();
+    $self->{fat_archs} = [];
     my $n_fat_archs = $self->num_fat_arch();
     for (my $i = 0; $i < $n_fat_archs; $i++) {
         push @{$self->{fat_archs}}, MachOFat::FatArch->new($self->{_io}, $self, $self->{_root});
@@ -79,7 +79,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 

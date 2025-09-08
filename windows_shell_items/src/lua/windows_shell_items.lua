@@ -44,84 +44,6 @@ end
 -- 
 -- See also: Section 2.2.1 (https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf)
 
-WindowsShellItems.ShellItemData = class.class(KaitaiStruct)
-
-function WindowsShellItems.ShellItemData:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function WindowsShellItems.ShellItemData:_read()
-  self.code = self._io:read_u1()
-  local _on = self.code
-  if _on == 31 then
-    self.body1 = WindowsShellItems.RootFolderBody(self._io, self, self._root)
-  end
-  local _on = (self.code & 112)
-  if _on == 32 then
-    self.body2 = WindowsShellItems.VolumeBody(self._io, self, self._root)
-  elseif _on == 48 then
-    self.body2 = WindowsShellItems.FileEntryBody(self._io, self, self._root)
-  end
-end
-
-
--- 
--- See also: Section 2.2.2 (https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf)
-WindowsShellItems.ShellItem = class.class(KaitaiStruct)
-
-function WindowsShellItems.ShellItem:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function WindowsShellItems.ShellItem:_read()
-  self.len_data = self._io:read_u2le()
-  if self.len_data >= 2 then
-    self._raw_data = self._io:read_bytes((self.len_data - 2))
-    local _io = KaitaiStream(stringstream(self._raw_data))
-    self.data = WindowsShellItems.ShellItemData(_io, self, self._root)
-  end
-end
-
-
--- 
--- See also: Source (https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#32-root-folder-shell-item)
-WindowsShellItems.RootFolderBody = class.class(KaitaiStruct)
-
-function WindowsShellItems.RootFolderBody:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function WindowsShellItems.RootFolderBody:_read()
-  self.sort_index = self._io:read_u1()
-  self.shell_folder_id = self._io:read_bytes(16)
-end
-
-
--- 
--- See also: Source (https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#33-volume-shell-item)
-WindowsShellItems.VolumeBody = class.class(KaitaiStruct)
-
-function WindowsShellItems.VolumeBody:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function WindowsShellItems.VolumeBody:_read()
-  self.flags = self._io:read_u1()
-end
-
-
 -- 
 -- See also: Source (https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#34-file-entry-shell-item)
 WindowsShellItems.FileEntryBody = class.class(KaitaiStruct)
@@ -129,7 +51,7 @@ WindowsShellItems.FileEntryBody = class.class(KaitaiStruct)
 function WindowsShellItems.FileEntryBody:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -146,7 +68,7 @@ function WindowsShellItems.FileEntryBody.property.is_dir:get()
     return self._m_is_dir
   end
 
-  self._m_is_dir = (self._parent.code & 1) ~= 0
+  self._m_is_dir = self._parent.code & 1 ~= 0
   return self._m_is_dir
 end
 
@@ -156,8 +78,86 @@ function WindowsShellItems.FileEntryBody.property.is_file:get()
     return self._m_is_file
   end
 
-  self._m_is_file = (self._parent.code & 2) ~= 0
+  self._m_is_file = self._parent.code & 2 ~= 0
   return self._m_is_file
+end
+
+
+-- 
+-- See also: Source (https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#32-root-folder-shell-item)
+WindowsShellItems.RootFolderBody = class.class(KaitaiStruct)
+
+function WindowsShellItems.RootFolderBody:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function WindowsShellItems.RootFolderBody:_read()
+  self.sort_index = self._io:read_u1()
+  self.shell_folder_id = self._io:read_bytes(16)
+end
+
+
+-- 
+-- See also: Section 2.2.2 (https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf)
+WindowsShellItems.ShellItem = class.class(KaitaiStruct)
+
+function WindowsShellItems.ShellItem:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function WindowsShellItems.ShellItem:_read()
+  self.len_data = self._io:read_u2le()
+  if self.len_data >= 2 then
+    self._raw_data = self._io:read_bytes(self.len_data - 2)
+    local _io = KaitaiStream(stringstream(self._raw_data))
+    self.data = WindowsShellItems.ShellItemData(_io, self, self._root)
+  end
+end
+
+
+WindowsShellItems.ShellItemData = class.class(KaitaiStruct)
+
+function WindowsShellItems.ShellItemData:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function WindowsShellItems.ShellItemData:_read()
+  self.code = self._io:read_u1()
+  local _on = self.code
+  if _on == 31 then
+    self.body1 = WindowsShellItems.RootFolderBody(self._io, self, self._root)
+  end
+  local _on = self.code & 112
+  if _on == 32 then
+    self.body2 = WindowsShellItems.VolumeBody(self._io, self, self._root)
+  elseif _on == 48 then
+    self.body2 = WindowsShellItems.FileEntryBody(self._io, self, self._root)
+  end
+end
+
+
+-- 
+-- See also: Source (https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#33-volume-shell-item)
+WindowsShellItems.VolumeBody = class.class(KaitaiStruct)
+
+function WindowsShellItems.VolumeBody:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function WindowsShellItems.VolumeBody:_read()
+  self.flags = self._io:read_u1()
 end
 
 

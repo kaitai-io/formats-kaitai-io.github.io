@@ -61,6 +61,27 @@ function PythonPyc27:_read()
 end
 
 
+PythonPyc27.Assembly = class.class(KaitaiStruct)
+
+function PythonPyc27.Assembly:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function PythonPyc27.Assembly:_read()
+  self.string_magic = self._io:read_bytes(1)
+  if not(self.string_magic == "\115") then
+    error("not equal, expected " .. "\115" .. ", but got " .. self.string_magic)
+  end
+  self.length = self._io:read_u4le()
+  self._raw_items = self._io:read_bytes(self.length)
+  local _io = KaitaiStream(stringstream(self._raw_items))
+  self.items = PythonPyc27.OpArgs(_io, self, self._root)
+end
+
+
 PythonPyc27.CodeObject = class.class(KaitaiStruct)
 
 PythonPyc27.CodeObject.FlagsEnum = enum.Enum {
@@ -72,7 +93,7 @@ PythonPyc27.CodeObject.FlagsEnum = enum.Enum {
 function PythonPyc27.CodeObject:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -91,27 +112,6 @@ function PythonPyc27.CodeObject:_read()
   self.name = PythonPyc27.PyObject(self._io, self, self._root)
   self.first_line_no = self._io:read_u4le()
   self.lnotab = PythonPyc27.PyObject(self._io, self, self._root)
-end
-
-
-PythonPyc27.Assembly = class.class(KaitaiStruct)
-
-function PythonPyc27.Assembly:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function PythonPyc27.Assembly:_read()
-  self.string_magic = self._io:read_bytes(1)
-  if not(self.string_magic == "\115") then
-    error("not equal, expected " ..  "\115" .. ", but got " .. self.string_magic)
-  end
-  self.length = self._io:read_u4le()
-  self._raw_items = self._io:read_bytes(self.length)
-  local _io = KaitaiStream(stringstream(self._raw_items))
-  self.items = PythonPyc27.OpArgs(_io, self, self._root)
 end
 
 
@@ -242,7 +242,7 @@ PythonPyc27.OpArg.OpCodeEnum = enum.Enum {
 function PythonPyc27.OpArg:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -250,6 +250,25 @@ function PythonPyc27.OpArg:_read()
   self.op_code = PythonPyc27.OpArg.OpCodeEnum(self._io:read_u1())
   if self.op_code.value >= PythonPyc27.OpArg.OpCodeEnum.store_name.value then
     self.arg = self._io:read_u2le()
+  end
+end
+
+
+PythonPyc27.OpArgs = class.class(KaitaiStruct)
+
+function PythonPyc27.OpArgs:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function PythonPyc27.OpArgs:_read()
+  self.items = {}
+  local i = 0
+  while not self._io:is_eof() do
+    self.items[i + 1] = PythonPyc27.OpArg(self._io, self, self._root)
+    i = i + 1
   end
 end
 
@@ -272,45 +291,47 @@ PythonPyc27.PyObject.ObjectType = enum.Enum {
 function PythonPyc27.PyObject:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function PythonPyc27.PyObject:_read()
   self.type = PythonPyc27.PyObject.ObjectType(self._io:read_u1())
   local _on = self.type
-  if _on == PythonPyc27.PyObject.ObjectType.string then
-    self.value = PythonPyc27.PyObject.PyString(self._io, self, self._root)
-  elseif _on == PythonPyc27.PyObject.ObjectType.tuple then
-    self.value = PythonPyc27.PyObject.Tuple(self._io, self, self._root)
+  if _on == PythonPyc27.PyObject.ObjectType.code_object then
+    self.value = PythonPyc27.CodeObject(self._io, self, self._root)
   elseif _on == PythonPyc27.PyObject.ObjectType.int then
     self.value = self._io:read_u4le()
-  elseif _on == PythonPyc27.PyObject.ObjectType.py_true then
-    self.value = PythonPyc27.PyObject.PyTrue(self._io, self, self._root)
-  elseif _on == PythonPyc27.PyObject.ObjectType.py_false then
-    self.value = PythonPyc27.PyObject.PyFalse(self._io, self, self._root)
-  elseif _on == PythonPyc27.PyObject.ObjectType.none then
-    self.value = PythonPyc27.PyObject.PyNone(self._io, self, self._root)
-  elseif _on == PythonPyc27.PyObject.ObjectType.string_ref then
-    self.value = PythonPyc27.PyObject.StringRef(self._io, self, self._root)
-  elseif _on == PythonPyc27.PyObject.ObjectType.code_object then
-    self.value = PythonPyc27.CodeObject(self._io, self, self._root)
   elseif _on == PythonPyc27.PyObject.ObjectType.interned then
     self.value = PythonPyc27.PyObject.InternedString(self._io, self, self._root)
+  elseif _on == PythonPyc27.PyObject.ObjectType.none then
+    self.value = PythonPyc27.PyObject.PyNone(self._io, self, self._root)
+  elseif _on == PythonPyc27.PyObject.ObjectType.py_false then
+    self.value = PythonPyc27.PyObject.PyFalse(self._io, self, self._root)
+  elseif _on == PythonPyc27.PyObject.ObjectType.py_true then
+    self.value = PythonPyc27.PyObject.PyTrue(self._io, self, self._root)
+  elseif _on == PythonPyc27.PyObject.ObjectType.string then
+    self.value = PythonPyc27.PyObject.PyString(self._io, self, self._root)
+  elseif _on == PythonPyc27.PyObject.ObjectType.string_ref then
+    self.value = PythonPyc27.PyObject.StringRef(self._io, self, self._root)
+  elseif _on == PythonPyc27.PyObject.ObjectType.tuple then
+    self.value = PythonPyc27.PyObject.Tuple(self._io, self, self._root)
   end
 end
 
 
-PythonPyc27.PyObject.PyNone = class.class(KaitaiStruct)
+PythonPyc27.PyObject.InternedString = class.class(KaitaiStruct)
 
-function PythonPyc27.PyObject.PyNone:_init(io, parent, root)
+function PythonPyc27.PyObject.InternedString:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function PythonPyc27.PyObject.PyNone:_read()
+function PythonPyc27.PyObject.InternedString:_read()
+  self.length = self._io:read_u4le()
+  self.data = str_decode.decode(self._io:read_bytes(self.length), "UTF-8")
 end
 
 
@@ -319,7 +340,7 @@ PythonPyc27.PyObject.PyFalse = class.class(KaitaiStruct)
 function PythonPyc27.PyObject.PyFalse:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -327,17 +348,31 @@ function PythonPyc27.PyObject.PyFalse:_read()
 end
 
 
-PythonPyc27.PyObject.StringRef = class.class(KaitaiStruct)
+PythonPyc27.PyObject.PyNone = class.class(KaitaiStruct)
 
-function PythonPyc27.PyObject.StringRef:_init(io, parent, root)
+function PythonPyc27.PyObject.PyNone:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function PythonPyc27.PyObject.StringRef:_read()
-  self.interned_list_index = self._io:read_u4le()
+function PythonPyc27.PyObject.PyNone:_read()
+end
+
+
+PythonPyc27.PyObject.PyString = class.class(KaitaiStruct)
+
+function PythonPyc27.PyObject.PyString:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function PythonPyc27.PyObject.PyString:_read()
+  self.length = self._io:read_u4le()
+  self.data = self._io:read_bytes(self.length)
 end
 
 
@@ -346,11 +381,25 @@ PythonPyc27.PyObject.PyTrue = class.class(KaitaiStruct)
 function PythonPyc27.PyObject.PyTrue:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function PythonPyc27.PyObject.PyTrue:_read()
+end
+
+
+PythonPyc27.PyObject.StringRef = class.class(KaitaiStruct)
+
+function PythonPyc27.PyObject.StringRef:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function PythonPyc27.PyObject.StringRef:_read()
+  self.interned_list_index = self._io:read_u4le()
 end
 
 
@@ -359,7 +408,7 @@ PythonPyc27.PyObject.Tuple = class.class(KaitaiStruct)
 function PythonPyc27.PyObject.Tuple:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -377,62 +426,13 @@ PythonPyc27.PyObject.UnicodeString = class.class(KaitaiStruct)
 function PythonPyc27.PyObject.UnicodeString:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function PythonPyc27.PyObject.UnicodeString:_read()
   self.length = self._io:read_u4le()
-  self.data = str_decode.decode(self._io:read_bytes(self.length), "utf-8")
-end
-
-
-PythonPyc27.PyObject.InternedString = class.class(KaitaiStruct)
-
-function PythonPyc27.PyObject.InternedString:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function PythonPyc27.PyObject.InternedString:_read()
-  self.length = self._io:read_u4le()
-  self.data = str_decode.decode(self._io:read_bytes(self.length), "utf-8")
-end
-
-
-PythonPyc27.PyObject.PyString = class.class(KaitaiStruct)
-
-function PythonPyc27.PyObject.PyString:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function PythonPyc27.PyObject.PyString:_read()
-  self.length = self._io:read_u4le()
-  self.data = self._io:read_bytes(self.length)
-end
-
-
-PythonPyc27.OpArgs = class.class(KaitaiStruct)
-
-function PythonPyc27.OpArgs:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function PythonPyc27.OpArgs:_read()
-  self.items = {}
-  local i = 0
-  while not self._io:is_eof() do
-    self.items[i + 1] = PythonPyc27.OpArg(self._io, self, self._root)
-    i = i + 1
-  end
+  self.data = str_decode.decode(self._io:read_bytes(self.length), "UTF-8")
 end
 
 

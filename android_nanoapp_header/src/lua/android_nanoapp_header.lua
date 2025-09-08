@@ -19,11 +19,11 @@ end
 function AndroidNanoappHeader:_read()
   self.header_version = self._io:read_u4le()
   if not(self.header_version == 1) then
-    error("not equal, expected " ..  1 .. ", but got " .. self.header_version)
+    error("not equal, expected " .. 1 .. ", but got " .. self.header_version)
   end
   self.magic = self._io:read_bytes(4)
   if not(self.magic == "\078\065\078\079") then
-    error("not equal, expected " ..  "\078\065\078\079" .. ", but got " .. self.magic)
+    error("not equal, expected " .. "\078\065\078\079" .. ", but got " .. self.magic)
   end
   self.app_id = self._io:read_u8le()
   self.app_version = self._io:read_u4le()
@@ -33,18 +33,8 @@ function AndroidNanoappHeader:_read()
   self.chre_api_minor_version = self._io:read_u1()
   self.reserved = self._io:read_bytes(6)
   if not(self.reserved == "\000\000\000\000\000\000") then
-    error("not equal, expected " ..  "\000\000\000\000\000\000" .. ", but got " .. self.reserved)
+    error("not equal, expected " .. "\000\000\000\000\000\000" .. ", but got " .. self.reserved)
   end
-end
-
-AndroidNanoappHeader.property.is_signed = {}
-function AndroidNanoappHeader.property.is_signed:get()
-  if self._m_is_signed ~= nil then
-    return self._m_is_signed
-  end
-
-  self._m_is_signed = (self.flags & 1) ~= 0
-  return self._m_is_signed
 end
 
 AndroidNanoappHeader.property.is_encrypted = {}
@@ -53,8 +43,18 @@ function AndroidNanoappHeader.property.is_encrypted:get()
     return self._m_is_encrypted
   end
 
-  self._m_is_encrypted = (self.flags & 2) ~= 0
+  self._m_is_encrypted = self.flags & 2 ~= 0
   return self._m_is_encrypted
+end
+
+AndroidNanoappHeader.property.is_signed = {}
+function AndroidNanoappHeader.property.is_signed:get()
+  if self._m_is_signed ~= nil then
+    return self._m_is_signed
+  end
+
+  self._m_is_signed = self.flags & 1 ~= 0
+  return self._m_is_signed
 end
 
 AndroidNanoappHeader.property.is_tcm_capable = {}
@@ -63,7 +63,7 @@ function AndroidNanoappHeader.property.is_tcm_capable:get()
     return self._m_is_tcm_capable
   end
 
-  self._m_is_tcm_capable = (self.flags & 4) ~= 0
+  self._m_is_tcm_capable = self.flags & 4 ~= 0
   return self._m_is_tcm_capable
 end
 

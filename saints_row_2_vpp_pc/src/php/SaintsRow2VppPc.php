@@ -3,15 +3,15 @@
 
 namespace {
     class SaintsRow2VppPc extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \SaintsRow2VppPc $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\SaintsRow2VppPc $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic = $this->_io->readBytes(5);
-            if (!($this->magic() == "\xCE\x0A\x89\x51\x04")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\xCE\x0A\x89\x51\x04", $this->magic(), $this->_io(), "/seq/0");
+            if (!($this->_m_magic == "\xCE\x0A\x89\x51\x04")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\xCE\x0A\x89\x51\x04", $this->_m_magic, $this->_io, "/seq/0");
             }
             $this->_m_pad1 = $this->_io->readBytes(335);
             $this->_m_numFiles = $this->_io->readS4le();
@@ -25,42 +25,11 @@ namespace {
             $this->_m_smth8 = $this->_io->readS4le();
             $this->_m_smth9 = $this->_io->readS4le();
         }
-        protected $_m_filenames;
-        public function filenames() {
-            if ($this->_m_filenames !== null)
-                return $this->_m_filenames;
-            $_pos = $this->_io->pos();
-            $this->_io->seek($this->ofsFilenames());
-            $this->_m__raw_filenames = $this->_io->readBytes($this->lenFilenames());
-            $_io__raw_filenames = new \Kaitai\Struct\Stream($this->_m__raw_filenames);
-            $this->_m_filenames = new \SaintsRow2VppPc\Strings($_io__raw_filenames, $this, $this->_root);
-            $this->_io->seek($_pos);
-            return $this->_m_filenames;
-        }
-        protected $_m_ofsExtensions;
-        public function ofsExtensions() {
-            if ($this->_m_ofsExtensions !== null)
-                return $this->_m_ofsExtensions;
-            $this->_m_ofsExtensions = ((($this->ofsFilenames() + $this->lenFilenames()) & 4294965248) + 2048);
-            return $this->_m_ofsExtensions;
-        }
-        protected $_m_files;
-        public function files() {
-            if ($this->_m_files !== null)
-                return $this->_m_files;
-            $_pos = $this->_io->pos();
-            $this->_io->seek(2048);
-            $this->_m__raw_files = $this->_io->readBytes($this->lenOffsets());
-            $_io__raw_files = new \Kaitai\Struct\Stream($this->_m__raw_files);
-            $this->_m_files = new \SaintsRow2VppPc\Offsets($_io__raw_files, $this, $this->_root);
-            $this->_io->seek($_pos);
-            return $this->_m_files;
-        }
         protected $_m_dataStart;
         public function dataStart() {
             if ($this->_m_dataStart !== null)
                 return $this->_m_dataStart;
-            $this->_m_dataStart = ((($this->ofsExtensions() + $this->lenExtensions()) & 4294965248) + 2048);
+            $this->_m_dataStart = ($this->ofsExtensions() + $this->lenExtensions() & 4294965248) + 2048;
             return $this->_m_dataStart;
         }
         protected $_m_extensions;
@@ -75,11 +44,42 @@ namespace {
             $this->_io->seek($_pos);
             return $this->_m_extensions;
         }
+        protected $_m_filenames;
+        public function filenames() {
+            if ($this->_m_filenames !== null)
+                return $this->_m_filenames;
+            $_pos = $this->_io->pos();
+            $this->_io->seek($this->ofsFilenames());
+            $this->_m__raw_filenames = $this->_io->readBytes($this->lenFilenames());
+            $_io__raw_filenames = new \Kaitai\Struct\Stream($this->_m__raw_filenames);
+            $this->_m_filenames = new \SaintsRow2VppPc\Strings($_io__raw_filenames, $this, $this->_root);
+            $this->_io->seek($_pos);
+            return $this->_m_filenames;
+        }
+        protected $_m_files;
+        public function files() {
+            if ($this->_m_files !== null)
+                return $this->_m_files;
+            $_pos = $this->_io->pos();
+            $this->_io->seek(2048);
+            $this->_m__raw_files = $this->_io->readBytes($this->lenOffsets());
+            $_io__raw_files = new \Kaitai\Struct\Stream($this->_m__raw_files);
+            $this->_m_files = new \SaintsRow2VppPc\Offsets($_io__raw_files, $this, $this->_root);
+            $this->_io->seek($_pos);
+            return $this->_m_files;
+        }
+        protected $_m_ofsExtensions;
+        public function ofsExtensions() {
+            if ($this->_m_ofsExtensions !== null)
+                return $this->_m_ofsExtensions;
+            $this->_m_ofsExtensions = ($this->ofsFilenames() + $this->lenFilenames() & 4294965248) + 2048;
+            return $this->_m_ofsExtensions;
+        }
         protected $_m_ofsFilenames;
         public function ofsFilenames() {
             if ($this->_m_ofsFilenames !== null)
                 return $this->_m_ofsFilenames;
-            $this->_m_ofsFilenames = (((2048 + $this->lenOffsets()) & 4294965248) + 2048);
+            $this->_m_ofsFilenames = (2048 + $this->lenOffsets() & 4294965248) + 2048;
             return $this->_m_ofsFilenames;
         }
         protected $_m_magic;
@@ -94,9 +94,9 @@ namespace {
         protected $_m_smth7;
         protected $_m_smth8;
         protected $_m_smth9;
+        protected $_m__raw_extensions;
         protected $_m__raw_filenames;
         protected $_m__raw_files;
-        protected $_m__raw_extensions;
         public function magic() { return $this->_m_magic; }
         public function pad1() { return $this->_m_pad1; }
         public function numFiles() { return $this->_m_numFiles; }
@@ -109,15 +109,15 @@ namespace {
         public function smth7() { return $this->_m_smth7; }
         public function smth8() { return $this->_m_smth8; }
         public function smth9() { return $this->_m_smth9; }
+        public function _raw_extensions() { return $this->_m__raw_extensions; }
         public function _raw_filenames() { return $this->_m__raw_filenames; }
         public function _raw_files() { return $this->_m__raw_files; }
-        public function _raw_extensions() { return $this->_m__raw_extensions; }
     }
 }
 
 namespace SaintsRow2VppPc {
     class Offsets extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \SaintsRow2VppPc $_parent = null, \SaintsRow2VppPc $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\SaintsRow2VppPc $_parent = null, ?\SaintsRow2VppPc $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -137,7 +137,7 @@ namespace SaintsRow2VppPc {
 
 namespace SaintsRow2VppPc\Offsets {
     class Offset extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \SaintsRow2VppPc\Offsets $_parent = null, \SaintsRow2VppPc $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\SaintsRow2VppPc\Offsets $_parent = null, ?\SaintsRow2VppPc $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -151,16 +151,16 @@ namespace SaintsRow2VppPc\Offsets {
             $this->_m_alwaysMinus1 = $this->_io->readS4le();
             $this->_m_alwaysZero = $this->_io->readS4le();
         }
-        protected $_m_filename;
-        public function filename() {
-            if ($this->_m_filename !== null)
-                return $this->_m_filename;
-            $io = $this->_root()->filenames()->_io();
+        protected $_m_body;
+        public function body() {
+            if ($this->_m_body !== null)
+                return $this->_m_body;
+            $io = $this->_root()->_io();
             $_pos = $io->pos();
-            $io->seek($this->nameOfs());
-            $this->_m_filename = \Kaitai\Struct\Stream::bytesToStr($io->readBytesTerm(0, false, true, true), "UTF-8");
+            $io->seek($this->_root()->dataStart() + $this->ofsBody());
+            $this->_m_body = $io->readBytes($this->lenBody());
             $io->seek($_pos);
-            return $this->_m_filename;
+            return $this->_m_body;
         }
         protected $_m_ext;
         public function ext() {
@@ -173,16 +173,16 @@ namespace SaintsRow2VppPc\Offsets {
             $io->seek($_pos);
             return $this->_m_ext;
         }
-        protected $_m_body;
-        public function body() {
-            if ($this->_m_body !== null)
-                return $this->_m_body;
-            $io = $this->_root()->_io();
+        protected $_m_filename;
+        public function filename() {
+            if ($this->_m_filename !== null)
+                return $this->_m_filename;
+            $io = $this->_root()->filenames()->_io();
             $_pos = $io->pos();
-            $io->seek(($this->_root()->dataStart() + $this->ofsBody()));
-            $this->_m_body = $io->readBytes($this->lenBody());
+            $io->seek($this->nameOfs());
+            $this->_m_filename = \Kaitai\Struct\Stream::bytesToStr($io->readBytesTerm(0, false, true, true), "UTF-8");
             $io->seek($_pos);
-            return $this->_m_body;
+            return $this->_m_filename;
         }
         protected $_m_nameOfs;
         protected $_m_extOfs;
@@ -203,7 +203,7 @@ namespace SaintsRow2VppPc\Offsets {
 
 namespace SaintsRow2VppPc {
     class Strings extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \SaintsRow2VppPc $_parent = null, \SaintsRow2VppPc $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\SaintsRow2VppPc $_parent = null, ?\SaintsRow2VppPc $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }

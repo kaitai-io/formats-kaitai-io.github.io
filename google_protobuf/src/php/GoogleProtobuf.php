@@ -33,8 +33,8 @@
 
 namespace {
     class GoogleProtobuf extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \GoogleProtobuf $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\GoogleProtobuf $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -55,13 +55,31 @@ namespace {
     }
 }
 
+namespace GoogleProtobuf {
+    class DelimitedBytes extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\GoogleProtobuf\Pair $_parent = null, ?\GoogleProtobuf $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_len = new \VlqBase128Le($this->_io);
+            $this->_m_body = $this->_io->readBytes($this->len()->value());
+        }
+        protected $_m_len;
+        protected $_m_body;
+        public function len() { return $this->_m_len; }
+        public function body() { return $this->_m_body; }
+    }
+}
+
 /**
  * Key-value pair
  */
 
 namespace GoogleProtobuf {
     class Pair extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \GoogleProtobuf $_parent = null, \GoogleProtobuf $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\GoogleProtobuf $_parent = null, ?\GoogleProtobuf $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -69,19 +87,31 @@ namespace GoogleProtobuf {
         private function _read() {
             $this->_m_key = new \VlqBase128Le($this->_io);
             switch ($this->wireType()) {
-                case \GoogleProtobuf\Pair\WireTypes::VARINT:
-                    $this->_m_value = new \VlqBase128Le($this->_io);
-                    break;
-                case \GoogleProtobuf\Pair\WireTypes::LEN_DELIMITED:
-                    $this->_m_value = new \GoogleProtobuf\DelimitedBytes($this->_io, $this, $this->_root);
+                case \GoogleProtobuf\Pair\WireTypes::BIT_32:
+                    $this->_m_value = $this->_io->readU4le();
                     break;
                 case \GoogleProtobuf\Pair\WireTypes::BIT_64:
                     $this->_m_value = $this->_io->readU8le();
                     break;
-                case \GoogleProtobuf\Pair\WireTypes::BIT_32:
-                    $this->_m_value = $this->_io->readU4le();
+                case \GoogleProtobuf\Pair\WireTypes::LEN_DELIMITED:
+                    $this->_m_value = new \GoogleProtobuf\DelimitedBytes($this->_io, $this, $this->_root);
+                    break;
+                case \GoogleProtobuf\Pair\WireTypes::VARINT:
+                    $this->_m_value = new \VlqBase128Le($this->_io);
                     break;
             }
+        }
+        protected $_m_fieldTag;
+
+        /**
+         * Identifies a field of protocol. One can look up symbolic
+         * field name in a `.proto` file by this field tag.
+         */
+        public function fieldTag() {
+            if ($this->_m_fieldTag !== null)
+                return $this->_m_fieldTag;
+            $this->_m_fieldTag = $this->key()->value() >> 3;
+            return $this->_m_fieldTag;
         }
         protected $_m_wireType;
 
@@ -97,20 +127,8 @@ namespace GoogleProtobuf {
         public function wireType() {
             if ($this->_m_wireType !== null)
                 return $this->_m_wireType;
-            $this->_m_wireType = ($this->key()->value() & 7);
+            $this->_m_wireType = $this->key()->value() & 7;
             return $this->_m_wireType;
-        }
-        protected $_m_fieldTag;
-
-        /**
-         * Identifies a field of protocol. One can look up symbolic
-         * field name in a `.proto` file by this field tag.
-         */
-        public function fieldTag() {
-            if ($this->_m_fieldTag !== null)
-                return $this->_m_fieldTag;
-            $this->_m_fieldTag = ($this->key()->value() >> 3);
-            return $this->_m_fieldTag;
         }
         protected $_m_key;
         protected $_m_value;
@@ -141,23 +159,11 @@ namespace GoogleProtobuf\Pair {
         const GROUP_START = 3;
         const GROUP_END = 4;
         const BIT_32 = 5;
-    }
-}
 
-namespace GoogleProtobuf {
-    class DelimitedBytes extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \GoogleProtobuf\Pair $_parent = null, \GoogleProtobuf $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 5 => true];
 
-        private function _read() {
-            $this->_m_len = new \VlqBase128Le($this->_io);
-            $this->_m_body = $this->_io->readBytes($this->len()->value());
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
         }
-        protected $_m_len;
-        protected $_m_body;
-        public function len() { return $this->_m_len; }
-        public function body() { return $this->_m_body; }
     }
 }

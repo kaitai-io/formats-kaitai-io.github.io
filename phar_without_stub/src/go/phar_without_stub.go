@@ -61,13 +61,18 @@ const (
 	PharWithoutStub_SignatureType__Sha512 PharWithoutStub_SignatureType = 8
 	PharWithoutStub_SignatureType__Openssl PharWithoutStub_SignatureType = 16
 )
+var values_PharWithoutStub_SignatureType = map[PharWithoutStub_SignatureType]struct{}{1: {}, 2: {}, 4: {}, 8: {}, 16: {}}
+func (v PharWithoutStub_SignatureType) isDefined() bool {
+	_, ok := values_PharWithoutStub_SignatureType[v]
+	return ok
+}
 type PharWithoutStub struct {
 	Manifest *PharWithoutStub_Manifest
 	Files [][]byte
 	Signature *PharWithoutStub_Signature
 	_io *kaitai.Stream
 	_root *PharWithoutStub
-	_parent interface{}
+	_parent kaitai.Struct
 	_raw_Signature []byte
 }
 func NewPharWithoutStub() *PharWithoutStub {
@@ -75,7 +80,11 @@ func NewPharWithoutStub() *PharWithoutStub {
 	}
 }
 
-func (this *PharWithoutStub) Read(io *kaitai.Stream, parent interface{}, root *PharWithoutStub) (err error) {
+func (this PharWithoutStub) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PharWithoutStub) Read(io *kaitai.Stream, parent kaitai.Struct, root *PharWithoutStub) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -137,192 +146,6 @@ func (this *PharWithoutStub) Read(io *kaitai.Stream, parent interface{}, root *P
  * been tampered with. Only the OpenSSL signature type is a true
  * cryptographic signature.
  */
-type PharWithoutStub_SerializedValue struct {
-	Raw []byte
-	_io *kaitai.Stream
-	_root *PharWithoutStub
-	_parent interface{}
-	_f_parsed bool
-	parsed *PhpSerializedValue
-}
-func NewPharWithoutStub_SerializedValue() *PharWithoutStub_SerializedValue {
-	return &PharWithoutStub_SerializedValue{
-	}
-}
-
-func (this *PharWithoutStub_SerializedValue) Read(io *kaitai.Stream, parent interface{}, root *PharWithoutStub) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp6, err := this._io.ReadBytesFull()
-	if err != nil {
-		return err
-	}
-	tmp6 = tmp6
-	this.Raw = tmp6
-	return err
-}
-
-/**
- * The serialized value, parsed as a structure.
- */
-func (this *PharWithoutStub_SerializedValue) Parsed() (v *PhpSerializedValue, err error) {
-	if (this._f_parsed) {
-		return this.parsed, nil
-	}
-	_pos, err := this._io.Pos()
-	if err != nil {
-		return nil, err
-	}
-	_, err = this._io.Seek(int64(0), io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	tmp7 := NewPhpSerializedValue()
-	err = tmp7.Read(this._io, this, nil)
-	if err != nil {
-		return nil, err
-	}
-	this.parsed = tmp7
-	_, err = this._io.Seek(_pos, io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	this._f_parsed = true
-	this._f_parsed = true
-	return this.parsed, nil
-}
-
-/**
- * The serialized value, as a raw byte array.
- */
-type PharWithoutStub_Signature struct {
-	Data []byte
-	Type PharWithoutStub_SignatureType
-	Magic []byte
-	_io *kaitai.Stream
-	_root *PharWithoutStub
-	_parent *PharWithoutStub
-}
-func NewPharWithoutStub_Signature() *PharWithoutStub_Signature {
-	return &PharWithoutStub_Signature{
-	}
-}
-
-func (this *PharWithoutStub_Signature) Read(io *kaitai.Stream, parent *PharWithoutStub, root *PharWithoutStub) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp8, err := this._io.Size()
-	if err != nil {
-		return err
-	}
-	tmp9, err := this._io.Pos()
-	if err != nil {
-		return err
-	}
-	tmp10, err := this._io.ReadBytes(int(((tmp8 - tmp9) - 8)))
-	if err != nil {
-		return err
-	}
-	tmp10 = tmp10
-	this.Data = tmp10
-	tmp11, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Type = PharWithoutStub_SignatureType(tmp11)
-	tmp12, err := this._io.ReadBytes(int(4))
-	if err != nil {
-		return err
-	}
-	tmp12 = tmp12
-	this.Magic = tmp12
-	if !(bytes.Equal(this.Magic, []uint8{71, 66, 77, 66})) {
-		return kaitai.NewValidationNotEqualError([]uint8{71, 66, 77, 66}, this.Magic, this._io, "/types/signature/seq/2")
-	}
-	return err
-}
-
-/**
- * The signature data. The size and contents depend on the
- * signature type.
- */
-
-/**
- * The signature type.
- */
-type PharWithoutStub_FileFlags struct {
-	Value uint32
-	_io *kaitai.Stream
-	_root *PharWithoutStub
-	_parent *PharWithoutStub_FileEntry
-	_f_permissions bool
-	permissions int
-	_f_zlibCompressed bool
-	zlibCompressed bool
-	_f_bzip2Compressed bool
-	bzip2Compressed bool
-}
-func NewPharWithoutStub_FileFlags() *PharWithoutStub_FileFlags {
-	return &PharWithoutStub_FileFlags{
-	}
-}
-
-func (this *PharWithoutStub_FileFlags) Read(io *kaitai.Stream, parent *PharWithoutStub_FileEntry, root *PharWithoutStub) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp13, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Value = uint32(tmp13)
-	return err
-}
-
-/**
- * The file's permission bits.
- */
-func (this *PharWithoutStub_FileFlags) Permissions() (v int, err error) {
-	if (this._f_permissions) {
-		return this.permissions, nil
-	}
-	this.permissions = int((this.Value & 511))
-	this._f_permissions = true
-	return this.permissions, nil
-}
-
-/**
- * Whether this file's data is stored using zlib compression.
- */
-func (this *PharWithoutStub_FileFlags) ZlibCompressed() (v bool, err error) {
-	if (this._f_zlibCompressed) {
-		return this.zlibCompressed, nil
-	}
-	this.zlibCompressed = bool((this.Value & 4096) != 0)
-	this._f_zlibCompressed = true
-	return this.zlibCompressed, nil
-}
-
-/**
- * Whether this file's data is stored using bzip2 compression.
- */
-func (this *PharWithoutStub_FileFlags) Bzip2Compressed() (v bool, err error) {
-	if (this._f_bzip2Compressed) {
-		return this.bzip2Compressed, nil
-	}
-	this.bzip2Compressed = bool((this.Value & 8192) != 0)
-	this._f_bzip2Compressed = true
-	return this.bzip2Compressed, nil
-}
-
-/**
- * The unparsed flag bits.
- */
 
 /**
  * A phar API version number. This version number is meant to indicate
@@ -372,235 +195,37 @@ func NewPharWithoutStub_ApiVersion() *PharWithoutStub_ApiVersion {
 	}
 }
 
+func (this PharWithoutStub_ApiVersion) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *PharWithoutStub_ApiVersion) Read(io *kaitai.Stream, parent *PharWithoutStub_Manifest, root *PharWithoutStub) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp14, err := this._io.ReadBitsIntBe(4)
+	tmp6, err := this._io.ReadBitsIntBe(4)
 	if err != nil {
 		return err
 	}
-	this.Release = tmp14
-	tmp15, err := this._io.ReadBitsIntBe(4)
+	this.Release = tmp6
+	tmp7, err := this._io.ReadBitsIntBe(4)
 	if err != nil {
 		return err
 	}
-	this.Major = tmp15
-	tmp16, err := this._io.ReadBitsIntBe(4)
+	this.Major = tmp7
+	tmp8, err := this._io.ReadBitsIntBe(4)
 	if err != nil {
 		return err
 	}
-	this.Minor = tmp16
-	tmp17, err := this._io.ReadBitsIntBe(4)
+	this.Minor = tmp8
+	tmp9, err := this._io.ReadBitsIntBe(4)
 	if err != nil {
 		return err
 	}
-	this.Unused = tmp17
+	this.Unused = tmp9
 	return err
 }
-type PharWithoutStub_GlobalFlags struct {
-	Value uint32
-	_io *kaitai.Stream
-	_root *PharWithoutStub
-	_parent *PharWithoutStub_Manifest
-	_f_anyZlibCompressed bool
-	anyZlibCompressed bool
-	_f_anyBzip2Compressed bool
-	anyBzip2Compressed bool
-	_f_hasSignature bool
-	hasSignature bool
-}
-func NewPharWithoutStub_GlobalFlags() *PharWithoutStub_GlobalFlags {
-	return &PharWithoutStub_GlobalFlags{
-	}
-}
-
-func (this *PharWithoutStub_GlobalFlags) Read(io *kaitai.Stream, parent *PharWithoutStub_Manifest, root *PharWithoutStub) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp18, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Value = uint32(tmp18)
-	return err
-}
-
-/**
- * Whether any of the files in this phar are stored using
- * zlib compression.
- */
-func (this *PharWithoutStub_GlobalFlags) AnyZlibCompressed() (v bool, err error) {
-	if (this._f_anyZlibCompressed) {
-		return this.anyZlibCompressed, nil
-	}
-	this.anyZlibCompressed = bool((this.Value & 4096) != 0)
-	this._f_anyZlibCompressed = true
-	return this.anyZlibCompressed, nil
-}
-
-/**
- * Whether any of the files in this phar are stored using
- * bzip2 compression.
- */
-func (this *PharWithoutStub_GlobalFlags) AnyBzip2Compressed() (v bool, err error) {
-	if (this._f_anyBzip2Compressed) {
-		return this.anyBzip2Compressed, nil
-	}
-	this.anyBzip2Compressed = bool((this.Value & 8192) != 0)
-	this._f_anyBzip2Compressed = true
-	return this.anyBzip2Compressed, nil
-}
-
-/**
- * Whether this phar contains a signature.
- */
-func (this *PharWithoutStub_GlobalFlags) HasSignature() (v bool, err error) {
-	if (this._f_hasSignature) {
-		return this.hasSignature, nil
-	}
-	this.hasSignature = bool((this.Value & 65536) != 0)
-	this._f_hasSignature = true
-	return this.hasSignature, nil
-}
-
-/**
- * The unparsed flag bits.
- */
-type PharWithoutStub_Manifest struct {
-	LenManifest uint32
-	NumFiles uint32
-	ApiVersion *PharWithoutStub_ApiVersion
-	Flags *PharWithoutStub_GlobalFlags
-	LenAlias uint32
-	Alias []byte
-	LenMetadata uint32
-	Metadata *PharWithoutStub_SerializedValue
-	FileEntries []*PharWithoutStub_FileEntry
-	_io *kaitai.Stream
-	_root *PharWithoutStub
-	_parent *PharWithoutStub
-	_raw_Metadata []byte
-}
-func NewPharWithoutStub_Manifest() *PharWithoutStub_Manifest {
-	return &PharWithoutStub_Manifest{
-	}
-}
-
-func (this *PharWithoutStub_Manifest) Read(io *kaitai.Stream, parent *PharWithoutStub, root *PharWithoutStub) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp19, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.LenManifest = uint32(tmp19)
-	tmp20, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.NumFiles = uint32(tmp20)
-	tmp21 := NewPharWithoutStub_ApiVersion()
-	err = tmp21.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.ApiVersion = tmp21
-	tmp22 := NewPharWithoutStub_GlobalFlags()
-	err = tmp22.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Flags = tmp22
-	tmp23, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.LenAlias = uint32(tmp23)
-	tmp24, err := this._io.ReadBytes(int(this.LenAlias))
-	if err != nil {
-		return err
-	}
-	tmp24 = tmp24
-	this.Alias = tmp24
-	tmp25, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.LenMetadata = uint32(tmp25)
-	if (this.LenMetadata != 0) {
-		tmp26, err := this._io.ReadBytes(int(this.LenMetadata))
-		if err != nil {
-			return err
-		}
-		tmp26 = tmp26
-		this._raw_Metadata = tmp26
-		_io__raw_Metadata := kaitai.NewStream(bytes.NewReader(this._raw_Metadata))
-		tmp27 := NewPharWithoutStub_SerializedValue()
-		err = tmp27.Read(_io__raw_Metadata, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Metadata = tmp27
-	}
-	for i := 0; i < int(this.NumFiles); i++ {
-		_ = i
-		tmp28 := NewPharWithoutStub_FileEntry()
-		err = tmp28.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.FileEntries = append(this.FileEntries, tmp28)
-	}
-	return err
-}
-
-/**
- * The length of the manifest, in bytes.
- * 
- * Note: The phar extension does not allow reading manifests
- * larger than 100 MiB.
- */
-
-/**
- * The number of files in this phar.
- */
-
-/**
- * The API version used by this phar manifest.
- */
-
-/**
- * Global flags for this phar.
- */
-
-/**
- * The length of the alias, in bytes.
- */
-
-/**
- * The phar's alias, i. e. the name under which it is loaded into PHP.
- */
-
-/**
- * The size of the metadata, in bytes, or 0 if there is none.
- */
-
-/**
- * Metadata for this phar, in the format used by PHP's
- * `serialize` function. The meaning of the serialized data is not
- * specified further, it may be used to store arbitrary custom data
- * about the archive.
- */
-
-/**
- * Manifest entries for the files contained in this phar.
- */
 type PharWithoutStub_FileEntry struct {
 	LenFilename uint32
 	Filename []byte
@@ -621,67 +246,71 @@ func NewPharWithoutStub_FileEntry() *PharWithoutStub_FileEntry {
 	}
 }
 
+func (this PharWithoutStub_FileEntry) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *PharWithoutStub_FileEntry) Read(io *kaitai.Stream, parent *PharWithoutStub_Manifest, root *PharWithoutStub) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp29, err := this._io.ReadU4le()
+	tmp10, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.LenFilename = uint32(tmp29)
-	tmp30, err := this._io.ReadBytes(int(this.LenFilename))
+	this.LenFilename = uint32(tmp10)
+	tmp11, err := this._io.ReadBytes(int(this.LenFilename))
 	if err != nil {
 		return err
 	}
-	tmp30 = tmp30
-	this.Filename = tmp30
-	tmp31, err := this._io.ReadU4le()
+	tmp11 = tmp11
+	this.Filename = tmp11
+	tmp12, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.LenDataUncompressed = uint32(tmp31)
-	tmp32, err := this._io.ReadU4le()
+	this.LenDataUncompressed = uint32(tmp12)
+	tmp13, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Timestamp = uint32(tmp32)
-	tmp33, err := this._io.ReadU4le()
+	this.Timestamp = uint32(tmp13)
+	tmp14, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.LenDataCompressed = uint32(tmp33)
-	tmp34, err := this._io.ReadU4le()
+	this.LenDataCompressed = uint32(tmp14)
+	tmp15, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Crc32 = uint32(tmp34)
-	tmp35 := NewPharWithoutStub_FileFlags()
-	err = tmp35.Read(this._io, this, this._root)
+	this.Crc32 = uint32(tmp15)
+	tmp16 := NewPharWithoutStub_FileFlags()
+	err = tmp16.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Flags = tmp35
-	tmp36, err := this._io.ReadU4le()
+	this.Flags = tmp16
+	tmp17, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.LenMetadata = uint32(tmp36)
+	this.LenMetadata = uint32(tmp17)
 	if (this.LenMetadata != 0) {
-		tmp37, err := this._io.ReadBytes(int(this.LenMetadata))
+		tmp18, err := this._io.ReadBytes(int(this.LenMetadata))
 		if err != nil {
 			return err
 		}
-		tmp37 = tmp37
-		this._raw_Metadata = tmp37
+		tmp18 = tmp18
+		this._raw_Metadata = tmp18
 		_io__raw_Metadata := kaitai.NewStream(bytes.NewReader(this._raw_Metadata))
-		tmp38 := NewPharWithoutStub_SerializedValue()
-		err = tmp38.Read(_io__raw_Metadata, this, this._root)
+		tmp19 := NewPharWithoutStub_SerializedValue()
+		err = tmp19.Read(_io__raw_Metadata, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Metadata = tmp38
+		this.Metadata = tmp19
 	}
 	return err
 }
@@ -728,4 +357,411 @@ func (this *PharWithoutStub_FileEntry) Read(io *kaitai.Stream, parent *PharWitho
  * `serialize` function. The meaning of the serialized data is not
  * specified further, it may be used to store arbitrary custom data
  * about the file.
+ */
+type PharWithoutStub_FileFlags struct {
+	Value uint32
+	_io *kaitai.Stream
+	_root *PharWithoutStub
+	_parent *PharWithoutStub_FileEntry
+	_f_bzip2Compressed bool
+	bzip2Compressed bool
+	_f_permissions bool
+	permissions int
+	_f_zlibCompressed bool
+	zlibCompressed bool
+}
+func NewPharWithoutStub_FileFlags() *PharWithoutStub_FileFlags {
+	return &PharWithoutStub_FileFlags{
+	}
+}
+
+func (this PharWithoutStub_FileFlags) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PharWithoutStub_FileFlags) Read(io *kaitai.Stream, parent *PharWithoutStub_FileEntry, root *PharWithoutStub) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp20, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Value = uint32(tmp20)
+	return err
+}
+
+/**
+ * Whether this file's data is stored using bzip2 compression.
+ */
+func (this *PharWithoutStub_FileFlags) Bzip2Compressed() (v bool, err error) {
+	if (this._f_bzip2Compressed) {
+		return this.bzip2Compressed, nil
+	}
+	this._f_bzip2Compressed = true
+	this.bzip2Compressed = bool(this.Value & 8192 != 0)
+	return this.bzip2Compressed, nil
+}
+
+/**
+ * The file's permission bits.
+ */
+func (this *PharWithoutStub_FileFlags) Permissions() (v int, err error) {
+	if (this._f_permissions) {
+		return this.permissions, nil
+	}
+	this._f_permissions = true
+	this.permissions = int(this.Value & 511)
+	return this.permissions, nil
+}
+
+/**
+ * Whether this file's data is stored using zlib compression.
+ */
+func (this *PharWithoutStub_FileFlags) ZlibCompressed() (v bool, err error) {
+	if (this._f_zlibCompressed) {
+		return this.zlibCompressed, nil
+	}
+	this._f_zlibCompressed = true
+	this.zlibCompressed = bool(this.Value & 4096 != 0)
+	return this.zlibCompressed, nil
+}
+
+/**
+ * The unparsed flag bits.
+ */
+type PharWithoutStub_GlobalFlags struct {
+	Value uint32
+	_io *kaitai.Stream
+	_root *PharWithoutStub
+	_parent *PharWithoutStub_Manifest
+	_f_anyBzip2Compressed bool
+	anyBzip2Compressed bool
+	_f_anyZlibCompressed bool
+	anyZlibCompressed bool
+	_f_hasSignature bool
+	hasSignature bool
+}
+func NewPharWithoutStub_GlobalFlags() *PharWithoutStub_GlobalFlags {
+	return &PharWithoutStub_GlobalFlags{
+	}
+}
+
+func (this PharWithoutStub_GlobalFlags) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PharWithoutStub_GlobalFlags) Read(io *kaitai.Stream, parent *PharWithoutStub_Manifest, root *PharWithoutStub) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp21, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Value = uint32(tmp21)
+	return err
+}
+
+/**
+ * Whether any of the files in this phar are stored using
+ * bzip2 compression.
+ */
+func (this *PharWithoutStub_GlobalFlags) AnyBzip2Compressed() (v bool, err error) {
+	if (this._f_anyBzip2Compressed) {
+		return this.anyBzip2Compressed, nil
+	}
+	this._f_anyBzip2Compressed = true
+	this.anyBzip2Compressed = bool(this.Value & 8192 != 0)
+	return this.anyBzip2Compressed, nil
+}
+
+/**
+ * Whether any of the files in this phar are stored using
+ * zlib compression.
+ */
+func (this *PharWithoutStub_GlobalFlags) AnyZlibCompressed() (v bool, err error) {
+	if (this._f_anyZlibCompressed) {
+		return this.anyZlibCompressed, nil
+	}
+	this._f_anyZlibCompressed = true
+	this.anyZlibCompressed = bool(this.Value & 4096 != 0)
+	return this.anyZlibCompressed, nil
+}
+
+/**
+ * Whether this phar contains a signature.
+ */
+func (this *PharWithoutStub_GlobalFlags) HasSignature() (v bool, err error) {
+	if (this._f_hasSignature) {
+		return this.hasSignature, nil
+	}
+	this._f_hasSignature = true
+	this.hasSignature = bool(this.Value & 65536 != 0)
+	return this.hasSignature, nil
+}
+
+/**
+ * The unparsed flag bits.
+ */
+type PharWithoutStub_Manifest struct {
+	LenManifest uint32
+	NumFiles uint32
+	ApiVersion *PharWithoutStub_ApiVersion
+	Flags *PharWithoutStub_GlobalFlags
+	LenAlias uint32
+	Alias []byte
+	LenMetadata uint32
+	Metadata *PharWithoutStub_SerializedValue
+	FileEntries []*PharWithoutStub_FileEntry
+	_io *kaitai.Stream
+	_root *PharWithoutStub
+	_parent *PharWithoutStub
+	_raw_Metadata []byte
+}
+func NewPharWithoutStub_Manifest() *PharWithoutStub_Manifest {
+	return &PharWithoutStub_Manifest{
+	}
+}
+
+func (this PharWithoutStub_Manifest) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PharWithoutStub_Manifest) Read(io *kaitai.Stream, parent *PharWithoutStub, root *PharWithoutStub) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp22, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.LenManifest = uint32(tmp22)
+	tmp23, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.NumFiles = uint32(tmp23)
+	tmp24 := NewPharWithoutStub_ApiVersion()
+	err = tmp24.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.ApiVersion = tmp24
+	tmp25 := NewPharWithoutStub_GlobalFlags()
+	err = tmp25.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Flags = tmp25
+	tmp26, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.LenAlias = uint32(tmp26)
+	tmp27, err := this._io.ReadBytes(int(this.LenAlias))
+	if err != nil {
+		return err
+	}
+	tmp27 = tmp27
+	this.Alias = tmp27
+	tmp28, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.LenMetadata = uint32(tmp28)
+	if (this.LenMetadata != 0) {
+		tmp29, err := this._io.ReadBytes(int(this.LenMetadata))
+		if err != nil {
+			return err
+		}
+		tmp29 = tmp29
+		this._raw_Metadata = tmp29
+		_io__raw_Metadata := kaitai.NewStream(bytes.NewReader(this._raw_Metadata))
+		tmp30 := NewPharWithoutStub_SerializedValue()
+		err = tmp30.Read(_io__raw_Metadata, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Metadata = tmp30
+	}
+	for i := 0; i < int(this.NumFiles); i++ {
+		_ = i
+		tmp31 := NewPharWithoutStub_FileEntry()
+		err = tmp31.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.FileEntries = append(this.FileEntries, tmp31)
+	}
+	return err
+}
+
+/**
+ * The length of the manifest, in bytes.
+ * 
+ * Note: The phar extension does not allow reading manifests
+ * larger than 100 MiB.
+ */
+
+/**
+ * The number of files in this phar.
+ */
+
+/**
+ * The API version used by this phar manifest.
+ */
+
+/**
+ * Global flags for this phar.
+ */
+
+/**
+ * The length of the alias, in bytes.
+ */
+
+/**
+ * The phar's alias, i. e. the name under which it is loaded into PHP.
+ */
+
+/**
+ * The size of the metadata, in bytes, or 0 if there is none.
+ */
+
+/**
+ * Metadata for this phar, in the format used by PHP's
+ * `serialize` function. The meaning of the serialized data is not
+ * specified further, it may be used to store arbitrary custom data
+ * about the archive.
+ */
+
+/**
+ * Manifest entries for the files contained in this phar.
+ */
+type PharWithoutStub_SerializedValue struct {
+	Raw []byte
+	_io *kaitai.Stream
+	_root *PharWithoutStub
+	_parent kaitai.Struct
+	_f_parsed bool
+	parsed *PhpSerializedValue
+}
+func NewPharWithoutStub_SerializedValue() *PharWithoutStub_SerializedValue {
+	return &PharWithoutStub_SerializedValue{
+	}
+}
+
+func (this PharWithoutStub_SerializedValue) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PharWithoutStub_SerializedValue) Read(io *kaitai.Stream, parent kaitai.Struct, root *PharWithoutStub) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp32, err := this._io.ReadBytesFull()
+	if err != nil {
+		return err
+	}
+	tmp32 = tmp32
+	this.Raw = tmp32
+	return err
+}
+
+/**
+ * The serialized value, parsed as a structure.
+ */
+func (this *PharWithoutStub_SerializedValue) Parsed() (v *PhpSerializedValue, err error) {
+	if (this._f_parsed) {
+		return this.parsed, nil
+	}
+	this._f_parsed = true
+	_pos, err := this._io.Pos()
+	if err != nil {
+		return nil, err
+	}
+	_, err = this._io.Seek(int64(0), io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	tmp33 := NewPhpSerializedValue()
+	err = tmp33.Read(this._io, nil, nil)
+	if err != nil {
+		return nil, err
+	}
+	this.parsed = tmp33
+	_, err = this._io.Seek(_pos, io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	return this.parsed, nil
+}
+
+/**
+ * The serialized value, as a raw byte array.
+ */
+type PharWithoutStub_Signature struct {
+	Data []byte
+	Type PharWithoutStub_SignatureType
+	Magic []byte
+	_io *kaitai.Stream
+	_root *PharWithoutStub
+	_parent *PharWithoutStub
+}
+func NewPharWithoutStub_Signature() *PharWithoutStub_Signature {
+	return &PharWithoutStub_Signature{
+	}
+}
+
+func (this PharWithoutStub_Signature) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PharWithoutStub_Signature) Read(io *kaitai.Stream, parent *PharWithoutStub, root *PharWithoutStub) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp34, err := this._io.Size()
+	if err != nil {
+		return err
+	}
+	tmp35, err := this._io.Pos()
+	if err != nil {
+		return err
+	}
+	tmp36, err := this._io.ReadBytes(int((tmp34 - tmp35) - 8))
+	if err != nil {
+		return err
+	}
+	tmp36 = tmp36
+	this.Data = tmp36
+	tmp37, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Type = PharWithoutStub_SignatureType(tmp37)
+	tmp38, err := this._io.ReadBytes(int(4))
+	if err != nil {
+		return err
+	}
+	tmp38 = tmp38
+	this.Magic = tmp38
+	if !(bytes.Equal(this.Magic, []uint8{71, 66, 77, 66})) {
+		return kaitai.NewValidationNotEqualError([]uint8{71, 66, 77, 66}, this.Magic, this._io, "/types/signature/seq/2")
+	}
+	return err
+}
+
+/**
+ * The signature data. The size and contents depend on the
+ * signature type.
+ */
+
+/**
+ * The signature type.
  */

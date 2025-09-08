@@ -8,15 +8,15 @@
 
 namespace {
     class AndroidOpenglShadersCache extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \AndroidOpenglShadersCache $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\AndroidOpenglShadersCache $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic = $this->_io->readBytes(4);
-            if (!($this->magic() == "\x45\x47\x4C\x24")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x45\x47\x4C\x24", $this->magic(), $this->_io(), "/seq/0");
+            if (!($this->_m_magic == "\x45\x47\x4C\x24")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x45\x47\x4C\x24", $this->_m_magic, $this->_io, "/seq/0");
             }
             $this->_m_crc32 = $this->_io->readU4le();
             $this->_m__raw_contents = $this->_io->readBytesFull();
@@ -40,13 +40,13 @@ namespace {
 
 namespace AndroidOpenglShadersCache {
     class Alignment extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \AndroidOpenglShadersCache $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\AndroidOpenglShadersCache $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_alignment = $this->_io->readBytes((($this->_io()->pos() + 3) & (~3 - $this->_io()->pos())));
+            $this->_m_alignment = $this->_io->readBytes($this->_io()->pos() + 3 & ~3 - $this->_io()->pos());
         }
         protected $_m_alignment;
 
@@ -58,37 +58,16 @@ namespace AndroidOpenglShadersCache {
 }
 
 namespace AndroidOpenglShadersCache {
-    class PrefixedString extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \AndroidOpenglShadersCache\Cache $_parent = null, \AndroidOpenglShadersCache $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_lenStr = $this->_io->readU4le();
-            $this->_m_str = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($this->_io->readBytes($this->lenStr()), 0, false), "ascii");
-            $this->_m_alignment = new \AndroidOpenglShadersCache\Alignment($this->_io, $this, $this->_root);
-        }
-        protected $_m_lenStr;
-        protected $_m_str;
-        protected $_m_alignment;
-        public function lenStr() { return $this->_m_lenStr; }
-        public function str() { return $this->_m_str; }
-        public function alignment() { return $this->_m_alignment; }
-    }
-}
-
-namespace AndroidOpenglShadersCache {
     class Cache extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \AndroidOpenglShadersCache $_parent = null, \AndroidOpenglShadersCache $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\AndroidOpenglShadersCache $_parent = null, ?\AndroidOpenglShadersCache $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic = $this->_io->readBytes(4);
-            if (!($this->magic() == "\x24\x62\x42\x5F")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x24\x62\x42\x5F", $this->magic(), $this->_io(), "/types/cache/seq/0");
+            if (!($this->_m_magic == "\x24\x62\x42\x5F")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x24\x62\x42\x5F", $this->_m_magic, $this->_io, "/types/cache/seq/0");
             }
             $this->_m_version = $this->_io->readU4le();
             $this->_m_deviceVersion = $this->_io->readU4le();
@@ -119,7 +98,7 @@ namespace AndroidOpenglShadersCache {
 
 namespace AndroidOpenglShadersCache\Cache {
     class Entry extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \AndroidOpenglShadersCache\Cache $_parent = null, \AndroidOpenglShadersCache $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\AndroidOpenglShadersCache\Cache $_parent = null, ?\AndroidOpenglShadersCache $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -140,6 +119,27 @@ namespace AndroidOpenglShadersCache\Cache {
         public function lenValue() { return $this->_m_lenValue; }
         public function key() { return $this->_m_key; }
         public function value() { return $this->_m_value; }
+        public function alignment() { return $this->_m_alignment; }
+    }
+}
+
+namespace AndroidOpenglShadersCache {
+    class PrefixedString extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\AndroidOpenglShadersCache\Cache $_parent = null, ?\AndroidOpenglShadersCache $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_lenStr = $this->_io->readU4le();
+            $this->_m_str = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($this->_io->readBytes($this->lenStr()), 0, false), "ASCII");
+            $this->_m_alignment = new \AndroidOpenglShadersCache\Alignment($this->_io, $this, $this->_root);
+        }
+        protected $_m_lenStr;
+        protected $_m_str;
+        protected $_m_alignment;
+        public function lenStr() { return $this->_m_lenStr; }
+        public function str() { return $this->_m_str; }
         public function alignment() { return $this->_m_alignment; }
     }
 }

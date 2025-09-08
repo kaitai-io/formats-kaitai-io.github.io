@@ -217,6 +217,11 @@ how to process a certain block type.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="RAR (Roshall ARchiver) archive files parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="RAR (Roshall ARchiver) archive files parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -247,7 +252,17 @@ how to process a certain block type.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="RAR (Roshall ARchiver) archive files parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="RAR (Roshall ARchiver) archive files parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="RAR (Roshall ARchiver) archive files parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -360,16 +375,18 @@ and build them along with your project.</p>
 
 <span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
+<span class="k">class</span><span class="w"> </span><span class="nc">rar_t</span><span class="p">;</span>
+
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;kaitai/kaitaistruct.h&quot;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdint.h&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;memory&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;dos_datetime.h&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;set&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;vector&gt;</span>
 
-<span class="cp">#if KAITAI_STRUCT_VERSION &lt; 9000L</span>
-<span class="cp">#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required&quot;</span>
+<span class="cp">#if KAITAI_STRUCT_VERSION &lt; 11000L</span>
+<span class="cp">#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required&quot;</span>
 <span class="cp">#endif</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">dos_datetime_t</span><span class="p">;</span>
 
 <span class="cm">/**</span>
 <span class="cm"> * RAR is a archive format used by popular proprietary RAR archiver,</span>
@@ -386,10 +403,10 @@ and build them along with your project.</p>
 <span class="k">class</span><span class="w"> </span><span class="nc">rar_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
 
 <span class="k">public</span><span class="o">:</span>
-<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">magic_signature_t</span><span class="p">;</span>
 <span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">block_t</span><span class="p">;</span>
 <span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">block_file_header_t</span><span class="p">;</span>
 <span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">block_v5_t</span><span class="p">;</span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">magic_signature_t</span><span class="p">;</span>
 
 <span class="w">    </span><span class="k">enum</span><span class="w"> </span><span class="nc">block_types_t</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="n">BLOCK_TYPES_MARKER</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">114</span><span class="p">,</span>
@@ -403,15 +420,12 @@ and build them along with your project.</p>
 <span class="w">        </span><span class="n">BLOCK_TYPES_SUBBLOCK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">122</span><span class="p">,</span>
 <span class="w">        </span><span class="n">BLOCK_TYPES_TERMINATOR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">123</span>
 <span class="w">    </span><span class="p">};</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">_is_defined_block_types_t</span><span class="p">(</span><span class="n">block_types_t</span><span class="w"> </span><span class="n">v</span><span class="p">);</span>
 
-<span class="w">    </span><span class="k">enum</span><span class="w"> </span><span class="nc">oses_t</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">OSES_MS_DOS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
-<span class="w">        </span><span class="n">OSES_OS_2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
-<span class="w">        </span><span class="n">OSES_WINDOWS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
-<span class="w">        </span><span class="n">OSES_UNIX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
-<span class="w">        </span><span class="n">OSES_MAC_OS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span>
-<span class="w">        </span><span class="n">OSES_BEOS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
-<span class="w">    </span><span class="p">};</span>
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">block_types_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_values_block_types_t</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
 
 <span class="w">    </span><span class="k">enum</span><span class="w"> </span><span class="nc">methods_t</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="n">METHODS_STORE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">48</span><span class="p">,</span>
@@ -421,6 +435,27 @@ and build them along with your project.</p>
 <span class="w">        </span><span class="n">METHODS_GOOD</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">52</span><span class="p">,</span>
 <span class="w">        </span><span class="n">METHODS_BEST</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">53</span>
 <span class="w">    </span><span class="p">};</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">_is_defined_methods_t</span><span class="p">(</span><span class="n">methods_t</span><span class="w"> </span><span class="n">v</span><span class="p">);</span>
+
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">methods_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_values_methods_t</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+
+<span class="w">    </span><span class="k">enum</span><span class="w"> </span><span class="nc">oses_t</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">OSES_MS_DOS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">        </span><span class="n">OSES_OS_2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">        </span><span class="n">OSES_WINDOWS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">        </span><span class="n">OSES_UNIX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="w">        </span><span class="n">OSES_MAC_OS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span>
+<span class="w">        </span><span class="n">OSES_BEOS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">_is_defined_oses_t</span><span class="p">(</span><span class="n">oses_t</span><span class="w"> </span><span class="n">v</span><span class="p">);</span>
+
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">oses_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_values_oses_t</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
 
 <span class="w">    </span><span class="n">rar_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">rar_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span>
 
@@ -430,63 +465,6 @@ and build them along with your project.</p>
 
 <span class="k">public</span><span class="o">:</span>
 <span class="w">    </span><span class="o">~</span><span class="n">rar_t</span><span class="p">();</span>
-
-<span class="w">    </span><span class="cm">/**</span>
-<span class="cm">     * RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and</span>
-<span class="cm">     * 8-byte magic (and pretty different block format) for v5+. This</span>
-<span class="cm">     * type would parse and validate both versions of signature. Note</span>
-<span class="cm">     * that actually this signature is a valid RAR &quot;block&quot;: in theory,</span>
-<span class="cm">     * one can omit signature reading at all, and read this normally,</span>
-<span class="cm">     * as a block, if exact RAR version is known (and thus it&#39;s</span>
-<span class="cm">     * possible to choose correct block format).</span>
-<span class="cm">     */</span>
-
-<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">magic_signature_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
-
-<span class="w">    </span><span class="k">public</span><span class="o">:</span>
-
-<span class="w">        </span><span class="n">magic_signature_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">rar_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">rar_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span>
-
-<span class="w">    </span><span class="k">private</span><span class="o">:</span>
-<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span>
-<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span>
-
-<span class="w">    </span><span class="k">public</span><span class="o">:</span>
-<span class="w">        </span><span class="o">~</span><span class="n">magic_signature_t</span><span class="p">();</span>
-
-<span class="w">    </span><span class="k">private</span><span class="o">:</span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_magic1</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">m_version</span><span class="p">;</span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_magic3</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">n_magic3</span><span class="p">;</span>
-
-<span class="w">    </span><span class="k">public</span><span class="o">:</span>
-<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">_is_null_magic3</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">magic3</span><span class="p">();</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">n_magic3</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
-
-<span class="w">    </span><span class="k">private</span><span class="o">:</span>
-<span class="w">        </span><span class="n">rar_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
-<span class="w">        </span><span class="n">rar_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
-
-<span class="w">    </span><span class="k">public</span><span class="o">:</span>
-
-<span class="w">        </span><span class="cm">/**</span>
-<span class="cm">         * Fixed part of file&#39;s magic signature that doesn&#39;t change with RAR version</span>
-<span class="cm">         */</span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">magic1</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_magic1</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-
-<span class="w">        </span><span class="cm">/**</span>
-<span class="cm">         * Variable part of magic signature: 0 means old (RAR 1.5-4.0)</span>
-<span class="cm">         * format, 1 means new (RAR 5+) format</span>
-<span class="cm">         */</span>
-<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">version</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_version</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-
-<span class="w">        </span><span class="cm">/**</span>
-<span class="cm">         * New format (RAR 5+) magic contains extra byte</span>
-<span class="cm">         */</span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">magic3</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_magic3</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="n">rar_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">        </span><span class="n">rar_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
-<span class="w">    </span><span class="p">};</span>
 
 <span class="w">    </span><span class="cm">/**</span>
 <span class="cm">     * Basic block that RAR files consist of. There are several block</span>
@@ -508,6 +486,13 @@ and build them along with your project.</p>
 <span class="w">        </span><span class="o">~</span><span class="n">block_t</span><span class="p">();</span>
 
 <span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_body_size</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">int32_t</span><span class="w"> </span><span class="n">m_body_size</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">int32_t</span><span class="w"> </span><span class="n">body_size</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
 <span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_has_add</span><span class="p">;</span>
 <span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">m_has_add</span><span class="p">;</span>
 
@@ -524,13 +509,6 @@ and build them along with your project.</p>
 
 <span class="w">    </span><span class="k">public</span><span class="o">:</span>
 <span class="w">        </span><span class="kt">int8_t</span><span class="w"> </span><span class="n">header_size</span><span class="p">();</span>
-
-<span class="w">    </span><span class="k">private</span><span class="o">:</span>
-<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_body_size</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">int32_t</span><span class="w"> </span><span class="n">m_body_size</span><span class="p">;</span>
-
-<span class="w">    </span><span class="k">public</span><span class="o">:</span>
-<span class="w">        </span><span class="kt">int32_t</span><span class="w"> </span><span class="n">body_size</span><span class="p">();</span>
 
 <span class="w">    </span><span class="k">private</span><span class="o">:</span>
 <span class="w">        </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">m_crc16</span><span class="p">;</span>
@@ -707,6 +685,63 @@ and build them along with your project.</p>
 <span class="w">        </span><span class="n">rar_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 <span class="w">    </span><span class="p">};</span>
 
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and</span>
+<span class="cm">     * 8-byte magic (and pretty different block format) for v5+. This</span>
+<span class="cm">     * type would parse and validate both versions of signature. Note</span>
+<span class="cm">     * that actually this signature is a valid RAR &quot;block&quot;: in theory,</span>
+<span class="cm">     * one can omit signature reading at all, and read this normally,</span>
+<span class="cm">     * as a block, if exact RAR version is known (and thus it&#39;s</span>
+<span class="cm">     * possible to choose correct block format).</span>
+<span class="cm">     */</span>
+
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">magic_signature_t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="n">magic_signature_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">rar_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="n">rar_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="n">_read</span><span class="p">();</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="o">~</span><span class="n">magic_signature_t</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_magic1</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">m_version</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">m_magic3</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">n_magic3</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">_is_null_magic3</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">magic3</span><span class="p">();</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">n_magic3</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
+
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="n">rar_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span>
+<span class="w">        </span><span class="n">rar_t</span><span class="o">*</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * Fixed part of file&#39;s magic signature that doesn&#39;t change with RAR version</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">magic1</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_magic1</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * Variable part of magic signature: 0 means old (RAR 1.5-4.0)</span>
+<span class="cm">         * format, 1 means new (RAR 5+) format</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">version</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_version</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">        </span><span class="cm">/**</span>
+<span class="cm">         * New format (RAR 5+) magic contains extra byte</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">magic3</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m_magic3</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">rar_t</span><span class="o">*</span><span class="w"> </span><span class="n">_root</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__root</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">        </span><span class="n">rar_t</span><span class="o">*</span><span class="w"> </span><span class="n">_parent</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">m__parent</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">};</span>
+
 <span class="k">private</span><span class="o">:</span>
 <span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">magic_signature_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">m_magic</span><span class="p">;</span>
 <span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="n">m_blocks</span><span class="p">;</span>
@@ -747,10 +782,47 @@ and build them along with your project.</p>
 
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;rar.h&quot;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;kaitai/exceptions.h&quot;</span>
+<span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">rar_t</span><span class="o">::</span><span class="n">block_types_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">rar_t</span><span class="o">::</span><span class="n">_values_block_types_t</span><span class="p">{</span>
+<span class="w">    </span><span class="n">rar_t</span><span class="o">::</span><span class="n">BLOCK_TYPES_MARKER</span><span class="p">,</span>
+<span class="w">    </span><span class="n">rar_t</span><span class="o">::</span><span class="n">BLOCK_TYPES_ARCHIVE_HEADER</span><span class="p">,</span>
+<span class="w">    </span><span class="n">rar_t</span><span class="o">::</span><span class="n">BLOCK_TYPES_FILE_HEADER</span><span class="p">,</span>
+<span class="w">    </span><span class="n">rar_t</span><span class="o">::</span><span class="n">BLOCK_TYPES_OLD_STYLE_COMMENT_HEADER</span><span class="p">,</span>
+<span class="w">    </span><span class="n">rar_t</span><span class="o">::</span><span class="n">BLOCK_TYPES_OLD_STYLE_AUTHENTICITY_INFO_76</span><span class="p">,</span>
+<span class="w">    </span><span class="n">rar_t</span><span class="o">::</span><span class="n">BLOCK_TYPES_OLD_STYLE_SUBBLOCK</span><span class="p">,</span>
+<span class="w">    </span><span class="n">rar_t</span><span class="o">::</span><span class="n">BLOCK_TYPES_OLD_STYLE_RECOVERY_RECORD</span><span class="p">,</span>
+<span class="w">    </span><span class="n">rar_t</span><span class="o">::</span><span class="n">BLOCK_TYPES_OLD_STYLE_AUTHENTICITY_INFO_79</span><span class="p">,</span>
+<span class="w">    </span><span class="n">rar_t</span><span class="o">::</span><span class="n">BLOCK_TYPES_SUBBLOCK</span><span class="p">,</span>
+<span class="w">    </span><span class="n">rar_t</span><span class="o">::</span><span class="n">BLOCK_TYPES_TERMINATOR</span><span class="p">,</span>
+<span class="p">};</span>
+<span class="kt">bool</span><span class="w"> </span><span class="nf">rar_t::_is_defined_block_types_t</span><span class="p">(</span><span class="n">rar_t</span><span class="o">::</span><span class="n">block_types_t</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">rar_t</span><span class="o">::</span><span class="n">_values_block_types_t</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">rar_t</span><span class="o">::</span><span class="n">_values_block_types_t</span><span class="p">.</span><span class="n">end</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">rar_t</span><span class="o">::</span><span class="n">methods_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">rar_t</span><span class="o">::</span><span class="n">_values_methods_t</span><span class="p">{</span>
+<span class="w">    </span><span class="n">rar_t</span><span class="o">::</span><span class="n">METHODS_STORE</span><span class="p">,</span>
+<span class="w">    </span><span class="n">rar_t</span><span class="o">::</span><span class="n">METHODS_FASTEST</span><span class="p">,</span>
+<span class="w">    </span><span class="n">rar_t</span><span class="o">::</span><span class="n">METHODS_FAST</span><span class="p">,</span>
+<span class="w">    </span><span class="n">rar_t</span><span class="o">::</span><span class="n">METHODS_NORMAL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">rar_t</span><span class="o">::</span><span class="n">METHODS_GOOD</span><span class="p">,</span>
+<span class="w">    </span><span class="n">rar_t</span><span class="o">::</span><span class="n">METHODS_BEST</span><span class="p">,</span>
+<span class="p">};</span>
+<span class="kt">bool</span><span class="w"> </span><span class="nf">rar_t::_is_defined_methods_t</span><span class="p">(</span><span class="n">rar_t</span><span class="o">::</span><span class="n">methods_t</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">rar_t</span><span class="o">::</span><span class="n">_values_methods_t</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">rar_t</span><span class="o">::</span><span class="n">_values_methods_t</span><span class="p">.</span><span class="n">end</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">rar_t</span><span class="o">::</span><span class="n">oses_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">rar_t</span><span class="o">::</span><span class="n">_values_oses_t</span><span class="p">{</span>
+<span class="w">    </span><span class="n">rar_t</span><span class="o">::</span><span class="n">OSES_MS_DOS</span><span class="p">,</span>
+<span class="w">    </span><span class="n">rar_t</span><span class="o">::</span><span class="n">OSES_OS_2</span><span class="p">,</span>
+<span class="w">    </span><span class="n">rar_t</span><span class="o">::</span><span class="n">OSES_WINDOWS</span><span class="p">,</span>
+<span class="w">    </span><span class="n">rar_t</span><span class="o">::</span><span class="n">OSES_UNIX</span><span class="p">,</span>
+<span class="w">    </span><span class="n">rar_t</span><span class="o">::</span><span class="n">OSES_MAC_OS</span><span class="p">,</span>
+<span class="w">    </span><span class="n">rar_t</span><span class="o">::</span><span class="n">OSES_BEOS</span><span class="p">,</span>
+<span class="p">};</span>
+<span class="kt">bool</span><span class="w"> </span><span class="nf">rar_t::_is_defined_oses_t</span><span class="p">(</span><span class="n">rar_t</span><span class="o">::</span><span class="n">oses_t</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">rar_t</span><span class="o">::</span><span class="n">_values_oses_t</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">rar_t</span><span class="o">::</span><span class="n">_values_oses_t</span><span class="p">.</span><span class="n">end</span><span class="p">();</span>
+<span class="p">}</span>
 
 <span class="n">rar_t</span><span class="o">::</span><span class="n">rar_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">rar_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
-<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
 <span class="w">    </span><span class="n">m_magic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
 <span class="w">    </span><span class="n">m_blocks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
 <span class="w">    </span><span class="n">_read</span><span class="p">();</span>
@@ -784,44 +856,13 @@ and build them along with your project.</p>
 <span class="kt">void</span><span class="w"> </span><span class="n">rar_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="p">}</span>
 
-<span class="n">rar_t</span><span class="o">::</span><span class="n">magic_signature_t</span><span class="o">::</span><span class="n">magic_signature_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">rar_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">rar_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
-<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
-<span class="w">    </span><span class="n">_read</span><span class="p">();</span>
-<span class="p">}</span>
-
-<span class="kt">void</span><span class="w"> </span><span class="n">rar_t</span><span class="o">::</span><span class="n">magic_signature_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">m_magic1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">magic1</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x52\x61\x72\x21\x1A\x07</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">6</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_equal_error</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x52\x61\x72\x21\x1A\x07</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">6</span><span class="p">),</span><span class="w"> </span><span class="n">magic1</span><span class="p">(),</span><span class="w"> </span><span class="n">_io</span><span class="p">(),</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/magic_signature/seq/0&quot;</span><span class="p">));</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="n">m_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
-<span class="w">    </span><span class="n">n_magic3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">version</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">n_magic3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
-<span class="w">        </span><span class="n">m_magic3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">magic3</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x00</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_equal_error</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x00</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">magic3</span><span class="p">(),</span><span class="w"> </span><span class="n">_io</span><span class="p">(),</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/magic_signature/seq/2&quot;</span><span class="p">));</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-
-<span class="n">rar_t</span><span class="o">::</span><span class="n">magic_signature_t</span><span class="o">::~</span><span class="n">magic_signature_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
-<span class="p">}</span>
-
-<span class="kt">void</span><span class="w"> </span><span class="n">rar_t</span><span class="o">::</span><span class="n">magic_signature_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">n_magic3</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-
 <span class="n">rar_t</span><span class="o">::</span><span class="n">block_t</span><span class="o">::</span><span class="n">block_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">rar_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">rar_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
 <span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
 <span class="w">    </span><span class="n">m__io__raw_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_body_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
 <span class="w">    </span><span class="n">f_has_add</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
 <span class="w">    </span><span class="n">f_header_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
-<span class="w">    </span><span class="n">f_body_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
 <span class="w">    </span><span class="n">_read</span><span class="p">();</span>
 <span class="p">}</span>
 
@@ -869,28 +910,28 @@ and build them along with your project.</p>
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 
+<span class="kt">int32_t</span><span class="w"> </span><span class="n">rar_t</span><span class="o">::</span><span class="n">block_t</span><span class="o">::</span><span class="n">body_size</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_body_size</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_body_size</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_body_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_body_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">block_size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">header_size</span><span class="p">();</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_body_size</span><span class="p">;</span>
+<span class="p">}</span>
+
 <span class="kt">bool</span><span class="w"> </span><span class="n">rar_t</span><span class="o">::</span><span class="n">block_t</span><span class="o">::</span><span class="n">has_add</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_has_add</span><span class="p">)</span>
 <span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_has_add</span><span class="p">;</span>
-<span class="w">    </span><span class="n">m_has_add</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">flags</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">32768</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
 <span class="w">    </span><span class="n">f_has_add</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_has_add</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">flags</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">32768</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_has_add</span><span class="p">;</span>
 <span class="p">}</span>
 
 <span class="kt">int8_t</span><span class="w"> </span><span class="n">rar_t</span><span class="o">::</span><span class="n">block_t</span><span class="o">::</span><span class="n">header_size</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_header_size</span><span class="p">)</span>
 <span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_header_size</span><span class="p">;</span>
-<span class="w">    </span><span class="n">m_header_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">has_add</span><span class="p">())</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="p">(</span><span class="mi">11</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="mi">7</span><span class="p">));</span>
 <span class="w">    </span><span class="n">f_header_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_header_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">has_add</span><span class="p">())</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="p">(</span><span class="mi">11</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="mi">7</span><span class="p">));</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_header_size</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="kt">int32_t</span><span class="w"> </span><span class="n">rar_t</span><span class="o">::</span><span class="n">block_t</span><span class="o">::</span><span class="n">body_size</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_body_size</span><span class="p">)</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_body_size</span><span class="p">;</span>
-<span class="w">    </span><span class="n">m_body_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">block_size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">header_size</span><span class="p">());</span>
-<span class="w">    </span><span class="n">f_body_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_body_size</span><span class="p">;</span>
 <span class="p">}</span>
 
 <span class="n">rar_t</span><span class="o">::</span><span class="n">block_file_header_t</span><span class="o">::</span><span class="n">block_file_header_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">rar_t</span><span class="o">::</span><span class="n">block_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">rar_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
@@ -950,6 +991,37 @@ and build them along with your project.</p>
 <span class="p">}</span>
 
 <span class="kt">void</span><span class="w"> </span><span class="n">rar_t</span><span class="o">::</span><span class="n">block_v5_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="p">}</span>
+
+<span class="n">rar_t</span><span class="o">::</span><span class="n">magic_signature_t</span><span class="o">::</span><span class="n">magic_signature_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">rar_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">rar_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="p">;</span>
+<span class="w">    </span><span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">rar_t</span><span class="o">::</span><span class="n">magic_signature_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">m_magic1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">m_magic1</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x52\x61\x72\x21\x1A\x07</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">6</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_equal_error</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x52\x61\x72\x21\x1A\x07</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">6</span><span class="p">),</span><span class="w"> </span><span class="n">m_magic1</span><span class="p">,</span><span class="w"> </span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/magic_signature/seq/0&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">m_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="w">    </span><span class="n">n_magic3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">version</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">n_magic3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="n">m_magic3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">m_magic3</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x00</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">throw</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">validation_not_equal_error</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x00</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">m_magic3</span><span class="p">,</span><span class="w"> </span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/types/magic_signature/seq/2&quot;</span><span class="p">));</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">rar_t</span><span class="o">::</span><span class="n">magic_signature_t</span><span class="o">::~</span><span class="n">magic_signature_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">rar_t</span><span class="o">::</span><span class="n">magic_signature_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">n_magic3</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 

@@ -1,0 +1,528 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__java_class {
+		label="JavaClass";
+		graph[style=dotted];
+
+		java_class__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD>CA FE BA BE</TD><TD PORT="magic_type">magic</TD></TR>
+			<TR><TD PORT="version_minor_pos">4</TD><TD PORT="version_minor_size">2</TD><TD>u2be</TD><TD PORT="version_minor_type">version_minor</TD></TR>
+			<TR><TD PORT="version_major_pos">6</TD><TD PORT="version_major_size">2</TD><TD>u2be</TD><TD PORT="version_major_type">version_major</TD></TR>
+			<TR><TD COLSPAN="4" PORT="version_major__valid">must be at least 43</TD></TR>
+			<TR><TD PORT="constant_pool_count_pos">8</TD><TD PORT="constant_pool_count_size">2</TD><TD>u2be</TD><TD PORT="constant_pool_count_type">constant_pool_count</TD></TR>
+			<TR><TD PORT="constant_pool_pos">10</TD><TD PORT="constant_pool_size">...</TD><TD>ConstantPoolEntry</TD><TD PORT="constant_pool_type">constant_pool</TD></TR>
+			<TR><TD COLSPAN="4" PORT="constant_pool__repeat">repeat constant_pool_count - 1 times</TD></TR>
+			<TR><TD PORT="access_flags_pos">...</TD><TD PORT="access_flags_size">2</TD><TD>u2be</TD><TD PORT="access_flags_type">access_flags</TD></TR>
+			<TR><TD PORT="this_class_pos">...</TD><TD PORT="this_class_size">2</TD><TD>u2be</TD><TD PORT="this_class_type">this_class</TD></TR>
+			<TR><TD PORT="super_class_pos">...</TD><TD PORT="super_class_size">2</TD><TD>u2be</TD><TD PORT="super_class_type">super_class</TD></TR>
+			<TR><TD PORT="interfaces_count_pos">...</TD><TD PORT="interfaces_count_size">2</TD><TD>u2be</TD><TD PORT="interfaces_count_type">interfaces_count</TD></TR>
+			<TR><TD PORT="interfaces_pos">...</TD><TD PORT="interfaces_size">2</TD><TD>u2be</TD><TD PORT="interfaces_type">interfaces</TD></TR>
+			<TR><TD COLSPAN="4" PORT="interfaces__repeat">repeat interfaces_count times</TD></TR>
+			<TR><TD PORT="fields_count_pos">...</TD><TD PORT="fields_count_size">2</TD><TD>u2be</TD><TD PORT="fields_count_type">fields_count</TD></TR>
+			<TR><TD PORT="fields_pos">...</TD><TD PORT="fields_size">...</TD><TD>FieldInfo</TD><TD PORT="fields_type">fields</TD></TR>
+			<TR><TD COLSPAN="4" PORT="fields__repeat">repeat fields_count times</TD></TR>
+			<TR><TD PORT="methods_count_pos">...</TD><TD PORT="methods_count_size">2</TD><TD>u2be</TD><TD PORT="methods_count_type">methods_count</TD></TR>
+			<TR><TD PORT="methods_pos">...</TD><TD PORT="methods_size">...</TD><TD>MethodInfo</TD><TD PORT="methods_type">methods</TD></TR>
+			<TR><TD COLSPAN="4" PORT="methods__repeat">repeat methods_count times</TD></TR>
+			<TR><TD PORT="attributes_count_pos">...</TD><TD PORT="attributes_count_size">2</TD><TD>u2be</TD><TD PORT="attributes_count_type">attributes_count</TD></TR>
+			<TR><TD PORT="attributes_pos">...</TD><TD PORT="attributes_size">...</TD><TD>AttributeInfo</TD><TD PORT="attributes_type">attributes</TD></TR>
+			<TR><TD COLSPAN="4" PORT="attributes__repeat">repeat attributes_count times</TD></TR>
+		</TABLE>>];
+		subgraph cluster__attribute_info {
+			label="JavaClass::AttributeInfo";
+			graph[style=dotted];
+
+			attribute_info__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="name_index_pos">0</TD><TD PORT="name_index_size">2</TD><TD>u2be</TD><TD PORT="name_index_type">name_index</TD></TR>
+				<TR><TD PORT="attribute_length_pos">2</TD><TD PORT="attribute_length_size">4</TD><TD>u4be</TD><TD PORT="attribute_length_type">attribute_length</TD></TR>
+				<TR><TD PORT="info_pos">6</TD><TD PORT="info_size">...</TD><TD>switch (name_as_str)</TD><TD PORT="info_type">info</TD></TR>
+			</TABLE>>];
+			attribute_info__inst__name_as_str [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>name_as_str</TD><TD>_root.constant_pool[name_index - 1].cp_info.value</TD></TR>
+			</TABLE>>];
+attribute_info__seq_info_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>&quot;Code&quot;</TD><TD PORT="case0">AttrBodyCode</TD></TR>
+	<TR><TD>&quot;Exceptions&quot;</TD><TD PORT="case1">AttrBodyExceptions</TD></TR>
+	<TR><TD>&quot;LineNumberTable&quot;</TD><TD PORT="case2">AttrBodyLineNumberTable</TD></TR>
+	<TR><TD>&quot;SourceFile&quot;</TD><TD PORT="case3">AttrBodySourceFile</TD></TR>
+</TABLE>>];
+			subgraph cluster__attr_body_code {
+				label="JavaClass::AttributeInfo::AttrBodyCode";
+				graph[style=dotted];
+
+				attr_body_code__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="max_stack_pos">0</TD><TD PORT="max_stack_size">2</TD><TD>u2be</TD><TD PORT="max_stack_type">max_stack</TD></TR>
+					<TR><TD PORT="max_locals_pos">2</TD><TD PORT="max_locals_size">2</TD><TD>u2be</TD><TD PORT="max_locals_type">max_locals</TD></TR>
+					<TR><TD PORT="code_length_pos">4</TD><TD PORT="code_length_size">4</TD><TD>u4be</TD><TD PORT="code_length_type">code_length</TD></TR>
+					<TR><TD PORT="code_pos">8</TD><TD PORT="code_size">code_length</TD><TD></TD><TD PORT="code_type">code</TD></TR>
+					<TR><TD PORT="exception_table_length_pos">...</TD><TD PORT="exception_table_length_size">2</TD><TD>u2be</TD><TD PORT="exception_table_length_type">exception_table_length</TD></TR>
+					<TR><TD PORT="exception_table_pos">...</TD><TD PORT="exception_table_size">8</TD><TD>ExceptionEntry</TD><TD PORT="exception_table_type">exception_table</TD></TR>
+					<TR><TD COLSPAN="4" PORT="exception_table__repeat">repeat exception_table_length times</TD></TR>
+					<TR><TD PORT="attributes_count_pos">...</TD><TD PORT="attributes_count_size">2</TD><TD>u2be</TD><TD PORT="attributes_count_type">attributes_count</TD></TR>
+					<TR><TD PORT="attributes_pos">...</TD><TD PORT="attributes_size">...</TD><TD>AttributeInfo</TD><TD PORT="attributes_type">attributes</TD></TR>
+					<TR><TD COLSPAN="4" PORT="attributes__repeat">repeat attributes_count times</TD></TR>
+				</TABLE>>];
+				subgraph cluster__exception_entry {
+					label="JavaClass::AttributeInfo::AttrBodyCode::ExceptionEntry";
+					graph[style=dotted];
+
+					exception_entry__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="start_pc_pos">0</TD><TD PORT="start_pc_size">2</TD><TD>u2be</TD><TD PORT="start_pc_type">start_pc</TD></TR>
+						<TR><TD PORT="end_pc_pos">2</TD><TD PORT="end_pc_size">2</TD><TD>u2be</TD><TD PORT="end_pc_type">end_pc</TD></TR>
+						<TR><TD PORT="handler_pc_pos">4</TD><TD PORT="handler_pc_size">2</TD><TD>u2be</TD><TD PORT="handler_pc_type">handler_pc</TD></TR>
+						<TR><TD PORT="catch_type_pos">6</TD><TD PORT="catch_type_size">2</TD><TD>u2be</TD><TD PORT="catch_type_type">catch_type</TD></TR>
+					</TABLE>>];
+					exception_entry__inst__catch_exception [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+						<TR><TD>catch_exception</TD><TD>_root.constant_pool[catch_type - 1]</TD></TR>
+					</TABLE>>];
+				}
+			}
+			subgraph cluster__attr_body_exceptions {
+				label="JavaClass::AttributeInfo::AttrBodyExceptions";
+				graph[style=dotted];
+
+				attr_body_exceptions__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="number_of_exceptions_pos">0</TD><TD PORT="number_of_exceptions_size">2</TD><TD>u2be</TD><TD PORT="number_of_exceptions_type">number_of_exceptions</TD></TR>
+					<TR><TD PORT="exceptions_pos">2</TD><TD PORT="exceptions_size">2</TD><TD>ExceptionTableEntry</TD><TD PORT="exceptions_type">exceptions</TD></TR>
+					<TR><TD COLSPAN="4" PORT="exceptions__repeat">repeat number_of_exceptions times</TD></TR>
+				</TABLE>>];
+				subgraph cluster__exception_table_entry {
+					label="JavaClass::AttributeInfo::AttrBodyExceptions::ExceptionTableEntry";
+					graph[style=dotted];
+
+					exception_table_entry__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="index_pos">0</TD><TD PORT="index_size">2</TD><TD>u2be</TD><TD PORT="index_type">index</TD></TR>
+					</TABLE>>];
+					exception_table_entry__inst__as_info [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+						<TR><TD>as_info</TD><TD>_root.constant_pool[index - 1].cp_info</TD></TR>
+					</TABLE>>];
+					exception_table_entry__inst__name_as_str [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+						<TR><TD>name_as_str</TD><TD>as_info.name_as_str</TD></TR>
+					</TABLE>>];
+				}
+			}
+			subgraph cluster__attr_body_line_number_table {
+				label="JavaClass::AttributeInfo::AttrBodyLineNumberTable";
+				graph[style=dotted];
+
+				attr_body_line_number_table__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="line_number_table_length_pos">0</TD><TD PORT="line_number_table_length_size">2</TD><TD>u2be</TD><TD PORT="line_number_table_length_type">line_number_table_length</TD></TR>
+					<TR><TD PORT="line_number_table_pos">2</TD><TD PORT="line_number_table_size">4</TD><TD>LineNumberTableEntry</TD><TD PORT="line_number_table_type">line_number_table</TD></TR>
+					<TR><TD COLSPAN="4" PORT="line_number_table__repeat">repeat line_number_table_length times</TD></TR>
+				</TABLE>>];
+				subgraph cluster__line_number_table_entry {
+					label="JavaClass::AttributeInfo::AttrBodyLineNumberTable::LineNumberTableEntry";
+					graph[style=dotted];
+
+					line_number_table_entry__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+						<TR><TD PORT="start_pc_pos">0</TD><TD PORT="start_pc_size">2</TD><TD>u2be</TD><TD PORT="start_pc_type">start_pc</TD></TR>
+						<TR><TD PORT="line_number_pos">2</TD><TD PORT="line_number_size">2</TD><TD>u2be</TD><TD PORT="line_number_type">line_number</TD></TR>
+					</TABLE>>];
+				}
+			}
+			subgraph cluster__attr_body_source_file {
+				label="JavaClass::AttributeInfo::AttrBodySourceFile";
+				graph[style=dotted];
+
+				attr_body_source_file__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="sourcefile_index_pos">0</TD><TD PORT="sourcefile_index_size">2</TD><TD>u2be</TD><TD PORT="sourcefile_index_type">sourcefile_index</TD></TR>
+				</TABLE>>];
+				attr_body_source_file__inst__sourcefile_as_str [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>sourcefile_as_str</TD><TD>_root.constant_pool[sourcefile_index - 1].cp_info.value</TD></TR>
+				</TABLE>>];
+			}
+		}
+		subgraph cluster__class_cp_info {
+			label="JavaClass::ClassCpInfo";
+			graph[style=dotted];
+
+			class_cp_info__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="name_index_pos">0</TD><TD PORT="name_index_size">2</TD><TD>u2be</TD><TD PORT="name_index_type">name_index</TD></TR>
+			</TABLE>>];
+			class_cp_info__inst__name_as_info [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>name_as_info</TD><TD>_root.constant_pool[name_index - 1].cp_info</TD></TR>
+			</TABLE>>];
+			class_cp_info__inst__name_as_str [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>name_as_str</TD><TD>name_as_info.value</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__constant_pool_entry {
+			label="JavaClass::ConstantPoolEntry";
+			graph[style=dotted];
+
+			constant_pool_entry__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="tag_pos">0</TD><TD PORT="tag_size">1</TD><TD>u1→TagEnum</TD><TD PORT="tag_type">tag</TD></TR>
+				<TR><TD COLSPAN="4" PORT="tag__if">if !(is_prev_two_entries)</TD></TR>
+				<TR><TD PORT="cp_info_pos">1</TD><TD PORT="cp_info_size">...</TD><TD>switch (tag)</TD><TD PORT="cp_info_type">cp_info</TD></TR>
+				<TR><TD COLSPAN="4" PORT="cp_info__if">if !(is_prev_two_entries)</TD></TR>
+			</TABLE>>];
+			constant_pool_entry__inst__is_two_entries [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_two_entries</TD><TD>(is_prev_two_entries ? false :  ((tag == :tag_enum_long) || (tag == :tag_enum_double)) )</TD></TR>
+			</TABLE>>];
+constant_pool_entry__seq_cp_info_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>:tag_enum_class_type</TD><TD PORT="case0">ClassCpInfo</TD></TR>
+	<TR><TD>:tag_enum_double</TD><TD PORT="case1">DoubleCpInfo</TD></TR>
+	<TR><TD>:tag_enum_dynamic</TD><TD PORT="case2">DynamicCpInfo</TD></TR>
+	<TR><TD>:tag_enum_field_ref</TD><TD PORT="case3">FieldRefCpInfo</TD></TR>
+	<TR><TD>:tag_enum_float</TD><TD PORT="case4">FloatCpInfo</TD></TR>
+	<TR><TD>:tag_enum_integer</TD><TD PORT="case5">IntegerCpInfo</TD></TR>
+	<TR><TD>:tag_enum_interface_method_ref</TD><TD PORT="case6">InterfaceMethodRefCpInfo</TD></TR>
+	<TR><TD>:tag_enum_invoke_dynamic</TD><TD PORT="case7">InvokeDynamicCpInfo</TD></TR>
+	<TR><TD>:tag_enum_long</TD><TD PORT="case8">LongCpInfo</TD></TR>
+	<TR><TD>:tag_enum_method_handle</TD><TD PORT="case9">MethodHandleCpInfo</TD></TR>
+	<TR><TD>:tag_enum_method_ref</TD><TD PORT="case10">MethodRefCpInfo</TD></TR>
+	<TR><TD>:tag_enum_method_type</TD><TD PORT="case11">MethodTypeCpInfo</TD></TR>
+	<TR><TD>:tag_enum_module</TD><TD PORT="case12">ModulePackageCpInfo</TD></TR>
+	<TR><TD>:tag_enum_name_and_type</TD><TD PORT="case13">NameAndTypeCpInfo</TD></TR>
+	<TR><TD>:tag_enum_package</TD><TD PORT="case14">ModulePackageCpInfo</TD></TR>
+	<TR><TD>:tag_enum_string</TD><TD PORT="case15">StringCpInfo</TD></TR>
+	<TR><TD>:tag_enum_utf8</TD><TD PORT="case16">Utf8CpInfo</TD></TR>
+</TABLE>>];
+		}
+		subgraph cluster__double_cp_info {
+			label="JavaClass::DoubleCpInfo";
+			graph[style=dotted];
+
+			double_cp_info__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="value_pos">0</TD><TD PORT="value_size">8</TD><TD>f8be</TD><TD PORT="value_type">value</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__dynamic_cp_info {
+			label="JavaClass::DynamicCpInfo";
+			graph[style=dotted];
+
+			dynamic_cp_info__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="_unnamed0_pos">0</TD><TD PORT="_unnamed0_size">0</TD><TD>VersionGuard</TD><TD PORT="_unnamed0_type">_unnamed0</TD></TR>
+				<TR><TD PORT="bootstrap_method_attr_index_pos">0</TD><TD PORT="bootstrap_method_attr_index_size">2</TD><TD>u2be</TD><TD PORT="bootstrap_method_attr_index_type">bootstrap_method_attr_index</TD></TR>
+				<TR><TD PORT="name_and_type_index_pos">2</TD><TD PORT="name_and_type_index_size">2</TD><TD>u2be</TD><TD PORT="name_and_type_index_type">name_and_type_index</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__field_info {
+			label="JavaClass::FieldInfo";
+			graph[style=dotted];
+
+			field_info__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="access_flags_pos">0</TD><TD PORT="access_flags_size">2</TD><TD>u2be</TD><TD PORT="access_flags_type">access_flags</TD></TR>
+				<TR><TD PORT="name_index_pos">2</TD><TD PORT="name_index_size">2</TD><TD>u2be</TD><TD PORT="name_index_type">name_index</TD></TR>
+				<TR><TD PORT="descriptor_index_pos">4</TD><TD PORT="descriptor_index_size">2</TD><TD>u2be</TD><TD PORT="descriptor_index_type">descriptor_index</TD></TR>
+				<TR><TD PORT="attributes_count_pos">6</TD><TD PORT="attributes_count_size">2</TD><TD>u2be</TD><TD PORT="attributes_count_type">attributes_count</TD></TR>
+				<TR><TD PORT="attributes_pos">8</TD><TD PORT="attributes_size">...</TD><TD>AttributeInfo</TD><TD PORT="attributes_type">attributes</TD></TR>
+				<TR><TD COLSPAN="4" PORT="attributes__repeat">repeat attributes_count times</TD></TR>
+			</TABLE>>];
+			field_info__inst__name_as_str [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>name_as_str</TD><TD>_root.constant_pool[name_index - 1].cp_info.value</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__field_ref_cp_info {
+			label="JavaClass::FieldRefCpInfo";
+			graph[style=dotted];
+
+			field_ref_cp_info__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="class_index_pos">0</TD><TD PORT="class_index_size">2</TD><TD>u2be</TD><TD PORT="class_index_type">class_index</TD></TR>
+				<TR><TD PORT="name_and_type_index_pos">2</TD><TD PORT="name_and_type_index_size">2</TD><TD>u2be</TD><TD PORT="name_and_type_index_type">name_and_type_index</TD></TR>
+			</TABLE>>];
+			field_ref_cp_info__inst__class_as_info [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>class_as_info</TD><TD>_root.constant_pool[class_index - 1].cp_info</TD></TR>
+			</TABLE>>];
+			field_ref_cp_info__inst__name_and_type_as_info [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>name_and_type_as_info</TD><TD>_root.constant_pool[name_and_type_index - 1].cp_info</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__float_cp_info {
+			label="JavaClass::FloatCpInfo";
+			graph[style=dotted];
+
+			float_cp_info__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="value_pos">0</TD><TD PORT="value_size">4</TD><TD>f4be</TD><TD PORT="value_type">value</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__integer_cp_info {
+			label="JavaClass::IntegerCpInfo";
+			graph[style=dotted];
+
+			integer_cp_info__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="value_pos">0</TD><TD PORT="value_size">4</TD><TD>u4be</TD><TD PORT="value_type">value</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__interface_method_ref_cp_info {
+			label="JavaClass::InterfaceMethodRefCpInfo";
+			graph[style=dotted];
+
+			interface_method_ref_cp_info__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="class_index_pos">0</TD><TD PORT="class_index_size">2</TD><TD>u2be</TD><TD PORT="class_index_type">class_index</TD></TR>
+				<TR><TD PORT="name_and_type_index_pos">2</TD><TD PORT="name_and_type_index_size">2</TD><TD>u2be</TD><TD PORT="name_and_type_index_type">name_and_type_index</TD></TR>
+			</TABLE>>];
+			interface_method_ref_cp_info__inst__class_as_info [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>class_as_info</TD><TD>_root.constant_pool[class_index - 1].cp_info</TD></TR>
+			</TABLE>>];
+			interface_method_ref_cp_info__inst__name_and_type_as_info [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>name_and_type_as_info</TD><TD>_root.constant_pool[name_and_type_index - 1].cp_info</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__invoke_dynamic_cp_info {
+			label="JavaClass::InvokeDynamicCpInfo";
+			graph[style=dotted];
+
+			invoke_dynamic_cp_info__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="_unnamed0_pos">0</TD><TD PORT="_unnamed0_size">0</TD><TD>VersionGuard</TD><TD PORT="_unnamed0_type">_unnamed0</TD></TR>
+				<TR><TD PORT="bootstrap_method_attr_index_pos">0</TD><TD PORT="bootstrap_method_attr_index_size">2</TD><TD>u2be</TD><TD PORT="bootstrap_method_attr_index_type">bootstrap_method_attr_index</TD></TR>
+				<TR><TD PORT="name_and_type_index_pos">2</TD><TD PORT="name_and_type_index_size">2</TD><TD>u2be</TD><TD PORT="name_and_type_index_type">name_and_type_index</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__long_cp_info {
+			label="JavaClass::LongCpInfo";
+			graph[style=dotted];
+
+			long_cp_info__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="value_pos">0</TD><TD PORT="value_size">8</TD><TD>u8be</TD><TD PORT="value_type">value</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__method_handle_cp_info {
+			label="JavaClass::MethodHandleCpInfo";
+			graph[style=dotted];
+
+			method_handle_cp_info__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="_unnamed0_pos">0</TD><TD PORT="_unnamed0_size">0</TD><TD>VersionGuard</TD><TD PORT="_unnamed0_type">_unnamed0</TD></TR>
+				<TR><TD PORT="reference_kind_pos">0</TD><TD PORT="reference_kind_size">1</TD><TD>u1→ReferenceKindEnum</TD><TD PORT="reference_kind_type">reference_kind</TD></TR>
+				<TR><TD PORT="reference_index_pos">1</TD><TD PORT="reference_index_size">2</TD><TD>u2be</TD><TD PORT="reference_index_type">reference_index</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__method_info {
+			label="JavaClass::MethodInfo";
+			graph[style=dotted];
+
+			method_info__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="access_flags_pos">0</TD><TD PORT="access_flags_size">2</TD><TD>u2be</TD><TD PORT="access_flags_type">access_flags</TD></TR>
+				<TR><TD PORT="name_index_pos">2</TD><TD PORT="name_index_size">2</TD><TD>u2be</TD><TD PORT="name_index_type">name_index</TD></TR>
+				<TR><TD PORT="descriptor_index_pos">4</TD><TD PORT="descriptor_index_size">2</TD><TD>u2be</TD><TD PORT="descriptor_index_type">descriptor_index</TD></TR>
+				<TR><TD PORT="attributes_count_pos">6</TD><TD PORT="attributes_count_size">2</TD><TD>u2be</TD><TD PORT="attributes_count_type">attributes_count</TD></TR>
+				<TR><TD PORT="attributes_pos">8</TD><TD PORT="attributes_size">...</TD><TD>AttributeInfo</TD><TD PORT="attributes_type">attributes</TD></TR>
+				<TR><TD COLSPAN="4" PORT="attributes__repeat">repeat attributes_count times</TD></TR>
+			</TABLE>>];
+			method_info__inst__name_as_str [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>name_as_str</TD><TD>_root.constant_pool[name_index - 1].cp_info.value</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__method_ref_cp_info {
+			label="JavaClass::MethodRefCpInfo";
+			graph[style=dotted];
+
+			method_ref_cp_info__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="class_index_pos">0</TD><TD PORT="class_index_size">2</TD><TD>u2be</TD><TD PORT="class_index_type">class_index</TD></TR>
+				<TR><TD PORT="name_and_type_index_pos">2</TD><TD PORT="name_and_type_index_size">2</TD><TD>u2be</TD><TD PORT="name_and_type_index_type">name_and_type_index</TD></TR>
+			</TABLE>>];
+			method_ref_cp_info__inst__class_as_info [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>class_as_info</TD><TD>_root.constant_pool[class_index - 1].cp_info</TD></TR>
+			</TABLE>>];
+			method_ref_cp_info__inst__name_and_type_as_info [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>name_and_type_as_info</TD><TD>_root.constant_pool[name_and_type_index - 1].cp_info</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__method_type_cp_info {
+			label="JavaClass::MethodTypeCpInfo";
+			graph[style=dotted];
+
+			method_type_cp_info__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="_unnamed0_pos">0</TD><TD PORT="_unnamed0_size">0</TD><TD>VersionGuard</TD><TD PORT="_unnamed0_type">_unnamed0</TD></TR>
+				<TR><TD PORT="descriptor_index_pos">0</TD><TD PORT="descriptor_index_size">2</TD><TD>u2be</TD><TD PORT="descriptor_index_type">descriptor_index</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__module_package_cp_info {
+			label="JavaClass::ModulePackageCpInfo";
+			graph[style=dotted];
+
+			module_package_cp_info__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="_unnamed0_pos">0</TD><TD PORT="_unnamed0_size">0</TD><TD>VersionGuard</TD><TD PORT="_unnamed0_type">_unnamed0</TD></TR>
+				<TR><TD PORT="name_index_pos">0</TD><TD PORT="name_index_size">2</TD><TD>u2be</TD><TD PORT="name_index_type">name_index</TD></TR>
+			</TABLE>>];
+			module_package_cp_info__inst__name_as_info [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>name_as_info</TD><TD>_root.constant_pool[name_index - 1].cp_info</TD></TR>
+			</TABLE>>];
+			module_package_cp_info__inst__name_as_str [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>name_as_str</TD><TD>name_as_info.value</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__name_and_type_cp_info {
+			label="JavaClass::NameAndTypeCpInfo";
+			graph[style=dotted];
+
+			name_and_type_cp_info__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="name_index_pos">0</TD><TD PORT="name_index_size">2</TD><TD>u2be</TD><TD PORT="name_index_type">name_index</TD></TR>
+				<TR><TD PORT="descriptor_index_pos">2</TD><TD PORT="descriptor_index_size">2</TD><TD>u2be</TD><TD PORT="descriptor_index_type">descriptor_index</TD></TR>
+			</TABLE>>];
+			name_and_type_cp_info__inst__descriptor_as_info [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>descriptor_as_info</TD><TD>_root.constant_pool[descriptor_index - 1].cp_info</TD></TR>
+			</TABLE>>];
+			name_and_type_cp_info__inst__descriptor_as_str [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>descriptor_as_str</TD><TD>descriptor_as_info.value</TD></TR>
+			</TABLE>>];
+			name_and_type_cp_info__inst__name_as_info [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>name_as_info</TD><TD>_root.constant_pool[name_index - 1].cp_info</TD></TR>
+			</TABLE>>];
+			name_and_type_cp_info__inst__name_as_str [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>name_as_str</TD><TD>name_as_info.value</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__string_cp_info {
+			label="JavaClass::StringCpInfo";
+			graph[style=dotted];
+
+			string_cp_info__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="string_index_pos">0</TD><TD PORT="string_index_size">2</TD><TD>u2be</TD><TD PORT="string_index_type">string_index</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__utf8_cp_info {
+			label="JavaClass::Utf8CpInfo";
+			graph[style=dotted];
+
+			utf8_cp_info__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="str_len_pos">0</TD><TD PORT="str_len_size">2</TD><TD>u2be</TD><TD PORT="str_len_type">str_len</TD></TR>
+				<TR><TD PORT="value_pos">2</TD><TD PORT="value_size">str_len</TD><TD>str(UTF-8)</TD><TD PORT="value_type">value</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__version_guard {
+			label="JavaClass::VersionGuard";
+			graph[style=dotted];
+
+			version_guard__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="_unnamed0_pos">0</TD><TD PORT="_unnamed0_size">0</TD><TD></TD><TD PORT="_unnamed0_type">_unnamed0</TD></TR>
+				<TR><TD COLSPAN="4" PORT="_unnamed0__valid">must satisfy _root.version_major &gt;= major</TD></TR>
+			</TABLE>>];
+		}
+	}
+	java_class__seq:constant_pool_type -> constant_pool_entry__seq [style=bold];
+	java_class__seq:constant_pool_count_type -> java_class__seq:constant_pool__repeat [color="#404040"];
+	java_class__seq:interfaces_count_type -> java_class__seq:interfaces__repeat [color="#404040"];
+	java_class__seq:fields_type -> field_info__seq [style=bold];
+	java_class__seq:fields_count_type -> java_class__seq:fields__repeat [color="#404040"];
+	java_class__seq:methods_type -> method_info__seq [style=bold];
+	java_class__seq:methods_count_type -> java_class__seq:methods__repeat [color="#404040"];
+	java_class__seq:attributes_type -> attribute_info__seq [style=bold];
+	java_class__seq:attributes_count_type -> java_class__seq:attributes__repeat [color="#404040"];
+	attribute_info__seq:info_type -> attribute_info__seq_info_switch [style=bold];
+	attribute_info__seq_info_switch:case0 -> attr_body_code__seq [style=bold];
+	attribute_info__seq_info_switch:case1 -> attr_body_exceptions__seq [style=bold];
+	attribute_info__seq_info_switch:case2 -> attr_body_line_number_table__seq [style=bold];
+	attribute_info__seq_info_switch:case3 -> attr_body_source_file__seq [style=bold];
+	attribute_info__inst__name_as_str:name_as_str_type -> attribute_info__seq:info_type [color="#404040"];
+	utf8_cp_info__seq:value_type -> attribute_info__inst__name_as_str [color="#404040"];
+	attr_body_code__seq:code_length_type -> attr_body_code__seq:code_size [color="#404040"];
+	attr_body_code__seq:exception_table_type -> exception_entry__seq [style=bold];
+	attr_body_code__seq:exception_table_length_type -> attr_body_code__seq:exception_table__repeat [color="#404040"];
+	attr_body_code__seq:attributes_type -> attribute_info__seq [style=bold];
+	attr_body_code__seq:attributes_count_type -> attr_body_code__seq:attributes__repeat [color="#404040"];
+	java_class__seq:constant_pool_type -> exception_entry__inst__catch_exception [color="#404040"];
+	exception_entry__seq:catch_type_type -> exception_entry__inst__catch_exception [color="#404040"];
+	attr_body_exceptions__seq:exceptions_type -> exception_table_entry__seq [style=bold];
+	attr_body_exceptions__seq:number_of_exceptions_type -> attr_body_exceptions__seq:exceptions__repeat [color="#404040"];
+	constant_pool_entry__seq:cp_info_type -> exception_table_entry__inst__as_info [color="#404040"];
+	class_cp_info__inst__name_as_str:name_as_str_type -> exception_table_entry__inst__name_as_str [color="#404040"];
+	attr_body_line_number_table__seq:line_number_table_type -> line_number_table_entry__seq [style=bold];
+	attr_body_line_number_table__seq:line_number_table_length_type -> attr_body_line_number_table__seq:line_number_table__repeat [color="#404040"];
+	utf8_cp_info__seq:value_type -> attr_body_source_file__inst__sourcefile_as_str [color="#404040"];
+	constant_pool_entry__seq:cp_info_type -> class_cp_info__inst__name_as_info [color="#404040"];
+	utf8_cp_info__seq:value_type -> class_cp_info__inst__name_as_str [color="#404040"];
+	constant_pool_entry__params:is_prev_two_entries_type -> constant_pool_entry__seq:tag__if [color="#404040"];
+	constant_pool_entry__seq:cp_info_type -> constant_pool_entry__seq_cp_info_switch [style=bold];
+	constant_pool_entry__seq_cp_info_switch:case0 -> class_cp_info__seq [style=bold];
+	constant_pool_entry__seq_cp_info_switch:case1 -> double_cp_info__seq [style=bold];
+	constant_pool_entry__seq_cp_info_switch:case2 -> dynamic_cp_info__seq [style=bold];
+	constant_pool_entry__seq_cp_info_switch:case3 -> field_ref_cp_info__seq [style=bold];
+	constant_pool_entry__seq_cp_info_switch:case4 -> float_cp_info__seq [style=bold];
+	constant_pool_entry__seq_cp_info_switch:case5 -> integer_cp_info__seq [style=bold];
+	constant_pool_entry__seq_cp_info_switch:case6 -> interface_method_ref_cp_info__seq [style=bold];
+	constant_pool_entry__seq_cp_info_switch:case7 -> invoke_dynamic_cp_info__seq [style=bold];
+	constant_pool_entry__seq_cp_info_switch:case8 -> long_cp_info__seq [style=bold];
+	constant_pool_entry__seq_cp_info_switch:case9 -> method_handle_cp_info__seq [style=bold];
+	constant_pool_entry__seq_cp_info_switch:case10 -> method_ref_cp_info__seq [style=bold];
+	constant_pool_entry__seq_cp_info_switch:case11 -> method_type_cp_info__seq [style=bold];
+	constant_pool_entry__seq_cp_info_switch:case12 -> module_package_cp_info__seq [style=bold];
+	constant_pool_entry__seq_cp_info_switch:case13 -> name_and_type_cp_info__seq [style=bold];
+	constant_pool_entry__seq_cp_info_switch:case14 -> module_package_cp_info__seq [style=bold];
+	constant_pool_entry__seq_cp_info_switch:case15 -> string_cp_info__seq [style=bold];
+	constant_pool_entry__seq_cp_info_switch:case16 -> utf8_cp_info__seq [style=bold];
+	constant_pool_entry__seq:tag_type -> constant_pool_entry__seq:cp_info_type [color="#404040"];
+	constant_pool_entry__params:is_prev_two_entries_type -> constant_pool_entry__seq:cp_info__if [color="#404040"];
+	constant_pool_entry__params:is_prev_two_entries_type -> constant_pool_entry__inst__is_two_entries [color="#404040"];
+	constant_pool_entry__seq:tag_type -> constant_pool_entry__inst__is_two_entries [color="#404040"];
+	dynamic_cp_info__seq:_unnamed0_type -> version_guard__seq [style=bold];
+	field_info__seq:attributes_type -> attribute_info__seq [style=bold];
+	field_info__seq:attributes_count_type -> field_info__seq:attributes__repeat [color="#404040"];
+	utf8_cp_info__seq:value_type -> field_info__inst__name_as_str [color="#404040"];
+	constant_pool_entry__seq:cp_info_type -> field_ref_cp_info__inst__class_as_info [color="#404040"];
+	constant_pool_entry__seq:cp_info_type -> field_ref_cp_info__inst__name_and_type_as_info [color="#404040"];
+	constant_pool_entry__seq:cp_info_type -> interface_method_ref_cp_info__inst__class_as_info [color="#404040"];
+	constant_pool_entry__seq:cp_info_type -> interface_method_ref_cp_info__inst__name_and_type_as_info [color="#404040"];
+	invoke_dynamic_cp_info__seq:_unnamed0_type -> version_guard__seq [style=bold];
+	method_handle_cp_info__seq:_unnamed0_type -> version_guard__seq [style=bold];
+	method_info__seq:attributes_type -> attribute_info__seq [style=bold];
+	method_info__seq:attributes_count_type -> method_info__seq:attributes__repeat [color="#404040"];
+	utf8_cp_info__seq:value_type -> method_info__inst__name_as_str [color="#404040"];
+	constant_pool_entry__seq:cp_info_type -> method_ref_cp_info__inst__class_as_info [color="#404040"];
+	constant_pool_entry__seq:cp_info_type -> method_ref_cp_info__inst__name_and_type_as_info [color="#404040"];
+	method_type_cp_info__seq:_unnamed0_type -> version_guard__seq [style=bold];
+	module_package_cp_info__seq:_unnamed0_type -> version_guard__seq [style=bold];
+	constant_pool_entry__seq:cp_info_type -> module_package_cp_info__inst__name_as_info [color="#404040"];
+	utf8_cp_info__seq:value_type -> module_package_cp_info__inst__name_as_str [color="#404040"];
+	constant_pool_entry__seq:cp_info_type -> name_and_type_cp_info__inst__descriptor_as_info [color="#404040"];
+	utf8_cp_info__seq:value_type -> name_and_type_cp_info__inst__descriptor_as_str [color="#404040"];
+	constant_pool_entry__seq:cp_info_type -> name_and_type_cp_info__inst__name_as_info [color="#404040"];
+	utf8_cp_info__seq:value_type -> name_and_type_cp_info__inst__name_as_str [color="#404040"];
+	utf8_cp_info__seq:str_len_type -> utf8_cp_info__seq:value_size [color="#404040"];
+	java_class__seq:version_major_type -> version_guard__seq:_unnamed0__valid [color="#404040"];
+	version_guard__params:major_type -> version_guard__seq:_unnamed0__valid [color="#404040"];
+}

@@ -4,6 +4,7 @@
 
 local class = require("class")
 require("kaitaistruct")
+require("riff")
 local enum = require("enum")
 local str_decode = require("string_decode")
 
@@ -26,6 +27,28 @@ local str_decode = require("string_decode")
 -- See also: Source (https://www.mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/WAVE.html)
 -- See also: Source (https://web.archive.org/web/20101031101749/http://www.ebu.ch/fr/technical/publications/userguides/bwf_user_guide.php)
 Wav = class.class(KaitaiStruct)
+
+Wav.Fourcc = enum.Enum {
+  id3 = 540238953,
+  cue = 543520099,
+  fmt = 544501094,
+  wave = 1163280727,
+  riff = 1179011410,
+  peak = 1262568784,
+  ixml = 1280137321,
+  info = 1330007625,
+  list = 1414744396,
+  pmx = 1481461855,
+  chna = 1634625635,
+  data = 1635017060,
+  umid = 1684630901,
+  minf = 1718511981,
+  axml = 1819113569,
+  regn = 1852269938,
+  afsp = 1886611041,
+  fact = 1952670054,
+  bext = 1954047330,
+}
 
 Wav.WFormatTagType = enum.Enum {
   unknown = 0,
@@ -295,28 +318,6 @@ Wav.WFormatTagType = enum.Enum {
   development = 65535,
 }
 
-Wav.Fourcc = enum.Enum {
-  id3 = 540238953,
-  cue = 543520099,
-  fmt = 544501094,
-  wave = 1163280727,
-  riff = 1179011410,
-  peak = 1262568784,
-  ixml = 1280137321,
-  info = 1330007625,
-  list = 1414744396,
-  pmx = 1481461855,
-  chna = 1634625635,
-  data = 1635017060,
-  umid = 1684630901,
-  minf = 1718511981,
-  axml = 1819113569,
-  regn = 1852269938,
-  afsp = 1886611041,
-  fact = 1952670054,
-  bext = 1954047330,
-}
-
 function Wav:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
@@ -325,7 +326,63 @@ function Wav:_init(io, parent, root)
 end
 
 function Wav:_read()
-  self.chunk = Riff.Chunk(self._io, self, self._root)
+  self.chunk = Riff.Chunk(self._io)
+end
+
+Wav.property.chunk_id = {}
+function Wav.property.chunk_id:get()
+  if self._m_chunk_id ~= nil then
+    return self._m_chunk_id
+  end
+
+  self._m_chunk_id = Wav.Fourcc(self.chunk.id)
+  return self._m_chunk_id
+end
+
+Wav.property.form_type = {}
+function Wav.property.form_type:get()
+  if self._m_form_type ~= nil then
+    return self._m_form_type
+  end
+
+  self._m_form_type = Wav.Fourcc(self.parent_chunk_data.form_type)
+  return self._m_form_type
+end
+
+Wav.property.is_form_type_wave = {}
+function Wav.property.is_form_type_wave:get()
+  if self._m_is_form_type_wave ~= nil then
+    return self._m_is_form_type_wave
+  end
+
+  self._m_is_form_type_wave =  ((self.is_riff_chunk) and (self.form_type == Wav.Fourcc.wave)) 
+  return self._m_is_form_type_wave
+end
+
+Wav.property.is_riff_chunk = {}
+function Wav.property.is_riff_chunk:get()
+  if self._m_is_riff_chunk ~= nil then
+    return self._m_is_riff_chunk
+  end
+
+  self._m_is_riff_chunk = self.chunk_id == Wav.Fourcc.riff
+  return self._m_is_riff_chunk
+end
+
+Wav.property.parent_chunk_data = {}
+function Wav.property.parent_chunk_data:get()
+  if self._m_parent_chunk_data ~= nil then
+    return self._m_parent_chunk_data
+  end
+
+  if self.is_riff_chunk then
+    local _io = self.chunk.data_slot._io
+    local _pos = _io:pos()
+    _io:seek(0)
+    self._m_parent_chunk_data = Riff.ParentChunkData(_io)
+    _io:seek(_pos)
+  end
+  return self._m_parent_chunk_data
 end
 
 Wav.property.subchunks = {}
@@ -349,44 +406,181 @@ function Wav.property.subchunks:get()
   return self._m_subchunks
 end
 
-Wav.property.parent_chunk_data = {}
-function Wav.property.parent_chunk_data:get()
-  if self._m_parent_chunk_data ~= nil then
-    return self._m_parent_chunk_data
-  end
 
-  if self.is_riff_chunk then
-    local _io = self.chunk.data_slot._io
-    local _pos = _io:pos()
-    _io:seek(0)
-    self._m_parent_chunk_data = Riff.ParentChunkData(_io, self, self._root)
-    _io:seek(_pos)
-  end
-  return self._m_parent_chunk_data
+-- 
+-- See also: Source (https://www.mmsp.ece.mcgill.ca/Documents/Downloads/AFsp/)
+Wav.AfspChunkType = class.class(KaitaiStruct)
+
+function Wav.AfspChunkType:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
 end
 
-Wav.property.is_form_type_wave = {}
-function Wav.property.is_form_type_wave:get()
-  if self._m_is_form_type_wave ~= nil then
-    return self._m_is_form_type_wave
+function Wav.AfspChunkType:_read()
+  self.magic = self._io:read_bytes(4)
+  if not(self.magic == "\065\070\115\112") then
+    error("not equal, expected " .. "\065\070\115\112" .. ", but got " .. self.magic)
   end
-
-  self._m_is_form_type_wave =  ((self.is_riff_chunk) and (self.form_type == Wav.Fourcc.wave)) 
-  return self._m_is_form_type_wave
+  self.info_records = {}
+  local i = 0
+  while not self._io:is_eof() do
+    self.info_records[i + 1] = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "ASCII")
+    i = i + 1
+  end
 end
 
-Wav.property.is_riff_chunk = {}
-function Wav.property.is_riff_chunk:get()
-  if self._m_is_riff_chunk ~= nil then
-    return self._m_is_riff_chunk
-  end
+-- 
+-- An array of AFsp information records, in the `<field_name>: <value>`
+-- format (e.g. "`program: CopyAudio`"). The list of existing information
+-- record types are available in the `doc-ref` links.
+-- See also: Source (https://www.mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AF/AFsetInfo.html)
+-- See also: Source (https://www.mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AF/AFprintInfoRecs.html)
 
-  self._m_is_riff_chunk = self.chunk_id == Wav.Fourcc.riff
-  return self._m_is_riff_chunk
+-- 
+-- See also: Source (https://tech.ebu.ch/docs/tech/tech3285s5.pdf)
+Wav.AxmlChunkType = class.class(KaitaiStruct)
+
+function Wav.AxmlChunkType:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
 end
 
-Wav.property.chunk_id = {}
-function Wav.property.chunk_id:get()
+function Wav.AxmlChunkType:_read()
+  self.data = str_decode.decode(self._io:read_bytes_full(), "UTF-8")
+end
+
+
+-- 
+-- See also: Source (https://en.wikipedia.org/wiki/Broadcast_Wave_Format)
+Wav.BextChunkType = class.class(KaitaiStruct)
+
+function Wav.BextChunkType:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Wav.BextChunkType:_read()
+  self.description = str_decode.decode(KaitaiStream.bytes_terminate(self._io:read_bytes(256), 0, false), "ASCII")
+  self.originator = str_decode.decode(KaitaiStream.bytes_terminate(self._io:read_bytes(32), 0, false), "ASCII")
+  self.originator_reference = str_decode.decode(KaitaiStream.bytes_terminate(self._io:read_bytes(32), 0, false), "ASCII")
+  self.origination_date = str_decode.decode(self._io:read_bytes(10), "ASCII")
+  self.origination_time = str_decode.decode(self._io:read_bytes(8), "ASCII")
+  self.time_reference_low = self._io:read_u4le()
+  self.time_reference_high = self._io:read_u4le()
+  self.version = self._io:read_u2le()
+  self.umid = self._io:read_bytes(64)
+  self.loudness_value = self._io:read_u2le()
+  self.loudness_range = self._io:read_u2le()
+  self.max_true_peak_level = self._io:read_u2le()
+  self.max_momentary_loudness = self._io:read_u2le()
+  self.max_short_term_loudness = self._io:read_u2le()
+end
+
+
+Wav.ChannelMaskAndSubformatType = class.class(KaitaiStruct)
+
+function Wav.ChannelMaskAndSubformatType:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Wav.ChannelMaskAndSubformatType:_read()
+  self.dw_channel_mask = Wav.ChannelMaskType(self._io, self, self._root)
+  self.subformat = Wav.GuidType(self._io, self, self._root)
+end
+
+
+Wav.ChannelMaskType = class.class(KaitaiStruct)
+
+function Wav.ChannelMaskType:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Wav.ChannelMaskType:_read()
+  self.front_right_of_center = self._io:read_bits_int_be(1) ~= 0
+  self.front_left_of_center = self._io:read_bits_int_be(1) ~= 0
+  self.back_right = self._io:read_bits_int_be(1) ~= 0
+  self.back_left = self._io:read_bits_int_be(1) ~= 0
+  self.low_frequency = self._io:read_bits_int_be(1) ~= 0
+  self.front_center = self._io:read_bits_int_be(1) ~= 0
+  self.front_right = self._io:read_bits_int_be(1) ~= 0
+  self.front_left = self._io:read_bits_int_be(1) ~= 0
+  self.top_center = self._io:read_bits_int_be(1) ~= 0
+  self.side_right = self._io:read_bits_int_be(1) ~= 0
+  self.side_left = self._io:read_bits_int_be(1) ~= 0
+  self.back_center = self._io:read_bits_int_be(1) ~= 0
+  self.top_back_left = self._io:read_bits_int_be(1) ~= 0
+  self.top_front_right = self._io:read_bits_int_be(1) ~= 0
+  self.top_front_center = self._io:read_bits_int_be(1) ~= 0
+  self.top_front_left = self._io:read_bits_int_be(1) ~= 0
+  self.unused1 = self._io:read_bits_int_be(6)
+  self.top_back_right = self._io:read_bits_int_be(1) ~= 0
+  self.top_back_center = self._io:read_bits_int_be(1) ~= 0
+  self.unused2 = self._io:read_bits_int_be(8)
+end
+
+
+Wav.ChunkType = class.class(KaitaiStruct)
+
+function Wav.ChunkType:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Wav.ChunkType:_read()
+  self.chunk = Riff.Chunk(self._io)
+end
+
+Wav.ChunkType.property.chunk_data = {}
+function Wav.ChunkType.property.chunk_data:get()
+  if self._m_chunk_data ~= nil then
+    return self._m_chunk_data
+  end
+
+  local _io = self.chunk.data_slot._io
+  local _pos = _io:pos()
+  _io:seek(0)
+  local _on = self.chunk_id
+  if _on == Wav.Fourcc.afsp then
+    self._m_chunk_data = Wav.AfspChunkType(_io, self, self._root)
+  elseif _on == Wav.Fourcc.axml then
+    self._m_chunk_data = Wav.AxmlChunkType(_io, self, self._root)
+  elseif _on == Wav.Fourcc.bext then
+    self._m_chunk_data = Wav.BextChunkType(_io, self, self._root)
+  elseif _on == Wav.Fourcc.cue then
+    self._m_chunk_data = Wav.CueChunkType(_io, self, self._root)
+  elseif _on == Wav.Fourcc.data then
+    self._m_chunk_data = Wav.DataChunkType(_io, self, self._root)
+  elseif _on == Wav.Fourcc.fact then
+    self._m_chunk_data = Wav.FactChunkType(_io, self, self._root)
+  elseif _on == Wav.Fourcc.fmt then
+    self._m_chunk_data = Wav.FormatChunkType(_io, self, self._root)
+  elseif _on == Wav.Fourcc.ixml then
+    self._m_chunk_data = Wav.IxmlChunkType(_io, self, self._root)
+  elseif _on == Wav.Fourcc.list then
+    self._m_chunk_data = Wav.ListChunkType(_io, self, self._root)
+  elseif _on == Wav.Fourcc.pmx then
+    self._m_chunk_data = Wav.PmxChunkType(_io, self, self._root)
+  end
+  _io:seek(_pos)
+  return self._m_chunk_data
+end
+
+Wav.ChunkType.property.chunk_id = {}
+function Wav.ChunkType.property.chunk_id:get()
   if self._m_chunk_id ~= nil then
     return self._m_chunk_id
   end
@@ -395,28 +589,73 @@ function Wav.property.chunk_id:get()
   return self._m_chunk_id
 end
 
-Wav.property.form_type = {}
-function Wav.property.form_type:get()
-  if self._m_form_type ~= nil then
-    return self._m_form_type
-  end
 
-  self._m_form_type = Wav.Fourcc(self.parent_chunk_data.form_type)
-  return self._m_form_type
-end
+Wav.CueChunkType = class.class(KaitaiStruct)
 
-
-Wav.SampleType = class.class(KaitaiStruct)
-
-function Wav.SampleType:_init(io, parent, root)
+function Wav.CueChunkType:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function Wav.SampleType:_read()
-  self.sample = self._io:read_u2le()
+function Wav.CueChunkType:_read()
+  self.dw_cue_points = self._io:read_u4le()
+  self.cue_points = {}
+  for i = 0, self.dw_cue_points - 1 do
+    self.cue_points[i + 1] = Wav.CuePointType(self._io, self, self._root)
+  end
+end
+
+
+Wav.CuePointType = class.class(KaitaiStruct)
+
+function Wav.CuePointType:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Wav.CuePointType:_read()
+  self.dw_name = self._io:read_u4le()
+  self.dw_position = self._io:read_u4le()
+  self.fcc_chunk = self._io:read_u4le()
+  self.dw_chunk_start = self._io:read_u4le()
+  self.dw_block_start = self._io:read_u4le()
+  self.dw_sample_offset = self._io:read_u4le()
+end
+
+
+Wav.DataChunkType = class.class(KaitaiStruct)
+
+function Wav.DataChunkType:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Wav.DataChunkType:_read()
+  self.data = self._io:read_bytes_full()
+end
+
+
+-- 
+-- required for all non-PCM formats
+-- (`w_format_tag != w_format_tag_type::pcm` or `not is_basic_pcm` in
+-- `format_chunk_type` context)
+Wav.FactChunkType = class.class(KaitaiStruct)
+
+function Wav.FactChunkType:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Wav.FactChunkType:_read()
+  self.num_samples_per_channel = self._io:read_u4le()
 end
 
 
@@ -425,7 +664,7 @@ Wav.FormatChunkType = class.class(KaitaiStruct)
 function Wav.FormatChunkType:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -447,14 +686,14 @@ function Wav.FormatChunkType:_read()
   end
 end
 
-Wav.FormatChunkType.property.is_extensible = {}
-function Wav.FormatChunkType.property.is_extensible:get()
-  if self._m_is_extensible ~= nil then
-    return self._m_is_extensible
+Wav.FormatChunkType.property.is_basic_float = {}
+function Wav.FormatChunkType.property.is_basic_float:get()
+  if self._m_is_basic_float ~= nil then
+    return self._m_is_basic_float
   end
 
-  self._m_is_extensible = self.w_format_tag == Wav.WFormatTagType.extensible
-  return self._m_is_extensible
+  self._m_is_basic_float = self.w_format_tag == Wav.WFormatTagType.ieee_float
+  return self._m_is_basic_float
 end
 
 Wav.FormatChunkType.property.is_basic_pcm = {}
@@ -467,16 +706,6 @@ function Wav.FormatChunkType.property.is_basic_pcm:get()
   return self._m_is_basic_pcm
 end
 
-Wav.FormatChunkType.property.is_basic_float = {}
-function Wav.FormatChunkType.property.is_basic_float:get()
-  if self._m_is_basic_float ~= nil then
-    return self._m_is_basic_float
-  end
-
-  self._m_is_basic_float = self.w_format_tag == Wav.WFormatTagType.ieee_float
-  return self._m_is_basic_float
-end
-
 Wav.FormatChunkType.property.is_cb_size_meaningful = {}
 function Wav.FormatChunkType.property.is_cb_size_meaningful:get()
   if self._m_is_cb_size_meaningful ~= nil then
@@ -487,39 +716,14 @@ function Wav.FormatChunkType.property.is_cb_size_meaningful:get()
   return self._m_is_cb_size_meaningful
 end
 
+Wav.FormatChunkType.property.is_extensible = {}
+function Wav.FormatChunkType.property.is_extensible:get()
+  if self._m_is_extensible ~= nil then
+    return self._m_is_extensible
+  end
 
-Wav.PmxChunkType = class.class(KaitaiStruct)
-
-function Wav.PmxChunkType:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Wav.PmxChunkType:_read()
-  self.data = str_decode.decode(self._io:read_bytes_full(), "UTF-8")
-end
-
--- 
--- XMP data.
--- See also: Source (https://github.com/adobe/XMP-Toolkit-SDK/blob/v2022.06/docs/XMPSpecificationPart3.pdf)
-
--- 
--- required for all non-PCM formats
--- (`w_format_tag != w_format_tag_type::pcm` or `not is_basic_pcm` in
--- `format_chunk_type` context)
-Wav.FactChunkType = class.class(KaitaiStruct)
-
-function Wav.FactChunkType:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Wav.FactChunkType:_read()
-  self.num_samples_per_channel = self._io:read_u4le()
+  self._m_is_extensible = self.w_format_tag == Wav.WFormatTagType.extensible
+  return self._m_is_extensible
 end
 
 
@@ -528,7 +732,7 @@ Wav.GuidType = class.class(KaitaiStruct)
 function Wav.GuidType:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -541,33 +745,17 @@ function Wav.GuidType:_read()
 end
 
 
--- 
--- See also: Source (https://en.wikipedia.org/wiki/IXML)
-Wav.IxmlChunkType = class.class(KaitaiStruct)
-
-function Wav.IxmlChunkType:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Wav.IxmlChunkType:_read()
-  self.data = str_decode.decode(self._io:read_bytes_full(), "UTF-8")
-end
-
-
 Wav.InfoChunkType = class.class(KaitaiStruct)
 
 function Wav.InfoChunkType:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function Wav.InfoChunkType:_read()
-  self.chunk = Riff.Chunk(self._io, self, self._root)
+  self.chunk = Riff.Chunk(self._io)
 end
 
 Wav.InfoChunkType.property.chunk_data = {}
@@ -585,83 +773,19 @@ function Wav.InfoChunkType.property.chunk_data:get()
 end
 
 
-Wav.CuePointType = class.class(KaitaiStruct)
+-- 
+-- See also: Source (https://en.wikipedia.org/wiki/IXML)
+Wav.IxmlChunkType = class.class(KaitaiStruct)
 
-function Wav.CuePointType:_init(io, parent, root)
+function Wav.IxmlChunkType:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function Wav.CuePointType:_read()
-  self.dw_name = self._io:read_u4le()
-  self.dw_position = self._io:read_u4le()
-  self.fcc_chunk = self._io:read_u4le()
-  self.dw_chunk_start = self._io:read_u4le()
-  self.dw_block_start = self._io:read_u4le()
-  self.dw_sample_offset = self._io:read_u4le()
-end
-
-
-Wav.DataChunkType = class.class(KaitaiStruct)
-
-function Wav.DataChunkType:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Wav.DataChunkType:_read()
-  self.data = self._io:read_bytes_full()
-end
-
-
-Wav.SamplesType = class.class(KaitaiStruct)
-
-function Wav.SamplesType:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Wav.SamplesType:_read()
-  self.samples = self._io:read_u4le()
-end
-
-
-Wav.ChannelMaskAndSubformatType = class.class(KaitaiStruct)
-
-function Wav.ChannelMaskAndSubformatType:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Wav.ChannelMaskAndSubformatType:_read()
-  self.dw_channel_mask = Wav.ChannelMaskType(self._io, self, self._root)
-  self.subformat = Wav.GuidType(self._io, self, self._root)
-end
-
-
-Wav.CueChunkType = class.class(KaitaiStruct)
-
-function Wav.CueChunkType:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Wav.CueChunkType:_read()
-  self.dw_cue_points = self._io:read_u4le()
-  self.cue_points = {}
-  for i = 0, self.dw_cue_points - 1 do
-    self.cue_points[i + 1] = Wav.CuePointType(self._io, self, self._root)
-  end
+function Wav.IxmlChunkType:_read()
+  self.data = str_decode.decode(self._io:read_bytes_full(), "UTF-8")
 end
 
 
@@ -670,12 +794,12 @@ Wav.ListChunkType = class.class(KaitaiStruct)
 function Wav.ListChunkType:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function Wav.ListChunkType:_read()
-  self.parent_chunk_data = Riff.ParentChunkData(self._io, self, self._root)
+  self.parent_chunk_data = Riff.ParentChunkData(self._io)
 end
 
 Wav.ListChunkType.property.form_type = {}
@@ -711,171 +835,48 @@ function Wav.ListChunkType.property.subchunks:get()
 end
 
 
-Wav.ChannelMaskType = class.class(KaitaiStruct)
+Wav.PmxChunkType = class.class(KaitaiStruct)
 
-function Wav.ChannelMaskType:_init(io, parent, root)
+function Wav.PmxChunkType:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function Wav.ChannelMaskType:_read()
-  self.front_right_of_center = self._io:read_bits_int_be(1) ~= 0
-  self.front_left_of_center = self._io:read_bits_int_be(1) ~= 0
-  self.back_right = self._io:read_bits_int_be(1) ~= 0
-  self.back_left = self._io:read_bits_int_be(1) ~= 0
-  self.low_frequency = self._io:read_bits_int_be(1) ~= 0
-  self.front_center = self._io:read_bits_int_be(1) ~= 0
-  self.front_right = self._io:read_bits_int_be(1) ~= 0
-  self.front_left = self._io:read_bits_int_be(1) ~= 0
-  self.top_center = self._io:read_bits_int_be(1) ~= 0
-  self.side_right = self._io:read_bits_int_be(1) ~= 0
-  self.side_left = self._io:read_bits_int_be(1) ~= 0
-  self.back_center = self._io:read_bits_int_be(1) ~= 0
-  self.top_back_left = self._io:read_bits_int_be(1) ~= 0
-  self.top_front_right = self._io:read_bits_int_be(1) ~= 0
-  self.top_front_center = self._io:read_bits_int_be(1) ~= 0
-  self.top_front_left = self._io:read_bits_int_be(1) ~= 0
-  self.unused1 = self._io:read_bits_int_be(6)
-  self.top_back_right = self._io:read_bits_int_be(1) ~= 0
-  self.top_back_center = self._io:read_bits_int_be(1) ~= 0
-  self.unused2 = self._io:read_bits_int_be(8)
-end
-
-
--- 
--- See also: Source (https://www.mmsp.ece.mcgill.ca/Documents/Downloads/AFsp/)
-Wav.AfspChunkType = class.class(KaitaiStruct)
-
-function Wav.AfspChunkType:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Wav.AfspChunkType:_read()
-  self.magic = self._io:read_bytes(4)
-  if not(self.magic == "\065\070\115\112") then
-    error("not equal, expected " ..  "\065\070\115\112" .. ", but got " .. self.magic)
-  end
-  self.info_records = {}
-  local i = 0
-  while not self._io:is_eof() do
-    self.info_records[i + 1] = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "ASCII")
-    i = i + 1
-  end
-end
-
--- 
--- An array of AFsp information records, in the `<field_name>: <value>`
--- format (e.g. "`program: CopyAudio`"). The list of existing information
--- record types are available in the `doc-ref` links.
--- See also: Source (https://www.mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AF/AFsetInfo.html)
--- See also: Source (https://www.mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AF/AFprintInfoRecs.html)
-
--- 
--- See also: Source (https://tech.ebu.ch/docs/tech/tech3285s5.pdf)
-Wav.AxmlChunkType = class.class(KaitaiStruct)
-
-function Wav.AxmlChunkType:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Wav.AxmlChunkType:_read()
+function Wav.PmxChunkType:_read()
   self.data = str_decode.decode(self._io:read_bytes_full(), "UTF-8")
 end
 
-
-Wav.ChunkType = class.class(KaitaiStruct)
-
-function Wav.ChunkType:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Wav.ChunkType:_read()
-  self.chunk = Riff.Chunk(self._io, self, self._root)
-end
-
-Wav.ChunkType.property.chunk_id = {}
-function Wav.ChunkType.property.chunk_id:get()
-  if self._m_chunk_id ~= nil then
-    return self._m_chunk_id
-  end
-
-  self._m_chunk_id = Wav.Fourcc(self.chunk.id)
-  return self._m_chunk_id
-end
-
-Wav.ChunkType.property.chunk_data = {}
-function Wav.ChunkType.property.chunk_data:get()
-  if self._m_chunk_data ~= nil then
-    return self._m_chunk_data
-  end
-
-  local _io = self.chunk.data_slot._io
-  local _pos = _io:pos()
-  _io:seek(0)
-  local _on = self.chunk_id
-  if _on == Wav.Fourcc.fact then
-    self._m_chunk_data = Wav.FactChunkType(_io, self, self._root)
-  elseif _on == Wav.Fourcc.list then
-    self._m_chunk_data = Wav.ListChunkType(_io, self, self._root)
-  elseif _on == Wav.Fourcc.fmt then
-    self._m_chunk_data = Wav.FormatChunkType(_io, self, self._root)
-  elseif _on == Wav.Fourcc.afsp then
-    self._m_chunk_data = Wav.AfspChunkType(_io, self, self._root)
-  elseif _on == Wav.Fourcc.bext then
-    self._m_chunk_data = Wav.BextChunkType(_io, self, self._root)
-  elseif _on == Wav.Fourcc.cue then
-    self._m_chunk_data = Wav.CueChunkType(_io, self, self._root)
-  elseif _on == Wav.Fourcc.ixml then
-    self._m_chunk_data = Wav.IxmlChunkType(_io, self, self._root)
-  elseif _on == Wav.Fourcc.pmx then
-    self._m_chunk_data = Wav.PmxChunkType(_io, self, self._root)
-  elseif _on == Wav.Fourcc.axml then
-    self._m_chunk_data = Wav.AxmlChunkType(_io, self, self._root)
-  elseif _on == Wav.Fourcc.data then
-    self._m_chunk_data = Wav.DataChunkType(_io, self, self._root)
-  end
-  _io:seek(_pos)
-  return self._m_chunk_data
-end
-
-
 -- 
--- See also: Source (https://en.wikipedia.org/wiki/Broadcast_Wave_Format)
-Wav.BextChunkType = class.class(KaitaiStruct)
+-- XMP data.
+-- See also: Source (https://github.com/adobe/XMP-Toolkit-SDK/blob/v2022.06/docs/XMPSpecificationPart3.pdf)
 
-function Wav.BextChunkType:_init(io, parent, root)
+Wav.SampleType = class.class(KaitaiStruct)
+
+function Wav.SampleType:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function Wav.BextChunkType:_read()
-  self.description = str_decode.decode(KaitaiStream.bytes_terminate(self._io:read_bytes(256), 0, false), "ASCII")
-  self.originator = str_decode.decode(KaitaiStream.bytes_terminate(self._io:read_bytes(32), 0, false), "ASCII")
-  self.originator_reference = str_decode.decode(KaitaiStream.bytes_terminate(self._io:read_bytes(32), 0, false), "ASCII")
-  self.origination_date = str_decode.decode(self._io:read_bytes(10), "ASCII")
-  self.origination_time = str_decode.decode(self._io:read_bytes(8), "ASCII")
-  self.time_reference_low = self._io:read_u4le()
-  self.time_reference_high = self._io:read_u4le()
-  self.version = self._io:read_u2le()
-  self.umid = self._io:read_bytes(64)
-  self.loudness_value = self._io:read_u2le()
-  self.loudness_range = self._io:read_u2le()
-  self.max_true_peak_level = self._io:read_u2le()
-  self.max_momentary_loudness = self._io:read_u2le()
-  self.max_short_term_loudness = self._io:read_u2le()
+function Wav.SampleType:_read()
+  self.sample = self._io:read_u2le()
+end
+
+
+Wav.SamplesType = class.class(KaitaiStruct)
+
+function Wav.SamplesType:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Wav.SamplesType:_read()
+  self.samples = self._io:read_u4le()
 end
 
 

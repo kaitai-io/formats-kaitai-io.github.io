@@ -38,10 +38,68 @@ namespace Kaitai
                 _partitions.Add(new PartitionEntry(m_io, this, m_root));
             }
             _bootSignature = m_io.ReadBytes(2);
-            if (!((KaitaiStream.ByteArrayCompare(BootSignature, new byte[] { 85, 170 }) == 0)))
+            if (!((KaitaiStream.ByteArrayCompare(_bootSignature, new byte[] { 85, 170 }) == 0)))
             {
-                throw new ValidationNotEqualError(new byte[] { 85, 170 }, BootSignature, M_Io, "/seq/2");
+                throw new ValidationNotEqualError(new byte[] { 85, 170 }, _bootSignature, m_io, "/seq/2");
             }
+        }
+        public partial class Chs : KaitaiStruct
+        {
+            public static Chs FromFile(string fileName)
+            {
+                return new Chs(new KaitaiStream(fileName));
+            }
+
+            public Chs(KaitaiStream p__io, MbrPartitionTable.PartitionEntry p__parent = null, MbrPartitionTable p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_cylinder = false;
+                f_sector = false;
+                _read();
+            }
+            private void _read()
+            {
+                _head = m_io.ReadU1();
+                _b2 = m_io.ReadU1();
+                _b3 = m_io.ReadU1();
+            }
+            private bool f_cylinder;
+            private int _cylinder;
+            public int Cylinder
+            {
+                get
+                {
+                    if (f_cylinder)
+                        return _cylinder;
+                    f_cylinder = true;
+                    _cylinder = (int) (B3 + ((B2 & 192) << 2));
+                    return _cylinder;
+                }
+            }
+            private bool f_sector;
+            private int _sector;
+            public int Sector
+            {
+                get
+                {
+                    if (f_sector)
+                        return _sector;
+                    f_sector = true;
+                    _sector = (int) (B2 & 63);
+                    return _sector;
+                }
+            }
+            private byte _head;
+            private byte _b2;
+            private byte _b3;
+            private MbrPartitionTable m_root;
+            private MbrPartitionTable.PartitionEntry m_parent;
+            public byte Head { get { return _head; } }
+            public byte B2 { get { return _b2; } }
+            public byte B3 { get { return _b3; } }
+            public MbrPartitionTable M_Root { get { return m_root; } }
+            public MbrPartitionTable.PartitionEntry M_Parent { get { return m_parent; } }
         }
         public partial class PartitionEntry : KaitaiStruct
         {
@@ -81,64 +139,6 @@ namespace Kaitai
             public uint NumSectors { get { return _numSectors; } }
             public MbrPartitionTable M_Root { get { return m_root; } }
             public MbrPartitionTable M_Parent { get { return m_parent; } }
-        }
-        public partial class Chs : KaitaiStruct
-        {
-            public static Chs FromFile(string fileName)
-            {
-                return new Chs(new KaitaiStream(fileName));
-            }
-
-            public Chs(KaitaiStream p__io, MbrPartitionTable.PartitionEntry p__parent = null, MbrPartitionTable p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_sector = false;
-                f_cylinder = false;
-                _read();
-            }
-            private void _read()
-            {
-                _head = m_io.ReadU1();
-                _b2 = m_io.ReadU1();
-                _b3 = m_io.ReadU1();
-            }
-            private bool f_sector;
-            private int _sector;
-            public int Sector
-            {
-                get
-                {
-                    if (f_sector)
-                        return _sector;
-                    _sector = (int) ((B2 & 63));
-                    f_sector = true;
-                    return _sector;
-                }
-            }
-            private bool f_cylinder;
-            private int _cylinder;
-            public int Cylinder
-            {
-                get
-                {
-                    if (f_cylinder)
-                        return _cylinder;
-                    _cylinder = (int) ((B3 + ((B2 & 192) << 2)));
-                    f_cylinder = true;
-                    return _cylinder;
-                }
-            }
-            private byte _head;
-            private byte _b2;
-            private byte _b3;
-            private MbrPartitionTable m_root;
-            private MbrPartitionTable.PartitionEntry m_parent;
-            public byte Head { get { return _head; } }
-            public byte B2 { get { return _b2; } }
-            public byte B3 { get { return _b3; } }
-            public MbrPartitionTable M_Root { get { return m_root; } }
-            public MbrPartitionTable.PartitionEntry M_Parent { get { return m_parent; } }
         }
         private byte[] _bootstrapCode;
         private List<PartitionEntry> _partitions;

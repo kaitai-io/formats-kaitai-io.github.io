@@ -103,18 +103,27 @@ const (
 	PythonPickle_Opcode__NextBuffer PythonPickle_Opcode = 151
 	PythonPickle_Opcode__ReadonlyBuffer PythonPickle_Opcode = 152
 )
+var values_PythonPickle_Opcode = map[PythonPickle_Opcode]struct{}{40: {}, 41: {}, 46: {}, 48: {}, 49: {}, 50: {}, 66: {}, 67: {}, 70: {}, 71: {}, 73: {}, 74: {}, 75: {}, 76: {}, 77: {}, 78: {}, 80: {}, 81: {}, 82: {}, 83: {}, 84: {}, 85: {}, 86: {}, 88: {}, 93: {}, 97: {}, 98: {}, 99: {}, 100: {}, 101: {}, 103: {}, 104: {}, 105: {}, 106: {}, 108: {}, 111: {}, 112: {}, 113: {}, 114: {}, 115: {}, 116: {}, 117: {}, 125: {}, 128: {}, 129: {}, 130: {}, 131: {}, 132: {}, 133: {}, 134: {}, 135: {}, 136: {}, 137: {}, 138: {}, 139: {}, 140: {}, 141: {}, 142: {}, 143: {}, 144: {}, 145: {}, 146: {}, 147: {}, 148: {}, 149: {}, 150: {}, 151: {}, 152: {}}
+func (v PythonPickle_Opcode) isDefined() bool {
+	_, ok := values_PythonPickle_Opcode[v]
+	return ok
+}
 type PythonPickle struct {
 	Ops []*PythonPickle_Op
 	_io *kaitai.Stream
 	_root *PythonPickle
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewPythonPickle() *PythonPickle {
 	return &PythonPickle{
 	}
 }
 
-func (this *PythonPickle) Read(io *kaitai.Stream, parent interface{}, root *PythonPickle) (err error) {
+func (this PythonPickle) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PythonPickle) Read(io *kaitai.Stream, parent kaitai.Struct, root *PythonPickle) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -137,24 +146,25 @@ func (this *PythonPickle) Read(io *kaitai.Stream, parent interface{}, root *Pyth
 /**
  * Length prefixed string, between 0 and 2**64-1 bytes long.
  * 
- * Only a 64-bit build of Python would produce a pickle containing strings
- * large enough to need this type. Such a pickle could not be unpickled on
- * a 32-bit build of Python, because the string would be larger than
- * `sys.maxsize`.
+ * The contents are deserilised into a `bytearray` object.
  */
-type PythonPickle_Unicodestring8 struct {
+type PythonPickle_Bytearray8 struct {
 	Len uint64
-	Val string
+	Val []byte
 	_io *kaitai.Stream
 	_root *PythonPickle
 	_parent *PythonPickle_Op
 }
-func NewPythonPickle_Unicodestring8() *PythonPickle_Unicodestring8 {
-	return &PythonPickle_Unicodestring8{
+func NewPythonPickle_Bytearray8() *PythonPickle_Bytearray8 {
+	return &PythonPickle_Bytearray8{
 	}
 }
 
-func (this *PythonPickle_Unicodestring8) Read(io *kaitai.Stream, parent *PythonPickle_Op, root *PythonPickle) (err error) {
+func (this PythonPickle_Bytearray8) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PythonPickle_Bytearray8) Read(io *kaitai.Stream, parent *PythonPickle_Op, root *PythonPickle) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -169,27 +179,30 @@ func (this *PythonPickle_Unicodestring8) Read(io *kaitai.Stream, parent *PythonP
 		return err
 	}
 	tmp3 = tmp3
-	this.Val = string(tmp3)
+	this.Val = tmp3
 	return err
 }
 
 /**
- * Large signed integer, in the range -2**(8*255-1) to 2**(8*255-1)-1,
- * encoded as two's complement.
+ * Length prefixed byte string, between 0 and 255 bytes long.
  */
-type PythonPickle_Long1 struct {
+type PythonPickle_Bytes1 struct {
 	Len uint8
 	Val []byte
 	_io *kaitai.Stream
 	_root *PythonPickle
 	_parent *PythonPickle_Op
 }
-func NewPythonPickle_Long1() *PythonPickle_Long1 {
-	return &PythonPickle_Long1{
+func NewPythonPickle_Bytes1() *PythonPickle_Bytes1 {
+	return &PythonPickle_Bytes1{
 	}
 }
 
-func (this *PythonPickle_Long1) Read(io *kaitai.Stream, parent *PythonPickle_Op, root *PythonPickle) (err error) {
+func (this PythonPickle_Bytes1) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PythonPickle_Bytes1) Read(io *kaitai.Stream, parent *PythonPickle_Op, root *PythonPickle) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -205,6 +218,44 @@ func (this *PythonPickle_Long1) Read(io *kaitai.Stream, parent *PythonPickle_Op,
 	}
 	tmp5 = tmp5
 	this.Val = tmp5
+	return err
+}
+
+/**
+ * Length prefixed string, between 0 and 2**32-1 bytes long
+ */
+type PythonPickle_Bytes4 struct {
+	Len uint32
+	Val []byte
+	_io *kaitai.Stream
+	_root *PythonPickle
+	_parent *PythonPickle_Op
+}
+func NewPythonPickle_Bytes4() *PythonPickle_Bytes4 {
+	return &PythonPickle_Bytes4{
+	}
+}
+
+func (this PythonPickle_Bytes4) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PythonPickle_Bytes4) Read(io *kaitai.Stream, parent *PythonPickle_Op, root *PythonPickle) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp6, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Len = uint32(tmp6)
+	tmp7, err := this._io.ReadBytes(int(this.Len))
+	if err != nil {
+		return err
+	}
+	tmp7 = tmp7
+	this.Val = tmp7
 	return err
 }
 
@@ -228,138 +279,26 @@ func NewPythonPickle_Bytes8() *PythonPickle_Bytes8 {
 	}
 }
 
+func (this PythonPickle_Bytes8) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *PythonPickle_Bytes8) Read(io *kaitai.Stream, parent *PythonPickle_Op, root *PythonPickle) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp6, err := this._io.ReadU8le()
+	tmp8, err := this._io.ReadU8le()
 	if err != nil {
 		return err
 	}
-	this.Len = uint64(tmp6)
-	tmp7, err := this._io.ReadBytes(int(this.Len))
-	if err != nil {
-		return err
-	}
-	tmp7 = tmp7
-	this.Val = tmp7
-	return err
-}
-
-/**
- * Length prefixed byte string, between 0 and 255 bytes long.
- */
-type PythonPickle_Bytes1 struct {
-	Len uint8
-	Val []byte
-	_io *kaitai.Stream
-	_root *PythonPickle
-	_parent *PythonPickle_Op
-}
-func NewPythonPickle_Bytes1() *PythonPickle_Bytes1 {
-	return &PythonPickle_Bytes1{
-	}
-}
-
-func (this *PythonPickle_Bytes1) Read(io *kaitai.Stream, parent *PythonPickle_Op, root *PythonPickle) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp8, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Len = tmp8
+	this.Len = uint64(tmp8)
 	tmp9, err := this._io.ReadBytes(int(this.Len))
 	if err != nil {
 		return err
 	}
 	tmp9 = tmp9
 	this.Val = tmp9
-	return err
-}
-
-/**
- * Length prefixed string, between 0 and 2**32-1 bytes long
- */
-type PythonPickle_Bytes4 struct {
-	Len uint32
-	Val []byte
-	_io *kaitai.Stream
-	_root *PythonPickle
-	_parent *PythonPickle_Op
-}
-func NewPythonPickle_Bytes4() *PythonPickle_Bytes4 {
-	return &PythonPickle_Bytes4{
-	}
-}
-
-func (this *PythonPickle_Bytes4) Read(io *kaitai.Stream, parent *PythonPickle_Op, root *PythonPickle) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp10, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Len = uint32(tmp10)
-	tmp11, err := this._io.ReadBytes(int(this.Len))
-	if err != nil {
-		return err
-	}
-	tmp11 = tmp11
-	this.Val = tmp11
-	return err
-}
-
-/**
- * Some opcodes take no argument, this empty type is used for them.
- */
-type PythonPickle_NoArg struct {
-	_io *kaitai.Stream
-	_root *PythonPickle
-	_parent *PythonPickle_Op
-}
-func NewPythonPickle_NoArg() *PythonPickle_NoArg {
-	return &PythonPickle_NoArg{
-	}
-}
-
-func (this *PythonPickle_NoArg) Read(io *kaitai.Stream, parent *PythonPickle_Op, root *PythonPickle) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	return err
-}
-
-/**
- * Unquoted string, does not contain string escapes.
- */
-type PythonPickle_StringnlNoescape struct {
-	Val string
-	_io *kaitai.Stream
-	_root *PythonPickle
-	_parent interface{}
-}
-func NewPythonPickle_StringnlNoescape() *PythonPickle_StringnlNoescape {
-	return &PythonPickle_StringnlNoescape{
-	}
-}
-
-func (this *PythonPickle_StringnlNoescape) Read(io *kaitai.Stream, parent interface{}, root *PythonPickle) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp12, err := this._io.ReadBytesTerm(10, false, true, true)
-	if err != nil {
-		return err
-	}
-	this.Val = string(tmp12)
 	return err
 }
 
@@ -377,77 +316,125 @@ func NewPythonPickle_DecimalnlLong() *PythonPickle_DecimalnlLong {
 	}
 }
 
+func (this PythonPickle_DecimalnlLong) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *PythonPickle_DecimalnlLong) Read(io *kaitai.Stream, parent *PythonPickle_Op, root *PythonPickle) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp13, err := this._io.ReadBytesTerm(10, false, true, true)
+	tmp10, err := this._io.ReadBytesTerm(10, false, true, true)
 	if err != nil {
 		return err
 	}
-	this.Val = string(tmp13)
+	this.Val = string(tmp10)
 	return err
 }
 
 /**
- * Length prefixed string, between 0 and 2**32-1 bytes long
+ * Integer or boolean, encoded with the ASCII characters [0-9-].
+ * 
+ * The values '00' and '01' encode the Python values `False` and `True`.
+ * Normally a value would not contain leading '0' characters.
  */
-type PythonPickle_Unicodestring4 struct {
-	Len uint32
+type PythonPickle_DecimalnlShort struct {
 	Val string
 	_io *kaitai.Stream
 	_root *PythonPickle
 	_parent *PythonPickle_Op
 }
-func NewPythonPickle_Unicodestring4() *PythonPickle_Unicodestring4 {
-	return &PythonPickle_Unicodestring4{
+func NewPythonPickle_DecimalnlShort() *PythonPickle_DecimalnlShort {
+	return &PythonPickle_DecimalnlShort{
 	}
 }
 
-func (this *PythonPickle_Unicodestring4) Read(io *kaitai.Stream, parent *PythonPickle_Op, root *PythonPickle) (err error) {
+func (this PythonPickle_DecimalnlShort) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PythonPickle_DecimalnlShort) Read(io *kaitai.Stream, parent *PythonPickle_Op, root *PythonPickle) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp14, err := this._io.ReadU4le()
+	tmp11, err := this._io.ReadBytesTerm(10, false, true, true)
 	if err != nil {
 		return err
 	}
-	this.Len = uint32(tmp14)
-	tmp15, err := this._io.ReadBytes(int(this.Len))
-	if err != nil {
-		return err
-	}
-	tmp15 = tmp15
-	this.Val = string(tmp15)
+	this.Val = string(tmp11)
 	return err
 }
 
 /**
- * Unquoted string, containing Python Unicode escapes.
+ * Double float, encoded with the ASCII characters [0-9.e+-], '-inf', 'inf',
+ * or 'nan'.
  */
-type PythonPickle_Unicodestringnl struct {
+type PythonPickle_Floatnl struct {
 	Val string
 	_io *kaitai.Stream
 	_root *PythonPickle
 	_parent *PythonPickle_Op
 }
-func NewPythonPickle_Unicodestringnl() *PythonPickle_Unicodestringnl {
-	return &PythonPickle_Unicodestringnl{
+func NewPythonPickle_Floatnl() *PythonPickle_Floatnl {
+	return &PythonPickle_Floatnl{
 	}
 }
 
-func (this *PythonPickle_Unicodestringnl) Read(io *kaitai.Stream, parent *PythonPickle_Op, root *PythonPickle) (err error) {
+func (this PythonPickle_Floatnl) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PythonPickle_Floatnl) Read(io *kaitai.Stream, parent *PythonPickle_Op, root *PythonPickle) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp16, err := this._io.ReadBytesTerm(10, false, true, true)
+	tmp12, err := this._io.ReadBytesTerm(10, false, true, true)
 	if err != nil {
 		return err
 	}
-	this.Val = string(tmp16)
+	this.Val = string(tmp12)
+	return err
+}
+
+/**
+ * Large signed integer, in the range -2**(8*255-1) to 2**(8*255-1)-1,
+ * encoded as two's complement.
+ */
+type PythonPickle_Long1 struct {
+	Len uint8
+	Val []byte
+	_io *kaitai.Stream
+	_root *PythonPickle
+	_parent *PythonPickle_Op
+}
+func NewPythonPickle_Long1() *PythonPickle_Long1 {
+	return &PythonPickle_Long1{
+	}
+}
+
+func (this PythonPickle_Long1) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PythonPickle_Long1) Read(io *kaitai.Stream, parent *PythonPickle_Op, root *PythonPickle) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp13, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Len = tmp13
+	tmp14, err := this._io.ReadBytes(int(this.Len))
+	if err != nil {
+		return err
+	}
+	tmp14 = tmp14
+	this.Val = tmp14
 	return err
 }
 
@@ -467,24 +454,557 @@ func NewPythonPickle_Long4() *PythonPickle_Long4 {
 	}
 }
 
+func (this PythonPickle_Long4) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *PythonPickle_Long4) Read(io *kaitai.Stream, parent *PythonPickle_Op, root *PythonPickle) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp17, err := this._io.ReadU4le()
+	tmp15, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Len = uint32(tmp17)
-	tmp18, err := this._io.ReadBytes(int(this.Len))
+	this.Len = uint32(tmp15)
+	tmp16, err := this._io.ReadBytes(int(this.Len))
 	if err != nil {
 		return err
 	}
-	tmp18 = tmp18
-	this.Val = tmp18
+	tmp16 = tmp16
+	this.Val = tmp16
 	return err
 }
+
+/**
+ * Some opcodes take no argument, this empty type is used for them.
+ */
+type PythonPickle_NoArg struct {
+	_io *kaitai.Stream
+	_root *PythonPickle
+	_parent *PythonPickle_Op
+}
+func NewPythonPickle_NoArg() *PythonPickle_NoArg {
+	return &PythonPickle_NoArg{
+	}
+}
+
+func (this PythonPickle_NoArg) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PythonPickle_NoArg) Read(io *kaitai.Stream, parent *PythonPickle_Op, root *PythonPickle) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	return err
+}
+type PythonPickle_Op struct {
+	Code PythonPickle_Opcode
+	Arg interface{}
+	_io *kaitai.Stream
+	_root *PythonPickle
+	_parent *PythonPickle
+}
+func NewPythonPickle_Op() *PythonPickle_Op {
+	return &PythonPickle_Op{
+	}
+}
+
+func (this PythonPickle_Op) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PythonPickle_Op) Read(io *kaitai.Stream, parent *PythonPickle, root *PythonPickle) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp17, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Code = PythonPickle_Opcode(tmp17)
+	switch (this.Code) {
+	case PythonPickle_Opcode__Additems:
+		tmp18 := NewPythonPickle_NoArg()
+		err = tmp18.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp18
+	case PythonPickle_Opcode__Append:
+		tmp19 := NewPythonPickle_NoArg()
+		err = tmp19.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp19
+	case PythonPickle_Opcode__Appends:
+		tmp20 := NewPythonPickle_NoArg()
+		err = tmp20.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp20
+	case PythonPickle_Opcode__Binbytes:
+		tmp21 := NewPythonPickle_Bytes4()
+		err = tmp21.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp21
+	case PythonPickle_Opcode__Binbytes8:
+		tmp22 := NewPythonPickle_Bytes8()
+		err = tmp22.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp22
+	case PythonPickle_Opcode__Binfloat:
+		tmp23, err := this._io.ReadF8be()
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp23
+	case PythonPickle_Opcode__Binget:
+		tmp24, err := this._io.ReadU1()
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp24
+	case PythonPickle_Opcode__Binint:
+		tmp25, err := this._io.ReadS4le()
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp25
+	case PythonPickle_Opcode__Binint1:
+		tmp26, err := this._io.ReadU1()
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp26
+	case PythonPickle_Opcode__Binint2:
+		tmp27, err := this._io.ReadU2le()
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp27
+	case PythonPickle_Opcode__Binpersid:
+		tmp28 := NewPythonPickle_NoArg()
+		err = tmp28.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp28
+	case PythonPickle_Opcode__Binput:
+		tmp29, err := this._io.ReadU1()
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp29
+	case PythonPickle_Opcode__Binstring:
+		tmp30 := NewPythonPickle_String4()
+		err = tmp30.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp30
+	case PythonPickle_Opcode__Binunicode:
+		tmp31 := NewPythonPickle_Unicodestring4()
+		err = tmp31.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp31
+	case PythonPickle_Opcode__Binunicode8:
+		tmp32 := NewPythonPickle_Unicodestring8()
+		err = tmp32.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp32
+	case PythonPickle_Opcode__Build:
+		tmp33 := NewPythonPickle_NoArg()
+		err = tmp33.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp33
+	case PythonPickle_Opcode__Bytearray8:
+		tmp34 := NewPythonPickle_Bytearray8()
+		err = tmp34.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp34
+	case PythonPickle_Opcode__Dict:
+		tmp35 := NewPythonPickle_NoArg()
+		err = tmp35.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp35
+	case PythonPickle_Opcode__Dup:
+		tmp36 := NewPythonPickle_NoArg()
+		err = tmp36.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp36
+	case PythonPickle_Opcode__EmptyDict:
+		tmp37 := NewPythonPickle_NoArg()
+		err = tmp37.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp37
+	case PythonPickle_Opcode__EmptyList:
+		tmp38 := NewPythonPickle_NoArg()
+		err = tmp38.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp38
+	case PythonPickle_Opcode__EmptySet:
+		tmp39 := NewPythonPickle_NoArg()
+		err = tmp39.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp39
+	case PythonPickle_Opcode__EmptyTuple:
+		tmp40 := NewPythonPickle_NoArg()
+		err = tmp40.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp40
+	case PythonPickle_Opcode__Ext1:
+		tmp41, err := this._io.ReadU1()
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp41
+	case PythonPickle_Opcode__Ext2:
+		tmp42, err := this._io.ReadU2le()
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp42
+	case PythonPickle_Opcode__Ext4:
+		tmp43, err := this._io.ReadU4le()
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp43
+	case PythonPickle_Opcode__Float:
+		tmp44 := NewPythonPickle_Floatnl()
+		err = tmp44.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp44
+	case PythonPickle_Opcode__Frame:
+		tmp45, err := this._io.ReadU8le()
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp45
+	case PythonPickle_Opcode__Frozenset:
+		tmp46 := NewPythonPickle_NoArg()
+		err = tmp46.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp46
+	case PythonPickle_Opcode__Get:
+		tmp47 := NewPythonPickle_DecimalnlShort()
+		err = tmp47.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp47
+	case PythonPickle_Opcode__GlobalOpcode:
+		tmp48 := NewPythonPickle_StringnlNoescapePair()
+		err = tmp48.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp48
+	case PythonPickle_Opcode__Inst:
+		tmp49 := NewPythonPickle_StringnlNoescapePair()
+		err = tmp49.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp49
+	case PythonPickle_Opcode__Int:
+		tmp50 := NewPythonPickle_DecimalnlShort()
+		err = tmp50.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp50
+	case PythonPickle_Opcode__List:
+		tmp51 := NewPythonPickle_NoArg()
+		err = tmp51.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp51
+	case PythonPickle_Opcode__Long:
+		tmp52 := NewPythonPickle_DecimalnlLong()
+		err = tmp52.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp52
+	case PythonPickle_Opcode__Long1:
+		tmp53 := NewPythonPickle_Long1()
+		err = tmp53.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp53
+	case PythonPickle_Opcode__Long4:
+		tmp54 := NewPythonPickle_Long4()
+		err = tmp54.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp54
+	case PythonPickle_Opcode__LongBinget:
+		tmp55, err := this._io.ReadU4le()
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp55
+	case PythonPickle_Opcode__LongBinput:
+		tmp56, err := this._io.ReadU4le()
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp56
+	case PythonPickle_Opcode__Mark:
+		tmp57 := NewPythonPickle_NoArg()
+		err = tmp57.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp57
+	case PythonPickle_Opcode__Memoize:
+		tmp58 := NewPythonPickle_NoArg()
+		err = tmp58.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp58
+	case PythonPickle_Opcode__Newfalse:
+		tmp59 := NewPythonPickle_NoArg()
+		err = tmp59.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp59
+	case PythonPickle_Opcode__Newobj:
+		tmp60 := NewPythonPickle_NoArg()
+		err = tmp60.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp60
+	case PythonPickle_Opcode__NewobjEx:
+		tmp61 := NewPythonPickle_NoArg()
+		err = tmp61.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp61
+	case PythonPickle_Opcode__Newtrue:
+		tmp62 := NewPythonPickle_NoArg()
+		err = tmp62.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp62
+	case PythonPickle_Opcode__NextBuffer:
+		tmp63 := NewPythonPickle_NoArg()
+		err = tmp63.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp63
+	case PythonPickle_Opcode__None:
+		tmp64 := NewPythonPickle_NoArg()
+		err = tmp64.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp64
+	case PythonPickle_Opcode__Obj:
+		tmp65 := NewPythonPickle_NoArg()
+		err = tmp65.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp65
+	case PythonPickle_Opcode__Persid:
+		tmp66 := NewPythonPickle_StringnlNoescape()
+		err = tmp66.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp66
+	case PythonPickle_Opcode__Pop:
+		tmp67 := NewPythonPickle_NoArg()
+		err = tmp67.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp67
+	case PythonPickle_Opcode__PopMark:
+		tmp68 := NewPythonPickle_NoArg()
+		err = tmp68.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp68
+	case PythonPickle_Opcode__Proto:
+		tmp69, err := this._io.ReadU1()
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp69
+	case PythonPickle_Opcode__Put:
+		tmp70 := NewPythonPickle_DecimalnlShort()
+		err = tmp70.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp70
+	case PythonPickle_Opcode__ReadonlyBuffer:
+		tmp71 := NewPythonPickle_NoArg()
+		err = tmp71.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp71
+	case PythonPickle_Opcode__Reduce:
+		tmp72 := NewPythonPickle_NoArg()
+		err = tmp72.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp72
+	case PythonPickle_Opcode__Setitem:
+		tmp73 := NewPythonPickle_NoArg()
+		err = tmp73.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp73
+	case PythonPickle_Opcode__Setitems:
+		tmp74 := NewPythonPickle_NoArg()
+		err = tmp74.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp74
+	case PythonPickle_Opcode__ShortBinbytes:
+		tmp75 := NewPythonPickle_Bytes1()
+		err = tmp75.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp75
+	case PythonPickle_Opcode__ShortBinstring:
+		tmp76 := NewPythonPickle_String1()
+		err = tmp76.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp76
+	case PythonPickle_Opcode__ShortBinunicode:
+		tmp77 := NewPythonPickle_Unicodestring1()
+		err = tmp77.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp77
+	case PythonPickle_Opcode__StackGlobal:
+		tmp78 := NewPythonPickle_NoArg()
+		err = tmp78.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp78
+	case PythonPickle_Opcode__Stop:
+		tmp79 := NewPythonPickle_NoArg()
+		err = tmp79.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp79
+	case PythonPickle_Opcode__String:
+		tmp80 := NewPythonPickle_Stringnl()
+		err = tmp80.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp80
+	case PythonPickle_Opcode__Tuple:
+		tmp81 := NewPythonPickle_NoArg()
+		err = tmp81.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp81
+	case PythonPickle_Opcode__Tuple1:
+		tmp82 := NewPythonPickle_NoArg()
+		err = tmp82.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp82
+	case PythonPickle_Opcode__Tuple2:
+		tmp83 := NewPythonPickle_NoArg()
+		err = tmp83.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp83
+	case PythonPickle_Opcode__Tuple3:
+		tmp84 := NewPythonPickle_NoArg()
+		err = tmp84.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp84
+	case PythonPickle_Opcode__Unicode:
+		tmp85 := NewPythonPickle_Unicodestringnl()
+		err = tmp85.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Arg = tmp85
+	}
+	return err
+}
+
+/**
+ * Operation code that determines which action should be
+ * performed next by the Pickle Virtual Machine. Some opcodes
+ * are only available in later versions of the Pickle protocol.
+ */
+
+/**
+ * Optional argument for the operation. Data type and length
+ * are determined by the value of the opcode.
+ */
 
 /**
  * Length prefixed string, between 0 and 255 bytes long. Encoding is
@@ -514,184 +1034,26 @@ func NewPythonPickle_String1() *PythonPickle_String1 {
 	}
 }
 
+func (this PythonPickle_String1) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *PythonPickle_String1) Read(io *kaitai.Stream, parent *PythonPickle_Op, root *PythonPickle) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp19, err := this._io.ReadU1()
+	tmp86, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Len = tmp19
-	tmp20, err := this._io.ReadBytes(int(this.Len))
+	this.Len = tmp86
+	tmp87, err := this._io.ReadBytes(int(this.Len))
 	if err != nil {
 		return err
 	}
-	tmp20 = tmp20
-	this.Val = tmp20
-	return err
-}
-
-/**
- * Length prefixed string, between 0 and 2**64-1 bytes long.
- * 
- * The contents are deserilised into a `bytearray` object.
- */
-type PythonPickle_Bytearray8 struct {
-	Len uint64
-	Val []byte
-	_io *kaitai.Stream
-	_root *PythonPickle
-	_parent *PythonPickle_Op
-}
-func NewPythonPickle_Bytearray8() *PythonPickle_Bytearray8 {
-	return &PythonPickle_Bytearray8{
-	}
-}
-
-func (this *PythonPickle_Bytearray8) Read(io *kaitai.Stream, parent *PythonPickle_Op, root *PythonPickle) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp21, err := this._io.ReadU8le()
-	if err != nil {
-		return err
-	}
-	this.Len = uint64(tmp21)
-	tmp22, err := this._io.ReadBytes(int(this.Len))
-	if err != nil {
-		return err
-	}
-	tmp22 = tmp22
-	this.Val = tmp22
-	return err
-}
-
-/**
- * Integer or boolean, encoded with the ASCII characters [0-9-].
- * 
- * The values '00' and '01' encode the Python values `False` and `True`.
- * Normally a value would not contain leading '0' characters.
- */
-type PythonPickle_DecimalnlShort struct {
-	Val string
-	_io *kaitai.Stream
-	_root *PythonPickle
-	_parent *PythonPickle_Op
-}
-func NewPythonPickle_DecimalnlShort() *PythonPickle_DecimalnlShort {
-	return &PythonPickle_DecimalnlShort{
-	}
-}
-
-func (this *PythonPickle_DecimalnlShort) Read(io *kaitai.Stream, parent *PythonPickle_Op, root *PythonPickle) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp23, err := this._io.ReadBytesTerm(10, false, true, true)
-	if err != nil {
-		return err
-	}
-	this.Val = string(tmp23)
-	return err
-}
-
-/**
- * Length prefixed string, between 0 and 255 bytes long
- */
-type PythonPickle_Unicodestring1 struct {
-	Len uint8
-	Val string
-	_io *kaitai.Stream
-	_root *PythonPickle
-	_parent *PythonPickle_Op
-}
-func NewPythonPickle_Unicodestring1() *PythonPickle_Unicodestring1 {
-	return &PythonPickle_Unicodestring1{
-	}
-}
-
-func (this *PythonPickle_Unicodestring1) Read(io *kaitai.Stream, parent *PythonPickle_Op, root *PythonPickle) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp24, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Len = tmp24
-	tmp25, err := this._io.ReadBytes(int(this.Len))
-	if err != nil {
-		return err
-	}
-	tmp25 = tmp25
-	this.Val = string(tmp25)
-	return err
-}
-
-/**
- * Quoted string, possibly containing Python string escapes.
- */
-type PythonPickle_Stringnl struct {
-	Val string
-	_io *kaitai.Stream
-	_root *PythonPickle
-	_parent *PythonPickle_Op
-}
-func NewPythonPickle_Stringnl() *PythonPickle_Stringnl {
-	return &PythonPickle_Stringnl{
-	}
-}
-
-func (this *PythonPickle_Stringnl) Read(io *kaitai.Stream, parent *PythonPickle_Op, root *PythonPickle) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp26, err := this._io.ReadBytesTerm(10, false, true, true)
-	if err != nil {
-		return err
-	}
-	this.Val = string(tmp26)
-	return err
-}
-
-/**
- * Pair of unquoted, unescaped strings.
- */
-type PythonPickle_StringnlNoescapePair struct {
-	Val1 *PythonPickle_StringnlNoescape
-	Val2 *PythonPickle_StringnlNoescape
-	_io *kaitai.Stream
-	_root *PythonPickle
-	_parent *PythonPickle_Op
-}
-func NewPythonPickle_StringnlNoescapePair() *PythonPickle_StringnlNoescapePair {
-	return &PythonPickle_StringnlNoescapePair{
-	}
-}
-
-func (this *PythonPickle_StringnlNoescapePair) Read(io *kaitai.Stream, parent *PythonPickle_Op, root *PythonPickle) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp27 := NewPythonPickle_StringnlNoescape()
-	err = tmp27.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Val1 = tmp27
-	tmp28 := NewPythonPickle_StringnlNoescape()
-	err = tmp28.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Val2 = tmp28
+	tmp87 = tmp87
+	this.Val = tmp87
 	return err
 }
 
@@ -717,541 +1079,268 @@ func NewPythonPickle_String4() *PythonPickle_String4 {
 	}
 }
 
+func (this PythonPickle_String4) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *PythonPickle_String4) Read(io *kaitai.Stream, parent *PythonPickle_Op, root *PythonPickle) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp29, err := this._io.ReadS4le()
+	tmp88, err := this._io.ReadS4le()
 	if err != nil {
 		return err
 	}
-	this.Len = int32(tmp29)
-	tmp30, err := this._io.ReadBytes(int(this.Len))
+	this.Len = int32(tmp88)
+	tmp89, err := this._io.ReadBytes(int(this.Len))
 	if err != nil {
 		return err
 	}
-	tmp30 = tmp30
-	this.Val = tmp30
-	return err
-}
-type PythonPickle_Op struct {
-	Code PythonPickle_Opcode
-	Arg interface{}
-	_io *kaitai.Stream
-	_root *PythonPickle
-	_parent *PythonPickle
-}
-func NewPythonPickle_Op() *PythonPickle_Op {
-	return &PythonPickle_Op{
-	}
-}
-
-func (this *PythonPickle_Op) Read(io *kaitai.Stream, parent *PythonPickle, root *PythonPickle) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp31, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Code = PythonPickle_Opcode(tmp31)
-	switch (this.Code) {
-	case PythonPickle_Opcode__Ext4:
-		tmp32, err := this._io.ReadU4le()
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp32
-	case PythonPickle_Opcode__Tuple1:
-		tmp33 := NewPythonPickle_NoArg()
-		err = tmp33.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp33
-	case PythonPickle_Opcode__Setitem:
-		tmp34 := NewPythonPickle_NoArg()
-		err = tmp34.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp34
-	case PythonPickle_Opcode__ReadonlyBuffer:
-		tmp35 := NewPythonPickle_NoArg()
-		err = tmp35.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp35
-	case PythonPickle_Opcode__Stop:
-		tmp36 := NewPythonPickle_NoArg()
-		err = tmp36.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp36
-	case PythonPickle_Opcode__Ext2:
-		tmp37, err := this._io.ReadU2le()
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp37
-	case PythonPickle_Opcode__EmptyTuple:
-		tmp38 := NewPythonPickle_NoArg()
-		err = tmp38.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp38
-	case PythonPickle_Opcode__Newtrue:
-		tmp39 := NewPythonPickle_NoArg()
-		err = tmp39.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp39
-	case PythonPickle_Opcode__Long:
-		tmp40 := NewPythonPickle_DecimalnlLong()
-		err = tmp40.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp40
-	case PythonPickle_Opcode__Newobj:
-		tmp41 := NewPythonPickle_NoArg()
-		err = tmp41.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp41
-	case PythonPickle_Opcode__Bytearray8:
-		tmp42 := NewPythonPickle_Bytearray8()
-		err = tmp42.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp42
-	case PythonPickle_Opcode__Put:
-		tmp43 := NewPythonPickle_DecimalnlShort()
-		err = tmp43.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp43
-	case PythonPickle_Opcode__StackGlobal:
-		tmp44 := NewPythonPickle_NoArg()
-		err = tmp44.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp44
-	case PythonPickle_Opcode__PopMark:
-		tmp45 := NewPythonPickle_NoArg()
-		err = tmp45.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp45
-	case PythonPickle_Opcode__Append:
-		tmp46 := NewPythonPickle_NoArg()
-		err = tmp46.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp46
-	case PythonPickle_Opcode__Newfalse:
-		tmp47 := NewPythonPickle_NoArg()
-		err = tmp47.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp47
-	case PythonPickle_Opcode__Binpersid:
-		tmp48 := NewPythonPickle_NoArg()
-		err = tmp48.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp48
-	case PythonPickle_Opcode__Build:
-		tmp49 := NewPythonPickle_NoArg()
-		err = tmp49.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp49
-	case PythonPickle_Opcode__EmptyDict:
-		tmp50 := NewPythonPickle_NoArg()
-		err = tmp50.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp50
-	case PythonPickle_Opcode__Tuple2:
-		tmp51 := NewPythonPickle_NoArg()
-		err = tmp51.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp51
-	case PythonPickle_Opcode__Long4:
-		tmp52 := NewPythonPickle_Long4()
-		err = tmp52.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp52
-	case PythonPickle_Opcode__NextBuffer:
-		tmp53 := NewPythonPickle_NoArg()
-		err = tmp53.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp53
-	case PythonPickle_Opcode__Appends:
-		tmp54 := NewPythonPickle_NoArg()
-		err = tmp54.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp54
-	case PythonPickle_Opcode__Binbytes:
-		tmp55 := NewPythonPickle_Bytes4()
-		err = tmp55.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp55
-	case PythonPickle_Opcode__Dup:
-		tmp56 := NewPythonPickle_NoArg()
-		err = tmp56.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp56
-	case PythonPickle_Opcode__List:
-		tmp57 := NewPythonPickle_NoArg()
-		err = tmp57.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp57
-	case PythonPickle_Opcode__Proto:
-		tmp58, err := this._io.ReadU1()
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp58
-	case PythonPickle_Opcode__Pop:
-		tmp59 := NewPythonPickle_NoArg()
-		err = tmp59.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp59
-	case PythonPickle_Opcode__Frame:
-		tmp60, err := this._io.ReadU8le()
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp60
-	case PythonPickle_Opcode__String:
-		tmp61 := NewPythonPickle_Stringnl()
-		err = tmp61.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp61
-	case PythonPickle_Opcode__Binunicode:
-		tmp62 := NewPythonPickle_Unicodestring4()
-		err = tmp62.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp62
-	case PythonPickle_Opcode__Float:
-		tmp63 := NewPythonPickle_Floatnl()
-		err = tmp63.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp63
-	case PythonPickle_Opcode__Reduce:
-		tmp64 := NewPythonPickle_NoArg()
-		err = tmp64.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp64
-	case PythonPickle_Opcode__GlobalOpcode:
-		tmp65 := NewPythonPickle_StringnlNoescapePair()
-		err = tmp65.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp65
-	case PythonPickle_Opcode__Binput:
-		tmp66, err := this._io.ReadU1()
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp66
-	case PythonPickle_Opcode__Memoize:
-		tmp67 := NewPythonPickle_NoArg()
-		err = tmp67.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp67
-	case PythonPickle_Opcode__Persid:
-		tmp68 := NewPythonPickle_StringnlNoescape()
-		err = tmp68.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp68
-	case PythonPickle_Opcode__Ext1:
-		tmp69, err := this._io.ReadU1()
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp69
-	case PythonPickle_Opcode__None:
-		tmp70 := NewPythonPickle_NoArg()
-		err = tmp70.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp70
-	case PythonPickle_Opcode__ShortBinunicode:
-		tmp71 := NewPythonPickle_Unicodestring1()
-		err = tmp71.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp71
-	case PythonPickle_Opcode__Obj:
-		tmp72 := NewPythonPickle_NoArg()
-		err = tmp72.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp72
-	case PythonPickle_Opcode__Binfloat:
-		tmp73, err := this._io.ReadF8be()
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp73
-	case PythonPickle_Opcode__NewobjEx:
-		tmp74 := NewPythonPickle_NoArg()
-		err = tmp74.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp74
-	case PythonPickle_Opcode__EmptyList:
-		tmp75 := NewPythonPickle_NoArg()
-		err = tmp75.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp75
-	case PythonPickle_Opcode__Tuple:
-		tmp76 := NewPythonPickle_NoArg()
-		err = tmp76.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp76
-	case PythonPickle_Opcode__Binunicode8:
-		tmp77 := NewPythonPickle_Unicodestring8()
-		err = tmp77.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp77
-	case PythonPickle_Opcode__Binget:
-		tmp78, err := this._io.ReadU1()
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp78
-	case PythonPickle_Opcode__Dict:
-		tmp79 := NewPythonPickle_NoArg()
-		err = tmp79.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp79
-	case PythonPickle_Opcode__Binstring:
-		tmp80 := NewPythonPickle_String4()
-		err = tmp80.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp80
-	case PythonPickle_Opcode__Setitems:
-		tmp81 := NewPythonPickle_NoArg()
-		err = tmp81.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp81
-	case PythonPickle_Opcode__Binint2:
-		tmp82, err := this._io.ReadU2le()
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp82
-	case PythonPickle_Opcode__Binbytes8:
-		tmp83 := NewPythonPickle_Bytes8()
-		err = tmp83.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp83
-	case PythonPickle_Opcode__Binint1:
-		tmp84, err := this._io.ReadU1()
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp84
-	case PythonPickle_Opcode__Inst:
-		tmp85 := NewPythonPickle_StringnlNoescapePair()
-		err = tmp85.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp85
-	case PythonPickle_Opcode__LongBinget:
-		tmp86, err := this._io.ReadU4le()
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp86
-	case PythonPickle_Opcode__LongBinput:
-		tmp87, err := this._io.ReadU4le()
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp87
-	case PythonPickle_Opcode__Int:
-		tmp88 := NewPythonPickle_DecimalnlShort()
-		err = tmp88.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp88
-	case PythonPickle_Opcode__Binint:
-		tmp89, err := this._io.ReadS4le()
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp89
-	case PythonPickle_Opcode__Unicode:
-		tmp90 := NewPythonPickle_Unicodestringnl()
-		err = tmp90.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp90
-	case PythonPickle_Opcode__Long1:
-		tmp91 := NewPythonPickle_Long1()
-		err = tmp91.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp91
-	case PythonPickle_Opcode__ShortBinstring:
-		tmp92 := NewPythonPickle_String1()
-		err = tmp92.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp92
-	case PythonPickle_Opcode__Mark:
-		tmp93 := NewPythonPickle_NoArg()
-		err = tmp93.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp93
-	case PythonPickle_Opcode__Frozenset:
-		tmp94 := NewPythonPickle_NoArg()
-		err = tmp94.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp94
-	case PythonPickle_Opcode__Tuple3:
-		tmp95 := NewPythonPickle_NoArg()
-		err = tmp95.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp95
-	case PythonPickle_Opcode__Additems:
-		tmp96 := NewPythonPickle_NoArg()
-		err = tmp96.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp96
-	case PythonPickle_Opcode__Get:
-		tmp97 := NewPythonPickle_DecimalnlShort()
-		err = tmp97.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp97
-	case PythonPickle_Opcode__EmptySet:
-		tmp98 := NewPythonPickle_NoArg()
-		err = tmp98.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp98
-	case PythonPickle_Opcode__ShortBinbytes:
-		tmp99 := NewPythonPickle_Bytes1()
-		err = tmp99.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Arg = tmp99
-	}
+	tmp89 = tmp89
+	this.Val = tmp89
 	return err
 }
 
 /**
- * Operation code that determines which action should be
- * performed next by the Pickle Virtual Machine. Some opcodes
- * are only available in later versions of the Pickle protocol.
+ * Quoted string, possibly containing Python string escapes.
  */
-
-/**
- * Optional argument for the operation. Data type and length
- * are determined by the value of the opcode.
- */
-
-/**
- * Double float, encoded with the ASCII characters [0-9.e+-], '-inf', 'inf',
- * or 'nan'.
- */
-type PythonPickle_Floatnl struct {
+type PythonPickle_Stringnl struct {
 	Val string
 	_io *kaitai.Stream
 	_root *PythonPickle
 	_parent *PythonPickle_Op
 }
-func NewPythonPickle_Floatnl() *PythonPickle_Floatnl {
-	return &PythonPickle_Floatnl{
+func NewPythonPickle_Stringnl() *PythonPickle_Stringnl {
+	return &PythonPickle_Stringnl{
 	}
 }
 
-func (this *PythonPickle_Floatnl) Read(io *kaitai.Stream, parent *PythonPickle_Op, root *PythonPickle) (err error) {
+func (this PythonPickle_Stringnl) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PythonPickle_Stringnl) Read(io *kaitai.Stream, parent *PythonPickle_Op, root *PythonPickle) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp90, err := this._io.ReadBytesTerm(10, false, true, true)
+	if err != nil {
+		return err
+	}
+	this.Val = string(tmp90)
+	return err
+}
+
+/**
+ * Unquoted string, does not contain string escapes.
+ */
+type PythonPickle_StringnlNoescape struct {
+	Val string
+	_io *kaitai.Stream
+	_root *PythonPickle
+	_parent kaitai.Struct
+}
+func NewPythonPickle_StringnlNoescape() *PythonPickle_StringnlNoescape {
+	return &PythonPickle_StringnlNoescape{
+	}
+}
+
+func (this PythonPickle_StringnlNoescape) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PythonPickle_StringnlNoescape) Read(io *kaitai.Stream, parent kaitai.Struct, root *PythonPickle) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp91, err := this._io.ReadBytesTerm(10, false, true, true)
+	if err != nil {
+		return err
+	}
+	this.Val = string(tmp91)
+	return err
+}
+
+/**
+ * Pair of unquoted, unescaped strings.
+ */
+type PythonPickle_StringnlNoescapePair struct {
+	Val1 *PythonPickle_StringnlNoescape
+	Val2 *PythonPickle_StringnlNoescape
+	_io *kaitai.Stream
+	_root *PythonPickle
+	_parent *PythonPickle_Op
+}
+func NewPythonPickle_StringnlNoescapePair() *PythonPickle_StringnlNoescapePair {
+	return &PythonPickle_StringnlNoescapePair{
+	}
+}
+
+func (this PythonPickle_StringnlNoescapePair) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PythonPickle_StringnlNoescapePair) Read(io *kaitai.Stream, parent *PythonPickle_Op, root *PythonPickle) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp92 := NewPythonPickle_StringnlNoescape()
+	err = tmp92.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Val1 = tmp92
+	tmp93 := NewPythonPickle_StringnlNoescape()
+	err = tmp93.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Val2 = tmp93
+	return err
+}
+
+/**
+ * Length prefixed string, between 0 and 255 bytes long
+ */
+type PythonPickle_Unicodestring1 struct {
+	Len uint8
+	Val string
+	_io *kaitai.Stream
+	_root *PythonPickle
+	_parent *PythonPickle_Op
+}
+func NewPythonPickle_Unicodestring1() *PythonPickle_Unicodestring1 {
+	return &PythonPickle_Unicodestring1{
+	}
+}
+
+func (this PythonPickle_Unicodestring1) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PythonPickle_Unicodestring1) Read(io *kaitai.Stream, parent *PythonPickle_Op, root *PythonPickle) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp94, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Len = tmp94
+	tmp95, err := this._io.ReadBytes(int(this.Len))
+	if err != nil {
+		return err
+	}
+	tmp95 = tmp95
+	this.Val = string(tmp95)
+	return err
+}
+
+/**
+ * Length prefixed string, between 0 and 2**32-1 bytes long
+ */
+type PythonPickle_Unicodestring4 struct {
+	Len uint32
+	Val string
+	_io *kaitai.Stream
+	_root *PythonPickle
+	_parent *PythonPickle_Op
+}
+func NewPythonPickle_Unicodestring4() *PythonPickle_Unicodestring4 {
+	return &PythonPickle_Unicodestring4{
+	}
+}
+
+func (this PythonPickle_Unicodestring4) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PythonPickle_Unicodestring4) Read(io *kaitai.Stream, parent *PythonPickle_Op, root *PythonPickle) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp96, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Len = uint32(tmp96)
+	tmp97, err := this._io.ReadBytes(int(this.Len))
+	if err != nil {
+		return err
+	}
+	tmp97 = tmp97
+	this.Val = string(tmp97)
+	return err
+}
+
+/**
+ * Length prefixed string, between 0 and 2**64-1 bytes long.
+ * 
+ * Only a 64-bit build of Python would produce a pickle containing strings
+ * large enough to need this type. Such a pickle could not be unpickled on
+ * a 32-bit build of Python, because the string would be larger than
+ * `sys.maxsize`.
+ */
+type PythonPickle_Unicodestring8 struct {
+	Len uint64
+	Val string
+	_io *kaitai.Stream
+	_root *PythonPickle
+	_parent *PythonPickle_Op
+}
+func NewPythonPickle_Unicodestring8() *PythonPickle_Unicodestring8 {
+	return &PythonPickle_Unicodestring8{
+	}
+}
+
+func (this PythonPickle_Unicodestring8) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PythonPickle_Unicodestring8) Read(io *kaitai.Stream, parent *PythonPickle_Op, root *PythonPickle) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp98, err := this._io.ReadU8le()
+	if err != nil {
+		return err
+	}
+	this.Len = uint64(tmp98)
+	tmp99, err := this._io.ReadBytes(int(this.Len))
+	if err != nil {
+		return err
+	}
+	tmp99 = tmp99
+	this.Val = string(tmp99)
+	return err
+}
+
+/**
+ * Unquoted string, containing Python Unicode escapes.
+ */
+type PythonPickle_Unicodestringnl struct {
+	Val string
+	_io *kaitai.Stream
+	_root *PythonPickle
+	_parent *PythonPickle_Op
+}
+func NewPythonPickle_Unicodestringnl() *PythonPickle_Unicodestringnl {
+	return &PythonPickle_Unicodestringnl{
+	}
+}
+
+func (this PythonPickle_Unicodestringnl) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PythonPickle_Unicodestringnl) Read(io *kaitai.Stream, parent *PythonPickle_Op, root *PythonPickle) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root

@@ -18,7 +18,7 @@ type Ines struct {
 	Title string
 	_io *kaitai.Stream
 	_root *Ines
-	_parent interface{}
+	_parent kaitai.Struct
 	_raw_Header []byte
 }
 func NewInes() *Ines {
@@ -26,7 +26,11 @@ func NewInes() *Ines {
 	}
 }
 
-func (this *Ines) Read(io *kaitai.Stream, parent interface{}, root *Ines) (err error) {
+func (this Ines) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Ines) Read(io *kaitai.Stream, parent kaitai.Struct, root *Ines) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -52,13 +56,13 @@ func (this *Ines) Read(io *kaitai.Stream, parent interface{}, root *Ines) (err e
 		tmp3 = tmp3
 		this.Trainer = tmp3
 	}
-	tmp4, err := this._io.ReadBytes(int((this.Header.LenPrgRom * 16384)))
+	tmp4, err := this._io.ReadBytes(int(this.Header.LenPrgRom * 16384))
 	if err != nil {
 		return err
 	}
 	tmp4 = tmp4
 	this.PrgRom = tmp4
-	tmp5, err := this._io.ReadBytes(int((this.Header.LenChrRom * 8192)))
+	tmp5, err := this._io.ReadBytes(int(this.Header.LenChrRom * 8192))
 	if err != nil {
 		return err
 	}
@@ -109,6 +113,10 @@ type Ines_Header struct {
 func NewInes_Header() *Ines_Header {
 	return &Ines_Header{
 	}
+}
+
+func (this Ines_Header) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Ines_Header) Read(io *kaitai.Stream, parent *Ines, root *Ines) (err error) {
@@ -211,8 +219,8 @@ func (this *Ines_Header) Mapper() (v int, err error) {
 	if (this._f_mapper) {
 		return this.mapper, nil
 	}
-	this.mapper = int((this.F6.LowerMapper | (this.F7.UpperMapper << 4)))
 	this._f_mapper = true
+	this.mapper = int(this.F6.LowerMapper | this.F7.UpperMapper << 4)
 	return this.mapper, nil
 }
 
@@ -233,6 +241,86 @@ func (this *Ines_Header) Mapper() (v int, err error) {
  */
 
 /**
+ * @see <a href="https://www.nesdev.org/wiki/INES#Flags_10">Source</a>
+ */
+
+type Ines_Header_F10_TvSystem int
+const (
+	Ines_Header_F10_TvSystem__Ntsc Ines_Header_F10_TvSystem = 0
+	Ines_Header_F10_TvSystem__Dual1 Ines_Header_F10_TvSystem = 1
+	Ines_Header_F10_TvSystem__Pal Ines_Header_F10_TvSystem = 2
+	Ines_Header_F10_TvSystem__Dual2 Ines_Header_F10_TvSystem = 3
+)
+var values_Ines_Header_F10_TvSystem = map[Ines_Header_F10_TvSystem]struct{}{0: {}, 1: {}, 2: {}, 3: {}}
+func (v Ines_Header_F10_TvSystem) isDefined() bool {
+	_, ok := values_Ines_Header_F10_TvSystem[v]
+	return ok
+}
+type Ines_Header_F10 struct {
+	Reserved1 uint64
+	BusConflict bool
+	PrgRam bool
+	Reserved2 uint64
+	TvSystem Ines_Header_F10_TvSystem
+	_io *kaitai.Stream
+	_root *Ines
+	_parent *Ines_Header
+}
+func NewInes_Header_F10() *Ines_Header_F10 {
+	return &Ines_Header_F10{
+	}
+}
+
+func (this Ines_Header_F10) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Ines_Header_F10) Read(io *kaitai.Stream, parent *Ines_Header, root *Ines) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp22, err := this._io.ReadBitsIntBe(2)
+	if err != nil {
+		return err
+	}
+	this.Reserved1 = tmp22
+	tmp23, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.BusConflict = tmp23 != 0
+	tmp24, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.PrgRam = tmp24 != 0
+	tmp25, err := this._io.ReadBitsIntBe(2)
+	if err != nil {
+		return err
+	}
+	this.Reserved2 = tmp25
+	tmp26, err := this._io.ReadBitsIntBe(2)
+	if err != nil {
+		return err
+	}
+	this.TvSystem = Ines_Header_F10_TvSystem(tmp26)
+	return err
+}
+
+/**
+ * If 0, no bus conflicts. If 1, bus conflicts.
+ */
+
+/**
+ * If 0, PRG ram is present. If 1, not present.
+ */
+
+/**
+ * if 0, NTSC. If 2, PAL. If 1 or 3, dual compatible.
+ */
+
+/**
  * @see <a href="https://www.nesdev.org/wiki/INES#Flags_6">Source</a>
  */
 
@@ -241,6 +329,11 @@ const (
 	Ines_Header_F6_Mirroring__Horizontal Ines_Header_F6_Mirroring = 0
 	Ines_Header_F6_Mirroring__Vertical Ines_Header_F6_Mirroring = 1
 )
+var values_Ines_Header_F6_Mirroring = map[Ines_Header_F6_Mirroring]struct{}{0: {}, 1: {}}
+func (v Ines_Header_F6_Mirroring) isDefined() bool {
+	_, ok := values_Ines_Header_F6_Mirroring[v]
+	return ok
+}
 type Ines_Header_F6 struct {
 	LowerMapper uint64
 	FourScreen bool
@@ -256,36 +349,40 @@ func NewInes_Header_F6() *Ines_Header_F6 {
 	}
 }
 
+func (this Ines_Header_F6) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Ines_Header_F6) Read(io *kaitai.Stream, parent *Ines_Header, root *Ines) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp22, err := this._io.ReadBitsIntBe(4)
+	tmp27, err := this._io.ReadBitsIntBe(4)
 	if err != nil {
 		return err
 	}
-	this.LowerMapper = tmp22
-	tmp23, err := this._io.ReadBitsIntBe(1)
+	this.LowerMapper = tmp27
+	tmp28, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.FourScreen = tmp23 != 0
-	tmp24, err := this._io.ReadBitsIntBe(1)
+	this.FourScreen = tmp28 != 0
+	tmp29, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Trainer = tmp24 != 0
-	tmp25, err := this._io.ReadBitsIntBe(1)
+	this.Trainer = tmp29 != 0
+	tmp30, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.HasBatteryRam = tmp25 != 0
-	tmp26, err := this._io.ReadBitsIntBe(1)
+	this.HasBatteryRam = tmp30 != 0
+	tmp31, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Mirroring = Ines_Header_F6_Mirroring(tmp26)
+	this.Mirroring = Ines_Header_F6_Mirroring(tmp31)
 	return err
 }
 
@@ -326,31 +423,35 @@ func NewInes_Header_F7() *Ines_Header_F7 {
 	}
 }
 
+func (this Ines_Header_F7) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Ines_Header_F7) Read(io *kaitai.Stream, parent *Ines_Header, root *Ines) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp27, err := this._io.ReadBitsIntBe(4)
+	tmp32, err := this._io.ReadBitsIntBe(4)
 	if err != nil {
 		return err
 	}
-	this.UpperMapper = tmp27
-	tmp28, err := this._io.ReadBitsIntBe(2)
+	this.UpperMapper = tmp32
+	tmp33, err := this._io.ReadBitsIntBe(2)
 	if err != nil {
 		return err
 	}
-	this.Format = tmp28
-	tmp29, err := this._io.ReadBitsIntBe(1)
+	this.Format = tmp33
+	tmp34, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Playchoice10 = tmp29 != 0
-	tmp30, err := this._io.ReadBitsIntBe(1)
+	this.Playchoice10 = tmp34 != 0
+	tmp35, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.VsUnisystem = tmp30 != 0
+	this.VsUnisystem = tmp35 != 0
 	return err
 }
 
@@ -379,6 +480,11 @@ const (
 	Ines_Header_F9_TvSystem__Ntsc Ines_Header_F9_TvSystem = 0
 	Ines_Header_F9_TvSystem__Pal Ines_Header_F9_TvSystem = 1
 )
+var values_Ines_Header_F9_TvSystem = map[Ines_Header_F9_TvSystem]struct{}{0: {}, 1: {}}
+func (v Ines_Header_F9_TvSystem) isDefined() bool {
+	_, ok := values_Ines_Header_F9_TvSystem[v]
+	return ok
+}
 type Ines_Header_F9 struct {
 	Reserved uint64
 	TvSystem Ines_Header_F9_TvSystem
@@ -391,97 +497,30 @@ func NewInes_Header_F9() *Ines_Header_F9 {
 	}
 }
 
+func (this Ines_Header_F9) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Ines_Header_F9) Read(io *kaitai.Stream, parent *Ines_Header, root *Ines) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp31, err := this._io.ReadBitsIntBe(7)
+	tmp36, err := this._io.ReadBitsIntBe(7)
 	if err != nil {
 		return err
 	}
-	this.Reserved = tmp31
-	tmp32, err := this._io.ReadBitsIntBe(1)
+	this.Reserved = tmp36
+	tmp37, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.TvSystem = Ines_Header_F9_TvSystem(tmp32)
+	this.TvSystem = Ines_Header_F9_TvSystem(tmp37)
 	return err
 }
 
 /**
  * if 0, NTSC. If 1, PAL.
- */
-
-/**
- * @see <a href="https://www.nesdev.org/wiki/INES#Flags_10">Source</a>
- */
-
-type Ines_Header_F10_TvSystem int
-const (
-	Ines_Header_F10_TvSystem__Ntsc Ines_Header_F10_TvSystem = 0
-	Ines_Header_F10_TvSystem__Dual1 Ines_Header_F10_TvSystem = 1
-	Ines_Header_F10_TvSystem__Pal Ines_Header_F10_TvSystem = 2
-	Ines_Header_F10_TvSystem__Dual2 Ines_Header_F10_TvSystem = 3
-)
-type Ines_Header_F10 struct {
-	Reserved1 uint64
-	BusConflict bool
-	PrgRam bool
-	Reserved2 uint64
-	TvSystem Ines_Header_F10_TvSystem
-	_io *kaitai.Stream
-	_root *Ines
-	_parent *Ines_Header
-}
-func NewInes_Header_F10() *Ines_Header_F10 {
-	return &Ines_Header_F10{
-	}
-}
-
-func (this *Ines_Header_F10) Read(io *kaitai.Stream, parent *Ines_Header, root *Ines) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp33, err := this._io.ReadBitsIntBe(2)
-	if err != nil {
-		return err
-	}
-	this.Reserved1 = tmp33
-	tmp34, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.BusConflict = tmp34 != 0
-	tmp35, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.PrgRam = tmp35 != 0
-	tmp36, err := this._io.ReadBitsIntBe(2)
-	if err != nil {
-		return err
-	}
-	this.Reserved2 = tmp36
-	tmp37, err := this._io.ReadBitsIntBe(2)
-	if err != nil {
-		return err
-	}
-	this.TvSystem = Ines_Header_F10_TvSystem(tmp37)
-	return err
-}
-
-/**
- * If 0, no bus conflicts. If 1, bus conflicts.
- */
-
-/**
- * If 0, PRG ram is present. If 1, not present.
- */
-
-/**
- * if 0, NTSC. If 2, PAL. If 1 or 3, dual compatible.
  */
 
 /**
@@ -497,6 +536,10 @@ type Ines_Playchoice10 struct {
 func NewInes_Playchoice10() *Ines_Playchoice10 {
 	return &Ines_Playchoice10{
 	}
+}
+
+func (this Ines_Playchoice10) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Ines_Playchoice10) Read(io *kaitai.Stream, parent *Ines, root *Ines) (err error) {
@@ -528,6 +571,10 @@ type Ines_Playchoice10_Prom struct {
 func NewInes_Playchoice10_Prom() *Ines_Playchoice10_Prom {
 	return &Ines_Playchoice10_Prom{
 	}
+}
+
+func (this Ines_Playchoice10_Prom) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Ines_Playchoice10_Prom) Read(io *kaitai.Stream, parent *Ines_Playchoice10, root *Ines) (err error) {

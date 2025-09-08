@@ -1,9 +1,10 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 require 'kaitai/struct/struct'
+require_relative 'vlq_base128_le'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -37,8 +38,8 @@ end
 #   are the fields' default values, etc, etc.
 # @see https://protobuf.dev/programming-guides/encoding/ Source
 class GoogleProtobuf < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -50,6 +51,20 @@ class GoogleProtobuf < Kaitai::Struct::Struct
       i += 1
     end
     self
+  end
+  class DelimitedBytes < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @len = VlqBase128Le.new(@_io)
+      @body = @_io.read_bytes(len.value)
+      self
+    end
+    attr_reader :len
+    attr_reader :body
   end
 
   ##
@@ -65,7 +80,7 @@ class GoogleProtobuf < Kaitai::Struct::Struct
       5 => :wire_types_bit_32,
     }
     I__WIRE_TYPES = WIRE_TYPES.invert
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -73,16 +88,25 @@ class GoogleProtobuf < Kaitai::Struct::Struct
     def _read
       @key = VlqBase128Le.new(@_io)
       case wire_type
-      when :wire_types_varint
-        @value = VlqBase128Le.new(@_io)
-      when :wire_types_len_delimited
-        @value = DelimitedBytes.new(@_io, self, @_root)
-      when :wire_types_bit_64
-        @value = @_io.read_u8le
       when :wire_types_bit_32
         @value = @_io.read_u4le
+      when :wire_types_bit_64
+        @value = @_io.read_u8le
+      when :wire_types_len_delimited
+        @value = DelimitedBytes.new(@_io, self, @_root)
+      when :wire_types_varint
+        @value = VlqBase128Le.new(@_io)
       end
       self
+    end
+
+    ##
+    # Identifies a field of protocol. One can look up symbolic
+    # field name in a `.proto` file by this field tag.
+    def field_tag
+      return @field_tag unless @field_tag.nil?
+      @field_tag = key.value >> 3
+      @field_tag
     end
 
     ##
@@ -95,17 +119,8 @@ class GoogleProtobuf < Kaitai::Struct::Struct
     # arbitrary bytes from UTF-8 encoded strings, etc.
     def wire_type
       return @wire_type unless @wire_type.nil?
-      @wire_type = Kaitai::Struct::Stream::resolve_enum(WIRE_TYPES, (key.value & 7))
+      @wire_type = Kaitai::Struct::Stream::resolve_enum(WIRE_TYPES, key.value & 7)
       @wire_type
-    end
-
-    ##
-    # Identifies a field of protocol. One can look up symbolic
-    # field name in a `.proto` file by this field tag.
-    def field_tag
-      return @field_tag unless @field_tag.nil?
-      @field_tag = (key.value >> 3)
-      @field_tag
     end
 
     ##
@@ -121,20 +136,6 @@ class GoogleProtobuf < Kaitai::Struct::Struct
     # but further infromation from `.proto` file is required to
     # interprete it properly.
     attr_reader :value
-  end
-  class DelimitedBytes < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @len = VlqBase128Le.new(@_io)
-      @body = @_io.read_bytes(len.value)
-      self
-    end
-    attr_reader :len
-    attr_reader :body
   end
 
   ##

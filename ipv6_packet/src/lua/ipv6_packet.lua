@@ -4,8 +4,8 @@
 
 local class = require("class")
 require("kaitaistruct")
-
 require("protocol_body")
+
 Ipv6Packet = class.class(KaitaiStruct)
 
 function Ipv6Packet:_init(io, parent, root)

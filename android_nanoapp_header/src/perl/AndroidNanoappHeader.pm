@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 
 ########################################################################
 package AndroidNanoappHeader;
@@ -24,7 +24,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -45,18 +45,18 @@ sub _read {
     $self->{reserved} = $self->{_io}->read_bytes(6);
 }
 
-sub is_signed {
-    my ($self) = @_;
-    return $self->{is_signed} if ($self->{is_signed});
-    $self->{is_signed} = ($self->flags() & 1) != 0;
-    return $self->{is_signed};
-}
-
 sub is_encrypted {
     my ($self) = @_;
     return $self->{is_encrypted} if ($self->{is_encrypted});
     $self->{is_encrypted} = ($self->flags() & 2) != 0;
     return $self->{is_encrypted};
+}
+
+sub is_signed {
+    my ($self) = @_;
+    return $self->{is_signed} if ($self->{is_signed});
+    $self->{is_signed} = ($self->flags() & 1) != 0;
+    return $self->{is_signed};
 }
 
 sub is_tcm_capable {

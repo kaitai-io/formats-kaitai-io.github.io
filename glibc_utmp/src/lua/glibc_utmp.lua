@@ -48,7 +48,7 @@ GlibcUtmp.Record = class.class(KaitaiStruct)
 function GlibcUtmp.Record:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -92,7 +92,7 @@ GlibcUtmp.Timeval = class.class(KaitaiStruct)
 function GlibcUtmp.Timeval:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 

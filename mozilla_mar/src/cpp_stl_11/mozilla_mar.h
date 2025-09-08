@@ -2,13 +2,16 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class mozilla_mar_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -22,21 +25,33 @@
 class mozilla_mar_t : public kaitai::kstruct {
 
 public:
-    class mar_index_t;
-    class index_entries_t;
-    class signature_t;
-    class product_information_block_t;
-    class index_entry_t;
     class additional_section_t;
+    class index_entries_t;
+    class index_entry_t;
+    class mar_index_t;
+    class product_information_block_t;
+    class signature_t;
+
+    enum block_identifiers_t {
+        BLOCK_IDENTIFIERS_PRODUCT_INFORMATION = 1
+    };
+    static bool _is_defined_block_identifiers_t(block_identifiers_t v);
+
+private:
+    static const std::set<block_identifiers_t> _values_block_identifiers_t;
+
+public:
 
     enum signature_algorithms_t {
         SIGNATURE_ALGORITHMS_RSA_PKCS1_SHA1 = 1,
         SIGNATURE_ALGORITHMS_RSA_PKCS1_SHA384 = 2
     };
+    static bool _is_defined_signature_algorithms_t(signature_algorithms_t v);
 
-    enum block_identifiers_t {
-        BLOCK_IDENTIFIERS_PRODUCT_INFORMATION = 1
-    };
+private:
+    static const std::set<signature_algorithms_t> _values_signature_algorithms_t;
+
+public:
 
     mozilla_mar_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, mozilla_mar_t* p__root = nullptr);
 
@@ -47,34 +62,42 @@ private:
 public:
     ~mozilla_mar_t();
 
-    class mar_index_t : public kaitai::kstruct {
+    class additional_section_t : public kaitai::kstruct {
 
     public:
 
-        mar_index_t(kaitai::kstream* p__io, mozilla_mar_t* p__parent = nullptr, mozilla_mar_t* p__root = nullptr);
+        additional_section_t(kaitai::kstream* p__io, mozilla_mar_t* p__parent = nullptr, mozilla_mar_t* p__root = nullptr);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~mar_index_t();
+        ~additional_section_t();
 
     private:
-        uint32_t m_len_index;
-        std::unique_ptr<index_entries_t> m_index_entries;
-        mozilla_mar_t* m__root;
-        mozilla_mar_t* m__parent;
-        std::string m__raw_index_entries;
-        std::unique_ptr<kaitai::kstream> m__io__raw_index_entries;
+        uint32_t m_len_block;
+        block_identifiers_t m_block_identifier;
+        std::unique_ptr<product_information_block_t> m_bytes;
+        bool n_bytes;
 
     public:
-        uint32_t len_index() const { return m_len_index; }
-        index_entries_t* index_entries() const { return m_index_entries.get(); }
+        bool _is_null_bytes() { bytes(); return n_bytes; };
+
+    private:
+        mozilla_mar_t* m__root;
+        mozilla_mar_t* m__parent;
+        std::string m__raw_bytes;
+        std::unique_ptr<kaitai::kstream> m__io__raw_bytes;
+
+    public:
+        uint32_t len_block() const { return m_len_block; }
+        block_identifiers_t block_identifier() const { return m_block_identifier; }
+        product_information_block_t* bytes() const { return m_bytes.get(); }
         mozilla_mar_t* _root() const { return m__root; }
         mozilla_mar_t* _parent() const { return m__parent; }
-        std::string _raw_index_entries() const { return m__raw_index_entries; }
-        kaitai::kstream* _io__raw_index_entries() const { return m__io__raw_index_entries.get(); }
+        std::string _raw_bytes() const { return m__raw_bytes; }
+        kaitai::kstream* _io__raw_bytes() const { return m__io__raw_bytes.get(); }
     };
 
     class index_entries_t : public kaitai::kstruct {
@@ -99,60 +122,6 @@ public:
         std::vector<std::unique_ptr<index_entry_t>>* index_entry() const { return m_index_entry.get(); }
         mozilla_mar_t* _root() const { return m__root; }
         mozilla_mar_t::mar_index_t* _parent() const { return m__parent; }
-    };
-
-    class signature_t : public kaitai::kstruct {
-
-    public:
-
-        signature_t(kaitai::kstream* p__io, mozilla_mar_t* p__parent = nullptr, mozilla_mar_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~signature_t();
-
-    private:
-        signature_algorithms_t m_algorithm;
-        uint32_t m_len_signature;
-        std::string m_signature;
-        mozilla_mar_t* m__root;
-        mozilla_mar_t* m__parent;
-
-    public:
-        signature_algorithms_t algorithm() const { return m_algorithm; }
-        uint32_t len_signature() const { return m_len_signature; }
-        std::string signature() const { return m_signature; }
-        mozilla_mar_t* _root() const { return m__root; }
-        mozilla_mar_t* _parent() const { return m__parent; }
-    };
-
-    class product_information_block_t : public kaitai::kstruct {
-
-    public:
-
-        product_information_block_t(kaitai::kstream* p__io, mozilla_mar_t::additional_section_t* p__parent = nullptr, mozilla_mar_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~product_information_block_t();
-
-    private:
-        std::string m_mar_channel_name;
-        std::string m_product_version;
-        mozilla_mar_t* m__root;
-        mozilla_mar_t::additional_section_t* m__parent;
-
-    public:
-        std::string mar_channel_name() const { return m_mar_channel_name; }
-        std::string product_version() const { return m_product_version; }
-        mozilla_mar_t* _root() const { return m__root; }
-        mozilla_mar_t::additional_section_t* _parent() const { return m__parent; }
     };
 
     class index_entry_t : public kaitai::kstruct {
@@ -196,42 +165,88 @@ public:
         mozilla_mar_t::index_entries_t* _parent() const { return m__parent; }
     };
 
-    class additional_section_t : public kaitai::kstruct {
+    class mar_index_t : public kaitai::kstruct {
 
     public:
 
-        additional_section_t(kaitai::kstream* p__io, mozilla_mar_t* p__parent = nullptr, mozilla_mar_t* p__root = nullptr);
+        mar_index_t(kaitai::kstream* p__io, mozilla_mar_t* p__parent = nullptr, mozilla_mar_t* p__root = nullptr);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~additional_section_t();
+        ~mar_index_t();
 
     private:
-        uint32_t m_len_block;
-        block_identifiers_t m_block_identifier;
-        std::unique_ptr<product_information_block_t> m_bytes;
-        bool n_bytes;
-
-    public:
-        bool _is_null_bytes() { bytes(); return n_bytes; };
-
-    private:
+        uint32_t m_len_index;
+        std::unique_ptr<index_entries_t> m_index_entries;
         mozilla_mar_t* m__root;
         mozilla_mar_t* m__parent;
-        std::string m__raw_bytes;
-        std::unique_ptr<kaitai::kstream> m__io__raw_bytes;
+        std::string m__raw_index_entries;
+        std::unique_ptr<kaitai::kstream> m__io__raw_index_entries;
 
     public:
-        uint32_t len_block() const { return m_len_block; }
-        block_identifiers_t block_identifier() const { return m_block_identifier; }
-        product_information_block_t* bytes() const { return m_bytes.get(); }
+        uint32_t len_index() const { return m_len_index; }
+        index_entries_t* index_entries() const { return m_index_entries.get(); }
         mozilla_mar_t* _root() const { return m__root; }
         mozilla_mar_t* _parent() const { return m__parent; }
-        std::string _raw_bytes() const { return m__raw_bytes; }
-        kaitai::kstream* _io__raw_bytes() const { return m__io__raw_bytes.get(); }
+        std::string _raw_index_entries() const { return m__raw_index_entries; }
+        kaitai::kstream* _io__raw_index_entries() const { return m__io__raw_index_entries.get(); }
+    };
+
+    class product_information_block_t : public kaitai::kstruct {
+
+    public:
+
+        product_information_block_t(kaitai::kstream* p__io, mozilla_mar_t::additional_section_t* p__parent = nullptr, mozilla_mar_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~product_information_block_t();
+
+    private:
+        std::string m_mar_channel_name;
+        std::string m_product_version;
+        mozilla_mar_t* m__root;
+        mozilla_mar_t::additional_section_t* m__parent;
+
+    public:
+        std::string mar_channel_name() const { return m_mar_channel_name; }
+        std::string product_version() const { return m_product_version; }
+        mozilla_mar_t* _root() const { return m__root; }
+        mozilla_mar_t::additional_section_t* _parent() const { return m__parent; }
+    };
+
+    class signature_t : public kaitai::kstruct {
+
+    public:
+
+        signature_t(kaitai::kstream* p__io, mozilla_mar_t* p__parent = nullptr, mozilla_mar_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~signature_t();
+
+    private:
+        signature_algorithms_t m_algorithm;
+        uint32_t m_len_signature;
+        std::string m_signature;
+        mozilla_mar_t* m__root;
+        mozilla_mar_t* m__parent;
+
+    public:
+        signature_algorithms_t algorithm() const { return m_algorithm; }
+        uint32_t len_signature() const { return m_len_signature; }
+        std::string signature() const { return m_signature; }
+        mozilla_mar_t* _root() const { return m__root; }
+        mozilla_mar_t* _parent() const { return m__parent; }
     };
 
 private:

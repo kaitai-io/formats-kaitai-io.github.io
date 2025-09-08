@@ -13,13 +13,40 @@ digraph {
 		</TABLE>>];
 asn1_der__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
-	<TR><TD>:type_tag_printable_string</TD><TD PORT="case0">BodyPrintableString</TD></TR>
-	<TR><TD>:type_tag_sequence_10</TD><TD PORT="case1">BodySequence</TD></TR>
-	<TR><TD>:type_tag_set</TD><TD PORT="case2">BodySequence</TD></TR>
+	<TR><TD>:type_tag_object_id</TD><TD PORT="case0">BodyObjectId</TD></TR>
+	<TR><TD>:type_tag_printable_string</TD><TD PORT="case1">BodyPrintableString</TD></TR>
+	<TR><TD>:type_tag_sequence_10</TD><TD PORT="case2">BodySequence</TD></TR>
 	<TR><TD>:type_tag_sequence_30</TD><TD PORT="case3">BodySequence</TD></TR>
-	<TR><TD>:type_tag_utf8string</TD><TD PORT="case4">BodyUtf8string</TD></TR>
-	<TR><TD>:type_tag_object_id</TD><TD PORT="case5">BodyObjectId</TD></TR>
+	<TR><TD>:type_tag_set</TD><TD PORT="case4">BodySequence</TD></TR>
+	<TR><TD>:type_tag_utf8string</TD><TD PORT="case5">BodyUtf8string</TD></TR>
 </TABLE>>];
+		subgraph cluster__body_object_id {
+			label="Asn1Der::BodyObjectId";
+			graph[style=dotted];
+
+			body_object_id__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="first_and_second_pos">0</TD><TD PORT="first_and_second_size">1</TD><TD>u1</TD><TD PORT="first_and_second_type">first_and_second</TD></TR>
+				<TR><TD PORT="rest_pos">1</TD><TD PORT="rest_size">⇲</TD><TD></TD><TD PORT="rest_type">rest</TD></TR>
+			</TABLE>>];
+			body_object_id__inst__first [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>first</TD><TD>first_and_second / 40</TD></TR>
+			</TABLE>>];
+			body_object_id__inst__second [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>second</TD><TD>first_and_second % 40</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__body_printable_string {
+			label="Asn1Der::BodyPrintableString";
+			graph[style=dotted];
+
+			body_printable_string__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="str_pos">0</TD><TD PORT="str_size">⇲</TD><TD>str(ASCII)</TD><TD PORT="str_type">str</TD></TR>
+			</TABLE>>];
+		}
 		subgraph cluster__body_sequence {
 			label="Asn1Der::BodySequence";
 			graph[style=dotted];
@@ -39,24 +66,6 @@ asn1_der__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="
 				<TR><TD PORT="str_pos">0</TD><TD PORT="str_size">⇲</TD><TD>str(UTF-8)</TD><TD PORT="str_type">str</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__body_object_id {
-			label="Asn1Der::BodyObjectId";
-			graph[style=dotted];
-
-			body_object_id__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="first_and_second_pos">0</TD><TD PORT="first_and_second_size">1</TD><TD>u1</TD><TD PORT="first_and_second_type">first_and_second</TD></TR>
-				<TR><TD PORT="rest_pos">1</TD><TD PORT="rest_size">⇲</TD><TD></TD><TD PORT="rest_type">rest</TD></TR>
-			</TABLE>>];
-			body_object_id__inst__first [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>first</TD><TD>(first_and_second / 40)</TD></TR>
-			</TABLE>>];
-			body_object_id__inst__second [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>second</TD><TD>(first_and_second % 40)</TD></TR>
-			</TABLE>>];
-		}
 		subgraph cluster__len_encoded {
 			label="Asn1Der::LenEncoded";
 			graph[style=dotted];
@@ -65,38 +74,31 @@ asn1_der__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="b1_pos">0</TD><TD PORT="b1_size">1</TD><TD>u1</TD><TD PORT="b1_type">b1</TD></TR>
 				<TR><TD PORT="int2_pos">1</TD><TD PORT="int2_size">2</TD><TD>u2be</TD><TD PORT="int2_type">int2</TD></TR>
+				<TR><TD COLSPAN="4" PORT="int2__if">if b1 == 130</TD></TR>
 				<TR><TD PORT="int1_pos">3</TD><TD PORT="int1_size">1</TD><TD>u1</TD><TD PORT="int1_type">int1</TD></TR>
+				<TR><TD COLSPAN="4" PORT="int1__if">if b1 == 129</TD></TR>
 			</TABLE>>];
 			len_encoded__inst__result [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
 				<TR><TD>result</TD><TD>(b1 == 129 ? int1 : (b1 == 130 ? int2 : b1))</TD></TR>
 			</TABLE>>];
 		}
-		subgraph cluster__body_printable_string {
-			label="Asn1Der::BodyPrintableString";
-			graph[style=dotted];
-
-			body_printable_string__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="str_pos">0</TD><TD PORT="str_size">⇲</TD><TD>str(ASCII)</TD><TD PORT="str_type">str</TD></TR>
-			</TABLE>>];
-		}
 	}
 	asn1_der__seq:len_type -> len_encoded__seq [style=bold];
 	asn1_der__seq:body_type -> asn1_der__seq_body_switch [style=bold];
-	asn1_der__seq_body_switch:case0 -> body_printable_string__seq [style=bold];
-	asn1_der__seq_body_switch:case1 -> body_sequence__seq [style=bold];
+	asn1_der__seq_body_switch:case0 -> body_object_id__seq [style=bold];
+	asn1_der__seq_body_switch:case1 -> body_printable_string__seq [style=bold];
 	asn1_der__seq_body_switch:case2 -> body_sequence__seq [style=bold];
 	asn1_der__seq_body_switch:case3 -> body_sequence__seq [style=bold];
-	asn1_der__seq_body_switch:case4 -> body_utf8string__seq [style=bold];
-	asn1_der__seq_body_switch:case5 -> body_object_id__seq [style=bold];
+	asn1_der__seq_body_switch:case4 -> body_sequence__seq [style=bold];
+	asn1_der__seq_body_switch:case5 -> body_utf8string__seq [style=bold];
 	asn1_der__seq:type_tag_type -> asn1_der__seq:body_type [color="#404040"];
-	body_sequence__seq:entries_type -> asn1_der__seq [style=bold];
 	body_object_id__seq:first_and_second_type -> body_object_id__inst__first [color="#404040"];
 	body_object_id__seq:first_and_second_type -> body_object_id__inst__second [color="#404040"];
+	body_sequence__seq:entries_type -> asn1_der__seq [style=bold];
+	len_encoded__seq:b1_type -> len_encoded__seq:int2__if [color="#404040"];
+	len_encoded__seq:b1_type -> len_encoded__seq:int1__if [color="#404040"];
 	len_encoded__seq:b1_type -> len_encoded__inst__result [color="#404040"];
 	len_encoded__seq:int1_type -> len_encoded__inst__result [color="#404040"];
-	len_encoded__seq:b1_type -> len_encoded__inst__result [color="#404040"];
 	len_encoded__seq:int2_type -> len_encoded__inst__result [color="#404040"];
-	len_encoded__seq:b1_type -> len_encoded__inst__result [color="#404040"];
 }

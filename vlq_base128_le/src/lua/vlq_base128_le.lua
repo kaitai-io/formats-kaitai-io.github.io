@@ -49,7 +49,7 @@ function VlqBase128Le:_read()
   self.groups = {}
   local i = 0
   while true do
-    local _ = VlqBase128Le.Group(i, utils.box_unwrap((i ~= 0) and utils.box_wrap(self.groups[(i - 1) + 1].interm_value) or (0)), utils.box_unwrap((i ~= 0) and utils.box_wrap(utils.box_unwrap((i == 9) and utils.box_wrap(0x8000000000000000) or ((self.groups[(i - 1) + 1].multiplier * 128)))) or (1)), self._io, self, self._root)
+    local _ = VlqBase128Le.Group(i, utils.box_unwrap((i ~= 0) and utils.box_wrap(self.groups[(i - 1) + 1].interm_value) or (0)), utils.box_unwrap((i ~= 0) and utils.box_wrap(utils.box_unwrap((i == 9) and utils.box_wrap(0x8000000000000000) or (self.groups[(i - 1) + 1].multiplier * 128))) or (1)), self._io, self, self._root)
     self.groups[i + 1] = _
     if not(_.has_next) then
       break
@@ -68,6 +68,16 @@ function VlqBase128Le.property.len:get()
   return self._m_len
 end
 
+VlqBase128Le.property.sign_bit = {}
+function VlqBase128Le.property.sign_bit:get()
+  if self._m_sign_bit ~= nil then
+    return self._m_sign_bit
+  end
+
+  self._m_sign_bit = utils.box_unwrap((self.len == 10) and utils.box_wrap(0x8000000000000000) or (self.groups[#self.groups].multiplier * 64))
+  return self._m_sign_bit
+end
+
 -- 
 -- Resulting unsigned value as normal integer.
 VlqBase128Le.property.value = {}
@@ -78,16 +88,6 @@ function VlqBase128Le.property.value:get()
 
   self._m_value = self.groups[#self.groups].interm_value
   return self._m_value
-end
-
-VlqBase128Le.property.sign_bit = {}
-function VlqBase128Le.property.sign_bit:get()
-  if self._m_sign_bit ~= nil then
-    return self._m_sign_bit
-  end
-
-  self._m_sign_bit = utils.box_unwrap((self.len == 10) and utils.box_wrap(0x8000000000000000) or ((self.groups[#self.groups].multiplier * 64)))
-  return self._m_sign_bit
 end
 
 VlqBase128Le.property.value_signed = {}
@@ -108,7 +108,7 @@ VlqBase128Le.Group = class.class(KaitaiStruct)
 function VlqBase128Le.Group:_init(idx, prev_interm_value, multiplier, io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self.idx = idx
   self.prev_interm_value = prev_interm_value
   self.multiplier = multiplier
@@ -118,7 +118,7 @@ end
 function VlqBase128Le.Group:_read()
   self.has_next = self._io:read_bits_int_be(1) ~= 0
   if not(self.has_next == utils.box_unwrap((self.idx == 9) and utils.box_wrap(false) or (self.has_next))) then
-    error("not equal, expected " ..  utils.box_unwrap((self.idx == 9) and utils.box_wrap(false) or (self.has_next)) .. ", but got " .. self.has_next)
+    error("not equal, expected " .. utils.box_unwrap((self.idx == 9) and utils.box_wrap(false) or (self.has_next)) .. ", but got " .. self.has_next)
   end
   self.value = self._io:read_bits_int_be(7)
   if not(self.value <= utils.box_unwrap((self.idx == 9) and utils.box_wrap(1) or (127))) then
@@ -132,7 +132,7 @@ function VlqBase128Le.Group.property.interm_value:get()
     return self._m_interm_value
   end
 
-  self._m_interm_value = (self.prev_interm_value + (self.value * self.multiplier))
+  self._m_interm_value = (self.prev_interm_value + self.value * self.multiplier)
   return self._m_interm_value
 end
 

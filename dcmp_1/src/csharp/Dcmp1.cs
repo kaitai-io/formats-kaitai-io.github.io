@@ -99,6 +99,14 @@ namespace Kaitai
             {
                 _tag = m_io.ReadU1();
                 switch (( ((Tag >= 0) && (Tag <= 31))  ? TagKind.Literal : ( ((Tag >= 32) && (Tag <= 207))  ? TagKind.Backreference : ( ((Tag >= 208) && (Tag <= 209))  ? TagKind.Literal : (Tag == 210 ? TagKind.Backreference : ( ((Tag >= 213) && (Tag <= 253))  ? TagKind.TableLookup : (Tag == 254 ? TagKind.Extended : (Tag == 255 ? TagKind.End : TagKind.Invalid)))))))) {
+                case TagKind.Backreference: {
+                    _body = new BackreferenceBody(Tag, m_io, this, m_root);
+                    break;
+                }
+                case TagKind.End: {
+                    _body = new EndBody(m_io, this, m_root);
+                    break;
+                }
                 case TagKind.Extended: {
                     _body = new ExtendedBody(m_io, this, m_root);
                     break;
@@ -107,158 +115,11 @@ namespace Kaitai
                     _body = new LiteralBody(Tag, m_io, this, m_root);
                     break;
                 }
-                case TagKind.End: {
-                    _body = new EndBody(m_io, this, m_root);
-                    break;
-                }
                 case TagKind.TableLookup: {
                     _body = new TableLookupBody(Tag, m_io, this, m_root);
                     break;
                 }
-                case TagKind.Backreference: {
-                    _body = new BackreferenceBody(Tag, m_io, this, m_root);
-                    break;
                 }
-                }
-            }
-
-            /// <summary>
-            /// The body of a literal data chunk.
-            /// 
-            /// The data that this chunk expands to is stored literally in the body (`literal`).
-            /// Optionally,
-            /// the literal data may also be stored for use by future backreference chunks (`do_store`).
-            /// </summary>
-            public partial class LiteralBody : KaitaiStruct
-            {
-                public LiteralBody(byte p_tag, KaitaiStream p__io, Dcmp1.Chunk p__parent = null, Dcmp1 p__root = null) : base(p__io)
-                {
-                    m_parent = p__parent;
-                    m_root = p__root;
-                    _tag = p_tag;
-                    f_doStore = false;
-                    f_lenLiteralM1InTag = false;
-                    f_isLenLiteralSeparate = false;
-                    f_lenLiteral = false;
-                    _read();
-                }
-                private void _read()
-                {
-                    if (IsLenLiteralSeparate) {
-                        _lenLiteralSeparate = m_io.ReadU1();
-                    }
-                    _literal = m_io.ReadBytes(LenLiteral);
-                }
-                private bool f_doStore;
-                private bool _doStore;
-
-                /// <summary>
-                /// Whether this literal should be stored for use by future backreference chunks.
-                /// 
-                /// See the documentation of the `backreference_body` type for details about backreference chunks.
-                /// </summary>
-                public bool DoStore
-                {
-                    get
-                    {
-                        if (f_doStore)
-                            return _doStore;
-                        _doStore = (bool) ((IsLenLiteralSeparate ? Tag == 209 : (Tag & 16) != 0));
-                        f_doStore = true;
-                        return _doStore;
-                    }
-                }
-                private bool f_lenLiteralM1InTag;
-                private int? _lenLiteralM1InTag;
-
-                /// <summary>
-                /// The part of the tag byte that indicates the length of the literal data,
-                /// in bytes,
-                /// minus one.
-                /// 
-                /// If the tag byte is 0xd0 or 0xd1,
-                /// the length is stored in a separate byte after the tag byte and before the literal data.
-                /// </summary>
-                public int? LenLiteralM1InTag
-                {
-                    get
-                    {
-                        if (f_lenLiteralM1InTag)
-                            return _lenLiteralM1InTag;
-                        if (!(IsLenLiteralSeparate)) {
-                            _lenLiteralM1InTag = (int) ((Tag & 15));
-                        }
-                        f_lenLiteralM1InTag = true;
-                        return _lenLiteralM1InTag;
-                    }
-                }
-                private bool f_isLenLiteralSeparate;
-                private bool _isLenLiteralSeparate;
-
-                /// <summary>
-                /// Whether the length of the literal is stored separately from the tag.
-                /// </summary>
-                public bool IsLenLiteralSeparate
-                {
-                    get
-                    {
-                        if (f_isLenLiteralSeparate)
-                            return _isLenLiteralSeparate;
-                        _isLenLiteralSeparate = (bool) (Tag >= 208);
-                        f_isLenLiteralSeparate = true;
-                        return _isLenLiteralSeparate;
-                    }
-                }
-                private bool f_lenLiteral;
-                private int _lenLiteral;
-
-                /// <summary>
-                /// The length of the literal data,
-                /// in bytes.
-                /// 
-                /// In practice,
-                /// this value is always greater than zero,
-                /// as there is no use in storing a zero-length literal.
-                /// </summary>
-                public int LenLiteral
-                {
-                    get
-                    {
-                        if (f_lenLiteral)
-                            return _lenLiteral;
-                        _lenLiteral = (int) ((IsLenLiteralSeparate ? LenLiteralSeparate : (LenLiteralM1InTag + 1)));
-                        f_lenLiteral = true;
-                        return _lenLiteral;
-                    }
-                }
-                private byte? _lenLiteralSeparate;
-                private byte[] _literal;
-                private byte _tag;
-                private Dcmp1 m_root;
-                private Dcmp1.Chunk m_parent;
-
-                /// <summary>
-                /// The length of the literal data,
-                /// in bytes.
-                /// 
-                /// This field is only present if the tag byte is 0xd0 or 0xd1.
-                /// In practice,
-                /// this only happens if the length is 0x11 or greater,
-                /// because smaller lengths can be encoded into the tag byte.
-                /// </summary>
-                public byte? LenLiteralSeparate { get { return _lenLiteralSeparate; } }
-
-                /// <summary>
-                /// The literal data.
-                /// </summary>
-                public byte[] Literal { get { return _literal; } }
-
-                /// <summary>
-                /// The tag byte preceding this chunk body.
-                /// </summary>
-                public byte Tag { get { return _tag; } }
-                public Dcmp1 M_Root { get { return m_root; } }
-                public Dcmp1.Chunk M_Parent { get { return m_parent; } }
             }
 
             /// <summary>
@@ -274,72 +135,16 @@ namespace Kaitai
                     m_parent = p__parent;
                     m_root = p__root;
                     _tag = p_tag;
-                    f_isIndexSeparate = false;
+                    f_index = false;
                     f_indexInTag = false;
                     f_indexSeparate = false;
-                    f_index = false;
+                    f_isIndexSeparate = false;
                     _read();
                 }
                 private void _read()
                 {
                     if (IsIndexSeparate) {
                         _indexSeparateMinus = m_io.ReadU1();
-                    }
-                }
-                private bool f_isIndexSeparate;
-                private bool _isIndexSeparate;
-
-                /// <summary>
-                /// Whether the index is stored separately from the tag.
-                /// </summary>
-                public bool IsIndexSeparate
-                {
-                    get
-                    {
-                        if (f_isIndexSeparate)
-                            return _isIndexSeparate;
-                        _isIndexSeparate = (bool) (Tag == 210);
-                        f_isIndexSeparate = true;
-                        return _isIndexSeparate;
-                    }
-                }
-                private bool f_indexInTag;
-                private int _indexInTag;
-
-                /// <summary>
-                /// The index of the referenced literal chunk,
-                /// as stored in the tag byte.
-                /// </summary>
-                public int IndexInTag
-                {
-                    get
-                    {
-                        if (f_indexInTag)
-                            return _indexInTag;
-                        _indexInTag = (int) ((Tag - 32));
-                        f_indexInTag = true;
-                        return _indexInTag;
-                    }
-                }
-                private bool f_indexSeparate;
-                private int? _indexSeparate;
-
-                /// <summary>
-                /// The index of the referenced literal chunk,
-                /// as stored separately from the tag byte,
-                /// with the implicit offset corrected for.
-                /// </summary>
-                public int? IndexSeparate
-                {
-                    get
-                    {
-                        if (f_indexSeparate)
-                            return _indexSeparate;
-                        if (IsIndexSeparate) {
-                            _indexSeparate = (int) ((IndexSeparateMinus + 176));
-                        }
-                        f_indexSeparate = true;
-                        return _indexSeparate;
                     }
                 }
                 private bool f_index;
@@ -364,9 +169,65 @@ namespace Kaitai
                     {
                         if (f_index)
                             return _index;
-                        _index = (int) ((IsIndexSeparate ? IndexSeparate : IndexInTag));
                         f_index = true;
+                        _index = (int) ((IsIndexSeparate ? IndexSeparate : IndexInTag));
                         return _index;
+                    }
+                }
+                private bool f_indexInTag;
+                private int _indexInTag;
+
+                /// <summary>
+                /// The index of the referenced literal chunk,
+                /// as stored in the tag byte.
+                /// </summary>
+                public int IndexInTag
+                {
+                    get
+                    {
+                        if (f_indexInTag)
+                            return _indexInTag;
+                        f_indexInTag = true;
+                        _indexInTag = (int) (Tag - 32);
+                        return _indexInTag;
+                    }
+                }
+                private bool f_indexSeparate;
+                private int? _indexSeparate;
+
+                /// <summary>
+                /// The index of the referenced literal chunk,
+                /// as stored separately from the tag byte,
+                /// with the implicit offset corrected for.
+                /// </summary>
+                public int? IndexSeparate
+                {
+                    get
+                    {
+                        if (f_indexSeparate)
+                            return _indexSeparate;
+                        f_indexSeparate = true;
+                        if (IsIndexSeparate) {
+                            _indexSeparate = (int) (IndexSeparateMinus + 176);
+                        }
+                        return _indexSeparate;
+                    }
+                }
+                private bool f_isIndexSeparate;
+                private bool _isIndexSeparate;
+
+                /// <summary>
+                /// Whether the index is stored separately from the tag.
+                /// </summary>
+                public bool IsIndexSeparate
+                {
+                    get
+                    {
+                        if (f_isIndexSeparate)
+                            return _isIndexSeparate;
+                        f_isIndexSeparate = true;
+                        _isIndexSeparate = (bool) (Tag == 210);
+                        return _isIndexSeparate;
                     }
                 }
                 private byte? _indexSeparateMinus;
@@ -386,78 +247,6 @@ namespace Kaitai
                 /// they must always be encoded in the tag byte.
                 /// </summary>
                 public byte? IndexSeparateMinus { get { return _indexSeparateMinus; } }
-
-                /// <summary>
-                /// The tag byte preceding this chunk body.
-                /// </summary>
-                public byte Tag { get { return _tag; } }
-                public Dcmp1 M_Root { get { return m_root; } }
-                public Dcmp1.Chunk M_Parent { get { return m_parent; } }
-            }
-
-            /// <summary>
-            /// The body of a table lookup chunk.
-            /// This body is always empty.
-            /// 
-            /// This chunk always expands to two bytes (`value`),
-            /// determined from the tag byte using a fixed lookup table (`lookup_table`).
-            /// This lookup table is hardcoded in the decompressor and always the same for all compressed data.
-            /// </summary>
-            public partial class TableLookupBody : KaitaiStruct
-            {
-                public TableLookupBody(byte p_tag, KaitaiStream p__io, Dcmp1.Chunk p__parent = null, Dcmp1 p__root = null) : base(p__io)
-                {
-                    m_parent = p__parent;
-                    m_root = p__root;
-                    _tag = p_tag;
-                    f_lookupTable = false;
-                    f_value = false;
-                    _read();
-                }
-                private void _read()
-                {
-                }
-                private bool f_lookupTable;
-                private List<byte[]> _lookupTable;
-
-                /// <summary>
-                /// Fixed lookup table that maps tag byte numbers to two bytes each.
-                /// 
-                /// The entries in the lookup table are offset -
-                /// index 0 stands for tag 0xd5, 1 for 0xd6, etc.
-                /// </summary>
-                public List<byte[]> LookupTable
-                {
-                    get
-                    {
-                        if (f_lookupTable)
-                            return _lookupTable;
-                        _lookupTable = (List<byte[]>) (new List<byte[]> { new byte[] { 0, 0 }, new byte[] { 0, 1 }, new byte[] { 0, 2 }, new byte[] { 0, 3 }, new byte[] { 46, 1 }, new byte[] { 62, 1 }, new byte[] { 1, 1 }, new byte[] { 30, 1 }, new byte[] { 255, 255 }, new byte[] { 14, 1 }, new byte[] { 49, 0 }, new byte[] { 17, 18 }, new byte[] { 1, 7 }, new byte[] { 51, 50 }, new byte[] { 18, 57 }, new byte[] { 237, 16 }, new byte[] { 1, 39 }, new byte[] { 35, 34 }, new byte[] { 1, 55 }, new byte[] { 7, 6 }, new byte[] { 1, 23 }, new byte[] { 1, 35 }, new byte[] { 0, 255 }, new byte[] { 0, 47 }, new byte[] { 7, 14 }, new byte[] { 253, 60 }, new byte[] { 1, 53 }, new byte[] { 1, 21 }, new byte[] { 1, 2 }, new byte[] { 0, 7 }, new byte[] { 0, 62 }, new byte[] { 5, 213 }, new byte[] { 2, 1 }, new byte[] { 6, 7 }, new byte[] { 7, 8 }, new byte[] { 48, 1 }, new byte[] { 1, 51 }, new byte[] { 0, 16 }, new byte[] { 23, 22 }, new byte[] { 55, 62 }, new byte[] { 54, 55 } });
-                        f_lookupTable = true;
-                        return _lookupTable;
-                    }
-                }
-                private bool f_value;
-                private byte[] _value;
-
-                /// <summary>
-                /// The two bytes that the tag byte expands to,
-                /// based on the fixed lookup table.
-                /// </summary>
-                public byte[] Value
-                {
-                    get
-                    {
-                        if (f_value)
-                            return _value;
-                        _value = (byte[]) (LookupTable[(Tag - 213)]);
-                        f_value = true;
-                        return _value;
-                    }
-                }
-                private byte _tag;
-                private Dcmp1 m_root;
-                private Dcmp1.Chunk m_parent;
 
                 /// <summary>
                 /// The tag byte preceding this chunk body.
@@ -541,9 +330,9 @@ namespace Kaitai
                     {
                         m_parent = p__parent;
                         m_root = p__root;
-                        f_toRepeat = false;
-                        f_repeatCountM1 = false;
                         f_repeatCount = false;
+                        f_repeatCountM1 = false;
+                        f_toRepeat = false;
                         _read();
                     }
                     private void _read()
@@ -551,24 +340,23 @@ namespace Kaitai
                         _toRepeatRaw = new DcmpVariableLengthInteger(m_io);
                         _repeatCountM1Raw = new DcmpVariableLengthInteger(m_io);
                     }
-                    private bool f_toRepeat;
-                    private int _toRepeat;
+                    private bool f_repeatCount;
+                    private int _repeatCount;
 
                     /// <summary>
-                    /// The value to repeat.
+                    /// The number of times to repeat the value.
                     /// 
-                    /// Although it is stored as a variable-length integer,
-                    /// this value must fit into an unsigned 8-bit integer.
+                    /// This value must be positive.
                     /// </summary>
-                    public int ToRepeat
+                    public int RepeatCount
                     {
                         get
                         {
-                            if (f_toRepeat)
-                                return _toRepeat;
-                            _toRepeat = (int) (ToRepeatRaw.Value);
-                            f_toRepeat = true;
-                            return _toRepeat;
+                            if (f_repeatCount)
+                                return _repeatCount;
+                            f_repeatCount = true;
+                            _repeatCount = (int) (RepeatCountM1 + 1);
+                            return _repeatCount;
                         }
                     }
                     private bool f_repeatCountM1;
@@ -586,28 +374,29 @@ namespace Kaitai
                         {
                             if (f_repeatCountM1)
                                 return _repeatCountM1;
-                            _repeatCountM1 = (int) (RepeatCountM1Raw.Value);
                             f_repeatCountM1 = true;
+                            _repeatCountM1 = (int) (RepeatCountM1Raw.Value);
                             return _repeatCountM1;
                         }
                     }
-                    private bool f_repeatCount;
-                    private int _repeatCount;
+                    private bool f_toRepeat;
+                    private int _toRepeat;
 
                     /// <summary>
-                    /// The number of times to repeat the value.
+                    /// The value to repeat.
                     /// 
-                    /// This value must be positive.
+                    /// Although it is stored as a variable-length integer,
+                    /// this value must fit into an unsigned 8-bit integer.
                     /// </summary>
-                    public int RepeatCount
+                    public int ToRepeat
                     {
                         get
                         {
-                            if (f_repeatCount)
-                                return _repeatCount;
-                            _repeatCount = (int) ((RepeatCountM1 + 1));
-                            f_repeatCount = true;
-                            return _repeatCount;
+                            if (f_toRepeat)
+                                return _toRepeat;
+                            f_toRepeat = true;
+                            _toRepeat = (int) (ToRepeatRaw.Value);
+                            return _toRepeat;
                         }
                     }
                     private DcmpVariableLengthInteger _toRepeatRaw;
@@ -642,6 +431,217 @@ namespace Kaitai
                 /// The chunk's body.
                 /// </summary>
                 public RepeatBody Body { get { return _body; } }
+                public Dcmp1 M_Root { get { return m_root; } }
+                public Dcmp1.Chunk M_Parent { get { return m_parent; } }
+            }
+
+            /// <summary>
+            /// The body of a literal data chunk.
+            /// 
+            /// The data that this chunk expands to is stored literally in the body (`literal`).
+            /// Optionally,
+            /// the literal data may also be stored for use by future backreference chunks (`do_store`).
+            /// </summary>
+            public partial class LiteralBody : KaitaiStruct
+            {
+                public LiteralBody(byte p_tag, KaitaiStream p__io, Dcmp1.Chunk p__parent = null, Dcmp1 p__root = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    _tag = p_tag;
+                    f_doStore = false;
+                    f_isLenLiteralSeparate = false;
+                    f_lenLiteral = false;
+                    f_lenLiteralM1InTag = false;
+                    _read();
+                }
+                private void _read()
+                {
+                    if (IsLenLiteralSeparate) {
+                        _lenLiteralSeparate = m_io.ReadU1();
+                    }
+                    _literal = m_io.ReadBytes(LenLiteral);
+                }
+                private bool f_doStore;
+                private bool _doStore;
+
+                /// <summary>
+                /// Whether this literal should be stored for use by future backreference chunks.
+                /// 
+                /// See the documentation of the `backreference_body` type for details about backreference chunks.
+                /// </summary>
+                public bool DoStore
+                {
+                    get
+                    {
+                        if (f_doStore)
+                            return _doStore;
+                        f_doStore = true;
+                        _doStore = (bool) ((IsLenLiteralSeparate ? Tag == 209 : (Tag & 16) != 0));
+                        return _doStore;
+                    }
+                }
+                private bool f_isLenLiteralSeparate;
+                private bool _isLenLiteralSeparate;
+
+                /// <summary>
+                /// Whether the length of the literal is stored separately from the tag.
+                /// </summary>
+                public bool IsLenLiteralSeparate
+                {
+                    get
+                    {
+                        if (f_isLenLiteralSeparate)
+                            return _isLenLiteralSeparate;
+                        f_isLenLiteralSeparate = true;
+                        _isLenLiteralSeparate = (bool) (Tag >= 208);
+                        return _isLenLiteralSeparate;
+                    }
+                }
+                private bool f_lenLiteral;
+                private int _lenLiteral;
+
+                /// <summary>
+                /// The length of the literal data,
+                /// in bytes.
+                /// 
+                /// In practice,
+                /// this value is always greater than zero,
+                /// as there is no use in storing a zero-length literal.
+                /// </summary>
+                public int LenLiteral
+                {
+                    get
+                    {
+                        if (f_lenLiteral)
+                            return _lenLiteral;
+                        f_lenLiteral = true;
+                        _lenLiteral = (int) ((IsLenLiteralSeparate ? LenLiteralSeparate : LenLiteralM1InTag + 1));
+                        return _lenLiteral;
+                    }
+                }
+                private bool f_lenLiteralM1InTag;
+                private int? _lenLiteralM1InTag;
+
+                /// <summary>
+                /// The part of the tag byte that indicates the length of the literal data,
+                /// in bytes,
+                /// minus one.
+                /// 
+                /// If the tag byte is 0xd0 or 0xd1,
+                /// the length is stored in a separate byte after the tag byte and before the literal data.
+                /// </summary>
+                public int? LenLiteralM1InTag
+                {
+                    get
+                    {
+                        if (f_lenLiteralM1InTag)
+                            return _lenLiteralM1InTag;
+                        f_lenLiteralM1InTag = true;
+                        if (!(IsLenLiteralSeparate)) {
+                            _lenLiteralM1InTag = (int) (Tag & 15);
+                        }
+                        return _lenLiteralM1InTag;
+                    }
+                }
+                private byte? _lenLiteralSeparate;
+                private byte[] _literal;
+                private byte _tag;
+                private Dcmp1 m_root;
+                private Dcmp1.Chunk m_parent;
+
+                /// <summary>
+                /// The length of the literal data,
+                /// in bytes.
+                /// 
+                /// This field is only present if the tag byte is 0xd0 or 0xd1.
+                /// In practice,
+                /// this only happens if the length is 0x11 or greater,
+                /// because smaller lengths can be encoded into the tag byte.
+                /// </summary>
+                public byte? LenLiteralSeparate { get { return _lenLiteralSeparate; } }
+
+                /// <summary>
+                /// The literal data.
+                /// </summary>
+                public byte[] Literal { get { return _literal; } }
+
+                /// <summary>
+                /// The tag byte preceding this chunk body.
+                /// </summary>
+                public byte Tag { get { return _tag; } }
+                public Dcmp1 M_Root { get { return m_root; } }
+                public Dcmp1.Chunk M_Parent { get { return m_parent; } }
+            }
+
+            /// <summary>
+            /// The body of a table lookup chunk.
+            /// This body is always empty.
+            /// 
+            /// This chunk always expands to two bytes (`value`),
+            /// determined from the tag byte using a fixed lookup table (`lookup_table`).
+            /// This lookup table is hardcoded in the decompressor and always the same for all compressed data.
+            /// </summary>
+            public partial class TableLookupBody : KaitaiStruct
+            {
+                public TableLookupBody(byte p_tag, KaitaiStream p__io, Dcmp1.Chunk p__parent = null, Dcmp1 p__root = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    _tag = p_tag;
+                    f_lookupTable = false;
+                    f_value = false;
+                    _read();
+                }
+                private void _read()
+                {
+                }
+                private bool f_lookupTable;
+                private List<byte[]> _lookupTable;
+
+                /// <summary>
+                /// Fixed lookup table that maps tag byte numbers to two bytes each.
+                /// 
+                /// The entries in the lookup table are offset -
+                /// index 0 stands for tag 0xd5, 1 for 0xd6, etc.
+                /// </summary>
+                public List<byte[]> LookupTable
+                {
+                    get
+                    {
+                        if (f_lookupTable)
+                            return _lookupTable;
+                        f_lookupTable = true;
+                        _lookupTable = (List<byte[]>) (new List<byte[]> { new byte[] { 0, 0 }, new byte[] { 0, 1 }, new byte[] { 0, 2 }, new byte[] { 0, 3 }, new byte[] { 46, 1 }, new byte[] { 62, 1 }, new byte[] { 1, 1 }, new byte[] { 30, 1 }, new byte[] { 255, 255 }, new byte[] { 14, 1 }, new byte[] { 49, 0 }, new byte[] { 17, 18 }, new byte[] { 1, 7 }, new byte[] { 51, 50 }, new byte[] { 18, 57 }, new byte[] { 237, 16 }, new byte[] { 1, 39 }, new byte[] { 35, 34 }, new byte[] { 1, 55 }, new byte[] { 7, 6 }, new byte[] { 1, 23 }, new byte[] { 1, 35 }, new byte[] { 0, 255 }, new byte[] { 0, 47 }, new byte[] { 7, 14 }, new byte[] { 253, 60 }, new byte[] { 1, 53 }, new byte[] { 1, 21 }, new byte[] { 1, 2 }, new byte[] { 0, 7 }, new byte[] { 0, 62 }, new byte[] { 5, 213 }, new byte[] { 2, 1 }, new byte[] { 6, 7 }, new byte[] { 7, 8 }, new byte[] { 48, 1 }, new byte[] { 1, 51 }, new byte[] { 0, 16 }, new byte[] { 23, 22 }, new byte[] { 55, 62 }, new byte[] { 54, 55 } });
+                        return _lookupTable;
+                    }
+                }
+                private bool f_value;
+                private byte[] _value;
+
+                /// <summary>
+                /// The two bytes that the tag byte expands to,
+                /// based on the fixed lookup table.
+                /// </summary>
+                public byte[] Value
+                {
+                    get
+                    {
+                        if (f_value)
+                            return _value;
+                        f_value = true;
+                        _value = (byte[]) (LookupTable[Tag - 213]);
+                        return _value;
+                    }
+                }
+                private byte _tag;
+                private Dcmp1 m_root;
+                private Dcmp1.Chunk m_parent;
+
+                /// <summary>
+                /// The tag byte preceding this chunk body.
+                /// </summary>
+                public byte Tag { get { return _tag; } }
                 public Dcmp1 M_Root { get { return m_root; } }
                 public Dcmp1.Chunk M_Parent { get { return m_parent; } }
             }

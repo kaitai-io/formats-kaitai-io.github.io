@@ -15,33 +15,31 @@ type
     `lenStructureBlock`*: uint32
     `parent`*: KaitaiStruct
     `rawMemoryReservationBlockInst`*: seq[byte]
-    `rawStructureBlockInst`*: seq[byte]
     `rawStringsBlockInst`*: seq[byte]
+    `rawStructureBlockInst`*: seq[byte]
     `memoryReservationBlockInst`: Dtb_MemoryBlock
     `memoryReservationBlockInstFlag`: bool
-    `structureBlockInst`: Dtb_FdtBlock
-    `structureBlockInstFlag`: bool
     `stringsBlockInst`: Dtb_Strings
     `stringsBlockInstFlag`: bool
+    `structureBlockInst`: Dtb_FdtBlock
+    `structureBlockInstFlag`: bool
   Dtb_Fdt* = enum
     begin_node = 1
     end_node = 2
     prop = 3
     nop = 4
     end = 9
-  Dtb_MemoryBlock* = ref object of KaitaiStruct
-    `entries`*: seq[Dtb_MemoryBlockEntry]
-    `parent`*: Dtb
+  Dtb_FdtBeginNode* = ref object of KaitaiStruct
+    `name`*: string
+    `padding`*: seq[byte]
+    `parent`*: Dtb_FdtNode
   Dtb_FdtBlock* = ref object of KaitaiStruct
     `nodes`*: seq[Dtb_FdtNode]
     `parent`*: Dtb
-  Dtb_MemoryBlockEntry* = ref object of KaitaiStruct
-    `address`*: uint64
-    `size`*: uint64
-    `parent`*: Dtb_MemoryBlock
-  Dtb_Strings* = ref object of KaitaiStruct
-    `strings`*: seq[string]
-    `parent`*: Dtb
+  Dtb_FdtNode* = ref object of KaitaiStruct
+    `type`*: Dtb_Fdt
+    `body`*: KaitaiStruct
+    `parent`*: Dtb_FdtBlock
   Dtb_FdtProp* = ref object of KaitaiStruct
     `lenProperty`*: uint32
     `ofsName`*: uint32
@@ -50,27 +48,29 @@ type
     `parent`*: Dtb_FdtNode
     `nameInst`: string
     `nameInstFlag`: bool
-  Dtb_FdtNode* = ref object of KaitaiStruct
-    `type`*: Dtb_Fdt
-    `body`*: KaitaiStruct
-    `parent`*: Dtb_FdtBlock
-  Dtb_FdtBeginNode* = ref object of KaitaiStruct
-    `name`*: string
-    `padding`*: seq[byte]
-    `parent`*: Dtb_FdtNode
+  Dtb_MemoryBlock* = ref object of KaitaiStruct
+    `entries`*: seq[Dtb_MemoryBlockEntry]
+    `parent`*: Dtb
+  Dtb_MemoryBlockEntry* = ref object of KaitaiStruct
+    `address`*: uint64
+    `size`*: uint64
+    `parent`*: Dtb_MemoryBlock
+  Dtb_Strings* = ref object of KaitaiStruct
+    `strings`*: seq[string]
+    `parent`*: Dtb
 
 proc read*(_: typedesc[Dtb], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Dtb
-proc read*(_: typedesc[Dtb_MemoryBlock], io: KaitaiStream, root: KaitaiStruct, parent: Dtb): Dtb_MemoryBlock
+proc read*(_: typedesc[Dtb_FdtBeginNode], io: KaitaiStream, root: KaitaiStruct, parent: Dtb_FdtNode): Dtb_FdtBeginNode
 proc read*(_: typedesc[Dtb_FdtBlock], io: KaitaiStream, root: KaitaiStruct, parent: Dtb): Dtb_FdtBlock
+proc read*(_: typedesc[Dtb_FdtNode], io: KaitaiStream, root: KaitaiStruct, parent: Dtb_FdtBlock): Dtb_FdtNode
+proc read*(_: typedesc[Dtb_FdtProp], io: KaitaiStream, root: KaitaiStruct, parent: Dtb_FdtNode): Dtb_FdtProp
+proc read*(_: typedesc[Dtb_MemoryBlock], io: KaitaiStream, root: KaitaiStruct, parent: Dtb): Dtb_MemoryBlock
 proc read*(_: typedesc[Dtb_MemoryBlockEntry], io: KaitaiStream, root: KaitaiStruct, parent: Dtb_MemoryBlock): Dtb_MemoryBlockEntry
 proc read*(_: typedesc[Dtb_Strings], io: KaitaiStream, root: KaitaiStruct, parent: Dtb): Dtb_Strings
-proc read*(_: typedesc[Dtb_FdtProp], io: KaitaiStream, root: KaitaiStruct, parent: Dtb_FdtNode): Dtb_FdtProp
-proc read*(_: typedesc[Dtb_FdtNode], io: KaitaiStream, root: KaitaiStruct, parent: Dtb_FdtBlock): Dtb_FdtNode
-proc read*(_: typedesc[Dtb_FdtBeginNode], io: KaitaiStream, root: KaitaiStruct, parent: Dtb_FdtNode): Dtb_FdtBeginNode
 
 proc memoryReservationBlock*(this: Dtb): Dtb_MemoryBlock
-proc structureBlock*(this: Dtb): Dtb_FdtBlock
 proc stringsBlock*(this: Dtb): Dtb_Strings
+proc structureBlock*(this: Dtb): Dtb_FdtBlock
 proc name*(this: Dtb_FdtProp): string
 
 
@@ -134,7 +134,7 @@ proc memoryReservationBlock(this: Dtb): Dtb_MemoryBlock =
     return this.memoryReservationBlockInst
   let pos = this.io.pos()
   this.io.seek(int(this.ofsMemoryReservationBlock))
-  let rawMemoryReservationBlockInstExpr = this.io.readBytes(int((this.ofsStructureBlock - this.ofsMemoryReservationBlock)))
+  let rawMemoryReservationBlockInstExpr = this.io.readBytes(int(this.ofsStructureBlock - this.ofsMemoryReservationBlock))
   this.rawMemoryReservationBlockInst = rawMemoryReservationBlockInstExpr
   let rawMemoryReservationBlockInstIo = newKaitaiStream(rawMemoryReservationBlockInstExpr)
   let memoryReservationBlockInstExpr = Dtb_MemoryBlock.read(rawMemoryReservationBlockInstIo, this.root, this)
@@ -142,20 +142,6 @@ proc memoryReservationBlock(this: Dtb): Dtb_MemoryBlock =
   this.io.seek(pos)
   this.memoryReservationBlockInstFlag = true
   return this.memoryReservationBlockInst
-
-proc structureBlock(this: Dtb): Dtb_FdtBlock = 
-  if this.structureBlockInstFlag:
-    return this.structureBlockInst
-  let pos = this.io.pos()
-  this.io.seek(int(this.ofsStructureBlock))
-  let rawStructureBlockInstExpr = this.io.readBytes(int(this.lenStructureBlock))
-  this.rawStructureBlockInst = rawStructureBlockInstExpr
-  let rawStructureBlockInstIo = newKaitaiStream(rawStructureBlockInstExpr)
-  let structureBlockInstExpr = Dtb_FdtBlock.read(rawStructureBlockInstIo, this.root, this)
-  this.structureBlockInst = structureBlockInstExpr
-  this.io.seek(pos)
-  this.structureBlockInstFlag = true
-  return this.structureBlockInst
 
 proc stringsBlock(this: Dtb): Dtb_Strings = 
   if this.stringsBlockInstFlag:
@@ -171,26 +157,38 @@ proc stringsBlock(this: Dtb): Dtb_Strings =
   this.stringsBlockInstFlag = true
   return this.stringsBlockInst
 
+proc structureBlock(this: Dtb): Dtb_FdtBlock = 
+  if this.structureBlockInstFlag:
+    return this.structureBlockInst
+  let pos = this.io.pos()
+  this.io.seek(int(this.ofsStructureBlock))
+  let rawStructureBlockInstExpr = this.io.readBytes(int(this.lenStructureBlock))
+  this.rawStructureBlockInst = rawStructureBlockInstExpr
+  let rawStructureBlockInstIo = newKaitaiStream(rawStructureBlockInstExpr)
+  let structureBlockInstExpr = Dtb_FdtBlock.read(rawStructureBlockInstIo, this.root, this)
+  this.structureBlockInst = structureBlockInstExpr
+  this.io.seek(pos)
+  this.structureBlockInstFlag = true
+  return this.structureBlockInst
+
 proc fromFile*(_: typedesc[Dtb], filename: string): Dtb =
   Dtb.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[Dtb_MemoryBlock], io: KaitaiStream, root: KaitaiStruct, parent: Dtb): Dtb_MemoryBlock =
+proc read*(_: typedesc[Dtb_FdtBeginNode], io: KaitaiStream, root: KaitaiStruct, parent: Dtb_FdtNode): Dtb_FdtBeginNode =
   template this: untyped = result
-  this = new(Dtb_MemoryBlock)
+  this = new(Dtb_FdtBeginNode)
   let root = if root == nil: cast[Dtb](this) else: cast[Dtb](root)
   this.io = io
   this.root = root
   this.parent = parent
 
-  block:
-    var i: int
-    while not this.io.isEof:
-      let it = Dtb_MemoryBlockEntry.read(this.io, this.root, this)
-      this.entries.add(it)
-      inc i
+  let nameExpr = encode(this.io.readBytesTerm(0, false, true, true), "ASCII")
+  this.name = nameExpr
+  let paddingExpr = this.io.readBytes(int(-(this.io.pos) %%% 4))
+  this.padding = paddingExpr
 
-proc fromFile*(_: typedesc[Dtb_MemoryBlock], filename: string): Dtb_MemoryBlock =
-  Dtb_MemoryBlock.read(newKaitaiFileStream(filename), nil, nil)
+proc fromFile*(_: typedesc[Dtb_FdtBeginNode], filename: string): Dtb_FdtBeginNode =
+  Dtb_FdtBeginNode.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[Dtb_FdtBlock], io: KaitaiStream, root: KaitaiStruct, parent: Dtb): Dtb_FdtBlock =
   template this: untyped = result
@@ -211,6 +209,78 @@ proc read*(_: typedesc[Dtb_FdtBlock], io: KaitaiStream, root: KaitaiStruct, pare
 
 proc fromFile*(_: typedesc[Dtb_FdtBlock], filename: string): Dtb_FdtBlock =
   Dtb_FdtBlock.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Dtb_FdtNode], io: KaitaiStream, root: KaitaiStruct, parent: Dtb_FdtBlock): Dtb_FdtNode =
+  template this: untyped = result
+  this = new(Dtb_FdtNode)
+  let root = if root == nil: cast[Dtb](this) else: cast[Dtb](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let typeExpr = Dtb_Fdt(this.io.readU4be())
+  this.type = typeExpr
+  block:
+    let on = this.type
+    if on == dtb.begin_node:
+      let bodyExpr = Dtb_FdtBeginNode.read(this.io, this.root, this)
+      this.body = bodyExpr
+    elif on == dtb.prop:
+      let bodyExpr = Dtb_FdtProp.read(this.io, this.root, this)
+      this.body = bodyExpr
+
+proc fromFile*(_: typedesc[Dtb_FdtNode], filename: string): Dtb_FdtNode =
+  Dtb_FdtNode.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Dtb_FdtProp], io: KaitaiStream, root: KaitaiStruct, parent: Dtb_FdtNode): Dtb_FdtProp =
+  template this: untyped = result
+  this = new(Dtb_FdtProp)
+  let root = if root == nil: cast[Dtb](this) else: cast[Dtb](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let lenPropertyExpr = this.io.readU4be()
+  this.lenProperty = lenPropertyExpr
+  let ofsNameExpr = this.io.readU4be()
+  this.ofsName = ofsNameExpr
+  let propertyExpr = this.io.readBytes(int(this.lenProperty))
+  this.property = propertyExpr
+  let paddingExpr = this.io.readBytes(int(-(this.io.pos) %%% 4))
+  this.padding = paddingExpr
+
+proc name(this: Dtb_FdtProp): string = 
+  if this.nameInstFlag:
+    return this.nameInst
+  let io = Dtb(this.root).stringsBlock.io
+  let pos = io.pos()
+  io.seek(int(this.ofsName))
+  let nameInstExpr = encode(io.readBytesTerm(0, false, true, true), "ASCII")
+  this.nameInst = nameInstExpr
+  io.seek(pos)
+  this.nameInstFlag = true
+  return this.nameInst
+
+proc fromFile*(_: typedesc[Dtb_FdtProp], filename: string): Dtb_FdtProp =
+  Dtb_FdtProp.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Dtb_MemoryBlock], io: KaitaiStream, root: KaitaiStruct, parent: Dtb): Dtb_MemoryBlock =
+  template this: untyped = result
+  this = new(Dtb_MemoryBlock)
+  let root = if root == nil: cast[Dtb](this) else: cast[Dtb](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  block:
+    var i: int
+    while not this.io.isEof:
+      let it = Dtb_MemoryBlockEntry.read(this.io, this.root, this)
+      this.entries.add(it)
+      inc i
+
+proc fromFile*(_: typedesc[Dtb_MemoryBlock], filename: string): Dtb_MemoryBlock =
+  Dtb_MemoryBlock.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[Dtb_MemoryBlockEntry], io: KaitaiStream, root: KaitaiStruct, parent: Dtb_MemoryBlock): Dtb_MemoryBlockEntry =
   template this: untyped = result
@@ -253,74 +323,4 @@ proc read*(_: typedesc[Dtb_Strings], io: KaitaiStream, root: KaitaiStruct, paren
 
 proc fromFile*(_: typedesc[Dtb_Strings], filename: string): Dtb_Strings =
   Dtb_Strings.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Dtb_FdtProp], io: KaitaiStream, root: KaitaiStruct, parent: Dtb_FdtNode): Dtb_FdtProp =
-  template this: untyped = result
-  this = new(Dtb_FdtProp)
-  let root = if root == nil: cast[Dtb](this) else: cast[Dtb](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let lenPropertyExpr = this.io.readU4be()
-  this.lenProperty = lenPropertyExpr
-  let ofsNameExpr = this.io.readU4be()
-  this.ofsName = ofsNameExpr
-  let propertyExpr = this.io.readBytes(int(this.lenProperty))
-  this.property = propertyExpr
-  let paddingExpr = this.io.readBytes(int((-(this.io.pos) %%% 4)))
-  this.padding = paddingExpr
-
-proc name(this: Dtb_FdtProp): string = 
-  if this.nameInstFlag:
-    return this.nameInst
-  let io = Dtb(this.root).stringsBlock.io
-  let pos = io.pos()
-  io.seek(int(this.ofsName))
-  let nameInstExpr = encode(io.readBytesTerm(0, false, true, true), "ASCII")
-  this.nameInst = nameInstExpr
-  io.seek(pos)
-  this.nameInstFlag = true
-  return this.nameInst
-
-proc fromFile*(_: typedesc[Dtb_FdtProp], filename: string): Dtb_FdtProp =
-  Dtb_FdtProp.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Dtb_FdtNode], io: KaitaiStream, root: KaitaiStruct, parent: Dtb_FdtBlock): Dtb_FdtNode =
-  template this: untyped = result
-  this = new(Dtb_FdtNode)
-  let root = if root == nil: cast[Dtb](this) else: cast[Dtb](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let typeExpr = Dtb_Fdt(this.io.readU4be())
-  this.type = typeExpr
-  block:
-    let on = this.type
-    if on == dtb.begin_node:
-      let bodyExpr = Dtb_FdtBeginNode.read(this.io, this.root, this)
-      this.body = bodyExpr
-    elif on == dtb.prop:
-      let bodyExpr = Dtb_FdtProp.read(this.io, this.root, this)
-      this.body = bodyExpr
-
-proc fromFile*(_: typedesc[Dtb_FdtNode], filename: string): Dtb_FdtNode =
-  Dtb_FdtNode.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Dtb_FdtBeginNode], io: KaitaiStream, root: KaitaiStruct, parent: Dtb_FdtNode): Dtb_FdtBeginNode =
-  template this: untyped = result
-  this = new(Dtb_FdtBeginNode)
-  let root = if root == nil: cast[Dtb](this) else: cast[Dtb](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let nameExpr = encode(this.io.readBytesTerm(0, false, true, true), "ASCII")
-  this.name = nameExpr
-  let paddingExpr = this.io.readBytes(int((-(this.io.pos) %%% 4)))
-  this.padding = paddingExpr
-
-proc fromFile*(_: typedesc[Dtb_FdtBeginNode], filename: string): Dtb_FdtBeginNode =
-  Dtb_FdtBeginNode.read(newKaitaiFileStream(filename), nil, nil)
 

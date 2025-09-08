@@ -33,7 +33,7 @@ type AndroidBootldrHuawei struct {
 	ImageHeader *AndroidBootldrHuawei_ImageHdr
 	_io *kaitai.Stream
 	_root *AndroidBootldrHuawei
-	_parent interface{}
+	_parent kaitai.Struct
 	_raw_ImageHeader []byte
 }
 func NewAndroidBootldrHuawei() *AndroidBootldrHuawei {
@@ -41,7 +41,11 @@ func NewAndroidBootldrHuawei() *AndroidBootldrHuawei {
 	}
 }
 
-func (this *AndroidBootldrHuawei) Read(io *kaitai.Stream, parent interface{}, root *AndroidBootldrHuawei) (err error) {
+func (this AndroidBootldrHuawei) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *AndroidBootldrHuawei) Read(io *kaitai.Stream, parent kaitai.Struct, root *AndroidBootldrHuawei) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -52,7 +56,7 @@ func (this *AndroidBootldrHuawei) Read(io *kaitai.Stream, parent interface{}, ro
 		return err
 	}
 	this.MetaHeader = tmp1
-	tmp2, err := this._io.ReadBytes(int((this.MetaHeader.LenMetaHeader - 76)))
+	tmp2, err := this._io.ReadBytes(int(this.MetaHeader.LenMetaHeader - 76))
 	if err != nil {
 		return err
 	}
@@ -73,88 +77,6 @@ func (this *AndroidBootldrHuawei) Read(io *kaitai.Stream, parent interface{}, ro
 	this.ImageHeader = tmp4
 	return err
 }
-type AndroidBootldrHuawei_MetaHdr struct {
-	Magic []byte
-	Version *AndroidBootldrHuawei_Version
-	ImageVersion string
-	LenMetaHeader uint16
-	LenImageHeader uint16
-	_io *kaitai.Stream
-	_root *AndroidBootldrHuawei
-	_parent *AndroidBootldrHuawei
-}
-func NewAndroidBootldrHuawei_MetaHdr() *AndroidBootldrHuawei_MetaHdr {
-	return &AndroidBootldrHuawei_MetaHdr{
-	}
-}
-
-func (this *AndroidBootldrHuawei_MetaHdr) Read(io *kaitai.Stream, parent *AndroidBootldrHuawei, root *AndroidBootldrHuawei) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp5, err := this._io.ReadBytes(int(4))
-	if err != nil {
-		return err
-	}
-	tmp5 = tmp5
-	this.Magic = tmp5
-	if !(bytes.Equal(this.Magic, []uint8{60, 214, 26, 206})) {
-		return kaitai.NewValidationNotEqualError([]uint8{60, 214, 26, 206}, this.Magic, this._io, "/types/meta_hdr/seq/0")
-	}
-	tmp6 := NewAndroidBootldrHuawei_Version()
-	err = tmp6.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Version = tmp6
-	tmp7, err := this._io.ReadBytes(int(64))
-	if err != nil {
-		return err
-	}
-	tmp7 = kaitai.BytesTerminate(tmp7, 0, false)
-	this.ImageVersion = string(tmp7)
-	tmp8, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.LenMetaHeader = uint16(tmp8)
-	tmp9, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.LenImageHeader = uint16(tmp9)
-	return err
-}
-type AndroidBootldrHuawei_Version struct {
-	Major uint16
-	Minor uint16
-	_io *kaitai.Stream
-	_root *AndroidBootldrHuawei
-	_parent *AndroidBootldrHuawei_MetaHdr
-}
-func NewAndroidBootldrHuawei_Version() *AndroidBootldrHuawei_Version {
-	return &AndroidBootldrHuawei_Version{
-	}
-}
-
-func (this *AndroidBootldrHuawei_Version) Read(io *kaitai.Stream, parent *AndroidBootldrHuawei_MetaHdr, root *AndroidBootldrHuawei) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp10, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.Major = uint16(tmp10)
-	tmp11, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.Minor = uint16(tmp11)
-	return err
-}
 type AndroidBootldrHuawei_ImageHdr struct {
 	Entries []*AndroidBootldrHuawei_ImageHdrEntry
 	_io *kaitai.Stream
@@ -166,25 +88,29 @@ func NewAndroidBootldrHuawei_ImageHdr() *AndroidBootldrHuawei_ImageHdr {
 	}
 }
 
+func (this AndroidBootldrHuawei_ImageHdr) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *AndroidBootldrHuawei_ImageHdr) Read(io *kaitai.Stream, parent *AndroidBootldrHuawei, root *AndroidBootldrHuawei) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	for i := 1;; i++ {
-		tmp12, err := this._io.EOF()
+	for i := 0;; i++ {
+		tmp5, err := this._io.EOF()
 		if err != nil {
 			return err
 		}
-		if tmp12 {
+		if tmp5 {
 			break
 		}
-		tmp13 := NewAndroidBootldrHuawei_ImageHdrEntry()
-		err = tmp13.Read(this._io, this, this._root)
+		tmp6 := NewAndroidBootldrHuawei_ImageHdrEntry()
+		err = tmp6.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Entries = append(this.Entries, tmp13)
+		this.Entries = append(this.Entries, tmp6)
 	}
 	return err
 }
@@ -208,14 +134,18 @@ type AndroidBootldrHuawei_ImageHdrEntry struct {
 	_io *kaitai.Stream
 	_root *AndroidBootldrHuawei
 	_parent *AndroidBootldrHuawei_ImageHdr
-	_f_isUsed bool
-	isUsed bool
 	_f_body bool
 	body []byte
+	_f_isUsed bool
+	isUsed bool
 }
 func NewAndroidBootldrHuawei_ImageHdrEntry() *AndroidBootldrHuawei_ImageHdrEntry {
 	return &AndroidBootldrHuawei_ImageHdrEntry{
 	}
+}
+
+func (this AndroidBootldrHuawei_ImageHdrEntry) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *AndroidBootldrHuawei_ImageHdrEntry) Read(io *kaitai.Stream, parent *AndroidBootldrHuawei_ImageHdr, root *AndroidBootldrHuawei) (err error) {
@@ -223,45 +153,34 @@ func (this *AndroidBootldrHuawei_ImageHdrEntry) Read(io *kaitai.Stream, parent *
 	this._parent = parent
 	this._root = root
 
-	tmp14, err := this._io.ReadBytes(int(72))
+	tmp7, err := this._io.ReadBytes(int(72))
 	if err != nil {
 		return err
 	}
-	tmp14 = kaitai.BytesTerminate(tmp14, 0, false)
-	this.Name = string(tmp14)
-	tmp15, err := this._io.ReadU4le()
+	tmp7 = kaitai.BytesTerminate(tmp7, 0, false)
+	this.Name = string(tmp7)
+	tmp8, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.OfsBody = uint32(tmp15)
-	tmp16, err := this._io.ReadU4le()
+	this.OfsBody = uint32(tmp8)
+	tmp9, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.LenBody = uint32(tmp16)
+	this.LenBody = uint32(tmp9)
 	return err
-}
-
-/**
- * @see <a href="https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&amp;id=a68d284aee85#n119">Source</a>
- */
-func (this *AndroidBootldrHuawei_ImageHdrEntry) IsUsed() (v bool, err error) {
-	if (this._f_isUsed) {
-		return this.isUsed, nil
-	}
-	this.isUsed = bool( ((this.OfsBody != 0) && (this.LenBody != 0)) )
-	this._f_isUsed = true
-	return this.isUsed, nil
 }
 func (this *AndroidBootldrHuawei_ImageHdrEntry) Body() (v []byte, err error) {
 	if (this._f_body) {
 		return this.body, nil
 	}
-	tmp17, err := this.IsUsed()
+	this._f_body = true
+	tmp10, err := this.IsUsed()
 	if err != nil {
 		return nil, err
 	}
-	if (tmp17) {
+	if (tmp10) {
 		thisIo := this._root._io
 		_pos, err := thisIo.Pos()
 		if err != nil {
@@ -271,22 +190,122 @@ func (this *AndroidBootldrHuawei_ImageHdrEntry) Body() (v []byte, err error) {
 		if err != nil {
 			return nil, err
 		}
-		tmp18, err := thisIo.ReadBytes(int(this.LenBody))
+		tmp11, err := thisIo.ReadBytes(int(this.LenBody))
 		if err != nil {
 			return nil, err
 		}
-		tmp18 = tmp18
-		this.body = tmp18
+		tmp11 = tmp11
+		this.body = tmp11
 		_, err = thisIo.Seek(_pos, io.SeekStart)
 		if err != nil {
 			return nil, err
 		}
-		this._f_body = true
 	}
-	this._f_body = true
 	return this.body, nil
+}
+
+/**
+ * @see <a href="https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&amp;id=a68d284aee85#n119">Source</a>
+ */
+func (this *AndroidBootldrHuawei_ImageHdrEntry) IsUsed() (v bool, err error) {
+	if (this._f_isUsed) {
+		return this.isUsed, nil
+	}
+	this._f_isUsed = true
+	this.isUsed = bool( ((this.OfsBody != 0) && (this.LenBody != 0)) )
+	return this.isUsed, nil
 }
 
 /**
  * partition name
  */
+type AndroidBootldrHuawei_MetaHdr struct {
+	Magic []byte
+	Version *AndroidBootldrHuawei_Version
+	ImageVersion string
+	LenMetaHeader uint16
+	LenImageHeader uint16
+	_io *kaitai.Stream
+	_root *AndroidBootldrHuawei
+	_parent *AndroidBootldrHuawei
+}
+func NewAndroidBootldrHuawei_MetaHdr() *AndroidBootldrHuawei_MetaHdr {
+	return &AndroidBootldrHuawei_MetaHdr{
+	}
+}
+
+func (this AndroidBootldrHuawei_MetaHdr) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *AndroidBootldrHuawei_MetaHdr) Read(io *kaitai.Stream, parent *AndroidBootldrHuawei, root *AndroidBootldrHuawei) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp12, err := this._io.ReadBytes(int(4))
+	if err != nil {
+		return err
+	}
+	tmp12 = tmp12
+	this.Magic = tmp12
+	if !(bytes.Equal(this.Magic, []uint8{60, 214, 26, 206})) {
+		return kaitai.NewValidationNotEqualError([]uint8{60, 214, 26, 206}, this.Magic, this._io, "/types/meta_hdr/seq/0")
+	}
+	tmp13 := NewAndroidBootldrHuawei_Version()
+	err = tmp13.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Version = tmp13
+	tmp14, err := this._io.ReadBytes(int(64))
+	if err != nil {
+		return err
+	}
+	tmp14 = kaitai.BytesTerminate(tmp14, 0, false)
+	this.ImageVersion = string(tmp14)
+	tmp15, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.LenMetaHeader = uint16(tmp15)
+	tmp16, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.LenImageHeader = uint16(tmp16)
+	return err
+}
+type AndroidBootldrHuawei_Version struct {
+	Major uint16
+	Minor uint16
+	_io *kaitai.Stream
+	_root *AndroidBootldrHuawei
+	_parent *AndroidBootldrHuawei_MetaHdr
+}
+func NewAndroidBootldrHuawei_Version() *AndroidBootldrHuawei_Version {
+	return &AndroidBootldrHuawei_Version{
+	}
+}
+
+func (this AndroidBootldrHuawei_Version) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *AndroidBootldrHuawei_Version) Read(io *kaitai.Stream, parent *AndroidBootldrHuawei_MetaHdr, root *AndroidBootldrHuawei) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp17, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.Major = uint16(tmp17)
+	tmp18, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.Minor = uint16(tmp18)
+	return err
+}

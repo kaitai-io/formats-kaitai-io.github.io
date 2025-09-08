@@ -3,12 +3,15 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class warcraft_2_pud_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -29,14 +32,14 @@
 class warcraft_2_pud_t : public kaitai::kstruct {
 
 public:
-    class section_starting_resource_t;
-    class section_era_t;
-    class section_ver_t;
+    class section_t;
     class section_dim_t;
+    class section_era_t;
+    class section_ownr_t;
+    class section_starting_resource_t;
     class section_type_t;
     class section_unit_t;
-    class section_t;
-    class section_ownr_t;
+    class section_ver_t;
     class unit_t;
 
     enum controller_t {
@@ -48,6 +51,13 @@ public:
         CONTROLLER_RESCUE_PASSIVE = 6,
         CONTROLLER_RESCUE_ACTIVE = 7
     };
+    static bool _is_defined_controller_t(controller_t v);
+
+private:
+    static const std::set<controller_t> _values_controller_t;
+    static std::set<controller_t> _build_values_controller_t();
+
+public:
 
     enum terrain_type_t {
         TERRAIN_TYPE_FOREST = 0,
@@ -55,6 +65,13 @@ public:
         TERRAIN_TYPE_WASTELAND = 2,
         TERRAIN_TYPE_SWAMP = 3
     };
+    static bool _is_defined_terrain_type_t(terrain_type_t v);
+
+private:
+    static const std::set<terrain_type_t> _values_terrain_type_t;
+    static std::set<terrain_type_t> _build_values_terrain_type_t();
+
+public:
 
     enum unit_type_t {
         UNIT_TYPE_INFANTRY = 0,
@@ -158,6 +175,13 @@ public:
         UNIT_TYPE_HUMAN_WALL = 103,
         UNIT_TYPE_ORC_WALL = 104
     };
+    static bool _is_defined_unit_type_t(unit_type_t v);
+
+private:
+    static const std::set<unit_type_t> _values_unit_type_t;
+    static std::set<unit_type_t> _build_values_unit_type_t();
+
+public:
 
     warcraft_2_pud_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, warcraft_2_pud_t* p__root = 0);
 
@@ -168,26 +192,66 @@ private:
 public:
     ~warcraft_2_pud_t();
 
-    class section_starting_resource_t : public kaitai::kstruct {
+    class section_t : public kaitai::kstruct {
 
     public:
 
-        section_starting_resource_t(kaitai::kstream* p__io, warcraft_2_pud_t::section_t* p__parent = 0, warcraft_2_pud_t* p__root = 0);
+        section_t(kaitai::kstream* p__io, warcraft_2_pud_t* p__parent = 0, warcraft_2_pud_t* p__root = 0);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~section_starting_resource_t();
+        ~section_t();
 
     private:
-        std::vector<uint16_t>* m_resources_by_player;
+        std::string m_name;
+        uint32_t m_size;
+        kaitai::kstruct* m_body;
+        bool n_body;
+
+    public:
+        bool _is_null_body() { body(); return n_body; };
+
+    private:
+        warcraft_2_pud_t* m__root;
+        warcraft_2_pud_t* m__parent;
+        std::string m__raw_body;
+        kaitai::kstream* m__io__raw_body;
+
+    public:
+        std::string name() const { return m_name; }
+        uint32_t size() const { return m_size; }
+        kaitai::kstruct* body() const { return m_body; }
+        warcraft_2_pud_t* _root() const { return m__root; }
+        warcraft_2_pud_t* _parent() const { return m__parent; }
+        std::string _raw_body() const { return m__raw_body; }
+        kaitai::kstream* _io__raw_body() const { return m__io__raw_body; }
+    };
+
+    class section_dim_t : public kaitai::kstruct {
+
+    public:
+
+        section_dim_t(kaitai::kstream* p__io, warcraft_2_pud_t::section_t* p__parent = 0, warcraft_2_pud_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~section_dim_t();
+
+    private:
+        uint16_t m_x;
+        uint16_t m_y;
         warcraft_2_pud_t* m__root;
         warcraft_2_pud_t::section_t* m__parent;
 
     public:
-        std::vector<uint16_t>* resources_by_player() const { return m_resources_by_player; }
+        uint16_t x() const { return m_x; }
+        uint16_t y() const { return m_y; }
         warcraft_2_pud_t* _root() const { return m__root; }
         warcraft_2_pud_t::section_t* _parent() const { return m__parent; }
     };
@@ -221,55 +285,53 @@ public:
     };
 
     /**
-     * Section that specifies format version.
+     * Section that specifies who controls each player.
      */
 
-    class section_ver_t : public kaitai::kstruct {
+    class section_ownr_t : public kaitai::kstruct {
 
     public:
 
-        section_ver_t(kaitai::kstream* p__io, warcraft_2_pud_t::section_t* p__parent = 0, warcraft_2_pud_t* p__root = 0);
+        section_ownr_t(kaitai::kstream* p__io, warcraft_2_pud_t::section_t* p__parent = 0, warcraft_2_pud_t* p__root = 0);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~section_ver_t();
+        ~section_ownr_t();
 
     private:
-        uint16_t m_version;
+        std::vector<controller_t>* m_controller_by_player;
         warcraft_2_pud_t* m__root;
         warcraft_2_pud_t::section_t* m__parent;
 
     public:
-        uint16_t version() const { return m_version; }
+        std::vector<controller_t>* controller_by_player() const { return m_controller_by_player; }
         warcraft_2_pud_t* _root() const { return m__root; }
         warcraft_2_pud_t::section_t* _parent() const { return m__parent; }
     };
 
-    class section_dim_t : public kaitai::kstruct {
+    class section_starting_resource_t : public kaitai::kstruct {
 
     public:
 
-        section_dim_t(kaitai::kstream* p__io, warcraft_2_pud_t::section_t* p__parent = 0, warcraft_2_pud_t* p__root = 0);
+        section_starting_resource_t(kaitai::kstream* p__io, warcraft_2_pud_t::section_t* p__parent = 0, warcraft_2_pud_t* p__root = 0);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~section_dim_t();
+        ~section_starting_resource_t();
 
     private:
-        uint16_t m_x;
-        uint16_t m_y;
+        std::vector<uint16_t>* m_resources_by_player;
         warcraft_2_pud_t* m__root;
         warcraft_2_pud_t::section_t* m__parent;
 
     public:
-        uint16_t x() const { return m_x; }
-        uint16_t y() const { return m_y; }
+        std::vector<uint16_t>* resources_by_player() const { return m_resources_by_player; }
         warcraft_2_pud_t* _root() const { return m__root; }
         warcraft_2_pud_t::section_t* _parent() const { return m__parent; }
     };
@@ -341,68 +403,30 @@ public:
         warcraft_2_pud_t::section_t* _parent() const { return m__parent; }
     };
 
-    class section_t : public kaitai::kstruct {
-
-    public:
-
-        section_t(kaitai::kstream* p__io, warcraft_2_pud_t* p__parent = 0, warcraft_2_pud_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~section_t();
-
-    private:
-        std::string m_name;
-        uint32_t m_size;
-        kaitai::kstruct* m_body;
-        bool n_body;
-
-    public:
-        bool _is_null_body() { body(); return n_body; };
-
-    private:
-        warcraft_2_pud_t* m__root;
-        warcraft_2_pud_t* m__parent;
-        std::string m__raw_body;
-        kaitai::kstream* m__io__raw_body;
-
-    public:
-        std::string name() const { return m_name; }
-        uint32_t size() const { return m_size; }
-        kaitai::kstruct* body() const { return m_body; }
-        warcraft_2_pud_t* _root() const { return m__root; }
-        warcraft_2_pud_t* _parent() const { return m__parent; }
-        std::string _raw_body() const { return m__raw_body; }
-        kaitai::kstream* _io__raw_body() const { return m__io__raw_body; }
-    };
-
     /**
-     * Section that specifies who controls each player.
+     * Section that specifies format version.
      */
 
-    class section_ownr_t : public kaitai::kstruct {
+    class section_ver_t : public kaitai::kstruct {
 
     public:
 
-        section_ownr_t(kaitai::kstream* p__io, warcraft_2_pud_t::section_t* p__parent = 0, warcraft_2_pud_t* p__root = 0);
+        section_ver_t(kaitai::kstream* p__io, warcraft_2_pud_t::section_t* p__parent = 0, warcraft_2_pud_t* p__root = 0);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~section_ownr_t();
+        ~section_ver_t();
 
     private:
-        std::vector<controller_t>* m_controller_by_player;
+        uint16_t m_version;
         warcraft_2_pud_t* m__root;
         warcraft_2_pud_t::section_t* m__parent;
 
     public:
-        std::vector<controller_t>* controller_by_player() const { return m_controller_by_player; }
+        uint16_t version() const { return m_version; }
         warcraft_2_pud_t* _root() const { return m__root; }
         warcraft_2_pud_t::section_t* _parent() const { return m__parent; }
     };

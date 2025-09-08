@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.Lvm2 = factory(root.KaitaiStream);
+    factory(root.Lvm2 || (root.Lvm2 = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Lvm2_, KaitaiStream) {
 /**
  * ### Building a test file
  * 
@@ -39,7 +39,7 @@ var Lvm2 = (function() {
     function PhysicalVolume(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -52,7 +52,7 @@ var Lvm2 = (function() {
       function Label(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -65,14 +65,14 @@ var Lvm2 = (function() {
         function LabelHeader(_io, _parent, _root) {
           this._io = _io;
           this._parent = _parent;
-          this._root = _root || this;
+          this._root = _root;
 
           this._read();
         }
         LabelHeader.prototype._read = function() {
           this.signature = this._io.readBytes(8);
-          if (!((KaitaiStream.byteArrayCompare(this.signature, [76, 65, 66, 69, 76, 79, 78, 69]) == 0))) {
-            throw new KaitaiStream.ValidationNotEqualError([76, 65, 66, 69, 76, 79, 78, 69], this.signature, this._io, "/types/physical_volume/types/label/types/label_header/seq/0");
+          if (!((KaitaiStream.byteArrayCompare(this.signature, new Uint8Array([76, 65, 66, 69, 76, 79, 78, 69])) == 0))) {
+            throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([76, 65, 66, 69, 76, 79, 78, 69]), this.signature, this._io, "/types/physical_volume/types/label/types/label_header/seq/0");
           }
           this.sectorNumber = this._io.readU8le();
           this.checksum = this._io.readU4le();
@@ -83,15 +83,15 @@ var Lvm2 = (function() {
           function LabelHeader(_io, _parent, _root) {
             this._io = _io;
             this._parent = _parent;
-            this._root = _root || this;
+            this._root = _root;
 
             this._read();
           }
           LabelHeader.prototype._read = function() {
             this.dataOffset = this._io.readU4le();
             this.typeIndicator = this._io.readBytes(8);
-            if (!((KaitaiStream.byteArrayCompare(this.typeIndicator, [76, 86, 77, 50, 32, 48, 48, 49]) == 0))) {
-              throw new KaitaiStream.ValidationNotEqualError([76, 86, 77, 50, 32, 48, 48, 49], this.typeIndicator, this._io, "/types/physical_volume/types/label/types/label_header/types/label_header_/seq/1");
+            if (!((KaitaiStream.byteArrayCompare(this.typeIndicator, new Uint8Array([76, 86, 77, 50, 32, 48, 48, 49])) == 0))) {
+              throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([76, 86, 77, 50, 32, 48, 48, 49]), this.typeIndicator, this._io, "/types/physical_volume/types/label/types/label_header/types/label_header_/seq/1");
             }
           }
 
@@ -117,12 +117,12 @@ var Lvm2 = (function() {
         function VolumeHeader(_io, _parent, _root) {
           this._io = _io;
           this._parent = _parent;
-          this._root = _root || this;
+          this._root = _root;
 
           this._read();
         }
         VolumeHeader.prototype._read = function() {
-          this.id = KaitaiStream.bytesToStr(this._io.readBytes(32), "ascii");
+          this.id = KaitaiStream.bytesToStr(this._io.readBytes(32), "ASCII");
           this.size = this._io.readU8le();
           this.dataAreaDescriptors = [];
           var i = 0;
@@ -144,7 +144,7 @@ var Lvm2 = (function() {
           function DataAreaDescriptor(_io, _parent, _root) {
             this._io = _io;
             this._parent = _parent;
-            this._root = _root || this;
+            this._root = _root;
 
             this._read();
           }
@@ -159,7 +159,7 @@ var Lvm2 = (function() {
               if (this.size != 0) {
                 var _pos = this._io.pos;
                 this._io.seek(this.offset);
-                this._m_data = KaitaiStream.bytesToStr(this._io.readBytes(this.size), "ascii");
+                this._m_data = KaitaiStream.bytesToStr(this._io.readBytes(this.size), "ASCII");
                 this._io.seek(_pos);
               }
               return this._m_data;
@@ -177,45 +177,6 @@ var Lvm2 = (function() {
           return DataAreaDescriptor;
         })();
 
-        var MetadataAreaDescriptor = VolumeHeader.MetadataAreaDescriptor = (function() {
-          function MetadataAreaDescriptor(_io, _parent, _root) {
-            this._io = _io;
-            this._parent = _parent;
-            this._root = _root || this;
-
-            this._read();
-          }
-          MetadataAreaDescriptor.prototype._read = function() {
-            this.offset = this._io.readU8le();
-            this.size = this._io.readU8le();
-          }
-          Object.defineProperty(MetadataAreaDescriptor.prototype, 'data', {
-            get: function() {
-              if (this._m_data !== undefined)
-                return this._m_data;
-              if (this.size != 0) {
-                var _pos = this._io.pos;
-                this._io.seek(this.offset);
-                this._raw__m_data = this._io.readBytes(this.size);
-                var _io__raw__m_data = new KaitaiStream(this._raw__m_data);
-                this._m_data = new MetadataArea(_io__raw__m_data, this, this._root);
-                this._io.seek(_pos);
-              }
-              return this._m_data;
-            }
-          });
-
-          /**
-           * The offset, in bytes, relative from the start of the physical volume
-           */
-
-          /**
-           * Value in bytes
-           */
-
-          return MetadataAreaDescriptor;
-        })();
-
         /**
          * According to `[REDHAT]` the metadata area is a circular buffer. New metadata is appended to the old metadata and then the pointer to the start of it is updated. The metadata area, therefore, can contain copies of older versions of the metadata.
          */
@@ -224,7 +185,7 @@ var Lvm2 = (function() {
           function MetadataArea(_io, _parent, _root) {
             this._io = _io;
             this._parent = _parent;
-            this._root = _root || this;
+            this._root = _root;
 
             this._read();
           }
@@ -236,15 +197,15 @@ var Lvm2 = (function() {
             function MetadataAreaHeader(_io, _parent, _root) {
               this._io = _io;
               this._parent = _parent;
-              this._root = _root || this;
+              this._root = _root;
 
               this._read();
             }
             MetadataAreaHeader.prototype._read = function() {
               this.checksum = new MetadataAreaHeader(this._io, this, this._root);
               this.signature = this._io.readBytes(16);
-              if (!((KaitaiStream.byteArrayCompare(this.signature, [32, 76, 86, 77, 50, 32, 120, 91, 53, 65, 37, 114, 48, 78, 42, 62]) == 0))) {
-                throw new KaitaiStream.ValidationNotEqualError([32, 76, 86, 77, 50, 32, 120, 91, 53, 65, 37, 114, 48, 78, 42, 62], this.signature, this._io, "/types/physical_volume/types/label/types/volume_header/types/metadata_area/types/metadata_area_header/seq/1");
+              if (!((KaitaiStream.byteArrayCompare(this.signature, new Uint8Array([32, 76, 86, 77, 50, 32, 120, 91, 53, 65, 37, 114, 48, 78, 42, 62])) == 0))) {
+                throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([32, 76, 86, 77, 50, 32, 120, 91, 53, 65, 37, 114, 48, 78, 42, 62]), this.signature, this._io, "/types/physical_volume/types/label/types/volume_header/types/metadata_area/types/metadata_area_header/seq/1");
               }
               this.version = this._io.readU4le();
               this.metadataAreaOffset = this._io.readU8le();
@@ -272,7 +233,7 @@ var Lvm2 = (function() {
               function RawLocationDescriptor(_io, _parent, _root) {
                 this._io = _io;
                 this._parent = _parent;
-                this._root = _root || this;
+                this._root = _root;
 
                 this._read();
               }
@@ -327,6 +288,45 @@ var Lvm2 = (function() {
           return MetadataArea;
         })();
 
+        var MetadataAreaDescriptor = VolumeHeader.MetadataAreaDescriptor = (function() {
+          function MetadataAreaDescriptor(_io, _parent, _root) {
+            this._io = _io;
+            this._parent = _parent;
+            this._root = _root;
+
+            this._read();
+          }
+          MetadataAreaDescriptor.prototype._read = function() {
+            this.offset = this._io.readU8le();
+            this.size = this._io.readU8le();
+          }
+          Object.defineProperty(MetadataAreaDescriptor.prototype, 'data', {
+            get: function() {
+              if (this._m_data !== undefined)
+                return this._m_data;
+              if (this.size != 0) {
+                var _pos = this._io.pos;
+                this._io.seek(this.offset);
+                this._raw__m_data = this._io.readBytes(this.size);
+                var _io__raw__m_data = new KaitaiStream(this._raw__m_data);
+                this._m_data = new MetadataArea(_io__raw__m_data, this, this._root);
+                this._io.seek(_pos);
+              }
+              return this._m_data;
+            }
+          });
+
+          /**
+           * The offset, in bytes, relative from the start of the physical volume
+           */
+
+          /**
+           * Value in bytes
+           */
+
+          return MetadataAreaDescriptor;
+        })();
+
         /**
          * Contains a UUID stored as an ASCII string. The physical volume identifier can be used to uniquely identify a physical volume. The physical volume identifier is stored as: 9LBcEB7PQTGIlLI0KxrtzrynjuSL983W but is equivalent to its formatted variant: 9LBcEB-7PQT-GIlL-I0Kx-rtzr-ynju-SL983W, which is used in the metadata.
          */
@@ -362,5 +362,5 @@ var Lvm2 = (function() {
 
   return Lvm2;
 })();
-return Lvm2;
-}));
+Lvm2_.Lvm2 = Lvm2;
+});

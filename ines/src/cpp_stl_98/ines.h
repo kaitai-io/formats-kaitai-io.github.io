@@ -3,11 +3,14 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class ines_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
+#include <set>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -32,10 +35,10 @@ public:
     class header_t : public kaitai::kstruct {
 
     public:
+        class f10_t;
         class f6_t;
         class f7_t;
         class f9_t;
-        class f10_t;
 
         header_t(kaitai::kstream* p__io, ines_t* p__parent = 0, ines_t* p__root = 0);
 
@@ -45,6 +48,68 @@ public:
 
     public:
         ~header_t();
+
+        /**
+         * \sa https://www.nesdev.org/wiki/INES#Flags_10 Source
+         */
+
+        class f10_t : public kaitai::kstruct {
+
+        public:
+
+            enum tv_system_t {
+                TV_SYSTEM_NTSC = 0,
+                TV_SYSTEM_DUAL1 = 1,
+                TV_SYSTEM_PAL = 2,
+                TV_SYSTEM_DUAL2 = 3
+            };
+            static bool _is_defined_tv_system_t(tv_system_t v);
+
+        private:
+            static const std::set<tv_system_t> _values_tv_system_t;
+            static std::set<tv_system_t> _build_values_tv_system_t();
+
+        public:
+
+            f10_t(kaitai::kstream* p__io, ines_t::header_t* p__parent = 0, ines_t* p__root = 0);
+
+        private:
+            void _read();
+            void _clean_up();
+
+        public:
+            ~f10_t();
+
+        private:
+            uint64_t m_reserved1;
+            bool m_bus_conflict;
+            bool m_prg_ram;
+            uint64_t m_reserved2;
+            tv_system_t m_tv_system;
+            ines_t* m__root;
+            ines_t::header_t* m__parent;
+
+        public:
+            uint64_t reserved1() const { return m_reserved1; }
+
+            /**
+             * If 0, no bus conflicts. If 1, bus conflicts.
+             */
+            bool bus_conflict() const { return m_bus_conflict; }
+
+            /**
+             * If 0, PRG ram is present. If 1, not present.
+             */
+            bool prg_ram() const { return m_prg_ram; }
+            uint64_t reserved2() const { return m_reserved2; }
+
+            /**
+             * if 0, NTSC. If 2, PAL. If 1 or 3, dual compatible.
+             */
+            tv_system_t tv_system() const { return m_tv_system; }
+            ines_t* _root() const { return m__root; }
+            ines_t::header_t* _parent() const { return m__parent; }
+        };
 
         /**
          * \sa https://www.nesdev.org/wiki/INES#Flags_6 Source
@@ -58,6 +123,13 @@ public:
                 MIRRORING_HORIZONTAL = 0,
                 MIRRORING_VERTICAL = 1
             };
+            static bool _is_defined_mirroring_t(mirroring_t v);
+
+        private:
+            static const std::set<mirroring_t> _values_mirroring_t;
+            static std::set<mirroring_t> _build_values_mirroring_t();
+
+        public:
 
             f6_t(kaitai::kstream* p__io, ines_t::header_t* p__parent = 0, ines_t* p__root = 0);
 
@@ -169,6 +241,13 @@ public:
                 TV_SYSTEM_NTSC = 0,
                 TV_SYSTEM_PAL = 1
             };
+            static bool _is_defined_tv_system_t(tv_system_t v);
+
+        private:
+            static const std::set<tv_system_t> _values_tv_system_t;
+            static std::set<tv_system_t> _build_values_tv_system_t();
+
+        public:
 
             f9_t(kaitai::kstream* p__io, ines_t::header_t* p__parent = 0, ines_t* p__root = 0);
 
@@ -190,61 +269,6 @@ public:
 
             /**
              * if 0, NTSC. If 1, PAL.
-             */
-            tv_system_t tv_system() const { return m_tv_system; }
-            ines_t* _root() const { return m__root; }
-            ines_t::header_t* _parent() const { return m__parent; }
-        };
-
-        /**
-         * \sa https://www.nesdev.org/wiki/INES#Flags_10 Source
-         */
-
-        class f10_t : public kaitai::kstruct {
-
-        public:
-
-            enum tv_system_t {
-                TV_SYSTEM_NTSC = 0,
-                TV_SYSTEM_DUAL1 = 1,
-                TV_SYSTEM_PAL = 2,
-                TV_SYSTEM_DUAL2 = 3
-            };
-
-            f10_t(kaitai::kstream* p__io, ines_t::header_t* p__parent = 0, ines_t* p__root = 0);
-
-        private:
-            void _read();
-            void _clean_up();
-
-        public:
-            ~f10_t();
-
-        private:
-            uint64_t m_reserved1;
-            bool m_bus_conflict;
-            bool m_prg_ram;
-            uint64_t m_reserved2;
-            tv_system_t m_tv_system;
-            ines_t* m__root;
-            ines_t::header_t* m__parent;
-
-        public:
-            uint64_t reserved1() const { return m_reserved1; }
-
-            /**
-             * If 0, no bus conflicts. If 1, bus conflicts.
-             */
-            bool bus_conflict() const { return m_bus_conflict; }
-
-            /**
-             * If 0, PRG ram is present. If 1, not present.
-             */
-            bool prg_ram() const { return m_prg_ram; }
-            uint64_t reserved2() const { return m_reserved2; }
-
-            /**
-             * if 0, NTSC. If 2, PAL. If 1 or 3, dual compatible.
              */
             tv_system_t tv_system() const { return m_tv_system; }
             ines_t* _root() const { return m__root; }

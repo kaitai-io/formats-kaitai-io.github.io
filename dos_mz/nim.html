@@ -198,7 +198,17 @@ added support for relocations.</p>
                 
                 <li>
                 
+                <a href="graphviz.html" title="DOS MZ executable parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
                 <a href="java.html" title="DOS MZ executable parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="java-write.html" title="DOS MZ executable parsing Java (read-write) library">Java (read-write)</a></li>
                 
                 
                 <li>
@@ -233,7 +243,17 @@ added support for relocations.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="DOS MZ executable parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="DOS MZ executable parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="DOS MZ executable parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -364,13 +384,13 @@ added support for relocations.</p>
 
 <span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">mzExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DosMz_MzHeader</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">mz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mzExpr</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">restOfHeaderExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">mz</span><span class="p">.</span><span class="n">lenHeader</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">28</span><span class="p">)))</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">restOfHeaderExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">mz</span><span class="p">.</span><span class="n">lenHeader</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">28</span><span class="p">))</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">restOfHeader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">restOfHeaderExpr</span>
 
 <span class="k">proc</span><span class="w"> </span><span class="nf">lenBody</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">DosMz_ExeHeader</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
 <span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">lenBodyInstFlag</span><span class="p">:</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">lenBodyInst</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lenBodyInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">int</span><span class="p">(((</span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">mz</span><span class="p">.</span><span class="n">lastPageExtraBytes</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">:</span><span class="w"> </span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">mz</span><span class="p">.</span><span class="n">numPages</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">512</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">mz</span><span class="p">.</span><span class="n">numPages</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">512</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">mz</span><span class="p">.</span><span class="n">lastPageExtraBytes</span><span class="p">))</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">mz</span><span class="p">.</span><span class="n">lenHeader</span><span class="p">))</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lenBodyInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">int</span><span class="p">((</span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">mz</span><span class="p">.</span><span class="n">lastPageExtraBytes</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">:</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">mz</span><span class="p">.</span><span class="n">numPages</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">512</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">mz</span><span class="p">.</span><span class="n">numPages</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">512</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">mz</span><span class="p">.</span><span class="n">lastPageExtraBytes</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">mz</span><span class="p">.</span><span class="n">lenHeader</span><span class="p">)</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lenBodyInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lenBodyInstExpr</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lenBodyInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
 <span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">lenBodyInst</span>
@@ -418,7 +438,7 @@ added support for relocations.</p>
 <span class="k">proc</span><span class="w"> </span><span class="nf">lenHeader</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">DosMz_MzHeader</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
 <span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">lenHeaderInstFlag</span><span class="p">:</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">lenHeaderInst</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lenHeaderInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">headerSize</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">16</span><span class="p">))</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lenHeaderInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">headerSize</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">16</span><span class="p">)</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lenHeaderInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lenHeaderInstExpr</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lenHeaderInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
 <span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">lenHeaderInst</span>

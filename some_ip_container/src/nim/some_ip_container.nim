@@ -1,8 +1,7 @@
 import kaitai_struct_nim_runtime
 import options
-import /network/some_ip/some_ip
+import some_ip
 
-import "some_ip"
 type
   SomeIpContainer* = ref object of KaitaiStruct
     `someIpPackages`*: seq[SomeIp]
@@ -22,7 +21,7 @@ proc read*(_: typedesc[SomeIpContainer], io: KaitaiStream, root: KaitaiStruct, p
   block:
     var i: int
     while not this.io.isEof:
-      let it = SomeIp.read(this.io, this.root, this)
+      let it = SomeIp.read(this.io, nil, nil)
       this.someIpPackages.add(it)
       inc i
 

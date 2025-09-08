@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Encode;
 
 ########################################################################
@@ -54,7 +54,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -66,7 +66,7 @@ sub _read {
 
     $self->{magic} = $self->{_io}->read_bytes(4);
     $self->{ofs_data} = $self->{_io}->read_u4be();
-    $self->{_raw_header} = $self->{_io}->read_bytes((($self->ofs_data() - 4) - 4));
+    $self->{_raw_header} = $self->{_io}->read_bytes(($self->ofs_data() - 4) - 4);
     my $io__raw_header = IO::KaitaiStruct::Stream->new($self->{_raw_header});
     $self->{header} = Au::Header->new($io__raw_header, $self, $self->{_root});
 }
@@ -74,7 +74,7 @@ sub _read {
 sub len_data {
     my ($self) = @_;
     return $self->{len_data} if ($self->{len_data});
-    $self->{len_data} = ($self->header()->data_size() == 4294967295 ? ($self->_io()->size() - $self->ofs_data()) : $self->header()->data_size());
+    $self->{len_data} = ($self->header()->data_size() == 4294967295 ? $self->_io()->size() - $self->ofs_data() : $self->header()->data_size());
     return $self->{len_data};
 }
 
@@ -118,7 +118,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 

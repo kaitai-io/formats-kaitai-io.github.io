@@ -195,6 +195,11 @@ Transmission Control Protocol (TCP) or User Datagram Protocol (UDP).</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="RTP (Real-time Transport Protocol) parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="RTP (Real-time Transport Protocol) parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -225,7 +230,17 @@ Transmission Control Protocol (TCP) or User Datagram Protocol (UDP).</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="RTP (Real-time Transport Protocol) parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="RTP (Real-time Transport Protocol) parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="RTP (Real-time Transport Protocol) parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -341,11 +356,14 @@ and build them along with your project.</p>
 
 <span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
+<span class="k">class</span><span class="w"> </span><span class="nc">rtp_packet_t</span><span class="p">;</span>
+
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;kaitai/kaitaistruct.h&quot;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdint.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;set&gt;</span>
 
-<span class="cp">#if KAITAI_STRUCT_VERSION &lt; 9000L</span>
-<span class="cp">#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required&quot;</span>
+<span class="cp">#if KAITAI_STRUCT_VERSION &lt; 11000L</span>
+<span class="cp">#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required&quot;</span>
 <span class="cp">#endif</span>
 
 <span class="cm">/**</span>
@@ -398,6 +416,13 @@ and build them along with your project.</p>
 <span class="w">        </span><span class="n">PAYLOAD_TYPE_ENUM_H263</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">34</span><span class="p">,</span>
 <span class="w">        </span><span class="n">PAYLOAD_TYPE_ENUM_MPEG_PS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">96</span>
 <span class="w">    </span><span class="p">};</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">_is_defined_payload_type_enum_t</span><span class="p">(</span><span class="n">payload_type_enum_t</span><span class="w"> </span><span class="n">v</span><span class="p">);</span>
+
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">payload_type_enum_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_values_payload_type_enum_t</span><span class="p">;</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">payload_type_enum_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_build_values_payload_type_enum_t</span><span class="p">();</span>
+
+<span class="k">public</span><span class="o">:</span>
 
 <span class="w">    </span><span class="n">rtp_packet_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">rtp_packet_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
 
@@ -435,6 +460,17 @@ and build them along with your project.</p>
 <span class="w">    </span><span class="p">};</span>
 
 <span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_len_padding</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">m_len_padding</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     * Always returns number of padding bytes to in the payload.</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">len_padding</span><span class="p">();</span>
+
+<span class="k">private</span><span class="o">:</span>
 <span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_len_padding_if_exists</span><span class="p">;</span>
 <span class="w">    </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">m_len_padding_if_exists</span><span class="p">;</span>
 <span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">n_len_padding_if_exists</span><span class="p">;</span>
@@ -451,17 +487,6 @@ and build them along with your project.</p>
 <span class="cm">     * bytes appended to the payload as padding.</span>
 <span class="cm">     */</span>
 <span class="w">    </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">len_padding_if_exists</span><span class="p">();</span>
-
-<span class="k">private</span><span class="o">:</span>
-<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">f_len_padding</span><span class="p">;</span>
-<span class="w">    </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">m_len_padding</span><span class="p">;</span>
-
-<span class="k">public</span><span class="o">:</span>
-
-<span class="w">    </span><span class="cm">/**</span>
-<span class="cm">     * Always returns number of padding bytes to in the payload.</span>
-<span class="cm">     */</span>
-<span class="w">    </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">len_padding</span><span class="p">();</span>
 
 <span class="k">private</span><span class="o">:</span>
 <span class="w">    </span><span class="kt">uint64_t</span><span class="w"> </span><span class="n">m_version</span><span class="p">;</span>
@@ -526,13 +551,57 @@ and build them along with your project.</p>
             <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;rtp_packet.h&quot;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">payload_type_enum_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">_build_values_payload_type_enum_t</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">payload_type_enum_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_t</span><span class="p">;</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">PAYLOAD_TYPE_ENUM_PCMU</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">PAYLOAD_TYPE_ENUM_RESERVED1</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">PAYLOAD_TYPE_ENUM_RESERVED2</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">PAYLOAD_TYPE_ENUM_GSM</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">PAYLOAD_TYPE_ENUM_G723</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">PAYLOAD_TYPE_ENUM_DVI4_1</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">PAYLOAD_TYPE_ENUM_DVI4_2</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">PAYLOAD_TYPE_ENUM_LPC</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">PAYLOAD_TYPE_ENUM_PCMA</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">PAYLOAD_TYPE_ENUM_G722</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">PAYLOAD_TYPE_ENUM_L16_1</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">PAYLOAD_TYPE_ENUM_L16_2</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">PAYLOAD_TYPE_ENUM_QCELP</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">PAYLOAD_TYPE_ENUM_CN</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">PAYLOAD_TYPE_ENUM_MPA</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">PAYLOAD_TYPE_ENUM_G728</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">PAYLOAD_TYPE_ENUM_DVI4_3</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">PAYLOAD_TYPE_ENUM_DVI4_4</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">PAYLOAD_TYPE_ENUM_G729</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">PAYLOAD_TYPE_ENUM_RESERVED19</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">PAYLOAD_TYPE_ENUM_UNASSIGNED20</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">PAYLOAD_TYPE_ENUM_UNASSIGNED21</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">PAYLOAD_TYPE_ENUM_UNASSIGNED22</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">PAYLOAD_TYPE_ENUM_UNASSIGNED23</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">PAYLOAD_TYPE_ENUM_UNASSIGNED24</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">PAYLOAD_TYPE_ENUM_CELB</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">PAYLOAD_TYPE_ENUM_JPEG</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">PAYLOAD_TYPE_ENUM_UNASSIGNED27</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">PAYLOAD_TYPE_ENUM_NV</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">PAYLOAD_TYPE_ENUM_UNASSIGNED29</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">PAYLOAD_TYPE_ENUM_UNASSIGNED30</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">PAYLOAD_TYPE_ENUM_H261</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">PAYLOAD_TYPE_ENUM_MPV</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">PAYLOAD_TYPE_ENUM_MP2T</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">PAYLOAD_TYPE_ENUM_H263</span><span class="p">);</span>
+<span class="w">    </span><span class="n">_t</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">PAYLOAD_TYPE_ENUM_MPEG_PS</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">_t</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">payload_type_enum_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">_values_payload_type_enum_t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">_build_values_payload_type_enum_t</span><span class="p">();</span>
+<span class="kt">bool</span><span class="w"> </span><span class="nf">rtp_packet_t::_is_defined_payload_type_enum_t</span><span class="p">(</span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">payload_type_enum_t</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">_values_payload_type_enum_t</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">_values_payload_type_enum_t</span><span class="p">.</span><span class="n">end</span><span class="p">();</span>
+<span class="p">}</span>
 
 <span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">rtp_packet_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span><span class="w"> </span><span class="n">p__io</span><span class="p">,</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span><span class="w"> </span><span class="n">p__parent</span><span class="p">,</span><span class="w"> </span><span class="n">rtp_packet_t</span><span class="o">*</span><span class="w"> </span><span class="n">p__root</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">m__parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__parent</span><span class="p">;</span>
-<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m__root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">p__root</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">this</span><span class="p">;</span>
 <span class="w">    </span><span class="n">m_header_extension</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="w">    </span><span class="n">f_len_padding_if_exists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
 <span class="w">    </span><span class="n">f_len_padding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_len_padding_if_exists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
 
 <span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="n">_read</span><span class="p">();</span>
@@ -558,7 +627,7 @@ and build them along with your project.</p>
 <span class="w">        </span><span class="n">n_header_extension</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
 <span class="w">        </span><span class="n">m_header_extension</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">header_extention_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">m__root</span><span class="p">);</span>
 <span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="n">m_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(((</span><span class="n">_io</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">_io</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">())</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">len_padding</span><span class="p">()));</span>
+<span class="w">    </span><span class="n">m_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">_io</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">_io</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">())</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">len_padding</span><span class="p">());</span>
 <span class="w">    </span><span class="n">m_padding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_padding</span><span class="p">());</span>
 <span class="p">}</span>
 
@@ -600,27 +669,27 @@ and build them along with your project.</p>
 <span class="kt">void</span><span class="w"> </span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">header_extention_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="p">}</span>
 
+<span class="kt">uint8_t</span><span class="w"> </span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">len_padding</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_len_padding</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_len_padding</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_len_padding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="n">m_len_padding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">has_padding</span><span class="p">())</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="p">(</span><span class="n">len_padding_if_exists</span><span class="p">())</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_len_padding</span><span class="p">;</span>
+<span class="p">}</span>
+
 <span class="kt">uint8_t</span><span class="w"> </span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">len_padding_if_exists</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_len_padding_if_exists</span><span class="p">)</span>
 <span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_len_padding_if_exists</span><span class="p">;</span>
+<span class="w">    </span><span class="n">f_len_padding_if_exists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
 <span class="w">    </span><span class="n">n_len_padding_if_exists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
 <span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">has_padding</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="n">n_len_padding_if_exists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
 <span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">streampos</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span>
-<span class="w">        </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">((</span><span class="n">_io</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">));</span>
+<span class="w">        </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_io</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
 <span class="w">        </span><span class="n">m_len_padding_if_exists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
 <span class="w">        </span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
-<span class="w">        </span><span class="n">f_len_padding_if_exists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_len_padding_if_exists</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="kt">uint8_t</span><span class="w"> </span><span class="n">rtp_packet_t</span><span class="o">::</span><span class="n">len_padding</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f_len_padding</span><span class="p">)</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">m_len_padding</span><span class="p">;</span>
-<span class="w">    </span><span class="n">m_len_padding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">has_padding</span><span class="p">())</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="p">(</span><span class="n">len_padding_if_exists</span><span class="p">())</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
-<span class="w">    </span><span class="n">f_len_padding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">m_len_padding</span><span class="p">;</span>
 <span class="p">}</span>
 </pre></div>
 

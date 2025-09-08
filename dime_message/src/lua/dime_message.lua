@@ -49,18 +49,20 @@ end
 
 
 -- 
--- padding to the next 4-byte boundary.
-DimeMessage.Padding = class.class(KaitaiStruct)
+-- one element of the option field.
+DimeMessage.OptionElement = class.class(KaitaiStruct)
 
-function DimeMessage.Padding:_init(io, parent, root)
+function DimeMessage.OptionElement:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function DimeMessage.Padding:_read()
-  self.boundary_padding = self._io:read_bytes((-(self._io:pos()) % 4))
+function DimeMessage.OptionElement:_read()
+  self.element_format = self._io:read_u2be()
+  self.len_element = self._io:read_u2be()
+  self.element_data = self._io:read_bytes(self.len_element)
 end
 
 
@@ -71,7 +73,7 @@ DimeMessage.OptionField = class.class(KaitaiStruct)
 function DimeMessage.OptionField:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -86,20 +88,18 @@ end
 
 
 -- 
--- one element of the option field.
-DimeMessage.OptionElement = class.class(KaitaiStruct)
+-- padding to the next 4-byte boundary.
+DimeMessage.Padding = class.class(KaitaiStruct)
 
-function DimeMessage.OptionElement:_init(io, parent, root)
+function DimeMessage.Padding:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function DimeMessage.OptionElement:_read()
-  self.element_format = self._io:read_u2be()
-  self.len_element = self._io:read_u2be()
-  self.element_data = self._io:read_bytes(self.len_element)
+function DimeMessage.Padding:_read()
+  self.boundary_padding = self._io:read_bytes(-(self._io:pos()) % 4)
 end
 
 
@@ -110,7 +110,7 @@ DimeMessage.Record = class.class(KaitaiStruct)
 function DimeMessage.Record:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 

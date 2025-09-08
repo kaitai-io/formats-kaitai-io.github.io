@@ -41,6 +41,11 @@ const (
 	Dtb_Fdt__Nop Dtb_Fdt = 4
 	Dtb_Fdt__End Dtb_Fdt = 9
 )
+var values_Dtb_Fdt = map[Dtb_Fdt]struct{}{1: {}, 2: {}, 3: {}, 4: {}, 9: {}}
+func (v Dtb_Fdt) isDefined() bool {
+	_, ok := values_Dtb_Fdt[v]
+	return ok
+}
 type Dtb struct {
 	Magic []byte
 	TotalSize uint32
@@ -54,23 +59,27 @@ type Dtb struct {
 	LenStructureBlock uint32
 	_io *kaitai.Stream
 	_root *Dtb
-	_parent interface{}
+	_parent kaitai.Struct
 	_raw_memoryReservationBlock []byte
-	_raw_structureBlock []byte
 	_raw_stringsBlock []byte
+	_raw_structureBlock []byte
 	_f_memoryReservationBlock bool
 	memoryReservationBlock *Dtb_MemoryBlock
-	_f_structureBlock bool
-	structureBlock *Dtb_FdtBlock
 	_f_stringsBlock bool
 	stringsBlock *Dtb_Strings
+	_f_structureBlock bool
+	structureBlock *Dtb_FdtBlock
 }
 func NewDtb() *Dtb {
 	return &Dtb{
 	}
 }
 
-func (this *Dtb) Read(io *kaitai.Stream, parent interface{}, root *Dtb) (err error) {
+func (this Dtb) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Dtb) Read(io *kaitai.Stream, parent kaitai.Struct, root *Dtb) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -138,6 +147,7 @@ func (this *Dtb) MemoryReservationBlock() (v *Dtb_MemoryBlock, err error) {
 	if (this._f_memoryReservationBlock) {
 		return this.memoryReservationBlock, nil
 	}
+	this._f_memoryReservationBlock = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
@@ -146,7 +156,7 @@ func (this *Dtb) MemoryReservationBlock() (v *Dtb_MemoryBlock, err error) {
 	if err != nil {
 		return nil, err
 	}
-	tmp11, err := this._io.ReadBytes(int((this.OfsStructureBlock - this.OfsMemoryReservationBlock)))
+	tmp11, err := this._io.ReadBytes(int(this.OfsStructureBlock - this.OfsMemoryReservationBlock))
 	if err != nil {
 		return nil, err
 	}
@@ -163,47 +173,13 @@ func (this *Dtb) MemoryReservationBlock() (v *Dtb_MemoryBlock, err error) {
 	if err != nil {
 		return nil, err
 	}
-	this._f_memoryReservationBlock = true
-	this._f_memoryReservationBlock = true
 	return this.memoryReservationBlock, nil
-}
-func (this *Dtb) StructureBlock() (v *Dtb_FdtBlock, err error) {
-	if (this._f_structureBlock) {
-		return this.structureBlock, nil
-	}
-	_pos, err := this._io.Pos()
-	if err != nil {
-		return nil, err
-	}
-	_, err = this._io.Seek(int64(this.OfsStructureBlock), io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	tmp13, err := this._io.ReadBytes(int(this.LenStructureBlock))
-	if err != nil {
-		return nil, err
-	}
-	tmp13 = tmp13
-	this._raw_structureBlock = tmp13
-	_io__raw_structureBlock := kaitai.NewStream(bytes.NewReader(this._raw_structureBlock))
-	tmp14 := NewDtb_FdtBlock()
-	err = tmp14.Read(_io__raw_structureBlock, this, this._root)
-	if err != nil {
-		return nil, err
-	}
-	this.structureBlock = tmp14
-	_, err = this._io.Seek(_pos, io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	this._f_structureBlock = true
-	this._f_structureBlock = true
-	return this.structureBlock, nil
 }
 func (this *Dtb) StringsBlock() (v *Dtb_Strings, err error) {
 	if (this._f_stringsBlock) {
 		return this.stringsBlock, nil
 	}
+	this._f_stringsBlock = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
@@ -212,58 +188,97 @@ func (this *Dtb) StringsBlock() (v *Dtb_Strings, err error) {
 	if err != nil {
 		return nil, err
 	}
-	tmp15, err := this._io.ReadBytes(int(this.LenStringsBlock))
+	tmp13, err := this._io.ReadBytes(int(this.LenStringsBlock))
 	if err != nil {
 		return nil, err
 	}
-	tmp15 = tmp15
-	this._raw_stringsBlock = tmp15
+	tmp13 = tmp13
+	this._raw_stringsBlock = tmp13
 	_io__raw_stringsBlock := kaitai.NewStream(bytes.NewReader(this._raw_stringsBlock))
-	tmp16 := NewDtb_Strings()
-	err = tmp16.Read(_io__raw_stringsBlock, this, this._root)
+	tmp14 := NewDtb_Strings()
+	err = tmp14.Read(_io__raw_stringsBlock, this, this._root)
 	if err != nil {
 		return nil, err
 	}
-	this.stringsBlock = tmp16
+	this.stringsBlock = tmp14
 	_, err = this._io.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
-	this._f_stringsBlock = true
-	this._f_stringsBlock = true
 	return this.stringsBlock, nil
 }
-type Dtb_MemoryBlock struct {
-	Entries []*Dtb_MemoryBlockEntry
+func (this *Dtb) StructureBlock() (v *Dtb_FdtBlock, err error) {
+	if (this._f_structureBlock) {
+		return this.structureBlock, nil
+	}
+	this._f_structureBlock = true
+	_pos, err := this._io.Pos()
+	if err != nil {
+		return nil, err
+	}
+	_, err = this._io.Seek(int64(this.OfsStructureBlock), io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	tmp15, err := this._io.ReadBytes(int(this.LenStructureBlock))
+	if err != nil {
+		return nil, err
+	}
+	tmp15 = tmp15
+	this._raw_structureBlock = tmp15
+	_io__raw_structureBlock := kaitai.NewStream(bytes.NewReader(this._raw_structureBlock))
+	tmp16 := NewDtb_FdtBlock()
+	err = tmp16.Read(_io__raw_structureBlock, this, this._root)
+	if err != nil {
+		return nil, err
+	}
+	this.structureBlock = tmp16
+	_, err = this._io.Seek(_pos, io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	return this.structureBlock, nil
+}
+type Dtb_FdtBeginNode struct {
+	Name string
+	Padding []byte
 	_io *kaitai.Stream
 	_root *Dtb
-	_parent *Dtb
+	_parent *Dtb_FdtNode
 }
-func NewDtb_MemoryBlock() *Dtb_MemoryBlock {
-	return &Dtb_MemoryBlock{
+func NewDtb_FdtBeginNode() *Dtb_FdtBeginNode {
+	return &Dtb_FdtBeginNode{
 	}
 }
 
-func (this *Dtb_MemoryBlock) Read(io *kaitai.Stream, parent *Dtb, root *Dtb) (err error) {
+func (this Dtb_FdtBeginNode) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Dtb_FdtBeginNode) Read(io *kaitai.Stream, parent *Dtb_FdtNode, root *Dtb) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	for i := 1;; i++ {
-		tmp17, err := this._io.EOF()
-		if err != nil {
-			return err
-		}
-		if tmp17 {
-			break
-		}
-		tmp18 := NewDtb_MemoryBlockEntry()
-		err = tmp18.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Entries = append(this.Entries, tmp18)
+	tmp17, err := this._io.ReadBytesTerm(0, false, true, true)
+	if err != nil {
+		return err
 	}
+	this.Name = string(tmp17)
+	tmp19, err := this._io.Pos()
+	if err != nil {
+		return err
+	}
+	tmp18 := -(tmp19) % 4
+	if tmp18 < 0 {
+		tmp18 += 4
+	}
+	tmp20, err := this._io.ReadBytes(int(tmp18))
+	if err != nil {
+		return err
+	}
+	tmp20 = tmp20
+	this.Padding = tmp20
 	return err
 }
 type Dtb_FdtBlock struct {
@@ -277,22 +292,193 @@ func NewDtb_FdtBlock() *Dtb_FdtBlock {
 	}
 }
 
+func (this Dtb_FdtBlock) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Dtb_FdtBlock) Read(io *kaitai.Stream, parent *Dtb, root *Dtb) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
 	for i := 1;; i++ {
-		tmp19 := NewDtb_FdtNode()
-		err = tmp19.Read(this._io, this, this._root)
+		tmp21 := NewDtb_FdtNode()
+		err = tmp21.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		_it := tmp19
+		_it := tmp21
 		this.Nodes = append(this.Nodes, _it)
 		if _it.Type == Dtb_Fdt__End {
 			break
 		}
+	}
+	return err
+}
+type Dtb_FdtNode struct {
+	Type Dtb_Fdt
+	Body kaitai.Struct
+	_io *kaitai.Stream
+	_root *Dtb
+	_parent *Dtb_FdtBlock
+}
+func NewDtb_FdtNode() *Dtb_FdtNode {
+	return &Dtb_FdtNode{
+	}
+}
+
+func (this Dtb_FdtNode) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Dtb_FdtNode) Read(io *kaitai.Stream, parent *Dtb_FdtBlock, root *Dtb) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp22, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.Type = Dtb_Fdt(tmp22)
+	switch (this.Type) {
+	case Dtb_Fdt__BeginNode:
+		tmp23 := NewDtb_FdtBeginNode()
+		err = tmp23.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp23
+	case Dtb_Fdt__Prop:
+		tmp24 := NewDtb_FdtProp()
+		err = tmp24.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp24
+	}
+	return err
+}
+type Dtb_FdtProp struct {
+	LenProperty uint32
+	OfsName uint32
+	Property []byte
+	Padding []byte
+	_io *kaitai.Stream
+	_root *Dtb
+	_parent *Dtb_FdtNode
+	_f_name bool
+	name string
+}
+func NewDtb_FdtProp() *Dtb_FdtProp {
+	return &Dtb_FdtProp{
+	}
+}
+
+func (this Dtb_FdtProp) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Dtb_FdtProp) Read(io *kaitai.Stream, parent *Dtb_FdtNode, root *Dtb) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp25, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.LenProperty = uint32(tmp25)
+	tmp26, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.OfsName = uint32(tmp26)
+	tmp27, err := this._io.ReadBytes(int(this.LenProperty))
+	if err != nil {
+		return err
+	}
+	tmp27 = tmp27
+	this.Property = tmp27
+	tmp29, err := this._io.Pos()
+	if err != nil {
+		return err
+	}
+	tmp28 := -(tmp29) % 4
+	if tmp28 < 0 {
+		tmp28 += 4
+	}
+	tmp30, err := this._io.ReadBytes(int(tmp28))
+	if err != nil {
+		return err
+	}
+	tmp30 = tmp30
+	this.Padding = tmp30
+	return err
+}
+func (this *Dtb_FdtProp) Name() (v string, err error) {
+	if (this._f_name) {
+		return this.name, nil
+	}
+	this._f_name = true
+	tmp31, err := this._root.StringsBlock()
+	if err != nil {
+		return "", err
+	}
+	thisIo := tmp31._io
+	_pos, err := thisIo.Pos()
+	if err != nil {
+		return "", err
+	}
+	_, err = thisIo.Seek(int64(this.OfsName), io.SeekStart)
+	if err != nil {
+		return "", err
+	}
+	tmp32, err := thisIo.ReadBytesTerm(0, false, true, true)
+	if err != nil {
+		return "", err
+	}
+	this.name = string(tmp32)
+	_, err = thisIo.Seek(_pos, io.SeekStart)
+	if err != nil {
+		return "", err
+	}
+	return this.name, nil
+}
+type Dtb_MemoryBlock struct {
+	Entries []*Dtb_MemoryBlockEntry
+	_io *kaitai.Stream
+	_root *Dtb
+	_parent *Dtb
+}
+func NewDtb_MemoryBlock() *Dtb_MemoryBlock {
+	return &Dtb_MemoryBlock{
+	}
+}
+
+func (this Dtb_MemoryBlock) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Dtb_MemoryBlock) Read(io *kaitai.Stream, parent *Dtb, root *Dtb) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	for i := 0;; i++ {
+		tmp33, err := this._io.EOF()
+		if err != nil {
+			return err
+		}
+		if tmp33 {
+			break
+		}
+		tmp34 := NewDtb_MemoryBlockEntry()
+		err = tmp34.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Entries = append(this.Entries, tmp34)
 	}
 	return err
 }
@@ -308,21 +494,25 @@ func NewDtb_MemoryBlockEntry() *Dtb_MemoryBlockEntry {
 	}
 }
 
+func (this Dtb_MemoryBlockEntry) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Dtb_MemoryBlockEntry) Read(io *kaitai.Stream, parent *Dtb_MemoryBlock, root *Dtb) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp20, err := this._io.ReadU8be()
+	tmp35, err := this._io.ReadU8be()
 	if err != nil {
 		return err
 	}
-	this.Address = uint64(tmp20)
-	tmp21, err := this._io.ReadU8be()
+	this.Address = uint64(tmp35)
+	tmp36, err := this._io.ReadU8be()
 	if err != nil {
 		return err
 	}
-	this.Size = uint64(tmp21)
+	this.Size = uint64(tmp36)
 	return err
 }
 
@@ -344,185 +534,28 @@ func NewDtb_Strings() *Dtb_Strings {
 	}
 }
 
+func (this Dtb_Strings) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Dtb_Strings) Read(io *kaitai.Stream, parent *Dtb, root *Dtb) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	for i := 1;; i++ {
-		tmp22, err := this._io.EOF()
+	for i := 0;; i++ {
+		tmp37, err := this._io.EOF()
 		if err != nil {
 			return err
 		}
-		if tmp22 {
+		if tmp37 {
 			break
 		}
-		tmp23, err := this._io.ReadBytesTerm(0, false, true, true)
+		tmp38, err := this._io.ReadBytesTerm(0, false, true, true)
 		if err != nil {
 			return err
 		}
-		this.Strings = append(this.Strings, string(tmp23))
+		this.Strings = append(this.Strings, string(tmp38))
 	}
-	return err
-}
-type Dtb_FdtProp struct {
-	LenProperty uint32
-	OfsName uint32
-	Property []byte
-	Padding []byte
-	_io *kaitai.Stream
-	_root *Dtb
-	_parent *Dtb_FdtNode
-	_f_name bool
-	name string
-}
-func NewDtb_FdtProp() *Dtb_FdtProp {
-	return &Dtb_FdtProp{
-	}
-}
-
-func (this *Dtb_FdtProp) Read(io *kaitai.Stream, parent *Dtb_FdtNode, root *Dtb) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp24, err := this._io.ReadU4be()
-	if err != nil {
-		return err
-	}
-	this.LenProperty = uint32(tmp24)
-	tmp25, err := this._io.ReadU4be()
-	if err != nil {
-		return err
-	}
-	this.OfsName = uint32(tmp25)
-	tmp26, err := this._io.ReadBytes(int(this.LenProperty))
-	if err != nil {
-		return err
-	}
-	tmp26 = tmp26
-	this.Property = tmp26
-	tmp28, err := this._io.Pos()
-	if err != nil {
-		return err
-	}
-	tmp27 := -(tmp28) % 4
-	if tmp27 < 0 {
-		tmp27 += 4
-	}
-	tmp29, err := this._io.ReadBytes(int(tmp27))
-	if err != nil {
-		return err
-	}
-	tmp29 = tmp29
-	this.Padding = tmp29
-	return err
-}
-func (this *Dtb_FdtProp) Name() (v string, err error) {
-	if (this._f_name) {
-		return this.name, nil
-	}
-	tmp30, err := this._root.StringsBlock()
-	if err != nil {
-		return "", err
-	}
-	thisIo := tmp30._io
-	_pos, err := thisIo.Pos()
-	if err != nil {
-		return "", err
-	}
-	_, err = thisIo.Seek(int64(this.OfsName), io.SeekStart)
-	if err != nil {
-		return "", err
-	}
-	tmp31, err := thisIo.ReadBytesTerm(0, false, true, true)
-	if err != nil {
-		return "", err
-	}
-	this.name = string(tmp31)
-	_, err = thisIo.Seek(_pos, io.SeekStart)
-	if err != nil {
-		return "", err
-	}
-	this._f_name = true
-	this._f_name = true
-	return this.name, nil
-}
-type Dtb_FdtNode struct {
-	Type Dtb_Fdt
-	Body interface{}
-	_io *kaitai.Stream
-	_root *Dtb
-	_parent *Dtb_FdtBlock
-}
-func NewDtb_FdtNode() *Dtb_FdtNode {
-	return &Dtb_FdtNode{
-	}
-}
-
-func (this *Dtb_FdtNode) Read(io *kaitai.Stream, parent *Dtb_FdtBlock, root *Dtb) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp32, err := this._io.ReadU4be()
-	if err != nil {
-		return err
-	}
-	this.Type = Dtb_Fdt(tmp32)
-	switch (this.Type) {
-	case Dtb_Fdt__BeginNode:
-		tmp33 := NewDtb_FdtBeginNode()
-		err = tmp33.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp33
-	case Dtb_Fdt__Prop:
-		tmp34 := NewDtb_FdtProp()
-		err = tmp34.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp34
-	}
-	return err
-}
-type Dtb_FdtBeginNode struct {
-	Name string
-	Padding []byte
-	_io *kaitai.Stream
-	_root *Dtb
-	_parent *Dtb_FdtNode
-}
-func NewDtb_FdtBeginNode() *Dtb_FdtBeginNode {
-	return &Dtb_FdtBeginNode{
-	}
-}
-
-func (this *Dtb_FdtBeginNode) Read(io *kaitai.Stream, parent *Dtb_FdtNode, root *Dtb) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp35, err := this._io.ReadBytesTerm(0, false, true, true)
-	if err != nil {
-		return err
-	}
-	this.Name = string(tmp35)
-	tmp37, err := this._io.Pos()
-	if err != nil {
-		return err
-	}
-	tmp36 := -(tmp37) % 4
-	if tmp36 < 0 {
-		tmp36 += 4
-	}
-	tmp38, err := this._io.ReadBytes(int(tmp36))
-	if err != nil {
-		return err
-	}
-	tmp38 = tmp38
-	this.Padding = tmp38
 	return err
 }

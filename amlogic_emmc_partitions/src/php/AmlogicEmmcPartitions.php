@@ -16,23 +16,23 @@
 
 namespace {
     class AmlogicEmmcPartitions extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \AmlogicEmmcPartitions $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\AmlogicEmmcPartitions $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic = $this->_io->readBytes(4);
-            if (!($this->magic() == "\x4D\x50\x54\x00")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x4D\x50\x54\x00", $this->magic(), $this->_io(), "/seq/0");
+            if (!($this->_m_magic == "\x4D\x50\x54\x00")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x4D\x50\x54\x00", $this->_m_magic, $this->_io, "/seq/0");
             }
             $this->_m_version = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($this->_io->readBytes(12), 0, false), "UTF-8");
             $this->_m_numPartitions = $this->_io->readS4le();
-            if (!($this->numPartitions() >= 1)) {
-                throw new \Kaitai\Struct\Error\ValidationLessThanError(1, $this->numPartitions(), $this->_io(), "/seq/2");
+            if (!($this->_m_numPartitions >= 1)) {
+                throw new \Kaitai\Struct\Error\ValidationLessThanError(1, $this->_m_numPartitions, $this->_io, "/seq/2");
             }
-            if (!($this->numPartitions() <= 32)) {
-                throw new \Kaitai\Struct\Error\ValidationGreaterThanError(32, $this->numPartitions(), $this->_io(), "/seq/2");
+            if (!($this->_m_numPartitions <= 32)) {
+                throw new \Kaitai\Struct\Error\ValidationGreaterThanError(32, $this->_m_numPartitions, $this->_io, "/seq/2");
             }
             $this->_m_checksum = $this->_io->readU4le();
             $this->_m_partitions = [];
@@ -66,7 +66,7 @@ namespace {
 
 namespace AmlogicEmmcPartitions {
     class Partition extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \AmlogicEmmcPartitions $_parent = null, \AmlogicEmmcPartitions $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\AmlogicEmmcPartitions $_parent = null, ?\AmlogicEmmcPartitions $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -101,7 +101,7 @@ namespace AmlogicEmmcPartitions {
 
 namespace AmlogicEmmcPartitions\Partition {
     class PartFlags extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \AmlogicEmmcPartitions\Partition $_parent = null, \AmlogicEmmcPartitions $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\AmlogicEmmcPartitions\Partition $_parent = null, ?\AmlogicEmmcPartitions $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }

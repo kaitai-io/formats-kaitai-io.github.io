@@ -25,165 +25,6 @@ namespace Kaitai
         {
             _tag = new Tag(m_io, this, m_root);
         }
-        public partial class U1beSynchsafe : KaitaiStruct
-        {
-            public static U1beSynchsafe FromFile(string fileName)
-            {
-                return new U1beSynchsafe(new KaitaiStream(fileName));
-            }
-
-            public U1beSynchsafe(KaitaiStream p__io, Id3v23.U2beSynchsafe p__parent = null, Id3v23 p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _padding = m_io.ReadBitsIntBe(1) != 0;
-                _value = m_io.ReadBitsIntBe(7);
-            }
-            private bool _padding;
-            private ulong _value;
-            private Id3v23 m_root;
-            private Id3v23.U2beSynchsafe m_parent;
-            public bool Padding { get { return _padding; } }
-            public ulong Value { get { return _value; } }
-            public Id3v23 M_Root { get { return m_root; } }
-            public Id3v23.U2beSynchsafe M_Parent { get { return m_parent; } }
-        }
-        public partial class U2beSynchsafe : KaitaiStruct
-        {
-            public static U2beSynchsafe FromFile(string fileName)
-            {
-                return new U2beSynchsafe(new KaitaiStream(fileName));
-            }
-
-            public U2beSynchsafe(KaitaiStream p__io, Id3v23.U4beSynchsafe p__parent = null, Id3v23 p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_value = false;
-                _read();
-            }
-            private void _read()
-            {
-                _byte0 = new U1beSynchsafe(m_io, this, m_root);
-                _byte1 = new U1beSynchsafe(m_io, this, m_root);
-            }
-            private bool f_value;
-            private int _value;
-            public int Value
-            {
-                get
-                {
-                    if (f_value)
-                        return _value;
-                    _value = (int) (((Byte0.Value << 7) | Byte1.Value));
-                    f_value = true;
-                    return _value;
-                }
-            }
-            private U1beSynchsafe _byte0;
-            private U1beSynchsafe _byte1;
-            private Id3v23 m_root;
-            private Id3v23.U4beSynchsafe m_parent;
-            public U1beSynchsafe Byte0 { get { return _byte0; } }
-            public U1beSynchsafe Byte1 { get { return _byte1; } }
-            public Id3v23 M_Root { get { return m_root; } }
-            public Id3v23.U4beSynchsafe M_Parent { get { return m_parent; } }
-        }
-
-        /// <remarks>
-        /// Reference: Section 3. ID3v2 overview
-        /// </remarks>
-        public partial class Tag : KaitaiStruct
-        {
-            public static Tag FromFile(string fileName)
-            {
-                return new Tag(new KaitaiStream(fileName));
-            }
-
-            public Tag(KaitaiStream p__io, Id3v23 p__parent = null, Id3v23 p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _header = new Header(m_io, this, m_root);
-                if (Header.Flags.FlagHeaderex) {
-                    _headerEx = new HeaderEx(m_io, this, m_root);
-                }
-                _frames = new List<Frame>();
-                {
-                    var i = 0;
-                    Frame M_;
-                    do {
-                        M_ = new Frame(m_io, this, m_root);
-                        _frames.Add(M_);
-                        i++;
-                    } while (!( (((M_Io.Pos + M_.Size) > Header.Size.Value) || (M_.IsInvalid)) ));
-                }
-                if (Header.Flags.FlagHeaderex) {
-                    _padding = m_io.ReadBytes((HeaderEx.PaddingSize - M_Io.Pos));
-                }
-            }
-            private Header _header;
-            private HeaderEx _headerEx;
-            private List<Frame> _frames;
-            private byte[] _padding;
-            private Id3v23 m_root;
-            private Id3v23 m_parent;
-            public Header Header { get { return _header; } }
-            public HeaderEx HeaderEx { get { return _headerEx; } }
-            public List<Frame> Frames { get { return _frames; } }
-            public byte[] Padding { get { return _padding; } }
-            public Id3v23 M_Root { get { return m_root; } }
-            public Id3v23 M_Parent { get { return m_parent; } }
-        }
-        public partial class U4beSynchsafe : KaitaiStruct
-        {
-            public static U4beSynchsafe FromFile(string fileName)
-            {
-                return new U4beSynchsafe(new KaitaiStream(fileName));
-            }
-
-            public U4beSynchsafe(KaitaiStream p__io, Id3v23.Header p__parent = null, Id3v23 p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_value = false;
-                _read();
-            }
-            private void _read()
-            {
-                _short0 = new U2beSynchsafe(m_io, this, m_root);
-                _short1 = new U2beSynchsafe(m_io, this, m_root);
-            }
-            private bool f_value;
-            private int _value;
-            public int Value
-            {
-                get
-                {
-                    if (f_value)
-                        return _value;
-                    _value = (int) (((Short0.Value << 14) | Short1.Value));
-                    f_value = true;
-                    return _value;
-                }
-            }
-            private U2beSynchsafe _short0;
-            private U2beSynchsafe _short1;
-            private Id3v23 m_root;
-            private Id3v23.Header m_parent;
-            public U2beSynchsafe Short0 { get { return _short0; } }
-            public U2beSynchsafe Short1 { get { return _short1; } }
-            public Id3v23 M_Root { get { return m_root; } }
-            public Id3v23.Header M_Parent { get { return m_parent; } }
-        }
 
         /// <remarks>
         /// Reference: Section 3.3. ID3v2 frame overview
@@ -262,8 +103,8 @@ namespace Kaitai
                 {
                     if (f_isInvalid)
                         return _isInvalid;
-                    _isInvalid = (bool) (Id == "\0\0\0\0");
                     f_isInvalid = true;
+                    _isInvalid = (bool) (Id == "\0\0\0\0");
                     return _isInvalid;
                 }
             }
@@ -277,6 +118,86 @@ namespace Kaitai
             public uint Size { get { return _size; } }
             public Flags Flags { get { return _flags; } }
             public byte[] Data { get { return _data; } }
+            public Id3v23 M_Root { get { return m_root; } }
+            public Id3v23.Tag M_Parent { get { return m_parent; } }
+        }
+
+        /// <summary>
+        /// ID3v2 fixed header
+        /// </summary>
+        /// <remarks>
+        /// Reference: Section 3.1. ID3v2 header
+        /// </remarks>
+        public partial class Header : KaitaiStruct
+        {
+            public static Header FromFile(string fileName)
+            {
+                return new Header(new KaitaiStream(fileName));
+            }
+
+            public Header(KaitaiStream p__io, Id3v23.Tag p__parent = null, Id3v23 p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _magic = m_io.ReadBytes(3);
+                if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 73, 68, 51 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 73, 68, 51 }, _magic, m_io, "/types/header/seq/0");
+                }
+                _versionMajor = m_io.ReadU1();
+                _versionRevision = m_io.ReadU1();
+                _flags = new Flags(m_io, this, m_root);
+                _size = new U4beSynchsafe(m_io, this, m_root);
+            }
+            public partial class Flags : KaitaiStruct
+            {
+                public static Flags FromFile(string fileName)
+                {
+                    return new Flags(new KaitaiStream(fileName));
+                }
+
+                public Flags(KaitaiStream p__io, Id3v23.Header p__parent = null, Id3v23 p__root = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    _read();
+                }
+                private void _read()
+                {
+                    _flagUnsynchronization = m_io.ReadBitsIntBe(1) != 0;
+                    _flagHeaderex = m_io.ReadBitsIntBe(1) != 0;
+                    _flagExperimental = m_io.ReadBitsIntBe(1) != 0;
+                    _reserved = m_io.ReadBitsIntBe(5);
+                }
+                private bool _flagUnsynchronization;
+                private bool _flagHeaderex;
+                private bool _flagExperimental;
+                private ulong _reserved;
+                private Id3v23 m_root;
+                private Id3v23.Header m_parent;
+                public bool FlagUnsynchronization { get { return _flagUnsynchronization; } }
+                public bool FlagHeaderex { get { return _flagHeaderex; } }
+                public bool FlagExperimental { get { return _flagExperimental; } }
+                public ulong Reserved { get { return _reserved; } }
+                public Id3v23 M_Root { get { return m_root; } }
+                public Id3v23.Header M_Parent { get { return m_parent; } }
+            }
+            private byte[] _magic;
+            private byte _versionMajor;
+            private byte _versionRevision;
+            private Flags _flags;
+            private U4beSynchsafe _size;
+            private Id3v23 m_root;
+            private Id3v23.Tag m_parent;
+            public byte[] Magic { get { return _magic; } }
+            public byte VersionMajor { get { return _versionMajor; } }
+            public byte VersionRevision { get { return _versionRevision; } }
+            public Flags Flags { get { return _flags; } }
+            public U4beSynchsafe Size { get { return _size; } }
             public Id3v23 M_Root { get { return m_root; } }
             public Id3v23.Tag M_Parent { get { return m_parent; } }
         }
@@ -350,20 +271,17 @@ namespace Kaitai
             public Id3v23.Tag M_Parent { get { return m_parent; } }
         }
 
-        /// <summary>
-        /// ID3v2 fixed header
-        /// </summary>
         /// <remarks>
-        /// Reference: Section 3.1. ID3v2 header
+        /// Reference: Section 3. ID3v2 overview
         /// </remarks>
-        public partial class Header : KaitaiStruct
+        public partial class Tag : KaitaiStruct
         {
-            public static Header FromFile(string fileName)
+            public static Tag FromFile(string fileName)
             {
-                return new Header(new KaitaiStream(fileName));
+                return new Tag(new KaitaiStream(fileName));
             }
 
-            public Header(KaitaiStream p__io, Id3v23.Tag p__parent = null, Id3v23 p__root = null) : base(p__io)
+            public Tag(KaitaiStream p__io, Id3v23 p__parent = null, Id3v23 p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -371,63 +289,145 @@ namespace Kaitai
             }
             private void _read()
             {
-                _magic = m_io.ReadBytes(3);
-                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 73, 68, 51 }) == 0)))
-                {
-                    throw new ValidationNotEqualError(new byte[] { 73, 68, 51 }, Magic, M_Io, "/types/header/seq/0");
+                _header = new Header(m_io, this, m_root);
+                if (Header.Flags.FlagHeaderex) {
+                    _headerEx = new HeaderEx(m_io, this, m_root);
                 }
-                _versionMajor = m_io.ReadU1();
-                _versionRevision = m_io.ReadU1();
-                _flags = new Flags(m_io, this, m_root);
-                _size = new U4beSynchsafe(m_io, this, m_root);
+                _frames = new List<Frame>();
+                {
+                    var i = 0;
+                    Frame M_;
+                    do {
+                        M_ = new Frame(m_io, this, m_root);
+                        _frames.Add(M_);
+                        i++;
+                    } while (!( ((M_Io.Pos + M_.Size > Header.Size.Value) || (M_.IsInvalid)) ));
+                }
+                if (Header.Flags.FlagHeaderex) {
+                    _padding = m_io.ReadBytes(HeaderEx.PaddingSize - M_Io.Pos);
+                }
             }
-            public partial class Flags : KaitaiStruct
-            {
-                public static Flags FromFile(string fileName)
-                {
-                    return new Flags(new KaitaiStream(fileName));
-                }
-
-                public Flags(KaitaiStream p__io, Id3v23.Header p__parent = null, Id3v23 p__root = null) : base(p__io)
-                {
-                    m_parent = p__parent;
-                    m_root = p__root;
-                    _read();
-                }
-                private void _read()
-                {
-                    _flagUnsynchronization = m_io.ReadBitsIntBe(1) != 0;
-                    _flagHeaderex = m_io.ReadBitsIntBe(1) != 0;
-                    _flagExperimental = m_io.ReadBitsIntBe(1) != 0;
-                    _reserved = m_io.ReadBitsIntBe(5);
-                }
-                private bool _flagUnsynchronization;
-                private bool _flagHeaderex;
-                private bool _flagExperimental;
-                private ulong _reserved;
-                private Id3v23 m_root;
-                private Id3v23.Header m_parent;
-                public bool FlagUnsynchronization { get { return _flagUnsynchronization; } }
-                public bool FlagHeaderex { get { return _flagHeaderex; } }
-                public bool FlagExperimental { get { return _flagExperimental; } }
-                public ulong Reserved { get { return _reserved; } }
-                public Id3v23 M_Root { get { return m_root; } }
-                public Id3v23.Header M_Parent { get { return m_parent; } }
-            }
-            private byte[] _magic;
-            private byte _versionMajor;
-            private byte _versionRevision;
-            private Flags _flags;
-            private U4beSynchsafe _size;
+            private Header _header;
+            private HeaderEx _headerEx;
+            private List<Frame> _frames;
+            private byte[] _padding;
             private Id3v23 m_root;
-            private Id3v23.Tag m_parent;
-            public byte[] Magic { get { return _magic; } }
-            public byte VersionMajor { get { return _versionMajor; } }
-            public byte VersionRevision { get { return _versionRevision; } }
-            public Flags Flags { get { return _flags; } }
-            public U4beSynchsafe Size { get { return _size; } }
+            private Id3v23 m_parent;
+            public Header Header { get { return _header; } }
+            public HeaderEx HeaderEx { get { return _headerEx; } }
+            public List<Frame> Frames { get { return _frames; } }
+            public byte[] Padding { get { return _padding; } }
             public Id3v23 M_Root { get { return m_root; } }
-            public Id3v23.Tag M_Parent { get { return m_parent; } }
+            public Id3v23 M_Parent { get { return m_parent; } }
+        }
+        public partial class U1beSynchsafe : KaitaiStruct
+        {
+            public static U1beSynchsafe FromFile(string fileName)
+            {
+                return new U1beSynchsafe(new KaitaiStream(fileName));
+            }
+
+            public U1beSynchsafe(KaitaiStream p__io, Id3v23.U2beSynchsafe p__parent = null, Id3v23 p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _padding = m_io.ReadBitsIntBe(1) != 0;
+                _value = m_io.ReadBitsIntBe(7);
+            }
+            private bool _padding;
+            private ulong _value;
+            private Id3v23 m_root;
+            private Id3v23.U2beSynchsafe m_parent;
+            public bool Padding { get { return _padding; } }
+            public ulong Value { get { return _value; } }
+            public Id3v23 M_Root { get { return m_root; } }
+            public Id3v23.U2beSynchsafe M_Parent { get { return m_parent; } }
+        }
+        public partial class U2beSynchsafe : KaitaiStruct
+        {
+            public static U2beSynchsafe FromFile(string fileName)
+            {
+                return new U2beSynchsafe(new KaitaiStream(fileName));
+            }
+
+            public U2beSynchsafe(KaitaiStream p__io, Id3v23.U4beSynchsafe p__parent = null, Id3v23 p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_value = false;
+                _read();
+            }
+            private void _read()
+            {
+                _byte0 = new U1beSynchsafe(m_io, this, m_root);
+                _byte1 = new U1beSynchsafe(m_io, this, m_root);
+            }
+            private bool f_value;
+            private int _value;
+            public int Value
+            {
+                get
+                {
+                    if (f_value)
+                        return _value;
+                    f_value = true;
+                    _value = (int) (Byte0.Value << 7 | Byte1.Value);
+                    return _value;
+                }
+            }
+            private U1beSynchsafe _byte0;
+            private U1beSynchsafe _byte1;
+            private Id3v23 m_root;
+            private Id3v23.U4beSynchsafe m_parent;
+            public U1beSynchsafe Byte0 { get { return _byte0; } }
+            public U1beSynchsafe Byte1 { get { return _byte1; } }
+            public Id3v23 M_Root { get { return m_root; } }
+            public Id3v23.U4beSynchsafe M_Parent { get { return m_parent; } }
+        }
+        public partial class U4beSynchsafe : KaitaiStruct
+        {
+            public static U4beSynchsafe FromFile(string fileName)
+            {
+                return new U4beSynchsafe(new KaitaiStream(fileName));
+            }
+
+            public U4beSynchsafe(KaitaiStream p__io, Id3v23.Header p__parent = null, Id3v23 p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_value = false;
+                _read();
+            }
+            private void _read()
+            {
+                _short0 = new U2beSynchsafe(m_io, this, m_root);
+                _short1 = new U2beSynchsafe(m_io, this, m_root);
+            }
+            private bool f_value;
+            private int _value;
+            public int Value
+            {
+                get
+                {
+                    if (f_value)
+                        return _value;
+                    f_value = true;
+                    _value = (int) (Short0.Value << 14 | Short1.Value);
+                    return _value;
+                }
+            }
+            private U2beSynchsafe _short0;
+            private U2beSynchsafe _short1;
+            private Id3v23 m_root;
+            private Id3v23.Header m_parent;
+            public U2beSynchsafe Short0 { get { return _short0; } }
+            public U2beSynchsafe Short1 { get { return _short1; } }
+            public Id3v23 M_Root { get { return m_root; } }
+            public Id3v23.Header M_Parent { get { return m_parent; } }
         }
         private Tag _tag;
         private Id3v23 m_root;

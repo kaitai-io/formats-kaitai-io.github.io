@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Encode;
 
 ########################################################################
@@ -25,7 +25,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -36,7 +36,7 @@ sub _read {
     my ($self) = @_;
 
     $self->{num_files} = $self->{_io}->read_u2le();
-    $self->{entries} = ();
+    $self->{entries} = [];
     my $n_entries = $self->num_files();
     for (my $i = 0; $i < $n_entries; $i++) {
         push @{$self->{entries}}, HeroesOfMightAndMagicAgg::Entry->new($self->{_io}, $self, $self->{_root});
@@ -47,9 +47,9 @@ sub filenames {
     my ($self) = @_;
     return $self->{filenames} if ($self->{filenames});
     my $_pos = $self->{_io}->pos();
-    $self->{_io}->seek((@{$self->entries()}[-1]->offset() + @{$self->entries()}[-1]->size()));
-    $self->{_raw_filenames} = ();
-    $self->{filenames} = ();
+    $self->{_io}->seek(@{$self->entries()}[-1]->offset() + @{$self->entries()}[-1]->size());
+    $self->{_raw_filenames} = [];
+    $self->{filenames} = [];
     my $n_filenames = $self->num_files();
     for (my $i = 0; $i < $n_filenames; $i++) {
         push @{$self->{_raw_filenames}}, $self->{_io}->read_bytes(15);
@@ -95,7 +95,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -161,7 +161,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 

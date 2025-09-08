@@ -190,6 +190,11 @@ such as text.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="Compressed Macintosh resource data, Apple `'dcmp' (1)` format parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="Compressed Macintosh resource data, Apple `'dcmp' (1)` format parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -220,7 +225,17 @@ such as text.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="Compressed Macintosh resource data, Apple `'dcmp' (1)` format parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="Compressed Macintosh resource data, Apple `'dcmp' (1)` format parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="Compressed Macintosh resource data, Apple `'dcmp' (1)` format parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -256,10 +271,10 @@ such as text.</p>
 
 <span class="kd">local</span><span class="w"> </span><span class="nv">class</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
 <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;kaitaistruct&quot;</span><span class="p">)</span>
+<span class="nb">require</span><span class="p">(</span><span class="s2">&quot;dcmp_variable_length_integer&quot;</span><span class="p">)</span>
 <span class="kd">local</span><span class="w"> </span><span class="nv">enum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">&quot;enum&quot;</span><span class="p">)</span>
 <span class="kd">local</span><span class="w"> </span><span class="nv">utils</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">require</span><span class="p">(</span><span class="s2">&quot;utils&quot;</span><span class="p">)</span>
 
-<span class="nb">require</span><span class="p">(</span><span class="s2">&quot;dcmp_variable_length_integer&quot;</span><span class="p">)</span>
 <span class="c1">-- </span>
 <span class="c1">-- Compressed resource data in `&#39;dcmp&#39; (1)` format,</span>
 <span class="c1">-- as stored in compressed resources with header type `8` and decompressor ID `1`.</span>
@@ -335,23 +350,23 @@ such as text.</p>
 <span class="kr">function</span><span class="w"> </span><span class="nc">Dcmp1</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
 <span class="kr">function</span><span class="w"> </span><span class="nc">Dcmp1</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">tag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">()</span>
 <span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_unwrap</span><span class="p">((</span><span class="w"> </span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">tag</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">tag</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">31</span><span class="p">))</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_wrap</span><span class="p">(</span><span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">TagKind</span><span class="p">.</span><span class="py">literal</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_unwrap</span><span class="p">((</span><span class="w"> </span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">tag</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">32</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">tag</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">207</span><span class="p">))</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_wrap</span><span class="p">(</span><span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">TagKind</span><span class="p">.</span><span class="py">backreference</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_unwrap</span><span class="p">((</span><span class="w"> </span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">tag</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">208</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">tag</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">209</span><span class="p">))</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_wrap</span><span class="p">(</span><span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">TagKind</span><span class="p">.</span><span class="py">literal</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_unwrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">tag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">210</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_wrap</span><span class="p">(</span><span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">TagKind</span><span class="p">.</span><span class="py">backreference</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_unwrap</span><span class="p">((</span><span class="w"> </span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">tag</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">213</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">tag</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">253</span><span class="p">))</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_wrap</span><span class="p">(</span><span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">TagKind</span><span class="p">.</span><span class="py">table_lookup</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_unwrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">tag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">254</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_wrap</span><span class="p">(</span><span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">TagKind</span><span class="p">.</span><span class="py">extended</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_unwrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">tag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">255</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_wrap</span><span class="p">(</span><span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">TagKind</span><span class="p">.</span><span class="py">end</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">TagKind</span><span class="p">.</span><span class="py">invalid</span><span class="p">))))))))))))))</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">TagKind</span><span class="p">.</span><span class="py">extended</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">TagKind</span><span class="p">.</span><span class="py">backreference</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="nf">BackreferenceBody</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">tag</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">elseif</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">TagKind</span><span class="p">.</span><span class="py">end</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="nf">EndBody</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">elseif</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">TagKind</span><span class="p">.</span><span class="py">extended</span><span class="w"> </span><span class="kr">then</span>
 <span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="nf">ExtendedBody</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
 <span class="w">  </span><span class="kr">elseif</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">TagKind</span><span class="p">.</span><span class="py">literal</span><span class="w"> </span><span class="kr">then</span>
 <span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="nf">LiteralBody</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">tag</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
-<span class="w">  </span><span class="kr">elseif</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">TagKind</span><span class="p">.</span><span class="py">end</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="nf">EndBody</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
 <span class="w">  </span><span class="kr">elseif</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">TagKind</span><span class="p">.</span><span class="py">table_lookup</span><span class="w"> </span><span class="kr">then</span>
 <span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="nf">TableLookupBody</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">tag</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
-<span class="w">  </span><span class="kr">elseif</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">TagKind</span><span class="p">.</span><span class="py">backreference</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="nf">BackreferenceBody</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">tag</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
 <span class="w">  </span><span class="kr">end</span>
 <span class="kr">end</span>
 
@@ -366,6 +381,216 @@ such as text.</p>
 <span class="c1">-- the body is a zero-length structure.</span>
 
 <span class="c1">-- </span>
+<span class="c1">-- The body of a backreference chunk.</span>
+<span class="c1">-- </span>
+<span class="c1">-- This chunk expands to the data stored in a preceding literal chunk,</span>
+<span class="c1">-- indicated by an index number (`index`).</span>
+<span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">BackreferenceBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">Dcmp1</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">.</span><span class="nc">BackreferenceBody</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">tag</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">tag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">tag</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">Dcmp1</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">.</span><span class="nc">BackreferenceBody</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">is_index_separate</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">index_separate_minus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The index of the referenced literal chunk.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Stored literals are assigned index numbers in the order in which they appear in the compressed data,</span>
+<span class="c1">-- starting at 0.</span>
+<span class="c1">-- Non-stored literals are not counted in the numbering and cannot be referenced using backreferences.</span>
+<span class="c1">-- Once an index is assigned to a stored literal,</span>
+<span class="c1">-- it is never changed or unassigned for the entire length of the compressed data.</span>
+<span class="c1">-- </span>
+<span class="c1">-- As the name indicates,</span>
+<span class="c1">-- a backreference can only reference stored literal chunks found *before* the backreference,</span>
+<span class="c1">-- not ones that come after it.</span>
+<span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">BackreferenceBody</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">Dcmp1</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">.</span><span class="nc">BackreferenceBody</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">index</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_index</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_index</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_unwrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">is_index_separate</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_wrap</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">index_separate</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">index_in_tag</span><span class="p">))</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_index</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The index of the referenced literal chunk,</span>
+<span class="c1">-- as stored in the tag byte.</span>
+<span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">BackreferenceBody</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">index_in_tag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">Dcmp1</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">.</span><span class="nc">BackreferenceBody</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">index_in_tag</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_index_in_tag</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_index_in_tag</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_index_in_tag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">tag</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">32</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_index_in_tag</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The index of the referenced literal chunk,</span>
+<span class="c1">-- as stored separately from the tag byte,</span>
+<span class="c1">-- with the implicit offset corrected for.</span>
+<span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">BackreferenceBody</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">index_separate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">Dcmp1</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">.</span><span class="nc">BackreferenceBody</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">index_separate</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_index_separate</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_index_separate</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">is_index_separate</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_index_separate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">index_separate_minus</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">176</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_index_separate</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Whether the index is stored separately from the tag.</span>
+<span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">BackreferenceBody</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">is_index_separate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">Dcmp1</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">.</span><span class="nc">BackreferenceBody</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_index_separate</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_index_separate</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_index_separate</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_index_separate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">tag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">210</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_index_separate</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The index of the referenced literal chunk,</span>
+<span class="c1">-- stored separately from the tag.</span>
+<span class="c1">-- The value in this field is stored minus 0xb0.</span>
+<span class="c1">-- </span>
+<span class="c1">-- This field is only present if the tag byte is 0xd2.</span>
+<span class="c1">-- For other tag bytes,</span>
+<span class="c1">-- the index is encoded in the tag byte.</span>
+<span class="c1">-- Values smaller than 0xb0 cannot be stored in this field,</span>
+<span class="c1">-- they must always be encoded in the tag byte.</span>
+<span class="c1">-- </span>
+<span class="c1">-- The tag byte preceding this chunk body.</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The body of an end chunk.</span>
+<span class="c1">-- This body is always empty.</span>
+<span class="c1">-- </span>
+<span class="c1">-- The last chunk in the compressed data must always be an end chunk.</span>
+<span class="c1">-- An end chunk cannot appear elsewhere in the compressed data.</span>
+<span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">EndBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">Dcmp1</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">.</span><span class="nc">EndBody</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">Dcmp1</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">.</span><span class="nc">EndBody</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- The body of an extended chunk.</span>
+<span class="c1">-- The meaning of this chunk depends on the extended tag byte stored in the chunk data.</span>
+<span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">ExtendedBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">Dcmp1</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">.</span><span class="nc">ExtendedBody</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">Dcmp1</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">.</span><span class="nc">ExtendedBody</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">tag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">()</span>
+<span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">tag</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">ExtendedBody</span><span class="p">.</span><span class="nf">RepeatBody</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The chunk&#39;s extended tag byte.</span>
+<span class="c1">-- This controls the structure of the body and the meaning of the chunk.</span>
+<span class="c1">-- </span>
+<span class="c1">-- The chunk&#39;s body.</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The body of a repeat chunk.</span>
+<span class="c1">-- </span>
+<span class="c1">-- This chunk expands to the same byte repeated a number of times,</span>
+<span class="c1">-- i. e. it implements a form of run-length encoding.</span>
+<span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">ExtendedBody</span><span class="p">.</span><span class="py">RepeatBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">Dcmp1</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">.</span><span class="nc">ExtendedBody</span><span class="p">.</span><span class="nc">RepeatBody</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">Dcmp1</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">.</span><span class="nc">ExtendedBody</span><span class="p">.</span><span class="nc">RepeatBody</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">to_repeat_raw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">DcmpVariableLengthInteger</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">repeat_count_m1_raw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">DcmpVariableLengthInteger</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">)</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The number of times to repeat the value.</span>
+<span class="c1">-- </span>
+<span class="c1">-- This value must be positive.</span>
+<span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">ExtendedBody</span><span class="p">.</span><span class="py">RepeatBody</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">repeat_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">Dcmp1</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">.</span><span class="nc">ExtendedBody</span><span class="p">.</span><span class="nc">RepeatBody</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">repeat_count</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_repeat_count</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_repeat_count</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_repeat_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">repeat_count_m1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_repeat_count</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The number of times to repeat the value,</span>
+<span class="c1">-- minus one.</span>
+<span class="c1">-- </span>
+<span class="c1">-- This value must not be negative.</span>
+<span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">ExtendedBody</span><span class="p">.</span><span class="py">RepeatBody</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">repeat_count_m1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">Dcmp1</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">.</span><span class="nc">ExtendedBody</span><span class="p">.</span><span class="nc">RepeatBody</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">repeat_count_m1</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_repeat_count_m1</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_repeat_count_m1</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_repeat_count_m1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">repeat_count_m1_raw</span><span class="p">.</span><span class="py">value</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_repeat_count_m1</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The value to repeat.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Although it is stored as a variable-length integer,</span>
+<span class="c1">-- this value must fit into an unsigned 8-bit integer.</span>
+<span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">ExtendedBody</span><span class="p">.</span><span class="py">RepeatBody</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">to_repeat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">Dcmp1</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">.</span><span class="nc">ExtendedBody</span><span class="p">.</span><span class="nc">RepeatBody</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">to_repeat</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_to_repeat</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_to_repeat</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_to_repeat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">to_repeat_raw</span><span class="p">.</span><span class="py">value</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_to_repeat</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Raw variable-length integer representation of `to_repeat`.</span>
+<span class="c1">-- </span>
+<span class="c1">-- Raw variable-length integer representation of `repeat_count_m1`.</span>
+
+<span class="c1">-- </span>
 <span class="c1">-- The body of a literal data chunk.</span>
 <span class="c1">-- </span>
 <span class="c1">-- The data that this chunk expands to is stored literally in the body (`literal`).</span>
@@ -376,7 +601,7 @@ such as text.</p>
 <span class="kr">function</span><span class="w"> </span><span class="nc">Dcmp1</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">.</span><span class="nc">LiteralBody</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">tag</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">tag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">tag</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
@@ -398,27 +623,8 @@ such as text.</p>
 <span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_do_store</span>
 <span class="w">  </span><span class="kr">end</span>
 
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_do_store</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_unwrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">is_len_literal_separate</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_wrap</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">tag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">209</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">tag</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">16</span><span class="p">)</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_do_store</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_unwrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">is_len_literal_separate</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_wrap</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">tag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">209</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">tag</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">16</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span>
 <span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_do_store</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- The part of the tag byte that indicates the length of the literal data,</span>
-<span class="c1">-- in bytes,</span>
-<span class="c1">-- minus one.</span>
-<span class="c1">-- </span>
-<span class="c1">-- If the tag byte is 0xd0 or 0xd1,</span>
-<span class="c1">-- the length is stored in a separate byte after the tag byte and before the literal data.</span>
-<span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">LiteralBody</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">len_literal_m1_in_tag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">Dcmp1</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">.</span><span class="nc">LiteralBody</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">len_literal_m1_in_tag</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_literal_m1_in_tag</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_literal_m1_in_tag</span>
-<span class="w">  </span><span class="kr">end</span>
-
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">is_len_literal_separate</span><span class="p">)</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_literal_m1_in_tag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">tag</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">15</span><span class="p">)</span>
-<span class="w">  </span><span class="kr">end</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_literal_m1_in_tag</span>
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
@@ -446,8 +652,27 @@ such as text.</p>
 <span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_literal</span>
 <span class="w">  </span><span class="kr">end</span>
 
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_literal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_unwrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">is_len_literal_separate</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_wrap</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_literal_separate</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">len_literal_m1_in_tag</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)))</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_literal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_unwrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">is_len_literal_separate</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_wrap</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_literal_separate</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">len_literal_m1_in_tag</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
 <span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_literal</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- The part of the tag byte that indicates the length of the literal data,</span>
+<span class="c1">-- in bytes,</span>
+<span class="c1">-- minus one.</span>
+<span class="c1">-- </span>
+<span class="c1">-- If the tag byte is 0xd0 or 0xd1,</span>
+<span class="c1">-- the length is stored in a separate byte after the tag byte and before the literal data.</span>
+<span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">LiteralBody</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">len_literal_m1_in_tag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">Dcmp1</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">.</span><span class="nc">LiteralBody</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">len_literal_m1_in_tag</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_literal_m1_in_tag</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_literal_m1_in_tag</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="ow">not</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">is_len_literal_separate</span><span class="p">)</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_literal_m1_in_tag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">tag</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mi">15</span>
+<span class="w">  </span><span class="kr">end</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_len_literal_m1_in_tag</span>
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
@@ -464,103 +689,6 @@ such as text.</p>
 <span class="c1">-- The tag byte preceding this chunk body.</span>
 
 <span class="c1">-- </span>
-<span class="c1">-- The body of a backreference chunk.</span>
-<span class="c1">-- </span>
-<span class="c1">-- This chunk expands to the data stored in a preceding literal chunk,</span>
-<span class="c1">-- indicated by an index number (`index`).</span>
-<span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">BackreferenceBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">Dcmp1</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">.</span><span class="nc">BackreferenceBody</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">tag</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">tag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">tag</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">Dcmp1</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">.</span><span class="nc">BackreferenceBody</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">is_index_separate</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">index_separate_minus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">end</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- Whether the index is stored separately from the tag.</span>
-<span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">BackreferenceBody</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">is_index_separate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">Dcmp1</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">.</span><span class="nc">BackreferenceBody</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_index_separate</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_index_separate</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_index_separate</span>
-<span class="w">  </span><span class="kr">end</span>
-
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_index_separate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">tag</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">210</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_index_separate</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- The index of the referenced literal chunk,</span>
-<span class="c1">-- as stored in the tag byte.</span>
-<span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">BackreferenceBody</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">index_in_tag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">Dcmp1</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">.</span><span class="nc">BackreferenceBody</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">index_in_tag</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_index_in_tag</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_index_in_tag</span>
-<span class="w">  </span><span class="kr">end</span>
-
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_index_in_tag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">tag</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">32</span><span class="p">)</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_index_in_tag</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- The index of the referenced literal chunk,</span>
-<span class="c1">-- as stored separately from the tag byte,</span>
-<span class="c1">-- with the implicit offset corrected for.</span>
-<span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">BackreferenceBody</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">index_separate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">Dcmp1</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">.</span><span class="nc">BackreferenceBody</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">index_separate</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_index_separate</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_index_separate</span>
-<span class="w">  </span><span class="kr">end</span>
-
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">is_index_separate</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_index_separate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">index_separate_minus</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">176</span><span class="p">)</span>
-<span class="w">  </span><span class="kr">end</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_index_separate</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- The index of the referenced literal chunk.</span>
-<span class="c1">-- </span>
-<span class="c1">-- Stored literals are assigned index numbers in the order in which they appear in the compressed data,</span>
-<span class="c1">-- starting at 0.</span>
-<span class="c1">-- Non-stored literals are not counted in the numbering and cannot be referenced using backreferences.</span>
-<span class="c1">-- Once an index is assigned to a stored literal,</span>
-<span class="c1">-- it is never changed or unassigned for the entire length of the compressed data.</span>
-<span class="c1">-- </span>
-<span class="c1">-- As the name indicates,</span>
-<span class="c1">-- a backreference can only reference stored literal chunks found *before* the backreference,</span>
-<span class="c1">-- not ones that come after it.</span>
-<span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">BackreferenceBody</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">Dcmp1</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">.</span><span class="nc">BackreferenceBody</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">index</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_index</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_index</span>
-<span class="w">  </span><span class="kr">end</span>
-
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_unwrap</span><span class="p">((</span><span class="nv">self</span><span class="p">.</span><span class="py">is_index_separate</span><span class="p">)</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">utils</span><span class="p">.</span><span class="nf">box_wrap</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">index_separate</span><span class="p">)</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">index_in_tag</span><span class="p">))</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_index</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- The index of the referenced literal chunk,</span>
-<span class="c1">-- stored separately from the tag.</span>
-<span class="c1">-- The value in this field is stored minus 0xb0.</span>
-<span class="c1">-- </span>
-<span class="c1">-- This field is only present if the tag byte is 0xd2.</span>
-<span class="c1">-- For other tag bytes,</span>
-<span class="c1">-- the index is encoded in the tag byte.</span>
-<span class="c1">-- Values smaller than 0xb0 cannot be stored in this field,</span>
-<span class="c1">-- they must always be encoded in the tag byte.</span>
-<span class="c1">-- </span>
-<span class="c1">-- The tag byte preceding this chunk body.</span>
-
-<span class="c1">-- </span>
 <span class="c1">-- The body of a table lookup chunk.</span>
 <span class="c1">-- This body is always empty.</span>
 <span class="c1">-- </span>
@@ -572,7 +700,7 @@ such as text.</p>
 <span class="kr">function</span><span class="w"> </span><span class="nc">Dcmp1</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">.</span><span class="nc">TableLookupBody</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">tag</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">tag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">tag</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
@@ -610,119 +738,6 @@ such as text.</p>
 
 <span class="c1">-- </span>
 <span class="c1">-- The tag byte preceding this chunk body.</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- The body of an end chunk.</span>
-<span class="c1">-- This body is always empty.</span>
-<span class="c1">-- </span>
-<span class="c1">-- The last chunk in the compressed data must always be an end chunk.</span>
-<span class="c1">-- An end chunk cannot appear elsewhere in the compressed data.</span>
-<span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">EndBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">Dcmp1</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">.</span><span class="nc">EndBody</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">Dcmp1</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">.</span><span class="nc">EndBody</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="kr">end</span>
-
-
-<span class="c1">-- </span>
-<span class="c1">-- The body of an extended chunk.</span>
-<span class="c1">-- The meaning of this chunk depends on the extended tag byte stored in the chunk data.</span>
-<span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">ExtendedBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">Dcmp1</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">.</span><span class="nc">ExtendedBody</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">Dcmp1</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">.</span><span class="nc">ExtendedBody</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">tag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_u1</span><span class="p">()</span>
-<span class="w">  </span><span class="kd">local</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">tag</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">_on</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="nv">self</span><span class="p">.</span><span class="py">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">ExtendedBody</span><span class="p">.</span><span class="nf">RepeatBody</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="p">)</span>
-<span class="w">  </span><span class="kr">end</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- The chunk&#39;s extended tag byte.</span>
-<span class="c1">-- This controls the structure of the body and the meaning of the chunk.</span>
-<span class="c1">-- </span>
-<span class="c1">-- The chunk&#39;s body.</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- The body of a repeat chunk.</span>
-<span class="c1">-- </span>
-<span class="c1">-- This chunk expands to the same byte repeated a number of times,</span>
-<span class="c1">-- i. e. it implements a form of run-length encoding.</span>
-<span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">ExtendedBody</span><span class="p">.</span><span class="py">RepeatBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">Dcmp1</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">.</span><span class="nc">ExtendedBody</span><span class="p">.</span><span class="nc">RepeatBody</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">Dcmp1</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">.</span><span class="nc">ExtendedBody</span><span class="p">.</span><span class="nc">RepeatBody</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">to_repeat_raw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">DcmpVariableLengthInteger</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">repeat_count_m1_raw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">DcmpVariableLengthInteger</span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">)</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- The value to repeat.</span>
-<span class="c1">-- </span>
-<span class="c1">-- Although it is stored as a variable-length integer,</span>
-<span class="c1">-- this value must fit into an unsigned 8-bit integer.</span>
-<span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">ExtendedBody</span><span class="p">.</span><span class="py">RepeatBody</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">to_repeat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">Dcmp1</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">.</span><span class="nc">ExtendedBody</span><span class="p">.</span><span class="nc">RepeatBody</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">to_repeat</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_to_repeat</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_to_repeat</span>
-<span class="w">  </span><span class="kr">end</span>
-
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_to_repeat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">to_repeat_raw</span><span class="p">.</span><span class="py">value</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_to_repeat</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- The number of times to repeat the value,</span>
-<span class="c1">-- minus one.</span>
-<span class="c1">-- </span>
-<span class="c1">-- This value must not be negative.</span>
-<span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">ExtendedBody</span><span class="p">.</span><span class="py">RepeatBody</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">repeat_count_m1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">Dcmp1</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">.</span><span class="nc">ExtendedBody</span><span class="p">.</span><span class="nc">RepeatBody</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">repeat_count_m1</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_repeat_count_m1</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_repeat_count_m1</span>
-<span class="w">  </span><span class="kr">end</span>
-
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_repeat_count_m1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">repeat_count_m1_raw</span><span class="p">.</span><span class="py">value</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_repeat_count_m1</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- The number of times to repeat the value.</span>
-<span class="c1">-- </span>
-<span class="c1">-- This value must be positive.</span>
-<span class="nv">Dcmp1</span><span class="p">.</span><span class="py">Chunk</span><span class="p">.</span><span class="py">ExtendedBody</span><span class="p">.</span><span class="py">RepeatBody</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">repeat_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">Dcmp1</span><span class="p">.</span><span class="nc">Chunk</span><span class="p">.</span><span class="nc">ExtendedBody</span><span class="p">.</span><span class="nc">RepeatBody</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">repeat_count</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_repeat_count</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_repeat_count</span>
-<span class="w">  </span><span class="kr">end</span>
-
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_repeat_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nv">self</span><span class="p">.</span><span class="py">repeat_count_m1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_repeat_count</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- Raw variable-length integer representation of `to_repeat`.</span>
-<span class="c1">-- </span>
-<span class="c1">-- Raw variable-length integer representation of `repeat_count_m1`.</span>
 </pre></div>
 
         </div>

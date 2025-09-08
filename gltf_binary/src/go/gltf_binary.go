@@ -16,19 +16,28 @@ const (
 	GltfBinary_ChunkType__Bin GltfBinary_ChunkType = 5130562
 	GltfBinary_ChunkType__Json GltfBinary_ChunkType = 1313821514
 )
+var values_GltfBinary_ChunkType = map[GltfBinary_ChunkType]struct{}{5130562: {}, 1313821514: {}}
+func (v GltfBinary_ChunkType) isDefined() bool {
+	_, ok := values_GltfBinary_ChunkType[v]
+	return ok
+}
 type GltfBinary struct {
 	Header *GltfBinary_Header
 	Chunks []*GltfBinary_Chunk
 	_io *kaitai.Stream
 	_root *GltfBinary
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewGltfBinary() *GltfBinary {
 	return &GltfBinary{
 	}
 }
 
-func (this *GltfBinary) Read(io *kaitai.Stream, parent interface{}, root *GltfBinary) (err error) {
+func (this GltfBinary) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *GltfBinary) Read(io *kaitai.Stream, parent kaitai.Struct, root *GltfBinary) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -39,7 +48,7 @@ func (this *GltfBinary) Read(io *kaitai.Stream, parent interface{}, root *GltfBi
 		return err
 	}
 	this.Header = tmp1
-	for i := 1;; i++ {
+	for i := 0;; i++ {
 		tmp2, err := this._io.EOF()
 		if err != nil {
 			return err
@@ -56,54 +65,34 @@ func (this *GltfBinary) Read(io *kaitai.Stream, parent interface{}, root *GltfBi
 	}
 	return err
 }
-type GltfBinary_Header struct {
-	Magic []byte
-	Version uint32
-	Length uint32
+type GltfBinary_Bin struct {
+	Data []byte
 	_io *kaitai.Stream
 	_root *GltfBinary
-	_parent *GltfBinary
+	_parent *GltfBinary_Chunk
 }
-func NewGltfBinary_Header() *GltfBinary_Header {
-	return &GltfBinary_Header{
+func NewGltfBinary_Bin() *GltfBinary_Bin {
+	return &GltfBinary_Bin{
 	}
 }
 
-func (this *GltfBinary_Header) Read(io *kaitai.Stream, parent *GltfBinary, root *GltfBinary) (err error) {
+func (this GltfBinary_Bin) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *GltfBinary_Bin) Read(io *kaitai.Stream, parent *GltfBinary_Chunk, root *GltfBinary) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp4, err := this._io.ReadBytes(int(4))
+	tmp4, err := this._io.ReadBytesFull()
 	if err != nil {
 		return err
 	}
 	tmp4 = tmp4
-	this.Magic = tmp4
-	if !(bytes.Equal(this.Magic, []uint8{103, 108, 84, 70})) {
-		return kaitai.NewValidationNotEqualError([]uint8{103, 108, 84, 70}, this.Magic, this._io, "/types/header/seq/0")
-	}
-	tmp5, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Version = uint32(tmp5)
-	tmp6, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Length = uint32(tmp6)
+	this.Data = tmp4
 	return err
 }
-
-/**
- * Indicates the version of the Binary glTF container format.
- * For this specification, should be set to 2.
- */
-
-/**
- * Total length of the Binary glTF, including Header and all Chunks, in bytes.
- */
 type GltfBinary_Chunk struct {
 	LenData uint32
 	Type GltfBinary_ChunkType
@@ -118,22 +107,40 @@ func NewGltfBinary_Chunk() *GltfBinary_Chunk {
 	}
 }
 
+func (this GltfBinary_Chunk) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *GltfBinary_Chunk) Read(io *kaitai.Stream, parent *GltfBinary, root *GltfBinary) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp7, err := this._io.ReadU4le()
+	tmp5, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.LenData = uint32(tmp7)
-	tmp8, err := this._io.ReadU4le()
+	this.LenData = uint32(tmp5)
+	tmp6, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Type = GltfBinary_ChunkType(tmp8)
+	this.Type = GltfBinary_ChunkType(tmp6)
 	switch (this.Type) {
+	case GltfBinary_ChunkType__Bin:
+		tmp7, err := this._io.ReadBytes(int(this.LenData))
+		if err != nil {
+			return err
+		}
+		tmp7 = tmp7
+		this._raw_Data = tmp7
+		_io__raw_Data := kaitai.NewStream(bytes.NewReader(this._raw_Data))
+		tmp8 := NewGltfBinary_Bin()
+		err = tmp8.Read(_io__raw_Data, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Data = tmp8
 	case GltfBinary_ChunkType__Json:
 		tmp9, err := this._io.ReadBytes(int(this.LenData))
 		if err != nil {
@@ -148,30 +155,68 @@ func (this *GltfBinary_Chunk) Read(io *kaitai.Stream, parent *GltfBinary, root *
 			return err
 		}
 		this.Data = tmp10
-	case GltfBinary_ChunkType__Bin:
+	default:
 		tmp11, err := this._io.ReadBytes(int(this.LenData))
 		if err != nil {
 			return err
 		}
 		tmp11 = tmp11
 		this._raw_Data = tmp11
-		_io__raw_Data := kaitai.NewStream(bytes.NewReader(this._raw_Data))
-		tmp12 := NewGltfBinary_Bin()
-		err = tmp12.Read(_io__raw_Data, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Data = tmp12
-	default:
-		tmp13, err := this._io.ReadBytes(int(this.LenData))
-		if err != nil {
-			return err
-		}
-		tmp13 = tmp13
-		this._raw_Data = tmp13
 	}
 	return err
 }
+type GltfBinary_Header struct {
+	Magic []byte
+	Version uint32
+	Length uint32
+	_io *kaitai.Stream
+	_root *GltfBinary
+	_parent *GltfBinary
+}
+func NewGltfBinary_Header() *GltfBinary_Header {
+	return &GltfBinary_Header{
+	}
+}
+
+func (this GltfBinary_Header) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *GltfBinary_Header) Read(io *kaitai.Stream, parent *GltfBinary, root *GltfBinary) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp12, err := this._io.ReadBytes(int(4))
+	if err != nil {
+		return err
+	}
+	tmp12 = tmp12
+	this.Magic = tmp12
+	if !(bytes.Equal(this.Magic, []uint8{103, 108, 84, 70})) {
+		return kaitai.NewValidationNotEqualError([]uint8{103, 108, 84, 70}, this.Magic, this._io, "/types/header/seq/0")
+	}
+	tmp13, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Version = uint32(tmp13)
+	tmp14, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Length = uint32(tmp14)
+	return err
+}
+
+/**
+ * Indicates the version of the Binary glTF container format.
+ * For this specification, should be set to 2.
+ */
+
+/**
+ * Total length of the Binary glTF, including Header and all Chunks, in bytes.
+ */
 type GltfBinary_Json struct {
 	Data string
 	_io *kaitai.Stream
@@ -183,36 +228,11 @@ func NewGltfBinary_Json() *GltfBinary_Json {
 	}
 }
 
+func (this GltfBinary_Json) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *GltfBinary_Json) Read(io *kaitai.Stream, parent *GltfBinary_Chunk, root *GltfBinary) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp14, err := this._io.ReadBytesFull()
-	if err != nil {
-		return err
-	}
-	tmp14 = tmp14
-	this.Data = string(tmp14)
-	return err
-}
-
-/**
- * This is where GLB deviates from being an elegant format.
- * To parse the rest of the file, you have to parse the JSON first.
- */
-type GltfBinary_Bin struct {
-	Data []byte
-	_io *kaitai.Stream
-	_root *GltfBinary
-	_parent *GltfBinary_Chunk
-}
-func NewGltfBinary_Bin() *GltfBinary_Bin {
-	return &GltfBinary_Bin{
-	}
-}
-
-func (this *GltfBinary_Bin) Read(io *kaitai.Stream, parent *GltfBinary_Chunk, root *GltfBinary) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -222,6 +242,11 @@ func (this *GltfBinary_Bin) Read(io *kaitai.Stream, parent *GltfBinary_Chunk, ro
 		return err
 	}
 	tmp15 = tmp15
-	this.Data = tmp15
+	this.Data = string(tmp15)
 	return err
 }
+
+/**
+ * This is where GLB deviates from being an elegant format.
+ * To parse the rest of the file, you have to parse the JSON first.
+ */

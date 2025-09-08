@@ -13,17 +13,17 @@ type
     `chreApiMinorVersion`*: uint8
     `reserved`*: seq[byte]
     `parent`*: KaitaiStruct
-    `isSignedInst`: bool
-    `isSignedInstFlag`: bool
     `isEncryptedInst`: bool
     `isEncryptedInstFlag`: bool
+    `isSignedInst`: bool
+    `isSignedInstFlag`: bool
     `isTcmCapableInst`: bool
     `isTcmCapableInstFlag`: bool
 
 proc read*(_: typedesc[AndroidNanoappHeader], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): AndroidNanoappHeader
 
-proc isSigned*(this: AndroidNanoappHeader): bool
 proc isEncrypted*(this: AndroidNanoappHeader): bool
+proc isSigned*(this: AndroidNanoappHeader): bool
 proc isTcmCapable*(this: AndroidNanoappHeader): bool
 
 
@@ -57,14 +57,6 @@ proc read*(_: typedesc[AndroidNanoappHeader], io: KaitaiStream, root: KaitaiStru
   let reservedExpr = this.io.readBytes(int(6))
   this.reserved = reservedExpr
 
-proc isSigned(this: AndroidNanoappHeader): bool = 
-  if this.isSignedInstFlag:
-    return this.isSignedInst
-  let isSignedInstExpr = bool((this.flags and 1) != 0)
-  this.isSignedInst = isSignedInstExpr
-  this.isSignedInstFlag = true
-  return this.isSignedInst
-
 proc isEncrypted(this: AndroidNanoappHeader): bool = 
   if this.isEncryptedInstFlag:
     return this.isEncryptedInst
@@ -72,6 +64,14 @@ proc isEncrypted(this: AndroidNanoappHeader): bool =
   this.isEncryptedInst = isEncryptedInstExpr
   this.isEncryptedInstFlag = true
   return this.isEncryptedInst
+
+proc isSigned(this: AndroidNanoappHeader): bool = 
+  if this.isSignedInstFlag:
+    return this.isSignedInst
+  let isSignedInstExpr = bool((this.flags and 1) != 0)
+  this.isSignedInst = isSignedInstExpr
+  this.isSignedInstFlag = true
+  return this.isSignedInst
 
 proc isTcmCapable(this: AndroidNanoappHeader): bool = 
   if this.isTcmCapableInstFlag:

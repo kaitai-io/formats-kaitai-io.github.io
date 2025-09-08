@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -21,30 +21,113 @@ end
 # @see https://web.archive.org/web/20190127154419/https://openwrt.org/docs/techref/header Source
 # @see https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/mtd/partitions/brcm,trx.txt Source
 class BroadcomTrx < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
     self
   end
-  class Revision < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  class Header < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @major = @_io.read_u1
-      @minor = @_io.read_u1
+      @magic = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([72, 68, 82, 48].pack('C*'), @magic, @_io, "/types/header/seq/0") if not @magic == [72, 68, 82, 48].pack('C*')
+      @len = @_io.read_u4le
+      @crc32 = @_io.read_u4le
+      @version = @_io.read_u2le
+      @flags = Flags.new(@_io, self, @_root)
+      @partitions = []
+      i = 0
+      begin
+        _ = Partition.new(@_io, self, @_root, i)
+        @partitions << _
+        i += 1
+      end until  ((i >= 4) || (!(_.is_present))) 
       self
     end
-    attr_reader :major
-    attr_reader :minor
+    class Flags < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = nil)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        @flags = []
+        (16).times { |i|
+          @flags << @_io.read_bits_int_le(1) != 0
+        }
+        self
+      end
+      attr_reader :flags
+    end
+    class Partition < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = nil, idx)
+        super(_io, _parent, _root)
+        @idx = idx
+        _read
+      end
+
+      def _read
+        @ofs_body = @_io.read_u4le
+        self
+      end
+      def body
+        return @body unless @body.nil?
+        if is_present
+          io = _root._io
+          _pos = io.pos
+          io.seek(ofs_body)
+          @body = io.read_bytes(len_body)
+          io.seek(_pos)
+        end
+        @body
+      end
+      def is_last
+        return @is_last unless @is_last.nil?
+        if is_present
+          @is_last =  ((idx == _parent.partitions.length - 1) || (!(_parent.partitions[idx + 1].is_present))) 
+        end
+        @is_last
+      end
+      def is_present
+        return @is_present unless @is_present.nil?
+        @is_present = ofs_body != 0
+        @is_present
+      end
+      def len_body
+        return @len_body unless @len_body.nil?
+        if is_present
+          @len_body = (is_last ? _root._io.size - ofs_body : _parent.partitions[idx + 1].ofs_body)
+        end
+        @len_body
+      end
+      attr_reader :ofs_body
+      attr_reader :idx
+    end
+    attr_reader :magic
+
+    ##
+    # Length of file including header
+    attr_reader :len
+
+    ##
+    # CRC from `version` (??? todo: see the original and disambiguate) to end of file
+    attr_reader :crc32
+    attr_reader :version
+    attr_reader :flags
+
+    ##
+    # Offsets of partitions from start of header
+    attr_reader :partitions
   end
-  class Version < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  class Revision < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -52,27 +135,23 @@ class BroadcomTrx < Kaitai::Struct::Struct
     def _read
       @major = @_io.read_u1
       @minor = @_io.read_u1
-      @patch = @_io.read_u1
-      @tweak = @_io.read_u1
       self
     end
     attr_reader :major
     attr_reader :minor
-    attr_reader :patch
-    attr_reader :tweak
   end
 
   ##
   # A safeguard against installation of firmware to an incompatible device
   class Tail < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
       @version = Version.new(@_io, self, @_root)
-      @product_id = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(12), 0, false)).force_encoding("utf-8")
+      @product_id = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(12), 0, false)).force_encoding("UTF-8")
       @comp_hw = []
       (4).times { |i|
         @comp_hw << HwCompInfo.new(@_io, self, @_root)
@@ -81,7 +160,7 @@ class BroadcomTrx < Kaitai::Struct::Struct
       self
     end
     class HwCompInfo < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
@@ -105,102 +184,23 @@ class BroadcomTrx < Kaitai::Struct::Struct
     attr_reader :comp_hw
     attr_reader :reserved
   end
-  class Header < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  class Version < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @magic = @_io.read_bytes(4)
-      raise Kaitai::Struct::ValidationNotEqualError.new([72, 68, 82, 48].pack('C*'), magic, _io, "/types/header/seq/0") if not magic == [72, 68, 82, 48].pack('C*')
-      @len = @_io.read_u4le
-      @crc32 = @_io.read_u4le
-      @version = @_io.read_u2le
-      @flags = Flags.new(@_io, self, @_root)
-      @partitions = []
-      i = 0
-      begin
-        _ = Partition.new(@_io, self, @_root, i)
-        @partitions << _
-        i += 1
-      end until  ((i >= 4) || (!(_.is_present))) 
+      @major = @_io.read_u1
+      @minor = @_io.read_u1
+      @patch = @_io.read_u1
+      @tweak = @_io.read_u1
       self
     end
-    class Partition < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self, idx)
-        super(_io, _parent, _root)
-        @idx = idx
-        _read
-      end
-
-      def _read
-        @ofs_body = @_io.read_u4le
-        self
-      end
-      def is_present
-        return @is_present unless @is_present.nil?
-        @is_present = ofs_body != 0
-        @is_present
-      end
-      def is_last
-        return @is_last unless @is_last.nil?
-        if is_present
-          @is_last =  ((idx == (_parent.partitions.length - 1)) || (!(_parent.partitions[(idx + 1)].is_present))) 
-        end
-        @is_last
-      end
-      def len_body
-        return @len_body unless @len_body.nil?
-        if is_present
-          @len_body = (is_last ? (_root._io.size - ofs_body) : _parent.partitions[(idx + 1)].ofs_body)
-        end
-        @len_body
-      end
-      def body
-        return @body unless @body.nil?
-        if is_present
-          io = _root._io
-          _pos = io.pos
-          io.seek(ofs_body)
-          @body = io.read_bytes(len_body)
-          io.seek(_pos)
-        end
-        @body
-      end
-      attr_reader :ofs_body
-      attr_reader :idx
-    end
-    class Flags < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
-
-      def _read
-        @flags = []
-        (16).times { |i|
-          @flags << @_io.read_bits_int_le(1) != 0
-        }
-        self
-      end
-      attr_reader :flags
-    end
-    attr_reader :magic
-
-    ##
-    # Length of file including header
-    attr_reader :len
-
-    ##
-    # CRC from `version` (??? todo: see the original and disambiguate) to end of file
-    attr_reader :crc32
-    attr_reader :version
-    attr_reader :flags
-
-    ##
-    # Offsets of partitions from start of header
-    attr_reader :partitions
+    attr_reader :major
+    attr_reader :minor
+    attr_reader :patch
+    attr_reader :tweak
   end
   def header
     return @header unless @header.nil?
@@ -213,7 +213,7 @@ class BroadcomTrx < Kaitai::Struct::Struct
   def tail
     return @tail unless @tail.nil?
     _pos = @_io.pos
-    @_io.seek((_io.size - 64))
+    @_io.seek(_io.size - 64)
     @tail = Tail.new(@_io, self, @_root)
     @_io.seek(_pos)
     @tail

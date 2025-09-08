@@ -9,8 +9,8 @@
 
 namespace {
     class SomeIp extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \SomeIp $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\SomeIp $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -18,12 +18,12 @@ namespace {
             $this->_m_header = new \SomeIp\Header($this->_io, $this, $this->_root);
             switch ($this->header()->messageId()->value()) {
                 case 4294934784:
-                    $this->_m__raw_payload = $this->_io->readBytes(($this->header()->length() - 8));
+                    $this->_m__raw_payload = $this->_io->readBytes($this->header()->length() - 8);
                     $_io__raw_payload = new \Kaitai\Struct\Stream($this->_m__raw_payload);
                     $this->_m_payload = new \SomeIpSd($_io__raw_payload);
                     break;
                 default:
-                    $this->_m_payload = $this->_io->readBytes(($this->header()->length() - 8));
+                    $this->_m_payload = $this->_io->readBytes($this->header()->length() - 8);
                     break;
             }
         }
@@ -38,7 +38,7 @@ namespace {
 
 namespace SomeIp {
     class Header extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \SomeIp $_parent = null, \SomeIp $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\SomeIp $_parent = null, ?\SomeIp $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -134,7 +134,7 @@ namespace SomeIp {
 
 namespace SomeIp\Header {
     class MessageId extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \SomeIp\Header $_parent = null, \SomeIp $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\SomeIp\Header $_parent = null, ?\SomeIp $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -197,7 +197,7 @@ namespace SomeIp\Header {
 
 namespace SomeIp\Header {
     class RequestId extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \SomeIp\Header $_parent = null, \SomeIp $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\SomeIp\Header $_parent = null, ?\SomeIp $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -239,6 +239,12 @@ namespace SomeIp\Header {
         const ERROR = 129;
         const RESPONSE_ACK = 192;
         const ERROR_ACK = 193;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 64 => true, 65 => true, 66 => true, 128 => true, 129 => true, 192 => true, 193 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
@@ -255,5 +261,11 @@ namespace SomeIp\Header {
         const WRONG_INTERFACE_VERSION = 8;
         const MALFORMED_MESSAGE = 9;
         const WRONG_MESSAGE_TYPE = 10;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 7 => true, 8 => true, 9 => true, 10 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

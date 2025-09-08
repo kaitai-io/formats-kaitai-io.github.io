@@ -17,16 +17,16 @@
 
 namespace {
     class AllegroDat extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \AllegroDat $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\AllegroDat $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_packMagic = $this->_io->readU4be();
             $this->_m_datMagic = $this->_io->readBytes(4);
-            if (!($this->datMagic() == "\x41\x4C\x4C\x2E")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x41\x4C\x4C\x2E", $this->datMagic(), $this->_io(), "/seq/1");
+            if (!($this->_m_datMagic == "\x41\x4C\x4C\x2E")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x41\x4C\x4C\x2E", $this->_m_datMagic, $this->_io, "/seq/1");
             }
             $this->_m_numObjects = $this->_io->readU4be();
             $this->_m_objects = [];
@@ -46,33 +46,9 @@ namespace {
     }
 }
 
-/**
- * Simple monochrome monospaced font, 95 characters, 8x16 px
- * characters.
- */
-
-namespace AllegroDat {
-    class DatFont16 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \AllegroDat\DatFont $_parent = null, \AllegroDat $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_chars = [];
-            $n = 95;
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_chars[] = $this->_io->readBytes(16);
-            }
-        }
-        protected $_m_chars;
-        public function chars() { return $this->_m_chars; }
-    }
-}
-
 namespace AllegroDat {
     class DatBitmap extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \AllegroDat\DatObject $_parent = null, \AllegroDat $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\AllegroDat\DatObject $_parent = null, ?\AllegroDat $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -96,7 +72,7 @@ namespace AllegroDat {
 
 namespace AllegroDat {
     class DatFont extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \AllegroDat\DatObject $_parent = null, \AllegroDat $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\AllegroDat\DatObject $_parent = null, ?\AllegroDat $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -104,14 +80,14 @@ namespace AllegroDat {
         private function _read() {
             $this->_m_fontSize = $this->_io->readS2be();
             switch ($this->fontSize()) {
-                case 8:
-                    $this->_m_body = new \AllegroDat\DatFont8($this->_io, $this, $this->_root);
+                case 0:
+                    $this->_m_body = new \AllegroDat\DatFont39($this->_io, $this, $this->_root);
                     break;
                 case 16:
                     $this->_m_body = new \AllegroDat\DatFont16($this->_io, $this, $this->_root);
                     break;
-                case 0:
-                    $this->_m_body = new \AllegroDat\DatFont39($this->_io, $this, $this->_root);
+                case 8:
+                    $this->_m_body = new \AllegroDat\DatFont8($this->_io, $this, $this->_root);
                     break;
             }
         }
@@ -123,13 +99,122 @@ namespace AllegroDat {
 }
 
 /**
+ * Simple monochrome monospaced font, 95 characters, 8x16 px
+ * characters.
+ */
+
+namespace AllegroDat {
+    class DatFont16 extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\AllegroDat\DatFont $_parent = null, ?\AllegroDat $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_chars = [];
+            $n = 95;
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_chars[] = $this->_io->readBytes(16);
+            }
+        }
+        protected $_m_chars;
+        public function chars() { return $this->_m_chars; }
+    }
+}
+
+/**
+ * New bitmap font format introduced since Allegro 3.9: allows
+ * flexible designation of character ranges, 8-bit colored
+ * characters, etc.
+ */
+
+namespace AllegroDat {
+    class DatFont39 extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\AllegroDat\DatFont $_parent = null, ?\AllegroDat $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_numRanges = $this->_io->readS2be();
+            $this->_m_ranges = [];
+            $n = $this->numRanges();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_ranges[] = new \AllegroDat\DatFont39\Range($this->_io, $this, $this->_root);
+            }
+        }
+        protected $_m_numRanges;
+        protected $_m_ranges;
+        public function numRanges() { return $this->_m_numRanges; }
+        public function ranges() { return $this->_m_ranges; }
+    }
+}
+
+namespace AllegroDat\DatFont39 {
+    class FontChar extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\AllegroDat\DatFont39\Range $_parent = null, ?\AllegroDat $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_width = $this->_io->readU2be();
+            $this->_m_height = $this->_io->readU2be();
+            $this->_m_body = $this->_io->readBytes($this->width() * $this->height());
+        }
+        protected $_m_width;
+        protected $_m_height;
+        protected $_m_body;
+        public function width() { return $this->_m_width; }
+        public function height() { return $this->_m_height; }
+        public function body() { return $this->_m_body; }
+    }
+}
+
+namespace AllegroDat\DatFont39 {
+    class Range extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\AllegroDat\DatFont39 $_parent = null, ?\AllegroDat $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_mono = $this->_io->readU1();
+            $this->_m_startChar = $this->_io->readU4be();
+            $this->_m_endChar = $this->_io->readU4be();
+            $this->_m_chars = [];
+            $n = ($this->endChar() - $this->startChar()) + 1;
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_chars[] = new \AllegroDat\DatFont39\FontChar($this->_io, $this, $this->_root);
+            }
+        }
+        protected $_m_mono;
+        protected $_m_startChar;
+        protected $_m_endChar;
+        protected $_m_chars;
+        public function mono() { return $this->_m_mono; }
+
+        /**
+         * First character in range
+         */
+        public function startChar() { return $this->_m_startChar; }
+
+        /**
+         * Last character in range (inclusive)
+         */
+        public function endChar() { return $this->_m_endChar; }
+        public function chars() { return $this->_m_chars; }
+    }
+}
+
+/**
  * Simple monochrome monospaced font, 95 characters, 8x8 px
  * characters.
  */
 
 namespace AllegroDat {
     class DatFont8 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \AllegroDat\DatFont $_parent = null, \AllegroDat $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\AllegroDat\DatFont $_parent = null, ?\AllegroDat $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -148,7 +233,7 @@ namespace AllegroDat {
 
 namespace AllegroDat {
     class DatObject extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \AllegroDat $_parent = null, \AllegroDat $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\AllegroDat $_parent = null, ?\AllegroDat $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -169,15 +254,15 @@ namespace AllegroDat {
                     $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
                     $this->_m_body = new \AllegroDat\DatBitmap($_io__raw_body, $this, $this->_root);
                     break;
-                case "RLE ":
-                    $this->_m__raw_body = $this->_io->readBytes($this->lenCompressed());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \AllegroDat\DatRleSprite($_io__raw_body, $this, $this->_root);
-                    break;
                 case "FONT":
                     $this->_m__raw_body = $this->_io->readBytes($this->lenCompressed());
                     $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
                     $this->_m_body = new \AllegroDat\DatFont($_io__raw_body, $this, $this->_root);
+                    break;
+                case "RLE ":
+                    $this->_m__raw_body = $this->_io->readBytes($this->lenCompressed());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \AllegroDat\DatRleSprite($_io__raw_body, $this, $this->_root);
                     break;
                 default:
                     $this->_m_body = $this->_io->readBytes($this->lenCompressed());
@@ -204,94 +289,36 @@ namespace AllegroDat {
     }
 }
 
-/**
- * New bitmap font format introduced since Allegro 3.9: allows
- * flexible designation of character ranges, 8-bit colored
- * characters, etc.
- */
-
 namespace AllegroDat {
-    class DatFont39 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \AllegroDat\DatFont $_parent = null, \AllegroDat $_root = null) {
+    class DatRleSprite extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\AllegroDat\DatObject $_parent = null, ?\AllegroDat $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_numRanges = $this->_io->readS2be();
-            $this->_m_ranges = [];
-            $n = $this->numRanges();
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_ranges[] = new \AllegroDat\DatFont39\Range($this->_io, $this, $this->_root);
-            }
-        }
-        protected $_m_numRanges;
-        protected $_m_ranges;
-        public function numRanges() { return $this->_m_numRanges; }
-        public function ranges() { return $this->_m_ranges; }
-    }
-}
-
-namespace AllegroDat\DatFont39 {
-    class Range extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \AllegroDat\DatFont39 $_parent = null, \AllegroDat $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_mono = $this->_io->readU1();
-            $this->_m_startChar = $this->_io->readU4be();
-            $this->_m_endChar = $this->_io->readU4be();
-            $this->_m_chars = [];
-            $n = (($this->endChar() - $this->startChar()) + 1);
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_chars[] = new \AllegroDat\DatFont39\FontChar($this->_io, $this, $this->_root);
-            }
-        }
-        protected $_m_mono;
-        protected $_m_startChar;
-        protected $_m_endChar;
-        protected $_m_chars;
-        public function mono() { return $this->_m_mono; }
-
-        /**
-         * First character in range
-         */
-        public function startChar() { return $this->_m_startChar; }
-
-        /**
-         * Last character in range (inclusive)
-         */
-        public function endChar() { return $this->_m_endChar; }
-        public function chars() { return $this->_m_chars; }
-    }
-}
-
-namespace AllegroDat\DatFont39 {
-    class FontChar extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \AllegroDat\DatFont39\Range $_parent = null, \AllegroDat $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
+            $this->_m_bitsPerPixel = $this->_io->readS2be();
             $this->_m_width = $this->_io->readU2be();
             $this->_m_height = $this->_io->readU2be();
-            $this->_m_body = $this->_io->readBytes(($this->width() * $this->height()));
+            $this->_m_lenImage = $this->_io->readU4be();
+            $this->_m_image = $this->_io->readBytesFull();
         }
+        protected $_m_bitsPerPixel;
         protected $_m_width;
         protected $_m_height;
-        protected $_m_body;
+        protected $_m_lenImage;
+        protected $_m_image;
+        public function bitsPerPixel() { return $this->_m_bitsPerPixel; }
         public function width() { return $this->_m_width; }
         public function height() { return $this->_m_height; }
-        public function body() { return $this->_m_body; }
+        public function lenImage() { return $this->_m_lenImage; }
+        public function image() { return $this->_m_image; }
     }
 }
 
 namespace AllegroDat {
     class Property extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \AllegroDat\DatObject $_parent = null, \AllegroDat $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\AllegroDat\DatObject $_parent = null, ?\AllegroDat $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -327,34 +354,13 @@ namespace AllegroDat {
 }
 
 namespace AllegroDat {
-    class DatRleSprite extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \AllegroDat\DatObject $_parent = null, \AllegroDat $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_bitsPerPixel = $this->_io->readS2be();
-            $this->_m_width = $this->_io->readU2be();
-            $this->_m_height = $this->_io->readU2be();
-            $this->_m_lenImage = $this->_io->readU4be();
-            $this->_m_image = $this->_io->readBytesFull();
-        }
-        protected $_m_bitsPerPixel;
-        protected $_m_width;
-        protected $_m_height;
-        protected $_m_lenImage;
-        protected $_m_image;
-        public function bitsPerPixel() { return $this->_m_bitsPerPixel; }
-        public function width() { return $this->_m_width; }
-        public function height() { return $this->_m_height; }
-        public function lenImage() { return $this->_m_lenImage; }
-        public function image() { return $this->_m_image; }
-    }
-}
-
-namespace AllegroDat {
     class PackEnum {
         const UNPACKED = 1936484398;
+
+        private const _VALUES = [1936484398 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

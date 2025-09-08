@@ -55,13 +55,18 @@ const (
 	Asn1Der_TypeTag__Sequence30 Asn1Der_TypeTag = 48
 	Asn1Der_TypeTag__Set Asn1Der_TypeTag = 49
 )
+var values_Asn1Der_TypeTag = map[Asn1Der_TypeTag]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}, 10: {}, 11: {}, 12: {}, 13: {}, 16: {}, 19: {}, 22: {}, 48: {}, 49: {}}
+func (v Asn1Der_TypeTag) isDefined() bool {
+	_, ok := values_Asn1Der_TypeTag[v]
+	return ok
+}
 type Asn1Der struct {
 	TypeTag Asn1Der_TypeTag
 	Len *Asn1Der_LenEncoded
 	Body interface{}
 	_io *kaitai.Stream
 	_root *Asn1Der
-	_parent interface{}
+	_parent kaitai.Struct
 	_raw_Body []byte
 }
 func NewAsn1Der() *Asn1Der {
@@ -69,7 +74,11 @@ func NewAsn1Der() *Asn1Der {
 	}
 }
 
-func (this *Asn1Der) Read(io *kaitai.Stream, parent interface{}, root *Asn1Der) (err error) {
+func (this Asn1Der) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Asn1Der) Read(io *kaitai.Stream, parent kaitai.Struct, root *Asn1Der) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -86,7 +95,7 @@ func (this *Asn1Der) Read(io *kaitai.Stream, parent interface{}, root *Asn1Der) 
 	}
 	this.Len = tmp2
 	switch (this.TypeTag) {
-	case Asn1Der_TypeTag__PrintableString:
+	case Asn1Der_TypeTag__ObjectId:
 		tmp3, err := this.Len.Result()
 		if err != nil {
 			return err
@@ -98,13 +107,13 @@ func (this *Asn1Der) Read(io *kaitai.Stream, parent interface{}, root *Asn1Der) 
 		tmp4 = tmp4
 		this._raw_Body = tmp4
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp5 := NewAsn1Der_BodyPrintableString()
+		tmp5 := NewAsn1Der_BodyObjectId()
 		err = tmp5.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp5
-	case Asn1Der_TypeTag__Sequence10:
+	case Asn1Der_TypeTag__PrintableString:
 		tmp6, err := this.Len.Result()
 		if err != nil {
 			return err
@@ -116,13 +125,13 @@ func (this *Asn1Der) Read(io *kaitai.Stream, parent interface{}, root *Asn1Der) 
 		tmp7 = tmp7
 		this._raw_Body = tmp7
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp8 := NewAsn1Der_BodySequence()
+		tmp8 := NewAsn1Der_BodyPrintableString()
 		err = tmp8.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp8
-	case Asn1Der_TypeTag__Set:
+	case Asn1Der_TypeTag__Sequence10:
 		tmp9, err := this.Len.Result()
 		if err != nil {
 			return err
@@ -158,7 +167,7 @@ func (this *Asn1Der) Read(io *kaitai.Stream, parent interface{}, root *Asn1Der) 
 			return err
 		}
 		this.Body = tmp14
-	case Asn1Der_TypeTag__Utf8string:
+	case Asn1Der_TypeTag__Set:
 		tmp15, err := this.Len.Result()
 		if err != nil {
 			return err
@@ -170,13 +179,13 @@ func (this *Asn1Der) Read(io *kaitai.Stream, parent interface{}, root *Asn1Der) 
 		tmp16 = tmp16
 		this._raw_Body = tmp16
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp17 := NewAsn1Der_BodyUtf8string()
+		tmp17 := NewAsn1Der_BodySequence()
 		err = tmp17.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp17
-	case Asn1Der_TypeTag__ObjectId:
+	case Asn1Der_TypeTag__Utf8string:
 		tmp18, err := this.Len.Result()
 		if err != nil {
 			return err
@@ -188,7 +197,7 @@ func (this *Asn1Der) Read(io *kaitai.Stream, parent interface{}, root *Asn1Der) 
 		tmp19 = tmp19
 		this._raw_Body = tmp19
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp20 := NewAsn1Der_BodyObjectId()
+		tmp20 := NewAsn1Der_BodyUtf8string()
 		err = tmp20.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
@@ -206,63 +215,6 @@ func (this *Asn1Der) Read(io *kaitai.Stream, parent interface{}, root *Asn1Der) 
 		tmp22 = tmp22
 		this._raw_Body = tmp22
 	}
-	return err
-}
-type Asn1Der_BodySequence struct {
-	Entries []*Asn1Der
-	_io *kaitai.Stream
-	_root *Asn1Der
-	_parent *Asn1Der
-}
-func NewAsn1Der_BodySequence() *Asn1Der_BodySequence {
-	return &Asn1Der_BodySequence{
-	}
-}
-
-func (this *Asn1Der_BodySequence) Read(io *kaitai.Stream, parent *Asn1Der, root *Asn1Der) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	for i := 1;; i++ {
-		tmp23, err := this._io.EOF()
-		if err != nil {
-			return err
-		}
-		if tmp23 {
-			break
-		}
-		tmp24 := NewAsn1Der()
-		err = tmp24.Read(this._io, this, nil)
-		if err != nil {
-			return err
-		}
-		this.Entries = append(this.Entries, tmp24)
-	}
-	return err
-}
-type Asn1Der_BodyUtf8string struct {
-	Str string
-	_io *kaitai.Stream
-	_root *Asn1Der
-	_parent *Asn1Der
-}
-func NewAsn1Der_BodyUtf8string() *Asn1Der_BodyUtf8string {
-	return &Asn1Der_BodyUtf8string{
-	}
-}
-
-func (this *Asn1Der_BodyUtf8string) Read(io *kaitai.Stream, parent *Asn1Der, root *Asn1Der) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp25, err := this._io.ReadBytesFull()
-	if err != nil {
-		return err
-	}
-	tmp25 = tmp25
-	this.Str = string(tmp25)
 	return err
 }
 
@@ -285,43 +237,140 @@ func NewAsn1Der_BodyObjectId() *Asn1Der_BodyObjectId {
 	}
 }
 
+func (this Asn1Der_BodyObjectId) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Asn1Der_BodyObjectId) Read(io *kaitai.Stream, parent *Asn1Der, root *Asn1Der) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp26, err := this._io.ReadU1()
+	tmp23, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.FirstAndSecond = tmp26
-	tmp27, err := this._io.ReadBytesFull()
+	this.FirstAndSecond = tmp23
+	tmp24, err := this._io.ReadBytesFull()
 	if err != nil {
 		return err
 	}
-	tmp27 = tmp27
-	this.Rest = tmp27
+	tmp24 = tmp24
+	this.Rest = tmp24
 	return err
 }
 func (this *Asn1Der_BodyObjectId) First() (v int, err error) {
 	if (this._f_first) {
 		return this.first, nil
 	}
-	this.first = int((this.FirstAndSecond / 40))
 	this._f_first = true
+	this.first = int(this.FirstAndSecond / 40)
 	return this.first, nil
 }
 func (this *Asn1Der_BodyObjectId) Second() (v int, err error) {
 	if (this._f_second) {
 		return this.second, nil
 	}
-	tmp28 := this.FirstAndSecond % 40
-	if tmp28 < 0 {
-		tmp28 += 40
-	}
-	this.second = int(tmp28)
 	this._f_second = true
+	tmp25 := this.FirstAndSecond % 40
+	if tmp25 < 0 {
+		tmp25 += 40
+	}
+	this.second = int(tmp25)
 	return this.second, nil
+}
+type Asn1Der_BodyPrintableString struct {
+	Str string
+	_io *kaitai.Stream
+	_root *Asn1Der
+	_parent *Asn1Der
+}
+func NewAsn1Der_BodyPrintableString() *Asn1Der_BodyPrintableString {
+	return &Asn1Der_BodyPrintableString{
+	}
+}
+
+func (this Asn1Der_BodyPrintableString) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Asn1Der_BodyPrintableString) Read(io *kaitai.Stream, parent *Asn1Der, root *Asn1Der) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp26, err := this._io.ReadBytesFull()
+	if err != nil {
+		return err
+	}
+	tmp26 = tmp26
+	this.Str = string(tmp26)
+	return err
+}
+type Asn1Der_BodySequence struct {
+	Entries []*Asn1Der
+	_io *kaitai.Stream
+	_root *Asn1Der
+	_parent *Asn1Der
+}
+func NewAsn1Der_BodySequence() *Asn1Der_BodySequence {
+	return &Asn1Der_BodySequence{
+	}
+}
+
+func (this Asn1Der_BodySequence) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Asn1Der_BodySequence) Read(io *kaitai.Stream, parent *Asn1Der, root *Asn1Der) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	for i := 0;; i++ {
+		tmp27, err := this._io.EOF()
+		if err != nil {
+			return err
+		}
+		if tmp27 {
+			break
+		}
+		tmp28 := NewAsn1Der()
+		err = tmp28.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Entries = append(this.Entries, tmp28)
+	}
+	return err
+}
+type Asn1Der_BodyUtf8string struct {
+	Str string
+	_io *kaitai.Stream
+	_root *Asn1Der
+	_parent *Asn1Der
+}
+func NewAsn1Der_BodyUtf8string() *Asn1Der_BodyUtf8string {
+	return &Asn1Der_BodyUtf8string{
+	}
+}
+
+func (this Asn1Der_BodyUtf8string) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Asn1Der_BodyUtf8string) Read(io *kaitai.Stream, parent *Asn1Der, root *Asn1Der) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp29, err := this._io.ReadBytesFull()
+	if err != nil {
+		return err
+	}
+	tmp29 = tmp29
+	this.Str = string(tmp29)
+	return err
 }
 type Asn1Der_LenEncoded struct {
 	B1 uint8
@@ -338,29 +387,33 @@ func NewAsn1Der_LenEncoded() *Asn1Der_LenEncoded {
 	}
 }
 
+func (this Asn1Der_LenEncoded) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Asn1Der_LenEncoded) Read(io *kaitai.Stream, parent *Asn1Der, root *Asn1Der) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp29, err := this._io.ReadU1()
+	tmp30, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.B1 = tmp29
+	this.B1 = tmp30
 	if (this.B1 == 130) {
-		tmp30, err := this._io.ReadU2be()
+		tmp31, err := this._io.ReadU2be()
 		if err != nil {
 			return err
 		}
-		this.Int2 = uint16(tmp30)
+		this.Int2 = uint16(tmp31)
 	}
 	if (this.B1 == 129) {
-		tmp31, err := this._io.ReadU1()
+		tmp32, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
-		this.Int1 = tmp31
+		this.Int1 = tmp32
 	}
 	return err
 }
@@ -368,43 +421,19 @@ func (this *Asn1Der_LenEncoded) Result() (v uint16, err error) {
 	if (this._f_result) {
 		return this.result, nil
 	}
-	var tmp32 uint8;
-	if (this.B1 == 129) {
-		tmp32 = this.Int1
-	} else {
-		var tmp33 uint16;
-		if (this.B1 == 130) {
-			tmp33 = this.Int2
-		} else {
-			tmp33 = this.B1
-		}
-		tmp32 = tmp33
-	}
-	this.result = uint16(tmp32)
 	this._f_result = true
+	var tmp33 uint8;
+	if (this.B1 == 129) {
+		tmp33 = this.Int1
+	} else {
+		var tmp34 uint16;
+		if (this.B1 == 130) {
+			tmp34 = this.Int2
+		} else {
+			tmp34 = this.B1
+		}
+		tmp33 = tmp34
+	}
+	this.result = uint16(tmp33)
 	return this.result, nil
-}
-type Asn1Der_BodyPrintableString struct {
-	Str string
-	_io *kaitai.Stream
-	_root *Asn1Der
-	_parent *Asn1Der
-}
-func NewAsn1Der_BodyPrintableString() *Asn1Der_BodyPrintableString {
-	return &Asn1Der_BodyPrintableString{
-	}
-}
-
-func (this *Asn1Der_BodyPrintableString) Read(io *kaitai.Stream, parent *Asn1Der, root *Asn1Der) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp34, err := this._io.ReadBytesFull()
-	if err != nil {
-		return err
-	}
-	tmp34 = tmp34
-	this.Str = string(tmp34)
-	return err
 }

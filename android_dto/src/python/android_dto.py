@@ -1,11 +1,12 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class AndroidDto(KaitaiStruct):
     """Format for Android DTB/DTBO partitions. It's kind of archive with
@@ -24,9 +25,9 @@ class AndroidDto(KaitaiStruct):
        Source - https://android.googlesource.com/platform/system/libufdt/+/refs/tags/android-10.0.0_r47
     """
     def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
+        super(AndroidDto, self).__init__(_io)
         self._parent = _parent
-        self._root = _root if _root else self
+        self._root = _root or self
         self._read()
 
     def _read(self):
@@ -36,11 +37,62 @@ class AndroidDto(KaitaiStruct):
             self.entries.append(AndroidDto.DtTableEntry(self._io, self, self._root))
 
 
+
+    def _fetch_instances(self):
+        pass
+        self.header._fetch_instances()
+        for i in range(len(self.entries)):
+            pass
+            self.entries[i]._fetch_instances()
+
+
+    class DtTableEntry(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(AndroidDto.DtTableEntry, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.dt_size = self._io.read_u4be()
+            self.dt_offset = self._io.read_u4be()
+            self.id = self._io.read_u4be()
+            self.rev = self._io.read_u4be()
+            self.custom = []
+            for i in range(4):
+                self.custom.append(self._io.read_u4be())
+
+
+
+        def _fetch_instances(self):
+            pass
+            for i in range(len(self.custom)):
+                pass
+
+            _ = self.body
+            if hasattr(self, '_m_body'):
+                pass
+
+
+        @property
+        def body(self):
+            """DTB/DTBO file."""
+            if hasattr(self, '_m_body'):
+                return self._m_body
+
+            io = self._root._io
+            _pos = io.pos()
+            io.seek(self.dt_offset)
+            self._m_body = io.read_bytes(self.dt_size)
+            io.seek(_pos)
+            return getattr(self, '_m_body', None)
+
+
     class DtTableHeader(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(AndroidDto.DtTableHeader, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -56,35 +108,8 @@ class AndroidDto(KaitaiStruct):
             self.version = self._io.read_u4be()
 
 
-    class DtTableEntry(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.dt_size = self._io.read_u4be()
-            self.dt_offset = self._io.read_u4be()
-            self.id = self._io.read_u4be()
-            self.rev = self._io.read_u4be()
-            self.custom = []
-            for i in range(4):
-                self.custom.append(self._io.read_u4be())
-
-
-        @property
-        def body(self):
-            """DTB/DTBO file."""
-            if hasattr(self, '_m_body'):
-                return self._m_body
-
-            io = self._root._io
-            _pos = io.pos()
-            io.seek(self.dt_offset)
-            self._m_body = io.read_bytes(self.dt_size)
-            io.seek(_pos)
-            return getattr(self, '_m_body', None)
+        def _fetch_instances(self):
+            pass
 
 
 

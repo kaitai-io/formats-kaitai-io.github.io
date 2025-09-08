@@ -5,7 +5,7 @@
 
 mach_o_fat_t::mach_o_fat_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, mach_o_fat_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     m_fat_archs = 0;
 
     try {
@@ -18,8 +18,8 @@ mach_o_fat_t::mach_o_fat_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, m
 
 void mach_o_fat_t::_read() {
     m_magic = m__io->read_bytes(4);
-    if (!(magic() == std::string("\xCA\xFE\xBA\xBE", 4))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\xCA\xFE\xBA\xBE", 4), magic(), _io(), std::string("/seq/0"));
+    if (!(m_magic == std::string("\xCA\xFE\xBA\xBE", 4))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\xCA\xFE\xBA\xBE", 4), m_magic, m__io, std::string("/seq/0"));
     }
     m_num_fat_arch = m__io->read_u4be();
     m_fat_archs = new std::vector<fat_arch_t*>();
@@ -83,12 +83,12 @@ void mach_o_fat_t::fat_arch_t::_clean_up() {
 mach_o_t* mach_o_fat_t::fat_arch_t::object() {
     if (f_object)
         return m_object;
+    f_object = true;
     std::streampos _pos = m__io->pos();
     m__io->seek(ofs_object());
     m__raw_object = m__io->read_bytes(len_object());
     m__io__raw_object = new kaitai::kstream(m__raw_object);
     m_object = new mach_o_t(m__io__raw_object);
     m__io->seek(_pos);
-    f_object = true;
     return m_object;
 }

@@ -2,13 +2,15 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class android_bootldr_huawei_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -35,10 +37,10 @@
 class android_bootldr_huawei_t : public kaitai::kstruct {
 
 public:
-    class meta_hdr_t;
-    class version_t;
     class image_hdr_t;
     class image_hdr_entry_t;
+    class meta_hdr_t;
+    class version_t;
 
     android_bootldr_huawei_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, android_bootldr_huawei_t* p__root = nullptr);
 
@@ -48,6 +50,99 @@ private:
 
 public:
     ~android_bootldr_huawei_t();
+
+    class image_hdr_t : public kaitai::kstruct {
+
+    public:
+
+        image_hdr_t(kaitai::kstream* p__io, android_bootldr_huawei_t* p__parent = nullptr, android_bootldr_huawei_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~image_hdr_t();
+
+    private:
+        std::unique_ptr<std::vector<std::unique_ptr<image_hdr_entry_t>>> m_entries;
+        android_bootldr_huawei_t* m__root;
+        android_bootldr_huawei_t* m__parent;
+
+    public:
+
+        /**
+         * The C generator program defines `img_header` as a [fixed size
+         * array](https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&id=a68d284aee85#n42)
+         * of `img_header_entry_t` structs with length `MAX_IMAGES` (which is
+         * defined as `16`).
+         * 
+         * This means that technically there will always be 16 `image_hdr`
+         * entries, the first *n* entries being used (filled with real values)
+         * and the rest left unused with all bytes zero.
+         * 
+         * To check if an entry is used, use the `is_used` attribute.
+         */
+        std::vector<std::unique_ptr<image_hdr_entry_t>>* entries() const { return m_entries.get(); }
+        android_bootldr_huawei_t* _root() const { return m__root; }
+        android_bootldr_huawei_t* _parent() const { return m__parent; }
+    };
+
+    class image_hdr_entry_t : public kaitai::kstruct {
+
+    public:
+
+        image_hdr_entry_t(kaitai::kstream* p__io, android_bootldr_huawei_t::image_hdr_t* p__parent = nullptr, android_bootldr_huawei_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~image_hdr_entry_t();
+
+    private:
+        bool f_body;
+        std::string m_body;
+        bool n_body;
+
+    public:
+        bool _is_null_body() { body(); return n_body; };
+
+    private:
+
+    public:
+        std::string body();
+
+    private:
+        bool f_is_used;
+        bool m_is_used;
+
+    public:
+
+        /**
+         * \sa https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&id=a68d284aee85#n119 Source
+         */
+        bool is_used();
+
+    private:
+        std::string m_name;
+        uint32_t m_ofs_body;
+        uint32_t m_len_body;
+        android_bootldr_huawei_t* m__root;
+        android_bootldr_huawei_t::image_hdr_t* m__parent;
+
+    public:
+
+        /**
+         * partition name
+         */
+        std::string name() const { return m_name; }
+        uint32_t ofs_body() const { return m_ofs_body; }
+        uint32_t len_body() const { return m_len_body; }
+        android_bootldr_huawei_t* _root() const { return m__root; }
+        android_bootldr_huawei_t::image_hdr_t* _parent() const { return m__parent; }
+    };
 
     class meta_hdr_t : public kaitai::kstruct {
 
@@ -105,99 +200,6 @@ public:
         uint16_t minor() const { return m_minor; }
         android_bootldr_huawei_t* _root() const { return m__root; }
         android_bootldr_huawei_t::meta_hdr_t* _parent() const { return m__parent; }
-    };
-
-    class image_hdr_t : public kaitai::kstruct {
-
-    public:
-
-        image_hdr_t(kaitai::kstream* p__io, android_bootldr_huawei_t* p__parent = nullptr, android_bootldr_huawei_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~image_hdr_t();
-
-    private:
-        std::unique_ptr<std::vector<std::unique_ptr<image_hdr_entry_t>>> m_entries;
-        android_bootldr_huawei_t* m__root;
-        android_bootldr_huawei_t* m__parent;
-
-    public:
-
-        /**
-         * The C generator program defines `img_header` as a [fixed size
-         * array](https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&id=a68d284aee85#n42)
-         * of `img_header_entry_t` structs with length `MAX_IMAGES` (which is
-         * defined as `16`).
-         * 
-         * This means that technically there will always be 16 `image_hdr`
-         * entries, the first *n* entries being used (filled with real values)
-         * and the rest left unused with all bytes zero.
-         * 
-         * To check if an entry is used, use the `is_used` attribute.
-         */
-        std::vector<std::unique_ptr<image_hdr_entry_t>>* entries() const { return m_entries.get(); }
-        android_bootldr_huawei_t* _root() const { return m__root; }
-        android_bootldr_huawei_t* _parent() const { return m__parent; }
-    };
-
-    class image_hdr_entry_t : public kaitai::kstruct {
-
-    public:
-
-        image_hdr_entry_t(kaitai::kstream* p__io, android_bootldr_huawei_t::image_hdr_t* p__parent = nullptr, android_bootldr_huawei_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~image_hdr_entry_t();
-
-    private:
-        bool f_is_used;
-        bool m_is_used;
-
-    public:
-
-        /**
-         * \sa https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&id=a68d284aee85#n119 Source
-         */
-        bool is_used();
-
-    private:
-        bool f_body;
-        std::string m_body;
-        bool n_body;
-
-    public:
-        bool _is_null_body() { body(); return n_body; };
-
-    private:
-
-    public:
-        std::string body();
-
-    private:
-        std::string m_name;
-        uint32_t m_ofs_body;
-        uint32_t m_len_body;
-        android_bootldr_huawei_t* m__root;
-        android_bootldr_huawei_t::image_hdr_t* m__parent;
-
-    public:
-
-        /**
-         * partition name
-         */
-        std::string name() const { return m_name; }
-        uint32_t ofs_body() const { return m_ofs_body; }
-        uint32_t len_body() const { return m_len_body; }
-        android_bootldr_huawei_t* _root() const { return m__root; }
-        android_bootldr_huawei_t::image_hdr_t* _parent() const { return m__parent; }
     };
 
 private:

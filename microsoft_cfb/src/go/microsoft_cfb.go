@@ -11,21 +11,25 @@ type MicrosoftCfb struct {
 	Header *MicrosoftCfb_CfbHeader
 	_io *kaitai.Stream
 	_root *MicrosoftCfb
-	_parent interface{}
+	_parent kaitai.Struct
 	_raw_fat []byte
-	_f_sectorSize bool
-	sectorSize int
-	_f_fat bool
-	fat *MicrosoftCfb_FatEntries
 	_f_dir bool
 	dir *MicrosoftCfb_DirEntry
+	_f_fat bool
+	fat *MicrosoftCfb_FatEntries
+	_f_sectorSize bool
+	sectorSize int
 }
 func NewMicrosoftCfb() *MicrosoftCfb {
 	return &MicrosoftCfb{
 	}
 }
 
-func (this *MicrosoftCfb) Read(io *kaitai.Stream, parent interface{}, root *MicrosoftCfb) (err error) {
+func (this MicrosoftCfb) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *MicrosoftCfb) Read(io *kaitai.Stream, parent kaitai.Struct, root *MicrosoftCfb) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -38,18 +42,11 @@ func (this *MicrosoftCfb) Read(io *kaitai.Stream, parent interface{}, root *Micr
 	this.Header = tmp1
 	return err
 }
-func (this *MicrosoftCfb) SectorSize() (v int, err error) {
-	if (this._f_sectorSize) {
-		return this.sectorSize, nil
+func (this *MicrosoftCfb) Dir() (v *MicrosoftCfb_DirEntry, err error) {
+	if (this._f_dir) {
+		return this.dir, nil
 	}
-	this.sectorSize = int((1 << this.Header.SectorShift))
-	this._f_sectorSize = true
-	return this.sectorSize, nil
-}
-func (this *MicrosoftCfb) Fat() (v *MicrosoftCfb_FatEntries, err error) {
-	if (this._f_fat) {
-		return this.fat, nil
-	}
+	this._f_dir = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
@@ -58,64 +55,69 @@ func (this *MicrosoftCfb) Fat() (v *MicrosoftCfb_FatEntries, err error) {
 	if err != nil {
 		return nil, err
 	}
-	_, err = this._io.Seek(int64(tmp2), io.SeekStart)
+	_, err = this._io.Seek(int64((this.Header.OfsDir + 1) * tmp2), io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
-	tmp3, err := this.SectorSize()
+	tmp3 := NewMicrosoftCfb_DirEntry()
+	err = tmp3.Read(this._io, this, this._root)
 	if err != nil {
 		return nil, err
 	}
-	tmp4, err := this._io.ReadBytes(int((this.Header.SizeFat * tmp3)))
-	if err != nil {
-		return nil, err
-	}
-	tmp4 = tmp4
-	this._raw_fat = tmp4
-	_io__raw_fat := kaitai.NewStream(bytes.NewReader(this._raw_fat))
-	tmp5 := NewMicrosoftCfb_FatEntries()
-	err = tmp5.Read(_io__raw_fat, this, this._root)
-	if err != nil {
-		return nil, err
-	}
-	this.fat = tmp5
+	this.dir = tmp3
 	_, err = this._io.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
-	this._f_fat = true
-	this._f_fat = true
-	return this.fat, nil
+	return this.dir, nil
 }
-func (this *MicrosoftCfb) Dir() (v *MicrosoftCfb_DirEntry, err error) {
-	if (this._f_dir) {
-		return this.dir, nil
+func (this *MicrosoftCfb) Fat() (v *MicrosoftCfb_FatEntries, err error) {
+	if (this._f_fat) {
+		return this.fat, nil
 	}
+	this._f_fat = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
 	}
-	tmp6, err := this.SectorSize()
+	tmp4, err := this.SectorSize()
 	if err != nil {
 		return nil, err
 	}
-	_, err = this._io.Seek(int64(((this.Header.OfsDir + 1) * tmp6)), io.SeekStart)
+	_, err = this._io.Seek(int64(tmp4), io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
-	tmp7 := NewMicrosoftCfb_DirEntry()
-	err = tmp7.Read(this._io, this, this._root)
+	tmp5, err := this.SectorSize()
 	if err != nil {
 		return nil, err
 	}
-	this.dir = tmp7
+	tmp6, err := this._io.ReadBytes(int(this.Header.SizeFat * tmp5))
+	if err != nil {
+		return nil, err
+	}
+	tmp6 = tmp6
+	this._raw_fat = tmp6
+	_io__raw_fat := kaitai.NewStream(bytes.NewReader(this._raw_fat))
+	tmp7 := NewMicrosoftCfb_FatEntries()
+	err = tmp7.Read(_io__raw_fat, this, this._root)
+	if err != nil {
+		return nil, err
+	}
+	this.fat = tmp7
 	_, err = this._io.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
-	this._f_dir = true
-	this._f_dir = true
-	return this.dir, nil
+	return this.fat, nil
+}
+func (this *MicrosoftCfb) SectorSize() (v int, err error) {
+	if (this._f_sectorSize) {
+		return this.sectorSize, nil
+	}
+	this._f_sectorSize = true
+	this.sectorSize = int(1 << this.Header.SectorShift)
+	return this.sectorSize, nil
 }
 type MicrosoftCfb_CfbHeader struct {
 	Signature []byte
@@ -143,6 +145,10 @@ type MicrosoftCfb_CfbHeader struct {
 func NewMicrosoftCfb_CfbHeader() *MicrosoftCfb_CfbHeader {
 	return &MicrosoftCfb_CfbHeader{
 	}
+}
+
+func (this MicrosoftCfb_CfbHeader) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *MicrosoftCfb_CfbHeader) Read(io *kaitai.Stream, parent *MicrosoftCfb, root *MicrosoftCfb) (err error) {
@@ -306,38 +312,6 @@ func (this *MicrosoftCfb_CfbHeader) Read(io *kaitai.Stream, parent *MicrosoftCfb
 /**
  * Number of DIFAT sectors in this file.
  */
-type MicrosoftCfb_FatEntries struct {
-	Entries []int32
-	_io *kaitai.Stream
-	_root *MicrosoftCfb
-	_parent *MicrosoftCfb
-}
-func NewMicrosoftCfb_FatEntries() *MicrosoftCfb_FatEntries {
-	return &MicrosoftCfb_FatEntries{
-	}
-}
-
-func (this *MicrosoftCfb_FatEntries) Read(io *kaitai.Stream, parent *MicrosoftCfb, root *MicrosoftCfb) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	for i := 1;; i++ {
-		tmp26, err := this._io.EOF()
-		if err != nil {
-			return err
-		}
-		if tmp26 {
-			break
-		}
-		tmp27, err := this._io.ReadS4le()
-		if err != nil {
-			return err
-		}
-		this.Entries = append(this.Entries, tmp27)
-	}
-	return err
-}
 
 type MicrosoftCfb_DirEntry_ObjType int
 const (
@@ -346,12 +320,22 @@ const (
 	MicrosoftCfb_DirEntry_ObjType__Stream MicrosoftCfb_DirEntry_ObjType = 2
 	MicrosoftCfb_DirEntry_ObjType__RootStorage MicrosoftCfb_DirEntry_ObjType = 5
 )
+var values_MicrosoftCfb_DirEntry_ObjType = map[MicrosoftCfb_DirEntry_ObjType]struct{}{0: {}, 1: {}, 2: {}, 5: {}}
+func (v MicrosoftCfb_DirEntry_ObjType) isDefined() bool {
+	_, ok := values_MicrosoftCfb_DirEntry_ObjType[v]
+	return ok
+}
 
 type MicrosoftCfb_DirEntry_RbColor int
 const (
 	MicrosoftCfb_DirEntry_RbColor__Red MicrosoftCfb_DirEntry_RbColor = 0
 	MicrosoftCfb_DirEntry_RbColor__Black MicrosoftCfb_DirEntry_RbColor = 1
 )
+var values_MicrosoftCfb_DirEntry_RbColor = map[MicrosoftCfb_DirEntry_RbColor]struct{}{0: {}, 1: {}}
+func (v MicrosoftCfb_DirEntry_RbColor) isDefined() bool {
+	_, ok := values_MicrosoftCfb_DirEntry_RbColor[v]
+	return ok
+}
 type MicrosoftCfb_DirEntry struct {
 	Name string
 	NameLen uint16
@@ -368,13 +352,13 @@ type MicrosoftCfb_DirEntry struct {
 	Size uint64
 	_io *kaitai.Stream
 	_root *MicrosoftCfb
-	_parent interface{}
-	_f_miniStream bool
-	miniStream []byte
+	_parent kaitai.Struct
 	_f_child bool
 	child *MicrosoftCfb_DirEntry
 	_f_leftSibling bool
 	leftSibling *MicrosoftCfb_DirEntry
+	_f_miniStream bool
+	miniStream []byte
 	_f_rightSibling bool
 	rightSibling *MicrosoftCfb_DirEntry
 }
@@ -383,89 +367,126 @@ func NewMicrosoftCfb_DirEntry() *MicrosoftCfb_DirEntry {
 	}
 }
 
-func (this *MicrosoftCfb_DirEntry) Read(io *kaitai.Stream, parent interface{}, root *MicrosoftCfb) (err error) {
+func (this MicrosoftCfb_DirEntry) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *MicrosoftCfb_DirEntry) Read(io *kaitai.Stream, parent kaitai.Struct, root *MicrosoftCfb) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp28, err := this._io.ReadBytes(int(64))
+	tmp26, err := this._io.ReadBytes(int(64))
 	if err != nil {
 		return err
 	}
-	tmp28 = tmp28
-	tmp29, err := kaitai.BytesToStr(tmp28, unicode.UTF16(unicode.LittleEndian, unicode.IgnoreBOM).NewDecoder())
+	tmp26 = tmp26
+	tmp27, err := kaitai.BytesToStr(tmp26, unicode.UTF16(unicode.LittleEndian, unicode.IgnoreBOM).NewDecoder())
 	if err != nil {
 		return err
 	}
-	this.Name = tmp29
-	tmp30, err := this._io.ReadU2le()
+	this.Name = tmp27
+	tmp28, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.NameLen = uint16(tmp30)
-	tmp31, err := this._io.ReadU1()
+	this.NameLen = uint16(tmp28)
+	tmp29, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.ObjectType = MicrosoftCfb_DirEntry_ObjType(tmp31)
-	tmp32, err := this._io.ReadU1()
+	this.ObjectType = MicrosoftCfb_DirEntry_ObjType(tmp29)
+	tmp30, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.ColorFlag = MicrosoftCfb_DirEntry_RbColor(tmp32)
+	this.ColorFlag = MicrosoftCfb_DirEntry_RbColor(tmp30)
+	tmp31, err := this._io.ReadS4le()
+	if err != nil {
+		return err
+	}
+	this.LeftSiblingId = int32(tmp31)
+	tmp32, err := this._io.ReadS4le()
+	if err != nil {
+		return err
+	}
+	this.RightSiblingId = int32(tmp32)
 	tmp33, err := this._io.ReadS4le()
 	if err != nil {
 		return err
 	}
-	this.LeftSiblingId = int32(tmp33)
-	tmp34, err := this._io.ReadS4le()
+	this.ChildId = int32(tmp33)
+	tmp34, err := this._io.ReadBytes(int(16))
 	if err != nil {
 		return err
 	}
-	this.RightSiblingId = int32(tmp34)
-	tmp35, err := this._io.ReadS4le()
+	tmp34 = tmp34
+	this.Clsid = tmp34
+	tmp35, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.ChildId = int32(tmp35)
-	tmp36, err := this._io.ReadBytes(int(16))
+	this.State = uint32(tmp35)
+	tmp36, err := this._io.ReadU8le()
 	if err != nil {
 		return err
 	}
-	tmp36 = tmp36
-	this.Clsid = tmp36
-	tmp37, err := this._io.ReadU4le()
+	this.TimeCreate = uint64(tmp36)
+	tmp37, err := this._io.ReadU8le()
 	if err != nil {
 		return err
 	}
-	this.State = uint32(tmp37)
-	tmp38, err := this._io.ReadU8le()
+	this.TimeMod = uint64(tmp37)
+	tmp38, err := this._io.ReadS4le()
 	if err != nil {
 		return err
 	}
-	this.TimeCreate = uint64(tmp38)
+	this.Ofs = int32(tmp38)
 	tmp39, err := this._io.ReadU8le()
 	if err != nil {
 		return err
 	}
-	this.TimeMod = uint64(tmp39)
-	tmp40, err := this._io.ReadS4le()
-	if err != nil {
-		return err
-	}
-	this.Ofs = int32(tmp40)
-	tmp41, err := this._io.ReadU8le()
-	if err != nil {
-		return err
-	}
-	this.Size = uint64(tmp41)
+	this.Size = uint64(tmp39)
 	return err
 }
-func (this *MicrosoftCfb_DirEntry) MiniStream() (v []byte, err error) {
-	if (this._f_miniStream) {
-		return this.miniStream, nil
+func (this *MicrosoftCfb_DirEntry) Child() (v *MicrosoftCfb_DirEntry, err error) {
+	if (this._f_child) {
+		return this.child, nil
 	}
-	if (this.ObjectType == MicrosoftCfb_DirEntry_ObjType__RootStorage) {
+	this._f_child = true
+	if (this.ChildId != -1) {
+		thisIo := this._root._io
+		_pos, err := thisIo.Pos()
+		if err != nil {
+			return nil, err
+		}
+		tmp40, err := this._root.SectorSize()
+		if err != nil {
+			return nil, err
+		}
+		_, err = thisIo.Seek(int64((this._root.Header.OfsDir + 1) * tmp40 + this.ChildId * 128), io.SeekStart)
+		if err != nil {
+			return nil, err
+		}
+		tmp41 := NewMicrosoftCfb_DirEntry()
+		err = tmp41.Read(thisIo, this, this._root)
+		if err != nil {
+			return nil, err
+		}
+		this.child = tmp41
+		_, err = thisIo.Seek(_pos, io.SeekStart)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return this.child, nil
+}
+func (this *MicrosoftCfb_DirEntry) LeftSibling() (v *MicrosoftCfb_DirEntry, err error) {
+	if (this._f_leftSibling) {
+		return this.leftSibling, nil
+	}
+	this._f_leftSibling = true
+	if (this.LeftSiblingId != -1) {
 		thisIo := this._root._io
 		_pos, err := thisIo.Pos()
 		if err != nil {
@@ -475,30 +496,29 @@ func (this *MicrosoftCfb_DirEntry) MiniStream() (v []byte, err error) {
 		if err != nil {
 			return nil, err
 		}
-		_, err = thisIo.Seek(int64(((this.Ofs + 1) * tmp42)), io.SeekStart)
+		_, err = thisIo.Seek(int64((this._root.Header.OfsDir + 1) * tmp42 + this.LeftSiblingId * 128), io.SeekStart)
 		if err != nil {
 			return nil, err
 		}
-		tmp43, err := thisIo.ReadBytes(int(this.Size))
+		tmp43 := NewMicrosoftCfb_DirEntry()
+		err = tmp43.Read(thisIo, this, this._root)
 		if err != nil {
 			return nil, err
 		}
-		tmp43 = tmp43
-		this.miniStream = tmp43
+		this.leftSibling = tmp43
 		_, err = thisIo.Seek(_pos, io.SeekStart)
 		if err != nil {
 			return nil, err
 		}
-		this._f_miniStream = true
+	}
+	return this.leftSibling, nil
+}
+func (this *MicrosoftCfb_DirEntry) MiniStream() (v []byte, err error) {
+	if (this._f_miniStream) {
+		return this.miniStream, nil
 	}
 	this._f_miniStream = true
-	return this.miniStream, nil
-}
-func (this *MicrosoftCfb_DirEntry) Child() (v *MicrosoftCfb_DirEntry, err error) {
-	if (this._f_child) {
-		return this.child, nil
-	}
-	if (this.ChildId != -1) {
+	if (this.ObjectType == MicrosoftCfb_DirEntry_ObjType__RootStorage) {
 		thisIo := this._root._io
 		_pos, err := thisIo.Pos()
 		if err != nil {
@@ -508,30 +528,29 @@ func (this *MicrosoftCfb_DirEntry) Child() (v *MicrosoftCfb_DirEntry, err error)
 		if err != nil {
 			return nil, err
 		}
-		_, err = thisIo.Seek(int64((((this._root.Header.OfsDir + 1) * tmp44) + (this.ChildId * 128))), io.SeekStart)
+		_, err = thisIo.Seek(int64((this.Ofs + 1) * tmp44), io.SeekStart)
 		if err != nil {
 			return nil, err
 		}
-		tmp45 := NewMicrosoftCfb_DirEntry()
-		err = tmp45.Read(thisIo, this, this._root)
+		tmp45, err := thisIo.ReadBytes(int(this.Size))
 		if err != nil {
 			return nil, err
 		}
-		this.child = tmp45
+		tmp45 = tmp45
+		this.miniStream = tmp45
 		_, err = thisIo.Seek(_pos, io.SeekStart)
 		if err != nil {
 			return nil, err
 		}
-		this._f_child = true
 	}
-	this._f_child = true
-	return this.child, nil
+	return this.miniStream, nil
 }
-func (this *MicrosoftCfb_DirEntry) LeftSibling() (v *MicrosoftCfb_DirEntry, err error) {
-	if (this._f_leftSibling) {
-		return this.leftSibling, nil
+func (this *MicrosoftCfb_DirEntry) RightSibling() (v *MicrosoftCfb_DirEntry, err error) {
+	if (this._f_rightSibling) {
+		return this.rightSibling, nil
 	}
-	if (this.LeftSiblingId != -1) {
+	this._f_rightSibling = true
+	if (this.RightSiblingId != -1) {
 		thisIo := this._root._io
 		_pos, err := thisIo.Pos()
 		if err != nil {
@@ -541,7 +560,7 @@ func (this *MicrosoftCfb_DirEntry) LeftSibling() (v *MicrosoftCfb_DirEntry, err 
 		if err != nil {
 			return nil, err
 		}
-		_, err = thisIo.Seek(int64((((this._root.Header.OfsDir + 1) * tmp46) + (this.LeftSiblingId * 128))), io.SeekStart)
+		_, err = thisIo.Seek(int64((this._root.Header.OfsDir + 1) * tmp46 + this.RightSiblingId * 128), io.SeekStart)
 		if err != nil {
 			return nil, err
 		}
@@ -550,47 +569,12 @@ func (this *MicrosoftCfb_DirEntry) LeftSibling() (v *MicrosoftCfb_DirEntry, err 
 		if err != nil {
 			return nil, err
 		}
-		this.leftSibling = tmp47
+		this.rightSibling = tmp47
 		_, err = thisIo.Seek(_pos, io.SeekStart)
 		if err != nil {
 			return nil, err
 		}
-		this._f_leftSibling = true
 	}
-	this._f_leftSibling = true
-	return this.leftSibling, nil
-}
-func (this *MicrosoftCfb_DirEntry) RightSibling() (v *MicrosoftCfb_DirEntry, err error) {
-	if (this._f_rightSibling) {
-		return this.rightSibling, nil
-	}
-	if (this.RightSiblingId != -1) {
-		thisIo := this._root._io
-		_pos, err := thisIo.Pos()
-		if err != nil {
-			return nil, err
-		}
-		tmp48, err := this._root.SectorSize()
-		if err != nil {
-			return nil, err
-		}
-		_, err = thisIo.Seek(int64((((this._root.Header.OfsDir + 1) * tmp48) + (this.RightSiblingId * 128))), io.SeekStart)
-		if err != nil {
-			return nil, err
-		}
-		tmp49 := NewMicrosoftCfb_DirEntry()
-		err = tmp49.Read(thisIo, this, this._root)
-		if err != nil {
-			return nil, err
-		}
-		this.rightSibling = tmp49
-		_, err = thisIo.Seek(_pos, io.SeekStart)
-		if err != nil {
-			return nil, err
-		}
-		this._f_rightSibling = true
-	}
-	this._f_rightSibling = true
 	return this.rightSibling, nil
 }
 
@@ -613,3 +597,39 @@ func (this *MicrosoftCfb_DirEntry) RightSibling() (v *MicrosoftCfb_DirEntry, err
 /**
  * For stream object, size of user-defined data in bytes. For a root storage object, size of the mini stream.
  */
+type MicrosoftCfb_FatEntries struct {
+	Entries []int32
+	_io *kaitai.Stream
+	_root *MicrosoftCfb
+	_parent *MicrosoftCfb
+}
+func NewMicrosoftCfb_FatEntries() *MicrosoftCfb_FatEntries {
+	return &MicrosoftCfb_FatEntries{
+	}
+}
+
+func (this MicrosoftCfb_FatEntries) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *MicrosoftCfb_FatEntries) Read(io *kaitai.Stream, parent *MicrosoftCfb, root *MicrosoftCfb) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	for i := 0;; i++ {
+		tmp48, err := this._io.EOF()
+		if err != nil {
+			return err
+		}
+		if tmp48 {
+			break
+		}
+		tmp49, err := this._io.ReadS4le()
+		if err != nil {
+			return err
+		}
+		this.Entries = append(this.Entries, tmp49)
+	}
+	return err
+}

@@ -52,14 +52,21 @@ public class PsxTim extends KaitaiStruct {
     }
     private void _read() {
         this.magic = this._io.readBytes(4);
-        if (!(Arrays.equals(magic(), new byte[] { 16, 0, 0, 0 }))) {
-            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 16, 0, 0, 0 }, magic(), _io(), "/seq/0");
+        if (!(Arrays.equals(this.magic, new byte[] { 16, 0, 0, 0 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 16, 0, 0, 0 }, this.magic, this._io, "/seq/0");
         }
         this.flags = this._io.readU4le();
         if (hasClut()) {
             this.clut = new Bitmap(this._io, this, _root);
         }
         this.img = new Bitmap(this._io, this, _root);
+    }
+
+    public void _fetchInstances() {
+        if (hasClut()) {
+            this.clut._fetchInstances();
+        }
+        this.img._fetchInstances();
     }
     public static class Bitmap extends KaitaiStruct {
         public static Bitmap fromFile(String fileName) throws IOException {
@@ -86,7 +93,10 @@ public class PsxTim extends KaitaiStruct {
             this.originY = this._io.readU2le();
             this.width = this._io.readU2le();
             this.height = this._io.readU2le();
-            this.body = this._io.readBytes((len() - 12));
+            this.body = this._io.readBytes(len() - 12);
+        }
+
+        public void _fetchInstances() {
         }
         private long len;
         private int originX;
@@ -105,21 +115,19 @@ public class PsxTim extends KaitaiStruct {
         public PsxTim _root() { return _root; }
         public PsxTim _parent() { return _parent; }
     }
-    private Boolean hasClut;
-    public Boolean hasClut() {
-        if (this.hasClut != null)
-            return this.hasClut;
-        boolean _tmp = (boolean) ((flags() & 8) != 0);
-        this.hasClut = _tmp;
-        return this.hasClut;
-    }
     private Integer bpp;
     public Integer bpp() {
         if (this.bpp != null)
             return this.bpp;
-        int _tmp = (int) ((flags() & 3));
-        this.bpp = _tmp;
+        this.bpp = ((Number) (flags() & 3)).intValue();
         return this.bpp;
+    }
+    private Boolean hasClut;
+    public Boolean hasClut() {
+        if (this.hasClut != null)
+            return this.hasClut;
+        this.hasClut = (flags() & 8) != 0;
+        return this.hasClut;
     }
     private byte[] magic;
     private long flags;

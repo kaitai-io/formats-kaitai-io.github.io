@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.WindowsEvtLog = factory(root.KaitaiStream);
+    factory(root.WindowsEvtLog || (root.WindowsEvtLog = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (WindowsEvtLog_, KaitaiStream) {
 /**
  * EVT files are Windows Event Log files written by older Windows
  * operating systems (2000, XP, 2003). They are used as binary log
@@ -53,6 +53,32 @@ var WindowsEvtLog = (function() {
   }
 
   /**
+   * @see {@link https://forensics.wiki/windows_event_log_(evt)/#cursor-record|Source}
+   */
+
+  var CursorRecordBody = WindowsEvtLog.CursorRecordBody = (function() {
+    function CursorRecordBody(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    CursorRecordBody.prototype._read = function() {
+      this.magic = this._io.readBytes(12);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([34, 34, 34, 34, 51, 51, 51, 51, 68, 68, 68, 68])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([34, 34, 34, 34, 51, 51, 51, 51, 68, 68, 68, 68]), this.magic, this._io, "/types/cursor_record_body/seq/0");
+      }
+      this.ofsFirstRecord = this._io.readU4le();
+      this.ofsNextRecord = this._io.readU4le();
+      this.idxNextRecord = this._io.readU4le();
+      this.idxFirstRecord = this._io.readU4le();
+    }
+
+    return CursorRecordBody;
+  })();
+
+  /**
    * @see {@link https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb309024(v=vs.85)|Source}
    */
 
@@ -60,15 +86,15 @@ var WindowsEvtLog = (function() {
     function Header(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     Header.prototype._read = function() {
       this.lenHeader = this._io.readU4le();
       this.magic = this._io.readBytes(4);
-      if (!((KaitaiStream.byteArrayCompare(this.magic, [76, 102, 76, 101]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([76, 102, 76, 101], this.magic, this._io, "/types/header/seq/1");
+      if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([76, 102, 76, 101])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([76, 102, 76, 101]), this.magic, this._io, "/types/header/seq/1");
       }
       this.versionMajor = this._io.readU4le();
       this.versionMinor = this._io.readU4le();
@@ -86,7 +112,7 @@ var WindowsEvtLog = (function() {
       function Flags(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -158,7 +184,7 @@ var WindowsEvtLog = (function() {
     function Record(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -167,17 +193,17 @@ var WindowsEvtLog = (function() {
       this.type = this._io.readU4le();
       switch (this.type) {
       case 1699505740:
-        this._raw_body = this._io.readBytes((this.lenRecord - 12));
+        this._raw_body = this._io.readBytes(this.lenRecord - 12);
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new RecordBody(_io__raw_body, this, this._root);
         break;
       case 286331153:
-        this._raw_body = this._io.readBytes((this.lenRecord - 12));
+        this._raw_body = this._io.readBytes(this.lenRecord - 12);
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new CursorRecordBody(_io__raw_body, this, this._root);
         break;
       default:
-        this.body = this._io.readBytes((this.lenRecord - 12));
+        this.body = this._io.readBytes(this.lenRecord - 12);
         break;
       }
       this.lenRecord2 = this._io.readU4le();
@@ -228,7 +254,7 @@ var WindowsEvtLog = (function() {
     function RecordBody(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -247,26 +273,26 @@ var WindowsEvtLog = (function() {
       this.lenData = this._io.readU4le();
       this.ofsData = this._io.readU4le();
     }
-    Object.defineProperty(RecordBody.prototype, 'userSid', {
-      get: function() {
-        if (this._m_userSid !== undefined)
-          return this._m_userSid;
-        var _pos = this._io.pos;
-        this._io.seek((this.ofsUserSid - 8));
-        this._m_userSid = this._io.readBytes(this.lenUserSid);
-        this._io.seek(_pos);
-        return this._m_userSid;
-      }
-    });
     Object.defineProperty(RecordBody.prototype, 'data', {
       get: function() {
         if (this._m_data !== undefined)
           return this._m_data;
         var _pos = this._io.pos;
-        this._io.seek((this.ofsData - 8));
+        this._io.seek(this.ofsData - 8);
         this._m_data = this._io.readBytes(this.lenData);
         this._io.seek(_pos);
         return this._m_data;
+      }
+    });
+    Object.defineProperty(RecordBody.prototype, 'userSid', {
+      get: function() {
+        if (this._m_userSid !== undefined)
+          return this._m_userSid;
+        var _pos = this._io.pos;
+        this._io.seek(this.ofsUserSid - 8);
+        this._m_userSid = this._io.readBytes(this.lenUserSid);
+        this._io.seek(_pos);
+        return this._m_userSid;
       }
     });
 
@@ -307,33 +333,7 @@ var WindowsEvtLog = (function() {
     return RecordBody;
   })();
 
-  /**
-   * @see {@link https://forensics.wiki/windows_event_log_(evt)/#cursor-record|Source}
-   */
-
-  var CursorRecordBody = WindowsEvtLog.CursorRecordBody = (function() {
-    function CursorRecordBody(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    CursorRecordBody.prototype._read = function() {
-      this.magic = this._io.readBytes(12);
-      if (!((KaitaiStream.byteArrayCompare(this.magic, [34, 34, 34, 34, 51, 51, 51, 51, 68, 68, 68, 68]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([34, 34, 34, 34, 51, 51, 51, 51, 68, 68, 68, 68], this.magic, this._io, "/types/cursor_record_body/seq/0");
-      }
-      this.ofsFirstRecord = this._io.readU4le();
-      this.ofsNextRecord = this._io.readU4le();
-      this.idxNextRecord = this._io.readU4le();
-      this.idxFirstRecord = this._io.readU4le();
-    }
-
-    return CursorRecordBody;
-  })();
-
   return WindowsEvtLog;
 })();
-return WindowsEvtLog;
-}));
+WindowsEvtLog_.WindowsEvtLog = WindowsEvtLog;
+});

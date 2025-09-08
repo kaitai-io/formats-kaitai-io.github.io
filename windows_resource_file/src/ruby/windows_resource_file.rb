@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -33,8 +33,8 @@ end
 # definitions. RC tool ensures that first resource (#0) is always
 # empty.
 class WindowsResourceFile < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -79,7 +79,7 @@ class WindowsResourceFile < Kaitai::Struct::Struct
       24 => :predef_types_manifest,
     }
     I__PREDEF_TYPES = PREDEF_TYPES.invert
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -89,14 +89,14 @@ class WindowsResourceFile < Kaitai::Struct::Struct
       @header_size = @_io.read_u4le
       @type = UnicodeOrId.new(@_io, self, @_root)
       @name = UnicodeOrId.new(@_io, self, @_root)
-      @padding1 = @_io.read_bytes(((4 - _io.pos) % 4))
+      @padding1 = @_io.read_bytes((4 - _io.pos) % 4)
       @format_version = @_io.read_u4le
       @flags = @_io.read_u2le
       @language = @_io.read_u2le
       @value_version = @_io.read_u4le
       @characteristics = @_io.read_u4le
       @value = @_io.read_bytes(value_size)
-      @padding2 = @_io.read_bytes(((4 - _io.pos) % 4))
+      @padding2 = @_io.read_bytes((4 - _io.pos) % 4)
       self
     end
 
@@ -146,7 +146,7 @@ class WindowsResourceFile < Kaitai::Struct::Struct
   # Use `is_string` to check which kind we've got here, and then use
   # `as_numeric` or `as_string` to get relevant value.
   class UnicodeOrId < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -172,6 +172,21 @@ class WindowsResourceFile < Kaitai::Struct::Struct
       end
       self
     end
+    def as_string
+      return @as_string unless @as_string.nil?
+      if is_string
+        _pos = @_io.pos
+        @_io.seek(save_pos1)
+        @as_string = (@_io.read_bytes((save_pos2 - save_pos1) - 2)).force_encoding("UTF-16LE").encode('UTF-8')
+        @_io.seek(_pos)
+      end
+      @as_string
+    end
+    def is_string
+      return @is_string unless @is_string.nil?
+      @is_string = first != 65535
+      @is_string
+    end
     def save_pos1
       return @save_pos1 unless @save_pos1.nil?
       @save_pos1 = _io.pos
@@ -181,21 +196,6 @@ class WindowsResourceFile < Kaitai::Struct::Struct
       return @save_pos2 unless @save_pos2.nil?
       @save_pos2 = _io.pos
       @save_pos2
-    end
-    def is_string
-      return @is_string unless @is_string.nil?
-      @is_string = first != 65535
-      @is_string
-    end
-    def as_string
-      return @as_string unless @as_string.nil?
-      if is_string
-        _pos = @_io.pos
-        @_io.seek(save_pos1)
-        @as_string = (@_io.read_bytes(((save_pos2 - save_pos1) - 2))).force_encoding("UTF-16LE")
-        @_io.seek(_pos)
-      end
-      @as_string
     end
     attr_reader :first
     attr_reader :as_numeric

@@ -71,6 +71,18 @@ function Bcd.property.as_int:get()
 end
 
 -- 
+-- Value of this BCD number as integer (treating digit order as big-endian).
+Bcd.property.as_int_be = {}
+function Bcd.property.as_int_be:get()
+  if self._m_as_int_be ~= nil then
+    return self._m_as_int_be
+  end
+
+  self._m_as_int_be = self.digits[self.last_idx + 1] + utils.box_unwrap((self.num_digits < 2) and utils.box_wrap(0) or (self.digits[(self.last_idx - 1) + 1] * 10 + utils.box_unwrap((self.num_digits < 3) and utils.box_wrap(0) or (self.digits[(self.last_idx - 2) + 1] * 100 + utils.box_unwrap((self.num_digits < 4) and utils.box_wrap(0) or (self.digits[(self.last_idx - 3) + 1] * 1000 + utils.box_unwrap((self.num_digits < 5) and utils.box_wrap(0) or (self.digits[(self.last_idx - 4) + 1] * 10000 + utils.box_unwrap((self.num_digits < 6) and utils.box_wrap(0) or (self.digits[(self.last_idx - 5) + 1] * 100000 + utils.box_unwrap((self.num_digits < 7) and utils.box_wrap(0) or (self.digits[(self.last_idx - 6) + 1] * 1000000 + utils.box_unwrap((self.num_digits < 8) and utils.box_wrap(0) or (self.digits[(self.last_idx - 7) + 1] * 10000000))))))))))))))
+  return self._m_as_int_be
+end
+
+-- 
 -- Value of this BCD number as integer (treating digit order as little-endian).
 Bcd.property.as_int_le = {}
 function Bcd.property.as_int_le:get()
@@ -78,7 +90,7 @@ function Bcd.property.as_int_le:get()
     return self._m_as_int_le
   end
 
-  self._m_as_int_le = (self.digits[0 + 1] + utils.box_unwrap((self.num_digits < 2) and utils.box_wrap(0) or (((self.digits[1 + 1] * 10) + utils.box_unwrap((self.num_digits < 3) and utils.box_wrap(0) or (((self.digits[2 + 1] * 100) + utils.box_unwrap((self.num_digits < 4) and utils.box_wrap(0) or (((self.digits[3 + 1] * 1000) + utils.box_unwrap((self.num_digits < 5) and utils.box_wrap(0) or (((self.digits[4 + 1] * 10000) + utils.box_unwrap((self.num_digits < 6) and utils.box_wrap(0) or (((self.digits[5 + 1] * 100000) + utils.box_unwrap((self.num_digits < 7) and utils.box_wrap(0) or (((self.digits[6 + 1] * 1000000) + utils.box_unwrap((self.num_digits < 8) and utils.box_wrap(0) or ((self.digits[7 + 1] * 10000000))))))))))))))))))))))
+  self._m_as_int_le = self.digits[0 + 1] + utils.box_unwrap((self.num_digits < 2) and utils.box_wrap(0) or (self.digits[1 + 1] * 10 + utils.box_unwrap((self.num_digits < 3) and utils.box_wrap(0) or (self.digits[2 + 1] * 100 + utils.box_unwrap((self.num_digits < 4) and utils.box_wrap(0) or (self.digits[3 + 1] * 1000 + utils.box_unwrap((self.num_digits < 5) and utils.box_wrap(0) or (self.digits[4 + 1] * 10000 + utils.box_unwrap((self.num_digits < 6) and utils.box_wrap(0) or (self.digits[5 + 1] * 100000 + utils.box_unwrap((self.num_digits < 7) and utils.box_wrap(0) or (self.digits[6 + 1] * 1000000 + utils.box_unwrap((self.num_digits < 8) and utils.box_wrap(0) or (self.digits[7 + 1] * 10000000))))))))))))))
   return self._m_as_int_le
 end
 
@@ -90,20 +102,8 @@ function Bcd.property.last_idx:get()
     return self._m_last_idx
   end
 
-  self._m_last_idx = (self.num_digits - 1)
+  self._m_last_idx = self.num_digits - 1
   return self._m_last_idx
-end
-
--- 
--- Value of this BCD number as integer (treating digit order as big-endian).
-Bcd.property.as_int_be = {}
-function Bcd.property.as_int_be:get()
-  if self._m_as_int_be ~= nil then
-    return self._m_as_int_be
-  end
-
-  self._m_as_int_be = (self.digits[self.last_idx + 1] + utils.box_unwrap((self.num_digits < 2) and utils.box_wrap(0) or (((self.digits[(self.last_idx - 1) + 1] * 10) + utils.box_unwrap((self.num_digits < 3) and utils.box_wrap(0) or (((self.digits[(self.last_idx - 2) + 1] * 100) + utils.box_unwrap((self.num_digits < 4) and utils.box_wrap(0) or (((self.digits[(self.last_idx - 3) + 1] * 1000) + utils.box_unwrap((self.num_digits < 5) and utils.box_wrap(0) or (((self.digits[(self.last_idx - 4) + 1] * 10000) + utils.box_unwrap((self.num_digits < 6) and utils.box_wrap(0) or (((self.digits[(self.last_idx - 5) + 1] * 100000) + utils.box_unwrap((self.num_digits < 7) and utils.box_wrap(0) or (((self.digits[(self.last_idx - 6) + 1] * 1000000) + utils.box_unwrap((self.num_digits < 8) and utils.box_wrap(0) or ((self.digits[(self.last_idx - 7) + 1] * 10000000))))))))))))))))))))))
-  return self._m_as_int_be
 end
 
 -- 

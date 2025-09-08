@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>ID3v1.1 tag for .mp3 files: Rust parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="/pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li><a href="//kaitai.io/news/">News</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../">Format Gallery</a></li>
+        <li>Multimedia Files</li>
+        <li class="active">ID3v1.1 tag for .mp3 files</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>ID3v1.1 tag for .mp3 files:
+            
+            Rust parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>ID3v1.1 tag is a method to store simple metadata in .mp3 files. The
+tag is appended to the end of file and spans exactly 128 bytes.</p>
+<p>This type is supposed to be used on full .mp3 files, seeking to
+proper position automatically. If you're interesting in parsing only
+the tag itself, please use <code>id3v1_1::id3_v1_1_tag</code> subtype.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        mp3
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="https://www.loc.gov/preservation/digital/formats/fdd/fdd000107.shtml">LOC fdd000107</a></li>
+                            
+                            
+                            
+                            <li><a href="https://www.wikidata.org/wiki/Q1054220">Wikidata Q1054220</a></li>
+                            
+                            <li><a href="https://forensics.wiki/id3/">id3 in ForensicsWiki</a></li>
+                            
+                            <li><a href="http://fileformats.archiveteam.org/wiki/ID3">ID3 in Just Solve the File Format Problem</a></li>
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of ID3v1.1 tag for .mp3 files
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="ID3v1.1 tag for .mp3 files parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_11.html" title="ID3v1.1 tag for .mp3 files parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="ID3v1.1 tag for .mp3 files parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="ID3v1.1 tag for .mp3 files parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="ID3v1.1 tag for .mp3 files parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="ID3v1.1 tag for .mp3 files parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="ID3v1.1 tag for .mp3 files parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="java-write.html" title="ID3v1.1 tag for .mp3 files parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="ID3v1.1 tag for .mp3 files parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="ID3v1.1 tag for .mp3 files parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="ID3v1.1 tag for .mp3 files parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="ID3v1.1 tag for .mp3 files parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="ID3v1.1 tag for .mp3 files parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="ID3v1.1 tag for .mp3 files parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="python-write.html" title="ID3v1.1 tag for .mp3 files parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="ID3v1.1 tag for .mp3 files parsing Ruby library">Ruby</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="rust.html" title="ID3v1.1 tag for .mp3 files parsing Rust library">Rust</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Rust source code to parse ID3v1.1 tag for .mp3 files
+            
+        </h2>
+
+        
+
+        <h3>id3v1_1.rs</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/rust/id3v1_1.rs" download="id3v1_1.rs" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="cp">#![allow(unused_imports)]</span>
+<span class="cp">#![allow(non_snake_case)]</span>
+<span class="cp">#![allow(non_camel_case_types)]</span>
+<span class="cp">#![allow(irrefutable_let_patterns)]</span>
+<span class="cp">#![allow(unused_comparisons)]</span>
+
+<span class="k">extern</span><span class="w"> </span><span class="k">crate</span><span class="w"> </span><span class="n">kaitai</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="n">kaitai</span><span class="p">::</span><span class="o">*</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">convert</span><span class="p">::{</span><span class="n">TryFrom</span><span class="p">,</span><span class="w"> </span><span class="n">TryInto</span><span class="p">};</span>
+<span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">cell</span><span class="p">::{</span><span class="n">Ref</span><span class="p">,</span><span class="w"> </span><span class="n">Cell</span><span class="p">,</span><span class="w"> </span><span class="n">RefCell</span><span class="p">};</span>
+<span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">rc</span><span class="p">::{</span><span class="n">Rc</span><span class="p">,</span><span class="w"> </span><span class="n">Weak</span><span class="p">};</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * ID3v1.1 tag is a method to store simple metadata in .mp3 files. The</span>
+<span class="sd"> * tag is appended to the end of file and spans exactly 128 bytes.</span>
+<span class="sd"> * </span>
+<span class="sd"> * This type is supposed to be used on full .mp3 files, seeking to</span>
+<span class="sd"> * proper position automatically. If you&#39;re interesting in parsing only</span>
+<span class="sd"> * the tag itself, please use `id3v1_1::id3_v1_1_tag` subtype.</span>
+<span class="sd"> * \sa https://id3.org/ID3v1 Source</span>
+<span class="sd"> */</span>
+
+<span class="cp">#[derive(Default, Debug, Clone)]</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">Id3v11</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">_root</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="n">Id3v11</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">_parent</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="n">Id3v11</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">_self</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="bp">Self</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">_io</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="n">BytesReader</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">f_id3v1_tag</span><span class="p">:</span><span class="w"> </span><span class="nc">Cell</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">id3v1_tag</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="n">OptRc</span><span class="o">&lt;</span><span class="n">Id3v11_Id3V11Tag</span><span class="o">&gt;&gt;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">KStruct</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">Id3v11</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">type</span><span class="w"> </span><span class="nc">Root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Id3v11</span><span class="p">;</span>
+<span class="w">    </span><span class="k">type</span><span class="w"> </span><span class="nc">Parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Id3v11</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">read</span><span class="o">&lt;</span><span class="n">S</span><span class="p">:</span><span class="w"> </span><span class="nc">KStream</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">OptRc</span><span class="o">&lt;</span><span class="bp">Self</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">_io</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">S</span><span class="p">,</span>
+<span class="w">        </span><span class="n">_root</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="bp">Self</span><span class="p">::</span><span class="n">Root</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">_parent</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="bp">Self</span><span class="p">::</span><span class="n">Parent</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">KResult</span><span class="o">&lt;</span><span class="p">()</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">_io</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">_parent</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_self</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="nb">Ok</span><span class="p">(</span><span class="n">self_rc</span><span class="p">.</span><span class="n">clone</span><span class="p">()));</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_rrc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">get_value</span><span class="p">().</span><span class="n">borrow</span><span class="p">().</span><span class="n">upgrade</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_prc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">get_value</span><span class="p">().</span><span class="n">borrow</span><span class="p">().</span><span class="n">upgrade</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_rrc</span><span class="p">.</span><span class="n">as_ref</span><span class="p">().</span><span class="n">unwrap</span><span class="p">();</span>
+<span class="w">        </span><span class="nb">Ok</span><span class="p">(())</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Id3v11</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">id3v1_tag</span><span class="p">(</span>
+<span class="w">        </span><span class="o">&amp;</span><span class="bp">self</span>
+<span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">KResult</span><span class="o">&lt;</span><span class="n">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="n">OptRc</span><span class="o">&lt;</span><span class="n">Id3v11_Id3V11Tag</span><span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">_io</span><span class="p">.</span><span class="n">borrow</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_rrc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">get_value</span><span class="p">().</span><span class="n">borrow</span><span class="p">().</span><span class="n">upgrade</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_prc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">get_value</span><span class="p">().</span><span class="n">borrow</span><span class="p">().</span><span class="n">upgrade</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_rrc</span><span class="p">.</span><span class="n">as_ref</span><span class="p">().</span><span class="n">unwrap</span><span class="p">();</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">f_id3v1_tag</span><span class="p">.</span><span class="n">get</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">id3v1_tag</span><span class="p">.</span><span class="n">borrow</span><span class="p">());</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">pos</span><span class="p">();</span>
+<span class="w">        </span><span class="n">_io</span><span class="p">.</span><span class="n">seek</span><span class="p">(((</span><span class="n">_io</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">i32</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="mi">128</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">i32</span><span class="p">))</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">usize</span><span class="p">)</span><span class="o">?</span><span class="p">;</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">Self</span><span class="p">::</span><span class="n">read_into</span><span class="p">::</span><span class="o">&lt;</span><span class="n">_</span><span class="p">,</span><span class="w"> </span><span class="n">Id3v11_Id3V11Tag</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;*</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">clone</span><span class="p">()),</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">_self</span><span class="p">.</span><span class="n">clone</span><span class="p">()))</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">        </span><span class="o">*</span><span class="bp">self</span><span class="p">.</span><span class="n">id3v1_tag</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t</span><span class="p">;</span>
+<span class="w">        </span><span class="n">_io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span><span class="o">?</span><span class="p">;</span>
+<span class="w">        </span><span class="nb">Ok</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">id3v1_tag</span><span class="p">.</span><span class="n">borrow</span><span class="p">())</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Id3v11</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">_io</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="n">BytesReader</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">_io</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * ID3v1.1 tag itself, a fixed size 128 byte structure. Contains</span>
+<span class="sd"> * several metadata fields as fixed-size strings.</span>
+<span class="sd"> * </span>
+<span class="sd"> * Note that string encoding is not specified by standard, so real</span>
+<span class="sd"> * encoding used would vary a lot from one implementation to</span>
+<span class="sd"> * another. Most Windows-based applications tend to use &quot;ANSI&quot;</span>
+<span class="sd"> * (i.e. locale-dependent encoding, usually one byte per</span>
+<span class="sd"> * character). Some embedded applications allow selection of</span>
+<span class="sd"> * charset.</span>
+<span class="sd"> */</span>
+
+<span class="cp">#[derive(Default, Debug, Clone)]</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">Id3v11_Id3V11Tag</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">_root</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="n">Id3v11</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">_parent</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="n">Id3v11</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">_self</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="bp">Self</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">magic</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">u8</span><span class="o">&gt;&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">title</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">u8</span><span class="o">&gt;&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">artist</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">u8</span><span class="o">&gt;&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">album</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">u8</span><span class="o">&gt;&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">year</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="nb">String</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">comment</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">u8</span><span class="o">&gt;&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">genre</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">_io</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="n">BytesReader</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">KStruct</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">Id3v11_Id3V11Tag</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">type</span><span class="w"> </span><span class="nc">Root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Id3v11</span><span class="p">;</span>
+<span class="w">    </span><span class="k">type</span><span class="w"> </span><span class="nc">Parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Id3v11</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">read</span><span class="o">&lt;</span><span class="n">S</span><span class="p">:</span><span class="w"> </span><span class="nc">KStream</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">OptRc</span><span class="o">&lt;</span><span class="bp">Self</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">_io</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">S</span><span class="p">,</span>
+<span class="w">        </span><span class="n">_root</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="bp">Self</span><span class="p">::</span><span class="n">Root</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">_parent</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="bp">Self</span><span class="p">::</span><span class="n">Parent</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">KResult</span><span class="o">&lt;</span><span class="p">()</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">_io</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">_parent</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_self</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="nb">Ok</span><span class="p">(</span><span class="n">self_rc</span><span class="p">.</span><span class="n">clone</span><span class="p">()));</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_rrc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">get_value</span><span class="p">().</span><span class="n">borrow</span><span class="p">().</span><span class="n">upgrade</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_prc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">get_value</span><span class="p">().</span><span class="n">borrow</span><span class="p">().</span><span class="n">upgrade</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_rrc</span><span class="p">.</span><span class="n">as_ref</span><span class="p">().</span><span class="n">unwrap</span><span class="p">();</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">magic</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">3</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">usize</span><span class="p">)</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="o">!</span><span class="p">(</span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">magic</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="mh">0x54</span><span class="k">u8</span><span class="p">,</span><span class="w"> </span><span class="mh">0x41</span><span class="k">u8</span><span class="p">,</span><span class="w"> </span><span class="mh">0x47</span><span class="k">u8</span><span class="p">])</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nb">Err</span><span class="p">(</span><span class="n">KError</span><span class="p">::</span><span class="n">ValidationFailed</span><span class="p">(</span><span class="n">ValidationFailedError</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">kind</span><span class="p">:</span><span class="w"> </span><span class="nc">ValidationKind</span><span class="p">::</span><span class="n">NotEqual</span><span class="p">,</span><span class="w"> </span><span class="n">src_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/types/id3_v1_1_tag/seq/0&quot;</span><span class="p">.</span><span class="n">to_string</span><span class="p">()</span><span class="w"> </span><span class="p">}));</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">title</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">30</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">usize</span><span class="p">)</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">artist</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">30</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">usize</span><span class="p">)</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">album</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">30</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">usize</span><span class="p">)</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">year</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bytes_to_str</span><span class="p">(</span><span class="o">&amp;</span><span class="n">_io</span><span class="p">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">usize</span><span class="p">)</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;ASCII&quot;</span><span class="p">)</span><span class="o">?</span><span class="p">;</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">comment</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">30</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">usize</span><span class="p">)</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">genre</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">_io</span><span class="p">.</span><span class="n">read_u1</span><span class="p">()</span><span class="o">?</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">i64</span><span class="p">).</span><span class="n">try_into</span><span class="p">()</span><span class="o">?</span><span class="p">;</span>
+<span class="w">        </span><span class="nb">Ok</span><span class="p">(())</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Id3v11_Id3V11Tag</span><span class="w"> </span><span class="p">{</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Id3v11_Id3V11Tag</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">magic</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">u8</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">magic</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * Song title</span>
+<span class="sd"> */</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Id3v11_Id3V11Tag</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">title</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">u8</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">title</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * Artist name</span>
+<span class="sd"> */</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Id3v11_Id3V11Tag</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">artist</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">u8</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">artist</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * Album title</span>
+<span class="sd"> */</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Id3v11_Id3V11Tag</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">album</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">u8</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">album</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * Year of release</span>
+<span class="sd"> */</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Id3v11_Id3V11Tag</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">year</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="nb">String</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">year</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * Arbitary comment</span>
+<span class="sd"> */</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Id3v11_Id3V11Tag</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">comment</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">u8</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">comment</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Id3v11_Id3V11Tag</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">genre</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">genre</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Id3v11_Id3V11Tag</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">_io</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="n">BytesReader</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">_io</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="cp">#[derive(Debug, PartialEq, Clone)]</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">enum</span><span class="w"> </span><span class="nc">Id3v11_Id3V11Tag_GenreEnum</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">Blues</span><span class="p">,</span>
+<span class="w">    </span><span class="n">ClassicRock</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Country</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Dance</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Disco</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Funk</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Grunge</span><span class="p">,</span>
+<span class="w">    </span><span class="n">HipHop</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Jazz</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Metal</span><span class="p">,</span>
+<span class="w">    </span><span class="n">NewAge</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Oldies</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Other</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Pop</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Rnb</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Rap</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Reggae</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Rock</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Techno</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Industrial</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Alternative</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Ska</span><span class="p">,</span>
+<span class="w">    </span><span class="n">DeathMetal</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Pranks</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Soundtrack</span><span class="p">,</span>
+<span class="w">    </span><span class="n">EuroTechno</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Ambient</span><span class="p">,</span>
+<span class="w">    </span><span class="n">TripHop</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Vocal</span><span class="p">,</span>
+<span class="w">    </span><span class="n">JazzFunk</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Fusion</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Trance</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Classical</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Instrumental</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Acid</span><span class="p">,</span>
+<span class="w">    </span><span class="n">House</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Game</span><span class="p">,</span>
+<span class="w">    </span><span class="n">SoundClip</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Gospel</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Noise</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Alternrock</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Bass</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Soul</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Punk</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Space</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Meditative</span><span class="p">,</span>
+<span class="w">    </span><span class="n">InstrumentalPop</span><span class="p">,</span>
+<span class="w">    </span><span class="n">InstrumentalRock</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Ethnic</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Gothic</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Darkwave</span><span class="p">,</span>
+<span class="w">    </span><span class="n">TechnoIndustrial</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Electronic</span><span class="p">,</span>
+<span class="w">    </span><span class="n">PopFolk</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Eurodance</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Dream</span><span class="p">,</span>
+<span class="w">    </span><span class="n">SouthernRock</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Comedy</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Cult</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Gangsta</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Top40</span><span class="p">,</span>
+<span class="w">    </span><span class="n">ChristianRap</span><span class="p">,</span>
+<span class="w">    </span><span class="n">PopFunk</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Jungle</span><span class="p">,</span>
+<span class="w">    </span><span class="n">NativeAmerican</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Cabaret</span><span class="p">,</span>
+<span class="w">    </span><span class="n">NewWave</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Psychadelic</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Rave</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Showtunes</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Trailer</span><span class="p">,</span>
+<span class="w">    </span><span class="n">LoFi</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Tribal</span><span class="p">,</span>
+<span class="w">    </span><span class="n">AcidPunk</span><span class="p">,</span>
+<span class="w">    </span><span class="n">AcidJazz</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Polka</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Retro</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Musical</span><span class="p">,</span>
+<span class="w">    </span><span class="n">RockNRoll</span><span class="p">,</span>
+<span class="w">    </span><span class="n">HardRock</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Folk</span><span class="p">,</span>
+<span class="w">    </span><span class="n">FolkRock</span><span class="p">,</span>
+<span class="w">    </span><span class="n">NationalFolk</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Swing</span><span class="p">,</span>
+<span class="w">    </span><span class="n">FastFusion</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Bebob</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Latin</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Revival</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Celtic</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Bluegrass</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Avantgarde</span><span class="p">,</span>
+<span class="w">    </span><span class="n">GothicRock</span><span class="p">,</span>
+<span class="w">    </span><span class="n">ProgressiveRock</span><span class="p">,</span>
+<span class="w">    </span><span class="n">PsychedelicRock</span><span class="p">,</span>
+<span class="w">    </span><span class="n">SymphonicRock</span><span class="p">,</span>
+<span class="w">    </span><span class="n">SlowRock</span><span class="p">,</span>
+<span class="w">    </span><span class="n">BigBand</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Chorus</span><span class="p">,</span>
+<span class="w">    </span><span class="n">EasyListening</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Acoustic</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Humour</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Speech</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Chanson</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Opera</span><span class="p">,</span>
+<span class="w">    </span><span class="n">ChamberMusic</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Sonata</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Symphony</span><span class="p">,</span>
+<span class="w">    </span><span class="n">BootyBass</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Primus</span><span class="p">,</span>
+<span class="w">    </span><span class="n">PornGroove</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Satire</span><span class="p">,</span>
+<span class="w">    </span><span class="n">SlowJam</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Club</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Tango</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Samba</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Folklore</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Ballad</span><span class="p">,</span>
+<span class="w">    </span><span class="n">PowerBallad</span><span class="p">,</span>
+<span class="w">    </span><span class="n">RhythmicSoul</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Freestyle</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Duet</span><span class="p">,</span>
+<span class="w">    </span><span class="n">PunkRock</span><span class="p">,</span>
+<span class="w">    </span><span class="n">DrumSolo</span><span class="p">,</span>
+<span class="w">    </span><span class="n">ACapella</span><span class="p">,</span>
+<span class="w">    </span><span class="n">EuroHouse</span><span class="p">,</span>
+<span class="w">    </span><span class="n">DanceHall</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Unknown</span><span class="p">(</span><span class="kt">i64</span><span class="p">),</span>
+<span class="p">}</span>
+
+<span class="k">impl</span><span class="w"> </span><span class="n">TryFrom</span><span class="o">&lt;</span><span class="kt">i64</span><span class="o">&gt;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">type</span><span class="w"> </span><span class="nc">Error</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">KError</span><span class="p">;</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">try_from</span><span class="p">(</span><span class="n">flag</span><span class="p">:</span><span class="w"> </span><span class="kt">i64</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">KResult</span><span class="o">&lt;</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">match</span><span class="w"> </span><span class="n">flag</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="mi">0</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Blues</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">1</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">ClassicRock</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">2</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Country</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">3</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Dance</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">4</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Disco</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">5</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Funk</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">6</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Grunge</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">7</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">HipHop</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">8</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Jazz</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">9</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Metal</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">10</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">NewAge</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">11</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Oldies</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">12</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Other</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">13</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Pop</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">14</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Rnb</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">15</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Rap</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">16</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Reggae</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">17</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Rock</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">18</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Techno</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">19</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Industrial</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">20</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Alternative</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">21</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Ska</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">22</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">DeathMetal</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">23</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Pranks</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">24</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Soundtrack</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">25</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">EuroTechno</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">26</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Ambient</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">27</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">TripHop</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">28</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Vocal</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">29</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">JazzFunk</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">30</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Fusion</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">31</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Trance</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">32</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Classical</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">33</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Instrumental</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">34</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Acid</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">35</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">House</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">36</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Game</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">37</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">SoundClip</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">38</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Gospel</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">39</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Noise</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">40</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Alternrock</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">41</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Bass</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">42</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Soul</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">43</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Punk</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">44</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Space</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">45</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Meditative</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">46</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">InstrumentalPop</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">47</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">InstrumentalRock</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">48</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Ethnic</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">49</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Gothic</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">50</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Darkwave</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">51</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">TechnoIndustrial</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">52</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Electronic</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">53</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">PopFolk</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">54</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Eurodance</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">55</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Dream</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">56</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">SouthernRock</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">57</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Comedy</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">58</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Cult</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">59</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Gangsta</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">60</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Top40</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">61</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">ChristianRap</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">62</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">PopFunk</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">63</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Jungle</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">64</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">NativeAmerican</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">65</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Cabaret</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">66</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">NewWave</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">67</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Psychadelic</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">68</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Rave</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">69</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Showtunes</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">70</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Trailer</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">71</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">LoFi</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">72</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Tribal</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">73</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">AcidPunk</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">74</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">AcidJazz</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">75</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Polka</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">76</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Retro</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">77</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Musical</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">78</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">RockNRoll</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">79</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">HardRock</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">80</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Folk</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">81</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">FolkRock</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">82</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">NationalFolk</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">83</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Swing</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">84</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">FastFusion</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">85</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Bebob</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">86</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Latin</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">87</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Revival</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">88</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Celtic</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">89</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Bluegrass</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">90</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Avantgarde</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">91</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">GothicRock</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">92</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">ProgressiveRock</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">93</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">PsychedelicRock</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">94</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">SymphonicRock</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">95</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">SlowRock</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">96</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">BigBand</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">97</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Chorus</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">98</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">EasyListening</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">99</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Acoustic</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">100</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Humour</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">101</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Speech</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">102</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Chanson</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">103</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Opera</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">104</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">ChamberMusic</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">105</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Sonata</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">106</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Symphony</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">107</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">BootyBass</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">108</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Primus</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">109</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">PornGroove</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">110</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Satire</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">111</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">SlowJam</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">112</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Club</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">113</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Tango</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">114</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Samba</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">115</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Folklore</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">116</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Ballad</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">117</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">PowerBallad</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">118</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">RhythmicSoul</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">119</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Freestyle</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">120</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Duet</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">121</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">PunkRock</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">122</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">DrumSolo</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">123</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">ACapella</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">124</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">EuroHouse</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">125</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">DanceHall</span><span class="p">),</span>
+<span class="w">            </span><span class="n">_</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Unknown</span><span class="p">(</span><span class="n">flag</span><span class="p">)),</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">impl</span><span class="w"> </span><span class="nb">From</span><span class="o">&lt;&amp;</span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="o">&gt;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="kt">i64</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">from</span><span class="p">(</span><span class="n">v</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Self</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">match</span><span class="w"> </span><span class="o">*</span><span class="n">v</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Blues</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">ClassicRock</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Country</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Dance</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Disco</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Funk</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Grunge</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">HipHop</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Jazz</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Metal</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">9</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">NewAge</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Oldies</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">11</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Other</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Pop</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">13</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Rnb</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">14</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Rap</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Reggae</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">16</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Rock</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">17</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Techno</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">18</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Industrial</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">19</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Alternative</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Ska</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">21</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">DeathMetal</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">22</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Pranks</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">23</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Soundtrack</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">24</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">EuroTechno</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Ambient</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">26</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">TripHop</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">27</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Vocal</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">28</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">JazzFunk</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">29</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Fusion</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Trance</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">31</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Classical</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">32</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Instrumental</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">33</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Acid</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">34</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">House</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">35</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Game</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">36</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">SoundClip</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">37</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Gospel</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">38</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Noise</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">39</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Alternrock</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">40</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Bass</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">41</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Soul</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">42</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Punk</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">43</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Space</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">44</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Meditative</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">45</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">InstrumentalPop</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">46</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">InstrumentalRock</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">47</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Ethnic</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">48</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Gothic</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">49</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Darkwave</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">TechnoIndustrial</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">51</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Electronic</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">52</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">PopFolk</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">53</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Eurodance</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">54</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Dream</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">55</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">SouthernRock</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">56</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Comedy</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">57</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Cult</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">58</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Gangsta</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">59</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Top40</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">60</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">ChristianRap</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">61</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">PopFunk</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">62</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Jungle</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">63</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">NativeAmerican</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">64</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Cabaret</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">65</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">NewWave</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">66</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Psychadelic</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">67</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Rave</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">68</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Showtunes</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">69</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Trailer</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">70</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">LoFi</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">71</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Tribal</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">72</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">AcidPunk</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">73</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">AcidJazz</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">74</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Polka</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">75</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Retro</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">76</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Musical</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">77</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">RockNRoll</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">78</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">HardRock</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">79</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Folk</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">80</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">FolkRock</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">81</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">NationalFolk</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">82</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Swing</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">83</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">FastFusion</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">84</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Bebob</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">85</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Latin</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">86</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Revival</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">87</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Celtic</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">88</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Bluegrass</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">89</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Avantgarde</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">90</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">GothicRock</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">91</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">ProgressiveRock</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">92</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">PsychedelicRock</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">93</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">SymphonicRock</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">94</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">SlowRock</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">95</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">BigBand</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">96</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Chorus</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">97</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">EasyListening</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">98</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Acoustic</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">99</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Humour</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Speech</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">101</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Chanson</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">102</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Opera</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">103</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">ChamberMusic</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">104</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Sonata</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">105</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Symphony</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">106</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">BootyBass</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">107</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Primus</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">108</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">PornGroove</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">109</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Satire</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">110</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">SlowJam</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">111</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Club</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">112</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Tango</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">113</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Samba</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">114</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Folklore</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">115</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Ballad</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">116</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">PowerBallad</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">117</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">RhythmicSoul</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">118</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Freestyle</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">119</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Duet</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">120</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">PunkRock</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">121</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">DrumSolo</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">122</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">ACapella</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">123</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">EuroHouse</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">124</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">DanceHall</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">125</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Unknown</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">v</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">impl</span><span class="w"> </span><span class="nb">Default</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">default</span><span class="p">()</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Self</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">Id3v11_Id3V11Tag_GenreEnum</span><span class="p">::</span><span class="n">Unknown</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015&ndash;2025 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">format repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+</body>
+</html>

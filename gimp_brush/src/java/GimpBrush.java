@@ -6,9 +6,10 @@ import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.Arrays;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Arrays;
+import java.nio.charset.StandardCharsets;
 
 
 /**
@@ -60,9 +61,53 @@ public class GimpBrush extends KaitaiStruct {
     }
     private void _read() {
         this.lenHeader = this._io.readU4be();
-        this._raw_header = this._io.readBytes((lenHeader() - 4));
-        KaitaiStream _io__raw_header = new ByteBufferKaitaiStream(_raw_header);
-        this.header = new Header(_io__raw_header, this, _root);
+        KaitaiStream _io_header = this._io.substream(lenHeader() - 4);
+        this.header = new Header(_io_header, this, _root);
+    }
+
+    public void _fetchInstances() {
+        this.header._fetchInstances();
+        body();
+        if (this.body != null) {
+        }
+    }
+    public static class Bitmap extends KaitaiStruct {
+        public static Bitmap fromFile(String fileName) throws IOException {
+            return new Bitmap(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Bitmap(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Bitmap(KaitaiStream _io, KaitaiStruct _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Bitmap(KaitaiStream _io, KaitaiStruct _parent, GimpBrush _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.rows = new ArrayList<Row>();
+            for (int i = 0; i < _root().header().height(); i++) {
+                this.rows.add(new Row(this._io, this, _root));
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.rows.size(); i++) {
+                this.rows.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private List<Row> rows;
+        private GimpBrush _root;
+        private KaitaiStruct _parent;
+        public List<Row> rows() { return rows; }
+        public GimpBrush _root() { return _root; }
+        public KaitaiStruct _parent() { return _parent; }
     }
     public static class Header extends KaitaiStruct {
         public static Header fromFile(String fileName) throws IOException {
@@ -85,30 +130,33 @@ public class GimpBrush extends KaitaiStruct {
         }
         private void _read() {
             this.version = this._io.readU4be();
-            if (!(version() == 2)) {
-                throw new KaitaiStream.ValidationNotEqualError(2, version(), _io(), "/types/header/seq/0");
+            if (!(this.version == 2)) {
+                throw new KaitaiStream.ValidationNotEqualError(2, this.version, this._io, "/types/header/seq/0");
             }
             this.width = this._io.readU4be();
-            if (!(width() >= 1)) {
-                throw new KaitaiStream.ValidationLessThanError(1, width(), _io(), "/types/header/seq/1");
+            if (!(this.width >= 1)) {
+                throw new KaitaiStream.ValidationLessThanError(1, this.width, this._io, "/types/header/seq/1");
             }
-            if (!(width() <= 10000)) {
-                throw new KaitaiStream.ValidationGreaterThanError(10000, width(), _io(), "/types/header/seq/1");
+            if (!(this.width <= 10000)) {
+                throw new KaitaiStream.ValidationGreaterThanError(10000, this.width, this._io, "/types/header/seq/1");
             }
             this.height = this._io.readU4be();
-            if (!(height() >= 1)) {
-                throw new KaitaiStream.ValidationLessThanError(1, height(), _io(), "/types/header/seq/2");
+            if (!(this.height >= 1)) {
+                throw new KaitaiStream.ValidationLessThanError(1, this.height, this._io, "/types/header/seq/2");
             }
-            if (!(height() <= 10000)) {
-                throw new KaitaiStream.ValidationGreaterThanError(10000, height(), _io(), "/types/header/seq/2");
+            if (!(this.height <= 10000)) {
+                throw new KaitaiStream.ValidationGreaterThanError(10000, this.height, this._io, "/types/header/seq/2");
             }
             this.bytesPerPixel = GimpBrush.ColorDepth.byId(this._io.readU4be());
             this.magic = this._io.readBytes(4);
-            if (!(Arrays.equals(magic(), new byte[] { 71, 73, 77, 80 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 71, 73, 77, 80 }, magic(), _io(), "/types/header/seq/4");
+            if (!(Arrays.equals(this.magic, new byte[] { 71, 73, 77, 80 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 71, 73, 77, 80 }, this.magic, this._io, "/types/header/seq/4");
             }
             this.spacing = this._io.readU4be();
-            this.brushName = new String(KaitaiStream.bytesTerminate(this._io.readBytesFull(), (byte) 0, false), Charset.forName("UTF-8"));
+            this.brushName = new String(KaitaiStream.bytesTerminate(this._io.readBytesFull(), (byte) 0, false), StandardCharsets.UTF_8);
+        }
+
+        public void _fetchInstances() {
         }
         private long version;
         private long width;
@@ -143,38 +191,6 @@ public class GimpBrush extends KaitaiStruct {
         public GimpBrush _root() { return _root; }
         public GimpBrush _parent() { return _parent; }
     }
-    public static class Bitmap extends KaitaiStruct {
-        public static Bitmap fromFile(String fileName) throws IOException {
-            return new Bitmap(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Bitmap(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Bitmap(KaitaiStream _io, KaitaiStruct _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Bitmap(KaitaiStream _io, KaitaiStruct _parent, GimpBrush _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.rows = new ArrayList<Row>();
-            for (int i = 0; i < _root().header().height(); i++) {
-                this.rows.add(new Row(this._io, this, _root));
-            }
-        }
-        private ArrayList<Row> rows;
-        private GimpBrush _root;
-        private KaitaiStruct _parent;
-        public ArrayList<Row> rows() { return rows; }
-        public GimpBrush _root() { return _root; }
-        public KaitaiStruct _parent() { return _parent; }
-    }
     public static class Row extends KaitaiStruct {
         public static Row fromFile(String fileName) throws IOException {
             return new Row(new ByteBufferKaitaiStream(fileName));
@@ -184,11 +200,11 @@ public class GimpBrush extends KaitaiStruct {
             this(_io, null, null);
         }
 
-        public Row(KaitaiStream _io, KaitaiStruct _parent) {
+        public Row(KaitaiStream _io, GimpBrush.Bitmap _parent) {
             this(_io, _parent, null);
         }
 
-        public Row(KaitaiStream _io, KaitaiStruct _parent, GimpBrush _root) {
+        public Row(KaitaiStream _io, GimpBrush.Bitmap _parent, GimpBrush _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
@@ -214,6 +230,26 @@ public class GimpBrush extends KaitaiStruct {
                 }
             }
         }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.pixels.size(); i++) {
+                {
+                    ColorDepth on = _root().header().bytesPerPixel();
+                    if (on != null) {
+                        switch (_root().header().bytesPerPixel()) {
+                        case GRAYSCALE: {
+                            ((PixelGray) (this.pixels.get(((Number) (i)).intValue())))._fetchInstances();
+                            break;
+                        }
+                        case RGBA: {
+                            ((PixelRgba) (this.pixels.get(((Number) (i)).intValue())))._fetchInstances();
+                            break;
+                        }
+                        }
+                    }
+                }
+            }
+        }
         public static class PixelGray extends KaitaiStruct {
             public static PixelGray fromFile(String fileName) throws IOException {
                 return new PixelGray(new ByteBufferKaitaiStream(fileName));
@@ -223,11 +259,11 @@ public class GimpBrush extends KaitaiStruct {
                 this(_io, null, null);
             }
 
-            public PixelGray(KaitaiStream _io, KaitaiStruct _parent) {
+            public PixelGray(KaitaiStream _io, GimpBrush.Row _parent) {
                 this(_io, _parent, null);
             }
 
-            public PixelGray(KaitaiStream _io, KaitaiStruct _parent, GimpBrush _root) {
+            public PixelGray(KaitaiStream _io, GimpBrush.Row _parent, GimpBrush _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
@@ -236,44 +272,43 @@ public class GimpBrush extends KaitaiStruct {
             private void _read() {
                 this.gray = this._io.readU1();
             }
-            private Byte red;
-            public Byte red() {
-                if (this.red != null)
-                    return this.red;
-                byte _tmp = (byte) (0);
-                this.red = _tmp;
-                return this.red;
-            }
-            private Byte green;
-            public Byte green() {
-                if (this.green != null)
-                    return this.green;
-                byte _tmp = (byte) (0);
-                this.green = _tmp;
-                return this.green;
-            }
-            private Byte blue;
-            public Byte blue() {
-                if (this.blue != null)
-                    return this.blue;
-                byte _tmp = (byte) (0);
-                this.blue = _tmp;
-                return this.blue;
+
+            public void _fetchInstances() {
             }
             private Integer alpha;
             public Integer alpha() {
                 if (this.alpha != null)
                     return this.alpha;
-                int _tmp = (int) (gray());
-                this.alpha = _tmp;
+                this.alpha = ((Number) (gray())).intValue();
                 return this.alpha;
+            }
+            private Byte blue;
+            public Byte blue() {
+                if (this.blue != null)
+                    return this.blue;
+                this.blue = ((byte) 0);
+                return this.blue;
+            }
+            private Byte green;
+            public Byte green() {
+                if (this.green != null)
+                    return this.green;
+                this.green = ((byte) 0);
+                return this.green;
+            }
+            private Byte red;
+            public Byte red() {
+                if (this.red != null)
+                    return this.red;
+                this.red = ((byte) 0);
+                return this.red;
             }
             private int gray;
             private GimpBrush _root;
-            private KaitaiStruct _parent;
+            private GimpBrush.Row _parent;
             public int gray() { return gray; }
             public GimpBrush _root() { return _root; }
-            public KaitaiStruct _parent() { return _parent; }
+            public GimpBrush.Row _parent() { return _parent; }
         }
         public static class PixelRgba extends KaitaiStruct {
             public static PixelRgba fromFile(String fileName) throws IOException {
@@ -284,11 +319,11 @@ public class GimpBrush extends KaitaiStruct {
                 this(_io, null, null);
             }
 
-            public PixelRgba(KaitaiStream _io, KaitaiStruct _parent) {
+            public PixelRgba(KaitaiStream _io, GimpBrush.Row _parent) {
                 this(_io, _parent, null);
             }
 
-            public PixelRgba(KaitaiStream _io, KaitaiStruct _parent, GimpBrush _root) {
+            public PixelRgba(KaitaiStream _io, GimpBrush.Row _parent, GimpBrush _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
@@ -300,33 +335,28 @@ public class GimpBrush extends KaitaiStruct {
                 this.blue = this._io.readU1();
                 this.alpha = this._io.readU1();
             }
+
+            public void _fetchInstances() {
+            }
             private int red;
             private int green;
             private int blue;
             private int alpha;
             private GimpBrush _root;
-            private KaitaiStruct _parent;
+            private GimpBrush.Row _parent;
             public int red() { return red; }
             public int green() { return green; }
             public int blue() { return blue; }
             public int alpha() { return alpha; }
             public GimpBrush _root() { return _root; }
-            public KaitaiStruct _parent() { return _parent; }
+            public GimpBrush.Row _parent() { return _parent; }
         }
-        private ArrayList<KaitaiStruct> pixels;
+        private List<KaitaiStruct> pixels;
         private GimpBrush _root;
-        private KaitaiStruct _parent;
-        public ArrayList<KaitaiStruct> pixels() { return pixels; }
+        private GimpBrush.Bitmap _parent;
+        public List<KaitaiStruct> pixels() { return pixels; }
         public GimpBrush _root() { return _root; }
-        public KaitaiStruct _parent() { return _parent; }
-    }
-    private Integer lenBody;
-    public Integer lenBody() {
-        if (this.lenBody != null)
-            return this.lenBody;
-        int _tmp = (int) (((header().width() * header().height()) * header().bytesPerPixel().id()));
-        this.lenBody = _tmp;
-        return this.lenBody;
+        public GimpBrush.Bitmap _parent() { return _parent; }
     }
     private byte[] body;
     public byte[] body() {
@@ -338,14 +368,19 @@ public class GimpBrush extends KaitaiStruct {
         this._io.seek(_pos);
         return this.body;
     }
+    private Integer lenBody;
+    public Integer lenBody() {
+        if (this.lenBody != null)
+            return this.lenBody;
+        this.lenBody = ((Number) ((header().width() * header().height()) * header().bytesPerPixel().id())).intValue();
+        return this.lenBody;
+    }
     private long lenHeader;
     private Header header;
     private GimpBrush _root;
     private KaitaiStruct _parent;
-    private byte[] _raw_header;
     public long lenHeader() { return lenHeader; }
     public Header header() { return header; }
     public GimpBrush _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
-    public byte[] _raw_header() { return _raw_header; }
 }

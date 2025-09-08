@@ -2,13 +2,16 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class allegro_dat_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -29,18 +32,24 @@
 class allegro_dat_t : public kaitai::kstruct {
 
 public:
-    class dat_font_16_t;
     class dat_bitmap_t;
     class dat_font_t;
+    class dat_font_16_t;
+    class dat_font_3_9_t;
     class dat_font_8_t;
     class dat_object_t;
-    class dat_font_3_9_t;
-    class property_t;
     class dat_rle_sprite_t;
+    class property_t;
 
     enum pack_enum_t {
         PACK_ENUM_UNPACKED = 1936484398
     };
+    static bool _is_defined_pack_enum_t(pack_enum_t v);
+
+private:
+    static const std::set<pack_enum_t> _values_pack_enum_t;
+
+public:
 
     allegro_dat_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, allegro_dat_t* p__root = nullptr);
 
@@ -50,35 +59,6 @@ private:
 
 public:
     ~allegro_dat_t();
-
-    /**
-     * Simple monochrome monospaced font, 95 characters, 8x16 px
-     * characters.
-     */
-
-    class dat_font_16_t : public kaitai::kstruct {
-
-    public:
-
-        dat_font_16_t(kaitai::kstream* p__io, allegro_dat_t::dat_font_t* p__parent = nullptr, allegro_dat_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~dat_font_16_t();
-
-    private:
-        std::unique_ptr<std::vector<std::string>> m_chars;
-        allegro_dat_t* m__root;
-        allegro_dat_t::dat_font_t* m__parent;
-
-    public:
-        std::vector<std::string>* chars() const { return m_chars.get(); }
-        allegro_dat_t* _root() const { return m__root; }
-        allegro_dat_t::dat_font_t* _parent() const { return m__parent; }
-    };
 
     class dat_bitmap_t : public kaitai::kstruct {
 
@@ -140,6 +120,135 @@ public:
         kaitai::kstruct* body() const { return m_body.get(); }
         allegro_dat_t* _root() const { return m__root; }
         allegro_dat_t::dat_object_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * Simple monochrome monospaced font, 95 characters, 8x16 px
+     * characters.
+     */
+
+    class dat_font_16_t : public kaitai::kstruct {
+
+    public:
+
+        dat_font_16_t(kaitai::kstream* p__io, allegro_dat_t::dat_font_t* p__parent = nullptr, allegro_dat_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~dat_font_16_t();
+
+    private:
+        std::unique_ptr<std::vector<std::string>> m_chars;
+        allegro_dat_t* m__root;
+        allegro_dat_t::dat_font_t* m__parent;
+
+    public:
+        std::vector<std::string>* chars() const { return m_chars.get(); }
+        allegro_dat_t* _root() const { return m__root; }
+        allegro_dat_t::dat_font_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * New bitmap font format introduced since Allegro 3.9: allows
+     * flexible designation of character ranges, 8-bit colored
+     * characters, etc.
+     */
+
+    class dat_font_3_9_t : public kaitai::kstruct {
+
+    public:
+        class font_char_t;
+        class range_t;
+
+        dat_font_3_9_t(kaitai::kstream* p__io, allegro_dat_t::dat_font_t* p__parent = nullptr, allegro_dat_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~dat_font_3_9_t();
+
+        class font_char_t : public kaitai::kstruct {
+
+        public:
+
+            font_char_t(kaitai::kstream* p__io, allegro_dat_t::dat_font_3_9_t::range_t* p__parent = nullptr, allegro_dat_t* p__root = nullptr);
+
+        private:
+            void _read();
+            void _clean_up();
+
+        public:
+            ~font_char_t();
+
+        private:
+            uint16_t m_width;
+            uint16_t m_height;
+            std::string m_body;
+            allegro_dat_t* m__root;
+            allegro_dat_t::dat_font_3_9_t::range_t* m__parent;
+
+        public:
+            uint16_t width() const { return m_width; }
+            uint16_t height() const { return m_height; }
+            std::string body() const { return m_body; }
+            allegro_dat_t* _root() const { return m__root; }
+            allegro_dat_t::dat_font_3_9_t::range_t* _parent() const { return m__parent; }
+        };
+
+        class range_t : public kaitai::kstruct {
+
+        public:
+
+            range_t(kaitai::kstream* p__io, allegro_dat_t::dat_font_3_9_t* p__parent = nullptr, allegro_dat_t* p__root = nullptr);
+
+        private:
+            void _read();
+            void _clean_up();
+
+        public:
+            ~range_t();
+
+        private:
+            uint8_t m_mono;
+            uint32_t m_start_char;
+            uint32_t m_end_char;
+            std::unique_ptr<std::vector<std::unique_ptr<font_char_t>>> m_chars;
+            allegro_dat_t* m__root;
+            allegro_dat_t::dat_font_3_9_t* m__parent;
+
+        public:
+            uint8_t mono() const { return m_mono; }
+
+            /**
+             * First character in range
+             */
+            uint32_t start_char() const { return m_start_char; }
+
+            /**
+             * Last character in range (inclusive)
+             */
+            uint32_t end_char() const { return m_end_char; }
+            std::vector<std::unique_ptr<font_char_t>>* chars() const { return m_chars.get(); }
+            allegro_dat_t* _root() const { return m__root; }
+            allegro_dat_t::dat_font_3_9_t* _parent() const { return m__parent; }
+        };
+
+    private:
+        int16_t m_num_ranges;
+        std::unique_ptr<std::vector<std::unique_ptr<range_t>>> m_ranges;
+        allegro_dat_t* m__root;
+        allegro_dat_t::dat_font_t* m__parent;
+
+    public:
+        int16_t num_ranges() const { return m_num_ranges; }
+        std::vector<std::unique_ptr<range_t>>* ranges() const { return m_ranges.get(); }
+        allegro_dat_t* _root() const { return m__root; }
+        allegro_dat_t::dat_font_t* _parent() const { return m__parent; }
     };
 
     /**
@@ -218,104 +327,36 @@ public:
         kaitai::kstream* _io__raw_body() const { return m__io__raw_body.get(); }
     };
 
-    /**
-     * New bitmap font format introduced since Allegro 3.9: allows
-     * flexible designation of character ranges, 8-bit colored
-     * characters, etc.
-     */
-
-    class dat_font_3_9_t : public kaitai::kstruct {
+    class dat_rle_sprite_t : public kaitai::kstruct {
 
     public:
-        class range_t;
-        class font_char_t;
 
-        dat_font_3_9_t(kaitai::kstream* p__io, allegro_dat_t::dat_font_t* p__parent = nullptr, allegro_dat_t* p__root = nullptr);
+        dat_rle_sprite_t(kaitai::kstream* p__io, allegro_dat_t::dat_object_t* p__parent = nullptr, allegro_dat_t* p__root = nullptr);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~dat_font_3_9_t();
-
-        class range_t : public kaitai::kstruct {
-
-        public:
-
-            range_t(kaitai::kstream* p__io, allegro_dat_t::dat_font_3_9_t* p__parent = nullptr, allegro_dat_t* p__root = nullptr);
-
-        private:
-            void _read();
-            void _clean_up();
-
-        public:
-            ~range_t();
-
-        private:
-            uint8_t m_mono;
-            uint32_t m_start_char;
-            uint32_t m_end_char;
-            std::unique_ptr<std::vector<std::unique_ptr<font_char_t>>> m_chars;
-            allegro_dat_t* m__root;
-            allegro_dat_t::dat_font_3_9_t* m__parent;
-
-        public:
-            uint8_t mono() const { return m_mono; }
-
-            /**
-             * First character in range
-             */
-            uint32_t start_char() const { return m_start_char; }
-
-            /**
-             * Last character in range (inclusive)
-             */
-            uint32_t end_char() const { return m_end_char; }
-            std::vector<std::unique_ptr<font_char_t>>* chars() const { return m_chars.get(); }
-            allegro_dat_t* _root() const { return m__root; }
-            allegro_dat_t::dat_font_3_9_t* _parent() const { return m__parent; }
-        };
-
-        class font_char_t : public kaitai::kstruct {
-
-        public:
-
-            font_char_t(kaitai::kstream* p__io, allegro_dat_t::dat_font_3_9_t::range_t* p__parent = nullptr, allegro_dat_t* p__root = nullptr);
-
-        private:
-            void _read();
-            void _clean_up();
-
-        public:
-            ~font_char_t();
-
-        private:
-            uint16_t m_width;
-            uint16_t m_height;
-            std::string m_body;
-            allegro_dat_t* m__root;
-            allegro_dat_t::dat_font_3_9_t::range_t* m__parent;
-
-        public:
-            uint16_t width() const { return m_width; }
-            uint16_t height() const { return m_height; }
-            std::string body() const { return m_body; }
-            allegro_dat_t* _root() const { return m__root; }
-            allegro_dat_t::dat_font_3_9_t::range_t* _parent() const { return m__parent; }
-        };
+        ~dat_rle_sprite_t();
 
     private:
-        int16_t m_num_ranges;
-        std::unique_ptr<std::vector<std::unique_ptr<range_t>>> m_ranges;
+        int16_t m_bits_per_pixel;
+        uint16_t m_width;
+        uint16_t m_height;
+        uint32_t m_len_image;
+        std::string m_image;
         allegro_dat_t* m__root;
-        allegro_dat_t::dat_font_t* m__parent;
+        allegro_dat_t::dat_object_t* m__parent;
 
     public:
-        int16_t num_ranges() const { return m_num_ranges; }
-        std::vector<std::unique_ptr<range_t>>* ranges() const { return m_ranges.get(); }
+        int16_t bits_per_pixel() const { return m_bits_per_pixel; }
+        uint16_t width() const { return m_width; }
+        uint16_t height() const { return m_height; }
+        uint32_t len_image() const { return m_len_image; }
+        std::string image() const { return m_image; }
         allegro_dat_t* _root() const { return m__root; }
-        allegro_dat_t::dat_font_t* _parent() const { return m__parent; }
+        allegro_dat_t::dat_object_t* _parent() const { return m__parent; }
     };
 
     class property_t : public kaitai::kstruct {
@@ -369,38 +410,6 @@ public:
         std::string type() const { return m_type; }
         uint32_t len_body() const { return m_len_body; }
         std::string body() const { return m_body; }
-        allegro_dat_t* _root() const { return m__root; }
-        allegro_dat_t::dat_object_t* _parent() const { return m__parent; }
-    };
-
-    class dat_rle_sprite_t : public kaitai::kstruct {
-
-    public:
-
-        dat_rle_sprite_t(kaitai::kstream* p__io, allegro_dat_t::dat_object_t* p__parent = nullptr, allegro_dat_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~dat_rle_sprite_t();
-
-    private:
-        int16_t m_bits_per_pixel;
-        uint16_t m_width;
-        uint16_t m_height;
-        uint32_t m_len_image;
-        std::string m_image;
-        allegro_dat_t* m__root;
-        allegro_dat_t::dat_object_t* m__parent;
-
-    public:
-        int16_t bits_per_pixel() const { return m_bits_per_pixel; }
-        uint16_t width() const { return m_width; }
-        uint16_t height() const { return m_height; }
-        uint32_t len_image() const { return m_len_image; }
-        std::string image() const { return m_image; }
         allegro_dat_t* _root() const { return m__root; }
         allegro_dat_t::dat_object_t* _parent() const { return m__parent; }
     };

@@ -2,12 +2,12 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
-use UdpDatagram;
-use Ipv4Packet;
-use IcmpPacket;
+use IO::KaitaiStruct 0.011_000;
 use Ipv6Packet;
+use UdpDatagram;
+use IcmpPacket;
 use TcpSegment;
+use Ipv4Packet;
 
 ########################################################################
 package ProtocolBody;
@@ -174,7 +174,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -185,26 +185,26 @@ sub _read {
     my ($self) = @_;
 
     my $_on = $self->protocol();
-    if ($_on == $ProtocolBody::PROTOCOL_ENUM_IPV6_NONXT) {
-        $self->{body} = ProtocolBody::NoNextHeader->new($self->{_io}, $self, $self->{_root});
-    }
-    elsif ($_on == $ProtocolBody::PROTOCOL_ENUM_IPV4) {
-        $self->{body} = Ipv4Packet->new($self->{_io});
-    }
-    elsif ($_on == $ProtocolBody::PROTOCOL_ENUM_UDP) {
-        $self->{body} = UdpDatagram->new($self->{_io});
+    if ($_on == $ProtocolBody::PROTOCOL_ENUM_HOPOPT) {
+        $self->{body} = ProtocolBody::OptionHopByHop->new($self->{_io}, $self, $self->{_root});
     }
     elsif ($_on == $ProtocolBody::PROTOCOL_ENUM_ICMP) {
         $self->{body} = IcmpPacket->new($self->{_io});
     }
-    elsif ($_on == $ProtocolBody::PROTOCOL_ENUM_HOPOPT) {
-        $self->{body} = ProtocolBody::OptionHopByHop->new($self->{_io}, $self, $self->{_root});
+    elsif ($_on == $ProtocolBody::PROTOCOL_ENUM_IPV4) {
+        $self->{body} = Ipv4Packet->new($self->{_io});
     }
     elsif ($_on == $ProtocolBody::PROTOCOL_ENUM_IPV6) {
         $self->{body} = Ipv6Packet->new($self->{_io});
     }
+    elsif ($_on == $ProtocolBody::PROTOCOL_ENUM_IPV6_NONXT) {
+        $self->{body} = ProtocolBody::NoNextHeader->new($self->{_io}, $self, $self->{_root});
+    }
     elsif ($_on == $ProtocolBody::PROTOCOL_ENUM_TCP) {
         $self->{body} = TcpSegment->new($self->{_io});
+    }
+    elsif ($_on == $ProtocolBody::PROTOCOL_ENUM_UDP) {
+        $self->{body} = UdpDatagram->new($self->{_io});
     }
 }
 
@@ -245,7 +245,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -277,7 +277,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -289,8 +289,8 @@ sub _read {
 
     $self->{next_header_type} = $self->{_io}->read_u1();
     $self->{hdr_ext_len} = $self->{_io}->read_u1();
-    $self->{body} = $self->{_io}->read_bytes(($self->hdr_ext_len() > 0 ? ($self->hdr_ext_len() - 1) : 1));
-    $self->{next_header} = ProtocolBody->new($self->{_io});
+    $self->{body} = $self->{_io}->read_bytes(($self->hdr_ext_len() > 0 ? $self->hdr_ext_len() - 1 : 1));
+    $self->{next_header} = ProtocolBody->new($self->{_io}, $self, $self->{_root});
 }
 
 sub next_header_type {

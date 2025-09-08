@@ -35,20 +35,29 @@ const (
 	PcfFont_Types__GlyphNames PcfFont_Types = 128
 	PcfFont_Types__BdfAccelerators PcfFont_Types = 256
 )
+var values_PcfFont_Types = map[PcfFont_Types]struct{}{1: {}, 2: {}, 4: {}, 8: {}, 16: {}, 32: {}, 64: {}, 128: {}, 256: {}}
+func (v PcfFont_Types) isDefined() bool {
+	_, ok := values_PcfFont_Types[v]
+	return ok
+}
 type PcfFont struct {
 	Magic []byte
 	NumTables uint32
 	Tables []*PcfFont_Table
 	_io *kaitai.Stream
 	_root *PcfFont
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewPcfFont() *PcfFont {
 	return &PcfFont{
 	}
 }
 
-func (this *PcfFont) Read(io *kaitai.Stream, parent interface{}, root *PcfFont) (err error) {
+func (this PcfFont) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PcfFont) Read(io *kaitai.Stream, parent kaitai.Struct, root *PcfFont) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -80,6 +89,85 @@ func (this *PcfFont) Read(io *kaitai.Stream, parent interface{}, root *PcfFont) 
 }
 
 /**
+ * Table format specifier, always 4 bytes. Original implementation treats
+ * it as always little-endian and makes liberal use of bitmasking to parse
+ * various parts of it.
+ * 
+ * TODO: this format specification recognizes endianness and bit
+ * order format bits, but it does not really takes any parsing
+ * decisions based on them.
+ * @see <a href="https://fontforge.org/docs/techref/pcf-format.html#file-header">Source</a>
+ */
+type PcfFont_Format struct {
+	Padding1 uint64
+	ScanUnitMask uint64
+	IsMostSignificantBitFirst bool
+	IsBigEndian bool
+	GlyphPadMask uint64
+	Format uint8
+	Padding uint16
+	_io *kaitai.Stream
+	_root *PcfFont
+	_parent kaitai.Struct
+}
+func NewPcfFont_Format() *PcfFont_Format {
+	return &PcfFont_Format{
+	}
+}
+
+func (this PcfFont_Format) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PcfFont_Format) Read(io *kaitai.Stream, parent kaitai.Struct, root *PcfFont) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp4, err := this._io.ReadBitsIntBe(2)
+	if err != nil {
+		return err
+	}
+	this.Padding1 = tmp4
+	tmp5, err := this._io.ReadBitsIntBe(2)
+	if err != nil {
+		return err
+	}
+	this.ScanUnitMask = tmp5
+	tmp6, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.IsMostSignificantBitFirst = tmp6 != 0
+	tmp7, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.IsBigEndian = tmp7 != 0
+	tmp8, err := this._io.ReadBitsIntBe(2)
+	if err != nil {
+		return err
+	}
+	this.GlyphPadMask = tmp8
+	this._io.AlignToByte()
+	tmp9, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Format = tmp9
+	tmp10, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.Padding = uint16(tmp10)
+	return err
+}
+
+/**
+ * If set, then all integers in the table are treated as big-endian
+ */
+
+/**
  * Table offers a offset + length pointer to a particular
  * table. "Type" of table references certain enum. Applications can
  * ignore enum values which they don't support.
@@ -101,38 +189,43 @@ func NewPcfFont_Table() *PcfFont_Table {
 	}
 }
 
+func (this PcfFont_Table) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *PcfFont_Table) Read(io *kaitai.Stream, parent *PcfFont, root *PcfFont) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp4, err := this._io.ReadU4le()
+	tmp11, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Type = PcfFont_Types(tmp4)
-	tmp5 := NewPcfFont_Format()
-	err = tmp5.Read(this._io, this, this._root)
+	this.Type = PcfFont_Types(tmp11)
+	tmp12 := NewPcfFont_Format()
+	err = tmp12.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Format = tmp5
-	tmp6, err := this._io.ReadU4le()
+	this.Format = tmp12
+	tmp13, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.LenBody = uint32(tmp6)
-	tmp7, err := this._io.ReadU4le()
+	this.LenBody = uint32(tmp13)
+	tmp14, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.OfsBody = uint32(tmp7)
+	this.OfsBody = uint32(tmp14)
 	return err
 }
 func (this *PcfFont_Table) Body() (v interface{}, err error) {
 	if (this._f_body) {
 		return this.body, nil
 	}
+	this._f_body = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
@@ -142,369 +235,90 @@ func (this *PcfFont_Table) Body() (v interface{}, err error) {
 		return nil, err
 	}
 	switch (this.Type) {
-	case PcfFont_Types__Properties:
-		tmp8, err := this._io.ReadBytes(int(this.LenBody))
-		if err != nil {
-			return nil, err
-		}
-		tmp8 = tmp8
-		this._raw_body = tmp8
-		_io__raw_body := kaitai.NewStream(bytes.NewReader(this._raw_body))
-		tmp9 := NewPcfFont_Table_Properties()
-		err = tmp9.Read(_io__raw_body, this, this._root)
-		if err != nil {
-			return nil, err
-		}
-		this.body = tmp9
 	case PcfFont_Types__BdfEncodings:
-		tmp10, err := this._io.ReadBytes(int(this.LenBody))
+		tmp15, err := this._io.ReadBytes(int(this.LenBody))
 		if err != nil {
 			return nil, err
 		}
-		tmp10 = tmp10
-		this._raw_body = tmp10
+		tmp15 = tmp15
+		this._raw_body = tmp15
 		_io__raw_body := kaitai.NewStream(bytes.NewReader(this._raw_body))
-		tmp11 := NewPcfFont_Table_BdfEncodings()
-		err = tmp11.Read(_io__raw_body, this, this._root)
+		tmp16 := NewPcfFont_Table_BdfEncodings()
+		err = tmp16.Read(_io__raw_body, this, this._root)
 		if err != nil {
 			return nil, err
 		}
-		this.body = tmp11
-	case PcfFont_Types__Swidths:
-		tmp12, err := this._io.ReadBytes(int(this.LenBody))
-		if err != nil {
-			return nil, err
-		}
-		tmp12 = tmp12
-		this._raw_body = tmp12
-		_io__raw_body := kaitai.NewStream(bytes.NewReader(this._raw_body))
-		tmp13 := NewPcfFont_Table_Swidths()
-		err = tmp13.Read(_io__raw_body, this, this._root)
-		if err != nil {
-			return nil, err
-		}
-		this.body = tmp13
-	case PcfFont_Types__GlyphNames:
-		tmp14, err := this._io.ReadBytes(int(this.LenBody))
-		if err != nil {
-			return nil, err
-		}
-		tmp14 = tmp14
-		this._raw_body = tmp14
-		_io__raw_body := kaitai.NewStream(bytes.NewReader(this._raw_body))
-		tmp15 := NewPcfFont_Table_GlyphNames()
-		err = tmp15.Read(_io__raw_body, this, this._root)
-		if err != nil {
-			return nil, err
-		}
-		this.body = tmp15
+		this.body = tmp16
 	case PcfFont_Types__Bitmaps:
-		tmp16, err := this._io.ReadBytes(int(this.LenBody))
+		tmp17, err := this._io.ReadBytes(int(this.LenBody))
 		if err != nil {
 			return nil, err
 		}
-		tmp16 = tmp16
-		this._raw_body = tmp16
+		tmp17 = tmp17
+		this._raw_body = tmp17
 		_io__raw_body := kaitai.NewStream(bytes.NewReader(this._raw_body))
-		tmp17 := NewPcfFont_Table_Bitmaps()
-		err = tmp17.Read(_io__raw_body, this, this._root)
+		tmp18 := NewPcfFont_Table_Bitmaps()
+		err = tmp18.Read(_io__raw_body, this, this._root)
 		if err != nil {
 			return nil, err
 		}
-		this.body = tmp17
+		this.body = tmp18
+	case PcfFont_Types__GlyphNames:
+		tmp19, err := this._io.ReadBytes(int(this.LenBody))
+		if err != nil {
+			return nil, err
+		}
+		tmp19 = tmp19
+		this._raw_body = tmp19
+		_io__raw_body := kaitai.NewStream(bytes.NewReader(this._raw_body))
+		tmp20 := NewPcfFont_Table_GlyphNames()
+		err = tmp20.Read(_io__raw_body, this, this._root)
+		if err != nil {
+			return nil, err
+		}
+		this.body = tmp20
+	case PcfFont_Types__Properties:
+		tmp21, err := this._io.ReadBytes(int(this.LenBody))
+		if err != nil {
+			return nil, err
+		}
+		tmp21 = tmp21
+		this._raw_body = tmp21
+		_io__raw_body := kaitai.NewStream(bytes.NewReader(this._raw_body))
+		tmp22 := NewPcfFont_Table_Properties()
+		err = tmp22.Read(_io__raw_body, this, this._root)
+		if err != nil {
+			return nil, err
+		}
+		this.body = tmp22
+	case PcfFont_Types__Swidths:
+		tmp23, err := this._io.ReadBytes(int(this.LenBody))
+		if err != nil {
+			return nil, err
+		}
+		tmp23 = tmp23
+		this._raw_body = tmp23
+		_io__raw_body := kaitai.NewStream(bytes.NewReader(this._raw_body))
+		tmp24 := NewPcfFont_Table_Swidths()
+		err = tmp24.Read(_io__raw_body, this, this._root)
+		if err != nil {
+			return nil, err
+		}
+		this.body = tmp24
 	default:
-		tmp18, err := this._io.ReadBytes(int(this.LenBody))
+		tmp25, err := this._io.ReadBytes(int(this.LenBody))
 		if err != nil {
 			return nil, err
 		}
-		tmp18 = tmp18
-		this._raw_body = tmp18
+		tmp25 = tmp25
+		this._raw_body = tmp25
 	}
 	_, err = this._io.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
-	this._f_body = true
-	this._f_body = true
 	return this.body, nil
 }
-
-/**
- * Table containing scalable widths of characters.
- * @see <a href="https://fontforge.org/docs/techref/pcf-format.html#the-scalable-widths-table">Source</a>
- */
-type PcfFont_Table_Swidths struct {
-	Format *PcfFont_Format
-	NumGlyphs uint32
-	Swidths []uint32
-	_io *kaitai.Stream
-	_root *PcfFont
-	_parent *PcfFont_Table
-}
-func NewPcfFont_Table_Swidths() *PcfFont_Table_Swidths {
-	return &PcfFont_Table_Swidths{
-	}
-}
-
-func (this *PcfFont_Table_Swidths) Read(io *kaitai.Stream, parent *PcfFont_Table, root *PcfFont) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp19 := NewPcfFont_Format()
-	err = tmp19.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Format = tmp19
-	tmp20, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.NumGlyphs = uint32(tmp20)
-	for i := 0; i < int(this.NumGlyphs); i++ {
-		_ = i
-		tmp21, err := this._io.ReadU4le()
-		if err != nil {
-			return err
-		}
-		this.Swidths = append(this.Swidths, tmp21)
-	}
-	return err
-}
-
-/**
- * The scalable width of a character is the width of the corresponding
- * PostScript character in em-units (1/1000ths of an em).
- */
-
-/**
- * Array of properties (key-value pairs), used to convey different X11
- * settings of a font. Key is always an X font atom.
- * @see <a href="https://fontforge.org/docs/techref/pcf-format.html#properties-table">Source</a>
- */
-type PcfFont_Table_Properties struct {
-	Format *PcfFont_Format
-	NumProps uint32
-	Props []*PcfFont_Table_Properties_Prop
-	Padding []byte
-	LenStrings uint32
-	Strings *BytesWithIo
-	_io *kaitai.Stream
-	_root *PcfFont
-	_parent *PcfFont_Table
-	_raw_Strings []byte
-}
-func NewPcfFont_Table_Properties() *PcfFont_Table_Properties {
-	return &PcfFont_Table_Properties{
-	}
-}
-
-func (this *PcfFont_Table_Properties) Read(io *kaitai.Stream, parent *PcfFont_Table, root *PcfFont) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp22 := NewPcfFont_Format()
-	err = tmp22.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Format = tmp22
-	tmp23, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.NumProps = uint32(tmp23)
-	for i := 0; i < int(this.NumProps); i++ {
-		_ = i
-		tmp24 := NewPcfFont_Table_Properties_Prop()
-		err = tmp24.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Props = append(this.Props, tmp24)
-	}
-	var tmp25 int8;
-	if ((this.NumProps & 3) == 0) {
-		tmp25 = 0
-	} else {
-		tmp25 = (4 - (this.NumProps & 3))
-	}
-	tmp26, err := this._io.ReadBytes(int(tmp25))
-	if err != nil {
-		return err
-	}
-	tmp26 = tmp26
-	this.Padding = tmp26
-	tmp27, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.LenStrings = uint32(tmp27)
-	tmp28, err := this._io.ReadBytes(int(this.LenStrings))
-	if err != nil {
-		return err
-	}
-	tmp28 = tmp28
-	this._raw_Strings = tmp28
-	_io__raw_Strings := kaitai.NewStream(bytes.NewReader(this._raw_Strings))
-	tmp29 := NewBytesWithIo()
-	err = tmp29.Read(_io__raw_Strings, this, nil)
-	if err != nil {
-		return err
-	}
-	this.Strings = tmp29
-	return err
-}
-
-/**
- * Strings buffer. Never used directly, but instead is
- * addressed by offsets from the properties.
- */
-
-/**
- * Property is a key-value pair, "key" being always a
- * string and "value" being either a string or a 32-bit
- * integer based on an additinal flag (`is_string`).
- * 
- * Simple offset-based mechanism is employed to keep this
- * type's sequence fixed-sized and thus have simple access
- * to property key/value by index.
- */
-type PcfFont_Table_Properties_Prop struct {
-	OfsName uint32
-	IsString uint8
-	ValueOrOfsValue uint32
-	_io *kaitai.Stream
-	_root *PcfFont
-	_parent *PcfFont_Table_Properties
-	_f_name bool
-	name string
-	_f_strValue bool
-	strValue string
-	_f_intValue bool
-	intValue uint32
-}
-func NewPcfFont_Table_Properties_Prop() *PcfFont_Table_Properties_Prop {
-	return &PcfFont_Table_Properties_Prop{
-	}
-}
-
-func (this *PcfFont_Table_Properties_Prop) Read(io *kaitai.Stream, parent *PcfFont_Table_Properties, root *PcfFont) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp30, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.OfsName = uint32(tmp30)
-	tmp31, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.IsString = tmp31
-	tmp32, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.ValueOrOfsValue = uint32(tmp32)
-	return err
-}
-
-/**
- * Name of the property addressed in the strings buffer.
- */
-func (this *PcfFont_Table_Properties_Prop) Name() (v string, err error) {
-	if (this._f_name) {
-		return this.name, nil
-	}
-	thisIo := this._parent.Strings._io
-	_pos, err := thisIo.Pos()
-	if err != nil {
-		return "", err
-	}
-	_, err = thisIo.Seek(int64(this.OfsName), io.SeekStart)
-	if err != nil {
-		return "", err
-	}
-	tmp33, err := thisIo.ReadBytesTerm(0, false, true, true)
-	if err != nil {
-		return "", err
-	}
-	this.name = string(tmp33)
-	_, err = thisIo.Seek(_pos, io.SeekStart)
-	if err != nil {
-		return "", err
-	}
-	this._f_name = true
-	this._f_name = true
-	return this.name, nil
-}
-
-/**
- * Value of the property addressed in the strings
- * buffer, if this is a string value.
- */
-func (this *PcfFont_Table_Properties_Prop) StrValue() (v string, err error) {
-	if (this._f_strValue) {
-		return this.strValue, nil
-	}
-	if (this.IsString != 0) {
-		thisIo := this._parent.Strings._io
-		_pos, err := thisIo.Pos()
-		if err != nil {
-			return "", err
-		}
-		_, err = thisIo.Seek(int64(this.ValueOrOfsValue), io.SeekStart)
-		if err != nil {
-			return "", err
-		}
-		tmp34, err := thisIo.ReadBytesTerm(0, false, true, true)
-		if err != nil {
-			return "", err
-		}
-		this.strValue = string(tmp34)
-		_, err = thisIo.Seek(_pos, io.SeekStart)
-		if err != nil {
-			return "", err
-		}
-		this._f_strValue = true
-	}
-	this._f_strValue = true
-	return this.strValue, nil
-}
-
-/**
- * Value of the property, if this is an integer value.
- */
-func (this *PcfFont_Table_Properties_Prop) IntValue() (v uint32, err error) {
-	if (this._f_intValue) {
-		return this.intValue, nil
-	}
-	if (this.IsString == 0) {
-		this.intValue = uint32(this.ValueOrOfsValue)
-	}
-	this._f_intValue = true
-	return this.intValue, nil
-}
-
-/**
- * Offset to name in the strings buffer.
- */
-
-/**
- * Designates if value is an integer (zero) or a string (non-zero).
- */
-
-/**
- * If the value is an integer (`is_string` is false),
- * then it's stored here. If the value is a string
- * (`is_string` is true), then it stores offset to the
- * value in the strings buffer.
- */
 
 /**
  * Table that allows mapping of character codes to glyphs present in the
@@ -534,49 +348,110 @@ func NewPcfFont_Table_BdfEncodings() *PcfFont_Table_BdfEncodings {
 	}
 }
 
+func (this PcfFont_Table_BdfEncodings) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *PcfFont_Table_BdfEncodings) Read(io *kaitai.Stream, parent *PcfFont_Table, root *PcfFont) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp35 := NewPcfFont_Format()
-	err = tmp35.Read(this._io, this, this._root)
+	tmp26 := NewPcfFont_Format()
+	err = tmp26.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Format = tmp35
-	tmp36, err := this._io.ReadU2le()
+	this.Format = tmp26
+	tmp27, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.MinCharOrByte2 = uint16(tmp36)
-	tmp37, err := this._io.ReadU2le()
+	this.MinCharOrByte2 = uint16(tmp27)
+	tmp28, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.MaxCharOrByte2 = uint16(tmp37)
-	tmp38, err := this._io.ReadU2le()
+	this.MaxCharOrByte2 = uint16(tmp28)
+	tmp29, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.MinByte1 = uint16(tmp38)
-	tmp39, err := this._io.ReadU2le()
+	this.MinByte1 = uint16(tmp29)
+	tmp30, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.MaxByte1 = uint16(tmp39)
-	tmp40, err := this._io.ReadU2le()
+	this.MaxByte1 = uint16(tmp30)
+	tmp31, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.DefaultChar = uint16(tmp40)
-	for i := 0; i < int((((this.MaxCharOrByte2 - this.MinCharOrByte2) + 1) * ((this.MaxByte1 - this.MinByte1) + 1))); i++ {
+	this.DefaultChar = uint16(tmp31)
+	for i := 0; i < int(((this.MaxCharOrByte2 - this.MinCharOrByte2) + 1) * ((this.MaxByte1 - this.MinByte1) + 1)); i++ {
 		_ = i
-		tmp41, err := this._io.ReadU2le()
+		tmp32, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
-		this.GlyphIndexes = append(this.GlyphIndexes, tmp41)
+		this.GlyphIndexes = append(this.GlyphIndexes, tmp32)
+	}
+	return err
+}
+
+/**
+ * Table containing uncompressed glyph bitmaps.
+ * @see <a href="https://fontforge.org/docs/techref/pcf-format.html#the-bitmap-table">Source</a>
+ */
+type PcfFont_Table_Bitmaps struct {
+	Format *PcfFont_Format
+	NumGlyphs uint32
+	Offsets []uint32
+	BitmapSizes []uint32
+	_io *kaitai.Stream
+	_root *PcfFont
+	_parent *PcfFont_Table
+}
+func NewPcfFont_Table_Bitmaps() *PcfFont_Table_Bitmaps {
+	return &PcfFont_Table_Bitmaps{
+	}
+}
+
+func (this PcfFont_Table_Bitmaps) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PcfFont_Table_Bitmaps) Read(io *kaitai.Stream, parent *PcfFont_Table, root *PcfFont) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp33 := NewPcfFont_Format()
+	err = tmp33.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Format = tmp33
+	tmp34, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.NumGlyphs = uint32(tmp34)
+	for i := 0; i < int(this.NumGlyphs); i++ {
+		_ = i
+		tmp35, err := this._io.ReadU4le()
+		if err != nil {
+			return err
+		}
+		this.Offsets = append(this.Offsets, tmp35)
+	}
+	for i := 0; i < int(4); i++ {
+		_ = i
+		tmp36, err := this._io.ReadU4le()
+		if err != nil {
+			return err
+		}
+		this.BitmapSizes = append(this.BitmapSizes, tmp36)
 	}
 	return err
 }
@@ -601,49 +476,53 @@ func NewPcfFont_Table_GlyphNames() *PcfFont_Table_GlyphNames {
 	}
 }
 
+func (this PcfFont_Table_GlyphNames) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *PcfFont_Table_GlyphNames) Read(io *kaitai.Stream, parent *PcfFont_Table, root *PcfFont) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp42 := NewPcfFont_Format()
-	err = tmp42.Read(this._io, this, this._root)
+	tmp37 := NewPcfFont_Format()
+	err = tmp37.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Format = tmp42
-	tmp43, err := this._io.ReadU4le()
+	this.Format = tmp37
+	tmp38, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.NumGlyphs = uint32(tmp43)
+	this.NumGlyphs = uint32(tmp38)
 	for i := 0; i < int(this.NumGlyphs); i++ {
 		_ = i
-		tmp44 := NewPcfFont_Table_GlyphNames_StringRef()
-		err = tmp44.Read(this._io, this, this._root)
+		tmp39 := NewPcfFont_Table_GlyphNames_StringRef()
+		err = tmp39.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Names = append(this.Names, tmp44)
+		this.Names = append(this.Names, tmp39)
 	}
-	tmp45, err := this._io.ReadU4le()
+	tmp40, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.LenStrings = uint32(tmp45)
-	tmp46, err := this._io.ReadBytes(int(this.LenStrings))
+	this.LenStrings = uint32(tmp40)
+	tmp41, err := this._io.ReadBytes(int(this.LenStrings))
 	if err != nil {
 		return err
 	}
-	tmp46 = tmp46
-	this._raw_Strings = tmp46
+	tmp41 = tmp41
+	this._raw_Strings = tmp41
 	_io__raw_Strings := kaitai.NewStream(bytes.NewReader(this._raw_Strings))
-	tmp47 := NewBytesWithIo()
-	err = tmp47.Read(_io__raw_Strings, this, nil)
+	tmp42 := NewBytesWithIo()
+	err = tmp42.Read(_io__raw_Strings, nil, nil)
 	if err != nil {
 		return err
 	}
-	this.Strings = tmp47
+	this.Strings = tmp42
 	return err
 }
 
@@ -667,22 +546,27 @@ func NewPcfFont_Table_GlyphNames_StringRef() *PcfFont_Table_GlyphNames_StringRef
 	}
 }
 
+func (this PcfFont_Table_GlyphNames_StringRef) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *PcfFont_Table_GlyphNames_StringRef) Read(io *kaitai.Stream, parent *PcfFont_Table_GlyphNames, root *PcfFont) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp48, err := this._io.ReadU4le()
+	tmp43, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.OfsString = uint32(tmp48)
+	this.OfsString = uint32(tmp43)
 	return err
 }
 func (this *PcfFont_Table_GlyphNames_StringRef) Value() (v string, err error) {
 	if (this._f_value) {
 		return this.value, nil
 	}
+	this._f_value = true
 	thisIo := this._parent.Strings._io
 	_pos, err := thisIo.Pos()
 	if err != nil {
@@ -692,144 +576,301 @@ func (this *PcfFont_Table_GlyphNames_StringRef) Value() (v string, err error) {
 	if err != nil {
 		return "", err
 	}
-	tmp49, err := thisIo.ReadBytesTerm(0, false, true, true)
+	tmp44, err := thisIo.ReadBytesTerm(0, false, true, true)
 	if err != nil {
 		return "", err
 	}
-	this.value = string(tmp49)
+	this.value = string(tmp44)
 	_, err = thisIo.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return "", err
 	}
-	this._f_value = true
-	this._f_value = true
 	return this.value, nil
 }
 
 /**
- * Table containing uncompressed glyph bitmaps.
- * @see <a href="https://fontforge.org/docs/techref/pcf-format.html#the-bitmap-table">Source</a>
+ * Array of properties (key-value pairs), used to convey different X11
+ * settings of a font. Key is always an X font atom.
+ * @see <a href="https://fontforge.org/docs/techref/pcf-format.html#properties-table">Source</a>
  */
-type PcfFont_Table_Bitmaps struct {
+type PcfFont_Table_Properties struct {
+	Format *PcfFont_Format
+	NumProps uint32
+	Props []*PcfFont_Table_Properties_Prop
+	Padding []byte
+	LenStrings uint32
+	Strings *BytesWithIo
+	_io *kaitai.Stream
+	_root *PcfFont
+	_parent *PcfFont_Table
+	_raw_Strings []byte
+}
+func NewPcfFont_Table_Properties() *PcfFont_Table_Properties {
+	return &PcfFont_Table_Properties{
+	}
+}
+
+func (this PcfFont_Table_Properties) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PcfFont_Table_Properties) Read(io *kaitai.Stream, parent *PcfFont_Table, root *PcfFont) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp45 := NewPcfFont_Format()
+	err = tmp45.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Format = tmp45
+	tmp46, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.NumProps = uint32(tmp46)
+	for i := 0; i < int(this.NumProps); i++ {
+		_ = i
+		tmp47 := NewPcfFont_Table_Properties_Prop()
+		err = tmp47.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Props = append(this.Props, tmp47)
+	}
+	var tmp48 int8;
+	if (this.NumProps & 3 == 0) {
+		tmp48 = 0
+	} else {
+		tmp48 = 4 - this.NumProps & 3
+	}
+	tmp49, err := this._io.ReadBytes(int(tmp48))
+	if err != nil {
+		return err
+	}
+	tmp49 = tmp49
+	this.Padding = tmp49
+	tmp50, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.LenStrings = uint32(tmp50)
+	tmp51, err := this._io.ReadBytes(int(this.LenStrings))
+	if err != nil {
+		return err
+	}
+	tmp51 = tmp51
+	this._raw_Strings = tmp51
+	_io__raw_Strings := kaitai.NewStream(bytes.NewReader(this._raw_Strings))
+	tmp52 := NewBytesWithIo()
+	err = tmp52.Read(_io__raw_Strings, nil, nil)
+	if err != nil {
+		return err
+	}
+	this.Strings = tmp52
+	return err
+}
+
+/**
+ * Strings buffer. Never used directly, but instead is
+ * addressed by offsets from the properties.
+ */
+
+/**
+ * Property is a key-value pair, "key" being always a
+ * string and "value" being either a string or a 32-bit
+ * integer based on an additinal flag (`is_string`).
+ * 
+ * Simple offset-based mechanism is employed to keep this
+ * type's sequence fixed-sized and thus have simple access
+ * to property key/value by index.
+ */
+type PcfFont_Table_Properties_Prop struct {
+	OfsName uint32
+	IsString uint8
+	ValueOrOfsValue uint32
+	_io *kaitai.Stream
+	_root *PcfFont
+	_parent *PcfFont_Table_Properties
+	_f_intValue bool
+	intValue uint32
+	_f_name bool
+	name string
+	_f_strValue bool
+	strValue string
+}
+func NewPcfFont_Table_Properties_Prop() *PcfFont_Table_Properties_Prop {
+	return &PcfFont_Table_Properties_Prop{
+	}
+}
+
+func (this PcfFont_Table_Properties_Prop) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PcfFont_Table_Properties_Prop) Read(io *kaitai.Stream, parent *PcfFont_Table_Properties, root *PcfFont) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp53, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.OfsName = uint32(tmp53)
+	tmp54, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.IsString = tmp54
+	tmp55, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.ValueOrOfsValue = uint32(tmp55)
+	return err
+}
+
+/**
+ * Value of the property, if this is an integer value.
+ */
+func (this *PcfFont_Table_Properties_Prop) IntValue() (v uint32, err error) {
+	if (this._f_intValue) {
+		return this.intValue, nil
+	}
+	this._f_intValue = true
+	if (this.IsString == 0) {
+		this.intValue = uint32(this.ValueOrOfsValue)
+	}
+	return this.intValue, nil
+}
+
+/**
+ * Name of the property addressed in the strings buffer.
+ */
+func (this *PcfFont_Table_Properties_Prop) Name() (v string, err error) {
+	if (this._f_name) {
+		return this.name, nil
+	}
+	this._f_name = true
+	thisIo := this._parent.Strings._io
+	_pos, err := thisIo.Pos()
+	if err != nil {
+		return "", err
+	}
+	_, err = thisIo.Seek(int64(this.OfsName), io.SeekStart)
+	if err != nil {
+		return "", err
+	}
+	tmp56, err := thisIo.ReadBytesTerm(0, false, true, true)
+	if err != nil {
+		return "", err
+	}
+	this.name = string(tmp56)
+	_, err = thisIo.Seek(_pos, io.SeekStart)
+	if err != nil {
+		return "", err
+	}
+	return this.name, nil
+}
+
+/**
+ * Value of the property addressed in the strings
+ * buffer, if this is a string value.
+ */
+func (this *PcfFont_Table_Properties_Prop) StrValue() (v string, err error) {
+	if (this._f_strValue) {
+		return this.strValue, nil
+	}
+	this._f_strValue = true
+	if (this.IsString != 0) {
+		thisIo := this._parent.Strings._io
+		_pos, err := thisIo.Pos()
+		if err != nil {
+			return "", err
+		}
+		_, err = thisIo.Seek(int64(this.ValueOrOfsValue), io.SeekStart)
+		if err != nil {
+			return "", err
+		}
+		tmp57, err := thisIo.ReadBytesTerm(0, false, true, true)
+		if err != nil {
+			return "", err
+		}
+		this.strValue = string(tmp57)
+		_, err = thisIo.Seek(_pos, io.SeekStart)
+		if err != nil {
+			return "", err
+		}
+	}
+	return this.strValue, nil
+}
+
+/**
+ * Offset to name in the strings buffer.
+ */
+
+/**
+ * Designates if value is an integer (zero) or a string (non-zero).
+ */
+
+/**
+ * If the value is an integer (`is_string` is false),
+ * then it's stored here. If the value is a string
+ * (`is_string` is true), then it stores offset to the
+ * value in the strings buffer.
+ */
+
+/**
+ * Table containing scalable widths of characters.
+ * @see <a href="https://fontforge.org/docs/techref/pcf-format.html#the-scalable-widths-table">Source</a>
+ */
+type PcfFont_Table_Swidths struct {
 	Format *PcfFont_Format
 	NumGlyphs uint32
-	Offsets []uint32
-	BitmapSizes []uint32
+	Swidths []uint32
 	_io *kaitai.Stream
 	_root *PcfFont
 	_parent *PcfFont_Table
 }
-func NewPcfFont_Table_Bitmaps() *PcfFont_Table_Bitmaps {
-	return &PcfFont_Table_Bitmaps{
+func NewPcfFont_Table_Swidths() *PcfFont_Table_Swidths {
+	return &PcfFont_Table_Swidths{
 	}
 }
 
-func (this *PcfFont_Table_Bitmaps) Read(io *kaitai.Stream, parent *PcfFont_Table, root *PcfFont) (err error) {
+func (this PcfFont_Table_Swidths) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PcfFont_Table_Swidths) Read(io *kaitai.Stream, parent *PcfFont_Table, root *PcfFont) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp50 := NewPcfFont_Format()
-	err = tmp50.Read(this._io, this, this._root)
+	tmp58 := NewPcfFont_Format()
+	err = tmp58.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Format = tmp50
-	tmp51, err := this._io.ReadU4le()
+	this.Format = tmp58
+	tmp59, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.NumGlyphs = uint32(tmp51)
+	this.NumGlyphs = uint32(tmp59)
 	for i := 0; i < int(this.NumGlyphs); i++ {
 		_ = i
-		tmp52, err := this._io.ReadU4le()
+		tmp60, err := this._io.ReadU4le()
 		if err != nil {
 			return err
 		}
-		this.Offsets = append(this.Offsets, tmp52)
-	}
-	for i := 0; i < int(4); i++ {
-		_ = i
-		tmp53, err := this._io.ReadU4le()
-		if err != nil {
-			return err
-		}
-		this.BitmapSizes = append(this.BitmapSizes, tmp53)
+		this.Swidths = append(this.Swidths, tmp60)
 	}
 	return err
 }
 
 /**
- * Table format specifier, always 4 bytes. Original implementation treats
- * it as always little-endian and makes liberal use of bitmasking to parse
- * various parts of it.
- * 
- * TODO: this format specification recognizes endianness and bit
- * order format bits, but it does not really takes any parsing
- * decisions based on them.
- * @see <a href="https://fontforge.org/docs/techref/pcf-format.html#file-header">Source</a>
- */
-type PcfFont_Format struct {
-	Padding1 uint64
-	ScanUnitMask uint64
-	IsMostSignificantBitFirst bool
-	IsBigEndian bool
-	GlyphPadMask uint64
-	Format uint8
-	Padding uint16
-	_io *kaitai.Stream
-	_root *PcfFont
-	_parent interface{}
-}
-func NewPcfFont_Format() *PcfFont_Format {
-	return &PcfFont_Format{
-	}
-}
-
-func (this *PcfFont_Format) Read(io *kaitai.Stream, parent interface{}, root *PcfFont) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp54, err := this._io.ReadBitsIntBe(2)
-	if err != nil {
-		return err
-	}
-	this.Padding1 = tmp54
-	tmp55, err := this._io.ReadBitsIntBe(2)
-	if err != nil {
-		return err
-	}
-	this.ScanUnitMask = tmp55
-	tmp56, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.IsMostSignificantBitFirst = tmp56 != 0
-	tmp57, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.IsBigEndian = tmp57 != 0
-	tmp58, err := this._io.ReadBitsIntBe(2)
-	if err != nil {
-		return err
-	}
-	this.GlyphPadMask = tmp58
-	this._io.AlignToByte()
-	tmp59, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Format = tmp59
-	tmp60, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.Padding = uint16(tmp60)
-	return err
-}
-
-/**
- * If set, then all integers in the table are treated as big-endian
+ * The scalable width of a character is the width of the corresponding
+ * PostScript character in em-units (1/1000ths of an em).
  */

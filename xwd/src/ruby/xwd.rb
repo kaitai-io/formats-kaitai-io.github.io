@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -19,18 +19,18 @@ end
 # and thus is probably a poor choice for true cross-platform usage.
 class Xwd < Kaitai::Struct::Struct
 
+  BYTE_ORDER = {
+    0 => :byte_order_le,
+    1 => :byte_order_be,
+  }
+  I__BYTE_ORDER = BYTE_ORDER.invert
+
   PIXMAP_FORMAT = {
     0 => :pixmap_format_x_y_bitmap,
     1 => :pixmap_format_x_y_pixmap,
     2 => :pixmap_format_z_pixmap,
   }
   I__PIXMAP_FORMAT = PIXMAP_FORMAT.invert
-
-  BYTE_ORDER = {
-    0 => :byte_order_le,
-    1 => :byte_order_be,
-  }
-  I__BYTE_ORDER = BYTE_ORDER.invert
 
   VISUAL_CLASS = {
     0 => :visual_class_static_gray,
@@ -41,27 +41,50 @@ class Xwd < Kaitai::Struct::Struct
     5 => :visual_class_direct_color,
   }
   I__VISUAL_CLASS = VISUAL_CLASS.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
     @len_header = @_io.read_u4be
-    @_raw_hdr = @_io.read_bytes((len_header - 4))
-    _io__raw_hdr = Kaitai::Struct::Stream.new(@_raw_hdr)
-    @hdr = Header.new(_io__raw_hdr, self, @_root)
+    _io_hdr = @_io.substream(len_header - 4)
+    @hdr = Header.new(_io_hdr, self, @_root)
     @_raw_color_map = []
     @color_map = []
     (hdr.color_map_entries).times { |i|
-      @_raw_color_map << @_io.read_bytes(12)
-      _io__raw_color_map = Kaitai::Struct::Stream.new(@_raw_color_map[i])
-      @color_map << ColorMapEntry.new(_io__raw_color_map, self, @_root)
+      _io_color_map = @_io.substream(12)
+      @color_map << ColorMapEntry.new(_io_color_map, self, @_root)
     }
     self
   end
+  class ColorMapEntry < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @entry_number = @_io.read_u4be
+      @red = @_io.read_u2be
+      @green = @_io.read_u2be
+      @blue = @_io.read_u2be
+      @flags = @_io.read_u1
+      @padding = @_io.read_u1
+      self
+    end
+
+    ##
+    # Number of the color map entry
+    attr_reader :entry_number
+    attr_reader :red
+    attr_reader :green
+    attr_reader :blue
+    attr_reader :flags
+    attr_reader :padding
+  end
   class Header < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -194,31 +217,6 @@ class Xwd < Kaitai::Struct::Struct
     ##
     # Program that created this xwd file
     attr_reader :creator
-  end
-  class ColorMapEntry < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @entry_number = @_io.read_u4be
-      @red = @_io.read_u2be
-      @green = @_io.read_u2be
-      @blue = @_io.read_u2be
-      @flags = @_io.read_u1
-      @padding = @_io.read_u1
-      self
-    end
-
-    ##
-    # Number of the color map entry
-    attr_reader :entry_number
-    attr_reader :red
-    attr_reader :green
-    attr_reader :blue
-    attr_reader :flags
-    attr_reader :padding
   end
 
   ##

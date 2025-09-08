@@ -3,12 +3,14 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class heaps_pak_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -32,9 +34,9 @@ public:
     class header_t : public kaitai::kstruct {
 
     public:
+        class dir_t;
         class entry_t;
         class file_t;
-        class dir_t;
 
         header_t(kaitai::kstream* p__io, heaps_pak_t* p__parent = 0, heaps_pak_t* p__root = 0);
 
@@ -44,6 +46,32 @@ public:
 
     public:
         ~header_t();
+
+        class dir_t : public kaitai::kstruct {
+
+        public:
+
+            dir_t(kaitai::kstream* p__io, heaps_pak_t::header_t::entry_t* p__parent = 0, heaps_pak_t* p__root = 0);
+
+        private:
+            void _read();
+            void _clean_up();
+
+        public:
+            ~dir_t();
+
+        private:
+            uint32_t m_num_entries;
+            std::vector<entry_t*>* m_entries;
+            heaps_pak_t* m__root;
+            heaps_pak_t::header_t::entry_t* m__parent;
+
+        public:
+            uint32_t num_entries() const { return m_num_entries; }
+            std::vector<entry_t*>* entries() const { return m_entries; }
+            heaps_pak_t* _root() const { return m__root; }
+            heaps_pak_t::header_t::entry_t* _parent() const { return m__parent; }
+        };
 
         /**
          * \sa https://github.com/HeapsIO/heaps/blob/2bbc2b386952dfd8856c04a854bb706a52cb4b58/hxd/fmt/pak/Data.hx Source
@@ -143,32 +171,6 @@ public:
             uint32_t ofs_data() const { return m_ofs_data; }
             uint32_t len_data() const { return m_len_data; }
             std::string checksum() const { return m_checksum; }
-            heaps_pak_t* _root() const { return m__root; }
-            heaps_pak_t::header_t::entry_t* _parent() const { return m__parent; }
-        };
-
-        class dir_t : public kaitai::kstruct {
-
-        public:
-
-            dir_t(kaitai::kstream* p__io, heaps_pak_t::header_t::entry_t* p__parent = 0, heaps_pak_t* p__root = 0);
-
-        private:
-            void _read();
-            void _clean_up();
-
-        public:
-            ~dir_t();
-
-        private:
-            uint32_t m_num_entries;
-            std::vector<entry_t*>* m_entries;
-            heaps_pak_t* m__root;
-            heaps_pak_t::header_t::entry_t* m__parent;
-
-        public:
-            uint32_t num_entries() const { return m_num_entries; }
-            std::vector<entry_t*>* entries() const { return m_entries; }
             heaps_pak_t* _root() const { return m__root; }
             heaps_pak_t::header_t::entry_t* _parent() const { return m__parent; }
         };

@@ -53,16 +53,14 @@ namespace Kaitai
             False = 255,
         }
 
-        public enum XmlScanLocation
+        public enum Consts
         {
-            Hlt = 0,
-            Hlb = 1,
-            Hrt = 2,
-            Hrb = 3,
-            Vlt = 4,
-            Vlb = 5,
-            Vrt = 6,
-            Vrb = 7,
+            FrameModeSize = 8,
+            FrameHeaderSize = 22,
+            AxisScalesSize = 30,
+            FileHeaderSize = 32,
+            SpectroVarsMinSize = 38,
+            ScanVarsMinSize = 77,
         }
 
         public enum DataType
@@ -81,14 +79,6 @@ namespace Kaitai
             Uint16 = 2,
             Uint32 = 4,
             Uint64 = 8,
-        }
-
-        public enum XmlParamType
-        {
-            None = 0,
-            LaserWavelength = 1,
-            Units = 2,
-            DataArray = 255,
         }
 
         public enum SpmMode
@@ -119,6 +109,14 @@ namespace Kaitai
             SnomReflection = 23,
             SnomAll = 24,
             Snom = 25,
+        }
+
+        public enum SpmTechnique
+        {
+            ContactMode = 0,
+            SemicontactMode = 1,
+            TunnelCurrent = 2,
+            Snom = 3,
         }
 
         public enum Unit
@@ -175,22 +173,24 @@ namespace Kaitai
             ReservedDos4 = 39,
         }
 
-        public enum SpmTechnique
+        public enum XmlParamType
         {
-            ContactMode = 0,
-            SemicontactMode = 1,
-            TunnelCurrent = 2,
-            Snom = 3,
+            None = 0,
+            LaserWavelength = 1,
+            Units = 2,
+            DataArray = 255,
         }
 
-        public enum Consts
+        public enum XmlScanLocation
         {
-            FrameModeSize = 8,
-            FrameHeaderSize = 22,
-            AxisScalesSize = 30,
-            FileHeaderSize = 32,
-            SpectroVarsMinSize = 38,
-            ScanVarsMinSize = 77,
+            Hlt = 0,
+            Hlb = 1,
+            Hrt = 2,
+            Hrb = 3,
+            Vlt = 4,
+            Vlb = 5,
+            Vrt = 6,
+            Vrb = 7,
         }
         public NtMdt(KaitaiStream p__io, KaitaiStruct p__parent = null, NtMdt p__root = null) : base(p__io)
         {
@@ -201,9 +201,9 @@ namespace Kaitai
         private void _read()
         {
             _signature = m_io.ReadBytes(4);
-            if (!((KaitaiStream.ByteArrayCompare(Signature, new byte[] { 1, 176, 147, 255 }) == 0)))
+            if (!((KaitaiStream.ByteArrayCompare(_signature, new byte[] { 1, 176, 147, 255 }) == 0)))
             {
-                throw new ValidationNotEqualError(new byte[] { 1, 176, 147, 255 }, Signature, M_Io, "/seq/0");
+                throw new ValidationNotEqualError(new byte[] { 1, 176, 147, 255 }, _signature, m_io, "/seq/0");
             }
             _size = m_io.ReadU4le();
             _reserved0 = m_io.ReadBytes(4);
@@ -213,62 +213,6 @@ namespace Kaitai
             __raw_frames = m_io.ReadBytes(Size);
             var io___raw_frames = new KaitaiStream(__raw_frames);
             _frames = new Framez(io___raw_frames, this, m_root);
-        }
-        public partial class Uuid : KaitaiStruct
-        {
-            public static Uuid FromFile(string fileName)
-            {
-                return new Uuid(new KaitaiStream(fileName));
-            }
-
-            public Uuid(KaitaiStream p__io, NtMdt.Frame.FdMetaData p__parent = null, NtMdt p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _data = new List<byte>();
-                for (var i = 0; i < 16; i++)
-                {
-                    _data.Add(m_io.ReadU1());
-                }
-            }
-            private List<byte> _data;
-            private NtMdt m_root;
-            private NtMdt.Frame.FdMetaData m_parent;
-            public List<byte> Data { get { return _data; } }
-            public NtMdt M_Root { get { return m_root; } }
-            public NtMdt.Frame.FdMetaData M_Parent { get { return m_parent; } }
-        }
-        public partial class Framez : KaitaiStruct
-        {
-            public static Framez FromFile(string fileName)
-            {
-                return new Framez(new KaitaiStream(fileName));
-            }
-
-            public Framez(KaitaiStream p__io, NtMdt p__parent = null, NtMdt p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _frames = new List<Frame>();
-                for (var i = 0; i < (M_Root.LastFrame + 1); i++)
-                {
-                    _frames.Add(new Frame(m_io, this, m_root));
-                }
-            }
-            private List<Frame> _frames;
-            private NtMdt m_root;
-            private NtMdt m_parent;
-            public List<Frame> Frames { get { return _frames; } }
-            public NtMdt M_Root { get { return m_root; } }
-            public NtMdt M_Parent { get { return m_parent; } }
         }
         public partial class Frame : KaitaiStruct
         {
@@ -298,9 +242,165 @@ namespace Kaitai
             private void _read()
             {
                 _size = m_io.ReadU4le();
-                __raw_main = m_io.ReadBytes((Size - 4));
+                __raw_main = m_io.ReadBytes(Size - 4);
                 var io___raw_main = new KaitaiStream(__raw_main);
                 _main = new FrameMain(io___raw_main, this, m_root);
+            }
+            public partial class AxisScale : KaitaiStruct
+            {
+                public static AxisScale FromFile(string fileName)
+                {
+                    return new AxisScale(new KaitaiStream(fileName));
+                }
+
+                public AxisScale(KaitaiStream p__io, KaitaiStruct p__parent = null, NtMdt p__root = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    _read();
+                }
+                private void _read()
+                {
+                    _offset = m_io.ReadF4le();
+                    _step = m_io.ReadF4le();
+                    _unit = ((NtMdt.Unit) m_io.ReadS2le());
+                }
+                private float _offset;
+                private float _step;
+                private Unit _unit;
+                private NtMdt m_root;
+                private KaitaiStruct m_parent;
+
+                /// <summary>
+                /// x_scale-&gt;offset = gwy_get_gfloat_le(&amp;p);# r0 (physical units)
+                /// </summary>
+                public float Offset { get { return _offset; } }
+
+                /// <summary>
+                /// x_scale-&gt;step = gwy_get_gfloat_le(&amp;p); r (physical units) x_scale-&gt;step = fabs(x_scale-&gt;step); if (!x_scale-&gt;step) {
+                ///   g_warning(&quot;x_scale.step == 0, changing to 1&quot;);
+                ///   x_scale-&gt;step = 1.0;
+                /// }
+                /// </summary>
+                public float Step { get { return _step; } }
+
+                /// <summary>
+                /// U
+                /// </summary>
+                public Unit Unit { get { return _unit; } }
+                public NtMdt M_Root { get { return m_root; } }
+                public KaitaiStruct M_Parent { get { return m_parent; } }
+            }
+            public partial class DateTime : KaitaiStruct
+            {
+                public static DateTime FromFile(string fileName)
+                {
+                    return new DateTime(new KaitaiStream(fileName));
+                }
+
+                public DateTime(KaitaiStream p__io, NtMdt.Frame.FrameMain p__parent = null, NtMdt p__root = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    _read();
+                }
+                private void _read()
+                {
+                    _date = new Date(m_io, this, m_root);
+                    _time = new Time(m_io, this, m_root);
+                }
+                public partial class Date : KaitaiStruct
+                {
+                    public static Date FromFile(string fileName)
+                    {
+                        return new Date(new KaitaiStream(fileName));
+                    }
+
+                    public Date(KaitaiStream p__io, NtMdt.Frame.DateTime p__parent = null, NtMdt p__root = null) : base(p__io)
+                    {
+                        m_parent = p__parent;
+                        m_root = p__root;
+                        _read();
+                    }
+                    private void _read()
+                    {
+                        _year = m_io.ReadU2le();
+                        _month = m_io.ReadU2le();
+                        _day = m_io.ReadU2le();
+                    }
+                    private ushort _year;
+                    private ushort _month;
+                    private ushort _day;
+                    private NtMdt m_root;
+                    private NtMdt.Frame.DateTime m_parent;
+
+                    /// <summary>
+                    /// h_yea
+                    /// </summary>
+                    public ushort Year { get { return _year; } }
+
+                    /// <summary>
+                    /// h_mon
+                    /// </summary>
+                    public ushort Month { get { return _month; } }
+
+                    /// <summary>
+                    /// h_day
+                    /// </summary>
+                    public ushort Day { get { return _day; } }
+                    public NtMdt M_Root { get { return m_root; } }
+                    public NtMdt.Frame.DateTime M_Parent { get { return m_parent; } }
+                }
+                public partial class Time : KaitaiStruct
+                {
+                    public static Time FromFile(string fileName)
+                    {
+                        return new Time(new KaitaiStream(fileName));
+                    }
+
+                    public Time(KaitaiStream p__io, NtMdt.Frame.DateTime p__parent = null, NtMdt p__root = null) : base(p__io)
+                    {
+                        m_parent = p__parent;
+                        m_root = p__root;
+                        _read();
+                    }
+                    private void _read()
+                    {
+                        _hour = m_io.ReadU2le();
+                        _min = m_io.ReadU2le();
+                        _sec = m_io.ReadU2le();
+                    }
+                    private ushort _hour;
+                    private ushort _min;
+                    private ushort _sec;
+                    private NtMdt m_root;
+                    private NtMdt.Frame.DateTime m_parent;
+
+                    /// <summary>
+                    /// h_h
+                    /// </summary>
+                    public ushort Hour { get { return _hour; } }
+
+                    /// <summary>
+                    /// h_m
+                    /// </summary>
+                    public ushort Min { get { return _min; } }
+
+                    /// <summary>
+                    /// h_s
+                    /// </summary>
+                    public ushort Sec { get { return _sec; } }
+                    public NtMdt M_Root { get { return m_root; } }
+                    public NtMdt.Frame.DateTime M_Parent { get { return m_parent; } }
+                }
+                private Date _date;
+                private Time _time;
+                private NtMdt m_root;
+                private NtMdt.Frame.FrameMain m_parent;
+                public Date Date { get { return _date; } }
+                public Time Time { get { return _time; } }
+                public NtMdt M_Root { get { return m_root; } }
+                public NtMdt.Frame.FrameMain M_Parent { get { return m_parent; } }
             }
             public partial class Dots : KaitaiStruct
             {
@@ -331,6 +431,72 @@ namespace Kaitai
                     {
                         _data.Add(new DataLinez(i, m_io, this, m_root));
                     }
+                }
+                public partial class DataLinez : KaitaiStruct
+                {
+                    public DataLinez(ushort p_index, KaitaiStream p__io, NtMdt.Frame.Dots p__parent = null, NtMdt p__root = null) : base(p__io)
+                    {
+                        m_parent = p__parent;
+                        m_root = p__root;
+                        _index = p_index;
+                        _read();
+                    }
+                    private void _read()
+                    {
+                        _forward = new List<short>();
+                        for (var i = 0; i < M_Parent.Coordinates[Index].ForwardSize; i++)
+                        {
+                            _forward.Add(m_io.ReadS2le());
+                        }
+                        _backward = new List<short>();
+                        for (var i = 0; i < M_Parent.Coordinates[Index].BackwardSize; i++)
+                        {
+                            _backward.Add(m_io.ReadS2le());
+                        }
+                    }
+                    private List<short> _forward;
+                    private List<short> _backward;
+                    private ushort _index;
+                    private NtMdt m_root;
+                    private NtMdt.Frame.Dots m_parent;
+                    public List<short> Forward { get { return _forward; } }
+                    public List<short> Backward { get { return _backward; } }
+                    public ushort Index { get { return _index; } }
+                    public NtMdt M_Root { get { return m_root; } }
+                    public NtMdt.Frame.Dots M_Parent { get { return m_parent; } }
+                }
+                public partial class DotsData : KaitaiStruct
+                {
+                    public static DotsData FromFile(string fileName)
+                    {
+                        return new DotsData(new KaitaiStream(fileName));
+                    }
+
+                    public DotsData(KaitaiStream p__io, NtMdt.Frame.Dots p__parent = null, NtMdt p__root = null) : base(p__io)
+                    {
+                        m_parent = p__parent;
+                        m_root = p__root;
+                        _read();
+                    }
+                    private void _read()
+                    {
+                        _coordX = m_io.ReadF4le();
+                        _coordY = m_io.ReadF4le();
+                        _forwardSize = m_io.ReadS4le();
+                        _backwardSize = m_io.ReadS4le();
+                    }
+                    private float _coordX;
+                    private float _coordY;
+                    private int _forwardSize;
+                    private int _backwardSize;
+                    private NtMdt m_root;
+                    private NtMdt.Frame.Dots m_parent;
+                    public float CoordX { get { return _coordX; } }
+                    public float CoordY { get { return _coordY; } }
+                    public int ForwardSize { get { return _forwardSize; } }
+                    public int BackwardSize { get { return _backwardSize; } }
+                    public NtMdt M_Root { get { return m_root; } }
+                    public NtMdt.Frame.Dots M_Parent { get { return m_parent; } }
                 }
                 public partial class DotsHeader : KaitaiStruct
                 {
@@ -393,72 +559,6 @@ namespace Kaitai
                     public NtMdt.Frame.Dots M_Parent { get { return m_parent; } }
                     public byte[] M_RawHeader { get { return __raw_header; } }
                 }
-                public partial class DotsData : KaitaiStruct
-                {
-                    public static DotsData FromFile(string fileName)
-                    {
-                        return new DotsData(new KaitaiStream(fileName));
-                    }
-
-                    public DotsData(KaitaiStream p__io, NtMdt.Frame.Dots p__parent = null, NtMdt p__root = null) : base(p__io)
-                    {
-                        m_parent = p__parent;
-                        m_root = p__root;
-                        _read();
-                    }
-                    private void _read()
-                    {
-                        _coordX = m_io.ReadF4le();
-                        _coordY = m_io.ReadF4le();
-                        _forwardSize = m_io.ReadS4le();
-                        _backwardSize = m_io.ReadS4le();
-                    }
-                    private float _coordX;
-                    private float _coordY;
-                    private int _forwardSize;
-                    private int _backwardSize;
-                    private NtMdt m_root;
-                    private NtMdt.Frame.Dots m_parent;
-                    public float CoordX { get { return _coordX; } }
-                    public float CoordY { get { return _coordY; } }
-                    public int ForwardSize { get { return _forwardSize; } }
-                    public int BackwardSize { get { return _backwardSize; } }
-                    public NtMdt M_Root { get { return m_root; } }
-                    public NtMdt.Frame.Dots M_Parent { get { return m_parent; } }
-                }
-                public partial class DataLinez : KaitaiStruct
-                {
-                    public DataLinez(ushort p_index, KaitaiStream p__io, NtMdt.Frame.Dots p__parent = null, NtMdt p__root = null) : base(p__io)
-                    {
-                        m_parent = p__parent;
-                        m_root = p__root;
-                        _index = p_index;
-                        _read();
-                    }
-                    private void _read()
-                    {
-                        _forward = new List<short>();
-                        for (var i = 0; i < M_Parent.Coordinates[Index].ForwardSize; i++)
-                        {
-                            _forward.Add(m_io.ReadS2le());
-                        }
-                        _backward = new List<short>();
-                        for (var i = 0; i < M_Parent.Coordinates[Index].BackwardSize; i++)
-                        {
-                            _backward.Add(m_io.ReadS2le());
-                        }
-                    }
-                    private List<short> _forward;
-                    private List<short> _backward;
-                    private ushort _index;
-                    private NtMdt m_root;
-                    private NtMdt.Frame.Dots m_parent;
-                    public List<short> Forward { get { return _forward; } }
-                    public List<short> Backward { get { return _backward; } }
-                    public ushort Index { get { return _index; } }
-                    public NtMdt M_Root { get { return m_root; } }
-                    public NtMdt.Frame.Dots M_Parent { get { return m_parent; } }
-                }
                 private ushort _fmNdots;
                 private DotsHeader _coordHeader;
                 private List<DotsData> _coordinates;
@@ -471,91 +571,6 @@ namespace Kaitai
                 public List<DataLinez> Data { get { return _data; } }
                 public NtMdt M_Root { get { return m_root; } }
                 public KaitaiStruct M_Parent { get { return m_parent; } }
-            }
-            public partial class FrameMain : KaitaiStruct
-            {
-                public static FrameMain FromFile(string fileName)
-                {
-                    return new FrameMain(new KaitaiStream(fileName));
-                }
-
-                public FrameMain(KaitaiStream p__io, NtMdt.Frame p__parent = null, NtMdt p__root = null) : base(p__io)
-                {
-                    m_parent = p__parent;
-                    m_root = p__root;
-                    _read();
-                }
-                private void _read()
-                {
-                    _type = ((NtMdt.Frame.FrameType) m_io.ReadU2le());
-                    _version = new Version(m_io, this, m_root);
-                    _dateTime = new DateTime(m_io, this, m_root);
-                    _varSize = m_io.ReadU2le();
-                    switch (Type) {
-                    case NtMdt.Frame.FrameType.Mda: {
-                        __raw_frameData = m_io.ReadBytesFull();
-                        var io___raw_frameData = new KaitaiStream(__raw_frameData);
-                        _frameData = new FdMetaData(io___raw_frameData, this, m_root);
-                        break;
-                    }
-                    case NtMdt.Frame.FrameType.CurvesNew: {
-                        __raw_frameData = m_io.ReadBytesFull();
-                        var io___raw_frameData = new KaitaiStream(__raw_frameData);
-                        _frameData = new FdCurvesNew(io___raw_frameData, this, m_root);
-                        break;
-                    }
-                    case NtMdt.Frame.FrameType.Curves: {
-                        __raw_frameData = m_io.ReadBytesFull();
-                        var io___raw_frameData = new KaitaiStream(__raw_frameData);
-                        _frameData = new FdSpectroscopy(io___raw_frameData, this, m_root);
-                        break;
-                    }
-                    case NtMdt.Frame.FrameType.Spectroscopy: {
-                        __raw_frameData = m_io.ReadBytesFull();
-                        var io___raw_frameData = new KaitaiStream(__raw_frameData);
-                        _frameData = new FdSpectroscopy(io___raw_frameData, this, m_root);
-                        break;
-                    }
-                    case NtMdt.Frame.FrameType.Scanned: {
-                        __raw_frameData = m_io.ReadBytesFull();
-                        var io___raw_frameData = new KaitaiStream(__raw_frameData);
-                        _frameData = new FdScanned(io___raw_frameData, this, m_root);
-                        break;
-                    }
-                    default: {
-                        _frameData = m_io.ReadBytesFull();
-                        break;
-                    }
-                    }
-                }
-                private FrameType _type;
-                private Version _version;
-                private DateTime _dateTime;
-                private ushort _varSize;
-                private object _frameData;
-                private NtMdt m_root;
-                private NtMdt.Frame m_parent;
-                private byte[] __raw_frameData;
-
-                /// <summary>
-                /// h_what
-                /// </summary>
-                public FrameType Type { get { return _type; } }
-                public Version Version { get { return _version; } }
-                public DateTime DateTime { get { return _dateTime; } }
-
-                /// <summary>
-                /// h_am, v6 and older only
-                /// </summary>
-                public ushort VarSize { get { return _varSize; } }
-
-                /// <summary>
-                /// 
-                /// </summary>
-                public object FrameData { get { return _frameData; } }
-                public NtMdt M_Root { get { return m_root; } }
-                public NtMdt.Frame M_Parent { get { return m_parent; } }
-                public byte[] M_RawFrameData { get { return __raw_frameData; } }
             }
             public partial class FdCurvesNew : KaitaiStruct
             {
@@ -679,106 +694,6 @@ namespace Kaitai
                         _mesurands.Add(new Calibration(m_io, this, m_root));
                     }
                 }
-                public partial class Image : KaitaiStruct
-                {
-                    public static Image FromFile(string fileName)
-                    {
-                        return new Image(new KaitaiStream(fileName));
-                    }
-
-                    public Image(KaitaiStream p__io, NtMdt.Frame.FdMetaData p__parent = null, NtMdt p__root = null) : base(p__io)
-                    {
-                        m_parent = p__parent;
-                        m_root = p__root;
-                        _read();
-                    }
-                    private void _read()
-                    {
-                        _image = new List<Vec>();
-                        {
-                            var i = 0;
-                            while (!m_io.IsEof) {
-                                _image.Add(new Vec(m_io, this, m_root));
-                                i++;
-                            }
-                        }
-                    }
-                    public partial class Vec : KaitaiStruct
-                    {
-                        public static Vec FromFile(string fileName)
-                        {
-                            return new Vec(new KaitaiStream(fileName));
-                        }
-
-                        public Vec(KaitaiStream p__io, NtMdt.Frame.FdMetaData.Image p__parent = null, NtMdt p__root = null) : base(p__io)
-                        {
-                            m_parent = p__parent;
-                            m_root = p__root;
-                            _read();
-                        }
-                        private void _read()
-                        {
-                            _items = new List<double>();
-                            for (var i = 0; i < M_Parent.M_Parent.NMesurands; i++)
-                            {
-                                switch (M_Parent.M_Parent.Mesurands[i].DataType) {
-                                case NtMdt.DataType.Uint64: {
-                                    _items.Add(m_io.ReadU8le());
-                                    break;
-                                }
-                                case NtMdt.DataType.Uint8: {
-                                    _items.Add(m_io.ReadU1());
-                                    break;
-                                }
-                                case NtMdt.DataType.Float32: {
-                                    _items.Add(m_io.ReadF4le());
-                                    break;
-                                }
-                                case NtMdt.DataType.Int8: {
-                                    _items.Add(m_io.ReadS1());
-                                    break;
-                                }
-                                case NtMdt.DataType.Uint16: {
-                                    _items.Add(m_io.ReadU2le());
-                                    break;
-                                }
-                                case NtMdt.DataType.Int64: {
-                                    _items.Add(m_io.ReadS8le());
-                                    break;
-                                }
-                                case NtMdt.DataType.Uint32: {
-                                    _items.Add(m_io.ReadU4le());
-                                    break;
-                                }
-                                case NtMdt.DataType.Float64: {
-                                    _items.Add(m_io.ReadF8le());
-                                    break;
-                                }
-                                case NtMdt.DataType.Int16: {
-                                    _items.Add(m_io.ReadS2le());
-                                    break;
-                                }
-                                case NtMdt.DataType.Int32: {
-                                    _items.Add(m_io.ReadS4le());
-                                    break;
-                                }
-                                }
-                            }
-                        }
-                        private List<double> _items;
-                        private NtMdt m_root;
-                        private NtMdt.Frame.FdMetaData.Image m_parent;
-                        public List<double> Items { get { return _items; } }
-                        public NtMdt M_Root { get { return m_root; } }
-                        public NtMdt.Frame.FdMetaData.Image M_Parent { get { return m_parent; } }
-                    }
-                    private List<Vec> _image;
-                    private NtMdt m_root;
-                    private NtMdt.Frame.FdMetaData m_parent;
-                    public List<Vec> Image { get { return _image; } }
-                    public NtMdt M_Root { get { return m_root; } }
-                    public NtMdt.Frame.FdMetaData M_Parent { get { return m_parent; } }
-                }
                 public partial class Calibration : KaitaiStruct
                 {
                     public static Calibration FromFile(string fileName)
@@ -809,10 +724,10 @@ namespace Kaitai
                         _maxIndex = m_io.ReadU8le();
                         _dataType = ((NtMdt.DataType) m_io.ReadS4le());
                         _lenAuthor = m_io.ReadU4le();
-                        _name = System.Text.Encoding.GetEncoding("utf-8").GetString(m_io.ReadBytes(LenName));
-                        _comment = System.Text.Encoding.GetEncoding("utf-8").GetString(m_io.ReadBytes(LenComment));
-                        _unit = System.Text.Encoding.GetEncoding("utf-8").GetString(m_io.ReadBytes(LenUnit));
-                        _author = System.Text.Encoding.GetEncoding("utf-8").GetString(m_io.ReadBytes(LenAuthor));
+                        _name = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(LenName));
+                        _comment = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(LenComment));
+                        _unit = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(LenUnit));
+                        _author = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(LenAuthor));
                     }
                     private bool f_count;
                     private int _count;
@@ -822,8 +737,8 @@ namespace Kaitai
                         {
                             if (f_count)
                                 return _count;
-                            _count = (int) (((MaxIndex - MinIndex) + 1));
                             f_count = true;
+                            _count = (int) ((MaxIndex - MinIndex) + 1);
                             return _count;
                         }
                     }
@@ -868,6 +783,106 @@ namespace Kaitai
                     public NtMdt M_Root { get { return m_root; } }
                     public NtMdt.Frame.FdMetaData M_Parent { get { return m_parent; } }
                 }
+                public partial class Image : KaitaiStruct
+                {
+                    public static Image FromFile(string fileName)
+                    {
+                        return new Image(new KaitaiStream(fileName));
+                    }
+
+                    public Image(KaitaiStream p__io, NtMdt.Frame.FdMetaData p__parent = null, NtMdt p__root = null) : base(p__io)
+                    {
+                        m_parent = p__parent;
+                        m_root = p__root;
+                        _read();
+                    }
+                    private void _read()
+                    {
+                        _image = new List<Vec>();
+                        {
+                            var i = 0;
+                            while (!m_io.IsEof) {
+                                _image.Add(new Vec(m_io, this, m_root));
+                                i++;
+                            }
+                        }
+                    }
+                    public partial class Vec : KaitaiStruct
+                    {
+                        public static Vec FromFile(string fileName)
+                        {
+                            return new Vec(new KaitaiStream(fileName));
+                        }
+
+                        public Vec(KaitaiStream p__io, NtMdt.Frame.FdMetaData.Image p__parent = null, NtMdt p__root = null) : base(p__io)
+                        {
+                            m_parent = p__parent;
+                            m_root = p__root;
+                            _read();
+                        }
+                        private void _read()
+                        {
+                            _items = new List<double>();
+                            for (var i = 0; i < M_Parent.M_Parent.NMesurands; i++)
+                            {
+                                switch (M_Parent.M_Parent.Mesurands[i].DataType) {
+                                case NtMdt.DataType.Float32: {
+                                    _items.Add(m_io.ReadF4le());
+                                    break;
+                                }
+                                case NtMdt.DataType.Float64: {
+                                    _items.Add(m_io.ReadF8le());
+                                    break;
+                                }
+                                case NtMdt.DataType.Int16: {
+                                    _items.Add(m_io.ReadS2le());
+                                    break;
+                                }
+                                case NtMdt.DataType.Int32: {
+                                    _items.Add(m_io.ReadS4le());
+                                    break;
+                                }
+                                case NtMdt.DataType.Int64: {
+                                    _items.Add(m_io.ReadS8le());
+                                    break;
+                                }
+                                case NtMdt.DataType.Int8: {
+                                    _items.Add(m_io.ReadS1());
+                                    break;
+                                }
+                                case NtMdt.DataType.Uint16: {
+                                    _items.Add(m_io.ReadU2le());
+                                    break;
+                                }
+                                case NtMdt.DataType.Uint32: {
+                                    _items.Add(m_io.ReadU4le());
+                                    break;
+                                }
+                                case NtMdt.DataType.Uint64: {
+                                    _items.Add(m_io.ReadU8le());
+                                    break;
+                                }
+                                case NtMdt.DataType.Uint8: {
+                                    _items.Add(m_io.ReadU1());
+                                    break;
+                                }
+                                }
+                            }
+                        }
+                        private List<double> _items;
+                        private NtMdt m_root;
+                        private NtMdt.Frame.FdMetaData.Image m_parent;
+                        public List<double> Items { get { return _items; } }
+                        public NtMdt M_Root { get { return m_root; } }
+                        public NtMdt.Frame.FdMetaData.Image M_Parent { get { return m_parent; } }
+                    }
+                    private List<Vec> _image;
+                    private NtMdt m_root;
+                    private NtMdt.Frame.FdMetaData m_parent;
+                    public List<Vec> Image { get { return _image; } }
+                    public NtMdt M_Root { get { return m_root; } }
+                    public NtMdt.Frame.FdMetaData M_Parent { get { return m_parent; } }
+                }
                 private bool f_image;
                 private Image _image;
                 public Image Image
@@ -876,13 +891,13 @@ namespace Kaitai
                     {
                         if (f_image)
                             return _image;
+                        f_image = true;
                         long _pos = m_io.Pos;
                         m_io.Seek(DataOffset);
                         __raw_image = m_io.ReadBytes(DataSize);
                         var io___raw_image = new KaitaiStream(__raw_image);
                         _image = new Image(io___raw_image, this, m_root);
                         m_io.Seek(_pos);
-                        f_image = true;
                         return _image;
                     }
                 }
@@ -935,296 +950,6 @@ namespace Kaitai
                 public NtMdt.Frame.FrameMain M_Parent { get { return m_parent; } }
                 public byte[] M_RawImage { get { return __raw_image; } }
             }
-            public partial class FdSpectroscopy : KaitaiStruct
-            {
-                public static FdSpectroscopy FromFile(string fileName)
-                {
-                    return new FdSpectroscopy(new KaitaiStream(fileName));
-                }
-
-                public FdSpectroscopy(KaitaiStream p__io, NtMdt.Frame.FrameMain p__parent = null, NtMdt p__root = null) : base(p__io)
-                {
-                    m_parent = p__parent;
-                    m_root = p__root;
-                    _read();
-                }
-                private void _read()
-                {
-                    __raw_vars = m_io.ReadBytes(M_Parent.VarSize);
-                    var io___raw_vars = new KaitaiStream(__raw_vars);
-                    _vars = new Vars(io___raw_vars, this, m_root);
-                    _fmMode = m_io.ReadU2le();
-                    _fmXres = m_io.ReadU2le();
-                    _fmYres = m_io.ReadU2le();
-                    _dots = new Dots(m_io, this, m_root);
-                    _data = new List<short>();
-                    for (var i = 0; i < (FmXres * FmYres); i++)
-                    {
-                        _data.Add(m_io.ReadS2le());
-                    }
-                    _title = new Title(m_io, this, m_root);
-                    _xml = new Xml(m_io, this, m_root);
-                }
-                public partial class Vars : KaitaiStruct
-                {
-                    public static Vars FromFile(string fileName)
-                    {
-                        return new Vars(new KaitaiStream(fileName));
-                    }
-
-                    public Vars(KaitaiStream p__io, NtMdt.Frame.FdSpectroscopy p__parent = null, NtMdt p__root = null) : base(p__io)
-                    {
-                        m_parent = p__parent;
-                        m_root = p__root;
-                        _read();
-                    }
-                    private void _read()
-                    {
-                        _xScale = new AxisScale(m_io, this, m_root);
-                        _yScale = new AxisScale(m_io, this, m_root);
-                        _zScale = new AxisScale(m_io, this, m_root);
-                        _spMode = m_io.ReadU2le();
-                        _spFilter = m_io.ReadU2le();
-                        _uBegin = m_io.ReadF4le();
-                        _uEnd = m_io.ReadF4le();
-                        _zUp = m_io.ReadS2le();
-                        _zDown = m_io.ReadS2le();
-                        _spAveraging = m_io.ReadU2le();
-                        _spRepeat = m_io.ReadU1();
-                        _spBack = m_io.ReadU1();
-                        _sp4nx = m_io.ReadS2le();
-                        _spOsc = m_io.ReadU1();
-                        _spN4 = m_io.ReadU1();
-                        _sp4x0 = m_io.ReadF4le();
-                        _sp4xr = m_io.ReadF4le();
-                        _sp4u = m_io.ReadS2le();
-                        _sp4i = m_io.ReadS2le();
-                        _spNx = m_io.ReadS2le();
-                    }
-                    private AxisScale _xScale;
-                    private AxisScale _yScale;
-                    private AxisScale _zScale;
-                    private ushort _spMode;
-                    private ushort _spFilter;
-                    private float _uBegin;
-                    private float _uEnd;
-                    private short _zUp;
-                    private short _zDown;
-                    private ushort _spAveraging;
-                    private byte _spRepeat;
-                    private byte _spBack;
-                    private short _sp4nx;
-                    private byte _spOsc;
-                    private byte _spN4;
-                    private float _sp4x0;
-                    private float _sp4xr;
-                    private short _sp4u;
-                    private short _sp4i;
-                    private short _spNx;
-                    private NtMdt m_root;
-                    private NtMdt.Frame.FdSpectroscopy m_parent;
-                    public AxisScale XScale { get { return _xScale; } }
-                    public AxisScale YScale { get { return _yScale; } }
-                    public AxisScale ZScale { get { return _zScale; } }
-                    public ushort SpMode { get { return _spMode; } }
-                    public ushort SpFilter { get { return _spFilter; } }
-                    public float UBegin { get { return _uBegin; } }
-                    public float UEnd { get { return _uEnd; } }
-                    public short ZUp { get { return _zUp; } }
-                    public short ZDown { get { return _zDown; } }
-                    public ushort SpAveraging { get { return _spAveraging; } }
-                    public byte SpRepeat { get { return _spRepeat; } }
-                    public byte SpBack { get { return _spBack; } }
-                    public short Sp4nx { get { return _sp4nx; } }
-                    public byte SpOsc { get { return _spOsc; } }
-                    public byte SpN4 { get { return _spN4; } }
-                    public float Sp4x0 { get { return _sp4x0; } }
-                    public float Sp4xr { get { return _sp4xr; } }
-                    public short Sp4u { get { return _sp4u; } }
-                    public short Sp4i { get { return _sp4i; } }
-                    public short SpNx { get { return _spNx; } }
-                    public NtMdt M_Root { get { return m_root; } }
-                    public NtMdt.Frame.FdSpectroscopy M_Parent { get { return m_parent; } }
-                }
-                private Vars _vars;
-                private ushort _fmMode;
-                private ushort _fmXres;
-                private ushort _fmYres;
-                private Dots _dots;
-                private List<short> _data;
-                private Title _title;
-                private Xml _xml;
-                private NtMdt m_root;
-                private NtMdt.Frame.FrameMain m_parent;
-                private byte[] __raw_vars;
-                public Vars Vars { get { return _vars; } }
-                public ushort FmMode { get { return _fmMode; } }
-                public ushort FmXres { get { return _fmXres; } }
-                public ushort FmYres { get { return _fmYres; } }
-                public Dots Dots { get { return _dots; } }
-                public List<short> Data { get { return _data; } }
-                public Title Title { get { return _title; } }
-                public Xml Xml { get { return _xml; } }
-                public NtMdt M_Root { get { return m_root; } }
-                public NtMdt.Frame.FrameMain M_Parent { get { return m_parent; } }
-                public byte[] M_RawVars { get { return __raw_vars; } }
-            }
-            public partial class DateTime : KaitaiStruct
-            {
-                public static DateTime FromFile(string fileName)
-                {
-                    return new DateTime(new KaitaiStream(fileName));
-                }
-
-                public DateTime(KaitaiStream p__io, NtMdt.Frame.FrameMain p__parent = null, NtMdt p__root = null) : base(p__io)
-                {
-                    m_parent = p__parent;
-                    m_root = p__root;
-                    _read();
-                }
-                private void _read()
-                {
-                    _date = new Date(m_io, this, m_root);
-                    _time = new Time(m_io, this, m_root);
-                }
-                public partial class Date : KaitaiStruct
-                {
-                    public static Date FromFile(string fileName)
-                    {
-                        return new Date(new KaitaiStream(fileName));
-                    }
-
-                    public Date(KaitaiStream p__io, NtMdt.Frame.DateTime p__parent = null, NtMdt p__root = null) : base(p__io)
-                    {
-                        m_parent = p__parent;
-                        m_root = p__root;
-                        _read();
-                    }
-                    private void _read()
-                    {
-                        _year = m_io.ReadU2le();
-                        _month = m_io.ReadU2le();
-                        _day = m_io.ReadU2le();
-                    }
-                    private ushort _year;
-                    private ushort _month;
-                    private ushort _day;
-                    private NtMdt m_root;
-                    private NtMdt.Frame.DateTime m_parent;
-
-                    /// <summary>
-                    /// h_yea
-                    /// </summary>
-                    public ushort Year { get { return _year; } }
-
-                    /// <summary>
-                    /// h_mon
-                    /// </summary>
-                    public ushort Month { get { return _month; } }
-
-                    /// <summary>
-                    /// h_day
-                    /// </summary>
-                    public ushort Day { get { return _day; } }
-                    public NtMdt M_Root { get { return m_root; } }
-                    public NtMdt.Frame.DateTime M_Parent { get { return m_parent; } }
-                }
-                public partial class Time : KaitaiStruct
-                {
-                    public static Time FromFile(string fileName)
-                    {
-                        return new Time(new KaitaiStream(fileName));
-                    }
-
-                    public Time(KaitaiStream p__io, NtMdt.Frame.DateTime p__parent = null, NtMdt p__root = null) : base(p__io)
-                    {
-                        m_parent = p__parent;
-                        m_root = p__root;
-                        _read();
-                    }
-                    private void _read()
-                    {
-                        _hour = m_io.ReadU2le();
-                        _min = m_io.ReadU2le();
-                        _sec = m_io.ReadU2le();
-                    }
-                    private ushort _hour;
-                    private ushort _min;
-                    private ushort _sec;
-                    private NtMdt m_root;
-                    private NtMdt.Frame.DateTime m_parent;
-
-                    /// <summary>
-                    /// h_h
-                    /// </summary>
-                    public ushort Hour { get { return _hour; } }
-
-                    /// <summary>
-                    /// h_m
-                    /// </summary>
-                    public ushort Min { get { return _min; } }
-
-                    /// <summary>
-                    /// h_s
-                    /// </summary>
-                    public ushort Sec { get { return _sec; } }
-                    public NtMdt M_Root { get { return m_root; } }
-                    public NtMdt.Frame.DateTime M_Parent { get { return m_parent; } }
-                }
-                private Date _date;
-                private Time _time;
-                private NtMdt m_root;
-                private NtMdt.Frame.FrameMain m_parent;
-                public Date Date { get { return _date; } }
-                public Time Time { get { return _time; } }
-                public NtMdt M_Root { get { return m_root; } }
-                public NtMdt.Frame.FrameMain M_Parent { get { return m_parent; } }
-            }
-            public partial class AxisScale : KaitaiStruct
-            {
-                public static AxisScale FromFile(string fileName)
-                {
-                    return new AxisScale(new KaitaiStream(fileName));
-                }
-
-                public AxisScale(KaitaiStream p__io, KaitaiStruct p__parent = null, NtMdt p__root = null) : base(p__io)
-                {
-                    m_parent = p__parent;
-                    m_root = p__root;
-                    _read();
-                }
-                private void _read()
-                {
-                    _offset = m_io.ReadF4le();
-                    _step = m_io.ReadF4le();
-                    _unit = ((NtMdt.Unit) m_io.ReadS2le());
-                }
-                private float _offset;
-                private float _step;
-                private Unit _unit;
-                private NtMdt m_root;
-                private KaitaiStruct m_parent;
-
-                /// <summary>
-                /// x_scale-&gt;offset = gwy_get_gfloat_le(&amp;p);# r0 (physical units)
-                /// </summary>
-                public float Offset { get { return _offset; } }
-
-                /// <summary>
-                /// x_scale-&gt;step = gwy_get_gfloat_le(&amp;p); r (physical units) x_scale-&gt;step = fabs(x_scale-&gt;step); if (!x_scale-&gt;step) {
-                ///   g_warning(&quot;x_scale.step == 0, changing to 1&quot;);
-                ///   x_scale-&gt;step = 1.0;
-                /// }
-                /// </summary>
-                public float Step { get { return _step; } }
-
-                /// <summary>
-                /// U
-                /// </summary>
-                public Unit Unit { get { return _unit; } }
-                public NtMdt M_Root { get { return m_root; } }
-                public KaitaiStruct M_Parent { get { return m_parent; } }
-            }
             public partial class FdScanned : KaitaiStruct
             {
                 public static FdScanned FromFile(string fileName)
@@ -1232,15 +957,6 @@ namespace Kaitai
                     return new FdScanned(new KaitaiStream(fileName));
                 }
 
-
-                public enum Mode
-                {
-                    Stm = 0,
-                    Afm = 1,
-                    Unknown2 = 2,
-                    Unknown3 = 3,
-                    Unknown4 = 4,
-                }
 
                 public enum InputSignal
                 {
@@ -1254,6 +970,15 @@ namespace Kaitai
                     Step = 0,
                     Fine = 1,
                     Slope = 2,
+                }
+
+                public enum Mode
+                {
+                    Stm = 0,
+                    Afm = 1,
+                    Unknown2 = 2,
+                    Unknown3 = 3,
+                    Unknown4 = 4,
                 }
                 public FdScanned(KaitaiStream p__io, NtMdt.Frame.FrameMain p__parent = null, NtMdt p__root = null) : base(p__io)
                 {
@@ -1286,12 +1011,87 @@ namespace Kaitai
                     _fmYres = m_io.ReadU2le();
                     _dots = new Dots(m_io, this, m_root);
                     _image = new List<short>();
-                    for (var i = 0; i < (FmXres * FmYres); i++)
+                    for (var i = 0; i < FmXres * FmYres; i++)
                     {
                         _image.Add(m_io.ReadS2le());
                     }
                     _title = new Title(m_io, this, m_root);
                     _xml = new Xml(m_io, this, m_root);
+                }
+                public partial class Dot : KaitaiStruct
+                {
+                    public static Dot FromFile(string fileName)
+                    {
+                        return new Dot(new KaitaiStream(fileName));
+                    }
+
+                    public Dot(KaitaiStream p__io, KaitaiStruct p__parent = null, NtMdt p__root = null) : base(p__io)
+                    {
+                        m_parent = p__parent;
+                        m_root = p__root;
+                        _read();
+                    }
+                    private void _read()
+                    {
+                        _x = m_io.ReadS2le();
+                        _y = m_io.ReadS2le();
+                    }
+                    private short _x;
+                    private short _y;
+                    private NtMdt m_root;
+                    private KaitaiStruct m_parent;
+                    public short X { get { return _x; } }
+                    public short Y { get { return _y; } }
+                    public NtMdt M_Root { get { return m_root; } }
+                    public KaitaiStruct M_Parent { get { return m_parent; } }
+                }
+                public partial class ScanDir : KaitaiStruct
+                {
+                    public static ScanDir FromFile(string fileName)
+                    {
+                        return new ScanDir(new KaitaiStream(fileName));
+                    }
+
+                    public ScanDir(KaitaiStream p__io, NtMdt.Frame.FdScanned.Vars p__parent = null, NtMdt p__root = null) : base(p__io)
+                    {
+                        m_parent = p__parent;
+                        m_root = p__root;
+                        _read();
+                    }
+                    private void _read()
+                    {
+                        _unkn = m_io.ReadBitsIntBe(4);
+                        _doublePass = m_io.ReadBitsIntBe(1) != 0;
+                        _bottom = m_io.ReadBitsIntBe(1) != 0;
+                        _left = m_io.ReadBitsIntBe(1) != 0;
+                        _horizontal = m_io.ReadBitsIntBe(1) != 0;
+                    }
+                    private ulong _unkn;
+                    private bool _doublePass;
+                    private bool _bottom;
+                    private bool _left;
+                    private bool _horizontal;
+                    private NtMdt m_root;
+                    private NtMdt.Frame.FdScanned.Vars m_parent;
+                    public ulong Unkn { get { return _unkn; } }
+                    public bool DoublePass { get { return _doublePass; } }
+
+                    /// <summary>
+                    /// Bottom - 1 Top - 0
+                    /// </summary>
+                    public bool Bottom { get { return _bottom; } }
+
+                    /// <summary>
+                    /// Left - 1 Right - 0
+                    /// </summary>
+                    public bool Left { get { return _left; } }
+
+                    /// <summary>
+                    /// Horizontal - 1 Vertical - 0
+                    /// </summary>
+                    public bool Horizontal { get { return _horizontal; } }
+                    public NtMdt M_Root { get { return m_root; } }
+                    public NtMdt.Frame.FdScanned.Vars M_Parent { get { return m_parent; } }
                 }
                 public partial class Vars : KaitaiStruct
                 {
@@ -1466,81 +1266,6 @@ namespace Kaitai
                     public NtMdt M_Root { get { return m_root; } }
                     public NtMdt.Frame.FdScanned M_Parent { get { return m_parent; } }
                 }
-                public partial class Dot : KaitaiStruct
-                {
-                    public static Dot FromFile(string fileName)
-                    {
-                        return new Dot(new KaitaiStream(fileName));
-                    }
-
-                    public Dot(KaitaiStream p__io, KaitaiStruct p__parent = null, NtMdt p__root = null) : base(p__io)
-                    {
-                        m_parent = p__parent;
-                        m_root = p__root;
-                        _read();
-                    }
-                    private void _read()
-                    {
-                        _x = m_io.ReadS2le();
-                        _y = m_io.ReadS2le();
-                    }
-                    private short _x;
-                    private short _y;
-                    private NtMdt m_root;
-                    private KaitaiStruct m_parent;
-                    public short X { get { return _x; } }
-                    public short Y { get { return _y; } }
-                    public NtMdt M_Root { get { return m_root; } }
-                    public KaitaiStruct M_Parent { get { return m_parent; } }
-                }
-                public partial class ScanDir : KaitaiStruct
-                {
-                    public static ScanDir FromFile(string fileName)
-                    {
-                        return new ScanDir(new KaitaiStream(fileName));
-                    }
-
-                    public ScanDir(KaitaiStream p__io, NtMdt.Frame.FdScanned.Vars p__parent = null, NtMdt p__root = null) : base(p__io)
-                    {
-                        m_parent = p__parent;
-                        m_root = p__root;
-                        _read();
-                    }
-                    private void _read()
-                    {
-                        _unkn = m_io.ReadBitsIntBe(4);
-                        _doublePass = m_io.ReadBitsIntBe(1) != 0;
-                        _bottom = m_io.ReadBitsIntBe(1) != 0;
-                        _left = m_io.ReadBitsIntBe(1) != 0;
-                        _horizontal = m_io.ReadBitsIntBe(1) != 0;
-                    }
-                    private ulong _unkn;
-                    private bool _doublePass;
-                    private bool _bottom;
-                    private bool _left;
-                    private bool _horizontal;
-                    private NtMdt m_root;
-                    private NtMdt.Frame.FdScanned.Vars m_parent;
-                    public ulong Unkn { get { return _unkn; } }
-                    public bool DoublePass { get { return _doublePass; } }
-
-                    /// <summary>
-                    /// Bottom - 1 Top - 0
-                    /// </summary>
-                    public bool Bottom { get { return _bottom; } }
-
-                    /// <summary>
-                    /// Left - 1 Right - 0
-                    /// </summary>
-                    public bool Left { get { return _left; } }
-
-                    /// <summary>
-                    /// Horizontal - 1 Vertical - 0
-                    /// </summary>
-                    public bool Horizontal { get { return _horizontal; } }
-                    public NtMdt M_Root { get { return m_root; } }
-                    public NtMdt.Frame.FdScanned.Vars M_Parent { get { return m_parent; } }
-                }
                 private Vars _vars;
                 private uint? _origFormat;
                 private LiftMode _tune;
@@ -1606,6 +1331,225 @@ namespace Kaitai
                 public NtMdt.Frame.FrameMain M_Parent { get { return m_parent; } }
                 public byte[] M_RawVars { get { return __raw_vars; } }
             }
+            public partial class FdSpectroscopy : KaitaiStruct
+            {
+                public static FdSpectroscopy FromFile(string fileName)
+                {
+                    return new FdSpectroscopy(new KaitaiStream(fileName));
+                }
+
+                public FdSpectroscopy(KaitaiStream p__io, NtMdt.Frame.FrameMain p__parent = null, NtMdt p__root = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    _read();
+                }
+                private void _read()
+                {
+                    __raw_vars = m_io.ReadBytes(M_Parent.VarSize);
+                    var io___raw_vars = new KaitaiStream(__raw_vars);
+                    _vars = new Vars(io___raw_vars, this, m_root);
+                    _fmMode = m_io.ReadU2le();
+                    _fmXres = m_io.ReadU2le();
+                    _fmYres = m_io.ReadU2le();
+                    _dots = new Dots(m_io, this, m_root);
+                    _data = new List<short>();
+                    for (var i = 0; i < FmXres * FmYres; i++)
+                    {
+                        _data.Add(m_io.ReadS2le());
+                    }
+                    _title = new Title(m_io, this, m_root);
+                    _xml = new Xml(m_io, this, m_root);
+                }
+                public partial class Vars : KaitaiStruct
+                {
+                    public static Vars FromFile(string fileName)
+                    {
+                        return new Vars(new KaitaiStream(fileName));
+                    }
+
+                    public Vars(KaitaiStream p__io, NtMdt.Frame.FdSpectroscopy p__parent = null, NtMdt p__root = null) : base(p__io)
+                    {
+                        m_parent = p__parent;
+                        m_root = p__root;
+                        _read();
+                    }
+                    private void _read()
+                    {
+                        _xScale = new AxisScale(m_io, this, m_root);
+                        _yScale = new AxisScale(m_io, this, m_root);
+                        _zScale = new AxisScale(m_io, this, m_root);
+                        _spMode = m_io.ReadU2le();
+                        _spFilter = m_io.ReadU2le();
+                        _uBegin = m_io.ReadF4le();
+                        _uEnd = m_io.ReadF4le();
+                        _zUp = m_io.ReadS2le();
+                        _zDown = m_io.ReadS2le();
+                        _spAveraging = m_io.ReadU2le();
+                        _spRepeat = m_io.ReadU1();
+                        _spBack = m_io.ReadU1();
+                        _sp4nx = m_io.ReadS2le();
+                        _spOsc = m_io.ReadU1();
+                        _spN4 = m_io.ReadU1();
+                        _sp4x0 = m_io.ReadF4le();
+                        _sp4xr = m_io.ReadF4le();
+                        _sp4u = m_io.ReadS2le();
+                        _sp4i = m_io.ReadS2le();
+                        _spNx = m_io.ReadS2le();
+                    }
+                    private AxisScale _xScale;
+                    private AxisScale _yScale;
+                    private AxisScale _zScale;
+                    private ushort _spMode;
+                    private ushort _spFilter;
+                    private float _uBegin;
+                    private float _uEnd;
+                    private short _zUp;
+                    private short _zDown;
+                    private ushort _spAveraging;
+                    private byte _spRepeat;
+                    private byte _spBack;
+                    private short _sp4nx;
+                    private byte _spOsc;
+                    private byte _spN4;
+                    private float _sp4x0;
+                    private float _sp4xr;
+                    private short _sp4u;
+                    private short _sp4i;
+                    private short _spNx;
+                    private NtMdt m_root;
+                    private NtMdt.Frame.FdSpectroscopy m_parent;
+                    public AxisScale XScale { get { return _xScale; } }
+                    public AxisScale YScale { get { return _yScale; } }
+                    public AxisScale ZScale { get { return _zScale; } }
+                    public ushort SpMode { get { return _spMode; } }
+                    public ushort SpFilter { get { return _spFilter; } }
+                    public float UBegin { get { return _uBegin; } }
+                    public float UEnd { get { return _uEnd; } }
+                    public short ZUp { get { return _zUp; } }
+                    public short ZDown { get { return _zDown; } }
+                    public ushort SpAveraging { get { return _spAveraging; } }
+                    public byte SpRepeat { get { return _spRepeat; } }
+                    public byte SpBack { get { return _spBack; } }
+                    public short Sp4nx { get { return _sp4nx; } }
+                    public byte SpOsc { get { return _spOsc; } }
+                    public byte SpN4 { get { return _spN4; } }
+                    public float Sp4x0 { get { return _sp4x0; } }
+                    public float Sp4xr { get { return _sp4xr; } }
+                    public short Sp4u { get { return _sp4u; } }
+                    public short Sp4i { get { return _sp4i; } }
+                    public short SpNx { get { return _spNx; } }
+                    public NtMdt M_Root { get { return m_root; } }
+                    public NtMdt.Frame.FdSpectroscopy M_Parent { get { return m_parent; } }
+                }
+                private Vars _vars;
+                private ushort _fmMode;
+                private ushort _fmXres;
+                private ushort _fmYres;
+                private Dots _dots;
+                private List<short> _data;
+                private Title _title;
+                private Xml _xml;
+                private NtMdt m_root;
+                private NtMdt.Frame.FrameMain m_parent;
+                private byte[] __raw_vars;
+                public Vars Vars { get { return _vars; } }
+                public ushort FmMode { get { return _fmMode; } }
+                public ushort FmXres { get { return _fmXres; } }
+                public ushort FmYres { get { return _fmYres; } }
+                public Dots Dots { get { return _dots; } }
+                public List<short> Data { get { return _data; } }
+                public Title Title { get { return _title; } }
+                public Xml Xml { get { return _xml; } }
+                public NtMdt M_Root { get { return m_root; } }
+                public NtMdt.Frame.FrameMain M_Parent { get { return m_parent; } }
+                public byte[] M_RawVars { get { return __raw_vars; } }
+            }
+            public partial class FrameMain : KaitaiStruct
+            {
+                public static FrameMain FromFile(string fileName)
+                {
+                    return new FrameMain(new KaitaiStream(fileName));
+                }
+
+                public FrameMain(KaitaiStream p__io, NtMdt.Frame p__parent = null, NtMdt p__root = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    _read();
+                }
+                private void _read()
+                {
+                    _type = ((NtMdt.Frame.FrameType) m_io.ReadU2le());
+                    _version = new Version(m_io, this, m_root);
+                    _dateTime = new DateTime(m_io, this, m_root);
+                    _varSize = m_io.ReadU2le();
+                    switch (Type) {
+                    case NtMdt.Frame.FrameType.Curves: {
+                        __raw_frameData = m_io.ReadBytesFull();
+                        var io___raw_frameData = new KaitaiStream(__raw_frameData);
+                        _frameData = new FdSpectroscopy(io___raw_frameData, this, m_root);
+                        break;
+                    }
+                    case NtMdt.Frame.FrameType.CurvesNew: {
+                        __raw_frameData = m_io.ReadBytesFull();
+                        var io___raw_frameData = new KaitaiStream(__raw_frameData);
+                        _frameData = new FdCurvesNew(io___raw_frameData, this, m_root);
+                        break;
+                    }
+                    case NtMdt.Frame.FrameType.Mda: {
+                        __raw_frameData = m_io.ReadBytesFull();
+                        var io___raw_frameData = new KaitaiStream(__raw_frameData);
+                        _frameData = new FdMetaData(io___raw_frameData, this, m_root);
+                        break;
+                    }
+                    case NtMdt.Frame.FrameType.Scanned: {
+                        __raw_frameData = m_io.ReadBytesFull();
+                        var io___raw_frameData = new KaitaiStream(__raw_frameData);
+                        _frameData = new FdScanned(io___raw_frameData, this, m_root);
+                        break;
+                    }
+                    case NtMdt.Frame.FrameType.Spectroscopy: {
+                        __raw_frameData = m_io.ReadBytesFull();
+                        var io___raw_frameData = new KaitaiStream(__raw_frameData);
+                        _frameData = new FdSpectroscopy(io___raw_frameData, this, m_root);
+                        break;
+                    }
+                    default: {
+                        _frameData = m_io.ReadBytesFull();
+                        break;
+                    }
+                    }
+                }
+                private FrameType _type;
+                private Version _version;
+                private DateTime _dateTime;
+                private ushort _varSize;
+                private object _frameData;
+                private NtMdt m_root;
+                private NtMdt.Frame m_parent;
+                private byte[] __raw_frameData;
+
+                /// <summary>
+                /// h_what
+                /// </summary>
+                public FrameType Type { get { return _type; } }
+                public Version Version { get { return _version; } }
+                public DateTime DateTime { get { return _dateTime; } }
+
+                /// <summary>
+                /// h_am, v6 and older only
+                /// </summary>
+                public ushort VarSize { get { return _varSize; } }
+
+                /// <summary>
+                /// 
+                /// </summary>
+                public object FrameData { get { return _frameData; } }
+                public NtMdt M_Root { get { return m_root; } }
+                public NtMdt.Frame M_Parent { get { return m_parent; } }
+                public byte[] M_RawFrameData { get { return __raw_frameData; } }
+            }
             private uint _size;
             private FrameMain _main;
             private NtMdt m_root;
@@ -1620,6 +1564,89 @@ namespace Kaitai
             public NtMdt M_Root { get { return m_root; } }
             public NtMdt.Framez M_Parent { get { return m_parent; } }
             public byte[] M_RawMain { get { return __raw_main; } }
+        }
+        public partial class Framez : KaitaiStruct
+        {
+            public static Framez FromFile(string fileName)
+            {
+                return new Framez(new KaitaiStream(fileName));
+            }
+
+            public Framez(KaitaiStream p__io, NtMdt p__parent = null, NtMdt p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _frames = new List<Frame>();
+                for (var i = 0; i < M_Root.LastFrame + 1; i++)
+                {
+                    _frames.Add(new Frame(m_io, this, m_root));
+                }
+            }
+            private List<Frame> _frames;
+            private NtMdt m_root;
+            private NtMdt m_parent;
+            public List<Frame> Frames { get { return _frames; } }
+            public NtMdt M_Root { get { return m_root; } }
+            public NtMdt M_Parent { get { return m_parent; } }
+        }
+        public partial class Title : KaitaiStruct
+        {
+            public static Title FromFile(string fileName)
+            {
+                return new Title(new KaitaiStream(fileName));
+            }
+
+            public Title(KaitaiStream p__io, KaitaiStruct p__parent = null, NtMdt p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _titleLen = m_io.ReadU4le();
+                _title = System.Text.Encoding.GetEncoding("windows-1251").GetString(m_io.ReadBytes(TitleLen));
+            }
+            private uint _titleLen;
+            private string _title;
+            private NtMdt m_root;
+            private KaitaiStruct m_parent;
+            public uint TitleLen { get { return _titleLen; } }
+            public string Title { get { return _title; } }
+            public NtMdt M_Root { get { return m_root; } }
+            public KaitaiStruct M_Parent { get { return m_parent; } }
+        }
+        public partial class Uuid : KaitaiStruct
+        {
+            public static Uuid FromFile(string fileName)
+            {
+                return new Uuid(new KaitaiStream(fileName));
+            }
+
+            public Uuid(KaitaiStream p__io, NtMdt.Frame.FdMetaData p__parent = null, NtMdt p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _data = new List<byte>();
+                for (var i = 0; i < 16; i++)
+                {
+                    _data.Add(m_io.ReadU1());
+                }
+            }
+            private List<byte> _data;
+            private NtMdt m_root;
+            private NtMdt.Frame.FdMetaData m_parent;
+            public List<byte> Data { get { return _data; } }
+            public NtMdt M_Root { get { return m_root; } }
+            public NtMdt.Frame.FdMetaData M_Parent { get { return m_parent; } }
         }
         public partial class Version : KaitaiStruct
         {
@@ -1672,33 +1699,6 @@ namespace Kaitai
             private KaitaiStruct m_parent;
             public uint XmlLen { get { return _xmlLen; } }
             public string Xml { get { return _xml; } }
-            public NtMdt M_Root { get { return m_root; } }
-            public KaitaiStruct M_Parent { get { return m_parent; } }
-        }
-        public partial class Title : KaitaiStruct
-        {
-            public static Title FromFile(string fileName)
-            {
-                return new Title(new KaitaiStream(fileName));
-            }
-
-            public Title(KaitaiStream p__io, KaitaiStruct p__parent = null, NtMdt p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _titleLen = m_io.ReadU4le();
-                _title = System.Text.Encoding.GetEncoding("cp1251").GetString(m_io.ReadBytes(TitleLen));
-            }
-            private uint _titleLen;
-            private string _title;
-            private NtMdt m_root;
-            private KaitaiStruct m_parent;
-            public uint TitleLen { get { return _titleLen; } }
-            public string Title { get { return _title; } }
             public NtMdt M_Root { get { return m_root; } }
             public KaitaiStruct M_Parent { get { return m_parent; } }
         }

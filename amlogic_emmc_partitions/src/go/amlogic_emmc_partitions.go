@@ -28,14 +28,18 @@ type AmlogicEmmcPartitions struct {
 	Partitions []*AmlogicEmmcPartitions_Partition
 	_io *kaitai.Stream
 	_root *AmlogicEmmcPartitions
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewAmlogicEmmcPartitions() *AmlogicEmmcPartitions {
 	return &AmlogicEmmcPartitions{
 	}
 }
 
-func (this *AmlogicEmmcPartitions) Read(io *kaitai.Stream, parent interface{}, root *AmlogicEmmcPartitions) (err error) {
+func (this AmlogicEmmcPartitions) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *AmlogicEmmcPartitions) Read(io *kaitai.Stream, parent kaitai.Struct, root *AmlogicEmmcPartitions) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -108,6 +112,10 @@ func NewAmlogicEmmcPartitions_Partition() *AmlogicEmmcPartitions_Partition {
 	}
 }
 
+func (this AmlogicEmmcPartitions_Partition) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *AmlogicEmmcPartitions_Partition) Read(io *kaitai.Stream, parent *AmlogicEmmcPartitions, root *AmlogicEmmcPartitions) (err error) {
 	this._io = io
 	this._parent = parent
@@ -165,6 +173,10 @@ type AmlogicEmmcPartitions_Partition_PartFlags struct {
 func NewAmlogicEmmcPartitions_Partition_PartFlags() *AmlogicEmmcPartitions_Partition_PartFlags {
 	return &AmlogicEmmcPartitions_Partition_PartFlags{
 	}
+}
+
+func (this AmlogicEmmcPartitions_Partition_PartFlags) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *AmlogicEmmcPartitions_Partition_PartFlags) Read(io *kaitai.Stream, parent *AmlogicEmmcPartitions_Partition, root *AmlogicEmmcPartitions) (err error) {

@@ -2,13 +2,16 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class ttf_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
 #include <vector>
+#include <set>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -20,22 +23,22 @@
 class ttf_t : public kaitai::kstruct {
 
 public:
-    class post_t;
-    class name_t;
-    class head_t;
-    class prep_t;
-    class hhea_t;
-    class fpgm_t;
-    class kern_t;
-    class dir_table_entry_t;
-    class os2_t;
-    class fixed_t;
-    class glyf_t;
+    class cmap_t;
     class cvt_t;
+    class dir_table_entry_t;
+    class fixed_t;
+    class fpgm_t;
+    class glyf_t;
+    class head_t;
+    class hhea_t;
+    class kern_t;
     class maxp_t;
     class maxp_version10_body_t;
+    class name_t;
     class offset_table_t;
-    class cmap_t;
+    class os2_t;
+    class post_t;
+    class prep_t;
 
     ttf_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, ttf_t* p__root = nullptr);
 
@@ -46,231 +49,501 @@ private:
 public:
     ~ttf_t();
 
-    class post_t : public kaitai::kstruct {
+    /**
+     * cmap - Character To Glyph Index Mapping Table This table defines the mapping of character codes to the glyph index values used in the font.
+     */
+
+    class cmap_t : public kaitai::kstruct {
 
     public:
-        class format20_t;
+        class subtable_t;
+        class subtable_header_t;
 
-        post_t(kaitai::kstream* p__io, ttf_t::dir_table_entry_t* p__parent = nullptr, ttf_t* p__root = nullptr);
+        cmap_t(kaitai::kstream* p__io, ttf_t::dir_table_entry_t* p__parent = nullptr, ttf_t* p__root = nullptr);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~post_t();
+        ~cmap_t();
 
-        class format20_t : public kaitai::kstruct {
+        class subtable_t : public kaitai::kstruct {
 
         public:
-            class pascal_string_t;
+            class byte_encoding_table_t;
+            class high_byte_mapping_through_table_t;
+            class segment_mapping_to_delta_values_t;
+            class trimmed_table_mapping_t;
 
-            format20_t(kaitai::kstream* p__io, ttf_t::post_t* p__parent = nullptr, ttf_t* p__root = nullptr);
+            enum subtable_format_t {
+                SUBTABLE_FORMAT_BYTE_ENCODING_TABLE = 0,
+                SUBTABLE_FORMAT_HIGH_BYTE_MAPPING_THROUGH_TABLE = 2,
+                SUBTABLE_FORMAT_SEGMENT_MAPPING_TO_DELTA_VALUES = 4,
+                SUBTABLE_FORMAT_TRIMMED_TABLE_MAPPING = 6
+            };
+            static bool _is_defined_subtable_format_t(subtable_format_t v);
+
+        private:
+            static const std::set<subtable_format_t> _values_subtable_format_t;
+
+        public:
+
+            subtable_t(kaitai::kstream* p__io, ttf_t::cmap_t::subtable_header_t* p__parent = nullptr, ttf_t* p__root = nullptr);
 
         private:
             void _read();
             void _clean_up();
 
         public:
-            ~format20_t();
+            ~subtable_t();
 
-            class pascal_string_t : public kaitai::kstruct {
+            class byte_encoding_table_t : public kaitai::kstruct {
 
             public:
 
-                pascal_string_t(kaitai::kstream* p__io, ttf_t::post_t::format20_t* p__parent = nullptr, ttf_t* p__root = nullptr);
+                byte_encoding_table_t(kaitai::kstream* p__io, ttf_t::cmap_t::subtable_t* p__parent = nullptr, ttf_t* p__root = nullptr);
 
             private:
                 void _read();
                 void _clean_up();
 
             public:
-                ~pascal_string_t();
+                ~byte_encoding_table_t();
 
             private:
-                uint8_t m_length;
-                std::string m_value;
-                bool n_value;
-
-            public:
-                bool _is_null_value() { value(); return n_value; };
-
-            private:
+                std::string m_glyph_id_array;
                 ttf_t* m__root;
-                ttf_t::post_t::format20_t* m__parent;
+                ttf_t::cmap_t::subtable_t* m__parent;
 
             public:
-                uint8_t length() const { return m_length; }
-                std::string value() const { return m_value; }
+                std::string glyph_id_array() const { return m_glyph_id_array; }
                 ttf_t* _root() const { return m__root; }
-                ttf_t::post_t::format20_t* _parent() const { return m__parent; }
+                ttf_t::cmap_t::subtable_t* _parent() const { return m__parent; }
+            };
+
+            class high_byte_mapping_through_table_t : public kaitai::kstruct {
+
+            public:
+
+                high_byte_mapping_through_table_t(kaitai::kstream* p__io, ttf_t::cmap_t::subtable_t* p__parent = nullptr, ttf_t* p__root = nullptr);
+
+            private:
+                void _read();
+                void _clean_up();
+
+            public:
+                ~high_byte_mapping_through_table_t();
+
+            private:
+                std::unique_ptr<std::vector<uint16_t>> m_sub_header_keys;
+                ttf_t* m__root;
+                ttf_t::cmap_t::subtable_t* m__parent;
+
+            public:
+                std::vector<uint16_t>* sub_header_keys() const { return m_sub_header_keys.get(); }
+                ttf_t* _root() const { return m__root; }
+                ttf_t::cmap_t::subtable_t* _parent() const { return m__parent; }
+            };
+
+            class segment_mapping_to_delta_values_t : public kaitai::kstruct {
+
+            public:
+
+                segment_mapping_to_delta_values_t(kaitai::kstream* p__io, ttf_t::cmap_t::subtable_t* p__parent = nullptr, ttf_t* p__root = nullptr);
+
+            private:
+                void _read();
+                void _clean_up();
+
+            public:
+                ~segment_mapping_to_delta_values_t();
+
+            private:
+                bool f_seg_count;
+                int32_t m_seg_count;
+
+            public:
+                int32_t seg_count();
+
+            private:
+                uint16_t m_seg_count_x2;
+                uint16_t m_search_range;
+                uint16_t m_entry_selector;
+                uint16_t m_range_shift;
+                std::unique_ptr<std::vector<uint16_t>> m_end_count;
+                uint16_t m_reserved_pad;
+                std::unique_ptr<std::vector<uint16_t>> m_start_count;
+                std::unique_ptr<std::vector<uint16_t>> m_id_delta;
+                std::unique_ptr<std::vector<uint16_t>> m_id_range_offset;
+                std::unique_ptr<std::vector<uint16_t>> m_glyph_id_array;
+                ttf_t* m__root;
+                ttf_t::cmap_t::subtable_t* m__parent;
+
+            public:
+                uint16_t seg_count_x2() const { return m_seg_count_x2; }
+                uint16_t search_range() const { return m_search_range; }
+                uint16_t entry_selector() const { return m_entry_selector; }
+                uint16_t range_shift() const { return m_range_shift; }
+                std::vector<uint16_t>* end_count() const { return m_end_count.get(); }
+                uint16_t reserved_pad() const { return m_reserved_pad; }
+                std::vector<uint16_t>* start_count() const { return m_start_count.get(); }
+                std::vector<uint16_t>* id_delta() const { return m_id_delta.get(); }
+                std::vector<uint16_t>* id_range_offset() const { return m_id_range_offset.get(); }
+                std::vector<uint16_t>* glyph_id_array() const { return m_glyph_id_array.get(); }
+                ttf_t* _root() const { return m__root; }
+                ttf_t::cmap_t::subtable_t* _parent() const { return m__parent; }
+            };
+
+            class trimmed_table_mapping_t : public kaitai::kstruct {
+
+            public:
+
+                trimmed_table_mapping_t(kaitai::kstream* p__io, ttf_t::cmap_t::subtable_t* p__parent = nullptr, ttf_t* p__root = nullptr);
+
+            private:
+                void _read();
+                void _clean_up();
+
+            public:
+                ~trimmed_table_mapping_t();
+
+            private:
+                uint16_t m_first_code;
+                uint16_t m_entry_count;
+                std::unique_ptr<std::vector<uint16_t>> m_glyph_id_array;
+                ttf_t* m__root;
+                ttf_t::cmap_t::subtable_t* m__parent;
+
+            public:
+                uint16_t first_code() const { return m_first_code; }
+                uint16_t entry_count() const { return m_entry_count; }
+                std::vector<uint16_t>* glyph_id_array() const { return m_glyph_id_array.get(); }
+                ttf_t* _root() const { return m__root; }
+                ttf_t::cmap_t::subtable_t* _parent() const { return m__parent; }
             };
 
         private:
-            uint16_t m_number_of_glyphs;
-            std::unique_ptr<std::vector<uint16_t>> m_glyph_name_index;
-            std::unique_ptr<std::vector<std::unique_ptr<pascal_string_t>>> m_glyph_names;
+            subtable_format_t m_format;
+            uint16_t m_length;
+            uint16_t m_version;
+            std::unique_ptr<kaitai::kstruct> m_value;
+            bool n_value;
+
+        public:
+            bool _is_null_value() { value(); return n_value; };
+
+        private:
             ttf_t* m__root;
-            ttf_t::post_t* m__parent;
+            ttf_t::cmap_t::subtable_header_t* m__parent;
+            std::string m__raw_value;
+            std::unique_ptr<kaitai::kstream> m__io__raw_value;
 
         public:
-            uint16_t number_of_glyphs() const { return m_number_of_glyphs; }
-            std::vector<uint16_t>* glyph_name_index() const { return m_glyph_name_index.get(); }
-            std::vector<std::unique_ptr<pascal_string_t>>* glyph_names() const { return m_glyph_names.get(); }
+            subtable_format_t format() const { return m_format; }
+            uint16_t length() const { return m_length; }
+            uint16_t version() const { return m_version; }
+            kaitai::kstruct* value() const { return m_value.get(); }
             ttf_t* _root() const { return m__root; }
-            ttf_t::post_t* _parent() const { return m__parent; }
+            ttf_t::cmap_t::subtable_header_t* _parent() const { return m__parent; }
+            std::string _raw_value() const { return m__raw_value; }
+            kaitai::kstream* _io__raw_value() const { return m__io__raw_value.get(); }
         };
 
-    private:
-        std::unique_ptr<fixed_t> m_format;
-        std::unique_ptr<fixed_t> m_italic_angle;
-        int16_t m_underline_position;
-        int16_t m_underline_thichness;
-        uint32_t m_is_fixed_pitch;
-        uint32_t m_min_mem_type42;
-        uint32_t m_max_mem_type42;
-        uint32_t m_min_mem_type1;
-        uint32_t m_max_mem_type1;
-        std::unique_ptr<format20_t> m_format20;
-        bool n_format20;
-
-    public:
-        bool _is_null_format20() { format20(); return n_format20; };
-
-    private:
-        ttf_t* m__root;
-        ttf_t::dir_table_entry_t* m__parent;
-
-    public:
-        fixed_t* format() const { return m_format.get(); }
-        fixed_t* italic_angle() const { return m_italic_angle.get(); }
-        int16_t underline_position() const { return m_underline_position; }
-        int16_t underline_thichness() const { return m_underline_thichness; }
-        uint32_t is_fixed_pitch() const { return m_is_fixed_pitch; }
-        uint32_t min_mem_type42() const { return m_min_mem_type42; }
-        uint32_t max_mem_type42() const { return m_max_mem_type42; }
-        uint32_t min_mem_type1() const { return m_min_mem_type1; }
-        uint32_t max_mem_type1() const { return m_max_mem_type1; }
-        format20_t* format20() const { return m_format20.get(); }
-        ttf_t* _root() const { return m__root; }
-        ttf_t::dir_table_entry_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * Name table is meant to include human-readable string metadata
-     * that describes font: name of the font, its styles, copyright &
-     * trademark notices, vendor and designer info, etc.
-     * 
-     * The table includes a list of "name records", each of which
-     * corresponds to a single metadata entry.
-     * \sa https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6name.html Source
-     */
-
-    class name_t : public kaitai::kstruct {
-
-    public:
-        class name_record_t;
-
-        enum platforms_t {
-            PLATFORMS_UNICODE = 0,
-            PLATFORMS_MACINTOSH = 1,
-            PLATFORMS_RESERVED_2 = 2,
-            PLATFORMS_MICROSOFT = 3
-        };
-
-        enum names_t {
-            NAMES_COPYRIGHT = 0,
-            NAMES_FONT_FAMILY = 1,
-            NAMES_FONT_SUBFAMILY = 2,
-            NAMES_UNIQUE_SUBFAMILY_ID = 3,
-            NAMES_FULL_FONT_NAME = 4,
-            NAMES_NAME_TABLE_VERSION = 5,
-            NAMES_POSTSCRIPT_FONT_NAME = 6,
-            NAMES_TRADEMARK = 7,
-            NAMES_MANUFACTURER = 8,
-            NAMES_DESIGNER = 9,
-            NAMES_DESCRIPTION = 10,
-            NAMES_URL_VENDOR = 11,
-            NAMES_URL_DESIGNER = 12,
-            NAMES_LICENSE = 13,
-            NAMES_URL_LICENSE = 14,
-            NAMES_RESERVED_15 = 15,
-            NAMES_PREFERRED_FAMILY = 16,
-            NAMES_PREFERRED_SUBFAMILY = 17,
-            NAMES_COMPATIBLE_FULL_NAME = 18,
-            NAMES_SAMPLE_TEXT = 19
-        };
-
-        name_t(kaitai::kstream* p__io, ttf_t::dir_table_entry_t* p__parent = nullptr, ttf_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~name_t();
-
-        class name_record_t : public kaitai::kstruct {
+        class subtable_header_t : public kaitai::kstruct {
 
         public:
 
-            name_record_t(kaitai::kstream* p__io, ttf_t::name_t* p__parent = nullptr, ttf_t* p__root = nullptr);
+            subtable_header_t(kaitai::kstream* p__io, ttf_t::cmap_t* p__parent = nullptr, ttf_t* p__root = nullptr);
 
         private:
             void _read();
             void _clean_up();
 
         public:
-            ~name_record_t();
+            ~subtable_header_t();
 
         private:
-            bool f_ascii_value;
-            std::string m_ascii_value;
+            bool f_table;
+            std::unique_ptr<subtable_t> m_table;
 
         public:
-            std::string ascii_value();
+            subtable_t* table();
 
         private:
-            bool f_unicode_value;
-            std::string m_unicode_value;
-
-        public:
-            std::string unicode_value();
-
-        private:
-            platforms_t m_platform_id;
+            uint16_t m_platform_id;
             uint16_t m_encoding_id;
-            uint16_t m_language_id;
-            names_t m_name_id;
-            uint16_t m_len_str;
-            uint16_t m_ofs_str;
+            uint32_t m_subtable_offset;
             ttf_t* m__root;
-            ttf_t::name_t* m__parent;
+            ttf_t::cmap_t* m__parent;
 
         public:
-            platforms_t platform_id() const { return m_platform_id; }
+            uint16_t platform_id() const { return m_platform_id; }
             uint16_t encoding_id() const { return m_encoding_id; }
-            uint16_t language_id() const { return m_language_id; }
-            names_t name_id() const { return m_name_id; }
-            uint16_t len_str() const { return m_len_str; }
-            uint16_t ofs_str() const { return m_ofs_str; }
+            uint32_t subtable_offset() const { return m_subtable_offset; }
             ttf_t* _root() const { return m__root; }
-            ttf_t::name_t* _parent() const { return m__parent; }
+            ttf_t::cmap_t* _parent() const { return m__parent; }
         };
 
     private:
-        uint16_t m_format_selector;
-        uint16_t m_num_name_records;
-        uint16_t m_ofs_strings;
-        std::unique_ptr<std::vector<std::unique_ptr<name_record_t>>> m_name_records;
+        uint16_t m_version_number;
+        uint16_t m_number_of_encoding_tables;
+        std::unique_ptr<std::vector<std::unique_ptr<subtable_header_t>>> m_tables;
         ttf_t* m__root;
         ttf_t::dir_table_entry_t* m__parent;
 
     public:
-        uint16_t format_selector() const { return m_format_selector; }
-        uint16_t num_name_records() const { return m_num_name_records; }
-        uint16_t ofs_strings() const { return m_ofs_strings; }
-        std::vector<std::unique_ptr<name_record_t>>* name_records() const { return m_name_records.get(); }
+        uint16_t version_number() const { return m_version_number; }
+        uint16_t number_of_encoding_tables() const { return m_number_of_encoding_tables; }
+        std::vector<std::unique_ptr<subtable_header_t>>* tables() const { return m_tables.get(); }
+        ttf_t* _root() const { return m__root; }
+        ttf_t::dir_table_entry_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * cvt  - Control Value Table This table contains a list of values that can be referenced by instructions. They can be used, among other things, to control characteristics for different glyphs.
+     */
+
+    class cvt_t : public kaitai::kstruct {
+
+    public:
+
+        cvt_t(kaitai::kstream* p__io, ttf_t::dir_table_entry_t* p__parent = nullptr, ttf_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~cvt_t();
+
+    private:
+        std::unique_ptr<std::vector<int16_t>> m_fwords;
+        ttf_t* m__root;
+        ttf_t::dir_table_entry_t* m__parent;
+
+    public:
+        std::vector<int16_t>* fwords() const { return m_fwords.get(); }
+        ttf_t* _root() const { return m__root; }
+        ttf_t::dir_table_entry_t* _parent() const { return m__parent; }
+    };
+
+    class dir_table_entry_t : public kaitai::kstruct {
+
+    public:
+
+        dir_table_entry_t(kaitai::kstream* p__io, ttf_t* p__parent = nullptr, ttf_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~dir_table_entry_t();
+
+    private:
+        bool f_value;
+        std::unique_ptr<kaitai::kstruct> m_value;
+        bool n_value;
+
+    public:
+        bool _is_null_value() { value(); return n_value; };
+
+    private:
+
+    public:
+        kaitai::kstruct* value();
+
+    private:
+        std::string m_tag;
+        uint32_t m_checksum;
+        uint32_t m_offset;
+        uint32_t m_length;
+        ttf_t* m__root;
+        ttf_t* m__parent;
+        std::string m__raw_value;
+        std::unique_ptr<kaitai::kstream> m__io__raw_value;
+
+    public:
+        std::string tag() const { return m_tag; }
+        uint32_t checksum() const { return m_checksum; }
+        uint32_t offset() const { return m_offset; }
+        uint32_t length() const { return m_length; }
+        ttf_t* _root() const { return m__root; }
+        ttf_t* _parent() const { return m__parent; }
+        std::string _raw_value() const { return m__raw_value; }
+        kaitai::kstream* _io__raw_value() const { return m__io__raw_value.get(); }
+    };
+
+    class fixed_t : public kaitai::kstruct {
+
+    public:
+
+        fixed_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, ttf_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~fixed_t();
+
+    private:
+        uint16_t m_major;
+        uint16_t m_minor;
+        ttf_t* m__root;
+        kaitai::kstruct* m__parent;
+
+    public:
+        uint16_t major() const { return m_major; }
+        uint16_t minor() const { return m_minor; }
+        ttf_t* _root() const { return m__root; }
+        kaitai::kstruct* _parent() const { return m__parent; }
+    };
+
+    class fpgm_t : public kaitai::kstruct {
+
+    public:
+
+        fpgm_t(kaitai::kstream* p__io, ttf_t::dir_table_entry_t* p__parent = nullptr, ttf_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~fpgm_t();
+
+    private:
+        std::string m_instructions;
+        ttf_t* m__root;
+        ttf_t::dir_table_entry_t* m__parent;
+
+    public:
+        std::string instructions() const { return m_instructions; }
+        ttf_t* _root() const { return m__root; }
+        ttf_t::dir_table_entry_t* _parent() const { return m__parent; }
+    };
+
+    class glyf_t : public kaitai::kstruct {
+
+    public:
+        class simple_glyph_t;
+
+        glyf_t(kaitai::kstream* p__io, ttf_t::dir_table_entry_t* p__parent = nullptr, ttf_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~glyf_t();
+
+        class simple_glyph_t : public kaitai::kstruct {
+
+        public:
+            class flag_t;
+
+            simple_glyph_t(kaitai::kstream* p__io, ttf_t::glyf_t* p__parent = nullptr, ttf_t* p__root = nullptr);
+
+        private:
+            void _read();
+            void _clean_up();
+
+        public:
+            ~simple_glyph_t();
+
+            class flag_t : public kaitai::kstruct {
+
+            public:
+
+                flag_t(kaitai::kstream* p__io, ttf_t::glyf_t::simple_glyph_t* p__parent = nullptr, ttf_t* p__root = nullptr);
+
+            private:
+                void _read();
+                void _clean_up();
+
+            public:
+                ~flag_t();
+
+            private:
+                uint64_t m_reserved;
+                bool m_y_is_same;
+                bool m_x_is_same;
+                bool m_repeat;
+                bool m_y_short_vector;
+                bool m_x_short_vector;
+                bool m_on_curve;
+                uint8_t m_repeat_value;
+                bool n_repeat_value;
+
+            public:
+                bool _is_null_repeat_value() { repeat_value(); return n_repeat_value; };
+
+            private:
+                ttf_t* m__root;
+                ttf_t::glyf_t::simple_glyph_t* m__parent;
+
+            public:
+                uint64_t reserved() const { return m_reserved; }
+                bool y_is_same() const { return m_y_is_same; }
+                bool x_is_same() const { return m_x_is_same; }
+                bool repeat() const { return m_repeat; }
+                bool y_short_vector() const { return m_y_short_vector; }
+                bool x_short_vector() const { return m_x_short_vector; }
+                bool on_curve() const { return m_on_curve; }
+                uint8_t repeat_value() const { return m_repeat_value; }
+                ttf_t* _root() const { return m__root; }
+                ttf_t::glyf_t::simple_glyph_t* _parent() const { return m__parent; }
+            };
+
+        private:
+            bool f_point_count;
+            int32_t m_point_count;
+
+        public:
+            int32_t point_count();
+
+        private:
+            std::unique_ptr<std::vector<uint16_t>> m_end_pts_of_contours;
+            uint16_t m_instruction_length;
+            std::string m_instructions;
+            std::unique_ptr<std::vector<std::unique_ptr<flag_t>>> m_flags;
+            ttf_t* m__root;
+            ttf_t::glyf_t* m__parent;
+
+        public:
+            std::vector<uint16_t>* end_pts_of_contours() const { return m_end_pts_of_contours.get(); }
+            uint16_t instruction_length() const { return m_instruction_length; }
+            std::string instructions() const { return m_instructions; }
+            std::vector<std::unique_ptr<flag_t>>* flags() const { return m_flags.get(); }
+            ttf_t* _root() const { return m__root; }
+            ttf_t::glyf_t* _parent() const { return m__parent; }
+        };
+
+    private:
+        int16_t m_number_of_contours;
+        int16_t m_x_min;
+        int16_t m_y_min;
+        int16_t m_x_max;
+        int16_t m_y_max;
+        std::unique_ptr<simple_glyph_t> m_value;
+        bool n_value;
+
+    public:
+        bool _is_null_value() { value(); return n_value; };
+
+    private:
+        ttf_t* m__root;
+        ttf_t::dir_table_entry_t* m__parent;
+
+    public:
+        int16_t number_of_contours() const { return m_number_of_contours; }
+        int16_t x_min() const { return m_x_min; }
+        int16_t y_min() const { return m_y_min; }
+        int16_t x_max() const { return m_x_max; }
+        int16_t y_max() const { return m_y_max; }
+        simple_glyph_t* value() const { return m_value.get(); }
         ttf_t* _root() const { return m__root; }
         ttf_t::dir_table_entry_t* _parent() const { return m__parent; }
     };
@@ -286,12 +559,24 @@ public:
             FLAGS_FLAG_FORCE_PPEM = 8,
             FLAGS_FLAG_MAY_ADVANCE_WIDTH = 16
         };
+        static bool _is_defined_flags_t(flags_t v);
+
+    private:
+        static const std::set<flags_t> _values_flags_t;
+
+    public:
 
         enum font_direction_hint_t {
             FONT_DIRECTION_HINT_FULLY_MIXED_DIRECTIONAL_GLYPHS = 0,
             FONT_DIRECTION_HINT_ONLY_STRONGLY_LEFT_TO_RIGHT = 1,
             FONT_DIRECTION_HINT_STRONGLY_LEFT_TO_RIGHT_AND_NEUTRALS = 2
         };
+        static bool _is_defined_font_direction_hint_t(font_direction_hint_t v);
+
+    private:
+        static const std::set<font_direction_hint_t> _values_font_direction_hint_t;
+
+    public:
 
         head_t(kaitai::kstream* p__io, ttf_t::dir_table_entry_t* p__parent = nullptr, ttf_t* p__root = nullptr);
 
@@ -341,30 +626,6 @@ public:
         font_direction_hint_t font_direction_hint() const { return m_font_direction_hint; }
         int16_t index_to_loc_format() const { return m_index_to_loc_format; }
         int16_t glyph_data_format() const { return m_glyph_data_format; }
-        ttf_t* _root() const { return m__root; }
-        ttf_t::dir_table_entry_t* _parent() const { return m__parent; }
-    };
-
-    class prep_t : public kaitai::kstruct {
-
-    public:
-
-        prep_t(kaitai::kstream* p__io, ttf_t::dir_table_entry_t* p__parent = nullptr, ttf_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~prep_t();
-
-    private:
-        std::string m_instructions;
-        ttf_t* m__root;
-        ttf_t::dir_table_entry_t* m__parent;
-
-    public:
-        std::string instructions() const { return m_instructions; }
         ttf_t* _root() const { return m__root; }
         ttf_t::dir_table_entry_t* _parent() const { return m__parent; }
     };
@@ -441,30 +702,6 @@ public:
         std::string reserved() const { return m_reserved; }
         int16_t metric_data_format() const { return m_metric_data_format; }
         uint16_t number_of_hmetrics() const { return m_number_of_hmetrics; }
-        ttf_t* _root() const { return m__root; }
-        ttf_t::dir_table_entry_t* _parent() const { return m__parent; }
-    };
-
-    class fpgm_t : public kaitai::kstruct {
-
-    public:
-
-        fpgm_t(kaitai::kstream* p__io, ttf_t::dir_table_entry_t* p__parent = nullptr, ttf_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~fpgm_t();
-
-    private:
-        std::string m_instructions;
-        ttf_t* m__root;
-        ttf_t::dir_table_entry_t* m__parent;
-
-    public:
-        std::string instructions() const { return m_instructions; }
         ttf_t* _root() const { return m__root; }
         ttf_t::dir_table_entry_t* _parent() const { return m__parent; }
     };
@@ -606,51 +843,316 @@ public:
         ttf_t::dir_table_entry_t* _parent() const { return m__parent; }
     };
 
-    class dir_table_entry_t : public kaitai::kstruct {
+    class maxp_t : public kaitai::kstruct {
 
     public:
 
-        dir_table_entry_t(kaitai::kstream* p__io, ttf_t* p__parent = nullptr, ttf_t* p__root = nullptr);
+        maxp_t(kaitai::kstream* p__io, ttf_t::dir_table_entry_t* p__parent = nullptr, ttf_t* p__root = nullptr);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~dir_table_entry_t();
+        ~maxp_t();
 
     private:
-        bool f_value;
-        std::unique_ptr<kaitai::kstruct> m_value;
-        bool n_value;
+        bool f_is_version10;
+        bool m_is_version10;
 
     public:
-        bool _is_null_value() { value(); return n_value; };
+        bool is_version10();
 
     private:
+        std::unique_ptr<fixed_t> m_table_version_number;
+        uint16_t m_num_glyphs;
+        std::unique_ptr<maxp_version10_body_t> m_version10_body;
+        bool n_version10_body;
 
     public:
-        kaitai::kstruct* value();
+        bool _is_null_version10_body() { version10_body(); return n_version10_body; };
 
     private:
-        std::string m_tag;
-        uint32_t m_checksum;
-        uint32_t m_offset;
-        uint32_t m_length;
+        ttf_t* m__root;
+        ttf_t::dir_table_entry_t* m__parent;
+
+    public:
+
+        /**
+         * 0x00010000 for version 1.0.
+         */
+        fixed_t* table_version_number() const { return m_table_version_number.get(); }
+
+        /**
+         * The number of glyphs in the font.
+         */
+        uint16_t num_glyphs() const { return m_num_glyphs; }
+        maxp_version10_body_t* version10_body() const { return m_version10_body.get(); }
+        ttf_t* _root() const { return m__root; }
+        ttf_t::dir_table_entry_t* _parent() const { return m__parent; }
+    };
+
+    class maxp_version10_body_t : public kaitai::kstruct {
+
+    public:
+
+        maxp_version10_body_t(kaitai::kstream* p__io, ttf_t::maxp_t* p__parent = nullptr, ttf_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~maxp_version10_body_t();
+
+    private:
+        uint16_t m_max_points;
+        uint16_t m_max_contours;
+        uint16_t m_max_composite_points;
+        uint16_t m_max_composite_contours;
+        uint16_t m_max_zones;
+        uint16_t m_max_twilight_points;
+        uint16_t m_max_storage;
+        uint16_t m_max_function_defs;
+        uint16_t m_max_instruction_defs;
+        uint16_t m_max_stack_elements;
+        uint16_t m_max_size_of_instructions;
+        uint16_t m_max_component_elements;
+        uint16_t m_max_component_depth;
+        ttf_t* m__root;
+        ttf_t::maxp_t* m__parent;
+
+    public:
+
+        /**
+         * Maximum points in a non-composite glyph.
+         */
+        uint16_t max_points() const { return m_max_points; }
+
+        /**
+         * Maximum contours in a non-composite glyph.
+         */
+        uint16_t max_contours() const { return m_max_contours; }
+
+        /**
+         * Maximum points in a composite glyph.
+         */
+        uint16_t max_composite_points() const { return m_max_composite_points; }
+
+        /**
+         * Maximum contours in a composite glyph.
+         */
+        uint16_t max_composite_contours() const { return m_max_composite_contours; }
+
+        /**
+         * 1 if instructions do not use the twilight zone (Z0), or 2 if instructions do use Z0; should be set to 2 in most cases.
+         */
+        uint16_t max_zones() const { return m_max_zones; }
+
+        /**
+         * Maximum points used in Z0.
+         */
+        uint16_t max_twilight_points() const { return m_max_twilight_points; }
+
+        /**
+         * Number of Storage Area locations.
+         */
+        uint16_t max_storage() const { return m_max_storage; }
+
+        /**
+         * Number of FDEFs.
+         */
+        uint16_t max_function_defs() const { return m_max_function_defs; }
+
+        /**
+         * Number of IDEFs.
+         */
+        uint16_t max_instruction_defs() const { return m_max_instruction_defs; }
+
+        /**
+         * Maximum stack depth.
+         */
+        uint16_t max_stack_elements() const { return m_max_stack_elements; }
+
+        /**
+         * Maximum byte count for glyph instructions.
+         */
+        uint16_t max_size_of_instructions() const { return m_max_size_of_instructions; }
+
+        /**
+         * Maximum number of components referenced at "top level" for any composite glyph.
+         */
+        uint16_t max_component_elements() const { return m_max_component_elements; }
+
+        /**
+         * Maximum levels of recursion; 1 for simple components.
+         */
+        uint16_t max_component_depth() const { return m_max_component_depth; }
+        ttf_t* _root() const { return m__root; }
+        ttf_t::maxp_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * Name table is meant to include human-readable string metadata
+     * that describes font: name of the font, its styles, copyright &
+     * trademark notices, vendor and designer info, etc.
+     * 
+     * The table includes a list of "name records", each of which
+     * corresponds to a single metadata entry.
+     * \sa https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6name.html Source
+     */
+
+    class name_t : public kaitai::kstruct {
+
+    public:
+        class name_record_t;
+
+        enum names_t {
+            NAMES_COPYRIGHT = 0,
+            NAMES_FONT_FAMILY = 1,
+            NAMES_FONT_SUBFAMILY = 2,
+            NAMES_UNIQUE_SUBFAMILY_ID = 3,
+            NAMES_FULL_FONT_NAME = 4,
+            NAMES_NAME_TABLE_VERSION = 5,
+            NAMES_POSTSCRIPT_FONT_NAME = 6,
+            NAMES_TRADEMARK = 7,
+            NAMES_MANUFACTURER = 8,
+            NAMES_DESIGNER = 9,
+            NAMES_DESCRIPTION = 10,
+            NAMES_URL_VENDOR = 11,
+            NAMES_URL_DESIGNER = 12,
+            NAMES_LICENSE = 13,
+            NAMES_URL_LICENSE = 14,
+            NAMES_RESERVED_15 = 15,
+            NAMES_PREFERRED_FAMILY = 16,
+            NAMES_PREFERRED_SUBFAMILY = 17,
+            NAMES_COMPATIBLE_FULL_NAME = 18,
+            NAMES_SAMPLE_TEXT = 19
+        };
+        static bool _is_defined_names_t(names_t v);
+
+    private:
+        static const std::set<names_t> _values_names_t;
+
+    public:
+
+        enum platforms_t {
+            PLATFORMS_UNICODE = 0,
+            PLATFORMS_MACINTOSH = 1,
+            PLATFORMS_RESERVED_2 = 2,
+            PLATFORMS_MICROSOFT = 3
+        };
+        static bool _is_defined_platforms_t(platforms_t v);
+
+    private:
+        static const std::set<platforms_t> _values_platforms_t;
+
+    public:
+
+        name_t(kaitai::kstream* p__io, ttf_t::dir_table_entry_t* p__parent = nullptr, ttf_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~name_t();
+
+        class name_record_t : public kaitai::kstruct {
+
+        public:
+
+            name_record_t(kaitai::kstream* p__io, ttf_t::name_t* p__parent = nullptr, ttf_t* p__root = nullptr);
+
+        private:
+            void _read();
+            void _clean_up();
+
+        public:
+            ~name_record_t();
+
+        private:
+            bool f_ascii_value;
+            std::string m_ascii_value;
+
+        public:
+            std::string ascii_value();
+
+        private:
+            bool f_unicode_value;
+            std::string m_unicode_value;
+
+        public:
+            std::string unicode_value();
+
+        private:
+            platforms_t m_platform_id;
+            uint16_t m_encoding_id;
+            uint16_t m_language_id;
+            names_t m_name_id;
+            uint16_t m_len_str;
+            uint16_t m_ofs_str;
+            ttf_t* m__root;
+            ttf_t::name_t* m__parent;
+
+        public:
+            platforms_t platform_id() const { return m_platform_id; }
+            uint16_t encoding_id() const { return m_encoding_id; }
+            uint16_t language_id() const { return m_language_id; }
+            names_t name_id() const { return m_name_id; }
+            uint16_t len_str() const { return m_len_str; }
+            uint16_t ofs_str() const { return m_ofs_str; }
+            ttf_t* _root() const { return m__root; }
+            ttf_t::name_t* _parent() const { return m__parent; }
+        };
+
+    private:
+        uint16_t m_format_selector;
+        uint16_t m_num_name_records;
+        uint16_t m_ofs_strings;
+        std::unique_ptr<std::vector<std::unique_ptr<name_record_t>>> m_name_records;
+        ttf_t* m__root;
+        ttf_t::dir_table_entry_t* m__parent;
+
+    public:
+        uint16_t format_selector() const { return m_format_selector; }
+        uint16_t num_name_records() const { return m_num_name_records; }
+        uint16_t ofs_strings() const { return m_ofs_strings; }
+        std::vector<std::unique_ptr<name_record_t>>* name_records() const { return m_name_records.get(); }
+        ttf_t* _root() const { return m__root; }
+        ttf_t::dir_table_entry_t* _parent() const { return m__parent; }
+    };
+
+    class offset_table_t : public kaitai::kstruct {
+
+    public:
+
+        offset_table_t(kaitai::kstream* p__io, ttf_t* p__parent = nullptr, ttf_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~offset_table_t();
+
+    private:
+        std::unique_ptr<fixed_t> m_sfnt_version;
+        uint16_t m_num_tables;
+        uint16_t m_search_range;
+        uint16_t m_entry_selector;
+        uint16_t m_range_shift;
         ttf_t* m__root;
         ttf_t* m__parent;
-        std::string m__raw_value;
-        std::unique_ptr<kaitai::kstream> m__io__raw_value;
 
     public:
-        std::string tag() const { return m_tag; }
-        uint32_t checksum() const { return m_checksum; }
-        uint32_t offset() const { return m_offset; }
-        uint32_t length() const { return m_length; }
+        fixed_t* sfnt_version() const { return m_sfnt_version.get(); }
+        uint16_t num_tables() const { return m_num_tables; }
+        uint16_t search_range() const { return m_search_range; }
+        uint16_t entry_selector() const { return m_entry_selector; }
+        uint16_t range_shift() const { return m_range_shift; }
         ttf_t* _root() const { return m__root; }
         ttf_t* _parent() const { return m__parent; }
-        std::string _raw_value() const { return m__raw_value; }
-        kaitai::kstream* _io__raw_value() const { return m__io__raw_value.get(); }
     };
 
     /**
@@ -660,9 +1162,37 @@ public:
     class os2_t : public kaitai::kstruct {
 
     public:
+        class code_page_range_t;
         class panose_t;
         class unicode_range_t;
-        class code_page_range_t;
+
+        enum fs_selection_t {
+            FS_SELECTION_ITALIC = 1,
+            FS_SELECTION_UNDERSCORE = 2,
+            FS_SELECTION_NEGATIVE = 4,
+            FS_SELECTION_OUTLINED = 8,
+            FS_SELECTION_STRIKEOUT = 16,
+            FS_SELECTION_BOLD = 32,
+            FS_SELECTION_REGULAR = 64
+        };
+        static bool _is_defined_fs_selection_t(fs_selection_t v);
+
+    private:
+        static const std::set<fs_selection_t> _values_fs_selection_t;
+
+    public:
+
+        enum fs_type_t {
+            FS_TYPE_RESTRICTED_LICENSE_EMBEDDING = 2,
+            FS_TYPE_PREVIEW_AND_PRINT_EMBEDDING = 4,
+            FS_TYPE_EDITABLE_EMBEDDING = 8
+        };
+        static bool _is_defined_fs_type_t(fs_type_t v);
+
+    private:
+        static const std::set<fs_type_t> _values_fs_type_t;
+
+    public:
 
         enum weight_class_t {
             WEIGHT_CLASS_THIN = 100,
@@ -675,6 +1205,12 @@ public:
             WEIGHT_CLASS_EXTRA_BOLD = 800,
             WEIGHT_CLASS_BLACK = 900
         };
+        static bool _is_defined_weight_class_t(weight_class_t v);
+
+    private:
+        static const std::set<weight_class_t> _values_weight_class_t;
+
+    public:
 
         enum width_class_t {
             WIDTH_CLASS_ULTRA_CONDENSED = 1,
@@ -687,22 +1223,12 @@ public:
             WIDTH_CLASS_EXTRA_EXPANDED = 8,
             WIDTH_CLASS_ULTRA_EXPANDED = 9
         };
+        static bool _is_defined_width_class_t(width_class_t v);
 
-        enum fs_type_t {
-            FS_TYPE_RESTRICTED_LICENSE_EMBEDDING = 2,
-            FS_TYPE_PREVIEW_AND_PRINT_EMBEDDING = 4,
-            FS_TYPE_EDITABLE_EMBEDDING = 8
-        };
+    private:
+        static const std::set<width_class_t> _values_width_class_t;
 
-        enum fs_selection_t {
-            FS_SELECTION_ITALIC = 1,
-            FS_SELECTION_UNDERSCORE = 2,
-            FS_SELECTION_NEGATIVE = 4,
-            FS_SELECTION_OUTLINED = 8,
-            FS_SELECTION_STRIKEOUT = 16,
-            FS_SELECTION_BOLD = 32,
-            FS_SELECTION_REGULAR = 64
-        };
+    public:
 
         os2_t(kaitai::kstream* p__io, ttf_t::dir_table_entry_t* p__parent = nullptr, ttf_t* p__root = nullptr);
 
@@ -713,37 +1239,143 @@ public:
     public:
         ~os2_t();
 
+        class code_page_range_t : public kaitai::kstruct {
+
+        public:
+
+            code_page_range_t(kaitai::kstream* p__io, ttf_t::os2_t* p__parent = nullptr, ttf_t* p__root = nullptr);
+
+        private:
+            void _read();
+            void _clean_up();
+
+        public:
+            ~code_page_range_t();
+
+        private:
+            bool m_symbol_character_set;
+            bool m_oem_character_set;
+            bool m_macintosh_character_set;
+            uint64_t m_reserved_for_alternate_ansi_oem;
+            bool m_cp1361_korean_johab;
+            bool m_cp950_chinese_traditional_chars_taiwan_and_hong_kong;
+            bool m_cp949_korean_wansung;
+            bool m_cp936_chinese_simplified_chars_prc_and_singapore;
+            bool m_cp932_jis_japan;
+            bool m_cp874_thai;
+            uint64_t m_reserved_for_alternate_ansi;
+            bool m_cp1257_windows_baltic;
+            bool m_cp1256_arabic;
+            bool m_cp1255_hebrew;
+            bool m_cp1254_turkish;
+            bool m_cp1253_greek;
+            bool m_cp1251_cyrillic;
+            bool m_cp1250_latin_2_eastern_europe;
+            bool m_cp1252_latin_1;
+            bool m_cp437_us;
+            bool m_cp850_we_latin_1;
+            bool m_cp708_arabic_asmo_708;
+            bool m_cp737_greek_former_437_g;
+            bool m_cp775_ms_dos_baltic;
+            bool m_cp852_latin_2;
+            bool m_cp855_ibm_cyrillic_primarily_russian;
+            bool m_cp857_ibm_turkish;
+            bool m_cp860_ms_dos_portuguese;
+            bool m_cp861_ms_dos_icelandic;
+            bool m_cp862_hebrew;
+            bool m_cp863_ms_dos_canadian_french;
+            bool m_cp864_arabic;
+            bool m_cp865_ms_dos_nordic;
+            bool m_cp866_ms_dos_russian;
+            bool m_cp869_ibm_greek;
+            uint64_t m_reserved_for_oem;
+            ttf_t* m__root;
+            ttf_t::os2_t* m__parent;
+
+        public:
+            bool symbol_character_set() const { return m_symbol_character_set; }
+            bool oem_character_set() const { return m_oem_character_set; }
+            bool macintosh_character_set() const { return m_macintosh_character_set; }
+            uint64_t reserved_for_alternate_ansi_oem() const { return m_reserved_for_alternate_ansi_oem; }
+            bool cp1361_korean_johab() const { return m_cp1361_korean_johab; }
+            bool cp950_chinese_traditional_chars_taiwan_and_hong_kong() const { return m_cp950_chinese_traditional_chars_taiwan_and_hong_kong; }
+            bool cp949_korean_wansung() const { return m_cp949_korean_wansung; }
+            bool cp936_chinese_simplified_chars_prc_and_singapore() const { return m_cp936_chinese_simplified_chars_prc_and_singapore; }
+            bool cp932_jis_japan() const { return m_cp932_jis_japan; }
+            bool cp874_thai() const { return m_cp874_thai; }
+            uint64_t reserved_for_alternate_ansi() const { return m_reserved_for_alternate_ansi; }
+            bool cp1257_windows_baltic() const { return m_cp1257_windows_baltic; }
+            bool cp1256_arabic() const { return m_cp1256_arabic; }
+            bool cp1255_hebrew() const { return m_cp1255_hebrew; }
+            bool cp1254_turkish() const { return m_cp1254_turkish; }
+            bool cp1253_greek() const { return m_cp1253_greek; }
+            bool cp1251_cyrillic() const { return m_cp1251_cyrillic; }
+            bool cp1250_latin_2_eastern_europe() const { return m_cp1250_latin_2_eastern_europe; }
+            bool cp1252_latin_1() const { return m_cp1252_latin_1; }
+            bool cp437_us() const { return m_cp437_us; }
+            bool cp850_we_latin_1() const { return m_cp850_we_latin_1; }
+            bool cp708_arabic_asmo_708() const { return m_cp708_arabic_asmo_708; }
+            bool cp737_greek_former_437_g() const { return m_cp737_greek_former_437_g; }
+            bool cp775_ms_dos_baltic() const { return m_cp775_ms_dos_baltic; }
+            bool cp852_latin_2() const { return m_cp852_latin_2; }
+            bool cp855_ibm_cyrillic_primarily_russian() const { return m_cp855_ibm_cyrillic_primarily_russian; }
+            bool cp857_ibm_turkish() const { return m_cp857_ibm_turkish; }
+            bool cp860_ms_dos_portuguese() const { return m_cp860_ms_dos_portuguese; }
+            bool cp861_ms_dos_icelandic() const { return m_cp861_ms_dos_icelandic; }
+            bool cp862_hebrew() const { return m_cp862_hebrew; }
+            bool cp863_ms_dos_canadian_french() const { return m_cp863_ms_dos_canadian_french; }
+            bool cp864_arabic() const { return m_cp864_arabic; }
+            bool cp865_ms_dos_nordic() const { return m_cp865_ms_dos_nordic; }
+            bool cp866_ms_dos_russian() const { return m_cp866_ms_dos_russian; }
+            bool cp869_ibm_greek() const { return m_cp869_ibm_greek; }
+            uint64_t reserved_for_oem() const { return m_reserved_for_oem; }
+            ttf_t* _root() const { return m__root; }
+            ttf_t::os2_t* _parent() const { return m__parent; }
+        };
+
         class panose_t : public kaitai::kstruct {
 
         public:
 
-            enum weight_t {
-                WEIGHT_ANY = 0,
-                WEIGHT_NO_FIT = 1,
-                WEIGHT_VERY_LIGHT = 2,
-                WEIGHT_LIGHT = 3,
-                WEIGHT_THIN = 4,
-                WEIGHT_BOOK = 5,
-                WEIGHT_MEDIUM = 6,
-                WEIGHT_DEMI = 7,
-                WEIGHT_BOLD = 8,
-                WEIGHT_HEAVY = 9,
-                WEIGHT_BLACK = 10,
-                WEIGHT_NORD = 11
+            enum arm_style_t {
+                ARM_STYLE_ANY = 0,
+                ARM_STYLE_NO_FIT = 1,
+                ARM_STYLE_STRAIGHT_ARMS_HORIZONTAL = 2,
+                ARM_STYLE_STRAIGHT_ARMS_WEDGE = 3,
+                ARM_STYLE_STRAIGHT_ARMS_VERTICAL = 4,
+                ARM_STYLE_STRAIGHT_ARMS_SINGLE_SERIF = 5,
+                ARM_STYLE_STRAIGHT_ARMS_DOUBLE_SERIF = 6,
+                ARM_STYLE_NON_STRAIGHT_ARMS_HORIZONTAL = 7,
+                ARM_STYLE_NON_STRAIGHT_ARMS_WEDGE = 8,
+                ARM_STYLE_NON_STRAIGHT_ARMS_VERTICAL = 9,
+                ARM_STYLE_NON_STRAIGHT_ARMS_SINGLE_SERIF = 10,
+                ARM_STYLE_NON_STRAIGHT_ARMS_DOUBLE_SERIF = 11
             };
+            static bool _is_defined_arm_style_t(arm_style_t v);
 
-            enum proportion_t {
-                PROPORTION_ANY = 0,
-                PROPORTION_NO_FIT = 1,
-                PROPORTION_OLD_STYLE = 2,
-                PROPORTION_MODERN = 3,
-                PROPORTION_EVEN_WIDTH = 4,
-                PROPORTION_EXPANDED = 5,
-                PROPORTION_CONDENSED = 6,
-                PROPORTION_VERY_EXPANDED = 7,
-                PROPORTION_VERY_CONDENSED = 8,
-                PROPORTION_MONOSPACED = 9
+        private:
+            static const std::set<arm_style_t> _values_arm_style_t;
+
+        public:
+
+            enum contrast_t {
+                CONTRAST_ANY = 0,
+                CONTRAST_NO_FIT = 1,
+                CONTRAST_NONE = 2,
+                CONTRAST_VERY_LOW = 3,
+                CONTRAST_LOW = 4,
+                CONTRAST_MEDIUM_LOW = 5,
+                CONTRAST_MEDIUM = 6,
+                CONTRAST_MEDIUM_HIGH = 7,
+                CONTRAST_HIGH = 8,
+                CONTRAST_VERY_HIGH = 9
             };
+            static bool _is_defined_contrast_t(contrast_t v);
+
+        private:
+            static const std::set<contrast_t> _values_contrast_t;
+
+        public:
 
             enum family_kind_t {
                 FAMILY_KIND_ANY = 0,
@@ -753,6 +1385,12 @@ public:
                 FAMILY_KIND_DECORATIVE = 4,
                 FAMILY_KIND_PICTORIAL = 5
             };
+            static bool _is_defined_family_kind_t(family_kind_t v);
+
+        private:
+            static const std::set<family_kind_t> _values_family_kind_t;
+
+        public:
 
             enum letter_form_t {
                 LETTER_FORM_ANY = 0,
@@ -772,6 +1410,54 @@ public:
                 LETTER_FORM_OBLIQUE_OFF_CENTER = 14,
                 LETTER_FORM_OBLIQUE_SQUARE = 15
             };
+            static bool _is_defined_letter_form_t(letter_form_t v);
+
+        private:
+            static const std::set<letter_form_t> _values_letter_form_t;
+
+        public:
+
+            enum midline_t {
+                MIDLINE_ANY = 0,
+                MIDLINE_NO_FIT = 1,
+                MIDLINE_STANDARD_TRIMMED = 2,
+                MIDLINE_STANDARD_POINTED = 3,
+                MIDLINE_STANDARD_SERIFED = 4,
+                MIDLINE_HIGH_TRIMMED = 5,
+                MIDLINE_HIGH_POINTED = 6,
+                MIDLINE_HIGH_SERIFED = 7,
+                MIDLINE_CONSTANT_TRIMMED = 8,
+                MIDLINE_CONSTANT_POINTED = 9,
+                MIDLINE_CONSTANT_SERIFED = 10,
+                MIDLINE_LOW_TRIMMED = 11,
+                MIDLINE_LOW_POINTED = 12,
+                MIDLINE_LOW_SERIFED = 13
+            };
+            static bool _is_defined_midline_t(midline_t v);
+
+        private:
+            static const std::set<midline_t> _values_midline_t;
+
+        public:
+
+            enum proportion_t {
+                PROPORTION_ANY = 0,
+                PROPORTION_NO_FIT = 1,
+                PROPORTION_OLD_STYLE = 2,
+                PROPORTION_MODERN = 3,
+                PROPORTION_EVEN_WIDTH = 4,
+                PROPORTION_EXPANDED = 5,
+                PROPORTION_CONDENSED = 6,
+                PROPORTION_VERY_EXPANDED = 7,
+                PROPORTION_VERY_CONDENSED = 8,
+                PROPORTION_MONOSPACED = 9
+            };
+            static bool _is_defined_proportion_t(proportion_t v);
+
+        private:
+            static const std::set<proportion_t> _values_proportion_t;
+
+        public:
 
             enum serif_style_t {
                 SERIF_STYLE_ANY = 0,
@@ -791,32 +1477,12 @@ public:
                 SERIF_STYLE_FLARED = 14,
                 SERIF_STYLE_ROUNDED = 15
             };
+            static bool _is_defined_serif_style_t(serif_style_t v);
 
-            enum x_height_t {
-                X_HEIGHT_ANY = 0,
-                X_HEIGHT_NO_FIT = 1,
-                X_HEIGHT_CONSTANT_SMALL = 2,
-                X_HEIGHT_CONSTANT_STANDARD = 3,
-                X_HEIGHT_CONSTANT_LARGE = 4,
-                X_HEIGHT_DUCKING_SMALL = 5,
-                X_HEIGHT_DUCKING_STANDARD = 6,
-                X_HEIGHT_DUCKING_LARGE = 7
-            };
+        private:
+            static const std::set<serif_style_t> _values_serif_style_t;
 
-            enum arm_style_t {
-                ARM_STYLE_ANY = 0,
-                ARM_STYLE_NO_FIT = 1,
-                ARM_STYLE_STRAIGHT_ARMS_HORIZONTAL = 2,
-                ARM_STYLE_STRAIGHT_ARMS_WEDGE = 3,
-                ARM_STYLE_STRAIGHT_ARMS_VERTICAL = 4,
-                ARM_STYLE_STRAIGHT_ARMS_SINGLE_SERIF = 5,
-                ARM_STYLE_STRAIGHT_ARMS_DOUBLE_SERIF = 6,
-                ARM_STYLE_NON_STRAIGHT_ARMS_HORIZONTAL = 7,
-                ARM_STYLE_NON_STRAIGHT_ARMS_WEDGE = 8,
-                ARM_STYLE_NON_STRAIGHT_ARMS_VERTICAL = 9,
-                ARM_STYLE_NON_STRAIGHT_ARMS_SINGLE_SERIF = 10,
-                ARM_STYLE_NON_STRAIGHT_ARMS_DOUBLE_SERIF = 11
-            };
+        public:
 
             enum stroke_variation_t {
                 STROKE_VARIATION_ANY = 0,
@@ -829,36 +1495,50 @@ public:
                 STROKE_VARIATION_RAPID_HORIZONTAL = 7,
                 STROKE_VARIATION_INSTANT_VERTICAL = 8
             };
+            static bool _is_defined_stroke_variation_t(stroke_variation_t v);
 
-            enum contrast_t {
-                CONTRAST_ANY = 0,
-                CONTRAST_NO_FIT = 1,
-                CONTRAST_NONE = 2,
-                CONTRAST_VERY_LOW = 3,
-                CONTRAST_LOW = 4,
-                CONTRAST_MEDIUM_LOW = 5,
-                CONTRAST_MEDIUM = 6,
-                CONTRAST_MEDIUM_HIGH = 7,
-                CONTRAST_HIGH = 8,
-                CONTRAST_VERY_HIGH = 9
-            };
+        private:
+            static const std::set<stroke_variation_t> _values_stroke_variation_t;
 
-            enum midline_t {
-                MIDLINE_ANY = 0,
-                MIDLINE_NO_FIT = 1,
-                MIDLINE_STANDARD_TRIMMED = 2,
-                MIDLINE_STANDARD_POINTED = 3,
-                MIDLINE_STANDARD_SERIFED = 4,
-                MIDLINE_HIGH_TRIMMED = 5,
-                MIDLINE_HIGH_POINTED = 6,
-                MIDLINE_HIGH_SERIFED = 7,
-                MIDLINE_CONSTANT_TRIMMED = 8,
-                MIDLINE_CONSTANT_POINTED = 9,
-                MIDLINE_CONSTANT_SERIFED = 10,
-                MIDLINE_LOW_TRIMMED = 11,
-                MIDLINE_LOW_POINTED = 12,
-                MIDLINE_LOW_SERIFED = 13
+        public:
+
+            enum weight_t {
+                WEIGHT_ANY = 0,
+                WEIGHT_NO_FIT = 1,
+                WEIGHT_VERY_LIGHT = 2,
+                WEIGHT_LIGHT = 3,
+                WEIGHT_THIN = 4,
+                WEIGHT_BOOK = 5,
+                WEIGHT_MEDIUM = 6,
+                WEIGHT_DEMI = 7,
+                WEIGHT_BOLD = 8,
+                WEIGHT_HEAVY = 9,
+                WEIGHT_BLACK = 10,
+                WEIGHT_NORD = 11
             };
+            static bool _is_defined_weight_t(weight_t v);
+
+        private:
+            static const std::set<weight_t> _values_weight_t;
+
+        public:
+
+            enum x_height_t {
+                X_HEIGHT_ANY = 0,
+                X_HEIGHT_NO_FIT = 1,
+                X_HEIGHT_CONSTANT_SMALL = 2,
+                X_HEIGHT_CONSTANT_STANDARD = 3,
+                X_HEIGHT_CONSTANT_LARGE = 4,
+                X_HEIGHT_DUCKING_SMALL = 5,
+                X_HEIGHT_DUCKING_STANDARD = 6,
+                X_HEIGHT_DUCKING_LARGE = 7
+            };
+            static bool _is_defined_x_height_t(x_height_t v);
+
+        private:
+            static const std::set<x_height_t> _values_x_height_t;
+
+        public:
 
             panose_t(kaitai::kstream* p__io, ttf_t::os2_t* p__parent = nullptr, ttf_t* p__root = nullptr);
 
@@ -1062,100 +1742,6 @@ public:
             ttf_t::os2_t* _parent() const { return m__parent; }
         };
 
-        class code_page_range_t : public kaitai::kstruct {
-
-        public:
-
-            code_page_range_t(kaitai::kstream* p__io, ttf_t::os2_t* p__parent = nullptr, ttf_t* p__root = nullptr);
-
-        private:
-            void _read();
-            void _clean_up();
-
-        public:
-            ~code_page_range_t();
-
-        private:
-            bool m_symbol_character_set;
-            bool m_oem_character_set;
-            bool m_macintosh_character_set;
-            uint64_t m_reserved_for_alternate_ansi_oem;
-            bool m_cp1361_korean_johab;
-            bool m_cp950_chinese_traditional_chars_taiwan_and_hong_kong;
-            bool m_cp949_korean_wansung;
-            bool m_cp936_chinese_simplified_chars_prc_and_singapore;
-            bool m_cp932_jis_japan;
-            bool m_cp874_thai;
-            uint64_t m_reserved_for_alternate_ansi;
-            bool m_cp1257_windows_baltic;
-            bool m_cp1256_arabic;
-            bool m_cp1255_hebrew;
-            bool m_cp1254_turkish;
-            bool m_cp1253_greek;
-            bool m_cp1251_cyrillic;
-            bool m_cp1250_latin_2_eastern_europe;
-            bool m_cp1252_latin_1;
-            bool m_cp437_us;
-            bool m_cp850_we_latin_1;
-            bool m_cp708_arabic_asmo_708;
-            bool m_cp737_greek_former_437_g;
-            bool m_cp775_ms_dos_baltic;
-            bool m_cp852_latin_2;
-            bool m_cp855_ibm_cyrillic_primarily_russian;
-            bool m_cp857_ibm_turkish;
-            bool m_cp860_ms_dos_portuguese;
-            bool m_cp861_ms_dos_icelandic;
-            bool m_cp862_hebrew;
-            bool m_cp863_ms_dos_canadian_french;
-            bool m_cp864_arabic;
-            bool m_cp865_ms_dos_nordic;
-            bool m_cp866_ms_dos_russian;
-            bool m_cp869_ibm_greek;
-            uint64_t m_reserved_for_oem;
-            ttf_t* m__root;
-            ttf_t::os2_t* m__parent;
-
-        public:
-            bool symbol_character_set() const { return m_symbol_character_set; }
-            bool oem_character_set() const { return m_oem_character_set; }
-            bool macintosh_character_set() const { return m_macintosh_character_set; }
-            uint64_t reserved_for_alternate_ansi_oem() const { return m_reserved_for_alternate_ansi_oem; }
-            bool cp1361_korean_johab() const { return m_cp1361_korean_johab; }
-            bool cp950_chinese_traditional_chars_taiwan_and_hong_kong() const { return m_cp950_chinese_traditional_chars_taiwan_and_hong_kong; }
-            bool cp949_korean_wansung() const { return m_cp949_korean_wansung; }
-            bool cp936_chinese_simplified_chars_prc_and_singapore() const { return m_cp936_chinese_simplified_chars_prc_and_singapore; }
-            bool cp932_jis_japan() const { return m_cp932_jis_japan; }
-            bool cp874_thai() const { return m_cp874_thai; }
-            uint64_t reserved_for_alternate_ansi() const { return m_reserved_for_alternate_ansi; }
-            bool cp1257_windows_baltic() const { return m_cp1257_windows_baltic; }
-            bool cp1256_arabic() const { return m_cp1256_arabic; }
-            bool cp1255_hebrew() const { return m_cp1255_hebrew; }
-            bool cp1254_turkish() const { return m_cp1254_turkish; }
-            bool cp1253_greek() const { return m_cp1253_greek; }
-            bool cp1251_cyrillic() const { return m_cp1251_cyrillic; }
-            bool cp1250_latin_2_eastern_europe() const { return m_cp1250_latin_2_eastern_europe; }
-            bool cp1252_latin_1() const { return m_cp1252_latin_1; }
-            bool cp437_us() const { return m_cp437_us; }
-            bool cp850_we_latin_1() const { return m_cp850_we_latin_1; }
-            bool cp708_arabic_asmo_708() const { return m_cp708_arabic_asmo_708; }
-            bool cp737_greek_former_437_g() const { return m_cp737_greek_former_437_g; }
-            bool cp775_ms_dos_baltic() const { return m_cp775_ms_dos_baltic; }
-            bool cp852_latin_2() const { return m_cp852_latin_2; }
-            bool cp855_ibm_cyrillic_primarily_russian() const { return m_cp855_ibm_cyrillic_primarily_russian; }
-            bool cp857_ibm_turkish() const { return m_cp857_ibm_turkish; }
-            bool cp860_ms_dos_portuguese() const { return m_cp860_ms_dos_portuguese; }
-            bool cp861_ms_dos_icelandic() const { return m_cp861_ms_dos_icelandic; }
-            bool cp862_hebrew() const { return m_cp862_hebrew; }
-            bool cp863_ms_dos_canadian_french() const { return m_cp863_ms_dos_canadian_french; }
-            bool cp864_arabic() const { return m_cp864_arabic; }
-            bool cp865_ms_dos_nordic() const { return m_cp865_ms_dos_nordic; }
-            bool cp866_ms_dos_russian() const { return m_cp866_ms_dos_russian; }
-            bool cp869_ibm_greek() const { return m_cp869_ibm_greek; }
-            uint64_t reserved_for_oem() const { return m_reserved_for_oem; }
-            ttf_t* _root() const { return m__root; }
-            ttf_t::os2_t* _parent() const { return m__parent; }
-        };
-
     private:
         uint16_t m_version;
         int16_t m_x_avg_char_width;
@@ -1325,605 +1911,136 @@ public:
         ttf_t::dir_table_entry_t* _parent() const { return m__parent; }
     };
 
-    class fixed_t : public kaitai::kstruct {
+    class post_t : public kaitai::kstruct {
 
     public:
+        class format20_t;
 
-        fixed_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, ttf_t* p__root = nullptr);
+        post_t(kaitai::kstream* p__io, ttf_t::dir_table_entry_t* p__parent = nullptr, ttf_t* p__root = nullptr);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~fixed_t();
+        ~post_t();
 
-    private:
-        uint16_t m_major;
-        uint16_t m_minor;
-        ttf_t* m__root;
-        kaitai::kstruct* m__parent;
-
-    public:
-        uint16_t major() const { return m_major; }
-        uint16_t minor() const { return m_minor; }
-        ttf_t* _root() const { return m__root; }
-        kaitai::kstruct* _parent() const { return m__parent; }
-    };
-
-    class glyf_t : public kaitai::kstruct {
-
-    public:
-        class simple_glyph_t;
-
-        glyf_t(kaitai::kstream* p__io, ttf_t::dir_table_entry_t* p__parent = nullptr, ttf_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~glyf_t();
-
-        class simple_glyph_t : public kaitai::kstruct {
+        class format20_t : public kaitai::kstruct {
 
         public:
-            class flag_t;
+            class pascal_string_t;
 
-            simple_glyph_t(kaitai::kstream* p__io, ttf_t::glyf_t* p__parent = nullptr, ttf_t* p__root = nullptr);
+            format20_t(kaitai::kstream* p__io, ttf_t::post_t* p__parent = nullptr, ttf_t* p__root = nullptr);
 
         private:
             void _read();
             void _clean_up();
 
         public:
-            ~simple_glyph_t();
+            ~format20_t();
 
-            class flag_t : public kaitai::kstruct {
+            class pascal_string_t : public kaitai::kstruct {
 
             public:
 
-                flag_t(kaitai::kstream* p__io, ttf_t::glyf_t::simple_glyph_t* p__parent = nullptr, ttf_t* p__root = nullptr);
+                pascal_string_t(kaitai::kstream* p__io, ttf_t::post_t::format20_t* p__parent = nullptr, ttf_t* p__root = nullptr);
 
             private:
                 void _read();
                 void _clean_up();
 
             public:
-                ~flag_t();
+                ~pascal_string_t();
 
             private:
-                uint64_t m_reserved;
-                bool m_y_is_same;
-                bool m_x_is_same;
-                bool m_repeat;
-                bool m_y_short_vector;
-                bool m_x_short_vector;
-                bool m_on_curve;
-                uint8_t m_repeat_value;
-                bool n_repeat_value;
+                uint8_t m_length;
+                std::string m_value;
+                bool n_value;
 
             public:
-                bool _is_null_repeat_value() { repeat_value(); return n_repeat_value; };
+                bool _is_null_value() { value(); return n_value; };
 
             private:
                 ttf_t* m__root;
-                ttf_t::glyf_t::simple_glyph_t* m__parent;
+                ttf_t::post_t::format20_t* m__parent;
 
             public:
-                uint64_t reserved() const { return m_reserved; }
-                bool y_is_same() const { return m_y_is_same; }
-                bool x_is_same() const { return m_x_is_same; }
-                bool repeat() const { return m_repeat; }
-                bool y_short_vector() const { return m_y_short_vector; }
-                bool x_short_vector() const { return m_x_short_vector; }
-                bool on_curve() const { return m_on_curve; }
-                uint8_t repeat_value() const { return m_repeat_value; }
+                uint8_t length() const { return m_length; }
+                std::string value() const { return m_value; }
                 ttf_t* _root() const { return m__root; }
-                ttf_t::glyf_t::simple_glyph_t* _parent() const { return m__parent; }
+                ttf_t::post_t::format20_t* _parent() const { return m__parent; }
             };
 
         private:
-            bool f_point_count;
-            int32_t m_point_count;
-
-        public:
-            int32_t point_count();
-
-        private:
-            std::unique_ptr<std::vector<uint16_t>> m_end_pts_of_contours;
-            uint16_t m_instruction_length;
-            std::string m_instructions;
-            std::unique_ptr<std::vector<std::unique_ptr<flag_t>>> m_flags;
+            uint16_t m_number_of_glyphs;
+            std::unique_ptr<std::vector<uint16_t>> m_glyph_name_index;
+            std::unique_ptr<std::vector<std::unique_ptr<pascal_string_t>>> m_glyph_names;
             ttf_t* m__root;
-            ttf_t::glyf_t* m__parent;
+            ttf_t::post_t* m__parent;
 
         public:
-            std::vector<uint16_t>* end_pts_of_contours() const { return m_end_pts_of_contours.get(); }
-            uint16_t instruction_length() const { return m_instruction_length; }
-            std::string instructions() const { return m_instructions; }
-            std::vector<std::unique_ptr<flag_t>>* flags() const { return m_flags.get(); }
+            uint16_t number_of_glyphs() const { return m_number_of_glyphs; }
+            std::vector<uint16_t>* glyph_name_index() const { return m_glyph_name_index.get(); }
+            std::vector<std::unique_ptr<pascal_string_t>>* glyph_names() const { return m_glyph_names.get(); }
             ttf_t* _root() const { return m__root; }
-            ttf_t::glyf_t* _parent() const { return m__parent; }
+            ttf_t::post_t* _parent() const { return m__parent; }
         };
 
     private:
-        int16_t m_number_of_contours;
-        int16_t m_x_min;
-        int16_t m_y_min;
-        int16_t m_x_max;
-        int16_t m_y_max;
-        std::unique_ptr<simple_glyph_t> m_value;
-        bool n_value;
+        std::unique_ptr<fixed_t> m_format;
+        std::unique_ptr<fixed_t> m_italic_angle;
+        int16_t m_underline_position;
+        int16_t m_underline_thichness;
+        uint32_t m_is_fixed_pitch;
+        uint32_t m_min_mem_type42;
+        uint32_t m_max_mem_type42;
+        uint32_t m_min_mem_type1;
+        uint32_t m_max_mem_type1;
+        std::unique_ptr<format20_t> m_format20;
+        bool n_format20;
 
     public:
-        bool _is_null_value() { value(); return n_value; };
+        bool _is_null_format20() { format20(); return n_format20; };
 
     private:
         ttf_t* m__root;
         ttf_t::dir_table_entry_t* m__parent;
 
     public:
-        int16_t number_of_contours() const { return m_number_of_contours; }
-        int16_t x_min() const { return m_x_min; }
-        int16_t y_min() const { return m_y_min; }
-        int16_t x_max() const { return m_x_max; }
-        int16_t y_max() const { return m_y_max; }
-        simple_glyph_t* value() const { return m_value.get(); }
+        fixed_t* format() const { return m_format.get(); }
+        fixed_t* italic_angle() const { return m_italic_angle.get(); }
+        int16_t underline_position() const { return m_underline_position; }
+        int16_t underline_thichness() const { return m_underline_thichness; }
+        uint32_t is_fixed_pitch() const { return m_is_fixed_pitch; }
+        uint32_t min_mem_type42() const { return m_min_mem_type42; }
+        uint32_t max_mem_type42() const { return m_max_mem_type42; }
+        uint32_t min_mem_type1() const { return m_min_mem_type1; }
+        uint32_t max_mem_type1() const { return m_max_mem_type1; }
+        format20_t* format20() const { return m_format20.get(); }
         ttf_t* _root() const { return m__root; }
         ttf_t::dir_table_entry_t* _parent() const { return m__parent; }
     };
 
-    /**
-     * cvt  - Control Value Table This table contains a list of values that can be referenced by instructions. They can be used, among other things, to control characteristics for different glyphs.
-     */
-
-    class cvt_t : public kaitai::kstruct {
+    class prep_t : public kaitai::kstruct {
 
     public:
 
-        cvt_t(kaitai::kstream* p__io, ttf_t::dir_table_entry_t* p__parent = nullptr, ttf_t* p__root = nullptr);
+        prep_t(kaitai::kstream* p__io, ttf_t::dir_table_entry_t* p__parent = nullptr, ttf_t* p__root = nullptr);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~cvt_t();
+        ~prep_t();
 
     private:
-        std::unique_ptr<std::vector<int16_t>> m_fwords;
+        std::string m_instructions;
         ttf_t* m__root;
         ttf_t::dir_table_entry_t* m__parent;
 
     public:
-        std::vector<int16_t>* fwords() const { return m_fwords.get(); }
-        ttf_t* _root() const { return m__root; }
-        ttf_t::dir_table_entry_t* _parent() const { return m__parent; }
-    };
-
-    class maxp_t : public kaitai::kstruct {
-
-    public:
-
-        maxp_t(kaitai::kstream* p__io, ttf_t::dir_table_entry_t* p__parent = nullptr, ttf_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~maxp_t();
-
-    private:
-        bool f_is_version10;
-        bool m_is_version10;
-
-    public:
-        bool is_version10();
-
-    private:
-        std::unique_ptr<fixed_t> m_table_version_number;
-        uint16_t m_num_glyphs;
-        std::unique_ptr<maxp_version10_body_t> m_version10_body;
-        bool n_version10_body;
-
-    public:
-        bool _is_null_version10_body() { version10_body(); return n_version10_body; };
-
-    private:
-        ttf_t* m__root;
-        ttf_t::dir_table_entry_t* m__parent;
-
-    public:
-
-        /**
-         * 0x00010000 for version 1.0.
-         */
-        fixed_t* table_version_number() const { return m_table_version_number.get(); }
-
-        /**
-         * The number of glyphs in the font.
-         */
-        uint16_t num_glyphs() const { return m_num_glyphs; }
-        maxp_version10_body_t* version10_body() const { return m_version10_body.get(); }
-        ttf_t* _root() const { return m__root; }
-        ttf_t::dir_table_entry_t* _parent() const { return m__parent; }
-    };
-
-    class maxp_version10_body_t : public kaitai::kstruct {
-
-    public:
-
-        maxp_version10_body_t(kaitai::kstream* p__io, ttf_t::maxp_t* p__parent = nullptr, ttf_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~maxp_version10_body_t();
-
-    private:
-        uint16_t m_max_points;
-        uint16_t m_max_contours;
-        uint16_t m_max_composite_points;
-        uint16_t m_max_composite_contours;
-        uint16_t m_max_zones;
-        uint16_t m_max_twilight_points;
-        uint16_t m_max_storage;
-        uint16_t m_max_function_defs;
-        uint16_t m_max_instruction_defs;
-        uint16_t m_max_stack_elements;
-        uint16_t m_max_size_of_instructions;
-        uint16_t m_max_component_elements;
-        uint16_t m_max_component_depth;
-        ttf_t* m__root;
-        ttf_t::maxp_t* m__parent;
-
-    public:
-
-        /**
-         * Maximum points in a non-composite glyph.
-         */
-        uint16_t max_points() const { return m_max_points; }
-
-        /**
-         * Maximum contours in a non-composite glyph.
-         */
-        uint16_t max_contours() const { return m_max_contours; }
-
-        /**
-         * Maximum points in a composite glyph.
-         */
-        uint16_t max_composite_points() const { return m_max_composite_points; }
-
-        /**
-         * Maximum contours in a composite glyph.
-         */
-        uint16_t max_composite_contours() const { return m_max_composite_contours; }
-
-        /**
-         * 1 if instructions do not use the twilight zone (Z0), or 2 if instructions do use Z0; should be set to 2 in most cases.
-         */
-        uint16_t max_zones() const { return m_max_zones; }
-
-        /**
-         * Maximum points used in Z0.
-         */
-        uint16_t max_twilight_points() const { return m_max_twilight_points; }
-
-        /**
-         * Number of Storage Area locations.
-         */
-        uint16_t max_storage() const { return m_max_storage; }
-
-        /**
-         * Number of FDEFs.
-         */
-        uint16_t max_function_defs() const { return m_max_function_defs; }
-
-        /**
-         * Number of IDEFs.
-         */
-        uint16_t max_instruction_defs() const { return m_max_instruction_defs; }
-
-        /**
-         * Maximum stack depth.
-         */
-        uint16_t max_stack_elements() const { return m_max_stack_elements; }
-
-        /**
-         * Maximum byte count for glyph instructions.
-         */
-        uint16_t max_size_of_instructions() const { return m_max_size_of_instructions; }
-
-        /**
-         * Maximum number of components referenced at "top level" for any composite glyph.
-         */
-        uint16_t max_component_elements() const { return m_max_component_elements; }
-
-        /**
-         * Maximum levels of recursion; 1 for simple components.
-         */
-        uint16_t max_component_depth() const { return m_max_component_depth; }
-        ttf_t* _root() const { return m__root; }
-        ttf_t::maxp_t* _parent() const { return m__parent; }
-    };
-
-    class offset_table_t : public kaitai::kstruct {
-
-    public:
-
-        offset_table_t(kaitai::kstream* p__io, ttf_t* p__parent = nullptr, ttf_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~offset_table_t();
-
-    private:
-        std::unique_ptr<fixed_t> m_sfnt_version;
-        uint16_t m_num_tables;
-        uint16_t m_search_range;
-        uint16_t m_entry_selector;
-        uint16_t m_range_shift;
-        ttf_t* m__root;
-        ttf_t* m__parent;
-
-    public:
-        fixed_t* sfnt_version() const { return m_sfnt_version.get(); }
-        uint16_t num_tables() const { return m_num_tables; }
-        uint16_t search_range() const { return m_search_range; }
-        uint16_t entry_selector() const { return m_entry_selector; }
-        uint16_t range_shift() const { return m_range_shift; }
-        ttf_t* _root() const { return m__root; }
-        ttf_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * cmap - Character To Glyph Index Mapping Table This table defines the mapping of character codes to the glyph index values used in the font.
-     */
-
-    class cmap_t : public kaitai::kstruct {
-
-    public:
-        class subtable_header_t;
-        class subtable_t;
-
-        cmap_t(kaitai::kstream* p__io, ttf_t::dir_table_entry_t* p__parent = nullptr, ttf_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~cmap_t();
-
-        class subtable_header_t : public kaitai::kstruct {
-
-        public:
-
-            subtable_header_t(kaitai::kstream* p__io, ttf_t::cmap_t* p__parent = nullptr, ttf_t* p__root = nullptr);
-
-        private:
-            void _read();
-            void _clean_up();
-
-        public:
-            ~subtable_header_t();
-
-        private:
-            bool f_table;
-            std::unique_ptr<subtable_t> m_table;
-
-        public:
-            subtable_t* table();
-
-        private:
-            uint16_t m_platform_id;
-            uint16_t m_encoding_id;
-            uint32_t m_subtable_offset;
-            ttf_t* m__root;
-            ttf_t::cmap_t* m__parent;
-
-        public:
-            uint16_t platform_id() const { return m_platform_id; }
-            uint16_t encoding_id() const { return m_encoding_id; }
-            uint32_t subtable_offset() const { return m_subtable_offset; }
-            ttf_t* _root() const { return m__root; }
-            ttf_t::cmap_t* _parent() const { return m__parent; }
-        };
-
-        class subtable_t : public kaitai::kstruct {
-
-        public:
-            class byte_encoding_table_t;
-            class high_byte_mapping_through_table_t;
-            class segment_mapping_to_delta_values_t;
-            class trimmed_table_mapping_t;
-
-            enum subtable_format_t {
-                SUBTABLE_FORMAT_BYTE_ENCODING_TABLE = 0,
-                SUBTABLE_FORMAT_HIGH_BYTE_MAPPING_THROUGH_TABLE = 2,
-                SUBTABLE_FORMAT_SEGMENT_MAPPING_TO_DELTA_VALUES = 4,
-                SUBTABLE_FORMAT_TRIMMED_TABLE_MAPPING = 6
-            };
-
-            subtable_t(kaitai::kstream* p__io, ttf_t::cmap_t::subtable_header_t* p__parent = nullptr, ttf_t* p__root = nullptr);
-
-        private:
-            void _read();
-            void _clean_up();
-
-        public:
-            ~subtable_t();
-
-            class byte_encoding_table_t : public kaitai::kstruct {
-
-            public:
-
-                byte_encoding_table_t(kaitai::kstream* p__io, ttf_t::cmap_t::subtable_t* p__parent = nullptr, ttf_t* p__root = nullptr);
-
-            private:
-                void _read();
-                void _clean_up();
-
-            public:
-                ~byte_encoding_table_t();
-
-            private:
-                std::string m_glyph_id_array;
-                ttf_t* m__root;
-                ttf_t::cmap_t::subtable_t* m__parent;
-
-            public:
-                std::string glyph_id_array() const { return m_glyph_id_array; }
-                ttf_t* _root() const { return m__root; }
-                ttf_t::cmap_t::subtable_t* _parent() const { return m__parent; }
-            };
-
-            class high_byte_mapping_through_table_t : public kaitai::kstruct {
-
-            public:
-
-                high_byte_mapping_through_table_t(kaitai::kstream* p__io, ttf_t::cmap_t::subtable_t* p__parent = nullptr, ttf_t* p__root = nullptr);
-
-            private:
-                void _read();
-                void _clean_up();
-
-            public:
-                ~high_byte_mapping_through_table_t();
-
-            private:
-                std::unique_ptr<std::vector<uint16_t>> m_sub_header_keys;
-                ttf_t* m__root;
-                ttf_t::cmap_t::subtable_t* m__parent;
-
-            public:
-                std::vector<uint16_t>* sub_header_keys() const { return m_sub_header_keys.get(); }
-                ttf_t* _root() const { return m__root; }
-                ttf_t::cmap_t::subtable_t* _parent() const { return m__parent; }
-            };
-
-            class segment_mapping_to_delta_values_t : public kaitai::kstruct {
-
-            public:
-
-                segment_mapping_to_delta_values_t(kaitai::kstream* p__io, ttf_t::cmap_t::subtable_t* p__parent = nullptr, ttf_t* p__root = nullptr);
-
-            private:
-                void _read();
-                void _clean_up();
-
-            public:
-                ~segment_mapping_to_delta_values_t();
-
-            private:
-                bool f_seg_count;
-                int32_t m_seg_count;
-
-            public:
-                int32_t seg_count();
-
-            private:
-                uint16_t m_seg_count_x2;
-                uint16_t m_search_range;
-                uint16_t m_entry_selector;
-                uint16_t m_range_shift;
-                std::unique_ptr<std::vector<uint16_t>> m_end_count;
-                uint16_t m_reserved_pad;
-                std::unique_ptr<std::vector<uint16_t>> m_start_count;
-                std::unique_ptr<std::vector<uint16_t>> m_id_delta;
-                std::unique_ptr<std::vector<uint16_t>> m_id_range_offset;
-                std::unique_ptr<std::vector<uint16_t>> m_glyph_id_array;
-                ttf_t* m__root;
-                ttf_t::cmap_t::subtable_t* m__parent;
-
-            public:
-                uint16_t seg_count_x2() const { return m_seg_count_x2; }
-                uint16_t search_range() const { return m_search_range; }
-                uint16_t entry_selector() const { return m_entry_selector; }
-                uint16_t range_shift() const { return m_range_shift; }
-                std::vector<uint16_t>* end_count() const { return m_end_count.get(); }
-                uint16_t reserved_pad() const { return m_reserved_pad; }
-                std::vector<uint16_t>* start_count() const { return m_start_count.get(); }
-                std::vector<uint16_t>* id_delta() const { return m_id_delta.get(); }
-                std::vector<uint16_t>* id_range_offset() const { return m_id_range_offset.get(); }
-                std::vector<uint16_t>* glyph_id_array() const { return m_glyph_id_array.get(); }
-                ttf_t* _root() const { return m__root; }
-                ttf_t::cmap_t::subtable_t* _parent() const { return m__parent; }
-            };
-
-            class trimmed_table_mapping_t : public kaitai::kstruct {
-
-            public:
-
-                trimmed_table_mapping_t(kaitai::kstream* p__io, ttf_t::cmap_t::subtable_t* p__parent = nullptr, ttf_t* p__root = nullptr);
-
-            private:
-                void _read();
-                void _clean_up();
-
-            public:
-                ~trimmed_table_mapping_t();
-
-            private:
-                uint16_t m_first_code;
-                uint16_t m_entry_count;
-                std::unique_ptr<std::vector<uint16_t>> m_glyph_id_array;
-                ttf_t* m__root;
-                ttf_t::cmap_t::subtable_t* m__parent;
-
-            public:
-                uint16_t first_code() const { return m_first_code; }
-                uint16_t entry_count() const { return m_entry_count; }
-                std::vector<uint16_t>* glyph_id_array() const { return m_glyph_id_array.get(); }
-                ttf_t* _root() const { return m__root; }
-                ttf_t::cmap_t::subtable_t* _parent() const { return m__parent; }
-            };
-
-        private:
-            subtable_format_t m_format;
-            uint16_t m_length;
-            uint16_t m_version;
-            std::unique_ptr<kaitai::kstruct> m_value;
-            bool n_value;
-
-        public:
-            bool _is_null_value() { value(); return n_value; };
-
-        private:
-            ttf_t* m__root;
-            ttf_t::cmap_t::subtable_header_t* m__parent;
-            std::string m__raw_value;
-            std::unique_ptr<kaitai::kstream> m__io__raw_value;
-
-        public:
-            subtable_format_t format() const { return m_format; }
-            uint16_t length() const { return m_length; }
-            uint16_t version() const { return m_version; }
-            kaitai::kstruct* value() const { return m_value.get(); }
-            ttf_t* _root() const { return m__root; }
-            ttf_t::cmap_t::subtable_header_t* _parent() const { return m__parent; }
-            std::string _raw_value() const { return m__raw_value; }
-            kaitai::kstream* _io__raw_value() const { return m__io__raw_value.get(); }
-        };
-
-    private:
-        uint16_t m_version_number;
-        uint16_t m_number_of_encoding_tables;
-        std::unique_ptr<std::vector<std::unique_ptr<subtable_header_t>>> m_tables;
-        ttf_t* m__root;
-        ttf_t::dir_table_entry_t* m__parent;
-
-    public:
-        uint16_t version_number() const { return m_version_number; }
-        uint16_t number_of_encoding_tables() const { return m_number_of_encoding_tables; }
-        std::vector<std::unique_ptr<subtable_header_t>>* tables() const { return m_tables.get(); }
+        std::string instructions() const { return m_instructions; }
         ttf_t* _root() const { return m__root; }
         ttf_t::dir_table_entry_t* _parent() const { return m__parent; }
     };

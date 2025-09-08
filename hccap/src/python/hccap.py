@@ -1,11 +1,12 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 
 
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Hccap(KaitaiStruct):
     """Native format of Hashcat password "recovery" utility.
@@ -17,9 +18,9 @@ class Hccap(KaitaiStruct):
        Source - https://hashcat.net/wiki/doku.php?id=hccap
     """
     def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
+        super(Hccap, self).__init__(_io)
         self._parent = _parent
-        self._root = _root if _root else self
+        self._root = _root or self
         self._read()
 
     def _read(self):
@@ -30,11 +31,34 @@ class Hccap(KaitaiStruct):
             i += 1
 
 
+
+    def _fetch_instances(self):
+        pass
+        for i in range(len(self.records)):
+            pass
+            self.records[i]._fetch_instances()
+
+
+    class EapolDummy(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(Hccap.EapolDummy, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            pass
+
+
+        def _fetch_instances(self):
+            pass
+
+
     class HccapRecord(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(Hccap.HccapRecord, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -50,6 +74,15 @@ class Hccap(KaitaiStruct):
             self.keyver = self._io.read_u4le()
             self.keymic = self._io.read_bytes(16)
 
+
+        def _fetch_instances(self):
+            pass
+            self.eapol_buffer._fetch_instances()
+            _ = self.eapol
+            if hasattr(self, '_m_eapol'):
+                pass
+
+
         @property
         def eapol(self):
             if hasattr(self, '_m_eapol'):
@@ -61,17 +94,6 @@ class Hccap(KaitaiStruct):
             self._m_eapol = io.read_bytes(self.len_eapol)
             io.seek(_pos)
             return getattr(self, '_m_eapol', None)
-
-
-    class EapolDummy(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            pass
 
 
 

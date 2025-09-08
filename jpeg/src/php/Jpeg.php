@@ -22,8 +22,8 @@
 
 namespace {
     class Jpeg extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Jpeg $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Jpeg $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -41,16 +41,41 @@ namespace {
 }
 
 namespace Jpeg {
+    class ExifInJpeg extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Jpeg\SegmentApp1 $_parent = null, ?\Jpeg $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_extraZero = $this->_io->readBytes(1);
+            if (!($this->_m_extraZero == "\x00")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00", $this->_m_extraZero, $this->_io, "/types/exif_in_jpeg/seq/0");
+            }
+            $this->_m__raw_data = $this->_io->readBytesFull();
+            $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+            $this->_m_data = new \Exif($_io__raw_data);
+        }
+        protected $_m_extraZero;
+        protected $_m_data;
+        protected $_m__raw_data;
+        public function extraZero() { return $this->_m_extraZero; }
+        public function data() { return $this->_m_data; }
+        public function _raw_data() { return $this->_m__raw_data; }
+    }
+}
+
+namespace Jpeg {
     class Segment extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Jpeg $_parent = null, \Jpeg $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Jpeg $_parent = null, ?\Jpeg $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic = $this->_io->readBytes(1);
-            if (!($this->magic() == "\xFF")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\xFF", $this->magic(), $this->_io(), "/types/segment/seq/0");
+            if (!($this->_m_magic == "\xFF")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\xFF", $this->_m_magic, $this->_io, "/types/segment/seq/0");
             }
             $this->_m_marker = $this->_io->readU1();
             if ( (($this->marker() != \Jpeg\Segment\MarkerEnum::SOI) && ($this->marker() != \Jpeg\Segment\MarkerEnum::EOI)) ) {
@@ -58,28 +83,28 @@ namespace Jpeg {
             }
             if ( (($this->marker() != \Jpeg\Segment\MarkerEnum::SOI) && ($this->marker() != \Jpeg\Segment\MarkerEnum::EOI)) ) {
                 switch ($this->marker()) {
-                    case \Jpeg\Segment\MarkerEnum::APP1:
-                        $this->_m__raw_data = $this->_io->readBytes(($this->length() - 2));
-                        $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                        $this->_m_data = new \Jpeg\SegmentApp1($_io__raw_data, $this, $this->_root);
-                        break;
                     case \Jpeg\Segment\MarkerEnum::APP0:
-                        $this->_m__raw_data = $this->_io->readBytes(($this->length() - 2));
+                        $this->_m__raw_data = $this->_io->readBytes($this->length() - 2);
                         $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
                         $this->_m_data = new \Jpeg\SegmentApp0($_io__raw_data, $this, $this->_root);
                         break;
+                    case \Jpeg\Segment\MarkerEnum::APP1:
+                        $this->_m__raw_data = $this->_io->readBytes($this->length() - 2);
+                        $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                        $this->_m_data = new \Jpeg\SegmentApp1($_io__raw_data, $this, $this->_root);
+                        break;
                     case \Jpeg\Segment\MarkerEnum::SOF0:
-                        $this->_m__raw_data = $this->_io->readBytes(($this->length() - 2));
+                        $this->_m__raw_data = $this->_io->readBytes($this->length() - 2);
                         $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
                         $this->_m_data = new \Jpeg\SegmentSof0($_io__raw_data, $this, $this->_root);
                         break;
                     case \Jpeg\Segment\MarkerEnum::SOS:
-                        $this->_m__raw_data = $this->_io->readBytes(($this->length() - 2));
+                        $this->_m__raw_data = $this->_io->readBytes($this->length() - 2);
                         $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
                         $this->_m_data = new \Jpeg\SegmentSos($_io__raw_data, $this, $this->_root);
                         break;
                     default:
-                        $this->_m_data = $this->_io->readBytes(($this->length() - 2));
+                        $this->_m_data = $this->_io->readBytes($this->length() - 2);
                         break;
                 }
             }
@@ -137,12 +162,183 @@ namespace Jpeg\Segment {
         const APP14 = 238;
         const APP15 = 239;
         const COM = 254;
+
+        private const _VALUES = [1 => true, 192 => true, 193 => true, 194 => true, 195 => true, 196 => true, 197 => true, 198 => true, 199 => true, 216 => true, 217 => true, 218 => true, 219 => true, 220 => true, 221 => true, 222 => true, 224 => true, 225 => true, 226 => true, 227 => true, 228 => true, 229 => true, 230 => true, 231 => true, 232 => true, 233 => true, 234 => true, 235 => true, 236 => true, 237 => true, 238 => true, 239 => true, 254 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
+    }
+}
+
+namespace Jpeg {
+    class SegmentApp0 extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Jpeg\Segment $_parent = null, ?\Jpeg $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_magic = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(5), "ASCII");
+            $this->_m_versionMajor = $this->_io->readU1();
+            $this->_m_versionMinor = $this->_io->readU1();
+            $this->_m_densityUnits = $this->_io->readU1();
+            $this->_m_densityX = $this->_io->readU2be();
+            $this->_m_densityY = $this->_io->readU2be();
+            $this->_m_thumbnailX = $this->_io->readU1();
+            $this->_m_thumbnailY = $this->_io->readU1();
+            $this->_m_thumbnail = $this->_io->readBytes(($this->thumbnailX() * $this->thumbnailY()) * 3);
+        }
+        protected $_m_magic;
+        protected $_m_versionMajor;
+        protected $_m_versionMinor;
+        protected $_m_densityUnits;
+        protected $_m_densityX;
+        protected $_m_densityY;
+        protected $_m_thumbnailX;
+        protected $_m_thumbnailY;
+        protected $_m_thumbnail;
+        public function magic() { return $this->_m_magic; }
+        public function versionMajor() { return $this->_m_versionMajor; }
+        public function versionMinor() { return $this->_m_versionMinor; }
+        public function densityUnits() { return $this->_m_densityUnits; }
+
+        /**
+         * Horizontal pixel density. Must not be zero.
+         */
+        public function densityX() { return $this->_m_densityX; }
+
+        /**
+         * Vertical pixel density. Must not be zero.
+         */
+        public function densityY() { return $this->_m_densityY; }
+
+        /**
+         * Horizontal pixel count of the following embedded RGB thumbnail. May be zero.
+         */
+        public function thumbnailX() { return $this->_m_thumbnailX; }
+
+        /**
+         * Vertical pixel count of the following embedded RGB thumbnail. May be zero.
+         */
+        public function thumbnailY() { return $this->_m_thumbnailY; }
+
+        /**
+         * Uncompressed 24 bit RGB (8 bits per color channel) raster thumbnail data in the order R0, G0, B0, ... Rn, Gn, Bn
+         */
+        public function thumbnail() { return $this->_m_thumbnail; }
+    }
+}
+
+namespace Jpeg\SegmentApp0 {
+    class DensityUnit {
+        const NO_UNITS = 0;
+        const PIXELS_PER_INCH = 1;
+        const PIXELS_PER_CM = 2;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
+    }
+}
+
+namespace Jpeg {
+    class SegmentApp1 extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Jpeg\Segment $_parent = null, ?\Jpeg $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_magic = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, true), "ASCII");
+            switch ($this->magic()) {
+                case "Exif":
+                    $this->_m_body = new \Jpeg\ExifInJpeg($this->_io, $this, $this->_root);
+                    break;
+            }
+        }
+        protected $_m_magic;
+        protected $_m_body;
+        public function magic() { return $this->_m_magic; }
+        public function body() { return $this->_m_body; }
+    }
+}
+
+namespace Jpeg {
+    class SegmentSof0 extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Jpeg\Segment $_parent = null, ?\Jpeg $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_bitsPerSample = $this->_io->readU1();
+            $this->_m_imageHeight = $this->_io->readU2be();
+            $this->_m_imageWidth = $this->_io->readU2be();
+            $this->_m_numComponents = $this->_io->readU1();
+            $this->_m_components = [];
+            $n = $this->numComponents();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_components[] = new \Jpeg\SegmentSof0\Component($this->_io, $this, $this->_root);
+            }
+        }
+        protected $_m_bitsPerSample;
+        protected $_m_imageHeight;
+        protected $_m_imageWidth;
+        protected $_m_numComponents;
+        protected $_m_components;
+        public function bitsPerSample() { return $this->_m_bitsPerSample; }
+        public function imageHeight() { return $this->_m_imageHeight; }
+        public function imageWidth() { return $this->_m_imageWidth; }
+        public function numComponents() { return $this->_m_numComponents; }
+        public function components() { return $this->_m_components; }
+    }
+}
+
+namespace Jpeg\SegmentSof0 {
+    class Component extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Jpeg\SegmentSof0 $_parent = null, ?\Jpeg $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_id = $this->_io->readU1();
+            $this->_m_samplingFactors = $this->_io->readU1();
+            $this->_m_quantizationTableId = $this->_io->readU1();
+        }
+        protected $_m_samplingX;
+        public function samplingX() {
+            if ($this->_m_samplingX !== null)
+                return $this->_m_samplingX;
+            $this->_m_samplingX = ($this->samplingFactors() & 240) >> 4;
+            return $this->_m_samplingX;
+        }
+        protected $_m_samplingY;
+        public function samplingY() {
+            if ($this->_m_samplingY !== null)
+                return $this->_m_samplingY;
+            $this->_m_samplingY = $this->samplingFactors() & 15;
+            return $this->_m_samplingY;
+        }
+        protected $_m_id;
+        protected $_m_samplingFactors;
+        protected $_m_quantizationTableId;
+
+        /**
+         * Component selector
+         */
+        public function id() { return $this->_m_id; }
+        public function samplingFactors() { return $this->_m_samplingFactors; }
+        public function quantizationTableId() { return $this->_m_quantizationTableId; }
     }
 }
 
 namespace Jpeg {
     class SegmentSos extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Jpeg\Segment $_parent = null, \Jpeg $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Jpeg\Segment $_parent = null, ?\Jpeg $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -193,7 +389,7 @@ namespace Jpeg {
 
 namespace Jpeg\SegmentSos {
     class Component extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Jpeg\SegmentSos $_parent = null, \Jpeg $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Jpeg\SegmentSos $_parent = null, ?\Jpeg $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -214,195 +410,17 @@ namespace Jpeg\SegmentSos {
 }
 
 namespace Jpeg {
-    class SegmentApp1 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Jpeg\Segment $_parent = null, \Jpeg $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_magic = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, true), "ASCII");
-            switch ($this->magic()) {
-                case "Exif":
-                    $this->_m_body = new \Jpeg\ExifInJpeg($this->_io, $this, $this->_root);
-                    break;
-            }
-        }
-        protected $_m_magic;
-        protected $_m_body;
-        public function magic() { return $this->_m_magic; }
-        public function body() { return $this->_m_body; }
-    }
-}
-
-namespace Jpeg {
-    class SegmentSof0 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Jpeg\Segment $_parent = null, \Jpeg $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_bitsPerSample = $this->_io->readU1();
-            $this->_m_imageHeight = $this->_io->readU2be();
-            $this->_m_imageWidth = $this->_io->readU2be();
-            $this->_m_numComponents = $this->_io->readU1();
-            $this->_m_components = [];
-            $n = $this->numComponents();
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_components[] = new \Jpeg\SegmentSof0\Component($this->_io, $this, $this->_root);
-            }
-        }
-        protected $_m_bitsPerSample;
-        protected $_m_imageHeight;
-        protected $_m_imageWidth;
-        protected $_m_numComponents;
-        protected $_m_components;
-        public function bitsPerSample() { return $this->_m_bitsPerSample; }
-        public function imageHeight() { return $this->_m_imageHeight; }
-        public function imageWidth() { return $this->_m_imageWidth; }
-        public function numComponents() { return $this->_m_numComponents; }
-        public function components() { return $this->_m_components; }
-    }
-}
-
-namespace Jpeg\SegmentSof0 {
-    class Component extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Jpeg\SegmentSof0 $_parent = null, \Jpeg $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_id = $this->_io->readU1();
-            $this->_m_samplingFactors = $this->_io->readU1();
-            $this->_m_quantizationTableId = $this->_io->readU1();
-        }
-        protected $_m_samplingX;
-        public function samplingX() {
-            if ($this->_m_samplingX !== null)
-                return $this->_m_samplingX;
-            $this->_m_samplingX = (($this->samplingFactors() & 240) >> 4);
-            return $this->_m_samplingX;
-        }
-        protected $_m_samplingY;
-        public function samplingY() {
-            if ($this->_m_samplingY !== null)
-                return $this->_m_samplingY;
-            $this->_m_samplingY = ($this->samplingFactors() & 15);
-            return $this->_m_samplingY;
-        }
-        protected $_m_id;
-        protected $_m_samplingFactors;
-        protected $_m_quantizationTableId;
-
-        /**
-         * Component selector
-         */
-        public function id() { return $this->_m_id; }
-        public function samplingFactors() { return $this->_m_samplingFactors; }
-        public function quantizationTableId() { return $this->_m_quantizationTableId; }
-    }
-}
-
-namespace Jpeg {
-    class ExifInJpeg extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Jpeg\SegmentApp1 $_parent = null, \Jpeg $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_extraZero = $this->_io->readBytes(1);
-            if (!($this->extraZero() == "\x00")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00", $this->extraZero(), $this->_io(), "/types/exif_in_jpeg/seq/0");
-            }
-            $this->_m__raw_data = $this->_io->readBytesFull();
-            $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
-            $this->_m_data = new \Exif($_io__raw_data);
-        }
-        protected $_m_extraZero;
-        protected $_m_data;
-        protected $_m__raw_data;
-        public function extraZero() { return $this->_m_extraZero; }
-        public function data() { return $this->_m_data; }
-        public function _raw_data() { return $this->_m__raw_data; }
-    }
-}
-
-namespace Jpeg {
-    class SegmentApp0 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Jpeg\Segment $_parent = null, \Jpeg $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_magic = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(5), "ASCII");
-            $this->_m_versionMajor = $this->_io->readU1();
-            $this->_m_versionMinor = $this->_io->readU1();
-            $this->_m_densityUnits = $this->_io->readU1();
-            $this->_m_densityX = $this->_io->readU2be();
-            $this->_m_densityY = $this->_io->readU2be();
-            $this->_m_thumbnailX = $this->_io->readU1();
-            $this->_m_thumbnailY = $this->_io->readU1();
-            $this->_m_thumbnail = $this->_io->readBytes((($this->thumbnailX() * $this->thumbnailY()) * 3));
-        }
-        protected $_m_magic;
-        protected $_m_versionMajor;
-        protected $_m_versionMinor;
-        protected $_m_densityUnits;
-        protected $_m_densityX;
-        protected $_m_densityY;
-        protected $_m_thumbnailX;
-        protected $_m_thumbnailY;
-        protected $_m_thumbnail;
-        public function magic() { return $this->_m_magic; }
-        public function versionMajor() { return $this->_m_versionMajor; }
-        public function versionMinor() { return $this->_m_versionMinor; }
-        public function densityUnits() { return $this->_m_densityUnits; }
-
-        /**
-         * Horizontal pixel density. Must not be zero.
-         */
-        public function densityX() { return $this->_m_densityX; }
-
-        /**
-         * Vertical pixel density. Must not be zero.
-         */
-        public function densityY() { return $this->_m_densityY; }
-
-        /**
-         * Horizontal pixel count of the following embedded RGB thumbnail. May be zero.
-         */
-        public function thumbnailX() { return $this->_m_thumbnailX; }
-
-        /**
-         * Vertical pixel count of the following embedded RGB thumbnail. May be zero.
-         */
-        public function thumbnailY() { return $this->_m_thumbnailY; }
-
-        /**
-         * Uncompressed 24 bit RGB (8 bits per color channel) raster thumbnail data in the order R0, G0, B0, ... Rn, Gn, Bn
-         */
-        public function thumbnail() { return $this->_m_thumbnail; }
-    }
-}
-
-namespace Jpeg\SegmentApp0 {
-    class DensityUnit {
-        const NO_UNITS = 0;
-        const PIXELS_PER_INCH = 1;
-        const PIXELS_PER_CM = 2;
-    }
-}
-
-namespace Jpeg {
     class ComponentId {
         const Y = 1;
         const CB = 2;
         const CR = 3;
         const I = 4;
         const Q = 5;
+
+        private const _VALUES = [1 => true, 2 => true, 3 => true, 4 => true, 5 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

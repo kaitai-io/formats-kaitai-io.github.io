@@ -23,7 +23,7 @@ end
 function Ico:_read()
   self.magic = self._io:read_bytes(4)
   if not(self.magic == "\000\000\001\000") then
-    error("not equal, expected " ..  "\000\000\001\000" .. ", but got " .. self.magic)
+    error("not equal, expected " .. "\000\000\001\000" .. ", but got " .. self.magic)
   end
   self.num_images = self._io:read_u2le()
   self.images = {}
@@ -40,7 +40,7 @@ Ico.IconDirEntry = class.class(KaitaiStruct)
 function Ico.IconDirEntry:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -50,7 +50,7 @@ function Ico.IconDirEntry:_read()
   self.num_colors = self._io:read_u1()
   self.reserved = self._io:read_bytes(1)
   if not(self.reserved == "\000") then
-    error("not equal, expected " ..  "\000" .. ", but got " .. self.reserved)
+    error("not equal, expected " .. "\000" .. ", but got " .. self.reserved)
   end
   self.num_planes = self._io:read_u2le()
   self.bpp = self._io:read_u2le()
@@ -76,6 +76,18 @@ function Ico.IconDirEntry.property.img:get()
 end
 
 -- 
+-- True if this image is in PNG format.
+Ico.IconDirEntry.property.is_png = {}
+function Ico.IconDirEntry.property.is_png:get()
+  if self._m_is_png ~= nil then
+    return self._m_is_png
+  end
+
+  self._m_is_png = self.png_header == "\137\080\078\071\013\010\026\010"
+  return self._m_is_png
+end
+
+-- 
 -- Pre-reads first 8 bytes of the image to determine if it's an
 -- embedded PNG file.
 Ico.IconDirEntry.property.png_header = {}
@@ -89,18 +101,6 @@ function Ico.IconDirEntry.property.png_header:get()
   self._m_png_header = self._io:read_bytes(8)
   self._io:seek(_pos)
   return self._m_png_header
-end
-
--- 
--- True if this image is in PNG format.
-Ico.IconDirEntry.property.is_png = {}
-function Ico.IconDirEntry.property.is_png:get()
-  if self._m_is_png ~= nil then
-    return self._m_is_png
-  end
-
-  self._m_is_png = self.png_header == "\137\080\078\071\013\010\026\010"
-  return self._m_is_png
 end
 
 -- 

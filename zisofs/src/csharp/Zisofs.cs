@@ -40,10 +40,64 @@ namespace Kaitai
             var io___raw_header = new KaitaiStream(__raw_header);
             _header = new Header(io___raw_header, this, m_root);
             _blockPointers = new List<uint>();
-            for (var i = 0; i < (Header.NumBlocks + 1); i++)
+            for (var i = 0; i < Header.NumBlocks + 1; i++)
             {
                 _blockPointers.Add(m_io.ReadU4le());
             }
+        }
+        public partial class Block : KaitaiStruct
+        {
+            public Block(uint p_ofsStart, uint p_ofsEnd, KaitaiStream p__io, Zisofs p__parent = null, Zisofs p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _ofsStart = p_ofsStart;
+                _ofsEnd = p_ofsEnd;
+                f_data = false;
+                f_lenData = false;
+                _read();
+            }
+            private void _read()
+            {
+            }
+            private bool f_data;
+            private byte[] _data;
+            public byte[] Data
+            {
+                get
+                {
+                    if (f_data)
+                        return _data;
+                    f_data = true;
+                    KaitaiStream io = M_Root.M_Io;
+                    long _pos = io.Pos;
+                    io.Seek(OfsStart);
+                    _data = io.ReadBytes(LenData);
+                    io.Seek(_pos);
+                    return _data;
+                }
+            }
+            private bool f_lenData;
+            private int _lenData;
+            public int LenData
+            {
+                get
+                {
+                    if (f_lenData)
+                        return _lenData;
+                    f_lenData = true;
+                    _lenData = (int) (OfsEnd - OfsStart);
+                    return _lenData;
+                }
+            }
+            private uint _ofsStart;
+            private uint _ofsEnd;
+            private Zisofs m_root;
+            private Zisofs m_parent;
+            public uint OfsStart { get { return _ofsStart; } }
+            public uint OfsEnd { get { return _ofsEnd; } }
+            public Zisofs M_Root { get { return m_root; } }
+            public Zisofs M_Parent { get { return m_parent; } }
         }
         public partial class Header : KaitaiStruct
         {
@@ -63,25 +117,25 @@ namespace Kaitai
             private void _read()
             {
                 _magic = m_io.ReadBytes(8);
-                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 55, 228, 83, 150, 201, 219, 214, 7 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 55, 228, 83, 150, 201, 219, 214, 7 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 55, 228, 83, 150, 201, 219, 214, 7 }, Magic, M_Io, "/types/header/seq/0");
+                    throw new ValidationNotEqualError(new byte[] { 55, 228, 83, 150, 201, 219, 214, 7 }, _magic, m_io, "/types/header/seq/0");
                 }
                 _uncompressedSize = m_io.ReadU4le();
                 _lenHeader = m_io.ReadU1();
-                if (!(LenHeader == 4))
+                if (!(_lenHeader == 4))
                 {
-                    throw new ValidationNotEqualError(4, LenHeader, M_Io, "/types/header/seq/2");
+                    throw new ValidationNotEqualError(4, _lenHeader, m_io, "/types/header/seq/2");
                 }
                 _blockSizeLog2 = m_io.ReadU1();
-                if (!( ((BlockSizeLog2 == 15) || (BlockSizeLog2 == 16) || (BlockSizeLog2 == 17)) ))
+                if (!( ((_blockSizeLog2 == 15) || (_blockSizeLog2 == 16) || (_blockSizeLog2 == 17)) ))
                 {
-                    throw new ValidationNotAnyOfError(BlockSizeLog2, M_Io, "/types/header/seq/3");
+                    throw new ValidationNotAnyOfError(_blockSizeLog2, m_io, "/types/header/seq/3");
                 }
                 _reserved = m_io.ReadBytes(2);
-                if (!((KaitaiStream.ByteArrayCompare(Reserved, new byte[] { 0, 0 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_reserved, new byte[] { 0, 0 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 0, 0 }, Reserved, M_Io, "/types/header/seq/4");
+                    throw new ValidationNotEqualError(new byte[] { 0, 0 }, _reserved, m_io, "/types/header/seq/4");
                 }
             }
             private bool f_blockSize;
@@ -92,8 +146,8 @@ namespace Kaitai
                 {
                     if (f_blockSize)
                         return _blockSize;
-                    _blockSize = (int) ((1 << BlockSizeLog2));
                     f_blockSize = true;
+                    _blockSize = (int) (1 << BlockSizeLog2);
                     return _blockSize;
                 }
             }
@@ -109,8 +163,8 @@ namespace Kaitai
                 {
                     if (f_numBlocks)
                         return _numBlocks;
-                    _numBlocks = (int) (((UncompressedSize / BlockSize) + (KaitaiStream.Mod(UncompressedSize, BlockSize) != 0 ? 1 : 0)));
                     f_numBlocks = true;
+                    _numBlocks = (int) (UncompressedSize / BlockSize + (KaitaiStream.Mod(UncompressedSize, BlockSize) != 0 ? 1 : 0));
                     return _numBlocks;
                 }
             }
@@ -137,60 +191,6 @@ namespace Kaitai
             public Zisofs M_Root { get { return m_root; } }
             public Zisofs M_Parent { get { return m_parent; } }
         }
-        public partial class Block : KaitaiStruct
-        {
-            public Block(uint p_ofsStart, uint p_ofsEnd, KaitaiStream p__io, Zisofs p__parent = null, Zisofs p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _ofsStart = p_ofsStart;
-                _ofsEnd = p_ofsEnd;
-                f_lenData = false;
-                f_data = false;
-                _read();
-            }
-            private void _read()
-            {
-            }
-            private bool f_lenData;
-            private int _lenData;
-            public int LenData
-            {
-                get
-                {
-                    if (f_lenData)
-                        return _lenData;
-                    _lenData = (int) ((OfsEnd - OfsStart));
-                    f_lenData = true;
-                    return _lenData;
-                }
-            }
-            private bool f_data;
-            private byte[] _data;
-            public byte[] Data
-            {
-                get
-                {
-                    if (f_data)
-                        return _data;
-                    KaitaiStream io = M_Root.M_Io;
-                    long _pos = io.Pos;
-                    io.Seek(OfsStart);
-                    _data = io.ReadBytes(LenData);
-                    io.Seek(_pos);
-                    f_data = true;
-                    return _data;
-                }
-            }
-            private uint _ofsStart;
-            private uint _ofsEnd;
-            private Zisofs m_root;
-            private Zisofs m_parent;
-            public uint OfsStart { get { return _ofsStart; } }
-            public uint OfsEnd { get { return _ofsEnd; } }
-            public Zisofs M_Root { get { return m_root; } }
-            public Zisofs M_Parent { get { return m_parent; } }
-        }
         private bool f_blocks;
         private List<Block> _blocks;
         public List<Block> Blocks
@@ -199,12 +199,12 @@ namespace Kaitai
             {
                 if (f_blocks)
                     return _blocks;
+                f_blocks = true;
                 _blocks = new List<Block>();
                 for (var i = 0; i < Header.NumBlocks; i++)
                 {
-                    _blocks.Add(new Block(BlockPointers[i], BlockPointers[(i + 1)], m_io, this, m_root));
+                    _blocks.Add(new Block(BlockPointers[i], BlockPointers[i + 1], m_io, this, m_root));
                 }
-                f_blocks = true;
                 return _blocks;
             }
         }

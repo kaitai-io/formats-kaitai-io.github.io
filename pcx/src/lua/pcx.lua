@@ -25,16 +25,16 @@ local stringstream = require("string_stream")
 -- See also: Source (https://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt)
 Pcx = class.class(KaitaiStruct)
 
+Pcx.Encodings = enum.Enum {
+  rle = 1,
+}
+
 Pcx.Versions = enum.Enum {
   v2_5 = 0,
   v2_8_with_palette = 2,
   v2_8_without_palette = 3,
   paintbrush_for_windows = 4,
   v3_0 = 5,
-}
-
-Pcx.Encodings = enum.Enum {
-  rle = 1,
 }
 
 function Pcx:_init(io, parent, root)
@@ -60,7 +60,7 @@ function Pcx.property.palette_256:get()
 
   if  ((self.hdr.version == Pcx.Versions.v3_0) and (self.hdr.bits_per_pixel == 8) and (self.hdr.num_planes == 1))  then
     local _pos = self._io:pos()
-    self._io:seek((self._io:size() - 769))
+    self._io:seek(self._io:size() - 769)
     self._m_palette_256 = Pcx.TPalette256(self._io, self, self._root)
     self._io:seek(_pos)
   end
@@ -75,14 +75,14 @@ Pcx.Header = class.class(KaitaiStruct)
 function Pcx.Header:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function Pcx.Header:_read()
   self.magic = self._io:read_bytes(1)
   if not(self.magic == "\010") then
-    error("not equal, expected " ..  "\010" .. ", but got " .. self.magic)
+    error("not equal, expected " .. "\010" .. ", but got " .. self.magic)
   end
   self.version = Pcx.Versions(self._io:read_u1())
   self.encoding = Pcx.Encodings(self._io:read_u1())
@@ -96,7 +96,7 @@ function Pcx.Header:_read()
   self.palette_16 = self._io:read_bytes(48)
   self.reserved = self._io:read_bytes(1)
   if not(self.reserved == "\000") then
-    error("not equal, expected " ..  "\000" .. ", but got " .. self.reserved)
+    error("not equal, expected " .. "\000" .. ", but got " .. self.reserved)
   end
   self.num_planes = self._io:read_u1()
   self.bytes_per_line = self._io:read_u2le()
@@ -112,33 +112,12 @@ end
 -- up writing a 0x0a into this field, so that's what majority
 -- of modern software expects to have in this attribute.
 
-Pcx.TPalette256 = class.class(KaitaiStruct)
-
-function Pcx.TPalette256:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Pcx.TPalette256:_read()
-  self.magic = self._io:read_bytes(1)
-  if not(self.magic == "\012") then
-    error("not equal, expected " ..  "\012" .. ", but got " .. self.magic)
-  end
-  self.colors = {}
-  for i = 0, 256 - 1 do
-    self.colors[i + 1] = Pcx.Rgb(self._io, self, self._root)
-  end
-end
-
-
 Pcx.Rgb = class.class(KaitaiStruct)
 
 function Pcx.Rgb:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -146,6 +125,27 @@ function Pcx.Rgb:_read()
   self.r = self._io:read_u1()
   self.g = self._io:read_u1()
   self.b = self._io:read_u1()
+end
+
+
+Pcx.TPalette256 = class.class(KaitaiStruct)
+
+function Pcx.TPalette256:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Pcx.TPalette256:_read()
+  self.magic = self._io:read_bytes(1)
+  if not(self.magic == "\012") then
+    error("not equal, expected " .. "\012" .. ", but got " .. self.magic)
+  end
+  self.colors = {}
+  for i = 0, 256 - 1 do
+    self.colors[i + 1] = Pcx.Rgb(self._io, self, self._root)
+  end
 end
 
 

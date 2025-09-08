@@ -25,16 +25,6 @@ namespace Kaitai
         }
 
 
-        public enum PfhType
-        {
-            Radio80211Common = 2,
-            Radio80211nMacExt = 3,
-            Radio80211nMacPhyExt = 4,
-            SpectrumMap = 5,
-            ProcessInfo = 6,
-            CaptureInfo = 7,
-        }
-
         public enum Linktype
         {
             NullLinktype = 0,
@@ -142,6 +132,16 @@ namespace Kaitai
             WattstopperDlm = 263,
             Iso14443 = 264,
         }
+
+        public enum PfhType
+        {
+            Radio80211Common = 2,
+            Radio80211nMacExt = 3,
+            Radio80211nMacPhyExt = 4,
+            SpectrumMap = 5,
+            ProcessInfo = 6,
+            CaptureInfo = 7,
+        }
         public PacketPpi(KaitaiStream p__io, KaitaiStruct p__parent = null, PacketPpi p__root = null) : base(p__io)
         {
             m_parent = p__parent;
@@ -151,20 +151,20 @@ namespace Kaitai
         private void _read()
         {
             _header = new PacketPpiHeader(m_io, this, m_root);
-            __raw_fields = m_io.ReadBytes((Header.PphLen - 8));
+            __raw_fields = m_io.ReadBytes(Header.PphLen - 8);
             var io___raw_fields = new KaitaiStream(__raw_fields);
             _fields = new PacketPpiFields(io___raw_fields, this, m_root);
             switch (Header.PphDlt) {
-            case Linktype.Ppi: {
-                __raw_body = m_io.ReadBytesFull();
-                var io___raw_body = new KaitaiStream(__raw_body);
-                _body = new PacketPpi(io___raw_body);
-                break;
-            }
             case Linktype.Ethernet: {
                 __raw_body = m_io.ReadBytesFull();
                 var io___raw_body = new KaitaiStream(__raw_body);
                 _body = new EthernetFrame(io___raw_body);
+                break;
+            }
+            case Linktype.Ppi: {
+                __raw_body = m_io.ReadBytesFull();
+                var io___raw_body = new KaitaiStream(__raw_body);
+                _body = new PacketPpi(io___raw_body, this, m_root);
                 break;
             }
             default: {
@@ -172,74 +172,6 @@ namespace Kaitai
                 break;
             }
             }
-        }
-        public partial class PacketPpiFields : KaitaiStruct
-        {
-            public static PacketPpiFields FromFile(string fileName)
-            {
-                return new PacketPpiFields(new KaitaiStream(fileName));
-            }
-
-            public PacketPpiFields(KaitaiStream p__io, PacketPpi p__parent = null, PacketPpi p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _entries = new List<PacketPpiField>();
-                {
-                    var i = 0;
-                    while (!m_io.IsEof) {
-                        _entries.Add(new PacketPpiField(m_io, this, m_root));
-                        i++;
-                    }
-                }
-            }
-            private List<PacketPpiField> _entries;
-            private PacketPpi m_root;
-            private PacketPpi m_parent;
-            public List<PacketPpiField> Entries { get { return _entries; } }
-            public PacketPpi M_Root { get { return m_root; } }
-            public PacketPpi M_Parent { get { return m_parent; } }
-        }
-
-        /// <remarks>
-        /// Reference: <a href="https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 4.1.3</a>
-        /// </remarks>
-        public partial class Radio80211nMacExtBody : KaitaiStruct
-        {
-            public static Radio80211nMacExtBody FromFile(string fileName)
-            {
-                return new Radio80211nMacExtBody(new KaitaiStream(fileName));
-            }
-
-            public Radio80211nMacExtBody(KaitaiStream p__io, PacketPpi.PacketPpiField p__parent = null, PacketPpi p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _flags = new MacFlags(m_io, this, m_root);
-                _aMpduId = m_io.ReadU4le();
-                _numDelimiters = m_io.ReadU1();
-                _reserved = m_io.ReadBytes(3);
-            }
-            private MacFlags _flags;
-            private uint _aMpduId;
-            private byte _numDelimiters;
-            private byte[] _reserved;
-            private PacketPpi m_root;
-            private PacketPpi.PacketPpiField m_parent;
-            public MacFlags Flags { get { return _flags; } }
-            public uint AMpduId { get { return _aMpduId; } }
-            public byte NumDelimiters { get { return _numDelimiters; } }
-            public byte[] Reserved { get { return _reserved; } }
-            public PacketPpi M_Root { get { return m_root; } }
-            public PacketPpi.PacketPpiField M_Parent { get { return m_parent; } }
         }
         public partial class MacFlags : KaitaiStruct
         {
@@ -317,6 +249,96 @@ namespace Kaitai
             public byte[] Unused2 { get { return _unused2; } }
             public PacketPpi M_Root { get { return m_root; } }
             public KaitaiStruct M_Parent { get { return m_parent; } }
+        }
+
+        /// <remarks>
+        /// Reference: <a href="https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 3.1</a>
+        /// </remarks>
+        public partial class PacketPpiField : KaitaiStruct
+        {
+            public static PacketPpiField FromFile(string fileName)
+            {
+                return new PacketPpiField(new KaitaiStream(fileName));
+            }
+
+            public PacketPpiField(KaitaiStream p__io, PacketPpi.PacketPpiFields p__parent = null, PacketPpi p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _pfhType = ((PacketPpi.PfhType) m_io.ReadU2le());
+                _pfhDatalen = m_io.ReadU2le();
+                switch (PfhType) {
+                case PacketPpi.PfhType.Radio80211Common: {
+                    __raw_body = m_io.ReadBytes(PfhDatalen);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new Radio80211CommonBody(io___raw_body, this, m_root);
+                    break;
+                }
+                case PacketPpi.PfhType.Radio80211nMacExt: {
+                    __raw_body = m_io.ReadBytes(PfhDatalen);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new Radio80211nMacExtBody(io___raw_body, this, m_root);
+                    break;
+                }
+                case PacketPpi.PfhType.Radio80211nMacPhyExt: {
+                    __raw_body = m_io.ReadBytes(PfhDatalen);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new Radio80211nMacPhyExtBody(io___raw_body, this, m_root);
+                    break;
+                }
+                default: {
+                    _body = m_io.ReadBytes(PfhDatalen);
+                    break;
+                }
+                }
+            }
+            private PfhType _pfhType;
+            private ushort _pfhDatalen;
+            private object _body;
+            private PacketPpi m_root;
+            private PacketPpi.PacketPpiFields m_parent;
+            private byte[] __raw_body;
+            public PfhType PfhType { get { return _pfhType; } }
+            public ushort PfhDatalen { get { return _pfhDatalen; } }
+            public object Body { get { return _body; } }
+            public PacketPpi M_Root { get { return m_root; } }
+            public PacketPpi.PacketPpiFields M_Parent { get { return m_parent; } }
+            public byte[] M_RawBody { get { return __raw_body; } }
+        }
+        public partial class PacketPpiFields : KaitaiStruct
+        {
+            public static PacketPpiFields FromFile(string fileName)
+            {
+                return new PacketPpiFields(new KaitaiStream(fileName));
+            }
+
+            public PacketPpiFields(KaitaiStream p__io, PacketPpi p__parent = null, PacketPpi p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _entries = new List<PacketPpiField>();
+                {
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _entries.Add(new PacketPpiField(m_io, this, m_root));
+                        i++;
+                    }
+                }
+            }
+            private List<PacketPpiField> _entries;
+            private PacketPpi m_root;
+            private PacketPpi m_parent;
+            public List<PacketPpiField> Entries { get { return _entries; } }
+            public PacketPpi M_Root { get { return m_root; } }
+            public PacketPpi M_Parent { get { return m_parent; } }
         }
 
         /// <remarks>
@@ -409,16 +431,16 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 3.1</a>
+        /// Reference: <a href="https://web.archive.org/web/20090206112419/https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf">PPI header format spec, section 4.1.3</a>
         /// </remarks>
-        public partial class PacketPpiField : KaitaiStruct
+        public partial class Radio80211nMacExtBody : KaitaiStruct
         {
-            public static PacketPpiField FromFile(string fileName)
+            public static Radio80211nMacExtBody FromFile(string fileName)
             {
-                return new PacketPpiField(new KaitaiStream(fileName));
+                return new Radio80211nMacExtBody(new KaitaiStream(fileName));
             }
 
-            public PacketPpiField(KaitaiStream p__io, PacketPpi.PacketPpiFields p__parent = null, PacketPpi p__root = null) : base(p__io)
+            public Radio80211nMacExtBody(KaitaiStream p__io, PacketPpi.PacketPpiField p__parent = null, PacketPpi p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -426,45 +448,23 @@ namespace Kaitai
             }
             private void _read()
             {
-                _pfhType = ((PacketPpi.PfhType) m_io.ReadU2le());
-                _pfhDatalen = m_io.ReadU2le();
-                switch (PfhType) {
-                case PacketPpi.PfhType.Radio80211Common: {
-                    __raw_body = m_io.ReadBytes(PfhDatalen);
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new Radio80211CommonBody(io___raw_body, this, m_root);
-                    break;
-                }
-                case PacketPpi.PfhType.Radio80211nMacExt: {
-                    __raw_body = m_io.ReadBytes(PfhDatalen);
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new Radio80211nMacExtBody(io___raw_body, this, m_root);
-                    break;
-                }
-                case PacketPpi.PfhType.Radio80211nMacPhyExt: {
-                    __raw_body = m_io.ReadBytes(PfhDatalen);
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new Radio80211nMacPhyExtBody(io___raw_body, this, m_root);
-                    break;
-                }
-                default: {
-                    _body = m_io.ReadBytes(PfhDatalen);
-                    break;
-                }
-                }
+                _flags = new MacFlags(m_io, this, m_root);
+                _aMpduId = m_io.ReadU4le();
+                _numDelimiters = m_io.ReadU1();
+                _reserved = m_io.ReadBytes(3);
             }
-            private PfhType _pfhType;
-            private ushort _pfhDatalen;
-            private object _body;
+            private MacFlags _flags;
+            private uint _aMpduId;
+            private byte _numDelimiters;
+            private byte[] _reserved;
             private PacketPpi m_root;
-            private PacketPpi.PacketPpiFields m_parent;
-            private byte[] __raw_body;
-            public PfhType PfhType { get { return _pfhType; } }
-            public ushort PfhDatalen { get { return _pfhDatalen; } }
-            public object Body { get { return _body; } }
+            private PacketPpi.PacketPpiField m_parent;
+            public MacFlags Flags { get { return _flags; } }
+            public uint AMpduId { get { return _aMpduId; } }
+            public byte NumDelimiters { get { return _numDelimiters; } }
+            public byte[] Reserved { get { return _reserved; } }
             public PacketPpi M_Root { get { return m_root; } }
-            public PacketPpi.PacketPpiFields M_Parent { get { return m_parent; } }
-            public byte[] M_RawBody { get { return __raw_body; } }
+            public PacketPpi.PacketPpiField M_Parent { get { return m_parent; } }
         }
 
         /// <remarks>

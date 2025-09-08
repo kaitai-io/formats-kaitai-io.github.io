@@ -56,13 +56,13 @@ DosMz.ExeHeader = class.class(KaitaiStruct)
 function DosMz.ExeHeader:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function DosMz.ExeHeader:_read()
   self.mz = DosMz.MzHeader(self._io, self, self._root)
-  self.rest_of_header = self._io:read_bytes((self.mz.len_header - 28))
+  self.rest_of_header = self._io:read_bytes(self.mz.len_header - 28)
 end
 
 DosMz.ExeHeader.property.len_body = {}
@@ -71,7 +71,7 @@ function DosMz.ExeHeader.property.len_body:get()
     return self._m_len_body
   end
 
-  self._m_len_body = (utils.box_unwrap((self.mz.last_page_extra_bytes == 0) and utils.box_wrap((self.mz.num_pages * 512)) or ((((self.mz.num_pages - 1) * 512) + self.mz.last_page_extra_bytes))) - self.mz.len_header)
+  self._m_len_body = utils.box_unwrap((self.mz.last_page_extra_bytes == 0) and utils.box_wrap(self.mz.num_pages * 512) or ((self.mz.num_pages - 1) * 512 + self.mz.last_page_extra_bytes)) - self.mz.len_header
   return self._m_len_body
 end
 
@@ -81,7 +81,7 @@ DosMz.MzHeader = class.class(KaitaiStruct)
 function DosMz.MzHeader:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -111,7 +111,7 @@ function DosMz.MzHeader.property.len_header:get()
     return self._m_len_header
   end
 
-  self._m_len_header = (self.header_size * 16)
+  self._m_len_header = self.header_size * 16
   return self._m_len_header
 end
 
@@ -121,7 +121,7 @@ DosMz.Relocation = class.class(KaitaiStruct)
 function DosMz.Relocation:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 

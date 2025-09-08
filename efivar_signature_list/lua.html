@@ -204,6 +204,11 @@ hashes. On a Linux system using UEFI, these variables are readable from:</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="UEFI Variable with Signature List parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="UEFI Variable with Signature List parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -234,7 +239,17 @@ hashes. On a Linux system using UEFI, these variables are readable from:</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="UEFI Variable with Signature List parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="UEFI Variable with Signature List parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="UEFI Variable with Signature List parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -314,13 +329,60 @@ hashes. On a Linux system using UEFI, these variables are readable from:</p>
 <span class="c1">-- Attributes of the UEFI variable.</span>
 
 <span class="c1">-- </span>
+<span class="c1">-- Attributes of a UEFI variable.</span>
+<span class="nv">EfivarSignatureList</span><span class="p">.</span><span class="py">EfiVarAttr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">EfivarSignatureList</span><span class="p">.</span><span class="nc">EfiVarAttr</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">EfivarSignatureList</span><span class="p">.</span><span class="nc">EfiVarAttr</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">enhanced_authenticated_access</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">append_write</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">time_based_authenticated_write_access</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">authenticated_write_access</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">hardware_error_record</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">runtime_access</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">bootservice_access</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">non_volatile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">reserved1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bits_int_be</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Reserved (unused) bits.</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- See also: EFI_SIGNATURE_DATA</span>
+<span class="nv">EfivarSignatureList</span><span class="p">.</span><span class="py">SignatureData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">EfivarSignatureList</span><span class="p">.</span><span class="nc">SignatureData</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span><span class="w"> </span><span class="nc">EfivarSignatureList</span><span class="p">.</span><span class="nc">SignatureData</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">owner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes_full</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- An identifier which identifies the agent which added the signature to the list.</span>
+<span class="c1">-- </span>
+<span class="c1">-- The format of the signature is defined by the SignatureType.</span>
+
+<span class="c1">-- </span>
 <span class="c1">-- See also: EFI_SIGNATURE_LIST</span>
 <span class="nv">EfivarSignatureList</span><span class="p">.</span><span class="py">SignatureList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
 
 <span class="kr">function</span><span class="w"> </span><span class="nc">EfivarSignatureList</span><span class="p">.</span><span class="nc">SignatureList</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span>
 <span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="kr">end</span>
 
@@ -342,55 +404,16 @@ hashes. On a Linux system using UEFI, these variables are readable from:</p>
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
-<span class="c1">-- SHA512 hash of an X.509 certificate&#39;s To-Be-Signed contents, and a time of revocation.</span>
-<span class="c1">-- See also: EFI_CERT_X509_SHA512_GUID</span>
-<span class="nv">EfivarSignatureList</span><span class="p">.</span><span class="py">SignatureList</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">is_cert_sha512_x509</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">EfivarSignatureList</span><span class="p">.</span><span class="nc">SignatureList</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_cert_sha512_x509</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha512_x509</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha512_x509</span>
+<span class="c1">-- DER-encoded PKCS #7 version 1.5 [RFC2315].</span>
+<span class="c1">-- See also: EFI_CERT_TYPE_PKCS7_GUID</span>
+<span class="nv">EfivarSignatureList</span><span class="p">.</span><span class="py">SignatureList</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">is_cert_der_pkcs7</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">EfivarSignatureList</span><span class="p">.</span><span class="nc">SignatureList</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_cert_der_pkcs7</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_der_pkcs7</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_der_pkcs7</span>
 <span class="w">  </span><span class="kr">end</span>
 
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha512_x509</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\099\191\109\068\002\037\218\076\188\250\036\101\210\176\254\157</span><span class="s2">&quot;</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha512_x509</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- SHA-224 hash.</span>
-<span class="c1">-- See also: EFI_CERT_SHA224_GUID</span>
-<span class="nv">EfivarSignatureList</span><span class="p">.</span><span class="py">SignatureList</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">is_cert_sha224</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">EfivarSignatureList</span><span class="p">.</span><span class="nc">SignatureList</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_cert_sha224</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha224</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha224</span>
-<span class="w">  </span><span class="kr">end</span>
-
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha224</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\051\082\110\011\092\166\201\068\148\007\217\171\131\191\200\189</span><span class="s2">&quot;</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha224</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- X.509 certificate.</span>
-<span class="c1">-- See also: EFI_CERT_X509_GUID</span>
-<span class="nv">EfivarSignatureList</span><span class="p">.</span><span class="py">SignatureList</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">is_cert_x509</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">EfivarSignatureList</span><span class="p">.</span><span class="nc">SignatureList</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_cert_x509</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_x509</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_x509</span>
-<span class="w">  </span><span class="kr">end</span>
-
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_x509</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\161\089\192\165\228\148\167\074\135\181\171\021\092\043\240\114</span><span class="s2">&quot;</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_x509</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- SHA256 hash of an X.509 certificate&#39;s To-Be-Signed contents, and a time of revocation.</span>
-<span class="c1">-- See also: EFI_CERT_X509_SHA256_GUID</span>
-<span class="nv">EfivarSignatureList</span><span class="p">.</span><span class="py">SignatureList</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">is_cert_sha256_x509</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">EfivarSignatureList</span><span class="p">.</span><span class="nc">SignatureList</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_cert_sha256_x509</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha256_x509</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha256_x509</span>
-<span class="w">  </span><span class="kr">end</span>
-
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha256_x509</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\146\164\210\059\192\150\121\064\180\032\252\249\142\241\003\237</span><span class="s2">&quot;</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha256_x509</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_der_pkcs7</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\157\210\175\074\223\104\238\073\138\169\052\125\055\086\101\167</span><span class="s2">&quot;</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_der_pkcs7</span>
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
@@ -407,45 +430,6 @@ hashes. On a Linux system using UEFI, these variables are readable from:</p>
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
-<span class="c1">-- SHA-512 hash.</span>
-<span class="c1">-- See also: EFI_CERT_SHA512_GUID</span>
-<span class="nv">EfivarSignatureList</span><span class="p">.</span><span class="py">SignatureList</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">is_cert_sha512</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">EfivarSignatureList</span><span class="p">.</span><span class="nc">SignatureList</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_cert_sha512</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha512</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha512</span>
-<span class="w">  </span><span class="kr">end</span>
-
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha512</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\174\015\062\009\196\166\080\079\159\027\212\030\043\137\193\154</span><span class="s2">&quot;</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha512</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- SHA-384 hash.</span>
-<span class="c1">-- See also: EFI_CERT_SHA384_GUID</span>
-<span class="nv">EfivarSignatureList</span><span class="p">.</span><span class="py">SignatureList</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">is_cert_sha384</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">EfivarSignatureList</span><span class="p">.</span><span class="nc">SignatureList</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_cert_sha384</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha384</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha384</span>
-<span class="w">  </span><span class="kr">end</span>
-
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha384</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\007\083\062\255\208\159\201\072\133\241\138\213\108\112\030\001</span><span class="s2">&quot;</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha384</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- SHA-1 hash.</span>
-<span class="c1">-- See also: EFI_CERT_SHA1_GUID</span>
-<span class="nv">EfivarSignatureList</span><span class="p">.</span><span class="py">SignatureList</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">is_cert_sha1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">EfivarSignatureList</span><span class="p">.</span><span class="nc">SignatureList</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_cert_sha1</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha1</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha1</span>
-<span class="w">  </span><span class="kr">end</span>
-
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\018\165\108\130\016\207\201\074\177\135\190\001\073\102\049\189</span><span class="s2">&quot;</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha1</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
 <span class="c1">-- RSA-2048 signature of a SHA-1 hash.</span>
 <span class="c1">-- See also: EFI_CERT_RSA2048_SHA1_GUID</span>
 <span class="nv">EfivarSignatureList</span><span class="p">.</span><span class="py">SignatureList</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">is_cert_rsa2048_sha1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
@@ -456,32 +440,6 @@ hashes. On a Linux system using UEFI, these variables are readable from:</p>
 
 <span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_rsa2048_sha1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\079\068\248\103\067\135\241\072\163\040\030\170\184\115\096\128</span><span class="s2">&quot;</span>
 <span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_rsa2048_sha1</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- SHA-256 hash.</span>
-<span class="c1">-- See also: EFI_CERT_SHA256_GUID</span>
-<span class="nv">EfivarSignatureList</span><span class="p">.</span><span class="py">SignatureList</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">is_cert_sha256</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">EfivarSignatureList</span><span class="p">.</span><span class="nc">SignatureList</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_cert_sha256</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha256</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha256</span>
-<span class="w">  </span><span class="kr">end</span>
-
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha256</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\038\022\196\193\076\080\146\064\172\169\065\249\054\147\067\040</span><span class="s2">&quot;</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha256</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- SHA384 hash of an X.509 certificate&#39;s To-Be-Signed contents, and a time of revocation.</span>
-<span class="c1">-- See also: EFI_CERT_X509_SHA384_GUID</span>
-<span class="nv">EfivarSignatureList</span><span class="p">.</span><span class="py">SignatureList</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">is_cert_sha384_x509</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">EfivarSignatureList</span><span class="p">.</span><span class="nc">SignatureList</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_cert_sha384_x509</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha384_x509</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha384_x509</span>
-<span class="w">  </span><span class="kr">end</span>
-
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha384_x509</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\110\135\118\112\194\128\230\078\170\210\040\179\073\166\134\091</span><span class="s2">&quot;</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha384_x509</span>
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
@@ -498,16 +456,120 @@ hashes. On a Linux system using UEFI, these variables are readable from:</p>
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
-<span class="c1">-- DER-encoded PKCS #7 version 1.5 [RFC2315].</span>
-<span class="c1">-- See also: EFI_CERT_TYPE_PKCS7_GUID</span>
-<span class="nv">EfivarSignatureList</span><span class="p">.</span><span class="py">SignatureList</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">is_cert_der_pkcs7</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
-<span class="kr">function</span><span class="w"> </span><span class="nc">EfivarSignatureList</span><span class="p">.</span><span class="nc">SignatureList</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_cert_der_pkcs7</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_der_pkcs7</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
-<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_der_pkcs7</span>
+<span class="c1">-- SHA-1 hash.</span>
+<span class="c1">-- See also: EFI_CERT_SHA1_GUID</span>
+<span class="nv">EfivarSignatureList</span><span class="p">.</span><span class="py">SignatureList</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">is_cert_sha1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">EfivarSignatureList</span><span class="p">.</span><span class="nc">SignatureList</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_cert_sha1</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha1</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha1</span>
 <span class="w">  </span><span class="kr">end</span>
 
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_der_pkcs7</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\157\210\175\074\223\104\238\073\138\169\052\125\055\086\101\167</span><span class="s2">&quot;</span>
-<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_der_pkcs7</span>
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\018\165\108\130\016\207\201\074\177\135\190\001\073\102\049\189</span><span class="s2">&quot;</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha1</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- SHA-224 hash.</span>
+<span class="c1">-- See also: EFI_CERT_SHA224_GUID</span>
+<span class="nv">EfivarSignatureList</span><span class="p">.</span><span class="py">SignatureList</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">is_cert_sha224</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">EfivarSignatureList</span><span class="p">.</span><span class="nc">SignatureList</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_cert_sha224</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha224</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha224</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha224</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\051\082\110\011\092\166\201\068\148\007\217\171\131\191\200\189</span><span class="s2">&quot;</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha224</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- SHA-256 hash.</span>
+<span class="c1">-- See also: EFI_CERT_SHA256_GUID</span>
+<span class="nv">EfivarSignatureList</span><span class="p">.</span><span class="py">SignatureList</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">is_cert_sha256</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">EfivarSignatureList</span><span class="p">.</span><span class="nc">SignatureList</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_cert_sha256</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha256</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha256</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha256</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\038\022\196\193\076\080\146\064\172\169\065\249\054\147\067\040</span><span class="s2">&quot;</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha256</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- SHA256 hash of an X.509 certificate&#39;s To-Be-Signed contents, and a time of revocation.</span>
+<span class="c1">-- See also: EFI_CERT_X509_SHA256_GUID</span>
+<span class="nv">EfivarSignatureList</span><span class="p">.</span><span class="py">SignatureList</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">is_cert_sha256_x509</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">EfivarSignatureList</span><span class="p">.</span><span class="nc">SignatureList</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_cert_sha256_x509</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha256_x509</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha256_x509</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha256_x509</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\146\164\210\059\192\150\121\064\180\032\252\249\142\241\003\237</span><span class="s2">&quot;</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha256_x509</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- SHA-384 hash.</span>
+<span class="c1">-- See also: EFI_CERT_SHA384_GUID</span>
+<span class="nv">EfivarSignatureList</span><span class="p">.</span><span class="py">SignatureList</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">is_cert_sha384</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">EfivarSignatureList</span><span class="p">.</span><span class="nc">SignatureList</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_cert_sha384</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha384</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha384</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha384</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\007\083\062\255\208\159\201\072\133\241\138\213\108\112\030\001</span><span class="s2">&quot;</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha384</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- SHA384 hash of an X.509 certificate&#39;s To-Be-Signed contents, and a time of revocation.</span>
+<span class="c1">-- See also: EFI_CERT_X509_SHA384_GUID</span>
+<span class="nv">EfivarSignatureList</span><span class="p">.</span><span class="py">SignatureList</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">is_cert_sha384_x509</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">EfivarSignatureList</span><span class="p">.</span><span class="nc">SignatureList</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_cert_sha384_x509</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha384_x509</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha384_x509</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha384_x509</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\110\135\118\112\194\128\230\078\170\210\040\179\073\166\134\091</span><span class="s2">&quot;</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha384_x509</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- SHA-512 hash.</span>
+<span class="c1">-- See also: EFI_CERT_SHA512_GUID</span>
+<span class="nv">EfivarSignatureList</span><span class="p">.</span><span class="py">SignatureList</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">is_cert_sha512</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">EfivarSignatureList</span><span class="p">.</span><span class="nc">SignatureList</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_cert_sha512</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha512</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha512</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha512</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\174\015\062\009\196\166\080\079\159\027\212\030\043\137\193\154</span><span class="s2">&quot;</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha512</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- SHA512 hash of an X.509 certificate&#39;s To-Be-Signed contents, and a time of revocation.</span>
+<span class="c1">-- See also: EFI_CERT_X509_SHA512_GUID</span>
+<span class="nv">EfivarSignatureList</span><span class="p">.</span><span class="py">SignatureList</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">is_cert_sha512_x509</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">EfivarSignatureList</span><span class="p">.</span><span class="nc">SignatureList</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_cert_sha512_x509</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha512_x509</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha512_x509</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha512_x509</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\099\191\109\068\002\037\218\076\188\250\036\101\210\176\254\157</span><span class="s2">&quot;</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_sha512_x509</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- X.509 certificate.</span>
+<span class="c1">-- See also: EFI_CERT_X509_GUID</span>
+<span class="nv">EfivarSignatureList</span><span class="p">.</span><span class="py">SignatureList</span><span class="p">.</span><span class="py">property</span><span class="p">.</span><span class="py">is_cert_x509</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{}</span>
+<span class="kr">function</span><span class="w"> </span><span class="nc">EfivarSignatureList</span><span class="p">.</span><span class="nc">SignatureList</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_cert_x509</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="w">  </span><span class="kr">if</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_x509</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="kc">nil</span><span class="w"> </span><span class="kr">then</span>
+<span class="w">    </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_x509</span>
+<span class="w">  </span><span class="kr">end</span>
+
+<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_x509</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">signature_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;</span><span class="se">\161\089\192\165\228\148\167\074\135\181\171\021\092\043\240\114</span><span class="s2">&quot;</span>
+<span class="w">  </span><span class="kr">return</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_m_is_cert_x509</span>
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
@@ -522,53 +584,6 @@ hashes. On a Linux system using UEFI, these variables are readable from:</p>
 <span class="c1">-- Header before the array of signatures.</span>
 <span class="c1">-- </span>
 <span class="c1">-- An array of signatures.</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- See also: EFI_SIGNATURE_DATA</span>
-<span class="nv">EfivarSignatureList</span><span class="p">.</span><span class="py">SignatureData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">EfivarSignatureList</span><span class="p">.</span><span class="nc">SignatureData</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">EfivarSignatureList</span><span class="p">.</span><span class="nc">SignatureData</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">owner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bytes_full</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- An identifier which identifies the agent which added the signature to the list.</span>
-<span class="c1">-- </span>
-<span class="c1">-- The format of the signature is defined by the SignatureType.</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- Attributes of a UEFI variable.</span>
-<span class="nv">EfivarSignatureList</span><span class="p">.</span><span class="py">EfiVarAttr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">class</span><span class="p">.</span><span class="nf">class</span><span class="p">(</span><span class="nv">KaitaiStruct</span><span class="p">)</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">EfivarSignatureList</span><span class="p">.</span><span class="nc">EfiVarAttr</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="nv">io</span><span class="p">,</span><span class="w"> </span><span class="nv">parent</span><span class="p">,</span><span class="w"> </span><span class="nv">root</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">KaitaiStruct</span><span class="p">.</span><span class="nf">_init</span><span class="p">(</span><span class="nv">self</span><span class="p">,</span><span class="w"> </span><span class="nv">io</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">parent</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">root</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="nv">self</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="kr">function</span><span class="w"> </span><span class="nc">EfivarSignatureList</span><span class="p">.</span><span class="nc">EfiVarAttr</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">enhanced_authenticated_access</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">append_write</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">time_based_authenticated_write_access</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">authenticated_write_access</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">hardware_error_record</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">runtime_access</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">bootservice_access</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">non_volatile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">~=</span><span class="w"> </span><span class="mi">0</span>
-<span class="w">  </span><span class="nv">self</span><span class="p">.</span><span class="py">reserved1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">self</span><span class="p">.</span><span class="py">_io</span><span class="p">:</span><span class="nf">read_bits_int_be</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- Reserved (unused) bits.</span>
 </pre></div>
 
         </div>

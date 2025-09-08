@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.Dtb = factory(root.KaitaiStream);
+    factory(root.Dtb || (root.Dtb = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Dtb_, KaitaiStream) {
 /**
  * Also referred to as Devicetree Blob (DTB). It is a flat binary encoding
  * of data (primarily devicetree data, although other data is possible as well).
@@ -59,8 +59,8 @@ var Dtb = (function() {
   }
   Dtb.prototype._read = function() {
     this.magic = this._io.readBytes(4);
-    if (!((KaitaiStream.byteArrayCompare(this.magic, [208, 13, 254, 237]) == 0))) {
-      throw new KaitaiStream.ValidationNotEqualError([208, 13, 254, 237], this.magic, this._io, "/seq/0");
+    if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([208, 13, 254, 237])) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([208, 13, 254, 237]), this.magic, this._io, "/seq/0");
     }
     this.totalSize = this._io.readU4be();
     this.ofsStructureBlock = this._io.readU4be();
@@ -76,31 +76,27 @@ var Dtb = (function() {
     this.lenStructureBlock = this._io.readU4be();
   }
 
-  var MemoryBlock = Dtb.MemoryBlock = (function() {
-    function MemoryBlock(_io, _parent, _root) {
+  var FdtBeginNode = Dtb.FdtBeginNode = (function() {
+    function FdtBeginNode(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    MemoryBlock.prototype._read = function() {
-      this.entries = [];
-      var i = 0;
-      while (!this._io.isEof()) {
-        this.entries.push(new MemoryBlockEntry(this._io, this, this._root));
-        i++;
-      }
+    FdtBeginNode.prototype._read = function() {
+      this.name = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "ASCII");
+      this.padding = this._io.readBytes(KaitaiStream.mod(-(this._io.pos), 4));
     }
 
-    return MemoryBlock;
+    return FdtBeginNode;
   })();
 
   var FdtBlock = Dtb.FdtBlock = (function() {
     function FdtBlock(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -117,55 +113,34 @@ var Dtb = (function() {
     return FdtBlock;
   })();
 
-  var MemoryBlockEntry = Dtb.MemoryBlockEntry = (function() {
-    function MemoryBlockEntry(_io, _parent, _root) {
+  var FdtNode = Dtb.FdtNode = (function() {
+    function FdtNode(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    MemoryBlockEntry.prototype._read = function() {
-      this.address = this._io.readU8be();
-      this.size = this._io.readU8be();
-    }
-
-    /**
-     * physical address of a reserved memory region
-     */
-
-    /**
-     * size of a reserved memory region
-     */
-
-    return MemoryBlockEntry;
-  })();
-
-  var Strings = Dtb.Strings = (function() {
-    function Strings(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Strings.prototype._read = function() {
-      this.strings = [];
-      var i = 0;
-      while (!this._io.isEof()) {
-        this.strings.push(KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "ASCII"));
-        i++;
+    FdtNode.prototype._read = function() {
+      this.type = this._io.readU4be();
+      switch (this.type) {
+      case Dtb.Fdt.BEGIN_NODE:
+        this.body = new FdtBeginNode(this._io, this, this._root);
+        break;
+      case Dtb.Fdt.PROP:
+        this.body = new FdtProp(this._io, this, this._root);
+        break;
       }
     }
 
-    return Strings;
+    return FdtNode;
   })();
 
   var FdtProp = Dtb.FdtProp = (function() {
     function FdtProp(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -191,43 +166,68 @@ var Dtb = (function() {
     return FdtProp;
   })();
 
-  var FdtNode = Dtb.FdtNode = (function() {
-    function FdtNode(_io, _parent, _root) {
+  var MemoryBlock = Dtb.MemoryBlock = (function() {
+    function MemoryBlock(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    FdtNode.prototype._read = function() {
-      this.type = this._io.readU4be();
-      switch (this.type) {
-      case Dtb.Fdt.BEGIN_NODE:
-        this.body = new FdtBeginNode(this._io, this, this._root);
-        break;
-      case Dtb.Fdt.PROP:
-        this.body = new FdtProp(this._io, this, this._root);
-        break;
+    MemoryBlock.prototype._read = function() {
+      this.entries = [];
+      var i = 0;
+      while (!this._io.isEof()) {
+        this.entries.push(new MemoryBlockEntry(this._io, this, this._root));
+        i++;
       }
     }
 
-    return FdtNode;
+    return MemoryBlock;
   })();
 
-  var FdtBeginNode = Dtb.FdtBeginNode = (function() {
-    function FdtBeginNode(_io, _parent, _root) {
+  var MemoryBlockEntry = Dtb.MemoryBlockEntry = (function() {
+    function MemoryBlockEntry(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    FdtBeginNode.prototype._read = function() {
-      this.name = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "ASCII");
-      this.padding = this._io.readBytes(KaitaiStream.mod(-(this._io.pos), 4));
+    MemoryBlockEntry.prototype._read = function() {
+      this.address = this._io.readU8be();
+      this.size = this._io.readU8be();
     }
 
-    return FdtBeginNode;
+    /**
+     * physical address of a reserved memory region
+     */
+
+    /**
+     * size of a reserved memory region
+     */
+
+    return MemoryBlockEntry;
+  })();
+
+  var Strings = Dtb.Strings = (function() {
+    function Strings(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Strings.prototype._read = function() {
+      this.strings = [];
+      var i = 0;
+      while (!this._io.isEof()) {
+        this.strings.push(KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "ASCII"));
+        i++;
+      }
+    }
+
+    return Strings;
   })();
   Object.defineProperty(Dtb.prototype, 'memoryReservationBlock', {
     get: function() {
@@ -235,24 +235,11 @@ var Dtb = (function() {
         return this._m_memoryReservationBlock;
       var _pos = this._io.pos;
       this._io.seek(this.ofsMemoryReservationBlock);
-      this._raw__m_memoryReservationBlock = this._io.readBytes((this.ofsStructureBlock - this.ofsMemoryReservationBlock));
+      this._raw__m_memoryReservationBlock = this._io.readBytes(this.ofsStructureBlock - this.ofsMemoryReservationBlock);
       var _io__raw__m_memoryReservationBlock = new KaitaiStream(this._raw__m_memoryReservationBlock);
       this._m_memoryReservationBlock = new MemoryBlock(_io__raw__m_memoryReservationBlock, this, this._root);
       this._io.seek(_pos);
       return this._m_memoryReservationBlock;
-    }
-  });
-  Object.defineProperty(Dtb.prototype, 'structureBlock', {
-    get: function() {
-      if (this._m_structureBlock !== undefined)
-        return this._m_structureBlock;
-      var _pos = this._io.pos;
-      this._io.seek(this.ofsStructureBlock);
-      this._raw__m_structureBlock = this._io.readBytes(this.lenStructureBlock);
-      var _io__raw__m_structureBlock = new KaitaiStream(this._raw__m_structureBlock);
-      this._m_structureBlock = new FdtBlock(_io__raw__m_structureBlock, this, this._root);
-      this._io.seek(_pos);
-      return this._m_structureBlock;
     }
   });
   Object.defineProperty(Dtb.prototype, 'stringsBlock', {
@@ -268,8 +255,21 @@ var Dtb = (function() {
       return this._m_stringsBlock;
     }
   });
+  Object.defineProperty(Dtb.prototype, 'structureBlock', {
+    get: function() {
+      if (this._m_structureBlock !== undefined)
+        return this._m_structureBlock;
+      var _pos = this._io.pos;
+      this._io.seek(this.ofsStructureBlock);
+      this._raw__m_structureBlock = this._io.readBytes(this.lenStructureBlock);
+      var _io__raw__m_structureBlock = new KaitaiStream(this._raw__m_structureBlock);
+      this._m_structureBlock = new FdtBlock(_io__raw__m_structureBlock, this, this._root);
+      this._io.seek(_pos);
+      return this._m_structureBlock;
+    }
+  });
 
   return Dtb;
 })();
-return Dtb;
-}));
+Dtb_.Dtb = Dtb;
+});

@@ -4,7 +4,7 @@ import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 
@@ -33,7 +33,11 @@ public class Respack extends KaitaiStruct {
     }
     private void _read() {
         this.header = new Header(this._io, this, _root);
-        this.json = new String(this._io.readBytes(header().lenJson()), Charset.forName("UTF-8"));
+        this.json = new String(this._io.readBytes(header().lenJson()), StandardCharsets.UTF_8);
+    }
+
+    public void _fetchInstances() {
+        this.header._fetchInstances();
     }
     public static class Header extends KaitaiStruct {
         public static Header fromFile(String fileName) throws IOException {
@@ -56,12 +60,15 @@ public class Respack extends KaitaiStruct {
         }
         private void _read() {
             this.magic = this._io.readBytes(2);
-            if (!(Arrays.equals(magic(), new byte[] { 82, 83 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 82, 83 }, magic(), _io(), "/types/header/seq/0");
+            if (!(Arrays.equals(this.magic, new byte[] { 82, 83 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 82, 83 }, this.magic, this._io, "/types/header/seq/0");
             }
             this.unknown = this._io.readBytes(8);
             this.lenJson = this._io.readU4le();
-            this.md5 = new String(this._io.readBytes(32), Charset.forName("UTF-8"));
+            this.md5 = new String(this._io.readBytes(32), StandardCharsets.UTF_8);
+        }
+
+        public void _fetchInstances() {
         }
         private byte[] magic;
         private byte[] unknown;

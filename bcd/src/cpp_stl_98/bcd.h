@@ -3,12 +3,14 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class bcd_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -66,6 +68,17 @@ public:
     int32_t as_int();
 
 private:
+    bool f_as_int_be;
+    int32_t m_as_int_be;
+
+public:
+
+    /**
+     * Value of this BCD number as integer (treating digit order as big-endian).
+     */
+    int32_t as_int_be();
+
+private:
     bool f_as_int_le;
     int32_t m_as_int_le;
 
@@ -86,17 +99,6 @@ public:
      * Index of last digit (0-based).
      */
     int32_t last_idx();
-
-private:
-    bool f_as_int_be;
-    int32_t m_as_int_be;
-
-public:
-
-    /**
-     * Value of this BCD number as integer (treating digit order as big-endian).
-     */
-    int32_t as_int_be();
 
 private:
     std::vector<int32_t>* m_digits;

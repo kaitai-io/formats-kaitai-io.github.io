@@ -4,7 +4,7 @@ import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.HashMap;
@@ -33,19 +33,29 @@ public class Ines extends KaitaiStruct {
         _read();
     }
     private void _read() {
-        this._raw_header = this._io.readBytes(16);
-        KaitaiStream _io__raw_header = new ByteBufferKaitaiStream(_raw_header);
-        this.header = new Header(_io__raw_header, this, _root);
+        KaitaiStream _io_header = this._io.substream(16);
+        this.header = new Header(_io_header, this, _root);
         if (header().f6().trainer()) {
             this.trainer = this._io.readBytes(512);
         }
-        this.prgRom = this._io.readBytes((header().lenPrgRom() * 16384));
-        this.chrRom = this._io.readBytes((header().lenChrRom() * 8192));
+        this.prgRom = this._io.readBytes(header().lenPrgRom() * 16384);
+        this.chrRom = this._io.readBytes(header().lenChrRom() * 8192);
         if (header().f7().playchoice10()) {
             this.playchoice10 = new Playchoice10(this._io, this, _root);
         }
         if (!(_io().isEof())) {
-            this.title = new String(this._io.readBytesFull(), Charset.forName("ASCII"));
+            this.title = new String(this._io.readBytesFull(), StandardCharsets.US_ASCII);
+        }
+    }
+
+    public void _fetchInstances() {
+        this.header._fetchInstances();
+        if (header().f6().trainer()) {
+        }
+        if (header().f7().playchoice10()) {
+            this.playchoice10._fetchInstances();
+        }
+        if (!(_io().isEof())) {
         }
     }
     public static class Header extends KaitaiStruct {
@@ -69,28 +79,108 @@ public class Ines extends KaitaiStruct {
         }
         private void _read() {
             this.magic = this._io.readBytes(4);
-            if (!(Arrays.equals(magic(), new byte[] { 78, 69, 83, 26 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 78, 69, 83, 26 }, magic(), _io(), "/types/header/seq/0");
+            if (!(Arrays.equals(this.magic, new byte[] { 78, 69, 83, 26 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 78, 69, 83, 26 }, this.magic, this._io, "/types/header/seq/0");
             }
             this.lenPrgRom = this._io.readU1();
             this.lenChrRom = this._io.readU1();
-            this._raw_f6 = this._io.readBytes(1);
-            KaitaiStream _io__raw_f6 = new ByteBufferKaitaiStream(_raw_f6);
-            this.f6 = new F6(_io__raw_f6, this, _root);
-            this._raw_f7 = this._io.readBytes(1);
-            KaitaiStream _io__raw_f7 = new ByteBufferKaitaiStream(_raw_f7);
-            this.f7 = new F7(_io__raw_f7, this, _root);
+            KaitaiStream _io_f6 = this._io.substream(1);
+            this.f6 = new F6(_io_f6, this, _root);
+            KaitaiStream _io_f7 = this._io.substream(1);
+            this.f7 = new F7(_io_f7, this, _root);
             this.lenPrgRam = this._io.readU1();
-            this._raw_f9 = this._io.readBytes(1);
-            KaitaiStream _io__raw_f9 = new ByteBufferKaitaiStream(_raw_f9);
-            this.f9 = new F9(_io__raw_f9, this, _root);
-            this._raw_f10 = this._io.readBytes(1);
-            KaitaiStream _io__raw_f10 = new ByteBufferKaitaiStream(_raw_f10);
-            this.f10 = new F10(_io__raw_f10, this, _root);
+            KaitaiStream _io_f9 = this._io.substream(1);
+            this.f9 = new F9(_io_f9, this, _root);
+            KaitaiStream _io_f10 = this._io.substream(1);
+            this.f10 = new F10(_io_f10, this, _root);
             this.reserved = this._io.readBytes(5);
-            if (!(Arrays.equals(reserved(), new byte[] { 0, 0, 0, 0, 0 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 0, 0 }, reserved(), _io(), "/types/header/seq/8");
+            if (!(Arrays.equals(this.reserved, new byte[] { 0, 0, 0, 0, 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 0, 0 }, this.reserved, this._io, "/types/header/seq/8");
             }
+        }
+
+        public void _fetchInstances() {
+            this.f6._fetchInstances();
+            this.f7._fetchInstances();
+            this.f9._fetchInstances();
+            this.f10._fetchInstances();
+        }
+
+        /**
+         * @see <a href="https://www.nesdev.org/wiki/INES#Flags_10">Source</a>
+         */
+        public static class F10 extends KaitaiStruct {
+            public static F10 fromFile(String fileName) throws IOException {
+                return new F10(new ByteBufferKaitaiStream(fileName));
+            }
+
+            public enum TvSystem {
+                NTSC(0),
+                DUAL1(1),
+                PAL(2),
+                DUAL2(3);
+
+                private final long id;
+                TvSystem(long id) { this.id = id; }
+                public long id() { return id; }
+                private static final Map<Long, TvSystem> byId = new HashMap<Long, TvSystem>(4);
+                static {
+                    for (TvSystem e : TvSystem.values())
+                        byId.put(e.id(), e);
+                }
+                public static TvSystem byId(long id) { return byId.get(id); }
+            }
+
+            public F10(KaitaiStream _io) {
+                this(_io, null, null);
+            }
+
+            public F10(KaitaiStream _io, Ines.Header _parent) {
+                this(_io, _parent, null);
+            }
+
+            public F10(KaitaiStream _io, Ines.Header _parent, Ines _root) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                _read();
+            }
+            private void _read() {
+                this.reserved1 = this._io.readBitsIntBe(2);
+                this.busConflict = this._io.readBitsIntBe(1) != 0;
+                this.prgRam = this._io.readBitsIntBe(1) != 0;
+                this.reserved2 = this._io.readBitsIntBe(2);
+                this.tvSystem = TvSystem.byId(this._io.readBitsIntBe(2));
+            }
+
+            public void _fetchInstances() {
+            }
+            private long reserved1;
+            private boolean busConflict;
+            private boolean prgRam;
+            private long reserved2;
+            private TvSystem tvSystem;
+            private Ines _root;
+            private Ines.Header _parent;
+            public long reserved1() { return reserved1; }
+
+            /**
+             * If 0, no bus conflicts. If 1, bus conflicts.
+             */
+            public boolean busConflict() { return busConflict; }
+
+            /**
+             * If 0, PRG ram is present. If 1, not present.
+             */
+            public boolean prgRam() { return prgRam; }
+            public long reserved2() { return reserved2; }
+
+            /**
+             * if 0, NTSC. If 2, PAL. If 1 or 3, dual compatible.
+             */
+            public TvSystem tvSystem() { return tvSystem; }
+            public Ines _root() { return _root; }
+            public Ines.Header _parent() { return _parent; }
         }
 
         /**
@@ -136,6 +226,9 @@ public class Ines extends KaitaiStruct {
                 this.trainer = this._io.readBitsIntBe(1) != 0;
                 this.hasBatteryRam = this._io.readBitsIntBe(1) != 0;
                 this.mirroring = Mirroring.byId(this._io.readBitsIntBe(1));
+            }
+
+            public void _fetchInstances() {
             }
             private long lowerMapper;
             private boolean fourScreen;
@@ -200,6 +293,9 @@ public class Ines extends KaitaiStruct {
                 this.format = this._io.readBitsIntBe(2);
                 this.playchoice10 = this._io.readBitsIntBe(1) != 0;
                 this.vsUnisystem = this._io.readBitsIntBe(1) != 0;
+            }
+
+            public void _fetchInstances() {
             }
             private long upperMapper;
             private long format;
@@ -272,6 +368,9 @@ public class Ines extends KaitaiStruct {
                 this.reserved = this._io.readBitsIntBe(7);
                 this.tvSystem = TvSystem.byId(this._io.readBitsIntBe(1));
             }
+
+            public void _fetchInstances() {
+            }
             private long reserved;
             private TvSystem tvSystem;
             private Ines _root;
@@ -285,80 +384,6 @@ public class Ines extends KaitaiStruct {
             public Ines _root() { return _root; }
             public Ines.Header _parent() { return _parent; }
         }
-
-        /**
-         * @see <a href="https://www.nesdev.org/wiki/INES#Flags_10">Source</a>
-         */
-        public static class F10 extends KaitaiStruct {
-            public static F10 fromFile(String fileName) throws IOException {
-                return new F10(new ByteBufferKaitaiStream(fileName));
-            }
-
-            public enum TvSystem {
-                NTSC(0),
-                DUAL1(1),
-                PAL(2),
-                DUAL2(3);
-
-                private final long id;
-                TvSystem(long id) { this.id = id; }
-                public long id() { return id; }
-                private static final Map<Long, TvSystem> byId = new HashMap<Long, TvSystem>(4);
-                static {
-                    for (TvSystem e : TvSystem.values())
-                        byId.put(e.id(), e);
-                }
-                public static TvSystem byId(long id) { return byId.get(id); }
-            }
-
-            public F10(KaitaiStream _io) {
-                this(_io, null, null);
-            }
-
-            public F10(KaitaiStream _io, Ines.Header _parent) {
-                this(_io, _parent, null);
-            }
-
-            public F10(KaitaiStream _io, Ines.Header _parent, Ines _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.reserved1 = this._io.readBitsIntBe(2);
-                this.busConflict = this._io.readBitsIntBe(1) != 0;
-                this.prgRam = this._io.readBitsIntBe(1) != 0;
-                this.reserved2 = this._io.readBitsIntBe(2);
-                this.tvSystem = TvSystem.byId(this._io.readBitsIntBe(2));
-            }
-            private long reserved1;
-            private boolean busConflict;
-            private boolean prgRam;
-            private long reserved2;
-            private TvSystem tvSystem;
-            private Ines _root;
-            private Ines.Header _parent;
-            public long reserved1() { return reserved1; }
-
-            /**
-             * If 0, no bus conflicts. If 1, bus conflicts.
-             */
-            public boolean busConflict() { return busConflict; }
-
-            /**
-             * If 0, PRG ram is present. If 1, not present.
-             */
-            public boolean prgRam() { return prgRam; }
-            public long reserved2() { return reserved2; }
-
-            /**
-             * if 0, NTSC. If 2, PAL. If 1 or 3, dual compatible.
-             */
-            public TvSystem tvSystem() { return tvSystem; }
-            public Ines _root() { return _root; }
-            public Ines.Header _parent() { return _parent; }
-        }
         private Integer mapper;
 
         /**
@@ -367,8 +392,7 @@ public class Ines extends KaitaiStruct {
         public Integer mapper() {
             if (this.mapper != null)
                 return this.mapper;
-            int _tmp = (int) ((f6().lowerMapper() | (f7().upperMapper() << 4)));
-            this.mapper = _tmp;
+            this.mapper = ((Number) (f6().lowerMapper() | f7().upperMapper() << 4)).intValue();
             return this.mapper;
         }
         private byte[] magic;
@@ -382,10 +406,6 @@ public class Ines extends KaitaiStruct {
         private byte[] reserved;
         private Ines _root;
         private Ines _parent;
-        private byte[] _raw_f6;
-        private byte[] _raw_f7;
-        private byte[] _raw_f9;
-        private byte[] _raw_f10;
         public byte[] magic() { return magic; }
 
         /**
@@ -413,10 +433,6 @@ public class Ines extends KaitaiStruct {
         public byte[] reserved() { return reserved; }
         public Ines _root() { return _root; }
         public Ines _parent() { return _parent; }
-        public byte[] _raw_f6() { return _raw_f6; }
-        public byte[] _raw_f7() { return _raw_f7; }
-        public byte[] _raw_f9() { return _raw_f9; }
-        public byte[] _raw_f10() { return _raw_f10; }
     }
 
     /**
@@ -445,6 +461,10 @@ public class Ines extends KaitaiStruct {
             this.instRom = this._io.readBytes(8192);
             this.prom = new Prom(this._io, this, _root);
         }
+
+        public void _fetchInstances() {
+            this.prom._fetchInstances();
+        }
         public static class Prom extends KaitaiStruct {
             public static Prom fromFile(String fileName) throws IOException {
                 return new Prom(new ByteBufferKaitaiStream(fileName));
@@ -467,6 +487,9 @@ public class Ines extends KaitaiStruct {
             private void _read() {
                 this.data = this._io.readBytes(16);
                 this.counterOut = this._io.readBytes(16);
+            }
+
+            public void _fetchInstances() {
             }
             private byte[] data;
             private byte[] counterOut;
@@ -494,7 +517,6 @@ public class Ines extends KaitaiStruct {
     private String title;
     private Ines _root;
     private KaitaiStruct _parent;
-    private byte[] _raw_header;
     public Header header() { return header; }
     public byte[] trainer() { return trainer; }
     public byte[] prgRom() { return prgRom; }
@@ -503,5 +525,4 @@ public class Ines extends KaitaiStruct {
     public String title() { return title; }
     public Ines _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
-    public byte[] _raw_header() { return _raw_header; }
 }

@@ -21,36 +21,33 @@ import (
 type Iso9660 struct {
 	_io *kaitai.Stream
 	_root *Iso9660
-	_parent interface{}
-	_f_sectorSize bool
-	sectorSize int
+	_parent kaitai.Struct
 	_f_primaryVolDesc bool
 	primaryVolDesc *Iso9660_VolDesc
+	_f_sectorSize bool
+	sectorSize int
 }
 func NewIso9660() *Iso9660 {
 	return &Iso9660{
 	}
 }
 
-func (this *Iso9660) Read(io *kaitai.Stream, parent interface{}, root *Iso9660) (err error) {
+func (this Iso9660) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Iso9660) Read(io *kaitai.Stream, parent kaitai.Struct, root *Iso9660) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
 	return err
 }
-func (this *Iso9660) SectorSize() (v int, err error) {
-	if (this._f_sectorSize) {
-		return this.sectorSize, nil
-	}
-	this.sectorSize = int(2048)
-	this._f_sectorSize = true
-	return this.sectorSize, nil
-}
 func (this *Iso9660) PrimaryVolDesc() (v *Iso9660_VolDesc, err error) {
 	if (this._f_primaryVolDesc) {
 		return this.primaryVolDesc, nil
 	}
+	this._f_primaryVolDesc = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
@@ -59,7 +56,7 @@ func (this *Iso9660) PrimaryVolDesc() (v *Iso9660_VolDesc, err error) {
 	if err != nil {
 		return nil, err
 	}
-	_, err = this._io.Seek(int64((16 * tmp1)), io.SeekStart)
+	_, err = this._io.Seek(int64(16 * tmp1), io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
@@ -73,9 +70,684 @@ func (this *Iso9660) PrimaryVolDesc() (v *Iso9660_VolDesc, err error) {
 	if err != nil {
 		return nil, err
 	}
-	this._f_primaryVolDesc = true
-	this._f_primaryVolDesc = true
 	return this.primaryVolDesc, nil
+}
+func (this *Iso9660) SectorSize() (v int, err error) {
+	if (this._f_sectorSize) {
+		return this.sectorSize, nil
+	}
+	this._f_sectorSize = true
+	this.sectorSize = int(2048)
+	return this.sectorSize, nil
+}
+type Iso9660_Datetime struct {
+	Year uint8
+	Month uint8
+	Day uint8
+	Hour uint8
+	Minute uint8
+	Sec uint8
+	Timezone uint8
+	_io *kaitai.Stream
+	_root *Iso9660
+	_parent *Iso9660_DirEntryBody
+}
+func NewIso9660_Datetime() *Iso9660_Datetime {
+	return &Iso9660_Datetime{
+	}
+}
+
+func (this Iso9660_Datetime) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Iso9660_Datetime) Read(io *kaitai.Stream, parent *Iso9660_DirEntryBody, root *Iso9660) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp3, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Year = tmp3
+	tmp4, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Month = tmp4
+	tmp5, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Day = tmp5
+	tmp6, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Hour = tmp6
+	tmp7, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Minute = tmp7
+	tmp8, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Sec = tmp8
+	tmp9, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Timezone = tmp9
+	return err
+}
+
+/**
+ * @see <a href="https://wiki.osdev.org/ISO_9660#Date.2Ftime_format">Source</a>
+ */
+type Iso9660_DecDatetime struct {
+	Year string
+	Month string
+	Day string
+	Hour string
+	Minute string
+	Sec string
+	SecHundreds string
+	Timezone uint8
+	_io *kaitai.Stream
+	_root *Iso9660
+	_parent *Iso9660_VolDescPrimary
+}
+func NewIso9660_DecDatetime() *Iso9660_DecDatetime {
+	return &Iso9660_DecDatetime{
+	}
+}
+
+func (this Iso9660_DecDatetime) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Iso9660_DecDatetime) Read(io *kaitai.Stream, parent *Iso9660_VolDescPrimary, root *Iso9660) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp10, err := this._io.ReadBytes(int(4))
+	if err != nil {
+		return err
+	}
+	tmp10 = tmp10
+	this.Year = string(tmp10)
+	tmp11, err := this._io.ReadBytes(int(2))
+	if err != nil {
+		return err
+	}
+	tmp11 = tmp11
+	this.Month = string(tmp11)
+	tmp12, err := this._io.ReadBytes(int(2))
+	if err != nil {
+		return err
+	}
+	tmp12 = tmp12
+	this.Day = string(tmp12)
+	tmp13, err := this._io.ReadBytes(int(2))
+	if err != nil {
+		return err
+	}
+	tmp13 = tmp13
+	this.Hour = string(tmp13)
+	tmp14, err := this._io.ReadBytes(int(2))
+	if err != nil {
+		return err
+	}
+	tmp14 = tmp14
+	this.Minute = string(tmp14)
+	tmp15, err := this._io.ReadBytes(int(2))
+	if err != nil {
+		return err
+	}
+	tmp15 = tmp15
+	this.Sec = string(tmp15)
+	tmp16, err := this._io.ReadBytes(int(2))
+	if err != nil {
+		return err
+	}
+	tmp16 = tmp16
+	this.SecHundreds = string(tmp16)
+	tmp17, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Timezone = tmp17
+	return err
+}
+type Iso9660_DirEntries struct {
+	Entries []*Iso9660_DirEntry
+	_io *kaitai.Stream
+	_root *Iso9660
+	_parent *Iso9660_DirEntryBody
+}
+func NewIso9660_DirEntries() *Iso9660_DirEntries {
+	return &Iso9660_DirEntries{
+	}
+}
+
+func (this Iso9660_DirEntries) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Iso9660_DirEntries) Read(io *kaitai.Stream, parent *Iso9660_DirEntryBody, root *Iso9660) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	for i := 1;; i++ {
+		tmp18 := NewIso9660_DirEntry()
+		err = tmp18.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		_it := tmp18
+		this.Entries = append(this.Entries, _it)
+		if _it.Len == 0 {
+			break
+		}
+	}
+	return err
+}
+type Iso9660_DirEntry struct {
+	Len uint8
+	Body *Iso9660_DirEntryBody
+	_io *kaitai.Stream
+	_root *Iso9660
+	_parent kaitai.Struct
+	_raw_Body []byte
+}
+func NewIso9660_DirEntry() *Iso9660_DirEntry {
+	return &Iso9660_DirEntry{
+	}
+}
+
+func (this Iso9660_DirEntry) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Iso9660_DirEntry) Read(io *kaitai.Stream, parent kaitai.Struct, root *Iso9660) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp19, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Len = tmp19
+	if (this.Len > 0) {
+		tmp20, err := this._io.ReadBytes(int(this.Len - 1))
+		if err != nil {
+			return err
+		}
+		tmp20 = tmp20
+		this._raw_Body = tmp20
+		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+		tmp21 := NewIso9660_DirEntryBody()
+		err = tmp21.Read(_io__raw_Body, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp21
+	}
+	return err
+}
+type Iso9660_DirEntryBody struct {
+	LenExtAttrRec uint8
+	LbaExtent *Iso9660_U4bi
+	SizeExtent *Iso9660_U4bi
+	Datetime *Iso9660_Datetime
+	FileFlags uint8
+	FileUnitSize uint8
+	InterleaveGapSize uint8
+	VolSeqNum *Iso9660_U2bi
+	LenFileName uint8
+	FileName string
+	Padding uint8
+	Rest []byte
+	_io *kaitai.Stream
+	_root *Iso9660
+	_parent *Iso9660_DirEntry
+	_raw_extentAsDir []byte
+	_f_extentAsDir bool
+	extentAsDir *Iso9660_DirEntries
+	_f_extentAsFile bool
+	extentAsFile []byte
+}
+func NewIso9660_DirEntryBody() *Iso9660_DirEntryBody {
+	return &Iso9660_DirEntryBody{
+	}
+}
+
+func (this Iso9660_DirEntryBody) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Iso9660_DirEntryBody) Read(io *kaitai.Stream, parent *Iso9660_DirEntry, root *Iso9660) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp22, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.LenExtAttrRec = tmp22
+	tmp23 := NewIso9660_U4bi()
+	err = tmp23.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.LbaExtent = tmp23
+	tmp24 := NewIso9660_U4bi()
+	err = tmp24.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.SizeExtent = tmp24
+	tmp25 := NewIso9660_Datetime()
+	err = tmp25.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Datetime = tmp25
+	tmp26, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.FileFlags = tmp26
+	tmp27, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.FileUnitSize = tmp27
+	tmp28, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.InterleaveGapSize = tmp28
+	tmp29 := NewIso9660_U2bi()
+	err = tmp29.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.VolSeqNum = tmp29
+	tmp30, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.LenFileName = tmp30
+	tmp31, err := this._io.ReadBytes(int(this.LenFileName))
+	if err != nil {
+		return err
+	}
+	tmp31 = tmp31
+	this.FileName = string(tmp31)
+	tmp32 := this.LenFileName % 2
+	if tmp32 < 0 {
+		tmp32 += 2
+	}
+	if (tmp32 == 0) {
+		tmp33, err := this._io.ReadU1()
+		if err != nil {
+			return err
+		}
+		this.Padding = tmp33
+	}
+	tmp34, err := this._io.ReadBytesFull()
+	if err != nil {
+		return err
+	}
+	tmp34 = tmp34
+	this.Rest = tmp34
+	return err
+}
+func (this *Iso9660_DirEntryBody) ExtentAsDir() (v *Iso9660_DirEntries, err error) {
+	if (this._f_extentAsDir) {
+		return this.extentAsDir, nil
+	}
+	this._f_extentAsDir = true
+	if (this.FileFlags & 2 != 0) {
+		thisIo := this._root._io
+		_pos, err := thisIo.Pos()
+		if err != nil {
+			return nil, err
+		}
+		tmp35, err := this._root.SectorSize()
+		if err != nil {
+			return nil, err
+		}
+		_, err = thisIo.Seek(int64(this.LbaExtent.Le * tmp35), io.SeekStart)
+		if err != nil {
+			return nil, err
+		}
+		tmp36, err := thisIo.ReadBytes(int(this.SizeExtent.Le))
+		if err != nil {
+			return nil, err
+		}
+		tmp36 = tmp36
+		this._raw_extentAsDir = tmp36
+		_io__raw_extentAsDir := kaitai.NewStream(bytes.NewReader(this._raw_extentAsDir))
+		tmp37 := NewIso9660_DirEntries()
+		err = tmp37.Read(_io__raw_extentAsDir, this, this._root)
+		if err != nil {
+			return nil, err
+		}
+		this.extentAsDir = tmp37
+		_, err = thisIo.Seek(_pos, io.SeekStart)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return this.extentAsDir, nil
+}
+func (this *Iso9660_DirEntryBody) ExtentAsFile() (v []byte, err error) {
+	if (this._f_extentAsFile) {
+		return this.extentAsFile, nil
+	}
+	this._f_extentAsFile = true
+	if (this.FileFlags & 2 == 0) {
+		thisIo := this._root._io
+		_pos, err := thisIo.Pos()
+		if err != nil {
+			return nil, err
+		}
+		tmp38, err := this._root.SectorSize()
+		if err != nil {
+			return nil, err
+		}
+		_, err = thisIo.Seek(int64(this.LbaExtent.Le * tmp38), io.SeekStart)
+		if err != nil {
+			return nil, err
+		}
+		tmp39, err := thisIo.ReadBytes(int(this.SizeExtent.Le))
+		if err != nil {
+			return nil, err
+		}
+		tmp39 = tmp39
+		this.extentAsFile = tmp39
+		_, err = thisIo.Seek(_pos, io.SeekStart)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return this.extentAsFile, nil
+}
+type Iso9660_PathTableEntryLe struct {
+	LenDirName uint8
+	LenExtAttrRec uint8
+	LbaExtent uint32
+	ParentDirIdx uint16
+	DirName string
+	Padding uint8
+	_io *kaitai.Stream
+	_root *Iso9660
+	_parent *Iso9660_PathTableLe
+}
+func NewIso9660_PathTableEntryLe() *Iso9660_PathTableEntryLe {
+	return &Iso9660_PathTableEntryLe{
+	}
+}
+
+func (this Iso9660_PathTableEntryLe) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Iso9660_PathTableEntryLe) Read(io *kaitai.Stream, parent *Iso9660_PathTableLe, root *Iso9660) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp40, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.LenDirName = tmp40
+	tmp41, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.LenExtAttrRec = tmp41
+	tmp42, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.LbaExtent = uint32(tmp42)
+	tmp43, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.ParentDirIdx = uint16(tmp43)
+	tmp44, err := this._io.ReadBytes(int(this.LenDirName))
+	if err != nil {
+		return err
+	}
+	tmp44 = tmp44
+	this.DirName = string(tmp44)
+	tmp45 := this.LenDirName % 2
+	if tmp45 < 0 {
+		tmp45 += 2
+	}
+	if (tmp45 == 1) {
+		tmp46, err := this._io.ReadU1()
+		if err != nil {
+			return err
+		}
+		this.Padding = tmp46
+	}
+	return err
+}
+
+/**
+ * @see <a href="https://wiki.osdev.org/ISO_9660#The_Path_Table">Source</a>
+ */
+type Iso9660_PathTableLe struct {
+	Entries []*Iso9660_PathTableEntryLe
+	_io *kaitai.Stream
+	_root *Iso9660
+	_parent *Iso9660_VolDescPrimary
+}
+func NewIso9660_PathTableLe() *Iso9660_PathTableLe {
+	return &Iso9660_PathTableLe{
+	}
+}
+
+func (this Iso9660_PathTableLe) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Iso9660_PathTableLe) Read(io *kaitai.Stream, parent *Iso9660_VolDescPrimary, root *Iso9660) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	for i := 0;; i++ {
+		tmp47, err := this._io.EOF()
+		if err != nil {
+			return err
+		}
+		if tmp47 {
+			break
+		}
+		tmp48 := NewIso9660_PathTableEntryLe()
+		err = tmp48.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Entries = append(this.Entries, tmp48)
+	}
+	return err
+}
+type Iso9660_U2bi struct {
+	Le uint16
+	Be uint16
+	_io *kaitai.Stream
+	_root *Iso9660
+	_parent kaitai.Struct
+}
+func NewIso9660_U2bi() *Iso9660_U2bi {
+	return &Iso9660_U2bi{
+	}
+}
+
+func (this Iso9660_U2bi) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Iso9660_U2bi) Read(io *kaitai.Stream, parent kaitai.Struct, root *Iso9660) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp49, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.Le = uint16(tmp49)
+	tmp50, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.Be = uint16(tmp50)
+	return err
+}
+type Iso9660_U4bi struct {
+	Le uint32
+	Be uint32
+	_io *kaitai.Stream
+	_root *Iso9660
+	_parent kaitai.Struct
+}
+func NewIso9660_U4bi() *Iso9660_U4bi {
+	return &Iso9660_U4bi{
+	}
+}
+
+func (this Iso9660_U4bi) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Iso9660_U4bi) Read(io *kaitai.Stream, parent kaitai.Struct, root *Iso9660) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp51, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Le = uint32(tmp51)
+	tmp52, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.Be = uint32(tmp52)
+	return err
+}
+type Iso9660_VolDesc struct {
+	Type uint8
+	Magic []byte
+	Version uint8
+	VolDescBootRecord *Iso9660_VolDescBootRecord
+	VolDescPrimary *Iso9660_VolDescPrimary
+	_io *kaitai.Stream
+	_root *Iso9660
+	_parent *Iso9660
+}
+func NewIso9660_VolDesc() *Iso9660_VolDesc {
+	return &Iso9660_VolDesc{
+	}
+}
+
+func (this Iso9660_VolDesc) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Iso9660_VolDesc) Read(io *kaitai.Stream, parent *Iso9660, root *Iso9660) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp53, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Type = tmp53
+	tmp54, err := this._io.ReadBytes(int(5))
+	if err != nil {
+		return err
+	}
+	tmp54 = tmp54
+	this.Magic = tmp54
+	if !(bytes.Equal(this.Magic, []uint8{67, 68, 48, 48, 49})) {
+		return kaitai.NewValidationNotEqualError([]uint8{67, 68, 48, 48, 49}, this.Magic, this._io, "/types/vol_desc/seq/1")
+	}
+	tmp55, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Version = tmp55
+	if (this.Type == 0) {
+		tmp56 := NewIso9660_VolDescBootRecord()
+		err = tmp56.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.VolDescBootRecord = tmp56
+	}
+	if (this.Type == 1) {
+		tmp57 := NewIso9660_VolDescPrimary()
+		err = tmp57.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.VolDescPrimary = tmp57
+	}
+	return err
+}
+type Iso9660_VolDescBootRecord struct {
+	BootSystemId string
+	BootId string
+	_io *kaitai.Stream
+	_root *Iso9660
+	_parent *Iso9660_VolDesc
+}
+func NewIso9660_VolDescBootRecord() *Iso9660_VolDescBootRecord {
+	return &Iso9660_VolDescBootRecord{
+	}
+}
+
+func (this Iso9660_VolDescBootRecord) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Iso9660_VolDescBootRecord) Read(io *kaitai.Stream, parent *Iso9660_VolDesc, root *Iso9660) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp58, err := this._io.ReadBytes(int(32))
+	if err != nil {
+		return err
+	}
+	tmp58 = tmp58
+	this.BootSystemId = string(tmp58)
+	tmp59, err := this._io.ReadBytes(int(32))
+	if err != nil {
+		return err
+	}
+	tmp59 = tmp59
+	this.BootId = string(tmp59)
+	return err
 }
 
 /**
@@ -124,858 +796,234 @@ func NewIso9660_VolDescPrimary() *Iso9660_VolDescPrimary {
 	}
 }
 
+func (this Iso9660_VolDescPrimary) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Iso9660_VolDescPrimary) Read(io *kaitai.Stream, parent *Iso9660_VolDesc, root *Iso9660) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp3, err := this._io.ReadBytes(int(1))
+	tmp60, err := this._io.ReadBytes(int(1))
 	if err != nil {
 		return err
 	}
-	tmp3 = tmp3
-	this.Unused1 = tmp3
+	tmp60 = tmp60
+	this.Unused1 = tmp60
 	if !(bytes.Equal(this.Unused1, []uint8{0})) {
 		return kaitai.NewValidationNotEqualError([]uint8{0}, this.Unused1, this._io, "/types/vol_desc_primary/seq/0")
 	}
-	tmp4, err := this._io.ReadBytes(int(32))
+	tmp61, err := this._io.ReadBytes(int(32))
 	if err != nil {
 		return err
 	}
-	tmp4 = tmp4
-	this.SystemId = string(tmp4)
-	tmp5, err := this._io.ReadBytes(int(32))
+	tmp61 = tmp61
+	this.SystemId = string(tmp61)
+	tmp62, err := this._io.ReadBytes(int(32))
 	if err != nil {
 		return err
 	}
-	tmp5 = tmp5
-	this.VolumeId = string(tmp5)
-	tmp6, err := this._io.ReadBytes(int(8))
+	tmp62 = tmp62
+	this.VolumeId = string(tmp62)
+	tmp63, err := this._io.ReadBytes(int(8))
 	if err != nil {
 		return err
 	}
-	tmp6 = tmp6
-	this.Unused2 = tmp6
+	tmp63 = tmp63
+	this.Unused2 = tmp63
 	if !(bytes.Equal(this.Unused2, []uint8{0, 0, 0, 0, 0, 0, 0, 0})) {
 		return kaitai.NewValidationNotEqualError([]uint8{0, 0, 0, 0, 0, 0, 0, 0}, this.Unused2, this._io, "/types/vol_desc_primary/seq/3")
 	}
-	tmp7 := NewIso9660_U4bi()
-	err = tmp7.Read(this._io, this, this._root)
+	tmp64 := NewIso9660_U4bi()
+	err = tmp64.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.VolSpaceSize = tmp7
-	tmp8, err := this._io.ReadBytes(int(32))
+	this.VolSpaceSize = tmp64
+	tmp65, err := this._io.ReadBytes(int(32))
 	if err != nil {
 		return err
 	}
-	tmp8 = tmp8
-	this.Unused3 = tmp8
+	tmp65 = tmp65
+	this.Unused3 = tmp65
 	if !(bytes.Equal(this.Unused3, []uint8{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0})) {
 		return kaitai.NewValidationNotEqualError([]uint8{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, this.Unused3, this._io, "/types/vol_desc_primary/seq/5")
 	}
-	tmp9 := NewIso9660_U2bi()
-	err = tmp9.Read(this._io, this, this._root)
+	tmp66 := NewIso9660_U2bi()
+	err = tmp66.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.VolSetSize = tmp9
-	tmp10 := NewIso9660_U2bi()
-	err = tmp10.Read(this._io, this, this._root)
+	this.VolSetSize = tmp66
+	tmp67 := NewIso9660_U2bi()
+	err = tmp67.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.VolSeqNum = tmp10
-	tmp11 := NewIso9660_U2bi()
-	err = tmp11.Read(this._io, this, this._root)
+	this.VolSeqNum = tmp67
+	tmp68 := NewIso9660_U2bi()
+	err = tmp68.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.LogicalBlockSize = tmp11
-	tmp12 := NewIso9660_U4bi()
-	err = tmp12.Read(this._io, this, this._root)
+	this.LogicalBlockSize = tmp68
+	tmp69 := NewIso9660_U4bi()
+	err = tmp69.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.PathTableSize = tmp12
-	tmp13, err := this._io.ReadU4le()
+	this.PathTableSize = tmp69
+	tmp70, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.LbaPathTableLe = uint32(tmp13)
-	tmp14, err := this._io.ReadU4le()
+	this.LbaPathTableLe = uint32(tmp70)
+	tmp71, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.LbaOptPathTableLe = uint32(tmp14)
-	tmp15, err := this._io.ReadU4be()
+	this.LbaOptPathTableLe = uint32(tmp71)
+	tmp72, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.LbaPathTableBe = uint32(tmp15)
-	tmp16, err := this._io.ReadU4be()
+	this.LbaPathTableBe = uint32(tmp72)
+	tmp73, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.LbaOptPathTableBe = uint32(tmp16)
-	tmp17, err := this._io.ReadBytes(int(34))
+	this.LbaOptPathTableBe = uint32(tmp73)
+	tmp74, err := this._io.ReadBytes(int(34))
 	if err != nil {
 		return err
 	}
-	tmp17 = tmp17
-	this._raw_RootDir = tmp17
+	tmp74 = tmp74
+	this._raw_RootDir = tmp74
 	_io__raw_RootDir := kaitai.NewStream(bytes.NewReader(this._raw_RootDir))
-	tmp18 := NewIso9660_DirEntry()
-	err = tmp18.Read(_io__raw_RootDir, this, this._root)
+	tmp75 := NewIso9660_DirEntry()
+	err = tmp75.Read(_io__raw_RootDir, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.RootDir = tmp18
-	tmp19, err := this._io.ReadBytes(int(128))
+	this.RootDir = tmp75
+	tmp76, err := this._io.ReadBytes(int(128))
 	if err != nil {
 		return err
 	}
-	tmp19 = tmp19
-	this.VolSetId = string(tmp19)
-	tmp20, err := this._io.ReadBytes(int(128))
+	tmp76 = tmp76
+	this.VolSetId = string(tmp76)
+	tmp77, err := this._io.ReadBytes(int(128))
 	if err != nil {
 		return err
 	}
-	tmp20 = tmp20
-	this.PublisherId = string(tmp20)
-	tmp21, err := this._io.ReadBytes(int(128))
+	tmp77 = tmp77
+	this.PublisherId = string(tmp77)
+	tmp78, err := this._io.ReadBytes(int(128))
 	if err != nil {
 		return err
 	}
-	tmp21 = tmp21
-	this.DataPreparerId = string(tmp21)
-	tmp22, err := this._io.ReadBytes(int(128))
+	tmp78 = tmp78
+	this.DataPreparerId = string(tmp78)
+	tmp79, err := this._io.ReadBytes(int(128))
 	if err != nil {
 		return err
 	}
-	tmp22 = tmp22
-	this.ApplicationId = string(tmp22)
-	tmp23, err := this._io.ReadBytes(int(38))
+	tmp79 = tmp79
+	this.ApplicationId = string(tmp79)
+	tmp80, err := this._io.ReadBytes(int(38))
 	if err != nil {
 		return err
 	}
-	tmp23 = tmp23
-	this.CopyrightFileId = string(tmp23)
-	tmp24, err := this._io.ReadBytes(int(36))
+	tmp80 = tmp80
+	this.CopyrightFileId = string(tmp80)
+	tmp81, err := this._io.ReadBytes(int(36))
 	if err != nil {
 		return err
 	}
-	tmp24 = tmp24
-	this.AbstractFileId = string(tmp24)
-	tmp25, err := this._io.ReadBytes(int(37))
+	tmp81 = tmp81
+	this.AbstractFileId = string(tmp81)
+	tmp82, err := this._io.ReadBytes(int(37))
 	if err != nil {
 		return err
 	}
-	tmp25 = tmp25
-	this.BibliographicFileId = string(tmp25)
-	tmp26 := NewIso9660_DecDatetime()
-	err = tmp26.Read(this._io, this, this._root)
+	tmp82 = tmp82
+	this.BibliographicFileId = string(tmp82)
+	tmp83 := NewIso9660_DecDatetime()
+	err = tmp83.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.VolCreateDatetime = tmp26
-	tmp27 := NewIso9660_DecDatetime()
-	err = tmp27.Read(this._io, this, this._root)
+	this.VolCreateDatetime = tmp83
+	tmp84 := NewIso9660_DecDatetime()
+	err = tmp84.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.VolModDatetime = tmp27
-	tmp28 := NewIso9660_DecDatetime()
-	err = tmp28.Read(this._io, this, this._root)
+	this.VolModDatetime = tmp84
+	tmp85 := NewIso9660_DecDatetime()
+	err = tmp85.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.VolExpireDatetime = tmp28
-	tmp29 := NewIso9660_DecDatetime()
-	err = tmp29.Read(this._io, this, this._root)
+	this.VolExpireDatetime = tmp85
+	tmp86 := NewIso9660_DecDatetime()
+	err = tmp86.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.VolEffectiveDatetime = tmp29
-	tmp30, err := this._io.ReadU1()
+	this.VolEffectiveDatetime = tmp86
+	tmp87, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.FileStructureVersion = tmp30
-	tmp31, err := this._io.ReadU1()
+	this.FileStructureVersion = tmp87
+	tmp88, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Unused4 = tmp31
-	tmp32, err := this._io.ReadBytes(int(512))
+	this.Unused4 = tmp88
+	tmp89, err := this._io.ReadBytes(int(512))
 	if err != nil {
 		return err
 	}
-	tmp32 = tmp32
-	this.ApplicationArea = tmp32
+	tmp89 = tmp89
+	this.ApplicationArea = tmp89
 	return err
 }
 func (this *Iso9660_VolDescPrimary) PathTable() (v *Iso9660_PathTableLe, err error) {
 	if (this._f_pathTable) {
 		return this.pathTable, nil
 	}
+	this._f_pathTable = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
 	}
-	tmp33, err := this._root.SectorSize()
+	tmp90, err := this._root.SectorSize()
 	if err != nil {
 		return nil, err
 	}
-	_, err = this._io.Seek(int64((this.LbaPathTableLe * tmp33)), io.SeekStart)
+	_, err = this._io.Seek(int64(this.LbaPathTableLe * tmp90), io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
-	tmp34, err := this._io.ReadBytes(int(this.PathTableSize.Le))
+	tmp91, err := this._io.ReadBytes(int(this.PathTableSize.Le))
 	if err != nil {
 		return nil, err
 	}
-	tmp34 = tmp34
-	this._raw_pathTable = tmp34
+	tmp91 = tmp91
+	this._raw_pathTable = tmp91
 	_io__raw_pathTable := kaitai.NewStream(bytes.NewReader(this._raw_pathTable))
-	tmp35 := NewIso9660_PathTableLe()
-	err = tmp35.Read(_io__raw_pathTable, this, this._root)
+	tmp92 := NewIso9660_PathTableLe()
+	err = tmp92.Read(_io__raw_pathTable, this, this._root)
 	if err != nil {
 		return nil, err
 	}
-	this.pathTable = tmp35
+	this.pathTable = tmp92
 	_, err = this._io.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
-	this._f_pathTable = true
-	this._f_pathTable = true
 	return this.pathTable, nil
-}
-type Iso9660_VolDescBootRecord struct {
-	BootSystemId string
-	BootId string
-	_io *kaitai.Stream
-	_root *Iso9660
-	_parent *Iso9660_VolDesc
-}
-func NewIso9660_VolDescBootRecord() *Iso9660_VolDescBootRecord {
-	return &Iso9660_VolDescBootRecord{
-	}
-}
-
-func (this *Iso9660_VolDescBootRecord) Read(io *kaitai.Stream, parent *Iso9660_VolDesc, root *Iso9660) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp36, err := this._io.ReadBytes(int(32))
-	if err != nil {
-		return err
-	}
-	tmp36 = tmp36
-	this.BootSystemId = string(tmp36)
-	tmp37, err := this._io.ReadBytes(int(32))
-	if err != nil {
-		return err
-	}
-	tmp37 = tmp37
-	this.BootId = string(tmp37)
-	return err
-}
-type Iso9660_Datetime struct {
-	Year uint8
-	Month uint8
-	Day uint8
-	Hour uint8
-	Minute uint8
-	Sec uint8
-	Timezone uint8
-	_io *kaitai.Stream
-	_root *Iso9660
-	_parent *Iso9660_DirEntryBody
-}
-func NewIso9660_Datetime() *Iso9660_Datetime {
-	return &Iso9660_Datetime{
-	}
-}
-
-func (this *Iso9660_Datetime) Read(io *kaitai.Stream, parent *Iso9660_DirEntryBody, root *Iso9660) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp38, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Year = tmp38
-	tmp39, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Month = tmp39
-	tmp40, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Day = tmp40
-	tmp41, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Hour = tmp41
-	tmp42, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Minute = tmp42
-	tmp43, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Sec = tmp43
-	tmp44, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Timezone = tmp44
-	return err
-}
-type Iso9660_DirEntry struct {
-	Len uint8
-	Body *Iso9660_DirEntryBody
-	_io *kaitai.Stream
-	_root *Iso9660
-	_parent interface{}
-	_raw_Body []byte
-}
-func NewIso9660_DirEntry() *Iso9660_DirEntry {
-	return &Iso9660_DirEntry{
-	}
-}
-
-func (this *Iso9660_DirEntry) Read(io *kaitai.Stream, parent interface{}, root *Iso9660) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp45, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Len = tmp45
-	if (this.Len > 0) {
-		tmp46, err := this._io.ReadBytes(int((this.Len - 1)))
-		if err != nil {
-			return err
-		}
-		tmp46 = tmp46
-		this._raw_Body = tmp46
-		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp47 := NewIso9660_DirEntryBody()
-		err = tmp47.Read(_io__raw_Body, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp47
-	}
-	return err
-}
-type Iso9660_VolDesc struct {
-	Type uint8
-	Magic []byte
-	Version uint8
-	VolDescBootRecord *Iso9660_VolDescBootRecord
-	VolDescPrimary *Iso9660_VolDescPrimary
-	_io *kaitai.Stream
-	_root *Iso9660
-	_parent *Iso9660
-}
-func NewIso9660_VolDesc() *Iso9660_VolDesc {
-	return &Iso9660_VolDesc{
-	}
-}
-
-func (this *Iso9660_VolDesc) Read(io *kaitai.Stream, parent *Iso9660, root *Iso9660) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp48, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Type = tmp48
-	tmp49, err := this._io.ReadBytes(int(5))
-	if err != nil {
-		return err
-	}
-	tmp49 = tmp49
-	this.Magic = tmp49
-	if !(bytes.Equal(this.Magic, []uint8{67, 68, 48, 48, 49})) {
-		return kaitai.NewValidationNotEqualError([]uint8{67, 68, 48, 48, 49}, this.Magic, this._io, "/types/vol_desc/seq/1")
-	}
-	tmp50, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Version = tmp50
-	if (this.Type == 0) {
-		tmp51 := NewIso9660_VolDescBootRecord()
-		err = tmp51.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.VolDescBootRecord = tmp51
-	}
-	if (this.Type == 1) {
-		tmp52 := NewIso9660_VolDescPrimary()
-		err = tmp52.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.VolDescPrimary = tmp52
-	}
-	return err
-}
-type Iso9660_PathTableEntryLe struct {
-	LenDirName uint8
-	LenExtAttrRec uint8
-	LbaExtent uint32
-	ParentDirIdx uint16
-	DirName string
-	Padding uint8
-	_io *kaitai.Stream
-	_root *Iso9660
-	_parent *Iso9660_PathTableLe
-}
-func NewIso9660_PathTableEntryLe() *Iso9660_PathTableEntryLe {
-	return &Iso9660_PathTableEntryLe{
-	}
-}
-
-func (this *Iso9660_PathTableEntryLe) Read(io *kaitai.Stream, parent *Iso9660_PathTableLe, root *Iso9660) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp53, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.LenDirName = tmp53
-	tmp54, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.LenExtAttrRec = tmp54
-	tmp55, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.LbaExtent = uint32(tmp55)
-	tmp56, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.ParentDirIdx = uint16(tmp56)
-	tmp57, err := this._io.ReadBytes(int(this.LenDirName))
-	if err != nil {
-		return err
-	}
-	tmp57 = tmp57
-	this.DirName = string(tmp57)
-	tmp58 := this.LenDirName % 2
-	if tmp58 < 0 {
-		tmp58 += 2
-	}
-	if (tmp58 == 1) {
-		tmp59, err := this._io.ReadU1()
-		if err != nil {
-			return err
-		}
-		this.Padding = tmp59
-	}
-	return err
-}
-type Iso9660_DirEntries struct {
-	Entries []*Iso9660_DirEntry
-	_io *kaitai.Stream
-	_root *Iso9660
-	_parent *Iso9660_DirEntryBody
-}
-func NewIso9660_DirEntries() *Iso9660_DirEntries {
-	return &Iso9660_DirEntries{
-	}
-}
-
-func (this *Iso9660_DirEntries) Read(io *kaitai.Stream, parent *Iso9660_DirEntryBody, root *Iso9660) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	for i := 1;; i++ {
-		tmp60 := NewIso9660_DirEntry()
-		err = tmp60.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		_it := tmp60
-		this.Entries = append(this.Entries, _it)
-		if _it.Len == 0 {
-			break
-		}
-	}
-	return err
-}
-type Iso9660_U4bi struct {
-	Le uint32
-	Be uint32
-	_io *kaitai.Stream
-	_root *Iso9660
-	_parent interface{}
-}
-func NewIso9660_U4bi() *Iso9660_U4bi {
-	return &Iso9660_U4bi{
-	}
-}
-
-func (this *Iso9660_U4bi) Read(io *kaitai.Stream, parent interface{}, root *Iso9660) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp61, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Le = uint32(tmp61)
-	tmp62, err := this._io.ReadU4be()
-	if err != nil {
-		return err
-	}
-	this.Be = uint32(tmp62)
-	return err
-}
-type Iso9660_U2bi struct {
-	Le uint16
-	Be uint16
-	_io *kaitai.Stream
-	_root *Iso9660
-	_parent interface{}
-}
-func NewIso9660_U2bi() *Iso9660_U2bi {
-	return &Iso9660_U2bi{
-	}
-}
-
-func (this *Iso9660_U2bi) Read(io *kaitai.Stream, parent interface{}, root *Iso9660) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp63, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.Le = uint16(tmp63)
-	tmp64, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.Be = uint16(tmp64)
-	return err
-}
-
-/**
- * @see <a href="https://wiki.osdev.org/ISO_9660#The_Path_Table">Source</a>
- */
-type Iso9660_PathTableLe struct {
-	Entries []*Iso9660_PathTableEntryLe
-	_io *kaitai.Stream
-	_root *Iso9660
-	_parent *Iso9660_VolDescPrimary
-}
-func NewIso9660_PathTableLe() *Iso9660_PathTableLe {
-	return &Iso9660_PathTableLe{
-	}
-}
-
-func (this *Iso9660_PathTableLe) Read(io *kaitai.Stream, parent *Iso9660_VolDescPrimary, root *Iso9660) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	for i := 1;; i++ {
-		tmp65, err := this._io.EOF()
-		if err != nil {
-			return err
-		}
-		if tmp65 {
-			break
-		}
-		tmp66 := NewIso9660_PathTableEntryLe()
-		err = tmp66.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Entries = append(this.Entries, tmp66)
-	}
-	return err
-}
-
-/**
- * @see <a href="https://wiki.osdev.org/ISO_9660#Date.2Ftime_format">Source</a>
- */
-type Iso9660_DecDatetime struct {
-	Year string
-	Month string
-	Day string
-	Hour string
-	Minute string
-	Sec string
-	SecHundreds string
-	Timezone uint8
-	_io *kaitai.Stream
-	_root *Iso9660
-	_parent *Iso9660_VolDescPrimary
-}
-func NewIso9660_DecDatetime() *Iso9660_DecDatetime {
-	return &Iso9660_DecDatetime{
-	}
-}
-
-func (this *Iso9660_DecDatetime) Read(io *kaitai.Stream, parent *Iso9660_VolDescPrimary, root *Iso9660) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp67, err := this._io.ReadBytes(int(4))
-	if err != nil {
-		return err
-	}
-	tmp67 = tmp67
-	this.Year = string(tmp67)
-	tmp68, err := this._io.ReadBytes(int(2))
-	if err != nil {
-		return err
-	}
-	tmp68 = tmp68
-	this.Month = string(tmp68)
-	tmp69, err := this._io.ReadBytes(int(2))
-	if err != nil {
-		return err
-	}
-	tmp69 = tmp69
-	this.Day = string(tmp69)
-	tmp70, err := this._io.ReadBytes(int(2))
-	if err != nil {
-		return err
-	}
-	tmp70 = tmp70
-	this.Hour = string(tmp70)
-	tmp71, err := this._io.ReadBytes(int(2))
-	if err != nil {
-		return err
-	}
-	tmp71 = tmp71
-	this.Minute = string(tmp71)
-	tmp72, err := this._io.ReadBytes(int(2))
-	if err != nil {
-		return err
-	}
-	tmp72 = tmp72
-	this.Sec = string(tmp72)
-	tmp73, err := this._io.ReadBytes(int(2))
-	if err != nil {
-		return err
-	}
-	tmp73 = tmp73
-	this.SecHundreds = string(tmp73)
-	tmp74, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Timezone = tmp74
-	return err
-}
-type Iso9660_DirEntryBody struct {
-	LenExtAttrRec uint8
-	LbaExtent *Iso9660_U4bi
-	SizeExtent *Iso9660_U4bi
-	Datetime *Iso9660_Datetime
-	FileFlags uint8
-	FileUnitSize uint8
-	InterleaveGapSize uint8
-	VolSeqNum *Iso9660_U2bi
-	LenFileName uint8
-	FileName string
-	Padding uint8
-	Rest []byte
-	_io *kaitai.Stream
-	_root *Iso9660
-	_parent *Iso9660_DirEntry
-	_raw_extentAsDir []byte
-	_f_extentAsDir bool
-	extentAsDir *Iso9660_DirEntries
-	_f_extentAsFile bool
-	extentAsFile []byte
-}
-func NewIso9660_DirEntryBody() *Iso9660_DirEntryBody {
-	return &Iso9660_DirEntryBody{
-	}
-}
-
-func (this *Iso9660_DirEntryBody) Read(io *kaitai.Stream, parent *Iso9660_DirEntry, root *Iso9660) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp75, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.LenExtAttrRec = tmp75
-	tmp76 := NewIso9660_U4bi()
-	err = tmp76.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.LbaExtent = tmp76
-	tmp77 := NewIso9660_U4bi()
-	err = tmp77.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.SizeExtent = tmp77
-	tmp78 := NewIso9660_Datetime()
-	err = tmp78.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Datetime = tmp78
-	tmp79, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.FileFlags = tmp79
-	tmp80, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.FileUnitSize = tmp80
-	tmp81, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.InterleaveGapSize = tmp81
-	tmp82 := NewIso9660_U2bi()
-	err = tmp82.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.VolSeqNum = tmp82
-	tmp83, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.LenFileName = tmp83
-	tmp84, err := this._io.ReadBytes(int(this.LenFileName))
-	if err != nil {
-		return err
-	}
-	tmp84 = tmp84
-	this.FileName = string(tmp84)
-	tmp85 := this.LenFileName % 2
-	if tmp85 < 0 {
-		tmp85 += 2
-	}
-	if (tmp85 == 0) {
-		tmp86, err := this._io.ReadU1()
-		if err != nil {
-			return err
-		}
-		this.Padding = tmp86
-	}
-	tmp87, err := this._io.ReadBytesFull()
-	if err != nil {
-		return err
-	}
-	tmp87 = tmp87
-	this.Rest = tmp87
-	return err
-}
-func (this *Iso9660_DirEntryBody) ExtentAsDir() (v *Iso9660_DirEntries, err error) {
-	if (this._f_extentAsDir) {
-		return this.extentAsDir, nil
-	}
-	if ((this.FileFlags & 2) != 0) {
-		thisIo := this._root._io
-		_pos, err := thisIo.Pos()
-		if err != nil {
-			return nil, err
-		}
-		tmp88, err := this._root.SectorSize()
-		if err != nil {
-			return nil, err
-		}
-		_, err = thisIo.Seek(int64((this.LbaExtent.Le * tmp88)), io.SeekStart)
-		if err != nil {
-			return nil, err
-		}
-		tmp89, err := thisIo.ReadBytes(int(this.SizeExtent.Le))
-		if err != nil {
-			return nil, err
-		}
-		tmp89 = tmp89
-		this._raw_extentAsDir = tmp89
-		_io__raw_extentAsDir := kaitai.NewStream(bytes.NewReader(this._raw_extentAsDir))
-		tmp90 := NewIso9660_DirEntries()
-		err = tmp90.Read(_io__raw_extentAsDir, this, this._root)
-		if err != nil {
-			return nil, err
-		}
-		this.extentAsDir = tmp90
-		_, err = thisIo.Seek(_pos, io.SeekStart)
-		if err != nil {
-			return nil, err
-		}
-		this._f_extentAsDir = true
-	}
-	this._f_extentAsDir = true
-	return this.extentAsDir, nil
-}
-func (this *Iso9660_DirEntryBody) ExtentAsFile() (v []byte, err error) {
-	if (this._f_extentAsFile) {
-		return this.extentAsFile, nil
-	}
-	if ((this.FileFlags & 2) == 0) {
-		thisIo := this._root._io
-		_pos, err := thisIo.Pos()
-		if err != nil {
-			return nil, err
-		}
-		tmp91, err := this._root.SectorSize()
-		if err != nil {
-			return nil, err
-		}
-		_, err = thisIo.Seek(int64((this.LbaExtent.Le * tmp91)), io.SeekStart)
-		if err != nil {
-			return nil, err
-		}
-		tmp92, err := thisIo.ReadBytes(int(this.SizeExtent.Le))
-		if err != nil {
-			return nil, err
-		}
-		tmp92 = tmp92
-		this.extentAsFile = tmp92
-		_, err = thisIo.Seek(_pos, io.SeekStart)
-		if err != nil {
-			return nil, err
-		}
-		this._f_extentAsFile = true
-	}
-	this._f_extentAsFile = true
-	return this.extentAsFile, nil
 }

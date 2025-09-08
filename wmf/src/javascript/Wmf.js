@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.Wmf = factory(root.KaitaiStream);
+    factory(root.Wmf || (root.Wmf = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Wmf_, KaitaiStream) {
 /**
  * WMF (Windows Metafile) is a relatively early vector image format
  * introduced for Microsoft Windows in 1990.
@@ -21,6 +21,42 @@
  */
 
 var Wmf = (function() {
+  Wmf.BinRasterOp = Object.freeze({
+    BLACK: 1,
+    NOTMERGEPEN: 2,
+    MASKNOTPEN: 3,
+    NOTCOPYPEN: 4,
+    MASKPENNOT: 5,
+    NOT: 6,
+    XORPEN: 7,
+    NOTMASKPEN: 8,
+    MASKPEN: 9,
+    NOTXORPEN: 10,
+    NOP: 11,
+    MERGENOTPEN: 12,
+    COPYPEN: 13,
+    MERGEPENNOT: 14,
+    MERGEPEN: 15,
+    WHITE: 16,
+
+    1: "BLACK",
+    2: "NOTMERGEPEN",
+    3: "MASKNOTPEN",
+    4: "NOTCOPYPEN",
+    5: "MASKPENNOT",
+    6: "NOT",
+    7: "XORPEN",
+    8: "NOTMASKPEN",
+    9: "MASKPEN",
+    10: "NOTXORPEN",
+    11: "NOP",
+    12: "MERGENOTPEN",
+    13: "COPYPEN",
+    14: "MERGEPENNOT",
+    15: "MERGEPEN",
+    16: "WHITE",
+  });
+
   Wmf.Func = Object.freeze({
     EOF: 0,
     SAVEDC: 30,
@@ -165,42 +201,6 @@ var Wmf = (function() {
     3907: "STRETCHDIB",
   });
 
-  Wmf.BinRasterOp = Object.freeze({
-    BLACK: 1,
-    NOTMERGEPEN: 2,
-    MASKNOTPEN: 3,
-    NOTCOPYPEN: 4,
-    MASKPENNOT: 5,
-    NOT: 6,
-    XORPEN: 7,
-    NOTMASKPEN: 8,
-    MASKPEN: 9,
-    NOTXORPEN: 10,
-    NOP: 11,
-    MERGENOTPEN: 12,
-    COPYPEN: 13,
-    MERGEPENNOT: 14,
-    MERGEPEN: 15,
-    WHITE: 16,
-
-    1: "BLACK",
-    2: "NOTMERGEPEN",
-    3: "MASKNOTPEN",
-    4: "NOTCOPYPEN",
-    5: "MASKPENNOT",
-    6: "NOT",
-    7: "XORPEN",
-    8: "NOTMASKPEN",
-    9: "MASKPEN",
-    10: "NOTXORPEN",
-    11: "NOP",
-    12: "MERGENOTPEN",
-    13: "COPYPEN",
-    14: "MERGEPENNOT",
-    15: "MERGEPEN",
-    16: "WHITE",
-  });
-
   Wmf.MixMode = Object.freeze({
     TRANSPARENT: 1,
     OPAQUE: 2,
@@ -237,31 +237,100 @@ var Wmf = (function() {
   }
 
   /**
-   * @see section 2.3.5.31
+   * @see section 2.2.1.7
    */
 
-  var ParamsSetwindoworg = Wmf.ParamsSetwindoworg = (function() {
-    function ParamsSetwindoworg(_io, _parent, _root) {
+  var ColorRef = Wmf.ColorRef = (function() {
+    function ColorRef(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    ParamsSetwindoworg.prototype._read = function() {
-      this.y = this._io.readS2le();
-      this.x = this._io.readS2le();
+    ColorRef.prototype._read = function() {
+      this.red = this._io.readU1();
+      this.green = this._io.readU1();
+      this.blue = this._io.readU1();
+      this.reserved = this._io.readU1();
     }
 
-    /**
-     * Y coordinate of the window origin, in logical units.
-     */
+    return ColorRef;
+  })();
 
-    /**
-     * X coordinate of the window origin, in logical units.
-     */
+  var Header = Wmf.Header = (function() {
+    Header.MetafileType = Object.freeze({
+      MEMORY_METAFILE: 1,
+      DISK_METAFILE: 2,
 
-    return ParamsSetwindoworg;
+      1: "MEMORY_METAFILE",
+      2: "DISK_METAFILE",
+    });
+
+    function Header(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Header.prototype._read = function() {
+      this.metafileType = this._io.readU2le();
+      this.headerSize = this._io.readU2le();
+      this.version = this._io.readU2le();
+      this.size = this._io.readU4le();
+      this.numberOfObjects = this._io.readU2le();
+      this.maxRecord = this._io.readU4le();
+      this.numberOfMembers = this._io.readU2le();
+    }
+
+    return Header;
+  })();
+
+  /**
+   * @see section 2.3.3.15 = params_polyline
+   */
+
+  var ParamsPolygon = Wmf.ParamsPolygon = (function() {
+    function ParamsPolygon(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    ParamsPolygon.prototype._read = function() {
+      this.numPoints = this._io.readS2le();
+      this.points = [];
+      for (var i = 0; i < this.numPoints; i++) {
+        this.points.push(new PointS(this._io, this, this._root));
+      }
+    }
+
+    return ParamsPolygon;
+  })();
+
+  /**
+   * @see section 2.3.3.14
+   */
+
+  var ParamsPolyline = Wmf.ParamsPolyline = (function() {
+    function ParamsPolyline(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    ParamsPolyline.prototype._read = function() {
+      this.numPoints = this._io.readS2le();
+      this.points = [];
+      for (var i = 0; i < this.numPoints; i++) {
+        this.points.push(new PointS(this._io, this, this._root));
+      }
+    }
+
+    return ParamsPolyline;
   })();
 
   /**
@@ -272,7 +341,7 @@ var Wmf = (function() {
     function ParamsSetbkmode(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -288,31 +357,49 @@ var Wmf = (function() {
   })();
 
   /**
-   * @see section 2.2.1.12
+   * @see section 2.3.5.20
    */
 
-  var PointS = Wmf.PointS = (function() {
-    function PointS(_io, _parent, _root) {
+  var ParamsSetpolyfillmode = Wmf.ParamsSetpolyfillmode = (function() {
+    function ParamsSetpolyfillmode(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    PointS.prototype._read = function() {
-      this.x = this._io.readS2le();
-      this.y = this._io.readS2le();
+    ParamsSetpolyfillmode.prototype._read = function() {
+      this.polyFillMode = this._io.readU2le();
     }
 
     /**
-     * X coordinate of the point, in logical units.
+     * Defines current polygon fill mode.
      */
+
+    return ParamsSetpolyfillmode;
+  })();
+
+  /**
+   * @see section 2.3.5.22
+   */
+
+  var ParamsSetrop2 = Wmf.ParamsSetrop2 = (function() {
+    function ParamsSetrop2(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    ParamsSetrop2.prototype._read = function() {
+      this.drawMode = this._io.readU2le();
+    }
 
     /**
-     * Y coordinate of the point, in logical units.
+     * Defines current foreground binary raster operation mixing mode.
      */
 
-    return PointS;
+    return ParamsSetrop2;
   })();
 
   /**
@@ -323,7 +410,7 @@ var Wmf = (function() {
     function ParamsSetwindowext(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -344,185 +431,66 @@ var Wmf = (function() {
   })();
 
   /**
-   * @see section 2.3.3.15 = params_polyline
+   * @see section 2.3.5.31
    */
 
-  var ParamsPolygon = Wmf.ParamsPolygon = (function() {
-    function ParamsPolygon(_io, _parent, _root) {
+  var ParamsSetwindoworg = Wmf.ParamsSetwindoworg = (function() {
+    function ParamsSetwindoworg(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    ParamsPolygon.prototype._read = function() {
-      this.numPoints = this._io.readS2le();
-      this.points = [];
-      for (var i = 0; i < this.numPoints; i++) {
-        this.points.push(new PointS(this._io, this, this._root));
-      }
-    }
-
-    return ParamsPolygon;
-  })();
-
-  var Header = Wmf.Header = (function() {
-    Header.MetafileType = Object.freeze({
-      MEMORY_METAFILE: 1,
-      DISK_METAFILE: 2,
-
-      1: "MEMORY_METAFILE",
-      2: "DISK_METAFILE",
-    });
-
-    function Header(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Header.prototype._read = function() {
-      this.metafileType = this._io.readU2le();
-      this.headerSize = this._io.readU2le();
-      this.version = this._io.readU2le();
-      this.size = this._io.readU4le();
-      this.numberOfObjects = this._io.readU2le();
-      this.maxRecord = this._io.readU4le();
-      this.numberOfMembers = this._io.readU2le();
-    }
-
-    return Header;
-  })();
-
-  /**
-   * @see section 2.2.1.7
-   */
-
-  var ColorRef = Wmf.ColorRef = (function() {
-    function ColorRef(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    ColorRef.prototype._read = function() {
-      this.red = this._io.readU1();
-      this.green = this._io.readU1();
-      this.blue = this._io.readU1();
-      this.reserved = this._io.readU1();
-    }
-
-    return ColorRef;
-  })();
-
-  /**
-   * @see section 2.3.5.22
-   */
-
-  var ParamsSetrop2 = Wmf.ParamsSetrop2 = (function() {
-    function ParamsSetrop2(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    ParamsSetrop2.prototype._read = function() {
-      this.drawMode = this._io.readU2le();
+    ParamsSetwindoworg.prototype._read = function() {
+      this.y = this._io.readS2le();
+      this.x = this._io.readS2le();
     }
 
     /**
-     * Defines current foreground binary raster operation mixing mode.
+     * Y coordinate of the window origin, in logical units.
      */
 
-    return ParamsSetrop2;
+    /**
+     * X coordinate of the window origin, in logical units.
+     */
+
+    return ParamsSetwindoworg;
   })();
 
   /**
-   * @see section 2.3.5.20
+   * @see section 2.2.1.12
    */
 
-  var ParamsSetpolyfillmode = Wmf.ParamsSetpolyfillmode = (function() {
-    function ParamsSetpolyfillmode(_io, _parent, _root) {
+  var PointS = Wmf.PointS = (function() {
+    function PointS(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    ParamsSetpolyfillmode.prototype._read = function() {
-      this.polyFillMode = this._io.readU2le();
+    PointS.prototype._read = function() {
+      this.x = this._io.readS2le();
+      this.y = this._io.readS2le();
     }
 
     /**
-     * Defines current polygon fill mode.
+     * X coordinate of the point, in logical units.
      */
 
-    return ParamsSetpolyfillmode;
-  })();
+    /**
+     * Y coordinate of the point, in logical units.
+     */
 
-  /**
-   * @see section 2.3.3.14
-   */
-
-  var ParamsPolyline = Wmf.ParamsPolyline = (function() {
-    function ParamsPolyline(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    ParamsPolyline.prototype._read = function() {
-      this.numPoints = this._io.readS2le();
-      this.points = [];
-      for (var i = 0; i < this.numPoints; i++) {
-        this.points.push(new PointS(this._io, this, this._root));
-      }
-    }
-
-    return ParamsPolyline;
-  })();
-
-  var SpecialHeader = Wmf.SpecialHeader = (function() {
-    function SpecialHeader(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    SpecialHeader.prototype._read = function() {
-      this.magic = this._io.readBytes(4);
-      if (!((KaitaiStream.byteArrayCompare(this.magic, [215, 205, 198, 154]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([215, 205, 198, 154], this.magic, this._io, "/types/special_header/seq/0");
-      }
-      this.handle = this._io.readBytes(2);
-      if (!((KaitaiStream.byteArrayCompare(this.handle, [0, 0]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([0, 0], this.handle, this._io, "/types/special_header/seq/1");
-      }
-      this.left = this._io.readS2le();
-      this.top = this._io.readS2le();
-      this.right = this._io.readS2le();
-      this.bottom = this._io.readS2le();
-      this.inch = this._io.readU2le();
-      this.reserved = this._io.readBytes(4);
-      if (!((KaitaiStream.byteArrayCompare(this.reserved, [0, 0, 0, 0]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([0, 0, 0, 0], this.reserved, this._io, "/types/special_header/seq/7");
-      }
-      this.checksum = this._io.readU2le();
-    }
-
-    return SpecialHeader;
+    return PointS;
   })();
 
   var Record = Wmf.Record = (function() {
     function Record(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -530,48 +498,48 @@ var Wmf = (function() {
       this.size = this._io.readU4le();
       this.function = this._io.readU2le();
       switch (this.function) {
-      case Wmf.Func.SETBKMODE:
-        this._raw_params = this._io.readBytes(((this.size - 3) * 2));
-        var _io__raw_params = new KaitaiStream(this._raw_params);
-        this.params = new ParamsSetbkmode(_io__raw_params, this, this._root);
-        break;
       case Wmf.Func.POLYGON:
-        this._raw_params = this._io.readBytes(((this.size - 3) * 2));
+        this._raw_params = this._io.readBytes((this.size - 3) * 2);
         var _io__raw_params = new KaitaiStream(this._raw_params);
         this.params = new ParamsPolygon(_io__raw_params, this, this._root);
         break;
+      case Wmf.Func.POLYLINE:
+        this._raw_params = this._io.readBytes((this.size - 3) * 2);
+        var _io__raw_params = new KaitaiStream(this._raw_params);
+        this.params = new ParamsPolyline(_io__raw_params, this, this._root);
+        break;
       case Wmf.Func.SETBKCOLOR:
-        this._raw_params = this._io.readBytes(((this.size - 3) * 2));
+        this._raw_params = this._io.readBytes((this.size - 3) * 2);
         var _io__raw_params = new KaitaiStream(this._raw_params);
         this.params = new ColorRef(_io__raw_params, this, this._root);
         break;
+      case Wmf.Func.SETBKMODE:
+        this._raw_params = this._io.readBytes((this.size - 3) * 2);
+        var _io__raw_params = new KaitaiStream(this._raw_params);
+        this.params = new ParamsSetbkmode(_io__raw_params, this, this._root);
+        break;
       case Wmf.Func.SETPOLYFILLMODE:
-        this._raw_params = this._io.readBytes(((this.size - 3) * 2));
+        this._raw_params = this._io.readBytes((this.size - 3) * 2);
         var _io__raw_params = new KaitaiStream(this._raw_params);
         this.params = new ParamsSetpolyfillmode(_io__raw_params, this, this._root);
         break;
-      case Wmf.Func.SETWINDOWORG:
-        this._raw_params = this._io.readBytes(((this.size - 3) * 2));
-        var _io__raw_params = new KaitaiStream(this._raw_params);
-        this.params = new ParamsSetwindoworg(_io__raw_params, this, this._root);
-        break;
       case Wmf.Func.SETROP2:
-        this._raw_params = this._io.readBytes(((this.size - 3) * 2));
+        this._raw_params = this._io.readBytes((this.size - 3) * 2);
         var _io__raw_params = new KaitaiStream(this._raw_params);
         this.params = new ParamsSetrop2(_io__raw_params, this, this._root);
         break;
       case Wmf.Func.SETWINDOWEXT:
-        this._raw_params = this._io.readBytes(((this.size - 3) * 2));
+        this._raw_params = this._io.readBytes((this.size - 3) * 2);
         var _io__raw_params = new KaitaiStream(this._raw_params);
         this.params = new ParamsSetwindowext(_io__raw_params, this, this._root);
         break;
-      case Wmf.Func.POLYLINE:
-        this._raw_params = this._io.readBytes(((this.size - 3) * 2));
+      case Wmf.Func.SETWINDOWORG:
+        this._raw_params = this._io.readBytes((this.size - 3) * 2);
         var _io__raw_params = new KaitaiStream(this._raw_params);
-        this.params = new ParamsPolyline(_io__raw_params, this, this._root);
+        this.params = new ParamsSetwindoworg(_io__raw_params, this, this._root);
         break;
       default:
-        this.params = this._io.readBytes(((this.size - 3) * 2));
+        this.params = this._io.readBytes((this.size - 3) * 2);
         break;
       }
     }
@@ -579,7 +547,39 @@ var Wmf = (function() {
     return Record;
   })();
 
+  var SpecialHeader = Wmf.SpecialHeader = (function() {
+    function SpecialHeader(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    SpecialHeader.prototype._read = function() {
+      this.magic = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([215, 205, 198, 154])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([215, 205, 198, 154]), this.magic, this._io, "/types/special_header/seq/0");
+      }
+      this.handle = this._io.readBytes(2);
+      if (!((KaitaiStream.byteArrayCompare(this.handle, new Uint8Array([0, 0])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([0, 0]), this.handle, this._io, "/types/special_header/seq/1");
+      }
+      this.left = this._io.readS2le();
+      this.top = this._io.readS2le();
+      this.right = this._io.readS2le();
+      this.bottom = this._io.readS2le();
+      this.inch = this._io.readU2le();
+      this.reserved = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.reserved, new Uint8Array([0, 0, 0, 0])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([0, 0, 0, 0]), this.reserved, this._io, "/types/special_header/seq/7");
+      }
+      this.checksum = this._io.readU2le();
+    }
+
+    return SpecialHeader;
+  })();
+
   return Wmf;
 })();
-return Wmf;
-}));
+Wmf_.Wmf = Wmf;
+});

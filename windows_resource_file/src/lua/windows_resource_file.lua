@@ -85,7 +85,7 @@ WindowsResourceFile.Resource.PredefTypes = enum.Enum {
 function WindowsResourceFile.Resource:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -94,14 +94,14 @@ function WindowsResourceFile.Resource:_read()
   self.header_size = self._io:read_u4le()
   self.type = WindowsResourceFile.UnicodeOrId(self._io, self, self._root)
   self.name = WindowsResourceFile.UnicodeOrId(self._io, self, self._root)
-  self.padding1 = self._io:read_bytes(((4 - self._io:pos()) % 4))
+  self.padding1 = self._io:read_bytes((4 - self._io:pos()) % 4)
   self.format_version = self._io:read_u4le()
   self.flags = self._io:read_u2le()
   self.language = self._io:read_u2le()
   self.value_version = self._io:read_u4le()
   self.characteristics = self._io:read_u4le()
   self.value = self._io:read_bytes(self.value_size)
-  self.padding2 = self._io:read_bytes(((4 - self._io:pos()) % 4))
+  self.padding2 = self._io:read_bytes((4 - self._io:pos()) % 4)
 end
 
 -- 
@@ -142,7 +142,7 @@ WindowsResourceFile.UnicodeOrId = class.class(KaitaiStruct)
 function WindowsResourceFile.UnicodeOrId:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -170,6 +170,31 @@ function WindowsResourceFile.UnicodeOrId:_read()
   end
 end
 
+WindowsResourceFile.UnicodeOrId.property.as_string = {}
+function WindowsResourceFile.UnicodeOrId.property.as_string:get()
+  if self._m_as_string ~= nil then
+    return self._m_as_string
+  end
+
+  if self.is_string then
+    local _pos = self._io:pos()
+    self._io:seek(self.save_pos1)
+    self._m_as_string = str_decode.decode(self._io:read_bytes((self.save_pos2 - self.save_pos1) - 2), "UTF-16LE")
+    self._io:seek(_pos)
+  end
+  return self._m_as_string
+end
+
+WindowsResourceFile.UnicodeOrId.property.is_string = {}
+function WindowsResourceFile.UnicodeOrId.property.is_string:get()
+  if self._m_is_string ~= nil then
+    return self._m_is_string
+  end
+
+  self._m_is_string = self.first ~= 65535
+  return self._m_is_string
+end
+
 WindowsResourceFile.UnicodeOrId.property.save_pos1 = {}
 function WindowsResourceFile.UnicodeOrId.property.save_pos1:get()
   if self._m_save_pos1 ~= nil then
@@ -188,31 +213,6 @@ function WindowsResourceFile.UnicodeOrId.property.save_pos2:get()
 
   self._m_save_pos2 = self._io:pos()
   return self._m_save_pos2
-end
-
-WindowsResourceFile.UnicodeOrId.property.is_string = {}
-function WindowsResourceFile.UnicodeOrId.property.is_string:get()
-  if self._m_is_string ~= nil then
-    return self._m_is_string
-  end
-
-  self._m_is_string = self.first ~= 65535
-  return self._m_is_string
-end
-
-WindowsResourceFile.UnicodeOrId.property.as_string = {}
-function WindowsResourceFile.UnicodeOrId.property.as_string:get()
-  if self._m_as_string ~= nil then
-    return self._m_as_string
-  end
-
-  if self.is_string then
-    local _pos = self._io:pos()
-    self._io:seek(self.save_pos1)
-    self._m_as_string = str_decode.decode(self._io:read_bytes(((self.save_pos2 - self.save_pos1) - 2)), "UTF-16LE")
-    self._io:seek(_pos)
-  end
-  return self._m_as_string
 end
 
 

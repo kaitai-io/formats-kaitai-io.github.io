@@ -12,27 +12,13 @@ digraph {
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 			<TR><TD PORT="root_pos">4096</TD><TD PORT="root_size">...</TD><TD>Root</TD><TD PORT="root_type">root</TD></TR>
 		</TABLE>>];
-		subgraph cluster__root {
-			label="AndroidSuper::Root";
-			graph[style=dotted];
-
-			root__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="primary_geometry_pos">0</TD><TD PORT="primary_geometry_size">4096</TD><TD>Geometry</TD><TD PORT="primary_geometry_type">primary_geometry</TD></TR>
-				<TR><TD PORT="backup_geometry_pos">4096</TD><TD PORT="backup_geometry_size">4096</TD><TD>Geometry</TD><TD PORT="backup_geometry_type">backup_geometry</TD></TR>
-				<TR><TD PORT="primary_metadata_pos">8192</TD><TD PORT="primary_metadata_size">primary_geometry.metadata_max_size</TD><TD>Metadata</TD><TD PORT="primary_metadata_type">primary_metadata</TD></TR>
-				<TR><TD COLSPAN="4" PORT="primary_metadata__repeat">repeat primary_geometry.metadata_slot_count times</TD></TR>
-				<TR><TD PORT="backup_metadata_pos">...</TD><TD PORT="backup_metadata_size">primary_geometry.metadata_max_size</TD><TD>Metadata</TD><TD PORT="backup_metadata_type">backup_metadata</TD></TR>
-				<TR><TD COLSPAN="4" PORT="backup_metadata__repeat">repeat primary_geometry.metadata_slot_count times</TD></TR>
-			</TABLE>>];
-		}
 		subgraph cluster__geometry {
 			label="AndroidSuper::Geometry";
 			graph[style=dotted];
 
 			geometry__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD></TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD>67 44 6C 61</TD><TD PORT="magic_type">magic</TD></TR>
 				<TR><TD PORT="struct_size_pos">4</TD><TD PORT="struct_size_size">4</TD><TD>u4le</TD><TD PORT="struct_size_type">struct_size</TD></TR>
 				<TR><TD PORT="checksum_pos">8</TD><TD PORT="checksum_size">32</TD><TD></TD><TD PORT="checksum_type">checksum</TD></TR>
 				<TR><TD PORT="metadata_max_size_pos">40</TD><TD PORT="metadata_max_size_size">4</TD><TD>u4le</TD><TD PORT="metadata_max_size_type">metadata_max_size</TD></TR>
@@ -46,7 +32,7 @@ digraph {
 
 			metadata__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD></TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD>30 50 4C 41</TD><TD PORT="magic_type">magic</TD></TR>
 				<TR><TD PORT="major_version_pos">4</TD><TD PORT="major_version_size">2</TD><TD>u2le</TD><TD PORT="major_version_type">major_version</TD></TR>
 				<TR><TD PORT="minor_version_pos">6</TD><TD PORT="minor_version_size">2</TD><TD>u2le</TD><TD PORT="minor_version_type">minor_version</TD></TR>
 				<TR><TD PORT="header_size_pos">8</TD><TD PORT="header_size_size">4</TD><TD>u4le</TD><TD PORT="header_size_type">header_size</TD></TR>
@@ -69,8 +55,8 @@ digraph {
 					<TR><TD PORT="alignment_offset_pos">12</TD><TD PORT="alignment_offset_size">4</TD><TD>u4le</TD><TD PORT="alignment_offset_type">alignment_offset</TD></TR>
 					<TR><TD PORT="size_pos">16</TD><TD PORT="size_size">8</TD><TD>u8le</TD><TD PORT="size_type">size</TD></TR>
 					<TR><TD PORT="partition_name_pos">24</TD><TD PORT="partition_name_size">36</TD><TD>str(UTF-8)</TD><TD PORT="partition_name_type">partition_name</TD></TR>
-					<TR><TD PORT="flag_slot_suffixed_pos">60</TD><TD PORT="flag_slot_suffixed_size">1b</TD><TD>BitsType1(LittleBitEndian)</TD><TD PORT="flag_slot_suffixed_type">flag_slot_suffixed</TD></TR>
-					<TR><TD PORT="flags_reserved_pos">60:1</TD><TD PORT="flags_reserved_size">31b</TD><TD>b31</TD><TD PORT="flags_reserved_type">flags_reserved</TD></TR>
+					<TR><TD PORT="flag_slot_suffixed_pos">60</TD><TD PORT="flag_slot_suffixed_size">1b</TD><TD>b1le→bool</TD><TD PORT="flag_slot_suffixed_type">flag_slot_suffixed</TD></TR>
+					<TR><TD PORT="flags_reserved_pos">60:1</TD><TD PORT="flags_reserved_size">31b</TD><TD>b31le</TD><TD PORT="flags_reserved_type">flags_reserved</TD></TR>
 				</TABLE>>];
 			}
 			subgraph cluster__extent {
@@ -85,6 +71,35 @@ digraph {
 					<TR><TD PORT="target_source_pos">20</TD><TD PORT="target_source_size">4</TD><TD>u4le</TD><TD PORT="target_source_type">target_source</TD></TR>
 				</TABLE>>];
 			}
+			subgraph cluster__group {
+				label="AndroidSuper::Metadata::Group";
+				graph[style=dotted];
+
+				group__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="name_pos">0</TD><TD PORT="name_size">36</TD><TD>str(UTF-8)</TD><TD PORT="name_type">name</TD></TR>
+					<TR><TD PORT="flag_slot_suffixed_pos">36</TD><TD PORT="flag_slot_suffixed_size">1b</TD><TD>b1le→bool</TD><TD PORT="flag_slot_suffixed_type">flag_slot_suffixed</TD></TR>
+					<TR><TD PORT="flags_reserved_pos">36:1</TD><TD PORT="flags_reserved_size">31b</TD><TD>b31le</TD><TD PORT="flags_reserved_type">flags_reserved</TD></TR>
+					<TR><TD PORT="maximum_size_pos">40</TD><TD PORT="maximum_size_size">8</TD><TD>u8le</TD><TD PORT="maximum_size_type">maximum_size</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__partition {
+				label="AndroidSuper::Metadata::Partition";
+				graph[style=dotted];
+
+				partition__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="name_pos">0</TD><TD PORT="name_size">36</TD><TD>str(UTF-8)</TD><TD PORT="name_type">name</TD></TR>
+					<TR><TD PORT="attr_readonly_pos">36</TD><TD PORT="attr_readonly_size">1b</TD><TD>b1le→bool</TD><TD PORT="attr_readonly_type">attr_readonly</TD></TR>
+					<TR><TD PORT="attr_slot_suffixed_pos">36:1</TD><TD PORT="attr_slot_suffixed_size">1b</TD><TD>b1le→bool</TD><TD PORT="attr_slot_suffixed_type">attr_slot_suffixed</TD></TR>
+					<TR><TD PORT="attr_updated_pos">36:2</TD><TD PORT="attr_updated_size">1b</TD><TD>b1le→bool</TD><TD PORT="attr_updated_type">attr_updated</TD></TR>
+					<TR><TD PORT="attr_disabled_pos">36:3</TD><TD PORT="attr_disabled_size">1b</TD><TD>b1le→bool</TD><TD PORT="attr_disabled_type">attr_disabled</TD></TR>
+					<TR><TD PORT="attrs_reserved_pos">36:4</TD><TD PORT="attrs_reserved_size">28b</TD><TD>b28le</TD><TD PORT="attrs_reserved_type">attrs_reserved</TD></TR>
+					<TR><TD PORT="first_extent_index_pos">40</TD><TD PORT="first_extent_index_size">4</TD><TD>u4le</TD><TD PORT="first_extent_index_type">first_extent_index</TD></TR>
+					<TR><TD PORT="num_extents_pos">44</TD><TD PORT="num_extents_size">4</TD><TD>u4le</TD><TD PORT="num_extents_type">num_extents</TD></TR>
+					<TR><TD PORT="group_index_pos">48</TD><TD PORT="group_index_size">4</TD><TD>u4le</TD><TD PORT="group_index_type">group_index</TD></TR>
+				</TABLE>>];
+			}
 			subgraph cluster__table_descriptor {
 				label="AndroidSuper::Metadata::TableDescriptor";
 				graph[style=dotted];
@@ -97,49 +112,47 @@ digraph {
 				</TABLE>>];
 				table_descriptor__inst__table [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="table_pos">(_parent.header_size + offset)</TD><TD PORT="table_size">...</TD><TD>switch (kind)</TD><TD PORT="table_type">table</TD></TR>
+					<TR><TD PORT="table_pos">_parent.header_size + offset</TD><TD PORT="table_size">...</TD><TD>switch (kind)</TD><TD PORT="table_type">table</TD></TR>
 					<TR><TD COLSPAN="4" PORT="table__repeat">repeat num_entries times</TD></TR>
 				</TABLE>>];
 table_descriptor__inst__table_table_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
-	<TR><TD>:table_kind_partitions</TD><TD PORT="case0">Partition</TD></TR>
+	<TR><TD>:table_kind_block_devices</TD><TD PORT="case0">BlockDevice</TD></TR>
 	<TR><TD>:table_kind_extents</TD><TD PORT="case1">Extent</TD></TR>
 	<TR><TD>:table_kind_groups</TD><TD PORT="case2">Group</TD></TR>
-	<TR><TD>:table_kind_block_devices</TD><TD PORT="case3">BlockDevice</TD></TR>
+	<TR><TD>:table_kind_partitions</TD><TD PORT="case3">Partition</TD></TR>
 </TABLE>>];
 			}
-			subgraph cluster__partition {
-				label="AndroidSuper::Metadata::Partition";
-				graph[style=dotted];
+		}
+		subgraph cluster__root {
+			label="AndroidSuper::Root";
+			graph[style=dotted];
 
-				partition__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="name_pos">0</TD><TD PORT="name_size">36</TD><TD>str(UTF-8)</TD><TD PORT="name_type">name</TD></TR>
-					<TR><TD PORT="attr_readonly_pos">36</TD><TD PORT="attr_readonly_size">1b</TD><TD>BitsType1(LittleBitEndian)</TD><TD PORT="attr_readonly_type">attr_readonly</TD></TR>
-					<TR><TD PORT="attr_slot_suffixed_pos">36:1</TD><TD PORT="attr_slot_suffixed_size">1b</TD><TD>BitsType1(LittleBitEndian)</TD><TD PORT="attr_slot_suffixed_type">attr_slot_suffixed</TD></TR>
-					<TR><TD PORT="attr_updated_pos">36:2</TD><TD PORT="attr_updated_size">1b</TD><TD>BitsType1(LittleBitEndian)</TD><TD PORT="attr_updated_type">attr_updated</TD></TR>
-					<TR><TD PORT="attr_disabled_pos">36:3</TD><TD PORT="attr_disabled_size">1b</TD><TD>BitsType1(LittleBitEndian)</TD><TD PORT="attr_disabled_type">attr_disabled</TD></TR>
-					<TR><TD PORT="attrs_reserved_pos">36:4</TD><TD PORT="attrs_reserved_size">28b</TD><TD>b28</TD><TD PORT="attrs_reserved_type">attrs_reserved</TD></TR>
-					<TR><TD PORT="first_extent_index_pos">40</TD><TD PORT="first_extent_index_size">4</TD><TD>u4le</TD><TD PORT="first_extent_index_type">first_extent_index</TD></TR>
-					<TR><TD PORT="num_extents_pos">44</TD><TD PORT="num_extents_size">4</TD><TD>u4le</TD><TD PORT="num_extents_type">num_extents</TD></TR>
-					<TR><TD PORT="group_index_pos">48</TD><TD PORT="group_index_size">4</TD><TD>u4le</TD><TD PORT="group_index_type">group_index</TD></TR>
-				</TABLE>>];
-			}
-			subgraph cluster__group {
-				label="AndroidSuper::Metadata::Group";
-				graph[style=dotted];
-
-				group__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="name_pos">0</TD><TD PORT="name_size">36</TD><TD>str(UTF-8)</TD><TD PORT="name_type">name</TD></TR>
-					<TR><TD PORT="flag_slot_suffixed_pos">36</TD><TD PORT="flag_slot_suffixed_size">1b</TD><TD>BitsType1(LittleBitEndian)</TD><TD PORT="flag_slot_suffixed_type">flag_slot_suffixed</TD></TR>
-					<TR><TD PORT="flags_reserved_pos">36:1</TD><TD PORT="flags_reserved_size">31b</TD><TD>b31</TD><TD PORT="flags_reserved_type">flags_reserved</TD></TR>
-					<TR><TD PORT="maximum_size_pos">40</TD><TD PORT="maximum_size_size">8</TD><TD>u8le</TD><TD PORT="maximum_size_type">maximum_size</TD></TR>
-				</TABLE>>];
-			}
+			root__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="primary_geometry_pos">0</TD><TD PORT="primary_geometry_size">4096</TD><TD>Geometry</TD><TD PORT="primary_geometry_type">primary_geometry</TD></TR>
+				<TR><TD PORT="backup_geometry_pos">4096</TD><TD PORT="backup_geometry_size">4096</TD><TD>Geometry</TD><TD PORT="backup_geometry_type">backup_geometry</TD></TR>
+				<TR><TD PORT="primary_metadata_pos">8192</TD><TD PORT="primary_metadata_size">primary_geometry.metadata_max_size</TD><TD>Metadata</TD><TD PORT="primary_metadata_type">primary_metadata</TD></TR>
+				<TR><TD COLSPAN="4" PORT="primary_metadata__repeat">repeat primary_geometry.metadata_slot_count times</TD></TR>
+				<TR><TD PORT="backup_metadata_pos">...</TD><TD PORT="backup_metadata_size">primary_geometry.metadata_max_size</TD><TD>Metadata</TD><TD PORT="backup_metadata_type">backup_metadata</TD></TR>
+				<TR><TD COLSPAN="4" PORT="backup_metadata__repeat">repeat primary_geometry.metadata_slot_count times</TD></TR>
+			</TABLE>>];
 		}
 	}
 	android_super__inst__root:root_type -> root__seq [style=bold];
+	metadata__seq:partitions_type -> table_descriptor__seq [style=bold];
+	metadata__seq:extents_type -> table_descriptor__seq [style=bold];
+	metadata__seq:groups_type -> table_descriptor__seq [style=bold];
+	metadata__seq:block_devices_type -> table_descriptor__seq [style=bold];
+	metadata__seq:header_size_type -> table_descriptor__inst__table:table_pos [color="#404040"];
+	table_descriptor__seq:offset_type -> table_descriptor__inst__table:table_pos [color="#404040"];
+	table_descriptor__inst__table:table_type -> table_descriptor__inst__table_table_switch [style=bold];
+	table_descriptor__inst__table_table_switch:case0 -> block_device__seq [style=bold];
+	table_descriptor__inst__table_table_switch:case1 -> extent__seq [style=bold];
+	table_descriptor__inst__table_table_switch:case2 -> group__seq [style=bold];
+	table_descriptor__inst__table_table_switch:case3 -> partition__seq [style=bold];
+	table_descriptor__params:kind_type -> table_descriptor__inst__table:table_type [color="#404040"];
+	table_descriptor__seq:num_entries_type -> table_descriptor__inst__table:table__repeat [color="#404040"];
 	root__seq:primary_geometry_type -> geometry__seq [style=bold];
 	root__seq:backup_geometry_type -> geometry__seq [style=bold];
 	geometry__seq:metadata_max_size_type -> root__seq:primary_metadata_size [color="#404040"];
@@ -148,17 +161,4 @@ table_descriptor__inst__table_table_switch [label=<<TABLE BORDER="0" CELLBORDER=
 	geometry__seq:metadata_max_size_type -> root__seq:backup_metadata_size [color="#404040"];
 	root__seq:backup_metadata_type -> metadata__seq [style=bold];
 	geometry__seq:metadata_slot_count_type -> root__seq:backup_metadata__repeat [color="#404040"];
-	metadata__seq:partitions_type -> table_descriptor__seq [style=bold];
-	metadata__seq:extents_type -> table_descriptor__seq [style=bold];
-	metadata__seq:groups_type -> table_descriptor__seq [style=bold];
-	metadata__seq:block_devices_type -> table_descriptor__seq [style=bold];
-	metadata__seq:header_size_type -> table_descriptor__inst__table:table_pos [color="#404040"];
-	table_descriptor__seq:offset_type -> table_descriptor__inst__table:table_pos [color="#404040"];
-	table_descriptor__inst__table:table_type -> table_descriptor__inst__table_table_switch [style=bold];
-	table_descriptor__inst__table_table_switch:case0 -> partition__seq [style=bold];
-	table_descriptor__inst__table_table_switch:case1 -> extent__seq [style=bold];
-	table_descriptor__inst__table_table_switch:case2 -> group__seq [style=bold];
-	table_descriptor__inst__table_table_switch:case3 -> block_device__seq [style=bold];
-	table_descriptor__params:kind_type -> table_descriptor__inst__table:table_type [color="#404040"];
-	table_descriptor__seq:num_entries_type -> table_descriptor__inst__table:table__repeat [color="#404040"];
 }

@@ -21,20 +21,20 @@ type SaintsRow2VppPc struct {
 	Smth9 int32
 	_io *kaitai.Stream
 	_root *SaintsRow2VppPc
-	_parent interface{}
+	_parent kaitai.Struct
+	_raw_extensions []byte
 	_raw_filenames []byte
 	_raw_files []byte
-	_raw_extensions []byte
-	_f_filenames bool
-	filenames *SaintsRow2VppPc_Strings
-	_f_ofsExtensions bool
-	ofsExtensions int
-	_f_files bool
-	files *SaintsRow2VppPc_Offsets
 	_f_dataStart bool
 	dataStart int
 	_f_extensions bool
 	extensions *SaintsRow2VppPc_Strings
+	_f_filenames bool
+	filenames *SaintsRow2VppPc_Strings
+	_f_files bool
+	files *SaintsRow2VppPc_Offsets
+	_f_ofsExtensions bool
+	ofsExtensions int
 	_f_ofsFilenames bool
 	ofsFilenames int
 }
@@ -43,7 +43,11 @@ func NewSaintsRow2VppPc() *SaintsRow2VppPc {
 	}
 }
 
-func (this *SaintsRow2VppPc) Read(io *kaitai.Stream, parent interface{}, root *SaintsRow2VppPc) (err error) {
+func (this SaintsRow2VppPc) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *SaintsRow2VppPc) Read(io *kaitai.Stream, parent kaitai.Struct, root *SaintsRow2VppPc) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -115,59 +119,95 @@ func (this *SaintsRow2VppPc) Read(io *kaitai.Stream, parent interface{}, root *S
 	this.Smth9 = int32(tmp12)
 	return err
 }
-func (this *SaintsRow2VppPc) Filenames() (v *SaintsRow2VppPc_Strings, err error) {
-	if (this._f_filenames) {
-		return this.filenames, nil
+func (this *SaintsRow2VppPc) DataStart() (v int, err error) {
+	if (this._f_dataStart) {
+		return this.dataStart, nil
 	}
+	this._f_dataStart = true
+	tmp13, err := this.OfsExtensions()
+	if err != nil {
+		return 0, err
+	}
+	this.dataStart = int((tmp13 + this.LenExtensions) & uint32(4294965248) + 2048)
+	return this.dataStart, nil
+}
+func (this *SaintsRow2VppPc) Extensions() (v *SaintsRow2VppPc_Strings, err error) {
+	if (this._f_extensions) {
+		return this.extensions, nil
+	}
+	this._f_extensions = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
 	}
-	tmp13, err := this.OfsFilenames()
+	tmp14, err := this.OfsExtensions()
 	if err != nil {
 		return nil, err
 	}
-	_, err = this._io.Seek(int64(tmp13), io.SeekStart)
+	_, err = this._io.Seek(int64(tmp14), io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
-	tmp14, err := this._io.ReadBytes(int(this.LenFilenames))
+	tmp15, err := this._io.ReadBytes(int(this.LenExtensions))
 	if err != nil {
 		return nil, err
 	}
-	tmp14 = tmp14
-	this._raw_filenames = tmp14
-	_io__raw_filenames := kaitai.NewStream(bytes.NewReader(this._raw_filenames))
-	tmp15 := NewSaintsRow2VppPc_Strings()
-	err = tmp15.Read(_io__raw_filenames, this, this._root)
+	tmp15 = tmp15
+	this._raw_extensions = tmp15
+	_io__raw_extensions := kaitai.NewStream(bytes.NewReader(this._raw_extensions))
+	tmp16 := NewSaintsRow2VppPc_Strings()
+	err = tmp16.Read(_io__raw_extensions, this, this._root)
 	if err != nil {
 		return nil, err
 	}
-	this.filenames = tmp15
+	this.extensions = tmp16
 	_, err = this._io.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
-	this._f_filenames = true
-	this._f_filenames = true
-	return this.filenames, nil
+	return this.extensions, nil
 }
-func (this *SaintsRow2VppPc) OfsExtensions() (v int, err error) {
-	if (this._f_ofsExtensions) {
-		return this.ofsExtensions, nil
+func (this *SaintsRow2VppPc) Filenames() (v *SaintsRow2VppPc_Strings, err error) {
+	if (this._f_filenames) {
+		return this.filenames, nil
 	}
-	tmp16, err := this.OfsFilenames()
+	this._f_filenames = true
+	_pos, err := this._io.Pos()
 	if err != nil {
-		return 0, err
+		return nil, err
 	}
-	this.ofsExtensions = int((((tmp16 + this.LenFilenames) & uint32(4294965248)) + 2048))
-	this._f_ofsExtensions = true
-	return this.ofsExtensions, nil
+	tmp17, err := this.OfsFilenames()
+	if err != nil {
+		return nil, err
+	}
+	_, err = this._io.Seek(int64(tmp17), io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	tmp18, err := this._io.ReadBytes(int(this.LenFilenames))
+	if err != nil {
+		return nil, err
+	}
+	tmp18 = tmp18
+	this._raw_filenames = tmp18
+	_io__raw_filenames := kaitai.NewStream(bytes.NewReader(this._raw_filenames))
+	tmp19 := NewSaintsRow2VppPc_Strings()
+	err = tmp19.Read(_io__raw_filenames, this, this._root)
+	if err != nil {
+		return nil, err
+	}
+	this.filenames = tmp19
+	_, err = this._io.Seek(_pos, io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	return this.filenames, nil
 }
 func (this *SaintsRow2VppPc) Files() (v *SaintsRow2VppPc_Offsets, err error) {
 	if (this._f_files) {
 		return this.files, nil
 	}
+	this._f_files = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
@@ -176,82 +216,43 @@ func (this *SaintsRow2VppPc) Files() (v *SaintsRow2VppPc_Offsets, err error) {
 	if err != nil {
 		return nil, err
 	}
-	tmp17, err := this._io.ReadBytes(int(this.LenOffsets))
+	tmp20, err := this._io.ReadBytes(int(this.LenOffsets))
 	if err != nil {
 		return nil, err
 	}
-	tmp17 = tmp17
-	this._raw_files = tmp17
+	tmp20 = tmp20
+	this._raw_files = tmp20
 	_io__raw_files := kaitai.NewStream(bytes.NewReader(this._raw_files))
-	tmp18 := NewSaintsRow2VppPc_Offsets()
-	err = tmp18.Read(_io__raw_files, this, this._root)
+	tmp21 := NewSaintsRow2VppPc_Offsets()
+	err = tmp21.Read(_io__raw_files, this, this._root)
 	if err != nil {
 		return nil, err
 	}
-	this.files = tmp18
+	this.files = tmp21
 	_, err = this._io.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
-	this._f_files = true
-	this._f_files = true
 	return this.files, nil
 }
-func (this *SaintsRow2VppPc) DataStart() (v int, err error) {
-	if (this._f_dataStart) {
-		return this.dataStart, nil
+func (this *SaintsRow2VppPc) OfsExtensions() (v int, err error) {
+	if (this._f_ofsExtensions) {
+		return this.ofsExtensions, nil
 	}
-	tmp19, err := this.OfsExtensions()
+	this._f_ofsExtensions = true
+	tmp22, err := this.OfsFilenames()
 	if err != nil {
 		return 0, err
 	}
-	this.dataStart = int((((tmp19 + this.LenExtensions) & uint32(4294965248)) + 2048))
-	this._f_dataStart = true
-	return this.dataStart, nil
-}
-func (this *SaintsRow2VppPc) Extensions() (v *SaintsRow2VppPc_Strings, err error) {
-	if (this._f_extensions) {
-		return this.extensions, nil
-	}
-	_pos, err := this._io.Pos()
-	if err != nil {
-		return nil, err
-	}
-	tmp20, err := this.OfsExtensions()
-	if err != nil {
-		return nil, err
-	}
-	_, err = this._io.Seek(int64(tmp20), io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	tmp21, err := this._io.ReadBytes(int(this.LenExtensions))
-	if err != nil {
-		return nil, err
-	}
-	tmp21 = tmp21
-	this._raw_extensions = tmp21
-	_io__raw_extensions := kaitai.NewStream(bytes.NewReader(this._raw_extensions))
-	tmp22 := NewSaintsRow2VppPc_Strings()
-	err = tmp22.Read(_io__raw_extensions, this, this._root)
-	if err != nil {
-		return nil, err
-	}
-	this.extensions = tmp22
-	_, err = this._io.Seek(_pos, io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	this._f_extensions = true
-	this._f_extensions = true
-	return this.extensions, nil
+	this.ofsExtensions = int((tmp22 + this.LenFilenames) & uint32(4294965248) + 2048)
+	return this.ofsExtensions, nil
 }
 func (this *SaintsRow2VppPc) OfsFilenames() (v int, err error) {
 	if (this._f_ofsFilenames) {
 		return this.ofsFilenames, nil
 	}
-	this.ofsFilenames = int((((2048 + this.LenOffsets) & uint32(4294965248)) + 2048))
 	this._f_ofsFilenames = true
+	this.ofsFilenames = int((2048 + this.LenOffsets) & uint32(4294965248) + 2048)
 	return this.ofsFilenames, nil
 }
 type SaintsRow2VppPc_Offsets struct {
@@ -265,12 +266,16 @@ func NewSaintsRow2VppPc_Offsets() *SaintsRow2VppPc_Offsets {
 	}
 }
 
+func (this SaintsRow2VppPc_Offsets) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *SaintsRow2VppPc_Offsets) Read(io *kaitai.Stream, parent *SaintsRow2VppPc, root *SaintsRow2VppPc) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	for i := 1;; i++ {
+	for i := 0;; i++ {
 		tmp23, err := this._io.EOF()
 		if err != nil {
 			return err
@@ -298,16 +303,20 @@ type SaintsRow2VppPc_Offsets_Offset struct {
 	_io *kaitai.Stream
 	_root *SaintsRow2VppPc
 	_parent *SaintsRow2VppPc_Offsets
-	_f_filename bool
-	filename string
-	_f_ext bool
-	ext string
 	_f_body bool
 	body []byte
+	_f_ext bool
+	ext string
+	_f_filename bool
+	filename string
 }
 func NewSaintsRow2VppPc_Offsets_Offset() *SaintsRow2VppPc_Offsets_Offset {
 	return &SaintsRow2VppPc_Offsets_Offset{
 	}
+}
+
+func (this SaintsRow2VppPc_Offsets_Offset) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *SaintsRow2VppPc_Offsets_Offset) Read(io *kaitai.Stream, parent *SaintsRow2VppPc_Offsets, root *SaintsRow2VppPc) (err error) {
@@ -352,40 +361,41 @@ func (this *SaintsRow2VppPc_Offsets_Offset) Read(io *kaitai.Stream, parent *Sain
 	this.AlwaysZero = int32(tmp31)
 	return err
 }
-func (this *SaintsRow2VppPc_Offsets_Offset) Filename() (v string, err error) {
-	if (this._f_filename) {
-		return this.filename, nil
+func (this *SaintsRow2VppPc_Offsets_Offset) Body() (v []byte, err error) {
+	if (this._f_body) {
+		return this.body, nil
 	}
-	tmp32, err := this._root.Filenames()
-	if err != nil {
-		return "", err
-	}
-	thisIo := tmp32._io
+	this._f_body = true
+	thisIo := this._root._io
 	_pos, err := thisIo.Pos()
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	_, err = thisIo.Seek(int64(this.NameOfs), io.SeekStart)
+	tmp32, err := this._root.DataStart()
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	tmp33, err := thisIo.ReadBytesTerm(0, false, true, true)
+	_, err = thisIo.Seek(int64(tmp32 + this.OfsBody), io.SeekStart)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	this.filename = string(tmp33)
+	tmp33, err := thisIo.ReadBytes(int(this.LenBody))
+	if err != nil {
+		return nil, err
+	}
+	tmp33 = tmp33
+	this.body = tmp33
 	_, err = thisIo.Seek(_pos, io.SeekStart)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	this._f_filename = true
-	this._f_filename = true
-	return this.filename, nil
+	return this.body, nil
 }
 func (this *SaintsRow2VppPc_Offsets_Offset) Ext() (v string, err error) {
 	if (this._f_ext) {
 		return this.ext, nil
 	}
+	this._f_ext = true
 	tmp34, err := this._root.Extensions()
 	if err != nil {
 		return "", err
@@ -408,40 +418,36 @@ func (this *SaintsRow2VppPc_Offsets_Offset) Ext() (v string, err error) {
 	if err != nil {
 		return "", err
 	}
-	this._f_ext = true
-	this._f_ext = true
 	return this.ext, nil
 }
-func (this *SaintsRow2VppPc_Offsets_Offset) Body() (v []byte, err error) {
-	if (this._f_body) {
-		return this.body, nil
+func (this *SaintsRow2VppPc_Offsets_Offset) Filename() (v string, err error) {
+	if (this._f_filename) {
+		return this.filename, nil
 	}
-	thisIo := this._root._io
+	this._f_filename = true
+	tmp36, err := this._root.Filenames()
+	if err != nil {
+		return "", err
+	}
+	thisIo := tmp36._io
 	_pos, err := thisIo.Pos()
 	if err != nil {
-		return nil, err
+		return "", err
 	}
-	tmp36, err := this._root.DataStart()
+	_, err = thisIo.Seek(int64(this.NameOfs), io.SeekStart)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
-	_, err = thisIo.Seek(int64((tmp36 + this.OfsBody)), io.SeekStart)
+	tmp37, err := thisIo.ReadBytesTerm(0, false, true, true)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
-	tmp37, err := thisIo.ReadBytes(int(this.LenBody))
-	if err != nil {
-		return nil, err
-	}
-	tmp37 = tmp37
-	this.body = tmp37
+	this.filename = string(tmp37)
 	_, err = thisIo.Seek(_pos, io.SeekStart)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
-	this._f_body = true
-	this._f_body = true
-	return this.body, nil
+	return this.filename, nil
 }
 type SaintsRow2VppPc_Strings struct {
 	Entries []string
@@ -454,12 +460,16 @@ func NewSaintsRow2VppPc_Strings() *SaintsRow2VppPc_Strings {
 	}
 }
 
+func (this SaintsRow2VppPc_Strings) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *SaintsRow2VppPc_Strings) Read(io *kaitai.Stream, parent *SaintsRow2VppPc, root *SaintsRow2VppPc) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	for i := 1;; i++ {
+	for i := 0;; i++ {
 		tmp38, err := this._io.EOF()
 		if err != nil {
 			return err

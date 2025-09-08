@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 
 ########################################################################
 package Vp8DuckIvf;
@@ -24,7 +24,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -44,7 +44,7 @@ sub _read {
     $self->{timescale} = $self->{_io}->read_u4le();
     $self->{num_frames} = $self->{_io}->read_u4le();
     $self->{unused} = $self->{_io}->read_u4le();
-    $self->{image_data} = ();
+    $self->{image_data} = [];
     my $n_image_data = $self->num_frames();
     for (my $i = 0; $i < $n_image_data; $i++) {
         push @{$self->{image_data}}, Vp8DuckIvf::Blocks->new($self->{_io}, $self, $self->{_root});
@@ -107,44 +107,6 @@ sub image_data {
 }
 
 ########################################################################
-package Vp8DuckIvf::Blocks;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{entries} = Vp8DuckIvf::Block->new($self->{_io}, $self, $self->{_root});
-}
-
-sub entries {
-    my ($self) = @_;
-    return $self->{entries};
-}
-
-########################################################################
 package Vp8DuckIvf::Block;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -164,7 +126,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -192,6 +154,44 @@ sub timestamp {
 sub framedata {
     my ($self) = @_;
     return $self->{framedata};
+}
+
+########################################################################
+package Vp8DuckIvf::Blocks;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{entries} = Vp8DuckIvf::Block->new($self->{_io}, $self, $self->{_root});
+}
+
+sub entries {
+    my ($self) = @_;
+    return $self->{entries};
 }
 
 1;

@@ -2,7 +2,6 @@ import kaitai_struct_nim_runtime
 import options
 import pcx
 
-import "pcx"
 type
   PcxDcx* = ref object of KaitaiStruct
     `magic`*: seq[byte]
@@ -66,7 +65,7 @@ proc body(this: PcxDcx_PcxOffset): Pcx =
   if this.ofsBody != 0:
     let pos = this.io.pos()
     this.io.seek(int(this.ofsBody))
-    let bodyInstExpr = Pcx.read(this.io, this.root, this)
+    let bodyInstExpr = Pcx.read(this.io, nil, nil)
     this.bodyInst = bodyInstExpr
     this.io.seek(pos)
   this.bodyInstFlag = true

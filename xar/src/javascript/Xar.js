@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.Xar = factory(root.KaitaiStream);
+    factory(root.Xar || (root.Xar = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Xar_, KaitaiStream) {
 /**
  * From [Wikipedia](https://en.wikipedia.org/wiki/Xar_(archiver)):
  * 
@@ -43,7 +43,7 @@ var Xar = (function() {
   }
   Xar.prototype._read = function() {
     this.headerPrefix = new FileHeaderPrefix(this._io, this, this._root);
-    this._raw_header = this._io.readBytes((this.headerPrefix.lenHeader - 6));
+    this._raw_header = this._io.readBytes(this.headerPrefix.lenHeader - 6);
     var _io__raw_header = new KaitaiStream(this._raw_header);
     this.header = new FileHeader(_io__raw_header, this, this._root);
     this._raw__raw_toc = this._io.readBytes(this.header.lenTocCompressed);
@@ -52,34 +52,11 @@ var Xar = (function() {
     this.toc = new TocType(_io__raw_toc, this, this._root);
   }
 
-  var FileHeaderPrefix = Xar.FileHeaderPrefix = (function() {
-    function FileHeaderPrefix(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    FileHeaderPrefix.prototype._read = function() {
-      this.magic = this._io.readBytes(4);
-      if (!((KaitaiStream.byteArrayCompare(this.magic, [120, 97, 114, 33]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([120, 97, 114, 33], this.magic, this._io, "/types/file_header_prefix/seq/0");
-      }
-      this.lenHeader = this._io.readU2be();
-    }
-
-    /**
-     * internal; access `_root.header.len_header` instead
-     */
-
-    return FileHeaderPrefix;
-  })();
-
   var FileHeader = Xar.FileHeader = (function() {
     function FileHeader(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -158,11 +135,34 @@ var Xar = (function() {
     return FileHeader;
   })();
 
+  var FileHeaderPrefix = Xar.FileHeaderPrefix = (function() {
+    function FileHeaderPrefix(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    FileHeaderPrefix.prototype._read = function() {
+      this.magic = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([120, 97, 114, 33])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([120, 97, 114, 33]), this.magic, this._io, "/types/file_header_prefix/seq/0");
+      }
+      this.lenHeader = this._io.readU2be();
+    }
+
+    /**
+     * internal; access `_root.header.len_header` instead
+     */
+
+    return FileHeaderPrefix;
+  })();
+
   var TocType = Xar.TocType = (function() {
     function TocType(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -195,5 +195,5 @@ var Xar = (function() {
 
   return Xar;
 })();
-return Xar;
-}));
+Xar_.Xar = Xar;
+});

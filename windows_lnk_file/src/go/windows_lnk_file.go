@@ -3,9 +3,9 @@
 import (
 	"github.com/kaitai-io/kaitai_struct_go_runtime/kaitai"
 	"bytes"
-	"golang.org/x/text/encoding/unicode"
 	"io"
 	"golang.org/x/text/encoding/charmap"
+	"golang.org/x/text/encoding/unicode"
 )
 
 
@@ -17,13 +17,6 @@ import (
  * @see <a href="https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf">Source</a>
  */
 
-type WindowsLnkFile_WindowState int
-const (
-	WindowsLnkFile_WindowState__Normal WindowsLnkFile_WindowState = 1
-	WindowsLnkFile_WindowState__Maximized WindowsLnkFile_WindowState = 3
-	WindowsLnkFile_WindowState__MinNoActive WindowsLnkFile_WindowState = 7
-)
-
 type WindowsLnkFile_DriveTypes int
 const (
 	WindowsLnkFile_DriveTypes__Unknown WindowsLnkFile_DriveTypes = 0
@@ -34,6 +27,23 @@ const (
 	WindowsLnkFile_DriveTypes__Cdrom WindowsLnkFile_DriveTypes = 5
 	WindowsLnkFile_DriveTypes__Ramdisk WindowsLnkFile_DriveTypes = 6
 )
+var values_WindowsLnkFile_DriveTypes = map[WindowsLnkFile_DriveTypes]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}}
+func (v WindowsLnkFile_DriveTypes) isDefined() bool {
+	_, ok := values_WindowsLnkFile_DriveTypes[v]
+	return ok
+}
+
+type WindowsLnkFile_WindowState int
+const (
+	WindowsLnkFile_WindowState__Normal WindowsLnkFile_WindowState = 1
+	WindowsLnkFile_WindowState__Maximized WindowsLnkFile_WindowState = 3
+	WindowsLnkFile_WindowState__MinNoActive WindowsLnkFile_WindowState = 7
+)
+var values_WindowsLnkFile_WindowState = map[WindowsLnkFile_WindowState]struct{}{1: {}, 3: {}, 7: {}}
+func (v WindowsLnkFile_WindowState) isDefined() bool {
+	_, ok := values_WindowsLnkFile_WindowState[v]
+	return ok
+}
 type WindowsLnkFile struct {
 	Header *WindowsLnkFile_FileHeader
 	TargetIdList *WindowsLnkFile_LinkTargetIdList
@@ -45,14 +55,18 @@ type WindowsLnkFile struct {
 	IconLocation *WindowsLnkFile_StringData
 	_io *kaitai.Stream
 	_root *WindowsLnkFile
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewWindowsLnkFile() *WindowsLnkFile {
 	return &WindowsLnkFile{
 	}
 }
 
-func (this *WindowsLnkFile) Read(io *kaitai.Stream, parent interface{}, root *WindowsLnkFile) (err error) {
+func (this WindowsLnkFile) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *WindowsLnkFile) Read(io *kaitai.Stream, parent kaitai.Struct, root *WindowsLnkFile) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -123,579 +137,6 @@ func (this *WindowsLnkFile) Read(io *kaitai.Stream, parent interface{}, root *Wi
 }
 
 /**
- * @see <a href="https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf">Section 2.2</a>
- */
-type WindowsLnkFile_LinkTargetIdList struct {
-	LenIdList uint16
-	IdList *WindowsShellItems
-	_io *kaitai.Stream
-	_root *WindowsLnkFile
-	_parent *WindowsLnkFile
-	_raw_IdList []byte
-}
-func NewWindowsLnkFile_LinkTargetIdList() *WindowsLnkFile_LinkTargetIdList {
-	return &WindowsLnkFile_LinkTargetIdList{
-	}
-}
-
-func (this *WindowsLnkFile_LinkTargetIdList) Read(io *kaitai.Stream, parent *WindowsLnkFile, root *WindowsLnkFile) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp9, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.LenIdList = uint16(tmp9)
-	tmp10, err := this._io.ReadBytes(int(this.LenIdList))
-	if err != nil {
-		return err
-	}
-	tmp10 = tmp10
-	this._raw_IdList = tmp10
-	_io__raw_IdList := kaitai.NewStream(bytes.NewReader(this._raw_IdList))
-	tmp11 := NewWindowsShellItems()
-	err = tmp11.Read(_io__raw_IdList, this, nil)
-	if err != nil {
-		return err
-	}
-	this.IdList = tmp11
-	return err
-}
-type WindowsLnkFile_StringData struct {
-	CharsStr uint16
-	Str string
-	_io *kaitai.Stream
-	_root *WindowsLnkFile
-	_parent *WindowsLnkFile
-}
-func NewWindowsLnkFile_StringData() *WindowsLnkFile_StringData {
-	return &WindowsLnkFile_StringData{
-	}
-}
-
-func (this *WindowsLnkFile_StringData) Read(io *kaitai.Stream, parent *WindowsLnkFile, root *WindowsLnkFile) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp12, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.CharsStr = uint16(tmp12)
-	tmp13, err := this._io.ReadBytes(int((this.CharsStr * 2)))
-	if err != nil {
-		return err
-	}
-	tmp13 = tmp13
-	tmp14, err := kaitai.BytesToStr(tmp13, unicode.UTF16(unicode.LittleEndian, unicode.IgnoreBOM).NewDecoder())
-	if err != nil {
-		return err
-	}
-	this.Str = tmp14
-	return err
-}
-
-/**
- * @see <a href="https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf">Section 2.3</a>
- */
-type WindowsLnkFile_LinkInfo struct {
-	LenAll uint32
-	All *WindowsLnkFile_LinkInfo_All
-	_io *kaitai.Stream
-	_root *WindowsLnkFile
-	_parent *WindowsLnkFile
-	_raw_All []byte
-}
-func NewWindowsLnkFile_LinkInfo() *WindowsLnkFile_LinkInfo {
-	return &WindowsLnkFile_LinkInfo{
-	}
-}
-
-func (this *WindowsLnkFile_LinkInfo) Read(io *kaitai.Stream, parent *WindowsLnkFile, root *WindowsLnkFile) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp15, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.LenAll = uint32(tmp15)
-	tmp16, err := this._io.ReadBytes(int((this.LenAll - 4)))
-	if err != nil {
-		return err
-	}
-	tmp16 = tmp16
-	this._raw_All = tmp16
-	_io__raw_All := kaitai.NewStream(bytes.NewReader(this._raw_All))
-	tmp17 := NewWindowsLnkFile_LinkInfo_All()
-	err = tmp17.Read(_io__raw_All, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.All = tmp17
-	return err
-}
-
-/**
- * @see <a href="https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf">Section 2.3.1</a>
- */
-type WindowsLnkFile_LinkInfo_VolumeIdBody struct {
-	DriveType WindowsLnkFile_DriveTypes
-	DriveSerialNumber uint32
-	OfsVolumeLabel uint32
-	OfsVolumeLabelUnicode uint32
-	_io *kaitai.Stream
-	_root *WindowsLnkFile
-	_parent *WindowsLnkFile_LinkInfo_VolumeIdSpec
-	_f_isUnicode bool
-	isUnicode bool
-	_f_volumeLabelAnsi bool
-	volumeLabelAnsi string
-}
-func NewWindowsLnkFile_LinkInfo_VolumeIdBody() *WindowsLnkFile_LinkInfo_VolumeIdBody {
-	return &WindowsLnkFile_LinkInfo_VolumeIdBody{
-	}
-}
-
-func (this *WindowsLnkFile_LinkInfo_VolumeIdBody) Read(io *kaitai.Stream, parent *WindowsLnkFile_LinkInfo_VolumeIdSpec, root *WindowsLnkFile) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp18, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.DriveType = WindowsLnkFile_DriveTypes(tmp18)
-	tmp19, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.DriveSerialNumber = uint32(tmp19)
-	tmp20, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.OfsVolumeLabel = uint32(tmp20)
-	tmp21, err := this.IsUnicode()
-	if err != nil {
-		return err
-	}
-	if (tmp21) {
-		tmp22, err := this._io.ReadU4le()
-		if err != nil {
-			return err
-		}
-		this.OfsVolumeLabelUnicode = uint32(tmp22)
-	}
-	return err
-}
-func (this *WindowsLnkFile_LinkInfo_VolumeIdBody) IsUnicode() (v bool, err error) {
-	if (this._f_isUnicode) {
-		return this.isUnicode, nil
-	}
-	this.isUnicode = bool(this.OfsVolumeLabel == 20)
-	this._f_isUnicode = true
-	return this.isUnicode, nil
-}
-func (this *WindowsLnkFile_LinkInfo_VolumeIdBody) VolumeLabelAnsi() (v string, err error) {
-	if (this._f_volumeLabelAnsi) {
-		return this.volumeLabelAnsi, nil
-	}
-	tmp23, err := this.IsUnicode()
-	if err != nil {
-		return "", err
-	}
-	if (!(tmp23)) {
-		_pos, err := this._io.Pos()
-		if err != nil {
-			return "", err
-		}
-		_, err = this._io.Seek(int64((this.OfsVolumeLabel - 4)), io.SeekStart)
-		if err != nil {
-			return "", err
-		}
-		tmp24, err := this._io.ReadBytesTerm(0, false, true, true)
-		if err != nil {
-			return "", err
-		}
-		tmp25, err := kaitai.BytesToStr(tmp24, charmap.CodePage437.NewDecoder())
-		if err != nil {
-			return "", err
-		}
-		this.volumeLabelAnsi = tmp25
-		_, err = this._io.Seek(_pos, io.SeekStart)
-		if err != nil {
-			return "", err
-		}
-		this._f_volumeLabelAnsi = true
-	}
-	this._f_volumeLabelAnsi = true
-	return this.volumeLabelAnsi, nil
-}
-
-/**
- * @see <a href="https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf">Section 2.3</a>
- */
-type WindowsLnkFile_LinkInfo_All struct {
-	LenHeader uint32
-	Header *WindowsLnkFile_LinkInfo_Header
-	_io *kaitai.Stream
-	_root *WindowsLnkFile
-	_parent *WindowsLnkFile_LinkInfo
-	_raw_Header []byte
-	_f_volumeId bool
-	volumeId *WindowsLnkFile_LinkInfo_VolumeIdSpec
-	_f_localBasePath bool
-	localBasePath []byte
-}
-func NewWindowsLnkFile_LinkInfo_All() *WindowsLnkFile_LinkInfo_All {
-	return &WindowsLnkFile_LinkInfo_All{
-	}
-}
-
-func (this *WindowsLnkFile_LinkInfo_All) Read(io *kaitai.Stream, parent *WindowsLnkFile_LinkInfo, root *WindowsLnkFile) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp26, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.LenHeader = uint32(tmp26)
-	tmp27, err := this._io.ReadBytes(int((this.LenHeader - 8)))
-	if err != nil {
-		return err
-	}
-	tmp27 = tmp27
-	this._raw_Header = tmp27
-	_io__raw_Header := kaitai.NewStream(bytes.NewReader(this._raw_Header))
-	tmp28 := NewWindowsLnkFile_LinkInfo_Header()
-	err = tmp28.Read(_io__raw_Header, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Header = tmp28
-	return err
-}
-func (this *WindowsLnkFile_LinkInfo_All) VolumeId() (v *WindowsLnkFile_LinkInfo_VolumeIdSpec, err error) {
-	if (this._f_volumeId) {
-		return this.volumeId, nil
-	}
-	if (this.Header.Flags.HasVolumeIdAndLocalBasePath) {
-		_pos, err := this._io.Pos()
-		if err != nil {
-			return nil, err
-		}
-		_, err = this._io.Seek(int64((this.Header.OfsVolumeId - 4)), io.SeekStart)
-		if err != nil {
-			return nil, err
-		}
-		tmp29 := NewWindowsLnkFile_LinkInfo_VolumeIdSpec()
-		err = tmp29.Read(this._io, this, this._root)
-		if err != nil {
-			return nil, err
-		}
-		this.volumeId = tmp29
-		_, err = this._io.Seek(_pos, io.SeekStart)
-		if err != nil {
-			return nil, err
-		}
-		this._f_volumeId = true
-	}
-	this._f_volumeId = true
-	return this.volumeId, nil
-}
-func (this *WindowsLnkFile_LinkInfo_All) LocalBasePath() (v []byte, err error) {
-	if (this._f_localBasePath) {
-		return this.localBasePath, nil
-	}
-	if (this.Header.Flags.HasVolumeIdAndLocalBasePath) {
-		_pos, err := this._io.Pos()
-		if err != nil {
-			return nil, err
-		}
-		_, err = this._io.Seek(int64((this.Header.OfsLocalBasePath - 4)), io.SeekStart)
-		if err != nil {
-			return nil, err
-		}
-		tmp30, err := this._io.ReadBytesTerm(0, false, true, true)
-		if err != nil {
-			return nil, err
-		}
-		this.localBasePath = tmp30
-		_, err = this._io.Seek(_pos, io.SeekStart)
-		if err != nil {
-			return nil, err
-		}
-		this._f_localBasePath = true
-	}
-	this._f_localBasePath = true
-	return this.localBasePath, nil
-}
-
-/**
- * @see <a href="https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf">Section 2.3.1</a>
- */
-type WindowsLnkFile_LinkInfo_VolumeIdSpec struct {
-	LenAll uint32
-	Body *WindowsLnkFile_LinkInfo_VolumeIdBody
-	_io *kaitai.Stream
-	_root *WindowsLnkFile
-	_parent *WindowsLnkFile_LinkInfo_All
-	_raw_Body []byte
-}
-func NewWindowsLnkFile_LinkInfo_VolumeIdSpec() *WindowsLnkFile_LinkInfo_VolumeIdSpec {
-	return &WindowsLnkFile_LinkInfo_VolumeIdSpec{
-	}
-}
-
-func (this *WindowsLnkFile_LinkInfo_VolumeIdSpec) Read(io *kaitai.Stream, parent *WindowsLnkFile_LinkInfo_All, root *WindowsLnkFile) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp31, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.LenAll = uint32(tmp31)
-	tmp32, err := this._io.ReadBytes(int((this.LenAll - 4)))
-	if err != nil {
-		return err
-	}
-	tmp32 = tmp32
-	this._raw_Body = tmp32
-	_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-	tmp33 := NewWindowsLnkFile_LinkInfo_VolumeIdBody()
-	err = tmp33.Read(_io__raw_Body, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Body = tmp33
-	return err
-}
-
-/**
- * @see <a href="https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf">Section 2.3</a>
- */
-type WindowsLnkFile_LinkInfo_LinkInfoFlags struct {
-	Reserved1 uint64
-	HasCommonNetRelLink bool
-	HasVolumeIdAndLocalBasePath bool
-	Reserved2 uint64
-	_io *kaitai.Stream
-	_root *WindowsLnkFile
-	_parent *WindowsLnkFile_LinkInfo_Header
-}
-func NewWindowsLnkFile_LinkInfo_LinkInfoFlags() *WindowsLnkFile_LinkInfo_LinkInfoFlags {
-	return &WindowsLnkFile_LinkInfo_LinkInfoFlags{
-	}
-}
-
-func (this *WindowsLnkFile_LinkInfo_LinkInfoFlags) Read(io *kaitai.Stream, parent *WindowsLnkFile_LinkInfo_Header, root *WindowsLnkFile) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp34, err := this._io.ReadBitsIntBe(6)
-	if err != nil {
-		return err
-	}
-	this.Reserved1 = tmp34
-	tmp35, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.HasCommonNetRelLink = tmp35 != 0
-	tmp36, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.HasVolumeIdAndLocalBasePath = tmp36 != 0
-	tmp37, err := this._io.ReadBitsIntBe(24)
-	if err != nil {
-		return err
-	}
-	this.Reserved2 = tmp37
-	return err
-}
-
-/**
- * @see <a href="https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf">Section 2.3</a>
- */
-type WindowsLnkFile_LinkInfo_Header struct {
-	Flags *WindowsLnkFile_LinkInfo_LinkInfoFlags
-	OfsVolumeId uint32
-	OfsLocalBasePath uint32
-	OfsCommonNetRelLink uint32
-	OfsCommonPathSuffix uint32
-	OfsLocalBasePathUnicode uint32
-	OfsCommonPathSuffixUnicode uint32
-	_io *kaitai.Stream
-	_root *WindowsLnkFile
-	_parent *WindowsLnkFile_LinkInfo_All
-}
-func NewWindowsLnkFile_LinkInfo_Header() *WindowsLnkFile_LinkInfo_Header {
-	return &WindowsLnkFile_LinkInfo_Header{
-	}
-}
-
-func (this *WindowsLnkFile_LinkInfo_Header) Read(io *kaitai.Stream, parent *WindowsLnkFile_LinkInfo_All, root *WindowsLnkFile) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp38 := NewWindowsLnkFile_LinkInfo_LinkInfoFlags()
-	err = tmp38.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Flags = tmp38
-	tmp39, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.OfsVolumeId = uint32(tmp39)
-	tmp40, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.OfsLocalBasePath = uint32(tmp40)
-	tmp41, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.OfsCommonNetRelLink = uint32(tmp41)
-	tmp42, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.OfsCommonPathSuffix = uint32(tmp42)
-	tmp43, err := this._io.EOF()
-	if err != nil {
-		return err
-	}
-	if (!(tmp43)) {
-		tmp44, err := this._io.ReadU4le()
-		if err != nil {
-			return err
-		}
-		this.OfsLocalBasePathUnicode = uint32(tmp44)
-	}
-	tmp45, err := this._io.EOF()
-	if err != nil {
-		return err
-	}
-	if (!(tmp45)) {
-		tmp46, err := this._io.ReadU4le()
-		if err != nil {
-			return err
-		}
-		this.OfsCommonPathSuffixUnicode = uint32(tmp46)
-	}
-	return err
-}
-
-/**
- * @see <a href="https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf">Section 2.1.1</a>
- */
-type WindowsLnkFile_LinkFlags struct {
-	IsUnicode bool
-	HasIconLocation bool
-	HasArguments bool
-	HasWorkDir bool
-	HasRelPath bool
-	HasName bool
-	HasLinkInfo bool
-	HasLinkTargetIdList bool
-	_unnamed8 uint64
-	Reserved uint64
-	KeepLocalIdListForUncTarget bool
-	_unnamed11 uint64
-	_io *kaitai.Stream
-	_root *WindowsLnkFile
-	_parent *WindowsLnkFile_FileHeader
-}
-func NewWindowsLnkFile_LinkFlags() *WindowsLnkFile_LinkFlags {
-	return &WindowsLnkFile_LinkFlags{
-	}
-}
-
-func (this *WindowsLnkFile_LinkFlags) Read(io *kaitai.Stream, parent *WindowsLnkFile_FileHeader, root *WindowsLnkFile) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp47, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.IsUnicode = tmp47 != 0
-	tmp48, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.HasIconLocation = tmp48 != 0
-	tmp49, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.HasArguments = tmp49 != 0
-	tmp50, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.HasWorkDir = tmp50 != 0
-	tmp51, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.HasRelPath = tmp51 != 0
-	tmp52, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.HasName = tmp52 != 0
-	tmp53, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.HasLinkInfo = tmp53 != 0
-	tmp54, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.HasLinkTargetIdList = tmp54 != 0
-	tmp55, err := this._io.ReadBitsIntBe(16)
-	if err != nil {
-		return err
-	}
-	this._unnamed8 = tmp55
-	tmp56, err := this._io.ReadBitsIntBe(5)
-	if err != nil {
-		return err
-	}
-	this.Reserved = tmp56
-	tmp57, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.KeepLocalIdListForUncTarget = tmp57 != 0
-	tmp58, err := this._io.ReadBitsIntBe(2)
-	if err != nil {
-		return err
-	}
-	this._unnamed11 = tmp58
-	return err
-}
-
-/**
  * @see <a href="https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf">Section 2.1</a>
  */
 type WindowsLnkFile_FileHeader struct {
@@ -721,88 +162,92 @@ func NewWindowsLnkFile_FileHeader() *WindowsLnkFile_FileHeader {
 	}
 }
 
+func (this WindowsLnkFile_FileHeader) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *WindowsLnkFile_FileHeader) Read(io *kaitai.Stream, parent *WindowsLnkFile, root *WindowsLnkFile) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp59, err := this._io.ReadBytes(int(4))
+	tmp9, err := this._io.ReadBytes(int(4))
 	if err != nil {
 		return err
 	}
-	tmp59 = tmp59
-	this.LenHeader = tmp59
+	tmp9 = tmp9
+	this.LenHeader = tmp9
 	if !(bytes.Equal(this.LenHeader, []uint8{76, 0, 0, 0})) {
 		return kaitai.NewValidationNotEqualError([]uint8{76, 0, 0, 0}, this.LenHeader, this._io, "/types/file_header/seq/0")
 	}
-	tmp60, err := this._io.ReadBytes(int(16))
+	tmp10, err := this._io.ReadBytes(int(16))
 	if err != nil {
 		return err
 	}
-	tmp60 = tmp60
-	this.LinkClsid = tmp60
+	tmp10 = tmp10
+	this.LinkClsid = tmp10
 	if !(bytes.Equal(this.LinkClsid, []uint8{1, 20, 2, 0, 0, 0, 0, 0, 192, 0, 0, 0, 0, 0, 0, 70})) {
 		return kaitai.NewValidationNotEqualError([]uint8{1, 20, 2, 0, 0, 0, 0, 0, 192, 0, 0, 0, 0, 0, 0, 70}, this.LinkClsid, this._io, "/types/file_header/seq/1")
 	}
-	tmp61, err := this._io.ReadBytes(int(4))
+	tmp11, err := this._io.ReadBytes(int(4))
 	if err != nil {
 		return err
 	}
-	tmp61 = tmp61
-	this._raw_Flags = tmp61
+	tmp11 = tmp11
+	this._raw_Flags = tmp11
 	_io__raw_Flags := kaitai.NewStream(bytes.NewReader(this._raw_Flags))
-	tmp62 := NewWindowsLnkFile_LinkFlags()
-	err = tmp62.Read(_io__raw_Flags, this, this._root)
+	tmp12 := NewWindowsLnkFile_LinkFlags()
+	err = tmp12.Read(_io__raw_Flags, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Flags = tmp62
-	tmp63, err := this._io.ReadU4le()
+	this.Flags = tmp12
+	tmp13, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.FileAttrs = uint32(tmp63)
-	tmp64, err := this._io.ReadU8le()
+	this.FileAttrs = uint32(tmp13)
+	tmp14, err := this._io.ReadU8le()
 	if err != nil {
 		return err
 	}
-	this.TimeCreation = uint64(tmp64)
-	tmp65, err := this._io.ReadU8le()
+	this.TimeCreation = uint64(tmp14)
+	tmp15, err := this._io.ReadU8le()
 	if err != nil {
 		return err
 	}
-	this.TimeAccess = uint64(tmp65)
-	tmp66, err := this._io.ReadU8le()
+	this.TimeAccess = uint64(tmp15)
+	tmp16, err := this._io.ReadU8le()
 	if err != nil {
 		return err
 	}
-	this.TimeWrite = uint64(tmp66)
-	tmp67, err := this._io.ReadU4le()
+	this.TimeWrite = uint64(tmp16)
+	tmp17, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.TargetFileSize = uint32(tmp67)
-	tmp68, err := this._io.ReadS4le()
+	this.TargetFileSize = uint32(tmp17)
+	tmp18, err := this._io.ReadS4le()
 	if err != nil {
 		return err
 	}
-	this.IconIndex = int32(tmp68)
-	tmp69, err := this._io.ReadU4le()
+	this.IconIndex = int32(tmp18)
+	tmp19, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.ShowCommand = WindowsLnkFile_WindowState(tmp69)
-	tmp70, err := this._io.ReadU2le()
+	this.ShowCommand = WindowsLnkFile_WindowState(tmp19)
+	tmp20, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.Hotkey = uint16(tmp70)
-	tmp71, err := this._io.ReadBytes(int(10))
+	this.Hotkey = uint16(tmp20)
+	tmp21, err := this._io.ReadBytes(int(10))
 	if err != nil {
 		return err
 	}
-	tmp71 = tmp71
-	this.Reserved = tmp71
+	tmp21 = tmp21
+	this.Reserved = tmp21
 	if !(bytes.Equal(this.Reserved, []uint8{0, 0, 0, 0, 0, 0, 0, 0, 0, 0})) {
 		return kaitai.NewValidationNotEqualError([]uint8{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, this.Reserved, this._io, "/types/file_header/seq/11")
 	}
@@ -830,3 +275,609 @@ func (this *WindowsLnkFile_FileHeader) Read(io *kaitai.Stream, parent *WindowsLn
 /**
  * Window state to set after the launch of target executable
  */
+
+/**
+ * @see <a href="https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf">Section 2.1.1</a>
+ */
+type WindowsLnkFile_LinkFlags struct {
+	IsUnicode bool
+	HasIconLocation bool
+	HasArguments bool
+	HasWorkDir bool
+	HasRelPath bool
+	HasName bool
+	HasLinkInfo bool
+	HasLinkTargetIdList bool
+	_unnamed8 uint64
+	Reserved uint64
+	KeepLocalIdListForUncTarget bool
+	_unnamed11 uint64
+	_io *kaitai.Stream
+	_root *WindowsLnkFile
+	_parent *WindowsLnkFile_FileHeader
+}
+func NewWindowsLnkFile_LinkFlags() *WindowsLnkFile_LinkFlags {
+	return &WindowsLnkFile_LinkFlags{
+	}
+}
+
+func (this WindowsLnkFile_LinkFlags) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *WindowsLnkFile_LinkFlags) Read(io *kaitai.Stream, parent *WindowsLnkFile_FileHeader, root *WindowsLnkFile) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp22, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.IsUnicode = tmp22 != 0
+	tmp23, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.HasIconLocation = tmp23 != 0
+	tmp24, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.HasArguments = tmp24 != 0
+	tmp25, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.HasWorkDir = tmp25 != 0
+	tmp26, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.HasRelPath = tmp26 != 0
+	tmp27, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.HasName = tmp27 != 0
+	tmp28, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.HasLinkInfo = tmp28 != 0
+	tmp29, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.HasLinkTargetIdList = tmp29 != 0
+	tmp30, err := this._io.ReadBitsIntBe(16)
+	if err != nil {
+		return err
+	}
+	this._unnamed8 = tmp30
+	tmp31, err := this._io.ReadBitsIntBe(5)
+	if err != nil {
+		return err
+	}
+	this.Reserved = tmp31
+	tmp32, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.KeepLocalIdListForUncTarget = tmp32 != 0
+	tmp33, err := this._io.ReadBitsIntBe(2)
+	if err != nil {
+		return err
+	}
+	this._unnamed11 = tmp33
+	return err
+}
+
+/**
+ * @see <a href="https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf">Section 2.3</a>
+ */
+type WindowsLnkFile_LinkInfo struct {
+	LenAll uint32
+	All *WindowsLnkFile_LinkInfo_All
+	_io *kaitai.Stream
+	_root *WindowsLnkFile
+	_parent *WindowsLnkFile
+	_raw_All []byte
+}
+func NewWindowsLnkFile_LinkInfo() *WindowsLnkFile_LinkInfo {
+	return &WindowsLnkFile_LinkInfo{
+	}
+}
+
+func (this WindowsLnkFile_LinkInfo) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *WindowsLnkFile_LinkInfo) Read(io *kaitai.Stream, parent *WindowsLnkFile, root *WindowsLnkFile) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp34, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.LenAll = uint32(tmp34)
+	tmp35, err := this._io.ReadBytes(int(this.LenAll - 4))
+	if err != nil {
+		return err
+	}
+	tmp35 = tmp35
+	this._raw_All = tmp35
+	_io__raw_All := kaitai.NewStream(bytes.NewReader(this._raw_All))
+	tmp36 := NewWindowsLnkFile_LinkInfo_All()
+	err = tmp36.Read(_io__raw_All, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.All = tmp36
+	return err
+}
+
+/**
+ * @see <a href="https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf">Section 2.3</a>
+ */
+type WindowsLnkFile_LinkInfo_All struct {
+	LenHeader uint32
+	Header *WindowsLnkFile_LinkInfo_Header
+	_io *kaitai.Stream
+	_root *WindowsLnkFile
+	_parent *WindowsLnkFile_LinkInfo
+	_raw_Header []byte
+	_f_localBasePath bool
+	localBasePath []byte
+	_f_volumeId bool
+	volumeId *WindowsLnkFile_LinkInfo_VolumeIdSpec
+}
+func NewWindowsLnkFile_LinkInfo_All() *WindowsLnkFile_LinkInfo_All {
+	return &WindowsLnkFile_LinkInfo_All{
+	}
+}
+
+func (this WindowsLnkFile_LinkInfo_All) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *WindowsLnkFile_LinkInfo_All) Read(io *kaitai.Stream, parent *WindowsLnkFile_LinkInfo, root *WindowsLnkFile) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp37, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.LenHeader = uint32(tmp37)
+	tmp38, err := this._io.ReadBytes(int(this.LenHeader - 8))
+	if err != nil {
+		return err
+	}
+	tmp38 = tmp38
+	this._raw_Header = tmp38
+	_io__raw_Header := kaitai.NewStream(bytes.NewReader(this._raw_Header))
+	tmp39 := NewWindowsLnkFile_LinkInfo_Header()
+	err = tmp39.Read(_io__raw_Header, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Header = tmp39
+	return err
+}
+func (this *WindowsLnkFile_LinkInfo_All) LocalBasePath() (v []byte, err error) {
+	if (this._f_localBasePath) {
+		return this.localBasePath, nil
+	}
+	this._f_localBasePath = true
+	if (this.Header.Flags.HasVolumeIdAndLocalBasePath) {
+		_pos, err := this._io.Pos()
+		if err != nil {
+			return nil, err
+		}
+		_, err = this._io.Seek(int64(this.Header.OfsLocalBasePath - 4), io.SeekStart)
+		if err != nil {
+			return nil, err
+		}
+		tmp40, err := this._io.ReadBytesTerm(0, false, true, true)
+		if err != nil {
+			return nil, err
+		}
+		this.localBasePath = tmp40
+		_, err = this._io.Seek(_pos, io.SeekStart)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return this.localBasePath, nil
+}
+func (this *WindowsLnkFile_LinkInfo_All) VolumeId() (v *WindowsLnkFile_LinkInfo_VolumeIdSpec, err error) {
+	if (this._f_volumeId) {
+		return this.volumeId, nil
+	}
+	this._f_volumeId = true
+	if (this.Header.Flags.HasVolumeIdAndLocalBasePath) {
+		_pos, err := this._io.Pos()
+		if err != nil {
+			return nil, err
+		}
+		_, err = this._io.Seek(int64(this.Header.OfsVolumeId - 4), io.SeekStart)
+		if err != nil {
+			return nil, err
+		}
+		tmp41 := NewWindowsLnkFile_LinkInfo_VolumeIdSpec()
+		err = tmp41.Read(this._io, this, this._root)
+		if err != nil {
+			return nil, err
+		}
+		this.volumeId = tmp41
+		_, err = this._io.Seek(_pos, io.SeekStart)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return this.volumeId, nil
+}
+
+/**
+ * @see <a href="https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf">Section 2.3</a>
+ */
+type WindowsLnkFile_LinkInfo_Header struct {
+	Flags *WindowsLnkFile_LinkInfo_LinkInfoFlags
+	OfsVolumeId uint32
+	OfsLocalBasePath uint32
+	OfsCommonNetRelLink uint32
+	OfsCommonPathSuffix uint32
+	OfsLocalBasePathUnicode uint32
+	OfsCommonPathSuffixUnicode uint32
+	_io *kaitai.Stream
+	_root *WindowsLnkFile
+	_parent *WindowsLnkFile_LinkInfo_All
+}
+func NewWindowsLnkFile_LinkInfo_Header() *WindowsLnkFile_LinkInfo_Header {
+	return &WindowsLnkFile_LinkInfo_Header{
+	}
+}
+
+func (this WindowsLnkFile_LinkInfo_Header) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *WindowsLnkFile_LinkInfo_Header) Read(io *kaitai.Stream, parent *WindowsLnkFile_LinkInfo_All, root *WindowsLnkFile) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp42 := NewWindowsLnkFile_LinkInfo_LinkInfoFlags()
+	err = tmp42.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Flags = tmp42
+	tmp43, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.OfsVolumeId = uint32(tmp43)
+	tmp44, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.OfsLocalBasePath = uint32(tmp44)
+	tmp45, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.OfsCommonNetRelLink = uint32(tmp45)
+	tmp46, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.OfsCommonPathSuffix = uint32(tmp46)
+	tmp47, err := this._io.EOF()
+	if err != nil {
+		return err
+	}
+	if (!(tmp47)) {
+		tmp48, err := this._io.ReadU4le()
+		if err != nil {
+			return err
+		}
+		this.OfsLocalBasePathUnicode = uint32(tmp48)
+	}
+	tmp49, err := this._io.EOF()
+	if err != nil {
+		return err
+	}
+	if (!(tmp49)) {
+		tmp50, err := this._io.ReadU4le()
+		if err != nil {
+			return err
+		}
+		this.OfsCommonPathSuffixUnicode = uint32(tmp50)
+	}
+	return err
+}
+
+/**
+ * @see <a href="https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf">Section 2.3</a>
+ */
+type WindowsLnkFile_LinkInfo_LinkInfoFlags struct {
+	Reserved1 uint64
+	HasCommonNetRelLink bool
+	HasVolumeIdAndLocalBasePath bool
+	Reserved2 uint64
+	_io *kaitai.Stream
+	_root *WindowsLnkFile
+	_parent *WindowsLnkFile_LinkInfo_Header
+}
+func NewWindowsLnkFile_LinkInfo_LinkInfoFlags() *WindowsLnkFile_LinkInfo_LinkInfoFlags {
+	return &WindowsLnkFile_LinkInfo_LinkInfoFlags{
+	}
+}
+
+func (this WindowsLnkFile_LinkInfo_LinkInfoFlags) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *WindowsLnkFile_LinkInfo_LinkInfoFlags) Read(io *kaitai.Stream, parent *WindowsLnkFile_LinkInfo_Header, root *WindowsLnkFile) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp51, err := this._io.ReadBitsIntBe(6)
+	if err != nil {
+		return err
+	}
+	this.Reserved1 = tmp51
+	tmp52, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.HasCommonNetRelLink = tmp52 != 0
+	tmp53, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.HasVolumeIdAndLocalBasePath = tmp53 != 0
+	tmp54, err := this._io.ReadBitsIntBe(24)
+	if err != nil {
+		return err
+	}
+	this.Reserved2 = tmp54
+	return err
+}
+
+/**
+ * @see <a href="https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf">Section 2.3.1</a>
+ */
+type WindowsLnkFile_LinkInfo_VolumeIdBody struct {
+	DriveType WindowsLnkFile_DriveTypes
+	DriveSerialNumber uint32
+	OfsVolumeLabel uint32
+	OfsVolumeLabelUnicode uint32
+	_io *kaitai.Stream
+	_root *WindowsLnkFile
+	_parent *WindowsLnkFile_LinkInfo_VolumeIdSpec
+	_f_isUnicode bool
+	isUnicode bool
+	_f_volumeLabelAnsi bool
+	volumeLabelAnsi string
+}
+func NewWindowsLnkFile_LinkInfo_VolumeIdBody() *WindowsLnkFile_LinkInfo_VolumeIdBody {
+	return &WindowsLnkFile_LinkInfo_VolumeIdBody{
+	}
+}
+
+func (this WindowsLnkFile_LinkInfo_VolumeIdBody) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *WindowsLnkFile_LinkInfo_VolumeIdBody) Read(io *kaitai.Stream, parent *WindowsLnkFile_LinkInfo_VolumeIdSpec, root *WindowsLnkFile) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp55, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.DriveType = WindowsLnkFile_DriveTypes(tmp55)
+	tmp56, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.DriveSerialNumber = uint32(tmp56)
+	tmp57, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.OfsVolumeLabel = uint32(tmp57)
+	tmp58, err := this.IsUnicode()
+	if err != nil {
+		return err
+	}
+	if (tmp58) {
+		tmp59, err := this._io.ReadU4le()
+		if err != nil {
+			return err
+		}
+		this.OfsVolumeLabelUnicode = uint32(tmp59)
+	}
+	return err
+}
+func (this *WindowsLnkFile_LinkInfo_VolumeIdBody) IsUnicode() (v bool, err error) {
+	if (this._f_isUnicode) {
+		return this.isUnicode, nil
+	}
+	this._f_isUnicode = true
+	this.isUnicode = bool(this.OfsVolumeLabel == 20)
+	return this.isUnicode, nil
+}
+func (this *WindowsLnkFile_LinkInfo_VolumeIdBody) VolumeLabelAnsi() (v string, err error) {
+	if (this._f_volumeLabelAnsi) {
+		return this.volumeLabelAnsi, nil
+	}
+	this._f_volumeLabelAnsi = true
+	tmp60, err := this.IsUnicode()
+	if err != nil {
+		return "", err
+	}
+	if (!(tmp60)) {
+		_pos, err := this._io.Pos()
+		if err != nil {
+			return "", err
+		}
+		_, err = this._io.Seek(int64(this.OfsVolumeLabel - 4), io.SeekStart)
+		if err != nil {
+			return "", err
+		}
+		tmp61, err := this._io.ReadBytesTerm(0, false, true, true)
+		if err != nil {
+			return "", err
+		}
+		tmp62, err := kaitai.BytesToStr(tmp61, charmap.CodePage437.NewDecoder())
+		if err != nil {
+			return "", err
+		}
+		this.volumeLabelAnsi = tmp62
+		_, err = this._io.Seek(_pos, io.SeekStart)
+		if err != nil {
+			return "", err
+		}
+	}
+	return this.volumeLabelAnsi, nil
+}
+
+/**
+ * @see <a href="https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf">Section 2.3.1</a>
+ */
+type WindowsLnkFile_LinkInfo_VolumeIdSpec struct {
+	LenAll uint32
+	Body *WindowsLnkFile_LinkInfo_VolumeIdBody
+	_io *kaitai.Stream
+	_root *WindowsLnkFile
+	_parent *WindowsLnkFile_LinkInfo_All
+	_raw_Body []byte
+}
+func NewWindowsLnkFile_LinkInfo_VolumeIdSpec() *WindowsLnkFile_LinkInfo_VolumeIdSpec {
+	return &WindowsLnkFile_LinkInfo_VolumeIdSpec{
+	}
+}
+
+func (this WindowsLnkFile_LinkInfo_VolumeIdSpec) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *WindowsLnkFile_LinkInfo_VolumeIdSpec) Read(io *kaitai.Stream, parent *WindowsLnkFile_LinkInfo_All, root *WindowsLnkFile) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp63, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.LenAll = uint32(tmp63)
+	tmp64, err := this._io.ReadBytes(int(this.LenAll - 4))
+	if err != nil {
+		return err
+	}
+	tmp64 = tmp64
+	this._raw_Body = tmp64
+	_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+	tmp65 := NewWindowsLnkFile_LinkInfo_VolumeIdBody()
+	err = tmp65.Read(_io__raw_Body, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Body = tmp65
+	return err
+}
+
+/**
+ * @see <a href="https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf">Section 2.2</a>
+ */
+type WindowsLnkFile_LinkTargetIdList struct {
+	LenIdList uint16
+	IdList *WindowsShellItems
+	_io *kaitai.Stream
+	_root *WindowsLnkFile
+	_parent *WindowsLnkFile
+	_raw_IdList []byte
+}
+func NewWindowsLnkFile_LinkTargetIdList() *WindowsLnkFile_LinkTargetIdList {
+	return &WindowsLnkFile_LinkTargetIdList{
+	}
+}
+
+func (this WindowsLnkFile_LinkTargetIdList) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *WindowsLnkFile_LinkTargetIdList) Read(io *kaitai.Stream, parent *WindowsLnkFile, root *WindowsLnkFile) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp66, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.LenIdList = uint16(tmp66)
+	tmp67, err := this._io.ReadBytes(int(this.LenIdList))
+	if err != nil {
+		return err
+	}
+	tmp67 = tmp67
+	this._raw_IdList = tmp67
+	_io__raw_IdList := kaitai.NewStream(bytes.NewReader(this._raw_IdList))
+	tmp68 := NewWindowsShellItems()
+	err = tmp68.Read(_io__raw_IdList, nil, nil)
+	if err != nil {
+		return err
+	}
+	this.IdList = tmp68
+	return err
+}
+type WindowsLnkFile_StringData struct {
+	CharsStr uint16
+	Str string
+	_io *kaitai.Stream
+	_root *WindowsLnkFile
+	_parent *WindowsLnkFile
+}
+func NewWindowsLnkFile_StringData() *WindowsLnkFile_StringData {
+	return &WindowsLnkFile_StringData{
+	}
+}
+
+func (this WindowsLnkFile_StringData) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *WindowsLnkFile_StringData) Read(io *kaitai.Stream, parent *WindowsLnkFile, root *WindowsLnkFile) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp69, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.CharsStr = uint16(tmp69)
+	tmp70, err := this._io.ReadBytes(int(this.CharsStr * 2))
+	if err != nil {
+		return err
+	}
+	tmp70 = tmp70
+	tmp71, err := kaitai.BytesToStr(tmp70, unicode.UTF16(unicode.LittleEndian, unicode.IgnoreBOM).NewDecoder())
+	if err != nil {
+		return err
+	}
+	this.Str = tmp71
+	return err
+}

@@ -4,7 +4,7 @@
 
 some_ip_t::some_ip_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, some_ip_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     m_header = 0;
     m__io__raw_payload = 0;
 
@@ -22,13 +22,13 @@ void some_ip_t::_read() {
     switch (header()->message_id()->value()) {
     case 4294934784UL: {
         n_payload = false;
-        m__raw_payload = m__io->read_bytes((header()->length() - 8));
+        m__raw_payload = m__io->read_bytes(header()->length() - 8);
         m__io__raw_payload = new kaitai::kstream(m__raw_payload);
         m_payload = new some_ip_sd_t(m__io__raw_payload);
         break;
     }
     default: {
-        m__raw_payload = m__io->read_bytes((header()->length() - 8));
+        m__raw_payload = m__io->read_bytes(header()->length() - 8);
         break;
     }
     }
@@ -50,6 +50,43 @@ void some_ip_t::_clean_up() {
             delete m_payload; m_payload = 0;
         }
     }
+}
+std::set<some_ip_t::header_t::message_type_enum_t> some_ip_t::header_t::_build_values_message_type_enum_t() {
+    std::set<some_ip_t::header_t::message_type_enum_t> _t;
+    _t.insert(some_ip_t::header_t::MESSAGE_TYPE_ENUM_REQUEST);
+    _t.insert(some_ip_t::header_t::MESSAGE_TYPE_ENUM_REQUEST_NO_RETURN);
+    _t.insert(some_ip_t::header_t::MESSAGE_TYPE_ENUM_NOTIFICATION);
+    _t.insert(some_ip_t::header_t::MESSAGE_TYPE_ENUM_REQUEST_ACK);
+    _t.insert(some_ip_t::header_t::MESSAGE_TYPE_ENUM_REQUEST_NO_RETURN_ACK);
+    _t.insert(some_ip_t::header_t::MESSAGE_TYPE_ENUM_NOTIFICATION_ACK);
+    _t.insert(some_ip_t::header_t::MESSAGE_TYPE_ENUM_RESPONSE);
+    _t.insert(some_ip_t::header_t::MESSAGE_TYPE_ENUM_ERROR);
+    _t.insert(some_ip_t::header_t::MESSAGE_TYPE_ENUM_RESPONSE_ACK);
+    _t.insert(some_ip_t::header_t::MESSAGE_TYPE_ENUM_ERROR_ACK);
+    return _t;
+}
+const std::set<some_ip_t::header_t::message_type_enum_t> some_ip_t::header_t::_values_message_type_enum_t = some_ip_t::header_t::_build_values_message_type_enum_t();
+bool some_ip_t::header_t::_is_defined_message_type_enum_t(some_ip_t::header_t::message_type_enum_t v) {
+    return some_ip_t::header_t::_values_message_type_enum_t.find(v) != some_ip_t::header_t::_values_message_type_enum_t.end();
+}
+std::set<some_ip_t::header_t::return_code_enum_t> some_ip_t::header_t::_build_values_return_code_enum_t() {
+    std::set<some_ip_t::header_t::return_code_enum_t> _t;
+    _t.insert(some_ip_t::header_t::RETURN_CODE_ENUM_OK);
+    _t.insert(some_ip_t::header_t::RETURN_CODE_ENUM_NOT_OK);
+    _t.insert(some_ip_t::header_t::RETURN_CODE_ENUM_UNKNOWN_SERVICE);
+    _t.insert(some_ip_t::header_t::RETURN_CODE_ENUM_UNKNOWN_METHOD);
+    _t.insert(some_ip_t::header_t::RETURN_CODE_ENUM_NOT_READY);
+    _t.insert(some_ip_t::header_t::RETURN_CODE_ENUM_NOT_REACHABLE);
+    _t.insert(some_ip_t::header_t::RETURN_CODE_ENUM_TIME_OUT);
+    _t.insert(some_ip_t::header_t::RETURN_CODE_ENUM_WRONG_PROTOCOL_VERSION);
+    _t.insert(some_ip_t::header_t::RETURN_CODE_ENUM_WRONG_INTERFACE_VERSION);
+    _t.insert(some_ip_t::header_t::RETURN_CODE_ENUM_MALFORMED_MESSAGE);
+    _t.insert(some_ip_t::header_t::RETURN_CODE_ENUM_WRONG_MESSAGE_TYPE);
+    return _t;
+}
+const std::set<some_ip_t::header_t::return_code_enum_t> some_ip_t::header_t::_values_return_code_enum_t = some_ip_t::header_t::_build_values_return_code_enum_t();
+bool some_ip_t::header_t::_is_defined_return_code_enum_t(some_ip_t::header_t::return_code_enum_t v) {
+    return some_ip_t::header_t::_values_return_code_enum_t.find(v) != some_ip_t::header_t::_values_return_code_enum_t.end();
 }
 
 some_ip_t::header_t::header_t(kaitai::kstream* p__io, some_ip_t* p__parent, some_ip_t* p__root) : kaitai::kstruct(p__io) {
@@ -146,11 +183,11 @@ void some_ip_t::header_t::message_id_t::_clean_up() {
 uint32_t some_ip_t::header_t::message_id_t::value() {
     if (f_value)
         return m_value;
+    f_value = true;
     std::streampos _pos = m__io->pos();
     m__io->seek(0);
     m_value = m__io->read_u4be();
     m__io->seek(_pos);
-    f_value = true;
     return m_value;
 }
 
@@ -184,18 +221,18 @@ void some_ip_t::header_t::request_id_t::_clean_up() {
 uint32_t some_ip_t::header_t::request_id_t::value() {
     if (f_value)
         return m_value;
+    f_value = true;
     std::streampos _pos = m__io->pos();
     m__io->seek(0);
     m_value = m__io->read_u4be();
     m__io->seek(_pos);
-    f_value = true;
     return m_value;
 }
 
 bool some_ip_t::header_t::is_valid_service_discovery() {
     if (f_is_valid_service_discovery)
         return m_is_valid_service_discovery;
-    m_is_valid_service_discovery =  ((message_id()->value() == 4294934784UL) && (protocol_version() == 1) && (interface_version() == 1) && (message_type() == some_ip_t::header_t::MESSAGE_TYPE_ENUM_NOTIFICATION) && (return_code() == some_ip_t::header_t::RETURN_CODE_ENUM_OK)) ;
     f_is_valid_service_discovery = true;
+    m_is_valid_service_discovery =  ((message_id()->value() == 4294934784UL) && (protocol_version() == 1) && (interface_version() == 1) && (message_type() == some_ip_t::header_t::MESSAGE_TYPE_ENUM_NOTIFICATION) && (return_code() == some_ip_t::header_t::RETURN_CODE_ENUM_OK)) ;
     return m_is_valid_service_discovery;
 }

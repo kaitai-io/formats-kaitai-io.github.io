@@ -13,6 +13,58 @@ import (
  * @see <a href="https://source.denx.de/u-boot/u-boot/-/raw/e4dba4ba6f/include/image.h">Source</a>
  */
 
+type Uimage_UimageArch int
+const (
+	Uimage_UimageArch__Invalid Uimage_UimageArch = 0
+	Uimage_UimageArch__Alpha Uimage_UimageArch = 1
+	Uimage_UimageArch__Arm Uimage_UimageArch = 2
+	Uimage_UimageArch__I386 Uimage_UimageArch = 3
+	Uimage_UimageArch__Ia64 Uimage_UimageArch = 4
+	Uimage_UimageArch__Mips Uimage_UimageArch = 5
+	Uimage_UimageArch__Mips64 Uimage_UimageArch = 6
+	Uimage_UimageArch__Ppc Uimage_UimageArch = 7
+	Uimage_UimageArch__S390 Uimage_UimageArch = 8
+	Uimage_UimageArch__Sh Uimage_UimageArch = 9
+	Uimage_UimageArch__Sparc Uimage_UimageArch = 10
+	Uimage_UimageArch__Sparc64 Uimage_UimageArch = 11
+	Uimage_UimageArch__M68k Uimage_UimageArch = 12
+	Uimage_UimageArch__Nios Uimage_UimageArch = 13
+	Uimage_UimageArch__Microblaze Uimage_UimageArch = 14
+	Uimage_UimageArch__Nios2 Uimage_UimageArch = 15
+	Uimage_UimageArch__Blackfin Uimage_UimageArch = 16
+	Uimage_UimageArch__Avr32 Uimage_UimageArch = 17
+	Uimage_UimageArch__St200 Uimage_UimageArch = 18
+	Uimage_UimageArch__Sandbox Uimage_UimageArch = 19
+	Uimage_UimageArch__Nds32 Uimage_UimageArch = 20
+	Uimage_UimageArch__Openrisc Uimage_UimageArch = 21
+	Uimage_UimageArch__Arm64 Uimage_UimageArch = 22
+	Uimage_UimageArch__Arc Uimage_UimageArch = 23
+	Uimage_UimageArch__X8664 Uimage_UimageArch = 24
+	Uimage_UimageArch__Xtensa Uimage_UimageArch = 25
+	Uimage_UimageArch__Riscv Uimage_UimageArch = 26
+)
+var values_Uimage_UimageArch = map[Uimage_UimageArch]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}, 10: {}, 11: {}, 12: {}, 13: {}, 14: {}, 15: {}, 16: {}, 17: {}, 18: {}, 19: {}, 20: {}, 21: {}, 22: {}, 23: {}, 24: {}, 25: {}, 26: {}}
+func (v Uimage_UimageArch) isDefined() bool {
+	_, ok := values_Uimage_UimageArch[v]
+	return ok
+}
+
+type Uimage_UimageComp int
+const (
+	Uimage_UimageComp__None Uimage_UimageComp = 0
+	Uimage_UimageComp__Gzip Uimage_UimageComp = 1
+	Uimage_UimageComp__Bzip2 Uimage_UimageComp = 2
+	Uimage_UimageComp__Lzma Uimage_UimageComp = 3
+	Uimage_UimageComp__Lzo Uimage_UimageComp = 4
+	Uimage_UimageComp__Lz4 Uimage_UimageComp = 5
+	Uimage_UimageComp__Zstd Uimage_UimageComp = 6
+)
+var values_Uimage_UimageComp = map[Uimage_UimageComp]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}}
+func (v Uimage_UimageComp) isDefined() bool {
+	_, ok := values_Uimage_UimageComp[v]
+	return ok
+}
+
 type Uimage_UimageOs int
 const (
 	Uimage_UimageOs__Invalid Uimage_UimageOs = 0
@@ -45,48 +97,11 @@ const (
 	Uimage_UimageOs__Opensbi Uimage_UimageOs = 27
 	Uimage_UimageOs__Efi Uimage_UimageOs = 28
 )
-
-type Uimage_UimageArch int
-const (
-	Uimage_UimageArch__Invalid Uimage_UimageArch = 0
-	Uimage_UimageArch__Alpha Uimage_UimageArch = 1
-	Uimage_UimageArch__Arm Uimage_UimageArch = 2
-	Uimage_UimageArch__I386 Uimage_UimageArch = 3
-	Uimage_UimageArch__Ia64 Uimage_UimageArch = 4
-	Uimage_UimageArch__Mips Uimage_UimageArch = 5
-	Uimage_UimageArch__Mips64 Uimage_UimageArch = 6
-	Uimage_UimageArch__Ppc Uimage_UimageArch = 7
-	Uimage_UimageArch__S390 Uimage_UimageArch = 8
-	Uimage_UimageArch__Sh Uimage_UimageArch = 9
-	Uimage_UimageArch__Sparc Uimage_UimageArch = 10
-	Uimage_UimageArch__Sparc64 Uimage_UimageArch = 11
-	Uimage_UimageArch__M68k Uimage_UimageArch = 12
-	Uimage_UimageArch__Nios Uimage_UimageArch = 13
-	Uimage_UimageArch__Microblaze Uimage_UimageArch = 14
-	Uimage_UimageArch__Nios2 Uimage_UimageArch = 15
-	Uimage_UimageArch__Blackfin Uimage_UimageArch = 16
-	Uimage_UimageArch__Avr32 Uimage_UimageArch = 17
-	Uimage_UimageArch__St200 Uimage_UimageArch = 18
-	Uimage_UimageArch__Sandbox Uimage_UimageArch = 19
-	Uimage_UimageArch__Nds32 Uimage_UimageArch = 20
-	Uimage_UimageArch__Openrisc Uimage_UimageArch = 21
-	Uimage_UimageArch__Arm64 Uimage_UimageArch = 22
-	Uimage_UimageArch__Arc Uimage_UimageArch = 23
-	Uimage_UimageArch__X8664 Uimage_UimageArch = 24
-	Uimage_UimageArch__Xtensa Uimage_UimageArch = 25
-	Uimage_UimageArch__Riscv Uimage_UimageArch = 26
-)
-
-type Uimage_UimageComp int
-const (
-	Uimage_UimageComp__None Uimage_UimageComp = 0
-	Uimage_UimageComp__Gzip Uimage_UimageComp = 1
-	Uimage_UimageComp__Bzip2 Uimage_UimageComp = 2
-	Uimage_UimageComp__Lzma Uimage_UimageComp = 3
-	Uimage_UimageComp__Lzo Uimage_UimageComp = 4
-	Uimage_UimageComp__Lz4 Uimage_UimageComp = 5
-	Uimage_UimageComp__Zstd Uimage_UimageComp = 6
-)
+var values_Uimage_UimageOs = map[Uimage_UimageOs]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}, 10: {}, 11: {}, 12: {}, 13: {}, 14: {}, 15: {}, 16: {}, 17: {}, 18: {}, 19: {}, 20: {}, 21: {}, 22: {}, 23: {}, 24: {}, 25: {}, 26: {}, 27: {}, 28: {}}
+func (v Uimage_UimageOs) isDefined() bool {
+	_, ok := values_Uimage_UimageOs[v]
+	return ok
+}
 
 type Uimage_UimageType int
 const (
@@ -132,19 +147,28 @@ const (
 	Uimage_UimageType__Copro Uimage_UimageType = 39
 	Uimage_UimageType__SunxiEgon Uimage_UimageType = 40
 )
+var values_Uimage_UimageType = map[Uimage_UimageType]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}, 10: {}, 11: {}, 12: {}, 13: {}, 14: {}, 15: {}, 16: {}, 17: {}, 18: {}, 19: {}, 20: {}, 21: {}, 22: {}, 23: {}, 24: {}, 25: {}, 26: {}, 27: {}, 28: {}, 29: {}, 30: {}, 31: {}, 32: {}, 33: {}, 34: {}, 35: {}, 36: {}, 37: {}, 38: {}, 39: {}, 40: {}}
+func (v Uimage_UimageType) isDefined() bool {
+	_, ok := values_Uimage_UimageType[v]
+	return ok
+}
 type Uimage struct {
 	Header *Uimage_Uheader
 	Data []byte
 	_io *kaitai.Stream
 	_root *Uimage
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewUimage() *Uimage {
 	return &Uimage{
 	}
 }
 
-func (this *Uimage) Read(io *kaitai.Stream, parent interface{}, root *Uimage) (err error) {
+func (this Uimage) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Uimage) Read(io *kaitai.Stream, parent kaitai.Struct, root *Uimage) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -183,6 +207,10 @@ type Uimage_Uheader struct {
 func NewUimage_Uheader() *Uimage_Uheader {
 	return &Uimage_Uheader{
 	}
+}
+
+func (this Uimage_Uheader) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Uimage_Uheader) Read(io *kaitai.Stream, parent *Uimage, root *Uimage) (err error) {

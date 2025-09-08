@@ -13,93 +13,13 @@
 
 namespace {
     class Dex extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Dex $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Dex $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_header = new \Dex\HeaderItem($this->_io, $this, $this->_root);
-        }
-        protected $_m_stringIds;
-
-        /**
-         * string identifiers list.
-         * 
-         * These are identifiers for all the strings used by this file, either for
-         * internal naming (e.g., type descriptors) or as constant objects referred to by code.
-         * 
-         * This list must be sorted by string contents, using UTF-16 code point values
-         * (not in a locale-sensitive manner), and it must not contain any duplicate entries.
-         */
-        public function stringIds() {
-            if ($this->_m_stringIds !== null)
-                return $this->_m_stringIds;
-            $_pos = $this->_io->pos();
-            $this->_io->seek($this->header()->stringIdsOff());
-            $this->_m_stringIds = [];
-            $n = $this->header()->stringIdsSize();
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_stringIds[] = new \Dex\StringIdItem($this->_io, $this, $this->_root);
-            }
-            $this->_io->seek($_pos);
-            return $this->_m_stringIds;
-        }
-        protected $_m_methodIds;
-
-        /**
-         * method identifiers list.
-         * 
-         * These are identifiers for all methods referred to by this file,
-         * whether defined in the file or not.
-         * 
-         * This list must be sorted, where the defining type (by type_id index
-         * is the major order, method name (by string_id index) is the intermediate
-         * order, and method prototype (by proto_id index) is the minor order.
-         * 
-         * The list must not contain any duplicate entries.
-         */
-        public function methodIds() {
-            if ($this->_m_methodIds !== null)
-                return $this->_m_methodIds;
-            $_pos = $this->_io->pos();
-            $this->_io->seek($this->header()->methodIdsOff());
-            $this->_m_methodIds = [];
-            $n = $this->header()->methodIdsSize();
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_methodIds[] = new \Dex\MethodIdItem($this->_io, $this, $this->_root);
-            }
-            $this->_io->seek($_pos);
-            return $this->_m_methodIds;
-        }
-        protected $_m_linkData;
-
-        /**
-         * data used in statically linked files.
-         * 
-         * The format of the data in this section is left unspecified by this document.
-         * 
-         * This section is empty in unlinked files, and runtime implementations may
-         * use it as they see fit.
-         */
-        public function linkData() {
-            if ($this->_m_linkData !== null)
-                return $this->_m_linkData;
-            $_pos = $this->_io->pos();
-            $this->_io->seek($this->header()->linkOff());
-            $this->_m_linkData = $this->_io->readBytes($this->header()->linkSize());
-            $this->_io->seek($_pos);
-            return $this->_m_linkData;
-        }
-        protected $_m_map;
-        public function map() {
-            if ($this->_m_map !== null)
-                return $this->_m_map;
-            $_pos = $this->_io->pos();
-            $this->_io->seek($this->header()->mapOff());
-            $this->_m_map = new \Dex\MapList($this->_io, $this, $this->_root);
-            $this->_io->seek($_pos);
-            return $this->_m_map;
         }
         protected $_m_classDefs;
 
@@ -142,53 +62,6 @@ namespace {
             $this->_io->seek($_pos);
             return $this->_m_data;
         }
-        protected $_m_typeIds;
-
-        /**
-         * type identifiers list.
-         * 
-         * These are identifiers for all types (classes, arrays, or primitive types)
-         * referred to by this file, whether defined in the file or not.
-         * 
-         * This list must be sorted by string_id index, and it must not contain any duplicate entries.
-         */
-        public function typeIds() {
-            if ($this->_m_typeIds !== null)
-                return $this->_m_typeIds;
-            $_pos = $this->_io->pos();
-            $this->_io->seek($this->header()->typeIdsOff());
-            $this->_m_typeIds = [];
-            $n = $this->header()->typeIdsSize();
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_typeIds[] = new \Dex\TypeIdItem($this->_io, $this, $this->_root);
-            }
-            $this->_io->seek($_pos);
-            return $this->_m_typeIds;
-        }
-        protected $_m_protoIds;
-
-        /**
-         * method prototype identifiers list.
-         * 
-         * These are identifiers for all prototypes referred to by this file.
-         * 
-         * This list must be sorted in return-type (by type_id index) major order,
-         * and then by argument list (lexicographic ordering, individual arguments
-         * ordered by type_id index). The list must not contain any duplicate entries.
-         */
-        public function protoIds() {
-            if ($this->_m_protoIds !== null)
-                return $this->_m_protoIds;
-            $_pos = $this->_io->pos();
-            $this->_io->seek($this->header()->protoIdsOff());
-            $this->_m_protoIds = [];
-            $n = $this->header()->protoIdsSize();
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_protoIds[] = new \Dex\ProtoIdItem($this->_io, $this, $this->_root);
-            }
-            $this->_io->seek($_pos);
-            return $this->_m_protoIds;
-        }
         protected $_m_fieldIds;
 
         /**
@@ -215,24 +88,766 @@ namespace {
             $this->_io->seek($_pos);
             return $this->_m_fieldIds;
         }
+        protected $_m_linkData;
+
+        /**
+         * data used in statically linked files.
+         * 
+         * The format of the data in this section is left unspecified by this document.
+         * 
+         * This section is empty in unlinked files, and runtime implementations may
+         * use it as they see fit.
+         */
+        public function linkData() {
+            if ($this->_m_linkData !== null)
+                return $this->_m_linkData;
+            $_pos = $this->_io->pos();
+            $this->_io->seek($this->header()->linkOff());
+            $this->_m_linkData = $this->_io->readBytes($this->header()->linkSize());
+            $this->_io->seek($_pos);
+            return $this->_m_linkData;
+        }
+        protected $_m_map;
+        public function map() {
+            if ($this->_m_map !== null)
+                return $this->_m_map;
+            $_pos = $this->_io->pos();
+            $this->_io->seek($this->header()->mapOff());
+            $this->_m_map = new \Dex\MapList($this->_io, $this, $this->_root);
+            $this->_io->seek($_pos);
+            return $this->_m_map;
+        }
+        protected $_m_methodIds;
+
+        /**
+         * method identifiers list.
+         * 
+         * These are identifiers for all methods referred to by this file,
+         * whether defined in the file or not.
+         * 
+         * This list must be sorted, where the defining type (by type_id index
+         * is the major order, method name (by string_id index) is the intermediate
+         * order, and method prototype (by proto_id index) is the minor order.
+         * 
+         * The list must not contain any duplicate entries.
+         */
+        public function methodIds() {
+            if ($this->_m_methodIds !== null)
+                return $this->_m_methodIds;
+            $_pos = $this->_io->pos();
+            $this->_io->seek($this->header()->methodIdsOff());
+            $this->_m_methodIds = [];
+            $n = $this->header()->methodIdsSize();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_methodIds[] = new \Dex\MethodIdItem($this->_io, $this, $this->_root);
+            }
+            $this->_io->seek($_pos);
+            return $this->_m_methodIds;
+        }
+        protected $_m_protoIds;
+
+        /**
+         * method prototype identifiers list.
+         * 
+         * These are identifiers for all prototypes referred to by this file.
+         * 
+         * This list must be sorted in return-type (by type_id index) major order,
+         * and then by argument list (lexicographic ordering, individual arguments
+         * ordered by type_id index). The list must not contain any duplicate entries.
+         */
+        public function protoIds() {
+            if ($this->_m_protoIds !== null)
+                return $this->_m_protoIds;
+            $_pos = $this->_io->pos();
+            $this->_io->seek($this->header()->protoIdsOff());
+            $this->_m_protoIds = [];
+            $n = $this->header()->protoIdsSize();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_protoIds[] = new \Dex\ProtoIdItem($this->_io, $this, $this->_root);
+            }
+            $this->_io->seek($_pos);
+            return $this->_m_protoIds;
+        }
+        protected $_m_stringIds;
+
+        /**
+         * string identifiers list.
+         * 
+         * These are identifiers for all the strings used by this file, either for
+         * internal naming (e.g., type descriptors) or as constant objects referred to by code.
+         * 
+         * This list must be sorted by string contents, using UTF-16 code point values
+         * (not in a locale-sensitive manner), and it must not contain any duplicate entries.
+         */
+        public function stringIds() {
+            if ($this->_m_stringIds !== null)
+                return $this->_m_stringIds;
+            $_pos = $this->_io->pos();
+            $this->_io->seek($this->header()->stringIdsOff());
+            $this->_m_stringIds = [];
+            $n = $this->header()->stringIdsSize();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_stringIds[] = new \Dex\StringIdItem($this->_io, $this, $this->_root);
+            }
+            $this->_io->seek($_pos);
+            return $this->_m_stringIds;
+        }
+        protected $_m_typeIds;
+
+        /**
+         * type identifiers list.
+         * 
+         * These are identifiers for all types (classes, arrays, or primitive types)
+         * referred to by this file, whether defined in the file or not.
+         * 
+         * This list must be sorted by string_id index, and it must not contain any duplicate entries.
+         */
+        public function typeIds() {
+            if ($this->_m_typeIds !== null)
+                return $this->_m_typeIds;
+            $_pos = $this->_io->pos();
+            $this->_io->seek($this->header()->typeIdsOff());
+            $this->_m_typeIds = [];
+            $n = $this->header()->typeIdsSize();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_typeIds[] = new \Dex\TypeIdItem($this->_io, $this, $this->_root);
+            }
+            $this->_io->seek($_pos);
+            return $this->_m_typeIds;
+        }
         protected $_m_header;
         public function header() { return $this->_m_header; }
     }
 }
 
 namespace Dex {
+    class AnnotationElement extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Dex\EncodedAnnotation $_parent = null, ?\Dex $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_nameIdx = new \VlqBase128Le($this->_io);
+            $this->_m_value = new \Dex\EncodedValue($this->_io, $this, $this->_root);
+        }
+        protected $_m_nameIdx;
+        protected $_m_value;
+
+        /**
+         * element name, represented as an index into the string_ids section.
+         * 
+         * The string must conform to the syntax for MemberName, defined above.
+         */
+        public function nameIdx() { return $this->_m_nameIdx; }
+
+        /**
+         * element value
+         */
+        public function value() { return $this->_m_value; }
+    }
+}
+
+namespace Dex {
+    class CallSiteIdItem extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Dex $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_callSiteOff = $this->_io->readU4le();
+        }
+        protected $_m_callSiteOff;
+
+        /**
+         * offset from the start of the file to call site definition.
+         * 
+         * The offset should be in the data section, and the data there should
+         * be in the format specified by "call_site_item" below.
+         */
+        public function callSiteOff() { return $this->_m_callSiteOff; }
+    }
+}
+
+namespace Dex {
+    class ClassDataItem extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Dex\ClassDefItem $_parent = null, ?\Dex $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_staticFieldsSize = new \VlqBase128Le($this->_io);
+            $this->_m_instanceFieldsSize = new \VlqBase128Le($this->_io);
+            $this->_m_directMethodsSize = new \VlqBase128Le($this->_io);
+            $this->_m_virtualMethodsSize = new \VlqBase128Le($this->_io);
+            $this->_m_staticFields = [];
+            $n = $this->staticFieldsSize()->value();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_staticFields[] = new \Dex\EncodedField($this->_io, $this, $this->_root);
+            }
+            $this->_m_instanceFields = [];
+            $n = $this->instanceFieldsSize()->value();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_instanceFields[] = new \Dex\EncodedField($this->_io, $this, $this->_root);
+            }
+            $this->_m_directMethods = [];
+            $n = $this->directMethodsSize()->value();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_directMethods[] = new \Dex\EncodedMethod($this->_io, $this, $this->_root);
+            }
+            $this->_m_virtualMethods = [];
+            $n = $this->virtualMethodsSize()->value();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_virtualMethods[] = new \Dex\EncodedMethod($this->_io, $this, $this->_root);
+            }
+        }
+        protected $_m_staticFieldsSize;
+        protected $_m_instanceFieldsSize;
+        protected $_m_directMethodsSize;
+        protected $_m_virtualMethodsSize;
+        protected $_m_staticFields;
+        protected $_m_instanceFields;
+        protected $_m_directMethods;
+        protected $_m_virtualMethods;
+
+        /**
+         * the number of static fields defined in this item
+         */
+        public function staticFieldsSize() { return $this->_m_staticFieldsSize; }
+
+        /**
+         * the number of instance fields defined in this item
+         */
+        public function instanceFieldsSize() { return $this->_m_instanceFieldsSize; }
+
+        /**
+         * the number of direct methods defined in this item
+         */
+        public function directMethodsSize() { return $this->_m_directMethodsSize; }
+
+        /**
+         * the number of virtual methods defined in this item
+         */
+        public function virtualMethodsSize() { return $this->_m_virtualMethodsSize; }
+
+        /**
+         * the defined static fields, represented as a sequence of encoded elements.
+         * 
+         * The fields must be sorted by field_idx in increasing order.
+         */
+        public function staticFields() { return $this->_m_staticFields; }
+
+        /**
+         * the defined instance fields, represented as a sequence of encoded elements.
+         * 
+         * The fields must be sorted by field_idx in increasing order.
+         */
+        public function instanceFields() { return $this->_m_instanceFields; }
+
+        /**
+         * the defined direct (any of static, private, or constructor) methods,
+         * represented as a sequence of encoded elements.
+         * 
+         * The methods must be sorted by method_idx in increasing order.
+         */
+        public function directMethods() { return $this->_m_directMethods; }
+
+        /**
+         * the defined virtual (none of static, private, or constructor) methods,
+         * represented as a sequence of encoded elements.
+         * 
+         * This list should not include inherited methods unless overridden by
+         * the class that this item represents.
+         * 
+         * The methods must be sorted by method_idx in increasing order.
+         * 
+         * The method_idx of a virtual method must not be the same as any direct method.
+         */
+        public function virtualMethods() { return $this->_m_virtualMethods; }
+    }
+}
+
+namespace Dex {
+    class ClassDefItem extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Dex $_parent = null, ?\Dex $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_classIdx = $this->_io->readU4le();
+            $this->_m_accessFlags = $this->_io->readU4le();
+            $this->_m_superclassIdx = $this->_io->readU4le();
+            $this->_m_interfacesOff = $this->_io->readU4le();
+            $this->_m_sourceFileIdx = $this->_io->readU4le();
+            $this->_m_annotationsOff = $this->_io->readU4le();
+            $this->_m_classDataOff = $this->_io->readU4le();
+            $this->_m_staticValuesOff = $this->_io->readU4le();
+        }
+        protected $_m_classData;
+        public function classData() {
+            if ($this->_m_classData !== null)
+                return $this->_m_classData;
+            if ($this->classDataOff() != 0) {
+                $_pos = $this->_io->pos();
+                $this->_io->seek($this->classDataOff());
+                $this->_m_classData = new \Dex\ClassDataItem($this->_io, $this, $this->_root);
+                $this->_io->seek($_pos);
+            }
+            return $this->_m_classData;
+        }
+        protected $_m_staticValues;
+        public function staticValues() {
+            if ($this->_m_staticValues !== null)
+                return $this->_m_staticValues;
+            if ($this->staticValuesOff() != 0) {
+                $_pos = $this->_io->pos();
+                $this->_io->seek($this->staticValuesOff());
+                $this->_m_staticValues = new \Dex\EncodedArrayItem($this->_io, $this, $this->_root);
+                $this->_io->seek($_pos);
+            }
+            return $this->_m_staticValues;
+        }
+        protected $_m_typeName;
+        public function typeName() {
+            if ($this->_m_typeName !== null)
+                return $this->_m_typeName;
+            $this->_m_typeName = $this->_root()->typeIds()[$this->classIdx()]->typeName();
+            return $this->_m_typeName;
+        }
+        protected $_m_classIdx;
+        protected $_m_accessFlags;
+        protected $_m_superclassIdx;
+        protected $_m_interfacesOff;
+        protected $_m_sourceFileIdx;
+        protected $_m_annotationsOff;
+        protected $_m_classDataOff;
+        protected $_m_staticValuesOff;
+
+        /**
+         * index into the type_ids list for this class.
+         * 
+         * This must be a class type, and not an array or primitive type.
+         */
+        public function classIdx() { return $this->_m_classIdx; }
+
+        /**
+         * access flags for the class (public, final, etc.).
+         * 
+         * See "access_flags Definitions" for details.
+         */
+        public function accessFlags() { return $this->_m_accessFlags; }
+
+        /**
+         * index into the type_ids list for the superclass,
+         * or the constant value NO_INDEX if this class has no superclass
+         * (i.e., it is a root class such as Object).
+         * 
+         * If present, this must be a class type, and not an array or primitive type.
+         */
+        public function superclassIdx() { return $this->_m_superclassIdx; }
+
+        /**
+         * offset from the start of the file to the list of interfaces, or 0 if there are none.
+         * 
+         * This offset should be in the data section, and the data there should
+         * be in the format specified by "type_list" below. Each of the elements
+         * of the list must be a class type (not an array or primitive type),
+         * and there must not be any duplicates.
+         */
+        public function interfacesOff() { return $this->_m_interfacesOff; }
+
+        /**
+         * index into the string_ids list for the name of the file containing
+         * the original source for (at least most of) this class, or the
+         * special value NO_INDEX to represent a lack of this information.
+         * 
+         * The debug_info_item of any given method may override this source file,
+         * but the expectation is that most classes will only come from one source file.
+         */
+        public function sourceFileIdx() { return $this->_m_sourceFileIdx; }
+
+        /**
+         * offset from the start of the file to the annotations structure for
+         * this class, or 0 if there are no annotations on this class.
+         * 
+         * This offset, if non-zero, should be in the data section, and the data
+         * there should be in the format specified by "annotations_directory_item"
+         * below,with all items referring to this class as the definer.
+         */
+        public function annotationsOff() { return $this->_m_annotationsOff; }
+
+        /**
+         * offset from the start of the file to the associated class data for this
+         * item, or 0 if there is no class data for this class.
+         * 
+         * (This may be the case, for example, if this class is a marker interface.)
+         * 
+         * The offset, if non-zero, should be in the data section, and the data
+         * there should be in the format specified by "class_data_item" below,
+         * with all items referring to this class as the definer.
+         */
+        public function classDataOff() { return $this->_m_classDataOff; }
+
+        /**
+         * offset from the start of the file to the list of initial values for
+         * static fields, or 0 if there are none (and all static fields are to be
+         * initialized with 0 or null).
+         * 
+         * This offset should be in the data section, and the data there should
+         * be in the format specified by "encoded_array_item" below.
+         * 
+         * The size of the array must be no larger than the number of static fields
+         * declared by this class, and the elements correspond to the static fields
+         * in the same order as declared in the corresponding field_list.
+         * 
+         * The type of each array element must match the declared type of its
+         * corresponding field.
+         * 
+         * If there are fewer elements in the array than there are static fields,
+         * then the leftover fields are initialized with a type-appropriate 0 or null.
+         */
+        public function staticValuesOff() { return $this->_m_staticValuesOff; }
+    }
+}
+
+namespace Dex {
+    class EncodedAnnotation extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Dex\EncodedValue $_parent = null, ?\Dex $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_typeIdx = new \VlqBase128Le($this->_io);
+            $this->_m_size = new \VlqBase128Le($this->_io);
+            $this->_m_elements = [];
+            $n = $this->size()->value();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_elements[] = new \Dex\AnnotationElement($this->_io, $this, $this->_root);
+            }
+        }
+        protected $_m_typeIdx;
+        protected $_m_size;
+        protected $_m_elements;
+
+        /**
+         * type of the annotation.
+         * 
+         * This must be a class (not array or primitive) type.
+         */
+        public function typeIdx() { return $this->_m_typeIdx; }
+
+        /**
+         * number of name-value mappings in this annotation
+         */
+        public function size() { return $this->_m_size; }
+
+        /**
+         * elements of the annotation, represented directly in-line (not as offsets).
+         * 
+         * Elements must be sorted in increasing order by string_id index.
+         */
+        public function elements() { return $this->_m_elements; }
+    }
+}
+
+namespace Dex {
+    class EncodedArray extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Dex $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_size = new \VlqBase128Le($this->_io);
+            $this->_m_values = [];
+            $n = $this->size()->value();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_values[] = new \Dex\EncodedValue($this->_io, $this, $this->_root);
+            }
+        }
+        protected $_m_size;
+        protected $_m_values;
+        public function size() { return $this->_m_size; }
+        public function values() { return $this->_m_values; }
+    }
+}
+
+namespace Dex {
+    class EncodedArrayItem extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Dex\ClassDefItem $_parent = null, ?\Dex $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_value = new \Dex\EncodedArray($this->_io, $this, $this->_root);
+        }
+        protected $_m_value;
+        public function value() { return $this->_m_value; }
+    }
+}
+
+namespace Dex {
+    class EncodedField extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Dex\ClassDataItem $_parent = null, ?\Dex $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_fieldIdxDiff = new \VlqBase128Le($this->_io);
+            $this->_m_accessFlags = new \VlqBase128Le($this->_io);
+        }
+        protected $_m_fieldIdxDiff;
+        protected $_m_accessFlags;
+
+        /**
+         * index into the field_ids list for the identity of this field
+         * (includes the name and descriptor), represented as a difference
+         * from the index of previous element in the list.
+         * 
+         * The index of the first element in a list is represented directly.
+         */
+        public function fieldIdxDiff() { return $this->_m_fieldIdxDiff; }
+
+        /**
+         * access flags for the field (public, final, etc.).
+         * 
+         * See "access_flags Definitions" for details.
+         */
+        public function accessFlags() { return $this->_m_accessFlags; }
+    }
+}
+
+namespace Dex {
+    class EncodedMethod extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Dex\ClassDataItem $_parent = null, ?\Dex $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_methodIdxDiff = new \VlqBase128Le($this->_io);
+            $this->_m_accessFlags = new \VlqBase128Le($this->_io);
+            $this->_m_codeOff = new \VlqBase128Le($this->_io);
+        }
+        protected $_m_methodIdxDiff;
+        protected $_m_accessFlags;
+        protected $_m_codeOff;
+
+        /**
+         * index into the method_ids list for the identity of this method
+         * (includes the name and descriptor), represented as a difference
+         * from the index of previous element in the list.
+         * 
+         * The index of the first element in a list is represented directly.
+         */
+        public function methodIdxDiff() { return $this->_m_methodIdxDiff; }
+
+        /**
+         * access flags for the field (public, final, etc.).
+         * 
+         * See "access_flags Definitions" for details.
+         */
+        public function accessFlags() { return $this->_m_accessFlags; }
+
+        /**
+         * offset from the start of the file to the code structure for this method,
+         * or 0 if this method is either abstract or native.
+         * 
+         * The offset should be to a location in the data section.
+         * 
+         * The format of the data is specified by "code_item" below.
+         */
+        public function codeOff() { return $this->_m_codeOff; }
+    }
+}
+
+namespace Dex {
+    class EncodedValue extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Dex $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_valueArg = $this->_io->readBitsIntBe(3);
+            $this->_m_valueType = $this->_io->readBitsIntBe(5);
+            $this->_io->alignToByte();
+            switch ($this->valueType()) {
+                case \Dex\EncodedValue\ValueTypeEnum::ANNOTATION:
+                    $this->_m_value = new \Dex\EncodedAnnotation($this->_io, $this, $this->_root);
+                    break;
+                case \Dex\EncodedValue\ValueTypeEnum::ARRAY:
+                    $this->_m_value = new \Dex\EncodedArray($this->_io, $this, $this->_root);
+                    break;
+                case \Dex\EncodedValue\ValueTypeEnum::BYTE:
+                    $this->_m_value = $this->_io->readS1();
+                    break;
+                case \Dex\EncodedValue\ValueTypeEnum::CHAR:
+                    $this->_m_value = $this->_io->readU2le();
+                    break;
+                case \Dex\EncodedValue\ValueTypeEnum::DOUBLE:
+                    $this->_m_value = $this->_io->readF8le();
+                    break;
+                case \Dex\EncodedValue\ValueTypeEnum::ENUM:
+                    $this->_m_value = $this->_io->readU4le();
+                    break;
+                case \Dex\EncodedValue\ValueTypeEnum::FIELD:
+                    $this->_m_value = $this->_io->readU4le();
+                    break;
+                case \Dex\EncodedValue\ValueTypeEnum::FLOAT:
+                    $this->_m_value = $this->_io->readF4le();
+                    break;
+                case \Dex\EncodedValue\ValueTypeEnum::INT:
+                    $this->_m_value = $this->_io->readS4le();
+                    break;
+                case \Dex\EncodedValue\ValueTypeEnum::LONG:
+                    $this->_m_value = $this->_io->readS8le();
+                    break;
+                case \Dex\EncodedValue\ValueTypeEnum::METHOD:
+                    $this->_m_value = $this->_io->readU4le();
+                    break;
+                case \Dex\EncodedValue\ValueTypeEnum::METHOD_HANDLE:
+                    $this->_m_value = $this->_io->readU4le();
+                    break;
+                case \Dex\EncodedValue\ValueTypeEnum::METHOD_TYPE:
+                    $this->_m_value = $this->_io->readU4le();
+                    break;
+                case \Dex\EncodedValue\ValueTypeEnum::SHORT:
+                    $this->_m_value = $this->_io->readS2le();
+                    break;
+                case \Dex\EncodedValue\ValueTypeEnum::STRING:
+                    $this->_m_value = $this->_io->readU4le();
+                    break;
+                case \Dex\EncodedValue\ValueTypeEnum::TYPE:
+                    $this->_m_value = $this->_io->readU4le();
+                    break;
+            }
+        }
+        protected $_m_valueArg;
+        protected $_m_valueType;
+        protected $_m_value;
+        public function valueArg() { return $this->_m_valueArg; }
+        public function valueType() { return $this->_m_valueType; }
+        public function value() { return $this->_m_value; }
+    }
+}
+
+namespace Dex\EncodedValue {
+    class ValueTypeEnum {
+        const BYTE = 0;
+        const SHORT = 2;
+        const CHAR = 3;
+        const INT = 4;
+        const LONG = 6;
+        const FLOAT = 16;
+        const DOUBLE = 17;
+        const METHOD_TYPE = 21;
+        const METHOD_HANDLE = 22;
+        const STRING = 23;
+        const TYPE = 24;
+        const FIELD = 25;
+        const METHOD = 26;
+        const ENUM = 27;
+        const ARRAY = 28;
+        const ANNOTATION = 29;
+        const NULL = 30;
+        const BOOLEAN = 31;
+
+        private const _VALUES = [0 => true, 2 => true, 3 => true, 4 => true, 6 => true, 16 => true, 17 => true, 21 => true, 22 => true, 23 => true, 24 => true, 25 => true, 26 => true, 27 => true, 28 => true, 29 => true, 30 => true, 31 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
+    }
+}
+
+namespace Dex {
+    class FieldIdItem extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Dex $_parent = null, ?\Dex $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_classIdx = $this->_io->readU2le();
+            $this->_m_typeIdx = $this->_io->readU2le();
+            $this->_m_nameIdx = $this->_io->readU4le();
+        }
+        protected $_m_className;
+
+        /**
+         * the definer of this field
+         */
+        public function className() {
+            if ($this->_m_className !== null)
+                return $this->_m_className;
+            $this->_m_className = $this->_root()->typeIds()[$this->classIdx()]->typeName();
+            return $this->_m_className;
+        }
+        protected $_m_fieldName;
+
+        /**
+         * the name of this field
+         */
+        public function fieldName() {
+            if ($this->_m_fieldName !== null)
+                return $this->_m_fieldName;
+            $this->_m_fieldName = $this->_root()->stringIds()[$this->nameIdx()]->value()->data();
+            return $this->_m_fieldName;
+        }
+        protected $_m_typeName;
+
+        /**
+         * the type of this field
+         */
+        public function typeName() {
+            if ($this->_m_typeName !== null)
+                return $this->_m_typeName;
+            $this->_m_typeName = $this->_root()->typeIds()[$this->typeIdx()]->typeName();
+            return $this->_m_typeName;
+        }
+        protected $_m_classIdx;
+        protected $_m_typeIdx;
+        protected $_m_nameIdx;
+
+        /**
+         * index into the type_ids list for the definer of this field.
+         * This must be a class type, and not an array or primitive type.
+         */
+        public function classIdx() { return $this->_m_classIdx; }
+
+        /**
+         * index into the type_ids list for the type of this field
+         */
+        public function typeIdx() { return $this->_m_typeIdx; }
+
+        /**
+         * index into the string_ids list for the name of this field.
+         * The string must conform to the syntax for MemberName, defined above.
+         */
+        public function nameIdx() { return $this->_m_nameIdx; }
+    }
+}
+
+namespace Dex {
     class HeaderItem extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Dex $_parent = null, \Dex $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Dex $_parent = null, ?\Dex $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic = $this->_io->readBytes(4);
-            if (!($this->magic() == "\x64\x65\x78\x0A")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x64\x65\x78\x0A", $this->magic(), $this->_io(), "/types/header_item/seq/0");
+            if (!($this->_m_magic == "\x64\x65\x78\x0A")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x64\x65\x78\x0A", $this->_m_magic, $this->_io, "/types/header_item/seq/0");
             }
-            $this->_m_versionStr = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($this->_io->readBytes(4), 0, false), "ascii");
+            $this->_m_versionStr = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($this->_io->readBytes(4), 0, false), "ASCII");
             $this->_m_checksum = $this->_io->readU4le();
             $this->_m_signature = $this->_io->readBytes(20);
             $this->_m_fileSize = $this->_io->readU4le();
@@ -416,888 +1031,18 @@ namespace Dex\HeaderItem {
     class EndianConstant {
         const ENDIAN_CONSTANT = 305419896;
         const REVERSE_ENDIAN_CONSTANT = 2018915346;
-    }
-}
 
-namespace Dex {
-    class MapList extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Dex $_parent = null, \Dex $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
+        private const _VALUES = [305419896 => true, 2018915346 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
         }
-
-        private function _read() {
-            $this->_m_size = $this->_io->readU4le();
-            $this->_m_list = [];
-            $n = $this->size();
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_list[] = new \Dex\MapItem($this->_io, $this, $this->_root);
-            }
-        }
-        protected $_m_size;
-        protected $_m_list;
-        public function size() { return $this->_m_size; }
-        public function list() { return $this->_m_list; }
-    }
-}
-
-namespace Dex {
-    class EncodedValue extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Dex $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_valueArg = $this->_io->readBitsIntBe(3);
-            $this->_m_valueType = $this->_io->readBitsIntBe(5);
-            $this->_io->alignToByte();
-            switch ($this->valueType()) {
-                case \Dex\EncodedValue\ValueTypeEnum::INT:
-                    $this->_m_value = $this->_io->readS4le();
-                    break;
-                case \Dex\EncodedValue\ValueTypeEnum::ANNOTATION:
-                    $this->_m_value = new \Dex\EncodedAnnotation($this->_io, $this, $this->_root);
-                    break;
-                case \Dex\EncodedValue\ValueTypeEnum::LONG:
-                    $this->_m_value = $this->_io->readS8le();
-                    break;
-                case \Dex\EncodedValue\ValueTypeEnum::METHOD_HANDLE:
-                    $this->_m_value = $this->_io->readU4le();
-                    break;
-                case \Dex\EncodedValue\ValueTypeEnum::BYTE:
-                    $this->_m_value = $this->_io->readS1();
-                    break;
-                case \Dex\EncodedValue\ValueTypeEnum::ARRAY:
-                    $this->_m_value = new \Dex\EncodedArray($this->_io, $this, $this->_root);
-                    break;
-                case \Dex\EncodedValue\ValueTypeEnum::METHOD_TYPE:
-                    $this->_m_value = $this->_io->readU4le();
-                    break;
-                case \Dex\EncodedValue\ValueTypeEnum::SHORT:
-                    $this->_m_value = $this->_io->readS2le();
-                    break;
-                case \Dex\EncodedValue\ValueTypeEnum::METHOD:
-                    $this->_m_value = $this->_io->readU4le();
-                    break;
-                case \Dex\EncodedValue\ValueTypeEnum::DOUBLE:
-                    $this->_m_value = $this->_io->readF8le();
-                    break;
-                case \Dex\EncodedValue\ValueTypeEnum::FLOAT:
-                    $this->_m_value = $this->_io->readF4le();
-                    break;
-                case \Dex\EncodedValue\ValueTypeEnum::TYPE:
-                    $this->_m_value = $this->_io->readU4le();
-                    break;
-                case \Dex\EncodedValue\ValueTypeEnum::ENUM:
-                    $this->_m_value = $this->_io->readU4le();
-                    break;
-                case \Dex\EncodedValue\ValueTypeEnum::FIELD:
-                    $this->_m_value = $this->_io->readU4le();
-                    break;
-                case \Dex\EncodedValue\ValueTypeEnum::STRING:
-                    $this->_m_value = $this->_io->readU4le();
-                    break;
-                case \Dex\EncodedValue\ValueTypeEnum::CHAR:
-                    $this->_m_value = $this->_io->readU2le();
-                    break;
-            }
-        }
-        protected $_m_valueArg;
-        protected $_m_valueType;
-        protected $_m_value;
-        public function valueArg() { return $this->_m_valueArg; }
-        public function valueType() { return $this->_m_valueType; }
-        public function value() { return $this->_m_value; }
-    }
-}
-
-namespace Dex\EncodedValue {
-    class ValueTypeEnum {
-        const BYTE = 0;
-        const SHORT = 2;
-        const CHAR = 3;
-        const INT = 4;
-        const LONG = 6;
-        const FLOAT = 16;
-        const DOUBLE = 17;
-        const METHOD_TYPE = 21;
-        const METHOD_HANDLE = 22;
-        const STRING = 23;
-        const TYPE = 24;
-        const FIELD = 25;
-        const METHOD = 26;
-        const ENUM = 27;
-        const ARRAY = 28;
-        const ANNOTATION = 29;
-        const NULL = 30;
-        const BOOLEAN = 31;
-    }
-}
-
-namespace Dex {
-    class CallSiteIdItem extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Dex $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_callSiteOff = $this->_io->readU4le();
-        }
-        protected $_m_callSiteOff;
-
-        /**
-         * offset from the start of the file to call site definition.
-         * 
-         * The offset should be in the data section, and the data there should
-         * be in the format specified by "call_site_item" below.
-         */
-        public function callSiteOff() { return $this->_m_callSiteOff; }
-    }
-}
-
-namespace Dex {
-    class MethodIdItem extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Dex $_parent = null, \Dex $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_classIdx = $this->_io->readU2le();
-            $this->_m_protoIdx = $this->_io->readU2le();
-            $this->_m_nameIdx = $this->_io->readU4le();
-        }
-        protected $_m_className;
-
-        /**
-         * the definer of this method
-         */
-        public function className() {
-            if ($this->_m_className !== null)
-                return $this->_m_className;
-            $this->_m_className = $this->_root()->typeIds()[$this->classIdx()]->typeName();
-            return $this->_m_className;
-        }
-        protected $_m_protoDesc;
-
-        /**
-         * the short-form descriptor of the prototype of this method
-         */
-        public function protoDesc() {
-            if ($this->_m_protoDesc !== null)
-                return $this->_m_protoDesc;
-            $this->_m_protoDesc = $this->_root()->protoIds()[$this->protoIdx()]->shortyDesc();
-            return $this->_m_protoDesc;
-        }
-        protected $_m_methodName;
-
-        /**
-         * the name of this method
-         */
-        public function methodName() {
-            if ($this->_m_methodName !== null)
-                return $this->_m_methodName;
-            $this->_m_methodName = $this->_root()->stringIds()[$this->nameIdx()]->value()->data();
-            return $this->_m_methodName;
-        }
-        protected $_m_classIdx;
-        protected $_m_protoIdx;
-        protected $_m_nameIdx;
-
-        /**
-         * index into the type_ids list for the definer of this method.
-         * This must be a class or array type, and not a primitive type.
-         */
-        public function classIdx() { return $this->_m_classIdx; }
-
-        /**
-         * index into the proto_ids list for the prototype of this method
-         */
-        public function protoIdx() { return $this->_m_protoIdx; }
-
-        /**
-         * index into the string_ids list for the name of this method.
-         * The string must conform to the syntax for MemberName, defined above.
-         */
-        public function nameIdx() { return $this->_m_nameIdx; }
-    }
-}
-
-namespace Dex {
-    class TypeItem extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Dex\TypeList $_parent = null, \Dex $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_typeIdx = $this->_io->readU2le();
-        }
-        protected $_m_value;
-        public function value() {
-            if ($this->_m_value !== null)
-                return $this->_m_value;
-            $this->_m_value = $this->_root()->typeIds()[$this->typeIdx()]->typeName();
-            return $this->_m_value;
-        }
-        protected $_m_typeIdx;
-        public function typeIdx() { return $this->_m_typeIdx; }
-    }
-}
-
-namespace Dex {
-    class TypeIdItem extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Dex $_parent = null, \Dex $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_descriptorIdx = $this->_io->readU4le();
-        }
-        protected $_m_typeName;
-        public function typeName() {
-            if ($this->_m_typeName !== null)
-                return $this->_m_typeName;
-            $this->_m_typeName = $this->_root()->stringIds()[$this->descriptorIdx()]->value()->data();
-            return $this->_m_typeName;
-        }
-        protected $_m_descriptorIdx;
-
-        /**
-         * index into the string_ids list for the descriptor string of this type.
-         * The string must conform to the syntax for TypeDescriptor, defined above.
-         */
-        public function descriptorIdx() { return $this->_m_descriptorIdx; }
-    }
-}
-
-namespace Dex {
-    class AnnotationElement extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Dex\EncodedAnnotation $_parent = null, \Dex $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_nameIdx = new \VlqBase128Le($this->_io);
-            $this->_m_value = new \Dex\EncodedValue($this->_io, $this, $this->_root);
-        }
-        protected $_m_nameIdx;
-        protected $_m_value;
-
-        /**
-         * element name, represented as an index into the string_ids section.
-         * 
-         * The string must conform to the syntax for MemberName, defined above.
-         */
-        public function nameIdx() { return $this->_m_nameIdx; }
-
-        /**
-         * element value
-         */
-        public function value() { return $this->_m_value; }
-    }
-}
-
-namespace Dex {
-    class EncodedField extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Dex\ClassDataItem $_parent = null, \Dex $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_fieldIdxDiff = new \VlqBase128Le($this->_io);
-            $this->_m_accessFlags = new \VlqBase128Le($this->_io);
-        }
-        protected $_m_fieldIdxDiff;
-        protected $_m_accessFlags;
-
-        /**
-         * index into the field_ids list for the identity of this field
-         * (includes the name and descriptor), represented as a difference
-         * from the index of previous element in the list.
-         * 
-         * The index of the first element in a list is represented directly.
-         */
-        public function fieldIdxDiff() { return $this->_m_fieldIdxDiff; }
-
-        /**
-         * access flags for the field (public, final, etc.).
-         * 
-         * See "access_flags Definitions" for details.
-         */
-        public function accessFlags() { return $this->_m_accessFlags; }
-    }
-}
-
-namespace Dex {
-    class EncodedArrayItem extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Dex\ClassDefItem $_parent = null, \Dex $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_value = new \Dex\EncodedArray($this->_io, $this, $this->_root);
-        }
-        protected $_m_value;
-        public function value() { return $this->_m_value; }
-    }
-}
-
-namespace Dex {
-    class ClassDataItem extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Dex\ClassDefItem $_parent = null, \Dex $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_staticFieldsSize = new \VlqBase128Le($this->_io);
-            $this->_m_instanceFieldsSize = new \VlqBase128Le($this->_io);
-            $this->_m_directMethodsSize = new \VlqBase128Le($this->_io);
-            $this->_m_virtualMethodsSize = new \VlqBase128Le($this->_io);
-            $this->_m_staticFields = [];
-            $n = $this->staticFieldsSize()->value();
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_staticFields[] = new \Dex\EncodedField($this->_io, $this, $this->_root);
-            }
-            $this->_m_instanceFields = [];
-            $n = $this->instanceFieldsSize()->value();
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_instanceFields[] = new \Dex\EncodedField($this->_io, $this, $this->_root);
-            }
-            $this->_m_directMethods = [];
-            $n = $this->directMethodsSize()->value();
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_directMethods[] = new \Dex\EncodedMethod($this->_io, $this, $this->_root);
-            }
-            $this->_m_virtualMethods = [];
-            $n = $this->virtualMethodsSize()->value();
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_virtualMethods[] = new \Dex\EncodedMethod($this->_io, $this, $this->_root);
-            }
-        }
-        protected $_m_staticFieldsSize;
-        protected $_m_instanceFieldsSize;
-        protected $_m_directMethodsSize;
-        protected $_m_virtualMethodsSize;
-        protected $_m_staticFields;
-        protected $_m_instanceFields;
-        protected $_m_directMethods;
-        protected $_m_virtualMethods;
-
-        /**
-         * the number of static fields defined in this item
-         */
-        public function staticFieldsSize() { return $this->_m_staticFieldsSize; }
-
-        /**
-         * the number of instance fields defined in this item
-         */
-        public function instanceFieldsSize() { return $this->_m_instanceFieldsSize; }
-
-        /**
-         * the number of direct methods defined in this item
-         */
-        public function directMethodsSize() { return $this->_m_directMethodsSize; }
-
-        /**
-         * the number of virtual methods defined in this item
-         */
-        public function virtualMethodsSize() { return $this->_m_virtualMethodsSize; }
-
-        /**
-         * the defined static fields, represented as a sequence of encoded elements.
-         * 
-         * The fields must be sorted by field_idx in increasing order.
-         */
-        public function staticFields() { return $this->_m_staticFields; }
-
-        /**
-         * the defined instance fields, represented as a sequence of encoded elements.
-         * 
-         * The fields must be sorted by field_idx in increasing order.
-         */
-        public function instanceFields() { return $this->_m_instanceFields; }
-
-        /**
-         * the defined direct (any of static, private, or constructor) methods,
-         * represented as a sequence of encoded elements.
-         * 
-         * The methods must be sorted by method_idx in increasing order.
-         */
-        public function directMethods() { return $this->_m_directMethods; }
-
-        /**
-         * the defined virtual (none of static, private, or constructor) methods,
-         * represented as a sequence of encoded elements.
-         * 
-         * This list should not include inherited methods unless overridden by
-         * the class that this item represents.
-         * 
-         * The methods must be sorted by method_idx in increasing order.
-         * 
-         * The method_idx of a virtual method must not be the same as any direct method.
-         */
-        public function virtualMethods() { return $this->_m_virtualMethods; }
-    }
-}
-
-namespace Dex {
-    class FieldIdItem extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Dex $_parent = null, \Dex $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_classIdx = $this->_io->readU2le();
-            $this->_m_typeIdx = $this->_io->readU2le();
-            $this->_m_nameIdx = $this->_io->readU4le();
-        }
-        protected $_m_className;
-
-        /**
-         * the definer of this field
-         */
-        public function className() {
-            if ($this->_m_className !== null)
-                return $this->_m_className;
-            $this->_m_className = $this->_root()->typeIds()[$this->classIdx()]->typeName();
-            return $this->_m_className;
-        }
-        protected $_m_typeName;
-
-        /**
-         * the type of this field
-         */
-        public function typeName() {
-            if ($this->_m_typeName !== null)
-                return $this->_m_typeName;
-            $this->_m_typeName = $this->_root()->typeIds()[$this->typeIdx()]->typeName();
-            return $this->_m_typeName;
-        }
-        protected $_m_fieldName;
-
-        /**
-         * the name of this field
-         */
-        public function fieldName() {
-            if ($this->_m_fieldName !== null)
-                return $this->_m_fieldName;
-            $this->_m_fieldName = $this->_root()->stringIds()[$this->nameIdx()]->value()->data();
-            return $this->_m_fieldName;
-        }
-        protected $_m_classIdx;
-        protected $_m_typeIdx;
-        protected $_m_nameIdx;
-
-        /**
-         * index into the type_ids list for the definer of this field.
-         * This must be a class type, and not an array or primitive type.
-         */
-        public function classIdx() { return $this->_m_classIdx; }
-
-        /**
-         * index into the type_ids list for the type of this field
-         */
-        public function typeIdx() { return $this->_m_typeIdx; }
-
-        /**
-         * index into the string_ids list for the name of this field.
-         * The string must conform to the syntax for MemberName, defined above.
-         */
-        public function nameIdx() { return $this->_m_nameIdx; }
-    }
-}
-
-namespace Dex {
-    class EncodedAnnotation extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Dex\EncodedValue $_parent = null, \Dex $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_typeIdx = new \VlqBase128Le($this->_io);
-            $this->_m_size = new \VlqBase128Le($this->_io);
-            $this->_m_elements = [];
-            $n = $this->size()->value();
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_elements[] = new \Dex\AnnotationElement($this->_io, $this, $this->_root);
-            }
-        }
-        protected $_m_typeIdx;
-        protected $_m_size;
-        protected $_m_elements;
-
-        /**
-         * type of the annotation.
-         * 
-         * This must be a class (not array or primitive) type.
-         */
-        public function typeIdx() { return $this->_m_typeIdx; }
-
-        /**
-         * number of name-value mappings in this annotation
-         */
-        public function size() { return $this->_m_size; }
-
-        /**
-         * elements of the annotation, represented directly in-line (not as offsets).
-         * 
-         * Elements must be sorted in increasing order by string_id index.
-         */
-        public function elements() { return $this->_m_elements; }
-    }
-}
-
-namespace Dex {
-    class ClassDefItem extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Dex $_parent = null, \Dex $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_classIdx = $this->_io->readU4le();
-            $this->_m_accessFlags = $this->_io->readU4le();
-            $this->_m_superclassIdx = $this->_io->readU4le();
-            $this->_m_interfacesOff = $this->_io->readU4le();
-            $this->_m_sourceFileIdx = $this->_io->readU4le();
-            $this->_m_annotationsOff = $this->_io->readU4le();
-            $this->_m_classDataOff = $this->_io->readU4le();
-            $this->_m_staticValuesOff = $this->_io->readU4le();
-        }
-        protected $_m_typeName;
-        public function typeName() {
-            if ($this->_m_typeName !== null)
-                return $this->_m_typeName;
-            $this->_m_typeName = $this->_root()->typeIds()[$this->classIdx()]->typeName();
-            return $this->_m_typeName;
-        }
-        protected $_m_classData;
-        public function classData() {
-            if ($this->_m_classData !== null)
-                return $this->_m_classData;
-            if ($this->classDataOff() != 0) {
-                $_pos = $this->_io->pos();
-                $this->_io->seek($this->classDataOff());
-                $this->_m_classData = new \Dex\ClassDataItem($this->_io, $this, $this->_root);
-                $this->_io->seek($_pos);
-            }
-            return $this->_m_classData;
-        }
-        protected $_m_staticValues;
-        public function staticValues() {
-            if ($this->_m_staticValues !== null)
-                return $this->_m_staticValues;
-            if ($this->staticValuesOff() != 0) {
-                $_pos = $this->_io->pos();
-                $this->_io->seek($this->staticValuesOff());
-                $this->_m_staticValues = new \Dex\EncodedArrayItem($this->_io, $this, $this->_root);
-                $this->_io->seek($_pos);
-            }
-            return $this->_m_staticValues;
-        }
-        protected $_m_classIdx;
-        protected $_m_accessFlags;
-        protected $_m_superclassIdx;
-        protected $_m_interfacesOff;
-        protected $_m_sourceFileIdx;
-        protected $_m_annotationsOff;
-        protected $_m_classDataOff;
-        protected $_m_staticValuesOff;
-
-        /**
-         * index into the type_ids list for this class.
-         * 
-         * This must be a class type, and not an array or primitive type.
-         */
-        public function classIdx() { return $this->_m_classIdx; }
-
-        /**
-         * access flags for the class (public, final, etc.).
-         * 
-         * See "access_flags Definitions" for details.
-         */
-        public function accessFlags() { return $this->_m_accessFlags; }
-
-        /**
-         * index into the type_ids list for the superclass,
-         * or the constant value NO_INDEX if this class has no superclass
-         * (i.e., it is a root class such as Object).
-         * 
-         * If present, this must be a class type, and not an array or primitive type.
-         */
-        public function superclassIdx() { return $this->_m_superclassIdx; }
-
-        /**
-         * offset from the start of the file to the list of interfaces, or 0 if there are none.
-         * 
-         * This offset should be in the data section, and the data there should
-         * be in the format specified by "type_list" below. Each of the elements
-         * of the list must be a class type (not an array or primitive type),
-         * and there must not be any duplicates.
-         */
-        public function interfacesOff() { return $this->_m_interfacesOff; }
-
-        /**
-         * index into the string_ids list for the name of the file containing
-         * the original source for (at least most of) this class, or the
-         * special value NO_INDEX to represent a lack of this information.
-         * 
-         * The debug_info_item of any given method may override this source file,
-         * but the expectation is that most classes will only come from one source file.
-         */
-        public function sourceFileIdx() { return $this->_m_sourceFileIdx; }
-
-        /**
-         * offset from the start of the file to the annotations structure for
-         * this class, or 0 if there are no annotations on this class.
-         * 
-         * This offset, if non-zero, should be in the data section, and the data
-         * there should be in the format specified by "annotations_directory_item"
-         * below,with all items referring to this class as the definer.
-         */
-        public function annotationsOff() { return $this->_m_annotationsOff; }
-
-        /**
-         * offset from the start of the file to the associated class data for this
-         * item, or 0 if there is no class data for this class.
-         * 
-         * (This may be the case, for example, if this class is a marker interface.)
-         * 
-         * The offset, if non-zero, should be in the data section, and the data
-         * there should be in the format specified by "class_data_item" below,
-         * with all items referring to this class as the definer.
-         */
-        public function classDataOff() { return $this->_m_classDataOff; }
-
-        /**
-         * offset from the start of the file to the list of initial values for
-         * static fields, or 0 if there are none (and all static fields are to be
-         * initialized with 0 or null).
-         * 
-         * This offset should be in the data section, and the data there should
-         * be in the format specified by "encoded_array_item" below.
-         * 
-         * The size of the array must be no larger than the number of static fields
-         * declared by this class, and the elements correspond to the static fields
-         * in the same order as declared in the corresponding field_list.
-         * 
-         * The type of each array element must match the declared type of its
-         * corresponding field.
-         * 
-         * If there are fewer elements in the array than there are static fields,
-         * then the leftover fields are initialized with a type-appropriate 0 or null.
-         */
-        public function staticValuesOff() { return $this->_m_staticValuesOff; }
-    }
-}
-
-namespace Dex {
-    class TypeList extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Dex\ProtoIdItem $_parent = null, \Dex $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_size = $this->_io->readU4le();
-            $this->_m_list = [];
-            $n = $this->size();
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_list[] = new \Dex\TypeItem($this->_io, $this, $this->_root);
-            }
-        }
-        protected $_m_size;
-        protected $_m_list;
-        public function size() { return $this->_m_size; }
-        public function list() { return $this->_m_list; }
-    }
-}
-
-namespace Dex {
-    class StringIdItem extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Dex $_parent = null, \Dex $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_stringDataOff = $this->_io->readU4le();
-        }
-        protected $_m_value;
-        public function value() {
-            if ($this->_m_value !== null)
-                return $this->_m_value;
-            $_pos = $this->_io->pos();
-            $this->_io->seek($this->stringDataOff());
-            $this->_m_value = new \Dex\StringIdItem\StringDataItem($this->_io, $this, $this->_root);
-            $this->_io->seek($_pos);
-            return $this->_m_value;
-        }
-        protected $_m_stringDataOff;
-
-        /**
-         * offset from the start of the file to the string data for this item.
-         * The offset should be to a location in the data section, and the data
-         * should be in the format specified by "string_data_item" below.
-         * There is no alignment requirement for the offset.
-         */
-        public function stringDataOff() { return $this->_m_stringDataOff; }
-    }
-}
-
-namespace Dex\StringIdItem {
-    class StringDataItem extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Dex\StringIdItem $_parent = null, \Dex $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_utf16Size = new \VlqBase128Le($this->_io);
-            $this->_m_data = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->utf16Size()->value()), "ascii");
-        }
-        protected $_m_utf16Size;
-        protected $_m_data;
-        public function utf16Size() { return $this->_m_utf16Size; }
-        public function data() { return $this->_m_data; }
-    }
-}
-
-namespace Dex {
-    class ProtoIdItem extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Dex $_parent = null, \Dex $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_shortyIdx = $this->_io->readU4le();
-            $this->_m_returnTypeIdx = $this->_io->readU4le();
-            $this->_m_parametersOff = $this->_io->readU4le();
-        }
-        protected $_m_shortyDesc;
-
-        /**
-         * short-form descriptor string of this prototype, as pointed to by shorty_idx
-         */
-        public function shortyDesc() {
-            if ($this->_m_shortyDesc !== null)
-                return $this->_m_shortyDesc;
-            $this->_m_shortyDesc = $this->_root()->stringIds()[$this->shortyIdx()]->value()->data();
-            return $this->_m_shortyDesc;
-        }
-        protected $_m_paramsTypes;
-
-        /**
-         * list of parameter types for this prototype
-         */
-        public function paramsTypes() {
-            if ($this->_m_paramsTypes !== null)
-                return $this->_m_paramsTypes;
-            if ($this->parametersOff() != 0) {
-                $io = $this->_root()->_io();
-                $_pos = $io->pos();
-                $io->seek($this->parametersOff());
-                $this->_m_paramsTypes = new \Dex\TypeList($io, $this, $this->_root);
-                $io->seek($_pos);
-            }
-            return $this->_m_paramsTypes;
-        }
-        protected $_m_returnType;
-
-        /**
-         * return type of this prototype
-         */
-        public function returnType() {
-            if ($this->_m_returnType !== null)
-                return $this->_m_returnType;
-            $this->_m_returnType = $this->_root()->typeIds()[$this->returnTypeIdx()]->typeName();
-            return $this->_m_returnType;
-        }
-        protected $_m_shortyIdx;
-        protected $_m_returnTypeIdx;
-        protected $_m_parametersOff;
-
-        /**
-         * index into the string_ids list for the short-form descriptor string of this prototype.
-         * The string must conform to the syntax for ShortyDescriptor, defined above,
-         * and must correspond to the return type and parameters of this item.
-         */
-        public function shortyIdx() { return $this->_m_shortyIdx; }
-
-        /**
-         * index into the type_ids list for the return type of this prototype
-         */
-        public function returnTypeIdx() { return $this->_m_returnTypeIdx; }
-
-        /**
-         * offset from the start of the file to the list of parameter types for this prototype,
-         * or 0 if this prototype has no parameters.
-         * This offset, if non-zero, should be in the data section, and the data
-         * there should be in the format specified by "type_list" below.
-         * Additionally, there should be no reference to the type void in the list.
-         */
-        public function parametersOff() { return $this->_m_parametersOff; }
-    }
-}
-
-namespace Dex {
-    class EncodedMethod extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Dex\ClassDataItem $_parent = null, \Dex $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_methodIdxDiff = new \VlqBase128Le($this->_io);
-            $this->_m_accessFlags = new \VlqBase128Le($this->_io);
-            $this->_m_codeOff = new \VlqBase128Le($this->_io);
-        }
-        protected $_m_methodIdxDiff;
-        protected $_m_accessFlags;
-        protected $_m_codeOff;
-
-        /**
-         * index into the method_ids list for the identity of this method
-         * (includes the name and descriptor), represented as a difference
-         * from the index of previous element in the list.
-         * 
-         * The index of the first element in a list is represented directly.
-         */
-        public function methodIdxDiff() { return $this->_m_methodIdxDiff; }
-
-        /**
-         * access flags for the field (public, final, etc.).
-         * 
-         * See "access_flags Definitions" for details.
-         */
-        public function accessFlags() { return $this->_m_accessFlags; }
-
-        /**
-         * offset from the start of the file to the code structure for this method,
-         * or 0 if this method is either abstract or native.
-         * 
-         * The offset should be to a location in the data section.
-         * 
-         * The format of the data is specified by "code_item" below.
-         */
-        public function codeOff() { return $this->_m_codeOff; }
     }
 }
 
 namespace Dex {
     class MapItem extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Dex\MapList $_parent = null, \Dex $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Dex\MapList $_parent = null, ?\Dex $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -1357,28 +1102,301 @@ namespace Dex\MapItem {
         const ANNOTATION_ITEM = 8196;
         const ENCODED_ARRAY_ITEM = 8197;
         const ANNOTATIONS_DIRECTORY_ITEM = 8198;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 7 => true, 8 => true, 4096 => true, 4097 => true, 4098 => true, 4099 => true, 8192 => true, 8193 => true, 8194 => true, 8195 => true, 8196 => true, 8197 => true, 8198 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
 namespace Dex {
-    class EncodedArray extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Dex $_root = null) {
+    class MapList extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Dex $_parent = null, ?\Dex $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_size = new \VlqBase128Le($this->_io);
-            $this->_m_values = [];
-            $n = $this->size()->value();
+            $this->_m_size = $this->_io->readU4le();
+            $this->_m_list = [];
+            $n = $this->size();
             for ($i = 0; $i < $n; $i++) {
-                $this->_m_values[] = new \Dex\EncodedValue($this->_io, $this, $this->_root);
+                $this->_m_list[] = new \Dex\MapItem($this->_io, $this, $this->_root);
             }
         }
         protected $_m_size;
-        protected $_m_values;
+        protected $_m_list;
         public function size() { return $this->_m_size; }
-        public function values() { return $this->_m_values; }
+        public function list() { return $this->_m_list; }
+    }
+}
+
+namespace Dex {
+    class MethodIdItem extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Dex $_parent = null, ?\Dex $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_classIdx = $this->_io->readU2le();
+            $this->_m_protoIdx = $this->_io->readU2le();
+            $this->_m_nameIdx = $this->_io->readU4le();
+        }
+        protected $_m_className;
+
+        /**
+         * the definer of this method
+         */
+        public function className() {
+            if ($this->_m_className !== null)
+                return $this->_m_className;
+            $this->_m_className = $this->_root()->typeIds()[$this->classIdx()]->typeName();
+            return $this->_m_className;
+        }
+        protected $_m_methodName;
+
+        /**
+         * the name of this method
+         */
+        public function methodName() {
+            if ($this->_m_methodName !== null)
+                return $this->_m_methodName;
+            $this->_m_methodName = $this->_root()->stringIds()[$this->nameIdx()]->value()->data();
+            return $this->_m_methodName;
+        }
+        protected $_m_protoDesc;
+
+        /**
+         * the short-form descriptor of the prototype of this method
+         */
+        public function protoDesc() {
+            if ($this->_m_protoDesc !== null)
+                return $this->_m_protoDesc;
+            $this->_m_protoDesc = $this->_root()->protoIds()[$this->protoIdx()]->shortyDesc();
+            return $this->_m_protoDesc;
+        }
+        protected $_m_classIdx;
+        protected $_m_protoIdx;
+        protected $_m_nameIdx;
+
+        /**
+         * index into the type_ids list for the definer of this method.
+         * This must be a class or array type, and not a primitive type.
+         */
+        public function classIdx() { return $this->_m_classIdx; }
+
+        /**
+         * index into the proto_ids list for the prototype of this method
+         */
+        public function protoIdx() { return $this->_m_protoIdx; }
+
+        /**
+         * index into the string_ids list for the name of this method.
+         * The string must conform to the syntax for MemberName, defined above.
+         */
+        public function nameIdx() { return $this->_m_nameIdx; }
+    }
+}
+
+namespace Dex {
+    class ProtoIdItem extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Dex $_parent = null, ?\Dex $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_shortyIdx = $this->_io->readU4le();
+            $this->_m_returnTypeIdx = $this->_io->readU4le();
+            $this->_m_parametersOff = $this->_io->readU4le();
+        }
+        protected $_m_paramsTypes;
+
+        /**
+         * list of parameter types for this prototype
+         */
+        public function paramsTypes() {
+            if ($this->_m_paramsTypes !== null)
+                return $this->_m_paramsTypes;
+            if ($this->parametersOff() != 0) {
+                $io = $this->_root()->_io();
+                $_pos = $io->pos();
+                $io->seek($this->parametersOff());
+                $this->_m_paramsTypes = new \Dex\TypeList($io, $this, $this->_root);
+                $io->seek($_pos);
+            }
+            return $this->_m_paramsTypes;
+        }
+        protected $_m_returnType;
+
+        /**
+         * return type of this prototype
+         */
+        public function returnType() {
+            if ($this->_m_returnType !== null)
+                return $this->_m_returnType;
+            $this->_m_returnType = $this->_root()->typeIds()[$this->returnTypeIdx()]->typeName();
+            return $this->_m_returnType;
+        }
+        protected $_m_shortyDesc;
+
+        /**
+         * short-form descriptor string of this prototype, as pointed to by shorty_idx
+         */
+        public function shortyDesc() {
+            if ($this->_m_shortyDesc !== null)
+                return $this->_m_shortyDesc;
+            $this->_m_shortyDesc = $this->_root()->stringIds()[$this->shortyIdx()]->value()->data();
+            return $this->_m_shortyDesc;
+        }
+        protected $_m_shortyIdx;
+        protected $_m_returnTypeIdx;
+        protected $_m_parametersOff;
+
+        /**
+         * index into the string_ids list for the short-form descriptor string of this prototype.
+         * The string must conform to the syntax for ShortyDescriptor, defined above,
+         * and must correspond to the return type and parameters of this item.
+         */
+        public function shortyIdx() { return $this->_m_shortyIdx; }
+
+        /**
+         * index into the type_ids list for the return type of this prototype
+         */
+        public function returnTypeIdx() { return $this->_m_returnTypeIdx; }
+
+        /**
+         * offset from the start of the file to the list of parameter types for this prototype,
+         * or 0 if this prototype has no parameters.
+         * This offset, if non-zero, should be in the data section, and the data
+         * there should be in the format specified by "type_list" below.
+         * Additionally, there should be no reference to the type void in the list.
+         */
+        public function parametersOff() { return $this->_m_parametersOff; }
+    }
+}
+
+namespace Dex {
+    class StringIdItem extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Dex $_parent = null, ?\Dex $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_stringDataOff = $this->_io->readU4le();
+        }
+        protected $_m_value;
+        public function value() {
+            if ($this->_m_value !== null)
+                return $this->_m_value;
+            $_pos = $this->_io->pos();
+            $this->_io->seek($this->stringDataOff());
+            $this->_m_value = new \Dex\StringIdItem\StringDataItem($this->_io, $this, $this->_root);
+            $this->_io->seek($_pos);
+            return $this->_m_value;
+        }
+        protected $_m_stringDataOff;
+
+        /**
+         * offset from the start of the file to the string data for this item.
+         * The offset should be to a location in the data section, and the data
+         * should be in the format specified by "string_data_item" below.
+         * There is no alignment requirement for the offset.
+         */
+        public function stringDataOff() { return $this->_m_stringDataOff; }
+    }
+}
+
+namespace Dex\StringIdItem {
+    class StringDataItem extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Dex\StringIdItem $_parent = null, ?\Dex $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_utf16Size = new \VlqBase128Le($this->_io);
+            $this->_m_data = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->utf16Size()->value()), "ASCII");
+        }
+        protected $_m_utf16Size;
+        protected $_m_data;
+        public function utf16Size() { return $this->_m_utf16Size; }
+        public function data() { return $this->_m_data; }
+    }
+}
+
+namespace Dex {
+    class TypeIdItem extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Dex $_parent = null, ?\Dex $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_descriptorIdx = $this->_io->readU4le();
+        }
+        protected $_m_typeName;
+        public function typeName() {
+            if ($this->_m_typeName !== null)
+                return $this->_m_typeName;
+            $this->_m_typeName = $this->_root()->stringIds()[$this->descriptorIdx()]->value()->data();
+            return $this->_m_typeName;
+        }
+        protected $_m_descriptorIdx;
+
+        /**
+         * index into the string_ids list for the descriptor string of this type.
+         * The string must conform to the syntax for TypeDescriptor, defined above.
+         */
+        public function descriptorIdx() { return $this->_m_descriptorIdx; }
+    }
+}
+
+namespace Dex {
+    class TypeItem extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Dex\TypeList $_parent = null, ?\Dex $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_typeIdx = $this->_io->readU2le();
+        }
+        protected $_m_value;
+        public function value() {
+            if ($this->_m_value !== null)
+                return $this->_m_value;
+            $this->_m_value = $this->_root()->typeIds()[$this->typeIdx()]->typeName();
+            return $this->_m_value;
+        }
+        protected $_m_typeIdx;
+        public function typeIdx() { return $this->_m_typeIdx; }
+    }
+}
+
+namespace Dex {
+    class TypeList extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Dex\ProtoIdItem $_parent = null, ?\Dex $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_size = $this->_io->readU4le();
+            $this->_m_list = [];
+            $n = $this->size();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_list[] = new \Dex\TypeItem($this->_io, $this, $this->_root);
+            }
+        }
+        protected $_m_size;
+        protected $_m_list;
+        public function size() { return $this->_m_size; }
+        public function list() { return $this->_m_list; }
     }
 }
 
@@ -1394,5 +1412,11 @@ namespace Dex {
         const SYNTHETIC = 4096;
         const ANNOTATION = 8192;
         const ENUM = 16384;
+
+        private const _VALUES = [1 => true, 2 => true, 4 => true, 8 => true, 16 => true, 512 => true, 1024 => true, 4096 => true, 8192 => true, 16384 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

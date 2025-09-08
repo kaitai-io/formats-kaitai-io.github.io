@@ -17,19 +17,23 @@ type SomeIpSdOptions struct {
 	Entries []*SomeIpSdOptions_SdOption
 	_io *kaitai.Stream
 	_root *SomeIpSdOptions
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewSomeIpSdOptions() *SomeIpSdOptions {
 	return &SomeIpSdOptions{
 	}
 }
 
-func (this *SomeIpSdOptions) Read(io *kaitai.Stream, parent interface{}, root *SomeIpSdOptions) (err error) {
+func (this SomeIpSdOptions) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *SomeIpSdOptions) Read(io *kaitai.Stream, parent kaitai.Struct, root *SomeIpSdOptions) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	for i := 1;; i++ {
+	for i := 0;; i++ {
 		tmp1, err := this._io.EOF()
 		if err != nil {
 			return err
@@ -58,9 +62,14 @@ const (
 	SomeIpSdOptions_SdOption_OptionTypes__Ipv4SdEndpointOption SomeIpSdOptions_SdOption_OptionTypes = 36
 	SomeIpSdOptions_SdOption_OptionTypes__Ipv6SdEndpointOption SomeIpSdOptions_SdOption_OptionTypes = 38
 )
+var values_SomeIpSdOptions_SdOption_OptionTypes = map[SomeIpSdOptions_SdOption_OptionTypes]struct{}{1: {}, 2: {}, 4: {}, 6: {}, 20: {}, 22: {}, 36: {}, 38: {}}
+func (v SomeIpSdOptions_SdOption_OptionTypes) isDefined() bool {
+	_, ok := values_SomeIpSdOptions_SdOption_OptionTypes[v]
+	return ok
+}
 type SomeIpSdOptions_SdOption struct {
 	Header *SomeIpSdOptions_SdOption_SdOptionHeader
-	Content interface{}
+	Content kaitai.Struct
 	_io *kaitai.Stream
 	_root *SomeIpSdOptions
 	_parent *SomeIpSdOptions
@@ -68,6 +77,10 @@ type SomeIpSdOptions_SdOption struct {
 func NewSomeIpSdOptions_SdOption() *SomeIpSdOptions_SdOption {
 	return &SomeIpSdOptions_SdOption{
 	}
+}
+
+func (this SomeIpSdOptions_SdOption) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *SomeIpSdOptions_SdOption) Read(io *kaitai.Stream, parent *SomeIpSdOptions, root *SomeIpSdOptions) (err error) {
@@ -82,57 +95,57 @@ func (this *SomeIpSdOptions_SdOption) Read(io *kaitai.Stream, parent *SomeIpSdOp
 	}
 	this.Header = tmp3
 	switch (this.Header.Type) {
-	case SomeIpSdOptions_SdOption_OptionTypes__LoadBalancingOption:
-		tmp4 := NewSomeIpSdOptions_SdOption_SdLoadBalancingOption()
+	case SomeIpSdOptions_SdOption_OptionTypes__ConfigurationOption:
+		tmp4 := NewSomeIpSdOptions_SdOption_SdConfigurationOption()
 		err = tmp4.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Content = tmp4
-	case SomeIpSdOptions_SdOption_OptionTypes__ConfigurationOption:
-		tmp5 := NewSomeIpSdOptions_SdOption_SdConfigurationOption()
+	case SomeIpSdOptions_SdOption_OptionTypes__Ipv4EndpointOption:
+		tmp5 := NewSomeIpSdOptions_SdOption_SdIpv4EndpointOption()
 		err = tmp5.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Content = tmp5
-	case SomeIpSdOptions_SdOption_OptionTypes__Ipv4SdEndpointOption:
-		tmp6 := NewSomeIpSdOptions_SdOption_SdIpv4SdEndpointOption()
+	case SomeIpSdOptions_SdOption_OptionTypes__Ipv4MulticastOption:
+		tmp6 := NewSomeIpSdOptions_SdOption_SdIpv4MulticastOption()
 		err = tmp6.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Content = tmp6
-	case SomeIpSdOptions_SdOption_OptionTypes__Ipv4EndpointOption:
-		tmp7 := NewSomeIpSdOptions_SdOption_SdIpv4EndpointOption()
+	case SomeIpSdOptions_SdOption_OptionTypes__Ipv4SdEndpointOption:
+		tmp7 := NewSomeIpSdOptions_SdOption_SdIpv4SdEndpointOption()
 		err = tmp7.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Content = tmp7
-	case SomeIpSdOptions_SdOption_OptionTypes__Ipv6SdEndpointOption:
-		tmp8 := NewSomeIpSdOptions_SdOption_SdIpv6SdEndpointOption()
+	case SomeIpSdOptions_SdOption_OptionTypes__Ipv6EndpointOption:
+		tmp8 := NewSomeIpSdOptions_SdOption_SdIpv6EndpointOption()
 		err = tmp8.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Content = tmp8
-	case SomeIpSdOptions_SdOption_OptionTypes__Ipv4MulticastOption:
-		tmp9 := NewSomeIpSdOptions_SdOption_SdIpv4MulticastOption()
+	case SomeIpSdOptions_SdOption_OptionTypes__Ipv6MulticastOption:
+		tmp9 := NewSomeIpSdOptions_SdOption_SdIpv6MulticastOption()
 		err = tmp9.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Content = tmp9
-	case SomeIpSdOptions_SdOption_OptionTypes__Ipv6EndpointOption:
-		tmp10 := NewSomeIpSdOptions_SdOption_SdIpv6EndpointOption()
+	case SomeIpSdOptions_SdOption_OptionTypes__Ipv6SdEndpointOption:
+		tmp10 := NewSomeIpSdOptions_SdOption_SdIpv6SdEndpointOption()
 		err = tmp10.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Content = tmp10
-	case SomeIpSdOptions_SdOption_OptionTypes__Ipv6MulticastOption:
-		tmp11 := NewSomeIpSdOptions_SdOption_SdIpv6MulticastOption()
+	case SomeIpSdOptions_SdOption_OptionTypes__LoadBalancingOption:
+		tmp11 := NewSomeIpSdOptions_SdOption_SdLoadBalancingOption()
 		err = tmp11.Read(this._io, this, this._root)
 		if err != nil {
 			return err
@@ -141,33 +154,38 @@ func (this *SomeIpSdOptions_SdOption) Read(io *kaitai.Stream, parent *SomeIpSdOp
 	}
 	return err
 }
-type SomeIpSdOptions_SdOption_SdOptionHeader struct {
-	Length uint16
-	Type SomeIpSdOptions_SdOption_OptionTypes
+type SomeIpSdOptions_SdOption_SdConfigKvPair struct {
+	Key string
+	Value string
 	_io *kaitai.Stream
 	_root *SomeIpSdOptions
-	_parent *SomeIpSdOptions_SdOption
+	_parent *SomeIpSdOptions_SdOption_SdConfigString
 }
-func NewSomeIpSdOptions_SdOption_SdOptionHeader() *SomeIpSdOptions_SdOption_SdOptionHeader {
-	return &SomeIpSdOptions_SdOption_SdOptionHeader{
+func NewSomeIpSdOptions_SdOption_SdConfigKvPair() *SomeIpSdOptions_SdOption_SdConfigKvPair {
+	return &SomeIpSdOptions_SdOption_SdConfigKvPair{
 	}
 }
 
-func (this *SomeIpSdOptions_SdOption_SdOptionHeader) Read(io *kaitai.Stream, parent *SomeIpSdOptions_SdOption, root *SomeIpSdOptions) (err error) {
+func (this SomeIpSdOptions_SdOption_SdConfigKvPair) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *SomeIpSdOptions_SdOption_SdConfigKvPair) Read(io *kaitai.Stream, parent *SomeIpSdOptions_SdOption_SdConfigString, root *SomeIpSdOptions) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp12, err := this._io.ReadU2be()
+	tmp12, err := this._io.ReadBytesTerm(61, false, true, true)
 	if err != nil {
 		return err
 	}
-	this.Length = uint16(tmp12)
-	tmp13, err := this._io.ReadU1()
+	this.Key = string(tmp12)
+	tmp13, err := this._io.ReadBytesFull()
 	if err != nil {
 		return err
 	}
-	this.Type = SomeIpSdOptions_SdOption_OptionTypes(tmp13)
+	tmp13 = tmp13
+	this.Value = string(tmp13)
 	return err
 }
 type SomeIpSdOptions_SdOption_SdConfigString struct {
@@ -181,6 +199,10 @@ type SomeIpSdOptions_SdOption_SdConfigString struct {
 func NewSomeIpSdOptions_SdOption_SdConfigString() *SomeIpSdOptions_SdOption_SdConfigString {
 	return &SomeIpSdOptions_SdOption_SdConfigString{
 	}
+}
+
+func (this SomeIpSdOptions_SdOption_SdConfigString) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *SomeIpSdOptions_SdOption_SdConfigString) Read(io *kaitai.Stream, parent *SomeIpSdOptions_SdOption_SdConfigStringsContainer, root *SomeIpSdOptions) (err error) {
@@ -221,12 +243,16 @@ func NewSomeIpSdOptions_SdOption_SdConfigStringsContainer() *SomeIpSdOptions_SdO
 	}
 }
 
+func (this SomeIpSdOptions_SdOption_SdConfigStringsContainer) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *SomeIpSdOptions_SdOption_SdConfigStringsContainer) Read(io *kaitai.Stream, parent *SomeIpSdOptions_SdOption_SdConfigurationOption, root *SomeIpSdOptions) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	for i := 1;; i++ {
+	for i := 0;; i++ {
 		tmp17, err := this._io.EOF()
 		if err != nil {
 			return err
@@ -256,6 +282,10 @@ func NewSomeIpSdOptions_SdOption_SdConfigurationOption() *SomeIpSdOptions_SdOpti
 	}
 }
 
+func (this SomeIpSdOptions_SdOption_SdConfigurationOption) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *SomeIpSdOptions_SdOption_SdConfigurationOption) Read(io *kaitai.Stream, parent *SomeIpSdOptions_SdOption, root *SomeIpSdOptions) (err error) {
 	this._io = io
 	this._parent = parent
@@ -266,7 +296,7 @@ func (this *SomeIpSdOptions_SdOption_SdConfigurationOption) Read(io *kaitai.Stre
 		return err
 	}
 	this.Reserved = tmp19
-	tmp20, err := this._io.ReadBytes(int((this._parent.Header.Length - 1)))
+	tmp20, err := this._io.ReadBytes(int(this._parent.Header.Length - 1))
 	if err != nil {
 		return err
 	}
@@ -281,7 +311,7 @@ func (this *SomeIpSdOptions_SdOption_SdConfigurationOption) Read(io *kaitai.Stre
 	this.Configurations = tmp21
 	return err
 }
-type SomeIpSdOptions_SdOption_SdIpv4MulticastOption struct {
+type SomeIpSdOptions_SdOption_SdIpv4EndpointOption struct {
 	Reserved uint8
 	Address []byte
 	Reserved2 uint8
@@ -291,12 +321,16 @@ type SomeIpSdOptions_SdOption_SdIpv4MulticastOption struct {
 	_root *SomeIpSdOptions
 	_parent *SomeIpSdOptions_SdOption
 }
-func NewSomeIpSdOptions_SdOption_SdIpv4MulticastOption() *SomeIpSdOptions_SdOption_SdIpv4MulticastOption {
-	return &SomeIpSdOptions_SdOption_SdIpv4MulticastOption{
+func NewSomeIpSdOptions_SdOption_SdIpv4EndpointOption() *SomeIpSdOptions_SdOption_SdIpv4EndpointOption {
+	return &SomeIpSdOptions_SdOption_SdIpv4EndpointOption{
 	}
 }
 
-func (this *SomeIpSdOptions_SdOption_SdIpv4MulticastOption) Read(io *kaitai.Stream, parent *SomeIpSdOptions_SdOption, root *SomeIpSdOptions) (err error) {
+func (this SomeIpSdOptions_SdOption_SdIpv4EndpointOption) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *SomeIpSdOptions_SdOption_SdIpv4EndpointOption) Read(io *kaitai.Stream, parent *SomeIpSdOptions_SdOption, root *SomeIpSdOptions) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -329,7 +363,7 @@ func (this *SomeIpSdOptions_SdOption_SdIpv4MulticastOption) Read(io *kaitai.Stre
 	this.Port = uint16(tmp26)
 	return err
 }
-type SomeIpSdOptions_SdOption_SdIpv4SdEndpointOption struct {
+type SomeIpSdOptions_SdOption_SdIpv4MulticastOption struct {
 	Reserved uint8
 	Address []byte
 	Reserved2 uint8
@@ -339,12 +373,16 @@ type SomeIpSdOptions_SdOption_SdIpv4SdEndpointOption struct {
 	_root *SomeIpSdOptions
 	_parent *SomeIpSdOptions_SdOption
 }
-func NewSomeIpSdOptions_SdOption_SdIpv4SdEndpointOption() *SomeIpSdOptions_SdOption_SdIpv4SdEndpointOption {
-	return &SomeIpSdOptions_SdOption_SdIpv4SdEndpointOption{
+func NewSomeIpSdOptions_SdOption_SdIpv4MulticastOption() *SomeIpSdOptions_SdOption_SdIpv4MulticastOption {
+	return &SomeIpSdOptions_SdOption_SdIpv4MulticastOption{
 	}
 }
 
-func (this *SomeIpSdOptions_SdOption_SdIpv4SdEndpointOption) Read(io *kaitai.Stream, parent *SomeIpSdOptions_SdOption, root *SomeIpSdOptions) (err error) {
+func (this SomeIpSdOptions_SdOption_SdIpv4MulticastOption) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *SomeIpSdOptions_SdOption_SdIpv4MulticastOption) Read(io *kaitai.Stream, parent *SomeIpSdOptions_SdOption, root *SomeIpSdOptions) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -377,7 +415,7 @@ func (this *SomeIpSdOptions_SdOption_SdIpv4SdEndpointOption) Read(io *kaitai.Str
 	this.Port = uint16(tmp31)
 	return err
 }
-type SomeIpSdOptions_SdOption_SdIpv6MulticastOption struct {
+type SomeIpSdOptions_SdOption_SdIpv4SdEndpointOption struct {
 	Reserved uint8
 	Address []byte
 	Reserved2 uint8
@@ -387,12 +425,16 @@ type SomeIpSdOptions_SdOption_SdIpv6MulticastOption struct {
 	_root *SomeIpSdOptions
 	_parent *SomeIpSdOptions_SdOption
 }
-func NewSomeIpSdOptions_SdOption_SdIpv6MulticastOption() *SomeIpSdOptions_SdOption_SdIpv6MulticastOption {
-	return &SomeIpSdOptions_SdOption_SdIpv6MulticastOption{
+func NewSomeIpSdOptions_SdOption_SdIpv4SdEndpointOption() *SomeIpSdOptions_SdOption_SdIpv4SdEndpointOption {
+	return &SomeIpSdOptions_SdOption_SdIpv4SdEndpointOption{
 	}
 }
 
-func (this *SomeIpSdOptions_SdOption_SdIpv6MulticastOption) Read(io *kaitai.Stream, parent *SomeIpSdOptions_SdOption, root *SomeIpSdOptions) (err error) {
+func (this SomeIpSdOptions_SdOption_SdIpv4SdEndpointOption) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *SomeIpSdOptions_SdOption_SdIpv4SdEndpointOption) Read(io *kaitai.Stream, parent *SomeIpSdOptions_SdOption, root *SomeIpSdOptions) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -402,7 +444,7 @@ func (this *SomeIpSdOptions_SdOption_SdIpv6MulticastOption) Read(io *kaitai.Stre
 		return err
 	}
 	this.Reserved = tmp32
-	tmp33, err := this._io.ReadBytes(int(16))
+	tmp33, err := this._io.ReadBytes(int(4))
 	if err != nil {
 		return err
 	}
@@ -425,34 +467,108 @@ func (this *SomeIpSdOptions_SdOption_SdIpv6MulticastOption) Read(io *kaitai.Stre
 	this.Port = uint16(tmp36)
 	return err
 }
-type SomeIpSdOptions_SdOption_SdConfigKvPair struct {
-	Key string
-	Value string
+type SomeIpSdOptions_SdOption_SdIpv6EndpointOption struct {
+	Reserved uint8
+	Address []byte
+	Reserved2 uint8
+	L4Protocol uint8
+	Port uint16
 	_io *kaitai.Stream
 	_root *SomeIpSdOptions
-	_parent *SomeIpSdOptions_SdOption_SdConfigString
+	_parent *SomeIpSdOptions_SdOption
 }
-func NewSomeIpSdOptions_SdOption_SdConfigKvPair() *SomeIpSdOptions_SdOption_SdConfigKvPair {
-	return &SomeIpSdOptions_SdOption_SdConfigKvPair{
+func NewSomeIpSdOptions_SdOption_SdIpv6EndpointOption() *SomeIpSdOptions_SdOption_SdIpv6EndpointOption {
+	return &SomeIpSdOptions_SdOption_SdIpv6EndpointOption{
 	}
 }
 
-func (this *SomeIpSdOptions_SdOption_SdConfigKvPair) Read(io *kaitai.Stream, parent *SomeIpSdOptions_SdOption_SdConfigString, root *SomeIpSdOptions) (err error) {
+func (this SomeIpSdOptions_SdOption_SdIpv6EndpointOption) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *SomeIpSdOptions_SdOption_SdIpv6EndpointOption) Read(io *kaitai.Stream, parent *SomeIpSdOptions_SdOption, root *SomeIpSdOptions) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp37, err := this._io.ReadBytesTerm(61, false, true, true)
+	tmp37, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Key = string(tmp37)
-	tmp38, err := this._io.ReadBytesFull()
+	this.Reserved = tmp37
+	tmp38, err := this._io.ReadBytes(int(16))
 	if err != nil {
 		return err
 	}
 	tmp38 = tmp38
-	this.Value = string(tmp38)
+	this.Address = tmp38
+	tmp39, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Reserved2 = tmp39
+	tmp40, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.L4Protocol = tmp40
+	tmp41, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.Port = uint16(tmp41)
+	return err
+}
+type SomeIpSdOptions_SdOption_SdIpv6MulticastOption struct {
+	Reserved uint8
+	Address []byte
+	Reserved2 uint8
+	L4Protocol uint8
+	Port uint16
+	_io *kaitai.Stream
+	_root *SomeIpSdOptions
+	_parent *SomeIpSdOptions_SdOption
+}
+func NewSomeIpSdOptions_SdOption_SdIpv6MulticastOption() *SomeIpSdOptions_SdOption_SdIpv6MulticastOption {
+	return &SomeIpSdOptions_SdOption_SdIpv6MulticastOption{
+	}
+}
+
+func (this SomeIpSdOptions_SdOption_SdIpv6MulticastOption) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *SomeIpSdOptions_SdOption_SdIpv6MulticastOption) Read(io *kaitai.Stream, parent *SomeIpSdOptions_SdOption, root *SomeIpSdOptions) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp42, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Reserved = tmp42
+	tmp43, err := this._io.ReadBytes(int(16))
+	if err != nil {
+		return err
+	}
+	tmp43 = tmp43
+	this.Address = tmp43
+	tmp44, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Reserved2 = tmp44
+	tmp45, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.L4Protocol = tmp45
+	tmp46, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.Port = uint16(tmp46)
 	return err
 }
 type SomeIpSdOptions_SdOption_SdIpv6SdEndpointOption struct {
@@ -470,133 +586,41 @@ func NewSomeIpSdOptions_SdOption_SdIpv6SdEndpointOption() *SomeIpSdOptions_SdOpt
 	}
 }
 
+func (this SomeIpSdOptions_SdOption_SdIpv6SdEndpointOption) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *SomeIpSdOptions_SdOption_SdIpv6SdEndpointOption) Read(io *kaitai.Stream, parent *SomeIpSdOptions_SdOption, root *SomeIpSdOptions) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp39, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Reserved = tmp39
-	tmp40, err := this._io.ReadBytes(int(16))
-	if err != nil {
-		return err
-	}
-	tmp40 = tmp40
-	this.Address = tmp40
-	tmp41, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Reserved2 = tmp41
-	tmp42, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.L4Protocol = tmp42
-	tmp43, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.Port = uint16(tmp43)
-	return err
-}
-type SomeIpSdOptions_SdOption_SdIpv4EndpointOption struct {
-	Reserved uint8
-	Address []byte
-	Reserved2 uint8
-	L4Protocol uint8
-	Port uint16
-	_io *kaitai.Stream
-	_root *SomeIpSdOptions
-	_parent *SomeIpSdOptions_SdOption
-}
-func NewSomeIpSdOptions_SdOption_SdIpv4EndpointOption() *SomeIpSdOptions_SdOption_SdIpv4EndpointOption {
-	return &SomeIpSdOptions_SdOption_SdIpv4EndpointOption{
-	}
-}
-
-func (this *SomeIpSdOptions_SdOption_SdIpv4EndpointOption) Read(io *kaitai.Stream, parent *SomeIpSdOptions_SdOption, root *SomeIpSdOptions) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp44, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Reserved = tmp44
-	tmp45, err := this._io.ReadBytes(int(4))
-	if err != nil {
-		return err
-	}
-	tmp45 = tmp45
-	this.Address = tmp45
-	tmp46, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Reserved2 = tmp46
 	tmp47, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.L4Protocol = tmp47
-	tmp48, err := this._io.ReadU2be()
+	this.Reserved = tmp47
+	tmp48, err := this._io.ReadBytes(int(16))
 	if err != nil {
 		return err
 	}
-	this.Port = uint16(tmp48)
-	return err
-}
-type SomeIpSdOptions_SdOption_SdIpv6EndpointOption struct {
-	Reserved uint8
-	Address []byte
-	Reserved2 uint8
-	L4Protocol uint8
-	Port uint16
-	_io *kaitai.Stream
-	_root *SomeIpSdOptions
-	_parent *SomeIpSdOptions_SdOption
-}
-func NewSomeIpSdOptions_SdOption_SdIpv6EndpointOption() *SomeIpSdOptions_SdOption_SdIpv6EndpointOption {
-	return &SomeIpSdOptions_SdOption_SdIpv6EndpointOption{
-	}
-}
-
-func (this *SomeIpSdOptions_SdOption_SdIpv6EndpointOption) Read(io *kaitai.Stream, parent *SomeIpSdOptions_SdOption, root *SomeIpSdOptions) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
+	tmp48 = tmp48
+	this.Address = tmp48
 	tmp49, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Reserved = tmp49
-	tmp50, err := this._io.ReadBytes(int(16))
+	this.Reserved2 = tmp49
+	tmp50, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	tmp50 = tmp50
-	this.Address = tmp50
-	tmp51, err := this._io.ReadU1()
+	this.L4Protocol = tmp50
+	tmp51, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.Reserved2 = tmp51
-	tmp52, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.L4Protocol = tmp52
-	tmp53, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.Port = uint16(tmp53)
+	this.Port = uint16(tmp51)
 	return err
 }
 type SomeIpSdOptions_SdOption_SdLoadBalancingOption struct {
@@ -612,25 +636,62 @@ func NewSomeIpSdOptions_SdOption_SdLoadBalancingOption() *SomeIpSdOptions_SdOpti
 	}
 }
 
+func (this SomeIpSdOptions_SdOption_SdLoadBalancingOption) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *SomeIpSdOptions_SdOption_SdLoadBalancingOption) Read(io *kaitai.Stream, parent *SomeIpSdOptions_SdOption, root *SomeIpSdOptions) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp54, err := this._io.ReadU1()
+	tmp52, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Reserved = tmp54
+	this.Reserved = tmp52
+	tmp53, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.Priority = uint16(tmp53)
+	tmp54, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.Weight = uint16(tmp54)
+	return err
+}
+type SomeIpSdOptions_SdOption_SdOptionHeader struct {
+	Length uint16
+	Type SomeIpSdOptions_SdOption_OptionTypes
+	_io *kaitai.Stream
+	_root *SomeIpSdOptions
+	_parent *SomeIpSdOptions_SdOption
+}
+func NewSomeIpSdOptions_SdOption_SdOptionHeader() *SomeIpSdOptions_SdOption_SdOptionHeader {
+	return &SomeIpSdOptions_SdOption_SdOptionHeader{
+	}
+}
+
+func (this SomeIpSdOptions_SdOption_SdOptionHeader) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *SomeIpSdOptions_SdOption_SdOptionHeader) Read(io *kaitai.Stream, parent *SomeIpSdOptions_SdOption, root *SomeIpSdOptions) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
 	tmp55, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.Priority = uint16(tmp55)
-	tmp56, err := this._io.ReadU2be()
+	this.Length = uint16(tmp55)
+	tmp56, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Weight = uint16(tmp56)
+	this.Type = SomeIpSdOptions_SdOption_OptionTypes(tmp56)
 	return err
 }

@@ -2,23 +2,23 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 class GranTurismoVol < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
     @magic = @_io.read_bytes(8)
-    raise Kaitai::Struct::ValidationNotEqualError.new([71, 84, 70, 83, 0, 0, 0, 0].pack('C*'), magic, _io, "/seq/0") if not magic == [71, 84, 70, 83, 0, 0, 0, 0].pack('C*')
+    raise Kaitai::Struct::ValidationNotEqualError.new([71, 84, 70, 83, 0, 0, 0, 0].pack('C*'), @magic, @_io, "/seq/0") if not @magic == [71, 84, 70, 83, 0, 0, 0, 0].pack('C*')
     @num_files = @_io.read_u2le
     @num_entries = @_io.read_u2le
     @reserved = @_io.read_bytes(4)
-    raise Kaitai::Struct::ValidationNotEqualError.new([0, 0, 0, 0].pack('C*'), reserved, _io, "/seq/3") if not reserved == [0, 0, 0, 0].pack('C*')
+    raise Kaitai::Struct::ValidationNotEqualError.new([0, 0, 0, 0].pack('C*'), @reserved, @_io, "/seq/3") if not @reserved == [0, 0, 0, 0].pack('C*')
     @offsets = []
     (num_files).times { |i|
       @offsets << @_io.read_u4le
@@ -26,7 +26,7 @@ class GranTurismoVol < Kaitai::Struct::Struct
     self
   end
   class FileInfo < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -35,19 +35,14 @@ class GranTurismoVol < Kaitai::Struct::Struct
       @timestamp = @_io.read_u4le
       @offset_idx = @_io.read_u2le
       @flags = @_io.read_u1
-      @name = (Kaitai::Struct::Stream::bytes_terminate(Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(25), 0), 0, false)).force_encoding("ASCII")
+      @name = (Kaitai::Struct::Stream::bytes_terminate(Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(25), 0), 0, false)).force_encoding("ASCII").encode('UTF-8')
       self
-    end
-    def size
-      return @size unless @size.nil?
-      @size = ((_root.offsets[(offset_idx + 1)] & 4294965248) - _root.offsets[offset_idx])
-      @size
     end
     def body
       return @body unless @body.nil?
       if !(is_dir)
         _pos = @_io.pos
-        @_io.seek((_root.offsets[offset_idx] & 4294965248))
+        @_io.seek(_root.offsets[offset_idx] & 4294965248)
         @body = @_io.read_bytes(size)
         @_io.seek(_pos)
       end
@@ -55,34 +50,39 @@ class GranTurismoVol < Kaitai::Struct::Struct
     end
     def is_dir
       return @is_dir unless @is_dir.nil?
-      @is_dir = (flags & 1) != 0
+      @is_dir = flags & 1 != 0
       @is_dir
     end
     def is_last_entry
       return @is_last_entry unless @is_last_entry.nil?
-      @is_last_entry = (flags & 128) != 0
+      @is_last_entry = flags & 128 != 0
       @is_last_entry
+    end
+    def size
+      return @size unless @size.nil?
+      @size = (_root.offsets[offset_idx + 1] & 4294965248) - _root.offsets[offset_idx]
+      @size
     end
     attr_reader :timestamp
     attr_reader :offset_idx
     attr_reader :flags
     attr_reader :name
   end
-  def ofs_dir
-    return @ofs_dir unless @ofs_dir.nil?
-    @ofs_dir = offsets[1]
-    @ofs_dir
-  end
   def files
     return @files unless @files.nil?
     _pos = @_io.pos
-    @_io.seek((ofs_dir & 4294965248))
+    @_io.seek(ofs_dir & 4294965248)
     @files = []
     (_root.num_entries).times { |i|
       @files << FileInfo.new(@_io, self, @_root)
     }
     @_io.seek(_pos)
     @files
+  end
+  def ofs_dir
+    return @ofs_dir unless @ofs_dir.nil?
+    @ofs_dir = offsets[1]
+    @ofs_dir
   end
   attr_reader :magic
   attr_reader :num_files

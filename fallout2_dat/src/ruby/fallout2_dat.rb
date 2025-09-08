@@ -3,8 +3,8 @@
 require 'kaitai/struct/struct'
 require 'zlib'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 class Fallout2Dat < Kaitai::Struct::Struct
@@ -14,61 +14,16 @@ class Fallout2Dat < Kaitai::Struct::Struct
     1 => :compression_zlib,
   }
   I__COMPRESSION = COMPRESSION.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
     self
   end
-  class Pstr < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @size = @_io.read_u4le
-      @str = (@_io.read_bytes(size)).force_encoding("ASCII")
-      self
-    end
-    attr_reader :size
-    attr_reader :str
-  end
-  class Footer < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @index_size = @_io.read_u4le
-      @file_size = @_io.read_u4le
-      self
-    end
-    attr_reader :index_size
-    attr_reader :file_size
-  end
-  class Index < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @file_count = @_io.read_u4le
-      @files = []
-      (file_count).times { |i|
-        @files << File.new(@_io, self, @_root)
-      }
-      self
-    end
-    attr_reader :file_count
-    attr_reader :files
-  end
   class File < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -80,6 +35,13 @@ class Fallout2Dat < Kaitai::Struct::Struct
       @size_packed = @_io.read_u4le
       @offset = @_io.read_u4le
       self
+    end
+    def contents
+      return @contents unless @contents.nil?
+      if  ((flags == :compression_zlib) || (flags == :compression_none)) 
+        @contents = (flags == :compression_zlib ? contents_zlib : contents_raw)
+      end
+      @contents
     end
     def contents_raw
       return @contents_raw unless @contents_raw.nil?
@@ -104,13 +66,6 @@ class Fallout2Dat < Kaitai::Struct::Struct
       end
       @contents_zlib
     end
-    def contents
-      return @contents unless @contents.nil?
-      if  ((flags == :compression_zlib) || (flags == :compression_none)) 
-        @contents = (flags == :compression_zlib ? contents_zlib : contents_raw)
-      end
-      @contents
-    end
     attr_reader :name
     attr_reader :flags
     attr_reader :size_unpacked
@@ -118,10 +73,55 @@ class Fallout2Dat < Kaitai::Struct::Struct
     attr_reader :offset
     attr_reader :_raw_contents_zlib
   end
+  class Footer < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @index_size = @_io.read_u4le
+      @file_size = @_io.read_u4le
+      self
+    end
+    attr_reader :index_size
+    attr_reader :file_size
+  end
+  class Index < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @file_count = @_io.read_u4le
+      @files = []
+      (file_count).times { |i|
+        @files << File.new(@_io, self, @_root)
+      }
+      self
+    end
+    attr_reader :file_count
+    attr_reader :files
+  end
+  class Pstr < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @size = @_io.read_u4le
+      @str = (@_io.read_bytes(size)).force_encoding("ASCII").encode('UTF-8')
+      self
+    end
+    attr_reader :size
+    attr_reader :str
+  end
   def footer
     return @footer unless @footer.nil?
     _pos = @_io.pos
-    @_io.seek((_io.size - 8))
+    @_io.seek(_io.size - 8)
     @footer = Footer.new(@_io, self, @_root)
     @_io.seek(_pos)
     @footer
@@ -129,7 +129,7 @@ class Fallout2Dat < Kaitai::Struct::Struct
   def index
     return @index unless @index.nil?
     _pos = @_io.pos
-    @_io.seek(((_io.size - 8) - footer.index_size))
+    @_io.seek((_io.size - 8) - footer.index_size)
     @index = Index.new(@_io, self, @_root)
     @_io.seek(_pos)
     @index

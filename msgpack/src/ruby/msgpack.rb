@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -12,30 +12,30 @@ end
 # data into a compact binary stream.
 # @see https://github.com/msgpack/msgpack/blob/master/spec.md Source
 class Msgpack < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
     @b1 = @_io.read_u1
     case b1
-    when 211
-      @int_extra = @_io.read_s8be
+    when 204
+      @int_extra = @_io.read_u1
+    when 205
+      @int_extra = @_io.read_u2be
+    when 206
+      @int_extra = @_io.read_u4be
+    when 207
+      @int_extra = @_io.read_u8be
+    when 208
+      @int_extra = @_io.read_s1
     when 209
       @int_extra = @_io.read_s2be
     when 210
       @int_extra = @_io.read_s4be
-    when 208
-      @int_extra = @_io.read_s1
-    when 205
-      @int_extra = @_io.read_u2be
-    when 207
-      @int_extra = @_io.read_u8be
-    when 204
-      @int_extra = @_io.read_u1
-    when 206
-      @int_extra = @_io.read_u4be
+    when 211
+      @int_extra = @_io.read_s8be
     end
     if is_float_32
       @float_32_value = @_io.read_f4be
@@ -64,7 +64,7 @@ class Msgpack < Kaitai::Struct::Struct
     if is_array
       @array_elements = []
       (num_array_elements).times { |i|
-        @array_elements << Msgpack.new(@_io)
+        @array_elements << Msgpack.new(@_io, self, @_root)
       }
     end
     if is_map_16
@@ -82,163 +82,18 @@ class Msgpack < Kaitai::Struct::Struct
     self
   end
   class MapTuple < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @key = Msgpack.new(@_io)
-      @value = Msgpack.new(@_io)
+      @key = Msgpack.new(@_io, self, @_root)
+      @value = Msgpack.new(@_io, self, @_root)
       self
     end
     attr_reader :key
     attr_reader :value
-  end
-
-  ##
-  # @see https://github.com/msgpack/msgpack/blob/master/spec.md#formats-array Source
-  def is_array_32
-    return @is_array_32 unless @is_array_32.nil?
-    @is_array_32 = b1 == 221
-    @is_array_32
-  end
-  def int_value
-    return @int_value unless @int_value.nil?
-    if is_int
-      @int_value = (is_pos_int7 ? pos_int7_value : (is_neg_int5 ? neg_int5_value : 4919))
-    end
-    @int_value
-  end
-  def str_len
-    return @str_len unless @str_len.nil?
-    if is_str
-      @str_len = (is_fix_str ? (b1 & 31) : (is_str_8 ? str_len_8 : (is_str_16 ? str_len_16 : str_len_32)))
-    end
-    @str_len
-  end
-
-  ##
-  # @see https://github.com/msgpack/msgpack/blob/master/spec.md#formats-array Source
-  def is_fix_array
-    return @is_fix_array unless @is_fix_array.nil?
-    @is_fix_array = (b1 & 240) == 144
-    @is_fix_array
-  end
-
-  ##
-  # @see https://github.com/msgpack/msgpack/blob/master/spec.md#formats-map Source
-  def is_map
-    return @is_map unless @is_map.nil?
-    @is_map =  ((is_fix_map) || (is_map_16) || (is_map_32)) 
-    @is_map
-  end
-
-  ##
-  # @see https://github.com/msgpack/msgpack/blob/master/spec.md#formats-array Source
-  def is_array
-    return @is_array unless @is_array.nil?
-    @is_array =  ((is_fix_array) || (is_array_16) || (is_array_32)) 
-    @is_array
-  end
-  def is_float
-    return @is_float unless @is_float.nil?
-    @is_float =  ((is_float_32) || (is_float_64)) 
-    @is_float
-  end
-
-  ##
-  # @see https://github.com/msgpack/msgpack/blob/master/spec.md#formats-str Source
-  def is_str_8
-    return @is_str_8 unless @is_str_8.nil?
-    @is_str_8 = b1 == 217
-    @is_str_8
-  end
-
-  ##
-  # @see https://github.com/msgpack/msgpack/blob/master/spec.md#formats-map Source
-  def is_fix_map
-    return @is_fix_map unless @is_fix_map.nil?
-    @is_fix_map = (b1 & 240) == 128
-    @is_fix_map
-  end
-  def is_int
-    return @is_int unless @is_int.nil?
-    @is_int =  ((is_pos_int7) || (is_neg_int5)) 
-    @is_int
-  end
-  def is_bool
-    return @is_bool unless @is_bool.nil?
-    @is_bool =  ((b1 == 194) || (b1 == 195)) 
-    @is_bool
-  end
-
-  ##
-  # @see https://github.com/msgpack/msgpack/blob/master/spec.md#formats-str Source
-  def is_str_16
-    return @is_str_16 unless @is_str_16.nil?
-    @is_str_16 = b1 == 218
-    @is_str_16
-  end
-
-  ##
-  # @see https://github.com/msgpack/msgpack/blob/master/spec.md#formats-float Source
-  def is_float_64
-    return @is_float_64 unless @is_float_64.nil?
-    @is_float_64 = b1 == 203
-    @is_float_64
-  end
-
-  ##
-  # @see https://github.com/msgpack/msgpack/blob/master/spec.md#formats-map Source
-  def is_map_16
-    return @is_map_16 unless @is_map_16.nil?
-    @is_map_16 = b1 == 222
-    @is_map_16
-  end
-  def is_neg_int5
-    return @is_neg_int5 unless @is_neg_int5.nil?
-    @is_neg_int5 = (b1 & 224) == 224
-    @is_neg_int5
-  end
-  def pos_int7_value
-    return @pos_int7_value unless @pos_int7_value.nil?
-    if is_pos_int7
-      @pos_int7_value = b1
-    end
-    @pos_int7_value
-  end
-
-  ##
-  # @see https://github.com/msgpack/msgpack/blob/master/spec.md#formats-nil Source
-  def is_nil
-    return @is_nil unless @is_nil.nil?
-    @is_nil = b1 == 192
-    @is_nil
-  end
-  def float_value
-    return @float_value unless @float_value.nil?
-    if is_float
-      @float_value = (is_float_32 ? float_32_value : float_64_value)
-    end
-    @float_value
-  end
-
-  ##
-  # @see https://github.com/msgpack/msgpack/blob/master/spec.md#formats-array Source
-  def num_array_elements
-    return @num_array_elements unless @num_array_elements.nil?
-    if is_array
-      @num_array_elements = (is_fix_array ? (b1 & 15) : (is_array_16 ? num_array_elements_16 : num_array_elements_32))
-    end
-    @num_array_elements
-  end
-  def neg_int5_value
-    return @neg_int5_value unless @neg_int5_value.nil?
-    if is_neg_int5
-      @neg_int5_value = -((b1 & 31))
-    end
-    @neg_int5_value
   end
 
   ##
@@ -250,10 +105,27 @@ class Msgpack < Kaitai::Struct::Struct
     end
     @bool_value
   end
-  def is_pos_int7
-    return @is_pos_int7 unless @is_pos_int7.nil?
-    @is_pos_int7 = (b1 & 128) == 0
-    @is_pos_int7
+  def float_value
+    return @float_value unless @float_value.nil?
+    if is_float
+      @float_value = (is_float_32 ? float_32_value : float_64_value)
+    end
+    @float_value
+  end
+  def int_value
+    return @int_value unless @int_value.nil?
+    if is_int
+      @int_value = (is_pos_int7 ? pos_int7_value : (is_neg_int5 ? neg_int5_value : 4919))
+    end
+    @int_value
+  end
+
+  ##
+  # @see https://github.com/msgpack/msgpack/blob/master/spec.md#formats-array Source
+  def is_array
+    return @is_array unless @is_array.nil?
+    @is_array =  ((is_fix_array) || (is_array_16) || (is_array_32)) 
+    @is_array
   end
 
   ##
@@ -263,36 +135,47 @@ class Msgpack < Kaitai::Struct::Struct
     @is_array_16 = b1 == 220
     @is_array_16
   end
-  def is_str
-    return @is_str unless @is_str.nil?
-    @is_str =  ((is_fix_str) || (is_str_8) || (is_str_16) || (is_str_32)) 
-    @is_str
+
+  ##
+  # @see https://github.com/msgpack/msgpack/blob/master/spec.md#formats-array Source
+  def is_array_32
+    return @is_array_32 unless @is_array_32.nil?
+    @is_array_32 = b1 == 221
+    @is_array_32
+  end
+  def is_bool
+    return @is_bool unless @is_bool.nil?
+    @is_bool =  ((b1 == 194) || (b1 == 195)) 
+    @is_bool
+  end
+
+  ##
+  # @see https://github.com/msgpack/msgpack/blob/master/spec.md#formats-array Source
+  def is_fix_array
+    return @is_fix_array unless @is_fix_array.nil?
+    @is_fix_array = b1 & 240 == 144
+    @is_fix_array
+  end
+
+  ##
+  # @see https://github.com/msgpack/msgpack/blob/master/spec.md#formats-map Source
+  def is_fix_map
+    return @is_fix_map unless @is_fix_map.nil?
+    @is_fix_map = b1 & 240 == 128
+    @is_fix_map
   end
 
   ##
   # @see https://github.com/msgpack/msgpack/blob/master/spec.md#formats-str Source
   def is_fix_str
     return @is_fix_str unless @is_fix_str.nil?
-    @is_fix_str = (b1 & 224) == 160
+    @is_fix_str = b1 & 224 == 160
     @is_fix_str
   end
-
-  ##
-  # @see https://github.com/msgpack/msgpack/blob/master/spec.md#formats-str Source
-  def is_str_32
-    return @is_str_32 unless @is_str_32.nil?
-    @is_str_32 = b1 == 219
-    @is_str_32
-  end
-
-  ##
-  # @see https://github.com/msgpack/msgpack/blob/master/spec.md#formats-map Source
-  def num_map_elements
-    return @num_map_elements unless @num_map_elements.nil?
-    if is_map
-      @num_map_elements = (is_fix_map ? (b1 & 15) : (is_map_16 ? num_map_elements_16 : num_map_elements_32))
-    end
-    @num_map_elements
+  def is_float
+    return @is_float unless @is_float.nil?
+    @is_float =  ((is_float_32) || (is_float_64)) 
+    @is_float
   end
 
   ##
@@ -304,11 +187,128 @@ class Msgpack < Kaitai::Struct::Struct
   end
 
   ##
+  # @see https://github.com/msgpack/msgpack/blob/master/spec.md#formats-float Source
+  def is_float_64
+    return @is_float_64 unless @is_float_64.nil?
+    @is_float_64 = b1 == 203
+    @is_float_64
+  end
+  def is_int
+    return @is_int unless @is_int.nil?
+    @is_int =  ((is_pos_int7) || (is_neg_int5)) 
+    @is_int
+  end
+
+  ##
+  # @see https://github.com/msgpack/msgpack/blob/master/spec.md#formats-map Source
+  def is_map
+    return @is_map unless @is_map.nil?
+    @is_map =  ((is_fix_map) || (is_map_16) || (is_map_32)) 
+    @is_map
+  end
+
+  ##
+  # @see https://github.com/msgpack/msgpack/blob/master/spec.md#formats-map Source
+  def is_map_16
+    return @is_map_16 unless @is_map_16.nil?
+    @is_map_16 = b1 == 222
+    @is_map_16
+  end
+
+  ##
   # @see https://github.com/msgpack/msgpack/blob/master/spec.md#formats-map Source
   def is_map_32
     return @is_map_32 unless @is_map_32.nil?
     @is_map_32 = b1 == 223
     @is_map_32
+  end
+  def is_neg_int5
+    return @is_neg_int5 unless @is_neg_int5.nil?
+    @is_neg_int5 = b1 & 224 == 224
+    @is_neg_int5
+  end
+
+  ##
+  # @see https://github.com/msgpack/msgpack/blob/master/spec.md#formats-nil Source
+  def is_nil
+    return @is_nil unless @is_nil.nil?
+    @is_nil = b1 == 192
+    @is_nil
+  end
+  def is_pos_int7
+    return @is_pos_int7 unless @is_pos_int7.nil?
+    @is_pos_int7 = b1 & 128 == 0
+    @is_pos_int7
+  end
+  def is_str
+    return @is_str unless @is_str.nil?
+    @is_str =  ((is_fix_str) || (is_str_8) || (is_str_16) || (is_str_32)) 
+    @is_str
+  end
+
+  ##
+  # @see https://github.com/msgpack/msgpack/blob/master/spec.md#formats-str Source
+  def is_str_16
+    return @is_str_16 unless @is_str_16.nil?
+    @is_str_16 = b1 == 218
+    @is_str_16
+  end
+
+  ##
+  # @see https://github.com/msgpack/msgpack/blob/master/spec.md#formats-str Source
+  def is_str_32
+    return @is_str_32 unless @is_str_32.nil?
+    @is_str_32 = b1 == 219
+    @is_str_32
+  end
+
+  ##
+  # @see https://github.com/msgpack/msgpack/blob/master/spec.md#formats-str Source
+  def is_str_8
+    return @is_str_8 unless @is_str_8.nil?
+    @is_str_8 = b1 == 217
+    @is_str_8
+  end
+  def neg_int5_value
+    return @neg_int5_value unless @neg_int5_value.nil?
+    if is_neg_int5
+      @neg_int5_value = -(b1 & 31)
+    end
+    @neg_int5_value
+  end
+
+  ##
+  # @see https://github.com/msgpack/msgpack/blob/master/spec.md#formats-array Source
+  def num_array_elements
+    return @num_array_elements unless @num_array_elements.nil?
+    if is_array
+      @num_array_elements = (is_fix_array ? b1 & 15 : (is_array_16 ? num_array_elements_16 : num_array_elements_32))
+    end
+    @num_array_elements
+  end
+
+  ##
+  # @see https://github.com/msgpack/msgpack/blob/master/spec.md#formats-map Source
+  def num_map_elements
+    return @num_map_elements unless @num_map_elements.nil?
+    if is_map
+      @num_map_elements = (is_fix_map ? b1 & 15 : (is_map_16 ? num_map_elements_16 : num_map_elements_32))
+    end
+    @num_map_elements
+  end
+  def pos_int7_value
+    return @pos_int7_value unless @pos_int7_value.nil?
+    if is_pos_int7
+      @pos_int7_value = b1
+    end
+    @pos_int7_value
+  end
+  def str_len
+    return @str_len unless @str_len.nil?
+    if is_str
+      @str_len = (is_fix_str ? b1 & 31 : (is_str_8 ? str_len_8 : (is_str_16 ? str_len_16 : str_len_32)))
+    end
+    @str_len
   end
 
   ##

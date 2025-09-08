@@ -169,6 +169,11 @@ with sha1 and md5 checksums.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="U-Boot Image wrapper parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="U-Boot Image wrapper parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -199,7 +204,17 @@ with sha1 and md5 checksums.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="U-Boot Image wrapper parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="U-Boot Image wrapper parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="U-Boot Image wrapper parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -274,14 +289,15 @@ with sha1 and md5 checksums.</p>
 
         <div class="row">
             <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+<span class="c1"># type: ignore</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">kaitaistruct</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">kaitaistruct</span><span class="w"> </span><span class="kn">import</span> <span class="n">KaitaiStruct</span><span class="p">,</span> <span class="n">KaitaiStream</span><span class="p">,</span> <span class="n">BytesIO</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">IntEnum</span>
 
 
-<span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">kaitaistruct</span><span class="p">,</span> <span class="s1">&#39;API_VERSION&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">):</span>
-    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">kaitaistruct</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span>
+<span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">kaitaistruct</span><span class="p">,</span> <span class="s1">&#39;API_VERSION&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">kaitaistruct</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Uimage</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The new uImage format allows more flexibility in handling images of various</span>
@@ -292,7 +308,45 @@ with sha1 and md5 checksums.</p>
 <span class="sd">       Source - https://source.denx.de/u-boot/u-boot/-/raw/e4dba4ba6f/include/image.h</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">class</span><span class="w"> </span><span class="nc">UimageOs</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="k">class</span><span class="w"> </span><span class="nc">UimageArch</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+        <span class="n">invalid</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">alpha</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">arm</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">i386</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="n">ia64</span> <span class="o">=</span> <span class="mi">4</span>
+        <span class="n">mips</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="n">mips64</span> <span class="o">=</span> <span class="mi">6</span>
+        <span class="n">ppc</span> <span class="o">=</span> <span class="mi">7</span>
+        <span class="n">s390</span> <span class="o">=</span> <span class="mi">8</span>
+        <span class="n">sh</span> <span class="o">=</span> <span class="mi">9</span>
+        <span class="n">sparc</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="n">sparc64</span> <span class="o">=</span> <span class="mi">11</span>
+        <span class="n">m68k</span> <span class="o">=</span> <span class="mi">12</span>
+        <span class="n">nios</span> <span class="o">=</span> <span class="mi">13</span>
+        <span class="n">microblaze</span> <span class="o">=</span> <span class="mi">14</span>
+        <span class="n">nios2</span> <span class="o">=</span> <span class="mi">15</span>
+        <span class="n">blackfin</span> <span class="o">=</span> <span class="mi">16</span>
+        <span class="n">avr32</span> <span class="o">=</span> <span class="mi">17</span>
+        <span class="n">st200</span> <span class="o">=</span> <span class="mi">18</span>
+        <span class="n">sandbox</span> <span class="o">=</span> <span class="mi">19</span>
+        <span class="n">nds32</span> <span class="o">=</span> <span class="mi">20</span>
+        <span class="n">openrisc</span> <span class="o">=</span> <span class="mi">21</span>
+        <span class="n">arm64</span> <span class="o">=</span> <span class="mi">22</span>
+        <span class="n">arc</span> <span class="o">=</span> <span class="mi">23</span>
+        <span class="n">x86_64</span> <span class="o">=</span> <span class="mi">24</span>
+        <span class="n">xtensa</span> <span class="o">=</span> <span class="mi">25</span>
+        <span class="n">riscv</span> <span class="o">=</span> <span class="mi">26</span>
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">UimageComp</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+        <span class="n">none</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">gzip</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">bzip2</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">lzma</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="n">lzo</span> <span class="o">=</span> <span class="mi">4</span>
+        <span class="n">lz4</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="n">zstd</span> <span class="o">=</span> <span class="mi">6</span>
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">UimageOs</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
         <span class="n">invalid</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">openbsd</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="n">netbsd</span> <span class="o">=</span> <span class="mi">2</span>
@@ -323,45 +377,7 @@ with sha1 and md5 checksums.</p>
         <span class="n">opensbi</span> <span class="o">=</span> <span class="mi">27</span>
         <span class="n">efi</span> <span class="o">=</span> <span class="mi">28</span>
 
-    <span class="k">class</span><span class="w"> </span><span class="nc">UimageArch</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-        <span class="n">invalid</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">alpha</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="n">arm</span> <span class="o">=</span> <span class="mi">2</span>
-        <span class="n">i386</span> <span class="o">=</span> <span class="mi">3</span>
-        <span class="n">ia64</span> <span class="o">=</span> <span class="mi">4</span>
-        <span class="n">mips</span> <span class="o">=</span> <span class="mi">5</span>
-        <span class="n">mips64</span> <span class="o">=</span> <span class="mi">6</span>
-        <span class="n">ppc</span> <span class="o">=</span> <span class="mi">7</span>
-        <span class="n">s390</span> <span class="o">=</span> <span class="mi">8</span>
-        <span class="n">sh</span> <span class="o">=</span> <span class="mi">9</span>
-        <span class="n">sparc</span> <span class="o">=</span> <span class="mi">10</span>
-        <span class="n">sparc64</span> <span class="o">=</span> <span class="mi">11</span>
-        <span class="n">m68k</span> <span class="o">=</span> <span class="mi">12</span>
-        <span class="n">nios</span> <span class="o">=</span> <span class="mi">13</span>
-        <span class="n">microblaze</span> <span class="o">=</span> <span class="mi">14</span>
-        <span class="n">nios2</span> <span class="o">=</span> <span class="mi">15</span>
-        <span class="n">blackfin</span> <span class="o">=</span> <span class="mi">16</span>
-        <span class="n">avr32</span> <span class="o">=</span> <span class="mi">17</span>
-        <span class="n">st200</span> <span class="o">=</span> <span class="mi">18</span>
-        <span class="n">sandbox</span> <span class="o">=</span> <span class="mi">19</span>
-        <span class="n">nds32</span> <span class="o">=</span> <span class="mi">20</span>
-        <span class="n">openrisc</span> <span class="o">=</span> <span class="mi">21</span>
-        <span class="n">arm64</span> <span class="o">=</span> <span class="mi">22</span>
-        <span class="n">arc</span> <span class="o">=</span> <span class="mi">23</span>
-        <span class="n">x86_64</span> <span class="o">=</span> <span class="mi">24</span>
-        <span class="n">xtensa</span> <span class="o">=</span> <span class="mi">25</span>
-        <span class="n">riscv</span> <span class="o">=</span> <span class="mi">26</span>
-
-    <span class="k">class</span><span class="w"> </span><span class="nc">UimageComp</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-        <span class="n">none</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">gzip</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="n">bzip2</span> <span class="o">=</span> <span class="mi">2</span>
-        <span class="n">lzma</span> <span class="o">=</span> <span class="mi">3</span>
-        <span class="n">lzo</span> <span class="o">=</span> <span class="mi">4</span>
-        <span class="n">lz4</span> <span class="o">=</span> <span class="mi">5</span>
-        <span class="n">zstd</span> <span class="o">=</span> <span class="mi">6</span>
-
-    <span class="k">class</span><span class="w"> </span><span class="nc">UimageType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="k">class</span><span class="w"> </span><span class="nc">UimageType</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
         <span class="n">invalid</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">standalone</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="n">kernel</span> <span class="o">=</span> <span class="mi">2</span>
@@ -404,20 +420,25 @@ with sha1 and md5 checksums.</p>
         <span class="n">copro</span> <span class="o">=</span> <span class="mi">39</span>
         <span class="n">sunxi_egon</span> <span class="o">=</span> <span class="mi">40</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Uimage</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="ow">or</span> <span class="bp">self</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">Uimage</span><span class="o">.</span><span class="n">Uheader</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">len_image</span><span class="p">)</span>
 
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+
     <span class="k">class</span><span class="w"> </span><span class="nc">Uheader</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
         <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">Uimage</span><span class="o">.</span><span class="n">Uheader</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -435,6 +456,10 @@ with sha1 and md5 checksums.</p>
             <span class="bp">self</span><span class="o">.</span><span class="n">image_type</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="o">.</span><span class="n">resolve_enum</span><span class="p">(</span><span class="n">Uimage</span><span class="o">.</span><span class="n">UimageType</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">())</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">compression_type</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="o">.</span><span class="n">resolve_enum</span><span class="p">(</span><span class="n">Uimage</span><span class="o">.</span><span class="n">UimageComp</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">())</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="p">(</span><span class="n">KaitaiStream</span><span class="o">.</span><span class="n">bytes_terminate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">False</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
 </pre></div>
 
         </div>

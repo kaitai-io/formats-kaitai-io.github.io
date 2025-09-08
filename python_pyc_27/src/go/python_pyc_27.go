@@ -44,6 +44,11 @@ const (
 	PythonPyc27_Version__V27A0d PythonPyc27_Version = 62201
 	PythonPyc27_Version__V27A0e PythonPyc27_Version = 62211
 )
+var values_PythonPyc27_Version = map[PythonPyc27_Version]struct{}{20121: {}, 50428: {}, 50823: {}, 60202: {}, 60717: {}, 62011: {}, 62021: {}, 62041: {}, 62051: {}, 62061: {}, 62071: {}, 62081: {}, 62091: {}, 62092: {}, 62101: {}, 62111: {}, 62121: {}, 62131: {}, 62151: {}, 62161: {}, 62171: {}, 62181: {}, 62191: {}, 62201: {}, 62211: {}}
+func (v PythonPyc27_Version) isDefined() bool {
+	_, ok := values_PythonPyc27_Version[v]
+	return ok
+}
 type PythonPyc27 struct {
 	VersionMagic PythonPyc27_Version
 	Crlf uint16
@@ -51,14 +56,18 @@ type PythonPyc27 struct {
 	Body *PythonPyc27_PyObject
 	_io *kaitai.Stream
 	_root *PythonPyc27
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewPythonPyc27() *PythonPyc27 {
 	return &PythonPyc27{
 	}
 }
 
-func (this *PythonPyc27) Read(io *kaitai.Stream, parent interface{}, root *PythonPyc27) (err error) {
+func (this PythonPyc27) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PythonPyc27) Read(io *kaitai.Stream, parent kaitai.Struct, root *PythonPyc27) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -86,6 +95,58 @@ func (this *PythonPyc27) Read(io *kaitai.Stream, parent interface{}, root *Pytho
 	this.Body = tmp4
 	return err
 }
+type PythonPyc27_Assembly struct {
+	StringMagic []byte
+	Length uint32
+	Items *PythonPyc27_OpArgs
+	_io *kaitai.Stream
+	_root *PythonPyc27
+	_parent *PythonPyc27_CodeObject
+	_raw_Items []byte
+}
+func NewPythonPyc27_Assembly() *PythonPyc27_Assembly {
+	return &PythonPyc27_Assembly{
+	}
+}
+
+func (this PythonPyc27_Assembly) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PythonPyc27_Assembly) Read(io *kaitai.Stream, parent *PythonPyc27_CodeObject, root *PythonPyc27) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp5, err := this._io.ReadBytes(int(1))
+	if err != nil {
+		return err
+	}
+	tmp5 = tmp5
+	this.StringMagic = tmp5
+	if !(bytes.Equal(this.StringMagic, []uint8{115})) {
+		return kaitai.NewValidationNotEqualError([]uint8{115}, this.StringMagic, this._io, "/types/assembly/seq/0")
+	}
+	tmp6, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Length = uint32(tmp6)
+	tmp7, err := this._io.ReadBytes(int(this.Length))
+	if err != nil {
+		return err
+	}
+	tmp7 = tmp7
+	this._raw_Items = tmp7
+	_io__raw_Items := kaitai.NewStream(bytes.NewReader(this._raw_Items))
+	tmp8 := NewPythonPyc27_OpArgs()
+	err = tmp8.Read(_io__raw_Items, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Items = tmp8
+	return err
+}
 
 type PythonPyc27_CodeObject_FlagsEnum int
 const (
@@ -93,6 +154,11 @@ const (
 	PythonPyc27_CodeObject_FlagsEnum__HasKwargs PythonPyc27_CodeObject_FlagsEnum = 8
 	PythonPyc27_CodeObject_FlagsEnum__Generator PythonPyc27_CodeObject_FlagsEnum = 32
 )
+var values_PythonPyc27_CodeObject_FlagsEnum = map[PythonPyc27_CodeObject_FlagsEnum]struct{}{4: {}, 8: {}, 32: {}}
+func (v PythonPyc27_CodeObject_FlagsEnum) isDefined() bool {
+	_, ok := values_PythonPyc27_CodeObject_FlagsEnum[v]
+	return ok
+}
 type PythonPyc27_CodeObject struct {
 	ArgCount uint32
 	LocalCount uint32
@@ -117,138 +183,94 @@ func NewPythonPyc27_CodeObject() *PythonPyc27_CodeObject {
 	}
 }
 
+func (this PythonPyc27_CodeObject) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *PythonPyc27_CodeObject) Read(io *kaitai.Stream, parent *PythonPyc27_PyObject, root *PythonPyc27) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp5, err := this._io.ReadU4le()
+	tmp9, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.ArgCount = uint32(tmp5)
-	tmp6, err := this._io.ReadU4le()
+	this.ArgCount = uint32(tmp9)
+	tmp10, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.LocalCount = uint32(tmp6)
-	tmp7, err := this._io.ReadU4le()
+	this.LocalCount = uint32(tmp10)
+	tmp11, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.StackSize = uint32(tmp7)
-	tmp8, err := this._io.ReadU4le()
+	this.StackSize = uint32(tmp11)
+	tmp12, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Flags = PythonPyc27_CodeObject_FlagsEnum(tmp8)
-	tmp9 := NewPythonPyc27_Assembly()
-	err = tmp9.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Code = tmp9
-	tmp10 := NewPythonPyc27_PyObject()
-	err = tmp10.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Consts = tmp10
-	tmp11 := NewPythonPyc27_PyObject()
-	err = tmp11.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Names = tmp11
-	tmp12 := NewPythonPyc27_PyObject()
-	err = tmp12.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.VarNames = tmp12
-	tmp13 := NewPythonPyc27_PyObject()
+	this.Flags = PythonPyc27_CodeObject_FlagsEnum(tmp12)
+	tmp13 := NewPythonPyc27_Assembly()
 	err = tmp13.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.FreeVars = tmp13
+	this.Code = tmp13
 	tmp14 := NewPythonPyc27_PyObject()
 	err = tmp14.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.CellVars = tmp14
+	this.Consts = tmp14
 	tmp15 := NewPythonPyc27_PyObject()
 	err = tmp15.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Filename = tmp15
+	this.Names = tmp15
 	tmp16 := NewPythonPyc27_PyObject()
 	err = tmp16.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Name = tmp16
-	tmp17, err := this._io.ReadU4le()
+	this.VarNames = tmp16
+	tmp17 := NewPythonPyc27_PyObject()
+	err = tmp17.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.FirstLineNo = uint32(tmp17)
+	this.FreeVars = tmp17
 	tmp18 := NewPythonPyc27_PyObject()
 	err = tmp18.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Lnotab = tmp18
-	return err
-}
-type PythonPyc27_Assembly struct {
-	StringMagic []byte
-	Length uint32
-	Items *PythonPyc27_OpArgs
-	_io *kaitai.Stream
-	_root *PythonPyc27
-	_parent *PythonPyc27_CodeObject
-	_raw_Items []byte
-}
-func NewPythonPyc27_Assembly() *PythonPyc27_Assembly {
-	return &PythonPyc27_Assembly{
-	}
-}
-
-func (this *PythonPyc27_Assembly) Read(io *kaitai.Stream, parent *PythonPyc27_CodeObject, root *PythonPyc27) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp19, err := this._io.ReadBytes(int(1))
+	this.CellVars = tmp18
+	tmp19 := NewPythonPyc27_PyObject()
+	err = tmp19.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	tmp19 = tmp19
-	this.StringMagic = tmp19
-	if !(bytes.Equal(this.StringMagic, []uint8{115})) {
-		return kaitai.NewValidationNotEqualError([]uint8{115}, this.StringMagic, this._io, "/types/assembly/seq/0")
-	}
-	tmp20, err := this._io.ReadU4le()
+	this.Filename = tmp19
+	tmp20 := NewPythonPyc27_PyObject()
+	err = tmp20.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Length = uint32(tmp20)
-	tmp21, err := this._io.ReadBytes(int(this.Length))
+	this.Name = tmp20
+	tmp21, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	tmp21 = tmp21
-	this._raw_Items = tmp21
-	_io__raw_Items := kaitai.NewStream(bytes.NewReader(this._raw_Items))
-	tmp22 := NewPythonPyc27_OpArgs()
-	err = tmp22.Read(_io__raw_Items, this, this._root)
+	this.FirstLineNo = uint32(tmp21)
+	tmp22 := NewPythonPyc27_PyObject()
+	err = tmp22.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Items = tmp22
+	this.Lnotab = tmp22
 	return err
 }
 
@@ -374,6 +396,11 @@ const (
 	PythonPyc27_OpArg_OpCodeEnum__SetAdd PythonPyc27_OpArg_OpCodeEnum = 146
 	PythonPyc27_OpArg_OpCodeEnum__MapAdd PythonPyc27_OpArg_OpCodeEnum = 147
 )
+var values_PythonPyc27_OpArg_OpCodeEnum = map[PythonPyc27_OpArg_OpCodeEnum]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 9: {}, 10: {}, 11: {}, 12: {}, 13: {}, 15: {}, 19: {}, 20: {}, 21: {}, 22: {}, 23: {}, 24: {}, 25: {}, 26: {}, 27: {}, 28: {}, 29: {}, 30: {}, 31: {}, 32: {}, 33: {}, 40: {}, 41: {}, 42: {}, 43: {}, 50: {}, 51: {}, 52: {}, 53: {}, 54: {}, 55: {}, 56: {}, 57: {}, 58: {}, 59: {}, 60: {}, 61: {}, 62: {}, 63: {}, 64: {}, 65: {}, 66: {}, 67: {}, 68: {}, 70: {}, 71: {}, 72: {}, 73: {}, 74: {}, 75: {}, 76: {}, 77: {}, 78: {}, 79: {}, 80: {}, 81: {}, 82: {}, 83: {}, 84: {}, 85: {}, 86: {}, 87: {}, 88: {}, 89: {}, 90: {}, 91: {}, 92: {}, 93: {}, 94: {}, 95: {}, 96: {}, 97: {}, 98: {}, 99: {}, 100: {}, 101: {}, 102: {}, 103: {}, 104: {}, 105: {}, 106: {}, 107: {}, 108: {}, 109: {}, 110: {}, 111: {}, 112: {}, 113: {}, 114: {}, 115: {}, 116: {}, 119: {}, 120: {}, 121: {}, 122: {}, 124: {}, 125: {}, 126: {}, 130: {}, 131: {}, 132: {}, 133: {}, 134: {}, 135: {}, 136: {}, 137: {}, 140: {}, 141: {}, 142: {}, 143: {}, 145: {}, 146: {}, 147: {}}
+func (v PythonPyc27_OpArg_OpCodeEnum) isDefined() bool {
+	_, ok := values_PythonPyc27_OpArg_OpCodeEnum[v]
+	return ok
+}
 type PythonPyc27_OpArg struct {
 	OpCode PythonPyc27_OpArg_OpCodeEnum
 	Arg uint16
@@ -384,6 +411,10 @@ type PythonPyc27_OpArg struct {
 func NewPythonPyc27_OpArg() *PythonPyc27_OpArg {
 	return &PythonPyc27_OpArg{
 	}
+}
+
+func (this PythonPyc27_OpArg) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *PythonPyc27_OpArg) Read(io *kaitai.Stream, parent *PythonPyc27_OpArgs, root *PythonPyc27) (err error) {
@@ -405,6 +436,43 @@ func (this *PythonPyc27_OpArg) Read(io *kaitai.Stream, parent *PythonPyc27_OpArg
 	}
 	return err
 }
+type PythonPyc27_OpArgs struct {
+	Items []*PythonPyc27_OpArg
+	_io *kaitai.Stream
+	_root *PythonPyc27
+	_parent *PythonPyc27_Assembly
+}
+func NewPythonPyc27_OpArgs() *PythonPyc27_OpArgs {
+	return &PythonPyc27_OpArgs{
+	}
+}
+
+func (this PythonPyc27_OpArgs) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PythonPyc27_OpArgs) Read(io *kaitai.Stream, parent *PythonPyc27_Assembly, root *PythonPyc27) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	for i := 0;; i++ {
+		tmp25, err := this._io.EOF()
+		if err != nil {
+			return err
+		}
+		if tmp25 {
+			break
+		}
+		tmp26 := NewPythonPyc27_OpArg()
+		err = tmp26.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Items = append(this.Items, tmp26)
+	}
+	return err
+}
 
 type PythonPyc27_PyObject_ObjectType int
 const (
@@ -419,58 +487,53 @@ const (
 	PythonPyc27_PyObject_ObjectType__Interned PythonPyc27_PyObject_ObjectType = 116
 	PythonPyc27_PyObject_ObjectType__UnicodeString PythonPyc27_PyObject_ObjectType = 117
 )
+var values_PythonPyc27_PyObject_ObjectType = map[PythonPyc27_PyObject_ObjectType]struct{}{40: {}, 70: {}, 78: {}, 82: {}, 84: {}, 99: {}, 105: {}, 115: {}, 116: {}, 117: {}}
+func (v PythonPyc27_PyObject_ObjectType) isDefined() bool {
+	_, ok := values_PythonPyc27_PyObject_ObjectType[v]
+	return ok
+}
 type PythonPyc27_PyObject struct {
 	Type PythonPyc27_PyObject_ObjectType
 	Value interface{}
 	_io *kaitai.Stream
 	_root *PythonPyc27
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewPythonPyc27_PyObject() *PythonPyc27_PyObject {
 	return &PythonPyc27_PyObject{
 	}
 }
 
-func (this *PythonPyc27_PyObject) Read(io *kaitai.Stream, parent interface{}, root *PythonPyc27) (err error) {
+func (this PythonPyc27_PyObject) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PythonPyc27_PyObject) Read(io *kaitai.Stream, parent kaitai.Struct, root *PythonPyc27) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp25, err := this._io.ReadU1()
+	tmp27, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Type = PythonPyc27_PyObject_ObjectType(tmp25)
+	this.Type = PythonPyc27_PyObject_ObjectType(tmp27)
 	switch (this.Type) {
-	case PythonPyc27_PyObject_ObjectType__String:
-		tmp26 := NewPythonPyc27_PyObject_PyString()
-		err = tmp26.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Value = tmp26
-	case PythonPyc27_PyObject_ObjectType__Tuple:
-		tmp27 := NewPythonPyc27_PyObject_Tuple()
-		err = tmp27.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Value = tmp27
-	case PythonPyc27_PyObject_ObjectType__Int:
-		tmp28, err := this._io.ReadU4le()
+	case PythonPyc27_PyObject_ObjectType__CodeObject:
+		tmp28 := NewPythonPyc27_CodeObject()
+		err = tmp28.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Value = tmp28
-	case PythonPyc27_PyObject_ObjectType__PyTrue:
-		tmp29 := NewPythonPyc27_PyObject_PyTrue()
-		err = tmp29.Read(this._io, this, this._root)
+	case PythonPyc27_PyObject_ObjectType__Int:
+		tmp29, err := this._io.ReadU4le()
 		if err != nil {
 			return err
 		}
 		this.Value = tmp29
-	case PythonPyc27_PyObject_ObjectType__PyFalse:
-		tmp30 := NewPythonPyc27_PyObject_PyFalse()
+	case PythonPyc27_PyObject_ObjectType__Interned:
+		tmp30 := NewPythonPyc27_PyObject_InternedString()
 		err = tmp30.Read(this._io, this, this._root)
 		if err != nil {
 			return err
@@ -483,45 +546,76 @@ func (this *PythonPyc27_PyObject) Read(io *kaitai.Stream, parent interface{}, ro
 			return err
 		}
 		this.Value = tmp31
-	case PythonPyc27_PyObject_ObjectType__StringRef:
-		tmp32 := NewPythonPyc27_PyObject_StringRef()
+	case PythonPyc27_PyObject_ObjectType__PyFalse:
+		tmp32 := NewPythonPyc27_PyObject_PyFalse()
 		err = tmp32.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Value = tmp32
-	case PythonPyc27_PyObject_ObjectType__CodeObject:
-		tmp33 := NewPythonPyc27_CodeObject()
+	case PythonPyc27_PyObject_ObjectType__PyTrue:
+		tmp33 := NewPythonPyc27_PyObject_PyTrue()
 		err = tmp33.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Value = tmp33
-	case PythonPyc27_PyObject_ObjectType__Interned:
-		tmp34 := NewPythonPyc27_PyObject_InternedString()
+	case PythonPyc27_PyObject_ObjectType__String:
+		tmp34 := NewPythonPyc27_PyObject_PyString()
 		err = tmp34.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Value = tmp34
+	case PythonPyc27_PyObject_ObjectType__StringRef:
+		tmp35 := NewPythonPyc27_PyObject_StringRef()
+		err = tmp35.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Value = tmp35
+	case PythonPyc27_PyObject_ObjectType__Tuple:
+		tmp36 := NewPythonPyc27_PyObject_Tuple()
+		err = tmp36.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Value = tmp36
 	}
 	return err
 }
-type PythonPyc27_PyObject_PyNone struct {
+type PythonPyc27_PyObject_InternedString struct {
+	Length uint32
+	Data string
 	_io *kaitai.Stream
 	_root *PythonPyc27
 	_parent *PythonPyc27_PyObject
 }
-func NewPythonPyc27_PyObject_PyNone() *PythonPyc27_PyObject_PyNone {
-	return &PythonPyc27_PyObject_PyNone{
+func NewPythonPyc27_PyObject_InternedString() *PythonPyc27_PyObject_InternedString {
+	return &PythonPyc27_PyObject_InternedString{
 	}
 }
 
-func (this *PythonPyc27_PyObject_PyNone) Read(io *kaitai.Stream, parent *PythonPyc27_PyObject, root *PythonPyc27) (err error) {
+func (this PythonPyc27_PyObject_InternedString) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PythonPyc27_PyObject_InternedString) Read(io *kaitai.Stream, parent *PythonPyc27_PyObject, root *PythonPyc27) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
+	tmp37, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Length = uint32(tmp37)
+	tmp38, err := this._io.ReadBytes(int(this.Length))
+	if err != nil {
+		return err
+	}
+	tmp38 = tmp38
+	this.Data = string(tmp38)
 	return err
 }
 type PythonPyc27_PyObject_PyFalse struct {
@@ -534,7 +628,87 @@ func NewPythonPyc27_PyObject_PyFalse() *PythonPyc27_PyObject_PyFalse {
 	}
 }
 
+func (this PythonPyc27_PyObject_PyFalse) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *PythonPyc27_PyObject_PyFalse) Read(io *kaitai.Stream, parent *PythonPyc27_PyObject, root *PythonPyc27) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	return err
+}
+type PythonPyc27_PyObject_PyNone struct {
+	_io *kaitai.Stream
+	_root *PythonPyc27
+	_parent *PythonPyc27_PyObject
+}
+func NewPythonPyc27_PyObject_PyNone() *PythonPyc27_PyObject_PyNone {
+	return &PythonPyc27_PyObject_PyNone{
+	}
+}
+
+func (this PythonPyc27_PyObject_PyNone) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PythonPyc27_PyObject_PyNone) Read(io *kaitai.Stream, parent *PythonPyc27_PyObject, root *PythonPyc27) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	return err
+}
+type PythonPyc27_PyObject_PyString struct {
+	Length uint32
+	Data []byte
+	_io *kaitai.Stream
+	_root *PythonPyc27
+	_parent *PythonPyc27_PyObject
+}
+func NewPythonPyc27_PyObject_PyString() *PythonPyc27_PyObject_PyString {
+	return &PythonPyc27_PyObject_PyString{
+	}
+}
+
+func (this PythonPyc27_PyObject_PyString) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PythonPyc27_PyObject_PyString) Read(io *kaitai.Stream, parent *PythonPyc27_PyObject, root *PythonPyc27) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp39, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Length = uint32(tmp39)
+	tmp40, err := this._io.ReadBytes(int(this.Length))
+	if err != nil {
+		return err
+	}
+	tmp40 = tmp40
+	this.Data = tmp40
+	return err
+}
+type PythonPyc27_PyObject_PyTrue struct {
+	_io *kaitai.Stream
+	_root *PythonPyc27
+	_parent *PythonPyc27_PyObject
+}
+func NewPythonPyc27_PyObject_PyTrue() *PythonPyc27_PyObject_PyTrue {
+	return &PythonPyc27_PyObject_PyTrue{
+	}
+}
+
+func (this PythonPyc27_PyObject_PyTrue) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PythonPyc27_PyObject_PyTrue) Read(io *kaitai.Stream, parent *PythonPyc27_PyObject, root *PythonPyc27) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -552,33 +726,20 @@ func NewPythonPyc27_PyObject_StringRef() *PythonPyc27_PyObject_StringRef {
 	}
 }
 
+func (this PythonPyc27_PyObject_StringRef) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *PythonPyc27_PyObject_StringRef) Read(io *kaitai.Stream, parent *PythonPyc27_PyObject, root *PythonPyc27) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp35, err := this._io.ReadU4le()
+	tmp41, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.InternedListIndex = uint32(tmp35)
-	return err
-}
-type PythonPyc27_PyObject_PyTrue struct {
-	_io *kaitai.Stream
-	_root *PythonPyc27
-	_parent *PythonPyc27_PyObject
-}
-func NewPythonPyc27_PyObject_PyTrue() *PythonPyc27_PyObject_PyTrue {
-	return &PythonPyc27_PyObject_PyTrue{
-	}
-}
-
-func (this *PythonPyc27_PyObject_PyTrue) Read(io *kaitai.Stream, parent *PythonPyc27_PyObject, root *PythonPyc27) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
+	this.InternedListIndex = uint32(tmp41)
 	return err
 }
 type PythonPyc27_PyObject_Tuple struct {
@@ -593,100 +754,11 @@ func NewPythonPyc27_PyObject_Tuple() *PythonPyc27_PyObject_Tuple {
 	}
 }
 
+func (this PythonPyc27_PyObject_Tuple) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *PythonPyc27_PyObject_Tuple) Read(io *kaitai.Stream, parent *PythonPyc27_PyObject, root *PythonPyc27) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp36, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Count = uint32(tmp36)
-	for i := 0; i < int(this.Count); i++ {
-		_ = i
-		tmp37 := NewPythonPyc27_PyObject()
-		err = tmp37.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Items = append(this.Items, tmp37)
-	}
-	return err
-}
-type PythonPyc27_PyObject_UnicodeString struct {
-	Length uint32
-	Data string
-	_io *kaitai.Stream
-	_root *PythonPyc27
-	_parent interface{}
-}
-func NewPythonPyc27_PyObject_UnicodeString() *PythonPyc27_PyObject_UnicodeString {
-	return &PythonPyc27_PyObject_UnicodeString{
-	}
-}
-
-func (this *PythonPyc27_PyObject_UnicodeString) Read(io *kaitai.Stream, parent interface{}, root *PythonPyc27) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp38, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Length = uint32(tmp38)
-	tmp39, err := this._io.ReadBytes(int(this.Length))
-	if err != nil {
-		return err
-	}
-	tmp39 = tmp39
-	this.Data = string(tmp39)
-	return err
-}
-type PythonPyc27_PyObject_InternedString struct {
-	Length uint32
-	Data string
-	_io *kaitai.Stream
-	_root *PythonPyc27
-	_parent *PythonPyc27_PyObject
-}
-func NewPythonPyc27_PyObject_InternedString() *PythonPyc27_PyObject_InternedString {
-	return &PythonPyc27_PyObject_InternedString{
-	}
-}
-
-func (this *PythonPyc27_PyObject_InternedString) Read(io *kaitai.Stream, parent *PythonPyc27_PyObject, root *PythonPyc27) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp40, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Length = uint32(tmp40)
-	tmp41, err := this._io.ReadBytes(int(this.Length))
-	if err != nil {
-		return err
-	}
-	tmp41 = tmp41
-	this.Data = string(tmp41)
-	return err
-}
-type PythonPyc27_PyObject_PyString struct {
-	Length uint32
-	Data []byte
-	_io *kaitai.Stream
-	_root *PythonPyc27
-	_parent *PythonPyc27_PyObject
-}
-func NewPythonPyc27_PyObject_PyString() *PythonPyc27_PyObject_PyString {
-	return &PythonPyc27_PyObject_PyString{
-	}
-}
-
-func (this *PythonPyc27_PyObject_PyString) Read(io *kaitai.Stream, parent *PythonPyc27_PyObject, root *PythonPyc27) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -695,45 +767,49 @@ func (this *PythonPyc27_PyObject_PyString) Read(io *kaitai.Stream, parent *Pytho
 	if err != nil {
 		return err
 	}
-	this.Length = uint32(tmp42)
-	tmp43, err := this._io.ReadBytes(int(this.Length))
-	if err != nil {
-		return err
+	this.Count = uint32(tmp42)
+	for i := 0; i < int(this.Count); i++ {
+		_ = i
+		tmp43 := NewPythonPyc27_PyObject()
+		err = tmp43.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Items = append(this.Items, tmp43)
 	}
-	tmp43 = tmp43
-	this.Data = tmp43
 	return err
 }
-type PythonPyc27_OpArgs struct {
-	Items []*PythonPyc27_OpArg
+type PythonPyc27_PyObject_UnicodeString struct {
+	Length uint32
+	Data string
 	_io *kaitai.Stream
 	_root *PythonPyc27
-	_parent *PythonPyc27_Assembly
+	_parent kaitai.Struct
 }
-func NewPythonPyc27_OpArgs() *PythonPyc27_OpArgs {
-	return &PythonPyc27_OpArgs{
+func NewPythonPyc27_PyObject_UnicodeString() *PythonPyc27_PyObject_UnicodeString {
+	return &PythonPyc27_PyObject_UnicodeString{
 	}
 }
 
-func (this *PythonPyc27_OpArgs) Read(io *kaitai.Stream, parent *PythonPyc27_Assembly, root *PythonPyc27) (err error) {
+func (this PythonPyc27_PyObject_UnicodeString) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *PythonPyc27_PyObject_UnicodeString) Read(io *kaitai.Stream, parent kaitai.Struct, root *PythonPyc27) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	for i := 1;; i++ {
-		tmp44, err := this._io.EOF()
-		if err != nil {
-			return err
-		}
-		if tmp44 {
-			break
-		}
-		tmp45 := NewPythonPyc27_OpArg()
-		err = tmp45.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Items = append(this.Items, tmp45)
+	tmp44, err := this._io.ReadU4le()
+	if err != nil {
+		return err
 	}
+	this.Length = uint32(tmp44)
+	tmp45, err := this._io.ReadBytes(int(this.Length))
+	if err != nil {
+		return err
+	}
+	tmp45 = tmp45
+	this.Data = string(tmp45)
 	return err
 }

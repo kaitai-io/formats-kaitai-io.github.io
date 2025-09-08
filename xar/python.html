@@ -196,7 +196,17 @@ well as browser extensions in Safari 5.0 and up.&quot;</p>
                 
                 <li>
                 
+                <a href="graphviz.html" title="XAR (eXtensible ARchive) parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
                 <a href="java.html" title="XAR (eXtensible ARchive) parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="java-write.html" title="XAR (eXtensible ARchive) parsing Java (read-write) library">Java (read-write)</a></li>
                 
                 
                 <li>
@@ -211,6 +221,11 @@ well as browser extensions in Safari 5.0 and up.&quot;</p>
                 
                 <li>
                 
+                <a href="perl.html" title="XAR (eXtensible ARchive) parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
                 <a href="php.html" title="XAR (eXtensible ARchive) parsing PHP library">PHP</a></li>
                 
                 
@@ -221,7 +236,17 @@ well as browser extensions in Safari 5.0 and up.&quot;</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="XAR (eXtensible ARchive) parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="XAR (eXtensible ARchive) parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="XAR (eXtensible ARchive) parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -296,15 +321,16 @@ well as browser extensions in Safari 5.0 and up.&quot;</p>
 
         <div class="row">
             <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+<span class="c1"># type: ignore</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">kaitaistruct</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">kaitaistruct</span><span class="w"> </span><span class="kn">import</span> <span class="n">KaitaiStruct</span><span class="p">,</span> <span class="n">KaitaiStream</span><span class="p">,</span> <span class="n">BytesIO</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">IntEnum</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">zlib</span>
 
 
-<span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">kaitaistruct</span><span class="p">,</span> <span class="s1">&#39;API_VERSION&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">):</span>
-    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">kaitaistruct</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span>
+<span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">kaitaistruct</span><span class="p">,</span> <span class="s1">&#39;API_VERSION&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">kaitaistruct</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Xar</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;From [Wikipedia](https://en.wikipedia.org/wiki/Xar_(archiver)):</span>
@@ -318,21 +344,21 @@ well as browser extensions in Safari 5.0 and up.&quot;</p>
 <span class="sd">       Source - https://github.com/mackyle/xar/wiki/xarformat</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">class</span><span class="w"> </span><span class="nc">ChecksumAlgorithmsApple</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="k">class</span><span class="w"> </span><span class="nc">ChecksumAlgorithmsApple</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
         <span class="n">none</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">sha1</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="n">md5</span> <span class="o">=</span> <span class="mi">2</span>
         <span class="n">sha256</span> <span class="o">=</span> <span class="mi">3</span>
         <span class="n">sha512</span> <span class="o">=</span> <span class="mi">4</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Xar</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="ow">or</span> <span class="bp">self</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">header_prefix</span> <span class="o">=</span> <span class="n">Xar</span><span class="o">.</span><span class="n">FileHeaderPrefix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_raw_header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">header_prefix</span><span class="o">.</span><span class="n">len_header</span> <span class="o">-</span> <span class="mi">6</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_raw_header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header_prefix</span><span class="o">.</span><span class="n">len_header</span> <span class="o">-</span> <span class="mi">6</span><span class="p">)</span>
         <span class="n">_io__raw_header</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_header</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">Xar</span><span class="o">.</span><span class="n">FileHeader</span><span class="p">(</span><span class="n">_io__raw_header</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_raw__raw_toc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">len_toc_compressed</span><span class="p">)</span>
@@ -340,25 +366,18 @@ well as browser extensions in Safari 5.0 and up.&quot;</p>
         <span class="n">_io__raw_toc</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_toc</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">toc</span> <span class="o">=</span> <span class="n">Xar</span><span class="o">.</span><span class="n">TocType</span><span class="p">(</span><span class="n">_io__raw_toc</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
 
-    <span class="k">class</span><span class="w"> </span><span class="nc">FileHeaderPrefix</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">magic</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">magic</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x78\x61\x72\x21</span><span class="s2">&quot;</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationNotEqualError</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x78\x61\x72\x21</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">magic</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/types/file_header_prefix/seq/0&quot;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">len_header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">()</span>
-
+    <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">header_prefix</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">toc</span><span class="o">.</span><span class="n">_fetch_instances</span><span class="p">()</span>
 
     <span class="k">class</span><span class="w"> </span><span class="nc">FileHeader</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
         <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">Xar</span><span class="o">.</span><span class="n">FileHeader</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -369,10 +388,18 @@ well as browser extensions in Safari 5.0 and up.&quot;</p>
             <span class="bp">self</span><span class="o">.</span><span class="n">toc_length_uncompressed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u8be</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">checksum_algorithm_int</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_checksum_alg_name</span><span class="p">:</span>
+                <span class="k">pass</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">checksum_alg_name</span> <span class="o">=</span> <span class="p">(</span><span class="n">KaitaiStream</span><span class="o">.</span><span class="n">bytes_terminate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes_full</span><span class="p">(),</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">False</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
                 <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">checksum_alg_name</span>
                 <span class="k">if</span> <span class="ow">not</span>  <span class="p">((</span><span class="n">_</span> <span class="o">!=</span> <span class="sa">u</span><span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">_</span> <span class="o">!=</span> <span class="sa">u</span><span class="s2">&quot;none&quot;</span><span class="p">))</span> <span class="p">:</span>
                     <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationExprError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">checksum_alg_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/types/file_header/seq/4&quot;</span><span class="p">)</span>
+
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_checksum_alg_name</span><span class="p">:</span>
+                <span class="k">pass</span>
 
 
         <span class="nd">@property</span>
@@ -401,7 +428,7 @@ well as browser extensions in Safari 5.0 and up.&quot;</p>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_checksum_algorithm_name&#39;</span><span class="p">):</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_checksum_algorithm_name</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_checksum_algorithm_name</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">checksum_alg_name</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_checksum_alg_name</span> <span class="k">else</span> <span class="p">(</span><span class="sa">u</span><span class="s2">&quot;none&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checksum_algorithm_int</span> <span class="o">==</span> <span class="n">Xar</span><span class="o">.</span><span class="n">ChecksumAlgorithmsApple</span><span class="o">.</span><span class="n">none</span><span class="o">.</span><span class="n">value</span> <span class="k">else</span> <span class="p">(</span><span class="sa">u</span><span class="s2">&quot;sha1&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checksum_algorithm_int</span> <span class="o">==</span> <span class="n">Xar</span><span class="o">.</span><span class="n">ChecksumAlgorithmsApple</span><span class="o">.</span><span class="n">sha1</span><span class="o">.</span><span class="n">value</span> <span class="k">else</span> <span class="p">(</span><span class="sa">u</span><span class="s2">&quot;md5&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checksum_algorithm_int</span> <span class="o">==</span> <span class="n">Xar</span><span class="o">.</span><span class="n">ChecksumAlgorithmsApple</span><span class="o">.</span><span class="n">md5</span><span class="o">.</span><span class="n">value</span> <span class="k">else</span> <span class="p">(</span><span class="sa">u</span><span class="s2">&quot;sha256&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checksum_algorithm_int</span> <span class="o">==</span> <span class="n">Xar</span><span class="o">.</span><span class="n">ChecksumAlgorithmsApple</span><span class="o">.</span><span class="n">sha256</span><span class="o">.</span><span class="n">value</span> <span class="k">else</span> <span class="p">(</span><span class="sa">u</span><span class="s2">&quot;sha512&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checksum_algorithm_int</span> <span class="o">==</span> <span class="n">Xar</span><span class="o">.</span><span class="n">ChecksumAlgorithmsApple</span><span class="o">.</span><span class="n">sha512</span><span class="o">.</span><span class="n">value</span> <span class="k">else</span> <span class="sa">u</span><span class="s2">&quot;&quot;</span><span class="p">))))))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_checksum_algorithm_name</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">checksum_alg_name</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_checksum_alg_name</span> <span class="k">else</span> <span class="p">(</span><span class="sa">u</span><span class="s2">&quot;none&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checksum_algorithm_int</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">Xar</span><span class="o">.</span><span class="n">ChecksumAlgorithmsApple</span><span class="o">.</span><span class="n">none</span><span class="p">)</span> <span class="k">else</span> <span class="p">(</span><span class="sa">u</span><span class="s2">&quot;sha1&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checksum_algorithm_int</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">Xar</span><span class="o">.</span><span class="n">ChecksumAlgorithmsApple</span><span class="o">.</span><span class="n">sha1</span><span class="p">)</span> <span class="k">else</span> <span class="p">(</span><span class="sa">u</span><span class="s2">&quot;md5&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checksum_algorithm_int</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">Xar</span><span class="o">.</span><span class="n">ChecksumAlgorithmsApple</span><span class="o">.</span><span class="n">md5</span><span class="p">)</span> <span class="k">else</span> <span class="p">(</span><span class="sa">u</span><span class="s2">&quot;sha256&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checksum_algorithm_int</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">Xar</span><span class="o">.</span><span class="n">ChecksumAlgorithmsApple</span><span class="o">.</span><span class="n">sha256</span><span class="p">)</span> <span class="k">else</span> <span class="p">(</span><span class="sa">u</span><span class="s2">&quot;sha512&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">checksum_algorithm_int</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">Xar</span><span class="o">.</span><span class="n">ChecksumAlgorithmsApple</span><span class="o">.</span><span class="n">sha512</span><span class="p">)</span> <span class="k">else</span> <span class="sa">u</span><span class="s2">&quot;&quot;</span><span class="p">))))))</span>
             <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_checksum_algorithm_name&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
         <span class="nd">@property</span>
@@ -409,7 +436,7 @@ well as browser extensions in Safari 5.0 and up.&quot;</p>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_has_checksum_alg_name&#39;</span><span class="p">):</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_has_checksum_alg_name</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_has_checksum_alg_name</span> <span class="o">=</span>  <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">checksum_algorithm_int</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">checksum_algorithm_other</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_header</span> <span class="o">&gt;=</span> <span class="mi">32</span><span class="p">)</span> <span class="ow">and</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">len_header</span> <span class="o">%</span> <span class="mi">4</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">))</span> 
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_has_checksum_alg_name</span> <span class="o">=</span>  <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">checksum_algorithm_int</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">checksum_algorithm_other</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_header</span> <span class="o">&gt;=</span> <span class="mi">32</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len_header</span> <span class="o">%</span> <span class="mi">4</span> <span class="o">==</span> <span class="mi">0</span><span class="p">))</span> 
             <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_has_checksum_alg_name&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
         <span class="nd">@property</span>
@@ -421,15 +448,37 @@ well as browser extensions in Safari 5.0 and up.&quot;</p>
             <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_len_header&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
 
+    <span class="k">class</span><span class="w"> </span><span class="nc">FileHeaderPrefix</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">Xar</span><span class="o">.</span><span class="n">FileHeaderPrefix</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">magic</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">magic</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x78\x61\x72\x21</span><span class="s2">&quot;</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationNotEqualError</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x78\x61\x72\x21</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">magic</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/types/file_header_prefix/seq/0&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">len_header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">()</span>
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+
+
     <span class="k">class</span><span class="w"> </span><span class="nc">TocType</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
         <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">Xar</span><span class="o">.</span><span class="n">TocType</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">xml_string</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes_full</span><span class="p">())</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
 
 
     <span class="nd">@property</span>

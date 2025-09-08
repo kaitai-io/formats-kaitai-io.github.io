@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -44,8 +44,8 @@ end
 # Skins (textures) where prepared as LBM bitmaps with the help from
 # `texmap` utility in the same development utilities toolkit.
 class QuakeMdl < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -69,58 +69,58 @@ class QuakeMdl < Kaitai::Struct::Struct
     }
     self
   end
-  class MdlVertex < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  class MdlFrame < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @values = []
-      (3).times { |i|
-        @values << @_io.read_u1
+      @type = @_io.read_s4le
+      if type != 0
+        @min = MdlVertex.new(@_io, self, @_root)
+      end
+      if type != 0
+        @max = MdlVertex.new(@_io, self, @_root)
+      end
+      if type != 0
+        @time = []
+        (type).times { |i|
+          @time << @_io.read_f4le
+        }
+      end
+      @frames = []
+      (num_simple_frames).times { |i|
+        @frames << MdlSimpleFrame.new(@_io, self, @_root)
       }
-      @normal_index = @_io.read_u1
       self
     end
-    attr_reader :values
-    attr_reader :normal_index
-  end
-
-  ##
-  # @see https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L79-L83 Source
-  # @see https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD2 Source
-  class MdlTexcoord < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
+    def num_simple_frames
+      return @num_simple_frames unless @num_simple_frames.nil?
+      @num_simple_frames = (type == 0 ? 1 : type)
+      @num_simple_frames
     end
-
-    def _read
-      @on_seam = @_io.read_s4le
-      @s = @_io.read_s4le
-      @t = @_io.read_s4le
-      self
-    end
-    attr_reader :on_seam
-    attr_reader :s
-    attr_reader :t
+    attr_reader :type
+    attr_reader :min
+    attr_reader :max
+    attr_reader :time
+    attr_reader :frames
   end
 
   ##
   # @see https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L59-L75 Source
   # @see https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD0 Source
   class MdlHeader < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
       @ident = @_io.read_bytes(4)
-      raise Kaitai::Struct::ValidationNotEqualError.new([73, 68, 80, 79].pack('C*'), ident, _io, "/types/mdl_header/seq/0") if not ident == [73, 68, 80, 79].pack('C*')
+      raise Kaitai::Struct::ValidationNotEqualError.new([73, 68, 80, 79].pack('C*'), @ident, @_io, "/types/mdl_header/seq/0") if not @ident == [73, 68, 80, 79].pack('C*')
       @version = @_io.read_s4le
-      raise Kaitai::Struct::ValidationNotEqualError.new(6, version, _io, "/types/mdl_header/seq/1") if not version == 6
+      raise Kaitai::Struct::ValidationNotEqualError.new(6, @version, @_io, "/types/mdl_header/seq/1") if not @version == 6
       @scale = Vec3.new(@_io, self, @_root)
       @origin = Vec3.new(@_io, self, @_root)
       @radius = @_io.read_f4le
@@ -141,7 +141,7 @@ class QuakeMdl < Kaitai::Struct::Struct
     # Skin size in pixels.
     def skin_size
       return @skin_size unless @skin_size.nil?
-      @skin_size = (skin_width * skin_height)
+      @skin_size = skin_width * skin_height
       @skin_size
     end
 
@@ -190,8 +190,29 @@ class QuakeMdl < Kaitai::Struct::Struct
     attr_reader :flags
     attr_reader :size
   end
+  class MdlSimpleFrame < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @bbox_min = MdlVertex.new(@_io, self, @_root)
+      @bbox_max = MdlVertex.new(@_io, self, @_root)
+      @name = (Kaitai::Struct::Stream::bytes_terminate(Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(16), 0), 0, false)).force_encoding("ASCII").encode('UTF-8')
+      @vertices = []
+      (_root.header.num_verts).times { |i|
+        @vertices << MdlVertex.new(@_io, self, @_root)
+      }
+      self
+    end
+    attr_reader :bbox_min
+    attr_reader :bbox_max
+    attr_reader :name
+    attr_reader :vertices
+  end
   class MdlSkin < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -224,63 +245,25 @@ class QuakeMdl < Kaitai::Struct::Struct
     attr_reader :frame_times
     attr_reader :group_texture_data
   end
-  class MdlFrame < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+
+  ##
+  # @see https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L79-L83 Source
+  # @see https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD2 Source
+  class MdlTexcoord < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @type = @_io.read_s4le
-      if type != 0
-        @min = MdlVertex.new(@_io, self, @_root)
-      end
-      if type != 0
-        @max = MdlVertex.new(@_io, self, @_root)
-      end
-      if type != 0
-        @time = []
-        (type).times { |i|
-          @time << @_io.read_f4le
-        }
-      end
-      @frames = []
-      (num_simple_frames).times { |i|
-        @frames << MdlSimpleFrame.new(@_io, self, @_root)
-      }
+      @on_seam = @_io.read_s4le
+      @s = @_io.read_s4le
+      @t = @_io.read_s4le
       self
     end
-    def num_simple_frames
-      return @num_simple_frames unless @num_simple_frames.nil?
-      @num_simple_frames = (type == 0 ? 1 : type)
-      @num_simple_frames
-    end
-    attr_reader :type
-    attr_reader :min
-    attr_reader :max
-    attr_reader :time
-    attr_reader :frames
-  end
-  class MdlSimpleFrame < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @bbox_min = MdlVertex.new(@_io, self, @_root)
-      @bbox_max = MdlVertex.new(@_io, self, @_root)
-      @name = (Kaitai::Struct::Stream::bytes_terminate(Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(16), 0), 0, false)).force_encoding("ASCII")
-      @vertices = []
-      (_root.header.num_verts).times { |i|
-        @vertices << MdlVertex.new(@_io, self, @_root)
-      }
-      self
-    end
-    attr_reader :bbox_min
-    attr_reader :bbox_max
-    attr_reader :name
-    attr_reader :vertices
+    attr_reader :on_seam
+    attr_reader :s
+    attr_reader :t
   end
 
   ##
@@ -289,7 +272,7 @@ class QuakeMdl < Kaitai::Struct::Struct
   # @see https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L85-L88 Source
   # @see https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD3 Source
   class MdlTriangle < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -305,13 +288,30 @@ class QuakeMdl < Kaitai::Struct::Struct
     attr_reader :faces_front
     attr_reader :vertices
   end
+  class MdlVertex < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @values = []
+      (3).times { |i|
+        @values << @_io.read_u1
+      }
+      @normal_index = @_io.read_u1
+      self
+    end
+    attr_reader :values
+    attr_reader :normal_index
+  end
 
   ##
   # Basic 3D vector (x, y, z) using single-precision floating point
   # coordnates. Can be used to specify a point in 3D space,
   # direction, scaling factor, etc.
   class Vec3 < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end

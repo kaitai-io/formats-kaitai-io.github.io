@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -144,8 +144,8 @@ class Warcraft2Pud < Kaitai::Struct::Struct
     104 => :unit_type_orc_wall,
   }
   I__UNIT_TYPE = UNIT_TYPE.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -158,8 +158,107 @@ class Warcraft2Pud < Kaitai::Struct::Struct
     end
     self
   end
+  class Section < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @name = (@_io.read_bytes(4)).force_encoding("ASCII").encode('UTF-8')
+      @size = @_io.read_u4le
+      case name
+      when "DIM "
+        _io_body = @_io.substream(size)
+        @body = SectionDim.new(_io_body, self, @_root)
+      when "ERA "
+        _io_body = @_io.substream(size)
+        @body = SectionEra.new(_io_body, self, @_root)
+      when "ERAX"
+        _io_body = @_io.substream(size)
+        @body = SectionEra.new(_io_body, self, @_root)
+      when "OWNR"
+        _io_body = @_io.substream(size)
+        @body = SectionOwnr.new(_io_body, self, @_root)
+      when "SGLD"
+        _io_body = @_io.substream(size)
+        @body = SectionStartingResource.new(_io_body, self, @_root)
+      when "SLBR"
+        _io_body = @_io.substream(size)
+        @body = SectionStartingResource.new(_io_body, self, @_root)
+      when "SOIL"
+        _io_body = @_io.substream(size)
+        @body = SectionStartingResource.new(_io_body, self, @_root)
+      when "TYPE"
+        _io_body = @_io.substream(size)
+        @body = SectionType.new(_io_body, self, @_root)
+      when "UNIT"
+        _io_body = @_io.substream(size)
+        @body = SectionUnit.new(_io_body, self, @_root)
+      when "VER "
+        _io_body = @_io.substream(size)
+        @body = SectionVer.new(_io_body, self, @_root)
+      else
+        @body = @_io.read_bytes(size)
+      end
+      self
+    end
+    attr_reader :name
+    attr_reader :size
+    attr_reader :body
+    attr_reader :_raw_body
+  end
+  class SectionDim < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @x = @_io.read_u2le
+      @y = @_io.read_u2le
+      self
+    end
+    attr_reader :x
+    attr_reader :y
+  end
+
+  ##
+  # Section that specifies terrain type for this map.
+  class SectionEra < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @terrain = Kaitai::Struct::Stream::resolve_enum(Warcraft2Pud::TERRAIN_TYPE, @_io.read_u2le)
+      self
+    end
+    attr_reader :terrain
+  end
+
+  ##
+  # Section that specifies who controls each player.
+  class SectionOwnr < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @controller_by_player = []
+      i = 0
+      while not @_io.eof?
+        @controller_by_player << Kaitai::Struct::Stream::resolve_enum(Warcraft2Pud::CONTROLLER, @_io.read_u1)
+        i += 1
+      end
+      self
+    end
+    attr_reader :controller_by_player
+  end
   class SectionStartingResource < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -177,63 +276,19 @@ class Warcraft2Pud < Kaitai::Struct::Struct
   end
 
   ##
-  # Section that specifies terrain type for this map.
-  class SectionEra < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @terrain = Kaitai::Struct::Stream::resolve_enum(Warcraft2Pud::TERRAIN_TYPE, @_io.read_u2le)
-      self
-    end
-    attr_reader :terrain
-  end
-
-  ##
-  # Section that specifies format version.
-  class SectionVer < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @version = @_io.read_u2le
-      self
-    end
-    attr_reader :version
-  end
-  class SectionDim < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @x = @_io.read_u2le
-      @y = @_io.read_u2le
-      self
-    end
-    attr_reader :x
-    attr_reader :y
-  end
-
-  ##
   # Section that confirms that this file is a "map file" by certain
   # magic string and supplies a tag that could be used in
   # multiplayer to check that all player use the same version of the
   # map.
   class SectionType < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
       @magic = @_io.read_bytes(10)
-      raise Kaitai::Struct::ValidationNotEqualError.new([87, 65, 82, 50, 32, 77, 65, 80, 0, 0].pack('C*'), magic, _io, "/types/section_type/seq/0") if not magic == [87, 65, 82, 50, 32, 77, 65, 80, 0, 0].pack('C*')
+      raise Kaitai::Struct::ValidationNotEqualError.new([87, 65, 82, 50, 32, 77, 65, 80, 0, 0].pack('C*'), @magic, @_io, "/types/section_type/seq/0") if not @magic == [87, 65, 82, 50, 32, 77, 65, 80, 0, 0].pack('C*')
       @unused = @_io.read_bytes(2)
       @id_tag = @_io.read_u4le
       self
@@ -249,7 +304,7 @@ class Warcraft2Pud < Kaitai::Struct::Struct
     attr_reader :id_tag
   end
   class SectionUnit < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -265,88 +320,23 @@ class Warcraft2Pud < Kaitai::Struct::Struct
     end
     attr_reader :units
   end
-  class Section < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @name = (@_io.read_bytes(4)).force_encoding("ASCII")
-      @size = @_io.read_u4le
-      case name
-      when "SLBR"
-        @_raw_body = @_io.read_bytes(size)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SectionStartingResource.new(_io__raw_body, self, @_root)
-      when "ERAX"
-        @_raw_body = @_io.read_bytes(size)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SectionEra.new(_io__raw_body, self, @_root)
-      when "OWNR"
-        @_raw_body = @_io.read_bytes(size)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SectionOwnr.new(_io__raw_body, self, @_root)
-      when "ERA "
-        @_raw_body = @_io.read_bytes(size)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SectionEra.new(_io__raw_body, self, @_root)
-      when "SGLD"
-        @_raw_body = @_io.read_bytes(size)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SectionStartingResource.new(_io__raw_body, self, @_root)
-      when "VER "
-        @_raw_body = @_io.read_bytes(size)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SectionVer.new(_io__raw_body, self, @_root)
-      when "SOIL"
-        @_raw_body = @_io.read_bytes(size)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SectionStartingResource.new(_io__raw_body, self, @_root)
-      when "UNIT"
-        @_raw_body = @_io.read_bytes(size)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SectionUnit.new(_io__raw_body, self, @_root)
-      when "DIM "
-        @_raw_body = @_io.read_bytes(size)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SectionDim.new(_io__raw_body, self, @_root)
-      when "TYPE"
-        @_raw_body = @_io.read_bytes(size)
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SectionType.new(_io__raw_body, self, @_root)
-      else
-        @body = @_io.read_bytes(size)
-      end
-      self
-    end
-    attr_reader :name
-    attr_reader :size
-    attr_reader :body
-    attr_reader :_raw_body
-  end
 
   ##
-  # Section that specifies who controls each player.
-  class SectionOwnr < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  # Section that specifies format version.
+  class SectionVer < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @controller_by_player = []
-      i = 0
-      while not @_io.eof?
-        @controller_by_player << Kaitai::Struct::Stream::resolve_enum(Warcraft2Pud::CONTROLLER, @_io.read_u1)
-        i += 1
-      end
+      @version = @_io.read_u2le
       self
     end
-    attr_reader :controller_by_player
+    attr_reader :version
   end
   class Unit < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -362,7 +352,7 @@ class Warcraft2Pud < Kaitai::Struct::Struct
     def resource
       return @resource unless @resource.nil?
       if  ((u_type == :unit_type_gold_mine) || (u_type == :unit_type_human_oil_well) || (u_type == :unit_type_orc_oil_well) || (u_type == :unit_type_oil_patch)) 
-        @resource = (options * 2500)
+        @resource = options * 2500
       end
       @resource
     end

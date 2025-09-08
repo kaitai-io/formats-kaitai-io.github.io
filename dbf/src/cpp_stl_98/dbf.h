@@ -3,12 +3,15 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class dbf_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -23,9 +26,9 @@
 class dbf_t : public kaitai::kstruct {
 
 public:
-    class header2_t;
     class field_t;
     class header1_t;
+    class header2_t;
     class header_dbase_3_t;
     class header_dbase_7_t;
     class record_t;
@@ -34,6 +37,13 @@ public:
         DELETE_STATE_FALSE = 32,
         DELETE_STATE_TRUE = 42
     };
+    static bool _is_defined_delete_state_t(delete_state_t v);
+
+private:
+    static const std::set<delete_state_t> _values_delete_state_t;
+    static std::set<delete_state_t> _build_values_delete_state_t();
+
+public:
 
     dbf_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, dbf_t* p__root = 0);
 
@@ -43,46 +53,6 @@ private:
 
 public:
     ~dbf_t();
-
-    class header2_t : public kaitai::kstruct {
-
-    public:
-
-        header2_t(kaitai::kstream* p__io, dbf_t* p__parent = 0, dbf_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~header2_t();
-
-    private:
-        header_dbase_3_t* m_header_dbase_3;
-        bool n_header_dbase_3;
-
-    public:
-        bool _is_null_header_dbase_3() { header_dbase_3(); return n_header_dbase_3; };
-
-    private:
-        header_dbase_7_t* m_header_dbase_7;
-        bool n_header_dbase_7;
-
-    public:
-        bool _is_null_header_dbase_7() { header_dbase_7(); return n_header_dbase_7; };
-
-    private:
-        std::vector<field_t*>* m_fields;
-        dbf_t* m__root;
-        dbf_t* m__parent;
-
-    public:
-        header_dbase_3_t* header_dbase_3() const { return m_header_dbase_3; }
-        header_dbase_7_t* header_dbase_7() const { return m_header_dbase_7; }
-        std::vector<field_t*>* fields() const { return m_fields; }
-        dbf_t* _root() const { return m__root; }
-        dbf_t* _parent() const { return m__parent; }
-    };
 
     class field_t : public kaitai::kstruct {
 
@@ -169,6 +139,46 @@ public:
         uint32_t num_records() const { return m_num_records; }
         uint16_t len_header() const { return m_len_header; }
         uint16_t len_record() const { return m_len_record; }
+        dbf_t* _root() const { return m__root; }
+        dbf_t* _parent() const { return m__parent; }
+    };
+
+    class header2_t : public kaitai::kstruct {
+
+    public:
+
+        header2_t(kaitai::kstream* p__io, dbf_t* p__parent = 0, dbf_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~header2_t();
+
+    private:
+        header_dbase_3_t* m_header_dbase_3;
+        bool n_header_dbase_3;
+
+    public:
+        bool _is_null_header_dbase_3() { header_dbase_3(); return n_header_dbase_3; };
+
+    private:
+        header_dbase_7_t* m_header_dbase_7;
+        bool n_header_dbase_7;
+
+    public:
+        bool _is_null_header_dbase_7() { header_dbase_7(); return n_header_dbase_7; };
+
+    private:
+        std::vector<field_t*>* m_fields;
+        dbf_t* m__root;
+        dbf_t* m__parent;
+
+    public:
+        header_dbase_3_t* header_dbase_3() const { return m_header_dbase_3; }
+        header_dbase_7_t* header_dbase_7() const { return m_header_dbase_7; }
+        std::vector<field_t*>* fields() const { return m_fields; }
         dbf_t* _root() const { return m__root; }
         dbf_t* _parent() const { return m__parent; }
     };

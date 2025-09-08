@@ -7,26 +7,28 @@ digraph {
 
 		rtp_packet__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-			<TR><TD PORT="version_pos">0</TD><TD PORT="version_size">2b</TD><TD>b2</TD><TD PORT="version_type">version</TD></TR>
-			<TR><TD PORT="has_padding_pos">0:2</TD><TD PORT="has_padding_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="has_padding_type">has_padding</TD></TR>
-			<TR><TD PORT="has_extension_pos">0:3</TD><TD PORT="has_extension_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="has_extension_type">has_extension</TD></TR>
-			<TR><TD PORT="csrc_count_pos">0:4</TD><TD PORT="csrc_count_size">4b</TD><TD>b4</TD><TD PORT="csrc_count_type">csrc_count</TD></TR>
-			<TR><TD PORT="marker_pos">1</TD><TD PORT="marker_size">1b</TD><TD>BitsType1(BigBitEndian)</TD><TD PORT="marker_type">marker</TD></TR>
-			<TR><TD PORT="payload_type_pos">1:1</TD><TD PORT="payload_type_size">7b</TD><TD>b7→PayloadTypeEnum</TD><TD PORT="payload_type_type">payload_type</TD></TR>
+			<TR><TD PORT="version_pos">0</TD><TD PORT="version_size">2b</TD><TD>b2be</TD><TD PORT="version_type">version</TD></TR>
+			<TR><TD PORT="has_padding_pos">0:2</TD><TD PORT="has_padding_size">1b</TD><TD>b1be→bool</TD><TD PORT="has_padding_type">has_padding</TD></TR>
+			<TR><TD PORT="has_extension_pos">0:3</TD><TD PORT="has_extension_size">1b</TD><TD>b1be→bool</TD><TD PORT="has_extension_type">has_extension</TD></TR>
+			<TR><TD PORT="csrc_count_pos">0:4</TD><TD PORT="csrc_count_size">4b</TD><TD>b4be</TD><TD PORT="csrc_count_type">csrc_count</TD></TR>
+			<TR><TD PORT="marker_pos">1</TD><TD PORT="marker_size">1b</TD><TD>b1be→bool</TD><TD PORT="marker_type">marker</TD></TR>
+			<TR><TD PORT="payload_type_pos">1:1</TD><TD PORT="payload_type_size">7b</TD><TD>b7be→PayloadTypeEnum</TD><TD PORT="payload_type_type">payload_type</TD></TR>
 			<TR><TD PORT="sequence_number_pos">2</TD><TD PORT="sequence_number_size">2</TD><TD>u2be</TD><TD PORT="sequence_number_type">sequence_number</TD></TR>
 			<TR><TD PORT="timestamp_pos">4</TD><TD PORT="timestamp_size">4</TD><TD>u4be</TD><TD PORT="timestamp_type">timestamp</TD></TR>
 			<TR><TD PORT="ssrc_pos">8</TD><TD PORT="ssrc_size">4</TD><TD>u4be</TD><TD PORT="ssrc_type">ssrc</TD></TR>
 			<TR><TD PORT="header_extension_pos">12</TD><TD PORT="header_extension_size">4</TD><TD>HeaderExtention</TD><TD PORT="header_extension_type">header_extension</TD></TR>
-			<TR><TD PORT="data_pos">16</TD><TD PORT="data_size">((_io.size - _io.pos) - len_padding)</TD><TD></TD><TD PORT="data_type">data</TD></TR>
+			<TR><TD COLSPAN="4" PORT="header_extension__if">if has_extension</TD></TR>
+			<TR><TD PORT="data_pos">16</TD><TD PORT="data_size">(_io.size - _io.pos) - len_padding</TD><TD></TD><TD PORT="data_type">data</TD></TR>
 			<TR><TD PORT="padding_pos">...</TD><TD PORT="padding_size">len_padding</TD><TD></TD><TD PORT="padding_type">padding</TD></TR>
-		</TABLE>>];
-		rtp_packet__inst__len_padding_if_exists [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-			<TR><TD PORT="len_padding_if_exists_pos">(_io.size - 1)</TD><TD PORT="len_padding_if_exists_size">1</TD><TD>u1</TD><TD PORT="len_padding_if_exists_type">len_padding_if_exists</TD></TR>
 		</TABLE>>];
 		rtp_packet__inst__len_padding [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
 			<TR><TD>len_padding</TD><TD>(has_padding ? len_padding_if_exists : 0)</TD></TR>
+		</TABLE>>];
+		rtp_packet__inst__len_padding_if_exists [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="len_padding_if_exists_pos">_io.size - 1</TD><TD PORT="len_padding_if_exists_size">1</TD><TD>u1</TD><TD PORT="len_padding_if_exists_type">len_padding_if_exists</TD></TR>
+			<TR><TD COLSPAN="4" PORT="len_padding_if_exists__if">if has_padding</TD></TR>
 		</TABLE>>];
 		subgraph cluster__header_extention {
 			label="RtpPacket::HeaderExtention";
@@ -40,8 +42,10 @@ digraph {
 		}
 	}
 	rtp_packet__seq:header_extension_type -> header_extention__seq [style=bold];
+	rtp_packet__seq:has_extension_type -> rtp_packet__seq:header_extension__if [color="#404040"];
 	rtp_packet__inst__len_padding:len_padding_type -> rtp_packet__seq:data_size [color="#404040"];
 	rtp_packet__inst__len_padding:len_padding_type -> rtp_packet__seq:padding_size [color="#404040"];
 	rtp_packet__seq:has_padding_type -> rtp_packet__inst__len_padding [color="#404040"];
 	rtp_packet__inst__len_padding_if_exists:len_padding_if_exists_type -> rtp_packet__inst__len_padding [color="#404040"];
+	rtp_packet__seq:has_padding_type -> rtp_packet__inst__len_padding_if_exists:len_padding_if_exists__if [color="#404040"];
 }

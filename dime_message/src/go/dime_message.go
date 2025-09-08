@@ -29,23 +29,32 @@ const (
 	DimeMessage_TypeFormats__Unknown DimeMessage_TypeFormats = 3
 	DimeMessage_TypeFormats__None DimeMessage_TypeFormats = 4
 )
+var values_DimeMessage_TypeFormats = map[DimeMessage_TypeFormats]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}}
+func (v DimeMessage_TypeFormats) isDefined() bool {
+	_, ok := values_DimeMessage_TypeFormats[v]
+	return ok
+}
 type DimeMessage struct {
 	Records []*DimeMessage_Record
 	_io *kaitai.Stream
 	_root *DimeMessage
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewDimeMessage() *DimeMessage {
 	return &DimeMessage{
 	}
 }
 
-func (this *DimeMessage) Read(io *kaitai.Stream, parent interface{}, root *DimeMessage) (err error) {
+func (this DimeMessage) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *DimeMessage) Read(io *kaitai.Stream, parent kaitai.Struct, root *DimeMessage) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	for i := 1;; i++ {
+	for i := 0;; i++ {
 		tmp1, err := this._io.EOF()
 		if err != nil {
 			return err
@@ -59,79 +68,6 @@ func (this *DimeMessage) Read(io *kaitai.Stream, parent interface{}, root *DimeM
 			return err
 		}
 		this.Records = append(this.Records, tmp2)
-	}
-	return err
-}
-
-/**
- * padding to the next 4-byte boundary
- */
-type DimeMessage_Padding struct {
-	BoundaryPadding []byte
-	_io *kaitai.Stream
-	_root *DimeMessage
-	_parent *DimeMessage_Record
-}
-func NewDimeMessage_Padding() *DimeMessage_Padding {
-	return &DimeMessage_Padding{
-	}
-}
-
-func (this *DimeMessage_Padding) Read(io *kaitai.Stream, parent *DimeMessage_Record, root *DimeMessage) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp4, err := this._io.Pos()
-	if err != nil {
-		return err
-	}
-	tmp3 := -(tmp4) % 4
-	if tmp3 < 0 {
-		tmp3 += 4
-	}
-	tmp5, err := this._io.ReadBytes(int(tmp3))
-	if err != nil {
-		return err
-	}
-	tmp5 = tmp5
-	this.BoundaryPadding = tmp5
-	return err
-}
-
-/**
- * the option field of the record
- */
-type DimeMessage_OptionField struct {
-	OptionElements []*DimeMessage_OptionElement
-	_io *kaitai.Stream
-	_root *DimeMessage
-	_parent *DimeMessage_Record
-}
-func NewDimeMessage_OptionField() *DimeMessage_OptionField {
-	return &DimeMessage_OptionField{
-	}
-}
-
-func (this *DimeMessage_OptionField) Read(io *kaitai.Stream, parent *DimeMessage_Record, root *DimeMessage) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	for i := 1;; i++ {
-		tmp6, err := this._io.EOF()
-		if err != nil {
-			return err
-		}
-		if tmp6 {
-			break
-		}
-		tmp7 := NewDimeMessage_OptionElement()
-		err = tmp7.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.OptionElements = append(this.OptionElements, tmp7)
 	}
 	return err
 }
@@ -152,27 +88,112 @@ func NewDimeMessage_OptionElement() *DimeMessage_OptionElement {
 	}
 }
 
+func (this DimeMessage_OptionElement) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *DimeMessage_OptionElement) Read(io *kaitai.Stream, parent *DimeMessage_OptionField, root *DimeMessage) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp8, err := this._io.ReadU2be()
+	tmp3, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.ElementFormat = uint16(tmp8)
-	tmp9, err := this._io.ReadU2be()
+	this.ElementFormat = uint16(tmp3)
+	tmp4, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.LenElement = uint16(tmp9)
-	tmp10, err := this._io.ReadBytes(int(this.LenElement))
+	this.LenElement = uint16(tmp4)
+	tmp5, err := this._io.ReadBytes(int(this.LenElement))
+	if err != nil {
+		return err
+	}
+	tmp5 = tmp5
+	this.ElementData = tmp5
+	return err
+}
+
+/**
+ * the option field of the record
+ */
+type DimeMessage_OptionField struct {
+	OptionElements []*DimeMessage_OptionElement
+	_io *kaitai.Stream
+	_root *DimeMessage
+	_parent *DimeMessage_Record
+}
+func NewDimeMessage_OptionField() *DimeMessage_OptionField {
+	return &DimeMessage_OptionField{
+	}
+}
+
+func (this DimeMessage_OptionField) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *DimeMessage_OptionField) Read(io *kaitai.Stream, parent *DimeMessage_Record, root *DimeMessage) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	for i := 0;; i++ {
+		tmp6, err := this._io.EOF()
+		if err != nil {
+			return err
+		}
+		if tmp6 {
+			break
+		}
+		tmp7 := NewDimeMessage_OptionElement()
+		err = tmp7.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.OptionElements = append(this.OptionElements, tmp7)
+	}
+	return err
+}
+
+/**
+ * padding to the next 4-byte boundary
+ */
+type DimeMessage_Padding struct {
+	BoundaryPadding []byte
+	_io *kaitai.Stream
+	_root *DimeMessage
+	_parent *DimeMessage_Record
+}
+func NewDimeMessage_Padding() *DimeMessage_Padding {
+	return &DimeMessage_Padding{
+	}
+}
+
+func (this DimeMessage_Padding) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *DimeMessage_Padding) Read(io *kaitai.Stream, parent *DimeMessage_Record, root *DimeMessage) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp9, err := this._io.Pos()
+	if err != nil {
+		return err
+	}
+	tmp8 := -(tmp9) % 4
+	if tmp8 < 0 {
+		tmp8 += 4
+	}
+	tmp10, err := this._io.ReadBytes(int(tmp8))
 	if err != nil {
 		return err
 	}
 	tmp10 = tmp10
-	this.ElementData = tmp10
+	this.BoundaryPadding = tmp10
 	return err
 }
 
@@ -206,6 +227,10 @@ type DimeMessage_Record struct {
 func NewDimeMessage_Record() *DimeMessage_Record {
 	return &DimeMessage_Record{
 	}
+}
+
+func (this DimeMessage_Record) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *DimeMessage_Record) Read(io *kaitai.Stream, parent *DimeMessage, root *DimeMessage) (err error) {

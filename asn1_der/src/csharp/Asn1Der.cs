@@ -74,6 +74,12 @@ namespace Kaitai
             _typeTag = ((TypeTag) m_io.ReadU1());
             _len = new LenEncoded(m_io, this, m_root);
             switch (TypeTag) {
+            case TypeTag.ObjectId: {
+                __raw_body = m_io.ReadBytes(Len.Result);
+                var io___raw_body = new KaitaiStream(__raw_body);
+                _body = new BodyObjectId(io___raw_body, this, m_root);
+                break;
+            }
             case TypeTag.PrintableString: {
                 __raw_body = m_io.ReadBytes(Len.Result);
                 var io___raw_body = new KaitaiStream(__raw_body);
@@ -86,13 +92,13 @@ namespace Kaitai
                 _body = new BodySequence(io___raw_body, this, m_root);
                 break;
             }
-            case TypeTag.Set: {
+            case TypeTag.Sequence30: {
                 __raw_body = m_io.ReadBytes(Len.Result);
                 var io___raw_body = new KaitaiStream(__raw_body);
                 _body = new BodySequence(io___raw_body, this, m_root);
                 break;
             }
-            case TypeTag.Sequence30: {
+            case TypeTag.Set: {
                 __raw_body = m_io.ReadBytes(Len.Result);
                 var io___raw_body = new KaitaiStream(__raw_body);
                 _body = new BodySequence(io___raw_body, this, m_root);
@@ -104,17 +110,94 @@ namespace Kaitai
                 _body = new BodyUtf8string(io___raw_body, this, m_root);
                 break;
             }
-            case TypeTag.ObjectId: {
-                __raw_body = m_io.ReadBytes(Len.Result);
-                var io___raw_body = new KaitaiStream(__raw_body);
-                _body = new BodyObjectId(io___raw_body, this, m_root);
-                break;
-            }
             default: {
                 _body = m_io.ReadBytes(Len.Result);
                 break;
             }
             }
+        }
+
+        /// <remarks>
+        /// Reference: <a href="https://learn.microsoft.com/en-us/windows/win32/seccertenroll/about-object-identifier">Source</a>
+        /// </remarks>
+        public partial class BodyObjectId : KaitaiStruct
+        {
+            public static BodyObjectId FromFile(string fileName)
+            {
+                return new BodyObjectId(new KaitaiStream(fileName));
+            }
+
+            public BodyObjectId(KaitaiStream p__io, Asn1Der p__parent = null, Asn1Der p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_first = false;
+                f_second = false;
+                _read();
+            }
+            private void _read()
+            {
+                _firstAndSecond = m_io.ReadU1();
+                _rest = m_io.ReadBytesFull();
+            }
+            private bool f_first;
+            private int _first;
+            public int First
+            {
+                get
+                {
+                    if (f_first)
+                        return _first;
+                    f_first = true;
+                    _first = (int) (FirstAndSecond / 40);
+                    return _first;
+                }
+            }
+            private bool f_second;
+            private int _second;
+            public int Second
+            {
+                get
+                {
+                    if (f_second)
+                        return _second;
+                    f_second = true;
+                    _second = (int) (KaitaiStream.Mod(FirstAndSecond, 40));
+                    return _second;
+                }
+            }
+            private byte _firstAndSecond;
+            private byte[] _rest;
+            private Asn1Der m_root;
+            private Asn1Der m_parent;
+            public byte FirstAndSecond { get { return _firstAndSecond; } }
+            public byte[] Rest { get { return _rest; } }
+            public Asn1Der M_Root { get { return m_root; } }
+            public Asn1Der M_Parent { get { return m_parent; } }
+        }
+        public partial class BodyPrintableString : KaitaiStruct
+        {
+            public static BodyPrintableString FromFile(string fileName)
+            {
+                return new BodyPrintableString(new KaitaiStream(fileName));
+            }
+
+            public BodyPrintableString(KaitaiStream p__io, Asn1Der p__parent = null, Asn1Der p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _str = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytesFull());
+            }
+            private string _str;
+            private Asn1Der m_root;
+            private Asn1Der m_parent;
+            public string Str { get { return _str; } }
+            public Asn1Der M_Root { get { return m_root; } }
+            public Asn1Der M_Parent { get { return m_parent; } }
         }
         public partial class BodySequence : KaitaiStruct
         {
@@ -135,7 +218,7 @@ namespace Kaitai
                 {
                     var i = 0;
                     while (!m_io.IsEof) {
-                        _entries.Add(new Asn1Der(m_io));
+                        _entries.Add(new Asn1Der(m_io, this, m_root));
                         i++;
                     }
                 }
@@ -171,65 +254,6 @@ namespace Kaitai
             public Asn1Der M_Root { get { return m_root; } }
             public Asn1Der M_Parent { get { return m_parent; } }
         }
-
-        /// <remarks>
-        /// Reference: <a href="https://learn.microsoft.com/en-us/windows/win32/seccertenroll/about-object-identifier">Source</a>
-        /// </remarks>
-        public partial class BodyObjectId : KaitaiStruct
-        {
-            public static BodyObjectId FromFile(string fileName)
-            {
-                return new BodyObjectId(new KaitaiStream(fileName));
-            }
-
-            public BodyObjectId(KaitaiStream p__io, Asn1Der p__parent = null, Asn1Der p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_first = false;
-                f_second = false;
-                _read();
-            }
-            private void _read()
-            {
-                _firstAndSecond = m_io.ReadU1();
-                _rest = m_io.ReadBytesFull();
-            }
-            private bool f_first;
-            private int _first;
-            public int First
-            {
-                get
-                {
-                    if (f_first)
-                        return _first;
-                    _first = (int) ((FirstAndSecond / 40));
-                    f_first = true;
-                    return _first;
-                }
-            }
-            private bool f_second;
-            private int _second;
-            public int Second
-            {
-                get
-                {
-                    if (f_second)
-                        return _second;
-                    _second = (int) (KaitaiStream.Mod(FirstAndSecond, 40));
-                    f_second = true;
-                    return _second;
-                }
-            }
-            private byte _firstAndSecond;
-            private byte[] _rest;
-            private Asn1Der m_root;
-            private Asn1Der m_parent;
-            public byte FirstAndSecond { get { return _firstAndSecond; } }
-            public byte[] Rest { get { return _rest; } }
-            public Asn1Der M_Root { get { return m_root; } }
-            public Asn1Der M_Parent { get { return m_parent; } }
-        }
         public partial class LenEncoded : KaitaiStruct
         {
             public static LenEncoded FromFile(string fileName)
@@ -262,8 +286,8 @@ namespace Kaitai
                 {
                     if (f_result)
                         return _result;
-                    _result = (ushort) ((B1 == 129 ? Int1 : (B1 == 130 ? Int2 : B1)));
                     f_result = true;
+                    _result = (ushort) ((B1 == 129 ? Int1 : (B1 == 130 ? Int2 : B1)));
                     return _result;
                 }
             }
@@ -275,30 +299,6 @@ namespace Kaitai
             public byte B1 { get { return _b1; } }
             public ushort? Int2 { get { return _int2; } }
             public byte? Int1 { get { return _int1; } }
-            public Asn1Der M_Root { get { return m_root; } }
-            public Asn1Der M_Parent { get { return m_parent; } }
-        }
-        public partial class BodyPrintableString : KaitaiStruct
-        {
-            public static BodyPrintableString FromFile(string fileName)
-            {
-                return new BodyPrintableString(new KaitaiStream(fileName));
-            }
-
-            public BodyPrintableString(KaitaiStream p__io, Asn1Der p__parent = null, Asn1Der p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _str = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytesFull());
-            }
-            private string _str;
-            private Asn1Der m_root;
-            private Asn1Der m_parent;
-            public string Str { get { return _str; } }
             public Asn1Der M_Root { get { return m_root; } }
             public Asn1Der M_Parent { get { return m_parent; } }
         }

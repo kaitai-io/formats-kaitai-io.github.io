@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream', './VlqBase128Le'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./VlqBase128Le'));
+    define(['exports', 'kaitai-struct/KaitaiStream', './VlqBase128Le'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'), require('./VlqBase128Le'));
   } else {
-    root.Dex = factory(root.KaitaiStream, root.VlqBase128Le);
+    factory(root.Dex || (root.Dex = {}), root.KaitaiStream, root.VlqBase128Le || (root.VlqBase128Le = {}));
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, VlqBase128Le) {
+})(typeof self !== 'undefined' ? self : this, function (Dex_, KaitaiStream, VlqBase128Le_) {
 /**
  * Android OS applications executables are typically stored in its own
  * format, optimized for more efficient execution in Dalvik virtual
@@ -56,6 +56,582 @@ var Dex = (function() {
     this.header = new HeaderItem(this._io, this, this._root);
   }
 
+  var AnnotationElement = Dex.AnnotationElement = (function() {
+    function AnnotationElement(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    AnnotationElement.prototype._read = function() {
+      this.nameIdx = new VlqBase128Le_.VlqBase128Le(this._io, null, null);
+      this.value = new EncodedValue(this._io, this, this._root);
+    }
+
+    /**
+     * element name, represented as an index into the string_ids section.
+     * 
+     * The string must conform to the syntax for MemberName, defined above.
+     */
+
+    /**
+     * element value
+     */
+
+    return AnnotationElement;
+  })();
+
+  var CallSiteIdItem = Dex.CallSiteIdItem = (function() {
+    function CallSiteIdItem(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    CallSiteIdItem.prototype._read = function() {
+      this.callSiteOff = this._io.readU4le();
+    }
+
+    /**
+     * offset from the start of the file to call site definition.
+     * 
+     * The offset should be in the data section, and the data there should
+     * be in the format specified by "call_site_item" below.
+     */
+
+    return CallSiteIdItem;
+  })();
+
+  var ClassDataItem = Dex.ClassDataItem = (function() {
+    function ClassDataItem(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    ClassDataItem.prototype._read = function() {
+      this.staticFieldsSize = new VlqBase128Le_.VlqBase128Le(this._io, null, null);
+      this.instanceFieldsSize = new VlqBase128Le_.VlqBase128Le(this._io, null, null);
+      this.directMethodsSize = new VlqBase128Le_.VlqBase128Le(this._io, null, null);
+      this.virtualMethodsSize = new VlqBase128Le_.VlqBase128Le(this._io, null, null);
+      this.staticFields = [];
+      for (var i = 0; i < this.staticFieldsSize.value; i++) {
+        this.staticFields.push(new EncodedField(this._io, this, this._root));
+      }
+      this.instanceFields = [];
+      for (var i = 0; i < this.instanceFieldsSize.value; i++) {
+        this.instanceFields.push(new EncodedField(this._io, this, this._root));
+      }
+      this.directMethods = [];
+      for (var i = 0; i < this.directMethodsSize.value; i++) {
+        this.directMethods.push(new EncodedMethod(this._io, this, this._root));
+      }
+      this.virtualMethods = [];
+      for (var i = 0; i < this.virtualMethodsSize.value; i++) {
+        this.virtualMethods.push(new EncodedMethod(this._io, this, this._root));
+      }
+    }
+
+    /**
+     * the number of static fields defined in this item
+     */
+
+    /**
+     * the number of instance fields defined in this item
+     */
+
+    /**
+     * the number of direct methods defined in this item
+     */
+
+    /**
+     * the number of virtual methods defined in this item
+     */
+
+    /**
+     * the defined static fields, represented as a sequence of encoded elements.
+     * 
+     * The fields must be sorted by field_idx in increasing order.
+     */
+
+    /**
+     * the defined instance fields, represented as a sequence of encoded elements.
+     * 
+     * The fields must be sorted by field_idx in increasing order.
+     */
+
+    /**
+     * the defined direct (any of static, private, or constructor) methods,
+     * represented as a sequence of encoded elements.
+     * 
+     * The methods must be sorted by method_idx in increasing order.
+     */
+
+    /**
+     * the defined virtual (none of static, private, or constructor) methods,
+     * represented as a sequence of encoded elements.
+     * 
+     * This list should not include inherited methods unless overridden by
+     * the class that this item represents.
+     * 
+     * The methods must be sorted by method_idx in increasing order.
+     * 
+     * The method_idx of a virtual method must not be the same as any direct method.
+     */
+
+    return ClassDataItem;
+  })();
+
+  var ClassDefItem = Dex.ClassDefItem = (function() {
+    function ClassDefItem(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    ClassDefItem.prototype._read = function() {
+      this.classIdx = this._io.readU4le();
+      this.accessFlags = this._io.readU4le();
+      this.superclassIdx = this._io.readU4le();
+      this.interfacesOff = this._io.readU4le();
+      this.sourceFileIdx = this._io.readU4le();
+      this.annotationsOff = this._io.readU4le();
+      this.classDataOff = this._io.readU4le();
+      this.staticValuesOff = this._io.readU4le();
+    }
+    Object.defineProperty(ClassDefItem.prototype, 'classData', {
+      get: function() {
+        if (this._m_classData !== undefined)
+          return this._m_classData;
+        if (this.classDataOff != 0) {
+          var _pos = this._io.pos;
+          this._io.seek(this.classDataOff);
+          this._m_classData = new ClassDataItem(this._io, this, this._root);
+          this._io.seek(_pos);
+        }
+        return this._m_classData;
+      }
+    });
+    Object.defineProperty(ClassDefItem.prototype, 'staticValues', {
+      get: function() {
+        if (this._m_staticValues !== undefined)
+          return this._m_staticValues;
+        if (this.staticValuesOff != 0) {
+          var _pos = this._io.pos;
+          this._io.seek(this.staticValuesOff);
+          this._m_staticValues = new EncodedArrayItem(this._io, this, this._root);
+          this._io.seek(_pos);
+        }
+        return this._m_staticValues;
+      }
+    });
+    Object.defineProperty(ClassDefItem.prototype, 'typeName', {
+      get: function() {
+        if (this._m_typeName !== undefined)
+          return this._m_typeName;
+        this._m_typeName = this._root.typeIds[this.classIdx].typeName;
+        return this._m_typeName;
+      }
+    });
+
+    /**
+     * index into the type_ids list for this class.
+     * 
+     * This must be a class type, and not an array or primitive type.
+     */
+
+    /**
+     * access flags for the class (public, final, etc.).
+     * 
+     * See "access_flags Definitions" for details.
+     */
+
+    /**
+     * index into the type_ids list for the superclass,
+     * or the constant value NO_INDEX if this class has no superclass
+     * (i.e., it is a root class such as Object).
+     * 
+     * If present, this must be a class type, and not an array or primitive type.
+     */
+
+    /**
+     * offset from the start of the file to the list of interfaces, or 0 if there are none.
+     * 
+     * This offset should be in the data section, and the data there should
+     * be in the format specified by "type_list" below. Each of the elements
+     * of the list must be a class type (not an array or primitive type),
+     * and there must not be any duplicates.
+     */
+
+    /**
+     * index into the string_ids list for the name of the file containing
+     * the original source for (at least most of) this class, or the
+     * special value NO_INDEX to represent a lack of this information.
+     * 
+     * The debug_info_item of any given method may override this source file,
+     * but the expectation is that most classes will only come from one source file.
+     */
+
+    /**
+     * offset from the start of the file to the annotations structure for
+     * this class, or 0 if there are no annotations on this class.
+     * 
+     * This offset, if non-zero, should be in the data section, and the data
+     * there should be in the format specified by "annotations_directory_item"
+     * below,with all items referring to this class as the definer.
+     */
+
+    /**
+     * offset from the start of the file to the associated class data for this
+     * item, or 0 if there is no class data for this class.
+     * 
+     * (This may be the case, for example, if this class is a marker interface.)
+     * 
+     * The offset, if non-zero, should be in the data section, and the data
+     * there should be in the format specified by "class_data_item" below,
+     * with all items referring to this class as the definer.
+     */
+
+    /**
+     * offset from the start of the file to the list of initial values for
+     * static fields, or 0 if there are none (and all static fields are to be
+     * initialized with 0 or null).
+     * 
+     * This offset should be in the data section, and the data there should
+     * be in the format specified by "encoded_array_item" below.
+     * 
+     * The size of the array must be no larger than the number of static fields
+     * declared by this class, and the elements correspond to the static fields
+     * in the same order as declared in the corresponding field_list.
+     * 
+     * The type of each array element must match the declared type of its
+     * corresponding field.
+     * 
+     * If there are fewer elements in the array than there are static fields,
+     * then the leftover fields are initialized with a type-appropriate 0 or null.
+     */
+
+    return ClassDefItem;
+  })();
+
+  var EncodedAnnotation = Dex.EncodedAnnotation = (function() {
+    function EncodedAnnotation(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    EncodedAnnotation.prototype._read = function() {
+      this.typeIdx = new VlqBase128Le_.VlqBase128Le(this._io, null, null);
+      this.size = new VlqBase128Le_.VlqBase128Le(this._io, null, null);
+      this.elements = [];
+      for (var i = 0; i < this.size.value; i++) {
+        this.elements.push(new AnnotationElement(this._io, this, this._root));
+      }
+    }
+
+    /**
+     * type of the annotation.
+     * 
+     * This must be a class (not array or primitive) type.
+     */
+
+    /**
+     * number of name-value mappings in this annotation
+     */
+
+    /**
+     * elements of the annotation, represented directly in-line (not as offsets).
+     * 
+     * Elements must be sorted in increasing order by string_id index.
+     */
+
+    return EncodedAnnotation;
+  })();
+
+  var EncodedArray = Dex.EncodedArray = (function() {
+    function EncodedArray(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    EncodedArray.prototype._read = function() {
+      this.size = new VlqBase128Le_.VlqBase128Le(this._io, null, null);
+      this.values = [];
+      for (var i = 0; i < this.size.value; i++) {
+        this.values.push(new EncodedValue(this._io, this, this._root));
+      }
+    }
+
+    return EncodedArray;
+  })();
+
+  var EncodedArrayItem = Dex.EncodedArrayItem = (function() {
+    function EncodedArrayItem(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    EncodedArrayItem.prototype._read = function() {
+      this.value = new EncodedArray(this._io, this, this._root);
+    }
+
+    return EncodedArrayItem;
+  })();
+
+  var EncodedField = Dex.EncodedField = (function() {
+    function EncodedField(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    EncodedField.prototype._read = function() {
+      this.fieldIdxDiff = new VlqBase128Le_.VlqBase128Le(this._io, null, null);
+      this.accessFlags = new VlqBase128Le_.VlqBase128Le(this._io, null, null);
+    }
+
+    /**
+     * index into the field_ids list for the identity of this field
+     * (includes the name and descriptor), represented as a difference
+     * from the index of previous element in the list.
+     * 
+     * The index of the first element in a list is represented directly.
+     */
+
+    /**
+     * access flags for the field (public, final, etc.).
+     * 
+     * See "access_flags Definitions" for details.
+     */
+
+    return EncodedField;
+  })();
+
+  var EncodedMethod = Dex.EncodedMethod = (function() {
+    function EncodedMethod(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    EncodedMethod.prototype._read = function() {
+      this.methodIdxDiff = new VlqBase128Le_.VlqBase128Le(this._io, null, null);
+      this.accessFlags = new VlqBase128Le_.VlqBase128Le(this._io, null, null);
+      this.codeOff = new VlqBase128Le_.VlqBase128Le(this._io, null, null);
+    }
+
+    /**
+     * index into the method_ids list for the identity of this method
+     * (includes the name and descriptor), represented as a difference
+     * from the index of previous element in the list.
+     * 
+     * The index of the first element in a list is represented directly.
+     */
+
+    /**
+     * access flags for the field (public, final, etc.).
+     * 
+     * See "access_flags Definitions" for details.
+     */
+
+    /**
+     * offset from the start of the file to the code structure for this method,
+     * or 0 if this method is either abstract or native.
+     * 
+     * The offset should be to a location in the data section.
+     * 
+     * The format of the data is specified by "code_item" below.
+     */
+
+    return EncodedMethod;
+  })();
+
+  var EncodedValue = Dex.EncodedValue = (function() {
+    EncodedValue.ValueTypeEnum = Object.freeze({
+      BYTE: 0,
+      SHORT: 2,
+      CHAR: 3,
+      INT: 4,
+      LONG: 6,
+      FLOAT: 16,
+      DOUBLE: 17,
+      METHOD_TYPE: 21,
+      METHOD_HANDLE: 22,
+      STRING: 23,
+      TYPE: 24,
+      FIELD: 25,
+      METHOD: 26,
+      ENUM: 27,
+      ARRAY: 28,
+      ANNOTATION: 29,
+      NULL: 30,
+      BOOLEAN: 31,
+
+      0: "BYTE",
+      2: "SHORT",
+      3: "CHAR",
+      4: "INT",
+      6: "LONG",
+      16: "FLOAT",
+      17: "DOUBLE",
+      21: "METHOD_TYPE",
+      22: "METHOD_HANDLE",
+      23: "STRING",
+      24: "TYPE",
+      25: "FIELD",
+      26: "METHOD",
+      27: "ENUM",
+      28: "ARRAY",
+      29: "ANNOTATION",
+      30: "NULL",
+      31: "BOOLEAN",
+    });
+
+    function EncodedValue(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    EncodedValue.prototype._read = function() {
+      this.valueArg = this._io.readBitsIntBe(3);
+      this.valueType = this._io.readBitsIntBe(5);
+      this._io.alignToByte();
+      switch (this.valueType) {
+      case Dex.EncodedValue.ValueTypeEnum.ANNOTATION:
+        this.value = new EncodedAnnotation(this._io, this, this._root);
+        break;
+      case Dex.EncodedValue.ValueTypeEnum.ARRAY:
+        this.value = new EncodedArray(this._io, this, this._root);
+        break;
+      case Dex.EncodedValue.ValueTypeEnum.BYTE:
+        this.value = this._io.readS1();
+        break;
+      case Dex.EncodedValue.ValueTypeEnum.CHAR:
+        this.value = this._io.readU2le();
+        break;
+      case Dex.EncodedValue.ValueTypeEnum.DOUBLE:
+        this.value = this._io.readF8le();
+        break;
+      case Dex.EncodedValue.ValueTypeEnum.ENUM:
+        this.value = this._io.readU4le();
+        break;
+      case Dex.EncodedValue.ValueTypeEnum.FIELD:
+        this.value = this._io.readU4le();
+        break;
+      case Dex.EncodedValue.ValueTypeEnum.FLOAT:
+        this.value = this._io.readF4le();
+        break;
+      case Dex.EncodedValue.ValueTypeEnum.INT:
+        this.value = this._io.readS4le();
+        break;
+      case Dex.EncodedValue.ValueTypeEnum.LONG:
+        this.value = this._io.readS8le();
+        break;
+      case Dex.EncodedValue.ValueTypeEnum.METHOD:
+        this.value = this._io.readU4le();
+        break;
+      case Dex.EncodedValue.ValueTypeEnum.METHOD_HANDLE:
+        this.value = this._io.readU4le();
+        break;
+      case Dex.EncodedValue.ValueTypeEnum.METHOD_TYPE:
+        this.value = this._io.readU4le();
+        break;
+      case Dex.EncodedValue.ValueTypeEnum.SHORT:
+        this.value = this._io.readS2le();
+        break;
+      case Dex.EncodedValue.ValueTypeEnum.STRING:
+        this.value = this._io.readU4le();
+        break;
+      case Dex.EncodedValue.ValueTypeEnum.TYPE:
+        this.value = this._io.readU4le();
+        break;
+      }
+    }
+
+    return EncodedValue;
+  })();
+
+  var FieldIdItem = Dex.FieldIdItem = (function() {
+    function FieldIdItem(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    FieldIdItem.prototype._read = function() {
+      this.classIdx = this._io.readU2le();
+      this.typeIdx = this._io.readU2le();
+      this.nameIdx = this._io.readU4le();
+    }
+
+    /**
+     * the definer of this field
+     */
+    Object.defineProperty(FieldIdItem.prototype, 'className', {
+      get: function() {
+        if (this._m_className !== undefined)
+          return this._m_className;
+        this._m_className = this._root.typeIds[this.classIdx].typeName;
+        return this._m_className;
+      }
+    });
+
+    /**
+     * the name of this field
+     */
+    Object.defineProperty(FieldIdItem.prototype, 'fieldName', {
+      get: function() {
+        if (this._m_fieldName !== undefined)
+          return this._m_fieldName;
+        this._m_fieldName = this._root.stringIds[this.nameIdx].value.data;
+        return this._m_fieldName;
+      }
+    });
+
+    /**
+     * the type of this field
+     */
+    Object.defineProperty(FieldIdItem.prototype, 'typeName', {
+      get: function() {
+        if (this._m_typeName !== undefined)
+          return this._m_typeName;
+        this._m_typeName = this._root.typeIds[this.typeIdx].typeName;
+        return this._m_typeName;
+      }
+    });
+
+    /**
+     * index into the type_ids list for the definer of this field.
+     * This must be a class type, and not an array or primitive type.
+     */
+
+    /**
+     * index into the type_ids list for the type of this field
+     */
+
+    /**
+     * index into the string_ids list for the name of this field.
+     * The string must conform to the syntax for MemberName, defined above.
+     */
+
+    return FieldIdItem;
+  })();
+
   var HeaderItem = Dex.HeaderItem = (function() {
     HeaderItem.EndianConstant = Object.freeze({
       ENDIAN_CONSTANT: 305419896,
@@ -68,16 +644,16 @@ var Dex = (function() {
     function HeaderItem(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     HeaderItem.prototype._read = function() {
       this.magic = this._io.readBytes(4);
-      if (!((KaitaiStream.byteArrayCompare(this.magic, [100, 101, 120, 10]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([100, 101, 120, 10], this.magic, this._io, "/types/header_item/seq/0");
+      if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([100, 101, 120, 10])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([100, 101, 120, 10]), this.magic, this._io, "/types/header_item/seq/0");
       }
-      this.versionStr = KaitaiStream.bytesToStr(KaitaiStream.bytesTerminate(this._io.readBytes(4), 0, false), "ascii");
+      this.versionStr = KaitaiStream.bytesToStr(KaitaiStream.bytesTerminate(this._io.readBytes(4), 0, false), "ASCII");
       this.checksum = this._io.readU4le();
       this.signature = this._io.readBytes(20);
       this.fileSize = this._io.readU4le();
@@ -210,845 +786,6 @@ var Dex = (function() {
     return HeaderItem;
   })();
 
-  var MapList = Dex.MapList = (function() {
-    function MapList(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    MapList.prototype._read = function() {
-      this.size = this._io.readU4le();
-      this.list = [];
-      for (var i = 0; i < this.size; i++) {
-        this.list.push(new MapItem(this._io, this, this._root));
-      }
-    }
-
-    return MapList;
-  })();
-
-  var EncodedValue = Dex.EncodedValue = (function() {
-    EncodedValue.ValueTypeEnum = Object.freeze({
-      BYTE: 0,
-      SHORT: 2,
-      CHAR: 3,
-      INT: 4,
-      LONG: 6,
-      FLOAT: 16,
-      DOUBLE: 17,
-      METHOD_TYPE: 21,
-      METHOD_HANDLE: 22,
-      STRING: 23,
-      TYPE: 24,
-      FIELD: 25,
-      METHOD: 26,
-      ENUM: 27,
-      ARRAY: 28,
-      ANNOTATION: 29,
-      NULL: 30,
-      BOOLEAN: 31,
-
-      0: "BYTE",
-      2: "SHORT",
-      3: "CHAR",
-      4: "INT",
-      6: "LONG",
-      16: "FLOAT",
-      17: "DOUBLE",
-      21: "METHOD_TYPE",
-      22: "METHOD_HANDLE",
-      23: "STRING",
-      24: "TYPE",
-      25: "FIELD",
-      26: "METHOD",
-      27: "ENUM",
-      28: "ARRAY",
-      29: "ANNOTATION",
-      30: "NULL",
-      31: "BOOLEAN",
-    });
-
-    function EncodedValue(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    EncodedValue.prototype._read = function() {
-      this.valueArg = this._io.readBitsIntBe(3);
-      this.valueType = this._io.readBitsIntBe(5);
-      this._io.alignToByte();
-      switch (this.valueType) {
-      case Dex.EncodedValue.ValueTypeEnum.INT:
-        this.value = this._io.readS4le();
-        break;
-      case Dex.EncodedValue.ValueTypeEnum.ANNOTATION:
-        this.value = new EncodedAnnotation(this._io, this, this._root);
-        break;
-      case Dex.EncodedValue.ValueTypeEnum.LONG:
-        this.value = this._io.readS8le();
-        break;
-      case Dex.EncodedValue.ValueTypeEnum.METHOD_HANDLE:
-        this.value = this._io.readU4le();
-        break;
-      case Dex.EncodedValue.ValueTypeEnum.BYTE:
-        this.value = this._io.readS1();
-        break;
-      case Dex.EncodedValue.ValueTypeEnum.ARRAY:
-        this.value = new EncodedArray(this._io, this, this._root);
-        break;
-      case Dex.EncodedValue.ValueTypeEnum.METHOD_TYPE:
-        this.value = this._io.readU4le();
-        break;
-      case Dex.EncodedValue.ValueTypeEnum.SHORT:
-        this.value = this._io.readS2le();
-        break;
-      case Dex.EncodedValue.ValueTypeEnum.METHOD:
-        this.value = this._io.readU4le();
-        break;
-      case Dex.EncodedValue.ValueTypeEnum.DOUBLE:
-        this.value = this._io.readF8le();
-        break;
-      case Dex.EncodedValue.ValueTypeEnum.FLOAT:
-        this.value = this._io.readF4le();
-        break;
-      case Dex.EncodedValue.ValueTypeEnum.TYPE:
-        this.value = this._io.readU4le();
-        break;
-      case Dex.EncodedValue.ValueTypeEnum.ENUM:
-        this.value = this._io.readU4le();
-        break;
-      case Dex.EncodedValue.ValueTypeEnum.FIELD:
-        this.value = this._io.readU4le();
-        break;
-      case Dex.EncodedValue.ValueTypeEnum.STRING:
-        this.value = this._io.readU4le();
-        break;
-      case Dex.EncodedValue.ValueTypeEnum.CHAR:
-        this.value = this._io.readU2le();
-        break;
-      }
-    }
-
-    return EncodedValue;
-  })();
-
-  var CallSiteIdItem = Dex.CallSiteIdItem = (function() {
-    function CallSiteIdItem(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    CallSiteIdItem.prototype._read = function() {
-      this.callSiteOff = this._io.readU4le();
-    }
-
-    /**
-     * offset from the start of the file to call site definition.
-     * 
-     * The offset should be in the data section, and the data there should
-     * be in the format specified by "call_site_item" below.
-     */
-
-    return CallSiteIdItem;
-  })();
-
-  var MethodIdItem = Dex.MethodIdItem = (function() {
-    function MethodIdItem(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    MethodIdItem.prototype._read = function() {
-      this.classIdx = this._io.readU2le();
-      this.protoIdx = this._io.readU2le();
-      this.nameIdx = this._io.readU4le();
-    }
-
-    /**
-     * the definer of this method
-     */
-    Object.defineProperty(MethodIdItem.prototype, 'className', {
-      get: function() {
-        if (this._m_className !== undefined)
-          return this._m_className;
-        this._m_className = this._root.typeIds[this.classIdx].typeName;
-        return this._m_className;
-      }
-    });
-
-    /**
-     * the short-form descriptor of the prototype of this method
-     */
-    Object.defineProperty(MethodIdItem.prototype, 'protoDesc', {
-      get: function() {
-        if (this._m_protoDesc !== undefined)
-          return this._m_protoDesc;
-        this._m_protoDesc = this._root.protoIds[this.protoIdx].shortyDesc;
-        return this._m_protoDesc;
-      }
-    });
-
-    /**
-     * the name of this method
-     */
-    Object.defineProperty(MethodIdItem.prototype, 'methodName', {
-      get: function() {
-        if (this._m_methodName !== undefined)
-          return this._m_methodName;
-        this._m_methodName = this._root.stringIds[this.nameIdx].value.data;
-        return this._m_methodName;
-      }
-    });
-
-    /**
-     * index into the type_ids list for the definer of this method.
-     * This must be a class or array type, and not a primitive type.
-     */
-
-    /**
-     * index into the proto_ids list for the prototype of this method
-     */
-
-    /**
-     * index into the string_ids list for the name of this method.
-     * The string must conform to the syntax for MemberName, defined above.
-     */
-
-    return MethodIdItem;
-  })();
-
-  var TypeItem = Dex.TypeItem = (function() {
-    function TypeItem(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    TypeItem.prototype._read = function() {
-      this.typeIdx = this._io.readU2le();
-    }
-    Object.defineProperty(TypeItem.prototype, 'value', {
-      get: function() {
-        if (this._m_value !== undefined)
-          return this._m_value;
-        this._m_value = this._root.typeIds[this.typeIdx].typeName;
-        return this._m_value;
-      }
-    });
-
-    return TypeItem;
-  })();
-
-  var TypeIdItem = Dex.TypeIdItem = (function() {
-    function TypeIdItem(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    TypeIdItem.prototype._read = function() {
-      this.descriptorIdx = this._io.readU4le();
-    }
-    Object.defineProperty(TypeIdItem.prototype, 'typeName', {
-      get: function() {
-        if (this._m_typeName !== undefined)
-          return this._m_typeName;
-        this._m_typeName = this._root.stringIds[this.descriptorIdx].value.data;
-        return this._m_typeName;
-      }
-    });
-
-    /**
-     * index into the string_ids list for the descriptor string of this type.
-     * The string must conform to the syntax for TypeDescriptor, defined above.
-     */
-
-    return TypeIdItem;
-  })();
-
-  var AnnotationElement = Dex.AnnotationElement = (function() {
-    function AnnotationElement(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    AnnotationElement.prototype._read = function() {
-      this.nameIdx = new VlqBase128Le(this._io, this, null);
-      this.value = new EncodedValue(this._io, this, this._root);
-    }
-
-    /**
-     * element name, represented as an index into the string_ids section.
-     * 
-     * The string must conform to the syntax for MemberName, defined above.
-     */
-
-    /**
-     * element value
-     */
-
-    return AnnotationElement;
-  })();
-
-  var EncodedField = Dex.EncodedField = (function() {
-    function EncodedField(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    EncodedField.prototype._read = function() {
-      this.fieldIdxDiff = new VlqBase128Le(this._io, this, null);
-      this.accessFlags = new VlqBase128Le(this._io, this, null);
-    }
-
-    /**
-     * index into the field_ids list for the identity of this field
-     * (includes the name and descriptor), represented as a difference
-     * from the index of previous element in the list.
-     * 
-     * The index of the first element in a list is represented directly.
-     */
-
-    /**
-     * access flags for the field (public, final, etc.).
-     * 
-     * See "access_flags Definitions" for details.
-     */
-
-    return EncodedField;
-  })();
-
-  var EncodedArrayItem = Dex.EncodedArrayItem = (function() {
-    function EncodedArrayItem(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    EncodedArrayItem.prototype._read = function() {
-      this.value = new EncodedArray(this._io, this, this._root);
-    }
-
-    return EncodedArrayItem;
-  })();
-
-  var ClassDataItem = Dex.ClassDataItem = (function() {
-    function ClassDataItem(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    ClassDataItem.prototype._read = function() {
-      this.staticFieldsSize = new VlqBase128Le(this._io, this, null);
-      this.instanceFieldsSize = new VlqBase128Le(this._io, this, null);
-      this.directMethodsSize = new VlqBase128Le(this._io, this, null);
-      this.virtualMethodsSize = new VlqBase128Le(this._io, this, null);
-      this.staticFields = [];
-      for (var i = 0; i < this.staticFieldsSize.value; i++) {
-        this.staticFields.push(new EncodedField(this._io, this, this._root));
-      }
-      this.instanceFields = [];
-      for (var i = 0; i < this.instanceFieldsSize.value; i++) {
-        this.instanceFields.push(new EncodedField(this._io, this, this._root));
-      }
-      this.directMethods = [];
-      for (var i = 0; i < this.directMethodsSize.value; i++) {
-        this.directMethods.push(new EncodedMethod(this._io, this, this._root));
-      }
-      this.virtualMethods = [];
-      for (var i = 0; i < this.virtualMethodsSize.value; i++) {
-        this.virtualMethods.push(new EncodedMethod(this._io, this, this._root));
-      }
-    }
-
-    /**
-     * the number of static fields defined in this item
-     */
-
-    /**
-     * the number of instance fields defined in this item
-     */
-
-    /**
-     * the number of direct methods defined in this item
-     */
-
-    /**
-     * the number of virtual methods defined in this item
-     */
-
-    /**
-     * the defined static fields, represented as a sequence of encoded elements.
-     * 
-     * The fields must be sorted by field_idx in increasing order.
-     */
-
-    /**
-     * the defined instance fields, represented as a sequence of encoded elements.
-     * 
-     * The fields must be sorted by field_idx in increasing order.
-     */
-
-    /**
-     * the defined direct (any of static, private, or constructor) methods,
-     * represented as a sequence of encoded elements.
-     * 
-     * The methods must be sorted by method_idx in increasing order.
-     */
-
-    /**
-     * the defined virtual (none of static, private, or constructor) methods,
-     * represented as a sequence of encoded elements.
-     * 
-     * This list should not include inherited methods unless overridden by
-     * the class that this item represents.
-     * 
-     * The methods must be sorted by method_idx in increasing order.
-     * 
-     * The method_idx of a virtual method must not be the same as any direct method.
-     */
-
-    return ClassDataItem;
-  })();
-
-  var FieldIdItem = Dex.FieldIdItem = (function() {
-    function FieldIdItem(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    FieldIdItem.prototype._read = function() {
-      this.classIdx = this._io.readU2le();
-      this.typeIdx = this._io.readU2le();
-      this.nameIdx = this._io.readU4le();
-    }
-
-    /**
-     * the definer of this field
-     */
-    Object.defineProperty(FieldIdItem.prototype, 'className', {
-      get: function() {
-        if (this._m_className !== undefined)
-          return this._m_className;
-        this._m_className = this._root.typeIds[this.classIdx].typeName;
-        return this._m_className;
-      }
-    });
-
-    /**
-     * the type of this field
-     */
-    Object.defineProperty(FieldIdItem.prototype, 'typeName', {
-      get: function() {
-        if (this._m_typeName !== undefined)
-          return this._m_typeName;
-        this._m_typeName = this._root.typeIds[this.typeIdx].typeName;
-        return this._m_typeName;
-      }
-    });
-
-    /**
-     * the name of this field
-     */
-    Object.defineProperty(FieldIdItem.prototype, 'fieldName', {
-      get: function() {
-        if (this._m_fieldName !== undefined)
-          return this._m_fieldName;
-        this._m_fieldName = this._root.stringIds[this.nameIdx].value.data;
-        return this._m_fieldName;
-      }
-    });
-
-    /**
-     * index into the type_ids list for the definer of this field.
-     * This must be a class type, and not an array or primitive type.
-     */
-
-    /**
-     * index into the type_ids list for the type of this field
-     */
-
-    /**
-     * index into the string_ids list for the name of this field.
-     * The string must conform to the syntax for MemberName, defined above.
-     */
-
-    return FieldIdItem;
-  })();
-
-  var EncodedAnnotation = Dex.EncodedAnnotation = (function() {
-    function EncodedAnnotation(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    EncodedAnnotation.prototype._read = function() {
-      this.typeIdx = new VlqBase128Le(this._io, this, null);
-      this.size = new VlqBase128Le(this._io, this, null);
-      this.elements = [];
-      for (var i = 0; i < this.size.value; i++) {
-        this.elements.push(new AnnotationElement(this._io, this, this._root));
-      }
-    }
-
-    /**
-     * type of the annotation.
-     * 
-     * This must be a class (not array or primitive) type.
-     */
-
-    /**
-     * number of name-value mappings in this annotation
-     */
-
-    /**
-     * elements of the annotation, represented directly in-line (not as offsets).
-     * 
-     * Elements must be sorted in increasing order by string_id index.
-     */
-
-    return EncodedAnnotation;
-  })();
-
-  var ClassDefItem = Dex.ClassDefItem = (function() {
-    function ClassDefItem(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    ClassDefItem.prototype._read = function() {
-      this.classIdx = this._io.readU4le();
-      this.accessFlags = this._io.readU4le();
-      this.superclassIdx = this._io.readU4le();
-      this.interfacesOff = this._io.readU4le();
-      this.sourceFileIdx = this._io.readU4le();
-      this.annotationsOff = this._io.readU4le();
-      this.classDataOff = this._io.readU4le();
-      this.staticValuesOff = this._io.readU4le();
-    }
-    Object.defineProperty(ClassDefItem.prototype, 'typeName', {
-      get: function() {
-        if (this._m_typeName !== undefined)
-          return this._m_typeName;
-        this._m_typeName = this._root.typeIds[this.classIdx].typeName;
-        return this._m_typeName;
-      }
-    });
-    Object.defineProperty(ClassDefItem.prototype, 'classData', {
-      get: function() {
-        if (this._m_classData !== undefined)
-          return this._m_classData;
-        if (this.classDataOff != 0) {
-          var _pos = this._io.pos;
-          this._io.seek(this.classDataOff);
-          this._m_classData = new ClassDataItem(this._io, this, this._root);
-          this._io.seek(_pos);
-        }
-        return this._m_classData;
-      }
-    });
-    Object.defineProperty(ClassDefItem.prototype, 'staticValues', {
-      get: function() {
-        if (this._m_staticValues !== undefined)
-          return this._m_staticValues;
-        if (this.staticValuesOff != 0) {
-          var _pos = this._io.pos;
-          this._io.seek(this.staticValuesOff);
-          this._m_staticValues = new EncodedArrayItem(this._io, this, this._root);
-          this._io.seek(_pos);
-        }
-        return this._m_staticValues;
-      }
-    });
-
-    /**
-     * index into the type_ids list for this class.
-     * 
-     * This must be a class type, and not an array or primitive type.
-     */
-
-    /**
-     * access flags for the class (public, final, etc.).
-     * 
-     * See "access_flags Definitions" for details.
-     */
-
-    /**
-     * index into the type_ids list for the superclass,
-     * or the constant value NO_INDEX if this class has no superclass
-     * (i.e., it is a root class such as Object).
-     * 
-     * If present, this must be a class type, and not an array or primitive type.
-     */
-
-    /**
-     * offset from the start of the file to the list of interfaces, or 0 if there are none.
-     * 
-     * This offset should be in the data section, and the data there should
-     * be in the format specified by "type_list" below. Each of the elements
-     * of the list must be a class type (not an array or primitive type),
-     * and there must not be any duplicates.
-     */
-
-    /**
-     * index into the string_ids list for the name of the file containing
-     * the original source for (at least most of) this class, or the
-     * special value NO_INDEX to represent a lack of this information.
-     * 
-     * The debug_info_item of any given method may override this source file,
-     * but the expectation is that most classes will only come from one source file.
-     */
-
-    /**
-     * offset from the start of the file to the annotations structure for
-     * this class, or 0 if there are no annotations on this class.
-     * 
-     * This offset, if non-zero, should be in the data section, and the data
-     * there should be in the format specified by "annotations_directory_item"
-     * below,with all items referring to this class as the definer.
-     */
-
-    /**
-     * offset from the start of the file to the associated class data for this
-     * item, or 0 if there is no class data for this class.
-     * 
-     * (This may be the case, for example, if this class is a marker interface.)
-     * 
-     * The offset, if non-zero, should be in the data section, and the data
-     * there should be in the format specified by "class_data_item" below,
-     * with all items referring to this class as the definer.
-     */
-
-    /**
-     * offset from the start of the file to the list of initial values for
-     * static fields, or 0 if there are none (and all static fields are to be
-     * initialized with 0 or null).
-     * 
-     * This offset should be in the data section, and the data there should
-     * be in the format specified by "encoded_array_item" below.
-     * 
-     * The size of the array must be no larger than the number of static fields
-     * declared by this class, and the elements correspond to the static fields
-     * in the same order as declared in the corresponding field_list.
-     * 
-     * The type of each array element must match the declared type of its
-     * corresponding field.
-     * 
-     * If there are fewer elements in the array than there are static fields,
-     * then the leftover fields are initialized with a type-appropriate 0 or null.
-     */
-
-    return ClassDefItem;
-  })();
-
-  var TypeList = Dex.TypeList = (function() {
-    function TypeList(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    TypeList.prototype._read = function() {
-      this.size = this._io.readU4le();
-      this.list = [];
-      for (var i = 0; i < this.size; i++) {
-        this.list.push(new TypeItem(this._io, this, this._root));
-      }
-    }
-
-    return TypeList;
-  })();
-
-  var StringIdItem = Dex.StringIdItem = (function() {
-    function StringIdItem(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    StringIdItem.prototype._read = function() {
-      this.stringDataOff = this._io.readU4le();
-    }
-
-    var StringDataItem = StringIdItem.StringDataItem = (function() {
-      function StringDataItem(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      StringDataItem.prototype._read = function() {
-        this.utf16Size = new VlqBase128Le(this._io, this, null);
-        this.data = KaitaiStream.bytesToStr(this._io.readBytes(this.utf16Size.value), "ascii");
-      }
-
-      return StringDataItem;
-    })();
-    Object.defineProperty(StringIdItem.prototype, 'value', {
-      get: function() {
-        if (this._m_value !== undefined)
-          return this._m_value;
-        var _pos = this._io.pos;
-        this._io.seek(this.stringDataOff);
-        this._m_value = new StringDataItem(this._io, this, this._root);
-        this._io.seek(_pos);
-        return this._m_value;
-      }
-    });
-
-    /**
-     * offset from the start of the file to the string data for this item.
-     * The offset should be to a location in the data section, and the data
-     * should be in the format specified by "string_data_item" below.
-     * There is no alignment requirement for the offset.
-     */
-
-    return StringIdItem;
-  })();
-
-  var ProtoIdItem = Dex.ProtoIdItem = (function() {
-    function ProtoIdItem(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    ProtoIdItem.prototype._read = function() {
-      this.shortyIdx = this._io.readU4le();
-      this.returnTypeIdx = this._io.readU4le();
-      this.parametersOff = this._io.readU4le();
-    }
-
-    /**
-     * short-form descriptor string of this prototype, as pointed to by shorty_idx
-     */
-    Object.defineProperty(ProtoIdItem.prototype, 'shortyDesc', {
-      get: function() {
-        if (this._m_shortyDesc !== undefined)
-          return this._m_shortyDesc;
-        this._m_shortyDesc = this._root.stringIds[this.shortyIdx].value.data;
-        return this._m_shortyDesc;
-      }
-    });
-
-    /**
-     * list of parameter types for this prototype
-     */
-    Object.defineProperty(ProtoIdItem.prototype, 'paramsTypes', {
-      get: function() {
-        if (this._m_paramsTypes !== undefined)
-          return this._m_paramsTypes;
-        if (this.parametersOff != 0) {
-          var io = this._root._io;
-          var _pos = io.pos;
-          io.seek(this.parametersOff);
-          this._m_paramsTypes = new TypeList(io, this, this._root);
-          io.seek(_pos);
-        }
-        return this._m_paramsTypes;
-      }
-    });
-
-    /**
-     * return type of this prototype
-     */
-    Object.defineProperty(ProtoIdItem.prototype, 'returnType', {
-      get: function() {
-        if (this._m_returnType !== undefined)
-          return this._m_returnType;
-        this._m_returnType = this._root.typeIds[this.returnTypeIdx].typeName;
-        return this._m_returnType;
-      }
-    });
-
-    /**
-     * index into the string_ids list for the short-form descriptor string of this prototype.
-     * The string must conform to the syntax for ShortyDescriptor, defined above,
-     * and must correspond to the return type and parameters of this item.
-     */
-
-    /**
-     * index into the type_ids list for the return type of this prototype
-     */
-
-    /**
-     * offset from the start of the file to the list of parameter types for this prototype,
-     * or 0 if this prototype has no parameters.
-     * This offset, if non-zero, should be in the data section, and the data
-     * there should be in the format specified by "type_list" below.
-     * Additionally, there should be no reference to the type void in the list.
-     */
-
-    return ProtoIdItem;
-  })();
-
-  var EncodedMethod = Dex.EncodedMethod = (function() {
-    function EncodedMethod(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    EncodedMethod.prototype._read = function() {
-      this.methodIdxDiff = new VlqBase128Le(this._io, this, null);
-      this.accessFlags = new VlqBase128Le(this._io, this, null);
-      this.codeOff = new VlqBase128Le(this._io, this, null);
-    }
-
-    /**
-     * index into the method_ids list for the identity of this method
-     * (includes the name and descriptor), represented as a difference
-     * from the index of previous element in the list.
-     * 
-     * The index of the first element in a list is represented directly.
-     */
-
-    /**
-     * access flags for the field (public, final, etc.).
-     * 
-     * See "access_flags Definitions" for details.
-     */
-
-    /**
-     * offset from the start of the file to the code structure for this method,
-     * or 0 if this method is either abstract or native.
-     * 
-     * The offset should be to a location in the data section.
-     * 
-     * The format of the data is specified by "code_item" below.
-     */
-
-    return EncodedMethod;
-  })();
-
   var MapItem = Dex.MapItem = (function() {
     MapItem.MapItemType = Object.freeze({
       HEADER_ITEM: 0,
@@ -1097,7 +834,7 @@ var Dex = (function() {
     function MapItem(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -1127,106 +864,287 @@ var Dex = (function() {
     return MapItem;
   })();
 
-  var EncodedArray = Dex.EncodedArray = (function() {
-    function EncodedArray(_io, _parent, _root) {
+  var MapList = Dex.MapList = (function() {
+    function MapList(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    EncodedArray.prototype._read = function() {
-      this.size = new VlqBase128Le(this._io, this, null);
-      this.values = [];
-      for (var i = 0; i < this.size.value; i++) {
-        this.values.push(new EncodedValue(this._io, this, this._root));
+    MapList.prototype._read = function() {
+      this.size = this._io.readU4le();
+      this.list = [];
+      for (var i = 0; i < this.size; i++) {
+        this.list.push(new MapItem(this._io, this, this._root));
       }
     }
 
-    return EncodedArray;
+    return MapList;
   })();
 
-  /**
-   * string identifiers list.
-   * 
-   * These are identifiers for all the strings used by this file, either for
-   * internal naming (e.g., type descriptors) or as constant objects referred to by code.
-   * 
-   * This list must be sorted by string contents, using UTF-16 code point values
-   * (not in a locale-sensitive manner), and it must not contain any duplicate entries.
-   */
-  Object.defineProperty(Dex.prototype, 'stringIds', {
-    get: function() {
-      if (this._m_stringIds !== undefined)
-        return this._m_stringIds;
-      var _pos = this._io.pos;
-      this._io.seek(this.header.stringIdsOff);
-      this._m_stringIds = [];
-      for (var i = 0; i < this.header.stringIdsSize; i++) {
-        this._m_stringIds.push(new StringIdItem(this._io, this, this._root));
-      }
-      this._io.seek(_pos);
-      return this._m_stringIds;
-    }
-  });
+  var MethodIdItem = Dex.MethodIdItem = (function() {
+    function MethodIdItem(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
 
-  /**
-   * method identifiers list.
-   * 
-   * These are identifiers for all methods referred to by this file,
-   * whether defined in the file or not.
-   * 
-   * This list must be sorted, where the defining type (by type_id index
-   * is the major order, method name (by string_id index) is the intermediate
-   * order, and method prototype (by proto_id index) is the minor order.
-   * 
-   * The list must not contain any duplicate entries.
-   */
-  Object.defineProperty(Dex.prototype, 'methodIds', {
-    get: function() {
-      if (this._m_methodIds !== undefined)
-        return this._m_methodIds;
-      var _pos = this._io.pos;
-      this._io.seek(this.header.methodIdsOff);
-      this._m_methodIds = [];
-      for (var i = 0; i < this.header.methodIdsSize; i++) {
-        this._m_methodIds.push(new MethodIdItem(this._io, this, this._root));
-      }
-      this._io.seek(_pos);
-      return this._m_methodIds;
+      this._read();
     }
-  });
+    MethodIdItem.prototype._read = function() {
+      this.classIdx = this._io.readU2le();
+      this.protoIdx = this._io.readU2le();
+      this.nameIdx = this._io.readU4le();
+    }
 
-  /**
-   * data used in statically linked files.
-   * 
-   * The format of the data in this section is left unspecified by this document.
-   * 
-   * This section is empty in unlinked files, and runtime implementations may
-   * use it as they see fit.
-   */
-  Object.defineProperty(Dex.prototype, 'linkData', {
-    get: function() {
-      if (this._m_linkData !== undefined)
-        return this._m_linkData;
-      var _pos = this._io.pos;
-      this._io.seek(this.header.linkOff);
-      this._m_linkData = this._io.readBytes(this.header.linkSize);
-      this._io.seek(_pos);
-      return this._m_linkData;
+    /**
+     * the definer of this method
+     */
+    Object.defineProperty(MethodIdItem.prototype, 'className', {
+      get: function() {
+        if (this._m_className !== undefined)
+          return this._m_className;
+        this._m_className = this._root.typeIds[this.classIdx].typeName;
+        return this._m_className;
+      }
+    });
+
+    /**
+     * the name of this method
+     */
+    Object.defineProperty(MethodIdItem.prototype, 'methodName', {
+      get: function() {
+        if (this._m_methodName !== undefined)
+          return this._m_methodName;
+        this._m_methodName = this._root.stringIds[this.nameIdx].value.data;
+        return this._m_methodName;
+      }
+    });
+
+    /**
+     * the short-form descriptor of the prototype of this method
+     */
+    Object.defineProperty(MethodIdItem.prototype, 'protoDesc', {
+      get: function() {
+        if (this._m_protoDesc !== undefined)
+          return this._m_protoDesc;
+        this._m_protoDesc = this._root.protoIds[this.protoIdx].shortyDesc;
+        return this._m_protoDesc;
+      }
+    });
+
+    /**
+     * index into the type_ids list for the definer of this method.
+     * This must be a class or array type, and not a primitive type.
+     */
+
+    /**
+     * index into the proto_ids list for the prototype of this method
+     */
+
+    /**
+     * index into the string_ids list for the name of this method.
+     * The string must conform to the syntax for MemberName, defined above.
+     */
+
+    return MethodIdItem;
+  })();
+
+  var ProtoIdItem = Dex.ProtoIdItem = (function() {
+    function ProtoIdItem(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
     }
-  });
-  Object.defineProperty(Dex.prototype, 'map', {
-    get: function() {
-      if (this._m_map !== undefined)
-        return this._m_map;
-      var _pos = this._io.pos;
-      this._io.seek(this.header.mapOff);
-      this._m_map = new MapList(this._io, this, this._root);
-      this._io.seek(_pos);
-      return this._m_map;
+    ProtoIdItem.prototype._read = function() {
+      this.shortyIdx = this._io.readU4le();
+      this.returnTypeIdx = this._io.readU4le();
+      this.parametersOff = this._io.readU4le();
     }
-  });
+
+    /**
+     * list of parameter types for this prototype
+     */
+    Object.defineProperty(ProtoIdItem.prototype, 'paramsTypes', {
+      get: function() {
+        if (this._m_paramsTypes !== undefined)
+          return this._m_paramsTypes;
+        if (this.parametersOff != 0) {
+          var io = this._root._io;
+          var _pos = io.pos;
+          io.seek(this.parametersOff);
+          this._m_paramsTypes = new TypeList(io, this, this._root);
+          io.seek(_pos);
+        }
+        return this._m_paramsTypes;
+      }
+    });
+
+    /**
+     * return type of this prototype
+     */
+    Object.defineProperty(ProtoIdItem.prototype, 'returnType', {
+      get: function() {
+        if (this._m_returnType !== undefined)
+          return this._m_returnType;
+        this._m_returnType = this._root.typeIds[this.returnTypeIdx].typeName;
+        return this._m_returnType;
+      }
+    });
+
+    /**
+     * short-form descriptor string of this prototype, as pointed to by shorty_idx
+     */
+    Object.defineProperty(ProtoIdItem.prototype, 'shortyDesc', {
+      get: function() {
+        if (this._m_shortyDesc !== undefined)
+          return this._m_shortyDesc;
+        this._m_shortyDesc = this._root.stringIds[this.shortyIdx].value.data;
+        return this._m_shortyDesc;
+      }
+    });
+
+    /**
+     * index into the string_ids list for the short-form descriptor string of this prototype.
+     * The string must conform to the syntax for ShortyDescriptor, defined above,
+     * and must correspond to the return type and parameters of this item.
+     */
+
+    /**
+     * index into the type_ids list for the return type of this prototype
+     */
+
+    /**
+     * offset from the start of the file to the list of parameter types for this prototype,
+     * or 0 if this prototype has no parameters.
+     * This offset, if non-zero, should be in the data section, and the data
+     * there should be in the format specified by "type_list" below.
+     * Additionally, there should be no reference to the type void in the list.
+     */
+
+    return ProtoIdItem;
+  })();
+
+  var StringIdItem = Dex.StringIdItem = (function() {
+    function StringIdItem(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    StringIdItem.prototype._read = function() {
+      this.stringDataOff = this._io.readU4le();
+    }
+
+    var StringDataItem = StringIdItem.StringDataItem = (function() {
+      function StringDataItem(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+
+        this._read();
+      }
+      StringDataItem.prototype._read = function() {
+        this.utf16Size = new VlqBase128Le_.VlqBase128Le(this._io, null, null);
+        this.data = KaitaiStream.bytesToStr(this._io.readBytes(this.utf16Size.value), "ASCII");
+      }
+
+      return StringDataItem;
+    })();
+    Object.defineProperty(StringIdItem.prototype, 'value', {
+      get: function() {
+        if (this._m_value !== undefined)
+          return this._m_value;
+        var _pos = this._io.pos;
+        this._io.seek(this.stringDataOff);
+        this._m_value = new StringDataItem(this._io, this, this._root);
+        this._io.seek(_pos);
+        return this._m_value;
+      }
+    });
+
+    /**
+     * offset from the start of the file to the string data for this item.
+     * The offset should be to a location in the data section, and the data
+     * should be in the format specified by "string_data_item" below.
+     * There is no alignment requirement for the offset.
+     */
+
+    return StringIdItem;
+  })();
+
+  var TypeIdItem = Dex.TypeIdItem = (function() {
+    function TypeIdItem(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    TypeIdItem.prototype._read = function() {
+      this.descriptorIdx = this._io.readU4le();
+    }
+    Object.defineProperty(TypeIdItem.prototype, 'typeName', {
+      get: function() {
+        if (this._m_typeName !== undefined)
+          return this._m_typeName;
+        this._m_typeName = this._root.stringIds[this.descriptorIdx].value.data;
+        return this._m_typeName;
+      }
+    });
+
+    /**
+     * index into the string_ids list for the descriptor string of this type.
+     * The string must conform to the syntax for TypeDescriptor, defined above.
+     */
+
+    return TypeIdItem;
+  })();
+
+  var TypeItem = Dex.TypeItem = (function() {
+    function TypeItem(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    TypeItem.prototype._read = function() {
+      this.typeIdx = this._io.readU2le();
+    }
+    Object.defineProperty(TypeItem.prototype, 'value', {
+      get: function() {
+        if (this._m_value !== undefined)
+          return this._m_value;
+        this._m_value = this._root.typeIds[this.typeIdx].typeName;
+        return this._m_value;
+      }
+    });
+
+    return TypeItem;
+  })();
+
+  var TypeList = Dex.TypeList = (function() {
+    function TypeList(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    TypeList.prototype._read = function() {
+      this.size = this._io.readU4le();
+      this.list = [];
+      for (var i = 0; i < this.size; i++) {
+        this.list.push(new TypeItem(this._io, this, this._root));
+      }
+    }
+
+    return TypeList;
+  })();
 
   /**
    * class definitions list.
@@ -1271,25 +1189,86 @@ var Dex = (function() {
   });
 
   /**
-   * type identifiers list.
+   * field identifiers list.
    * 
-   * These are identifiers for all types (classes, arrays, or primitive types)
-   * referred to by this file, whether defined in the file or not.
+   * These are identifiers for all fields referred to by this file, whether defined in the file or not.
    * 
-   * This list must be sorted by string_id index, and it must not contain any duplicate entries.
+   * This list must be sorted, where the defining type (by type_id index)
+   * is the major order, field name (by string_id index) is the intermediate
+   * order, and type (by type_id index) is the minor order.
+   * 
+   * The list must not contain any duplicate entries.
    */
-  Object.defineProperty(Dex.prototype, 'typeIds', {
+  Object.defineProperty(Dex.prototype, 'fieldIds', {
     get: function() {
-      if (this._m_typeIds !== undefined)
-        return this._m_typeIds;
+      if (this._m_fieldIds !== undefined)
+        return this._m_fieldIds;
       var _pos = this._io.pos;
-      this._io.seek(this.header.typeIdsOff);
-      this._m_typeIds = [];
-      for (var i = 0; i < this.header.typeIdsSize; i++) {
-        this._m_typeIds.push(new TypeIdItem(this._io, this, this._root));
+      this._io.seek(this.header.fieldIdsOff);
+      this._m_fieldIds = [];
+      for (var i = 0; i < this.header.fieldIdsSize; i++) {
+        this._m_fieldIds.push(new FieldIdItem(this._io, this, this._root));
       }
       this._io.seek(_pos);
-      return this._m_typeIds;
+      return this._m_fieldIds;
+    }
+  });
+
+  /**
+   * data used in statically linked files.
+   * 
+   * The format of the data in this section is left unspecified by this document.
+   * 
+   * This section is empty in unlinked files, and runtime implementations may
+   * use it as they see fit.
+   */
+  Object.defineProperty(Dex.prototype, 'linkData', {
+    get: function() {
+      if (this._m_linkData !== undefined)
+        return this._m_linkData;
+      var _pos = this._io.pos;
+      this._io.seek(this.header.linkOff);
+      this._m_linkData = this._io.readBytes(this.header.linkSize);
+      this._io.seek(_pos);
+      return this._m_linkData;
+    }
+  });
+  Object.defineProperty(Dex.prototype, 'map', {
+    get: function() {
+      if (this._m_map !== undefined)
+        return this._m_map;
+      var _pos = this._io.pos;
+      this._io.seek(this.header.mapOff);
+      this._m_map = new MapList(this._io, this, this._root);
+      this._io.seek(_pos);
+      return this._m_map;
+    }
+  });
+
+  /**
+   * method identifiers list.
+   * 
+   * These are identifiers for all methods referred to by this file,
+   * whether defined in the file or not.
+   * 
+   * This list must be sorted, where the defining type (by type_id index
+   * is the major order, method name (by string_id index) is the intermediate
+   * order, and method prototype (by proto_id index) is the minor order.
+   * 
+   * The list must not contain any duplicate entries.
+   */
+  Object.defineProperty(Dex.prototype, 'methodIds', {
+    get: function() {
+      if (this._m_methodIds !== undefined)
+        return this._m_methodIds;
+      var _pos = this._io.pos;
+      this._io.seek(this.header.methodIdsOff);
+      this._m_methodIds = [];
+      for (var i = 0; i < this.header.methodIdsSize; i++) {
+        this._m_methodIds.push(new MethodIdItem(this._io, this, this._root));
+      }
+      this._io.seek(_pos);
+      return this._m_methodIds;
     }
   });
 
@@ -1318,32 +1297,53 @@ var Dex = (function() {
   });
 
   /**
-   * field identifiers list.
+   * string identifiers list.
    * 
-   * These are identifiers for all fields referred to by this file, whether defined in the file or not.
+   * These are identifiers for all the strings used by this file, either for
+   * internal naming (e.g., type descriptors) or as constant objects referred to by code.
    * 
-   * This list must be sorted, where the defining type (by type_id index)
-   * is the major order, field name (by string_id index) is the intermediate
-   * order, and type (by type_id index) is the minor order.
-   * 
-   * The list must not contain any duplicate entries.
+   * This list must be sorted by string contents, using UTF-16 code point values
+   * (not in a locale-sensitive manner), and it must not contain any duplicate entries.
    */
-  Object.defineProperty(Dex.prototype, 'fieldIds', {
+  Object.defineProperty(Dex.prototype, 'stringIds', {
     get: function() {
-      if (this._m_fieldIds !== undefined)
-        return this._m_fieldIds;
+      if (this._m_stringIds !== undefined)
+        return this._m_stringIds;
       var _pos = this._io.pos;
-      this._io.seek(this.header.fieldIdsOff);
-      this._m_fieldIds = [];
-      for (var i = 0; i < this.header.fieldIdsSize; i++) {
-        this._m_fieldIds.push(new FieldIdItem(this._io, this, this._root));
+      this._io.seek(this.header.stringIdsOff);
+      this._m_stringIds = [];
+      for (var i = 0; i < this.header.stringIdsSize; i++) {
+        this._m_stringIds.push(new StringIdItem(this._io, this, this._root));
       }
       this._io.seek(_pos);
-      return this._m_fieldIds;
+      return this._m_stringIds;
+    }
+  });
+
+  /**
+   * type identifiers list.
+   * 
+   * These are identifiers for all types (classes, arrays, or primitive types)
+   * referred to by this file, whether defined in the file or not.
+   * 
+   * This list must be sorted by string_id index, and it must not contain any duplicate entries.
+   */
+  Object.defineProperty(Dex.prototype, 'typeIds', {
+    get: function() {
+      if (this._m_typeIds !== undefined)
+        return this._m_typeIds;
+      var _pos = this._io.pos;
+      this._io.seek(this.header.typeIdsOff);
+      this._m_typeIds = [];
+      for (var i = 0; i < this.header.typeIdsSize; i++) {
+        this._m_typeIds.push(new TypeIdItem(this._io, this, this._root));
+      }
+      this._io.seek(_pos);
+      return this._m_typeIds;
     }
   });
 
   return Dex;
 })();
-return Dex;
-}));
+Dex_.Dex = Dex;
+});

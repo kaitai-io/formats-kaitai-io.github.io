@@ -5,7 +5,7 @@
 
 cpio_old_le_t::cpio_old_le_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, cpio_old_le_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     m_files = 0;
 
     try {
@@ -55,17 +55,17 @@ cpio_old_le_t::file_t::file_t(kaitai::kstream* p__io, cpio_old_le_t* p__parent, 
 
 void cpio_old_le_t::file_t::_read() {
     m_header = new file_header_t(m__io, this, m__root);
-    m_path_name = m__io->read_bytes((header()->path_name_size() - 1));
+    m_path_name = m__io->read_bytes(header()->path_name_size() - 1);
     m_string_terminator = m__io->read_bytes(1);
-    if (!(string_terminator() == std::string("\x00", 1))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\x00", 1), string_terminator(), _io(), std::string("/types/file/seq/2"));
+    if (!(m_string_terminator == std::string("\x00", 1))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\x00", 1), m_string_terminator, m__io, std::string("/types/file/seq/2"));
     }
     n_path_name_padding = true;
     if (kaitai::kstream::mod(header()->path_name_size(), 2) == 1) {
         n_path_name_padding = false;
         m_path_name_padding = m__io->read_bytes(1);
-        if (!(path_name_padding() == std::string("\x00", 1))) {
-            throw kaitai::validation_not_equal_error<std::string>(std::string("\x00", 1), path_name_padding(), _io(), std::string("/types/file/seq/3"));
+        if (!(m_path_name_padding == std::string("\x00", 1))) {
+            throw kaitai::validation_not_equal_error<std::string>(std::string("\x00", 1), m_path_name_padding, m__io, std::string("/types/file/seq/3"));
         }
     }
     m_file_data = m__io->read_bytes(header()->file_size()->value());
@@ -73,8 +73,8 @@ void cpio_old_le_t::file_t::_read() {
     if (kaitai::kstream::mod(header()->file_size()->value(), 2) == 1) {
         n_file_data_padding = false;
         m_file_data_padding = m__io->read_bytes(1);
-        if (!(file_data_padding() == std::string("\x00", 1))) {
-            throw kaitai::validation_not_equal_error<std::string>(std::string("\x00", 1), file_data_padding(), _io(), std::string("/types/file/seq/5"));
+        if (!(m_file_data_padding == std::string("\x00", 1))) {
+            throw kaitai::validation_not_equal_error<std::string>(std::string("\x00", 1), m_file_data_padding, m__io, std::string("/types/file/seq/5"));
         }
     }
     n_end_of_file_padding = true;
@@ -116,8 +116,8 @@ cpio_old_le_t::file_header_t::file_header_t(kaitai::kstream* p__io, cpio_old_le_
 
 void cpio_old_le_t::file_header_t::_read() {
     m_magic = m__io->read_bytes(2);
-    if (!(magic() == std::string("\xC7\x71", 2))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\xC7\x71", 2), magic(), _io(), std::string("/types/file_header/seq/0"));
+    if (!(m_magic == std::string("\xC7\x71", 2))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\xC7\x71", 2), m_magic, m__io, std::string("/types/file_header/seq/0"));
     }
     m_device_number = m__io->read_u2le();
     m_inode_number = m__io->read_u2le();
@@ -172,7 +172,7 @@ void cpio_old_le_t::four_byte_unsigned_integer_t::_clean_up() {
 int32_t cpio_old_le_t::four_byte_unsigned_integer_t::value() {
     if (f_value)
         return m_value;
-    m_value = (least_significant_bits() + (most_significant_bits() << 16));
     f_value = true;
+    m_value = least_significant_bits() + (most_significant_bits() << 16);
     return m_value;
 }

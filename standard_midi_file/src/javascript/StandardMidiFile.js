@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream', './VlqBase128Be'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./VlqBase128Be'));
+    define(['exports', 'kaitai-struct/KaitaiStream', './VlqBase128Be'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'), require('./VlqBase128Be'));
   } else {
-    root.StandardMidiFile = factory(root.KaitaiStream, root.VlqBase128Be);
+    factory(root.StandardMidiFile || (root.StandardMidiFile = {}), root.KaitaiStream, root.VlqBase128Be || (root.VlqBase128Be = {}));
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, VlqBase128Be) {
+})(typeof self !== 'undefined' ? self : this, function (StandardMidiFile_, KaitaiStream, VlqBase128Be_) {
 /**
  * Standard MIDI file, typically known just as "MID", is a standard way
  * to serialize series of MIDI events, which is a protocol used in many
@@ -42,188 +42,57 @@ var StandardMidiFile = (function() {
     }
   }
 
-  var TrackEvents = StandardMidiFile.TrackEvents = (function() {
-    function TrackEvents(_io, _parent, _root) {
+  var ChannelPressureEvent = StandardMidiFile.ChannelPressureEvent = (function() {
+    function ChannelPressureEvent(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    TrackEvents.prototype._read = function() {
-      this.event = [];
-      var i = 0;
-      while (!this._io.isEof()) {
-        this.event.push(new TrackEvent(this._io, this, this._root));
-        i++;
-      }
-    }
-
-    return TrackEvents;
-  })();
-
-  var TrackEvent = StandardMidiFile.TrackEvent = (function() {
-    function TrackEvent(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    TrackEvent.prototype._read = function() {
-      this.vTime = new VlqBase128Be(this._io, this, null);
-      this.eventHeader = this._io.readU1();
-      if (this.eventHeader == 255) {
-        this.metaEventBody = new MetaEventBody(this._io, this, this._root);
-      }
-      if (this.eventHeader == 240) {
-        this.sysexBody = new SysexEventBody(this._io, this, this._root);
-      }
-      switch (this.eventType) {
-      case 224:
-        this.eventBody = new PitchBendEvent(this._io, this, this._root);
-        break;
-      case 144:
-        this.eventBody = new NoteOnEvent(this._io, this, this._root);
-        break;
-      case 208:
-        this.eventBody = new ChannelPressureEvent(this._io, this, this._root);
-        break;
-      case 192:
-        this.eventBody = new ProgramChangeEvent(this._io, this, this._root);
-        break;
-      case 160:
-        this.eventBody = new PolyphonicPressureEvent(this._io, this, this._root);
-        break;
-      case 176:
-        this.eventBody = new ControllerEvent(this._io, this, this._root);
-        break;
-      case 128:
-        this.eventBody = new NoteOffEvent(this._io, this, this._root);
-        break;
-      }
-    }
-    Object.defineProperty(TrackEvent.prototype, 'eventType', {
-      get: function() {
-        if (this._m_eventType !== undefined)
-          return this._m_eventType;
-        this._m_eventType = (this.eventHeader & 240);
-        return this._m_eventType;
-      }
-    });
-    Object.defineProperty(TrackEvent.prototype, 'channel', {
-      get: function() {
-        if (this._m_channel !== undefined)
-          return this._m_channel;
-        if (this.eventType != 240) {
-          this._m_channel = (this.eventHeader & 15);
-        }
-        return this._m_channel;
-      }
-    });
-
-    return TrackEvent;
-  })();
-
-  var PitchBendEvent = StandardMidiFile.PitchBendEvent = (function() {
-    function PitchBendEvent(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    PitchBendEvent.prototype._read = function() {
-      this.b1 = this._io.readU1();
-      this.b2 = this._io.readU1();
-    }
-    Object.defineProperty(PitchBendEvent.prototype, 'bendValue', {
-      get: function() {
-        if (this._m_bendValue !== undefined)
-          return this._m_bendValue;
-        this._m_bendValue = (((this.b2 << 7) + this.b1) - 16384);
-        return this._m_bendValue;
-      }
-    });
-    Object.defineProperty(PitchBendEvent.prototype, 'adjBendValue', {
-      get: function() {
-        if (this._m_adjBendValue !== undefined)
-          return this._m_adjBendValue;
-        this._m_adjBendValue = (this.bendValue - 16384);
-        return this._m_adjBendValue;
-      }
-    });
-
-    return PitchBendEvent;
-  })();
-
-  var ProgramChangeEvent = StandardMidiFile.ProgramChangeEvent = (function() {
-    function ProgramChangeEvent(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    ProgramChangeEvent.prototype._read = function() {
-      this.program = this._io.readU1();
-    }
-
-    return ProgramChangeEvent;
-  })();
-
-  var NoteOnEvent = StandardMidiFile.NoteOnEvent = (function() {
-    function NoteOnEvent(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    NoteOnEvent.prototype._read = function() {
-      this.note = this._io.readU1();
-      this.velocity = this._io.readU1();
-    }
-
-    return NoteOnEvent;
-  })();
-
-  var PolyphonicPressureEvent = StandardMidiFile.PolyphonicPressureEvent = (function() {
-    function PolyphonicPressureEvent(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    PolyphonicPressureEvent.prototype._read = function() {
-      this.note = this._io.readU1();
+    ChannelPressureEvent.prototype._read = function() {
       this.pressure = this._io.readU1();
     }
 
-    return PolyphonicPressureEvent;
+    return ChannelPressureEvent;
   })();
 
-  var Track = StandardMidiFile.Track = (function() {
-    function Track(_io, _parent, _root) {
+  var ControllerEvent = StandardMidiFile.ControllerEvent = (function() {
+    function ControllerEvent(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    Track.prototype._read = function() {
-      this.magic = this._io.readBytes(4);
-      if (!((KaitaiStream.byteArrayCompare(this.magic, [77, 84, 114, 107]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([77, 84, 114, 107], this.magic, this._io, "/types/track/seq/0");
-      }
-      this.lenEvents = this._io.readU4be();
-      this._raw_events = this._io.readBytes(this.lenEvents);
-      var _io__raw_events = new KaitaiStream(this._raw_events);
-      this.events = new TrackEvents(_io__raw_events, this, this._root);
+    ControllerEvent.prototype._read = function() {
+      this.controller = this._io.readU1();
+      this.value = this._io.readU1();
     }
 
-    return Track;
+    return ControllerEvent;
+  })();
+
+  var Header = StandardMidiFile.Header = (function() {
+    function Header(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Header.prototype._read = function() {
+      this.magic = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([77, 84, 104, 100])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([77, 84, 104, 100]), this.magic, this._io, "/types/header/seq/0");
+      }
+      this.lenHeader = this._io.readU4be();
+      this.format = this._io.readU2be();
+      this.numTracks = this._io.readU2be();
+      this.division = this._io.readS2be();
+    }
+
+    return Header;
   })();
 
   var MetaEventBody = StandardMidiFile.MetaEventBody = (function() {
@@ -264,78 +133,24 @@ var StandardMidiFile = (function() {
     function MetaEventBody(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     MetaEventBody.prototype._read = function() {
       this.metaType = this._io.readU1();
-      this.len = new VlqBase128Be(this._io, this, null);
+      this.len = new VlqBase128Be_.VlqBase128Be(this._io, null, null);
       this.body = this._io.readBytes(this.len.value);
     }
 
     return MetaEventBody;
   })();
 
-  var ControllerEvent = StandardMidiFile.ControllerEvent = (function() {
-    function ControllerEvent(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    ControllerEvent.prototype._read = function() {
-      this.controller = this._io.readU1();
-      this.value = this._io.readU1();
-    }
-
-    return ControllerEvent;
-  })();
-
-  var Header = StandardMidiFile.Header = (function() {
-    function Header(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Header.prototype._read = function() {
-      this.magic = this._io.readBytes(4);
-      if (!((KaitaiStream.byteArrayCompare(this.magic, [77, 84, 104, 100]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([77, 84, 104, 100], this.magic, this._io, "/types/header/seq/0");
-      }
-      this.lenHeader = this._io.readU4be();
-      this.format = this._io.readU2be();
-      this.numTracks = this._io.readU2be();
-      this.division = this._io.readS2be();
-    }
-
-    return Header;
-  })();
-
-  var SysexEventBody = StandardMidiFile.SysexEventBody = (function() {
-    function SysexEventBody(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    SysexEventBody.prototype._read = function() {
-      this.len = new VlqBase128Be(this._io, this, null);
-      this.data = this._io.readBytes(this.len.value);
-    }
-
-    return SysexEventBody;
-  })();
-
   var NoteOffEvent = StandardMidiFile.NoteOffEvent = (function() {
     function NoteOffEvent(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -347,22 +162,207 @@ var StandardMidiFile = (function() {
     return NoteOffEvent;
   })();
 
-  var ChannelPressureEvent = StandardMidiFile.ChannelPressureEvent = (function() {
-    function ChannelPressureEvent(_io, _parent, _root) {
+  var NoteOnEvent = StandardMidiFile.NoteOnEvent = (function() {
+    function NoteOnEvent(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    ChannelPressureEvent.prototype._read = function() {
+    NoteOnEvent.prototype._read = function() {
+      this.note = this._io.readU1();
+      this.velocity = this._io.readU1();
+    }
+
+    return NoteOnEvent;
+  })();
+
+  var PitchBendEvent = StandardMidiFile.PitchBendEvent = (function() {
+    function PitchBendEvent(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    PitchBendEvent.prototype._read = function() {
+      this.b1 = this._io.readU1();
+      this.b2 = this._io.readU1();
+    }
+    Object.defineProperty(PitchBendEvent.prototype, 'adjBendValue', {
+      get: function() {
+        if (this._m_adjBendValue !== undefined)
+          return this._m_adjBendValue;
+        this._m_adjBendValue = this.bendValue - 16384;
+        return this._m_adjBendValue;
+      }
+    });
+    Object.defineProperty(PitchBendEvent.prototype, 'bendValue', {
+      get: function() {
+        if (this._m_bendValue !== undefined)
+          return this._m_bendValue;
+        this._m_bendValue = ((this.b2 << 7) + this.b1) - 16384;
+        return this._m_bendValue;
+      }
+    });
+
+    return PitchBendEvent;
+  })();
+
+  var PolyphonicPressureEvent = StandardMidiFile.PolyphonicPressureEvent = (function() {
+    function PolyphonicPressureEvent(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    PolyphonicPressureEvent.prototype._read = function() {
+      this.note = this._io.readU1();
       this.pressure = this._io.readU1();
     }
 
-    return ChannelPressureEvent;
+    return PolyphonicPressureEvent;
+  })();
+
+  var ProgramChangeEvent = StandardMidiFile.ProgramChangeEvent = (function() {
+    function ProgramChangeEvent(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    ProgramChangeEvent.prototype._read = function() {
+      this.program = this._io.readU1();
+    }
+
+    return ProgramChangeEvent;
+  })();
+
+  var SysexEventBody = StandardMidiFile.SysexEventBody = (function() {
+    function SysexEventBody(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    SysexEventBody.prototype._read = function() {
+      this.len = new VlqBase128Be_.VlqBase128Be(this._io, null, null);
+      this.data = this._io.readBytes(this.len.value);
+    }
+
+    return SysexEventBody;
+  })();
+
+  var Track = StandardMidiFile.Track = (function() {
+    function Track(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Track.prototype._read = function() {
+      this.magic = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([77, 84, 114, 107])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([77, 84, 114, 107]), this.magic, this._io, "/types/track/seq/0");
+      }
+      this.lenEvents = this._io.readU4be();
+      this._raw_events = this._io.readBytes(this.lenEvents);
+      var _io__raw_events = new KaitaiStream(this._raw_events);
+      this.events = new TrackEvents(_io__raw_events, this, this._root);
+    }
+
+    return Track;
+  })();
+
+  var TrackEvent = StandardMidiFile.TrackEvent = (function() {
+    function TrackEvent(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    TrackEvent.prototype._read = function() {
+      this.vTime = new VlqBase128Be_.VlqBase128Be(this._io, null, null);
+      this.eventHeader = this._io.readU1();
+      if (this.eventHeader == 255) {
+        this.metaEventBody = new MetaEventBody(this._io, this, this._root);
+      }
+      if (this.eventHeader == 240) {
+        this.sysexBody = new SysexEventBody(this._io, this, this._root);
+      }
+      switch (this.eventType) {
+      case 128:
+        this.eventBody = new NoteOffEvent(this._io, this, this._root);
+        break;
+      case 144:
+        this.eventBody = new NoteOnEvent(this._io, this, this._root);
+        break;
+      case 160:
+        this.eventBody = new PolyphonicPressureEvent(this._io, this, this._root);
+        break;
+      case 176:
+        this.eventBody = new ControllerEvent(this._io, this, this._root);
+        break;
+      case 192:
+        this.eventBody = new ProgramChangeEvent(this._io, this, this._root);
+        break;
+      case 208:
+        this.eventBody = new ChannelPressureEvent(this._io, this, this._root);
+        break;
+      case 224:
+        this.eventBody = new PitchBendEvent(this._io, this, this._root);
+        break;
+      }
+    }
+    Object.defineProperty(TrackEvent.prototype, 'channel', {
+      get: function() {
+        if (this._m_channel !== undefined)
+          return this._m_channel;
+        if (this.eventType != 240) {
+          this._m_channel = this.eventHeader & 15;
+        }
+        return this._m_channel;
+      }
+    });
+    Object.defineProperty(TrackEvent.prototype, 'eventType', {
+      get: function() {
+        if (this._m_eventType !== undefined)
+          return this._m_eventType;
+        this._m_eventType = this.eventHeader & 240;
+        return this._m_eventType;
+      }
+    });
+
+    return TrackEvent;
+  })();
+
+  var TrackEvents = StandardMidiFile.TrackEvents = (function() {
+    function TrackEvents(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    TrackEvents.prototype._read = function() {
+      this.event = [];
+      var i = 0;
+      while (!this._io.isEof()) {
+        this.event.push(new TrackEvent(this._io, this, this._root));
+        i++;
+      }
+    }
+
+    return TrackEvents;
   })();
 
   return StandardMidiFile;
 })();
-return StandardMidiFile;
-}));
+StandardMidiFile_.StandardMidiFile = StandardMidiFile;
+});

@@ -2,13 +2,15 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class genmidi_op2_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -29,8 +31,8 @@
 class genmidi_op2_t : public kaitai::kstruct {
 
 public:
-    class instrument_entry_t;
     class instrument_t;
+    class instrument_entry_t;
     class op_settings_t;
 
     genmidi_op2_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, genmidi_op2_t* p__root = nullptr);
@@ -41,40 +43,6 @@ private:
 
 public:
     ~genmidi_op2_t();
-
-    class instrument_entry_t : public kaitai::kstruct {
-
-    public:
-
-        instrument_entry_t(kaitai::kstream* p__io, genmidi_op2_t* p__parent = nullptr, genmidi_op2_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~instrument_entry_t();
-
-    private:
-        uint16_t m_flags;
-        uint8_t m_finetune;
-        uint8_t m_note;
-        std::unique_ptr<std::vector<std::unique_ptr<instrument_t>>> m_instruments;
-        genmidi_op2_t* m__root;
-        genmidi_op2_t* m__parent;
-
-    public:
-        uint16_t flags() const { return m_flags; }
-        uint8_t finetune() const { return m_finetune; }
-
-        /**
-         * MIDI note for fixed instruments, 0 otherwise
-         */
-        uint8_t note() const { return m_note; }
-        std::vector<std::unique_ptr<instrument_t>>* instruments() const { return m_instruments.get(); }
-        genmidi_op2_t* _root() const { return m__root; }
-        genmidi_op2_t* _parent() const { return m__parent; }
-    };
 
     class instrument_t : public kaitai::kstruct {
 
@@ -114,6 +82,40 @@ public:
         int16_t base_note() const { return m_base_note; }
         genmidi_op2_t* _root() const { return m__root; }
         genmidi_op2_t::instrument_entry_t* _parent() const { return m__parent; }
+    };
+
+    class instrument_entry_t : public kaitai::kstruct {
+
+    public:
+
+        instrument_entry_t(kaitai::kstream* p__io, genmidi_op2_t* p__parent = nullptr, genmidi_op2_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~instrument_entry_t();
+
+    private:
+        uint16_t m_flags;
+        uint8_t m_finetune;
+        uint8_t m_note;
+        std::unique_ptr<std::vector<std::unique_ptr<instrument_t>>> m_instruments;
+        genmidi_op2_t* m__root;
+        genmidi_op2_t* m__parent;
+
+    public:
+        uint16_t flags() const { return m_flags; }
+        uint8_t finetune() const { return m_finetune; }
+
+        /**
+         * MIDI note for fixed instruments, 0 otherwise
+         */
+        uint8_t note() const { return m_note; }
+        std::vector<std::unique_ptr<instrument_t>>* instruments() const { return m_instruments.get(); }
+        genmidi_op2_t* _root() const { return m__root; }
+        genmidi_op2_t* _parent() const { return m__parent; }
     };
 
     /**

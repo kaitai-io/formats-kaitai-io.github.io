@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.Edid = factory(root.KaitaiStream);
+    factory(root.Edid || (root.Edid = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Edid_, KaitaiStream) {
 var Edid = (function() {
   function Edid(_io, _parent, _root) {
     this._io = _io;
@@ -19,8 +19,8 @@ var Edid = (function() {
   }
   Edid.prototype._read = function() {
     this.magic = this._io.readBytes(8);
-    if (!((KaitaiStream.byteArrayCompare(this.magic, [0, 255, 255, 255, 255, 255, 255, 0]) == 0))) {
-      throw new KaitaiStream.ValidationNotEqualError([0, 255, 255, 255, 255, 255, 255, 0], this.magic, this._io, "/seq/0");
+    if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([0, 255, 255, 255, 255, 255, 255, 0])) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([0, 255, 255, 255, 255, 255, 255, 0]), this.magic, this._io, "/seq/0");
     }
     this.mfgBytes = this._io.readU2be();
     this.productCode = this._io.readU2le();
@@ -55,7 +55,7 @@ var Edid = (function() {
     function ChromacityInfo(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -78,70 +78,6 @@ var Edid = (function() {
       this.whiteX92 = this._io.readU1();
       this.whiteY92 = this._io.readU1();
     }
-    Object.defineProperty(ChromacityInfo.prototype, 'greenXInt', {
-      get: function() {
-        if (this._m_greenXInt !== undefined)
-          return this._m_greenXInt;
-        this._m_greenXInt = ((this.greenX92 << 2) | this.greenX10);
-        return this._m_greenXInt;
-      }
-    });
-
-    /**
-     * Red Y coordinate
-     */
-    Object.defineProperty(ChromacityInfo.prototype, 'redY', {
-      get: function() {
-        if (this._m_redY !== undefined)
-          return this._m_redY;
-        this._m_redY = (this.redYInt / 1024.0);
-        return this._m_redY;
-      }
-    });
-    Object.defineProperty(ChromacityInfo.prototype, 'greenYInt', {
-      get: function() {
-        if (this._m_greenYInt !== undefined)
-          return this._m_greenYInt;
-        this._m_greenYInt = ((this.greenY92 << 2) | this.greenY10);
-        return this._m_greenYInt;
-      }
-    });
-
-    /**
-     * White Y coordinate
-     */
-    Object.defineProperty(ChromacityInfo.prototype, 'whiteY', {
-      get: function() {
-        if (this._m_whiteY !== undefined)
-          return this._m_whiteY;
-        this._m_whiteY = (this.whiteYInt / 1024.0);
-        return this._m_whiteY;
-      }
-    });
-
-    /**
-     * Red X coordinate
-     */
-    Object.defineProperty(ChromacityInfo.prototype, 'redX', {
-      get: function() {
-        if (this._m_redX !== undefined)
-          return this._m_redX;
-        this._m_redX = (this.redXInt / 1024.0);
-        return this._m_redX;
-      }
-    });
-
-    /**
-     * White X coordinate
-     */
-    Object.defineProperty(ChromacityInfo.prototype, 'whiteX', {
-      get: function() {
-        if (this._m_whiteX !== undefined)
-          return this._m_whiteX;
-        this._m_whiteX = (this.whiteXInt / 1024.0);
-        return this._m_whiteX;
-      }
-    });
 
     /**
      * Blue X coordinate
@@ -150,59 +86,15 @@ var Edid = (function() {
       get: function() {
         if (this._m_blueX !== undefined)
           return this._m_blueX;
-        this._m_blueX = (this.blueXInt / 1024.0);
+        this._m_blueX = this.blueXInt / 1024.0;
         return this._m_blueX;
-      }
-    });
-    Object.defineProperty(ChromacityInfo.prototype, 'whiteXInt', {
-      get: function() {
-        if (this._m_whiteXInt !== undefined)
-          return this._m_whiteXInt;
-        this._m_whiteXInt = ((this.whiteX92 << 2) | this.whiteX10);
-        return this._m_whiteXInt;
-      }
-    });
-    Object.defineProperty(ChromacityInfo.prototype, 'whiteYInt', {
-      get: function() {
-        if (this._m_whiteYInt !== undefined)
-          return this._m_whiteYInt;
-        this._m_whiteYInt = ((this.whiteY92 << 2) | this.whiteY10);
-        return this._m_whiteYInt;
-      }
-    });
-
-    /**
-     * Green X coordinate
-     */
-    Object.defineProperty(ChromacityInfo.prototype, 'greenX', {
-      get: function() {
-        if (this._m_greenX !== undefined)
-          return this._m_greenX;
-        this._m_greenX = (this.greenXInt / 1024.0);
-        return this._m_greenX;
-      }
-    });
-    Object.defineProperty(ChromacityInfo.prototype, 'redXInt', {
-      get: function() {
-        if (this._m_redXInt !== undefined)
-          return this._m_redXInt;
-        this._m_redXInt = ((this.redX92 << 2) | this.redX10);
-        return this._m_redXInt;
-      }
-    });
-    Object.defineProperty(ChromacityInfo.prototype, 'redYInt', {
-      get: function() {
-        if (this._m_redYInt !== undefined)
-          return this._m_redYInt;
-        this._m_redYInt = ((this.redY92 << 2) | this.redY10);
-        return this._m_redYInt;
       }
     });
     Object.defineProperty(ChromacityInfo.prototype, 'blueXInt', {
       get: function() {
         if (this._m_blueXInt !== undefined)
           return this._m_blueXInt;
-        this._m_blueXInt = ((this.blueX92 << 2) | this.blueX10);
+        this._m_blueXInt = this.blueX92 << 2 | this.blueX10;
         return this._m_blueXInt;
       }
     });
@@ -214,8 +106,36 @@ var Edid = (function() {
       get: function() {
         if (this._m_blueY !== undefined)
           return this._m_blueY;
-        this._m_blueY = (this.blueYInt / 1024.0);
+        this._m_blueY = this.blueYInt / 1024.0;
         return this._m_blueY;
+      }
+    });
+    Object.defineProperty(ChromacityInfo.prototype, 'blueYInt', {
+      get: function() {
+        if (this._m_blueYInt !== undefined)
+          return this._m_blueYInt;
+        this._m_blueYInt = this.blueY92 << 2 | this.blueY10;
+        return this._m_blueYInt;
+      }
+    });
+
+    /**
+     * Green X coordinate
+     */
+    Object.defineProperty(ChromacityInfo.prototype, 'greenX', {
+      get: function() {
+        if (this._m_greenX !== undefined)
+          return this._m_greenX;
+        this._m_greenX = this.greenXInt / 1024.0;
+        return this._m_greenX;
+      }
+    });
+    Object.defineProperty(ChromacityInfo.prototype, 'greenXInt', {
+      get: function() {
+        if (this._m_greenXInt !== undefined)
+          return this._m_greenXInt;
+        this._m_greenXInt = this.greenX92 << 2 | this.greenX10;
+        return this._m_greenXInt;
       }
     });
 
@@ -226,16 +146,96 @@ var Edid = (function() {
       get: function() {
         if (this._m_greenY !== undefined)
           return this._m_greenY;
-        this._m_greenY = (this.greenYInt / 1024.0);
+        this._m_greenY = this.greenYInt / 1024.0;
         return this._m_greenY;
       }
     });
-    Object.defineProperty(ChromacityInfo.prototype, 'blueYInt', {
+    Object.defineProperty(ChromacityInfo.prototype, 'greenYInt', {
       get: function() {
-        if (this._m_blueYInt !== undefined)
-          return this._m_blueYInt;
-        this._m_blueYInt = ((this.blueY92 << 2) | this.blueY10);
-        return this._m_blueYInt;
+        if (this._m_greenYInt !== undefined)
+          return this._m_greenYInt;
+        this._m_greenYInt = this.greenY92 << 2 | this.greenY10;
+        return this._m_greenYInt;
+      }
+    });
+
+    /**
+     * Red X coordinate
+     */
+    Object.defineProperty(ChromacityInfo.prototype, 'redX', {
+      get: function() {
+        if (this._m_redX !== undefined)
+          return this._m_redX;
+        this._m_redX = this.redXInt / 1024.0;
+        return this._m_redX;
+      }
+    });
+    Object.defineProperty(ChromacityInfo.prototype, 'redXInt', {
+      get: function() {
+        if (this._m_redXInt !== undefined)
+          return this._m_redXInt;
+        this._m_redXInt = this.redX92 << 2 | this.redX10;
+        return this._m_redXInt;
+      }
+    });
+
+    /**
+     * Red Y coordinate
+     */
+    Object.defineProperty(ChromacityInfo.prototype, 'redY', {
+      get: function() {
+        if (this._m_redY !== undefined)
+          return this._m_redY;
+        this._m_redY = this.redYInt / 1024.0;
+        return this._m_redY;
+      }
+    });
+    Object.defineProperty(ChromacityInfo.prototype, 'redYInt', {
+      get: function() {
+        if (this._m_redYInt !== undefined)
+          return this._m_redYInt;
+        this._m_redYInt = this.redY92 << 2 | this.redY10;
+        return this._m_redYInt;
+      }
+    });
+
+    /**
+     * White X coordinate
+     */
+    Object.defineProperty(ChromacityInfo.prototype, 'whiteX', {
+      get: function() {
+        if (this._m_whiteX !== undefined)
+          return this._m_whiteX;
+        this._m_whiteX = this.whiteXInt / 1024.0;
+        return this._m_whiteX;
+      }
+    });
+    Object.defineProperty(ChromacityInfo.prototype, 'whiteXInt', {
+      get: function() {
+        if (this._m_whiteXInt !== undefined)
+          return this._m_whiteXInt;
+        this._m_whiteXInt = this.whiteX92 << 2 | this.whiteX10;
+        return this._m_whiteXInt;
+      }
+    });
+
+    /**
+     * White Y coordinate
+     */
+    Object.defineProperty(ChromacityInfo.prototype, 'whiteY', {
+      get: function() {
+        if (this._m_whiteY !== undefined)
+          return this._m_whiteY;
+        this._m_whiteY = this.whiteYInt / 1024.0;
+        return this._m_whiteY;
+      }
+    });
+    Object.defineProperty(ChromacityInfo.prototype, 'whiteYInt', {
+      get: function() {
+        if (this._m_whiteYInt !== undefined)
+          return this._m_whiteYInt;
+        this._m_whiteYInt = this.whiteY92 << 2 | this.whiteY10;
+        return this._m_whiteYInt;
       }
     });
 
@@ -310,7 +310,7 @@ var Edid = (function() {
     function EstTimingsInfo(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -422,7 +422,7 @@ var Edid = (function() {
     function StdTiming(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -442,14 +442,6 @@ var Edid = (function() {
         return this._m_bytesLookahead;
       }
     });
-    Object.defineProperty(StdTiming.prototype, 'isUsed', {
-      get: function() {
-        if (this._m_isUsed !== undefined)
-          return this._m_isUsed;
-        this._m_isUsed = (KaitaiStream.byteArrayCompare(this.bytesLookahead, [1, 1]) != 0);
-        return this._m_isUsed;
-      }
-    });
 
     /**
      * Range of horizontal active pixels.
@@ -459,9 +451,17 @@ var Edid = (function() {
         if (this._m_horizActivePixels !== undefined)
           return this._m_horizActivePixels;
         if (this.isUsed) {
-          this._m_horizActivePixels = ((this.horizActivePixelsMod + 31) * 8);
+          this._m_horizActivePixels = (this.horizActivePixelsMod + 31) * 8;
         }
         return this._m_horizActivePixels;
+      }
+    });
+    Object.defineProperty(StdTiming.prototype, 'isUsed', {
+      get: function() {
+        if (this._m_isUsed !== undefined)
+          return this._m_isUsed;
+        this._m_isUsed = (KaitaiStream.byteArrayCompare(this.bytesLookahead, new Uint8Array([1, 1])) != 0);
+        return this._m_isUsed;
       }
     });
 
@@ -473,7 +473,7 @@ var Edid = (function() {
         if (this._m_refreshRate !== undefined)
           return this._m_refreshRate;
         if (this.isUsed) {
-          this._m_refreshRate = (this.refreshRateMod + 60);
+          this._m_refreshRate = this.refreshRateMod + 60;
         }
         return this._m_refreshRate;
       }
@@ -497,54 +497,54 @@ var Edid = (function() {
 
     return StdTiming;
   })();
-  Object.defineProperty(Edid.prototype, 'mfgYear', {
+  Object.defineProperty(Edid.prototype, 'gamma', {
     get: function() {
-      if (this._m_mfgYear !== undefined)
-        return this._m_mfgYear;
-      this._m_mfgYear = (this.mfgYearMod + 1990);
-      return this._m_mfgYear;
+      if (this._m_gamma !== undefined)
+        return this._m_gamma;
+      if (this.gammaMod != 255) {
+        this._m_gamma = (this.gammaMod + 100) / 100.0;
+      }
+      return this._m_gamma;
     }
   });
   Object.defineProperty(Edid.prototype, 'mfgIdCh1', {
     get: function() {
       if (this._m_mfgIdCh1 !== undefined)
         return this._m_mfgIdCh1;
-      this._m_mfgIdCh1 = ((this.mfgBytes & 31744) >>> 10);
+      this._m_mfgIdCh1 = (this.mfgBytes & 31744) >>> 10;
       return this._m_mfgIdCh1;
-    }
-  });
-  Object.defineProperty(Edid.prototype, 'mfgIdCh3', {
-    get: function() {
-      if (this._m_mfgIdCh3 !== undefined)
-        return this._m_mfgIdCh3;
-      this._m_mfgIdCh3 = (this.mfgBytes & 31);
-      return this._m_mfgIdCh3;
-    }
-  });
-  Object.defineProperty(Edid.prototype, 'gamma', {
-    get: function() {
-      if (this._m_gamma !== undefined)
-        return this._m_gamma;
-      if (this.gammaMod != 255) {
-        this._m_gamma = ((this.gammaMod + 100) / 100.0);
-      }
-      return this._m_gamma;
-    }
-  });
-  Object.defineProperty(Edid.prototype, 'mfgStr', {
-    get: function() {
-      if (this._m_mfgStr !== undefined)
-        return this._m_mfgStr;
-      this._m_mfgStr = KaitaiStream.bytesToStr(new Uint8Array([(this.mfgIdCh1 + 64), (this.mfgIdCh2 + 64), (this.mfgIdCh3 + 64)]), "ASCII");
-      return this._m_mfgStr;
     }
   });
   Object.defineProperty(Edid.prototype, 'mfgIdCh2', {
     get: function() {
       if (this._m_mfgIdCh2 !== undefined)
         return this._m_mfgIdCh2;
-      this._m_mfgIdCh2 = ((this.mfgBytes & 992) >>> 5);
+      this._m_mfgIdCh2 = (this.mfgBytes & 992) >>> 5;
       return this._m_mfgIdCh2;
+    }
+  });
+  Object.defineProperty(Edid.prototype, 'mfgIdCh3', {
+    get: function() {
+      if (this._m_mfgIdCh3 !== undefined)
+        return this._m_mfgIdCh3;
+      this._m_mfgIdCh3 = this.mfgBytes & 31;
+      return this._m_mfgIdCh3;
+    }
+  });
+  Object.defineProperty(Edid.prototype, 'mfgStr', {
+    get: function() {
+      if (this._m_mfgStr !== undefined)
+        return this._m_mfgStr;
+      this._m_mfgStr = KaitaiStream.bytesToStr(new Uint8Array([this.mfgIdCh1 + 64, this.mfgIdCh2 + 64, this.mfgIdCh3 + 64]), "ASCII");
+      return this._m_mfgStr;
+    }
+  });
+  Object.defineProperty(Edid.prototype, 'mfgYear', {
+    get: function() {
+      if (this._m_mfgYear !== undefined)
+        return this._m_mfgYear;
+      this._m_mfgYear = this.mfgYearMod + 1990;
+      return this._m_mfgYear;
     }
   });
 
@@ -604,5 +604,5 @@ var Edid = (function() {
 
   return Edid;
 })();
-return Edid;
-}));
+Edid_.Edid = Edid;
+});

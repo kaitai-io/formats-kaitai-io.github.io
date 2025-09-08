@@ -21,23 +21,23 @@ digraph {
 			</TABLE>>];
 sd_option__seq_content_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
-	<TR><TD>:option_types_load_balancing_option</TD><TD PORT="case0">SdLoadBalancingOption</TD></TR>
-	<TR><TD>:option_types_configuration_option</TD><TD PORT="case1">SdConfigurationOption</TD></TR>
-	<TR><TD>:option_types_ipv4_sd_endpoint_option</TD><TD PORT="case2">SdIpv4SdEndpointOption</TD></TR>
-	<TR><TD>:option_types_ipv4_endpoint_option</TD><TD PORT="case3">SdIpv4EndpointOption</TD></TR>
-	<TR><TD>:option_types_ipv6_sd_endpoint_option</TD><TD PORT="case4">SdIpv6SdEndpointOption</TD></TR>
-	<TR><TD>:option_types_ipv4_multicast_option</TD><TD PORT="case5">SdIpv4MulticastOption</TD></TR>
-	<TR><TD>:option_types_ipv6_endpoint_option</TD><TD PORT="case6">SdIpv6EndpointOption</TD></TR>
-	<TR><TD>:option_types_ipv6_multicast_option</TD><TD PORT="case7">SdIpv6MulticastOption</TD></TR>
+	<TR><TD>:option_types_configuration_option</TD><TD PORT="case0">SdConfigurationOption</TD></TR>
+	<TR><TD>:option_types_ipv4_endpoint_option</TD><TD PORT="case1">SdIpv4EndpointOption</TD></TR>
+	<TR><TD>:option_types_ipv4_multicast_option</TD><TD PORT="case2">SdIpv4MulticastOption</TD></TR>
+	<TR><TD>:option_types_ipv4_sd_endpoint_option</TD><TD PORT="case3">SdIpv4SdEndpointOption</TD></TR>
+	<TR><TD>:option_types_ipv6_endpoint_option</TD><TD PORT="case4">SdIpv6EndpointOption</TD></TR>
+	<TR><TD>:option_types_ipv6_multicast_option</TD><TD PORT="case5">SdIpv6MulticastOption</TD></TR>
+	<TR><TD>:option_types_ipv6_sd_endpoint_option</TD><TD PORT="case6">SdIpv6SdEndpointOption</TD></TR>
+	<TR><TD>:option_types_load_balancing_option</TD><TD PORT="case7">SdLoadBalancingOption</TD></TR>
 </TABLE>>];
-			subgraph cluster__sd_option_header {
-				label="SomeIpSdOptions::SdOption::SdOptionHeader";
+			subgraph cluster__sd_config_kv_pair {
+				label="SomeIpSdOptions::SdOption::SdConfigKvPair";
 				graph[style=dotted];
 
-				sd_option_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				sd_config_kv_pair__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="length_pos">0</TD><TD PORT="length_size">2</TD><TD>u2be</TD><TD PORT="length_type">length</TD></TR>
-					<TR><TD PORT="type_pos">2</TD><TD PORT="type_size">1</TD><TD>u1→OptionTypes</TD><TD PORT="type_type">type</TD></TR>
+					<TR><TD PORT="key_pos">0</TD><TD PORT="key_size">...</TD><TD>str(term=61, ASCII)</TD><TD PORT="key_type">key</TD></TR>
+					<TR><TD PORT="value_pos">...</TD><TD PORT="value_size">⇲</TD><TD>str(ASCII)</TD><TD PORT="value_type">value</TD></TR>
 				</TABLE>>];
 			}
 			subgraph cluster__sd_config_string {
@@ -48,6 +48,7 @@ sd_option__seq_content_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACI
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 					<TR><TD PORT="length_pos">0</TD><TD PORT="length_size">1</TD><TD>u1</TD><TD PORT="length_type">length</TD></TR>
 					<TR><TD PORT="config_pos">1</TD><TD PORT="config_size">length</TD><TD>SdConfigKvPair</TD><TD PORT="config_type">config</TD></TR>
+					<TR><TD COLSPAN="4" PORT="config__if">if length != 0</TD></TR>
 				</TABLE>>];
 			}
 			subgraph cluster__sd_config_strings_container {
@@ -67,7 +68,20 @@ sd_option__seq_content_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACI
 				sd_configuration_option__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 					<TR><TD PORT="reserved_pos">0</TD><TD PORT="reserved_size">1</TD><TD>u1</TD><TD PORT="reserved_type">reserved</TD></TR>
-					<TR><TD PORT="configurations_pos">1</TD><TD PORT="configurations_size">(_parent.header.length - 1)</TD><TD>SdConfigStringsContainer</TD><TD PORT="configurations_type">configurations</TD></TR>
+					<TR><TD PORT="configurations_pos">1</TD><TD PORT="configurations_size">_parent.header.length - 1</TD><TD>SdConfigStringsContainer</TD><TD PORT="configurations_type">configurations</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__sd_ipv4_endpoint_option {
+				label="SomeIpSdOptions::SdOption::SdIpv4EndpointOption";
+				graph[style=dotted];
+
+				sd_ipv4_endpoint_option__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="reserved_pos">0</TD><TD PORT="reserved_size">1</TD><TD>u1</TD><TD PORT="reserved_type">reserved</TD></TR>
+					<TR><TD PORT="address_pos">1</TD><TD PORT="address_size">4</TD><TD></TD><TD PORT="address_type">address</TD></TR>
+					<TR><TD PORT="reserved2_pos">5</TD><TD PORT="reserved2_size">1</TD><TD>u1</TD><TD PORT="reserved2_type">reserved2</TD></TR>
+					<TR><TD PORT="l4_protocol_pos">6</TD><TD PORT="l4_protocol_size">1</TD><TD>u1</TD><TD PORT="l4_protocol_type">l4_protocol</TD></TR>
+					<TR><TD PORT="port_pos">7</TD><TD PORT="port_size">2</TD><TD>u2be</TD><TD PORT="port_type">port</TD></TR>
 				</TABLE>>];
 			}
 			subgraph cluster__sd_ipv4_multicast_option {
@@ -96,6 +110,19 @@ sd_option__seq_content_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACI
 					<TR><TD PORT="port_pos">7</TD><TD PORT="port_size">2</TD><TD>u2be</TD><TD PORT="port_type">port</TD></TR>
 				</TABLE>>];
 			}
+			subgraph cluster__sd_ipv6_endpoint_option {
+				label="SomeIpSdOptions::SdOption::SdIpv6EndpointOption";
+				graph[style=dotted];
+
+				sd_ipv6_endpoint_option__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="reserved_pos">0</TD><TD PORT="reserved_size">1</TD><TD>u1</TD><TD PORT="reserved_type">reserved</TD></TR>
+					<TR><TD PORT="address_pos">1</TD><TD PORT="address_size">16</TD><TD></TD><TD PORT="address_type">address</TD></TR>
+					<TR><TD PORT="reserved2_pos">17</TD><TD PORT="reserved2_size">1</TD><TD>u1</TD><TD PORT="reserved2_type">reserved2</TD></TR>
+					<TR><TD PORT="l4_protocol_pos">18</TD><TD PORT="l4_protocol_size">1</TD><TD>u1</TD><TD PORT="l4_protocol_type">l4_protocol</TD></TR>
+					<TR><TD PORT="port_pos">19</TD><TD PORT="port_size">2</TD><TD>u2be</TD><TD PORT="port_type">port</TD></TR>
+				</TABLE>>];
+			}
 			subgraph cluster__sd_ipv6_multicast_option {
 				label="SomeIpSdOptions::SdOption::SdIpv6MulticastOption";
 				graph[style=dotted];
@@ -109,47 +136,11 @@ sd_option__seq_content_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACI
 					<TR><TD PORT="port_pos">19</TD><TD PORT="port_size">2</TD><TD>u2be</TD><TD PORT="port_type">port</TD></TR>
 				</TABLE>>];
 			}
-			subgraph cluster__sd_config_kv_pair {
-				label="SomeIpSdOptions::SdOption::SdConfigKvPair";
-				graph[style=dotted];
-
-				sd_config_kv_pair__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="key_pos">0</TD><TD PORT="key_size">...</TD><TD>str(term=61, ASCII)</TD><TD PORT="key_type">key</TD></TR>
-					<TR><TD PORT="value_pos">...</TD><TD PORT="value_size">⇲</TD><TD>str(ASCII)</TD><TD PORT="value_type">value</TD></TR>
-				</TABLE>>];
-			}
 			subgraph cluster__sd_ipv6_sd_endpoint_option {
 				label="SomeIpSdOptions::SdOption::SdIpv6SdEndpointOption";
 				graph[style=dotted];
 
 				sd_ipv6_sd_endpoint_option__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="reserved_pos">0</TD><TD PORT="reserved_size">1</TD><TD>u1</TD><TD PORT="reserved_type">reserved</TD></TR>
-					<TR><TD PORT="address_pos">1</TD><TD PORT="address_size">16</TD><TD></TD><TD PORT="address_type">address</TD></TR>
-					<TR><TD PORT="reserved2_pos">17</TD><TD PORT="reserved2_size">1</TD><TD>u1</TD><TD PORT="reserved2_type">reserved2</TD></TR>
-					<TR><TD PORT="l4_protocol_pos">18</TD><TD PORT="l4_protocol_size">1</TD><TD>u1</TD><TD PORT="l4_protocol_type">l4_protocol</TD></TR>
-					<TR><TD PORT="port_pos">19</TD><TD PORT="port_size">2</TD><TD>u2be</TD><TD PORT="port_type">port</TD></TR>
-				</TABLE>>];
-			}
-			subgraph cluster__sd_ipv4_endpoint_option {
-				label="SomeIpSdOptions::SdOption::SdIpv4EndpointOption";
-				graph[style=dotted];
-
-				sd_ipv4_endpoint_option__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="reserved_pos">0</TD><TD PORT="reserved_size">1</TD><TD>u1</TD><TD PORT="reserved_type">reserved</TD></TR>
-					<TR><TD PORT="address_pos">1</TD><TD PORT="address_size">4</TD><TD></TD><TD PORT="address_type">address</TD></TR>
-					<TR><TD PORT="reserved2_pos">5</TD><TD PORT="reserved2_size">1</TD><TD>u1</TD><TD PORT="reserved2_type">reserved2</TD></TR>
-					<TR><TD PORT="l4_protocol_pos">6</TD><TD PORT="l4_protocol_size">1</TD><TD>u1</TD><TD PORT="l4_protocol_type">l4_protocol</TD></TR>
-					<TR><TD PORT="port_pos">7</TD><TD PORT="port_size">2</TD><TD>u2be</TD><TD PORT="port_type">port</TD></TR>
-				</TABLE>>];
-			}
-			subgraph cluster__sd_ipv6_endpoint_option {
-				label="SomeIpSdOptions::SdOption::SdIpv6EndpointOption";
-				graph[style=dotted];
-
-				sd_ipv6_endpoint_option__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 					<TR><TD PORT="reserved_pos">0</TD><TD PORT="reserved_size">1</TD><TD>u1</TD><TD PORT="reserved_type">reserved</TD></TR>
 					<TR><TD PORT="address_pos">1</TD><TD PORT="address_size">16</TD><TD></TD><TD PORT="address_type">address</TD></TR>
@@ -169,22 +160,33 @@ sd_option__seq_content_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACI
 					<TR><TD PORT="weight_pos">3</TD><TD PORT="weight_size">2</TD><TD>u2be</TD><TD PORT="weight_type">weight</TD></TR>
 				</TABLE>>];
 			}
+			subgraph cluster__sd_option_header {
+				label="SomeIpSdOptions::SdOption::SdOptionHeader";
+				graph[style=dotted];
+
+				sd_option_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="length_pos">0</TD><TD PORT="length_size">2</TD><TD>u2be</TD><TD PORT="length_type">length</TD></TR>
+					<TR><TD PORT="type_pos">2</TD><TD PORT="type_size">1</TD><TD>u1→OptionTypes</TD><TD PORT="type_type">type</TD></TR>
+				</TABLE>>];
+			}
 		}
 	}
 	some_ip_sd_options__seq:entries_type -> sd_option__seq [style=bold];
 	sd_option__seq:header_type -> sd_option_header__seq [style=bold];
 	sd_option__seq:content_type -> sd_option__seq_content_switch [style=bold];
-	sd_option__seq_content_switch:case0 -> sd_load_balancing_option__seq [style=bold];
-	sd_option__seq_content_switch:case1 -> sd_configuration_option__seq [style=bold];
-	sd_option__seq_content_switch:case2 -> sd_ipv4_sd_endpoint_option__seq [style=bold];
-	sd_option__seq_content_switch:case3 -> sd_ipv4_endpoint_option__seq [style=bold];
-	sd_option__seq_content_switch:case4 -> sd_ipv6_sd_endpoint_option__seq [style=bold];
-	sd_option__seq_content_switch:case5 -> sd_ipv4_multicast_option__seq [style=bold];
-	sd_option__seq_content_switch:case6 -> sd_ipv6_endpoint_option__seq [style=bold];
-	sd_option__seq_content_switch:case7 -> sd_ipv6_multicast_option__seq [style=bold];
+	sd_option__seq_content_switch:case0 -> sd_configuration_option__seq [style=bold];
+	sd_option__seq_content_switch:case1 -> sd_ipv4_endpoint_option__seq [style=bold];
+	sd_option__seq_content_switch:case2 -> sd_ipv4_multicast_option__seq [style=bold];
+	sd_option__seq_content_switch:case3 -> sd_ipv4_sd_endpoint_option__seq [style=bold];
+	sd_option__seq_content_switch:case4 -> sd_ipv6_endpoint_option__seq [style=bold];
+	sd_option__seq_content_switch:case5 -> sd_ipv6_multicast_option__seq [style=bold];
+	sd_option__seq_content_switch:case6 -> sd_ipv6_sd_endpoint_option__seq [style=bold];
+	sd_option__seq_content_switch:case7 -> sd_load_balancing_option__seq [style=bold];
 	sd_option_header__seq:type_type -> sd_option__seq:content_type [color="#404040"];
 	sd_config_string__seq:length_type -> sd_config_string__seq:config_size [color="#404040"];
 	sd_config_string__seq:config_type -> sd_config_kv_pair__seq [style=bold];
+	sd_config_string__seq:length_type -> sd_config_string__seq:config__if [color="#404040"];
 	sd_config_strings_container__seq:config_strings_type -> sd_config_string__seq [style=bold];
 	sd_option_header__seq:length_type -> sd_configuration_option__seq:configurations_size [color="#404040"];
 	sd_configuration_option__seq:configurations_type -> sd_config_strings_container__seq [style=bold];

@@ -2,13 +2,16 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class aix_utmp_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -19,8 +22,8 @@
 class aix_utmp_t : public kaitai::kstruct {
 
 public:
-    class record_t;
     class exit_status_t;
+    class record_t;
 
     enum entry_type_t {
         ENTRY_TYPE_EMPTY = 0,
@@ -34,6 +37,12 @@ public:
         ENTRY_TYPE_DEAD_PROCESS = 8,
         ENTRY_TYPE_ACCOUNTING = 9
     };
+    static bool _is_defined_entry_type_t(entry_type_t v);
+
+private:
+    static const std::set<entry_type_t> _values_entry_type_t;
+
+public:
 
     aix_utmp_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, aix_utmp_t* p__root = nullptr);
 
@@ -43,6 +52,40 @@ private:
 
 public:
     ~aix_utmp_t();
+
+    class exit_status_t : public kaitai::kstruct {
+
+    public:
+
+        exit_status_t(kaitai::kstream* p__io, aix_utmp_t::record_t* p__parent = nullptr, aix_utmp_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~exit_status_t();
+
+    private:
+        int16_t m_termination_code;
+        int16_t m_exit_code;
+        aix_utmp_t* m__root;
+        aix_utmp_t::record_t* m__parent;
+
+    public:
+
+        /**
+         * process termination status
+         */
+        int16_t termination_code() const { return m_termination_code; }
+
+        /**
+         * process exit status
+         */
+        int16_t exit_code() const { return m_exit_code; }
+        aix_utmp_t* _root() const { return m__root; }
+        aix_utmp_t::record_t* _parent() const { return m__parent; }
+    };
 
     class record_t : public kaitai::kstruct {
 
@@ -118,40 +161,6 @@ public:
         std::string reserved_v() const { return m_reserved_v; }
         aix_utmp_t* _root() const { return m__root; }
         aix_utmp_t* _parent() const { return m__parent; }
-    };
-
-    class exit_status_t : public kaitai::kstruct {
-
-    public:
-
-        exit_status_t(kaitai::kstream* p__io, aix_utmp_t::record_t* p__parent = nullptr, aix_utmp_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~exit_status_t();
-
-    private:
-        int16_t m_termination_code;
-        int16_t m_exit_code;
-        aix_utmp_t* m__root;
-        aix_utmp_t::record_t* m__parent;
-
-    public:
-
-        /**
-         * process termination status
-         */
-        int16_t termination_code() const { return m_termination_code; }
-
-        /**
-         * process exit status
-         */
-        int16_t exit_code() const { return m_exit_code; }
-        aix_utmp_t* _root() const { return m__root; }
-        aix_utmp_t::record_t* _parent() const { return m__parent; }
     };
 
 private:

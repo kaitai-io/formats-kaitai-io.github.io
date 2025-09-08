@@ -67,7 +67,7 @@ namespace Kaitai
                 _unknown3.Add(m_io.ReadF4le());
             }
             _spectrum = new List<float>();
-            for (var i = 0; i < (((long) (Ipixlast) - (long) (Ipixfirst)) - 1); i++)
+            for (var i = 0; i < ((long) (Ipixlast) - (long) (Ipixfirst)) - 1; i++)
             {
                 _spectrum.Add(m_io.ReadF4le());
             }

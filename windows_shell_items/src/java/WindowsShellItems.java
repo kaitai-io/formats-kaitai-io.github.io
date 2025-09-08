@@ -5,6 +5,7 @@ import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -52,165 +53,11 @@ public class WindowsShellItems extends KaitaiStruct {
             } while (!(_it.lenData() == 0));
         }
     }
-    public static class ShellItemData extends KaitaiStruct {
-        public static ShellItemData fromFile(String fileName) throws IOException {
-            return new ShellItemData(new ByteBufferKaitaiStream(fileName));
-        }
 
-        public ShellItemData(KaitaiStream _io) {
-            this(_io, null, null);
+    public void _fetchInstances() {
+        for (int i = 0; i < this.items.size(); i++) {
+            this.items.get(((Number) (i)).intValue())._fetchInstances();
         }
-
-        public ShellItemData(KaitaiStream _io, WindowsShellItems.ShellItem _parent) {
-            this(_io, _parent, null);
-        }
-
-        public ShellItemData(KaitaiStream _io, WindowsShellItems.ShellItem _parent, WindowsShellItems _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.code = this._io.readU1();
-            switch (code()) {
-            case 31: {
-                this.body1 = new RootFolderBody(this._io, this, _root);
-                break;
-            }
-            }
-            switch ((code() & 112)) {
-            case 32: {
-                this.body2 = new VolumeBody(this._io, this, _root);
-                break;
-            }
-            case 48: {
-                this.body2 = new FileEntryBody(this._io, this, _root);
-                break;
-            }
-            }
-        }
-        private int code;
-        private RootFolderBody body1;
-        private KaitaiStruct body2;
-        private WindowsShellItems _root;
-        private WindowsShellItems.ShellItem _parent;
-        public int code() { return code; }
-        public RootFolderBody body1() { return body1; }
-        public KaitaiStruct body2() { return body2; }
-        public WindowsShellItems _root() { return _root; }
-        public WindowsShellItems.ShellItem _parent() { return _parent; }
-    }
-
-    /**
-     * @see <a href="https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf">Section 2.2.2</a>
-     */
-    public static class ShellItem extends KaitaiStruct {
-        public static ShellItem fromFile(String fileName) throws IOException {
-            return new ShellItem(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public ShellItem(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public ShellItem(KaitaiStream _io, WindowsShellItems _parent) {
-            this(_io, _parent, null);
-        }
-
-        public ShellItem(KaitaiStream _io, WindowsShellItems _parent, WindowsShellItems _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.lenData = this._io.readU2le();
-            if (lenData() >= 2) {
-                this._raw_data = this._io.readBytes((lenData() - 2));
-                KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
-                this.data = new ShellItemData(_io__raw_data, this, _root);
-            }
-        }
-        private int lenData;
-        private ShellItemData data;
-        private WindowsShellItems _root;
-        private WindowsShellItems _parent;
-        private byte[] _raw_data;
-        public int lenData() { return lenData; }
-        public ShellItemData data() { return data; }
-        public WindowsShellItems _root() { return _root; }
-        public WindowsShellItems _parent() { return _parent; }
-        public byte[] _raw_data() { return _raw_data; }
-    }
-
-    /**
-     * @see <a href="https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#32-root-folder-shell-item">Source</a>
-     */
-    public static class RootFolderBody extends KaitaiStruct {
-        public static RootFolderBody fromFile(String fileName) throws IOException {
-            return new RootFolderBody(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public RootFolderBody(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public RootFolderBody(KaitaiStream _io, WindowsShellItems.ShellItemData _parent) {
-            this(_io, _parent, null);
-        }
-
-        public RootFolderBody(KaitaiStream _io, WindowsShellItems.ShellItemData _parent, WindowsShellItems _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.sortIndex = this._io.readU1();
-            this.shellFolderId = this._io.readBytes(16);
-        }
-        private int sortIndex;
-        private byte[] shellFolderId;
-        private WindowsShellItems _root;
-        private WindowsShellItems.ShellItemData _parent;
-        public int sortIndex() { return sortIndex; }
-        public byte[] shellFolderId() { return shellFolderId; }
-        public WindowsShellItems _root() { return _root; }
-        public WindowsShellItems.ShellItemData _parent() { return _parent; }
-    }
-
-    /**
-     * @see <a href="https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#33-volume-shell-item">Source</a>
-     */
-    public static class VolumeBody extends KaitaiStruct {
-        public static VolumeBody fromFile(String fileName) throws IOException {
-            return new VolumeBody(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public VolumeBody(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public VolumeBody(KaitaiStream _io, WindowsShellItems.ShellItemData _parent) {
-            this(_io, _parent, null);
-        }
-
-        public VolumeBody(KaitaiStream _io, WindowsShellItems.ShellItemData _parent, WindowsShellItems _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.flags = this._io.readU1();
-        }
-        private int flags;
-        private WindowsShellItems _root;
-        private WindowsShellItems.ShellItemData _parent;
-        public int flags() { return flags; }
-        public WindowsShellItems _root() { return _root; }
-        public WindowsShellItems.ShellItemData _parent() { return _parent; }
     }
 
     /**
@@ -241,20 +88,21 @@ public class WindowsShellItems extends KaitaiStruct {
             this.lastModTime = this._io.readU4le();
             this.fileAttrs = this._io.readU2le();
         }
+
+        public void _fetchInstances() {
+        }
         private Boolean isDir;
         public Boolean isDir() {
             if (this.isDir != null)
                 return this.isDir;
-            boolean _tmp = (boolean) ((_parent().code() & 1) != 0);
-            this.isDir = _tmp;
+            this.isDir = (_parent().code() & 1) != 0;
             return this.isDir;
         }
         private Boolean isFile;
         public Boolean isFile() {
             if (this.isFile != null)
                 return this.isFile;
-            boolean _tmp = (boolean) ((_parent().code() & 2) != 0);
-            this.isFile = _tmp;
+            this.isFile = (_parent().code() & 2) != 0;
             return this.isFile;
         }
         private int _unnamed0;
@@ -270,14 +118,202 @@ public class WindowsShellItems extends KaitaiStruct {
         public WindowsShellItems _root() { return _root; }
         public WindowsShellItems.ShellItemData _parent() { return _parent; }
     }
-    private ArrayList<ShellItem> items;
+
+    /**
+     * @see <a href="https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#32-root-folder-shell-item">Source</a>
+     */
+    public static class RootFolderBody extends KaitaiStruct {
+        public static RootFolderBody fromFile(String fileName) throws IOException {
+            return new RootFolderBody(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public RootFolderBody(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public RootFolderBody(KaitaiStream _io, WindowsShellItems.ShellItemData _parent) {
+            this(_io, _parent, null);
+        }
+
+        public RootFolderBody(KaitaiStream _io, WindowsShellItems.ShellItemData _parent, WindowsShellItems _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.sortIndex = this._io.readU1();
+            this.shellFolderId = this._io.readBytes(16);
+        }
+
+        public void _fetchInstances() {
+        }
+        private int sortIndex;
+        private byte[] shellFolderId;
+        private WindowsShellItems _root;
+        private WindowsShellItems.ShellItemData _parent;
+        public int sortIndex() { return sortIndex; }
+        public byte[] shellFolderId() { return shellFolderId; }
+        public WindowsShellItems _root() { return _root; }
+        public WindowsShellItems.ShellItemData _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf">Section 2.2.2</a>
+     */
+    public static class ShellItem extends KaitaiStruct {
+        public static ShellItem fromFile(String fileName) throws IOException {
+            return new ShellItem(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public ShellItem(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public ShellItem(KaitaiStream _io, WindowsShellItems _parent) {
+            this(_io, _parent, null);
+        }
+
+        public ShellItem(KaitaiStream _io, WindowsShellItems _parent, WindowsShellItems _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.lenData = this._io.readU2le();
+            if (lenData() >= 2) {
+                KaitaiStream _io_data = this._io.substream(lenData() - 2);
+                this.data = new ShellItemData(_io_data, this, _root);
+            }
+        }
+
+        public void _fetchInstances() {
+            if (lenData() >= 2) {
+                this.data._fetchInstances();
+            }
+        }
+        private int lenData;
+        private ShellItemData data;
+        private WindowsShellItems _root;
+        private WindowsShellItems _parent;
+        public int lenData() { return lenData; }
+        public ShellItemData data() { return data; }
+        public WindowsShellItems _root() { return _root; }
+        public WindowsShellItems _parent() { return _parent; }
+    }
+    public static class ShellItemData extends KaitaiStruct {
+        public static ShellItemData fromFile(String fileName) throws IOException {
+            return new ShellItemData(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public ShellItemData(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public ShellItemData(KaitaiStream _io, WindowsShellItems.ShellItem _parent) {
+            this(_io, _parent, null);
+        }
+
+        public ShellItemData(KaitaiStream _io, WindowsShellItems.ShellItem _parent, WindowsShellItems _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.code = this._io.readU1();
+            switch (code()) {
+            case 31: {
+                this.body1 = new RootFolderBody(this._io, this, _root);
+                break;
+            }
+            }
+            switch (code() & 112) {
+            case 32: {
+                this.body2 = new VolumeBody(this._io, this, _root);
+                break;
+            }
+            case 48: {
+                this.body2 = new FileEntryBody(this._io, this, _root);
+                break;
+            }
+            }
+        }
+
+        public void _fetchInstances() {
+            switch (code()) {
+            case 31: {
+                this.body1._fetchInstances();
+                break;
+            }
+            }
+            switch (code() & 112) {
+            case 32: {
+                ((VolumeBody) (this.body2))._fetchInstances();
+                break;
+            }
+            case 48: {
+                ((FileEntryBody) (this.body2))._fetchInstances();
+                break;
+            }
+            }
+        }
+        private int code;
+        private RootFolderBody body1;
+        private KaitaiStruct body2;
+        private WindowsShellItems _root;
+        private WindowsShellItems.ShellItem _parent;
+        public int code() { return code; }
+        public RootFolderBody body1() { return body1; }
+        public KaitaiStruct body2() { return body2; }
+        public WindowsShellItems _root() { return _root; }
+        public WindowsShellItems.ShellItem _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc#33-volume-shell-item">Source</a>
+     */
+    public static class VolumeBody extends KaitaiStruct {
+        public static VolumeBody fromFile(String fileName) throws IOException {
+            return new VolumeBody(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public VolumeBody(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public VolumeBody(KaitaiStream _io, WindowsShellItems.ShellItemData _parent) {
+            this(_io, _parent, null);
+        }
+
+        public VolumeBody(KaitaiStream _io, WindowsShellItems.ShellItemData _parent, WindowsShellItems _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.flags = this._io.readU1();
+        }
+
+        public void _fetchInstances() {
+        }
+        private int flags;
+        private WindowsShellItems _root;
+        private WindowsShellItems.ShellItemData _parent;
+        public int flags() { return flags; }
+        public WindowsShellItems _root() { return _root; }
+        public WindowsShellItems.ShellItemData _parent() { return _parent; }
+    }
+    private List<ShellItem> items;
     private WindowsShellItems _root;
     private KaitaiStruct _parent;
 
     /**
      * @see <a href="https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf">Section 2.2.1</a>
      */
-    public ArrayList<ShellItem> items() { return items; }
+    public List<ShellItem> items() { return items; }
     public WindowsShellItems _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

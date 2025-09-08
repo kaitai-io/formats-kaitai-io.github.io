@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.Pif = factory(root.KaitaiStream);
+    factory(root.Pif || (root.Pif = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Pif_, KaitaiStream) {
 /**
  * The Portable Image Format (PIF) is a basic, bitmap-like image format with the
  * focus on ease of use (implementation) and small size for embedded
@@ -20,6 +20,14 @@
  */
 
 var Pif = (function() {
+  Pif.CompressionType = Object.freeze({
+    NONE: 0,
+    RLE: 32222,
+
+    0: "NONE",
+    32222: "RLE",
+  });
+
   Pif.ImageType = Object.freeze({
     RGB332: 7763,
     RGB888: 17212,
@@ -40,14 +48,6 @@ var Pif = (function() {
     58821: "RGB565",
   });
 
-  Pif.CompressionType = Object.freeze({
-    NONE: 0,
-    RLE: 32222,
-
-    0: "NONE",
-    32222: "RLE",
-  });
-
   function Pif(_io, _parent, _root) {
     this._io = _io;
     this._parent = _parent;
@@ -65,48 +65,41 @@ var Pif = (function() {
     }
   }
 
-  var PifHeader = Pif.PifHeader = (function() {
-    function PifHeader(_io, _parent, _root) {
+  var ColorTableData = Pif.ColorTableData = (function() {
+    function ColorTableData(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    PifHeader.prototype._read = function() {
-      this.magic = this._io.readBytes(4);
-      if (!((KaitaiStream.byteArrayCompare(this.magic, [80, 73, 70, 0]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([80, 73, 70, 0], this.magic, this._io, "/types/pif_header/seq/0");
-      }
-      this.lenFile = this._io.readU4le();
-      if (!(this.lenFile >= this.ofsImageDataMin)) {
-        throw new KaitaiStream.ValidationLessThanError(this.ofsImageDataMin, this.lenFile, this._io, "/types/pif_header/seq/1");
-      }
-      this.ofsImageData = this._io.readU4le();
-      if (!(this.ofsImageData >= this.ofsImageDataMin)) {
-        throw new KaitaiStream.ValidationLessThanError(this.ofsImageDataMin, this.ofsImageData, this._io, "/types/pif_header/seq/2");
-      }
-      if (!(this.ofsImageData <= this.lenFile)) {
-        throw new KaitaiStream.ValidationGreaterThanError(this.lenFile, this.ofsImageData, this._io, "/types/pif_header/seq/2");
+    ColorTableData.prototype._read = function() {
+      this.entries = [];
+      var i = 0;
+      while (!this._io.isEof()) {
+        switch (this._root.infoHeader.imageType) {
+        case Pif.ImageType.INDEXED_RGB332:
+          this.entries.push(this._io.readBitsIntLe(8));
+          break;
+        case Pif.ImageType.INDEXED_RGB565:
+          this.entries.push(this._io.readBitsIntLe(16));
+          break;
+        case Pif.ImageType.INDEXED_RGB888:
+          this.entries.push(this._io.readBitsIntLe(24));
+          break;
+        }
+        i++;
       }
     }
-    Object.defineProperty(PifHeader.prototype, 'ofsImageDataMin', {
-      get: function() {
-        if (this._m_ofsImageDataMin !== undefined)
-          return this._m_ofsImageDataMin;
-        this._m_ofsImageDataMin = (12 + 16);
-        return this._m_ofsImageDataMin;
-      }
-    });
 
-    return PifHeader;
+    return ColorTableData;
   })();
 
   var InformationHeader = Pif.InformationHeader = (function() {
     function InformationHeader(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -123,12 +116,12 @@ var Pif = (function() {
       this.width = this._io.readU2le();
       this.height = this._io.readU2le();
       this.lenImageData = this._io.readU4le();
-      if (!(this.lenImageData <= (this._root.fileHeader.lenFile - this._root.fileHeader.ofsImageData))) {
-        throw new KaitaiStream.ValidationGreaterThanError((this._root.fileHeader.lenFile - this._root.fileHeader.ofsImageData), this.lenImageData, this._io, "/types/information_header/seq/4");
+      if (!(this.lenImageData <= this._root.fileHeader.lenFile - this._root.fileHeader.ofsImageData)) {
+        throw new KaitaiStream.ValidationGreaterThanError(this._root.fileHeader.lenFile - this._root.fileHeader.ofsImageData, this.lenImageData, this._io, "/types/information_header/seq/4");
       }
       this.lenColorTable = this._io.readU2le();
-      if (!(this.lenColorTable >= (this.usesIndexedMode ? (this.lenColorTableEntry * 1) : 0))) {
-        throw new KaitaiStream.ValidationLessThanError((this.usesIndexedMode ? (this.lenColorTableEntry * 1) : 0), this.lenColorTable, this._io, "/types/information_header/seq/5");
+      if (!(this.lenColorTable >= (this.usesIndexedMode ? this.lenColorTableEntry * 1 : 0))) {
+        throw new KaitaiStream.ValidationLessThanError((this.usesIndexedMode ? this.lenColorTableEntry * 1 : 0), this.lenColorTable, this._io, "/types/information_header/seq/5");
       }
       if (!(this.lenColorTable <= (this.usesIndexedMode ? (this.lenColorTableMax < this.lenColorTableFull ? this.lenColorTableMax : this.lenColorTableFull) : 0))) {
         throw new KaitaiStream.ValidationGreaterThanError((this.usesIndexedMode ? (this.lenColorTableMax < this.lenColorTableFull ? this.lenColorTableMax : this.lenColorTableFull) : 0), this.lenColorTable, this._io, "/types/information_header/seq/5");
@@ -150,7 +143,7 @@ var Pif = (function() {
       get: function() {
         if (this._m_lenColorTableFull !== undefined)
           return this._m_lenColorTableFull;
-        this._m_lenColorTableFull = (this.lenColorTableEntry * (1 << this.bitsPerPixel));
+        this._m_lenColorTableFull = this.lenColorTableEntry * (1 << this.bitsPerPixel);
         return this._m_lenColorTableFull;
       }
     });
@@ -158,7 +151,7 @@ var Pif = (function() {
       get: function() {
         if (this._m_lenColorTableMax !== undefined)
           return this._m_lenColorTableMax;
-        this._m_lenColorTableMax = (this._root.fileHeader.ofsImageData - this._root.fileHeader.ofsImageDataMin);
+        this._m_lenColorTableMax = this._root.fileHeader.ofsImageData - this._root.fileHeader.ofsImageDataMin;
         return this._m_lenColorTableMax;
       }
     });
@@ -195,34 +188,41 @@ var Pif = (function() {
     return InformationHeader;
   })();
 
-  var ColorTableData = Pif.ColorTableData = (function() {
-    function ColorTableData(_io, _parent, _root) {
+  var PifHeader = Pif.PifHeader = (function() {
+    function PifHeader(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    ColorTableData.prototype._read = function() {
-      this.entries = [];
-      var i = 0;
-      while (!this._io.isEof()) {
-        switch (this._root.infoHeader.imageType) {
-        case Pif.ImageType.INDEXED_RGB888:
-          this.entries.push(this._io.readBitsIntLe(24));
-          break;
-        case Pif.ImageType.INDEXED_RGB565:
-          this.entries.push(this._io.readBitsIntLe(16));
-          break;
-        case Pif.ImageType.INDEXED_RGB332:
-          this.entries.push(this._io.readBitsIntLe(8));
-          break;
-        }
-        i++;
+    PifHeader.prototype._read = function() {
+      this.magic = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([80, 73, 70, 0])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([80, 73, 70, 0]), this.magic, this._io, "/types/pif_header/seq/0");
+      }
+      this.lenFile = this._io.readU4le();
+      if (!(this.lenFile >= this.ofsImageDataMin)) {
+        throw new KaitaiStream.ValidationLessThanError(this.ofsImageDataMin, this.lenFile, this._io, "/types/pif_header/seq/1");
+      }
+      this.ofsImageData = this._io.readU4le();
+      if (!(this.ofsImageData >= this.ofsImageDataMin)) {
+        throw new KaitaiStream.ValidationLessThanError(this.ofsImageDataMin, this.ofsImageData, this._io, "/types/pif_header/seq/2");
+      }
+      if (!(this.ofsImageData <= this.lenFile)) {
+        throw new KaitaiStream.ValidationGreaterThanError(this.lenFile, this.ofsImageData, this._io, "/types/pif_header/seq/2");
       }
     }
+    Object.defineProperty(PifHeader.prototype, 'ofsImageDataMin', {
+      get: function() {
+        if (this._m_ofsImageDataMin !== undefined)
+          return this._m_ofsImageDataMin;
+        this._m_ofsImageDataMin = 12 + 16;
+        return this._m_ofsImageDataMin;
+      }
+    });
 
-    return ColorTableData;
+    return PifHeader;
   })();
   Object.defineProperty(Pif.prototype, 'imageData', {
     get: function() {
@@ -238,5 +238,5 @@ var Pif = (function() {
 
   return Pif;
 })();
-return Pif;
-}));
+Pif_.Pif = Pif;
+});

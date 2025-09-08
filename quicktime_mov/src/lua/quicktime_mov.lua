@@ -315,6 +315,158 @@ function QuicktimeMov:_read()
 end
 
 
+QuicktimeMov.Atom = class.class(KaitaiStruct)
+
+function QuicktimeMov.Atom:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function QuicktimeMov.Atom:_read()
+  self.len32 = self._io:read_u4be()
+  self.atom_type = QuicktimeMov.AtomType(self._io:read_u4be())
+  if self.len32 == 1 then
+    self.len64 = self._io:read_u8be()
+  end
+  local _on = self.atom_type
+  if _on == QuicktimeMov.AtomType.dinf then
+    self._raw_body = self._io:read_bytes(self.len)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = QuicktimeMov.AtomList(_io, self, self._root)
+  elseif _on == QuicktimeMov.AtomType.ftyp then
+    self._raw_body = self._io:read_bytes(self.len)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = QuicktimeMov.FtypBody(_io, self, self._root)
+  elseif _on == QuicktimeMov.AtomType.mdia then
+    self._raw_body = self._io:read_bytes(self.len)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = QuicktimeMov.AtomList(_io, self, self._root)
+  elseif _on == QuicktimeMov.AtomType.minf then
+    self._raw_body = self._io:read_bytes(self.len)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = QuicktimeMov.AtomList(_io, self, self._root)
+  elseif _on == QuicktimeMov.AtomType.moof then
+    self._raw_body = self._io:read_bytes(self.len)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = QuicktimeMov.AtomList(_io, self, self._root)
+  elseif _on == QuicktimeMov.AtomType.moov then
+    self._raw_body = self._io:read_bytes(self.len)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = QuicktimeMov.AtomList(_io, self, self._root)
+  elseif _on == QuicktimeMov.AtomType.mvhd then
+    self._raw_body = self._io:read_bytes(self.len)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = QuicktimeMov.MvhdBody(_io, self, self._root)
+  elseif _on == QuicktimeMov.AtomType.stbl then
+    self._raw_body = self._io:read_bytes(self.len)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = QuicktimeMov.AtomList(_io, self, self._root)
+  elseif _on == QuicktimeMov.AtomType.tkhd then
+    self._raw_body = self._io:read_bytes(self.len)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = QuicktimeMov.TkhdBody(_io, self, self._root)
+  elseif _on == QuicktimeMov.AtomType.traf then
+    self._raw_body = self._io:read_bytes(self.len)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = QuicktimeMov.AtomList(_io, self, self._root)
+  elseif _on == QuicktimeMov.AtomType.trak then
+    self._raw_body = self._io:read_bytes(self.len)
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = QuicktimeMov.AtomList(_io, self, self._root)
+  else
+    self.body = self._io:read_bytes(self.len)
+  end
+end
+
+QuicktimeMov.Atom.property.len = {}
+function QuicktimeMov.Atom.property.len:get()
+  if self._m_len ~= nil then
+    return self._m_len
+  end
+
+  self._m_len = utils.box_unwrap((self.len32 == 0) and utils.box_wrap(self._io:size() - 8) or (utils.box_unwrap((self.len32 == 1) and utils.box_wrap(self.len64 - 16) or (self.len32 - 8))))
+  return self._m_len
+end
+
+
+QuicktimeMov.AtomList = class.class(KaitaiStruct)
+
+function QuicktimeMov.AtomList:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function QuicktimeMov.AtomList:_read()
+  self.items = {}
+  local i = 0
+  while not self._io:is_eof() do
+    self.items[i + 1] = QuicktimeMov.Atom(self._io, self, self._root)
+    i = i + 1
+  end
+end
+
+
+-- 
+-- Fixed-point 16-bit number.
+QuicktimeMov.Fixed16 = class.class(KaitaiStruct)
+
+function QuicktimeMov.Fixed16:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function QuicktimeMov.Fixed16:_read()
+  self.int_part = self._io:read_s1()
+  self.frac_part = self._io:read_u1()
+end
+
+
+-- 
+-- Fixed-point 32-bit number.
+QuicktimeMov.Fixed32 = class.class(KaitaiStruct)
+
+function QuicktimeMov.Fixed32:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function QuicktimeMov.Fixed32:_read()
+  self.int_part = self._io:read_s2be()
+  self.frac_part = self._io:read_u2be()
+end
+
+
+-- 
+-- See also: Source (https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-CJBCBIFF)
+QuicktimeMov.FtypBody = class.class(KaitaiStruct)
+
+function QuicktimeMov.FtypBody:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function QuicktimeMov.FtypBody:_read()
+  self.major_brand = QuicktimeMov.Brand(self._io:read_u4be())
+  self.minor_version = self._io:read_bytes(4)
+  self.compatible_brands = {}
+  local i = 0
+  while not self._io:is_eof() do
+    self.compatible_brands[i + 1] = QuicktimeMov.Brand(self._io:read_u4be())
+    i = i + 1
+  end
+end
+
+
 -- 
 -- See also: Source (https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-BBCGFGJG)
 QuicktimeMov.MvhdBody = class.class(KaitaiStruct)
@@ -322,7 +474,7 @@ QuicktimeMov.MvhdBody = class.class(KaitaiStruct)
 function QuicktimeMov.MvhdBody:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -383,146 +535,13 @@ end
 -- ID value.
 
 -- 
--- See also: Source (https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-CJBCBIFF)
-QuicktimeMov.FtypBody = class.class(KaitaiStruct)
-
-function QuicktimeMov.FtypBody:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function QuicktimeMov.FtypBody:_read()
-  self.major_brand = QuicktimeMov.Brand(self._io:read_u4be())
-  self.minor_version = self._io:read_bytes(4)
-  self.compatible_brands = {}
-  local i = 0
-  while not self._io:is_eof() do
-    self.compatible_brands[i + 1] = QuicktimeMov.Brand(self._io:read_u4be())
-    i = i + 1
-  end
-end
-
-
--- 
--- Fixed-point 32-bit number.
-QuicktimeMov.Fixed32 = class.class(KaitaiStruct)
-
-function QuicktimeMov.Fixed32:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function QuicktimeMov.Fixed32:_read()
-  self.int_part = self._io:read_s2be()
-  self.frac_part = self._io:read_u2be()
-end
-
-
--- 
--- Fixed-point 16-bit number.
-QuicktimeMov.Fixed16 = class.class(KaitaiStruct)
-
-function QuicktimeMov.Fixed16:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function QuicktimeMov.Fixed16:_read()
-  self.int_part = self._io:read_s1()
-  self.frac_part = self._io:read_u1()
-end
-
-
-QuicktimeMov.Atom = class.class(KaitaiStruct)
-
-function QuicktimeMov.Atom:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function QuicktimeMov.Atom:_read()
-  self.len32 = self._io:read_u4be()
-  self.atom_type = QuicktimeMov.AtomType(self._io:read_u4be())
-  if self.len32 == 1 then
-    self.len64 = self._io:read_u8be()
-  end
-  local _on = self.atom_type
-  if _on == QuicktimeMov.AtomType.moof then
-    self._raw_body = self._io:read_bytes(self.len)
-    local _io = KaitaiStream(stringstream(self._raw_body))
-    self.body = QuicktimeMov.AtomList(_io, self, self._root)
-  elseif _on == QuicktimeMov.AtomType.tkhd then
-    self._raw_body = self._io:read_bytes(self.len)
-    local _io = KaitaiStream(stringstream(self._raw_body))
-    self.body = QuicktimeMov.TkhdBody(_io, self, self._root)
-  elseif _on == QuicktimeMov.AtomType.stbl then
-    self._raw_body = self._io:read_bytes(self.len)
-    local _io = KaitaiStream(stringstream(self._raw_body))
-    self.body = QuicktimeMov.AtomList(_io, self, self._root)
-  elseif _on == QuicktimeMov.AtomType.traf then
-    self._raw_body = self._io:read_bytes(self.len)
-    local _io = KaitaiStream(stringstream(self._raw_body))
-    self.body = QuicktimeMov.AtomList(_io, self, self._root)
-  elseif _on == QuicktimeMov.AtomType.minf then
-    self._raw_body = self._io:read_bytes(self.len)
-    local _io = KaitaiStream(stringstream(self._raw_body))
-    self.body = QuicktimeMov.AtomList(_io, self, self._root)
-  elseif _on == QuicktimeMov.AtomType.trak then
-    self._raw_body = self._io:read_bytes(self.len)
-    local _io = KaitaiStream(stringstream(self._raw_body))
-    self.body = QuicktimeMov.AtomList(_io, self, self._root)
-  elseif _on == QuicktimeMov.AtomType.moov then
-    self._raw_body = self._io:read_bytes(self.len)
-    local _io = KaitaiStream(stringstream(self._raw_body))
-    self.body = QuicktimeMov.AtomList(_io, self, self._root)
-  elseif _on == QuicktimeMov.AtomType.mdia then
-    self._raw_body = self._io:read_bytes(self.len)
-    local _io = KaitaiStream(stringstream(self._raw_body))
-    self.body = QuicktimeMov.AtomList(_io, self, self._root)
-  elseif _on == QuicktimeMov.AtomType.dinf then
-    self._raw_body = self._io:read_bytes(self.len)
-    local _io = KaitaiStream(stringstream(self._raw_body))
-    self.body = QuicktimeMov.AtomList(_io, self, self._root)
-  elseif _on == QuicktimeMov.AtomType.mvhd then
-    self._raw_body = self._io:read_bytes(self.len)
-    local _io = KaitaiStream(stringstream(self._raw_body))
-    self.body = QuicktimeMov.MvhdBody(_io, self, self._root)
-  elseif _on == QuicktimeMov.AtomType.ftyp then
-    self._raw_body = self._io:read_bytes(self.len)
-    local _io = KaitaiStream(stringstream(self._raw_body))
-    self.body = QuicktimeMov.FtypBody(_io, self, self._root)
-  else
-    self.body = self._io:read_bytes(self.len)
-  end
-end
-
-QuicktimeMov.Atom.property.len = {}
-function QuicktimeMov.Atom.property.len:get()
-  if self._m_len ~= nil then
-    return self._m_len
-  end
-
-  self._m_len = utils.box_unwrap((self.len32 == 0) and utils.box_wrap((self._io:size() - 8)) or (utils.box_unwrap((self.len32 == 1) and utils.box_wrap((self.len64 - 16)) or ((self.len32 - 8)))))
-  return self._m_len
-end
-
-
--- 
 -- See also: Source (https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-25550)
 QuicktimeMov.TkhdBody = class.class(KaitaiStruct)
 
 function QuicktimeMov.TkhdBody:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -546,23 +565,4 @@ end
 
 -- 
 -- Integer that uniquely identifies the track. The value 0 cannot be used.
-
-QuicktimeMov.AtomList = class.class(KaitaiStruct)
-
-function QuicktimeMov.AtomList:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function QuicktimeMov.AtomList:_read()
-  self.items = {}
-  local i = 0
-  while not self._io:is_eof() do
-    self.items[i + 1] = QuicktimeMov.Atom(self._io, self, self._root)
-    i = i + 1
-  end
-end
-
 

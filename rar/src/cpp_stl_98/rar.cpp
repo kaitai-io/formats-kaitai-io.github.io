@@ -2,10 +2,56 @@
 
 #include "rar.h"
 #include "kaitai/exceptions.h"
+std::set<rar_t::block_types_t> rar_t::_build_values_block_types_t() {
+    std::set<rar_t::block_types_t> _t;
+    _t.insert(rar_t::BLOCK_TYPES_MARKER);
+    _t.insert(rar_t::BLOCK_TYPES_ARCHIVE_HEADER);
+    _t.insert(rar_t::BLOCK_TYPES_FILE_HEADER);
+    _t.insert(rar_t::BLOCK_TYPES_OLD_STYLE_COMMENT_HEADER);
+    _t.insert(rar_t::BLOCK_TYPES_OLD_STYLE_AUTHENTICITY_INFO_76);
+    _t.insert(rar_t::BLOCK_TYPES_OLD_STYLE_SUBBLOCK);
+    _t.insert(rar_t::BLOCK_TYPES_OLD_STYLE_RECOVERY_RECORD);
+    _t.insert(rar_t::BLOCK_TYPES_OLD_STYLE_AUTHENTICITY_INFO_79);
+    _t.insert(rar_t::BLOCK_TYPES_SUBBLOCK);
+    _t.insert(rar_t::BLOCK_TYPES_TERMINATOR);
+    return _t;
+}
+const std::set<rar_t::block_types_t> rar_t::_values_block_types_t = rar_t::_build_values_block_types_t();
+bool rar_t::_is_defined_block_types_t(rar_t::block_types_t v) {
+    return rar_t::_values_block_types_t.find(v) != rar_t::_values_block_types_t.end();
+}
+std::set<rar_t::methods_t> rar_t::_build_values_methods_t() {
+    std::set<rar_t::methods_t> _t;
+    _t.insert(rar_t::METHODS_STORE);
+    _t.insert(rar_t::METHODS_FASTEST);
+    _t.insert(rar_t::METHODS_FAST);
+    _t.insert(rar_t::METHODS_NORMAL);
+    _t.insert(rar_t::METHODS_GOOD);
+    _t.insert(rar_t::METHODS_BEST);
+    return _t;
+}
+const std::set<rar_t::methods_t> rar_t::_values_methods_t = rar_t::_build_values_methods_t();
+bool rar_t::_is_defined_methods_t(rar_t::methods_t v) {
+    return rar_t::_values_methods_t.find(v) != rar_t::_values_methods_t.end();
+}
+std::set<rar_t::oses_t> rar_t::_build_values_oses_t() {
+    std::set<rar_t::oses_t> _t;
+    _t.insert(rar_t::OSES_MS_DOS);
+    _t.insert(rar_t::OSES_OS_2);
+    _t.insert(rar_t::OSES_WINDOWS);
+    _t.insert(rar_t::OSES_UNIX);
+    _t.insert(rar_t::OSES_MAC_OS);
+    _t.insert(rar_t::OSES_BEOS);
+    return _t;
+}
+const std::set<rar_t::oses_t> rar_t::_values_oses_t = rar_t::_build_values_oses_t();
+bool rar_t::_is_defined_oses_t(rar_t::oses_t v) {
+    return rar_t::_values_oses_t.find(v) != rar_t::_values_oses_t.end();
+}
 
 rar_t::rar_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, rar_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     m_magic = 0;
     m_blocks = 0;
 
@@ -54,50 +100,13 @@ void rar_t::_clean_up() {
     }
 }
 
-rar_t::magic_signature_t::magic_signature_t(kaitai::kstream* p__io, rar_t* p__parent, rar_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void rar_t::magic_signature_t::_read() {
-    m_magic1 = m__io->read_bytes(6);
-    if (!(magic1() == std::string("\x52\x61\x72\x21\x1A\x07", 6))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\x52\x61\x72\x21\x1A\x07", 6), magic1(), _io(), std::string("/types/magic_signature/seq/0"));
-    }
-    m_version = m__io->read_u1();
-    n_magic3 = true;
-    if (version() == 1) {
-        n_magic3 = false;
-        m_magic3 = m__io->read_bytes(1);
-        if (!(magic3() == std::string("\x00", 1))) {
-            throw kaitai::validation_not_equal_error<std::string>(std::string("\x00", 1), magic3(), _io(), std::string("/types/magic_signature/seq/2"));
-        }
-    }
-}
-
-rar_t::magic_signature_t::~magic_signature_t() {
-    _clean_up();
-}
-
-void rar_t::magic_signature_t::_clean_up() {
-    if (!n_magic3) {
-    }
-}
-
 rar_t::block_t::block_t(kaitai::kstream* p__io, rar_t* p__parent, rar_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
     m__io__raw_body = 0;
+    f_body_size = false;
     f_has_add = false;
     f_header_size = false;
-    f_body_size = false;
 
     try {
         _read();
@@ -157,28 +166,28 @@ void rar_t::block_t::_clean_up() {
     }
 }
 
+int32_t rar_t::block_t::body_size() {
+    if (f_body_size)
+        return m_body_size;
+    f_body_size = true;
+    m_body_size = block_size() - header_size();
+    return m_body_size;
+}
+
 bool rar_t::block_t::has_add() {
     if (f_has_add)
         return m_has_add;
-    m_has_add = (flags() & 32768) != 0;
     f_has_add = true;
+    m_has_add = (flags() & 32768) != 0;
     return m_has_add;
 }
 
 int8_t rar_t::block_t::header_size() {
     if (f_header_size)
         return m_header_size;
-    m_header_size = ((has_add()) ? (11) : (7));
     f_header_size = true;
+    m_header_size = ((has_add()) ? (11) : (7));
     return m_header_size;
-}
-
-int32_t rar_t::block_t::body_size() {
-    if (f_body_size)
-        return m_body_size;
-    m_body_size = (block_size() - header_size());
-    f_body_size = true;
-    return m_body_size;
 }
 
 rar_t::block_file_header_t::block_file_header_t(kaitai::kstream* p__io, rar_t::block_t* p__parent, rar_t* p__root) : kaitai::kstruct(p__io) {
@@ -256,4 +265,41 @@ rar_t::block_v5_t::~block_v5_t() {
 }
 
 void rar_t::block_v5_t::_clean_up() {
+}
+
+rar_t::magic_signature_t::magic_signature_t(kaitai::kstream* p__io, rar_t* p__parent, rar_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void rar_t::magic_signature_t::_read() {
+    m_magic1 = m__io->read_bytes(6);
+    if (!(m_magic1 == std::string("\x52\x61\x72\x21\x1A\x07", 6))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\x52\x61\x72\x21\x1A\x07", 6), m_magic1, m__io, std::string("/types/magic_signature/seq/0"));
+    }
+    m_version = m__io->read_u1();
+    n_magic3 = true;
+    if (version() == 1) {
+        n_magic3 = false;
+        m_magic3 = m__io->read_bytes(1);
+        if (!(m_magic3 == std::string("\x00", 1))) {
+            throw kaitai::validation_not_equal_error<std::string>(std::string("\x00", 1), m_magic3, m__io, std::string("/types/magic_signature/seq/2"));
+        }
+    }
+}
+
+rar_t::magic_signature_t::~magic_signature_t() {
+    _clean_up();
+}
+
+void rar_t::magic_signature_t::_clean_up() {
+    if (!n_magic3) {
+    }
 }

@@ -1,0 +1,115 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__android_sparse {
+		label="AndroidSparse";
+		graph[style=dotted];
+
+		android_sparse__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="header_prefix_pos">0</TD><TD PORT="header_prefix_size">10</TD><TD>FileHeaderPrefix</TD><TD PORT="header_prefix_type">header_prefix</TD></TR>
+			<TR><TD PORT="header_pos">10</TD><TD PORT="header_size">header_prefix.len_header - 10</TD><TD>FileHeader</TD><TD PORT="header_type">header</TD></TR>
+			<TR><TD PORT="chunks_pos">...</TD><TD PORT="chunks_size">...</TD><TD>Chunk</TD><TD PORT="chunks_type">chunks</TD></TR>
+			<TR><TD COLSPAN="4" PORT="chunks__repeat">repeat header.num_chunks times</TD></TR>
+		</TABLE>>];
+		subgraph cluster__chunk {
+			label="AndroidSparse::Chunk";
+			graph[style=dotted];
+
+			chunk__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="header_pos">0</TD><TD PORT="header_size">_root.header.len_chunk_header</TD><TD>ChunkHeader</TD><TD PORT="header_type">header</TD></TR>
+				<TR><TD PORT="body_pos">...</TD><TD PORT="body_size">...</TD><TD>switch (header.chunk_type)</TD><TD PORT="body_type">body</TD></TR>
+			</TABLE>>];
+chunk__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+</TABLE>>];
+			subgraph cluster__chunk_header {
+				label="AndroidSparse::Chunk::ChunkHeader";
+				graph[style=dotted];
+
+				chunk_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="chunk_type_pos">0</TD><TD PORT="chunk_type_size">2</TD><TD>u2le→ChunkTypes</TD><TD PORT="chunk_type_type">chunk_type</TD></TR>
+					<TR><TD PORT="reserved1_pos">2</TD><TD PORT="reserved1_size">2</TD><TD>u2le</TD><TD PORT="reserved1_type">reserved1</TD></TR>
+					<TR><TD PORT="num_body_blocks_pos">4</TD><TD PORT="num_body_blocks_size">4</TD><TD>u4le</TD><TD PORT="num_body_blocks_type">num_body_blocks</TD></TR>
+					<TR><TD PORT="len_chunk_pos">8</TD><TD PORT="len_chunk_size">4</TD><TD>u4le</TD><TD PORT="len_chunk_type">len_chunk</TD></TR>
+					<TR><TD COLSPAN="4" PORT="len_chunk__valid">must be equal to (len_body_expected != -1 ? _root.header.len_chunk_header + len_body_expected : len_chunk)</TD></TR>
+				</TABLE>>];
+				chunk_header__inst__len_body [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>len_body</TD><TD>len_chunk - _root.header.len_chunk_header</TD></TR>
+				</TABLE>>];
+				chunk_header__inst__len_body_expected [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>len_body_expected</TD><TD>(chunk_type == :chunk_types_raw ? _root.header.block_size * num_body_blocks : (chunk_type == :chunk_types_fill ? 4 : (chunk_type == :chunk_types_dont_care ? 0 : (chunk_type == :chunk_types_crc32 ? 4 : -1))))</TD></TR>
+				</TABLE>>];
+			}
+		}
+		subgraph cluster__file_header {
+			label="AndroidSparse::FileHeader";
+			graph[style=dotted];
+
+			file_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="len_chunk_header_pos">0</TD><TD PORT="len_chunk_header_size">2</TD><TD>u2le</TD><TD PORT="len_chunk_header_type">len_chunk_header</TD></TR>
+				<TR><TD PORT="block_size_pos">2</TD><TD PORT="block_size_size">4</TD><TD>u4le</TD><TD PORT="block_size_type">block_size</TD></TR>
+				<TR><TD COLSPAN="4" PORT="block_size__valid">must satisfy _ % 4 == 0</TD></TR>
+				<TR><TD PORT="num_blocks_pos">6</TD><TD PORT="num_blocks_size">4</TD><TD>u4le</TD><TD PORT="num_blocks_type">num_blocks</TD></TR>
+				<TR><TD PORT="num_chunks_pos">10</TD><TD PORT="num_chunks_size">4</TD><TD>u4le</TD><TD PORT="num_chunks_type">num_chunks</TD></TR>
+				<TR><TD PORT="checksum_pos">14</TD><TD PORT="checksum_size">4</TD><TD>u4le</TD><TD PORT="checksum_type">checksum</TD></TR>
+			</TABLE>>];
+			file_header__inst__len_header [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>len_header</TD><TD>_root.header_prefix.len_header</TD></TR>
+			</TABLE>>];
+			file_header__inst__version [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>version</TD><TD>_root.header_prefix.version</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__file_header_prefix {
+			label="AndroidSparse::FileHeaderPrefix";
+			graph[style=dotted];
+
+			file_header_prefix__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD>3A FF 26 ED</TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD PORT="version_pos">4</TD><TD PORT="version_size">4</TD><TD>Version</TD><TD PORT="version_type">version</TD></TR>
+				<TR><TD PORT="len_header_pos">8</TD><TD PORT="len_header_size">2</TD><TD>u2le</TD><TD PORT="len_header_type">len_header</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__version {
+			label="AndroidSparse::Version";
+			graph[style=dotted];
+
+			version__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="major_pos">0</TD><TD PORT="major_size">2</TD><TD>u2le</TD><TD PORT="major_type">major</TD></TR>
+				<TR><TD COLSPAN="4" PORT="major__valid">must be equal to 1</TD></TR>
+				<TR><TD PORT="minor_pos">2</TD><TD PORT="minor_size">2</TD><TD>u2le</TD><TD PORT="minor_type">minor</TD></TR>
+			</TABLE>>];
+		}
+	}
+	android_sparse__seq:header_prefix_type -> file_header_prefix__seq [style=bold];
+	file_header_prefix__seq:len_header_type -> android_sparse__seq:header_size [color="#404040"];
+	android_sparse__seq:header_prefix_size -> android_sparse__seq:header_size [color="#404040"];
+	android_sparse__seq:header_type -> file_header__seq [style=bold];
+	android_sparse__seq:chunks_type -> chunk__seq [style=bold];
+	file_header__seq:num_chunks_type -> android_sparse__seq:chunks__repeat [color="#404040"];
+	file_header__seq:len_chunk_header_type -> chunk__seq:header_size [color="#404040"];
+	chunk__seq:header_type -> chunk_header__seq [style=bold];
+	chunk__seq:body_type -> chunk__seq_body_switch [style=bold];
+	chunk_header__seq:chunk_type_type -> chunk__seq:body_type [color="#404040"];
+	chunk_header__inst__len_body_expected:len_body_expected_type -> chunk_header__seq:len_chunk__valid [color="#404040"];
+	file_header__seq:len_chunk_header_type -> chunk_header__seq:len_chunk__valid [color="#404040"];
+	chunk_header__seq:len_chunk_type -> chunk_header__seq:len_chunk__valid [color="#404040"];
+	chunk_header__seq:len_chunk_type -> chunk_header__inst__len_body [color="#404040"];
+	file_header__seq:len_chunk_header_type -> chunk_header__inst__len_body [color="#404040"];
+	chunk_header__seq:chunk_type_type -> chunk_header__inst__len_body_expected [color="#404040"];
+	file_header__seq:block_size_type -> chunk_header__inst__len_body_expected [color="#404040"];
+	chunk_header__seq:num_body_blocks_type -> chunk_header__inst__len_body_expected [color="#404040"];
+	file_header_prefix__seq:len_header_type -> file_header__inst__len_header [color="#404040"];
+	file_header_prefix__seq:version_type -> file_header__inst__version [color="#404040"];
+	file_header_prefix__seq:version_type -> version__seq [style=bold];
+}

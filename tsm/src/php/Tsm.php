@@ -14,8 +14,8 @@
 
 namespace {
     class Tsm extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Tsm $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Tsm $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -27,7 +27,7 @@ namespace {
             if ($this->_m_index !== null)
                 return $this->_m_index;
             $_pos = $this->_io->pos();
-            $this->_io->seek(($this->_io()->size() - 8));
+            $this->_io->seek($this->_io()->size() - 8);
             $this->_m_index = new \Tsm\Index($this->_io, $this, $this->_root);
             $this->_io->seek($_pos);
             return $this->_m_index;
@@ -39,15 +39,15 @@ namespace {
 
 namespace Tsm {
     class Header extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Tsm $_parent = null, \Tsm $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Tsm $_parent = null, ?\Tsm $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic = $this->_io->readBytes(4);
-            if (!($this->magic() == "\x16\xD1\x16\xD1")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x16\xD1\x16\xD1", $this->magic(), $this->_io(), "/types/header/seq/0");
+            if (!($this->_m_magic == "\x16\xD1\x16\xD1")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x16\xD1\x16\xD1", $this->_m_magic, $this->_io, "/types/header/seq/0");
             }
             $this->_m_version = $this->_io->readU1();
         }
@@ -60,7 +60,7 @@ namespace Tsm {
 
 namespace Tsm {
     class Index extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Tsm $_parent = null, \Tsm $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Tsm $_parent = null, ?\Tsm $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -80,7 +80,7 @@ namespace Tsm {
                 $_ = new \Tsm\Index\IndexHeader($this->_io, $this, $this->_root);
                 $this->_m_entries[] = $_;
                 $i++;
-            } while (!($this->_io()->pos() == ($this->_io()->size() - 8)));
+            } while (!($this->_io()->pos() == $this->_io()->size() - 8));
             $this->_io->seek($_pos);
             return $this->_m_entries;
         }
@@ -91,7 +91,7 @@ namespace Tsm {
 
 namespace Tsm\Index {
     class IndexHeader extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Tsm\Index $_parent = null, \Tsm $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Tsm\Index $_parent = null, ?\Tsm $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -122,7 +122,7 @@ namespace Tsm\Index {
 
 namespace Tsm\Index\IndexHeader {
     class IndexEntry extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Tsm\Index\IndexHeader $_parent = null, \Tsm $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Tsm\Index\IndexHeader $_parent = null, ?\Tsm $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -157,14 +157,14 @@ namespace Tsm\Index\IndexHeader {
 
 namespace Tsm\Index\IndexHeader\IndexEntry {
     class BlockEntry extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Tsm\Index\IndexHeader\IndexEntry $_parent = null, \Tsm $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Tsm\Index\IndexHeader\IndexEntry $_parent = null, ?\Tsm $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_crc32 = $this->_io->readU4be();
-            $this->_m_data = $this->_io->readBytes(($this->_parent()->blockSize() - 4));
+            $this->_m_data = $this->_io->readBytes($this->_parent()->blockSize() - 4);
         }
         protected $_m_crc32;
         protected $_m_data;

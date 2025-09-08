@@ -16,13 +16,13 @@ local str_decode = require("string_decode")
 -- See also: Source (https://wiki.mozilla.org/Software_Update:MAR)
 MozillaMar = class.class(KaitaiStruct)
 
+MozillaMar.BlockIdentifiers = enum.Enum {
+  product_information = 1,
+}
+
 MozillaMar.SignatureAlgorithms = enum.Enum {
   rsa_pkcs1_sha1 = 1,
   rsa_pkcs1_sha384 = 2,
-}
-
-MozillaMar.BlockIdentifiers = enum.Enum {
-  product_information = 1,
 }
 
 function MozillaMar:_init(io, parent, root)
@@ -35,7 +35,7 @@ end
 function MozillaMar:_read()
   self.magic = self._io:read_bytes(4)
   if not(self.magic == "\077\065\082\049") then
-    error("not equal, expected " ..  "\077\065\082\049" .. ", but got " .. self.magic)
+    error("not equal, expected " .. "\077\065\082\049" .. ", but got " .. self.magic)
   end
   self.ofs_index = self._io:read_u4be()
   self.file_size = self._io:read_u8be()
@@ -65,20 +65,26 @@ function MozillaMar.property.index:get()
 end
 
 
-MozillaMar.MarIndex = class.class(KaitaiStruct)
+MozillaMar.AdditionalSection = class.class(KaitaiStruct)
 
-function MozillaMar.MarIndex:_init(io, parent, root)
+function MozillaMar.AdditionalSection:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function MozillaMar.MarIndex:_read()
-  self.len_index = self._io:read_u4be()
-  self._raw_index_entries = self._io:read_bytes(self.len_index)
-  local _io = KaitaiStream(stringstream(self._raw_index_entries))
-  self.index_entries = MozillaMar.IndexEntries(_io, self, self._root)
+function MozillaMar.AdditionalSection:_read()
+  self.len_block = self._io:read_u4be()
+  self.block_identifier = MozillaMar.BlockIdentifiers(self._io:read_u4be())
+  local _on = self.block_identifier
+  if _on == MozillaMar.BlockIdentifiers.product_information then
+    self._raw_bytes = self._io:read_bytes((self.len_block - 4) - 4)
+    local _io = KaitaiStream(stringstream(self._raw_bytes))
+    self.bytes = MozillaMar.ProductInformationBlock(_io, self, self._root)
+  else
+    self.bytes = self._io:read_bytes((self.len_block - 4) - 4)
+  end
 end
 
 
@@ -87,7 +93,7 @@ MozillaMar.IndexEntries = class.class(KaitaiStruct)
 function MozillaMar.IndexEntries:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -101,43 +107,12 @@ function MozillaMar.IndexEntries:_read()
 end
 
 
-MozillaMar.Signature = class.class(KaitaiStruct)
-
-function MozillaMar.Signature:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function MozillaMar.Signature:_read()
-  self.algorithm = MozillaMar.SignatureAlgorithms(self._io:read_u4be())
-  self.len_signature = self._io:read_u4be()
-  self.signature = self._io:read_bytes(self.len_signature)
-end
-
-
-MozillaMar.ProductInformationBlock = class.class(KaitaiStruct)
-
-function MozillaMar.ProductInformationBlock:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function MozillaMar.ProductInformationBlock:_read()
-  self.mar_channel_name = str_decode.decode(KaitaiStream.bytes_terminate(self._io:read_bytes(64), 0, false), "UTF-8")
-  self.product_version = str_decode.decode(KaitaiStream.bytes_terminate(self._io:read_bytes(32), 0, false), "UTF-8")
-end
-
-
 MozillaMar.IndexEntry = class.class(KaitaiStruct)
 
 function MozillaMar.IndexEntry:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -165,26 +140,51 @@ end
 -- 
 -- File permission bits (in standard unix-style format).
 
-MozillaMar.AdditionalSection = class.class(KaitaiStruct)
+MozillaMar.MarIndex = class.class(KaitaiStruct)
 
-function MozillaMar.AdditionalSection:_init(io, parent, root)
+function MozillaMar.MarIndex:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function MozillaMar.AdditionalSection:_read()
-  self.len_block = self._io:read_u4be()
-  self.block_identifier = MozillaMar.BlockIdentifiers(self._io:read_u4be())
-  local _on = self.block_identifier
-  if _on == MozillaMar.BlockIdentifiers.product_information then
-    self._raw_bytes = self._io:read_bytes(((self.len_block - 4) - 4))
-    local _io = KaitaiStream(stringstream(self._raw_bytes))
-    self.bytes = MozillaMar.ProductInformationBlock(_io, self, self._root)
-  else
-    self.bytes = self._io:read_bytes(((self.len_block - 4) - 4))
-  end
+function MozillaMar.MarIndex:_read()
+  self.len_index = self._io:read_u4be()
+  self._raw_index_entries = self._io:read_bytes(self.len_index)
+  local _io = KaitaiStream(stringstream(self._raw_index_entries))
+  self.index_entries = MozillaMar.IndexEntries(_io, self, self._root)
+end
+
+
+MozillaMar.ProductInformationBlock = class.class(KaitaiStruct)
+
+function MozillaMar.ProductInformationBlock:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function MozillaMar.ProductInformationBlock:_read()
+  self.mar_channel_name = str_decode.decode(KaitaiStream.bytes_terminate(self._io:read_bytes(64), 0, false), "UTF-8")
+  self.product_version = str_decode.decode(KaitaiStream.bytes_terminate(self._io:read_bytes(32), 0, false), "UTF-8")
+end
+
+
+MozillaMar.Signature = class.class(KaitaiStruct)
+
+function MozillaMar.Signature:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function MozillaMar.Signature:_read()
+  self.algorithm = MozillaMar.SignatureAlgorithms(self._io:read_u4be())
+  self.len_signature = self._io:read_u4be()
+  self.signature = self._io:read_bytes(self.len_signature)
 end
 
 

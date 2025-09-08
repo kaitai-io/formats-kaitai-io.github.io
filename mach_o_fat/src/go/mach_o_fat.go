@@ -19,14 +19,18 @@ type MachOFat struct {
 	FatArchs []*MachOFat_FatArch
 	_io *kaitai.Stream
 	_root *MachOFat
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewMachOFat() *MachOFat {
 	return &MachOFat{
 	}
 }
 
-func (this *MachOFat) Read(io *kaitai.Stream, parent interface{}, root *MachOFat) (err error) {
+func (this MachOFat) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *MachOFat) Read(io *kaitai.Stream, parent kaitai.Struct, root *MachOFat) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -74,6 +78,10 @@ func NewMachOFat_FatArch() *MachOFat_FatArch {
 	}
 }
 
+func (this MachOFat_FatArch) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *MachOFat_FatArch) Read(io *kaitai.Stream, parent *MachOFat, root *MachOFat) (err error) {
 	this._io = io
 	this._parent = parent
@@ -110,6 +118,7 @@ func (this *MachOFat_FatArch) Object() (v *MachO, err error) {
 	if (this._f_object) {
 		return this.object, nil
 	}
+	this._f_object = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
@@ -126,7 +135,7 @@ func (this *MachOFat_FatArch) Object() (v *MachO, err error) {
 	this._raw_object = tmp9
 	_io__raw_object := kaitai.NewStream(bytes.NewReader(this._raw_object))
 	tmp10 := NewMachO()
-	err = tmp10.Read(_io__raw_object, this, nil)
+	err = tmp10.Read(_io__raw_object, nil, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -135,7 +144,5 @@ func (this *MachOFat_FatArch) Object() (v *MachO, err error) {
 	if err != nil {
 		return nil, err
 	}
-	this._f_object = true
-	this._f_object = true
 	return this.object, nil
 }

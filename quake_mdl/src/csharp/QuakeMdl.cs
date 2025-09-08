@@ -79,71 +79,67 @@ namespace Kaitai
                 _frames.Add(new MdlFrame(m_io, this, m_root));
             }
         }
-        public partial class MdlVertex : KaitaiStruct
+        public partial class MdlFrame : KaitaiStruct
         {
-            public static MdlVertex FromFile(string fileName)
+            public static MdlFrame FromFile(string fileName)
             {
-                return new MdlVertex(new KaitaiStream(fileName));
+                return new MdlFrame(new KaitaiStream(fileName));
             }
 
-            public MdlVertex(KaitaiStream p__io, KaitaiStruct p__parent = null, QuakeMdl p__root = null) : base(p__io)
+            public MdlFrame(KaitaiStream p__io, QuakeMdl p__parent = null, QuakeMdl p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
+                f_numSimpleFrames = false;
                 _read();
             }
             private void _read()
             {
-                _values = new List<byte>();
-                for (var i = 0; i < 3; i++)
-                {
-                    _values.Add(m_io.ReadU1());
+                _type = m_io.ReadS4le();
+                if (Type != 0) {
+                    _min = new MdlVertex(m_io, this, m_root);
                 }
-                _normalIndex = m_io.ReadU1();
+                if (Type != 0) {
+                    _max = new MdlVertex(m_io, this, m_root);
+                }
+                if (Type != 0) {
+                    _time = new List<float>();
+                    for (var i = 0; i < Type; i++)
+                    {
+                        _time.Add(m_io.ReadF4le());
+                    }
+                }
+                _frames = new List<MdlSimpleFrame>();
+                for (var i = 0; i < NumSimpleFrames; i++)
+                {
+                    _frames.Add(new MdlSimpleFrame(m_io, this, m_root));
+                }
             }
-            private List<byte> _values;
-            private byte _normalIndex;
-            private QuakeMdl m_root;
-            private KaitaiStruct m_parent;
-            public List<byte> Values { get { return _values; } }
-            public byte NormalIndex { get { return _normalIndex; } }
-            public QuakeMdl M_Root { get { return m_root; } }
-            public KaitaiStruct M_Parent { get { return m_parent; } }
-        }
-
-        /// <remarks>
-        /// Reference: <a href="https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L79-L83">Source</a>
-        /// </remarks>
-        /// <remarks>
-        /// Reference: <a href="https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD2">Source</a>
-        /// </remarks>
-        public partial class MdlTexcoord : KaitaiStruct
-        {
-            public static MdlTexcoord FromFile(string fileName)
+            private bool f_numSimpleFrames;
+            private int _numSimpleFrames;
+            public int NumSimpleFrames
             {
-                return new MdlTexcoord(new KaitaiStream(fileName));
+                get
+                {
+                    if (f_numSimpleFrames)
+                        return _numSimpleFrames;
+                    f_numSimpleFrames = true;
+                    _numSimpleFrames = (int) ((Type == 0 ? 1 : Type));
+                    return _numSimpleFrames;
+                }
             }
-
-            public MdlTexcoord(KaitaiStream p__io, QuakeMdl p__parent = null, QuakeMdl p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _onSeam = m_io.ReadS4le();
-                _s = m_io.ReadS4le();
-                _t = m_io.ReadS4le();
-            }
-            private int _onSeam;
-            private int _s;
-            private int _t;
+            private int _type;
+            private MdlVertex _min;
+            private MdlVertex _max;
+            private List<float> _time;
+            private List<MdlSimpleFrame> _frames;
             private QuakeMdl m_root;
             private QuakeMdl m_parent;
-            public int OnSeam { get { return _onSeam; } }
-            public int S { get { return _s; } }
-            public int T { get { return _t; } }
+            public int Type { get { return _type; } }
+            public MdlVertex Min { get { return _min; } }
+            public MdlVertex Max { get { return _max; } }
+            public List<float> Time { get { return _time; } }
+            public List<MdlSimpleFrame> Frames { get { return _frames; } }
             public QuakeMdl M_Root { get { return m_root; } }
             public QuakeMdl M_Parent { get { return m_parent; } }
         }
@@ -171,14 +167,14 @@ namespace Kaitai
             private void _read()
             {
                 _ident = m_io.ReadBytes(4);
-                if (!((KaitaiStream.ByteArrayCompare(Ident, new byte[] { 73, 68, 80, 79 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_ident, new byte[] { 73, 68, 80, 79 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 73, 68, 80, 79 }, Ident, M_Io, "/types/mdl_header/seq/0");
+                    throw new ValidationNotEqualError(new byte[] { 73, 68, 80, 79 }, _ident, m_io, "/types/mdl_header/seq/0");
                 }
                 _version = m_io.ReadS4le();
-                if (!(Version == 6))
+                if (!(_version == 6))
                 {
-                    throw new ValidationNotEqualError(6, Version, M_Io, "/types/mdl_header/seq/1");
+                    throw new ValidationNotEqualError(6, _version, m_io, "/types/mdl_header/seq/1");
                 }
                 _scale = new Vec3(m_io, this, m_root);
                 _origin = new Vec3(m_io, this, m_root);
@@ -206,8 +202,8 @@ namespace Kaitai
                 {
                     if (f_skinSize)
                         return _skinSize;
-                    _skinSize = (int) ((SkinWidth * SkinHeight));
                     f_skinSize = true;
+                    _skinSize = (int) (SkinWidth * SkinHeight);
                     return _skinSize;
                 }
             }
@@ -286,6 +282,43 @@ namespace Kaitai
             public QuakeMdl M_Root { get { return m_root; } }
             public QuakeMdl M_Parent { get { return m_parent; } }
         }
+        public partial class MdlSimpleFrame : KaitaiStruct
+        {
+            public static MdlSimpleFrame FromFile(string fileName)
+            {
+                return new MdlSimpleFrame(new KaitaiStream(fileName));
+            }
+
+            public MdlSimpleFrame(KaitaiStream p__io, QuakeMdl.MdlFrame p__parent = null, QuakeMdl p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _bboxMin = new MdlVertex(m_io, this, m_root);
+                _bboxMax = new MdlVertex(m_io, this, m_root);
+                _name = System.Text.Encoding.GetEncoding("ASCII").GetString(KaitaiStream.BytesTerminate(KaitaiStream.BytesStripRight(m_io.ReadBytes(16), 0), 0, false));
+                _vertices = new List<MdlVertex>();
+                for (var i = 0; i < M_Root.Header.NumVerts; i++)
+                {
+                    _vertices.Add(new MdlVertex(m_io, this, m_root));
+                }
+            }
+            private MdlVertex _bboxMin;
+            private MdlVertex _bboxMax;
+            private string _name;
+            private List<MdlVertex> _vertices;
+            private QuakeMdl m_root;
+            private QuakeMdl.MdlFrame m_parent;
+            public MdlVertex BboxMin { get { return _bboxMin; } }
+            public MdlVertex BboxMax { get { return _bboxMax; } }
+            public string Name { get { return _name; } }
+            public List<MdlVertex> Vertices { get { return _vertices; } }
+            public QuakeMdl M_Root { get { return m_root; } }
+            public QuakeMdl.MdlFrame M_Parent { get { return m_parent; } }
+        }
         public partial class MdlSkin : KaitaiStruct
         {
             public static MdlSkin FromFile(string fileName)
@@ -338,106 +371,42 @@ namespace Kaitai
             public QuakeMdl M_Root { get { return m_root; } }
             public QuakeMdl M_Parent { get { return m_parent; } }
         }
-        public partial class MdlFrame : KaitaiStruct
+
+        /// <remarks>
+        /// Reference: <a href="https://github.com/id-Software/Quake/blob/0023db327bc1db00068284b70e1db45857aeee35/WinQuake/modelgen.h#L79-L83">Source</a>
+        /// </remarks>
+        /// <remarks>
+        /// Reference: <a href="https://www.gamers.org/dEngine/quake/spec/quake-spec34/qkspec_5.htm#MD2">Source</a>
+        /// </remarks>
+        public partial class MdlTexcoord : KaitaiStruct
         {
-            public static MdlFrame FromFile(string fileName)
+            public static MdlTexcoord FromFile(string fileName)
             {
-                return new MdlFrame(new KaitaiStream(fileName));
+                return new MdlTexcoord(new KaitaiStream(fileName));
             }
 
-            public MdlFrame(KaitaiStream p__io, QuakeMdl p__parent = null, QuakeMdl p__root = null) : base(p__io)
+            public MdlTexcoord(KaitaiStream p__io, QuakeMdl p__parent = null, QuakeMdl p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
-                f_numSimpleFrames = false;
                 _read();
             }
             private void _read()
             {
-                _type = m_io.ReadS4le();
-                if (Type != 0) {
-                    _min = new MdlVertex(m_io, this, m_root);
-                }
-                if (Type != 0) {
-                    _max = new MdlVertex(m_io, this, m_root);
-                }
-                if (Type != 0) {
-                    _time = new List<float>();
-                    for (var i = 0; i < Type; i++)
-                    {
-                        _time.Add(m_io.ReadF4le());
-                    }
-                }
-                _frames = new List<MdlSimpleFrame>();
-                for (var i = 0; i < NumSimpleFrames; i++)
-                {
-                    _frames.Add(new MdlSimpleFrame(m_io, this, m_root));
-                }
+                _onSeam = m_io.ReadS4le();
+                _s = m_io.ReadS4le();
+                _t = m_io.ReadS4le();
             }
-            private bool f_numSimpleFrames;
-            private int _numSimpleFrames;
-            public int NumSimpleFrames
-            {
-                get
-                {
-                    if (f_numSimpleFrames)
-                        return _numSimpleFrames;
-                    _numSimpleFrames = (int) ((Type == 0 ? 1 : Type));
-                    f_numSimpleFrames = true;
-                    return _numSimpleFrames;
-                }
-            }
-            private int _type;
-            private MdlVertex _min;
-            private MdlVertex _max;
-            private List<float> _time;
-            private List<MdlSimpleFrame> _frames;
+            private int _onSeam;
+            private int _s;
+            private int _t;
             private QuakeMdl m_root;
             private QuakeMdl m_parent;
-            public int Type { get { return _type; } }
-            public MdlVertex Min { get { return _min; } }
-            public MdlVertex Max { get { return _max; } }
-            public List<float> Time { get { return _time; } }
-            public List<MdlSimpleFrame> Frames { get { return _frames; } }
+            public int OnSeam { get { return _onSeam; } }
+            public int S { get { return _s; } }
+            public int T { get { return _t; } }
             public QuakeMdl M_Root { get { return m_root; } }
             public QuakeMdl M_Parent { get { return m_parent; } }
-        }
-        public partial class MdlSimpleFrame : KaitaiStruct
-        {
-            public static MdlSimpleFrame FromFile(string fileName)
-            {
-                return new MdlSimpleFrame(new KaitaiStream(fileName));
-            }
-
-            public MdlSimpleFrame(KaitaiStream p__io, QuakeMdl.MdlFrame p__parent = null, QuakeMdl p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _bboxMin = new MdlVertex(m_io, this, m_root);
-                _bboxMax = new MdlVertex(m_io, this, m_root);
-                _name = System.Text.Encoding.GetEncoding("ASCII").GetString(KaitaiStream.BytesTerminate(KaitaiStream.BytesStripRight(m_io.ReadBytes(16), 0), 0, false));
-                _vertices = new List<MdlVertex>();
-                for (var i = 0; i < M_Root.Header.NumVerts; i++)
-                {
-                    _vertices.Add(new MdlVertex(m_io, this, m_root));
-                }
-            }
-            private MdlVertex _bboxMin;
-            private MdlVertex _bboxMax;
-            private string _name;
-            private List<MdlVertex> _vertices;
-            private QuakeMdl m_root;
-            private QuakeMdl.MdlFrame m_parent;
-            public MdlVertex BboxMin { get { return _bboxMin; } }
-            public MdlVertex BboxMax { get { return _bboxMax; } }
-            public string Name { get { return _name; } }
-            public List<MdlVertex> Vertices { get { return _vertices; } }
-            public QuakeMdl M_Root { get { return m_root; } }
-            public QuakeMdl.MdlFrame M_Parent { get { return m_parent; } }
         }
 
         /// <summary>
@@ -480,6 +449,37 @@ namespace Kaitai
             public List<int> Vertices { get { return _vertices; } }
             public QuakeMdl M_Root { get { return m_root; } }
             public QuakeMdl M_Parent { get { return m_parent; } }
+        }
+        public partial class MdlVertex : KaitaiStruct
+        {
+            public static MdlVertex FromFile(string fileName)
+            {
+                return new MdlVertex(new KaitaiStream(fileName));
+            }
+
+            public MdlVertex(KaitaiStream p__io, KaitaiStruct p__parent = null, QuakeMdl p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _values = new List<byte>();
+                for (var i = 0; i < 3; i++)
+                {
+                    _values.Add(m_io.ReadU1());
+                }
+                _normalIndex = m_io.ReadU1();
+            }
+            private List<byte> _values;
+            private byte _normalIndex;
+            private QuakeMdl m_root;
+            private KaitaiStruct m_parent;
+            public List<byte> Values { get { return _values; } }
+            public byte NormalIndex { get { return _normalIndex; } }
+            public QuakeMdl M_Root { get { return m_root; } }
+            public KaitaiStruct M_Parent { get { return m_parent; } }
         }
 
         /// <summary>

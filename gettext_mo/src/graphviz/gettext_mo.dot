@@ -17,6 +17,14 @@ digraph {
 			hash_lookup_iteration__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 			</TABLE>>];
+			hash_lookup_iteration__inst__next [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="next_pos">0</TD><TD PORT="next_size">0</TD><TD>HashLookupIteration</TD><TD PORT="next_type">next</TD></TR>
+			</TABLE>>];
+			hash_lookup_iteration__inst__next_idx [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>next_idx</TD><TD>(idx + collision_step) - (idx &gt;= _root.mo.num_hashtable_items - collision_step ? _root.mo.num_hashtable_items : 0)</TD></TR>
+			</TABLE>>];
 			hash_lookup_iteration__inst__original [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
 				<TR><TD>original</TD><TD>_root.mo.originals[idx].str</TD></TR>
@@ -25,13 +33,29 @@ digraph {
 				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
 				<TR><TD>translation</TD><TD>_root.mo.translations[idx].str</TD></TR>
 			</TABLE>>];
-			hash_lookup_iteration__inst__next_idx [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>next_idx</TD><TD>((idx + collision_step) - (idx &gt;= (_root.mo.num_hashtable_items - collision_step) ? _root.mo.num_hashtable_items : 0))</TD></TR>
-			</TABLE>>];
-			hash_lookup_iteration__inst__next [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+		}
+		subgraph cluster__hashtable_lookup {
+			label="GettextMo::HashtableLookup";
+			graph[style=dotted];
+
+			hashtable_lookup__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="next_pos">0</TD><TD PORT="next_size">0</TD><TD>HashLookupIteration</TD><TD PORT="next_type">next</TD></TR>
+			</TABLE>>];
+			hashtable_lookup__inst__collision_step [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>collision_step</TD><TD>hash % (_root.mo.num_hashtable_items - 2) + 1</TD></TR>
+			</TABLE>>];
+			hashtable_lookup__inst__entry [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="entry_pos">0</TD><TD PORT="entry_size">0</TD><TD>LookupIteration</TD><TD PORT="entry_type">entry</TD></TR>
+			</TABLE>>];
+			hashtable_lookup__inst__hash_lookup_iteration [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="hash_lookup_iteration_pos">0</TD><TD PORT="hash_lookup_iteration_size">0</TD><TD>HashLookupIteration</TD><TD PORT="hash_lookup_iteration_type">hash_lookup_iteration</TD></TR>
+			</TABLE>>];
+			hashtable_lookup__inst__idx [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>idx</TD><TD>hash % _root.mo.num_hashtable_items</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__lookup_iteration {
@@ -48,30 +72,7 @@ digraph {
 			lookup_iteration__inst__next [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="next_pos">0</TD><TD PORT="next_size">0</TD><TD>LookupIteration</TD><TD PORT="next_type">next</TD></TR>
-			</TABLE>>];
-		}
-		subgraph cluster__hashtable_lookup {
-			label="GettextMo::HashtableLookup";
-			graph[style=dotted];
-
-			hashtable_lookup__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-			</TABLE>>];
-			hashtable_lookup__inst__collision_step [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>collision_step</TD><TD>((hash % (_root.mo.num_hashtable_items - 2)) + 1)</TD></TR>
-			</TABLE>>];
-			hashtable_lookup__inst__idx [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>idx</TD><TD>(hash % _root.mo.num_hashtable_items)</TD></TR>
-			</TABLE>>];
-			hashtable_lookup__inst__hash_lookup_iteration [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="hash_lookup_iteration_pos">0</TD><TD PORT="hash_lookup_iteration_size">0</TD><TD>HashLookupIteration</TD><TD PORT="hash_lookup_iteration_type">hash_lookup_iteration</TD></TR>
-			</TABLE>>];
-			hashtable_lookup__inst__entry [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="entry_pos">0</TD><TD PORT="entry_size">0</TD><TD>LookupIteration</TD><TD PORT="entry_type">entry</TD></TR>
+				<TR><TD COLSPAN="4" PORT="next__if">if !(found)</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__mo {
@@ -87,6 +88,12 @@ digraph {
 				<TR><TD PORT="num_hashtable_items_pos">16</TD><TD PORT="num_hashtable_items_size">4</TD><TD>u4</TD><TD PORT="num_hashtable_items_type">num_hashtable_items</TD></TR>
 				<TR><TD PORT="ofs_hashtable_items_pos">20</TD><TD PORT="ofs_hashtable_items_size">4</TD><TD>u4</TD><TD PORT="ofs_hashtable_items_type">ofs_hashtable_items</TD></TR>
 			</TABLE>>];
+			mo__inst__hashtable_items [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="hashtable_items_pos">ofs_hashtable_items</TD><TD PORT="hashtable_items_size">4</TD><TD>HashtableItem</TD><TD PORT="hashtable_items_type">hashtable_items</TD></TR>
+				<TR><TD COLSPAN="4" PORT="hashtable_items__repeat">repeat num_hashtable_items times</TD></TR>
+				<TR><TD COLSPAN="4" PORT="hashtable_items__if">if ofs_hashtable_items != 0</TD></TR>
+			</TABLE>>];
 			mo__inst__originals [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="originals_pos">ofs_originals</TD><TD PORT="originals_size">8</TD><TD>Descriptor</TD><TD PORT="originals_type">originals</TD></TR>
@@ -97,53 +104,6 @@ digraph {
 				<TR><TD PORT="translations_pos">ofs_translations</TD><TD PORT="translations_size">8</TD><TD>Descriptor</TD><TD PORT="translations_type">translations</TD></TR>
 				<TR><TD COLSPAN="4" PORT="translations__repeat">repeat num_translations times</TD></TR>
 			</TABLE>>];
-			mo__inst__hashtable_items [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="hashtable_items_pos">ofs_hashtable_items</TD><TD PORT="hashtable_items_size">4</TD><TD>HashtableItem</TD><TD PORT="hashtable_items_type">hashtable_items</TD></TR>
-				<TR><TD COLSPAN="4" PORT="hashtable_items__repeat">repeat num_hashtable_items times</TD></TR>
-			</TABLE>>];
-			subgraph cluster__version {
-				label="GettextMo::Mo::Version";
-				graph[style=dotted];
-
-				version__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="version_raw_pos">0</TD><TD PORT="version_raw_size">4</TD><TD>u4</TD><TD PORT="version_raw_type">version_raw</TD></TR>
-				</TABLE>>];
-				version__inst__major [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-					<TR><TD>major</TD><TD>(version_raw &gt;&gt; 16)</TD></TR>
-				</TABLE>>];
-				version__inst__minor [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-					<TR><TD>minor</TD><TD>(version_raw &amp; 65535)</TD></TR>
-				</TABLE>>];
-			}
-			subgraph cluster__hashtable_item {
-				label="GettextMo::Mo::HashtableItem";
-				graph[style=dotted];
-
-				hashtable_item__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="raw_val_pos">0</TD><TD PORT="raw_val_size">4</TD><TD>u4</TD><TD PORT="raw_val_type">raw_val</TD></TR>
-				</TABLE>>];
-				hashtable_item__inst__mask [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-					<TR><TD>mask</TD><TD>2147483648</TD></TR>
-				</TABLE>>];
-				hashtable_item__inst__val_1 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-					<TR><TD>val_1</TD><TD>(raw_val - 1)</TD></TR>
-				</TABLE>>];
-				hashtable_item__inst__is_system_dependent [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-					<TR><TD>is_system_dependent</TD><TD>(val_1 &amp; mask) == 1</TD></TR>
-				</TABLE>>];
-				hashtable_item__inst__val [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-					<TR><TD>val</TD><TD>(val_1 &amp; ~(mask))</TD></TR>
-				</TABLE>>];
-			}
 			subgraph cluster__descriptor {
 				label="GettextMo::Mo::Descriptor";
 				graph[style=dotted];
@@ -158,44 +118,85 @@ digraph {
 					<TR><TD PORT="str_pos">ofs_str</TD><TD PORT="str_size">len_str</TD><TD>str(UTF-8)</TD><TD PORT="str_type">str</TD></TR>
 				</TABLE>>];
 			}
+			subgraph cluster__hashtable_item {
+				label="GettextMo::Mo::HashtableItem";
+				graph[style=dotted];
+
+				hashtable_item__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="raw_val_pos">0</TD><TD PORT="raw_val_size">4</TD><TD>u4</TD><TD PORT="raw_val_type">raw_val</TD></TR>
+				</TABLE>>];
+				hashtable_item__inst__is_system_dependent [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>is_system_dependent</TD><TD>val_1 &amp; mask == 1</TD></TR>
+				</TABLE>>];
+				hashtable_item__inst__mask [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>mask</TD><TD>2147483648</TD></TR>
+				</TABLE>>];
+				hashtable_item__inst__val [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>val</TD><TD>val_1 &amp; ~(mask)</TD></TR>
+				</TABLE>>];
+				hashtable_item__inst__val_1 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>val_1</TD><TD>raw_val - 1</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__version {
+				label="GettextMo::Mo::Version";
+				graph[style=dotted];
+
+				version__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="version_raw_pos">0</TD><TD PORT="version_raw_size">4</TD><TD>u4</TD><TD PORT="version_raw_type">version_raw</TD></TR>
+				</TABLE>>];
+				version__inst__major [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>major</TD><TD>version_raw &gt;&gt; 16</TD></TR>
+				</TABLE>>];
+				version__inst__minor [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>minor</TD><TD>version_raw &amp; 65535</TD></TR>
+				</TABLE>>];
+			}
 		}
 	}
 	gettext_mo__seq:mo_type -> mo__seq [style=bold];
+	hash_lookup_iteration__inst__next:next_type -> hash_lookup_iteration__seq [style=bold];
+	hash_lookup_iteration__params:idx_type -> hash_lookup_iteration__inst__next_idx [color="#404040"];
+	hash_lookup_iteration__params:collision_step_type -> hash_lookup_iteration__inst__next_idx [color="#404040"];
+	mo__seq:num_hashtable_items_type -> hash_lookup_iteration__inst__next_idx [color="#404040"];
 	descriptor__inst__str:str_type -> hash_lookup_iteration__inst__original [color="#404040"];
 	descriptor__inst__str:str_type -> hash_lookup_iteration__inst__translation [color="#404040"];
-	hash_lookup_iteration__params:idx_type -> hash_lookup_iteration__inst__next_idx [color="#404040"];
-	hash_lookup_iteration__params:collision_step_type -> hash_lookup_iteration__inst__next_idx [color="#404040"];
-	hash_lookup_iteration__params:idx_type -> hash_lookup_iteration__inst__next_idx [color="#404040"];
-	mo__seq:num_hashtable_items_type -> hash_lookup_iteration__inst__next_idx [color="#404040"];
-	hash_lookup_iteration__params:collision_step_type -> hash_lookup_iteration__inst__next_idx [color="#404040"];
-	mo__seq:num_hashtable_items_type -> hash_lookup_iteration__inst__next_idx [color="#404040"];
-	hash_lookup_iteration__inst__next:next_type -> hash_lookup_iteration__seq [style=bold];
+	hashtable_lookup__params:hash_type -> hashtable_lookup__inst__collision_step [color="#404040"];
+	mo__seq:num_hashtable_items_type -> hashtable_lookup__inst__collision_step [color="#404040"];
+	hashtable_lookup__inst__entry:entry_type -> lookup_iteration__seq [style=bold];
+	hashtable_lookup__inst__hash_lookup_iteration:hash_lookup_iteration_type -> hash_lookup_iteration__seq [style=bold];
+	hashtable_lookup__params:hash_type -> hashtable_lookup__inst__idx [color="#404040"];
+	mo__seq:num_hashtable_items_type -> hashtable_lookup__inst__idx [color="#404040"];
 	lookup_iteration__params:query_type -> lookup_iteration__inst__found [color="#404040"];
 	hash_lookup_iteration__inst__original:original_type -> lookup_iteration__inst__found [color="#404040"];
 	lookup_iteration__inst__next:next_type -> lookup_iteration__seq [style=bold];
-	hashtable_lookup__params:hash_type -> hashtable_lookup__inst__collision_step [color="#404040"];
-	mo__seq:num_hashtable_items_type -> hashtable_lookup__inst__collision_step [color="#404040"];
-	hashtable_lookup__params:hash_type -> hashtable_lookup__inst__idx [color="#404040"];
-	mo__seq:num_hashtable_items_type -> hashtable_lookup__inst__idx [color="#404040"];
-	hashtable_lookup__inst__hash_lookup_iteration:hash_lookup_iteration_type -> hash_lookup_iteration__seq [style=bold];
-	hashtable_lookup__inst__entry:entry_type -> lookup_iteration__seq [style=bold];
+	lookup_iteration__inst__found:found_type -> lookup_iteration__inst__next:next__if [color="#404040"];
 	mo__seq:version_type -> version__seq [style=bold];
+	mo__seq:ofs_hashtable_items_type -> mo__inst__hashtable_items:hashtable_items_pos [color="#404040"];
+	mo__inst__hashtable_items:hashtable_items_type -> hashtable_item__seq [style=bold];
+	mo__seq:num_hashtable_items_type -> mo__inst__hashtable_items:hashtable_items__repeat [color="#404040"];
+	mo__seq:ofs_hashtable_items_type -> mo__inst__hashtable_items:hashtable_items__if [color="#404040"];
 	mo__seq:ofs_originals_type -> mo__inst__originals:originals_pos [color="#404040"];
 	mo__inst__originals:originals_type -> descriptor__seq [style=bold];
 	mo__seq:num_translations_type -> mo__inst__originals:originals__repeat [color="#404040"];
 	mo__seq:ofs_translations_type -> mo__inst__translations:translations_pos [color="#404040"];
 	mo__inst__translations:translations_type -> descriptor__seq [style=bold];
 	mo__seq:num_translations_type -> mo__inst__translations:translations__repeat [color="#404040"];
-	mo__seq:ofs_hashtable_items_type -> mo__inst__hashtable_items:hashtable_items_pos [color="#404040"];
-	mo__inst__hashtable_items:hashtable_items_type -> hashtable_item__seq [style=bold];
-	mo__seq:num_hashtable_items_type -> mo__inst__hashtable_items:hashtable_items__repeat [color="#404040"];
-	version__seq:version_raw_type -> version__inst__major [color="#404040"];
-	version__seq:version_raw_type -> version__inst__minor [color="#404040"];
-	hashtable_item__seq:raw_val_type -> hashtable_item__inst__val_1 [color="#404040"];
+	descriptor__seq:ofs_str_type -> descriptor__inst__str:str_pos [color="#404040"];
+	descriptor__seq:len_str_type -> descriptor__inst__str:str_size [color="#404040"];
 	hashtable_item__inst__val_1:val_1_type -> hashtable_item__inst__is_system_dependent [color="#404040"];
 	hashtable_item__inst__mask:mask_type -> hashtable_item__inst__is_system_dependent [color="#404040"];
 	hashtable_item__inst__val_1:val_1_type -> hashtable_item__inst__val [color="#404040"];
 	hashtable_item__inst__mask:mask_type -> hashtable_item__inst__val [color="#404040"];
-	descriptor__seq:ofs_str_type -> descriptor__inst__str:str_pos [color="#404040"];
-	descriptor__seq:len_str_type -> descriptor__inst__str:str_size [color="#404040"];
+	hashtable_item__seq:raw_val_type -> hashtable_item__inst__val_1 [color="#404040"];
+	version__seq:version_raw_type -> version__inst__major [color="#404040"];
+	version__seq:version_raw_type -> version__inst__minor [color="#404040"];
 }

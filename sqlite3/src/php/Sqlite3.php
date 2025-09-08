@@ -19,15 +19,15 @@
 
 namespace {
     class Sqlite3 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Sqlite3 $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Sqlite3 $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic = $this->_io->readBytes(16);
-            if (!($this->magic() == "\x53\x51\x4C\x69\x74\x65\x20\x66\x6F\x72\x6D\x61\x74\x20\x33\x00")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x53\x51\x4C\x69\x74\x65\x20\x66\x6F\x72\x6D\x61\x74\x20\x33\x00", $this->magic(), $this->_io(), "/seq/0");
+            if (!($this->_m_magic == "\x53\x51\x4C\x69\x74\x65\x20\x66\x6F\x72\x6D\x61\x74\x20\x33\x00")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x53\x51\x4C\x69\x74\x65\x20\x66\x6F\x72\x6D\x61\x74\x20\x33\x00", $this->_m_magic, $this->_io, "/seq/0");
             }
             $this->_m_lenPageMod = $this->_io->readU2be();
             $this->_m_writeVersion = $this->_io->readU1();
@@ -174,46 +174,8 @@ namespace {
 }
 
 namespace Sqlite3 {
-    class Serial extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Sqlite3\Serials $_parent = null, \Sqlite3 $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_code = new \VlqBase128Be($this->_io);
-        }
-        protected $_m_isBlob;
-        public function isBlob() {
-            if ($this->_m_isBlob !== null)
-                return $this->_m_isBlob;
-            $this->_m_isBlob =  (($this->code()->value() >= 12) && (\Kaitai\Struct\Stream::mod($this->code()->value(), 2) == 0)) ;
-            return $this->_m_isBlob;
-        }
-        protected $_m_isString;
-        public function isString() {
-            if ($this->_m_isString !== null)
-                return $this->_m_isString;
-            $this->_m_isString =  (($this->code()->value() >= 13) && (\Kaitai\Struct\Stream::mod($this->code()->value(), 2) == 1)) ;
-            return $this->_m_isString;
-        }
-        protected $_m_lenContent;
-        public function lenContent() {
-            if ($this->_m_lenContent !== null)
-                return $this->_m_lenContent;
-            if ($this->code()->value() >= 12) {
-                $this->_m_lenContent = intval(($this->code()->value() - 12) / 2);
-            }
-            return $this->_m_lenContent;
-        }
-        protected $_m_code;
-        public function code() { return $this->_m_code; }
-    }
-}
-
-namespace Sqlite3 {
     class BtreePage extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Sqlite3 $_parent = null, \Sqlite3 $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Sqlite3 $_parent = null, ?\Sqlite3 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -251,21 +213,24 @@ namespace Sqlite3 {
 }
 
 namespace Sqlite3 {
-    class CellIndexLeaf extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Sqlite3\RefCell $_parent = null, \Sqlite3 $_root = null) {
+    class CellIndexInterior extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Sqlite3\RefCell $_parent = null, ?\Sqlite3 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
+            $this->_m_leftChildPage = $this->_io->readU4be();
             $this->_m_lenPayload = new \VlqBase128Be($this->_io);
             $this->_m__raw_payload = $this->_io->readBytes($this->lenPayload()->value());
             $_io__raw_payload = new \Kaitai\Struct\Stream($this->_m__raw_payload);
             $this->_m_payload = new \Sqlite3\CellPayload($_io__raw_payload, $this, $this->_root);
         }
+        protected $_m_leftChildPage;
         protected $_m_lenPayload;
         protected $_m_payload;
         protected $_m__raw_payload;
+        public function leftChildPage() { return $this->_m_leftChildPage; }
         public function lenPayload() { return $this->_m_lenPayload; }
         public function payload() { return $this->_m_payload; }
         public function _raw_payload() { return $this->_m__raw_payload; }
@@ -273,45 +238,22 @@ namespace Sqlite3 {
 }
 
 namespace Sqlite3 {
-    class Serials extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Sqlite3\CellPayload $_parent = null, \Sqlite3 $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_entries = [];
-            $i = 0;
-            while (!$this->_io->isEof()) {
-                $this->_m_entries[] = new \Sqlite3\Serial($this->_io, $this, $this->_root);
-                $i++;
-            }
-        }
-        protected $_m_entries;
-        public function entries() { return $this->_m_entries; }
-    }
-}
-
-namespace Sqlite3 {
-    class CellTableLeaf extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Sqlite3\RefCell $_parent = null, \Sqlite3 $_root = null) {
+    class CellIndexLeaf extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Sqlite3\RefCell $_parent = null, ?\Sqlite3 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_lenPayload = new \VlqBase128Be($this->_io);
-            $this->_m_rowId = new \VlqBase128Be($this->_io);
             $this->_m__raw_payload = $this->_io->readBytes($this->lenPayload()->value());
             $_io__raw_payload = new \Kaitai\Struct\Stream($this->_m__raw_payload);
             $this->_m_payload = new \Sqlite3\CellPayload($_io__raw_payload, $this, $this->_root);
         }
         protected $_m_lenPayload;
-        protected $_m_rowId;
         protected $_m_payload;
         protected $_m__raw_payload;
         public function lenPayload() { return $this->_m_lenPayload; }
-        public function rowId() { return $this->_m_rowId; }
         public function payload() { return $this->_m_payload; }
         public function _raw_payload() { return $this->_m__raw_payload; }
     }
@@ -319,14 +261,14 @@ namespace Sqlite3 {
 
 namespace Sqlite3 {
     class CellPayload extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Sqlite3 $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Sqlite3 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_lenHeaderAndLen = new \VlqBase128Be($this->_io);
-            $this->_m__raw_columnSerials = $this->_io->readBytes(($this->lenHeaderAndLen()->value() - 1));
+            $this->_m__raw_columnSerials = $this->_io->readBytes($this->lenHeaderAndLen()->value() - 1);
             $_io__raw_columnSerials = new \Kaitai\Struct\Stream($this->_m__raw_columnSerials);
             $this->_m_columnSerials = new \Sqlite3\Serials($_io__raw_columnSerials, $this, $this->_root);
             $this->_m_columnContents = [];
@@ -348,7 +290,7 @@ namespace Sqlite3 {
 
 namespace Sqlite3 {
     class CellTableInterior extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Sqlite3\RefCell $_parent = null, \Sqlite3 $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Sqlite3\RefCell $_parent = null, ?\Sqlite3 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -365,25 +307,25 @@ namespace Sqlite3 {
 }
 
 namespace Sqlite3 {
-    class CellIndexInterior extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Sqlite3\RefCell $_parent = null, \Sqlite3 $_root = null) {
+    class CellTableLeaf extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Sqlite3\RefCell $_parent = null, ?\Sqlite3 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_leftChildPage = $this->_io->readU4be();
             $this->_m_lenPayload = new \VlqBase128Be($this->_io);
+            $this->_m_rowId = new \VlqBase128Be($this->_io);
             $this->_m__raw_payload = $this->_io->readBytes($this->lenPayload()->value());
             $_io__raw_payload = new \Kaitai\Struct\Stream($this->_m__raw_payload);
             $this->_m_payload = new \Sqlite3\CellPayload($_io__raw_payload, $this, $this->_root);
         }
-        protected $_m_leftChildPage;
         protected $_m_lenPayload;
+        protected $_m_rowId;
         protected $_m_payload;
         protected $_m__raw_payload;
-        public function leftChildPage() { return $this->_m_leftChildPage; }
         public function lenPayload() { return $this->_m_lenPayload; }
+        public function rowId() { return $this->_m_rowId; }
         public function payload() { return $this->_m_payload; }
         public function _raw_payload() { return $this->_m__raw_payload; }
     }
@@ -391,7 +333,7 @@ namespace Sqlite3 {
 
 namespace Sqlite3 {
     class ColumnContent extends \Kaitai\Struct\Struct {
-        public function __construct(\Sqlite3\Serial $serialType, \Kaitai\Struct\Stream $_io, \Sqlite3\CellPayload $_parent = null, \Sqlite3 $_root = null) {
+        public function __construct(\Sqlite3\Serial $serialType, \Kaitai\Struct\Stream $_io, ?\Sqlite3\CellPayload $_parent = null, ?\Sqlite3 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_m_serialType = $serialType;
             $this->_read();
@@ -400,23 +342,23 @@ namespace Sqlite3 {
         private function _read() {
             if ( (($this->serialType()->code()->value() >= 1) && ($this->serialType()->code()->value() <= 6)) ) {
                 switch ($this->serialType()->code()->value()) {
-                    case 4:
-                        $this->_m_asInt = $this->_io->readU4be();
-                        break;
-                    case 6:
-                        $this->_m_asInt = $this->_io->readU8be();
-                        break;
                     case 1:
                         $this->_m_asInt = $this->_io->readU1();
+                        break;
+                    case 2:
+                        $this->_m_asInt = $this->_io->readU2be();
                         break;
                     case 3:
                         $this->_m_asInt = $this->_io->readBitsIntBe(24);
                         break;
+                    case 4:
+                        $this->_m_asInt = $this->_io->readU4be();
+                        break;
                     case 5:
                         $this->_m_asInt = $this->_io->readBitsIntBe(48);
                         break;
-                    case 2:
-                        $this->_m_asInt = $this->_io->readU2be();
+                    case 6:
+                        $this->_m_asInt = $this->_io->readU8be();
                         break;
                 }
             }
@@ -443,7 +385,7 @@ namespace Sqlite3 {
 
 namespace Sqlite3 {
     class RefCell extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Sqlite3\BtreePage $_parent = null, \Sqlite3 $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Sqlite3\BtreePage $_parent = null, ?\Sqlite3 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -458,17 +400,17 @@ namespace Sqlite3 {
             $_pos = $this->_io->pos();
             $this->_io->seek($this->ofsBody());
             switch ($this->_parent()->pageType()) {
-                case 13:
-                    $this->_m_body = new \Sqlite3\CellTableLeaf($this->_io, $this, $this->_root);
-                    break;
-                case 5:
-                    $this->_m_body = new \Sqlite3\CellTableInterior($this->_io, $this, $this->_root);
-                    break;
                 case 10:
                     $this->_m_body = new \Sqlite3\CellIndexLeaf($this->_io, $this, $this->_root);
                     break;
+                case 13:
+                    $this->_m_body = new \Sqlite3\CellTableLeaf($this->_io, $this, $this->_root);
+                    break;
                 case 2:
                     $this->_m_body = new \Sqlite3\CellIndexInterior($this->_io, $this, $this->_root);
+                    break;
+                case 5:
+                    $this->_m_body = new \Sqlite3\CellTableInterior($this->_io, $this, $this->_root);
                     break;
             }
             $this->_io->seek($_pos);
@@ -480,9 +422,60 @@ namespace Sqlite3 {
 }
 
 namespace Sqlite3 {
-    class Versions {
-        const LEGACY = 1;
-        const WAL = 2;
+    class Serial extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Sqlite3\Serials $_parent = null, ?\Sqlite3 $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_code = new \VlqBase128Be($this->_io);
+        }
+        protected $_m_isBlob;
+        public function isBlob() {
+            if ($this->_m_isBlob !== null)
+                return $this->_m_isBlob;
+            $this->_m_isBlob =  (($this->code()->value() >= 12) && (\Kaitai\Struct\Stream::mod($this->code()->value(), 2) == 0)) ;
+            return $this->_m_isBlob;
+        }
+        protected $_m_isString;
+        public function isString() {
+            if ($this->_m_isString !== null)
+                return $this->_m_isString;
+            $this->_m_isString =  (($this->code()->value() >= 13) && (\Kaitai\Struct\Stream::mod($this->code()->value(), 2) == 1)) ;
+            return $this->_m_isString;
+        }
+        protected $_m_lenContent;
+        public function lenContent() {
+            if ($this->_m_lenContent !== null)
+                return $this->_m_lenContent;
+            if ($this->code()->value() >= 12) {
+                $this->_m_lenContent = intval(($this->code()->value() - 12) / 2);
+            }
+            return $this->_m_lenContent;
+        }
+        protected $_m_code;
+        public function code() { return $this->_m_code; }
+    }
+}
+
+namespace Sqlite3 {
+    class Serials extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Sqlite3\CellPayload $_parent = null, ?\Sqlite3 $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_entries = [];
+            $i = 0;
+            while (!$this->_io->isEof()) {
+                $this->_m_entries[] = new \Sqlite3\Serial($this->_io, $this, $this->_root);
+                $i++;
+            }
+        }
+        protected $_m_entries;
+        public function entries() { return $this->_m_entries; }
     }
 }
 
@@ -491,5 +484,24 @@ namespace Sqlite3 {
         const UTF_8 = 1;
         const UTF_16LE = 2;
         const UTF_16BE = 3;
+
+        private const _VALUES = [1 => true, 2 => true, 3 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
+    }
+}
+
+namespace Sqlite3 {
+    class Versions {
+        const LEGACY = 1;
+        const WAL = 2;
+
+        private const _VALUES = [1 => true, 2 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

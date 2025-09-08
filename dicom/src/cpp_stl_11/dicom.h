@@ -2,13 +2,16 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class dicom_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -28,10 +31,10 @@
 class dicom_t : public kaitai::kstruct {
 
 public:
-    class t_file_header_t;
+    class seq_item_t;
     class t_data_element_explicit_t;
     class t_data_element_implicit_t;
-    class seq_item_t;
+    class t_file_header_t;
 
     enum tags_t {
         TAGS_FILE_META_INFORMATION_GROUP_LENGTH = 131072,
@@ -4058,6 +4061,12 @@ public:
         TAGS_ITEM_DELIMITATION_ITEM = 4294893581UL,
         TAGS_SEQUENCE_DELIMITATION_ITEM = 4294893789UL
     };
+    static bool _is_defined_tags_t(tags_t v);
+
+private:
+    static const std::set<tags_t> _values_tags_t;
+
+public:
 
     dicom_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, dicom_t* p__root = nullptr);
 
@@ -4068,30 +4077,48 @@ private:
 public:
     ~dicom_t();
 
-    class t_file_header_t : public kaitai::kstruct {
+    class seq_item_t : public kaitai::kstruct {
 
     public:
 
-        t_file_header_t(kaitai::kstream* p__io, dicom_t* p__parent = nullptr, dicom_t* p__root = nullptr);
+        seq_item_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, dicom_t* p__root = nullptr);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~t_file_header_t();
+        ~seq_item_t();
 
     private:
-        std::string m_preamble;
-        std::string m_magic;
-        dicom_t* m__root;
-        dicom_t* m__parent;
+        std::string m_tag_group;
+        uint16_t m_tag_elem;
+        uint32_t m_value_len;
+        std::string m_value;
+        bool n_value;
 
     public:
-        std::string preamble() const { return m_preamble; }
-        std::string magic() const { return m_magic; }
+        bool _is_null_value() { value(); return n_value; };
+
+    private:
+        std::unique_ptr<std::vector<std::unique_ptr<t_data_element_explicit_t>>> m_items;
+        bool n_items;
+
+    public:
+        bool _is_null_items() { items(); return n_items; };
+
+    private:
+        dicom_t* m__root;
+        kaitai::kstruct* m__parent;
+
+    public:
+        std::string tag_group() const { return m_tag_group; }
+        uint16_t tag_elem() const { return m_tag_elem; }
+        uint32_t value_len() const { return m_value_len; }
+        std::string value() const { return m_value; }
+        std::vector<std::unique_ptr<t_data_element_explicit_t>>* items() const { return m_items.get(); }
         dicom_t* _root() const { return m__root; }
-        dicom_t* _parent() const { return m__parent; }
+        kaitai::kstruct* _parent() const { return m__parent; }
     };
 
     /**
@@ -4218,18 +4245,11 @@ public:
         ~t_data_element_implicit_t();
 
     private:
-        bool f_tag;
-        tags_t m_tag;
+        bool f_is_forced_explicit;
+        bool m_is_forced_explicit;
 
     public:
-        tags_t tag();
-
-    private:
-        bool f_is_transfer_syntax_change_explicit;
-        bool m_is_transfer_syntax_change_explicit;
-
-    public:
-        bool is_transfer_syntax_change_explicit();
+        bool is_forced_explicit();
 
     private:
         bool f_is_long_len;
@@ -4239,6 +4259,13 @@ public:
         bool is_long_len();
 
     private:
+        bool f_is_transfer_syntax_change_explicit;
+        bool m_is_transfer_syntax_change_explicit;
+
+    public:
+        bool is_transfer_syntax_change_explicit();
+
+    private:
         bool f_p_is_transfer_syntax_change_explicit;
         bool m_p_is_transfer_syntax_change_explicit;
 
@@ -4246,11 +4273,11 @@ public:
         bool p_is_transfer_syntax_change_explicit();
 
     private:
-        bool f_is_forced_explicit;
-        bool m_is_forced_explicit;
+        bool f_tag;
+        tags_t m_tag;
 
     public:
-        bool is_forced_explicit();
+        tags_t tag();
 
     private:
         uint16_t m_tag_group;
@@ -4313,48 +4340,30 @@ public:
         kaitai::kstruct* _parent() const { return m__parent; }
     };
 
-    class seq_item_t : public kaitai::kstruct {
+    class t_file_header_t : public kaitai::kstruct {
 
     public:
 
-        seq_item_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, dicom_t* p__root = nullptr);
+        t_file_header_t(kaitai::kstream* p__io, dicom_t* p__parent = nullptr, dicom_t* p__root = nullptr);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~seq_item_t();
+        ~t_file_header_t();
 
     private:
-        std::string m_tag_group;
-        uint16_t m_tag_elem;
-        uint32_t m_value_len;
-        std::string m_value;
-        bool n_value;
-
-    public:
-        bool _is_null_value() { value(); return n_value; };
-
-    private:
-        std::unique_ptr<std::vector<std::unique_ptr<t_data_element_explicit_t>>> m_items;
-        bool n_items;
-
-    public:
-        bool _is_null_items() { items(); return n_items; };
-
-    private:
+        std::string m_preamble;
+        std::string m_magic;
         dicom_t* m__root;
-        kaitai::kstruct* m__parent;
+        dicom_t* m__parent;
 
     public:
-        std::string tag_group() const { return m_tag_group; }
-        uint16_t tag_elem() const { return m_tag_elem; }
-        uint32_t value_len() const { return m_value_len; }
-        std::string value() const { return m_value; }
-        std::vector<std::unique_ptr<t_data_element_explicit_t>>* items() const { return m_items.get(); }
+        std::string preamble() const { return m_preamble; }
+        std::string magic() const { return m_magic; }
         dicom_t* _root() const { return m__root; }
-        kaitai::kstruct* _parent() const { return m__parent; }
+        dicom_t* _parent() const { return m__parent; }
     };
 
 private:

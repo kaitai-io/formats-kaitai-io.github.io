@@ -5,8 +5,8 @@
 local class = require("class")
 require("kaitaistruct")
 local enum = require("enum")
-local utils = require("utils")
 local str_decode = require("string_decode")
+local utils = require("utils")
 
 -- 
 -- Sound resources were introduced in Classic MacOS with the Sound Manager program.
@@ -46,23 +46,20 @@ MacOsResourceSnd.CmdType = enum.Enum {
   get_rate_cmd = 85,
 }
 
-MacOsResourceSnd.SoundHeaderType = enum.Enum {
-  standard = 0,
-  compressed = 254,
-  extended = 255,
+MacOsResourceSnd.CompressionTypeEnum = enum.Enum {
+  variable_compression = -2,
+  fixed_compression = -1,
+  not_compressed = 0,
+  two_to_one = 1,
+  eight_to_three = 2,
+  three_to_one = 3,
+  six_to_one = 4,
 }
 
 MacOsResourceSnd.DataType = enum.Enum {
   square_wave_synth = 1,
   wave_table_synth = 3,
   sampled_synth = 5,
-}
-
-MacOsResourceSnd.WaveInitOption = enum.Enum {
-  channel0 = 4,
-  channel1 = 5,
-  channel2 = 6,
-  channel3 = 7,
 }
 
 MacOsResourceSnd.InitOption = enum.Enum {
@@ -76,14 +73,17 @@ MacOsResourceSnd.InitOption = enum.Enum {
   mace6 = 1024,
 }
 
-MacOsResourceSnd.CompressionTypeEnum = enum.Enum {
-  variable_compression = -2,
-  fixed_compression = -1,
-  not_compressed = 0,
-  two_to_one = 1,
-  eight_to_three = 2,
-  three_to_one = 3,
-  six_to_one = 4,
+MacOsResourceSnd.SoundHeaderType = enum.Enum {
+  standard = 0,
+  compressed = 254,
+  extended = 255,
+}
+
+MacOsResourceSnd.WaveInitOption = enum.Enum {
+  channel0 = 4,
+  channel1 = 5,
+  channel2 = 6,
+  channel3 = 7,
 }
 
 function MacOsResourceSnd:_init(io, parent, root)
@@ -129,180 +129,12 @@ function MacOsResourceSnd.property.midi_note_to_frequency:get()
 end
 
 
-MacOsResourceSnd.Extended = class.class(KaitaiStruct)
-
-function MacOsResourceSnd.Extended:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function MacOsResourceSnd.Extended:_read()
-  self.instrument_chunk_ptr = self._io:read_u4be()
-  self.aes_recording_ptr = self._io:read_u4be()
-end
-
--- 
--- pointer to instrument info.
--- 
--- pointer to audio info.
-
-MacOsResourceSnd.SoundHeader = class.class(KaitaiStruct)
-
-function MacOsResourceSnd.SoundHeader:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function MacOsResourceSnd.SoundHeader:_read()
-  if self.start_ofs < 0 then
-    self._unnamed0 = self._io:read_bytes(0)
-  end
-  self.sample_ptr = self._io:read_u4be()
-  if self.sound_header_type == MacOsResourceSnd.SoundHeaderType.standard then
-    self.num_samples = self._io:read_u4be()
-  end
-  if  ((self.sound_header_type == MacOsResourceSnd.SoundHeaderType.extended) or (self.sound_header_type == MacOsResourceSnd.SoundHeaderType.compressed))  then
-    self.num_channels = self._io:read_u4be()
-  end
-  self.sample_rate = MacOsResourceSnd.UnsignedFixedPoint(self._io, self, self._root)
-  self.loop_start = self._io:read_u4be()
-  self.loop_end = self._io:read_u4be()
-  self.encode = MacOsResourceSnd.SoundHeaderType(self._io:read_u1())
-  self.midi_note = self._io:read_u1()
-  if  ((self.sound_header_type == MacOsResourceSnd.SoundHeaderType.extended) or (self.sound_header_type == MacOsResourceSnd.SoundHeaderType.compressed))  then
-    self.extended_or_compressed = MacOsResourceSnd.ExtendedOrCompressed(self._io, self, self._root)
-  end
-  if self.sample_ptr == 0 then
-    self.sample_area = self._io:read_bytes(utils.box_unwrap((self.sound_header_type == MacOsResourceSnd.SoundHeaderType.standard) and utils.box_wrap(self.num_samples) or (utils.box_unwrap((self.sound_header_type == MacOsResourceSnd.SoundHeaderType.extended) and utils.box_wrap(math.floor(((self.extended_or_compressed.num_frames * self.num_channels) * self.extended_or_compressed.bits_per_sample) / 8)) or ((self._io:size() - self._io:pos()))))))
-  end
-end
-
-MacOsResourceSnd.SoundHeader.property.start_ofs = {}
-function MacOsResourceSnd.SoundHeader.property.start_ofs:get()
-  if self._m_start_ofs ~= nil then
-    return self._m_start_ofs
-  end
-
-  self._m_start_ofs = self._io:pos()
-  return self._m_start_ofs
-end
-
--- 
--- base frequency of sample in Hz
--- Calculated with the formula (2 ** ((midi_note - 69) / 12)) * 440
--- See also: Source (https://en.wikipedia.org/wiki/MIDI_tuning_standard)
-MacOsResourceSnd.SoundHeader.property.base_freqeuncy = {}
-function MacOsResourceSnd.SoundHeader.property.base_freqeuncy:get()
-  if self._m_base_freqeuncy ~= nil then
-    return self._m_base_freqeuncy
-  end
-
-  if  ((self.midi_note >= 0) and (self.midi_note < 128))  then
-    self._m_base_freqeuncy = self._root.midi_note_to_frequency[self.midi_note + 1]
-  end
-  return self._m_base_freqeuncy
-end
-
-MacOsResourceSnd.SoundHeader.property.sound_header_type = {}
-function MacOsResourceSnd.SoundHeader.property.sound_header_type:get()
-  if self._m_sound_header_type ~= nil then
-    return self._m_sound_header_type
-  end
-
-  local _pos = self._io:pos()
-  self._io:seek((self.start_ofs + 20))
-  self._m_sound_header_type = MacOsResourceSnd.SoundHeaderType(self._io:read_u1())
-  self._io:seek(_pos)
-  return self._m_sound_header_type
-end
-
--- 
--- pointer to samples (or 0 if samples follow data structure).
--- 
--- number of samples.
--- 
--- number of channels in sample.
--- 
--- The rate at which the sample was originally recorded.
--- 
--- loop point beginning.
--- 
--- loop point ending.
--- 
--- sample's encoding option.
--- 
--- base frequency of sample, expressed as MIDI note values, 60 is middle C.
--- 
--- sampled-sound data.
-
-MacOsResourceSnd.UnsignedFixedPoint = class.class(KaitaiStruct)
-
-function MacOsResourceSnd.UnsignedFixedPoint:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function MacOsResourceSnd.UnsignedFixedPoint:_read()
-  self.integer_part = self._io:read_u2be()
-  self.fraction_part = self._io:read_u2be()
-end
-
-MacOsResourceSnd.UnsignedFixedPoint.property.value = {}
-function MacOsResourceSnd.UnsignedFixedPoint.property.value:get()
-  if self._m_value ~= nil then
-    return self._m_value
-  end
-
-  self._m_value = (self.integer_part + (self.fraction_part / 65535.0))
-  return self._m_value
-end
-
-
-MacOsResourceSnd.SoundCommand = class.class(KaitaiStruct)
-
-function MacOsResourceSnd.SoundCommand:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function MacOsResourceSnd.SoundCommand:_read()
-  self.is_data_offset = self._io:read_bits_int_be(1) ~= 0
-  self.cmd = MacOsResourceSnd.CmdType(self._io:read_bits_int_be(15))
-  self._io:align_to_byte()
-  self.param1 = self._io:read_u2be()
-  self.param2 = self._io:read_u4be()
-end
-
-MacOsResourceSnd.SoundCommand.property.sound_header = {}
-function MacOsResourceSnd.SoundCommand.property.sound_header:get()
-  if self._m_sound_header ~= nil then
-    return self._m_sound_header
-  end
-
-  if  ((self.is_data_offset) and (self.cmd == MacOsResourceSnd.CmdType.buffer_cmd))  then
-    local _pos = self._io:pos()
-    self._io:seek(self.param2)
-    self._m_sound_header = MacOsResourceSnd.SoundHeader(self._io, self, self._root)
-    self._io:seek(_pos)
-  end
-  return self._m_sound_header
-end
-
-
 MacOsResourceSnd.Compressed = class.class(KaitaiStruct)
 
 function MacOsResourceSnd.Compressed:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -343,12 +175,138 @@ end
 -- Indicates the resource ID number of the 'snth' resource that was used to compress the packets contained in the compressed sound header.
 -- See also: Page 22-49, absolute page number 1169 in the PDF (https://vintageapple.org/inside_o/pdf/Inside_Macintosh_Volume_VI_1991.pdf)
 
+MacOsResourceSnd.DataFormat = class.class(KaitaiStruct)
+
+function MacOsResourceSnd.DataFormat:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function MacOsResourceSnd.DataFormat:_read()
+  self.id = MacOsResourceSnd.DataType(self._io:read_u2be())
+  self.options = self._io:read_u4be()
+end
+
+MacOsResourceSnd.DataFormat.property.comp_init = {}
+function MacOsResourceSnd.DataFormat.property.comp_init:get()
+  if self._m_comp_init ~= nil then
+    return self._m_comp_init
+  end
+
+  self._m_comp_init = MacOsResourceSnd.InitOption(self.options & self.init_comp_mask)
+  return self._m_comp_init
+end
+
+-- 
+-- mask for compression IDs.
+MacOsResourceSnd.DataFormat.property.init_comp_mask = {}
+function MacOsResourceSnd.DataFormat.property.init_comp_mask:get()
+  if self._m_init_comp_mask ~= nil then
+    return self._m_init_comp_mask
+  end
+
+  self._m_init_comp_mask = 65280
+  return self._m_init_comp_mask
+end
+
+-- 
+-- mask for right/left pan values.
+MacOsResourceSnd.DataFormat.property.init_pan_mask = {}
+function MacOsResourceSnd.DataFormat.property.init_pan_mask:get()
+  if self._m_init_pan_mask ~= nil then
+    return self._m_init_pan_mask
+  end
+
+  self._m_init_pan_mask = 3
+  return self._m_init_pan_mask
+end
+
+-- 
+-- mask for mono/stereo values.
+MacOsResourceSnd.DataFormat.property.init_stereo_mask = {}
+function MacOsResourceSnd.DataFormat.property.init_stereo_mask:get()
+  if self._m_init_stereo_mask ~= nil then
+    return self._m_init_stereo_mask
+  end
+
+  self._m_init_stereo_mask = 192
+  return self._m_init_stereo_mask
+end
+
+MacOsResourceSnd.DataFormat.property.pan_init = {}
+function MacOsResourceSnd.DataFormat.property.pan_init:get()
+  if self._m_pan_init ~= nil then
+    return self._m_pan_init
+  end
+
+  self._m_pan_init = MacOsResourceSnd.InitOption(self.options & self.init_pan_mask)
+  return self._m_pan_init
+end
+
+MacOsResourceSnd.DataFormat.property.stereo_init = {}
+function MacOsResourceSnd.DataFormat.property.stereo_init:get()
+  if self._m_stereo_init ~= nil then
+    return self._m_stereo_init
+  end
+
+  self._m_stereo_init = MacOsResourceSnd.InitOption(self.options & self.init_stereo_mask)
+  return self._m_stereo_init
+end
+
+MacOsResourceSnd.DataFormat.property.wave_init = {}
+function MacOsResourceSnd.DataFormat.property.wave_init:get()
+  if self._m_wave_init ~= nil then
+    return self._m_wave_init
+  end
+
+  if self.id == MacOsResourceSnd.DataType.wave_table_synth then
+    self._m_wave_init = MacOsResourceSnd.WaveInitOption(self.options & self.wave_init_channel_mask)
+  end
+  return self._m_wave_init
+end
+
+-- 
+-- wave table only, Sound Manager 2.0 and earlier.
+MacOsResourceSnd.DataFormat.property.wave_init_channel_mask = {}
+function MacOsResourceSnd.DataFormat.property.wave_init_channel_mask:get()
+  if self._m_wave_init_channel_mask ~= nil then
+    return self._m_wave_init_channel_mask
+  end
+
+  self._m_wave_init_channel_mask = 7
+  return self._m_wave_init_channel_mask
+end
+
+-- 
+-- contains initialisation options for the SndNewChannel function.
+
+MacOsResourceSnd.Extended = class.class(KaitaiStruct)
+
+function MacOsResourceSnd.Extended:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function MacOsResourceSnd.Extended:_read()
+  self.instrument_chunk_ptr = self._io:read_u4be()
+  self.aes_recording_ptr = self._io:read_u4be()
+end
+
+-- 
+-- pointer to instrument info.
+-- 
+-- pointer to audio info.
+
 MacOsResourceSnd.ExtendedOrCompressed = class.class(KaitaiStruct)
 
 function MacOsResourceSnd.ExtendedOrCompressed:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -377,110 +335,152 @@ end
 -- 
 -- reserved.
 
-MacOsResourceSnd.DataFormat = class.class(KaitaiStruct)
+MacOsResourceSnd.SoundCommand = class.class(KaitaiStruct)
 
-function MacOsResourceSnd.DataFormat:_init(io, parent, root)
+function MacOsResourceSnd.SoundCommand:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
-function MacOsResourceSnd.DataFormat:_read()
-  self.id = MacOsResourceSnd.DataType(self._io:read_u2be())
-  self.options = self._io:read_u4be()
+function MacOsResourceSnd.SoundCommand:_read()
+  self.is_data_offset = self._io:read_bits_int_be(1) ~= 0
+  self.cmd = MacOsResourceSnd.CmdType(self._io:read_bits_int_be(15))
+  self._io:align_to_byte()
+  self.param1 = self._io:read_u2be()
+  self.param2 = self._io:read_u4be()
+end
+
+MacOsResourceSnd.SoundCommand.property.sound_header = {}
+function MacOsResourceSnd.SoundCommand.property.sound_header:get()
+  if self._m_sound_header ~= nil then
+    return self._m_sound_header
+  end
+
+  if  ((self.is_data_offset) and (self.cmd == MacOsResourceSnd.CmdType.buffer_cmd))  then
+    local _pos = self._io:pos()
+    self._io:seek(self.param2)
+    self._m_sound_header = MacOsResourceSnd.SoundHeader(self._io, self, self._root)
+    self._io:seek(_pos)
+  end
+  return self._m_sound_header
+end
+
+
+MacOsResourceSnd.SoundHeader = class.class(KaitaiStruct)
+
+function MacOsResourceSnd.SoundHeader:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function MacOsResourceSnd.SoundHeader:_read()
+  if self.start_ofs < 0 then
+    self._unnamed0 = self._io:read_bytes(0)
+  end
+  self.sample_ptr = self._io:read_u4be()
+  if self.sound_header_type == MacOsResourceSnd.SoundHeaderType.standard then
+    self.num_samples = self._io:read_u4be()
+  end
+  if  ((self.sound_header_type == MacOsResourceSnd.SoundHeaderType.extended) or (self.sound_header_type == MacOsResourceSnd.SoundHeaderType.compressed))  then
+    self.num_channels = self._io:read_u4be()
+  end
+  self.sample_rate = MacOsResourceSnd.UnsignedFixedPoint(self._io, self, self._root)
+  self.loop_start = self._io:read_u4be()
+  self.loop_end = self._io:read_u4be()
+  self.encode = MacOsResourceSnd.SoundHeaderType(self._io:read_u1())
+  self.midi_note = self._io:read_u1()
+  if  ((self.sound_header_type == MacOsResourceSnd.SoundHeaderType.extended) or (self.sound_header_type == MacOsResourceSnd.SoundHeaderType.compressed))  then
+    self.extended_or_compressed = MacOsResourceSnd.ExtendedOrCompressed(self._io, self, self._root)
+  end
+  if self.sample_ptr == 0 then
+    self.sample_area = self._io:read_bytes(utils.box_unwrap((self.sound_header_type == MacOsResourceSnd.SoundHeaderType.standard) and utils.box_wrap(self.num_samples) or (utils.box_unwrap((self.sound_header_type == MacOsResourceSnd.SoundHeaderType.extended) and utils.box_wrap(math.floor(((self.extended_or_compressed.num_frames * self.num_channels) * self.extended_or_compressed.bits_per_sample) / 8)) or (self._io:size() - self._io:pos())))))
+  end
 end
 
 -- 
--- mask for right/left pan values.
-MacOsResourceSnd.DataFormat.property.init_pan_mask = {}
-function MacOsResourceSnd.DataFormat.property.init_pan_mask:get()
-  if self._m_init_pan_mask ~= nil then
-    return self._m_init_pan_mask
+-- base frequency of sample in Hz
+-- Calculated with the formula (2 ** ((midi_note - 69) / 12)) * 440
+-- See also: Source (https://en.wikipedia.org/wiki/MIDI_tuning_standard)
+MacOsResourceSnd.SoundHeader.property.base_freqeuncy = {}
+function MacOsResourceSnd.SoundHeader.property.base_freqeuncy:get()
+  if self._m_base_freqeuncy ~= nil then
+    return self._m_base_freqeuncy
   end
 
-  self._m_init_pan_mask = 3
-  return self._m_init_pan_mask
+  if  ((self.midi_note >= 0) and (self.midi_note < 128))  then
+    self._m_base_freqeuncy = self._root.midi_note_to_frequency[self.midi_note + 1]
+  end
+  return self._m_base_freqeuncy
+end
+
+MacOsResourceSnd.SoundHeader.property.sound_header_type = {}
+function MacOsResourceSnd.SoundHeader.property.sound_header_type:get()
+  if self._m_sound_header_type ~= nil then
+    return self._m_sound_header_type
+  end
+
+  local _pos = self._io:pos()
+  self._io:seek(self.start_ofs + 20)
+  self._m_sound_header_type = MacOsResourceSnd.SoundHeaderType(self._io:read_u1())
+  self._io:seek(_pos)
+  return self._m_sound_header_type
+end
+
+MacOsResourceSnd.SoundHeader.property.start_ofs = {}
+function MacOsResourceSnd.SoundHeader.property.start_ofs:get()
+  if self._m_start_ofs ~= nil then
+    return self._m_start_ofs
+  end
+
+  self._m_start_ofs = self._io:pos()
+  return self._m_start_ofs
 end
 
 -- 
--- wave table only, Sound Manager 2.0 and earlier.
-MacOsResourceSnd.DataFormat.property.wave_init_channel_mask = {}
-function MacOsResourceSnd.DataFormat.property.wave_init_channel_mask:get()
-  if self._m_wave_init_channel_mask ~= nil then
-    return self._m_wave_init_channel_mask
-  end
-
-  self._m_wave_init_channel_mask = 7
-  return self._m_wave_init_channel_mask
-end
-
+-- pointer to samples (or 0 if samples follow data structure).
 -- 
--- mask for mono/stereo values.
-MacOsResourceSnd.DataFormat.property.init_stereo_mask = {}
-function MacOsResourceSnd.DataFormat.property.init_stereo_mask:get()
-  if self._m_init_stereo_mask ~= nil then
-    return self._m_init_stereo_mask
-  end
-
-  self._m_init_stereo_mask = 192
-  return self._m_init_stereo_mask
-end
-
-MacOsResourceSnd.DataFormat.property.wave_init = {}
-function MacOsResourceSnd.DataFormat.property.wave_init:get()
-  if self._m_wave_init ~= nil then
-    return self._m_wave_init
-  end
-
-  if self.id == MacOsResourceSnd.DataType.wave_table_synth then
-    self._m_wave_init = MacOsResourceSnd.WaveInitOption((self.options & self.wave_init_channel_mask))
-  end
-  return self._m_wave_init
-end
-
-MacOsResourceSnd.DataFormat.property.pan_init = {}
-function MacOsResourceSnd.DataFormat.property.pan_init:get()
-  if self._m_pan_init ~= nil then
-    return self._m_pan_init
-  end
-
-  self._m_pan_init = MacOsResourceSnd.InitOption((self.options & self.init_pan_mask))
-  return self._m_pan_init
-end
-
+-- number of samples.
 -- 
--- mask for compression IDs.
-MacOsResourceSnd.DataFormat.property.init_comp_mask = {}
-function MacOsResourceSnd.DataFormat.property.init_comp_mask:get()
-  if self._m_init_comp_mask ~= nil then
-    return self._m_init_comp_mask
-  end
-
-  self._m_init_comp_mask = 65280
-  return self._m_init_comp_mask
-end
-
-MacOsResourceSnd.DataFormat.property.stereo_init = {}
-function MacOsResourceSnd.DataFormat.property.stereo_init:get()
-  if self._m_stereo_init ~= nil then
-    return self._m_stereo_init
-  end
-
-  self._m_stereo_init = MacOsResourceSnd.InitOption((self.options & self.init_stereo_mask))
-  return self._m_stereo_init
-end
-
-MacOsResourceSnd.DataFormat.property.comp_init = {}
-function MacOsResourceSnd.DataFormat.property.comp_init:get()
-  if self._m_comp_init ~= nil then
-    return self._m_comp_init
-  end
-
-  self._m_comp_init = MacOsResourceSnd.InitOption((self.options & self.init_comp_mask))
-  return self._m_comp_init
-end
-
+-- number of channels in sample.
 -- 
--- contains initialisation options for the SndNewChannel function.
+-- The rate at which the sample was originally recorded.
+-- 
+-- loop point beginning.
+-- 
+-- loop point ending.
+-- 
+-- sample's encoding option.
+-- 
+-- base frequency of sample, expressed as MIDI note values, 60 is middle C.
+-- 
+-- sampled-sound data.
+
+MacOsResourceSnd.UnsignedFixedPoint = class.class(KaitaiStruct)
+
+function MacOsResourceSnd.UnsignedFixedPoint:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function MacOsResourceSnd.UnsignedFixedPoint:_read()
+  self.integer_part = self._io:read_u2be()
+  self.fraction_part = self._io:read_u2be()
+end
+
+MacOsResourceSnd.UnsignedFixedPoint.property.value = {}
+function MacOsResourceSnd.UnsignedFixedPoint.property.value:get()
+  if self._m_value ~= nil then
+    return self._m_value
+  end
+
+  self._m_value = self.integer_part + self.fraction_part / 65535.0
+  return self._m_value
+end
+
 

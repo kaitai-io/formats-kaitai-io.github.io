@@ -1,16 +1,11 @@
 import kaitai_struct_nim_runtime
 import options
-import /network/tcp_segment
-import /network/icmp_packet
-import /network/udp_datagram
-import /network/ipv4_packet
-import /network/ipv6_packet
+import ipv6_packet
+import udp_datagram
+import icmp_packet
+import tcp_segment
+import ipv4_packet
 
-import "udp_datagram"
-import "ipv4_packet"
-import "icmp_packet"
-import "ipv6_packet"
-import "tcp_segment"
 type
   ProtocolBody* = ref object of KaitaiStruct
     `body`*: KaitaiStruct
@@ -207,26 +202,26 @@ proc read*(_: typedesc[ProtocolBody], io: KaitaiStream, root: KaitaiStruct, pare
 
   block:
     let on = this.protocol
-    if on == protocol_body.ipv6_nonxt:
-      let bodyExpr = ProtocolBody_NoNextHeader.read(this.io, this.root, this)
-      this.body = bodyExpr
-    elif on == protocol_body.ipv4:
-      let bodyExpr = Ipv4Packet.read(this.io, this.root, this)
-      this.body = bodyExpr
-    elif on == protocol_body.udp:
-      let bodyExpr = UdpDatagram.read(this.io, this.root, this)
-      this.body = bodyExpr
-    elif on == protocol_body.icmp:
-      let bodyExpr = IcmpPacket.read(this.io, this.root, this)
-      this.body = bodyExpr
-    elif on == protocol_body.hopopt:
+    if on == protocol_body.hopopt:
       let bodyExpr = ProtocolBody_OptionHopByHop.read(this.io, this.root, this)
       this.body = bodyExpr
+    elif on == protocol_body.icmp:
+      let bodyExpr = IcmpPacket.read(this.io, nil, nil)
+      this.body = bodyExpr
+    elif on == protocol_body.ipv4:
+      let bodyExpr = Ipv4Packet.read(this.io, nil, nil)
+      this.body = bodyExpr
     elif on == protocol_body.ipv6:
-      let bodyExpr = Ipv6Packet.read(this.io, this.root, this)
+      let bodyExpr = Ipv6Packet.read(this.io, nil, nil)
+      this.body = bodyExpr
+    elif on == protocol_body.ipv6_nonxt:
+      let bodyExpr = ProtocolBody_NoNextHeader.read(this.io, this.root, this)
       this.body = bodyExpr
     elif on == protocol_body.tcp:
-      let bodyExpr = TcpSegment.read(this.io, this.root, this)
+      let bodyExpr = TcpSegment.read(this.io, nil, nil)
+      this.body = bodyExpr
+    elif on == protocol_body.udp:
+      let bodyExpr = UdpDatagram.read(this.io, nil, nil)
       this.body = bodyExpr
 
 proc protocol(this: ProtocolBody): ProtocolBody_ProtocolEnum = 
@@ -268,7 +263,7 @@ proc read*(_: typedesc[ProtocolBody_OptionHopByHop], io: KaitaiStream, root: Kai
   this.nextHeaderType = nextHeaderTypeExpr
   let hdrExtLenExpr = this.io.readU1()
   this.hdrExtLen = hdrExtLenExpr
-  let bodyExpr = this.io.readBytes(int((if this.hdrExtLen > 0: (this.hdrExtLen - 1) else: 1)))
+  let bodyExpr = this.io.readBytes(int((if this.hdrExtLen > 0: this.hdrExtLen - 1 else: 1)))
   this.body = bodyExpr
   let nextHeaderExpr = ProtocolBody.read(this.io, this.root, this, this.nextHeaderType)
   this.nextHeader = nextHeaderExpr

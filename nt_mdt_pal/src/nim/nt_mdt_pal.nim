@@ -9,6 +9,20 @@ type
     `something2`*: seq[byte]
     `tables`*: seq[NtMdtPal_ColTable]
     `parent`*: KaitaiStruct
+  NtMdtPal_ColTable* = ref object of KaitaiStruct
+    `size1`*: uint8
+    `unkn`*: uint8
+    `title`*: string
+    `unkn1`*: uint16
+    `colors`*: seq[NtMdtPal_Color]
+    `index`*: uint16
+    `parent`*: NtMdtPal
+  NtMdtPal_Color* = ref object of KaitaiStruct
+    `red`*: uint8
+    `unkn`*: uint8
+    `blue`*: uint8
+    `green`*: uint8
+    `parent`*: NtMdtPal_ColTable
   NtMdtPal_Meta* = ref object of KaitaiStruct
     `unkn00`*: seq[byte]
     `unkn01`*: seq[byte]
@@ -20,25 +34,11 @@ type
     `unkn12`*: seq[byte]
     `nameSize`*: uint16
     `parent`*: NtMdtPal
-  NtMdtPal_Color* = ref object of KaitaiStruct
-    `red`*: uint8
-    `unkn`*: uint8
-    `blue`*: uint8
-    `green`*: uint8
-    `parent`*: NtMdtPal_ColTable
-  NtMdtPal_ColTable* = ref object of KaitaiStruct
-    `size1`*: uint8
-    `unkn`*: uint8
-    `title`*: string
-    `unkn1`*: uint16
-    `colors`*: seq[NtMdtPal_Color]
-    `index`*: uint16
-    `parent`*: NtMdtPal
 
 proc read*(_: typedesc[NtMdtPal], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): NtMdtPal
-proc read*(_: typedesc[NtMdtPal_Meta], io: KaitaiStream, root: KaitaiStruct, parent: NtMdtPal): NtMdtPal_Meta
-proc read*(_: typedesc[NtMdtPal_Color], io: KaitaiStream, root: KaitaiStruct, parent: NtMdtPal_ColTable): NtMdtPal_Color
 proc read*(_: typedesc[NtMdtPal_ColTable], io: KaitaiStream, root: KaitaiStruct, parent: NtMdtPal, index: any): NtMdtPal_ColTable
+proc read*(_: typedesc[NtMdtPal_Color], io: KaitaiStream, root: KaitaiStruct, parent: NtMdtPal_ColTable): NtMdtPal_Color
+proc read*(_: typedesc[NtMdtPal_Meta], io: KaitaiStream, root: KaitaiStruct, parent: NtMdtPal): NtMdtPal_Meta
 
 
 
@@ -68,6 +68,51 @@ proc read*(_: typedesc[NtMdtPal], io: KaitaiStream, root: KaitaiStruct, parent: 
 
 proc fromFile*(_: typedesc[NtMdtPal], filename: string): NtMdtPal =
   NtMdtPal.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[NtMdtPal_ColTable], io: KaitaiStream, root: KaitaiStruct, parent: NtMdtPal, index: any): NtMdtPal_ColTable =
+  template this: untyped = result
+  this = new(NtMdtPal_ColTable)
+  let root = if root == nil: cast[NtMdtPal](this) else: cast[NtMdtPal](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+  let indexExpr = uint16(index)
+  this.index = indexExpr
+
+  let size1Expr = this.io.readU1()
+  this.size1 = size1Expr
+  let unknExpr = this.io.readU1()
+  this.unkn = unknExpr
+  let titleExpr = encode(this.io.readBytes(int(NtMdtPal(this.root).meta[this.index].nameSize)), "UTF-16LE")
+  this.title = titleExpr
+  let unkn1Expr = this.io.readU2be()
+  this.unkn1 = unkn1Expr
+  for i in 0 ..< int(NtMdtPal(this.root).meta[this.index].colorsCount - 1):
+    let it = NtMdtPal_Color.read(this.io, this.root, this)
+    this.colors.add(it)
+
+proc fromFile*(_: typedesc[NtMdtPal_ColTable], filename: string): NtMdtPal_ColTable =
+  NtMdtPal_ColTable.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[NtMdtPal_Color], io: KaitaiStream, root: KaitaiStruct, parent: NtMdtPal_ColTable): NtMdtPal_Color =
+  template this: untyped = result
+  this = new(NtMdtPal_Color)
+  let root = if root == nil: cast[NtMdtPal](this) else: cast[NtMdtPal](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let redExpr = this.io.readU1()
+  this.red = redExpr
+  let unknExpr = this.io.readU1()
+  this.unkn = unknExpr
+  let blueExpr = this.io.readU1()
+  this.blue = blueExpr
+  let greenExpr = this.io.readU1()
+  this.green = greenExpr
+
+proc fromFile*(_: typedesc[NtMdtPal_Color], filename: string): NtMdtPal_Color =
+  NtMdtPal_Color.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[NtMdtPal_Meta], io: KaitaiStream, root: KaitaiStruct, parent: NtMdtPal): NtMdtPal_Meta =
   template this: untyped = result
@@ -118,49 +163,4 @@ proc read*(_: typedesc[NtMdtPal_Meta], io: KaitaiStream, root: KaitaiStruct, par
 
 proc fromFile*(_: typedesc[NtMdtPal_Meta], filename: string): NtMdtPal_Meta =
   NtMdtPal_Meta.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[NtMdtPal_Color], io: KaitaiStream, root: KaitaiStruct, parent: NtMdtPal_ColTable): NtMdtPal_Color =
-  template this: untyped = result
-  this = new(NtMdtPal_Color)
-  let root = if root == nil: cast[NtMdtPal](this) else: cast[NtMdtPal](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let redExpr = this.io.readU1()
-  this.red = redExpr
-  let unknExpr = this.io.readU1()
-  this.unkn = unknExpr
-  let blueExpr = this.io.readU1()
-  this.blue = blueExpr
-  let greenExpr = this.io.readU1()
-  this.green = greenExpr
-
-proc fromFile*(_: typedesc[NtMdtPal_Color], filename: string): NtMdtPal_Color =
-  NtMdtPal_Color.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[NtMdtPal_ColTable], io: KaitaiStream, root: KaitaiStruct, parent: NtMdtPal, index: any): NtMdtPal_ColTable =
-  template this: untyped = result
-  this = new(NtMdtPal_ColTable)
-  let root = if root == nil: cast[NtMdtPal](this) else: cast[NtMdtPal](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-  let indexExpr = uint16(index)
-  this.index = indexExpr
-
-  let size1Expr = this.io.readU1()
-  this.size1 = size1Expr
-  let unknExpr = this.io.readU1()
-  this.unkn = unknExpr
-  let titleExpr = encode(this.io.readBytes(int(NtMdtPal(this.root).meta[this.index].nameSize)), "UTF-16LE")
-  this.title = titleExpr
-  let unkn1Expr = this.io.readU2be()
-  this.unkn1 = unkn1Expr
-  for i in 0 ..< int((NtMdtPal(this.root).meta[this.index].colorsCount - 1)):
-    let it = NtMdtPal_Color.read(this.io, this.root, this)
-    this.colors.add(it)
-
-proc fromFile*(_: typedesc[NtMdtPal_ColTable], filename: string): NtMdtPal_ColTable =
-  NtMdtPal_ColTable.read(newKaitaiFileStream(filename), nil, nil)
 

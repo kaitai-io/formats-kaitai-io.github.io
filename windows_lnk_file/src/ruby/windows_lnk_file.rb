@@ -1,9 +1,10 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 require 'kaitai/struct/struct'
+require_relative 'windows_shell_items'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -15,13 +16,6 @@ end
 # @see https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Source
 class WindowsLnkFile < Kaitai::Struct::Struct
 
-  WINDOW_STATE = {
-    1 => :window_state_normal,
-    3 => :window_state_maximized,
-    7 => :window_state_min_no_active,
-  }
-  I__WINDOW_STATE = WINDOW_STATE.invert
-
   DRIVE_TYPES = {
     0 => :drive_types_unknown,
     1 => :drive_types_no_root_dir,
@@ -32,8 +26,15 @@ class WindowsLnkFile < Kaitai::Struct::Struct
     6 => :drive_types_ramdisk,
   }
   I__DRIVE_TYPES = DRIVE_TYPES.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+
+  WINDOW_STATE = {
+    1 => :window_state_normal,
+    3 => :window_state_maximized,
+    7 => :window_state_min_no_active,
+  }
+  I__WINDOW_STATE = WINDOW_STATE.invert
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -64,213 +65,68 @@ class WindowsLnkFile < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Section 2.2
-  class LinkTargetIdList < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  # @see https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Section 2.1
+  class FileHeader < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @len_id_list = @_io.read_u2le
-      @_raw_id_list = @_io.read_bytes(len_id_list)
-      _io__raw_id_list = Kaitai::Struct::Stream.new(@_raw_id_list)
-      @id_list = WindowsShellItems.new(_io__raw_id_list)
-      self
-    end
-    attr_reader :len_id_list
-    attr_reader :id_list
-    attr_reader :_raw_id_list
-  end
-  class StringData < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @chars_str = @_io.read_u2le
-      @str = (@_io.read_bytes((chars_str * 2))).force_encoding("UTF-16LE")
-      self
-    end
-    attr_reader :chars_str
-    attr_reader :str
-  end
-
-  ##
-  # @see https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Section 2.3
-  class LinkInfo < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @len_all = @_io.read_u4le
-      @_raw_all = @_io.read_bytes((len_all - 4))
-      _io__raw_all = Kaitai::Struct::Stream.new(@_raw_all)
-      @all = All.new(_io__raw_all, self, @_root)
+      @len_header = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([76, 0, 0, 0].pack('C*'), @len_header, @_io, "/types/file_header/seq/0") if not @len_header == [76, 0, 0, 0].pack('C*')
+      @link_clsid = @_io.read_bytes(16)
+      raise Kaitai::Struct::ValidationNotEqualError.new([1, 20, 2, 0, 0, 0, 0, 0, 192, 0, 0, 0, 0, 0, 0, 70].pack('C*'), @link_clsid, @_io, "/types/file_header/seq/1") if not @link_clsid == [1, 20, 2, 0, 0, 0, 0, 0, 192, 0, 0, 0, 0, 0, 0, 70].pack('C*')
+      _io_flags = @_io.substream(4)
+      @flags = LinkFlags.new(_io_flags, self, @_root)
+      @file_attrs = @_io.read_u4le
+      @time_creation = @_io.read_u8le
+      @time_access = @_io.read_u8le
+      @time_write = @_io.read_u8le
+      @target_file_size = @_io.read_u4le
+      @icon_index = @_io.read_s4le
+      @show_command = Kaitai::Struct::Stream::resolve_enum(WindowsLnkFile::WINDOW_STATE, @_io.read_u4le)
+      @hotkey = @_io.read_u2le
+      @reserved = @_io.read_bytes(10)
+      raise Kaitai::Struct::ValidationNotEqualError.new([0, 0, 0, 0, 0, 0, 0, 0, 0, 0].pack('C*'), @reserved, @_io, "/types/file_header/seq/11") if not @reserved == [0, 0, 0, 0, 0, 0, 0, 0, 0, 0].pack('C*')
       self
     end
 
     ##
-    # @see https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Section 2.3.1
-    class VolumeIdBody < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
-
-      def _read
-        @drive_type = Kaitai::Struct::Stream::resolve_enum(WindowsLnkFile::DRIVE_TYPES, @_io.read_u4le)
-        @drive_serial_number = @_io.read_u4le
-        @ofs_volume_label = @_io.read_u4le
-        if is_unicode
-          @ofs_volume_label_unicode = @_io.read_u4le
-        end
-        self
-      end
-      def is_unicode
-        return @is_unicode unless @is_unicode.nil?
-        @is_unicode = ofs_volume_label == 20
-        @is_unicode
-      end
-      def volume_label_ansi
-        return @volume_label_ansi unless @volume_label_ansi.nil?
-        if !(is_unicode)
-          _pos = @_io.pos
-          @_io.seek((ofs_volume_label - 4))
-          @volume_label_ansi = (@_io.read_bytes_term(0, false, true, true)).force_encoding("cp437")
-          @_io.seek(_pos)
-        end
-        @volume_label_ansi
-      end
-      attr_reader :drive_type
-      attr_reader :drive_serial_number
-      attr_reader :ofs_volume_label
-      attr_reader :ofs_volume_label_unicode
-    end
+    # Technically, a size of the header, but in reality, it's
+    # fixed by standard.
+    attr_reader :len_header
 
     ##
-    # @see https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Section 2.3
-    class All < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
-
-      def _read
-        @len_header = @_io.read_u4le
-        @_raw_header = @_io.read_bytes((len_header - 8))
-        _io__raw_header = Kaitai::Struct::Stream.new(@_raw_header)
-        @header = Header.new(_io__raw_header, self, @_root)
-        self
-      end
-      def volume_id
-        return @volume_id unless @volume_id.nil?
-        if header.flags.has_volume_id_and_local_base_path
-          _pos = @_io.pos
-          @_io.seek((header.ofs_volume_id - 4))
-          @volume_id = VolumeIdSpec.new(@_io, self, @_root)
-          @_io.seek(_pos)
-        end
-        @volume_id
-      end
-      def local_base_path
-        return @local_base_path unless @local_base_path.nil?
-        if header.flags.has_volume_id_and_local_base_path
-          _pos = @_io.pos
-          @_io.seek((header.ofs_local_base_path - 4))
-          @local_base_path = @_io.read_bytes_term(0, false, true, true)
-          @_io.seek(_pos)
-        end
-        @local_base_path
-      end
-      attr_reader :len_header
-      attr_reader :header
-      attr_reader :_raw_header
-    end
+    # 16-byte class identified (CLSID), reserved for Windows shell
+    # link files.
+    attr_reader :link_clsid
+    attr_reader :flags
+    attr_reader :file_attrs
+    attr_reader :time_creation
+    attr_reader :time_access
+    attr_reader :time_write
 
     ##
-    # @see https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Section 2.3.1
-    class VolumeIdSpec < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
-
-      def _read
-        @len_all = @_io.read_u4le
-        @_raw_body = @_io.read_bytes((len_all - 4))
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = VolumeIdBody.new(_io__raw_body, self, @_root)
-        self
-      end
-      attr_reader :len_all
-      attr_reader :body
-      attr_reader :_raw_body
-    end
+    # Lower 32 bits of the size of the file that this link targets
+    attr_reader :target_file_size
 
     ##
-    # @see https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Section 2.3
-    class LinkInfoFlags < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
-
-      def _read
-        @reserved1 = @_io.read_bits_int_be(6)
-        @has_common_net_rel_link = @_io.read_bits_int_be(1) != 0
-        @has_volume_id_and_local_base_path = @_io.read_bits_int_be(1) != 0
-        @reserved2 = @_io.read_bits_int_be(24)
-        self
-      end
-      attr_reader :reserved1
-      attr_reader :has_common_net_rel_link
-      attr_reader :has_volume_id_and_local_base_path
-      attr_reader :reserved2
-    end
+    # Index of an icon to use from target file
+    attr_reader :icon_index
 
     ##
-    # @see https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Section 2.3
-    class Header < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
-
-      def _read
-        @flags = LinkInfoFlags.new(@_io, self, @_root)
-        @ofs_volume_id = @_io.read_u4le
-        @ofs_local_base_path = @_io.read_u4le
-        @ofs_common_net_rel_link = @_io.read_u4le
-        @ofs_common_path_suffix = @_io.read_u4le
-        if !(_io.eof?)
-          @ofs_local_base_path_unicode = @_io.read_u4le
-        end
-        if !(_io.eof?)
-          @ofs_common_path_suffix_unicode = @_io.read_u4le
-        end
-        self
-      end
-      attr_reader :flags
-      attr_reader :ofs_volume_id
-      attr_reader :ofs_local_base_path
-      attr_reader :ofs_common_net_rel_link
-      attr_reader :ofs_common_path_suffix
-      attr_reader :ofs_local_base_path_unicode
-      attr_reader :ofs_common_path_suffix_unicode
-    end
-    attr_reader :len_all
-    attr_reader :all
-    attr_reader :_raw_all
+    # Window state to set after the launch of target executable
+    attr_reader :show_command
+    attr_reader :hotkey
+    attr_reader :reserved
+    attr_reader :_raw_flags
   end
 
   ##
   # @see https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Section 2.1.1
   class LinkFlags < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -305,63 +161,203 @@ class WindowsLnkFile < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Section 2.1
-  class FileHeader < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+  # @see https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Section 2.3
+  class LinkInfo < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @len_header = @_io.read_bytes(4)
-      raise Kaitai::Struct::ValidationNotEqualError.new([76, 0, 0, 0].pack('C*'), len_header, _io, "/types/file_header/seq/0") if not len_header == [76, 0, 0, 0].pack('C*')
-      @link_clsid = @_io.read_bytes(16)
-      raise Kaitai::Struct::ValidationNotEqualError.new([1, 20, 2, 0, 0, 0, 0, 0, 192, 0, 0, 0, 0, 0, 0, 70].pack('C*'), link_clsid, _io, "/types/file_header/seq/1") if not link_clsid == [1, 20, 2, 0, 0, 0, 0, 0, 192, 0, 0, 0, 0, 0, 0, 70].pack('C*')
-      @_raw_flags = @_io.read_bytes(4)
-      _io__raw_flags = Kaitai::Struct::Stream.new(@_raw_flags)
-      @flags = LinkFlags.new(_io__raw_flags, self, @_root)
-      @file_attrs = @_io.read_u4le
-      @time_creation = @_io.read_u8le
-      @time_access = @_io.read_u8le
-      @time_write = @_io.read_u8le
-      @target_file_size = @_io.read_u4le
-      @icon_index = @_io.read_s4le
-      @show_command = Kaitai::Struct::Stream::resolve_enum(WindowsLnkFile::WINDOW_STATE, @_io.read_u4le)
-      @hotkey = @_io.read_u2le
-      @reserved = @_io.read_bytes(10)
-      raise Kaitai::Struct::ValidationNotEqualError.new([0, 0, 0, 0, 0, 0, 0, 0, 0, 0].pack('C*'), reserved, _io, "/types/file_header/seq/11") if not reserved == [0, 0, 0, 0, 0, 0, 0, 0, 0, 0].pack('C*')
+      @len_all = @_io.read_u4le
+      _io_all = @_io.substream(len_all - 4)
+      @all = All.new(_io_all, self, @_root)
       self
     end
 
     ##
-    # Technically, a size of the header, but in reality, it's
-    # fixed by standard.
-    attr_reader :len_header
+    # @see https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Section 2.3
+    class All < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = nil)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        @len_header = @_io.read_u4le
+        _io_header = @_io.substream(len_header - 8)
+        @header = Header.new(_io_header, self, @_root)
+        self
+      end
+      def local_base_path
+        return @local_base_path unless @local_base_path.nil?
+        if header.flags.has_volume_id_and_local_base_path
+          _pos = @_io.pos
+          @_io.seek(header.ofs_local_base_path - 4)
+          @local_base_path = @_io.read_bytes_term(0, false, true, true)
+          @_io.seek(_pos)
+        end
+        @local_base_path
+      end
+      def volume_id
+        return @volume_id unless @volume_id.nil?
+        if header.flags.has_volume_id_and_local_base_path
+          _pos = @_io.pos
+          @_io.seek(header.ofs_volume_id - 4)
+          @volume_id = VolumeIdSpec.new(@_io, self, @_root)
+          @_io.seek(_pos)
+        end
+        @volume_id
+      end
+      attr_reader :len_header
+      attr_reader :header
+      attr_reader :_raw_header
+    end
 
     ##
-    # 16-byte class identified (CLSID), reserved for Windows shell
-    # link files.
-    attr_reader :link_clsid
-    attr_reader :flags
-    attr_reader :file_attrs
-    attr_reader :time_creation
-    attr_reader :time_access
-    attr_reader :time_write
+    # @see https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Section 2.3
+    class Header < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = nil)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        @flags = LinkInfoFlags.new(@_io, self, @_root)
+        @ofs_volume_id = @_io.read_u4le
+        @ofs_local_base_path = @_io.read_u4le
+        @ofs_common_net_rel_link = @_io.read_u4le
+        @ofs_common_path_suffix = @_io.read_u4le
+        if !(_io.eof?)
+          @ofs_local_base_path_unicode = @_io.read_u4le
+        end
+        if !(_io.eof?)
+          @ofs_common_path_suffix_unicode = @_io.read_u4le
+        end
+        self
+      end
+      attr_reader :flags
+      attr_reader :ofs_volume_id
+      attr_reader :ofs_local_base_path
+      attr_reader :ofs_common_net_rel_link
+      attr_reader :ofs_common_path_suffix
+      attr_reader :ofs_local_base_path_unicode
+      attr_reader :ofs_common_path_suffix_unicode
+    end
 
     ##
-    # Lower 32 bits of the size of the file that this link targets
-    attr_reader :target_file_size
+    # @see https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Section 2.3
+    class LinkInfoFlags < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = nil)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        @reserved1 = @_io.read_bits_int_be(6)
+        @has_common_net_rel_link = @_io.read_bits_int_be(1) != 0
+        @has_volume_id_and_local_base_path = @_io.read_bits_int_be(1) != 0
+        @reserved2 = @_io.read_bits_int_be(24)
+        self
+      end
+      attr_reader :reserved1
+      attr_reader :has_common_net_rel_link
+      attr_reader :has_volume_id_and_local_base_path
+      attr_reader :reserved2
+    end
 
     ##
-    # Index of an icon to use from target file
-    attr_reader :icon_index
+    # @see https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Section 2.3.1
+    class VolumeIdBody < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = nil)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        @drive_type = Kaitai::Struct::Stream::resolve_enum(WindowsLnkFile::DRIVE_TYPES, @_io.read_u4le)
+        @drive_serial_number = @_io.read_u4le
+        @ofs_volume_label = @_io.read_u4le
+        if is_unicode
+          @ofs_volume_label_unicode = @_io.read_u4le
+        end
+        self
+      end
+      def is_unicode
+        return @is_unicode unless @is_unicode.nil?
+        @is_unicode = ofs_volume_label == 20
+        @is_unicode
+      end
+      def volume_label_ansi
+        return @volume_label_ansi unless @volume_label_ansi.nil?
+        if !(is_unicode)
+          _pos = @_io.pos
+          @_io.seek(ofs_volume_label - 4)
+          @volume_label_ansi = (@_io.read_bytes_term(0, false, true, true)).force_encoding("IBM437").encode('UTF-8')
+          @_io.seek(_pos)
+        end
+        @volume_label_ansi
+      end
+      attr_reader :drive_type
+      attr_reader :drive_serial_number
+      attr_reader :ofs_volume_label
+      attr_reader :ofs_volume_label_unicode
+    end
 
     ##
-    # Window state to set after the launch of target executable
-    attr_reader :show_command
-    attr_reader :hotkey
-    attr_reader :reserved
-    attr_reader :_raw_flags
+    # @see https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Section 2.3.1
+    class VolumeIdSpec < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = nil)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        @len_all = @_io.read_u4le
+        _io_body = @_io.substream(len_all - 4)
+        @body = VolumeIdBody.new(_io_body, self, @_root)
+        self
+      end
+      attr_reader :len_all
+      attr_reader :body
+      attr_reader :_raw_body
+    end
+    attr_reader :len_all
+    attr_reader :all
+    attr_reader :_raw_all
+  end
+
+  ##
+  # @see https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Section 2.2
+  class LinkTargetIdList < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @len_id_list = @_io.read_u2le
+      _io_id_list = @_io.substream(len_id_list)
+      @id_list = WindowsShellItems.new(_io_id_list)
+      self
+    end
+    attr_reader :len_id_list
+    attr_reader :id_list
+    attr_reader :_raw_id_list
+  end
+  class StringData < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @chars_str = @_io.read_u2le
+      @str = (@_io.read_bytes(chars_str * 2)).force_encoding("UTF-16LE").encode('UTF-8')
+      self
+    end
+    attr_reader :chars_str
+    attr_reader :str
   end
   attr_reader :header
   attr_reader :target_id_list

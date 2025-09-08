@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 
 ########################################################################
 package Hccapx;
@@ -24,7 +24,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -34,7 +34,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{records} = ();
+    $self->{records} = [];
     while (!$self->{_io}->is_eof()) {
         push @{$self->{records}}, Hccapx::HccapxRecord->new($self->{_io}, $self, $self->{_root});
     }
@@ -65,7 +65,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -82,7 +82,7 @@ sub _read {
     $self->{_io}->align_to_byte();
     $self->{len_essid} = $self->{_io}->read_u1();
     $self->{essid} = $self->{_io}->read_bytes($self->len_essid());
-    $self->{padding1} = $self->{_io}->read_bytes((32 - $self->len_essid()));
+    $self->{padding1} = $self->{_io}->read_bytes(32 - $self->len_essid());
     $self->{keyver} = $self->{_io}->read_u1();
     $self->{keymic} = $self->{_io}->read_bytes(16);
     $self->{mac_ap} = $self->{_io}->read_bytes(6);
@@ -91,7 +91,7 @@ sub _read {
     $self->{nonce_station} = $self->{_io}->read_bytes(32);
     $self->{len_eapol} = $self->{_io}->read_u2le();
     $self->{eapol} = $self->{_io}->read_bytes($self->len_eapol());
-    $self->{padding2} = $self->{_io}->read_bytes((256 - $self->len_eapol()));
+    $self->{padding2} = $self->{_io}->read_bytes(256 - $self->len_eapol());
 }
 
 sub magic {

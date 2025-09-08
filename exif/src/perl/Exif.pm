@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 
 ########################################################################
 package Exif;
@@ -24,7 +24,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -68,7 +68,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -152,7 +152,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
     $self->{_is_le} = $_is_le;
 
     $self->_read();
@@ -176,7 +176,7 @@ sub _read_le {
     my ($self) = @_;
 
     $self->{num_fields} = $self->{_io}->read_u2le();
-    $self->{fields} = ();
+    $self->{fields} = [];
     my $n_fields = $self->num_fields();
     for (my $i = 0; $i < $n_fields; $i++) {
         push @{$self->{fields}}, Exif::ExifBody::IfdField->new($self->{_io}, $self, $self->{_root}, $self->{_is_le});
@@ -188,7 +188,7 @@ sub _read_be {
     my ($self) = @_;
 
     $self->{num_fields} = $self->{_io}->read_u2be();
-    $self->{fields} = ();
+    $self->{fields} = [];
     my $n_fields = $self->num_fields();
     for (my $i = 0; $i < $n_fields; $i++) {
         push @{$self->{fields}}, Exif::ExifBody::IfdField->new($self->{_io}, $self, $self->{_root}, $self->{_is_le});
@@ -715,7 +715,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
     $self->{_is_le} = $_is_le;
 
     $self->_read();
@@ -753,25 +753,11 @@ sub _read_be {
     $self->{ofs_or_data} = $self->{_io}->read_u4be();
 }
 
-sub type_byte_length {
-    my ($self) = @_;
-    return $self->{type_byte_length} if ($self->{type_byte_length});
-    $self->{type_byte_length} = ($self->field_type() == $Exif::ExifBody::IfdField::FIELD_TYPE_ENUM_WORD ? 2 : ($self->field_type() == $Exif::ExifBody::IfdField::FIELD_TYPE_ENUM_DWORD ? 4 : 1));
-    return $self->{type_byte_length};
-}
-
 sub byte_length {
     my ($self) = @_;
     return $self->{byte_length} if ($self->{byte_length});
-    $self->{byte_length} = ($self->length() * $self->type_byte_length());
+    $self->{byte_length} = $self->length() * $self->type_byte_length();
     return $self->{byte_length};
-}
-
-sub is_immediate_data {
-    my ($self) = @_;
-    return $self->{is_immediate_data} if ($self->{is_immediate_data});
-    $self->{is_immediate_data} = $self->byte_length() <= 4;
-    return $self->{is_immediate_data};
 }
 
 sub data {
@@ -789,6 +775,20 @@ sub data {
         $io->seek($_pos);
     }
     return $self->{data};
+}
+
+sub is_immediate_data {
+    my ($self) = @_;
+    return $self->{is_immediate_data} if ($self->{is_immediate_data});
+    $self->{is_immediate_data} = $self->byte_length() <= 4;
+    return $self->{is_immediate_data};
+}
+
+sub type_byte_length {
+    my ($self) = @_;
+    return $self->{type_byte_length} if ($self->{type_byte_length});
+    $self->{type_byte_length} = ($self->field_type() == $Exif::ExifBody::IfdField::FIELD_TYPE_ENUM_WORD ? 2 : ($self->field_type() == $Exif::ExifBody::IfdField::FIELD_TYPE_ENUM_DWORD ? 4 : 1));
+    return $self->{type_byte_length};
 }
 
 sub tag {

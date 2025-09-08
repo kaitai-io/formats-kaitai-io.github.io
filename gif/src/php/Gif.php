@@ -23,8 +23,8 @@
 
 namespace {
     class Gif extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Gif $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Gif $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -32,7 +32,7 @@ namespace {
             $this->_m_hdr = new \Gif\Header($this->_io, $this, $this->_root);
             $this->_m_logicalScreenDescriptor = new \Gif\LogicalScreenDescriptorStruct($this->_io, $this, $this->_root);
             if ($this->logicalScreenDescriptor()->hasColorTable()) {
-                $this->_m__raw_globalColorTable = $this->_io->readBytes(($this->logicalScreenDescriptor()->colorTableSize() * 3));
+                $this->_m__raw_globalColorTable = $this->_io->readBytes($this->logicalScreenDescriptor()->colorTableSize() * 3);
                 $_io__raw_globalColorTable = new \Kaitai\Struct\Stream($this->_m__raw_globalColorTable);
                 $this->_m_globalColorTable = new \Gif\ColorTable($_io__raw_globalColorTable, $this, $this->_root);
             }
@@ -58,155 +58,32 @@ namespace {
 }
 
 namespace Gif {
-    class ImageData extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Gif\LocalImageDescriptor $_parent = null, \Gif $_root = null) {
+    class ApplicationId extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Gif\ExtApplication $_parent = null, ?\Gif $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_lzwMinCodeSize = $this->_io->readU1();
-            $this->_m_subblocks = new \Gif\Subblocks($this->_io, $this, $this->_root);
-        }
-        protected $_m_lzwMinCodeSize;
-        protected $_m_subblocks;
-        public function lzwMinCodeSize() { return $this->_m_lzwMinCodeSize; }
-        public function subblocks() { return $this->_m_subblocks; }
-    }
-}
-
-namespace Gif {
-    class ColorTableEntry extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Gif\ColorTable $_parent = null, \Gif $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_red = $this->_io->readU1();
-            $this->_m_green = $this->_io->readU1();
-            $this->_m_blue = $this->_io->readU1();
-        }
-        protected $_m_red;
-        protected $_m_green;
-        protected $_m_blue;
-        public function red() { return $this->_m_red; }
-        public function green() { return $this->_m_green; }
-        public function blue() { return $this->_m_blue; }
-    }
-}
-
-namespace Gif {
-    class LogicalScreenDescriptorStruct extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Gif $_parent = null, \Gif $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_screenWidth = $this->_io->readU2le();
-            $this->_m_screenHeight = $this->_io->readU2le();
-            $this->_m_flags = $this->_io->readU1();
-            $this->_m_bgColorIndex = $this->_io->readU1();
-            $this->_m_pixelAspectRatio = $this->_io->readU1();
-        }
-        protected $_m_hasColorTable;
-        public function hasColorTable() {
-            if ($this->_m_hasColorTable !== null)
-                return $this->_m_hasColorTable;
-            $this->_m_hasColorTable = ($this->flags() & 128) != 0;
-            return $this->_m_hasColorTable;
-        }
-        protected $_m_colorTableSize;
-        public function colorTableSize() {
-            if ($this->_m_colorTableSize !== null)
-                return $this->_m_colorTableSize;
-            $this->_m_colorTableSize = (2 << ($this->flags() & 7));
-            return $this->_m_colorTableSize;
-        }
-        protected $_m_screenWidth;
-        protected $_m_screenHeight;
-        protected $_m_flags;
-        protected $_m_bgColorIndex;
-        protected $_m_pixelAspectRatio;
-        public function screenWidth() { return $this->_m_screenWidth; }
-        public function screenHeight() { return $this->_m_screenHeight; }
-        public function flags() { return $this->_m_flags; }
-        public function bgColorIndex() { return $this->_m_bgColorIndex; }
-        public function pixelAspectRatio() { return $this->_m_pixelAspectRatio; }
-    }
-}
-
-namespace Gif {
-    class LocalImageDescriptor extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Gif\Block $_parent = null, \Gif $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_left = $this->_io->readU2le();
-            $this->_m_top = $this->_io->readU2le();
-            $this->_m_width = $this->_io->readU2le();
-            $this->_m_height = $this->_io->readU2le();
-            $this->_m_flags = $this->_io->readU1();
-            if ($this->hasColorTable()) {
-                $this->_m__raw_localColorTable = $this->_io->readBytes(($this->colorTableSize() * 3));
-                $_io__raw_localColorTable = new \Kaitai\Struct\Stream($this->_m__raw_localColorTable);
-                $this->_m_localColorTable = new \Gif\ColorTable($_io__raw_localColorTable, $this, $this->_root);
+            $this->_m_lenBytes = $this->_io->readU1();
+            if (!($this->_m_lenBytes == 11)) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError(11, $this->_m_lenBytes, $this->_io, "/types/application_id/seq/0");
             }
-            $this->_m_imageData = new \Gif\ImageData($this->_io, $this, $this->_root);
+            $this->_m_applicationIdentifier = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(8), "ASCII");
+            $this->_m_applicationAuthCode = $this->_io->readBytes(3);
         }
-        protected $_m_hasColorTable;
-        public function hasColorTable() {
-            if ($this->_m_hasColorTable !== null)
-                return $this->_m_hasColorTable;
-            $this->_m_hasColorTable = ($this->flags() & 128) != 0;
-            return $this->_m_hasColorTable;
-        }
-        protected $_m_hasInterlace;
-        public function hasInterlace() {
-            if ($this->_m_hasInterlace !== null)
-                return $this->_m_hasInterlace;
-            $this->_m_hasInterlace = ($this->flags() & 64) != 0;
-            return $this->_m_hasInterlace;
-        }
-        protected $_m_hasSortedColorTable;
-        public function hasSortedColorTable() {
-            if ($this->_m_hasSortedColorTable !== null)
-                return $this->_m_hasSortedColorTable;
-            $this->_m_hasSortedColorTable = ($this->flags() & 32) != 0;
-            return $this->_m_hasSortedColorTable;
-        }
-        protected $_m_colorTableSize;
-        public function colorTableSize() {
-            if ($this->_m_colorTableSize !== null)
-                return $this->_m_colorTableSize;
-            $this->_m_colorTableSize = (2 << ($this->flags() & 7));
-            return $this->_m_colorTableSize;
-        }
-        protected $_m_left;
-        protected $_m_top;
-        protected $_m_width;
-        protected $_m_height;
-        protected $_m_flags;
-        protected $_m_localColorTable;
-        protected $_m_imageData;
-        protected $_m__raw_localColorTable;
-        public function left() { return $this->_m_left; }
-        public function top() { return $this->_m_top; }
-        public function width() { return $this->_m_width; }
-        public function height() { return $this->_m_height; }
-        public function flags() { return $this->_m_flags; }
-        public function localColorTable() { return $this->_m_localColorTable; }
-        public function imageData() { return $this->_m_imageData; }
-        public function _raw_localColorTable() { return $this->_m__raw_localColorTable; }
+        protected $_m_lenBytes;
+        protected $_m_applicationIdentifier;
+        protected $_m_applicationAuthCode;
+        public function lenBytes() { return $this->_m_lenBytes; }
+        public function applicationIdentifier() { return $this->_m_applicationIdentifier; }
+        public function applicationAuthCode() { return $this->_m_applicationAuthCode; }
     }
 }
 
 namespace Gif {
     class Block extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Gif $_parent = null, \Gif $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Gif $_parent = null, ?\Gif $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -231,7 +108,7 @@ namespace Gif {
 
 namespace Gif {
     class ColorTable extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Gif $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Gif $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -250,44 +127,68 @@ namespace Gif {
 }
 
 namespace Gif {
-    class Header extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Gif $_parent = null, \Gif $_root = null) {
+    class ColorTableEntry extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Gif\ColorTable $_parent = null, ?\Gif $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_magic = $this->_io->readBytes(3);
-            if (!($this->magic() == "\x47\x49\x46")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x47\x49\x46", $this->magic(), $this->_io(), "/types/header/seq/0");
-            }
-            $this->_m_version = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(3), "ASCII");
+            $this->_m_red = $this->_io->readU1();
+            $this->_m_green = $this->_io->readU1();
+            $this->_m_blue = $this->_io->readU1();
         }
-        protected $_m_magic;
-        protected $_m_version;
-        public function magic() { return $this->_m_magic; }
-        public function version() { return $this->_m_version; }
+        protected $_m_red;
+        protected $_m_green;
+        protected $_m_blue;
+        public function red() { return $this->_m_red; }
+        public function green() { return $this->_m_green; }
+        public function blue() { return $this->_m_blue; }
+    }
+}
+
+namespace Gif {
+    class ExtApplication extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Gif\Extension $_parent = null, ?\Gif $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_applicationId = new \Gif\ApplicationId($this->_io, $this, $this->_root);
+            $this->_m_subblocks = [];
+            $i = 0;
+            do {
+                $_ = new \Gif\Subblock($this->_io, $this, $this->_root);
+                $this->_m_subblocks[] = $_;
+                $i++;
+            } while (!($_->lenBytes() == 0));
+        }
+        protected $_m_applicationId;
+        protected $_m_subblocks;
+        public function applicationId() { return $this->_m_applicationId; }
+        public function subblocks() { return $this->_m_subblocks; }
     }
 }
 
 namespace Gif {
     class ExtGraphicControl extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Gif\Extension $_parent = null, \Gif $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Gif\Extension $_parent = null, ?\Gif $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_blockSize = $this->_io->readBytes(1);
-            if (!($this->blockSize() == "\x04")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x04", $this->blockSize(), $this->_io(), "/types/ext_graphic_control/seq/0");
+            if (!($this->_m_blockSize == "\x04")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x04", $this->_m_blockSize, $this->_io, "/types/ext_graphic_control/seq/0");
             }
             $this->_m_flags = $this->_io->readU1();
             $this->_m_delayTime = $this->_io->readU2le();
             $this->_m_transparentIdx = $this->_io->readU1();
             $this->_m_terminator = $this->_io->readBytes(1);
-            if (!($this->terminator() == "\x00")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00", $this->terminator(), $this->_io(), "/types/ext_graphic_control/seq/4");
+            if (!($this->_m_terminator == "\x00")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00", $this->_m_terminator, $this->_io, "/types/ext_graphic_control/seq/4");
             }
         }
         protected $_m_transparentColorFlag;
@@ -318,95 +219,8 @@ namespace Gif {
 }
 
 namespace Gif {
-    class Subblock extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Gif $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_lenBytes = $this->_io->readU1();
-            $this->_m_bytes = $this->_io->readBytes($this->lenBytes());
-        }
-        protected $_m_lenBytes;
-        protected $_m_bytes;
-        public function lenBytes() { return $this->_m_lenBytes; }
-        public function bytes() { return $this->_m_bytes; }
-    }
-}
-
-namespace Gif {
-    class ApplicationId extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Gif\ExtApplication $_parent = null, \Gif $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_lenBytes = $this->_io->readU1();
-            if (!($this->lenBytes() == 11)) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError(11, $this->lenBytes(), $this->_io(), "/types/application_id/seq/0");
-            }
-            $this->_m_applicationIdentifier = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(8), "ASCII");
-            $this->_m_applicationAuthCode = $this->_io->readBytes(3);
-        }
-        protected $_m_lenBytes;
-        protected $_m_applicationIdentifier;
-        protected $_m_applicationAuthCode;
-        public function lenBytes() { return $this->_m_lenBytes; }
-        public function applicationIdentifier() { return $this->_m_applicationIdentifier; }
-        public function applicationAuthCode() { return $this->_m_applicationAuthCode; }
-    }
-}
-
-namespace Gif {
-    class ExtApplication extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Gif\Extension $_parent = null, \Gif $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_applicationId = new \Gif\ApplicationId($this->_io, $this, $this->_root);
-            $this->_m_subblocks = [];
-            $i = 0;
-            do {
-                $_ = new \Gif\Subblock($this->_io, $this, $this->_root);
-                $this->_m_subblocks[] = $_;
-                $i++;
-            } while (!($_->lenBytes() == 0));
-        }
-        protected $_m_applicationId;
-        protected $_m_subblocks;
-        public function applicationId() { return $this->_m_applicationId; }
-        public function subblocks() { return $this->_m_subblocks; }
-    }
-}
-
-namespace Gif {
-    class Subblocks extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Gif $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_entries = [];
-            $i = 0;
-            do {
-                $_ = new \Gif\Subblock($this->_io, $this, $this->_root);
-                $this->_m_entries[] = $_;
-                $i++;
-            } while (!($_->lenBytes() == 0));
-        }
-        protected $_m_entries;
-        public function entries() { return $this->_m_entries; }
-    }
-}
-
-namespace Gif {
     class Extension extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Gif\Block $_parent = null, \Gif $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Gif\Block $_parent = null, ?\Gif $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -436,10 +250,202 @@ namespace Gif {
 }
 
 namespace Gif {
+    class Header extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Gif $_parent = null, ?\Gif $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_magic = $this->_io->readBytes(3);
+            if (!($this->_m_magic == "\x47\x49\x46")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x47\x49\x46", $this->_m_magic, $this->_io, "/types/header/seq/0");
+            }
+            $this->_m_version = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(3), "ASCII");
+        }
+        protected $_m_magic;
+        protected $_m_version;
+        public function magic() { return $this->_m_magic; }
+        public function version() { return $this->_m_version; }
+    }
+}
+
+namespace Gif {
+    class ImageData extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Gif\LocalImageDescriptor $_parent = null, ?\Gif $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_lzwMinCodeSize = $this->_io->readU1();
+            $this->_m_subblocks = new \Gif\Subblocks($this->_io, $this, $this->_root);
+        }
+        protected $_m_lzwMinCodeSize;
+        protected $_m_subblocks;
+        public function lzwMinCodeSize() { return $this->_m_lzwMinCodeSize; }
+        public function subblocks() { return $this->_m_subblocks; }
+    }
+}
+
+namespace Gif {
+    class LocalImageDescriptor extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Gif\Block $_parent = null, ?\Gif $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_left = $this->_io->readU2le();
+            $this->_m_top = $this->_io->readU2le();
+            $this->_m_width = $this->_io->readU2le();
+            $this->_m_height = $this->_io->readU2le();
+            $this->_m_flags = $this->_io->readU1();
+            if ($this->hasColorTable()) {
+                $this->_m__raw_localColorTable = $this->_io->readBytes($this->colorTableSize() * 3);
+                $_io__raw_localColorTable = new \Kaitai\Struct\Stream($this->_m__raw_localColorTable);
+                $this->_m_localColorTable = new \Gif\ColorTable($_io__raw_localColorTable, $this, $this->_root);
+            }
+            $this->_m_imageData = new \Gif\ImageData($this->_io, $this, $this->_root);
+        }
+        protected $_m_colorTableSize;
+        public function colorTableSize() {
+            if ($this->_m_colorTableSize !== null)
+                return $this->_m_colorTableSize;
+            $this->_m_colorTableSize = 2 << ($this->flags() & 7);
+            return $this->_m_colorTableSize;
+        }
+        protected $_m_hasColorTable;
+        public function hasColorTable() {
+            if ($this->_m_hasColorTable !== null)
+                return $this->_m_hasColorTable;
+            $this->_m_hasColorTable = ($this->flags() & 128) != 0;
+            return $this->_m_hasColorTable;
+        }
+        protected $_m_hasInterlace;
+        public function hasInterlace() {
+            if ($this->_m_hasInterlace !== null)
+                return $this->_m_hasInterlace;
+            $this->_m_hasInterlace = ($this->flags() & 64) != 0;
+            return $this->_m_hasInterlace;
+        }
+        protected $_m_hasSortedColorTable;
+        public function hasSortedColorTable() {
+            if ($this->_m_hasSortedColorTable !== null)
+                return $this->_m_hasSortedColorTable;
+            $this->_m_hasSortedColorTable = ($this->flags() & 32) != 0;
+            return $this->_m_hasSortedColorTable;
+        }
+        protected $_m_left;
+        protected $_m_top;
+        protected $_m_width;
+        protected $_m_height;
+        protected $_m_flags;
+        protected $_m_localColorTable;
+        protected $_m_imageData;
+        protected $_m__raw_localColorTable;
+        public function left() { return $this->_m_left; }
+        public function top() { return $this->_m_top; }
+        public function width() { return $this->_m_width; }
+        public function height() { return $this->_m_height; }
+        public function flags() { return $this->_m_flags; }
+        public function localColorTable() { return $this->_m_localColorTable; }
+        public function imageData() { return $this->_m_imageData; }
+        public function _raw_localColorTable() { return $this->_m__raw_localColorTable; }
+    }
+}
+
+namespace Gif {
+    class LogicalScreenDescriptorStruct extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Gif $_parent = null, ?\Gif $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_screenWidth = $this->_io->readU2le();
+            $this->_m_screenHeight = $this->_io->readU2le();
+            $this->_m_flags = $this->_io->readU1();
+            $this->_m_bgColorIndex = $this->_io->readU1();
+            $this->_m_pixelAspectRatio = $this->_io->readU1();
+        }
+        protected $_m_colorTableSize;
+        public function colorTableSize() {
+            if ($this->_m_colorTableSize !== null)
+                return $this->_m_colorTableSize;
+            $this->_m_colorTableSize = 2 << ($this->flags() & 7);
+            return $this->_m_colorTableSize;
+        }
+        protected $_m_hasColorTable;
+        public function hasColorTable() {
+            if ($this->_m_hasColorTable !== null)
+                return $this->_m_hasColorTable;
+            $this->_m_hasColorTable = ($this->flags() & 128) != 0;
+            return $this->_m_hasColorTable;
+        }
+        protected $_m_screenWidth;
+        protected $_m_screenHeight;
+        protected $_m_flags;
+        protected $_m_bgColorIndex;
+        protected $_m_pixelAspectRatio;
+        public function screenWidth() { return $this->_m_screenWidth; }
+        public function screenHeight() { return $this->_m_screenHeight; }
+        public function flags() { return $this->_m_flags; }
+        public function bgColorIndex() { return $this->_m_bgColorIndex; }
+        public function pixelAspectRatio() { return $this->_m_pixelAspectRatio; }
+    }
+}
+
+namespace Gif {
+    class Subblock extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Gif $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_lenBytes = $this->_io->readU1();
+            $this->_m_bytes = $this->_io->readBytes($this->lenBytes());
+        }
+        protected $_m_lenBytes;
+        protected $_m_bytes;
+        public function lenBytes() { return $this->_m_lenBytes; }
+        public function bytes() { return $this->_m_bytes; }
+    }
+}
+
+namespace Gif {
+    class Subblocks extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Gif $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_entries = [];
+            $i = 0;
+            do {
+                $_ = new \Gif\Subblock($this->_io, $this, $this->_root);
+                $this->_m_entries[] = $_;
+                $i++;
+            } while (!($_->lenBytes() == 0));
+        }
+        protected $_m_entries;
+        public function entries() { return $this->_m_entries; }
+    }
+}
+
+namespace Gif {
     class BlockType {
         const EXTENSION = 33;
         const LOCAL_IMAGE_DESCRIPTOR = 44;
         const END_OF_FILE = 59;
+
+        private const _VALUES = [33 => true, 44 => true, 59 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
@@ -448,5 +454,11 @@ namespace Gif {
         const GRAPHIC_CONTROL = 249;
         const COMMENT = 254;
         const APPLICATION = 255;
+
+        private const _VALUES = [249 => true, 254 => true, 255 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

@@ -51,9 +51,9 @@ namespace Kaitai
             private void _read()
             {
                 _magic = m_io.ReadBytes(4);
-                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 72, 67, 80, 88 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 72, 67, 80, 88 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 72, 67, 80, 88 }, Magic, M_Io, "/types/hccapx_record/seq/0");
+                    throw new ValidationNotEqualError(new byte[] { 72, 67, 80, 88 }, _magic, m_io, "/types/hccapx_record/seq/0");
                 }
                 _version = m_io.ReadU4le();
                 _ignoreReplayCounter = m_io.ReadBitsIntBe(1) != 0;
@@ -61,7 +61,7 @@ namespace Kaitai
                 m_io.AlignToByte();
                 _lenEssid = m_io.ReadU1();
                 _essid = m_io.ReadBytes(LenEssid);
-                _padding1 = m_io.ReadBytes((32 - LenEssid));
+                _padding1 = m_io.ReadBytes(32 - LenEssid);
                 _keyver = m_io.ReadU1();
                 _keymic = m_io.ReadBytes(16);
                 _macAp = m_io.ReadBytes(6);
@@ -70,7 +70,7 @@ namespace Kaitai
                 _nonceStation = m_io.ReadBytes(32);
                 _lenEapol = m_io.ReadU2le();
                 _eapol = m_io.ReadBytes(LenEapol);
-                _padding2 = m_io.ReadBytes((256 - LenEapol));
+                _padding2 = m_io.ReadBytes(256 - LenEapol);
             }
             private byte[] _magic;
             private uint _version;

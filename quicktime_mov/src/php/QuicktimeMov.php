@@ -3,8 +3,8 @@
 
 namespace {
     class QuicktimeMov extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \QuicktimeMov $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\QuicktimeMov $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -17,8 +17,192 @@ namespace {
 }
 
 namespace QuicktimeMov {
+    class Atom extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\QuicktimeMov\AtomList $_parent = null, ?\QuicktimeMov $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_len32 = $this->_io->readU4be();
+            $this->_m_atomType = $this->_io->readU4be();
+            if ($this->len32() == 1) {
+                $this->_m_len64 = $this->_io->readU8be();
+            }
+            switch ($this->atomType()) {
+                case \QuicktimeMov\AtomType::DINF:
+                    $this->_m__raw_body = $this->_io->readBytes($this->len());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \QuicktimeMov\AtomList($_io__raw_body, $this, $this->_root);
+                    break;
+                case \QuicktimeMov\AtomType::FTYP:
+                    $this->_m__raw_body = $this->_io->readBytes($this->len());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \QuicktimeMov\FtypBody($_io__raw_body, $this, $this->_root);
+                    break;
+                case \QuicktimeMov\AtomType::MDIA:
+                    $this->_m__raw_body = $this->_io->readBytes($this->len());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \QuicktimeMov\AtomList($_io__raw_body, $this, $this->_root);
+                    break;
+                case \QuicktimeMov\AtomType::MINF:
+                    $this->_m__raw_body = $this->_io->readBytes($this->len());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \QuicktimeMov\AtomList($_io__raw_body, $this, $this->_root);
+                    break;
+                case \QuicktimeMov\AtomType::MOOF:
+                    $this->_m__raw_body = $this->_io->readBytes($this->len());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \QuicktimeMov\AtomList($_io__raw_body, $this, $this->_root);
+                    break;
+                case \QuicktimeMov\AtomType::MOOV:
+                    $this->_m__raw_body = $this->_io->readBytes($this->len());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \QuicktimeMov\AtomList($_io__raw_body, $this, $this->_root);
+                    break;
+                case \QuicktimeMov\AtomType::MVHD:
+                    $this->_m__raw_body = $this->_io->readBytes($this->len());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \QuicktimeMov\MvhdBody($_io__raw_body, $this, $this->_root);
+                    break;
+                case \QuicktimeMov\AtomType::STBL:
+                    $this->_m__raw_body = $this->_io->readBytes($this->len());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \QuicktimeMov\AtomList($_io__raw_body, $this, $this->_root);
+                    break;
+                case \QuicktimeMov\AtomType::TKHD:
+                    $this->_m__raw_body = $this->_io->readBytes($this->len());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \QuicktimeMov\TkhdBody($_io__raw_body, $this, $this->_root);
+                    break;
+                case \QuicktimeMov\AtomType::TRAF:
+                    $this->_m__raw_body = $this->_io->readBytes($this->len());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \QuicktimeMov\AtomList($_io__raw_body, $this, $this->_root);
+                    break;
+                case \QuicktimeMov\AtomType::TRAK:
+                    $this->_m__raw_body = $this->_io->readBytes($this->len());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \QuicktimeMov\AtomList($_io__raw_body, $this, $this->_root);
+                    break;
+                default:
+                    $this->_m_body = $this->_io->readBytes($this->len());
+                    break;
+            }
+        }
+        protected $_m_len;
+        public function len() {
+            if ($this->_m_len !== null)
+                return $this->_m_len;
+            $this->_m_len = ($this->len32() == 0 ? $this->_io()->size() - 8 : ($this->len32() == 1 ? $this->len64() - 16 : $this->len32() - 8));
+            return $this->_m_len;
+        }
+        protected $_m_len32;
+        protected $_m_atomType;
+        protected $_m_len64;
+        protected $_m_body;
+        protected $_m__raw_body;
+        public function len32() { return $this->_m_len32; }
+        public function atomType() { return $this->_m_atomType; }
+        public function len64() { return $this->_m_len64; }
+        public function body() { return $this->_m_body; }
+        public function _raw_body() { return $this->_m__raw_body; }
+    }
+}
+
+namespace QuicktimeMov {
+    class AtomList extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\QuicktimeMov $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_items = [];
+            $i = 0;
+            while (!$this->_io->isEof()) {
+                $this->_m_items[] = new \QuicktimeMov\Atom($this->_io, $this, $this->_root);
+                $i++;
+            }
+        }
+        protected $_m_items;
+        public function items() { return $this->_m_items; }
+    }
+}
+
+/**
+ * Fixed-point 16-bit number.
+ */
+
+namespace QuicktimeMov {
+    class Fixed16 extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\QuicktimeMov\MvhdBody $_parent = null, ?\QuicktimeMov $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_intPart = $this->_io->readS1();
+            $this->_m_fracPart = $this->_io->readU1();
+        }
+        protected $_m_intPart;
+        protected $_m_fracPart;
+        public function intPart() { return $this->_m_intPart; }
+        public function fracPart() { return $this->_m_fracPart; }
+    }
+}
+
+/**
+ * Fixed-point 32-bit number.
+ */
+
+namespace QuicktimeMov {
+    class Fixed32 extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\QuicktimeMov $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_intPart = $this->_io->readS2be();
+            $this->_m_fracPart = $this->_io->readU2be();
+        }
+        protected $_m_intPart;
+        protected $_m_fracPart;
+        public function intPart() { return $this->_m_intPart; }
+        public function fracPart() { return $this->_m_fracPart; }
+    }
+}
+
+namespace QuicktimeMov {
+    class FtypBody extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\QuicktimeMov\Atom $_parent = null, ?\QuicktimeMov $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_majorBrand = $this->_io->readU4be();
+            $this->_m_minorVersion = $this->_io->readBytes(4);
+            $this->_m_compatibleBrands = [];
+            $i = 0;
+            while (!$this->_io->isEof()) {
+                $this->_m_compatibleBrands[] = $this->_io->readU4be();
+                $i++;
+            }
+        }
+        protected $_m_majorBrand;
+        protected $_m_minorVersion;
+        protected $_m_compatibleBrands;
+        public function majorBrand() { return $this->_m_majorBrand; }
+        public function minorVersion() { return $this->_m_minorVersion; }
+        public function compatibleBrands() { return $this->_m_compatibleBrands; }
+    }
+}
+
+namespace QuicktimeMov {
     class MvhdBody extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \QuicktimeMov\Atom $_parent = null, \QuicktimeMov $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\QuicktimeMov\Atom $_parent = null, ?\QuicktimeMov $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -141,172 +325,8 @@ namespace QuicktimeMov {
 }
 
 namespace QuicktimeMov {
-    class FtypBody extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \QuicktimeMov\Atom $_parent = null, \QuicktimeMov $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_majorBrand = $this->_io->readU4be();
-            $this->_m_minorVersion = $this->_io->readBytes(4);
-            $this->_m_compatibleBrands = [];
-            $i = 0;
-            while (!$this->_io->isEof()) {
-                $this->_m_compatibleBrands[] = $this->_io->readU4be();
-                $i++;
-            }
-        }
-        protected $_m_majorBrand;
-        protected $_m_minorVersion;
-        protected $_m_compatibleBrands;
-        public function majorBrand() { return $this->_m_majorBrand; }
-        public function minorVersion() { return $this->_m_minorVersion; }
-        public function compatibleBrands() { return $this->_m_compatibleBrands; }
-    }
-}
-
-/**
- * Fixed-point 32-bit number.
- */
-
-namespace QuicktimeMov {
-    class Fixed32 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \QuicktimeMov $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_intPart = $this->_io->readS2be();
-            $this->_m_fracPart = $this->_io->readU2be();
-        }
-        protected $_m_intPart;
-        protected $_m_fracPart;
-        public function intPart() { return $this->_m_intPart; }
-        public function fracPart() { return $this->_m_fracPart; }
-    }
-}
-
-/**
- * Fixed-point 16-bit number.
- */
-
-namespace QuicktimeMov {
-    class Fixed16 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \QuicktimeMov\MvhdBody $_parent = null, \QuicktimeMov $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_intPart = $this->_io->readS1();
-            $this->_m_fracPart = $this->_io->readU1();
-        }
-        protected $_m_intPart;
-        protected $_m_fracPart;
-        public function intPart() { return $this->_m_intPart; }
-        public function fracPart() { return $this->_m_fracPart; }
-    }
-}
-
-namespace QuicktimeMov {
-    class Atom extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \QuicktimeMov\AtomList $_parent = null, \QuicktimeMov $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_len32 = $this->_io->readU4be();
-            $this->_m_atomType = $this->_io->readU4be();
-            if ($this->len32() == 1) {
-                $this->_m_len64 = $this->_io->readU8be();
-            }
-            switch ($this->atomType()) {
-                case \QuicktimeMov\AtomType::MOOF:
-                    $this->_m__raw_body = $this->_io->readBytes($this->len());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \QuicktimeMov\AtomList($_io__raw_body, $this, $this->_root);
-                    break;
-                case \QuicktimeMov\AtomType::TKHD:
-                    $this->_m__raw_body = $this->_io->readBytes($this->len());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \QuicktimeMov\TkhdBody($_io__raw_body, $this, $this->_root);
-                    break;
-                case \QuicktimeMov\AtomType::STBL:
-                    $this->_m__raw_body = $this->_io->readBytes($this->len());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \QuicktimeMov\AtomList($_io__raw_body, $this, $this->_root);
-                    break;
-                case \QuicktimeMov\AtomType::TRAF:
-                    $this->_m__raw_body = $this->_io->readBytes($this->len());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \QuicktimeMov\AtomList($_io__raw_body, $this, $this->_root);
-                    break;
-                case \QuicktimeMov\AtomType::MINF:
-                    $this->_m__raw_body = $this->_io->readBytes($this->len());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \QuicktimeMov\AtomList($_io__raw_body, $this, $this->_root);
-                    break;
-                case \QuicktimeMov\AtomType::TRAK:
-                    $this->_m__raw_body = $this->_io->readBytes($this->len());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \QuicktimeMov\AtomList($_io__raw_body, $this, $this->_root);
-                    break;
-                case \QuicktimeMov\AtomType::MOOV:
-                    $this->_m__raw_body = $this->_io->readBytes($this->len());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \QuicktimeMov\AtomList($_io__raw_body, $this, $this->_root);
-                    break;
-                case \QuicktimeMov\AtomType::MDIA:
-                    $this->_m__raw_body = $this->_io->readBytes($this->len());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \QuicktimeMov\AtomList($_io__raw_body, $this, $this->_root);
-                    break;
-                case \QuicktimeMov\AtomType::DINF:
-                    $this->_m__raw_body = $this->_io->readBytes($this->len());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \QuicktimeMov\AtomList($_io__raw_body, $this, $this->_root);
-                    break;
-                case \QuicktimeMov\AtomType::MVHD:
-                    $this->_m__raw_body = $this->_io->readBytes($this->len());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \QuicktimeMov\MvhdBody($_io__raw_body, $this, $this->_root);
-                    break;
-                case \QuicktimeMov\AtomType::FTYP:
-                    $this->_m__raw_body = $this->_io->readBytes($this->len());
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \QuicktimeMov\FtypBody($_io__raw_body, $this, $this->_root);
-                    break;
-                default:
-                    $this->_m_body = $this->_io->readBytes($this->len());
-                    break;
-            }
-        }
-        protected $_m_len;
-        public function len() {
-            if ($this->_m_len !== null)
-                return $this->_m_len;
-            $this->_m_len = ($this->len32() == 0 ? ($this->_io()->size() - 8) : ($this->len32() == 1 ? ($this->len64() - 16) : ($this->len32() - 8)));
-            return $this->_m_len;
-        }
-        protected $_m_len32;
-        protected $_m_atomType;
-        protected $_m_len64;
-        protected $_m_body;
-        protected $_m__raw_body;
-        public function len32() { return $this->_m_len32; }
-        public function atomType() { return $this->_m_atomType; }
-        public function len64() { return $this->_m_len64; }
-        public function body() { return $this->_m_body; }
-        public function _raw_body() { return $this->_m__raw_body; }
-    }
-}
-
-namespace QuicktimeMov {
     class TkhdBody extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \QuicktimeMov\Atom $_parent = null, \QuicktimeMov $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\QuicktimeMov\Atom $_parent = null, ?\QuicktimeMov $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -366,26 +386,6 @@ namespace QuicktimeMov {
 }
 
 namespace QuicktimeMov {
-    class AtomList extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \QuicktimeMov $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_items = [];
-            $i = 0;
-            while (!$this->_io->isEof()) {
-                $this->_m_items[] = new \QuicktimeMov\Atom($this->_io, $this, $this->_root);
-                $i++;
-            }
-        }
-        protected $_m_items;
-        public function items() { return $this->_m_items; }
-    }
-}
-
-namespace QuicktimeMov {
     class AtomType {
         const XTRA = 1484026465;
         const DINF = 1684631142;
@@ -417,6 +417,12 @@ namespace QuicktimeMov {
         const TREF = 1953654118;
         const UDTA = 1969517665;
         const VMHD = 1986881636;
+
+        private const _VALUES = [1484026465 => true, 1684631142 => true, 1685218662 => true, 1701082227 => true, 1701606260 => true, 1718773093 => true, 1718909296 => true, 1751411826 => true, 1768907891 => true, 1835295092 => true, 1835296868 => true, 1835297121 => true, 1835365473 => true, 1835626086 => true, 1836019558 => true, 1836019574 => true, 1836476516 => true, 1936549988 => true, 1937007212 => true, 1937007471 => true, 1937011555 => true, 1937011556 => true, 1937011578 => true, 1937011827 => true, 1953196132 => true, 1953653094 => true, 1953653099 => true, 1953654118 => true, 1969517665 => true, 1986881636 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
@@ -677,5 +683,11 @@ namespace QuicktimeMov {
         const VVOI = 1987473257;
         const VWPT = 1987539060;
         const YT4 = 2037658656;
+
+        private const _VALUES = [862401121 => true, 862414134 => true, 862414135 => true, 862414137 => true, 862414393 => true, 862414646 => true, 862414649 => true, 862414905 => true, 862416185 => true, 862416193 => true, 862416948 => true, 862416949 => true, 862416950 => true, 862416951 => true, 862416952 => true, 862416953 => true, 862417462 => true, 862417465 => true, 862417718 => true, 862417721 => true, 862417976 => true, 862417977 => true, 862418038 => true, 862418546 => true, 863400545 => true, 863400546 => true, 863400557 => true, 1095914057 => true, 1128351056 => true, 1128555891 => true, 1244811312 => true, 1244811313 => true, 1279476039 => true, 1295270176 => true, 1295270432 => true, 1295274016 => true, 1295275552 => true, 1296118081 => true, 1296118082 => true, 1296454477 => true, 1296520022 => true, 1297109065 => true, 1297305174 => true, 1298743618 => true, 1298743619 => true, 1298743662 => true, 1298743925 => true, 1298744173 => true, 1298745409 => true, 1298745410 => true, 1298745413 => true, 1298747506 => true, 1380930387 => true, 1397047637 => true, 1397047883 => true, 1480676931 => true, 1633973353 => true, 1634296883 => true, 1635135537 => true, 1635148593 => true, 1635148649 => true, 1635148659 => true, 1635148901 => true, 1635150182 => true, 1635150191 => true, 1635150195 => true, 1650620525 => true, 1667314797 => true, 1667314803 => true, 1667326305 => true, 1667326307 => true, 1667326572 => true, 1667329377 => true, 1667329379 => true, 1667330422 => true, 1667330933 => true, 1667458401 => true, 1667458662 => true, 1667525937 => true, 1667525940 => true, 1667588451 => true, 1667655780 => true, 1667658596 => true, 1667785777 => true, 1667785778 => true, 1667785830 => true, 1667786102 => true, 1667786801 => true, 1667786852 => true, 1667853940 => true, 1668048689 => true, 1668048690 => true, 1668113970 => true, 1668114019 => true, 1668114022 => true, 1668114028 => true, 1668114035 => true, 1668114541 => true, 1668114547 => true, 1668246896 => true, 1668507697 => true, 1668637745 => true, 1668637746 => true, 1668637752 => true, 1668637753 => true, 1668642404 => true, 1668704612 => true, 1668707939 => true, 1668773492 => true, 1684090977 => true, 1684090978 => true, 1684091233 => true, 1684091234 => true, 1684091489 => true, 1684091490 => true, 1684091745 => true, 1684091746 => true, 1684108136 => true, 1684175153 => true, 1684890161 => true, 1685286259 => true, 1685353265 => true, 1685353266 => true, 1685353267 => true, 1685467489 => true, 1685467490 => true, 1685467745 => true, 1685467746 => true, 1685468001 => true, 1685468002 => true, 1685484081 => true, 1685484593 => true, 1685614368 => true, 1701671783 => true, 1751476579 => true, 1751476589 => true, 1751476595 => true, 1751476600 => true, 1751478121 => true, 1751479907 => true, 1751479908 => true, 1751479913 => true, 1751479917 => true, 1751479923 => true, 1751479928 => true, 1752589157 => true, 1752589161 => true, 1752589176 => true, 1752593513 => true, 1768317281 => true, 1768317288 => true, 1768317289 => true, 1768317299 => true, 1768317301 => true, 1768317302 => true, 1768319076 => true, 1768319080 => true, 1768319090 => true, 1768319091 => true, 1768319093 => true, 1768319096 => true, 1768321645 => true, 1768321892 => true, 1768763753 => true, 1768763764 => true, 1768764009 => true, 1768764020 => true, 1769169714 => true, 1769172786 => true, 1769172787 => true, 1769172788 => true, 1769172789 => true, 1769172790 => true, 1769172791 => true, 1769172792 => true, 1769172793 => true, 1769172833 => true, 1769172834 => true, 1769172835 => true, 1769172845 => true, 1781688691 => true, 1781689193 => true, 1781689203 => true, 1785737760 => true, 1785750887 => true, 1785751411 => true, 1785752864 => true, 1785753449 => true, 1785754473 => true, 1785755680 => true, 1785755746 => true, 1786276896 => true, 1786278688 => true, 1786278755 => true, 1786278761 => true, 1786278771 => true, 1818784869 => true, 1818784873 => true, 1819112295 => true, 1835622758 => true, 1835623985 => true, 1835623986 => true, 1835676275 => true, 1835692082 => true, 1836069425 => true, 1836069937 => true, 1836069938 => true, 1836070705 => true, 1836086630 => true, 1836278888 => true, 1836279345 => true, 1836280184 => true, 1852402543 => true, 1852601196 => true, 1852989811 => true, 1868640868 => true, 1868653164 => true, 1868850022 => true, 1869443184 => true, 1869637170 => true, 1869641778 => true, 1870029936 => true, 1870031993 => true, 1885431398 => true, 1885433441 => true, 1885955686 => true, 1886217830 => true, 1886287465 => true, 1886545252 => true, 1903435808 => true, 1919249519 => true, 1919513464 => true, 1935963680 => true, 1936027254 => true, 1936289139 => true, 1936290680 => true, 1936290921 => true, 1936290934 => true, 1936484401 => true, 1936484402 => true, 1936484403 => true, 1936946035 => true, 1953787244 => true, 1953789814 => true, 1969780329 => true, 1970170214 => true, 1970697845 => true, 1983081840 => true, 1983081844 => true, 1983082100 => true, 1983083380 => true, 1987470185 => true, 1987473257 => true, 1987539060 => true, 2037658656 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

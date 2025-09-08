@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -53,8 +53,8 @@ class RtpPacket < Kaitai::Struct::Struct
     96 => :payload_type_enum_mpeg_ps,
   }
   I__PAYLOAD_TYPE_ENUM = PAYLOAD_TYPE_ENUM.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -72,12 +72,12 @@ class RtpPacket < Kaitai::Struct::Struct
     if has_extension
       @header_extension = HeaderExtention.new(@_io, self, @_root)
     end
-    @data = @_io.read_bytes(((_io.size - _io.pos) - len_padding))
+    @data = @_io.read_bytes((_io.size - _io.pos) - len_padding)
     @padding = @_io.read_bytes(len_padding)
     self
   end
   class HeaderExtention < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -92,25 +92,25 @@ class RtpPacket < Kaitai::Struct::Struct
   end
 
   ##
+  # Always returns number of padding bytes to in the payload.
+  def len_padding
+    return @len_padding unless @len_padding.nil?
+    @len_padding = (has_padding ? len_padding_if_exists : 0)
+    @len_padding
+  end
+
+  ##
   # If padding bit is enabled, last byte of data contains number of
   # bytes appended to the payload as padding.
   def len_padding_if_exists
     return @len_padding_if_exists unless @len_padding_if_exists.nil?
     if has_padding
       _pos = @_io.pos
-      @_io.seek((_io.size - 1))
+      @_io.seek(_io.size - 1)
       @len_padding_if_exists = @_io.read_u1
       @_io.seek(_pos)
     end
     @len_padding_if_exists
-  end
-
-  ##
-  # Always returns number of padding bytes to in the payload.
-  def len_padding
-    return @len_padding unless @len_padding.nil?
-    @len_padding = (has_padding ? len_padding_if_exists : 0)
-    @len_padding
   end
   attr_reader :version
   attr_reader :has_padding

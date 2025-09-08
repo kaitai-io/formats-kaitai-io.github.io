@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.SystemdJournal = factory(root.KaitaiStream);
+    factory(root.SystemdJournal || (root.SystemdJournal = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (SystemdJournal_, KaitaiStream) {
 /**
  * systemd, a popular user-space system/service management suite on Linux,
  * offers logging functionality, storing incoming logs in a binary journal
@@ -49,18 +49,101 @@ var SystemdJournal = (function() {
     }
   }
 
+  /**
+   * Data objects are designed to carry log payload, typically in
+   * form of a "key=value" string in `payload` attribute.
+   * @see {@link https://www.freedesktop.org/wiki/Software/systemd/journal-files/#dataobjects|Source}
+   */
+
+  var DataObject = SystemdJournal.DataObject = (function() {
+    function DataObject(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    DataObject.prototype._read = function() {
+      this.hash = this._io.readU8le();
+      this.ofsNextHash = this._io.readU8le();
+      this.ofsHeadField = this._io.readU8le();
+      this.ofsEntry = this._io.readU8le();
+      this.ofsEntryArray = this._io.readU8le();
+      this.numEntries = this._io.readU8le();
+      this.payload = this._io.readBytesFull();
+    }
+    Object.defineProperty(DataObject.prototype, 'entry', {
+      get: function() {
+        if (this._m_entry !== undefined)
+          return this._m_entry;
+        if (this.ofsEntry != 0) {
+          var io = this._root._io;
+          var _pos = io.pos;
+          io.seek(this.ofsEntry);
+          this._m_entry = new JournalObject(io, this, this._root);
+          io.seek(_pos);
+        }
+        return this._m_entry;
+      }
+    });
+    Object.defineProperty(DataObject.prototype, 'entryArray', {
+      get: function() {
+        if (this._m_entryArray !== undefined)
+          return this._m_entryArray;
+        if (this.ofsEntryArray != 0) {
+          var io = this._root._io;
+          var _pos = io.pos;
+          io.seek(this.ofsEntryArray);
+          this._m_entryArray = new JournalObject(io, this, this._root);
+          io.seek(_pos);
+        }
+        return this._m_entryArray;
+      }
+    });
+    Object.defineProperty(DataObject.prototype, 'headField', {
+      get: function() {
+        if (this._m_headField !== undefined)
+          return this._m_headField;
+        if (this.ofsHeadField != 0) {
+          var io = this._root._io;
+          var _pos = io.pos;
+          io.seek(this.ofsHeadField);
+          this._m_headField = new JournalObject(io, this, this._root);
+          io.seek(_pos);
+        }
+        return this._m_headField;
+      }
+    });
+    Object.defineProperty(DataObject.prototype, 'nextHash', {
+      get: function() {
+        if (this._m_nextHash !== undefined)
+          return this._m_nextHash;
+        if (this.ofsNextHash != 0) {
+          var io = this._root._io;
+          var _pos = io.pos;
+          io.seek(this.ofsNextHash);
+          this._m_nextHash = new JournalObject(io, this, this._root);
+          io.seek(_pos);
+        }
+        return this._m_nextHash;
+      }
+    });
+
+    return DataObject;
+  })();
+
   var Header = SystemdJournal.Header = (function() {
     function Header(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     Header.prototype._read = function() {
       this.signature = this._io.readBytes(8);
-      if (!((KaitaiStream.byteArrayCompare(this.signature, [76, 80, 75, 83, 72, 72, 82, 72]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([76, 80, 75, 83, 72, 72, 82, 72], this.signature, this._io, "/types/header/seq/0");
+      if (!((KaitaiStream.byteArrayCompare(this.signature, new Uint8Array([76, 80, 75, 83, 72, 72, 82, 72])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([76, 80, 75, 83, 72, 72, 82, 72]), this.signature, this._io, "/types/header/seq/0");
       }
       this.compatibleFlags = this._io.readU4le();
       this.incompatibleFlags = this._io.readU4le();
@@ -130,129 +213,30 @@ var SystemdJournal = (function() {
     function JournalObject(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     JournalObject.prototype._read = function() {
-      this.padding = this._io.readBytes(KaitaiStream.mod((8 - this._io.pos), 8));
+      this.padding = this._io.readBytes(KaitaiStream.mod(8 - this._io.pos, 8));
       this.objectType = this._io.readU1();
       this.flags = this._io.readU1();
       this.reserved = this._io.readBytes(6);
       this.lenObject = this._io.readU8le();
       switch (this.objectType) {
       case SystemdJournal.JournalObject.ObjectTypes.DATA:
-        this._raw_payload = this._io.readBytes((this.lenObject - 16));
+        this._raw_payload = this._io.readBytes(this.lenObject - 16);
         var _io__raw_payload = new KaitaiStream(this._raw_payload);
         this.payload = new DataObject(_io__raw_payload, this, this._root);
         break;
       default:
-        this.payload = this._io.readBytes((this.lenObject - 16));
+        this.payload = this._io.readBytes(this.lenObject - 16);
         break;
       }
     }
 
     return JournalObject;
   })();
-
-  /**
-   * Data objects are designed to carry log payload, typically in
-   * form of a "key=value" string in `payload` attribute.
-   * @see {@link https://www.freedesktop.org/wiki/Software/systemd/journal-files/#dataobjects|Source}
-   */
-
-  var DataObject = SystemdJournal.DataObject = (function() {
-    function DataObject(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    DataObject.prototype._read = function() {
-      this.hash = this._io.readU8le();
-      this.ofsNextHash = this._io.readU8le();
-      this.ofsHeadField = this._io.readU8le();
-      this.ofsEntry = this._io.readU8le();
-      this.ofsEntryArray = this._io.readU8le();
-      this.numEntries = this._io.readU8le();
-      this.payload = this._io.readBytesFull();
-    }
-    Object.defineProperty(DataObject.prototype, 'nextHash', {
-      get: function() {
-        if (this._m_nextHash !== undefined)
-          return this._m_nextHash;
-        if (this.ofsNextHash != 0) {
-          var io = this._root._io;
-          var _pos = io.pos;
-          io.seek(this.ofsNextHash);
-          this._m_nextHash = new JournalObject(io, this, this._root);
-          io.seek(_pos);
-        }
-        return this._m_nextHash;
-      }
-    });
-    Object.defineProperty(DataObject.prototype, 'headField', {
-      get: function() {
-        if (this._m_headField !== undefined)
-          return this._m_headField;
-        if (this.ofsHeadField != 0) {
-          var io = this._root._io;
-          var _pos = io.pos;
-          io.seek(this.ofsHeadField);
-          this._m_headField = new JournalObject(io, this, this._root);
-          io.seek(_pos);
-        }
-        return this._m_headField;
-      }
-    });
-    Object.defineProperty(DataObject.prototype, 'entry', {
-      get: function() {
-        if (this._m_entry !== undefined)
-          return this._m_entry;
-        if (this.ofsEntry != 0) {
-          var io = this._root._io;
-          var _pos = io.pos;
-          io.seek(this.ofsEntry);
-          this._m_entry = new JournalObject(io, this, this._root);
-          io.seek(_pos);
-        }
-        return this._m_entry;
-      }
-    });
-    Object.defineProperty(DataObject.prototype, 'entryArray', {
-      get: function() {
-        if (this._m_entryArray !== undefined)
-          return this._m_entryArray;
-        if (this.ofsEntryArray != 0) {
-          var io = this._root._io;
-          var _pos = io.pos;
-          io.seek(this.ofsEntryArray);
-          this._m_entryArray = new JournalObject(io, this, this._root);
-          io.seek(_pos);
-        }
-        return this._m_entryArray;
-      }
-    });
-
-    return DataObject;
-  })();
-
-  /**
-   * Header length is used to set substream size, as it thus required
-   * prior to declaration of header.
-   */
-  Object.defineProperty(SystemdJournal.prototype, 'lenHeader', {
-    get: function() {
-      if (this._m_lenHeader !== undefined)
-        return this._m_lenHeader;
-      var _pos = this._io.pos;
-      this._io.seek(88);
-      this._m_lenHeader = this._io.readU8le();
-      this._io.seek(_pos);
-      return this._m_lenHeader;
-    }
-  });
   Object.defineProperty(SystemdJournal.prototype, 'dataHashTable', {
     get: function() {
       if (this._m_dataHashTable !== undefined)
@@ -276,7 +260,23 @@ var SystemdJournal = (function() {
     }
   });
 
+  /**
+   * Header length is used to set substream size, as it thus required
+   * prior to declaration of header.
+   */
+  Object.defineProperty(SystemdJournal.prototype, 'lenHeader', {
+    get: function() {
+      if (this._m_lenHeader !== undefined)
+        return this._m_lenHeader;
+      var _pos = this._io.pos;
+      this._io.seek(88);
+      this._m_lenHeader = this._io.readU8le();
+      this._io.seek(_pos);
+      return this._m_lenHeader;
+    }
+  });
+
   return SystemdJournal;
 })();
-return SystemdJournal;
-}));
+SystemdJournal_.SystemdJournal = SystemdJournal;
+});

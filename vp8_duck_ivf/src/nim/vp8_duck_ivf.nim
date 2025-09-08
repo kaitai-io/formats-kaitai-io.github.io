@@ -15,18 +15,18 @@ type
     `unused`*: uint32
     `imageData`*: seq[Vp8DuckIvf_Blocks]
     `parent`*: KaitaiStruct
-  Vp8DuckIvf_Blocks* = ref object of KaitaiStruct
-    `entries`*: Vp8DuckIvf_Block
-    `parent`*: Vp8DuckIvf
   Vp8DuckIvf_Block* = ref object of KaitaiStruct
     `lenFrame`*: uint32
     `timestamp`*: uint64
     `framedata`*: seq[byte]
     `parent`*: Vp8DuckIvf_Blocks
+  Vp8DuckIvf_Blocks* = ref object of KaitaiStruct
+    `entries`*: Vp8DuckIvf_Block
+    `parent`*: Vp8DuckIvf
 
 proc read*(_: typedesc[Vp8DuckIvf], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Vp8DuckIvf
-proc read*(_: typedesc[Vp8DuckIvf_Blocks], io: KaitaiStream, root: KaitaiStruct, parent: Vp8DuckIvf): Vp8DuckIvf_Blocks
 proc read*(_: typedesc[Vp8DuckIvf_Block], io: KaitaiStream, root: KaitaiStruct, parent: Vp8DuckIvf_Blocks): Vp8DuckIvf_Block
+proc read*(_: typedesc[Vp8DuckIvf_Blocks], io: KaitaiStream, root: KaitaiStruct, parent: Vp8DuckIvf): Vp8DuckIvf_Blocks
 
 
 
@@ -110,20 +110,6 @@ proc read*(_: typedesc[Vp8DuckIvf], io: KaitaiStream, root: KaitaiStruct, parent
 proc fromFile*(_: typedesc[Vp8DuckIvf], filename: string): Vp8DuckIvf =
   Vp8DuckIvf.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[Vp8DuckIvf_Blocks], io: KaitaiStream, root: KaitaiStruct, parent: Vp8DuckIvf): Vp8DuckIvf_Blocks =
-  template this: untyped = result
-  this = new(Vp8DuckIvf_Blocks)
-  let root = if root == nil: cast[Vp8DuckIvf](this) else: cast[Vp8DuckIvf](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let entriesExpr = Vp8DuckIvf_Block.read(this.io, this.root, this)
-  this.entries = entriesExpr
-
-proc fromFile*(_: typedesc[Vp8DuckIvf_Blocks], filename: string): Vp8DuckIvf_Blocks =
-  Vp8DuckIvf_Blocks.read(newKaitaiFileStream(filename), nil, nil)
-
 proc read*(_: typedesc[Vp8DuckIvf_Block], io: KaitaiStream, root: KaitaiStruct, parent: Vp8DuckIvf_Blocks): Vp8DuckIvf_Block =
   template this: untyped = result
   this = new(Vp8DuckIvf_Block)
@@ -145,4 +131,18 @@ proc read*(_: typedesc[Vp8DuckIvf_Block], io: KaitaiStream, root: KaitaiStruct, 
 
 proc fromFile*(_: typedesc[Vp8DuckIvf_Block], filename: string): Vp8DuckIvf_Block =
   Vp8DuckIvf_Block.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Vp8DuckIvf_Blocks], io: KaitaiStream, root: KaitaiStruct, parent: Vp8DuckIvf): Vp8DuckIvf_Blocks =
+  template this: untyped = result
+  this = new(Vp8DuckIvf_Blocks)
+  let root = if root == nil: cast[Vp8DuckIvf](this) else: cast[Vp8DuckIvf](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let entriesExpr = Vp8DuckIvf_Block.read(this.io, this.root, this)
+  this.entries = entriesExpr
+
+proc fromFile*(_: typedesc[Vp8DuckIvf_Blocks], filename: string): Vp8DuckIvf_Blocks =
+  Vp8DuckIvf_Blocks.read(newKaitaiFileStream(filename), nil, nil)
 

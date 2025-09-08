@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>.pcx file format: Rust parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="/pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li><a href="//kaitai.io/news/">News</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../">Format Gallery</a></li>
+        <li>Image Files</li>
+        <li class="active">.pcx file format</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>.pcx file format:
+            
+            Rust parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>PCX is a bitmap image format originally used by PC Paintbrush from
+ZSoft Corporation. Originally, it was a relatively simple 128-byte
+header + uncompressed bitmap format, but latest versions introduced
+more complicated palette support and RLE compression.</p>
+<p>There's an option to encode 32-bit or 16-bit RGBA pixels, and thus
+it can potentially include transparency. Theoretically, it's
+possible to encode resolution or pixel density in the some of the
+header fields too, but in reality there's no uniform standard for
+these, so different implementations treat these differently.</p>
+<p>PCX format was never made a formal standard. &quot;ZSoft Corporation
+Technical Reference Manual&quot; for &quot;Image File (.PCX) Format&quot;, last
+updated in 1991, is likely the closest authoritative source.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        pcx
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/86">PRONOM fmt/86</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/87">PRONOM fmt/87</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/88">PRONOM fmt/88</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/89">PRONOM fmt/89</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/90">PRONOM fmt/90</a></li>
+                            
+                            <li><a href="https://www.wikidata.org/wiki/Q535473">Wikidata Q535473</a></li>
+                            
+                            
+                            
+                            <li><a href="http://fileformats.archiveteam.org/wiki/PCX">PCX in Just Solve the File Format Problem</a></li>
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of .pcx file format
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title=".pcx file format parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_11.html" title=".pcx file format parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title=".pcx file format parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title=".pcx file format parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title=".pcx file format parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title=".pcx file format parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title=".pcx file format parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="java-write.html" title=".pcx file format parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title=".pcx file format parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title=".pcx file format parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title=".pcx file format parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title=".pcx file format parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title=".pcx file format parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title=".pcx file format parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="python-write.html" title=".pcx file format parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title=".pcx file format parsing Ruby library">Ruby</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="rust.html" title=".pcx file format parsing Rust library">Rust</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Rust source code to parse .pcx file format
+            
+        </h2>
+
+        
+
+        <h3>pcx.rs</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/rust/pcx.rs" download="pcx.rs" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="cp">#![allow(unused_imports)]</span>
+<span class="cp">#![allow(non_snake_case)]</span>
+<span class="cp">#![allow(non_camel_case_types)]</span>
+<span class="cp">#![allow(irrefutable_let_patterns)]</span>
+<span class="cp">#![allow(unused_comparisons)]</span>
+
+<span class="k">extern</span><span class="w"> </span><span class="k">crate</span><span class="w"> </span><span class="n">kaitai</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="n">kaitai</span><span class="p">::</span><span class="o">*</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">convert</span><span class="p">::{</span><span class="n">TryFrom</span><span class="p">,</span><span class="w"> </span><span class="n">TryInto</span><span class="p">};</span>
+<span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">cell</span><span class="p">::{</span><span class="n">Ref</span><span class="p">,</span><span class="w"> </span><span class="n">Cell</span><span class="p">,</span><span class="w"> </span><span class="n">RefCell</span><span class="p">};</span>
+<span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">rc</span><span class="p">::{</span><span class="n">Rc</span><span class="p">,</span><span class="w"> </span><span class="n">Weak</span><span class="p">};</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * PCX is a bitmap image format originally used by PC Paintbrush from</span>
+<span class="sd"> * ZSoft Corporation. Originally, it was a relatively simple 128-byte</span>
+<span class="sd"> * header + uncompressed bitmap format, but latest versions introduced</span>
+<span class="sd"> * more complicated palette support and RLE compression.</span>
+<span class="sd"> * </span>
+<span class="sd"> * There&#39;s an option to encode 32-bit or 16-bit RGBA pixels, and thus</span>
+<span class="sd"> * it can potentially include transparency. Theoretically, it&#39;s</span>
+<span class="sd"> * possible to encode resolution or pixel density in the some of the</span>
+<span class="sd"> * header fields too, but in reality there&#39;s no uniform standard for</span>
+<span class="sd"> * these, so different implementations treat these differently.</span>
+<span class="sd"> * </span>
+<span class="sd"> * PCX format was never made a formal standard. &quot;ZSoft Corporation</span>
+<span class="sd"> * Technical Reference Manual&quot; for &quot;Image File (.PCX) Format&quot;, last</span>
+<span class="sd"> * updated in 1991, is likely the closest authoritative source.</span>
+<span class="sd"> * \sa https://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt Source</span>
+<span class="sd"> */</span>
+
+<span class="cp">#[derive(Default, Debug, Clone)]</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">Pcx</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">_root</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="n">Pcx</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">_parent</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="n">Pcx</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">_self</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="bp">Self</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">hdr</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="n">OptRc</span><span class="o">&lt;</span><span class="n">Pcx_Header</span><span class="o">&gt;&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">_io</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="n">BytesReader</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">hdr_raw</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">u8</span><span class="o">&gt;&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">f_palette_256</span><span class="p">:</span><span class="w"> </span><span class="nc">Cell</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">palette_256</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="n">OptRc</span><span class="o">&lt;</span><span class="n">Pcx_TPalette256</span><span class="o">&gt;&gt;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">KStruct</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">Pcx</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">type</span><span class="w"> </span><span class="nc">Root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Pcx</span><span class="p">;</span>
+<span class="w">    </span><span class="k">type</span><span class="w"> </span><span class="nc">Parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Pcx</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">read</span><span class="o">&lt;</span><span class="n">S</span><span class="p">:</span><span class="w"> </span><span class="nc">KStream</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">OptRc</span><span class="o">&lt;</span><span class="bp">Self</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">_io</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">S</span><span class="p">,</span>
+<span class="w">        </span><span class="n">_root</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="bp">Self</span><span class="p">::</span><span class="n">Root</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">_parent</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="bp">Self</span><span class="p">::</span><span class="n">Parent</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">KResult</span><span class="o">&lt;</span><span class="p">()</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">_io</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">_parent</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_self</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="nb">Ok</span><span class="p">(</span><span class="n">self_rc</span><span class="p">.</span><span class="n">clone</span><span class="p">()));</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_rrc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">get_value</span><span class="p">().</span><span class="n">borrow</span><span class="p">().</span><span class="n">upgrade</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_prc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">get_value</span><span class="p">().</span><span class="n">borrow</span><span class="p">().</span><span class="n">upgrade</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_rrc</span><span class="p">.</span><span class="n">as_ref</span><span class="p">().</span><span class="n">unwrap</span><span class="p">();</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">hdr_raw</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">128</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">usize</span><span class="p">)</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">hdr_raw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self_rc</span><span class="p">.</span><span class="n">hdr_raw</span><span class="p">.</span><span class="n">borrow</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_t_hdr_raw_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BytesReader</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="n">hdr_raw</span><span class="p">.</span><span class="n">clone</span><span class="p">());</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">Self</span><span class="p">::</span><span class="n">read_into</span><span class="p">::</span><span class="o">&lt;</span><span class="n">BytesReader</span><span class="p">,</span><span class="w"> </span><span class="n">Pcx_Header</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">_t_hdr_raw_io</span><span class="p">,</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="n">self_rc</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">clone</span><span class="p">()),</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="n">self_rc</span><span class="p">.</span><span class="n">_self</span><span class="p">.</span><span class="n">clone</span><span class="p">()))</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">hdr</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t</span><span class="p">;</span>
+<span class="w">        </span><span class="nb">Ok</span><span class="p">(())</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Pcx</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="sd">/**</span>
+<span class="sd">     * \sa https://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt - &quot;VGA 256 Color Palette Information&quot;</span>
+<span class="sd">     */</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">palette_256</span><span class="p">(</span>
+<span class="w">        </span><span class="o">&amp;</span><span class="bp">self</span>
+<span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">KResult</span><span class="o">&lt;</span><span class="n">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="n">OptRc</span><span class="o">&lt;</span><span class="n">Pcx_TPalette256</span><span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">_io</span><span class="p">.</span><span class="n">borrow</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_rrc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">get_value</span><span class="p">().</span><span class="n">borrow</span><span class="p">().</span><span class="n">upgrade</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_prc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">get_value</span><span class="p">().</span><span class="n">borrow</span><span class="p">().</span><span class="n">upgrade</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_rrc</span><span class="p">.</span><span class="n">as_ref</span><span class="p">().</span><span class="n">unwrap</span><span class="p">();</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">f_palette_256</span><span class="p">.</span><span class="n">get</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">palette_256</span><span class="p">.</span><span class="n">borrow</span><span class="p">());</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">if</span><span class="w">  </span><span class="p">((</span><span class="o">*</span><span class="bp">self</span><span class="p">.</span><span class="n">hdr</span><span class="p">().</span><span class="n">version</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">Pcx_Versions</span><span class="p">::</span><span class="n">V30</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(((</span><span class="o">*</span><span class="bp">self</span><span class="p">.</span><span class="n">hdr</span><span class="p">().</span><span class="n">bits_per_pixel</span><span class="p">()</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">u8</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="p">(</span><span class="mi">8</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">u8</span><span class="p">)))</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(((</span><span class="o">*</span><span class="bp">self</span><span class="p">.</span><span class="n">hdr</span><span class="p">().</span><span class="n">num_planes</span><span class="p">()</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">u8</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">u8</span><span class="p">))))</span><span class="w">  </span><span class="p">{</span>
+<span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">pos</span><span class="p">();</span>
+<span class="w">            </span><span class="n">_io</span><span class="p">.</span><span class="n">seek</span><span class="p">(((</span><span class="n">_io</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">i32</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="mi">769</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">i32</span><span class="p">))</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">usize</span><span class="p">)</span><span class="o">?</span><span class="p">;</span>
+<span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">Self</span><span class="p">::</span><span class="n">read_into</span><span class="p">::</span><span class="o">&lt;</span><span class="n">_</span><span class="p">,</span><span class="w"> </span><span class="n">Pcx_TPalette256</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;*</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">clone</span><span class="p">()),</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">_self</span><span class="p">.</span><span class="n">clone</span><span class="p">()))</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">            </span><span class="o">*</span><span class="bp">self</span><span class="p">.</span><span class="n">palette_256</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t</span><span class="p">;</span>
+<span class="w">            </span><span class="n">_io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span><span class="o">?</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="nb">Ok</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">palette_256</span><span class="p">.</span><span class="n">borrow</span><span class="p">())</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Pcx</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">hdr</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="n">OptRc</span><span class="o">&lt;</span><span class="n">Pcx_Header</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">hdr</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Pcx</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">_io</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="n">BytesReader</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">_io</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Pcx</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">hdr_raw</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">u8</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">hdr_raw</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="cp">#[derive(Debug, PartialEq, Clone)]</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">enum</span><span class="w"> </span><span class="nc">Pcx_Encodings</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">Rle</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Unknown</span><span class="p">(</span><span class="kt">i64</span><span class="p">),</span>
+<span class="p">}</span>
+
+<span class="k">impl</span><span class="w"> </span><span class="n">TryFrom</span><span class="o">&lt;</span><span class="kt">i64</span><span class="o">&gt;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">Pcx_Encodings</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">type</span><span class="w"> </span><span class="nc">Error</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">KError</span><span class="p">;</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">try_from</span><span class="p">(</span><span class="n">flag</span><span class="p">:</span><span class="w"> </span><span class="kt">i64</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">KResult</span><span class="o">&lt;</span><span class="n">Pcx_Encodings</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">match</span><span class="w"> </span><span class="n">flag</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="mi">1</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Pcx_Encodings</span><span class="p">::</span><span class="n">Rle</span><span class="p">),</span>
+<span class="w">            </span><span class="n">_</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Pcx_Encodings</span><span class="p">::</span><span class="n">Unknown</span><span class="p">(</span><span class="n">flag</span><span class="p">)),</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">impl</span><span class="w"> </span><span class="nb">From</span><span class="o">&lt;&amp;</span><span class="n">Pcx_Encodings</span><span class="o">&gt;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="kt">i64</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">from</span><span class="p">(</span><span class="n">v</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">Pcx_Encodings</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Self</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">match</span><span class="w"> </span><span class="o">*</span><span class="n">v</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Pcx_Encodings</span><span class="p">::</span><span class="n">Rle</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Pcx_Encodings</span><span class="p">::</span><span class="n">Unknown</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">v</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">impl</span><span class="w"> </span><span class="nb">Default</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">Pcx_Encodings</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">default</span><span class="p">()</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Self</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">Pcx_Encodings</span><span class="p">::</span><span class="n">Unknown</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="cp">#[derive(Debug, PartialEq, Clone)]</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">enum</span><span class="w"> </span><span class="nc">Pcx_Versions</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">V25</span><span class="p">,</span>
+<span class="w">    </span><span class="n">V28WithPalette</span><span class="p">,</span>
+<span class="w">    </span><span class="n">V28WithoutPalette</span><span class="p">,</span>
+<span class="w">    </span><span class="n">PaintbrushForWindows</span><span class="p">,</span>
+<span class="w">    </span><span class="n">V30</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Unknown</span><span class="p">(</span><span class="kt">i64</span><span class="p">),</span>
+<span class="p">}</span>
+
+<span class="k">impl</span><span class="w"> </span><span class="n">TryFrom</span><span class="o">&lt;</span><span class="kt">i64</span><span class="o">&gt;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">Pcx_Versions</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">type</span><span class="w"> </span><span class="nc">Error</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">KError</span><span class="p">;</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">try_from</span><span class="p">(</span><span class="n">flag</span><span class="p">:</span><span class="w"> </span><span class="kt">i64</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">KResult</span><span class="o">&lt;</span><span class="n">Pcx_Versions</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">match</span><span class="w"> </span><span class="n">flag</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="mi">0</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Pcx_Versions</span><span class="p">::</span><span class="n">V25</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">2</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Pcx_Versions</span><span class="p">::</span><span class="n">V28WithPalette</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">3</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Pcx_Versions</span><span class="p">::</span><span class="n">V28WithoutPalette</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">4</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Pcx_Versions</span><span class="p">::</span><span class="n">PaintbrushForWindows</span><span class="p">),</span>
+<span class="w">            </span><span class="mi">5</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Pcx_Versions</span><span class="p">::</span><span class="n">V30</span><span class="p">),</span>
+<span class="w">            </span><span class="n">_</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">Pcx_Versions</span><span class="p">::</span><span class="n">Unknown</span><span class="p">(</span><span class="n">flag</span><span class="p">)),</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">impl</span><span class="w"> </span><span class="nb">From</span><span class="o">&lt;&amp;</span><span class="n">Pcx_Versions</span><span class="o">&gt;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="kt">i64</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">from</span><span class="p">(</span><span class="n">v</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">Pcx_Versions</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Self</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">match</span><span class="w"> </span><span class="o">*</span><span class="n">v</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Pcx_Versions</span><span class="p">::</span><span class="n">V25</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Pcx_Versions</span><span class="p">::</span><span class="n">V28WithPalette</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Pcx_Versions</span><span class="p">::</span><span class="n">V28WithoutPalette</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Pcx_Versions</span><span class="p">::</span><span class="n">PaintbrushForWindows</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Pcx_Versions</span><span class="p">::</span><span class="n">V30</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<span class="w">            </span><span class="n">Pcx_Versions</span><span class="p">::</span><span class="n">Unknown</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">v</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">impl</span><span class="w"> </span><span class="nb">Default</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">Pcx_Versions</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">default</span><span class="p">()</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Self</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">Pcx_Versions</span><span class="p">::</span><span class="n">Unknown</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+
+
+<span class="sd">/**</span>
+<span class="sd"> * \sa https://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt - &quot;ZSoft .PCX FILE HEADER FORMAT&quot;</span>
+<span class="sd"> */</span>
+
+<span class="cp">#[derive(Default, Debug, Clone)]</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">Pcx_Header</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">_root</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="n">Pcx</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">_parent</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="n">Pcx</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">_self</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="bp">Self</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">magic</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">u8</span><span class="o">&gt;&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">version</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="n">Pcx_Versions</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">encoding</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="n">Pcx_Encodings</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">bits_per_pixel</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="kt">u8</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">img_x_min</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="kt">u16</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">img_y_min</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="kt">u16</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">img_x_max</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="kt">u16</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">img_y_max</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="kt">u16</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">hdpi</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="kt">u16</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">vdpi</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="kt">u16</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">palette_16</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">u8</span><span class="o">&gt;&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">reserved</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">u8</span><span class="o">&gt;&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">num_planes</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="kt">u8</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">bytes_per_line</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="kt">u16</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">palette_info</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="kt">u16</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">h_screen_size</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="kt">u16</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">v_screen_size</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="kt">u16</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">_io</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="n">BytesReader</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">KStruct</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">Pcx_Header</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">type</span><span class="w"> </span><span class="nc">Root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Pcx</span><span class="p">;</span>
+<span class="w">    </span><span class="k">type</span><span class="w"> </span><span class="nc">Parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Pcx</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">read</span><span class="o">&lt;</span><span class="n">S</span><span class="p">:</span><span class="w"> </span><span class="nc">KStream</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">OptRc</span><span class="o">&lt;</span><span class="bp">Self</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">_io</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">S</span><span class="p">,</span>
+<span class="w">        </span><span class="n">_root</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="bp">Self</span><span class="p">::</span><span class="n">Root</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">_parent</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="bp">Self</span><span class="p">::</span><span class="n">Parent</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">KResult</span><span class="o">&lt;</span><span class="p">()</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">_io</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">_parent</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_self</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="nb">Ok</span><span class="p">(</span><span class="n">self_rc</span><span class="p">.</span><span class="n">clone</span><span class="p">()));</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_rrc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">get_value</span><span class="p">().</span><span class="n">borrow</span><span class="p">().</span><span class="n">upgrade</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_prc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">get_value</span><span class="p">().</span><span class="n">borrow</span><span class="p">().</span><span class="n">upgrade</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_rrc</span><span class="p">.</span><span class="n">as_ref</span><span class="p">().</span><span class="n">unwrap</span><span class="p">();</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">magic</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">usize</span><span class="p">)</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="o">!</span><span class="p">(</span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">magic</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="mh">0xa</span><span class="k">u8</span><span class="p">])</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nb">Err</span><span class="p">(</span><span class="n">KError</span><span class="p">::</span><span class="n">ValidationFailed</span><span class="p">(</span><span class="n">ValidationFailedError</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">kind</span><span class="p">:</span><span class="w"> </span><span class="nc">ValidationKind</span><span class="p">::</span><span class="n">NotEqual</span><span class="p">,</span><span class="w"> </span><span class="n">src_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/types/header/seq/0&quot;</span><span class="p">.</span><span class="n">to_string</span><span class="p">()</span><span class="w"> </span><span class="p">}));</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">version</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">_io</span><span class="p">.</span><span class="n">read_u1</span><span class="p">()</span><span class="o">?</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">i64</span><span class="p">).</span><span class="n">try_into</span><span class="p">()</span><span class="o">?</span><span class="p">;</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">encoding</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">_io</span><span class="p">.</span><span class="n">read_u1</span><span class="p">()</span><span class="o">?</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">i64</span><span class="p">).</span><span class="n">try_into</span><span class="p">()</span><span class="o">?</span><span class="p">;</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">bits_per_pixel</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">read_u1</span><span class="p">()</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">img_x_min</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">read_u2le</span><span class="p">()</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">img_y_min</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">read_u2le</span><span class="p">()</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">img_x_max</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">read_u2le</span><span class="p">()</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">img_y_max</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">read_u2le</span><span class="p">()</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">hdpi</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">read_u2le</span><span class="p">()</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">vdpi</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">read_u2le</span><span class="p">()</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">palette_16</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">48</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">usize</span><span class="p">)</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">reserved</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">usize</span><span class="p">)</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="o">!</span><span class="p">(</span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">reserved</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="mh">0x0</span><span class="k">u8</span><span class="p">])</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nb">Err</span><span class="p">(</span><span class="n">KError</span><span class="p">::</span><span class="n">ValidationFailed</span><span class="p">(</span><span class="n">ValidationFailedError</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">kind</span><span class="p">:</span><span class="w"> </span><span class="nc">ValidationKind</span><span class="p">::</span><span class="n">NotEqual</span><span class="p">,</span><span class="w"> </span><span class="n">src_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/types/header/seq/11&quot;</span><span class="p">.</span><span class="n">to_string</span><span class="p">()</span><span class="w"> </span><span class="p">}));</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">num_planes</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">read_u1</span><span class="p">()</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">bytes_per_line</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">read_u2le</span><span class="p">()</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">palette_info</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">read_u2le</span><span class="p">()</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">h_screen_size</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">read_u2le</span><span class="p">()</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">v_screen_size</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">read_u2le</span><span class="p">()</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">        </span><span class="nb">Ok</span><span class="p">(())</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Pcx_Header</span><span class="w"> </span><span class="p">{</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * Technically, this field was supposed to be &quot;manufacturer&quot;</span>
+<span class="sd"> * mark to distinguish between various software vendors, and</span>
+<span class="sd"> * 0x0a was supposed to mean &quot;ZSoft&quot;, but everyone else ended</span>
+<span class="sd"> * up writing a 0x0a into this field, so that&#39;s what majority</span>
+<span class="sd"> * of modern software expects to have in this attribute.</span>
+<span class="sd"> */</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Pcx_Header</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">magic</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">u8</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">magic</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Pcx_Header</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">version</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="n">Pcx_Versions</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">version</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Pcx_Header</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">encoding</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="n">Pcx_Encodings</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">encoding</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Pcx_Header</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">bits_per_pixel</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="kt">u8</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">bits_per_pixel</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Pcx_Header</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">img_x_min</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="kt">u16</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">img_x_min</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Pcx_Header</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">img_y_min</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="kt">u16</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">img_y_min</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Pcx_Header</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">img_x_max</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="kt">u16</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">img_x_max</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Pcx_Header</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">img_y_max</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="kt">u16</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">img_y_max</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Pcx_Header</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">hdpi</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="kt">u16</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">hdpi</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Pcx_Header</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">vdpi</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="kt">u16</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">vdpi</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Pcx_Header</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">palette_16</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">u8</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">palette_16</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Pcx_Header</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">reserved</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">u8</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">reserved</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Pcx_Header</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">num_planes</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="kt">u8</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">num_planes</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Pcx_Header</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">bytes_per_line</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="kt">u16</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">bytes_per_line</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Pcx_Header</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">palette_info</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="kt">u16</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">palette_info</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Pcx_Header</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">h_screen_size</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="kt">u16</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">h_screen_size</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Pcx_Header</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">v_screen_size</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="kt">u16</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">v_screen_size</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Pcx_Header</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">_io</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="n">BytesReader</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">_io</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="cp">#[derive(Default, Debug, Clone)]</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">Pcx_Rgb</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">_root</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="n">Pcx</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">_parent</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="n">Pcx_TPalette256</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">_self</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="bp">Self</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">r</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="kt">u8</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">g</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="kt">u8</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">b</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="kt">u8</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">_io</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="n">BytesReader</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">KStruct</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">Pcx_Rgb</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">type</span><span class="w"> </span><span class="nc">Root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Pcx</span><span class="p">;</span>
+<span class="w">    </span><span class="k">type</span><span class="w"> </span><span class="nc">Parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Pcx_TPalette256</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">read</span><span class="o">&lt;</span><span class="n">S</span><span class="p">:</span><span class="w"> </span><span class="nc">KStream</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">OptRc</span><span class="o">&lt;</span><span class="bp">Self</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">_io</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">S</span><span class="p">,</span>
+<span class="w">        </span><span class="n">_root</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="bp">Self</span><span class="p">::</span><span class="n">Root</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">_parent</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="bp">Self</span><span class="p">::</span><span class="n">Parent</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">KResult</span><span class="o">&lt;</span><span class="p">()</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">_io</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">_parent</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_self</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="nb">Ok</span><span class="p">(</span><span class="n">self_rc</span><span class="p">.</span><span class="n">clone</span><span class="p">()));</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_rrc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">get_value</span><span class="p">().</span><span class="n">borrow</span><span class="p">().</span><span class="n">upgrade</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_prc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">get_value</span><span class="p">().</span><span class="n">borrow</span><span class="p">().</span><span class="n">upgrade</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_rrc</span><span class="p">.</span><span class="n">as_ref</span><span class="p">().</span><span class="n">unwrap</span><span class="p">();</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">r</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">read_u1</span><span class="p">()</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">g</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">read_u1</span><span class="p">()</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">b</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">read_u1</span><span class="p">()</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">        </span><span class="nb">Ok</span><span class="p">(())</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Pcx_Rgb</span><span class="w"> </span><span class="p">{</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Pcx_Rgb</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">r</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="kt">u8</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">r</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Pcx_Rgb</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">g</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="kt">u8</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">g</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Pcx_Rgb</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">b</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="kt">u8</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">b</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Pcx_Rgb</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">_io</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="n">BytesReader</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">_io</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="cp">#[derive(Default, Debug, Clone)]</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">Pcx_TPalette256</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">_root</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="n">Pcx</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">_parent</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="n">Pcx</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">_self</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="bp">Self</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">magic</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">u8</span><span class="o">&gt;&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">colors</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="nb">Vec</span><span class="o">&lt;</span><span class="n">OptRc</span><span class="o">&lt;</span><span class="n">Pcx_Rgb</span><span class="o">&gt;&gt;&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">_io</span><span class="p">:</span><span class="w"> </span><span class="nc">RefCell</span><span class="o">&lt;</span><span class="n">BytesReader</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">KStruct</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">Pcx_TPalette256</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">type</span><span class="w"> </span><span class="nc">Root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Pcx</span><span class="p">;</span>
+<span class="w">    </span><span class="k">type</span><span class="w"> </span><span class="nc">Parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Pcx</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">read</span><span class="o">&lt;</span><span class="n">S</span><span class="p">:</span><span class="w"> </span><span class="nc">KStream</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">OptRc</span><span class="o">&lt;</span><span class="bp">Self</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">_io</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">S</span><span class="p">,</span>
+<span class="w">        </span><span class="n">_root</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="bp">Self</span><span class="p">::</span><span class="n">Root</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">        </span><span class="n">_parent</span><span class="p">:</span><span class="w"> </span><span class="nc">SharedType</span><span class="o">&lt;</span><span class="bp">Self</span><span class="p">::</span><span class="n">Parent</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">KResult</span><span class="o">&lt;</span><span class="p">()</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">_io</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">_parent</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>
+<span class="w">        </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_self</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="nb">Ok</span><span class="p">(</span><span class="n">self_rc</span><span class="p">.</span><span class="n">clone</span><span class="p">()));</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_rrc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">get_value</span><span class="p">().</span><span class="n">borrow</span><span class="p">().</span><span class="n">upgrade</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_prc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self_rc</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">get_value</span><span class="p">().</span><span class="n">borrow</span><span class="p">().</span><span class="n">upgrade</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">_r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_rrc</span><span class="p">.</span><span class="n">as_ref</span><span class="p">().</span><span class="n">unwrap</span><span class="p">();</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">magic</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="p">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">usize</span><span class="p">)</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="o">!</span><span class="p">(</span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">magic</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="fm">vec!</span><span class="p">[</span><span class="mh">0xc</span><span class="k">u8</span><span class="p">])</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nb">Err</span><span class="p">(</span><span class="n">KError</span><span class="p">::</span><span class="n">ValidationFailed</span><span class="p">(</span><span class="n">ValidationFailedError</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">kind</span><span class="p">:</span><span class="w"> </span><span class="nc">ValidationKind</span><span class="p">::</span><span class="n">NotEqual</span><span class="p">,</span><span class="w"> </span><span class="n">src_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/types/t_palette_256/seq/0&quot;</span><span class="p">.</span><span class="n">to_string</span><span class="p">()</span><span class="w"> </span><span class="p">}));</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="o">*</span><span class="n">self_rc</span><span class="p">.</span><span class="n">colors</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Vec</span><span class="p">::</span><span class="n">new</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">l_colors</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">256</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">_i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="n">l_colors</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kd">let</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">Self</span><span class="p">::</span><span class="n">read_into</span><span class="p">::</span><span class="o">&lt;</span><span class="n">_</span><span class="p">,</span><span class="w"> </span><span class="n">Pcx_Rgb</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;*</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="n">self_rc</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">clone</span><span class="p">()),</span><span class="w"> </span><span class="nb">Some</span><span class="p">(</span><span class="n">self_rc</span><span class="p">.</span><span class="n">_self</span><span class="p">.</span><span class="n">clone</span><span class="p">()))</span><span class="o">?</span><span class="p">.</span><span class="n">into</span><span class="p">();</span>
+<span class="w">            </span><span class="n">self_rc</span><span class="p">.</span><span class="n">colors</span><span class="p">.</span><span class="n">borrow_mut</span><span class="p">().</span><span class="n">push</span><span class="p">(</span><span class="n">t</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="nb">Ok</span><span class="p">(())</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Pcx_TPalette256</span><span class="w"> </span><span class="p">{</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Pcx_TPalette256</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">magic</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="kt">u8</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">magic</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Pcx_TPalette256</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">colors</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="n">OptRc</span><span class="o">&lt;</span><span class="n">Pcx_Rgb</span><span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">colors</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="k">impl</span><span class="w"> </span><span class="n">Pcx_TPalette256</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">_io</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">Ref</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="p">,</span><span class="w"> </span><span class="n">BytesReader</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">_io</span><span class="p">.</span><span class="n">borrow</span><span class="p">()</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015&ndash;2025 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">format repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+</body>
+</html>

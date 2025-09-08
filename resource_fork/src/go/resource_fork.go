@@ -53,13 +53,13 @@ type ResourceFork struct {
 	ApplicationData []byte
 	_io *kaitai.Stream
 	_root *ResourceFork
-	_parent interface{}
+	_parent kaitai.Struct
 	_raw_dataBlocksWithIo []byte
 	_raw_resourceMap []byte
-	_f_dataBlocksWithIo bool
-	dataBlocksWithIo *BytesWithIo
 	_f_dataBlocks bool
 	dataBlocks []byte
+	_f_dataBlocksWithIo bool
+	dataBlocksWithIo *BytesWithIo
 	_f_resourceMap bool
 	resourceMap *ResourceFork_ResourceMap
 }
@@ -68,7 +68,11 @@ func NewResourceFork() *ResourceFork {
 	}
 }
 
-func (this *ResourceFork) Read(io *kaitai.Stream, parent interface{}, root *ResourceFork) (err error) {
+func (this ResourceFork) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *ResourceFork) Read(io *kaitai.Stream, parent kaitai.Struct, root *ResourceFork) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -95,44 +99,6 @@ func (this *ResourceFork) Read(io *kaitai.Stream, parent interface{}, root *Reso
 }
 
 /**
- * Use `data_blocks` instead,
- * unless you need access to this instance's `_io`.
- */
-func (this *ResourceFork) DataBlocksWithIo() (v *BytesWithIo, err error) {
-	if (this._f_dataBlocksWithIo) {
-		return this.dataBlocksWithIo, nil
-	}
-	_pos, err := this._io.Pos()
-	if err != nil {
-		return nil, err
-	}
-	_, err = this._io.Seek(int64(this.Header.OfsDataBlocks), io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	tmp4, err := this._io.ReadBytes(int(this.Header.LenDataBlocks))
-	if err != nil {
-		return nil, err
-	}
-	tmp4 = tmp4
-	this._raw_dataBlocksWithIo = tmp4
-	_io__raw_dataBlocksWithIo := kaitai.NewStream(bytes.NewReader(this._raw_dataBlocksWithIo))
-	tmp5 := NewBytesWithIo()
-	err = tmp5.Read(_io__raw_dataBlocksWithIo, this, nil)
-	if err != nil {
-		return nil, err
-	}
-	this.dataBlocksWithIo = tmp5
-	_, err = this._io.Seek(_pos, io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	this._f_dataBlocksWithIo = true
-	this._f_dataBlocksWithIo = true
-	return this.dataBlocksWithIo, nil
-}
-
-/**
  * Storage area for the data blocks of all resources.
  * 
  * These data blocks are not required to appear in any particular order,
@@ -151,13 +117,50 @@ func (this *ResourceFork) DataBlocks() (v []byte, err error) {
 	if (this._f_dataBlocks) {
 		return this.dataBlocks, nil
 	}
-	tmp6, err := this.DataBlocksWithIo()
+	this._f_dataBlocks = true
+	tmp4, err := this.DataBlocksWithIo()
 	if err != nil {
 		return nil, err
 	}
-	this.dataBlocks = []byte(tmp6.Data)
-	this._f_dataBlocks = true
+	this.dataBlocks = []byte(tmp4.Data)
 	return this.dataBlocks, nil
+}
+
+/**
+ * Use `data_blocks` instead,
+ * unless you need access to this instance's `_io`.
+ */
+func (this *ResourceFork) DataBlocksWithIo() (v *BytesWithIo, err error) {
+	if (this._f_dataBlocksWithIo) {
+		return this.dataBlocksWithIo, nil
+	}
+	this._f_dataBlocksWithIo = true
+	_pos, err := this._io.Pos()
+	if err != nil {
+		return nil, err
+	}
+	_, err = this._io.Seek(int64(this.Header.OfsDataBlocks), io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	tmp5, err := this._io.ReadBytes(int(this.Header.LenDataBlocks))
+	if err != nil {
+		return nil, err
+	}
+	tmp5 = tmp5
+	this._raw_dataBlocksWithIo = tmp5
+	_io__raw_dataBlocksWithIo := kaitai.NewStream(bytes.NewReader(this._raw_dataBlocksWithIo))
+	tmp6 := NewBytesWithIo()
+	err = tmp6.Read(_io__raw_dataBlocksWithIo, nil, nil)
+	if err != nil {
+		return nil, err
+	}
+	this.dataBlocksWithIo = tmp6
+	_, err = this._io.Seek(_pos, io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	return this.dataBlocksWithIo, nil
 }
 
 /**
@@ -167,6 +170,7 @@ func (this *ResourceFork) ResourceMap() (v *ResourceFork_ResourceMap, err error)
 	if (this._f_resourceMap) {
 		return this.resourceMap, nil
 	}
+	this._f_resourceMap = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
@@ -192,8 +196,6 @@ func (this *ResourceFork) ResourceMap() (v *ResourceFork_ResourceMap, err error)
 	if err != nil {
 		return nil, err
 	}
-	this._f_resourceMap = true
-	this._f_resourceMap = true
 	return this.resourceMap, nil
 }
 
@@ -227,6 +229,56 @@ func (this *ResourceFork) ResourceMap() (v *ResourceFork_ResourceMap, err error)
  */
 
 /**
+ * A resource data block,
+ * as stored in the resource data area.
+ * 
+ * Each data block stores the data contained in a resource,
+ * along with its length.
+ */
+type ResourceFork_DataBlock struct {
+	LenData uint32
+	Data []byte
+	_io *kaitai.Stream
+	_root *ResourceFork
+	_parent *ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference
+}
+func NewResourceFork_DataBlock() *ResourceFork_DataBlock {
+	return &ResourceFork_DataBlock{
+	}
+}
+
+func (this ResourceFork_DataBlock) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *ResourceFork_DataBlock) Read(io *kaitai.Stream, parent *ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference, root *ResourceFork) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp9, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.LenData = uint32(tmp9)
+	tmp10, err := this._io.ReadBytes(int(this.LenData))
+	if err != nil {
+		return err
+	}
+	tmp10 = tmp10
+	this.Data = tmp10
+	return err
+}
+
+/**
+ * The length of the resource data stored in this block.
+ */
+
+/**
+ * The data stored in this block.
+ */
+
+/**
  * Resource file header,
  * containing the offsets and lengths of the resource data area and resource map.
  */
@@ -237,38 +289,42 @@ type ResourceFork_FileHeader struct {
 	LenResourceMap uint32
 	_io *kaitai.Stream
 	_root *ResourceFork
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewResourceFork_FileHeader() *ResourceFork_FileHeader {
 	return &ResourceFork_FileHeader{
 	}
 }
 
-func (this *ResourceFork_FileHeader) Read(io *kaitai.Stream, parent interface{}, root *ResourceFork) (err error) {
+func (this ResourceFork_FileHeader) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *ResourceFork_FileHeader) Read(io *kaitai.Stream, parent kaitai.Struct, root *ResourceFork) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp9, err := this._io.ReadU4be()
-	if err != nil {
-		return err
-	}
-	this.OfsDataBlocks = uint32(tmp9)
-	tmp10, err := this._io.ReadU4be()
-	if err != nil {
-		return err
-	}
-	this.OfsResourceMap = uint32(tmp10)
 	tmp11, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.LenDataBlocks = uint32(tmp11)
+	this.OfsDataBlocks = uint32(tmp11)
 	tmp12, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.LenResourceMap = uint32(tmp12)
+	this.OfsResourceMap = uint32(tmp12)
+	tmp13, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.LenDataBlocks = uint32(tmp13)
+	tmp14, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.LenResourceMap = uint32(tmp14)
 	return err
 }
 
@@ -303,52 +359,6 @@ func (this *ResourceFork_FileHeader) Read(io *kaitai.Stream, parent interface{},
  */
 
 /**
- * A resource data block,
- * as stored in the resource data area.
- * 
- * Each data block stores the data contained in a resource,
- * along with its length.
- */
-type ResourceFork_DataBlock struct {
-	LenData uint32
-	Data []byte
-	_io *kaitai.Stream
-	_root *ResourceFork
-	_parent *ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference
-}
-func NewResourceFork_DataBlock() *ResourceFork_DataBlock {
-	return &ResourceFork_DataBlock{
-	}
-}
-
-func (this *ResourceFork_DataBlock) Read(io *kaitai.Stream, parent *ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference, root *ResourceFork) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp13, err := this._io.ReadU4be()
-	if err != nil {
-		return err
-	}
-	this.LenData = uint32(tmp13)
-	tmp14, err := this._io.ReadBytes(int(this.LenData))
-	if err != nil {
-		return err
-	}
-	tmp14 = tmp14
-	this.Data = tmp14
-	return err
-}
-
-/**
- * The length of the resource data stored in this block.
- */
-
-/**
- * The data stored in this block.
- */
-
-/**
  * Resource map,
  * containing information about the resources in the file and where they are located in the data area.
  */
@@ -363,18 +373,22 @@ type ResourceFork_ResourceMap struct {
 	_root *ResourceFork
 	_parent *ResourceFork
 	_raw_FileAttributes []byte
-	_raw_typeListAndReferenceLists []byte
 	_raw_namesWithIo []byte
-	_f_typeListAndReferenceLists bool
-	typeListAndReferenceLists *ResourceFork_ResourceMap_TypeListAndReferenceLists
-	_f_namesWithIo bool
-	namesWithIo *BytesWithIo
+	_raw_typeListAndReferenceLists []byte
 	_f_names bool
 	names []byte
+	_f_namesWithIo bool
+	namesWithIo *BytesWithIo
+	_f_typeListAndReferenceLists bool
+	typeListAndReferenceLists *ResourceFork_ResourceMap_TypeListAndReferenceLists
 }
 func NewResourceFork_ResourceMap() *ResourceFork_ResourceMap {
 	return &ResourceFork_ResourceMap{
 	}
+}
+
+func (this ResourceFork_ResourceMap) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *ResourceFork_ResourceMap) Read(io *kaitai.Stream, parent *ResourceFork, root *ResourceFork) (err error) {
@@ -425,40 +439,19 @@ func (this *ResourceFork_ResourceMap) Read(io *kaitai.Stream, parent *ResourceFo
 }
 
 /**
- * The resource map's resource type list, followed by the resource reference list area.
+ * Storage area for the names of all resources.
  */
-func (this *ResourceFork_ResourceMap) TypeListAndReferenceLists() (v *ResourceFork_ResourceMap_TypeListAndReferenceLists, err error) {
-	if (this._f_typeListAndReferenceLists) {
-		return this.typeListAndReferenceLists, nil
+func (this *ResourceFork_ResourceMap) Names() (v []byte, err error) {
+	if (this._f_names) {
+		return this.names, nil
 	}
-	_pos, err := this._io.Pos()
+	this._f_names = true
+	tmp22, err := this.NamesWithIo()
 	if err != nil {
 		return nil, err
 	}
-	_, err = this._io.Seek(int64(this.OfsTypeList), io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	tmp22, err := this._io.ReadBytes(int((this.OfsNames - this.OfsTypeList)))
-	if err != nil {
-		return nil, err
-	}
-	tmp22 = tmp22
-	this._raw_typeListAndReferenceLists = tmp22
-	_io__raw_typeListAndReferenceLists := kaitai.NewStream(bytes.NewReader(this._raw_typeListAndReferenceLists))
-	tmp23 := NewResourceFork_ResourceMap_TypeListAndReferenceLists()
-	err = tmp23.Read(_io__raw_typeListAndReferenceLists, this, this._root)
-	if err != nil {
-		return nil, err
-	}
-	this.typeListAndReferenceLists = tmp23
-	_, err = this._io.Seek(_pos, io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	this._f_typeListAndReferenceLists = true
-	this._f_typeListAndReferenceLists = true
-	return this.typeListAndReferenceLists, nil
+	this.names = []byte(tmp22.Data)
+	return this.names, nil
 }
 
 /**
@@ -469,6 +462,7 @@ func (this *ResourceFork_ResourceMap) NamesWithIo() (v *BytesWithIo, err error) 
 	if (this._f_namesWithIo) {
 		return this.namesWithIo, nil
 	}
+	this._f_namesWithIo = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
@@ -477,42 +471,60 @@ func (this *ResourceFork_ResourceMap) NamesWithIo() (v *BytesWithIo, err error) 
 	if err != nil {
 		return nil, err
 	}
-	tmp24, err := this._io.ReadBytesFull()
+	tmp23, err := this._io.ReadBytesFull()
 	if err != nil {
 		return nil, err
 	}
-	tmp24 = tmp24
-	this._raw_namesWithIo = tmp24
+	tmp23 = tmp23
+	this._raw_namesWithIo = tmp23
 	_io__raw_namesWithIo := kaitai.NewStream(bytes.NewReader(this._raw_namesWithIo))
-	tmp25 := NewBytesWithIo()
-	err = tmp25.Read(_io__raw_namesWithIo, this, nil)
+	tmp24 := NewBytesWithIo()
+	err = tmp24.Read(_io__raw_namesWithIo, nil, nil)
 	if err != nil {
 		return nil, err
 	}
-	this.namesWithIo = tmp25
+	this.namesWithIo = tmp24
 	_, err = this._io.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
-	this._f_namesWithIo = true
-	this._f_namesWithIo = true
 	return this.namesWithIo, nil
 }
 
 /**
- * Storage area for the names of all resources.
+ * The resource map's resource type list, followed by the resource reference list area.
  */
-func (this *ResourceFork_ResourceMap) Names() (v []byte, err error) {
-	if (this._f_names) {
-		return this.names, nil
+func (this *ResourceFork_ResourceMap) TypeListAndReferenceLists() (v *ResourceFork_ResourceMap_TypeListAndReferenceLists, err error) {
+	if (this._f_typeListAndReferenceLists) {
+		return this.typeListAndReferenceLists, nil
 	}
-	tmp26, err := this.NamesWithIo()
+	this._f_typeListAndReferenceLists = true
+	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
 	}
-	this.names = []byte(tmp26.Data)
-	this._f_names = true
-	return this.names, nil
+	_, err = this._io.Seek(int64(this.OfsTypeList), io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	tmp25, err := this._io.ReadBytes(int(this.OfsNames - this.OfsTypeList))
+	if err != nil {
+		return nil, err
+	}
+	tmp25 = tmp25
+	this._raw_typeListAndReferenceLists = tmp25
+	_io__raw_typeListAndReferenceLists := kaitai.NewStream(bytes.NewReader(this._raw_typeListAndReferenceLists))
+	tmp26 := NewResourceFork_ResourceMap_TypeListAndReferenceLists()
+	err = tmp26.Read(_io__raw_typeListAndReferenceLists, this, this._root)
+	if err != nil {
+		return nil, err
+	}
+	this.typeListAndReferenceLists = tmp26
+	_, err = this._io.Seek(_pos, io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	return this.typeListAndReferenceLists, nil
 }
 
 /**
@@ -571,6 +583,10 @@ func NewResourceFork_ResourceMap_FileAttributes() *ResourceFork_ResourceMap_File
 	}
 }
 
+func (this ResourceFork_ResourceMap_FileAttributes) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *ResourceFork_ResourceMap_FileAttributes) Read(io *kaitai.Stream, parent *ResourceFork_ResourceMap, root *ResourceFork) (err error) {
 	this._io = io
 	this._parent = parent
@@ -622,6 +638,7 @@ func (this *ResourceFork_ResourceMap_FileAttributes) AsInt() (v uint16, err erro
 	if (this._f_asInt) {
 		return this.asInt, nil
 	}
+	this._f_asInt = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return 0, err
@@ -639,8 +656,6 @@ func (this *ResourceFork_ResourceMap_FileAttributes) AsInt() (v uint16, err erro
 	if err != nil {
 		return 0, err
 	}
-	this._f_asInt = true
-	this._f_asInt = true
 	return this.asInt, nil
 }
 
@@ -698,6 +713,81 @@ func (this *ResourceFork_ResourceMap_FileAttributes) AsInt() (v uint16, err erro
  */
 
 /**
+ * A resource name,
+ * as stored in the resource name storage area in the resource map.
+ * 
+ * The resource names are not required to appear in any particular order.
+ * There may be unused space between and around resource names,
+ * but in practice they are often contiguous.
+ */
+type ResourceFork_ResourceMap_Name struct {
+	LenValue uint8
+	Value []byte
+	_io *kaitai.Stream
+	_root *ResourceFork
+	_parent *ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference
+}
+func NewResourceFork_ResourceMap_Name() *ResourceFork_ResourceMap_Name {
+	return &ResourceFork_ResourceMap_Name{
+	}
+}
+
+func (this ResourceFork_ResourceMap_Name) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *ResourceFork_ResourceMap_Name) Read(io *kaitai.Stream, parent *ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference, root *ResourceFork) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp35, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.LenValue = tmp35
+	tmp36, err := this._io.ReadBytes(int(this.LenValue))
+	if err != nil {
+		return err
+	}
+	tmp36 = tmp36
+	this.Value = tmp36
+	return err
+}
+
+/**
+ * The length of the resource name, in bytes.
+ */
+
+/**
+ * The resource name.
+ * 
+ * This field is exposed as a byte array,
+ * because there is no universal encoding for resource names.
+ * Most Classic Mac software does not deal with encodings explicitly and instead assumes that all strings,
+ * including resource names,
+ * use the system encoding,
+ * which varies depending on the system language.
+ * This means that resource names can use different encodings depending on what system language they were created with.
+ * 
+ * Many resource names are plain ASCII,
+ * meaning that the encoding often does not matter
+ * (because all Mac OS encodings are ASCII-compatible).
+ * For non-ASCII resource names,
+ * the most common encoding is perhaps MacRoman
+ * (used for English and other Western languages),
+ * but other encodings are also sometimes used,
+ * especially for software in non-Western languages.
+ * 
+ * There is no requirement that all names in a single resource file use the same encoding.
+ * For example,
+ * localized software may have some (but not all) of its resource names translated.
+ * For non-Western languages,
+ * this can lead to some resource names using MacRoman,
+ * and others using a different encoding.
+ */
+
+/**
  * Resource type list and storage area for resource reference lists in the resource map.
  * 
  * The two parts are combined into a single type here for technical reasons:
@@ -717,23 +807,27 @@ func NewResourceFork_ResourceMap_TypeListAndReferenceLists() *ResourceFork_Resou
 	}
 }
 
+func (this ResourceFork_ResourceMap_TypeListAndReferenceLists) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *ResourceFork_ResourceMap_TypeListAndReferenceLists) Read(io *kaitai.Stream, parent *ResourceFork_ResourceMap, root *ResourceFork) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp35 := NewResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList()
-	err = tmp35.Read(this._io, this, this._root)
+	tmp37 := NewResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList()
+	err = tmp37.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.TypeList = tmp35
-	tmp36, err := this._io.ReadBytesFull()
+	this.TypeList = tmp37
+	tmp38, err := this._io.ReadBytesFull()
 	if err != nil {
 		return err
 	}
-	tmp36 = tmp36
-	this.ReferenceLists = tmp36
+	tmp38 = tmp38
+	this.ReferenceLists = tmp38
 	return err
 }
 
@@ -747,197 +841,6 @@ func (this *ResourceFork_ResourceMap_TypeListAndReferenceLists) Read(io *kaitai.
  * According to Inside Macintosh,
  * the reference lists are stored contiguously,
  * in the same order as their corresponding resource type list entries.
- */
-
-/**
- * Resource type list in the resource map.
- */
-type ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList struct {
-	NumTypesM1 uint16
-	Entries []*ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry
-	_io *kaitai.Stream
-	_root *ResourceFork
-	_parent *ResourceFork_ResourceMap_TypeListAndReferenceLists
-	_f_numTypes bool
-	numTypes int
-}
-func NewResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList() *ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList {
-	return &ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList{
-	}
-}
-
-func (this *ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList) Read(io *kaitai.Stream, parent *ResourceFork_ResourceMap_TypeListAndReferenceLists, root *ResourceFork) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp37, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.NumTypesM1 = uint16(tmp37)
-	tmp38, err := this.NumTypes()
-	if err != nil {
-		return err
-	}
-	for i := 0; i < int(tmp38); i++ {
-		_ = i
-		tmp39 := NewResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry()
-		err = tmp39.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Entries = append(this.Entries, tmp39)
-	}
-	return err
-}
-
-/**
- * The number of resource types in this list.
- */
-func (this *ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList) NumTypes() (v int, err error) {
-	if (this._f_numTypes) {
-		return this.numTypes, nil
-	}
-	tmp40 := (this.NumTypesM1 + 1) % 65536
-	if tmp40 < 0 {
-		tmp40 += 65536
-	}
-	this.numTypes = int(tmp40)
-	this._f_numTypes = true
-	return this.numTypes, nil
-}
-
-/**
- * The number of resource types in this list,
- * minus one.
- * 
- * If the resource list is empty,
- * the value of this field is `0xffff`,
- * i. e. `-1` truncated to a 16-bit unsigned integer.
- */
-
-/**
- * Entries in the resource type list.
- */
-
-/**
- * A single entry in the resource type list.
- * 
- * Each entry corresponds to exactly one resource reference list.
- */
-type ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry struct {
-	Type []byte
-	NumReferencesM1 uint16
-	OfsReferenceList uint16
-	_io *kaitai.Stream
-	_root *ResourceFork
-	_parent *ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList
-	_f_numReferences bool
-	numReferences int
-	_f_referenceList bool
-	referenceList *ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList
-}
-func NewResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry() *ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry {
-	return &ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry{
-	}
-}
-
-func (this *ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry) Read(io *kaitai.Stream, parent *ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList, root *ResourceFork) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp41, err := this._io.ReadBytes(int(4))
-	if err != nil {
-		return err
-	}
-	tmp41 = tmp41
-	this.Type = tmp41
-	tmp42, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.NumReferencesM1 = uint16(tmp42)
-	tmp43, err := this._io.ReadU2be()
-	if err != nil {
-		return err
-	}
-	this.OfsReferenceList = uint16(tmp43)
-	return err
-}
-
-/**
- * The number of resources in the reference list for this type.
- */
-func (this *ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry) NumReferences() (v int, err error) {
-	if (this._f_numReferences) {
-		return this.numReferences, nil
-	}
-	tmp44 := (this.NumReferencesM1 + 1) % 65536
-	if tmp44 < 0 {
-		tmp44 += 65536
-	}
-	this.numReferences = int(tmp44)
-	this._f_numReferences = true
-	return this.numReferences, nil
-}
-
-/**
- * The resource reference list for this resource type.
- */
-func (this *ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry) ReferenceList() (v *ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList, err error) {
-	if (this._f_referenceList) {
-		return this.referenceList, nil
-	}
-	thisIo := this._parent._parent._io
-	_pos, err := thisIo.Pos()
-	if err != nil {
-		return nil, err
-	}
-	_, err = thisIo.Seek(int64(this.OfsReferenceList), io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	tmp46, err := this.NumReferences()
-	if err != nil {
-		return nil, err
-	}
-	tmp45 := NewResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList(tmp46)
-	err = tmp45.Read(thisIo, this, this._root)
-	if err != nil {
-		return nil, err
-	}
-	this.referenceList = tmp45
-	_, err = thisIo.Seek(_pos, io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	this._f_referenceList = true
-	this._f_referenceList = true
-	return this.referenceList, nil
-}
-
-/**
- * The four-character type code of the resources in the reference list.
- */
-
-/**
- * The number of resources in the reference list for this type,
- * minus one.
- * 
- * Empty reference lists should never exist.
- */
-
-/**
- * Offset of the resource reference list for this resource type,
- * from the start of the resource type list.
- * 
- * Although the offset is relative to the start of the type list,
- * it should never point into the type list itself,
- * but into the reference list storage area that directly follows it.
- * That is,
- * it should always be at least `_parent._sizeof`.
  */
 
 /**
@@ -960,6 +863,10 @@ func NewResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList(numRefe
 	}
 }
 
+func (this ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList) Read(io *kaitai.Stream, parent *ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry, root *ResourceFork) (err error) {
 	this._io = io
 	this._parent = parent
@@ -967,12 +874,12 @@ func (this *ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList) Re
 
 	for i := 0; i < int(this.NumReferences); i++ {
 		_ = i
-		tmp47 := NewResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference()
-		err = tmp47.Read(this._io, this, this._root)
+		tmp39 := NewResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference()
+		err = tmp39.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.References = append(this.References, tmp47)
+		this.References = append(this.References, tmp39)
 	}
 	return err
 }
@@ -994,14 +901,18 @@ type ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference 
 	_root *ResourceFork
 	_parent *ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList
 	_raw_Attributes []byte
-	_f_name bool
-	name *ResourceFork_ResourceMap_Name
 	_f_dataBlock bool
 	dataBlock *ResourceFork_DataBlock
+	_f_name bool
+	name *ResourceFork_ResourceMap_Name
 }
 func NewResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference() *ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference {
 	return &ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference{
 	}
+}
+
+func (this ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference) Read(io *kaitai.Stream, parent *ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList, root *ResourceFork) (err error) {
@@ -1009,82 +920,41 @@ func (this *ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Ref
 	this._parent = parent
 	this._root = root
 
-	tmp48, err := this._io.ReadS2be()
+	tmp40, err := this._io.ReadS2be()
 	if err != nil {
 		return err
 	}
-	this.Id = int16(tmp48)
-	tmp49, err := this._io.ReadU2be()
+	this.Id = int16(tmp40)
+	tmp41, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.OfsName = uint16(tmp49)
-	tmp50, err := this._io.ReadBytes(int(1))
+	this.OfsName = uint16(tmp41)
+	tmp42, err := this._io.ReadBytes(int(1))
 	if err != nil {
 		return err
 	}
-	tmp50 = tmp50
-	this._raw_Attributes = tmp50
+	tmp42 = tmp42
+	this._raw_Attributes = tmp42
 	_io__raw_Attributes := kaitai.NewStream(bytes.NewReader(this._raw_Attributes))
-	tmp51 := NewResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference_Attributes()
-	err = tmp51.Read(_io__raw_Attributes, this, this._root)
+	tmp43 := NewResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference_Attributes()
+	err = tmp43.Read(_io__raw_Attributes, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Attributes = tmp51
-	tmp52, err := this._io.ReadBitsIntBe(24)
+	this.Attributes = tmp43
+	tmp44, err := this._io.ReadBitsIntBe(24)
 	if err != nil {
 		return err
 	}
-	this.OfsDataBlock = tmp52
+	this.OfsDataBlock = tmp44
 	this._io.AlignToByte()
-	tmp53, err := this._io.ReadU4be()
+	tmp45, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.ReservedHandle = uint32(tmp53)
+	this.ReservedHandle = uint32(tmp45)
 	return err
-}
-
-/**
- * The name (if any) of the resource described by this reference.
- */
-func (this *ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference) Name() (v *ResourceFork_ResourceMap_Name, err error) {
-	if (this._f_name) {
-		return this.name, nil
-	}
-	if (this.OfsName != 65535) {
-		tmp54, err := this._root.ResourceMap()
-		if err != nil {
-			return nil, err
-		}
-		tmp55, err := tmp54.NamesWithIo()
-		if err != nil {
-			return nil, err
-		}
-		thisIo := tmp55._io
-		_pos, err := thisIo.Pos()
-		if err != nil {
-			return nil, err
-		}
-		_, err = thisIo.Seek(int64(this.OfsName), io.SeekStart)
-		if err != nil {
-			return nil, err
-		}
-		tmp56 := NewResourceFork_ResourceMap_Name()
-		err = tmp56.Read(thisIo, this, this._root)
-		if err != nil {
-			return nil, err
-		}
-		this.name = tmp56
-		_, err = thisIo.Seek(_pos, io.SeekStart)
-		if err != nil {
-			return nil, err
-		}
-		this._f_name = true
-	}
-	this._f_name = true
-	return this.name, nil
 }
 
 /**
@@ -1094,11 +964,12 @@ func (this *ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Ref
 	if (this._f_dataBlock) {
 		return this.dataBlock, nil
 	}
-	tmp57, err := this._root.DataBlocksWithIo()
+	this._f_dataBlock = true
+	tmp46, err := this._root.DataBlocksWithIo()
 	if err != nil {
 		return nil, err
 	}
-	thisIo := tmp57._io
+	thisIo := tmp46._io
 	_pos, err := thisIo.Pos()
 	if err != nil {
 		return nil, err
@@ -1107,19 +978,57 @@ func (this *ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Ref
 	if err != nil {
 		return nil, err
 	}
-	tmp58 := NewResourceFork_DataBlock()
-	err = tmp58.Read(thisIo, this, this._root)
+	tmp47 := NewResourceFork_DataBlock()
+	err = tmp47.Read(thisIo, this, this._root)
 	if err != nil {
 		return nil, err
 	}
-	this.dataBlock = tmp58
+	this.dataBlock = tmp47
 	_, err = thisIo.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
-	this._f_dataBlock = true
-	this._f_dataBlock = true
 	return this.dataBlock, nil
+}
+
+/**
+ * The name (if any) of the resource described by this reference.
+ */
+func (this *ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference) Name() (v *ResourceFork_ResourceMap_Name, err error) {
+	if (this._f_name) {
+		return this.name, nil
+	}
+	this._f_name = true
+	if (this.OfsName != 65535) {
+		tmp48, err := this._root.ResourceMap()
+		if err != nil {
+			return nil, err
+		}
+		tmp49, err := tmp48.NamesWithIo()
+		if err != nil {
+			return nil, err
+		}
+		thisIo := tmp49._io
+		_pos, err := thisIo.Pos()
+		if err != nil {
+			return nil, err
+		}
+		_, err = thisIo.Seek(int64(this.OfsName), io.SeekStart)
+		if err != nil {
+			return nil, err
+		}
+		tmp50 := NewResourceFork_ResourceMap_Name()
+		err = tmp50.Read(thisIo, this, this._root)
+		if err != nil {
+			return nil, err
+		}
+		this.name = tmp50
+		_, err = thisIo.Seek(_pos, io.SeekStart)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return this.name, nil
 }
 
 /**
@@ -1172,51 +1081,55 @@ func NewResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Referen
 	}
 }
 
+func (this ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference_Attributes) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference_Attributes) Read(io *kaitai.Stream, parent *ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference, root *ResourceFork) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp59, err := this._io.ReadBitsIntBe(1)
+	tmp51, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.SystemReference = tmp59 != 0
-	tmp60, err := this._io.ReadBitsIntBe(1)
+	this.SystemReference = tmp51 != 0
+	tmp52, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.LoadIntoSystemHeap = tmp60 != 0
-	tmp61, err := this._io.ReadBitsIntBe(1)
+	this.LoadIntoSystemHeap = tmp52 != 0
+	tmp53, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Purgeable = tmp61 != 0
-	tmp62, err := this._io.ReadBitsIntBe(1)
+	this.Purgeable = tmp53 != 0
+	tmp54, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Locked = tmp62 != 0
-	tmp63, err := this._io.ReadBitsIntBe(1)
+	this.Locked = tmp54 != 0
+	tmp55, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Protected = tmp63 != 0
-	tmp64, err := this._io.ReadBitsIntBe(1)
+	this.Protected = tmp55 != 0
+	tmp56, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Preload = tmp64 != 0
-	tmp65, err := this._io.ReadBitsIntBe(1)
+	this.Preload = tmp56 != 0
+	tmp57, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.NeedsWrite = tmp65 != 0
-	tmp66, err := this._io.ReadBitsIntBe(1)
+	this.NeedsWrite = tmp57 != 0
+	tmp58, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Compressed = tmp66 != 0
+	this.Compressed = tmp58 != 0
 	return err
 }
 
@@ -1228,6 +1141,7 @@ func (this *ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Ref
 	if (this._f_asInt) {
 		return this.asInt, nil
 	}
+	this._f_asInt = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return 0, err
@@ -1236,17 +1150,15 @@ func (this *ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Ref
 	if err != nil {
 		return 0, err
 	}
-	tmp67, err := this._io.ReadU1()
+	tmp59, err := this._io.ReadU1()
 	if err != nil {
 		return 0, err
 	}
-	this.asInt = tmp67
+	this.asInt = tmp59
 	_, err = this._io.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return 0, err
 	}
-	this._f_asInt = true
-	this._f_asInt = true
 	return this.asInt, nil
 }
 
@@ -1349,72 +1261,199 @@ func (this *ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Ref
  */
 
 /**
- * A resource name,
- * as stored in the resource name storage area in the resource map.
- * 
- * The resource names are not required to appear in any particular order.
- * There may be unused space between and around resource names,
- * but in practice they are often contiguous.
+ * Resource type list in the resource map.
  */
-type ResourceFork_ResourceMap_Name struct {
-	LenValue uint8
-	Value []byte
+type ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList struct {
+	NumTypesM1 uint16
+	Entries []*ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry
 	_io *kaitai.Stream
 	_root *ResourceFork
-	_parent *ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference
+	_parent *ResourceFork_ResourceMap_TypeListAndReferenceLists
+	_f_numTypes bool
+	numTypes int
 }
-func NewResourceFork_ResourceMap_Name() *ResourceFork_ResourceMap_Name {
-	return &ResourceFork_ResourceMap_Name{
+func NewResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList() *ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList {
+	return &ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList{
 	}
 }
 
-func (this *ResourceFork_ResourceMap_Name) Read(io *kaitai.Stream, parent *ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList_Reference, root *ResourceFork) (err error) {
+func (this ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList) Read(io *kaitai.Stream, parent *ResourceFork_ResourceMap_TypeListAndReferenceLists, root *ResourceFork) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp68, err := this._io.ReadU1()
+	tmp60, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.LenValue = tmp68
-	tmp69, err := this._io.ReadBytes(int(this.LenValue))
+	this.NumTypesM1 = uint16(tmp60)
+	tmp61, err := this.NumTypes()
 	if err != nil {
 		return err
 	}
-	tmp69 = tmp69
-	this.Value = tmp69
+	for i := 0; i < int(tmp61); i++ {
+		_ = i
+		tmp62 := NewResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry()
+		err = tmp62.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Entries = append(this.Entries, tmp62)
+	}
 	return err
 }
 
 /**
- * The length of the resource name, in bytes.
+ * The number of resource types in this list.
+ */
+func (this *ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList) NumTypes() (v int, err error) {
+	if (this._f_numTypes) {
+		return this.numTypes, nil
+	}
+	this._f_numTypes = true
+	tmp63 := (this.NumTypesM1 + 1) % 65536
+	if tmp63 < 0 {
+		tmp63 += 65536
+	}
+	this.numTypes = int(tmp63)
+	return this.numTypes, nil
+}
+
+/**
+ * The number of resource types in this list,
+ * minus one.
+ * 
+ * If the resource list is empty,
+ * the value of this field is `0xffff`,
+ * i. e. `-1` truncated to a 16-bit unsigned integer.
  */
 
 /**
- * The resource name.
+ * Entries in the resource type list.
+ */
+
+/**
+ * A single entry in the resource type list.
  * 
- * This field is exposed as a byte array,
- * because there is no universal encoding for resource names.
- * Most Classic Mac software does not deal with encodings explicitly and instead assumes that all strings,
- * including resource names,
- * use the system encoding,
- * which varies depending on the system language.
- * This means that resource names can use different encodings depending on what system language they were created with.
+ * Each entry corresponds to exactly one resource reference list.
+ */
+type ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry struct {
+	Type []byte
+	NumReferencesM1 uint16
+	OfsReferenceList uint16
+	_io *kaitai.Stream
+	_root *ResourceFork
+	_parent *ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList
+	_f_numReferences bool
+	numReferences int
+	_f_referenceList bool
+	referenceList *ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList
+}
+func NewResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry() *ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry {
+	return &ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry{
+	}
+}
+
+func (this ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry) Read(io *kaitai.Stream, parent *ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList, root *ResourceFork) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp64, err := this._io.ReadBytes(int(4))
+	if err != nil {
+		return err
+	}
+	tmp64 = tmp64
+	this.Type = tmp64
+	tmp65, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.NumReferencesM1 = uint16(tmp65)
+	tmp66, err := this._io.ReadU2be()
+	if err != nil {
+		return err
+	}
+	this.OfsReferenceList = uint16(tmp66)
+	return err
+}
+
+/**
+ * The number of resources in the reference list for this type.
+ */
+func (this *ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry) NumReferences() (v int, err error) {
+	if (this._f_numReferences) {
+		return this.numReferences, nil
+	}
+	this._f_numReferences = true
+	tmp67 := (this.NumReferencesM1 + 1) % 65536
+	if tmp67 < 0 {
+		tmp67 += 65536
+	}
+	this.numReferences = int(tmp67)
+	return this.numReferences, nil
+}
+
+/**
+ * The resource reference list for this resource type.
+ */
+func (this *ResourceFork_ResourceMap_TypeListAndReferenceLists_TypeList_TypeListEntry) ReferenceList() (v *ResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList, err error) {
+	if (this._f_referenceList) {
+		return this.referenceList, nil
+	}
+	this._f_referenceList = true
+	thisIo := this._parent._parent._io
+	_pos, err := thisIo.Pos()
+	if err != nil {
+		return nil, err
+	}
+	_, err = thisIo.Seek(int64(this.OfsReferenceList), io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	tmp68, err := this.NumReferences()
+	if err != nil {
+		return nil, err
+	}
+	tmp69 := NewResourceFork_ResourceMap_TypeListAndReferenceLists_ReferenceList(tmp68)
+	err = tmp69.Read(thisIo, this, this._root)
+	if err != nil {
+		return nil, err
+	}
+	this.referenceList = tmp69
+	_, err = thisIo.Seek(_pos, io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	return this.referenceList, nil
+}
+
+/**
+ * The four-character type code of the resources in the reference list.
+ */
+
+/**
+ * The number of resources in the reference list for this type,
+ * minus one.
  * 
- * Many resource names are plain ASCII,
- * meaning that the encoding often does not matter
- * (because all Mac OS encodings are ASCII-compatible).
- * For non-ASCII resource names,
- * the most common encoding is perhaps MacRoman
- * (used for English and other Western languages),
- * but other encodings are also sometimes used,
- * especially for software in non-Western languages.
+ * Empty reference lists should never exist.
+ */
+
+/**
+ * Offset of the resource reference list for this resource type,
+ * from the start of the resource type list.
  * 
- * There is no requirement that all names in a single resource file use the same encoding.
- * For example,
- * localized software may have some (but not all) of its resource names translated.
- * For non-Western languages,
- * this can lead to some resource names using MacRoman,
- * and others using a different encoding.
+ * Although the offset is relative to the start of the type list,
+ * it should never point into the type list itself,
+ * but into the reference list storage area that directly follows it.
+ * That is,
+ * it should always be at least `_parent._sizeof`.
  */

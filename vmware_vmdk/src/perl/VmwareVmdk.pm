@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 
 ########################################################################
 package VmwareVmdk;
@@ -27,7 +27,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -53,19 +53,12 @@ sub _read {
     $self->{compression_method} = $self->{_io}->read_u2le();
 }
 
-sub len_sector {
-    my ($self) = @_;
-    return $self->{len_sector} if ($self->{len_sector});
-    $self->{len_sector} = 512;
-    return $self->{len_sector};
-}
-
 sub descriptor {
     my ($self) = @_;
     return $self->{descriptor} if ($self->{descriptor});
     my $_pos = $self->{_io}->pos();
-    $self->{_io}->seek(($self->start_descriptor() * $self->_root()->len_sector()));
-    $self->{descriptor} = $self->{_io}->read_bytes(($self->size_descriptor() * $self->_root()->len_sector()));
+    $self->{_io}->seek($self->start_descriptor() * $self->_root()->len_sector());
+    $self->{descriptor} = $self->{_io}->read_bytes($self->size_descriptor() * $self->_root()->len_sector());
     $self->{_io}->seek($_pos);
     return $self->{descriptor};
 }
@@ -74,8 +67,8 @@ sub grain_primary {
     my ($self) = @_;
     return $self->{grain_primary} if ($self->{grain_primary});
     my $_pos = $self->{_io}->pos();
-    $self->{_io}->seek(($self->start_primary_grain() * $self->_root()->len_sector()));
-    $self->{grain_primary} = $self->{_io}->read_bytes(($self->size_grain() * $self->_root()->len_sector()));
+    $self->{_io}->seek($self->start_primary_grain() * $self->_root()->len_sector());
+    $self->{grain_primary} = $self->{_io}->read_bytes($self->size_grain() * $self->_root()->len_sector());
     $self->{_io}->seek($_pos);
     return $self->{grain_primary};
 }
@@ -84,10 +77,17 @@ sub grain_secondary {
     my ($self) = @_;
     return $self->{grain_secondary} if ($self->{grain_secondary});
     my $_pos = $self->{_io}->pos();
-    $self->{_io}->seek(($self->start_secondary_grain() * $self->_root()->len_sector()));
-    $self->{grain_secondary} = $self->{_io}->read_bytes(($self->size_grain() * $self->_root()->len_sector()));
+    $self->{_io}->seek($self->start_secondary_grain() * $self->_root()->len_sector());
+    $self->{grain_secondary} = $self->{_io}->read_bytes($self->size_grain() * $self->_root()->len_sector());
     $self->{_io}->seek($_pos);
     return $self->{grain_secondary};
+}
+
+sub len_sector {
+    my ($self) = @_;
+    return $self->{len_sector} if ($self->{len_sector});
+    $self->{len_sector} = 512;
+    return $self->{len_sector};
 }
 
 sub magic {
@@ -180,7 +180,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 

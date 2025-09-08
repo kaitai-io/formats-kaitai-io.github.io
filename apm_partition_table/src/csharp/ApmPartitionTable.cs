@@ -19,9 +19,9 @@ namespace Kaitai
         {
             m_parent = p__parent;
             m_root = p__root ?? this;
-            f_sectorSize = false;
-            f_partitionLookup = false;
             f_partitionEntries = false;
+            f_partitionLookup = false;
+            f_sectorSize = false;
             _read();
         }
         private void _read()
@@ -38,24 +38,24 @@ namespace Kaitai
             {
                 m_parent = p__parent;
                 m_root = p__root;
-                f_partition = false;
-                f_data = false;
                 f_bootCode = false;
+                f_data = false;
+                f_partition = false;
                 _read();
             }
             private void _read()
             {
                 _magic = m_io.ReadBytes(2);
-                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 80, 77 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 80, 77 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 80, 77 }, Magic, M_Io, "/types/partition_entry/seq/0");
+                    throw new ValidationNotEqualError(new byte[] { 80, 77 }, _magic, m_io, "/types/partition_entry/seq/0");
                 }
                 _reserved1 = m_io.ReadBytes(2);
                 _numberOfPartitions = m_io.ReadU4be();
                 _partitionStart = m_io.ReadU4be();
                 _partitionSize = m_io.ReadU4be();
-                _partitionName = System.Text.Encoding.GetEncoding("ascii").GetString(KaitaiStream.BytesTerminate(m_io.ReadBytes(32), 0, false));
-                _partitionType = System.Text.Encoding.GetEncoding("ascii").GetString(KaitaiStream.BytesTerminate(m_io.ReadBytes(32), 0, false));
+                _partitionName = System.Text.Encoding.GetEncoding("ASCII").GetString(KaitaiStream.BytesTerminate(m_io.ReadBytes(32), 0, false));
+                _partitionType = System.Text.Encoding.GetEncoding("ASCII").GetString(KaitaiStream.BytesTerminate(m_io.ReadBytes(32), 0, false));
                 _dataStart = m_io.ReadU4be();
                 _dataSize = m_io.ReadU4be();
                 _partitionStatus = m_io.ReadU4be();
@@ -66,25 +66,23 @@ namespace Kaitai
                 _bootCodeEntry = m_io.ReadU4be();
                 _reserved3 = m_io.ReadBytes(4);
                 _bootCodeCksum = m_io.ReadU4be();
-                _processorType = System.Text.Encoding.GetEncoding("ascii").GetString(KaitaiStream.BytesTerminate(m_io.ReadBytes(16), 0, false));
+                _processorType = System.Text.Encoding.GetEncoding("ASCII").GetString(KaitaiStream.BytesTerminate(m_io.ReadBytes(16), 0, false));
             }
-            private bool f_partition;
-            private byte[] _partition;
-            public byte[] Partition
+            private bool f_bootCode;
+            private byte[] _bootCode;
+            public byte[] BootCode
             {
                 get
                 {
-                    if (f_partition)
-                        return _partition;
-                    if ((PartitionStatus & 1) != 0) {
-                        KaitaiStream io = M_Root.M_Io;
-                        long _pos = io.Pos;
-                        io.Seek((PartitionStart * M_Root.SectorSize));
-                        _partition = io.ReadBytes((PartitionSize * M_Root.SectorSize));
-                        io.Seek(_pos);
-                        f_partition = true;
-                    }
-                    return _partition;
+                    if (f_bootCode)
+                        return _bootCode;
+                    f_bootCode = true;
+                    KaitaiStream io = M_Root.M_Io;
+                    long _pos = io.Pos;
+                    io.Seek(BootCodeStart * M_Root.SectorSize);
+                    _bootCode = io.ReadBytes(BootCodeSize);
+                    io.Seek(_pos);
+                    return _bootCode;
                 }
             }
             private bool f_data;
@@ -95,30 +93,32 @@ namespace Kaitai
                 {
                     if (f_data)
                         return _data;
+                    f_data = true;
                     KaitaiStream io = M_Root.M_Io;
                     long _pos = io.Pos;
-                    io.Seek((DataStart * M_Root.SectorSize));
-                    _data = io.ReadBytes((DataSize * M_Root.SectorSize));
+                    io.Seek(DataStart * M_Root.SectorSize);
+                    _data = io.ReadBytes(DataSize * M_Root.SectorSize);
                     io.Seek(_pos);
-                    f_data = true;
                     return _data;
                 }
             }
-            private bool f_bootCode;
-            private byte[] _bootCode;
-            public byte[] BootCode
+            private bool f_partition;
+            private byte[] _partition;
+            public byte[] Partition
             {
                 get
                 {
-                    if (f_bootCode)
-                        return _bootCode;
-                    KaitaiStream io = M_Root.M_Io;
-                    long _pos = io.Pos;
-                    io.Seek((BootCodeStart * M_Root.SectorSize));
-                    _bootCode = io.ReadBytes(BootCodeSize);
-                    io.Seek(_pos);
-                    f_bootCode = true;
-                    return _bootCode;
+                    if (f_partition)
+                        return _partition;
+                    f_partition = true;
+                    if ((PartitionStatus & 1) != 0) {
+                        KaitaiStream io = M_Root.M_Io;
+                        long _pos = io.Pos;
+                        io.Seek(PartitionStart * M_Root.SectorSize);
+                        _partition = io.ReadBytes(PartitionSize * M_Root.SectorSize);
+                        io.Seek(_pos);
+                    }
+                    return _partition;
                 }
             }
             private byte[] _magic;
@@ -198,22 +198,28 @@ namespace Kaitai
             public ApmPartitionTable M_Root { get { return m_root; } }
             public ApmPartitionTable M_Parent { get { return m_parent; } }
         }
-        private bool f_sectorSize;
-        private int _sectorSize;
-
-        /// <summary>
-        /// 0x200 (512) bytes for disks, 0x1000 (4096) bytes is not supported by APM
-        /// 0x800 (2048) bytes for CDROM
-        /// </summary>
-        public int SectorSize
+        private bool f_partitionEntries;
+        private List<PartitionEntry> _partitionEntries;
+        public List<PartitionEntry> PartitionEntries
         {
             get
             {
-                if (f_sectorSize)
-                    return _sectorSize;
-                _sectorSize = (int) (512);
-                f_sectorSize = true;
-                return _sectorSize;
+                if (f_partitionEntries)
+                    return _partitionEntries;
+                f_partitionEntries = true;
+                KaitaiStream io = M_Root.M_Io;
+                long _pos = io.Pos;
+                io.Seek(M_Root.SectorSize);
+                __raw_partitionEntries = new List<byte[]>();
+                _partitionEntries = new List<PartitionEntry>();
+                for (var i = 0; i < M_Root.PartitionLookup.NumberOfPartitions; i++)
+                {
+                    __raw_partitionEntries.Add(io.ReadBytes(SectorSize));
+                    var io___raw_partitionEntries = new KaitaiStream(__raw_partitionEntries[__raw_partitionEntries.Count - 1]);
+                    _partitionEntries.Add(new PartitionEntry(io___raw_partitionEntries, this, m_root));
+                }
+                io.Seek(_pos);
+                return _partitionEntries;
             }
         }
         private bool f_partitionLookup;
@@ -230,6 +236,7 @@ namespace Kaitai
             {
                 if (f_partitionLookup)
                     return _partitionLookup;
+                f_partitionLookup = true;
                 KaitaiStream io = M_Root.M_Io;
                 long _pos = io.Pos;
                 io.Seek(M_Root.SectorSize);
@@ -237,41 +244,34 @@ namespace Kaitai
                 var io___raw_partitionLookup = new KaitaiStream(__raw_partitionLookup);
                 _partitionLookup = new PartitionEntry(io___raw_partitionLookup, this, m_root);
                 io.Seek(_pos);
-                f_partitionLookup = true;
                 return _partitionLookup;
             }
         }
-        private bool f_partitionEntries;
-        private List<PartitionEntry> _partitionEntries;
-        public List<PartitionEntry> PartitionEntries
+        private bool f_sectorSize;
+        private int _sectorSize;
+
+        /// <summary>
+        /// 0x200 (512) bytes for disks, 0x1000 (4096) bytes is not supported by APM
+        /// 0x800 (2048) bytes for CDROM
+        /// </summary>
+        public int SectorSize
         {
             get
             {
-                if (f_partitionEntries)
-                    return _partitionEntries;
-                KaitaiStream io = M_Root.M_Io;
-                long _pos = io.Pos;
-                io.Seek(M_Root.SectorSize);
-                __raw_partitionEntries = new List<byte[]>();
-                _partitionEntries = new List<PartitionEntry>();
-                for (var i = 0; i < M_Root.PartitionLookup.NumberOfPartitions; i++)
-                {
-                    __raw_partitionEntries.Add(io.ReadBytes(SectorSize));
-                    var io___raw_partitionEntries = new KaitaiStream(__raw_partitionEntries[__raw_partitionEntries.Count - 1]);
-                    _partitionEntries.Add(new PartitionEntry(io___raw_partitionEntries, this, m_root));
-                }
-                io.Seek(_pos);
-                f_partitionEntries = true;
-                return _partitionEntries;
+                if (f_sectorSize)
+                    return _sectorSize;
+                f_sectorSize = true;
+                _sectorSize = (int) (512);
+                return _sectorSize;
             }
         }
         private ApmPartitionTable m_root;
         private KaitaiStruct m_parent;
-        private byte[] __raw_partitionLookup;
         private List<byte[]> __raw_partitionEntries;
+        private byte[] __raw_partitionLookup;
         public ApmPartitionTable M_Root { get { return m_root; } }
         public KaitaiStruct M_Parent { get { return m_parent; } }
-        public byte[] M_RawPartitionLookup { get { return __raw_partitionLookup; } }
         public List<byte[]> M_RawPartitionEntries { get { return __raw_partitionEntries; } }
+        public byte[] M_RawPartitionLookup { get { return __raw_partitionLookup; } }
     }
 }

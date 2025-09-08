@@ -6,7 +6,8 @@ import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.ArrayList;
-import java.nio.charset.Charset;
+import java.util.List;
+import java.nio.charset.StandardCharsets;
 
 
 /**
@@ -34,8 +35,8 @@ public class Grub2Font extends KaitaiStruct {
     }
     private void _read() {
         this.magic = this._io.readBytes(12);
-        if (!(Arrays.equals(magic(), new byte[] { 70, 73, 76, 69, 0, 0, 0, 4, 80, 70, 70, 50 }))) {
-            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 70, 73, 76, 69, 0, 0, 0, 4, 80, 70, 70, 50 }, magic(), _io(), "/seq/0");
+        if (!(Arrays.equals(this.magic, new byte[] { 70, 73, 76, 69, 0, 0, 0, 4, 80, 70, 70, 50 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 70, 73, 76, 69, 0, 0, 0, 4, 80, 70, 70, 50 }, this.magic, this._io, "/seq/0");
         }
         this.sections = new ArrayList<Section>();
         {
@@ -48,258 +49,11 @@ public class Grub2Font extends KaitaiStruct {
             } while (!(_it.sectionType().equals("DATA")));
         }
     }
-    public static class PtszSection extends KaitaiStruct {
-        public static PtszSection fromFile(String fileName) throws IOException {
-            return new PtszSection(new ByteBufferKaitaiStream(fileName));
-        }
 
-        public PtszSection(KaitaiStream _io) {
-            this(_io, null, null);
+    public void _fetchInstances() {
+        for (int i = 0; i < this.sections.size(); i++) {
+            this.sections.get(((Number) (i)).intValue())._fetchInstances();
         }
-
-        public PtszSection(KaitaiStream _io, Grub2Font.Section _parent) {
-            this(_io, _parent, null);
-        }
-
-        public PtszSection(KaitaiStream _io, Grub2Font.Section _parent, Grub2Font _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.fontPointSize = this._io.readU2be();
-        }
-        private int fontPointSize;
-        private Grub2Font _root;
-        private Grub2Font.Section _parent;
-        public int fontPointSize() { return fontPointSize; }
-        public Grub2Font _root() { return _root; }
-        public Grub2Font.Section _parent() { return _parent; }
-    }
-    public static class FamiSection extends KaitaiStruct {
-        public static FamiSection fromFile(String fileName) throws IOException {
-            return new FamiSection(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public FamiSection(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public FamiSection(KaitaiStream _io, Grub2Font.Section _parent) {
-            this(_io, _parent, null);
-        }
-
-        public FamiSection(KaitaiStream _io, Grub2Font.Section _parent, Grub2Font _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.fontFamilyName = new String(this._io.readBytesTerm((byte) 0, false, true, true), Charset.forName("ASCII"));
-        }
-        private String fontFamilyName;
-        private Grub2Font _root;
-        private Grub2Font.Section _parent;
-        public String fontFamilyName() { return fontFamilyName; }
-        public Grub2Font _root() { return _root; }
-        public Grub2Font.Section _parent() { return _parent; }
-    }
-    public static class WeigSection extends KaitaiStruct {
-        public static WeigSection fromFile(String fileName) throws IOException {
-            return new WeigSection(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public WeigSection(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public WeigSection(KaitaiStream _io, Grub2Font.Section _parent) {
-            this(_io, _parent, null);
-        }
-
-        public WeigSection(KaitaiStream _io, Grub2Font.Section _parent, Grub2Font _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.fontWeight = new String(this._io.readBytesTerm((byte) 0, false, true, true), Charset.forName("ASCII"));
-        }
-        private String fontWeight;
-        private Grub2Font _root;
-        private Grub2Font.Section _parent;
-        public String fontWeight() { return fontWeight; }
-        public Grub2Font _root() { return _root; }
-        public Grub2Font.Section _parent() { return _parent; }
-    }
-    public static class MaxwSection extends KaitaiStruct {
-        public static MaxwSection fromFile(String fileName) throws IOException {
-            return new MaxwSection(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public MaxwSection(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public MaxwSection(KaitaiStream _io, Grub2Font.Section _parent) {
-            this(_io, _parent, null);
-        }
-
-        public MaxwSection(KaitaiStream _io, Grub2Font.Section _parent, Grub2Font _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.maximumCharacterWidth = this._io.readU2be();
-        }
-        private int maximumCharacterWidth;
-        private Grub2Font _root;
-        private Grub2Font.Section _parent;
-        public int maximumCharacterWidth() { return maximumCharacterWidth; }
-        public Grub2Font _root() { return _root; }
-        public Grub2Font.Section _parent() { return _parent; }
-    }
-    public static class DescSection extends KaitaiStruct {
-        public static DescSection fromFile(String fileName) throws IOException {
-            return new DescSection(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public DescSection(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public DescSection(KaitaiStream _io, Grub2Font.Section _parent) {
-            this(_io, _parent, null);
-        }
-
-        public DescSection(KaitaiStream _io, Grub2Font.Section _parent, Grub2Font _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.descentInPixels = this._io.readU2be();
-        }
-        private int descentInPixels;
-        private Grub2Font _root;
-        private Grub2Font.Section _parent;
-        public int descentInPixels() { return descentInPixels; }
-        public Grub2Font _root() { return _root; }
-        public Grub2Font.Section _parent() { return _parent; }
-    }
-    public static class Section extends KaitaiStruct {
-        public static Section fromFile(String fileName) throws IOException {
-            return new Section(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Section(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Section(KaitaiStream _io, Grub2Font _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Section(KaitaiStream _io, Grub2Font _parent, Grub2Font _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.sectionType = new String(this._io.readBytes(4), Charset.forName("ASCII"));
-            this.lenBody = this._io.readU4be();
-            if (!(sectionType()).equals("DATA")) {
-                switch (sectionType()) {
-                case "MAXH": {
-                    this._raw_body = this._io.readBytes(lenBody());
-                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                    this.body = new MaxhSection(_io__raw_body, this, _root);
-                    break;
-                }
-                case "FAMI": {
-                    this._raw_body = this._io.readBytes(lenBody());
-                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                    this.body = new FamiSection(_io__raw_body, this, _root);
-                    break;
-                }
-                case "PTSZ": {
-                    this._raw_body = this._io.readBytes(lenBody());
-                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                    this.body = new PtszSection(_io__raw_body, this, _root);
-                    break;
-                }
-                case "MAXW": {
-                    this._raw_body = this._io.readBytes(lenBody());
-                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                    this.body = new MaxwSection(_io__raw_body, this, _root);
-                    break;
-                }
-                case "SLAN": {
-                    this._raw_body = this._io.readBytes(lenBody());
-                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                    this.body = new SlanSection(_io__raw_body, this, _root);
-                    break;
-                }
-                case "WEIG": {
-                    this._raw_body = this._io.readBytes(lenBody());
-                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                    this.body = new WeigSection(_io__raw_body, this, _root);
-                    break;
-                }
-                case "CHIX": {
-                    this._raw_body = this._io.readBytes(lenBody());
-                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                    this.body = new ChixSection(_io__raw_body, this, _root);
-                    break;
-                }
-                case "DESC": {
-                    this._raw_body = this._io.readBytes(lenBody());
-                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                    this.body = new DescSection(_io__raw_body, this, _root);
-                    break;
-                }
-                case "NAME": {
-                    this._raw_body = this._io.readBytes(lenBody());
-                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                    this.body = new NameSection(_io__raw_body, this, _root);
-                    break;
-                }
-                case "ASCE": {
-                    this._raw_body = this._io.readBytes(lenBody());
-                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                    this.body = new AsceSection(_io__raw_body, this, _root);
-                    break;
-                }
-                default: {
-                    this.body = this._io.readBytes(lenBody());
-                    break;
-                }
-                }
-            }
-        }
-        private String sectionType;
-        private long lenBody;
-        private Object body;
-        private Grub2Font _root;
-        private Grub2Font _parent;
-        private byte[] _raw_body;
-        public String sectionType() { return sectionType; }
-
-        /**
-         * Should be set to `0xFFFF_FFFF` for `section_type != "DATA"`
-         */
-        public long lenBody() { return lenBody; }
-        public Object body() { return body; }
-        public Grub2Font _root() { return _root; }
-        public Grub2Font _parent() { return _parent; }
-        public byte[] _raw_body() { return _raw_body; }
     }
     public static class AsceSection extends KaitaiStruct {
         public static AsceSection fromFile(String fileName) throws IOException {
@@ -322,6 +76,9 @@ public class Grub2Font extends KaitaiStruct {
         }
         private void _read() {
             this.ascentInPixels = this._io.readU2be();
+        }
+
+        public void _fetchInstances() {
         }
         private int ascentInPixels;
         private Grub2Font _root;
@@ -359,6 +116,12 @@ public class Grub2Font extends KaitaiStruct {
                 }
             }
         }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.characters.size(); i++) {
+                this.characters.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
         public static class Character extends KaitaiStruct {
             public static Character fromFile(String fileName) throws IOException {
                 return new Character(new ByteBufferKaitaiStream(fileName));
@@ -382,6 +145,13 @@ public class Grub2Font extends KaitaiStruct {
                 this.codePoint = this._io.readU4be();
                 this.flags = this._io.readU1();
                 this.ofsDefinition = this._io.readU4be();
+            }
+
+            public void _fetchInstances() {
+                definition();
+                if (this.definition != null) {
+                    this.definition._fetchInstances();
+                }
             }
             private CharacterDefinition definition;
             public CharacterDefinition definition() {
@@ -434,7 +204,10 @@ public class Grub2Font extends KaitaiStruct {
                 this.xOffset = this._io.readS2be();
                 this.yOffset = this._io.readS2be();
                 this.deviceWidth = this._io.readS2be();
-                this.bitmapData = this._io.readBytes((((width() * height()) + 7) / 8));
+                this.bitmapData = this._io.readBytes((width() * height() + 7) / 8);
+            }
+
+            public void _fetchInstances() {
             }
             private int width;
             private int height;
@@ -468,10 +241,74 @@ public class Grub2Font extends KaitaiStruct {
             public Grub2Font _root() { return _root; }
             public Grub2Font.ChixSection.Character _parent() { return _parent; }
         }
-        private ArrayList<Character> characters;
+        private List<Character> characters;
         private Grub2Font _root;
         private Grub2Font.Section _parent;
-        public ArrayList<Character> characters() { return characters; }
+        public List<Character> characters() { return characters; }
+        public Grub2Font _root() { return _root; }
+        public Grub2Font.Section _parent() { return _parent; }
+    }
+    public static class DescSection extends KaitaiStruct {
+        public static DescSection fromFile(String fileName) throws IOException {
+            return new DescSection(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public DescSection(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public DescSection(KaitaiStream _io, Grub2Font.Section _parent) {
+            this(_io, _parent, null);
+        }
+
+        public DescSection(KaitaiStream _io, Grub2Font.Section _parent, Grub2Font _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.descentInPixels = this._io.readU2be();
+        }
+
+        public void _fetchInstances() {
+        }
+        private int descentInPixels;
+        private Grub2Font _root;
+        private Grub2Font.Section _parent;
+        public int descentInPixels() { return descentInPixels; }
+        public Grub2Font _root() { return _root; }
+        public Grub2Font.Section _parent() { return _parent; }
+    }
+    public static class FamiSection extends KaitaiStruct {
+        public static FamiSection fromFile(String fileName) throws IOException {
+            return new FamiSection(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public FamiSection(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public FamiSection(KaitaiStream _io, Grub2Font.Section _parent) {
+            this(_io, _parent, null);
+        }
+
+        public FamiSection(KaitaiStream _io, Grub2Font.Section _parent, Grub2Font _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.fontFamilyName = new String(this._io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.US_ASCII);
+        }
+
+        public void _fetchInstances() {
+        }
+        private String fontFamilyName;
+        private Grub2Font _root;
+        private Grub2Font.Section _parent;
+        public String fontFamilyName() { return fontFamilyName; }
         public Grub2Font _root() { return _root; }
         public Grub2Font.Section _parent() { return _parent; }
     }
@@ -497,10 +334,45 @@ public class Grub2Font extends KaitaiStruct {
         private void _read() {
             this.maximumCharacterHeight = this._io.readU2be();
         }
+
+        public void _fetchInstances() {
+        }
         private int maximumCharacterHeight;
         private Grub2Font _root;
         private Grub2Font.Section _parent;
         public int maximumCharacterHeight() { return maximumCharacterHeight; }
+        public Grub2Font _root() { return _root; }
+        public Grub2Font.Section _parent() { return _parent; }
+    }
+    public static class MaxwSection extends KaitaiStruct {
+        public static MaxwSection fromFile(String fileName) throws IOException {
+            return new MaxwSection(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public MaxwSection(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public MaxwSection(KaitaiStream _io, Grub2Font.Section _parent) {
+            this(_io, _parent, null);
+        }
+
+        public MaxwSection(KaitaiStream _io, Grub2Font.Section _parent, Grub2Font _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.maximumCharacterWidth = this._io.readU2be();
+        }
+
+        public void _fetchInstances() {
+        }
+        private int maximumCharacterWidth;
+        private Grub2Font _root;
+        private Grub2Font.Section _parent;
+        public int maximumCharacterWidth() { return maximumCharacterWidth; }
         public Grub2Font _root() { return _root; }
         public Grub2Font.Section _parent() { return _parent; }
     }
@@ -524,7 +396,10 @@ public class Grub2Font extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.fontName = new String(this._io.readBytesTerm((byte) 0, false, true, true), Charset.forName("ASCII"));
+            this.fontName = new String(this._io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.US_ASCII);
+        }
+
+        public void _fetchInstances() {
         }
         private String fontName;
         private Grub2Font _root;
@@ -532,6 +407,184 @@ public class Grub2Font extends KaitaiStruct {
         public String fontName() { return fontName; }
         public Grub2Font _root() { return _root; }
         public Grub2Font.Section _parent() { return _parent; }
+    }
+    public static class PtszSection extends KaitaiStruct {
+        public static PtszSection fromFile(String fileName) throws IOException {
+            return new PtszSection(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public PtszSection(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public PtszSection(KaitaiStream _io, Grub2Font.Section _parent) {
+            this(_io, _parent, null);
+        }
+
+        public PtszSection(KaitaiStream _io, Grub2Font.Section _parent, Grub2Font _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.fontPointSize = this._io.readU2be();
+        }
+
+        public void _fetchInstances() {
+        }
+        private int fontPointSize;
+        private Grub2Font _root;
+        private Grub2Font.Section _parent;
+        public int fontPointSize() { return fontPointSize; }
+        public Grub2Font _root() { return _root; }
+        public Grub2Font.Section _parent() { return _parent; }
+    }
+    public static class Section extends KaitaiStruct {
+        public static Section fromFile(String fileName) throws IOException {
+            return new Section(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Section(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Section(KaitaiStream _io, Grub2Font _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Section(KaitaiStream _io, Grub2Font _parent, Grub2Font _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.sectionType = new String(this._io.readBytes(4), StandardCharsets.US_ASCII);
+            this.lenBody = this._io.readU4be();
+            if (!sectionType().equals("DATA")) {
+                switch (sectionType()) {
+                case "ASCE": {
+                    KaitaiStream _io_body = this._io.substream(lenBody());
+                    this.body = new AsceSection(_io_body, this, _root);
+                    break;
+                }
+                case "CHIX": {
+                    KaitaiStream _io_body = this._io.substream(lenBody());
+                    this.body = new ChixSection(_io_body, this, _root);
+                    break;
+                }
+                case "DESC": {
+                    KaitaiStream _io_body = this._io.substream(lenBody());
+                    this.body = new DescSection(_io_body, this, _root);
+                    break;
+                }
+                case "FAMI": {
+                    KaitaiStream _io_body = this._io.substream(lenBody());
+                    this.body = new FamiSection(_io_body, this, _root);
+                    break;
+                }
+                case "MAXH": {
+                    KaitaiStream _io_body = this._io.substream(lenBody());
+                    this.body = new MaxhSection(_io_body, this, _root);
+                    break;
+                }
+                case "MAXW": {
+                    KaitaiStream _io_body = this._io.substream(lenBody());
+                    this.body = new MaxwSection(_io_body, this, _root);
+                    break;
+                }
+                case "NAME": {
+                    KaitaiStream _io_body = this._io.substream(lenBody());
+                    this.body = new NameSection(_io_body, this, _root);
+                    break;
+                }
+                case "PTSZ": {
+                    KaitaiStream _io_body = this._io.substream(lenBody());
+                    this.body = new PtszSection(_io_body, this, _root);
+                    break;
+                }
+                case "SLAN": {
+                    KaitaiStream _io_body = this._io.substream(lenBody());
+                    this.body = new SlanSection(_io_body, this, _root);
+                    break;
+                }
+                case "WEIG": {
+                    KaitaiStream _io_body = this._io.substream(lenBody());
+                    this.body = new WeigSection(_io_body, this, _root);
+                    break;
+                }
+                default: {
+                    this.body = this._io.readBytes(lenBody());
+                    break;
+                }
+                }
+            }
+        }
+
+        public void _fetchInstances() {
+            if (!sectionType().equals("DATA")) {
+                switch (sectionType()) {
+                case "ASCE": {
+                    ((AsceSection) (this.body))._fetchInstances();
+                    break;
+                }
+                case "CHIX": {
+                    ((ChixSection) (this.body))._fetchInstances();
+                    break;
+                }
+                case "DESC": {
+                    ((DescSection) (this.body))._fetchInstances();
+                    break;
+                }
+                case "FAMI": {
+                    ((FamiSection) (this.body))._fetchInstances();
+                    break;
+                }
+                case "MAXH": {
+                    ((MaxhSection) (this.body))._fetchInstances();
+                    break;
+                }
+                case "MAXW": {
+                    ((MaxwSection) (this.body))._fetchInstances();
+                    break;
+                }
+                case "NAME": {
+                    ((NameSection) (this.body))._fetchInstances();
+                    break;
+                }
+                case "PTSZ": {
+                    ((PtszSection) (this.body))._fetchInstances();
+                    break;
+                }
+                case "SLAN": {
+                    ((SlanSection) (this.body))._fetchInstances();
+                    break;
+                }
+                case "WEIG": {
+                    ((WeigSection) (this.body))._fetchInstances();
+                    break;
+                }
+                default: {
+                    break;
+                }
+                }
+            }
+        }
+        private String sectionType;
+        private long lenBody;
+        private Object body;
+        private Grub2Font _root;
+        private Grub2Font _parent;
+        public String sectionType() { return sectionType; }
+
+        /**
+         * Should be set to `0xFFFF_FFFF` for `section_type != "DATA"`
+         */
+        public long lenBody() { return lenBody; }
+        public Object body() { return body; }
+        public Grub2Font _root() { return _root; }
+        public Grub2Font _parent() { return _parent; }
     }
     public static class SlanSection extends KaitaiStruct {
         public static SlanSection fromFile(String fileName) throws IOException {
@@ -553,7 +606,10 @@ public class Grub2Font extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.fontSlant = new String(this._io.readBytesTerm((byte) 0, false, true, true), Charset.forName("ASCII"));
+            this.fontSlant = new String(this._io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.US_ASCII);
+        }
+
+        public void _fetchInstances() {
         }
         private String fontSlant;
         private Grub2Font _root;
@@ -562,8 +618,40 @@ public class Grub2Font extends KaitaiStruct {
         public Grub2Font _root() { return _root; }
         public Grub2Font.Section _parent() { return _parent; }
     }
+    public static class WeigSection extends KaitaiStruct {
+        public static WeigSection fromFile(String fileName) throws IOException {
+            return new WeigSection(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public WeigSection(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public WeigSection(KaitaiStream _io, Grub2Font.Section _parent) {
+            this(_io, _parent, null);
+        }
+
+        public WeigSection(KaitaiStream _io, Grub2Font.Section _parent, Grub2Font _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.fontWeight = new String(this._io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.US_ASCII);
+        }
+
+        public void _fetchInstances() {
+        }
+        private String fontWeight;
+        private Grub2Font _root;
+        private Grub2Font.Section _parent;
+        public String fontWeight() { return fontWeight; }
+        public Grub2Font _root() { return _root; }
+        public Grub2Font.Section _parent() { return _parent; }
+    }
     private byte[] magic;
-    private ArrayList<Section> sections;
+    private List<Section> sections;
     private Grub2Font _root;
     private KaitaiStruct _parent;
     public byte[] magic() { return magic; }
@@ -574,7 +662,7 @@ public class Grub2Font extends KaitaiStruct {
      * via the character index (CHIX) section. When reading this font file,
      * the rest of the file can be ignored when scanning the sections."
      */
-    public ArrayList<Section> sections() { return sections; }
+    public List<Section> sections() { return sections; }
     public Grub2Font _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

@@ -9,8 +9,8 @@
 
 namespace {
     class Websocket extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Websocket $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Websocket $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -34,8 +34,33 @@ namespace {
 }
 
 namespace Websocket {
+    class Dataframe extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Websocket $_parent = null, ?\Websocket $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_header = new \Websocket\FrameHeader($this->_io, $this, $this->_root);
+            if ($this->_root()->initialFrame()->header()->opcode() != \Websocket\Opcode::TEXT) {
+                $this->_m_payloadBytes = $this->_io->readBytes($this->header()->lenPayload());
+            }
+            if ($this->_root()->initialFrame()->header()->opcode() == \Websocket\Opcode::TEXT) {
+                $this->_m_payloadText = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->header()->lenPayload()), "UTF-8");
+            }
+        }
+        protected $_m_header;
+        protected $_m_payloadBytes;
+        protected $_m_payloadText;
+        public function header() { return $this->_m_header; }
+        public function payloadBytes() { return $this->_m_payloadBytes; }
+        public function payloadText() { return $this->_m_payloadText; }
+    }
+}
+
+namespace Websocket {
     class FrameHeader extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Websocket $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Websocket $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -85,7 +110,7 @@ namespace Websocket {
 
 namespace Websocket {
     class InitialFrame extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Websocket $_parent = null, \Websocket $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Websocket $_parent = null, ?\Websocket $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -96,31 +121,6 @@ namespace Websocket {
                 $this->_m_payloadBytes = $this->_io->readBytes($this->header()->lenPayload());
             }
             if ($this->header()->opcode() == \Websocket\Opcode::TEXT) {
-                $this->_m_payloadText = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->header()->lenPayload()), "UTF-8");
-            }
-        }
-        protected $_m_header;
-        protected $_m_payloadBytes;
-        protected $_m_payloadText;
-        public function header() { return $this->_m_header; }
-        public function payloadBytes() { return $this->_m_payloadBytes; }
-        public function payloadText() { return $this->_m_payloadText; }
-    }
-}
-
-namespace Websocket {
-    class Dataframe extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Websocket $_parent = null, \Websocket $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_header = new \Websocket\FrameHeader($this->_io, $this, $this->_root);
-            if ($this->_root()->initialFrame()->header()->opcode() != \Websocket\Opcode::TEXT) {
-                $this->_m_payloadBytes = $this->_io->readBytes($this->header()->lenPayload());
-            }
-            if ($this->_root()->initialFrame()->header()->opcode() == \Websocket\Opcode::TEXT) {
                 $this->_m_payloadText = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->header()->lenPayload()), "UTF-8");
             }
         }
@@ -151,5 +151,11 @@ namespace Websocket {
         const RESERVED_CONTROL_D = 13;
         const RESERVED_CONTROL_E = 14;
         const RESERVED_CONTROL_F = 15;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 7 => true, 8 => true, 9 => true, 10 => true, 11 => true, 12 => true, 13 => true, 14 => true, 15 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

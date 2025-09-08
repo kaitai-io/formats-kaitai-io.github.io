@@ -3,12 +3,15 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class websocket_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -20,9 +23,9 @@
 class websocket_t : public kaitai::kstruct {
 
 public:
+    class dataframe_t;
     class frame_header_t;
     class initial_frame_t;
-    class dataframe_t;
 
     enum opcode_t {
         OPCODE_CONTINUATION = 0,
@@ -42,6 +45,13 @@ public:
         OPCODE_RESERVED_CONTROL_E = 14,
         OPCODE_RESERVED_CONTROL_F = 15
     };
+    static bool _is_defined_opcode_t(opcode_t v);
+
+private:
+    static const std::set<opcode_t> _values_opcode_t;
+    static std::set<opcode_t> _build_values_opcode_t();
+
+public:
 
     websocket_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, websocket_t* p__root = 0);
 
@@ -51,6 +61,46 @@ private:
 
 public:
     ~websocket_t();
+
+    class dataframe_t : public kaitai::kstruct {
+
+    public:
+
+        dataframe_t(kaitai::kstream* p__io, websocket_t* p__parent = 0, websocket_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~dataframe_t();
+
+    private:
+        frame_header_t* m_header;
+        std::string m_payload_bytes;
+        bool n_payload_bytes;
+
+    public:
+        bool _is_null_payload_bytes() { payload_bytes(); return n_payload_bytes; };
+
+    private:
+        std::string m_payload_text;
+        bool n_payload_text;
+
+    public:
+        bool _is_null_payload_text() { payload_text(); return n_payload_text; };
+
+    private:
+        websocket_t* m__root;
+        websocket_t* m__parent;
+
+    public:
+        frame_header_t* header() const { return m_header; }
+        std::string payload_bytes() const { return m_payload_bytes; }
+        std::string payload_text() const { return m_payload_text; }
+        websocket_t* _root() const { return m__root; }
+        websocket_t* _parent() const { return m__parent; }
+    };
 
     class frame_header_t : public kaitai::kstruct {
 
@@ -127,46 +177,6 @@ public:
 
     public:
         ~initial_frame_t();
-
-    private:
-        frame_header_t* m_header;
-        std::string m_payload_bytes;
-        bool n_payload_bytes;
-
-    public:
-        bool _is_null_payload_bytes() { payload_bytes(); return n_payload_bytes; };
-
-    private:
-        std::string m_payload_text;
-        bool n_payload_text;
-
-    public:
-        bool _is_null_payload_text() { payload_text(); return n_payload_text; };
-
-    private:
-        websocket_t* m__root;
-        websocket_t* m__parent;
-
-    public:
-        frame_header_t* header() const { return m_header; }
-        std::string payload_bytes() const { return m_payload_bytes; }
-        std::string payload_text() const { return m_payload_text; }
-        websocket_t* _root() const { return m__root; }
-        websocket_t* _parent() const { return m__parent; }
-    };
-
-    class dataframe_t : public kaitai::kstruct {
-
-    public:
-
-        dataframe_t(kaitai::kstream* p__io, websocket_t* p__parent = 0, websocket_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~dataframe_t();
 
     private:
         frame_header_t* m_header;

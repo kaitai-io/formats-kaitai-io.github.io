@@ -28,12 +28,6 @@ type
     ia5string = 22
     sequence_30 = 48
     set = 49
-  Asn1Der_BodySequence* = ref object of KaitaiStruct
-    `entries`*: seq[Asn1Der]
-    `parent`*: Asn1Der
-  Asn1Der_BodyUtf8string* = ref object of KaitaiStruct
-    `str`*: string
-    `parent`*: Asn1Der
   Asn1Der_BodyObjectId* = ref object of KaitaiStruct
     `firstAndSecond`*: uint8
     `rest`*: seq[byte]
@@ -42,6 +36,15 @@ type
     `firstInstFlag`: bool
     `secondInst`: int
     `secondInstFlag`: bool
+  Asn1Der_BodyPrintableString* = ref object of KaitaiStruct
+    `str`*: string
+    `parent`*: Asn1Der
+  Asn1Der_BodySequence* = ref object of KaitaiStruct
+    `entries`*: seq[Asn1Der]
+    `parent`*: Asn1Der
+  Asn1Der_BodyUtf8string* = ref object of KaitaiStruct
+    `str`*: string
+    `parent`*: Asn1Der
   Asn1Der_LenEncoded* = ref object of KaitaiStruct
     `b1`*: uint8
     `int2`*: uint16
@@ -49,16 +52,13 @@ type
     `parent`*: Asn1Der
     `resultInst`: uint16
     `resultInstFlag`: bool
-  Asn1Der_BodyPrintableString* = ref object of KaitaiStruct
-    `str`*: string
-    `parent`*: Asn1Der
 
 proc read*(_: typedesc[Asn1Der], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Asn1Der
+proc read*(_: typedesc[Asn1Der_BodyObjectId], io: KaitaiStream, root: KaitaiStruct, parent: Asn1Der): Asn1Der_BodyObjectId
+proc read*(_: typedesc[Asn1Der_BodyPrintableString], io: KaitaiStream, root: KaitaiStruct, parent: Asn1Der): Asn1Der_BodyPrintableString
 proc read*(_: typedesc[Asn1Der_BodySequence], io: KaitaiStream, root: KaitaiStruct, parent: Asn1Der): Asn1Der_BodySequence
 proc read*(_: typedesc[Asn1Der_BodyUtf8string], io: KaitaiStream, root: KaitaiStruct, parent: Asn1Der): Asn1Der_BodyUtf8string
-proc read*(_: typedesc[Asn1Der_BodyObjectId], io: KaitaiStream, root: KaitaiStruct, parent: Asn1Der): Asn1Der_BodyObjectId
 proc read*(_: typedesc[Asn1Der_LenEncoded], io: KaitaiStream, root: KaitaiStruct, parent: Asn1Der): Asn1Der_LenEncoded
-proc read*(_: typedesc[Asn1Der_BodyPrintableString], io: KaitaiStream, root: KaitaiStruct, parent: Asn1Der): Asn1Der_BodyPrintableString
 
 proc first*(this: Asn1Der_BodyObjectId): int
 proc second*(this: Asn1Der_BodyObjectId): int
@@ -106,7 +106,13 @@ proc read*(_: typedesc[Asn1Der], io: KaitaiStream, root: KaitaiStruct, parent: K
   this.len = lenExpr
   block:
     let on = this.typeTag
-    if on == asn1_der.printable_string:
+    if on == asn1_der.object_id:
+      let rawBodyExpr = this.io.readBytes(int(this.len.result))
+      this.rawBody = rawBodyExpr
+      let rawBodyIo = newKaitaiStream(rawBodyExpr)
+      let bodyExpr = Asn1Der_BodyObjectId.read(rawBodyIo, this.root, this)
+      this.body = bodyExpr
+    elif on == asn1_der.printable_string:
       let rawBodyExpr = this.io.readBytes(int(this.len.result))
       this.rawBody = rawBodyExpr
       let rawBodyIo = newKaitaiStream(rawBodyExpr)
@@ -118,13 +124,13 @@ proc read*(_: typedesc[Asn1Der], io: KaitaiStream, root: KaitaiStruct, parent: K
       let rawBodyIo = newKaitaiStream(rawBodyExpr)
       let bodyExpr = Asn1Der_BodySequence.read(rawBodyIo, this.root, this)
       this.body = bodyExpr
-    elif on == asn1_der.set:
+    elif on == asn1_der.sequence_30:
       let rawBodyExpr = this.io.readBytes(int(this.len.result))
       this.rawBody = rawBodyExpr
       let rawBodyIo = newKaitaiStream(rawBodyExpr)
       let bodyExpr = Asn1Der_BodySequence.read(rawBodyIo, this.root, this)
       this.body = bodyExpr
-    elif on == asn1_der.sequence_30:
+    elif on == asn1_der.set:
       let rawBodyExpr = this.io.readBytes(int(this.len.result))
       this.rawBody = rawBodyExpr
       let rawBodyIo = newKaitaiStream(rawBodyExpr)
@@ -136,18 +142,62 @@ proc read*(_: typedesc[Asn1Der], io: KaitaiStream, root: KaitaiStruct, parent: K
       let rawBodyIo = newKaitaiStream(rawBodyExpr)
       let bodyExpr = Asn1Der_BodyUtf8string.read(rawBodyIo, this.root, this)
       this.body = bodyExpr
-    elif on == asn1_der.object_id:
-      let rawBodyExpr = this.io.readBytes(int(this.len.result))
-      this.rawBody = rawBodyExpr
-      let rawBodyIo = newKaitaiStream(rawBodyExpr)
-      let bodyExpr = Asn1Der_BodyObjectId.read(rawBodyIo, this.root, this)
-      this.body = bodyExpr
     else:
       let bodyExpr = this.io.readBytes(int(this.len.result))
       this.body = bodyExpr
 
 proc fromFile*(_: typedesc[Asn1Der], filename: string): Asn1Der =
   Asn1Der.read(newKaitaiFileStream(filename), nil, nil)
+
+
+##[
+@see <a href="https://learn.microsoft.com/en-us/windows/win32/seccertenroll/about-object-identifier">Source</a>
+]##
+proc read*(_: typedesc[Asn1Der_BodyObjectId], io: KaitaiStream, root: KaitaiStruct, parent: Asn1Der): Asn1Der_BodyObjectId =
+  template this: untyped = result
+  this = new(Asn1Der_BodyObjectId)
+  let root = if root == nil: cast[Asn1Der](this) else: cast[Asn1Der](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let firstAndSecondExpr = this.io.readU1()
+  this.firstAndSecond = firstAndSecondExpr
+  let restExpr = this.io.readBytesFull()
+  this.rest = restExpr
+
+proc first(this: Asn1Der_BodyObjectId): int = 
+  if this.firstInstFlag:
+    return this.firstInst
+  let firstInstExpr = int(this.firstAndSecond div 40)
+  this.firstInst = firstInstExpr
+  this.firstInstFlag = true
+  return this.firstInst
+
+proc second(this: Asn1Der_BodyObjectId): int = 
+  if this.secondInstFlag:
+    return this.secondInst
+  let secondInstExpr = int(this.firstAndSecond %%% 40)
+  this.secondInst = secondInstExpr
+  this.secondInstFlag = true
+  return this.secondInst
+
+proc fromFile*(_: typedesc[Asn1Der_BodyObjectId], filename: string): Asn1Der_BodyObjectId =
+  Asn1Der_BodyObjectId.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Asn1Der_BodyPrintableString], io: KaitaiStream, root: KaitaiStruct, parent: Asn1Der): Asn1Der_BodyPrintableString =
+  template this: untyped = result
+  this = new(Asn1Der_BodyPrintableString)
+  let root = if root == nil: cast[Asn1Der](this) else: cast[Asn1Der](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let strExpr = encode(this.io.readBytesFull(), "ASCII")
+  this.str = strExpr
+
+proc fromFile*(_: typedesc[Asn1Der_BodyPrintableString], filename: string): Asn1Der_BodyPrintableString =
+  Asn1Der_BodyPrintableString.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[Asn1Der_BodySequence], io: KaitaiStream, root: KaitaiStruct, parent: Asn1Der): Asn1Der_BodySequence =
   template this: untyped = result
@@ -181,42 +231,6 @@ proc read*(_: typedesc[Asn1Der_BodyUtf8string], io: KaitaiStream, root: KaitaiSt
 proc fromFile*(_: typedesc[Asn1Der_BodyUtf8string], filename: string): Asn1Der_BodyUtf8string =
   Asn1Der_BodyUtf8string.read(newKaitaiFileStream(filename), nil, nil)
 
-
-##[
-@see <a href="https://learn.microsoft.com/en-us/windows/win32/seccertenroll/about-object-identifier">Source</a>
-]##
-proc read*(_: typedesc[Asn1Der_BodyObjectId], io: KaitaiStream, root: KaitaiStruct, parent: Asn1Der): Asn1Der_BodyObjectId =
-  template this: untyped = result
-  this = new(Asn1Der_BodyObjectId)
-  let root = if root == nil: cast[Asn1Der](this) else: cast[Asn1Der](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let firstAndSecondExpr = this.io.readU1()
-  this.firstAndSecond = firstAndSecondExpr
-  let restExpr = this.io.readBytesFull()
-  this.rest = restExpr
-
-proc first(this: Asn1Der_BodyObjectId): int = 
-  if this.firstInstFlag:
-    return this.firstInst
-  let firstInstExpr = int((this.firstAndSecond div 40))
-  this.firstInst = firstInstExpr
-  this.firstInstFlag = true
-  return this.firstInst
-
-proc second(this: Asn1Der_BodyObjectId): int = 
-  if this.secondInstFlag:
-    return this.secondInst
-  let secondInstExpr = int((this.firstAndSecond %%% 40))
-  this.secondInst = secondInstExpr
-  this.secondInstFlag = true
-  return this.secondInst
-
-proc fromFile*(_: typedesc[Asn1Der_BodyObjectId], filename: string): Asn1Der_BodyObjectId =
-  Asn1Der_BodyObjectId.read(newKaitaiFileStream(filename), nil, nil)
-
 proc read*(_: typedesc[Asn1Der_LenEncoded], io: KaitaiStream, root: KaitaiStruct, parent: Asn1Der): Asn1Der_LenEncoded =
   template this: untyped = result
   this = new(Asn1Der_LenEncoded)
@@ -244,18 +258,4 @@ proc result(this: Asn1Der_LenEncoded): uint16 =
 
 proc fromFile*(_: typedesc[Asn1Der_LenEncoded], filename: string): Asn1Der_LenEncoded =
   Asn1Der_LenEncoded.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Asn1Der_BodyPrintableString], io: KaitaiStream, root: KaitaiStruct, parent: Asn1Der): Asn1Der_BodyPrintableString =
-  template this: untyped = result
-  this = new(Asn1Der_BodyPrintableString)
-  let root = if root == nil: cast[Asn1Der](this) else: cast[Asn1Der](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let strExpr = encode(this.io.readBytesFull(), "ASCII")
-  this.str = strExpr
-
-proc fromFile*(_: typedesc[Asn1Der_BodyPrintableString], filename: string): Asn1Der_BodyPrintableString =
-  Asn1Der_BodyPrintableString.read(newKaitaiFileStream(filename), nil, nil)
 

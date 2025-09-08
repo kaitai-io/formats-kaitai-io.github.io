@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Encode;
 
 ########################################################################
@@ -25,7 +25,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -51,10 +51,208 @@ sub tail {
     my ($self) = @_;
     return $self->{tail} if ($self->{tail});
     my $_pos = $self->{_io}->pos();
-    $self->{_io}->seek(($self->_io()->size() - 64));
+    $self->{_io}->seek($self->_io()->size() - 64);
     $self->{tail} = BroadcomTrx::Tail->new($self->{_io}, $self, $self->{_root});
     $self->{_io}->seek($_pos);
     return $self->{tail};
+}
+
+########################################################################
+package BroadcomTrx::Header;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{magic} = $self->{_io}->read_bytes(4);
+    $self->{len} = $self->{_io}->read_u4le();
+    $self->{crc32} = $self->{_io}->read_u4le();
+    $self->{version} = $self->{_io}->read_u2le();
+    $self->{flags} = BroadcomTrx::Header::Flags->new($self->{_io}, $self, $self->{_root});
+    $self->{partitions} = [];
+    {
+        my $_it;
+        do {
+            $_it = BroadcomTrx::Header::Partition->new($self->{_io}, $self, $self->{_root});
+            push @{$self->{partitions}}, $_it;
+        } until ( (($i >= 4) || (!($_it->is_present()))) );
+    }
+}
+
+sub magic {
+    my ($self) = @_;
+    return $self->{magic};
+}
+
+sub len {
+    my ($self) = @_;
+    return $self->{len};
+}
+
+sub crc32 {
+    my ($self) = @_;
+    return $self->{crc32};
+}
+
+sub version {
+    my ($self) = @_;
+    return $self->{version};
+}
+
+sub flags {
+    my ($self) = @_;
+    return $self->{flags};
+}
+
+sub partitions {
+    my ($self) = @_;
+    return $self->{partitions};
+}
+
+########################################################################
+package BroadcomTrx::Header::Flags;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{flags} = [];
+    my $n_flags = 16;
+    for (my $i = 0; $i < $n_flags; $i++) {
+        push @{$self->{flags}}, $self->{_io}->read_bits_int_le(1);
+    }
+}
+
+sub flags {
+    my ($self) = @_;
+    return $self->{flags};
+}
+
+########################################################################
+package BroadcomTrx::Header::Partition;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{ofs_body} = $self->{_io}->read_u4le();
+}
+
+sub body {
+    my ($self) = @_;
+    return $self->{body} if ($self->{body});
+    if ($self->is_present()) {
+        my $io = $self->_root()->_io();
+        my $_pos = $io->pos();
+        $io->seek($self->ofs_body());
+        $self->{body} = $io->read_bytes($self->len_body());
+        $io->seek($_pos);
+    }
+    return $self->{body};
+}
+
+sub is_last {
+    my ($self) = @_;
+    return $self->{is_last} if ($self->{is_last});
+    if ($self->is_present()) {
+        $self->{is_last} =  (($self->idx() == scalar(@{$self->_parent()->partitions()}) - 1) || (!(@{$self->_parent()->partitions()}[$self->idx() + 1]->is_present()))) ;
+    }
+    return $self->{is_last};
+}
+
+sub is_present {
+    my ($self) = @_;
+    return $self->{is_present} if ($self->{is_present});
+    $self->{is_present} = $self->ofs_body() != 0;
+    return $self->{is_present};
+}
+
+sub len_body {
+    my ($self) = @_;
+    return $self->{len_body} if ($self->{len_body});
+    if ($self->is_present()) {
+        $self->{len_body} = ($self->is_last() ? $self->_root()->_io()->size() - $self->ofs_body() : @{$self->_parent()->partitions()}[$self->idx() + 1]->ofs_body());
+    }
+    return $self->{len_body};
+}
+
+sub ofs_body {
+    my ($self) = @_;
+    return $self->{ofs_body};
+}
+
+sub idx {
+    my ($self) = @_;
+    return $self->{idx};
 }
 
 ########################################################################
@@ -77,7 +275,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -99,62 +297,6 @@ sub major {
 sub minor {
     my ($self) = @_;
     return $self->{minor};
-}
-
-########################################################################
-package BroadcomTrx::Version;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{major} = $self->{_io}->read_u1();
-    $self->{minor} = $self->{_io}->read_u1();
-    $self->{patch} = $self->{_io}->read_u1();
-    $self->{tweak} = $self->{_io}->read_u1();
-}
-
-sub major {
-    my ($self) = @_;
-    return $self->{major};
-}
-
-sub minor {
-    my ($self) = @_;
-    return $self->{minor};
-}
-
-sub patch {
-    my ($self) = @_;
-    return $self->{patch};
-}
-
-sub tweak {
-    my ($self) = @_;
-    return $self->{tweak};
 }
 
 ########################################################################
@@ -177,7 +319,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -188,8 +330,8 @@ sub _read {
     my ($self) = @_;
 
     $self->{version} = BroadcomTrx::Version->new($self->{_io}, $self, $self->{_root});
-    $self->{product_id} = Encode::decode("utf-8", IO::KaitaiStruct::Stream::bytes_terminate($self->{_io}->read_bytes(12), 0, 0));
-    $self->{comp_hw} = ();
+    $self->{product_id} = Encode::decode("UTF-8", IO::KaitaiStruct::Stream::bytes_terminate($self->{_io}->read_bytes(12), 0, 0));
+    $self->{comp_hw} = [];
     my $n_comp_hw = 4;
     for (my $i = 0; $i < $n_comp_hw; $i++) {
         push @{$self->{comp_hw}}, BroadcomTrx::Tail::HwCompInfo->new($self->{_io}, $self, $self->{_root});
@@ -237,7 +379,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -262,7 +404,7 @@ sub max {
 }
 
 ########################################################################
-package BroadcomTrx::Header;
+package BroadcomTrx::Version;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -281,7 +423,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -291,169 +433,30 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic} = $self->{_io}->read_bytes(4);
-    $self->{len} = $self->{_io}->read_u4le();
-    $self->{crc32} = $self->{_io}->read_u4le();
-    $self->{version} = $self->{_io}->read_u2le();
-    $self->{flags} = BroadcomTrx::Header::Flags->new($self->{_io}, $self, $self->{_root});
-    $self->{partitions} = ();
-    do {
-        $_ = BroadcomTrx::Header::Partition->new($self->{_io}, $self, $self->{_root});
-        push @{$self->{partitions}}, $_;
-    } until ( (($i >= 4) || (!($_->is_present()))) );
+    $self->{major} = $self->{_io}->read_u1();
+    $self->{minor} = $self->{_io}->read_u1();
+    $self->{patch} = $self->{_io}->read_u1();
+    $self->{tweak} = $self->{_io}->read_u1();
 }
 
-sub magic {
+sub major {
     my ($self) = @_;
-    return $self->{magic};
+    return $self->{major};
 }
 
-sub len {
+sub minor {
     my ($self) = @_;
-    return $self->{len};
+    return $self->{minor};
 }
 
-sub crc32 {
+sub patch {
     my ($self) = @_;
-    return $self->{crc32};
+    return $self->{patch};
 }
 
-sub version {
+sub tweak {
     my ($self) = @_;
-    return $self->{version};
-}
-
-sub flags {
-    my ($self) = @_;
-    return $self->{flags};
-}
-
-sub partitions {
-    my ($self) = @_;
-    return $self->{partitions};
-}
-
-########################################################################
-package BroadcomTrx::Header::Partition;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{ofs_body} = $self->{_io}->read_u4le();
-}
-
-sub is_present {
-    my ($self) = @_;
-    return $self->{is_present} if ($self->{is_present});
-    $self->{is_present} = $self->ofs_body() != 0;
-    return $self->{is_present};
-}
-
-sub is_last {
-    my ($self) = @_;
-    return $self->{is_last} if ($self->{is_last});
-    if ($self->is_present()) {
-        $self->{is_last} =  (($self->idx() == (scalar(@{$self->_parent()->partitions()}) - 1)) || (!(@{$self->_parent()->partitions()}[($self->idx() + 1)]->is_present()))) ;
-    }
-    return $self->{is_last};
-}
-
-sub len_body {
-    my ($self) = @_;
-    return $self->{len_body} if ($self->{len_body});
-    if ($self->is_present()) {
-        $self->{len_body} = ($self->is_last() ? ($self->_root()->_io()->size() - $self->ofs_body()) : @{$self->_parent()->partitions()}[($self->idx() + 1)]->ofs_body());
-    }
-    return $self->{len_body};
-}
-
-sub body {
-    my ($self) = @_;
-    return $self->{body} if ($self->{body});
-    if ($self->is_present()) {
-        my $io = $self->_root()->_io();
-        my $_pos = $io->pos();
-        $io->seek($self->ofs_body());
-        $self->{body} = $io->read_bytes($self->len_body());
-        $io->seek($_pos);
-    }
-    return $self->{body};
-}
-
-sub ofs_body {
-    my ($self) = @_;
-    return $self->{ofs_body};
-}
-
-sub idx {
-    my ($self) = @_;
-    return $self->{idx};
-}
-
-########################################################################
-package BroadcomTrx::Header::Flags;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{flags} = ();
-    my $n_flags = 16;
-    for (my $i = 0; $i < $n_flags; $i++) {
-        push @{$self->{flags}}, $self->{_io}->read_bits_int_le(1);
-    }
-}
-
-sub flags {
-    my ($self) = @_;
-    return $self->{flags};
+    return $self->{tweak};
 }
 
 1;

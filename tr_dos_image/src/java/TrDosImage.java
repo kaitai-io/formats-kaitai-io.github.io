@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -78,6 +79,319 @@ public class TrDosImage extends KaitaiStruct {
             } while (!(_it.isTerminator()));
         }
     }
+
+    public void _fetchInstances() {
+        for (int i = 0; i < this.files.size(); i++) {
+            this.files.get(((Number) (i)).intValue())._fetchInstances();
+        }
+        volumeInfo();
+        if (this.volumeInfo != null) {
+            this.volumeInfo._fetchInstances();
+        }
+    }
+    public static class File extends KaitaiStruct {
+        public static File fromFile(String fileName) throws IOException {
+            return new File(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public File(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public File(KaitaiStream _io, TrDosImage _parent) {
+            this(_io, _parent, null);
+        }
+
+        public File(KaitaiStream _io, TrDosImage _parent, TrDosImage _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            KaitaiStream _io_name = this._io.substream(8);
+            this.name = new Filename(_io_name, this, _root);
+            this.extension = this._io.readU1();
+            switch (extension()) {
+            case 35: {
+                this.positionAndLength = new PositionAndLengthPrint(this._io, this, _root);
+                break;
+            }
+            case 66: {
+                this.positionAndLength = new PositionAndLengthBasic(this._io, this, _root);
+                break;
+            }
+            case 67: {
+                this.positionAndLength = new PositionAndLengthCode(this._io, this, _root);
+                break;
+            }
+            default: {
+                this.positionAndLength = new PositionAndLengthGeneric(this._io, this, _root);
+                break;
+            }
+            }
+            this.lengthSectors = this._io.readU1();
+            this.startingSector = this._io.readU1();
+            this.startingTrack = this._io.readU1();
+        }
+
+        public void _fetchInstances() {
+            this.name._fetchInstances();
+            switch (extension()) {
+            case 35: {
+                ((PositionAndLengthPrint) (this.positionAndLength))._fetchInstances();
+                break;
+            }
+            case 66: {
+                ((PositionAndLengthBasic) (this.positionAndLength))._fetchInstances();
+                break;
+            }
+            case 67: {
+                ((PositionAndLengthCode) (this.positionAndLength))._fetchInstances();
+                break;
+            }
+            default: {
+                ((PositionAndLengthGeneric) (this.positionAndLength))._fetchInstances();
+                break;
+            }
+            }
+            contents();
+            if (this.contents != null) {
+            }
+        }
+        private byte[] contents;
+        public byte[] contents() {
+            if (this.contents != null)
+                return this.contents;
+            long _pos = this._io.pos();
+            this._io.seek((startingTrack() * 256) * 16 + startingSector() * 256);
+            this.contents = this._io.readBytes(lengthSectors() * 256);
+            this._io.seek(_pos);
+            return this.contents;
+        }
+        private Boolean isDeleted;
+        public Boolean isDeleted() {
+            if (this.isDeleted != null)
+                return this.isDeleted;
+            this.isDeleted = name().firstByte() == 1;
+            return this.isDeleted;
+        }
+        private Boolean isTerminator;
+        public Boolean isTerminator() {
+            if (this.isTerminator != null)
+                return this.isTerminator;
+            this.isTerminator = name().firstByte() == 0;
+            return this.isTerminator;
+        }
+        private Filename name;
+        private int extension;
+        private KaitaiStruct positionAndLength;
+        private int lengthSectors;
+        private int startingSector;
+        private int startingTrack;
+        private TrDosImage _root;
+        private TrDosImage _parent;
+        public Filename name() { return name; }
+        public int extension() { return extension; }
+        public KaitaiStruct positionAndLength() { return positionAndLength; }
+        public int lengthSectors() { return lengthSectors; }
+        public int startingSector() { return startingSector; }
+        public int startingTrack() { return startingTrack; }
+        public TrDosImage _root() { return _root; }
+        public TrDosImage _parent() { return _parent; }
+    }
+    public static class Filename extends KaitaiStruct {
+        public static Filename fromFile(String fileName) throws IOException {
+            return new Filename(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Filename(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Filename(KaitaiStream _io, TrDosImage.File _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Filename(KaitaiStream _io, TrDosImage.File _parent, TrDosImage _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.name = this._io.readBytes(8);
+        }
+
+        public void _fetchInstances() {
+            firstByte();
+            if (this.firstByte != null) {
+            }
+        }
+        private Integer firstByte;
+        public Integer firstByte() {
+            if (this.firstByte != null)
+                return this.firstByte;
+            long _pos = this._io.pos();
+            this._io.seek(0);
+            this.firstByte = this._io.readU1();
+            this._io.seek(_pos);
+            return this.firstByte;
+        }
+        private byte[] name;
+        private TrDosImage _root;
+        private TrDosImage.File _parent;
+        public byte[] name() { return name; }
+        public TrDosImage _root() { return _root; }
+        public TrDosImage.File _parent() { return _parent; }
+    }
+    public static class PositionAndLengthBasic extends KaitaiStruct {
+        public static PositionAndLengthBasic fromFile(String fileName) throws IOException {
+            return new PositionAndLengthBasic(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public PositionAndLengthBasic(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public PositionAndLengthBasic(KaitaiStream _io, TrDosImage.File _parent) {
+            this(_io, _parent, null);
+        }
+
+        public PositionAndLengthBasic(KaitaiStream _io, TrDosImage.File _parent, TrDosImage _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.programAndDataLength = this._io.readU2le();
+            this.programLength = this._io.readU2le();
+        }
+
+        public void _fetchInstances() {
+        }
+        private int programAndDataLength;
+        private int programLength;
+        private TrDosImage _root;
+        private TrDosImage.File _parent;
+        public int programAndDataLength() { return programAndDataLength; }
+        public int programLength() { return programLength; }
+        public TrDosImage _root() { return _root; }
+        public TrDosImage.File _parent() { return _parent; }
+    }
+    public static class PositionAndLengthCode extends KaitaiStruct {
+        public static PositionAndLengthCode fromFile(String fileName) throws IOException {
+            return new PositionAndLengthCode(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public PositionAndLengthCode(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public PositionAndLengthCode(KaitaiStream _io, TrDosImage.File _parent) {
+            this(_io, _parent, null);
+        }
+
+        public PositionAndLengthCode(KaitaiStream _io, TrDosImage.File _parent, TrDosImage _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.startAddress = this._io.readU2le();
+            this.length = this._io.readU2le();
+        }
+
+        public void _fetchInstances() {
+        }
+        private int startAddress;
+        private int length;
+        private TrDosImage _root;
+        private TrDosImage.File _parent;
+
+        /**
+         * Default memory address to load this byte array into
+         */
+        public int startAddress() { return startAddress; }
+        public int length() { return length; }
+        public TrDosImage _root() { return _root; }
+        public TrDosImage.File _parent() { return _parent; }
+    }
+    public static class PositionAndLengthGeneric extends KaitaiStruct {
+        public static PositionAndLengthGeneric fromFile(String fileName) throws IOException {
+            return new PositionAndLengthGeneric(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public PositionAndLengthGeneric(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public PositionAndLengthGeneric(KaitaiStream _io, TrDosImage.File _parent) {
+            this(_io, _parent, null);
+        }
+
+        public PositionAndLengthGeneric(KaitaiStream _io, TrDosImage.File _parent, TrDosImage _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.reserved = this._io.readU2le();
+            this.length = this._io.readU2le();
+        }
+
+        public void _fetchInstances() {
+        }
+        private int reserved;
+        private int length;
+        private TrDosImage _root;
+        private TrDosImage.File _parent;
+        public int reserved() { return reserved; }
+        public int length() { return length; }
+        public TrDosImage _root() { return _root; }
+        public TrDosImage.File _parent() { return _parent; }
+    }
+    public static class PositionAndLengthPrint extends KaitaiStruct {
+        public static PositionAndLengthPrint fromFile(String fileName) throws IOException {
+            return new PositionAndLengthPrint(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public PositionAndLengthPrint(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public PositionAndLengthPrint(KaitaiStream _io, TrDosImage.File _parent) {
+            this(_io, _parent, null);
+        }
+
+        public PositionAndLengthPrint(KaitaiStream _io, TrDosImage.File _parent, TrDosImage _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.extentNo = this._io.readU1();
+            this.reserved = this._io.readU1();
+            this.length = this._io.readU2le();
+        }
+
+        public void _fetchInstances() {
+        }
+        private int extentNo;
+        private int reserved;
+        private int length;
+        private TrDosImage _root;
+        private TrDosImage.File _parent;
+        public int extentNo() { return extentNo; }
+        public int reserved() { return reserved; }
+        public int length() { return length; }
+        public TrDosImage _root() { return _root; }
+        public TrDosImage.File _parent() { return _parent; }
+    }
     public static class VolumeInfo extends KaitaiStruct {
         public static VolumeInfo fromFile(String fileName) throws IOException {
             return new VolumeInfo(new ByteBufferKaitaiStream(fileName));
@@ -99,8 +413,8 @@ public class TrDosImage extends KaitaiStruct {
         }
         private void _read() {
             this.catalogEnd = this._io.readBytes(1);
-            if (!(Arrays.equals(catalogEnd(), new byte[] { 0 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0 }, catalogEnd(), _io(), "/types/volume_info/seq/0");
+            if (!(Arrays.equals(this.catalogEnd, new byte[] { 0 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0 }, this.catalogEnd, this._io, "/types/volume_info/seq/0");
             }
             this.unused = this._io.readBytes(224);
             this.firstFreeSectorSector = this._io.readU1();
@@ -109,8 +423,8 @@ public class TrDosImage extends KaitaiStruct {
             this.numFiles = this._io.readU1();
             this.numFreeSectors = this._io.readU2le();
             this.trDosId = this._io.readBytes(1);
-            if (!(Arrays.equals(trDosId(), new byte[] { 16 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 16 }, trDosId(), _io(), "/types/volume_info/seq/7");
+            if (!(Arrays.equals(this.trDosId, new byte[] { 16 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 16 }, this.trDosId, this._io, "/types/volume_info/seq/7");
             }
             this.unused2 = this._io.readBytes(2);
             this.password = this._io.readBytes(9);
@@ -119,21 +433,22 @@ public class TrDosImage extends KaitaiStruct {
             this.label = this._io.readBytes(8);
             this.unused4 = this._io.readBytes(3);
         }
-        private Byte numTracks;
-        public Byte numTracks() {
-            if (this.numTracks != null)
-                return this.numTracks;
-            byte _tmp = (byte) (((diskType().id() & 1) != 0 ? 40 : 80));
-            this.numTracks = _tmp;
-            return this.numTracks;
+
+        public void _fetchInstances() {
         }
         private Byte numSides;
         public Byte numSides() {
             if (this.numSides != null)
                 return this.numSides;
-            byte _tmp = (byte) (((diskType().id() & 8) != 0 ? 1 : 2));
-            this.numSides = _tmp;
+            this.numSides = ((Number) (((diskType().id() & 8) != 0 ? 1 : 2))).byteValue();
             return this.numSides;
+        }
+        private Byte numTracks;
+        public Byte numTracks() {
+            if (this.numTracks != null)
+                return this.numTracks;
+            this.numTracks = ((Number) (((diskType().id() & 1) != 0 ? 40 : 80))).byteValue();
+            return this.numTracks;
         }
         private byte[] catalogEnd;
         private byte[] unused;
@@ -179,271 +494,6 @@ public class TrDosImage extends KaitaiStruct {
         public TrDosImage _root() { return _root; }
         public TrDosImage _parent() { return _parent; }
     }
-    public static class PositionAndLengthCode extends KaitaiStruct {
-        public static PositionAndLengthCode fromFile(String fileName) throws IOException {
-            return new PositionAndLengthCode(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public PositionAndLengthCode(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public PositionAndLengthCode(KaitaiStream _io, TrDosImage.File _parent) {
-            this(_io, _parent, null);
-        }
-
-        public PositionAndLengthCode(KaitaiStream _io, TrDosImage.File _parent, TrDosImage _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.startAddress = this._io.readU2le();
-            this.length = this._io.readU2le();
-        }
-        private int startAddress;
-        private int length;
-        private TrDosImage _root;
-        private TrDosImage.File _parent;
-
-        /**
-         * Default memory address to load this byte array into
-         */
-        public int startAddress() { return startAddress; }
-        public int length() { return length; }
-        public TrDosImage _root() { return _root; }
-        public TrDosImage.File _parent() { return _parent; }
-    }
-    public static class Filename extends KaitaiStruct {
-        public static Filename fromFile(String fileName) throws IOException {
-            return new Filename(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Filename(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Filename(KaitaiStream _io, TrDosImage.File _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Filename(KaitaiStream _io, TrDosImage.File _parent, TrDosImage _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.name = this._io.readBytes(8);
-        }
-        private Integer firstByte;
-        public Integer firstByte() {
-            if (this.firstByte != null)
-                return this.firstByte;
-            long _pos = this._io.pos();
-            this._io.seek(0);
-            this.firstByte = this._io.readU1();
-            this._io.seek(_pos);
-            return this.firstByte;
-        }
-        private byte[] name;
-        private TrDosImage _root;
-        private TrDosImage.File _parent;
-        public byte[] name() { return name; }
-        public TrDosImage _root() { return _root; }
-        public TrDosImage.File _parent() { return _parent; }
-    }
-    public static class PositionAndLengthPrint extends KaitaiStruct {
-        public static PositionAndLengthPrint fromFile(String fileName) throws IOException {
-            return new PositionAndLengthPrint(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public PositionAndLengthPrint(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public PositionAndLengthPrint(KaitaiStream _io, TrDosImage.File _parent) {
-            this(_io, _parent, null);
-        }
-
-        public PositionAndLengthPrint(KaitaiStream _io, TrDosImage.File _parent, TrDosImage _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.extentNo = this._io.readU1();
-            this.reserved = this._io.readU1();
-            this.length = this._io.readU2le();
-        }
-        private int extentNo;
-        private int reserved;
-        private int length;
-        private TrDosImage _root;
-        private TrDosImage.File _parent;
-        public int extentNo() { return extentNo; }
-        public int reserved() { return reserved; }
-        public int length() { return length; }
-        public TrDosImage _root() { return _root; }
-        public TrDosImage.File _parent() { return _parent; }
-    }
-    public static class PositionAndLengthGeneric extends KaitaiStruct {
-        public static PositionAndLengthGeneric fromFile(String fileName) throws IOException {
-            return new PositionAndLengthGeneric(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public PositionAndLengthGeneric(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public PositionAndLengthGeneric(KaitaiStream _io, TrDosImage.File _parent) {
-            this(_io, _parent, null);
-        }
-
-        public PositionAndLengthGeneric(KaitaiStream _io, TrDosImage.File _parent, TrDosImage _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.reserved = this._io.readU2le();
-            this.length = this._io.readU2le();
-        }
-        private int reserved;
-        private int length;
-        private TrDosImage _root;
-        private TrDosImage.File _parent;
-        public int reserved() { return reserved; }
-        public int length() { return length; }
-        public TrDosImage _root() { return _root; }
-        public TrDosImage.File _parent() { return _parent; }
-    }
-    public static class PositionAndLengthBasic extends KaitaiStruct {
-        public static PositionAndLengthBasic fromFile(String fileName) throws IOException {
-            return new PositionAndLengthBasic(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public PositionAndLengthBasic(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public PositionAndLengthBasic(KaitaiStream _io, TrDosImage.File _parent) {
-            this(_io, _parent, null);
-        }
-
-        public PositionAndLengthBasic(KaitaiStream _io, TrDosImage.File _parent, TrDosImage _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.programAndDataLength = this._io.readU2le();
-            this.programLength = this._io.readU2le();
-        }
-        private int programAndDataLength;
-        private int programLength;
-        private TrDosImage _root;
-        private TrDosImage.File _parent;
-        public int programAndDataLength() { return programAndDataLength; }
-        public int programLength() { return programLength; }
-        public TrDosImage _root() { return _root; }
-        public TrDosImage.File _parent() { return _parent; }
-    }
-    public static class File extends KaitaiStruct {
-        public static File fromFile(String fileName) throws IOException {
-            return new File(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public File(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public File(KaitaiStream _io, TrDosImage _parent) {
-            this(_io, _parent, null);
-        }
-
-        public File(KaitaiStream _io, TrDosImage _parent, TrDosImage _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this._raw_name = this._io.readBytes(8);
-            KaitaiStream _io__raw_name = new ByteBufferKaitaiStream(_raw_name);
-            this.name = new Filename(_io__raw_name, this, _root);
-            this.extension = this._io.readU1();
-            switch (extension()) {
-            case 66: {
-                this.positionAndLength = new PositionAndLengthBasic(this._io, this, _root);
-                break;
-            }
-            case 67: {
-                this.positionAndLength = new PositionAndLengthCode(this._io, this, _root);
-                break;
-            }
-            case 35: {
-                this.positionAndLength = new PositionAndLengthPrint(this._io, this, _root);
-                break;
-            }
-            default: {
-                this.positionAndLength = new PositionAndLengthGeneric(this._io, this, _root);
-                break;
-            }
-            }
-            this.lengthSectors = this._io.readU1();
-            this.startingSector = this._io.readU1();
-            this.startingTrack = this._io.readU1();
-        }
-        private Boolean isDeleted;
-        public Boolean isDeleted() {
-            if (this.isDeleted != null)
-                return this.isDeleted;
-            boolean _tmp = (boolean) (name().firstByte() == 1);
-            this.isDeleted = _tmp;
-            return this.isDeleted;
-        }
-        private Boolean isTerminator;
-        public Boolean isTerminator() {
-            if (this.isTerminator != null)
-                return this.isTerminator;
-            boolean _tmp = (boolean) (name().firstByte() == 0);
-            this.isTerminator = _tmp;
-            return this.isTerminator;
-        }
-        private byte[] contents;
-        public byte[] contents() {
-            if (this.contents != null)
-                return this.contents;
-            long _pos = this._io.pos();
-            this._io.seek((((startingTrack() * 256) * 16) + (startingSector() * 256)));
-            this.contents = this._io.readBytes((lengthSectors() * 256));
-            this._io.seek(_pos);
-            return this.contents;
-        }
-        private Filename name;
-        private int extension;
-        private KaitaiStruct positionAndLength;
-        private int lengthSectors;
-        private int startingSector;
-        private int startingTrack;
-        private TrDosImage _root;
-        private TrDosImage _parent;
-        private byte[] _raw_name;
-        public Filename name() { return name; }
-        public int extension() { return extension; }
-        public KaitaiStruct positionAndLength() { return positionAndLength; }
-        public int lengthSectors() { return lengthSectors; }
-        public int startingSector() { return startingSector; }
-        public int startingTrack() { return startingTrack; }
-        public TrDosImage _root() { return _root; }
-        public TrDosImage _parent() { return _parent; }
-        public byte[] _raw_name() { return _raw_name; }
-    }
     private VolumeInfo volumeInfo;
     public VolumeInfo volumeInfo() {
         if (this.volumeInfo != null)
@@ -454,10 +504,10 @@ public class TrDosImage extends KaitaiStruct {
         this._io.seek(_pos);
         return this.volumeInfo;
     }
-    private ArrayList<File> files;
+    private List<File> files;
     private TrDosImage _root;
     private KaitaiStruct _parent;
-    public ArrayList<File> files() { return files; }
+    public List<File> files() { return files; }
     public TrDosImage _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

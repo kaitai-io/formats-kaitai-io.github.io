@@ -28,6 +28,11 @@ const (
 	Swf_Compressions__None Swf_Compressions = 70
 	Swf_Compressions__Lzma Swf_Compressions = 90
 )
+var values_Swf_Compressions = map[Swf_Compressions]struct{}{67: {}, 70: {}, 90: {}}
+func (v Swf_Compressions) isDefined() bool {
+	_, ok := values_Swf_Compressions[v]
+	return ok
+}
 
 type Swf_TagType int
 const (
@@ -49,6 +54,11 @@ const (
 	Swf_TagType__DoAbc Swf_TagType = 82
 	Swf_TagType__DefineSceneAndFrameLabelData Swf_TagType = 86
 )
+var values_Swf_TagType = map[Swf_TagType]struct{}{0: {}, 4: {}, 5: {}, 9: {}, 14: {}, 26: {}, 28: {}, 43: {}, 56: {}, 65: {}, 69: {}, 70: {}, 76: {}, 77: {}, 78: {}, 82: {}, 86: {}}
+func (v Swf_TagType) isDefined() bool {
+	_, ok := values_Swf_TagType[v]
+	return ok
+}
 type Swf struct {
 	Compression Swf_Compressions
 	Signature []byte
@@ -58,7 +68,7 @@ type Swf struct {
 	ZlibBody *Swf_SwfBody
 	_io *kaitai.Stream
 	_root *Swf
-	_parent interface{}
+	_parent kaitai.Struct
 	_raw_PlainBody []byte
 	_raw_ZlibBody []byte
 	_raw__raw_ZlibBody []byte
@@ -68,7 +78,11 @@ func NewSwf() *Swf {
 	}
 }
 
-func (this *Swf) Read(io *kaitai.Stream, parent interface{}, root *Swf) (err error) {
+func (this Swf) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Swf) Read(io *kaitai.Stream, parent kaitai.Struct, root *Swf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -134,41 +148,103 @@ func (this *Swf) Read(io *kaitai.Stream, parent interface{}, root *Swf) (err err
 	}
 	return err
 }
-type Swf_Rgb struct {
-	R uint8
-	G uint8
-	B uint8
+
+type Swf_DefineSoundBody_Bps int
+const (
+	Swf_DefineSoundBody_Bps__Sound8Bit Swf_DefineSoundBody_Bps = 0
+	Swf_DefineSoundBody_Bps__Sound16Bit Swf_DefineSoundBody_Bps = 1
+)
+var values_Swf_DefineSoundBody_Bps = map[Swf_DefineSoundBody_Bps]struct{}{0: {}, 1: {}}
+func (v Swf_DefineSoundBody_Bps) isDefined() bool {
+	_, ok := values_Swf_DefineSoundBody_Bps[v]
+	return ok
+}
+
+type Swf_DefineSoundBody_Channels int
+const (
+	Swf_DefineSoundBody_Channels__Mono Swf_DefineSoundBody_Channels = 0
+	Swf_DefineSoundBody_Channels__Stereo Swf_DefineSoundBody_Channels = 1
+)
+var values_Swf_DefineSoundBody_Channels = map[Swf_DefineSoundBody_Channels]struct{}{0: {}, 1: {}}
+func (v Swf_DefineSoundBody_Channels) isDefined() bool {
+	_, ok := values_Swf_DefineSoundBody_Channels[v]
+	return ok
+}
+
+type Swf_DefineSoundBody_SamplingRates int
+const (
+	Swf_DefineSoundBody_SamplingRates__Rate55Khz Swf_DefineSoundBody_SamplingRates = 0
+	Swf_DefineSoundBody_SamplingRates__Rate11Khz Swf_DefineSoundBody_SamplingRates = 1
+	Swf_DefineSoundBody_SamplingRates__Rate22Khz Swf_DefineSoundBody_SamplingRates = 2
+	Swf_DefineSoundBody_SamplingRates__Rate44Khz Swf_DefineSoundBody_SamplingRates = 3
+)
+var values_Swf_DefineSoundBody_SamplingRates = map[Swf_DefineSoundBody_SamplingRates]struct{}{0: {}, 1: {}, 2: {}, 3: {}}
+func (v Swf_DefineSoundBody_SamplingRates) isDefined() bool {
+	_, ok := values_Swf_DefineSoundBody_SamplingRates[v]
+	return ok
+}
+type Swf_DefineSoundBody struct {
+	Id uint16
+	Format uint64
+	SamplingRate Swf_DefineSoundBody_SamplingRates
+	BitsPerSample Swf_DefineSoundBody_Bps
+	NumChannels Swf_DefineSoundBody_Channels
+	NumSamples uint32
 	_io *kaitai.Stream
 	_root *Swf
 	_parent *Swf_Tag
 }
-func NewSwf_Rgb() *Swf_Rgb {
-	return &Swf_Rgb{
+func NewSwf_DefineSoundBody() *Swf_DefineSoundBody {
+	return &Swf_DefineSoundBody{
 	}
 }
 
-func (this *Swf_Rgb) Read(io *kaitai.Stream, parent *Swf_Tag, root *Swf) (err error) {
+func (this Swf_DefineSoundBody) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Swf_DefineSoundBody) Read(io *kaitai.Stream, parent *Swf_Tag, root *Swf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp10, err := this._io.ReadU1()
+	tmp10, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.R = tmp10
-	tmp11, err := this._io.ReadU1()
+	this.Id = uint16(tmp10)
+	tmp11, err := this._io.ReadBitsIntBe(4)
 	if err != nil {
 		return err
 	}
-	this.G = tmp11
-	tmp12, err := this._io.ReadU1()
+	this.Format = tmp11
+	tmp12, err := this._io.ReadBitsIntBe(2)
 	if err != nil {
 		return err
 	}
-	this.B = tmp12
+	this.SamplingRate = Swf_DefineSoundBody_SamplingRates(tmp12)
+	tmp13, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.BitsPerSample = Swf_DefineSoundBody_Bps(tmp13)
+	tmp14, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.NumChannels = Swf_DefineSoundBody_Channels(tmp14)
+	this._io.AlignToByte()
+	tmp15, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.NumSamples = uint32(tmp15)
 	return err
 }
+
+/**
+ * Sound sampling rate, as per enum. Ignored for Nellymoser and Speex codecs.
+ */
 type Swf_DoAbcBody struct {
 	Flags uint32
 	Name string
@@ -182,89 +258,115 @@ func NewSwf_DoAbcBody() *Swf_DoAbcBody {
 	}
 }
 
+func (this Swf_DoAbcBody) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Swf_DoAbcBody) Read(io *kaitai.Stream, parent *Swf_Tag, root *Swf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp13, err := this._io.ReadU4le()
+	tmp16, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Flags = uint32(tmp13)
-	tmp14, err := this._io.ReadBytesTerm(0, false, true, true)
+	this.Flags = uint32(tmp16)
+	tmp17, err := this._io.ReadBytesTerm(0, false, true, true)
 	if err != nil {
 		return err
 	}
-	this.Name = string(tmp14)
-	tmp15, err := this._io.ReadBytesFull()
+	this.Name = string(tmp17)
+	tmp18, err := this._io.ReadBytesFull()
 	if err != nil {
 		return err
 	}
-	tmp15 = tmp15
-	this.Abcdata = tmp15
+	tmp18 = tmp18
+	this.Abcdata = tmp18
 	return err
 }
-type Swf_SwfBody struct {
-	Rect *Swf_Rect
-	FrameRate uint16
-	FrameCount uint16
-	FileAttributesTag *Swf_Tag
-	Tags []*Swf_Tag
+type Swf_RecordHeader struct {
+	TagCodeAndLength uint16
+	BigLen int32
 	_io *kaitai.Stream
 	_root *Swf
-	_parent *Swf
+	_parent *Swf_Tag
+	_f_len bool
+	len int
+	_f_smallLen bool
+	smallLen int
+	_f_tagType bool
+	tagType Swf_TagType
 }
-func NewSwf_SwfBody() *Swf_SwfBody {
-	return &Swf_SwfBody{
+func NewSwf_RecordHeader() *Swf_RecordHeader {
+	return &Swf_RecordHeader{
 	}
 }
 
-func (this *Swf_SwfBody) Read(io *kaitai.Stream, parent *Swf, root *Swf) (err error) {
+func (this Swf_RecordHeader) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Swf_RecordHeader) Read(io *kaitai.Stream, parent *Swf_Tag, root *Swf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp16 := NewSwf_Rect()
-	err = tmp16.Read(this._io, this, this._root)
+	tmp19, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.Rect = tmp16
-	tmp17, err := this._io.ReadU2le()
+	this.TagCodeAndLength = uint16(tmp19)
+	tmp20, err := this.SmallLen()
 	if err != nil {
 		return err
 	}
-	this.FrameRate = uint16(tmp17)
-	tmp18, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.FrameCount = uint16(tmp18)
-	if (this._root.Version >= 8) {
-		tmp19 := NewSwf_Tag()
-		err = tmp19.Read(this._io, this, this._root)
+	if (tmp20 == 63) {
+		tmp21, err := this._io.ReadS4le()
 		if err != nil {
 			return err
 		}
-		this.FileAttributesTag = tmp19
-	}
-	for i := 1;; i++ {
-		tmp20, err := this._io.EOF()
-		if err != nil {
-			return err
-		}
-		if tmp20 {
-			break
-		}
-		tmp21 := NewSwf_Tag()
-		err = tmp21.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Tags = append(this.Tags, tmp21)
+		this.BigLen = int32(tmp21)
 	}
 	return err
+}
+func (this *Swf_RecordHeader) Len() (v int, err error) {
+	if (this._f_len) {
+		return this.len, nil
+	}
+	this._f_len = true
+	var tmp22 int32;
+	tmp23, err := this.SmallLen()
+	if err != nil {
+		return 0, err
+	}
+	if (tmp23 == 63) {
+		tmp22 = this.BigLen
+	} else {
+		tmp24, err := this.SmallLen()
+		if err != nil {
+			return 0, err
+		}
+		tmp22 = tmp24
+	}
+	this.len = int(tmp22)
+	return this.len, nil
+}
+func (this *Swf_RecordHeader) SmallLen() (v int, err error) {
+	if (this._f_smallLen) {
+		return this.smallLen, nil
+	}
+	this._f_smallLen = true
+	this.smallLen = int(this.TagCodeAndLength & 63)
+	return this.smallLen, nil
+}
+func (this *Swf_RecordHeader) TagType() (v Swf_TagType, err error) {
+	if (this._f_tagType) {
+		return this.tagType, nil
+	}
+	this._f_tagType = true
+	this.tagType = Swf_TagType(Swf_TagType(this.TagCodeAndLength >> 6))
+	return this.tagType, nil
 }
 type Swf_Rect struct {
 	B1 uint8
@@ -282,196 +384,186 @@ func NewSwf_Rect() *Swf_Rect {
 	}
 }
 
+func (this Swf_Rect) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Swf_Rect) Read(io *kaitai.Stream, parent *Swf_SwfBody, root *Swf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp22, err := this._io.ReadU1()
+	tmp25, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.B1 = tmp22
-	tmp23, err := this.NumBytes()
+	this.B1 = tmp25
+	tmp26, err := this.NumBytes()
 	if err != nil {
 		return err
 	}
-	tmp24, err := this._io.ReadBytes(int(tmp23))
+	tmp27, err := this._io.ReadBytes(int(tmp26))
 	if err != nil {
 		return err
 	}
-	tmp24 = tmp24
-	this.Skip = tmp24
+	tmp27 = tmp27
+	this.Skip = tmp27
 	return err
 }
 func (this *Swf_Rect) NumBits() (v int, err error) {
 	if (this._f_numBits) {
 		return this.numBits, nil
 	}
-	this.numBits = int((this.B1 >> 3))
 	this._f_numBits = true
+	this.numBits = int(this.B1 >> 3)
 	return this.numBits, nil
 }
 func (this *Swf_Rect) NumBytes() (v int, err error) {
 	if (this._f_numBytes) {
 		return this.numBytes, nil
 	}
-	tmp25, err := this.NumBits()
+	this._f_numBytes = true
+	tmp28, err := this.NumBits()
 	if err != nil {
 		return 0, err
 	}
-	this.numBytes = int(((((tmp25 * 4) - 3) + 7) / 8))
-	this._f_numBytes = true
+	this.numBytes = int(((tmp28 * 4 - 3) + 7) / 8)
 	return this.numBytes, nil
 }
-type Swf_Tag struct {
-	RecordHeader *Swf_RecordHeader
-	TagBody interface{}
+type Swf_Rgb struct {
+	R uint8
+	G uint8
+	B uint8
 	_io *kaitai.Stream
 	_root *Swf
-	_parent *Swf_SwfBody
-	_raw_TagBody []byte
+	_parent *Swf_Tag
 }
-func NewSwf_Tag() *Swf_Tag {
-	return &Swf_Tag{
+func NewSwf_Rgb() *Swf_Rgb {
+	return &Swf_Rgb{
 	}
 }
 
-func (this *Swf_Tag) Read(io *kaitai.Stream, parent *Swf_SwfBody, root *Swf) (err error) {
+func (this Swf_Rgb) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Swf_Rgb) Read(io *kaitai.Stream, parent *Swf_Tag, root *Swf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp26 := NewSwf_RecordHeader()
-	err = tmp26.Read(this._io, this, this._root)
+	tmp29, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.RecordHeader = tmp26
-	tmp27, err := this.RecordHeader.TagType()
+	this.R = tmp29
+	tmp30, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	switch (tmp27) {
-	case Swf_TagType__DefineSound:
-		tmp28, err := this.RecordHeader.Len()
+	this.G = tmp30
+	tmp31, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.B = tmp31
+	return err
+}
+type Swf_ScriptLimitsBody struct {
+	MaxRecursionDepth uint16
+	ScriptTimeoutSeconds uint16
+	_io *kaitai.Stream
+	_root *Swf
+	_parent *Swf_Tag
+}
+func NewSwf_ScriptLimitsBody() *Swf_ScriptLimitsBody {
+	return &Swf_ScriptLimitsBody{
+	}
+}
+
+func (this Swf_ScriptLimitsBody) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Swf_ScriptLimitsBody) Read(io *kaitai.Stream, parent *Swf_Tag, root *Swf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp32, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.MaxRecursionDepth = uint16(tmp32)
+	tmp33, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.ScriptTimeoutSeconds = uint16(tmp33)
+	return err
+}
+type Swf_SwfBody struct {
+	Rect *Swf_Rect
+	FrameRate uint16
+	FrameCount uint16
+	FileAttributesTag *Swf_Tag
+	Tags []*Swf_Tag
+	_io *kaitai.Stream
+	_root *Swf
+	_parent *Swf
+}
+func NewSwf_SwfBody() *Swf_SwfBody {
+	return &Swf_SwfBody{
+	}
+}
+
+func (this Swf_SwfBody) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Swf_SwfBody) Read(io *kaitai.Stream, parent *Swf, root *Swf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp34 := NewSwf_Rect()
+	err = tmp34.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Rect = tmp34
+	tmp35, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.FrameRate = uint16(tmp35)
+	tmp36, err := this._io.ReadU2le()
+	if err != nil {
+		return err
+	}
+	this.FrameCount = uint16(tmp36)
+	if (this._root.Version >= 8) {
+		tmp37 := NewSwf_Tag()
+		err = tmp37.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		tmp29, err := this._io.ReadBytes(int(tmp28))
+		this.FileAttributesTag = tmp37
+	}
+	for i := 0;; i++ {
+		tmp38, err := this._io.EOF()
 		if err != nil {
 			return err
 		}
-		tmp29 = tmp29
-		this._raw_TagBody = tmp29
-		_io__raw_TagBody := kaitai.NewStream(bytes.NewReader(this._raw_TagBody))
-		tmp30 := NewSwf_DefineSoundBody()
-		err = tmp30.Read(_io__raw_TagBody, this, this._root)
+		if tmp38 {
+			break
+		}
+		tmp39 := NewSwf_Tag()
+		err = tmp39.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.TagBody = tmp30
-	case Swf_TagType__SetBackgroundColor:
-		tmp31, err := this.RecordHeader.Len()
-		if err != nil {
-			return err
-		}
-		tmp32, err := this._io.ReadBytes(int(tmp31))
-		if err != nil {
-			return err
-		}
-		tmp32 = tmp32
-		this._raw_TagBody = tmp32
-		_io__raw_TagBody := kaitai.NewStream(bytes.NewReader(this._raw_TagBody))
-		tmp33 := NewSwf_Rgb()
-		err = tmp33.Read(_io__raw_TagBody, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.TagBody = tmp33
-	case Swf_TagType__ScriptLimits:
-		tmp34, err := this.RecordHeader.Len()
-		if err != nil {
-			return err
-		}
-		tmp35, err := this._io.ReadBytes(int(tmp34))
-		if err != nil {
-			return err
-		}
-		tmp35 = tmp35
-		this._raw_TagBody = tmp35
-		_io__raw_TagBody := kaitai.NewStream(bytes.NewReader(this._raw_TagBody))
-		tmp36 := NewSwf_ScriptLimitsBody()
-		err = tmp36.Read(_io__raw_TagBody, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.TagBody = tmp36
-	case Swf_TagType__DoAbc:
-		tmp37, err := this.RecordHeader.Len()
-		if err != nil {
-			return err
-		}
-		tmp38, err := this._io.ReadBytes(int(tmp37))
-		if err != nil {
-			return err
-		}
-		tmp38 = tmp38
-		this._raw_TagBody = tmp38
-		_io__raw_TagBody := kaitai.NewStream(bytes.NewReader(this._raw_TagBody))
-		tmp39 := NewSwf_DoAbcBody()
-		err = tmp39.Read(_io__raw_TagBody, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.TagBody = tmp39
-	case Swf_TagType__ExportAssets:
-		tmp40, err := this.RecordHeader.Len()
-		if err != nil {
-			return err
-		}
-		tmp41, err := this._io.ReadBytes(int(tmp40))
-		if err != nil {
-			return err
-		}
-		tmp41 = tmp41
-		this._raw_TagBody = tmp41
-		_io__raw_TagBody := kaitai.NewStream(bytes.NewReader(this._raw_TagBody))
-		tmp42 := NewSwf_SymbolClassBody()
-		err = tmp42.Read(_io__raw_TagBody, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.TagBody = tmp42
-	case Swf_TagType__SymbolClass:
-		tmp43, err := this.RecordHeader.Len()
-		if err != nil {
-			return err
-		}
-		tmp44, err := this._io.ReadBytes(int(tmp43))
-		if err != nil {
-			return err
-		}
-		tmp44 = tmp44
-		this._raw_TagBody = tmp44
-		_io__raw_TagBody := kaitai.NewStream(bytes.NewReader(this._raw_TagBody))
-		tmp45 := NewSwf_SymbolClassBody()
-		err = tmp45.Read(_io__raw_TagBody, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.TagBody = tmp45
-	default:
-		tmp46, err := this.RecordHeader.Len()
-		if err != nil {
-			return err
-		}
-		tmp47, err := this._io.ReadBytes(int(tmp46))
-		if err != nil {
-			return err
-		}
-		tmp47 = tmp47
-		this._raw_TagBody = tmp47
+		this.Tags = append(this.Tags, tmp39)
 	}
 	return err
 }
@@ -487,24 +579,28 @@ func NewSwf_SymbolClassBody() *Swf_SymbolClassBody {
 	}
 }
 
+func (this Swf_SymbolClassBody) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Swf_SymbolClassBody) Read(io *kaitai.Stream, parent *Swf_Tag, root *Swf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp48, err := this._io.ReadU2le()
+	tmp40, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.NumSymbols = uint16(tmp48)
+	this.NumSymbols = uint16(tmp40)
 	for i := 0; i < int(this.NumSymbols); i++ {
 		_ = i
-		tmp49 := NewSwf_SymbolClassBody_Symbol()
-		err = tmp49.Read(this._io, this, this._root)
+		tmp41 := NewSwf_SymbolClassBody_Symbol()
+		err = tmp41.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Symbols = append(this.Symbols, tmp49)
+		this.Symbols = append(this.Symbols, tmp41)
 	}
 	return err
 }
@@ -520,206 +616,179 @@ func NewSwf_SymbolClassBody_Symbol() *Swf_SymbolClassBody_Symbol {
 	}
 }
 
+func (this Swf_SymbolClassBody_Symbol) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Swf_SymbolClassBody_Symbol) Read(io *kaitai.Stream, parent *Swf_SymbolClassBody, root *Swf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp50, err := this._io.ReadU2le()
+	tmp42, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.Tag = uint16(tmp50)
-	tmp51, err := this._io.ReadBytesTerm(0, false, true, true)
+	this.Tag = uint16(tmp42)
+	tmp43, err := this._io.ReadBytesTerm(0, false, true, true)
 	if err != nil {
 		return err
 	}
-	this.Name = string(tmp51)
+	this.Name = string(tmp43)
 	return err
 }
-
-type Swf_DefineSoundBody_SamplingRates int
-const (
-	Swf_DefineSoundBody_SamplingRates__Rate55Khz Swf_DefineSoundBody_SamplingRates = 0
-	Swf_DefineSoundBody_SamplingRates__Rate11Khz Swf_DefineSoundBody_SamplingRates = 1
-	Swf_DefineSoundBody_SamplingRates__Rate22Khz Swf_DefineSoundBody_SamplingRates = 2
-	Swf_DefineSoundBody_SamplingRates__Rate44Khz Swf_DefineSoundBody_SamplingRates = 3
-)
-
-type Swf_DefineSoundBody_Bps int
-const (
-	Swf_DefineSoundBody_Bps__Sound8Bit Swf_DefineSoundBody_Bps = 0
-	Swf_DefineSoundBody_Bps__Sound16Bit Swf_DefineSoundBody_Bps = 1
-)
-
-type Swf_DefineSoundBody_Channels int
-const (
-	Swf_DefineSoundBody_Channels__Mono Swf_DefineSoundBody_Channels = 0
-	Swf_DefineSoundBody_Channels__Stereo Swf_DefineSoundBody_Channels = 1
-)
-type Swf_DefineSoundBody struct {
-	Id uint16
-	Format uint64
-	SamplingRate Swf_DefineSoundBody_SamplingRates
-	BitsPerSample Swf_DefineSoundBody_Bps
-	NumChannels Swf_DefineSoundBody_Channels
-	NumSamples uint32
+type Swf_Tag struct {
+	RecordHeader *Swf_RecordHeader
+	TagBody interface{}
 	_io *kaitai.Stream
 	_root *Swf
-	_parent *Swf_Tag
+	_parent *Swf_SwfBody
+	_raw_TagBody []byte
 }
-func NewSwf_DefineSoundBody() *Swf_DefineSoundBody {
-	return &Swf_DefineSoundBody{
+func NewSwf_Tag() *Swf_Tag {
+	return &Swf_Tag{
 	}
 }
 
-func (this *Swf_DefineSoundBody) Read(io *kaitai.Stream, parent *Swf_Tag, root *Swf) (err error) {
+func (this Swf_Tag) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Swf_Tag) Read(io *kaitai.Stream, parent *Swf_SwfBody, root *Swf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp52, err := this._io.ReadU2le()
+	tmp44 := NewSwf_RecordHeader()
+	err = tmp44.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Id = uint16(tmp52)
-	tmp53, err := this._io.ReadBitsIntBe(4)
+	this.RecordHeader = tmp44
+	tmp45, err := this.RecordHeader.TagType()
 	if err != nil {
 		return err
 	}
-	this.Format = tmp53
-	tmp54, err := this._io.ReadBitsIntBe(2)
-	if err != nil {
-		return err
-	}
-	this.SamplingRate = Swf_DefineSoundBody_SamplingRates(tmp54)
-	tmp55, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.BitsPerSample = Swf_DefineSoundBody_Bps(tmp55)
-	tmp56, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.NumChannels = Swf_DefineSoundBody_Channels(tmp56)
-	this._io.AlignToByte()
-	tmp57, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.NumSamples = uint32(tmp57)
-	return err
-}
-
-/**
- * Sound sampling rate, as per enum. Ignored for Nellymoser and Speex codecs.
- */
-type Swf_RecordHeader struct {
-	TagCodeAndLength uint16
-	BigLen int32
-	_io *kaitai.Stream
-	_root *Swf
-	_parent *Swf_Tag
-	_f_tagType bool
-	tagType Swf_TagType
-	_f_smallLen bool
-	smallLen int
-	_f_len bool
-	len int
-}
-func NewSwf_RecordHeader() *Swf_RecordHeader {
-	return &Swf_RecordHeader{
-	}
-}
-
-func (this *Swf_RecordHeader) Read(io *kaitai.Stream, parent *Swf_Tag, root *Swf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp58, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.TagCodeAndLength = uint16(tmp58)
-	tmp59, err := this.SmallLen()
-	if err != nil {
-		return err
-	}
-	if (tmp59 == 63) {
-		tmp60, err := this._io.ReadS4le()
+	switch (tmp45) {
+	case Swf_TagType__DefineSound:
+		tmp46, err := this.RecordHeader.Len()
 		if err != nil {
 			return err
 		}
-		this.BigLen = int32(tmp60)
-	}
-	return err
-}
-func (this *Swf_RecordHeader) TagType() (v Swf_TagType, err error) {
-	if (this._f_tagType) {
-		return this.tagType, nil
-	}
-	this.tagType = Swf_TagType(Swf_TagType((this.TagCodeAndLength >> 6)))
-	this._f_tagType = true
-	return this.tagType, nil
-}
-func (this *Swf_RecordHeader) SmallLen() (v int, err error) {
-	if (this._f_smallLen) {
-		return this.smallLen, nil
-	}
-	this.smallLen = int((this.TagCodeAndLength & 63))
-	this._f_smallLen = true
-	return this.smallLen, nil
-}
-func (this *Swf_RecordHeader) Len() (v int, err error) {
-	if (this._f_len) {
-		return this.len, nil
-	}
-	var tmp61 int32;
-	tmp62, err := this.SmallLen()
-	if err != nil {
-		return 0, err
-	}
-	if (tmp62 == 63) {
-		tmp61 = this.BigLen
-	} else {
-		tmp63, err := this.SmallLen()
+		tmp47, err := this._io.ReadBytes(int(tmp46))
 		if err != nil {
-			return 0, err
+			return err
 		}
-		tmp61 = tmp63
+		tmp47 = tmp47
+		this._raw_TagBody = tmp47
+		_io__raw_TagBody := kaitai.NewStream(bytes.NewReader(this._raw_TagBody))
+		tmp48 := NewSwf_DefineSoundBody()
+		err = tmp48.Read(_io__raw_TagBody, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.TagBody = tmp48
+	case Swf_TagType__DoAbc:
+		tmp49, err := this.RecordHeader.Len()
+		if err != nil {
+			return err
+		}
+		tmp50, err := this._io.ReadBytes(int(tmp49))
+		if err != nil {
+			return err
+		}
+		tmp50 = tmp50
+		this._raw_TagBody = tmp50
+		_io__raw_TagBody := kaitai.NewStream(bytes.NewReader(this._raw_TagBody))
+		tmp51 := NewSwf_DoAbcBody()
+		err = tmp51.Read(_io__raw_TagBody, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.TagBody = tmp51
+	case Swf_TagType__ExportAssets:
+		tmp52, err := this.RecordHeader.Len()
+		if err != nil {
+			return err
+		}
+		tmp53, err := this._io.ReadBytes(int(tmp52))
+		if err != nil {
+			return err
+		}
+		tmp53 = tmp53
+		this._raw_TagBody = tmp53
+		_io__raw_TagBody := kaitai.NewStream(bytes.NewReader(this._raw_TagBody))
+		tmp54 := NewSwf_SymbolClassBody()
+		err = tmp54.Read(_io__raw_TagBody, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.TagBody = tmp54
+	case Swf_TagType__ScriptLimits:
+		tmp55, err := this.RecordHeader.Len()
+		if err != nil {
+			return err
+		}
+		tmp56, err := this._io.ReadBytes(int(tmp55))
+		if err != nil {
+			return err
+		}
+		tmp56 = tmp56
+		this._raw_TagBody = tmp56
+		_io__raw_TagBody := kaitai.NewStream(bytes.NewReader(this._raw_TagBody))
+		tmp57 := NewSwf_ScriptLimitsBody()
+		err = tmp57.Read(_io__raw_TagBody, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.TagBody = tmp57
+	case Swf_TagType__SetBackgroundColor:
+		tmp58, err := this.RecordHeader.Len()
+		if err != nil {
+			return err
+		}
+		tmp59, err := this._io.ReadBytes(int(tmp58))
+		if err != nil {
+			return err
+		}
+		tmp59 = tmp59
+		this._raw_TagBody = tmp59
+		_io__raw_TagBody := kaitai.NewStream(bytes.NewReader(this._raw_TagBody))
+		tmp60 := NewSwf_Rgb()
+		err = tmp60.Read(_io__raw_TagBody, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.TagBody = tmp60
+	case Swf_TagType__SymbolClass:
+		tmp61, err := this.RecordHeader.Len()
+		if err != nil {
+			return err
+		}
+		tmp62, err := this._io.ReadBytes(int(tmp61))
+		if err != nil {
+			return err
+		}
+		tmp62 = tmp62
+		this._raw_TagBody = tmp62
+		_io__raw_TagBody := kaitai.NewStream(bytes.NewReader(this._raw_TagBody))
+		tmp63 := NewSwf_SymbolClassBody()
+		err = tmp63.Read(_io__raw_TagBody, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.TagBody = tmp63
+	default:
+		tmp64, err := this.RecordHeader.Len()
+		if err != nil {
+			return err
+		}
+		tmp65, err := this._io.ReadBytes(int(tmp64))
+		if err != nil {
+			return err
+		}
+		tmp65 = tmp65
+		this._raw_TagBody = tmp65
 	}
-	this.len = int(tmp61)
-	this._f_len = true
-	return this.len, nil
-}
-type Swf_ScriptLimitsBody struct {
-	MaxRecursionDepth uint16
-	ScriptTimeoutSeconds uint16
-	_io *kaitai.Stream
-	_root *Swf
-	_parent *Swf_Tag
-}
-func NewSwf_ScriptLimitsBody() *Swf_ScriptLimitsBody {
-	return &Swf_ScriptLimitsBody{
-	}
-}
-
-func (this *Swf_ScriptLimitsBody) Read(io *kaitai.Stream, parent *Swf_Tag, root *Swf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp64, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.MaxRecursionDepth = uint16(tmp64)
-	tmp65, err := this._io.ReadU2le()
-	if err != nil {
-		return err
-	}
-	this.ScriptTimeoutSeconds = uint16(tmp65)
 	return err
 }

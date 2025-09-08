@@ -3,12 +3,15 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class rpm_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -26,66 +29,54 @@
 class rpm_t : public kaitai::kstruct {
 
 public:
-    class record_type_string_array_t;
-    class lead_t;
-    class record_type_string_t;
-    class signature_tags_step_t;
-    class record_type_uint32_t;
-    class record_type_uint16_t;
-    class header_index_record_t;
-    class rpm_version_t;
     class dummy_t;
-    class record_type_uint8_t;
-    class record_type_uint64_t;
-    class record_type_bin_t;
-    class header_record_t;
     class header_t;
+    class header_index_record_t;
+    class header_record_t;
+    class lead_t;
+    class record_type_bin_t;
+    class record_type_string_t;
+    class record_type_string_array_t;
+    class record_type_uint16_t;
+    class record_type_uint32_t;
+    class record_type_uint64_t;
+    class record_type_uint8_t;
+    class rpm_version_t;
+    class signature_tags_step_t;
 
-    enum operating_systems_t {
-        OPERATING_SYSTEMS_LINUX = 1,
-        OPERATING_SYSTEMS_IRIX = 2,
-        OPERATING_SYSTEMS_NO_OS = 255
+    enum architectures_t {
+        ARCHITECTURES_X86 = 1,
+        ARCHITECTURES_ALPHA = 2,
+        ARCHITECTURES_SPARC = 3,
+        ARCHITECTURES_MIPS = 4,
+        ARCHITECTURES_PPC = 5,
+        ARCHITECTURES_M68K = 6,
+        ARCHITECTURES_SGI = 7,
+        ARCHITECTURES_RS6000 = 8,
+        ARCHITECTURES_IA64 = 9,
+        ARCHITECTURES_SPARC64 = 10,
+        ARCHITECTURES_MIPS64 = 11,
+        ARCHITECTURES_ARM = 12,
+        ARCHITECTURES_M68K_MINT = 13,
+        ARCHITECTURES_S390 = 14,
+        ARCHITECTURES_S390X = 15,
+        ARCHITECTURES_PPC64 = 16,
+        ARCHITECTURES_SH = 17,
+        ARCHITECTURES_XTENSA = 18,
+        ARCHITECTURES_AARCH64 = 19,
+        ARCHITECTURES_MIPS_R6 = 20,
+        ARCHITECTURES_MIPS64_R6 = 21,
+        ARCHITECTURES_RISCV = 22,
+        ARCHITECTURES_LOONGARCH64 = 23,
+        ARCHITECTURES_NO_ARCH = 255
     };
+    static bool _is_defined_architectures_t(architectures_t v);
 
-    enum signature_tags_t {
-        SIGNATURE_TAGS_SIGNATURES = 62,
-        SIGNATURE_TAGS_HEADER_IMMUTABLE = 63,
-        SIGNATURE_TAGS_I18N_TABLE = 100,
-        SIGNATURE_TAGS_BAD_SHA1_1_OBSOLETE = 264,
-        SIGNATURE_TAGS_BAD_SHA1_2_OBSOLETE = 265,
-        SIGNATURE_TAGS_DSA = 267,
-        SIGNATURE_TAGS_RSA = 268,
-        SIGNATURE_TAGS_SHA1 = 269,
-        SIGNATURE_TAGS_LONG_SIZE = 270,
-        SIGNATURE_TAGS_LONG_ARCHIVE_SIZE = 271,
-        SIGNATURE_TAGS_SHA256 = 273,
-        SIGNATURE_TAGS_FILE_SIGNATURES = 274,
-        SIGNATURE_TAGS_FILE_SIGNATURE_LENGTH = 275,
-        SIGNATURE_TAGS_VERITY_SIGNATURES = 276,
-        SIGNATURE_TAGS_VERITY_SIGNATURE_ALGO = 277,
-        SIGNATURE_TAGS_SIZE = 1000,
-        SIGNATURE_TAGS_LE_MD5_1_OBSOLETE = 1001,
-        SIGNATURE_TAGS_PGP = 1002,
-        SIGNATURE_TAGS_LE_MD5_2_OBSOLETE = 1003,
-        SIGNATURE_TAGS_MD5 = 1004,
-        SIGNATURE_TAGS_GPG = 1005,
-        SIGNATURE_TAGS_PGP5_OBSOLETE = 1006,
-        SIGNATURE_TAGS_PAYLOAD_SIZE = 1007,
-        SIGNATURE_TAGS_RESERVED_SPACE = 1008
-    };
+private:
+    static const std::set<architectures_t> _values_architectures_t;
+    static std::set<architectures_t> _build_values_architectures_t();
 
-    enum record_types_t {
-        RECORD_TYPES_NOT_IMPLEMENTED = 0,
-        RECORD_TYPES_CHAR = 1,
-        RECORD_TYPES_UINT8 = 2,
-        RECORD_TYPES_UINT16 = 3,
-        RECORD_TYPES_UINT32 = 4,
-        RECORD_TYPES_UINT64 = 5,
-        RECORD_TYPES_STRING = 6,
-        RECORD_TYPES_BIN = 7,
-        RECORD_TYPES_STRING_ARRAY = 8,
-        RECORD_TYPES_I18N_STRING = 9
-    };
+public:
 
     enum header_tags_t {
         HEADER_TAGS_SIGNATURES = 62,
@@ -389,38 +380,92 @@ public:
         HEADER_TAGS_POST_UNTRANS_FLAGS = 5108,
         HEADER_TAGS_SYS_USERS = 5109
     };
+    static bool _is_defined_header_tags_t(header_tags_t v);
+
+private:
+    static const std::set<header_tags_t> _values_header_tags_t;
+    static std::set<header_tags_t> _build_values_header_tags_t();
+
+public:
+
+    enum operating_systems_t {
+        OPERATING_SYSTEMS_LINUX = 1,
+        OPERATING_SYSTEMS_IRIX = 2,
+        OPERATING_SYSTEMS_NO_OS = 255
+    };
+    static bool _is_defined_operating_systems_t(operating_systems_t v);
+
+private:
+    static const std::set<operating_systems_t> _values_operating_systems_t;
+    static std::set<operating_systems_t> _build_values_operating_systems_t();
+
+public:
+
+    enum record_types_t {
+        RECORD_TYPES_NOT_IMPLEMENTED = 0,
+        RECORD_TYPES_CHAR = 1,
+        RECORD_TYPES_UINT8 = 2,
+        RECORD_TYPES_UINT16 = 3,
+        RECORD_TYPES_UINT32 = 4,
+        RECORD_TYPES_UINT64 = 5,
+        RECORD_TYPES_STRING = 6,
+        RECORD_TYPES_BIN = 7,
+        RECORD_TYPES_STRING_ARRAY = 8,
+        RECORD_TYPES_I18N_STRING = 9
+    };
+    static bool _is_defined_record_types_t(record_types_t v);
+
+private:
+    static const std::set<record_types_t> _values_record_types_t;
+    static std::set<record_types_t> _build_values_record_types_t();
+
+public:
 
     enum rpm_types_t {
         RPM_TYPES_BINARY = 0,
         RPM_TYPES_SOURCE = 1
     };
+    static bool _is_defined_rpm_types_t(rpm_types_t v);
 
-    enum architectures_t {
-        ARCHITECTURES_X86 = 1,
-        ARCHITECTURES_ALPHA = 2,
-        ARCHITECTURES_SPARC = 3,
-        ARCHITECTURES_MIPS = 4,
-        ARCHITECTURES_PPC = 5,
-        ARCHITECTURES_M68K = 6,
-        ARCHITECTURES_SGI = 7,
-        ARCHITECTURES_RS6000 = 8,
-        ARCHITECTURES_IA64 = 9,
-        ARCHITECTURES_SPARC64 = 10,
-        ARCHITECTURES_MIPS64 = 11,
-        ARCHITECTURES_ARM = 12,
-        ARCHITECTURES_M68K_MINT = 13,
-        ARCHITECTURES_S390 = 14,
-        ARCHITECTURES_S390X = 15,
-        ARCHITECTURES_PPC64 = 16,
-        ARCHITECTURES_SH = 17,
-        ARCHITECTURES_XTENSA = 18,
-        ARCHITECTURES_AARCH64 = 19,
-        ARCHITECTURES_MIPS_R6 = 20,
-        ARCHITECTURES_MIPS64_R6 = 21,
-        ARCHITECTURES_RISCV = 22,
-        ARCHITECTURES_LOONGARCH64 = 23,
-        ARCHITECTURES_NO_ARCH = 255
+private:
+    static const std::set<rpm_types_t> _values_rpm_types_t;
+    static std::set<rpm_types_t> _build_values_rpm_types_t();
+
+public:
+
+    enum signature_tags_t {
+        SIGNATURE_TAGS_SIGNATURES = 62,
+        SIGNATURE_TAGS_HEADER_IMMUTABLE = 63,
+        SIGNATURE_TAGS_I18N_TABLE = 100,
+        SIGNATURE_TAGS_BAD_SHA1_1_OBSOLETE = 264,
+        SIGNATURE_TAGS_BAD_SHA1_2_OBSOLETE = 265,
+        SIGNATURE_TAGS_DSA = 267,
+        SIGNATURE_TAGS_RSA = 268,
+        SIGNATURE_TAGS_SHA1 = 269,
+        SIGNATURE_TAGS_LONG_SIZE = 270,
+        SIGNATURE_TAGS_LONG_ARCHIVE_SIZE = 271,
+        SIGNATURE_TAGS_SHA256 = 273,
+        SIGNATURE_TAGS_FILE_SIGNATURES = 274,
+        SIGNATURE_TAGS_FILE_SIGNATURE_LENGTH = 275,
+        SIGNATURE_TAGS_VERITY_SIGNATURES = 276,
+        SIGNATURE_TAGS_VERITY_SIGNATURE_ALGO = 277,
+        SIGNATURE_TAGS_SIZE = 1000,
+        SIGNATURE_TAGS_LE_MD5_1_OBSOLETE = 1001,
+        SIGNATURE_TAGS_PGP = 1002,
+        SIGNATURE_TAGS_LE_MD5_2_OBSOLETE = 1003,
+        SIGNATURE_TAGS_MD5 = 1004,
+        SIGNATURE_TAGS_GPG = 1005,
+        SIGNATURE_TAGS_PGP5_OBSOLETE = 1006,
+        SIGNATURE_TAGS_PAYLOAD_SIZE = 1007,
+        SIGNATURE_TAGS_RESERVED_SPACE = 1008
     };
+    static bool _is_defined_signature_tags_t(signature_tags_t v);
+
+private:
+    static const std::set<signature_tags_t> _values_signature_tags_t;
+    static std::set<signature_tags_t> _build_values_signature_tags_t();
+
+public:
 
     rpm_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, rpm_t* p__root = 0);
 
@@ -431,30 +476,211 @@ private:
 public:
     ~rpm_t();
 
-    class record_type_string_array_t : public kaitai::kstruct {
+    class dummy_t : public kaitai::kstruct {
 
     public:
 
-        record_type_string_array_t(uint32_t p_num_values, kaitai::kstream* p__io, rpm_t::header_index_record_t* p__parent = 0, rpm_t* p__root = 0);
+        dummy_t(kaitai::kstream* p__io, rpm_t::header_t* p__parent = 0, rpm_t* p__root = 0);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~record_type_string_array_t();
+        ~dummy_t();
 
     private:
-        std::vector<std::string>* m_values;
-        uint32_t m_num_values;
         rpm_t* m__root;
-        rpm_t::header_index_record_t* m__parent;
+        rpm_t::header_t* m__parent;
 
     public:
-        std::vector<std::string>* values() const { return m_values; }
-        uint32_t num_values() const { return m_num_values; }
         rpm_t* _root() const { return m__root; }
-        rpm_t::header_index_record_t* _parent() const { return m__parent; }
+        rpm_t::header_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * header structure used for both the "header" and "signature", but some tag
+     * values have different meanings in signature and header (hence they use
+     * different enums)
+     */
+
+    class header_t : public kaitai::kstruct {
+
+    public:
+
+        header_t(bool p_is_signature, kaitai::kstream* p__io, rpm_t* p__parent = 0, rpm_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~header_t();
+
+    private:
+        bool f_is_header;
+        bool m_is_header;
+
+    public:
+        bool is_header();
+
+    private:
+        header_record_t* m_header_record;
+        std::vector<header_index_record_t*>* m_index_records;
+        dummy_t* m_storage_section;
+        bool m_is_signature;
+        rpm_t* m__root;
+        rpm_t* m__parent;
+        std::string m__raw_storage_section;
+        kaitai::kstream* m__io__raw_storage_section;
+
+    public:
+        header_record_t* header_record() const { return m_header_record; }
+        std::vector<header_index_record_t*>* index_records() const { return m_index_records; }
+        dummy_t* storage_section() const { return m_storage_section; }
+        bool is_signature() const { return m_is_signature; }
+        rpm_t* _root() const { return m__root; }
+        rpm_t* _parent() const { return m__parent; }
+        std::string _raw_storage_section() const { return m__raw_storage_section; }
+        kaitai::kstream* _io__raw_storage_section() const { return m__io__raw_storage_section; }
+    };
+
+    class header_index_record_t : public kaitai::kstruct {
+
+    public:
+
+        header_index_record_t(kaitai::kstream* p__io, rpm_t::header_t* p__parent = 0, rpm_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~header_index_record_t();
+
+    private:
+        bool f_body;
+        kaitai::kstruct* m_body;
+        bool n_body;
+
+    public:
+        bool _is_null_body() { body(); return n_body; };
+
+    private:
+
+    public:
+        kaitai::kstruct* body();
+
+    private:
+        bool f_header_tag;
+        header_tags_t m_header_tag;
+        bool n_header_tag;
+
+    public:
+        bool _is_null_header_tag() { header_tag(); return n_header_tag; };
+
+    private:
+
+    public:
+        header_tags_t header_tag();
+
+    private:
+        bool f_len_value;
+        uint32_t m_len_value;
+        bool n_len_value;
+
+    public:
+        bool _is_null_len_value() { len_value(); return n_len_value; };
+
+    private:
+
+    public:
+        uint32_t len_value();
+
+    private:
+        bool f_num_values;
+        uint32_t m_num_values;
+        bool n_num_values;
+
+    public:
+        bool _is_null_num_values() { num_values(); return n_num_values; };
+
+    private:
+
+    public:
+        uint32_t num_values();
+
+    private:
+        bool f_signature_tag;
+        signature_tags_t m_signature_tag;
+        bool n_signature_tag;
+
+    public:
+        bool _is_null_signature_tag() { signature_tag(); return n_signature_tag; };
+
+    private:
+
+    public:
+        signature_tags_t signature_tag();
+
+    private:
+        uint32_t m_tag_raw;
+        record_types_t m_record_type;
+        uint32_t m_ofs_body;
+        uint32_t m_count;
+        rpm_t* m__root;
+        rpm_t::header_t* m__parent;
+
+    public:
+
+        /**
+         * prefer to access `signature_tag` and `header_tag` instead
+         */
+        uint32_t tag_raw() const { return m_tag_raw; }
+        record_types_t record_type() const { return m_record_type; }
+        uint32_t ofs_body() const { return m_ofs_body; }
+
+        /**
+         * internal; access `num_values` and `len_value` instead
+         */
+        uint32_t count() const { return m_count; }
+        rpm_t* _root() const { return m__root; }
+        rpm_t::header_t* _parent() const { return m__parent; }
+    };
+
+    class header_record_t : public kaitai::kstruct {
+
+    public:
+
+        header_record_t(kaitai::kstream* p__io, rpm_t::header_t* p__parent = 0, rpm_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~header_record_t();
+
+    private:
+        std::string m_magic;
+        std::string m_reserved;
+        uint32_t m_num_index_records;
+        uint32_t m_len_storage_section;
+        rpm_t* m__root;
+        rpm_t::header_t* m__parent;
+
+    public:
+        std::string magic() const { return m_magic; }
+        std::string reserved() const { return m_reserved; }
+        uint32_t num_index_records() const { return m_num_index_records; }
+
+        /**
+         * Size of the storage area for the data
+         * pointed to by the Index Records.
+         */
+        uint32_t len_storage_section() const { return m_len_storage_section; }
+        rpm_t* _root() const { return m__root; }
+        rpm_t::header_t* _parent() const { return m__parent; }
     };
 
     /**
@@ -511,6 +737,32 @@ public:
         rpm_t* _parent() const { return m__parent; }
     };
 
+    class record_type_bin_t : public kaitai::kstruct {
+
+    public:
+
+        record_type_bin_t(uint32_t p_len_value, kaitai::kstream* p__io, rpm_t::header_index_record_t* p__parent = 0, rpm_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~record_type_bin_t();
+
+    private:
+        std::vector<std::string>* m_values;
+        uint32_t m_len_value;
+        rpm_t* m__root;
+        rpm_t::header_index_record_t* m__parent;
+
+    public:
+        std::vector<std::string>* values() const { return m_values; }
+        uint32_t len_value() const { return m_len_value; }
+        rpm_t* _root() const { return m__root; }
+        rpm_t::header_index_record_t* _parent() const { return m__parent; }
+    };
+
     class record_type_string_t : public kaitai::kstruct {
 
     public:
@@ -533,6 +785,166 @@ public:
         std::vector<std::string>* values() const { return m_values; }
         rpm_t* _root() const { return m__root; }
         rpm_t::header_index_record_t* _parent() const { return m__parent; }
+    };
+
+    class record_type_string_array_t : public kaitai::kstruct {
+
+    public:
+
+        record_type_string_array_t(uint32_t p_num_values, kaitai::kstream* p__io, rpm_t::header_index_record_t* p__parent = 0, rpm_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~record_type_string_array_t();
+
+    private:
+        std::vector<std::string>* m_values;
+        uint32_t m_num_values;
+        rpm_t* m__root;
+        rpm_t::header_index_record_t* m__parent;
+
+    public:
+        std::vector<std::string>* values() const { return m_values; }
+        uint32_t num_values() const { return m_num_values; }
+        rpm_t* _root() const { return m__root; }
+        rpm_t::header_index_record_t* _parent() const { return m__parent; }
+    };
+
+    class record_type_uint16_t : public kaitai::kstruct {
+
+    public:
+
+        record_type_uint16_t(uint32_t p_num_values, kaitai::kstream* p__io, rpm_t::header_index_record_t* p__parent = 0, rpm_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~record_type_uint16_t();
+
+    private:
+        std::vector<uint16_t>* m_values;
+        uint32_t m_num_values;
+        rpm_t* m__root;
+        rpm_t::header_index_record_t* m__parent;
+
+    public:
+        std::vector<uint16_t>* values() const { return m_values; }
+        uint32_t num_values() const { return m_num_values; }
+        rpm_t* _root() const { return m__root; }
+        rpm_t::header_index_record_t* _parent() const { return m__parent; }
+    };
+
+    class record_type_uint32_t : public kaitai::kstruct {
+
+    public:
+
+        record_type_uint32_t(uint32_t p_num_values, kaitai::kstream* p__io, rpm_t::header_index_record_t* p__parent = 0, rpm_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~record_type_uint32_t();
+
+    private:
+        std::vector<uint32_t>* m_values;
+        uint32_t m_num_values;
+        rpm_t* m__root;
+        rpm_t::header_index_record_t* m__parent;
+
+    public:
+        std::vector<uint32_t>* values() const { return m_values; }
+        uint32_t num_values() const { return m_num_values; }
+        rpm_t* _root() const { return m__root; }
+        rpm_t::header_index_record_t* _parent() const { return m__parent; }
+    };
+
+    class record_type_uint64_t : public kaitai::kstruct {
+
+    public:
+
+        record_type_uint64_t(uint32_t p_num_values, kaitai::kstream* p__io, rpm_t::header_index_record_t* p__parent = 0, rpm_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~record_type_uint64_t();
+
+    private:
+        std::vector<uint64_t>* m_values;
+        uint32_t m_num_values;
+        rpm_t* m__root;
+        rpm_t::header_index_record_t* m__parent;
+
+    public:
+        std::vector<uint64_t>* values() const { return m_values; }
+        uint32_t num_values() const { return m_num_values; }
+        rpm_t* _root() const { return m__root; }
+        rpm_t::header_index_record_t* _parent() const { return m__parent; }
+    };
+
+    class record_type_uint8_t : public kaitai::kstruct {
+
+    public:
+
+        record_type_uint8_t(uint32_t p_num_values, kaitai::kstream* p__io, rpm_t::header_index_record_t* p__parent = 0, rpm_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~record_type_uint8_t();
+
+    private:
+        std::vector<uint8_t>* m_values;
+        uint32_t m_num_values;
+        rpm_t* m__root;
+        rpm_t::header_index_record_t* m__parent;
+
+    public:
+        std::vector<uint8_t>* values() const { return m_values; }
+        uint32_t num_values() const { return m_num_values; }
+        rpm_t* _root() const { return m__root; }
+        rpm_t::header_index_record_t* _parent() const { return m__parent; }
+    };
+
+    class rpm_version_t : public kaitai::kstruct {
+
+    public:
+
+        rpm_version_t(kaitai::kstream* p__io, rpm_t::lead_t* p__parent = 0, rpm_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~rpm_version_t();
+
+    private:
+        uint8_t m_major;
+        uint8_t m_minor;
+        rpm_t* m__root;
+        rpm_t::lead_t* m__parent;
+
+    public:
+
+        /**
+         * \sa https://github.com/rpm-software-management/rpm/blob/afad3167/lib/rpmlead.c#L102 Source
+         */
+        uint8_t major() const { return m_major; }
+        uint8_t minor() const { return m_minor; }
+        rpm_t* _root() const { return m__root; }
+        rpm_t::lead_t* _parent() const { return m__parent; }
     };
 
     class signature_tags_step_t : public kaitai::kstruct {
@@ -568,373 +980,6 @@ public:
         rpm_t* _parent() const { return m__parent; }
     };
 
-    class record_type_uint32_t : public kaitai::kstruct {
-
-    public:
-
-        record_type_uint32_t(uint32_t p_num_values, kaitai::kstream* p__io, rpm_t::header_index_record_t* p__parent = 0, rpm_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~record_type_uint32_t();
-
-    private:
-        std::vector<uint32_t>* m_values;
-        uint32_t m_num_values;
-        rpm_t* m__root;
-        rpm_t::header_index_record_t* m__parent;
-
-    public:
-        std::vector<uint32_t>* values() const { return m_values; }
-        uint32_t num_values() const { return m_num_values; }
-        rpm_t* _root() const { return m__root; }
-        rpm_t::header_index_record_t* _parent() const { return m__parent; }
-    };
-
-    class record_type_uint16_t : public kaitai::kstruct {
-
-    public:
-
-        record_type_uint16_t(uint32_t p_num_values, kaitai::kstream* p__io, rpm_t::header_index_record_t* p__parent = 0, rpm_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~record_type_uint16_t();
-
-    private:
-        std::vector<uint16_t>* m_values;
-        uint32_t m_num_values;
-        rpm_t* m__root;
-        rpm_t::header_index_record_t* m__parent;
-
-    public:
-        std::vector<uint16_t>* values() const { return m_values; }
-        uint32_t num_values() const { return m_num_values; }
-        rpm_t* _root() const { return m__root; }
-        rpm_t::header_index_record_t* _parent() const { return m__parent; }
-    };
-
-    class header_index_record_t : public kaitai::kstruct {
-
-    public:
-
-        header_index_record_t(kaitai::kstream* p__io, rpm_t::header_t* p__parent = 0, rpm_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~header_index_record_t();
-
-    private:
-        bool f_num_values;
-        uint32_t m_num_values;
-        bool n_num_values;
-
-    public:
-        bool _is_null_num_values() { num_values(); return n_num_values; };
-
-    private:
-
-    public:
-        uint32_t num_values();
-
-    private:
-        bool f_body;
-        kaitai::kstruct* m_body;
-        bool n_body;
-
-    public:
-        bool _is_null_body() { body(); return n_body; };
-
-    private:
-
-    public:
-        kaitai::kstruct* body();
-
-    private:
-        bool f_signature_tag;
-        signature_tags_t m_signature_tag;
-        bool n_signature_tag;
-
-    public:
-        bool _is_null_signature_tag() { signature_tag(); return n_signature_tag; };
-
-    private:
-
-    public:
-        signature_tags_t signature_tag();
-
-    private:
-        bool f_len_value;
-        uint32_t m_len_value;
-        bool n_len_value;
-
-    public:
-        bool _is_null_len_value() { len_value(); return n_len_value; };
-
-    private:
-
-    public:
-        uint32_t len_value();
-
-    private:
-        bool f_header_tag;
-        header_tags_t m_header_tag;
-        bool n_header_tag;
-
-    public:
-        bool _is_null_header_tag() { header_tag(); return n_header_tag; };
-
-    private:
-
-    public:
-        header_tags_t header_tag();
-
-    private:
-        uint32_t m_tag_raw;
-        record_types_t m_record_type;
-        uint32_t m_ofs_body;
-        uint32_t m_count;
-        rpm_t* m__root;
-        rpm_t::header_t* m__parent;
-
-    public:
-
-        /**
-         * prefer to access `signature_tag` and `header_tag` instead
-         */
-        uint32_t tag_raw() const { return m_tag_raw; }
-        record_types_t record_type() const { return m_record_type; }
-        uint32_t ofs_body() const { return m_ofs_body; }
-
-        /**
-         * internal; access `num_values` and `len_value` instead
-         */
-        uint32_t count() const { return m_count; }
-        rpm_t* _root() const { return m__root; }
-        rpm_t::header_t* _parent() const { return m__parent; }
-    };
-
-    class rpm_version_t : public kaitai::kstruct {
-
-    public:
-
-        rpm_version_t(kaitai::kstream* p__io, rpm_t::lead_t* p__parent = 0, rpm_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~rpm_version_t();
-
-    private:
-        uint8_t m_major;
-        uint8_t m_minor;
-        rpm_t* m__root;
-        rpm_t::lead_t* m__parent;
-
-    public:
-
-        /**
-         * \sa https://github.com/rpm-software-management/rpm/blob/afad3167/lib/rpmlead.c#L102 Source
-         */
-        uint8_t major() const { return m_major; }
-        uint8_t minor() const { return m_minor; }
-        rpm_t* _root() const { return m__root; }
-        rpm_t::lead_t* _parent() const { return m__parent; }
-    };
-
-    class dummy_t : public kaitai::kstruct {
-
-    public:
-
-        dummy_t(kaitai::kstream* p__io, rpm_t::header_t* p__parent = 0, rpm_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~dummy_t();
-
-    private:
-        rpm_t* m__root;
-        rpm_t::header_t* m__parent;
-
-    public:
-        rpm_t* _root() const { return m__root; }
-        rpm_t::header_t* _parent() const { return m__parent; }
-    };
-
-    class record_type_uint8_t : public kaitai::kstruct {
-
-    public:
-
-        record_type_uint8_t(uint32_t p_num_values, kaitai::kstream* p__io, rpm_t::header_index_record_t* p__parent = 0, rpm_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~record_type_uint8_t();
-
-    private:
-        std::vector<uint8_t>* m_values;
-        uint32_t m_num_values;
-        rpm_t* m__root;
-        rpm_t::header_index_record_t* m__parent;
-
-    public:
-        std::vector<uint8_t>* values() const { return m_values; }
-        uint32_t num_values() const { return m_num_values; }
-        rpm_t* _root() const { return m__root; }
-        rpm_t::header_index_record_t* _parent() const { return m__parent; }
-    };
-
-    class record_type_uint64_t : public kaitai::kstruct {
-
-    public:
-
-        record_type_uint64_t(uint32_t p_num_values, kaitai::kstream* p__io, rpm_t::header_index_record_t* p__parent = 0, rpm_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~record_type_uint64_t();
-
-    private:
-        std::vector<uint64_t>* m_values;
-        uint32_t m_num_values;
-        rpm_t* m__root;
-        rpm_t::header_index_record_t* m__parent;
-
-    public:
-        std::vector<uint64_t>* values() const { return m_values; }
-        uint32_t num_values() const { return m_num_values; }
-        rpm_t* _root() const { return m__root; }
-        rpm_t::header_index_record_t* _parent() const { return m__parent; }
-    };
-
-    class record_type_bin_t : public kaitai::kstruct {
-
-    public:
-
-        record_type_bin_t(uint32_t p_len_value, kaitai::kstream* p__io, rpm_t::header_index_record_t* p__parent = 0, rpm_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~record_type_bin_t();
-
-    private:
-        std::vector<std::string>* m_values;
-        uint32_t m_len_value;
-        rpm_t* m__root;
-        rpm_t::header_index_record_t* m__parent;
-
-    public:
-        std::vector<std::string>* values() const { return m_values; }
-        uint32_t len_value() const { return m_len_value; }
-        rpm_t* _root() const { return m__root; }
-        rpm_t::header_index_record_t* _parent() const { return m__parent; }
-    };
-
-    class header_record_t : public kaitai::kstruct {
-
-    public:
-
-        header_record_t(kaitai::kstream* p__io, rpm_t::header_t* p__parent = 0, rpm_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~header_record_t();
-
-    private:
-        std::string m_magic;
-        std::string m_reserved;
-        uint32_t m_num_index_records;
-        uint32_t m_len_storage_section;
-        rpm_t* m__root;
-        rpm_t::header_t* m__parent;
-
-    public:
-        std::string magic() const { return m_magic; }
-        std::string reserved() const { return m_reserved; }
-        uint32_t num_index_records() const { return m_num_index_records; }
-
-        /**
-         * Size of the storage area for the data
-         * pointed to by the Index Records.
-         */
-        uint32_t len_storage_section() const { return m_len_storage_section; }
-        rpm_t* _root() const { return m__root; }
-        rpm_t::header_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * header structure used for both the "header" and "signature", but some tag
-     * values have different meanings in signature and header (hence they use
-     * different enums)
-     */
-
-    class header_t : public kaitai::kstruct {
-
-    public:
-
-        header_t(bool p_is_signature, kaitai::kstream* p__io, rpm_t* p__parent = 0, rpm_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~header_t();
-
-    private:
-        bool f_is_header;
-        bool m_is_header;
-
-    public:
-        bool is_header();
-
-    private:
-        header_record_t* m_header_record;
-        std::vector<header_index_record_t*>* m_index_records;
-        dummy_t* m_storage_section;
-        bool m_is_signature;
-        rpm_t* m__root;
-        rpm_t* m__parent;
-        std::string m__raw_storage_section;
-        kaitai::kstream* m__io__raw_storage_section;
-
-    public:
-        header_record_t* header_record() const { return m_header_record; }
-        std::vector<header_index_record_t*>* index_records() const { return m_index_records; }
-        dummy_t* storage_section() const { return m_storage_section; }
-        bool is_signature() const { return m_is_signature; }
-        rpm_t* _root() const { return m__root; }
-        rpm_t* _parent() const { return m__parent; }
-        std::string _raw_storage_section() const { return m__raw_storage_section; }
-        kaitai::kstream* _io__raw_storage_section() const { return m__io__raw_storage_section; }
-    };
-
 private:
     bool f_has_signature_size_tag;
     bool m_has_signature_size_tag;
@@ -943,17 +988,11 @@ public:
     bool has_signature_size_tag();
 
 private:
-    bool f_signature_size_tag;
-    header_index_record_t* m_signature_size_tag;
-    bool n_signature_size_tag;
+    bool f_len_header;
+    int32_t m_len_header;
 
 public:
-    bool _is_null_signature_size_tag() { signature_size_tag(); return n_signature_size_tag; };
-
-private:
-
-public:
-    header_index_record_t* signature_size_tag();
+    int32_t len_header();
 
 private:
     bool f_len_payload;
@@ -969,6 +1008,20 @@ public:
     int32_t len_payload();
 
 private:
+    bool f_ofs_header;
+    int32_t m_ofs_header;
+
+public:
+    int32_t ofs_header();
+
+private:
+    bool f_ofs_payload;
+    int32_t m_ofs_payload;
+
+public:
+    int32_t ofs_payload();
+
+private:
     bool f_payload;
     std::string m_payload;
     bool n_payload;
@@ -982,25 +1035,17 @@ public:
     std::string payload();
 
 private:
-    bool f_len_header;
-    int32_t m_len_header;
+    bool f_signature_size_tag;
+    header_index_record_t* m_signature_size_tag;
+    bool n_signature_size_tag;
 
 public:
-    int32_t len_header();
+    bool _is_null_signature_size_tag() { signature_size_tag(); return n_signature_size_tag; };
 
 private:
-    bool f_ofs_header;
-    int32_t m_ofs_header;
 
 public:
-    int32_t ofs_header();
-
-private:
-    bool f_ofs_payload;
-    int32_t m_ofs_payload;
-
-public:
-    int32_t ofs_payload();
+    header_index_record_t* signature_size_tag();
 
 private:
     lead_t* m_lead;

@@ -5,8 +5,8 @@
 local class = require("class")
 require("kaitaistruct")
 local str_decode = require("string_decode")
-local stringstream = require("string_stream")
 local enum = require("enum")
+local stringstream = require("string_stream")
 
 -- 
 -- ### Building a test file
@@ -51,7 +51,7 @@ Lvm2.PhysicalVolume = class.class(KaitaiStruct)
 function Lvm2.PhysicalVolume:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -66,7 +66,7 @@ Lvm2.PhysicalVolume.Label = class.class(KaitaiStruct)
 function Lvm2.PhysicalVolume.Label:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -81,14 +81,14 @@ Lvm2.PhysicalVolume.Label.LabelHeader = class.class(KaitaiStruct)
 function Lvm2.PhysicalVolume.Label.LabelHeader:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function Lvm2.PhysicalVolume.Label.LabelHeader:_read()
   self.signature = self._io:read_bytes(8)
   if not(self.signature == "\076\065\066\069\076\079\078\069") then
-    error("not equal, expected " ..  "\076\065\066\069\076\079\078\069" .. ", but got " .. self.signature)
+    error("not equal, expected " .. "\076\065\066\069\076\079\078\069" .. ", but got " .. self.signature)
   end
   self.sector_number = self._io:read_u8le()
   self.checksum = self._io:read_u4le()
@@ -105,7 +105,7 @@ Lvm2.PhysicalVolume.Label.LabelHeader.LabelHeader = class.class(KaitaiStruct)
 function Lvm2.PhysicalVolume.Label.LabelHeader.LabelHeader:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -113,7 +113,7 @@ function Lvm2.PhysicalVolume.Label.LabelHeader.LabelHeader:_read()
   self.data_offset = self._io:read_u4le()
   self.type_indicator = self._io:read_bytes(8)
   if not(self.type_indicator == "\076\086\077\050\032\048\048\049") then
-    error("not equal, expected " ..  "\076\086\077\050\032\048\048\049" .. ", but got " .. self.type_indicator)
+    error("not equal, expected " .. "\076\086\077\050\032\048\048\049" .. ", but got " .. self.type_indicator)
   end
 end
 
@@ -125,12 +125,12 @@ Lvm2.PhysicalVolume.Label.VolumeHeader = class.class(KaitaiStruct)
 function Lvm2.PhysicalVolume.Label.VolumeHeader:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
 function Lvm2.PhysicalVolume.Label.VolumeHeader:_read()
-  self.id = str_decode.decode(self._io:read_bytes(32), "ascii")
+  self.id = str_decode.decode(self._io:read_bytes(32), "ASCII")
   self.size = self._io:read_u8le()
   self.data_area_descriptors = {}
   local i = 0
@@ -166,7 +166,7 @@ Lvm2.PhysicalVolume.Label.VolumeHeader.DataAreaDescriptor = class.class(KaitaiSt
 function Lvm2.PhysicalVolume.Label.VolumeHeader.DataAreaDescriptor:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -184,7 +184,7 @@ function Lvm2.PhysicalVolume.Label.VolumeHeader.DataAreaDescriptor.property.data
   if self.size ~= 0 then
     local _pos = self._io:pos()
     self._io:seek(self.offset)
-    self._m_data = str_decode.decode(self._io:read_bytes(self.size), "ascii")
+    self._m_data = str_decode.decode(self._io:read_bytes(self.size), "ASCII")
     self._io:seek(_pos)
   end
   return self._m_data
@@ -195,42 +195,6 @@ end
 -- 
 -- Value in bytes. Can be 0. [yellow-background]*Does this represent all remaining available space?*
 
-Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataAreaDescriptor = class.class(KaitaiStruct)
-
-function Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataAreaDescriptor:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataAreaDescriptor:_read()
-  self.offset = self._io:read_u8le()
-  self.size = self._io:read_u8le()
-end
-
-Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataAreaDescriptor.property.data = {}
-function Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataAreaDescriptor.property.data:get()
-  if self._m_data ~= nil then
-    return self._m_data
-  end
-
-  if self.size ~= 0 then
-    local _pos = self._io:pos()
-    self._io:seek(self.offset)
-    self._raw__m_data = self._io:read_bytes(self.size)
-    local _io = KaitaiStream(stringstream(self._raw__m_data))
-    self._m_data = Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataArea(_io, self, self._root)
-    self._io:seek(_pos)
-  end
-  return self._m_data
-end
-
--- 
--- The offset, in bytes, relative from the start of the physical volume.
--- 
--- Value in bytes.
-
 -- 
 -- According to `[REDHAT]` the metadata area is a circular buffer. New metadata is appended to the old metadata and then the pointer to the start of it is updated. The metadata area, therefore, can contain copies of older versions of the metadata.
 Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataArea = class.class(KaitaiStruct)
@@ -238,7 +202,7 @@ Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataArea = class.class(KaitaiStruct)
 function Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataArea:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -252,7 +216,7 @@ Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataArea.MetadataAreaHeader = class.c
 function Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataArea.MetadataAreaHeader:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -260,7 +224,7 @@ function Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataArea.MetadataAreaHeader:
   self.checksum = Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataArea.MetadataAreaHeader(self._io, self, self._root)
   self.signature = self._io:read_bytes(16)
   if not(self.signature == "\032\076\086\077\050\032\120\091\053\065\037\114\048\078\042\062") then
-    error("not equal, expected " ..  "\032\076\086\077\050\032\120\091\053\065\037\114\048\078\042\062" .. ", but got " .. self.signature)
+    error("not equal, expected " .. "\032\076\086\077\050\032\120\091\053\065\037\114\048\078\042\062" .. ", but got " .. self.signature)
   end
   self.version = self._io:read_u4le()
   self.metadata_area_offset = self._io:read_u8le()
@@ -308,7 +272,7 @@ Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataArea.MetadataAreaHeader.RawLocati
 function Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataArea.MetadataAreaHeader.RawLocationDescriptor:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -325,4 +289,40 @@ end
 -- data area size in bytes.
 -- 
 -- CRC-32 of *TODO (metadata?)*.
+
+Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataAreaDescriptor = class.class(KaitaiStruct)
+
+function Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataAreaDescriptor:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataAreaDescriptor:_read()
+  self.offset = self._io:read_u8le()
+  self.size = self._io:read_u8le()
+end
+
+Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataAreaDescriptor.property.data = {}
+function Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataAreaDescriptor.property.data:get()
+  if self._m_data ~= nil then
+    return self._m_data
+  end
+
+  if self.size ~= 0 then
+    local _pos = self._io:pos()
+    self._io:seek(self.offset)
+    self._raw__m_data = self._io:read_bytes(self.size)
+    local _io = KaitaiStream(stringstream(self._raw__m_data))
+    self._m_data = Lvm2.PhysicalVolume.Label.VolumeHeader.MetadataArea(_io, self, self._root)
+    self._io:seek(_pos)
+  end
+  return self._m_data
+end
+
+-- 
+-- The offset, in bytes, relative from the start of the physical volume.
+-- 
+-- Value in bytes.
 

@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -20,14 +20,14 @@ class PsxTim < Kaitai::Struct::Struct
     3 => :bpp_type_bpp_24,
   }
   I__BPP_TYPE = BPP_TYPE.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
   def _read
     @magic = @_io.read_bytes(4)
-    raise Kaitai::Struct::ValidationNotEqualError.new([16, 0, 0, 0].pack('C*'), magic, _io, "/seq/0") if not magic == [16, 0, 0, 0].pack('C*')
+    raise Kaitai::Struct::ValidationNotEqualError.new([16, 0, 0, 0].pack('C*'), @magic, @_io, "/seq/0") if not @magic == [16, 0, 0, 0].pack('C*')
     @flags = @_io.read_u4le
     if has_clut
       @clut = Bitmap.new(@_io, self, @_root)
@@ -36,7 +36,7 @@ class PsxTim < Kaitai::Struct::Struct
     self
   end
   class Bitmap < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -47,7 +47,7 @@ class PsxTim < Kaitai::Struct::Struct
       @origin_y = @_io.read_u2le
       @width = @_io.read_u2le
       @height = @_io.read_u2le
-      @body = @_io.read_bytes((len - 12))
+      @body = @_io.read_bytes(len - 12)
       self
     end
     attr_reader :len
@@ -57,15 +57,15 @@ class PsxTim < Kaitai::Struct::Struct
     attr_reader :height
     attr_reader :body
   end
-  def has_clut
-    return @has_clut unless @has_clut.nil?
-    @has_clut = (flags & 8) != 0
-    @has_clut
-  end
   def bpp
     return @bpp unless @bpp.nil?
-    @bpp = (flags & 3)
+    @bpp = flags & 3
     @bpp
+  end
+  def has_clut
+    return @has_clut unless @has_clut.nil?
+    @has_clut = flags & 8 != 0
+    @has_clut
   end
   attr_reader :magic
 

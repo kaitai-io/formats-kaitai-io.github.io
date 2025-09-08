@@ -44,114 +44,6 @@ namespace Kaitai
         {
             _chunk = new Chunk(m_io, this, m_root);
         }
-        public partial class ListChunkData : KaitaiStruct
-        {
-            public static ListChunkData FromFile(string fileName)
-            {
-                return new ListChunkData(new KaitaiStream(fileName));
-            }
-
-            public ListChunkData(KaitaiStream p__io, Riff.ChunkType p__parent = null, Riff p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_parentChunkDataOfs = false;
-                f_formType = false;
-                f_formTypeReadable = false;
-                f_subchunks = false;
-                _read();
-            }
-            private void _read()
-            {
-                if (ParentChunkDataOfs < 0) {
-                    _saveParentChunkDataOfs = m_io.ReadBytes(0);
-                }
-                _parentChunkData = new ParentChunkData(m_io, this, m_root);
-            }
-            private bool f_parentChunkDataOfs;
-            private int _parentChunkDataOfs;
-            public int ParentChunkDataOfs
-            {
-                get
-                {
-                    if (f_parentChunkDataOfs)
-                        return _parentChunkDataOfs;
-                    _parentChunkDataOfs = (int) (M_Io.Pos);
-                    f_parentChunkDataOfs = true;
-                    return _parentChunkDataOfs;
-                }
-            }
-            private bool f_formType;
-            private Fourcc _formType;
-            public Fourcc FormType
-            {
-                get
-                {
-                    if (f_formType)
-                        return _formType;
-                    _formType = (Fourcc) (((Riff.Fourcc) ParentChunkData.FormType));
-                    f_formType = true;
-                    return _formType;
-                }
-            }
-            private bool f_formTypeReadable;
-            private string _formTypeReadable;
-            public string FormTypeReadable
-            {
-                get
-                {
-                    if (f_formTypeReadable)
-                        return _formTypeReadable;
-                    long _pos = m_io.Pos;
-                    m_io.Seek(ParentChunkDataOfs);
-                    _formTypeReadable = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(4));
-                    m_io.Seek(_pos);
-                    f_formTypeReadable = true;
-                    return _formTypeReadable;
-                }
-            }
-            private bool f_subchunks;
-            private List<KaitaiStruct> _subchunks;
-            public List<KaitaiStruct> Subchunks
-            {
-                get
-                {
-                    if (f_subchunks)
-                        return _subchunks;
-                    KaitaiStream io = ParentChunkData.SubchunksSlot.M_Io;
-                    long _pos = io.Pos;
-                    io.Seek(0);
-                    _subchunks = new List<KaitaiStruct>();
-                    {
-                        var i = 0;
-                        while (!io.IsEof) {
-                            switch (FormType) {
-                            case Riff.Fourcc.Info: {
-                                _subchunks.Add(new InfoSubchunk(io, this, m_root));
-                                break;
-                            }
-                            default: {
-                                _subchunks.Add(new ChunkType(io, this, m_root));
-                                break;
-                            }
-                            }
-                            i++;
-                        }
-                    }
-                    io.Seek(_pos);
-                    f_subchunks = true;
-                    return _subchunks;
-                }
-            }
-            private byte[] _saveParentChunkDataOfs;
-            private ParentChunkData _parentChunkData;
-            private Riff m_root;
-            private Riff.ChunkType m_parent;
-            public byte[] SaveParentChunkDataOfs { get { return _saveParentChunkDataOfs; } }
-            public ParentChunkData ParentChunkData { get { return _parentChunkData; } }
-            public Riff M_Root { get { return m_root; } }
-            public Riff.ChunkType M_Parent { get { return m_parent; } }
-        }
         public partial class Chunk : KaitaiStruct
         {
             public static Chunk FromFile(string fileName)
@@ -210,6 +102,337 @@ namespace Kaitai
             public KaitaiStruct M_Parent { get { return m_parent; } }
             public byte[] M_RawDataSlot { get { return __raw_dataSlot; } }
         }
+        public partial class ChunkType : KaitaiStruct
+        {
+            public static ChunkType FromFile(string fileName)
+            {
+                return new ChunkType(new KaitaiStream(fileName));
+            }
+
+            public ChunkType(KaitaiStream p__io, KaitaiStruct p__parent = null, Riff p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_chunkData = false;
+                f_chunkId = false;
+                f_chunkIdReadable = false;
+                f_chunkOfs = false;
+                _read();
+            }
+            private void _read()
+            {
+                if (ChunkOfs < 0) {
+                    _saveChunkOfs = m_io.ReadBytes(0);
+                }
+                _chunk = new Chunk(m_io, this, m_root);
+            }
+            private bool f_chunkData;
+            private ListChunkData _chunkData;
+            public ListChunkData ChunkData
+            {
+                get
+                {
+                    if (f_chunkData)
+                        return _chunkData;
+                    f_chunkData = true;
+                    KaitaiStream io = Chunk.DataSlot.M_Io;
+                    long _pos = io.Pos;
+                    io.Seek(0);
+                    switch (ChunkId) {
+                    case Riff.Fourcc.List: {
+                        _chunkData = new ListChunkData(io, this, m_root);
+                        break;
+                    }
+                    }
+                    io.Seek(_pos);
+                    return _chunkData;
+                }
+            }
+            private bool f_chunkId;
+            private Fourcc _chunkId;
+            public Fourcc ChunkId
+            {
+                get
+                {
+                    if (f_chunkId)
+                        return _chunkId;
+                    f_chunkId = true;
+                    _chunkId = (Fourcc) (((Riff.Fourcc) Chunk.Id));
+                    return _chunkId;
+                }
+            }
+            private bool f_chunkIdReadable;
+            private string _chunkIdReadable;
+            public string ChunkIdReadable
+            {
+                get
+                {
+                    if (f_chunkIdReadable)
+                        return _chunkIdReadable;
+                    f_chunkIdReadable = true;
+                    long _pos = m_io.Pos;
+                    m_io.Seek(ChunkOfs);
+                    _chunkIdReadable = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(4));
+                    m_io.Seek(_pos);
+                    return _chunkIdReadable;
+                }
+            }
+            private bool f_chunkOfs;
+            private int _chunkOfs;
+            public int ChunkOfs
+            {
+                get
+                {
+                    if (f_chunkOfs)
+                        return _chunkOfs;
+                    f_chunkOfs = true;
+                    _chunkOfs = (int) (M_Io.Pos);
+                    return _chunkOfs;
+                }
+            }
+            private byte[] _saveChunkOfs;
+            private Chunk _chunk;
+            private Riff m_root;
+            private KaitaiStruct m_parent;
+            public byte[] SaveChunkOfs { get { return _saveChunkOfs; } }
+            public Chunk Chunk { get { return _chunk; } }
+            public Riff M_Root { get { return m_root; } }
+            public KaitaiStruct M_Parent { get { return m_parent; } }
+        }
+
+        /// <summary>
+        /// All registered subchunks in the INFO chunk are NULL-terminated strings,
+        /// but the unregistered might not be. By convention, the registered
+        /// chunk IDs are in uppercase and the unregistered IDs are in lowercase.
+        /// 
+        /// If the chunk ID of an INFO subchunk contains a lowercase
+        /// letter, this chunk is considered as unregistered and thus we can make
+        /// no assumptions about the type of data.
+        /// </summary>
+        public partial class InfoSubchunk : KaitaiStruct
+        {
+            public static InfoSubchunk FromFile(string fileName)
+            {
+                return new InfoSubchunk(new KaitaiStream(fileName));
+            }
+
+            public InfoSubchunk(KaitaiStream p__io, Riff.ListChunkData p__parent = null, Riff p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_chunkData = false;
+                f_chunkIdReadable = false;
+                f_chunkOfs = false;
+                f_idChars = false;
+                f_isUnregisteredTag = false;
+                _read();
+            }
+            private void _read()
+            {
+                if (ChunkOfs < 0) {
+                    _saveChunkOfs = m_io.ReadBytes(0);
+                }
+                _chunk = new Chunk(m_io, this, m_root);
+            }
+            private bool f_chunkData;
+            private string _chunkData;
+            public string ChunkData
+            {
+                get
+                {
+                    if (f_chunkData)
+                        return _chunkData;
+                    f_chunkData = true;
+                    KaitaiStream io = Chunk.DataSlot.M_Io;
+                    long _pos = io.Pos;
+                    io.Seek(0);
+                    {
+                        bool on = IsUnregisteredTag;
+                        if (on == false)
+                        {
+                            _chunkData = System.Text.Encoding.GetEncoding("UTF-8").GetString(io.ReadBytesTerm(0, false, true, true));
+                        }
+                    }
+                    io.Seek(_pos);
+                    return _chunkData;
+                }
+            }
+            private bool f_chunkIdReadable;
+            private string _chunkIdReadable;
+            public string ChunkIdReadable
+            {
+                get
+                {
+                    if (f_chunkIdReadable)
+                        return _chunkIdReadable;
+                    f_chunkIdReadable = true;
+                    _chunkIdReadable = (string) (System.Text.Encoding.GetEncoding("ASCII").GetString(IdChars));
+                    return _chunkIdReadable;
+                }
+            }
+            private bool f_chunkOfs;
+            private int _chunkOfs;
+            public int ChunkOfs
+            {
+                get
+                {
+                    if (f_chunkOfs)
+                        return _chunkOfs;
+                    f_chunkOfs = true;
+                    _chunkOfs = (int) (M_Io.Pos);
+                    return _chunkOfs;
+                }
+            }
+            private bool f_idChars;
+            private byte[] _idChars;
+            public byte[] IdChars
+            {
+                get
+                {
+                    if (f_idChars)
+                        return _idChars;
+                    f_idChars = true;
+                    long _pos = m_io.Pos;
+                    m_io.Seek(ChunkOfs);
+                    _idChars = m_io.ReadBytes(4);
+                    m_io.Seek(_pos);
+                    return _idChars;
+                }
+            }
+            private bool f_isUnregisteredTag;
+            private bool _isUnregisteredTag;
+
+            /// <summary>
+            /// Check if chunk_id contains lowercase characters ([a-z], ASCII 97 = a, ASCII 122 = z).
+            /// </summary>
+            public bool IsUnregisteredTag
+            {
+                get
+                {
+                    if (f_isUnregisteredTag)
+                        return _isUnregisteredTag;
+                    f_isUnregisteredTag = true;
+                    _isUnregisteredTag = (bool) ( (( ((IdChars[0] >= 97) && (IdChars[0] <= 122)) ) || ( ((IdChars[1] >= 97) && (IdChars[1] <= 122)) ) || ( ((IdChars[2] >= 97) && (IdChars[2] <= 122)) ) || ( ((IdChars[3] >= 97) && (IdChars[3] <= 122)) )) );
+                    return _isUnregisteredTag;
+                }
+            }
+            private byte[] _saveChunkOfs;
+            private Chunk _chunk;
+            private Riff m_root;
+            private Riff.ListChunkData m_parent;
+            public byte[] SaveChunkOfs { get { return _saveChunkOfs; } }
+            public Chunk Chunk { get { return _chunk; } }
+            public Riff M_Root { get { return m_root; } }
+            public Riff.ListChunkData M_Parent { get { return m_parent; } }
+        }
+        public partial class ListChunkData : KaitaiStruct
+        {
+            public static ListChunkData FromFile(string fileName)
+            {
+                return new ListChunkData(new KaitaiStream(fileName));
+            }
+
+            public ListChunkData(KaitaiStream p__io, Riff.ChunkType p__parent = null, Riff p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_formType = false;
+                f_formTypeReadable = false;
+                f_parentChunkDataOfs = false;
+                f_subchunks = false;
+                _read();
+            }
+            private void _read()
+            {
+                if (ParentChunkDataOfs < 0) {
+                    _saveParentChunkDataOfs = m_io.ReadBytes(0);
+                }
+                _parentChunkData = new ParentChunkData(m_io, this, m_root);
+            }
+            private bool f_formType;
+            private Fourcc _formType;
+            public Fourcc FormType
+            {
+                get
+                {
+                    if (f_formType)
+                        return _formType;
+                    f_formType = true;
+                    _formType = (Fourcc) (((Riff.Fourcc) ParentChunkData.FormType));
+                    return _formType;
+                }
+            }
+            private bool f_formTypeReadable;
+            private string _formTypeReadable;
+            public string FormTypeReadable
+            {
+                get
+                {
+                    if (f_formTypeReadable)
+                        return _formTypeReadable;
+                    f_formTypeReadable = true;
+                    long _pos = m_io.Pos;
+                    m_io.Seek(ParentChunkDataOfs);
+                    _formTypeReadable = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(4));
+                    m_io.Seek(_pos);
+                    return _formTypeReadable;
+                }
+            }
+            private bool f_parentChunkDataOfs;
+            private int _parentChunkDataOfs;
+            public int ParentChunkDataOfs
+            {
+                get
+                {
+                    if (f_parentChunkDataOfs)
+                        return _parentChunkDataOfs;
+                    f_parentChunkDataOfs = true;
+                    _parentChunkDataOfs = (int) (M_Io.Pos);
+                    return _parentChunkDataOfs;
+                }
+            }
+            private bool f_subchunks;
+            private List<KaitaiStruct> _subchunks;
+            public List<KaitaiStruct> Subchunks
+            {
+                get
+                {
+                    if (f_subchunks)
+                        return _subchunks;
+                    f_subchunks = true;
+                    KaitaiStream io = ParentChunkData.SubchunksSlot.M_Io;
+                    long _pos = io.Pos;
+                    io.Seek(0);
+                    _subchunks = new List<KaitaiStruct>();
+                    {
+                        var i = 0;
+                        while (!io.IsEof) {
+                            switch (FormType) {
+                            case Riff.Fourcc.Info: {
+                                _subchunks.Add(new InfoSubchunk(io, this, m_root));
+                                break;
+                            }
+                            default: {
+                                _subchunks.Add(new ChunkType(io, this, m_root));
+                                break;
+                            }
+                            }
+                            i++;
+                        }
+                    }
+                    io.Seek(_pos);
+                    return _subchunks;
+                }
+            }
+            private byte[] _saveParentChunkDataOfs;
+            private ParentChunkData _parentChunkData;
+            private Riff m_root;
+            private Riff.ChunkType m_parent;
+            public byte[] SaveParentChunkDataOfs { get { return _saveParentChunkDataOfs; } }
+            public ParentChunkData ParentChunkData { get { return _parentChunkData; } }
+            public Riff M_Root { get { return m_root; } }
+            public Riff.ChunkType M_Parent { get { return m_parent; } }
+        }
         public partial class ParentChunkData : KaitaiStruct
         {
             public static ParentChunkData FromFile(string fileName)
@@ -262,229 +485,6 @@ namespace Kaitai
             public KaitaiStruct M_Parent { get { return m_parent; } }
             public byte[] M_RawSubchunksSlot { get { return __raw_subchunksSlot; } }
         }
-
-        /// <summary>
-        /// All registered subchunks in the INFO chunk are NULL-terminated strings,
-        /// but the unregistered might not be. By convention, the registered
-        /// chunk IDs are in uppercase and the unregistered IDs are in lowercase.
-        /// 
-        /// If the chunk ID of an INFO subchunk contains a lowercase
-        /// letter, this chunk is considered as unregistered and thus we can make
-        /// no assumptions about the type of data.
-        /// </summary>
-        public partial class InfoSubchunk : KaitaiStruct
-        {
-            public static InfoSubchunk FromFile(string fileName)
-            {
-                return new InfoSubchunk(new KaitaiStream(fileName));
-            }
-
-            public InfoSubchunk(KaitaiStream p__io, Riff.ListChunkData p__parent = null, Riff p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_chunkData = false;
-                f_isUnregisteredTag = false;
-                f_idChars = false;
-                f_chunkIdReadable = false;
-                f_chunkOfs = false;
-                _read();
-            }
-            private void _read()
-            {
-                if (ChunkOfs < 0) {
-                    _saveChunkOfs = m_io.ReadBytes(0);
-                }
-                _chunk = new Chunk(m_io, this, m_root);
-            }
-            private bool f_chunkData;
-            private string _chunkData;
-            public string ChunkData
-            {
-                get
-                {
-                    if (f_chunkData)
-                        return _chunkData;
-                    KaitaiStream io = Chunk.DataSlot.M_Io;
-                    long _pos = io.Pos;
-                    io.Seek(0);
-                    {
-                        bool on = IsUnregisteredTag;
-                        if (on == false)
-                        {
-                            _chunkData = System.Text.Encoding.GetEncoding("UTF-8").GetString(io.ReadBytesTerm(0, false, true, true));
-                        }
-                    }
-                    io.Seek(_pos);
-                    f_chunkData = true;
-                    return _chunkData;
-                }
-            }
-            private bool f_isUnregisteredTag;
-            private bool _isUnregisteredTag;
-
-            /// <summary>
-            /// Check if chunk_id contains lowercase characters ([a-z], ASCII 97 = a, ASCII 122 = z).
-            /// </summary>
-            public bool IsUnregisteredTag
-            {
-                get
-                {
-                    if (f_isUnregisteredTag)
-                        return _isUnregisteredTag;
-                    _isUnregisteredTag = (bool) ( (( ((IdChars[0] >= 97) && (IdChars[0] <= 122)) ) || ( ((IdChars[1] >= 97) && (IdChars[1] <= 122)) ) || ( ((IdChars[2] >= 97) && (IdChars[2] <= 122)) ) || ( ((IdChars[3] >= 97) && (IdChars[3] <= 122)) )) );
-                    f_isUnregisteredTag = true;
-                    return _isUnregisteredTag;
-                }
-            }
-            private bool f_idChars;
-            private byte[] _idChars;
-            public byte[] IdChars
-            {
-                get
-                {
-                    if (f_idChars)
-                        return _idChars;
-                    long _pos = m_io.Pos;
-                    m_io.Seek(ChunkOfs);
-                    _idChars = m_io.ReadBytes(4);
-                    m_io.Seek(_pos);
-                    f_idChars = true;
-                    return _idChars;
-                }
-            }
-            private bool f_chunkIdReadable;
-            private string _chunkIdReadable;
-            public string ChunkIdReadable
-            {
-                get
-                {
-                    if (f_chunkIdReadable)
-                        return _chunkIdReadable;
-                    _chunkIdReadable = (string) (System.Text.Encoding.GetEncoding("ASCII").GetString(IdChars));
-                    f_chunkIdReadable = true;
-                    return _chunkIdReadable;
-                }
-            }
-            private bool f_chunkOfs;
-            private int _chunkOfs;
-            public int ChunkOfs
-            {
-                get
-                {
-                    if (f_chunkOfs)
-                        return _chunkOfs;
-                    _chunkOfs = (int) (M_Io.Pos);
-                    f_chunkOfs = true;
-                    return _chunkOfs;
-                }
-            }
-            private byte[] _saveChunkOfs;
-            private Chunk _chunk;
-            private Riff m_root;
-            private Riff.ListChunkData m_parent;
-            public byte[] SaveChunkOfs { get { return _saveChunkOfs; } }
-            public Chunk Chunk { get { return _chunk; } }
-            public Riff M_Root { get { return m_root; } }
-            public Riff.ListChunkData M_Parent { get { return m_parent; } }
-        }
-        public partial class ChunkType : KaitaiStruct
-        {
-            public static ChunkType FromFile(string fileName)
-            {
-                return new ChunkType(new KaitaiStream(fileName));
-            }
-
-            public ChunkType(KaitaiStream p__io, KaitaiStruct p__parent = null, Riff p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_chunkOfs = false;
-                f_chunkId = false;
-                f_chunkIdReadable = false;
-                f_chunkData = false;
-                _read();
-            }
-            private void _read()
-            {
-                if (ChunkOfs < 0) {
-                    _saveChunkOfs = m_io.ReadBytes(0);
-                }
-                _chunk = new Chunk(m_io, this, m_root);
-            }
-            private bool f_chunkOfs;
-            private int _chunkOfs;
-            public int ChunkOfs
-            {
-                get
-                {
-                    if (f_chunkOfs)
-                        return _chunkOfs;
-                    _chunkOfs = (int) (M_Io.Pos);
-                    f_chunkOfs = true;
-                    return _chunkOfs;
-                }
-            }
-            private bool f_chunkId;
-            private Fourcc _chunkId;
-            public Fourcc ChunkId
-            {
-                get
-                {
-                    if (f_chunkId)
-                        return _chunkId;
-                    _chunkId = (Fourcc) (((Riff.Fourcc) Chunk.Id));
-                    f_chunkId = true;
-                    return _chunkId;
-                }
-            }
-            private bool f_chunkIdReadable;
-            private string _chunkIdReadable;
-            public string ChunkIdReadable
-            {
-                get
-                {
-                    if (f_chunkIdReadable)
-                        return _chunkIdReadable;
-                    long _pos = m_io.Pos;
-                    m_io.Seek(ChunkOfs);
-                    _chunkIdReadable = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(4));
-                    m_io.Seek(_pos);
-                    f_chunkIdReadable = true;
-                    return _chunkIdReadable;
-                }
-            }
-            private bool f_chunkData;
-            private ListChunkData _chunkData;
-            public ListChunkData ChunkData
-            {
-                get
-                {
-                    if (f_chunkData)
-                        return _chunkData;
-                    KaitaiStream io = Chunk.DataSlot.M_Io;
-                    long _pos = io.Pos;
-                    io.Seek(0);
-                    switch (ChunkId) {
-                    case Riff.Fourcc.List: {
-                        _chunkData = new ListChunkData(io, this, m_root);
-                        break;
-                    }
-                    }
-                    io.Seek(_pos);
-                    f_chunkData = true;
-                    return _chunkData;
-                }
-            }
-            private byte[] _saveChunkOfs;
-            private Chunk _chunk;
-            private Riff m_root;
-            private KaitaiStruct m_parent;
-            public byte[] SaveChunkOfs { get { return _saveChunkOfs; } }
-            public Chunk Chunk { get { return _chunk; } }
-            public Riff M_Root { get { return m_root; } }
-            public KaitaiStruct M_Parent { get { return m_parent; } }
-        }
         private bool f_chunkId;
         private Fourcc _chunkId;
         public Fourcc ChunkId
@@ -493,8 +493,8 @@ namespace Kaitai
             {
                 if (f_chunkId)
                     return _chunkId;
-                _chunkId = (Fourcc) (((Fourcc) Chunk.Id));
                 f_chunkId = true;
+                _chunkId = (Fourcc) (((Fourcc) Chunk.Id));
                 return _chunkId;
             }
         }
@@ -506,8 +506,8 @@ namespace Kaitai
             {
                 if (f_isRiffChunk)
                     return _isRiffChunk;
-                _isRiffChunk = (bool) (ChunkId == Fourcc.Riff);
                 f_isRiffChunk = true;
+                _isRiffChunk = (bool) (ChunkId == Fourcc.Riff);
                 return _isRiffChunk;
             }
         }
@@ -519,13 +519,13 @@ namespace Kaitai
             {
                 if (f_parentChunkData)
                     return _parentChunkData;
+                f_parentChunkData = true;
                 if (IsRiffChunk) {
                     KaitaiStream io = Chunk.DataSlot.M_Io;
                     long _pos = io.Pos;
                     io.Seek(0);
                     _parentChunkData = new ParentChunkData(io, this, m_root);
                     io.Seek(_pos);
-                    f_parentChunkData = true;
                 }
                 return _parentChunkData;
             }
@@ -538,6 +538,7 @@ namespace Kaitai
             {
                 if (f_subchunks)
                     return _subchunks;
+                f_subchunks = true;
                 if (IsRiffChunk) {
                     KaitaiStream io = ParentChunkData.SubchunksSlot.M_Io;
                     long _pos = io.Pos;
@@ -551,7 +552,6 @@ namespace Kaitai
                         }
                     }
                     io.Seek(_pos);
-                    f_subchunks = true;
                 }
                 return _subchunks;
             }

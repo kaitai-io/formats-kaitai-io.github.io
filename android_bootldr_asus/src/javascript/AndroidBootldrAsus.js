@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.AndroidBootldrAsus = factory(root.KaitaiStream);
+    factory(root.AndroidBootldrAsus || (root.AndroidBootldrAsus = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (AndroidBootldrAsus_, KaitaiStream) {
 /**
  * A bootloader image which only seems to have been used on a few ASUS
  * devices. The encoding is ASCII, because the `releasetools.py` script
@@ -29,8 +29,8 @@ var AndroidBootldrAsus = (function() {
   }
   AndroidBootldrAsus.prototype._read = function() {
     this.magic = this._io.readBytes(8);
-    if (!((KaitaiStream.byteArrayCompare(this.magic, [66, 79, 79, 84, 76, 68, 82, 33]) == 0))) {
-      throw new KaitaiStream.ValidationNotEqualError([66, 79, 79, 84, 76, 68, 82, 33], this.magic, this._io, "/seq/0");
+    if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([66, 79, 79, 84, 76, 68, 82, 33])) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([66, 79, 79, 84, 76, 68, 82, 33]), this.magic, this._io, "/seq/0");
     }
     this.revision = this._io.readU2le();
     if (!(this.revision >= 2)) {
@@ -48,7 +48,7 @@ var AndroidBootldrAsus = (function() {
     function Image(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -87,5 +87,5 @@ var AndroidBootldrAsus = (function() {
 
   return AndroidBootldrAsus;
 })();
-return AndroidBootldrAsus;
-}));
+AndroidBootldrAsus_.AndroidBootldrAsus = AndroidBootldrAsus;
+});

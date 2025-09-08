@@ -2,13 +2,16 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class windows_evt_log_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
 #include <vector>
+#include <set>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -39,10 +42,10 @@
 class windows_evt_log_t : public kaitai::kstruct {
 
 public:
+    class cursor_record_body_t;
     class header_t;
     class record_t;
     class record_body_t;
-    class cursor_record_body_t;
 
     windows_evt_log_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, windows_evt_log_t* p__root = nullptr);
 
@@ -52,6 +55,42 @@ private:
 
 public:
     ~windows_evt_log_t();
+
+    /**
+     * \sa https://forensics.wiki/windows_event_log_(evt)/#cursor-record Source
+     */
+
+    class cursor_record_body_t : public kaitai::kstruct {
+
+    public:
+
+        cursor_record_body_t(kaitai::kstream* p__io, windows_evt_log_t::record_t* p__parent = nullptr, windows_evt_log_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~cursor_record_body_t();
+
+    private:
+        std::string m_magic;
+        uint32_t m_ofs_first_record;
+        uint32_t m_ofs_next_record;
+        uint32_t m_idx_next_record;
+        uint32_t m_idx_first_record;
+        windows_evt_log_t* m__root;
+        windows_evt_log_t::record_t* m__parent;
+
+    public:
+        std::string magic() const { return m_magic; }
+        uint32_t ofs_first_record() const { return m_ofs_first_record; }
+        uint32_t ofs_next_record() const { return m_ofs_next_record; }
+        uint32_t idx_next_record() const { return m_idx_next_record; }
+        uint32_t idx_first_record() const { return m_idx_first_record; }
+        windows_evt_log_t* _root() const { return m__root; }
+        windows_evt_log_t::record_t* _parent() const { return m__parent; }
+    };
 
     /**
      * \sa https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb309024(v=vs.85) Source
@@ -261,6 +300,12 @@ public:
             EVENT_TYPES_INFO = 4,
             EVENT_TYPES_WARNING = 5
         };
+        static bool _is_defined_event_types_t(event_types_t v);
+
+    private:
+        static const std::set<event_types_t> _values_event_types_t;
+
+    public:
 
         record_body_t(kaitai::kstream* p__io, windows_evt_log_t::record_t* p__parent = nullptr, windows_evt_log_t* p__root = nullptr);
 
@@ -272,18 +317,18 @@ public:
         ~record_body_t();
 
     private:
-        bool f_user_sid;
-        std::string m_user_sid;
-
-    public:
-        std::string user_sid();
-
-    private:
         bool f_data;
         std::string m_data;
 
     public:
         std::string data();
+
+    private:
+        bool f_user_sid;
+        std::string m_user_sid;
+
+    public:
+        std::string user_sid();
 
     private:
         uint32_t m_idx;
@@ -350,42 +395,6 @@ public:
         uint32_t ofs_user_sid() const { return m_ofs_user_sid; }
         uint32_t len_data() const { return m_len_data; }
         uint32_t ofs_data() const { return m_ofs_data; }
-        windows_evt_log_t* _root() const { return m__root; }
-        windows_evt_log_t::record_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * \sa https://forensics.wiki/windows_event_log_(evt)/#cursor-record Source
-     */
-
-    class cursor_record_body_t : public kaitai::kstruct {
-
-    public:
-
-        cursor_record_body_t(kaitai::kstream* p__io, windows_evt_log_t::record_t* p__parent = nullptr, windows_evt_log_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~cursor_record_body_t();
-
-    private:
-        std::string m_magic;
-        uint32_t m_ofs_first_record;
-        uint32_t m_ofs_next_record;
-        uint32_t m_idx_next_record;
-        uint32_t m_idx_first_record;
-        windows_evt_log_t* m__root;
-        windows_evt_log_t::record_t* m__parent;
-
-    public:
-        std::string magic() const { return m_magic; }
-        uint32_t ofs_first_record() const { return m_ofs_first_record; }
-        uint32_t ofs_next_record() const { return m_ofs_next_record; }
-        uint32_t idx_next_record() const { return m_idx_next_record; }
-        uint32_t idx_first_record() const { return m_idx_first_record; }
         windows_evt_log_t* _root() const { return m__root; }
         windows_evt_log_t::record_t* _parent() const { return m__parent; }
     };

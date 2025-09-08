@@ -12,8 +12,8 @@
 
 namespace {
     class Id3v11 extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Id3v11 $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Id3v11 $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -24,7 +24,7 @@ namespace {
             if ($this->_m_id3v1Tag !== null)
                 return $this->_m_id3v1Tag;
             $_pos = $this->_io->pos();
-            $this->_io->seek(($this->_io()->size() - 128));
+            $this->_io->seek($this->_io()->size() - 128);
             $this->_m_id3v1Tag = new \Id3v11\Id3V11Tag($this->_io, $this, $this->_root);
             $this->_io->seek($_pos);
             return $this->_m_id3v1Tag;
@@ -46,15 +46,15 @@ namespace {
 
 namespace Id3v11 {
     class Id3V11Tag extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Id3v11 $_parent = null, \Id3v11 $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Id3v11 $_parent = null, ?\Id3v11 $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic = $this->_io->readBytes(3);
-            if (!($this->magic() == "\x54\x41\x47")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x54\x41\x47", $this->magic(), $this->_io(), "/types/id3_v1_1_tag/seq/0");
+            if (!($this->_m_magic == "\x54\x41\x47")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x54\x41\x47", $this->_m_magic, $this->_io, "/types/id3_v1_1_tag/seq/0");
             }
             $this->_m_title = $this->_io->readBytes(30);
             $this->_m_artist = $this->_io->readBytes(30);
@@ -228,5 +228,11 @@ namespace Id3v11\Id3V11Tag {
         const A_CAPELLA = 123;
         const EURO_HOUSE = 124;
         const DANCE_HALL = 125;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 7 => true, 8 => true, 9 => true, 10 => true, 11 => true, 12 => true, 13 => true, 14 => true, 15 => true, 16 => true, 17 => true, 18 => true, 19 => true, 20 => true, 21 => true, 22 => true, 23 => true, 24 => true, 25 => true, 26 => true, 27 => true, 28 => true, 29 => true, 30 => true, 31 => true, 32 => true, 33 => true, 34 => true, 35 => true, 36 => true, 37 => true, 38 => true, 39 => true, 40 => true, 41 => true, 42 => true, 43 => true, 44 => true, 45 => true, 46 => true, 47 => true, 48 => true, 49 => true, 50 => true, 51 => true, 52 => true, 53 => true, 54 => true, 55 => true, 56 => true, 57 => true, 58 => true, 59 => true, 60 => true, 61 => true, 62 => true, 63 => true, 64 => true, 65 => true, 66 => true, 67 => true, 68 => true, 69 => true, 70 => true, 71 => true, 72 => true, 73 => true, 74 => true, 75 => true, 76 => true, 77 => true, 78 => true, 79 => true, 80 => true, 81 => true, 82 => true, 83 => true, 84 => true, 85 => true, 86 => true, 87 => true, 88 => true, 89 => true, 90 => true, 91 => true, 92 => true, 93 => true, 94 => true, 95 => true, 96 => true, 97 => true, 98 => true, 99 => true, 100 => true, 101 => true, 102 => true, 103 => true, 104 => true, 105 => true, 106 => true, 107 => true, 108 => true, 109 => true, 110 => true, 111 => true, 112 => true, 113 => true, 114 => true, 115 => true, 116 => true, 117 => true, 118 => true, 119 => true, 120 => true, 121 => true, 122 => true, 123 => true, 124 => true, 125 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

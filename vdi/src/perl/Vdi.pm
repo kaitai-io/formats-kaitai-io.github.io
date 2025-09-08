@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Encode;
 
 ########################################################################
@@ -30,7 +30,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -90,6 +90,237 @@ sub _raw_blocks_map {
 }
 
 ########################################################################
+package Vdi::BlocksMap;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{index} = [];
+    my $n_index = $self->_root()->header()->header_main()->blocks_in_image();
+    for (my $i = 0; $i < $n_index; $i++) {
+        push @{$self->{index}}, Vdi::BlocksMap::BlockIndex->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub index {
+    my ($self) = @_;
+    return $self->{index};
+}
+
+########################################################################
+package Vdi::BlocksMap::BlockIndex;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{index} = $self->{_io}->read_u4le();
+}
+
+sub block {
+    my ($self) = @_;
+    return $self->{block} if ($self->{block});
+    if ($self->is_allocated()) {
+        $self->{block} = @{$self->_root()->disk()->blocks()}[$self->index()];
+    }
+    return $self->{block};
+}
+
+sub is_allocated {
+    my ($self) = @_;
+    return $self->{is_allocated} if ($self->{is_allocated});
+    $self->{is_allocated} = $self->index() < $self->_root()->block_discarded();
+    return $self->{is_allocated};
+}
+
+sub index {
+    my ($self) = @_;
+    return $self->{index};
+}
+
+########################################################################
+package Vdi::Disk;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{blocks} = [];
+    my $n_blocks = $self->_root()->header()->header_main()->blocks_in_image();
+    for (my $i = 0; $i < $n_blocks; $i++) {
+        push @{$self->{blocks}}, Vdi::Disk::Block->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub blocks {
+    my ($self) = @_;
+    return $self->{blocks};
+}
+
+########################################################################
+package Vdi::Disk::Block;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{metadata} = $self->{_io}->read_bytes($self->_root()->header()->header_main()->block_metadata_size());
+    $self->{_raw_data} = [];
+    $self->{data} = [];
+    while (!$self->{_io}->is_eof()) {
+        push @{$self->{_raw_data}}, $self->{_io}->read_bytes($self->_root()->header()->header_main()->block_data_size());
+        my $io__raw_data = IO::KaitaiStruct::Stream->new($self->{_raw_data}[-1]);
+        push @{$self->{data}}, Vdi::Disk::Block::Sector->new($io__raw_data, $self, $self->{_root});
+    }
+}
+
+sub metadata {
+    my ($self) = @_;
+    return $self->{metadata};
+}
+
+sub data {
+    my ($self) = @_;
+    return $self->{data};
+}
+
+sub _raw_data {
+    my ($self) = @_;
+    return $self->{_raw_data};
+}
+
+########################################################################
+package Vdi::Disk::Block::Sector;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{data} = $self->{_io}->read_bytes($self->_root()->header()->header_main()->geometry()->sector_size());
+}
+
+sub data {
+    my ($self) = @_;
+    return $self->{data};
+}
+
+########################################################################
 package Vdi::Header;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -109,7 +340,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -119,7 +350,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{text} = Encode::decode("utf-8", $self->{_io}->read_bytes(64));
+    $self->{text} = Encode::decode("UTF-8", $self->{_io}->read_bytes(64));
     $self->{signature} = $self->{_io}->read_bytes(4);
     $self->{version} = Vdi::Header::Version->new($self->{_io}, $self, $self->{_root});
     if ($self->subheader_size_is_dynamic()) {
@@ -130,11 +361,11 @@ sub _read {
     $self->{header_main} = Vdi::Header::HeaderMain->new($io__raw_header_main, $self, $self->{_root});
 }
 
-sub header_size {
+sub block_size {
     my ($self) = @_;
-    return $self->{header_size} if ($self->{header_size});
-    $self->{header_size} = ($self->subheader_size_is_dynamic() ? $self->header_size_optional() : 336);
-    return $self->{header_size};
+    return $self->{block_size} if ($self->{block_size});
+    $self->{block_size} = $self->header_main()->block_metadata_size() + $self->header_main()->block_data_size();
+    return $self->{block_size};
 }
 
 sub blocks_map_offset {
@@ -144,11 +375,11 @@ sub blocks_map_offset {
     return $self->{blocks_map_offset};
 }
 
-sub subheader_size_is_dynamic {
+sub blocks_map_size {
     my ($self) = @_;
-    return $self->{subheader_size_is_dynamic} if ($self->{subheader_size_is_dynamic});
-    $self->{subheader_size_is_dynamic} = $self->version()->major() >= 1;
-    return $self->{subheader_size_is_dynamic};
+    return $self->{blocks_map_size} if ($self->{blocks_map_size});
+    $self->{blocks_map_size} = int((($self->header_main()->blocks_in_image() * 4 + $self->header_main()->geometry()->sector_size()) - 1) / $self->header_main()->geometry()->sector_size()) * $self->header_main()->geometry()->sector_size();
+    return $self->{blocks_map_size};
 }
 
 sub blocks_offset {
@@ -158,18 +389,18 @@ sub blocks_offset {
     return $self->{blocks_offset};
 }
 
-sub block_size {
+sub header_size {
     my ($self) = @_;
-    return $self->{block_size} if ($self->{block_size});
-    $self->{block_size} = ($self->header_main()->block_metadata_size() + $self->header_main()->block_data_size());
-    return $self->{block_size};
+    return $self->{header_size} if ($self->{header_size});
+    $self->{header_size} = ($self->subheader_size_is_dynamic() ? $self->header_size_optional() : 336);
+    return $self->{header_size};
 }
 
-sub blocks_map_size {
+sub subheader_size_is_dynamic {
     my ($self) = @_;
-    return $self->{blocks_map_size} if ($self->{blocks_map_size});
-    $self->{blocks_map_size} = (int(((($self->header_main()->blocks_in_image() * 4) + $self->header_main()->geometry()->sector_size()) - 1) / $self->header_main()->geometry()->sector_size()) * $self->header_main()->geometry()->sector_size());
-    return $self->{blocks_map_size};
+    return $self->{subheader_size_is_dynamic} if ($self->{subheader_size_is_dynamic});
+    $self->{subheader_size_is_dynamic} = $self->version()->major() >= 1;
+    return $self->{subheader_size_is_dynamic};
 }
 
 sub text {
@@ -203,88 +434,6 @@ sub _raw_header_main {
 }
 
 ########################################################################
-package Vdi::Header::Uuid;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{uuid} = $self->{_io}->read_bytes(16);
-}
-
-sub uuid {
-    my ($self) = @_;
-    return $self->{uuid};
-}
-
-########################################################################
-package Vdi::Header::Version;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{major} = $self->{_io}->read_u2le();
-    $self->{minor} = $self->{_io}->read_u2le();
-}
-
-sub major {
-    my ($self) = @_;
-    return $self->{major};
-}
-
-sub minor {
-    my ($self) = @_;
-    return $self->{minor};
-}
-
-########################################################################
 package Vdi::Header::HeaderMain;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -304,7 +453,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -316,7 +465,7 @@ sub _read {
 
     $self->{image_type} = $self->{_io}->read_u4le();
     $self->{image_flags} = Vdi::Header::HeaderMain::Flags->new($self->{_io}, $self, $self->{_root});
-    $self->{description} = Encode::decode("utf-8", $self->{_io}->read_bytes(256));
+    $self->{description} = Encode::decode("UTF-8", $self->{_io}->read_bytes(256));
     if ($self->_parent()->version()->major() >= 1) {
         $self->{blocks_map_offset} = $self->{_io}->read_u4le();
     }
@@ -340,7 +489,7 @@ sub _read {
     if ($self->_parent()->version()->major() >= 1) {
         $self->{uuid_parent} = Vdi::Header::Uuid->new($self->{_io}, $self, $self->{_root});
     }
-    if ( (($self->_parent()->version()->major() >= 1) && (($self->_io()->pos() + 16) <= $self->_io()->size())) ) {
+    if ( (($self->_parent()->version()->major() >= 1) && ($self->_io()->pos() + 16 <= $self->_io()->size())) ) {
         $self->{lchc_geometry} = Vdi::Header::HeaderMain::Geometry->new($self->{_io}, $self, $self->{_root});
     }
 }
@@ -431,62 +580,6 @@ sub lchc_geometry {
 }
 
 ########################################################################
-package Vdi::Header::HeaderMain::Geometry;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{cylinders} = $self->{_io}->read_u4le();
-    $self->{heads} = $self->{_io}->read_u4le();
-    $self->{sectors} = $self->{_io}->read_u4le();
-    $self->{sector_size} = $self->{_io}->read_u4le();
-}
-
-sub cylinders {
-    my ($self) = @_;
-    return $self->{cylinders};
-}
-
-sub heads {
-    my ($self) = @_;
-    return $self->{heads};
-}
-
-sub sectors {
-    my ($self) = @_;
-    return $self->{sectors};
-}
-
-sub sector_size {
-    my ($self) = @_;
-    return $self->{sector_size};
-}
-
-########################################################################
 package Vdi::Header::HeaderMain::Flags;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -506,7 +599,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -555,7 +648,7 @@ sub reserved2 {
 }
 
 ########################################################################
-package Vdi::BlocksMap;
+package Vdi::Header::HeaderMain::Geometry;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -574,7 +667,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -584,20 +677,34 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{index} = ();
-    my $n_index = $self->_root()->header()->header_main()->blocks_in_image();
-    for (my $i = 0; $i < $n_index; $i++) {
-        push @{$self->{index}}, Vdi::BlocksMap::BlockIndex->new($self->{_io}, $self, $self->{_root});
-    }
+    $self->{cylinders} = $self->{_io}->read_u4le();
+    $self->{heads} = $self->{_io}->read_u4le();
+    $self->{sectors} = $self->{_io}->read_u4le();
+    $self->{sector_size} = $self->{_io}->read_u4le();
 }
 
-sub index {
+sub cylinders {
     my ($self) = @_;
-    return $self->{index};
+    return $self->{cylinders};
+}
+
+sub heads {
+    my ($self) = @_;
+    return $self->{heads};
+}
+
+sub sectors {
+    my ($self) = @_;
+    return $self->{sectors};
+}
+
+sub sector_size {
+    my ($self) = @_;
+    return $self->{sector_size};
 }
 
 ########################################################################
-package Vdi::BlocksMap::BlockIndex;
+package Vdi::Header::Uuid;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -616,7 +723,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -626,32 +733,16 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{index} = $self->{_io}->read_u4le();
+    $self->{uuid} = $self->{_io}->read_bytes(16);
 }
 
-sub is_allocated {
+sub uuid {
     my ($self) = @_;
-    return $self->{is_allocated} if ($self->{is_allocated});
-    $self->{is_allocated} = $self->index() < $self->_root()->block_discarded();
-    return $self->{is_allocated};
-}
-
-sub block {
-    my ($self) = @_;
-    return $self->{block} if ($self->{block});
-    if ($self->is_allocated()) {
-        $self->{block} = @{$self->_root()->disk()->blocks()}[$self->index()];
-    }
-    return $self->{block};
-}
-
-sub index {
-    my ($self) = @_;
-    return $self->{index};
+    return $self->{uuid};
 }
 
 ########################################################################
-package Vdi::Disk;
+package Vdi::Header::Version;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -670,7 +761,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -680,109 +771,18 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{blocks} = ();
-    my $n_blocks = $self->_root()->header()->header_main()->blocks_in_image();
-    for (my $i = 0; $i < $n_blocks; $i++) {
-        push @{$self->{blocks}}, Vdi::Disk::Block->new($self->{_io}, $self, $self->{_root});
-    }
+    $self->{major} = $self->{_io}->read_u2le();
+    $self->{minor} = $self->{_io}->read_u2le();
 }
 
-sub blocks {
+sub major {
     my ($self) = @_;
-    return $self->{blocks};
+    return $self->{major};
 }
 
-########################################################################
-package Vdi::Disk::Block;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
+sub minor {
     my ($self) = @_;
-
-    $self->{metadata} = $self->{_io}->read_bytes($self->_root()->header()->header_main()->block_metadata_size());
-    $self->{_raw_data} = ();
-    $self->{data} = ();
-    while (!$self->{_io}->is_eof()) {
-        push @{$self->{_raw_data}}, $self->{_io}->read_bytes($self->_root()->header()->header_main()->block_data_size());
-        my $io__raw_data = IO::KaitaiStruct::Stream->new($self->{_raw_data}[-1]);
-        push @{$self->{data}}, Vdi::Disk::Block::Sector->new($io__raw_data, $self, $self->{_root});
-    }
-}
-
-sub metadata {
-    my ($self) = @_;
-    return $self->{metadata};
-}
-
-sub data {
-    my ($self) = @_;
-    return $self->{data};
-}
-
-sub _raw_data {
-    my ($self) = @_;
-    return $self->{_raw_data};
-}
-
-########################################################################
-package Vdi::Disk::Block::Sector;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{data} = $self->{_io}->read_bytes($self->_root()->header()->header_main()->geometry()->sector_size());
-}
-
-sub data {
-    my ($self) = @_;
-    return $self->{data};
+    return $self->{minor};
 }
 
 1;

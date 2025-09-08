@@ -2,13 +2,13 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 class MicrosoftCfb < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -17,20 +17,20 @@ class MicrosoftCfb < Kaitai::Struct::Struct
     self
   end
   class CfbHeader < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
       @signature = @_io.read_bytes(8)
-      raise Kaitai::Struct::ValidationNotEqualError.new([208, 207, 17, 224, 161, 177, 26, 225].pack('C*'), signature, _io, "/types/cfb_header/seq/0") if not signature == [208, 207, 17, 224, 161, 177, 26, 225].pack('C*')
+      raise Kaitai::Struct::ValidationNotEqualError.new([208, 207, 17, 224, 161, 177, 26, 225].pack('C*'), @signature, @_io, "/types/cfb_header/seq/0") if not @signature == [208, 207, 17, 224, 161, 177, 26, 225].pack('C*')
       @clsid = @_io.read_bytes(16)
-      raise Kaitai::Struct::ValidationNotEqualError.new([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0].pack('C*'), clsid, _io, "/types/cfb_header/seq/1") if not clsid == [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0].pack('C*')
+      raise Kaitai::Struct::ValidationNotEqualError.new([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0].pack('C*'), @clsid, @_io, "/types/cfb_header/seq/1") if not @clsid == [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0].pack('C*')
       @version_minor = @_io.read_u2le
       @version_major = @_io.read_u2le
       @byte_order = @_io.read_bytes(2)
-      raise Kaitai::Struct::ValidationNotEqualError.new([254, 255].pack('C*'), byte_order, _io, "/types/cfb_header/seq/4") if not byte_order == [254, 255].pack('C*')
+      raise Kaitai::Struct::ValidationNotEqualError.new([254, 255].pack('C*'), @byte_order, @_io, "/types/cfb_header/seq/4") if not @byte_order == [254, 255].pack('C*')
       @sector_shift = @_io.read_u2le
       @mini_sector_shift = @_io.read_u2le
       @reserved1 = @_io.read_bytes(6)
@@ -104,23 +104,6 @@ class MicrosoftCfb < Kaitai::Struct::Struct
     attr_reader :size_difat
     attr_reader :difat
   end
-  class FatEntries < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
-
-    def _read
-      @entries = []
-      i = 0
-      while not @_io.eof?
-        @entries << @_io.read_s4le
-        i += 1
-      end
-      self
-    end
-    attr_reader :entries
-  end
   class DirEntry < Kaitai::Struct::Struct
 
     OBJ_TYPE = {
@@ -136,13 +119,13 @@ class MicrosoftCfb < Kaitai::Struct::Struct
       1 => :rb_color_black,
     }
     I__RB_COLOR = RB_COLOR.invert
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
-      @name = (@_io.read_bytes(64)).force_encoding("UTF-16LE")
+      @name = (@_io.read_bytes(64)).force_encoding("UTF-16LE").encode('UTF-8')
       @name_len = @_io.read_u2le
       @object_type = Kaitai::Struct::Stream::resolve_enum(OBJ_TYPE, @_io.read_u1)
       @color_flag = Kaitai::Struct::Stream::resolve_enum(RB_COLOR, @_io.read_u1)
@@ -157,23 +140,12 @@ class MicrosoftCfb < Kaitai::Struct::Struct
       @size = @_io.read_u8le
       self
     end
-    def mini_stream
-      return @mini_stream unless @mini_stream.nil?
-      if object_type == :obj_type_root_storage
-        io = _root._io
-        _pos = io.pos
-        io.seek(((ofs + 1) * _root.sector_size))
-        @mini_stream = io.read_bytes(size)
-        io.seek(_pos)
-      end
-      @mini_stream
-    end
     def child
       return @child unless @child.nil?
       if child_id != -1
         io = _root._io
         _pos = io.pos
-        io.seek((((_root.header.ofs_dir + 1) * _root.sector_size) + (child_id * 128)))
+        io.seek((_root.header.ofs_dir + 1) * _root.sector_size + child_id * 128)
         @child = DirEntry.new(io, self, @_root)
         io.seek(_pos)
       end
@@ -184,18 +156,29 @@ class MicrosoftCfb < Kaitai::Struct::Struct
       if left_sibling_id != -1
         io = _root._io
         _pos = io.pos
-        io.seek((((_root.header.ofs_dir + 1) * _root.sector_size) + (left_sibling_id * 128)))
+        io.seek((_root.header.ofs_dir + 1) * _root.sector_size + left_sibling_id * 128)
         @left_sibling = DirEntry.new(io, self, @_root)
         io.seek(_pos)
       end
       @left_sibling
+    end
+    def mini_stream
+      return @mini_stream unless @mini_stream.nil?
+      if object_type == :obj_type_root_storage
+        io = _root._io
+        _pos = io.pos
+        io.seek((ofs + 1) * _root.sector_size)
+        @mini_stream = io.read_bytes(size)
+        io.seek(_pos)
+      end
+      @mini_stream
     end
     def right_sibling
       return @right_sibling unless @right_sibling.nil?
       if right_sibling_id != -1
         io = _root._io
         _pos = io.pos
-        io.seek((((_root.header.ofs_dir + 1) * _root.sector_size) + (right_sibling_id * 128)))
+        io.seek((_root.header.ofs_dir + 1) * _root.sector_size + right_sibling_id * 128)
         @right_sibling = DirEntry.new(io, self, @_root)
         io.seek(_pos)
       end
@@ -230,28 +213,44 @@ class MicrosoftCfb < Kaitai::Struct::Struct
     # For stream object, size of user-defined data in bytes. For a root storage object, size of the mini stream.
     attr_reader :size
   end
-  def sector_size
-    return @sector_size unless @sector_size.nil?
-    @sector_size = (1 << header.sector_shift)
-    @sector_size
+  class FatEntries < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = nil)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @entries = []
+      i = 0
+      while not @_io.eof?
+        @entries << @_io.read_s4le
+        i += 1
+      end
+      self
+    end
+    attr_reader :entries
+  end
+  def dir
+    return @dir unless @dir.nil?
+    _pos = @_io.pos
+    @_io.seek((header.ofs_dir + 1) * sector_size)
+    @dir = DirEntry.new(@_io, self, @_root)
+    @_io.seek(_pos)
+    @dir
   end
   def fat
     return @fat unless @fat.nil?
     _pos = @_io.pos
     @_io.seek(sector_size)
-    @_raw_fat = @_io.read_bytes((header.size_fat * sector_size))
-    _io__raw_fat = Kaitai::Struct::Stream.new(@_raw_fat)
-    @fat = FatEntries.new(_io__raw_fat, self, @_root)
+    _io_fat = @_io.substream(header.size_fat * sector_size)
+    @fat = FatEntries.new(_io_fat, self, @_root)
     @_io.seek(_pos)
     @fat
   end
-  def dir
-    return @dir unless @dir.nil?
-    _pos = @_io.pos
-    @_io.seek(((header.ofs_dir + 1) * sector_size))
-    @dir = DirEntry.new(@_io, self, @_root)
-    @_io.seek(_pos)
-    @dir
+  def sector_size
+    return @sector_size unless @sector_size.nil?
+    @sector_size = 1 << header.sector_shift
+    @sector_size
   end
   attr_reader :header
   attr_reader :_raw_fat

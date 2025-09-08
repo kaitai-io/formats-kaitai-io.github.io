@@ -194,6 +194,11 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="java-write.html" title="vfat parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="vfat parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -224,7 +229,17 @@ section#format-index .row {
                 
                 <li>
                 
+                <a href="python-write.html" title="vfat parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="vfat parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="vfat parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -256,9 +271,8 @@ section#format-index .row {
         <div class="row">
             <div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="n">kaitai_struct_nim_runtime</span>
 <span class="kn">import</span><span class="w"> </span><span class="n">options</span>
-<span class="kn">import</span><span class="w"> </span><span class="o">/</span><span class="n">common</span><span class="o">/</span><span class="n">dos_datetime</span>
+<span class="kn">import</span><span class="w"> </span><span class="n">dos_datetime</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="s">&quot;dos_datetime&quot;</span>
 <span class="k">type</span>
 <span class="w">  </span><span class="n">Vfat</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
 <span class="w">    </span><span class="p">`</span><span class="n">bootSector</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Vfat_BootSector</span>
@@ -268,6 +282,49 @@ section#format-index .row {
 <span class="w">    </span><span class="p">`</span><span class="n">fatsInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
 <span class="w">    </span><span class="p">`</span><span class="n">rootDirInst</span><span class="p">`:</span><span class="w"> </span><span class="n">Vfat_RootDirectory</span>
 <span class="w">    </span><span class="p">`</span><span class="n">rootDirInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">  </span><span class="n">Vfat_BiosParamBlock</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">bytesPerLs</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">lsPerClus</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint8</span>
+<span class="w">    </span><span class="p">`</span><span class="n">numReservedLs</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">numFats</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint8</span>
+<span class="w">    </span><span class="p">`</span><span class="n">maxRootDirRec</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">totalLs2</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">mediaCode</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint8</span>
+<span class="w">    </span><span class="p">`</span><span class="n">lsPerFat</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">psPerTrack</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">numHeads</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">numHiddenSectors</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">totalLs4</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Vfat_BootSector</span>
+<span class="w">  </span><span class="n">Vfat_BootSector</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">jmpInstruction</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">oemName</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">string</span>
+<span class="w">    </span><span class="p">`</span><span class="n">bpb</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Vfat_BiosParamBlock</span>
+<span class="w">    </span><span class="p">`</span><span class="n">ebpbFat16</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Vfat_ExtBiosParamBlockFat16</span>
+<span class="w">    </span><span class="p">`</span><span class="n">ebpbFat32</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Vfat_ExtBiosParamBlockFat32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Vfat</span>
+<span class="w">    </span><span class="p">`</span><span class="n">isFat32Inst</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">isFat32InstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">lsPerFatInst</span><span class="p">`:</span><span class="w"> </span><span class="n">uint32</span>
+<span class="w">    </span><span class="p">`</span><span class="n">lsPerFatInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">lsPerRootDirInst</span><span class="p">`:</span><span class="w"> </span><span class="nb">int</span>
+<span class="w">    </span><span class="p">`</span><span class="n">lsPerRootDirInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">posFatsInst</span><span class="p">`:</span><span class="w"> </span><span class="nb">int</span>
+<span class="w">    </span><span class="p">`</span><span class="n">posFatsInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">posRootDirInst</span><span class="p">`:</span><span class="w"> </span><span class="nb">int</span>
+<span class="w">    </span><span class="p">`</span><span class="n">posRootDirInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">sizeFatInst</span><span class="p">`:</span><span class="w"> </span><span class="nb">int</span>
+<span class="w">    </span><span class="p">`</span><span class="n">sizeFatInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">    </span><span class="p">`</span><span class="n">sizeRootDirInst</span><span class="p">`:</span><span class="w"> </span><span class="nb">int</span>
+<span class="w">    </span><span class="p">`</span><span class="n">sizeRootDirInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
+<span class="w">  </span><span class="n">Vfat_ExtBiosParamBlockFat16</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">physDriveNum</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint8</span>
+<span class="w">    </span><span class="p">`</span><span class="n">reserved1</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint8</span>
+<span class="w">    </span><span class="p">`</span><span class="n">extBootSign</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint8</span>
+<span class="w">    </span><span class="p">`</span><span class="n">volumeId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="w">    </span><span class="p">`</span><span class="n">partitionVolumeLabel</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">string</span>
+<span class="w">    </span><span class="p">`</span><span class="n">fsTypeStr</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">string</span>
+<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Vfat_BootSector</span>
 <span class="w">  </span><span class="n">Vfat_ExtBiosParamBlockFat32</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
 <span class="w">    </span><span class="p">`</span><span class="n">lsPerFat</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
 <span class="w">    </span><span class="p">`</span><span class="n">hasActiveFat</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">bool</span>
@@ -286,41 +343,9 @@ section#format-index .row {
 <span class="w">    </span><span class="p">`</span><span class="n">partitionVolumeLabel</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">string</span>
 <span class="w">    </span><span class="p">`</span><span class="n">fsTypeStr</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">string</span>
 <span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Vfat_BootSector</span>
-<span class="w">  </span><span class="n">Vfat_BootSector</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
-<span class="w">    </span><span class="p">`</span><span class="n">jmpInstruction</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-<span class="w">    </span><span class="p">`</span><span class="n">oemName</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">string</span>
-<span class="w">    </span><span class="p">`</span><span class="n">bpb</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Vfat_BiosParamBlock</span>
-<span class="w">    </span><span class="p">`</span><span class="n">ebpbFat16</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Vfat_ExtBiosParamBlockFat16</span>
-<span class="w">    </span><span class="p">`</span><span class="n">ebpbFat32</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Vfat_ExtBiosParamBlockFat32</span>
+<span class="w">  </span><span class="n">Vfat_RootDirectory</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
+<span class="w">    </span><span class="p">`</span><span class="n">records</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">Vfat_RootDirectoryRec</span><span class="o">]</span>
 <span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Vfat</span>
-<span class="w">    </span><span class="p">`</span><span class="n">posFatsInst</span><span class="p">`:</span><span class="w"> </span><span class="nb">int</span>
-<span class="w">    </span><span class="p">`</span><span class="n">posFatsInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
-<span class="w">    </span><span class="p">`</span><span class="n">lsPerFatInst</span><span class="p">`:</span><span class="w"> </span><span class="n">uint32</span>
-<span class="w">    </span><span class="p">`</span><span class="n">lsPerFatInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
-<span class="w">    </span><span class="p">`</span><span class="n">lsPerRootDirInst</span><span class="p">`:</span><span class="w"> </span><span class="nb">int</span>
-<span class="w">    </span><span class="p">`</span><span class="n">lsPerRootDirInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
-<span class="w">    </span><span class="p">`</span><span class="n">isFat32Inst</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
-<span class="w">    </span><span class="p">`</span><span class="n">isFat32InstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
-<span class="w">    </span><span class="p">`</span><span class="n">sizeFatInst</span><span class="p">`:</span><span class="w"> </span><span class="nb">int</span>
-<span class="w">    </span><span class="p">`</span><span class="n">sizeFatInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
-<span class="w">    </span><span class="p">`</span><span class="n">posRootDirInst</span><span class="p">`:</span><span class="w"> </span><span class="nb">int</span>
-<span class="w">    </span><span class="p">`</span><span class="n">posRootDirInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
-<span class="w">    </span><span class="p">`</span><span class="n">sizeRootDirInst</span><span class="p">`:</span><span class="w"> </span><span class="nb">int</span>
-<span class="w">    </span><span class="p">`</span><span class="n">sizeRootDirInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
-<span class="w">  </span><span class="n">Vfat_BiosParamBlock</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
-<span class="w">    </span><span class="p">`</span><span class="n">bytesPerLs</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
-<span class="w">    </span><span class="p">`</span><span class="n">lsPerClus</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint8</span>
-<span class="w">    </span><span class="p">`</span><span class="n">numReservedLs</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
-<span class="w">    </span><span class="p">`</span><span class="n">numFats</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint8</span>
-<span class="w">    </span><span class="p">`</span><span class="n">maxRootDirRec</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
-<span class="w">    </span><span class="p">`</span><span class="n">totalLs2</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
-<span class="w">    </span><span class="p">`</span><span class="n">mediaCode</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint8</span>
-<span class="w">    </span><span class="p">`</span><span class="n">lsPerFat</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
-<span class="w">    </span><span class="p">`</span><span class="n">psPerTrack</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
-<span class="w">    </span><span class="p">`</span><span class="n">numHeads</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint16</span>
-<span class="w">    </span><span class="p">`</span><span class="n">numHiddenSectors</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
-<span class="w">    </span><span class="p">`</span><span class="n">totalLs4</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint32</span>
-<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Vfat_BootSector</span>
 <span class="w">  </span><span class="n">Vfat_RootDirectoryRec</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
 <span class="w">    </span><span class="p">`</span><span class="n">fileName</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
 <span class="w">    </span><span class="p">`</span><span class="n">attrs</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Vfat_RootDirectoryRec_AttrFlags</span>
@@ -342,35 +367,24 @@ section#format-index .row {
 <span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Vfat_RootDirectoryRec</span>
 <span class="w">    </span><span class="p">`</span><span class="n">longNameInst</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
 <span class="w">    </span><span class="p">`</span><span class="n">longNameInstFlag</span><span class="p">`:</span><span class="w"> </span><span class="nb">bool</span>
-<span class="w">  </span><span class="n">Vfat_RootDirectory</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
-<span class="w">    </span><span class="p">`</span><span class="n">records</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">Vfat_RootDirectoryRec</span><span class="o">]</span>
-<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Vfat</span>
-<span class="w">  </span><span class="n">Vfat_ExtBiosParamBlockFat16</span><span class="o">*</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ref</span><span class="w"> </span><span class="k">object</span><span class="w"> </span><span class="k">of</span><span class="w"> </span><span class="n">KaitaiStruct</span>
-<span class="w">    </span><span class="p">`</span><span class="n">physDriveNum</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint8</span>
-<span class="w">    </span><span class="p">`</span><span class="n">reserved1</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint8</span>
-<span class="w">    </span><span class="p">`</span><span class="n">extBootSign</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">uint8</span>
-<span class="w">    </span><span class="p">`</span><span class="n">volumeId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-<span class="w">    </span><span class="p">`</span><span class="n">partitionVolumeLabel</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">string</span>
-<span class="w">    </span><span class="p">`</span><span class="n">fsTypeStr</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="nb">string</span>
-<span class="w">    </span><span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span><span class="w"> </span><span class="n">Vfat_BootSector</span>
 
 <span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Vfat], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Vfat</span>
-<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Vfat_ExtBiosParamBlockFat32], io: KaitaiStream, root: KaitaiStruct, parent: Vfat_BootSector): Vfat_ExtBiosParamBlockFat32</span>
-<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Vfat_BootSector], io: KaitaiStream, root: KaitaiStruct, parent: Vfat): Vfat_BootSector</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Vfat_BiosParamBlock], io: KaitaiStream, root: KaitaiStruct, parent: Vfat_BootSector): Vfat_BiosParamBlock</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Vfat_BootSector], io: KaitaiStream, root: KaitaiStruct, parent: Vfat): Vfat_BootSector</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Vfat_ExtBiosParamBlockFat16], io: KaitaiStream, root: KaitaiStruct, parent: Vfat_BootSector): Vfat_ExtBiosParamBlockFat16</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Vfat_ExtBiosParamBlockFat32], io: KaitaiStream, root: KaitaiStruct, parent: Vfat_BootSector): Vfat_ExtBiosParamBlockFat32</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Vfat_RootDirectory], io: KaitaiStream, root: KaitaiStruct, parent: Vfat): Vfat_RootDirectory</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Vfat_RootDirectoryRec], io: KaitaiStream, root: KaitaiStruct, parent: Vfat_RootDirectory): Vfat_RootDirectoryRec</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Vfat_RootDirectoryRec_AttrFlags], io: KaitaiStream, root: KaitaiStruct, parent: Vfat_RootDirectoryRec): Vfat_RootDirectoryRec_AttrFlags</span>
-<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Vfat_RootDirectory], io: KaitaiStream, root: KaitaiStruct, parent: Vfat): Vfat_RootDirectory</span>
-<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Vfat_ExtBiosParamBlockFat16], io: KaitaiStream, root: KaitaiStruct, parent: Vfat_BootSector): Vfat_ExtBiosParamBlockFat16</span>
 
 <span class="k">proc</span><span class="w"> </span><span class="nf">fats</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Vfat</span><span class="p">):</span><span class="w"> </span><span class="nb">seq</span><span class="o">[</span><span class="nb">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]]</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">rootDir</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Vfat</span><span class="p">):</span><span class="w"> </span><span class="n">Vfat_RootDirectory</span>
-<span class="k">proc</span><span class="w"> </span><span class="nf">posFats</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Vfat_BootSector</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">isFat32</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Vfat_BootSector</span><span class="p">):</span><span class="w"> </span><span class="nb">bool</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">lsPerFat</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Vfat_BootSector</span><span class="p">):</span><span class="w"> </span><span class="n">uint32</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">lsPerRootDir</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Vfat_BootSector</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span>
-<span class="k">proc</span><span class="w"> </span><span class="nf">isFat32</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Vfat_BootSector</span><span class="p">):</span><span class="w"> </span><span class="nb">bool</span>
-<span class="k">proc</span><span class="w"> </span><span class="nf">sizeFat</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Vfat_BootSector</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">posFats</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Vfat_BootSector</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">posRootDir</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Vfat_BootSector</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">sizeFat</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Vfat_BootSector</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">sizeRootDir</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Vfat_BootSector</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span>
 <span class="k">proc</span><span class="w"> </span><span class="nf">longName</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Vfat_RootDirectoryRec_AttrFlags</span><span class="p">):</span><span class="w"> </span><span class="nb">bool</span>
 
@@ -417,6 +431,291 @@ section#format-index .row {
 
 <span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Vfat], filename: string): Vfat =</span>
 <span class="w">  </span><span class="n">Vfat</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Vfat_BiosParamBlock], io: KaitaiStream, root: KaitaiStruct, parent: Vfat_BootSector): Vfat_BiosParamBlock =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">Vfat_BiosParamBlock</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Vfat</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Vfat</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
+
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Bytes per logical sector</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">bytesPerLsExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">bytesPerLs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bytesPerLsExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Logical sectors per cluster</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lsPerClusExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lsPerClus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lsPerClusExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Count of reserved logical sectors. The number of logical</span>
+<span class="sd">sectors before the first FAT in the file system image.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">numReservedLsExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">numReservedLs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">numReservedLsExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Number of File Allocation Tables</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">numFatsExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">numFats</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">numFatsExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Maximum number of FAT12 or FAT16 root directory entries. 0</span>
+<span class="sd">for FAT32, where the root directory is stored in ordinary</span>
+<span class="sd">data clusters.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">maxRootDirRecExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">maxRootDirRec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">maxRootDirRecExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Total logical sectors (if zero, use total_ls_4)</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">totalLs2Expr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">totalLs2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">totalLs2Expr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Media descriptor</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">mediaCodeExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">mediaCode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mediaCodeExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Logical sectors per File Allocation Table for</span>
+<span class="sd">FAT12/FAT16. FAT32 sets this to 0 and uses the 32-bit value</span>
+<span class="sd">at offset 0x024 instead.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lsPerFatExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lsPerFat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lsPerFatExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Physical sectors per track for disks with INT 13h CHS</span>
+<span class="sd">geometry, e.g., 15 for a &quot;1.20 MB&quot; (1200 KB) floppy. A zero</span>
+<span class="sd">entry indicates that this entry is reserved, but not used.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">psPerTrackExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">psPerTrack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">psPerTrackExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Number of heads for disks with INT 13h CHS geometry,[9]</span>
+<span class="sd">e.g., 2 for a double sided floppy.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">numHeadsExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">numHeads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">numHeadsExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Number of hidden sectors preceding the partition that</span>
+<span class="sd">contains this FAT volume. This field should always be zero</span>
+<span class="sd">on media that are not partitioned. This DOS 3.0 entry is</span>
+<span class="sd">incompatible with a similar entry at offset 0x01C in BPBs</span>
+<span class="sd">since DOS 3.31.  It must not be used if the logical sectors</span>
+<span class="sd">entry at offset 0x013 is zero.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">numHiddenSectorsExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">numHiddenSectors</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">numHiddenSectorsExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Total logical sectors including hidden sectors. This DOS 3.2</span>
+<span class="sd">entry is incompatible with a similar entry at offset 0x020</span>
+<span class="sd">in BPBs since DOS 3.31. It must not be used if the logical</span>
+<span class="sd">sectors entry at offset 0x013 is zero.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">totalLs4Expr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">totalLs4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">totalLs4Expr</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Vfat_BiosParamBlock], filename: string): Vfat_BiosParamBlock =</span>
+<span class="w">  </span><span class="n">Vfat_BiosParamBlock</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Vfat_BootSector], io: KaitaiStream, root: KaitaiStruct, parent: Vfat): Vfat_BootSector =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">Vfat_BootSector</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Vfat</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Vfat</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
+
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">jmpInstructionExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">jmpInstruction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">jmpInstructionExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">oemNameExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">8</span><span class="p">)).</span><span class="n">bytesStripRight</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;ASCII&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">oemName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">oemNameExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Basic BIOS parameter block, present in all versions of FAT</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">bpbExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Vfat_BiosParamBlock</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">bpb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bpbExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  FAT12/16-specific extended BIOS parameter block</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">isFat32</span><span class="p">):</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">ebpbFat16Expr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Vfat_ExtBiosParamBlockFat16</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">ebpbFat16</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ebpbFat16Expr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  FAT32-specific extended BIOS parameter block</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">isFat32</span><span class="p">:</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">ebpbFat32Expr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Vfat_ExtBiosParamBlockFat32</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">ebpbFat32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ebpbFat32Expr</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">isFat32</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Vfat_BootSector</span><span class="p">):</span><span class="w"> </span><span class="nb">bool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Determines if filesystem is FAT32 (true) or FAT12/16 (false)</span>
+<span class="sd">by analyzing some preliminary conditions in BPB. Used to</span>
+<span class="sd">determine whether we should parse post-BPB data as</span>
+<span class="sd">`ext_bios_param_block_fat16` or `ext_bios_param_block_fat32`.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">isFat32InstFlag</span><span class="p">:</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">isFat32Inst</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">isFat32InstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">bool</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">bpb</span><span class="p">.</span><span class="n">maxRootDirRec</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">isFat32Inst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">isFat32InstExpr</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">isFat32InstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">isFat32Inst</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">lsPerFat</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Vfat_BootSector</span><span class="p">):</span><span class="w"> </span><span class="n">uint32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">lsPerFatInstFlag</span><span class="p">:</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">lsPerFatInst</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lsPerFatInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">uint32</span><span class="p">((</span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">isFat32</span><span class="p">:</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">ebpbFat32</span><span class="p">.</span><span class="n">lsPerFat</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">bpb</span><span class="p">.</span><span class="n">lsPerFat</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lsPerFatInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lsPerFatInstExpr</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lsPerFatInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">lsPerFatInst</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">lsPerRootDir</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Vfat_BootSector</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Size of root directory in logical sectors</span>
+<span class="sd">  @see &quot;FAT: General Overview of On-Disk Format, section &quot;FAT Data Structure&quot;&quot;</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">lsPerRootDirInstFlag</span><span class="p">:</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">lsPerRootDirInst</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lsPerRootDirInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">bpb</span><span class="p">.</span><span class="n">maxRootDirRec</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">32</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">bpb</span><span class="p">.</span><span class="n">bytesPerLs</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="ow">div</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">bpb</span><span class="p">.</span><span class="n">bytesPerLs</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lsPerRootDirInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lsPerRootDirInstExpr</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lsPerRootDirInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">lsPerRootDirInst</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">posFats</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Vfat_BootSector</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Offset of FATs in bytes from start of filesystem</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">posFatsInstFlag</span><span class="p">:</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">posFatsInst</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">posFatsInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">bpb</span><span class="p">.</span><span class="n">bytesPerLs</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">bpb</span><span class="p">.</span><span class="n">numReservedLs</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">posFatsInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">posFatsInstExpr</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">posFatsInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">posFatsInst</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">posRootDir</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Vfat_BootSector</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Offset of root directory in bytes from start of filesystem</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">posRootDirInstFlag</span><span class="p">:</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">posRootDirInst</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">posRootDirInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">bpb</span><span class="p">.</span><span class="n">bytesPerLs</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">bpb</span><span class="p">.</span><span class="n">numReservedLs</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">lsPerFat</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">bpb</span><span class="p">.</span><span class="n">numFats</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">posRootDirInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">posRootDirInstExpr</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">posRootDirInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">posRootDirInst</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">sizeFat</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Vfat_BootSector</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Size of one FAT in bytes</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">sizeFatInstFlag</span><span class="p">:</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">sizeFatInst</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">sizeFatInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">bpb</span><span class="p">.</span><span class="n">bytesPerLs</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">lsPerFat</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">sizeFatInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sizeFatInstExpr</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">sizeFatInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">sizeFatInst</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">sizeRootDir</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Vfat_BootSector</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Size of root directory in bytes</span>
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">sizeRootDirInstFlag</span><span class="p">:</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">sizeRootDirInst</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">sizeRootDirInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lsPerRootDir</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">bpb</span><span class="p">.</span><span class="n">bytesPerLs</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">sizeRootDirInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sizeRootDirInstExpr</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">sizeRootDirInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">sizeRootDirInst</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Vfat_BootSector], filename: string): Vfat_BootSector =</span>
+<span class="w">  </span><span class="n">Vfat_BootSector</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="sd">Extended BIOS Parameter Block (DOS 4.0+, OS/2 1.0+). Used only</span>
+<span class="sd">for FAT12 and FAT16.</span>
+
+<span class="sd">]##</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Vfat_ExtBiosParamBlockFat16], io: KaitaiStream, root: KaitaiStruct, parent: Vfat_BootSector): Vfat_ExtBiosParamBlockFat16 =</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">Vfat_ExtBiosParamBlockFat16</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Vfat</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Vfat</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
+
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Physical drive number (0x00 for (first) removable media,</span>
+<span class="sd">0x80 for (first) fixed disk as per INT 13h).</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">physDriveNumExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">physDriveNum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">physDriveNumExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">reserved1Expr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">reserved1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">reserved1Expr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Should be 0x29 to indicate that an EBPB with the following 3</span>
+<span class="sd">entries exists.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">extBootSignExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">extBootSign</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">extBootSignExpr</span>
+
+<span class="w">  </span><span class="sd">##[</span>
+<span class="sd">  Volume ID (serial number).</span>
+
+<span class="sd">Typically the serial number &quot;xxxx-xxxx&quot; is created by a</span>
+<span class="sd">16-bit addition of both DX values returned by INT 21h/AH=2Ah</span>
+<span class="sd">(get system date) and INT 21h/AH=2Ch (get system time) for</span>
+<span class="sd">the high word and another 16-bit addition of both CX values</span>
+<span class="sd">for the low word of the serial number. Alternatively, some</span>
+<span class="sd">DR-DOS disk utilities provide a /# option to generate a</span>
+<span class="sd">human-readable time stamp &quot;mmdd-hhmm&quot; build from BCD-encoded</span>
+<span class="sd">8-bit values for the month, day, hour and minute instead of</span>
+<span class="sd">a serial number.</span>
+
+<span class="sd">  ]##</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">volumeIdExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">volumeId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">volumeIdExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">partitionVolumeLabelExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">11</span><span class="p">)).</span><span class="n">bytesStripRight</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;ASCII&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">partitionVolumeLabel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">partitionVolumeLabelExpr</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">fsTypeStrExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">8</span><span class="p">)).</span><span class="n">bytesStripRight</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;ASCII&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">fsTypeStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fsTypeStrExpr</span>
+
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Vfat_ExtBiosParamBlockFat16], filename: string): Vfat_ExtBiosParamBlockFat16 =</span>
+<span class="w">  </span><span class="n">Vfat_ExtBiosParamBlockFat16</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 
 
 <span class="sd">##[</span>
@@ -535,233 +834,20 @@ section#format-index .row {
 <span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Vfat_ExtBiosParamBlockFat32], filename: string): Vfat_ExtBiosParamBlockFat32 =</span>
 <span class="w">  </span><span class="n">Vfat_ExtBiosParamBlockFat32</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 
-<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Vfat_BootSector], io: KaitaiStream, root: KaitaiStruct, parent: Vfat): Vfat_BootSector =</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Vfat_RootDirectory], io: KaitaiStream, root: KaitaiStruct, parent: Vfat): Vfat_RootDirectory =</span>
 <span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
-<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">Vfat_BootSector</span><span class="p">)</span>
+<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">Vfat_RootDirectory</span><span class="p">)</span>
 <span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Vfat</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Vfat</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
 
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">jmpInstructionExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">jmpInstruction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">jmpInstructionExpr</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">oemNameExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">8</span><span class="p">)).</span><span class="n">bytesStripRight</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;ASCII&quot;</span><span class="p">)</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">oemName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">oemNameExpr</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">..</span><span class="o">&lt;</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="n">Vfat</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">bootSector</span><span class="p">.</span><span class="n">bpb</span><span class="p">.</span><span class="n">maxRootDirRec</span><span class="p">):</span>
+<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Vfat_RootDirectoryRec</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">records</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
 
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  Basic BIOS parameter block, present in all versions of FAT</span>
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">bpbExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Vfat_BiosParamBlock</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">bpb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bpbExpr</span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  FAT12/16-specific extended BIOS parameter block</span>
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="ow">not</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">isFat32</span><span class="p">):</span>
-<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">ebpbFat16Expr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Vfat_ExtBiosParamBlockFat16</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
-<span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">ebpbFat16</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ebpbFat16Expr</span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  FAT32-specific extended BIOS parameter block</span>
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">isFat32</span><span class="p">:</span>
-<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">ebpbFat32Expr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Vfat_ExtBiosParamBlockFat32</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
-<span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">ebpbFat32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ebpbFat32Expr</span>
-
-<span class="k">proc</span><span class="w"> </span><span class="nf">posFats</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Vfat_BootSector</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  Offset of FATs in bytes from start of filesystem</span>
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">posFatsInstFlag</span><span class="p">:</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">posFatsInst</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">posFatsInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">bpb</span><span class="p">.</span><span class="n">bytesPerLs</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">bpb</span><span class="p">.</span><span class="n">numReservedLs</span><span class="p">))</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">posFatsInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">posFatsInstExpr</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">posFatsInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">posFatsInst</span>
-
-<span class="k">proc</span><span class="w"> </span><span class="nf">lsPerFat</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Vfat_BootSector</span><span class="p">):</span><span class="w"> </span><span class="n">uint32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">lsPerFatInstFlag</span><span class="p">:</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">lsPerFatInst</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lsPerFatInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">uint32</span><span class="p">((</span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">isFat32</span><span class="p">:</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">ebpbFat32</span><span class="p">.</span><span class="n">lsPerFat</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">bpb</span><span class="p">.</span><span class="n">lsPerFat</span><span class="p">))</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lsPerFatInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lsPerFatInstExpr</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lsPerFatInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">lsPerFatInst</span>
-
-<span class="k">proc</span><span class="w"> </span><span class="nf">lsPerRootDir</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Vfat_BootSector</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  Size of root directory in logical sectors</span>
-<span class="sd">  @see &quot;FAT: General Overview of On-Disk Format, section &quot;FAT Data Structure&quot;&quot;</span>
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">lsPerRootDirInstFlag</span><span class="p">:</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">lsPerRootDirInst</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lsPerRootDirInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">int</span><span class="p">(((((</span><span class="n">this</span><span class="p">.</span><span class="n">bpb</span><span class="p">.</span><span class="n">maxRootDirRec</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">32</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">bpb</span><span class="p">.</span><span class="n">bytesPerLs</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="ow">div</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">bpb</span><span class="p">.</span><span class="n">bytesPerLs</span><span class="p">))</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lsPerRootDirInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lsPerRootDirInstExpr</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lsPerRootDirInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">lsPerRootDirInst</span>
-
-<span class="k">proc</span><span class="w"> </span><span class="nf">isFat32</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Vfat_BootSector</span><span class="p">):</span><span class="w"> </span><span class="nb">bool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  Determines if filesystem is FAT32 (true) or FAT12/16 (false)</span>
-<span class="sd">by analyzing some preliminary conditions in BPB. Used to</span>
-<span class="sd">determine whether we should parse post-BPB data as</span>
-<span class="sd">`ext_bios_param_block_fat16` or `ext_bios_param_block_fat32`.</span>
-
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">isFat32InstFlag</span><span class="p">:</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">isFat32Inst</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">isFat32InstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">bool</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">bpb</span><span class="p">.</span><span class="n">maxRootDirRec</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">isFat32Inst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">isFat32InstExpr</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">isFat32InstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">isFat32Inst</span>
-
-<span class="k">proc</span><span class="w"> </span><span class="nf">sizeFat</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Vfat_BootSector</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  Size of one FAT in bytes</span>
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">sizeFatInstFlag</span><span class="p">:</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">sizeFatInst</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">sizeFatInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">bpb</span><span class="p">.</span><span class="n">bytesPerLs</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">lsPerFat</span><span class="p">))</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">sizeFatInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sizeFatInstExpr</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">sizeFatInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">sizeFatInst</span>
-
-<span class="k">proc</span><span class="w"> </span><span class="nf">posRootDir</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Vfat_BootSector</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  Offset of root directory in bytes from start of filesystem</span>
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">posRootDirInstFlag</span><span class="p">:</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">posRootDirInst</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">posRootDirInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">bpb</span><span class="p">.</span><span class="n">bytesPerLs</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">bpb</span><span class="p">.</span><span class="n">numReservedLs</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lsPerFat</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">bpb</span><span class="p">.</span><span class="n">numFats</span><span class="p">))))</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">posRootDirInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">posRootDirInstExpr</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">posRootDirInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">posRootDirInst</span>
-
-<span class="k">proc</span><span class="w"> </span><span class="nf">sizeRootDir</span><span class="p">(</span><span class="n">this</span><span class="p">:</span><span class="w"> </span><span class="n">Vfat_BootSector</span><span class="p">):</span><span class="w"> </span><span class="nb">int</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  Size of root directory in bytes</span>
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">sizeRootDirInstFlag</span><span class="p">:</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">sizeRootDirInst</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">sizeRootDirInstExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">lsPerRootDir</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">bpb</span><span class="p">.</span><span class="n">bytesPerLs</span><span class="p">))</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">sizeRootDirInst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sizeRootDirInstExpr</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">sizeRootDirInstFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">true</span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">sizeRootDirInst</span>
-
-<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Vfat_BootSector], filename: string): Vfat_BootSector =</span>
-<span class="w">  </span><span class="n">Vfat_BootSector</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
-
-<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Vfat_BiosParamBlock], io: KaitaiStream, root: KaitaiStruct, parent: Vfat_BootSector): Vfat_BiosParamBlock =</span>
-<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
-<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">Vfat_BiosParamBlock</span><span class="p">)</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Vfat</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Vfat</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
-
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  Bytes per logical sector</span>
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">bytesPerLsExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">bytesPerLs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bytesPerLsExpr</span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  Logical sectors per cluster</span>
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lsPerClusExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lsPerClus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lsPerClusExpr</span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  Count of reserved logical sectors. The number of logical</span>
-<span class="sd">sectors before the first FAT in the file system image.</span>
-
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">numReservedLsExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">numReservedLs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">numReservedLsExpr</span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  Number of File Allocation Tables</span>
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">numFatsExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">numFats</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">numFatsExpr</span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  Maximum number of FAT12 or FAT16 root directory entries. 0</span>
-<span class="sd">for FAT32, where the root directory is stored in ordinary</span>
-<span class="sd">data clusters.</span>
-
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">maxRootDirRecExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">maxRootDirRec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">maxRootDirRecExpr</span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  Total logical sectors (if zero, use total_ls_4)</span>
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">totalLs2Expr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">totalLs2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">totalLs2Expr</span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  Media descriptor</span>
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">mediaCodeExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">mediaCode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mediaCodeExpr</span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  Logical sectors per File Allocation Table for</span>
-<span class="sd">FAT12/FAT16. FAT32 sets this to 0 and uses the 32-bit value</span>
-<span class="sd">at offset 0x024 instead.</span>
-
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lsPerFatExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lsPerFat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lsPerFatExpr</span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  Physical sectors per track for disks with INT 13h CHS</span>
-<span class="sd">geometry, e.g., 15 for a &quot;1.20 MB&quot; (1200 KB) floppy. A zero</span>
-<span class="sd">entry indicates that this entry is reserved, but not used.</span>
-
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">psPerTrackExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">psPerTrack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">psPerTrackExpr</span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  Number of heads for disks with INT 13h CHS geometry,[9]</span>
-<span class="sd">e.g., 2 for a double sided floppy.</span>
-
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">numHeadsExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">numHeads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">numHeadsExpr</span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  Number of hidden sectors preceding the partition that</span>
-<span class="sd">contains this FAT volume. This field should always be zero</span>
-<span class="sd">on media that are not partitioned. This DOS 3.0 entry is</span>
-<span class="sd">incompatible with a similar entry at offset 0x01C in BPBs</span>
-<span class="sd">since DOS 3.31.  It must not be used if the logical sectors</span>
-<span class="sd">entry at offset 0x013 is zero.</span>
-
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">numHiddenSectorsExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">numHiddenSectors</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">numHiddenSectorsExpr</span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  Total logical sectors including hidden sectors. This DOS 3.2</span>
-<span class="sd">entry is incompatible with a similar entry at offset 0x020</span>
-<span class="sd">in BPBs since DOS 3.31. It must not be used if the logical</span>
-<span class="sd">sectors entry at offset 0x013 is zero.</span>
-
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">totalLs4Expr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">totalLs4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">totalLs4Expr</span>
-
-<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Vfat_BiosParamBlock], filename: string): Vfat_BiosParamBlock =</span>
-<span class="w">  </span><span class="n">Vfat_BiosParamBlock</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Vfat_RootDirectory], filename: string): Vfat_RootDirectory =</span>
+<span class="w">  </span><span class="n">Vfat_RootDirectory</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 
 <span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Vfat_RootDirectoryRec], io: KaitaiStream, root: KaitaiStruct, parent: Vfat_RootDirectory): Vfat_RootDirectoryRec =</span>
 <span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
@@ -783,7 +869,7 @@ section#format-index .row {
 <span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">rawLastWriteTimeExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">rawLastWriteTime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rawLastWriteTimeExpr</span>
 <span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">rawLastWriteTimeIo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawLastWriteTimeExpr</span><span class="p">)</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lastWriteTimeExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DosDatetime</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawLastWriteTimeIo</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
+<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">lastWriteTimeExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DosDatetime</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawLastWriteTimeIo</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">lastWriteTime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lastWriteTimeExpr</span>
 <span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">startClusExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
 <span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">startClus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">startClusExpr</span>
@@ -826,78 +912,6 @@ section#format-index .row {
 
 <span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Vfat_RootDirectoryRec_AttrFlags], filename: string): Vfat_RootDirectoryRec_AttrFlags =</span>
 <span class="w">  </span><span class="n">Vfat_RootDirectoryRec_AttrFlags</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
-
-<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Vfat_RootDirectory], io: KaitaiStream, root: KaitaiStruct, parent: Vfat): Vfat_RootDirectory =</span>
-<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
-<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">Vfat_RootDirectory</span><span class="p">)</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Vfat</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Vfat</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
-
-<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">..</span><span class="o">&lt;</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="n">Vfat</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">bootSector</span><span class="p">.</span><span class="n">bpb</span><span class="p">.</span><span class="n">maxRootDirRec</span><span class="p">):</span>
-<span class="w">    </span><span class="k">let</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Vfat_RootDirectoryRec</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">this</span><span class="p">)</span>
-<span class="w">    </span><span class="n">this</span><span class="p">.</span><span class="n">records</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
-
-<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Vfat_RootDirectory], filename: string): Vfat_RootDirectory =</span>
-<span class="w">  </span><span class="n">Vfat_RootDirectory</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
-
-
-<span class="sd">##[</span>
-<span class="sd">Extended BIOS Parameter Block (DOS 4.0+, OS/2 1.0+). Used only</span>
-<span class="sd">for FAT12 and FAT16.</span>
-
-<span class="sd">]##</span>
-<span class="k">proc</span><span class="w"> </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Vfat_ExtBiosParamBlockFat16], io: KaitaiStream, root: KaitaiStruct, parent: Vfat_BootSector): Vfat_ExtBiosParamBlockFat16 =</span>
-<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="nf">this</span><span class="p">:</span><span class="w"> </span><span class="n">untyped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span>
-<span class="w">  </span><span class="n">this</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new</span><span class="p">(</span><span class="n">Vfat_ExtBiosParamBlockFat16</span><span class="p">)</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kp">nil</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Vfat</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span><span class="w"> </span><span class="k">else</span><span class="p">:</span><span class="w"> </span><span class="k">cast</span><span class="o">[</span><span class="n">Vfat</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span>
-
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  Physical drive number (0x00 for (first) removable media,</span>
-<span class="sd">0x80 for (first) fixed disk as per INT 13h).</span>
-
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">physDriveNumExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">physDriveNum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">physDriveNumExpr</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">reserved1Expr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">reserved1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">reserved1Expr</span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  Should be 0x29 to indicate that an EBPB with the following 3</span>
-<span class="sd">entries exists.</span>
-
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">extBootSignExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">extBootSign</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">extBootSignExpr</span>
-
-<span class="w">  </span><span class="sd">##[</span>
-<span class="sd">  Volume ID (serial number).</span>
-
-<span class="sd">Typically the serial number &quot;xxxx-xxxx&quot; is created by a</span>
-<span class="sd">16-bit addition of both DX values returned by INT 21h/AH=2Ah</span>
-<span class="sd">(get system date) and INT 21h/AH=2Ch (get system time) for</span>
-<span class="sd">the high word and another 16-bit addition of both CX values</span>
-<span class="sd">for the low word of the serial number. Alternatively, some</span>
-<span class="sd">DR-DOS disk utilities provide a /# option to generate a</span>
-<span class="sd">human-readable time stamp &quot;mmdd-hhmm&quot; build from BCD-encoded</span>
-<span class="sd">8-bit values for the month, day, hour and minute instead of</span>
-<span class="sd">a serial number.</span>
-
-<span class="sd">  ]##</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">volumeIdExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">volumeId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">volumeIdExpr</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">partitionVolumeLabelExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">11</span><span class="p">)).</span><span class="n">bytesStripRight</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;ASCII&quot;</span><span class="p">)</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">partitionVolumeLabel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">partitionVolumeLabelExpr</span>
-<span class="w">  </span><span class="k">let</span><span class="w"> </span><span class="n">fsTypeStrExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">8</span><span class="p">)).</span><span class="n">bytesStripRight</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;ASCII&quot;</span><span class="p">)</span>
-<span class="w">  </span><span class="n">this</span><span class="p">.</span><span class="n">fsTypeStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fsTypeStrExpr</span>
-
-<span class="k">proc</span><span class="w"> </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Vfat_ExtBiosParamBlockFat16], filename: string): Vfat_ExtBiosParamBlockFat16 =</span>
-<span class="w">  </span><span class="n">Vfat_ExtBiosParamBlockFat16</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 </pre></div>
 
         </div>

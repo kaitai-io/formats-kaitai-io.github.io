@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.TcpSegment = factory(root.KaitaiStream);
+    factory(root.TcpSegment || (root.TcpSegment = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (TcpSegment_, KaitaiStream) {
 /**
  * TCP is one of the core Internet protocols on transport layer (AKA
  * OSI layer 4), providing stateful connections with error checking,
@@ -36,8 +36,8 @@ var TcpSegment = (function() {
     this.windowSize = this._io.readU2be();
     this.checksum = this._io.readU2be();
     this.urgentPointer = this._io.readU2be();
-    if (((this.dataOffset * 4) - 20) != 0) {
-      this.options = this._io.readBytes(((this.dataOffset * 4) - 20));
+    if (this.dataOffset * 4 - 20 != 0) {
+      this.options = this._io.readBytes(this.dataOffset * 4 - 20);
     }
     this.body = this._io.readBytesFull();
   }
@@ -50,7 +50,7 @@ var TcpSegment = (function() {
     function Flags(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -98,7 +98,7 @@ var TcpSegment = (function() {
      */
 
     Flags.prototype.toString = function() {
-      return (this.cwr ? "|CWR" : "") + (this.ece ? "|ECE" : "") + (this.urg ? "|URG" : "") + (this.ack ? "|ACK" : "") + (this.psh ? "|PSH" : "") + (this.rst ? "|RST" : "") + (this.syn ? "|SYN" : "") + (this.fin ? "|FIN" : "");
+      return (((((((this.cwr ? "|CWR" : "") + (this.ece ? "|ECE" : "")) + (this.urg ? "|URG" : "")) + (this.ack ? "|ACK" : "")) + (this.psh ? "|PSH" : "")) + (this.rst ? "|RST" : "")) + (this.syn ? "|SYN" : "")) + (this.fin ? "|FIN" : "");
     }
 
     return Flags;
@@ -126,5 +126,5 @@ var TcpSegment = (function() {
 
   return TcpSegment;
 })();
-return TcpSegment;
-}));
+TcpSegment_.TcpSegment = TcpSegment;
+});

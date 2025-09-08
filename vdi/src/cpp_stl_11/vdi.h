@@ -2,13 +2,16 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class vdi_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -26,9 +29,9 @@
 class vdi_t : public kaitai::kstruct {
 
 public:
-    class header_t;
     class blocks_map_t;
     class disk_t;
+    class header_t;
 
     enum image_type_t {
         IMAGE_TYPE_DYNAMIC = 1,
@@ -36,6 +39,12 @@ public:
         IMAGE_TYPE_UNDO = 3,
         IMAGE_TYPE_DIFF = 4
     };
+    static bool _is_defined_image_type_t(image_type_t v);
+
+private:
+    static const std::set<image_type_t> _values_image_type_t;
+
+public:
 
     vdi_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, vdi_t* p__root = nullptr);
 
@@ -45,305 +54,6 @@ private:
 
 public:
     ~vdi_t();
-
-    class header_t : public kaitai::kstruct {
-
-    public:
-        class uuid_t;
-        class version_t;
-        class header_main_t;
-
-        header_t(kaitai::kstream* p__io, vdi_t* p__parent = nullptr, vdi_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~header_t();
-
-        class uuid_t : public kaitai::kstruct {
-
-        public:
-
-            uuid_t(kaitai::kstream* p__io, vdi_t::header_t::header_main_t* p__parent = nullptr, vdi_t* p__root = nullptr);
-
-        private:
-            void _read();
-            void _clean_up();
-
-        public:
-            ~uuid_t();
-
-        private:
-            std::string m_uuid;
-            vdi_t* m__root;
-            vdi_t::header_t::header_main_t* m__parent;
-
-        public:
-            std::string uuid() const { return m_uuid; }
-            vdi_t* _root() const { return m__root; }
-            vdi_t::header_t::header_main_t* _parent() const { return m__parent; }
-        };
-
-        class version_t : public kaitai::kstruct {
-
-        public:
-
-            version_t(kaitai::kstream* p__io, vdi_t::header_t* p__parent = nullptr, vdi_t* p__root = nullptr);
-
-        private:
-            void _read();
-            void _clean_up();
-
-        public:
-            ~version_t();
-
-        private:
-            uint16_t m_major;
-            uint16_t m_minor;
-            vdi_t* m__root;
-            vdi_t::header_t* m__parent;
-
-        public:
-            uint16_t major() const { return m_major; }
-            uint16_t minor() const { return m_minor; }
-            vdi_t* _root() const { return m__root; }
-            vdi_t::header_t* _parent() const { return m__parent; }
-        };
-
-        class header_main_t : public kaitai::kstruct {
-
-        public:
-            class geometry_t;
-            class flags_t;
-
-            header_main_t(kaitai::kstream* p__io, vdi_t::header_t* p__parent = nullptr, vdi_t* p__root = nullptr);
-
-        private:
-            void _read();
-            void _clean_up();
-
-        public:
-            ~header_main_t();
-
-            class geometry_t : public kaitai::kstruct {
-
-            public:
-
-                geometry_t(kaitai::kstream* p__io, vdi_t::header_t::header_main_t* p__parent = nullptr, vdi_t* p__root = nullptr);
-
-            private:
-                void _read();
-                void _clean_up();
-
-            public:
-                ~geometry_t();
-
-            private:
-                uint32_t m_cylinders;
-                uint32_t m_heads;
-                uint32_t m_sectors;
-                uint32_t m_sector_size;
-                vdi_t* m__root;
-                vdi_t::header_t::header_main_t* m__parent;
-
-            public:
-                uint32_t cylinders() const { return m_cylinders; }
-                uint32_t heads() const { return m_heads; }
-                uint32_t sectors() const { return m_sectors; }
-                uint32_t sector_size() const { return m_sector_size; }
-                vdi_t* _root() const { return m__root; }
-                vdi_t::header_t::header_main_t* _parent() const { return m__parent; }
-            };
-
-            class flags_t : public kaitai::kstruct {
-
-            public:
-
-                flags_t(kaitai::kstream* p__io, vdi_t::header_t::header_main_t* p__parent = nullptr, vdi_t* p__root = nullptr);
-
-            private:
-                void _read();
-                void _clean_up();
-
-            public:
-                ~flags_t();
-
-            private:
-                uint64_t m_reserved0;
-                bool m_zero_expand;
-                uint64_t m_reserved1;
-                bool m_diff;
-                bool m_fixed;
-                uint64_t m_reserved2;
-                vdi_t* m__root;
-                vdi_t::header_t::header_main_t* m__parent;
-
-            public:
-                uint64_t reserved0() const { return m_reserved0; }
-                bool zero_expand() const { return m_zero_expand; }
-                uint64_t reserved1() const { return m_reserved1; }
-                bool diff() const { return m_diff; }
-                bool fixed() const { return m_fixed; }
-                uint64_t reserved2() const { return m_reserved2; }
-                vdi_t* _root() const { return m__root; }
-                vdi_t::header_t::header_main_t* _parent() const { return m__parent; }
-            };
-
-        private:
-            image_type_t m_image_type;
-            std::unique_ptr<flags_t> m_image_flags;
-            std::string m_description;
-            uint32_t m_blocks_map_offset;
-            bool n_blocks_map_offset;
-
-        public:
-            bool _is_null_blocks_map_offset() { blocks_map_offset(); return n_blocks_map_offset; };
-
-        private:
-            uint32_t m_offset_data;
-            bool n_offset_data;
-
-        public:
-            bool _is_null_offset_data() { offset_data(); return n_offset_data; };
-
-        private:
-            std::unique_ptr<geometry_t> m_geometry;
-            uint32_t m_reserved1;
-            bool n_reserved1;
-
-        public:
-            bool _is_null_reserved1() { reserved1(); return n_reserved1; };
-
-        private:
-            uint64_t m_disk_size;
-            uint32_t m_block_data_size;
-            uint32_t m_block_metadata_size;
-            bool n_block_metadata_size;
-
-        public:
-            bool _is_null_block_metadata_size() { block_metadata_size(); return n_block_metadata_size; };
-
-        private:
-            uint32_t m_blocks_in_image;
-            uint32_t m_blocks_allocated;
-            std::unique_ptr<uuid_t> m_uuid_image;
-            std::unique_ptr<uuid_t> m_uuid_last_snap;
-            std::unique_ptr<uuid_t> m_uuid_link;
-            std::unique_ptr<uuid_t> m_uuid_parent;
-            bool n_uuid_parent;
-
-        public:
-            bool _is_null_uuid_parent() { uuid_parent(); return n_uuid_parent; };
-
-        private:
-            std::unique_ptr<geometry_t> m_lchc_geometry;
-            bool n_lchc_geometry;
-
-        public:
-            bool _is_null_lchc_geometry() { lchc_geometry(); return n_lchc_geometry; };
-
-        private:
-            vdi_t* m__root;
-            vdi_t::header_t* m__parent;
-
-        public:
-            image_type_t image_type() const { return m_image_type; }
-            flags_t* image_flags() const { return m_image_flags.get(); }
-            std::string description() const { return m_description; }
-            uint32_t blocks_map_offset() const { return m_blocks_map_offset; }
-            uint32_t offset_data() const { return m_offset_data; }
-            geometry_t* geometry() const { return m_geometry.get(); }
-            uint32_t reserved1() const { return m_reserved1; }
-            uint64_t disk_size() const { return m_disk_size; }
-
-            /**
-             * Size of block (bytes).
-             */
-            uint32_t block_data_size() const { return m_block_data_size; }
-            uint32_t block_metadata_size() const { return m_block_metadata_size; }
-            uint32_t blocks_in_image() const { return m_blocks_in_image; }
-            uint32_t blocks_allocated() const { return m_blocks_allocated; }
-            uuid_t* uuid_image() const { return m_uuid_image.get(); }
-            uuid_t* uuid_last_snap() const { return m_uuid_last_snap.get(); }
-            uuid_t* uuid_link() const { return m_uuid_link.get(); }
-            uuid_t* uuid_parent() const { return m_uuid_parent.get(); }
-            geometry_t* lchc_geometry() const { return m_lchc_geometry.get(); }
-            vdi_t* _root() const { return m__root; }
-            vdi_t::header_t* _parent() const { return m__parent; }
-        };
-
-    private:
-        bool f_header_size;
-        int32_t m_header_size;
-
-    public:
-        int32_t header_size();
-
-    private:
-        bool f_blocks_map_offset;
-        uint32_t m_blocks_map_offset;
-
-    public:
-        uint32_t blocks_map_offset();
-
-    private:
-        bool f_subheader_size_is_dynamic;
-        bool m_subheader_size_is_dynamic;
-
-    public:
-        bool subheader_size_is_dynamic();
-
-    private:
-        bool f_blocks_offset;
-        uint32_t m_blocks_offset;
-
-    public:
-        uint32_t blocks_offset();
-
-    private:
-        bool f_block_size;
-        int32_t m_block_size;
-
-    public:
-        int32_t block_size();
-
-    private:
-        bool f_blocks_map_size;
-        int32_t m_blocks_map_size;
-
-    public:
-        int32_t blocks_map_size();
-
-    private:
-        std::string m_text;
-        std::string m_signature;
-        std::unique_ptr<version_t> m_version;
-        uint32_t m_header_size_optional;
-        bool n_header_size_optional;
-
-    public:
-        bool _is_null_header_size_optional() { header_size_optional(); return n_header_size_optional; };
-
-    private:
-        std::unique_ptr<header_main_t> m_header_main;
-        vdi_t* m__root;
-        vdi_t* m__parent;
-        std::string m__raw_header_main;
-        std::unique_ptr<kaitai::kstream> m__io__raw_header_main;
-
-    public:
-        std::string text() const { return m_text; }
-        std::string signature() const { return m_signature; }
-        version_t* version() const { return m_version.get(); }
-        uint32_t header_size_optional() const { return m_header_size_optional; }
-        header_main_t* header_main() const { return m_header_main.get(); }
-        vdi_t* _root() const { return m__root; }
-        vdi_t* _parent() const { return m__parent; }
-        std::string _raw_header_main() const { return m__raw_header_main; }
-        kaitai::kstream* _io__raw_header_main() const { return m__io__raw_header_main.get(); }
-    };
 
     class blocks_map_t : public kaitai::kstruct {
 
@@ -373,13 +83,6 @@ public:
             ~block_index_t();
 
         private:
-            bool f_is_allocated;
-            bool m_is_allocated;
-
-        public:
-            bool is_allocated();
-
-        private:
             bool f_block;
             block_t* m_block;
             bool n_block;
@@ -391,6 +94,13 @@ public:
 
         public:
             block_t* block();
+
+        private:
+            bool f_is_allocated;
+            bool m_is_allocated;
+
+        public:
+            bool is_allocated();
 
         private:
             uint32_t m_index;
@@ -492,6 +202,305 @@ public:
         std::vector<std::unique_ptr<block_t>>* blocks() const { return m_blocks.get(); }
         vdi_t* _root() const { return m__root; }
         vdi_t* _parent() const { return m__parent; }
+    };
+
+    class header_t : public kaitai::kstruct {
+
+    public:
+        class header_main_t;
+        class uuid_t;
+        class version_t;
+
+        header_t(kaitai::kstream* p__io, vdi_t* p__parent = nullptr, vdi_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~header_t();
+
+        class header_main_t : public kaitai::kstruct {
+
+        public:
+            class flags_t;
+            class geometry_t;
+
+            header_main_t(kaitai::kstream* p__io, vdi_t::header_t* p__parent = nullptr, vdi_t* p__root = nullptr);
+
+        private:
+            void _read();
+            void _clean_up();
+
+        public:
+            ~header_main_t();
+
+            class flags_t : public kaitai::kstruct {
+
+            public:
+
+                flags_t(kaitai::kstream* p__io, vdi_t::header_t::header_main_t* p__parent = nullptr, vdi_t* p__root = nullptr);
+
+            private:
+                void _read();
+                void _clean_up();
+
+            public:
+                ~flags_t();
+
+            private:
+                uint64_t m_reserved0;
+                bool m_zero_expand;
+                uint64_t m_reserved1;
+                bool m_diff;
+                bool m_fixed;
+                uint64_t m_reserved2;
+                vdi_t* m__root;
+                vdi_t::header_t::header_main_t* m__parent;
+
+            public:
+                uint64_t reserved0() const { return m_reserved0; }
+                bool zero_expand() const { return m_zero_expand; }
+                uint64_t reserved1() const { return m_reserved1; }
+                bool diff() const { return m_diff; }
+                bool fixed() const { return m_fixed; }
+                uint64_t reserved2() const { return m_reserved2; }
+                vdi_t* _root() const { return m__root; }
+                vdi_t::header_t::header_main_t* _parent() const { return m__parent; }
+            };
+
+            class geometry_t : public kaitai::kstruct {
+
+            public:
+
+                geometry_t(kaitai::kstream* p__io, vdi_t::header_t::header_main_t* p__parent = nullptr, vdi_t* p__root = nullptr);
+
+            private:
+                void _read();
+                void _clean_up();
+
+            public:
+                ~geometry_t();
+
+            private:
+                uint32_t m_cylinders;
+                uint32_t m_heads;
+                uint32_t m_sectors;
+                uint32_t m_sector_size;
+                vdi_t* m__root;
+                vdi_t::header_t::header_main_t* m__parent;
+
+            public:
+                uint32_t cylinders() const { return m_cylinders; }
+                uint32_t heads() const { return m_heads; }
+                uint32_t sectors() const { return m_sectors; }
+                uint32_t sector_size() const { return m_sector_size; }
+                vdi_t* _root() const { return m__root; }
+                vdi_t::header_t::header_main_t* _parent() const { return m__parent; }
+            };
+
+        private:
+            image_type_t m_image_type;
+            std::unique_ptr<flags_t> m_image_flags;
+            std::string m_description;
+            uint32_t m_blocks_map_offset;
+            bool n_blocks_map_offset;
+
+        public:
+            bool _is_null_blocks_map_offset() { blocks_map_offset(); return n_blocks_map_offset; };
+
+        private:
+            uint32_t m_offset_data;
+            bool n_offset_data;
+
+        public:
+            bool _is_null_offset_data() { offset_data(); return n_offset_data; };
+
+        private:
+            std::unique_ptr<geometry_t> m_geometry;
+            uint32_t m_reserved1;
+            bool n_reserved1;
+
+        public:
+            bool _is_null_reserved1() { reserved1(); return n_reserved1; };
+
+        private:
+            uint64_t m_disk_size;
+            uint32_t m_block_data_size;
+            uint32_t m_block_metadata_size;
+            bool n_block_metadata_size;
+
+        public:
+            bool _is_null_block_metadata_size() { block_metadata_size(); return n_block_metadata_size; };
+
+        private:
+            uint32_t m_blocks_in_image;
+            uint32_t m_blocks_allocated;
+            std::unique_ptr<uuid_t> m_uuid_image;
+            std::unique_ptr<uuid_t> m_uuid_last_snap;
+            std::unique_ptr<uuid_t> m_uuid_link;
+            std::unique_ptr<uuid_t> m_uuid_parent;
+            bool n_uuid_parent;
+
+        public:
+            bool _is_null_uuid_parent() { uuid_parent(); return n_uuid_parent; };
+
+        private:
+            std::unique_ptr<geometry_t> m_lchc_geometry;
+            bool n_lchc_geometry;
+
+        public:
+            bool _is_null_lchc_geometry() { lchc_geometry(); return n_lchc_geometry; };
+
+        private:
+            vdi_t* m__root;
+            vdi_t::header_t* m__parent;
+
+        public:
+            image_type_t image_type() const { return m_image_type; }
+            flags_t* image_flags() const { return m_image_flags.get(); }
+            std::string description() const { return m_description; }
+            uint32_t blocks_map_offset() const { return m_blocks_map_offset; }
+            uint32_t offset_data() const { return m_offset_data; }
+            geometry_t* geometry() const { return m_geometry.get(); }
+            uint32_t reserved1() const { return m_reserved1; }
+            uint64_t disk_size() const { return m_disk_size; }
+
+            /**
+             * Size of block (bytes).
+             */
+            uint32_t block_data_size() const { return m_block_data_size; }
+            uint32_t block_metadata_size() const { return m_block_metadata_size; }
+            uint32_t blocks_in_image() const { return m_blocks_in_image; }
+            uint32_t blocks_allocated() const { return m_blocks_allocated; }
+            uuid_t* uuid_image() const { return m_uuid_image.get(); }
+            uuid_t* uuid_last_snap() const { return m_uuid_last_snap.get(); }
+            uuid_t* uuid_link() const { return m_uuid_link.get(); }
+            uuid_t* uuid_parent() const { return m_uuid_parent.get(); }
+            geometry_t* lchc_geometry() const { return m_lchc_geometry.get(); }
+            vdi_t* _root() const { return m__root; }
+            vdi_t::header_t* _parent() const { return m__parent; }
+        };
+
+        class uuid_t : public kaitai::kstruct {
+
+        public:
+
+            uuid_t(kaitai::kstream* p__io, vdi_t::header_t::header_main_t* p__parent = nullptr, vdi_t* p__root = nullptr);
+
+        private:
+            void _read();
+            void _clean_up();
+
+        public:
+            ~uuid_t();
+
+        private:
+            std::string m_uuid;
+            vdi_t* m__root;
+            vdi_t::header_t::header_main_t* m__parent;
+
+        public:
+            std::string uuid() const { return m_uuid; }
+            vdi_t* _root() const { return m__root; }
+            vdi_t::header_t::header_main_t* _parent() const { return m__parent; }
+        };
+
+        class version_t : public kaitai::kstruct {
+
+        public:
+
+            version_t(kaitai::kstream* p__io, vdi_t::header_t* p__parent = nullptr, vdi_t* p__root = nullptr);
+
+        private:
+            void _read();
+            void _clean_up();
+
+        public:
+            ~version_t();
+
+        private:
+            uint16_t m_major;
+            uint16_t m_minor;
+            vdi_t* m__root;
+            vdi_t::header_t* m__parent;
+
+        public:
+            uint16_t major() const { return m_major; }
+            uint16_t minor() const { return m_minor; }
+            vdi_t* _root() const { return m__root; }
+            vdi_t::header_t* _parent() const { return m__parent; }
+        };
+
+    private:
+        bool f_block_size;
+        int32_t m_block_size;
+
+    public:
+        int32_t block_size();
+
+    private:
+        bool f_blocks_map_offset;
+        uint32_t m_blocks_map_offset;
+
+    public:
+        uint32_t blocks_map_offset();
+
+    private:
+        bool f_blocks_map_size;
+        int32_t m_blocks_map_size;
+
+    public:
+        int32_t blocks_map_size();
+
+    private:
+        bool f_blocks_offset;
+        uint32_t m_blocks_offset;
+
+    public:
+        uint32_t blocks_offset();
+
+    private:
+        bool f_header_size;
+        int32_t m_header_size;
+
+    public:
+        int32_t header_size();
+
+    private:
+        bool f_subheader_size_is_dynamic;
+        bool m_subheader_size_is_dynamic;
+
+    public:
+        bool subheader_size_is_dynamic();
+
+    private:
+        std::string m_text;
+        std::string m_signature;
+        std::unique_ptr<version_t> m_version;
+        uint32_t m_header_size_optional;
+        bool n_header_size_optional;
+
+    public:
+        bool _is_null_header_size_optional() { header_size_optional(); return n_header_size_optional; };
+
+    private:
+        std::unique_ptr<header_main_t> m_header_main;
+        vdi_t* m__root;
+        vdi_t* m__parent;
+        std::string m__raw_header_main;
+        std::unique_ptr<kaitai::kstream> m__io__raw_header_main;
+
+    public:
+        std::string text() const { return m_text; }
+        std::string signature() const { return m_signature; }
+        version_t* version() const { return m_version.get(); }
+        uint32_t header_size_optional() const { return m_header_size_optional; }
+        header_main_t* header_main() const { return m_header_main.get(); }
+        vdi_t* _root() const { return m__root; }
+        vdi_t* _parent() const { return m__parent; }
+        std::string _raw_header_main() const { return m__raw_header_main; }
+        kaitai::kstream* _io__raw_header_main() const { return m__io__raw_header_main.get(); }
     };
 
 private:

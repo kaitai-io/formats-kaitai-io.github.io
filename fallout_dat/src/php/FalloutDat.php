@@ -3,8 +3,8 @@
 
 namespace {
     class FalloutDat extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \FalloutDat $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\FalloutDat $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -40,57 +40,8 @@ namespace {
 }
 
 namespace FalloutDat {
-    class Pstr extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \FalloutDat $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_size = $this->_io->readU1();
-            $this->_m_str = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->size()), "ASCII");
-        }
-        protected $_m_size;
-        protected $_m_str;
-        public function size() { return $this->_m_size; }
-        public function str() { return $this->_m_str; }
-    }
-}
-
-namespace FalloutDat {
-    class Folder extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \FalloutDat $_parent = null, \FalloutDat $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_fileCount = $this->_io->readU4be();
-            $this->_m_unknown = $this->_io->readU4be();
-            $this->_m_flags = $this->_io->readU4be();
-            $this->_m_timestamp = $this->_io->readU4be();
-            $this->_m_files = [];
-            $n = $this->fileCount();
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_files[] = new \FalloutDat\File($this->_io, $this, $this->_root);
-            }
-        }
-        protected $_m_fileCount;
-        protected $_m_unknown;
-        protected $_m_flags;
-        protected $_m_timestamp;
-        protected $_m_files;
-        public function fileCount() { return $this->_m_fileCount; }
-        public function unknown() { return $this->_m_unknown; }
-        public function flags() { return $this->_m_flags; }
-        public function timestamp() { return $this->_m_timestamp; }
-        public function files() { return $this->_m_files; }
-    }
-}
-
-namespace FalloutDat {
     class File extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \FalloutDat\Folder $_parent = null, \FalloutDat $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\FalloutDat\Folder $_parent = null, ?\FalloutDat $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -127,8 +78,63 @@ namespace FalloutDat {
 }
 
 namespace FalloutDat {
+    class Folder extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\FalloutDat $_parent = null, ?\FalloutDat $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_fileCount = $this->_io->readU4be();
+            $this->_m_unknown = $this->_io->readU4be();
+            $this->_m_flags = $this->_io->readU4be();
+            $this->_m_timestamp = $this->_io->readU4be();
+            $this->_m_files = [];
+            $n = $this->fileCount();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_files[] = new \FalloutDat\File($this->_io, $this, $this->_root);
+            }
+        }
+        protected $_m_fileCount;
+        protected $_m_unknown;
+        protected $_m_flags;
+        protected $_m_timestamp;
+        protected $_m_files;
+        public function fileCount() { return $this->_m_fileCount; }
+        public function unknown() { return $this->_m_unknown; }
+        public function flags() { return $this->_m_flags; }
+        public function timestamp() { return $this->_m_timestamp; }
+        public function files() { return $this->_m_files; }
+    }
+}
+
+namespace FalloutDat {
+    class Pstr extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\FalloutDat $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_size = $this->_io->readU1();
+            $this->_m_str = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->size()), "ASCII");
+        }
+        protected $_m_size;
+        protected $_m_str;
+        public function size() { return $this->_m_size; }
+        public function str() { return $this->_m_str; }
+    }
+}
+
+namespace FalloutDat {
     class Compression {
         const NONE = 32;
         const LZSS = 64;
+
+        private const _VALUES = [32 => true, 64 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

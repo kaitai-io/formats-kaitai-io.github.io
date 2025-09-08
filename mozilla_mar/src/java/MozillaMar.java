@@ -8,7 +8,8 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Arrays;
 import java.util.ArrayList;
-import java.nio.charset.Charset;
+import java.util.List;
+import java.nio.charset.StandardCharsets;
 
 
 /**
@@ -21,6 +22,20 @@ import java.nio.charset.Charset;
 public class MozillaMar extends KaitaiStruct {
     public static MozillaMar fromFile(String fileName) throws IOException {
         return new MozillaMar(new ByteBufferKaitaiStream(fileName));
+    }
+
+    public enum BlockIdentifiers {
+        PRODUCT_INFORMATION(1);
+
+        private final long id;
+        BlockIdentifiers(long id) { this.id = id; }
+        public long id() { return id; }
+        private static final Map<Long, BlockIdentifiers> byId = new HashMap<Long, BlockIdentifiers>(1);
+        static {
+            for (BlockIdentifiers e : BlockIdentifiers.values())
+                byId.put(e.id(), e);
+        }
+        public static BlockIdentifiers byId(long id) { return byId.get(id); }
     }
 
     public enum SignatureAlgorithms {
@@ -36,20 +51,6 @@ public class MozillaMar extends KaitaiStruct {
                 byId.put(e.id(), e);
         }
         public static SignatureAlgorithms byId(long id) { return byId.get(id); }
-    }
-
-    public enum BlockIdentifiers {
-        PRODUCT_INFORMATION(1);
-
-        private final long id;
-        BlockIdentifiers(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map<Long, BlockIdentifiers> byId = new HashMap<Long, BlockIdentifiers>(1);
-        static {
-            for (BlockIdentifiers e : BlockIdentifiers.values())
-                byId.put(e.id(), e);
-        }
-        public static BlockIdentifiers byId(long id) { return byId.get(id); }
     }
 
     public MozillaMar(KaitaiStream _io) {
@@ -68,8 +69,8 @@ public class MozillaMar extends KaitaiStruct {
     }
     private void _read() {
         this.magic = this._io.readBytes(4);
-        if (!(Arrays.equals(magic(), new byte[] { 77, 65, 82, 49 }))) {
-            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 77, 65, 82, 49 }, magic(), _io(), "/seq/0");
+        if (!(Arrays.equals(this.magic, new byte[] { 77, 65, 82, 49 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 77, 65, 82, 49 }, this.magic, this._io, "/seq/0");
         }
         this.ofsIndex = this._io.readU4be();
         this.fileSize = this._io.readU8be();
@@ -84,41 +85,88 @@ public class MozillaMar extends KaitaiStruct {
             this.additionalSections.add(new AdditionalSection(this._io, this, _root));
         }
     }
-    public static class MarIndex extends KaitaiStruct {
-        public static MarIndex fromFile(String fileName) throws IOException {
-            return new MarIndex(new ByteBufferKaitaiStream(fileName));
+
+    public void _fetchInstances() {
+        for (int i = 0; i < this.signatures.size(); i++) {
+            this.signatures.get(((Number) (i)).intValue())._fetchInstances();
+        }
+        for (int i = 0; i < this.additionalSections.size(); i++) {
+            this.additionalSections.get(((Number) (i)).intValue())._fetchInstances();
+        }
+        index();
+        if (this.index != null) {
+            this.index._fetchInstances();
+        }
+    }
+    public static class AdditionalSection extends KaitaiStruct {
+        public static AdditionalSection fromFile(String fileName) throws IOException {
+            return new AdditionalSection(new ByteBufferKaitaiStream(fileName));
         }
 
-        public MarIndex(KaitaiStream _io) {
+        public AdditionalSection(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public MarIndex(KaitaiStream _io, MozillaMar _parent) {
+        public AdditionalSection(KaitaiStream _io, MozillaMar _parent) {
             this(_io, _parent, null);
         }
 
-        public MarIndex(KaitaiStream _io, MozillaMar _parent, MozillaMar _root) {
+        public AdditionalSection(KaitaiStream _io, MozillaMar _parent, MozillaMar _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.lenIndex = this._io.readU4be();
-            this._raw_indexEntries = this._io.readBytes(lenIndex());
-            KaitaiStream _io__raw_indexEntries = new ByteBufferKaitaiStream(_raw_indexEntries);
-            this.indexEntries = new IndexEntries(_io__raw_indexEntries, this, _root);
+            this.lenBlock = this._io.readU4be();
+            this.blockIdentifier = MozillaMar.BlockIdentifiers.byId(this._io.readU4be());
+            {
+                BlockIdentifiers on = blockIdentifier();
+                if (on != null) {
+                    switch (blockIdentifier()) {
+                    case PRODUCT_INFORMATION: {
+                        KaitaiStream _io_bytes = this._io.substream((lenBlock() - 4) - 4);
+                        this.bytes = new ProductInformationBlock(_io_bytes, this, _root);
+                        break;
+                    }
+                    default: {
+                        this.bytes = this._io.readBytes((lenBlock() - 4) - 4);
+                        break;
+                    }
+                    }
+                } else {
+                    this.bytes = this._io.readBytes((lenBlock() - 4) - 4);
+                }
+            }
         }
-        private long lenIndex;
-        private IndexEntries indexEntries;
+
+        public void _fetchInstances() {
+            {
+                BlockIdentifiers on = blockIdentifier();
+                if (on != null) {
+                    switch (blockIdentifier()) {
+                    case PRODUCT_INFORMATION: {
+                        ((ProductInformationBlock) (this.bytes))._fetchInstances();
+                        break;
+                    }
+                    default: {
+                        break;
+                    }
+                    }
+                } else {
+                }
+            }
+        }
+        private long lenBlock;
+        private BlockIdentifiers blockIdentifier;
+        private Object bytes;
         private MozillaMar _root;
         private MozillaMar _parent;
-        private byte[] _raw_indexEntries;
-        public long lenIndex() { return lenIndex; }
-        public IndexEntries indexEntries() { return indexEntries; }
+        public long lenBlock() { return lenBlock; }
+        public BlockIdentifiers blockIdentifier() { return blockIdentifier; }
+        public Object bytes() { return bytes; }
         public MozillaMar _root() { return _root; }
         public MozillaMar _parent() { return _parent; }
-        public byte[] _raw_indexEntries() { return _raw_indexEntries; }
     }
     public static class IndexEntries extends KaitaiStruct {
         public static IndexEntries fromFile(String fileName) throws IOException {
@@ -149,79 +197,18 @@ public class MozillaMar extends KaitaiStruct {
                 }
             }
         }
-        private ArrayList<IndexEntry> indexEntry;
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.indexEntry.size(); i++) {
+                this.indexEntry.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private List<IndexEntry> indexEntry;
         private MozillaMar _root;
         private MozillaMar.MarIndex _parent;
-        public ArrayList<IndexEntry> indexEntry() { return indexEntry; }
+        public List<IndexEntry> indexEntry() { return indexEntry; }
         public MozillaMar _root() { return _root; }
         public MozillaMar.MarIndex _parent() { return _parent; }
-    }
-    public static class Signature extends KaitaiStruct {
-        public static Signature fromFile(String fileName) throws IOException {
-            return new Signature(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Signature(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Signature(KaitaiStream _io, MozillaMar _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Signature(KaitaiStream _io, MozillaMar _parent, MozillaMar _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.algorithm = MozillaMar.SignatureAlgorithms.byId(this._io.readU4be());
-            this.lenSignature = this._io.readU4be();
-            this.signature = this._io.readBytes(lenSignature());
-        }
-        private SignatureAlgorithms algorithm;
-        private long lenSignature;
-        private byte[] signature;
-        private MozillaMar _root;
-        private MozillaMar _parent;
-        public SignatureAlgorithms algorithm() { return algorithm; }
-        public long lenSignature() { return lenSignature; }
-        public byte[] signature() { return signature; }
-        public MozillaMar _root() { return _root; }
-        public MozillaMar _parent() { return _parent; }
-    }
-    public static class ProductInformationBlock extends KaitaiStruct {
-        public static ProductInformationBlock fromFile(String fileName) throws IOException {
-            return new ProductInformationBlock(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public ProductInformationBlock(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public ProductInformationBlock(KaitaiStream _io, MozillaMar.AdditionalSection _parent) {
-            this(_io, _parent, null);
-        }
-
-        public ProductInformationBlock(KaitaiStream _io, MozillaMar.AdditionalSection _parent, MozillaMar _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.marChannelName = new String(KaitaiStream.bytesTerminate(this._io.readBytes(64), (byte) 0, false), Charset.forName("UTF-8"));
-            this.productVersion = new String(KaitaiStream.bytesTerminate(this._io.readBytes(32), (byte) 0, false), Charset.forName("UTF-8"));
-        }
-        private String marChannelName;
-        private String productVersion;
-        private MozillaMar _root;
-        private MozillaMar.AdditionalSection _parent;
-        public String marChannelName() { return marChannelName; }
-        public String productVersion() { return productVersion; }
-        public MozillaMar _root() { return _root; }
-        public MozillaMar.AdditionalSection _parent() { return _parent; }
     }
     public static class IndexEntry extends KaitaiStruct {
         public static IndexEntry fromFile(String fileName) throws IOException {
@@ -246,7 +233,13 @@ public class MozillaMar extends KaitaiStruct {
             this.ofsContent = this._io.readU4be();
             this.lenContent = this._io.readU4be();
             this.flags = this._io.readU4be();
-            this.fileName = new String(this._io.readBytesTerm((byte) 0, false, true, true), Charset.forName("UTF-8"));
+            this.fileName = new String(this._io.readBytesTerm((byte) 0, false, true, true), StandardCharsets.UTF_8);
+        }
+
+        public void _fetchInstances() {
+            body();
+            if (this.body != null) {
+            }
         }
         private byte[] body;
         public byte[] body() {
@@ -276,60 +269,115 @@ public class MozillaMar extends KaitaiStruct {
         public MozillaMar _root() { return _root; }
         public MozillaMar.IndexEntries _parent() { return _parent; }
     }
-    public static class AdditionalSection extends KaitaiStruct {
-        public static AdditionalSection fromFile(String fileName) throws IOException {
-            return new AdditionalSection(new ByteBufferKaitaiStream(fileName));
+    public static class MarIndex extends KaitaiStruct {
+        public static MarIndex fromFile(String fileName) throws IOException {
+            return new MarIndex(new ByteBufferKaitaiStream(fileName));
         }
 
-        public AdditionalSection(KaitaiStream _io) {
+        public MarIndex(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public AdditionalSection(KaitaiStream _io, MozillaMar _parent) {
+        public MarIndex(KaitaiStream _io, MozillaMar _parent) {
             this(_io, _parent, null);
         }
 
-        public AdditionalSection(KaitaiStream _io, MozillaMar _parent, MozillaMar _root) {
+        public MarIndex(KaitaiStream _io, MozillaMar _parent, MozillaMar _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.lenBlock = this._io.readU4be();
-            this.blockIdentifier = MozillaMar.BlockIdentifiers.byId(this._io.readU4be());
-            {
-                BlockIdentifiers on = blockIdentifier();
-                if (on != null) {
-                    switch (blockIdentifier()) {
-                    case PRODUCT_INFORMATION: {
-                        this._raw_bytes = this._io.readBytes(((lenBlock() - 4) - 4));
-                        KaitaiStream _io__raw_bytes = new ByteBufferKaitaiStream(_raw_bytes);
-                        this.bytes = new ProductInformationBlock(_io__raw_bytes, this, _root);
-                        break;
-                    }
-                    default: {
-                        this.bytes = this._io.readBytes(((lenBlock() - 4) - 4));
-                        break;
-                    }
-                    }
-                } else {
-                    this.bytes = this._io.readBytes(((lenBlock() - 4) - 4));
-                }
-            }
+            this.lenIndex = this._io.readU4be();
+            KaitaiStream _io_indexEntries = this._io.substream(lenIndex());
+            this.indexEntries = new IndexEntries(_io_indexEntries, this, _root);
         }
-        private long lenBlock;
-        private BlockIdentifiers blockIdentifier;
-        private Object bytes;
+
+        public void _fetchInstances() {
+            this.indexEntries._fetchInstances();
+        }
+        private long lenIndex;
+        private IndexEntries indexEntries;
         private MozillaMar _root;
         private MozillaMar _parent;
-        private byte[] _raw_bytes;
-        public long lenBlock() { return lenBlock; }
-        public BlockIdentifiers blockIdentifier() { return blockIdentifier; }
-        public Object bytes() { return bytes; }
+        public long lenIndex() { return lenIndex; }
+        public IndexEntries indexEntries() { return indexEntries; }
         public MozillaMar _root() { return _root; }
         public MozillaMar _parent() { return _parent; }
-        public byte[] _raw_bytes() { return _raw_bytes; }
+    }
+    public static class ProductInformationBlock extends KaitaiStruct {
+        public static ProductInformationBlock fromFile(String fileName) throws IOException {
+            return new ProductInformationBlock(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public ProductInformationBlock(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public ProductInformationBlock(KaitaiStream _io, MozillaMar.AdditionalSection _parent) {
+            this(_io, _parent, null);
+        }
+
+        public ProductInformationBlock(KaitaiStream _io, MozillaMar.AdditionalSection _parent, MozillaMar _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.marChannelName = new String(KaitaiStream.bytesTerminate(this._io.readBytes(64), (byte) 0, false), StandardCharsets.UTF_8);
+            this.productVersion = new String(KaitaiStream.bytesTerminate(this._io.readBytes(32), (byte) 0, false), StandardCharsets.UTF_8);
+        }
+
+        public void _fetchInstances() {
+        }
+        private String marChannelName;
+        private String productVersion;
+        private MozillaMar _root;
+        private MozillaMar.AdditionalSection _parent;
+        public String marChannelName() { return marChannelName; }
+        public String productVersion() { return productVersion; }
+        public MozillaMar _root() { return _root; }
+        public MozillaMar.AdditionalSection _parent() { return _parent; }
+    }
+    public static class Signature extends KaitaiStruct {
+        public static Signature fromFile(String fileName) throws IOException {
+            return new Signature(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Signature(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Signature(KaitaiStream _io, MozillaMar _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Signature(KaitaiStream _io, MozillaMar _parent, MozillaMar _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.algorithm = MozillaMar.SignatureAlgorithms.byId(this._io.readU4be());
+            this.lenSignature = this._io.readU4be();
+            this.signature = this._io.readBytes(lenSignature());
+        }
+
+        public void _fetchInstances() {
+        }
+        private SignatureAlgorithms algorithm;
+        private long lenSignature;
+        private byte[] signature;
+        private MozillaMar _root;
+        private MozillaMar _parent;
+        public SignatureAlgorithms algorithm() { return algorithm; }
+        public long lenSignature() { return lenSignature; }
+        public byte[] signature() { return signature; }
+        public MozillaMar _root() { return _root; }
+        public MozillaMar _parent() { return _parent; }
     }
     private MarIndex index;
     public MarIndex index() {
@@ -345,18 +393,18 @@ public class MozillaMar extends KaitaiStruct {
     private long ofsIndex;
     private long fileSize;
     private long lenSignatures;
-    private ArrayList<Signature> signatures;
+    private List<Signature> signatures;
     private long lenAdditionalSections;
-    private ArrayList<AdditionalSection> additionalSections;
+    private List<AdditionalSection> additionalSections;
     private MozillaMar _root;
     private KaitaiStruct _parent;
     public byte[] magic() { return magic; }
     public long ofsIndex() { return ofsIndex; }
     public long fileSize() { return fileSize; }
     public long lenSignatures() { return lenSignatures; }
-    public ArrayList<Signature> signatures() { return signatures; }
+    public List<Signature> signatures() { return signatures; }
     public long lenAdditionalSections() { return lenAdditionalSections; }
-    public ArrayList<AdditionalSection> additionalSections() { return additionalSections; }
+    public List<AdditionalSection> additionalSections() { return additionalSections; }
     public MozillaMar _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

@@ -241,6 +241,11 @@ such as custom file icons.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="Macintosh resource fork data parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="Macintosh resource fork data parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -269,9 +274,19 @@ such as custom file icons.</p>
                 <a href="python.html" title="Macintosh resource fork data parsing Python library">Python</a></li>
                 
                 
+                <li>
+                
+                <a href="python-write.html" title="Macintosh resource fork data parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
                 <li class="active">
                 
                 <a href="ruby.html" title="Macintosh resource fork data parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="Macintosh resource fork data parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -348,9 +363,10 @@ such as custom file icons.</p>
             <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
 <span class="nb">require</span><span class="w"> </span><span class="s1">&#39;kaitai/struct/struct&#39;</span>
+<span class="n">require_relative</span><span class="w"> </span><span class="s1">&#39;bytes_with_io&#39;</span>
 
-<span class="k">unless</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.9&#39;</span><span class="p">)</span>
-<span class="w">  </span><span class="k">raise</span><span class="w"> </span><span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">unless</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.11&#39;</span><span class="p">)</span>
+<span class="w">  </span><span class="k">raise</span><span class="w"> </span><span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
 <span class="k">end</span>
 
 
@@ -394,8 +410,8 @@ such as custom file icons.</p>
 <span class="c1"># @see https://github.com/kreativekorp/ksfl/wiki/Macintosh-Resource-File-Format Source</span>
 <span class="c1"># @see https://github.com/dgelessus/mac_file_format_docs/blob/master/README.md#resource-forks Source</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">ResourceFork</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
-<span class="w">    </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">    </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
 <span class="w">    </span><span class="n">_read</span>
 <span class="w">  </span><span class="k">end</span>
 
@@ -407,10 +423,37 @@ such as custom file icons.</p>
 <span class="w">  </span><span class="k">end</span>
 
 <span class="w">  </span><span class="c1">##</span>
+<span class="w">  </span><span class="c1"># A resource data block,</span>
+<span class="w">  </span><span class="c1"># as stored in the resource data area.</span>
+<span class="w">  </span><span class="c1"># </span>
+<span class="w">  </span><span class="c1"># Each data block stores the data contained in a resource,</span>
+<span class="w">  </span><span class="c1"># along with its length.</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">DataBlock</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@len_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+<span class="w">      </span><span class="vi">@data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_data</span><span class="p">)</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># The length of the resource data stored in this block.</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:len_data</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># The data stored in this block.</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:data</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="c1">##</span>
 <span class="w">  </span><span class="c1"># Resource file header,</span>
 <span class="w">  </span><span class="c1"># containing the offsets and lengths of the resource data area and resource map.</span>
 <span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">FileHeader</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 <span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
 <span class="w">      </span><span class="n">_read</span>
 <span class="w">    </span><span class="k">end</span>
@@ -455,37 +498,10 @@ such as custom file icons.</p>
 <span class="w">  </span><span class="k">end</span>
 
 <span class="w">  </span><span class="c1">##</span>
-<span class="w">  </span><span class="c1"># A resource data block,</span>
-<span class="w">  </span><span class="c1"># as stored in the resource data area.</span>
-<span class="w">  </span><span class="c1"># </span>
-<span class="w">  </span><span class="c1"># Each data block stores the data contained in a resource,</span>
-<span class="w">  </span><span class="c1"># along with its length.</span>
-<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">DataBlock</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
-<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
-<span class="w">      </span><span class="n">_read</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">      </span><span class="vi">@len_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
-<span class="w">      </span><span class="vi">@data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_data</span><span class="p">)</span>
-<span class="w">      </span><span class="nb">self</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># The length of the resource data stored in this block.</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:len_data</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># The data stored in this block.</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:data</span>
-<span class="w">  </span><span class="k">end</span>
-
-<span class="w">  </span><span class="c1">##</span>
 <span class="w">  </span><span class="c1"># Resource map,</span>
 <span class="w">  </span><span class="c1"># containing information about the resources in the file and where they are located in the data area.</span>
 <span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">ResourceMap</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 <span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
 <span class="w">      </span><span class="n">_read</span>
 <span class="w">    </span><span class="k">end</span>
@@ -494,9 +510,8 @@ such as custom file icons.</p>
 <span class="w">      </span><span class="vi">@reserved_file_header_copy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">FileHeader</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
 <span class="w">      </span><span class="vi">@reserved_next_resource_map_handle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
 <span class="w">      </span><span class="vi">@reserved_file_reference_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
-<span class="w">      </span><span class="vi">@_raw_file_attributes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-<span class="w">      </span><span class="n">_io__raw_file_attributes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_file_attributes</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@file_attributes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">FileAttributes</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_file_attributes</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_io_file_attributes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@file_attributes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">FileAttributes</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_file_attributes</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
 <span class="w">      </span><span class="vi">@ofs_type_list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
 <span class="w">      </span><span class="vi">@ofs_names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
 <span class="w">      </span><span class="nb">self</span>
@@ -509,7 +524,7 @@ such as custom file icons.</p>
 <span class="w">    </span><span class="c1"># These attributes are sometimes also referred to as resource map attributes,</span>
 <span class="w">    </span><span class="c1"># because of where they are stored in the file.</span>
 <span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">FileAttributes</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 <span class="w">        </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
 <span class="w">        </span><span class="n">_read</span>
 <span class="w">      </span><span class="k">end</span>
@@ -592,6 +607,58 @@ such as custom file icons.</p>
 <span class="w">    </span><span class="k">end</span>
 
 <span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># A resource name,</span>
+<span class="w">    </span><span class="c1"># as stored in the resource name storage area in the resource map.</span>
+<span class="w">    </span><span class="c1"># </span>
+<span class="w">    </span><span class="c1"># The resource names are not required to appear in any particular order.</span>
+<span class="w">    </span><span class="c1"># There may be unused space between and around resource names,</span>
+<span class="w">    </span><span class="c1"># but in practice they are often contiguous.</span>
+<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">Name</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">        </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">        </span><span class="n">_read</span>
+<span class="w">      </span><span class="k">end</span>
+
+<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">        </span><span class="vi">@len_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">        </span><span class="vi">@value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_value</span><span class="p">)</span>
+<span class="w">        </span><span class="nb">self</span>
+<span class="w">      </span><span class="k">end</span>
+
+<span class="w">      </span><span class="c1">##</span>
+<span class="w">      </span><span class="c1"># The length of the resource name, in bytes.</span>
+<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:len_value</span>
+
+<span class="w">      </span><span class="c1">##</span>
+<span class="w">      </span><span class="c1"># The resource name.</span>
+<span class="w">      </span><span class="c1"># </span>
+<span class="w">      </span><span class="c1"># This field is exposed as a byte array,</span>
+<span class="w">      </span><span class="c1"># because there is no universal encoding for resource names.</span>
+<span class="w">      </span><span class="c1"># Most Classic Mac software does not deal with encodings explicitly and instead assumes that all strings,</span>
+<span class="w">      </span><span class="c1"># including resource names,</span>
+<span class="w">      </span><span class="c1"># use the system encoding,</span>
+<span class="w">      </span><span class="c1"># which varies depending on the system language.</span>
+<span class="w">      </span><span class="c1"># This means that resource names can use different encodings depending on what system language they were created with.</span>
+<span class="w">      </span><span class="c1"># </span>
+<span class="w">      </span><span class="c1"># Many resource names are plain ASCII,</span>
+<span class="w">      </span><span class="c1"># meaning that the encoding often does not matter</span>
+<span class="w">      </span><span class="c1"># (because all Mac OS encodings are ASCII-compatible).</span>
+<span class="w">      </span><span class="c1"># For non-ASCII resource names,</span>
+<span class="w">      </span><span class="c1"># the most common encoding is perhaps MacRoman</span>
+<span class="w">      </span><span class="c1"># (used for English and other Western languages),</span>
+<span class="w">      </span><span class="c1"># but other encodings are also sometimes used,</span>
+<span class="w">      </span><span class="c1"># especially for software in non-Western languages.</span>
+<span class="w">      </span><span class="c1"># </span>
+<span class="w">      </span><span class="c1"># There is no requirement that all names in a single resource file use the same encoding.</span>
+<span class="w">      </span><span class="c1"># For example,</span>
+<span class="w">      </span><span class="c1"># localized software may have some (but not all) of its resource names translated.</span>
+<span class="w">      </span><span class="c1"># For non-Western languages,</span>
+<span class="w">      </span><span class="c1"># this can lead to some resource names using MacRoman,</span>
+<span class="w">      </span><span class="c1"># and others using a different encoding.</span>
+<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:value</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
 <span class="w">    </span><span class="c1"># Resource type list and storage area for resource reference lists in the resource map.</span>
 <span class="w">    </span><span class="c1"># </span>
 <span class="w">    </span><span class="c1"># The two parts are combined into a single type here for technical reasons:</span>
@@ -599,7 +666,7 @@ such as custom file icons.</p>
 <span class="w">    </span><span class="c1"># instead it always starts directly after the resource type list.</span>
 <span class="w">    </span><span class="c1"># The simplest way to implement this is by placing both types into a single `seq`.</span>
 <span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">TypeListAndReferenceLists</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 <span class="w">        </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
 <span class="w">        </span><span class="n">_read</span>
 <span class="w">      </span><span class="k">end</span>
@@ -611,112 +678,13 @@ such as custom file icons.</p>
 <span class="w">      </span><span class="k">end</span>
 
 <span class="w">      </span><span class="c1">##</span>
-<span class="w">      </span><span class="c1"># Resource type list in the resource map.</span>
-<span class="w">      </span><span class="k">class</span><span class="w"> </span><span class="nc">TypeList</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
-<span class="w">          </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
-<span class="w">          </span><span class="n">_read</span>
-<span class="w">        </span><span class="k">end</span>
-
-<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">          </span><span class="vi">@num_types_m1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
-<span class="w">          </span><span class="vi">@entries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span>
-<span class="w">          </span><span class="p">(</span><span class="n">num_types</span><span class="p">)</span><span class="o">.</span><span class="n">times</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">|</span><span class="n">i</span><span class="o">|</span>
-<span class="w">            </span><span class="vi">@entries</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="no">TypeListEntry</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">          </span><span class="p">}</span>
-<span class="w">          </span><span class="nb">self</span>
-<span class="w">        </span><span class="k">end</span>
-
-<span class="w">        </span><span class="c1">##</span>
-<span class="w">        </span><span class="c1"># A single entry in the resource type list.</span>
-<span class="w">        </span><span class="c1"># </span>
-<span class="w">        </span><span class="c1"># Each entry corresponds to exactly one resource reference list.</span>
-<span class="w">        </span><span class="k">class</span><span class="w"> </span><span class="nc">TypeListEntry</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">          </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
-<span class="w">            </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
-<span class="w">            </span><span class="n">_read</span>
-<span class="w">          </span><span class="k">end</span>
-
-<span class="w">          </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">            </span><span class="vi">@type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-<span class="w">            </span><span class="vi">@num_references_m1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
-<span class="w">            </span><span class="vi">@ofs_reference_list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
-<span class="w">            </span><span class="nb">self</span>
-<span class="w">          </span><span class="k">end</span>
-
-<span class="w">          </span><span class="c1">##</span>
-<span class="w">          </span><span class="c1"># The number of resources in the reference list for this type.</span>
-<span class="w">          </span><span class="k">def</span><span class="w"> </span><span class="nf">num_references</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="vi">@num_references</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@num_references</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">            </span><span class="vi">@num_references</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">num_references_m1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">65536</span><span class="p">)</span>
-<span class="w">            </span><span class="vi">@num_references</span>
-<span class="w">          </span><span class="k">end</span>
-
-<span class="w">          </span><span class="c1">##</span>
-<span class="w">          </span><span class="c1"># The resource reference list for this resource type.</span>
-<span class="w">          </span><span class="k">def</span><span class="w"> </span><span class="nf">reference_list</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="vi">@reference_list</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@reference_list</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">            </span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_parent</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">_io</span>
-<span class="w">            </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span><span class="o">.</span><span class="n">pos</span>
-<span class="w">            </span><span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">ofs_reference_list</span><span class="p">)</span>
-<span class="w">            </span><span class="vi">@reference_list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">ReferenceList</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">,</span><span class="w"> </span><span class="n">num_references</span><span class="p">)</span>
-<span class="w">            </span><span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
-<span class="w">            </span><span class="vi">@reference_list</span>
-<span class="w">          </span><span class="k">end</span>
-
-<span class="w">          </span><span class="c1">##</span>
-<span class="w">          </span><span class="c1"># The four-character type code of the resources in the reference list.</span>
-<span class="w">          </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:type</span>
-
-<span class="w">          </span><span class="c1">##</span>
-<span class="w">          </span><span class="c1"># The number of resources in the reference list for this type,</span>
-<span class="w">          </span><span class="c1"># minus one.</span>
-<span class="w">          </span><span class="c1"># </span>
-<span class="w">          </span><span class="c1"># Empty reference lists should never exist.</span>
-<span class="w">          </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:num_references_m1</span>
-
-<span class="w">          </span><span class="c1">##</span>
-<span class="w">          </span><span class="c1"># Offset of the resource reference list for this resource type,</span>
-<span class="w">          </span><span class="c1"># from the start of the resource type list.</span>
-<span class="w">          </span><span class="c1"># </span>
-<span class="w">          </span><span class="c1"># Although the offset is relative to the start of the type list,</span>
-<span class="w">          </span><span class="c1"># it should never point into the type list itself,</span>
-<span class="w">          </span><span class="c1"># but into the reference list storage area that directly follows it.</span>
-<span class="w">          </span><span class="c1"># That is,</span>
-<span class="w">          </span><span class="c1"># it should always be at least `_parent._sizeof`.</span>
-<span class="w">          </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:ofs_reference_list</span>
-<span class="w">        </span><span class="k">end</span>
-
-<span class="w">        </span><span class="c1">##</span>
-<span class="w">        </span><span class="c1"># The number of resource types in this list.</span>
-<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="nf">num_types</span>
-<span class="w">          </span><span class="k">return</span><span class="w"> </span><span class="vi">@num_types</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@num_types</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">          </span><span class="vi">@num_types</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="n">num_types_m1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">65536</span><span class="p">)</span>
-<span class="w">          </span><span class="vi">@num_types</span>
-<span class="w">        </span><span class="k">end</span>
-
-<span class="w">        </span><span class="c1">##</span>
-<span class="w">        </span><span class="c1"># The number of resource types in this list,</span>
-<span class="w">        </span><span class="c1"># minus one.</span>
-<span class="w">        </span><span class="c1"># </span>
-<span class="w">        </span><span class="c1"># If the resource list is empty,</span>
-<span class="w">        </span><span class="c1"># the value of this field is `0xffff`,</span>
-<span class="w">        </span><span class="c1"># i. e. `-1` truncated to a 16-bit unsigned integer.</span>
-<span class="w">        </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:num_types_m1</span>
-
-<span class="w">        </span><span class="c1">##</span>
-<span class="w">        </span><span class="c1"># Entries in the resource type list.</span>
-<span class="w">        </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:entries</span>
-<span class="w">      </span><span class="k">end</span>
-
-<span class="w">      </span><span class="c1">##</span>
 <span class="w">      </span><span class="c1"># A resource reference list,</span>
 <span class="w">      </span><span class="c1"># as stored in the reference list area.</span>
 <span class="w">      </span><span class="c1"># </span>
 <span class="w">      </span><span class="c1"># Each reference list has exactly one matching entry in the resource type list,</span>
 <span class="w">      </span><span class="c1"># and describes all resources of a single type in the file.</span>
 <span class="w">      </span><span class="k">class</span><span class="w"> </span><span class="nc">ReferenceList</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="n">num_references</span><span class="p">)</span>
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">num_references</span><span class="p">)</span>
 <span class="w">          </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
 <span class="w">          </span><span class="vi">@num_references</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">num_references</span>
 <span class="w">          </span><span class="n">_read</span>
@@ -733,7 +701,7 @@ such as custom file icons.</p>
 <span class="w">        </span><span class="c1">##</span>
 <span class="w">        </span><span class="c1"># A single resource reference in a resource reference list.</span>
 <span class="w">        </span><span class="k">class</span><span class="w"> </span><span class="nc">Reference</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">          </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">          </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 <span class="w">            </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
 <span class="w">            </span><span class="n">_read</span>
 <span class="w">          </span><span class="k">end</span>
@@ -741,9 +709,8 @@ such as custom file icons.</p>
 <span class="w">          </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
 <span class="w">            </span><span class="vi">@id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_s2be</span>
 <span class="w">            </span><span class="vi">@ofs_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
-<span class="w">            </span><span class="vi">@_raw_attributes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-<span class="w">            </span><span class="n">_io__raw_attributes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_attributes</span><span class="p">)</span>
-<span class="w">            </span><span class="vi">@attributes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Attributes</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_attributes</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">            </span><span class="n">_io_attributes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="w">            </span><span class="vi">@attributes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Attributes</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_attributes</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
 <span class="w">            </span><span class="vi">@ofs_data_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span>
 <span class="w">            </span><span class="vi">@_io</span><span class="o">.</span><span class="n">align_to_byte</span>
 <span class="w">            </span><span class="vi">@reserved_handle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
@@ -754,7 +721,7 @@ such as custom file icons.</p>
 <span class="w">          </span><span class="c1"># A resource&#39;s attributes,</span>
 <span class="w">          </span><span class="c1"># as stored in a resource reference.</span>
 <span class="w">          </span><span class="k">class</span><span class="w"> </span><span class="nc">Attributes</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">            </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">            </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 <span class="w">              </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
 <span class="w">              </span><span class="n">_read</span>
 <span class="w">            </span><span class="k">end</span>
@@ -883,6 +850,18 @@ such as custom file icons.</p>
 <span class="w">          </span><span class="k">end</span>
 
 <span class="w">          </span><span class="c1">##</span>
+<span class="w">          </span><span class="c1"># The data block containing the data for the resource described by this reference.</span>
+<span class="w">          </span><span class="k">def</span><span class="w"> </span><span class="nf">data_block</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="vi">@data_block</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@data_block</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">            </span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_root</span><span class="o">.</span><span class="n">data_blocks_with_io</span><span class="o">.</span><span class="n">_io</span>
+<span class="w">            </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span><span class="o">.</span><span class="n">pos</span>
+<span class="w">            </span><span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">ofs_data_block</span><span class="p">)</span>
+<span class="w">            </span><span class="vi">@data_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">DataBlock</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">            </span><span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+<span class="w">            </span><span class="vi">@data_block</span>
+<span class="w">          </span><span class="k">end</span>
+
+<span class="w">          </span><span class="c1">##</span>
 <span class="w">          </span><span class="c1"># The name (if any) of the resource described by this reference.</span>
 <span class="w">          </span><span class="k">def</span><span class="w"> </span><span class="nf">name</span>
 <span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="vi">@name</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@name</span><span class="o">.</span><span class="n">nil?</span>
@@ -894,18 +873,6 @@ such as custom file icons.</p>
 <span class="w">              </span><span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
 <span class="w">            </span><span class="k">end</span>
 <span class="w">            </span><span class="vi">@name</span>
-<span class="w">          </span><span class="k">end</span>
-
-<span class="w">          </span><span class="c1">##</span>
-<span class="w">          </span><span class="c1"># The data block containing the data for the resource described by this reference.</span>
-<span class="w">          </span><span class="k">def</span><span class="w"> </span><span class="nf">data_block</span>
-<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="vi">@data_block</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@data_block</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">            </span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_root</span><span class="o">.</span><span class="n">data_blocks_with_io</span><span class="o">.</span><span class="n">_io</span>
-<span class="w">            </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span><span class="o">.</span><span class="n">pos</span>
-<span class="w">            </span><span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">ofs_data_block</span><span class="p">)</span>
-<span class="w">            </span><span class="vi">@data_block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">DataBlock</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">            </span><span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
-<span class="w">            </span><span class="vi">@data_block</span>
 <span class="w">          </span><span class="k">end</span>
 
 <span class="w">          </span><span class="c1">##</span>
@@ -950,6 +917,105 @@ such as custom file icons.</p>
 <span class="w">      </span><span class="k">end</span>
 
 <span class="w">      </span><span class="c1">##</span>
+<span class="w">      </span><span class="c1"># Resource type list in the resource map.</span>
+<span class="w">      </span><span class="k">class</span><span class="w"> </span><span class="nc">TypeList</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">          </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">          </span><span class="n">_read</span>
+<span class="w">        </span><span class="k">end</span>
+
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">          </span><span class="vi">@num_types_m1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+<span class="w">          </span><span class="vi">@entries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[]</span>
+<span class="w">          </span><span class="p">(</span><span class="n">num_types</span><span class="p">)</span><span class="o">.</span><span class="n">times</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">|</span><span class="n">i</span><span class="o">|</span>
+<span class="w">            </span><span class="vi">@entries</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="no">TypeListEntry</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">          </span><span class="nb">self</span>
+<span class="w">        </span><span class="k">end</span>
+
+<span class="w">        </span><span class="c1">##</span>
+<span class="w">        </span><span class="c1"># A single entry in the resource type list.</span>
+<span class="w">        </span><span class="c1"># </span>
+<span class="w">        </span><span class="c1"># Each entry corresponds to exactly one resource reference list.</span>
+<span class="w">        </span><span class="k">class</span><span class="w"> </span><span class="nc">TypeListEntry</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">          </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">            </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">            </span><span class="n">_read</span>
+<span class="w">          </span><span class="k">end</span>
+
+<span class="w">          </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">            </span><span class="vi">@type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="w">            </span><span class="vi">@num_references_m1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+<span class="w">            </span><span class="vi">@ofs_reference_list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+<span class="w">            </span><span class="nb">self</span>
+<span class="w">          </span><span class="k">end</span>
+
+<span class="w">          </span><span class="c1">##</span>
+<span class="w">          </span><span class="c1"># The number of resources in the reference list for this type.</span>
+<span class="w">          </span><span class="k">def</span><span class="w"> </span><span class="nf">num_references</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="vi">@num_references</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@num_references</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">            </span><span class="vi">@num_references</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">num_references_m1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">65536</span>
+<span class="w">            </span><span class="vi">@num_references</span>
+<span class="w">          </span><span class="k">end</span>
+
+<span class="w">          </span><span class="c1">##</span>
+<span class="w">          </span><span class="c1"># The resource reference list for this resource type.</span>
+<span class="w">          </span><span class="k">def</span><span class="w"> </span><span class="nf">reference_list</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="vi">@reference_list</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@reference_list</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">            </span><span class="n">io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_parent</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">_io</span>
+<span class="w">            </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">io</span><span class="o">.</span><span class="n">pos</span>
+<span class="w">            </span><span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">ofs_reference_list</span><span class="p">)</span>
+<span class="w">            </span><span class="vi">@reference_list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">ReferenceList</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">,</span><span class="w"> </span><span class="n">num_references</span><span class="p">)</span>
+<span class="w">            </span><span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+<span class="w">            </span><span class="vi">@reference_list</span>
+<span class="w">          </span><span class="k">end</span>
+
+<span class="w">          </span><span class="c1">##</span>
+<span class="w">          </span><span class="c1"># The four-character type code of the resources in the reference list.</span>
+<span class="w">          </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:type</span>
+
+<span class="w">          </span><span class="c1">##</span>
+<span class="w">          </span><span class="c1"># The number of resources in the reference list for this type,</span>
+<span class="w">          </span><span class="c1"># minus one.</span>
+<span class="w">          </span><span class="c1"># </span>
+<span class="w">          </span><span class="c1"># Empty reference lists should never exist.</span>
+<span class="w">          </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:num_references_m1</span>
+
+<span class="w">          </span><span class="c1">##</span>
+<span class="w">          </span><span class="c1"># Offset of the resource reference list for this resource type,</span>
+<span class="w">          </span><span class="c1"># from the start of the resource type list.</span>
+<span class="w">          </span><span class="c1"># </span>
+<span class="w">          </span><span class="c1"># Although the offset is relative to the start of the type list,</span>
+<span class="w">          </span><span class="c1"># it should never point into the type list itself,</span>
+<span class="w">          </span><span class="c1"># but into the reference list storage area that directly follows it.</span>
+<span class="w">          </span><span class="c1"># That is,</span>
+<span class="w">          </span><span class="c1"># it should always be at least `_parent._sizeof`.</span>
+<span class="w">          </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:ofs_reference_list</span>
+<span class="w">        </span><span class="k">end</span>
+
+<span class="w">        </span><span class="c1">##</span>
+<span class="w">        </span><span class="c1"># The number of resource types in this list.</span>
+<span class="w">        </span><span class="k">def</span><span class="w"> </span><span class="nf">num_types</span>
+<span class="w">          </span><span class="k">return</span><span class="w"> </span><span class="vi">@num_types</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@num_types</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">          </span><span class="vi">@num_types</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">num_types_m1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">65536</span>
+<span class="w">          </span><span class="vi">@num_types</span>
+<span class="w">        </span><span class="k">end</span>
+
+<span class="w">        </span><span class="c1">##</span>
+<span class="w">        </span><span class="c1"># The number of resource types in this list,</span>
+<span class="w">        </span><span class="c1"># minus one.</span>
+<span class="w">        </span><span class="c1"># </span>
+<span class="w">        </span><span class="c1"># If the resource list is empty,</span>
+<span class="w">        </span><span class="c1"># the value of this field is `0xffff`,</span>
+<span class="w">        </span><span class="c1"># i. e. `-1` truncated to a 16-bit unsigned integer.</span>
+<span class="w">        </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:num_types_m1</span>
+
+<span class="w">        </span><span class="c1">##</span>
+<span class="w">        </span><span class="c1"># Entries in the resource type list.</span>
+<span class="w">        </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:entries</span>
+<span class="w">      </span><span class="k">end</span>
+
+<span class="w">      </span><span class="c1">##</span>
 <span class="w">      </span><span class="c1"># The resource map&#39;s resource type list.</span>
 <span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:type_list</span>
 
@@ -963,68 +1029,11 @@ such as custom file icons.</p>
 <span class="w">    </span><span class="k">end</span>
 
 <span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># A resource name,</span>
-<span class="w">    </span><span class="c1"># as stored in the resource name storage area in the resource map.</span>
-<span class="w">    </span><span class="c1"># </span>
-<span class="w">    </span><span class="c1"># The resource names are not required to appear in any particular order.</span>
-<span class="w">    </span><span class="c1"># There may be unused space between and around resource names,</span>
-<span class="w">    </span><span class="c1"># but in practice they are often contiguous.</span>
-<span class="w">    </span><span class="k">class</span><span class="w"> </span><span class="nc">Name</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
-<span class="w">        </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
-<span class="w">        </span><span class="n">_read</span>
-<span class="w">      </span><span class="k">end</span>
-
-<span class="w">      </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">        </span><span class="vi">@len_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-<span class="w">        </span><span class="vi">@value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_value</span><span class="p">)</span>
-<span class="w">        </span><span class="nb">self</span>
-<span class="w">      </span><span class="k">end</span>
-
-<span class="w">      </span><span class="c1">##</span>
-<span class="w">      </span><span class="c1"># The length of the resource name, in bytes.</span>
-<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:len_value</span>
-
-<span class="w">      </span><span class="c1">##</span>
-<span class="w">      </span><span class="c1"># The resource name.</span>
-<span class="w">      </span><span class="c1"># </span>
-<span class="w">      </span><span class="c1"># This field is exposed as a byte array,</span>
-<span class="w">      </span><span class="c1"># because there is no universal encoding for resource names.</span>
-<span class="w">      </span><span class="c1"># Most Classic Mac software does not deal with encodings explicitly and instead assumes that all strings,</span>
-<span class="w">      </span><span class="c1"># including resource names,</span>
-<span class="w">      </span><span class="c1"># use the system encoding,</span>
-<span class="w">      </span><span class="c1"># which varies depending on the system language.</span>
-<span class="w">      </span><span class="c1"># This means that resource names can use different encodings depending on what system language they were created with.</span>
-<span class="w">      </span><span class="c1"># </span>
-<span class="w">      </span><span class="c1"># Many resource names are plain ASCII,</span>
-<span class="w">      </span><span class="c1"># meaning that the encoding often does not matter</span>
-<span class="w">      </span><span class="c1"># (because all Mac OS encodings are ASCII-compatible).</span>
-<span class="w">      </span><span class="c1"># For non-ASCII resource names,</span>
-<span class="w">      </span><span class="c1"># the most common encoding is perhaps MacRoman</span>
-<span class="w">      </span><span class="c1"># (used for English and other Western languages),</span>
-<span class="w">      </span><span class="c1"># but other encodings are also sometimes used,</span>
-<span class="w">      </span><span class="c1"># especially for software in non-Western languages.</span>
-<span class="w">      </span><span class="c1"># </span>
-<span class="w">      </span><span class="c1"># There is no requirement that all names in a single resource file use the same encoding.</span>
-<span class="w">      </span><span class="c1"># For example,</span>
-<span class="w">      </span><span class="c1"># localized software may have some (but not all) of its resource names translated.</span>
-<span class="w">      </span><span class="c1"># For non-Western languages,</span>
-<span class="w">      </span><span class="c1"># this can lead to some resource names using MacRoman,</span>
-<span class="w">      </span><span class="c1"># and others using a different encoding.</span>
-<span class="w">      </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:value</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># The resource map&#39;s resource type list, followed by the resource reference list area.</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">type_list_and_reference_lists</span>
-<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@type_list_and_reference_lists</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@type_list_and_reference_lists</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">      </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
-<span class="w">      </span><span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">ofs_type_list</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@_raw_type_list_and_reference_lists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">ofs_names</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">ofs_type_list</span><span class="p">))</span>
-<span class="w">      </span><span class="n">_io__raw_type_list_and_reference_lists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_type_list_and_reference_lists</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@type_list_and_reference_lists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">TypeListAndReferenceLists</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_type_list_and_reference_lists</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@type_list_and_reference_lists</span>
+<span class="w">    </span><span class="c1"># Storage area for the names of all resources.</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">names</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@names</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@names</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">names_with_io</span><span class="o">.</span><span class="n">data</span>
+<span class="w">      </span><span class="vi">@names</span>
 <span class="w">    </span><span class="k">end</span>
 
 <span class="w">    </span><span class="c1">##</span>
@@ -1042,11 +1051,15 @@ such as custom file icons.</p>
 <span class="w">    </span><span class="k">end</span>
 
 <span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># Storage area for the names of all resources.</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">names</span>
-<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@names</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@names</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">      </span><span class="vi">@names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">names_with_io</span><span class="o">.</span><span class="n">data</span>
-<span class="w">      </span><span class="vi">@names</span>
+<span class="w">    </span><span class="c1"># The resource map&#39;s resource type list, followed by the resource reference list area.</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">type_list_and_reference_lists</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@type_list_and_reference_lists</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@type_list_and_reference_lists</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
+<span class="w">      </span><span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">ofs_type_list</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_io_type_list_and_reference_lists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">(</span><span class="n">ofs_names</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">ofs_type_list</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@type_list_and_reference_lists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">TypeListAndReferenceLists</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_type_list_and_reference_lists</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@type_list_and_reference_lists</span>
 <span class="w">    </span><span class="k">end</span>
 
 <span class="w">    </span><span class="c1">##</span>
@@ -1079,22 +1092,8 @@ such as custom file icons.</p>
 <span class="w">    </span><span class="c1"># from the start of the resource map.</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:ofs_names</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:_raw_file_attributes</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:_raw_type_list_and_reference_lists</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:_raw_names_with_io</span>
-<span class="w">  </span><span class="k">end</span>
-
-<span class="w">  </span><span class="c1">##</span>
-<span class="w">  </span><span class="c1"># Use `data_blocks` instead,</span>
-<span class="w">  </span><span class="c1"># unless you need access to this instance&#39;s `_io`.</span>
-<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">data_blocks_with_io</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="vi">@data_blocks_with_io</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@data_blocks_with_io</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">    </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
-<span class="w">    </span><span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">ofs_data_blocks</span><span class="p">)</span>
-<span class="w">    </span><span class="vi">@_raw_data_blocks_with_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">len_data_blocks</span><span class="p">)</span>
-<span class="w">    </span><span class="n">_io__raw_data_blocks_with_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_data_blocks_with_io</span><span class="p">)</span>
-<span class="w">    </span><span class="vi">@data_blocks_with_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">BytesWithIo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_data_blocks_with_io</span><span class="p">)</span>
-<span class="w">    </span><span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
-<span class="w">    </span><span class="vi">@data_blocks_with_io</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:_raw_type_list_and_reference_lists</span>
 <span class="w">  </span><span class="k">end</span>
 
 <span class="w">  </span><span class="c1">##</span>
@@ -1118,14 +1117,26 @@ such as custom file icons.</p>
 <span class="w">  </span><span class="k">end</span>
 
 <span class="w">  </span><span class="c1">##</span>
+<span class="w">  </span><span class="c1"># Use `data_blocks` instead,</span>
+<span class="w">  </span><span class="c1"># unless you need access to this instance&#39;s `_io`.</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">data_blocks_with_io</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="vi">@data_blocks_with_io</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@data_blocks_with_io</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">    </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
+<span class="w">    </span><span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">ofs_data_blocks</span><span class="p">)</span>
+<span class="w">    </span><span class="n">_io_data_blocks_with_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">len_data_blocks</span><span class="p">)</span>
+<span class="w">    </span><span class="vi">@data_blocks_with_io</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">BytesWithIo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_data_blocks_with_io</span><span class="p">)</span>
+<span class="w">    </span><span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+<span class="w">    </span><span class="vi">@data_blocks_with_io</span>
+<span class="w">  </span><span class="k">end</span>
+
+<span class="w">  </span><span class="c1">##</span>
 <span class="w">  </span><span class="c1"># The resource file&#39;s resource map.</span>
 <span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">resource_map</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="vi">@resource_map</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@resource_map</span><span class="o">.</span><span class="n">nil?</span>
 <span class="w">    </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
 <span class="w">    </span><span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">ofs_resource_map</span><span class="p">)</span>
-<span class="w">    </span><span class="vi">@_raw_resource_map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">len_resource_map</span><span class="p">)</span>
-<span class="w">    </span><span class="n">_io__raw_resource_map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_resource_map</span><span class="p">)</span>
-<span class="w">    </span><span class="vi">@resource_map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">ResourceMap</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_resource_map</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">    </span><span class="n">_io_resource_map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">substream</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">len_resource_map</span><span class="p">)</span>
+<span class="w">    </span><span class="vi">@resource_map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">ResourceMap</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io_resource_map</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
 <span class="w">    </span><span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
 <span class="w">    </span><span class="vi">@resource_map</span>
 <span class="w">  </span><span class="k">end</span>

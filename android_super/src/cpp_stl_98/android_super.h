@@ -3,12 +3,15 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class android_super_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -24,9 +27,9 @@
 class android_super_t : public kaitai::kstruct {
 
 public:
-    class root_t;
     class geometry_t;
     class metadata_t;
+    class root_t;
 
     android_super_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, android_super_t* p__root = 0);
 
@@ -36,52 +39,6 @@ private:
 
 public:
     ~android_super_t();
-
-    class root_t : public kaitai::kstruct {
-
-    public:
-
-        root_t(kaitai::kstream* p__io, android_super_t* p__parent = 0, android_super_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~root_t();
-
-    private:
-        geometry_t* m_primary_geometry;
-        geometry_t* m_backup_geometry;
-        std::vector<metadata_t*>* m_primary_metadata;
-        std::vector<metadata_t*>* m_backup_metadata;
-        android_super_t* m__root;
-        android_super_t* m__parent;
-        std::string m__raw_primary_geometry;
-        kaitai::kstream* m__io__raw_primary_geometry;
-        std::string m__raw_backup_geometry;
-        kaitai::kstream* m__io__raw_backup_geometry;
-        std::vector<std::string>* m__raw_primary_metadata;
-        std::vector<kaitai::kstream*>* m__io__raw_primary_metadata;
-        std::vector<std::string>* m__raw_backup_metadata;
-        std::vector<kaitai::kstream*>* m__io__raw_backup_metadata;
-
-    public:
-        geometry_t* primary_geometry() const { return m_primary_geometry; }
-        geometry_t* backup_geometry() const { return m_backup_geometry; }
-        std::vector<metadata_t*>* primary_metadata() const { return m_primary_metadata; }
-        std::vector<metadata_t*>* backup_metadata() const { return m_backup_metadata; }
-        android_super_t* _root() const { return m__root; }
-        android_super_t* _parent() const { return m__parent; }
-        std::string _raw_primary_geometry() const { return m__raw_primary_geometry; }
-        kaitai::kstream* _io__raw_primary_geometry() const { return m__io__raw_primary_geometry; }
-        std::string _raw_backup_geometry() const { return m__raw_backup_geometry; }
-        kaitai::kstream* _io__raw_backup_geometry() const { return m__io__raw_backup_geometry; }
-        std::vector<std::string>* _raw_primary_metadata() const { return m__raw_primary_metadata; }
-        std::vector<kaitai::kstream*>* _io__raw_primary_metadata() const { return m__io__raw_primary_metadata; }
-        std::vector<std::string>* _raw_backup_metadata() const { return m__raw_backup_metadata; }
-        std::vector<kaitai::kstream*>* _io__raw_backup_metadata() const { return m__io__raw_backup_metadata; }
-    };
 
     class geometry_t : public kaitai::kstruct {
 
@@ -127,9 +84,9 @@ public:
     public:
         class block_device_t;
         class extent_t;
-        class table_descriptor_t;
-        class partition_t;
         class group_t;
+        class partition_t;
+        class table_descriptor_t;
 
         enum table_kind_t {
             TABLE_KIND_PARTITIONS = 0,
@@ -137,6 +94,13 @@ public:
             TABLE_KIND_GROUPS = 2,
             TABLE_KIND_BLOCK_DEVICES = 3
         };
+        static bool _is_defined_table_kind_t(table_kind_t v);
+
+    private:
+        static const std::set<table_kind_t> _values_table_kind_t;
+        static std::set<table_kind_t> _build_values_table_kind_t();
+
+    public:
 
         metadata_t(kaitai::kstream* p__io, android_super_t::root_t* p__parent = 0, android_super_t* p__root = 0);
 
@@ -191,6 +155,13 @@ public:
                 TARGET_TYPE_LINEAR = 0,
                 TARGET_TYPE_ZERO = 1
             };
+            static bool _is_defined_target_type_t(target_type_t v);
+
+        private:
+            static const std::set<target_type_t> _values_target_type_t;
+            static std::set<target_type_t> _build_values_target_type_t();
+
+        public:
 
             extent_t(kaitai::kstream* p__io, android_super_t::metadata_t::table_descriptor_t* p__parent = 0, android_super_t* p__root = 0);
 
@@ -214,6 +185,76 @@ public:
             target_type_t target_type() const { return m_target_type; }
             uint64_t target_data() const { return m_target_data; }
             uint32_t target_source() const { return m_target_source; }
+            android_super_t* _root() const { return m__root; }
+            android_super_t::metadata_t::table_descriptor_t* _parent() const { return m__parent; }
+        };
+
+        class group_t : public kaitai::kstruct {
+
+        public:
+
+            group_t(kaitai::kstream* p__io, android_super_t::metadata_t::table_descriptor_t* p__parent = 0, android_super_t* p__root = 0);
+
+        private:
+            void _read();
+            void _clean_up();
+
+        public:
+            ~group_t();
+
+        private:
+            std::string m_name;
+            bool m_flag_slot_suffixed;
+            uint64_t m_flags_reserved;
+            uint64_t m_maximum_size;
+            android_super_t* m__root;
+            android_super_t::metadata_t::table_descriptor_t* m__parent;
+
+        public:
+            std::string name() const { return m_name; }
+            bool flag_slot_suffixed() const { return m_flag_slot_suffixed; }
+            uint64_t flags_reserved() const { return m_flags_reserved; }
+            uint64_t maximum_size() const { return m_maximum_size; }
+            android_super_t* _root() const { return m__root; }
+            android_super_t::metadata_t::table_descriptor_t* _parent() const { return m__parent; }
+        };
+
+        class partition_t : public kaitai::kstruct {
+
+        public:
+
+            partition_t(kaitai::kstream* p__io, android_super_t::metadata_t::table_descriptor_t* p__parent = 0, android_super_t* p__root = 0);
+
+        private:
+            void _read();
+            void _clean_up();
+
+        public:
+            ~partition_t();
+
+        private:
+            std::string m_name;
+            bool m_attr_readonly;
+            bool m_attr_slot_suffixed;
+            bool m_attr_updated;
+            bool m_attr_disabled;
+            uint64_t m_attrs_reserved;
+            uint32_t m_first_extent_index;
+            uint32_t m_num_extents;
+            uint32_t m_group_index;
+            android_super_t* m__root;
+            android_super_t::metadata_t::table_descriptor_t* m__parent;
+
+        public:
+            std::string name() const { return m_name; }
+            bool attr_readonly() const { return m_attr_readonly; }
+            bool attr_slot_suffixed() const { return m_attr_slot_suffixed; }
+            bool attr_updated() const { return m_attr_updated; }
+            bool attr_disabled() const { return m_attr_disabled; }
+            uint64_t attrs_reserved() const { return m_attrs_reserved; }
+            uint32_t first_extent_index() const { return m_first_extent_index; }
+            uint32_t num_extents() const { return m_num_extents; }
+            uint32_t group_index() const { return m_group_index; }
             android_super_t* _root() const { return m__root; }
             android_super_t::metadata_t::table_descriptor_t* _parent() const { return m__parent; }
         };
@@ -259,76 +300,6 @@ public:
             std::vector<kaitai::kstream*>* _io__raw_table() const { return m__io__raw_table; }
         };
 
-        class partition_t : public kaitai::kstruct {
-
-        public:
-
-            partition_t(kaitai::kstream* p__io, android_super_t::metadata_t::table_descriptor_t* p__parent = 0, android_super_t* p__root = 0);
-
-        private:
-            void _read();
-            void _clean_up();
-
-        public:
-            ~partition_t();
-
-        private:
-            std::string m_name;
-            bool m_attr_readonly;
-            bool m_attr_slot_suffixed;
-            bool m_attr_updated;
-            bool m_attr_disabled;
-            uint64_t m_attrs_reserved;
-            uint32_t m_first_extent_index;
-            uint32_t m_num_extents;
-            uint32_t m_group_index;
-            android_super_t* m__root;
-            android_super_t::metadata_t::table_descriptor_t* m__parent;
-
-        public:
-            std::string name() const { return m_name; }
-            bool attr_readonly() const { return m_attr_readonly; }
-            bool attr_slot_suffixed() const { return m_attr_slot_suffixed; }
-            bool attr_updated() const { return m_attr_updated; }
-            bool attr_disabled() const { return m_attr_disabled; }
-            uint64_t attrs_reserved() const { return m_attrs_reserved; }
-            uint32_t first_extent_index() const { return m_first_extent_index; }
-            uint32_t num_extents() const { return m_num_extents; }
-            uint32_t group_index() const { return m_group_index; }
-            android_super_t* _root() const { return m__root; }
-            android_super_t::metadata_t::table_descriptor_t* _parent() const { return m__parent; }
-        };
-
-        class group_t : public kaitai::kstruct {
-
-        public:
-
-            group_t(kaitai::kstream* p__io, android_super_t::metadata_t::table_descriptor_t* p__parent = 0, android_super_t* p__root = 0);
-
-        private:
-            void _read();
-            void _clean_up();
-
-        public:
-            ~group_t();
-
-        private:
-            std::string m_name;
-            bool m_flag_slot_suffixed;
-            uint64_t m_flags_reserved;
-            uint64_t m_maximum_size;
-            android_super_t* m__root;
-            android_super_t::metadata_t::table_descriptor_t* m__parent;
-
-        public:
-            std::string name() const { return m_name; }
-            bool flag_slot_suffixed() const { return m_flag_slot_suffixed; }
-            uint64_t flags_reserved() const { return m_flags_reserved; }
-            uint64_t maximum_size() const { return m_maximum_size; }
-            android_super_t* _root() const { return m__root; }
-            android_super_t::metadata_t::table_descriptor_t* _parent() const { return m__parent; }
-        };
-
     private:
         std::string m_magic;
         uint16_t m_major_version;
@@ -367,6 +338,52 @@ public:
         table_descriptor_t* block_devices() const { return m_block_devices; }
         android_super_t* _root() const { return m__root; }
         android_super_t::root_t* _parent() const { return m__parent; }
+    };
+
+    class root_t : public kaitai::kstruct {
+
+    public:
+
+        root_t(kaitai::kstream* p__io, android_super_t* p__parent = 0, android_super_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~root_t();
+
+    private:
+        geometry_t* m_primary_geometry;
+        geometry_t* m_backup_geometry;
+        std::vector<metadata_t*>* m_primary_metadata;
+        std::vector<metadata_t*>* m_backup_metadata;
+        android_super_t* m__root;
+        android_super_t* m__parent;
+        std::string m__raw_primary_geometry;
+        kaitai::kstream* m__io__raw_primary_geometry;
+        std::string m__raw_backup_geometry;
+        kaitai::kstream* m__io__raw_backup_geometry;
+        std::vector<std::string>* m__raw_primary_metadata;
+        std::vector<kaitai::kstream*>* m__io__raw_primary_metadata;
+        std::vector<std::string>* m__raw_backup_metadata;
+        std::vector<kaitai::kstream*>* m__io__raw_backup_metadata;
+
+    public:
+        geometry_t* primary_geometry() const { return m_primary_geometry; }
+        geometry_t* backup_geometry() const { return m_backup_geometry; }
+        std::vector<metadata_t*>* primary_metadata() const { return m_primary_metadata; }
+        std::vector<metadata_t*>* backup_metadata() const { return m_backup_metadata; }
+        android_super_t* _root() const { return m__root; }
+        android_super_t* _parent() const { return m__parent; }
+        std::string _raw_primary_geometry() const { return m__raw_primary_geometry; }
+        kaitai::kstream* _io__raw_primary_geometry() const { return m__io__raw_primary_geometry; }
+        std::string _raw_backup_geometry() const { return m__raw_backup_geometry; }
+        kaitai::kstream* _io__raw_backup_geometry() const { return m__io__raw_backup_geometry; }
+        std::vector<std::string>* _raw_primary_metadata() const { return m__raw_primary_metadata; }
+        std::vector<kaitai::kstream*>* _io__raw_primary_metadata() const { return m__io__raw_primary_metadata; }
+        std::vector<std::string>* _raw_backup_metadata() const { return m__raw_backup_metadata; }
+        std::vector<kaitai::kstream*>* _io__raw_backup_metadata() const { return m__io__raw_backup_metadata; }
     };
 
 private:

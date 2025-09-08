@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
-from enum import Enum
+from enum import IntEnum
 
 
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class RtpPacket(KaitaiStruct):
     """The Real-time Transport Protocol (RTP) is a widely used network
@@ -15,7 +16,7 @@ class RtpPacket(KaitaiStruct):
     Transmission Control Protocol (TCP) or User Datagram Protocol (UDP).
     """
 
-    class PayloadTypeEnum(Enum):
+    class PayloadTypeEnum(IntEnum):
         pcmu = 0
         reserved1 = 1
         reserved2 = 2
@@ -53,9 +54,9 @@ class RtpPacket(KaitaiStruct):
         h263 = 34
         mpeg_ps = 96
     def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
+        super(RtpPacket, self).__init__(_io)
         self._parent = _parent
-        self._root = _root if _root else self
+        self._root = _root or self
         self._read()
 
     def _read(self):
@@ -65,27 +66,52 @@ class RtpPacket(KaitaiStruct):
         self.csrc_count = self._io.read_bits_int_be(4)
         self.marker = self._io.read_bits_int_be(1) != 0
         self.payload_type = KaitaiStream.resolve_enum(RtpPacket.PayloadTypeEnum, self._io.read_bits_int_be(7))
-        self._io.align_to_byte()
         self.sequence_number = self._io.read_u2be()
         self.timestamp = self._io.read_u4be()
         self.ssrc = self._io.read_u4be()
         if self.has_extension:
+            pass
             self.header_extension = RtpPacket.HeaderExtention(self._io, self, self._root)
 
-        self.data = self._io.read_bytes(((self._io.size() - self._io.pos()) - self.len_padding))
+        self.data = self._io.read_bytes((self._io.size() - self._io.pos()) - self.len_padding)
         self.padding = self._io.read_bytes(self.len_padding)
+
+
+    def _fetch_instances(self):
+        pass
+        if self.has_extension:
+            pass
+            self.header_extension._fetch_instances()
+
+        _ = self.len_padding_if_exists
+        if hasattr(self, '_m_len_padding_if_exists'):
+            pass
+
 
     class HeaderExtention(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(RtpPacket.HeaderExtention, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
             self.id = self._io.read_u2be()
             self.length = self._io.read_u2be()
 
+
+        def _fetch_instances(self):
+            pass
+
+
+    @property
+    def len_padding(self):
+        """Always returns number of padding bytes to in the payload."""
+        if hasattr(self, '_m_len_padding'):
+            return self._m_len_padding
+
+        self._m_len_padding = (self.len_padding_if_exists if self.has_padding else 0)
+        return getattr(self, '_m_len_padding', None)
 
     @property
     def len_padding_if_exists(self):
@@ -96,20 +122,12 @@ class RtpPacket(KaitaiStruct):
             return self._m_len_padding_if_exists
 
         if self.has_padding:
+            pass
             _pos = self._io.pos()
-            self._io.seek((self._io.size() - 1))
+            self._io.seek(self._io.size() - 1)
             self._m_len_padding_if_exists = self._io.read_u1()
             self._io.seek(_pos)
 
         return getattr(self, '_m_len_padding_if_exists', None)
-
-    @property
-    def len_padding(self):
-        """Always returns number of padding bytes to in the payload."""
-        if hasattr(self, '_m_len_padding'):
-            return self._m_len_padding
-
-        self._m_len_padding = (self.len_padding_if_exists if self.has_padding else 0)
-        return getattr(self, '_m_len_padding', None)
 
 

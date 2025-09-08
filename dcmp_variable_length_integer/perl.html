@@ -194,6 +194,11 @@ but technically any of the larger formats could be used as well.</p>
                 
                 <li>
                 
+                <a href="java-write.html" title="Variable-length integer used in Apple `'dcmp' (0)` and `'dcmp' (1)` compressed resource formats parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="Variable-length integer used in Apple `'dcmp' (0)` and `'dcmp' (1)` compressed resource formats parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -224,7 +229,17 @@ but technically any of the larger formats could be used as well.</p>
                 
                 <li>
                 
+                <a href="python-write.html" title="Variable-length integer used in Apple `'dcmp' (0)` and `'dcmp' (1)` compressed resource formats parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="ruby.html" title="Variable-length integer used in Apple `'dcmp' (0)` and `'dcmp' (1)` compressed resource formats parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="Variable-length integer used in Apple `'dcmp' (0)` and `'dcmp' (1)` compressed resource formats parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -258,7 +273,7 @@ but technically any of the larger formats could be used as well.</p>
 
 <span class="k">use</span><span class="w"> </span><span class="nn">strict</span><span class="p">;</span>
 <span class="k">use</span><span class="w"> </span><span class="nn">warnings</span><span class="p">;</span>
-<span class="k">use</span><span class="w"> </span><span class="nn">IO::KaitaiStruct</span><span class="w"> </span><span class="mf">0.009_000</span><span class="p">;</span>
+<span class="k">use</span><span class="w"> </span><span class="nn">IO::KaitaiStruct</span><span class="w"> </span><span class="mf">0.011_000</span><span class="p">;</span>
 
 <span class="c1">########################################################################</span>
 <span class="k">package</span><span class="w"> </span><span class="nn">DcmpVariableLengthInteger</span><span class="p">;</span>
@@ -280,7 +295,7 @@ but technically any of the larger formats could be used as well.</p>
 
 <span class="w">    </span><span class="nb">bless</span><span class="w"> </span><span class="nv">$self</span><span class="p">,</span><span class="w"> </span><span class="nv">$class</span><span class="p">;</span>
 <span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_parent</span><span class="p">;</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nv">$self</span><span class="p">;;</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nv">$self</span><span class="p">;</span>
 
 <span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
 
@@ -305,7 +320,7 @@ but technically any of the larger formats could be used as well.</p>
 <span class="k">sub</span><span class="w"> </span><span class="nf">value</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">my</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">@_</span><span class="p">;</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">value</span><span class="p">}</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">value</span><span class="p">});</span>
-<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">value</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">first</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">255</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">more</span><span class="p">()</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">first</span><span class="p">()</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">128</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="p">(((</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">first</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">8</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">more</span><span class="p">())</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">49152</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">first</span><span class="p">()));</span>
+<span class="w">    </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">value</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">first</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">255</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">more</span><span class="p">()</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">first</span><span class="p">()</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">128</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">first</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">more</span><span class="p">())</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">49152</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">first</span><span class="p">()));</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">value</span><span class="p">};</span>
 <span class="p">}</span>
 

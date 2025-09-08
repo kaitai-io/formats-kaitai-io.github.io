@@ -60,16 +60,16 @@ namespace Kaitai
         }
 
         /// <summary>
-        /// padding to the next 4-byte boundary
+        /// one element of the option field
         /// </summary>
-        public partial class Padding : KaitaiStruct
+        public partial class OptionElement : KaitaiStruct
         {
-            public static Padding FromFile(string fileName)
+            public static OptionElement FromFile(string fileName)
             {
-                return new Padding(new KaitaiStream(fileName));
+                return new OptionElement(new KaitaiStream(fileName));
             }
 
-            public Padding(KaitaiStream p__io, DimeMessage.Record p__parent = null, DimeMessage p__root = null) : base(p__io)
+            public OptionElement(KaitaiStream p__io, DimeMessage.OptionField p__parent = null, DimeMessage p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -77,14 +77,20 @@ namespace Kaitai
             }
             private void _read()
             {
-                _boundaryPadding = m_io.ReadBytes(KaitaiStream.Mod(-(M_Io.Pos), 4));
+                _elementFormat = m_io.ReadU2be();
+                _lenElement = m_io.ReadU2be();
+                _elementData = m_io.ReadBytes(LenElement);
             }
-            private byte[] _boundaryPadding;
+            private ushort _elementFormat;
+            private ushort _lenElement;
+            private byte[] _elementData;
             private DimeMessage m_root;
-            private DimeMessage.Record m_parent;
-            public byte[] BoundaryPadding { get { return _boundaryPadding; } }
+            private DimeMessage.OptionField m_parent;
+            public ushort ElementFormat { get { return _elementFormat; } }
+            public ushort LenElement { get { return _lenElement; } }
+            public byte[] ElementData { get { return _elementData; } }
             public DimeMessage M_Root { get { return m_root; } }
-            public DimeMessage.Record M_Parent { get { return m_parent; } }
+            public DimeMessage.OptionField M_Parent { get { return m_parent; } }
         }
 
         /// <summary>
@@ -123,16 +129,16 @@ namespace Kaitai
         }
 
         /// <summary>
-        /// one element of the option field
+        /// padding to the next 4-byte boundary
         /// </summary>
-        public partial class OptionElement : KaitaiStruct
+        public partial class Padding : KaitaiStruct
         {
-            public static OptionElement FromFile(string fileName)
+            public static Padding FromFile(string fileName)
             {
-                return new OptionElement(new KaitaiStream(fileName));
+                return new Padding(new KaitaiStream(fileName));
             }
 
-            public OptionElement(KaitaiStream p__io, DimeMessage.OptionField p__parent = null, DimeMessage p__root = null) : base(p__io)
+            public Padding(KaitaiStream p__io, DimeMessage.Record p__parent = null, DimeMessage p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -140,20 +146,14 @@ namespace Kaitai
             }
             private void _read()
             {
-                _elementFormat = m_io.ReadU2be();
-                _lenElement = m_io.ReadU2be();
-                _elementData = m_io.ReadBytes(LenElement);
+                _boundaryPadding = m_io.ReadBytes(KaitaiStream.Mod(-(M_Io.Pos), 4));
             }
-            private ushort _elementFormat;
-            private ushort _lenElement;
-            private byte[] _elementData;
+            private byte[] _boundaryPadding;
             private DimeMessage m_root;
-            private DimeMessage.OptionField m_parent;
-            public ushort ElementFormat { get { return _elementFormat; } }
-            public ushort LenElement { get { return _lenElement; } }
-            public byte[] ElementData { get { return _elementData; } }
+            private DimeMessage.Record m_parent;
+            public byte[] BoundaryPadding { get { return _boundaryPadding; } }
             public DimeMessage M_Root { get { return m_root; } }
-            public DimeMessage.OptionField M_Parent { get { return m_parent; } }
+            public DimeMessage.Record M_Parent { get { return m_parent; } }
         }
 
         /// <summary>

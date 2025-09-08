@@ -7,7 +7,7 @@ digraph {
 
 		saints_row_2_vpp_pc__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-			<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">5</TD><TD></TD><TD PORT="magic_type">magic</TD></TR>
+			<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">5</TD><TD>CE 0A 89 51 04</TD><TD PORT="magic_type">magic</TD></TR>
 			<TR><TD PORT="pad1_pos">5</TD><TD PORT="pad1_size">335</TD><TD></TD><TD PORT="pad1_type">pad1</TD></TR>
 			<TR><TD PORT="num_files_pos">340</TD><TD PORT="num_files_size">4</TD><TD>s4le</TD><TD PORT="num_files_type">num_files</TD></TR>
 			<TR><TD PORT="container_size_pos">344</TD><TD PORT="container_size_size">4</TD><TD>s4le</TD><TD PORT="container_size_type">container_size</TD></TR>
@@ -20,29 +20,29 @@ digraph {
 			<TR><TD PORT="smth8_pos">372</TD><TD PORT="smth8_size">4</TD><TD>s4le</TD><TD PORT="smth8_type">smth8</TD></TR>
 			<TR><TD PORT="smth9_pos">376</TD><TD PORT="smth9_size">4</TD><TD>s4le</TD><TD PORT="smth9_type">smth9</TD></TR>
 		</TABLE>>];
-		saints_row_2_vpp_pc__inst__filenames [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-			<TR><TD PORT="filenames_pos">ofs_filenames</TD><TD PORT="filenames_size">len_filenames</TD><TD>Strings</TD><TD PORT="filenames_type">filenames</TD></TR>
-		</TABLE>>];
-		saints_row_2_vpp_pc__inst__ofs_extensions [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-			<TR><TD>ofs_extensions</TD><TD>(((ofs_filenames + len_filenames) &amp; 4294965248) + 2048)</TD></TR>
-		</TABLE>>];
-		saints_row_2_vpp_pc__inst__files [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-			<TR><TD PORT="files_pos">2048</TD><TD PORT="files_size">len_offsets</TD><TD>Offsets</TD><TD PORT="files_type">files</TD></TR>
-		</TABLE>>];
 		saints_row_2_vpp_pc__inst__data_start [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-			<TR><TD>data_start</TD><TD>(((ofs_extensions + len_extensions) &amp; 4294965248) + 2048)</TD></TR>
+			<TR><TD>data_start</TD><TD>(ofs_extensions + len_extensions &amp; 4294965248) + 2048</TD></TR>
 		</TABLE>>];
 		saints_row_2_vpp_pc__inst__extensions [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 			<TR><TD PORT="extensions_pos">ofs_extensions</TD><TD PORT="extensions_size">len_extensions</TD><TD>Strings</TD><TD PORT="extensions_type">extensions</TD></TR>
 		</TABLE>>];
+		saints_row_2_vpp_pc__inst__filenames [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="filenames_pos">ofs_filenames</TD><TD PORT="filenames_size">len_filenames</TD><TD>Strings</TD><TD PORT="filenames_type">filenames</TD></TR>
+		</TABLE>>];
+		saints_row_2_vpp_pc__inst__files [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="files_pos">2048</TD><TD PORT="files_size">len_offsets</TD><TD>Offsets</TD><TD PORT="files_type">files</TD></TR>
+		</TABLE>>];
+		saints_row_2_vpp_pc__inst__ofs_extensions [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>ofs_extensions</TD><TD>(ofs_filenames + len_filenames &amp; 4294965248) + 2048</TD></TR>
+		</TABLE>>];
 		saints_row_2_vpp_pc__inst__ofs_filenames [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-			<TR><TD>ofs_filenames</TD><TD>(((2048 + len_offsets) &amp; 4294965248) + 2048)</TD></TR>
+			<TR><TD>ofs_filenames</TD><TD>(2048 + len_offsets &amp; 4294965248) + 2048</TD></TR>
 		</TABLE>>];
 		subgraph cluster__offsets {
 			label="SaintsRow2VppPc::Offsets";
@@ -67,17 +67,17 @@ digraph {
 					<TR><TD PORT="always_minus_1_pos">20</TD><TD PORT="always_minus_1_size">4</TD><TD>s4le</TD><TD PORT="always_minus_1_type">always_minus_1</TD></TR>
 					<TR><TD PORT="always_zero_pos">24</TD><TD PORT="always_zero_size">4</TD><TD>s4le</TD><TD PORT="always_zero_type">always_zero</TD></TR>
 				</TABLE>>];
-				offset__inst__filename [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				offset__inst__body [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="filename_pos">name_ofs</TD><TD PORT="filename_size">...</TD><TD>str(UTF-8)</TD><TD PORT="filename_type">filename</TD></TR>
+					<TR><TD PORT="body_pos">_root.data_start + ofs_body</TD><TD PORT="body_size">len_body</TD><TD></TD><TD PORT="body_type">body</TD></TR>
 				</TABLE>>];
 				offset__inst__ext [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="ext_pos">ext_ofs</TD><TD PORT="ext_size">...</TD><TD>str(UTF-8)</TD><TD PORT="ext_type">ext</TD></TR>
+					<TR><TD PORT="ext_pos">ext_ofs</TD><TD PORT="ext_size">...</TD><TD>str(term=0, UTF-8)</TD><TD PORT="ext_type">ext</TD></TR>
 				</TABLE>>];
-				offset__inst__body [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				offset__inst__filename [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="body_pos">(_root.data_start + ofs_body)</TD><TD PORT="body_size">len_body</TD><TD></TD><TD PORT="body_type">body</TD></TR>
+					<TR><TD PORT="filename_pos">name_ofs</TD><TD PORT="filename_size">...</TD><TD>str(term=0, UTF-8)</TD><TD PORT="filename_type">filename</TD></TR>
 				</TABLE>>];
 			}
 		}
@@ -87,28 +87,28 @@ digraph {
 
 			strings__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="entries_pos">0</TD><TD PORT="entries_size">...</TD><TD>str(UTF-8)</TD><TD PORT="entries_type">entries</TD></TR>
+				<TR><TD PORT="entries_pos">0</TD><TD PORT="entries_size">...</TD><TD>str(term=0, UTF-8)</TD><TD PORT="entries_type">entries</TD></TR>
 				<TR><TD COLSPAN="4" PORT="entries__repeat">repeat to end of stream</TD></TR>
 			</TABLE>>];
 		}
 	}
-	saints_row_2_vpp_pc__inst__ofs_filenames:ofs_filenames_type -> saints_row_2_vpp_pc__inst__filenames:filenames_pos [color="#404040"];
-	saints_row_2_vpp_pc__seq:len_filenames_type -> saints_row_2_vpp_pc__inst__filenames:filenames_size [color="#404040"];
-	saints_row_2_vpp_pc__inst__filenames:filenames_type -> strings__seq [style=bold];
-	saints_row_2_vpp_pc__inst__ofs_filenames:ofs_filenames_type -> saints_row_2_vpp_pc__inst__ofs_extensions [color="#404040"];
-	saints_row_2_vpp_pc__seq:len_filenames_type -> saints_row_2_vpp_pc__inst__ofs_extensions [color="#404040"];
-	saints_row_2_vpp_pc__seq:len_offsets_type -> saints_row_2_vpp_pc__inst__files:files_size [color="#404040"];
-	saints_row_2_vpp_pc__inst__files:files_type -> offsets__seq [style=bold];
 	saints_row_2_vpp_pc__inst__ofs_extensions:ofs_extensions_type -> saints_row_2_vpp_pc__inst__data_start [color="#404040"];
 	saints_row_2_vpp_pc__seq:len_extensions_type -> saints_row_2_vpp_pc__inst__data_start [color="#404040"];
 	saints_row_2_vpp_pc__inst__ofs_extensions:ofs_extensions_type -> saints_row_2_vpp_pc__inst__extensions:extensions_pos [color="#404040"];
 	saints_row_2_vpp_pc__seq:len_extensions_type -> saints_row_2_vpp_pc__inst__extensions:extensions_size [color="#404040"];
 	saints_row_2_vpp_pc__inst__extensions:extensions_type -> strings__seq [style=bold];
+	saints_row_2_vpp_pc__inst__ofs_filenames:ofs_filenames_type -> saints_row_2_vpp_pc__inst__filenames:filenames_pos [color="#404040"];
+	saints_row_2_vpp_pc__seq:len_filenames_type -> saints_row_2_vpp_pc__inst__filenames:filenames_size [color="#404040"];
+	saints_row_2_vpp_pc__inst__filenames:filenames_type -> strings__seq [style=bold];
+	saints_row_2_vpp_pc__seq:len_offsets_type -> saints_row_2_vpp_pc__inst__files:files_size [color="#404040"];
+	saints_row_2_vpp_pc__inst__files:files_type -> offsets__seq [style=bold];
+	saints_row_2_vpp_pc__inst__ofs_filenames:ofs_filenames_type -> saints_row_2_vpp_pc__inst__ofs_extensions [color="#404040"];
+	saints_row_2_vpp_pc__seq:len_filenames_type -> saints_row_2_vpp_pc__inst__ofs_extensions [color="#404040"];
 	saints_row_2_vpp_pc__seq:len_offsets_type -> saints_row_2_vpp_pc__inst__ofs_filenames [color="#404040"];
 	offsets__seq:entries_type -> offset__seq [style=bold];
-	offset__seq:name_ofs_type -> offset__inst__filename:filename_pos [color="#404040"];
-	offset__seq:ext_ofs_type -> offset__inst__ext:ext_pos [color="#404040"];
 	saints_row_2_vpp_pc__inst__data_start:data_start_type -> offset__inst__body:body_pos [color="#404040"];
 	offset__seq:ofs_body_type -> offset__inst__body:body_pos [color="#404040"];
 	offset__seq:len_body_type -> offset__inst__body:body_size [color="#404040"];
+	offset__seq:ext_ofs_type -> offset__inst__ext:ext_pos [color="#404040"];
+	offset__seq:name_ofs_type -> offset__inst__filename:filename_pos [color="#404040"];
 }

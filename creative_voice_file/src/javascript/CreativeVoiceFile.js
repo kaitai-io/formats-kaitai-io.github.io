@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.CreativeVoiceFile = factory(root.KaitaiStream);
+    factory(root.CreativeVoiceFile || (root.CreativeVoiceFile = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (CreativeVoiceFile_, KaitaiStream) {
 /**
  * Creative Voice File is a container file format for digital audio
  * wave data. Initial revisions were able to support only unsigned
@@ -77,8 +77,8 @@ var CreativeVoiceFile = (function() {
   }
   CreativeVoiceFile.prototype._read = function() {
     this.magic = this._io.readBytes(20);
-    if (!((KaitaiStream.byteArrayCompare(this.magic, [67, 114, 101, 97, 116, 105, 118, 101, 32, 86, 111, 105, 99, 101, 32, 70, 105, 108, 101, 26]) == 0))) {
-      throw new KaitaiStream.ValidationNotEqualError([67, 114, 101, 97, 116, 105, 118, 101, 32, 86, 111, 105, 99, 101, 32, 70, 105, 108, 101, 26], this.magic, this._io, "/seq/0");
+    if (!((KaitaiStream.byteArrayCompare(this.magic, new Uint8Array([67, 114, 101, 97, 116, 105, 118, 101, 32, 86, 111, 105, 99, 101, 32, 70, 105, 108, 101, 26])) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([67, 114, 101, 97, 116, 105, 118, 101, 32, 86, 111, 105, 99, 101, 32, 70, 105, 108, 101, 26]), this.magic, this._io, "/seq/0");
     }
     this.headerSize = this._io.readU2le();
     this.version = this._io.readU2le();
@@ -91,106 +91,11 @@ var CreativeVoiceFile = (function() {
     }
   }
 
-  /**
-   * @see {@link https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x04:_Marker|Source}
-   */
-
-  var BlockMarker = CreativeVoiceFile.BlockMarker = (function() {
-    function BlockMarker(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    BlockMarker.prototype._read = function() {
-      this.markerId = this._io.readU2le();
-    }
-
-    /**
-     * Marker ID
-     */
-
-    return BlockMarker;
-  })();
-
-  /**
-   * @see {@link https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x03:_Silence|Source}
-   */
-
-  var BlockSilence = CreativeVoiceFile.BlockSilence = (function() {
-    function BlockSilence(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    BlockSilence.prototype._read = function() {
-      this.durationSamples = this._io.readU2le();
-      this.freqDiv = this._io.readU1();
-    }
-    Object.defineProperty(BlockSilence.prototype, 'sampleRate', {
-      get: function() {
-        if (this._m_sampleRate !== undefined)
-          return this._m_sampleRate;
-        this._m_sampleRate = (1000000.0 / (256 - this.freqDiv));
-        return this._m_sampleRate;
-      }
-    });
-
-    /**
-     * Duration of silence, in seconds
-     */
-    Object.defineProperty(BlockSilence.prototype, 'durationSec', {
-      get: function() {
-        if (this._m_durationSec !== undefined)
-          return this._m_durationSec;
-        this._m_durationSec = (this.durationSamples / this.sampleRate);
-        return this._m_durationSec;
-      }
-    });
-
-    /**
-     * Duration of silence, in samples
-     */
-
-    /**
-     * Frequency divisor, used to determine sample rate
-     */
-
-    return BlockSilence;
-  })();
-
-  /**
-   * @see {@link https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x09:_Sound_data_.28New_format.29|Source}
-   */
-
-  var BlockSoundDataNew = CreativeVoiceFile.BlockSoundDataNew = (function() {
-    function BlockSoundDataNew(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    BlockSoundDataNew.prototype._read = function() {
-      this.sampleRate = this._io.readU4le();
-      this.bitsPerSample = this._io.readU1();
-      this.numChannels = this._io.readU1();
-      this.codec = this._io.readU2le();
-      this.reserved = this._io.readBytes(4);
-      this.wave = this._io.readBytesFull();
-    }
-
-    return BlockSoundDataNew;
-  })();
-
   var Block = CreativeVoiceFile.Block = (function() {
     function Block(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -204,35 +109,35 @@ var CreativeVoiceFile = (function() {
       }
       if (this.blockType != CreativeVoiceFile.BlockTypes.TERMINATOR) {
         switch (this.blockType) {
-        case CreativeVoiceFile.BlockTypes.SOUND_DATA_NEW:
+        case CreativeVoiceFile.BlockTypes.EXTRA_INFO:
           this._raw_body = this._io.readBytes(this.bodySize);
           var _io__raw_body = new KaitaiStream(this._raw_body);
-          this.body = new BlockSoundDataNew(_io__raw_body, this, this._root);
-          break;
-        case CreativeVoiceFile.BlockTypes.REPEAT_START:
-          this._raw_body = this._io.readBytes(this.bodySize);
-          var _io__raw_body = new KaitaiStream(this._raw_body);
-          this.body = new BlockRepeatStart(_io__raw_body, this, this._root);
+          this.body = new BlockExtraInfo(_io__raw_body, this, this._root);
           break;
         case CreativeVoiceFile.BlockTypes.MARKER:
           this._raw_body = this._io.readBytes(this.bodySize);
           var _io__raw_body = new KaitaiStream(this._raw_body);
           this.body = new BlockMarker(_io__raw_body, this, this._root);
           break;
-        case CreativeVoiceFile.BlockTypes.SOUND_DATA:
+        case CreativeVoiceFile.BlockTypes.REPEAT_START:
           this._raw_body = this._io.readBytes(this.bodySize);
           var _io__raw_body = new KaitaiStream(this._raw_body);
-          this.body = new BlockSoundData(_io__raw_body, this, this._root);
-          break;
-        case CreativeVoiceFile.BlockTypes.EXTRA_INFO:
-          this._raw_body = this._io.readBytes(this.bodySize);
-          var _io__raw_body = new KaitaiStream(this._raw_body);
-          this.body = new BlockExtraInfo(_io__raw_body, this, this._root);
+          this.body = new BlockRepeatStart(_io__raw_body, this, this._root);
           break;
         case CreativeVoiceFile.BlockTypes.SILENCE:
           this._raw_body = this._io.readBytes(this.bodySize);
           var _io__raw_body = new KaitaiStream(this._raw_body);
           this.body = new BlockSilence(_io__raw_body, this, this._root);
+          break;
+        case CreativeVoiceFile.BlockTypes.SOUND_DATA:
+          this._raw_body = this._io.readBytes(this.bodySize);
+          var _io__raw_body = new KaitaiStream(this._raw_body);
+          this.body = new BlockSoundData(_io__raw_body, this, this._root);
+          break;
+        case CreativeVoiceFile.BlockTypes.SOUND_DATA_NEW:
+          this._raw_body = this._io.readBytes(this.bodySize);
+          var _io__raw_body = new KaitaiStream(this._raw_body);
+          this.body = new BlockSoundDataNew(_io__raw_body, this, this._root);
           break;
         default:
           this.body = this._io.readBytes(this.bodySize);
@@ -251,7 +156,7 @@ var CreativeVoiceFile = (function() {
         if (this._m_bodySize !== undefined)
           return this._m_bodySize;
         if (this.blockType != CreativeVoiceFile.BlockTypes.TERMINATOR) {
-          this._m_bodySize = (this.bodySize1 + (this.bodySize2 << 16));
+          this._m_bodySize = this.bodySize1 + (this.bodySize2 << 16);
         }
         return this._m_bodySize;
       }
@@ -269,62 +174,6 @@ var CreativeVoiceFile = (function() {
   })();
 
   /**
-   * @see {@link https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x06:_Repeat_start|Source}
-   */
-
-  var BlockRepeatStart = CreativeVoiceFile.BlockRepeatStart = (function() {
-    function BlockRepeatStart(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    BlockRepeatStart.prototype._read = function() {
-      this.repeatCount1 = this._io.readU2le();
-    }
-
-    /**
-     * Number of repetitions minus 1; 0xffff means infinite repetitions
-     */
-
-    return BlockRepeatStart;
-  })();
-
-  /**
-   * @see {@link https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x01:_Sound_data|Source}
-   */
-
-  var BlockSoundData = CreativeVoiceFile.BlockSoundData = (function() {
-    function BlockSoundData(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    BlockSoundData.prototype._read = function() {
-      this.freqDiv = this._io.readU1();
-      this.codec = this._io.readU1();
-      this.wave = this._io.readBytesFull();
-    }
-    Object.defineProperty(BlockSoundData.prototype, 'sampleRate', {
-      get: function() {
-        if (this._m_sampleRate !== undefined)
-          return this._m_sampleRate;
-        this._m_sampleRate = (1000000.0 / (256 - this.freqDiv));
-        return this._m_sampleRate;
-      }
-    });
-
-    /**
-     * Frequency divisor, used to determine sample rate
-     */
-
-    return BlockSoundData;
-  })();
-
-  /**
    * @see {@link https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x08:_Extra_info|Source}
    */
 
@@ -332,7 +181,7 @@ var CreativeVoiceFile = (function() {
     function BlockExtraInfo(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -349,7 +198,7 @@ var CreativeVoiceFile = (function() {
       get: function() {
         if (this._m_numChannels !== undefined)
           return this._m_numChannels;
-        this._m_numChannels = (this.numChannels1 + 1);
+        this._m_numChannels = this.numChannels1 + 1;
         return this._m_numChannels;
       }
     });
@@ -357,7 +206,7 @@ var CreativeVoiceFile = (function() {
       get: function() {
         if (this._m_sampleRate !== undefined)
           return this._m_sampleRate;
-        this._m_sampleRate = (256000000.0 / (this.numChannels * (65536 - this.freqDiv)));
+        this._m_sampleRate = 256000000.0 / (this.numChannels * (65536 - this.freqDiv));
         return this._m_sampleRate;
       }
     });
@@ -374,6 +223,157 @@ var CreativeVoiceFile = (function() {
   })();
 
   /**
+   * @see {@link https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x04:_Marker|Source}
+   */
+
+  var BlockMarker = CreativeVoiceFile.BlockMarker = (function() {
+    function BlockMarker(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    BlockMarker.prototype._read = function() {
+      this.markerId = this._io.readU2le();
+    }
+
+    /**
+     * Marker ID
+     */
+
+    return BlockMarker;
+  })();
+
+  /**
+   * @see {@link https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x06:_Repeat_start|Source}
+   */
+
+  var BlockRepeatStart = CreativeVoiceFile.BlockRepeatStart = (function() {
+    function BlockRepeatStart(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    BlockRepeatStart.prototype._read = function() {
+      this.repeatCount1 = this._io.readU2le();
+    }
+
+    /**
+     * Number of repetitions minus 1; 0xffff means infinite repetitions
+     */
+
+    return BlockRepeatStart;
+  })();
+
+  /**
+   * @see {@link https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x03:_Silence|Source}
+   */
+
+  var BlockSilence = CreativeVoiceFile.BlockSilence = (function() {
+    function BlockSilence(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    BlockSilence.prototype._read = function() {
+      this.durationSamples = this._io.readU2le();
+      this.freqDiv = this._io.readU1();
+    }
+
+    /**
+     * Duration of silence, in seconds
+     */
+    Object.defineProperty(BlockSilence.prototype, 'durationSec', {
+      get: function() {
+        if (this._m_durationSec !== undefined)
+          return this._m_durationSec;
+        this._m_durationSec = this.durationSamples / this.sampleRate;
+        return this._m_durationSec;
+      }
+    });
+    Object.defineProperty(BlockSilence.prototype, 'sampleRate', {
+      get: function() {
+        if (this._m_sampleRate !== undefined)
+          return this._m_sampleRate;
+        this._m_sampleRate = 1000000.0 / (256 - this.freqDiv);
+        return this._m_sampleRate;
+      }
+    });
+
+    /**
+     * Duration of silence, in samples
+     */
+
+    /**
+     * Frequency divisor, used to determine sample rate
+     */
+
+    return BlockSilence;
+  })();
+
+  /**
+   * @see {@link https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x01:_Sound_data|Source}
+   */
+
+  var BlockSoundData = CreativeVoiceFile.BlockSoundData = (function() {
+    function BlockSoundData(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    BlockSoundData.prototype._read = function() {
+      this.freqDiv = this._io.readU1();
+      this.codec = this._io.readU1();
+      this.wave = this._io.readBytesFull();
+    }
+    Object.defineProperty(BlockSoundData.prototype, 'sampleRate', {
+      get: function() {
+        if (this._m_sampleRate !== undefined)
+          return this._m_sampleRate;
+        this._m_sampleRate = 1000000.0 / (256 - this.freqDiv);
+        return this._m_sampleRate;
+      }
+    });
+
+    /**
+     * Frequency divisor, used to determine sample rate
+     */
+
+    return BlockSoundData;
+  })();
+
+  /**
+   * @see {@link https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x09:_Sound_data_.28New_format.29|Source}
+   */
+
+  var BlockSoundDataNew = CreativeVoiceFile.BlockSoundDataNew = (function() {
+    function BlockSoundDataNew(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    BlockSoundDataNew.prototype._read = function() {
+      this.sampleRate = this._io.readU4le();
+      this.bitsPerSample = this._io.readU1();
+      this.numChannels = this._io.readU1();
+      this.codec = this._io.readU2le();
+      this.reserved = this._io.readBytes(4);
+      this.wave = this._io.readBytesFull();
+    }
+
+    return BlockSoundDataNew;
+  })();
+
+  /**
    * Total size of this main header (usually 0x001A)
    */
 
@@ -387,5 +387,5 @@ var CreativeVoiceFile = (function() {
 
   return CreativeVoiceFile;
 })();
-return CreativeVoiceFile;
-}));
+CreativeVoiceFile_.CreativeVoiceFile = CreativeVoiceFile;
+});

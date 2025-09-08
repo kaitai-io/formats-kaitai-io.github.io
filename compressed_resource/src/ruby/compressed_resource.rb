@@ -1,9 +1,10 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 require 'kaitai/struct/struct'
+require_relative 'bytes_with_io'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -30,8 +31,8 @@ end
 # @see http://preserve.mactech.com/articles/mactech/Vol.09/09.01/ResCompression/index.html Source
 # @see https://github.com/dgelessus/python-rsrcfork/tree/f891a6e/src/rsrcfork/compress Source
 class CompressedResource < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -45,16 +46,15 @@ class CompressedResource < Kaitai::Struct::Struct
   # Compressed resource data header,
   # as stored at the start of all compressed resources.
   class Header < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
 
     def _read
       @common_part = CommonPart.new(@_io, self, @_root)
-      @_raw_type_specific_part_raw_with_io = @_io.read_bytes((common_part.len_header - 12))
-      _io__raw_type_specific_part_raw_with_io = Kaitai::Struct::Stream.new(@_raw_type_specific_part_raw_with_io)
-      @type_specific_part_raw_with_io = BytesWithIo.new(_io__raw_type_specific_part_raw_with_io)
+      _io_type_specific_part_raw_with_io = @_io.substream(common_part.len_header - 12)
+      @type_specific_part_raw_with_io = BytesWithIo.new(_io_type_specific_part_raw_with_io)
       self
     end
 
@@ -62,19 +62,19 @@ class CompressedResource < Kaitai::Struct::Struct
     # The common part of a compressed resource data header.
     # The format of this part is the same for all compressed resources.
     class CommonPart < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
 
       def _read
         @magic = @_io.read_bytes(4)
-        raise Kaitai::Struct::ValidationNotEqualError.new([168, 159, 101, 114].pack('C*'), magic, _io, "/types/header/types/common_part/seq/0") if not magic == [168, 159, 101, 114].pack('C*')
+        raise Kaitai::Struct::ValidationNotEqualError.new([168, 159, 101, 114].pack('C*'), @magic, @_io, "/types/header/types/common_part/seq/0") if not @magic == [168, 159, 101, 114].pack('C*')
         @len_header = @_io.read_u2be
-        raise Kaitai::Struct::ValidationNotEqualError.new(18, len_header, _io, "/types/header/types/common_part/seq/1") if not len_header == 18
+        raise Kaitai::Struct::ValidationNotEqualError.new(18, @len_header, @_io, "/types/header/types/common_part/seq/1") if not @len_header == 18
         @header_type = @_io.read_u1
         @unknown = @_io.read_u1
-        raise Kaitai::Struct::ValidationNotEqualError.new(1, unknown, _io, "/types/header/types/common_part/seq/3") if not unknown == 1
+        raise Kaitai::Struct::ValidationNotEqualError.new(1, @unknown, @_io, "/types/header/types/common_part/seq/3") if not @unknown == 1
         @len_decompressed = @_io.read_u4be
         self
       end
@@ -117,7 +117,7 @@ class CompressedResource < Kaitai::Struct::Struct
     ##
     # The type-specific part of a compressed resource header with header type `8`.
     class TypeSpecificPartType8 < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
@@ -127,7 +127,7 @@ class CompressedResource < Kaitai::Struct::Struct
         @expansion_buffer_size = @_io.read_u1
         @decompressor_id = @_io.read_s2be
         @reserved = @_io.read_u2be
-        raise Kaitai::Struct::ValidationNotEqualError.new(0, reserved, _io, "/types/header/types/type_specific_part_type_8/seq/3") if not reserved == 0
+        raise Kaitai::Struct::ValidationNotEqualError.new(0, @reserved, @_io, "/types/header/types/type_specific_part_type_8/seq/3") if not @reserved == 0
         self
       end
 
@@ -164,16 +164,15 @@ class CompressedResource < Kaitai::Struct::Struct
     ##
     # The type-specific part of a compressed resource header with header type `9`.
     class TypeSpecificPartType9 < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
+      def initialize(_io, _parent = nil, _root = nil)
         super(_io, _parent, _root)
         _read
       end
 
       def _read
         @decompressor_id = @_io.read_s2be
-        @_raw_decompressor_specific_parameters_with_io = @_io.read_bytes(4)
-        _io__raw_decompressor_specific_parameters_with_io = Kaitai::Struct::Stream.new(@_raw_decompressor_specific_parameters_with_io)
-        @decompressor_specific_parameters_with_io = BytesWithIo.new(_io__raw_decompressor_specific_parameters_with_io)
+        _io_decompressor_specific_parameters_with_io = @_io.substream(4)
+        @decompressor_specific_parameters_with_io = BytesWithIo.new(_io_decompressor_specific_parameters_with_io)
         self
       end
 
@@ -203,15 +202,6 @@ class CompressedResource < Kaitai::Struct::Struct
 
     ##
     # The type-specific part of the header,
-    # as a raw byte array.
-    def type_specific_part_raw
-      return @type_specific_part_raw unless @type_specific_part_raw.nil?
-      @type_specific_part_raw = type_specific_part_raw_with_io.data
-      @type_specific_part_raw
-    end
-
-    ##
-    # The type-specific part of the header,
     # parsed according to the type from the common part.
     def type_specific_part
       return @type_specific_part unless @type_specific_part.nil?
@@ -226,6 +216,15 @@ class CompressedResource < Kaitai::Struct::Struct
       end
       io.seek(_pos)
       @type_specific_part
+    end
+
+    ##
+    # The type-specific part of the header,
+    # as a raw byte array.
+    def type_specific_part_raw
+      return @type_specific_part_raw unless @type_specific_part_raw.nil?
+      @type_specific_part_raw = type_specific_part_raw_with_io.data
+      @type_specific_part_raw
     end
 
     ##

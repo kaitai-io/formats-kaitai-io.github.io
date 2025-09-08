@@ -50,7 +50,7 @@ proc filenames(this: HeroesOfMightAndMagicAgg): seq[HeroesOfMightAndMagicAgg_Fil
   if this.filenamesInstFlag:
     return this.filenamesInst
   let pos = this.io.pos()
-  this.io.seek(int((this.entries[^1].offset + this.entries[^1].size)))
+  this.io.seek(int(this.entries[^1].offset + this.entries[^1].size))
   for i in 0 ..< int(this.numFiles):
     let buf = this.io.readBytes(int(15))
     this.rawFilenamesInst.add(buf)

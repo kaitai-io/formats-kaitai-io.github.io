@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -53,8 +54,8 @@ public class ChromePak extends KaitaiStruct {
     }
     private void _read() {
         this.version = this._io.readU4le();
-        if (!( ((version() == 4) || (version() == 5)) )) {
-            throw new KaitaiStream.ValidationNotAnyOfError(version(), _io(), "/seq/0");
+        if (!( ((this.version == 4) || (this.version == 5)) )) {
+            throw new KaitaiStream.ValidationNotAnyOfError(this.version, this._io, "/seq/0");
         }
         if (version() == 4) {
             this.numResourcesV4 = this._io.readU4le();
@@ -64,13 +65,72 @@ public class ChromePak extends KaitaiStruct {
             this.v5Part = new HeaderV5Part(this._io, this, _root);
         }
         this.resources = new ArrayList<Resource>();
-        for (int i = 0; i < (numResources() + 1); i++) {
+        for (int i = 0; i < numResources() + 1; i++) {
             this.resources.add(new Resource(this._io, this, _root, i, i < numResources()));
         }
         this.aliases = new ArrayList<Alias>();
         for (int i = 0; i < numAliases(); i++) {
             this.aliases.add(new Alias(this._io, this, _root));
         }
+    }
+
+    public void _fetchInstances() {
+        if (version() == 4) {
+        }
+        if (version() == 5) {
+            this.v5Part._fetchInstances();
+        }
+        for (int i = 0; i < this.resources.size(); i++) {
+            this.resources.get(((Number) (i)).intValue())._fetchInstances();
+        }
+        for (int i = 0; i < this.aliases.size(); i++) {
+            this.aliases.get(((Number) (i)).intValue())._fetchInstances();
+        }
+    }
+    public static class Alias extends KaitaiStruct {
+        public static Alias fromFile(String fileName) throws IOException {
+            return new Alias(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Alias(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Alias(KaitaiStream _io, ChromePak _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Alias(KaitaiStream _io, ChromePak _parent, ChromePak _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.id = this._io.readU2le();
+            this.resourceIdx = this._io.readU2le();
+            if (!(this.resourceIdx <= _parent().numResources() - 1)) {
+                throw new KaitaiStream.ValidationGreaterThanError(_parent().numResources() - 1, this.resourceIdx, this._io, "/types/alias/seq/1");
+            }
+        }
+
+        public void _fetchInstances() {
+        }
+        private Resource resource;
+        public Resource resource() {
+            if (this.resource != null)
+                return this.resource;
+            this.resource = _parent().resources().get(((Number) (resourceIdx())).intValue());
+            return this.resource;
+        }
+        private int id;
+        private int resourceIdx;
+        private ChromePak _root;
+        private ChromePak _parent;
+        public int id() { return id; }
+        public int resourceIdx() { return resourceIdx; }
+        public ChromePak _root() { return _root; }
+        public ChromePak _parent() { return _parent; }
     }
     public static class HeaderV5Part extends KaitaiStruct {
         public static HeaderV5Part fromFile(String fileName) throws IOException {
@@ -95,6 +155,9 @@ public class ChromePak extends KaitaiStruct {
             this.encodingPadding = this._io.readBytes(3);
             this.numResources = this._io.readU2le();
             this.numAliases = this._io.readU2le();
+        }
+
+        public void _fetchInstances() {
         }
         private byte[] encodingPadding;
         private int numResources;
@@ -129,19 +192,11 @@ public class ChromePak extends KaitaiStruct {
             this.id = this._io.readU2le();
             this.ofsBody = this._io.readU4le();
         }
-        private Integer lenBody;
 
-        /**
-         * MUST NOT be accessed until the next `resource` is parsed
-         */
-        public Integer lenBody() {
-            if (this.lenBody != null)
-                return this.lenBody;
-            if (hasBody()) {
-                int _tmp = (int) ((_parent().resources().get((int) (idx() + 1)).ofsBody() - ofsBody()));
-                this.lenBody = _tmp;
+        public void _fetchInstances() {
+            body();
+            if (this.body != null) {
             }
-            return this.lenBody;
         }
         private byte[] body;
 
@@ -159,6 +214,19 @@ public class ChromePak extends KaitaiStruct {
             }
             return this.body;
         }
+        private Integer lenBody;
+
+        /**
+         * MUST NOT be accessed until the next `resource` is parsed
+         */
+        public Integer lenBody() {
+            if (this.lenBody != null)
+                return this.lenBody;
+            if (hasBody()) {
+                this.lenBody = ((Number) (_parent().resources().get(((Number) (idx() + 1)).intValue()).ofsBody() - ofsBody())).intValue();
+            }
+            return this.lenBody;
+        }
         private int id;
         private long ofsBody;
         private int idx;
@@ -172,70 +240,26 @@ public class ChromePak extends KaitaiStruct {
         public ChromePak _root() { return _root; }
         public ChromePak _parent() { return _parent; }
     }
-    public static class Alias extends KaitaiStruct {
-        public static Alias fromFile(String fileName) throws IOException {
-            return new Alias(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Alias(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Alias(KaitaiStream _io, ChromePak _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Alias(KaitaiStream _io, ChromePak _parent, ChromePak _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.id = this._io.readU2le();
-            this.resourceIdx = this._io.readU2le();
-            if (!(resourceIdx() <= (_parent().numResources() - 1))) {
-                throw new KaitaiStream.ValidationGreaterThanError((_parent().numResources() - 1), resourceIdx(), _io(), "/types/alias/seq/1");
-            }
-        }
-        private Resource resource;
-        public Resource resource() {
-            if (this.resource != null)
-                return this.resource;
-            this.resource = _parent().resources().get((int) resourceIdx());
-            return this.resource;
-        }
-        private int id;
-        private int resourceIdx;
-        private ChromePak _root;
-        private ChromePak _parent;
-        public int id() { return id; }
-        public int resourceIdx() { return resourceIdx; }
-        public ChromePak _root() { return _root; }
-        public ChromePak _parent() { return _parent; }
+    private Integer numAliases;
+    public Integer numAliases() {
+        if (this.numAliases != null)
+            return this.numAliases;
+        this.numAliases = ((Number) ((version() == 5 ? v5Part().numAliases() : 0))).intValue();
+        return this.numAliases;
     }
     private Long numResources;
     public Long numResources() {
         if (this.numResources != null)
             return this.numResources;
-        long _tmp = (long) ((version() == 5 ? v5Part().numResources() : numResourcesV4()));
-        this.numResources = _tmp;
+        this.numResources = ((Number) ((version() == 5 ? v5Part().numResources() : numResourcesV4()))).longValue();
         return this.numResources;
-    }
-    private Integer numAliases;
-    public Integer numAliases() {
-        if (this.numAliases != null)
-            return this.numAliases;
-        int _tmp = (int) ((version() == 5 ? v5Part().numAliases() : 0));
-        this.numAliases = _tmp;
-        return this.numAliases;
     }
     private long version;
     private Long numResourcesV4;
     private Encodings encoding;
     private HeaderV5Part v5Part;
-    private ArrayList<Resource> resources;
-    private ArrayList<Alias> aliases;
+    private List<Resource> resources;
+    private List<Alias> aliases;
     private ChromePak _root;
     private KaitaiStruct _parent;
 
@@ -264,8 +288,8 @@ public class ChromePak extends KaitaiStruct {
      * the next item, so an extra entry is stored with id 0
      * and offset pointing to the end of the resources.
      */
-    public ArrayList<Resource> resources() { return resources; }
-    public ArrayList<Alias> aliases() { return aliases; }
+    public List<Resource> resources() { return resources; }
+    public List<Alias> aliases() { return aliases; }
     public ChromePak _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

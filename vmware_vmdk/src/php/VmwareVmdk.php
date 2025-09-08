@@ -3,15 +3,15 @@
 
 namespace {
     class VmwareVmdk extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \VmwareVmdk $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\VmwareVmdk $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic = $this->_io->readBytes(4);
-            if (!($this->magic() == "\x4B\x44\x4D\x56")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x4B\x44\x4D\x56", $this->magic(), $this->_io(), "/seq/0");
+            if (!($this->_m_magic == "\x4B\x44\x4D\x56")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x4B\x44\x4D\x56", $this->_m_magic, $this->_io, "/seq/0");
             }
             $this->_m_version = $this->_io->readS4le();
             $this->_m_flags = new \VmwareVmdk\HeaderFlags($this->_io, $this, $this->_root);
@@ -27,20 +27,13 @@ namespace {
             $this->_m_stuff = $this->_io->readBytes(4);
             $this->_m_compressionMethod = $this->_io->readU2le();
         }
-        protected $_m_lenSector;
-        public function lenSector() {
-            if ($this->_m_lenSector !== null)
-                return $this->_m_lenSector;
-            $this->_m_lenSector = 512;
-            return $this->_m_lenSector;
-        }
         protected $_m_descriptor;
         public function descriptor() {
             if ($this->_m_descriptor !== null)
                 return $this->_m_descriptor;
             $_pos = $this->_io->pos();
-            $this->_io->seek(($this->startDescriptor() * $this->_root()->lenSector()));
-            $this->_m_descriptor = $this->_io->readBytes(($this->sizeDescriptor() * $this->_root()->lenSector()));
+            $this->_io->seek($this->startDescriptor() * $this->_root()->lenSector());
+            $this->_m_descriptor = $this->_io->readBytes($this->sizeDescriptor() * $this->_root()->lenSector());
             $this->_io->seek($_pos);
             return $this->_m_descriptor;
         }
@@ -49,8 +42,8 @@ namespace {
             if ($this->_m_grainPrimary !== null)
                 return $this->_m_grainPrimary;
             $_pos = $this->_io->pos();
-            $this->_io->seek(($this->startPrimaryGrain() * $this->_root()->lenSector()));
-            $this->_m_grainPrimary = $this->_io->readBytes(($this->sizeGrain() * $this->_root()->lenSector()));
+            $this->_io->seek($this->startPrimaryGrain() * $this->_root()->lenSector());
+            $this->_m_grainPrimary = $this->_io->readBytes($this->sizeGrain() * $this->_root()->lenSector());
             $this->_io->seek($_pos);
             return $this->_m_grainPrimary;
         }
@@ -59,10 +52,17 @@ namespace {
             if ($this->_m_grainSecondary !== null)
                 return $this->_m_grainSecondary;
             $_pos = $this->_io->pos();
-            $this->_io->seek(($this->startSecondaryGrain() * $this->_root()->lenSector()));
-            $this->_m_grainSecondary = $this->_io->readBytes(($this->sizeGrain() * $this->_root()->lenSector()));
+            $this->_io->seek($this->startSecondaryGrain() * $this->_root()->lenSector());
+            $this->_m_grainSecondary = $this->_io->readBytes($this->sizeGrain() * $this->_root()->lenSector());
             $this->_io->seek($_pos);
             return $this->_m_grainSecondary;
+        }
+        protected $_m_lenSector;
+        public function lenSector() {
+            if ($this->_m_lenSector !== null)
+                return $this->_m_lenSector;
+            $this->_m_lenSector = 512;
+            return $this->_m_lenSector;
         }
         protected $_m_magic;
         protected $_m_version;
@@ -121,7 +121,7 @@ namespace {
 
 namespace VmwareVmdk {
     class HeaderFlags extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \VmwareVmdk $_parent = null, \VmwareVmdk $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\VmwareVmdk $_parent = null, ?\VmwareVmdk $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -164,5 +164,11 @@ namespace VmwareVmdk {
     class CompressionMethods {
         const NONE = 0;
         const DEFLATE = 1;
+
+        private const _VALUES = [0 => true, 1 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

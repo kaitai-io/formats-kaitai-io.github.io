@@ -54,7 +54,7 @@ namespace Kaitai
             private void _read()
             {
                 _mz = new MzHeader(m_io, this, m_root);
-                _restOfHeader = m_io.ReadBytes((Mz.LenHeader - 28));
+                _restOfHeader = m_io.ReadBytes(Mz.LenHeader - 28);
             }
             private bool f_lenBody;
             private int _lenBody;
@@ -64,8 +64,8 @@ namespace Kaitai
                 {
                     if (f_lenBody)
                         return _lenBody;
-                    _lenBody = (int) (((Mz.LastPageExtraBytes == 0 ? (Mz.NumPages * 512) : (((Mz.NumPages - 1) * 512) + Mz.LastPageExtraBytes)) - Mz.LenHeader));
                     f_lenBody = true;
+                    _lenBody = (int) ((Mz.LastPageExtraBytes == 0 ? Mz.NumPages * 512 : (Mz.NumPages - 1) * 512 + Mz.LastPageExtraBytes) - Mz.LenHeader);
                     return _lenBody;
                 }
             }
@@ -95,9 +95,9 @@ namespace Kaitai
             private void _read()
             {
                 _magic = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(2));
-                if (!( ((Magic == "MZ") || (Magic == "ZM")) ))
+                if (!( ((_magic == "MZ") || (_magic == "ZM")) ))
                 {
-                    throw new ValidationNotAnyOfError(Magic, M_Io, "/types/mz_header/seq/0");
+                    throw new ValidationNotAnyOfError(_magic, m_io, "/types/mz_header/seq/0");
                 }
                 _lastPageExtraBytes = m_io.ReadU2le();
                 _numPages = m_io.ReadU2le();
@@ -121,8 +121,8 @@ namespace Kaitai
                 {
                     if (f_lenHeader)
                         return _lenHeader;
-                    _lenHeader = (int) ((HeaderSize * 16));
                     f_lenHeader = true;
+                    _lenHeader = (int) (HeaderSize * 16);
                     return _lenHeader;
                 }
             }
@@ -194,6 +194,7 @@ namespace Kaitai
             {
                 if (f_relocations)
                     return _relocations;
+                f_relocations = true;
                 if (Header.Mz.OfsRelocations != 0) {
                     KaitaiStream io = Header.M_Io;
                     long _pos = io.Pos;
@@ -204,7 +205,6 @@ namespace Kaitai
                         _relocations.Add(new Relocation(io, this, m_root));
                     }
                     io.Seek(_pos);
-                    f_relocations = true;
                 }
                 return _relocations;
             }

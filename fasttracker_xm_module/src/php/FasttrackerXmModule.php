@@ -13,14 +13,14 @@
 
 namespace {
     class FasttrackerXmModule extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \FasttrackerXmModule $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\FasttrackerXmModule $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_preheader = new \FasttrackerXmModule\Preheader($this->_io, $this, $this->_root);
-            $this->_m__raw_header = $this->_io->readBytes(($this->preheader()->headerSize() - 4));
+            $this->_m__raw_header = $this->_io->readBytes($this->preheader()->headerSize() - 4);
             $_io__raw_header = new \Kaitai\Struct\Stream($this->_m__raw_header);
             $this->_m_header = new \FasttrackerXmModule\Header($_io__raw_header, $this, $this->_root);
             $this->_m_patterns = [];
@@ -48,184 +48,8 @@ namespace {
 }
 
 namespace FasttrackerXmModule {
-    class Preheader extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \FasttrackerXmModule $_parent = null, \FasttrackerXmModule $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_signature0 = $this->_io->readBytes(17);
-            if (!($this->signature0() == "\x45\x78\x74\x65\x6E\x64\x65\x64\x20\x4D\x6F\x64\x75\x6C\x65\x3A\x20")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x45\x78\x74\x65\x6E\x64\x65\x64\x20\x4D\x6F\x64\x75\x6C\x65\x3A\x20", $this->signature0(), $this->_io(), "/types/preheader/seq/0");
-            }
-            $this->_m_moduleName = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($this->_io->readBytes(20), 0, false), "utf-8");
-            $this->_m_signature1 = $this->_io->readBytes(1);
-            if (!($this->signature1() == "\x1A")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x1A", $this->signature1(), $this->_io(), "/types/preheader/seq/2");
-            }
-            $this->_m_trackerName = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($this->_io->readBytes(20), 0, false), "utf-8");
-            $this->_m_versionNumber = new \FasttrackerXmModule\Preheader\Version($this->_io, $this, $this->_root);
-            $this->_m_headerSize = $this->_io->readU4le();
-        }
-        protected $_m_signature0;
-        protected $_m_moduleName;
-        protected $_m_signature1;
-        protected $_m_trackerName;
-        protected $_m_versionNumber;
-        protected $_m_headerSize;
-        public function signature0() { return $this->_m_signature0; }
-
-        /**
-         * Module name, padded with zeroes
-         */
-        public function moduleName() { return $this->_m_moduleName; }
-        public function signature1() { return $this->_m_signature1; }
-
-        /**
-         * Tracker name
-         */
-        public function trackerName() { return $this->_m_trackerName; }
-
-        /**
-         * Format versions below [0x01, 0x04] have a LOT of differences. Check this field!
-         */
-        public function versionNumber() { return $this->_m_versionNumber; }
-
-        /**
-         * Header size << Calculated FROM THIS OFFSET, not from the beginning of the file! >>
-         */
-        public function headerSize() { return $this->_m_headerSize; }
-    }
-}
-
-namespace FasttrackerXmModule\Preheader {
-    class Version extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \FasttrackerXmModule\Preheader $_parent = null, \FasttrackerXmModule $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_minor = $this->_io->readU1();
-            $this->_m_major = $this->_io->readU1();
-        }
-        protected $_m_value;
-        public function value() {
-            if ($this->_m_value !== null)
-                return $this->_m_value;
-            $this->_m_value = (($this->major() << 8) | $this->minor());
-            return $this->_m_value;
-        }
-        protected $_m_minor;
-        protected $_m_major;
-
-        /**
-         * currently 0x04
-         */
-        public function minor() { return $this->_m_minor; }
-
-        /**
-         * currently 0x01
-         */
-        public function major() { return $this->_m_major; }
-    }
-}
-
-namespace FasttrackerXmModule {
-    class Pattern extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \FasttrackerXmModule $_parent = null, \FasttrackerXmModule $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_header = new \FasttrackerXmModule\Pattern\Header($this->_io, $this, $this->_root);
-            $this->_m_packedData = $this->_io->readBytes($this->header()->main()->lenPackedPattern());
-        }
-        protected $_m_header;
-        protected $_m_packedData;
-        public function header() { return $this->_m_header; }
-        public function packedData() { return $this->_m_packedData; }
-    }
-}
-
-namespace FasttrackerXmModule\Pattern {
-    class Header extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \FasttrackerXmModule\Pattern $_parent = null, \FasttrackerXmModule $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_headerLength = $this->_io->readU4le();
-            $this->_m__raw_main = $this->_io->readBytes(($this->headerLength() - 4));
-            $_io__raw_main = new \Kaitai\Struct\Stream($this->_m__raw_main);
-            $this->_m_main = new \FasttrackerXmModule\Pattern\Header\HeaderMain($_io__raw_main, $this, $this->_root);
-        }
-        protected $_m_headerLength;
-        protected $_m_main;
-        protected $_m__raw_main;
-
-        /**
-         * Pattern header length
-         */
-        public function headerLength() { return $this->_m_headerLength; }
-        public function main() { return $this->_m_main; }
-        public function _raw_main() { return $this->_m__raw_main; }
-    }
-}
-
-namespace FasttrackerXmModule\Pattern\Header {
-    class HeaderMain extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \FasttrackerXmModule\Pattern\Header $_parent = null, \FasttrackerXmModule $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_packingType = $this->_io->readU1();
-            switch ($this->_root()->preheader()->versionNumber()->value()) {
-                case 258:
-                    $this->_m_numRowsRaw = $this->_io->readU1();
-                    break;
-                default:
-                    $this->_m_numRowsRaw = $this->_io->readU2le();
-                    break;
-            }
-            $this->_m_lenPackedPattern = $this->_io->readU2le();
-        }
-        protected $_m_numRows;
-        public function numRows() {
-            if ($this->_m_numRows !== null)
-                return $this->_m_numRows;
-            $this->_m_numRows = ($this->numRowsRaw() + ($this->_root()->preheader()->versionNumber()->value() == 258 ? 1 : 0));
-            return $this->_m_numRows;
-        }
-        protected $_m_packingType;
-        protected $_m_numRowsRaw;
-        protected $_m_lenPackedPattern;
-
-        /**
-         * Packing type (always 0)
-         */
-        public function packingType() { return $this->_m_packingType; }
-
-        /**
-         * Number of rows in pattern (1..256)
-         */
-        public function numRowsRaw() { return $this->_m_numRowsRaw; }
-
-        /**
-         * Packed pattern data size
-         */
-        public function lenPackedPattern() { return $this->_m_lenPackedPattern; }
-    }
-}
-
-namespace FasttrackerXmModule {
     class Flags extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \FasttrackerXmModule\Header $_parent = null, \FasttrackerXmModule $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\FasttrackerXmModule\Header $_parent = null, ?\FasttrackerXmModule $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -247,7 +71,7 @@ namespace FasttrackerXmModule {
 
 namespace FasttrackerXmModule {
     class Header extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \FasttrackerXmModule $_parent = null, \FasttrackerXmModule $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\FasttrackerXmModule $_parent = null, ?\FasttrackerXmModule $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -321,14 +145,14 @@ namespace FasttrackerXmModule {
 
 namespace FasttrackerXmModule {
     class Instrument extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \FasttrackerXmModule $_parent = null, \FasttrackerXmModule $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\FasttrackerXmModule $_parent = null, ?\FasttrackerXmModule $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_headerSize = $this->_io->readU4le();
-            $this->_m__raw_header = $this->_io->readBytes(($this->headerSize() - 4));
+            $this->_m__raw_header = $this->_io->readBytes($this->headerSize() - 4);
             $_io__raw_header = new \Kaitai\Struct\Stream($this->_m__raw_header);
             $this->_m_header = new \FasttrackerXmModule\Instrument\Header($_io__raw_header, $this, $this->_root);
             $this->_m_samplesHeaders = [];
@@ -361,38 +185,8 @@ namespace FasttrackerXmModule {
 }
 
 namespace FasttrackerXmModule\Instrument {
-    class Header extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \FasttrackerXmModule\Instrument $_parent = null, \FasttrackerXmModule $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_name = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($this->_io->readBytes(22), 0, false), "utf-8");
-            $this->_m_type = $this->_io->readU1();
-            $this->_m_numSamples = $this->_io->readU2le();
-            if ($this->numSamples() > 0) {
-                $this->_m_extraHeader = new \FasttrackerXmModule\Instrument\ExtraHeader($this->_io, $this, $this->_root);
-            }
-        }
-        protected $_m_name;
-        protected $_m_type;
-        protected $_m_numSamples;
-        protected $_m_extraHeader;
-        public function name() { return $this->_m_name; }
-
-        /**
-         * Usually zero, but this seems pretty random, don't assume it's zero
-         */
-        public function type() { return $this->_m_type; }
-        public function numSamples() { return $this->_m_numSamples; }
-        public function extraHeader() { return $this->_m_extraHeader; }
-    }
-}
-
-namespace FasttrackerXmModule\Instrument {
     class ExtraHeader extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \FasttrackerXmModule\Instrument\Header $_parent = null, \FasttrackerXmModule $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\FasttrackerXmModule\Instrument\Header $_parent = null, ?\FasttrackerXmModule $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -499,7 +293,7 @@ namespace FasttrackerXmModule\Instrument {
 
 namespace FasttrackerXmModule\Instrument\ExtraHeader {
     class EnvelopePoint extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \FasttrackerXmModule\Instrument\ExtraHeader $_parent = null, \FasttrackerXmModule $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\FasttrackerXmModule\Instrument\ExtraHeader $_parent = null, ?\FasttrackerXmModule $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -528,40 +322,48 @@ namespace FasttrackerXmModule\Instrument\ExtraHeader {
         const TRUE = 0;
         const SUSTAIN = 1;
         const LOOP = 2;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
-/**
- * The saved data uses simple delta-encoding to achieve better compression ratios (when compressed with pkzip, etc.)
- * Pseudocode for converting the delta-coded data to normal data,
- * old = 0;
- * for i in range(data_len):
- *   new = sample[i] + old;
- *   sample[i] = new;
- *   old = new;
- */
-
 namespace FasttrackerXmModule\Instrument {
-    class SamplesData extends \Kaitai\Struct\Struct {
-        public function __construct(\FasttrackerXmModule\Instrument\SampleHeader $header, \Kaitai\Struct\Stream $_io, \FasttrackerXmModule\Instrument $_parent = null, \FasttrackerXmModule $_root = null) {
+    class Header extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\FasttrackerXmModule\Instrument $_parent = null, ?\FasttrackerXmModule $_root = null) {
             parent::__construct($_io, $_parent, $_root);
-            $this->_m_header = $header;
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_data = $this->_io->readBytes(($this->header()->sampleLength() * ($this->header()->type()->isSampleData16Bit() ? 2 : 1)));
+            $this->_m_name = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($this->_io->readBytes(22), 0, false), "UTF-8");
+            $this->_m_type = $this->_io->readU1();
+            $this->_m_numSamples = $this->_io->readU2le();
+            if ($this->numSamples() > 0) {
+                $this->_m_extraHeader = new \FasttrackerXmModule\Instrument\ExtraHeader($this->_io, $this, $this->_root);
+            }
         }
-        protected $_m_data;
-        protected $_m_header;
-        public function data() { return $this->_m_data; }
-        public function header() { return $this->_m_header; }
+        protected $_m_name;
+        protected $_m_type;
+        protected $_m_numSamples;
+        protected $_m_extraHeader;
+        public function name() { return $this->_m_name; }
+
+        /**
+         * Usually zero, but this seems pretty random, don't assume it's zero
+         */
+        public function type() { return $this->_m_type; }
+        public function numSamples() { return $this->_m_numSamples; }
+        public function extraHeader() { return $this->_m_extraHeader; }
     }
 }
 
 namespace FasttrackerXmModule\Instrument {
     class SampleHeader extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \FasttrackerXmModule\Instrument $_parent = null, \FasttrackerXmModule $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\FasttrackerXmModule\Instrument $_parent = null, ?\FasttrackerXmModule $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -576,7 +378,7 @@ namespace FasttrackerXmModule\Instrument {
             $this->_m_panning = $this->_io->readU1();
             $this->_m_relativeNoteNumber = $this->_io->readS1();
             $this->_m_reserved = $this->_io->readU1();
-            $this->_m_name = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($this->_io->readBytes(22), 0, false), "utf-8");
+            $this->_m_name = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($this->_io->readBytes(22), 0, false), "UTF-8");
         }
         protected $_m_sampleLength;
         protected $_m_sampleLoopStart;
@@ -611,7 +413,7 @@ namespace FasttrackerXmModule\Instrument {
 
 namespace FasttrackerXmModule\Instrument\SampleHeader {
     class LoopType extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \FasttrackerXmModule\Instrument\SampleHeader $_parent = null, \FasttrackerXmModule $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\FasttrackerXmModule\Instrument\SampleHeader $_parent = null, ?\FasttrackerXmModule $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -638,5 +440,215 @@ namespace FasttrackerXmModule\Instrument\SampleHeader\LoopType {
         const NONE = 0;
         const FORWARD = 1;
         const PING_PONG = 2;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
+    }
+}
+
+/**
+ * The saved data uses simple delta-encoding to achieve better compression ratios (when compressed with pkzip, etc.)
+ * Pseudocode for converting the delta-coded data to normal data,
+ * old = 0;
+ * for i in range(data_len):
+ *   new = sample[i] + old;
+ *   sample[i] = new;
+ *   old = new;
+ */
+
+namespace FasttrackerXmModule\Instrument {
+    class SamplesData extends \Kaitai\Struct\Struct {
+        public function __construct(\FasttrackerXmModule\Instrument\SampleHeader $header, \Kaitai\Struct\Stream $_io, ?\FasttrackerXmModule\Instrument $_parent = null, ?\FasttrackerXmModule $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_m_header = $header;
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_data = $this->_io->readBytes($this->header()->sampleLength() * ($this->header()->type()->isSampleData16Bit() ? 2 : 1));
+        }
+        protected $_m_data;
+        protected $_m_header;
+        public function data() { return $this->_m_data; }
+        public function header() { return $this->_m_header; }
+    }
+}
+
+namespace FasttrackerXmModule {
+    class Pattern extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\FasttrackerXmModule $_parent = null, ?\FasttrackerXmModule $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_header = new \FasttrackerXmModule\Pattern\Header($this->_io, $this, $this->_root);
+            $this->_m_packedData = $this->_io->readBytes($this->header()->main()->lenPackedPattern());
+        }
+        protected $_m_header;
+        protected $_m_packedData;
+        public function header() { return $this->_m_header; }
+        public function packedData() { return $this->_m_packedData; }
+    }
+}
+
+namespace FasttrackerXmModule\Pattern {
+    class Header extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\FasttrackerXmModule\Pattern $_parent = null, ?\FasttrackerXmModule $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_headerLength = $this->_io->readU4le();
+            $this->_m__raw_main = $this->_io->readBytes($this->headerLength() - 4);
+            $_io__raw_main = new \Kaitai\Struct\Stream($this->_m__raw_main);
+            $this->_m_main = new \FasttrackerXmModule\Pattern\Header\HeaderMain($_io__raw_main, $this, $this->_root);
+        }
+        protected $_m_headerLength;
+        protected $_m_main;
+        protected $_m__raw_main;
+
+        /**
+         * Pattern header length
+         */
+        public function headerLength() { return $this->_m_headerLength; }
+        public function main() { return $this->_m_main; }
+        public function _raw_main() { return $this->_m__raw_main; }
+    }
+}
+
+namespace FasttrackerXmModule\Pattern\Header {
+    class HeaderMain extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\FasttrackerXmModule\Pattern\Header $_parent = null, ?\FasttrackerXmModule $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_packingType = $this->_io->readU1();
+            switch ($this->_root()->preheader()->versionNumber()->value()) {
+                case 258:
+                    $this->_m_numRowsRaw = $this->_io->readU1();
+                    break;
+                default:
+                    $this->_m_numRowsRaw = $this->_io->readU2le();
+                    break;
+            }
+            $this->_m_lenPackedPattern = $this->_io->readU2le();
+        }
+        protected $_m_numRows;
+        public function numRows() {
+            if ($this->_m_numRows !== null)
+                return $this->_m_numRows;
+            $this->_m_numRows = $this->numRowsRaw() + ($this->_root()->preheader()->versionNumber()->value() == 258 ? 1 : 0);
+            return $this->_m_numRows;
+        }
+        protected $_m_packingType;
+        protected $_m_numRowsRaw;
+        protected $_m_lenPackedPattern;
+
+        /**
+         * Packing type (always 0)
+         */
+        public function packingType() { return $this->_m_packingType; }
+
+        /**
+         * Number of rows in pattern (1..256)
+         */
+        public function numRowsRaw() { return $this->_m_numRowsRaw; }
+
+        /**
+         * Packed pattern data size
+         */
+        public function lenPackedPattern() { return $this->_m_lenPackedPattern; }
+    }
+}
+
+namespace FasttrackerXmModule {
+    class Preheader extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\FasttrackerXmModule $_parent = null, ?\FasttrackerXmModule $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_signature0 = $this->_io->readBytes(17);
+            if (!($this->_m_signature0 == "\x45\x78\x74\x65\x6E\x64\x65\x64\x20\x4D\x6F\x64\x75\x6C\x65\x3A\x20")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x45\x78\x74\x65\x6E\x64\x65\x64\x20\x4D\x6F\x64\x75\x6C\x65\x3A\x20", $this->_m_signature0, $this->_io, "/types/preheader/seq/0");
+            }
+            $this->_m_moduleName = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($this->_io->readBytes(20), 0, false), "UTF-8");
+            $this->_m_signature1 = $this->_io->readBytes(1);
+            if (!($this->_m_signature1 == "\x1A")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x1A", $this->_m_signature1, $this->_io, "/types/preheader/seq/2");
+            }
+            $this->_m_trackerName = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($this->_io->readBytes(20), 0, false), "UTF-8");
+            $this->_m_versionNumber = new \FasttrackerXmModule\Preheader\Version($this->_io, $this, $this->_root);
+            $this->_m_headerSize = $this->_io->readU4le();
+        }
+        protected $_m_signature0;
+        protected $_m_moduleName;
+        protected $_m_signature1;
+        protected $_m_trackerName;
+        protected $_m_versionNumber;
+        protected $_m_headerSize;
+        public function signature0() { return $this->_m_signature0; }
+
+        /**
+         * Module name, padded with zeroes
+         */
+        public function moduleName() { return $this->_m_moduleName; }
+        public function signature1() { return $this->_m_signature1; }
+
+        /**
+         * Tracker name
+         */
+        public function trackerName() { return $this->_m_trackerName; }
+
+        /**
+         * Format versions below [0x01, 0x04] have a LOT of differences. Check this field!
+         */
+        public function versionNumber() { return $this->_m_versionNumber; }
+
+        /**
+         * Header size << Calculated FROM THIS OFFSET, not from the beginning of the file! >>
+         */
+        public function headerSize() { return $this->_m_headerSize; }
+    }
+}
+
+namespace FasttrackerXmModule\Preheader {
+    class Version extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\FasttrackerXmModule\Preheader $_parent = null, ?\FasttrackerXmModule $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_minor = $this->_io->readU1();
+            $this->_m_major = $this->_io->readU1();
+        }
+        protected $_m_value;
+        public function value() {
+            if ($this->_m_value !== null)
+                return $this->_m_value;
+            $this->_m_value = $this->major() << 8 | $this->minor();
+            return $this->_m_value;
+        }
+        protected $_m_minor;
+        protected $_m_major;
+
+        /**
+         * currently 0x04
+         */
+        public function minor() { return $this->_m_minor; }
+
+        /**
+         * currently 0x01
+         */
+        public function major() { return $this->_m_major; }
     }
 }

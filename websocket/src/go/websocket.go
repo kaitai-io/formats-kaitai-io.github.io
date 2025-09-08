@@ -28,19 +28,28 @@ const (
 	Websocket_Opcode__ReservedControlE Websocket_Opcode = 14
 	Websocket_Opcode__ReservedControlF Websocket_Opcode = 15
 )
+var values_Websocket_Opcode = map[Websocket_Opcode]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}, 10: {}, 11: {}, 12: {}, 13: {}, 14: {}, 15: {}}
+func (v Websocket_Opcode) isDefined() bool {
+	_, ok := values_Websocket_Opcode[v]
+	return ok
+}
 type Websocket struct {
 	InitialFrame *Websocket_InitialFrame
 	TrailingFrames []*Websocket_Dataframe
 	_io *kaitai.Stream
 	_root *Websocket
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewWebsocket() *Websocket {
 	return &Websocket{
 	}
 }
 
-func (this *Websocket) Read(io *kaitai.Stream, parent interface{}, root *Websocket) (err error) {
+func (this Websocket) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Websocket) Read(io *kaitai.Stream, parent kaitai.Struct, root *Websocket) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -67,6 +76,60 @@ func (this *Websocket) Read(io *kaitai.Stream, parent interface{}, root *Websock
 	}
 	return err
 }
+type Websocket_Dataframe struct {
+	Header *Websocket_FrameHeader
+	PayloadBytes []byte
+	PayloadText string
+	_io *kaitai.Stream
+	_root *Websocket
+	_parent *Websocket
+}
+func NewWebsocket_Dataframe() *Websocket_Dataframe {
+	return &Websocket_Dataframe{
+	}
+}
+
+func (this Websocket_Dataframe) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Websocket_Dataframe) Read(io *kaitai.Stream, parent *Websocket, root *Websocket) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp3 := NewWebsocket_FrameHeader()
+	err = tmp3.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Header = tmp3
+	if (this._root.InitialFrame.Header.Opcode != Websocket_Opcode__Text) {
+		tmp4, err := this.Header.LenPayload()
+		if err != nil {
+			return err
+		}
+		tmp5, err := this._io.ReadBytes(int(tmp4))
+		if err != nil {
+			return err
+		}
+		tmp5 = tmp5
+		this.PayloadBytes = tmp5
+	}
+	if (this._root.InitialFrame.Header.Opcode == Websocket_Opcode__Text) {
+		tmp6, err := this.Header.LenPayload()
+		if err != nil {
+			return err
+		}
+		tmp7, err := this._io.ReadBytes(int(tmp6))
+		if err != nil {
+			return err
+		}
+		tmp7 = tmp7
+		this.PayloadText = string(tmp7)
+	}
+	return err
+}
 type Websocket_FrameHeader struct {
 	Finished bool
 	Reserved uint64
@@ -78,7 +141,7 @@ type Websocket_FrameHeader struct {
 	MaskKey uint32
 	_io *kaitai.Stream
 	_root *Websocket
-	_parent interface{}
+	_parent kaitai.Struct
 	_f_lenPayload bool
 	lenPayload int
 }
@@ -87,57 +150,61 @@ func NewWebsocket_FrameHeader() *Websocket_FrameHeader {
 	}
 }
 
-func (this *Websocket_FrameHeader) Read(io *kaitai.Stream, parent interface{}, root *Websocket) (err error) {
+func (this Websocket_FrameHeader) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Websocket_FrameHeader) Read(io *kaitai.Stream, parent kaitai.Struct, root *Websocket) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp3, err := this._io.ReadBitsIntBe(1)
+	tmp8, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Finished = tmp3 != 0
-	tmp4, err := this._io.ReadBitsIntBe(3)
+	this.Finished = tmp8 != 0
+	tmp9, err := this._io.ReadBitsIntBe(3)
 	if err != nil {
 		return err
 	}
-	this.Reserved = tmp4
-	tmp5, err := this._io.ReadBitsIntBe(4)
+	this.Reserved = tmp9
+	tmp10, err := this._io.ReadBitsIntBe(4)
 	if err != nil {
 		return err
 	}
-	this.Opcode = Websocket_Opcode(tmp5)
-	tmp6, err := this._io.ReadBitsIntBe(1)
+	this.Opcode = Websocket_Opcode(tmp10)
+	tmp11, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.IsMasked = tmp6 != 0
-	tmp7, err := this._io.ReadBitsIntBe(7)
+	this.IsMasked = tmp11 != 0
+	tmp12, err := this._io.ReadBitsIntBe(7)
 	if err != nil {
 		return err
 	}
-	this.LenPayloadPrimary = tmp7
+	this.LenPayloadPrimary = tmp12
 	this._io.AlignToByte()
 	if (this.LenPayloadPrimary == 126) {
-		tmp8, err := this._io.ReadU2be()
+		tmp13, err := this._io.ReadU2be()
 		if err != nil {
 			return err
 		}
-		this.LenPayloadExtended1 = uint16(tmp8)
+		this.LenPayloadExtended1 = uint16(tmp13)
 	}
 	if (this.LenPayloadPrimary == 127) {
-		tmp9, err := this._io.ReadU4be()
+		tmp14, err := this._io.ReadU4be()
 		if err != nil {
 			return err
 		}
-		this.LenPayloadExtended2 = uint32(tmp9)
+		this.LenPayloadExtended2 = uint32(tmp14)
 	}
 	if (this.IsMasked) {
-		tmp10, err := this._io.ReadU4be()
+		tmp15, err := this._io.ReadU4be()
 		if err != nil {
 			return err
 		}
-		this.MaskKey = uint32(tmp10)
+		this.MaskKey = uint32(tmp15)
 	}
 	return err
 }
@@ -145,20 +212,20 @@ func (this *Websocket_FrameHeader) LenPayload() (v int, err error) {
 	if (this._f_lenPayload) {
 		return this.lenPayload, nil
 	}
-	var tmp11 uint64;
-	if (this.LenPayloadPrimary <= 125) {
-		tmp11 = this.LenPayloadPrimary
-	} else {
-		var tmp12 uint16;
-		if (this.LenPayloadPrimary == 126) {
-			tmp12 = this.LenPayloadExtended1
-		} else {
-			tmp12 = this.LenPayloadExtended2
-		}
-		tmp11 = tmp12
-	}
-	this.lenPayload = int(tmp11)
 	this._f_lenPayload = true
+	var tmp16 uint64;
+	if (this.LenPayloadPrimary <= 125) {
+		tmp16 = this.LenPayloadPrimary
+	} else {
+		var tmp17 uint16;
+		if (this.LenPayloadPrimary == 126) {
+			tmp17 = this.LenPayloadExtended1
+		} else {
+			tmp17 = this.LenPayloadExtended2
+		}
+		tmp16 = tmp17
+	}
+	this.lenPayload = int(tmp16)
 	return this.lenPayload, nil
 }
 type Websocket_InitialFrame struct {
@@ -174,57 +241,11 @@ func NewWebsocket_InitialFrame() *Websocket_InitialFrame {
 	}
 }
 
+func (this Websocket_InitialFrame) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Websocket_InitialFrame) Read(io *kaitai.Stream, parent *Websocket, root *Websocket) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp13 := NewWebsocket_FrameHeader()
-	err = tmp13.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Header = tmp13
-	if (this.Header.Opcode != Websocket_Opcode__Text) {
-		tmp14, err := this.Header.LenPayload()
-		if err != nil {
-			return err
-		}
-		tmp15, err := this._io.ReadBytes(int(tmp14))
-		if err != nil {
-			return err
-		}
-		tmp15 = tmp15
-		this.PayloadBytes = tmp15
-	}
-	if (this.Header.Opcode == Websocket_Opcode__Text) {
-		tmp16, err := this.Header.LenPayload()
-		if err != nil {
-			return err
-		}
-		tmp17, err := this._io.ReadBytes(int(tmp16))
-		if err != nil {
-			return err
-		}
-		tmp17 = tmp17
-		this.PayloadText = string(tmp17)
-	}
-	return err
-}
-type Websocket_Dataframe struct {
-	Header *Websocket_FrameHeader
-	PayloadBytes []byte
-	PayloadText string
-	_io *kaitai.Stream
-	_root *Websocket
-	_parent *Websocket
-}
-func NewWebsocket_Dataframe() *Websocket_Dataframe {
-	return &Websocket_Dataframe{
-	}
-}
-
-func (this *Websocket_Dataframe) Read(io *kaitai.Stream, parent *Websocket, root *Websocket) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -235,7 +256,7 @@ func (this *Websocket_Dataframe) Read(io *kaitai.Stream, parent *Websocket, root
 		return err
 	}
 	this.Header = tmp18
-	if (this._root.InitialFrame.Header.Opcode != Websocket_Opcode__Text) {
+	if (this.Header.Opcode != Websocket_Opcode__Text) {
 		tmp19, err := this.Header.LenPayload()
 		if err != nil {
 			return err
@@ -247,7 +268,7 @@ func (this *Websocket_Dataframe) Read(io *kaitai.Stream, parent *Websocket, root
 		tmp20 = tmp20
 		this.PayloadBytes = tmp20
 	}
-	if (this._root.InitialFrame.Header.Opcode == Websocket_Opcode__Text) {
+	if (this.Header.Opcode == Websocket_Opcode__Text) {
 		tmp21, err := this.Header.LenPayload()
 		if err != nil {
 			return err

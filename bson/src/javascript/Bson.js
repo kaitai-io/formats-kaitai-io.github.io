@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.Bson = factory(root.KaitaiStream);
+    factory(root.Bson || (root.Bson = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Bson_, KaitaiStream) {
 /**
  * BSON, short for Binary JSON, is a binary-encoded serialization of JSON-like documents. Like JSON, BSON supports the embedding of documents and arrays within other documents and arrays. BSON also contains extensions that allow representation of data types that are not part of the JSON spec. For example, BSON has a Date type and a BinData type. BSON can be compared to binary interchange formats, like Protocol Buffers. BSON is more "schemaless" than Protocol Buffers, which can give it an advantage in flexibility but also a slight disadvantage in space efficiency (BSON has overhead for field names within the serialized data). BSON was designed to have the following three characteristics:
  *   * Lightweight. Keeping spatial overhead to a minimum is important for any data representation format, especially when used over the network.
@@ -26,34 +26,14 @@ var Bson = (function() {
   }
   Bson.prototype._read = function() {
     this.len = this._io.readS4le();
-    this._raw_fields = this._io.readBytes((this.len - 5));
+    this._raw_fields = this._io.readBytes(this.len - 5);
     var _io__raw_fields = new KaitaiStream(this._raw_fields);
     this.fields = new ElementsList(_io__raw_fields, this, this._root);
     this.terminator = this._io.readBytes(1);
-    if (!((KaitaiStream.byteArrayCompare(this.terminator, [0]) == 0))) {
-      throw new KaitaiStream.ValidationNotEqualError([0], this.terminator, this._io, "/seq/2");
+    if (!((KaitaiStream.byteArrayCompare(this.terminator, new Uint8Array([0])) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([0]), this.terminator, this._io, "/seq/2");
     }
   }
-
-  /**
-   * Special internal type used by MongoDB replication and sharding. First 4 bytes are an increment, second 4 are a timestamp.
-   */
-
-  var Timestamp = Bson.Timestamp = (function() {
-    function Timestamp(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Timestamp.prototype._read = function() {
-      this.increment = this._io.readU4le();
-      this.timestamp = this._io.readU4le();
-    }
-
-    return Timestamp;
-  })();
 
   /**
    * The BSON "binary" or "BinData" datatype is used to represent arrays of bytes. It is somewhat analogous to the Java notion of a ByteArray. BSON binary values have a subtype. This is used to indicate what kind of data is in the byte array. Subtypes from zero to 127 are predefined or reserved. Subtypes from 128-255 are user-defined.
@@ -81,7 +61,7 @@ var Bson = (function() {
     function BinData(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -108,7 +88,7 @@ var Bson = (function() {
       function ByteArrayDeprecated(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -123,31 +103,32 @@ var Bson = (function() {
     return BinData;
   })();
 
-  var ElementsList = Bson.ElementsList = (function() {
-    function ElementsList(_io, _parent, _root) {
+  var CodeWithScope = Bson.CodeWithScope = (function() {
+    function CodeWithScope(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    ElementsList.prototype._read = function() {
-      this.elements = [];
-      var i = 0;
-      while (!this._io.isEof()) {
-        this.elements.push(new Element(this._io, this, this._root));
-        i++;
-      }
+    CodeWithScope.prototype._read = function() {
+      this.id = this._io.readS4le();
+      this.source = new String(this._io, this, this._root);
+      this.scope = new Bson(this._io, this, this._root);
     }
 
-    return ElementsList;
+    /**
+     * mapping from identifiers to values, representing the scope in which the string should be evaluated.
+     */
+
+    return CodeWithScope;
   })();
 
   var Cstring = Bson.Cstring = (function() {
     function Cstring(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -162,24 +143,20 @@ var Bson = (function() {
     return Cstring;
   })();
 
-  var String = Bson.String = (function() {
-    function String(_io, _parent, _root) {
+  var DbPointer = Bson.DbPointer = (function() {
+    function DbPointer(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    String.prototype._read = function() {
-      this.len = this._io.readS4le();
-      this.str = KaitaiStream.bytesToStr(this._io.readBytes((this.len - 1)), "UTF-8");
-      this.terminator = this._io.readBytes(1);
-      if (!((KaitaiStream.byteArrayCompare(this.terminator, [0]) == 0))) {
-        throw new KaitaiStream.ValidationNotEqualError([0], this.terminator, this._io, "/types/string/seq/2");
-      }
+    DbPointer.prototype._read = function() {
+      this.namespace = new String(this._io, this, this._root);
+      this.id = new ObjectId(this._io, this, this._root);
     }
 
-    return String;
+    return DbPointer;
   })();
 
   var Element = Bson.Element = (function() {
@@ -234,7 +211,7 @@ var Bson = (function() {
     function Element(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -242,14 +219,47 @@ var Bson = (function() {
       this.typeByte = this._io.readU1();
       this.name = new Cstring(this._io, this, this._root);
       switch (this.typeByte) {
+      case Bson.Element.BsonType.ARRAY:
+        this.content = new Bson(this._io, this, this._root);
+        break;
+      case Bson.Element.BsonType.BIN_DATA:
+        this.content = new BinData(this._io, this, this._root);
+        break;
+      case Bson.Element.BsonType.BOOLEAN:
+        this.content = this._io.readU1();
+        break;
       case Bson.Element.BsonType.CODE_WITH_SCOPE:
         this.content = new CodeWithScope(this._io, this, this._root);
+        break;
+      case Bson.Element.BsonType.DB_POINTER:
+        this.content = new DbPointer(this._io, this, this._root);
+        break;
+      case Bson.Element.BsonType.DOCUMENT:
+        this.content = new Bson(this._io, this, this._root);
+        break;
+      case Bson.Element.BsonType.JAVASCRIPT:
+        this.content = new String(this._io, this, this._root);
+        break;
+      case Bson.Element.BsonType.NUMBER_DECIMAL:
+        this.content = new F16(this._io, this, this._root);
+        break;
+      case Bson.Element.BsonType.NUMBER_DOUBLE:
+        this.content = this._io.readF8le();
+        break;
+      case Bson.Element.BsonType.NUMBER_INT:
+        this.content = this._io.readS4le();
+        break;
+      case Bson.Element.BsonType.NUMBER_LONG:
+        this.content = this._io.readS8le();
+        break;
+      case Bson.Element.BsonType.OBJECT_ID:
+        this.content = new ObjectId(this._io, this, this._root);
         break;
       case Bson.Element.BsonType.REG_EX:
         this.content = new RegEx(this._io, this, this._root);
         break;
-      case Bson.Element.BsonType.NUMBER_DOUBLE:
-        this.content = this._io.readF8le();
+      case Bson.Element.BsonType.STRING:
+        this.content = new String(this._io, this, this._root);
         break;
       case Bson.Element.BsonType.SYMBOL:
         this.content = new String(this._io, this, this._root);
@@ -257,41 +267,8 @@ var Bson = (function() {
       case Bson.Element.BsonType.TIMESTAMP:
         this.content = new Timestamp(this._io, this, this._root);
         break;
-      case Bson.Element.BsonType.NUMBER_INT:
-        this.content = this._io.readS4le();
-        break;
-      case Bson.Element.BsonType.DOCUMENT:
-        this.content = new Bson(this._io, this, null);
-        break;
-      case Bson.Element.BsonType.OBJECT_ID:
-        this.content = new ObjectId(this._io, this, this._root);
-        break;
-      case Bson.Element.BsonType.JAVASCRIPT:
-        this.content = new String(this._io, this, this._root);
-        break;
       case Bson.Element.BsonType.UTC_DATETIME:
         this.content = this._io.readS8le();
-        break;
-      case Bson.Element.BsonType.BOOLEAN:
-        this.content = this._io.readU1();
-        break;
-      case Bson.Element.BsonType.NUMBER_LONG:
-        this.content = this._io.readS8le();
-        break;
-      case Bson.Element.BsonType.BIN_DATA:
-        this.content = new BinData(this._io, this, this._root);
-        break;
-      case Bson.Element.BsonType.STRING:
-        this.content = new String(this._io, this, this._root);
-        break;
-      case Bson.Element.BsonType.DB_POINTER:
-        this.content = new DbPointer(this._io, this, this._root);
-        break;
-      case Bson.Element.BsonType.ARRAY:
-        this.content = new Bson(this._io, this, null);
-        break;
-      case Bson.Element.BsonType.NUMBER_DECIMAL:
-        this.content = new F16(this._io, this, this._root);
         break;
       }
     }
@@ -299,70 +276,24 @@ var Bson = (function() {
     return Element;
   })();
 
-  var DbPointer = Bson.DbPointer = (function() {
-    function DbPointer(_io, _parent, _root) {
+  var ElementsList = Bson.ElementsList = (function() {
+    function ElementsList(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    DbPointer.prototype._read = function() {
-      this.namespace = new String(this._io, this, this._root);
-      this.id = new ObjectId(this._io, this, this._root);
-    }
-
-    return DbPointer;
-  })();
-
-  /**
-   * Implements unsigned 24-bit (3 byte) integer.
-   */
-
-  var U3 = Bson.U3 = (function() {
-    function U3(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    U3.prototype._read = function() {
-      this.b1 = this._io.readU1();
-      this.b2 = this._io.readU1();
-      this.b3 = this._io.readU1();
-    }
-    Object.defineProperty(U3.prototype, 'value', {
-      get: function() {
-        if (this._m_value !== undefined)
-          return this._m_value;
-        this._m_value = ((this.b1 | (this.b2 << 8)) | (this.b3 << 16));
-        return this._m_value;
+    ElementsList.prototype._read = function() {
+      this.elements = [];
+      var i = 0;
+      while (!this._io.isEof()) {
+        this.elements.push(new Element(this._io, this, this._root));
+        i++;
       }
-    });
-
-    return U3;
-  })();
-
-  var CodeWithScope = Bson.CodeWithScope = (function() {
-    function CodeWithScope(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    CodeWithScope.prototype._read = function() {
-      this.id = this._io.readS4le();
-      this.source = new String(this._io, this, this._root);
-      this.scope = new Bson(this._io, this, null);
     }
 
-    /**
-     * mapping from identifiers to values, representing the scope in which the string should be evaluated.
-     */
-
-    return CodeWithScope;
+    return ElementsList;
   })();
 
   /**
@@ -373,7 +304,7 @@ var Bson = (function() {
     function F16(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -396,7 +327,7 @@ var Bson = (function() {
     function ObjectId(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -422,7 +353,7 @@ var Bson = (function() {
     function RegEx(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -434,11 +365,80 @@ var Bson = (function() {
     return RegEx;
   })();
 
+  var String = Bson.String = (function() {
+    function String(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    String.prototype._read = function() {
+      this.len = this._io.readS4le();
+      this.str = KaitaiStream.bytesToStr(this._io.readBytes(this.len - 1), "UTF-8");
+      this.terminator = this._io.readBytes(1);
+      if (!((KaitaiStream.byteArrayCompare(this.terminator, new Uint8Array([0])) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError(new Uint8Array([0]), this.terminator, this._io, "/types/string/seq/2");
+      }
+    }
+
+    return String;
+  })();
+
+  /**
+   * Special internal type used by MongoDB replication and sharding. First 4 bytes are an increment, second 4 are a timestamp.
+   */
+
+  var Timestamp = Bson.Timestamp = (function() {
+    function Timestamp(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Timestamp.prototype._read = function() {
+      this.increment = this._io.readU4le();
+      this.timestamp = this._io.readU4le();
+    }
+
+    return Timestamp;
+  })();
+
+  /**
+   * Implements unsigned 24-bit (3 byte) integer.
+   */
+
+  var U3 = Bson.U3 = (function() {
+    function U3(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    U3.prototype._read = function() {
+      this.b1 = this._io.readU1();
+      this.b2 = this._io.readU1();
+      this.b3 = this._io.readU1();
+    }
+    Object.defineProperty(U3.prototype, 'value', {
+      get: function() {
+        if (this._m_value !== undefined)
+          return this._m_value;
+        this._m_value = (this.b1 | this.b2 << 8) | this.b3 << 16;
+        return this._m_value;
+      }
+    });
+
+    return U3;
+  })();
+
   /**
    * Total number of bytes comprising the document.
    */
 
   return Bson;
 })();
-return Bson;
-}));
+Bson_.Bson = Bson;
+});

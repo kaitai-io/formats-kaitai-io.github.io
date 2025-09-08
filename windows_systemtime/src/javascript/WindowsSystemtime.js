@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.WindowsSystemtime = factory(root.KaitaiStream);
+    factory(root.WindowsSystemtime || (root.WindowsSystemtime = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (WindowsSystemtime_, KaitaiStream) {
 /**
  * Microsoft Windows SYSTEMTIME structure, stores individual components
  * of date and time as individual fields, up to millisecond precision.
@@ -68,5 +68,5 @@ var WindowsSystemtime = (function() {
 
   return WindowsSystemtime;
 })();
-return WindowsSystemtime;
-}));
+WindowsSystemtime_.WindowsSystemtime = WindowsSystemtime;
+});

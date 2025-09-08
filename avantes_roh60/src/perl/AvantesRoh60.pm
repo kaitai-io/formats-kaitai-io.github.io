@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 
 ########################################################################
 package AvantesRoh60;
@@ -24,7 +24,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -40,20 +40,20 @@ sub _read {
     $self->{wlx2} = $self->{_io}->read_f4le();
     $self->{wlx3} = $self->{_io}->read_f4le();
     $self->{wlx4} = $self->{_io}->read_f4le();
-    $self->{unknown2} = ();
+    $self->{unknown2} = [];
     my $n_unknown2 = 9;
     for (my $i = 0; $i < $n_unknown2; $i++) {
         push @{$self->{unknown2}}, $self->{_io}->read_f4le();
     }
     $self->{ipixfirst} = $self->{_io}->read_f4le();
     $self->{ipixlast} = $self->{_io}->read_f4le();
-    $self->{unknown3} = ();
+    $self->{unknown3} = [];
     my $n_unknown3 = 4;
     for (my $i = 0; $i < $n_unknown3; $i++) {
         push @{$self->{unknown3}}, $self->{_io}->read_f4le();
     }
-    $self->{spectrum} = ();
-    my $n_spectrum = ((int($self->ipixlast()) - int($self->ipixfirst())) - 1);
+    $self->{spectrum} = [];
+    my $n_spectrum = (int($self->ipixlast()) - int($self->ipixfirst())) - 1;
     for (my $i = 0; $i < $n_spectrum; $i++) {
         push @{$self->{spectrum}}, $self->{_io}->read_f4le();
     }

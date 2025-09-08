@@ -37,16 +37,44 @@ namespace Kaitai
         {
             m_parent = p__parent;
             m_root = p__root ?? this;
-            f_lenBody = false;
             f_body = false;
+            f_lenBody = false;
             _read();
         }
         private void _read()
         {
             _lenHeader = m_io.ReadU4be();
-            __raw_header = m_io.ReadBytes((LenHeader - 4));
+            __raw_header = m_io.ReadBytes(LenHeader - 4);
             var io___raw_header = new KaitaiStream(__raw_header);
             _header = new Header(io___raw_header, this, m_root);
+        }
+        public partial class Bitmap : KaitaiStruct
+        {
+            public static Bitmap FromFile(string fileName)
+            {
+                return new Bitmap(new KaitaiStream(fileName));
+            }
+
+            public Bitmap(KaitaiStream p__io, KaitaiStruct p__parent = null, GimpBrush p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _rows = new List<Row>();
+                for (var i = 0; i < M_Root.Header.Height; i++)
+                {
+                    _rows.Add(new Row(m_io, this, m_root));
+                }
+            }
+            private List<Row> _rows;
+            private GimpBrush m_root;
+            private KaitaiStruct m_parent;
+            public List<Row> Rows { get { return _rows; } }
+            public GimpBrush M_Root { get { return m_root; } }
+            public KaitaiStruct M_Parent { get { return m_parent; } }
         }
         public partial class Header : KaitaiStruct
         {
@@ -64,33 +92,33 @@ namespace Kaitai
             private void _read()
             {
                 _version = m_io.ReadU4be();
-                if (!(Version == 2))
+                if (!(_version == 2))
                 {
-                    throw new ValidationNotEqualError(2, Version, M_Io, "/types/header/seq/0");
+                    throw new ValidationNotEqualError(2, _version, m_io, "/types/header/seq/0");
                 }
                 _width = m_io.ReadU4be();
-                if (!(Width >= 1))
+                if (!(_width >= 1))
                 {
-                    throw new ValidationLessThanError(1, Width, M_Io, "/types/header/seq/1");
+                    throw new ValidationLessThanError(1, _width, m_io, "/types/header/seq/1");
                 }
-                if (!(Width <= 10000))
+                if (!(_width <= 10000))
                 {
-                    throw new ValidationGreaterThanError(10000, Width, M_Io, "/types/header/seq/1");
+                    throw new ValidationGreaterThanError(10000, _width, m_io, "/types/header/seq/1");
                 }
                 _height = m_io.ReadU4be();
-                if (!(Height >= 1))
+                if (!(_height >= 1))
                 {
-                    throw new ValidationLessThanError(1, Height, M_Io, "/types/header/seq/2");
+                    throw new ValidationLessThanError(1, _height, m_io, "/types/header/seq/2");
                 }
-                if (!(Height <= 10000))
+                if (!(_height <= 10000))
                 {
-                    throw new ValidationGreaterThanError(10000, Height, M_Io, "/types/header/seq/2");
+                    throw new ValidationGreaterThanError(10000, _height, m_io, "/types/header/seq/2");
                 }
                 _bytesPerPixel = ((GimpBrush.ColorDepth) m_io.ReadU4be());
                 _magic = m_io.ReadBytes(4);
-                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 71, 73, 77, 80 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 71, 73, 77, 80 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 71, 73, 77, 80 }, Magic, M_Io, "/types/header/seq/4");
+                    throw new ValidationNotEqualError(new byte[] { 71, 73, 77, 80 }, _magic, m_io, "/types/header/seq/4");
                 }
                 _spacing = m_io.ReadU4be();
                 _brushName = System.Text.Encoding.GetEncoding("UTF-8").GetString(KaitaiStream.BytesTerminate(m_io.ReadBytesFull(), 0, false));
@@ -132,34 +160,6 @@ namespace Kaitai
             public GimpBrush M_Root { get { return m_root; } }
             public GimpBrush M_Parent { get { return m_parent; } }
         }
-        public partial class Bitmap : KaitaiStruct
-        {
-            public static Bitmap FromFile(string fileName)
-            {
-                return new Bitmap(new KaitaiStream(fileName));
-            }
-
-            public Bitmap(KaitaiStream p__io, KaitaiStruct p__parent = null, GimpBrush p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _rows = new List<Row>();
-                for (var i = 0; i < M_Root.Header.Height; i++)
-                {
-                    _rows.Add(new Row(m_io, this, m_root));
-                }
-            }
-            private List<Row> _rows;
-            private GimpBrush m_root;
-            private KaitaiStruct m_parent;
-            public List<Row> Rows { get { return _rows; } }
-            public GimpBrush M_Root { get { return m_root; } }
-            public KaitaiStruct M_Parent { get { return m_parent; } }
-        }
         public partial class Row : KaitaiStruct
         {
             public static Row FromFile(string fileName)
@@ -167,7 +167,7 @@ namespace Kaitai
                 return new Row(new KaitaiStream(fileName));
             }
 
-            public Row(KaitaiStream p__io, KaitaiStruct p__parent = null, GimpBrush p__root = null) : base(p__io)
+            public Row(KaitaiStream p__io, GimpBrush.Bitmap p__parent = null, GimpBrush p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -197,44 +197,31 @@ namespace Kaitai
                     return new PixelGray(new KaitaiStream(fileName));
                 }
 
-                public PixelGray(KaitaiStream p__io, KaitaiStruct p__parent = null, GimpBrush p__root = null) : base(p__io)
+                public PixelGray(KaitaiStream p__io, GimpBrush.Row p__parent = null, GimpBrush p__root = null) : base(p__io)
                 {
                     m_parent = p__parent;
                     m_root = p__root;
-                    f_red = false;
-                    f_green = false;
-                    f_blue = false;
                     f_alpha = false;
+                    f_blue = false;
+                    f_green = false;
+                    f_red = false;
                     _read();
                 }
                 private void _read()
                 {
                     _gray = m_io.ReadU1();
                 }
-                private bool f_red;
-                private sbyte _red;
-                public sbyte Red
+                private bool f_alpha;
+                private byte _alpha;
+                public byte Alpha
                 {
                     get
                     {
-                        if (f_red)
-                            return _red;
-                        _red = (sbyte) (0);
-                        f_red = true;
-                        return _red;
-                    }
-                }
-                private bool f_green;
-                private sbyte _green;
-                public sbyte Green
-                {
-                    get
-                    {
-                        if (f_green)
-                            return _green;
-                        _green = (sbyte) (0);
-                        f_green = true;
-                        return _green;
+                        if (f_alpha)
+                            return _alpha;
+                        f_alpha = true;
+                        _alpha = (byte) (Gray);
+                        return _alpha;
                     }
                 }
                 private bool f_blue;
@@ -245,30 +232,43 @@ namespace Kaitai
                     {
                         if (f_blue)
                             return _blue;
-                        _blue = (sbyte) (0);
                         f_blue = true;
+                        _blue = (sbyte) (0);
                         return _blue;
                     }
                 }
-                private bool f_alpha;
-                private byte _alpha;
-                public byte Alpha
+                private bool f_green;
+                private sbyte _green;
+                public sbyte Green
                 {
                     get
                     {
-                        if (f_alpha)
-                            return _alpha;
-                        _alpha = (byte) (Gray);
-                        f_alpha = true;
-                        return _alpha;
+                        if (f_green)
+                            return _green;
+                        f_green = true;
+                        _green = (sbyte) (0);
+                        return _green;
+                    }
+                }
+                private bool f_red;
+                private sbyte _red;
+                public sbyte Red
+                {
+                    get
+                    {
+                        if (f_red)
+                            return _red;
+                        f_red = true;
+                        _red = (sbyte) (0);
+                        return _red;
                     }
                 }
                 private byte _gray;
                 private GimpBrush m_root;
-                private KaitaiStruct m_parent;
+                private GimpBrush.Row m_parent;
                 public byte Gray { get { return _gray; } }
                 public GimpBrush M_Root { get { return m_root; } }
-                public KaitaiStruct M_Parent { get { return m_parent; } }
+                public GimpBrush.Row M_Parent { get { return m_parent; } }
             }
             public partial class PixelRgba : KaitaiStruct
             {
@@ -277,7 +277,7 @@ namespace Kaitai
                     return new PixelRgba(new KaitaiStream(fileName));
                 }
 
-                public PixelRgba(KaitaiStream p__io, KaitaiStruct p__parent = null, GimpBrush p__root = null) : base(p__io)
+                public PixelRgba(KaitaiStream p__io, GimpBrush.Row p__parent = null, GimpBrush p__root = null) : base(p__io)
                 {
                     m_parent = p__parent;
                     m_root = p__root;
@@ -295,33 +295,20 @@ namespace Kaitai
                 private byte _blue;
                 private byte _alpha;
                 private GimpBrush m_root;
-                private KaitaiStruct m_parent;
+                private GimpBrush.Row m_parent;
                 public byte Red { get { return _red; } }
                 public byte Green { get { return _green; } }
                 public byte Blue { get { return _blue; } }
                 public byte Alpha { get { return _alpha; } }
                 public GimpBrush M_Root { get { return m_root; } }
-                public KaitaiStruct M_Parent { get { return m_parent; } }
+                public GimpBrush.Row M_Parent { get { return m_parent; } }
             }
             private List<KaitaiStruct> _pixels;
             private GimpBrush m_root;
-            private KaitaiStruct m_parent;
+            private GimpBrush.Bitmap m_parent;
             public List<KaitaiStruct> Pixels { get { return _pixels; } }
             public GimpBrush M_Root { get { return m_root; } }
-            public KaitaiStruct M_Parent { get { return m_parent; } }
-        }
-        private bool f_lenBody;
-        private int _lenBody;
-        public int LenBody
-        {
-            get
-            {
-                if (f_lenBody)
-                    return _lenBody;
-                _lenBody = (int) (((Header.Width * Header.Height) * Header.BytesPerPixel));
-                f_lenBody = true;
-                return _lenBody;
-            }
+            public GimpBrush.Bitmap M_Parent { get { return m_parent; } }
         }
         private bool f_body;
         private byte[] _body;
@@ -331,12 +318,25 @@ namespace Kaitai
             {
                 if (f_body)
                     return _body;
+                f_body = true;
                 long _pos = m_io.Pos;
                 m_io.Seek(LenHeader);
                 _body = m_io.ReadBytes(LenBody);
                 m_io.Seek(_pos);
-                f_body = true;
                 return _body;
+            }
+        }
+        private bool f_lenBody;
+        private int _lenBody;
+        public int LenBody
+        {
+            get
+            {
+                if (f_lenBody)
+                    return _lenBody;
+                f_lenBody = true;
+                _lenBody = (int) ((Header.Width * Header.Height) * ((int) Header.BytesPerPixel));
+                return _lenBody;
             }
         }
         private uint _lenHeader;

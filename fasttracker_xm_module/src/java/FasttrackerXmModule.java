@@ -5,10 +5,11 @@ import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.nio.charset.Charset;
+import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 
 /**
@@ -44,9 +45,8 @@ public class FasttrackerXmModule extends KaitaiStruct {
     }
     private void _read() {
         this.preheader = new Preheader(this._io, this, _root);
-        this._raw_header = this._io.readBytes((preheader().headerSize() - 4));
-        KaitaiStream _io__raw_header = new ByteBufferKaitaiStream(_raw_header);
-        this.header = new Header(_io__raw_header, this, _root);
+        KaitaiStream _io_header = this._io.substream(preheader().headerSize() - 4);
+        this.header = new Header(_io_header, this, _root);
         this.patterns = new ArrayList<Pattern>();
         for (int i = 0; i < header().numPatterns(); i++) {
             this.patterns.add(new Pattern(this._io, this, _root));
@@ -56,255 +56,16 @@ public class FasttrackerXmModule extends KaitaiStruct {
             this.instruments.add(new Instrument(this._io, this, _root));
         }
     }
-    public static class Preheader extends KaitaiStruct {
-        public static Preheader fromFile(String fileName) throws IOException {
-            return new Preheader(new ByteBufferKaitaiStream(fileName));
+
+    public void _fetchInstances() {
+        this.preheader._fetchInstances();
+        this.header._fetchInstances();
+        for (int i = 0; i < this.patterns.size(); i++) {
+            this.patterns.get(((Number) (i)).intValue())._fetchInstances();
         }
-
-        public Preheader(KaitaiStream _io) {
-            this(_io, null, null);
+        for (int i = 0; i < this.instruments.size(); i++) {
+            this.instruments.get(((Number) (i)).intValue())._fetchInstances();
         }
-
-        public Preheader(KaitaiStream _io, FasttrackerXmModule _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Preheader(KaitaiStream _io, FasttrackerXmModule _parent, FasttrackerXmModule _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.signature0 = this._io.readBytes(17);
-            if (!(Arrays.equals(signature0(), new byte[] { 69, 120, 116, 101, 110, 100, 101, 100, 32, 77, 111, 100, 117, 108, 101, 58, 32 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 69, 120, 116, 101, 110, 100, 101, 100, 32, 77, 111, 100, 117, 108, 101, 58, 32 }, signature0(), _io(), "/types/preheader/seq/0");
-            }
-            this.moduleName = new String(KaitaiStream.bytesTerminate(this._io.readBytes(20), (byte) 0, false), Charset.forName("utf-8"));
-            this.signature1 = this._io.readBytes(1);
-            if (!(Arrays.equals(signature1(), new byte[] { 26 }))) {
-                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 26 }, signature1(), _io(), "/types/preheader/seq/2");
-            }
-            this.trackerName = new String(KaitaiStream.bytesTerminate(this._io.readBytes(20), (byte) 0, false), Charset.forName("utf-8"));
-            this.versionNumber = new Version(this._io, this, _root);
-            this.headerSize = this._io.readU4le();
-        }
-        public static class Version extends KaitaiStruct {
-            public static Version fromFile(String fileName) throws IOException {
-                return new Version(new ByteBufferKaitaiStream(fileName));
-            }
-
-            public Version(KaitaiStream _io) {
-                this(_io, null, null);
-            }
-
-            public Version(KaitaiStream _io, FasttrackerXmModule.Preheader _parent) {
-                this(_io, _parent, null);
-            }
-
-            public Version(KaitaiStream _io, FasttrackerXmModule.Preheader _parent, FasttrackerXmModule _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.minor = this._io.readU1();
-                this.major = this._io.readU1();
-            }
-            private Integer value;
-            public Integer value() {
-                if (this.value != null)
-                    return this.value;
-                int _tmp = (int) (((major() << 8) | minor()));
-                this.value = _tmp;
-                return this.value;
-            }
-            private int minor;
-            private int major;
-            private FasttrackerXmModule _root;
-            private FasttrackerXmModule.Preheader _parent;
-
-            /**
-             * currently 0x04
-             */
-            public int minor() { return minor; }
-
-            /**
-             * currently 0x01
-             */
-            public int major() { return major; }
-            public FasttrackerXmModule _root() { return _root; }
-            public FasttrackerXmModule.Preheader _parent() { return _parent; }
-        }
-        private byte[] signature0;
-        private String moduleName;
-        private byte[] signature1;
-        private String trackerName;
-        private Version versionNumber;
-        private long headerSize;
-        private FasttrackerXmModule _root;
-        private FasttrackerXmModule _parent;
-        public byte[] signature0() { return signature0; }
-
-        /**
-         * Module name, padded with zeroes
-         */
-        public String moduleName() { return moduleName; }
-        public byte[] signature1() { return signature1; }
-
-        /**
-         * Tracker name
-         */
-        public String trackerName() { return trackerName; }
-
-        /**
-         * Format versions below [0x01, 0x04] have a LOT of differences. Check this field!
-         */
-        public Version versionNumber() { return versionNumber; }
-
-        /**
-         * Header size << Calculated FROM THIS OFFSET, not from the beginning of the file! >>
-         */
-        public long headerSize() { return headerSize; }
-        public FasttrackerXmModule _root() { return _root; }
-        public FasttrackerXmModule _parent() { return _parent; }
-    }
-    public static class Pattern extends KaitaiStruct {
-        public static Pattern fromFile(String fileName) throws IOException {
-            return new Pattern(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Pattern(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Pattern(KaitaiStream _io, FasttrackerXmModule _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Pattern(KaitaiStream _io, FasttrackerXmModule _parent, FasttrackerXmModule _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.header = new Header(this._io, this, _root);
-            this.packedData = this._io.readBytes(header().main().lenPackedPattern());
-        }
-        public static class Header extends KaitaiStruct {
-            public static Header fromFile(String fileName) throws IOException {
-                return new Header(new ByteBufferKaitaiStream(fileName));
-            }
-
-            public Header(KaitaiStream _io) {
-                this(_io, null, null);
-            }
-
-            public Header(KaitaiStream _io, FasttrackerXmModule.Pattern _parent) {
-                this(_io, _parent, null);
-            }
-
-            public Header(KaitaiStream _io, FasttrackerXmModule.Pattern _parent, FasttrackerXmModule _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.headerLength = this._io.readU4le();
-                this._raw_main = this._io.readBytes((headerLength() - 4));
-                KaitaiStream _io__raw_main = new ByteBufferKaitaiStream(_raw_main);
-                this.main = new HeaderMain(_io__raw_main, this, _root);
-            }
-            public static class HeaderMain extends KaitaiStruct {
-                public static HeaderMain fromFile(String fileName) throws IOException {
-                    return new HeaderMain(new ByteBufferKaitaiStream(fileName));
-                }
-
-                public HeaderMain(KaitaiStream _io) {
-                    this(_io, null, null);
-                }
-
-                public HeaderMain(KaitaiStream _io, FasttrackerXmModule.Pattern.Header _parent) {
-                    this(_io, _parent, null);
-                }
-
-                public HeaderMain(KaitaiStream _io, FasttrackerXmModule.Pattern.Header _parent, FasttrackerXmModule _root) {
-                    super(_io);
-                    this._parent = _parent;
-                    this._root = _root;
-                    _read();
-                }
-                private void _read() {
-                    this.packingType = this._io.readU1();
-                    switch (_root().preheader().versionNumber().value()) {
-                    case 258: {
-                        this.numRowsRaw = (int) (this._io.readU1());
-                        break;
-                    }
-                    default: {
-                        this.numRowsRaw = this._io.readU2le();
-                        break;
-                    }
-                    }
-                    this.lenPackedPattern = this._io.readU2le();
-                }
-                private Integer numRows;
-                public Integer numRows() {
-                    if (this.numRows != null)
-                        return this.numRows;
-                    int _tmp = (int) ((numRowsRaw() + (_root().preheader().versionNumber().value() == 258 ? 1 : 0)));
-                    this.numRows = _tmp;
-                    return this.numRows;
-                }
-                private int packingType;
-                private int numRowsRaw;
-                private int lenPackedPattern;
-                private FasttrackerXmModule _root;
-                private FasttrackerXmModule.Pattern.Header _parent;
-
-                /**
-                 * Packing type (always 0)
-                 */
-                public int packingType() { return packingType; }
-
-                /**
-                 * Number of rows in pattern (1..256)
-                 */
-                public int numRowsRaw() { return numRowsRaw; }
-
-                /**
-                 * Packed pattern data size
-                 */
-                public int lenPackedPattern() { return lenPackedPattern; }
-                public FasttrackerXmModule _root() { return _root; }
-                public FasttrackerXmModule.Pattern.Header _parent() { return _parent; }
-            }
-            private long headerLength;
-            private HeaderMain main;
-            private FasttrackerXmModule _root;
-            private FasttrackerXmModule.Pattern _parent;
-            private byte[] _raw_main;
-
-            /**
-             * Pattern header length
-             */
-            public long headerLength() { return headerLength; }
-            public HeaderMain main() { return main; }
-            public FasttrackerXmModule _root() { return _root; }
-            public FasttrackerXmModule.Pattern _parent() { return _parent; }
-            public byte[] _raw_main() { return _raw_main; }
-        }
-        private Header header;
-        private byte[] packedData;
-        private FasttrackerXmModule _root;
-        private FasttrackerXmModule _parent;
-        public Header header() { return header; }
-        public byte[] packedData() { return packedData; }
-        public FasttrackerXmModule _root() { return _root; }
-        public FasttrackerXmModule _parent() { return _parent; }
     }
     public static class Flags extends KaitaiStruct {
         public static Flags fromFile(String fileName) throws IOException {
@@ -328,6 +89,9 @@ public class FasttrackerXmModule extends KaitaiStruct {
         private void _read() {
             this.reserved = this._io.readBitsIntBe(15);
             this.freqTableType = this._io.readBitsIntBe(1) != 0;
+        }
+
+        public void _fetchInstances() {
         }
         private long reserved;
         private boolean freqTableType;
@@ -375,6 +139,12 @@ public class FasttrackerXmModule extends KaitaiStruct {
                 this.patternOrderTable.add(this._io.readU1());
             }
         }
+
+        public void _fetchInstances() {
+            this.flags._fetchInstances();
+            for (int i = 0; i < this.patternOrderTable.size(); i++) {
+            }
+        }
         private int songLength;
         private int restartPosition;
         private int numChannels;
@@ -383,7 +153,7 @@ public class FasttrackerXmModule extends KaitaiStruct {
         private Flags flags;
         private int defaultTempo;
         private int defaultBpm;
-        private ArrayList<Integer> patternOrderTable;
+        private List<Integer> patternOrderTable;
         private FasttrackerXmModule _root;
         private FasttrackerXmModule _parent;
 
@@ -414,7 +184,7 @@ public class FasttrackerXmModule extends KaitaiStruct {
         /**
          * max 256
          */
-        public ArrayList<Integer> patternOrderTable() { return patternOrderTable; }
+        public List<Integer> patternOrderTable() { return patternOrderTable; }
         public FasttrackerXmModule _root() { return _root; }
         public FasttrackerXmModule _parent() { return _parent; }
     }
@@ -450,61 +220,26 @@ public class FasttrackerXmModule extends KaitaiStruct {
         }
         private void _read() {
             this.headerSize = this._io.readU4le();
-            this._raw_header = this._io.readBytes((headerSize() - 4));
-            KaitaiStream _io__raw_header = new ByteBufferKaitaiStream(_raw_header);
-            this.header = new Header(_io__raw_header, this, _root);
+            KaitaiStream _io_header = this._io.substream(headerSize() - 4);
+            this.header = new Header(_io_header, this, _root);
             this.samplesHeaders = new ArrayList<SampleHeader>();
             for (int i = 0; i < header().numSamples(); i++) {
                 this.samplesHeaders.add(new SampleHeader(this._io, this, _root));
             }
             this.samples = new ArrayList<SamplesData>();
             for (int i = 0; i < header().numSamples(); i++) {
-                this.samples.add(new SamplesData(this._io, this, _root, samplesHeaders().get((int) i)));
+                this.samples.add(new SamplesData(this._io, this, _root, samplesHeaders().get(((Number) (i)).intValue())));
             }
         }
-        public static class Header extends KaitaiStruct {
-            public static Header fromFile(String fileName) throws IOException {
-                return new Header(new ByteBufferKaitaiStream(fileName));
-            }
 
-            public Header(KaitaiStream _io) {
-                this(_io, null, null);
+        public void _fetchInstances() {
+            this.header._fetchInstances();
+            for (int i = 0; i < this.samplesHeaders.size(); i++) {
+                this.samplesHeaders.get(((Number) (i)).intValue())._fetchInstances();
             }
-
-            public Header(KaitaiStream _io, FasttrackerXmModule.Instrument _parent) {
-                this(_io, _parent, null);
+            for (int i = 0; i < this.samples.size(); i++) {
+                this.samples.get(((Number) (i)).intValue())._fetchInstances();
             }
-
-            public Header(KaitaiStream _io, FasttrackerXmModule.Instrument _parent, FasttrackerXmModule _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.name = new String(KaitaiStream.bytesTerminate(this._io.readBytes(22), (byte) 0, false), Charset.forName("utf-8"));
-                this.type = this._io.readU1();
-                this.numSamples = this._io.readU2le();
-                if (numSamples() > 0) {
-                    this.extraHeader = new ExtraHeader(this._io, this, _root);
-                }
-            }
-            private String name;
-            private int type;
-            private int numSamples;
-            private ExtraHeader extraHeader;
-            private FasttrackerXmModule _root;
-            private FasttrackerXmModule.Instrument _parent;
-            public String name() { return name; }
-
-            /**
-             * Usually zero, but this seems pretty random, don't assume it's zero
-             */
-            public int type() { return type; }
-            public int numSamples() { return numSamples; }
-            public ExtraHeader extraHeader() { return extraHeader; }
-            public FasttrackerXmModule _root() { return _root; }
-            public FasttrackerXmModule.Instrument _parent() { return _parent; }
         }
         public static class ExtraHeader extends KaitaiStruct {
             public static ExtraHeader fromFile(String fileName) throws IOException {
@@ -573,6 +308,17 @@ public class FasttrackerXmModule extends KaitaiStruct {
                 this.reserved = this._io.readU2le();
             }
 
+            public void _fetchInstances() {
+                for (int i = 0; i < this.idxSamplePerNote.size(); i++) {
+                }
+                for (int i = 0; i < this.volumePoints.size(); i++) {
+                    this.volumePoints.get(((Number) (i)).intValue())._fetchInstances();
+                }
+                for (int i = 0; i < this.panningPoints.size(); i++) {
+                    this.panningPoints.get(((Number) (i)).intValue())._fetchInstances();
+                }
+            }
+
             /**
              * Envelope frame-counters work in range 0..FFFFh (0..65535 dec).
              * BUT! FT2 only itself supports only range 0..FFh (0..255 dec).
@@ -604,6 +350,9 @@ public class FasttrackerXmModule extends KaitaiStruct {
                     this.x = this._io.readU2le();
                     this.y = this._io.readU2le();
                 }
+
+                public void _fetchInstances() {
+                }
                 private int x;
                 private int y;
                 private FasttrackerXmModule _root;
@@ -622,9 +371,9 @@ public class FasttrackerXmModule extends KaitaiStruct {
                 public FasttrackerXmModule.Instrument.ExtraHeader _parent() { return _parent; }
             }
             private long lenSampleHeader;
-            private ArrayList<Integer> idxSamplePerNote;
-            private ArrayList<EnvelopePoint> volumePoints;
-            private ArrayList<EnvelopePoint> panningPoints;
+            private List<Integer> idxSamplePerNote;
+            private List<EnvelopePoint> volumePoints;
+            private List<EnvelopePoint> panningPoints;
             private int numVolumePoints;
             private int numPanningPoints;
             private int volumeSustainPoint;
@@ -650,17 +399,17 @@ public class FasttrackerXmModule extends KaitaiStruct {
              * note. In the simplest case, where it's only one sample
              * is available, it's an array of full of zeroes.
              */
-            public ArrayList<Integer> idxSamplePerNote() { return idxSamplePerNote; }
+            public List<Integer> idxSamplePerNote() { return idxSamplePerNote; }
 
             /**
              * Points for volume envelope. Only `num_volume_points` will be actually used.
              */
-            public ArrayList<EnvelopePoint> volumePoints() { return volumePoints; }
+            public List<EnvelopePoint> volumePoints() { return volumePoints; }
 
             /**
              * Points for panning envelope. Only `num_panning_points` will be actually used.
              */
-            public ArrayList<EnvelopePoint> panningPoints() { return panningPoints; }
+            public List<EnvelopePoint> panningPoints() { return panningPoints; }
             public int numVolumePoints() { return numVolumePoints; }
             public int numPanningPoints() { return numPanningPoints; }
             public int volumeSustainPoint() { return volumeSustainPoint; }
@@ -680,42 +429,53 @@ public class FasttrackerXmModule extends KaitaiStruct {
             public FasttrackerXmModule _root() { return _root; }
             public FasttrackerXmModule.Instrument.Header _parent() { return _parent; }
         }
-
-        /**
-         * The saved data uses simple delta-encoding to achieve better compression ratios (when compressed with pkzip, etc.)
-         * Pseudocode for converting the delta-coded data to normal data,
-         * old = 0;
-         * for i in range(data_len):
-         *   new = sample[i] + old;
-         *   sample[i] = new;
-         *   old = new;
-         */
-        public static class SamplesData extends KaitaiStruct {
-
-            public SamplesData(KaitaiStream _io, SampleHeader header) {
-                this(_io, null, null, header);
+        public static class Header extends KaitaiStruct {
+            public static Header fromFile(String fileName) throws IOException {
+                return new Header(new ByteBufferKaitaiStream(fileName));
             }
 
-            public SamplesData(KaitaiStream _io, FasttrackerXmModule.Instrument _parent, SampleHeader header) {
-                this(_io, _parent, null, header);
+            public Header(KaitaiStream _io) {
+                this(_io, null, null);
             }
 
-            public SamplesData(KaitaiStream _io, FasttrackerXmModule.Instrument _parent, FasttrackerXmModule _root, SampleHeader header) {
+            public Header(KaitaiStream _io, FasttrackerXmModule.Instrument _parent) {
+                this(_io, _parent, null);
+            }
+
+            public Header(KaitaiStream _io, FasttrackerXmModule.Instrument _parent, FasttrackerXmModule _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
-                this.header = header;
                 _read();
             }
             private void _read() {
-                this.data = this._io.readBytes((header().sampleLength() * (header().type().isSampleData16Bit() ? 2 : 1)));
+                this.name = new String(KaitaiStream.bytesTerminate(this._io.readBytes(22), (byte) 0, false), StandardCharsets.UTF_8);
+                this.type = this._io.readU1();
+                this.numSamples = this._io.readU2le();
+                if (numSamples() > 0) {
+                    this.extraHeader = new ExtraHeader(this._io, this, _root);
+                }
             }
-            private byte[] data;
-            private SampleHeader header;
+
+            public void _fetchInstances() {
+                if (numSamples() > 0) {
+                    this.extraHeader._fetchInstances();
+                }
+            }
+            private String name;
+            private int type;
+            private int numSamples;
+            private ExtraHeader extraHeader;
             private FasttrackerXmModule _root;
             private FasttrackerXmModule.Instrument _parent;
-            public byte[] data() { return data; }
-            public SampleHeader header() { return header; }
+            public String name() { return name; }
+
+            /**
+             * Usually zero, but this seems pretty random, don't assume it's zero
+             */
+            public int type() { return type; }
+            public int numSamples() { return numSamples; }
+            public ExtraHeader extraHeader() { return extraHeader; }
             public FasttrackerXmModule _root() { return _root; }
             public FasttrackerXmModule.Instrument _parent() { return _parent; }
         }
@@ -748,7 +508,11 @@ public class FasttrackerXmModule extends KaitaiStruct {
                 this.panning = this._io.readU1();
                 this.relativeNoteNumber = this._io.readS1();
                 this.reserved = this._io.readU1();
-                this.name = new String(KaitaiStream.bytesTerminate(this._io.readBytes(22), (byte) 0, false), Charset.forName("utf-8"));
+                this.name = new String(KaitaiStream.bytesTerminate(this._io.readBytes(22), (byte) 0, false), StandardCharsets.UTF_8);
+            }
+
+            public void _fetchInstances() {
+                this.type._fetchInstances();
             }
             public static class LoopType extends KaitaiStruct {
                 public static LoopType fromFile(String fileName) throws IOException {
@@ -790,6 +554,9 @@ public class FasttrackerXmModule extends KaitaiStruct {
                     this.isSampleData16Bit = this._io.readBitsIntBe(1) != 0;
                     this.reserved1 = this._io.readBitsIntBe(2);
                     this.loopType = LoopType.byId(this._io.readBitsIntBe(2));
+                }
+
+                public void _fetchInstances() {
                 }
                 private long reserved0;
                 private boolean isSampleData16Bit;
@@ -837,13 +604,54 @@ public class FasttrackerXmModule extends KaitaiStruct {
             public FasttrackerXmModule _root() { return _root; }
             public FasttrackerXmModule.Instrument _parent() { return _parent; }
         }
+
+        /**
+         * The saved data uses simple delta-encoding to achieve better compression ratios (when compressed with pkzip, etc.)
+         * Pseudocode for converting the delta-coded data to normal data,
+         * old = 0;
+         * for i in range(data_len):
+         *   new = sample[i] + old;
+         *   sample[i] = new;
+         *   old = new;
+         */
+        public static class SamplesData extends KaitaiStruct {
+
+            public SamplesData(KaitaiStream _io, SampleHeader header) {
+                this(_io, null, null, header);
+            }
+
+            public SamplesData(KaitaiStream _io, FasttrackerXmModule.Instrument _parent, SampleHeader header) {
+                this(_io, _parent, null, header);
+            }
+
+            public SamplesData(KaitaiStream _io, FasttrackerXmModule.Instrument _parent, FasttrackerXmModule _root, SampleHeader header) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                this.header = header;
+                _read();
+            }
+            private void _read() {
+                this.data = this._io.readBytes(header().sampleLength() * (header().type().isSampleData16Bit() ? 2 : 1));
+            }
+
+            public void _fetchInstances() {
+            }
+            private byte[] data;
+            private SampleHeader header;
+            private FasttrackerXmModule _root;
+            private FasttrackerXmModule.Instrument _parent;
+            public byte[] data() { return data; }
+            public SampleHeader header() { return header; }
+            public FasttrackerXmModule _root() { return _root; }
+            public FasttrackerXmModule.Instrument _parent() { return _parent; }
+        }
         private long headerSize;
         private Header header;
-        private ArrayList<SampleHeader> samplesHeaders;
-        private ArrayList<SamplesData> samples;
+        private List<SampleHeader> samplesHeaders;
+        private List<SamplesData> samples;
         private FasttrackerXmModule _root;
         private FasttrackerXmModule _parent;
-        private byte[] _raw_header;
 
         /**
          * Instrument size << header that is >>
@@ -851,24 +659,292 @@ public class FasttrackerXmModule extends KaitaiStruct {
          */
         public long headerSize() { return headerSize; }
         public Header header() { return header; }
-        public ArrayList<SampleHeader> samplesHeaders() { return samplesHeaders; }
-        public ArrayList<SamplesData> samples() { return samples; }
+        public List<SampleHeader> samplesHeaders() { return samplesHeaders; }
+        public List<SamplesData> samples() { return samples; }
         public FasttrackerXmModule _root() { return _root; }
         public FasttrackerXmModule _parent() { return _parent; }
-        public byte[] _raw_header() { return _raw_header; }
+    }
+    public static class Pattern extends KaitaiStruct {
+        public static Pattern fromFile(String fileName) throws IOException {
+            return new Pattern(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Pattern(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Pattern(KaitaiStream _io, FasttrackerXmModule _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Pattern(KaitaiStream _io, FasttrackerXmModule _parent, FasttrackerXmModule _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.header = new Header(this._io, this, _root);
+            this.packedData = this._io.readBytes(header().main().lenPackedPattern());
+        }
+
+        public void _fetchInstances() {
+            this.header._fetchInstances();
+        }
+        public static class Header extends KaitaiStruct {
+            public static Header fromFile(String fileName) throws IOException {
+                return new Header(new ByteBufferKaitaiStream(fileName));
+            }
+
+            public Header(KaitaiStream _io) {
+                this(_io, null, null);
+            }
+
+            public Header(KaitaiStream _io, FasttrackerXmModule.Pattern _parent) {
+                this(_io, _parent, null);
+            }
+
+            public Header(KaitaiStream _io, FasttrackerXmModule.Pattern _parent, FasttrackerXmModule _root) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                _read();
+            }
+            private void _read() {
+                this.headerLength = this._io.readU4le();
+                KaitaiStream _io_main = this._io.substream(headerLength() - 4);
+                this.main = new HeaderMain(_io_main, this, _root);
+            }
+
+            public void _fetchInstances() {
+                this.main._fetchInstances();
+            }
+            public static class HeaderMain extends KaitaiStruct {
+                public static HeaderMain fromFile(String fileName) throws IOException {
+                    return new HeaderMain(new ByteBufferKaitaiStream(fileName));
+                }
+
+                public HeaderMain(KaitaiStream _io) {
+                    this(_io, null, null);
+                }
+
+                public HeaderMain(KaitaiStream _io, FasttrackerXmModule.Pattern.Header _parent) {
+                    this(_io, _parent, null);
+                }
+
+                public HeaderMain(KaitaiStream _io, FasttrackerXmModule.Pattern.Header _parent, FasttrackerXmModule _root) {
+                    super(_io);
+                    this._parent = _parent;
+                    this._root = _root;
+                    _read();
+                }
+                private void _read() {
+                    this.packingType = this._io.readU1();
+                    switch (_root().preheader().versionNumber().value()) {
+                    case 258: {
+                        this.numRowsRaw = ((Number) (this._io.readU1())).intValue();
+                        break;
+                    }
+                    default: {
+                        this.numRowsRaw = this._io.readU2le();
+                        break;
+                    }
+                    }
+                    this.lenPackedPattern = this._io.readU2le();
+                }
+
+                public void _fetchInstances() {
+                    switch (_root().preheader().versionNumber().value()) {
+                    case 258: {
+                        break;
+                    }
+                    default: {
+                        break;
+                    }
+                    }
+                }
+                private Integer numRows;
+                public Integer numRows() {
+                    if (this.numRows != null)
+                        return this.numRows;
+                    this.numRows = ((Number) (numRowsRaw() + (_root().preheader().versionNumber().value() == 258 ? 1 : 0))).intValue();
+                    return this.numRows;
+                }
+                private int packingType;
+                private int numRowsRaw;
+                private int lenPackedPattern;
+                private FasttrackerXmModule _root;
+                private FasttrackerXmModule.Pattern.Header _parent;
+
+                /**
+                 * Packing type (always 0)
+                 */
+                public int packingType() { return packingType; }
+
+                /**
+                 * Number of rows in pattern (1..256)
+                 */
+                public int numRowsRaw() { return numRowsRaw; }
+
+                /**
+                 * Packed pattern data size
+                 */
+                public int lenPackedPattern() { return lenPackedPattern; }
+                public FasttrackerXmModule _root() { return _root; }
+                public FasttrackerXmModule.Pattern.Header _parent() { return _parent; }
+            }
+            private long headerLength;
+            private HeaderMain main;
+            private FasttrackerXmModule _root;
+            private FasttrackerXmModule.Pattern _parent;
+
+            /**
+             * Pattern header length
+             */
+            public long headerLength() { return headerLength; }
+            public HeaderMain main() { return main; }
+            public FasttrackerXmModule _root() { return _root; }
+            public FasttrackerXmModule.Pattern _parent() { return _parent; }
+        }
+        private Header header;
+        private byte[] packedData;
+        private FasttrackerXmModule _root;
+        private FasttrackerXmModule _parent;
+        public Header header() { return header; }
+        public byte[] packedData() { return packedData; }
+        public FasttrackerXmModule _root() { return _root; }
+        public FasttrackerXmModule _parent() { return _parent; }
+    }
+    public static class Preheader extends KaitaiStruct {
+        public static Preheader fromFile(String fileName) throws IOException {
+            return new Preheader(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Preheader(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Preheader(KaitaiStream _io, FasttrackerXmModule _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Preheader(KaitaiStream _io, FasttrackerXmModule _parent, FasttrackerXmModule _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.signature0 = this._io.readBytes(17);
+            if (!(Arrays.equals(this.signature0, new byte[] { 69, 120, 116, 101, 110, 100, 101, 100, 32, 77, 111, 100, 117, 108, 101, 58, 32 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 69, 120, 116, 101, 110, 100, 101, 100, 32, 77, 111, 100, 117, 108, 101, 58, 32 }, this.signature0, this._io, "/types/preheader/seq/0");
+            }
+            this.moduleName = new String(KaitaiStream.bytesTerminate(this._io.readBytes(20), (byte) 0, false), StandardCharsets.UTF_8);
+            this.signature1 = this._io.readBytes(1);
+            if (!(Arrays.equals(this.signature1, new byte[] { 26 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 26 }, this.signature1, this._io, "/types/preheader/seq/2");
+            }
+            this.trackerName = new String(KaitaiStream.bytesTerminate(this._io.readBytes(20), (byte) 0, false), StandardCharsets.UTF_8);
+            this.versionNumber = new Version(this._io, this, _root);
+            this.headerSize = this._io.readU4le();
+        }
+
+        public void _fetchInstances() {
+            this.versionNumber._fetchInstances();
+        }
+        public static class Version extends KaitaiStruct {
+            public static Version fromFile(String fileName) throws IOException {
+                return new Version(new ByteBufferKaitaiStream(fileName));
+            }
+
+            public Version(KaitaiStream _io) {
+                this(_io, null, null);
+            }
+
+            public Version(KaitaiStream _io, FasttrackerXmModule.Preheader _parent) {
+                this(_io, _parent, null);
+            }
+
+            public Version(KaitaiStream _io, FasttrackerXmModule.Preheader _parent, FasttrackerXmModule _root) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                _read();
+            }
+            private void _read() {
+                this.minor = this._io.readU1();
+                this.major = this._io.readU1();
+            }
+
+            public void _fetchInstances() {
+            }
+            private Integer value;
+            public Integer value() {
+                if (this.value != null)
+                    return this.value;
+                this.value = ((Number) (major() << 8 | minor())).intValue();
+                return this.value;
+            }
+            private int minor;
+            private int major;
+            private FasttrackerXmModule _root;
+            private FasttrackerXmModule.Preheader _parent;
+
+            /**
+             * currently 0x04
+             */
+            public int minor() { return minor; }
+
+            /**
+             * currently 0x01
+             */
+            public int major() { return major; }
+            public FasttrackerXmModule _root() { return _root; }
+            public FasttrackerXmModule.Preheader _parent() { return _parent; }
+        }
+        private byte[] signature0;
+        private String moduleName;
+        private byte[] signature1;
+        private String trackerName;
+        private Version versionNumber;
+        private long headerSize;
+        private FasttrackerXmModule _root;
+        private FasttrackerXmModule _parent;
+        public byte[] signature0() { return signature0; }
+
+        /**
+         * Module name, padded with zeroes
+         */
+        public String moduleName() { return moduleName; }
+        public byte[] signature1() { return signature1; }
+
+        /**
+         * Tracker name
+         */
+        public String trackerName() { return trackerName; }
+
+        /**
+         * Format versions below [0x01, 0x04] have a LOT of differences. Check this field!
+         */
+        public Version versionNumber() { return versionNumber; }
+
+        /**
+         * Header size << Calculated FROM THIS OFFSET, not from the beginning of the file! >>
+         */
+        public long headerSize() { return headerSize; }
+        public FasttrackerXmModule _root() { return _root; }
+        public FasttrackerXmModule _parent() { return _parent; }
     }
     private Preheader preheader;
     private Header header;
-    private ArrayList<Pattern> patterns;
-    private ArrayList<Instrument> instruments;
+    private List<Pattern> patterns;
+    private List<Instrument> instruments;
     private FasttrackerXmModule _root;
     private KaitaiStruct _parent;
-    private byte[] _raw_header;
     public Preheader preheader() { return preheader; }
     public Header header() { return header; }
-    public ArrayList<Pattern> patterns() { return patterns; }
-    public ArrayList<Instrument> instruments() { return instruments; }
+    public List<Pattern> patterns() { return patterns; }
+    public List<Instrument> instruments() { return instruments; }
     public FasttrackerXmModule _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
-    public byte[] _raw_header() { return _raw_header; }
 }

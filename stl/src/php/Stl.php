@@ -22,8 +22,8 @@
 
 namespace {
     class Stl extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Stl $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Stl $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -53,7 +53,7 @@ namespace {
 
 namespace Stl {
     class Triangle extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Stl $_parent = null, \Stl $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Stl $_parent = null, ?\Stl $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -89,7 +89,7 @@ namespace Stl {
 
 namespace Stl {
     class Vec3d extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Stl\Triangle $_parent = null, \Stl $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Stl\Triangle $_parent = null, ?\Stl $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }

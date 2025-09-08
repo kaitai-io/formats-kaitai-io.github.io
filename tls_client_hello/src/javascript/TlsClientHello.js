@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.TlsClientHello = factory(root.KaitaiStream);
+    factory(root.TlsClientHello || (root.TlsClientHello = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (TlsClientHello_, KaitaiStream) {
 var TlsClientHello = (function() {
   function TlsClientHello(_io, _parent, _root) {
     this._io = _io;
@@ -28,81 +28,32 @@ var TlsClientHello = (function() {
     }
   }
 
-  var ServerName = TlsClientHello.ServerName = (function() {
-    function ServerName(_io, _parent, _root) {
+  var Alpn = TlsClientHello.Alpn = (function() {
+    function Alpn(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
-    ServerName.prototype._read = function() {
-      this.nameType = this._io.readU1();
-      this.length = this._io.readU2be();
-      this.hostName = this._io.readBytes(this.length);
-    }
-
-    return ServerName;
-  })();
-
-  var Random = TlsClientHello.Random = (function() {
-    function Random(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Random.prototype._read = function() {
-      this.gmtUnixTime = this._io.readU4be();
-      this.random = this._io.readBytes(28);
-    }
-
-    return Random;
-  })();
-
-  var SessionId = TlsClientHello.SessionId = (function() {
-    function SessionId(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    SessionId.prototype._read = function() {
-      this.len = this._io.readU1();
-      this.sid = this._io.readBytes(this.len);
-    }
-
-    return SessionId;
-  })();
-
-  var Sni = TlsClientHello.Sni = (function() {
-    function Sni(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Sni.prototype._read = function() {
-      this.listLength = this._io.readU2be();
-      this.serverNames = [];
+    Alpn.prototype._read = function() {
+      this.extLen = this._io.readU2be();
+      this.alpnProtocols = [];
       var i = 0;
       while (!this._io.isEof()) {
-        this.serverNames.push(new ServerName(this._io, this, this._root));
+        this.alpnProtocols.push(new Protocol(this._io, this, this._root));
         i++;
       }
     }
 
-    return Sni;
+    return Alpn;
   })();
 
   var CipherSuites = TlsClientHello.CipherSuites = (function() {
     function CipherSuites(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -121,7 +72,7 @@ var TlsClientHello = (function() {
     function CompressionMethods(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -133,85 +84,11 @@ var TlsClientHello = (function() {
     return CompressionMethods;
   })();
 
-  var Alpn = TlsClientHello.Alpn = (function() {
-    function Alpn(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Alpn.prototype._read = function() {
-      this.extLen = this._io.readU2be();
-      this.alpnProtocols = [];
-      var i = 0;
-      while (!this._io.isEof()) {
-        this.alpnProtocols.push(new Protocol(this._io, this, this._root));
-        i++;
-      }
-    }
-
-    return Alpn;
-  })();
-
-  var Extensions = TlsClientHello.Extensions = (function() {
-    function Extensions(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Extensions.prototype._read = function() {
-      this.len = this._io.readU2be();
-      this.extensions = [];
-      var i = 0;
-      while (!this._io.isEof()) {
-        this.extensions.push(new Extension(this._io, this, this._root));
-        i++;
-      }
-    }
-
-    return Extensions;
-  })();
-
-  var Version = TlsClientHello.Version = (function() {
-    function Version(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Version.prototype._read = function() {
-      this.major = this._io.readU1();
-      this.minor = this._io.readU1();
-    }
-
-    return Version;
-  })();
-
-  var Protocol = TlsClientHello.Protocol = (function() {
-    function Protocol(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Protocol.prototype._read = function() {
-      this.strlen = this._io.readU1();
-      this.name = this._io.readBytes(this.strlen);
-    }
-
-    return Protocol;
-  })();
-
   var Extension = TlsClientHello.Extension = (function() {
     function Extension(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -238,7 +115,130 @@ var TlsClientHello = (function() {
     return Extension;
   })();
 
+  var Extensions = TlsClientHello.Extensions = (function() {
+    function Extensions(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Extensions.prototype._read = function() {
+      this.len = this._io.readU2be();
+      this.extensions = [];
+      var i = 0;
+      while (!this._io.isEof()) {
+        this.extensions.push(new Extension(this._io, this, this._root));
+        i++;
+      }
+    }
+
+    return Extensions;
+  })();
+
+  var Protocol = TlsClientHello.Protocol = (function() {
+    function Protocol(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Protocol.prototype._read = function() {
+      this.strlen = this._io.readU1();
+      this.name = this._io.readBytes(this.strlen);
+    }
+
+    return Protocol;
+  })();
+
+  var Random = TlsClientHello.Random = (function() {
+    function Random(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Random.prototype._read = function() {
+      this.gmtUnixTime = this._io.readU4be();
+      this.random = this._io.readBytes(28);
+    }
+
+    return Random;
+  })();
+
+  var ServerName = TlsClientHello.ServerName = (function() {
+    function ServerName(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    ServerName.prototype._read = function() {
+      this.nameType = this._io.readU1();
+      this.length = this._io.readU2be();
+      this.hostName = this._io.readBytes(this.length);
+    }
+
+    return ServerName;
+  })();
+
+  var SessionId = TlsClientHello.SessionId = (function() {
+    function SessionId(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    SessionId.prototype._read = function() {
+      this.len = this._io.readU1();
+      this.sid = this._io.readBytes(this.len);
+    }
+
+    return SessionId;
+  })();
+
+  var Sni = TlsClientHello.Sni = (function() {
+    function Sni(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Sni.prototype._read = function() {
+      this.listLength = this._io.readU2be();
+      this.serverNames = [];
+      var i = 0;
+      while (!this._io.isEof()) {
+        this.serverNames.push(new ServerName(this._io, this, this._root));
+        i++;
+      }
+    }
+
+    return Sni;
+  })();
+
+  var Version = TlsClientHello.Version = (function() {
+    function Version(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    Version.prototype._read = function() {
+      this.major = this._io.readU1();
+      this.minor = this._io.readU1();
+    }
+
+    return Version;
+  })();
+
   return TlsClientHello;
 })();
-return TlsClientHello;
-}));
+TlsClientHello_.TlsClientHello = TlsClientHello;
+});

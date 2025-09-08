@@ -5,7 +5,7 @@
 
 android_super_t::android_super_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, android_super_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     m_root = 0;
     f_root = false;
 
@@ -30,6 +30,322 @@ void android_super_t::_clean_up() {
             delete m_root; m_root = 0;
         }
     }
+}
+
+android_super_t::geometry_t::geometry_t(kaitai::kstream* p__io, android_super_t::root_t* p__parent, android_super_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void android_super_t::geometry_t::_read() {
+    m_magic = m__io->read_bytes(4);
+    if (!(m_magic == std::string("\x67\x44\x6C\x61", 4))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\x67\x44\x6C\x61", 4), m_magic, m__io, std::string("/types/geometry/seq/0"));
+    }
+    m_struct_size = m__io->read_u4le();
+    m_checksum = m__io->read_bytes(32);
+    m_metadata_max_size = m__io->read_u4le();
+    m_metadata_slot_count = m__io->read_u4le();
+    m_logical_block_size = m__io->read_u4le();
+}
+
+android_super_t::geometry_t::~geometry_t() {
+    _clean_up();
+}
+
+void android_super_t::geometry_t::_clean_up() {
+}
+std::set<android_super_t::metadata_t::table_kind_t> android_super_t::metadata_t::_build_values_table_kind_t() {
+    std::set<android_super_t::metadata_t::table_kind_t> _t;
+    _t.insert(android_super_t::metadata_t::TABLE_KIND_PARTITIONS);
+    _t.insert(android_super_t::metadata_t::TABLE_KIND_EXTENTS);
+    _t.insert(android_super_t::metadata_t::TABLE_KIND_GROUPS);
+    _t.insert(android_super_t::metadata_t::TABLE_KIND_BLOCK_DEVICES);
+    return _t;
+}
+const std::set<android_super_t::metadata_t::table_kind_t> android_super_t::metadata_t::_values_table_kind_t = android_super_t::metadata_t::_build_values_table_kind_t();
+bool android_super_t::metadata_t::_is_defined_table_kind_t(android_super_t::metadata_t::table_kind_t v) {
+    return android_super_t::metadata_t::_values_table_kind_t.find(v) != android_super_t::metadata_t::_values_table_kind_t.end();
+}
+
+android_super_t::metadata_t::metadata_t(kaitai::kstream* p__io, android_super_t::root_t* p__parent, android_super_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_partitions = 0;
+    m_extents = 0;
+    m_groups = 0;
+    m_block_devices = 0;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void android_super_t::metadata_t::_read() {
+    m_magic = m__io->read_bytes(4);
+    if (!(m_magic == std::string("\x30\x50\x4C\x41", 4))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\x30\x50\x4C\x41", 4), m_magic, m__io, std::string("/types/metadata/seq/0"));
+    }
+    m_major_version = m__io->read_u2le();
+    m_minor_version = m__io->read_u2le();
+    m_header_size = m__io->read_u4le();
+    m_header_checksum = m__io->read_bytes(32);
+    m_tables_size = m__io->read_u4le();
+    m_tables_checksum = m__io->read_bytes(32);
+    m_partitions = new table_descriptor_t(android_super_t::metadata_t::TABLE_KIND_PARTITIONS, m__io, this, m__root);
+    m_extents = new table_descriptor_t(android_super_t::metadata_t::TABLE_KIND_EXTENTS, m__io, this, m__root);
+    m_groups = new table_descriptor_t(android_super_t::metadata_t::TABLE_KIND_GROUPS, m__io, this, m__root);
+    m_block_devices = new table_descriptor_t(android_super_t::metadata_t::TABLE_KIND_BLOCK_DEVICES, m__io, this, m__root);
+}
+
+android_super_t::metadata_t::~metadata_t() {
+    _clean_up();
+}
+
+void android_super_t::metadata_t::_clean_up() {
+    if (m_partitions) {
+        delete m_partitions; m_partitions = 0;
+    }
+    if (m_extents) {
+        delete m_extents; m_extents = 0;
+    }
+    if (m_groups) {
+        delete m_groups; m_groups = 0;
+    }
+    if (m_block_devices) {
+        delete m_block_devices; m_block_devices = 0;
+    }
+}
+
+android_super_t::metadata_t::block_device_t::block_device_t(kaitai::kstream* p__io, android_super_t::metadata_t::table_descriptor_t* p__parent, android_super_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void android_super_t::metadata_t::block_device_t::_read() {
+    m_first_logical_sector = m__io->read_u8le();
+    m_alignment = m__io->read_u4le();
+    m_alignment_offset = m__io->read_u4le();
+    m_size = m__io->read_u8le();
+    m_partition_name = kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_terminate(m__io->read_bytes(36), 0, false), "UTF-8");
+    m_flag_slot_suffixed = m__io->read_bits_int_le(1);
+    m_flags_reserved = m__io->read_bits_int_le(31);
+}
+
+android_super_t::metadata_t::block_device_t::~block_device_t() {
+    _clean_up();
+}
+
+void android_super_t::metadata_t::block_device_t::_clean_up() {
+}
+std::set<android_super_t::metadata_t::extent_t::target_type_t> android_super_t::metadata_t::extent_t::_build_values_target_type_t() {
+    std::set<android_super_t::metadata_t::extent_t::target_type_t> _t;
+    _t.insert(android_super_t::metadata_t::extent_t::TARGET_TYPE_LINEAR);
+    _t.insert(android_super_t::metadata_t::extent_t::TARGET_TYPE_ZERO);
+    return _t;
+}
+const std::set<android_super_t::metadata_t::extent_t::target_type_t> android_super_t::metadata_t::extent_t::_values_target_type_t = android_super_t::metadata_t::extent_t::_build_values_target_type_t();
+bool android_super_t::metadata_t::extent_t::_is_defined_target_type_t(android_super_t::metadata_t::extent_t::target_type_t v) {
+    return android_super_t::metadata_t::extent_t::_values_target_type_t.find(v) != android_super_t::metadata_t::extent_t::_values_target_type_t.end();
+}
+
+android_super_t::metadata_t::extent_t::extent_t(kaitai::kstream* p__io, android_super_t::metadata_t::table_descriptor_t* p__parent, android_super_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void android_super_t::metadata_t::extent_t::_read() {
+    m_num_sectors = m__io->read_u8le();
+    m_target_type = static_cast<android_super_t::metadata_t::extent_t::target_type_t>(m__io->read_u4le());
+    m_target_data = m__io->read_u8le();
+    m_target_source = m__io->read_u4le();
+}
+
+android_super_t::metadata_t::extent_t::~extent_t() {
+    _clean_up();
+}
+
+void android_super_t::metadata_t::extent_t::_clean_up() {
+}
+
+android_super_t::metadata_t::group_t::group_t(kaitai::kstream* p__io, android_super_t::metadata_t::table_descriptor_t* p__parent, android_super_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void android_super_t::metadata_t::group_t::_read() {
+    m_name = kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_terminate(m__io->read_bytes(36), 0, false), "UTF-8");
+    m_flag_slot_suffixed = m__io->read_bits_int_le(1);
+    m_flags_reserved = m__io->read_bits_int_le(31);
+    m__io->align_to_byte();
+    m_maximum_size = m__io->read_u8le();
+}
+
+android_super_t::metadata_t::group_t::~group_t() {
+    _clean_up();
+}
+
+void android_super_t::metadata_t::group_t::_clean_up() {
+}
+
+android_super_t::metadata_t::partition_t::partition_t(kaitai::kstream* p__io, android_super_t::metadata_t::table_descriptor_t* p__parent, android_super_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void android_super_t::metadata_t::partition_t::_read() {
+    m_name = kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_terminate(m__io->read_bytes(36), 0, false), "UTF-8");
+    m_attr_readonly = m__io->read_bits_int_le(1);
+    m_attr_slot_suffixed = m__io->read_bits_int_le(1);
+    m_attr_updated = m__io->read_bits_int_le(1);
+    m_attr_disabled = m__io->read_bits_int_le(1);
+    m_attrs_reserved = m__io->read_bits_int_le(28);
+    m__io->align_to_byte();
+    m_first_extent_index = m__io->read_u4le();
+    m_num_extents = m__io->read_u4le();
+    m_group_index = m__io->read_u4le();
+}
+
+android_super_t::metadata_t::partition_t::~partition_t() {
+    _clean_up();
+}
+
+void android_super_t::metadata_t::partition_t::_clean_up() {
+}
+
+android_super_t::metadata_t::table_descriptor_t::table_descriptor_t(table_kind_t p_kind, kaitai::kstream* p__io, android_super_t::metadata_t* p__parent, android_super_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_kind = p_kind;
+    m_table = 0;
+    m__raw_table = 0;
+    m__io__raw_table = 0;
+    f_table = false;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void android_super_t::metadata_t::table_descriptor_t::_read() {
+    m_offset = m__io->read_u4le();
+    m_num_entries = m__io->read_u4le();
+    m_entry_size = m__io->read_u4le();
+}
+
+android_super_t::metadata_t::table_descriptor_t::~table_descriptor_t() {
+    _clean_up();
+}
+
+void android_super_t::metadata_t::table_descriptor_t::_clean_up() {
+    if (f_table) {
+        if (m__raw_table) {
+            delete m__raw_table; m__raw_table = 0;
+        }
+        if (m__io__raw_table) {
+            for (std::vector<kaitai::kstream*>::iterator it = m__io__raw_table->begin(); it != m__io__raw_table->end(); ++it) {
+                delete *it;
+            }
+            delete m__io__raw_table; m__io__raw_table = 0;
+        }
+        if (m_table) {
+            for (std::vector<kaitai::kstruct*>::iterator it = m_table->begin(); it != m_table->end(); ++it) {
+                delete *it;
+            }
+            delete m_table; m_table = 0;
+        }
+    }
+}
+
+std::vector<kaitai::kstruct*>* android_super_t::metadata_t::table_descriptor_t::table() {
+    if (f_table)
+        return m_table;
+    f_table = true;
+    std::streampos _pos = m__io->pos();
+    m__io->seek(_parent()->header_size() + offset());
+    m__raw_table = new std::vector<std::string>();
+    m__io__raw_table = new std::vector<kaitai::kstream*>();
+    m_table = new std::vector<kaitai::kstruct*>();
+    const int l_table = num_entries();
+    for (int i = 0; i < l_table; i++) {
+        switch (kind()) {
+        case android_super_t::metadata_t::TABLE_KIND_BLOCK_DEVICES: {
+            m__raw_table->push_back(m__io->read_bytes(entry_size()));
+            kaitai::kstream* io__raw_table = new kaitai::kstream(m__raw_table->at(m__raw_table->size() - 1));
+            m__io__raw_table->push_back(io__raw_table);
+            m_table->push_back(new block_device_t(io__raw_table, this, m__root));
+            break;
+        }
+        case android_super_t::metadata_t::TABLE_KIND_EXTENTS: {
+            m__raw_table->push_back(m__io->read_bytes(entry_size()));
+            kaitai::kstream* io__raw_table = new kaitai::kstream(m__raw_table->at(m__raw_table->size() - 1));
+            m__io__raw_table->push_back(io__raw_table);
+            m_table->push_back(new extent_t(io__raw_table, this, m__root));
+            break;
+        }
+        case android_super_t::metadata_t::TABLE_KIND_GROUPS: {
+            m__raw_table->push_back(m__io->read_bytes(entry_size()));
+            kaitai::kstream* io__raw_table = new kaitai::kstream(m__raw_table->at(m__raw_table->size() - 1));
+            m__io__raw_table->push_back(io__raw_table);
+            m_table->push_back(new group_t(io__raw_table, this, m__root));
+            break;
+        }
+        case android_super_t::metadata_t::TABLE_KIND_PARTITIONS: {
+            m__raw_table->push_back(m__io->read_bytes(entry_size()));
+            kaitai::kstream* io__raw_table = new kaitai::kstream(m__raw_table->at(m__raw_table->size() - 1));
+            m__io__raw_table->push_back(io__raw_table);
+            m_table->push_back(new partition_t(io__raw_table, this, m__root));
+            break;
+        }
+        default: {
+            m__raw_table->push_back(m__io->read_bytes(entry_size()));
+            break;
+        }
+        }
+    }
+    m__io->seek(_pos);
+    return m_table;
 }
 
 android_super_t::root_t::root_t(kaitai::kstream* p__io, android_super_t* p__parent, android_super_t* p__root) : kaitai::kstruct(p__io) {
@@ -132,307 +448,13 @@ void android_super_t::root_t::_clean_up() {
     }
 }
 
-android_super_t::geometry_t::geometry_t(kaitai::kstream* p__io, android_super_t::root_t* p__parent, android_super_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void android_super_t::geometry_t::_read() {
-    m_magic = m__io->read_bytes(4);
-    if (!(magic() == std::string("\x67\x44\x6C\x61", 4))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\x67\x44\x6C\x61", 4), magic(), _io(), std::string("/types/geometry/seq/0"));
-    }
-    m_struct_size = m__io->read_u4le();
-    m_checksum = m__io->read_bytes(32);
-    m_metadata_max_size = m__io->read_u4le();
-    m_metadata_slot_count = m__io->read_u4le();
-    m_logical_block_size = m__io->read_u4le();
-}
-
-android_super_t::geometry_t::~geometry_t() {
-    _clean_up();
-}
-
-void android_super_t::geometry_t::_clean_up() {
-}
-
-android_super_t::metadata_t::metadata_t(kaitai::kstream* p__io, android_super_t::root_t* p__parent, android_super_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    m_partitions = 0;
-    m_extents = 0;
-    m_groups = 0;
-    m_block_devices = 0;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void android_super_t::metadata_t::_read() {
-    m_magic = m__io->read_bytes(4);
-    if (!(magic() == std::string("\x30\x50\x4C\x41", 4))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\x30\x50\x4C\x41", 4), magic(), _io(), std::string("/types/metadata/seq/0"));
-    }
-    m_major_version = m__io->read_u2le();
-    m_minor_version = m__io->read_u2le();
-    m_header_size = m__io->read_u4le();
-    m_header_checksum = m__io->read_bytes(32);
-    m_tables_size = m__io->read_u4le();
-    m_tables_checksum = m__io->read_bytes(32);
-    m_partitions = new table_descriptor_t(android_super_t::metadata_t::TABLE_KIND_PARTITIONS, m__io, this, m__root);
-    m_extents = new table_descriptor_t(android_super_t::metadata_t::TABLE_KIND_EXTENTS, m__io, this, m__root);
-    m_groups = new table_descriptor_t(android_super_t::metadata_t::TABLE_KIND_GROUPS, m__io, this, m__root);
-    m_block_devices = new table_descriptor_t(android_super_t::metadata_t::TABLE_KIND_BLOCK_DEVICES, m__io, this, m__root);
-}
-
-android_super_t::metadata_t::~metadata_t() {
-    _clean_up();
-}
-
-void android_super_t::metadata_t::_clean_up() {
-    if (m_partitions) {
-        delete m_partitions; m_partitions = 0;
-    }
-    if (m_extents) {
-        delete m_extents; m_extents = 0;
-    }
-    if (m_groups) {
-        delete m_groups; m_groups = 0;
-    }
-    if (m_block_devices) {
-        delete m_block_devices; m_block_devices = 0;
-    }
-}
-
-android_super_t::metadata_t::block_device_t::block_device_t(kaitai::kstream* p__io, android_super_t::metadata_t::table_descriptor_t* p__parent, android_super_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void android_super_t::metadata_t::block_device_t::_read() {
-    m_first_logical_sector = m__io->read_u8le();
-    m_alignment = m__io->read_u4le();
-    m_alignment_offset = m__io->read_u4le();
-    m_size = m__io->read_u8le();
-    m_partition_name = kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_terminate(m__io->read_bytes(36), 0, false), std::string("UTF-8"));
-    m_flag_slot_suffixed = m__io->read_bits_int_le(1);
-    m_flags_reserved = m__io->read_bits_int_le(31);
-}
-
-android_super_t::metadata_t::block_device_t::~block_device_t() {
-    _clean_up();
-}
-
-void android_super_t::metadata_t::block_device_t::_clean_up() {
-}
-
-android_super_t::metadata_t::extent_t::extent_t(kaitai::kstream* p__io, android_super_t::metadata_t::table_descriptor_t* p__parent, android_super_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void android_super_t::metadata_t::extent_t::_read() {
-    m_num_sectors = m__io->read_u8le();
-    m_target_type = static_cast<android_super_t::metadata_t::extent_t::target_type_t>(m__io->read_u4le());
-    m_target_data = m__io->read_u8le();
-    m_target_source = m__io->read_u4le();
-}
-
-android_super_t::metadata_t::extent_t::~extent_t() {
-    _clean_up();
-}
-
-void android_super_t::metadata_t::extent_t::_clean_up() {
-}
-
-android_super_t::metadata_t::table_descriptor_t::table_descriptor_t(table_kind_t p_kind, kaitai::kstream* p__io, android_super_t::metadata_t* p__parent, android_super_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    m_kind = p_kind;
-    m_table = 0;
-    m__raw_table = 0;
-    m__io__raw_table = 0;
-    f_table = false;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void android_super_t::metadata_t::table_descriptor_t::_read() {
-    m_offset = m__io->read_u4le();
-    m_num_entries = m__io->read_u4le();
-    m_entry_size = m__io->read_u4le();
-}
-
-android_super_t::metadata_t::table_descriptor_t::~table_descriptor_t() {
-    _clean_up();
-}
-
-void android_super_t::metadata_t::table_descriptor_t::_clean_up() {
-    if (f_table) {
-        if (m__raw_table) {
-            delete m__raw_table; m__raw_table = 0;
-        }
-        if (m__io__raw_table) {
-            for (std::vector<kaitai::kstream*>::iterator it = m__io__raw_table->begin(); it != m__io__raw_table->end(); ++it) {
-                delete *it;
-            }
-            delete m__io__raw_table; m__io__raw_table = 0;
-        }
-        if (m_table) {
-            for (std::vector<kaitai::kstruct*>::iterator it = m_table->begin(); it != m_table->end(); ++it) {
-                delete *it;
-            }
-            delete m_table; m_table = 0;
-        }
-    }
-}
-
-std::vector<kaitai::kstruct*>* android_super_t::metadata_t::table_descriptor_t::table() {
-    if (f_table)
-        return m_table;
-    std::streampos _pos = m__io->pos();
-    m__io->seek((_parent()->header_size() + offset()));
-    m__raw_table = new std::vector<std::string>();
-    m__io__raw_table = new std::vector<kaitai::kstream*>();
-    m_table = new std::vector<kaitai::kstruct*>();
-    const int l_table = num_entries();
-    for (int i = 0; i < l_table; i++) {
-        switch (kind()) {
-        case android_super_t::metadata_t::TABLE_KIND_PARTITIONS: {
-            m__raw_table->push_back(m__io->read_bytes(entry_size()));
-            kaitai::kstream* io__raw_table = new kaitai::kstream(m__raw_table->at(m__raw_table->size() - 1));
-            m__io__raw_table->push_back(io__raw_table);
-            m_table->push_back(new partition_t(io__raw_table, this, m__root));
-            break;
-        }
-        case android_super_t::metadata_t::TABLE_KIND_EXTENTS: {
-            m__raw_table->push_back(m__io->read_bytes(entry_size()));
-            kaitai::kstream* io__raw_table = new kaitai::kstream(m__raw_table->at(m__raw_table->size() - 1));
-            m__io__raw_table->push_back(io__raw_table);
-            m_table->push_back(new extent_t(io__raw_table, this, m__root));
-            break;
-        }
-        case android_super_t::metadata_t::TABLE_KIND_GROUPS: {
-            m__raw_table->push_back(m__io->read_bytes(entry_size()));
-            kaitai::kstream* io__raw_table = new kaitai::kstream(m__raw_table->at(m__raw_table->size() - 1));
-            m__io__raw_table->push_back(io__raw_table);
-            m_table->push_back(new group_t(io__raw_table, this, m__root));
-            break;
-        }
-        case android_super_t::metadata_t::TABLE_KIND_BLOCK_DEVICES: {
-            m__raw_table->push_back(m__io->read_bytes(entry_size()));
-            kaitai::kstream* io__raw_table = new kaitai::kstream(m__raw_table->at(m__raw_table->size() - 1));
-            m__io__raw_table->push_back(io__raw_table);
-            m_table->push_back(new block_device_t(io__raw_table, this, m__root));
-            break;
-        }
-        default: {
-            m__raw_table->push_back(m__io->read_bytes(entry_size()));
-            break;
-        }
-        }
-    }
-    m__io->seek(_pos);
-    f_table = true;
-    return m_table;
-}
-
-android_super_t::metadata_t::partition_t::partition_t(kaitai::kstream* p__io, android_super_t::metadata_t::table_descriptor_t* p__parent, android_super_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void android_super_t::metadata_t::partition_t::_read() {
-    m_name = kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_terminate(m__io->read_bytes(36), 0, false), std::string("UTF-8"));
-    m_attr_readonly = m__io->read_bits_int_le(1);
-    m_attr_slot_suffixed = m__io->read_bits_int_le(1);
-    m_attr_updated = m__io->read_bits_int_le(1);
-    m_attr_disabled = m__io->read_bits_int_le(1);
-    m_attrs_reserved = m__io->read_bits_int_le(28);
-    m__io->align_to_byte();
-    m_first_extent_index = m__io->read_u4le();
-    m_num_extents = m__io->read_u4le();
-    m_group_index = m__io->read_u4le();
-}
-
-android_super_t::metadata_t::partition_t::~partition_t() {
-    _clean_up();
-}
-
-void android_super_t::metadata_t::partition_t::_clean_up() {
-}
-
-android_super_t::metadata_t::group_t::group_t(kaitai::kstream* p__io, android_super_t::metadata_t::table_descriptor_t* p__parent, android_super_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void android_super_t::metadata_t::group_t::_read() {
-    m_name = kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_terminate(m__io->read_bytes(36), 0, false), std::string("UTF-8"));
-    m_flag_slot_suffixed = m__io->read_bits_int_le(1);
-    m_flags_reserved = m__io->read_bits_int_le(31);
-    m__io->align_to_byte();
-    m_maximum_size = m__io->read_u8le();
-}
-
-android_super_t::metadata_t::group_t::~group_t() {
-    _clean_up();
-}
-
-void android_super_t::metadata_t::group_t::_clean_up() {
-}
-
 android_super_t::root_t* android_super_t::root() {
     if (f_root)
         return m_root;
+    f_root = true;
     std::streampos _pos = m__io->pos();
     m__io->seek(4096);
     m_root = new root_t(m__io, this, m__root);
     m__io->seek(_pos);
-    f_root = true;
     return m_root;
 }

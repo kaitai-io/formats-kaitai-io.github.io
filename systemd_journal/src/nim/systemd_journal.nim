@@ -7,16 +7,33 @@ type
     `objects`*: seq[SystemdJournal_JournalObject]
     `parent`*: KaitaiStruct
     `rawHeader`*: seq[byte]
-    `lenHeaderInst`: uint64
-    `lenHeaderInstFlag`: bool
     `dataHashTableInst`: seq[byte]
     `dataHashTableInstFlag`: bool
     `fieldHashTableInst`: seq[byte]
     `fieldHashTableInstFlag`: bool
+    `lenHeaderInst`: uint64
+    `lenHeaderInstFlag`: bool
   SystemdJournal_State* = enum
     offline = 0
     online = 1
     archived = 2
+  SystemdJournal_DataObject* = ref object of KaitaiStruct
+    `hash`*: uint64
+    `ofsNextHash`*: uint64
+    `ofsHeadField`*: uint64
+    `ofsEntry`*: uint64
+    `ofsEntryArray`*: uint64
+    `numEntries`*: uint64
+    `payload`*: seq[byte]
+    `parent`*: SystemdJournal_JournalObject
+    `entryInst`: SystemdJournal_JournalObject
+    `entryInstFlag`: bool
+    `entryArrayInst`: SystemdJournal_JournalObject
+    `entryArrayInstFlag`: bool
+    `headFieldInst`: SystemdJournal_JournalObject
+    `headFieldInstFlag`: bool
+    `nextHashInst`: SystemdJournal_JournalObject
+    `nextHashInstFlag`: bool
   SystemdJournal_Header* = ref object of KaitaiStruct
     `signature`*: seq[byte]
     `compatibleFlags`*: uint32
@@ -65,36 +82,19 @@ type
     field_hash_table = 5
     entry_array = 6
     tag = 7
-  SystemdJournal_DataObject* = ref object of KaitaiStruct
-    `hash`*: uint64
-    `ofsNextHash`*: uint64
-    `ofsHeadField`*: uint64
-    `ofsEntry`*: uint64
-    `ofsEntryArray`*: uint64
-    `numEntries`*: uint64
-    `payload`*: seq[byte]
-    `parent`*: SystemdJournal_JournalObject
-    `nextHashInst`: SystemdJournal_JournalObject
-    `nextHashInstFlag`: bool
-    `headFieldInst`: SystemdJournal_JournalObject
-    `headFieldInstFlag`: bool
-    `entryInst`: SystemdJournal_JournalObject
-    `entryInstFlag`: bool
-    `entryArrayInst`: SystemdJournal_JournalObject
-    `entryArrayInstFlag`: bool
 
 proc read*(_: typedesc[SystemdJournal], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): SystemdJournal
+proc read*(_: typedesc[SystemdJournal_DataObject], io: KaitaiStream, root: KaitaiStruct, parent: SystemdJournal_JournalObject): SystemdJournal_DataObject
 proc read*(_: typedesc[SystemdJournal_Header], io: KaitaiStream, root: KaitaiStruct, parent: SystemdJournal): SystemdJournal_Header
 proc read*(_: typedesc[SystemdJournal_JournalObject], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): SystemdJournal_JournalObject
-proc read*(_: typedesc[SystemdJournal_DataObject], io: KaitaiStream, root: KaitaiStruct, parent: SystemdJournal_JournalObject): SystemdJournal_DataObject
 
-proc lenHeader*(this: SystemdJournal): uint64
 proc dataHashTable*(this: SystemdJournal): seq[byte]
 proc fieldHashTable*(this: SystemdJournal): seq[byte]
-proc nextHash*(this: SystemdJournal_DataObject): SystemdJournal_JournalObject
-proc headField*(this: SystemdJournal_DataObject): SystemdJournal_JournalObject
+proc lenHeader*(this: SystemdJournal): uint64
 proc entry*(this: SystemdJournal_DataObject): SystemdJournal_JournalObject
 proc entryArray*(this: SystemdJournal_DataObject): SystemdJournal_JournalObject
+proc headField*(this: SystemdJournal_DataObject): SystemdJournal_JournalObject
+proc nextHash*(this: SystemdJournal_DataObject): SystemdJournal_JournalObject
 
 
 ##[
@@ -126,23 +126,6 @@ proc read*(_: typedesc[SystemdJournal], io: KaitaiStream, root: KaitaiStruct, pa
     let it = SystemdJournal_JournalObject.read(this.io, this.root, this)
     this.objects.add(it)
 
-proc lenHeader(this: SystemdJournal): uint64 = 
-
-  ##[
-  Header length is used to set substream size, as it thus required
-prior to declaration of header.
-
-  ]##
-  if this.lenHeaderInstFlag:
-    return this.lenHeaderInst
-  let pos = this.io.pos()
-  this.io.seek(int(88))
-  let lenHeaderInstExpr = this.io.readU8le()
-  this.lenHeaderInst = lenHeaderInstExpr
-  this.io.seek(pos)
-  this.lenHeaderInstFlag = true
-  return this.lenHeaderInst
-
 proc dataHashTable(this: SystemdJournal): seq[byte] = 
   if this.dataHashTableInstFlag:
     return this.dataHashTableInst
@@ -165,8 +148,110 @@ proc fieldHashTable(this: SystemdJournal): seq[byte] =
   this.fieldHashTableInstFlag = true
   return this.fieldHashTableInst
 
+proc lenHeader(this: SystemdJournal): uint64 = 
+
+  ##[
+  Header length is used to set substream size, as it thus required
+prior to declaration of header.
+
+  ]##
+  if this.lenHeaderInstFlag:
+    return this.lenHeaderInst
+  let pos = this.io.pos()
+  this.io.seek(int(88))
+  let lenHeaderInstExpr = this.io.readU8le()
+  this.lenHeaderInst = lenHeaderInstExpr
+  this.io.seek(pos)
+  this.lenHeaderInstFlag = true
+  return this.lenHeaderInst
+
 proc fromFile*(_: typedesc[SystemdJournal], filename: string): SystemdJournal =
   SystemdJournal.read(newKaitaiFileStream(filename), nil, nil)
+
+
+##[
+Data objects are designed to carry log payload, typically in
+form of a "key=value" string in `payload` attribute.
+
+@see <a href="https://www.freedesktop.org/wiki/Software/systemd/journal-files/#dataobjects">Source</a>
+]##
+proc read*(_: typedesc[SystemdJournal_DataObject], io: KaitaiStream, root: KaitaiStruct, parent: SystemdJournal_JournalObject): SystemdJournal_DataObject =
+  template this: untyped = result
+  this = new(SystemdJournal_DataObject)
+  let root = if root == nil: cast[SystemdJournal](this) else: cast[SystemdJournal](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let hashExpr = this.io.readU8le()
+  this.hash = hashExpr
+  let ofsNextHashExpr = this.io.readU8le()
+  this.ofsNextHash = ofsNextHashExpr
+  let ofsHeadFieldExpr = this.io.readU8le()
+  this.ofsHeadField = ofsHeadFieldExpr
+  let ofsEntryExpr = this.io.readU8le()
+  this.ofsEntry = ofsEntryExpr
+  let ofsEntryArrayExpr = this.io.readU8le()
+  this.ofsEntryArray = ofsEntryArrayExpr
+  let numEntriesExpr = this.io.readU8le()
+  this.numEntries = numEntriesExpr
+  let payloadExpr = this.io.readBytesFull()
+  this.payload = payloadExpr
+
+proc entry(this: SystemdJournal_DataObject): SystemdJournal_JournalObject = 
+  if this.entryInstFlag:
+    return this.entryInst
+  if this.ofsEntry != 0:
+    let io = SystemdJournal(this.root).io
+    let pos = io.pos()
+    io.seek(int(this.ofsEntry))
+    let entryInstExpr = SystemdJournal_JournalObject.read(io, this.root, this)
+    this.entryInst = entryInstExpr
+    io.seek(pos)
+  this.entryInstFlag = true
+  return this.entryInst
+
+proc entryArray(this: SystemdJournal_DataObject): SystemdJournal_JournalObject = 
+  if this.entryArrayInstFlag:
+    return this.entryArrayInst
+  if this.ofsEntryArray != 0:
+    let io = SystemdJournal(this.root).io
+    let pos = io.pos()
+    io.seek(int(this.ofsEntryArray))
+    let entryArrayInstExpr = SystemdJournal_JournalObject.read(io, this.root, this)
+    this.entryArrayInst = entryArrayInstExpr
+    io.seek(pos)
+  this.entryArrayInstFlag = true
+  return this.entryArrayInst
+
+proc headField(this: SystemdJournal_DataObject): SystemdJournal_JournalObject = 
+  if this.headFieldInstFlag:
+    return this.headFieldInst
+  if this.ofsHeadField != 0:
+    let io = SystemdJournal(this.root).io
+    let pos = io.pos()
+    io.seek(int(this.ofsHeadField))
+    let headFieldInstExpr = SystemdJournal_JournalObject.read(io, this.root, this)
+    this.headFieldInst = headFieldInstExpr
+    io.seek(pos)
+  this.headFieldInstFlag = true
+  return this.headFieldInst
+
+proc nextHash(this: SystemdJournal_DataObject): SystemdJournal_JournalObject = 
+  if this.nextHashInstFlag:
+    return this.nextHashInst
+  if this.ofsNextHash != 0:
+    let io = SystemdJournal(this.root).io
+    let pos = io.pos()
+    io.seek(int(this.ofsNextHash))
+    let nextHashInstExpr = SystemdJournal_JournalObject.read(io, this.root, this)
+    this.nextHashInst = nextHashInstExpr
+    io.seek(pos)
+  this.nextHashInstFlag = true
+  return this.nextHashInst
+
+proc fromFile*(_: typedesc[SystemdJournal_DataObject], filename: string): SystemdJournal_DataObject =
+  SystemdJournal_DataObject.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[SystemdJournal_Header], io: KaitaiStream, root: KaitaiStruct, parent: SystemdJournal): SystemdJournal_Header =
   template this: untyped = result
@@ -252,7 +337,7 @@ proc read*(_: typedesc[SystemdJournal_JournalObject], io: KaitaiStream, root: Ka
   this.root = root
   this.parent = parent
 
-  let paddingExpr = this.io.readBytes(int(((8 - this.io.pos) %%% 8)))
+  let paddingExpr = this.io.readBytes(int((8 - this.io.pos) %%% 8))
   this.padding = paddingExpr
   let objectTypeExpr = SystemdJournal_JournalObject_ObjectTypes(this.io.readU1())
   this.objectType = objectTypeExpr
@@ -265,100 +350,15 @@ proc read*(_: typedesc[SystemdJournal_JournalObject], io: KaitaiStream, root: Ka
   block:
     let on = this.objectType
     if on == systemd_journal.data:
-      let rawPayloadExpr = this.io.readBytes(int((this.lenObject - 16)))
+      let rawPayloadExpr = this.io.readBytes(int(this.lenObject - 16))
       this.rawPayload = rawPayloadExpr
       let rawPayloadIo = newKaitaiStream(rawPayloadExpr)
       let payloadExpr = SystemdJournal_DataObject.read(rawPayloadIo, this.root, this)
       this.payload = payloadExpr
     else:
-      let payloadExpr = this.io.readBytes(int((this.lenObject - 16)))
+      let payloadExpr = this.io.readBytes(int(this.lenObject - 16))
       this.payload = payloadExpr
 
 proc fromFile*(_: typedesc[SystemdJournal_JournalObject], filename: string): SystemdJournal_JournalObject =
   SystemdJournal_JournalObject.read(newKaitaiFileStream(filename), nil, nil)
-
-
-##[
-Data objects are designed to carry log payload, typically in
-form of a "key=value" string in `payload` attribute.
-
-@see <a href="https://www.freedesktop.org/wiki/Software/systemd/journal-files/#dataobjects">Source</a>
-]##
-proc read*(_: typedesc[SystemdJournal_DataObject], io: KaitaiStream, root: KaitaiStruct, parent: SystemdJournal_JournalObject): SystemdJournal_DataObject =
-  template this: untyped = result
-  this = new(SystemdJournal_DataObject)
-  let root = if root == nil: cast[SystemdJournal](this) else: cast[SystemdJournal](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let hashExpr = this.io.readU8le()
-  this.hash = hashExpr
-  let ofsNextHashExpr = this.io.readU8le()
-  this.ofsNextHash = ofsNextHashExpr
-  let ofsHeadFieldExpr = this.io.readU8le()
-  this.ofsHeadField = ofsHeadFieldExpr
-  let ofsEntryExpr = this.io.readU8le()
-  this.ofsEntry = ofsEntryExpr
-  let ofsEntryArrayExpr = this.io.readU8le()
-  this.ofsEntryArray = ofsEntryArrayExpr
-  let numEntriesExpr = this.io.readU8le()
-  this.numEntries = numEntriesExpr
-  let payloadExpr = this.io.readBytesFull()
-  this.payload = payloadExpr
-
-proc nextHash(this: SystemdJournal_DataObject): SystemdJournal_JournalObject = 
-  if this.nextHashInstFlag:
-    return this.nextHashInst
-  if this.ofsNextHash != 0:
-    let io = SystemdJournal(this.root).io
-    let pos = io.pos()
-    io.seek(int(this.ofsNextHash))
-    let nextHashInstExpr = SystemdJournal_JournalObject.read(io, this.root, this)
-    this.nextHashInst = nextHashInstExpr
-    io.seek(pos)
-  this.nextHashInstFlag = true
-  return this.nextHashInst
-
-proc headField(this: SystemdJournal_DataObject): SystemdJournal_JournalObject = 
-  if this.headFieldInstFlag:
-    return this.headFieldInst
-  if this.ofsHeadField != 0:
-    let io = SystemdJournal(this.root).io
-    let pos = io.pos()
-    io.seek(int(this.ofsHeadField))
-    let headFieldInstExpr = SystemdJournal_JournalObject.read(io, this.root, this)
-    this.headFieldInst = headFieldInstExpr
-    io.seek(pos)
-  this.headFieldInstFlag = true
-  return this.headFieldInst
-
-proc entry(this: SystemdJournal_DataObject): SystemdJournal_JournalObject = 
-  if this.entryInstFlag:
-    return this.entryInst
-  if this.ofsEntry != 0:
-    let io = SystemdJournal(this.root).io
-    let pos = io.pos()
-    io.seek(int(this.ofsEntry))
-    let entryInstExpr = SystemdJournal_JournalObject.read(io, this.root, this)
-    this.entryInst = entryInstExpr
-    io.seek(pos)
-  this.entryInstFlag = true
-  return this.entryInst
-
-proc entryArray(this: SystemdJournal_DataObject): SystemdJournal_JournalObject = 
-  if this.entryArrayInstFlag:
-    return this.entryArrayInst
-  if this.ofsEntryArray != 0:
-    let io = SystemdJournal(this.root).io
-    let pos = io.pos()
-    io.seek(int(this.ofsEntryArray))
-    let entryArrayInstExpr = SystemdJournal_JournalObject.read(io, this.root, this)
-    this.entryArrayInst = entryArrayInstExpr
-    io.seek(pos)
-  this.entryArrayInstFlag = true
-  return this.entryArrayInst
-
-proc fromFile*(_: typedesc[SystemdJournal_DataObject], filename: string): SystemdJournal_DataObject =
-  SystemdJournal_DataObject.read(newKaitaiFileStream(filename), nil, nil)
 

@@ -14,19 +14,23 @@ type Hccapx struct {
 	Records []*Hccapx_HccapxRecord
 	_io *kaitai.Stream
 	_root *Hccapx
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewHccapx() *Hccapx {
 	return &Hccapx{
 	}
 }
 
-func (this *Hccapx) Read(io *kaitai.Stream, parent interface{}, root *Hccapx) (err error) {
+func (this Hccapx) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Hccapx) Read(io *kaitai.Stream, parent kaitai.Struct, root *Hccapx) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	for i := 1;; i++ {
+	for i := 0;; i++ {
 		tmp1, err := this._io.EOF()
 		if err != nil {
 			return err
@@ -67,6 +71,10 @@ type Hccapx_HccapxRecord struct {
 func NewHccapx_HccapxRecord() *Hccapx_HccapxRecord {
 	return &Hccapx_HccapxRecord{
 	}
+}
+
+func (this Hccapx_HccapxRecord) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Hccapx_HccapxRecord) Read(io *kaitai.Stream, parent *Hccapx, root *Hccapx) (err error) {
@@ -110,7 +118,7 @@ func (this *Hccapx_HccapxRecord) Read(io *kaitai.Stream, parent *Hccapx, root *H
 	}
 	tmp8 = tmp8
 	this.Essid = tmp8
-	tmp9, err := this._io.ReadBytes(int((32 - this.LenEssid)))
+	tmp9, err := this._io.ReadBytes(int(32 - this.LenEssid))
 	if err != nil {
 		return err
 	}
@@ -162,7 +170,7 @@ func (this *Hccapx_HccapxRecord) Read(io *kaitai.Stream, parent *Hccapx, root *H
 	}
 	tmp17 = tmp17
 	this.Eapol = tmp17
-	tmp18, err := this._io.ReadBytes(int((256 - this.LenEapol)))
+	tmp18, err := this._io.ReadBytes(int(256 - this.LenEapol))
 	if err != nil {
 		return err
 	}

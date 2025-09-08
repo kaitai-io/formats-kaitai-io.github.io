@@ -18,14 +18,18 @@ type HashcatRestore struct {
 	Argv []string
 	_io *kaitai.Stream
 	_root *HashcatRestore
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewHashcatRestore() *HashcatRestore {
 	return &HashcatRestore{
 	}
 }
 
-func (this *HashcatRestore) Read(io *kaitai.Stream, parent interface{}, root *HashcatRestore) (err error) {
+func (this HashcatRestore) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *HashcatRestore) Read(io *kaitai.Stream, parent kaitai.Struct, root *HashcatRestore) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root

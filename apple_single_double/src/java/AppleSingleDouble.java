@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -75,6 +76,12 @@ public class AppleSingleDouble extends KaitaiStruct {
             this.entries.add(new Entry(this._io, this, _root));
         }
     }
+
+    public void _fetchInstances() {
+        for (int i = 0; i < this.entries.size(); i++) {
+            this.entries.get(((Number) (i)).intValue())._fetchInstances();
+        }
+    }
     public static class Entry extends KaitaiStruct {
         public static Entry fromFile(String fileName) throws IOException {
             return new Entry(new ByteBufferKaitaiStream(fileName));
@@ -126,6 +133,27 @@ public class AppleSingleDouble extends KaitaiStruct {
             this.ofsBody = this._io.readU4be();
             this.lenBody = this._io.readU4be();
         }
+
+        public void _fetchInstances() {
+            body();
+            if (this.body != null) {
+                {
+                    Types on = type();
+                    if (on != null) {
+                        switch (type()) {
+                        case FINDER_INFO: {
+                            ((FinderInfo) (this.body))._fetchInstances();
+                            break;
+                        }
+                        default: {
+                            break;
+                        }
+                        }
+                    } else {
+                    }
+                }
+            }
+        }
         private Object body;
         public Object body() {
             if (this.body != null)
@@ -137,9 +165,8 @@ public class AppleSingleDouble extends KaitaiStruct {
                 if (on != null) {
                     switch (type()) {
                     case FINDER_INFO: {
-                        this._raw_body = this._io.readBytes(lenBody());
-                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                        this.body = new FinderInfo(_io__raw_body, this, _root);
+                        KaitaiStream _io_body = this._io.substream(lenBody());
+                        this.body = new FinderInfo(_io_body, this, _root);
                         break;
                     }
                     default: {
@@ -159,13 +186,11 @@ public class AppleSingleDouble extends KaitaiStruct {
         private long lenBody;
         private AppleSingleDouble _root;
         private AppleSingleDouble _parent;
-        private byte[] _raw_body;
         public Types type() { return type; }
         public long ofsBody() { return ofsBody; }
         public long lenBody() { return lenBody; }
         public AppleSingleDouble _root() { return _root; }
         public AppleSingleDouble _parent() { return _parent; }
-        public byte[] _raw_body() { return _raw_body; }
     }
 
     /**
@@ -197,6 +222,10 @@ public class AppleSingleDouble extends KaitaiStruct {
             this.flags = this._io.readU2be();
             this.location = new Point(this._io, this, _root);
             this.folderId = this._io.readU2be();
+        }
+
+        public void _fetchInstances() {
+            this.location._fetchInstances();
         }
         private byte[] fileType;
         private byte[] fileCreator;
@@ -248,6 +277,9 @@ public class AppleSingleDouble extends KaitaiStruct {
             this.x = this._io.readU2be();
             this.y = this._io.readU2be();
         }
+
+        public void _fetchInstances() {
+        }
         private int x;
         private int y;
         private AppleSingleDouble _root;
@@ -261,7 +293,7 @@ public class AppleSingleDouble extends KaitaiStruct {
     private long version;
     private byte[] reserved;
     private int numEntries;
-    private ArrayList<Entry> entries;
+    private List<Entry> entries;
     private AppleSingleDouble _root;
     private KaitaiStruct _parent;
     public FileType magic() { return magic; }
@@ -272,7 +304,7 @@ public class AppleSingleDouble extends KaitaiStruct {
      */
     public byte[] reserved() { return reserved; }
     public int numEntries() { return numEntries; }
-    public ArrayList<Entry> entries() { return entries; }
+    public List<Entry> entries() { return entries; }
     public AppleSingleDouble _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

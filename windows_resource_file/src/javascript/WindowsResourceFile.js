@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.WindowsResourceFile = factory(root.KaitaiStream);
+    factory(root.WindowsResourceFile || (root.WindowsResourceFile = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (WindowsResourceFile_, KaitaiStream) {
 /**
  * Windows resource file (.res) are binary bundles of
  * "resources". Resource has some sort of ID (numerical or string),
@@ -110,7 +110,7 @@ var WindowsResourceFile = (function() {
     function Resource(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -119,14 +119,14 @@ var WindowsResourceFile = (function() {
       this.headerSize = this._io.readU4le();
       this.type = new UnicodeOrId(this._io, this, this._root);
       this.name = new UnicodeOrId(this._io, this, this._root);
-      this.padding1 = this._io.readBytes(KaitaiStream.mod((4 - this._io.pos), 4));
+      this.padding1 = this._io.readBytes(KaitaiStream.mod(4 - this._io.pos, 4));
       this.formatVersion = this._io.readU4le();
       this.flags = this._io.readU2le();
       this.language = this._io.readU2le();
       this.valueVersion = this._io.readU4le();
       this.characteristics = this._io.readU4le();
       this.value = this._io.readBytes(this.valueSize);
-      this.padding2 = this._io.readBytes(KaitaiStream.mod((4 - this._io.pos), 4));
+      this.padding2 = this._io.readBytes(KaitaiStream.mod(4 - this._io.pos, 4));
     }
 
     /**
@@ -178,7 +178,7 @@ var WindowsResourceFile = (function() {
     function UnicodeOrId(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -202,6 +202,27 @@ var WindowsResourceFile = (function() {
         this.noop = this._io.readBytes(0);
       }
     }
+    Object.defineProperty(UnicodeOrId.prototype, 'asString', {
+      get: function() {
+        if (this._m_asString !== undefined)
+          return this._m_asString;
+        if (this.isString) {
+          var _pos = this._io.pos;
+          this._io.seek(this.savePos1);
+          this._m_asString = KaitaiStream.bytesToStr(this._io.readBytes((this.savePos2 - this.savePos1) - 2), "UTF-16LE");
+          this._io.seek(_pos);
+        }
+        return this._m_asString;
+      }
+    });
+    Object.defineProperty(UnicodeOrId.prototype, 'isString', {
+      get: function() {
+        if (this._m_isString !== undefined)
+          return this._m_isString;
+        this._m_isString = this.first != 65535;
+        return this._m_isString;
+      }
+    });
     Object.defineProperty(UnicodeOrId.prototype, 'savePos1', {
       get: function() {
         if (this._m_savePos1 !== undefined)
@@ -218,32 +239,11 @@ var WindowsResourceFile = (function() {
         return this._m_savePos2;
       }
     });
-    Object.defineProperty(UnicodeOrId.prototype, 'isString', {
-      get: function() {
-        if (this._m_isString !== undefined)
-          return this._m_isString;
-        this._m_isString = this.first != 65535;
-        return this._m_isString;
-      }
-    });
-    Object.defineProperty(UnicodeOrId.prototype, 'asString', {
-      get: function() {
-        if (this._m_asString !== undefined)
-          return this._m_asString;
-        if (this.isString) {
-          var _pos = this._io.pos;
-          this._io.seek(this.savePos1);
-          this._m_asString = KaitaiStream.bytesToStr(this._io.readBytes(((this.savePos2 - this.savePos1) - 2)), "UTF-16LE");
-          this._io.seek(_pos);
-        }
-        return this._m_asString;
-      }
-    });
 
     return UnicodeOrId;
   })();
 
   return WindowsResourceFile;
 })();
-return WindowsResourceFile;
-}));
+WindowsResourceFile_.WindowsResourceFile = WindowsResourceFile;
+});

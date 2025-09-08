@@ -3,12 +3,15 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class gltf_binary_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -19,15 +22,22 @@
 class gltf_binary_t : public kaitai::kstruct {
 
 public:
-    class header_t;
-    class chunk_t;
-    class json_t;
     class bin_t;
+    class chunk_t;
+    class header_t;
+    class json_t;
 
     enum chunk_type_t {
         CHUNK_TYPE_BIN = 5130562,
         CHUNK_TYPE_JSON = 1313821514
     };
+    static bool _is_defined_chunk_type_t(chunk_type_t v);
+
+private:
+    static const std::set<chunk_type_t> _values_chunk_type_t;
+    static std::set<chunk_type_t> _build_values_chunk_type_t();
+
+public:
 
     gltf_binary_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, gltf_binary_t* p__root = 0);
 
@@ -38,41 +48,28 @@ private:
 public:
     ~gltf_binary_t();
 
-    class header_t : public kaitai::kstruct {
+    class bin_t : public kaitai::kstruct {
 
     public:
 
-        header_t(kaitai::kstream* p__io, gltf_binary_t* p__parent = 0, gltf_binary_t* p__root = 0);
+        bin_t(kaitai::kstream* p__io, gltf_binary_t::chunk_t* p__parent = 0, gltf_binary_t* p__root = 0);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~header_t();
+        ~bin_t();
 
     private:
-        std::string m_magic;
-        uint32_t m_version;
-        uint32_t m_length;
+        std::string m_data;
         gltf_binary_t* m__root;
-        gltf_binary_t* m__parent;
+        gltf_binary_t::chunk_t* m__parent;
 
     public:
-        std::string magic() const { return m_magic; }
-
-        /**
-         * Indicates the version of the Binary glTF container format.
-         * For this specification, should be set to 2.
-         */
-        uint32_t version() const { return m_version; }
-
-        /**
-         * Total length of the Binary glTF, including Header and all Chunks, in bytes.
-         */
-        uint32_t length() const { return m_length; }
+        std::string data() const { return m_data; }
         gltf_binary_t* _root() const { return m__root; }
-        gltf_binary_t* _parent() const { return m__parent; }
+        gltf_binary_t::chunk_t* _parent() const { return m__parent; }
     };
 
     class chunk_t : public kaitai::kstruct {
@@ -113,6 +110,43 @@ public:
         kaitai::kstream* _io__raw_data() const { return m__io__raw_data; }
     };
 
+    class header_t : public kaitai::kstruct {
+
+    public:
+
+        header_t(kaitai::kstream* p__io, gltf_binary_t* p__parent = 0, gltf_binary_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~header_t();
+
+    private:
+        std::string m_magic;
+        uint32_t m_version;
+        uint32_t m_length;
+        gltf_binary_t* m__root;
+        gltf_binary_t* m__parent;
+
+    public:
+        std::string magic() const { return m_magic; }
+
+        /**
+         * Indicates the version of the Binary glTF container format.
+         * For this specification, should be set to 2.
+         */
+        uint32_t version() const { return m_version; }
+
+        /**
+         * Total length of the Binary glTF, including Header and all Chunks, in bytes.
+         */
+        uint32_t length() const { return m_length; }
+        gltf_binary_t* _root() const { return m__root; }
+        gltf_binary_t* _parent() const { return m__parent; }
+    };
+
     class json_t : public kaitai::kstruct {
 
     public:
@@ -137,30 +171,6 @@ public:
          * This is where GLB deviates from being an elegant format.
          * To parse the rest of the file, you have to parse the JSON first.
          */
-        std::string data() const { return m_data; }
-        gltf_binary_t* _root() const { return m__root; }
-        gltf_binary_t::chunk_t* _parent() const { return m__parent; }
-    };
-
-    class bin_t : public kaitai::kstruct {
-
-    public:
-
-        bin_t(kaitai::kstream* p__io, gltf_binary_t::chunk_t* p__parent = 0, gltf_binary_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~bin_t();
-
-    private:
-        std::string m_data;
-        gltf_binary_t* m__root;
-        gltf_binary_t::chunk_t* m__parent;
-
-    public:
         std::string data() const { return m_data; }
         gltf_binary_t* _root() const { return m__root; }
         gltf_binary_t::chunk_t* _parent() const { return m__parent; }

@@ -2,13 +2,16 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class code_6502_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -176,6 +179,12 @@ public:
         OPCODE_SBC_ABS_X = 253,
         OPCODE_INC_ABS_X = 254
     };
+    static bool _is_defined_opcode_t(opcode_t v);
+
+private:
+    static const std::set<opcode_t> _values_opcode_t;
+
+public:
 
     code_6502_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, code_6502_t* p__root = nullptr);
 

@@ -6,6 +6,7 @@ import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -37,14 +38,14 @@ public class Vp8DuckIvf extends KaitaiStruct {
     }
     private void _read() {
         this.magic1 = this._io.readBytes(4);
-        if (!(Arrays.equals(magic1(), new byte[] { 68, 75, 73, 70 }))) {
-            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 68, 75, 73, 70 }, magic1(), _io(), "/seq/0");
+        if (!(Arrays.equals(this.magic1, new byte[] { 68, 75, 73, 70 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 68, 75, 73, 70 }, this.magic1, this._io, "/seq/0");
         }
         this.version = this._io.readU2le();
         this.lenHeader = this._io.readU2le();
         this.codec = this._io.readBytes(4);
-        if (!(Arrays.equals(codec(), new byte[] { 86, 80, 56, 48 }))) {
-            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 86, 80, 56, 48 }, codec(), _io(), "/seq/3");
+        if (!(Arrays.equals(this.codec, new byte[] { 86, 80, 56, 48 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 86, 80, 56, 48 }, this.codec, this._io, "/seq/3");
         }
         this.width = this._io.readU2le();
         this.height = this._io.readU2le();
@@ -57,34 +58,11 @@ public class Vp8DuckIvf extends KaitaiStruct {
             this.imageData.add(new Blocks(this._io, this, _root));
         }
     }
-    public static class Blocks extends KaitaiStruct {
-        public static Blocks fromFile(String fileName) throws IOException {
-            return new Blocks(new ByteBufferKaitaiStream(fileName));
-        }
 
-        public Blocks(KaitaiStream _io) {
-            this(_io, null, null);
+    public void _fetchInstances() {
+        for (int i = 0; i < this.imageData.size(); i++) {
+            this.imageData.get(((Number) (i)).intValue())._fetchInstances();
         }
-
-        public Blocks(KaitaiStream _io, Vp8DuckIvf _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Blocks(KaitaiStream _io, Vp8DuckIvf _parent, Vp8DuckIvf _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.entries = new Block(this._io, this, _root);
-        }
-        private Block entries;
-        private Vp8DuckIvf _root;
-        private Vp8DuckIvf _parent;
-        public Block entries() { return entries; }
-        public Vp8DuckIvf _root() { return _root; }
-        public Vp8DuckIvf _parent() { return _parent; }
     }
     public static class Block extends KaitaiStruct {
         public static Block fromFile(String fileName) throws IOException {
@@ -110,6 +88,9 @@ public class Vp8DuckIvf extends KaitaiStruct {
             this.timestamp = this._io.readU8le();
             this.framedata = this._io.readBytes(lenFrame());
         }
+
+        public void _fetchInstances() {
+        }
         private long lenFrame;
         private long timestamp;
         private byte[] framedata;
@@ -125,6 +106,39 @@ public class Vp8DuckIvf extends KaitaiStruct {
         public Vp8DuckIvf _root() { return _root; }
         public Vp8DuckIvf.Blocks _parent() { return _parent; }
     }
+    public static class Blocks extends KaitaiStruct {
+        public static Blocks fromFile(String fileName) throws IOException {
+            return new Blocks(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Blocks(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Blocks(KaitaiStream _io, Vp8DuckIvf _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Blocks(KaitaiStream _io, Vp8DuckIvf _parent, Vp8DuckIvf _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.entries = new Block(this._io, this, _root);
+        }
+
+        public void _fetchInstances() {
+            this.entries._fetchInstances();
+        }
+        private Block entries;
+        private Vp8DuckIvf _root;
+        private Vp8DuckIvf _parent;
+        public Block entries() { return entries; }
+        public Vp8DuckIvf _root() { return _root; }
+        public Vp8DuckIvf _parent() { return _parent; }
+    }
     private byte[] magic1;
     private int version;
     private int lenHeader;
@@ -135,7 +149,7 @@ public class Vp8DuckIvf extends KaitaiStruct {
     private long timescale;
     private long numFrames;
     private long unused;
-    private ArrayList<Blocks> imageData;
+    private List<Blocks> imageData;
     private Vp8DuckIvf _root;
     private KaitaiStruct _parent;
 
@@ -184,7 +198,7 @@ public class Vp8DuckIvf extends KaitaiStruct {
      */
     public long numFrames() { return numFrames; }
     public long unused() { return unused; }
-    public ArrayList<Blocks> imageData() { return imageData; }
+    public List<Blocks> imageData() { return imageData; }
     public Vp8DuckIvf _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

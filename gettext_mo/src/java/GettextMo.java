@@ -5,7 +5,8 @@ import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.Arrays;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.ArrayList;
 
 
@@ -48,6 +49,10 @@ public class GettextMo extends KaitaiStruct {
         this.signature = this._io.readBytes(4);
         this.mo = new Mo(this._io, this, _root);
     }
+
+    public void _fetchInstances() {
+        this.mo._fetchInstances();
+    }
     public static class HashLookupIteration extends KaitaiStruct {
 
         public HashLookupIteration(KaitaiStream _io, long idx, long collisionStep) {
@@ -68,27 +73,12 @@ public class GettextMo extends KaitaiStruct {
         }
         private void _read() {
         }
-        private String original;
-        public String original() {
-            if (this.original != null)
-                return this.original;
-            this.original = _root().mo().originals().get((int) idx()).str();
-            return this.original;
-        }
-        private String translation;
-        public String translation() {
-            if (this.translation != null)
-                return this.translation;
-            this.translation = _root().mo().translations().get((int) idx()).str();
-            return this.translation;
-        }
-        private Integer nextIdx;
-        public Integer nextIdx() {
-            if (this.nextIdx != null)
-                return this.nextIdx;
-            int _tmp = (int) (((idx() + collisionStep()) - (idx() >= (_root().mo().numHashtableItems() - collisionStep()) ? _root().mo().numHashtableItems() : 0)));
-            this.nextIdx = _tmp;
-            return this.nextIdx;
+
+        public void _fetchInstances() {
+            next();
+            if (this.next != null) {
+                this.next._fetchInstances();
+            }
         }
         private HashLookupIteration next;
         public HashLookupIteration next() {
@@ -96,9 +86,30 @@ public class GettextMo extends KaitaiStruct {
                 return this.next;
             long _pos = this._io.pos();
             this._io.seek(0);
-            this.next = new HashLookupIteration(this._io, this, _root, _root().mo().hashtableItems().get((int) nextIdx()).val(), collisionStep());
+            this.next = new HashLookupIteration(this._io, this, _root, _root().mo().hashtableItems().get(((Number) (nextIdx())).intValue()).val(), collisionStep());
             this._io.seek(_pos);
             return this.next;
+        }
+        private Integer nextIdx;
+        public Integer nextIdx() {
+            if (this.nextIdx != null)
+                return this.nextIdx;
+            this.nextIdx = ((Number) ((idx() + collisionStep()) - (idx() >= _root().mo().numHashtableItems() - collisionStep() ? _root().mo().numHashtableItems() : 0))).intValue();
+            return this.nextIdx;
+        }
+        private String original;
+        public String original() {
+            if (this.original != null)
+                return this.original;
+            this.original = _root().mo().originals().get(((Number) (idx())).intValue()).str();
+            return this.original;
+        }
+        private String translation;
+        public String translation() {
+            if (this.translation != null)
+                return this.translation;
+            this.translation = _root().mo().translations().get(((Number) (idx())).intValue()).str();
+            return this.translation;
         }
         private long idx;
         private long collisionStep;
@@ -106,55 +117,6 @@ public class GettextMo extends KaitaiStruct {
         private KaitaiStruct _parent;
         public long idx() { return idx; }
         public long collisionStep() { return collisionStep; }
-        public GettextMo _root() { return _root; }
-        public KaitaiStruct _parent() { return _parent; }
-    }
-    public static class LookupIteration extends KaitaiStruct {
-
-        public LookupIteration(KaitaiStream _io, HashLookupIteration current, String query) {
-            this(_io, null, null, current, query);
-        }
-
-        public LookupIteration(KaitaiStream _io, KaitaiStruct _parent, HashLookupIteration current, String query) {
-            this(_io, _parent, null, current, query);
-        }
-
-        public LookupIteration(KaitaiStream _io, KaitaiStruct _parent, GettextMo _root, HashLookupIteration current, String query) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            this.current = current;
-            this.query = query;
-            _read();
-        }
-        private void _read() {
-        }
-        private Boolean found;
-        public Boolean found() {
-            if (this.found != null)
-                return this.found;
-            boolean _tmp = (boolean) (query().equals(current().original()));
-            this.found = _tmp;
-            return this.found;
-        }
-        private LookupIteration next;
-        public LookupIteration next() {
-            if (this.next != null)
-                return this.next;
-            if (!(found())) {
-                long _pos = this._io.pos();
-                this._io.seek(0);
-                this.next = new LookupIteration(this._io, this, _root, current().next(), query());
-                this._io.seek(_pos);
-            }
-            return this.next;
-        }
-        private HashLookupIteration current;
-        private String query;
-        private GettextMo _root;
-        private KaitaiStruct _parent;
-        public HashLookupIteration current() { return current; }
-        public String query() { return query; }
         public GettextMo _root() { return _root; }
         public KaitaiStruct _parent() { return _parent; }
     }
@@ -193,31 +155,23 @@ public class GettextMo extends KaitaiStruct {
         }
         private void _read() {
         }
+
+        public void _fetchInstances() {
+            entry();
+            if (this.entry != null) {
+                this.entry._fetchInstances();
+            }
+            hashLookupIteration();
+            if (this.hashLookupIteration != null) {
+                this.hashLookupIteration._fetchInstances();
+            }
+        }
         private Integer collisionStep;
         public Integer collisionStep() {
             if (this.collisionStep != null)
                 return this.collisionStep;
-            int _tmp = (int) ((KaitaiStream.mod(hash(), (_root().mo().numHashtableItems() - 2)) + 1));
-            this.collisionStep = _tmp;
+            this.collisionStep = ((Number) (KaitaiStream.mod(hash(), _root().mo().numHashtableItems() - 2) + 1)).intValue();
             return this.collisionStep;
-        }
-        private Integer idx;
-        public Integer idx() {
-            if (this.idx != null)
-                return this.idx;
-            int _tmp = (int) (KaitaiStream.mod(hash(), _root().mo().numHashtableItems()));
-            this.idx = _tmp;
-            return this.idx;
-        }
-        private HashLookupIteration hashLookupIteration;
-        public HashLookupIteration hashLookupIteration() {
-            if (this.hashLookupIteration != null)
-                return this.hashLookupIteration;
-            long _pos = this._io.pos();
-            this._io.seek(0);
-            this.hashLookupIteration = new HashLookupIteration(this._io, this, _root, _root().mo().hashtableItems().get((int) idx()).val(), collisionStep());
-            this._io.seek(_pos);
-            return this.hashLookupIteration;
         }
         private LookupIteration entry;
         public LookupIteration entry() {
@@ -228,6 +182,23 @@ public class GettextMo extends KaitaiStruct {
             this.entry = new LookupIteration(this._io, this, _root, hashLookupIteration(), query());
             this._io.seek(_pos);
             return this.entry;
+        }
+        private HashLookupIteration hashLookupIteration;
+        public HashLookupIteration hashLookupIteration() {
+            if (this.hashLookupIteration != null)
+                return this.hashLookupIteration;
+            long _pos = this._io.pos();
+            this._io.seek(0);
+            this.hashLookupIteration = new HashLookupIteration(this._io, this, _root, _root().mo().hashtableItems().get(((Number) (idx())).intValue()).val(), collisionStep());
+            this._io.seek(_pos);
+            return this.hashLookupIteration;
+        }
+        private Integer idx;
+        public Integer idx() {
+            if (this.idx != null)
+                return this.idx;
+            this.idx = ((Number) (KaitaiStream.mod(hash(), _root().mo().numHashtableItems()))).intValue();
+            return this.idx;
         }
         private String query;
         private long hash;
@@ -250,6 +221,61 @@ public class GettextMo extends KaitaiStruct {
          * @see <a href="https://gitlab.com/worr/libintl/raw/master/src/lib/libintl/strhash.c">Source</a>
          */
         public long hash() { return hash; }
+        public GettextMo _root() { return _root; }
+        public KaitaiStruct _parent() { return _parent; }
+    }
+    public static class LookupIteration extends KaitaiStruct {
+
+        public LookupIteration(KaitaiStream _io, HashLookupIteration current, String query) {
+            this(_io, null, null, current, query);
+        }
+
+        public LookupIteration(KaitaiStream _io, KaitaiStruct _parent, HashLookupIteration current, String query) {
+            this(_io, _parent, null, current, query);
+        }
+
+        public LookupIteration(KaitaiStream _io, KaitaiStruct _parent, GettextMo _root, HashLookupIteration current, String query) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            this.current = current;
+            this.query = query;
+            _read();
+        }
+        private void _read() {
+        }
+
+        public void _fetchInstances() {
+            next();
+            if (this.next != null) {
+                this.next._fetchInstances();
+            }
+        }
+        private Boolean found;
+        public Boolean found() {
+            if (this.found != null)
+                return this.found;
+            this.found = query().equals(current().original());
+            return this.found;
+        }
+        private LookupIteration next;
+        public LookupIteration next() {
+            if (this.next != null)
+                return this.next;
+            if (!(found())) {
+                long _pos = this._io.pos();
+                this._io.seek(0);
+                this.next = new LookupIteration(this._io, this, _root, current().next(), query());
+                this._io.seek(_pos);
+            }
+            return this.next;
+        }
+        private HashLookupIteration current;
+        private String query;
+        private GettextMo _root;
+        private KaitaiStruct _parent;
+        public HashLookupIteration current() { return current; }
+        public String query() { return query; }
         public GettextMo _root() { return _root; }
         public KaitaiStruct _parent() { return _parent; }
     }
@@ -277,12 +303,10 @@ public class GettextMo extends KaitaiStruct {
             {
                 byte[] on = _root().signature();
                 if (Arrays.equals(on, new byte[] { -34, 18, 4, -107 })) {
-                    boolean _tmp = (boolean) (true);
-                    this._is_le = _tmp;
+                    this._is_le = true;
                 }
                 else if (Arrays.equals(on, new byte[] { -107, 4, 18, -34 })) {
-                    boolean _tmp = (boolean) (false);
-                    this._is_le = _tmp;
+                    this._is_le = false;
                 }
             }
 
@@ -310,125 +334,27 @@ public class GettextMo extends KaitaiStruct {
             this.numHashtableItems = this._io.readU4be();
             this.ofsHashtableItems = this._io.readU4be();
         }
-        public static class Version extends KaitaiStruct {
-            private Boolean _is_le;
 
-            public Version(KaitaiStream _io, GettextMo.Mo _parent, GettextMo _root, boolean _is_le) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                this._is_le = _is_le;
-                _read();
-            }
-            private void _read() {
-
-                if (_is_le == null) {
-                    throw new KaitaiStream.UndecidedEndiannessError();
-                } else if (_is_le) {
-                    _readLE();
-                } else {
-                    _readBE();
+        public void _fetchInstances() {
+            this.version._fetchInstances();
+            hashtableItems();
+            if (this.hashtableItems != null) {
+                for (int i = 0; i < this.hashtableItems.size(); i++) {
+                    this.hashtableItems.get(((Number) (i)).intValue())._fetchInstances();
                 }
             }
-            private void _readLE() {
-                this.versionRaw = this._io.readU4le();
-            }
-            private void _readBE() {
-                this.versionRaw = this._io.readU4be();
-            }
-            private Integer major;
-            public Integer major() {
-                if (this.major != null)
-                    return this.major;
-                int _tmp = (int) ((versionRaw() >> 16));
-                this.major = _tmp;
-                return this.major;
-            }
-            private Integer minor;
-            public Integer minor() {
-                if (this.minor != null)
-                    return this.minor;
-                int _tmp = (int) ((versionRaw() & 65535));
-                this.minor = _tmp;
-                return this.minor;
-            }
-            private long versionRaw;
-            private GettextMo _root;
-            private GettextMo.Mo _parent;
-            public long versionRaw() { return versionRaw; }
-            public GettextMo _root() { return _root; }
-            public GettextMo.Mo _parent() { return _parent; }
-        }
-        public static class HashtableItem extends KaitaiStruct {
-            private Boolean _is_le;
-
-            public HashtableItem(KaitaiStream _io, GettextMo.Mo _parent, GettextMo _root, boolean _is_le) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                this._is_le = _is_le;
-                _read();
-            }
-            private void _read() {
-
-                if (_is_le == null) {
-                    throw new KaitaiStream.UndecidedEndiannessError();
-                } else if (_is_le) {
-                    _readLE();
-                } else {
-                    _readBE();
+            originals();
+            if (this.originals != null) {
+                for (int i = 0; i < this.originals.size(); i++) {
+                    this.originals.get(((Number) (i)).intValue())._fetchInstances();
                 }
             }
-            private void _readLE() {
-                this.rawVal = this._io.readU4le();
-            }
-            private void _readBE() {
-                this.rawVal = this._io.readU4be();
-            }
-            private Integer mask;
-            public Integer mask() {
-                if (this.mask != null)
-                    return this.mask;
-                int _tmp = (int) (2147483648L);
-                this.mask = _tmp;
-                return this.mask;
-            }
-            private Integer val1;
-            public Integer val1() {
-                if (this.val1 != null)
-                    return this.val1;
-                if (rawVal() != 0) {
-                    int _tmp = (int) ((rawVal() - 1));
-                    this.val1 = _tmp;
+            translations();
+            if (this.translations != null) {
+                for (int i = 0; i < this.translations.size(); i++) {
+                    this.translations.get(((Number) (i)).intValue())._fetchInstances();
                 }
-                return this.val1;
             }
-            private Boolean isSystemDependent;
-            public Boolean isSystemDependent() {
-                if (this.isSystemDependent != null)
-                    return this.isSystemDependent;
-                if (rawVal() != 0) {
-                    boolean _tmp = (boolean) ((val1() & mask()) == 1);
-                    this.isSystemDependent = _tmp;
-                }
-                return this.isSystemDependent;
-            }
-            private Integer val;
-            public Integer val() {
-                if (this.val != null)
-                    return this.val;
-                if (rawVal() != 0) {
-                    int _tmp = (int) ((val1() & ~(mask())));
-                    this.val = _tmp;
-                }
-                return this.val;
-            }
-            private long rawVal;
-            private GettextMo _root;
-            private GettextMo.Mo _parent;
-            public long rawVal() { return rawVal; }
-            public GettextMo _root() { return _root; }
-            public GettextMo.Mo _parent() { return _parent; }
         }
         public static class Descriptor extends KaitaiStruct {
             private Boolean _is_le;
@@ -458,6 +384,12 @@ public class GettextMo extends KaitaiStruct {
                 this.lenStr = this._io.readU4be();
                 this.ofsStr = this._io.readU4be();
             }
+
+            public void _fetchInstances() {
+                str();
+                if (this.str != null) {
+                }
+            }
             private String str;
             public String str() {
                 if (this.str != null)
@@ -466,9 +398,9 @@ public class GettextMo extends KaitaiStruct {
                 long _pos = io.pos();
                 io.seek(ofsStr());
                 if (_is_le) {
-                    this.str = new String(KaitaiStream.bytesTerminate(io.readBytes(lenStr()), (byte) 0, false), Charset.forName("UTF-8"));
+                    this.str = new String(KaitaiStream.bytesTerminate(io.readBytes(lenStr()), (byte) 0, false), StandardCharsets.UTF_8);
                 } else {
-                    this.str = new String(KaitaiStream.bytesTerminate(io.readBytes(lenStr()), (byte) 0, false), Charset.forName("UTF-8"));
+                    this.str = new String(KaitaiStream.bytesTerminate(io.readBytes(lenStr()), (byte) 0, false), StandardCharsets.UTF_8);
                 }
                 io.seek(_pos);
                 return this.str;
@@ -482,50 +414,128 @@ public class GettextMo extends KaitaiStruct {
             public GettextMo _root() { return _root; }
             public GettextMo.Mo _parent() { return _parent; }
         }
-        private ArrayList<Descriptor> originals;
-        public ArrayList<Descriptor> originals() {
-            if (this.originals != null)
-                return this.originals;
-            KaitaiStream io = _root()._io();
-            long _pos = io.pos();
-            io.seek(ofsOriginals());
-            if (_is_le) {
-                this.originals = new ArrayList<Descriptor>();
-                for (int i = 0; i < numTranslations(); i++) {
-                    this.originals.add(new Descriptor(io, this, _root, _is_le));
-                }
-            } else {
-                this.originals = new ArrayList<Descriptor>();
-                for (int i = 0; i < numTranslations(); i++) {
-                    this.originals.add(new Descriptor(io, this, _root, _is_le));
+        public static class HashtableItem extends KaitaiStruct {
+            private Boolean _is_le;
+
+            public HashtableItem(KaitaiStream _io, GettextMo.Mo _parent, GettextMo _root, boolean _is_le) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                this._is_le = _is_le;
+                _read();
+            }
+            private void _read() {
+
+                if (_is_le == null) {
+                    throw new KaitaiStream.UndecidedEndiannessError();
+                } else if (_is_le) {
+                    _readLE();
+                } else {
+                    _readBE();
                 }
             }
-            io.seek(_pos);
-            return this.originals;
-        }
-        private ArrayList<Descriptor> translations;
-        public ArrayList<Descriptor> translations() {
-            if (this.translations != null)
-                return this.translations;
-            KaitaiStream io = _root()._io();
-            long _pos = io.pos();
-            io.seek(ofsTranslations());
-            if (_is_le) {
-                this.translations = new ArrayList<Descriptor>();
-                for (int i = 0; i < numTranslations(); i++) {
-                    this.translations.add(new Descriptor(io, this, _root, _is_le));
+            private void _readLE() {
+                this.rawVal = this._io.readU4le();
+            }
+            private void _readBE() {
+                this.rawVal = this._io.readU4be();
+            }
+
+            public void _fetchInstances() {
+            }
+            private Boolean isSystemDependent;
+            public Boolean isSystemDependent() {
+                if (this.isSystemDependent != null)
+                    return this.isSystemDependent;
+                if (rawVal() != 0) {
+                    this.isSystemDependent = (val1() & mask()) == 1;
                 }
-            } else {
-                this.translations = new ArrayList<Descriptor>();
-                for (int i = 0; i < numTranslations(); i++) {
-                    this.translations.add(new Descriptor(io, this, _root, _is_le));
+                return this.isSystemDependent;
+            }
+            private Integer mask;
+            public Integer mask() {
+                if (this.mask != null)
+                    return this.mask;
+                this.mask = ((int) 2147483648L);
+                return this.mask;
+            }
+            private Integer val;
+            public Integer val() {
+                if (this.val != null)
+                    return this.val;
+                if (rawVal() != 0) {
+                    this.val = ((Number) (val1() & ~(mask()))).intValue();
+                }
+                return this.val;
+            }
+            private Integer val1;
+            public Integer val1() {
+                if (this.val1 != null)
+                    return this.val1;
+                if (rawVal() != 0) {
+                    this.val1 = ((Number) (rawVal() - 1)).intValue();
+                }
+                return this.val1;
+            }
+            private long rawVal;
+            private GettextMo _root;
+            private GettextMo.Mo _parent;
+            public long rawVal() { return rawVal; }
+            public GettextMo _root() { return _root; }
+            public GettextMo.Mo _parent() { return _parent; }
+        }
+        public static class Version extends KaitaiStruct {
+            private Boolean _is_le;
+
+            public Version(KaitaiStream _io, GettextMo.Mo _parent, GettextMo _root, boolean _is_le) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                this._is_le = _is_le;
+                _read();
+            }
+            private void _read() {
+
+                if (_is_le == null) {
+                    throw new KaitaiStream.UndecidedEndiannessError();
+                } else if (_is_le) {
+                    _readLE();
+                } else {
+                    _readBE();
                 }
             }
-            io.seek(_pos);
-            return this.translations;
+            private void _readLE() {
+                this.versionRaw = this._io.readU4le();
+            }
+            private void _readBE() {
+                this.versionRaw = this._io.readU4be();
+            }
+
+            public void _fetchInstances() {
+            }
+            private Integer major;
+            public Integer major() {
+                if (this.major != null)
+                    return this.major;
+                this.major = ((Number) (versionRaw() >> 16)).intValue();
+                return this.major;
+            }
+            private Integer minor;
+            public Integer minor() {
+                if (this.minor != null)
+                    return this.minor;
+                this.minor = ((Number) (versionRaw() & 65535)).intValue();
+                return this.minor;
+            }
+            private long versionRaw;
+            private GettextMo _root;
+            private GettextMo.Mo _parent;
+            public long versionRaw() { return versionRaw; }
+            public GettextMo _root() { return _root; }
+            public GettextMo.Mo _parent() { return _parent; }
         }
-        private ArrayList<HashtableItem> hashtableItems;
-        public ArrayList<HashtableItem> hashtableItems() {
+        private List<HashtableItem> hashtableItems;
+        public List<HashtableItem> hashtableItems() {
             if (this.hashtableItems != null)
                 return this.hashtableItems;
             if (ofsHashtableItems() != 0) {
@@ -546,6 +556,48 @@ public class GettextMo extends KaitaiStruct {
                 io.seek(_pos);
             }
             return this.hashtableItems;
+        }
+        private List<Descriptor> originals;
+        public List<Descriptor> originals() {
+            if (this.originals != null)
+                return this.originals;
+            KaitaiStream io = _root()._io();
+            long _pos = io.pos();
+            io.seek(ofsOriginals());
+            if (_is_le) {
+                this.originals = new ArrayList<Descriptor>();
+                for (int i = 0; i < numTranslations(); i++) {
+                    this.originals.add(new Descriptor(io, this, _root, _is_le));
+                }
+            } else {
+                this.originals = new ArrayList<Descriptor>();
+                for (int i = 0; i < numTranslations(); i++) {
+                    this.originals.add(new Descriptor(io, this, _root, _is_le));
+                }
+            }
+            io.seek(_pos);
+            return this.originals;
+        }
+        private List<Descriptor> translations;
+        public List<Descriptor> translations() {
+            if (this.translations != null)
+                return this.translations;
+            KaitaiStream io = _root()._io();
+            long _pos = io.pos();
+            io.seek(ofsTranslations());
+            if (_is_le) {
+                this.translations = new ArrayList<Descriptor>();
+                for (int i = 0; i < numTranslations(); i++) {
+                    this.translations.add(new Descriptor(io, this, _root, _is_le));
+                }
+            } else {
+                this.translations = new ArrayList<Descriptor>();
+                for (int i = 0; i < numTranslations(); i++) {
+                    this.translations.add(new Descriptor(io, this, _root, _is_le));
+                }
+            }
+            io.seek(_pos);
+            return this.translations;
         }
         private Version version;
         private long numTranslations;

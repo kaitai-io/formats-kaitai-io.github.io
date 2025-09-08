@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
-from enum import Enum
+from enum import IntEnum
 
 
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Rpm(KaitaiStruct):
     """This parser is for the RPM version 3 file format which is the current version
@@ -31,50 +32,33 @@ class Rpm(KaitaiStruct):
        Source - http://ftp.rpm.org/max-rpm/
     """
 
-    class OperatingSystems(Enum):
-        linux = 1
-        irix = 2
-        no_os = 255
+    class Architectures(IntEnum):
+        x86 = 1
+        alpha = 2
+        sparc = 3
+        mips = 4
+        ppc = 5
+        m68k = 6
+        sgi = 7
+        rs6000 = 8
+        ia64 = 9
+        sparc64 = 10
+        mips64 = 11
+        arm = 12
+        m68k_mint = 13
+        s390 = 14
+        s390x = 15
+        ppc64 = 16
+        sh = 17
+        xtensa = 18
+        aarch64 = 19
+        mips_r6 = 20
+        mips64_r6 = 21
+        riscv = 22
+        loongarch64 = 23
+        no_arch = 255
 
-    class SignatureTags(Enum):
-        signatures = 62
-        header_immutable = 63
-        i18n_table = 100
-        bad_sha1_1_obsolete = 264
-        bad_sha1_2_obsolete = 265
-        dsa = 267
-        rsa = 268
-        sha1 = 269
-        long_size = 270
-        long_archive_size = 271
-        sha256 = 273
-        file_signatures = 274
-        file_signature_length = 275
-        verity_signatures = 276
-        verity_signature_algo = 277
-        size = 1000
-        le_md5_1_obsolete = 1001
-        pgp = 1002
-        le_md5_2_obsolete = 1003
-        md5 = 1004
-        gpg = 1005
-        pgp5_obsolete = 1006
-        payload_size = 1007
-        reserved_space = 1008
-
-    class RecordTypes(Enum):
-        not_implemented = 0
-        char = 1
-        uint8 = 2
-        uint16 = 3
-        uint32 = 4
-        uint64 = 5
-        string = 6
-        bin = 7
-        string_array = 8
-        i18n_string = 9
-
-    class HeaderTags(Enum):
+    class HeaderTags(IntEnum):
         signatures = 62
         header_immutable = 63
         i18n_table = 100
@@ -376,70 +360,308 @@ class Rpm(KaitaiStruct):
         post_untrans_flags = 5108
         sys_users = 5109
 
-    class RpmTypes(Enum):
+    class OperatingSystems(IntEnum):
+        linux = 1
+        irix = 2
+        no_os = 255
+
+    class RecordTypes(IntEnum):
+        not_implemented = 0
+        char = 1
+        uint8 = 2
+        uint16 = 3
+        uint32 = 4
+        uint64 = 5
+        string = 6
+        bin = 7
+        string_array = 8
+        i18n_string = 9
+
+    class RpmTypes(IntEnum):
         binary = 0
         source = 1
 
-    class Architectures(Enum):
-        x86 = 1
-        alpha = 2
-        sparc = 3
-        mips = 4
-        ppc = 5
-        m68k = 6
-        sgi = 7
-        rs6000 = 8
-        ia64 = 9
-        sparc64 = 10
-        mips64 = 11
-        arm = 12
-        m68k_mint = 13
-        s390 = 14
-        s390x = 15
-        ppc64 = 16
-        sh = 17
-        xtensa = 18
-        aarch64 = 19
-        mips_r6 = 20
-        mips64_r6 = 21
-        riscv = 22
-        loongarch64 = 23
-        no_arch = 255
+    class SignatureTags(IntEnum):
+        signatures = 62
+        header_immutable = 63
+        i18n_table = 100
+        bad_sha1_1_obsolete = 264
+        bad_sha1_2_obsolete = 265
+        dsa = 267
+        rsa = 268
+        sha1 = 269
+        long_size = 270
+        long_archive_size = 271
+        sha256 = 273
+        file_signatures = 274
+        file_signature_length = 275
+        verity_signatures = 276
+        verity_signature_algo = 277
+        size = 1000
+        le_md5_1_obsolete = 1001
+        pgp = 1002
+        le_md5_2_obsolete = 1003
+        md5 = 1004
+        gpg = 1005
+        pgp5_obsolete = 1006
+        payload_size = 1007
+        reserved_space = 1008
     def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
+        super(Rpm, self).__init__(_io)
         self._parent = _parent
-        self._root = _root if _root else self
+        self._root = _root or self
         self._read()
 
     def _read(self):
         self.lead = Rpm.Lead(self._io, self, self._root)
         self.signature = Rpm.Header(True, self._io, self, self._root)
-        self.signature_padding = self._io.read_bytes((-(self._io.pos()) % 8))
+        self.signature_padding = self._io.read_bytes(-(self._io.pos()) % 8)
         if self.ofs_header < 0:
+            pass
             self._unnamed3 = self._io.read_bytes(0)
 
         self.header = Rpm.Header(False, self._io, self, self._root)
         if self.ofs_payload < 0:
+            pass
             self._unnamed5 = self._io.read_bytes(0)
 
         self.signature_tags_steps = []
         for i in range(self.signature.header_record.num_index_records):
-            self.signature_tags_steps.append(Rpm.SignatureTagsStep(i, (-1 if i < 1 else self.signature_tags_steps[(i - 1)].size_tag_idx), self._io, self, self._root))
+            self.signature_tags_steps.append(Rpm.SignatureTagsStep(i, (-1 if i < 1 else self.signature_tags_steps[i - 1].size_tag_idx), self._io, self, self._root))
 
 
-    class RecordTypeStringArray(KaitaiStruct):
-        def __init__(self, num_values, _io, _parent=None, _root=None):
-            self._io = _io
+
+    def _fetch_instances(self):
+        pass
+        self.lead._fetch_instances()
+        self.signature._fetch_instances()
+        if self.ofs_header < 0:
+            pass
+
+        self.header._fetch_instances()
+        if self.ofs_payload < 0:
+            pass
+
+        for i in range(len(self.signature_tags_steps)):
+            pass
+            self.signature_tags_steps[i]._fetch_instances()
+
+        _ = self.payload
+        if hasattr(self, '_m_payload'):
+            pass
+
+
+    class Dummy(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(Rpm.Dummy, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
-            self.num_values = num_values
+            self._root = _root
             self._read()
 
         def _read(self):
-            self.values = []
-            for i in range(self.num_values):
-                self.values.append((self._io.read_bytes_term(0, False, True, True)).decode(u"UTF-8"))
+            pass
 
+
+        def _fetch_instances(self):
+            pass
+
+
+    class Header(KaitaiStruct):
+        """header structure used for both the "header" and "signature", but some tag
+        values have different meanings in signature and header (hence they use
+        different enums)
+        """
+        def __init__(self, is_signature, _io, _parent=None, _root=None):
+            super(Rpm.Header, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self.is_signature = is_signature
+            self._read()
+
+        def _read(self):
+            self.header_record = Rpm.HeaderRecord(self._io, self, self._root)
+            self.index_records = []
+            for i in range(self.header_record.num_index_records):
+                self.index_records.append(Rpm.HeaderIndexRecord(self._io, self, self._root))
+
+            self._raw_storage_section = self._io.read_bytes(self.header_record.len_storage_section)
+            _io__raw_storage_section = KaitaiStream(BytesIO(self._raw_storage_section))
+            self.storage_section = Rpm.Dummy(_io__raw_storage_section, self, self._root)
+
+
+        def _fetch_instances(self):
+            pass
+            self.header_record._fetch_instances()
+            for i in range(len(self.index_records)):
+                pass
+                self.index_records[i]._fetch_instances()
+
+            self.storage_section._fetch_instances()
+
+        @property
+        def is_header(self):
+            if hasattr(self, '_m_is_header'):
+                return self._m_is_header
+
+            self._m_is_header = (not (self.is_signature))
+            return getattr(self, '_m_is_header', None)
+
+
+    class HeaderIndexRecord(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(Rpm.HeaderIndexRecord, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.tag_raw = self._io.read_u4be()
+            self.record_type = KaitaiStream.resolve_enum(Rpm.RecordTypes, self._io.read_u4be())
+            self.ofs_body = self._io.read_u4be()
+            self.count = self._io.read_u4be()
+
+
+        def _fetch_instances(self):
+            pass
+            _ = self.body
+            if hasattr(self, '_m_body'):
+                pass
+                _on = self.record_type
+                if _on == Rpm.RecordTypes.bin:
+                    pass
+                    self._m_body._fetch_instances()
+                elif _on == Rpm.RecordTypes.char:
+                    pass
+                    self._m_body._fetch_instances()
+                elif _on == Rpm.RecordTypes.i18n_string:
+                    pass
+                    self._m_body._fetch_instances()
+                elif _on == Rpm.RecordTypes.string:
+                    pass
+                    self._m_body._fetch_instances()
+                elif _on == Rpm.RecordTypes.string_array:
+                    pass
+                    self._m_body._fetch_instances()
+                elif _on == Rpm.RecordTypes.uint16:
+                    pass
+                    self._m_body._fetch_instances()
+                elif _on == Rpm.RecordTypes.uint32:
+                    pass
+                    self._m_body._fetch_instances()
+                elif _on == Rpm.RecordTypes.uint64:
+                    pass
+                    self._m_body._fetch_instances()
+                elif _on == Rpm.RecordTypes.uint8:
+                    pass
+                    self._m_body._fetch_instances()
+
+
+        @property
+        def body(self):
+            if hasattr(self, '_m_body'):
+                return self._m_body
+
+            io = self._parent.storage_section._io
+            _pos = io.pos()
+            io.seek(self.ofs_body)
+            _on = self.record_type
+            if _on == Rpm.RecordTypes.bin:
+                pass
+                self._m_body = Rpm.RecordTypeBin(self.len_value, io, self, self._root)
+            elif _on == Rpm.RecordTypes.char:
+                pass
+                self._m_body = Rpm.RecordTypeUint8(self.num_values, io, self, self._root)
+            elif _on == Rpm.RecordTypes.i18n_string:
+                pass
+                self._m_body = Rpm.RecordTypeStringArray(self.num_values, io, self, self._root)
+            elif _on == Rpm.RecordTypes.string:
+                pass
+                self._m_body = Rpm.RecordTypeString(io, self, self._root)
+            elif _on == Rpm.RecordTypes.string_array:
+                pass
+                self._m_body = Rpm.RecordTypeStringArray(self.num_values, io, self, self._root)
+            elif _on == Rpm.RecordTypes.uint16:
+                pass
+                self._m_body = Rpm.RecordTypeUint16(self.num_values, io, self, self._root)
+            elif _on == Rpm.RecordTypes.uint32:
+                pass
+                self._m_body = Rpm.RecordTypeUint32(self.num_values, io, self, self._root)
+            elif _on == Rpm.RecordTypes.uint64:
+                pass
+                self._m_body = Rpm.RecordTypeUint64(self.num_values, io, self, self._root)
+            elif _on == Rpm.RecordTypes.uint8:
+                pass
+                self._m_body = Rpm.RecordTypeUint8(self.num_values, io, self, self._root)
+            io.seek(_pos)
+            return getattr(self, '_m_body', None)
+
+        @property
+        def header_tag(self):
+            if hasattr(self, '_m_header_tag'):
+                return self._m_header_tag
+
+            if self._parent.is_header:
+                pass
+                self._m_header_tag = KaitaiStream.resolve_enum(Rpm.HeaderTags, self.tag_raw)
+
+            return getattr(self, '_m_header_tag', None)
+
+        @property
+        def len_value(self):
+            if hasattr(self, '_m_len_value'):
+                return self._m_len_value
+
+            if self.record_type == Rpm.RecordTypes.bin:
+                pass
+                self._m_len_value = self.count
+
+            return getattr(self, '_m_len_value', None)
+
+        @property
+        def num_values(self):
+            if hasattr(self, '_m_num_values'):
+                return self._m_num_values
+
+            if self.record_type != Rpm.RecordTypes.bin:
+                pass
+                self._m_num_values = self.count
+
+            return getattr(self, '_m_num_values', None)
+
+        @property
+        def signature_tag(self):
+            if hasattr(self, '_m_signature_tag'):
+                return self._m_signature_tag
+
+            if self._parent.is_signature:
+                pass
+                self._m_signature_tag = KaitaiStream.resolve_enum(Rpm.SignatureTags, self.tag_raw)
+
+            return getattr(self, '_m_signature_tag', None)
+
+
+    class HeaderRecord(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            super(Rpm.HeaderRecord, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.magic = self._io.read_bytes(4)
+            if not self.magic == b"\x8E\xAD\xE8\x01":
+                raise kaitaistruct.ValidationNotEqualError(b"\x8E\xAD\xE8\x01", self.magic, self._io, u"/types/header_record/seq/0")
+            self.reserved = self._io.read_bytes(4)
+            if not self.reserved == b"\x00\x00\x00\x00":
+                raise kaitaistruct.ValidationNotEqualError(b"\x00\x00\x00\x00", self.reserved, self._io, u"/types/header_record/seq/1")
+            self.num_index_records = self._io.read_u4be()
+            if not self.num_index_records >= 1:
+                raise kaitaistruct.ValidationLessThanError(1, self.num_index_records, self._io, u"/types/header_record/seq/2")
+            self.len_storage_section = self._io.read_u4be()
+
+
+        def _fetch_instances(self):
+            pass
 
 
     class Lead(KaitaiStruct):
@@ -458,9 +680,9 @@ class Rpm(KaitaiStruct):
         values given here.
         """
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(Rpm.Lead, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -478,11 +700,38 @@ class Rpm(KaitaiStruct):
             self.reserved = self._io.read_bytes(16)
 
 
+        def _fetch_instances(self):
+            pass
+            self.version._fetch_instances()
+
+
+    class RecordTypeBin(KaitaiStruct):
+        def __init__(self, len_value, _io, _parent=None, _root=None):
+            super(Rpm.RecordTypeBin, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self.len_value = len_value
+            self._read()
+
+        def _read(self):
+            self.values = []
+            for i in range(1):
+                self.values.append(self._io.read_bytes(self.len_value))
+
+
+
+        def _fetch_instances(self):
+            pass
+            for i in range(len(self.values)):
+                pass
+
+
+
     class RecordTypeString(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(Rpm.RecordTypeString, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -492,47 +741,40 @@ class Rpm(KaitaiStruct):
 
 
 
-    class SignatureTagsStep(KaitaiStruct):
-        def __init__(self, idx, prev_size_tag_idx, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self.idx = idx
-            self.prev_size_tag_idx = prev_size_tag_idx
-            self._read()
-
-        def _read(self):
+        def _fetch_instances(self):
             pass
-
-        @property
-        def size_tag_idx(self):
-            if hasattr(self, '_m_size_tag_idx'):
-                return self._m_size_tag_idx
-
-            self._m_size_tag_idx = (self.prev_size_tag_idx if self.prev_size_tag_idx != -1 else (self.idx if  ((self._parent.signature.index_records[self.idx].signature_tag == Rpm.SignatureTags.size) and (self._parent.signature.index_records[self.idx].record_type == Rpm.RecordTypes.uint32) and (self._parent.signature.index_records[self.idx].num_values >= 1))  else -1))
-            return getattr(self, '_m_size_tag_idx', None)
+            for i in range(len(self.values)):
+                pass
 
 
-    class RecordTypeUint32(KaitaiStruct):
+
+    class RecordTypeStringArray(KaitaiStruct):
         def __init__(self, num_values, _io, _parent=None, _root=None):
-            self._io = _io
+            super(Rpm.RecordTypeStringArray, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self.num_values = num_values
             self._read()
 
         def _read(self):
             self.values = []
             for i in range(self.num_values):
-                self.values.append(self._io.read_u4be())
+                self.values.append((self._io.read_bytes_term(0, False, True, True)).decode(u"UTF-8"))
+
+
+
+        def _fetch_instances(self):
+            pass
+            for i in range(len(self.values)):
+                pass
 
 
 
     class RecordTypeUint16(KaitaiStruct):
         def __init__(self, num_values, _io, _parent=None, _root=None):
-            self._io = _io
+            super(Rpm.RecordTypeUint16, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self.num_values = num_values
             self._read()
 
@@ -543,95 +785,84 @@ class Rpm(KaitaiStruct):
 
 
 
-    class HeaderIndexRecord(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+        def _fetch_instances(self):
+            pass
+            for i in range(len(self.values)):
+                pass
+
+
+
+    class RecordTypeUint32(KaitaiStruct):
+        def __init__(self, num_values, _io, _parent=None, _root=None):
+            super(Rpm.RecordTypeUint32, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
+            self.num_values = num_values
             self._read()
 
         def _read(self):
-            self.tag_raw = self._io.read_u4be()
-            self.record_type = KaitaiStream.resolve_enum(Rpm.RecordTypes, self._io.read_u4be())
-            self.ofs_body = self._io.read_u4be()
-            self.count = self._io.read_u4be()
+            self.values = []
+            for i in range(self.num_values):
+                self.values.append(self._io.read_u4be())
 
-        @property
-        def num_values(self):
-            if hasattr(self, '_m_num_values'):
-                return self._m_num_values
 
-            if self.record_type != Rpm.RecordTypes.bin:
-                self._m_num_values = self.count
 
-            return getattr(self, '_m_num_values', None)
+        def _fetch_instances(self):
+            pass
+            for i in range(len(self.values)):
+                pass
 
-        @property
-        def body(self):
-            if hasattr(self, '_m_body'):
-                return self._m_body
 
-            io = self._parent.storage_section._io
-            _pos = io.pos()
-            io.seek(self.ofs_body)
-            _on = self.record_type
-            if _on == Rpm.RecordTypes.uint32:
-                self._m_body = Rpm.RecordTypeUint32(self.num_values, io, self, self._root)
-            elif _on == Rpm.RecordTypes.uint64:
-                self._m_body = Rpm.RecordTypeUint64(self.num_values, io, self, self._root)
-            elif _on == Rpm.RecordTypes.bin:
-                self._m_body = Rpm.RecordTypeBin(self.len_value, io, self, self._root)
-            elif _on == Rpm.RecordTypes.string:
-                self._m_body = Rpm.RecordTypeString(io, self, self._root)
-            elif _on == Rpm.RecordTypes.uint8:
-                self._m_body = Rpm.RecordTypeUint8(self.num_values, io, self, self._root)
-            elif _on == Rpm.RecordTypes.i18n_string:
-                self._m_body = Rpm.RecordTypeStringArray(self.num_values, io, self, self._root)
-            elif _on == Rpm.RecordTypes.uint16:
-                self._m_body = Rpm.RecordTypeUint16(self.num_values, io, self, self._root)
-            elif _on == Rpm.RecordTypes.char:
-                self._m_body = Rpm.RecordTypeUint8(self.num_values, io, self, self._root)
-            elif _on == Rpm.RecordTypes.string_array:
-                self._m_body = Rpm.RecordTypeStringArray(self.num_values, io, self, self._root)
-            io.seek(_pos)
-            return getattr(self, '_m_body', None)
 
-        @property
-        def signature_tag(self):
-            if hasattr(self, '_m_signature_tag'):
-                return self._m_signature_tag
+    class RecordTypeUint64(KaitaiStruct):
+        def __init__(self, num_values, _io, _parent=None, _root=None):
+            super(Rpm.RecordTypeUint64, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self.num_values = num_values
+            self._read()
 
-            if self._parent.is_signature:
-                self._m_signature_tag = KaitaiStream.resolve_enum(Rpm.SignatureTags, self.tag_raw)
+        def _read(self):
+            self.values = []
+            for i in range(self.num_values):
+                self.values.append(self._io.read_u8be())
 
-            return getattr(self, '_m_signature_tag', None)
 
-        @property
-        def len_value(self):
-            if hasattr(self, '_m_len_value'):
-                return self._m_len_value
 
-            if self.record_type == Rpm.RecordTypes.bin:
-                self._m_len_value = self.count
+        def _fetch_instances(self):
+            pass
+            for i in range(len(self.values)):
+                pass
 
-            return getattr(self, '_m_len_value', None)
 
-        @property
-        def header_tag(self):
-            if hasattr(self, '_m_header_tag'):
-                return self._m_header_tag
 
-            if self._parent.is_header:
-                self._m_header_tag = KaitaiStream.resolve_enum(Rpm.HeaderTags, self.tag_raw)
+    class RecordTypeUint8(KaitaiStruct):
+        def __init__(self, num_values, _io, _parent=None, _root=None):
+            super(Rpm.RecordTypeUint8, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self.num_values = num_values
+            self._read()
 
-            return getattr(self, '_m_header_tag', None)
+        def _read(self):
+            self.values = []
+            for i in range(self.num_values):
+                self.values.append(self._io.read_u1())
+
+
+
+        def _fetch_instances(self):
+            pass
+            for i in range(len(self.values)):
+                pass
+
 
 
     class RpmVersion(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(Rpm.RpmVersion, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -643,111 +874,33 @@ class Rpm(KaitaiStruct):
             self.minor = self._io.read_u1()
 
 
-    class Dummy(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+        def _fetch_instances(self):
+            pass
+
+
+    class SignatureTagsStep(KaitaiStruct):
+        def __init__(self, idx, prev_size_tag_idx, _io, _parent=None, _root=None):
+            super(Rpm.SignatureTagsStep, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
+            self.idx = idx
+            self.prev_size_tag_idx = prev_size_tag_idx
             self._read()
 
         def _read(self):
             pass
 
 
-    class RecordTypeUint8(KaitaiStruct):
-        def __init__(self, num_values, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self.num_values = num_values
-            self._read()
-
-        def _read(self):
-            self.values = []
-            for i in range(self.num_values):
-                self.values.append(self._io.read_u1())
-
-
-
-    class RecordTypeUint64(KaitaiStruct):
-        def __init__(self, num_values, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self.num_values = num_values
-            self._read()
-
-        def _read(self):
-            self.values = []
-            for i in range(self.num_values):
-                self.values.append(self._io.read_u8be())
-
-
-
-    class RecordTypeBin(KaitaiStruct):
-        def __init__(self, len_value, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self.len_value = len_value
-            self._read()
-
-        def _read(self):
-            self.values = []
-            for i in range(1):
-                self.values.append(self._io.read_bytes(self.len_value))
-
-
-
-    class HeaderRecord(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.magic = self._io.read_bytes(4)
-            if not self.magic == b"\x8E\xAD\xE8\x01":
-                raise kaitaistruct.ValidationNotEqualError(b"\x8E\xAD\xE8\x01", self.magic, self._io, u"/types/header_record/seq/0")
-            self.reserved = self._io.read_bytes(4)
-            if not self.reserved == b"\x00\x00\x00\x00":
-                raise kaitaistruct.ValidationNotEqualError(b"\x00\x00\x00\x00", self.reserved, self._io, u"/types/header_record/seq/1")
-            self.num_index_records = self._io.read_u4be()
-            if not self.num_index_records >= 1:
-                raise kaitaistruct.ValidationLessThanError(1, self.num_index_records, self._io, u"/types/header_record/seq/2")
-            self.len_storage_section = self._io.read_u4be()
-
-
-    class Header(KaitaiStruct):
-        """header structure used for both the "header" and "signature", but some tag
-        values have different meanings in signature and header (hence they use
-        different enums)
-        """
-        def __init__(self, is_signature, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self.is_signature = is_signature
-            self._read()
-
-        def _read(self):
-            self.header_record = Rpm.HeaderRecord(self._io, self, self._root)
-            self.index_records = []
-            for i in range(self.header_record.num_index_records):
-                self.index_records.append(Rpm.HeaderIndexRecord(self._io, self, self._root))
-
-            self._raw_storage_section = self._io.read_bytes(self.header_record.len_storage_section)
-            _io__raw_storage_section = KaitaiStream(BytesIO(self._raw_storage_section))
-            self.storage_section = Rpm.Dummy(_io__raw_storage_section, self, self._root)
+        def _fetch_instances(self):
+            pass
 
         @property
-        def is_header(self):
-            if hasattr(self, '_m_is_header'):
-                return self._m_is_header
+        def size_tag_idx(self):
+            if hasattr(self, '_m_size_tag_idx'):
+                return self._m_size_tag_idx
 
-            self._m_is_header = not (self.is_signature)
-            return getattr(self, '_m_is_header', None)
+            self._m_size_tag_idx = (self.prev_size_tag_idx if self.prev_size_tag_idx != -1 else (self.idx if  ((self._parent.signature.index_records[self.idx].signature_tag == Rpm.SignatureTags.size) and (self._parent.signature.index_records[self.idx].record_type == Rpm.RecordTypes.uint32) and (self._parent.signature.index_records[self.idx].num_values >= 1))  else -1))
+            return getattr(self, '_m_size_tag_idx', None)
 
 
     @property
@@ -759,14 +912,12 @@ class Rpm(KaitaiStruct):
         return getattr(self, '_m_has_signature_size_tag', None)
 
     @property
-    def signature_size_tag(self):
-        if hasattr(self, '_m_signature_size_tag'):
-            return self._m_signature_size_tag
+    def len_header(self):
+        if hasattr(self, '_m_len_header'):
+            return self._m_len_header
 
-        if self.has_signature_size_tag:
-            self._m_signature_size_tag = self.signature.index_records[self.signature_tags_steps[-1].size_tag_idx]
-
-        return getattr(self, '_m_signature_size_tag', None)
+        self._m_len_header = self.ofs_payload - self.ofs_header
+        return getattr(self, '_m_len_header', None)
 
     @property
     def len_payload(self):
@@ -774,30 +925,10 @@ class Rpm(KaitaiStruct):
             return self._m_len_payload
 
         if self.has_signature_size_tag:
-            self._m_len_payload = (self.signature_size_tag.body.values[0] - self.len_header)
+            pass
+            self._m_len_payload = self.signature_size_tag.body.values[0] - self.len_header
 
         return getattr(self, '_m_len_payload', None)
-
-    @property
-    def payload(self):
-        if hasattr(self, '_m_payload'):
-            return self._m_payload
-
-        if self.has_signature_size_tag:
-            _pos = self._io.pos()
-            self._io.seek(self.ofs_payload)
-            self._m_payload = self._io.read_bytes(self.len_payload)
-            self._io.seek(_pos)
-
-        return getattr(self, '_m_payload', None)
-
-    @property
-    def len_header(self):
-        if hasattr(self, '_m_len_header'):
-            return self._m_len_header
-
-        self._m_len_header = (self.ofs_payload - self.ofs_header)
-        return getattr(self, '_m_len_header', None)
 
     @property
     def ofs_header(self):
@@ -814,5 +945,30 @@ class Rpm(KaitaiStruct):
 
         self._m_ofs_payload = self._io.pos()
         return getattr(self, '_m_ofs_payload', None)
+
+    @property
+    def payload(self):
+        if hasattr(self, '_m_payload'):
+            return self._m_payload
+
+        if self.has_signature_size_tag:
+            pass
+            _pos = self._io.pos()
+            self._io.seek(self.ofs_payload)
+            self._m_payload = self._io.read_bytes(self.len_payload)
+            self._io.seek(_pos)
+
+        return getattr(self, '_m_payload', None)
+
+    @property
+    def signature_size_tag(self):
+        if hasattr(self, '_m_signature_size_tag'):
+            return self._m_signature_size_tag
+
+        if self.has_signature_size_tag:
+            pass
+            self._m_signature_size_tag = self.signature.index_records[self.signature_tags_steps[-1].size_tag_idx]
+
+        return getattr(self, '_m_signature_size_tag', None)
 
 

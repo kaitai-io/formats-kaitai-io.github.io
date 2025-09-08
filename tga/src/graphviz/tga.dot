@@ -20,32 +20,14 @@ digraph {
 			<TR><TD PORT="image_depth_pos">16</TD><TD PORT="image_depth_size">1</TD><TD>u1</TD><TD PORT="image_depth_type">image_depth</TD></TR>
 			<TR><TD PORT="img_descriptor_pos">17</TD><TD PORT="img_descriptor_size">1</TD><TD>u1</TD><TD PORT="img_descriptor_type">img_descriptor</TD></TR>
 			<TR><TD PORT="image_id_pos">18</TD><TD PORT="image_id_size">image_id_len</TD><TD></TD><TD PORT="image_id_type">image_id</TD></TR>
-			<TR><TD PORT="color_map_pos">...</TD><TD PORT="color_map_size">((color_map_depth + 7) / 8)</TD><TD></TD><TD PORT="color_map_type">color_map</TD></TR>
+			<TR><TD PORT="color_map_pos">...</TD><TD PORT="color_map_size">(color_map_depth + 7) / 8</TD><TD></TD><TD PORT="color_map_type">color_map</TD></TR>
 			<TR><TD COLSPAN="4" PORT="color_map__repeat">repeat num_color_map times</TD></TR>
+			<TR><TD COLSPAN="4" PORT="color_map__if">if color_map_type == :color_map_enum_has_color_map</TD></TR>
 		</TABLE>>];
 		tga__inst__footer [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-			<TR><TD PORT="footer_pos">(_io.size - 26)</TD><TD PORT="footer_size">26</TD><TD>TgaFooter</TD><TD PORT="footer_type">footer</TD></TR>
+			<TR><TD PORT="footer_pos">_io.size - 26</TD><TD PORT="footer_size">26</TD><TD>TgaFooter</TD><TD PORT="footer_type">footer</TD></TR>
 		</TABLE>>];
-		subgraph cluster__tga_footer {
-			label="Tga::TgaFooter";
-			graph[style=dotted];
-
-			tga_footer__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="ext_area_ofs_pos">0</TD><TD PORT="ext_area_ofs_size">4</TD><TD>u4le</TD><TD PORT="ext_area_ofs_type">ext_area_ofs</TD></TR>
-				<TR><TD PORT="dev_dir_ofs_pos">4</TD><TD PORT="dev_dir_ofs_size">4</TD><TD>u4le</TD><TD PORT="dev_dir_ofs_type">dev_dir_ofs</TD></TR>
-				<TR><TD PORT="version_magic_pos">8</TD><TD PORT="version_magic_size">18</TD><TD></TD><TD PORT="version_magic_type">version_magic</TD></TR>
-			</TABLE>>];
-			tga_footer__inst__is_valid [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>is_valid</TD><TD>version_magic == [84, 82, 85, 69, 86, 73, 83, 73, 79, 78, 45, 88, 70, 73, 76, 69, 46, 0].pack('C*')</TD></TR>
-			</TABLE>>];
-			tga_footer__inst__ext_area [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="ext_area_pos">ext_area_ofs</TD><TD PORT="ext_area_size">495</TD><TD>TgaExtArea</TD><TD PORT="ext_area_type">ext_area</TD></TR>
-			</TABLE>>];
-		}
 		subgraph cluster__tga_ext_area {
 			label="Tga::TgaExtArea";
 			graph[style=dotted];
@@ -70,12 +52,34 @@ digraph {
 				<TR><TD PORT="attributes_pos">494</TD><TD PORT="attributes_size">1</TD><TD>u1</TD><TD PORT="attributes_type">attributes</TD></TR>
 			</TABLE>>];
 		}
+		subgraph cluster__tga_footer {
+			label="Tga::TgaFooter";
+			graph[style=dotted];
+
+			tga_footer__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="ext_area_ofs_pos">0</TD><TD PORT="ext_area_ofs_size">4</TD><TD>u4le</TD><TD PORT="ext_area_ofs_type">ext_area_ofs</TD></TR>
+				<TR><TD PORT="dev_dir_ofs_pos">4</TD><TD PORT="dev_dir_ofs_size">4</TD><TD>u4le</TD><TD PORT="dev_dir_ofs_type">dev_dir_ofs</TD></TR>
+				<TR><TD PORT="version_magic_pos">8</TD><TD PORT="version_magic_size">18</TD><TD></TD><TD PORT="version_magic_type">version_magic</TD></TR>
+			</TABLE>>];
+			tga_footer__inst__ext_area [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="ext_area_pos">ext_area_ofs</TD><TD PORT="ext_area_size">495</TD><TD>TgaExtArea</TD><TD PORT="ext_area_type">ext_area</TD></TR>
+				<TR><TD COLSPAN="4" PORT="ext_area__if">if is_valid</TD></TR>
+			</TABLE>>];
+			tga_footer__inst__is_valid [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_valid</TD><TD>version_magic == [84, 82, 85, 69, 86, 73, 83, 73, 79, 78, 45, 88, 70, 73, 76, 69, 46, 0].pack('C*')</TD></TR>
+			</TABLE>>];
+		}
 	}
 	tga__seq:image_id_len_type -> tga__seq:image_id_size [color="#404040"];
 	tga__seq:color_map_depth_type -> tga__seq:color_map_size [color="#404040"];
 	tga__seq:num_color_map_type -> tga__seq:color_map__repeat [color="#404040"];
+	tga__seq:color_map_type_type -> tga__seq:color_map__if [color="#404040"];
 	tga__inst__footer:footer_type -> tga_footer__seq [style=bold];
-	tga_footer__seq:version_magic_type -> tga_footer__inst__is_valid [color="#404040"];
 	tga_footer__seq:ext_area_ofs_type -> tga_footer__inst__ext_area:ext_area_pos [color="#404040"];
 	tga_footer__inst__ext_area:ext_area_type -> tga_ext_area__seq [style=bold];
+	tga_footer__inst__is_valid:is_valid_type -> tga_footer__inst__ext_area:ext_area__if [color="#404040"];
+	tga_footer__seq:version_magic_type -> tga_footer__inst__is_valid [color="#404040"];
 }

@@ -10,14 +10,18 @@ type BytesWithIo struct {
 	Data []byte
 	_io *kaitai.Stream
 	_root *BytesWithIo
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewBytesWithIo() *BytesWithIo {
 	return &BytesWithIo{
 	}
 }
 
-func (this *BytesWithIo) Read(io *kaitai.Stream, parent interface{}, root *BytesWithIo) (err error) {
+func (this BytesWithIo) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *BytesWithIo) Read(io *kaitai.Stream, parent kaitai.Struct, root *BytesWithIo) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root

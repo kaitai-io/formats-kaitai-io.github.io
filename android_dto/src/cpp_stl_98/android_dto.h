@@ -3,12 +3,14 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class android_dto_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -26,8 +28,8 @@
 class android_dto_t : public kaitai::kstruct {
 
 public:
-    class dt_table_header_t;
     class dt_table_entry_t;
+    class dt_table_header_t;
 
     android_dto_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, android_dto_t* p__root = 0);
 
@@ -37,6 +39,69 @@ private:
 
 public:
     ~android_dto_t();
+
+    class dt_table_entry_t : public kaitai::kstruct {
+
+    public:
+
+        dt_table_entry_t(kaitai::kstream* p__io, android_dto_t* p__parent = 0, android_dto_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~dt_table_entry_t();
+
+    private:
+        bool f_body;
+        std::string m_body;
+
+    public:
+
+        /**
+         * DTB/DTBO file
+         */
+        std::string body();
+
+    private:
+        uint32_t m_dt_size;
+        uint32_t m_dt_offset;
+        uint32_t m_id;
+        uint32_t m_rev;
+        std::vector<uint32_t>* m_custom;
+        android_dto_t* m__root;
+        android_dto_t* m__parent;
+
+    public:
+
+        /**
+         * size of this entry
+         */
+        uint32_t dt_size() const { return m_dt_size; }
+
+        /**
+         * offset from head of dt_table_header
+         */
+        uint32_t dt_offset() const { return m_dt_offset; }
+
+        /**
+         * optional, must be zero if unused
+         */
+        uint32_t id() const { return m_id; }
+
+        /**
+         * optional, must be zero if unused
+         */
+        uint32_t rev() const { return m_rev; }
+
+        /**
+         * optional, must be zero if unused
+         */
+        std::vector<uint32_t>* custom() const { return m_custom; }
+        android_dto_t* _root() const { return m__root; }
+        android_dto_t* _parent() const { return m__parent; }
+    };
 
     class dt_table_header_t : public kaitai::kstruct {
 
@@ -100,69 +165,6 @@ public:
          * DTBO image version
          */
         uint32_t version() const { return m_version; }
-        android_dto_t* _root() const { return m__root; }
-        android_dto_t* _parent() const { return m__parent; }
-    };
-
-    class dt_table_entry_t : public kaitai::kstruct {
-
-    public:
-
-        dt_table_entry_t(kaitai::kstream* p__io, android_dto_t* p__parent = 0, android_dto_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~dt_table_entry_t();
-
-    private:
-        bool f_body;
-        std::string m_body;
-
-    public:
-
-        /**
-         * DTB/DTBO file
-         */
-        std::string body();
-
-    private:
-        uint32_t m_dt_size;
-        uint32_t m_dt_offset;
-        uint32_t m_id;
-        uint32_t m_rev;
-        std::vector<uint32_t>* m_custom;
-        android_dto_t* m__root;
-        android_dto_t* m__parent;
-
-    public:
-
-        /**
-         * size of this entry
-         */
-        uint32_t dt_size() const { return m_dt_size; }
-
-        /**
-         * offset from head of dt_table_header
-         */
-        uint32_t dt_offset() const { return m_dt_offset; }
-
-        /**
-         * optional, must be zero if unused
-         */
-        uint32_t id() const { return m_id; }
-
-        /**
-         * optional, must be zero if unused
-         */
-        uint32_t rev() const { return m_rev; }
-
-        /**
-         * optional, must be zero if unused
-         */
-        std::vector<uint32_t>* custom() const { return m_custom; }
         android_dto_t* _root() const { return m__root; }
         android_dto_t* _parent() const { return m__parent; }
     };

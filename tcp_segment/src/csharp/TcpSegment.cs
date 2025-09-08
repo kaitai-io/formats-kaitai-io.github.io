@@ -37,8 +37,8 @@ namespace Kaitai
             _windowSize = m_io.ReadU2be();
             _checksum = m_io.ReadU2be();
             _urgentPointer = m_io.ReadU2be();
-            if (((DataOffset * 4) - 20) != 0) {
-                _options = m_io.ReadBytes(((DataOffset * 4) - 20));
+            if (DataOffset * 4 - 20 != 0) {
+                _options = m_io.ReadBytes(DataOffset * 4 - 20);
             }
             _body = m_io.ReadBytesFull();
         }
@@ -122,6 +122,11 @@ namespace Kaitai
             public bool Fin { get { return _fin; } }
             public TcpSegment M_Root { get { return m_root; } }
             public TcpSegment M_Parent { get { return m_parent; } }
+
+            public override string ToString()
+            {
+                return (((((((Cwr ? "|CWR" : "") + (Ece ? "|ECE" : "")) + (Urg ? "|URG" : "")) + (Ack ? "|ACK" : "")) + (Psh ? "|PSH" : "")) + (Rst ? "|RST" : "")) + (Syn ? "|SYN" : "")) + (Fin ? "|FIN" : "");
+            }
         }
         private ushort _srcPort;
         private ushort _dstPort;

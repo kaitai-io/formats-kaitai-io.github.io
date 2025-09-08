@@ -7,12 +7,6 @@ type
     `instruments`*: seq[GenmidiOp2_InstrumentEntry]
     `instrumentNames`*: seq[string]
     `parent`*: KaitaiStruct
-  GenmidiOp2_InstrumentEntry* = ref object of KaitaiStruct
-    `flags`*: uint16
-    `finetune`*: uint8
-    `note`*: uint8
-    `instruments`*: seq[GenmidiOp2_Instrument]
-    `parent`*: GenmidiOp2
   GenmidiOp2_Instrument* = ref object of KaitaiStruct
     `op1`*: GenmidiOp2_OpSettings
     `feedback`*: uint8
@@ -20,6 +14,12 @@ type
     `unused`*: uint8
     `baseNote`*: int16
     `parent`*: GenmidiOp2_InstrumentEntry
+  GenmidiOp2_InstrumentEntry* = ref object of KaitaiStruct
+    `flags`*: uint16
+    `finetune`*: uint8
+    `note`*: uint8
+    `instruments`*: seq[GenmidiOp2_Instrument]
+    `parent`*: GenmidiOp2
   GenmidiOp2_OpSettings* = ref object of KaitaiStruct
     `tremVibr`*: uint8
     `attDec`*: uint8
@@ -30,8 +30,8 @@ type
     `parent`*: GenmidiOp2_Instrument
 
 proc read*(_: typedesc[GenmidiOp2], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): GenmidiOp2
-proc read*(_: typedesc[GenmidiOp2_InstrumentEntry], io: KaitaiStream, root: KaitaiStruct, parent: GenmidiOp2): GenmidiOp2_InstrumentEntry
 proc read*(_: typedesc[GenmidiOp2_Instrument], io: KaitaiStream, root: KaitaiStruct, parent: GenmidiOp2_InstrumentEntry): GenmidiOp2_Instrument
+proc read*(_: typedesc[GenmidiOp2_InstrumentEntry], io: KaitaiStream, root: KaitaiStruct, parent: GenmidiOp2): GenmidiOp2_InstrumentEntry
 proc read*(_: typedesc[GenmidiOp2_OpSettings], io: KaitaiStream, root: KaitaiStruct, parent: GenmidiOp2_Instrument): GenmidiOp2_OpSettings
 
 
@@ -71,31 +71,6 @@ proc read*(_: typedesc[GenmidiOp2], io: KaitaiStream, root: KaitaiStruct, parent
 proc fromFile*(_: typedesc[GenmidiOp2], filename: string): GenmidiOp2 =
   GenmidiOp2.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[GenmidiOp2_InstrumentEntry], io: KaitaiStream, root: KaitaiStruct, parent: GenmidiOp2): GenmidiOp2_InstrumentEntry =
-  template this: untyped = result
-  this = new(GenmidiOp2_InstrumentEntry)
-  let root = if root == nil: cast[GenmidiOp2](this) else: cast[GenmidiOp2](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let flagsExpr = this.io.readU2le()
-  this.flags = flagsExpr
-  let finetuneExpr = this.io.readU1()
-  this.finetune = finetuneExpr
-
-  ##[
-  MIDI note for fixed instruments, 0 otherwise
-  ]##
-  let noteExpr = this.io.readU1()
-  this.note = noteExpr
-  for i in 0 ..< int(2):
-    let it = GenmidiOp2_Instrument.read(this.io, this.root, this)
-    this.instruments.add(it)
-
-proc fromFile*(_: typedesc[GenmidiOp2_InstrumentEntry], filename: string): GenmidiOp2_InstrumentEntry =
-  GenmidiOp2_InstrumentEntry.read(newKaitaiFileStream(filename), nil, nil)
-
 proc read*(_: typedesc[GenmidiOp2_Instrument], io: KaitaiStream, root: KaitaiStruct, parent: GenmidiOp2_InstrumentEntry): GenmidiOp2_Instrument =
   template this: untyped = result
   this = new(GenmidiOp2_Instrument)
@@ -125,6 +100,31 @@ proc read*(_: typedesc[GenmidiOp2_Instrument], io: KaitaiStream, root: KaitaiStr
 
 proc fromFile*(_: typedesc[GenmidiOp2_Instrument], filename: string): GenmidiOp2_Instrument =
   GenmidiOp2_Instrument.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[GenmidiOp2_InstrumentEntry], io: KaitaiStream, root: KaitaiStruct, parent: GenmidiOp2): GenmidiOp2_InstrumentEntry =
+  template this: untyped = result
+  this = new(GenmidiOp2_InstrumentEntry)
+  let root = if root == nil: cast[GenmidiOp2](this) else: cast[GenmidiOp2](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let flagsExpr = this.io.readU2le()
+  this.flags = flagsExpr
+  let finetuneExpr = this.io.readU1()
+  this.finetune = finetuneExpr
+
+  ##[
+  MIDI note for fixed instruments, 0 otherwise
+  ]##
+  let noteExpr = this.io.readU1()
+  this.note = noteExpr
+  for i in 0 ..< int(2):
+    let it = GenmidiOp2_Instrument.read(this.io, this.root, this)
+    this.instruments.add(it)
+
+proc fromFile*(_: typedesc[GenmidiOp2_InstrumentEntry], filename: string): GenmidiOp2_InstrumentEntry =
+  GenmidiOp2_InstrumentEntry.read(newKaitaiFileStream(filename), nil, nil)
 
 
 ##[

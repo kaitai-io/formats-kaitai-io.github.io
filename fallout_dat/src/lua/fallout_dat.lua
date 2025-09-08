@@ -5,8 +5,8 @@
 local class = require("class")
 require("kaitaistruct")
 local enum = require("enum")
-local str_decode = require("string_decode")
 local utils = require("utils")
+local str_decode = require("string_decode")
 
 FalloutDat = class.class(KaitaiStruct)
 
@@ -38,48 +38,12 @@ function FalloutDat:_read()
 end
 
 
-FalloutDat.Pstr = class.class(KaitaiStruct)
-
-function FalloutDat.Pstr:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function FalloutDat.Pstr:_read()
-  self.size = self._io:read_u1()
-  self.str = str_decode.decode(self._io:read_bytes(self.size), "ASCII")
-end
-
-
-FalloutDat.Folder = class.class(KaitaiStruct)
-
-function FalloutDat.Folder:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function FalloutDat.Folder:_read()
-  self.file_count = self._io:read_u4be()
-  self.unknown = self._io:read_u4be()
-  self.flags = self._io:read_u4be()
-  self.timestamp = self._io:read_u4be()
-  self.files = {}
-  for i = 0, self.file_count - 1 do
-    self.files[i + 1] = FalloutDat.File(self._io, self, self._root)
-  end
-end
-
-
 FalloutDat.File = class.class(KaitaiStruct)
 
 function FalloutDat.File:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -103,6 +67,42 @@ function FalloutDat.File.property.contents:get()
   self._m_contents = _io:read_bytes(utils.box_unwrap((self.flags == FalloutDat.Compression.none) and utils.box_wrap(self.size_unpacked) or (self.size_packed)))
   _io:seek(_pos)
   return self._m_contents
+end
+
+
+FalloutDat.Folder = class.class(KaitaiStruct)
+
+function FalloutDat.Folder:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function FalloutDat.Folder:_read()
+  self.file_count = self._io:read_u4be()
+  self.unknown = self._io:read_u4be()
+  self.flags = self._io:read_u4be()
+  self.timestamp = self._io:read_u4be()
+  self.files = {}
+  for i = 0, self.file_count - 1 do
+    self.files[i + 1] = FalloutDat.File(self._io, self, self._root)
+  end
+end
+
+
+FalloutDat.Pstr = class.class(KaitaiStruct)
+
+function FalloutDat.Pstr:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function FalloutDat.Pstr:_read()
+  self.size = self._io:read_u1()
+  self.str = str_decode.decode(self._io:read_bytes(self.size), "ASCII")
 end
 
 

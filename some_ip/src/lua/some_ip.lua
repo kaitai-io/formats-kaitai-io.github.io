@@ -4,10 +4,10 @@
 
 local class = require("class")
 require("kaitaistruct")
+require("some_ip_sd")
 local stringstream = require("string_stream")
 local enum = require("enum")
 
-require("some_ip_sd")
 -- 
 -- SOME/IP (Scalable service-Oriented MiddlewarE over IP) is an automotive/embedded
 -- communication protocol which supports remoteprocedure calls, event notifications
@@ -26,11 +26,11 @@ function SomeIp:_read()
   self.header = SomeIp.Header(self._io, self, self._root)
   local _on = self.header.message_id.value
   if _on == 4294934784 then
-    self._raw_payload = self._io:read_bytes((self.header.length - 8))
+    self._raw_payload = self._io:read_bytes(self.header.length - 8)
     local _io = KaitaiStream(stringstream(self._raw_payload))
     self.payload = SomeIpSd(_io)
   else
-    self.payload = self._io:read_bytes((self.header.length - 8))
+    self.payload = self._io:read_bytes(self.header.length - 8)
   end
 end
 
@@ -67,7 +67,7 @@ SomeIp.Header.ReturnCodeEnum = enum.Enum {
 function SomeIp.Header:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -135,7 +135,7 @@ SomeIp.Header.MessageId = class.class(KaitaiStruct)
 function SomeIp.Header.MessageId:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -185,7 +185,7 @@ SomeIp.Header.RequestId = class.class(KaitaiStruct)
 function SomeIp.Header.RequestId:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 

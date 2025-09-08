@@ -13,26 +13,26 @@
 
 namespace {
     class PacketPpi extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \PacketPpi $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\PacketPpi $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_header = new \PacketPpi\PacketPpiHeader($this->_io, $this, $this->_root);
-            $this->_m__raw_fields = $this->_io->readBytes(($this->header()->pphLen() - 8));
+            $this->_m__raw_fields = $this->_io->readBytes($this->header()->pphLen() - 8);
             $_io__raw_fields = new \Kaitai\Struct\Stream($this->_m__raw_fields);
             $this->_m_fields = new \PacketPpi\PacketPpiFields($_io__raw_fields, $this, $this->_root);
             switch ($this->header()->pphDlt()) {
-                case \PacketPpi\Linktype::PPI:
-                    $this->_m__raw_body = $this->_io->readBytesFull();
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \PacketPpi($_io__raw_body);
-                    break;
                 case \PacketPpi\Linktype::ETHERNET:
                     $this->_m__raw_body = $this->_io->readBytesFull();
                     $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
                     $this->_m_body = new \EthernetFrame($_io__raw_body);
+                    break;
+                case \PacketPpi\Linktype::PPI:
+                    $this->_m__raw_body = $this->_io->readBytesFull();
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \PacketPpi($_io__raw_body, $this, $this->_root);
                     break;
                 default:
                     $this->_m_body = $this->_io->readBytesFull();
@@ -53,52 +53,8 @@ namespace {
 }
 
 namespace PacketPpi {
-    class PacketPpiFields extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PacketPpi $_parent = null, \PacketPpi $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_entries = [];
-            $i = 0;
-            while (!$this->_io->isEof()) {
-                $this->_m_entries[] = new \PacketPpi\PacketPpiField($this->_io, $this, $this->_root);
-                $i++;
-            }
-        }
-        protected $_m_entries;
-        public function entries() { return $this->_m_entries; }
-    }
-}
-
-namespace PacketPpi {
-    class Radio80211nMacExtBody extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PacketPpi\PacketPpiField $_parent = null, \PacketPpi $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_flags = new \PacketPpi\MacFlags($this->_io, $this, $this->_root);
-            $this->_m_aMpduId = $this->_io->readU4le();
-            $this->_m_numDelimiters = $this->_io->readU1();
-            $this->_m_reserved = $this->_io->readBytes(3);
-        }
-        protected $_m_flags;
-        protected $_m_aMpduId;
-        protected $_m_numDelimiters;
-        protected $_m_reserved;
-        public function flags() { return $this->_m_flags; }
-        public function aMpduId() { return $this->_m_aMpduId; }
-        public function numDelimiters() { return $this->_m_numDelimiters; }
-        public function reserved() { return $this->_m_reserved; }
-    }
-}
-
-namespace PacketPpi {
     class MacFlags extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \PacketPpi $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\PacketPpi $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -165,71 +121,8 @@ namespace PacketPpi {
 }
 
 namespace PacketPpi {
-    class PacketPpiHeader extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PacketPpi $_parent = null, \PacketPpi $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_pphVersion = $this->_io->readU1();
-            $this->_m_pphFlags = $this->_io->readU1();
-            $this->_m_pphLen = $this->_io->readU2le();
-            $this->_m_pphDlt = $this->_io->readU4le();
-        }
-        protected $_m_pphVersion;
-        protected $_m_pphFlags;
-        protected $_m_pphLen;
-        protected $_m_pphDlt;
-        public function pphVersion() { return $this->_m_pphVersion; }
-        public function pphFlags() { return $this->_m_pphFlags; }
-        public function pphLen() { return $this->_m_pphLen; }
-        public function pphDlt() { return $this->_m_pphDlt; }
-    }
-}
-
-namespace PacketPpi {
-    class Radio80211CommonBody extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PacketPpi\PacketPpiField $_parent = null, \PacketPpi $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_tsfTimer = $this->_io->readU8le();
-            $this->_m_flags = $this->_io->readU2le();
-            $this->_m_rate = $this->_io->readU2le();
-            $this->_m_channelFreq = $this->_io->readU2le();
-            $this->_m_channelFlags = $this->_io->readU2le();
-            $this->_m_fhssHopset = $this->_io->readU1();
-            $this->_m_fhssPattern = $this->_io->readU1();
-            $this->_m_dbmAntsignal = $this->_io->readS1();
-            $this->_m_dbmAntnoise = $this->_io->readS1();
-        }
-        protected $_m_tsfTimer;
-        protected $_m_flags;
-        protected $_m_rate;
-        protected $_m_channelFreq;
-        protected $_m_channelFlags;
-        protected $_m_fhssHopset;
-        protected $_m_fhssPattern;
-        protected $_m_dbmAntsignal;
-        protected $_m_dbmAntnoise;
-        public function tsfTimer() { return $this->_m_tsfTimer; }
-        public function flags() { return $this->_m_flags; }
-        public function rate() { return $this->_m_rate; }
-        public function channelFreq() { return $this->_m_channelFreq; }
-        public function channelFlags() { return $this->_m_channelFlags; }
-        public function fhssHopset() { return $this->_m_fhssHopset; }
-        public function fhssPattern() { return $this->_m_fhssPattern; }
-        public function dbmAntsignal() { return $this->_m_dbmAntsignal; }
-        public function dbmAntnoise() { return $this->_m_dbmAntnoise; }
-    }
-}
-
-namespace PacketPpi {
     class PacketPpiField extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PacketPpi\PacketPpiFields $_parent = null, \PacketPpi $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PacketPpi\PacketPpiFields $_parent = null, ?\PacketPpi $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -270,8 +163,115 @@ namespace PacketPpi {
 }
 
 namespace PacketPpi {
+    class PacketPpiFields extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PacketPpi $_parent = null, ?\PacketPpi $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_entries = [];
+            $i = 0;
+            while (!$this->_io->isEof()) {
+                $this->_m_entries[] = new \PacketPpi\PacketPpiField($this->_io, $this, $this->_root);
+                $i++;
+            }
+        }
+        protected $_m_entries;
+        public function entries() { return $this->_m_entries; }
+    }
+}
+
+namespace PacketPpi {
+    class PacketPpiHeader extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PacketPpi $_parent = null, ?\PacketPpi $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_pphVersion = $this->_io->readU1();
+            $this->_m_pphFlags = $this->_io->readU1();
+            $this->_m_pphLen = $this->_io->readU2le();
+            $this->_m_pphDlt = $this->_io->readU4le();
+        }
+        protected $_m_pphVersion;
+        protected $_m_pphFlags;
+        protected $_m_pphLen;
+        protected $_m_pphDlt;
+        public function pphVersion() { return $this->_m_pphVersion; }
+        public function pphFlags() { return $this->_m_pphFlags; }
+        public function pphLen() { return $this->_m_pphLen; }
+        public function pphDlt() { return $this->_m_pphDlt; }
+    }
+}
+
+namespace PacketPpi {
+    class Radio80211CommonBody extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PacketPpi\PacketPpiField $_parent = null, ?\PacketPpi $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_tsfTimer = $this->_io->readU8le();
+            $this->_m_flags = $this->_io->readU2le();
+            $this->_m_rate = $this->_io->readU2le();
+            $this->_m_channelFreq = $this->_io->readU2le();
+            $this->_m_channelFlags = $this->_io->readU2le();
+            $this->_m_fhssHopset = $this->_io->readU1();
+            $this->_m_fhssPattern = $this->_io->readU1();
+            $this->_m_dbmAntsignal = $this->_io->readS1();
+            $this->_m_dbmAntnoise = $this->_io->readS1();
+        }
+        protected $_m_tsfTimer;
+        protected $_m_flags;
+        protected $_m_rate;
+        protected $_m_channelFreq;
+        protected $_m_channelFlags;
+        protected $_m_fhssHopset;
+        protected $_m_fhssPattern;
+        protected $_m_dbmAntsignal;
+        protected $_m_dbmAntnoise;
+        public function tsfTimer() { return $this->_m_tsfTimer; }
+        public function flags() { return $this->_m_flags; }
+        public function rate() { return $this->_m_rate; }
+        public function channelFreq() { return $this->_m_channelFreq; }
+        public function channelFlags() { return $this->_m_channelFlags; }
+        public function fhssHopset() { return $this->_m_fhssHopset; }
+        public function fhssPattern() { return $this->_m_fhssPattern; }
+        public function dbmAntsignal() { return $this->_m_dbmAntsignal; }
+        public function dbmAntnoise() { return $this->_m_dbmAntnoise; }
+    }
+}
+
+namespace PacketPpi {
+    class Radio80211nMacExtBody extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PacketPpi\PacketPpiField $_parent = null, ?\PacketPpi $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_flags = new \PacketPpi\MacFlags($this->_io, $this, $this->_root);
+            $this->_m_aMpduId = $this->_io->readU4le();
+            $this->_m_numDelimiters = $this->_io->readU1();
+            $this->_m_reserved = $this->_io->readBytes(3);
+        }
+        protected $_m_flags;
+        protected $_m_aMpduId;
+        protected $_m_numDelimiters;
+        protected $_m_reserved;
+        public function flags() { return $this->_m_flags; }
+        public function aMpduId() { return $this->_m_aMpduId; }
+        public function numDelimiters() { return $this->_m_numDelimiters; }
+        public function reserved() { return $this->_m_reserved; }
+    }
+}
+
+namespace PacketPpi {
     class Radio80211nMacPhyExtBody extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PacketPpi\PacketPpiField $_parent = null, \PacketPpi $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PacketPpi\PacketPpiField $_parent = null, ?\PacketPpi $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -371,7 +371,7 @@ namespace PacketPpi {
 
 namespace PacketPpi\Radio80211nMacPhyExtBody {
     class ChannelFlags extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PacketPpi\Radio80211nMacPhyExtBody $_parent = null, \PacketPpi $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PacketPpi\Radio80211nMacPhyExtBody $_parent = null, ?\PacketPpi $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -442,7 +442,7 @@ namespace PacketPpi\Radio80211nMacPhyExtBody {
 
 namespace PacketPpi\Radio80211nMacPhyExtBody {
     class SignalNoise extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \PacketPpi\Radio80211nMacPhyExtBody $_parent = null, \PacketPpi $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\PacketPpi\Radio80211nMacPhyExtBody $_parent = null, ?\PacketPpi $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -463,17 +463,6 @@ namespace PacketPpi\Radio80211nMacPhyExtBody {
          * RF noise, dBm
          */
         public function noise() { return $this->_m_noise; }
-    }
-}
-
-namespace PacketPpi {
-    class PfhType {
-        const RADIO_802_11_COMMON = 2;
-        const RADIO_802_11N_MAC_EXT = 3;
-        const RADIO_802_11N_MAC_PHY_EXT = 4;
-        const SPECTRUM_MAP = 5;
-        const PROCESS_INFO = 6;
-        const CAPTURE_INFO = 7;
     }
 }
 
@@ -583,5 +572,28 @@ namespace PacketPpi {
         const ZWAVE_R3 = 262;
         const WATTSTOPPER_DLM = 263;
         const ISO_14443 = 264;
+
+        private const _VALUES = [0 => true, 1 => true, 3 => true, 6 => true, 7 => true, 8 => true, 9 => true, 10 => true, 50 => true, 51 => true, 100 => true, 101 => true, 104 => true, 105 => true, 107 => true, 108 => true, 113 => true, 114 => true, 117 => true, 119 => true, 122 => true, 123 => true, 127 => true, 129 => true, 138 => true, 139 => true, 140 => true, 141 => true, 142 => true, 143 => true, 144 => true, 147 => true, 148 => true, 149 => true, 150 => true, 151 => true, 152 => true, 153 => true, 154 => true, 155 => true, 156 => true, 157 => true, 158 => true, 159 => true, 160 => true, 161 => true, 162 => true, 163 => true, 165 => true, 166 => true, 169 => true, 170 => true, 171 => true, 177 => true, 187 => true, 189 => true, 192 => true, 195 => true, 196 => true, 197 => true, 201 => true, 202 => true, 203 => true, 204 => true, 205 => true, 206 => true, 209 => true, 215 => true, 220 => true, 224 => true, 225 => true, 226 => true, 227 => true, 228 => true, 229 => true, 230 => true, 231 => true, 235 => true, 236 => true, 237 => true, 239 => true, 240 => true, 241 => true, 242 => true, 243 => true, 244 => true, 245 => true, 247 => true, 248 => true, 249 => true, 250 => true, 251 => true, 253 => true, 254 => true, 255 => true, 256 => true, 257 => true, 258 => true, 259 => true, 260 => true, 261 => true, 262 => true, 263 => true, 264 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
+    }
+}
+
+namespace PacketPpi {
+    class PfhType {
+        const RADIO_802_11_COMMON = 2;
+        const RADIO_802_11N_MAC_EXT = 3;
+        const RADIO_802_11N_MAC_PHY_EXT = 4;
+        const SPECTRUM_MAP = 5;
+        const PROCESS_INFO = 6;
+        const CAPTURE_INFO = 7;
+
+        private const _VALUES = [2 => true, 3 => true, 4 => true, 5 => true, 6 => true, 7 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

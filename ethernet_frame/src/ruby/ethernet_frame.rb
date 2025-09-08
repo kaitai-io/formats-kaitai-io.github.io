@@ -1,9 +1,11 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 require 'kaitai/struct/struct'
+require_relative 'ipv6_packet'
+require_relative 'ipv4_packet'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -26,8 +28,8 @@ class EthernetFrame < Kaitai::Struct::Struct
     34525 => :ether_type_enum_ipv6,
   }
   I__ETHER_TYPE_ENUM = ETHER_TYPE_ENUM.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -60,7 +62,7 @@ class EthernetFrame < Kaitai::Struct::Struct
   # Tag Control Information (TCI) is an extension of IEEE 802.1Q to
   # support VLANs on normal IEEE 802.3 Ethernet network.
   class TagControlInfo < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end

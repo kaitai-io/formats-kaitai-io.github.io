@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 
 ########################################################################
 package PsxTim;
@@ -29,7 +29,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -47,18 +47,18 @@ sub _read {
     $self->{img} = PsxTim::Bitmap->new($self->{_io}, $self, $self->{_root});
 }
 
+sub bpp {
+    my ($self) = @_;
+    return $self->{bpp} if ($self->{bpp});
+    $self->{bpp} = $self->flags() & 3;
+    return $self->{bpp};
+}
+
 sub has_clut {
     my ($self) = @_;
     return $self->{has_clut} if ($self->{has_clut});
     $self->{has_clut} = ($self->flags() & 8) != 0;
     return $self->{has_clut};
-}
-
-sub bpp {
-    my ($self) = @_;
-    return $self->{bpp} if ($self->{bpp});
-    $self->{bpp} = ($self->flags() & 3);
-    return $self->{bpp};
 }
 
 sub magic {
@@ -101,7 +101,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -116,7 +116,7 @@ sub _read {
     $self->{origin_y} = $self->{_io}->read_u2le();
     $self->{width} = $self->{_io}->read_u2le();
     $self->{height} = $self->{_io}->read_u2le();
-    $self->{body} = $self->{_io}->read_bytes(($self->len() - 12));
+    $self->{body} = $self->{_io}->read_bytes($self->len() - 12);
 }
 
 sub len {

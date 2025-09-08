@@ -31,12 +31,25 @@ function Hccap:_read()
 end
 
 
+Hccap.EapolDummy = class.class(KaitaiStruct)
+
+function Hccap.EapolDummy:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root
+  self:_read()
+end
+
+function Hccap.EapolDummy:_read()
+end
+
+
 Hccap.HccapRecord = class.class(KaitaiStruct)
 
 function Hccap.HccapRecord:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -86,17 +99,4 @@ end
 -- 
 -- The final hash value. MD5 for WPA and SHA-1 for WPA2
 -- (truncated to 128 bit).
-
-Hccap.EapolDummy = class.class(KaitaiStruct)
-
-function Hccap.EapolDummy:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function Hccap.EapolDummy:_read()
-end
-
 

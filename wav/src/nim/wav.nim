@@ -1,23 +1,43 @@
 import kaitai_struct_nim_runtime
 import options
-import /common/riff
+import riff
 
 type
   Wav* = ref object of KaitaiStruct
     `chunk`*: Riff_Chunk
     `parent`*: KaitaiStruct
-    `subchunksInst`: seq[Wav_ChunkType]
-    `subchunksInstFlag`: bool
-    `parentChunkDataInst`: Riff_ParentChunkData
-    `parentChunkDataInstFlag`: bool
-    `isFormTypeWaveInst`: bool
-    `isFormTypeWaveInstFlag`: bool
-    `isRiffChunkInst`: bool
-    `isRiffChunkInstFlag`: bool
     `chunkIdInst`: Wav_Fourcc
     `chunkIdInstFlag`: bool
     `formTypeInst`: Wav_Fourcc
     `formTypeInstFlag`: bool
+    `isFormTypeWaveInst`: bool
+    `isFormTypeWaveInstFlag`: bool
+    `isRiffChunkInst`: bool
+    `isRiffChunkInstFlag`: bool
+    `parentChunkDataInst`: Riff_ParentChunkData
+    `parentChunkDataInstFlag`: bool
+    `subchunksInst`: seq[Wav_ChunkType]
+    `subchunksInstFlag`: bool
+  Wav_Fourcc* = enum
+    id3 = 540238953
+    cue = 543520099
+    fmt = 544501094
+    wave = 1163280727
+    riff = 1179011410
+    peak = 1262568784
+    ixml = 1280137321
+    info = 1330007625
+    list = 1414744396
+    pmx = 1481461855
+    chna = 1634625635
+    data = 1635017060
+    umid = 1684630901
+    minf = 1718511981
+    axml = 1819113569
+    regn = 1852269938
+    afsp = 1886611041
+    fact = 1952670054
+    bext = 1954047330
   Wav_WFormatTagType* = enum
     unknown = 0
     pcm = 1
@@ -284,98 +304,33 @@ type
     flac = 61868
     extensible = 65534
     development = 65535
-  Wav_Fourcc* = enum
-    id3 = 540238953
-    cue = 543520099
-    fmt = 544501094
-    wave = 1163280727
-    riff = 1179011410
-    peak = 1262568784
-    ixml = 1280137321
-    info = 1330007625
-    list = 1414744396
-    pmx = 1481461855
-    chna = 1634625635
-    data = 1635017060
-    umid = 1684630901
-    minf = 1718511981
-    axml = 1819113569
-    regn = 1852269938
-    afsp = 1886611041
-    fact = 1952670054
-    bext = 1954047330
-  Wav_SampleType* = ref object of KaitaiStruct
-    `sample`*: uint16
-    `parent`*: KaitaiStruct
-  Wav_FormatChunkType* = ref object of KaitaiStruct
-    `wFormatTag`*: Wav_WFormatTagType
-    `nChannels`*: uint16
-    `nSamplesPerSec`*: uint32
-    `nAvgBytesPerSec`*: uint32
-    `nBlockAlign`*: uint16
-    `wBitsPerSample`*: uint16
-    `cbSize`*: uint16
-    `wValidBitsPerSample`*: uint16
-    `channelMaskAndSubformat`*: Wav_ChannelMaskAndSubformatType
+  Wav_AfspChunkType* = ref object of KaitaiStruct
+    `magic`*: seq[byte]
+    `infoRecords`*: seq[string]
     `parent`*: Wav_ChunkType
-    `isExtensibleInst`: bool
-    `isExtensibleInstFlag`: bool
-    `isBasicPcmInst`: bool
-    `isBasicPcmInstFlag`: bool
-    `isBasicFloatInst`: bool
-    `isBasicFloatInstFlag`: bool
-    `isCbSizeMeaningfulInst`: bool
-    `isCbSizeMeaningfulInstFlag`: bool
-  Wav_PmxChunkType* = ref object of KaitaiStruct
+  Wav_AxmlChunkType* = ref object of KaitaiStruct
     `data`*: string
     `parent`*: Wav_ChunkType
-  Wav_FactChunkType* = ref object of KaitaiStruct
-    `numSamplesPerChannel`*: uint32
+  Wav_BextChunkType* = ref object of KaitaiStruct
+    `description`*: string
+    `originator`*: string
+    `originatorReference`*: string
+    `originationDate`*: string
+    `originationTime`*: string
+    `timeReferenceLow`*: uint32
+    `timeReferenceHigh`*: uint32
+    `version`*: uint16
+    `umid`*: seq[byte]
+    `loudnessValue`*: uint16
+    `loudnessRange`*: uint16
+    `maxTruePeakLevel`*: uint16
+    `maxMomentaryLoudness`*: uint16
+    `maxShortTermLoudness`*: uint16
     `parent`*: Wav_ChunkType
-  Wav_GuidType* = ref object of KaitaiStruct
-    `data1`*: uint32
-    `data2`*: uint16
-    `data3`*: uint16
-    `data4`*: uint32
-    `data4a`*: uint32
-    `parent`*: Wav_ChannelMaskAndSubformatType
-  Wav_IxmlChunkType* = ref object of KaitaiStruct
-    `data`*: string
-    `parent`*: Wav_ChunkType
-  Wav_InfoChunkType* = ref object of KaitaiStruct
-    `chunk`*: Riff_Chunk
-    `parent`*: Wav_ListChunkType
-    `chunkDataInst`: string
-    `chunkDataInstFlag`: bool
-  Wav_CuePointType* = ref object of KaitaiStruct
-    `dwName`*: uint32
-    `dwPosition`*: uint32
-    `fccChunk`*: uint32
-    `dwChunkStart`*: uint32
-    `dwBlockStart`*: uint32
-    `dwSampleOffset`*: uint32
-    `parent`*: Wav_CueChunkType
-  Wav_DataChunkType* = ref object of KaitaiStruct
-    `data`*: seq[byte]
-    `parent`*: Wav_ChunkType
-  Wav_SamplesType* = ref object of KaitaiStruct
-    `samples`*: uint32
-    `parent`*: KaitaiStruct
   Wav_ChannelMaskAndSubformatType* = ref object of KaitaiStruct
     `dwChannelMask`*: Wav_ChannelMaskType
     `subformat`*: Wav_GuidType
     `parent`*: Wav_FormatChunkType
-  Wav_CueChunkType* = ref object of KaitaiStruct
-    `dwCuePoints`*: uint32
-    `cuePoints`*: seq[Wav_CuePointType]
-    `parent`*: Wav_ChunkType
-  Wav_ListChunkType* = ref object of KaitaiStruct
-    `parentChunkData`*: Riff_ParentChunkData
-    `parent`*: Wav_ChunkType
-    `formTypeInst`: Wav_Fourcc
-    `formTypeInstFlag`: bool
-    `subchunksInst`: seq[Wav_InfoChunkType]
-    `subchunksInstFlag`: bool
   Wav_ChannelMaskType* = ref object of KaitaiStruct
     `frontRightOfCenter`*: bool
     `frontLeftOfCenter`*: bool
@@ -398,72 +353,117 @@ type
     `topBackCenter`*: bool
     `unused2`*: uint64
     `parent`*: Wav_ChannelMaskAndSubformatType
-  Wav_AfspChunkType* = ref object of KaitaiStruct
-    `magic`*: seq[byte]
-    `infoRecords`*: seq[string]
-    `parent`*: Wav_ChunkType
-  Wav_AxmlChunkType* = ref object of KaitaiStruct
-    `data`*: string
-    `parent`*: Wav_ChunkType
   Wav_ChunkType* = ref object of KaitaiStruct
     `chunk`*: Riff_Chunk
     `parent`*: Wav
-    `chunkIdInst`: Wav_Fourcc
-    `chunkIdInstFlag`: bool
     `chunkDataInst`: KaitaiStruct
     `chunkDataInstFlag`: bool
-  Wav_BextChunkType* = ref object of KaitaiStruct
-    `description`*: string
-    `originator`*: string
-    `originatorReference`*: string
-    `originationDate`*: string
-    `originationTime`*: string
-    `timeReferenceLow`*: uint32
-    `timeReferenceHigh`*: uint32
-    `version`*: uint16
-    `umid`*: seq[byte]
-    `loudnessValue`*: uint16
-    `loudnessRange`*: uint16
-    `maxTruePeakLevel`*: uint16
-    `maxMomentaryLoudness`*: uint16
-    `maxShortTermLoudness`*: uint16
+    `chunkIdInst`: Wav_Fourcc
+    `chunkIdInstFlag`: bool
+  Wav_CueChunkType* = ref object of KaitaiStruct
+    `dwCuePoints`*: uint32
+    `cuePoints`*: seq[Wav_CuePointType]
     `parent`*: Wav_ChunkType
+  Wav_CuePointType* = ref object of KaitaiStruct
+    `dwName`*: uint32
+    `dwPosition`*: uint32
+    `fccChunk`*: uint32
+    `dwChunkStart`*: uint32
+    `dwBlockStart`*: uint32
+    `dwSampleOffset`*: uint32
+    `parent`*: Wav_CueChunkType
+  Wav_DataChunkType* = ref object of KaitaiStruct
+    `data`*: seq[byte]
+    `parent`*: Wav_ChunkType
+  Wav_FactChunkType* = ref object of KaitaiStruct
+    `numSamplesPerChannel`*: uint32
+    `parent`*: Wav_ChunkType
+  Wav_FormatChunkType* = ref object of KaitaiStruct
+    `wFormatTag`*: Wav_WFormatTagType
+    `nChannels`*: uint16
+    `nSamplesPerSec`*: uint32
+    `nAvgBytesPerSec`*: uint32
+    `nBlockAlign`*: uint16
+    `wBitsPerSample`*: uint16
+    `cbSize`*: uint16
+    `wValidBitsPerSample`*: uint16
+    `channelMaskAndSubformat`*: Wav_ChannelMaskAndSubformatType
+    `parent`*: Wav_ChunkType
+    `isBasicFloatInst`: bool
+    `isBasicFloatInstFlag`: bool
+    `isBasicPcmInst`: bool
+    `isBasicPcmInstFlag`: bool
+    `isCbSizeMeaningfulInst`: bool
+    `isCbSizeMeaningfulInstFlag`: bool
+    `isExtensibleInst`: bool
+    `isExtensibleInstFlag`: bool
+  Wav_GuidType* = ref object of KaitaiStruct
+    `data1`*: uint32
+    `data2`*: uint16
+    `data3`*: uint16
+    `data4`*: uint32
+    `data4a`*: uint32
+    `parent`*: Wav_ChannelMaskAndSubformatType
+  Wav_InfoChunkType* = ref object of KaitaiStruct
+    `chunk`*: Riff_Chunk
+    `parent`*: Wav_ListChunkType
+    `chunkDataInst`: string
+    `chunkDataInstFlag`: bool
+  Wav_IxmlChunkType* = ref object of KaitaiStruct
+    `data`*: string
+    `parent`*: Wav_ChunkType
+  Wav_ListChunkType* = ref object of KaitaiStruct
+    `parentChunkData`*: Riff_ParentChunkData
+    `parent`*: Wav_ChunkType
+    `formTypeInst`: Wav_Fourcc
+    `formTypeInstFlag`: bool
+    `subchunksInst`: seq[Wav_InfoChunkType]
+    `subchunksInstFlag`: bool
+  Wav_PmxChunkType* = ref object of KaitaiStruct
+    `data`*: string
+    `parent`*: Wav_ChunkType
+  Wav_SampleType* = ref object of KaitaiStruct
+    `sample`*: uint16
+    `parent`*: KaitaiStruct
+  Wav_SamplesType* = ref object of KaitaiStruct
+    `samples`*: uint32
+    `parent`*: KaitaiStruct
 
 proc read*(_: typedesc[Wav], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Wav
-proc read*(_: typedesc[Wav_SampleType], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Wav_SampleType
-proc read*(_: typedesc[Wav_FormatChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChunkType): Wav_FormatChunkType
-proc read*(_: typedesc[Wav_PmxChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChunkType): Wav_PmxChunkType
-proc read*(_: typedesc[Wav_FactChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChunkType): Wav_FactChunkType
-proc read*(_: typedesc[Wav_GuidType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChannelMaskAndSubformatType): Wav_GuidType
-proc read*(_: typedesc[Wav_IxmlChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChunkType): Wav_IxmlChunkType
-proc read*(_: typedesc[Wav_InfoChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ListChunkType): Wav_InfoChunkType
-proc read*(_: typedesc[Wav_CuePointType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_CueChunkType): Wav_CuePointType
-proc read*(_: typedesc[Wav_DataChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChunkType): Wav_DataChunkType
-proc read*(_: typedesc[Wav_SamplesType], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Wav_SamplesType
-proc read*(_: typedesc[Wav_ChannelMaskAndSubformatType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_FormatChunkType): Wav_ChannelMaskAndSubformatType
-proc read*(_: typedesc[Wav_CueChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChunkType): Wav_CueChunkType
-proc read*(_: typedesc[Wav_ListChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChunkType): Wav_ListChunkType
-proc read*(_: typedesc[Wav_ChannelMaskType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChannelMaskAndSubformatType): Wav_ChannelMaskType
 proc read*(_: typedesc[Wav_AfspChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChunkType): Wav_AfspChunkType
 proc read*(_: typedesc[Wav_AxmlChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChunkType): Wav_AxmlChunkType
-proc read*(_: typedesc[Wav_ChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav): Wav_ChunkType
 proc read*(_: typedesc[Wav_BextChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChunkType): Wav_BextChunkType
+proc read*(_: typedesc[Wav_ChannelMaskAndSubformatType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_FormatChunkType): Wav_ChannelMaskAndSubformatType
+proc read*(_: typedesc[Wav_ChannelMaskType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChannelMaskAndSubformatType): Wav_ChannelMaskType
+proc read*(_: typedesc[Wav_ChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav): Wav_ChunkType
+proc read*(_: typedesc[Wav_CueChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChunkType): Wav_CueChunkType
+proc read*(_: typedesc[Wav_CuePointType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_CueChunkType): Wav_CuePointType
+proc read*(_: typedesc[Wav_DataChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChunkType): Wav_DataChunkType
+proc read*(_: typedesc[Wav_FactChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChunkType): Wav_FactChunkType
+proc read*(_: typedesc[Wav_FormatChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChunkType): Wav_FormatChunkType
+proc read*(_: typedesc[Wav_GuidType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChannelMaskAndSubformatType): Wav_GuidType
+proc read*(_: typedesc[Wav_InfoChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ListChunkType): Wav_InfoChunkType
+proc read*(_: typedesc[Wav_IxmlChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChunkType): Wav_IxmlChunkType
+proc read*(_: typedesc[Wav_ListChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChunkType): Wav_ListChunkType
+proc read*(_: typedesc[Wav_PmxChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChunkType): Wav_PmxChunkType
+proc read*(_: typedesc[Wav_SampleType], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Wav_SampleType
+proc read*(_: typedesc[Wav_SamplesType], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Wav_SamplesType
 
-proc subchunks*(this: Wav): seq[Wav_ChunkType]
-proc parentChunkData*(this: Wav): Riff_ParentChunkData
-proc isFormTypeWave*(this: Wav): bool
-proc isRiffChunk*(this: Wav): bool
 proc chunkId*(this: Wav): Wav_Fourcc
 proc formType*(this: Wav): Wav_Fourcc
-proc isExtensible*(this: Wav_FormatChunkType): bool
-proc isBasicPcm*(this: Wav_FormatChunkType): bool
+proc isFormTypeWave*(this: Wav): bool
+proc isRiffChunk*(this: Wav): bool
+proc parentChunkData*(this: Wav): Riff_ParentChunkData
+proc subchunks*(this: Wav): seq[Wav_ChunkType]
+proc chunkData*(this: Wav_ChunkType): KaitaiStruct
+proc chunkId*(this: Wav_ChunkType): Wav_Fourcc
 proc isBasicFloat*(this: Wav_FormatChunkType): bool
+proc isBasicPcm*(this: Wav_FormatChunkType): bool
 proc isCbSizeMeaningful*(this: Wav_FormatChunkType): bool
+proc isExtensible*(this: Wav_FormatChunkType): bool
 proc chunkData*(this: Wav_InfoChunkType): string
 proc formType*(this: Wav_ListChunkType): Wav_Fourcc
 proc subchunks*(this: Wav_ListChunkType): seq[Wav_InfoChunkType]
-proc chunkId*(this: Wav_ChunkType): Wav_Fourcc
-proc chunkData*(this: Wav_ChunkType): KaitaiStruct
 
 
 ##[
@@ -494,8 +494,53 @@ proc read*(_: typedesc[Wav], io: KaitaiStream, root: KaitaiStruct, parent: Kaita
   this.root = root
   this.parent = parent
 
-  let chunkExpr = Riff_Chunk.read(this.io, this.root, this)
+  let chunkExpr = Riff_Chunk.read(this.io, nil, nil)
   this.chunk = chunkExpr
+
+proc chunkId(this: Wav): Wav_Fourcc = 
+  if this.chunkIdInstFlag:
+    return this.chunkIdInst
+  let chunkIdInstExpr = Wav_Fourcc(Wav_Fourcc(this.chunk.id))
+  this.chunkIdInst = chunkIdInstExpr
+  this.chunkIdInstFlag = true
+  return this.chunkIdInst
+
+proc formType(this: Wav): Wav_Fourcc = 
+  if this.formTypeInstFlag:
+    return this.formTypeInst
+  let formTypeInstExpr = Wav_Fourcc(Wav_Fourcc(this.parentChunkData.formType))
+  this.formTypeInst = formTypeInstExpr
+  this.formTypeInstFlag = true
+  return this.formTypeInst
+
+proc isFormTypeWave(this: Wav): bool = 
+  if this.isFormTypeWaveInstFlag:
+    return this.isFormTypeWaveInst
+  let isFormTypeWaveInstExpr = bool( ((this.isRiffChunk) and (this.formType == wav.wave)) )
+  this.isFormTypeWaveInst = isFormTypeWaveInstExpr
+  this.isFormTypeWaveInstFlag = true
+  return this.isFormTypeWaveInst
+
+proc isRiffChunk(this: Wav): bool = 
+  if this.isRiffChunkInstFlag:
+    return this.isRiffChunkInst
+  let isRiffChunkInstExpr = bool(this.chunkId == wav.riff)
+  this.isRiffChunkInst = isRiffChunkInstExpr
+  this.isRiffChunkInstFlag = true
+  return this.isRiffChunkInst
+
+proc parentChunkData(this: Wav): Riff_ParentChunkData = 
+  if this.parentChunkDataInstFlag:
+    return this.parentChunkDataInst
+  if this.isRiffChunk:
+    let io = this.chunk.dataSlot.io
+    let pos = io.pos()
+    io.seek(int(0))
+    let parentChunkDataInstExpr = Riff_ParentChunkData.read(io, nil, nil)
+    this.parentChunkDataInst = parentChunkDataInstExpr
+    io.seek(pos)
+  this.parentChunkDataInstFlag = true
+  return this.parentChunkDataInst
 
 proc subchunks(this: Wav): seq[Wav_ChunkType] = 
   if this.subchunksInstFlag:
@@ -514,202 +559,49 @@ proc subchunks(this: Wav): seq[Wav_ChunkType] =
   this.subchunksInstFlag = true
   return this.subchunksInst
 
-proc parentChunkData(this: Wav): Riff_ParentChunkData = 
-  if this.parentChunkDataInstFlag:
-    return this.parentChunkDataInst
-  if this.isRiffChunk:
-    let io = this.chunk.dataSlot.io
-    let pos = io.pos()
-    io.seek(int(0))
-    let parentChunkDataInstExpr = Riff_ParentChunkData.read(io, this.root, this)
-    this.parentChunkDataInst = parentChunkDataInstExpr
-    io.seek(pos)
-  this.parentChunkDataInstFlag = true
-  return this.parentChunkDataInst
-
-proc isFormTypeWave(this: Wav): bool = 
-  if this.isFormTypeWaveInstFlag:
-    return this.isFormTypeWaveInst
-  let isFormTypeWaveInstExpr = bool( ((this.isRiffChunk) and (this.formType == wav.wave)) )
-  this.isFormTypeWaveInst = isFormTypeWaveInstExpr
-  this.isFormTypeWaveInstFlag = true
-  return this.isFormTypeWaveInst
-
-proc isRiffChunk(this: Wav): bool = 
-  if this.isRiffChunkInstFlag:
-    return this.isRiffChunkInst
-  let isRiffChunkInstExpr = bool(this.chunkId == wav.riff)
-  this.isRiffChunkInst = isRiffChunkInstExpr
-  this.isRiffChunkInstFlag = true
-  return this.isRiffChunkInst
-
-proc chunkId(this: Wav): Wav_Fourcc = 
-  if this.chunkIdInstFlag:
-    return this.chunkIdInst
-  let chunkIdInstExpr = Wav_Fourcc(Wav_Fourcc(this.chunk.id))
-  this.chunkIdInst = chunkIdInstExpr
-  this.chunkIdInstFlag = true
-  return this.chunkIdInst
-
-proc formType(this: Wav): Wav_Fourcc = 
-  if this.formTypeInstFlag:
-    return this.formTypeInst
-  let formTypeInstExpr = Wav_Fourcc(Wav_Fourcc(this.parentChunkData.formType))
-  this.formTypeInst = formTypeInstExpr
-  this.formTypeInstFlag = true
-  return this.formTypeInst
-
 proc fromFile*(_: typedesc[Wav], filename: string): Wav =
   Wav.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[Wav_SampleType], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Wav_SampleType =
+
+##[
+@see <a href="https://www.mmsp.ece.mcgill.ca/Documents/Downloads/AFsp/">Source</a>
+]##
+proc read*(_: typedesc[Wav_AfspChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChunkType): Wav_AfspChunkType =
   template this: untyped = result
-  this = new(Wav_SampleType)
+  this = new(Wav_AfspChunkType)
   let root = if root == nil: cast[Wav](this) else: cast[Wav](root)
   this.io = io
   this.root = root
   this.parent = parent
 
-  let sampleExpr = this.io.readU2le()
-  this.sample = sampleExpr
-
-proc fromFile*(_: typedesc[Wav_SampleType], filename: string): Wav_SampleType =
-  Wav_SampleType.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Wav_FormatChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChunkType): Wav_FormatChunkType =
-  template this: untyped = result
-  this = new(Wav_FormatChunkType)
-  let root = if root == nil: cast[Wav](this) else: cast[Wav](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let wFormatTagExpr = Wav_WFormatTagType(this.io.readU2le())
-  this.wFormatTag = wFormatTagExpr
-  let nChannelsExpr = this.io.readU2le()
-  this.nChannels = nChannelsExpr
-  let nSamplesPerSecExpr = this.io.readU4le()
-  this.nSamplesPerSec = nSamplesPerSecExpr
-  let nAvgBytesPerSecExpr = this.io.readU4le()
-  this.nAvgBytesPerSec = nAvgBytesPerSecExpr
-  let nBlockAlignExpr = this.io.readU2le()
-  this.nBlockAlign = nBlockAlignExpr
-  let wBitsPerSampleExpr = this.io.readU2le()
-  this.wBitsPerSample = wBitsPerSampleExpr
-  if not(this.isBasicPcm):
-    let cbSizeExpr = this.io.readU2le()
-    this.cbSize = cbSizeExpr
-  if this.isCbSizeMeaningful:
-    let wValidBitsPerSampleExpr = this.io.readU2le()
-    this.wValidBitsPerSample = wValidBitsPerSampleExpr
-  if this.isExtensible:
-    let channelMaskAndSubformatExpr = Wav_ChannelMaskAndSubformatType.read(this.io, this.root, this)
-    this.channelMaskAndSubformat = channelMaskAndSubformatExpr
-
-proc isExtensible(this: Wav_FormatChunkType): bool = 
-  if this.isExtensibleInstFlag:
-    return this.isExtensibleInst
-  let isExtensibleInstExpr = bool(this.wFormatTag == wav.extensible)
-  this.isExtensibleInst = isExtensibleInstExpr
-  this.isExtensibleInstFlag = true
-  return this.isExtensibleInst
-
-proc isBasicPcm(this: Wav_FormatChunkType): bool = 
-  if this.isBasicPcmInstFlag:
-    return this.isBasicPcmInst
-  let isBasicPcmInstExpr = bool(this.wFormatTag == wav.pcm)
-  this.isBasicPcmInst = isBasicPcmInstExpr
-  this.isBasicPcmInstFlag = true
-  return this.isBasicPcmInst
-
-proc isBasicFloat(this: Wav_FormatChunkType): bool = 
-  if this.isBasicFloatInstFlag:
-    return this.isBasicFloatInst
-  let isBasicFloatInstExpr = bool(this.wFormatTag == wav.ieee_float)
-  this.isBasicFloatInst = isBasicFloatInstExpr
-  this.isBasicFloatInstFlag = true
-  return this.isBasicFloatInst
-
-proc isCbSizeMeaningful(this: Wav_FormatChunkType): bool = 
-  if this.isCbSizeMeaningfulInstFlag:
-    return this.isCbSizeMeaningfulInst
-  let isCbSizeMeaningfulInstExpr = bool( ((not(this.isBasicPcm)) and (this.cbSize != 0)) )
-  this.isCbSizeMeaningfulInst = isCbSizeMeaningfulInstExpr
-  this.isCbSizeMeaningfulInstFlag = true
-  return this.isCbSizeMeaningfulInst
-
-proc fromFile*(_: typedesc[Wav_FormatChunkType], filename: string): Wav_FormatChunkType =
-  Wav_FormatChunkType.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Wav_PmxChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChunkType): Wav_PmxChunkType =
-  template this: untyped = result
-  this = new(Wav_PmxChunkType)
-  let root = if root == nil: cast[Wav](this) else: cast[Wav](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
+  let magicExpr = this.io.readBytes(int(4))
+  this.magic = magicExpr
 
   ##[
-  XMP data
-  @see <a href="https://github.com/adobe/XMP-Toolkit-SDK/blob/v2022.06/docs/XMPSpecificationPart3.pdf">Source</a>
+  An array of AFsp information records, in the `<field_name>: <value>`
+format (e.g. "`program: CopyAudio`"). The list of existing information
+record types are available in the `doc-ref` links.
+
+  @see <a href="https://www.mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AF/AFsetInfo.html">Source</a>
+  @see <a href="https://www.mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AF/AFprintInfoRecs.html">Source</a>
   ]##
-  let dataExpr = encode(this.io.readBytesFull(), "UTF-8")
-  this.data = dataExpr
+  block:
+    var i: int
+    while not this.io.isEof:
+      let it = encode(this.io.readBytesTerm(0, false, true, true), "ASCII")
+      this.infoRecords.add(it)
+      inc i
 
-proc fromFile*(_: typedesc[Wav_PmxChunkType], filename: string): Wav_PmxChunkType =
-  Wav_PmxChunkType.read(newKaitaiFileStream(filename), nil, nil)
-
-
-##[
-required for all non-PCM formats
-(`w_format_tag != w_format_tag_type::pcm` or `not is_basic_pcm` in
-`format_chunk_type` context)
-
-]##
-proc read*(_: typedesc[Wav_FactChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChunkType): Wav_FactChunkType =
-  template this: untyped = result
-  this = new(Wav_FactChunkType)
-  let root = if root == nil: cast[Wav](this) else: cast[Wav](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let numSamplesPerChannelExpr = this.io.readU4le()
-  this.numSamplesPerChannel = numSamplesPerChannelExpr
-
-proc fromFile*(_: typedesc[Wav_FactChunkType], filename: string): Wav_FactChunkType =
-  Wav_FactChunkType.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Wav_GuidType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChannelMaskAndSubformatType): Wav_GuidType =
-  template this: untyped = result
-  this = new(Wav_GuidType)
-  let root = if root == nil: cast[Wav](this) else: cast[Wav](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let data1Expr = this.io.readU4le()
-  this.data1 = data1Expr
-  let data2Expr = this.io.readU2le()
-  this.data2 = data2Expr
-  let data3Expr = this.io.readU2le()
-  this.data3 = data3Expr
-  let data4Expr = this.io.readU4be()
-  this.data4 = data4Expr
-  let data4aExpr = this.io.readU4be()
-  this.data4a = data4aExpr
-
-proc fromFile*(_: typedesc[Wav_GuidType], filename: string): Wav_GuidType =
-  Wav_GuidType.read(newKaitaiFileStream(filename), nil, nil)
+proc fromFile*(_: typedesc[Wav_AfspChunkType], filename: string): Wav_AfspChunkType =
+  Wav_AfspChunkType.read(newKaitaiFileStream(filename), nil, nil)
 
 
 ##[
-@see <a href="https://en.wikipedia.org/wiki/IXML">Source</a>
+@see <a href="https://tech.ebu.ch/docs/tech/tech3285s5.pdf">Source</a>
 ]##
-proc read*(_: typedesc[Wav_IxmlChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChunkType): Wav_IxmlChunkType =
+proc read*(_: typedesc[Wav_AxmlChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChunkType): Wav_AxmlChunkType =
   template this: untyped = result
-  this = new(Wav_IxmlChunkType)
+  this = new(Wav_AxmlChunkType)
   let root = if root == nil: cast[Wav](this) else: cast[Wav](root)
   this.io = io
   this.root = root
@@ -718,86 +610,52 @@ proc read*(_: typedesc[Wav_IxmlChunkType], io: KaitaiStream, root: KaitaiStruct,
   let dataExpr = encode(this.io.readBytesFull(), "UTF-8")
   this.data = dataExpr
 
-proc fromFile*(_: typedesc[Wav_IxmlChunkType], filename: string): Wav_IxmlChunkType =
-  Wav_IxmlChunkType.read(newKaitaiFileStream(filename), nil, nil)
+proc fromFile*(_: typedesc[Wav_AxmlChunkType], filename: string): Wav_AxmlChunkType =
+  Wav_AxmlChunkType.read(newKaitaiFileStream(filename), nil, nil)
 
-proc read*(_: typedesc[Wav_InfoChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ListChunkType): Wav_InfoChunkType =
+
+##[
+@see <a href="https://en.wikipedia.org/wiki/Broadcast_Wave_Format">Source</a>
+]##
+proc read*(_: typedesc[Wav_BextChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChunkType): Wav_BextChunkType =
   template this: untyped = result
-  this = new(Wav_InfoChunkType)
+  this = new(Wav_BextChunkType)
   let root = if root == nil: cast[Wav](this) else: cast[Wav](root)
   this.io = io
   this.root = root
   this.parent = parent
 
-  let chunkExpr = Riff_Chunk.read(this.io, this.root, this)
-  this.chunk = chunkExpr
+  let descriptionExpr = encode(this.io.readBytes(int(256)).bytesTerminate(0, false), "ASCII")
+  this.description = descriptionExpr
+  let originatorExpr = encode(this.io.readBytes(int(32)).bytesTerminate(0, false), "ASCII")
+  this.originator = originatorExpr
+  let originatorReferenceExpr = encode(this.io.readBytes(int(32)).bytesTerminate(0, false), "ASCII")
+  this.originatorReference = originatorReferenceExpr
+  let originationDateExpr = encode(this.io.readBytes(int(10)), "ASCII")
+  this.originationDate = originationDateExpr
+  let originationTimeExpr = encode(this.io.readBytes(int(8)), "ASCII")
+  this.originationTime = originationTimeExpr
+  let timeReferenceLowExpr = this.io.readU4le()
+  this.timeReferenceLow = timeReferenceLowExpr
+  let timeReferenceHighExpr = this.io.readU4le()
+  this.timeReferenceHigh = timeReferenceHighExpr
+  let versionExpr = this.io.readU2le()
+  this.version = versionExpr
+  let umidExpr = this.io.readBytes(int(64))
+  this.umid = umidExpr
+  let loudnessValueExpr = this.io.readU2le()
+  this.loudnessValue = loudnessValueExpr
+  let loudnessRangeExpr = this.io.readU2le()
+  this.loudnessRange = loudnessRangeExpr
+  let maxTruePeakLevelExpr = this.io.readU2le()
+  this.maxTruePeakLevel = maxTruePeakLevelExpr
+  let maxMomentaryLoudnessExpr = this.io.readU2le()
+  this.maxMomentaryLoudness = maxMomentaryLoudnessExpr
+  let maxShortTermLoudnessExpr = this.io.readU2le()
+  this.maxShortTermLoudness = maxShortTermLoudnessExpr
 
-proc chunkData(this: Wav_InfoChunkType): string = 
-  if this.chunkDataInstFlag:
-    return this.chunkDataInst
-  let io = this.chunk.dataSlot.io
-  let pos = io.pos()
-  io.seek(int(0))
-  let chunkDataInstExpr = encode(io.readBytesTerm(0, false, true, true), "ASCII")
-  this.chunkDataInst = chunkDataInstExpr
-  io.seek(pos)
-  this.chunkDataInstFlag = true
-  return this.chunkDataInst
-
-proc fromFile*(_: typedesc[Wav_InfoChunkType], filename: string): Wav_InfoChunkType =
-  Wav_InfoChunkType.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Wav_CuePointType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_CueChunkType): Wav_CuePointType =
-  template this: untyped = result
-  this = new(Wav_CuePointType)
-  let root = if root == nil: cast[Wav](this) else: cast[Wav](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let dwNameExpr = this.io.readU4le()
-  this.dwName = dwNameExpr
-  let dwPositionExpr = this.io.readU4le()
-  this.dwPosition = dwPositionExpr
-  let fccChunkExpr = this.io.readU4le()
-  this.fccChunk = fccChunkExpr
-  let dwChunkStartExpr = this.io.readU4le()
-  this.dwChunkStart = dwChunkStartExpr
-  let dwBlockStartExpr = this.io.readU4le()
-  this.dwBlockStart = dwBlockStartExpr
-  let dwSampleOffsetExpr = this.io.readU4le()
-  this.dwSampleOffset = dwSampleOffsetExpr
-
-proc fromFile*(_: typedesc[Wav_CuePointType], filename: string): Wav_CuePointType =
-  Wav_CuePointType.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Wav_DataChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChunkType): Wav_DataChunkType =
-  template this: untyped = result
-  this = new(Wav_DataChunkType)
-  let root = if root == nil: cast[Wav](this) else: cast[Wav](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let dataExpr = this.io.readBytesFull()
-  this.data = dataExpr
-
-proc fromFile*(_: typedesc[Wav_DataChunkType], filename: string): Wav_DataChunkType =
-  Wav_DataChunkType.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Wav_SamplesType], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Wav_SamplesType =
-  template this: untyped = result
-  this = new(Wav_SamplesType)
-  let root = if root == nil: cast[Wav](this) else: cast[Wav](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let samplesExpr = this.io.readU4le()
-  this.samples = samplesExpr
-
-proc fromFile*(_: typedesc[Wav_SamplesType], filename: string): Wav_SamplesType =
-  Wav_SamplesType.read(newKaitaiFileStream(filename), nil, nil)
+proc fromFile*(_: typedesc[Wav_BextChunkType], filename: string): Wav_BextChunkType =
+  Wav_BextChunkType.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[Wav_ChannelMaskAndSubformatType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_FormatChunkType): Wav_ChannelMaskAndSubformatType =
   template this: untyped = result
@@ -814,64 +672,6 @@ proc read*(_: typedesc[Wav_ChannelMaskAndSubformatType], io: KaitaiStream, root:
 
 proc fromFile*(_: typedesc[Wav_ChannelMaskAndSubformatType], filename: string): Wav_ChannelMaskAndSubformatType =
   Wav_ChannelMaskAndSubformatType.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Wav_CueChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChunkType): Wav_CueChunkType =
-  template this: untyped = result
-  this = new(Wav_CueChunkType)
-  let root = if root == nil: cast[Wav](this) else: cast[Wav](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let dwCuePointsExpr = this.io.readU4le()
-  this.dwCuePoints = dwCuePointsExpr
-  for i in 0 ..< int(this.dwCuePoints):
-    let it = Wav_CuePointType.read(this.io, this.root, this)
-    this.cuePoints.add(it)
-
-proc fromFile*(_: typedesc[Wav_CueChunkType], filename: string): Wav_CueChunkType =
-  Wav_CueChunkType.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Wav_ListChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChunkType): Wav_ListChunkType =
-  template this: untyped = result
-  this = new(Wav_ListChunkType)
-  let root = if root == nil: cast[Wav](this) else: cast[Wav](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let parentChunkDataExpr = Riff_ParentChunkData.read(this.io, this.root, this)
-  this.parentChunkData = parentChunkDataExpr
-
-proc formType(this: Wav_ListChunkType): Wav_Fourcc = 
-  if this.formTypeInstFlag:
-    return this.formTypeInst
-  let formTypeInstExpr = Wav_Fourcc(Wav_Fourcc(this.parentChunkData.formType))
-  this.formTypeInst = formTypeInstExpr
-  this.formTypeInstFlag = true
-  return this.formTypeInst
-
-proc subchunks(this: Wav_ListChunkType): seq[Wav_InfoChunkType] = 
-  if this.subchunksInstFlag:
-    return this.subchunksInst
-  let io = this.parentChunkData.subchunksSlot.io
-  let pos = io.pos()
-  io.seek(int(0))
-  block:
-    var i: int
-    while not io.isEof:
-      block:
-        let on = this.formType
-        if on == wav.info:
-          let it = Wav_InfoChunkType.read(io, this.root, this)
-          this.subchunksInst.add(it)
-      inc i
-  io.seek(pos)
-  this.subchunksInstFlag = true
-  return this.subchunksInst
-
-proc fromFile*(_: typedesc[Wav_ListChunkType], filename: string): Wav_ListChunkType =
-  Wav_ListChunkType.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[Wav_ChannelMaskType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChannelMaskAndSubformatType): Wav_ChannelMaskType =
   template this: untyped = result
@@ -925,57 +725,6 @@ proc read*(_: typedesc[Wav_ChannelMaskType], io: KaitaiStream, root: KaitaiStruc
 proc fromFile*(_: typedesc[Wav_ChannelMaskType], filename: string): Wav_ChannelMaskType =
   Wav_ChannelMaskType.read(newKaitaiFileStream(filename), nil, nil)
 
-
-##[
-@see <a href="https://www.mmsp.ece.mcgill.ca/Documents/Downloads/AFsp/">Source</a>
-]##
-proc read*(_: typedesc[Wav_AfspChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChunkType): Wav_AfspChunkType =
-  template this: untyped = result
-  this = new(Wav_AfspChunkType)
-  let root = if root == nil: cast[Wav](this) else: cast[Wav](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let magicExpr = this.io.readBytes(int(4))
-  this.magic = magicExpr
-
-  ##[
-  An array of AFsp information records, in the `<field_name>: <value>`
-format (e.g. "`program: CopyAudio`"). The list of existing information
-record types are available in the `doc-ref` links.
-
-  @see <a href="https://www.mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AF/AFsetInfo.html">Source</a>
-  @see <a href="https://www.mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AF/AFprintInfoRecs.html">Source</a>
-  ]##
-  block:
-    var i: int
-    while not this.io.isEof:
-      let it = encode(this.io.readBytesTerm(0, false, true, true), "ASCII")
-      this.infoRecords.add(it)
-      inc i
-
-proc fromFile*(_: typedesc[Wav_AfspChunkType], filename: string): Wav_AfspChunkType =
-  Wav_AfspChunkType.read(newKaitaiFileStream(filename), nil, nil)
-
-
-##[
-@see <a href="https://tech.ebu.ch/docs/tech/tech3285s5.pdf">Source</a>
-]##
-proc read*(_: typedesc[Wav_AxmlChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChunkType): Wav_AxmlChunkType =
-  template this: untyped = result
-  this = new(Wav_AxmlChunkType)
-  let root = if root == nil: cast[Wav](this) else: cast[Wav](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let dataExpr = encode(this.io.readBytesFull(), "UTF-8")
-  this.data = dataExpr
-
-proc fromFile*(_: typedesc[Wav_AxmlChunkType], filename: string): Wav_AxmlChunkType =
-  Wav_AxmlChunkType.read(newKaitaiFileStream(filename), nil, nil)
-
 proc read*(_: typedesc[Wav_ChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav): Wav_ChunkType =
   template this: untyped = result
   this = new(Wav_ChunkType)
@@ -984,16 +733,8 @@ proc read*(_: typedesc[Wav_ChunkType], io: KaitaiStream, root: KaitaiStruct, par
   this.root = root
   this.parent = parent
 
-  let chunkExpr = Riff_Chunk.read(this.io, this.root, this)
+  let chunkExpr = Riff_Chunk.read(this.io, nil, nil)
   this.chunk = chunkExpr
-
-proc chunkId(this: Wav_ChunkType): Wav_Fourcc = 
-  if this.chunkIdInstFlag:
-    return this.chunkIdInst
-  let chunkIdInstExpr = Wav_Fourcc(Wav_Fourcc(this.chunk.id))
-  this.chunkIdInst = chunkIdInstExpr
-  this.chunkIdInstFlag = true
-  return this.chunkIdInst
 
 proc chunkData(this: Wav_ChunkType): KaitaiStruct = 
   if this.chunkDataInstFlag:
@@ -1003,17 +744,11 @@ proc chunkData(this: Wav_ChunkType): KaitaiStruct =
   io.seek(int(0))
   block:
     let on = this.chunkId
-    if on == wav.fact:
-      let chunkDataInstExpr = Wav_FactChunkType.read(io, this.root, this)
-      this.chunkDataInst = chunkDataInstExpr
-    elif on == wav.list:
-      let chunkDataInstExpr = Wav_ListChunkType.read(io, this.root, this)
-      this.chunkDataInst = chunkDataInstExpr
-    elif on == wav.fmt:
-      let chunkDataInstExpr = Wav_FormatChunkType.read(io, this.root, this)
-      this.chunkDataInst = chunkDataInstExpr
-    elif on == wav.afsp:
+    if on == wav.afsp:
       let chunkDataInstExpr = Wav_AfspChunkType.read(io, this.root, this)
+      this.chunkDataInst = chunkDataInstExpr
+    elif on == wav.axml:
+      let chunkDataInstExpr = Wav_AxmlChunkType.read(io, this.root, this)
       this.chunkDataInst = chunkDataInstExpr
     elif on == wav.bext:
       let chunkDataInstExpr = Wav_BextChunkType.read(io, this.root, this)
@@ -1021,66 +756,331 @@ proc chunkData(this: Wav_ChunkType): KaitaiStruct =
     elif on == wav.cue:
       let chunkDataInstExpr = Wav_CueChunkType.read(io, this.root, this)
       this.chunkDataInst = chunkDataInstExpr
+    elif on == wav.data:
+      let chunkDataInstExpr = Wav_DataChunkType.read(io, this.root, this)
+      this.chunkDataInst = chunkDataInstExpr
+    elif on == wav.fact:
+      let chunkDataInstExpr = Wav_FactChunkType.read(io, this.root, this)
+      this.chunkDataInst = chunkDataInstExpr
+    elif on == wav.fmt:
+      let chunkDataInstExpr = Wav_FormatChunkType.read(io, this.root, this)
+      this.chunkDataInst = chunkDataInstExpr
     elif on == wav.ixml:
       let chunkDataInstExpr = Wav_IxmlChunkType.read(io, this.root, this)
       this.chunkDataInst = chunkDataInstExpr
+    elif on == wav.list:
+      let chunkDataInstExpr = Wav_ListChunkType.read(io, this.root, this)
+      this.chunkDataInst = chunkDataInstExpr
     elif on == wav.pmx:
       let chunkDataInstExpr = Wav_PmxChunkType.read(io, this.root, this)
-      this.chunkDataInst = chunkDataInstExpr
-    elif on == wav.axml:
-      let chunkDataInstExpr = Wav_AxmlChunkType.read(io, this.root, this)
-      this.chunkDataInst = chunkDataInstExpr
-    elif on == wav.data:
-      let chunkDataInstExpr = Wav_DataChunkType.read(io, this.root, this)
       this.chunkDataInst = chunkDataInstExpr
   io.seek(pos)
   this.chunkDataInstFlag = true
   return this.chunkDataInst
 
+proc chunkId(this: Wav_ChunkType): Wav_Fourcc = 
+  if this.chunkIdInstFlag:
+    return this.chunkIdInst
+  let chunkIdInstExpr = Wav_Fourcc(Wav_Fourcc(this.chunk.id))
+  this.chunkIdInst = chunkIdInstExpr
+  this.chunkIdInstFlag = true
+  return this.chunkIdInst
+
 proc fromFile*(_: typedesc[Wav_ChunkType], filename: string): Wav_ChunkType =
   Wav_ChunkType.read(newKaitaiFileStream(filename), nil, nil)
 
-
-##[
-@see <a href="https://en.wikipedia.org/wiki/Broadcast_Wave_Format">Source</a>
-]##
-proc read*(_: typedesc[Wav_BextChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChunkType): Wav_BextChunkType =
+proc read*(_: typedesc[Wav_CueChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChunkType): Wav_CueChunkType =
   template this: untyped = result
-  this = new(Wav_BextChunkType)
+  this = new(Wav_CueChunkType)
   let root = if root == nil: cast[Wav](this) else: cast[Wav](root)
   this.io = io
   this.root = root
   this.parent = parent
 
-  let descriptionExpr = encode(this.io.readBytes(int(256)).bytesTerminate(0, false), "ASCII")
-  this.description = descriptionExpr
-  let originatorExpr = encode(this.io.readBytes(int(32)).bytesTerminate(0, false), "ASCII")
-  this.originator = originatorExpr
-  let originatorReferenceExpr = encode(this.io.readBytes(int(32)).bytesTerminate(0, false), "ASCII")
-  this.originatorReference = originatorReferenceExpr
-  let originationDateExpr = encode(this.io.readBytes(int(10)), "ASCII")
-  this.originationDate = originationDateExpr
-  let originationTimeExpr = encode(this.io.readBytes(int(8)), "ASCII")
-  this.originationTime = originationTimeExpr
-  let timeReferenceLowExpr = this.io.readU4le()
-  this.timeReferenceLow = timeReferenceLowExpr
-  let timeReferenceHighExpr = this.io.readU4le()
-  this.timeReferenceHigh = timeReferenceHighExpr
-  let versionExpr = this.io.readU2le()
-  this.version = versionExpr
-  let umidExpr = this.io.readBytes(int(64))
-  this.umid = umidExpr
-  let loudnessValueExpr = this.io.readU2le()
-  this.loudnessValue = loudnessValueExpr
-  let loudnessRangeExpr = this.io.readU2le()
-  this.loudnessRange = loudnessRangeExpr
-  let maxTruePeakLevelExpr = this.io.readU2le()
-  this.maxTruePeakLevel = maxTruePeakLevelExpr
-  let maxMomentaryLoudnessExpr = this.io.readU2le()
-  this.maxMomentaryLoudness = maxMomentaryLoudnessExpr
-  let maxShortTermLoudnessExpr = this.io.readU2le()
-  this.maxShortTermLoudness = maxShortTermLoudnessExpr
+  let dwCuePointsExpr = this.io.readU4le()
+  this.dwCuePoints = dwCuePointsExpr
+  for i in 0 ..< int(this.dwCuePoints):
+    let it = Wav_CuePointType.read(this.io, this.root, this)
+    this.cuePoints.add(it)
 
-proc fromFile*(_: typedesc[Wav_BextChunkType], filename: string): Wav_BextChunkType =
-  Wav_BextChunkType.read(newKaitaiFileStream(filename), nil, nil)
+proc fromFile*(_: typedesc[Wav_CueChunkType], filename: string): Wav_CueChunkType =
+  Wav_CueChunkType.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Wav_CuePointType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_CueChunkType): Wav_CuePointType =
+  template this: untyped = result
+  this = new(Wav_CuePointType)
+  let root = if root == nil: cast[Wav](this) else: cast[Wav](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let dwNameExpr = this.io.readU4le()
+  this.dwName = dwNameExpr
+  let dwPositionExpr = this.io.readU4le()
+  this.dwPosition = dwPositionExpr
+  let fccChunkExpr = this.io.readU4le()
+  this.fccChunk = fccChunkExpr
+  let dwChunkStartExpr = this.io.readU4le()
+  this.dwChunkStart = dwChunkStartExpr
+  let dwBlockStartExpr = this.io.readU4le()
+  this.dwBlockStart = dwBlockStartExpr
+  let dwSampleOffsetExpr = this.io.readU4le()
+  this.dwSampleOffset = dwSampleOffsetExpr
+
+proc fromFile*(_: typedesc[Wav_CuePointType], filename: string): Wav_CuePointType =
+  Wav_CuePointType.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Wav_DataChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChunkType): Wav_DataChunkType =
+  template this: untyped = result
+  this = new(Wav_DataChunkType)
+  let root = if root == nil: cast[Wav](this) else: cast[Wav](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let dataExpr = this.io.readBytesFull()
+  this.data = dataExpr
+
+proc fromFile*(_: typedesc[Wav_DataChunkType], filename: string): Wav_DataChunkType =
+  Wav_DataChunkType.read(newKaitaiFileStream(filename), nil, nil)
+
+
+##[
+required for all non-PCM formats
+(`w_format_tag != w_format_tag_type::pcm` or `not is_basic_pcm` in
+`format_chunk_type` context)
+
+]##
+proc read*(_: typedesc[Wav_FactChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChunkType): Wav_FactChunkType =
+  template this: untyped = result
+  this = new(Wav_FactChunkType)
+  let root = if root == nil: cast[Wav](this) else: cast[Wav](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let numSamplesPerChannelExpr = this.io.readU4le()
+  this.numSamplesPerChannel = numSamplesPerChannelExpr
+
+proc fromFile*(_: typedesc[Wav_FactChunkType], filename: string): Wav_FactChunkType =
+  Wav_FactChunkType.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Wav_FormatChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChunkType): Wav_FormatChunkType =
+  template this: untyped = result
+  this = new(Wav_FormatChunkType)
+  let root = if root == nil: cast[Wav](this) else: cast[Wav](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let wFormatTagExpr = Wav_WFormatTagType(this.io.readU2le())
+  this.wFormatTag = wFormatTagExpr
+  let nChannelsExpr = this.io.readU2le()
+  this.nChannels = nChannelsExpr
+  let nSamplesPerSecExpr = this.io.readU4le()
+  this.nSamplesPerSec = nSamplesPerSecExpr
+  let nAvgBytesPerSecExpr = this.io.readU4le()
+  this.nAvgBytesPerSec = nAvgBytesPerSecExpr
+  let nBlockAlignExpr = this.io.readU2le()
+  this.nBlockAlign = nBlockAlignExpr
+  let wBitsPerSampleExpr = this.io.readU2le()
+  this.wBitsPerSample = wBitsPerSampleExpr
+  if not(this.isBasicPcm):
+    let cbSizeExpr = this.io.readU2le()
+    this.cbSize = cbSizeExpr
+  if this.isCbSizeMeaningful:
+    let wValidBitsPerSampleExpr = this.io.readU2le()
+    this.wValidBitsPerSample = wValidBitsPerSampleExpr
+  if this.isExtensible:
+    let channelMaskAndSubformatExpr = Wav_ChannelMaskAndSubformatType.read(this.io, this.root, this)
+    this.channelMaskAndSubformat = channelMaskAndSubformatExpr
+
+proc isBasicFloat(this: Wav_FormatChunkType): bool = 
+  if this.isBasicFloatInstFlag:
+    return this.isBasicFloatInst
+  let isBasicFloatInstExpr = bool(this.wFormatTag == wav.ieee_float)
+  this.isBasicFloatInst = isBasicFloatInstExpr
+  this.isBasicFloatInstFlag = true
+  return this.isBasicFloatInst
+
+proc isBasicPcm(this: Wav_FormatChunkType): bool = 
+  if this.isBasicPcmInstFlag:
+    return this.isBasicPcmInst
+  let isBasicPcmInstExpr = bool(this.wFormatTag == wav.pcm)
+  this.isBasicPcmInst = isBasicPcmInstExpr
+  this.isBasicPcmInstFlag = true
+  return this.isBasicPcmInst
+
+proc isCbSizeMeaningful(this: Wav_FormatChunkType): bool = 
+  if this.isCbSizeMeaningfulInstFlag:
+    return this.isCbSizeMeaningfulInst
+  let isCbSizeMeaningfulInstExpr = bool( ((not(this.isBasicPcm)) and (this.cbSize != 0)) )
+  this.isCbSizeMeaningfulInst = isCbSizeMeaningfulInstExpr
+  this.isCbSizeMeaningfulInstFlag = true
+  return this.isCbSizeMeaningfulInst
+
+proc isExtensible(this: Wav_FormatChunkType): bool = 
+  if this.isExtensibleInstFlag:
+    return this.isExtensibleInst
+  let isExtensibleInstExpr = bool(this.wFormatTag == wav.extensible)
+  this.isExtensibleInst = isExtensibleInstExpr
+  this.isExtensibleInstFlag = true
+  return this.isExtensibleInst
+
+proc fromFile*(_: typedesc[Wav_FormatChunkType], filename: string): Wav_FormatChunkType =
+  Wav_FormatChunkType.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Wav_GuidType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChannelMaskAndSubformatType): Wav_GuidType =
+  template this: untyped = result
+  this = new(Wav_GuidType)
+  let root = if root == nil: cast[Wav](this) else: cast[Wav](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let data1Expr = this.io.readU4le()
+  this.data1 = data1Expr
+  let data2Expr = this.io.readU2le()
+  this.data2 = data2Expr
+  let data3Expr = this.io.readU2le()
+  this.data3 = data3Expr
+  let data4Expr = this.io.readU4be()
+  this.data4 = data4Expr
+  let data4aExpr = this.io.readU4be()
+  this.data4a = data4aExpr
+
+proc fromFile*(_: typedesc[Wav_GuidType], filename: string): Wav_GuidType =
+  Wav_GuidType.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Wav_InfoChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ListChunkType): Wav_InfoChunkType =
+  template this: untyped = result
+  this = new(Wav_InfoChunkType)
+  let root = if root == nil: cast[Wav](this) else: cast[Wav](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let chunkExpr = Riff_Chunk.read(this.io, nil, nil)
+  this.chunk = chunkExpr
+
+proc chunkData(this: Wav_InfoChunkType): string = 
+  if this.chunkDataInstFlag:
+    return this.chunkDataInst
+  let io = this.chunk.dataSlot.io
+  let pos = io.pos()
+  io.seek(int(0))
+  let chunkDataInstExpr = encode(io.readBytesTerm(0, false, true, true), "ASCII")
+  this.chunkDataInst = chunkDataInstExpr
+  io.seek(pos)
+  this.chunkDataInstFlag = true
+  return this.chunkDataInst
+
+proc fromFile*(_: typedesc[Wav_InfoChunkType], filename: string): Wav_InfoChunkType =
+  Wav_InfoChunkType.read(newKaitaiFileStream(filename), nil, nil)
+
+
+##[
+@see <a href="https://en.wikipedia.org/wiki/IXML">Source</a>
+]##
+proc read*(_: typedesc[Wav_IxmlChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChunkType): Wav_IxmlChunkType =
+  template this: untyped = result
+  this = new(Wav_IxmlChunkType)
+  let root = if root == nil: cast[Wav](this) else: cast[Wav](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let dataExpr = encode(this.io.readBytesFull(), "UTF-8")
+  this.data = dataExpr
+
+proc fromFile*(_: typedesc[Wav_IxmlChunkType], filename: string): Wav_IxmlChunkType =
+  Wav_IxmlChunkType.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Wav_ListChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChunkType): Wav_ListChunkType =
+  template this: untyped = result
+  this = new(Wav_ListChunkType)
+  let root = if root == nil: cast[Wav](this) else: cast[Wav](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let parentChunkDataExpr = Riff_ParentChunkData.read(this.io, nil, nil)
+  this.parentChunkData = parentChunkDataExpr
+
+proc formType(this: Wav_ListChunkType): Wav_Fourcc = 
+  if this.formTypeInstFlag:
+    return this.formTypeInst
+  let formTypeInstExpr = Wav_Fourcc(Wav_Fourcc(this.parentChunkData.formType))
+  this.formTypeInst = formTypeInstExpr
+  this.formTypeInstFlag = true
+  return this.formTypeInst
+
+proc subchunks(this: Wav_ListChunkType): seq[Wav_InfoChunkType] = 
+  if this.subchunksInstFlag:
+    return this.subchunksInst
+  let io = this.parentChunkData.subchunksSlot.io
+  let pos = io.pos()
+  io.seek(int(0))
+  block:
+    var i: int
+    while not io.isEof:
+      block:
+        let on = this.formType
+        if on == wav.info:
+          let it = Wav_InfoChunkType.read(io, this.root, this)
+          this.subchunksInst.add(it)
+      inc i
+  io.seek(pos)
+  this.subchunksInstFlag = true
+  return this.subchunksInst
+
+proc fromFile*(_: typedesc[Wav_ListChunkType], filename: string): Wav_ListChunkType =
+  Wav_ListChunkType.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Wav_PmxChunkType], io: KaitaiStream, root: KaitaiStruct, parent: Wav_ChunkType): Wav_PmxChunkType =
+  template this: untyped = result
+  this = new(Wav_PmxChunkType)
+  let root = if root == nil: cast[Wav](this) else: cast[Wav](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+
+  ##[
+  XMP data
+  @see <a href="https://github.com/adobe/XMP-Toolkit-SDK/blob/v2022.06/docs/XMPSpecificationPart3.pdf">Source</a>
+  ]##
+  let dataExpr = encode(this.io.readBytesFull(), "UTF-8")
+  this.data = dataExpr
+
+proc fromFile*(_: typedesc[Wav_PmxChunkType], filename: string): Wav_PmxChunkType =
+  Wav_PmxChunkType.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Wav_SampleType], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Wav_SampleType =
+  template this: untyped = result
+  this = new(Wav_SampleType)
+  let root = if root == nil: cast[Wav](this) else: cast[Wav](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let sampleExpr = this.io.readU2le()
+  this.sample = sampleExpr
+
+proc fromFile*(_: typedesc[Wav_SampleType], filename: string): Wav_SampleType =
+  Wav_SampleType.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Wav_SamplesType], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Wav_SamplesType =
+  template this: untyped = result
+  this = new(Wav_SamplesType)
+  let root = if root == nil: cast[Wav](this) else: cast[Wav](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let samplesExpr = this.io.readU4le()
+  this.samples = samplesExpr
+
+proc fromFile*(_: typedesc[Wav_SamplesType], filename: string): Wav_SamplesType =
+  Wav_SamplesType.read(newKaitaiFileStream(filename), nil, nil)
 

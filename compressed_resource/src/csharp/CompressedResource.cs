@@ -68,14 +68,14 @@ namespace Kaitai
             {
                 m_parent = p__parent;
                 m_root = p__root;
-                f_typeSpecificPartRaw = false;
                 f_typeSpecificPart = false;
+                f_typeSpecificPartRaw = false;
                 _read();
             }
             private void _read()
             {
                 _commonPart = new CommonPart(m_io, this, m_root);
-                __raw_typeSpecificPartRawWithIo = m_io.ReadBytes((CommonPart.LenHeader - 12));
+                __raw_typeSpecificPartRawWithIo = m_io.ReadBytes(CommonPart.LenHeader - 12);
                 var io___raw_typeSpecificPartRawWithIo = new KaitaiStream(__raw_typeSpecificPartRawWithIo);
                 _typeSpecificPartRawWithIo = new BytesWithIo(io___raw_typeSpecificPartRawWithIo);
             }
@@ -100,20 +100,20 @@ namespace Kaitai
                 private void _read()
                 {
                     _magic = m_io.ReadBytes(4);
-                    if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 168, 159, 101, 114 }) == 0)))
+                    if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 168, 159, 101, 114 }) == 0)))
                     {
-                        throw new ValidationNotEqualError(new byte[] { 168, 159, 101, 114 }, Magic, M_Io, "/types/header/types/common_part/seq/0");
+                        throw new ValidationNotEqualError(new byte[] { 168, 159, 101, 114 }, _magic, m_io, "/types/header/types/common_part/seq/0");
                     }
                     _lenHeader = m_io.ReadU2be();
-                    if (!(LenHeader == 18))
+                    if (!(_lenHeader == 18))
                     {
-                        throw new ValidationNotEqualError(18, LenHeader, M_Io, "/types/header/types/common_part/seq/1");
+                        throw new ValidationNotEqualError(18, _lenHeader, m_io, "/types/header/types/common_part/seq/1");
                     }
                     _headerType = m_io.ReadU1();
                     _unknown = m_io.ReadU1();
-                    if (!(Unknown == 1))
+                    if (!(_unknown == 1))
                     {
-                        throw new ValidationNotEqualError(1, Unknown, M_Io, "/types/header/types/common_part/seq/3");
+                        throw new ValidationNotEqualError(1, _unknown, m_io, "/types/header/types/common_part/seq/3");
                     }
                     _lenDecompressed = m_io.ReadU4be();
                 }
@@ -189,9 +189,9 @@ namespace Kaitai
                     _expansionBufferSize = m_io.ReadU1();
                     _decompressorId = m_io.ReadS2be();
                     _reserved = m_io.ReadU2be();
-                    if (!(Reserved == 0))
+                    if (!(_reserved == 0))
                     {
-                        throw new ValidationNotEqualError(0, Reserved, M_Io, "/types/header/types/type_specific_part_type_8/seq/3");
+                        throw new ValidationNotEqualError(0, _reserved, m_io, "/types/header/types/type_specific_part_type_8/seq/3");
                     }
                 }
                 private byte _workingBufferFractionalSize;
@@ -278,8 +278,8 @@ namespace Kaitai
                     {
                         if (f_decompressorSpecificParameters)
                             return _decompressorSpecificParameters;
-                        _decompressorSpecificParameters = (byte[]) (DecompressorSpecificParametersWithIo.Data);
                         f_decompressorSpecificParameters = true;
+                        _decompressorSpecificParameters = (byte[]) (DecompressorSpecificParametersWithIo.Data);
                         return _decompressorSpecificParameters;
                     }
                 }
@@ -303,24 +303,6 @@ namespace Kaitai
                 public CompressedResource.Header M_Parent { get { return m_parent; } }
                 public byte[] M_RawDecompressorSpecificParametersWithIo { get { return __raw_decompressorSpecificParametersWithIo; } }
             }
-            private bool f_typeSpecificPartRaw;
-            private byte[] _typeSpecificPartRaw;
-
-            /// <summary>
-            /// The type-specific part of the header,
-            /// as a raw byte array.
-            /// </summary>
-            public byte[] TypeSpecificPartRaw
-            {
-                get
-                {
-                    if (f_typeSpecificPartRaw)
-                        return _typeSpecificPartRaw;
-                    _typeSpecificPartRaw = (byte[]) (TypeSpecificPartRawWithIo.Data);
-                    f_typeSpecificPartRaw = true;
-                    return _typeSpecificPartRaw;
-                }
-            }
             private bool f_typeSpecificPart;
             private KaitaiStruct _typeSpecificPart;
 
@@ -334,6 +316,7 @@ namespace Kaitai
                 {
                     if (f_typeSpecificPart)
                         return _typeSpecificPart;
+                    f_typeSpecificPart = true;
                     KaitaiStream io = TypeSpecificPartRawWithIo.M_Io;
                     long _pos = io.Pos;
                     io.Seek(0);
@@ -348,8 +331,25 @@ namespace Kaitai
                     }
                     }
                     io.Seek(_pos);
-                    f_typeSpecificPart = true;
                     return _typeSpecificPart;
+                }
+            }
+            private bool f_typeSpecificPartRaw;
+            private byte[] _typeSpecificPartRaw;
+
+            /// <summary>
+            /// The type-specific part of the header,
+            /// as a raw byte array.
+            /// </summary>
+            public byte[] TypeSpecificPartRaw
+            {
+                get
+                {
+                    if (f_typeSpecificPartRaw)
+                        return _typeSpecificPartRaw;
+                    f_typeSpecificPartRaw = true;
+                    _typeSpecificPartRaw = (byte[]) (TypeSpecificPartRawWithIo.Data);
+                    return _typeSpecificPartRaw;
                 }
             }
             private CommonPart _commonPart;

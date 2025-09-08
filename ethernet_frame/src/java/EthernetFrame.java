@@ -71,13 +71,13 @@ public class EthernetFrame extends KaitaiStruct {
                 switch (etherType()) {
                 case IPV4: {
                     this._raw_body = this._io.readBytesFull();
-                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(this._raw_body);
                     this.body = new Ipv4Packet(_io__raw_body);
                     break;
                 }
                 case IPV6: {
                     this._raw_body = this._io.readBytesFull();
-                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(this._raw_body);
                     this.body = new Ipv6Packet(_io__raw_body);
                     break;
                 }
@@ -88,6 +88,33 @@ public class EthernetFrame extends KaitaiStruct {
                 }
             } else {
                 this.body = this._io.readBytesFull();
+            }
+        }
+    }
+
+    public void _fetchInstances() {
+        if (etherType1() == EtherTypeEnum.IEEE_802_1Q_TPID) {
+            this.tci._fetchInstances();
+        }
+        if (etherType1() == EtherTypeEnum.IEEE_802_1Q_TPID) {
+        }
+        {
+            EtherTypeEnum on = etherType();
+            if (on != null) {
+                switch (etherType()) {
+                case IPV4: {
+                    ((Ipv4Packet) (this.body))._fetchInstances();
+                    break;
+                }
+                case IPV6: {
+                    ((Ipv6Packet) (this.body))._fetchInstances();
+                    break;
+                }
+                default: {
+                    break;
+                }
+                }
+            } else {
             }
         }
     }
@@ -119,6 +146,9 @@ public class EthernetFrame extends KaitaiStruct {
             this.priority = this._io.readBitsIntBe(3);
             this.dropEligible = this._io.readBitsIntBe(1) != 0;
             this.vlanId = this._io.readBitsIntBe(12);
+        }
+
+        public void _fetchInstances() {
         }
         private long priority;
         private boolean dropEligible;

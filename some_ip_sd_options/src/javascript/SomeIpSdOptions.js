@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.SomeIpSdOptions = factory(root.KaitaiStream);
+    factory(root.SomeIpSdOptions || (root.SomeIpSdOptions = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (SomeIpSdOptions_, KaitaiStream) {
 /**
  * FormatOptions are used to transport additional information to the entries.
  * This includes forinstance the information how a service instance is
@@ -58,30 +58,24 @@ var SomeIpSdOptions = (function() {
     function SdOption(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
     SdOption.prototype._read = function() {
       this.header = new SdOptionHeader(this._io, this, this._root);
       switch (this.header.type) {
-      case SomeIpSdOptions.SdOption.OptionTypes.LOAD_BALANCING_OPTION:
-        this.content = new SdLoadBalancingOption(this._io, this, this._root);
-        break;
       case SomeIpSdOptions.SdOption.OptionTypes.CONFIGURATION_OPTION:
         this.content = new SdConfigurationOption(this._io, this, this._root);
-        break;
-      case SomeIpSdOptions.SdOption.OptionTypes.IPV4_SD_ENDPOINT_OPTION:
-        this.content = new SdIpv4SdEndpointOption(this._io, this, this._root);
         break;
       case SomeIpSdOptions.SdOption.OptionTypes.IPV4_ENDPOINT_OPTION:
         this.content = new SdIpv4EndpointOption(this._io, this, this._root);
         break;
-      case SomeIpSdOptions.SdOption.OptionTypes.IPV6_SD_ENDPOINT_OPTION:
-        this.content = new SdIpv6SdEndpointOption(this._io, this, this._root);
-        break;
       case SomeIpSdOptions.SdOption.OptionTypes.IPV4_MULTICAST_OPTION:
         this.content = new SdIpv4MulticastOption(this._io, this, this._root);
+        break;
+      case SomeIpSdOptions.SdOption.OptionTypes.IPV4_SD_ENDPOINT_OPTION:
+        this.content = new SdIpv4SdEndpointOption(this._io, this, this._root);
         break;
       case SomeIpSdOptions.SdOption.OptionTypes.IPV6_ENDPOINT_OPTION:
         this.content = new SdIpv6EndpointOption(this._io, this, this._root);
@@ -89,30 +83,36 @@ var SomeIpSdOptions = (function() {
       case SomeIpSdOptions.SdOption.OptionTypes.IPV6_MULTICAST_OPTION:
         this.content = new SdIpv6MulticastOption(this._io, this, this._root);
         break;
+      case SomeIpSdOptions.SdOption.OptionTypes.IPV6_SD_ENDPOINT_OPTION:
+        this.content = new SdIpv6SdEndpointOption(this._io, this, this._root);
+        break;
+      case SomeIpSdOptions.SdOption.OptionTypes.LOAD_BALANCING_OPTION:
+        this.content = new SdLoadBalancingOption(this._io, this, this._root);
+        break;
       }
     }
 
-    var SdOptionHeader = SdOption.SdOptionHeader = (function() {
-      function SdOptionHeader(_io, _parent, _root) {
+    var SdConfigKvPair = SdOption.SdConfigKvPair = (function() {
+      function SdConfigKvPair(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
-      SdOptionHeader.prototype._read = function() {
-        this.length = this._io.readU2be();
-        this.type = this._io.readU1();
+      SdConfigKvPair.prototype._read = function() {
+        this.key = KaitaiStream.bytesToStr(this._io.readBytesTerm(61, false, true, true), "ASCII");
+        this.value = KaitaiStream.bytesToStr(this._io.readBytesFull(), "ASCII");
       }
 
-      return SdOptionHeader;
+      return SdConfigKvPair;
     })();
 
     var SdConfigString = SdOption.SdConfigString = (function() {
       function SdConfigString(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -132,7 +132,7 @@ var SomeIpSdOptions = (function() {
       function SdConfigStringsContainer(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -152,13 +152,13 @@ var SomeIpSdOptions = (function() {
       function SdConfigurationOption(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
       SdConfigurationOption.prototype._read = function() {
         this.reserved = this._io.readU1();
-        this._raw_configurations = this._io.readBytes((this._parent.header.length - 1));
+        this._raw_configurations = this._io.readBytes(this._parent.header.length - 1);
         var _io__raw_configurations = new KaitaiStream(this._raw_configurations);
         this.configurations = new SdConfigStringsContainer(_io__raw_configurations, this, this._root);
       }
@@ -166,11 +166,30 @@ var SomeIpSdOptions = (function() {
       return SdConfigurationOption;
     })();
 
+    var SdIpv4EndpointOption = SdOption.SdIpv4EndpointOption = (function() {
+      function SdIpv4EndpointOption(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+
+        this._read();
+      }
+      SdIpv4EndpointOption.prototype._read = function() {
+        this.reserved = this._io.readU1();
+        this.address = this._io.readBytes(4);
+        this.reserved2 = this._io.readU1();
+        this.l4Protocol = this._io.readU1();
+        this.port = this._io.readU2be();
+      }
+
+      return SdIpv4EndpointOption;
+    })();
+
     var SdIpv4MulticastOption = SdOption.SdIpv4MulticastOption = (function() {
       function SdIpv4MulticastOption(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -189,7 +208,7 @@ var SomeIpSdOptions = (function() {
       function SdIpv4SdEndpointOption(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -204,84 +223,11 @@ var SomeIpSdOptions = (function() {
       return SdIpv4SdEndpointOption;
     })();
 
-    var SdIpv6MulticastOption = SdOption.SdIpv6MulticastOption = (function() {
-      function SdIpv6MulticastOption(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      SdIpv6MulticastOption.prototype._read = function() {
-        this.reserved = this._io.readU1();
-        this.address = this._io.readBytes(16);
-        this.reserved2 = this._io.readU1();
-        this.l4Protocol = this._io.readU1();
-        this.port = this._io.readU2be();
-      }
-
-      return SdIpv6MulticastOption;
-    })();
-
-    var SdConfigKvPair = SdOption.SdConfigKvPair = (function() {
-      function SdConfigKvPair(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      SdConfigKvPair.prototype._read = function() {
-        this.key = KaitaiStream.bytesToStr(this._io.readBytesTerm(61, false, true, true), "ASCII");
-        this.value = KaitaiStream.bytesToStr(this._io.readBytesFull(), "ASCII");
-      }
-
-      return SdConfigKvPair;
-    })();
-
-    var SdIpv6SdEndpointOption = SdOption.SdIpv6SdEndpointOption = (function() {
-      function SdIpv6SdEndpointOption(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      SdIpv6SdEndpointOption.prototype._read = function() {
-        this.reserved = this._io.readU1();
-        this.address = this._io.readBytes(16);
-        this.reserved2 = this._io.readU1();
-        this.l4Protocol = this._io.readU1();
-        this.port = this._io.readU2be();
-      }
-
-      return SdIpv6SdEndpointOption;
-    })();
-
-    var SdIpv4EndpointOption = SdOption.SdIpv4EndpointOption = (function() {
-      function SdIpv4EndpointOption(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      SdIpv4EndpointOption.prototype._read = function() {
-        this.reserved = this._io.readU1();
-        this.address = this._io.readBytes(4);
-        this.reserved2 = this._io.readU1();
-        this.l4Protocol = this._io.readU1();
-        this.port = this._io.readU2be();
-      }
-
-      return SdIpv4EndpointOption;
-    })();
-
     var SdIpv6EndpointOption = SdOption.SdIpv6EndpointOption = (function() {
       function SdIpv6EndpointOption(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -296,11 +242,49 @@ var SomeIpSdOptions = (function() {
       return SdIpv6EndpointOption;
     })();
 
+    var SdIpv6MulticastOption = SdOption.SdIpv6MulticastOption = (function() {
+      function SdIpv6MulticastOption(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+
+        this._read();
+      }
+      SdIpv6MulticastOption.prototype._read = function() {
+        this.reserved = this._io.readU1();
+        this.address = this._io.readBytes(16);
+        this.reserved2 = this._io.readU1();
+        this.l4Protocol = this._io.readU1();
+        this.port = this._io.readU2be();
+      }
+
+      return SdIpv6MulticastOption;
+    })();
+
+    var SdIpv6SdEndpointOption = SdOption.SdIpv6SdEndpointOption = (function() {
+      function SdIpv6SdEndpointOption(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+
+        this._read();
+      }
+      SdIpv6SdEndpointOption.prototype._read = function() {
+        this.reserved = this._io.readU1();
+        this.address = this._io.readBytes(16);
+        this.reserved2 = this._io.readU1();
+        this.l4Protocol = this._io.readU1();
+        this.port = this._io.readU2be();
+      }
+
+      return SdIpv6SdEndpointOption;
+    })();
+
     var SdLoadBalancingOption = SdOption.SdLoadBalancingOption = (function() {
       function SdLoadBalancingOption(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -313,10 +297,26 @@ var SomeIpSdOptions = (function() {
       return SdLoadBalancingOption;
     })();
 
+    var SdOptionHeader = SdOption.SdOptionHeader = (function() {
+      function SdOptionHeader(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root;
+
+        this._read();
+      }
+      SdOptionHeader.prototype._read = function() {
+        this.length = this._io.readU2be();
+        this.type = this._io.readU1();
+      }
+
+      return SdOptionHeader;
+    })();
+
     return SdOption;
   })();
 
   return SomeIpSdOptions;
 })();
-return SomeIpSdOptions;
-}));
+SomeIpSdOptions_.SomeIpSdOptions = SomeIpSdOptions;
+});

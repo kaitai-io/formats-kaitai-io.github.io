@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream', './SomeIpSd'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./SomeIpSd'));
+    define(['exports', 'kaitai-struct/KaitaiStream', './SomeIpSd'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'), require('./SomeIpSd'));
   } else {
-    root.SomeIp = factory(root.KaitaiStream, root.SomeIpSd);
+    factory(root.SomeIp || (root.SomeIp = {}), root.KaitaiStream, root.SomeIpSd || (root.SomeIpSd = {}));
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream, SomeIpSd) {
+})(typeof self !== 'undefined' ? self : this, function (SomeIp_, KaitaiStream, SomeIpSd_) {
 /**
  * SOME/IP (Scalable service-Oriented MiddlewarE over IP) is an automotive/embedded
  * communication protocol which supports remoteprocedure calls, event notifications
@@ -28,12 +28,12 @@ var SomeIp = (function() {
     this.header = new Header(this._io, this, this._root);
     switch (this.header.messageId.value) {
     case 4294934784:
-      this._raw_payload = this._io.readBytes((this.header.length - 8));
+      this._raw_payload = this._io.readBytes(this.header.length - 8);
       var _io__raw_payload = new KaitaiStream(this._raw_payload);
-      this.payload = new SomeIpSd(_io__raw_payload, this, null);
+      this.payload = new SomeIpSd_.SomeIpSd(_io__raw_payload, null, null);
       break;
     default:
-      this.payload = this._io.readBytes((this.header.length - 8));
+      this.payload = this._io.readBytes(this.header.length - 8);
       break;
     }
   }
@@ -92,7 +92,7 @@ var SomeIp = (function() {
     function Header(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -124,7 +124,7 @@ var SomeIp = (function() {
       function MessageId(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -185,7 +185,7 @@ var SomeIp = (function() {
       function RequestId(_io, _parent, _root) {
         this._io = _io;
         this._parent = _parent;
-        this._root = _root || this;
+        this._root = _root;
 
         this._read();
       }
@@ -267,5 +267,5 @@ var SomeIp = (function() {
 
   return SomeIp;
 })();
-return SomeIp;
-}));
+SomeIp_.SomeIp = SomeIp;
+});

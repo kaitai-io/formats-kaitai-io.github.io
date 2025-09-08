@@ -7,8 +7,8 @@
 
 namespace {
     class GltfBinary extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \GltfBinary $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\GltfBinary $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -29,16 +29,68 @@ namespace {
 }
 
 namespace GltfBinary {
+    class Bin extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\GltfBinary\Chunk $_parent = null, ?\GltfBinary $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_data = $this->_io->readBytesFull();
+        }
+        protected $_m_data;
+        public function data() { return $this->_m_data; }
+    }
+}
+
+namespace GltfBinary {
+    class Chunk extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\GltfBinary $_parent = null, ?\GltfBinary $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_lenData = $this->_io->readU4le();
+            $this->_m_type = $this->_io->readU4le();
+            switch ($this->type()) {
+                case \GltfBinary\ChunkType::BIN:
+                    $this->_m__raw_data = $this->_io->readBytes($this->lenData());
+                    $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                    $this->_m_data = new \GltfBinary\Bin($_io__raw_data, $this, $this->_root);
+                    break;
+                case \GltfBinary\ChunkType::JSON:
+                    $this->_m__raw_data = $this->_io->readBytes($this->lenData());
+                    $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
+                    $this->_m_data = new \GltfBinary\Json($_io__raw_data, $this, $this->_root);
+                    break;
+                default:
+                    $this->_m_data = $this->_io->readBytes($this->lenData());
+                    break;
+            }
+        }
+        protected $_m_lenData;
+        protected $_m_type;
+        protected $_m_data;
+        protected $_m__raw_data;
+        public function lenData() { return $this->_m_lenData; }
+        public function type() { return $this->_m_type; }
+        public function data() { return $this->_m_data; }
+        public function _raw_data() { return $this->_m__raw_data; }
+    }
+}
+
+namespace GltfBinary {
     class Header extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \GltfBinary $_parent = null, \GltfBinary $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\GltfBinary $_parent = null, ?\GltfBinary $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_magic = $this->_io->readBytes(4);
-            if (!($this->magic() == "\x67\x6C\x54\x46")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x67\x6C\x54\x46", $this->magic(), $this->_io(), "/types/header/seq/0");
+            if (!($this->_m_magic == "\x67\x6C\x54\x46")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x67\x6C\x54\x46", $this->_m_magic, $this->_io, "/types/header/seq/0");
             }
             $this->_m_version = $this->_io->readU4le();
             $this->_m_length = $this->_io->readU4le();
@@ -62,45 +114,8 @@ namespace GltfBinary {
 }
 
 namespace GltfBinary {
-    class Chunk extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \GltfBinary $_parent = null, \GltfBinary $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_lenData = $this->_io->readU4le();
-            $this->_m_type = $this->_io->readU4le();
-            switch ($this->type()) {
-                case \GltfBinary\ChunkType::JSON:
-                    $this->_m__raw_data = $this->_io->readBytes($this->lenData());
-                    $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                    $this->_m_data = new \GltfBinary\Json($_io__raw_data, $this, $this->_root);
-                    break;
-                case \GltfBinary\ChunkType::BIN:
-                    $this->_m__raw_data = $this->_io->readBytes($this->lenData());
-                    $_io__raw_data = new \Kaitai\Struct\Stream($this->_m__raw_data);
-                    $this->_m_data = new \GltfBinary\Bin($_io__raw_data, $this, $this->_root);
-                    break;
-                default:
-                    $this->_m_data = $this->_io->readBytes($this->lenData());
-                    break;
-            }
-        }
-        protected $_m_lenData;
-        protected $_m_type;
-        protected $_m_data;
-        protected $_m__raw_data;
-        public function lenData() { return $this->_m_lenData; }
-        public function type() { return $this->_m_type; }
-        public function data() { return $this->_m_data; }
-        public function _raw_data() { return $this->_m__raw_data; }
-    }
-}
-
-namespace GltfBinary {
     class Json extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \GltfBinary\Chunk $_parent = null, \GltfBinary $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\GltfBinary\Chunk $_parent = null, ?\GltfBinary $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -119,23 +134,14 @@ namespace GltfBinary {
 }
 
 namespace GltfBinary {
-    class Bin extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \GltfBinary\Chunk $_parent = null, \GltfBinary $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_data = $this->_io->readBytesFull();
-        }
-        protected $_m_data;
-        public function data() { return $this->_m_data; }
-    }
-}
-
-namespace GltfBinary {
     class ChunkType {
         const BIN = 5130562;
         const JSON = 1313821514;
+
+        private const _VALUES = [5130562 => true, 1313821514 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.AppleSingleDouble = factory(root.KaitaiStream);
+    factory(root.AppleSingleDouble || (root.AppleSingleDouble = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (AppleSingleDouble_, KaitaiStream) {
 /**
  * AppleSingle and AppleDouble files are used by certain Mac
  * applications (e.g. Finder) to store Mac-specific file attributes on
@@ -95,7 +95,7 @@ var AppleSingleDouble = (function() {
     function Entry(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -137,7 +137,7 @@ var AppleSingleDouble = (function() {
     function FinderInfo(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -168,7 +168,7 @@ var AppleSingleDouble = (function() {
     function Point(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -186,5 +186,5 @@ var AppleSingleDouble = (function() {
 
   return AppleSingleDouble;
 })();
-return AppleSingleDouble;
-}));
+AppleSingleDouble_.AppleSingleDouble = AppleSingleDouble;
+});

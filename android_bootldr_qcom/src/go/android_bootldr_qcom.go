@@ -121,7 +121,7 @@ type AndroidBootldrQcom struct {
 	ImgHeaders []*AndroidBootldrQcom_ImgHeader
 	_io *kaitai.Stream
 	_root *AndroidBootldrQcom
-	_parent interface{}
+	_parent kaitai.Struct
 	_f_imgBodies bool
 	imgBodies []*AndroidBootldrQcom_ImgBody
 }
@@ -130,7 +130,11 @@ func NewAndroidBootldrQcom() *AndroidBootldrQcom {
 	}
 }
 
-func (this *AndroidBootldrQcom) Read(io *kaitai.Stream, parent interface{}, root *AndroidBootldrQcom) (err error) {
+func (this AndroidBootldrQcom) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *AndroidBootldrQcom) Read(io *kaitai.Stream, parent kaitai.Struct, root *AndroidBootldrQcom) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -174,6 +178,7 @@ func (this *AndroidBootldrQcom) ImgBodies() (v []*AndroidBootldrQcom_ImgBody, er
 	if (this._f_imgBodies) {
 		return this.imgBodies, nil
 	}
+	this._f_imgBodies = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
@@ -195,8 +200,6 @@ func (this *AndroidBootldrQcom) ImgBodies() (v []*AndroidBootldrQcom_ImgBody, er
 	if err != nil {
 		return nil, err
 	}
-	this._f_imgBodies = true
-	this._f_imgBodies = true
 	return this.imgBodies, nil
 }
 
@@ -222,36 +225,6 @@ func (this *AndroidBootldrQcom) ImgBodies() (v []*AndroidBootldrQcom_ImgBody, er
  * substream. If you want to check if it has a reasonable value, do so in
  * your application code.
  */
-type AndroidBootldrQcom_ImgHeader struct {
-	Name string
-	LenBody uint32
-	_io *kaitai.Stream
-	_root *AndroidBootldrQcom
-	_parent *AndroidBootldrQcom
-}
-func NewAndroidBootldrQcom_ImgHeader() *AndroidBootldrQcom_ImgHeader {
-	return &AndroidBootldrQcom_ImgHeader{
-	}
-}
-
-func (this *AndroidBootldrQcom_ImgHeader) Read(io *kaitai.Stream, parent *AndroidBootldrQcom, root *AndroidBootldrQcom) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp7, err := this._io.ReadBytes(int(64))
-	if err != nil {
-		return err
-	}
-	tmp7 = kaitai.BytesTerminate(tmp7, 0, false)
-	this.Name = string(tmp7)
-	tmp8, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.LenBody = uint32(tmp8)
-	return err
-}
 type AndroidBootldrQcom_ImgBody struct {
 	Body []byte
 	Idx int32
@@ -267,28 +240,66 @@ func NewAndroidBootldrQcom_ImgBody(idx int32) *AndroidBootldrQcom_ImgBody {
 	}
 }
 
+func (this AndroidBootldrQcom_ImgBody) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *AndroidBootldrQcom_ImgBody) Read(io *kaitai.Stream, parent *AndroidBootldrQcom, root *AndroidBootldrQcom) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp9, err := this.ImgHeader()
+	tmp7, err := this.ImgHeader()
 	if err != nil {
 		return err
 	}
-	tmp10, err := this._io.ReadBytes(int(tmp9.LenBody))
+	tmp8, err := this._io.ReadBytes(int(tmp7.LenBody))
 	if err != nil {
 		return err
 	}
-	tmp10 = tmp10
-	this.Body = tmp10
+	tmp8 = tmp8
+	this.Body = tmp8
 	return err
 }
 func (this *AndroidBootldrQcom_ImgBody) ImgHeader() (v *AndroidBootldrQcom_ImgHeader, err error) {
 	if (this._f_imgHeader) {
 		return this.imgHeader, nil
 	}
-	this.imgHeader = this._root.ImgHeaders[this.Idx]
 	this._f_imgHeader = true
+	this.imgHeader = this._root.ImgHeaders[this.Idx]
 	return this.imgHeader, nil
+}
+type AndroidBootldrQcom_ImgHeader struct {
+	Name string
+	LenBody uint32
+	_io *kaitai.Stream
+	_root *AndroidBootldrQcom
+	_parent *AndroidBootldrQcom
+}
+func NewAndroidBootldrQcom_ImgHeader() *AndroidBootldrQcom_ImgHeader {
+	return &AndroidBootldrQcom_ImgHeader{
+	}
+}
+
+func (this AndroidBootldrQcom_ImgHeader) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *AndroidBootldrQcom_ImgHeader) Read(io *kaitai.Stream, parent *AndroidBootldrQcom, root *AndroidBootldrQcom) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp9, err := this._io.ReadBytes(int(64))
+	if err != nil {
+		return err
+	}
+	tmp9 = kaitai.BytesTerminate(tmp9, 0, false)
+	this.Name = string(tmp9)
+	tmp10, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.LenBody = uint32(tmp10)
+	return err
 }

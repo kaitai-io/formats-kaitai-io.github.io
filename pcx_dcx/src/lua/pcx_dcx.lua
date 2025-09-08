@@ -4,8 +4,8 @@
 
 local class = require("class")
 require("kaitaistruct")
-
 require("pcx")
+
 -- 
 -- DCX is a simple extension of PCX image format allowing to bundle
 -- many PCX images (typically, pages of a document) in one file. It saw
@@ -23,7 +23,7 @@ end
 function PcxDcx:_read()
   self.magic = self._io:read_bytes(4)
   if not(self.magic == "\177\104\222\058") then
-    error("not equal, expected " ..  "\177\104\222\058" .. ", but got " .. self.magic)
+    error("not equal, expected " .. "\177\104\222\058" .. ", but got " .. self.magic)
   end
   self.files = {}
   local i = 0
@@ -43,7 +43,7 @@ PcxDcx.PcxOffset = class.class(KaitaiStruct)
 function PcxDcx.PcxOffset:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 

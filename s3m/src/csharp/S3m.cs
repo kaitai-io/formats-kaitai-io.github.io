@@ -42,9 +42,9 @@ namespace Kaitai
         {
             _songName = KaitaiStream.BytesTerminate(m_io.ReadBytes(28), 0, false);
             _magic1 = m_io.ReadBytes(1);
-            if (!((KaitaiStream.ByteArrayCompare(Magic1, new byte[] { 26 }) == 0)))
+            if (!((KaitaiStream.ByteArrayCompare(_magic1, new byte[] { 26 }) == 0)))
             {
-                throw new ValidationNotEqualError(new byte[] { 26 }, Magic1, M_Io, "/seq/1");
+                throw new ValidationNotEqualError(new byte[] { 26 }, _magic1, m_io, "/seq/1");
             }
             _fileType = m_io.ReadU1();
             _reserved1 = m_io.ReadBytes(2);
@@ -55,9 +55,9 @@ namespace Kaitai
             _version = m_io.ReadU2le();
             _samplesFormat = m_io.ReadU2le();
             _magic2 = m_io.ReadBytes(4);
-            if (!((KaitaiStream.ByteArrayCompare(Magic2, new byte[] { 83, 67, 82, 77 }) == 0)))
+            if (!((KaitaiStream.ByteArrayCompare(_magic2, new byte[] { 83, 67, 82, 77 }) == 0)))
             {
-                throw new ValidationNotEqualError(new byte[] { 83, 67, 82, 77 }, Magic2, M_Io, "/seq/10");
+                throw new ValidationNotEqualError(new byte[] { 83, 67, 82, 77 }, _magic2, m_io, "/seq/10");
             }
             _globalVolume = m_io.ReadU1();
             _initialSpeed = m_io.ReadU1();
@@ -92,6 +92,37 @@ namespace Kaitai
                     _channelPans.Add(new ChannelPan(m_io, this, m_root));
                 }
             }
+        }
+        public partial class Channel : KaitaiStruct
+        {
+            public static Channel FromFile(string fileName)
+            {
+                return new Channel(new KaitaiStream(fileName));
+            }
+
+            public Channel(KaitaiStream p__io, S3m p__parent = null, S3m p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _isDisabled = m_io.ReadBitsIntBe(1) != 0;
+                _chType = m_io.ReadBitsIntBe(7);
+            }
+            private bool _isDisabled;
+            private ulong _chType;
+            private S3m m_root;
+            private S3m m_parent;
+            public bool IsDisabled { get { return _isDisabled; } }
+
+            /// <summary>
+            /// Channel type (0..7 = left sample channels, 8..15 = right sample channels, 16..31 = AdLib synth channels)
+            /// </summary>
+            public ulong ChType { get { return _chType; } }
+            public S3m M_Root { get { return m_root; } }
+            public S3m M_Parent { get { return m_parent; } }
         }
         public partial class ChannelPan : KaitaiStruct
         {
@@ -131,6 +162,245 @@ namespace Kaitai
             public ulong Pan { get { return _pan; } }
             public S3m M_Root { get { return m_root; } }
             public S3m M_Parent { get { return m_parent; } }
+        }
+        public partial class Instrument : KaitaiStruct
+        {
+            public static Instrument FromFile(string fileName)
+            {
+                return new Instrument(new KaitaiStream(fileName));
+            }
+
+
+            public enum InstTypes
+            {
+                Sample = 1,
+                Melodic = 2,
+                BassDrum = 3,
+                SnareDrum = 4,
+                Tom = 5,
+                Cymbal = 6,
+                Hihat = 7,
+            }
+            public Instrument(KaitaiStream p__io, S3m.InstrumentPtr p__parent = null, S3m p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _type = ((InstTypes) m_io.ReadU1());
+                _filename = KaitaiStream.BytesTerminate(m_io.ReadBytes(12), 0, false);
+                switch (Type) {
+                case InstTypes.Sample: {
+                    _body = new Sampled(m_io, this, m_root);
+                    break;
+                }
+                default: {
+                    _body = new Adlib(m_io, this, m_root);
+                    break;
+                }
+                }
+                _tuningHz = m_io.ReadU4le();
+                _reserved2 = m_io.ReadBytes(12);
+                _sampleName = KaitaiStream.BytesTerminate(m_io.ReadBytes(28), 0, false);
+                _magic = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 83, 67, 82, 83 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 83, 67, 82, 83 }, _magic, m_io, "/types/instrument/seq/6");
+                }
+            }
+            public partial class Adlib : KaitaiStruct
+            {
+                public static Adlib FromFile(string fileName)
+                {
+                    return new Adlib(new KaitaiStream(fileName));
+                }
+
+                public Adlib(KaitaiStream p__io, S3m.Instrument p__parent = null, S3m p__root = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    _read();
+                }
+                private void _read()
+                {
+                    _reserved1 = m_io.ReadBytes(3);
+                    if (!((KaitaiStream.ByteArrayCompare(_reserved1, new byte[] { 0, 0, 0 }) == 0)))
+                    {
+                        throw new ValidationNotEqualError(new byte[] { 0, 0, 0 }, _reserved1, m_io, "/types/instrument/types/adlib/seq/0");
+                    }
+                    __unnamed1 = m_io.ReadBytes(16);
+                }
+                private byte[] _reserved1;
+                private byte[] __unnamed1;
+                private S3m m_root;
+                private S3m.Instrument m_parent;
+                public byte[] Reserved1 { get { return _reserved1; } }
+                public byte[] Unnamed_1 { get { return __unnamed1; } }
+                public S3m M_Root { get { return m_root; } }
+                public S3m.Instrument M_Parent { get { return m_parent; } }
+            }
+            public partial class Sampled : KaitaiStruct
+            {
+                public static Sampled FromFile(string fileName)
+                {
+                    return new Sampled(new KaitaiStream(fileName));
+                }
+
+                public Sampled(KaitaiStream p__io, S3m.Instrument p__parent = null, S3m p__root = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    f_sample = false;
+                    _read();
+                }
+                private void _read()
+                {
+                    _paraptrSample = new SwappedU3(m_io, this, m_root);
+                    _lenSample = m_io.ReadU4le();
+                    _loopBegin = m_io.ReadU4le();
+                    _loopEnd = m_io.ReadU4le();
+                    _defaultVolume = m_io.ReadU1();
+                    _reserved1 = m_io.ReadU1();
+                    _isPacked = m_io.ReadU1();
+                    _flags = m_io.ReadU1();
+                }
+                private bool f_sample;
+                private byte[] _sample;
+                public byte[] Sample
+                {
+                    get
+                    {
+                        if (f_sample)
+                            return _sample;
+                        f_sample = true;
+                        long _pos = m_io.Pos;
+                        m_io.Seek(ParaptrSample.Value * 16);
+                        _sample = m_io.ReadBytes(LenSample);
+                        m_io.Seek(_pos);
+                        return _sample;
+                    }
+                }
+                private SwappedU3 _paraptrSample;
+                private uint _lenSample;
+                private uint _loopBegin;
+                private uint _loopEnd;
+                private byte _defaultVolume;
+                private byte _reserved1;
+                private byte _isPacked;
+                private byte _flags;
+                private S3m m_root;
+                private S3m.Instrument m_parent;
+                public SwappedU3 ParaptrSample { get { return _paraptrSample; } }
+                public uint LenSample { get { return _lenSample; } }
+                public uint LoopBegin { get { return _loopBegin; } }
+                public uint LoopEnd { get { return _loopEnd; } }
+
+                /// <summary>
+                /// Default volume
+                /// </summary>
+                public byte DefaultVolume { get { return _defaultVolume; } }
+                public byte Reserved1 { get { return _reserved1; } }
+
+                /// <summary>
+                /// 0 = unpacked, 1 = DP30ADPCM packing
+                /// </summary>
+                public byte IsPacked { get { return _isPacked; } }
+                public byte Flags { get { return _flags; } }
+                public S3m M_Root { get { return m_root; } }
+                public S3m.Instrument M_Parent { get { return m_parent; } }
+            }
+            private InstTypes _type;
+            private byte[] _filename;
+            private KaitaiStruct _body;
+            private uint _tuningHz;
+            private byte[] _reserved2;
+            private byte[] _sampleName;
+            private byte[] _magic;
+            private S3m m_root;
+            private S3m.InstrumentPtr m_parent;
+            public InstTypes Type { get { return _type; } }
+            public byte[] Filename { get { return _filename; } }
+            public KaitaiStruct Body { get { return _body; } }
+            public uint TuningHz { get { return _tuningHz; } }
+            public byte[] Reserved2 { get { return _reserved2; } }
+            public byte[] SampleName { get { return _sampleName; } }
+            public byte[] Magic { get { return _magic; } }
+            public S3m M_Root { get { return m_root; } }
+            public S3m.InstrumentPtr M_Parent { get { return m_parent; } }
+        }
+        public partial class InstrumentPtr : KaitaiStruct
+        {
+            public static InstrumentPtr FromFile(string fileName)
+            {
+                return new InstrumentPtr(new KaitaiStream(fileName));
+            }
+
+            public InstrumentPtr(KaitaiStream p__io, S3m p__parent = null, S3m p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_body = false;
+                _read();
+            }
+            private void _read()
+            {
+                _paraptr = m_io.ReadU2le();
+            }
+            private bool f_body;
+            private Instrument _body;
+            public Instrument Body
+            {
+                get
+                {
+                    if (f_body)
+                        return _body;
+                    f_body = true;
+                    long _pos = m_io.Pos;
+                    m_io.Seek(Paraptr * 16);
+                    _body = new Instrument(m_io, this, m_root);
+                    m_io.Seek(_pos);
+                    return _body;
+                }
+            }
+            private ushort _paraptr;
+            private S3m m_root;
+            private S3m m_parent;
+            public ushort Paraptr { get { return _paraptr; } }
+            public S3m M_Root { get { return m_root; } }
+            public S3m M_Parent { get { return m_parent; } }
+        }
+        public partial class Pattern : KaitaiStruct
+        {
+            public static Pattern FromFile(string fileName)
+            {
+                return new Pattern(new KaitaiStream(fileName));
+            }
+
+            public Pattern(KaitaiStream p__io, S3m.PatternPtr p__parent = null, S3m p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _size = m_io.ReadU2le();
+                __raw_body = m_io.ReadBytes(Size - 2);
+                var io___raw_body = new KaitaiStream(__raw_body);
+                _body = new PatternCells(io___raw_body, this, m_root);
+            }
+            private ushort _size;
+            private PatternCells _body;
+            private S3m m_root;
+            private S3m.PatternPtr m_parent;
+            private byte[] __raw_body;
+            public ushort Size { get { return _size; } }
+            public PatternCells Body { get { return _body; } }
+            public S3m M_Root { get { return m_root; } }
+            public S3m.PatternPtr M_Parent { get { return m_parent; } }
+            public byte[] M_RawBody { get { return __raw_body; } }
         }
         public partial class PatternCell : KaitaiStruct
         {
@@ -222,34 +492,44 @@ namespace Kaitai
             public S3m M_Root { get { return m_root; } }
             public S3m.Pattern M_Parent { get { return m_parent; } }
         }
-        public partial class Channel : KaitaiStruct
+        public partial class PatternPtr : KaitaiStruct
         {
-            public static Channel FromFile(string fileName)
+            public static PatternPtr FromFile(string fileName)
             {
-                return new Channel(new KaitaiStream(fileName));
+                return new PatternPtr(new KaitaiStream(fileName));
             }
 
-            public Channel(KaitaiStream p__io, S3m p__parent = null, S3m p__root = null) : base(p__io)
+            public PatternPtr(KaitaiStream p__io, S3m p__parent = null, S3m p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
+                f_body = false;
                 _read();
             }
             private void _read()
             {
-                _isDisabled = m_io.ReadBitsIntBe(1) != 0;
-                _chType = m_io.ReadBitsIntBe(7);
+                _paraptr = m_io.ReadU2le();
             }
-            private bool _isDisabled;
-            private ulong _chType;
+            private bool f_body;
+            private Pattern _body;
+            public Pattern Body
+            {
+                get
+                {
+                    if (f_body)
+                        return _body;
+                    f_body = true;
+                    long _pos = m_io.Pos;
+                    m_io.Seek(Paraptr * 16);
+                    _body = new Pattern(m_io, this, m_root);
+                    m_io.Seek(_pos);
+                    return _body;
+                }
+            }
+            private ushort _paraptr;
             private S3m m_root;
             private S3m m_parent;
-            public bool IsDisabled { get { return _isDisabled; } }
-
-            /// <summary>
-            /// Channel type (0..7 = left sample channels, 8..15 = right sample channels, 16..31 = AdLib synth channels)
-            /// </summary>
-            public ulong ChType { get { return _chType; } }
+            public ushort Paraptr { get { return _paraptr; } }
             public S3m M_Root { get { return m_root; } }
             public S3m M_Parent { get { return m_parent; } }
         }
@@ -284,8 +564,8 @@ namespace Kaitai
                 {
                     if (f_value)
                         return _value;
-                    _value = (int) ((Lo | (Hi << 16)));
                     f_value = true;
+                    _value = (int) (Lo | Hi << 16);
                     return _value;
                 }
             }
@@ -297,286 +577,6 @@ namespace Kaitai
             public ushort Lo { get { return _lo; } }
             public S3m M_Root { get { return m_root; } }
             public S3m.Instrument.Sampled M_Parent { get { return m_parent; } }
-        }
-        public partial class Pattern : KaitaiStruct
-        {
-            public static Pattern FromFile(string fileName)
-            {
-                return new Pattern(new KaitaiStream(fileName));
-            }
-
-            public Pattern(KaitaiStream p__io, S3m.PatternPtr p__parent = null, S3m p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _size = m_io.ReadU2le();
-                __raw_body = m_io.ReadBytes((Size - 2));
-                var io___raw_body = new KaitaiStream(__raw_body);
-                _body = new PatternCells(io___raw_body, this, m_root);
-            }
-            private ushort _size;
-            private PatternCells _body;
-            private S3m m_root;
-            private S3m.PatternPtr m_parent;
-            private byte[] __raw_body;
-            public ushort Size { get { return _size; } }
-            public PatternCells Body { get { return _body; } }
-            public S3m M_Root { get { return m_root; } }
-            public S3m.PatternPtr M_Parent { get { return m_parent; } }
-            public byte[] M_RawBody { get { return __raw_body; } }
-        }
-        public partial class PatternPtr : KaitaiStruct
-        {
-            public static PatternPtr FromFile(string fileName)
-            {
-                return new PatternPtr(new KaitaiStream(fileName));
-            }
-
-            public PatternPtr(KaitaiStream p__io, S3m p__parent = null, S3m p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_body = false;
-                _read();
-            }
-            private void _read()
-            {
-                _paraptr = m_io.ReadU2le();
-            }
-            private bool f_body;
-            private Pattern _body;
-            public Pattern Body
-            {
-                get
-                {
-                    if (f_body)
-                        return _body;
-                    long _pos = m_io.Pos;
-                    m_io.Seek((Paraptr * 16));
-                    _body = new Pattern(m_io, this, m_root);
-                    m_io.Seek(_pos);
-                    f_body = true;
-                    return _body;
-                }
-            }
-            private ushort _paraptr;
-            private S3m m_root;
-            private S3m m_parent;
-            public ushort Paraptr { get { return _paraptr; } }
-            public S3m M_Root { get { return m_root; } }
-            public S3m M_Parent { get { return m_parent; } }
-        }
-        public partial class InstrumentPtr : KaitaiStruct
-        {
-            public static InstrumentPtr FromFile(string fileName)
-            {
-                return new InstrumentPtr(new KaitaiStream(fileName));
-            }
-
-            public InstrumentPtr(KaitaiStream p__io, S3m p__parent = null, S3m p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_body = false;
-                _read();
-            }
-            private void _read()
-            {
-                _paraptr = m_io.ReadU2le();
-            }
-            private bool f_body;
-            private Instrument _body;
-            public Instrument Body
-            {
-                get
-                {
-                    if (f_body)
-                        return _body;
-                    long _pos = m_io.Pos;
-                    m_io.Seek((Paraptr * 16));
-                    _body = new Instrument(m_io, this, m_root);
-                    m_io.Seek(_pos);
-                    f_body = true;
-                    return _body;
-                }
-            }
-            private ushort _paraptr;
-            private S3m m_root;
-            private S3m m_parent;
-            public ushort Paraptr { get { return _paraptr; } }
-            public S3m M_Root { get { return m_root; } }
-            public S3m M_Parent { get { return m_parent; } }
-        }
-        public partial class Instrument : KaitaiStruct
-        {
-            public static Instrument FromFile(string fileName)
-            {
-                return new Instrument(new KaitaiStream(fileName));
-            }
-
-
-            public enum InstTypes
-            {
-                Sample = 1,
-                Melodic = 2,
-                BassDrum = 3,
-                SnareDrum = 4,
-                Tom = 5,
-                Cymbal = 6,
-                Hihat = 7,
-            }
-            public Instrument(KaitaiStream p__io, S3m.InstrumentPtr p__parent = null, S3m p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _type = ((InstTypes) m_io.ReadU1());
-                _filename = KaitaiStream.BytesTerminate(m_io.ReadBytes(12), 0, false);
-                switch (Type) {
-                case InstTypes.Sample: {
-                    _body = new Sampled(m_io, this, m_root);
-                    break;
-                }
-                default: {
-                    _body = new Adlib(m_io, this, m_root);
-                    break;
-                }
-                }
-                _tuningHz = m_io.ReadU4le();
-                _reserved2 = m_io.ReadBytes(12);
-                _sampleName = KaitaiStream.BytesTerminate(m_io.ReadBytes(28), 0, false);
-                _magic = m_io.ReadBytes(4);
-                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 83, 67, 82, 83 }) == 0)))
-                {
-                    throw new ValidationNotEqualError(new byte[] { 83, 67, 82, 83 }, Magic, M_Io, "/types/instrument/seq/6");
-                }
-            }
-            public partial class Sampled : KaitaiStruct
-            {
-                public static Sampled FromFile(string fileName)
-                {
-                    return new Sampled(new KaitaiStream(fileName));
-                }
-
-                public Sampled(KaitaiStream p__io, S3m.Instrument p__parent = null, S3m p__root = null) : base(p__io)
-                {
-                    m_parent = p__parent;
-                    m_root = p__root;
-                    f_sample = false;
-                    _read();
-                }
-                private void _read()
-                {
-                    _paraptrSample = new SwappedU3(m_io, this, m_root);
-                    _lenSample = m_io.ReadU4le();
-                    _loopBegin = m_io.ReadU4le();
-                    _loopEnd = m_io.ReadU4le();
-                    _defaultVolume = m_io.ReadU1();
-                    _reserved1 = m_io.ReadU1();
-                    _isPacked = m_io.ReadU1();
-                    _flags = m_io.ReadU1();
-                }
-                private bool f_sample;
-                private byte[] _sample;
-                public byte[] Sample
-                {
-                    get
-                    {
-                        if (f_sample)
-                            return _sample;
-                        long _pos = m_io.Pos;
-                        m_io.Seek((ParaptrSample.Value * 16));
-                        _sample = m_io.ReadBytes(LenSample);
-                        m_io.Seek(_pos);
-                        f_sample = true;
-                        return _sample;
-                    }
-                }
-                private SwappedU3 _paraptrSample;
-                private uint _lenSample;
-                private uint _loopBegin;
-                private uint _loopEnd;
-                private byte _defaultVolume;
-                private byte _reserved1;
-                private byte _isPacked;
-                private byte _flags;
-                private S3m m_root;
-                private S3m.Instrument m_parent;
-                public SwappedU3 ParaptrSample { get { return _paraptrSample; } }
-                public uint LenSample { get { return _lenSample; } }
-                public uint LoopBegin { get { return _loopBegin; } }
-                public uint LoopEnd { get { return _loopEnd; } }
-
-                /// <summary>
-                /// Default volume
-                /// </summary>
-                public byte DefaultVolume { get { return _defaultVolume; } }
-                public byte Reserved1 { get { return _reserved1; } }
-
-                /// <summary>
-                /// 0 = unpacked, 1 = DP30ADPCM packing
-                /// </summary>
-                public byte IsPacked { get { return _isPacked; } }
-                public byte Flags { get { return _flags; } }
-                public S3m M_Root { get { return m_root; } }
-                public S3m.Instrument M_Parent { get { return m_parent; } }
-            }
-            public partial class Adlib : KaitaiStruct
-            {
-                public static Adlib FromFile(string fileName)
-                {
-                    return new Adlib(new KaitaiStream(fileName));
-                }
-
-                public Adlib(KaitaiStream p__io, S3m.Instrument p__parent = null, S3m p__root = null) : base(p__io)
-                {
-                    m_parent = p__parent;
-                    m_root = p__root;
-                    _read();
-                }
-                private void _read()
-                {
-                    _reserved1 = m_io.ReadBytes(3);
-                    if (!((KaitaiStream.ByteArrayCompare(Reserved1, new byte[] { 0, 0, 0 }) == 0)))
-                    {
-                        throw new ValidationNotEqualError(new byte[] { 0, 0, 0 }, Reserved1, M_Io, "/types/instrument/types/adlib/seq/0");
-                    }
-                    __unnamed1 = m_io.ReadBytes(16);
-                }
-                private byte[] _reserved1;
-                private byte[] __unnamed1;
-                private S3m m_root;
-                private S3m.Instrument m_parent;
-                public byte[] Reserved1 { get { return _reserved1; } }
-                public byte[] Unnamed_1 { get { return __unnamed1; } }
-                public S3m M_Root { get { return m_root; } }
-                public S3m.Instrument M_Parent { get { return m_parent; } }
-            }
-            private InstTypes _type;
-            private byte[] _filename;
-            private KaitaiStruct _body;
-            private uint _tuningHz;
-            private byte[] _reserved2;
-            private byte[] _sampleName;
-            private byte[] _magic;
-            private S3m m_root;
-            private S3m.InstrumentPtr m_parent;
-            public InstTypes Type { get { return _type; } }
-            public byte[] Filename { get { return _filename; } }
-            public KaitaiStruct Body { get { return _body; } }
-            public uint TuningHz { get { return _tuningHz; } }
-            public byte[] Reserved2 { get { return _reserved2; } }
-            public byte[] SampleName { get { return _sampleName; } }
-            public byte[] Magic { get { return _magic; } }
-            public S3m M_Root { get { return m_root; } }
-            public S3m.InstrumentPtr M_Parent { get { return m_parent; } }
         }
         private byte[] _songName;
         private byte[] _magic1;

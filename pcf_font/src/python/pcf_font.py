@@ -1,14 +1,15 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
-from enum import Enum
-
-
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
-
 import bytes_with_io
+from enum import IntEnum
+
+
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
+
 class PcfFont(KaitaiStruct):
     """Portable Compiled Format (PCF) font is a bitmap font format
     originating from X11 Window System. It matches BDF format (which is
@@ -27,7 +28,7 @@ class PcfFont(KaitaiStruct):
        Source - https://fontforge.org/docs/techref/pcf-format.html
     """
 
-    class Types(Enum):
+    class Types(IntEnum):
         properties = 1
         accelerators = 2
         metrics = 4
@@ -38,9 +39,9 @@ class PcfFont(KaitaiStruct):
         glyph_names = 128
         bdf_accelerators = 256
     def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
+        super(PcfFont, self).__init__(_io)
         self._parent = _parent
-        self._root = _root if _root else self
+        self._root = _root or self
         self._read()
 
     def _read(self):
@@ -53,15 +54,55 @@ class PcfFont(KaitaiStruct):
             self.tables.append(PcfFont.Table(self._io, self, self._root))
 
 
+
+    def _fetch_instances(self):
+        pass
+        for i in range(len(self.tables)):
+            pass
+            self.tables[i]._fetch_instances()
+
+
+    class Format(KaitaiStruct):
+        """Table format specifier, always 4 bytes. Original implementation treats
+        it as always little-endian and makes liberal use of bitmasking to parse
+        various parts of it.
+        
+        TODO: this format specification recognizes endianness and bit
+        order format bits, but it does not really takes any parsing
+        decisions based on them.
+        
+        .. seealso::
+           Source - https://fontforge.org/docs/techref/pcf-format.html#file-header
+        """
+        def __init__(self, _io, _parent=None, _root=None):
+            super(PcfFont.Format, self).__init__(_io)
+            self._parent = _parent
+            self._root = _root
+            self._read()
+
+        def _read(self):
+            self.padding1 = self._io.read_bits_int_be(2)
+            self.scan_unit_mask = self._io.read_bits_int_be(2)
+            self.is_most_significant_bit_first = self._io.read_bits_int_be(1) != 0
+            self.is_big_endian = self._io.read_bits_int_be(1) != 0
+            self.glyph_pad_mask = self._io.read_bits_int_be(2)
+            self.format = self._io.read_u1()
+            self.padding = self._io.read_u2le()
+
+
+        def _fetch_instances(self):
+            pass
+
+
     class Table(KaitaiStruct):
         """Table offers a offset + length pointer to a particular
         table. "Type" of table references certain enum. Applications can
         ignore enum values which they don't support.
         """
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(PcfFont.Table, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -70,24 +111,172 @@ class PcfFont(KaitaiStruct):
             self.len_body = self._io.read_u4le()
             self.ofs_body = self._io.read_u4le()
 
-        class Swidths(KaitaiStruct):
-            """Table containing scalable widths of characters.
+
+        def _fetch_instances(self):
+            pass
+            self.format._fetch_instances()
+            _ = self.body
+            if hasattr(self, '_m_body'):
+                pass
+                _on = self.type
+                if _on == PcfFont.Types.bdf_encodings:
+                    pass
+                    self._m_body._fetch_instances()
+                elif _on == PcfFont.Types.bitmaps:
+                    pass
+                    self._m_body._fetch_instances()
+                elif _on == PcfFont.Types.glyph_names:
+                    pass
+                    self._m_body._fetch_instances()
+                elif _on == PcfFont.Types.properties:
+                    pass
+                    self._m_body._fetch_instances()
+                elif _on == PcfFont.Types.swidths:
+                    pass
+                    self._m_body._fetch_instances()
+                else:
+                    pass
+
+
+        class BdfEncodings(KaitaiStruct):
+            """Table that allows mapping of character codes to glyphs present in the
+            font. Supports 1-byte and 2-byte character codes.
+            
+            Note that this mapping is agnostic to character encoding itself - it
+            can represent ASCII, Unicode (ISO/IEC 10646), various single-byte
+            national encodings, etc. If application cares about it, normally
+            encoding will be specified in `properties` table, in the properties named
+            `CHARSET_REGISTRY` / `CHARSET_ENCODING`.
             
             .. seealso::
-               Source - https://fontforge.org/docs/techref/pcf-format.html#the-scalable-widths-table
+               Source - https://fontforge.org/docs/techref/pcf-format.html#the-encoding-table
             """
             def __init__(self, _io, _parent=None, _root=None):
-                self._io = _io
+                super(PcfFont.Table.BdfEncodings, self).__init__(_io)
                 self._parent = _parent
-                self._root = _root if _root else self
+                self._root = _root
+                self._read()
+
+            def _read(self):
+                self.format = PcfFont.Format(self._io, self, self._root)
+                self.min_char_or_byte2 = self._io.read_u2le()
+                self.max_char_or_byte2 = self._io.read_u2le()
+                self.min_byte1 = self._io.read_u2le()
+                self.max_byte1 = self._io.read_u2le()
+                self.default_char = self._io.read_u2le()
+                self.glyph_indexes = []
+                for i in range(((self.max_char_or_byte2 - self.min_char_or_byte2) + 1) * ((self.max_byte1 - self.min_byte1) + 1)):
+                    self.glyph_indexes.append(self._io.read_u2le())
+
+
+
+            def _fetch_instances(self):
+                pass
+                self.format._fetch_instances()
+                for i in range(len(self.glyph_indexes)):
+                    pass
+
+
+
+        class Bitmaps(KaitaiStruct):
+            """Table containing uncompressed glyph bitmaps.
+            
+            .. seealso::
+               Source - https://fontforge.org/docs/techref/pcf-format.html#the-bitmap-table
+            """
+            def __init__(self, _io, _parent=None, _root=None):
+                super(PcfFont.Table.Bitmaps, self).__init__(_io)
+                self._parent = _parent
+                self._root = _root
                 self._read()
 
             def _read(self):
                 self.format = PcfFont.Format(self._io, self, self._root)
                 self.num_glyphs = self._io.read_u4le()
-                self.swidths = []
+                self.offsets = []
                 for i in range(self.num_glyphs):
-                    self.swidths.append(self._io.read_u4le())
+                    self.offsets.append(self._io.read_u4le())
+
+                self.bitmap_sizes = []
+                for i in range(4):
+                    self.bitmap_sizes.append(self._io.read_u4le())
+
+
+
+            def _fetch_instances(self):
+                pass
+                self.format._fetch_instances()
+                for i in range(len(self.offsets)):
+                    pass
+
+                for i in range(len(self.bitmap_sizes)):
+                    pass
+
+
+
+        class GlyphNames(KaitaiStruct):
+            """Table containing character names for every glyph.
+            
+            .. seealso::
+               Source - https://fontforge.org/docs/techref/pcf-format.html#the-glyph-names-table
+            """
+            def __init__(self, _io, _parent=None, _root=None):
+                super(PcfFont.Table.GlyphNames, self).__init__(_io)
+                self._parent = _parent
+                self._root = _root
+                self._read()
+
+            def _read(self):
+                self.format = PcfFont.Format(self._io, self, self._root)
+                self.num_glyphs = self._io.read_u4le()
+                self.names = []
+                for i in range(self.num_glyphs):
+                    self.names.append(PcfFont.Table.GlyphNames.StringRef(self._io, self, self._root))
+
+                self.len_strings = self._io.read_u4le()
+                self._raw_strings = self._io.read_bytes(self.len_strings)
+                _io__raw_strings = KaitaiStream(BytesIO(self._raw_strings))
+                self.strings = bytes_with_io.BytesWithIo(_io__raw_strings)
+
+
+            def _fetch_instances(self):
+                pass
+                self.format._fetch_instances()
+                for i in range(len(self.names)):
+                    pass
+                    self.names[i]._fetch_instances()
+
+                self.strings._fetch_instances()
+
+            class StringRef(KaitaiStruct):
+                def __init__(self, _io, _parent=None, _root=None):
+                    super(PcfFont.Table.GlyphNames.StringRef, self).__init__(_io)
+                    self._parent = _parent
+                    self._root = _root
+                    self._read()
+
+                def _read(self):
+                    self.ofs_string = self._io.read_u4le()
+
+
+                def _fetch_instances(self):
+                    pass
+                    _ = self.value
+                    if hasattr(self, '_m_value'):
+                        pass
+
+
+                @property
+                def value(self):
+                    if hasattr(self, '_m_value'):
+                        return self._m_value
+
+                    io = self._parent.strings._io
+                    _pos = io.pos()
+                    io.seek(self.ofs_string)
+                    self._m_value = (io.read_bytes_term(0, False, True, True)).decode(u"UTF-8")
+                    io.seek(_pos)
+                    return getattr(self, '_m_value', None)
 
 
 
@@ -99,9 +288,9 @@ class PcfFont(KaitaiStruct):
                Source - https://fontforge.org/docs/techref/pcf-format.html#properties-table
             """
             def __init__(self, _io, _parent=None, _root=None):
-                self._io = _io
+                super(PcfFont.Table.Properties, self).__init__(_io)
                 self._parent = _parent
-                self._root = _root if _root else self
+                self._root = _root
                 self._read()
 
             def _read(self):
@@ -111,11 +300,21 @@ class PcfFont(KaitaiStruct):
                 for i in range(self.num_props):
                     self.props.append(PcfFont.Table.Properties.Prop(self._io, self, self._root))
 
-                self.padding = self._io.read_bytes((0 if (self.num_props & 3) == 0 else (4 - (self.num_props & 3))))
+                self.padding = self._io.read_bytes((0 if self.num_props & 3 == 0 else 4 - (self.num_props & 3)))
                 self.len_strings = self._io.read_u4le()
                 self._raw_strings = self._io.read_bytes(self.len_strings)
                 _io__raw_strings = KaitaiStream(BytesIO(self._raw_strings))
                 self.strings = bytes_with_io.BytesWithIo(_io__raw_strings)
+
+
+            def _fetch_instances(self):
+                pass
+                self.format._fetch_instances()
+                for i in range(len(self.props)):
+                    pass
+                    self.props[i]._fetch_instances()
+
+                self.strings._fetch_instances()
 
             class Prop(KaitaiStruct):
                 """Property is a key-value pair, "key" being always a
@@ -127,15 +326,40 @@ class PcfFont(KaitaiStruct):
                 to property key/value by index.
                 """
                 def __init__(self, _io, _parent=None, _root=None):
-                    self._io = _io
+                    super(PcfFont.Table.Properties.Prop, self).__init__(_io)
                     self._parent = _parent
-                    self._root = _root if _root else self
+                    self._root = _root
                     self._read()
 
                 def _read(self):
                     self.ofs_name = self._io.read_u4le()
                     self.is_string = self._io.read_u1()
                     self.value_or_ofs_value = self._io.read_u4le()
+
+
+                def _fetch_instances(self):
+                    pass
+                    _ = self.name
+                    if hasattr(self, '_m_name'):
+                        pass
+
+                    _ = self.str_value
+                    if hasattr(self, '_m_str_value'):
+                        pass
+
+
+                @property
+                def int_value(self):
+                    """Value of the property, if this is an integer value.
+                    """
+                    if hasattr(self, '_m_int_value'):
+                        return self._m_int_value
+
+                    if self.is_string == 0:
+                        pass
+                        self._m_int_value = self.value_or_ofs_value
+
+                    return getattr(self, '_m_int_value', None)
 
                 @property
                 def name(self):
@@ -160,6 +384,7 @@ class PcfFont(KaitaiStruct):
                         return self._m_str_value
 
                     if self.is_string != 0:
+                        pass
                         io = self._parent.strings._io
                         _pos = io.pos()
                         io.seek(self.value_or_ofs_value)
@@ -168,122 +393,34 @@ class PcfFont(KaitaiStruct):
 
                     return getattr(self, '_m_str_value', None)
 
-                @property
-                def int_value(self):
-                    """Value of the property, if this is an integer value.
-                    """
-                    if hasattr(self, '_m_int_value'):
-                        return self._m_int_value
-
-                    if self.is_string == 0:
-                        self._m_int_value = self.value_or_ofs_value
-
-                    return getattr(self, '_m_int_value', None)
 
 
-
-        class BdfEncodings(KaitaiStruct):
-            """Table that allows mapping of character codes to glyphs present in the
-            font. Supports 1-byte and 2-byte character codes.
-            
-            Note that this mapping is agnostic to character encoding itself - it
-            can represent ASCII, Unicode (ISO/IEC 10646), various single-byte
-            national encodings, etc. If application cares about it, normally
-            encoding will be specified in `properties` table, in the properties named
-            `CHARSET_REGISTRY` / `CHARSET_ENCODING`.
+        class Swidths(KaitaiStruct):
+            """Table containing scalable widths of characters.
             
             .. seealso::
-               Source - https://fontforge.org/docs/techref/pcf-format.html#the-encoding-table
+               Source - https://fontforge.org/docs/techref/pcf-format.html#the-scalable-widths-table
             """
             def __init__(self, _io, _parent=None, _root=None):
-                self._io = _io
+                super(PcfFont.Table.Swidths, self).__init__(_io)
                 self._parent = _parent
-                self._root = _root if _root else self
-                self._read()
-
-            def _read(self):
-                self.format = PcfFont.Format(self._io, self, self._root)
-                self.min_char_or_byte2 = self._io.read_u2le()
-                self.max_char_or_byte2 = self._io.read_u2le()
-                self.min_byte1 = self._io.read_u2le()
-                self.max_byte1 = self._io.read_u2le()
-                self.default_char = self._io.read_u2le()
-                self.glyph_indexes = []
-                for i in range((((self.max_char_or_byte2 - self.min_char_or_byte2) + 1) * ((self.max_byte1 - self.min_byte1) + 1))):
-                    self.glyph_indexes.append(self._io.read_u2le())
-
-
-
-        class GlyphNames(KaitaiStruct):
-            """Table containing character names for every glyph.
-            
-            .. seealso::
-               Source - https://fontforge.org/docs/techref/pcf-format.html#the-glyph-names-table
-            """
-            def __init__(self, _io, _parent=None, _root=None):
-                self._io = _io
-                self._parent = _parent
-                self._root = _root if _root else self
+                self._root = _root
                 self._read()
 
             def _read(self):
                 self.format = PcfFont.Format(self._io, self, self._root)
                 self.num_glyphs = self._io.read_u4le()
-                self.names = []
+                self.swidths = []
                 for i in range(self.num_glyphs):
-                    self.names.append(PcfFont.Table.GlyphNames.StringRef(self._io, self, self._root))
-
-                self.len_strings = self._io.read_u4le()
-                self._raw_strings = self._io.read_bytes(self.len_strings)
-                _io__raw_strings = KaitaiStream(BytesIO(self._raw_strings))
-                self.strings = bytes_with_io.BytesWithIo(_io__raw_strings)
-
-            class StringRef(KaitaiStruct):
-                def __init__(self, _io, _parent=None, _root=None):
-                    self._io = _io
-                    self._parent = _parent
-                    self._root = _root if _root else self
-                    self._read()
-
-                def _read(self):
-                    self.ofs_string = self._io.read_u4le()
-
-                @property
-                def value(self):
-                    if hasattr(self, '_m_value'):
-                        return self._m_value
-
-                    io = self._parent.strings._io
-                    _pos = io.pos()
-                    io.seek(self.ofs_string)
-                    self._m_value = (io.read_bytes_term(0, False, True, True)).decode(u"UTF-8")
-                    io.seek(_pos)
-                    return getattr(self, '_m_value', None)
+                    self.swidths.append(self._io.read_u4le())
 
 
 
-        class Bitmaps(KaitaiStruct):
-            """Table containing uncompressed glyph bitmaps.
-            
-            .. seealso::
-               Source - https://fontforge.org/docs/techref/pcf-format.html#the-bitmap-table
-            """
-            def __init__(self, _io, _parent=None, _root=None):
-                self._io = _io
-                self._parent = _parent
-                self._root = _root if _root else self
-                self._read()
-
-            def _read(self):
-                self.format = PcfFont.Format(self._io, self, self._root)
-                self.num_glyphs = self._io.read_u4le()
-                self.offsets = []
-                for i in range(self.num_glyphs):
-                    self.offsets.append(self._io.read_u4le())
-
-                self.bitmap_sizes = []
-                for i in range(4):
-                    self.bitmap_sizes.append(self._io.read_u4le())
+            def _fetch_instances(self):
+                pass
+                self.format._fetch_instances()
+                for i in range(len(self.swidths)):
+                    pass
 
 
 
@@ -295,59 +432,36 @@ class PcfFont(KaitaiStruct):
             _pos = self._io.pos()
             self._io.seek(self.ofs_body)
             _on = self.type
-            if _on == PcfFont.Types.properties:
-                self._raw__m_body = self._io.read_bytes(self.len_body)
-                _io__raw__m_body = KaitaiStream(BytesIO(self._raw__m_body))
-                self._m_body = PcfFont.Table.Properties(_io__raw__m_body, self, self._root)
-            elif _on == PcfFont.Types.bdf_encodings:
+            if _on == PcfFont.Types.bdf_encodings:
+                pass
                 self._raw__m_body = self._io.read_bytes(self.len_body)
                 _io__raw__m_body = KaitaiStream(BytesIO(self._raw__m_body))
                 self._m_body = PcfFont.Table.BdfEncodings(_io__raw__m_body, self, self._root)
-            elif _on == PcfFont.Types.swidths:
-                self._raw__m_body = self._io.read_bytes(self.len_body)
-                _io__raw__m_body = KaitaiStream(BytesIO(self._raw__m_body))
-                self._m_body = PcfFont.Table.Swidths(_io__raw__m_body, self, self._root)
-            elif _on == PcfFont.Types.glyph_names:
-                self._raw__m_body = self._io.read_bytes(self.len_body)
-                _io__raw__m_body = KaitaiStream(BytesIO(self._raw__m_body))
-                self._m_body = PcfFont.Table.GlyphNames(_io__raw__m_body, self, self._root)
             elif _on == PcfFont.Types.bitmaps:
+                pass
                 self._raw__m_body = self._io.read_bytes(self.len_body)
                 _io__raw__m_body = KaitaiStream(BytesIO(self._raw__m_body))
                 self._m_body = PcfFont.Table.Bitmaps(_io__raw__m_body, self, self._root)
+            elif _on == PcfFont.Types.glyph_names:
+                pass
+                self._raw__m_body = self._io.read_bytes(self.len_body)
+                _io__raw__m_body = KaitaiStream(BytesIO(self._raw__m_body))
+                self._m_body = PcfFont.Table.GlyphNames(_io__raw__m_body, self, self._root)
+            elif _on == PcfFont.Types.properties:
+                pass
+                self._raw__m_body = self._io.read_bytes(self.len_body)
+                _io__raw__m_body = KaitaiStream(BytesIO(self._raw__m_body))
+                self._m_body = PcfFont.Table.Properties(_io__raw__m_body, self, self._root)
+            elif _on == PcfFont.Types.swidths:
+                pass
+                self._raw__m_body = self._io.read_bytes(self.len_body)
+                _io__raw__m_body = KaitaiStream(BytesIO(self._raw__m_body))
+                self._m_body = PcfFont.Table.Swidths(_io__raw__m_body, self, self._root)
             else:
+                pass
                 self._m_body = self._io.read_bytes(self.len_body)
             self._io.seek(_pos)
             return getattr(self, '_m_body', None)
-
-
-    class Format(KaitaiStruct):
-        """Table format specifier, always 4 bytes. Original implementation treats
-        it as always little-endian and makes liberal use of bitmasking to parse
-        various parts of it.
-        
-        TODO: this format specification recognizes endianness and bit
-        order format bits, but it does not really takes any parsing
-        decisions based on them.
-        
-        .. seealso::
-           Source - https://fontforge.org/docs/techref/pcf-format.html#file-header
-        """
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.padding1 = self._io.read_bits_int_be(2)
-            self.scan_unit_mask = self._io.read_bits_int_be(2)
-            self.is_most_significant_bit_first = self._io.read_bits_int_be(1) != 0
-            self.is_big_endian = self._io.read_bits_int_be(1) != 0
-            self.glyph_pad_mask = self._io.read_bits_int_be(2)
-            self._io.align_to_byte()
-            self.format = self._io.read_u1()
-            self.padding = self._io.read_u2le()
 
 
 

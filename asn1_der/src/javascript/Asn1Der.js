@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    define(['exports', 'kaitai-struct/KaitaiStream'], factory);
+  } else if (typeof exports === 'object' && exports !== null && typeof exports.nodeType !== 'number') {
+    factory(exports, require('kaitai-struct/KaitaiStream'));
   } else {
-    root.Asn1Der = factory(root.KaitaiStream);
+    factory(root.Asn1Der || (root.Asn1Der = {}), root.KaitaiStream);
   }
-}(typeof self !== 'undefined' ? self : this, function (KaitaiStream) {
+})(typeof self !== 'undefined' ? self : this, function (Asn1Der_, KaitaiStream) {
 /**
  * ASN.1 (Abstract Syntax Notation One) DER (Distinguished Encoding
  * Rules) is a standard-backed serialization scheme used in many
@@ -90,6 +90,11 @@ var Asn1Der = (function() {
     this.typeTag = this._io.readU1();
     this.len = new LenEncoded(this._io, this, this._root);
     switch (this.typeTag) {
+    case Asn1Der.TypeTag.OBJECT_ID:
+      this._raw_body = this._io.readBytes(this.len.result);
+      var _io__raw_body = new KaitaiStream(this._raw_body);
+      this.body = new BodyObjectId(_io__raw_body, this, this._root);
+      break;
     case Asn1Der.TypeTag.PRINTABLE_STRING:
       this._raw_body = this._io.readBytes(this.len.result);
       var _io__raw_body = new KaitaiStream(this._raw_body);
@@ -100,12 +105,12 @@ var Asn1Der = (function() {
       var _io__raw_body = new KaitaiStream(this._raw_body);
       this.body = new BodySequence(_io__raw_body, this, this._root);
       break;
-    case Asn1Der.TypeTag.SET:
+    case Asn1Der.TypeTag.SEQUENCE_30:
       this._raw_body = this._io.readBytes(this.len.result);
       var _io__raw_body = new KaitaiStream(this._raw_body);
       this.body = new BodySequence(_io__raw_body, this, this._root);
       break;
-    case Asn1Der.TypeTag.SEQUENCE_30:
+    case Asn1Der.TypeTag.SET:
       this._raw_body = this._io.readBytes(this.len.result);
       var _io__raw_body = new KaitaiStream(this._raw_body);
       this.body = new BodySequence(_io__raw_body, this, this._root);
@@ -115,51 +120,11 @@ var Asn1Der = (function() {
       var _io__raw_body = new KaitaiStream(this._raw_body);
       this.body = new BodyUtf8string(_io__raw_body, this, this._root);
       break;
-    case Asn1Der.TypeTag.OBJECT_ID:
-      this._raw_body = this._io.readBytes(this.len.result);
-      var _io__raw_body = new KaitaiStream(this._raw_body);
-      this.body = new BodyObjectId(_io__raw_body, this, this._root);
-      break;
     default:
       this.body = this._io.readBytes(this.len.result);
       break;
     }
   }
-
-  var BodySequence = Asn1Der.BodySequence = (function() {
-    function BodySequence(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    BodySequence.prototype._read = function() {
-      this.entries = [];
-      var i = 0;
-      while (!this._io.isEof()) {
-        this.entries.push(new Asn1Der(this._io, this, null));
-        i++;
-      }
-    }
-
-    return BodySequence;
-  })();
-
-  var BodyUtf8string = Asn1Der.BodyUtf8string = (function() {
-    function BodyUtf8string(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    BodyUtf8string.prototype._read = function() {
-      this.str = KaitaiStream.bytesToStr(this._io.readBytesFull(), "UTF-8");
-    }
-
-    return BodyUtf8string;
-  })();
 
   /**
    * @see {@link https://learn.microsoft.com/en-us/windows/win32/seccertenroll/about-object-identifier|Source}
@@ -169,7 +134,7 @@ var Asn1Der = (function() {
     function BodyObjectId(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -197,11 +162,61 @@ var Asn1Der = (function() {
     return BodyObjectId;
   })();
 
+  var BodyPrintableString = Asn1Der.BodyPrintableString = (function() {
+    function BodyPrintableString(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    BodyPrintableString.prototype._read = function() {
+      this.str = KaitaiStream.bytesToStr(this._io.readBytesFull(), "ASCII");
+    }
+
+    return BodyPrintableString;
+  })();
+
+  var BodySequence = Asn1Der.BodySequence = (function() {
+    function BodySequence(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    BodySequence.prototype._read = function() {
+      this.entries = [];
+      var i = 0;
+      while (!this._io.isEof()) {
+        this.entries.push(new Asn1Der(this._io, this, this._root));
+        i++;
+      }
+    }
+
+    return BodySequence;
+  })();
+
+  var BodyUtf8string = Asn1Der.BodyUtf8string = (function() {
+    function BodyUtf8string(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root;
+
+      this._read();
+    }
+    BodyUtf8string.prototype._read = function() {
+      this.str = KaitaiStream.bytesToStr(this._io.readBytesFull(), "UTF-8");
+    }
+
+    return BodyUtf8string;
+  })();
+
   var LenEncoded = Asn1Der.LenEncoded = (function() {
     function LenEncoded(_io, _parent, _root) {
       this._io = _io;
       this._parent = _parent;
-      this._root = _root || this;
+      this._root = _root;
 
       this._read();
     }
@@ -226,22 +241,7 @@ var Asn1Der = (function() {
     return LenEncoded;
   })();
 
-  var BodyPrintableString = Asn1Der.BodyPrintableString = (function() {
-    function BodyPrintableString(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    BodyPrintableString.prototype._read = function() {
-      this.str = KaitaiStream.bytesToStr(this._io.readBytesFull(), "ASCII");
-    }
-
-    return BodyPrintableString;
-  })();
-
   return Asn1Der;
 })();
-return Asn1Der;
-}));
+Asn1Der_.Asn1Der = Asn1Der;
+});

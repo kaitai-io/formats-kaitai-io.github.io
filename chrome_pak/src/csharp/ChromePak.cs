@@ -36,16 +36,16 @@ namespace Kaitai
         {
             m_parent = p__parent;
             m_root = p__root ?? this;
-            f_numResources = false;
             f_numAliases = false;
+            f_numResources = false;
             _read();
         }
         private void _read()
         {
             _version = m_io.ReadU4le();
-            if (!( ((Version == 4) || (Version == 5)) ))
+            if (!( ((_version == 4) || (_version == 5)) ))
             {
-                throw new ValidationNotAnyOfError(Version, M_Io, "/seq/0");
+                throw new ValidationNotAnyOfError(_version, m_io, "/seq/0");
             }
             if (Version == 4) {
                 _numResourcesV4 = m_io.ReadU4le();
@@ -55,7 +55,7 @@ namespace Kaitai
                 _v5Part = new HeaderV5Part(m_io, this, m_root);
             }
             _resources = new List<Resource>();
-            for (var i = 0; i < (NumResources + 1); i++)
+            for (var i = 0; i < NumResources + 1; i++)
             {
                 _resources.Add(new Resource(i, i < NumResources, m_io, this, m_root));
             }
@@ -64,6 +64,51 @@ namespace Kaitai
             {
                 _aliases.Add(new Alias(m_io, this, m_root));
             }
+        }
+        public partial class Alias : KaitaiStruct
+        {
+            public static Alias FromFile(string fileName)
+            {
+                return new Alias(new KaitaiStream(fileName));
+            }
+
+            public Alias(KaitaiStream p__io, ChromePak p__parent = null, ChromePak p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_resource = false;
+                _read();
+            }
+            private void _read()
+            {
+                _id = m_io.ReadU2le();
+                _resourceIdx = m_io.ReadU2le();
+                if (!(_resourceIdx <= M_Parent.NumResources - 1))
+                {
+                    throw new ValidationGreaterThanError(M_Parent.NumResources - 1, _resourceIdx, m_io, "/types/alias/seq/1");
+                }
+            }
+            private bool f_resource;
+            private Resource _resource;
+            public Resource Resource
+            {
+                get
+                {
+                    if (f_resource)
+                        return _resource;
+                    f_resource = true;
+                    _resource = (Resource) (M_Parent.Resources[ResourceIdx]);
+                    return _resource;
+                }
+            }
+            private ushort _id;
+            private ushort _resourceIdx;
+            private ChromePak m_root;
+            private ChromePak m_parent;
+            public ushort Id { get { return _id; } }
+            public ushort ResourceIdx { get { return _resourceIdx; } }
+            public ChromePak M_Root { get { return m_root; } }
+            public ChromePak M_Parent { get { return m_parent; } }
         }
         public partial class HeaderV5Part : KaitaiStruct
         {
@@ -103,33 +148,14 @@ namespace Kaitai
                 m_root = p__root;
                 _idx = p_idx;
                 _hasBody = p_hasBody;
-                f_lenBody = false;
                 f_body = false;
+                f_lenBody = false;
                 _read();
             }
             private void _read()
             {
                 _id = m_io.ReadU2le();
                 _ofsBody = m_io.ReadU4le();
-            }
-            private bool f_lenBody;
-            private int? _lenBody;
-
-            /// <summary>
-            /// MUST NOT be accessed until the next `resource` is parsed
-            /// </summary>
-            public int? LenBody
-            {
-                get
-                {
-                    if (f_lenBody)
-                        return _lenBody;
-                    if (HasBody) {
-                        _lenBody = (int) ((M_Parent.Resources[(Idx + 1)].OfsBody - OfsBody));
-                    }
-                    f_lenBody = true;
-                    return _lenBody;
-                }
             }
             private bool f_body;
             private byte[] _body;
@@ -143,14 +169,33 @@ namespace Kaitai
                 {
                     if (f_body)
                         return _body;
+                    f_body = true;
                     if (HasBody) {
                         long _pos = m_io.Pos;
                         m_io.Seek(OfsBody);
                         _body = m_io.ReadBytes(LenBody);
                         m_io.Seek(_pos);
-                        f_body = true;
                     }
                     return _body;
+                }
+            }
+            private bool f_lenBody;
+            private int? _lenBody;
+
+            /// <summary>
+            /// MUST NOT be accessed until the next `resource` is parsed
+            /// </summary>
+            public int? LenBody
+            {
+                get
+                {
+                    if (f_lenBody)
+                        return _lenBody;
+                    f_lenBody = true;
+                    if (HasBody) {
+                        _lenBody = (int) (M_Parent.Resources[Idx + 1].OfsBody - OfsBody);
+                    }
+                    return _lenBody;
                 }
             }
             private ushort _id;
@@ -166,50 +211,18 @@ namespace Kaitai
             public ChromePak M_Root { get { return m_root; } }
             public ChromePak M_Parent { get { return m_parent; } }
         }
-        public partial class Alias : KaitaiStruct
+        private bool f_numAliases;
+        private ushort _numAliases;
+        public ushort NumAliases
         {
-            public static Alias FromFile(string fileName)
+            get
             {
-                return new Alias(new KaitaiStream(fileName));
+                if (f_numAliases)
+                    return _numAliases;
+                f_numAliases = true;
+                _numAliases = (ushort) ((Version == 5 ? V5Part.NumAliases : 0));
+                return _numAliases;
             }
-
-            public Alias(KaitaiStream p__io, ChromePak p__parent = null, ChromePak p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_resource = false;
-                _read();
-            }
-            private void _read()
-            {
-                _id = m_io.ReadU2le();
-                _resourceIdx = m_io.ReadU2le();
-                if (!(ResourceIdx <= (M_Parent.NumResources - 1)))
-                {
-                    throw new ValidationGreaterThanError((M_Parent.NumResources - 1), ResourceIdx, M_Io, "/types/alias/seq/1");
-                }
-            }
-            private bool f_resource;
-            private Resource _resource;
-            public Resource Resource
-            {
-                get
-                {
-                    if (f_resource)
-                        return _resource;
-                    _resource = (Resource) (M_Parent.Resources[ResourceIdx]);
-                    f_resource = true;
-                    return _resource;
-                }
-            }
-            private ushort _id;
-            private ushort _resourceIdx;
-            private ChromePak m_root;
-            private ChromePak m_parent;
-            public ushort Id { get { return _id; } }
-            public ushort ResourceIdx { get { return _resourceIdx; } }
-            public ChromePak M_Root { get { return m_root; } }
-            public ChromePak M_Parent { get { return m_parent; } }
         }
         private bool f_numResources;
         private uint _numResources;
@@ -219,22 +232,9 @@ namespace Kaitai
             {
                 if (f_numResources)
                     return _numResources;
-                _numResources = (uint) ((Version == 5 ? V5Part.NumResources : NumResourcesV4));
                 f_numResources = true;
+                _numResources = (uint) ((Version == 5 ? V5Part.NumResources : NumResourcesV4));
                 return _numResources;
-            }
-        }
-        private bool f_numAliases;
-        private ushort _numAliases;
-        public ushort NumAliases
-        {
-            get
-            {
-                if (f_numAliases)
-                    return _numAliases;
-                _numAliases = (ushort) ((Version == 5 ? V5Part.NumAliases : 0));
-                f_numAliases = true;
-                return _numAliases;
             }
         }
         private uint _version;

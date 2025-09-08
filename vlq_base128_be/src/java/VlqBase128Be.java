@@ -5,6 +5,7 @@ import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -55,6 +56,12 @@ public class VlqBase128Be extends KaitaiStruct {
         }
     }
 
+    public void _fetchInstances() {
+        for (int i = 0; i < this.groups.size(); i++) {
+            this.groups.get(((Number) (i)).intValue())._fetchInstances();
+        }
+    }
+
     /**
      * One byte group, clearly divided into 7-bit "value" chunk and 1-bit "continuation" flag.
      */
@@ -81,6 +88,9 @@ public class VlqBase128Be extends KaitaiStruct {
             this.hasNext = this._io.readBitsIntBe(1) != 0;
             this.value = this._io.readBitsIntBe(7);
         }
+
+        public void _fetchInstances() {
+        }
         private boolean hasNext;
         private long value;
         private VlqBase128Be _root;
@@ -102,8 +112,7 @@ public class VlqBase128Be extends KaitaiStruct {
     public Integer last() {
         if (this.last != null)
             return this.last;
-        int _tmp = (int) ((groups().size() - 1));
-        this.last = _tmp;
+        this.last = ((Number) (groups().size() - 1)).intValue();
         return this.last;
     }
     private Long value;
@@ -114,14 +123,13 @@ public class VlqBase128Be extends KaitaiStruct {
     public Long value() {
         if (this.value != null)
             return this.value;
-        long _tmp = (long) (((long) ((((((((groups().get((int) last()).value() + (last() >= 1 ? (groups().get((int) (last() - 1)).value() << 7) : 0)) + (last() >= 2 ? (groups().get((int) (last() - 2)).value() << 14) : 0)) + (last() >= 3 ? (groups().get((int) (last() - 3)).value() << 21) : 0)) + (last() >= 4 ? (groups().get((int) (last() - 4)).value() << 28) : 0)) + (last() >= 5 ? (groups().get((int) (last() - 5)).value() << 35) : 0)) + (last() >= 6 ? (groups().get((int) (last() - 6)).value() << 42) : 0)) + (last() >= 7 ? (groups().get((int) (last() - 7)).value() << 49) : 0)))));
-        this.value = _tmp;
+        this.value = ((Number) (((Number) (((((((groups().get(((Number) (last())).intValue()).value() + (last() >= 1 ? groups().get(((Number) (last() - 1)).intValue()).value() << 7 : 0)) + (last() >= 2 ? groups().get(((Number) (last() - 2)).intValue()).value() << 14 : 0)) + (last() >= 3 ? groups().get(((Number) (last() - 3)).intValue()).value() << 21 : 0)) + (last() >= 4 ? groups().get(((Number) (last() - 4)).intValue()).value() << 28 : 0)) + (last() >= 5 ? groups().get(((Number) (last() - 5)).intValue()).value() << 35 : 0)) + (last() >= 6 ? groups().get(((Number) (last() - 6)).intValue()).value() << 42 : 0)) + (last() >= 7 ? groups().get(((Number) (last() - 7)).intValue()).value() << 49 : 0))).longValue())).longValue();
         return this.value;
     }
-    private ArrayList<Group> groups;
+    private List<Group> groups;
     private VlqBase128Be _root;
     private KaitaiStruct _parent;
-    public ArrayList<Group> groups() { return groups; }
+    public List<Group> groups() { return groups; }
     public VlqBase128Be _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

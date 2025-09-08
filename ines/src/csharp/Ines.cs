@@ -29,8 +29,8 @@ namespace Kaitai
             if (Header.F6.Trainer) {
                 _trainer = m_io.ReadBytes(512);
             }
-            _prgRom = m_io.ReadBytes((Header.LenPrgRom * 16384));
-            _chrRom = m_io.ReadBytes((Header.LenChrRom * 8192));
+            _prgRom = m_io.ReadBytes(Header.LenPrgRom * 16384);
+            _chrRom = m_io.ReadBytes(Header.LenChrRom * 8192);
             if (Header.F7.Playchoice10) {
                 _playchoice10 = new Playchoice10(m_io, this, m_root);
             }
@@ -55,9 +55,9 @@ namespace Kaitai
             private void _read()
             {
                 _magic = m_io.ReadBytes(4);
-                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 78, 69, 83, 26 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 78, 69, 83, 26 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 78, 69, 83, 26 }, Magic, M_Io, "/types/header/seq/0");
+                    throw new ValidationNotEqualError(new byte[] { 78, 69, 83, 26 }, _magic, m_io, "/types/header/seq/0");
                 }
                 _lenPrgRom = m_io.ReadU1();
                 _lenChrRom = m_io.ReadU1();
@@ -75,10 +75,70 @@ namespace Kaitai
                 var io___raw_f10 = new KaitaiStream(__raw_f10);
                 _f10 = new F10(io___raw_f10, this, m_root);
                 _reserved = m_io.ReadBytes(5);
-                if (!((KaitaiStream.ByteArrayCompare(Reserved, new byte[] { 0, 0, 0, 0, 0 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_reserved, new byte[] { 0, 0, 0, 0, 0 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 0, 0, 0, 0, 0 }, Reserved, M_Io, "/types/header/seq/8");
+                    throw new ValidationNotEqualError(new byte[] { 0, 0, 0, 0, 0 }, _reserved, m_io, "/types/header/seq/8");
                 }
+            }
+
+            /// <remarks>
+            /// Reference: <a href="https://www.nesdev.org/wiki/INES#Flags_10">Source</a>
+            /// </remarks>
+            public partial class F10 : KaitaiStruct
+            {
+                public static F10 FromFile(string fileName)
+                {
+                    return new F10(new KaitaiStream(fileName));
+                }
+
+
+                public enum TvSystem
+                {
+                    Ntsc = 0,
+                    Dual1 = 1,
+                    Pal = 2,
+                    Dual2 = 3,
+                }
+                public F10(KaitaiStream p__io, Ines.Header p__parent = null, Ines p__root = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    _read();
+                }
+                private void _read()
+                {
+                    _reserved1 = m_io.ReadBitsIntBe(2);
+                    _busConflict = m_io.ReadBitsIntBe(1) != 0;
+                    _prgRam = m_io.ReadBitsIntBe(1) != 0;
+                    _reserved2 = m_io.ReadBitsIntBe(2);
+                    _tvSystem = ((TvSystem) m_io.ReadBitsIntBe(2));
+                }
+                private ulong _reserved1;
+                private bool _busConflict;
+                private bool _prgRam;
+                private ulong _reserved2;
+                private TvSystem _tvSystem;
+                private Ines m_root;
+                private Ines.Header m_parent;
+                public ulong Reserved1 { get { return _reserved1; } }
+
+                /// <summary>
+                /// If 0, no bus conflicts. If 1, bus conflicts.
+                /// </summary>
+                public bool BusConflict { get { return _busConflict; } }
+
+                /// <summary>
+                /// If 0, PRG ram is present. If 1, not present.
+                /// </summary>
+                public bool PrgRam { get { return _prgRam; } }
+                public ulong Reserved2 { get { return _reserved2; } }
+
+                /// <summary>
+                /// if 0, NTSC. If 2, PAL. If 1 or 3, dual compatible.
+                /// </summary>
+                public TvSystem TvSystem { get { return _tvSystem; } }
+                public Ines M_Root { get { return m_root; } }
+                public Ines.Header M_Parent { get { return m_parent; } }
             }
 
             /// <remarks>
@@ -240,66 +300,6 @@ namespace Kaitai
                 public Ines M_Root { get { return m_root; } }
                 public Ines.Header M_Parent { get { return m_parent; } }
             }
-
-            /// <remarks>
-            /// Reference: <a href="https://www.nesdev.org/wiki/INES#Flags_10">Source</a>
-            /// </remarks>
-            public partial class F10 : KaitaiStruct
-            {
-                public static F10 FromFile(string fileName)
-                {
-                    return new F10(new KaitaiStream(fileName));
-                }
-
-
-                public enum TvSystem
-                {
-                    Ntsc = 0,
-                    Dual1 = 1,
-                    Pal = 2,
-                    Dual2 = 3,
-                }
-                public F10(KaitaiStream p__io, Ines.Header p__parent = null, Ines p__root = null) : base(p__io)
-                {
-                    m_parent = p__parent;
-                    m_root = p__root;
-                    _read();
-                }
-                private void _read()
-                {
-                    _reserved1 = m_io.ReadBitsIntBe(2);
-                    _busConflict = m_io.ReadBitsIntBe(1) != 0;
-                    _prgRam = m_io.ReadBitsIntBe(1) != 0;
-                    _reserved2 = m_io.ReadBitsIntBe(2);
-                    _tvSystem = ((TvSystem) m_io.ReadBitsIntBe(2));
-                }
-                private ulong _reserved1;
-                private bool _busConflict;
-                private bool _prgRam;
-                private ulong _reserved2;
-                private TvSystem _tvSystem;
-                private Ines m_root;
-                private Ines.Header m_parent;
-                public ulong Reserved1 { get { return _reserved1; } }
-
-                /// <summary>
-                /// If 0, no bus conflicts. If 1, bus conflicts.
-                /// </summary>
-                public bool BusConflict { get { return _busConflict; } }
-
-                /// <summary>
-                /// If 0, PRG ram is present. If 1, not present.
-                /// </summary>
-                public bool PrgRam { get { return _prgRam; } }
-                public ulong Reserved2 { get { return _reserved2; } }
-
-                /// <summary>
-                /// if 0, NTSC. If 2, PAL. If 1 or 3, dual compatible.
-                /// </summary>
-                public TvSystem TvSystem { get { return _tvSystem; } }
-                public Ines M_Root { get { return m_root; } }
-                public Ines.Header M_Parent { get { return m_parent; } }
-            }
             private bool f_mapper;
             private int _mapper;
 
@@ -312,8 +312,8 @@ namespace Kaitai
                 {
                     if (f_mapper)
                         return _mapper;
-                    _mapper = (int) ((F6.LowerMapper | (F7.UpperMapper << 4)));
                     f_mapper = true;
+                    _mapper = (int) (F6.LowerMapper | F7.UpperMapper << 4);
                     return _mapper;
                 }
             }

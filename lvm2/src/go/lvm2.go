@@ -24,7 +24,7 @@ type Lvm2 struct {
 	Pv *Lvm2_PhysicalVolume
 	_io *kaitai.Stream
 	_root *Lvm2
-	_parent interface{}
+	_parent kaitai.Struct
 	_f_sectorSize bool
 	sectorSize int
 }
@@ -33,7 +33,11 @@ func NewLvm2() *Lvm2 {
 	}
 }
 
-func (this *Lvm2) Read(io *kaitai.Stream, parent interface{}, root *Lvm2) (err error) {
+func (this Lvm2) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Lvm2) Read(io *kaitai.Stream, parent kaitai.Struct, root *Lvm2) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -50,8 +54,8 @@ func (this *Lvm2) SectorSize() (v int, err error) {
 	if (this._f_sectorSize) {
 		return this.sectorSize, nil
 	}
-	this.sectorSize = int(512)
 	this._f_sectorSize = true
+	this.sectorSize = int(512)
 	return this.sectorSize, nil
 }
 
@@ -68,6 +72,10 @@ type Lvm2_PhysicalVolume struct {
 func NewLvm2_PhysicalVolume() *Lvm2_PhysicalVolume {
 	return &Lvm2_PhysicalVolume{
 	}
+}
+
+func (this Lvm2_PhysicalVolume) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Lvm2_PhysicalVolume) Read(io *kaitai.Stream, parent *Lvm2, root *Lvm2) (err error) {
@@ -105,6 +113,10 @@ func NewLvm2_PhysicalVolume_Label() *Lvm2_PhysicalVolume_Label {
 	}
 }
 
+func (this Lvm2_PhysicalVolume_Label) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Lvm2_PhysicalVolume_Label) Read(io *kaitai.Stream, parent *Lvm2_PhysicalVolume, root *Lvm2) (err error) {
 	this._io = io
 	this._parent = parent
@@ -136,6 +148,10 @@ type Lvm2_PhysicalVolume_Label_LabelHeader struct {
 func NewLvm2_PhysicalVolume_Label_LabelHeader() *Lvm2_PhysicalVolume_Label_LabelHeader {
 	return &Lvm2_PhysicalVolume_Label_LabelHeader{
 	}
+}
+
+func (this Lvm2_PhysicalVolume_Label_LabelHeader) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Lvm2_PhysicalVolume_Label_LabelHeader) Read(io *kaitai.Stream, parent *Lvm2_PhysicalVolume_Label, root *Lvm2) (err error) {
@@ -190,6 +206,10 @@ func NewLvm2_PhysicalVolume_Label_LabelHeader_LabelHeader() *Lvm2_PhysicalVolume
 	}
 }
 
+func (this Lvm2_PhysicalVolume_Label_LabelHeader_LabelHeader) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Lvm2_PhysicalVolume_Label_LabelHeader_LabelHeader) Read(io *kaitai.Stream, parent *Lvm2_PhysicalVolume_Label_LabelHeader, root *Lvm2) (err error) {
 	this._io = io
 	this._parent = parent
@@ -227,6 +247,10 @@ type Lvm2_PhysicalVolume_Label_VolumeHeader struct {
 func NewLvm2_PhysicalVolume_Label_VolumeHeader() *Lvm2_PhysicalVolume_Label_VolumeHeader {
 	return &Lvm2_PhysicalVolume_Label_VolumeHeader{
 	}
+}
+
+func (this Lvm2_PhysicalVolume_Label_VolumeHeader) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *Lvm2_PhysicalVolume_Label_VolumeHeader) Read(io *kaitai.Stream, parent *Lvm2_PhysicalVolume_Label, root *Lvm2) (err error) {
@@ -297,6 +321,10 @@ func NewLvm2_PhysicalVolume_Label_VolumeHeader_DataAreaDescriptor() *Lvm2_Physic
 	}
 }
 
+func (this Lvm2_PhysicalVolume_Label_VolumeHeader_DataAreaDescriptor) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Lvm2_PhysicalVolume_Label_VolumeHeader_DataAreaDescriptor) Read(io *kaitai.Stream, parent *Lvm2_PhysicalVolume_Label_VolumeHeader, root *Lvm2) (err error) {
 	this._io = io
 	this._parent = parent
@@ -318,6 +346,7 @@ func (this *Lvm2_PhysicalVolume_Label_VolumeHeader_DataAreaDescriptor) Data() (v
 	if (this._f_data) {
 		return this.data, nil
 	}
+	this._f_data = true
 	if (this.Size != 0) {
 		_pos, err := this._io.Pos()
 		if err != nil {
@@ -337,9 +366,7 @@ func (this *Lvm2_PhysicalVolume_Label_VolumeHeader_DataAreaDescriptor) Data() (v
 		if err != nil {
 			return "", err
 		}
-		this._f_data = true
 	}
-	this._f_data = true
 	return this.data, nil
 }
 
@@ -349,81 +376,6 @@ func (this *Lvm2_PhysicalVolume_Label_VolumeHeader_DataAreaDescriptor) Data() (v
 
 /**
  * Value in bytes. Can be 0. [yellow-background]*Does this represent all remaining available space?*
- */
-type Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor struct {
-	Offset uint64
-	Size uint64
-	_io *kaitai.Stream
-	_root *Lvm2
-	_parent *Lvm2_PhysicalVolume_Label_VolumeHeader
-	_raw_data []byte
-	_f_data bool
-	data *Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea
-}
-func NewLvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor() *Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor {
-	return &Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor{
-	}
-}
-
-func (this *Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor) Read(io *kaitai.Stream, parent *Lvm2_PhysicalVolume_Label_VolumeHeader, root *Lvm2) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp20, err := this._io.ReadU8le()
-	if err != nil {
-		return err
-	}
-	this.Offset = uint64(tmp20)
-	tmp21, err := this._io.ReadU8le()
-	if err != nil {
-		return err
-	}
-	this.Size = uint64(tmp21)
-	return err
-}
-func (this *Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor) Data() (v *Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea, err error) {
-	if (this._f_data) {
-		return this.data, nil
-	}
-	if (this.Size != 0) {
-		_pos, err := this._io.Pos()
-		if err != nil {
-			return nil, err
-		}
-		_, err = this._io.Seek(int64(this.Offset), io.SeekStart)
-		if err != nil {
-			return nil, err
-		}
-		tmp22, err := this._io.ReadBytes(int(this.Size))
-		if err != nil {
-			return nil, err
-		}
-		tmp22 = tmp22
-		this._raw_data = tmp22
-		_io__raw_data := kaitai.NewStream(bytes.NewReader(this._raw_data))
-		tmp23 := NewLvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea()
-		err = tmp23.Read(_io__raw_data, this, this._root)
-		if err != nil {
-			return nil, err
-		}
-		this.data = tmp23
-		_, err = this._io.Seek(_pos, io.SeekStart)
-		if err != nil {
-			return nil, err
-		}
-		this._f_data = true
-	}
-	this._f_data = true
-	return this.data, nil
-}
-
-/**
- * The offset, in bytes, relative from the start of the physical volume
- */
-
-/**
- * Value in bytes
  */
 
 /**
@@ -440,17 +392,21 @@ func NewLvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea() *Lvm2_PhysicalVolu
 	}
 }
 
+func (this Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea) Read(io *kaitai.Stream, parent *Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor, root *Lvm2) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp24 := NewLvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader()
-	err = tmp24.Read(this._io, this, this._root)
+	tmp20 := NewLvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader()
+	err = tmp20.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Header = tmp24
+	this.Header = tmp20
 	return err
 }
 type Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader struct {
@@ -462,7 +418,7 @@ type Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader stru
 	RawLocationDescriptors []*Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader_RawLocationDescriptor
 	_io *kaitai.Stream
 	_root *Lvm2
-	_parent interface{}
+	_parent kaitai.Struct
 	_f_metadata bool
 	metadata []byte
 }
@@ -471,48 +427,52 @@ func NewLvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader()
 	}
 }
 
-func (this *Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader) Read(io *kaitai.Stream, parent interface{}, root *Lvm2) (err error) {
+func (this Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader) Read(io *kaitai.Stream, parent kaitai.Struct, root *Lvm2) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	tmp25 := NewLvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader()
-	err = tmp25.Read(this._io, this, this._root)
+	tmp21 := NewLvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader()
+	err = tmp21.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Checksum = tmp25
-	tmp26, err := this._io.ReadBytes(int(16))
+	this.Checksum = tmp21
+	tmp22, err := this._io.ReadBytes(int(16))
 	if err != nil {
 		return err
 	}
-	tmp26 = tmp26
-	this.Signature = tmp26
+	tmp22 = tmp22
+	this.Signature = tmp22
 	if !(bytes.Equal(this.Signature, []uint8{32, 76, 86, 77, 50, 32, 120, 91, 53, 65, 37, 114, 48, 78, 42, 62})) {
 		return kaitai.NewValidationNotEqualError([]uint8{32, 76, 86, 77, 50, 32, 120, 91, 53, 65, 37, 114, 48, 78, 42, 62}, this.Signature, this._io, "/types/physical_volume/types/label/types/volume_header/types/metadata_area/types/metadata_area_header/seq/1")
 	}
-	tmp27, err := this._io.ReadU4le()
+	tmp23, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Version = uint32(tmp27)
-	tmp28, err := this._io.ReadU8le()
+	this.Version = uint32(tmp23)
+	tmp24, err := this._io.ReadU8le()
 	if err != nil {
 		return err
 	}
-	this.MetadataAreaOffset = uint64(tmp28)
-	tmp29, err := this._io.ReadU8le()
+	this.MetadataAreaOffset = uint64(tmp24)
+	tmp25, err := this._io.ReadU8le()
 	if err != nil {
 		return err
 	}
-	this.MetadataAreaSize = uint64(tmp29)
+	this.MetadataAreaSize = uint64(tmp25)
 	for i := 1;; i++ {
-		tmp30 := NewLvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader_RawLocationDescriptor()
-		err = tmp30.Read(this._io, this, this._root)
+		tmp26 := NewLvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader_RawLocationDescriptor()
+		err = tmp26.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		_it := tmp30
+		_it := tmp26
 		this.RawLocationDescriptors = append(this.RawLocationDescriptors, _it)
 		if  ((_it.Offset != 0) && (_it.Size != 0) && (_it.Checksum != 0))  {
 			break
@@ -524,6 +484,7 @@ func (this *Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHead
 	if (this._f_metadata) {
 		return this.metadata, nil
 	}
+	this._f_metadata = true
 	_pos, err := this._io.Pos()
 	if err != nil {
 		return nil, err
@@ -532,18 +493,16 @@ func (this *Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHead
 	if err != nil {
 		return nil, err
 	}
-	tmp31, err := this._io.ReadBytes(int(this.MetadataAreaSize))
+	tmp27, err := this._io.ReadBytes(int(this.MetadataAreaSize))
 	if err != nil {
 		return nil, err
 	}
-	tmp31 = tmp31
-	this.metadata = tmp31
+	tmp27 = tmp27
+	this.metadata = tmp27
 	_, err = this._io.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
-	this._f_metadata = true
-	this._f_metadata = true
 	return this.metadata, nil
 }
 
@@ -567,6 +526,11 @@ type Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader_RawL
 const (
 	Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader_RawLocationDescriptor_RawLocationDescriptorFlags__RawLocationIgnored Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader_RawLocationDescriptor_RawLocationDescriptorFlags = 1
 )
+var values_Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader_RawLocationDescriptor_RawLocationDescriptorFlags = map[Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader_RawLocationDescriptor_RawLocationDescriptorFlags]struct{}{1: {}}
+func (v Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader_RawLocationDescriptor_RawLocationDescriptorFlags) isDefined() bool {
+	_, ok := values_Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader_RawLocationDescriptor_RawLocationDescriptorFlags[v]
+	return ok
+}
 type Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader_RawLocationDescriptor struct {
 	Offset uint64
 	Size uint64
@@ -581,7 +545,69 @@ func NewLvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader_R
 	}
 }
 
+func (this Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader_RawLocationDescriptor) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader_RawLocationDescriptor) Read(io *kaitai.Stream, parent *Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader, root *Lvm2) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp28, err := this._io.ReadU8le()
+	if err != nil {
+		return err
+	}
+	this.Offset = uint64(tmp28)
+	tmp29, err := this._io.ReadU8le()
+	if err != nil {
+		return err
+	}
+	this.Size = uint64(tmp29)
+	tmp30, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Checksum = uint32(tmp30)
+	tmp31, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Flags = Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader_RawLocationDescriptor_RawLocationDescriptorFlags(tmp31)
+	return err
+}
+
+/**
+ * The data area offset, in bytes, relative from the start of the metadata area
+ */
+
+/**
+ * data area size in bytes
+ */
+
+/**
+ * CRC-32 of *TODO (metadata?)*
+ */
+type Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor struct {
+	Offset uint64
+	Size uint64
+	_io *kaitai.Stream
+	_root *Lvm2
+	_parent *Lvm2_PhysicalVolume_Label_VolumeHeader
+	_raw_data []byte
+	_f_data bool
+	data *Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea
+}
+func NewLvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor() *Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor {
+	return &Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor{
+	}
+}
+
+func (this Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor) Read(io *kaitai.Stream, parent *Lvm2_PhysicalVolume_Label_VolumeHeader, root *Lvm2) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
@@ -596,27 +622,47 @@ func (this *Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHead
 		return err
 	}
 	this.Size = uint64(tmp33)
-	tmp34, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Checksum = uint32(tmp34)
-	tmp35, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Flags = Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea_MetadataAreaHeader_RawLocationDescriptor_RawLocationDescriptorFlags(tmp35)
 	return err
+}
+func (this *Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataAreaDescriptor) Data() (v *Lvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea, err error) {
+	if (this._f_data) {
+		return this.data, nil
+	}
+	this._f_data = true
+	if (this.Size != 0) {
+		_pos, err := this._io.Pos()
+		if err != nil {
+			return nil, err
+		}
+		_, err = this._io.Seek(int64(this.Offset), io.SeekStart)
+		if err != nil {
+			return nil, err
+		}
+		tmp34, err := this._io.ReadBytes(int(this.Size))
+		if err != nil {
+			return nil, err
+		}
+		tmp34 = tmp34
+		this._raw_data = tmp34
+		_io__raw_data := kaitai.NewStream(bytes.NewReader(this._raw_data))
+		tmp35 := NewLvm2_PhysicalVolume_Label_VolumeHeader_MetadataArea()
+		err = tmp35.Read(_io__raw_data, this, this._root)
+		if err != nil {
+			return nil, err
+		}
+		this.data = tmp35
+		_, err = this._io.Seek(_pos, io.SeekStart)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return this.data, nil
 }
 
 /**
- * The data area offset, in bytes, relative from the start of the metadata area
+ * The offset, in bytes, relative from the start of the physical volume
  */
 
 /**
- * data area size in bytes
- */
-
-/**
- * CRC-32 of *TODO (metadata?)*
+ * Value in bytes
  */

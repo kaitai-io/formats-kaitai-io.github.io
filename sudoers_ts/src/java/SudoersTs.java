@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -60,6 +61,174 @@ public class SudoersTs extends KaitaiStruct {
             }
         }
     }
+
+    public void _fetchInstances() {
+        for (int i = 0; i < this.records.size(); i++) {
+            this.records.get(((Number) (i)).intValue())._fetchInstances();
+        }
+    }
+    public static class Record extends KaitaiStruct {
+        public static Record fromFile(String fileName) throws IOException {
+            return new Record(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Record(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Record(KaitaiStream _io, SudoersTs _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Record(KaitaiStream _io, SudoersTs _parent, SudoersTs _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.version = this._io.readU2le();
+            this.lenRecord = this._io.readU2le();
+            switch (version()) {
+            case 1: {
+                KaitaiStream _io_payload = this._io.substream(lenRecord() - 4);
+                this.payload = new RecordV1(_io_payload, this, _root);
+                break;
+            }
+            case 2: {
+                KaitaiStream _io_payload = this._io.substream(lenRecord() - 4);
+                this.payload = new RecordV2(_io_payload, this, _root);
+                break;
+            }
+            default: {
+                this.payload = this._io.readBytes(lenRecord() - 4);
+                break;
+            }
+            }
+        }
+
+        public void _fetchInstances() {
+            switch (version()) {
+            case 1: {
+                ((RecordV1) (this.payload))._fetchInstances();
+                break;
+            }
+            case 2: {
+                ((RecordV2) (this.payload))._fetchInstances();
+                break;
+            }
+            default: {
+                break;
+            }
+            }
+        }
+        private int version;
+        private int lenRecord;
+        private Object payload;
+        private SudoersTs _root;
+        private SudoersTs _parent;
+
+        /**
+         * version number of the timestamp_entry struct
+         */
+        public int version() { return version; }
+
+        /**
+         * size of the record in bytes
+         */
+        public int lenRecord() { return lenRecord; }
+        public Object payload() { return payload; }
+        public SudoersTs _root() { return _root; }
+        public SudoersTs _parent() { return _parent; }
+    }
+    public static class RecordV1 extends KaitaiStruct {
+        public static RecordV1 fromFile(String fileName) throws IOException {
+            return new RecordV1(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public RecordV1(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public RecordV1(KaitaiStream _io, SudoersTs.Record _parent) {
+            this(_io, _parent, null);
+        }
+
+        public RecordV1(KaitaiStream _io, SudoersTs.Record _parent, SudoersTs _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.type = SudoersTs.TsType.byId(this._io.readU2le());
+            this.flags = new TsFlag(this._io, this, _root);
+            this.authUid = this._io.readU4le();
+            this.sid = this._io.readU4le();
+            this.ts = new Timespec(this._io, this, _root);
+            if (type() == SudoersTs.TsType.TTY) {
+                this.ttydev = this._io.readU4le();
+            }
+            if (type() == SudoersTs.TsType.PPID) {
+                this.ppid = this._io.readU4le();
+            }
+        }
+
+        public void _fetchInstances() {
+            this.flags._fetchInstances();
+            this.ts._fetchInstances();
+            if (type() == SudoersTs.TsType.TTY) {
+            }
+            if (type() == SudoersTs.TsType.PPID) {
+            }
+        }
+        private TsType type;
+        private TsFlag flags;
+        private long authUid;
+        private long sid;
+        private Timespec ts;
+        private Long ttydev;
+        private Long ppid;
+        private SudoersTs _root;
+        private SudoersTs.Record _parent;
+
+        /**
+         * record type
+         */
+        public TsType type() { return type; }
+
+        /**
+         * record flags
+         */
+        public TsFlag flags() { return flags; }
+
+        /**
+         * user ID that was used for authentication
+         */
+        public long authUid() { return authUid; }
+
+        /**
+         * session ID associated with tty/ppid
+         */
+        public long sid() { return sid; }
+
+        /**
+         * time stamp, from a monotonic time source
+         */
+        public Timespec ts() { return ts; }
+
+        /**
+         * device number of the terminal associated with the session
+         */
+        public Long ttydev() { return ttydev; }
+
+        /**
+         * ID of the parent process
+         */
+        public Long ppid() { return ppid; }
+        public SudoersTs _root() { return _root; }
+        public SudoersTs.Record _parent() { return _parent; }
+    }
     public static class RecordV2 extends KaitaiStruct {
         public static RecordV2 fromFile(String fileName) throws IOException {
             return new RecordV2(new ByteBufferKaitaiStream(fileName));
@@ -91,6 +260,16 @@ public class SudoersTs extends KaitaiStruct {
             }
             if (type() == SudoersTs.TsType.PPID) {
                 this.ppid = this._io.readU4le();
+            }
+        }
+
+        public void _fetchInstances() {
+            this.flags._fetchInstances();
+            this.startTime._fetchInstances();
+            this.ts._fetchInstances();
+            if (type() == SudoersTs.TsType.TTY) {
+            }
+            if (type() == SudoersTs.TsType.PPID) {
             }
         }
         private TsType type;
@@ -146,6 +325,49 @@ public class SudoersTs extends KaitaiStruct {
         public SudoersTs _root() { return _root; }
         public SudoersTs.Record _parent() { return _parent; }
     }
+    public static class Timespec extends KaitaiStruct {
+        public static Timespec fromFile(String fileName) throws IOException {
+            return new Timespec(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Timespec(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Timespec(KaitaiStream _io, KaitaiStruct _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Timespec(KaitaiStream _io, KaitaiStruct _parent, SudoersTs _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.sec = this._io.readS8le();
+            this.nsec = this._io.readS8le();
+        }
+
+        public void _fetchInstances() {
+        }
+        private long sec;
+        private long nsec;
+        private SudoersTs _root;
+        private KaitaiStruct _parent;
+
+        /**
+         * seconds
+         */
+        public long sec() { return sec; }
+
+        /**
+         * nanoseconds
+         */
+        public long nsec() { return nsec; }
+        public SudoersTs _root() { return _root; }
+        public KaitaiStruct _parent() { return _parent; }
+    }
     public static class TsFlag extends KaitaiStruct {
         public static TsFlag fromFile(String fileName) throws IOException {
             return new TsFlag(new ByteBufferKaitaiStream(fileName));
@@ -170,6 +392,9 @@ public class SudoersTs extends KaitaiStruct {
             this.anyuid = this._io.readBitsIntBe(1) != 0;
             this.disabled = this._io.readBitsIntBe(1) != 0;
             this.reserved1 = this._io.readBitsIntBe(8);
+        }
+
+        public void _fetchInstances() {
         }
         private long reserved0;
         private boolean anyuid;
@@ -200,191 +425,10 @@ public class SudoersTs extends KaitaiStruct {
         public SudoersTs _root() { return _root; }
         public KaitaiStruct _parent() { return _parent; }
     }
-    public static class RecordV1 extends KaitaiStruct {
-        public static RecordV1 fromFile(String fileName) throws IOException {
-            return new RecordV1(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public RecordV1(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public RecordV1(KaitaiStream _io, SudoersTs.Record _parent) {
-            this(_io, _parent, null);
-        }
-
-        public RecordV1(KaitaiStream _io, SudoersTs.Record _parent, SudoersTs _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.type = SudoersTs.TsType.byId(this._io.readU2le());
-            this.flags = new TsFlag(this._io, this, _root);
-            this.authUid = this._io.readU4le();
-            this.sid = this._io.readU4le();
-            this.ts = new Timespec(this._io, this, _root);
-            if (type() == SudoersTs.TsType.TTY) {
-                this.ttydev = this._io.readU4le();
-            }
-            if (type() == SudoersTs.TsType.PPID) {
-                this.ppid = this._io.readU4le();
-            }
-        }
-        private TsType type;
-        private TsFlag flags;
-        private long authUid;
-        private long sid;
-        private Timespec ts;
-        private Long ttydev;
-        private Long ppid;
-        private SudoersTs _root;
-        private SudoersTs.Record _parent;
-
-        /**
-         * record type
-         */
-        public TsType type() { return type; }
-
-        /**
-         * record flags
-         */
-        public TsFlag flags() { return flags; }
-
-        /**
-         * user ID that was used for authentication
-         */
-        public long authUid() { return authUid; }
-
-        /**
-         * session ID associated with tty/ppid
-         */
-        public long sid() { return sid; }
-
-        /**
-         * time stamp, from a monotonic time source
-         */
-        public Timespec ts() { return ts; }
-
-        /**
-         * device number of the terminal associated with the session
-         */
-        public Long ttydev() { return ttydev; }
-
-        /**
-         * ID of the parent process
-         */
-        public Long ppid() { return ppid; }
-        public SudoersTs _root() { return _root; }
-        public SudoersTs.Record _parent() { return _parent; }
-    }
-    public static class Timespec extends KaitaiStruct {
-        public static Timespec fromFile(String fileName) throws IOException {
-            return new Timespec(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Timespec(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Timespec(KaitaiStream _io, KaitaiStruct _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Timespec(KaitaiStream _io, KaitaiStruct _parent, SudoersTs _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.sec = this._io.readS8le();
-            this.nsec = this._io.readS8le();
-        }
-        private long sec;
-        private long nsec;
-        private SudoersTs _root;
-        private KaitaiStruct _parent;
-
-        /**
-         * seconds
-         */
-        public long sec() { return sec; }
-
-        /**
-         * nanoseconds
-         */
-        public long nsec() { return nsec; }
-        public SudoersTs _root() { return _root; }
-        public KaitaiStruct _parent() { return _parent; }
-    }
-    public static class Record extends KaitaiStruct {
-        public static Record fromFile(String fileName) throws IOException {
-            return new Record(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Record(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Record(KaitaiStream _io, SudoersTs _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Record(KaitaiStream _io, SudoersTs _parent, SudoersTs _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.version = this._io.readU2le();
-            this.lenRecord = this._io.readU2le();
-            switch (version()) {
-            case 1: {
-                this._raw_payload = this._io.readBytes((lenRecord() - 4));
-                KaitaiStream _io__raw_payload = new ByteBufferKaitaiStream(_raw_payload);
-                this.payload = new RecordV1(_io__raw_payload, this, _root);
-                break;
-            }
-            case 2: {
-                this._raw_payload = this._io.readBytes((lenRecord() - 4));
-                KaitaiStream _io__raw_payload = new ByteBufferKaitaiStream(_raw_payload);
-                this.payload = new RecordV2(_io__raw_payload, this, _root);
-                break;
-            }
-            default: {
-                this.payload = this._io.readBytes((lenRecord() - 4));
-                break;
-            }
-            }
-        }
-        private int version;
-        private int lenRecord;
-        private Object payload;
-        private SudoersTs _root;
-        private SudoersTs _parent;
-        private byte[] _raw_payload;
-
-        /**
-         * version number of the timestamp_entry struct
-         */
-        public int version() { return version; }
-
-        /**
-         * size of the record in bytes
-         */
-        public int lenRecord() { return lenRecord; }
-        public Object payload() { return payload; }
-        public SudoersTs _root() { return _root; }
-        public SudoersTs _parent() { return _parent; }
-        public byte[] _raw_payload() { return _raw_payload; }
-    }
-    private ArrayList<Record> records;
+    private List<Record> records;
     private SudoersTs _root;
     private KaitaiStruct _parent;
-    public ArrayList<Record> records() { return records; }
+    public List<Record> records() { return records; }
     public SudoersTs _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
 }

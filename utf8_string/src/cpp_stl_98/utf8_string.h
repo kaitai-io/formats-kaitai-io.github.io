@@ -3,12 +3,14 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class utf8_string_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -60,6 +62,27 @@ public:
         ~utf8_codepoint_t();
 
     private:
+        bool f_byte0;
+        uint8_t m_byte0;
+
+    public:
+        uint8_t byte0();
+
+    private:
+        bool f_len_bytes;
+        int32_t m_len_bytes;
+
+    public:
+        int32_t len_bytes();
+
+    private:
+        bool f_raw0;
+        int32_t m_raw0;
+
+    public:
+        int32_t raw0();
+
+    private:
         bool f_raw1;
         int32_t m_raw1;
         bool n_raw1;
@@ -73,11 +96,17 @@ public:
         int32_t raw1();
 
     private:
-        bool f_len_bytes;
-        int32_t m_len_bytes;
+        bool f_raw2;
+        int32_t m_raw2;
+        bool n_raw2;
 
     public:
-        int32_t len_bytes();
+        bool _is_null_raw2() { raw2(); return n_raw2; };
+
+    private:
+
+    public:
+        int32_t raw2();
 
     private:
         bool f_raw3;
@@ -98,33 +127,6 @@ public:
 
     public:
         int32_t value_as_int();
-
-    private:
-        bool f_raw0;
-        int32_t m_raw0;
-
-    public:
-        int32_t raw0();
-
-    private:
-        bool f_byte0;
-        uint8_t m_byte0;
-
-    public:
-        uint8_t byte0();
-
-    private:
-        bool f_raw2;
-        int32_t m_raw2;
-        bool n_raw2;
-
-    public:
-        bool _is_null_raw2() { raw2(); return n_raw2; };
-
-    private:
-
-    public:
-        int32_t raw2();
 
     private:
         std::string m_bytes;

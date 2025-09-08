@@ -272,14 +272,14 @@ namespace Kaitai
             private void _read()
             {
                 _magicNumber = m_io.ReadBytes(4);
-                if (!((KaitaiStream.ByteArrayCompare(MagicNumber, new byte[] { 212, 195, 178, 161 }) == 0)))
+                if (!((KaitaiStream.ByteArrayCompare(_magicNumber, new byte[] { 212, 195, 178, 161 }) == 0)))
                 {
-                    throw new ValidationNotEqualError(new byte[] { 212, 195, 178, 161 }, MagicNumber, M_Io, "/types/header/seq/0");
+                    throw new ValidationNotEqualError(new byte[] { 212, 195, 178, 161 }, _magicNumber, m_io, "/types/header/seq/0");
                 }
                 _versionMajor = m_io.ReadU2le();
-                if (!(VersionMajor == 2))
+                if (!(_versionMajor == 2))
                 {
-                    throw new ValidationNotEqualError(2, VersionMajor, M_Io, "/types/header/seq/1");
+                    throw new ValidationNotEqualError(2, _versionMajor, m_io, "/types/header/seq/1");
                 }
                 _versionMinor = m_io.ReadU2le();
                 _thiszone = m_io.ReadS4le();
@@ -351,16 +351,16 @@ namespace Kaitai
                 _inclLen = m_io.ReadU4le();
                 _origLen = m_io.ReadU4le();
                 switch (M_Root.Hdr.Network) {
-                case Pcap.Linktype.Ppi: {
-                    __raw_body = m_io.ReadBytes((InclLen < M_Root.Hdr.Snaplen ? InclLen : M_Root.Hdr.Snaplen));
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new PacketPpi(io___raw_body);
-                    break;
-                }
                 case Pcap.Linktype.Ethernet: {
                     __raw_body = m_io.ReadBytes((InclLen < M_Root.Hdr.Snaplen ? InclLen : M_Root.Hdr.Snaplen));
                     var io___raw_body = new KaitaiStream(__raw_body);
                     _body = new EthernetFrame(io___raw_body);
+                    break;
+                }
+                case Pcap.Linktype.Ppi: {
+                    __raw_body = m_io.ReadBytes((InclLen < M_Root.Hdr.Snaplen ? InclLen : M_Root.Hdr.Snaplen));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new PacketPpi(io___raw_body);
                     break;
                 }
                 default: {

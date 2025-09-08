@@ -2,16 +2,18 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class jpeg_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
 #include "exif.h"
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
-class exif_t;
 
 /**
  * JPEG File Interchange Format, or JFIF, or, more colloquially known
@@ -35,12 +37,12 @@ class exif_t;
 class jpeg_t : public kaitai::kstruct {
 
 public:
+    class exif_in_jpeg_t;
     class segment_t;
-    class segment_sos_t;
+    class segment_app0_t;
     class segment_app1_t;
     class segment_sof0_t;
-    class exif_in_jpeg_t;
-    class segment_app0_t;
+    class segment_sos_t;
 
     enum component_id_t {
         COMPONENT_ID_Y = 1,
@@ -49,6 +51,12 @@ public:
         COMPONENT_ID_I = 4,
         COMPONENT_ID_Q = 5
     };
+    static bool _is_defined_component_id_t(component_id_t v);
+
+private:
+    static const std::set<component_id_t> _values_component_id_t;
+
+public:
 
     jpeg_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, jpeg_t* p__root = nullptr);
 
@@ -58,6 +66,36 @@ private:
 
 public:
     ~jpeg_t();
+
+    class exif_in_jpeg_t : public kaitai::kstruct {
+
+    public:
+
+        exif_in_jpeg_t(kaitai::kstream* p__io, jpeg_t::segment_app1_t* p__parent = nullptr, jpeg_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~exif_in_jpeg_t();
+
+    private:
+        std::string m_extra_zero;
+        std::unique_ptr<exif_t> m_data;
+        jpeg_t* m__root;
+        jpeg_t::segment_app1_t* m__parent;
+        std::string m__raw_data;
+        std::unique_ptr<kaitai::kstream> m__io__raw_data;
+
+    public:
+        std::string extra_zero() const { return m_extra_zero; }
+        exif_t* data() const { return m_data.get(); }
+        jpeg_t* _root() const { return m__root; }
+        jpeg_t::segment_app1_t* _parent() const { return m__parent; }
+        std::string _raw_data() const { return m__raw_data; }
+        kaitai::kstream* _io__raw_data() const { return m__io__raw_data.get(); }
+    };
 
     class segment_t : public kaitai::kstruct {
 
@@ -98,6 +136,12 @@ public:
             MARKER_ENUM_APP15 = 239,
             MARKER_ENUM_COM = 254
         };
+        static bool _is_defined_marker_enum_t(marker_enum_t v);
+
+    private:
+        static const std::set<marker_enum_t> _values_marker_enum_t;
+
+    public:
 
         segment_t(kaitai::kstream* p__io, jpeg_t* p__parent = nullptr, jpeg_t* p__root = nullptr);
 
@@ -155,85 +199,74 @@ public:
         kaitai::kstream* _io__raw_data() const { return m__io__raw_data.get(); }
     };
 
-    class segment_sos_t : public kaitai::kstruct {
+    class segment_app0_t : public kaitai::kstruct {
 
     public:
-        class component_t;
 
-        segment_sos_t(kaitai::kstream* p__io, jpeg_t::segment_t* p__parent = nullptr, jpeg_t* p__root = nullptr);
+        enum density_unit_t {
+            DENSITY_UNIT_NO_UNITS = 0,
+            DENSITY_UNIT_PIXELS_PER_INCH = 1,
+            DENSITY_UNIT_PIXELS_PER_CM = 2
+        };
+        static bool _is_defined_density_unit_t(density_unit_t v);
+
+    private:
+        static const std::set<density_unit_t> _values_density_unit_t;
+
+    public:
+
+        segment_app0_t(kaitai::kstream* p__io, jpeg_t::segment_t* p__parent = nullptr, jpeg_t* p__root = nullptr);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~segment_sos_t();
-
-        class component_t : public kaitai::kstruct {
-
-        public:
-
-            component_t(kaitai::kstream* p__io, jpeg_t::segment_sos_t* p__parent = nullptr, jpeg_t* p__root = nullptr);
-
-        private:
-            void _read();
-            void _clean_up();
-
-        public:
-            ~component_t();
-
-        private:
-            component_id_t m_id;
-            uint8_t m_huffman_table;
-            jpeg_t* m__root;
-            jpeg_t::segment_sos_t* m__parent;
-
-        public:
-
-            /**
-             * Scan component selector
-             */
-            component_id_t id() const { return m_id; }
-            uint8_t huffman_table() const { return m_huffman_table; }
-            jpeg_t* _root() const { return m__root; }
-            jpeg_t::segment_sos_t* _parent() const { return m__parent; }
-        };
+        ~segment_app0_t();
 
     private:
-        uint8_t m_num_components;
-        std::unique_ptr<std::vector<std::unique_ptr<component_t>>> m_components;
-        uint8_t m_start_spectral_selection;
-        uint8_t m_end_spectral;
-        uint8_t m_appr_bit_pos;
+        std::string m_magic;
+        uint8_t m_version_major;
+        uint8_t m_version_minor;
+        density_unit_t m_density_units;
+        uint16_t m_density_x;
+        uint16_t m_density_y;
+        uint8_t m_thumbnail_x;
+        uint8_t m_thumbnail_y;
+        std::string m_thumbnail;
         jpeg_t* m__root;
         jpeg_t::segment_t* m__parent;
 
     public:
+        std::string magic() const { return m_magic; }
+        uint8_t version_major() const { return m_version_major; }
+        uint8_t version_minor() const { return m_version_minor; }
+        density_unit_t density_units() const { return m_density_units; }
 
         /**
-         * Number of components in scan
+         * Horizontal pixel density. Must not be zero.
          */
-        uint8_t num_components() const { return m_num_components; }
+        uint16_t density_x() const { return m_density_x; }
 
         /**
-         * Scan components specification
+         * Vertical pixel density. Must not be zero.
          */
-        std::vector<std::unique_ptr<component_t>>* components() const { return m_components.get(); }
+        uint16_t density_y() const { return m_density_y; }
 
         /**
-         * Start of spectral selection or predictor selection
+         * Horizontal pixel count of the following embedded RGB thumbnail. May be zero.
          */
-        uint8_t start_spectral_selection() const { return m_start_spectral_selection; }
+        uint8_t thumbnail_x() const { return m_thumbnail_x; }
 
         /**
-         * End of spectral selection
+         * Vertical pixel count of the following embedded RGB thumbnail. May be zero.
          */
-        uint8_t end_spectral() const { return m_end_spectral; }
+        uint8_t thumbnail_y() const { return m_thumbnail_y; }
 
         /**
-         * Successive approximation bit position high + Successive approximation bit position low or point transform
+         * Uncompressed 24 bit RGB (8 bits per color channel) raster thumbnail data in the order R0, G0, B0, ... Rn, Gn, Bn
          */
-        uint8_t appr_bit_pos() const { return m_appr_bit_pos; }
+        std::string thumbnail() const { return m_thumbnail; }
         jpeg_t* _root() const { return m__root; }
         jpeg_t::segment_t* _parent() const { return m__parent; }
     };
@@ -349,98 +382,85 @@ public:
         jpeg_t::segment_t* _parent() const { return m__parent; }
     };
 
-    class exif_in_jpeg_t : public kaitai::kstruct {
+    class segment_sos_t : public kaitai::kstruct {
 
     public:
+        class component_t;
 
-        exif_in_jpeg_t(kaitai::kstream* p__io, jpeg_t::segment_app1_t* p__parent = nullptr, jpeg_t* p__root = nullptr);
+        segment_sos_t(kaitai::kstream* p__io, jpeg_t::segment_t* p__parent = nullptr, jpeg_t* p__root = nullptr);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~exif_in_jpeg_t();
+        ~segment_sos_t();
 
-    private:
-        std::string m_extra_zero;
-        std::unique_ptr<exif_t> m_data;
-        jpeg_t* m__root;
-        jpeg_t::segment_app1_t* m__parent;
-        std::string m__raw_data;
-        std::unique_ptr<kaitai::kstream> m__io__raw_data;
+        class component_t : public kaitai::kstruct {
 
-    public:
-        std::string extra_zero() const { return m_extra_zero; }
-        exif_t* data() const { return m_data.get(); }
-        jpeg_t* _root() const { return m__root; }
-        jpeg_t::segment_app1_t* _parent() const { return m__parent; }
-        std::string _raw_data() const { return m__raw_data; }
-        kaitai::kstream* _io__raw_data() const { return m__io__raw_data.get(); }
-    };
+        public:
 
-    class segment_app0_t : public kaitai::kstruct {
+            component_t(kaitai::kstream* p__io, jpeg_t::segment_sos_t* p__parent = nullptr, jpeg_t* p__root = nullptr);
 
-    public:
+        private:
+            void _read();
+            void _clean_up();
 
-        enum density_unit_t {
-            DENSITY_UNIT_NO_UNITS = 0,
-            DENSITY_UNIT_PIXELS_PER_INCH = 1,
-            DENSITY_UNIT_PIXELS_PER_CM = 2
+        public:
+            ~component_t();
+
+        private:
+            component_id_t m_id;
+            uint8_t m_huffman_table;
+            jpeg_t* m__root;
+            jpeg_t::segment_sos_t* m__parent;
+
+        public:
+
+            /**
+             * Scan component selector
+             */
+            component_id_t id() const { return m_id; }
+            uint8_t huffman_table() const { return m_huffman_table; }
+            jpeg_t* _root() const { return m__root; }
+            jpeg_t::segment_sos_t* _parent() const { return m__parent; }
         };
 
-        segment_app0_t(kaitai::kstream* p__io, jpeg_t::segment_t* p__parent = nullptr, jpeg_t* p__root = nullptr);
-
     private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~segment_app0_t();
-
-    private:
-        std::string m_magic;
-        uint8_t m_version_major;
-        uint8_t m_version_minor;
-        density_unit_t m_density_units;
-        uint16_t m_density_x;
-        uint16_t m_density_y;
-        uint8_t m_thumbnail_x;
-        uint8_t m_thumbnail_y;
-        std::string m_thumbnail;
+        uint8_t m_num_components;
+        std::unique_ptr<std::vector<std::unique_ptr<component_t>>> m_components;
+        uint8_t m_start_spectral_selection;
+        uint8_t m_end_spectral;
+        uint8_t m_appr_bit_pos;
         jpeg_t* m__root;
         jpeg_t::segment_t* m__parent;
 
     public:
-        std::string magic() const { return m_magic; }
-        uint8_t version_major() const { return m_version_major; }
-        uint8_t version_minor() const { return m_version_minor; }
-        density_unit_t density_units() const { return m_density_units; }
 
         /**
-         * Horizontal pixel density. Must not be zero.
+         * Number of components in scan
          */
-        uint16_t density_x() const { return m_density_x; }
+        uint8_t num_components() const { return m_num_components; }
 
         /**
-         * Vertical pixel density. Must not be zero.
+         * Scan components specification
          */
-        uint16_t density_y() const { return m_density_y; }
+        std::vector<std::unique_ptr<component_t>>* components() const { return m_components.get(); }
 
         /**
-         * Horizontal pixel count of the following embedded RGB thumbnail. May be zero.
+         * Start of spectral selection or predictor selection
          */
-        uint8_t thumbnail_x() const { return m_thumbnail_x; }
+        uint8_t start_spectral_selection() const { return m_start_spectral_selection; }
 
         /**
-         * Vertical pixel count of the following embedded RGB thumbnail. May be zero.
+         * End of spectral selection
          */
-        uint8_t thumbnail_y() const { return m_thumbnail_y; }
+        uint8_t end_spectral() const { return m_end_spectral; }
 
         /**
-         * Uncompressed 24 bit RGB (8 bits per color channel) raster thumbnail data in the order R0, G0, B0, ... Rn, Gn, Bn
+         * Successive approximation bit position high + Successive approximation bit position low or point transform
          */
-        std::string thumbnail() const { return m_thumbnail; }
+        uint8_t appr_bit_pos() const { return m_appr_bit_pos; }
         jpeg_t* _root() const { return m__root; }
         jpeg_t::segment_t* _parent() const { return m__parent; }
     };

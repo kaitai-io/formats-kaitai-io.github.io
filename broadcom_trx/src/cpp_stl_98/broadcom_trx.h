@@ -3,12 +3,14 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class broadcom_trx_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -29,10 +31,10 @@
 class broadcom_trx_t : public kaitai::kstruct {
 
 public:
-    class revision_t;
-    class version_t;
-    class tail_t;
     class header_t;
+    class revision_t;
+    class tail_t;
+    class version_t;
 
     broadcom_trx_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, broadcom_trx_t* p__root = 0);
 
@@ -42,6 +44,150 @@ private:
 
 public:
     ~broadcom_trx_t();
+
+    class header_t : public kaitai::kstruct {
+
+    public:
+        class flags_t;
+        class partition_t;
+
+        header_t(kaitai::kstream* p__io, broadcom_trx_t* p__parent = 0, broadcom_trx_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~header_t();
+
+        class flags_t : public kaitai::kstruct {
+
+        public:
+
+            flags_t(kaitai::kstream* p__io, broadcom_trx_t::header_t* p__parent = 0, broadcom_trx_t* p__root = 0);
+
+        private:
+            void _read();
+            void _clean_up();
+
+        public:
+            ~flags_t();
+
+        private:
+            std::vector<bool>* m_flags;
+            broadcom_trx_t* m__root;
+            broadcom_trx_t::header_t* m__parent;
+
+        public:
+            std::vector<bool>* flags() const { return m_flags; }
+            broadcom_trx_t* _root() const { return m__root; }
+            broadcom_trx_t::header_t* _parent() const { return m__parent; }
+        };
+
+        class partition_t : public kaitai::kstruct {
+
+        public:
+
+            partition_t(uint8_t p_idx, kaitai::kstream* p__io, broadcom_trx_t::header_t* p__parent = 0, broadcom_trx_t* p__root = 0);
+
+        private:
+            void _read();
+            void _clean_up();
+
+        public:
+            ~partition_t();
+
+        private:
+            bool f_body;
+            std::string m_body;
+            bool n_body;
+
+        public:
+            bool _is_null_body() { body(); return n_body; };
+
+        private:
+
+        public:
+            std::string body();
+
+        private:
+            bool f_is_last;
+            bool m_is_last;
+            bool n_is_last;
+
+        public:
+            bool _is_null_is_last() { is_last(); return n_is_last; };
+
+        private:
+
+        public:
+            bool is_last();
+
+        private:
+            bool f_is_present;
+            bool m_is_present;
+
+        public:
+            bool is_present();
+
+        private:
+            bool f_len_body;
+            int32_t m_len_body;
+            bool n_len_body;
+
+        public:
+            bool _is_null_len_body() { len_body(); return n_len_body; };
+
+        private:
+
+        public:
+            int32_t len_body();
+
+        private:
+            uint32_t m_ofs_body;
+            uint8_t m_idx;
+            broadcom_trx_t* m__root;
+            broadcom_trx_t::header_t* m__parent;
+
+        public:
+            uint32_t ofs_body() const { return m_ofs_body; }
+            uint8_t idx() const { return m_idx; }
+            broadcom_trx_t* _root() const { return m__root; }
+            broadcom_trx_t::header_t* _parent() const { return m__parent; }
+        };
+
+    private:
+        std::string m_magic;
+        uint32_t m_len;
+        uint32_t m_crc32;
+        uint16_t m_version;
+        flags_t* m_flags;
+        std::vector<partition_t*>* m_partitions;
+        broadcom_trx_t* m__root;
+        broadcom_trx_t* m__parent;
+
+    public:
+        std::string magic() const { return m_magic; }
+
+        /**
+         * Length of file including header
+         */
+        uint32_t len() const { return m_len; }
+
+        /**
+         * CRC from `version` (??? todo: see the original and disambiguate) to end of file
+         */
+        uint32_t crc32() const { return m_crc32; }
+        uint16_t version() const { return m_version; }
+        flags_t* flags() const { return m_flags; }
+
+        /**
+         * Offsets of partitions from start of header
+         */
+        std::vector<partition_t*>* partitions() const { return m_partitions; }
+        broadcom_trx_t* _root() const { return m__root; }
+        broadcom_trx_t* _parent() const { return m__parent; }
+    };
 
     class revision_t : public kaitai::kstruct {
 
@@ -67,36 +213,6 @@ public:
         uint8_t minor() const { return m_minor; }
         broadcom_trx_t* _root() const { return m__root; }
         broadcom_trx_t::tail_t::hw_comp_info_t* _parent() const { return m__parent; }
-    };
-
-    class version_t : public kaitai::kstruct {
-
-    public:
-
-        version_t(kaitai::kstream* p__io, broadcom_trx_t::tail_t* p__parent = 0, broadcom_trx_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~version_t();
-
-    private:
-        uint8_t m_major;
-        uint8_t m_minor;
-        uint8_t m_patch;
-        uint8_t m_tweak;
-        broadcom_trx_t* m__root;
-        broadcom_trx_t::tail_t* m__parent;
-
-    public:
-        uint8_t major() const { return m_major; }
-        uint8_t minor() const { return m_minor; }
-        uint8_t patch() const { return m_patch; }
-        uint8_t tweak() const { return m_tweak; }
-        broadcom_trx_t* _root() const { return m__root; }
-        broadcom_trx_t::tail_t* _parent() const { return m__parent; }
     };
 
     /**
@@ -168,148 +284,34 @@ public:
         broadcom_trx_t* _parent() const { return m__parent; }
     };
 
-    class header_t : public kaitai::kstruct {
+    class version_t : public kaitai::kstruct {
 
     public:
-        class partition_t;
-        class flags_t;
 
-        header_t(kaitai::kstream* p__io, broadcom_trx_t* p__parent = 0, broadcom_trx_t* p__root = 0);
+        version_t(kaitai::kstream* p__io, broadcom_trx_t::tail_t* p__parent = 0, broadcom_trx_t* p__root = 0);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~header_t();
-
-        class partition_t : public kaitai::kstruct {
-
-        public:
-
-            partition_t(uint8_t p_idx, kaitai::kstream* p__io, broadcom_trx_t::header_t* p__parent = 0, broadcom_trx_t* p__root = 0);
-
-        private:
-            void _read();
-            void _clean_up();
-
-        public:
-            ~partition_t();
-
-        private:
-            bool f_is_present;
-            bool m_is_present;
-
-        public:
-            bool is_present();
-
-        private:
-            bool f_is_last;
-            bool m_is_last;
-            bool n_is_last;
-
-        public:
-            bool _is_null_is_last() { is_last(); return n_is_last; };
-
-        private:
-
-        public:
-            bool is_last();
-
-        private:
-            bool f_len_body;
-            int32_t m_len_body;
-            bool n_len_body;
-
-        public:
-            bool _is_null_len_body() { len_body(); return n_len_body; };
-
-        private:
-
-        public:
-            int32_t len_body();
-
-        private:
-            bool f_body;
-            std::string m_body;
-            bool n_body;
-
-        public:
-            bool _is_null_body() { body(); return n_body; };
-
-        private:
-
-        public:
-            std::string body();
-
-        private:
-            uint32_t m_ofs_body;
-            uint8_t m_idx;
-            broadcom_trx_t* m__root;
-            broadcom_trx_t::header_t* m__parent;
-
-        public:
-            uint32_t ofs_body() const { return m_ofs_body; }
-            uint8_t idx() const { return m_idx; }
-            broadcom_trx_t* _root() const { return m__root; }
-            broadcom_trx_t::header_t* _parent() const { return m__parent; }
-        };
-
-        class flags_t : public kaitai::kstruct {
-
-        public:
-
-            flags_t(kaitai::kstream* p__io, broadcom_trx_t::header_t* p__parent = 0, broadcom_trx_t* p__root = 0);
-
-        private:
-            void _read();
-            void _clean_up();
-
-        public:
-            ~flags_t();
-
-        private:
-            std::vector<bool>* m_flags;
-            broadcom_trx_t* m__root;
-            broadcom_trx_t::header_t* m__parent;
-
-        public:
-            std::vector<bool>* flags() const { return m_flags; }
-            broadcom_trx_t* _root() const { return m__root; }
-            broadcom_trx_t::header_t* _parent() const { return m__parent; }
-        };
+        ~version_t();
 
     private:
-        std::string m_magic;
-        uint32_t m_len;
-        uint32_t m_crc32;
-        uint16_t m_version;
-        flags_t* m_flags;
-        std::vector<partition_t*>* m_partitions;
+        uint8_t m_major;
+        uint8_t m_minor;
+        uint8_t m_patch;
+        uint8_t m_tweak;
         broadcom_trx_t* m__root;
-        broadcom_trx_t* m__parent;
+        broadcom_trx_t::tail_t* m__parent;
 
     public:
-        std::string magic() const { return m_magic; }
-
-        /**
-         * Length of file including header
-         */
-        uint32_t len() const { return m_len; }
-
-        /**
-         * CRC from `version` (??? todo: see the original and disambiguate) to end of file
-         */
-        uint32_t crc32() const { return m_crc32; }
-        uint16_t version() const { return m_version; }
-        flags_t* flags() const { return m_flags; }
-
-        /**
-         * Offsets of partitions from start of header
-         */
-        std::vector<partition_t*>* partitions() const { return m_partitions; }
+        uint8_t major() const { return m_major; }
+        uint8_t minor() const { return m_minor; }
+        uint8_t patch() const { return m_patch; }
+        uint8_t tweak() const { return m_tweak; }
         broadcom_trx_t* _root() const { return m__root; }
-        broadcom_trx_t* _parent() const { return m__parent; }
+        broadcom_trx_t::tail_t* _parent() const { return m__parent; }
     };
 
 private:

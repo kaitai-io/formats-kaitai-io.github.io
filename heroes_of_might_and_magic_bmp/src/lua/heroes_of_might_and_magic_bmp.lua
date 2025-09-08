@@ -18,7 +18,7 @@ function HeroesOfMightAndMagicBmp:_read()
   self.magic = self._io:read_u2le()
   self.width = self._io:read_u2le()
   self.height = self._io:read_u2le()
-  self.data = self._io:read_bytes((self.width * self.height))
+  self.data = self._io:read_bytes(self.width * self.height)
 end
 
 

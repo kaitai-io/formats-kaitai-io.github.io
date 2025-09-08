@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 
 ########################################################################
 package Ico;
@@ -24,7 +24,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -36,7 +36,7 @@ sub _read {
 
     $self->{magic} = $self->{_io}->read_bytes(4);
     $self->{num_images} = $self->{_io}->read_u2le();
-    $self->{images} = ();
+    $self->{images} = [];
     my $n_images = $self->num_images();
     for (my $i = 0; $i < $n_images; $i++) {
         push @{$self->{images}}, Ico::IconDirEntry->new($self->{_io}, $self, $self->{_root});
@@ -78,7 +78,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -108,6 +108,13 @@ sub img {
     return $self->{img};
 }
 
+sub is_png {
+    my ($self) = @_;
+    return $self->{is_png} if ($self->{is_png});
+    $self->{is_png} = $self->png_header() eq pack('C*', (137, 80, 78, 71, 13, 10, 26, 10));
+    return $self->{is_png};
+}
+
 sub png_header {
     my ($self) = @_;
     return $self->{png_header} if ($self->{png_header});
@@ -116,13 +123,6 @@ sub png_header {
     $self->{png_header} = $self->{_io}->read_bytes(8);
     $self->{_io}->seek($_pos);
     return $self->{png_header};
-}
-
-sub is_png {
-    my ($self) = @_;
-    return $self->{is_png} if ($self->{is_png});
-    $self->{is_png} = $self->png_header() eq pack('C*', (137, 80, 78, 71, 13, 10, 26, 10));
-    return $self->{is_png};
 }
 
 sub width {

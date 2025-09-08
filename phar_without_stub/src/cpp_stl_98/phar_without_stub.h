@@ -3,15 +3,17 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class phar_without_stub_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include "php_serialized_value.h"
+#include <set>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
-class php_serialized_value_t;
 
 /**
  * A phar (PHP archive) file. The phar format is a custom archive format
@@ -62,13 +64,13 @@ class php_serialized_value_t;
 class phar_without_stub_t : public kaitai::kstruct {
 
 public:
-    class serialized_value_t;
-    class signature_t;
-    class file_flags_t;
     class api_version_t;
+    class file_entry_t;
+    class file_flags_t;
     class global_flags_t;
     class manifest_t;
-    class file_entry_t;
+    class serialized_value_t;
+    class signature_t;
 
     enum signature_type_t {
         SIGNATURE_TYPE_MD5 = 1,
@@ -77,6 +79,13 @@ public:
         SIGNATURE_TYPE_SHA512 = 8,
         SIGNATURE_TYPE_OPENSSL = 16
     };
+    static bool _is_defined_signature_type_t(signature_type_t v);
+
+private:
+    static const std::set<signature_type_t> _values_signature_type_t;
+    static std::set<signature_type_t> _build_values_signature_type_t();
+
+public:
 
     phar_without_stub_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, phar_without_stub_t* p__root = 0);
 
@@ -86,143 +95,6 @@ private:
 
 public:
     ~phar_without_stub_t();
-
-    class serialized_value_t : public kaitai::kstruct {
-
-    public:
-
-        serialized_value_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, phar_without_stub_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~serialized_value_t();
-
-    private:
-        bool f_parsed;
-        php_serialized_value_t* m_parsed;
-
-    public:
-
-        /**
-         * The serialized value, parsed as a structure.
-         */
-        php_serialized_value_t* parsed();
-
-    private:
-        std::string m_raw;
-        phar_without_stub_t* m__root;
-        kaitai::kstruct* m__parent;
-
-    public:
-
-        /**
-         * The serialized value, as a raw byte array.
-         */
-        std::string raw() const { return m_raw; }
-        phar_without_stub_t* _root() const { return m__root; }
-        kaitai::kstruct* _parent() const { return m__parent; }
-    };
-
-    class signature_t : public kaitai::kstruct {
-
-    public:
-
-        signature_t(kaitai::kstream* p__io, phar_without_stub_t* p__parent = 0, phar_without_stub_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~signature_t();
-
-    private:
-        std::string m_data;
-        signature_type_t m_type;
-        std::string m_magic;
-        phar_without_stub_t* m__root;
-        phar_without_stub_t* m__parent;
-
-    public:
-
-        /**
-         * The signature data. The size and contents depend on the
-         * signature type.
-         */
-        std::string data() const { return m_data; }
-
-        /**
-         * The signature type.
-         */
-        signature_type_t type() const { return m_type; }
-        std::string magic() const { return m_magic; }
-        phar_without_stub_t* _root() const { return m__root; }
-        phar_without_stub_t* _parent() const { return m__parent; }
-    };
-
-    class file_flags_t : public kaitai::kstruct {
-
-    public:
-
-        file_flags_t(kaitai::kstream* p__io, phar_without_stub_t::file_entry_t* p__parent = 0, phar_without_stub_t* p__root = 0);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~file_flags_t();
-
-    private:
-        bool f_permissions;
-        int32_t m_permissions;
-
-    public:
-
-        /**
-         * The file's permission bits.
-         */
-        int32_t permissions();
-
-    private:
-        bool f_zlib_compressed;
-        bool m_zlib_compressed;
-
-    public:
-
-        /**
-         * Whether this file's data is stored using zlib compression.
-         */
-        bool zlib_compressed();
-
-    private:
-        bool f_bzip2_compressed;
-        bool m_bzip2_compressed;
-
-    public:
-
-        /**
-         * Whether this file's data is stored using bzip2 compression.
-         */
-        bool bzip2_compressed();
-
-    private:
-        uint32_t m_value;
-        phar_without_stub_t* m__root;
-        phar_without_stub_t::file_entry_t* m__parent;
-
-    public:
-
-        /**
-         * The unparsed flag bits.
-         */
-        uint32_t value() const { return m_value; }
-        phar_without_stub_t* _root() const { return m__root; }
-        phar_without_stub_t::file_entry_t* _parent() const { return m__parent; }
-    };
 
     /**
      * A phar API version number. This version number is meant to indicate
@@ -289,6 +161,167 @@ public:
         phar_without_stub_t::manifest_t* _parent() const { return m__parent; }
     };
 
+    class file_entry_t : public kaitai::kstruct {
+
+    public:
+
+        file_entry_t(kaitai::kstream* p__io, phar_without_stub_t::manifest_t* p__parent = 0, phar_without_stub_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~file_entry_t();
+
+    private:
+        uint32_t m_len_filename;
+        std::string m_filename;
+        uint32_t m_len_data_uncompressed;
+        uint32_t m_timestamp;
+        uint32_t m_len_data_compressed;
+        uint32_t m_crc32;
+        file_flags_t* m_flags;
+        uint32_t m_len_metadata;
+        serialized_value_t* m_metadata;
+        bool n_metadata;
+
+    public:
+        bool _is_null_metadata() { metadata(); return n_metadata; };
+
+    private:
+        phar_without_stub_t* m__root;
+        phar_without_stub_t::manifest_t* m__parent;
+        std::string m__raw_metadata;
+        bool n__raw_metadata;
+
+    public:
+        bool _is_null__raw_metadata() { _raw_metadata(); return n__raw_metadata; };
+
+    private:
+        kaitai::kstream* m__io__raw_metadata;
+
+    public:
+
+        /**
+         * The length of the file name, in bytes.
+         */
+        uint32_t len_filename() const { return m_len_filename; }
+
+        /**
+         * The name of this file. If the name ends with a slash, this entry
+         * represents a directory, otherwise a regular file. Directory entries
+         * are supported since phar API version 1.1.1.
+         * (Explicit directory entries are only needed for empty directories.
+         * Non-empty directories are implied by the files located inside them.)
+         */
+        std::string filename() const { return m_filename; }
+
+        /**
+         * The length of the file's data when uncompressed, in bytes.
+         */
+        uint32_t len_data_uncompressed() const { return m_len_data_uncompressed; }
+
+        /**
+         * The time at which the file was added or last updated, as a
+         * Unix timestamp.
+         */
+        uint32_t timestamp() const { return m_timestamp; }
+
+        /**
+         * The length of the file's data when compressed, in bytes.
+         */
+        uint32_t len_data_compressed() const { return m_len_data_compressed; }
+
+        /**
+         * The CRC32 checksum of the file's uncompressed data.
+         */
+        uint32_t crc32() const { return m_crc32; }
+
+        /**
+         * Flags for this file.
+         */
+        file_flags_t* flags() const { return m_flags; }
+
+        /**
+         * The length of the metadata, in bytes, or 0 if there is none.
+         */
+        uint32_t len_metadata() const { return m_len_metadata; }
+
+        /**
+         * Metadata for this file, in the format used by PHP's
+         * `serialize` function. The meaning of the serialized data is not
+         * specified further, it may be used to store arbitrary custom data
+         * about the file.
+         */
+        serialized_value_t* metadata() const { return m_metadata; }
+        phar_without_stub_t* _root() const { return m__root; }
+        phar_without_stub_t::manifest_t* _parent() const { return m__parent; }
+        std::string _raw_metadata() const { return m__raw_metadata; }
+        kaitai::kstream* _io__raw_metadata() const { return m__io__raw_metadata; }
+    };
+
+    class file_flags_t : public kaitai::kstruct {
+
+    public:
+
+        file_flags_t(kaitai::kstream* p__io, phar_without_stub_t::file_entry_t* p__parent = 0, phar_without_stub_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~file_flags_t();
+
+    private:
+        bool f_bzip2_compressed;
+        bool m_bzip2_compressed;
+
+    public:
+
+        /**
+         * Whether this file's data is stored using bzip2 compression.
+         */
+        bool bzip2_compressed();
+
+    private:
+        bool f_permissions;
+        int32_t m_permissions;
+
+    public:
+
+        /**
+         * The file's permission bits.
+         */
+        int32_t permissions();
+
+    private:
+        bool f_zlib_compressed;
+        bool m_zlib_compressed;
+
+    public:
+
+        /**
+         * Whether this file's data is stored using zlib compression.
+         */
+        bool zlib_compressed();
+
+    private:
+        uint32_t m_value;
+        phar_without_stub_t* m__root;
+        phar_without_stub_t::file_entry_t* m__parent;
+
+    public:
+
+        /**
+         * The unparsed flag bits.
+         */
+        uint32_t value() const { return m_value; }
+        phar_without_stub_t* _root() const { return m__root; }
+        phar_without_stub_t::file_entry_t* _parent() const { return m__parent; }
+    };
+
     class global_flags_t : public kaitai::kstruct {
 
     public:
@@ -303,18 +336,6 @@ public:
         ~global_flags_t();
 
     private:
-        bool f_any_zlib_compressed;
-        bool m_any_zlib_compressed;
-
-    public:
-
-        /**
-         * Whether any of the files in this phar are stored using
-         * zlib compression.
-         */
-        bool any_zlib_compressed();
-
-    private:
         bool f_any_bzip2_compressed;
         bool m_any_bzip2_compressed;
 
@@ -325,6 +346,18 @@ public:
          * bzip2 compression.
          */
         bool any_bzip2_compressed();
+
+    private:
+        bool f_any_zlib_compressed;
+        bool m_any_zlib_compressed;
+
+    public:
+
+        /**
+         * Whether any of the files in this phar are stored using
+         * zlib compression.
+         */
+        bool any_zlib_compressed();
 
     private:
         bool f_has_signature;
@@ -450,104 +483,80 @@ public:
         kaitai::kstream* _io__raw_metadata() const { return m__io__raw_metadata; }
     };
 
-    class file_entry_t : public kaitai::kstruct {
+    class serialized_value_t : public kaitai::kstruct {
 
     public:
 
-        file_entry_t(kaitai::kstream* p__io, phar_without_stub_t::manifest_t* p__parent = 0, phar_without_stub_t* p__root = 0);
+        serialized_value_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, phar_without_stub_t* p__root = 0);
 
     private:
         void _read();
         void _clean_up();
 
     public:
-        ~file_entry_t();
+        ~serialized_value_t();
 
     private:
-        uint32_t m_len_filename;
-        std::string m_filename;
-        uint32_t m_len_data_uncompressed;
-        uint32_t m_timestamp;
-        uint32_t m_len_data_compressed;
-        uint32_t m_crc32;
-        file_flags_t* m_flags;
-        uint32_t m_len_metadata;
-        serialized_value_t* m_metadata;
-        bool n_metadata;
+        bool f_parsed;
+        php_serialized_value_t* m_parsed;
 
     public:
-        bool _is_null_metadata() { metadata(); return n_metadata; };
+
+        /**
+         * The serialized value, parsed as a structure.
+         */
+        php_serialized_value_t* parsed();
 
     private:
+        std::string m_raw;
         phar_without_stub_t* m__root;
-        phar_without_stub_t::manifest_t* m__parent;
-        std::string m__raw_metadata;
-        bool n__raw_metadata;
+        kaitai::kstruct* m__parent;
 
     public:
-        bool _is_null__raw_metadata() { _raw_metadata(); return n__raw_metadata; };
+
+        /**
+         * The serialized value, as a raw byte array.
+         */
+        std::string raw() const { return m_raw; }
+        phar_without_stub_t* _root() const { return m__root; }
+        kaitai::kstruct* _parent() const { return m__parent; }
+    };
+
+    class signature_t : public kaitai::kstruct {
+
+    public:
+
+        signature_t(kaitai::kstream* p__io, phar_without_stub_t* p__parent = 0, phar_without_stub_t* p__root = 0);
 
     private:
-        kaitai::kstream* m__io__raw_metadata;
+        void _read();
+        void _clean_up();
+
+    public:
+        ~signature_t();
+
+    private:
+        std::string m_data;
+        signature_type_t m_type;
+        std::string m_magic;
+        phar_without_stub_t* m__root;
+        phar_without_stub_t* m__parent;
 
     public:
 
         /**
-         * The length of the file name, in bytes.
+         * The signature data. The size and contents depend on the
+         * signature type.
          */
-        uint32_t len_filename() const { return m_len_filename; }
+        std::string data() const { return m_data; }
 
         /**
-         * The name of this file. If the name ends with a slash, this entry
-         * represents a directory, otherwise a regular file. Directory entries
-         * are supported since phar API version 1.1.1.
-         * (Explicit directory entries are only needed for empty directories.
-         * Non-empty directories are implied by the files located inside them.)
+         * The signature type.
          */
-        std::string filename() const { return m_filename; }
-
-        /**
-         * The length of the file's data when uncompressed, in bytes.
-         */
-        uint32_t len_data_uncompressed() const { return m_len_data_uncompressed; }
-
-        /**
-         * The time at which the file was added or last updated, as a
-         * Unix timestamp.
-         */
-        uint32_t timestamp() const { return m_timestamp; }
-
-        /**
-         * The length of the file's data when compressed, in bytes.
-         */
-        uint32_t len_data_compressed() const { return m_len_data_compressed; }
-
-        /**
-         * The CRC32 checksum of the file's uncompressed data.
-         */
-        uint32_t crc32() const { return m_crc32; }
-
-        /**
-         * Flags for this file.
-         */
-        file_flags_t* flags() const { return m_flags; }
-
-        /**
-         * The length of the metadata, in bytes, or 0 if there is none.
-         */
-        uint32_t len_metadata() const { return m_len_metadata; }
-
-        /**
-         * Metadata for this file, in the format used by PHP's
-         * `serialize` function. The meaning of the serialized data is not
-         * specified further, it may be used to store arbitrary custom data
-         * about the file.
-         */
-        serialized_value_t* metadata() const { return m_metadata; }
+        signature_type_t type() const { return m_type; }
+        std::string magic() const { return m_magic; }
         phar_without_stub_t* _root() const { return m__root; }
-        phar_without_stub_t::manifest_t* _parent() const { return m__parent; }
-        std::string _raw_metadata() const { return m__raw_metadata; }
-        kaitai::kstream* _io__raw_metadata() const { return m__io__raw_metadata; }
+        phar_without_stub_t* _parent() const { return m__parent; }
     };
 
 private:

@@ -1,12 +1,13 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
-from enum import Enum
+from enum import IntEnum
 
 
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
+if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 11):
+    raise Exception("Incompatible Kaitai Struct Python API: 0.11 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Id3v11(KaitaiStruct):
     """ID3v1.1 tag is a method to store simple metadata in .mp3 files. The
@@ -20,13 +21,22 @@ class Id3v11(KaitaiStruct):
        Source - https://id3.org/ID3v1
     """
     def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
+        super(Id3v11, self).__init__(_io)
         self._parent = _parent
-        self._root = _root if _root else self
+        self._root = _root or self
         self._read()
 
     def _read(self):
         pass
+
+
+    def _fetch_instances(self):
+        pass
+        _ = self.id3v1_tag
+        if hasattr(self, '_m_id3v1_tag'):
+            pass
+            self._m_id3v1_tag._fetch_instances()
+
 
     class Id3V11Tag(KaitaiStruct):
         """ID3v1.1 tag itself, a fixed size 128 byte structure. Contains
@@ -40,7 +50,7 @@ class Id3v11(KaitaiStruct):
         charset.
         """
 
-        class GenreEnum(Enum):
+        class GenreEnum(IntEnum):
             blues = 0
             classic_rock = 1
             country = 2
@@ -168,9 +178,9 @@ class Id3v11(KaitaiStruct):
             euro_house = 124
             dance_hall = 125
         def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
+            super(Id3v11.Id3V11Tag, self).__init__(_io)
             self._parent = _parent
-            self._root = _root if _root else self
+            self._root = _root
             self._read()
 
         def _read(self):
@@ -185,13 +195,17 @@ class Id3v11(KaitaiStruct):
             self.genre = KaitaiStream.resolve_enum(Id3v11.Id3V11Tag.GenreEnum, self._io.read_u1())
 
 
+        def _fetch_instances(self):
+            pass
+
+
     @property
     def id3v1_tag(self):
         if hasattr(self, '_m_id3v1_tag'):
             return self._m_id3v1_tag
 
         _pos = self._io.pos()
-        self._io.seek((self._io.size() - 128))
+        self._io.seek(self._io.size() - 128)
         self._m_id3v1_tag = Id3v11.Id3V11Tag(self._io, self, self._root)
         self._io.seek(_pos)
         return getattr(self, '_m_id3v1_tag', None)

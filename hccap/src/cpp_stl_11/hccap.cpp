@@ -4,7 +4,7 @@
 
 hccap_t::hccap_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, hccap_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
-    m__root = this;
+    m__root = p__root ? p__root : this;
     m_records = nullptr;
     _read();
 }
@@ -25,6 +25,22 @@ hccap_t::~hccap_t() {
 }
 
 void hccap_t::_clean_up() {
+}
+
+hccap_t::eapol_dummy_t::eapol_dummy_t(kaitai::kstream* p__io, hccap_t::hccap_record_t* p__parent, hccap_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void hccap_t::eapol_dummy_t::_read() {
+}
+
+hccap_t::eapol_dummy_t::~eapol_dummy_t() {
+    _clean_up();
+}
+
+void hccap_t::eapol_dummy_t::_clean_up() {
 }
 
 hccap_t::hccap_record_t::hccap_record_t(kaitai::kstream* p__io, hccap_t* p__parent, hccap_t* p__root) : kaitai::kstruct(p__io) {
@@ -62,27 +78,11 @@ void hccap_t::hccap_record_t::_clean_up() {
 std::string hccap_t::hccap_record_t::eapol() {
     if (f_eapol)
         return m_eapol;
+    f_eapol = true;
     kaitai::kstream *io = eapol_buffer()->_io();
     std::streampos _pos = io->pos();
     io->seek(0);
     m_eapol = io->read_bytes(len_eapol());
     io->seek(_pos);
-    f_eapol = true;
     return m_eapol;
-}
-
-hccap_t::eapol_dummy_t::eapol_dummy_t(kaitai::kstream* p__io, hccap_t::hccap_record_t* p__parent, hccap_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
-
-void hccap_t::eapol_dummy_t::_read() {
-}
-
-hccap_t::eapol_dummy_t::~eapol_dummy_t() {
-    _clean_up();
-}
-
-void hccap_t::eapol_dummy_t::_clean_up() {
 }

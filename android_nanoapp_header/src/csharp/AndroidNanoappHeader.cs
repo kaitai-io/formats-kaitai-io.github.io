@@ -19,22 +19,22 @@ namespace Kaitai
         {
             m_parent = p__parent;
             m_root = p__root ?? this;
-            f_isSigned = false;
             f_isEncrypted = false;
+            f_isSigned = false;
             f_isTcmCapable = false;
             _read();
         }
         private void _read()
         {
             _headerVersion = m_io.ReadU4le();
-            if (!(HeaderVersion == 1))
+            if (!(_headerVersion == 1))
             {
-                throw new ValidationNotEqualError(1, HeaderVersion, M_Io, "/seq/0");
+                throw new ValidationNotEqualError(1, _headerVersion, m_io, "/seq/0");
             }
             _magic = m_io.ReadBytes(4);
-            if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 78, 65, 78, 79 }) == 0)))
+            if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 78, 65, 78, 79 }) == 0)))
             {
-                throw new ValidationNotEqualError(new byte[] { 78, 65, 78, 79 }, Magic, M_Io, "/seq/1");
+                throw new ValidationNotEqualError(new byte[] { 78, 65, 78, 79 }, _magic, m_io, "/seq/1");
             }
             _appId = m_io.ReadU8le();
             _appVersion = m_io.ReadU4le();
@@ -43,22 +43,9 @@ namespace Kaitai
             _chreApiMajorVersion = m_io.ReadU1();
             _chreApiMinorVersion = m_io.ReadU1();
             _reserved = m_io.ReadBytes(6);
-            if (!((KaitaiStream.ByteArrayCompare(Reserved, new byte[] { 0, 0, 0, 0, 0, 0 }) == 0)))
+            if (!((KaitaiStream.ByteArrayCompare(_reserved, new byte[] { 0, 0, 0, 0, 0, 0 }) == 0)))
             {
-                throw new ValidationNotEqualError(new byte[] { 0, 0, 0, 0, 0, 0 }, Reserved, M_Io, "/seq/8");
-            }
-        }
-        private bool f_isSigned;
-        private bool _isSigned;
-        public bool IsSigned
-        {
-            get
-            {
-                if (f_isSigned)
-                    return _isSigned;
-                _isSigned = (bool) ((Flags & 1) != 0);
-                f_isSigned = true;
-                return _isSigned;
+                throw new ValidationNotEqualError(new byte[] { 0, 0, 0, 0, 0, 0 }, _reserved, m_io, "/seq/8");
             }
         }
         private bool f_isEncrypted;
@@ -69,9 +56,22 @@ namespace Kaitai
             {
                 if (f_isEncrypted)
                     return _isEncrypted;
-                _isEncrypted = (bool) ((Flags & 2) != 0);
                 f_isEncrypted = true;
+                _isEncrypted = (bool) ((Flags & 2) != 0);
                 return _isEncrypted;
+            }
+        }
+        private bool f_isSigned;
+        private bool _isSigned;
+        public bool IsSigned
+        {
+            get
+            {
+                if (f_isSigned)
+                    return _isSigned;
+                f_isSigned = true;
+                _isSigned = (bool) ((Flags & 1) != 0);
+                return _isSigned;
             }
         }
         private bool f_isTcmCapable;
@@ -82,8 +82,8 @@ namespace Kaitai
             {
                 if (f_isTcmCapable)
                     return _isTcmCapable;
-                _isTcmCapable = (bool) ((Flags & 4) != 0);
                 f_isTcmCapable = true;
+                _isTcmCapable = (bool) ((Flags & 4) != 0);
                 return _isTcmCapable;
             }
         }

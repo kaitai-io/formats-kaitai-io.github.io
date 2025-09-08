@@ -29,7 +29,7 @@ end
 function PsxTim:_read()
   self.magic = self._io:read_bytes(4)
   if not(self.magic == "\016\000\000\000") then
-    error("not equal, expected " ..  "\016\000\000\000" .. ", but got " .. self.magic)
+    error("not equal, expected " .. "\016\000\000\000" .. ", but got " .. self.magic)
   end
   self.flags = self._io:read_u4le()
   if self.has_clut then
@@ -38,24 +38,24 @@ function PsxTim:_read()
   self.img = PsxTim.Bitmap(self._io, self, self._root)
 end
 
-PsxTim.property.has_clut = {}
-function PsxTim.property.has_clut:get()
-  if self._m_has_clut ~= nil then
-    return self._m_has_clut
-  end
-
-  self._m_has_clut = (self.flags & 8) ~= 0
-  return self._m_has_clut
-end
-
 PsxTim.property.bpp = {}
 function PsxTim.property.bpp:get()
   if self._m_bpp ~= nil then
     return self._m_bpp
   end
 
-  self._m_bpp = (self.flags & 3)
+  self._m_bpp = self.flags & 3
   return self._m_bpp
+end
+
+PsxTim.property.has_clut = {}
+function PsxTim.property.has_clut:get()
+  if self._m_has_clut ~= nil then
+    return self._m_has_clut
+  end
+
+  self._m_has_clut = self.flags & 8 ~= 0
+  return self._m_has_clut
 end
 
 -- 
@@ -68,7 +68,7 @@ PsxTim.Bitmap = class.class(KaitaiStruct)
 function PsxTim.Bitmap:_init(io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
-  self._root = root or self
+  self._root = root
   self:_read()
 end
 
@@ -78,7 +78,7 @@ function PsxTim.Bitmap:_read()
   self.origin_y = self._io:read_u2le()
   self.width = self._io:read_u2le()
   self.height = self._io:read_u2le()
-  self.body = self._io:read_bytes((self.len - 12))
+  self.body = self._io:read_bytes(self.len - 12)
 end
 
 

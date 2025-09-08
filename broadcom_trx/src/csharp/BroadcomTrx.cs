@@ -43,6 +43,186 @@ namespace Kaitai
         private void _read()
         {
         }
+        public partial class Header : KaitaiStruct
+        {
+            public static Header FromFile(string fileName)
+            {
+                return new Header(new KaitaiStream(fileName));
+            }
+
+            public Header(KaitaiStream p__io, BroadcomTrx p__parent = null, BroadcomTrx p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _magic = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(_magic, new byte[] { 72, 68, 82, 48 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 72, 68, 82, 48 }, _magic, m_io, "/types/header/seq/0");
+                }
+                _len = m_io.ReadU4le();
+                _crc32 = m_io.ReadU4le();
+                _version = m_io.ReadU2le();
+                _flags = new Flags(m_io, this, m_root);
+                _partitions = new List<Partition>();
+                {
+                    var i = 0;
+                    Partition M_;
+                    do {
+                        M_ = new Partition(i, m_io, this, m_root);
+                        _partitions.Add(M_);
+                        i++;
+                    } while (!( ((i >= 4) || (!(M_.IsPresent))) ));
+                }
+            }
+            public partial class Flags : KaitaiStruct
+            {
+                public static Flags FromFile(string fileName)
+                {
+                    return new Flags(new KaitaiStream(fileName));
+                }
+
+                public Flags(KaitaiStream p__io, BroadcomTrx.Header p__parent = null, BroadcomTrx p__root = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    _read();
+                }
+                private void _read()
+                {
+                    _flags = new List<bool>();
+                    for (var i = 0; i < 16; i++)
+                    {
+                        _flags.Add(m_io.ReadBitsIntLe(1) != 0);
+                    }
+                }
+                private List<bool> _flags;
+                private BroadcomTrx m_root;
+                private BroadcomTrx.Header m_parent;
+                public List<bool> Flags { get { return _flags; } }
+                public BroadcomTrx M_Root { get { return m_root; } }
+                public BroadcomTrx.Header M_Parent { get { return m_parent; } }
+            }
+            public partial class Partition : KaitaiStruct
+            {
+                public Partition(byte p_idx, KaitaiStream p__io, BroadcomTrx.Header p__parent = null, BroadcomTrx p__root = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    _idx = p_idx;
+                    f_body = false;
+                    f_isLast = false;
+                    f_isPresent = false;
+                    f_lenBody = false;
+                    _read();
+                }
+                private void _read()
+                {
+                    _ofsBody = m_io.ReadU4le();
+                }
+                private bool f_body;
+                private byte[] _body;
+                public byte[] Body
+                {
+                    get
+                    {
+                        if (f_body)
+                            return _body;
+                        f_body = true;
+                        if (IsPresent) {
+                            KaitaiStream io = M_Root.M_Io;
+                            long _pos = io.Pos;
+                            io.Seek(OfsBody);
+                            _body = io.ReadBytes(LenBody);
+                            io.Seek(_pos);
+                        }
+                        return _body;
+                    }
+                }
+                private bool f_isLast;
+                private bool? _isLast;
+                public bool? IsLast
+                {
+                    get
+                    {
+                        if (f_isLast)
+                            return _isLast;
+                        f_isLast = true;
+                        if (IsPresent) {
+                            _isLast = (bool) ( ((Idx == M_Parent.Partitions.Count - 1) || (!(M_Parent.Partitions[Idx + 1].IsPresent))) );
+                        }
+                        return _isLast;
+                    }
+                }
+                private bool f_isPresent;
+                private bool _isPresent;
+                public bool IsPresent
+                {
+                    get
+                    {
+                        if (f_isPresent)
+                            return _isPresent;
+                        f_isPresent = true;
+                        _isPresent = (bool) (OfsBody != 0);
+                        return _isPresent;
+                    }
+                }
+                private bool f_lenBody;
+                private int? _lenBody;
+                public int? LenBody
+                {
+                    get
+                    {
+                        if (f_lenBody)
+                            return _lenBody;
+                        f_lenBody = true;
+                        if (IsPresent) {
+                            _lenBody = (int) ((IsLast ? M_Root.M_Io.Size - OfsBody : M_Parent.Partitions[Idx + 1].OfsBody));
+                        }
+                        return _lenBody;
+                    }
+                }
+                private uint _ofsBody;
+                private byte _idx;
+                private BroadcomTrx m_root;
+                private BroadcomTrx.Header m_parent;
+                public uint OfsBody { get { return _ofsBody; } }
+                public byte Idx { get { return _idx; } }
+                public BroadcomTrx M_Root { get { return m_root; } }
+                public BroadcomTrx.Header M_Parent { get { return m_parent; } }
+            }
+            private byte[] _magic;
+            private uint _len;
+            private uint _crc32;
+            private ushort _version;
+            private Flags _flags;
+            private List<Partition> _partitions;
+            private BroadcomTrx m_root;
+            private BroadcomTrx m_parent;
+            public byte[] Magic { get { return _magic; } }
+
+            /// <summary>
+            /// Length of file including header
+            /// </summary>
+            public uint Len { get { return _len; } }
+
+            /// <summary>
+            /// CRC from `version` (??? todo: see the original and disambiguate) to end of file
+            /// </summary>
+            public uint Crc32 { get { return _crc32; } }
+            public ushort Version { get { return _version; } }
+            public Flags Flags { get { return _flags; } }
+
+            /// <summary>
+            /// Offsets of partitions from start of header
+            /// </summary>
+            public List<Partition> Partitions { get { return _partitions; } }
+            public BroadcomTrx M_Root { get { return m_root; } }
+            public BroadcomTrx M_Parent { get { return m_parent; } }
+        }
         public partial class Revision : KaitaiStruct
         {
             public static Revision FromFile(string fileName)
@@ -70,39 +250,6 @@ namespace Kaitai
             public BroadcomTrx M_Root { get { return m_root; } }
             public BroadcomTrx.Tail.HwCompInfo M_Parent { get { return m_parent; } }
         }
-        public partial class Version : KaitaiStruct
-        {
-            public static Version FromFile(string fileName)
-            {
-                return new Version(new KaitaiStream(fileName));
-            }
-
-            public Version(KaitaiStream p__io, BroadcomTrx.Tail p__parent = null, BroadcomTrx p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _major = m_io.ReadU1();
-                _minor = m_io.ReadU1();
-                _patch = m_io.ReadU1();
-                _tweak = m_io.ReadU1();
-            }
-            private byte _major;
-            private byte _minor;
-            private byte _patch;
-            private byte _tweak;
-            private BroadcomTrx m_root;
-            private BroadcomTrx.Tail m_parent;
-            public byte Major { get { return _major; } }
-            public byte Minor { get { return _minor; } }
-            public byte Patch { get { return _patch; } }
-            public byte Tweak { get { return _tweak; } }
-            public BroadcomTrx M_Root { get { return m_root; } }
-            public BroadcomTrx.Tail M_Parent { get { return m_parent; } }
-        }
 
         /// <summary>
         /// A safeguard against installation of firmware to an incompatible device
@@ -123,7 +270,7 @@ namespace Kaitai
             private void _read()
             {
                 _version = new Version(m_io, this, m_root);
-                _productId = System.Text.Encoding.GetEncoding("utf-8").GetString(KaitaiStream.BytesTerminate(m_io.ReadBytes(12), 0, false));
+                _productId = System.Text.Encoding.GetEncoding("UTF-8").GetString(KaitaiStream.BytesTerminate(m_io.ReadBytes(12), 0, false));
                 _compHw = new List<HwCompInfo>();
                 for (var i = 0; i < 4; i++)
                 {
@@ -179,14 +326,14 @@ namespace Kaitai
             public BroadcomTrx M_Root { get { return m_root; } }
             public BroadcomTrx M_Parent { get { return m_parent; } }
         }
-        public partial class Header : KaitaiStruct
+        public partial class Version : KaitaiStruct
         {
-            public static Header FromFile(string fileName)
+            public static Version FromFile(string fileName)
             {
-                return new Header(new KaitaiStream(fileName));
+                return new Version(new KaitaiStream(fileName));
             }
 
-            public Header(KaitaiStream p__io, BroadcomTrx p__parent = null, BroadcomTrx p__root = null) : base(p__io)
+            public Version(KaitaiStream p__io, BroadcomTrx.Tail p__parent = null, BroadcomTrx p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
@@ -194,170 +341,23 @@ namespace Kaitai
             }
             private void _read()
             {
-                _magic = m_io.ReadBytes(4);
-                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 72, 68, 82, 48 }) == 0)))
-                {
-                    throw new ValidationNotEqualError(new byte[] { 72, 68, 82, 48 }, Magic, M_Io, "/types/header/seq/0");
-                }
-                _len = m_io.ReadU4le();
-                _crc32 = m_io.ReadU4le();
-                _version = m_io.ReadU2le();
-                _flags = new Flags(m_io, this, m_root);
-                _partitions = new List<Partition>();
-                {
-                    var i = 0;
-                    Partition M_;
-                    do {
-                        M_ = new Partition(i, m_io, this, m_root);
-                        _partitions.Add(M_);
-                        i++;
-                    } while (!( ((i >= 4) || (!(M_.IsPresent))) ));
-                }
+                _major = m_io.ReadU1();
+                _minor = m_io.ReadU1();
+                _patch = m_io.ReadU1();
+                _tweak = m_io.ReadU1();
             }
-            public partial class Partition : KaitaiStruct
-            {
-                public Partition(byte p_idx, KaitaiStream p__io, BroadcomTrx.Header p__parent = null, BroadcomTrx p__root = null) : base(p__io)
-                {
-                    m_parent = p__parent;
-                    m_root = p__root;
-                    _idx = p_idx;
-                    f_isPresent = false;
-                    f_isLast = false;
-                    f_lenBody = false;
-                    f_body = false;
-                    _read();
-                }
-                private void _read()
-                {
-                    _ofsBody = m_io.ReadU4le();
-                }
-                private bool f_isPresent;
-                private bool _isPresent;
-                public bool IsPresent
-                {
-                    get
-                    {
-                        if (f_isPresent)
-                            return _isPresent;
-                        _isPresent = (bool) (OfsBody != 0);
-                        f_isPresent = true;
-                        return _isPresent;
-                    }
-                }
-                private bool f_isLast;
-                private bool? _isLast;
-                public bool? IsLast
-                {
-                    get
-                    {
-                        if (f_isLast)
-                            return _isLast;
-                        if (IsPresent) {
-                            _isLast = (bool) ( ((Idx == (M_Parent.Partitions.Count - 1)) || (!(M_Parent.Partitions[(Idx + 1)].IsPresent))) );
-                        }
-                        f_isLast = true;
-                        return _isLast;
-                    }
-                }
-                private bool f_lenBody;
-                private int? _lenBody;
-                public int? LenBody
-                {
-                    get
-                    {
-                        if (f_lenBody)
-                            return _lenBody;
-                        if (IsPresent) {
-                            _lenBody = (int) ((IsLast ? (M_Root.M_Io.Size - OfsBody) : M_Parent.Partitions[(Idx + 1)].OfsBody));
-                        }
-                        f_lenBody = true;
-                        return _lenBody;
-                    }
-                }
-                private bool f_body;
-                private byte[] _body;
-                public byte[] Body
-                {
-                    get
-                    {
-                        if (f_body)
-                            return _body;
-                        if (IsPresent) {
-                            KaitaiStream io = M_Root.M_Io;
-                            long _pos = io.Pos;
-                            io.Seek(OfsBody);
-                            _body = io.ReadBytes(LenBody);
-                            io.Seek(_pos);
-                            f_body = true;
-                        }
-                        return _body;
-                    }
-                }
-                private uint _ofsBody;
-                private byte _idx;
-                private BroadcomTrx m_root;
-                private BroadcomTrx.Header m_parent;
-                public uint OfsBody { get { return _ofsBody; } }
-                public byte Idx { get { return _idx; } }
-                public BroadcomTrx M_Root { get { return m_root; } }
-                public BroadcomTrx.Header M_Parent { get { return m_parent; } }
-            }
-            public partial class Flags : KaitaiStruct
-            {
-                public static Flags FromFile(string fileName)
-                {
-                    return new Flags(new KaitaiStream(fileName));
-                }
-
-                public Flags(KaitaiStream p__io, BroadcomTrx.Header p__parent = null, BroadcomTrx p__root = null) : base(p__io)
-                {
-                    m_parent = p__parent;
-                    m_root = p__root;
-                    _read();
-                }
-                private void _read()
-                {
-                    _flags = new List<bool>();
-                    for (var i = 0; i < 16; i++)
-                    {
-                        _flags.Add(m_io.ReadBitsIntLe(1) != 0);
-                    }
-                }
-                private List<bool> _flags;
-                private BroadcomTrx m_root;
-                private BroadcomTrx.Header m_parent;
-                public List<bool> Flags { get { return _flags; } }
-                public BroadcomTrx M_Root { get { return m_root; } }
-                public BroadcomTrx.Header M_Parent { get { return m_parent; } }
-            }
-            private byte[] _magic;
-            private uint _len;
-            private uint _crc32;
-            private ushort _version;
-            private Flags _flags;
-            private List<Partition> _partitions;
+            private byte _major;
+            private byte _minor;
+            private byte _patch;
+            private byte _tweak;
             private BroadcomTrx m_root;
-            private BroadcomTrx m_parent;
-            public byte[] Magic { get { return _magic; } }
-
-            /// <summary>
-            /// Length of file including header
-            /// </summary>
-            public uint Len { get { return _len; } }
-
-            /// <summary>
-            /// CRC from `version` (??? todo: see the original and disambiguate) to end of file
-            /// </summary>
-            public uint Crc32 { get { return _crc32; } }
-            public ushort Version { get { return _version; } }
-            public Flags Flags { get { return _flags; } }
-
-            /// <summary>
-            /// Offsets of partitions from start of header
-            /// </summary>
-            public List<Partition> Partitions { get { return _partitions; } }
+            private BroadcomTrx.Tail m_parent;
+            public byte Major { get { return _major; } }
+            public byte Minor { get { return _minor; } }
+            public byte Patch { get { return _patch; } }
+            public byte Tweak { get { return _tweak; } }
             public BroadcomTrx M_Root { get { return m_root; } }
-            public BroadcomTrx M_Parent { get { return m_parent; } }
+            public BroadcomTrx.Tail M_Parent { get { return m_parent; } }
         }
         private bool f_header;
         private Header _header;
@@ -367,11 +367,11 @@ namespace Kaitai
             {
                 if (f_header)
                     return _header;
+                f_header = true;
                 long _pos = m_io.Pos;
                 m_io.Seek(0);
                 _header = new Header(m_io, this, m_root);
                 m_io.Seek(_pos);
-                f_header = true;
                 return _header;
             }
         }
@@ -383,11 +383,11 @@ namespace Kaitai
             {
                 if (f_tail)
                     return _tail;
+                f_tail = true;
                 long _pos = m_io.Pos;
-                m_io.Seek((M_Io.Size - 64));
+                m_io.Seek(M_Io.Size - 64);
                 _tail = new Tail(m_io, this, m_root);
                 m_io.Seek(_pos);
-                f_tail = true;
                 return _tail;
             }
         }

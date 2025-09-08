@@ -2,13 +2,15 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class zisofs_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -28,8 +30,8 @@
 class zisofs_t : public kaitai::kstruct {
 
 public:
-    class header_t;
     class block_t;
+    class header_t;
 
     zisofs_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, zisofs_t* p__root = nullptr);
 
@@ -39,6 +41,46 @@ private:
 
 public:
     ~zisofs_t();
+
+    class block_t : public kaitai::kstruct {
+
+    public:
+
+        block_t(uint32_t p_ofs_start, uint32_t p_ofs_end, kaitai::kstream* p__io, zisofs_t* p__parent = nullptr, zisofs_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~block_t();
+
+    private:
+        bool f_data;
+        std::string m_data;
+
+    public:
+        std::string data();
+
+    private:
+        bool f_len_data;
+        int32_t m_len_data;
+
+    public:
+        int32_t len_data();
+
+    private:
+        uint32_t m_ofs_start;
+        uint32_t m_ofs_end;
+        zisofs_t* m__root;
+        zisofs_t* m__parent;
+
+    public:
+        uint32_t ofs_start() const { return m_ofs_start; }
+        uint32_t ofs_end() const { return m_ofs_end; }
+        zisofs_t* _root() const { return m__root; }
+        zisofs_t* _parent() const { return m__parent; }
+    };
 
     class header_t : public kaitai::kstruct {
 
@@ -94,46 +136,6 @@ public:
         uint8_t len_header() const { return m_len_header; }
         uint8_t block_size_log2() const { return m_block_size_log2; }
         std::string reserved() const { return m_reserved; }
-        zisofs_t* _root() const { return m__root; }
-        zisofs_t* _parent() const { return m__parent; }
-    };
-
-    class block_t : public kaitai::kstruct {
-
-    public:
-
-        block_t(uint32_t p_ofs_start, uint32_t p_ofs_end, kaitai::kstream* p__io, zisofs_t* p__parent = nullptr, zisofs_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~block_t();
-
-    private:
-        bool f_len_data;
-        int32_t m_len_data;
-
-    public:
-        int32_t len_data();
-
-    private:
-        bool f_data;
-        std::string m_data;
-
-    public:
-        std::string data();
-
-    private:
-        uint32_t m_ofs_start;
-        uint32_t m_ofs_end;
-        zisofs_t* m__root;
-        zisofs_t* m__parent;
-
-    public:
-        uint32_t ofs_start() const { return m_ofs_start; }
-        uint32_t ofs_end() const { return m_ofs_end; }
         zisofs_t* _root() const { return m__root; }
         zisofs_t* _parent() const { return m__parent; }
     };

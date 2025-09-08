@@ -3,20 +3,23 @@
 
 namespace {
     class MicrosoftCfb extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \MicrosoftCfb $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\MicrosoftCfb $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_header = new \MicrosoftCfb\CfbHeader($this->_io, $this, $this->_root);
         }
-        protected $_m_sectorSize;
-        public function sectorSize() {
-            if ($this->_m_sectorSize !== null)
-                return $this->_m_sectorSize;
-            $this->_m_sectorSize = (1 << $this->header()->sectorShift());
-            return $this->_m_sectorSize;
+        protected $_m_dir;
+        public function dir() {
+            if ($this->_m_dir !== null)
+                return $this->_m_dir;
+            $_pos = $this->_io->pos();
+            $this->_io->seek(($this->header()->ofsDir() + 1) * $this->sectorSize());
+            $this->_m_dir = new \MicrosoftCfb\DirEntry($this->_io, $this, $this->_root);
+            $this->_io->seek($_pos);
+            return $this->_m_dir;
         }
         protected $_m_fat;
         public function fat() {
@@ -24,21 +27,18 @@ namespace {
                 return $this->_m_fat;
             $_pos = $this->_io->pos();
             $this->_io->seek($this->sectorSize());
-            $this->_m__raw_fat = $this->_io->readBytes(($this->header()->sizeFat() * $this->sectorSize()));
+            $this->_m__raw_fat = $this->_io->readBytes($this->header()->sizeFat() * $this->sectorSize());
             $_io__raw_fat = new \Kaitai\Struct\Stream($this->_m__raw_fat);
             $this->_m_fat = new \MicrosoftCfb\FatEntries($_io__raw_fat, $this, $this->_root);
             $this->_io->seek($_pos);
             return $this->_m_fat;
         }
-        protected $_m_dir;
-        public function dir() {
-            if ($this->_m_dir !== null)
-                return $this->_m_dir;
-            $_pos = $this->_io->pos();
-            $this->_io->seek((($this->header()->ofsDir() + 1) * $this->sectorSize()));
-            $this->_m_dir = new \MicrosoftCfb\DirEntry($this->_io, $this, $this->_root);
-            $this->_io->seek($_pos);
-            return $this->_m_dir;
+        protected $_m_sectorSize;
+        public function sectorSize() {
+            if ($this->_m_sectorSize !== null)
+                return $this->_m_sectorSize;
+            $this->_m_sectorSize = 1 << $this->header()->sectorShift();
+            return $this->_m_sectorSize;
         }
         protected $_m_header;
         protected $_m__raw_fat;
@@ -49,25 +49,25 @@ namespace {
 
 namespace MicrosoftCfb {
     class CfbHeader extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \MicrosoftCfb $_parent = null, \MicrosoftCfb $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\MicrosoftCfb $_parent = null, ?\MicrosoftCfb $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
 
         private function _read() {
             $this->_m_signature = $this->_io->readBytes(8);
-            if (!($this->signature() == "\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1", $this->signature(), $this->_io(), "/types/cfb_header/seq/0");
+            if (!($this->_m_signature == "\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1", $this->_m_signature, $this->_io, "/types/cfb_header/seq/0");
             }
             $this->_m_clsid = $this->_io->readBytes(16);
-            if (!($this->clsid() == "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00", $this->clsid(), $this->_io(), "/types/cfb_header/seq/1");
+            if (!($this->_m_clsid == "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00", $this->_m_clsid, $this->_io, "/types/cfb_header/seq/1");
             }
             $this->_m_versionMinor = $this->_io->readU2le();
             $this->_m_versionMajor = $this->_io->readU2le();
             $this->_m_byteOrder = $this->_io->readBytes(2);
-            if (!($this->byteOrder() == "\xFE\xFF")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\xFE\xFF", $this->byteOrder(), $this->_io(), "/types/cfb_header/seq/4");
+            if (!($this->_m_byteOrder == "\xFE\xFF")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\xFE\xFF", $this->_m_byteOrder, $this->_io, "/types/cfb_header/seq/4");
             }
             $this->_m_sectorShift = $this->_io->readU2le();
             $this->_m_miniSectorShift = $this->_io->readU2le();
@@ -175,28 +175,8 @@ namespace MicrosoftCfb {
 }
 
 namespace MicrosoftCfb {
-    class FatEntries extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \MicrosoftCfb $_parent = null, \MicrosoftCfb $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_entries = [];
-            $i = 0;
-            while (!$this->_io->isEof()) {
-                $this->_m_entries[] = $this->_io->readS4le();
-                $i++;
-            }
-        }
-        protected $_m_entries;
-        public function entries() { return $this->_m_entries; }
-    }
-}
-
-namespace MicrosoftCfb {
     class DirEntry extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \MicrosoftCfb $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\MicrosoftCfb $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -216,19 +196,6 @@ namespace MicrosoftCfb {
             $this->_m_ofs = $this->_io->readS4le();
             $this->_m_size = $this->_io->readU8le();
         }
-        protected $_m_miniStream;
-        public function miniStream() {
-            if ($this->_m_miniStream !== null)
-                return $this->_m_miniStream;
-            if ($this->objectType() == \MicrosoftCfb\DirEntry\ObjType::ROOT_STORAGE) {
-                $io = $this->_root()->_io();
-                $_pos = $io->pos();
-                $io->seek((($this->ofs() + 1) * $this->_root()->sectorSize()));
-                $this->_m_miniStream = $io->readBytes($this->size());
-                $io->seek($_pos);
-            }
-            return $this->_m_miniStream;
-        }
         protected $_m_child;
         public function child() {
             if ($this->_m_child !== null)
@@ -236,7 +203,7 @@ namespace MicrosoftCfb {
             if ($this->childId() != -1) {
                 $io = $this->_root()->_io();
                 $_pos = $io->pos();
-                $io->seek(((($this->_root()->header()->ofsDir() + 1) * $this->_root()->sectorSize()) + ($this->childId() * 128)));
+                $io->seek(($this->_root()->header()->ofsDir() + 1) * $this->_root()->sectorSize() + $this->childId() * 128);
                 $this->_m_child = new \MicrosoftCfb\DirEntry($io, $this, $this->_root);
                 $io->seek($_pos);
             }
@@ -249,11 +216,24 @@ namespace MicrosoftCfb {
             if ($this->leftSiblingId() != -1) {
                 $io = $this->_root()->_io();
                 $_pos = $io->pos();
-                $io->seek(((($this->_root()->header()->ofsDir() + 1) * $this->_root()->sectorSize()) + ($this->leftSiblingId() * 128)));
+                $io->seek(($this->_root()->header()->ofsDir() + 1) * $this->_root()->sectorSize() + $this->leftSiblingId() * 128);
                 $this->_m_leftSibling = new \MicrosoftCfb\DirEntry($io, $this, $this->_root);
                 $io->seek($_pos);
             }
             return $this->_m_leftSibling;
+        }
+        protected $_m_miniStream;
+        public function miniStream() {
+            if ($this->_m_miniStream !== null)
+                return $this->_m_miniStream;
+            if ($this->objectType() == \MicrosoftCfb\DirEntry\ObjType::ROOT_STORAGE) {
+                $io = $this->_root()->_io();
+                $_pos = $io->pos();
+                $io->seek(($this->ofs() + 1) * $this->_root()->sectorSize());
+                $this->_m_miniStream = $io->readBytes($this->size());
+                $io->seek($_pos);
+            }
+            return $this->_m_miniStream;
         }
         protected $_m_rightSibling;
         public function rightSibling() {
@@ -262,7 +242,7 @@ namespace MicrosoftCfb {
             if ($this->rightSiblingId() != -1) {
                 $io = $this->_root()->_io();
                 $_pos = $io->pos();
-                $io->seek(((($this->_root()->header()->ofsDir() + 1) * $this->_root()->sectorSize()) + ($this->rightSiblingId() * 128)));
+                $io->seek(($this->_root()->header()->ofsDir() + 1) * $this->_root()->sectorSize() + $this->rightSiblingId() * 128);
                 $this->_m_rightSibling = new \MicrosoftCfb\DirEntry($io, $this, $this->_root);
                 $io->seek($_pos);
             }
@@ -323,6 +303,12 @@ namespace MicrosoftCfb\DirEntry {
         const STORAGE = 1;
         const STREAM = 2;
         const ROOT_STORAGE = 5;
+
+        private const _VALUES = [0 => true, 1 => true, 2 => true, 5 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }
 
@@ -330,5 +316,31 @@ namespace MicrosoftCfb\DirEntry {
     class RbColor {
         const RED = 0;
         const BLACK = 1;
+
+        private const _VALUES = [0 => true, 1 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
+    }
+}
+
+namespace MicrosoftCfb {
+    class FatEntries extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\MicrosoftCfb $_parent = null, ?\MicrosoftCfb $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_entries = [];
+            $i = 0;
+            while (!$this->_io->isEof()) {
+                $this->_m_entries[] = $this->_io->readS4le();
+                $i++;
+            }
+        }
+        protected $_m_entries;
+        public function entries() { return $this->_m_entries; }
     }
 }

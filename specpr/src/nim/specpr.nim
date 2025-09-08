@@ -10,6 +10,14 @@ type
     text_initial = 1
     data_continuation = 2
     text_continuation = 3
+  Specpr_CoarseTimestamp* = ref object of KaitaiStruct
+    `scaledSeconds`*: int32
+    `parent`*: Specpr_DataInitial
+    `secondsInst`: float64
+    `secondsInstFlag`: bool
+  Specpr_DataContinuation* = ref object of KaitaiStruct
+    `cdata`*: seq[float32]
+    `parent`*: Specpr_Record
   Specpr_DataInitial* = ref object of KaitaiStruct
     `ids`*: Specpr_Identifiers
     `iscta`*: Specpr_CoarseTimestamp
@@ -43,11 +51,6 @@ type
     `parent`*: Specpr_Record
     `phaseAngleArcsecInst`: float64
     `phaseAngleArcsecInstFlag`: bool
-  Specpr_CoarseTimestamp* = ref object of KaitaiStruct
-    `scaledSeconds`*: int32
-    `parent`*: Specpr_DataInitial
-    `secondsInst`: float64
-    `secondsInstFlag`: bool
   Specpr_Icflag* = ref object of KaitaiStruct
     `reserved`*: uint64
     `isctbType`*: bool
@@ -59,9 +62,6 @@ type
     `parent`*: Specpr_Record
     `typeInst`: Specpr_RecordType
     `typeInstFlag`: bool
-  Specpr_DataContinuation* = ref object of KaitaiStruct
-    `cdata`*: seq[float32]
-    `parent`*: Specpr_Record
   Specpr_Identifiers* = ref object of KaitaiStruct
     `ititle`*: string
     `usernm`*: string
@@ -69,18 +69,12 @@ type
   Specpr_IllumAngle* = ref object of KaitaiStruct
     `angl`*: int32
     `parent`*: Specpr_DataInitial
-    `secondsTotalInst`: int
-    `secondsTotalInstFlag`: bool
-    `minutesTotalInst`: int
-    `minutesTotalInstFlag`: bool
     `degreesTotalInst`: int
     `degreesTotalInstFlag`: bool
-  Specpr_TextInitial* = ref object of KaitaiStruct
-    `ids`*: Specpr_Identifiers
-    `itxtpt`*: uint32
-    `itxtch`*: int32
-    `itext`*: string
-    `parent`*: Specpr_Record
+    `minutesTotalInst`: int
+    `minutesTotalInstFlag`: bool
+    `secondsTotalInst`: int
+    `secondsTotalInstFlag`: bool
   Specpr_Record* = ref object of KaitaiStruct
     `icflag`*: Specpr_Icflag
     `content`*: KaitaiStruct
@@ -89,24 +83,30 @@ type
   Specpr_TextContinuation* = ref object of KaitaiStruct
     `tdata`*: string
     `parent`*: Specpr_Record
+  Specpr_TextInitial* = ref object of KaitaiStruct
+    `ids`*: Specpr_Identifiers
+    `itxtpt`*: uint32
+    `itxtch`*: int32
+    `itext`*: string
+    `parent`*: Specpr_Record
 
 proc read*(_: typedesc[Specpr], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Specpr
-proc read*(_: typedesc[Specpr_DataInitial], io: KaitaiStream, root: KaitaiStruct, parent: Specpr_Record): Specpr_DataInitial
 proc read*(_: typedesc[Specpr_CoarseTimestamp], io: KaitaiStream, root: KaitaiStruct, parent: Specpr_DataInitial): Specpr_CoarseTimestamp
-proc read*(_: typedesc[Specpr_Icflag], io: KaitaiStream, root: KaitaiStruct, parent: Specpr_Record): Specpr_Icflag
 proc read*(_: typedesc[Specpr_DataContinuation], io: KaitaiStream, root: KaitaiStruct, parent: Specpr_Record): Specpr_DataContinuation
+proc read*(_: typedesc[Specpr_DataInitial], io: KaitaiStream, root: KaitaiStruct, parent: Specpr_Record): Specpr_DataInitial
+proc read*(_: typedesc[Specpr_Icflag], io: KaitaiStream, root: KaitaiStruct, parent: Specpr_Record): Specpr_Icflag
 proc read*(_: typedesc[Specpr_Identifiers], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Specpr_Identifiers
 proc read*(_: typedesc[Specpr_IllumAngle], io: KaitaiStream, root: KaitaiStruct, parent: Specpr_DataInitial): Specpr_IllumAngle
-proc read*(_: typedesc[Specpr_TextInitial], io: KaitaiStream, root: KaitaiStruct, parent: Specpr_Record): Specpr_TextInitial
 proc read*(_: typedesc[Specpr_Record], io: KaitaiStream, root: KaitaiStruct, parent: Specpr): Specpr_Record
 proc read*(_: typedesc[Specpr_TextContinuation], io: KaitaiStream, root: KaitaiStruct, parent: Specpr_Record): Specpr_TextContinuation
+proc read*(_: typedesc[Specpr_TextInitial], io: KaitaiStream, root: KaitaiStruct, parent: Specpr_Record): Specpr_TextInitial
 
-proc phaseAngleArcsec*(this: Specpr_DataInitial): float64
 proc seconds*(this: Specpr_CoarseTimestamp): float64
+proc phaseAngleArcsec*(this: Specpr_DataInitial): float64
 proc type*(this: Specpr_Icflag): Specpr_RecordType
-proc secondsTotal*(this: Specpr_IllumAngle): int
-proc minutesTotal*(this: Specpr_IllumAngle): int
 proc degreesTotal*(this: Specpr_IllumAngle): int
+proc minutesTotal*(this: Specpr_IllumAngle): int
+proc secondsTotal*(this: Specpr_IllumAngle): int
 
 
 ##[
@@ -138,6 +138,47 @@ proc read*(_: typedesc[Specpr], io: KaitaiStream, root: KaitaiStruct, parent: Ka
 
 proc fromFile*(_: typedesc[Specpr], filename: string): Specpr =
   Specpr.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Specpr_CoarseTimestamp], io: KaitaiStream, root: KaitaiStruct, parent: Specpr_DataInitial): Specpr_CoarseTimestamp =
+  template this: untyped = result
+  this = new(Specpr_CoarseTimestamp)
+  let root = if root == nil: cast[Specpr](this) else: cast[Specpr](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let scaledSecondsExpr = this.io.readS4be()
+  this.scaledSeconds = scaledSecondsExpr
+
+proc seconds(this: Specpr_CoarseTimestamp): float64 = 
+  if this.secondsInstFlag:
+    return this.secondsInst
+  let secondsInstExpr = float64(this.scaledSeconds * 24000)
+  this.secondsInst = secondsInstExpr
+  this.secondsInstFlag = true
+  return this.secondsInst
+
+proc fromFile*(_: typedesc[Specpr_CoarseTimestamp], filename: string): Specpr_CoarseTimestamp =
+  Specpr_CoarseTimestamp.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Specpr_DataContinuation], io: KaitaiStream, root: KaitaiStruct, parent: Specpr_Record): Specpr_DataContinuation =
+  template this: untyped = result
+  this = new(Specpr_DataContinuation)
+  let root = if root == nil: cast[Specpr](this) else: cast[Specpr](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+
+  ##[
+  The continuation of the data values (383 channels of 32 bit real numbers).
+  ]##
+  for i in 0 ..< int(383):
+    let it = this.io.readF4be()
+    this.cdata.add(it)
+
+proc fromFile*(_: typedesc[Specpr_DataContinuation], filename: string): Specpr_DataContinuation =
+  Specpr_DataContinuation.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[Specpr_DataInitial], io: KaitaiStream, root: KaitaiStruct, parent: Specpr_Record): Specpr_DataInitial =
   template this: untyped = result
@@ -244,14 +285,14 @@ proc read*(_: typedesc[Specpr_DataInitial], io: KaitaiStream, root: KaitaiStruct
   ##[
   The program automatic 60 character history.
   ]##
-  let ihistExpr = encode(this.io.readBytes(int(60)).bytesStripRight(32), "ascii")
+  let ihistExpr = encode(this.io.readBytes(int(60)).bytesStripRight(32), "ASCII")
   this.ihist = ihistExpr
 
   ##[
   Manual history. Program automatic for large history requirements.
   ]##
   for i in 0 ..< int(4):
-    let it = encode(this.io.readBytes(int(74)), "ascii")
+    let it = encode(this.io.readBytes(int(74)), "ASCII")
     this.mhist.add(it)
 
   ##[
@@ -336,35 +377,13 @@ proc phaseAngleArcsec(this: Specpr_DataInitial): float64 =
   ]##
   if this.phaseAngleArcsecInstFlag:
     return this.phaseAngleArcsecInst
-  let phaseAngleArcsecInstExpr = float64((this.sphase div 1500))
+  let phaseAngleArcsecInstExpr = float64(this.sphase div 1500)
   this.phaseAngleArcsecInst = phaseAngleArcsecInstExpr
   this.phaseAngleArcsecInstFlag = true
   return this.phaseAngleArcsecInst
 
 proc fromFile*(_: typedesc[Specpr_DataInitial], filename: string): Specpr_DataInitial =
   Specpr_DataInitial.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Specpr_CoarseTimestamp], io: KaitaiStream, root: KaitaiStruct, parent: Specpr_DataInitial): Specpr_CoarseTimestamp =
-  template this: untyped = result
-  this = new(Specpr_CoarseTimestamp)
-  let root = if root == nil: cast[Specpr](this) else: cast[Specpr](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let scaledSecondsExpr = this.io.readS4be()
-  this.scaledSeconds = scaledSecondsExpr
-
-proc seconds(this: Specpr_CoarseTimestamp): float64 = 
-  if this.secondsInstFlag:
-    return this.secondsInst
-  let secondsInstExpr = float64((this.scaledSeconds * 24000))
-  this.secondsInst = secondsInstExpr
-  this.secondsInstFlag = true
-  return this.secondsInst
-
-proc fromFile*(_: typedesc[Specpr_CoarseTimestamp], filename: string): Specpr_CoarseTimestamp =
-  Specpr_CoarseTimestamp.read(newKaitaiFileStream(filename), nil, nil)
 
 
 ##[
@@ -439,32 +458,13 @@ proc read*(_: typedesc[Specpr_Icflag], io: KaitaiStream, root: KaitaiStruct, par
 proc type(this: Specpr_Icflag): Specpr_RecordType = 
   if this.typeInstFlag:
     return this.typeInst
-  let typeInstExpr = Specpr_RecordType(Specpr_RecordType((((if this.text: 1 else: 0) * 1) + ((if this.continuation: 1 else: 0) * 2))))
+  let typeInstExpr = Specpr_RecordType(Specpr_RecordType((if this.text: 1 else: 0) * 1 + (if this.continuation: 1 else: 0) * 2))
   this.typeInst = typeInstExpr
   this.typeInstFlag = true
   return this.typeInst
 
 proc fromFile*(_: typedesc[Specpr_Icflag], filename: string): Specpr_Icflag =
   Specpr_Icflag.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Specpr_DataContinuation], io: KaitaiStream, root: KaitaiStruct, parent: Specpr_Record): Specpr_DataContinuation =
-  template this: untyped = result
-  this = new(Specpr_DataContinuation)
-  let root = if root == nil: cast[Specpr](this) else: cast[Specpr](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-
-  ##[
-  The continuation of the data values (383 channels of 32 bit real numbers).
-  ]##
-  for i in 0 ..< int(383):
-    let it = this.io.readF4be()
-    this.cdata.add(it)
-
-proc fromFile*(_: typedesc[Specpr_DataContinuation], filename: string): Specpr_DataContinuation =
-  Specpr_DataContinuation.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[Specpr_Identifiers], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Specpr_Identifiers =
   template this: untyped = result
@@ -478,13 +478,13 @@ proc read*(_: typedesc[Specpr_Identifiers], io: KaitaiStream, root: KaitaiStruct
   ##[
   Title which describes the data
   ]##
-  let ititleExpr = encode(this.io.readBytes(int(40)).bytesStripRight(32), "ascii")
+  let ititleExpr = encode(this.io.readBytes(int(40)).bytesStripRight(32), "ASCII")
   this.ititle = ititleExpr
 
   ##[
   The name of the user who created the data record
   ]##
-  let usernmExpr = encode(this.io.readBytes(int(8)), "ascii")
+  let usernmExpr = encode(this.io.readBytes(int(8)), "ASCII")
   this.usernm = usernmExpr
 
 proc fromFile*(_: typedesc[Specpr_Identifiers], filename: string): Specpr_Identifiers =
@@ -506,32 +506,97 @@ proc read*(_: typedesc[Specpr_IllumAngle], io: KaitaiStream, root: KaitaiStruct,
   let anglExpr = this.io.readS4be()
   this.angl = anglExpr
 
-proc secondsTotal(this: Specpr_IllumAngle): int = 
-  if this.secondsTotalInstFlag:
-    return this.secondsTotalInst
-  let secondsTotalInstExpr = int((this.angl div 6000))
-  this.secondsTotalInst = secondsTotalInstExpr
-  this.secondsTotalInstFlag = true
-  return this.secondsTotalInst
-
-proc minutesTotal(this: Specpr_IllumAngle): int = 
-  if this.minutesTotalInstFlag:
-    return this.minutesTotalInst
-  let minutesTotalInstExpr = int((this.secondsTotal div 60))
-  this.minutesTotalInst = minutesTotalInstExpr
-  this.minutesTotalInstFlag = true
-  return this.minutesTotalInst
-
 proc degreesTotal(this: Specpr_IllumAngle): int = 
   if this.degreesTotalInstFlag:
     return this.degreesTotalInst
-  let degreesTotalInstExpr = int((this.minutesTotal div 60))
+  let degreesTotalInstExpr = int(this.minutesTotal div 60)
   this.degreesTotalInst = degreesTotalInstExpr
   this.degreesTotalInstFlag = true
   return this.degreesTotalInst
 
+proc minutesTotal(this: Specpr_IllumAngle): int = 
+  if this.minutesTotalInstFlag:
+    return this.minutesTotalInst
+  let minutesTotalInstExpr = int(this.secondsTotal div 60)
+  this.minutesTotalInst = minutesTotalInstExpr
+  this.minutesTotalInstFlag = true
+  return this.minutesTotalInst
+
+proc secondsTotal(this: Specpr_IllumAngle): int = 
+  if this.secondsTotalInstFlag:
+    return this.secondsTotalInst
+  let secondsTotalInstExpr = int(this.angl div 6000)
+  this.secondsTotalInst = secondsTotalInstExpr
+  this.secondsTotalInstFlag = true
+  return this.secondsTotalInst
+
 proc fromFile*(_: typedesc[Specpr_IllumAngle], filename: string): Specpr_IllumAngle =
   Specpr_IllumAngle.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Specpr_Record], io: KaitaiStream, root: KaitaiStruct, parent: Specpr): Specpr_Record =
+  template this: untyped = result
+  this = new(Specpr_Record)
+  let root = if root == nil: cast[Specpr](this) else: cast[Specpr](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+
+  ##[
+  Total number of bytes comprising the document.
+  ]##
+  let icflagExpr = Specpr_Icflag.read(this.io, this.root, this)
+  this.icflag = icflagExpr
+  block:
+    let on = this.icflag.type
+    if on == specpr.data_continuation:
+      let rawContentExpr = this.io.readBytes(int(1536 - 4))
+      this.rawContent = rawContentExpr
+      let rawContentIo = newKaitaiStream(rawContentExpr)
+      let contentExpr = Specpr_DataContinuation.read(rawContentIo, this.root, this)
+      this.content = contentExpr
+    elif on == specpr.data_initial:
+      let rawContentExpr = this.io.readBytes(int(1536 - 4))
+      this.rawContent = rawContentExpr
+      let rawContentIo = newKaitaiStream(rawContentExpr)
+      let contentExpr = Specpr_DataInitial.read(rawContentIo, this.root, this)
+      this.content = contentExpr
+    elif on == specpr.text_continuation:
+      let rawContentExpr = this.io.readBytes(int(1536 - 4))
+      this.rawContent = rawContentExpr
+      let rawContentIo = newKaitaiStream(rawContentExpr)
+      let contentExpr = Specpr_TextContinuation.read(rawContentIo, this.root, this)
+      this.content = contentExpr
+    elif on == specpr.text_initial:
+      let rawContentExpr = this.io.readBytes(int(1536 - 4))
+      this.rawContent = rawContentExpr
+      let rawContentIo = newKaitaiStream(rawContentExpr)
+      let contentExpr = Specpr_TextInitial.read(rawContentIo, this.root, this)
+      this.content = contentExpr
+    else:
+      let contentExpr = this.io.readBytes(int(1536 - 4))
+      this.content = contentExpr
+
+proc fromFile*(_: typedesc[Specpr_Record], filename: string): Specpr_Record =
+  Specpr_Record.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Specpr_TextContinuation], io: KaitaiStream, root: KaitaiStruct, parent: Specpr_Record): Specpr_TextContinuation =
+  template this: untyped = result
+  this = new(Specpr_TextContinuation)
+  let root = if root == nil: cast[Specpr](this) else: cast[Specpr](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+
+  ##[
+  1532 characters of text.
+  ]##
+  let tdataExpr = encode(this.io.readBytes(int(1532)), "ASCII")
+  this.tdata = tdataExpr
+
+proc fromFile*(_: typedesc[Specpr_TextContinuation], filename: string): Specpr_TextContinuation =
+  Specpr_TextContinuation.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[Specpr_TextInitial], io: KaitaiStream, root: KaitaiStruct, parent: Specpr_Record): Specpr_TextInitial =
   template this: untyped = result
@@ -559,74 +624,9 @@ proc read*(_: typedesc[Specpr_TextInitial], io: KaitaiStream, root: KaitaiStruct
   ##[
   1476 characters of text.  Text has embedded newlines so the number of lines available is limited only by the number of characters available.
   ]##
-  let itextExpr = encode(this.io.readBytes(int(1476)), "ascii")
+  let itextExpr = encode(this.io.readBytes(int(1476)), "ASCII")
   this.itext = itextExpr
 
 proc fromFile*(_: typedesc[Specpr_TextInitial], filename: string): Specpr_TextInitial =
   Specpr_TextInitial.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Specpr_Record], io: KaitaiStream, root: KaitaiStruct, parent: Specpr): Specpr_Record =
-  template this: untyped = result
-  this = new(Specpr_Record)
-  let root = if root == nil: cast[Specpr](this) else: cast[Specpr](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-
-  ##[
-  Total number of bytes comprising the document.
-  ]##
-  let icflagExpr = Specpr_Icflag.read(this.io, this.root, this)
-  this.icflag = icflagExpr
-  block:
-    let on = this.icflag.type
-    if on == specpr.data_initial:
-      let rawContentExpr = this.io.readBytes(int((1536 - 4)))
-      this.rawContent = rawContentExpr
-      let rawContentIo = newKaitaiStream(rawContentExpr)
-      let contentExpr = Specpr_DataInitial.read(rawContentIo, this.root, this)
-      this.content = contentExpr
-    elif on == specpr.data_continuation:
-      let rawContentExpr = this.io.readBytes(int((1536 - 4)))
-      this.rawContent = rawContentExpr
-      let rawContentIo = newKaitaiStream(rawContentExpr)
-      let contentExpr = Specpr_DataContinuation.read(rawContentIo, this.root, this)
-      this.content = contentExpr
-    elif on == specpr.text_continuation:
-      let rawContentExpr = this.io.readBytes(int((1536 - 4)))
-      this.rawContent = rawContentExpr
-      let rawContentIo = newKaitaiStream(rawContentExpr)
-      let contentExpr = Specpr_TextContinuation.read(rawContentIo, this.root, this)
-      this.content = contentExpr
-    elif on == specpr.text_initial:
-      let rawContentExpr = this.io.readBytes(int((1536 - 4)))
-      this.rawContent = rawContentExpr
-      let rawContentIo = newKaitaiStream(rawContentExpr)
-      let contentExpr = Specpr_TextInitial.read(rawContentIo, this.root, this)
-      this.content = contentExpr
-    else:
-      let contentExpr = this.io.readBytes(int((1536 - 4)))
-      this.content = contentExpr
-
-proc fromFile*(_: typedesc[Specpr_Record], filename: string): Specpr_Record =
-  Specpr_Record.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[Specpr_TextContinuation], io: KaitaiStream, root: KaitaiStruct, parent: Specpr_Record): Specpr_TextContinuation =
-  template this: untyped = result
-  this = new(Specpr_TextContinuation)
-  let root = if root == nil: cast[Specpr](this) else: cast[Specpr](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-
-  ##[
-  1532 characters of text.
-  ]##
-  let tdataExpr = encode(this.io.readBytes(int(1532)), "ascii")
-  this.tdata = tdataExpr
-
-proc fromFile*(_: typedesc[Specpr_TextContinuation], filename: string): Specpr_TextContinuation =
-  Specpr_TextContinuation.read(newKaitaiFileStream(filename), nil, nil)
 

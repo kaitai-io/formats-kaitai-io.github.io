@@ -3,8 +3,8 @@
 
 namespace {
     class Fallout2Dat extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Fallout2Dat $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Kaitai\Struct\Struct $_parent = null, ?\Fallout2Dat $_root = null) {
+            parent::__construct($_io, $_parent, $_root === null ? $this : $_root);
             $this->_read();
         }
 
@@ -15,7 +15,7 @@ namespace {
             if ($this->_m_footer !== null)
                 return $this->_m_footer;
             $_pos = $this->_io->pos();
-            $this->_io->seek(($this->_io()->size() - 8));
+            $this->_io->seek($this->_io()->size() - 8);
             $this->_m_footer = new \Fallout2Dat\Footer($this->_io, $this, $this->_root);
             $this->_io->seek($_pos);
             return $this->_m_footer;
@@ -25,7 +25,7 @@ namespace {
             if ($this->_m_index !== null)
                 return $this->_m_index;
             $_pos = $this->_io->pos();
-            $this->_io->seek((($this->_io()->size() - 8) - $this->footer()->indexSize()));
+            $this->_io->seek(($this->_io()->size() - 8) - $this->footer()->indexSize());
             $this->_m_index = new \Fallout2Dat\Index($this->_io, $this, $this->_root);
             $this->_io->seek($_pos);
             return $this->_m_index;
@@ -34,66 +34,8 @@ namespace {
 }
 
 namespace Fallout2Dat {
-    class Pstr extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Fallout2Dat\File $_parent = null, \Fallout2Dat $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_size = $this->_io->readU4le();
-            $this->_m_str = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->size()), "ASCII");
-        }
-        protected $_m_size;
-        protected $_m_str;
-        public function size() { return $this->_m_size; }
-        public function str() { return $this->_m_str; }
-    }
-}
-
-namespace Fallout2Dat {
-    class Footer extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Fallout2Dat $_parent = null, \Fallout2Dat $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_indexSize = $this->_io->readU4le();
-            $this->_m_fileSize = $this->_io->readU4le();
-        }
-        protected $_m_indexSize;
-        protected $_m_fileSize;
-        public function indexSize() { return $this->_m_indexSize; }
-        public function fileSize() { return $this->_m_fileSize; }
-    }
-}
-
-namespace Fallout2Dat {
-    class Index extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Fallout2Dat $_parent = null, \Fallout2Dat $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_fileCount = $this->_io->readU4le();
-            $this->_m_files = [];
-            $n = $this->fileCount();
-            for ($i = 0; $i < $n; $i++) {
-                $this->_m_files[] = new \Fallout2Dat\File($this->_io, $this, $this->_root);
-            }
-        }
-        protected $_m_fileCount;
-        protected $_m_files;
-        public function fileCount() { return $this->_m_fileCount; }
-        public function files() { return $this->_m_files; }
-    }
-}
-
-namespace Fallout2Dat {
     class File extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \Fallout2Dat\Index $_parent = null, \Fallout2Dat $_root = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Fallout2Dat\Index $_parent = null, ?\Fallout2Dat $_root = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_read();
         }
@@ -104,6 +46,15 @@ namespace Fallout2Dat {
             $this->_m_sizeUnpacked = $this->_io->readU4le();
             $this->_m_sizePacked = $this->_io->readU4le();
             $this->_m_offset = $this->_io->readU4le();
+        }
+        protected $_m_contents;
+        public function contents() {
+            if ($this->_m_contents !== null)
+                return $this->_m_contents;
+            if ( (($this->flags() == \Fallout2Dat\Compression::ZLIB) || ($this->flags() == \Fallout2Dat\Compression::NONE)) ) {
+                $this->_m_contents = ($this->flags() == \Fallout2Dat\Compression::ZLIB ? $this->contentsZlib() : $this->contentsRaw());
+            }
+            return $this->_m_contents;
         }
         protected $_m_contentsRaw;
         public function contentsRaw() {
@@ -132,15 +83,6 @@ namespace Fallout2Dat {
             }
             return $this->_m_contentsZlib;
         }
-        protected $_m_contents;
-        public function contents() {
-            if ($this->_m_contents !== null)
-                return $this->_m_contents;
-            if ( (($this->flags() == \Fallout2Dat\Compression::ZLIB) || ($this->flags() == \Fallout2Dat\Compression::NONE)) ) {
-                $this->_m_contents = ($this->flags() == \Fallout2Dat\Compression::ZLIB ? $this->contentsZlib() : $this->contentsRaw());
-            }
-            return $this->_m_contents;
-        }
         protected $_m_name;
         protected $_m_flags;
         protected $_m_sizeUnpacked;
@@ -157,8 +99,72 @@ namespace Fallout2Dat {
 }
 
 namespace Fallout2Dat {
+    class Footer extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Fallout2Dat $_parent = null, ?\Fallout2Dat $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_indexSize = $this->_io->readU4le();
+            $this->_m_fileSize = $this->_io->readU4le();
+        }
+        protected $_m_indexSize;
+        protected $_m_fileSize;
+        public function indexSize() { return $this->_m_indexSize; }
+        public function fileSize() { return $this->_m_fileSize; }
+    }
+}
+
+namespace Fallout2Dat {
+    class Index extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Fallout2Dat $_parent = null, ?\Fallout2Dat $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_fileCount = $this->_io->readU4le();
+            $this->_m_files = [];
+            $n = $this->fileCount();
+            for ($i = 0; $i < $n; $i++) {
+                $this->_m_files[] = new \Fallout2Dat\File($this->_io, $this, $this->_root);
+            }
+        }
+        protected $_m_fileCount;
+        protected $_m_files;
+        public function fileCount() { return $this->_m_fileCount; }
+        public function files() { return $this->_m_files; }
+    }
+}
+
+namespace Fallout2Dat {
+    class Pstr extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, ?\Fallout2Dat\File $_parent = null, ?\Fallout2Dat $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_size = $this->_io->readU4le();
+            $this->_m_str = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->size()), "ASCII");
+        }
+        protected $_m_size;
+        protected $_m_str;
+        public function size() { return $this->_m_size; }
+        public function str() { return $this->_m_str; }
+    }
+}
+
+namespace Fallout2Dat {
     class Compression {
         const NONE = 0;
         const ZLIB = 1;
+
+        private const _VALUES = [0 => true, 1 => true];
+
+        public static function isDefined(int $v): bool {
+            return isset(self::_VALUES[$v]);
+        }
     }
 }

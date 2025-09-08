@@ -69,16 +69,16 @@ proc read*(_: typedesc[CpioOldLe_File], io: KaitaiStream, root: KaitaiStruct, pa
 
   let headerExpr = CpioOldLe_FileHeader.read(this.io, this.root, this)
   this.header = headerExpr
-  let pathNameExpr = this.io.readBytes(int((this.header.pathNameSize - 1)))
+  let pathNameExpr = this.io.readBytes(int(this.header.pathNameSize - 1))
   this.pathName = pathNameExpr
   let stringTerminatorExpr = this.io.readBytes(int(1))
   this.stringTerminator = stringTerminatorExpr
-  if (this.header.pathNameSize %%% 2) == 1:
+  if this.header.pathNameSize %%% 2 == 1:
     let pathNamePaddingExpr = this.io.readBytes(int(1))
     this.pathNamePadding = pathNamePaddingExpr
   let fileDataExpr = this.io.readBytes(int(this.header.fileSize.value))
   this.fileData = fileDataExpr
-  if (this.header.fileSize.value %%% 2) == 1:
+  if this.header.fileSize.value %%% 2 == 1:
     let fileDataPaddingExpr = this.io.readBytes(int(1))
     this.fileDataPadding = fileDataPaddingExpr
   if  ((this.pathName == @[84'u8, 82'u8, 65'u8, 73'u8, 76'u8, 69'u8, 82'u8, 33'u8, 33'u8, 33'u8]) and (this.header.fileSize.value == 0)) :
@@ -138,7 +138,7 @@ proc read*(_: typedesc[CpioOldLe_FourByteUnsignedInteger], io: KaitaiStream, roo
 proc value(this: CpioOldLe_FourByteUnsignedInteger): int = 
   if this.valueInstFlag:
     return this.valueInst
-  let valueInstExpr = int((this.leastSignificantBits + (this.mostSignificantBits shl 16)))
+  let valueInstExpr = int(this.leastSignificantBits + this.mostSignificantBits shl 16)
   this.valueInst = valueInstExpr
   this.valueInstFlag = true
   return this.valueInst

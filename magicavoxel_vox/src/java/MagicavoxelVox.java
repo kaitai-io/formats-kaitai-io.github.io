@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -92,11 +93,15 @@ public class MagicavoxelVox extends KaitaiStruct {
     }
     private void _read() {
         this.magic = this._io.readBytes(4);
-        if (!(Arrays.equals(magic(), new byte[] { 86, 79, 88, 32 }))) {
-            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 86, 79, 88, 32 }, magic(), _io(), "/seq/0");
+        if (!(Arrays.equals(this.magic, new byte[] { 86, 79, 88, 32 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 86, 79, 88, 32 }, this.magic, this._io, "/seq/0");
         }
         this.version = this._io.readU4le();
         this.main = new Chunk(this._io, this, _root);
+    }
+
+    public void _fetchInstances() {
+        this.main._fetchInstances();
     }
     public static class Chunk extends KaitaiStruct {
         public static Chunk fromFile(String fileName) throws IOException {
@@ -126,34 +131,29 @@ public class MagicavoxelVox extends KaitaiStruct {
                     ChunkType on = chunkId();
                     if (on != null) {
                         switch (chunkId()) {
-                        case SIZE: {
-                            this._raw_chunkContent = this._io.readBytes(numBytesOfChunkContent());
-                            KaitaiStream _io__raw_chunkContent = new ByteBufferKaitaiStream(_raw_chunkContent);
-                            this.chunkContent = new Size(_io__raw_chunkContent, this, _root);
-                            break;
-                        }
                         case MATT: {
-                            this._raw_chunkContent = this._io.readBytes(numBytesOfChunkContent());
-                            KaitaiStream _io__raw_chunkContent = new ByteBufferKaitaiStream(_raw_chunkContent);
-                            this.chunkContent = new Matt(_io__raw_chunkContent, this, _root);
-                            break;
-                        }
-                        case RGBA: {
-                            this._raw_chunkContent = this._io.readBytes(numBytesOfChunkContent());
-                            KaitaiStream _io__raw_chunkContent = new ByteBufferKaitaiStream(_raw_chunkContent);
-                            this.chunkContent = new Rgba(_io__raw_chunkContent, this, _root);
-                            break;
-                        }
-                        case XYZI: {
-                            this._raw_chunkContent = this._io.readBytes(numBytesOfChunkContent());
-                            KaitaiStream _io__raw_chunkContent = new ByteBufferKaitaiStream(_raw_chunkContent);
-                            this.chunkContent = new Xyzi(_io__raw_chunkContent, this, _root);
+                            KaitaiStream _io_chunkContent = this._io.substream(numBytesOfChunkContent());
+                            this.chunkContent = new Matt(_io_chunkContent, this, _root);
                             break;
                         }
                         case PACK: {
-                            this._raw_chunkContent = this._io.readBytes(numBytesOfChunkContent());
-                            KaitaiStream _io__raw_chunkContent = new ByteBufferKaitaiStream(_raw_chunkContent);
-                            this.chunkContent = new Pack(_io__raw_chunkContent, this, _root);
+                            KaitaiStream _io_chunkContent = this._io.substream(numBytesOfChunkContent());
+                            this.chunkContent = new Pack(_io_chunkContent, this, _root);
+                            break;
+                        }
+                        case RGBA: {
+                            KaitaiStream _io_chunkContent = this._io.substream(numBytesOfChunkContent());
+                            this.chunkContent = new Rgba(_io_chunkContent, this, _root);
+                            break;
+                        }
+                        case SIZE: {
+                            KaitaiStream _io_chunkContent = this._io.substream(numBytesOfChunkContent());
+                            this.chunkContent = new Size(_io_chunkContent, this, _root);
+                            break;
+                        }
+                        case XYZI: {
+                            KaitaiStream _io_chunkContent = this._io.substream(numBytesOfChunkContent());
+                            this.chunkContent = new Xyzi(_io_chunkContent, this, _root);
                             break;
                         }
                         default: {
@@ -177,118 +177,102 @@ public class MagicavoxelVox extends KaitaiStruct {
                 }
             }
         }
+
+        public void _fetchInstances() {
+            if (numBytesOfChunkContent() != 0) {
+                {
+                    ChunkType on = chunkId();
+                    if (on != null) {
+                        switch (chunkId()) {
+                        case MATT: {
+                            ((Matt) (this.chunkContent))._fetchInstances();
+                            break;
+                        }
+                        case PACK: {
+                            ((Pack) (this.chunkContent))._fetchInstances();
+                            break;
+                        }
+                        case RGBA: {
+                            ((Rgba) (this.chunkContent))._fetchInstances();
+                            break;
+                        }
+                        case SIZE: {
+                            ((Size) (this.chunkContent))._fetchInstances();
+                            break;
+                        }
+                        case XYZI: {
+                            ((Xyzi) (this.chunkContent))._fetchInstances();
+                            break;
+                        }
+                        default: {
+                            break;
+                        }
+                        }
+                    } else {
+                    }
+                }
+            }
+            if (numBytesOfChildrenChunks() != 0) {
+                for (int i = 0; i < this.childrenChunks.size(); i++) {
+                    this.childrenChunks.get(((Number) (i)).intValue())._fetchInstances();
+                }
+            }
+        }
         private ChunkType chunkId;
         private long numBytesOfChunkContent;
         private long numBytesOfChildrenChunks;
         private Object chunkContent;
-        private ArrayList<Chunk> childrenChunks;
+        private List<Chunk> childrenChunks;
         private MagicavoxelVox _root;
         private KaitaiStruct _parent;
-        private byte[] _raw_chunkContent;
         public ChunkType chunkId() { return chunkId; }
         public long numBytesOfChunkContent() { return numBytesOfChunkContent; }
         public long numBytesOfChildrenChunks() { return numBytesOfChildrenChunks; }
         public Object chunkContent() { return chunkContent; }
-        public ArrayList<Chunk> childrenChunks() { return childrenChunks; }
+        public List<Chunk> childrenChunks() { return childrenChunks; }
         public MagicavoxelVox _root() { return _root; }
         public KaitaiStruct _parent() { return _parent; }
-        public byte[] _raw_chunkContent() { return _raw_chunkContent; }
     }
-    public static class Size extends KaitaiStruct {
-        public static Size fromFile(String fileName) throws IOException {
-            return new Size(new ByteBufferKaitaiStream(fileName));
+    public static class Color extends KaitaiStruct {
+        public static Color fromFile(String fileName) throws IOException {
+            return new Color(new ByteBufferKaitaiStream(fileName));
         }
 
-        public Size(KaitaiStream _io) {
+        public Color(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public Size(KaitaiStream _io, MagicavoxelVox.Chunk _parent) {
+        public Color(KaitaiStream _io, MagicavoxelVox.Rgba _parent) {
             this(_io, _parent, null);
         }
 
-        public Size(KaitaiStream _io, MagicavoxelVox.Chunk _parent, MagicavoxelVox _root) {
+        public Color(KaitaiStream _io, MagicavoxelVox.Rgba _parent, MagicavoxelVox _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.sizeX = this._io.readU4le();
-            this.sizeY = this._io.readU4le();
-            this.sizeZ = this._io.readU4le();
+            this.r = this._io.readU1();
+            this.g = this._io.readU1();
+            this.b = this._io.readU1();
+            this.a = this._io.readU1();
         }
-        private long sizeX;
-        private long sizeY;
-        private long sizeZ;
+
+        public void _fetchInstances() {
+        }
+        private int r;
+        private int g;
+        private int b;
+        private int a;
         private MagicavoxelVox _root;
-        private MagicavoxelVox.Chunk _parent;
-        public long sizeX() { return sizeX; }
-        public long sizeY() { return sizeY; }
-        public long sizeZ() { return sizeZ; }
+        private MagicavoxelVox.Rgba _parent;
+        public int r() { return r; }
+        public int g() { return g; }
+        public int b() { return b; }
+        public int a() { return a; }
         public MagicavoxelVox _root() { return _root; }
-        public MagicavoxelVox.Chunk _parent() { return _parent; }
-    }
-    public static class Rgba extends KaitaiStruct {
-        public static Rgba fromFile(String fileName) throws IOException {
-            return new Rgba(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Rgba(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Rgba(KaitaiStream _io, MagicavoxelVox.Chunk _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Rgba(KaitaiStream _io, MagicavoxelVox.Chunk _parent, MagicavoxelVox _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.colors = new ArrayList<Color>();
-            for (int i = 0; i < 256; i++) {
-                this.colors.add(new Color(this._io, this, _root));
-            }
-        }
-        private ArrayList<Color> colors;
-        private MagicavoxelVox _root;
-        private MagicavoxelVox.Chunk _parent;
-        public ArrayList<Color> colors() { return colors; }
-        public MagicavoxelVox _root() { return _root; }
-        public MagicavoxelVox.Chunk _parent() { return _parent; }
-    }
-    public static class Pack extends KaitaiStruct {
-        public static Pack fromFile(String fileName) throws IOException {
-            return new Pack(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Pack(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Pack(KaitaiStream _io, MagicavoxelVox.Chunk _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Pack(KaitaiStream _io, MagicavoxelVox.Chunk _parent, MagicavoxelVox _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.numModels = this._io.readU4le();
-        }
-        private long numModels;
-        private MagicavoxelVox _root;
-        private MagicavoxelVox.Chunk _parent;
-        public long numModels() { return numModels; }
-        public MagicavoxelVox _root() { return _root; }
-        public MagicavoxelVox.Chunk _parent() { return _parent; }
+        public MagicavoxelVox.Rgba _parent() { return _parent; }
     }
     public static class Matt extends KaitaiStruct {
         public static Matt fromFile(String fileName) throws IOException {
@@ -339,69 +323,80 @@ public class MagicavoxelVox extends KaitaiStruct {
                 this.isTotalPower = this._io.readF4le();
             }
         }
+
+        public void _fetchInstances() {
+            if (hasPlastic()) {
+            }
+            if (hasRoughness()) {
+            }
+            if (hasSpecular()) {
+            }
+            if (hasIor()) {
+            }
+            if (hasAttenuation()) {
+            }
+            if (hasPower()) {
+            }
+            if (hasGlow()) {
+            }
+            if (hasIsTotalPower()) {
+            }
+        }
+        private Boolean hasAttenuation;
+        public Boolean hasAttenuation() {
+            if (this.hasAttenuation != null)
+                return this.hasAttenuation;
+            this.hasAttenuation = (propertyBits() & 16) != 0;
+            return this.hasAttenuation;
+        }
+        private Boolean hasGlow;
+        public Boolean hasGlow() {
+            if (this.hasGlow != null)
+                return this.hasGlow;
+            this.hasGlow = (propertyBits() & 64) != 0;
+            return this.hasGlow;
+        }
+        private Boolean hasIor;
+        public Boolean hasIor() {
+            if (this.hasIor != null)
+                return this.hasIor;
+            this.hasIor = (propertyBits() & 8) != 0;
+            return this.hasIor;
+        }
         private Boolean hasIsTotalPower;
         public Boolean hasIsTotalPower() {
             if (this.hasIsTotalPower != null)
                 return this.hasIsTotalPower;
-            boolean _tmp = (boolean) ((propertyBits() & 128) != 0);
-            this.hasIsTotalPower = _tmp;
+            this.hasIsTotalPower = (propertyBits() & 128) != 0;
             return this.hasIsTotalPower;
         }
         private Boolean hasPlastic;
         public Boolean hasPlastic() {
             if (this.hasPlastic != null)
                 return this.hasPlastic;
-            boolean _tmp = (boolean) ((propertyBits() & 1) != 0);
-            this.hasPlastic = _tmp;
+            this.hasPlastic = (propertyBits() & 1) != 0;
             return this.hasPlastic;
-        }
-        private Boolean hasAttenuation;
-        public Boolean hasAttenuation() {
-            if (this.hasAttenuation != null)
-                return this.hasAttenuation;
-            boolean _tmp = (boolean) ((propertyBits() & 16) != 0);
-            this.hasAttenuation = _tmp;
-            return this.hasAttenuation;
         }
         private Boolean hasPower;
         public Boolean hasPower() {
             if (this.hasPower != null)
                 return this.hasPower;
-            boolean _tmp = (boolean) ((propertyBits() & 32) != 0);
-            this.hasPower = _tmp;
+            this.hasPower = (propertyBits() & 32) != 0;
             return this.hasPower;
         }
         private Boolean hasRoughness;
         public Boolean hasRoughness() {
             if (this.hasRoughness != null)
                 return this.hasRoughness;
-            boolean _tmp = (boolean) ((propertyBits() & 2) != 0);
-            this.hasRoughness = _tmp;
+            this.hasRoughness = (propertyBits() & 2) != 0;
             return this.hasRoughness;
         }
         private Boolean hasSpecular;
         public Boolean hasSpecular() {
             if (this.hasSpecular != null)
                 return this.hasSpecular;
-            boolean _tmp = (boolean) ((propertyBits() & 4) != 0);
-            this.hasSpecular = _tmp;
+            this.hasSpecular = (propertyBits() & 4) != 0;
             return this.hasSpecular;
-        }
-        private Boolean hasIor;
-        public Boolean hasIor() {
-            if (this.hasIor != null)
-                return this.hasIor;
-            boolean _tmp = (boolean) ((propertyBits() & 8) != 0);
-            this.hasIor = _tmp;
-            return this.hasIor;
-        }
-        private Boolean hasGlow;
-        public Boolean hasGlow() {
-            if (this.hasGlow != null)
-                return this.hasGlow;
-            boolean _tmp = (boolean) ((propertyBits() & 64) != 0);
-            this.hasGlow = _tmp;
-            return this.hasGlow;
         }
         private long id;
         private MaterialType materialType;
@@ -432,78 +427,113 @@ public class MagicavoxelVox extends KaitaiStruct {
         public MagicavoxelVox _root() { return _root; }
         public MagicavoxelVox.Chunk _parent() { return _parent; }
     }
-    public static class Xyzi extends KaitaiStruct {
-        public static Xyzi fromFile(String fileName) throws IOException {
-            return new Xyzi(new ByteBufferKaitaiStream(fileName));
+    public static class Pack extends KaitaiStruct {
+        public static Pack fromFile(String fileName) throws IOException {
+            return new Pack(new ByteBufferKaitaiStream(fileName));
         }
 
-        public Xyzi(KaitaiStream _io) {
+        public Pack(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public Xyzi(KaitaiStream _io, MagicavoxelVox.Chunk _parent) {
+        public Pack(KaitaiStream _io, MagicavoxelVox.Chunk _parent) {
             this(_io, _parent, null);
         }
 
-        public Xyzi(KaitaiStream _io, MagicavoxelVox.Chunk _parent, MagicavoxelVox _root) {
+        public Pack(KaitaiStream _io, MagicavoxelVox.Chunk _parent, MagicavoxelVox _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.numVoxels = this._io.readU4le();
-            this.voxels = new ArrayList<Voxel>();
-            for (int i = 0; i < numVoxels(); i++) {
-                this.voxels.add(new Voxel(this._io, this, _root));
-            }
+            this.numModels = this._io.readU4le();
         }
-        private long numVoxels;
-        private ArrayList<Voxel> voxels;
+
+        public void _fetchInstances() {
+        }
+        private long numModels;
         private MagicavoxelVox _root;
         private MagicavoxelVox.Chunk _parent;
-        public long numVoxels() { return numVoxels; }
-        public ArrayList<Voxel> voxels() { return voxels; }
+        public long numModels() { return numModels; }
         public MagicavoxelVox _root() { return _root; }
         public MagicavoxelVox.Chunk _parent() { return _parent; }
     }
-    public static class Color extends KaitaiStruct {
-        public static Color fromFile(String fileName) throws IOException {
-            return new Color(new ByteBufferKaitaiStream(fileName));
+    public static class Rgba extends KaitaiStruct {
+        public static Rgba fromFile(String fileName) throws IOException {
+            return new Rgba(new ByteBufferKaitaiStream(fileName));
         }
 
-        public Color(KaitaiStream _io) {
+        public Rgba(KaitaiStream _io) {
             this(_io, null, null);
         }
 
-        public Color(KaitaiStream _io, MagicavoxelVox.Rgba _parent) {
+        public Rgba(KaitaiStream _io, MagicavoxelVox.Chunk _parent) {
             this(_io, _parent, null);
         }
 
-        public Color(KaitaiStream _io, MagicavoxelVox.Rgba _parent, MagicavoxelVox _root) {
+        public Rgba(KaitaiStream _io, MagicavoxelVox.Chunk _parent, MagicavoxelVox _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.r = this._io.readU1();
-            this.g = this._io.readU1();
-            this.b = this._io.readU1();
-            this.a = this._io.readU1();
+            this.colors = new ArrayList<Color>();
+            for (int i = 0; i < 256; i++) {
+                this.colors.add(new Color(this._io, this, _root));
+            }
         }
-        private int r;
-        private int g;
-        private int b;
-        private int a;
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.colors.size(); i++) {
+                this.colors.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private List<Color> colors;
         private MagicavoxelVox _root;
-        private MagicavoxelVox.Rgba _parent;
-        public int r() { return r; }
-        public int g() { return g; }
-        public int b() { return b; }
-        public int a() { return a; }
+        private MagicavoxelVox.Chunk _parent;
+        public List<Color> colors() { return colors; }
         public MagicavoxelVox _root() { return _root; }
-        public MagicavoxelVox.Rgba _parent() { return _parent; }
+        public MagicavoxelVox.Chunk _parent() { return _parent; }
+    }
+    public static class Size extends KaitaiStruct {
+        public static Size fromFile(String fileName) throws IOException {
+            return new Size(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Size(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Size(KaitaiStream _io, MagicavoxelVox.Chunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Size(KaitaiStream _io, MagicavoxelVox.Chunk _parent, MagicavoxelVox _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.sizeX = this._io.readU4le();
+            this.sizeY = this._io.readU4le();
+            this.sizeZ = this._io.readU4le();
+        }
+
+        public void _fetchInstances() {
+        }
+        private long sizeX;
+        private long sizeY;
+        private long sizeZ;
+        private MagicavoxelVox _root;
+        private MagicavoxelVox.Chunk _parent;
+        public long sizeX() { return sizeX; }
+        public long sizeY() { return sizeY; }
+        public long sizeZ() { return sizeZ; }
+        public MagicavoxelVox _root() { return _root; }
+        public MagicavoxelVox.Chunk _parent() { return _parent; }
     }
     public static class Voxel extends KaitaiStruct {
         public static Voxel fromFile(String fileName) throws IOException {
@@ -530,6 +560,9 @@ public class MagicavoxelVox extends KaitaiStruct {
             this.z = this._io.readU1();
             this.colorIndex = this._io.readU1();
         }
+
+        public void _fetchInstances() {
+        }
         private int x;
         private int y;
         private int z;
@@ -542,6 +575,47 @@ public class MagicavoxelVox extends KaitaiStruct {
         public int colorIndex() { return colorIndex; }
         public MagicavoxelVox _root() { return _root; }
         public MagicavoxelVox.Xyzi _parent() { return _parent; }
+    }
+    public static class Xyzi extends KaitaiStruct {
+        public static Xyzi fromFile(String fileName) throws IOException {
+            return new Xyzi(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public Xyzi(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public Xyzi(KaitaiStream _io, MagicavoxelVox.Chunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public Xyzi(KaitaiStream _io, MagicavoxelVox.Chunk _parent, MagicavoxelVox _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.numVoxels = this._io.readU4le();
+            this.voxels = new ArrayList<Voxel>();
+            for (int i = 0; i < numVoxels(); i++) {
+                this.voxels.add(new Voxel(this._io, this, _root));
+            }
+        }
+
+        public void _fetchInstances() {
+            for (int i = 0; i < this.voxels.size(); i++) {
+                this.voxels.get(((Number) (i)).intValue())._fetchInstances();
+            }
+        }
+        private long numVoxels;
+        private List<Voxel> voxels;
+        private MagicavoxelVox _root;
+        private MagicavoxelVox.Chunk _parent;
+        public long numVoxels() { return numVoxels; }
+        public List<Voxel> voxels() { return voxels; }
+        public MagicavoxelVox _root() { return _root; }
+        public MagicavoxelVox.Chunk _parent() { return _parent; }
     }
     private byte[] magic;
     private long version;

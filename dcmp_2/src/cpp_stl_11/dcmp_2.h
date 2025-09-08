@@ -2,13 +2,16 @@
 
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+class dcmp_2_t;
+
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
 #include <memory>
+#include "bytes_with_io.h"
 #include <vector>
 
-#if KAITAI_STRUCT_VERSION < 9000L
-#error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
+#if KAITAI_STRUCT_VERSION < 11000L
+#error "Incompatible Kaitai Struct C++/STL API: version 0.11 or later is required"
 #endif
 
 /**
@@ -38,9 +41,8 @@ class dcmp_2_t : public kaitai::kstruct {
 
 public:
     class header_parameters_t;
-    class untagged_data_t;
     class tagged_data_t;
-    class bytes_with_io_t;
+    class untagged_data_t;
 
     dcmp_2_t(uint32_t p_len_decompressed, bytes_with_io_t* p_header_parameters_with_io, kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, dcmp_2_t* p__root = nullptr);
 
@@ -185,39 +187,6 @@ public:
     };
 
     /**
-     * Compressed data in the "untagged" variant of the format.
-     */
-
-    class untagged_data_t : public kaitai::kstruct {
-
-    public:
-
-        untagged_data_t(kaitai::kstream* p__io, dcmp_2_t* p__parent = nullptr, dcmp_2_t* p__root = nullptr);
-
-    private:
-        void _read();
-        void _clean_up();
-
-    public:
-        ~untagged_data_t();
-
-    private:
-        std::unique_ptr<std::vector<uint8_t>> m_table_references;
-        dcmp_2_t* m__root;
-        dcmp_2_t* m__parent;
-
-    public:
-
-        /**
-         * References into the lookup table.
-         * Each reference is an integer that is expanded to two bytes by looking it up in the table.
-         */
-        std::vector<uint8_t>* table_references() const { return m_table_references.get(); }
-        dcmp_2_t* _root() const { return m__root; }
-        dcmp_2_t* _parent() const { return m__parent; }
-    };
-
-    /**
      * Compressed data in the "tagged" variant of the format.
      */
 
@@ -302,6 +271,51 @@ public:
         dcmp_2_t* _parent() const { return m__parent; }
     };
 
+    /**
+     * Compressed data in the "untagged" variant of the format.
+     */
+
+    class untagged_data_t : public kaitai::kstruct {
+
+    public:
+
+        untagged_data_t(kaitai::kstream* p__io, dcmp_2_t* p__parent = nullptr, dcmp_2_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~untagged_data_t();
+
+    private:
+        std::unique_ptr<std::vector<uint8_t>> m_table_references;
+        dcmp_2_t* m__root;
+        dcmp_2_t* m__parent;
+
+    public:
+
+        /**
+         * References into the lookup table.
+         * Each reference is an integer that is expanded to two bytes by looking it up in the table.
+         */
+        std::vector<uint8_t>* table_references() const { return m_table_references.get(); }
+        dcmp_2_t* _root() const { return m__root; }
+        dcmp_2_t* _parent() const { return m__parent; }
+    };
+
+private:
+    bool f_default_lookup_table;
+    std::unique_ptr<std::vector<std::string>> m_default_lookup_table;
+
+public:
+
+    /**
+     * The default lookup table,
+     * which is used if no custom lookup table is included with the compressed data.
+     */
+    std::vector<std::string>* default_lookup_table();
+
 private:
     bool f_header_parameters;
     std::unique_ptr<header_parameters_t> m_header_parameters;
@@ -324,18 +338,6 @@ public:
      * This affects the meaning of the last byte of the compressed data.
      */
     bool is_len_decompressed_odd();
-
-private:
-    bool f_default_lookup_table;
-    std::unique_ptr<std::vector<std::string>> m_default_lookup_table;
-
-public:
-
-    /**
-     * The default lookup table,
-     * which is used if no custom lookup table is included with the compressed data.
-     */
-    std::vector<std::string>* default_lookup_table();
 
 private:
     bool f_lookup_table;

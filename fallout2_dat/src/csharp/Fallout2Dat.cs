@@ -28,32 +28,100 @@ namespace Kaitai
         private void _read()
         {
         }
-        public partial class Pstr : KaitaiStruct
+        public partial class File : KaitaiStruct
         {
-            public static Pstr FromFile(string fileName)
+            public static File FromFile(string fileName)
             {
-                return new Pstr(new KaitaiStream(fileName));
+                return new File(new KaitaiStream(fileName));
             }
 
-            public Pstr(KaitaiStream p__io, Fallout2Dat.File p__parent = null, Fallout2Dat p__root = null) : base(p__io)
+            public File(KaitaiStream p__io, Fallout2Dat.Index p__parent = null, Fallout2Dat p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
+                f_contents = false;
+                f_contentsRaw = false;
+                f_contentsZlib = false;
                 _read();
             }
             private void _read()
             {
-                _size = m_io.ReadU4le();
-                _str = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(Size));
+                _name = new Pstr(m_io, this, m_root);
+                _flags = ((Fallout2Dat.Compression) m_io.ReadU1());
+                _sizeUnpacked = m_io.ReadU4le();
+                _sizePacked = m_io.ReadU4le();
+                _offset = m_io.ReadU4le();
             }
-            private uint _size;
-            private string _str;
+            private bool f_contents;
+            private byte[] _contents;
+            public byte[] Contents
+            {
+                get
+                {
+                    if (f_contents)
+                        return _contents;
+                    f_contents = true;
+                    if ( ((Flags == Fallout2Dat.Compression.Zlib) || (Flags == Fallout2Dat.Compression.None)) ) {
+                        _contents = (byte[]) ((Flags == Fallout2Dat.Compression.Zlib ? ContentsZlib : ContentsRaw));
+                    }
+                    return _contents;
+                }
+            }
+            private bool f_contentsRaw;
+            private byte[] _contentsRaw;
+            public byte[] ContentsRaw
+            {
+                get
+                {
+                    if (f_contentsRaw)
+                        return _contentsRaw;
+                    f_contentsRaw = true;
+                    if (Flags == Fallout2Dat.Compression.None) {
+                        KaitaiStream io = M_Root.M_Io;
+                        long _pos = io.Pos;
+                        io.Seek(Offset);
+                        _contentsRaw = io.ReadBytes(SizeUnpacked);
+                        io.Seek(_pos);
+                    }
+                    return _contentsRaw;
+                }
+            }
+            private bool f_contentsZlib;
+            private byte[] _contentsZlib;
+            public byte[] ContentsZlib
+            {
+                get
+                {
+                    if (f_contentsZlib)
+                        return _contentsZlib;
+                    f_contentsZlib = true;
+                    if (Flags == Fallout2Dat.Compression.Zlib) {
+                        KaitaiStream io = M_Root.M_Io;
+                        long _pos = io.Pos;
+                        io.Seek(Offset);
+                        __raw_contentsZlib = io.ReadBytes(SizePacked);
+                        _contentsZlib = m_io.ProcessZlib(__raw_contentsZlib);
+                        io.Seek(_pos);
+                    }
+                    return _contentsZlib;
+                }
+            }
+            private Pstr _name;
+            private Compression _flags;
+            private uint _sizeUnpacked;
+            private uint _sizePacked;
+            private uint _offset;
             private Fallout2Dat m_root;
-            private Fallout2Dat.File m_parent;
-            public uint Size { get { return _size; } }
-            public string Str { get { return _str; } }
+            private Fallout2Dat.Index m_parent;
+            private byte[] __raw_contentsZlib;
+            public Pstr Name { get { return _name; } }
+            public Compression Flags { get { return _flags; } }
+            public uint SizeUnpacked { get { return _sizeUnpacked; } }
+            public uint SizePacked { get { return _sizePacked; } }
+            public uint Offset { get { return _offset; } }
             public Fallout2Dat M_Root { get { return m_root; } }
-            public Fallout2Dat.File M_Parent { get { return m_parent; } }
+            public Fallout2Dat.Index M_Parent { get { return m_parent; } }
+            public byte[] M_RawContentsZlib { get { return __raw_contentsZlib; } }
         }
         public partial class Footer : KaitaiStruct
         {
@@ -113,100 +181,32 @@ namespace Kaitai
             public Fallout2Dat M_Root { get { return m_root; } }
             public Fallout2Dat M_Parent { get { return m_parent; } }
         }
-        public partial class File : KaitaiStruct
+        public partial class Pstr : KaitaiStruct
         {
-            public static File FromFile(string fileName)
+            public static Pstr FromFile(string fileName)
             {
-                return new File(new KaitaiStream(fileName));
+                return new Pstr(new KaitaiStream(fileName));
             }
 
-            public File(KaitaiStream p__io, Fallout2Dat.Index p__parent = null, Fallout2Dat p__root = null) : base(p__io)
+            public Pstr(KaitaiStream p__io, Fallout2Dat.File p__parent = null, Fallout2Dat p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
-                f_contentsRaw = false;
-                f_contentsZlib = false;
-                f_contents = false;
                 _read();
             }
             private void _read()
             {
-                _name = new Pstr(m_io, this, m_root);
-                _flags = ((Fallout2Dat.Compression) m_io.ReadU1());
-                _sizeUnpacked = m_io.ReadU4le();
-                _sizePacked = m_io.ReadU4le();
-                _offset = m_io.ReadU4le();
+                _size = m_io.ReadU4le();
+                _str = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(Size));
             }
-            private bool f_contentsRaw;
-            private byte[] _contentsRaw;
-            public byte[] ContentsRaw
-            {
-                get
-                {
-                    if (f_contentsRaw)
-                        return _contentsRaw;
-                    if (Flags == Fallout2Dat.Compression.None) {
-                        KaitaiStream io = M_Root.M_Io;
-                        long _pos = io.Pos;
-                        io.Seek(Offset);
-                        _contentsRaw = io.ReadBytes(SizeUnpacked);
-                        io.Seek(_pos);
-                        f_contentsRaw = true;
-                    }
-                    return _contentsRaw;
-                }
-            }
-            private bool f_contentsZlib;
-            private byte[] _contentsZlib;
-            public byte[] ContentsZlib
-            {
-                get
-                {
-                    if (f_contentsZlib)
-                        return _contentsZlib;
-                    if (Flags == Fallout2Dat.Compression.Zlib) {
-                        KaitaiStream io = M_Root.M_Io;
-                        long _pos = io.Pos;
-                        io.Seek(Offset);
-                        __raw_contentsZlib = io.ReadBytes(SizePacked);
-                        _contentsZlib = m_io.ProcessZlib(__raw_contentsZlib);
-                        io.Seek(_pos);
-                        f_contentsZlib = true;
-                    }
-                    return _contentsZlib;
-                }
-            }
-            private bool f_contents;
-            private byte[] _contents;
-            public byte[] Contents
-            {
-                get
-                {
-                    if (f_contents)
-                        return _contents;
-                    if ( ((Flags == Fallout2Dat.Compression.Zlib) || (Flags == Fallout2Dat.Compression.None)) ) {
-                        _contents = (byte[]) ((Flags == Fallout2Dat.Compression.Zlib ? ContentsZlib : ContentsRaw));
-                    }
-                    f_contents = true;
-                    return _contents;
-                }
-            }
-            private Pstr _name;
-            private Compression _flags;
-            private uint _sizeUnpacked;
-            private uint _sizePacked;
-            private uint _offset;
+            private uint _size;
+            private string _str;
             private Fallout2Dat m_root;
-            private Fallout2Dat.Index m_parent;
-            private byte[] __raw_contentsZlib;
-            public Pstr Name { get { return _name; } }
-            public Compression Flags { get { return _flags; } }
-            public uint SizeUnpacked { get { return _sizeUnpacked; } }
-            public uint SizePacked { get { return _sizePacked; } }
-            public uint Offset { get { return _offset; } }
+            private Fallout2Dat.File m_parent;
+            public uint Size { get { return _size; } }
+            public string Str { get { return _str; } }
             public Fallout2Dat M_Root { get { return m_root; } }
-            public Fallout2Dat.Index M_Parent { get { return m_parent; } }
-            public byte[] M_RawContentsZlib { get { return __raw_contentsZlib; } }
+            public Fallout2Dat.File M_Parent { get { return m_parent; } }
         }
         private bool f_footer;
         private Footer _footer;
@@ -216,11 +216,11 @@ namespace Kaitai
             {
                 if (f_footer)
                     return _footer;
+                f_footer = true;
                 long _pos = m_io.Pos;
-                m_io.Seek((M_Io.Size - 8));
+                m_io.Seek(M_Io.Size - 8);
                 _footer = new Footer(m_io, this, m_root);
                 m_io.Seek(_pos);
-                f_footer = true;
                 return _footer;
             }
         }
@@ -232,11 +232,11 @@ namespace Kaitai
             {
                 if (f_index)
                     return _index;
+                f_index = true;
                 long _pos = m_io.Pos;
-                m_io.Seek(((M_Io.Size - 8) - Footer.IndexSize));
+                m_io.Seek((M_Io.Size - 8) - Footer.IndexSize);
                 _index = new Index(m_io, this, m_root);
                 m_io.Seek(_pos);
-                f_index = true;
                 return _index;
             }
         }

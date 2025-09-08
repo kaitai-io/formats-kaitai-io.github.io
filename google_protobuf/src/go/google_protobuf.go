@@ -37,19 +37,23 @@ type GoogleProtobuf struct {
 	Pairs []*GoogleProtobuf_Pair
 	_io *kaitai.Stream
 	_root *GoogleProtobuf
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewGoogleProtobuf() *GoogleProtobuf {
 	return &GoogleProtobuf{
 	}
 }
 
-func (this *GoogleProtobuf) Read(io *kaitai.Stream, parent interface{}, root *GoogleProtobuf) (err error) {
+func (this GoogleProtobuf) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *GoogleProtobuf) Read(io *kaitai.Stream, parent kaitai.Struct, root *GoogleProtobuf) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	for i := 1;; i++ {
+	for i := 0;; i++ {
 		tmp1, err := this._io.EOF()
 		if err != nil {
 			return err
@@ -70,6 +74,45 @@ func (this *GoogleProtobuf) Read(io *kaitai.Stream, parent interface{}, root *Go
 /**
  * Key-value pairs which constitute a message
  */
+type GoogleProtobuf_DelimitedBytes struct {
+	Len *VlqBase128Le
+	Body []byte
+	_io *kaitai.Stream
+	_root *GoogleProtobuf
+	_parent *GoogleProtobuf_Pair
+}
+func NewGoogleProtobuf_DelimitedBytes() *GoogleProtobuf_DelimitedBytes {
+	return &GoogleProtobuf_DelimitedBytes{
+	}
+}
+
+func (this GoogleProtobuf_DelimitedBytes) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *GoogleProtobuf_DelimitedBytes) Read(io *kaitai.Stream, parent *GoogleProtobuf_Pair, root *GoogleProtobuf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp3 := NewVlqBase128Le()
+	err = tmp3.Read(this._io, nil, nil)
+	if err != nil {
+		return err
+	}
+	this.Len = tmp3
+	tmp4, err := this.Len.Value()
+	if err != nil {
+		return err
+	}
+	tmp5, err := this._io.ReadBytes(int(tmp4))
+	if err != nil {
+		return err
+	}
+	tmp5 = tmp5
+	this.Body = tmp5
+	return err
+}
 
 /**
  * Key-value pair
@@ -84,20 +127,29 @@ const (
 	GoogleProtobuf_Pair_WireTypes__GroupEnd GoogleProtobuf_Pair_WireTypes = 4
 	GoogleProtobuf_Pair_WireTypes__Bit32 GoogleProtobuf_Pair_WireTypes = 5
 )
+var values_GoogleProtobuf_Pair_WireTypes = map[GoogleProtobuf_Pair_WireTypes]struct{}{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}}
+func (v GoogleProtobuf_Pair_WireTypes) isDefined() bool {
+	_, ok := values_GoogleProtobuf_Pair_WireTypes[v]
+	return ok
+}
 type GoogleProtobuf_Pair struct {
 	Key *VlqBase128Le
 	Value interface{}
 	_io *kaitai.Stream
 	_root *GoogleProtobuf
 	_parent *GoogleProtobuf
-	_f_wireType bool
-	wireType GoogleProtobuf_Pair_WireTypes
 	_f_fieldTag bool
 	fieldTag int
+	_f_wireType bool
+	wireType GoogleProtobuf_Pair_WireTypes
 }
 func NewGoogleProtobuf_Pair() *GoogleProtobuf_Pair {
 	return &GoogleProtobuf_Pair{
 	}
+}
+
+func (this GoogleProtobuf_Pair) IO_() *kaitai.Stream {
+	return this._io
 }
 
 func (this *GoogleProtobuf_Pair) Read(io *kaitai.Stream, parent *GoogleProtobuf, root *GoogleProtobuf) (err error) {
@@ -105,45 +157,62 @@ func (this *GoogleProtobuf_Pair) Read(io *kaitai.Stream, parent *GoogleProtobuf,
 	this._parent = parent
 	this._root = root
 
-	tmp3 := NewVlqBase128Le()
-	err = tmp3.Read(this._io, this, nil)
+	tmp6 := NewVlqBase128Le()
+	err = tmp6.Read(this._io, nil, nil)
 	if err != nil {
 		return err
 	}
-	this.Key = tmp3
-	tmp4, err := this.WireType()
+	this.Key = tmp6
+	tmp7, err := this.WireType()
 	if err != nil {
 		return err
 	}
-	switch (tmp4) {
-	case GoogleProtobuf_Pair_WireTypes__Varint:
-		tmp5 := NewVlqBase128Le()
-		err = tmp5.Read(this._io, this, nil)
-		if err != nil {
-			return err
-		}
-		this.Value = tmp5
-	case GoogleProtobuf_Pair_WireTypes__LenDelimited:
-		tmp6 := NewGoogleProtobuf_DelimitedBytes()
-		err = tmp6.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Value = tmp6
-	case GoogleProtobuf_Pair_WireTypes__Bit64:
-		tmp7, err := this._io.ReadU8le()
-		if err != nil {
-			return err
-		}
-		this.Value = tmp7
+	switch (tmp7) {
 	case GoogleProtobuf_Pair_WireTypes__Bit32:
 		tmp8, err := this._io.ReadU4le()
 		if err != nil {
 			return err
 		}
 		this.Value = tmp8
+	case GoogleProtobuf_Pair_WireTypes__Bit64:
+		tmp9, err := this._io.ReadU8le()
+		if err != nil {
+			return err
+		}
+		this.Value = tmp9
+	case GoogleProtobuf_Pair_WireTypes__LenDelimited:
+		tmp10 := NewGoogleProtobuf_DelimitedBytes()
+		err = tmp10.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Value = tmp10
+	case GoogleProtobuf_Pair_WireTypes__Varint:
+		tmp11 := NewVlqBase128Le()
+		err = tmp11.Read(this._io, nil, nil)
+		if err != nil {
+			return err
+		}
+		this.Value = tmp11
 	}
 	return err
+}
+
+/**
+ * Identifies a field of protocol. One can look up symbolic
+ * field name in a `.proto` file by this field tag.
+ */
+func (this *GoogleProtobuf_Pair) FieldTag() (v int, err error) {
+	if (this._f_fieldTag) {
+		return this.fieldTag, nil
+	}
+	this._f_fieldTag = true
+	tmp12, err := this.Key.Value()
+	if err != nil {
+		return 0, err
+	}
+	this.fieldTag = int(tmp12 >> 3)
+	return this.fieldTag, nil
 }
 
 /**
@@ -159,30 +228,13 @@ func (this *GoogleProtobuf_Pair) WireType() (v GoogleProtobuf_Pair_WireTypes, er
 	if (this._f_wireType) {
 		return this.wireType, nil
 	}
-	tmp9, err := this.Key.Value()
+	this._f_wireType = true
+	tmp13, err := this.Key.Value()
 	if err != nil {
 		return nil, err
 	}
-	this.wireType = GoogleProtobuf_Pair_WireTypes(GoogleProtobuf_Pair_WireTypes((tmp9 & 7)))
-	this._f_wireType = true
+	this.wireType = GoogleProtobuf_Pair_WireTypes(GoogleProtobuf_Pair_WireTypes(tmp13 & 7))
 	return this.wireType, nil
-}
-
-/**
- * Identifies a field of protocol. One can look up symbolic
- * field name in a `.proto` file by this field tag.
- */
-func (this *GoogleProtobuf_Pair) FieldTag() (v int, err error) {
-	if (this._f_fieldTag) {
-		return this.fieldTag, nil
-	}
-	tmp10, err := this.Key.Value()
-	if err != nil {
-		return 0, err
-	}
-	this.fieldTag = int((tmp10 >> 3))
-	this._f_fieldTag = true
-	return this.fieldTag, nil
 }
 
 /**
@@ -198,38 +250,3 @@ func (this *GoogleProtobuf_Pair) FieldTag() (v int, err error) {
  * but further infromation from `.proto` file is required to
  * interprete it properly.
  */
-type GoogleProtobuf_DelimitedBytes struct {
-	Len *VlqBase128Le
-	Body []byte
-	_io *kaitai.Stream
-	_root *GoogleProtobuf
-	_parent *GoogleProtobuf_Pair
-}
-func NewGoogleProtobuf_DelimitedBytes() *GoogleProtobuf_DelimitedBytes {
-	return &GoogleProtobuf_DelimitedBytes{
-	}
-}
-
-func (this *GoogleProtobuf_DelimitedBytes) Read(io *kaitai.Stream, parent *GoogleProtobuf_Pair, root *GoogleProtobuf) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp11 := NewVlqBase128Le()
-	err = tmp11.Read(this._io, this, nil)
-	if err != nil {
-		return err
-	}
-	this.Len = tmp11
-	tmp12, err := this.Len.Value()
-	if err != nil {
-		return err
-	}
-	tmp13, err := this._io.ReadBytes(int(tmp12))
-	if err != nil {
-		return err
-	}
-	tmp13 = tmp13
-	this.Body = tmp13
-	return err
-}

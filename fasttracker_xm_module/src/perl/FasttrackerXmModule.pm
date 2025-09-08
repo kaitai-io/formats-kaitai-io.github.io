@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use IO::KaitaiStruct 0.009_000;
+use IO::KaitaiStruct 0.011_000;
 use Encode;
 
 ########################################################################
@@ -25,7 +25,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root || $self;
 
     $self->_read();
 
@@ -36,15 +36,15 @@ sub _read {
     my ($self) = @_;
 
     $self->{preheader} = FasttrackerXmModule::Preheader->new($self->{_io}, $self, $self->{_root});
-    $self->{_raw_header} = $self->{_io}->read_bytes(($self->preheader()->header_size() - 4));
+    $self->{_raw_header} = $self->{_io}->read_bytes($self->preheader()->header_size() - 4);
     my $io__raw_header = IO::KaitaiStruct::Stream->new($self->{_raw_header});
     $self->{header} = FasttrackerXmModule::Header->new($io__raw_header, $self, $self->{_root});
-    $self->{patterns} = ();
+    $self->{patterns} = [];
     my $n_patterns = $self->header()->num_patterns();
     for (my $i = 0; $i < $n_patterns; $i++) {
         push @{$self->{patterns}}, FasttrackerXmModule::Pattern->new($self->{_io}, $self, $self->{_root});
     }
-    $self->{instruments} = ();
+    $self->{instruments} = [];
     my $n_instruments = $self->header()->num_instruments();
     for (my $i = 0; $i < $n_instruments; $i++) {
         push @{$self->{instruments}}, FasttrackerXmModule::Instrument->new($self->{_io}, $self, $self->{_root});
@@ -77,283 +77,6 @@ sub _raw_header {
 }
 
 ########################################################################
-package FasttrackerXmModule::Preheader;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{signature0} = $self->{_io}->read_bytes(17);
-    $self->{module_name} = Encode::decode("utf-8", IO::KaitaiStruct::Stream::bytes_terminate($self->{_io}->read_bytes(20), 0, 0));
-    $self->{signature1} = $self->{_io}->read_bytes(1);
-    $self->{tracker_name} = Encode::decode("utf-8", IO::KaitaiStruct::Stream::bytes_terminate($self->{_io}->read_bytes(20), 0, 0));
-    $self->{version_number} = FasttrackerXmModule::Preheader::Version->new($self->{_io}, $self, $self->{_root});
-    $self->{header_size} = $self->{_io}->read_u4le();
-}
-
-sub signature0 {
-    my ($self) = @_;
-    return $self->{signature0};
-}
-
-sub module_name {
-    my ($self) = @_;
-    return $self->{module_name};
-}
-
-sub signature1 {
-    my ($self) = @_;
-    return $self->{signature1};
-}
-
-sub tracker_name {
-    my ($self) = @_;
-    return $self->{tracker_name};
-}
-
-sub version_number {
-    my ($self) = @_;
-    return $self->{version_number};
-}
-
-sub header_size {
-    my ($self) = @_;
-    return $self->{header_size};
-}
-
-########################################################################
-package FasttrackerXmModule::Preheader::Version;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{minor} = $self->{_io}->read_u1();
-    $self->{major} = $self->{_io}->read_u1();
-}
-
-sub value {
-    my ($self) = @_;
-    return $self->{value} if ($self->{value});
-    $self->{value} = (($self->major() << 8) | $self->minor());
-    return $self->{value};
-}
-
-sub minor {
-    my ($self) = @_;
-    return $self->{minor};
-}
-
-sub major {
-    my ($self) = @_;
-    return $self->{major};
-}
-
-########################################################################
-package FasttrackerXmModule::Pattern;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{header} = FasttrackerXmModule::Pattern::Header->new($self->{_io}, $self, $self->{_root});
-    $self->{packed_data} = $self->{_io}->read_bytes($self->header()->main()->len_packed_pattern());
-}
-
-sub header {
-    my ($self) = @_;
-    return $self->{header};
-}
-
-sub packed_data {
-    my ($self) = @_;
-    return $self->{packed_data};
-}
-
-########################################################################
-package FasttrackerXmModule::Pattern::Header;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{header_length} = $self->{_io}->read_u4le();
-    $self->{_raw_main} = $self->{_io}->read_bytes(($self->header_length() - 4));
-    my $io__raw_main = IO::KaitaiStruct::Stream->new($self->{_raw_main});
-    $self->{main} = FasttrackerXmModule::Pattern::Header::HeaderMain->new($io__raw_main, $self, $self->{_root});
-}
-
-sub header_length {
-    my ($self) = @_;
-    return $self->{header_length};
-}
-
-sub main {
-    my ($self) = @_;
-    return $self->{main};
-}
-
-sub _raw_main {
-    my ($self) = @_;
-    return $self->{_raw_main};
-}
-
-########################################################################
-package FasttrackerXmModule::Pattern::Header::HeaderMain;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{packing_type} = $self->{_io}->read_u1();
-    my $_on = $self->_root()->preheader()->version_number()->value();
-    if ($_on == 258) {
-        $self->{num_rows_raw} = $self->{_io}->read_u1();
-    }
-    else {
-        $self->{num_rows_raw} = $self->{_io}->read_u2le();
-    }
-    $self->{len_packed_pattern} = $self->{_io}->read_u2le();
-}
-
-sub num_rows {
-    my ($self) = @_;
-    return $self->{num_rows} if ($self->{num_rows});
-    $self->{num_rows} = ($self->num_rows_raw() + ($self->_root()->preheader()->version_number()->value() == 258 ? 1 : 0));
-    return $self->{num_rows};
-}
-
-sub packing_type {
-    my ($self) = @_;
-    return $self->{packing_type};
-}
-
-sub num_rows_raw {
-    my ($self) = @_;
-    return $self->{num_rows_raw};
-}
-
-sub len_packed_pattern {
-    my ($self) = @_;
-    return $self->{len_packed_pattern};
-}
-
-########################################################################
 package FasttrackerXmModule::Flags;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -373,7 +96,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -417,7 +140,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -435,7 +158,7 @@ sub _read {
     $self->{flags} = FasttrackerXmModule::Flags->new($self->{_io}, $self, $self->{_root});
     $self->{default_tempo} = $self->{_io}->read_u2le();
     $self->{default_bpm} = $self->{_io}->read_u2le();
-    $self->{pattern_order_table} = ();
+    $self->{pattern_order_table} = [];
     my $n_pattern_order_table = 256;
     for (my $i = 0; $i < $n_pattern_order_table; $i++) {
         push @{$self->{pattern_order_table}}, $self->{_io}->read_u1();
@@ -507,7 +230,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -518,15 +241,15 @@ sub _read {
     my ($self) = @_;
 
     $self->{header_size} = $self->{_io}->read_u4le();
-    $self->{_raw_header} = $self->{_io}->read_bytes(($self->header_size() - 4));
+    $self->{_raw_header} = $self->{_io}->read_bytes($self->header_size() - 4);
     my $io__raw_header = IO::KaitaiStruct::Stream->new($self->{_raw_header});
     $self->{header} = FasttrackerXmModule::Instrument::Header->new($io__raw_header, $self, $self->{_root});
-    $self->{samples_headers} = ();
+    $self->{samples_headers} = [];
     my $n_samples_headers = $self->header()->num_samples();
     for (my $i = 0; $i < $n_samples_headers; $i++) {
         push @{$self->{samples_headers}}, FasttrackerXmModule::Instrument::SampleHeader->new($self->{_io}, $self, $self->{_root});
     }
-    $self->{samples} = ();
+    $self->{samples} = [];
     my $n_samples = $self->header()->num_samples();
     for (my $i = 0; $i < $n_samples; $i++) {
         push @{$self->{samples}}, FasttrackerXmModule::Instrument::SamplesData->new($self->{_io}, $self, $self->{_root});
@@ -559,64 +282,6 @@ sub _raw_header {
 }
 
 ########################################################################
-package FasttrackerXmModule::Instrument::Header;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{name} = Encode::decode("utf-8", IO::KaitaiStruct::Stream::bytes_terminate($self->{_io}->read_bytes(22), 0, 0));
-    $self->{type} = $self->{_io}->read_u1();
-    $self->{num_samples} = $self->{_io}->read_u2le();
-    if ($self->num_samples() > 0) {
-        $self->{extra_header} = FasttrackerXmModule::Instrument::ExtraHeader->new($self->{_io}, $self, $self->{_root});
-    }
-}
-
-sub name {
-    my ($self) = @_;
-    return $self->{name};
-}
-
-sub type {
-    my ($self) = @_;
-    return $self->{type};
-}
-
-sub num_samples {
-    my ($self) = @_;
-    return $self->{num_samples};
-}
-
-sub extra_header {
-    my ($self) = @_;
-    return $self->{extra_header};
-}
-
-########################################################################
 package FasttrackerXmModule::Instrument::ExtraHeader;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -640,7 +305,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -651,17 +316,17 @@ sub _read {
     my ($self) = @_;
 
     $self->{len_sample_header} = $self->{_io}->read_u4le();
-    $self->{idx_sample_per_note} = ();
+    $self->{idx_sample_per_note} = [];
     my $n_idx_sample_per_note = 96;
     for (my $i = 0; $i < $n_idx_sample_per_note; $i++) {
         push @{$self->{idx_sample_per_note}}, $self->{_io}->read_u1();
     }
-    $self->{volume_points} = ();
+    $self->{volume_points} = [];
     my $n_volume_points = 12;
     for (my $i = 0; $i < $n_volume_points; $i++) {
         push @{$self->{volume_points}}, FasttrackerXmModule::Instrument::ExtraHeader::EnvelopePoint->new($self->{_io}, $self, $self->{_root});
     }
-    $self->{panning_points} = ();
+    $self->{panning_points} = [];
     my $n_panning_points = 12;
     for (my $i = 0; $i < $n_panning_points; $i++) {
         push @{$self->{panning_points}}, FasttrackerXmModule::Instrument::ExtraHeader::EnvelopePoint->new($self->{_io}, $self, $self->{_root});
@@ -804,7 +469,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -829,7 +494,7 @@ sub y {
 }
 
 ########################################################################
-package FasttrackerXmModule::Instrument::SamplesData;
+package FasttrackerXmModule::Instrument::Header;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 
@@ -848,7 +513,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -858,17 +523,32 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{data} = $self->{_io}->read_bytes(($self->header()->sample_length() * ($self->header()->type()->is_sample_data_16_bit() ? 2 : 1)));
+    $self->{name} = Encode::decode("UTF-8", IO::KaitaiStruct::Stream::bytes_terminate($self->{_io}->read_bytes(22), 0, 0));
+    $self->{type} = $self->{_io}->read_u1();
+    $self->{num_samples} = $self->{_io}->read_u2le();
+    if ($self->num_samples() > 0) {
+        $self->{extra_header} = FasttrackerXmModule::Instrument::ExtraHeader->new($self->{_io}, $self, $self->{_root});
+    }
 }
 
-sub data {
+sub name {
     my ($self) = @_;
-    return $self->{data};
+    return $self->{name};
 }
 
-sub header {
+sub type {
     my ($self) = @_;
-    return $self->{header};
+    return $self->{type};
+}
+
+sub num_samples {
+    my ($self) = @_;
+    return $self->{num_samples};
+}
+
+sub extra_header {
+    my ($self) = @_;
+    return $self->{extra_header};
 }
 
 ########################################################################
@@ -891,7 +571,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -910,7 +590,7 @@ sub _read {
     $self->{panning} = $self->{_io}->read_u1();
     $self->{relative_note_number} = $self->{_io}->read_s1();
     $self->{reserved} = $self->{_io}->read_u1();
-    $self->{name} = Encode::decode("utf-8", IO::KaitaiStruct::Stream::bytes_terminate($self->{_io}->read_bytes(22), 0, 0));
+    $self->{name} = Encode::decode("UTF-8", IO::KaitaiStruct::Stream::bytes_terminate($self->{_io}->read_bytes(22), 0, 0));
 }
 
 sub sample_length {
@@ -987,7 +667,7 @@ sub new {
 
     bless $self, $class;
     $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
+    $self->{_root} = $_root;
 
     $self->_read();
 
@@ -1021,6 +701,326 @@ sub reserved1 {
 sub loop_type {
     my ($self) = @_;
     return $self->{loop_type};
+}
+
+########################################################################
+package FasttrackerXmModule::Instrument::SamplesData;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{data} = $self->{_io}->read_bytes($self->header()->sample_length() * ($self->header()->type()->is_sample_data_16_bit() ? 2 : 1));
+}
+
+sub data {
+    my ($self) = @_;
+    return $self->{data};
+}
+
+sub header {
+    my ($self) = @_;
+    return $self->{header};
+}
+
+########################################################################
+package FasttrackerXmModule::Pattern;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{header} = FasttrackerXmModule::Pattern::Header->new($self->{_io}, $self, $self->{_root});
+    $self->{packed_data} = $self->{_io}->read_bytes($self->header()->main()->len_packed_pattern());
+}
+
+sub header {
+    my ($self) = @_;
+    return $self->{header};
+}
+
+sub packed_data {
+    my ($self) = @_;
+    return $self->{packed_data};
+}
+
+########################################################################
+package FasttrackerXmModule::Pattern::Header;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{header_length} = $self->{_io}->read_u4le();
+    $self->{_raw_main} = $self->{_io}->read_bytes($self->header_length() - 4);
+    my $io__raw_main = IO::KaitaiStruct::Stream->new($self->{_raw_main});
+    $self->{main} = FasttrackerXmModule::Pattern::Header::HeaderMain->new($io__raw_main, $self, $self->{_root});
+}
+
+sub header_length {
+    my ($self) = @_;
+    return $self->{header_length};
+}
+
+sub main {
+    my ($self) = @_;
+    return $self->{main};
+}
+
+sub _raw_main {
+    my ($self) = @_;
+    return $self->{_raw_main};
+}
+
+########################################################################
+package FasttrackerXmModule::Pattern::Header::HeaderMain;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{packing_type} = $self->{_io}->read_u1();
+    my $_on = $self->_root()->preheader()->version_number()->value();
+    if ($_on == 258) {
+        $self->{num_rows_raw} = $self->{_io}->read_u1();
+    }
+    else {
+        $self->{num_rows_raw} = $self->{_io}->read_u2le();
+    }
+    $self->{len_packed_pattern} = $self->{_io}->read_u2le();
+}
+
+sub num_rows {
+    my ($self) = @_;
+    return $self->{num_rows} if ($self->{num_rows});
+    $self->{num_rows} = $self->num_rows_raw() + ($self->_root()->preheader()->version_number()->value() == 258 ? 1 : 0);
+    return $self->{num_rows};
+}
+
+sub packing_type {
+    my ($self) = @_;
+    return $self->{packing_type};
+}
+
+sub num_rows_raw {
+    my ($self) = @_;
+    return $self->{num_rows_raw};
+}
+
+sub len_packed_pattern {
+    my ($self) = @_;
+    return $self->{len_packed_pattern};
+}
+
+########################################################################
+package FasttrackerXmModule::Preheader;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{signature0} = $self->{_io}->read_bytes(17);
+    $self->{module_name} = Encode::decode("UTF-8", IO::KaitaiStruct::Stream::bytes_terminate($self->{_io}->read_bytes(20), 0, 0));
+    $self->{signature1} = $self->{_io}->read_bytes(1);
+    $self->{tracker_name} = Encode::decode("UTF-8", IO::KaitaiStruct::Stream::bytes_terminate($self->{_io}->read_bytes(20), 0, 0));
+    $self->{version_number} = FasttrackerXmModule::Preheader::Version->new($self->{_io}, $self, $self->{_root});
+    $self->{header_size} = $self->{_io}->read_u4le();
+}
+
+sub signature0 {
+    my ($self) = @_;
+    return $self->{signature0};
+}
+
+sub module_name {
+    my ($self) = @_;
+    return $self->{module_name};
+}
+
+sub signature1 {
+    my ($self) = @_;
+    return $self->{signature1};
+}
+
+sub tracker_name {
+    my ($self) = @_;
+    return $self->{tracker_name};
+}
+
+sub version_number {
+    my ($self) = @_;
+    return $self->{version_number};
+}
+
+sub header_size {
+    my ($self) = @_;
+    return $self->{header_size};
+}
+
+########################################################################
+package FasttrackerXmModule::Preheader::Version;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{minor} = $self->{_io}->read_u1();
+    $self->{major} = $self->{_io}->read_u1();
+}
+
+sub value {
+    my ($self) = @_;
+    return $self->{value} if ($self->{value});
+    $self->{value} = $self->major() << 8 | $self->minor();
+    return $self->{value};
+}
+
+sub minor {
+    my ($self) = @_;
+    return $self->{minor};
+}
+
+sub major {
+    my ($self) = @_;
+    return $self->{major};
 }
 
 1;

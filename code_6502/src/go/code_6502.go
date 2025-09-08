@@ -164,23 +164,32 @@ const (
 	Code6502_Opcode__SbcAbsX Code6502_Opcode = 253
 	Code6502_Opcode__IncAbsX Code6502_Opcode = 254
 )
+var values_Code6502_Opcode = map[Code6502_Opcode]struct{}{0: {}, 1: {}, 5: {}, 6: {}, 8: {}, 9: {}, 10: {}, 13: {}, 14: {}, 16: {}, 17: {}, 21: {}, 22: {}, 24: {}, 25: {}, 29: {}, 30: {}, 32: {}, 33: {}, 36: {}, 37: {}, 38: {}, 40: {}, 41: {}, 42: {}, 44: {}, 45: {}, 46: {}, 48: {}, 49: {}, 53: {}, 54: {}, 56: {}, 57: {}, 61: {}, 62: {}, 64: {}, 65: {}, 69: {}, 70: {}, 72: {}, 73: {}, 74: {}, 76: {}, 77: {}, 78: {}, 80: {}, 81: {}, 85: {}, 86: {}, 88: {}, 89: {}, 93: {}, 94: {}, 96: {}, 97: {}, 101: {}, 102: {}, 104: {}, 105: {}, 106: {}, 108: {}, 109: {}, 110: {}, 112: {}, 113: {}, 117: {}, 118: {}, 120: {}, 121: {}, 125: {}, 126: {}, 129: {}, 132: {}, 133: {}, 134: {}, 136: {}, 138: {}, 140: {}, 141: {}, 142: {}, 144: {}, 145: {}, 148: {}, 149: {}, 150: {}, 152: {}, 153: {}, 154: {}, 157: {}, 160: {}, 161: {}, 162: {}, 164: {}, 165: {}, 166: {}, 168: {}, 169: {}, 170: {}, 172: {}, 173: {}, 174: {}, 176: {}, 177: {}, 180: {}, 181: {}, 182: {}, 184: {}, 185: {}, 186: {}, 188: {}, 189: {}, 190: {}, 192: {}, 193: {}, 196: {}, 197: {}, 198: {}, 200: {}, 201: {}, 202: {}, 204: {}, 205: {}, 206: {}, 208: {}, 209: {}, 213: {}, 214: {}, 216: {}, 217: {}, 221: {}, 222: {}, 224: {}, 225: {}, 228: {}, 229: {}, 230: {}, 232: {}, 233: {}, 234: {}, 236: {}, 237: {}, 238: {}, 240: {}, 241: {}, 245: {}, 246: {}, 248: {}, 249: {}, 253: {}, 254: {}}
+func (v Code6502_Opcode) isDefined() bool {
+	_, ok := values_Code6502_Opcode[v]
+	return ok
+}
 type Code6502 struct {
 	Operations []*Code6502_Operation
 	_io *kaitai.Stream
 	_root *Code6502
-	_parent interface{}
+	_parent kaitai.Struct
 }
 func NewCode6502() *Code6502 {
 	return &Code6502{
 	}
 }
 
-func (this *Code6502) Read(io *kaitai.Stream, parent interface{}, root *Code6502) (err error) {
+func (this Code6502) IO_() *kaitai.Stream {
+	return this._io
+}
+
+func (this *Code6502) Read(io *kaitai.Stream, parent kaitai.Struct, root *Code6502) (err error) {
 	this._io = io
 	this._parent = parent
 	this._root = root
 
-	for i := 1;; i++ {
+	for i := 0;; i++ {
 		tmp1, err := this._io.EOF()
 		if err != nil {
 			return err
@@ -209,6 +218,10 @@ func NewCode6502_Operation() *Code6502_Operation {
 	}
 }
 
+func (this Code6502_Operation) IO_() *kaitai.Stream {
+	return this._io
+}
+
 func (this *Code6502_Operation) Read(io *kaitai.Stream, parent *Code6502, root *Code6502) (err error) {
 	this._io = io
 	this._parent = parent
@@ -220,55 +233,55 @@ func (this *Code6502_Operation) Read(io *kaitai.Stream, parent *Code6502, root *
 	}
 	this.Code = Code6502_Opcode(tmp3)
 	switch (this.Code) {
-	case Code6502_Opcode__BccRel:
-		tmp4, err := this._io.ReadS1()
+	case Code6502_Opcode__AdcAbs:
+		tmp4, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp4)
-	case Code6502_Opcode__OraIndY:
-		tmp5, err := this._io.ReadU1()
+	case Code6502_Opcode__AdcAbsX:
+		tmp5, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp5)
-	case Code6502_Opcode__LdaIndY:
-		tmp6, err := this._io.ReadU1()
+	case Code6502_Opcode__AdcAbsY:
+		tmp6, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp6)
-	case Code6502_Opcode__CpxZpg:
+	case Code6502_Opcode__AdcImm:
 		tmp7, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp7)
-	case Code6502_Opcode__StaZpgX:
+	case Code6502_Opcode__AdcIndY:
 		tmp8, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp8)
-	case Code6502_Opcode__StaZpg:
+	case Code6502_Opcode__AdcXInd:
 		tmp9, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp9)
-	case Code6502_Opcode__BcsRel:
-		tmp10, err := this._io.ReadS1()
+	case Code6502_Opcode__AdcZpg:
+		tmp10, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp10)
-	case Code6502_Opcode__LdyZpgX:
+	case Code6502_Opcode__AdcZpgX:
 		tmp11, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp11)
-	case Code6502_Opcode__LsrAbsX:
+	case Code6502_Opcode__AndAbs:
 		tmp12, err := this._io.ReadU2le()
 		if err != nil {
 			return err
@@ -280,673 +293,673 @@ func (this *Code6502_Operation) Read(io *kaitai.Stream, parent *Code6502, root *
 			return err
 		}
 		this.Args = uint16(tmp13)
-	case Code6502_Opcode__AdcAbs:
+	case Code6502_Opcode__AndAbsY:
 		tmp14, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp14)
-	case Code6502_Opcode__StaAbs:
-		tmp15, err := this._io.ReadU2le()
+	case Code6502_Opcode__AndImm:
+		tmp15, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp15)
-	case Code6502_Opcode__BneRel:
-		tmp16, err := this._io.ReadS1()
+	case Code6502_Opcode__AndIndY:
+		tmp16, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp16)
-	case Code6502_Opcode__LdaImm:
+	case Code6502_Opcode__AndXInd:
 		tmp17, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp17)
-	case Code6502_Opcode__AdcImm:
+	case Code6502_Opcode__AndZpg:
 		tmp18, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp18)
-	case Code6502_Opcode__LsrAbs:
-		tmp19, err := this._io.ReadU2le()
+	case Code6502_Opcode__AndZpgX:
+		tmp19, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp19)
-	case Code6502_Opcode__AdcAbsX:
+	case Code6502_Opcode__AslAbs:
 		tmp20, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp20)
-	case Code6502_Opcode__StaAbsX:
+	case Code6502_Opcode__AslAbsX:
 		tmp21, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp21)
-	case Code6502_Opcode__CpxImm:
+	case Code6502_Opcode__AslZpg:
 		tmp22, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp22)
-	case Code6502_Opcode__JmpInd:
-		tmp23, err := this._io.ReadU2le()
+	case Code6502_Opcode__AslZpgX:
+		tmp23, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp23)
-	case Code6502_Opcode__AdcZpg:
-		tmp24, err := this._io.ReadU1()
+	case Code6502_Opcode__BccRel:
+		tmp24, err := this._io.ReadS1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp24)
-	case Code6502_Opcode__EorImm:
-		tmp25, err := this._io.ReadU1()
+	case Code6502_Opcode__BcsRel:
+		tmp25, err := this._io.ReadS1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp25)
-	case Code6502_Opcode__EorAbsX:
-		tmp26, err := this._io.ReadU2le()
+	case Code6502_Opcode__BeqRel:
+		tmp26, err := this._io.ReadS1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp26)
-	case Code6502_Opcode__StaXInd:
-		tmp27, err := this._io.ReadU1()
+	case Code6502_Opcode__BitAbs:
+		tmp27, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp27)
-	case Code6502_Opcode__SbcImm:
+	case Code6502_Opcode__BitZpg:
 		tmp28, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp28)
-	case Code6502_Opcode__CpyAbs:
-		tmp29, err := this._io.ReadU2le()
+	case Code6502_Opcode__BmiRel:
+		tmp29, err := this._io.ReadS1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp29)
-	case Code6502_Opcode__LdxAbsY:
-		tmp30, err := this._io.ReadU2le()
+	case Code6502_Opcode__BneRel:
+		tmp30, err := this._io.ReadS1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp30)
-	case Code6502_Opcode__AdcZpgX:
-		tmp31, err := this._io.ReadU1()
+	case Code6502_Opcode__BplRel:
+		tmp31, err := this._io.ReadS1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp31)
-	case Code6502_Opcode__BplRel:
+	case Code6502_Opcode__BvcRel:
 		tmp32, err := this._io.ReadS1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp32)
-	case Code6502_Opcode__OraImm:
-		tmp33, err := this._io.ReadU1()
+	case Code6502_Opcode__BvsRel:
+		tmp33, err := this._io.ReadS1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp33)
-	case Code6502_Opcode__RorAbsX:
+	case Code6502_Opcode__CmpAbs:
 		tmp34, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp34)
-	case Code6502_Opcode__AdcIndY:
-		tmp35, err := this._io.ReadU1()
+	case Code6502_Opcode__CmpAbsX:
+		tmp35, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp35)
-	case Code6502_Opcode__EorIndY:
-		tmp36, err := this._io.ReadU1()
+	case Code6502_Opcode__CmpAbsY:
+		tmp36, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp36)
-	case Code6502_Opcode__LdaAbs:
-		tmp37, err := this._io.ReadU2le()
+	case Code6502_Opcode__CmpImm:
+		tmp37, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp37)
-	case Code6502_Opcode__BitZpg:
+	case Code6502_Opcode__CmpIndY:
 		tmp38, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp38)
-	case Code6502_Opcode__RolZpg:
+	case Code6502_Opcode__CmpXInd:
 		tmp39, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp39)
-	case Code6502_Opcode__StyZpg:
+	case Code6502_Opcode__CmpZpg:
 		tmp40, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp40)
-	case Code6502_Opcode__JsrAbs:
-		tmp41, err := this._io.ReadU2le()
+	case Code6502_Opcode__CmpZpgX:
+		tmp41, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp41)
-	case Code6502_Opcode__EorZpg:
-		tmp42, err := this._io.ReadU1()
+	case Code6502_Opcode__CpxAbs:
+		tmp42, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp42)
-	case Code6502_Opcode__EorAbs:
-		tmp43, err := this._io.ReadU2le()
+	case Code6502_Opcode__CpxImm:
+		tmp43, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp43)
-	case Code6502_Opcode__LdaAbsY:
-		tmp44, err := this._io.ReadU2le()
+	case Code6502_Opcode__CpxZpg:
+		tmp44, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp44)
-	case Code6502_Opcode__LdaZpgX:
-		tmp45, err := this._io.ReadU1()
+	case Code6502_Opcode__CpyAbs:
+		tmp45, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp45)
-	case Code6502_Opcode__BmiRel:
-		tmp46, err := this._io.ReadS1()
+	case Code6502_Opcode__CpyImm:
+		tmp46, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp46)
-	case Code6502_Opcode__StyZpgX:
+	case Code6502_Opcode__CpyZpg:
 		tmp47, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp47)
-	case Code6502_Opcode__AdcXInd:
-		tmp48, err := this._io.ReadU1()
+	case Code6502_Opcode__DecAbs:
+		tmp48, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp48)
-	case Code6502_Opcode__RolAbsX:
+	case Code6502_Opcode__DecAbsX:
 		tmp49, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp49)
-	case Code6502_Opcode__StxZpg:
+	case Code6502_Opcode__DecZpg:
 		tmp50, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp50)
-	case Code6502_Opcode__AslAbsX:
-		tmp51, err := this._io.ReadU2le()
+	case Code6502_Opcode__DecZpgX:
+		tmp51, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp51)
-	case Code6502_Opcode__LsrZpgX:
-		tmp52, err := this._io.ReadU1()
+	case Code6502_Opcode__EorAbs:
+		tmp52, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp52)
-	case Code6502_Opcode__OraZpgX:
-		tmp53, err := this._io.ReadU1()
+	case Code6502_Opcode__EorAbsX:
+		tmp53, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp53)
-	case Code6502_Opcode__AdcAbsY:
+	case Code6502_Opcode__EorAbsY:
 		tmp54, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp54)
-	case Code6502_Opcode__LdyAbs:
-		tmp55, err := this._io.ReadU2le()
+	case Code6502_Opcode__EorImm:
+		tmp55, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp55)
-	case Code6502_Opcode__CmpAbsX:
-		tmp56, err := this._io.ReadU2le()
+	case Code6502_Opcode__EorIndY:
+		tmp56, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp56)
-	case Code6502_Opcode__LdaAbsX:
-		tmp57, err := this._io.ReadU2le()
+	case Code6502_Opcode__EorXInd:
+		tmp57, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp57)
-	case Code6502_Opcode__BvsRel:
-		tmp58, err := this._io.ReadS1()
+	case Code6502_Opcode__EorZpg:
+		tmp58, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp58)
-	case Code6502_Opcode__LdaXInd:
+	case Code6502_Opcode__EorZpgX:
 		tmp59, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp59)
-	case Code6502_Opcode__CmpImm:
-		tmp60, err := this._io.ReadU1()
+	case Code6502_Opcode__IncAbs:
+		tmp60, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp60)
-	case Code6502_Opcode__IncZpgX:
-		tmp61, err := this._io.ReadU1()
+	case Code6502_Opcode__IncAbsX:
+		tmp61, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp61)
-	case Code6502_Opcode__AslZpg:
+	case Code6502_Opcode__IncZpg:
 		tmp62, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp62)
-	case Code6502_Opcode__AndAbsY:
-		tmp63, err := this._io.ReadU2le()
+	case Code6502_Opcode__IncZpgX:
+		tmp63, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp63)
-	case Code6502_Opcode__LdxImm:
-		tmp64, err := this._io.ReadU1()
+	case Code6502_Opcode__JmpAbs:
+		tmp64, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp64)
-	case Code6502_Opcode__AndZpg:
-		tmp65, err := this._io.ReadU1()
+	case Code6502_Opcode__JmpInd:
+		tmp65, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp65)
-	case Code6502_Opcode__CpxAbs:
+	case Code6502_Opcode__JsrAbs:
 		tmp66, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp66)
-	case Code6502_Opcode__DecZpg:
-		tmp67, err := this._io.ReadU1()
+	case Code6502_Opcode__LdaAbs:
+		tmp67, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp67)
-	case Code6502_Opcode__RorZpgX:
-		tmp68, err := this._io.ReadU1()
+	case Code6502_Opcode__LdaAbsX:
+		tmp68, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp68)
-	case Code6502_Opcode__LdxZpg:
-		tmp69, err := this._io.ReadU1()
+	case Code6502_Opcode__LdaAbsY:
+		tmp69, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp69)
-	case Code6502_Opcode__DecZpgX:
+	case Code6502_Opcode__LdaImm:
 		tmp70, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp70)
-	case Code6502_Opcode__SbcZpg:
+	case Code6502_Opcode__LdaIndY:
 		tmp71, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp71)
-	case Code6502_Opcode__CmpAbs:
-		tmp72, err := this._io.ReadU2le()
+	case Code6502_Opcode__LdaXInd:
+		tmp72, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp72)
-	case Code6502_Opcode__RorZpg:
+	case Code6502_Opcode__LdaZpg:
 		tmp73, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp73)
-	case Code6502_Opcode__IncAbs:
-		tmp74, err := this._io.ReadU2le()
+	case Code6502_Opcode__LdaZpgX:
+		tmp74, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp74)
-	case Code6502_Opcode__AndXInd:
-		tmp75, err := this._io.ReadU1()
+	case Code6502_Opcode__LdxAbs:
+		tmp75, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp75)
-	case Code6502_Opcode__SbcAbsX:
+	case Code6502_Opcode__LdxAbsY:
 		tmp76, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp76)
-	case Code6502_Opcode__AslAbs:
-		tmp77, err := this._io.ReadU2le()
+	case Code6502_Opcode__LdxImm:
+		tmp77, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp77)
-	case Code6502_Opcode__EorXInd:
+	case Code6502_Opcode__LdxZpg:
 		tmp78, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp78)
-	case Code6502_Opcode__OraAbsX:
-		tmp79, err := this._io.ReadU2le()
+	case Code6502_Opcode__LdxZpgY:
+		tmp79, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp79)
-	case Code6502_Opcode__LdyAbsX:
+	case Code6502_Opcode__LdyAbs:
 		tmp80, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp80)
-	case Code6502_Opcode__SbcXInd:
-		tmp81, err := this._io.ReadU1()
+	case Code6502_Opcode__LdyAbsX:
+		tmp81, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp81)
-	case Code6502_Opcode__AslZpgX:
+	case Code6502_Opcode__LdyImm:
 		tmp82, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp82)
-	case Code6502_Opcode__SbcAbsY:
-		tmp83, err := this._io.ReadU2le()
+	case Code6502_Opcode__LdyZpg:
+		tmp83, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp83)
-	case Code6502_Opcode__RolAbs:
-		tmp84, err := this._io.ReadU2le()
+	case Code6502_Opcode__LdyZpgX:
+		tmp84, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp84)
-	case Code6502_Opcode__LsrZpg:
-		tmp85, err := this._io.ReadU1()
+	case Code6502_Opcode__LsrAbs:
+		tmp85, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp85)
-	case Code6502_Opcode__StxZpgY:
-		tmp86, err := this._io.ReadU1()
+	case Code6502_Opcode__LsrAbsX:
+		tmp86, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp86)
-	case Code6502_Opcode__OraAbsY:
-		tmp87, err := this._io.ReadU2le()
+	case Code6502_Opcode__LsrZpg:
+		tmp87, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp87)
-	case Code6502_Opcode__EorAbsY:
-		tmp88, err := this._io.ReadU2le()
+	case Code6502_Opcode__LsrZpgX:
+		tmp88, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp88)
-	case Code6502_Opcode__BitAbs:
+	case Code6502_Opcode__OraAbs:
 		tmp89, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp89)
-	case Code6502_Opcode__LdxAbs:
+	case Code6502_Opcode__OraAbsX:
 		tmp90, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp90)
-	case Code6502_Opcode__LdyImm:
-		tmp91, err := this._io.ReadU1()
+	case Code6502_Opcode__OraAbsY:
+		tmp91, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp91)
-	case Code6502_Opcode__JmpAbs:
-		tmp92, err := this._io.ReadU2le()
+	case Code6502_Opcode__OraImm:
+		tmp92, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp92)
-	case Code6502_Opcode__BeqRel:
-		tmp93, err := this._io.ReadS1()
+	case Code6502_Opcode__OraIndY:
+		tmp93, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp93)
-	case Code6502_Opcode__DecAbsX:
-		tmp94, err := this._io.ReadU2le()
+	case Code6502_Opcode__OraXInd:
+		tmp94, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp94)
-	case Code6502_Opcode__AndIndY:
+	case Code6502_Opcode__OraZpg:
 		tmp95, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp95)
-	case Code6502_Opcode__AndZpgX:
+	case Code6502_Opcode__OraZpgX:
 		tmp96, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp96)
-	case Code6502_Opcode__CmpZpgX:
-		tmp97, err := this._io.ReadU1()
+	case Code6502_Opcode__RolAbs:
+		tmp97, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp97)
-	case Code6502_Opcode__EorZpgX:
-		tmp98, err := this._io.ReadU1()
+	case Code6502_Opcode__RolAbsX:
+		tmp98, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp98)
-	case Code6502_Opcode__SbcAbs:
-		tmp99, err := this._io.ReadU2le()
+	case Code6502_Opcode__RolZpg:
+		tmp99, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp99)
-	case Code6502_Opcode__CmpAbsY:
-		tmp100, err := this._io.ReadU2le()
+	case Code6502_Opcode__RolZpgX:
+		tmp100, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp100)
-	case Code6502_Opcode__SbcIndY:
-		tmp101, err := this._io.ReadU1()
+	case Code6502_Opcode__RorAbs:
+		tmp101, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp101)
-	case Code6502_Opcode__CmpZpg:
-		tmp102, err := this._io.ReadU1()
+	case Code6502_Opcode__RorAbsX:
+		tmp102, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp102)
-	case Code6502_Opcode__StxAbs:
-		tmp103, err := this._io.ReadU2le()
+	case Code6502_Opcode__RorZpg:
+		tmp103, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp103)
-	case Code6502_Opcode__StyAbs:
-		tmp104, err := this._io.ReadU2le()
+	case Code6502_Opcode__RorZpgX:
+		tmp104, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp104)
-	case Code6502_Opcode__CpyZpg:
-		tmp105, err := this._io.ReadU1()
+	case Code6502_Opcode__SbcAbs:
+		tmp105, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp105)
-	case Code6502_Opcode__DecAbs:
+	case Code6502_Opcode__SbcAbsX:
 		tmp106, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp106)
-	case Code6502_Opcode__RorAbs:
+	case Code6502_Opcode__SbcAbsY:
 		tmp107, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp107)
-	case Code6502_Opcode__StaAbsY:
-		tmp108, err := this._io.ReadU2le()
+	case Code6502_Opcode__SbcImm:
+		tmp108, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp108)
-	case Code6502_Opcode__IncAbsX:
-		tmp109, err := this._io.ReadU2le()
+	case Code6502_Opcode__SbcIndY:
+		tmp109, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp109)
-	case Code6502_Opcode__LdaZpg:
+	case Code6502_Opcode__SbcXInd:
 		tmp110, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp110)
-	case Code6502_Opcode__CmpIndY:
+	case Code6502_Opcode__SbcZpg:
 		tmp111, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp111)
-	case Code6502_Opcode__CpyImm:
+	case Code6502_Opcode__SbcZpgX:
 		tmp112, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp112)
-	case Code6502_Opcode__LdxZpgY:
-		tmp113, err := this._io.ReadU1()
+	case Code6502_Opcode__StaAbs:
+		tmp113, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp113)
-	case Code6502_Opcode__SbcZpgX:
-		tmp114, err := this._io.ReadU1()
+	case Code6502_Opcode__StaAbsX:
+		tmp114, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp114)
-	case Code6502_Opcode__OraXInd:
-		tmp115, err := this._io.ReadU1()
+	case Code6502_Opcode__StaAbsY:
+		tmp115, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp115)
-	case Code6502_Opcode__RolZpgX:
+	case Code6502_Opcode__StaIndY:
 		tmp116, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp116)
-	case Code6502_Opcode__OraAbs:
-		tmp117, err := this._io.ReadU2le()
+	case Code6502_Opcode__StaXInd:
+		tmp117, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp117)
-	case Code6502_Opcode__StaIndY:
+	case Code6502_Opcode__StaZpg:
 		tmp118, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp118)
-	case Code6502_Opcode__AndAbs:
-		tmp119, err := this._io.ReadU2le()
+	case Code6502_Opcode__StaZpgX:
+		tmp119, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp119)
-	case Code6502_Opcode__AndImm:
-		tmp120, err := this._io.ReadU1()
+	case Code6502_Opcode__StxAbs:
+		tmp120, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp120)
-	case Code6502_Opcode__CmpXInd:
+	case Code6502_Opcode__StxZpg:
 		tmp121, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp121)
-	case Code6502_Opcode__LdyZpg:
+	case Code6502_Opcode__StxZpgY:
 		tmp122, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp122)
-	case Code6502_Opcode__IncZpg:
-		tmp123, err := this._io.ReadU1()
+	case Code6502_Opcode__StyAbs:
+		tmp123, err := this._io.ReadU2le()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp123)
-	case Code6502_Opcode__BvcRel:
-		tmp124, err := this._io.ReadS1()
+	case Code6502_Opcode__StyZpg:
+		tmp124, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Args = uint16(tmp124)
-	case Code6502_Opcode__OraZpg:
+	case Code6502_Opcode__StyZpgX:
 		tmp125, err := this._io.ReadU1()
 		if err != nil {
 			return err

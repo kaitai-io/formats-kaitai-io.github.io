@@ -2,8 +2,8 @@
 
 require 'kaitai/struct/struct'
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
-  raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
+unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.11')
+  raise "Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
 
@@ -13,8 +13,8 @@ end
 # guarantees of delivery, order of segments and avoidance of duplicate
 # delivery.
 class TcpSegment < Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
+  def initialize(_io, _parent = nil, _root = nil)
+    super(_io, _parent, _root || self)
     _read
   end
 
@@ -30,8 +30,8 @@ class TcpSegment < Kaitai::Struct::Struct
     @window_size = @_io.read_u2be
     @checksum = @_io.read_u2be
     @urgent_pointer = @_io.read_u2be
-    if ((data_offset * 4) - 20) != 0
-      @options = @_io.read_bytes(((data_offset * 4) - 20))
+    if data_offset * 4 - 20 != 0
+      @options = @_io.read_bytes(data_offset * 4 - 20)
     end
     @body = @_io.read_bytes_full
     self
@@ -40,7 +40,7 @@ class TcpSegment < Kaitai::Struct::Struct
   ##
   # TCP header flags as defined "TCP Header Flags" registry.
   class Flags < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = nil)
       super(_io, _parent, _root)
       _read
     end
@@ -89,8 +89,8 @@ class TcpSegment < Kaitai::Struct::Struct
     # No more data from sender
     attr_reader :fin
 
-    def inspect
-      (cwr ? "|CWR" : "") + (ece ? "|ECE" : "") + (urg ? "|URG" : "") + (ack ? "|ACK" : "") + (psh ? "|PSH" : "") + (rst ? "|RST" : "") + (syn ? "|SYN" : "") + (fin ? "|FIN" : "")
+    def to_s
+      (((((((cwr ? "|CWR" : "") + (ece ? "|ECE" : "")) + (urg ? "|URG" : "")) + (ack ? "|ACK" : "")) + (psh ? "|PSH" : "")) + (rst ? "|RST" : "")) + (syn ? "|SYN" : "")) + (fin ? "|FIN" : "")
     end
   end
 

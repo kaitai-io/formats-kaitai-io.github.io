@@ -195,6 +195,11 @@ They are mostly found in resource forks, but can occasionally appear standalone 
                 
                 <li>
                 
+                <a href="java-write.html" title="Classic MacOS Sound Resource parsing Java (read-write) library">Java (read-write)</a></li>
+                
+                
+                <li>
+                
                 <a href="javascript.html" title="Classic MacOS Sound Resource parsing JavaScript library">JavaScript</a></li>
                 
                 
@@ -223,9 +228,19 @@ They are mostly found in resource forks, but can occasionally appear standalone 
                 <a href="python.html" title="Classic MacOS Sound Resource parsing Python library">Python</a></li>
                 
                 
+                <li>
+                
+                <a href="python-write.html" title="Classic MacOS Sound Resource parsing Python (read-write) library">Python (read-write)</a></li>
+                
+                
                 <li class="active">
                 
                 <a href="ruby.html" title="Classic MacOS Sound Resource parsing Ruby library">Ruby</a></li>
+                
+                
+                <li>
+                
+                <a href="rust.html" title="Classic MacOS Sound Resource parsing Rust library">Rust</a></li>
                 
             </ul>
             </div>
@@ -302,8 +317,8 @@ They are mostly found in resource forks, but can occasionally appear standalone 
 
 <span class="nb">require</span><span class="w"> </span><span class="s1">&#39;kaitai/struct/struct&#39;</span>
 
-<span class="k">unless</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.9&#39;</span><span class="p">)</span>
-<span class="w">  </span><span class="k">raise</span><span class="w"> </span><span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">unless</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.11&#39;</span><span class="p">)</span>
+<span class="w">  </span><span class="k">raise</span><span class="w"> </span><span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.11 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
 <span class="k">end</span>
 
 
@@ -346,12 +361,16 @@ They are mostly found in resource forks, but can occasionally appear standalone 
 <span class="w">  </span><span class="p">}</span>
 <span class="w">  </span><span class="no">I__CMD_TYPE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">CMD_TYPE</span><span class="o">.</span><span class="n">invert</span>
 
-<span class="w">  </span><span class="no">SOUND_HEADER_TYPE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="mi">0</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:sound_header_type_standard</span><span class="p">,</span>
-<span class="w">    </span><span class="mi">254</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:sound_header_type_compressed</span><span class="p">,</span>
-<span class="w">    </span><span class="mi">255</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:sound_header_type_extended</span><span class="p">,</span>
+<span class="w">  </span><span class="no">COMPRESSION_TYPE_ENUM</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="o">-</span><span class="mi">2</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:compression_type_enum_variable_compression</span><span class="p">,</span>
+<span class="w">    </span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:compression_type_enum_fixed_compression</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">0</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:compression_type_enum_not_compressed</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">1</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:compression_type_enum_two_to_one</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">2</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:compression_type_enum_eight_to_three</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">3</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:compression_type_enum_three_to_one</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">4</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:compression_type_enum_six_to_one</span><span class="p">,</span>
 <span class="w">  </span><span class="p">}</span>
-<span class="w">  </span><span class="no">I__SOUND_HEADER_TYPE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SOUND_HEADER_TYPE</span><span class="o">.</span><span class="n">invert</span>
+<span class="w">  </span><span class="no">I__COMPRESSION_TYPE_ENUM</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">COMPRESSION_TYPE_ENUM</span><span class="o">.</span><span class="n">invert</span>
 
 <span class="w">  </span><span class="no">DATA_TYPE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="mi">1</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:data_type_square_wave_synth</span><span class="p">,</span>
@@ -359,14 +378,6 @@ They are mostly found in resource forks, but can occasionally appear standalone 
 <span class="w">    </span><span class="mi">5</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:data_type_sampled_synth</span><span class="p">,</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="w">  </span><span class="no">I__DATA_TYPE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">DATA_TYPE</span><span class="o">.</span><span class="n">invert</span>
-
-<span class="w">  </span><span class="no">WAVE_INIT_OPTION</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="mi">4</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:wave_init_option_channel0</span><span class="p">,</span>
-<span class="w">    </span><span class="mi">5</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:wave_init_option_channel1</span><span class="p">,</span>
-<span class="w">    </span><span class="mi">6</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:wave_init_option_channel2</span><span class="p">,</span>
-<span class="w">    </span><span class="mi">7</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:wave_init_option_channel3</span><span class="p">,</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="w">  </span><span class="no">I__WAVE_INIT_OPTION</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">WAVE_INIT_OPTION</span><span class="o">.</span><span class="n">invert</span>
 
 <span class="w">  </span><span class="no">INIT_OPTION</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="mi">2</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:init_option_chan_left</span><span class="p">,</span>
@@ -380,18 +391,22 @@ They are mostly found in resource forks, but can occasionally appear standalone 
 <span class="w">  </span><span class="p">}</span>
 <span class="w">  </span><span class="no">I__INIT_OPTION</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">INIT_OPTION</span><span class="o">.</span><span class="n">invert</span>
 
-<span class="w">  </span><span class="no">COMPRESSION_TYPE_ENUM</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="o">-</span><span class="mi">2</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:compression_type_enum_variable_compression</span><span class="p">,</span>
-<span class="w">    </span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:compression_type_enum_fixed_compression</span><span class="p">,</span>
-<span class="w">    </span><span class="mi">0</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:compression_type_enum_not_compressed</span><span class="p">,</span>
-<span class="w">    </span><span class="mi">1</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:compression_type_enum_two_to_one</span><span class="p">,</span>
-<span class="w">    </span><span class="mi">2</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:compression_type_enum_eight_to_three</span><span class="p">,</span>
-<span class="w">    </span><span class="mi">3</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:compression_type_enum_three_to_one</span><span class="p">,</span>
-<span class="w">    </span><span class="mi">4</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:compression_type_enum_six_to_one</span><span class="p">,</span>
+<span class="w">  </span><span class="no">SOUND_HEADER_TYPE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="mi">0</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:sound_header_type_standard</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">254</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:sound_header_type_compressed</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">255</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:sound_header_type_extended</span><span class="p">,</span>
 <span class="w">  </span><span class="p">}</span>
-<span class="w">  </span><span class="no">I__COMPRESSION_TYPE_ENUM</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">COMPRESSION_TYPE_ENUM</span><span class="o">.</span><span class="n">invert</span>
-<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
-<span class="w">    </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">  </span><span class="no">I__SOUND_HEADER_TYPE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SOUND_HEADER_TYPE</span><span class="o">.</span><span class="n">invert</span>
+
+<span class="w">  </span><span class="no">WAVE_INIT_OPTION</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="mi">4</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:wave_init_option_channel0</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">5</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:wave_init_option_channel1</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">6</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:wave_init_option_channel2</span><span class="p">,</span>
+<span class="w">    </span><span class="mi">7</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="ss">:wave_init_option_channel3</span><span class="p">,</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="no">I__WAVE_INIT_OPTION</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">WAVE_INIT_OPTION</span><span class="o">.</span><span class="n">invert</span>
+<span class="w">  </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">    </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
 <span class="w">    </span><span class="n">_read</span>
 <span class="w">  </span><span class="k">end</span>
 
@@ -416,176 +431,14 @@ They are mostly found in resource forks, but can occasionally appear standalone 
 <span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="nb">self</span>
 <span class="w">  </span><span class="k">end</span>
-<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">Extended</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
-<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
-<span class="w">      </span><span class="n">_read</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">      </span><span class="vi">@instrument_chunk_ptr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
-<span class="w">      </span><span class="vi">@aes_recording_ptr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
-<span class="w">      </span><span class="nb">self</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># pointer to instrument info</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:instrument_chunk_ptr</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># pointer to audio info</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:aes_recording_ptr</span>
-<span class="w">  </span><span class="k">end</span>
-<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">SoundHeader</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
-<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
-<span class="w">      </span><span class="n">_read</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="n">start_ofs</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span>
-<span class="w">        </span><span class="vi">@_unnamed0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="w">      </span><span class="k">end</span>
-<span class="w">      </span><span class="vi">@sample_ptr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
-<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="n">sound_header_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="ss">:sound_header_type_standard</span>
-<span class="w">        </span><span class="vi">@num_samples</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
-<span class="w">      </span><span class="k">end</span>
-<span class="w">      </span><span class="k">if</span><span class="w">  </span><span class="p">((</span><span class="n">sound_header_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="ss">:sound_header_type_extended</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="n">sound_header_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="ss">:sound_header_type_compressed</span><span class="p">))</span><span class="w"> </span>
-<span class="w">        </span><span class="vi">@num_channels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
-<span class="w">      </span><span class="k">end</span>
-<span class="w">      </span><span class="vi">@sample_rate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">UnsignedFixedPoint</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@loop_start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
-<span class="w">      </span><span class="vi">@loop_end</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
-<span class="w">      </span><span class="vi">@encode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">MacOsResourceSnd</span><span class="o">::</span><span class="no">SOUND_HEADER_TYPE</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@midi_note</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-<span class="w">      </span><span class="k">if</span><span class="w">  </span><span class="p">((</span><span class="n">sound_header_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="ss">:sound_header_type_extended</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="n">sound_header_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="ss">:sound_header_type_compressed</span><span class="p">))</span><span class="w"> </span>
-<span class="w">        </span><span class="vi">@extended_or_compressed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">ExtendedOrCompressed</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">      </span><span class="k">end</span>
-<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="n">sample_ptr</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span>
-<span class="w">        </span><span class="vi">@sample_area</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">sound_header_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="ss">:sound_header_type_standard</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="n">num_samples</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">(</span><span class="n">sound_header_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="ss">:sound_header_type_extended</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="p">(((</span><span class="n">extended_or_compressed</span><span class="o">.</span><span class="n">num_frames</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">num_channels</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">extended_or_compressed</span><span class="o">.</span><span class="n">bits_per_sample</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">8</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">(</span><span class="n">_io</span><span class="o">.</span><span class="n">size</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">_io</span><span class="o">.</span><span class="n">pos</span><span class="p">))))</span>
-<span class="w">      </span><span class="k">end</span>
-<span class="w">      </span><span class="nb">self</span>
-<span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">start_ofs</span>
-<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@start_ofs</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@start_ofs</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">      </span><span class="vi">@start_ofs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="o">.</span><span class="n">pos</span>
-<span class="w">      </span><span class="vi">@start_ofs</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># base frequency of sample in Hz</span>
-<span class="w">    </span><span class="c1"># Calculated with the formula (2 ** ((midi_note - 69) / 12)) * 440</span>
-<span class="w">    </span><span class="c1"># @see https://en.wikipedia.org/wiki/MIDI_tuning_standard Source</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">base_freqeuncy</span>
-<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@base_freqeuncy</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@base_freqeuncy</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">      </span><span class="k">if</span><span class="w">  </span><span class="p">((</span><span class="n">midi_note</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">midi_note</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">128</span><span class="p">))</span><span class="w"> </span>
-<span class="w">        </span><span class="vi">@base_freqeuncy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_root</span><span class="o">.</span><span class="n">midi_note_to_frequency</span><span class="o">[</span><span class="n">midi_note</span><span class="o">]</span>
-<span class="w">      </span><span class="k">end</span>
-<span class="w">      </span><span class="vi">@base_freqeuncy</span>
-<span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">sound_header_type</span>
-<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@sound_header_type</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@sound_header_type</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">      </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
-<span class="w">      </span><span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">((</span><span class="n">start_ofs</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">20</span><span class="p">))</span>
-<span class="w">      </span><span class="vi">@sound_header_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">MacOsResourceSnd</span><span class="o">::</span><span class="no">SOUND_HEADER_TYPE</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@sound_header_type</span>
-<span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:_unnamed0</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># pointer to samples (or 0 if samples follow data structure)</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:sample_ptr</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># number of samples</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:num_samples</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># number of channels in sample</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:num_channels</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># The rate at which the sample was originally recorded.</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:sample_rate</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># loop point beginning</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:loop_start</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># loop point ending</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:loop_end</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># sample&#39;s encoding option</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:encode</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># base frequency of sample, expressed as MIDI note values, 60 is middle C</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:midi_note</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:extended_or_compressed</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># sampled-sound data</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:sample_area</span>
-<span class="w">  </span><span class="k">end</span>
-<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">UnsignedFixedPoint</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
-<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
-<span class="w">      </span><span class="n">_read</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">      </span><span class="vi">@integer_part</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
-<span class="w">      </span><span class="vi">@fraction_part</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
-<span class="w">      </span><span class="nb">self</span>
-<span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">value</span>
-<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@value</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@value</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">      </span><span class="vi">@value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">integer_part</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">fraction_part</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">65535</span><span class="o">.</span><span class="mi">0</span><span class="p">))</span>
-<span class="w">      </span><span class="vi">@value</span>
-<span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:integer_part</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:fraction_part</span>
-<span class="w">  </span><span class="k">end</span>
-<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">SoundCommand</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
-<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
-<span class="w">      </span><span class="n">_read</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">      </span><span class="vi">@is_data_offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span>
-<span class="w">      </span><span class="vi">@cmd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">MacOsResourceSnd</span><span class="o">::</span><span class="no">CMD_TYPE</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">15</span><span class="p">))</span>
-<span class="w">      </span><span class="vi">@_io</span><span class="o">.</span><span class="n">align_to_byte</span>
-<span class="w">      </span><span class="vi">@param1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
-<span class="w">      </span><span class="vi">@param2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
-<span class="w">      </span><span class="nb">self</span>
-<span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">sound_header</span>
-<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@sound_header</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@sound_header</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">      </span><span class="k">if</span><span class="w">  </span><span class="p">((</span><span class="n">is_data_offset</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">cmd</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="ss">:cmd_type_buffer_cmd</span><span class="p">))</span><span class="w"> </span>
-<span class="w">        </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
-<span class="w">        </span><span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">param2</span><span class="p">)</span>
-<span class="w">        </span><span class="vi">@sound_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SoundHeader</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
-<span class="w">        </span><span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
-<span class="w">      </span><span class="k">end</span>
-<span class="w">      </span><span class="vi">@sound_header</span>
-<span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:is_data_offset</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:cmd</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:param1</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:param2</span>
-<span class="w">  </span><span class="k">end</span>
 <span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">Compressed</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 <span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
 <span class="w">      </span><span class="n">_read</span>
 <span class="w">    </span><span class="k">end</span>
 
 <span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">      </span><span class="vi">@format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;UTF-8&#39;</span><span class="p">)</span>
 <span class="w">      </span><span class="vi">@reserved</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
 <span class="w">      </span><span class="vi">@state_vars_ptr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
 <span class="w">      </span><span class="vi">@left_over_samples_ptr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
@@ -629,8 +482,99 @@ They are mostly found in resource forks, but can occasionally appear standalone 
 <span class="w">    </span><span class="c1"># @see https://vintageapple.org/inside_o/pdf/Inside_Macintosh_Volume_VI_1991.pdf Page 22-49, absolute page number 1169 in the PDF</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:synthesizer_id</span>
 <span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">DataFormat</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">MacOsResourceSnd</span><span class="o">::</span><span class="no">DATA_TYPE</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">comp_init</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@comp_init</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@comp_init</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@comp_init</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">MacOsResourceSnd</span><span class="o">::</span><span class="no">INIT_OPTION</span><span class="p">,</span><span class="w"> </span><span class="n">options</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">init_comp_mask</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@comp_init</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># mask for compression IDs</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">init_comp_mask</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@init_comp_mask</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@init_comp_mask</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@init_comp_mask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">65280</span>
+<span class="w">      </span><span class="vi">@init_comp_mask</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># mask for right/left pan values</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">init_pan_mask</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@init_pan_mask</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@init_pan_mask</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@init_pan_mask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
+<span class="w">      </span><span class="vi">@init_pan_mask</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># mask for mono/stereo values</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">init_stereo_mask</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@init_stereo_mask</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@init_stereo_mask</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@init_stereo_mask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">192</span>
+<span class="w">      </span><span class="vi">@init_stereo_mask</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">pan_init</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@pan_init</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@pan_init</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@pan_init</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">MacOsResourceSnd</span><span class="o">::</span><span class="no">INIT_OPTION</span><span class="p">,</span><span class="w"> </span><span class="n">options</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">init_pan_mask</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@pan_init</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">stereo_init</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@stereo_init</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@stereo_init</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@stereo_init</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">MacOsResourceSnd</span><span class="o">::</span><span class="no">INIT_OPTION</span><span class="p">,</span><span class="w"> </span><span class="n">options</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">init_stereo_mask</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@stereo_init</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">wave_init</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@wave_init</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@wave_init</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="nb">id</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="ss">:data_type_wave_table_synth</span>
+<span class="w">        </span><span class="vi">@wave_init</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">MacOsResourceSnd</span><span class="o">::</span><span class="no">WAVE_INIT_OPTION</span><span class="p">,</span><span class="w"> </span><span class="n">options</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">wave_init_channel_mask</span><span class="p">)</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="vi">@wave_init</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># wave table only, Sound Manager 2.0 and earlier</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">wave_init_channel_mask</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@wave_init_channel_mask</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@wave_init_channel_mask</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@wave_init_channel_mask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">7</span>
+<span class="w">      </span><span class="vi">@wave_init_channel_mask</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:id</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># contains initialisation options for the SndNewChannel function</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:options</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">Extended</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@instrument_chunk_ptr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+<span class="w">      </span><span class="vi">@aes_recording_ptr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># pointer to instrument info</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:instrument_chunk_ptr</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># pointer to audio info</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:aes_recording_ptr</span>
+<span class="w">  </span><span class="k">end</span>
 <span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">ExtendedOrCompressed</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 <span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
 <span class="w">      </span><span class="n">_read</span>
 <span class="w">    </span><span class="k">end</span>
@@ -671,76 +615,147 @@ They are mostly found in resource forks, but can occasionally appear standalone 
 <span class="w">    </span><span class="c1"># reserved</span>
 <span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:reserved</span>
 <span class="w">  </span><span class="k">end</span>
-<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">DataFormat</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">self</span><span class="p">)</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">SoundCommand</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
 <span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
 <span class="w">      </span><span class="n">_read</span>
 <span class="w">    </span><span class="k">end</span>
 
 <span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
-<span class="w">      </span><span class="vi">@id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">MacOsResourceSnd</span><span class="o">::</span><span class="no">DATA_TYPE</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">)</span>
-<span class="w">      </span><span class="vi">@options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+<span class="w">      </span><span class="vi">@is_data_offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">      </span><span class="vi">@cmd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">MacOsResourceSnd</span><span class="o">::</span><span class="no">CMD_TYPE</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">15</span><span class="p">))</span>
+<span class="w">      </span><span class="vi">@_io</span><span class="o">.</span><span class="n">align_to_byte</span>
+<span class="w">      </span><span class="vi">@param1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+<span class="w">      </span><span class="vi">@param2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">sound_header</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@sound_header</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@sound_header</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="k">if</span><span class="w">  </span><span class="p">((</span><span class="n">is_data_offset</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">cmd</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="ss">:cmd_type_buffer_cmd</span><span class="p">))</span><span class="w"> </span>
+<span class="w">        </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
+<span class="w">        </span><span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">param2</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@sound_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">SoundHeader</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">        </span><span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="vi">@sound_header</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:is_data_offset</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:cmd</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:param1</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:param2</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">SoundHeader</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="n">start_ofs</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">        </span><span class="vi">@_unnamed0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="vi">@sample_ptr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="n">sound_header_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="ss">:sound_header_type_standard</span>
+<span class="w">        </span><span class="vi">@num_samples</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="k">if</span><span class="w">  </span><span class="p">((</span><span class="n">sound_header_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="ss">:sound_header_type_extended</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="n">sound_header_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="ss">:sound_header_type_compressed</span><span class="p">))</span><span class="w"> </span>
+<span class="w">        </span><span class="vi">@num_channels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="vi">@sample_rate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">UnsignedFixedPoint</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@loop_start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+<span class="w">      </span><span class="vi">@loop_end</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+<span class="w">      </span><span class="vi">@encode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">MacOsResourceSnd</span><span class="o">::</span><span class="no">SOUND_HEADER_TYPE</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@midi_note</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+<span class="w">      </span><span class="k">if</span><span class="w">  </span><span class="p">((</span><span class="n">sound_header_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="ss">:sound_header_type_extended</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="n">sound_header_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="ss">:sound_header_type_compressed</span><span class="p">))</span><span class="w"> </span>
+<span class="w">        </span><span class="vi">@extended_or_compressed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">ExtendedOrCompressed</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span><span class="w"> </span><span class="nb">self</span><span class="p">,</span><span class="w"> </span><span class="vi">@_root</span><span class="p">)</span>
+<span class="w">      </span><span class="k">end</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="n">sample_ptr</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">        </span><span class="vi">@sample_area</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">sound_header_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="ss">:sound_header_type_standard</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="n">num_samples</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">(</span><span class="n">sound_header_type</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="ss">:sound_header_type_extended</span><span class="w"> </span><span class="p">?</span><span class="w"> </span><span class="p">((</span><span class="n">extended_or_compressed</span><span class="o">.</span><span class="n">num_frames</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">num_channels</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">extended_or_compressed</span><span class="o">.</span><span class="n">bits_per_sample</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">_io</span><span class="o">.</span><span class="n">size</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">_io</span><span class="o">.</span><span class="n">pos</span><span class="p">)))</span>
+<span class="w">      </span><span class="k">end</span>
 <span class="w">      </span><span class="nb">self</span>
 <span class="w">    </span><span class="k">end</span>
 
 <span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># mask for right/left pan values</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">init_pan_mask</span>
-<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@init_pan_mask</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@init_pan_mask</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">      </span><span class="vi">@init_pan_mask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span>
-<span class="w">      </span><span class="vi">@init_pan_mask</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># wave table only, Sound Manager 2.0 and earlier</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">wave_init_channel_mask</span>
-<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@wave_init_channel_mask</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@wave_init_channel_mask</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">      </span><span class="vi">@wave_init_channel_mask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">7</span>
-<span class="w">      </span><span class="vi">@wave_init_channel_mask</span>
-<span class="w">    </span><span class="k">end</span>
-
-<span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># mask for mono/stereo values</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">init_stereo_mask</span>
-<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@init_stereo_mask</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@init_stereo_mask</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">      </span><span class="vi">@init_stereo_mask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">192</span>
-<span class="w">      </span><span class="vi">@init_stereo_mask</span>
-<span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">wave_init</span>
-<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@wave_init</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@wave_init</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="nb">id</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="ss">:data_type_wave_table_synth</span>
-<span class="w">        </span><span class="vi">@wave_init</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">MacOsResourceSnd</span><span class="o">::</span><span class="no">WAVE_INIT_OPTION</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">options</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">wave_init_channel_mask</span><span class="p">))</span>
+<span class="w">    </span><span class="c1"># base frequency of sample in Hz</span>
+<span class="w">    </span><span class="c1"># Calculated with the formula (2 ** ((midi_note - 69) / 12)) * 440</span>
+<span class="w">    </span><span class="c1"># @see https://en.wikipedia.org/wiki/MIDI_tuning_standard Source</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">base_freqeuncy</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@base_freqeuncy</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@base_freqeuncy</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="k">if</span><span class="w">  </span><span class="p">((</span><span class="n">midi_note</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">midi_note</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">128</span><span class="p">))</span><span class="w"> </span>
+<span class="w">        </span><span class="vi">@base_freqeuncy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_root</span><span class="o">.</span><span class="n">midi_note_to_frequency</span><span class="o">[</span><span class="n">midi_note</span><span class="o">]</span>
 <span class="w">      </span><span class="k">end</span>
-<span class="w">      </span><span class="vi">@wave_init</span>
+<span class="w">      </span><span class="vi">@base_freqeuncy</span>
 <span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">pan_init</span>
-<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@pan_init</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@pan_init</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">      </span><span class="vi">@pan_init</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">MacOsResourceSnd</span><span class="o">::</span><span class="no">INIT_OPTION</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">options</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">init_pan_mask</span><span class="p">))</span>
-<span class="w">      </span><span class="vi">@pan_init</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">sound_header_type</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@sound_header_type</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@sound_header_type</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="n">_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
+<span class="w">      </span><span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">start_ofs</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">20</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@sound_header_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">MacOsResourceSnd</span><span class="o">::</span><span class="no">SOUND_HEADER_TYPE</span><span class="p">,</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+<span class="w">      </span><span class="vi">@sound_header_type</span>
 <span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">start_ofs</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@start_ofs</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@start_ofs</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@start_ofs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_io</span><span class="o">.</span><span class="n">pos</span>
+<span class="w">      </span><span class="vi">@start_ofs</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:_unnamed0</span>
 
 <span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># mask for compression IDs</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">init_comp_mask</span>
-<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@init_comp_mask</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@init_comp_mask</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">      </span><span class="vi">@init_comp_mask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">65280</span>
-<span class="w">      </span><span class="vi">@init_comp_mask</span>
-<span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">stereo_init</span>
-<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@stereo_init</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@stereo_init</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">      </span><span class="vi">@stereo_init</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">MacOsResourceSnd</span><span class="o">::</span><span class="no">INIT_OPTION</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">options</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">init_stereo_mask</span><span class="p">))</span>
-<span class="w">      </span><span class="vi">@stereo_init</span>
-<span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">comp_init</span>
-<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@comp_init</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@comp_init</span><span class="o">.</span><span class="n">nil?</span>
-<span class="w">      </span><span class="vi">@comp_init</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">MacOsResourceSnd</span><span class="o">::</span><span class="no">INIT_OPTION</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">options</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">init_comp_mask</span><span class="p">))</span>
-<span class="w">      </span><span class="vi">@comp_init</span>
-<span class="w">    </span><span class="k">end</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:id</span>
+<span class="w">    </span><span class="c1"># pointer to samples (or 0 if samples follow data structure)</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:sample_ptr</span>
 
 <span class="w">    </span><span class="c1">##</span>
-<span class="w">    </span><span class="c1"># contains initialisation options for the SndNewChannel function</span>
-<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:options</span>
+<span class="w">    </span><span class="c1"># number of samples</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:num_samples</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># number of channels in sample</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:num_channels</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># The rate at which the sample was originally recorded.</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:sample_rate</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># loop point beginning</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:loop_start</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># loop point ending</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:loop_end</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># sample&#39;s encoding option</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:encode</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># base frequency of sample, expressed as MIDI note values, 60 is middle C</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:midi_note</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:extended_or_compressed</span>
+
+<span class="w">    </span><span class="c1">##</span>
+<span class="w">    </span><span class="c1"># sampled-sound data</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:sample_area</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="k">class</span><span class="w"> </span><span class="nc">UnsignedFixedPoint</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kp">nil</span><span class="p">)</span>
+<span class="w">      </span><span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span><span class="w"> </span><span class="n">_parent</span><span class="p">,</span><span class="w"> </span><span class="n">_root</span><span class="p">)</span>
+<span class="w">      </span><span class="n">_read</span>
+<span class="w">    </span><span class="k">end</span>
+
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="n">_read</span>
+<span class="w">      </span><span class="vi">@integer_part</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+<span class="w">      </span><span class="vi">@fraction_part</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+<span class="w">      </span><span class="nb">self</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="k">def</span><span class="w"> </span><span class="nf">value</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="vi">@value</span><span class="w"> </span><span class="k">unless</span><span class="w"> </span><span class="vi">@value</span><span class="o">.</span><span class="n">nil?</span>
+<span class="w">      </span><span class="vi">@value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">integer_part</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">fraction_part</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">65535</span><span class="o">.</span><span class="mi">0</span>
+<span class="w">      </span><span class="vi">@value</span>
+<span class="w">    </span><span class="k">end</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:integer_part</span>
+<span class="w">    </span><span class="kp">attr_reader</span><span class="w"> </span><span class="ss">:fraction_part</span>
 <span class="w">  </span><span class="k">end</span>
 
 <span class="w">  </span><span class="c1">##</span>
